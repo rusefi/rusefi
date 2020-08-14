@@ -1,0 +1,37 @@
+name: Generate Kicad Diffs
+
+on:
+  push:
+    paths:
+    - 'hardware/**'
+
+jobs:
+  generate:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+      with:
+        submodules: recursive
+        fetch-depth: 0
+
+    - name: Install ncftp, kicad, and tk bindings
+      run: |
+        sudo add-apt-repository ppa:js-reynaud/kicad-5.1
+        sudo apt-get update
+        sudo apt-get install ncftp kicad python3-tk
+
+    - name: Get KiCad-Diff
+      run: git clone https://github.com/Gasman2014/KiCad-Diff.git
+
+    - name: Set FTP variables
+      run: |
+        if [ "${{github.event_name}}" = "push" ] && [ "${{github.ref}}" = "refs/heads/master" ]; then
+          echo "::set-env name=RUSEFI_FTP_SERVER::${{secrets.RUSEFI_FTP_SERVER}}";
+          echo "::set-env name=RUSEFI_DOXYGEN_FTP_USER::${{secrets.RUSEFI_DOXYGEN_FTP_USER}}";
+          echo "::set-env name=RUSEFI_DOXYGEN_FTP_PASS::${{secrets.RUSEFI_DOXYGEN_FTP_PASS}}";
+        fi
+
+    - name: Generate diffs
+      working-directory: ./hardware
+      run: bash generate_diffs.sh
