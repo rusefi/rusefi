@@ -22,7 +22,7 @@ jobs:
         sudo apt-get install lftp kicad python3-tk
 
     - name: Get KiCad-Diff
-      run: git clone https://github.com/Gasman2014/KiCad-Diff.git
+      run: git clone https://github.com/chuckwagoncomputing/KiCad-Diff.git
 
     - name: Set FTP variables
       run: |
