@@ -9,4 +9,4 @@ function gendiffs() {
 }
 export -f gendiffs
 
-find . -name "*.kicad_pcb" -exec 'bash -c gendiffs "$0"' {} \;
+find . -name "*.kicad_pcb" -exec bash -c 'gendiffs "$0"' {} \;
