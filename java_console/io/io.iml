@@ -15,6 +15,6 @@
     <orderEntry type="module" module-name="models" exported="" />
     <orderEntry type="library" exported="" name="annotations" level="project" />
     <orderEntry type="module" module-name="inifile" exported="" />
-    <orderEntry type="library" scope="TEST" name="org.mockito:mockito-all:1.10.19" level="project" />
+    <orderEntry type="library" name="mockito-all-1.10.19" level="project" />
   </component>
 </module>

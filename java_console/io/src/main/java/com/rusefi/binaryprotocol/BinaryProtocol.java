@@ -417,7 +417,9 @@ public class BinaryProtocol implements BinaryProtocolCommands {
                 // that's unusual - most of the protocol is LITTLE_ENDIAN
                 bb.order(ByteOrder.BIG_ENDIAN);
                 int crcFromController = bb.getInt();
-                log.info(String.format("From rusEFI CRC %x\n", crcFromController));
+                log.info(String.format("From rusEFI tune CRC32 %x %d\n", crcFromController, crcFromController));
+                short crc16FromController = (short) crcFromController;
+                log.info(String.format("From rusEFI tune CRC16 %x %d\n", crc16FromController, crc16FromController));
                 if (crcOfLocallyCachedConfiguration == crcFromController) {
                     return localCached;
                 }
