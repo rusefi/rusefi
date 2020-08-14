@@ -7,7 +7,6 @@ import org.junit.Test;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.TreeMap;
 
 import static org.junit.Assert.assertNotNull;
 
@@ -23,9 +22,8 @@ public class ConfigDefinitionTest {
 
         ConfigDefinition.readPrependValues(variableRegistry, FIRMWARE + File.separator + "integration/rusefi_config.txt");
 
-        TreeMap<Integer, String> valueNameById = new TreeMap<>();
 
-        CharSequence sb = VariableRegistry.getEnumOptionsForTunerStudio(enumsReader, variableRegistry, valueNameById, "engine_type_e");
+        String sb = VariableRegistry.getEnumOptionsForTunerStudio(enumsReader, variableRegistry, "engine_type_e");
 
         System.out.println(sb);
         assertNotNull(sb);

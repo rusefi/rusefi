@@ -36,9 +36,13 @@ public class VariableRegistry  {
     public VariableRegistry() {
     }
 
-    @NotNull
-    public static CharSequence getEnumOptionsForTunerStudio(EnumsReader enumsReader, VariableRegistry variableRegistry, TreeMap<Integer, String> valueNameById, String enumName) {
-        for (Value value : enumsReader.getEnums().get(enumName).values()) {
+    public static String getEnumOptionsForTunerStudio(EnumsReader enumsReader, VariableRegistry variableRegistry, String enumName) {
+        TreeMap<Integer, String> valueNameById = new TreeMap<>();
+
+        Map<String, Value> stringValueMap = enumsReader.getEnums().get(enumName);
+        if (stringValueMap == null)
+            return null;
+        for (Value value : stringValueMap.values()) {
             if (value.getValue().contains("ENUM_32_BITS"))
                 continue;
 
