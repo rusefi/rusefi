@@ -24,14 +24,7 @@ public class MessagesView {
 
     private boolean isPaused;
 
-    protected final JTextPane messages = new JTextPane() {
-        @Override
-        public void setVisible(boolean aFlag) {
-            super.setVisible(aFlag);
-// todo: get focus on startup somehow
-//            anyCommand.getText().requestFocus();
-        }
-    };
+    protected final JTextPane messages = new JTextPane();
     public final JScrollPane messagesScroll = new JScrollPane(messages, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
 
     public MessagesView() {
