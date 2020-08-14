@@ -55,7 +55,7 @@ public class ConfigDefinition {
         return LazyFile.LAZY_FILE_TAG + "ConfigDefinition.jar based on " + TOOL + " ";
     }
 
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) {
         try {
             doJob(args);
         } catch (Throwable e) {
@@ -104,6 +104,7 @@ public class ConfigDefinition {
         // disable the lazy checks because we use timestamps to detect changes
         LazyFile.setLazyFileEnabled(false);
 
+        EnumsReader enumsReader = new EnumsReader();
         for (int i = 0; i < args.length - 1; i += 2) {
             String key = args[i];
             if (key.equals("-tool")) {
@@ -145,6 +146,9 @@ public class ConfigDefinition {
                 // don't add this file to the 'inputFiles'
             } else if (key.equals(KEY_SIGNATURE_DESTINATION)) {
                 signatureDestination = args[i + 1];
+            } else if (key.equals(EnumToString.KEY_ENUM_INPUT_FILE)) {
+                String inputFile = args[i + 1];
+                enumsReader.process(".", inputFile);
             } else if (key.equals(KEY_CACHE)) {
                 cachePath = args[i + 1];
             } else if (key.equals(KEY_CACHE_ZIP_FILE)) {
@@ -280,7 +284,7 @@ public class ConfigDefinition {
         return getMd5(content);
     }
 
-    private static void readPrependValues(VariableRegistry registry, String prependFile) throws IOException {
+    public static void readPrependValues(VariableRegistry registry, String prependFile) throws IOException {
         BufferedReader definitionReader = new BufferedReader(new FileReader(prependFile));
         String line;
         while ((line = definitionReader.readLine()) != null) {
@@ -293,7 +297,6 @@ public class ConfigDefinition {
             if (startsWithToken(line, ReaderState.DEFINE)) {
                 processDefine(registry, line.substring(ReaderState.DEFINE.length()).trim());
             }
-
         }
     }
 
