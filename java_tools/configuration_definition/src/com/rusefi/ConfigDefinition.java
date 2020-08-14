@@ -104,64 +104,90 @@ public class ConfigDefinition {
         // disable the lazy checks because we use timestamps to detect changes
         LazyFile.setLazyFileEnabled(false);
 
-        EnumsReader enumsReader = new EnumsReader();
+        ReaderState state = new ReaderState();
+
         for (int i = 0; i < args.length - 1; i += 2) {
             String key = args[i];
-            if (key.equals("-tool")) {
-                ConfigDefinition.TOOL = args[i + 1];
-            } else if (key.equals(KEY_DEFINITION)) {
-                definitionInputFile = args[i + 1];
-                inputFiles.add(definitionInputFile);
-            } else if (key.equals(KEY_TS_DESTINATION)) {
-                tsPath = args[i + 1];
-            } else if (key.equals(KEY_C_DESTINATION)) {
-                destCHeaderFileName = args[i + 1];
-            } else if (key.equals(KEY_C_FSIO_GETTERS)) {
-                destCFsioGettersFileName = args[i + 1];
-            } else if (key.equals(KEY_C_FSIO_STRING)) {
-                stringsCFileName = args[i + 1];
-            } else if (key.equals(KEY_C_FSIO_NAMES)) {
-                namesCFileName = args[i + 1];
-            } else if (key.equals(KEY_C_FSIO_CONSTANTS)) {
-                destCFsioConstantsFileName = args[i + 1];
-            } else if (key.equals(KEY_ZERO_INIT)) {
-                needZeroInit = Boolean.parseBoolean(args[i + 1]);
-            } else if (key.equals(KEY_WITH_C_DEFINES)) {
-                CHeaderConsumer.withC_Defines = Boolean.parseBoolean(args[i + 1]);
-            } else if (key.equals(KEY_C_DEFINES)) {
-                destCDefinesFileName = args[i + 1];
-            } else if (key.equals(KEY_JAVA_DESTINATION)) {
-                javaDestinationFileName = args[i + 1];
-            } else if (key.equals(KEY_FIRING)) {
-                firingEnumFileName = args[i + 1];
-                inputFiles.add(firingEnumFileName);
-            } else if (key.equals(KEY_ROMRAIDER_DESTINATION)) {
-                romRaiderDestination = args[i + 1];
-            } else if (key.equals(KEY_PREPEND)) {
-                prependFiles.add(args[i + 1]);
-                inputFiles.add(args[i + 1]);
-            } else if (key.equals(KEY_SIGNATURE)) {
-                signaturePrependFile = args[i + 1];
-                prependFiles.add(args[i + 1]);
-                // don't add this file to the 'inputFiles'
-            } else if (key.equals(KEY_SIGNATURE_DESTINATION)) {
-                signatureDestination = args[i + 1];
-            } else if (key.equals(EnumToString.KEY_ENUM_INPUT_FILE)) {
-                String inputFile = args[i + 1];
-                enumsReader.process(".", inputFile);
-            } else if (key.equals(KEY_CACHE)) {
-                cachePath = args[i + 1];
-            } else if (key.equals(KEY_CACHE_ZIP_FILE)) {
-                cacheZipFile = args[i + 1];
-            } else if (key.equals(KEY_SKIP)) {
-                // is this now not needed in light if LazyFile surving the same goal of not changing output unless needed?
-                skipRebuildFile = args[i + 1];
-            } else if (key.equals("-ts_output_name")) {
-                TSProjectConsumer.TS_FILE_OUTPUT_NAME = args[i + 1];
-            } else if (key.equals(KEY_ROM_INPUT)) {
-                String inputFilePath = args[i + 1];
-                romRaiderInputFile = inputFilePath + File.separator + ROM_RAIDER_XML_TEMPLATE;
-                inputFiles.add(romRaiderInputFile);
+            switch (key) {
+                case "-tool":
+                    ConfigDefinition.TOOL = args[i + 1];
+                    break;
+                case KEY_DEFINITION:
+                    definitionInputFile = args[i + 1];
+                    inputFiles.add(definitionInputFile);
+                    break;
+                case KEY_TS_DESTINATION:
+                    tsPath = args[i + 1];
+                    break;
+                case KEY_C_DESTINATION:
+                    destCHeaderFileName = args[i + 1];
+                    break;
+                case KEY_C_FSIO_GETTERS:
+                    destCFsioGettersFileName = args[i + 1];
+                    break;
+                case KEY_C_FSIO_STRING:
+                    stringsCFileName = args[i + 1];
+                    break;
+                case KEY_C_FSIO_NAMES:
+                    namesCFileName = args[i + 1];
+                    break;
+                case KEY_C_FSIO_CONSTANTS:
+                    destCFsioConstantsFileName = args[i + 1];
+                    break;
+                case KEY_ZERO_INIT:
+                    needZeroInit = Boolean.parseBoolean(args[i + 1]);
+                    break;
+                case KEY_WITH_C_DEFINES:
+                    CHeaderConsumer.withC_Defines = Boolean.parseBoolean(args[i + 1]);
+                    break;
+                case KEY_C_DEFINES:
+                    destCDefinesFileName = args[i + 1];
+                    break;
+                case KEY_JAVA_DESTINATION:
+                    javaDestinationFileName = args[i + 1];
+                    break;
+                case KEY_FIRING:
+                    firingEnumFileName = args[i + 1];
+                    inputFiles.add(firingEnumFileName);
+                    break;
+                case KEY_ROMRAIDER_DESTINATION:
+                    romRaiderDestination = args[i + 1];
+                    break;
+                case KEY_PREPEND:
+                    prependFiles.add(args[i + 1]);
+                    inputFiles.add(args[i + 1]);
+                    break;
+                case KEY_SIGNATURE:
+                    signaturePrependFile = args[i + 1];
+                    prependFiles.add(args[i + 1]);
+                    // don't add this file to the 'inputFiles'
+                    break;
+                case KEY_SIGNATURE_DESTINATION:
+                    signatureDestination = args[i + 1];
+                    break;
+                case EnumToString.KEY_ENUM_INPUT_FILE:
+                    String inputFile = args[i + 1];
+                    state.enumsReader.process(".", inputFile);
+                    SystemOut.println(state.enumsReader.getEnums() + " total enumsReader");
+                    break;
+                case KEY_CACHE:
+                    cachePath = args[i + 1];
+                    break;
+                case KEY_CACHE_ZIP_FILE:
+                    cacheZipFile = args[i + 1];
+                    break;
+                case KEY_SKIP:
+                    // is this now not needed in light if LazyFile surving the same goal of not changing output unless needed?
+                    skipRebuildFile = args[i + 1];
+                    break;
+                case "-ts_output_name":
+                    TSProjectConsumer.TS_FILE_OUTPUT_NAME = args[i + 1];
+                    break;
+                case KEY_ROM_INPUT:
+                    String inputFilePath = args[i + 1];
+                    romRaiderInputFile = inputFilePath + File.separator + ROM_RAIDER_XML_TEMPLATE;
+                    inputFiles.add(romRaiderInputFile);
+                    break;
             }
         }
 
@@ -217,7 +243,6 @@ public class ConfigDefinition {
             readPrependValues(VariableRegistry.INSTANCE, prependFile);
 
         BufferedReader definitionReader = new BufferedReader(new InputStreamReader(new FileInputStream(definitionInputFile), IoUtils.CHARSET.name()));
-        ReaderState state = new ReaderState();
 
         List<ConfigurationConsumer> destinations = new ArrayList<>();
         if (tsPath != null && needToUpdateTsFiles) {
@@ -278,7 +303,7 @@ public class ConfigDefinition {
     private static String getDefinitionMD5(String fullFileName) throws IOException {
         File source = new File(fullFileName);
         FileInputStream fileInputStream = new FileInputStream(fullFileName);
-        byte content[] = new byte[(int) source.length()];
+        byte[] content = new byte[(int) source.length()];
         if (fileInputStream.read(content) != content.length)
             return "";
         return getMd5(content);
