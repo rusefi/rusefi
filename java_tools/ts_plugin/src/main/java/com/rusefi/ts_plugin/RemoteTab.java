@@ -118,7 +118,8 @@ public class RemoteTab {
         if (currentState == null) {
             requestListDownload();
         } else {
-            setConnectedStatus(currentState.getApplicationRequest().getVehicleOwner(), null);
+            setConnectedStatus(currentState.getApplicationRequest().getVehicleOwner(), null,
+                    currentState.getApplicationRequest().getSessionDetails().getControllerInfo());
         }
     }
 
@@ -209,7 +210,7 @@ public class RemoteTab {
             SwingUtilities.invokeLater(new Runnable() {
                 @Override
                 public void run() {
-                    setConnectedStatus(publicSession.getVehicleOwner(), authenticatorToProxyStream);
+                    setConnectedStatus(publicSession.getVehicleOwner(), authenticatorToProxyStream, publicSession.getControllerInfo());
                 }
             });
         };
@@ -219,13 +220,14 @@ public class RemoteTab {
         }, "Authenticator").start();
     }
 
-    private void setConnectedStatus(UserDetails userDetails, StreamStatistics authenticatorToProxyStream) {
+    private void setConnectedStatus(UserDetails userDetails, StreamStatistics authenticatorToProxyStream, ControllerInfo controllerInfo) {
         if (authenticatorToProxyStream != null) {
             streamStatusControl = new StreamStatusControl(authenticatorToProxyStream);
         }
 
         setStatus("Connected to " + userDetails.getUserName(),
                 new JLabel("You can now connect your TunerStudio to IP address localhost and port " + getLocalPort()),
+                new URLLabel(SignatureHelper.getUrl(controllerInfo.getSignature())),
                 disconnect, streamStatusControl == null ? null : streamStatusControl.getContent());
     }
 

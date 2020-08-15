@@ -33,6 +33,7 @@ import static com.rusefi.binaryprotocol.BinaryProtocol.sleep;
  * see NetworkConnectorStartup
  */
 public class NetworkConnector implements Closeable {
+    public static final byte DISCONNECT = 14;
     public static final byte UPDATE_CONNECTOR_SOFTWARE = 15;
     public static final byte UPDATE_FIRMWARE = 16;
     private final static Logging log = Logging.getLogging(NetworkConnector.class);

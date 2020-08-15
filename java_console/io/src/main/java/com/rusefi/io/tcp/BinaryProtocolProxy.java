@@ -5,7 +5,9 @@ import com.rusefi.Listener;
 import com.rusefi.Timeouts;
 import com.rusefi.binaryprotocol.BinaryProtocol;
 import com.rusefi.binaryprotocol.IncomingDataBuffer;
+import com.rusefi.config.generated.Fields;
 import com.rusefi.io.IoStream;
+import com.rusefi.proxy.NetworkConnector;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.ByteArrayInputStream;
@@ -55,6 +57,9 @@ public class BinaryProtocolProxy {
                 continue;
             }
             BinaryProtocolServer.Packet clientRequest = readClientRequest(clientStream.getDataBuffer(), firstByte);
+            byte[] packet = clientRequest.getPacket();
+            if (packet.length > 1 && packet[0] == Fields.TS_ONLINE_PROTOCOL && packet[1] == NetworkConnector.DISCONNECT)
+                throw new IOException("User requested disconnect");
 
             /**
              * Two reasons for synchronization:

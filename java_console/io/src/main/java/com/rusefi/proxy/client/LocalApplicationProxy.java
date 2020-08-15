@@ -2,6 +2,7 @@ package com.rusefi.proxy.client;
 
 import com.devexperts.logging.Logging;
 import com.rusefi.NamedThreadFactory;
+import com.rusefi.config.generated.Fields;
 import com.rusefi.io.IoStream;
 import com.rusefi.io.commands.GetOutputsCommand;
 import com.rusefi.io.commands.HelloCommand;
@@ -10,6 +11,7 @@ import com.rusefi.io.serial.StreamStatistics;
 import com.rusefi.io.tcp.BinaryProtocolProxy;
 import com.rusefi.io.tcp.ServerSocketReference;
 import com.rusefi.io.tcp.TcpIoStream;
+import com.rusefi.proxy.NetworkConnector;
 import com.rusefi.server.ApplicationRequest;
 import com.rusefi.server.rusEFISSLContext;
 import com.rusefi.tools.online.HttpUtil;
@@ -133,6 +135,13 @@ public class LocalApplicationProxy implements Closeable {
     @Override
     public void close() {
         serverHolder.close();
+        byte[] request = new byte[2];
+        request[0] = Fields.TS_ONLINE_PROTOCOL;
+        request[1] = NetworkConnector.DISCONNECT;
+        try {
+            authenticatorToProxyStream.sendPacket(request);
+        } catch (IOException ignored) {
+        }
         authenticatorToProxyStream.close();
     }
 
