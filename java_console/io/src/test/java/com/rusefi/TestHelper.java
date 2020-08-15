@@ -99,7 +99,7 @@ public class TestHelper {
     public static SessionDetails createTestSession(String authToken, String signature) {
         ControllerInfo ci = new ControllerInfo("vehicle", "make", "code", signature);
 
-        return new SessionDetails(ci, authToken, SessionDetails.createOneTimeCode());
+        return new SessionDetails(ci, authToken, SessionDetails.createOneTimeCode(), rusEFIVersion.CONSOLE_VERSION);
     }
 
     public static void assertLatch(String message, CountDownLatch reconnectCounter) throws InterruptedException {

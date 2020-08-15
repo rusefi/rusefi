@@ -11,9 +11,11 @@ import com.rusefi.io.LinkManager;
 import com.rusefi.io.commands.HelloCommand;
 import com.rusefi.io.tcp.BinaryProtocolServer;
 import com.rusefi.io.tcp.TcpIoStream;
+import com.rusefi.rusEFIVersion;
 import com.rusefi.server.ControllerInfo;
 import com.rusefi.server.SessionDetails;
 import com.rusefi.server.rusEFISSLContext;
+import com.rusefi.tools.VehicleToken;
 import com.rusefi.tools.online.HttpUtil;
 import org.jetbrains.annotations.NotNull;
 
@@ -69,7 +71,7 @@ public class NetworkConnector implements Closeable {
             return NetworkConnectorResult.ERROR;
         }
 
-        int oneTimeToken = SessionDetails.createOneTimeCode();
+        int vehicleToken = VehicleToken.getOrCreate();
 
         BinaryProtocolServer.getThreadFactory("Proxy Reconnect").newThread(() -> {
             Semaphore proxyReconnectSemaphore = new Semaphore(1);
@@ -84,7 +86,7 @@ public class NetworkConnector implements Closeable {
                             log.debug("Releasing semaphore");
                             proxyReconnectSemaphore.release();
                             reconnectListener.onReconnect();
-                        }, oneTimeToken, controllerInfo, context);
+                        }, vehicleToken, controllerInfo, context);
                     } catch (IOException e) {
                         log.error("IO error", e);
                     }
@@ -94,14 +96,14 @@ public class NetworkConnector implements Closeable {
             }
         }).start();
 
-        return new NetworkConnectorResult(controllerInfo, oneTimeToken);
+        return new NetworkConnectorResult(controllerInfo, vehicleToken);
     }
 
     @NotNull
     private static SessionDetails start(int serverPortForControllers, LinkManager linkManager, String authToken, final TcpIoStream.DisconnectListener disconnectListener, int oneTimeToken, ControllerInfo controllerInfo, final NetworkConnectorContext context) throws IOException {
         IoStream targetEcuSocket = linkManager.getConnector().getBinaryProtocol().getStream();
 
-        SessionDetails deviceSessionDetails = new SessionDetails(controllerInfo, authToken, oneTimeToken);
+        SessionDetails deviceSessionDetails = new SessionDetails(controllerInfo, authToken, oneTimeToken, rusEFIVersion.CONSOLE_VERSION);
 
         Socket socket;
         try {

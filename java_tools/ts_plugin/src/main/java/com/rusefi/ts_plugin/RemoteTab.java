@@ -9,6 +9,7 @@ import com.rusefi.io.tcp.ServerSocketReference;
 import com.rusefi.io.tcp.TcpIoStream;
 import com.rusefi.proxy.client.LocalApplicationProxy;
 import com.rusefi.proxy.client.LocalApplicationProxyContextImpl;
+import com.rusefi.rusEFIVersion;
 import com.rusefi.server.ApplicationRequest;
 import com.rusefi.server.ControllerInfo;
 import com.rusefi.server.SessionDetails;
@@ -225,7 +226,7 @@ public class RemoteTab {
 
     private void runAuthenticator(PublicSession publicSession, ControllerInfo controllerInfo, LocalApplicationProxy.ConnectionListener connectionListener) {
         SessionDetails sessionDetails = new SessionDetails(controllerInfo, AuthTokenPanel.getAuthToken(),
-                Integer.parseInt(oneTimePasswordControl.getText()));
+                Integer.parseInt(oneTimePasswordControl.getText()), rusEFIVersion.CONSOLE_VERSION);
 
         ApplicationRequest applicationRequest = new ApplicationRequest(sessionDetails, publicSession.getUserDetails());
 

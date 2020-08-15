@@ -13,14 +13,17 @@ public class SessionDetails {
     private static final String ONE_TIME_TOKEN = "oneTime";
     private static final String AUTH_TOKEN = "authToken";
     private static final String CONTROLLER = "controller";
+    private static final String CONNECTOR_VERSION = "connectorVersion";
     private static final String HARDCODED_ONE_TIME_CODE = System.getProperty("ONE_TIME_CODE");
 
     private final ControllerInfo controllerInfo;
 
     private final int oneTimeToken;
     private final String authToken;
+    private final int consoleVersion;
 
-    public SessionDetails(ControllerInfo controllerInfo, String authToken, int oneTimeCode) {
+    public SessionDetails(ControllerInfo controllerInfo, String authToken, int oneTimeCode, int consoleVersion) {
+        this.consoleVersion = consoleVersion;
         Objects.requireNonNull(controllerInfo);
         Objects.requireNonNull(authToken);
         this.controllerInfo = controllerInfo;
@@ -49,6 +52,7 @@ public class SessionDetails {
         jsonObject.put(CONTROLLER, controllerInfo.toJson());
         jsonObject.put(ONE_TIME_TOKEN, oneTimeToken);
         jsonObject.put(AUTH_TOKEN, authToken);
+        jsonObject.put(CONNECTOR_VERSION, consoleVersion);
         return jsonObject.toJSONString();
     }
 
@@ -57,10 +61,11 @@ public class SessionDetails {
 
         String authToken = (String) jsonObject.get(AUTH_TOKEN);
         long oneTimeCode = (Long)jsonObject.get(ONE_TIME_TOKEN);
+        long connectorVersion = (long) jsonObject.get(CONNECTOR_VERSION);
 
         ControllerInfo controllerInfo = ControllerInfo.valueOf((String) jsonObject.get(CONTROLLER));
 
-        return new SessionDetails(controllerInfo, authToken, (int) oneTimeCode);
+        return new SessionDetails(controllerInfo, authToken, (int) oneTimeCode, (int) connectorVersion);
     }
 
     @Override
