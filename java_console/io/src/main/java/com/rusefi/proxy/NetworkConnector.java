@@ -128,6 +128,8 @@ public class NetworkConnector implements Closeable {
                     log.info("Got connector command " + packet.getPacket());
                     if (connectorCommand == NetworkConnector.UPDATE_CONNECTOR_SOFTWARE) {
                         context.onConnectorSoftwareUpdateRequest();
+                    } else if (connectorCommand == NetworkConnector.UPDATE_FIRMWARE) {
+
                     }
                     return;
                 }
