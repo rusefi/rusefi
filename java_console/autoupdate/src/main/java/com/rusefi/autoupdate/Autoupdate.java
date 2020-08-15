@@ -2,6 +2,7 @@ package com.rusefi.autoupdate;
 
 import com.rusefi.shared.ConnectionAndMeta;
 import com.rusefi.shared.FileUtil;
+import com.rusefi.ui.storage.PersistentConfiguration;
 import com.rusefi.ui.util.FrameHelper;
 
 import javax.swing.*;
@@ -16,8 +17,6 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.atomic.AtomicBoolean;
-
-import static com.rusefi.ui.storage.PersistentConfiguration.getConfig;
 
 public class Autoupdate {
     private static final String TITLE = "rusEFI Bundle Updater 20200607";
@@ -56,7 +55,7 @@ public class Autoupdate {
     }
 
     private static UpdateMode getMode() {
-        String value = getConfig().getRoot().getProperty(AUTOUPDATE_MODE);
+        String value = PersistentConfiguration.getConfig().getRoot().getProperty(AUTOUPDATE_MODE);
         try {
             return UpdateMode.valueOf(value);
         } catch (Throwable e) {
@@ -131,7 +130,7 @@ public class Autoupdate {
         never.addActionListener(new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                getConfig().getRoot().setProperty(AUTOUPDATE_MODE, UpdateMode.NEVER.toString());
+                PersistentConfiguration.getConfig().getRoot().setProperty(AUTOUPDATE_MODE, UpdateMode.NEVER.toString());
                 frameHelper.getFrame().dispose();
             }
         });
@@ -162,7 +161,7 @@ public class Autoupdate {
         always.addActionListener(new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                getConfig().getRoot().setProperty(AUTOUPDATE_MODE, UpdateMode.ALWAYS.toString());
+                PersistentConfiguration.getConfig().getRoot().setProperty(AUTOUPDATE_MODE, UpdateMode.ALWAYS.toString());
                 doUpdate.set(true);
                 frameHelper.getFrame().dispose();
             }
