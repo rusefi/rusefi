@@ -17,6 +17,7 @@ import static com.rusefi.config.generated.Fields.*;
 /**
  * @author Andrey Belomutskiy
  * 2/11/13
+ * @see Fields#TS_OUTPUT_SIZE
  */
 public enum Sensor {
     /**
