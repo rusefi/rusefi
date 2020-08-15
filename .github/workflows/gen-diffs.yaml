@@ -15,14 +15,14 @@ jobs:
         submodules: recursive
         fetch-depth: 0
 
-    - name: Install ncftp, kicad, and tk bindings
+    - name: Install lftp, kicad, and tk bindings
       run: |
         sudo add-apt-repository ppa:js-reynaud/kicad-5.1
         sudo apt-get update
-        sudo apt-get install ncftp kicad python3-tk
+        sudo apt-get install lftp kicad python3-tk
 
     - name: Get KiCad-Diff
-      run: git clone https://github.com/Gasman2014/KiCad-Diff.git
+      run: git clone https://github.com/chuckwagoncomputing/KiCad-Diff.git
 
     - name: Set FTP variables
       run: |
