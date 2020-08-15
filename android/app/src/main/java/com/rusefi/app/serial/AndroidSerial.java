@@ -1,4 +1,4 @@
-package com.rusefi.app;
+package com.rusefi.app.serial;
 
 import android.hardware.usb.UsbManager;
 
@@ -22,7 +22,7 @@ public class AndroidSerial extends AbstractIoStream {
 
     private UsbSerialPort usbSerialPort;
 
-    static List<UsbSerialDriver> findUsbSerial(UsbManager usbManager) {
+    public static List<UsbSerialDriver> findUsbSerial(UsbManager usbManager) {
         ProbeTable customTable = UsbSerialProber.getDefaultProbeTable();
         customTable.addProduct(DfuLogic.ST_VENDOR, ST_CDC, CdcAcmSerialDriver.class);
         UsbSerialProber prober = new UsbSerialProber(customTable);

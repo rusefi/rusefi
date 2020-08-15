@@ -34,29 +34,20 @@ import android.widget.TextView;
 
 import com.hoho.android.usbserial.driver.UsbSerialDriver;
 import com.hoho.android.usbserial.driver.UsbSerialPort;
-import com.rusefi.Listener;
+import com.rusefi.app.serial.AndroidSerial;
 import com.rusefi.dfu.DfuConnection;
 import com.rusefi.dfu.DfuImage;
 import com.rusefi.dfu.DfuLogic;
 import com.rusefi.dfu.android.AndroidDfuConnection;
 import com.rusefi.dfu.android.DfuDeviceLocator;
 import com.rusefi.io.DfuHelper;
-import com.rusefi.shared.ConnectionAndMeta;
-import com.rusefi.shared.FileUtil;
 
-import java.io.File;
 import java.io.IOException;
-import java.security.KeyManagementException;
-import java.security.NoSuchAlgorithmException;
 import java.util.Date;
 import java.util.List;
 
 public class rusEFI extends Activity {
     private static final String ACTION_USB_PERMISSION = "com.android.example.USB_PERMISSION";
-    //public static final String FILE = "rusefi_bundle_mre_f4_autoupdate.zip";
-    //private static final String DFU_FILE_NAME = "rusefi_mre_f4.dfu";
-    private static final String BUNDLE_FILE = "rusefi_bundle_autoupdate.zip";
-    private static final String DFU_FILE_NAME = "rusefi_.dfu";
 
     private static final byte REQUEST_TYPE_CLASS = 32;
     private static final byte RECIPIENT_INTERFACE = 0x01;
@@ -69,7 +60,7 @@ public class rusEFI extends Activity {
     private TextView mResultView;
 
     private UsbManager usbManager;
-    private String localDfuImageFileName;
+    private DfuUpload dfuUpload;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -89,53 +80,9 @@ public class rusEFI extends Activity {
 
         mStatusView.setText("Hello");
 
+        dfuUpload = new DfuUpload(this);
 
-        final File localFolder = getExternalFilesDir(null);
-        final String localFullFile = localFolder + File.separator + BUNDLE_FILE;
-        localDfuImageFileName = localFolder + File.separator + DFU_FILE_NAME;
-
-        if (new File(localFullFile).exists()) {
-            mResultView.append(BUNDLE_FILE + " found!\n");
-            uncompressFile(localFullFile, localFolder, localDfuImageFileName);
-        } else {
-            mResultView.append(BUNDLE_FILE + " not found!\n");
-
-            new Thread(new Runnable() {
-                @Override
-                public void run() {
-                    try {
-                        ConnectionAndMeta c = new ConnectionAndMeta(BUNDLE_FILE).invoke();
-                        ConnectionAndMeta.downloadFile(localFullFile, c, new ConnectionAndMeta.DownloadProgressListener() {
-                            @Override
-                            public void onPercentage(final int currentProgress) {
-                                mResultView.post(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        mResultView.append("Downloading " + currentProgress + "\n");
-                                    }
-                                });
-                            }
-                        });
-                        mResultView.post(new Runnable() {
-                            @Override
-                            public void run() {
-                                mResultView.append("Downloaded! " + "\n");
-                            }
-                        });
-                        uncompressFile(localFullFile, localFolder, localDfuImageFileName);
-
-                    } catch (IOException | KeyManagementException | NoSuchAlgorithmException e) {
-                        mResultView.post(new Runnable() {
-                            @Override
-                            public void run() {
-                                mResultView.append("Error downloading " + e + "\n");
-                            }
-                        });
-                    }
-
-                }
-            }).start();
-        }
+        dfuUpload.fileOperation(mResultView);
 
         handleButton();
     }
@@ -149,34 +96,6 @@ public class rusEFI extends Activity {
         }
     }
 
-    private void uncompressFile(final String localFullFile, final File localFolder, final String localDfuImageFileName) {
-        final Listener<Integer> onSuccess = new Listener<Integer>() {
-            @Override
-            public void onResult(final Integer size) {
-                mResultView.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        mResultView.append(localDfuImageFileName + " File size: " + size + "\n");
-                    }
-                });
-                DfuImage dfuImage = new DfuImage();
-                dfuImage.read(localDfuImageFileName);
-            }
-        };
-
-        new Thread(() -> {
-            try {
-                FileUtil.unzip(localFullFile, localFolder);
-                final int size = (int) new File(localDfuImageFileName).length();
-                onSuccess.onResult(size);
-
-            } catch (final IOException e) {
-                mResultView.post(() -> mResultView.append("Error uncompressing " + e + "\n"));
-            }
-
-        }).start();
-    }
-
     private final BroadcastReceiver mUsbReceiver = new BroadcastReceiver() {
         public void onReceive(Context context, Intent intent) {
             String action = intent.getAction();
@@ -184,7 +103,7 @@ public class rusEFI extends Activity {
                 synchronized (this) {
                     if (intent.getBooleanExtra(UsbManager.EXTRA_PERMISSION_GRANTED, false)) {
                         UsbDevice dfuDevice = DfuDeviceLocator.findDevice(usbManager);
-                        dfuUpdate(dfuDevice);
+                        dfuUpdate(dfuDevice, rusEFI.this.mResultView);
 //                        if (device != null) {
 //                            //call method to set up device communication
 //                        }
@@ -243,19 +162,19 @@ public class rusEFI extends Activity {
 
     private void handleDfuDevice(UsbDevice dfuDevice) {
         if (usbManager.hasPermission(dfuDevice)) {
-            dfuUpdate(dfuDevice);
+            dfuUpdate(dfuDevice, mResultView);
         } else {
             PendingIntent mPermissionIntent = PendingIntent.getBroadcast(this, 0, new Intent(ACTION_USB_PERMISSION), 0);
             usbManager.requestPermission(dfuDevice, mPermissionIntent);
         }
     }
 
-    private void dfuUpdate(UsbDevice dfuDevice) {
+    private void dfuUpdate(UsbDevice dfuDevice, TextView mResultView) {
         mStatusView.setText("rusEFI: DFU detected");
         DfuDeviceLocator.Result dfu = new DfuDeviceLocator().openDfu(usbManager, dfuDevice);
 
         DfuImage dfuImage = new DfuImage();
-        dfuImage.read(localDfuImageFileName);
+        dfuImage.read(dfuUpload.localDfuImageFileName);
         mResultView.append("Image size " + dfuImage.getImageSize() + "\n");
 
         DfuConnection connection = new AndroidDfuConnection(dfu.getConnection(), dfu.getInterfaceIndex(), dfu.getTransferSize(), dfu.getFlashRange());
@@ -266,9 +185,8 @@ public class rusEFI extends Activity {
 //            mResultView.append("State " + state + "\n");
 
             DfuLogic.uploadImage(logger, connection, dfuImage, dfu.getFlashRange());
-
         } catch (IllegalStateException e) {
-            mResultView.append("Error " + e + "\n");
+            this.mResultView.append("Error " + e + "\n");
         }
     }
 
