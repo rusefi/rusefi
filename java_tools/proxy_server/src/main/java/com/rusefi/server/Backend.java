@@ -16,6 +16,7 @@ import com.rusefi.shared.FileUtil;
 import com.rusefi.tools.online.ProxyClient;
 import net.jcip.annotations.GuardedBy;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.takes.Take;
 import org.takes.facets.fork.FkRegex;
 import org.takes.facets.fork.TkFork;
@@ -107,7 +108,7 @@ public class Backend implements Closeable {
                             showOnlineApplications,
                             new Monitoring(this).showStatistics,
                             new FkRegex(ProxyClient.VERSION_PATH, ProxyClient.BACKEND_VERSION),
-                            new FkRegex("/update", new UpdateRequestHandler()),
+                            new FkRegex(ProxyClient.UPDATE_CONNECTOR_SOFTWARE, new UpdateRequestHandler(this)),
                             new FkRegex("/", new RsHtml("<html><body>\n" +
                                     "<br/><a href='https://rusefi.com/online/'>rusEFI Online</a>\n" +
                                     "<br/><br/><br/>\n" +
@@ -191,7 +192,7 @@ public class Backend implements Closeable {
                     return;
                 }
 
-                ControllerKey controllerKey = new ControllerKey(applicationRequest.getTargetUser().getUserId(), applicationRequest.getSessionDetails().getControllerInfo());
+                ControllerKey controllerKey = new ControllerKey(applicationRequest.getVehicleOwner().getUserId(), applicationRequest.getSessionDetails().getControllerInfo());
                 ControllerConnectionState state;
                 synchronized (lock) {
                     state = acquire(controllerKey, userDetails);
@@ -217,7 +218,8 @@ public class Backend implements Closeable {
         }, serverPortForApplications, "ApplicationServer", serverSocketCreationCallback, BinaryProtocolServer.SECURE_SOCKET_FACTORY);
     }
 
-    private ControllerConnectionState acquire(ControllerKey controllerKey, UserDetails userDetails) {
+    @Nullable
+    public ControllerConnectionState acquire(ControllerKey controllerKey, UserDetails userDetails) {
         synchronized (lock) {
             ControllerConnectionState state = controllersByKey.get(controllerKey);
             if (state == null) {

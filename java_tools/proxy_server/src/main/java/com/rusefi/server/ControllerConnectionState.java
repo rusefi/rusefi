@@ -3,11 +3,13 @@ package com.rusefi.server;
 import com.devexperts.logging.Logging;
 import com.rusefi.auth.AutoTokenUtil;
 import com.rusefi.binaryprotocol.IncomingDataBuffer;
+import com.rusefi.config.generated.Fields;
 import com.rusefi.core.SensorsHolder;
 import com.rusefi.io.IoStream;
 import com.rusefi.io.commands.GetOutputsCommand;
 import com.rusefi.io.commands.HelloCommand;
 import com.rusefi.io.tcp.TcpIoStream;
+import com.rusefi.proxy.NetworkConnector;
 import com.rusefi.shared.FileUtil;
 import org.jetbrains.annotations.NotNull;
 
@@ -141,5 +143,12 @@ public class ControllerConnectionState {
             log.error("grabOutputs " + this, e);
             backend.close(this);
         }
+    }
+
+    public void requestConnectorSoftwareUpdate() throws IOException {
+        byte[] packet = new byte[2];
+        packet[0] = Fields.TS_ONLINE_PROTOCOL;
+        packet[1] = NetworkConnector.REBOOT;
+        stream.sendPacket(packet);
     }
 }

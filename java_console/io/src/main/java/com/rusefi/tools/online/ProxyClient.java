@@ -19,7 +19,8 @@ public class ProxyClient {
     public static final String LIST_CONTROLLERS_PATH = "/list_controllers";
     public static final String LIST_APPLICATIONS_PATH = "/list_applications";
     public static final String VERSION_PATH = "/version";
-    public static final String BACKEND_VERSION = "0.0001";
+    public static final String UPDATE_CONNECTOR_SOFTWARE = "/update_connector_software";
+    public static final String BACKEND_VERSION = "0.0002";
     public static final String IS_USED = "isUsed";
     public static final String OWNER = "owner";
     /**
@@ -49,10 +50,10 @@ public class ProxyClient {
                 JSONObject element = (JSONObject) array.get(i);
 
                 ControllerInfo ci = ControllerInfo.valueOf(element);
-                UserDetails userDetails = UserDetails.valueOf(element);
+                UserDetails vehicleOwner = UserDetails.valueOf(element);
                 boolean isUsed = (Boolean) element.get(IS_USED);
                 String ownerName = (String) element.get(OWNER);
-                userLists.add(new PublicSession(userDetails, ci, isUsed, ownerName));
+                userLists.add(new PublicSession(vehicleOwner, ci, isUsed, ownerName));
             }
 
             System.out.println("object=" + array);
