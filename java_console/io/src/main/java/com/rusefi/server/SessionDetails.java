@@ -12,8 +12,8 @@ import java.util.Random;
 public class SessionDetails {
     public static final String VEHICLE_TOKEN = "vehicleToken";
     public static final String AUTH_TOKEN = "authToken";
+    public static final String CONNECTOR_VERSION = "connectorVersion";
     private static final String CONTROLLER = "controller";
-    private static final String CONNECTOR_VERSION = "connectorVersion";
     private static final String HARDCODED_ONE_TIME_CODE = System.getProperty("ONE_TIME_CODE");
 
     private final ControllerInfo controllerInfo;
@@ -45,6 +45,10 @@ public class SessionDetails {
 
     public String getAuthToken() {
         return authToken;
+    }
+
+    public int getConsoleVersion() {
+        return consoleVersion;
     }
 
     public String toJson() {
@@ -88,6 +92,7 @@ public class SessionDetails {
         return "SessionDetails{" +
                 "controllerInfo=" + controllerInfo +
                 ", authToken='" + authToken + '\'' +
+                ", consoleVersion='" + consoleVersion + '\'' +
                 '}';
     }
 }

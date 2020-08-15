@@ -303,6 +303,8 @@ public class Backend implements Closeable {
             int rpm = (int) client.getSensorsHolder().getValue(Sensor.RPM);
             double clt = client.getSensorsHolder().getValue(Sensor.CLT);
             UserDetails owner = client.getTwoKindSemaphore().getOwner();
+            SessionDetails sessionDetails = client.getSessionDetails();
+            ControllerInfo controllerInfo = sessionDetails.getControllerInfo();
             JsonObjectBuilder objectBuilder = Json.createObjectBuilder()
                     .add(UserDetails.USER_ID, client.getUserDetails().getUserId())
                     .add(UserDetails.USERNAME, client.getUserDetails().getUserName())
@@ -311,10 +313,11 @@ public class Backend implements Closeable {
                     .add(ProxyClient.IS_USED, client.getTwoKindSemaphore().isUsed())
                     .add(ControllerStateDetails.RPM, rpm)
                     .add(ControllerStateDetails.CLT, clt)
-                    .add(ControllerInfo.SIGNATURE, client.getSessionDetails().getControllerInfo().getSignature())
-                    .add(ControllerInfo.VEHICLE_NAME, client.getSessionDetails().getControllerInfo().getVehicleName())
-                    .add(ControllerInfo.ENGINE_MAKE, client.getSessionDetails().getControllerInfo().getEngineMake())
-                    .add(ControllerInfo.ENGINE_CODE, client.getSessionDetails().getControllerInfo().getEngineCode());
+                    .add(ControllerInfo.SIGNATURE, controllerInfo.getSignature())
+                    .add(ControllerInfo.VEHICLE_NAME, controllerInfo.getVehicleName())
+                    .add(ControllerInfo.ENGINE_MAKE, controllerInfo.getEngineMake())
+                    .add(ControllerInfo.ENGINE_CODE, controllerInfo.getEngineCode())
+                    .add(SessionDetails.CONNECTOR_VERSION, sessionDetails.getAuthToken());
             objectBuilder = addStreamStats(objectBuilder, client.getStream());
             if (owner != null) {
                 objectBuilder = objectBuilder.add(ProxyClient.OWNER, owner.getUserName());
