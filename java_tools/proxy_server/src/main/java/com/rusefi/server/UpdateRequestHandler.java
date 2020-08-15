@@ -1,6 +1,7 @@
 package com.rusefi.server;
 
 import com.devexperts.logging.Logging;
+import com.rusefi.tools.online.ProxyClient;
 import org.takes.Request;
 import org.takes.Response;
 import org.takes.Take;
@@ -30,12 +31,9 @@ public class UpdateRequestHandler implements Take {
         try {
             RqForm rqForm = new RqFormBase(req);
 
-
-            String json = rqForm.param("json").iterator().next();
+            String json = rqForm.param(ProxyClient.JSON).iterator().next();
 
             ApplicationRequest applicationRequest = ApplicationRequest.valueOf(json);
-
-
             UserDetails tuner = backend.getUserDetailsResolver().apply(applicationRequest.getSessionDetails().getAuthToken());
 
             ControllerKey key = new ControllerKey(applicationRequest.getVehicleOwner().getUserId(), applicationRequest.getSessionDetails().getControllerInfo());
@@ -45,14 +43,11 @@ public class UpdateRequestHandler implements Take {
                 throw new IOException("Not acquired " + tuner);
 
             // should controller communication happen on http thread or not?
-            new Thread(new Runnable() {
-                @Override
-                public void run() {
-                    try {
-                        state.requestConnectorSoftwareUpdate();
-                    } catch (IOException e) {
-                        throw new IllegalStateException(e);
-                    }
+            new Thread(() -> {
+                try {
+                    state.requestConnectorSoftwareUpdate();
+                } catch (IOException e) {
+                    throw new IllegalStateException(e);
                 }
             }).start();
 
@@ -64,9 +59,5 @@ public class UpdateRequestHandler implements Take {
 
         objectBuilder.add("result", "OK");
         return new RsJson(objectBuilder.build());
-    }
-
-    private String get(RqForm rqForm, String name) throws IOException {
-        return rqForm.param(name).iterator().next();
     }
 }
