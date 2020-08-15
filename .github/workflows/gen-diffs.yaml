@@ -34,4 +34,4 @@ jobs:
 
     - name: Generate diffs
       working-directory: ./hardware
-      run: bash generate_diffs.sh
+      run: bash ./rusefi_lib/generate_diffs.sh
