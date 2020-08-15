@@ -59,7 +59,7 @@ public class Backend implements Closeable {
      */
     private static final int APPLICATION_INACTIVITY_TIMEOUT = 3 * Timeouts.MINUTE;
     static final String AGE = "age";
-    private static final ThreadFactory APPLLICATION_CONNECTION_CLEANUP = new NamedThreadFactory("rusEFI Application connections Cleanup");
+    private static final ThreadFactory APPLICATION_CONNECTION_CLEANUP = new NamedThreadFactory("rusEFI Application connections Cleanup");
     private static final ThreadFactory GAUGE_POKER = new NamedThreadFactory("rusEFI gauge poker");
 
     private final FkRegex showOnlineControllers = new FkRegex(ProxyClient.LIST_CONTROLLERS_PATH,
@@ -107,6 +107,7 @@ public class Backend implements Closeable {
                             showOnlineApplications,
                             new Monitoring(this).showStatistics,
                             new FkRegex(ProxyClient.VERSION_PATH, ProxyClient.BACKEND_VERSION),
+                            new FkRegex("/update", new UpdateRequestHandler()),
                             new FkRegex("/", new RsHtml("<html><body>\n" +
                                     "<br/><a href='https://rusefi.com/online/'>rusEFI Online</a>\n" +
                                     "<br/><br/><br/>\n" +
@@ -130,7 +131,7 @@ public class Backend implements Closeable {
 
         }, "Http Server Thread").start();
 
-        APPLLICATION_CONNECTION_CLEANUP.newThread(() -> {
+        APPLICATION_CONNECTION_CLEANUP.newThread(() -> {
             while (!isClosed()) {
                 log.info(getApplicationsCount() + " applications, " + getControllersCount() + " controllers");
                 runApplicationConnectionsCleanup();
