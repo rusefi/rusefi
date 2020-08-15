@@ -33,7 +33,8 @@ import static com.rusefi.binaryprotocol.BinaryProtocol.sleep;
  * see NetworkConnectorStartup
  */
 public class NetworkConnector implements Closeable {
-    public static final byte REBOOT = 15;
+    public static final byte UPDATE_CONNECTOR_SOFTWARE = 15;
+    public static final byte UPDATE_FIRMWARE = 16;
     private final static Logging log = Logging.getLogging(NetworkConnector.class);
     private boolean isClosed;
 
@@ -125,7 +126,7 @@ public class NetworkConnector implements Closeable {
                 if (command == Fields.TS_ONLINE_PROTOCOL) {
                     byte connectorCommand = packet.getPacket()[1];
                     log.info("Got connector command " + packet.getPacket());
-                    if (connectorCommand == NetworkConnector.REBOOT) {
+                    if (connectorCommand == NetworkConnector.UPDATE_CONNECTOR_SOFTWARE) {
                         context.onConnectorSoftwareUpdateRequest();
                     }
                     return;

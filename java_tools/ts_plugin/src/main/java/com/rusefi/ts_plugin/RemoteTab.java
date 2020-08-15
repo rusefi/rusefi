@@ -19,6 +19,7 @@ import com.rusefi.tools.online.ProxyClient;
 import com.rusefi.tools.online.PublicSession;
 import com.rusefi.ui.AuthTokenPanel;
 import com.rusefi.ui.util.URLLabel;
+import org.jetbrains.annotations.NotNull;
 import org.putgemin.VerticalFlowLayout;
 
 import javax.swing.*;
@@ -171,6 +172,21 @@ public class RemoteTab {
             JButton connect = new JButton("Connect to " + publicSession.getVehicleOwner().getUserName());
             connect.addActionListener(event -> connectToProxy(publicSession));
             bottomPanel.add(connect);
+
+            JButton updateSoftware = new JButton("Update Connector");
+            updateSoftware.addActionListener(new AbstractAction() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    try {
+                        LocalApplicationProxy.requestSoftwareUpdate(HttpUtil.PROXY_JSON_API_HTTP_PORT,
+                                getApplicationRequest(publicSession));
+                    } catch (IOException ioException) {
+                        ioException.printStackTrace();
+                    }
+                }
+            });
+            bottomPanel.add(updateSoftware);
+
         }
 
         JPanel userPanel = new JPanel(new BorderLayout());
@@ -225,10 +241,7 @@ public class RemoteTab {
     }
 
     private void runAuthenticator(PublicSession publicSession, LocalApplicationProxy.ConnectionListener connectionListener) {
-        SessionDetails sessionDetails = new SessionDetails(publicSession.getControllerInfo(), AuthTokenPanel.getAuthToken(),
-                Integer.parseInt(oneTimePasswordControl.getText()), rusEFIVersion.CONSOLE_VERSION);
-
-        ApplicationRequest applicationRequest = new ApplicationRequest(sessionDetails, publicSession.getVehicleOwner());
+        ApplicationRequest applicationRequest = getApplicationRequest(publicSession);
 
         try {
             AtomicReference<ServerSocketReference> serverHolderAtomicReference = new AtomicReference<>();
@@ -256,6 +269,15 @@ public class RemoteTab {
         } catch (IOException e) {
             setStatus("IO error: " + e);
         }
+    }
+
+    @NotNull
+    private ApplicationRequest getApplicationRequest(PublicSession publicSession) {
+        SessionDetails sessionDetails = new SessionDetails(publicSession.getControllerInfo(), AuthTokenPanel.getAuthToken(),
+                Integer.parseInt(oneTimePasswordControl.getText()), rusEFIVersion.CONSOLE_VERSION);
+
+        ApplicationRequest applicationRequest = new ApplicationRequest(sessionDetails, publicSession.getVehicleOwner());
+        return applicationRequest;
     }
 
     public JComponent getContent() {

@@ -28,6 +28,7 @@ public class ProxyClient {
      * @see LocalApplicationProxy#SERVER_PORT_FOR_APPLICATIONS
      */
     public static final int SERVER_PORT_FOR_CONTROLLERS = getIntProperty("controllers.port", 8003);
+    public static final String JSON = "json";
 
     public static List<PublicSession> getOnlineApplications(int httpPort) throws IOException {
         return getOnlineApplications(getHttpAddress(httpPort) + LIST_CONTROLLERS_PATH);
