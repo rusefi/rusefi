@@ -16,6 +16,7 @@
 
 package com.rusefi.app;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
@@ -49,11 +50,12 @@ import java.util.List;
 public class rusEFI extends Activity {
     private static final String ACTION_USB_PERMISSION = "com.android.example.USB_PERMISSION";
 
-    private static final byte REQUEST_TYPE_CLASS = 32;
-    private static final byte RECIPIENT_INTERFACE = 0x01;
+//    private static final byte REQUEST_TYPE_CLASS = 32;
+//    private static final byte RECIPIENT_INTERFACE = 0x01;
+//
+//    protected static final int DFU_DETACH_TIMEOUT = 1000;
 
-
-    protected static final int DFU_DETACH_TIMEOUT = 1000;
+    private static final String VERSION = "rusEFI app v0.0000004\n";
 
     /* UI elements */
     private TextView mStatusView;
@@ -62,6 +64,7 @@ public class rusEFI extends Activity {
     private UsbManager usbManager;
     private DfuUpload dfuUpload;
 
+    @SuppressLint("SetTextI18n")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -72,8 +75,8 @@ public class rusEFI extends Activity {
         // turn on scree while ADB debugging idle phone
         turnScreenOn();
 
-        mStatusView = (TextView) findViewById(R.id.text_status);
-        mResultView = (TextView) findViewById(R.id.text_result);
+        mStatusView = findViewById(R.id.text_status);
+        mResultView = findViewById(R.id.text_result);
 
         IntentFilter filter = new IntentFilter(ACTION_USB_PERMISSION);
         registerReceiver(mUsbReceiver, filter);
@@ -116,7 +119,7 @@ public class rusEFI extends Activity {
     };
 
     private void handleButton() {
-        mResultView.append("rusEFI app v0.0000003\n");
+        mResultView.append(VERSION);
 
         UsbDevice dfuDevice = DfuDeviceLocator.findDevice(usbManager);
 
@@ -129,6 +132,7 @@ public class rusEFI extends Activity {
 //        listDevices(manager);
     }
 
+    @SuppressLint("SetTextI18n")
     private void handleSerialDevice() {
         List<UsbSerialDriver> availableDrivers = AndroidSerial.findUsbSerial(usbManager);
         if (availableDrivers.isEmpty()) {
@@ -169,6 +173,7 @@ public class rusEFI extends Activity {
         }
     }
 
+    @SuppressLint("SetTextI18n")
     private void dfuUpdate(UsbDevice dfuDevice, TextView mResultView) {
         mStatusView.setText("rusEFI: DFU detected");
         DfuDeviceLocator.Result dfu = new DfuDeviceLocator().openDfu(usbManager, dfuDevice);
@@ -194,7 +199,12 @@ public class rusEFI extends Activity {
      * Called when the user touches the button
      */
     public void sendMessage(View view) {
-        handleButton();
+        if (view.getId() == R.id.button) {
+            handleButton();
+        } else if (view.getId() == R.id.buttonSound) {
+
+
+        }
     }
 
     @Override

@@ -17,9 +17,22 @@
         android:id="@+id/button"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Try"
         android:onClick="sendMessage"
-        />
+        android:text="Try" />
+
+    <Button
+        android:id="@+id/buttonSound"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:onClick="sendMessage"
+        android:text="Sound" />
+
+    <Button
+        android:id="@+id/button3"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:onClick="sendMessage"
+        android:text="Try" />
 
     <ScrollView
         android:layout_width="match_parent"
