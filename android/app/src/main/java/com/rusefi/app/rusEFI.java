@@ -63,6 +63,8 @@ public class rusEFI extends Activity {
 
     private UsbManager usbManager;
     private DfuUpload dfuUpload;
+    private SoundBroadcast soundBroadcast = new SoundBroadcast();
+
 
     @SuppressLint("SetTextI18n")
     @Override
@@ -202,7 +204,7 @@ public class rusEFI extends Activity {
         if (view.getId() == R.id.button) {
             handleButton();
         } else if (view.getId() == R.id.buttonSound) {
-
+            soundBroadcast.start();
 
         }
     }
