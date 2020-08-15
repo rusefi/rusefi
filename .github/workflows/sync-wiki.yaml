@@ -1,0 +1,13 @@
+name: Sync Wiki
+
+on: gollum
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Check Out Wiki
+    - uses: actions/checkout@v2
+      with:
+        repository: rusefi/rusefi.wiki
