@@ -122,6 +122,8 @@ public class ControllerConnectionState {
         outputRoundAroundDuration = (int) (System.currentTimeMillis() - start);
         if (packet == null)
             throw new IOException("getOutputs: No response");
+        if (packet.length != 1 + Fields.TS_OUTPUT_SIZE)
+            throw new IOException("getOutputs: unexpected package length " + packet.length);
         sensorsHolder.grabSensorValues(packet);
     }
 
