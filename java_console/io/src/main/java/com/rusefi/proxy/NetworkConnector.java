@@ -33,6 +33,7 @@ import static com.rusefi.binaryprotocol.BinaryProtocol.sleep;
  * see NetworkConnectorStartup
  */
 public class NetworkConnector implements Closeable {
+    public static final byte REBOOT = 15;
     private final static Logging log = Logging.getLogging(NetworkConnector.class);
     private boolean isClosed;
 
@@ -120,7 +121,17 @@ public class NetworkConnector implements Closeable {
             @Override
             protected void handleCommand(BinaryProtocolServer.Packet packet, TcpIoStream stream) throws IOException {
                 super.handleCommand(packet, stream);
-                log.info("Relaying request to controller " + BinaryProtocol.findCommand(packet.getPacket()[0]));
+                byte command = packet.getPacket()[0];
+                if (command == Fields.TS_ONLINE_PROTOCOL) {
+                    byte connectorCommand = packet.getPacket()[1];
+                    log.info("Got connector command " + packet.getPacket());
+                    if (connectorCommand == NetworkConnector.REBOOT) {
+                        context.onConnectorSoftwareUpdateRequest();
+                    }
+                    return;
+                }
+
+                log.info("Relaying request to controller " + BinaryProtocol.findCommand(command));
                 targetEcuSocket.sendPacket(packet);
 
                 BinaryProtocolServer.Packet response = targetEcuSocket.readPacket();
@@ -178,6 +189,7 @@ public class NetworkConnector implements Closeable {
 
             }
         };
+
         void onReconnect();
     }
 

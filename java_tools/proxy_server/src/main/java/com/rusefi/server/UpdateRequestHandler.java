@@ -16,8 +16,11 @@ import static com.devexperts.logging.Logging.getLogging;
 
 public class UpdateRequestHandler implements Take {
     private static final Logging log = getLogging(UpdateRequestHandler.class);
-    private static final String AUTH_TOKEN = "auth_token";
-    private static final String VEHICLE_TOKEN = "vehicle_token";
+    private final Backend backend;
+
+    public UpdateRequestHandler(Backend backend) {
+        this.backend = backend;
+    }
 
     @Override
     public Response act(Request req) throws IOException {
@@ -26,11 +29,36 @@ public class UpdateRequestHandler implements Take {
 
         try {
             RqForm rqForm = new RqFormBase(req);
-            String authToken = get(rqForm, AUTH_TOKEN);
-            String vehicleToken = get(rqForm, VEHICLE_TOKEN);
-            log.debug("Update request " + authToken + " " + vehicleToken);
+
+
+            String json = rqForm.param("json").iterator().next();
+
+            ApplicationRequest applicationRequest = ApplicationRequest.valueOf(json);
+
+
+            UserDetails tuner = backend.getUserDetailsResolver().apply(applicationRequest.getSessionDetails().getAuthToken());
+
+            ControllerKey key = new ControllerKey(applicationRequest.getVehicleOwner().getUserId(), applicationRequest.getSessionDetails().getControllerInfo());
+
+            ControllerConnectionState state = backend.acquire(key, tuner);
+            if (state == null)
+                throw new IOException("Not acquired " + tuner);
+
+            // should controller communication happen on http thread or not?
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    try {
+                        state.requestConnectorSoftwareUpdate();
+                    } catch (IOException e) {
+                        throw new IllegalStateException(e);
+                    }
+                }
+            }).start();
+
+            log.debug("Update request " + tuner);
         } catch (IOException e) {
-            objectBuilder.add("result", "error");
+            objectBuilder.add("result", "error: " + e);
             return new RsJson(objectBuilder.build());
         }
 

@@ -15,11 +15,24 @@ import com.rusefi.proxy.client.LocalApplicationProxy;
 import com.rusefi.proxy.client.LocalApplicationProxyContext;
 import com.rusefi.server.*;
 import com.rusefi.tools.online.HttpUtil;
+import com.rusefi.tools.online.ProxyClient;
+import org.apache.http.Consts;
+import org.apache.http.HttpEntity;
+import org.apache.http.HttpResponse;
+import org.apache.http.NameValuePair;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.entity.UrlEncodedFormEntity;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.mime.MultipartEntityBuilder;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.message.BasicNameValuePair;
 import org.junit.Before;
 import org.junit.Test;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
@@ -94,10 +107,17 @@ public class FullServerTest {
             ConfigurationImage controllerImage = prepareImage(value, createIniField(Fields.CYLINDERSCOUNT));
             TestHelper.createVirtualController(controllerPort, controllerImage, new BinaryProtocolServer.Context());
 
+            CountDownLatch softwareUpdateRequest = new CountDownLatch(1);
+
             NetworkConnectorContext networkConnectorContext = new NetworkConnectorContext() {
                 @Override
                 public int serverPortForControllers() {
                     return serverPortForControllers;
+                }
+
+                @Override
+                public void onConnectorSoftwareUpdateRequest() {
+                    softwareUpdateRequest.countDown();
                 }
             };
 
@@ -146,6 +166,22 @@ public class FullServerTest {
             assertTrue("applicationClosed", applicationClosed.await(3 * applicationTimeout, TimeUnit.MILLISECONDS));
 
             assertEquals("applications size", 0, backend.getApplications().size());
+
+
+            HttpPost httpPost = new HttpPost(ProxyClient.getHttpAddress(httpPort) + ProxyClient.UPDATE_CONNECTOR_SOFTWARE);
+
+            List<NameValuePair> form = new ArrayList<>();
+            form.add(new BasicNameValuePair("json", applicationRequest.toJson()));
+            UrlEncodedFormEntity entity = new UrlEncodedFormEntity(form, Consts.UTF_8);
+
+            httpPost.setEntity(entity);
+
+            HttpClient httpclient = new DefaultHttpClient();
+            HttpResponse response = httpclient.execute(httpPost);
+            log.info(response.toString());
+
+            assertTrue("update requested", softwareUpdateRequest.await(3 * applicationTimeout, TimeUnit.MILLISECONDS));
+
         }
     }
 }

@@ -10,15 +10,15 @@ import java.util.Random;
  * A session from Controller, including some sensitive information
  */
 public class SessionDetails {
-    private static final String ONE_TIME_TOKEN = "oneTime";
-    private static final String AUTH_TOKEN = "authToken";
+    public static final String VEHICLE_TOKEN = "vehicleToken";
+    public static final String AUTH_TOKEN = "authToken";
     private static final String CONTROLLER = "controller";
     private static final String CONNECTOR_VERSION = "connectorVersion";
     private static final String HARDCODED_ONE_TIME_CODE = System.getProperty("ONE_TIME_CODE");
 
     private final ControllerInfo controllerInfo;
 
-    private final int oneTimeToken;
+    private final int vehicleToken;
     private final String authToken;
     private final int consoleVersion;
 
@@ -27,7 +27,7 @@ public class SessionDetails {
         Objects.requireNonNull(controllerInfo);
         Objects.requireNonNull(authToken);
         this.controllerInfo = controllerInfo;
-        this.oneTimeToken = oneTimeCode;
+        this.vehicleToken = oneTimeCode;
         this.authToken = authToken;
     }
 
@@ -36,7 +36,7 @@ public class SessionDetails {
     }
 
     public int getOneTimeToken() {
-        return oneTimeToken;
+        return vehicleToken;
     }
 
     public ControllerInfo getControllerInfo() {
@@ -50,7 +50,7 @@ public class SessionDetails {
     public String toJson() {
         JSONObject jsonObject = new JSONObject();
         jsonObject.put(CONTROLLER, controllerInfo.toJson());
-        jsonObject.put(ONE_TIME_TOKEN, oneTimeToken);
+        jsonObject.put(VEHICLE_TOKEN, vehicleToken);
         jsonObject.put(AUTH_TOKEN, authToken);
         jsonObject.put(CONNECTOR_VERSION, consoleVersion);
         return jsonObject.toJSONString();
@@ -60,7 +60,7 @@ public class SessionDetails {
         JSONObject jsonObject = HttpUtil.parse(jsonString);
 
         String authToken = (String) jsonObject.get(AUTH_TOKEN);
-        long oneTimeCode = (Long)jsonObject.get(ONE_TIME_TOKEN);
+        long oneTimeCode = (Long)jsonObject.get(VEHICLE_TOKEN);
         long connectorVersion = (long) jsonObject.get(CONNECTOR_VERSION);
 
         ControllerInfo controllerInfo = ControllerInfo.valueOf((String) jsonObject.get(CONTROLLER));
@@ -73,14 +73,14 @@ public class SessionDetails {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         SessionDetails that = (SessionDetails) o;
-        return oneTimeToken == that.oneTimeToken &&
+        return vehicleToken == that.vehicleToken &&
                 controllerInfo.equals(that.controllerInfo) &&
                 authToken.equals(that.authToken);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(controllerInfo, oneTimeToken, authToken);
+        return Objects.hash(controllerInfo, vehicleToken, authToken);
     }
 
     @Override

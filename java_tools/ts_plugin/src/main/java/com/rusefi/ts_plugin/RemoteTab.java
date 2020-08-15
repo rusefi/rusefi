@@ -117,7 +117,7 @@ public class RemoteTab {
         if (currentState == null) {
             requestListDownload();
         } else {
-            setConnectedStatus(currentState.getApplicationRequest().getTargetUser(), null);
+            setConnectedStatus(currentState.getApplicationRequest().getVehicleOwner(), null);
         }
     }
 
@@ -159,17 +159,17 @@ public class RemoteTab {
 
     private JComponent createSessionControl(PublicSession publicSession) {
         JComponent topLine = new JPanel(new FlowLayout());
-        topLine.add(new JLabel(publicSession.getUserDetails().getUserName()));
+        topLine.add(new JLabel(publicSession.getVehicleOwner().getUserName()));
         ControllerInfo controllerInfo = publicSession.getControllerInfo();
         topLine.add(new JLabel(controllerInfo.getVehicleName() + " " + controllerInfo.getEngineMake() + " " + controllerInfo.getEngineCode()));
 
         JPanel bottomPanel = new JPanel(new FlowLayout());
 
         if (publicSession.isUsed()) {
-            bottomPanel.add(new JLabel(" Used by " + publicSession.getOwnerName()));
+            bottomPanel.add(new JLabel(" Used by " + publicSession.getTunerName()));
         } else {
-            JButton connect = new JButton("Connect to " + publicSession.getUserDetails().getUserName());
-            connect.addActionListener(event -> connectToProxy(publicSession, controllerInfo));
+            JButton connect = new JButton("Connect to " + publicSession.getVehicleOwner().getUserName());
+            connect.addActionListener(event -> connectToProxy(publicSession));
             bottomPanel.add(connect);
         }
 
@@ -184,22 +184,22 @@ public class RemoteTab {
         return userPanel;
     }
 
-    private void connectToProxy(PublicSession publicSession, ControllerInfo controllerInfo) {
+    private void connectToProxy(PublicSession publicSession) {
         RemoteTabController.INSTANCE.setState(RemoteTabController.State.CONNECTING);
-        setStatus("Connecting to " + publicSession.getUserDetails().getUserName());
+        setStatus("Connecting to " + publicSession.getVehicleOwner().getUserName());
 
         LocalApplicationProxy.ConnectionListener connectionListener = (localApplicationProxy, authenticatorToProxyStream) -> {
             RemoteTabController.INSTANCE.setConnected(localApplicationProxy);
             SwingUtilities.invokeLater(new Runnable() {
                 @Override
                 public void run() {
-                    setConnectedStatus(publicSession.getUserDetails(), authenticatorToProxyStream);
+                    setConnectedStatus(publicSession.getVehicleOwner(), authenticatorToProxyStream);
                 }
             });
         };
 
         new Thread(() -> {
-            runAuthenticator(publicSession, controllerInfo, connectionListener);
+            runAuthenticator(publicSession, connectionListener);
         }, "Authenticator").start();
     }
 
@@ -224,11 +224,11 @@ public class RemoteTab {
         AutoupdateUtil.trueLayout(list);
     }
 
-    private void runAuthenticator(PublicSession publicSession, ControllerInfo controllerInfo, LocalApplicationProxy.ConnectionListener connectionListener) {
-        SessionDetails sessionDetails = new SessionDetails(controllerInfo, AuthTokenPanel.getAuthToken(),
+    private void runAuthenticator(PublicSession publicSession, LocalApplicationProxy.ConnectionListener connectionListener) {
+        SessionDetails sessionDetails = new SessionDetails(publicSession.getControllerInfo(), AuthTokenPanel.getAuthToken(),
                 Integer.parseInt(oneTimePasswordControl.getText()), rusEFIVersion.CONSOLE_VERSION);
 
-        ApplicationRequest applicationRequest = new ApplicationRequest(sessionDetails, publicSession.getUserDetails());
+        ApplicationRequest applicationRequest = new ApplicationRequest(sessionDetails, publicSession.getVehicleOwner());
 
         try {
             AtomicReference<ServerSocketReference> serverHolderAtomicReference = new AtomicReference<>();
