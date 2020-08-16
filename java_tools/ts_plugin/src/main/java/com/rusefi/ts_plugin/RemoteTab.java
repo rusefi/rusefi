@@ -8,6 +8,7 @@ import com.rusefi.autoupdate.AutoupdateUtil;
 import com.rusefi.io.serial.StreamStatistics;
 import com.rusefi.io.tcp.ServerSocketReference;
 import com.rusefi.io.tcp.TcpIoStream;
+import com.rusefi.proxy.NetworkConnector;
 import com.rusefi.proxy.client.LocalApplicationProxy;
 import com.rusefi.proxy.client.LocalApplicationProxyContextImpl;
 import com.rusefi.rusEFIVersion;
@@ -276,7 +277,8 @@ public class RemoteTab {
 
     @NotNull
     private ApplicationRequest getApplicationRequest(PublicSession publicSession) {
-        SessionDetails sessionDetails = new SessionDetails(publicSession.getControllerInfo(), AuthTokenPanel.getAuthToken(),
+        SessionDetails sessionDetails = new SessionDetails(NetworkConnector.Implementation.Plugin,
+                publicSession.getControllerInfo(), AuthTokenPanel.getAuthToken(),
                 Integer.parseInt(oneTimePasswordControl.getText()), rusEFIVersion.CONSOLE_VERSION);
 
         ApplicationRequest applicationRequest = new ApplicationRequest(sessionDetails, publicSession.getVehicleOwner());

@@ -8,7 +8,6 @@ import com.rusefi.proxy.NetworkConnectorContext;
 import com.rusefi.tools.VehicleToken;
 import com.rusefi.ui.AuthTokenPanel;
 import com.rusefi.ui.util.URLLabel;
-import com.sun.naming.internal.VersionHelper;
 import org.putgemin.VerticalFlowLayout;
 
 import javax.swing.*;
