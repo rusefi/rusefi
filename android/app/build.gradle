@@ -26,9 +26,19 @@ android {
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
 
+    signingConfigs {
+        release {
+            storeFile file("../certs/rusEFI.jks")
+            storePassword System.getenv("RUSEFI_ANDROID_KEYPASS")
+            keyAlias "key0"
+            keyPassword System.getenv("RUSEFI_ANDROID_KEYPASS")
+        }
+    }
+
     buildTypes {
         release {
             minifyEnabled false
+            signingConfig signingConfigs.release
         }
     }
 }
@@ -56,3 +66,9 @@ dependencies {
 
     testImplementation libs.junit
 }
+
+/*
+gradle.taskGraph.afterTask { task ->
+    project.logger.lifecycle("Password " + System.getenv('RUSEFI_ANDROID_KEYPASS'));
+}
+ */
