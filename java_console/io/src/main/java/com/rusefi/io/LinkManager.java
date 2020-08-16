@@ -48,6 +48,12 @@ public class LinkManager implements Closeable {
     private boolean isStarted;
     private boolean compositeLogicEnabled = true;
     private boolean needPullData = true;
+    public MessagesListener messageListener = new MessagesListener() {
+        @Override
+        public void postMessage(Class<?> source, String message) {
+            System.out.println(source + ": " + message);
+        }
+    };
 
     public LinkManager() {
         engineState = new EngineState(new EngineState.EngineStateListenerImpl() {
@@ -206,7 +212,7 @@ public class LinkManager implements Closeable {
             Callable<IoStream> streamFactory = new Callable<IoStream>() {
                 @Override
                 public IoStream call() {
-                    MessagesCentral.getInstance().postMessage(getClass(), "Opening port: " + port);
+                    messageListener.postMessage(getClass(), "Opening port: " + port);
                     Socket socket;
                     try {
                         int portPart = TcpConnector.getTcpPort(port);
@@ -228,7 +234,7 @@ public class LinkManager implements Closeable {
             Callable<IoStream> ioStreamCallable = new Callable<IoStream>() {
                 @Override
                 public IoStream call() {
-                    MessagesCentral.getInstance().postMessage(getClass(), "Opening port: " + port);
+                    messageListener.postMessage(getClass(), "Opening port: " + port);
                     IoStream stream = ((Callable<IoStream>) () -> SerialIoStreamJSerialComm.openPort(port)).call();
                     if (stream == null) {
                         // error already reported
@@ -295,5 +301,9 @@ public class LinkManager implements Closeable {
         System.out.println("Using last of " + ports.length + " port(s)");
         System.out.println("All ports: " + Arrays.toString(ports));
         return port;
+    }
+
+    public interface MessagesListener {
+        void postMessage(Class<?> source, String message);
     }
 }

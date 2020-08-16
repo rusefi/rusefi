@@ -51,7 +51,7 @@ public class StreamConnector implements LinkConnector {
     @Override
     public void restart() {
         linkManager.execute(() -> {
-            MessagesCentral.getInstance().postMessage(StreamConnector.this.getClass(), "Restarting serial IO");
+            linkManager.messageListener.postMessage(StreamConnector.this.getClass(), "Restarting serial IO");
             portHolder.close();
             portHolder.connectAndReadConfiguration();
         });
