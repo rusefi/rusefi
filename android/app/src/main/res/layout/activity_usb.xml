@@ -20,7 +20,7 @@
             android:textAppearance="?android:textAppearanceMedium" />
 
         <Button
-            android:id="@+id/button"
+            android:id="@+id/buttonDfu"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:onClick="sendMessage"
@@ -35,7 +35,13 @@
             android:text="Auth Token" />
 
         <TextView
-            android:id="@+id/authStatus"
+            android:id="@+id/authStatus1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Please paste your auth token" />
+
+        <TextView
+            android:id="@+id/authStatus2"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="TextView" />

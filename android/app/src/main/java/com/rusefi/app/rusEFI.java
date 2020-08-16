@@ -70,7 +70,8 @@ public class rusEFI extends Activity {
     private TextView mStatusView;
     private TextView mResultView;
     private EditText authToken;
-    private TextView myClickableUrl;
+    private TextView authStatusMessage;
+    private TextView authStatusClickableUrl;
 
     private UsbManager usbManager;
     private DfuUpload dfuUpload;
@@ -82,6 +83,9 @@ public class rusEFI extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_usb);
+
+        findViewById(R.id.buttonSound).setVisibility(View.GONE);
+        findViewById(R.id.buttonDfu).setVisibility(View.GONE);
 
         usbManager = (UsbManager) getSystemService(Context.USB_SERVICE);
 
@@ -109,15 +113,16 @@ public class rusEFI extends Activity {
                     SharedPreferences.Editor editor = preferences.edit();
                     editor.putString(AuthTokenUtil.AUTH_TOKEN, text);
                     editor.commit();
-                    myClickableUrl.setVisibility(View.GONE);
+                    authStatusMessage.setVisibility(View.GONE);
+                    authStatusClickableUrl.setVisibility(View.GONE);
                 }
             }
         });
 
-        myClickableUrl = (TextView) findViewById(R.id.authStatus);
-        myClickableUrl.setText(AuthTokenUtil.TOKEN_PROFILE_URL);
-        Linkify.addLinks(myClickableUrl, Linkify.WEB_URLS);
-
+        authStatusMessage = findViewById(R.id.authStatus1);
+        authStatusClickableUrl = findViewById(R.id.authStatus2);
+        authStatusClickableUrl.setText(AuthTokenUtil.TOKEN_PROFILE_URL);
+        Linkify.addLinks(authStatusClickableUrl, Linkify.WEB_URLS);
 
         IntentFilter filter = new IntentFilter(ACTION_USB_PERMISSION);
         registerReceiver(mUsbReceiver, filter);
@@ -129,7 +134,9 @@ public class rusEFI extends Activity {
         dfuUpload.fileOperation(mResultView);
         String authToken = getAuthToken();
         this.authToken.setText(authToken);
-        myClickableUrl.setVisibility(AuthTokenUtil.isToken(authToken) ? View.VISIBLE : View.GONE);
+        int visibility = AuthTokenUtil.isToken(authToken) ? View.GONE : View.VISIBLE;
+        authStatusMessage.setVisibility(visibility);
+        authStatusClickableUrl.setVisibility(visibility);
 
 //        switchOrProgramDfu();
 
@@ -229,7 +236,7 @@ public class rusEFI extends Activity {
      * Called when the user touches the button
      */
     public void sendMessage(View view) {
-        if (view.getId() == R.id.button) {
+        if (view.getId() == R.id.buttonDfu) {
             switchOrProgramDfu();
         } else if (view.getId() == R.id.buttonSound) {
             soundBroadcast.start();
