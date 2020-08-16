@@ -36,6 +36,8 @@ dependencies {
     implementation project(':ecu_io')
     implementation project(':logging-api')
     implementation project(':shared_io')
+    implementation project(':models')
+    implementation libs.annotations
 
     implementation files('lib/dfu_java.jar')
     implementation 'com.github.mik3y:usb-serial-for-android:v2.2.3'
