@@ -62,7 +62,7 @@ public class UploadQueue {
         while (true) {
             FileAndFolder file = queue.take();
 
-            UploadResult result = Online.upload(new File(file.getFullName()), AutoTokenUtil.getAuthToken());
+            UploadResult result = Online.upload(new File(file.getFullName()), AuthTokenPanel.getAuthToken());
             System.out.println("isError " + result.isError());
             System.out.println("first " + result.getFirstMessage());
             if (result.isError() && result.getFirstMessage().contains("This file already exists")) {

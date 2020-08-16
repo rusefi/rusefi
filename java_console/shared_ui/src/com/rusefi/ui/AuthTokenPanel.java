@@ -3,6 +3,7 @@ package com.rusefi.ui;
 import com.rusefi.auth.AutoTokenUtil;
 import com.rusefi.ui.storage.PersistentConfiguration;
 import com.rusefi.ui.util.URLLabel;
+import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
@@ -11,6 +12,8 @@ import java.awt.*;
 import java.awt.datatransfer.*;
 import java.awt.event.ActionEvent;
 import java.io.IOException;
+
+import static com.rusefi.ui.storage.PersistentConfiguration.getConfig;
 
 public class AuthTokenPanel {
 
@@ -25,7 +28,7 @@ public class AuthTokenPanel {
 
         authTokenTestField.setPreferredSize(new Dimension(200, 24));
 
-        String authToken = AutoTokenUtil.getAuthToken();
+        String authToken = getAuthToken();
         System.out.println("Got from settings: " + authToken);
 
         authTokenTestField.getDocument().addDocumentListener(new DocumentListener() {
@@ -88,6 +91,15 @@ public class AuthTokenPanel {
         authTokenTestField.setText(authToken);
     }
 
+    public static void setAuthToken(String value) {
+        getConfig().getRoot().setProperty(AutoTokenUtil.AUTH_TOKEN, value);
+    }
+
+    @NotNull
+    public static String getAuthToken() {
+        return getConfig().getRoot().getProperty(AutoTokenUtil.AUTH_TOKEN);
+    }
+
     private void setPasteButtonEnabledBasedOnClipboardContent(Clipboard clipboard, JButton paste) {
         try {
             String data = (String) clipboard.getData(DataFlavor.stringFlavor);
@@ -98,7 +110,7 @@ public class AuthTokenPanel {
     }
 
     private void grabText() {
-        AutoTokenUtil.setAuthToken(AuthTokenPanel.this.authTokenTestField.getText());
+        setAuthToken(AuthTokenPanel.this.authTokenTestField.getText());
         PersistentConfiguration.getConfig().save();
     }
 
@@ -113,7 +125,7 @@ public class AuthTokenPanel {
     }
 
     public static boolean hasToken() {
-        return AutoTokenUtil.isToken(AutoTokenUtil.getAuthToken());
+        return AutoTokenUtil.isToken(getAuthToken());
     }
 
     public String getToken() {

@@ -276,7 +276,7 @@ public class RemoteTab {
 
     @NotNull
     private ApplicationRequest getApplicationRequest(PublicSession publicSession) {
-        SessionDetails sessionDetails = new SessionDetails(publicSession.getControllerInfo(), AutoTokenUtil.getAuthToken(),
+        SessionDetails sessionDetails = new SessionDetails(publicSession.getControllerInfo(), AuthTokenPanel.getAuthToken(),
                 Integer.parseInt(oneTimePasswordControl.getText()), rusEFIVersion.CONSOLE_VERSION);
 
         ApplicationRequest applicationRequest = new ApplicationRequest(sessionDetails, publicSession.getVehicleOwner());
