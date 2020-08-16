@@ -113,7 +113,7 @@ public class BroadcastTab {
             new Thread(() -> {
                 networkConnector = new NetworkConnector();
 
-                NetworkConnector.NetworkConnectorResult networkConnectorResult = networkConnector.start(authToken, autoDetectedPort, connectorContext);
+                NetworkConnector.NetworkConnectorResult networkConnectorResult = networkConnector.start(NetworkConnector.Implementation.Plugin, authToken, autoDetectedPort, connectorContext);
 
                 SwingUtilities.invokeLater(() -> status.setText("One time password to connect to this ECU: " + networkConnectorResult.getOneTimeToken()));
 

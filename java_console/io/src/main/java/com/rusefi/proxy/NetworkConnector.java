@@ -39,11 +39,11 @@ public class NetworkConnector implements Closeable {
     private final static Logging log = Logging.getLogging(NetworkConnector.class);
     private boolean isClosed;
 
-    public NetworkConnectorResult start(String authToken, String controllerPort, NetworkConnectorContext context) {
-        return start(authToken, controllerPort, context, ReconnectListener.VOID);
+    public NetworkConnectorResult start(Implementation implementation, String authToken, String controllerPort, NetworkConnectorContext context) {
+        return start(implementation, authToken, controllerPort, context, ReconnectListener.VOID);
     }
 
-    public NetworkConnectorResult start(String authToken, String controllerPort, NetworkConnectorContext context, ReconnectListener reconnectListener) {
+    public NetworkConnectorResult start(Implementation implementation, String authToken, String controllerPort, NetworkConnectorContext context, ReconnectListener reconnectListener) {
         LinkManager controllerConnector = new LinkManager()
                 .setCompositeLogicEnabled(false)
                 .setNeedPullData(false);
@@ -67,10 +67,10 @@ public class NetworkConnector implements Closeable {
             return NetworkConnectorResult.ERROR;
         }
 
-        return start(authToken, context, reconnectListener, controllerConnector);
+        return start(implementation, authToken, context, reconnectListener, controllerConnector);
     }
 
-    public NetworkConnectorResult start(String authToken, NetworkConnectorContext context, ReconnectListener reconnectListener, LinkManager linkManager) {
+    public NetworkConnectorResult start(Implementation implementation, String authToken, NetworkConnectorContext context, ReconnectListener reconnectListener, LinkManager linkManager) {
         ControllerInfo controllerInfo;
         try {
             controllerInfo = getControllerInfo(linkManager, linkManager.getConnector().getBinaryProtocol().getStream());
@@ -87,13 +87,14 @@ public class NetworkConnector implements Closeable {
                     proxyReconnectSemaphore.acquire();
 
                     try {
-                        start(context.serverPortForControllers(), linkManager, authToken, (String message) -> {
-                            log.error(message + " Disconnect from proxy server detected, now sleeping " + context.reconnectDelay() + " seconds");
-                            sleep(context.reconnectDelay() * Timeouts.SECOND);
-                            log.debug("Releasing semaphore");
-                            proxyReconnectSemaphore.release();
-                            reconnectListener.onReconnect();
-                        }, vehicleToken, controllerInfo, context);
+                        start(implementation,
+                                context.serverPortForControllers(), linkManager, authToken, (String message) -> {
+                                    log.error(message + " Disconnect from proxy server detected, now sleeping " + context.reconnectDelay() + " seconds");
+                                    sleep(context.reconnectDelay() * Timeouts.SECOND);
+                                    log.debug("Releasing semaphore");
+                                    proxyReconnectSemaphore.release();
+                                    reconnectListener.onReconnect();
+                                }, vehicleToken, controllerInfo, context);
                     } catch (IOException e) {
                         log.error("IO error", e);
                     }
@@ -107,10 +108,10 @@ public class NetworkConnector implements Closeable {
     }
 
     @NotNull
-    private static SessionDetails start(int serverPortForControllers, LinkManager linkManager, String authToken, final TcpIoStream.DisconnectListener disconnectListener, int oneTimeToken, ControllerInfo controllerInfo, final NetworkConnectorContext context) throws IOException {
+    private static SessionDetails start(Implementation implementation, int serverPortForControllers, LinkManager linkManager, String authToken, final TcpIoStream.DisconnectListener disconnectListener, int oneTimeToken, ControllerInfo controllerInfo, final NetworkConnectorContext context) throws IOException {
         IoStream targetEcuSocket = linkManager.getConnector().getBinaryProtocol().getStream();
 
-        SessionDetails deviceSessionDetails = new SessionDetails(controllerInfo, authToken, oneTimeToken, rusEFIVersion.CONSOLE_VERSION);
+        SessionDetails deviceSessionDetails = new SessionDetails(implementation, controllerInfo, authToken, oneTimeToken, rusEFIVersion.CONSOLE_VERSION);
 
         Socket socket;
         try {
@@ -201,4 +202,18 @@ public class NetworkConnector implements Closeable {
         void onReconnect();
     }
 
+    public enum Implementation {
+        Android,
+        Plugin,
+        SBC,
+        Unknown;
+
+        public static Implementation find(String name) {
+            for (Implementation implementation : values()) {
+                if (implementation.name().equalsIgnoreCase(name))
+                    return implementation;
+            }
+            return Unknown;
+        }
+    }
 }

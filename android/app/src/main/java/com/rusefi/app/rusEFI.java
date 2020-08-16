@@ -244,7 +244,8 @@ public class rusEFI extends Activity {
                     mResultView.post(() -> mResultView.append("On connection established\n"));
 
                     NetworkConnectorContext context = new NetworkConnectorContext();
-                    new NetworkConnector().start(getAuthToken(), context, new NetworkConnector.ReconnectListener() {
+                    new NetworkConnector().start(NetworkConnector.Implementation.Android,
+                            getAuthToken(), context, new NetworkConnector.ReconnectListener() {
                         @Override
                         public void onReconnect() {
 
