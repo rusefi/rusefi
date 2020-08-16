@@ -55,8 +55,6 @@ import com.rusefi.io.serial.StreamConnector;
 import com.rusefi.proxy.NetworkConnector;
 import com.rusefi.proxy.NetworkConnectorContext;
 
-import static com.rusefi.ui.storage.PersistentConfiguration.getConfig;
-
 public class rusEFI extends Activity {
     private static final String ACTION_USB_PERMISSION = "com.android.example.USB_PERMISSION";
 
@@ -123,7 +121,7 @@ public class rusEFI extends Activity {
         dfuUpload.fileOperation(mResultView);
         authToken.setText(getAuthToken());
 
-        switchOrProgramDfu();
+//        switchOrProgramDfu();
 
         SoundBroadcast.checkOrRequestPermission(this);
     }
@@ -243,7 +241,15 @@ public class rusEFI extends Activity {
             linkManager.getConnector().connectAndReadConfiguration(new ConnectionStateListener() {
                 @Override
                 public void onConnectionEstablished() {
-                    mResultView.append("On connection established\n");
+                    mResultView.post(() -> mResultView.append("On connection established\n"));
+
+                    NetworkConnectorContext context = new NetworkConnectorContext();
+                    new NetworkConnector().start(getAuthToken(), context, new NetworkConnector.ReconnectListener() {
+                        @Override
+                        public void onReconnect() {
+
+                        }
+                    }, linkManager);
                 }
 
                 @Override
@@ -255,13 +261,6 @@ public class rusEFI extends Activity {
             Snackbar mySnackbar = Snackbar.make(view, "Broadcasting with " + getAuthToken(), BaseTransientBottomBar.LENGTH_LONG);
             mySnackbar.show();
 
-            NetworkConnectorContext context = new NetworkConnectorContext();
-            new NetworkConnector().start(getAuthToken(), context, new NetworkConnector.ReconnectListener() {
-                @Override
-                public void onReconnect() {
-
-                }
-            }, linkManager);
 
         }
     }
