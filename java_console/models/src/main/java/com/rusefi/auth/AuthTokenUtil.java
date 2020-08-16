@@ -1,6 +1,6 @@
 package com.rusefi.auth;
 
-public class AutoTokenUtil {
+public class AuthTokenUtil {
 
     public static final int TOKEN_LENGTH = 8 + 1 + 4 + 1 + 4 + 1 + 4 + 1 + 12;
     public static final String TOKEN_PROFILE_URL = "https://rusefi.com/forum/ucp.php?i=254";
