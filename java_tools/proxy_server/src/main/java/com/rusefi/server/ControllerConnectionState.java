@@ -81,6 +81,7 @@ public class ControllerConnectionState {
     public String toString() {
         return "ControllerConnectionState{" +
                 "userDetails=" + userDetails +
+                ", sessionDetails=" + sessionDetails +
                 ", controllerKey=" + controllerKey +
                 ", isClosed=" + isClosed +
                 ", twoKindSemaphore=" + twoKindSemaphore +
