@@ -1,10 +1,16 @@
 package com.rusefi.app;
 
+import android.Manifest;
+import android.app.Activity;
+import android.content.pm.PackageManager;
 import android.media.AudioFormat;
 import android.media.AudioRecord;
 import android.media.MediaRecorder;
 import android.media.audiofx.AcousticEchoCanceler;
 import android.media.audiofx.NoiseSuppressor;
+
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 
 public class SoundBroadcast {
     private static final int sampleRate = 16000; // 44100 for music
@@ -13,16 +19,21 @@ public class SoundBroadcast {
     private static final int minBufSize = AudioRecord.getMinBufferSize(sampleRate, channelConfig, audioFormat) + 2048;
     private byte[] buffer = new byte[minBufSize];
 
+    static void checkOrRequestPermission(Activity context) {
+        if (ContextCompat.checkSelfPermission(context, Manifest.permission.RECORD_AUDIO)
+                != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(context,
+                    new String[]{Manifest.permission.RECORD_AUDIO},
+                    1234);
+        }
+    }
 
     public void start() {
-
-
         Thread streamThread = new Thread(new Runnable() {
             @Override
             public void run() {
 
-                AudioRecord recorder;
-                recorder = new AudioRecord(MediaRecorder.AudioSource.MIC, sampleRate, channelConfig, audioFormat, minBufSize * 10);
+                AudioRecord recorder = new AudioRecord(MediaRecorder.AudioSource.MIC, sampleRate, channelConfig, audioFormat, minBufSize * 10);
                 if (NoiseSuppressor.isAvailable()) {
                     NoiseSuppressor.create(recorder.getAudioSessionId()).setEnabled(true);
                 }
