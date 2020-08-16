@@ -33,7 +33,7 @@ public class BroadcastTab {
         disconnect.setEnabled(false);
 
         broadcast.addActionListener(e -> {
-            String authToken = AutoTokenUtil.getAuthToken();
+            String authToken = AuthTokenPanel.getAuthToken();
             if (!AutoTokenUtil.isToken(authToken)) {
                 status.setText("Auth token is required to broadcast ECU");
                 return;
