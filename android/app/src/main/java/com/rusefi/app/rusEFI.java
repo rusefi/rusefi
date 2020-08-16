@@ -192,8 +192,10 @@ public class rusEFI extends Activity {
     @SuppressLint("SetTextI18n")
     private void switchToDfu() {
         AndroidSerial serial = AndroidSerial.getAndroidSerial(mStatusView, mResultView, usbManager);
-        if (serial == null)
+        if (serial == null) {
+            // error already reported to mStatusView
             return;
+        }
 
         mResultView.append("Switching to DFU\n");
         DfuHelper.sendDfuRebootCommand(serial, new StringBuilder());
@@ -241,6 +243,7 @@ public class rusEFI extends Activity {
         } else if (view.getId() == R.id.buttonBroadcast) {
             AndroidSerial serial = AndroidSerial.getAndroidSerial(mStatusView, mResultView, usbManager);
             if (serial == null) {
+                // error already reported to mStatusView
                 Snackbar mySnackbar = Snackbar.make(view, "No ECU detected", BaseTransientBottomBar.LENGTH_LONG);
                 mySnackbar.show();
                 return;
