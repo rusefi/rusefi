@@ -27,18 +27,27 @@ import android.hardware.usb.UsbDevice;
 import android.hardware.usb.UsbManager;
 import android.os.Build;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.EditText;
 import android.widget.TextView;
 
+import com.rusefi.Callable;
 import com.rusefi.app.serial.AndroidSerial;
+import com.rusefi.auth.AutoTokenUtil;
 import com.rusefi.dfu.DfuConnection;
 import com.rusefi.dfu.DfuImage;
 import com.rusefi.dfu.DfuLogic;
 import com.rusefi.dfu.android.AndroidDfuConnection;
 import com.rusefi.dfu.android.DfuDeviceLocator;
+import com.rusefi.io.ConnectionStateListener;
 import com.rusefi.io.DfuHelper;
+import com.rusefi.io.IoStream;
+import com.rusefi.io.LinkManager;
+import com.rusefi.io.serial.StreamConnector;
 
 public class rusEFI extends Activity {
     private static final String ACTION_USB_PERMISSION = "com.android.example.USB_PERMISSION";
@@ -53,6 +62,7 @@ public class rusEFI extends Activity {
     /* UI elements */
     private TextView mStatusView;
     private TextView mResultView;
+    private EditText authToken;
 
     private UsbManager usbManager;
     private DfuUpload dfuUpload;
@@ -72,6 +82,25 @@ public class rusEFI extends Activity {
 
         mStatusView = findViewById(R.id.text_status);
         mResultView = findViewById(R.id.text_result);
+        authToken = findViewById(R.id.authToken);
+        authToken.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+                String text = authToken.getText().toString();
+                if (AutoTokenUtil.isToken(text)) {
+                    AutoTokenUtil.setAuthToken(text);
+                }
+            }
+        });
 
         IntentFilter filter = new IntentFilter(ACTION_USB_PERMISSION);
         registerReceiver(mUsbReceiver, filter);
@@ -81,8 +110,17 @@ public class rusEFI extends Activity {
         dfuUpload = new DfuUpload(this);
 
         dfuUpload.fileOperation(mResultView);
+        authToken.setText(AutoTokenUtil.getAuthToken());
 
         switchOrProgramDfu();
+
+        SoundBroadcast.checkOrRequestPermission(this);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        unregisterReceiver(mUsbReceiver);
     }
 
     private void turnScreenOn() {
@@ -171,7 +209,29 @@ public class rusEFI extends Activity {
             switchOrProgramDfu();
         } else if (view.getId() == R.id.buttonSound) {
             soundBroadcast.start();
+        } else if (view.getId() == R.id.buttonBroadcast) {
+            AndroidSerial serial = AndroidSerial.getAndroidSerial(mStatusView, mResultView, usbManager);
+            if (serial == null)
+                return;
 
+            LinkManager linkManager = new LinkManager();
+            linkManager.setConnector(new StreamConnector(linkManager, new Callable<IoStream>() {
+                @Override
+                public IoStream call() {
+                    return serial;
+                }
+            }));
+            linkManager.getConnector().connectAndReadConfiguration(new ConnectionStateListener() {
+                @Override
+                public void onConnectionEstablished() {
+                    mResultView.append("On connection established\n");
+                }
+
+                @Override
+                public void onConnectionFailed() {
+                    mResultView.append("On connection failed\n");
+                }
+            });
         }
     }
 
