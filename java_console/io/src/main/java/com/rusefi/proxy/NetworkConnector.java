@@ -189,6 +189,13 @@ public class NetworkConnector implements Closeable {
         public int getOneTimeToken() {
             return oneTimeToken;
         }
+
+        @Override
+        public String toString() {
+            return "NetworkConnectorResult{" +
+                    "controllerInfo=" + controllerInfo +
+                    '}';
+        }
     }
 
     public interface ReconnectListener {
