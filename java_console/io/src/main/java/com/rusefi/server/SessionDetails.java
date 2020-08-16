@@ -103,6 +103,7 @@ public class SessionDetails {
         return "SessionDetails{" +
                 "controllerInfo=" + controllerInfo +
                 ", authToken='" + authToken + '\'' +
+                ", implementation='" + implementation + '\'' +
                 ", consoleVersion='" + consoleVersion + '\'' +
                 '}';
     }
