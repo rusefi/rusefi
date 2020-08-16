@@ -70,10 +70,10 @@ public class NetworkConnector implements Closeable {
         return start(authToken, context, reconnectListener, controllerConnector);
     }
 
-    public NetworkConnectorResult start(String authToken, NetworkConnectorContext context, ReconnectListener reconnectListener, LinkManager controllerConnector) {
+    public NetworkConnectorResult start(String authToken, NetworkConnectorContext context, ReconnectListener reconnectListener, LinkManager linkManager) {
         ControllerInfo controllerInfo;
         try {
-            controllerInfo = getControllerInfo(controllerConnector, controllerConnector.getConnector().getBinaryProtocol().getStream());
+            controllerInfo = getControllerInfo(linkManager, linkManager.getConnector().getBinaryProtocol().getStream());
         } catch (IOException e) {
             return NetworkConnectorResult.ERROR;
         }
@@ -87,7 +87,7 @@ public class NetworkConnector implements Closeable {
                     proxyReconnectSemaphore.acquire();
 
                     try {
-                        start(context.serverPortForControllers(), controllerConnector, authToken, (String message) -> {
+                        start(context.serverPortForControllers(), linkManager, authToken, (String message) -> {
                             log.error(message + " Disconnect from proxy server detected, now sleeping " + context.reconnectDelay() + " seconds");
                             sleep(context.reconnectDelay() * Timeouts.SECOND);
                             log.debug("Releasing semaphore");
