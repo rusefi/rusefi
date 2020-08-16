@@ -23,10 +23,12 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.hardware.usb.UsbDevice;
 import android.hardware.usb.UsbManager;
 import android.os.Build;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
@@ -50,6 +52,10 @@ import com.rusefi.io.DfuHelper;
 import com.rusefi.io.IoStream;
 import com.rusefi.io.LinkManager;
 import com.rusefi.io.serial.StreamConnector;
+import com.rusefi.proxy.NetworkConnector;
+import com.rusefi.proxy.NetworkConnectorContext;
+
+import static com.rusefi.ui.storage.PersistentConfiguration.getConfig;
 
 public class rusEFI extends Activity {
     private static final String ACTION_USB_PERMISSION = "com.android.example.USB_PERMISSION";
@@ -99,7 +105,10 @@ public class rusEFI extends Activity {
             public void afterTextChanged(Editable editable) {
                 String text = authToken.getText().toString();
                 if (AutoTokenUtil.isToken(text)) {
-                    AutoTokenUtil.setAuthToken(text);
+                    SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(rusEFI.this);
+                    SharedPreferences.Editor editor = preferences.edit();
+                    editor.putString(AutoTokenUtil.AUTH_TOKEN, text);
+                    editor.commit();
                 }
             }
         });
@@ -112,11 +121,16 @@ public class rusEFI extends Activity {
         dfuUpload = new DfuUpload(this);
 
         dfuUpload.fileOperation(mResultView);
-        authToken.setText(AutoTokenUtil.getAuthToken());
+        authToken.setText(getAuthToken());
 
         switchOrProgramDfu();
 
         SoundBroadcast.checkOrRequestPermission(this);
+    }
+
+    private String getAuthToken() {
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(rusEFI.this);
+        return preferences.getString(AutoTokenUtil.AUTH_TOKEN, AutoTokenUtil.TOKEN_WARNING);
     }
 
     @Override
@@ -238,8 +252,16 @@ public class rusEFI extends Activity {
                 }
             });
 
-            Snackbar mySnackbar = Snackbar.make(view, "Broadcasting with " + AutoTokenUtil.getAuthToken(), BaseTransientBottomBar.LENGTH_LONG);
+            Snackbar mySnackbar = Snackbar.make(view, "Broadcasting with " + getAuthToken(), BaseTransientBottomBar.LENGTH_LONG);
             mySnackbar.show();
+
+            NetworkConnectorContext context = new NetworkConnectorContext();
+            new NetworkConnector().start(getAuthToken(), context, new NetworkConnector.ReconnectListener() {
+                @Override
+                public void onReconnect() {
+
+                }
+            }, linkManager);
 
         }
     }
