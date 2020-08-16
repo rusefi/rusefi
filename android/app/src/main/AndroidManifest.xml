@@ -4,6 +4,7 @@
     package="com.rusefi.app">
 
     <application android:label="@string/app_name"
+        android:icon="@mipmap/ic_launcher"
         android:theme="@style/AppTheme">
 
         <!--
