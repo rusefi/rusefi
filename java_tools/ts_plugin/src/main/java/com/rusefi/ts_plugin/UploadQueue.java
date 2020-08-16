@@ -2,6 +2,7 @@ package com.rusefi.ts_plugin;
 
 import com.devexperts.logging.Logging;
 import com.efiAnalytics.plugin.ecu.ControllerAccess;
+import com.rusefi.auth.AutoTokenUtil;
 import com.rusefi.shared.FileUtil;
 import com.rusefi.tools.online.Online;
 import com.rusefi.tools.online.UploadResult;
@@ -61,7 +62,7 @@ public class UploadQueue {
         while (true) {
             FileAndFolder file = queue.take();
 
-            UploadResult result = Online.upload(new File(file.getFullName()), AuthTokenPanel.getAuthToken());
+            UploadResult result = Online.upload(new File(file.getFullName()), AutoTokenUtil.getAuthToken());
             System.out.println("isError " + result.isError());
             System.out.println("first " + result.getFirstMessage());
             if (result.isError() && result.getFirstMessage().contains("This file already exists")) {
