@@ -27,6 +27,9 @@ jobs:
           name: rusEFI-release-unsigned
           path: ./android/app/build/outputs/apk/release/rusEFI-release-unsigned.apk
 
+      - name: Install Tools
+        run: sudo apt-get install ncftp
+
       - name: Upload rusEFI Android application
         working-directory: .
         run: java_console/upload_server.sh ${{ secrets.RUSEFI_BUILD_FTP_USER }} ${{ secrets.RUSEFI_BUILD_FTP_PASS }} ${{ secrets.RUSEFI_FTP_SERVER }} . android/app/build/outputs/apk/release/rusEFI-release-unsigned.apk
