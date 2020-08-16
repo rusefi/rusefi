@@ -1,7 +1,6 @@
 package com.rusefi.tools.online;
 
 import com.devexperts.logging.Logging;
-import com.rusefi.auth.AutoTokenUtil;
 import com.rusefi.shared.FileUtil;
 import com.rusefi.tune.xml.Msq;
 import com.rusefi.ui.AuthTokenPanel;
@@ -90,7 +89,7 @@ public class Online {
     @Nullable
     public static BasicFuture<UploadResult> uploadFile(JComponent parent, FutureCallback<UploadResult> callback, final String fileName) {
         BasicFuture<UploadResult> result = new BasicFuture<>(callback);
-        String authToken = AutoTokenUtil.getAuthToken();
+        String authToken = AuthTokenPanel.getAuthToken();
         if (!AuthTokenPanel.hasToken()) {
             AuthTokenPanel.showError(parent);
             return null;

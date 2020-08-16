@@ -6,7 +6,6 @@ import com.opensr5.Logger;
 import com.opensr5.ini.IniFileModel;
 import com.opensr5.io.ConfigurationImageFile;
 import com.rusefi.*;
-import com.rusefi.auth.AutoTokenUtil;
 import com.rusefi.autodetect.PortDetector;
 import com.rusefi.autodetect.SerialAutoChecker;
 import com.rusefi.binaryprotocol.BinaryProtocol;
@@ -25,6 +24,7 @@ import com.rusefi.maintenance.ExecHelper;
 import com.rusefi.proxy.client.LocalApplicationProxy;
 import com.rusefi.tools.online.Online;
 import com.rusefi.tune.xml.Msq;
+import com.rusefi.ui.AuthTokenPanel;
 import com.rusefi.ui.light.LightweightGUI;
 import org.jetbrains.annotations.Nullable;
 
@@ -124,7 +124,7 @@ public class ConsoleTools {
 
     private static void uploadTune(String[] args) {
         String fileName = args[1];
-        String authToken = AutoTokenUtil.getAuthToken();
+        String authToken = AuthTokenPanel.getAuthToken();
         System.out.println("Trying to upload " + fileName + " using " + authToken);
         Online.upload(new File(fileName), authToken);
     }
@@ -171,7 +171,7 @@ public class ConsoleTools {
     private static void setAuthToken(String[] args) {
         String newToken = args[1];
         System.out.println("Saving auth token " + newToken);
-        AutoTokenUtil.setAuthToken(newToken);
+        AuthTokenPanel.setAuthToken(newToken);
     }
 
     private static void printVehicleToken() {
@@ -180,7 +180,7 @@ public class ConsoleTools {
     }
 
     private static void printAuthToken() {
-        String authToken = AutoTokenUtil.getAuthToken();
+        String authToken = AuthTokenPanel.getAuthToken();
         if (authToken.trim().isEmpty()) {
             System.out.println("Auth token not defined. Please use " + SET_AUTH_TOKEN + " command");
             System.out.println("\tPlease see https://github.com/rusefi/rusefi/wiki/Online");
@@ -329,7 +329,7 @@ public class ConsoleTools {
 
         Msq tune = MsqFactory.valueOf(image);
         tune.writeXmlFile(Online.outputXmlFileName);
-        String authToken = AutoTokenUtil.getAuthToken();
+        String authToken = AuthTokenPanel.getAuthToken();
         System.out.println("Using " + authToken);
         Online.upload(new File(Online.outputXmlFileName), authToken);
     }
