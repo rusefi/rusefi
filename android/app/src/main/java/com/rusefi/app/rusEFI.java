@@ -35,6 +35,8 @@ import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.google.android.material.snackbar.BaseTransientBottomBar;
+import com.google.android.material.snackbar.Snackbar;
 import com.rusefi.Callable;
 import com.rusefi.app.serial.AndroidSerial;
 import com.rusefi.auth.AutoTokenUtil;
@@ -211,8 +213,11 @@ public class rusEFI extends Activity {
             soundBroadcast.start();
         } else if (view.getId() == R.id.buttonBroadcast) {
             AndroidSerial serial = AndroidSerial.getAndroidSerial(mStatusView, mResultView, usbManager);
-            if (serial == null)
+            if (serial == null) {
+                Snackbar mySnackbar = Snackbar.make(view, "No ECU detected", BaseTransientBottomBar.LENGTH_LONG);
+                mySnackbar.show();
                 return;
+            }
 
             LinkManager linkManager = new LinkManager();
             linkManager.setConnector(new StreamConnector(linkManager, new Callable<IoStream>() {
@@ -232,6 +237,10 @@ public class rusEFI extends Activity {
                     mResultView.append("On connection failed\n");
                 }
             });
+
+            Snackbar mySnackbar = Snackbar.make(view, "Broadcasting with " + AutoTokenUtil.getAuthToken(), BaseTransientBottomBar.LENGTH_LONG);
+            mySnackbar.show();
+
         }
     }
 
