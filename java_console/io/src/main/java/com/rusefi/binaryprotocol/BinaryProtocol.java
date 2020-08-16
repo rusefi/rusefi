@@ -153,7 +153,7 @@ public class BinaryProtocol implements BinaryProtocolCommands {
         communicationLoggingListener = new CommunicationLoggingListener() {
             @Override
             public void onPortHolderMessage(Class clazz, String message) {
-                MessagesCentral.getInstance().postMessage(clazz, message);
+                linkManager.messageListener.postMessage(clazz, message);
             }
         };
 

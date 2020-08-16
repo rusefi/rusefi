@@ -2,7 +2,6 @@ package com.rusefi.ts_plugin;
 
 import com.devexperts.logging.Logging;
 import com.efiAnalytics.plugin.ecu.ControllerAccess;
-import com.rusefi.auth.AutoTokenUtil;
 import com.rusefi.shared.FileUtil;
 import com.rusefi.tools.online.Online;
 import com.rusefi.tools.online.UploadResult;
