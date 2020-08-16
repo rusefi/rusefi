@@ -64,7 +64,7 @@ public class rusEFI extends Activity {
 //
 //    protected static final int DFU_DETACH_TIMEOUT = 1000;
 
-    private static final String VERSION = "rusEFI app v0.0000006\n";
+    private static final String VERSION = "rusEFI app v0.0000007\n";
 
     /* UI elements */
     private TextView mStatusView;
@@ -127,7 +127,7 @@ public class rusEFI extends Activity {
         IntentFilter filter = new IntentFilter(ACTION_USB_PERMISSION);
         registerReceiver(mUsbReceiver, filter);
 
-        mStatusView.setText("Hello");
+        mResultView.append(VERSION);
 
         dfuUpload = new DfuUpload(this);
 
@@ -178,8 +178,6 @@ public class rusEFI extends Activity {
     };
 
     private void switchOrProgramDfu() {
-        mResultView.append(VERSION);
-
         UsbDevice dfuDevice = DfuDeviceLocator.findDevice(usbManager);
 
         if (dfuDevice != null) {
