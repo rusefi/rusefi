@@ -1,6 +1,7 @@
 package com.rusefi.io.tcp;
 
 import com.devexperts.logging.Logging;
+import com.rusefi.CompatibleFunction;
 import com.rusefi.Listener;
 import com.rusefi.Timeouts;
 import com.rusefi.binaryprotocol.BinaryProtocol;
@@ -32,7 +33,7 @@ public class BinaryProtocolProxy {
     public static final int USER_IO_TIMEOUT = 10 * Timeouts.MINUTE;
 
     public static ServerSocketReference createProxy(IoStream targetEcuSocket, int serverProxyPort, AtomicInteger relayCommandCounter) throws IOException {
-        Function<Socket, Runnable> clientSocketRunnableFactory = clientSocket -> () -> {
+        CompatibleFunction<Socket, Runnable> clientSocketRunnableFactory = clientSocket -> () -> {
             TcpIoStream clientStream = null;
             try {
                 clientStream = new TcpIoStream("[[proxy]] ", clientSocket);
