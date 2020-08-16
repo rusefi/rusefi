@@ -24,7 +24,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.hardware.usb.UsbDevice;
-import android.hardware.usb.UsbDeviceConnection;
 import android.hardware.usb.UsbManager;
 import android.os.Build;
 import android.os.Bundle;
@@ -33,8 +32,6 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.TextView;
 
-import com.hoho.android.usbserial.driver.UsbSerialDriver;
-import com.hoho.android.usbserial.driver.UsbSerialPort;
 import com.rusefi.app.serial.AndroidSerial;
 import com.rusefi.dfu.DfuConnection;
 import com.rusefi.dfu.DfuImage;
@@ -42,10 +39,6 @@ import com.rusefi.dfu.DfuLogic;
 import com.rusefi.dfu.android.AndroidDfuConnection;
 import com.rusefi.dfu.android.DfuDeviceLocator;
 import com.rusefi.io.DfuHelper;
-
-import java.io.IOException;
-import java.util.Date;
-import java.util.List;
 
 public class rusEFI extends Activity {
     private static final String ACTION_USB_PERMISSION = "com.android.example.USB_PERMISSION";
@@ -89,7 +82,7 @@ public class rusEFI extends Activity {
 
         dfuUpload.fileOperation(mResultView);
 
-        handleButton();
+        switchOrProgramDfu();
     }
 
     private void turnScreenOn() {
@@ -108,67 +101,40 @@ public class rusEFI extends Activity {
                 synchronized (this) {
                     if (intent.getBooleanExtra(UsbManager.EXTRA_PERMISSION_GRANTED, false)) {
                         UsbDevice dfuDevice = DfuDeviceLocator.findDevice(usbManager);
-                        dfuUpdate(dfuDevice, rusEFI.this.mResultView);
-//                        if (device != null) {
-//                            //call method to set up device communication
-//                        }
-//                    } else {
-                        //txtInfo.append("permission denied for device " + device);
+                        doDfuUpdate(dfuDevice, rusEFI.this.mResultView);
                     }
                 }
             }
         }
     };
 
-    private void handleButton() {
+    private void switchOrProgramDfu() {
         mResultView.append(VERSION);
 
         UsbDevice dfuDevice = DfuDeviceLocator.findDevice(usbManager);
 
         if (dfuDevice != null) {
-            handleDfuDevice(dfuDevice);
+            dfuUpdate(dfuDevice);
         } else {
             mResultView.append("No DFU device\n");
-            handleSerialDevice();
+            switchToDfu();
+            // once device is in DFU mode we expect what exactly to happen?
         }
-//        listDevices(manager);
     }
 
     @SuppressLint("SetTextI18n")
-    private void handleSerialDevice() {
-        List<UsbSerialDriver> availableDrivers = AndroidSerial.findUsbSerial(usbManager);
-        if (availableDrivers.isEmpty()) {
-            mStatusView.setText("Not connected");
-            mResultView.append("No serial devices " + new Date() + "\n");
+    private void switchToDfu() {
+        AndroidSerial serial = AndroidSerial.getAndroidSerial(mStatusView, mResultView, usbManager);
+        if (serial == null)
             return;
-        }
-        mStatusView.setText("rusEFI: " + availableDrivers.size() + " device(s)");
 
-        UsbSerialDriver driver = availableDrivers.get(0);
-        UsbDeviceConnection connection = usbManager.openDevice(driver.getDevice());
-        if (connection == null) {
-            // add UsbManager.requestPermission(driver.getDevice(), ..) handling here
-            mStatusView.setText("Unable to open serial");
-            return;
-        }
-
-        UsbSerialPort port = driver.getPorts().get(0); // Most devices have just one port (port 0)
-        try {
-            port.open(connection);
-            port.setParameters(115200, 8, UsbSerialPort.STOPBITS_1, UsbSerialPort.PARITY_NONE);
-
-            AndroidSerial serial = new AndroidSerial(port);
-            mResultView.append("Switching to DFU\n");
-            DfuHelper.sendDfuRebootCommand(serial, new StringBuilder());
-
-        } catch (IOException e) {
-            throw new IllegalStateException(e);
-        }
+        mResultView.append("Switching to DFU\n");
+        DfuHelper.sendDfuRebootCommand(serial, new StringBuilder());
     }
 
-    private void handleDfuDevice(UsbDevice dfuDevice) {
+    private void dfuUpdate(UsbDevice dfuDevice) {
         if (usbManager.hasPermission(dfuDevice)) {
-            dfuUpdate(dfuDevice, mResultView);
+            doDfuUpdate(dfuDevice, mResultView);
         } else {
             PendingIntent mPermissionIntent = PendingIntent.getBroadcast(this, 0, new Intent(ACTION_USB_PERMISSION), 0);
             usbManager.requestPermission(dfuDevice, mPermissionIntent);
@@ -176,7 +142,7 @@ public class rusEFI extends Activity {
     }
 
     @SuppressLint("SetTextI18n")
-    private void dfuUpdate(UsbDevice dfuDevice, TextView mResultView) {
+    private void doDfuUpdate(UsbDevice dfuDevice, TextView mResultView) {
         mStatusView.setText("rusEFI: DFU detected");
         DfuDeviceLocator.Result dfu = new DfuDeviceLocator().openDfu(usbManager, dfuDevice);
 
@@ -202,7 +168,7 @@ public class rusEFI extends Activity {
      */
     public void sendMessage(View view) {
         if (view.getId() == R.id.button) {
-            handleButton();
+            switchOrProgramDfu();
         } else if (view.getId() == R.id.buttonSound) {
             soundBroadcast.start();
 
