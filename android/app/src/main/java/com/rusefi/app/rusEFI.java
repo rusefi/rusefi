@@ -64,7 +64,7 @@ public class rusEFI extends Activity {
 //
 //    protected static final int DFU_DETACH_TIMEOUT = 1000;
 
-    private static final String VERSION = "rusEFI app v0.0000005\n";
+    private static final String VERSION = "rusEFI app v0.0000006\n";
 
     /* UI elements */
     private TextView mStatusView;
@@ -272,7 +272,7 @@ public class rusEFI extends Activity {
 
                 @Override
                 public void onConnectionFailed() {
-                    mResultView.append("On connection failed\n");
+                    mResultView.post(() -> mResultView.append("Connection failed\n"));
                 }
             });
 
