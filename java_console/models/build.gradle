@@ -7,6 +7,8 @@ apply from: '../../android/dependencies.gradle'
 dependencies {
     implementation project(':inifile')
     implementation project(':logging-api')
+    implementation project(':autoupdate')
+    implementation project(':inifile')
     implementation libs.annotations
 
     testImplementation libs.junit
