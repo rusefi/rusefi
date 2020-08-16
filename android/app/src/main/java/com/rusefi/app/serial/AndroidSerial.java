@@ -1,5 +1,6 @@
 package com.rusefi.app.serial;
 
+import android.annotation.SuppressLint;
 import android.hardware.usb.UsbDeviceConnection;
 import android.hardware.usb.UsbManager;
 import android.widget.TextView;
@@ -40,6 +41,7 @@ public class AndroidSerial extends AbstractIoStream {
         dataBuffer = IncomingDataBuffer.createDataBuffer("", this);
     }
 
+    @SuppressLint("SetTextI18n")
     @Nullable
     public static AndroidSerial getAndroidSerial(TextView mStatusView, TextView mResultView, UsbManager usbManager) {
         List<UsbSerialDriver> availableDrivers = findUsbSerial(usbManager);
@@ -63,7 +65,8 @@ public class AndroidSerial extends AbstractIoStream {
             port.open(connection);
             port.setParameters(115200, 8, UsbSerialPort.STOPBITS_1, UsbSerialPort.PARITY_NONE);
         } catch (IOException e) {
-            throw new IllegalStateException(e);
+            mStatusView.append("Error opening " + e);
+            return null;
         }
 
         return new AndroidSerial(port);
