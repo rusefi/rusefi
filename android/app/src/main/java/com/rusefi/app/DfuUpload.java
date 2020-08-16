@@ -84,7 +84,11 @@ public class DfuUpload {
                     }
                 });
                 DfuImage dfuImage = new DfuImage();
-                dfuImage.read(localDfuImageFileName);
+                try {
+                    dfuImage.read(localDfuImageFileName);
+                } catch (Throwable e) {
+                    mResultView.post(() -> mResultView.append("Error reading " + e));
+                }
             }
         };
 

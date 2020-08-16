@@ -18,7 +18,15 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:onClick="sendMessage"
-        android:text="Try" />
+        android:text="DFU" />
+
+    <EditText
+        android:id="@+id/authToken"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:inputType="text"
+        android:text="Auth Token" />
 
     <Button
         android:id="@+id/buttonSound"
@@ -28,11 +36,11 @@
         android:text="Sound" />
 
     <Button
-        android:id="@+id/button3"
+        android:id="@+id/buttonBroadcast"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:onClick="sendMessage"
-        android:text="Try" />
+        android:text="Broadcast" />
 
     <ScrollView
         android:layout_width="match_parent"
