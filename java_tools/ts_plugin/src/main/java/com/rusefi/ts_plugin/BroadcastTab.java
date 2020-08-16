@@ -1,6 +1,6 @@
 package com.rusefi.ts_plugin;
 
-import com.rusefi.auth.AutoTokenUtil;
+import com.rusefi.auth.AuthTokenUtil;
 import com.rusefi.autodetect.PortDetector;
 import com.rusefi.autoupdate.AutoupdateUtil;
 import com.rusefi.proxy.NetworkConnector;
@@ -33,7 +33,7 @@ public class BroadcastTab {
 
         broadcast.addActionListener(e -> {
             String authToken = AuthTokenPanel.getAuthToken();
-            if (!AutoTokenUtil.isToken(authToken)) {
+            if (!AuthTokenUtil.isToken(authToken)) {
                 status.setText("Auth token is required to broadcast ECU");
                 return;
             }

@@ -31,6 +31,7 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.text.util.Linkify;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -41,7 +42,7 @@ import com.google.android.material.snackbar.BaseTransientBottomBar;
 import com.google.android.material.snackbar.Snackbar;
 import com.rusefi.Callable;
 import com.rusefi.app.serial.AndroidSerial;
-import com.rusefi.auth.AutoTokenUtil;
+import com.rusefi.auth.AuthTokenUtil;
 import com.rusefi.dfu.DfuConnection;
 import com.rusefi.dfu.DfuImage;
 import com.rusefi.dfu.DfuLogic;
@@ -69,6 +70,7 @@ public class rusEFI extends Activity {
     private TextView mStatusView;
     private TextView mResultView;
     private EditText authToken;
+    private TextView myClickableUrl;
 
     private UsbManager usbManager;
     private DfuUpload dfuUpload;
@@ -102,14 +104,20 @@ public class rusEFI extends Activity {
             @Override
             public void afterTextChanged(Editable editable) {
                 String text = authToken.getText().toString();
-                if (AutoTokenUtil.isToken(text)) {
+                if (AuthTokenUtil.isToken(text)) {
                     SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(rusEFI.this);
                     SharedPreferences.Editor editor = preferences.edit();
-                    editor.putString(AutoTokenUtil.AUTH_TOKEN, text);
+                    editor.putString(AuthTokenUtil.AUTH_TOKEN, text);
                     editor.commit();
+                    myClickableUrl.setVisibility(View.GONE);
                 }
             }
         });
+
+        myClickableUrl = (TextView) findViewById(R.id.authStatus);
+        myClickableUrl.setText(AuthTokenUtil.TOKEN_PROFILE_URL);
+        Linkify.addLinks(myClickableUrl, Linkify.WEB_URLS);
+
 
         IntentFilter filter = new IntentFilter(ACTION_USB_PERMISSION);
         registerReceiver(mUsbReceiver, filter);
@@ -119,7 +127,9 @@ public class rusEFI extends Activity {
         dfuUpload = new DfuUpload(this);
 
         dfuUpload.fileOperation(mResultView);
-        authToken.setText(getAuthToken());
+        String authToken = getAuthToken();
+        this.authToken.setText(authToken);
+        myClickableUrl.setVisibility(AuthTokenUtil.isToken(authToken) ? View.VISIBLE : View.GONE);
 
 //        switchOrProgramDfu();
 
@@ -128,7 +138,7 @@ public class rusEFI extends Activity {
 
     private String getAuthToken() {
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(rusEFI.this);
-        return preferences.getString(AutoTokenUtil.AUTH_TOKEN, AutoTokenUtil.TOKEN_WARNING);
+        return preferences.getString(AuthTokenUtil.AUTH_TOKEN, "");
     }
 
     @Override

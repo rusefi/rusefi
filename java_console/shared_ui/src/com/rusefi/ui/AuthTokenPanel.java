@@ -1,6 +1,6 @@
 package com.rusefi.ui;
 
-import com.rusefi.auth.AutoTokenUtil;
+import com.rusefi.auth.AuthTokenUtil;
 import com.rusefi.ui.storage.PersistentConfiguration;
 import com.rusefi.ui.util.URLLabel;
 import org.jetbrains.annotations.NotNull;
@@ -56,7 +56,7 @@ public class AuthTokenPanel {
             public void actionPerformed(ActionEvent e) {
                 try {
                     String data = (String) clipboard.getData(DataFlavor.stringFlavor);
-                    if (AutoTokenUtil.isToken(data)) {
+                    if (AuthTokenUtil.isToken(data)) {
                         authTokenTestField.setText(data);
                     }
                 } catch (IOException | UnsupportedFlavorException ex) {
@@ -85,25 +85,25 @@ public class AuthTokenPanel {
 */
         content.add(top);
         if (authToken.trim().isEmpty()) {
-            authToken = AutoTokenUtil.TOKEN_WARNING;
+            authToken = AuthTokenUtil.TOKEN_WARNING;
         }
-        content.add(new URLLabel("Manage authentication token at your forum profile", AutoTokenUtil.TOKEN_PROFILE_URL), BorderLayout.SOUTH);
+        content.add(new URLLabel("Manage authentication token at your forum profile", AuthTokenUtil.TOKEN_PROFILE_URL), BorderLayout.SOUTH);
         authTokenTestField.setText(authToken);
     }
 
     public static void setAuthToken(String value) {
-        getConfig().getRoot().setProperty(AutoTokenUtil.AUTH_TOKEN, value);
+        getConfig().getRoot().setProperty(AuthTokenUtil.AUTH_TOKEN, value);
     }
 
     @NotNull
     public static String getAuthToken() {
-        return getConfig().getRoot().getProperty(AutoTokenUtil.AUTH_TOKEN);
+        return getConfig().getRoot().getProperty(AuthTokenUtil.AUTH_TOKEN);
     }
 
     private void setPasteButtonEnabledBasedOnClipboardContent(Clipboard clipboard, JButton paste) {
         try {
             String data = (String) clipboard.getData(DataFlavor.stringFlavor);
-            paste.setEnabled(AutoTokenUtil.isToken(data));
+            paste.setEnabled(AuthTokenUtil.isToken(data));
         } catch (IOException | IllegalStateException | UnsupportedFlavorException ex) {
             // ignoring this exception
         }
@@ -115,7 +115,7 @@ public class AuthTokenPanel {
     }
 
     private void onTextChange() {
-        if (AutoTokenUtil.isToken(authTokenTestField.getText())) {
+        if (AuthTokenUtil.isToken(authTokenTestField.getText())) {
             grabText();
         }
     }
@@ -125,7 +125,7 @@ public class AuthTokenPanel {
     }
 
     public static boolean hasToken() {
-        return AutoTokenUtil.isToken(getAuthToken());
+        return AuthTokenUtil.isToken(getAuthToken());
     }
 
     public String getToken() {

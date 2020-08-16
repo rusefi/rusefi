@@ -3,7 +3,6 @@ package com.rusefi.ts_plugin;
 import com.rusefi.NamedThreadFactory;
 import com.rusefi.SignatureHelper;
 import com.rusefi.Timeouts;
-import com.rusefi.auth.AutoTokenUtil;
 import com.rusefi.autoupdate.AutoupdateUtil;
 import com.rusefi.io.serial.StreamStatistics;
 import com.rusefi.io.tcp.ServerSocketReference;

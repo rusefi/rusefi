@@ -1,7 +1,7 @@
 package com.rusefi.server;
 
 import com.devexperts.logging.Logging;
-import com.rusefi.auth.AutoTokenUtil;
+import com.rusefi.auth.AuthTokenUtil;
 import com.rusefi.binaryprotocol.IncomingDataBuffer;
 import com.rusefi.config.generated.Fields;
 import com.rusefi.core.SensorsHolder;
@@ -93,7 +93,7 @@ public class ControllerConnectionState {
         if (jsonString == null)
             return;
         sessionDetails = SessionDetails.valueOf(jsonString);
-        if (!AutoTokenUtil.isToken(sessionDetails.getAuthToken()))
+        if (!AuthTokenUtil.isToken(sessionDetails.getAuthToken()))
             throw new IOException("Invalid token in " + jsonString);
 
         log.info(sessionDetails.getAuthToken() + " New client: " + sessionDetails.getControllerInfo());
