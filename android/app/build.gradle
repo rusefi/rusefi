@@ -51,7 +51,7 @@ dependencies {
     implementation project(':models')
     implementation libs.annotations
 
-    def acraVersion = '5.6.1'
+    def acraVersion = '5.7.0'
     implementation "ch.acra:acra-http:$acraVersion"
     implementation "ch.acra:acra-mail:$acraVersion"
     implementation "ch.acra:acra-dialog:$acraVersion"
