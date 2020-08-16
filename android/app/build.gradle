@@ -51,6 +51,12 @@ dependencies {
     implementation project(':models')
     implementation libs.annotations
 
+    def acraVersion = '5.6.1'
+    implementation "ch.acra:acra-http:$acraVersion"
+    implementation "ch.acra:acra-mail:$acraVersion"
+    implementation "ch.acra:acra-dialog:$acraVersion"
+    implementation "ch.acra:acra-toast:$acraVersion"
+
     implementation files('lib/dfu_java.jar')
     implementation 'com.github.mik3y:usb-serial-for-android:v2.2.3'
     implementation fileTree(dir: "libs", include: ["*.jar"])

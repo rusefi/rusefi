@@ -64,7 +64,7 @@ public class rusEFI extends Activity {
 //
 //    protected static final int DFU_DETACH_TIMEOUT = 1000;
 
-    private static final String VERSION = "rusEFI app v0.0000004\n";
+    private static final String VERSION = "rusEFI app v0.0000005\n";
 
     /* UI elements */
     private TextView mStatusView;
