@@ -13,6 +13,7 @@ android {
 
     compileSdkVersion 30
     buildToolsVersion "30.0.0"
+    project.archivesBaseName = "rusEFI";
 
     defaultConfig {
         applicationId "com.rusefi.app"
