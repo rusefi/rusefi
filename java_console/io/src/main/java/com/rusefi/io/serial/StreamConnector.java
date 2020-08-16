@@ -21,10 +21,10 @@ public class StreamConnector implements LinkConnector {
     private final PortHolder portHolder;
     private final LinkManager linkManager;
 
-    public StreamConnector(LinkManager linkManager, String portName, Callable<IoStream> ioStreamCallable) {
+    public StreamConnector(LinkManager linkManager, Callable<IoStream> ioStreamCallable) {
         this.linkManager = linkManager;
 
-        portHolder = new PortHolder(portName, linkManager, ioStreamCallable);
+        portHolder = new PortHolder(linkManager, ioStreamCallable);
     }
 
     @Override

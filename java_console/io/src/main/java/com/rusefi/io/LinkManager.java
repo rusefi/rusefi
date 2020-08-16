@@ -7,6 +7,7 @@ import com.rusefi.NamedThreadFactory;
 import com.rusefi.binaryprotocol.BinaryProtocol;
 import com.rusefi.binaryprotocol.BinaryProtocolState;
 import com.rusefi.core.EngineState;
+import com.rusefi.core.MessagesCentral;
 import com.rusefi.io.serial.StreamConnector;
 import com.rusefi.io.serial.SerialIoStreamJSerialComm;
 import com.rusefi.io.tcp.TcpConnector;
@@ -205,6 +206,7 @@ public class LinkManager implements Closeable {
             Callable<IoStream> streamFactory = new Callable<IoStream>() {
                 @Override
                 public IoStream call() {
+                    MessagesCentral.getInstance().postMessage(getClass(), "Opening port: " + port);
                     Socket socket;
                     try {
                         int portPart = TcpConnector.getTcpPort(port);
@@ -220,12 +222,13 @@ public class LinkManager implements Closeable {
                 }
             };
 
-            setConnector(new StreamConnector(this, port, streamFactory));
+            setConnector(new StreamConnector(this, streamFactory));
             isSimulationMode = true;
         } else {
             Callable<IoStream> ioStreamCallable = new Callable<IoStream>() {
                 @Override
                 public IoStream call() {
+                    MessagesCentral.getInstance().postMessage(getClass(), "Opening port: " + port);
                     IoStream stream = ((Callable<IoStream>) () -> SerialIoStreamJSerialComm.openPort(port)).call();
                     if (stream == null) {
                         // error already reported
@@ -234,7 +237,7 @@ public class LinkManager implements Closeable {
                     return stream;
                 }
             };
-            setConnector(new StreamConnector(this, port, ioStreamCallable));
+            setConnector(new StreamConnector(this, ioStreamCallable));
         }
     }
 
