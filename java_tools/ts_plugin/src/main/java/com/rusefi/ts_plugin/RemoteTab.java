@@ -3,6 +3,7 @@ package com.rusefi.ts_plugin;
 import com.rusefi.NamedThreadFactory;
 import com.rusefi.SignatureHelper;
 import com.rusefi.Timeouts;
+import com.rusefi.auth.AutoTokenUtil;
 import com.rusefi.autoupdate.AutoupdateUtil;
 import com.rusefi.io.serial.StreamStatistics;
 import com.rusefi.io.tcp.ServerSocketReference;
@@ -275,7 +276,7 @@ public class RemoteTab {
 
     @NotNull
     private ApplicationRequest getApplicationRequest(PublicSession publicSession) {
-        SessionDetails sessionDetails = new SessionDetails(publicSession.getControllerInfo(), AuthTokenPanel.getAuthToken(),
+        SessionDetails sessionDetails = new SessionDetails(publicSession.getControllerInfo(), AutoTokenUtil.getAuthToken(),
                 Integer.parseInt(oneTimePasswordControl.getText()), rusEFIVersion.CONSOLE_VERSION);
 
         ApplicationRequest applicationRequest = new ApplicationRequest(sessionDetails, publicSession.getVehicleOwner());

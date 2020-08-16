@@ -67,6 +67,10 @@ public class NetworkConnector implements Closeable {
             return NetworkConnectorResult.ERROR;
         }
 
+        return start(authToken, context, reconnectListener, controllerConnector);
+    }
+
+    public NetworkConnectorResult start(String authToken, NetworkConnectorContext context, ReconnectListener reconnectListener, LinkManager controllerConnector) {
         ControllerInfo controllerInfo;
         try {
             controllerInfo = getControllerInfo(controllerConnector, controllerConnector.getConnector().getBinaryProtocol().getStream());
