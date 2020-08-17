@@ -42,6 +42,7 @@ import com.devexperts.logging.Logging;
 import com.google.android.material.snackbar.BaseTransientBottomBar;
 import com.google.android.material.snackbar.Snackbar;
 import com.rusefi.Callable;
+import com.rusefi.Timeouts;
 import com.rusefi.app.serial.AndroidSerial;
 import com.rusefi.auth.AuthTokenUtil;
 import com.rusefi.dfu.DfuConnection;
@@ -57,6 +58,8 @@ import com.rusefi.io.serial.StreamConnector;
 import com.rusefi.proxy.NetworkConnector;
 import com.rusefi.proxy.NetworkConnectorContext;
 
+import java.util.Date;
+
 public class rusEFI extends Activity {
     private final static Logging log = Logging.getLogging(rusEFI.class);
     private static final String ACTION_USB_PERMISSION = "com.android.example.USB_PERMISSION";
@@ -66,11 +69,12 @@ public class rusEFI extends Activity {
 //
 //    protected static final int DFU_DETACH_TIMEOUT = 1000;
 
-    private static final String VERSION = "rusEFI app v0.0000007\n";
+    private static final String VERSION = "rusEFI app v0.0000008\n";
 
     /* UI elements */
     private TextView mStatusView;
     private TextView mResultView;
+    private TextView broadcastStatus;
     private EditText authToken;
     private TextView authStatusMessage;
     private TextView authStatusClickableUrl;
@@ -87,8 +91,15 @@ public class rusEFI extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_usb);
 
+        /**
+         * We need to make sure that WiFi is available for us, this might be related to screen on?
+         */
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+
         findViewById(R.id.buttonSound).setVisibility(View.GONE);
         findViewById(R.id.buttonDfu).setVisibility(View.GONE);
+
+        broadcastStatus = findViewById(R.id.broadcastStatus);
 
         usbManager = (UsbManager) getSystemService(Context.USB_SERVICE);
 
@@ -244,6 +255,8 @@ public class rusEFI extends Activity {
         } else if (view.getId() == R.id.buttonSound) {
             soundBroadcast.start();
         } else if (view.getId() == R.id.buttonBroadcast) {
+            startService(new Intent(this, SerialService.class));
+
             AndroidSerial serial = AndroidSerial.getAndroidSerial(mStatusView, mResultView, usbManager);
             if (serial == null) {
                 // error already reported to mStatusView
@@ -262,18 +275,30 @@ public class rusEFI extends Activity {
             linkManager.getConnector().connectAndReadConfiguration(new ConnectionStateListener() {
                 @Override
                 public void onConnectionEstablished() {
-                    mResultView.post(() -> mResultView.append("On connection established\n"));
+                    mResultView.post(() -> mResultView.append(new Date() + " On connection established\n"));
 
                     NetworkConnectorContext context = new NetworkConnectorContext();
+                    NetworkConnector.ActivityListener oncePerSecondStatistics = new NetworkConnector.ActivityListener() {
+                        long previousTime;
+
+                        @Override
+                        public void onActivity(IoStream targetEcuSocket) {
+                            long now = System.currentTimeMillis();
+                            if (now - previousTime < Timeouts.SECOND) {
+                                return;
+                            }
+                            previousTime = now;
+                            broadcastStatus.post(() -> broadcastStatus.setText(targetEcuSocket.getBytesIn() + "/" + targetEcuSocket.getBytesOut()));
+                        }
+                    };
                     NetworkConnector.NetworkConnectorResult result = new NetworkConnector().start(NetworkConnector.Implementation.Android,
                             getAuthToken(), context, new NetworkConnector.ReconnectListener() {
-                        @Override
-                        public void onReconnect() {
+                                @Override
+                                public void onReconnect() {
+                                }
+                            }, linkManager, oncePerSecondStatistics);
 
-                        }
-                    }, linkManager);
-
-                    mResultView.post(() -> mResultView.append("Broadcast: " + result + "\n"));
+                    mResultView.post(() -> mResultView.append(new Date() + " Broadcast: " + result + "\n"));
 
                 }
 

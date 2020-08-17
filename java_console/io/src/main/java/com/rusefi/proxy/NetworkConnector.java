@@ -67,10 +67,10 @@ public class NetworkConnector implements Closeable {
             return NetworkConnectorResult.ERROR;
         }
 
-        return start(implementation, authToken, context, reconnectListener, controllerConnector);
+        return start(implementation, authToken, context, reconnectListener, controllerConnector, ActivityListener.VOID);
     }
 
-    public NetworkConnectorResult start(Implementation implementation, String authToken, NetworkConnectorContext context, ReconnectListener reconnectListener, LinkManager linkManager) {
+    public NetworkConnectorResult start(Implementation implementation, String authToken, NetworkConnectorContext context, ReconnectListener reconnectListener, LinkManager linkManager, ActivityListener activityListener) {
         ControllerInfo controllerInfo;
         try {
             controllerInfo = getControllerInfo(linkManager, linkManager.getConnector().getBinaryProtocol().getStream());
@@ -88,6 +88,7 @@ public class NetworkConnector implements Closeable {
 
                     try {
                         start(implementation,
+                                activityListener,
                                 context.serverPortForControllers(), linkManager, authToken, (String message) -> {
                                     log.error(message + " Disconnect from proxy server detected, now sleeping " + context.reconnectDelay() + " seconds");
                                     sleep(context.reconnectDelay() * Timeouts.SECOND);
@@ -108,7 +109,7 @@ public class NetworkConnector implements Closeable {
     }
 
     @NotNull
-    private static SessionDetails start(Implementation implementation, int serverPortForControllers, LinkManager linkManager, String authToken, final TcpIoStream.DisconnectListener disconnectListener, int oneTimeToken, ControllerInfo controllerInfo, final NetworkConnectorContext context) throws IOException {
+    private static SessionDetails start(Implementation implementation, ActivityListener activityListener, int serverPortForControllers, LinkManager linkManager, String authToken, final TcpIoStream.DisconnectListener disconnectListener, int oneTimeToken, ControllerInfo controllerInfo, final NetworkConnectorContext context) throws IOException {
         IoStream targetEcuSocket = linkManager.getConnector().getBinaryProtocol().getStream();
 
         SessionDetails deviceSessionDetails = new SessionDetails(implementation, controllerInfo, authToken, oneTimeToken, rusEFIVersion.CONSOLE_VERSION);
@@ -146,6 +147,7 @@ public class NetworkConnector implements Closeable {
                 BinaryProtocolServer.Packet response = targetEcuSocket.readPacket();
                 log.info("Relaying response to proxy size=" + response.getPacket().length);
                 stream.sendPacket(response);
+                activityListener.onActivity(targetEcuSocket);
             }
         };
         baseBroadcastingThread.start();
@@ -207,6 +209,16 @@ public class NetworkConnector implements Closeable {
         };
 
         void onReconnect();
+    }
+
+    public interface ActivityListener {
+        ActivityListener VOID = new ActivityListener() {
+            @Override
+            public void onActivity(IoStream targetEcuSocket) {
+
+            }
+        };
+        void onActivity(IoStream targetEcuSocket);
     }
 
     public enum Implementation {

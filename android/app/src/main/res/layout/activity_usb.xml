@@ -60,6 +60,12 @@
             android:onClick="sendMessage"
             android:text="Broadcast" />
 
+        <TextView
+            android:id="@+id/broadcastStatus"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="TextView" />
+
         <ScrollView
             android:layout_width="match_parent"
             android:layout_height="match_parent">
