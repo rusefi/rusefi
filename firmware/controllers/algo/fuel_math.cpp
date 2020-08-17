@@ -28,6 +28,7 @@
 #include "speed_density_airmass.h"
 #include "fuel_math.h"
 #include "fuel_computer.h"
+#include "injector_model.h"
 #include "interpolation.h"
 #include "engine_configuration.h"
 #include "allsensors.h"
@@ -193,6 +194,7 @@ AirmassModelBase* getAirmassModel(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 }
 
 static FuelComputer fuelComputer(afrMap);
+static InjectorModel injectorModel;
 
 /**
  * per-cylinder fuel amount
@@ -370,7 +372,9 @@ void initFuelMap(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	INJECT_ENGINE_REFERENCE(&sdAirmass);
 	INJECT_ENGINE_REFERENCE(&mafAirmass);
 	INJECT_ENGINE_REFERENCE(&alphaNAirmass);
+
 	INJECT_ENGINE_REFERENCE(&fuelComputer);
+	INJECT_ENGINE_REFERENCE(&injectorModel);
 
 #if (IGN_LOAD_COUNT == FUEL_LOAD_COUNT) && (IGN_RPM_COUNT == FUEL_RPM_COUNT)
 	fuelPhaseMap.init(config->injectionPhase, config->injPhaseLoadBins, config->injPhaseRpmBins);
