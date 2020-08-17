@@ -218,6 +218,10 @@ floatms_t getBaseFuel(int rpm DECLARE_ENGINE_PARAMETER_SUFFIX) {
 
 	float baseFuelMass = ENGINE(fuelComputer)->getCycleFuel(airmass.CylinderAirmass, rpm, airmass.EngineLoadPercent);
 	float baseFuel = getInjectionDurationForFuelMass(baseFuelMass PASS_ENGINE_PARAMETER_SUFFIX) * 1000;
+	if (cisnan(baseFuel)) {
+		// todo: we should not have this here but https://github.com/rusefi/rusefi/issues/1690
+		return 0;
+	}
 	efiAssert(CUSTOM_ERR_ASSERT, !cisnan(baseFuel), "NaN baseFuel", 0);
 
 	engine->engineState.baseFuel = baseFuel;

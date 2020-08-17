@@ -52,8 +52,16 @@ public class LogUploadSelector {
     private void refresh() {
         fileList.removeAll();
 
-        String folder = getLogsFolderDir(controllerAccessSupplier.get().getEcuConfigurationNames()[0]);
+        String[] ecuConfigurationNames = controllerAccessSupplier.get().getEcuConfigurationNames();
+        if (ecuConfigurationNames != null && ecuConfigurationNames.length > 0) {
+            String folder = getLogsFolderDir(ecuConfigurationNames[0]);
+            processFolder(folder);
+        }
 
+        AutoupdateUtil.trueLayout(content);
+    }
+
+    private void processFolder(String folder) {
         for (String fileName : Objects.requireNonNull(new File(folder).list((dir, name) -> name.endsWith(".mlg")))) {
             JPanel panel = new JPanel(new FlowLayout());
             JButton delete = new JButton("Delete");
@@ -103,8 +111,6 @@ public class LogUploadSelector {
             panel.add(new JLabel(fileName));
             fileList.add(panel);
         }
-
-        AutoupdateUtil.trueLayout(content);
     }
 
     @NotNull

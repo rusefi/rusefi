@@ -31,6 +31,9 @@ public class ReaderState {
     public Map<String, String> tsCustomLine = new HashMap<>();
     public Map<String, ConfigStructure> structures = new HashMap<>();
 
+    public EnumsReader enumsReader = new EnumsReader();
+
+
     private static void handleBitLine(ReaderState state, String line) {
         line = line.substring(BIT.length() + 1).trim();
 
@@ -44,7 +47,7 @@ public class ReaderState {
             bitName = line.substring(0, index);
             comment = line.substring(index + 1);
         }
-        String bitNameParts[] = bitName.split(",");
+        String[] bitNameParts = bitName.split(",");
 
         String trueName = bitNameParts.length > 1 ? bitNameParts[1] : null;
         String falseName = bitNameParts.length > 2 ? bitNameParts[2] : null;
@@ -68,6 +71,12 @@ public class ReaderState {
         line = line.substring(CUSTOM.length() + 1).trim();
         int index = line.indexOf(' ');
         String name = line.substring(0, index);
+
+        String autoEnumOptions = VariableRegistry.getEnumOptionsForTunerStudio(state.enumsReader, VariableRegistry.INSTANCE, name);
+        if (autoEnumOptions != null) {
+            VariableRegistry.INSTANCE.register(name + "_auto_enum", autoEnumOptions);
+        }
+        
         line = line.substring(index).trim();
         index = line.indexOf(' ');
         String customSize = line.substring(0, index);

@@ -1,7 +1,10 @@
 package com.rusefi;
 
+import com.rusefi.board_generator.BoardReader;
+import com.rusefi.enum_reader.Value;
 import com.rusefi.util.LazyFile;
 import com.rusefi.util.SystemOut;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.IOException;
@@ -31,6 +34,40 @@ public class VariableRegistry  {
     private final Map<String, String> javaDefinitions = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
 
     public VariableRegistry() {
+    }
+
+    public static String getEnumOptionsForTunerStudio(EnumsReader enumsReader, VariableRegistry variableRegistry, String enumName) {
+        TreeMap<Integer, String> valueNameById = new TreeMap<>();
+
+        Map<String, Value> stringValueMap = enumsReader.getEnums().get(enumName);
+        if (stringValueMap == null)
+            return null;
+        for (Value value : stringValueMap.values()) {
+            if (value.getValue().contains("ENUM_32_BITS"))
+                continue;
+
+            if (isNumeric(value.getValue())) {
+                valueNameById.put(value.getIntValue(), value.getName());
+            } else {
+                String valueFromRegistry = variableRegistry.get(value.getValue());
+                if (valueFromRegistry == null)
+                    throw new IllegalStateException("No value for " + value);
+                int intValue = Integer.parseInt(valueFromRegistry);
+                valueNameById.put(intValue, value.getName());
+            }
+        }
+
+        int maxValue = valueNameById.lastKey();
+
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i <= maxValue; i++) {
+            if (sb.length() > 0)
+                sb.append(", ");
+
+            String value = valueNameById.getOrDefault(i, BoardReader.INVALID);
+            sb.append("\"" + value + "\"");
+        }
+        return sb.toString();
     }
 
     /**

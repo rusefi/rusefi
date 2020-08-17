@@ -2,7 +2,7 @@ package com.rusefi.enum_reader;
 
 public class Value implements Comparable<Value> {
     private final String name;
-    private String value;
+    private final String value;
 
     public Value(String name, String value) {
         this.name = name;
