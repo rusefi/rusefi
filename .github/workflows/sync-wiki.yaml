@@ -25,5 +25,5 @@ jobs:
       uses: ad-m/github-push-action@master
       with:
         repository: chuckwagoncomputing/rusefi_documentation
-        github_token: ${{ github.token }}
+        github_token: ${{ secrets.ACCESS_TOKEN }}
         branch: master
