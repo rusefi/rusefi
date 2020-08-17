@@ -17,9 +17,9 @@ jobs:
       run: |
         git remote add best-wiki-git https://github.com/rusefi/rusefi.wiki.git
         git fetch best-wiki-git
-        git merge best-wiki-git/master
         git config --local user.email "action@github.com"
         git config --local user.name "GitHub Action"
+        git merge best-wiki-git/master
         git commit -m "Merge changes from wiki" -a
 
     - name: Push changes
