@@ -38,6 +38,7 @@ import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.devexperts.logging.Logging;
 import com.google.android.material.snackbar.BaseTransientBottomBar;
 import com.google.android.material.snackbar.Snackbar;
 import com.rusefi.Callable;
@@ -57,6 +58,7 @@ import com.rusefi.proxy.NetworkConnector;
 import com.rusefi.proxy.NetworkConnectorContext;
 
 public class rusEFI extends Activity {
+    private final static Logging log = Logging.getLogging(rusEFI.class);
     private static final String ACTION_USB_PERMISSION = "com.android.example.USB_PERMISSION";
 
 //    private static final byte REQUEST_TYPE_CLASS = 32;
@@ -81,6 +83,7 @@ public class rusEFI extends Activity {
     @SuppressLint("SetTextI18n")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        log.info("onCreate");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_usb);
 
