@@ -377,7 +377,31 @@ struct ThermistorConf @brief Thermistor curve parameters
 	adc_channel_e adcChannel;
 end_struct
 
-custom engine_type_e 4 bits, S32, @OFFSET@,   [0:2], "AUDI_AAN", "DODGE_NEON_1995", "FORD_ASPIRE_1996", "FORD_FIESTA", "NISSAN_PRIMERA", "HONDA_ACCORD", "FORD_INLINE_6_1995", "GY6_139QMB"
+#define ET_DODGE_NEON_1995 2
+#define ET_FORD_ASPIRE 3
+#define ET_FORD_FIESTA 4
+#define ET_FORD_INLINE_6 7
+#define ET_ROVER_V8 10
+#define ET_BMW_E34 25
+#define ET_CAMARO 35
+
+#define ET_MRE_MIATA_NA6_VAF 12
+#define ET_MRE_MIATA_NB2_MAP 11
+#define ET_MRE_MIATA_NB2_MAF 15
+#define ET_MRE_OLD_TEST_BOARD 30
+#define ET_MRE_NEW_TEST_BOARD 31
+#define ET_MRE_DEFAULTS 60
+#define ET_MRE_MIATA_NA6_MAP 66
+
+#define ET_FRANKENSO_MIATA_NA6 41
+#define ET_FRANKENSO_MIATA_NB2 47
+#define ET_FRANKENSO_MIATA_NA6_VAF 57
+#define ET_BMW_M73_PROTEUS 63
+#define ET_CITROEN_TU3JP 65
+
+
+
+custom engine_type_e 4 bits, S32, @OFFSET@,   [0:6], @@engine_type_e_auto_enum@@
 engine_type_e engineType;http://rusefi.com/wiki/index.php?title=Manual:Engine_Type\nset engine_type X
 
 int engineSnifferRpmThreshold;Engine sniffer would be disabled above this rpm\nset engineSnifferRpmThreshold X;"RPM",      1,     0,    0,30000,      0
@@ -1570,6 +1594,8 @@ end_struct
 #define CMD_FUNCTIONAL_TEST_MODE "test_mode"
 
 #define CMD_ENGINE_TYPE "engine_type"
+#define CMD_INJECTION "injection"
+#define CMD_IGNITION "ignition"
 #define CMD_TRIGGERINFO "triggerinfo"
 #define CMD_WRITECONFIG "writeconfig"
 #define CMD_DATE "date"
@@ -1685,28 +1711,6 @@ end_struct
 
 #define PROTOCOL_COIL1_SHORT_NAME "c1"
 #define PROTOCOL_INJ1_SHORT_NAME "i1"
-
-#define ET_DODGE_NEON_1995 2
-#define ET_FORD_ASPIRE 3
-#define ET_FORD_FIESTA 4
-#define ET_FORD_INLINE_6 7
-#define ET_ROVER_V8 10
-#define ET_BMW_E34 25
-#define ET_CAMARO 35
-
-#define ET_MRE_MIATA_NA6_VAF 12
-#define ET_MRE_MIATA_NB2_MAP 11
-#define ET_MRE_MIATA_NB2_MAF 15
-#define ET_MRE_OLD_TEST_BOARD 30
-#define ET_MRE_NEW_TEST_BOARD 31
-#define ET_MRE_DEFAULTS 60
-#define ET_MRE_MIATA_NA6_MAP 66
-
-#define ET_FRANKENSO_MIATA_NA6 41
-#define ET_FRANKENSO_MIATA_NB2 47
-#define ET_FRANKENSO_MIATA_NA6_VAF 57
-#define ET_BMW_M73_PROTEUS 63
-#define ET_CITROEN_TU3JP 65
 
 ! some board files override this value using prepend file
 #define ts_show_hip9011 true

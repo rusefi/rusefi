@@ -33,6 +33,9 @@ import static com.rusefi.StartupFrame.setFrameIcon;
 import static com.rusefi.rusEFIVersion.CONSOLE_VERSION;
 import static com.rusefi.ui.storage.PersistentConfiguration.getConfig;
 
+/**
+ * @see StartupFrame
+ */
 public class ConsoleUI {
     private static final int DEFAULT_TAB_INDEX = 0;
     public String port;

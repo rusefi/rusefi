@@ -15,6 +15,7 @@ import com.rusefi.proxy.client.LocalApplicationProxy;
 import com.rusefi.proxy.client.LocalApplicationProxyContext;
 import com.rusefi.server.*;
 import com.rusefi.tools.online.HttpUtil;
+import org.apache.http.HttpResponse;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -94,20 +95,28 @@ public class FullServerTest {
             ConfigurationImage controllerImage = prepareImage(value, createIniField(Fields.CYLINDERSCOUNT));
             TestHelper.createVirtualController(controllerPort, controllerImage, new BinaryProtocolServer.Context());
 
+            CountDownLatch softwareUpdateRequest = new CountDownLatch(1);
+
             NetworkConnectorContext networkConnectorContext = new NetworkConnectorContext() {
                 @Override
                 public int serverPortForControllers() {
                     return serverPortForControllers;
                 }
+
+                @Override
+                public void onConnectorSoftwareUpdateRequest() {
+                    softwareUpdateRequest.countDown();
+                }
             };
 
             // start "rusEFI network connector" to connect controller with backend since in real life controller has only local serial port it does not have network
-            NetworkConnector.NetworkConnectorResult networkConnectorResult = networkConnector.start(TestHelper.TEST_TOKEN_1, TestHelper.LOCALHOST + ":" + controllerPort, networkConnectorContext, NetworkConnector.ReconnectListener.VOID);
+            NetworkConnector.NetworkConnectorResult networkConnectorResult = networkConnector.start(NetworkConnector.Implementation.Unknown,
+                    TestHelper.TEST_TOKEN_1, TestHelper.LOCALHOST + ":" + controllerPort, networkConnectorContext, NetworkConnector.ReconnectListener.VOID);
             ControllerInfo controllerInfo = networkConnectorResult.getControllerInfo();
 
             TestHelper.assertLatch("controllerRegistered", controllerRegistered);
 
-            SessionDetails authenticatorSessionDetails = new SessionDetails(controllerInfo, TEST_TOKEN_3, networkConnectorResult.getOneTimeToken());
+            SessionDetails authenticatorSessionDetails = new SessionDetails(NetworkConnector.Implementation.Unknown, controllerInfo, TEST_TOKEN_3, networkConnectorResult.getOneTimeToken(), rusEFIVersion.CONSOLE_VERSION);
             ApplicationRequest applicationRequest = new ApplicationRequest(authenticatorSessionDetails, userDetailsResolver.apply(TestHelper.TEST_TOKEN_1));
 
             // start authenticator
@@ -146,6 +155,14 @@ public class FullServerTest {
             assertTrue("applicationClosed", applicationClosed.await(3 * applicationTimeout, TimeUnit.MILLISECONDS));
 
             assertEquals("applications size", 0, backend.getApplications().size());
+
+
+            HttpResponse response = LocalApplicationProxy.requestSoftwareUpdate(httpPort, applicationRequest);
+            log.info(response.toString());
+
+            assertTrue("update requested", softwareUpdateRequest.await(3 * applicationTimeout, TimeUnit.MILLISECONDS));
+
         }
     }
+
 }

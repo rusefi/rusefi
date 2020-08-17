@@ -16,6 +16,7 @@ import com.rusefi.shared.FileUtil;
 import com.rusefi.tools.online.ProxyClient;
 import net.jcip.annotations.GuardedBy;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.takes.Take;
 import org.takes.facets.fork.FkRegex;
 import org.takes.facets.fork.TkFork;
@@ -59,7 +60,7 @@ public class Backend implements Closeable {
      */
     private static final int APPLICATION_INACTIVITY_TIMEOUT = 3 * Timeouts.MINUTE;
     static final String AGE = "age";
-    private static final ThreadFactory APPLLICATION_CONNECTION_CLEANUP = new NamedThreadFactory("rusEFI Application connections Cleanup");
+    private static final ThreadFactory APPLICATION_CONNECTION_CLEANUP = new NamedThreadFactory("rusEFI Application connections Cleanup");
     private static final ThreadFactory GAUGE_POKER = new NamedThreadFactory("rusEFI gauge poker");
 
     private final FkRegex showOnlineControllers = new FkRegex(ProxyClient.LIST_CONTROLLERS_PATH,
@@ -107,6 +108,7 @@ public class Backend implements Closeable {
                             showOnlineApplications,
                             new Monitoring(this).showStatistics,
                             new FkRegex(ProxyClient.VERSION_PATH, ProxyClient.BACKEND_VERSION),
+                            new FkRegex(ProxyClient.UPDATE_CONNECTOR_SOFTWARE, new UpdateRequestHandler(this)),
                             new FkRegex("/", new RsHtml("<html><body>\n" +
                                     "<br/><a href='https://rusefi.com/online/'>rusEFI Online</a>\n" +
                                     "<br/><br/><br/>\n" +
@@ -130,7 +132,7 @@ public class Backend implements Closeable {
 
         }, "Http Server Thread").start();
 
-        APPLLICATION_CONNECTION_CLEANUP.newThread(() -> {
+        APPLICATION_CONNECTION_CLEANUP.newThread(() -> {
             while (!isClosed()) {
                 log.info(getApplicationsCount() + " applications, " + getControllersCount() + " controllers");
                 runApplicationConnectionsCleanup();
@@ -190,7 +192,7 @@ public class Backend implements Closeable {
                     return;
                 }
 
-                ControllerKey controllerKey = new ControllerKey(applicationRequest.getTargetUser().getUserId(), applicationRequest.getSessionDetails().getControllerInfo());
+                ControllerKey controllerKey = new ControllerKey(applicationRequest.getVehicleOwner().getUserId(), applicationRequest.getSessionDetails().getControllerInfo());
                 ControllerConnectionState state;
                 synchronized (lock) {
                     state = acquire(controllerKey, userDetails);
@@ -216,7 +218,8 @@ public class Backend implements Closeable {
         }, serverPortForApplications, "ApplicationServer", serverSocketCreationCallback, BinaryProtocolServer.SECURE_SOCKET_FACTORY);
     }
 
-    private ControllerConnectionState acquire(ControllerKey controllerKey, UserDetails userDetails) {
+    @Nullable
+    public ControllerConnectionState acquire(ControllerKey controllerKey, UserDetails userDetails) {
         synchronized (lock) {
             ControllerConnectionState state = controllersByKey.get(controllerKey);
             if (state == null) {
@@ -300,6 +303,8 @@ public class Backend implements Closeable {
             int rpm = (int) client.getSensorsHolder().getValue(Sensor.RPM);
             double clt = client.getSensorsHolder().getValue(Sensor.CLT);
             UserDetails owner = client.getTwoKindSemaphore().getOwner();
+            SessionDetails sessionDetails = client.getSessionDetails();
+            ControllerInfo controllerInfo = sessionDetails.getControllerInfo();
             JsonObjectBuilder objectBuilder = Json.createObjectBuilder()
                     .add(UserDetails.USER_ID, client.getUserDetails().getUserId())
                     .add(UserDetails.USERNAME, client.getUserDetails().getUserName())
@@ -308,10 +313,12 @@ public class Backend implements Closeable {
                     .add(ProxyClient.IS_USED, client.getTwoKindSemaphore().isUsed())
                     .add(ControllerStateDetails.RPM, rpm)
                     .add(ControllerStateDetails.CLT, clt)
-                    .add(ControllerInfo.SIGNATURE, client.getSessionDetails().getControllerInfo().getSignature())
-                    .add(ControllerInfo.VEHICLE_NAME, client.getSessionDetails().getControllerInfo().getVehicleName())
-                    .add(ControllerInfo.ENGINE_MAKE, client.getSessionDetails().getControllerInfo().getEngineMake())
-                    .add(ControllerInfo.ENGINE_CODE, client.getSessionDetails().getControllerInfo().getEngineCode());
+                    .add(ControllerInfo.SIGNATURE, controllerInfo.getSignature())
+                    .add(ControllerInfo.VEHICLE_NAME, controllerInfo.getVehicleName())
+                    .add(ControllerInfo.ENGINE_MAKE, controllerInfo.getEngineMake())
+                    .add(ControllerInfo.ENGINE_CODE, controllerInfo.getEngineCode())
+                    .add(SessionDetails.IMPLEMENTATION, sessionDetails.getImplementation().name())
+                    .add(SessionDetails.CONNECTOR_VERSION, sessionDetails.getConsoleVersion());
             objectBuilder = addStreamStats(objectBuilder, client.getStream());
             if (owner != null) {
                 objectBuilder = objectBuilder.add(ProxyClient.OWNER, owner.getUserName());
