@@ -8,6 +8,16 @@ import org.acra.config.MailSenderConfigurationBuilder;
 import org.acra.config.ToastConfigurationBuilder;
 
 public class RusefiApplication extends Application {
+    static {
+        /**
+         * We better not touch real classes in order not to trigger class loading
+         *
+         * Logging#LOG_CLASS_NAME
+         * @see ConsoleLogger
+         */
+        System.setProperty("log.className", "com.devexperts.logging.ConsoleLogger");
+    }
+
     @Override
     public void onCreate() {
         super.onCreate();
