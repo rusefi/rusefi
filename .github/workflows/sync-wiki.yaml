@@ -11,7 +11,7 @@ jobs:
       uses: actions/checkout@v2
       with:
         fetch-depth: 0
-        repository: chuckwagoncomputing/rusefi_documentation
+        repository: rusefi/rusefi_documentation
         persist-credentials: false
 
     - name: Merge
@@ -25,6 +25,6 @@ jobs:
     - name: Push changes
       uses: ad-m/github-push-action@master
       with:
-        repository: chuckwagoncomputing/rusefi_documentation
+        repository: rusefi/rusefi_documentation
         github_token: ${{ secrets.ACCESS_TOKEN }}
         branch: master
