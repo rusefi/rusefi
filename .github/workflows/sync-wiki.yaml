@@ -12,6 +12,7 @@ jobs:
       with:
         fetch-depth: 0
         repository: chuckwagoncomputing/rusefi_documentation
+        persist-credentials: false
 
     - name: Merge
       run: |
