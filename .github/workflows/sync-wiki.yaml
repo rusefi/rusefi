@@ -7,7 +7,23 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Check Out Wiki
+    - name: Check out docs repo
       uses: actions/checkout@v2
       with:
-        repository: rusefi/rusefi.wiki
+        fetch-depth: 0
+        repository: chuckwagoncomputing/rusefi_documentation
+
+    - name: Merge
+      run: |
+        git remote add best-wiki-git https://github.com/rusefi/rusefi.wiki.git
+        git fetch best-wiki-git
+	git merge best-wiki-git/master
+        git config --local user.email "action@github.com"
+        git config --local user.name "GitHub Action"
+        git commit -m "Merge changes from wiki" -a
+
+    - name: Push changes
+      uses: ad-m/github-push-action@master
+      with:
+        github_token: ${{ github.token }}
+        branch: master
