@@ -20,7 +20,6 @@ jobs:
         git config --local user.email "action@github.com"
         git config --local user.name "GitHub Action"
         git merge best-wiki-git/master
-        git commit -m "Merge changes from wiki" -a
 
     - name: Push changes
       uses: ad-m/github-push-action@master
