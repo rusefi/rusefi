@@ -49,6 +49,8 @@ class AirmassModelBase;
 #define CYCLE_ALTERNATION 2
 
 class IEtbController;
+class IFuelComputer;
+class IInjectorModel;
 
 class TCU {
 public:
@@ -61,6 +63,8 @@ public:
 	Engine();
 
 	IEtbController *etbControllers[ETB_COUNT] = {nullptr};
+	IFuelComputer *fuelComputer = nullptr;
+	IInjectorModel *injectorModel = nullptr;
 
 	cyclic_buffer<int> triggerErrorDetection;
 
