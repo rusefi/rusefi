@@ -526,8 +526,8 @@ enable2ndByteCanID = false
 
 	curve = dwellCorrection, "Dwell time RPM based"
       columnLabel = "RPM", "Dwell"
-      xAxis       =  0, 8000, 10
-      yAxis       =  0,  30, 10
+      xAxis       =  0, 8000, 9
+      yAxis       =  0,  8, 9
       xBins       = sparkDwellRpmBins, RPMValue
       yBins       = sparkDwellValues
       gauge       = RPMGauge
@@ -565,7 +565,7 @@ enable2ndByteCanID = false
 
    curve = iatFuelCorrCurve, "Intake air temperature fuel Multiplier"
       columnLabel = "Coolant", "Multiplier"
-      xAxis       =  -40, 120, 10
+      xAxis       =  -40, 120, 9
       yAxis       =  0,  2, 11
       xBins       = iatFuelCorrBins, intake
       yBins       = iatFuelCorr
@@ -573,15 +573,15 @@ enable2ndByteCanID = false
 	
 	curve = cltTimingCorrCurve, "Warmup timing correction"
       columnLabel = "Coolant", "Extra"
-      xAxis       =  -40, 120, 10
-      yAxis       =  0,  50, 10
+      xAxis       =  -40, 120, 9
+      yAxis       =  0,  20, 9
       xBins       = cltTimingBins, coolant
       yBins       = cltTimingExtra
       gauge       = CLTGauge
 
 	curve = cltFuelCorrCurve, "Warmup fuel manual Multiplier"
       columnLabel = "Coolant", "Multiplier"
-      xAxis       =  -40, 100, 10
+      xAxis       =  -40, 120, 9
       yAxis       =  0,  3, 10
       xBins       = cltFuelCorrBins, coolant
       yBins       = cltFuelCorr
@@ -589,7 +589,7 @@ enable2ndByteCanID = false
 
 	curve = crankingCltCurve, "Cranking Coolant Temperature Multiplier"
       columnLabel = "Coolant", "Multiplier"
-      xAxis       =  -40, 100, 10
+      xAxis       =  -40, 120, 9
       yAxis       =  0,  3, 10
       xBins       = crankingFuelBins, coolant
       yBins       = crankingFuelCoef
@@ -605,7 +605,7 @@ enable2ndByteCanID = false
 
 	curve = crankingTpsCurve, "Cranking TPS Multiplier"
       columnLabel = "TPS", "Multiplier"
-      xAxis       =  0, 100, 10
+      xAxis       =  0, 100, 11
       yAxis       =  0,  3, 10
       xBins       = crankingTpsBins, TPSValue
       yBins       = crankingTpsCoef
@@ -613,8 +613,8 @@ enable2ndByteCanID = false
 
 	curve = crankingDurationCurve, "Cranking Duration Multiplier"
       columnLabel = "Engine Cycle", "Multiplier"
-      xAxis       =  0, 1000, 10
-      yAxis       =  0,  3, 10
+      xAxis       =  0, 50, 11
+      yAxis       =  0,  5, 6
       xBins       = crankingCycleBins
       yBins       = crankingCycleCoef
 
@@ -629,7 +629,7 @@ enable2ndByteCanID = false
 
 	curve = iacCoastingCurve, "Coasting IAC Position for Auto-Idle"
       columnLabel = "Coolant", "Multiplier"
-      xAxis       = -40, 120, 10
+      xAxis       = -40, 120, 9
       yAxis       =  0,  100, 10
       xBins       = iacCoastingBins, coolant
       yBins       = iacCoasting
@@ -637,7 +637,7 @@ enable2ndByteCanID = false
 
 	curve = cltCrankingCurve, "Cranking Idle Air multiplier"
       columnLabel = "Coolant", "Multiplier"
-      xAxis       = -40, 120, 10
+      xAxis       = -40, 120, 9
       yAxis       =  0,  3, 10
       xBins       = cltCrankingCorrBins, coolant
       yBins       = cltCrankingCorr
@@ -645,7 +645,7 @@ enable2ndByteCanID = false
 
 	curve = cltIdleRPMCurve, "Idle Target RPM"
       columnLabel = "Coolant", "RPM"
-      xAxis       = -40, 120, 10
+      xAxis       = -40, 120, 9
       yAxis       =  0, 8000, 10
       xBins       = cltIdleRpmBins, coolant
       yBins       = cltIdleRpm, RPMValue
