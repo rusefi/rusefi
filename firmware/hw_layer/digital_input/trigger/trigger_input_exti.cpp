@@ -29,6 +29,9 @@ static ioline_t primary_line;
 static void shaft_callback(void *arg) {
 	// do the time sensitive things as early as possible!
 	efitick_t stamp = getTimeNowNt();
+	if (!engine->hwTriggerInputEnabled) {
+		return;
+	}
 	ioline_t pal_line = (ioline_t)arg;
 	bool rise = (palReadLine(pal_line) == PAL_HIGH);
 
@@ -59,6 +62,9 @@ static void shaft_callback(void *arg) {
 
 static void cam_callback(void *arg) {
 	efitick_t stamp = getTimeNowNt();
+	if (!engine->hwTriggerInputEnabled) {
+		return;
+	}
 
 	ioline_t pal_line = (ioline_t)arg;
 

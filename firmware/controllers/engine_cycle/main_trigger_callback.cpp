@@ -188,6 +188,12 @@ void turnInjectionPinLow(InjectionEvent *event) {
 }
 
 void InjectionEvent::onTriggerTooth(size_t trgEventIndex, int rpm, efitick_t nowNt) {
+	// note that here we take 'engineConfiguration' from DECLARE_ENGINE_PTR.
+	// set engine_type seems to be resetting those references (todo: where exactly? why exactly?) so an event during
+	// engine_type would not end well
+	efiAssertVoid(CUSTOM_ERR_ASSERT, engineConfiguration != nullptr, "assert#1");
+	efiAssertVoid(CUSTOM_ERR_ASSERT, getCurrentRemainingStack() > 128, "assert#2");
+
 	uint32_t eventIndex = injectionStart.triggerEventIndex;
 // right after trigger change we are still using old & invalid fuel schedule. good news is we do not change trigger on the fly in real life
 //		efiAssertVoid(CUSTOM_ERR_ASSERT_VOID, eventIndex < ENGINE(triggerShape.getLength()), "handleFuel/event sch index");

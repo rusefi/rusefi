@@ -1,1 +1,2 @@
 1)                  left and right side x9 pin section need much wider traces at least where possible - some of those are used for not smart coils thus higher current.
+2)                  add larger '134' silkscreen

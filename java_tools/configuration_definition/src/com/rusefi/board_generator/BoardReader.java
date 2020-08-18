@@ -1,5 +1,6 @@
 package com.rusefi.board_generator;
 
+import com.rusefi.EnumToString;
 import com.rusefi.EnumsReader;
 import com.rusefi.enum_reader.Value;
 import com.rusefi.util.LazyFile;
@@ -19,13 +20,12 @@ import java.util.Objects;
  * the primary generation to avoid the intermediate file.
  */
 public class BoardReader {
-    private static final String INVALID = "INVALID";
+    public static final String INVALID = "INVALID";
 
     private static final String KEY_BOARD_NAME = "-board";
     private static final String YAML_INPUT_NAME = "-yaml";
     private static final String OUTPUT_FILE_NAME = "-output_file";
     private static final String KEY_FIRMWARE_PATH = "-firmware_path";
-    private final static String KEY_ENUM_INPUT_FILE = "-enumInputFile";
 
     private static final String MAPPING_YAML = "mapping.yaml";
 
@@ -37,14 +37,14 @@ public class BoardReader {
             );
             return;
         }
-        String boardName = null;
         String firmwarePath = "firmware";
         String yamlInputFile = null;
         String outputFileName = null;
+        EnumsReader enumsReader = new EnumsReader();
         for (int i = 0; i < args.length - 1; i += 2) {
             String key = args[i];
             if (key.equals(KEY_BOARD_NAME)) {
-                boardName = args[i + 1];
+                String boardName = args[i + 1];
                 yamlInputFile = firmwarePath + "/config/boards/" + boardName + "/" + MAPPING_YAML;
             } else if (key.equals(OUTPUT_FILE_NAME)) {
                 outputFileName = args[i + 1];
@@ -52,9 +52,9 @@ public class BoardReader {
                 yamlInputFile = args[i + 1];
             } else if (key.equals(KEY_FIRMWARE_PATH)) {
                 firmwarePath = args[i + 1];
-            } else if (key.equals(KEY_ENUM_INPUT_FILE)) {
+            } else if (key.equals(EnumToString.KEY_ENUM_INPUT_FILE)) {
                 String inputFile = args[i + 1];
-                EnumsReader.process(new FileReader(firmwarePath + File.separator + inputFile));
+                enumsReader.process(firmwarePath, inputFile);
             }
         }
 
@@ -67,25 +67,25 @@ public class BoardReader {
 
             Output bw = new LazyFile(outputFileName);
 
-            bw.write(processSection(data, "brain_pin_e", "output_pin_e", "outputs", "GPIO_UNASSIGNED"));
-            bw.write(processSection(data, "adc_channel_e", "adc_channel_e", "analog_inputs", "EFI_ADC_NONE"));
+            bw.write(processSection(enumsReader, data, "brain_pin_e", "output_pin_e", "outputs", "GPIO_UNASSIGNED"));
+            bw.write(processSection(enumsReader, data, "adc_channel_e", "adc_channel_e", "analog_inputs", "EFI_ADC_NONE"));
 
-            bw.write(processSection(data, "brain_pin_e", "brain_input_pin_e", "event_inputs", "GPIO_UNASSIGNED"));
-            bw.write(processSection(data, "brain_pin_e", "switch_input_pin_e", "switch_inputs", "GPIO_UNASSIGNED"));
+            bw.write(processSection(enumsReader, data, "brain_pin_e", "brain_input_pin_e", "event_inputs", "GPIO_UNASSIGNED"));
+            bw.write(processSection(enumsReader, data, "brain_pin_e", "switch_input_pin_e", "switch_inputs", "GPIO_UNASSIGNED"));
 
             bw.close();
         }
         SystemOut.close();
     }
 
-    private static String processSection(Map<String, Object> data, String headerEnumName, String outputEnumName, String sectionName, String NOTHING_NAME) {
+    private static String processSection(EnumsReader enumsReader, Map<String, Object> data, String headerEnumName, String outputEnumName, String sectionName, String NOTHING_NAME) {
         Objects.requireNonNull(data, "data");
         Map<String, Object> outputs = (Map<String, Object>) data.get(sectionName);
         if (outputs == null)
             return "";
 
         Objects.requireNonNull(data, "enums");
-        Map<String, Value> enumMap = EnumsReader.enums.get(headerEnumName);
+        Map<String, Value> enumMap = enumsReader.getEnums().get(headerEnumName);
         Objects.requireNonNull(enumMap, "enum for " + headerEnumName);
         SystemOut.println(enumMap.size());
 
@@ -118,15 +118,18 @@ public class BoardReader {
 
     private static int getMaxValue(Collection<Value> values) {
         int result = -1;
-        for (Value v : values)
+        for (Value v : values) {
             result = Math.max(result, v.getIntValue());
+        }
         return result;
     }
 
     private static Value findByOrdinal(int ordinal, Collection<Value> values) {
-        for (Value v : values)
-            if (v.getValue().equals(String.valueOf(ordinal)))
+        for (Value v : values) {
+            if (v.getValue().equals(String.valueOf(ordinal))) {
                 return v;
+            }
+        }
         return null;
     }
 }

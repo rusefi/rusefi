@@ -29,6 +29,9 @@ static Logging *logger;
 
 static void vvtRisingCallback(void *) {
 	efitick_t now = getTimeNowNt();
+	if (!engine->hwTriggerInputEnabled) {
+		return;
+	}
 #if EFI_TOOTH_LOGGER
 	if (!CONFIG(displayLogicLevelsInEngineSniffer)) {
 		// real physical fronts go into engine sniffer
@@ -40,6 +43,9 @@ static void vvtRisingCallback(void *) {
 
 static void vvtFallingCallback(void *) {
 	efitick_t now = getTimeNowNt();
+	if (!engine->hwTriggerInputEnabled) {
+		return;
+	}
 #if EFI_TOOTH_LOGGER
 	if (!CONFIG(displayLogicLevelsInEngineSniffer)) {
 		LogTriggerTooth(SHAFT_SECONDARY_FALLING, now);

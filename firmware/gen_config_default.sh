@@ -27,6 +27,7 @@ java -DSystemOut.name=gen_config \
  -java_destination ../java_console/models/src/main/java/com/rusefi/config/generated/Fields.java \
  -signature tunerstudio/generated/signature_all.txt \
  -signature_destination controllers/generated/signature_all.h \
+ -enumInputFile controllers/algo/rusefi_enums.h \
  -romraider_destination ../java_console/rusefi.xml
 
 [ $? -eq 0 ] || { echo "ERROR generating default"; exit 1; }

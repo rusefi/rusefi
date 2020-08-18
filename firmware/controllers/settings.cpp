@@ -583,6 +583,11 @@ static void setIndividualPin(const char *pinName, brain_pin_e *targetPin, const 
 	incrementGlobalConfigurationVersion(PASS_ENGINE_PARAMETER_SIGNATURE);
 }
 
+// set vss_pin
+static void setVssPin(const char *pinName) {
+	setIndividualPin(pinName, &engineConfiguration->vehicleSpeedSensorInputPin, "VSS");
+}
+
 // set_idle_pin none
 static void setIdlePin(const char *pinName) {
 	setIndividualPin(pinName, &engineConfiguration->idle.solenoidPin, "idle");
@@ -879,18 +884,18 @@ static void enableOrDisable(const char *param, bool isEnabled) {
 	} else if (strEqualCaseInsensitive(param, "sd")) {
 		engineConfiguration->isSdCardEnabled = isEnabled;
 	} else if (strEqualCaseInsensitive(param, CMD_FUNCTIONAL_TEST_MODE)) {
-		engine->isTestMode = isEnabled;
+		engine->isFunctionalTestMode = isEnabled;
 	} else if (strEqualCaseInsensitive(param, "can_read")) {
 		engineConfiguration->canReadEnabled = isEnabled;
 	} else if (strEqualCaseInsensitive(param, "can_write")) {
 		engineConfiguration->canWriteEnabled = isEnabled;
-	} else if (strEqualCaseInsensitive(param, "injection")) {
+	} else if (strEqualCaseInsensitive(param, CMD_INJECTION)) {
 		engineConfiguration->isInjectionEnabled = isEnabled;
 	} else if (strEqualCaseInsensitive(param, "trigger_details")) {
 		engineConfiguration->verboseTriggerSynchDetails = isEnabled;
-	} else if (strEqualCaseInsensitive(param, "ignition")) {
+	} else if (strEqualCaseInsensitive(param, CMD_IGNITION)) {
 		engineConfiguration->isIgnitionEnabled = isEnabled;
-	} else if (strEqualCaseInsensitive(param, "self_stimulation")) {
+	} else if (strEqualCaseInsensitive(param, CMD_SELF_STIMULATION)) {
 		engine->directSelfStimulation = isEnabled;
 	} else if (strEqualCaseInsensitive(param, "engine_control")) {
 		engineConfiguration->isEngineControlEnabled = isEnabled;
@@ -1060,6 +1065,8 @@ static void getValue(const char *paramStr) {
 		scheduleMsg(&logger, "tps_max=%d", engineConfiguration->tpsMax);
 	} else if (strEqualCaseInsensitive(paramStr, "global_trigger_offset_angle")) {
 		scheduleMsg(&logger, "global_trigger_offset=%.2f", engineConfiguration->globalTriggerAngleOffset);
+	} else if (strEqualCaseInsensitive(paramStr, "trigger_hw_input")) {
+		scheduleMsg(&logger, "trigger_hw_input=%s", boolToString(engine->hwTriggerInputEnabled));
 	} else if (strEqualCaseInsensitive(paramStr, "is_enabled_spi_1")) {
 		scheduleMsg(&logger, "is_enabled_spi_1=%s", boolToString(engineConfiguration->is_enabled_spi_1));
 	} else if (strEqualCaseInsensitive(paramStr, "is_enabled_spi_2")) {
@@ -1272,7 +1279,7 @@ static void setValue(const char *paramStr, const char *valueStr) {
 	} else if (strEqualCaseInsensitive(paramStr, "tps_min")) {
 		engineConfiguration->tpsMin = valueI;
 #if EFI_EMULATE_POSITION_SENSORS
-	} else if (strEqualCaseInsensitive(paramStr, "rpm")) {
+	} else if (strEqualCaseInsensitive(paramStr, CMD_RPM)) {
 		setTriggerEmulatorRPM(valueI);
 #endif /* EFI_EMULATE_POSITION_SENSORS */
 	} else if (strEqualCaseInsensitive(paramStr, "vvt_offset")) {
@@ -1287,6 +1294,10 @@ static void setValue(const char *paramStr, const char *valueStr) {
 		engineConfiguration->wwaeBeta = valueF;
 	} else if (strEqualCaseInsensitive(paramStr, "cranking_dwell")) {
 		engineConfiguration->ignitionDwellForCrankingMs = valueF;
+#if EFI_PROD_CODE
+	} else if (strEqualCaseInsensitive(paramStr, CMD_VSS_PIN)) {
+		setVssPin(valueStr);
+#endif // EFI_PROD_CODE
 	} else if (strEqualCaseInsensitive(paramStr, "targetvbatt")) {
 		engineConfiguration->targetVBatt = valueF;
 #if EFI_RTC
@@ -1347,7 +1358,7 @@ void initSettings(void) {
 	addConsoleActionS("showpin", showPinFunction);
 	addConsoleActionSS("set_injection_pin", setInjectionPin);
 	addConsoleActionSS("set_ignition_pin", setIgnitionPin);
-	addConsoleActionSS("set_trigger_input_pin", setTriggerInputPin);
+	addConsoleActionSS(CMD_TRIGGER_PIN, setTriggerInputPin);
 	addConsoleActionSS("set_trigger_simulator_pin", setTriggerSimulatorPin);
 
 	addConsoleActionSS("set_egt_cs_pin", (VoidCharPtrCharPtr) setEgtCSPin);
