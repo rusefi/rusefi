@@ -550,7 +550,7 @@ enable2ndByteCanID = false
 
    curve = injectorsDeadTime, "Injector dead time"
       columnLabel = "Voltage", "Dead Time"
-      xAxis       =  8, 16, 5
+      xAxis       =  8, 16, 9
       yAxis       = 0, 2, 5
       xBins       = injector_battLagCorrBins, VBatt
       yBins       = injector_battLagCorr
