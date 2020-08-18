@@ -550,8 +550,8 @@ enable2ndByteCanID = false
 
    curve = injectorsDeadTime, "Injector dead time"
       columnLabel = "Voltage", "Dead Time"
-      xAxis       =  8, 21, 10
-      yAxis       = -3,  3, 10
+      xAxis       =  8, 16, 5
+      yAxis       = 0, 2, 5
       xBins       = injector_battLagCorrBins, VBatt
       yBins       = injector_battLagCorr
       
@@ -1206,10 +1206,10 @@ menuDialog = main
 
 		# Fuel model
 		subMenu = afrTableTbl,				"Target AFR", 0, {isInjectionEnabled == 1}
-		subMenu = fuelClosedLoopDialog, 	"Closed loop fuel correction", 0, {isInjectionEnabled == 1}
-		subMenu = coastingFuelCutControl, 	"Deceleration fuel cutoff (DFCO)", 0, {isInjectionEnabled == 1}
 		subMenu = cltFuelCorrCurve,			"CLT multiplier", 0, {isInjectionEnabled == 1}
 		subMenu = iatFuelCorrCurve,			"IAT multiplier", 0, {isInjectionEnabled == 1}
+		subMenu = fuelClosedLoopDialog, 	"Closed loop fuel correction", 0, {isInjectionEnabled == 1}
+		subMenu = coastingFuelCutControl, 	"Deceleration fuel cutoff (DFCO)", 0, {isInjectionEnabled == 1}
 		subMenu = std_separator
 
 		# Injector model
