@@ -289,5 +289,7 @@ void setEngineBMW_M73_Proteus(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	engineConfiguration->tps2_2AdcChannel = EFI_ADC_0;
 	// EFI_ADC_1: "Analog Volt 6"
 	engineConfiguration->throttlePedalPositionAdcChannel = EFI_ADC_1;
+	// EFI_ADC_2: "Analog Volt 7"
+	engineConfiguration->throttlePedalPositionSecondAdcChannel = EFI_ADC_2;
 
 }
