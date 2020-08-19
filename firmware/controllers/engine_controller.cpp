@@ -321,7 +321,8 @@ static void printAnalogInfo(void) {
 	printAnalogChannelInfo("fuel gauge", engineConfiguration->fuelLevelSensor);
 	printAnalogChannelInfo("TPS", engineConfiguration->tps1_1AdcChannel);
 	printAnalogChannelInfo("TPS2", engineConfiguration->tps2_1AdcChannel);
-	printAnalogChannelInfo("pPS", engineConfiguration->throttlePedalPositionAdcChannel);
+	printAnalogChannelInfo("pPS1", engineConfiguration->throttlePedalPositionAdcChannel);
+	printAnalogChannelInfo("pPS2", engineConfiguration->throttlePedalPositionSecondAdcChannel);
 	printAnalogChannelInfo("CLT", engineConfiguration->clt.adcChannel);
 	printAnalogChannelInfo("IAT", engineConfiguration->iat.adcChannel);
 	printAnalogChannelInfo("AuxT1", engineConfiguration->auxTempSensor1.adcChannel);
