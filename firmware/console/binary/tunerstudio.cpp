@@ -206,8 +206,8 @@ void sendOkResponse(ts_channel_s *tsChannel, ts_response_format_e mode) {
 	sr5SendResponse(tsChannel, mode, NULL, 0);
 }
 
-static void sendErrorCode(ts_channel_s *tsChannel) {
-	sr5WriteCrcPacket(tsChannel, TS_RESPONSE_CRC_FAILURE, NULL, 0);
+static void sendErrorCode(ts_channel_s *tsChannel, uint8_t code) {
+	sr5WriteCrcPacket(tsChannel, code, NULL, 0);
 }
 
 static void handlePageSelectCommand(ts_channel_s *tsChannel, ts_response_format_e mode) {
@@ -297,7 +297,7 @@ static bool validateOffsetCount(size_t offset, size_t count, ts_channel_s *tsCha
 	if (offset + count > getTunerStudioPageSize()) {
 		scheduleMsg(&tsLogger, "TS: Project mismatch? Too much configuration requested %d/%d", offset, count);
 		tunerStudioError("ERROR: out of range");
-		sendErrorCode(tsChannel);
+		sendErrorCode(tsChannel, TS_RESPONSE_OUT_OF_RANGE);
 		return true;
 	}
 
@@ -496,20 +496,21 @@ void runBinaryProtocolLoop(ts_channel_s *tsChannel) {
 		if (incomingPacketSize == 0 || incomingPacketSize > (sizeof(tsChannel->crcReadBuffer) - CRC_WRAPPING_SIZE)) {
 			scheduleMsg(&tsLogger, "TunerStudio: invalid size: %d", incomingPacketSize);
 			tunerStudioError("ERROR: CRC header size");
-			sendErrorCode(tsChannel);
+			sendErrorCode(tsChannel, TS_RESPONSE_UNDERRUN);
 			continue;
 		}
 
 		received = sr5ReadData(tsChannel, (uint8_t* )tsChannel->crcReadBuffer, 1);
 		if (received != 1) {
 			tunerStudioError("ERROR: did not receive command");
+			sendErrorCode(tsChannel, TS_RESPONSE_UNDERRUN);
 			continue;
 		}
 
 		char command = tsChannel->crcReadBuffer[0];
 		if (!isKnownCommand(command)) {
 			scheduleMsg(&tsLogger, "unexpected command %x", command);
-			sendErrorCode(tsChannel);
+			sendErrorCode(tsChannel, TS_RESPONSE_UNRECOGNIZED_COMMAND);
 			continue;
 		}
 
@@ -544,6 +545,7 @@ void runBinaryProtocolLoop(ts_channel_s *tsChannel) {
 			scheduleMsg(&tsLogger, "TunerStudio: command %c actual CRC %x/expected %x", tsChannel->crcReadBuffer[0],
 					actualCrc, expectedCrc);
 			tunerStudioError("ERROR: CRC issue");
+			sendErrorCode(tsChannel, TS_RESPONSE_CRC_FAILURE);
 			continue;
 		}
 
@@ -606,7 +608,7 @@ static void handleOutputChannelsCommand(ts_channel_s *tsChannel, ts_response_for
 	if (offset + count > sizeof(TunerStudioOutputChannels)) {
 		scheduleMsg(&tsLogger, "TS: Version Mismatch? Too much outputs requested %d/%d/%d", offset, count,
 				sizeof(TunerStudioOutputChannels));
-		sendErrorCode(tsChannel);
+		sendErrorCode(tsChannel, TS_RESPONSE_OUT_OF_RANGE);
 		return;
 	}
 
