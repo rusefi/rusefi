@@ -606,7 +606,7 @@ end_struct
 	
 afr_sensor_s afr
 
-adc_channel_e throttlePedalPositionAdcChannel;Electronic throttle pedal position input\nFirst channel\nSee also tps1_1AdcChannel\nset_analog_input_pin pps X
+adc_channel_e throttlePedalPositionAdcChannel;Electronic throttle pedal position first channel\nSee throttlePedalPositionSecondAdcChannel for second channel\nSee also tps1_1AdcChannel\nset_analog_input_pin pps X
 	brain_pin_e tle6240_cs;
 	pin_output_mode_e tle6240_csPinMode;
 
