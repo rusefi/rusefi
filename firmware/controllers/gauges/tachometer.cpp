@@ -68,6 +68,7 @@ void tachSignalCallback(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 }
 
 void initTachometer(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+	tachHasInit = false;
 	if (CONFIG(tachOutputPin) == GPIO_UNASSIGNED) {
 		return;
 	}
