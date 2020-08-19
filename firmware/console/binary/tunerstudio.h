@@ -75,14 +75,12 @@ typedef pre_packed struct
 
 	typedef pre_packed struct
 	post_packed {
-		short int page;
 		short int offset;
 		short int count;
 	} TunerStudioWriteChunkRequest;
 
 	typedef pre_packed struct
 		post_packed {
-			short int page;
 			short int offset;
 			short int count;
 		} TunerStudioReadRequest;
