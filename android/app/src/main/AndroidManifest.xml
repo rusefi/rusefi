@@ -3,7 +3,10 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.rusefi.app">
 
-    <application android:label="@string/app_name">
+    <application android:label="@string/app_name"
+        android:name="com.rusefi.app.RusefiApplication"
+        android:icon="@mipmap/ic_launcher"
+        android:theme="@style/AppTheme">
 
         <!--
             The USB_DEVICE_ATTACHED intent is always sent to an activity.
@@ -27,7 +30,11 @@
                 android:name="android.hardware.usb.action.USB_DEVICE_ATTACHED"
                 android:resource="@xml/device_filter" />
         </activity>
+        <service android:name=".SerialService" />
     </application>
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.RECORD_AUDIO" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
 
 </manifest>

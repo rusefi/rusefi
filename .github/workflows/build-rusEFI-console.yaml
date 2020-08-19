@@ -32,5 +32,5 @@ jobs:
           path: ./java_console/build/*.txt
 
       - name: Upload rusEFI server
-        working-directory: ./java_console
-        run: ./upload_server.sh ${{ secrets.RUSEFI_BUILD_FTP_USER }} ${{ secrets.RUSEFI_BUILD_FTP_PASS }} ${{ secrets.RUSEFI_FTP_SERVER }}
+        working-directory: .
+        run: java_console/upload_server.sh ${{ secrets.RUSEFI_BUILD_FTP_USER }} ${{ secrets.RUSEFI_BUILD_FTP_PASS }} ${{ secrets.RUSEFI_FTP_SERVER }} autoupdate java_console_binary/rusefi_server.jar

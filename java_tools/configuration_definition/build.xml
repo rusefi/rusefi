@@ -15,7 +15,7 @@
                 debug="true"
                 target="${javac.target}"
                 destdir="build/classes"
-                classpath="../../java_console/lib/jsr305-2.0.1.jar:lib/junit.jar:../../java_console/lib/annotations.jar:lib/snakeyaml.jar">
+                classpath="${console_path}/lib/jsr305-2.0.1.jar:lib/junit.jar:../../java_console/lib/annotations.jar:lib/snakeyaml.jar">
             <src path="src"/>
             <src path="${console_path}/autoupdate/src"/>
             <src path="${console_path}/inifile/src"/>

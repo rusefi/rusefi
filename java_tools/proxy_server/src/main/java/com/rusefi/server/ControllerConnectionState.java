@@ -1,13 +1,15 @@
 package com.rusefi.server;
 
 import com.devexperts.logging.Logging;
-import com.rusefi.auth.AutoTokenUtil;
+import com.rusefi.auth.AuthTokenUtil;
 import com.rusefi.binaryprotocol.IncomingDataBuffer;
+import com.rusefi.config.generated.Fields;
 import com.rusefi.core.SensorsHolder;
 import com.rusefi.io.IoStream;
 import com.rusefi.io.commands.GetOutputsCommand;
 import com.rusefi.io.commands.HelloCommand;
 import com.rusefi.io.tcp.TcpIoStream;
+import com.rusefi.proxy.NetworkConnector;
 import com.rusefi.shared.FileUtil;
 import org.jetbrains.annotations.NotNull;
 
@@ -79,6 +81,7 @@ public class ControllerConnectionState {
     public String toString() {
         return "ControllerConnectionState{" +
                 "userDetails=" + userDetails +
+                ", sessionDetails=" + sessionDetails +
                 ", controllerKey=" + controllerKey +
                 ", isClosed=" + isClosed +
                 ", twoKindSemaphore=" + twoKindSemaphore +
@@ -91,7 +94,7 @@ public class ControllerConnectionState {
         if (jsonString == null)
             return;
         sessionDetails = SessionDetails.valueOf(jsonString);
-        if (!AutoTokenUtil.isToken(sessionDetails.getAuthToken()))
+        if (!AuthTokenUtil.isToken(sessionDetails.getAuthToken()))
             throw new IOException("Invalid token in " + jsonString);
 
         log.info(sessionDetails.getAuthToken() + " New client: " + sessionDetails.getControllerInfo());
@@ -120,6 +123,8 @@ public class ControllerConnectionState {
         outputRoundAroundDuration = (int) (System.currentTimeMillis() - start);
         if (packet == null)
             throw new IOException("getOutputs: No response");
+        if (packet.length != 1 + Fields.TS_OUTPUT_SIZE)
+            throw new IOException("getOutputs: unexpected package length " + packet.length);
         sensorsHolder.grabSensorValues(packet);
     }
 
@@ -141,5 +146,12 @@ public class ControllerConnectionState {
             log.error("grabOutputs " + this, e);
             backend.close(this);
         }
+    }
+
+    public void requestConnectorSoftwareUpdate() throws IOException {
+        byte[] packet = new byte[2];
+        packet[0] = Fields.TS_ONLINE_PROTOCOL;
+        packet[1] = NetworkConnector.UPDATE_CONNECTOR_SOFTWARE;
+        stream.sendPacket(packet);
     }
 }

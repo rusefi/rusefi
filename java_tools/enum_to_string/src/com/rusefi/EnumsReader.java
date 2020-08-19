@@ -3,18 +3,20 @@ package com.rusefi;
 import com.rusefi.enum_reader.Value;
 import com.rusefi.util.SystemOut;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.Reader;
+import java.io.*;
 import java.util.Map;
 import java.util.TreeMap;
 
 public class EnumsReader {
-    private final static Map<String, Value> currentValues = new TreeMap<>();
+    private final Map<String, Value> currentValues = new TreeMap<>();
 
-    public final static Map<String, Map<String, Value>> enums = new TreeMap<>();
+    private final Map<String, Map<String, Value>> enums = new TreeMap<>();
 
-    public static void process(Reader in) throws IOException {
+    public void process(String path, String fileName) throws IOException {
+        process(new FileReader(path + File.separator + fileName));
+    }
+
+    public void process(Reader in) throws IOException {
         boolean isInsideEnum = false;
         BufferedReader reader = new BufferedReader(in);
         String line;
@@ -49,6 +51,10 @@ public class EnumsReader {
                 }
             }
         }
+    }
+
+    public Map<String, Map<String, Value>> getEnums() {
+        return enums;
     }
 
     static String removeSpaces(String line) {

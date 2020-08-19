@@ -1,5 +1,6 @@
 package com.rusefi.core;
 
+import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 
@@ -11,7 +12,12 @@ public interface ISensorHolder {
                 continue;
             }
 
-            ByteBuffer bb = ByteBuffer.wrap(response, 1 + sensor.getOffset(), 4);
+            int offset = 1 + sensor.getOffset();
+            int size = 4;
+            if (offset + size > response.length) {
+                throw new IllegalArgumentException(sensor + String.format(" but %d+%d in %d", offset, size, response.length));
+            }
+            ByteBuffer bb = ByteBuffer.wrap(response, offset, size);
             bb.order(ByteOrder.LITTLE_ENDIAN);
 
             double rawValue = sensor.getValueForChannel(bb);

@@ -290,11 +290,13 @@ static void handleCommandX14(uint16_t index) {
 void executeTSCommand(uint16_t subsystem, uint16_t index) {
 	scheduleMsg(logger, "IO test subsystem=%d index=%d", subsystem, index);
 
+	bool running = !ENGINE(rpmCalculator).isStopped();
+
     if (subsystem == 0x11) {
         clearWarnings();
-	} else if (subsystem == 0x12) {
+	} else if (subsystem == 0x12 && !running) {
 		doRunSpark(index, "300", "4", "400", "3");
-	} else if (subsystem == 0x13) {
+	} else if (subsystem == 0x13 && !running) {
 		doRunFuel(index, "300", "4", "400", "3");
 	} else if (subsystem == 0x14) {
 		handleCommandX14(index);
