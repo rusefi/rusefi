@@ -210,16 +210,10 @@ static void sendErrorCode(ts_channel_s *tsChannel) {
 	sr5WriteCrcPacket(tsChannel, TS_RESPONSE_CRC_FAILURE, NULL, 0);
 }
 
-static void handlePageSelectCommand(ts_channel_s *tsChannel, ts_response_format_e mode, uint16_t pageId) {
+static void handlePageSelectCommand(ts_channel_s *tsChannel, ts_response_format_e mode) {
 	tsState.pageCommandCounter++;
 
-	scheduleMsg(&tsLogger, "PAGE %d", pageId);
-
-	if (pageId == 0) {
-		sendOkResponse(tsChannel, mode);
-	} else {
-		sendErrorCode(tsChannel);
-	}
+	sendOkResponse(tsChannel, mode);
 }
 
 /**
@@ -331,19 +325,17 @@ static void handleWriteChunkCommand(ts_channel_s *tsChannel, ts_response_format_
 	sendOkResponse(tsChannel, mode);
 }
 
-static void handleCrc32Check(ts_channel_s *tsChannel, ts_response_format_e mode, uint16_t pageId) {
-	UNUSED(pageId);
-
+static void handleCrc32Check(ts_channel_s *tsChannel, ts_response_format_e mode, uint16_t offset, uint16_t count) {
 	tsState.crc32CheckCommandCounter++;
 
-	uint16_t count = getTunerStudioPageSize();
+	// Ensure we are reading from in bounds
+	if (validateOffsetCount(offset, count, tsChannel)) {
+		return;
+	}
 
-	uint32_t crc = SWAP_UINT32(crc32((void * ) getWorkingPageAddr(), count));
+	const char* start = getWorkingPageAddr() + offset;
 
-#if 0
-	scheduleMsg(&tsLogger, "Sending CRC32 response: %x", crc);
-#endif
-
+	uint32_t crc = SWAP_UINT32(crc32(start, count));
 	sr5SendResponse(tsChannel, mode, (const uint8_t *) &crc, 4);
 }
 
@@ -351,11 +343,9 @@ static void handleCrc32Check(ts_channel_s *tsChannel, ts_response_format_e mode,
  * 'Write' command receives a single value at a given offset
  * @note Writing values one by one is pretty slow
  */
-static void handleWriteValueCommand(ts_channel_s *tsChannel, ts_response_format_e mode, uint16_t page, uint16_t offset,
-		uint8_t value) {
+static void handleWriteValueCommand(ts_channel_s *tsChannel, ts_response_format_e mode, uint16_t offset, uint8_t value) {
 	UNUSED(tsChannel);
 	UNUSED(mode);
-	UNUSED(page);
 
 	tsState.writeValueCommandCounter++;
 
@@ -382,19 +372,12 @@ static void handleWriteValueCommand(ts_channel_s *tsChannel, ts_response_format_
 //	scheduleMsg(logger, "va=%d", configWorkingCopy.boardConfiguration.idleValvePin);
 }
 
-static void handlePageReadCommand(ts_channel_s *tsChannel, ts_response_format_e mode, uint16_t pageId, uint16_t offset,
-		uint16_t count) {
+static void handlePageReadCommand(ts_channel_s *tsChannel, ts_response_format_e mode, uint16_t offset, uint16_t count) {
 	tsState.readPageCommandsCounter++;
 
 #if EFI_TUNER_STUDIO_VERBOSE
 	scheduleMsg(&tsLogger, "READ mode=%d offset=%d size=%d", mode, offset, count);
 #endif
-
-	if (pageId != 0) {
-		// something is not right here
-		tunerStudioError("ERROR: invalid page number");
-		return;
-	}
 
 	if (validateOffsetCount(offset, count, tsChannel)) {
 		return;
@@ -424,9 +407,7 @@ static void sendResponseCode(ts_response_format_e mode, ts_channel_s *tsChannel,
 /**
  * 'Burn' command is a command to commit the changes
  */
-static void handleBurnCommand(ts_channel_s *tsChannel, ts_response_format_e mode, uint16_t page) {
-	UNUSED(page);
-	
+static void handleBurnCommand(ts_channel_s *tsChannel, ts_response_format_e mode) {
 	efitimems_t nowMs = currentTimeMillis();
 	tsState.burnCommandCounter++;
 
@@ -738,10 +719,13 @@ int tunerStudioHandleCrcCommand(ts_channel_s *tsChannel, char *data, int incomin
 
 	const uint16_t* data16 = reinterpret_cast<uint16_t*>(data);
 
+	uint16_t offset = data16[0];
+	uint16_t count = data16[1];
+
 	switch(command)
 	{
 	case TS_OUTPUT_COMMAND:
-		handleOutputChannelsCommand(tsChannel, TS_CRC, data16[0], data16[1]);
+		handleOutputChannelsCommand(tsChannel, TS_CRC, offset, count);
 		break;
 	case TS_HELLO_COMMAND:
 		tunerStudioDebug("got Query command");
@@ -765,28 +749,28 @@ int tunerStudioHandleCrcCommand(ts_channel_s *tsChannel, char *data, int incomin
 		handleExecuteCommand(tsChannel, data, incomingPacketSize - 1);
 		break;
 	case TS_PAGE_COMMAND:
-		handlePageSelectCommand(tsChannel, TS_CRC, data16[0]);
+		handlePageSelectCommand(tsChannel, TS_CRC);
 		break;
 	case TS_GET_STRUCT:
-		handleGetStructContent(tsChannel, data16[0], data16[1]);
+		handleGetStructContent(tsChannel, offset, count);
 		break;
 	case TS_CHUNK_WRITE_COMMAND:
-		handleWriteChunkCommand(tsChannel, TS_CRC, data16[1], data16[2], data + sizeof(TunerStudioWriteChunkRequest));
+		handleWriteChunkCommand(tsChannel, TS_CRC, offset, count, data + sizeof(TunerStudioWriteChunkRequest));
 		break;
 	case TS_SINGLE_WRITE_COMMAND:
 		{
 			uint8_t value = data[4];
-			handleWriteValueCommand(tsChannel, TS_CRC, data16[0], data16[1], value);
+			handleWriteValueCommand(tsChannel, TS_CRC, offset, value);
 		}
 		break;
 	case TS_CRC_CHECK_COMMAND:
-		handleCrc32Check(tsChannel, TS_CRC, data16[0]);
+		handleCrc32Check(tsChannel, TS_CRC, offset, count);
 		break;
 	case TS_BURN_COMMAND:
-		handleBurnCommand(tsChannel, TS_CRC, data16[0]);
+		handleBurnCommand(tsChannel, TS_CRC);
 		break;
 	case TS_READ_COMMAND:
-		handlePageReadCommand(tsChannel, TS_CRC, data16[0], data16[1], data16[2]);
+		handlePageReadCommand(tsChannel, TS_CRC, offset, count);
 		break;
 	case TS_TEST_COMMAND:
 		[[fallthrough]];
