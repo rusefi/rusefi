@@ -518,9 +518,6 @@ void runBinaryProtocolLoop(ts_channel_s *tsChannel) {
 			logMsg("command %c\r\n", command);
 #endif
 
-
-//		scheduleMsg(logger, "TunerStudio: reading %d+4 bytes(s)", incomingPacketSize);
-
 		received = sr5ReadData(tsChannel, (uint8_t * ) (tsChannel->crcReadBuffer + 1),
 				incomingPacketSize + CRC_VALUE_SIZE - 1);
 		int expectedSize = incomingPacketSize + CRC_VALUE_SIZE - 1;
@@ -528,7 +525,7 @@ void runBinaryProtocolLoop(ts_channel_s *tsChannel) {
 			scheduleMsg(&tsLogger, "Got only %d bytes while expecting %d for command %c", received,
 					expectedSize, command);
 			tunerStudioError("ERROR: not enough bytes in stream");
-			sendResponseCode(TS_CRC, tsChannel, TS_RESPONSE_UNDERRUN);
+			sendErrorCode(tsChannel, TS_RESPONSE_UNDERRUN);
 			continue;
 		}
 
@@ -548,9 +545,6 @@ void runBinaryProtocolLoop(ts_channel_s *tsChannel) {
 			sendErrorCode(tsChannel, TS_RESPONSE_CRC_FAILURE);
 			continue;
 		}
-
-//		scheduleMsg(logger, "TunerStudio: P00-07 %x %x %x %x %x %x %x %x", crcIoBuffer[0], crcIoBuffer[1],
-//				crcIoBuffer[2], crcIoBuffer[3], crcIoBuffer[4], crcIoBuffer[5], crcIoBuffer[6], crcIoBuffer[7]);
 
 		int success = tunerStudioHandleCrcCommand(tsChannel, tsChannel->crcReadBuffer, incomingPacketSize);
 		if (!success)
