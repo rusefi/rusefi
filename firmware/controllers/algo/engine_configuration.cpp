@@ -1223,6 +1223,9 @@ void resetConfigurationExt(Logging * logger, configuration_callback_t boardCallb
 		setIssue898(PASS_CONFIG_PARAMETER_SIGNATURE);
 		break;
 #endif // EFI_UNIT_TEST
+	case BMW_M73_PROTEUS:
+		setEngineBMW_M73_Proteus(PASS_CONFIG_PARAMETER_SIGNATURE);
+		break;
 #if EFI_INCLUDE_ENGINE_PRESETS
 	case DEFAULT_FRANKENSO:
 		setFrankensoConfiguration(PASS_CONFIG_PARAMETER_SIGNATURE);
@@ -1239,9 +1242,6 @@ void resetConfigurationExt(Logging * logger, configuration_callback_t boardCallb
 	case BMW_M73_MRE:
 	case BMW_M73_MRE_SLAVE:
 		setEngineBMW_M73_microRusEfi(PASS_CONFIG_PARAMETER_SIGNATURE);
-		break;
-	case BMW_M73_PROTEUS:
-		setEngineBMW_M73_Proteus(PASS_CONFIG_PARAMETER_SIGNATURE);
 		break;
 	case MRE_MIATA_NA6_VAF:
 		setMiataNA6_VAF_MRE(PASS_CONFIG_PARAMETER_SIGNATURE);
