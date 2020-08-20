@@ -1581,6 +1581,9 @@ end_struct
 #define ENGINE_MAKE_MERCEDES "Mercedes"
 
 
+#define CMD_MIL_BENCH "milbench"
+#define CMD_FUEL_BENCH "fuelbench"
+#define CMD_STARTER_BENCH "starterbench"
 #define CMD_PINS "pins"
 #define CMD_CALIBRATE_PEDAL_UP "calibrate_pedal_up"
 #define CMD_CALIBRATE_PEDAL_DOWN "calibrate_pedal_down"
