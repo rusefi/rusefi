@@ -39,6 +39,7 @@ public class BenchTestPane {
         content.add(createInjectorTest());
         content.add(createMILTest());
         content.add(createIdleTest());
+        content.add(createStarterTest());
         content.add(createDizzyTest());
         content.add(new CommandControl(uiContext, "Reboot", "", "Reboot") {
             @Override
@@ -89,7 +90,7 @@ public class BenchTestPane {
         CommandControl panel = new CommandControl(uiContext,"MIL", "check_engine.jpg", TEST) {
             @NotNull
             protected String getCommand() {
-                return "milbench";
+                return Fields.CMD_MIL_BENCH;
             }
         };
         return panel.getContent();
@@ -107,6 +108,11 @@ public class BenchTestPane {
 
     private Component createDizzyTest() {
         CommandControl panel = new FixedCommandControl(uiContext, "Dizzy", "dizzy.jpg", TEST, "dizzybench");
+        return panel.getContent();
+    }
+
+    private Component createStarterTest() {
+        CommandControl panel = new FixedCommandControl(uiContext, "Starter", "", TEST, Fields.CMD_STARTER_BENCH);
         return panel.getContent();
     }
 

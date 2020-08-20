@@ -269,6 +269,12 @@ void setEngineBMW_M73_Proteus(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 
 	strcpy(CONFIG(vehicleName), "Using Proteus");
 
+	// GPIOE_7:  "VR 1"
+	engineConfiguration->triggerInputPins[0] = GPIOE_7;
+
+	// GPIOE_11: "Digital 2"
+	engineConfiguration->camInputs[0] = GPIOE_11;
+
 	// set vbatt_divider 8.16
 	// engineConfiguration->vbattDividerCoeff = (49.0f / 10.0f) * 16.8f / 10.0f;
 	// todo: figure out exact values from TLE8888 breakout board used by Manhattan
