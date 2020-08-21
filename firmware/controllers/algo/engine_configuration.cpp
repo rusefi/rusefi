@@ -832,7 +832,7 @@ static void setDefaultEngineConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	setLinearCurve(engineConfiguration->map.samplingWindow, 50, 50, 1);
 
 	setAfrMap(config->afrTable, 14.7);
-	engineConfiguration->stoichRatioPrimary = 147;
+	engineConfiguration->stoichRatioPrimary = 14.7f / PACK_MULT_AFR;
 
 	setDefaultVETable(PASS_ENGINE_PARAMETER_SIGNATURE);
 
