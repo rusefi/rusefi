@@ -30,5 +30,5 @@ float FuelComputer::getTargetLambda(int rpm, float load) const {
 	efiAssert(OBD_PCM_Processor_Fault, m_afrTable != nullptr, "AFR table null", 0);
 
 	// TODO: set the table value in lambda instead of afr
-	return m_afrTable->getValue(rpm, load) / getStoichiometricRatio();
+	return m_afrTable->getValue(rpm, load) / 14.7f;
 };
