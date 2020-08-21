@@ -1604,6 +1604,9 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 	dialog = injChars, "Injector Settings",	yAxis
 		field = "Injector Flow",			injector_flow, {isInjectionEnabled == 1}
 
+	dialog = fuelParams, "Fuel characteristics", yAxis
+		field = "Stoichiometric ratio",		stoichRatioPrimary, {isInjectionEnabled == 1}
+
 	dialog = injectorOutputSettings, "Injector Outputs",	yAxis
 		field = "Use only first half of pins for batch mode"
 		field = "Injection Pin 1",						injectionPins1, {isInjectionEnabled == 1}
@@ -1651,6 +1654,7 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 		topicHelp = "fuelHelp"
 		panel = baseInjection
 		panel = injChars
+		panel = fuelParams
 		panel = injectorsDeadTime
 
 	dialog = ignitionCylExtra, "Ignition Cylinder Extra Timing"
