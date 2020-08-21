@@ -26,6 +26,7 @@
 #include "perf_trace.h"
 #include "sensor.h"
 #include "gppwm.h"
+#include "tachometer.h"
 
 #if EFI_TUNER_STUDIO
 #include "tunerstudio_outputs.h"
@@ -519,6 +520,8 @@ void Engine::periodicFastCallback(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 #endif
 
 	engineState.periodicFastCallback(PASS_ENGINE_PARAMETER_SIGNATURE);
+
+	tachSignalCallback(PASS_ENGINE_PARAMETER_SIGNATURE);
 }
 
 void doScheduleStopEngine(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
