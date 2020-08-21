@@ -65,7 +65,7 @@ FsioState::FsioState() {
 
 void Engine::resetEngineSnifferIfInTestMode() {
 #if EFI_ENGINE_SNIFFER
-	if (isTestMode) {
+	if (isFunctionalTestMode) {
 		// TODO: what is the exact reasoning for the exact engine sniffer pause time I wonder
 		waveChart.pauseEngineSnifferUntilNt = getTimeNowNt() + MS2NT(300);
 		waveChart.reset();

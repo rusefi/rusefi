@@ -38,6 +38,7 @@ public class SerialAutoChecker implements Runnable {
     public void run() {
         IoStream stream = SerialIoStreamJSerialComm.openPort(serialPort);
         IncomingDataBuffer incomingData = stream.getDataBuffer();
+        boolean isPortFound = false;
         try {
             HelloCommand.send(stream);
             byte[] response = incomingData.getPacket("");
@@ -50,14 +51,19 @@ public class SerialAutoChecker implements Runnable {
                 if (callback != null) {
                     callback.apply(stream);
                 }
-                result.set(serialPort);
-                portFound.countDown();
+                isPortFound = true;
             }
         } catch (IOException ignore) {
             return;
         } finally {
             stream.close();
         }
-
+        if (isPortFound) {
+            /**
+             * propagating result after closing the port so that it could be used right away
+             */
+            result.set(serialPort);
+            portFound.countDown();
+        }
     }
 }

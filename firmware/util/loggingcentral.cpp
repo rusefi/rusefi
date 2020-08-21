@@ -12,7 +12,7 @@
 #include "global.h"
 #include "efilib.h"
 
-#if EFI_UNIT_TEST
+#if EFI_UNIT_TEST || EFI_SIMULATOR
 extern bool verboseMode;
 #endif /* EFI_UNIT_TEST */
 
@@ -148,7 +148,7 @@ char * swapOutputBuffers(int *actualOutputBufferSize) {
  * this is really 'global lock + printf + scheduleLogging + unlock' a bit more clear
  */
 void scheduleMsg(Logging *logging, const char *format, ...) {
-#if EFI_UNIT_TEST
+#if EFI_UNIT_TEST || EFI_SIMULATOR
 	if (verboseMode) {
 		va_list ap;
 		va_start(ap, format);

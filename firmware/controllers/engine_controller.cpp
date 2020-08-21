@@ -321,7 +321,8 @@ static void printAnalogInfo(void) {
 	printAnalogChannelInfo("fuel gauge", engineConfiguration->fuelLevelSensor);
 	printAnalogChannelInfo("TPS", engineConfiguration->tps1_1AdcChannel);
 	printAnalogChannelInfo("TPS2", engineConfiguration->tps2_1AdcChannel);
-	printAnalogChannelInfo("pPS", engineConfiguration->throttlePedalPositionAdcChannel);
+	printAnalogChannelInfo("pPS1", engineConfiguration->throttlePedalPositionAdcChannel);
+	printAnalogChannelInfo("pPS2", engineConfiguration->throttlePedalPositionSecondAdcChannel);
 	printAnalogChannelInfo("CLT", engineConfiguration->clt.adcChannel);
 	printAnalogChannelInfo("IAT", engineConfiguration->iat.adcChannel);
 	printAnalogChannelInfo("AuxT1", engineConfiguration->auxTempSensor1.adcChannel);
@@ -698,7 +699,7 @@ void initEngineContoller(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX) 
  * UNUSED_SIZE constants.
  */
 #ifndef RAM_UNUSED_SIZE
-#define RAM_UNUSED_SIZE 9600
+#define RAM_UNUSED_SIZE 8600
 #endif
 #ifndef CCM_UNUSED_SIZE
 #define CCM_UNUSED_SIZE 2900

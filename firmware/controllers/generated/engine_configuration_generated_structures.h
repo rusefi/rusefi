@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Thu Aug 06 00:48:17 UTC 2020
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Thu Aug 20 01:06:29 UTC 2020
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -1059,8 +1059,8 @@ struct engine_configuration_s {
 	 */
 	afr_sensor_s afr;
 	/**
-	 * Electronic throttle pedal position input
-	 * First channel
+	 * Electronic throttle pedal position first channel
+	 * See throttlePedalPositionSecondAdcChannel for second channel
 	 * See also tps1_1AdcChannel
 	 * set_analog_input_pin pps X
 	 * offset 580
@@ -3651,4 +3651,4 @@ struct persistent_config_s {
 typedef struct persistent_config_s persistent_config_s;
 
 // end
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Thu Aug 06 00:48:17 UTC 2020
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Thu Aug 20 01:06:29 UTC 2020

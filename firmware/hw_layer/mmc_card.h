@@ -9,11 +9,19 @@
 
 #pragma once
 
+#include "tunerstudio_io.h"
+
+#define DOT_MLG ".mlg"
+
+bool isLogFile(const char *fileName);
 void initMmcCard(void);
 bool isSdCardAlive(void);
 void appendToLog(const char *line, size_t length);
 
 void readLogFileContent(char *buffer, short fileId, short offset, short length);
 
-void handleTsR(char *input);
-void handleTsW(char *input);
+void handleTsR(ts_channel_s *tsChannel, char *input);
+void handleTsW(ts_channel_s *tsChannel, char *input);
+
+#define LOCK_SD_SPI lockSpi(engineConfiguration->sdCardSpiDevice)
+#define UNLOCK_SD_SPI unlockSpi(engineConfiguration->sdCardSpiDevice)

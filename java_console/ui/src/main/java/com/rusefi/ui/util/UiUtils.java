@@ -113,9 +113,7 @@ public class UiUtils {
     }
 
     public static JComponent wrap(JComponent component) {
-        JPanel result = new JPanel();
-        result.add(component);
-        return result;
+        return AutoupdateUtil.wrap(component);
     }
 
     public static JButton createSaveImageButton() {

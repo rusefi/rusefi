@@ -11,11 +11,13 @@ import com.rusefi.io.LinkConnector;
 import com.rusefi.io.LinkManager;
 import com.rusefi.io.tcp.BinaryProtocolServer;
 import com.rusefi.io.tcp.TcpIoStream;
+import com.rusefi.proxy.NetworkConnector;
 import com.rusefi.server.ControllerInfo;
 import com.rusefi.server.SessionDetails;
 import com.rusefi.server.rusEFISSLContext;
 import com.rusefi.tune.xml.Constant;
 import org.jetbrains.annotations.NotNull;
+import org.mockito.stubbing.Answer;
 
 import java.io.IOException;
 import java.net.Socket;
@@ -32,6 +34,9 @@ public class TestHelper {
     public static final ControllerInfo CONTROLLER_INFO = new ControllerInfo("name", "make", "code", Fields.TS_SIGNATURE);
     public static final String TEST_TOKEN_1 = "00000000-1234-1234-1234-123456789012";
     public static final String TEST_TOKEN_3 = "33333333-3333-1234-1234-123456789012";
+    public static final Answer<?> NEGATIVE_ANSWER = invocation -> {
+        throw new UnsupportedOperationException("Not mocked " + invocation);
+    };
 
     @NotNull
     public static ScalarIniField createIniField(Field field) {
@@ -95,7 +100,7 @@ public class TestHelper {
     public static SessionDetails createTestSession(String authToken, String signature) {
         ControllerInfo ci = new ControllerInfo("vehicle", "make", "code", signature);
 
-        return new SessionDetails(ci, authToken, SessionDetails.createOneTimeCode());
+        return new SessionDetails(NetworkConnector.Implementation.Unknown, ci, authToken, SessionDetails.createOneTimeCode(), rusEFIVersion.CONSOLE_VERSION);
     }
 
     public static void assertLatch(String message, CountDownLatch reconnectCounter) throws InterruptedException {

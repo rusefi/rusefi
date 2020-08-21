@@ -16,128 +16,156 @@
 
 package com.rusefi.app;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.hardware.usb.UsbDevice;
-import android.hardware.usb.UsbDeviceConnection;
 import android.hardware.usb.UsbManager;
 import android.os.Build;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
+import android.text.Editable;
+import android.text.TextWatcher;
+import android.text.util.Linkify;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.EditText;
 import android.widget.TextView;
 
-import com.hoho.android.usbserial.driver.UsbSerialDriver;
-import com.hoho.android.usbserial.driver.UsbSerialPort;
-import com.rusefi.Listener;
+import com.devexperts.logging.Logging;
+import com.google.android.material.snackbar.BaseTransientBottomBar;
+import com.google.android.material.snackbar.Snackbar;
+import com.rusefi.Callable;
+import com.rusefi.Timeouts;
+import com.rusefi.app.serial.AndroidSerial;
+import com.rusefi.auth.AuthTokenUtil;
 import com.rusefi.dfu.DfuConnection;
 import com.rusefi.dfu.DfuImage;
 import com.rusefi.dfu.DfuLogic;
 import com.rusefi.dfu.android.AndroidDfuConnection;
 import com.rusefi.dfu.android.DfuDeviceLocator;
+import com.rusefi.io.ConnectionStateListener;
 import com.rusefi.io.DfuHelper;
-import com.rusefi.shared.ConnectionAndMeta;
-import com.rusefi.shared.FileUtil;
+import com.rusefi.io.IoStream;
+import com.rusefi.io.LinkManager;
+import com.rusefi.io.serial.StreamConnector;
+import com.rusefi.proxy.NetworkConnector;
+import com.rusefi.proxy.NetworkConnectorContext;
 
-import java.io.File;
-import java.io.IOException;
-import java.security.KeyManagementException;
-import java.security.NoSuchAlgorithmException;
 import java.util.Date;
-import java.util.List;
 
 public class rusEFI extends Activity {
+    private final static Logging log = Logging.getLogging(rusEFI.class);
     private static final String ACTION_USB_PERMISSION = "com.android.example.USB_PERMISSION";
-    //public static final String FILE = "rusefi_bundle_mre_f4_autoupdate.zip";
-    //private static final String DFU_FILE_NAME = "rusefi_mre_f4.dfu";
-    private static final String BUNDLE_FILE = "rusefi_bundle_autoupdate.zip";
-    private static final String DFU_FILE_NAME = "rusefi_.dfu";
 
-    private static final byte REQUEST_TYPE_CLASS = 32;
-    private static final byte RECIPIENT_INTERFACE = 0x01;
+//    private static final byte REQUEST_TYPE_CLASS = 32;
+//    private static final byte RECIPIENT_INTERFACE = 0x01;
+//
+//    protected static final int DFU_DETACH_TIMEOUT = 1000;
 
-
-    protected static final int DFU_DETACH_TIMEOUT = 1000;
+    private static final String VERSION = "rusEFI app v0.0000008\n";
 
     /* UI elements */
     private TextView mStatusView;
     private TextView mResultView;
+    private TextView broadcastStatus;
+    private EditText authToken;
+    private TextView authStatusMessage;
+    private TextView authStatusClickableUrl;
 
     private UsbManager usbManager;
-    private String localDfuImageFileName;
+    private DfuUpload dfuUpload;
+    private SoundBroadcast soundBroadcast = new SoundBroadcast();
 
+
+    @SuppressLint("SetTextI18n")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        log.info("onCreate");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_usb);
+
+        /**
+         * We need to make sure that WiFi is available for us, this might be related to screen on?
+         */
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+
+        findViewById(R.id.buttonSound).setVisibility(View.GONE);
+        findViewById(R.id.buttonDfu).setVisibility(View.GONE);
+
+        broadcastStatus = findViewById(R.id.broadcastStatus);
 
         usbManager = (UsbManager) getSystemService(Context.USB_SERVICE);
 
         // turn on scree while ADB debugging idle phone
         turnScreenOn();
 
-        mStatusView = (TextView) findViewById(R.id.text_status);
-        mResultView = (TextView) findViewById(R.id.text_result);
+        mStatusView = findViewById(R.id.text_status);
+        mResultView = findViewById(R.id.text_result);
+        authToken = findViewById(R.id.authToken);
+        authToken.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+                String text = authToken.getText().toString();
+                if (AuthTokenUtil.isToken(text)) {
+                    SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(rusEFI.this);
+                    SharedPreferences.Editor editor = preferences.edit();
+                    editor.putString(AuthTokenUtil.AUTH_TOKEN, text);
+                    editor.commit();
+                    authStatusMessage.setVisibility(View.GONE);
+                    authStatusClickableUrl.setVisibility(View.GONE);
+                }
+            }
+        });
+
+        authStatusMessage = findViewById(R.id.authStatus1);
+        authStatusClickableUrl = findViewById(R.id.authStatus2);
+        authStatusClickableUrl.setText(AuthTokenUtil.TOKEN_PROFILE_URL);
+        Linkify.addLinks(authStatusClickableUrl, Linkify.WEB_URLS);
 
         IntentFilter filter = new IntentFilter(ACTION_USB_PERMISSION);
         registerReceiver(mUsbReceiver, filter);
 
-        mStatusView.setText("Hello");
+        mResultView.append(VERSION);
 
+        dfuUpload = new DfuUpload(this);
 
-        final File localFolder = getExternalFilesDir(null);
-        final String localFullFile = localFolder + File.separator + BUNDLE_FILE;
-        localDfuImageFileName = localFolder + File.separator + DFU_FILE_NAME;
+        dfuUpload.fileOperation(mResultView);
+        String authToken = getAuthToken();
+        this.authToken.setText(authToken);
+        int visibility = AuthTokenUtil.isToken(authToken) ? View.GONE : View.VISIBLE;
+        authStatusMessage.setVisibility(visibility);
+        authStatusClickableUrl.setVisibility(visibility);
 
-        if (new File(localFullFile).exists()) {
-            mResultView.append(BUNDLE_FILE + " found!\n");
-            uncompressFile(localFullFile, localFolder, localDfuImageFileName);
-        } else {
-            mResultView.append(BUNDLE_FILE + " not found!\n");
+//        switchOrProgramDfu();
 
-            new Thread(new Runnable() {
-                @Override
-                public void run() {
-                    try {
-                        ConnectionAndMeta c = new ConnectionAndMeta(BUNDLE_FILE).invoke();
-                        ConnectionAndMeta.downloadFile(localFullFile, c, new ConnectionAndMeta.DownloadProgressListener() {
-                            @Override
-                            public void onPercentage(final int currentProgress) {
-                                mResultView.post(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        mResultView.append("Downloading " + currentProgress + "\n");
-                                    }
-                                });
-                            }
-                        });
-                        mResultView.post(new Runnable() {
-                            @Override
-                            public void run() {
-                                mResultView.append("Downloaded! " + "\n");
-                            }
-                        });
-                        uncompressFile(localFullFile, localFolder, localDfuImageFileName);
+        SoundBroadcast.checkOrRequestPermission(this);
+    }
 
-                    } catch (IOException | KeyManagementException | NoSuchAlgorithmException e) {
-                        mResultView.post(new Runnable() {
-                            @Override
-                            public void run() {
-                                mResultView.append("Error downloading " + e + "\n");
-                            }
-                        });
-                    }
+    private String getAuthToken() {
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(rusEFI.this);
+        return preferences.getString(AuthTokenUtil.AUTH_TOKEN, "");
+    }
 
-                }
-            }).start();
-        }
-
-        handleButton();
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        unregisterReceiver(mUsbReceiver);
     }
 
     private void turnScreenOn() {
@@ -149,34 +177,6 @@ public class rusEFI extends Activity {
         }
     }
 
-    private void uncompressFile(final String localFullFile, final File localFolder, final String localDfuImageFileName) {
-        final Listener<Integer> onSuccess = new Listener<Integer>() {
-            @Override
-            public void onResult(final Integer size) {
-                mResultView.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        mResultView.append(localDfuImageFileName + " File size: " + size + "\n");
-                    }
-                });
-                DfuImage dfuImage = new DfuImage();
-                dfuImage.read(localDfuImageFileName);
-            }
-        };
-
-        new Thread(() -> {
-            try {
-                FileUtil.unzip(localFullFile, localFolder);
-                final int size = (int) new File(localDfuImageFileName).length();
-                onSuccess.onResult(size);
-
-            } catch (final IOException e) {
-                mResultView.post(() -> mResultView.append("Error uncompressing " + e + "\n"));
-            }
-
-        }).start();
-    }
-
     private final BroadcastReceiver mUsbReceiver = new BroadcastReceiver() {
         public void onReceive(Context context, Intent intent) {
             String action = intent.getAction();
@@ -184,78 +184,53 @@ public class rusEFI extends Activity {
                 synchronized (this) {
                     if (intent.getBooleanExtra(UsbManager.EXTRA_PERMISSION_GRANTED, false)) {
                         UsbDevice dfuDevice = DfuDeviceLocator.findDevice(usbManager);
-                        dfuUpdate(dfuDevice);
-//                        if (device != null) {
-//                            //call method to set up device communication
-//                        }
-//                    } else {
-                        //txtInfo.append("permission denied for device " + device);
+                        doDfuUpdate(dfuDevice, rusEFI.this.mResultView);
                     }
                 }
             }
         }
     };
 
-    private void handleButton() {
-        mResultView.append("rusEFI app v0.0000003\n");
-
+    private void switchOrProgramDfu() {
         UsbDevice dfuDevice = DfuDeviceLocator.findDevice(usbManager);
 
         if (dfuDevice != null) {
-            handleDfuDevice(dfuDevice);
+            dfuUpdate(dfuDevice);
         } else {
             mResultView.append("No DFU device\n");
-            handleSerialDevice();
-        }
-//        listDevices(manager);
-    }
-
-    private void handleSerialDevice() {
-        List<UsbSerialDriver> availableDrivers = AndroidSerial.findUsbSerial(usbManager);
-        if (availableDrivers.isEmpty()) {
-            mStatusView.setText("Not connected");
-            mResultView.append("No serial devices " + new Date() + "\n");
-            return;
-        }
-        mStatusView.setText("rusEFI: " + availableDrivers.size() + " device(s)");
-
-        UsbSerialDriver driver = availableDrivers.get(0);
-        UsbDeviceConnection connection = usbManager.openDevice(driver.getDevice());
-        if (connection == null) {
-            // add UsbManager.requestPermission(driver.getDevice(), ..) handling here
-            mStatusView.setText("Unable to open serial");
-            return;
-        }
-
-        UsbSerialPort port = driver.getPorts().get(0); // Most devices have just one port (port 0)
-        try {
-            port.open(connection);
-            port.setParameters(115200, 8, UsbSerialPort.STOPBITS_1, UsbSerialPort.PARITY_NONE);
-
-            AndroidSerial serial = new AndroidSerial(port);
-            mResultView.append("Switching to DFU\n");
-            DfuHelper.sendDfuRebootCommand(serial, new StringBuilder());
-
-        } catch (IOException e) {
-            throw new IllegalStateException(e);
+            switchToDfu();
+            // once device is in DFU mode we expect what exactly to happen?
         }
     }
 
-    private void handleDfuDevice(UsbDevice dfuDevice) {
+    @SuppressLint("SetTextI18n")
+    private void switchToDfu() {
+        AndroidSerial serial = AndroidSerial.getAndroidSerial(mStatusView, mResultView, usbManager);
+        if (serial == null) {
+            // error already reported to mStatusView
+            return;
+        }
+
+        mResultView.append("Switching to DFU\n");
+        DfuHelper.sendDfuRebootCommand(serial, new StringBuilder());
+    }
+
+    private void dfuUpdate(UsbDevice dfuDevice) {
         if (usbManager.hasPermission(dfuDevice)) {
-            dfuUpdate(dfuDevice);
+            doDfuUpdate(dfuDevice, mResultView);
         } else {
             PendingIntent mPermissionIntent = PendingIntent.getBroadcast(this, 0, new Intent(ACTION_USB_PERMISSION), 0);
             usbManager.requestPermission(dfuDevice, mPermissionIntent);
         }
     }
 
-    private void dfuUpdate(UsbDevice dfuDevice) {
+    @SuppressLint("SetTextI18n")
+    private void doDfuUpdate(UsbDevice dfuDevice, TextView mResultView) {
         mStatusView.setText("rusEFI: DFU detected");
         DfuDeviceLocator.Result dfu = new DfuDeviceLocator().openDfu(usbManager, dfuDevice);
 
         DfuImage dfuImage = new DfuImage();
-        dfuImage.read(localDfuImageFileName);
+        dfuImage.read(dfuUpload.localDfuImageFileName);
         mResultView.append("Image size " + dfuImage.getImageSize() + "\n");
 
         DfuConnection connection = new AndroidDfuConnection(dfu.getConnection(), dfu.getInterfaceIndex(), dfu.getTransferSize(), dfu.getFlashRange());
@@ -266,9 +241,8 @@ public class rusEFI extends Activity {
 //            mResultView.append("State " + state + "\n");
 
             DfuLogic.uploadImage(logger, connection, dfuImage, dfu.getFlashRange());
-
         } catch (IllegalStateException e) {
-            mResultView.append("Error " + e + "\n");
+            this.mResultView.append("Error " + e + "\n");
         }
     }
 
@@ -276,7 +250,69 @@ public class rusEFI extends Activity {
      * Called when the user touches the button
      */
     public void sendMessage(View view) {
-        handleButton();
+        if (view.getId() == R.id.buttonDfu) {
+            switchOrProgramDfu();
+        } else if (view.getId() == R.id.buttonSound) {
+            soundBroadcast.start();
+        } else if (view.getId() == R.id.buttonBroadcast) {
+            startService(new Intent(this, SerialService.class));
+
+            AndroidSerial serial = AndroidSerial.getAndroidSerial(mStatusView, mResultView, usbManager);
+            if (serial == null) {
+                // error already reported to mStatusView
+                Snackbar mySnackbar = Snackbar.make(view, "No ECU detected", BaseTransientBottomBar.LENGTH_LONG);
+                mySnackbar.show();
+                return;
+            }
+
+            LinkManager linkManager = new LinkManager();
+            linkManager.setConnector(new StreamConnector(linkManager, new Callable<IoStream>() {
+                @Override
+                public IoStream call() {
+                    return serial;
+                }
+            }));
+            linkManager.getConnector().connectAndReadConfiguration(new ConnectionStateListener() {
+                @Override
+                public void onConnectionEstablished() {
+                    mResultView.post(() -> mResultView.append(new Date() + " On connection established\n"));
+
+                    NetworkConnectorContext context = new NetworkConnectorContext();
+                    NetworkConnector.ActivityListener oncePerSecondStatistics = new NetworkConnector.ActivityListener() {
+                        long previousTime;
+
+                        @Override
+                        public void onActivity(IoStream targetEcuSocket) {
+                            long now = System.currentTimeMillis();
+                            if (now - previousTime < Timeouts.SECOND) {
+                                return;
+                            }
+                            previousTime = now;
+                            broadcastStatus.post(() -> broadcastStatus.setText(targetEcuSocket.getBytesIn() + "/" + targetEcuSocket.getBytesOut()));
+                        }
+                    };
+                    NetworkConnector.NetworkConnectorResult result = new NetworkConnector().start(NetworkConnector.Implementation.Android,
+                            getAuthToken(), context, new NetworkConnector.ReconnectListener() {
+                                @Override
+                                public void onReconnect() {
+                                }
+                            }, linkManager, oncePerSecondStatistics);
+
+                    mResultView.post(() -> mResultView.append(new Date() + " Broadcast: " + result + "\n"));
+
+                }
+
+                @Override
+                public void onConnectionFailed() {
+                    mResultView.post(() -> mResultView.append("Connection failed\n"));
+                }
+            });
+
+            Snackbar mySnackbar = Snackbar.make(view, "Broadcasting with " + getAuthToken(), BaseTransientBottomBar.LENGTH_LONG);
+            mySnackbar.show();
+
+
+        }
     }
 
     @Override

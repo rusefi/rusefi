@@ -29,7 +29,8 @@ typedef struct {
 
 extern tunerstudio_counters_s tsState;
 
-#define CONNECTIVITY_THREAD_STACK (2 * UTILITY_THREAD_STACK_SIZE)
+// SD protocol file removal is one of the stack consuming use-cases
+#define CONNECTIVITY_THREAD_STACK (3 * UTILITY_THREAD_STACK_SIZE)
 
 /**
  * handle non CRC wrapped command
@@ -74,14 +75,12 @@ typedef pre_packed struct
 
 	typedef pre_packed struct
 	post_packed {
-		short int page;
 		short int offset;
 		short int count;
 	} TunerStudioWriteChunkRequest;
 
 	typedef pre_packed struct
 		post_packed {
-			short int page;
 			short int offset;
 			short int count;
 		} TunerStudioReadRequest;

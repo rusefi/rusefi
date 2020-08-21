@@ -18,6 +18,8 @@ jobs:
         run: javac -version
 
       - name: Build Android
+        env:
+          RUSEFI_ANDROID_KEYPASS: ${{ secrets.RUSEFI_ANDROID_KEYPASS }}
         working-directory: ./android
         run: bash ./gradlew build
 
@@ -25,4 +27,11 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           name: rusEFI-release-unsigned
-          path: ./android/app/build/outputs/apk/release/app-release-unsigned.apk
+          path: ./android/app/build/outputs/apk/release/rusEFI-release.apk
+
+      - name: Install Tools
+        run: sudo apt-get install ncftp
+
+      - name: Upload rusEFI Android application
+        working-directory: .
+        run: java_console/upload_server.sh ${{ secrets.RUSEFI_BUILD_FTP_USER }} ${{ secrets.RUSEFI_BUILD_FTP_PASS }} ${{ secrets.RUSEFI_FTP_SERVER }} . android/app/build/outputs/apk/release/rusEFI-release.apk

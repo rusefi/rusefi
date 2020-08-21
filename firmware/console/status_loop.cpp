@@ -290,7 +290,6 @@ static void showFuelInfo2(float rpm, float engineLoad) {
 
 	float magicAir = SpeedDensityBase::getAirmassImpl(1, 100, convertCelsiusToKelvin(20) PASS_ENGINE_PARAMETER_SUFFIX);
 
-	scheduleMsg(&logger, "SD magic fuel %.2f", getInjectionDurationForAirmass(magicAir, 14.7 PASS_ENGINE_PARAMETER_SUFFIX));
 	scheduleMsg(&logger, "inj flow %.2fcc/min displacement %.2fL", engineConfiguration->injector.flow,
 			engineConfiguration->specs.displacement);
 
@@ -474,6 +473,10 @@ void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels DECLARE_
 	executorStatistics();
 #endif /* EFI_PROD_CODE */
 
+#if EFI_SIMULATOR
+	tsOutputChannels->sd_status = 1 + 4;
+#endif
+
 	// header
 	tsOutputChannels->tsConfigVersion = TS_FILE_VERSION;
 
@@ -510,6 +513,7 @@ void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels DECLARE_
 	// Set raw sensors
 	tsOutputChannels->rawTps1Primary = Sensor::getRaw(SensorType::Tps1Primary);
 	tsOutputChannels->rawPpsPrimary = Sensor::getRaw(SensorType::AcceleratorPedalPrimary);
+	tsOutputChannels->rawPpsSecondary = Sensor::getRaw(SensorType::AcceleratorPedalSecondary);
 	tsOutputChannels->rawClt = Sensor::getRaw(SensorType::Clt);
 	tsOutputChannels->rawIat = Sensor::getRaw(SensorType::Iat);
 	tsOutputChannels->rawOilPressure = Sensor::getRaw(SensorType::OilPressure);

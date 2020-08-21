@@ -1,5 +1,6 @@
 package com.rusefi.server;
 
+import com.rusefi.proxy.NetworkConnector;
 import com.rusefi.tools.online.HttpUtil;
 import org.json.simple.JSONObject;
 
@@ -10,21 +11,28 @@ import java.util.Random;
  * A session from Controller, including some sensitive information
  */
 public class SessionDetails {
-    private static final String ONE_TIME_TOKEN = "oneTime";
-    private static final String AUTH_TOKEN = "authToken";
+    public static final String VEHICLE_TOKEN = "vehicleToken";
+    public static final String AUTH_TOKEN = "authToken";
+    public static final String CONNECTOR_VERSION = "connectorVersion";
+    public static final String IMPLEMENTATION = "implementation";
+
     private static final String CONTROLLER = "controller";
     private static final String HARDCODED_ONE_TIME_CODE = System.getProperty("ONE_TIME_CODE");
 
     private final ControllerInfo controllerInfo;
 
-    private final int oneTimeToken;
+    private final int vehicleToken;
     private final String authToken;
+    private final NetworkConnector.Implementation implementation;
+    private final int consoleVersion;
 
-    public SessionDetails(ControllerInfo controllerInfo, String authToken, int oneTimeCode) {
+    public SessionDetails(NetworkConnector.Implementation implementation, ControllerInfo controllerInfo, String authToken, int oneTimeCode, int consoleVersion) {
+        this.implementation = Objects.requireNonNull(implementation);
+        this.consoleVersion = consoleVersion;
         Objects.requireNonNull(controllerInfo);
         Objects.requireNonNull(authToken);
         this.controllerInfo = controllerInfo;
-        this.oneTimeToken = oneTimeCode;
+        this.vehicleToken = oneTimeCode;
         this.authToken = authToken;
     }
 
@@ -32,8 +40,12 @@ public class SessionDetails {
         return HARDCODED_ONE_TIME_CODE == null ? new Random().nextInt(100000) : Integer.parseInt(HARDCODED_ONE_TIME_CODE);
     }
 
+    public NetworkConnector.Implementation getImplementation() {
+        return implementation;
+    }
+
     public int getOneTimeToken() {
-        return oneTimeToken;
+        return vehicleToken;
     }
 
     public ControllerInfo getControllerInfo() {
@@ -44,11 +56,17 @@ public class SessionDetails {
         return authToken;
     }
 
+    public int getConsoleVersion() {
+        return consoleVersion;
+    }
+
     public String toJson() {
         JSONObject jsonObject = new JSONObject();
         jsonObject.put(CONTROLLER, controllerInfo.toJson());
-        jsonObject.put(ONE_TIME_TOKEN, oneTimeToken);
+        jsonObject.put(VEHICLE_TOKEN, vehicleToken);
         jsonObject.put(AUTH_TOKEN, authToken);
+        jsonObject.put(CONNECTOR_VERSION, consoleVersion);
+        jsonObject.put(IMPLEMENTATION, implementation.name());
         return jsonObject.toJSONString();
     }
 
@@ -56,11 +74,13 @@ public class SessionDetails {
         JSONObject jsonObject = HttpUtil.parse(jsonString);
 
         String authToken = (String) jsonObject.get(AUTH_TOKEN);
-        long oneTimeCode = (Long)jsonObject.get(ONE_TIME_TOKEN);
+        long oneTimeCode = (Long)jsonObject.get(VEHICLE_TOKEN);
+        long connectorVersion = (long) jsonObject.get(CONNECTOR_VERSION);
+        NetworkConnector.Implementation implementation = NetworkConnector.Implementation.find((String) jsonObject.get(IMPLEMENTATION));
 
-        ControllerInfo controllerInfo = ControllerInfo.valueOf((String) jsonObject.get(CONTROLLER));
+                ControllerInfo controllerInfo = ControllerInfo.valueOf((String) jsonObject.get(CONTROLLER));
 
-        return new SessionDetails(controllerInfo, authToken, (int) oneTimeCode);
+        return new SessionDetails(implementation, controllerInfo, authToken, (int) oneTimeCode, (int) connectorVersion);
     }
 
     @Override
@@ -68,14 +88,14 @@ public class SessionDetails {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         SessionDetails that = (SessionDetails) o;
-        return oneTimeToken == that.oneTimeToken &&
+        return vehicleToken == that.vehicleToken &&
                 controllerInfo.equals(that.controllerInfo) &&
                 authToken.equals(that.authToken);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(controllerInfo, oneTimeToken, authToken);
+        return Objects.hash(controllerInfo, vehicleToken, authToken);
     }
 
     @Override
@@ -83,6 +103,8 @@ public class SessionDetails {
         return "SessionDetails{" +
                 "controllerInfo=" + controllerInfo +
                 ", authToken='" + authToken + '\'' +
+                ", implementation='" + implementation + '\'' +
+                ", consoleVersion='" + consoleVersion + '\'' +
                 '}';
     }
 }

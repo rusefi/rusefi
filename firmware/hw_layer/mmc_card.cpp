@@ -52,8 +52,6 @@ static int totalSyncCounter = 0;
 
 #define LOG_INDEX_FILENAME "index.txt"
 
-#define DOT_MLG ".mlg"
-
 #define RUSEFI_LOG_PREFIX "re_"
 #define PREFIX_LEN 3
 #define SHORT_TIME_LEN 13
@@ -70,9 +68,6 @@ static int totalSyncCounter = 0;
 #endif
 extern const USBConfig msdusbcfg;
 #endif /* HAL_USE_USB_MSD */
-
-#define LOCK_SD_SPI lockSpi(engineConfiguration->sdCardSpiDevice)
-#define UNLOCK_SD_SPI unlockSpi(engineConfiguration->sdCardSpiDevice)
 
 static THD_WORKING_AREA(mmcThreadStack,3 * UTILITY_THREAD_STACK_SIZE);		// MMC monitor thread
 
@@ -127,7 +122,10 @@ static void printError(const char *str, FRESULT f_error) {
 
 static FIL FDLogFile NO_CACHE;
 static FIL FDCurrFile NO_CACHE;
-static int logFileIndex = 1;
+
+// 10 because we want at least 4 character name
+#define MIN_FILE_INDEX 10
+static int logFileIndex = MIN_FILE_INDEX;
 static char logName[_MAX_FILLER + 20];
 
 static void printMmcPinout(void) {
@@ -156,7 +154,7 @@ static void incLogFileName(void) {
 	char data[_MAX_FILLER];
 	UINT result = 0;
 	if (err != FR_OK && err != FR_EXIST) {
-			logFileIndex = 1;
+			logFileIndex = MIN_FILE_INDEX;
 			scheduleMsg(&logger, "%s: not found or error: %d", LOG_INDEX_FILENAME, err);
 	} else {
 		f_read(&FDCurrFile, (void*)data, sizeof(data), &result);
@@ -165,14 +163,14 @@ static void incLogFileName(void) {
 		f_close(&FDCurrFile);
 		if (result < 5) {
             data[result] = 0;
-			logFileIndex = atoi(data);
+			logFileIndex = maxI(MIN_FILE_INDEX, atoi(data));
 			if (absI(logFileIndex) == ERROR_CODE) {
-				logFileIndex = 1;
+				logFileIndex = MIN_FILE_INDEX;
 			} else {
 				logFileIndex++; // next file would use next file name
 			}
 		} else {
-			logFileIndex = 1;
+			logFileIndex = MIN_FILE_INDEX;
 		}
 	}
 
@@ -285,10 +283,12 @@ static void listDirectory(const char *path) {
 		FILINFO fno;
 
 		res = f_readdir(&dir, &fno);
-		if (res != FR_OK || fno.fname[0] == 0)
+		if (res != FR_OK || fno.fname[0] == 0) {
 			break;
-		if (fno.fname[0] == '.')
+		}
+		if (fno.fname[0] == '.') {
 			continue;
+		}
 		if ((fno.fattrib & AM_DIR) || mystrncasecmp(RUSEFI_LOG_PREFIX, fno.fname, sizeof(RUSEFI_LOG_PREFIX) - 1)) {
 			continue;
 		}

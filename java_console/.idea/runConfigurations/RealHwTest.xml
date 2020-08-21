@@ -2,8 +2,6 @@
   <configuration default="false" name="RealHwTest" type="Application" factoryName="Application" nameIsGenerated="true">
     <option name="MAIN_CLASS_NAME" value="com.rusefi.RealHwTest" />
     <module name="autotest" />
-    <option name="PROGRAM_PARAMETERS" value="COM56" />
-    <option name="WORKING_DIRECTORY" value="file://$PROJECT_DIR$" />
     <extension name="coverage">
       <pattern>
         <option name="PATTERN" value="com.rusefi.ui.console.*" />

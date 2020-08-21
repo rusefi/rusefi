@@ -16,6 +16,9 @@
 
 #define TS_RESPONSE_UNDERRUN 0x80
 #define TS_RESPONSE_CRC_FAILURE 0x82
+#define TS_RESPONSE_UNRECOGNIZED_COMMAND 0x83
+#define TS_RESPONSE_OUT_OF_RANGE 0x84
+#define TS_RESPONSE_FRAMING_ERROR 0x8D
 
 typedef enum {
 	TS_PLAIN = 0,
@@ -23,7 +26,9 @@ typedef enum {
 } ts_response_format_e;
 
 struct ts_channel_s {
+#if ! EFI_UNIT_TEST
 	BaseChannel * channel = nullptr;
+#endif
 	uint8_t writeBuffer[7];	// size(2 bytes) + response(1 byte) + crc32 (4 bytes)
 	/**
 	 * See 'blockingFactor' in rusefi.ini
@@ -34,14 +39,6 @@ struct ts_channel_s {
 	UARTDriver *uartp = nullptr;
 #endif // TS_UART_DMA_MODE
 };
-
-// These commands are used exclusively by the rusEfi console
-#define TS_GET_FILE_RANGE '2' // 0x32
-
-
-// many commands are now defined in rusefi_config.txt see TS_* constants
-// this way we reuse between firmware and java code
-
 
 #define CRC_VALUE_SIZE 4
 // todo: double-check this
@@ -63,6 +60,7 @@ bool stopTsPort(ts_channel_s *tsChannel);
 void sr5WriteData(ts_channel_s *tsChannel, const uint8_t * buffer, int size);
 void sr5WriteCrcPacket(ts_channel_s *tsChannel, const uint8_t responseCode, const void *buf, const uint16_t size);
 void sr5SendResponse(ts_channel_s *tsChannel, ts_response_format_e mode, const uint8_t * buffer, int size);
+void sendOkResponse(ts_channel_s *tsChannel, ts_response_format_e mode);
 int sr5ReadData(ts_channel_s *tsChannel, uint8_t * buffer, int size);
 int sr5ReadDataTimeout(ts_channel_s *tsChannel, uint8_t * buffer, int size, int timeout);
 bool sr5IsReady(ts_channel_s *tsChannel);
