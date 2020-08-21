@@ -16,7 +16,7 @@ FuelComputer::FuelComputer(const ValueProvider3D& afrTable) : m_afrTable(&afrTab
 
 float FuelComputer::getStoichiometricRatio() const {
 	// TODO: vary this with ethanol content/configured setting/whatever
-	float rawConfig = CONFIG(stoichRatioPrimary) / 10.0f;
+	float rawConfig = (float)CONFIG(stoichRatioPrimary) / PACK_MULT_AFR;
 
 	// Config compatibility: this field may be zero on ECUs with old defaults
 	if (rawConfig < 5) {
