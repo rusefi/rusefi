@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Fri Aug 21 18:13:46 UTC 2020
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Fri Aug 21 23:45:11 UTC 2020
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -3235,9 +3235,10 @@ struct engine_configuration_s {
 	 */
 	spi_device_e tle6240spiDevice;
 	/**
+	 * Stoichiometric ratio for your primary fuel.
 	 * offset 4005
 	 */
-	uint8_t unusedSpiPadding7;
+	uint8_t stoichRatioPrimary;
 	/**
 	 * iTerm max value
 	 * offset 4006
@@ -3651,4 +3652,4 @@ struct persistent_config_s {
 typedef struct persistent_config_s persistent_config_s;
 
 // end
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Fri Aug 21 18:13:46 UTC 2020
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Fri Aug 21 23:45:11 UTC 2020
