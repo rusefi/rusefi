@@ -322,7 +322,7 @@ public class BinaryProtocol implements BinaryProtocolCommands {
         setController(newVersion);
     }
 
-    private byte[] receivePacket(String msg, boolean allowLongResponse) throws EOFException {
+    private byte[] receivePacket(String msg, boolean allowLongResponse) throws IOException {
         long start = System.currentTimeMillis();
         synchronized (ioLock) {
             return incomingData.getPacket(msg, allowLongResponse, start);
@@ -465,12 +465,6 @@ public class BinaryProtocol implements BinaryProtocolCommands {
     }
 
     public void writeData(byte[] content, Integer offset, int size) {
-        if (size > Fields.BLOCKING_FACTOR) {
-            writeData(content, offset, Fields.BLOCKING_FACTOR);
-            writeData(content, offset + Fields.BLOCKING_FACTOR, size - Fields.BLOCKING_FACTOR);
-            return;
-        }
-
         isBurnPending = true;
 
         byte packet[] = new byte[5 + size];
