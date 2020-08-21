@@ -35,11 +35,12 @@
  * ECU pin 27: OUT         ORG injector #6
  * ECU pin 28: OUT         RED injector #5
  * ECU pin 32: IN          ORG VR positive crankshaft sensor - only 2x 5k per channel, R111 not installed, W1002 not installed
+ * ECU pin 34: IN              IAT sensor (only on second ECU)
  * ECU pin 40: OUT BRN/BLK GRN injector #3
  * ECU pin 41: OUT BRN/WHT BLU injector #1
  * ECU pin 45: GND             crankshaft shield
  * ECU pin 46: IN  BLK     BLU VR negative crankshaft sensor
- * ECU pin 47: IN              IAT sensor (only on second ECU)
+ * ECU pin 47: GND BRN     BLK IAT sensor Ground (only on second ECU)
  *
  * Plug #4 40 pin
  * ECU pin 6:  IN              start signal from ignition key
