@@ -250,7 +250,7 @@ void setConstantDwell(floatms_t dwellMs DECLARE_CONFIG_PARAMETER_SUFFIX) {
 void setAfrMap(afr_table_t table, float value) {
 	for (int l = 0; l < FUEL_LOAD_COUNT; l++) {
 		for (int rpmIndex = 0; rpmIndex < FUEL_RPM_COUNT; rpmIndex++) {
-			table[l][rpmIndex] = (int)(value * PACK_MULT_AFR);
+			table[l][rpmIndex] = (int)(value * PACK_MULT_AFR_CFG);
 		}
 	}
 }
@@ -832,7 +832,7 @@ static void setDefaultEngineConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	setLinearCurve(engineConfiguration->map.samplingWindow, 50, 50, 1);
 
 	setAfrMap(config->afrTable, 14.7);
-	engineConfiguration->stoichRatioPrimary = 14.7f / PACK_MULT_AFR;
+	engineConfiguration->stoichRatioPrimary = 14.7f / PACK_MULT_AFR_CFG;
 
 	setDefaultVETable(PASS_ENGINE_PARAMETER_SIGNATURE);
 
