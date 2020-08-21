@@ -2,6 +2,7 @@
 #include "global.h"
 #include "hal.h"
 #include "engine.h"
+#include "biquad.h"
 
 #include "software_knock.h"
 
@@ -9,6 +10,8 @@ EXTERN_ENGINE;
 
 
 adcsample_t sampleBuffer[8000];
+Biquad knockFilter;
+
 
 
 
@@ -62,40 +65,8 @@ void startKnockSampling(uint8_t cylinderIndex) {
 	adcStartConversionI(&ADCD3, &adcConvGroup, sampleBuffer, sampleCount);
 }
 
-struct biquad {
-	float a0, a1, a2, b1, b2;
-
-	float z1 = 0;
-	float z2 = 0;
-
-	void reset() {
-		z1 = 0;
-		z2 = 0;
-	}
-
-	float filter(float input) {
-		float result = input * a0 + z1;
-		z1 = input * a1 + z2 - b1 * result;
-		z2 = input * a2 - b2 * result;
-		return result;
-	}
-
-	void configureBandpass(float samplingFrequency, float centerFrequency, float Q) {
-		float K = tanf(3.14159 * centerFrequency / samplingFrequency);
-		float norm = 1 / (1 + K / Q + K * K);
-
-		a0 = K / Q * norm;
-		a1 = 0;
-		a2 = -a0;
-		b1 = 2 * (K * K - 1) * norm;
-		b2 = (1 - K / Q + K * K) * norm;
-	}
-};
-
-biquad biquadFilter;
-
 void initSoftwareKnock() {
-	biquadFilter.configureBandpass(217000, CONFIG(knockBandCustom), 3);
+	knockFilter.configureBandpass(217000, CONFIG(knockBandCustom), 3);
 	adcStart(&ADCD3, nullptr);
 }
 
@@ -109,15 +80,14 @@ void processLastKnockEvent() {
 
 	constexpr float ratio = 3.3f / 4095.0f;
 
-	biquadFilter.reset();
-	biquadFilter.configureBandpass(217000, 11000, 10);
+	knockFilter.reset();
 
 	// Compute the sum and sum of squares
 	for (size_t i = 0; i < sampleCount; i++)
 	{
 		float volts = ratio * (sampleBuffer[i] - 2048);
 
-		float filtered = biquadFilter.filter(volts);
+		float filtered = knockFilter.filter(volts);
 
 		sumSq += filtered * filtered;
 	}
