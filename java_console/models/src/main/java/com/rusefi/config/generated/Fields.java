@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEfi tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Thu Aug 20 01:06:29 UTC 2020
+// this file was generated automatically by rusEfi tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Fri Aug 21 18:13:29 UTC 2020
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -147,7 +147,7 @@ public class Fields {
 	public static final int baroSensor_type_offset = 592;
 	public static final int binarySerialRxPin_offset = 1815;
 	public static final int binarySerialTxPin_offset = 1814;
-	public static final int BLOCKING_FACTOR = 400;
+	public static final int BLOCKING_FACTOR = 256;
 	public static final int BOOST_LOAD_COUNT = 8;
 	public static final int BOOST_RPM_COUNT = 8;
 	public static final int boostControlPin_offset = 988;
@@ -1335,7 +1335,7 @@ public class Fields {
 	public static final char TS_SD_R_COMMAND = 'r';
 	public static final char TS_SD_W_COMMAND = 'w';
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI 2020.08.20.all.3971048189";
+	public static final String TS_SIGNATURE = "rusEFI 2020.08.21.all.4285457176";
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final int tunerStudioSerialSpeed_offset = 728;
 	public static final int twoWireBatchIgnition_offset = 1476;

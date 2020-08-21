@@ -12,6 +12,8 @@ public class TS2CRunner {
         TS2C.main(new String[]{tuneFileName, "cltIdleRpmBins", "cltIdleRpm"});
         TS2C.main(new String[]{tuneFileName, "cltIdleCorrBins", "cltIdleCorr"});
 
+        TS2C.main(new String[]{tuneFileName, "etbBiasBins", "etbBiasValues"});
+
         TS2C.main(new String[]{tuneFileName, "crankingCycleBins", "crankingCycleCoef"});
         TS2C.main(new String[]{tuneFileName, "crankingFuelBins", "crankingFuelCoef"});
 

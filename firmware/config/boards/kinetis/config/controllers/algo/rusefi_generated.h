@@ -148,7 +148,7 @@
 #define baroSensor_type_offset 592
 #define binarySerialRxPin_offset 1815
 #define binarySerialTxPin_offset 1814
-#define BLOCKING_FACTOR 400
+#define BLOCKING_FACTOR 256
 #define BOOST_LOAD_COUNT 8
 #define BOOST_RPM_COUNT 8
 #define boostControlPin_offset 988
@@ -1121,8 +1121,8 @@
 #define showHumanReadableWarning_offset 976
 #define showSdCardWarning_offset 76
 #define SIGNATURE_BOARD kin
-#define SIGNATURE_DATE 2020.08.20
-#define SIGNATURE_HASH 3278186333
+#define SIGNATURE_DATE 2020.08.21
+#define SIGNATURE_HASH 3501893304
 #define silentTriggerError_offset 1464
 #define slowAdcAlpha_offset 2088
 #define sparkDwellRpmBins_offset 332
@@ -1427,7 +1427,7 @@
 #define ts_show_spi true
 #define ts_show_trigger_comparator true
 #define ts_show_tunerstudio_port true
-#define TS_SIGNATURE "rusEFI 2020.08.20.kin.3278186333"
+#define TS_SIGNATURE "rusEFI 2020.08.21.kin.3501893304"
 #define TS_SINGLE_WRITE_COMMAND 'W'
 #define TS_SINGLE_WRITE_COMMAND_char W
 #define TS_TEST_COMMAND 't' // 0x74
