@@ -24,6 +24,8 @@ extern LoggingWithStorage tsLogger;
 #include "usbconsole.h"
 
 #if HAL_USE_SERIAL_USB
+// Assert that the USB tx/rx buffers are large enough to fit one full packet
+static_assert(SERIAL_USB_BUFFERS_SIZE >= BLOCKING_FACTOR + 10);
 extern SerialUSBDriver SDU1;
 #endif /* HAL_USE_SERIAL_USB */
 
