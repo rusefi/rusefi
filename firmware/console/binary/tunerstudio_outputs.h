@@ -226,8 +226,11 @@ typedef struct {
 
 	int16_t tuneCrc16; // 244
     uint8_t sd_status; // 246
+	uint8_t pad;
 
-	uint8_t unusedAtTheEnd[41]; // we have some unused bytes to allow compatible TS changes
+	scaled_voltage rawPpsSecondary;		// 248
+
+	uint8_t unusedAtTheEnd[38]; // we have some unused bytes to allow compatible TS changes
 
 	// Temporary - will remove soon
 	TsDebugChannels* getDebugChannels() {
