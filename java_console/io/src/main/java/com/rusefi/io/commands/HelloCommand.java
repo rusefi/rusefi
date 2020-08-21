@@ -25,7 +25,7 @@ public class HelloCommand implements Command {
 
     @Nullable
     public static String getHelloResponse(IncomingDataBuffer incomingData) throws EOFException {
-        byte[] response = incomingData.getPacket("[hello]");
+        byte[] response = incomingData.getPacket("[hello]", true);
         if (!checkResponseCode(response, BinaryProtocolCommands.RESPONSE_OK))
             return null;
         return new String(response, 1, response.length - 1);

@@ -148,7 +148,7 @@
 #define baroSensor_type_offset 592
 #define binarySerialRxPin_offset 1815
 #define binarySerialTxPin_offset 1814
-#define BLOCKING_FACTOR 400
+#define BLOCKING_FACTOR 256
 #define BOOST_LOAD_COUNT 8
 #define BOOST_RPM_COUNT 8
 #define boostControlPin_offset 988
@@ -243,15 +243,18 @@
 #define CMD_ENABLE "enable"
 #define CMD_ENGINE_TYPE "engine_type"
 #define CMD_ETB_DUTY "set_etb_duty"
+#define CMD_FUEL_BENCH "fuelbench"
 #define CMD_FUNCTIONAL_TEST_MODE "test_mode"
 #define CMD_IGNITION "ignition"
 #define CMD_INJECTION "injection"
+#define CMD_MIL_BENCH "milbench"
 #define CMD_PINS "pins"
 #define CMD_REBOOT "reboot"
 #define CMD_REBOOT_DFU "reboot_dfu"
 #define CMD_RESET_ENGINE_SNIFFER "reset_engine_chart"
 #define CMD_RPM "rpm"
 #define CMD_SELF_STIMULATION "self_stimulation"
+#define CMD_STARTER_BENCH "starterbench"
 #define CMD_TRIGGER_HW_INPUT "trigger_hw_input"
 #define CMD_TRIGGER_PIN "set_trigger_input_pin"
 #define CMD_TRIGGERINFO "triggerinfo"
@@ -1118,8 +1121,8 @@
 #define showHumanReadableWarning_offset 976
 #define showSdCardWarning_offset 76
 #define SIGNATURE_BOARD all
-#define SIGNATURE_DATE 2020.08.14
-#define SIGNATURE_HASH 1492793354
+#define SIGNATURE_DATE 2020.08.21
+#define SIGNATURE_HASH 4285457176
 #define silentTriggerError_offset 1464
 #define slowAdcAlpha_offset 2088
 #define sparkDwellRpmBins_offset 332
@@ -1424,7 +1427,7 @@
 #define ts_show_spi true
 #define ts_show_trigger_comparator false
 #define ts_show_tunerstudio_port true
-#define TS_SIGNATURE "rusEFI 2020.08.14.all.1492793354"
+#define TS_SIGNATURE "rusEFI 2020.08.21.all.4285457176"
 #define TS_SINGLE_WRITE_COMMAND 'W'
 #define TS_SINGLE_WRITE_COMMAND_char W
 #define TS_TEST_COMMAND 't' // 0x74
