@@ -1317,7 +1317,7 @@ tChargeMode_e tChargeMode;
 	int16_t idlerpmpid_iTermMin;iTerm min value;"",        1,     0,  -30000,    30000.0,  0
 
 	spi_device_e tle6240spiDevice;
-	uint8_t[1] unusedSpiPadding7;;"units", 1, 0, -20, 100, 0
+	uint8_t stoichRatioPrimary;+Stoichiometric ratio for your primary fuel.;":1", 5, 0, 0, 25.0, 1
 	int16_t idlerpmpid_iTermMax;iTerm max value;"",        1,     0,  -30000,    30000.0,  0
 
 	spi_device_e mc33972spiDevice;
