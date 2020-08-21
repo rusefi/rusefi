@@ -11,6 +11,7 @@ UTILSRC_CPP = \
 	$(UTIL_DIR)/containers/counter64.cpp \
 	$(UTIL_DIR)/containers/local_version_holder.cpp \
 	$(UTIL_DIR)/containers/table_helper.cpp \
+	$(UTIL_DIR)/math/biquad.cpp \
 	$(UTIL_DIR)/math/pid.cpp \
 	$(UTIL_DIR)/math/interpolation.cpp \
 	$(PROJECT_DIR)/util/datalogging.cpp \
