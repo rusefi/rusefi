@@ -53,7 +53,7 @@ enable2ndByteCanID = false
    pageActivate        = "@@TS_PAGE_COMMAND_char@@"
    pageValueWrite      = "@@TS_SINGLE_WRITE_COMMAND_char@@%2o%v"
    pageChunkWrite      = "@@TS_CHUNK_WRITE_COMMAND_char@@%2o%2c%v"
-   crc32CheckCommand   = "@@TS_CRC_CHECK_COMMAND@@%2o%2c"
+   crc32CheckCommand   = "@@TS_CRC_CHECK_COMMAND_char@@%2o%2c"
    retrieveConfigError = "e"
 
 ;communication settings
@@ -337,6 +337,7 @@ enable2ndByteCanID = false
       rawClt          = scalar,	 U16,    238, "V",{1/@@PACK_MULT_VOLTAGE@@}, 0.0
       rawIat          = scalar,	 U16,    240, "V",{1/@@PACK_MULT_VOLTAGE@@}, 0.0
       rawOilPressure  = scalar,	 U16,    242, "V",{1/@@PACK_MULT_VOLTAGE@@}, 0.0
+      rawPpsSecondary = scalar,	 U16,    248, "V",{1/@@PACK_MULT_VOLTAGE@@}, 0.0
 
 	; we use this to match logs to tunes
 	tuneCrc16         = scalar,  U16,    244, "crc16",           1,         0
@@ -953,6 +954,7 @@ gaugeCategory = Sensors - Raw
    rawCltGauge          = rawClt        , "Raw CLT",           "volts", 0, 5, 0, 0, 5, 5, 3, 0
    rawIatGauge          = rawIat        , "Raw IAT",           "volts", 0, 5, 0, 0, 5, 5, 3, 0
    rawOilPressureGauge  = rawOilPressure, "Raw Oil Pressure",  "volts", 0, 5, 0, 0, 5, 5, 3, 0
+   rawPpsSecondaryGauge = rawPpsSecondary,"Raw Pedal Secondary","volts", 0, 5, 0, 0, 5, 5, 3, 0
 
 [WueAnalyze]
     
@@ -1755,6 +1757,7 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 	dialog = pedalGauges
 		gauge = pedalPositionGauge
 		gauge = rawPpsPrimaryGauge
+		gauge = rawPpsSecondaryGauge
 
 	dialog = pedalSensor, "Accelerator pedal", border
 		panel = pedalSensorLeft, West

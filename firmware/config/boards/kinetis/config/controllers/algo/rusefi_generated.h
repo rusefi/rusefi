@@ -243,15 +243,18 @@
 #define CMD_ENABLE "enable"
 #define CMD_ENGINE_TYPE "engine_type"
 #define CMD_ETB_DUTY "set_etb_duty"
+#define CMD_FUEL_BENCH "fuelbench"
 #define CMD_FUNCTIONAL_TEST_MODE "test_mode"
 #define CMD_IGNITION "ignition"
 #define CMD_INJECTION "injection"
+#define CMD_MIL_BENCH "milbench"
 #define CMD_PINS "pins"
 #define CMD_REBOOT "reboot"
 #define CMD_REBOOT_DFU "reboot_dfu"
 #define CMD_RESET_ENGINE_SNIFFER "reset_engine_chart"
 #define CMD_RPM "rpm"
 #define CMD_SELF_STIMULATION "self_stimulation"
+#define CMD_STARTER_BENCH "starterbench"
 #define CMD_TRIGGER_HW_INPUT "trigger_hw_input"
 #define CMD_TRIGGER_PIN "set_trigger_input_pin"
 #define CMD_TRIGGERINFO "triggerinfo"
@@ -1118,8 +1121,8 @@
 #define showHumanReadableWarning_offset 976
 #define showSdCardWarning_offset 76
 #define SIGNATURE_BOARD kin
-#define SIGNATURE_DATE 2020.08.14
-#define SIGNATURE_HASH 1999535530
+#define SIGNATURE_DATE 2020.08.20
+#define SIGNATURE_HASH 3278186333
 #define silentTriggerError_offset 1464
 #define slowAdcAlpha_offset 2088
 #define sparkDwellRpmBins_offset 332
@@ -1424,7 +1427,7 @@
 #define ts_show_spi true
 #define ts_show_trigger_comparator true
 #define ts_show_tunerstudio_port true
-#define TS_SIGNATURE "rusEFI 2020.08.14.kin.1999535530"
+#define TS_SIGNATURE "rusEFI 2020.08.20.kin.3278186333"
 #define TS_SINGLE_WRITE_COMMAND 'W'
 #define TS_SINGLE_WRITE_COMMAND_char W
 #define TS_TEST_COMMAND 't' // 0x74
