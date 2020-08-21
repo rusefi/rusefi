@@ -1,3 +1,7 @@
+#
+# ACCESS_TOKEN - Personal Access Token with "public_repo" permission
+#
+
 name: Sync Wiki
 
 on: gollum
@@ -14,7 +18,7 @@ jobs:
         repository: rusefi/rusefi_documentation
         persist-credentials: false
 
-    - name: Merge
+    - name: Merge from rusefi/wiki
       run: |
         git remote add best-wiki-git https://github.com/rusefi/rusefi.wiki.git
         git fetch best-wiki-git
@@ -22,7 +26,7 @@ jobs:
         git config --local user.name "GitHub Action"
         git merge best-wiki-git/master
 
-    - name: Push changes
+    - name: Push changes to rusefi_documentation technical wiki
       uses: ad-m/github-push-action@master
       with:
         repository: rusefi/rusefi_documentation
