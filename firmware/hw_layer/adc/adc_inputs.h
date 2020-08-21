@@ -13,6 +13,8 @@
 
 #if HAL_USE_ADC
 
+#define SLOW_ADC_RATE 500
+
 const char * getAdcMode(adc_channel_e hwChannel);
 void initAdcInputs();
 

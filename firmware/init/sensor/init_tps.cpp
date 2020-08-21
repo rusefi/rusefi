@@ -51,7 +51,7 @@ static bool initTpsFunc(LinearFunc& func, FunctionalSensor& sensor, adc_channel_
 
 	sensor.setFunction(func);
 
-	AdcSubscription::SubscribeSensor(sensor, channel);
+	AdcSubscription::SubscribeSensor(sensor, channel, 200);
 
 	if (!sensor.Register()) {
 		firmwareError(CUSTOM_INVALID_TPS_SETTING, "Duplicate registration for sensor \"%s\"", sensor.getSensorName());
