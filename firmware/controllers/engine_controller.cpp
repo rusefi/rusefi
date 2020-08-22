@@ -319,10 +319,10 @@ static void printAnalogInfo(void) {
 
 	printAnalogChannelInfo("hip9011", engineConfiguration->hipOutputChannel);
 	printAnalogChannelInfo("fuel gauge", engineConfiguration->fuelLevelSensor);
-	printAnalogChannelInfo("TPS1_1", engineConfiguration->tps1_1AdcChannel);
-	printAnalogChannelInfo("TPS1_2", engineConfiguration->tps1_2AdcChannel);
-	printAnalogChannelInfo("TPS2_1", engineConfiguration->tps2_1AdcChannel);
-	printAnalogChannelInfo("TPS2_2", engineConfiguration->tps2_2AdcChannel);
+	printAnalogChannelInfo("TPS1 Primary", engineConfiguration->tps1_1AdcChannel);
+	printAnalogChannelInfo("TPS1 Secondary", engineConfiguration->tps1_2AdcChannel);
+	printAnalogChannelInfo("TPS2 Primary", engineConfiguration->tps2_1AdcChannel);
+	printAnalogChannelInfo("TPS2 Secondary", engineConfiguration->tps2_2AdcChannel);
 	printAnalogChannelInfo("pPS1", engineConfiguration->throttlePedalPositionAdcChannel);
 	printAnalogChannelInfo("pPS2", engineConfiguration->throttlePedalPositionSecondAdcChannel);
 	printAnalogChannelInfo("CLT", engineConfiguration->clt.adcChannel);
