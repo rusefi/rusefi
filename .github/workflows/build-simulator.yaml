@@ -19,7 +19,7 @@ jobs:
 
     - name: Compile Simulator
       working-directory: ./simulator/
-      run: sh compile.sh
+      run: bash compile.sh
 
     - name: Upload built simulator
       uses: actions/upload-artifact@v2
