@@ -29,14 +29,14 @@ jobs:
           fi
 
       - name: Upload APK - release
-        if: ${{ github.event_name == "push" }}
+        if: ${{ github.event_name == 'push' }}
         uses: actions/upload-artifact@v2
         with:
           name: rusEFI-release
           path: ./android/app/build/outputs/apk/release/rusEFI-release.apk
 
       - name: Upload APK - unsigned
-        if: ${{ github.event_name != "push" }}
+        if: ${{ github.event_name != 'push' }}
         uses: actions/upload-artifact@v2
         with:
           name: rusEFI-release-unsigned
@@ -46,6 +46,6 @@ jobs:
         run: sudo apt-get install ncftp
 
       - name: Upload rusEFI Android application
-        if: ${{ github.event_name == "push" && github.ref == "refs/heads/master" }}
+        if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/master' }}
         working-directory: .
         run: java_console/upload_server.sh ${{ secrets.RUSEFI_BUILD_FTP_USER }} ${{ secrets.RUSEFI_BUILD_FTP_PASS }} ${{ secrets.RUSEFI_FTP_SERVER }} . android/app/build/outputs/apk/release/rusEFI-release.apk
