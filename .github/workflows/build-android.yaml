@@ -40,7 +40,7 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           name: rusEFI-release-unsigned
-          path: ./android/app/build/outputs/apk/release/rusEFI-release-unsigned.apk
+          path: ./android/app/build/outputs/bundle/debug/rusEFI-debug.aab
 
       - name: Install Tools
         run: sudo apt-get install ncftp
