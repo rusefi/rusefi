@@ -25,7 +25,7 @@ jobs:
           if [ "${{github.event_name}}" == "push" ]; then
             bash ./gradlew build
           else
-            bash ./gradlew bundle
+            bash ./gradlew bundleDebug
           fi
 
       - name: Upload APK - release
