@@ -22,7 +22,7 @@ jobs:
           RUSEFI_ANDROID_KEYPASS: ${{ secrets.RUSEFI_ANDROID_KEYPASS }}
         working-directory: ./android
         run: |
-          if [ "${{github.event_name}}" = "push" ]; then
+          if [ "${{github.event_name}}" == "push" ]; then
             bash ./gradlew build
           else
             bash ./gradlew bundle
@@ -46,6 +46,6 @@ jobs:
         run: sudo apt-get install ncftp
 
       - name: Upload rusEFI Android application
-        if: ${{ github.event_name }} == "push" && ${{github.ref}} = "refs/heads/master"
+        if: ${{ github.event_name }} == "push" && ${{github.ref}} == "refs/heads/master"
         working-directory: .
         run: java_console/upload_server.sh ${{ secrets.RUSEFI_BUILD_FTP_USER }} ${{ secrets.RUSEFI_BUILD_FTP_PASS }} ${{ secrets.RUSEFI_FTP_SERVER }} . android/app/build/outputs/apk/release/rusEFI-release.apk
