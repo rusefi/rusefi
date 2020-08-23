@@ -310,7 +310,7 @@ static void printAnalogChannelInfoExt(const char *name, adc_channel_e hwChannel,
 
 static void printAnalogChannelInfo(const char *name, adc_channel_e hwChannel) {
 #if HAL_USE_ADC
-	printAnalogChannelInfoExt(name, hwChannel, getVoltage("print", hwChannel PASS_ENGINE_PARAMETER_SUFFIX), engineConfiguration->analogInputDividerCoefficient);
+	printAnalogChannelInfoExt(name, hwChannel, getVoltage(name, hwChannel PASS_ENGINE_PARAMETER_SUFFIX), engineConfiguration->analogInputDividerCoefficient);
 #endif /* HAL_USE_ADC */
 }
 
