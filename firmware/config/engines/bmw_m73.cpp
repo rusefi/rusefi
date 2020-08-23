@@ -321,4 +321,15 @@ void setEngineBMW_M73_Proteus(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	engineConfiguration->etb.maxValue = 100.0;
 
 
+	CONFIG(useETBforIdleControl) = true;
+
+	// Nissan 60mm throttle
+	CONFIG(tpsMin) = CONFIG(tps2Min) = 113;
+	CONFIG(tpsMax) = CONFIG(tps2Max) = 846;
+	CONFIG(tps1SecondaryMin) = CONFIG(tps2SecondaryMin) = 897;
+	CONFIG(tps1SecondaryMax) = CONFIG(tps2SecondaryMax) = 161;
+
+
+
+
 }
