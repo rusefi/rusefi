@@ -151,7 +151,7 @@ void hwHandleVvtCamSignal(trigger_value_e front, efitick_t nowNt DECLARE_ENGINE_
 	angle_t currentPosition = NT2US(offsetNt) / oneDegreeUs;
 	// convert engine cycle angle into trigger cycle angle
 	currentPosition -= tdcPosition();
-	fixAngle(currentPosition, "currentPosition", CUSTOM_ERR_6558);
+	// https://github.com/rusefi/rusefi/issues/1713 currentPosition could be negative that's expected
 
 	tc->currentVVTEventPosition = currentPosition;
 	if (engineConfiguration->debugMode == DBG_VVT) {
