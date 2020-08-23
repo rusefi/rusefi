@@ -2900,6 +2900,10 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 		commandButton = "Spark #6", cmd_test_spk6
 		commandButton = "Spark #7", cmd_test_spk7
 		commandButton = "Spark #8", cmd_test_spk8
+		commandButton = "Spark #9", cmd_test_spk9
+		commandButton = "Spark #10",cmd_test_spk10
+		commandButton = "Spark #11",cmd_test_spk11
+		commandButton = "Spark #12",cmd_test_spk12
 
 	dialog = testMisc, "Misc"
 ;		commandButton = "Come To Pit", cmd_call_from_pit
