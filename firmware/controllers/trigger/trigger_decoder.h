@@ -133,7 +133,7 @@ public:
 	uint32_t findTriggerZeroEventIndex(TriggerWaveform * shape,
 			const TriggerConfiguration * triggerConfiguration,
 			trigger_config_s const*triggerConfig
-			DECLARE_CONFIG_PARAMETER_SUFFIX);
+			);
 
 private:
 	void resetCurrentCycleState();
