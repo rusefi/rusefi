@@ -281,3 +281,23 @@ void printCurrentState(Logging *logging, int seconds, const char *engineTypeName
 			DELIMETER);
 }
 
+PrimaryTriggerConfiguration::PrimaryTriggerConfiguration(Engine *engine) {
+	this->engine = engine;
+}
+
+bool PrimaryTriggerConfiguration::isUseOnlyRisingEdgeForTrigger() {
+	return engine->engineConfigurationPtr->useOnlyRisingEdgeForTrigger;
+}
+
+debug_mode_e PrimaryTriggerConfiguration::getDebugMode() {
+	return engine->engineConfigurationPtr->debugMode;
+}
+
+bool PrimaryTriggerConfiguration::isSilentTriggerError() {
+	return engine->engineConfigurationPtr->silentTriggerError;
+}
+
+bool PrimaryTriggerConfiguration::isVerboseTriggerSynchDetails() {
+	return engine->engineConfigurationPtr->verboseTriggerSynchDetails;
+}
+
