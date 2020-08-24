@@ -124,6 +124,7 @@ static SensorType indexToTpsSensorSecondary(size_t index) {
 	}
 }
 
+#if EFI_TUNER_STUDIO
 static TsCalMode indexToCalModePriMin(size_t index) {
 	switch (index) {
 		case 0:  return TsCalMode::Tps1Min;
@@ -151,6 +152,7 @@ static TsCalMode indexToCalModeSecMax(size_t index) {
 		default: return TsCalMode::Tps2SecondaryMax;
 	}
 }
+#endif // EFI_TUNER_STUDIO
 
 static percent_t directPwmValue = NAN;
 static percent_t currentEtbDuty;
