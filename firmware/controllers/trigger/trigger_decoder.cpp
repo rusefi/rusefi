@@ -145,7 +145,6 @@ void calculateTriggerSynchPoint(TriggerWaveform *shape, TriggerState *state DECL
 			shape->eventAngles[0] = 0;
 			// this value would be used in case of front-only
 			shape->eventAngles[1] = 0;
-			shape->riseOnlyIndexes[0] = 0;
 		} else {
 			assertAngleRange(shape->triggerShapeSynchPointIndex, "triggerShapeSynchPointIndex", CUSTOM_TRIGGER_SYNC_ANGLE2);
 			unsigned int triggerDefinitionCoordinate = (shape->triggerShapeSynchPointIndex + eventIndex) % engine->engineCycleEventCount;
@@ -163,8 +162,6 @@ void calculateTriggerSynchPoint(TriggerWaveform *shape, TriggerState *state DECL
 			} else {
 				shape->eventAngles[eventIndex] = angle;
 			}
-
-			shape->riseOnlyIndexes[eventIndex] = riseOnlyIndex;
 		}
 	}
 }

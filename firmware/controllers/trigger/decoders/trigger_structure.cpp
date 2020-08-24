@@ -96,7 +96,6 @@ void TriggerWaveform::initialize(operation_mode_e operationMode) {
 	memset(expectedEventCount, 0, sizeof(expectedEventCount));
 	wave.reset();
 	previousAngle = 0;
-	memset(riseOnlyIndexes, 0, sizeof(riseOnlyIndexes));
 	memset(isRiseEvent, 0, sizeof(isRiseEvent));
 #if EFI_UNIT_TEST
 	memset(&triggerSignals, 0, sizeof(triggerSignals));
