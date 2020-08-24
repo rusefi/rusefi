@@ -310,7 +310,7 @@ static void printAnalogChannelInfoExt(const char *name, adc_channel_e hwChannel,
 
 static void printAnalogChannelInfo(const char *name, adc_channel_e hwChannel) {
 #if HAL_USE_ADC
-	printAnalogChannelInfoExt(name, hwChannel, getVoltage("print", hwChannel PASS_ENGINE_PARAMETER_SUFFIX), engineConfiguration->analogInputDividerCoefficient);
+	printAnalogChannelInfoExt(name, hwChannel, getVoltage(name, hwChannel PASS_ENGINE_PARAMETER_SUFFIX), engineConfiguration->analogInputDividerCoefficient);
 #endif /* HAL_USE_ADC */
 }
 
@@ -319,8 +319,10 @@ static void printAnalogInfo(void) {
 
 	printAnalogChannelInfo("hip9011", engineConfiguration->hipOutputChannel);
 	printAnalogChannelInfo("fuel gauge", engineConfiguration->fuelLevelSensor);
-	printAnalogChannelInfo("TPS", engineConfiguration->tps1_1AdcChannel);
-	printAnalogChannelInfo("TPS2", engineConfiguration->tps2_1AdcChannel);
+	printAnalogChannelInfo("TPS1 Primary", engineConfiguration->tps1_1AdcChannel);
+	printAnalogChannelInfo("TPS1 Secondary", engineConfiguration->tps1_2AdcChannel);
+	printAnalogChannelInfo("TPS2 Primary", engineConfiguration->tps2_1AdcChannel);
+	printAnalogChannelInfo("TPS2 Secondary", engineConfiguration->tps2_2AdcChannel);
 	printAnalogChannelInfo("pPS1", engineConfiguration->throttlePedalPositionAdcChannel);
 	printAnalogChannelInfo("pPS2", engineConfiguration->throttlePedalPositionSecondAdcChannel);
 	printAnalogChannelInfo("CLT", engineConfiguration->clt.adcChannel);

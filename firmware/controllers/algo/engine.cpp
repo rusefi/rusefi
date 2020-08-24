@@ -27,6 +27,7 @@
 #include "sensor.h"
 #include "gppwm.h"
 #include "software_knock.h"
+#include "tachometer.h"
 
 #if EFI_TUNER_STUDIO
 #include "tunerstudio_outputs.h"
@@ -222,11 +223,11 @@ void Engine::onTriggerSignalEvent(efitick_t nowNt) {
 	lastTriggerToothEventTimeNt = nowNt;
 }
 
-Engine::Engine() {
+Engine::Engine() : primaryTriggerConfiguration(this) {
 	reset();
 }
 
-Engine::Engine(persistent_config_s *config) {
+Engine::Engine(persistent_config_s *config) : primaryTriggerConfiguration(this) {
 	setConfig(config);
 	reset();
 }
@@ -524,6 +525,7 @@ void Engine::periodicFastCallback(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 #if EFI_SOFTWARE_KNOCK
 	processLastKnockEvent();
 #endif
+	tachSignalCallback(PASS_ENGINE_PARAMETER_SIGNATURE);
 }
 
 void doScheduleStopEngine(DECLARE_ENGINE_PARAMETER_SIGNATURE) {

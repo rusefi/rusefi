@@ -377,8 +377,8 @@ enable2ndByteCanID = false
 ;                                            DBG_ALTERNATOR_PID    DBG_TPS_ACCEL         DBG_2        DBG_IDLE_CONTROL
     debugFieldF1List = bits,   U08,   [0:7], "Controller Output",  "From TPS",           "",          "Controller Output",        "Idle output",         "Channel 1 Rise Counter",    "",           "",            "VVT Event Position","",          "Ign IAT Corr",      "",      "",         "",         "",            "",           "",             "ETB Controller Output", "",                "",           "df1",          "df1",           "22df1",          "fsio 1",  "24:df1",     "CJ125: output",  "",          "",         "",       "",     "",     "",               "TPS1 Pri/Sec Diff",    "",    "",      "",      "Boost Open Loop Duty",  "S unused"      "",           "Osc Amplitude",  "",              "fsio 8",    "idle offset",""
     debugFieldF2List = bits,   U08,   [0:7], "I-Term",             "To TPS",             "",          "I-Term",                   "Idle df2",            "Channel 2 Rise Counter",    "",           "",            "VVT Ratio",         "",          "Ign CLT Corr",      "",      "",         "",         "",            "",           "",             "ETB I-Term",            "",                "",           "df2",          "df2",           "22df2",          "fsio 2",  "24:df2",     "CJ125: i-term",  "",          "",         "",       "",     "",     "",               "TPS2 Pri/Sec Diff",    "",    "",      "",      "Boost Closed Loop Duty","S unused"      "",           "Duty Amplitude", "",              "fsio 9",    "idle min",   ""
-    debugFieldF3List = bits,   U08,   [0:7], "Previous Error",     "Current TPS<>TPS",   "",          "prev error",               "Idle df3",            "ICU sum",                   "",           "",            "",                  "",          "Ign FSIO Adj",      "",      "",         "",         "",            "",           "",             "ETB err",               "",                "",           "df3",          "df3",           "22df3",          "fsio 3",  "24:df3",     "CJ125: err",     "",          "",         "",       "",     "",     "",               "",                     "",    "",      "",      "",                      "S unused"      "",           "Tu",             "",              "fsio 10",   "",           ""
-    debugFieldF4List = bits,   U08,   [0:7], "I Gain",             "Extra Fuel",         "",          "I Gain",                   "Idle df4",            "VVT rise",                  "",           "",            "",                  "",          "Ign PID Adj",       "",      "",         "",         "",            "",           "",             "ETB I setting",         "",                "",           "df4",          "df4",           "22df4",          "fsio 4",  "24:df4",     "CJ125: UA",      "",          "",         "",       "",     "",     "",               "",                     "",    "",      "",      "",                      "S unused"      "",           "Ku",             "",              "fsio 11",   "",           ""
+    debugFieldF3List = bits,   U08,   [0:7], "Previous Error",     "Current TPS<>TPS",   "",          "prev error",               "Idle df3",            "ICU sum",                   "",           "",            "",                  "",          "Ign FSIO Adj",      "",      "",         "",         "",            "",           "",             "ETB err",               "",                "",           "df3",          "df3",           "22df3",          "fsio 3",  "24:df3",     "CJ125: err",     "",          "",         "",       "",     "",     "",               "TPS1/2 Diff",          "",    "",      "",      "",                      "S unused"      "",           "Tu",             "",              "fsio 10",   "",           ""
+    debugFieldF4List = bits,   U08,   [0:7], "I Gain",             "Extra Fuel",         "",          "I Gain",                   "Idle df4",            "VVT rise",                  "",           "",            "",                  "",          "Ign PID Adj",       "",      "",         "",         "",            "",           "",             "ETB I setting",         "",                "",           "df4",          "df4",           "22df4",          "fsio 4",  "24:df4",     "CJ125: UA",      "",          "",         "",       "",     "",     "",               "Acc Pedal Pri/Sec Diff","",   "",      "",      "",                      "S unused"      "",           "Ku",             "",              "fsio 11",   "",           ""
     debugFieldF5List = bits,   U08,   [0:7], "D Gain",             "df5",                "df5",       "D Gain",                   "Idle df5",            "VVT fall",                  "df5",        "",            "",                  "",          "",                  "",      "",         "",         "",            "",           "",             "ETB D setting",         "df5",             "df5",        "df5",          "df5",           "22df5",          "fsio 5",  "24:df5",     "CJ125: UR",      "",          "",         "",       "",     "",     "",               "",                     "",    "",      "",      "",                      "S unused"      "",           "Kp",             "",              "fsio 12",   "",           ""
     debugFieldF6List = bits,   U08,   [0:7], "D Term",             "",                   "",          "D Term",                   "Idle df6",            "Current Gap",               "",           "",            "",                  "",          "",                  "",      "",         "",         "",            "",           "",             "ETB df6",               "",                "",           "df6",          "df6",           "22df6",          "fsio 6",  "24:df6",     "cj: f7",         "",          "",         "",       "",     "",     "",               "",                     "",    "",      "",      "",                      "S unused"      "",           "Ki",             "",              "fsio 13",   "",           ""
     debugFieldF7List = bits,   U08,   [0:7], "Max-Value",          "",                   "",          "Max-Value",                "Idle df7",            "",                          "",           "",            "",                  "",          "",                  "",      "",         "",         "",            "",           "",             "ETB df7",               "",                "",           "df7",          "df7",           "22df7",          "fsio 7",  "24:df7",     "cj: f7",         "",          "",         "",       "",     "",     "",               "",                     "",    "",      "",      "",                      "S unused"      "",           "Kd",             "",              "fsio 14",   "",           ""
@@ -403,6 +403,14 @@ enable2ndByteCanID = false
 	; TPS 1 Secondary
 	maintainConstantValue = tps1SecondaryMax, { (calibrationMode == 6 ) ? calibrationValue : tps1SecondaryMax }
 	maintainConstantValue = tps1SecondaryMin, { (calibrationMode == 7 ) ? calibrationValue : tps1SecondaryMin }
+
+	; TPS 2 Primary
+	maintainConstantValue = tps2Max, { (calibrationMode == 8 ) ? calibrationValue : tps2Max }
+	maintainConstantValue = tps2Min, { (calibrationMode == 9 ) ? calibrationValue : tps2Min }
+
+	; TPS 2 Secondary
+	maintainConstantValue = tps2SecondaryMax, { (calibrationMode == 10 ) ? calibrationValue : tps2SecondaryMax }
+	maintainConstantValue = tps2SecondaryMin, { (calibrationMode == 11 ) ? calibrationValue : tps2SecondaryMin }
 
 	; ETB Auto Gain Calibration
 	maintainConstantValue = etb_pFactor, { (calibrationMode == 3 ) ? calibrationValue : etb_pFactor }
@@ -1194,8 +1202,8 @@ menuDialog = main
 
 	menu = "Fuel"
 		# basic
-		subMenu = injectorConfig,			"Injection configuration", 0, {isInjectionEnabled == 1}
-		subMenu = injectionSettings,		"Injection hardware"
+		subMenu = injectorConfig,			"Injection configuration"
+		subMenu = injectionSettings,		"Injection hardware", 0, {isInjectionEnabled == 1}
 		subMenu = std_separator
 
 		# Air mass model
@@ -1439,6 +1447,7 @@ cmd_test_starter_relay     	 = "@@TS_IO_TEST_COMMAND_char@@\x00\x14\x00\x0B"
 cmd_etb_autotune             = "@@TS_IO_TEST_COMMAND_char@@\x00\x14\x00\x0C"
 cmd_enable_self_stim         = "@@TS_IO_TEST_COMMAND_char@@\x00\x14\x00\x0D"
 cmb_etb_auto_calibrate       = "@@TS_IO_TEST_COMMAND_char@@\x00\x14\x00\x0E"
+cmb_etb_auto_calibrate_2     = "@@TS_IO_TEST_COMMAND_char@@\x00\x14\x00\x11"
 cmd_disable_self_stim        = "@@TS_IO_TEST_COMMAND_char@@\x00\x14\x00\x0F"
 cmd_etb_autotune_stop        = "@@TS_IO_TEST_COMMAND_char@@\x00\x14\x00\x10"
 
@@ -1604,6 +1613,9 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 	dialog = injChars, "Injector Settings",	yAxis
 		field = "Injector Flow",			injector_flow, {isInjectionEnabled == 1}
 
+	dialog = fuelParams, "Fuel characteristics", yAxis
+		field = "Stoichiometric ratio",		stoichRatioPrimary, {isInjectionEnabled == 1}
+
 	dialog = injectorOutputSettings, "Injector Outputs",	yAxis
 		field = "Use only first half of pins for batch mode"
 		field = "Injection Pin 1",						injectionPins1, {isInjectionEnabled == 1}
@@ -1651,6 +1663,7 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 		topicHelp = "fuelHelp"
 		panel = baseInjection
 		panel = injChars
+		panel = fuelParams
 		panel = injectorsDeadTime
 
 	dialog = ignitionCylExtra, "Ignition Cylinder Extra Timing"
@@ -1728,6 +1741,7 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 		field = "Secondary sensor",				tps1_2AdcChannel
 		field = "Secondary min",				tps1SecondaryMin, {tps1_2AdcChannel != @@ADC_CHANNEL_NONE@@}
 		field = "Secondary max",				tps1SecondaryMax, {tps1_2AdcChannel != @@ADC_CHANNEL_NONE@@}
+		commandButton = "Auto Calibrate TPS 1", cmb_etb_auto_calibrate, {tps1_2AdcChannel != @@ADC_CHANNEL_NONE@@ && throttlePedalPositionAdcChannel != @@ADC_CHANNEL_NONE@@}
 
 	dialog = tpsNum2, "Throttle #2"
 		field = "Primary sensor",				tps2_1AdcChannel
@@ -1736,6 +1750,7 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 		field = "Secondary sensor",				tps2_2AdcChannel
 		field = "Secondary min",				tps2SecondaryMin, {tps2_2AdcChannel != @@ADC_CHANNEL_NONE@@}
 		field = "Secondary max",				tps2SecondaryMax, {tps2_2AdcChannel != @@ADC_CHANNEL_NONE@@}
+		commandButton = "Auto Calibrate TPS 2", cmb_etb_auto_calibrate_2, {tps2_2AdcChannel != @@ADC_CHANNEL_NONE@@ && throttlePedalPositionAdcChannel != @@ADC_CHANNEL_NONE@@}
 
 	dialog = tpsLimits, "TPS Limits"
 		field = "TPS minimum valid value",	tpsErrorDetectionTooLow, {tps1_1AdcChannel != @@ADC_CHANNEL_NONE@@}
@@ -2863,10 +2878,13 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 		panel = hbridgeHardware,						{ throttlePedalPositionAdcChannel != @@ADC_CHANNEL_NONE@@ || (useStepperIdle && useHbridges) || dcMotorIdleValve }
 
 	dialog = etbAutotune, "PID Autotune"
+		field = "First step: calibrate TPS and hit 'Burn'"
+		commandButton = "Auto Calibrate TPS 1", cmb_etb_auto_calibrate
+		commandButton = "Auto Calibrate TPS 2", cmb_etb_auto_calibrate_2
+		field = "Second step"
 		commandButton = "Start ETB PID Autotune", cmd_etb_autotune
 		commandButton = "Stop ETB PID Autotune", cmd_etb_autotune_stop
 
-		commandButton = "Auto Calibrate TPS", cmb_etb_auto_calibrate
 
 		field = "!Set debug mode below to 'ETB Autotune' to show more detail"
 		field = "Debug mode",							debugMode
@@ -2894,6 +2912,10 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 		commandButton = "Spark #6", cmd_test_spk6
 		commandButton = "Spark #7", cmd_test_spk7
 		commandButton = "Spark #8", cmd_test_spk8
+		commandButton = "Spark #9", cmd_test_spk9
+		commandButton = "Spark #10",cmd_test_spk10
+		commandButton = "Spark #11",cmd_test_spk11
+		commandButton = "Spark #12",cmd_test_spk12
 
 	dialog = testMisc, "Misc"
 ;		commandButton = "Come To Pit", cmd_call_from_pit
