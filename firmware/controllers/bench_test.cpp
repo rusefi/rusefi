@@ -270,6 +270,9 @@ static void handleCommandX14(uint16_t index) {
 	case 0xE:
 		etbAutocal(0);
 		return;
+	case 0x11:
+		etbAutocal(1);
+		return;
 	case 0xC:
 		engine->etbAutoTune = true;
 		return;
