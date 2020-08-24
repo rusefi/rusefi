@@ -72,7 +72,7 @@ void TriggerStimulatorHelper::feedSimulatedEvent(const TriggerStateCallback trig
 					triggerCycleCallback,
 					/* override */ nullptr,
 					triggerConfiguration,
-					s, time PASS_CONFIG_PARAMETER_SUFFIX);
+					s, time);
 		}
 	}
 
@@ -84,7 +84,7 @@ void TriggerStimulatorHelper::feedSimulatedEvent(const TriggerStateCallback trig
 					triggerCycleCallback,
 					/* override */ nullptr,
 					triggerConfiguration,
-					s, time PASS_CONFIG_PARAMETER_SUFFIX);
+					s, time);
 		}
 	}
 
@@ -96,7 +96,7 @@ void TriggerStimulatorHelper::feedSimulatedEvent(const TriggerStateCallback trig
 					triggerCycleCallback,
 					/* override */ nullptr,
 					triggerConfiguration,
-					s, time PASS_CONFIG_PARAMETER_SUFFIX);
+					s, time);
 		}
 	}
 }

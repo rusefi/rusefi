@@ -60,10 +60,11 @@ public:
 class PrimaryTriggerConfiguration : public TriggerConfiguration {
 public:
 	PrimaryTriggerConfiguration(Engine *engine);
-	bool isUseOnlyRisingEdgeForTrigger();
-	bool isSilentTriggerError();
-	bool isVerboseTriggerSynchDetails();
-	debug_mode_e getDebugMode();
+	bool isUseOnlyRisingEdgeForTrigger() const;
+	bool isSilentTriggerError() const;
+	bool isVerboseTriggerSynchDetails() const;
+	debug_mode_e getDebugMode() const;
+	trigger_type_e getType() const;
 private:
 	Engine *engine;
 };

@@ -114,13 +114,6 @@ float actualSynchGap;
 
 static Logging * logger = nullptr;
 
-/**
- * @return TRUE is something is wrong with trigger decoding
- */
-bool isTriggerDecoderError(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
-	return engine->triggerErrorDetection.sum(6) > 4;
-}
-
 void calculateTriggerSynchPoint(TriggerWaveform *shape, TriggerState *state DECLARE_ENGINE_PARAMETER_SUFFIX) {
 #if EFI_PROD_CODE
 	efiAssertVoid(CUSTOM_TRIGGER_STACK, getCurrentRemainingStack() > EXPECTED_REMAINING_STACK, "calc s");
@@ -302,7 +295,7 @@ static trigger_value_e eventType[6] = { TV_FALL, TV_RISE, TV_FALL, TV_RISE, TV_F
 		/* odd event - start accumulation */ \
 		currentCycle.timeOfPreviousEventNt[triggerWheel] = nowNt; \
 	} \
-	if (engineConfiguration->useOnlyRisingEdgeForTrigger) {currentCycle.current_index++;} \
+	if (triggerConfiguration->isUseOnlyRisingEdgeForTrigger()) {currentCycle.current_index++;} \
 	currentCycle.current_index++; \
 	PRINT_INC_INDEX; \
 }
@@ -389,7 +382,7 @@ void TriggerState::decodeTriggerEvent(TriggerWaveform *triggerShape,
 		TriggerStateListener * triggerStateListener,
 		const TriggerConfiguration * triggerConfiguration,
 		const trigger_event_e signal,
-		const efitick_t nowNt DECLARE_CONFIG_PARAMETER_SUFFIX) {
+		const efitick_t nowNt) {
 	ScopePerf perf(PE::DecodeTriggerEvent);
 	
 	if (nowNt - previousShaftEventTimeNt > NT_PER_SECOND) {
@@ -439,7 +432,7 @@ void TriggerState::decodeTriggerEvent(TriggerWaveform *triggerShape,
 #if EFI_UNIT_TEST
 		if (printTriggerTrace) {
 			printf("%s isLessImportant %s now=%d index=%d\r\n",
-					getTrigger_type_e(engineConfiguration->trigger.type),
+					getTrigger_type_e(triggerConfiguration->getType()),
 					getTrigger_event_e(signal),
 					(int)nowNt,
 					currentCycle.current_index);
@@ -456,7 +449,7 @@ void TriggerState::decodeTriggerEvent(TriggerWaveform *triggerShape,
 #if EFI_UNIT_TEST
 		if (printTriggerTrace) {
 			printf("%s event %s %d\r\n",
-					getTrigger_type_e(engineConfiguration->trigger.type),
+					getTrigger_type_e(triggerConfiguration->getType()),
 					getTrigger_event_e(signal),
 					nowNt);
 		}
@@ -618,7 +611,7 @@ void TriggerState::decodeTriggerEvent(TriggerWaveform *triggerShape,
 #if EFI_UNIT_TEST
 		if (printTriggerTrace) {
 			printf("decodeTriggerEvent %s isSynchronizationPoint=%d index=%d %s\r\n",
-					getTrigger_type_e(engineConfiguration->trigger.type),
+					getTrigger_type_e(triggerConfiguration->getType()),
 					isSynchronizationPoint, currentCycle.current_index,
 					getTrigger_event_e(signal));
 		}
@@ -725,13 +718,6 @@ uint32_t TriggerState::findTriggerZeroEventIndex(TriggerWaveform * shape,
 
 void initTriggerDecoderLogger(Logging *sharedLogger) {
 	logger = sharedLogger;
-}
-
- void initTriggerDecoder(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
-#if EFI_GPIO_HARDWARE
-	enginePins.triggerDecoderErrorPin.initPin("led: trigger debug", CONFIG(triggerErrorPin),
-			&CONFIG(triggerErrorPinMode));
-#endif /* EFI_GPIO_HARDWARE */
 }
 
 #endif /* EFI_SHAFT_POSITION_INPUT */

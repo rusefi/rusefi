@@ -25,10 +25,11 @@ struct TriggerStateListener {
 
 class TriggerConfiguration {
 public:
-	virtual bool isUseOnlyRisingEdgeForTrigger() = 0;
-	virtual bool isSilentTriggerError() = 0;
-	virtual bool isVerboseTriggerSynchDetails() = 0;
-	virtual debug_mode_e getDebugMode() = 0;
+	virtual bool isUseOnlyRisingEdgeForTrigger() const = 0;
+	virtual bool isSilentTriggerError() const = 0;
+	virtual bool isVerboseTriggerSynchDetails() const = 0;
+	virtual debug_mode_e getDebugMode() const = 0;
+	virtual trigger_type_e getType() const = 0;
 };
 
 typedef void (*TriggerStateCallback)(TriggerState *);
@@ -81,12 +82,11 @@ public:
 			TriggerStateListener * triggerStateListener,
 			const TriggerConfiguration * triggerConfiguration,
 			const trigger_event_e signal,
-			const efitime_t nowUs DECLARE_CONFIG_PARAMETER_SUFFIX);
+			const efitime_t nowUs);
 
 	bool validateEventCounters(TriggerWaveform *triggerShape) const;
 	void onShaftSynchronization(const TriggerStateCallback triggerCycleCallback,
 			efitick_t nowNt, TriggerWaveform *triggerShape);
-
 
 	bool isValidIndex(TriggerWaveform *triggerShape) const;
 	float getTriggerDutyCycle(int index);
@@ -188,10 +188,7 @@ angle_t getEngineCycle(operation_mode_e operationMode);
 
 class Engine;
 
-void initTriggerDecoder(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 void initTriggerDecoderLogger(Logging *sharedLogger);
-
-bool isTriggerDecoderError(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 
 void calculateTriggerSynchPoint(TriggerWaveform *shape, TriggerState *state DECLARE_ENGINE_PARAMETER_SUFFIX);
 
