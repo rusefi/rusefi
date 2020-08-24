@@ -404,6 +404,14 @@ enable2ndByteCanID = false
 	maintainConstantValue = tps1SecondaryMax, { (calibrationMode == 6 ) ? calibrationValue : tps1SecondaryMax }
 	maintainConstantValue = tps1SecondaryMin, { (calibrationMode == 7 ) ? calibrationValue : tps1SecondaryMin }
 
+	; TPS 2 Primary
+	maintainConstantValue = tps2Max, { (calibrationMode == 8 ) ? calibrationValue : tps2Max }
+	maintainConstantValue = tps2Min, { (calibrationMode == 9 ) ? calibrationValue : tps2Min }
+
+	; TPS 2 Secondary
+	maintainConstantValue = tps2SecondaryMax, { (calibrationMode == 10 ) ? calibrationValue : tps2SecondaryMax }
+	maintainConstantValue = tps2SecondaryMin, { (calibrationMode == 11 ) ? calibrationValue : tps2SecondaryMin }
+
 	; ETB Auto Gain Calibration
 	maintainConstantValue = etb_pFactor, { (calibrationMode == 3 ) ? calibrationValue : etb_pFactor }
 	maintainConstantValue = etb_iFactor, { (calibrationMode == 4 ) ? calibrationValue : etb_iFactor }
@@ -1439,6 +1447,7 @@ cmd_test_starter_relay     	 = "@@TS_IO_TEST_COMMAND_char@@\x00\x14\x00\x0B"
 cmd_etb_autotune             = "@@TS_IO_TEST_COMMAND_char@@\x00\x14\x00\x0C"
 cmd_enable_self_stim         = "@@TS_IO_TEST_COMMAND_char@@\x00\x14\x00\x0D"
 cmb_etb_auto_calibrate       = "@@TS_IO_TEST_COMMAND_char@@\x00\x14\x00\x0E"
+cmb_etb_auto_calibrate_2     = "@@TS_IO_TEST_COMMAND_char@@\x00\x14\x00\x11"
 cmd_disable_self_stim        = "@@TS_IO_TEST_COMMAND_char@@\x00\x14\x00\x0F"
 cmd_etb_autotune_stop        = "@@TS_IO_TEST_COMMAND_char@@\x00\x14\x00\x10"
 
@@ -1732,6 +1741,7 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 		field = "Secondary sensor",				tps1_2AdcChannel
 		field = "Secondary min",				tps1SecondaryMin, {tps1_2AdcChannel != @@ADC_CHANNEL_NONE@@}
 		field = "Secondary max",				tps1SecondaryMax, {tps1_2AdcChannel != @@ADC_CHANNEL_NONE@@}
+		commandButton = "Auto Calibrate TPS 1", cmb_etb_auto_calibrate, {tps1_2AdcChannel != @@ADC_CHANNEL_NONE@@ && throttlePedalPositionAdcChannel != @@ADC_CHANNEL_NONE@@}
 
 	dialog = tpsNum2, "Throttle #2"
 		field = "Primary sensor",				tps2_1AdcChannel
@@ -1740,6 +1750,7 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 		field = "Secondary sensor",				tps2_2AdcChannel
 		field = "Secondary min",				tps2SecondaryMin, {tps2_2AdcChannel != @@ADC_CHANNEL_NONE@@}
 		field = "Secondary max",				tps2SecondaryMax, {tps2_2AdcChannel != @@ADC_CHANNEL_NONE@@}
+		commandButton = "Auto Calibrate TPS 2", cmb_etb_auto_calibrate_2, {tps2_2AdcChannel != @@ADC_CHANNEL_NONE@@ && throttlePedalPositionAdcChannel != @@ADC_CHANNEL_NONE@@}
 
 	dialog = tpsLimits, "TPS Limits"
 		field = "TPS minimum valid value",	tpsErrorDetectionTooLow, {tps1_1AdcChannel != @@ADC_CHANNEL_NONE@@}
@@ -2868,7 +2879,8 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 
 	dialog = etbAutotune, "PID Autotune"
 		field = "First step: calibrate TPS and hit 'Burn'"
-		commandButton = "Auto Calibrate TPS", cmb_etb_auto_calibrate
+		commandButton = "Auto Calibrate TPS 1", cmb_etb_auto_calibrate
+		commandButton = "Auto Calibrate TPS 2", cmb_etb_auto_calibrate_2
 		field = "Second step"
 		commandButton = "Start ETB PID Autotune", cmd_etb_autotune
 		commandButton = "Stop ETB PID Autotune", cmd_etb_autotune_stop
