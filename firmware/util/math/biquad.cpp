@@ -11,9 +11,14 @@
 #include <math.h>
 
 Biquad::Biquad() {
-	// Default to passthru
+// Default to passthru
 	a0 = 1;
 	a1 = a2 = b1 = b2 = 0;
+
+	reset();
+}
+
+void Biquad::reset() {
 	z1 = z2 = 0;
 }
 

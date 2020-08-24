@@ -11,7 +11,8 @@ class Biquad {
 public:
 	Biquad();
 
-    float filter(float input);
+	float filter(float input);
+	void reset();
 
 	void configureBandpass(float samplingFrequency, float centerFrequency, float Q);
 
@@ -19,6 +20,6 @@ public:
 	void configureLowpass(float samplingFrequency, float cutoffFrequency, float Q = 0.707f);
 
 private:
-    float a0, a1, a2, b1, b2;
-    float z1, z2;
+	float a0, a1, a2, b1, b2;
+	float z1, z2;
 };
