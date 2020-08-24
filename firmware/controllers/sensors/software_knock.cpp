@@ -24,7 +24,7 @@ static void completionCallback(ADCDriver*, adcsample_t*, size_t) {
 static void errorCallback(ADCDriver*, adcerror_t err) {
 }
 
-static ADCConversionGroup adcConvGroup = { FALSE, 1, &completionCallback, &errorCallback,
+static const ADCConversionGroup adcConvGroup = { FALSE, 1, &completionCallback, &errorCallback,
 	0,
 	ADC_CR2_SWSTART,
 	ADC_SMPR1_SMP_AN14(ADC_SAMPLE_84), // sample times for channels 10...18
