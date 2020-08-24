@@ -455,7 +455,7 @@ void TriggerCentral::handleShaftSignal(trigger_event_e signal, efitick_t timesta
 			nullptr,
 			engine,
 			&engine->primaryTriggerConfiguration,
-			signal, timestamp PASS_CONFIG_PARAMETER_SUFFIX);
+			signal, timestamp);
 
 	/**
 	 * If we only have a crank position sensor with four stroke, here we are extending crank revolutions with a 360 degree
@@ -792,8 +792,15 @@ void initTriggerCentral(Logging *sharedLogger) {
 	addConsoleAction(CMD_TRIGGERINFO, triggerInfo);
 	addConsoleAction("trigger_shape_info", triggerShapeInfo);
 	addConsoleAction("reset_trigger", resetRunningTriggerCounters);
-#endif
+#endif // EFI_PROD_CODE || EFI_SIMULATOR
 
 }
 
-#endif
+/**
+ * @return TRUE is something is wrong with trigger decoding
+ */
+bool isTriggerDecoderError(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+	return engine->triggerErrorDetection.sum(6) > 4;
+}
+
+#endif // EFI_SHAFT_POSITION_INPUT

@@ -285,19 +285,23 @@ PrimaryTriggerConfiguration::PrimaryTriggerConfiguration(Engine *engine) {
 	this->engine = engine;
 }
 
-bool PrimaryTriggerConfiguration::isUseOnlyRisingEdgeForTrigger() {
+bool PrimaryTriggerConfiguration::isUseOnlyRisingEdgeForTrigger() const {
 	return engine->engineConfigurationPtr->useOnlyRisingEdgeForTrigger;
 }
 
-debug_mode_e PrimaryTriggerConfiguration::getDebugMode() {
+debug_mode_e PrimaryTriggerConfiguration::getDebugMode() const {
 	return engine->engineConfigurationPtr->debugMode;
 }
 
-bool PrimaryTriggerConfiguration::isSilentTriggerError() {
+trigger_type_e PrimaryTriggerConfiguration::getType() const {
+	return engine->engineConfigurationPtr->trigger.type;
+}
+
+bool PrimaryTriggerConfiguration::isSilentTriggerError() const {
 	return engine->engineConfigurationPtr->silentTriggerError;
 }
 
-bool PrimaryTriggerConfiguration::isVerboseTriggerSynchDetails() {
+bool PrimaryTriggerConfiguration::isVerboseTriggerSynchDetails() const {
 	return engine->engineConfigurationPtr->verboseTriggerSynchDetails;
 }
 
