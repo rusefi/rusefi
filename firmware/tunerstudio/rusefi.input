@@ -1194,8 +1194,8 @@ menuDialog = main
 
 	menu = "Fuel"
 		# basic
-		subMenu = injectorConfig,			"Injection configuration", 0, {isInjectionEnabled == 1}
-		subMenu = injectionSettings,		"Injection hardware"
+		subMenu = injectorConfig,			"Injection configuration"
+		subMenu = injectionSettings,		"Injection hardware", 0, {isInjectionEnabled == 1}
 		subMenu = std_separator
 
 		# Air mass model
