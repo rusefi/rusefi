@@ -222,11 +222,11 @@ void Engine::onTriggerSignalEvent(efitick_t nowNt) {
 	lastTriggerToothEventTimeNt = nowNt;
 }
 
-Engine::Engine() {
+Engine::Engine() : primaryTriggerConfiguration(this) {
 	reset();
 }
 
-Engine::Engine(persistent_config_s *config) {
+Engine::Engine(persistent_config_s *config) : primaryTriggerConfiguration(this) {
 	setConfig(config);
 	reset();
 }

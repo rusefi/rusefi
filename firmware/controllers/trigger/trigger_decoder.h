@@ -20,7 +20,15 @@ struct TriggerStateListener {
 	virtual void OnTriggerSyncronization(bool wasSynchronized) = 0;
 	virtual void OnTriggerInvalidIndex(int currentIndex) = 0;
 	virtual void OnTriggerSynchronizationLost() = 0;
-#endif
+#endif // EFI_SHAFT_POSITION_INPUT
+};
+
+class TriggerConfiguration {
+public:
+	virtual bool isUseOnlyRisingEdgeForTrigger() = 0;
+	virtual bool isSilentTriggerError() = 0;
+	virtual bool isVerboseTriggerSynchDetails() = 0;
+	virtual debug_mode_e getDebugMode() = 0;
 };
 
 typedef void (*TriggerStateCallback)(TriggerState *);
@@ -68,9 +76,12 @@ public:
 	void incrementTotalEventCounter();
 	efitime_t getTotalEventCounter() const;
 
-	void decodeTriggerEvent(TriggerWaveform *triggerShape, const TriggerStateCallback triggerCycleCallback,
+	void decodeTriggerEvent(TriggerWaveform *triggerShape,
+			const TriggerStateCallback triggerCycleCallback,
 			TriggerStateListener * triggerStateListener,
-			trigger_event_e const signal, efitime_t nowUs DECLARE_CONFIG_PARAMETER_SUFFIX);
+			const TriggerConfiguration * triggerConfiguration,
+			const trigger_event_e signal,
+			const efitime_t nowUs DECLARE_CONFIG_PARAMETER_SUFFIX);
 
 	bool validateEventCounters(TriggerWaveform *triggerShape) const;
 	void onShaftSynchronization(const TriggerStateCallback triggerCycleCallback,
@@ -119,7 +130,9 @@ public:
 	 */
 	efitick_t startOfCycleNt;
 
-	uint32_t findTriggerZeroEventIndex(TriggerWaveform * shape, trigger_config_s const*triggerConfig
+	uint32_t findTriggerZeroEventIndex(TriggerWaveform * shape,
+			const TriggerConfiguration * triggerConfiguration,
+			trigger_config_s const*triggerConfig
 			DECLARE_CONFIG_PARAMETER_SUFFIX);
 
 private:

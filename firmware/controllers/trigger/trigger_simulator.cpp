@@ -30,6 +30,7 @@ extern bool printTriggerDebug;
 #endif /* ! EFI_UNIT_TEST */
 
 void TriggerStimulatorHelper::feedSimulatedEvent(const TriggerStateCallback triggerCycleCallback,
+		const TriggerConfiguration * triggerConfiguration,
 		TriggerState *state, TriggerWaveform * shape, int i
 		DECLARE_CONFIG_PARAMETER_SUFFIX) {
 	efiAssertVoid(CUSTOM_ERR_6593, shape->getSize() > 0, "size not zero");
@@ -70,6 +71,7 @@ void TriggerStimulatorHelper::feedSimulatedEvent(const TriggerStateCallback trig
 			state->decodeTriggerEvent(shape,
 					triggerCycleCallback,
 					/* override */ nullptr,
+					triggerConfiguration,
 					s, time PASS_CONFIG_PARAMETER_SUFFIX);
 		}
 	}
@@ -81,6 +83,7 @@ void TriggerStimulatorHelper::feedSimulatedEvent(const TriggerStateCallback trig
 			state->decodeTriggerEvent(shape,
 					triggerCycleCallback,
 					/* override */ nullptr,
+					triggerConfiguration,
 					s, time PASS_CONFIG_PARAMETER_SUFFIX);
 		}
 	}
@@ -92,12 +95,14 @@ void TriggerStimulatorHelper::feedSimulatedEvent(const TriggerStateCallback trig
 			state->decodeTriggerEvent(shape,
 					triggerCycleCallback,
 					/* override */ nullptr,
+					triggerConfiguration,
 					s, time PASS_CONFIG_PARAMETER_SUFFIX);
 		}
 	}
 }
 
 void TriggerStimulatorHelper::assertSyncPositionAndSetDutyCycle(const TriggerStateCallback triggerCycleCallback,
+		const TriggerConfiguration * triggerConfiguration,
 		const uint32_t syncIndex, TriggerState *state, TriggerWaveform * shape
 		DECLARE_CONFIG_PARAMETER_SUFFIX) {
 
@@ -105,7 +110,9 @@ void TriggerStimulatorHelper::assertSyncPositionAndSetDutyCycle(const TriggerSta
 	 * let's feed two more cycles to validate shape definition
 	 */
 	for (uint32_t i = syncIndex + 1; i <= syncIndex + GAP_TRACKING_LENGTH * shape->getSize(); i++) {
-		feedSimulatedEvent(triggerCycleCallback, state, shape, i PASS_CONFIG_PARAMETER_SUFFIX);
+		feedSimulatedEvent(triggerCycleCallback,
+				triggerConfiguration,
+				state, shape, i PASS_CONFIG_PARAMETER_SUFFIX);
 	}
 	int revolutionCounter = state->getTotalRevolutionCounter();
 	if (revolutionCounter != GAP_TRACKING_LENGTH + 1) {
@@ -124,9 +131,12 @@ void TriggerStimulatorHelper::assertSyncPositionAndSetDutyCycle(const TriggerSta
  * @return trigger synchronization point index, or error code if not found
  */
 uint32_t TriggerStimulatorHelper::findTriggerSyncPoint(TriggerWaveform * shape,
+		const TriggerConfiguration * triggerConfiguration,
 		 TriggerState *state DECLARE_CONFIG_PARAMETER_SUFFIX) {
 	for (int i = 0; i < 4 * PWM_PHASE_MAX_COUNT; i++) {
-		feedSimulatedEvent(nullptr, state, shape, i PASS_CONFIG_PARAMETER_SUFFIX);
+		feedSimulatedEvent(nullptr,
+				triggerConfiguration,
+				state, shape, i PASS_CONFIG_PARAMETER_SUFFIX);
 
 		if (state->shaft_is_synchronized) {
 			return i;

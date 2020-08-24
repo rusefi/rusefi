@@ -57,6 +57,17 @@ public:
 	gear_e currentGear = NEUTRAL;
 };
 
+class PrimaryTriggerConfiguration : public TriggerConfiguration {
+public:
+	PrimaryTriggerConfiguration(Engine *engine);
+	bool isUseOnlyRisingEdgeForTrigger();
+	bool isSilentTriggerError();
+	bool isVerboseTriggerSynchDetails();
+	debug_mode_e getDebugMode();
+private:
+	Engine *engine;
+};
+
 class Engine : public TriggerStateListener {
 public:
 	explicit Engine(persistent_config_s *config);
@@ -67,6 +78,8 @@ public:
 	IInjectorModel *injectorModel = nullptr;
 
 	cyclic_buffer<int> triggerErrorDetection;
+
+	PrimaryTriggerConfiguration primaryTriggerConfiguration;
 
 	TCU tcu;
 
