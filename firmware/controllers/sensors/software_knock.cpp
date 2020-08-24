@@ -3,6 +3,7 @@
 #include "hal.h"
 #include "engine.h"
 #include "biquad.h"
+#include "perf_trace.h"
 
 #include "software_knock.h"
 
@@ -11,9 +12,6 @@ EXTERN_ENGINE;
 
 adcsample_t sampleBuffer[8000];
 Biquad knockFilter;
-
-
-
 
 static volatile bool knockIsSampling = false;
 static volatile bool knockNeedsProcess = false;
@@ -74,6 +72,8 @@ void processLastKnockEvent() {
 	if (!knockNeedsProcess) {
 		return;
 	}
+
+	ScopePerf perf(PE::SoftwareKnockProcess);
 
 	float sum = 0;
 	float sumSq = 0;
