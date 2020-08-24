@@ -691,7 +691,7 @@ uint32_t TriggerState::findTriggerZeroEventIndex(TriggerWaveform * shape,
 
 	uint32_t syncIndex = helper.findTriggerSyncPoint(shape,
 			triggerConfiguration,
-			this PASS_CONFIG_PARAMETER_SUFFIX);
+			this);
 	if (syncIndex == EFI_ERROR_CODE) {
 		return syncIndex;
 	}
@@ -711,7 +711,7 @@ uint32_t TriggerState::findTriggerZeroEventIndex(TriggerWaveform * shape,
 	 */
 
 	helper.assertSyncPositionAndSetDutyCycle(onFindIndexCallback, triggerConfiguration,
-			syncIndex, this, shape PASS_CONFIG_PARAMETER_SUFFIX);
+			syncIndex, this, shape);
 
 	return syncIndex % shape->getSize();
 }

@@ -291,7 +291,8 @@ void hwHandleShaftSignal(trigger_event_e signal, efitick_t timestamp) {
 	// for effective noise filtering, we need both signal edges, 
 	// so we pass them to handleShaftSignal() and defer this test
 	if (!CONFIG(useNoiselessTriggerDecoder)) {
-		if (!isUsefulSignal(signal PASS_CONFIG_PARAMETER_SUFFIX)) {
+		const TriggerConfiguration * triggerConfiguration = &engine->primaryTriggerConfiguration;
+		if (!isUsefulSignal(signal, triggerConfiguration)) {
 			/**
 			 * no need to process VR falls further
 			 */
@@ -435,8 +436,9 @@ void TriggerCentral::handleShaftSignal(trigger_event_e signal, efitick_t timesta
 		if (!noiseFilter.noiseFilter(timestamp, &triggerState, signal PASS_ENGINE_PARAMETER_SUFFIX)) {
 			return;
 		}
+		const TriggerConfiguration * triggerConfiguration = &engine->primaryTriggerConfiguration;
 		// moved here from hwHandleShaftSignal()
-		if (!isUsefulSignal(signal PASS_CONFIG_PARAMETER_SUFFIX)) {
+		if (!isUsefulSignal(signal, triggerConfiguration)) {
 			return;
 		}
 	}
