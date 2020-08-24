@@ -46,8 +46,7 @@ static int getTriggerZeroEventIndex(engine_type_e engineType) {
 
 	TriggerWaveform * shape = &eth.engine.triggerCentral.triggerShape;
 	return eth.engine.triggerCentral.triggerState.findTriggerZeroEventIndex(shape, triggerConfiguration,
-			&engineConfiguration->trigger
-			PASS_CONFIG_PARAMETER_SUFFIX);
+			&engineConfiguration->trigger);
 }
 
 TEST(misc, testSkipped2_0) {

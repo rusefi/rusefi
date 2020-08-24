@@ -123,7 +123,7 @@ void calculateTriggerSynchPoint(TriggerWaveform *shape, TriggerState *state DECL
 	engine->triggerErrorDetection.clear();
 	shape->triggerShapeSynchPointIndex = state->findTriggerZeroEventIndex(shape,
 			&engine->primaryTriggerConfiguration,
-			triggerConfig PASS_CONFIG_PARAMETER_SUFFIX);
+			triggerConfig);
 
 	int length = shape->getLength();
 	engine->engineCycleEventCount = length;
@@ -672,7 +672,7 @@ static void onFindIndexCallback(TriggerState *state) {
  */
 uint32_t TriggerState::findTriggerZeroEventIndex(TriggerWaveform * shape,
 		const TriggerConfiguration * triggerConfiguration,
-		trigger_config_s const*triggerConfig DECLARE_CONFIG_PARAMETER_SUFFIX) {
+		trigger_config_s const*triggerConfig) {
 	UNUSED(triggerConfig);
 #if EFI_PROD_CODE
 	efiAssert(CUSTOM_ERR_ASSERT, getCurrentRemainingStack() > 128, "findPos", -1);
