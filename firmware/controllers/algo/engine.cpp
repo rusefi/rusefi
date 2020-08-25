@@ -98,7 +98,6 @@ void Engine::initializeTriggerWaveform(Logging *logger DECLARE_ENGINE_PARAMETER_
 	 	 */
 		initState.resetTriggerState();
 		calculateTriggerSynchPoint(&ENGINE(triggerCentral.triggerShape),
-				&ENGINE(triggerCentral.triggerFormDetails),
 				&initState PASS_ENGINE_PARAMETER_SUFFIX);
 
 		if (engine->triggerCentral.triggerShape.getSize() == 0) {

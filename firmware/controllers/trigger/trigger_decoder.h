@@ -191,7 +191,6 @@ class Engine;
 void initTriggerDecoderLogger(Logging *sharedLogger);
 
 void calculateTriggerSynchPoint(TriggerWaveform *shape,
-		TriggerFormDetails *details,
 		TriggerState *state DECLARE_ENGINE_PARAMETER_SUFFIX);
 
 void prepareEventAngles(TriggerWaveform *shape, TriggerFormDetails *details DECLARE_ENGINE_PARAMETER_SUFFIX);
