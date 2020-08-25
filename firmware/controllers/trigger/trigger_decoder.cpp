@@ -135,11 +135,16 @@ void calculateTriggerSynchPoint(TriggerWaveform *shape,
 		shape->setShapeDefinitionError(true);
 		return;
 	}
+}
 
+void prepareEventAngles(TriggerWaveform *shape,
+		TriggerFormDetails *details DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	float firstAngle = shape->getAngle(shape->triggerShapeSynchPointIndex);
-	assertAngleRange(shape->triggerShapeSynchPointIndex, "firstAngle", CUSTOM_TRIGGER_SYNC_ANGLE);
+	assertAngleRange(firstAngle, "firstAngle", CUSTOM_TRIGGER_SYNC_ANGLE);
 
 	int riseOnlyIndex = 0;
+
+	int length = shape->getLength();
 
 	memset(details->eventAngles, 0, sizeof(details->eventAngles));
 
@@ -151,7 +156,7 @@ void calculateTriggerSynchPoint(TriggerWaveform *shape,
 			details->eventAngles[1] = 0;
 		} else {
 			assertAngleRange(shape->triggerShapeSynchPointIndex, "triggerShapeSynchPointIndex", CUSTOM_TRIGGER_SYNC_ANGLE2);
-			unsigned int triggerDefinitionCoordinate = (shape->triggerShapeSynchPointIndex + eventIndex) % engine->engineCycleEventCount;
+			unsigned int triggerDefinitionCoordinate = (shape->triggerShapeSynchPointIndex + eventIndex) % length;
 			efiAssertVoid(CUSTOM_TRIGGER_CYCLE, engine->engineCycleEventCount != 0, "zero engineCycleEventCount");
 			int triggerDefinitionIndex = triggerDefinitionCoordinate >= shape->privateTriggerDefinitionSize ? triggerDefinitionCoordinate - shape->privateTriggerDefinitionSize : triggerDefinitionCoordinate;
 			float angle = shape->getAngle(triggerDefinitionCoordinate) - firstAngle;

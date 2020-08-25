@@ -406,8 +406,10 @@ void findTriggerPosition(TriggerWaveform *triggerShape,
 	position->angleOffsetFromTriggerEvent = angle - triggerEventAngle;
 }
 
-void TriggerWaveform::prepareShape(TriggerFormDetails *details) {
+void TriggerWaveform::prepareShape(TriggerFormDetails *details DECLARE_ENGINE_PARAMETER_SUFFIX) {
 #if EFI_ENGINE_CONTROL && EFI_SHAFT_POSITION_INPUT
+	prepareEventAngles(this, details PASS_ENGINE_PARAMETER_SUFFIX);
+
 	int engineCycleInt = (int) getEngineCycle(operationMode);
 	for (int angle = 0; angle < engineCycleInt; angle++) {
 		int triggerShapeIndex = findAngleIndex(details, angle);
