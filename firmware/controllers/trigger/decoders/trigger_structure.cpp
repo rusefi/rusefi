@@ -474,7 +474,7 @@ void TriggerWaveform::initializeTriggerWaveform(Logging *logger, operation_mode_
 		initialize_Mazda_Engine_z5_Shape(this);
 		break;
 
-	case TT_MIATA_NB2_VVT_CAM:
+	case TT_VVT_MIATA_NB2:
 		initializeMazdaMiataVVtCamShape(this);
 		break;
 
@@ -563,7 +563,6 @@ void TriggerWaveform::initializeTriggerWaveform(Logging *logger, operation_mode_
 		setToothedWheelConfiguration(this, 36, 1, ambiguousOperationMode);
 		break;
 
-	case TT_VVT_MIATA_NB2:
 	case TT_VVT_BOSCH_QUICK_START:
 		configureQuickStartSenderWheel(this);
 		break;
