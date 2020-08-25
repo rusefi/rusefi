@@ -1,7 +1,7 @@
 #include "global.h"
 #include "rusefi_enums.h"
 #include "rusefi_hw_enums.h"
-// was generated automatically by rusEfi tool  from rusefi_hw_enums.h // was generated automatically by rusEfi tool  from rusefi_enums.h // by enum2string.jar tool on Tue Aug 25 05:25:41 UTC 2020
+// was generated automatically by rusEfi tool  from rusefi_hw_enums.h // was generated automatically by rusEfi tool  from rusefi_enums.h // by enum2string.jar tool on Tue Aug 25 05:40:09 UTC 2020
 // see also gen_config_and_enums.bat
 
 
@@ -1284,8 +1284,6 @@ case TT_MAZDA_SOHC_4:
   return "TT_MAZDA_SOHC_4";
 case TT_MAZDA_Z5:
   return "TT_MAZDA_Z5";
-case TT_MIATA_NB2_VVT_CAM:
-  return "TT_MIATA_NB2_VVT_CAM";
 case TT_MIATA_VVT:
   return "TT_MIATA_VVT";
 case TT_MINI_COOPER_R50:
