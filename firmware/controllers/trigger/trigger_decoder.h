@@ -173,9 +173,9 @@ public:
 	 */
 	float prevInstantRpmValue = 0;
 	void movePreSynchTimestamps(DECLARE_ENGINE_PARAMETER_SIGNATURE);
-	float calculateInstantRpm(int *prevIndex, efitick_t nowNt DECLARE_ENGINE_PARAMETER_SUFFIX);
+	float calculateInstantRpm(TriggerFormDetails *triggerFormDetails, int *prevIndex, efitick_t nowNt DECLARE_ENGINE_PARAMETER_SUFFIX);
 #if EFI_ENGINE_CONTROL && EFI_SHAFT_POSITION_INPUT
-	void runtimeStatistics(efitick_t nowNt DECLARE_ENGINE_PARAMETER_SUFFIX);
+	void runtimeStatistics(TriggerFormDetails *triggerFormDetails, efitick_t nowNt DECLARE_ENGINE_PARAMETER_SUFFIX);
 #endif
 	/**
 	 * Update timeOfLastEvent[] on every trigger event - even without synchronization
@@ -190,5 +190,7 @@ class Engine;
 
 void initTriggerDecoderLogger(Logging *sharedLogger);
 
-void calculateTriggerSynchPoint(TriggerWaveform *shape, TriggerState *state DECLARE_ENGINE_PARAMETER_SUFFIX);
+void calculateTriggerSynchPoint(TriggerWaveform *shape,
+		TriggerFormDetails *details,
+		TriggerState *state DECLARE_ENGINE_PARAMETER_SUFFIX);
 
