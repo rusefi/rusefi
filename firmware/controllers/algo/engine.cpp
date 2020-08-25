@@ -93,7 +93,7 @@ void Engine::initializeTriggerWaveform(Logging *logger DECLARE_ENGINE_PARAMETER_
 
 	if (!TRIGGER_WAVEFORM(shapeDefinitionError)) {
 		/**
-	 	 * this instance is used only to initialize 'this' TriggerWaveform instance
+	 	 * 'initState' instance of TriggerState is used only to initialize 'this' TriggerWaveform instance
 	 	 * #192 BUG real hardware trigger events could be coming even while we are initializing trigger
 	 	 */
 		initState.resetTriggerState();
