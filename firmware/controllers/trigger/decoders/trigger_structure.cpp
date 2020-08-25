@@ -545,7 +545,10 @@ void TriggerWaveform::initializeTriggerWaveform(Logging *logger, operation_mode_
 		configureMiniCooperTriggerWaveform(this);
 		break;
 
-	case TT_UNUSED_17:
+	case TT_VVT_JZ:
+		setToothedWheelConfiguration(this, 3, 0, ambiguousOperationMode);
+		break;
+
 	case TT_TOOTHED_WHEEL_60_2:
 		setToothedWheelConfiguration(this, 60, 2, ambiguousOperationMode);
 		break;
