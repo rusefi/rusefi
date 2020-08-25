@@ -248,11 +248,14 @@ typedef enum {
 
 	TT_MAZDA_DOHC_1_4 = 15,
 
-	// "1+1"
-	// see also TT_ONE a bit below
+	/**
+	 * "1+1" - one tooth on primary channel, one tooth on secondary channel
+	 * this trigger is used only by unit tests
+	 * see also TT_ONE a bit below
+	 */
 	TT_ONE_PLUS_ONE = 16,
 	// "1+60/2"
-	TT_ONE_PLUS_TOOTHED_WHEEL_60_2 = 17,
+	TT_UNUSED_17 = 17,
 	// just one channel with just one tooth
 	TT_ONE = 18,
 
