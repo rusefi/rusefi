@@ -507,12 +507,13 @@ EXTERN_ENGINE;
 
 static void triggerShapeInfo(void) {
 #if EFI_PROD_CODE || EFI_SIMULATOR
-	TriggerWaveform *s = &engine->triggerCentral.triggerShape;
+	TriggerWaveform *shape = &engine->triggerCentral.triggerShape;
+	TriggerFormDetails *triggerFormDetails = &engine->triggerCentral.triggerFormDetails;
 	scheduleMsg(logger, "useRise=%s", boolToString(TRIGGER_WAVEFORM(useRiseEdge)));
 	scheduleMsg(logger, "gap from %.2f to %.2f", TRIGGER_WAVEFORM(syncronizationRatioFrom[0]), TRIGGER_WAVEFORM(syncronizationRatioTo[0]));
 
-	for (size_t i = 0; i < s->getSize(); i++) {
-		scheduleMsg(logger, "event %d %.2f", i, s->eventAngles[i]);
+	for (size_t i = 0; i < shape->getSize(); i++) {
+		scheduleMsg(logger, "event %d %.2f", i, triggerFormDetails->eventAngles[i]);
 	}
 #endif
 }
@@ -551,24 +552,25 @@ void printAllTriggers() {
 		engineConfiguration->trigger.type = tt;
 		engineConfiguration->ambiguousOperationMode = FOUR_STROKE_CAM_SENSOR;
 
-		TriggerWaveform *s = &engine->triggerCentral.triggerShape;
+		TriggerWaveform *shape = &engine->triggerCentral.triggerShape;
+		TriggerFormDetails *triggerFormDetails = &engine->triggerCentral.triggerFormDetails;
 		engine->initializeTriggerWaveform(NULL PASS_ENGINE_PARAMETER_SUFFIX);
 
-		if (s->shapeDefinitionError) {
+		if (shape->shapeDefinitionError) {
 			printf("Trigger error %d\r\n", triggerId);
 			exit(-1);
 		}
 
-		fprintf(fp, "TRIGGERTYPE %d %d %s %.2f\n", triggerId, s->getLength(), getTrigger_type_e(tt), s->tdcPosition);
+		fprintf(fp, "TRIGGERTYPE %d %d %s %.2f\n", triggerId, shape->getLength(), getTrigger_type_e(tt), shape->tdcPosition);
 
-		fprintf(fp, "# duty %.2f %.2f\n", s->expectedDutyCycle[0], s->expectedDutyCycle[1]);
+		fprintf(fp, "# duty %.2f %.2f\n", shape->expectedDutyCycle[0], shape->expectedDutyCycle[1]);
 
-		for (int i = 0; i < s->getLength(); i++) {
+		for (int i = 0; i < shape->getLength(); i++) {
 
-			int triggerDefinitionCoordinate = (s->getTriggerWaveformSynchPointIndex() + i) % s->getSize();
+			int triggerDefinitionCoordinate = (shape->getTriggerWaveformSynchPointIndex() + i) % shape->getSize();
 
 
-			fprintf(fp, "event %d %d %.2f\n", i, s->triggerSignals[triggerDefinitionCoordinate], s->eventAngles[i]);
+			fprintf(fp, "event %d %d %.2f\n", i, shape->triggerSignals[triggerDefinitionCoordinate], triggerFormDetails->eventAngles[i]);
 		}
 
 	}

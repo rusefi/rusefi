@@ -114,7 +114,9 @@ float actualSynchGap;
 
 static Logging * logger = nullptr;
 
-void calculateTriggerSynchPoint(TriggerWaveform *shape, TriggerState *state DECLARE_ENGINE_PARAMETER_SUFFIX) {
+void calculateTriggerSynchPoint(TriggerWaveform *shape,
+		TriggerFormDetails *details,
+		TriggerState *state DECLARE_ENGINE_PARAMETER_SUFFIX) {
 #if EFI_PROD_CODE
 	efiAssertVoid(CUSTOM_TRIGGER_STACK, getCurrentRemainingStack() > EXPECTED_REMAINING_STACK, "calc s");
 #endif
@@ -139,12 +141,14 @@ void calculateTriggerSynchPoint(TriggerWaveform *shape, TriggerState *state DECL
 
 	int riseOnlyIndex = 0;
 
+	memset(details->eventAngles, 0, sizeof(details->eventAngles));
+
 	for (int eventIndex = 0; eventIndex < length; eventIndex++) {
 		if (eventIndex == 0) {
 			// explicit check for zero to avoid issues where logical zero is not exactly zero due to float nature
-			shape->eventAngles[0] = 0;
+			details->eventAngles[0] = 0;
 			// this value would be used in case of front-only
-			shape->eventAngles[1] = 0;
+			details->eventAngles[1] = 0;
 		} else {
 			assertAngleRange(shape->triggerShapeSynchPointIndex, "triggerShapeSynchPointIndex", CUSTOM_TRIGGER_SYNC_ANGLE2);
 			unsigned int triggerDefinitionCoordinate = (shape->triggerShapeSynchPointIndex + eventIndex) % engine->engineCycleEventCount;
@@ -156,11 +160,11 @@ void calculateTriggerSynchPoint(TriggerWaveform *shape, TriggerState *state DECL
 			if (engineConfiguration->useOnlyRisingEdgeForTrigger) {
 				if (shape->isRiseEvent[triggerDefinitionIndex]) {
 					riseOnlyIndex += 2;
-					shape->eventAngles[riseOnlyIndex] = angle;
-					shape->eventAngles[riseOnlyIndex + 1] = angle;
+					details->eventAngles[riseOnlyIndex] = angle;
+					details->eventAngles[riseOnlyIndex + 1] = angle;
 				}
 			} else {
-				shape->eventAngles[eventIndex] = angle;
+				details->eventAngles[eventIndex] = angle;
 			}
 		}
 	}
@@ -182,13 +186,14 @@ void TriggerStateWithRunningStatistics::movePreSynchTimestamps(DECLARE_ENGINE_PA
 	}
 }
 
-float TriggerStateWithRunningStatistics::calculateInstantRpm(int *prevIndexOut, efitick_t nowNt DECLARE_ENGINE_PARAMETER_SUFFIX) {
+float TriggerStateWithRunningStatistics::calculateInstantRpm(TriggerFormDetails *triggerFormDetails,
+		int *prevIndexOut, efitick_t nowNt DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	int current_index = currentCycle.current_index; // local copy so that noone changes the value on us
 	timeOfLastEvent[current_index] = nowNt;
 	/**
 	 * Here we calculate RPM based on last 90 degrees
 	 */
-	angle_t currentAngle = TRIGGER_WAVEFORM(eventAngles[current_index]);
+	angle_t currentAngle = triggerFormDetails->eventAngles[current_index];
 	// todo: make this '90' depend on cylinder count or trigger shape?
 	if (cisnan(currentAngle)) {
 		return NOISY_RPM;
@@ -196,14 +201,14 @@ float TriggerStateWithRunningStatistics::calculateInstantRpm(int *prevIndexOut, 
 	angle_t previousAngle = currentAngle - 90;
 	fixAngle(previousAngle, "prevAngle", CUSTOM_ERR_TRIGGER_ANGLE_RANGE);
 	// todo: prevIndex should be pre-calculated
-	int prevIndex = TRIGGER_WAVEFORM(triggerIndexByAngle[(int)previousAngle]);
+	int prevIndex = triggerFormDetails->triggerIndexByAngle[(int)previousAngle];
 
 	if (prevIndexOut) {
 		*prevIndexOut = prevIndex;
 	}
 
 	// now let's get precise angle for that event
-	angle_t prevIndexAngle = TRIGGER_WAVEFORM(eventAngles[prevIndex]);
+	angle_t prevIndexAngle = triggerFormDetails->eventAngles[prevIndex];
 	efitick_t time90ago = timeOfLastEvent[prevIndex];
 	if (time90ago == 0) {
 		return prevInstantRpmValue;
@@ -244,16 +249,16 @@ void TriggerStateWithRunningStatistics::setLastEventTimeForInstantRpm(efitick_t 
 	spinningEvents[spinningEventIndex++] = nowNt;
 }
 
-void TriggerStateWithRunningStatistics::runtimeStatistics(efitick_t nowNt DECLARE_ENGINE_PARAMETER_SUFFIX) {
+void TriggerStateWithRunningStatistics::runtimeStatistics(TriggerFormDetails *triggerFormDetails, efitick_t nowNt DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	if (engineConfiguration->debugMode == DBG_INSTANT_RPM) {
-		instantRpm = calculateInstantRpm(NULL, nowNt PASS_ENGINE_PARAMETER_SUFFIX);
+		instantRpm = calculateInstantRpm(triggerFormDetails, NULL, nowNt PASS_ENGINE_PARAMETER_SUFFIX);
 	}
 	if (ENGINE(sensorChartMode) == SC_RPM_ACCEL || ENGINE(sensorChartMode) == SC_DETAILED_RPM) {
 		int prevIndex;
-		instantRpm = calculateInstantRpm(&prevIndex, nowNt PASS_ENGINE_PARAMETER_SUFFIX);
+		instantRpm = calculateInstantRpm(triggerFormDetails, &prevIndex, nowNt PASS_ENGINE_PARAMETER_SUFFIX);
 
 #if EFI_SENSOR_CHART
-		angle_t currentAngle = TRIGGER_WAVEFORM(eventAngles[currentCycle.current_index]);
+		angle_t currentAngle = triggerFormDetails->eventAngles[currentCycle.current_index];
 		if (CONFIG(sensorChartMode) == SC_DETAILED_RPM) {
 			scAddData(currentAngle, instantRpm);
 		} else {

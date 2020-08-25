@@ -48,7 +48,9 @@
 EXTERN_ENGINE;
 
 void event_trigger_position_s::setAngle(angle_t angle DECLARE_ENGINE_PARAMETER_SUFFIX) {
-	TRIGGER_WAVEFORM(findTriggerPosition(this, angle PASS_CONFIG_PARAM(engineConfiguration->globalTriggerAngleOffset)));
+	findTriggerPosition(&ENGINE(triggerCentral.triggerShape),
+			&ENGINE(triggerCentral.triggerFormDetails),
+			this, angle PASS_CONFIG_PARAM(engineConfiguration->globalTriggerAngleOffset));
 }
 
 trigger_shape_helper::trigger_shape_helper() {
@@ -62,7 +64,9 @@ TriggerWaveform::TriggerWaveform() :
 		wave(switchTimesBuffer, NULL) {
 	initialize(OM_NONE);
 	wave.channels = h.channels;
+}
 
+TriggerFormDetails::TriggerFormDetails() {
 	memset(triggerIndexByAngle, 0, sizeof(triggerIndexByAngle));
 }
 
@@ -72,7 +76,6 @@ void TriggerWaveform::initialize(operation_mode_e operationMode) {
 	needSecondTriggerInput = false;
 	shapeWithoutTdc = false;
 	memset(expectedDutyCycle, 0, sizeof(expectedDutyCycle));
-	memset(eventAngles, 0, sizeof(eventAngles));
 //	memset(triggerIndexByAngle, 0, sizeof(triggerIndexByAngle));
 
 	setTriggerSynchronizationGap(2);
@@ -342,7 +345,7 @@ void TriggerWaveform::setTriggerSynchronizationGap3(int gapIndex, float syncRati
 /**
  * this method is only used on initialization
  */
-int TriggerWaveform::findAngleIndex(float target) const {
+int TriggerWaveform::findAngleIndex(TriggerFormDetails *details, float target) const {
 	int engineCycleEventCount = getLength();
 
 	efiAssert(CUSTOM_ERR_ASSERT, engineCycleEventCount > 0, "engineCycleEventCount", 0);
@@ -356,7 +359,7 @@ int TriggerWaveform::findAngleIndex(float target) const {
 	 */
     while (left <= right) {
         int middle = (left + right) / 2;
-		angle_t eventAngle = eventAngles[middle];
+		angle_t eventAngle = details->eventAngles[middle];
 
         if (eventAngle < target) {
             left = middle + 1;
@@ -374,24 +377,26 @@ void TriggerWaveform::setShapeDefinitionError(bool value) {
 	shapeDefinitionError = value;
 }
 
-void TriggerWaveform::findTriggerPosition(event_trigger_position_s *position,
+void findTriggerPosition(TriggerWaveform *triggerShape,
+		TriggerFormDetails *details,
+		event_trigger_position_s *position,
 		angle_t angle DEFINE_CONFIG_PARAM(angle_t, globalTriggerAngleOffset)) {
 	efiAssertVoid(CUSTOM_ERR_6574, !cisnan(angle), "findAngle#1");
 	assertAngleRange(angle, "findAngle#a1", CUSTOM_ERR_6545);
 
-	efiAssertVoid(CUSTOM_ERR_6575, !cisnan(tdcPosition), "tdcPos#1")
-	assertAngleRange(tdcPosition, "tdcPos#a1", CUSTOM_UNEXPECTED_TDC_ANGLE);
+	efiAssertVoid(CUSTOM_ERR_6575, !cisnan(triggerShape->tdcPosition), "tdcPos#1")
+	assertAngleRange(triggerShape->tdcPosition, "tdcPos#a1", CUSTOM_UNEXPECTED_TDC_ANGLE);
 
 	efiAssertVoid(CUSTOM_ERR_6576, !cisnan(CONFIG_PARAM(globalTriggerAngleOffset)), "tdcPos#2")
 	assertAngleRange(CONFIG_PARAM(globalTriggerAngleOffset), "tdcPos#a2", CUSTOM_INVALID_GLOBAL_OFFSET);
 
 	// convert engine cycle angle into trigger cycle angle
-	angle += tdcPosition + CONFIG_PARAM(globalTriggerAngleOffset);
+	angle += triggerShape->tdcPosition + CONFIG_PARAM(globalTriggerAngleOffset);
 	efiAssertVoid(CUSTOM_ERR_6577, !cisnan(angle), "findAngle#2");
-	fixAngle2(angle, "addFuel#2", CUSTOM_ERR_6555, getEngineCycle(operationMode));
+	fixAngle2(angle, "addFuel#2", CUSTOM_ERR_6555, getEngineCycle(triggerShape->getOperationMode()));
 
-	int triggerEventIndex = triggerIndexByAngle[(int)angle];
-	angle_t triggerEventAngle = eventAngles[triggerEventIndex];
+	int triggerEventIndex = details->triggerIndexByAngle[(int)angle];
+	angle_t triggerEventAngle = details->eventAngles[triggerEventIndex];
 	if (angle < triggerEventAngle) {
 		warning(CUSTOM_OBD_ANGLE_CONSTRAINT_VIOLATION, "angle constraint violation in findTriggerPosition(): %.2f/%.2f", angle, triggerEventAngle);
 		return;
@@ -401,16 +406,16 @@ void TriggerWaveform::findTriggerPosition(event_trigger_position_s *position,
 	position->angleOffsetFromTriggerEvent = angle - triggerEventAngle;
 }
 
-void TriggerWaveform::prepareShape() {
+void TriggerWaveform::prepareShape(TriggerFormDetails *details) {
 #if EFI_ENGINE_CONTROL && EFI_SHAFT_POSITION_INPUT
 	int engineCycleInt = (int) getEngineCycle(operationMode);
 	for (int angle = 0; angle < engineCycleInt; angle++) {
-		int triggerShapeIndex = findAngleIndex(angle);
+		int triggerShapeIndex = findAngleIndex(details, angle);
 		if (useOnlyRisingEdgeForTriggerTemp) {
 			// we need even index for front_only mode - so if odd indexes are rounded down
 			triggerShapeIndex = triggerShapeIndex & 0xFFFFFFFE;
 		}
-		triggerIndexByAngle[angle] = triggerShapeIndex;
+		details->triggerIndexByAngle[angle] = triggerShapeIndex;
 	}
 #endif
 }

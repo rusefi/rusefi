@@ -166,13 +166,19 @@ TEST(misc, test1995FordInline6TriggerDecoder) {
 
 	event_trigger_position_s position;
 	ASSERT_EQ( 0,  engineConfiguration->globalTriggerAngleOffset) << "globalTriggerAngleOffset";
-	TRIGGER_WAVEFORM(findTriggerPosition(&position, 0, engineConfiguration->globalTriggerAngleOffset));
+	findTriggerPosition(&ENGINE(triggerCentral.triggerShape),
+			&ENGINE(triggerCentral.triggerFormDetails),
+			&position, 0, engineConfiguration->globalTriggerAngleOffset);
 	assertTriggerPosition(&position, 0, 0);
 
-	TRIGGER_WAVEFORM(findTriggerPosition(&position, 200, engineConfiguration->globalTriggerAngleOffset));
+	findTriggerPosition(&ENGINE(triggerCentral.triggerShape),
+			&ENGINE(triggerCentral.triggerFormDetails),
+			&position, 200, engineConfiguration->globalTriggerAngleOffset);
 	assertTriggerPosition(&position, 3, 20);
 
-	TRIGGER_WAVEFORM(findTriggerPosition(&position, 360, engineConfiguration->globalTriggerAngleOffset));
+	findTriggerPosition(&ENGINE(triggerCentral.triggerShape),
+			&ENGINE(triggerCentral.triggerFormDetails),
+			&position, 360, engineConfiguration->globalTriggerAngleOffset);
 	assertTriggerPosition(&position, 6, 0);
 
 	eth.applyTriggerWaveform();
@@ -320,8 +326,8 @@ TEST(misc, testRpmCalculator) {
 	ASSERT_EQ(0, GET_RPM());
 
 	// triggerIndexByAngle update is now fixed! prepareOutputSignals() wasn't reliably called
-	ASSERT_EQ(5, TRIGGER_WAVEFORM(triggerIndexByAngle[240]));
-	ASSERT_EQ(5, TRIGGER_WAVEFORM(triggerIndexByAngle[241]));
+	ASSERT_EQ(5, engine->triggerCentral.triggerFormDetails.triggerIndexByAngle[240]);
+	ASSERT_EQ(5, engine->triggerCentral.triggerFormDetails.triggerIndexByAngle[241]);
 
 	eth.fireTriggerEvents(/* count */ 48);
 
@@ -384,8 +390,8 @@ TEST(misc, testRpmCalculator) {
 	assertEqualsM("3/3", start + 14777, engine->executor.getForUnitTest(2)->momentX);
 	engine->executor.clear();
 
-	ASSERT_EQ(5, TRIGGER_WAVEFORM(triggerIndexByAngle[240]));
-	ASSERT_EQ(5, TRIGGER_WAVEFORM(triggerIndexByAngle[241]));
+	ASSERT_EQ(5, engine->triggerCentral.triggerFormDetails.triggerIndexByAngle[240]);
+	ASSERT_EQ(5, engine->triggerCentral.triggerFormDetails.triggerIndexByAngle[241]);
 
 
 	eth.fireFall(5);

@@ -414,7 +414,7 @@ void prepareOutputSignals(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 
 	prepareIgnitionPinIndices(CONFIG(ignitionMode) PASS_ENGINE_PARAMETER_SUFFIX);
 
-	TRIGGER_WAVEFORM(prepareShape());
+	TRIGGER_WAVEFORM(prepareShape(&ENGINE(triggerCentral.triggerFormDetails)));
 }
 
 void setTimingRpmBin(float from, float to DECLARE_CONFIG_PARAMETER_SUFFIX) {
