@@ -11,7 +11,7 @@
 EXTERN_ENGINE;
 
 
-adcsample_t sampleBuffer[8000];
+adcsample_t sampleBuffer[2000];
 Biquad knockFilter;
 
 static volatile bool knockIsSampling = false;
@@ -109,7 +109,7 @@ void processLastKnockEvent() {
 
 	size_t localCount = sampleCount;
 
-	// Compute the sum and sum of squares
+	// Compute the sum of squares
 	for (size_t i = 0; i < localCount; i++)
 	{
 		float volts = ratio * (sampleBuffer[i] - 2048);
