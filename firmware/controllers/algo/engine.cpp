@@ -26,7 +26,6 @@
 #include "perf_trace.h"
 #include "sensor.h"
 #include "gppwm.h"
-#include "software_knock.h"
 #include "tachometer.h"
 
 #if EFI_TUNER_STUDIO
