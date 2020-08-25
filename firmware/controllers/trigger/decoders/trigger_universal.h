@@ -20,8 +20,6 @@ void addSkippedToothTriggerEvents(trigger_wheel_e wheel, TriggerWaveform *s,
 
 void initializeSkippedToothTriggerWaveformExt(TriggerWaveform *s, int totalTeethCount, int skippedCount, operation_mode_e operationMode);;
 
-void configureOnePlus60_2(TriggerWaveform *s);
-
 // TT_3_1_CAM
 void configure3_1_cam(TriggerWaveform *s);
 

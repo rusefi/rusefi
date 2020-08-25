@@ -533,10 +533,6 @@ void TriggerWaveform::initializeTriggerWaveform(Logging *logger, operation_mode_
 		configure3_1_cam(this);
 		break;
 
-	case TT_ONE_PLUS_TOOTHED_WHEEL_60_2:
-		configureOnePlus60_2(this);
-		break;
-
 	case TT_ONE:
 		setToothedWheelConfiguration(this, 1, 0, ambiguousOperationMode);
 		break;
@@ -549,6 +545,7 @@ void TriggerWaveform::initializeTriggerWaveform(Logging *logger, operation_mode_
 		configureMiniCooperTriggerWaveform(this);
 		break;
 
+	case TT_UNUSED_17:
 	case TT_TOOTHED_WHEEL_60_2:
 		setToothedWheelConfiguration(this, 60, 2, ambiguousOperationMode);
 		break;
