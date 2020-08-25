@@ -115,7 +115,6 @@ float actualSynchGap;
 static Logging * logger = nullptr;
 
 void calculateTriggerSynchPoint(TriggerWaveform *shape,
-		TriggerFormDetails *details,
 		TriggerState *state DECLARE_ENGINE_PARAMETER_SUFFIX) {
 #if EFI_PROD_CODE
 	efiAssertVoid(CUSTOM_TRIGGER_STACK, getCurrentRemainingStack() > EXPECTED_REMAINING_STACK, "calc s");
