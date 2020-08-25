@@ -5,13 +5,13 @@
 #include "biquad.h"
 #include "perf_trace.h"
 #include "thread_controller.h"
-
-#include "knock_config.h"
-
 #include "software_knock.h"
+
+#if EFI_SOFTWARE_KNOCK
 
 EXTERN_ENGINE;
 
+#include "knock_config.h"
 
 adcsample_t sampleBuffer[2000];
 Biquad knockFilter;
@@ -134,3 +134,5 @@ void KnockThread::ThreadTask() {
 		processLastKnockEvent();
 	}
 }
+
+#endif // EFI_SOFTWARE_KNOCK
