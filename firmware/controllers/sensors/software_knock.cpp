@@ -1,6 +1,5 @@
 
 #include "global.h"
-#include "hal.h"
 #include "engine.h"
 #include "biquad.h"
 #include "perf_trace.h"
