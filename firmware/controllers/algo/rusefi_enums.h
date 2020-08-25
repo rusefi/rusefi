@@ -255,7 +255,7 @@ typedef enum {
 	 */
 	TT_ONE_PLUS_ONE = 16,
 	// "1+60/2"
-	TT_UNUSED_17 = 17,
+	TT_VVT_JZ = 17,
 	// just one channel with just one tooth
 	TT_ONE = 18,
 
