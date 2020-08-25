@@ -1199,6 +1199,7 @@ void resetConfigurationExt(Logging * logger, configuration_callback_t boardCallb
 	case PROMETHEUS_DEFAULTS:
 	case DAIHATSU:
 	case DODGE_STRATUS:
+	case TEST_ENGINE:
 	case SUZUKI_VITARA:
 	case MINIMAL_PINS:
 		// all basic settings are already set in prepareVoidConfiguration(), no need to set anything here
@@ -1209,9 +1210,6 @@ void resetConfigurationExt(Logging * logger, configuration_callback_t boardCallb
 		break;
 	case MRE_BOARD_NEW_TEST:
 		mreBoardNewTest(PASS_CONFIG_PARAMETER_SIGNATURE);
-		break;
-	case TEST_ENGINE:
-		setTestEngineConfiguration(PASS_CONFIG_PARAMETER_SIGNATURE);
 		break;
 #if EFI_UNIT_TEST
 	case TEST_ISSUE_366_BOTH:
