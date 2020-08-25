@@ -89,6 +89,9 @@ void initSoftwareKnock() {
 	knockFilter.configureBandpass(217000, 11500, 3);
 	adcStart(&KNOCK_ADC, nullptr);
 
+	efiSetPadMode("knock ch1", KNOCK_PIN_CH1, PAL_MODE_INPUT_ANALOG);
+	efiSetPadMode("knock ch2", KNOCK_PIN_CH2, PAL_MODE_INPUT_ANALOG);
+
 	kt.Start();
 }
 
