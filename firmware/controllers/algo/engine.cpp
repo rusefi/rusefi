@@ -520,10 +520,6 @@ void Engine::periodicFastCallback(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	refreshMapAveragingPreCalc(PASS_ENGINE_PARAMETER_SIGNATURE);
 #endif
 
-#if EFI_SOFTWARE_KNOCK
-	processLastKnockEvent();
-#endif
-
 	engineState.periodicFastCallback(PASS_ENGINE_PARAMETER_SIGNATURE);
 
 	tachSignalCallback(PASS_ENGINE_PARAMETER_SIGNATURE);

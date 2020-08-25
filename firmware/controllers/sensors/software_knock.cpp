@@ -4,6 +4,7 @@
 #include "engine.h"
 #include "biquad.h"
 #include "perf_trace.h"
+#include "thread_controller.h"
 
 #include "software_knock.h"
 
@@ -17,8 +18,18 @@ static volatile bool knockIsSampling = false;
 static volatile bool knockNeedsProcess = false;
 static volatile size_t sampleCount = 0;
 
-static void completionCallback(ADCDriver*, adcsample_t*, size_t) {
-	knockNeedsProcess = true;
+binary_semaphore_t knockSem;
+
+static void completionCallback(ADCDriver* adcp, adcsample_t*, size_t) {
+	palClearPad(GPIOD, 2);
+
+	if (adcp->state == ADC_COMPLETE) {
+		knockNeedsProcess = true;
+
+		chSysLockFromISR();
+		chBSemSignalI(&knockSem);
+		chSysUnlockFromISR();
+	}
 }
 
 static void errorCallback(ADCDriver*, adcerror_t err) {
@@ -39,7 +50,7 @@ static const ADCConversionGroup adcConvGroup = { FALSE, 1, &completionCallback, 
 };
 
 void startKnockSampling(uint8_t cylinderIndex) {
-	if (cylinderIndex == 2) {
+	if (cylinderIndex != 2) {
 		return;
 	}
 
@@ -61,11 +72,25 @@ void startKnockSampling(uint8_t cylinderIndex) {
 	sampleCount = 0xFFFFFFFE & static_cast<size_t>(clampF(100, samplingSeconds * sampleRate, efi::size(sampleBuffer)));
 
 	adcStartConversionI(&ADCD3, &adcConvGroup, sampleBuffer, sampleCount);
+	palSetPad(GPIOD, 2);
 }
 
+class KnockThread : public ThreadController<256> {
+public:
+	KnockThread() : ThreadController("knock", NORMALPRIO - 10) {}
+	void ThreadTask() override;
+};
+
+KnockThread kt;
+
 void initSoftwareKnock() {
-	knockFilter.configureBandpass(217000, CONFIG(knockBandCustom), 3);
+	chBSemObjectInit(&knockSem, TRUE);
+	knockFilter.configureBandpass(217000, 11500, 3);
 	adcStart(&ADCD3, nullptr);
+	palSetPadMode(GPIOD, 2, PAL_MODE_OUTPUT_PUSHPULL);
+	palSetPadMode(GPIOD, 4, PAL_MODE_OUTPUT_PUSHPULL);
+
+	kt.Start();
 }
 
 void processLastKnockEvent() {
@@ -73,17 +98,19 @@ void processLastKnockEvent() {
 		return;
 	}
 
-	ScopePerf perf(PE::SoftwareKnockProcess);
+	palSetPad(GPIOD, 4);
 
-	float sum = 0;
+
 	float sumSq = 0;
 
 	constexpr float ratio = 3.3f / 4095.0f;
 
 	knockFilter.reset();
 
+	size_t localCount = sampleCount;
+
 	// Compute the sum and sum of squares
-	for (size_t i = 0; i < sampleCount; i++)
+	for (size_t i = 0; i < localCount; i++)
 	{
 		float volts = ratio * (sampleBuffer[i] - 2048);
 
@@ -93,7 +120,7 @@ void processLastKnockEvent() {
 	}
 
 	// mean of squares (not yet root)
-	float meanSquares = sumSq / sampleCount;
+	float meanSquares = sumSq / localCount;
 
 	// RMS
 	float db = 10 * log10(meanSquares);
@@ -101,4 +128,15 @@ void processLastKnockEvent() {
 	tsOutputChannels.knockLevel = db;
 
 	knockNeedsProcess = false;
+
+	palClearPad(GPIOD, 4);
+}
+
+void KnockThread::ThreadTask() {
+	while(1) {
+		chBSemWait(&knockSem);
+
+		ScopePerf perf(PE::SoftwareKnockProcess);
+		processLastKnockEvent();
+	}
 }
