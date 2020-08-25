@@ -99,7 +99,7 @@
  */
 #define EFI_CLI_SUPPORT TRUE
 
-#define EFI_RTC FALSE
+#define EFI_RTC TRUE
 
 #define EFI_ALTERNATOR_CONTROL TRUE
 
@@ -139,21 +139,21 @@
 #define EFI_POTENTIOMETER TRUE
 
 #ifndef BOARD_TLE6240_COUNT
-#define BOARD_TLE6240_COUNT         0
+#define BOARD_TLE6240_COUNT         1
 #endif
 
 #ifndef BOARD_MC33972_COUNT
-#define BOARD_MC33972_COUNT			0
+#define BOARD_MC33972_COUNT			1
 #endif
 
 #ifndef BOARD_TLE8888_COUNT
-#define BOARD_TLE8888_COUNT 	0
+#define BOARD_TLE8888_COUNT 	1
 #endif
 
 #define EFI_ANALOG_SENSORS TRUE
 
 #ifndef EFI_MAX_31855
-#define EFI_MAX_31855 FALSE
+#define EFI_MAX_31855 TRUE
 #endif
 
 #define EFI_MCP_3208 FALSE
@@ -165,7 +165,7 @@
 #endif
 
 #ifndef EFI_CJ125
-#define EFI_CJ125 FALSE
+#define EFI_CJ125 TRUE
 #endif
 
 #if !defined(EFI_MEMS)
@@ -189,11 +189,11 @@
 #endif
 
 #ifndef EFI_HD44780_LCD
-#define EFI_HD44780_LCD FALSE
+#define EFI_HD44780_LCD TRUE
 #endif
 
 #ifndef EFI_LCD
-#define EFI_LCD FALSE
+#define EFI_LCD TRUE
 #endif
 
 #ifndef EFI_IDLE_CONTROL
@@ -404,5 +404,3 @@
 #define INTERMEDIATE_LOGGING_BUFFER_SIZE 2000
 
 #define EFI_JOYSTICK TRUE
-
-#define EFI_SOFTWARE_KNOCK TRUE
