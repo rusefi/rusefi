@@ -235,7 +235,7 @@ public:
 	size_t getSize() const;
 
 	int getTriggerWaveformSynchPointIndex() const;
-	void prepareShape(TriggerFormDetails *details);
+	void prepareShape(TriggerFormDetails *details DECLARE_ENGINE_PARAMETER_SUFFIX);
 
 	/**
 	 * This private method should only be used to prepare the array of pre-calculated values
