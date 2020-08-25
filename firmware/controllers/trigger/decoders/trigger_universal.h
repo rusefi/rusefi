@@ -26,5 +26,5 @@ void configureOnePlus60_2(TriggerWaveform *s);
 void configure3_1_cam(TriggerWaveform *s);
 
 void configureOnePlusOne(TriggerWaveform *s);
-// TT_BOSCH_QUICK_START
+// TT_VVT_BOSCH_QUICK_START
 void configureQuickStartSenderWheel(TriggerWaveform *s);
