@@ -6,6 +6,8 @@
 #include "perf_trace.h"
 #include "thread_controller.h"
 
+#include "knock_config.h"
+
 #include "software_knock.h"
 
 EXTERN_ENGINE;
@@ -46,7 +48,7 @@ static const ADCConversionGroup adcConvGroup = { FALSE, 1, &completionCallback, 
 
 	0,	// sqr1
 	0,	// sqr2
-	ADC_SQR3_SQ1_N(ADC_CHANNEL_IN14)	// knock 1 - pin PF4
+	ADC_SQR3_SQ1_N(KNOCK_ADC_CH1)
 };
 
 void startKnockSampling(uint8_t cylinderIndex) {
@@ -55,24 +57,23 @@ void startKnockSampling(uint8_t cylinderIndex) {
 	}
 
 	// Cancel if ADC isn't ready
-	if (!((ADCD3.state == ADC_READY) ||
-			(ADCD3.state == ADC_COMPLETE) ||
-			(ADCD3.state == ADC_ERROR))) {
+	if (!((KNOCK_ADC.state == ADC_READY) ||
+			(KNOCK_ADC.state == ADC_COMPLETE) ||
+			(KNOCK_ADC.state == ADC_ERROR))) {
 		return;
 	}
 
-	// If there's pending processing, skip
+	// If there's pending processing, skip this event
 	if (knockNeedsProcess) {
 		return;
 	}
 
-	// Sample for 60 degrees
+	// Sample for 45 degrees
 	float samplingSeconds = ENGINE(rpmCalculator).oneDegreeUs * 45 * 1e-6;
 	constexpr int sampleRate = 217000;
 	sampleCount = 0xFFFFFFFE & static_cast<size_t>(clampF(100, samplingSeconds * sampleRate, efi::size(sampleBuffer)));
 
-	adcStartConversionI(&ADCD3, &adcConvGroup, sampleBuffer, sampleCount);
-	palSetPad(GPIOD, 2);
+	adcStartConversionI(&KNOCK_ADC, &adcConvGroup, sampleBuffer, sampleCount);
 }
 
 class KnockThread : public ThreadController<256> {
@@ -86,9 +87,7 @@ KnockThread kt;
 void initSoftwareKnock() {
 	chBSemObjectInit(&knockSem, TRUE);
 	knockFilter.configureBandpass(217000, 11500, 3);
-	adcStart(&ADCD3, nullptr);
-	palSetPadMode(GPIOD, 2, PAL_MODE_OUTPUT_PUSHPULL);
-	palSetPadMode(GPIOD, 4, PAL_MODE_OUTPUT_PUSHPULL);
+	adcStart(&KNOCK_ADC, nullptr);
 
 	kt.Start();
 }
@@ -97,9 +96,6 @@ void processLastKnockEvent() {
 	if (!knockNeedsProcess) {
 		return;
 	}
-
-	palSetPad(GPIOD, 4);
-
 
 	float sumSq = 0;
 
@@ -128,8 +124,6 @@ void processLastKnockEvent() {
 	tsOutputChannels.knockLevel = db;
 
 	knockNeedsProcess = false;
-
-	palClearPad(GPIOD, 4);
 }
 
 void KnockThread::ThreadTask() {
