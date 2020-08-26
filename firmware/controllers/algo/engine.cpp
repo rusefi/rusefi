@@ -73,6 +73,21 @@ void Engine::resetEngineSnifferIfInTestMode() {
 #endif /* EFI_ENGINE_SNIFFER */
 }
 
+trigger_type_e getVvtTriggerType(vvt_mode_e vvtMode) {
+	switch (vvtMode) {
+	case VVT_2JZ:
+		return TT_VVT_JZ;
+	case MIATA_NB2:
+		return TT_VVT_MIATA_NB2;
+	case VVT_FIRST_HALF:
+		return TT_ONE;
+	case VVT_SECOND_HALF:
+		return TT_ONE;
+	default:
+		return TT_ONE;
+	}
+}
+
 void Engine::initializeTriggerWaveform(Logging *logger DECLARE_ENGINE_PARAMETER_SUFFIX) {
 #if EFI_ENGINE_CONTROL && EFI_SHAFT_POSITION_INPUT
 	// we have a confusing threading model so some synchronization would not hurt
@@ -105,6 +120,19 @@ void Engine::initializeTriggerWaveform(Logging *logger DECLARE_ENGINE_PARAMETER_
 		}
 		engine->engineCycleEventCount = TRIGGER_WAVEFORM(getLength());
 	}
+
+
+	if (engineConfiguration->vvtMode != VVT_INACTIVE) {
+		trigger_config_s config;
+		config.type = getVvtTriggerType(engineConfiguration->vvtMode);
+
+		ENGINE(triggerCentral).vvtShape.initializeTriggerWaveform(logger,
+				engineConfiguration->ambiguousOperationMode,
+				engineConfiguration->useOnlyRisingEdgeForTrigger, &config);
+
+
+	}
+
 
 	if (!alreadyLocked) {
 		unlockAnyContext();
