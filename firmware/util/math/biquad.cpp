@@ -63,3 +63,13 @@ float Biquad::filter(float input) {
 	z2 = input * a2 - b2 * result;
 	return result;
 }
+
+void Biquad::cookSteadyState(float steadyStateInput) {
+    float Y = steadyStateInput * (a0 + a1 + a2) / (1 + b1 + b2);
+
+    float steady_z2 = steadyStateInput * a2 - Y * b2;
+    float steady_z1 = steady_z2 + steadyStateInput * a1 - Y * b1;
+
+    this->z1 = steady_z1;
+    this->z2 = steady_z2;
+}

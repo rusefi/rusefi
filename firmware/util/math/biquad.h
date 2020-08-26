@@ -13,6 +13,7 @@ public:
 
 	float filter(float input);
 	void reset();
+	void cookSteadyState(float steadyStateInput);
 
 	void configureBandpass(float samplingFrequency, float centerFrequency, float Q);
 

@@ -103,14 +103,16 @@ void processLastKnockEvent() {
 
 	constexpr float ratio = 3.3f / 4095.0f;
 
-	knockFilter.reset();
-
 	size_t localCount = sampleCount;
+
+	// Prepare the steady state at vcc/2 so that there isn't a step
+	// when samples begin
+	knockFilter.cookSteadyState(3.3f / 2);
 
 	// Compute the sum of squares
 	for (size_t i = 0; i < localCount; i++)
 	{
-		float volts = ratio * (sampleBuffer[i] - 2048);
+		float volts = ratio * sampleBuffer[i];
 
 		float filtered = knockFilter.filter(volts);
 
