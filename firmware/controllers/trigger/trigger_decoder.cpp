@@ -272,7 +272,7 @@ void TriggerStateWithRunningStatistics::runtimeStatistics(TriggerFormDetails *tr
 	}
 }
 
-bool TriggerState::isValidIndex(TriggerWaveform *triggerShape) const {
+bool TriggerState::isValidIndex(const TriggerWaveform *triggerShape) const {
 	return currentCycle.current_index < triggerShape->getSize();
 }
 
