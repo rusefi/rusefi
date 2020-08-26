@@ -353,8 +353,10 @@ bool TriggerState::validateEventCounters(TriggerWaveform *triggerShape) const {
 	return isDecodingError;
 }
 
-void TriggerState::onShaftSynchronization(const TriggerStateCallback triggerCycleCallback,
-		efitick_t nowNt, TriggerWaveform *triggerShape) {
+void TriggerState::onShaftSynchronization(
+		const TriggerStateCallback triggerCycleCallback,
+		const efitick_t nowNt,
+		const TriggerWaveform *triggerShape) {
 
 
 	if (triggerCycleCallback) {
@@ -383,7 +385,8 @@ void TriggerState::onShaftSynchronization(const TriggerStateCallback triggerCycl
  * @param signal type of event which just happened
  * @param nowNt current time
  */
-void TriggerState::decodeTriggerEvent(TriggerWaveform *triggerShape,
+void TriggerState::decodeTriggerEvent(
+		const TriggerWaveform *triggerShape,
 		const TriggerStateCallback triggerCycleCallback,
 		TriggerStateListener * triggerStateListener,
 		const TriggerConfiguration * triggerConfiguration,
