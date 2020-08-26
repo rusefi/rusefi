@@ -248,11 +248,14 @@ typedef enum {
 
 	TT_MAZDA_DOHC_1_4 = 15,
 
-	// "1+1"
-	// see also TT_ONE a bit below
+	/**
+	 * "1+1" - one tooth on primary channel, one tooth on secondary channel
+	 * this trigger is used only by unit tests
+	 * see also TT_ONE a bit below
+	 */
 	TT_ONE_PLUS_ONE = 16,
 	// "1+60/2"
-	TT_ONE_PLUS_TOOTHED_WHEEL_60_2 = 17,
+	TT_VVT_JZ = 17,
 	// just one channel with just one tooth
 	TT_ONE = 18,
 
@@ -333,9 +336,9 @@ typedef enum {
 	TT_MAZDA_Z5 = 42,
 
 	/**
-	 * This shape for camshaft ONLY
+	 * cam sensor of Mazda Miata NB2 - the VVT signal shape
 	 */
-	TT_MIATA_NB2_VVT_CAM = 43,
+	TT_VVT_MIATA_NB2 = 43,
 
 	TT_RENIX_44_2_2 = 44,
 
@@ -346,7 +349,7 @@ typedef enum {
 
 	TT_HONDA_K_12_1 = 46,
 
-	TT_BOSCH_QUICK_START = 47,
+	TT_VVT_BOSCH_QUICK_START = 47,
 
 	TT_TOOTHED_WHEEL_36_2 = 48,
 

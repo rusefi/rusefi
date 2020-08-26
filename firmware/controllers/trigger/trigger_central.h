@@ -42,7 +42,6 @@ public:
 	int getHwEventCounter(int index) const;
 	void resetCounters();
 	void validateCamVvtCounters();
-	TriggerStateWithRunningStatistics triggerState;
 
 	TriggerNoiseFilter noiseFilter;
 
@@ -60,14 +59,19 @@ public:
 
 	efitick_t vvtSyncTimeNt = 0;
 
+	TriggerStateWithRunningStatistics triggerState;
 	TriggerWaveform triggerShape;
+
+	TriggerState vvtState;
+	TriggerWaveform vvtShape;
+
+	TriggerFormDetails triggerFormDetails;
 
 	efitick_t previousVvtCamTime = DEEP_IN_THE_PAST_SECONDS * NT_PER_SECOND;
 	efitick_t previousVvtCamDuration = 0;
 
 private:
 	IntListenerArray<15> triggerListeneres;
-
 };
 
 void triggerInfo(void);

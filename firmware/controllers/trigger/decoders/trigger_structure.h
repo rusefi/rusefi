@@ -65,6 +65,7 @@ private:
 
 class Engine;
 class TriggerState;
+class TriggerFormDetails;
 
 #define GAP_TRACKING_LENGTH 4
 
@@ -77,8 +78,6 @@ public:
 	TriggerWaveform();
 	void initializeTriggerWaveform(Logging *logger, operation_mode_e ambiguousOperationMode,
 			bool useOnlyRisingEdgeForTrigger, const trigger_config_s *triggerConfig);
-	void findTriggerPosition(event_trigger_position_s *position,
-			angle_t angle DEFINE_CONFIG_PARAM(angle_t, globalTriggerAngleOffset));
 	void setShapeDefinitionError(bool value);
 
 	/**
@@ -121,17 +120,6 @@ public:
 	 * duty cycle for each individual trigger channel
 	 */
 	float expectedDutyCycle[PWM_PHASE_MAX_WAVE_PER_PWM];
-
-	/**
-	 * These angles are in event coordinates - with synchronization point located at angle zero.
-	 * These values are pre-calculated for performance reasons.
-	 */
-	angle_t eventAngles[PWM_PHASE_MAX_COUNT];
-	/**
-	 * this cache allows us to find a close-enough (with one degree precision) trigger wheel index by
-	 * given angle with fast constant speed. That's a performance optimization for event scheduling.
-	 */
-	int triggerIndexByAngle[720];
 
 
 	/**
@@ -247,7 +235,7 @@ public:
 	size_t getSize() const;
 
 	int getTriggerWaveformSynchPointIndex() const;
-	void prepareShape();
+	void prepareShape(TriggerFormDetails *details DECLARE_ENGINE_PARAMETER_SUFFIX);
 
 	/**
 	 * This private method should only be used to prepare the array of pre-calculated values
@@ -265,7 +253,7 @@ public:
 private:
 	trigger_shape_helper h;
 
-	int findAngleIndex(float angle) const;
+	int findAngleIndex(TriggerFormDetails *details, float angle) const;
 
 	/**
 	 * Working buffer for 'wave' instance
@@ -287,6 +275,30 @@ private:
 	 */
 	operation_mode_e operationMode;
 };
+
+/**
+ * Misc values calculated from TriggerWaveform
+ */
+class TriggerFormDetails {
+public:
+	TriggerFormDetails();
+	/**
+	 * These angles are in event coordinates - with synchronization point located at angle zero.
+	 * These values are pre-calculated for performance reasons.
+	 */
+	angle_t eventAngles[PWM_PHASE_MAX_COUNT];
+	/**
+	 * this cache allows us to find a close-enough (with one degree precision) trigger wheel index by
+	 * given angle with fast constant speed. That's a performance optimization for event scheduling.
+	 */
+	int triggerIndexByAngle[720];
+};
+
+void findTriggerPosition(
+		TriggerWaveform *shape,
+		TriggerFormDetails *details,
+		event_trigger_position_s *position,
+		angle_t angle DEFINE_CONFIG_PARAM(angle_t, globalTriggerAngleOffset));
 
 void setToothedWheelConfiguration(TriggerWaveform *s, int total, int skipped, operation_mode_e operationMode);
 

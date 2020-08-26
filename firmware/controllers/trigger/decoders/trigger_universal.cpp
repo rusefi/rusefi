@@ -50,7 +50,6 @@ void initializeSkippedToothTriggerWaveformExt(TriggerWaveform *s, int totalTeeth
 	NO_LEFT_FILTER, NO_RIGHT_FILTER);
 }
 
-
 void configureOnePlusOne(TriggerWaveform *s) {
 	s->initialize(FOUR_STROKE_CAM_SENSOR);
 
@@ -59,25 +58,6 @@ void configureOnePlusOne(TriggerWaveform *s) {
 
 	s->addEvent720(540, T_SECONDARY, TV_RISE);
 	s->addEvent720(720, T_SECONDARY, TV_FALL);
-
-	s->isSynchronizationNeeded = false;
-	s->useOnlyPrimaryForSync = true;
-}
-
-// todo: open question if we need this trigger
-void configureOnePlus60_2(TriggerWaveform *s) {
-	s->initialize(FOUR_STROKE_CAM_SENSOR);
-
-	int totalTeethCount = 60;
-	int skippedCount = 2;
-
-	s->addEvent720(2, T_PRIMARY, TV_RISE);
-	addSkippedToothTriggerEvents(T_SECONDARY, s, totalTeethCount, skippedCount, 0.5, 0, 360, 2, 20);
-	s->addEvent720(20, T_PRIMARY, TV_FALL);
-	addSkippedToothTriggerEvents(T_SECONDARY, s, totalTeethCount, skippedCount, 0.5, 0, 360, 20, NO_RIGHT_FILTER);
-
-	addSkippedToothTriggerEvents(T_SECONDARY, s, totalTeethCount, skippedCount, 0.5, 360, 360, NO_LEFT_FILTER,
-	NO_RIGHT_FILTER);
 
 	s->isSynchronizationNeeded = false;
 	s->useOnlyPrimaryForSync = true;
