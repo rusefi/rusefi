@@ -91,7 +91,7 @@ public:
 			const efitick_t nowNt,
 			const TriggerWaveform *triggerShape);
 
-	bool isValidIndex(TriggerWaveform *triggerShape) const;
+	bool isValidIndex(const TriggerWaveform *triggerShape) const;
 
 	/**
 	 * TRUE if we know where we are
