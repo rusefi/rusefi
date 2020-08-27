@@ -77,7 +77,8 @@ public:
 	void incrementTotalEventCounter();
 	efitime_t getTotalEventCounter() const;
 
-	void decodeTriggerEvent(TriggerWaveform *triggerShape,
+	void decodeTriggerEvent(
+			const TriggerWaveform *triggerShape,
 			const TriggerStateCallback triggerCycleCallback,
 			TriggerStateListener * triggerStateListener,
 			const TriggerConfiguration * triggerConfiguration,
@@ -85,11 +86,12 @@ public:
 			const efitime_t nowUs);
 
 	bool validateEventCounters(TriggerWaveform *triggerShape) const;
-	void onShaftSynchronization(const TriggerStateCallback triggerCycleCallback,
-			efitick_t nowNt, TriggerWaveform *triggerShape);
+	void onShaftSynchronization(
+			const TriggerStateCallback triggerCycleCallback,
+			const efitick_t nowNt,
+			const TriggerWaveform *triggerShape);
 
-	bool isValidIndex(TriggerWaveform *triggerShape) const;
-	float getTriggerDutyCycle(int index);
+	bool isValidIndex(const TriggerWaveform *triggerShape) const;
 
 	/**
 	 * TRUE if we know where we are

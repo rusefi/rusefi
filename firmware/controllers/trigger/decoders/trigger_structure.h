@@ -66,6 +66,7 @@ private:
 class Engine;
 class TriggerState;
 class TriggerFormDetails;
+class TriggerConfiguration;
 
 #define GAP_TRACKING_LENGTH 4
 
@@ -250,6 +251,11 @@ public:
 	 * See findTriggerZeroEventIndex()
 	 */
 	int triggerShapeSynchPointIndex;
+
+	void initializeSyncPoint(TriggerState *state,
+			const TriggerConfiguration * triggerConfiguration,
+					trigger_config_s const*triggerConfig);
+
 private:
 	trigger_shape_helper h;
 

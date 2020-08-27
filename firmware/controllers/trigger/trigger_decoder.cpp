@@ -114,6 +114,16 @@ float actualSynchGap;
 
 static Logging * logger = nullptr;
 
+void TriggerWaveform::initializeSyncPoint(TriggerState *state,
+			const TriggerConfiguration * triggerConfiguration,
+					trigger_config_s const*triggerConfig) {
+	triggerShapeSynchPointIndex = state->findTriggerZeroEventIndex(this,
+			triggerConfiguration, triggerConfig);
+}
+
+/**
+ * Calculate 'shape.triggerShapeSynchPointIndex' value using 'TriggerState *state'
+ */
 void calculateTriggerSynchPoint(TriggerWaveform *shape,
 		TriggerState *state DECLARE_ENGINE_PARAMETER_SUFFIX) {
 #if EFI_PROD_CODE
@@ -122,7 +132,7 @@ void calculateTriggerSynchPoint(TriggerWaveform *shape,
 	trigger_config_s const*triggerConfig = &engineConfiguration->trigger;
 
 	engine->triggerErrorDetection.clear();
-	shape->triggerShapeSynchPointIndex = state->findTriggerZeroEventIndex(shape,
+	shape->initializeSyncPoint(state,
 			&engine->primaryTriggerConfiguration,
 			triggerConfig);
 
@@ -272,7 +282,7 @@ void TriggerStateWithRunningStatistics::runtimeStatistics(TriggerFormDetails *tr
 	}
 }
 
-bool TriggerState::isValidIndex(TriggerWaveform *triggerShape) const {
+bool TriggerState::isValidIndex(const TriggerWaveform *triggerShape) const {
 	return currentCycle.current_index < triggerShape->getSize();
 }
 
@@ -353,8 +363,10 @@ bool TriggerState::validateEventCounters(TriggerWaveform *triggerShape) const {
 	return isDecodingError;
 }
 
-void TriggerState::onShaftSynchronization(const TriggerStateCallback triggerCycleCallback,
-		efitick_t nowNt, TriggerWaveform *triggerShape) {
+void TriggerState::onShaftSynchronization(
+		const TriggerStateCallback triggerCycleCallback,
+		const efitick_t nowNt,
+		const TriggerWaveform *triggerShape) {
 
 
 	if (triggerCycleCallback) {
@@ -383,7 +395,8 @@ void TriggerState::onShaftSynchronization(const TriggerStateCallback triggerCycl
  * @param signal type of event which just happened
  * @param nowNt current time
  */
-void TriggerState::decodeTriggerEvent(TriggerWaveform *triggerShape,
+void TriggerState::decodeTriggerEvent(
+		const TriggerWaveform *triggerShape,
 		const TriggerStateCallback triggerCycleCallback,
 		TriggerStateListener * triggerStateListener,
 		const TriggerConfiguration * triggerConfiguration,
