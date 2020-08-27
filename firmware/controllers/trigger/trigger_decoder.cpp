@@ -126,6 +126,7 @@ void TriggerWaveform::initializeSyncPoint(TriggerState *state,
  */
 void calculateTriggerSynchPoint(TriggerWaveform *shape,
 		TriggerState *state DECLARE_ENGINE_PARAMETER_SUFFIX) {
+	state->resetTriggerState();
 #if EFI_PROD_CODE
 	efiAssertVoid(CUSTOM_TRIGGER_STACK, getCurrentRemainingStack() > EXPECTED_REMAINING_STACK, "calc s");
 #endif
@@ -143,6 +144,9 @@ void calculateTriggerSynchPoint(TriggerWaveform *shape,
 		firmwareError(CUSTOM_ERR_TRIGGER_WAVEFORM_TOO_LONG, "Trigger length above maximum: %d", length);
 		shape->setShapeDefinitionError(true);
 		return;
+	}
+	if (shape->getSize() == 0) {
+		firmwareError(CUSTOM_ERR_TRIGGER_ZERO, "triggerShape size is zero");
 	}
 }
 

@@ -310,7 +310,7 @@ VvtTriggerConfiguration::VvtTriggerConfiguration(Engine *engine) {
 }
 
 bool VvtTriggerConfiguration::isUseOnlyRisingEdgeForTrigger() const {
-	return engine->engineConfigurationPtr->useOnlyRisingEdgeForTrigger;
+	return engine->engineConfigurationPtr->vvtCamSensorUseRise;
 }
 
 debug_mode_e VvtTriggerConfiguration::getDebugMode() const {
@@ -318,7 +318,7 @@ debug_mode_e VvtTriggerConfiguration::getDebugMode() const {
 }
 
 trigger_type_e VvtTriggerConfiguration::getType() const {
-	return engine->engineConfigurationPtr->trigger.type;
+	return engine->triggerCentral.vvtTriggerType;
 }
 
 bool VvtTriggerConfiguration::isSilentTriggerError() const {
