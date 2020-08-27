@@ -423,6 +423,8 @@ typedef enum {
 	 */
 	VVT_FIRST_HALF = 4,
 
+	VVT_BOSCH_QUICK_START = 5,
+
 	Force_4_bytes_size_vvt_mode = ENUM_32_BITS,
 } vvt_mode_e;
 
