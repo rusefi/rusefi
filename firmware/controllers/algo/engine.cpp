@@ -42,8 +42,6 @@
 #include "gpio/tle8888.h"
 #endif
 
-static TriggerState initState CCM_OPTIONAL;
-
 LoggingWithStorage engineLogger("engine");
 
 EXTERN_ENGINE;
@@ -89,6 +87,8 @@ trigger_type_e getVvtTriggerType(vvt_mode_e vvtMode) {
 }
 
 void Engine::initializeTriggerWaveform(Logging *logger DECLARE_ENGINE_PARAMETER_SUFFIX) {
+	static TriggerState initState;
+
 #if EFI_ENGINE_CONTROL && EFI_SHAFT_POSITION_INPUT
 	// we have a confusing threading model so some synchronization would not hurt
 	bool alreadyLocked = lockAnyContext();
@@ -96,15 +96,6 @@ void Engine::initializeTriggerWaveform(Logging *logger DECLARE_ENGINE_PARAMETER_
 	TRIGGER_WAVEFORM(initializeTriggerWaveform(logger,
 			engineConfiguration->ambiguousOperationMode,
 			engineConfiguration->useOnlyRisingEdgeForTrigger, &engineConfiguration->trigger));
-
-	if (TRIGGER_WAVEFORM(bothFrontsRequired) && engineConfiguration->useOnlyRisingEdgeForTrigger) {
-#if EFI_PROD_CODE || EFI_SIMULATOR
-		firmwareError(CUSTOM_ERR_BOTH_FRONTS_REQUIRED, "trigger: both fronts required");
-#else
-		warning(CUSTOM_ERR_BOTH_FRONTS_REQUIRED, "trigger: both fronts required");
-#endif
-	}
-
 
 	if (!TRIGGER_WAVEFORM(shapeDefinitionError)) {
 		/**
@@ -130,9 +121,10 @@ void Engine::initializeTriggerWaveform(Logging *logger DECLARE_ENGINE_PARAMETER_
 				engineConfiguration->ambiguousOperationMode,
 				engineConfiguration->useOnlyRisingEdgeForTrigger, &config);
 
-
+		ENGINE(triggerCentral).vvtShape.initializeSyncPoint(&initState,
+				&engine->primaryTriggerConfiguration,
+				&config);
 	}
-
 
 	if (!alreadyLocked) {
 		unlockAnyContext();
@@ -250,11 +242,11 @@ void Engine::onTriggerSignalEvent(efitick_t nowNt) {
 	lastTriggerToothEventTimeNt = nowNt;
 }
 
-Engine::Engine() : primaryTriggerConfiguration(this) {
+Engine::Engine() : primaryTriggerConfiguration(this), vvtTriggerConfiguration(this) {
 	reset();
 }
 
-Engine::Engine(persistent_config_s *config) : primaryTriggerConfiguration(this) {
+Engine::Engine(persistent_config_s *config) : primaryTriggerConfiguration(this), vvtTriggerConfiguration(this) {
 	setConfig(config);
 	reset();
 }

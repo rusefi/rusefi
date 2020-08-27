@@ -305,3 +305,26 @@ bool PrimaryTriggerConfiguration::isVerboseTriggerSynchDetails() const {
 	return engine->engineConfigurationPtr->verboseTriggerSynchDetails;
 }
 
+VvtTriggerConfiguration::VvtTriggerConfiguration(Engine *engine) {
+	this->engine = engine;
+}
+
+bool VvtTriggerConfiguration::isUseOnlyRisingEdgeForTrigger() const {
+	return engine->engineConfigurationPtr->useOnlyRisingEdgeForTrigger;
+}
+
+debug_mode_e VvtTriggerConfiguration::getDebugMode() const {
+	return engine->engineConfigurationPtr->debugMode;
+}
+
+trigger_type_e VvtTriggerConfiguration::getType() const {
+	return engine->engineConfigurationPtr->trigger.type;
+}
+
+bool VvtTriggerConfiguration::isSilentTriggerError() const {
+	return engine->engineConfigurationPtr->silentTriggerError;
+}
+
+bool VvtTriggerConfiguration::isVerboseTriggerSynchDetails() const {
+	return engine->engineConfigurationPtr->verboseTriggerSynchDetails;
+}

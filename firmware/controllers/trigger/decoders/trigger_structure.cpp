@@ -134,6 +134,8 @@ angle_t TriggerWaveform::getCycleDuration() const {
 /**
  * Trigger event count equals engine cycle event count if we have a cam sensor.
  * Two trigger cycles make one engine cycle in case of a four stroke engine If we only have a cranksensor.
+ *
+ * 'engine->engineCycleEventCount' hold a pre-calculated copy of this value as a performance optimization
  */
 size_t TriggerWaveform::getLength() const {
 	/**
@@ -673,5 +675,14 @@ void TriggerWaveform::initializeTriggerWaveform(Logging *logger, operation_mode_
 	if (!shapeDefinitionError) {
 		wave.checkSwitchTimes(getSize(), getCycleDuration());
 	}
+
+	if (bothFrontsRequired && useOnlyRisingEdgeForTrigger) {
+#if EFI_PROD_CODE || EFI_SIMULATOR
+		firmwareError(CUSTOM_ERR_BOTH_FRONTS_REQUIRED, "trigger: both fronts required");
+#else
+		warning(CUSTOM_ERR_BOTH_FRONTS_REQUIRED, "trigger: both fronts required");
+#endif
+	}
+
 
 }
