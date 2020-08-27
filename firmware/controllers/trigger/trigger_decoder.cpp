@@ -666,6 +666,7 @@ void TriggerState::decodeTriggerEvent(
 	}
 	if (!isValidIndex(triggerShape) && triggerStateListener) {
 		triggerStateListener->OnTriggerInvalidIndex(currentCycle.current_index);
+		return;
 	}
 	if (someSortOfTriggerError) {
 		if (getTimeNowNt() - lastDecodingErrorTime > NT_PER_SECOND) {
