@@ -77,6 +77,8 @@ trigger_type_e getVvtTriggerType(vvt_mode_e vvtMode) {
 		return TT_VVT_JZ;
 	case MIATA_NB2:
 		return TT_VVT_MIATA_NB2;
+	case VVT_BOSCH_QUICK_START:
+		return TT_VVT_BOSCH_QUICK_START;
 	case VVT_FIRST_HALF:
 		return TT_ONE;
 	case VVT_SECOND_HALF:
