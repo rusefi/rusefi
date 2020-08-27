@@ -114,6 +114,16 @@ float actualSynchGap;
 
 static Logging * logger = nullptr;
 
+void TriggerWaveform::initializeSyncPoint(TriggerState *state,
+			const TriggerConfiguration * triggerConfiguration,
+					trigger_config_s const*triggerConfig) {
+	triggerShapeSynchPointIndex = state->findTriggerZeroEventIndex(this,
+			triggerConfiguration, triggerConfig);
+}
+
+/**
+ * Calculate 'shape.triggerShapeSynchPointIndex' value using 'TriggerState *state'
+ */
 void calculateTriggerSynchPoint(TriggerWaveform *shape,
 		TriggerState *state DECLARE_ENGINE_PARAMETER_SUFFIX) {
 #if EFI_PROD_CODE
@@ -122,7 +132,7 @@ void calculateTriggerSynchPoint(TriggerWaveform *shape,
 	trigger_config_s const*triggerConfig = &engineConfiguration->trigger;
 
 	engine->triggerErrorDetection.clear();
-	shape->triggerShapeSynchPointIndex = state->findTriggerZeroEventIndex(shape,
+	shape->initializeSyncPoint(state,
 			&engine->primaryTriggerConfiguration,
 			triggerConfig);
 
