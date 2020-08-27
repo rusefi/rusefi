@@ -27,6 +27,7 @@ static void completionCallback(ADCDriver* adcp, adcsample_t*, size_t) {
 	if (adcp->state == ADC_COMPLETE) {
 		knockNeedsProcess = true;
 
+		// Notify the processing thread that it's time to process this sample
 		chSysLockFromISR();
 		chBSemSignalI(&knockSem);
 		chSysUnlockFromISR();
@@ -39,7 +40,7 @@ static void errorCallback(ADCDriver*, adcerror_t err) {
 static const ADCConversionGroup adcConvGroup = { FALSE, 1, &completionCallback, &errorCallback,
 	0,
 	ADC_CR2_SWSTART,
-	ADC_SMPR1_SMP_AN14(ADC_SAMPLE_84), // sample times for channels 10...18
+	ADC_SMPR1_SMP_AN14(KNOCK_SAMPLE_TIME), // sample times for channels 10...18
 	0,
 
 	0,	// htr
@@ -69,7 +70,7 @@ void startKnockSampling(uint8_t cylinderIndex) {
 
 	// Sample for 45 degrees
 	float samplingSeconds = ENGINE(rpmCalculator).oneDegreeUs * 45 * 1e-6;
-	constexpr int sampleRate = 217000;
+	constexpr int sampleRate = KNOCK_SAMPLE_RATE;
 	sampleCount = 0xFFFFFFFE & static_cast<size_t>(clampF(100, samplingSeconds * sampleRate, efi::size(sampleBuffer)));
 
 	adcStartConversionI(&KNOCK_ADC, &adcConvGroup, sampleBuffer, sampleCount);
@@ -85,7 +86,7 @@ KnockThread kt;
 
 void initSoftwareKnock() {
 	chBSemObjectInit(&knockSem, TRUE);
-	knockFilter.configureBandpass(217000, 11500, 3);
+	knockFilter.configureBandpass(KNOCK_SAMPLE_RATE, 11500, 3);
 	adcStart(&KNOCK_ADC, nullptr);
 
 	efiSetPadMode("knock ch1", KNOCK_PIN_CH1, PAL_MODE_INPUT_ANALOG);
