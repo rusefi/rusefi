@@ -69,6 +69,18 @@ private:
 	Engine *engine;
 };
 
+class VvtTriggerConfiguration : public TriggerConfiguration {
+public:
+	VvtTriggerConfiguration(Engine *engine);
+	bool isUseOnlyRisingEdgeForTrigger() const;
+	bool isSilentTriggerError() const;
+	bool isVerboseTriggerSynchDetails() const;
+	debug_mode_e getDebugMode() const;
+	trigger_type_e getType() const;
+private:
+	Engine *engine;
+};
+
 class Engine : public TriggerStateListener {
 public:
 	explicit Engine(persistent_config_s *config);
@@ -81,6 +93,7 @@ public:
 	cyclic_buffer<int> triggerErrorDetection;
 
 	PrimaryTriggerConfiguration primaryTriggerConfiguration;
+	VvtTriggerConfiguration vvtTriggerConfiguration;
 
 	TCU tcu;
 
