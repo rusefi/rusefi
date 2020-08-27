@@ -105,7 +105,7 @@ EXTERN_ENGINE;
 static LoggingWithStorage logger("Engine Controller");
 
 /**
- * todo: this should probably become 'static', i.e. private, and propagated around explicitly?
+ * Would love to pass reference to configuration object into constructor but C++ does allow attributes after parenthesized initializer
  */
 Engine ___engine CCM_OPTIONAL;
 Engine * engine = &___engine;
