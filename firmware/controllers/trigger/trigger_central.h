@@ -68,9 +68,6 @@ public:
 
 	TriggerFormDetails triggerFormDetails;
 
-	efitick_t previousVvtCamTime = DEEP_IN_THE_PAST_SECONDS * NT_PER_SECOND;
-	efitick_t previousVvtCamDuration = 0;
-
 private:
 	IntListenerArray<15> triggerListeneres;
 };
