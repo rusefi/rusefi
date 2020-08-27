@@ -45,6 +45,7 @@ public:
 
 	TriggerNoiseFilter noiseFilter;
 
+	trigger_type_e vvtTriggerType;
 	angle_t getVVTPosition();
 
 	// latest VVT event position (could be not synchronization event)

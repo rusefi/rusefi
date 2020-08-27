@@ -145,6 +145,14 @@ void hwHandleVvtCamSignal(trigger_value_e front, efitick_t nowNt DECLARE_ENGINE_
 		return;
 	}
 
+	ENGINE(triggerCentral).vvtState.decodeTriggerEvent(
+			&ENGINE(triggerCentral).vvtShape,
+			nullptr,
+			nullptr,
+			&engine->vvtTriggerConfiguration,
+			front == TV_RISE ? SHAFT_PRIMARY_RISING : SHAFT_PRIMARY_FALLING, nowNt);
+
+
 	tc->vvtCamCounter++;
 
 	efitick_t offsetNt = nowNt - tc->timeAtVirtualZeroNt;

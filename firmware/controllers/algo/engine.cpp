@@ -102,27 +102,23 @@ void Engine::initializeTriggerWaveform(Logging *logger DECLARE_ENGINE_PARAMETER_
 	 	 * 'initState' instance of TriggerState is used only to initialize 'this' TriggerWaveform instance
 	 	 * #192 BUG real hardware trigger events could be coming even while we are initializing trigger
 	 	 */
-		initState.resetTriggerState();
 		calculateTriggerSynchPoint(&ENGINE(triggerCentral.triggerShape),
 				&initState PASS_ENGINE_PARAMETER_SUFFIX);
 
-		if (engine->triggerCentral.triggerShape.getSize() == 0) {
-			firmwareError(CUSTOM_ERR_TRIGGER_ZERO, "triggerShape size is zero");
-		}
 		engine->engineCycleEventCount = TRIGGER_WAVEFORM(getLength());
 	}
 
 
 	if (engineConfiguration->vvtMode != VVT_INACTIVE) {
 		trigger_config_s config;
-		config.type = getVvtTriggerType(engineConfiguration->vvtMode);
+		ENGINE(triggerCentral).vvtTriggerType = config.type = getVvtTriggerType(engineConfiguration->vvtMode);
 
 		ENGINE(triggerCentral).vvtShape.initializeTriggerWaveform(logger,
 				engineConfiguration->ambiguousOperationMode,
-				engineConfiguration->useOnlyRisingEdgeForTrigger, &config);
+				engine->engineConfigurationPtr->vvtCamSensorUseRise, &config);
 
 		ENGINE(triggerCentral).vvtShape.initializeSyncPoint(&initState,
-				&engine->primaryTriggerConfiguration,
+				&engine->vvtTriggerConfiguration,
 				&config);
 	}
 
