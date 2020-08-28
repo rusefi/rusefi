@@ -52,7 +52,7 @@ static const ADCConversionGroup adcConvGroup = { FALSE, 1, &completionCallback, 
 };
 
 void startKnockSampling(uint8_t cylinderIndex) {
-	if (cylinderIndex != 2) {
+	if (!CONFIG(enableSoftwareKnock)) {
 		return;
 	}
 
@@ -86,13 +86,16 @@ KnockThread kt;
 
 void initSoftwareKnock() {
 	chBSemObjectInit(&knockSem, TRUE);
-	knockFilter.configureBandpass(KNOCK_SAMPLE_RATE, 11500, 3);
-	adcStart(&KNOCK_ADC, nullptr);
 
-	efiSetPadMode("knock ch1", KNOCK_PIN_CH1, PAL_MODE_INPUT_ANALOG);
-	efiSetPadMode("knock ch2", KNOCK_PIN_CH2, PAL_MODE_INPUT_ANALOG);
+	if (CONFIG(enableSoftwareKnock)) {
+		knockFilter.configureBandpass(KNOCK_SAMPLE_RATE, 1000 * CONFIG(knockBandCustom), 3);
+		adcStart(&KNOCK_ADC, nullptr);
 
-	kt.Start();
+		efiSetPadMode("knock ch1", KNOCK_PIN_CH1, PAL_MODE_INPUT_ANALOG);
+		efiSetPadMode("knock ch2", KNOCK_PIN_CH2, PAL_MODE_INPUT_ANALOG);
+
+		kt.Start();
+	}
 }
 
 void processLastKnockEvent() {
