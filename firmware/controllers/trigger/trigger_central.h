@@ -45,6 +45,7 @@ public:
 
 	TriggerNoiseFilter noiseFilter;
 
+	trigger_type_e vvtTriggerType;
 	angle_t getVVTPosition();
 
 	// latest VVT event position (could be not synchronization event)
@@ -66,9 +67,6 @@ public:
 	TriggerWaveform vvtShape;
 
 	TriggerFormDetails triggerFormDetails;
-
-	efitick_t previousVvtCamTime = DEEP_IN_THE_PAST_SECONDS * NT_PER_SECOND;
-	efitick_t previousVvtCamDuration = 0;
 
 private:
 	IntListenerArray<15> triggerListeneres;

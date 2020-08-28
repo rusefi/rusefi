@@ -85,8 +85,6 @@ void addTriggerEventListener(ShaftPositionListener listener, const char *name, E
 	engine->triggerCentral.addEventListener(listener, name, engine);
 }
 
-#define miataNb2VVTRatioFrom (8.50 * 0.75)
-#define miataNb2VVTRatioTo (14)
 #define miataNbIndex (0)
 
 void hwHandleVvtCamSignal(trigger_value_e front, efitick_t nowNt DECLARE_ENGINE_PARAMETER_SUFFIX) {
@@ -145,6 +143,14 @@ void hwHandleVvtCamSignal(trigger_value_e front, efitick_t nowNt DECLARE_ENGINE_
 		return;
 	}
 
+	ENGINE(triggerCentral).vvtState.decodeTriggerEvent(
+			&ENGINE(triggerCentral).vvtShape,
+			nullptr,
+			nullptr,
+			&engine->vvtTriggerConfiguration,
+			front == TV_RISE ? SHAFT_PRIMARY_RISING : SHAFT_PRIMARY_FALLING, nowNt);
+
+
 	tc->vvtCamCounter++;
 
 	efitick_t offsetNt = nowNt - tc->timeAtVirtualZeroNt;
@@ -170,29 +176,11 @@ void hwHandleVvtCamSignal(trigger_value_e front, efitick_t nowNt DECLARE_ENGINE_
 		}
 		break;
 	case MIATA_NB2:
+	case VVT_BOSCH_QUICK_START:
 	 {
-		uint32_t currentDuration = nowNt - tc->previousVvtCamTime;
-		float ratio = ((float) currentDuration) / tc->previousVvtCamDuration;
-
-		if (engineConfiguration->debugMode == DBG_VVT) {
-#if EFI_TUNER_STUDIO
-			tsOutputChannels.debugFloatField2 = ratio;
-#endif /* EFI_TUNER_STUDIO */
-		}
-
-
-		tc->previousVvtCamDuration = currentDuration;
-		tc->previousVvtCamTime = nowNt;
-
-		if (engineConfiguration->verboseTriggerSynchDetails) {
-			scheduleMsg(logger, "vvt ratio %.2f", ratio);
-		}
-		if (ratio < miataNb2VVTRatioFrom || ratio > miataNb2VVTRatioTo) {
+		if (engine->triggerCentral.vvtState.currentCycle.current_index != 0) {
 			// this is not NB2 sync tooth - exiting
 			return;
-		}
-		if (engineConfiguration->verboseTriggerSynchDetails) {
-			scheduleMsg(logger, "looks good: vvt ratio %.2f", ratio);
 		}
 		if (engineConfiguration->debugMode == DBG_VVT) {
 #if EFI_TUNER_STUDIO
