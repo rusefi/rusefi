@@ -234,7 +234,9 @@ typedef struct {
 
 	scaled_voltage rawPpsSecondary;		// 248
 
-	uint8_t unusedAtTheEnd[38]; // we have some unused bytes to allow compatible TS changes
+	int8_t knockLevels[12];
+
+	uint8_t unusedAtTheEnd[26]; // we have some unused bytes to allow compatible TS changes
 
 	// Temporary - will remove soon
 	TsDebugChannels* getDebugChannels() {

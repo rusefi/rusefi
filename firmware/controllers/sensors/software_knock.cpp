@@ -13,6 +13,7 @@ EXTERN_ENGINE;
 #include "knock_config.h"
 
 adcsample_t sampleBuffer[2000];
+int8_t currentCylinderIndex = 0;
 Biquad knockFilter;
 
 static volatile bool knockIsSampling = false;
@@ -73,6 +74,7 @@ void startKnockSampling(uint8_t cylinderIndex) {
 	constexpr int sampleRate = KNOCK_SAMPLE_RATE;
 	sampleCount = 0xFFFFFFFE & static_cast<size_t>(clampF(100, samplingSeconds * sampleRate, efi::size(sampleBuffer)));
 
+	currentCylinderIndex = cylinderIndex;
 	adcStartConversionI(&KNOCK_ADC, &adcConvGroup, sampleBuffer, sampleCount);
 }
 
@@ -126,6 +128,7 @@ void processLastKnockEvent() {
 	// RMS
 	float db = 10 * log10(meanSquares);
 
+	tsOutputChannels.knockLevels[currentCylinderIndex] = roundf(clampF(-100, db, 100));
 	tsOutputChannels.knockLevel = db;
 
 	knockNeedsProcess = false;
