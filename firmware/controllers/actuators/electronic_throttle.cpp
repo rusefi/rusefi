@@ -124,6 +124,36 @@ static SensorType indexToTpsSensorSecondary(size_t index) {
 	}
 }
 
+#if EFI_TUNER_STUDIO
+static TsCalMode indexToCalModePriMin(size_t index) {
+	switch (index) {
+		case 0:  return TsCalMode::Tps1Min;
+		default: return TsCalMode::Tps2Min;
+	}
+}
+
+static TsCalMode indexToCalModePriMax(size_t index) {
+	switch (index) {
+		case 0:  return TsCalMode::Tps1Max;
+		default: return TsCalMode::Tps2Max;
+	}
+}
+
+static TsCalMode indexToCalModeSecMin(size_t index) {
+	switch (index) {
+		case 0:  return TsCalMode::Tps1SecondaryMin;
+		default: return TsCalMode::Tps2SecondaryMin;
+	}
+}
+
+static TsCalMode indexToCalModeSecMax(size_t index) {
+	switch (index) {
+		case 0:  return TsCalMode::Tps1SecondaryMax;
+		default: return TsCalMode::Tps2SecondaryMax;
+	}
+}
+#endif // EFI_TUNER_STUDIO
+
 static percent_t directPwmValue = NAN;
 static percent_t currentEtbDuty;
 
@@ -496,17 +526,17 @@ struct EtbImpl final : public EtbController, public PeriodicController<512> {
 		motor->disable();
 
 		// Write out the learned values to TS, waiting briefly after setting each to let TS grab it
-		tsOutputChannels.calibrationMode = TsCalMode::Tps1Max;
+		tsOutputChannels.calibrationMode = indexToCalModePriMax(myIndex);
 		tsOutputChannels.calibrationValue = primaryMax;
 		chThdSleepMilliseconds(500);
-		tsOutputChannels.calibrationMode = TsCalMode::Tps1Min;
+		tsOutputChannels.calibrationMode = indexToCalModePriMin(myIndex);
 		tsOutputChannels.calibrationValue = primaryMin;
 		chThdSleepMilliseconds(500);
 
-		tsOutputChannels.calibrationMode = TsCalMode::Tps1SecondaryMax;
+		tsOutputChannels.calibrationMode = indexToCalModeSecMax(myIndex);
 		tsOutputChannels.calibrationValue = secondaryMax;
 		chThdSleepMilliseconds(500);
-		tsOutputChannels.calibrationMode = TsCalMode::Tps1SecondaryMin;
+		tsOutputChannels.calibrationMode = indexToCalModeSecMin(myIndex);
 		tsOutputChannels.calibrationValue = secondaryMin;
 		chThdSleepMilliseconds(500);
 

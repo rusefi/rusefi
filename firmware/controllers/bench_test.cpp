@@ -270,6 +270,9 @@ static void handleCommandX14(uint16_t index) {
 	case 0xE:
 		etbAutocal(0);
 		return;
+	case 0x11:
+		etbAutocal(1);
+		return;
 	case 0xC:
 		engine->etbAutoTune = true;
 		return;
@@ -345,9 +348,9 @@ void initBenchTest(Logging *sharedLogger) {
 	addConsoleActionS("fanbench2", fanBenchExt);
 	addConsoleAction("dizzybench", dizzyBench); // this is useful for tach output testing
 
-	addConsoleAction("starterbench", starterRelayBench);
-	addConsoleAction("milbench", milBench);
-	addConsoleActionSSS("fuelbench", fuelbench);
+	addConsoleAction(CMD_STARTER_BENCH, starterRelayBench);
+	addConsoleAction(CMD_MIL_BENCH, milBench);
+	addConsoleActionSSS(CMD_FUEL_BENCH, fuelbench);
 	addConsoleActionSSS("sparkbench", sparkbench);
 
 	addConsoleActionSSSSS("fuelbench2", fuelbench2);

@@ -16,12 +16,19 @@ FuelComputer::FuelComputer(const ValueProvider3D& afrTable) : m_afrTable(&afrTab
 
 float FuelComputer::getStoichiometricRatio() const {
 	// TODO: vary this with ethanol content/configured setting/whatever
-	return 14.7f;
+	float rawConfig = (float)CONFIG(stoichRatioPrimary) / PACK_MULT_AFR_CFG;
+
+	// Config compatibility: this field may be zero on ECUs with old defaults
+	if (rawConfig < 5) {
+		return 14.7f;
+	}
+
+	return rawConfig;
 }
 
 float FuelComputer::getTargetLambda(int rpm, float load) const {
 	efiAssert(OBD_PCM_Processor_Fault, m_afrTable != nullptr, "AFR table null", 0);
 
 	// TODO: set the table value in lambda instead of afr
-	return m_afrTable->getValue(rpm, load) / getStoichiometricRatio();
+	return m_afrTable->getValue(rpm, load) / 14.7f;
 };

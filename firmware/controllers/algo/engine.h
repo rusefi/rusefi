@@ -53,6 +53,30 @@ class IEtbController;
 class IFuelComputer;
 class IInjectorModel;
 
+class PrimaryTriggerConfiguration : public TriggerConfiguration {
+public:
+	PrimaryTriggerConfiguration(Engine *engine);
+	bool isUseOnlyRisingEdgeForTrigger() const;
+	bool isSilentTriggerError() const;
+	bool isVerboseTriggerSynchDetails() const;
+	debug_mode_e getDebugMode() const;
+	trigger_type_e getType() const;
+private:
+	Engine *engine;
+};
+
+class VvtTriggerConfiguration : public TriggerConfiguration {
+public:
+	VvtTriggerConfiguration(Engine *engine);
+	bool isUseOnlyRisingEdgeForTrigger() const;
+	bool isSilentTriggerError() const;
+	bool isVerboseTriggerSynchDetails() const;
+	debug_mode_e getDebugMode() const;
+	trigger_type_e getType() const;
+private:
+	Engine *engine;
+};
+
 class Engine : public TriggerStateListener {
 public:
 	explicit Engine(persistent_config_s *config);
@@ -64,7 +88,8 @@ public:
 
 	GearControllerBase gearController;
 
-	cyclic_buffer<int> triggerErrorDetection;
+	PrimaryTriggerConfiguration primaryTriggerConfiguration;
+	VvtTriggerConfiguration vvtTriggerConfiguration;
 
 #if EFI_SHAFT_POSITION_INPUT
 	void OnTriggerStateDecodingError();

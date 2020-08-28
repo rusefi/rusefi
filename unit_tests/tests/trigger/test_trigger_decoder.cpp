@@ -42,9 +42,11 @@ static int getTriggerZeroEventIndex(engine_type_e engineType) {
 
 	initDataStructures(PASS_ENGINE_PARAMETER_SIGNATURE);
 
+	const TriggerConfiguration * triggerConfiguration = &engine->primaryTriggerConfiguration;
+
 	TriggerWaveform * shape = &eth.engine.triggerCentral.triggerShape;
-	return eth.engine.triggerCentral.triggerState.findTriggerZeroEventIndex(shape, &engineConfiguration->trigger
-			PASS_CONFIG_PARAMETER_SUFFIX);
+	return eth.engine.triggerCentral.triggerState.findTriggerZeroEventIndex(shape, triggerConfiguration,
+			&engineConfiguration->trigger);
 }
 
 TEST(misc, testSkipped2_0) {
@@ -118,31 +120,33 @@ TEST(misc, testSomethingWeird) {
 	TriggerState state_;
 	TriggerState *sta = &state_;
 
+	const TriggerConfiguration * triggerConfiguration = &engine->primaryTriggerConfiguration;
+
 
 	ASSERT_FALSE(sta->shaft_is_synchronized) << "shaft_is_synchronized";
 	int r = 10;
-	sta->decodeTriggerEvent(&ENGINE(triggerCentral.triggerShape), nullptr, /* override */ nullptr,SHAFT_PRIMARY_FALLING, r PASS_CONFIG_PARAMETER_SUFFIX);
+	sta->decodeTriggerEvent(&ENGINE(triggerCentral.triggerShape), nullptr, /* override */ nullptr, triggerConfiguration, SHAFT_PRIMARY_FALLING, r);
 	ASSERT_FALSE(sta->shaft_is_synchronized) << "shaft_is_synchronized"; // still no synchronization
-	sta->decodeTriggerEvent(&ENGINE(triggerCentral.triggerShape), nullptr, /* override */ nullptr,SHAFT_PRIMARY_RISING, ++r PASS_CONFIG_PARAMETER_SUFFIX);
+	sta->decodeTriggerEvent(&ENGINE(triggerCentral.triggerShape), nullptr, /* override */ nullptr, triggerConfiguration, SHAFT_PRIMARY_RISING, ++r);
 	ASSERT_TRUE(sta->shaft_is_synchronized); // first signal rise synchronize
 	ASSERT_EQ(0, sta->getCurrentIndex());
-	sta->decodeTriggerEvent(&ENGINE(triggerCentral.triggerShape), nullptr, /* override */ nullptr,SHAFT_PRIMARY_FALLING, r++ PASS_CONFIG_PARAMETER_SUFFIX);
+	sta->decodeTriggerEvent(&ENGINE(triggerCentral.triggerShape), nullptr, /* override */ nullptr, triggerConfiguration, SHAFT_PRIMARY_FALLING, r++);
 	ASSERT_EQ(1, sta->getCurrentIndex());
 
 	for (int i = 2; i < 10;) {
-		sta->decodeTriggerEvent(&ENGINE(triggerCentral.triggerShape), nullptr, /* override */ nullptr,SHAFT_PRIMARY_RISING, r++ PASS_CONFIG_PARAMETER_SUFFIX);
+		sta->decodeTriggerEvent(&ENGINE(triggerCentral.triggerShape), nullptr, /* override */ nullptr, triggerConfiguration, SHAFT_PRIMARY_RISING, r++);
 		assertEqualsM("even", i++, sta->getCurrentIndex());
-		sta->decodeTriggerEvent(&ENGINE(triggerCentral.triggerShape), nullptr, /* override */ nullptr,SHAFT_PRIMARY_FALLING, r++ PASS_CONFIG_PARAMETER_SUFFIX);
+		sta->decodeTriggerEvent(&ENGINE(triggerCentral.triggerShape), nullptr, /* override */ nullptr, triggerConfiguration, SHAFT_PRIMARY_FALLING, r++);
 		assertEqualsM("odd", i++, sta->getCurrentIndex());
 	}
 
-	sta->decodeTriggerEvent(&ENGINE(triggerCentral.triggerShape), nullptr, /* override */ nullptr,SHAFT_PRIMARY_RISING, r++ PASS_CONFIG_PARAMETER_SUFFIX);
+	sta->decodeTriggerEvent(&ENGINE(triggerCentral.triggerShape), nullptr, /* override */ nullptr, triggerConfiguration, SHAFT_PRIMARY_RISING, r++);
 	ASSERT_EQ(10, sta->getCurrentIndex());
 
-	sta->decodeTriggerEvent(&ENGINE(triggerCentral.triggerShape), nullptr, /* override */ nullptr,SHAFT_PRIMARY_FALLING, r++ PASS_CONFIG_PARAMETER_SUFFIX);
+	sta->decodeTriggerEvent(&ENGINE(triggerCentral.triggerShape), nullptr, /* override */ nullptr, triggerConfiguration, SHAFT_PRIMARY_FALLING, r++);
 	ASSERT_EQ(11, sta->getCurrentIndex());
 
-	sta->decodeTriggerEvent(&ENGINE(triggerCentral.triggerShape), nullptr, /* override */ nullptr,SHAFT_PRIMARY_RISING, r++ PASS_CONFIG_PARAMETER_SUFFIX);
+	sta->decodeTriggerEvent(&ENGINE(triggerCentral.triggerShape), nullptr, /* override */ nullptr, triggerConfiguration, SHAFT_PRIMARY_RISING, r++);
 	ASSERT_EQ(0, sta->getCurrentIndex()); // new revolution
 }
 
@@ -162,13 +166,19 @@ TEST(misc, test1995FordInline6TriggerDecoder) {
 
 	event_trigger_position_s position;
 	ASSERT_EQ( 0,  engineConfiguration->globalTriggerAngleOffset) << "globalTriggerAngleOffset";
-	TRIGGER_WAVEFORM(findTriggerPosition(&position, 0, engineConfiguration->globalTriggerAngleOffset));
+	findTriggerPosition(&ENGINE(triggerCentral.triggerShape),
+			&ENGINE(triggerCentral.triggerFormDetails),
+			&position, 0, engineConfiguration->globalTriggerAngleOffset);
 	assertTriggerPosition(&position, 0, 0);
 
-	TRIGGER_WAVEFORM(findTriggerPosition(&position, 200, engineConfiguration->globalTriggerAngleOffset));
+	findTriggerPosition(&ENGINE(triggerCentral.triggerShape),
+			&ENGINE(triggerCentral.triggerFormDetails),
+			&position, 200, engineConfiguration->globalTriggerAngleOffset);
 	assertTriggerPosition(&position, 3, 20);
 
-	TRIGGER_WAVEFORM(findTriggerPosition(&position, 360, engineConfiguration->globalTriggerAngleOffset));
+	findTriggerPosition(&ENGINE(triggerCentral.triggerShape),
+			&ENGINE(triggerCentral.triggerFormDetails),
+			&position, 360, engineConfiguration->globalTriggerAngleOffset);
 	assertTriggerPosition(&position, 6, 0);
 
 	eth.applyTriggerWaveform();
@@ -316,8 +326,8 @@ TEST(misc, testRpmCalculator) {
 	ASSERT_EQ(0, GET_RPM());
 
 	// triggerIndexByAngle update is now fixed! prepareOutputSignals() wasn't reliably called
-	ASSERT_EQ(5, TRIGGER_WAVEFORM(triggerIndexByAngle[240]));
-	ASSERT_EQ(5, TRIGGER_WAVEFORM(triggerIndexByAngle[241]));
+	ASSERT_EQ(5, engine->triggerCentral.triggerFormDetails.triggerIndexByAngle[240]);
+	ASSERT_EQ(5, engine->triggerCentral.triggerFormDetails.triggerIndexByAngle[241]);
 
 	eth.fireTriggerEvents(/* count */ 48);
 
@@ -380,8 +390,8 @@ TEST(misc, testRpmCalculator) {
 	assertEqualsM("3/3", start + 14777, engine->executor.getForUnitTest(2)->momentX);
 	engine->executor.clear();
 
-	ASSERT_EQ(5, TRIGGER_WAVEFORM(triggerIndexByAngle[240]));
-	ASSERT_EQ(5, TRIGGER_WAVEFORM(triggerIndexByAngle[241]));
+	ASSERT_EQ(5, engine->triggerCentral.triggerFormDetails.triggerIndexByAngle[240]);
+	ASSERT_EQ(5, engine->triggerCentral.triggerFormDetails.triggerIndexByAngle[241]);
 
 
 	eth.fireFall(5);

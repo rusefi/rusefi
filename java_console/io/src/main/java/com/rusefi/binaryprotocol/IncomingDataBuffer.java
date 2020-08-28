@@ -69,7 +69,7 @@ public class IncomingDataBuffer {
         if (packetSize < 0)
             return null;
         if (!allowLongResponse && packetSize > Math.max(Fields.BLOCKING_FACTOR, Fields.TS_OUTPUT_SIZE) + 10)
-            return null;
+            throw new IllegalArgumentException(packetSize + " packet while not allowLongResponse");
 
         isTimeout = waitForBytes(loggingPrefix + msg + " body", start, packetSize + 4);
         if (isTimeout)

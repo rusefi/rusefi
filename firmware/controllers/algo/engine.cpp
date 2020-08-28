@@ -26,6 +26,7 @@
 #include "perf_trace.h"
 #include "sensor.h"
 #include "gppwm.h"
+#include "tachometer.h"
 
 #if EFI_TUNER_STUDIO
 #include "tunerstudio_outputs.h"
@@ -40,8 +41,6 @@
 #if (BOARD_TLE8888_COUNT > 0)
 #include "gpio/tle8888.h"
 #endif
-
-static TriggerState initState CCM_OPTIONAL;
 
 LoggingWithStorage engineLogger("engine");
 
@@ -72,7 +71,26 @@ void Engine::resetEngineSnifferIfInTestMode() {
 #endif /* EFI_ENGINE_SNIFFER */
 }
 
+trigger_type_e getVvtTriggerType(vvt_mode_e vvtMode) {
+	switch (vvtMode) {
+	case VVT_2JZ:
+		return TT_VVT_JZ;
+	case MIATA_NB2:
+		return TT_VVT_MIATA_NB2;
+	case VVT_BOSCH_QUICK_START:
+		return TT_VVT_BOSCH_QUICK_START;
+	case VVT_FIRST_HALF:
+		return TT_ONE;
+	case VVT_SECOND_HALF:
+		return TT_ONE;
+	default:
+		return TT_ONE;
+	}
+}
+
 void Engine::initializeTriggerWaveform(Logging *logger DECLARE_ENGINE_PARAMETER_SUFFIX) {
+	static TriggerState initState;
+
 #if EFI_ENGINE_CONTROL && EFI_SHAFT_POSITION_INPUT
 	// we have a confusing threading model so some synchronization would not hurt
 	bool alreadyLocked = lockAnyContext();
@@ -81,28 +99,29 @@ void Engine::initializeTriggerWaveform(Logging *logger DECLARE_ENGINE_PARAMETER_
 			engineConfiguration->ambiguousOperationMode,
 			engineConfiguration->useOnlyRisingEdgeForTrigger, &engineConfiguration->trigger));
 
-	if (TRIGGER_WAVEFORM(bothFrontsRequired) && engineConfiguration->useOnlyRisingEdgeForTrigger) {
-#if EFI_PROD_CODE || EFI_SIMULATOR
-		firmwareError(CUSTOM_ERR_BOTH_FRONTS_REQUIRED, "trigger: both fronts required");
-#else
-		warning(CUSTOM_ERR_BOTH_FRONTS_REQUIRED, "trigger: both fronts required");
-#endif
-	}
-
-
 	if (!TRIGGER_WAVEFORM(shapeDefinitionError)) {
 		/**
-	 	 * this instance is used only to initialize 'this' TriggerWaveform instance
+	 	 * 'initState' instance of TriggerState is used only to initialize 'this' TriggerWaveform instance
 	 	 * #192 BUG real hardware trigger events could be coming even while we are initializing trigger
 	 	 */
-		initState.resetTriggerState();
 		calculateTriggerSynchPoint(&ENGINE(triggerCentral.triggerShape),
 				&initState PASS_ENGINE_PARAMETER_SUFFIX);
 
-		if (engine->triggerCentral.triggerShape.getSize() == 0) {
-			firmwareError(CUSTOM_ERR_TRIGGER_ZERO, "triggerShape size is zero");
-		}
 		engine->engineCycleEventCount = TRIGGER_WAVEFORM(getLength());
+	}
+
+
+	if (engineConfiguration->vvtMode != VVT_INACTIVE) {
+		trigger_config_s config;
+		ENGINE(triggerCentral).vvtTriggerType = config.type = getVvtTriggerType(engineConfiguration->vvtMode);
+
+		ENGINE(triggerCentral).vvtShape.initializeTriggerWaveform(logger,
+				engineConfiguration->ambiguousOperationMode,
+				engine->engineConfigurationPtr->vvtCamSensorUseRise, &config);
+
+		ENGINE(triggerCentral).vvtShape.initializeSyncPoint(&initState,
+				&engine->vvtTriggerConfiguration,
+				&config);
 	}
 
 	if (!alreadyLocked) {
@@ -221,11 +240,11 @@ void Engine::onTriggerSignalEvent(efitick_t nowNt) {
 	lastTriggerToothEventTimeNt = nowNt;
 }
 
-Engine::Engine() {
+Engine::Engine() : primaryTriggerConfiguration(this), vvtTriggerConfiguration(this) {
 	reset();
 }
 
-Engine::Engine(persistent_config_s *config) {
+Engine::Engine(persistent_config_s *config) : primaryTriggerConfiguration(this), vvtTriggerConfiguration(this) {
 	setConfig(config);
 	reset();
 }
@@ -310,7 +329,7 @@ void Engine::OnTriggerStateProperState(efitick_t nowNt) {
 	Engine *engine = this;
 	EXPAND_Engine;
 
-	triggerCentral.triggerState.runtimeStatistics(nowNt PASS_ENGINE_PARAMETER_SUFFIX);
+	triggerCentral.triggerState.runtimeStatistics(&triggerCentral.triggerFormDetails, nowNt PASS_ENGINE_PARAMETER_SUFFIX);
 
 	rpmCalculator.setSpinningUp(nowNt PASS_ENGINE_PARAMETER_SUFFIX);
 }
@@ -521,6 +540,8 @@ void Engine::periodicFastCallback(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	gearController.update();
 
 	engineState.periodicFastCallback(PASS_ENGINE_PARAMETER_SIGNATURE);
+
+	tachSignalCallback(PASS_ENGINE_PARAMETER_SIGNATURE);
 }
 
 void doScheduleStopEngine(DECLARE_ENGINE_PARAMETER_SIGNATURE) {

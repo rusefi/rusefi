@@ -24,6 +24,8 @@ extern LoggingWithStorage tsLogger;
 #include "usbconsole.h"
 
 #if HAL_USE_SERIAL_USB
+// Assert that the USB tx/rx buffers are large enough to fit one full packet
+static_assert(SERIAL_USB_BUFFERS_SIZE >= BLOCKING_FACTOR + 10);
 extern SerialUSBDriver SDU1;
 #endif /* HAL_USE_SERIAL_USB */
 
@@ -164,10 +166,10 @@ int sr5ReadDataTimeout(ts_channel_s *tsChannel, uint8_t * buffer, int size, int 
 		extern uart_dma_s tsUartDma;
 		return (int)iqReadTimeout(&tsUartDma.fifoRxQueue, (uint8_t * )buffer, (size_t)size, timeout);
 	}
+	firmwareError(CUSTOM_ERR_6126, "Unexpected DMA situation no uartp");
 #endif
 
-#if TS_UART_DMA_MODE
-#elif TS_UART_MODE
+#if TS_UART_MODE
 	UNUSED(tsChannel);
 	size_t received = (size_t)size;
 	uartReceiveTimeout(TS_UART_DEVICE, &received, buffer, timeout);
