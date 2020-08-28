@@ -86,6 +86,8 @@ public:
 	IFuelComputer *fuelComputer = nullptr;
 	IInjectorModel *injectorModel = nullptr;
 
+	cyclic_buffer<int> triggerErrorDetection;
+
 	GearControllerBase gearController;
 
 	PrimaryTriggerConfiguration primaryTriggerConfiguration;
