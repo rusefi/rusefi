@@ -347,7 +347,7 @@ static percent_t automaticIdleController(float tpsPos DECLARE_ENGINE_PARAMETER_S
 
 	float rpm;
 	if (CONFIG(useInstantRpmForIdle)) {
-		rpm = engine->triggerCentral.triggerState.calculateInstantRpm(NULL, nowNt PASS_ENGINE_PARAMETER_SUFFIX);
+		rpm = engine->triggerCentral.triggerState.calculateInstantRpm(&engine->triggerCentral.triggerFormDetails, NULL, nowNt PASS_ENGINE_PARAMETER_SUFFIX);
 	} else {
 		rpm = GET_RPM();
 	}

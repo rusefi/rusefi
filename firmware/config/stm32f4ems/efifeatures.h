@@ -36,7 +36,14 @@
 #define EFI_ENABLE_CRITICAL_ENGINE_STOP TRUE
 #define EFI_ENABLE_ENGINE_WARNING TRUE
 
-#define EFI_USE_CCM TRUE
+#if !defined(EFI_ENABLE_ASSERTS)
+ #define EFI_USE_CCM TRUE
+#endif
+
+#ifndef SC_BUFFER_SIZE
+#define SC_BUFFER_SIZE 4000
+#endif
+
 
 /**
  * if you have a 60-2 trigger, or if you just want better performance, you

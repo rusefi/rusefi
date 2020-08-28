@@ -48,7 +48,9 @@
 EXTERN_ENGINE;
 
 void event_trigger_position_s::setAngle(angle_t angle DECLARE_ENGINE_PARAMETER_SUFFIX) {
-	TRIGGER_WAVEFORM(findTriggerPosition(this, angle PASS_CONFIG_PARAM(engineConfiguration->globalTriggerAngleOffset)));
+	findTriggerPosition(&ENGINE(triggerCentral.triggerShape),
+			&ENGINE(triggerCentral.triggerFormDetails),
+			this, angle PASS_CONFIG_PARAM(engineConfiguration->globalTriggerAngleOffset));
 }
 
 trigger_shape_helper::trigger_shape_helper() {
@@ -62,7 +64,9 @@ TriggerWaveform::TriggerWaveform() :
 		wave(switchTimesBuffer, NULL) {
 	initialize(OM_NONE);
 	wave.channels = h.channels;
+}
 
+TriggerFormDetails::TriggerFormDetails() {
 	memset(triggerIndexByAngle, 0, sizeof(triggerIndexByAngle));
 }
 
@@ -72,7 +76,6 @@ void TriggerWaveform::initialize(operation_mode_e operationMode) {
 	needSecondTriggerInput = false;
 	shapeWithoutTdc = false;
 	memset(expectedDutyCycle, 0, sizeof(expectedDutyCycle));
-	memset(eventAngles, 0, sizeof(eventAngles));
 //	memset(triggerIndexByAngle, 0, sizeof(triggerIndexByAngle));
 
 	setTriggerSynchronizationGap(2);
@@ -96,7 +99,6 @@ void TriggerWaveform::initialize(operation_mode_e operationMode) {
 	memset(expectedEventCount, 0, sizeof(expectedEventCount));
 	wave.reset();
 	previousAngle = 0;
-	memset(riseOnlyIndexes, 0, sizeof(riseOnlyIndexes));
 	memset(isRiseEvent, 0, sizeof(isRiseEvent));
 #if EFI_UNIT_TEST
 	memset(&triggerSignals, 0, sizeof(triggerSignals));
@@ -132,6 +134,8 @@ angle_t TriggerWaveform::getCycleDuration() const {
 /**
  * Trigger event count equals engine cycle event count if we have a cam sensor.
  * Two trigger cycles make one engine cycle in case of a four stroke engine If we only have a cranksensor.
+ *
+ * 'engine->engineCycleEventCount' hold a pre-calculated copy of this value as a performance optimization
  */
 size_t TriggerWaveform::getLength() const {
 	/**
@@ -343,7 +347,7 @@ void TriggerWaveform::setTriggerSynchronizationGap3(int gapIndex, float syncRati
 /**
  * this method is only used on initialization
  */
-int TriggerWaveform::findAngleIndex(float target) const {
+int TriggerWaveform::findAngleIndex(TriggerFormDetails *details, float target) const {
 	int engineCycleEventCount = getLength();
 
 	efiAssert(CUSTOM_ERR_ASSERT, engineCycleEventCount > 0, "engineCycleEventCount", 0);
@@ -357,7 +361,7 @@ int TriggerWaveform::findAngleIndex(float target) const {
 	 */
     while (left <= right) {
         int middle = (left + right) / 2;
-		angle_t eventAngle = eventAngles[middle];
+		angle_t eventAngle = details->eventAngles[middle];
 
         if (eventAngle < target) {
             left = middle + 1;
@@ -375,24 +379,26 @@ void TriggerWaveform::setShapeDefinitionError(bool value) {
 	shapeDefinitionError = value;
 }
 
-void TriggerWaveform::findTriggerPosition(event_trigger_position_s *position,
+void findTriggerPosition(TriggerWaveform *triggerShape,
+		TriggerFormDetails *details,
+		event_trigger_position_s *position,
 		angle_t angle DEFINE_CONFIG_PARAM(angle_t, globalTriggerAngleOffset)) {
 	efiAssertVoid(CUSTOM_ERR_6574, !cisnan(angle), "findAngle#1");
 	assertAngleRange(angle, "findAngle#a1", CUSTOM_ERR_6545);
 
-	efiAssertVoid(CUSTOM_ERR_6575, !cisnan(tdcPosition), "tdcPos#1")
-	assertAngleRange(tdcPosition, "tdcPos#a1", CUSTOM_UNEXPECTED_TDC_ANGLE);
+	efiAssertVoid(CUSTOM_ERR_6575, !cisnan(triggerShape->tdcPosition), "tdcPos#1")
+	assertAngleRange(triggerShape->tdcPosition, "tdcPos#a1", CUSTOM_UNEXPECTED_TDC_ANGLE);
 
 	efiAssertVoid(CUSTOM_ERR_6576, !cisnan(CONFIG_PARAM(globalTriggerAngleOffset)), "tdcPos#2")
 	assertAngleRange(CONFIG_PARAM(globalTriggerAngleOffset), "tdcPos#a2", CUSTOM_INVALID_GLOBAL_OFFSET);
 
 	// convert engine cycle angle into trigger cycle angle
-	angle += tdcPosition + CONFIG_PARAM(globalTriggerAngleOffset);
+	angle += triggerShape->tdcPosition + CONFIG_PARAM(globalTriggerAngleOffset);
 	efiAssertVoid(CUSTOM_ERR_6577, !cisnan(angle), "findAngle#2");
-	fixAngle2(angle, "addFuel#2", CUSTOM_ERR_6555, getEngineCycle(operationMode));
+	fixAngle2(angle, "addFuel#2", CUSTOM_ERR_6555, getEngineCycle(triggerShape->getOperationMode()));
 
-	int triggerEventIndex = triggerIndexByAngle[(int)angle];
-	angle_t triggerEventAngle = eventAngles[triggerEventIndex];
+	int triggerEventIndex = details->triggerIndexByAngle[(int)angle];
+	angle_t triggerEventAngle = details->eventAngles[triggerEventIndex];
 	if (angle < triggerEventAngle) {
 		warning(CUSTOM_OBD_ANGLE_CONSTRAINT_VIOLATION, "angle constraint violation in findTriggerPosition(): %.2f/%.2f", angle, triggerEventAngle);
 		return;
@@ -402,16 +408,18 @@ void TriggerWaveform::findTriggerPosition(event_trigger_position_s *position,
 	position->angleOffsetFromTriggerEvent = angle - triggerEventAngle;
 }
 
-void TriggerWaveform::prepareShape() {
+void TriggerWaveform::prepareShape(TriggerFormDetails *details DECLARE_ENGINE_PARAMETER_SUFFIX) {
 #if EFI_ENGINE_CONTROL && EFI_SHAFT_POSITION_INPUT
+	prepareEventAngles(this, details PASS_ENGINE_PARAMETER_SUFFIX);
+
 	int engineCycleInt = (int) getEngineCycle(operationMode);
 	for (int angle = 0; angle < engineCycleInt; angle++) {
-		int triggerShapeIndex = findAngleIndex(angle);
+		int triggerShapeIndex = findAngleIndex(details, angle);
 		if (useOnlyRisingEdgeForTriggerTemp) {
 			// we need even index for front_only mode - so if odd indexes are rounded down
 			triggerShapeIndex = triggerShapeIndex & 0xFFFFFFFE;
 		}
-		triggerIndexByAngle[angle] = triggerShapeIndex;
+		details->triggerIndexByAngle[angle] = triggerShapeIndex;
 	}
 #endif
 }
@@ -470,7 +478,7 @@ void TriggerWaveform::initializeTriggerWaveform(Logging *logger, operation_mode_
 		initialize_Mazda_Engine_z5_Shape(this);
 		break;
 
-	case TT_MIATA_NB2_VVT_CAM:
+	case TT_VVT_MIATA_NB2:
 		initializeMazdaMiataVVtCamShape(this);
 		break;
 
@@ -527,10 +535,6 @@ void TriggerWaveform::initializeTriggerWaveform(Logging *logger, operation_mode_
 		configure3_1_cam(this);
 		break;
 
-	case TT_ONE_PLUS_TOOTHED_WHEEL_60_2:
-		configureOnePlus60_2(this);
-		break;
-
 	case TT_ONE:
 		setToothedWheelConfiguration(this, 1, 0, ambiguousOperationMode);
 		break;
@@ -541,6 +545,10 @@ void TriggerWaveform::initializeTriggerWaveform(Logging *logger, operation_mode_
 
 	case TT_MINI_COOPER_R50:
 		configureMiniCooperTriggerWaveform(this);
+		break;
+
+	case TT_VVT_JZ:
+		setToothedWheelConfiguration(this, 3, 0, ambiguousOperationMode);
 		break;
 
 	case TT_TOOTHED_WHEEL_60_2:
@@ -559,7 +567,7 @@ void TriggerWaveform::initializeTriggerWaveform(Logging *logger, operation_mode_
 		setToothedWheelConfiguration(this, 36, 1, ambiguousOperationMode);
 		break;
 
-	case TT_BOSCH_QUICK_START:
+	case TT_VVT_BOSCH_QUICK_START:
 		configureQuickStartSenderWheel(this);
 		break;
 
@@ -667,5 +675,14 @@ void TriggerWaveform::initializeTriggerWaveform(Logging *logger, operation_mode_
 	if (!shapeDefinitionError) {
 		wave.checkSwitchTimes(getSize(), getCycleDuration());
 	}
+
+	if (bothFrontsRequired && useOnlyRisingEdgeForTrigger) {
+#if EFI_PROD_CODE || EFI_SIMULATOR
+		firmwareError(CUSTOM_ERR_BOTH_FRONTS_REQUIRED, "trigger: both fronts required");
+#else
+		warning(CUSTOM_ERR_BOTH_FRONTS_REQUIRED, "trigger: both fronts required");
+#endif
+	}
+
 
 }

@@ -49,10 +49,36 @@ class AirmassModelBase;
 #define CYCLE_ALTERNATION 2
 
 class IEtbController;
+class IFuelComputer;
+class IInjectorModel;
 
 class TCU {
 public:
 	gear_e currentGear = NEUTRAL;
+};
+
+class PrimaryTriggerConfiguration : public TriggerConfiguration {
+public:
+	PrimaryTriggerConfiguration(Engine *engine);
+	bool isUseOnlyRisingEdgeForTrigger() const;
+	bool isSilentTriggerError() const;
+	bool isVerboseTriggerSynchDetails() const;
+	debug_mode_e getDebugMode() const;
+	trigger_type_e getType() const;
+private:
+	Engine *engine;
+};
+
+class VvtTriggerConfiguration : public TriggerConfiguration {
+public:
+	VvtTriggerConfiguration(Engine *engine);
+	bool isUseOnlyRisingEdgeForTrigger() const;
+	bool isSilentTriggerError() const;
+	bool isVerboseTriggerSynchDetails() const;
+	debug_mode_e getDebugMode() const;
+	trigger_type_e getType() const;
+private:
+	Engine *engine;
 };
 
 class Engine : public TriggerStateListener {
@@ -61,8 +87,13 @@ public:
 	Engine();
 
 	IEtbController *etbControllers[ETB_COUNT] = {nullptr};
+	IFuelComputer *fuelComputer = nullptr;
+	IInjectorModel *injectorModel = nullptr;
 
 	cyclic_buffer<int> triggerErrorDetection;
+
+	PrimaryTriggerConfiguration primaryTriggerConfiguration;
+	VvtTriggerConfiguration vvtTriggerConfiguration;
 
 	TCU tcu;
 

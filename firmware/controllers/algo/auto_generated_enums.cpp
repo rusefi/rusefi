@@ -1,7 +1,7 @@
 #include "global.h"
 #include "rusefi_enums.h"
 #include "rusefi_hw_enums.h"
-// was generated automatically by rusEfi tool  from rusefi_hw_enums.h // was generated automatically by rusEfi tool  from rusefi_enums.h // by enum2string.jar tool on Wed Jul 29 15:37:22 EDT 2020
+// was generated automatically by rusEfi tool  from rusefi_hw_enums.h // was generated automatically by rusEfi tool  from rusefi_enums.h // by enum2string.jar tool on Thu Aug 27 04:44:20 UTC 2020
 // see also gen_config_and_enums.bat
 
 
@@ -1232,8 +1232,6 @@ case TT_3_1_CAM:
   return "TT_3_1_CAM";
 case TT_60_2_VW:
   return "TT_60_2_VW";
-case TT_BOSCH_QUICK_START:
-  return "TT_BOSCH_QUICK_START";
 case TT_DODGE_NEON_1995:
   return "TT_DODGE_NEON_1995";
 case TT_DODGE_NEON_1995_ONLY_CRANK:
@@ -1286,8 +1284,6 @@ case TT_MAZDA_SOHC_4:
   return "TT_MAZDA_SOHC_4";
 case TT_MAZDA_Z5:
   return "TT_MAZDA_Z5";
-case TT_MIATA_NB2_VVT_CAM:
-  return "TT_MIATA_NB2_VVT_CAM";
 case TT_MIATA_VVT:
   return "TT_MIATA_VVT";
 case TT_MINI_COOPER_R50:
@@ -1302,8 +1298,6 @@ case TT_ONE:
   return "TT_ONE";
 case TT_ONE_PLUS_ONE:
   return "TT_ONE_PLUS_ONE";
-case TT_ONE_PLUS_TOOTHED_WHEEL_60_2:
-  return "TT_ONE_PLUS_TOOTHED_WHEEL_60_2";
 case TT_RENIX_44_2_2:
   return "TT_RENIX_44_2_2";
 case TT_RENIX_66_2_2_2:
@@ -1324,6 +1318,12 @@ case TT_TOOTHED_WHEEL_60_2:
   return "TT_TOOTHED_WHEEL_60_2";
 case TT_UNUSED:
   return "TT_UNUSED";
+case TT_VVT_BOSCH_QUICK_START:
+  return "TT_VVT_BOSCH_QUICK_START";
+case TT_VVT_JZ:
+  return "TT_VVT_JZ";
+case TT_VVT_MIATA_NB2:
+  return "TT_VVT_MIATA_NB2";
   }
  return NULL;
 }
@@ -1372,6 +1372,8 @@ case MIATA_NB2:
   return "MIATA_NB2";
 case VVT_2JZ:
   return "VVT_2JZ";
+case VVT_BOSCH_QUICK_START:
+  return "VVT_BOSCH_QUICK_START";
 case VVT_FIRST_HALF:
   return "VVT_FIRST_HALF";
 case VVT_INACTIVE:

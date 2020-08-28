@@ -270,6 +270,9 @@ static void handleCommandX14(uint16_t index) {
 	case 0xE:
 		etbAutocal(0);
 		return;
+	case 0x11:
+		etbAutocal(1);
+		return;
 	case 0xC:
 		engine->etbAutoTune = true;
 		return;
@@ -290,11 +293,13 @@ static void handleCommandX14(uint16_t index) {
 void executeTSCommand(uint16_t subsystem, uint16_t index) {
 	scheduleMsg(logger, "IO test subsystem=%d index=%d", subsystem, index);
 
+	bool running = !ENGINE(rpmCalculator).isStopped();
+
     if (subsystem == 0x11) {
         clearWarnings();
-	} else if (subsystem == 0x12) {
+	} else if (subsystem == 0x12 && !running) {
 		doRunSpark(index, "300", "4", "400", "3");
-	} else if (subsystem == 0x13) {
+	} else if (subsystem == 0x13 && !running) {
 		doRunFuel(index, "300", "4", "400", "3");
 	} else if (subsystem == 0x14) {
 		handleCommandX14(index);
@@ -343,9 +348,9 @@ void initBenchTest(Logging *sharedLogger) {
 	addConsoleActionS("fanbench2", fanBenchExt);
 	addConsoleAction("dizzybench", dizzyBench); // this is useful for tach output testing
 
-	addConsoleAction("starterbench", starterRelayBench);
-	addConsoleAction("milbench", milBench);
-	addConsoleActionSSS("fuelbench", fuelbench);
+	addConsoleAction(CMD_STARTER_BENCH, starterRelayBench);
+	addConsoleAction(CMD_MIL_BENCH, milBench);
+	addConsoleActionSSS(CMD_FUEL_BENCH, fuelbench);
 	addConsoleActionSSS("sparkbench", sparkbench);
 
 	addConsoleActionSSSSS("fuelbench2", fuelbench2);

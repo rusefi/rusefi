@@ -408,7 +408,6 @@ public class BinaryProtocolServer implements BinaryProtocolCommands {
     }
 
     private void handleWrite(LinkManager linkManager, byte[] packet, DataInputStream dis, TcpIoStream stream) throws IOException {
-        dis.readShort(); // page
         int offset = swap16(dis.readShort());
         int count = swap16(dis.readShort());
         log.info("TS_CHUNK_WRITE_COMMAND: offset=" + offset + " count=" + count);
@@ -418,14 +417,13 @@ public class BinaryProtocolServer implements BinaryProtocolCommands {
     }
 
     private void handleRead(LinkManager linkManager, DataInputStream dis, TcpIoStream stream) throws IOException {
-        short page = dis.readShort();
         int offset = swap16(dis.readShort());
         int count = swap16(dis.readShort());
         if (count <= 0) {
             log.info("Error: negative read request " + offset + "/" + count);
         } else {
             if (log.debugEnabled())
-                log.debug("read " + page + "/" + offset + "/" + count);
+                log.debug("read " + offset + "/" + count);
             BinaryProtocolState bp = linkManager.getBinaryProtocolState();
             byte[] response = new byte[1 + count];
             response[0] = (byte) TS_OK.charAt(0);

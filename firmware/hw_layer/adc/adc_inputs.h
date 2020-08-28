@@ -11,6 +11,8 @@
 #include "global.h"
 #include "adc_math.h"
 
+#define SLOW_ADC_RATE 500
+
 #if HAL_USE_ADC
 
 const char * getAdcMode(adc_channel_e hwChannel);

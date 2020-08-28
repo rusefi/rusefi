@@ -477,10 +477,6 @@ void initHardware(Logging *l) {
 		return;
 	}
 
-#if EFI_SHAFT_POSITION_INPUT
-	initTriggerDecoder(PASS_ENGINE_PARAMETER_SIGNATURE);
-#endif
-
 #if HAL_USE_ADC
 	initAdcInputs();
 	// wait for first set of ADC values so that we do not produce invalid sensor data
