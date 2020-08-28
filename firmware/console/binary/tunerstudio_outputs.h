@@ -232,14 +232,14 @@ typedef struct {
 
 	uint8_t sd_status; // 246
 
-	int16_t desiredGear; // 248
-	int16_t currentGear; // 250
+	int16_t desiredGear; // 247
+	int16_t currentGear; // 249
 
-	uint8_t pad;
+	uint8_t pad; // 251
 
 	scaled_voltage rawPpsSecondary;		// 252
 
-	uint8_t unusedAtTheEnd[34]; // we have some unused bytes to allow compatible TS changes
+	uint8_t unusedAtTheEnd[32]; // we have some unused bytes to allow compatible TS changes
 
 	// Temporary - will remove soon
 	TsDebugChannels* getDebugChannels() {
