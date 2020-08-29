@@ -378,6 +378,7 @@ struct ThermistorConf @brief Thermistor curve parameters
 	adc_channel_e adcChannel;
 end_struct
 
+#define ET_DEFAULT_FRANKENSO 0
 #define ET_DODGE_NEON_1995 2
 #define ET_FORD_ASPIRE 3
 #define ET_FORD_FIESTA 4
