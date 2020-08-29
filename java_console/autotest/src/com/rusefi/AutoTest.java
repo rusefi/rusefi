@@ -184,7 +184,7 @@ public class AutoTest extends BaseTest {
     }
 
     private void test2003DodgeNeon() {
-        setEngineType(23);
+        setEngineType(46);
         sendCommand("set wwaeTau 0");
         sendCommand("set wwaeBeta 0");
         sendCommand("set mock_map_voltage 1");

@@ -385,6 +385,7 @@ end_struct
 #define ET_ROVER_V8 10
 #define ET_BMW_E34 25
 #define ET_CAMARO 35
+#define ET_DODGE_NEON_2003_CRANK 46
 
 #define ET_MRE_MIATA_NA6_VAF 12
 #define ET_MRE_MIATA_NB2_MAP 11
