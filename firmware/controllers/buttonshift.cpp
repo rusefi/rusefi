@@ -11,8 +11,8 @@ ButtonShiftController::ButtonShiftController (DECLARE_ENGINE_PARAMETER_SIGNATURE
 }
 
 void ButtonShiftController::update() {
-    bool upPinState = debounceUp->readPin();
-    bool downPinState = debounceDown->readPin();
+    bool upPinState = debounceUp->readPinEvent();
+    bool downPinState = debounceDown->readPinEvent();
     gear_e gear = getDesiredGear();
     if (upPinState) {
         switch (gear) {

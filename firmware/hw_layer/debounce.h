@@ -4,8 +4,7 @@
 class ButtonDebounce {
 public:
     ButtonDebounce(int t, brain_pin_e p, iomode_t m);
-    bool readPin();
-    bool readEvent();
+    bool readPinEvent();
 private:
     bool checkThreshold(efitimems_t);
     int threshold;
