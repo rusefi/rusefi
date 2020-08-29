@@ -1262,7 +1262,7 @@ void resetConfigurationExt(Logging * logger, configuration_callback_t boardCallb
 	case DODGE_NEON_1995:
 		setDodgeNeon1995EngineConfiguration(PASS_CONFIG_PARAMETER_SIGNATURE);
 		break;
-	case DODGE_NEON_2003_CAM:
+	case MRE_BODY_CONTROL:
 	case DODGE_NEON_2003_CRANK:
 		setDodgeNeonNGCEngineConfiguration(PASS_CONFIG_PARAMETER_SIGNATURE);
 		break;
@@ -1358,6 +1358,9 @@ void resetConfigurationExt(Logging * logger, configuration_callback_t boardCallb
 		break;
 	case DODGE_RAM:
 		setDodgeRam1996(PASS_CONFIG_PARAMETER_SIGNATURE);
+		break;
+	case VW_B6:
+		setVwPassatB6(PASS_CONFIG_PARAMETER_SIGNATURE);
 		break;
 	case VW_ABA:
 		setVwAba(PASS_CONFIG_PARAMETER_SIGNATURE);
