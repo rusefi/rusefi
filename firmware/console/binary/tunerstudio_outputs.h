@@ -232,8 +232,8 @@ typedef struct {
 
 	uint8_t sd_status; // 246
 
-	int16_t tcuDesiredGear; // 247
-	int16_t tcuCurrentGear; // 248
+	int8_t tcuDesiredGear; // 247
+	int8_t tcuCurrentGear; // 248
 
 	uint8_t pad; // 249
 
