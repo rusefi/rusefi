@@ -96,7 +96,7 @@ public class ScalarIniField extends IniField {
         String digits = list.get(9);
 
         String unit = list.get(4);
-        double multiplier = Double.parseDouble(list.get(5));
+        double multiplier = IniField.parseDouble(list.get(5));
 
         return new ScalarIniField(name, offset, unit, type, multiplier, digits);
     }
