@@ -89,7 +89,7 @@ typedef enum {
 	/**
 	 * microRusEFI used as Body Control Module BCM
 	 */
-	MRE_BODY_CONTROL = 23,
+	MRE_BODY_CONTROL = ET_MRE_BODY_CONTROL,
 	BMW_M73_M = 24,
 
 	BMW_E34 = ET_BMW_E34,
@@ -185,7 +185,7 @@ typedef enum {
 
 	PROTEUS = 61,
 
-	VW_B6 = 62,
+	VW_B6 = ET_VW_B6,
 
 	BMW_M73_PROTEUS = ET_BMW_M73_PROTEUS,
 
