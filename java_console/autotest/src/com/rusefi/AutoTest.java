@@ -70,14 +70,14 @@ public class AutoTest extends BaseTest {
     };
 
     private void testVW_60_2() {
-        setEngineType(32);
+        setEngineType(ET_VW_ABA);
         changeRpm(900);
         // first let's get to expected RPM
         assertRpmDoesNotJump(20000, 15, 30, FAIL, commandQueue);
     }
 
     private void testV12() {
-        setEngineType(40);
+        setEngineType(ET_BMW_M73_F);
         changeRpm(700);
         // first let's get to expected RPM
         assertRpmDoesNotJump(15000, 15, 30, FAIL, commandQueue);
@@ -99,7 +99,7 @@ public class AutoTest extends BaseTest {
     }
 
     private void testCustomEngine() {
-        setEngineType(0);
+        setEngineType(ET_DEFAULT_FRANKENSO);
         sendCommand("set_toothed_wheel 4 0");
 //        sendCommand("enable trigger_only_front");
 //        changeRpm(100);
@@ -120,7 +120,7 @@ public class AutoTest extends BaseTest {
     }
 
     private void testSachs() {
-        setEngineType(29);
+        setEngineType(ET_SACHS);
 //        String msg = "BMW";
         changeRpm(1200);
         // todo: add more content
@@ -161,7 +161,7 @@ public class AutoTest extends BaseTest {
     }
 
     private void test2003DodgeNeon() {
-        setEngineType(46);
+        setEngineType(ET_DODGE_NEON_2003_CRANK);
         sendCommand("set wwaeTau 0");
         sendCommand("set wwaeBeta 0");
         sendCommand("set mock_map_voltage 1");
@@ -227,7 +227,7 @@ public class AutoTest extends BaseTest {
     }
 
     private void testMazdaProtege() {
-        setEngineType(14);
+        setEngineType(ET_FORD_ESCORT_GT);
         EngineChart chart;
         sendCommand("set mock_vbatt_voltage 1.395");
         changeRpm(200);
