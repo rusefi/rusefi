@@ -326,5 +326,5 @@ bool VvtTriggerConfiguration::isSilentTriggerError() const {
 }
 
 bool VvtTriggerConfiguration::isVerboseTriggerSynchDetails() const {
-	return engine->engineConfigurationPtr->verboseTriggerSynchDetails;
+	return engine->engineConfigurationPtr->verboseVVTDecoding;
 }
