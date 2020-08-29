@@ -3,7 +3,7 @@
 
 EXTERN_ENGINE;
 
-ButtonShiftController buttonShiftController();
+ButtonShiftController buttonShiftController;
 
 ButtonShiftController::ButtonShiftController () {
     ButtonDebounce u = ButtonDebounce(10, CONFIG(tcuUpshiftButtonPin), CONFIG(tcuUpshiftButtonPinMode));
