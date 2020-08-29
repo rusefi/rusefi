@@ -89,7 +89,7 @@ public:
 
 	cyclic_buffer<int> triggerErrorDetection;
 
-	GearControllerBase gearController;
+	GearControllerBase *gearController;
 
 	PrimaryTriggerConfiguration primaryTriggerConfiguration;
 	VvtTriggerConfiguration vvtTriggerConfiguration;
