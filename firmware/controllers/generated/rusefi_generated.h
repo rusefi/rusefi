@@ -370,6 +370,7 @@
 #define ET_FRANKENSO_MIATA_NA6 41
 #define ET_FRANKENSO_MIATA_NA6_VAF 57
 #define ET_FRANKENSO_MIATA_NB2 47
+#define ET_MRE_BODY_CONTROL 23
 #define ET_MRE_DEFAULTS 60
 #define ET_MRE_MIATA_NA6_MAP 66
 #define ET_MRE_MIATA_NA6_VAF 12
@@ -380,6 +381,7 @@
 #define ET_ROVER_V8 10
 #define ET_SACHS 29
 #define ET_VW_ABA 32
+#define ET_VW_B6 62
 #define ETB_BIAS_CURVE_LENGTH 8
 #define ETB_COUNT 2
 #define etb_dFactor_offset 1744
@@ -1130,7 +1132,7 @@
 #define showSdCardWarning_offset 76
 #define SIGNATURE_BOARD all
 #define SIGNATURE_DATE 2020.08.29
-#define SIGNATURE_HASH 441765865
+#define SIGNATURE_HASH 3344532170
 #define silentTriggerError_offset 1464
 #define slowAdcAlpha_offset 2088
 #define sparkDwellRpmBins_offset 332
@@ -1437,7 +1439,7 @@
 #define ts_show_spi true
 #define ts_show_trigger_comparator false
 #define ts_show_tunerstudio_port true
-#define TS_SIGNATURE "rusEFI 2020.08.29.all.441765865"
+#define TS_SIGNATURE "rusEFI 2020.08.29.all.3344532170"
 #define TS_SINGLE_WRITE_COMMAND 'W'
 #define TS_SINGLE_WRITE_COMMAND_char W
 #define TS_TEST_COMMAND 't' // 0x74
