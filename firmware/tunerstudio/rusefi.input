@@ -1178,7 +1178,7 @@ gaugeCategory = Transmission
    
 ; Transmission
    entry = tcuDesiredGear,  "Desired Gear", int, "%d"
-   entry = tcuCurrentGear,  "Desired Gear", int, "%d"
+   entry = tcuCurrentGear,  "Current Gear", int, "%d"
    
 ;     tpsADC          = U16,    "ADC",
 ;     alignmet        = U16,    "al",
