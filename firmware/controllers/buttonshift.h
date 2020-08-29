@@ -6,8 +6,8 @@
 
 class ButtonShiftController: public GearControllerBase {
 public:
-    void update();
-    ButtonShiftController();
+    void update(DECLARE_ENGINE_PARAMETER_SIGNATURE);
+    void init();
 private:
     ButtonDebounce *debounceUp;
     ButtonDebounce *debounceDown;
