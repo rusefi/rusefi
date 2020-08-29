@@ -17,7 +17,7 @@ gear_e TransmissionControllerBase::getCurrentGear() {
 
 void TransmissionControllerBase::postState() {
 #if EFI_TUNER_STUDIO
-    tsOutputChannels.tcuCurrentGear = getCurrentGear();
+    tsOutputChannels.tcuCurrentGear = GEAR_1 //getCurrentGear();
 #endif
 }
 void GearControllerBase::update() {
@@ -36,6 +36,6 @@ gear_e GearControllerBase::setDesiredGear(gear_e gear) {
 
 void GearControllerBase::postState() {
 #if EFI_TUNER_STUDIO
-    tsOutputChannels.tcuDesiredGear = getDesiredGear();
+    tsOutputChannels.tcuDesiredGear = GEAR_1 // getDesiredGear();
 #endif
 }
