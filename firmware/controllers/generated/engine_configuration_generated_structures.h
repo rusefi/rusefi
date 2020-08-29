@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Sat Aug 29 21:46:47 UTC 2020
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Sat Aug 29 22:00:03 UTC 2020
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -1774,8 +1774,9 @@ struct engine_configuration_s {
 	offset 976 bit 13 */
 	bool verboseVVTDecoding : 1;
 	/**
+	 * get invertCamVVTSignal
 	offset 976 bit 14 */
-	bool unusedBit_251_14 : 1;
+	bool invertCamVVTSignal : 1;
 	/**
 	offset 976 bit 15 */
 	bool unusedBit_251_15 : 1;
@@ -3654,4 +3655,4 @@ struct persistent_config_s {
 typedef struct persistent_config_s persistent_config_s;
 
 // end
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Sat Aug 29 21:46:47 UTC 2020
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Sat Aug 29 22:00:03 UTC 2020

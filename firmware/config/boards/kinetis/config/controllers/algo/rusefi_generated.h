@@ -862,6 +862,7 @@
 #define injector_s_size 68
 #define injPhaseLoadBins_offset 15008
 #define injPhaseRpmBins_offset 15072
+#define invertCamVVTSignal_offset 976
 #define invertPrimaryTriggerSignal_offset 1464
 #define invertSecondaryTriggerSignal_offset 1464
 #define is_enabled_spi_1_offset 744
@@ -1132,7 +1133,7 @@
 #define showSdCardWarning_offset 76
 #define SIGNATURE_BOARD kin
 #define SIGNATURE_DATE 2020.08.29
-#define SIGNATURE_HASH 1827291302
+#define SIGNATURE_HASH 2951368343
 #define silentTriggerError_offset 1464
 #define slowAdcAlpha_offset 2088
 #define sparkDwellRpmBins_offset 332
@@ -1439,7 +1440,7 @@
 #define ts_show_spi true
 #define ts_show_trigger_comparator true
 #define ts_show_tunerstudio_port true
-#define TS_SIGNATURE "rusEFI 2020.08.29.kin.1827291302"
+#define TS_SIGNATURE "rusEFI 2020.08.29.kin.2951368343"
 #define TS_SINGLE_WRITE_COMMAND 'W'
 #define TS_SINGLE_WRITE_COMMAND_char W
 #define TS_TEST_COMMAND 't' // 0x74
@@ -1484,7 +1485,6 @@
 #define unusedAuxVoltage1_TODO_332_offset 2713
 #define unusedAuxVoltage2_TODO_332_offset 2714
 #define unusedBit4_1476_offset 1476
-#define unusedBit_251_14_offset 976
 #define unusedBit_251_15_offset 976
 #define unusedBit_251_16_offset 976
 #define unusedBit_251_17_offset 976
