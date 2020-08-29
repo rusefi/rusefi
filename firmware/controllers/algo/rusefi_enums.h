@@ -418,6 +418,7 @@ typedef enum {
 	VVT_2JZ = 2,
 	/**
 	 * Mazda NB2 has three cam tooth. We synchronize based on gap ratio.
+	 * @see TT_VVT_MIATA_NB2
 	 */
 	MIATA_NB2 = 3,
 
@@ -425,7 +426,9 @@ typedef enum {
 	 * Single-tooth cam sensor mode where TDC and cam signal happen in the same 360 degree of 720 degree engine cycle
 	 */
 	VVT_FIRST_HALF = 4,
-
+	/**
+	 * @see TT_VVT_BOSCH_QUICK_START
+	 */
 	VVT_BOSCH_QUICK_START = 5,
 
 	Force_4_bytes_size_vvt_mode = ENUM_32_BITS,
