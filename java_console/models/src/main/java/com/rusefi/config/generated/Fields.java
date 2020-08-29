@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEfi tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Sat Aug 29 19:08:38 UTC 2020
+// this file was generated automatically by rusEfi tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Sat Aug 29 19:36:08 UTC 2020
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -344,6 +344,7 @@ public class Fields {
 	public static final int ET_BMW_M73_PROTEUS = 63;
 	public static final int ET_CAMARO = 35;
 	public static final int ET_CITROEN_TU3JP = 65;
+	public static final int ET_DEFAULT_FRANKENSO = 0;
 	public static final int ET_DODGE_NEON_1995 = 2;
 	public static final int ET_DODGE_NEON_2003_CRANK = 46;
 	public static final int ET_FORD_ASPIRE = 3;
@@ -1087,6 +1088,7 @@ public class Fields {
 	public static final int servoOutputPins8_offset = 3147;
 	public static final int showHumanReadableWarning_offset = 976;
 	public static final int showSdCardWarning_offset = 76;
+	public static final int SIGNATURE_HASH = 441765865;
 	public static final int silentTriggerError_offset = 1464;
 	public static final int slowAdcAlpha_offset = 2088;
 	public static final int sparkDwellRpmBins_offset = 332;
@@ -1343,7 +1345,7 @@ public class Fields {
 	public static final char TS_SD_R_COMMAND = 'r';
 	public static final char TS_SD_W_COMMAND = 'w';
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI 2020.08.29.all.3911204716";
+	public static final String TS_SIGNATURE = "rusEFI 2020.08.29.all.441765865";
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final int tunerStudioSerialSpeed_offset = 728;
 	public static final int twoWireBatchIgnition_offset = 1476;
