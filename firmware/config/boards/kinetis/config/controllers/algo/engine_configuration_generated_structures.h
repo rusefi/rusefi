@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Sat Aug 29 21:03:27 UTC 2020
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Sat Aug 29 21:47:05 UTC 2020
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -1426,6 +1426,7 @@ struct engine_configuration_s {
 	bool isCJ125Enabled : 1;
 	/**
 	 * Use rise or fall signal front
+	 * get vvtCamSensorUseRise
 	offset 744 bit 17 */
 	bool vvtCamSensorUseRise : 1;
 	/**
@@ -3653,4 +3654,4 @@ struct persistent_config_s {
 typedef struct persistent_config_s persistent_config_s;
 
 // end
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Sat Aug 29 21:03:27 UTC 2020
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Sat Aug 29 21:47:05 UTC 2020
