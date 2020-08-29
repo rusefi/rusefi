@@ -356,12 +356,14 @@
 #define engineType_offset 0
 #define ERROR_BUFFER_SIZE 120
 #define ET_BMW_E34 25
+#define ET_BMW_M73_F 40
 #define ET_BMW_M73_PROTEUS 63
 #define ET_CAMARO 35
 #define ET_CITROEN_TU3JP 65
 #define ET_DODGE_NEON_1995 2
 #define ET_DODGE_NEON_2003_CRANK 46
 #define ET_FORD_ASPIRE 3
+#define ET_FORD_ESCORT_GT 14
 #define ET_FORD_FIESTA 4
 #define ET_FORD_INLINE_6 7
 #define ET_FRANKENSO_MIATA_NA6 41
@@ -375,6 +377,8 @@
 #define ET_MRE_NEW_TEST_BOARD 31
 #define ET_MRE_OLD_TEST_BOARD 30
 #define ET_ROVER_V8 10
+#define ET_SACHS 29
+#define ET_VW_ABA 32
 #define ETB_BIAS_CURVE_LENGTH 8
 #define ETB_COUNT 2
 #define etb_dFactor_offset 1744
@@ -1125,7 +1129,7 @@
 #define showSdCardWarning_offset 76
 #define SIGNATURE_BOARD all
 #define SIGNATURE_DATE 2020.08.29
-#define SIGNATURE_HASH 2980157873
+#define SIGNATURE_HASH 3911204716
 #define silentTriggerError_offset 1464
 #define slowAdcAlpha_offset 2088
 #define sparkDwellRpmBins_offset 332
@@ -1432,7 +1436,7 @@
 #define ts_show_spi true
 #define ts_show_trigger_comparator false
 #define ts_show_tunerstudio_port true
-#define TS_SIGNATURE "rusEFI 2020.08.29.all.2980157873"
+#define TS_SIGNATURE "rusEFI 2020.08.29.all.3911204716"
 #define TS_SINGLE_WRITE_COMMAND 'W'
 #define TS_SINGLE_WRITE_COMMAND_char W
 #define TS_TEST_COMMAND 't' // 0x74

@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEfi tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Sat Aug 29 19:02:22 UTC 2020
+// this file was generated automatically by rusEfi tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Sat Aug 29 19:08:38 UTC 2020
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -340,12 +340,14 @@ public class Fields {
 	public static final int engineType_offset = 0;
 	public static final int ERROR_BUFFER_SIZE = 120;
 	public static final int ET_BMW_E34 = 25;
+	public static final int ET_BMW_M73_F = 40;
 	public static final int ET_BMW_M73_PROTEUS = 63;
 	public static final int ET_CAMARO = 35;
 	public static final int ET_CITROEN_TU3JP = 65;
 	public static final int ET_DODGE_NEON_1995 = 2;
 	public static final int ET_DODGE_NEON_2003_CRANK = 46;
 	public static final int ET_FORD_ASPIRE = 3;
+	public static final int ET_FORD_ESCORT_GT = 14;
 	public static final int ET_FORD_FIESTA = 4;
 	public static final int ET_FORD_INLINE_6 = 7;
 	public static final int ET_FRANKENSO_MIATA_NA6 = 41;
@@ -359,6 +361,8 @@ public class Fields {
 	public static final int ET_MRE_NEW_TEST_BOARD = 31;
 	public static final int ET_MRE_OLD_TEST_BOARD = 30;
 	public static final int ET_ROVER_V8 = 10;
+	public static final int ET_SACHS = 29;
+	public static final int ET_VW_ABA = 32;
 	public static final int ETB_BIAS_CURVE_LENGTH = 8;
 	public static final int ETB_COUNT = 2;
 	public static final int etb_dFactor_offset = 1744;
@@ -1339,7 +1343,7 @@ public class Fields {
 	public static final char TS_SD_R_COMMAND = 'r';
 	public static final char TS_SD_W_COMMAND = 'w';
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI 2020.08.29.all.2980157873";
+	public static final String TS_SIGNATURE = "rusEFI 2020.08.29.all.3911204716";
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final int tunerStudioSerialSpeed_offset = 728;
 	public static final int twoWireBatchIgnition_offset = 1476;
