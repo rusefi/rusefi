@@ -263,10 +263,6 @@ enable2ndByteCanID = false
       etb1DutyCycle   = scalar,  S16,     94,      "%",{1/@@PACK_MULT_PERCENT@@},         0
       etb1Error       = scalar,  S16,     96,      "%",{1/@@PACK_MULT_PERCENT@@},         0
 
-; Transmission
-      tcuDesiredGear  = scalar,  U16,     100,   "gear",    1,         0
-      tcuCurrentGear  = scalar,  U16,     100,   "gear",    1,         0
-
 ; Fuel system
       fuelTankLevel   = scalar,  S16,     98, "amount",{1/@@PACK_MULT_PERCENT@@},         0
       fuelConsumptionPerHour=scalar,F32, 100,    "kPa",      1,      0.0
@@ -346,6 +342,10 @@ enable2ndByteCanID = false
 	; we use this to match logs to tunes
 	tuneCrc16         = scalar,  U16,    244, "crc16",           1,         0
     sd_status         = scalar,  U08,    246,  "", 1.0, 0.0
+
+; Transmission
+      tcuDesiredGear  = scalar,  U16,     247,   "gear",    1,         0
+      tcuCurrentGear  = scalar,  U16,     249,   "gear",    1,         0
 
 ;
 ; see TunerStudioOutputChannels struct
