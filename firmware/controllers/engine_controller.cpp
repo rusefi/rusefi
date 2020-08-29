@@ -587,7 +587,7 @@ void commonInitEngineController(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_S
 	startIdleThread(sharedLogger PASS_ENGINE_PARAMETER_SUFFIX);
 #endif /* EFI_IDLE_CONTROL */
 
-	initButtonShift();
+	initButtonShift(PASS_ENGINE_PARAMETER_SIGNATURE);
 
 #if EFI_ELECTRONIC_THROTTLE_BODY
 	initElectronicThrottle(PASS_ENGINE_PARAMETER_SIGNATURE);
