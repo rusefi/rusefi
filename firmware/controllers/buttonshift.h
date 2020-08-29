@@ -13,4 +13,4 @@ private:
     ButtonDebounce *debounceDown;
 };
 
-void initButtonShift();
+void initButtonShift(DECLARE_ENGINE_PARAMETER_SIGNATURE);
