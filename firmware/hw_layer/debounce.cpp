@@ -20,7 +20,7 @@ bool ButtonDebounce::readPin() {
     readValue = false;
 #ifdef PAL_MODE_INPUT_PULLDOWN
     readValue = efiReadPin(pin);
-    if (mode != PAL_MODE_INPUT_PULLDOWN) {
+    if (mode == PAL_MODE_INPUT_PULLDOWN) {
         return !readValue;
     }
 #endif
