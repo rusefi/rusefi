@@ -29,7 +29,7 @@
  * http://rusefi.com/wiki/index.php?title=Manual:Engine_Type
  */
 typedef enum {
-	DEFAULT_FRANKENSO = 0,
+	DEFAULT_FRANKENSO = ET_DEFAULT_FRANKENSO,
 	AUDI_AAN = 1,
 	/**
 	 * 1995 Dodge Neon
@@ -66,7 +66,7 @@ typedef enum {
 
 	MRE_MIATA_NB2_ETB = 13,
 
-	FORD_ESCORT_GT = 14,
+	FORD_ESCORT_GT = ET_FORD_ESCORT_GT,
 
 	MRE_MIATA_NB2_MAF = ET_MRE_MIATA_NB2_MAF,
 
@@ -103,14 +103,14 @@ typedef enum {
 
 	MAZDA_626 = 28,
 
-	SACHS = 29,
+	SACHS = ET_SACHS,
 
 	// LED physical order set for older test fixtures
 	MRE_BOARD_OLD_TEST = 30,
 
 	MRE_BOARD_NEW_TEST = 31,
 
-	VW_ABA = 32,
+	VW_ABA = ET_VW_ABA,
 
 	DODGE_STRATUS = 33,
 
@@ -126,7 +126,7 @@ typedef enum {
 
 	LADA_KALINA = 39,
 
-	BMW_M73_F = 40,
+	BMW_M73_F = ET_BMW_M73_F,
 
 	// Frankenso board
 	MIATA_NA6_MAP = ET_FRANKENSO_MIATA_NA6,
