@@ -509,6 +509,10 @@ void mreBoardOldTest(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 #endif /* BOARD_TLE8888_COUNT */
 }
 
+void mreBCM(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
+
+}
+
 /**
  * MRE_BOARD_NEW_TEST
  * set engine_type 31

@@ -1263,6 +1263,8 @@ void resetConfigurationExt(Logging * logger, configuration_callback_t boardCallb
 		setDodgeNeon1995EngineConfiguration(PASS_CONFIG_PARAMETER_SIGNATURE);
 		break;
 	case MRE_BODY_CONTROL:
+		mreBCM(PASS_CONFIG_PARAMETER_SIGNATURE);
+		break;
 	case DODGE_NEON_2003_CRANK:
 		setDodgeNeonNGCEngineConfiguration(PASS_CONFIG_PARAMETER_SIGNATURE);
 		break;
