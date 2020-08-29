@@ -11,6 +11,9 @@
 #include "scaled_channel.h"
 #include "hal.h"
 
+/**
+ * Sensor which reads it's value from CAN
+ */
 class CanSensorBase : public StoredValueSensor {
 public:
 	CanSensorBase(uint32_t eid, SensorType type, efitick_t timeout)
