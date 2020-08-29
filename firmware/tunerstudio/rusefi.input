@@ -1397,6 +1397,7 @@ menuDialog = main
 		subMenu = std_separator
 		
 		subMenu = hipFunction,				"HIP9011 settings (knock sensor) (alpha version)" @@if_ts_show_hip9011
+		subMenu = softwareKnock,			"Software Knock" @@if_ts_show_software_knock
 		subMenu = std_separator
 
 		subMenu = etbDialog,				"Electronic throttle body (beta version)" @@if_ts_show_etb
@@ -2348,6 +2349,10 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 		field = "Pin",         			malfunctionIndicatorPin
 		field = "Pin mode",				malfunctionIndicatorPinMode	
 		field = "Warning Period",									warningPeriod
+
+	dialog = softwareKnock, "Software Knock"
+		field = "Enable",				enableSoftwareKnock
+		field = "Band Freq override",	knockBandCustom, {enableSoftwareKnock}
 
 ;			Engine->hip9011 Settings
 	dialog = hipFunction, "HIP9011 Settings (knock decoder)"
