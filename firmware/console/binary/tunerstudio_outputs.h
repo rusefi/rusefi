@@ -233,13 +233,13 @@ typedef struct {
 	uint8_t sd_status; // 246
 
 	int16_t tcuDesiredGear; // 247
-	int16_t tcuCurrentGear; // 249
+	int16_t tcuCurrentGear; // 248
 
-	uint8_t pad; // 251
+	uint8_t pad; // 249
 
-	scaled_voltage rawPpsSecondary;		// 252
+	scaled_voltage rawPpsSecondary;		// 250
 
-	uint8_t unusedAtTheEnd[32]; // we have some unused bytes to allow compatible TS changes
+	uint8_t unusedAtTheEnd[34]; // we have some unused bytes to allow compatible TS changes
 
 	// Temporary - will remove soon
 	TsDebugChannels* getDebugChannels() {

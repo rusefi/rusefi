@@ -344,8 +344,8 @@ enable2ndByteCanID = false
     sd_status         = scalar,  U08,    246,  "", 1.0, 0.0
 
 ; Transmission
-      tcuDesiredGear  = scalar,  S16,     247,   "gear",    1,         0
-      tcuCurrentGear  = scalar,  S16,     249,   "gear",    1,         0
+      tcuDesiredGear  = scalar,  S08,     247,   "gear",    1,         0
+      tcuCurrentGear  = scalar,  S08,     248,   "gear",    1,         0
 
 ;
 ; see TunerStudioOutputChannels struct
