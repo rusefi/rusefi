@@ -5,6 +5,9 @@
  * todo: this file should be split into two - one for CAN transport level ONLY and
  * another one with actual messages
  *
+ * @see can_verbose.cpp for higher level logic
+ * @see obd2.cpp for OBD-II messages via CAN
+ *
  * @date Dec 11, 2013
  * @author Andrey Belomutskiy, (c) 2012-2020
  */
