@@ -880,7 +880,7 @@ custom maf_sensor_type_e 4 bits, S32, @OFFSET@, [0:1], @@maf_sensor_type_e_enum@
 	bit dcMotorIdleValve;+Used on some German vehicles around late 90s: cable-operated throttle and DC motor idle air valve.\nSet the primary TPS to the cable-operated throttle's sensor\nSet the secondary TPS to the mini ETB's position sensor(s). 
 	bit enableSoftwareKnock
 	bit verboseVVTDecoding;enable vvt_details
-	bit unusedBit_251_14
+	bit invertCamVVTSignal;get invertCamVVTSignal
 	bit unusedBit_251_15
 	bit unusedBit_251_16
 	bit unusedBit_251_17
