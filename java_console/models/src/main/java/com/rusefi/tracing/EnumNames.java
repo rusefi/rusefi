@@ -50,5 +50,6 @@ public class EnumNames {
 	"Hip9011IntHoldCallback",
 	"GlobalLock",
 	"GlobalUnlock",
+	"SoftwareKnockProcess",
 	};
 }
