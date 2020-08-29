@@ -554,10 +554,10 @@ TEST(misc, testTriggerDecoder) {
 
 	testTriggerDecoder2("CAMARO_4", CAMARO_4, 40, 0.5, 0);
 
-	testTriggerDecoder3("neon NGC4", DODGE_NEON_2003_CAM, 6, 0.5000, 0.0, CHRYSLER_NGC4_GAP);
+	testTriggerDecoder3("neon NGC4", DODGE_NEON_2003_CRANK, 6, 0.5000, 0.0, CHRYSLER_NGC4_GAP);
 
 	{
-		WITH_ENGINE_TEST_HELPER(DODGE_NEON_2003_CAM);
+		WITH_ENGINE_TEST_HELPER(DODGE_NEON_2003_CRANK);
 
 		printf("!!!!!!!!!!!!!!!!!! Now trying with only rising edges !!!!!!!!!!!!!!!!!\r\n");
 		engineConfiguration->useOnlyRisingEdgeForTrigger = true;

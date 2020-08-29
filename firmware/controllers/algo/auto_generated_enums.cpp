@@ -1,7 +1,7 @@
 #include "global.h"
 #include "rusefi_enums.h"
 #include "rusefi_hw_enums.h"
-// was generated automatically by rusEfi tool  from rusefi_hw_enums.h // was generated automatically by rusEfi tool  from rusefi_enums.h // by enum2string.jar tool on Thu Aug 27 04:44:20 UTC 2020
+// was generated automatically by rusEfi tool  from rusefi_hw_enums.h // was generated automatically by rusEfi tool  from rusefi_enums.h // by enum2string.jar tool on Sat Aug 29 13:41:58 UTC 2020
 // see also gen_config_and_enums.bat
 
 
@@ -764,8 +764,6 @@ case DEFAULT_FRANKENSO:
   return "DEFAULT_FRANKENSO";
 case DODGE_NEON_1995:
   return "DODGE_NEON_1995";
-case DODGE_NEON_2003_CAM:
-  return "DODGE_NEON_2003_CAM";
 case DODGE_NEON_2003_CRANK:
   return "DODGE_NEON_2003_CRANK";
 case DODGE_RAM:
@@ -834,6 +832,8 @@ case MRE_BOARD_NEW_TEST:
   return "MRE_BOARD_NEW_TEST";
 case MRE_BOARD_OLD_TEST:
   return "MRE_BOARD_OLD_TEST";
+case MRE_BODY_CONTROL:
+  return "MRE_BODY_CONTROL";
 case MRE_MIATA_NA6_MAP:
   return "MRE_MIATA_NA6_MAP";
 case MRE_MIATA_NA6_VAF:
