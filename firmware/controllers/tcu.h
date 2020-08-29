@@ -26,5 +26,5 @@ private:
 protected:
     gear_e setDesiredGear(gear_e);
     void postState();
-    TransmissionControllerBase transmissionController;
+    TransmissionControllerBase transmissionController(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 };

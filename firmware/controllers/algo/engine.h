@@ -89,7 +89,7 @@ public:
 
 	cyclic_buffer<int> triggerErrorDetection;
 
-	ButtonShiftController gearController;
+	ButtonShiftController gearController(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 
 	PrimaryTriggerConfiguration primaryTriggerConfiguration;
 	VvtTriggerConfiguration vvtTriggerConfiguration;
