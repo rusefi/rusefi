@@ -61,6 +61,7 @@ class PrimaryTriggerConfiguration : public TriggerConfiguration {
 public:
 	PrimaryTriggerConfiguration(Engine *engine);
 	bool isUseOnlyRisingEdgeForTrigger() const;
+	const char * getPrintPrefix() const;
 	bool isSilentTriggerError() const;
 	bool isVerboseTriggerSynchDetails() const;
 	debug_mode_e getDebugMode() const;
@@ -73,6 +74,7 @@ class VvtTriggerConfiguration : public TriggerConfiguration {
 public:
 	VvtTriggerConfiguration(Engine *engine);
 	bool isUseOnlyRisingEdgeForTrigger() const;
+	const char * getPrintPrefix() const;
 	bool isSilentTriggerError() const;
 	bool isVerboseTriggerSynchDetails() const;
 	debug_mode_e getDebugMode() const;
