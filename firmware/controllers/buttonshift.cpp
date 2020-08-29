@@ -3,9 +3,9 @@
 
 EXTERN_ENGINE;
 
-ButtonShiftController buttonShiftController(PASS_ENGINE_PARAMETER_SIGNATURE);
+ButtonShiftController buttonShiftController();
 
-ButtonShiftController::ButtonShiftController (DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+ButtonShiftController::ButtonShiftController () {
     ButtonDebounce u = ButtonDebounce(10, CONFIG(tcuUpshiftButtonPin), CONFIG(tcuUpshiftButtonPinMode));
     debounceUp = &u;
     ButtonDebounce d = ButtonDebounce(10, CONFIG(tcuDownshiftButtonPin), CONFIG(tcuDownshiftButtonPinMode));
@@ -51,6 +51,6 @@ setDesiredGear(GEAR_1);
 }
 
 
-void initButtonShift(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+void initButtonShift() {
     engine->gearController = &buttonShiftController;
 }
