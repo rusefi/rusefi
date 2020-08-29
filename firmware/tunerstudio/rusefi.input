@@ -1607,6 +1607,7 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 		field = "Secondary channel", 					triggerInputPins2,            { trigger_type != 0 && trigger_type != 8 && trigger_type != 9 && trigger_type != 18 && trigger_type != 20}
 		field = "Invert Secondary",						invertSecondaryTriggerSignal, { trigger_type != 0 && trigger_type != 8 && trigger_type != 9 && trigger_type != 18 && trigger_type != 20}
 		field = "Cam Sync/VVT input",					camInputs1
+		field = "Invert Cam/VVT",                       invertCamVVTSignal
 		panel = triggerInputComparator @@if_ts_show_trigger_comparator
 
 	

@@ -895,6 +895,8 @@ static void enableOrDisable(const char *param, bool isEnabled) {
 		engineConfiguration->verboseTriggerSynchDetails = isEnabled;
 	} else if (strEqualCaseInsensitive(param, "vvt_details")) {
 		engineConfiguration->verboseVVTDecoding = isEnabled;
+	} else if (strEqualCaseInsensitive(param, "invertCamVVTSignal")) {
+		engineConfiguration->invertCamVVTSignal = isEnabled;
 	} else if (strEqualCaseInsensitive(param, CMD_IGNITION)) {
 		engineConfiguration->isIgnitionEnabled = isEnabled;
 	} else if (strEqualCaseInsensitive(param, CMD_SELF_STIMULATION)) {
@@ -1077,6 +1079,8 @@ static void getValue(const char *paramStr) {
 		scheduleMsg(&logger, "is_enabled_spi_3=%s", boolToString(engineConfiguration->is_enabled_spi_3));
 	} else if (strEqualCaseInsensitive(paramStr, "vvtCamSensorUseRise")) {
 		scheduleMsg(&logger, "vvtCamSensorUseRise=%s", boolToString(engineConfiguration->vvtCamSensorUseRise));
+	} else if (strEqualCaseInsensitive(paramStr, "invertCamVVTSignal")) {
+		scheduleMsg(&logger, "invertCamVVTSignal=%s", boolToString(engineConfiguration->invertCamVVTSignal));
 	} else if (strEqualCaseInsensitive(paramStr, "isHip9011Enabled")) {
 		scheduleMsg(&logger, "isHip9011Enabled=%d", engineConfiguration->isHip9011Enabled);
 	}
