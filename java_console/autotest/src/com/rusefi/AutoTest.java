@@ -57,10 +57,8 @@ public class AutoTest extends BaseTest {
         testBmwE34();
         testSachs();
         testRoverV8();
-        testMitsu();
         testCamaro();
         testCitroenBerlingo();
-        testMazda626();
         testFord6();
         testFordFiesta();
     }
@@ -151,32 +149,11 @@ public class AutoTest extends BaseTest {
         assertWave(msg, chart, EngineChart.MAP_AVERAGING, 0.139, x, x + 120, x + 240, x + 360, x + 480, x + 600);
     }
 
-    private void testMitsu() {
-        setEngineType(16);
-        sendCommand("disable cylinder_cleanup");
-//        String msg = "Mitsubishi";
-        changeRpm(200);
-
-        changeRpm(1200);
-        // todo: add more content
-    }
-
     private void testCitroenBerlingo() {
         setEngineType(ET_CITROEN_TU3JP);
 //        String msg = "Citroen";
         changeRpm(1200);
         // todo: add more content
-    }
-
-    private void testMazda626() {
-        setEngineType(28);
-        String msg = "mazda 626 default cranking";
-        changeRpm(200);
-        EngineChart chart;
-        chart = nextChart();
-
-        double x = 102;
-        assertWave(msg, chart, EngineChart.SPARK_1, 0.1944, x, x + 180, x + 360, x + 540);
     }
 
     private EngineChart nextChart() {
