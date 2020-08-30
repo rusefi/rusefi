@@ -3,7 +3,7 @@
 
 class ButtonDebounce {
 public:
-    ButtonDebounce(int t, brain_pin_e p, iomode_t m);
+    ButtonDebounce(int t, brain_pin_e p, pin_input_mode_e m);
     bool readPinEvent();
 private:
     bool checkThreshold(efitimems_t);
