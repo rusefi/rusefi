@@ -1,5 +1,5 @@
-#include "global.h"
 #include "globalaccess.h"
+#include "io_pins.h"
 
 class ButtonDebounce {
 public:
