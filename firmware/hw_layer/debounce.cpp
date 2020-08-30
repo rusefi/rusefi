@@ -6,7 +6,7 @@ ButtonDebounce::ButtonDebounce (int t, brain_pin_e p, iomode_t m) {
     timeLast = 0;
     pin = p;
     mode = m;
-#ifdef PAL_MODE_INPUT_PULLDOWN
+#ifdef PI_PULLDOWN
     efiSetPadMode("Button", p, m);
 #endif
 }
@@ -18,9 +18,9 @@ bool ButtonDebounce::readPinEvent() {
     }
     timeLast = timeNow;
     readValue = false;
-#ifdef PAL_MODE_INPUT_PULLDOWN
+#ifdef PI_PULLDOWN
     readValue = efiReadPin(pin);
-    if (mode != PAL_MODE_INPUT_PULLDOWN) {
+    if (mode != PI_PULLDOWN) {
         return !readValue;
     }
 #endif
