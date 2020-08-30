@@ -4,6 +4,7 @@ import com.rusefi.NamedThreadFactory;
 import com.rusefi.SignatureHelper;
 import com.rusefi.Timeouts;
 import com.rusefi.autoupdate.AutoupdateUtil;
+import com.rusefi.core.Pair;
 import com.rusefi.io.serial.StreamStatistics;
 import com.rusefi.io.tcp.ServerSocketReference;
 import com.rusefi.io.tcp.TcpIoStream;
@@ -18,6 +19,8 @@ import com.rusefi.server.UserDetails;
 import com.rusefi.tools.online.HttpUtil;
 import com.rusefi.tools.online.ProxyClient;
 import com.rusefi.tools.online.PublicSession;
+import com.rusefi.ts_plugin.auth.InstanceAuthContext;
+import com.rusefi.ts_plugin.auth.SelfInfo;
 import com.rusefi.ui.AuthTokenPanel;
 import com.rusefi.ui.util.URLLabel;
 import org.jetbrains.annotations.NotNull;
@@ -45,6 +48,8 @@ public class RemoteTab {
     private static final String APPLICATION_PORT = "application_port";
     public static final String HOWTO_REMOTE_TUNING = "https://github.com/rusefi/rusefi/wiki/HOWTO-Remote-Tuning";
     private final JComponent content = new JPanel(new BorderLayout());
+    private final JScrollPane scroll = new JScrollPane(content, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+
 
     private final JPanel list = new JPanel(new VerticalFlowLayout());
     private final JTextField oneTimePasswordControl = new JTextField("0") {
@@ -61,18 +66,18 @@ public class RemoteTab {
 
     private final JButton disconnect = new JButton("Disconnect");
 
-    private final Executor listDownloadExecutor = Executors.newSingleThreadExecutor(new NamedThreadFactory("online list downloader"));
+    private final Executor listDownloadExecutor = Executors.newSingleThreadExecutor(new NamedThreadFactory("online list downloader", true));
 
     public RemoteTab() {
-        JButton refresh = new JButton("Refresh List");
-        refresh.addActionListener(e -> requestListDownload());
+        JButton refresh = new JButton("Refresh Remote Controllers List");
+        refresh.addActionListener(e -> requestControllersList());
 
         disconnect.addActionListener(e -> {
             LocalApplicationProxy localApplicationProxy = RemoteTabController.INSTANCE.getLocalApplicationProxy();
             if (localApplicationProxy != null)
                 localApplicationProxy.close();
             RemoteTabController.INSTANCE.setState(RemoteTabController.State.NOT_CONNECTED);
-            requestListDownload();
+            requestControllersList();
         });
 
 
@@ -100,24 +105,23 @@ public class RemoteTab {
 
         JPanel topLines = new JPanel(new VerticalFlowLayout());
 
-
-        JPanel topPanel = new JPanel(new FlowLayout());
-        topPanel.add(refresh);
-        topPanel.add(new JLabel("    Local Port: "));
-        topPanel.add(applicationPort);
-        topPanel.add(new JLabel("   One time password:"));
-        topPanel.add(oneTimePasswordControl);
-
-        topLines.add(topPanel);
         topLines.add(new URLLabel(HOWTO_REMOTE_TUNING));
+        topLines.add(new SelfInfo().getContent());
+        topLines.add(refresh);
+        topLines.add(new JLabel("Local Port for tuning software"));
+        topLines.add(applicationPort);
+        topLines.add(new JLabel("One time password:"));
+        topLines.add(oneTimePasswordControl);
 
         content.add(topLines, BorderLayout.NORTH);
         content.add(list, BorderLayout.CENTER);
         list.add(new JLabel("Requesting list of ECUs"));
 
+        InstanceAuthContext.listeners.add(userDetails -> requestControllersList());
+
         LocalApplicationProxy currentState = RemoteTabController.INSTANCE.getLocalApplicationProxy();
         if (currentState == null) {
-            requestListDownload();
+            requestControllersList();
         } else {
             setConnectedStatus(currentState.getApplicationRequest().getVehicleOwner(), null,
                     currentState.getApplicationRequest().getSessionDetails().getControllerInfo());
@@ -128,15 +132,13 @@ public class RemoteTab {
         return getConfig().getRoot().getProperty(APPLICATION_PORT, "29001");
     }
 
-    private void requestListDownload() {
+    private void requestControllersList() {
         listDownloadExecutor.execute(() -> {
-            List<PublicSession> userDetails;
             try {
-                userDetails = ProxyClient.getOnlineApplications(HttpUtil.PROXY_JSON_API_HTTP_PORT);
+                List<PublicSession> userDetails = ProxyClient.getOnlineApplications(HttpUtil.PROXY_JSON_API_HTTP_PORT);
                 SwingUtilities.invokeLater(() -> showList(userDetails));
             } catch (IOException e) {
                 e.printStackTrace();
-                return;
             }
         });
     }
@@ -150,20 +152,20 @@ public class RemoteTab {
         } else {
 
             JPanel verticalPanel = new JPanel(new VerticalFlowLayout());
-            JScrollPane scroll = new JScrollPane(verticalPanel, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
-            list.add(scroll);
+            list.add(verticalPanel);
 
             for (PublicSession user : userDetails) {
-                verticalPanel.add(createSessionControl(user));
+                verticalPanel.add(createControllerRow(user));
             }
         }
         AutoupdateUtil.trueLayout(list);
     }
 
-    private JComponent createSessionControl(PublicSession publicSession) {
+    private JComponent createControllerRow(PublicSession publicSession) {
+        ControllerInfo controllerInfo = publicSession.getControllerInfo();
+
         JComponent topLine = new JPanel(new FlowLayout());
         topLine.add(new JLabel(publicSession.getVehicleOwner().getUserName()));
-        ControllerInfo controllerInfo = publicSession.getControllerInfo();
         topLine.add(new JLabel(controllerInfo.getVehicleName() + " " + controllerInfo.getEngineMake() + " " + controllerInfo.getEngineCode()));
 
         JPanel bottomPanel = new JPanel(new FlowLayout());
@@ -175,31 +177,46 @@ public class RemoteTab {
             connect.addActionListener(event -> connectToProxy(publicSession));
             bottomPanel.add(connect);
 
-            JButton updateSoftware = new JButton("Update Connector");
-            updateSoftware.addActionListener(new AbstractAction() {
-                @Override
-                public void actionPerformed(ActionEvent e) {
-                    try {
-                        LocalApplicationProxy.requestSoftwareUpdate(HttpUtil.PROXY_JSON_API_HTTP_PORT,
-                                getApplicationRequest(publicSession));
-                    } catch (IOException ioException) {
-                        ioException.printStackTrace();
+            if (InstanceAuthContext.isOurController(publicSession.getVehicleOwner().getUserId())) {
+                JButton updateSoftware = new JButton("Update Connector");
+                updateSoftware.addActionListener(new AbstractAction() {
+                    @Override
+                    public void actionPerformed(ActionEvent e) {
+                        try {
+                            LocalApplicationProxy.requestSoftwareUpdate(HttpUtil.PROXY_JSON_API_HTTP_PORT,
+                                    getApplicationRequest(publicSession));
+                        } catch (IOException ioException) {
+                            ioException.printStackTrace();
+                        }
                     }
-                }
-            });
-            bottomPanel.add(updateSoftware);
+                });
+                bottomPanel.add(updateSoftware);
+            }
 
         }
 
         JPanel userPanel = new JPanel(new BorderLayout());
 
+
+        JPanel infoLine = new JPanel(new FlowLayout());
+        infoLine.add(new JLabel("Age " + publicSession.getAge()));
+        infoLine.add(getSignatureDownload(controllerInfo));
+
+
         userPanel.add(topLine, BorderLayout.NORTH);
-        userPanel.add(new URLLabel(SignatureHelper.getUrl(controllerInfo.getSignature())), BorderLayout.CENTER);
+        userPanel.add(infoLine, BorderLayout.CENTER);
         userPanel.add(bottomPanel, BorderLayout.SOUTH);
 
         userPanel.setBorder(BorderFactory.createLineBorder(Color.BLACK));
 
         return userPanel;
+    }
+
+    @NotNull
+    private URLLabel getSignatureDownload(ControllerInfo controllerInfo) {
+        Pair<String, String> url = SignatureHelper.getUrl(controllerInfo.getSignature());
+
+        return new URLLabel(url.second, url.first);
     }
 
     private void connectToProxy(PublicSession publicSession) {
@@ -228,7 +245,7 @@ public class RemoteTab {
 
         setStatus("Connected to " + userDetails.getUserName(),
                 new JLabel("You can now connect your TunerStudio to IP address localhost and port " + getLocalPort()),
-                new URLLabel(SignatureHelper.getUrl(controllerInfo.getSignature())),
+                new URLLabel(SignatureHelper.getUrl(controllerInfo.getSignature()).first),
                 disconnect, streamStatusControl == null ? null : streamStatusControl.getContent());
     }
 
@@ -280,11 +297,10 @@ public class RemoteTab {
                 publicSession.getControllerInfo(), AuthTokenPanel.getAuthToken(),
                 Integer.parseInt(oneTimePasswordControl.getText()), rusEFIVersion.CONSOLE_VERSION);
 
-        ApplicationRequest applicationRequest = new ApplicationRequest(sessionDetails, publicSession.getVehicleOwner());
-        return applicationRequest;
+        return new ApplicationRequest(sessionDetails, publicSession.getVehicleOwner());
     }
 
     public JComponent getContent() {
-        return content;
+        return scroll;
     }
 }

@@ -2,6 +2,7 @@ package com.rusefi.tools.online;
 
 import com.rusefi.proxy.client.LocalApplicationProxy;
 import com.rusefi.server.ControllerInfo;
+import com.rusefi.server.SessionDetails;
 import com.rusefi.server.UserDetails;
 import org.jetbrains.annotations.NotNull;
 import org.json.simple.JSONArray;
@@ -54,7 +55,8 @@ public class ProxyClient {
                 UserDetails vehicleOwner = UserDetails.valueOf(element);
                 boolean isUsed = (Boolean) element.get(IS_USED);
                 String ownerName = (String) element.get(OWNER);
-                userLists.add(new PublicSession(vehicleOwner, ci, isUsed, ownerName));
+                String age = (String) element.get(SessionDetails.AGE);
+                userLists.add(new PublicSession(vehicleOwner, ci, isUsed, ownerName, age));
             }
 
             System.out.println("object=" + array);

@@ -15,6 +15,7 @@ public class SessionDetails {
     public static final String AUTH_TOKEN = "authToken";
     public static final String CONNECTOR_VERSION = "connectorVersion";
     public static final String IMPLEMENTATION = "implementation";
+    public static final String AGE = "age";
 
     private static final String CONTROLLER = "controller";
     private static final String HARDCODED_ONE_TIME_CODE = System.getProperty("ONE_TIME_CODE");
@@ -74,11 +75,12 @@ public class SessionDetails {
         JSONObject jsonObject = HttpUtil.parse(jsonString);
 
         String authToken = (String) jsonObject.get(AUTH_TOKEN);
-        long oneTimeCode = (Long)jsonObject.get(VEHICLE_TOKEN);
+        long oneTimeCode = (Long) jsonObject.get(VEHICLE_TOKEN);
         long connectorVersion = (long) jsonObject.get(CONNECTOR_VERSION);
+        String age = (String) jsonObject.get(AGE);
         NetworkConnector.Implementation implementation = NetworkConnector.Implementation.find((String) jsonObject.get(IMPLEMENTATION));
 
-                ControllerInfo controllerInfo = ControllerInfo.valueOf((String) jsonObject.get(CONTROLLER));
+        ControllerInfo controllerInfo = ControllerInfo.valueOf((String) jsonObject.get(CONTROLLER));
 
         return new SessionDetails(implementation, controllerInfo, authToken, (int) oneTimeCode, (int) connectorVersion);
     }

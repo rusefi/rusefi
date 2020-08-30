@@ -2,6 +2,7 @@ package com.rusefi.ts_plugin;
 
 import com.efiAnalytics.plugin.ecu.ControllerAccess;
 import com.rusefi.autoupdate.AutoupdateUtil;
+import com.rusefi.ts_plugin.auth.InstanceAuthContext;
 import com.rusefi.ts_plugin.util.ManifestHelper;
 import com.rusefi.tune.xml.Constant;
 
@@ -12,6 +13,7 @@ import java.util.function.Supplier;
 
 /**
  * {@link TsPluginLauncher} creates an instance of this class via reflection.
+ *
  * @see TuneUploadTab upload tune & TODO upload logs
  * @see RemoteTab remote ECU access & control
  * @see BroadcastTab offer your ECU for remove access & control
@@ -52,6 +54,18 @@ public class PluginEntry implements TsPluginBody {
         tabbedPane.addTab("Remote ECU", remoteTab.getContent());
         tabbedPane.addTab("Read SD Card", new SdCardReader(controllerAccessSupplier).getContent());
         content.add(tabbedPane);
+
+        InstanceAuthContext.startup();
+    }
+
+    public static String getNonDaemonThreads() {
+        StringBuilder sb = new StringBuilder();
+        for (Thread thread : Thread.getAllStackTraces().keySet()) {
+            // Daemon thread will not prevent the JVM from exiting
+            if (!thread.isDaemon())
+                sb.append(thread.getName() + "\n");
+        }
+        return sb.toString();
     }
 
     private boolean isLauncherTooOld() {
