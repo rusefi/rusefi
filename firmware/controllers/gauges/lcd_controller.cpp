@@ -220,8 +220,8 @@ static void showLine(lcd_line_e line, int screenY) {
 		return;
 #endif
 	case LL_AFR:
-		if (hasAfrSensor(PASS_ENGINE_PARAMETER_SIGNATURE)) {
-			lcdPrintf("AFR: %.2f", getAfr());
+		if (Sensor::hasSensor(SensorType::Lambda)) {
+			lcdPrintf("AFR: %.2f", Sensor::get(SensorType::Lambda).value_or(0));
 		} else {
 			lcdPrintf("AFR: none");
 		}
