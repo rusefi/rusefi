@@ -48,6 +48,8 @@ public class UpdateRequestHandler implements Take {
                     state.requestConnectorSoftwareUpdate();
                 } catch (IOException e) {
                     throw new IllegalStateException(e);
+                } finally {
+                    state.getTwoKindSemaphore().releaseFromLongTermUsage();
                 }
             }).start();
 
