@@ -74,7 +74,7 @@ public class Monitoring {
         builder.add("framework version", rusEFIVersion.CONSOLE_VERSION);
         builder.add("compiled", new Date(rusEFIVersion.classBuildTimeMillis()).toString());
         builder.add("now", System.currentTimeMillis());
-        builder.add(Backend.AGE, birthday.getDuration());
+        builder.add(SessionDetails.AGE, birthday.getDuration());
 
         return new RsJson(builder.build());
     }
