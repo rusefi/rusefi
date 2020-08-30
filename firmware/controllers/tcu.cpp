@@ -20,10 +20,6 @@ void TransmissionControllerBase::postState() {
     tsOutputChannels.tcuCurrentGear = getCurrentGear();
 #endif
 }
-void GearControllerBase::update() {
-    transmissionController.update(getDesiredGear());
-    postState();
-}
 
 gear_e GearControllerBase::getDesiredGear() {
     return desiredGear;
