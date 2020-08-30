@@ -37,7 +37,10 @@ public class SessionDetails {
 
     private static String findLocalIpAddress() {
         try {
-            return InetAddress.getLocalHost().getHostAddress();
+            String hostAddress = InetAddress.getLocalHost().getHostAddress();
+            if (hostAddress == null)
+                return "unable to resolve local IP";
+            return hostAddress;
         } catch (UnknownHostException e) {
             return "unknown";
         }
@@ -46,7 +49,7 @@ public class SessionDetails {
     public SessionDetails(NetworkConnector.Implementation implementation, ControllerInfo controllerInfo, String authToken, int oneTimeCode, int consoleVersion, String localIpAddress) {
         this.implementation = Objects.requireNonNull(implementation);
         this.consoleVersion = consoleVersion;
-        this.localIpAddress = localIpAddress;
+        this.localIpAddress = Objects.requireNonNull(localIpAddress);
         Objects.requireNonNull(controllerInfo);
         Objects.requireNonNull(authToken);
         this.controllerInfo = controllerInfo;
