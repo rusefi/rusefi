@@ -40,7 +40,12 @@ public class NetworkConnector implements Closeable {
     private boolean isClosed;
 
     public NetworkConnectorResult start(Implementation implementation, String authToken, String controllerPort, NetworkConnectorContext context) {
-        return start(implementation, authToken, controllerPort, context, ReconnectListener.VOID);
+        return start(implementation, authToken, controllerPort, context, new ReconnectListener() {
+            @Override
+            public void onReconnect() {
+                log.info("onReconnect");
+            }
+        });
     }
 
     public NetworkConnectorResult start(Implementation implementation, String authToken, String controllerPort, NetworkConnectorContext context, ReconnectListener reconnectListener) {

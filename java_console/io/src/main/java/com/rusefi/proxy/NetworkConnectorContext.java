@@ -10,7 +10,7 @@ import static com.devexperts.logging.Logging.getLogging;
 public class NetworkConnectorContext {
     private static final Logging log = getLogging(NetworkConnectorContext.class);
     private static final int UPDATE_SBC_EXIT_CODE = 15;
-    private static final int UPDATE_FIRMWARE_EXIT_CODE = 16;
+    public static final int UPDATE_FIRMWARE_EXIT_CODE = 16;
 
     public int reconnectDelay() {
         return 15; // this one is seconds
