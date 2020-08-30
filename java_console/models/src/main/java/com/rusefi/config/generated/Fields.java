@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEfi tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Sun Aug 30 19:34:38 UTC 2020
+// this file was generated automatically by rusEfi tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Sun Aug 30 19:39:58 UTC 2020
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -1093,6 +1093,7 @@ public class Fields {
 	public static final int servoOutputPins8_offset = 3147;
 	public static final int showHumanReadableWarning_offset = 976;
 	public static final int showSdCardWarning_offset = 76;
+	public static final int SIGNATURE_HASH = 1488300921;
 	public static final int silentTriggerError_offset = 1464;
 	public static final int slowAdcAlpha_offset = 2088;
 	public static final int sparkDwellRpmBins_offset = 332;
@@ -1349,7 +1350,7 @@ public class Fields {
 	public static final char TS_SD_R_COMMAND = 'r';
 	public static final char TS_SD_W_COMMAND = 'w';
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI 2020.08.30.all.3389104217";
+	public static final String TS_SIGNATURE = "rusEFI 2020.08.30.all.1488300921";
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final int tunerStudioSerialSpeed_offset = 728;
 	public static final int twoWireBatchIgnition_offset = 1476;
@@ -1726,7 +1727,8 @@ public class Fields {
 	public static final Field CLUTCHDOWNPIN = Field.create("CLUTCHDOWNPIN", 664, FieldType.INT8, switch_input_pin_e);
 	public static final Field ALTERNATORCONTROLPIN = Field.create("ALTERNATORCONTROLPIN", 665, FieldType.INT8, output_pin_e);
 	public static final Field ALTERNATORCONTROLPINMODE = Field.create("ALTERNATORCONTROLPINMODE", 666, FieldType.INT8, pin_output_mode_e);
-	public static final Field CLUTCHDOWNPINMODE = Field.create("CLUTCHDOWNPINMODE", 667, FieldType.INT8);
+	public static final String[] pin_input_mode_e = {"DEFAULT", "PULLUP", "PULLDOWN"};
+	public static final Field CLUTCHDOWNPINMODE = Field.create("CLUTCHDOWNPINMODE", 667, FieldType.INT8, pin_input_mode_e);
 	public static final Field DIGITALPOTENTIOMETERCHIPSELECT1 = Field.create("DIGITALPOTENTIOMETERCHIPSELECT1", 668, FieldType.INT8, brain_pin_e);
 	public static final Field DIGITALPOTENTIOMETERCHIPSELECT2 = Field.create("DIGITALPOTENTIOMETERCHIPSELECT2", 669, FieldType.INT8, brain_pin_e);
 	public static final Field DIGITALPOTENTIOMETERCHIPSELECT3 = Field.create("DIGITALPOTENTIOMETERCHIPSELECT3", 670, FieldType.INT8, brain_pin_e);
@@ -1758,7 +1760,7 @@ public class Fields {
 	public static final Field SDCARDCSPIN = Field.create("SDCARDCSPIN", 707, FieldType.INT8, brain_pin_e);
 	public static final Field CANTXPIN = Field.create("CANTXPIN", 708, FieldType.INT8, brain_pin_e);
 	public static final Field CANRXPIN = Field.create("CANRXPIN", 709, FieldType.INT8, brain_pin_e);
-	public static final Field THROTTLEPEDALUPPINMODE = Field.create("THROTTLEPEDALUPPINMODE", 710, FieldType.INT8);
+	public static final Field THROTTLEPEDALUPPINMODE = Field.create("THROTTLEPEDALUPPINMODE", 710, FieldType.INT8, pin_input_mode_e);
 	public static final Field ACIDLEEXTRAOFFSET = Field.create("ACIDLEEXTRAOFFSET", 711, FieldType.INT8);
 	public static final Field CAN2SLEEPPERIODMS = Field.create("CAN2SLEEPPERIODMS", 712, FieldType.INT);
 	public static final Field UNUSEDAT716 = Field.create("UNUSEDAT716", 716, FieldType.INT);
@@ -1946,7 +1948,7 @@ public class Fields {
 	public static final Field VEHICLESPEEDSENSORINPUTPIN = Field.create("VEHICLESPEEDSENSORINPUTPIN", 968, FieldType.INT8, brain_input_pin_e);
 	public static final Field CLUTCHUPPIN = Field.create("CLUTCHUPPIN", 969, FieldType.INT8, switch_input_pin_e);
 	public static final Field FREQUENCYREPORTINGMAPINPUTPIN = Field.create("FREQUENCYREPORTINGMAPINPUTPIN", 970, FieldType.INT8, brain_input_pin_e);
-	public static final Field CLUTCHUPPINMODE = Field.create("CLUTCHUPPINMODE", 971, FieldType.INT8);
+	public static final Field CLUTCHUPPINMODE = Field.create("CLUTCHUPPINMODE", 971, FieldType.INT8, pin_input_mode_e);
 	public static final Field MULTISPARKMAXRPM = Field.create("MULTISPARKMAXRPM", 972, FieldType.INT16);
 	public static final Field MULTISPARKMAXSPARKINGANGLE = Field.create("MULTISPARKMAXSPARKINGANGLE", 974, FieldType.INT8);
 	public static final Field MULTISPARKMAXEXTRASPARKCOUNT = Field.create("MULTISPARKMAXEXTRASPARKCOUNT", 975, FieldType.INT8);
@@ -2138,22 +2140,22 @@ public class Fields {
 	public static final Field KNOCKDETECTIONWINDOWEND = Field.create("KNOCKDETECTIONWINDOWEND", 1504, FieldType.FLOAT);
 	public static final Field IDLESTEPPERREACTIONTIME = Field.create("IDLESTEPPERREACTIONTIME", 1508, FieldType.FLOAT);
 	public static final Field KNOCKVTHRESHOLD = Field.create("KNOCKVTHRESHOLD", 1512, FieldType.FLOAT);
-	public static final Field FSIOINPUTMODES1 = Field.create("FSIOINPUTMODES1", 1516, FieldType.INT8);
-	public static final Field FSIOINPUTMODES2 = Field.create("FSIOINPUTMODES2", 1517, FieldType.INT8);
-	public static final Field FSIOINPUTMODES3 = Field.create("FSIOINPUTMODES3", 1518, FieldType.INT8);
-	public static final Field FSIOINPUTMODES4 = Field.create("FSIOINPUTMODES4", 1519, FieldType.INT8);
-	public static final Field FSIOINPUTMODES5 = Field.create("FSIOINPUTMODES5", 1520, FieldType.INT8);
-	public static final Field FSIOINPUTMODES6 = Field.create("FSIOINPUTMODES6", 1521, FieldType.INT8);
-	public static final Field FSIOINPUTMODES7 = Field.create("FSIOINPUTMODES7", 1522, FieldType.INT8);
-	public static final Field FSIOINPUTMODES8 = Field.create("FSIOINPUTMODES8", 1523, FieldType.INT8);
-	public static final Field FSIOINPUTMODES9 = Field.create("FSIOINPUTMODES9", 1524, FieldType.INT8);
-	public static final Field FSIOINPUTMODES10 = Field.create("FSIOINPUTMODES10", 1525, FieldType.INT8);
-	public static final Field FSIOINPUTMODES11 = Field.create("FSIOINPUTMODES11", 1526, FieldType.INT8);
-	public static final Field FSIOINPUTMODES12 = Field.create("FSIOINPUTMODES12", 1527, FieldType.INT8);
-	public static final Field FSIOINPUTMODES13 = Field.create("FSIOINPUTMODES13", 1528, FieldType.INT8);
-	public static final Field FSIOINPUTMODES14 = Field.create("FSIOINPUTMODES14", 1529, FieldType.INT8);
-	public static final Field FSIOINPUTMODES15 = Field.create("FSIOINPUTMODES15", 1530, FieldType.INT8);
-	public static final Field FSIOINPUTMODES16 = Field.create("FSIOINPUTMODES16", 1531, FieldType.INT8);
+	public static final Field FSIOINPUTMODES1 = Field.create("FSIOINPUTMODES1", 1516, FieldType.INT8, pin_input_mode_e);
+	public static final Field FSIOINPUTMODES2 = Field.create("FSIOINPUTMODES2", 1517, FieldType.INT8, pin_input_mode_e);
+	public static final Field FSIOINPUTMODES3 = Field.create("FSIOINPUTMODES3", 1518, FieldType.INT8, pin_input_mode_e);
+	public static final Field FSIOINPUTMODES4 = Field.create("FSIOINPUTMODES4", 1519, FieldType.INT8, pin_input_mode_e);
+	public static final Field FSIOINPUTMODES5 = Field.create("FSIOINPUTMODES5", 1520, FieldType.INT8, pin_input_mode_e);
+	public static final Field FSIOINPUTMODES6 = Field.create("FSIOINPUTMODES6", 1521, FieldType.INT8, pin_input_mode_e);
+	public static final Field FSIOINPUTMODES7 = Field.create("FSIOINPUTMODES7", 1522, FieldType.INT8, pin_input_mode_e);
+	public static final Field FSIOINPUTMODES8 = Field.create("FSIOINPUTMODES8", 1523, FieldType.INT8, pin_input_mode_e);
+	public static final Field FSIOINPUTMODES9 = Field.create("FSIOINPUTMODES9", 1524, FieldType.INT8, pin_input_mode_e);
+	public static final Field FSIOINPUTMODES10 = Field.create("FSIOINPUTMODES10", 1525, FieldType.INT8, pin_input_mode_e);
+	public static final Field FSIOINPUTMODES11 = Field.create("FSIOINPUTMODES11", 1526, FieldType.INT8, pin_input_mode_e);
+	public static final Field FSIOINPUTMODES12 = Field.create("FSIOINPUTMODES12", 1527, FieldType.INT8, pin_input_mode_e);
+	public static final Field FSIOINPUTMODES13 = Field.create("FSIOINPUTMODES13", 1528, FieldType.INT8, pin_input_mode_e);
+	public static final Field FSIOINPUTMODES14 = Field.create("FSIOINPUTMODES14", 1529, FieldType.INT8, pin_input_mode_e);
+	public static final Field FSIOINPUTMODES15 = Field.create("FSIOINPUTMODES15", 1530, FieldType.INT8, pin_input_mode_e);
+	public static final Field FSIOINPUTMODES16 = Field.create("FSIOINPUTMODES16", 1531, FieldType.INT8, pin_input_mode_e);
 	public static final Field IDLESTEPPERTOTALSTEPS = Field.create("IDLESTEPPERTOTALSTEPS", 1532, FieldType.INT);
 	public static final Field NOACCELAFTERHARDLIMITPERIODSECS = Field.create("NOACCELAFTERHARDLIMITPERIODSECS", 1536, FieldType.FLOAT);
 	public static final Field MAPAVERAGINGSCHEDULINGATINDEX = Field.create("MAPAVERAGINGSCHEDULINGATINDEX", 1540, FieldType.INT);
@@ -2181,7 +2183,7 @@ public class Fields {
 	public static final Field TPS2MIN = Field.create("TPS2MIN", 1768, FieldType.INT16);
 	public static final Field TPS2MAX = Field.create("TPS2MAX", 1770, FieldType.INT16);
 	public static final Field STARTERCONTROLPIN = Field.create("STARTERCONTROLPIN", 1772, FieldType.INT8, output_pin_e);
-	public static final Field STARTSTOPBUTTONMODE = Field.create("STARTSTOPBUTTONMODE", 1773, FieldType.INT8);
+	public static final Field STARTSTOPBUTTONMODE = Field.create("STARTSTOPBUTTONMODE", 1773, FieldType.INT8, pin_input_mode_e);
 	public static final Field MC33816_FLAG0 = Field.create("MC33816_FLAG0", 1774, FieldType.INT8, brain_pin_e);
 	public static final Field TACHPULSEPERREV = Field.create("TACHPULSEPERREV", 1775, FieldType.INT8);
 	public static final Field MAPERRORDETECTIONTOOLOW = Field.create("MAPERRORDETECTIONTOOLOW", 1776, FieldType.FLOAT);
@@ -2360,7 +2362,7 @@ public class Fields {
 	public static final Field BRAKEPEDALPIN = Field.create("BRAKEPEDALPIN", 2608, FieldType.INT8, switch_input_pin_e);
 	public static final Field CJ125UA = Field.create("CJ125UA", 2609, FieldType.INT8, adc_channel_e);
 	public static final Field CJ125UR = Field.create("CJ125UR", 2610, FieldType.INT8, adc_channel_e);
-	public static final Field BRAKEPEDALPINMODE = Field.create("BRAKEPEDALPINMODE", 2611, FieldType.INT8);
+	public static final Field BRAKEPEDALPINMODE = Field.create("BRAKEPEDALPINMODE", 2611, FieldType.INT8, pin_input_mode_e);
 	public static final Field AUXPID1_PFACTOR = Field.create("AUXPID1_PFACTOR", 2612, FieldType.FLOAT);
 	public static final Field AUXPID1_IFACTOR = Field.create("AUXPID1_IFACTOR", 2616, FieldType.FLOAT);
 	public static final Field AUXPID1_DFACTOR = Field.create("AUXPID1_DFACTOR", 2620, FieldType.FLOAT);
