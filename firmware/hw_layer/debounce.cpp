@@ -5,7 +5,7 @@ ButtonDebounce::ButtonDebounce (int t, brain_pin_e p, pin_input_mode_e m) {
     timeLast = 0;
     pin = p;
 #ifdef PAL_MODE_INPUT_PULLDOWN
-    mode = (m == PI_PULLUP) ? PAL_MODE_INPUT_PULLUP : PAL_MODE_INPUT_PULLDOWN;
+    mode = getInputMode(m);
     efiSetPadMode("Button", p, mode);
 #endif
 }
