@@ -317,6 +317,7 @@ public class Backend implements Closeable {
                     .add(ControllerInfo.ENGINE_MAKE, controllerInfo.getEngineMake())
                     .add(ControllerInfo.ENGINE_CODE, controllerInfo.getEngineCode())
                     .add(SessionDetails.IMPLEMENTATION, sessionDetails.getImplementation().name())
+                    .add(SessionDetails.LOCAL_IP, sessionDetails.getLocalIpAddress())
                     .add(SessionDetails.CONNECTOR_VERSION, sessionDetails.getConsoleVersion());
             objectBuilder = addStreamStats(objectBuilder, client.getStream());
             if (owner != null) {

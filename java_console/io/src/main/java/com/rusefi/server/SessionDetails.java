@@ -4,6 +4,8 @@ import com.rusefi.proxy.NetworkConnector;
 import com.rusefi.tools.online.HttpUtil;
 import org.json.simple.JSONObject;
 
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.util.Objects;
 import java.util.Random;
 
@@ -16,6 +18,7 @@ public class SessionDetails {
     public static final String CONNECTOR_VERSION = "connectorVersion";
     public static final String IMPLEMENTATION = "implementation";
     public static final String AGE = "age";
+    public static final String LOCAL_IP = "local_ip";
 
     private static final String CONTROLLER = "controller";
     private static final String HARDCODED_ONE_TIME_CODE = System.getProperty("ONE_TIME_CODE");
@@ -26,15 +29,33 @@ public class SessionDetails {
     private final String authToken;
     private final NetworkConnector.Implementation implementation;
     private final int consoleVersion;
+    private final String localIpAddress;
 
     public SessionDetails(NetworkConnector.Implementation implementation, ControllerInfo controllerInfo, String authToken, int oneTimeCode, int consoleVersion) {
+        this(implementation, controllerInfo, authToken, oneTimeCode, consoleVersion, findLocalIpAddress());
+    }
+
+    private static String findLocalIpAddress() {
+        try {
+            return InetAddress.getLocalHost().getHostAddress();
+        } catch (UnknownHostException e) {
+            return "unknown";
+        }
+    }
+
+    public SessionDetails(NetworkConnector.Implementation implementation, ControllerInfo controllerInfo, String authToken, int oneTimeCode, int consoleVersion, String localIpAddress) {
         this.implementation = Objects.requireNonNull(implementation);
         this.consoleVersion = consoleVersion;
+        this.localIpAddress = localIpAddress;
         Objects.requireNonNull(controllerInfo);
         Objects.requireNonNull(authToken);
         this.controllerInfo = controllerInfo;
         this.vehicleToken = oneTimeCode;
         this.authToken = authToken;
+    }
+
+    public String getLocalIpAddress() {
+        return localIpAddress;
     }
 
     public static int createOneTimeCode() {
@@ -68,6 +89,7 @@ public class SessionDetails {
         jsonObject.put(AUTH_TOKEN, authToken);
         jsonObject.put(CONNECTOR_VERSION, consoleVersion);
         jsonObject.put(IMPLEMENTATION, implementation.name());
+        jsonObject.put(LOCAL_IP, localIpAddress);
         return jsonObject.toJSONString();
     }
 
@@ -77,11 +99,12 @@ public class SessionDetails {
         String authToken = (String) jsonObject.get(AUTH_TOKEN);
         long oneTimeCode = (Long) jsonObject.get(VEHICLE_TOKEN);
         long connectorVersion = (long) jsonObject.get(CONNECTOR_VERSION);
+        String localIp = (String) jsonObject.get(LOCAL_IP);
         NetworkConnector.Implementation implementation = NetworkConnector.Implementation.find((String) jsonObject.get(IMPLEMENTATION));
 
         ControllerInfo controllerInfo = ControllerInfo.valueOf((String) jsonObject.get(CONTROLLER));
 
-        return new SessionDetails(implementation, controllerInfo, authToken, (int) oneTimeCode, (int) connectorVersion);
+        return new SessionDetails(implementation, controllerInfo, authToken, (int) oneTimeCode, (int) connectorVersion, localIp);
     }
 
     @Override
