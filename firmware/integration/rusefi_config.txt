@@ -25,6 +25,13 @@
 ! each field is declared as
 ! type name;comment
 !
+!
+! Q: What is "@OFFSET@"?
+! A: That's a templace placeholder for field offset within the resuting data structure.
+!
+! Q: What is "[0:2]"?
+! A: That part of the bit declaration specified usage of three bits - from bit 0 to bit 2  
+!
 ! Q: how does 'custom' work?
 ! A: let's look at
 !  #define can_baudrate_e_enum "100kbps", "250kbps" , "500kbps", "1Mbps"
@@ -1295,7 +1302,7 @@ float[IGN_TPS_COUNT] ignitionTpsBins;;"TPS",   1,   0.0,        0,  100.0,   2
 
 float tChargeAirCoefMin;;"Min tCharge Coeff.",        1,     0,  0.0,    1.0,  4
 float tChargeAirCoefMax;;"Max tCharge Coeff.",        1,     0,  0.0,    1.0,  4
-float tChargeAirFlowMax;;"Max Air Flow, kg/h",        1,     0,  0.0,    1000.0,  1
+float tChargeAirFlowMax;;"Max Air Flow (kg/h)",        1,     0,  0.0,    1000.0,  1
 float tChargeAirIncrLimit;;"tChange Increment Limit, deg/sec",        1,     0,  0.0,    100.0,  1
 float tChargeAirDecrLimit;;"tChange Decrement Limit, deg/sec",        1,     0,  0.0,    100.0,  1
 
