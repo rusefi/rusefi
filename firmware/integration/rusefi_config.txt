@@ -881,7 +881,7 @@ custom maf_sensor_type_e 4 bits, S32, @OFFSET@, [0:1], @@maf_sensor_type_e_enum@
 	bit enableSoftwareKnock
 	bit verboseVVTDecoding;enable vvt_details
 	bit invertCamVVTSignal;get invertCamVVTSignal
-	bit unusedBit_251_15
+	bit consumeObdSensors;enable consumeObdSensors
 	bit unusedBit_251_16
 	bit unusedBit_251_17
 	bit unusedBit_251_18

@@ -18,6 +18,9 @@ enum class SensorType : unsigned char {
 	Invalid = 0,
 	Clt,
 	Iat,
+	Rpm,
+	Map,
+	Maf,
 
 	OilPressure,
 
