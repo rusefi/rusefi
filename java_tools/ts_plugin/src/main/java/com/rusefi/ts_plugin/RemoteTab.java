@@ -11,6 +11,7 @@ import com.rusefi.io.tcp.TcpIoStream;
 import com.rusefi.proxy.NetworkConnector;
 import com.rusefi.proxy.client.LocalApplicationProxy;
 import com.rusefi.proxy.client.LocalApplicationProxyContextImpl;
+import com.rusefi.proxy.client.UpdateType;
 import com.rusefi.rusEFIVersion;
 import com.rusefi.server.ApplicationRequest;
 import com.rusefi.server.ControllerInfo;
@@ -168,7 +169,7 @@ public class RemoteTab {
         topLine.add(new JLabel(publicSession.getVehicleOwner().getUserName()));
         topLine.add(new JLabel(controllerInfo.getVehicleName() + " " + controllerInfo.getEngineMake() + " " + controllerInfo.getEngineCode()));
 
-        JPanel bottomPanel = new JPanel(new FlowLayout());
+        JPanel bottomPanel = new JPanel(new VerticalFlowLayout());
 
         if (publicSession.isUsed()) {
             bottomPanel.add(new JLabel(" Used by " + publicSession.getTunerName()));
@@ -185,17 +186,19 @@ public class RemoteTab {
                     updateSoftware.addActionListener(new AbstractAction() {
                         @Override
                         public void actionPerformed(ActionEvent e) {
-                            try {
-                                LocalApplicationProxy.requestSoftwareUpdate(HttpUtil.PROXY_JSON_API_HTTP_PORT,
-                                        getApplicationRequest(publicSession));
-                                updateSoftware.setText("Update requested");
-                            } catch (IOException ioException) {
-                                ioException.printStackTrace();
-                            }
+                            requestUpdate(publicSession, updateSoftware, UpdateType.CONTROLLER);
                         }
                     });
                     bottomPanel.add(updateSoftware);
                 }
+
+                JButton updateFirmware = new JButton("Update ECU firmware");
+                updateFirmware.addActionListener(new AbstractAction() {
+                    @Override
+                    public void actionPerformed(ActionEvent e) {
+                        requestUpdate(publicSession, updateFirmware, UpdateType.FIRMWARE);
+                    }
+                });
             }
         }
 
@@ -212,6 +215,16 @@ public class RemoteTab {
         userPanel.setBorder(BorderFactory.createLineBorder(Color.BLACK));
 
         return userPanel;
+    }
+
+    private void requestUpdate(PublicSession publicSession, JButton updateSoftware, UpdateType type) {
+        try {
+            LocalApplicationProxy.requestSoftwareUpdate(HttpUtil.PROXY_JSON_API_HTTP_PORT,
+                    getApplicationRequest(publicSession), type);
+            updateSoftware.setText("Update requested");
+        } catch (IOException ioException) {
+            ioException.printStackTrace();
+        }
     }
 
     @NotNull
