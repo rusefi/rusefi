@@ -56,7 +56,8 @@ public class ProxyClient {
                 boolean isUsed = (Boolean) element.get(IS_USED);
                 String ownerName = (String) element.get(OWNER);
                 String age = (String) element.get(SessionDetails.AGE);
-                userLists.add(new PublicSession(vehicleOwner, ci, isUsed, ownerName, age));
+                String implementation = (String) element.get(SessionDetails.IMPLEMENTATION);
+                userLists.add(new PublicSession(vehicleOwner, ci, isUsed, ownerName, age, implementation));
             }
 
             System.out.println("object=" + array);

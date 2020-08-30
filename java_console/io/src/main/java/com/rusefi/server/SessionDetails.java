@@ -77,7 +77,6 @@ public class SessionDetails {
         String authToken = (String) jsonObject.get(AUTH_TOKEN);
         long oneTimeCode = (Long) jsonObject.get(VEHICLE_TOKEN);
         long connectorVersion = (long) jsonObject.get(CONNECTOR_VERSION);
-        String age = (String) jsonObject.get(AGE);
         NetworkConnector.Implementation implementation = NetworkConnector.Implementation.find((String) jsonObject.get(IMPLEMENTATION));
 
         ControllerInfo controllerInfo = ControllerInfo.valueOf((String) jsonObject.get(CONTROLLER));
