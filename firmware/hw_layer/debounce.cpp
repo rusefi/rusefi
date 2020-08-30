@@ -24,5 +24,5 @@ bool ButtonDebounce::readPinEvent() {
         return !readValue;
     }
 #endif
-    return !readValue;
+    return readValue;
 }
