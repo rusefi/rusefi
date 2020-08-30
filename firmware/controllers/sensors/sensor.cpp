@@ -51,6 +51,9 @@ static const char* s_sensorNames[] = {
 	"Invalid",
 	"CLT",
 	"IAT",
+	"RPM",
+	"MAP",
+	"MAF",
 
 	"Oil Pressure",
 
