@@ -173,35 +173,37 @@ public class RemoteTab {
         if (publicSession.isUsed()) {
             bottomPanel.add(new JLabel(" Used by " + publicSession.getTunerName()));
         } else {
-            JButton connect = new JButton("Connect to " + publicSession.getVehicleOwner().getUserName());
+            JButton connect = new JButton("Connect to " + publicSession.getVehicleOwner().getUserName() + " ECU");
             connect.addActionListener(event -> connectToProxy(publicSession));
             bottomPanel.add(connect);
 
             if (InstanceAuthContext.isOurController(publicSession.getVehicleOwner().getUserId())) {
-                JButton updateSoftware = new JButton("Update Connector");
-                updateSoftware.addActionListener(new AbstractAction() {
-                    @Override
-                    public void actionPerformed(ActionEvent e) {
-                        try {
-                            LocalApplicationProxy.requestSoftwareUpdate(HttpUtil.PROXY_JSON_API_HTTP_PORT,
-                                    getApplicationRequest(publicSession));
-                        } catch (IOException ioException) {
-                            ioException.printStackTrace();
-                        }
-                    }
-                });
-                bottomPanel.add(updateSoftware);
-            }
 
+                if (publicSession.getImplementation().equals(NetworkConnector.Implementation.SBC.name())) {
+
+                    JButton updateSoftware = new JButton("Update Remote Connector Software");
+                    updateSoftware.addActionListener(new AbstractAction() {
+                        @Override
+                        public void actionPerformed(ActionEvent e) {
+                            try {
+                                LocalApplicationProxy.requestSoftwareUpdate(HttpUtil.PROXY_JSON_API_HTTP_PORT,
+                                        getApplicationRequest(publicSession));
+                                updateSoftware.setText("Update requested");
+                            } catch (IOException ioException) {
+                                ioException.printStackTrace();
+                            }
+                        }
+                    });
+                    bottomPanel.add(updateSoftware);
+                }
+            }
         }
 
         JPanel userPanel = new JPanel(new BorderLayout());
 
-
         JPanel infoLine = new JPanel(new FlowLayout());
         infoLine.add(new JLabel("Age " + publicSession.getAge()));
         infoLine.add(getSignatureDownload(controllerInfo));
-
 
         userPanel.add(topLine, BorderLayout.NORTH);
         userPanel.add(infoLine, BorderLayout.CENTER);
