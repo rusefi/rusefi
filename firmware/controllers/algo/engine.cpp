@@ -233,8 +233,6 @@ void Engine::updateSlowSensors(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 
 	engineState.running.injectorLag = getInjectorLag(sensors.vBatt PASS_ENGINE_PARAMETER_SUFFIX);
 #endif
-
-	gearController->update();
 }
 
 void Engine::onTriggerSignalEvent(efitick_t nowNt) {
