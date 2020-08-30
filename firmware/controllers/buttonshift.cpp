@@ -45,7 +45,6 @@ void ButtonShiftController::update() {
                 break;
         }
     }
-setDesiredGear(GEAR_1);
     transmissionController.update(getDesiredGear());
     postState();
 }
@@ -53,5 +52,6 @@ setDesiredGear(GEAR_1);
 
 void initButtonShift(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
     buttonShiftController.init(PASS_ENGINE_PARAMETER_SIGNATURE);
+buttonShiftController.setDesiredGear(GEAR_1);
     engine->gearController = &buttonShiftController;
 }
