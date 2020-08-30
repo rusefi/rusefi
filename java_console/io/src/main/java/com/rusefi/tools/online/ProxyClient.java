@@ -21,7 +21,7 @@ public class ProxyClient {
     public static final String LIST_APPLICATIONS_PATH = "/list_applications";
     public static final String VERSION_PATH = "/version";
     public static final String UPDATE_CONNECTOR_SOFTWARE = "/update_connector_software";
-    public static final String BACKEND_VERSION = "0.0004";
+    public static final String BACKEND_VERSION = "0.0005";
     public static final String IS_USED = "isUsed";
     public static final String OWNER = "owner";
     /**
