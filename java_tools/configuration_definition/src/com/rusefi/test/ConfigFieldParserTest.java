@@ -6,6 +6,7 @@ import com.rusefi.TypesHelper;
 import com.rusefi.VariableRegistry;
 import com.rusefi.output.FsioSettingsConsumer;
 import com.rusefi.output.JavaFieldsConsumer;
+import com.rusefi.output.TSProjectConsumer;
 import org.junit.Test;
 
 import java.io.BufferedReader;
@@ -98,6 +99,26 @@ public class ConfigFieldParserTest {
         assertEquals("#define ERROR_BUFFER_COUNT 120\n" +
                 "#define ERROR_BUFFER_SIZE 120\n" +
                 "#define RESULT 14400\n", VariableRegistry.INSTANCE.getDefinesSection());
+    }
+    @Test
+    public void expressionInMultiplier() throws IOException {
+        String test = "struct pid_s\n" +
+                "\tint16_t periodMs;PID dTime;\"ms\",      {1/10},      0,       0, 3000,      0\n" +
+                "end_struct\n" +
+                "";
+
+        VariableRegistry.INSTANCE.clear();
+        BufferedReader reader = new BufferedReader(new StringReader(test));
+
+        CharArrayWriter writer = new CharArrayWriter();
+        ReaderState state = new ReaderState();
+        TSProjectConsumer javaFieldsConsumer = new TestTSProjectConsumer(writer, "", state);
+
+        state.readBufferedReader(reader, Collections.singletonList(javaFieldsConsumer));
+
+        assertEquals("\tperiodMs\t\t\t\t\t\t= scalar, S16,\t0,\t\"ms\", {1/10}, 0, 0, 3000, 0\n" +
+                "\talignmentFill_at_2\t\t\t\t= array, U08,\t2,\t[2],\t\"units\", 1, 0, -20, 100, 0\n" +
+                "; total TS size = 4\n", new String(writer.toCharArray()));
     }
 
     @Test
