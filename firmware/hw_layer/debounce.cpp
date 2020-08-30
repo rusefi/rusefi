@@ -17,7 +17,7 @@ bool ButtonDebounce::readPinEvent() {
     timeLast = timeNow;
     readValue = false;
     readValue = efiReadPin(pin);
-    if (mode != PI_PULLDOWN) {
+    if (mode != PAL_MODE_INPUT_PULLDOWN) {
         return !readValue;
     }
     return readValue;

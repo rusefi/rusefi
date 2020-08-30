@@ -6,9 +6,11 @@ EXTERN_ENGINE;
 ButtonShiftController buttonShiftController;
 
 void ButtonShiftController::init (DECLARE_ENGINE_PARAMETER_SIGNATURE) {
-    ButtonDebounce u = ButtonDebounce(10, CONFIG(tcuUpshiftButtonPin), CONFIG(tcuUpshiftButtonPinMode));
+    iomode_t um = (CONFIG(tcuUpshiftButtonPinMode)) == PI_PULLUP ? PAL_MODE_INPUT_PULLUP : PAL_MODE_INPUT_PULLDOWN
+    ButtonDebounce u = ButtonDebounce(10, CONFIG(tcuUpshiftButtonPin), um);
     debounceUp = &u;
-    ButtonDebounce d = ButtonDebounce(10, CONFIG(tcuDownshiftButtonPin), CONFIG(tcuDownshiftButtonPinMode));
+    iomode_t ud = (CONFIG(tcuDownshiftButtonPinMode)) == PI_PULLUP ? PAL_MODE_INPUT_PULLUP : PAL_MODE_INPUT_PULLDOWN
+    ButtonDebounce d = ButtonDebounce(10, CONFIG(tcuDownshiftButtonPin), ud);
     debounceDown = &d;
 }
 
