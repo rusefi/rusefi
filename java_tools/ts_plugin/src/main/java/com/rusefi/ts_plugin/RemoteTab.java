@@ -199,6 +199,7 @@ public class RemoteTab {
                         requestUpdate(publicSession, updateFirmware, UpdateType.FIRMWARE);
                     }
                 });
+                bottomPanel.add(updateFirmware);
             }
         }
 
