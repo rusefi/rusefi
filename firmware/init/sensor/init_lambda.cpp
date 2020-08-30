@@ -8,12 +8,24 @@
 
 EXTERN_ENGINE;
 
+struct GetAfrWrapper {
+	DECLARE_ENGINE_PTR;
+
+	float getLambda() {
+		return getAfr(PASS_ENGINE_PARAMETER_SIGNATURE) / 14.7f;
+	}
+};
+
+static GetAfrWrapper afrWrapper;
+
 static FunctionPointerSensor lambdaSensor(SensorType::Lambda,
 []() {
-	return getAfr(PASS_ENGINE_PARAMETER_SIGNATURE) / 14.7f;
+	return afrWrapper.getLambda();
 });
 
 void init_lambda(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+	INJECT_ENGINE_REFERENCE(&afrWrapper);
+
 	if (!lambdaSensor.Register()) {
 		warning(OBD_PCM_Processor_Fault, "Duplicate lambda sensor registration, ignoring");
 	}
