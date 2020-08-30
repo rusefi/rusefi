@@ -11,9 +11,11 @@
 /**
  **************************************
  * SEE sensor.h ON HOW TO ADD NEW SENSOR TYPES
+ * While changing SensorType make sure to change s_sensorNames
+ * TODO: SensorType to s_sensorNames mapping has to be done by code generation! We already have relevant tools
+ * maybe we just need a better naming convention?
  **************************************
  */
-
 enum class SensorType : unsigned char {
 	Invalid = 0,
 	Clt,
