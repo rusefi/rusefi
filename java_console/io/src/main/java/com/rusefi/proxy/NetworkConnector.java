@@ -136,7 +136,7 @@ public class NetworkConnector implements Closeable {
                     if (connectorCommand == NetworkConnector.UPDATE_CONNECTOR_SOFTWARE) {
                         context.onConnectorSoftwareUpdateRequest();
                     } else if (connectorCommand == NetworkConnector.UPDATE_FIRMWARE) {
-
+                        context.onFirmwareUpdateRequest();
                     }
                     return;
                 }
