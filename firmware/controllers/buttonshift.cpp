@@ -53,6 +53,5 @@ setDesiredGear(GEAR_1);
 
 void initButtonShift(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
     buttonShiftController.init(PASS_ENGINE_PARAMETER_SIGNATURE);
-buttonShiftController.update();
     engine->gearController = &buttonShiftController;
 }
