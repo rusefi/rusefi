@@ -116,7 +116,7 @@ public class ConfigFieldParserTest {
 
         state.readBufferedReader(reader, Collections.singletonList(javaFieldsConsumer));
 
-        assertEquals("\tperiodMs\t\t\t\t\t\t= scalar, S16,\t0,\t\"ms\", {1/10}, 0, 0, 3000, 0\n" +
+        assertEquals("\tperiodMs\t\t\t\t\t\t= scalar, S16,\t0,\t\"ms\", 0.1, 0, 0, 3000, 0\n" +
                 "\talignmentFill_at_2\t\t\t\t= array, U08,\t2,\t[2],\t\"units\", 1, 0, -20, 100, 0\n" +
                 "; total TS size = 4\n", new String(writer.toCharArray()));
     }
