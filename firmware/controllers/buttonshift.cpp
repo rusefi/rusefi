@@ -45,7 +45,6 @@ void ButtonShiftController::update() {
                 break;
         }
     }
-setDesiredGear(GEAR_1);
     transmissionController.update(getDesiredGear());
     postState();
 }
