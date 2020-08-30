@@ -9,7 +9,6 @@ import com.rusefi.io.IoStream;
 import com.rusefi.io.commands.GetOutputsCommand;
 import com.rusefi.io.commands.HelloCommand;
 import com.rusefi.io.tcp.TcpIoStream;
-import com.rusefi.proxy.NetworkConnector;
 import com.rusefi.shared.FileUtil;
 import org.jetbrains.annotations.NotNull;
 
@@ -148,10 +147,10 @@ public class ControllerConnectionState {
         }
     }
 
-    public void requestConnectorSoftwareUpdate() throws IOException {
+    public void invokeOnlineCommand(byte command) throws IOException {
         byte[] packet = new byte[2];
         packet[0] = Fields.TS_ONLINE_PROTOCOL;
-        packet[1] = NetworkConnector.UPDATE_CONNECTOR_SOFTWARE;
+        packet[1] = command;
         stream.sendPacket(packet);
     }
 }

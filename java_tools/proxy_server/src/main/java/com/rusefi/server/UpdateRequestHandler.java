@@ -1,6 +1,8 @@
 package com.rusefi.server;
 
 import com.devexperts.logging.Logging;
+import com.rusefi.proxy.NetworkConnector;
+import com.rusefi.proxy.client.UpdateType;
 import com.rusefi.tools.online.ProxyClient;
 import org.takes.Request;
 import org.takes.Response;
@@ -32,11 +34,13 @@ public class UpdateRequestHandler implements Take {
             RqForm rqForm = new RqFormBase(req);
 
             String json = rqForm.param(ProxyClient.JSON).iterator().next();
+            String type = rqForm.param(ProxyClient.UPDATE_TYPE).iterator().next();
 
             ApplicationRequest applicationRequest = ApplicationRequest.valueOf(json);
             UserDetails tuner = backend.getUserDetailsResolver().apply(applicationRequest.getSessionDetails().getAuthToken());
 
             ControllerKey key = new ControllerKey(applicationRequest.getVehicleOwner().getUserId(), applicationRequest.getSessionDetails().getControllerInfo());
+            log.info("Online Request for " + key + ": " + type);
 
             ControllerConnectionState state = backend.acquire(key, tuner);
             if (state == null)
@@ -45,7 +49,11 @@ public class UpdateRequestHandler implements Take {
             // should controller communication happen on http thread or not?
             new Thread(() -> {
                 try {
-                    state.requestConnectorSoftwareUpdate();
+                    if (type.equals(UpdateType.FIRMWARE.name())) {
+                        state.invokeOnlineCommand(NetworkConnector.UPDATE_FIRMWARE);
+                    } else {
+                        state.invokeOnlineCommand(NetworkConnector.UPDATE_CONNECTOR_SOFTWARE);
+                    }
                 } catch (IOException e) {
                     throw new IllegalStateException(e);
                 } finally {

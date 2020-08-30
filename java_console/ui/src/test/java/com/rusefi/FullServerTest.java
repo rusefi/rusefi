@@ -13,6 +13,7 @@ import com.rusefi.proxy.NetworkConnector;
 import com.rusefi.proxy.NetworkConnectorContext;
 import com.rusefi.proxy.client.LocalApplicationProxy;
 import com.rusefi.proxy.client.LocalApplicationProxyContext;
+import com.rusefi.proxy.client.UpdateType;
 import com.rusefi.server.*;
 import com.rusefi.tools.online.HttpUtil;
 import org.apache.http.HttpResponse;
@@ -157,7 +158,7 @@ public class FullServerTest {
             assertEquals("applications size", 0, backend.getApplications().size());
 
 
-            HttpResponse response = LocalApplicationProxy.requestSoftwareUpdate(httpPort, applicationRequest);
+            HttpResponse response = LocalApplicationProxy.requestSoftwareUpdate(httpPort, applicationRequest, UpdateType.CONTROLLER);
             log.info(response.toString());
 
             assertTrue("update requested", softwareUpdateRequest.await(3 * applicationTimeout, TimeUnit.MILLISECONDS));

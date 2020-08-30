@@ -49,11 +49,12 @@ public class LocalApplicationProxy implements Closeable {
         this.authenticatorToProxyStream = authenticatorToProxyStream;
     }
 
-    public static HttpResponse requestSoftwareUpdate(int httpPort, ApplicationRequest applicationRequest) throws IOException {
+    public static HttpResponse requestSoftwareUpdate(int httpPort, ApplicationRequest applicationRequest, UpdateType type) throws IOException {
         HttpPost httpPost = new HttpPost(ProxyClient.getHttpAddress(httpPort) + ProxyClient.UPDATE_CONNECTOR_SOFTWARE);
 
         List<NameValuePair> form = new ArrayList<>();
         form.add(new BasicNameValuePair(ProxyClient.JSON, applicationRequest.toJson()));
+        form.add(new BasicNameValuePair(ProxyClient.UPDATE_TYPE, type.name()));
         UrlEncodedFormEntity entity = new UrlEncodedFormEntity(form, Consts.UTF_8);
 
         httpPost.setEntity(entity);

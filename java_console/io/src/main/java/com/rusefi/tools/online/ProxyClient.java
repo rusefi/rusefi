@@ -21,7 +21,7 @@ public class ProxyClient {
     public static final String LIST_APPLICATIONS_PATH = "/list_applications";
     public static final String VERSION_PATH = "/version";
     public static final String UPDATE_CONNECTOR_SOFTWARE = "/update_connector_software";
-    public static final String BACKEND_VERSION = "0.0002";
+    public static final String BACKEND_VERSION = "0.0003";
     public static final String IS_USED = "isUsed";
     public static final String OWNER = "owner";
     /**
@@ -30,6 +30,7 @@ public class ProxyClient {
      */
     public static final int SERVER_PORT_FOR_CONTROLLERS = getIntProperty("controllers.port", 8003);
     public static final String JSON = "json";
+    public static final String UPDATE_TYPE = "type";
 
     public static List<PublicSession> getOnlineApplications(int httpPort) throws IOException {
         return getOnlineApplications(getHttpAddress(httpPort) + LIST_CONTROLLERS_PATH);
