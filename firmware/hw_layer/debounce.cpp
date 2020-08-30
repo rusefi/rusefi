@@ -1,12 +1,12 @@
 #include "debounce.h"
 #include "io_pins.h"
 
-ButtonDebounce::ButtonDebounce (int t, brain_pin_e p, iomode_t m) {
+ButtonDebounce::ButtonDebounce (int t, brain_pin_e p, pin_input_mode_e m) {
     threshold = t;
     timeLast = 0;
     pin = p;
-    mode = m;
-    efiSetPadMode("Button", p, m);
+    mode = (m == PI_PULLUP) ? PAL_MODE_INPUT_PULLUP : PAL_MODE_INPUT_PULLDOWN;
+    efiSetPadMode("Button", p, mode);
 }
 
 bool ButtonDebounce::readPinEvent() {
