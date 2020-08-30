@@ -7,7 +7,6 @@ import com.rusefi.util.Output;
 import com.rusefi.util.SystemOut;
 
 import java.io.*;
-import java.util.Arrays;
 
 import static com.rusefi.util.IoUtils.CHARSET;
 import static com.rusefi.ConfigDefinition.EOL;
@@ -62,6 +61,9 @@ public class TSProjectConsumer implements ConfigurationConsumer {
 
         if (configField.getState().tsCustomLine.containsKey(configField.getType())) {
             String bits = configField.getState().tsCustomLine.get(configField.getType());
+            if (!bits.startsWith("bits")) {
+                bits = handleTsInfo(bits, 5);
+            }
 
             tsHeader.write("\t" + addTabsUpTo(nameWithPrefix, LENGTH));
             int size = configField.getState().tsCustomSize.get(configField.getType());
@@ -78,37 +80,41 @@ public class TSProjectConsumer implements ConfigurationConsumer {
             tsHeader.write(TypesHelper.convertToTs(configField.getType()) + ",");
             tsHeader.write("\t" + tsPosition + ",");
             tsHeader.write("\t[" + configField.getArraySize() + "],");
-            tsHeader.write("\t" + configField.getTsInfo());
+            tsHeader.write("\t" + handleTsInfo(configField.getTsInfo(), 1));
 
             tsPosition += configField.getArraySize() * configField.getElementSize();
         } else {
             tsHeader.write("\t" + addTabsUpTo(nameWithPrefix, LENGTH) + "\t\t= scalar, ");
             tsHeader.write(TypesHelper.convertToTs(configField.getType()) + ",");
             tsHeader.write("\t" + tsPosition + ",");
-            tsHeader.write("\t" + handleTsInfo(configField.getTsInfo()));
+            tsHeader.write("\t" + handleTsInfo(configField.getTsInfo(), 1));
             tsPosition += configField.getArraySize() * configField.getElementSize();
         }
         tsHeader.write(EOL);
         return tsPosition;
     }
 
-    private static String handleTsInfo(String tsInfo) {
-        String[] fields = tsInfo.split("\\,");
-        if (fields.length > 1) {
-            /**
-             * Evaluate static math on .ini layer to simplify rusEFI java and rusEFI PHP project consumers
-             * https://github.com/rusefi/web_backend/issues/97
-             */
-            fields[1] = " " + IniField.parseDouble(fields[1]);
-        }
-        StringBuilder sb = new StringBuilder();
-        for (String f : fields) {
-            if (sb.length() > 0) {
-                sb.append(",");
+    private static String handleTsInfo(String tsInfo, int mutliplierIndex) {
+        try {
+            String[] fields = tsInfo.split("\\,");
+            if (fields.length > mutliplierIndex) {
+                /**
+                 * Evaluate static math on .ini layer to simplify rusEFI java and rusEFI PHP project consumers
+                 * https://github.com/rusefi/web_backend/issues/97
+                 */
+                fields[mutliplierIndex] = " " + IniField.parseDouble(fields[mutliplierIndex]);
             }
-            sb.append(f);
+            StringBuilder sb = new StringBuilder();
+            for (String f : fields) {
+                if (sb.length() > 0) {
+                    sb.append(",");
+                }
+                sb.append(f);
+            }
+            return sb.toString();
+        } catch (Throwable e) {
+            throw new IllegalStateException("While parsing " + tsInfo, e);
         }
-        return sb.toString();
     }
 
     private int writeTunerStudio(ConfigStructure configStructure, String prefix, Writer tsHeader, int tsPosition) throws IOException {

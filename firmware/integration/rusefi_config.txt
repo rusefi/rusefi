@@ -1303,8 +1303,8 @@ float[IGN_TPS_COUNT] ignitionTpsBins;;"TPS",   1,   0.0,        0,  100.0,   2
 float tChargeAirCoefMin;;"Min tCharge Coeff.",        1,     0,  0.0,    1.0,  4
 float tChargeAirCoefMax;;"Max tCharge Coeff.",        1,     0,  0.0,    1.0,  4
 float tChargeAirFlowMax;;"Max Air Flow (kg/h)",        1,     0,  0.0,    1000.0,  1
-float tChargeAirIncrLimit;;"tChange Increment Limit, deg/sec",        1,     0,  0.0,    100.0,  1
-float tChargeAirDecrLimit;;"tChange Decrement Limit, deg/sec",        1,     0,  0.0,    100.0,  1
+float tChargeAirIncrLimit;;"tChange Increment Limit (deg/sec)",        1,     0,  0.0,    100.0,  1
+float tChargeAirDecrLimit;;"tChange Decrement Limit (deg/sec)",        1,     0,  0.0,    100.0,  1
 
 #define tChargeMode_e_enum "RPM+TPS (Default)", "Air Mass Interpolation"
 custom tChargeMode_e 4 bits,    U32,   @OFFSET@, [0:0], @@tChargeMode_e_enum@@
@@ -1405,7 +1405,7 @@ float[CLT_CRANKING_CURVE_SIZE] cltCrankingCorr    ;CLT-based cranking position m
 float[IDLE_ADVANCE_CURVE_SIZE] idleAdvanceBins;Optional timing advance table for Idle (see useSeparateAdvanceForIdle);"RPM",      1,     0,   0.0,    18000,   2
 float[IDLE_ADVANCE_CURVE_SIZE] idleAdvance    ;Optional timing advance table for Idle (see useSeparateAdvanceForIdle);"deg",      1,     0,     -20, 90,    2
 float[IDLE_VE_CURVE_SIZE] idleVeBins;Optional VE table for Idle (see useSeparateVEForIdle);"RPM",      1,     0,   0.0,    18000,   2
-float[IDLE_VE_CURVE_SIZE] idleVe;    Optional VE table for Idle (see useSeparateVEForIdle);,"%", 1, 0, 0, 999.0, 2
+float[IDLE_VE_CURVE_SIZE] idleVe;    Optional VE table for Idle (see useSeparateVEForIdle);"%", 1, 0, 0, 999.0, 2
 
 le_formula_t[FSIO_COMMAND_COUNT iterate] fsioFormulas;
 	le_formula_t timingMultiplier;
