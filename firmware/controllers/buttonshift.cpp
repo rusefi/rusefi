@@ -16,14 +16,13 @@ void ButtonShiftController::update() {
 //    bool upPinState = false;
 //    bool downPinState = false;
     if (CONFIG(tcuUpshiftButtonPin) && CONFIG(tcuEnabled)) {
-//        upPinState = debounceUp->readPinEvent();
-setDesiredGear(GEAR_1);
+        upPinState = debounceUp->readPinEvent();
     }
     if (CONFIG(tcuDownshiftButtonPin) && CONFIG(tcuEnabled)) {
 //        downPinState = debounceDown->readPinEvent();
     }
     gear_e gear = getDesiredGear();
-/*    if (upPinState) {
+    if (upPinState) {
         switch (gear) {
             case GEAR_1:
                 setDesiredGear(GEAR_2);
@@ -37,7 +36,7 @@ setDesiredGear(GEAR_1);
             default:
                 break;
         }
-    } else if (downPinState) {
+    } /*else if (downPinState) {
         switch (gear) {
             case GEAR_2:
                 setDesiredGear(GEAR_1);
