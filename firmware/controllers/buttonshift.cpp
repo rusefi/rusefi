@@ -26,7 +26,7 @@ void ButtonShiftController::update() {
     if (upPinState) {
         switch (gear) {
             case REVERSE:
-                setDesiredGer(NEUTRAL);
+                setDesiredGear(NEUTRAL);
             case NEUTRAL:
                 setDesiredGear(GEAR_1);
             case GEAR_1:
