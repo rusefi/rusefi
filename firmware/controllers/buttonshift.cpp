@@ -13,14 +13,13 @@ void ButtonShiftController::init (DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 }
 
 void ButtonShiftController::update() {
-    bool upPinState = true;
-//    bool downPinState = false;
+    bool upPinState = false;
+    bool downPinState = false;
     if (CONFIG(tcuUpshiftButtonPin) && CONFIG(tcuEnabled)) {
-//        upPinState = debounceUp->readPinEvent();
-//        upPinState = true;
+        upPinState = debounceUp->readPinEvent();
     }
     if (CONFIG(tcuDownshiftButtonPin) && CONFIG(tcuEnabled)) {
-//        downPinState = debounceDown->readPinEvent();
+        downPinState = debounceDown->readPinEvent();
     }
     gear_e gear = getDesiredGear();
     if (upPinState) {
@@ -43,8 +42,14 @@ void ButtonShiftController::update() {
             default:
                 break;
         }
-    } /*else if (downPinState) {
+    } else if (downPinState) {
         switch (gear) {
+            case NEUTRAL:
+                setDesiredGear(REVERSE);
+                break;
+            case GEAR_1:
+                setDesiredGear(NEUTRAL);
+                break;
             case GEAR_2:
                 setDesiredGear(GEAR_1);
                 break;
@@ -57,7 +62,7 @@ void ButtonShiftController::update() {
             default:
                 break;
         }
-    }*/
+    }
     transmissionController.update(getDesiredGear());
     postState();
 }
