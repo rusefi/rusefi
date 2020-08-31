@@ -57,7 +57,9 @@ void startKnockSampling(uint8_t cylinderIndex) {
 		return;
 	}
 
-	if (engine->rpmCalculator.getRpm() < 500) return;
+	if (!engine->rpmCalculator.isRunning()) {
+		return;
+	}
 
 	// Cancel if ADC isn't ready
 	if (!((KNOCK_ADC.state == ADC_READY) ||
