@@ -1,5 +1,6 @@
 package com.rusefi.ui;
 
+import com.devexperts.logging.Logging;
 import com.rusefi.auth.AuthTokenUtil;
 import com.rusefi.ui.storage.PersistentConfiguration;
 import com.rusefi.ui.util.URLLabel;
@@ -16,6 +17,7 @@ import java.io.IOException;
 import static com.rusefi.ui.storage.PersistentConfiguration.getConfig;
 
 public class AuthTokenPanel {
+    private final static Logging log = Logging.getLogging(AuthTokenPanel.class);
 
     private final JPanel content = new JPanel(new BorderLayout());
     private final JTextField authTokenTestField = new JTextField();
@@ -105,18 +107,18 @@ public class AuthTokenPanel {
             String data = (String) clipboard.getData(DataFlavor.stringFlavor);
             paste.setEnabled(AuthTokenUtil.isToken(data));
         } catch (IOException | IllegalStateException | UnsupportedFlavorException ex) {
-            // ignoring this exception
+            log.info("Ignoring " + ex);
         }
     }
 
-    private void grabText() {
+    private void persistToken() {
         setAuthToken(AuthTokenPanel.this.authTokenTestField.getText());
         PersistentConfiguration.getConfig().save();
     }
 
     private void onTextChange() {
         if (AuthTokenUtil.isToken(authTokenTestField.getText())) {
-            grabText();
+            persistToken();
         }
     }
 

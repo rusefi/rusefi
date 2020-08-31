@@ -87,6 +87,10 @@ void addTriggerEventListener(ShaftPositionListener listener, const char *name, E
 
 #define miataNbIndex (0)
 
+static bool vvtWithRealDecoder(vvt_mode_e vvtMode) {
+	return vvtMode == MIATA_NB2 || vvtMode == VVT_BOSCH_QUICK_START;
+}
+
 void hwHandleVvtCamSignal(trigger_value_e front, efitick_t nowNt DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	TriggerCentral *tc = &engine->triggerCentral;
 	if (front == TV_RISE) {
@@ -108,7 +112,8 @@ void hwHandleVvtCamSignal(trigger_value_e front, efitick_t nowNt DECLARE_ENGINE_
 	}
 
 
-	if (CONFIG(vvtCamSensorUseRise) ^ (front != TV_FALL)) {
+	if (!vvtWithRealDecoder(engineConfiguration->vvtMode) && (CONFIG(vvtCamSensorUseRise) ^ (front != TV_FALL))) {
+		// todo: there should be a way to always use real trigger code for this logic?
 		return;
 	}
 

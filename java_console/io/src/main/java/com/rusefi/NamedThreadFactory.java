@@ -8,7 +8,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 public class NamedThreadFactory implements ThreadFactory {
     private final AtomicInteger counter = new AtomicInteger();
-    private String name;
+    private final String name;
     private final boolean isDaemon;
 
     public NamedThreadFactory(String name) {
@@ -19,7 +19,6 @@ public class NamedThreadFactory implements ThreadFactory {
         this.name = name;
         this.isDaemon = isDaemon;
     }
-
 
     @Override
     public Thread newThread(@NotNull Runnable r) {

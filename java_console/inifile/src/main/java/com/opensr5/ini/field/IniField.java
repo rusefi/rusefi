@@ -12,6 +12,17 @@ public abstract class IniField {
         this.offset = offset;
     }
 
+    public static double parseDouble(String s) {
+        // todo: real implementation
+        s = s.replaceAll("\\{", "").replaceAll("\\}", "");
+        int dividerIndex = s.indexOf('/');
+        if (dividerIndex != -1) {
+            return Double.parseDouble(s.substring(0, dividerIndex)) / Double.parseDouble(s.substring(dividerIndex + 1));
+        } else {
+            return Double.parseDouble(s);
+        }
+    }
+
     public String getName() {
         return name;
     }

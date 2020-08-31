@@ -38,7 +38,7 @@ static void vvtRisingCallback(void *) {
 		LogTriggerTooth(SHAFT_SECONDARY_RISING, now);
 	}
 #endif /* EFI_TOOTH_LOGGER */
-	hwHandleVvtCamSignal(TV_RISE, now);
+	hwHandleVvtCamSignal(engineConfiguration->invertCamVVTSignal ? TV_FALL : TV_RISE, now);
 }
 
 static void vvtFallingCallback(void *) {
@@ -51,7 +51,7 @@ static void vvtFallingCallback(void *) {
 		LogTriggerTooth(SHAFT_SECONDARY_FALLING, now);
 	}
 #endif /* EFI_TOOTH_LOGGER */
-	hwHandleVvtCamSignal(TV_FALL, now);
+	hwHandleVvtCamSignal(engineConfiguration->invertCamVVTSignal ? TV_RISE : TV_FALL, now);
 }
 
 /**

@@ -301,6 +301,10 @@ bool PrimaryTriggerConfiguration::isSilentTriggerError() const {
 	return engine->engineConfigurationPtr->silentTriggerError;
 }
 
+const char * PrimaryTriggerConfiguration::getPrintPrefix() const {
+	return "TRG ";
+}
+
 bool PrimaryTriggerConfiguration::isVerboseTriggerSynchDetails() const {
 	return engine->engineConfigurationPtr->verboseTriggerSynchDetails;
 }
@@ -311,6 +315,10 @@ VvtTriggerConfiguration::VvtTriggerConfiguration(Engine *engine) {
 
 bool VvtTriggerConfiguration::isUseOnlyRisingEdgeForTrigger() const {
 	return engine->engineConfigurationPtr->vvtCamSensorUseRise;
+}
+
+const char * VvtTriggerConfiguration::getPrintPrefix() const {
+	return "VVT ";
 }
 
 debug_mode_e VvtTriggerConfiguration::getDebugMode() const {
@@ -326,5 +334,5 @@ bool VvtTriggerConfiguration::isSilentTriggerError() const {
 }
 
 bool VvtTriggerConfiguration::isVerboseTriggerSynchDetails() const {
-	return engine->engineConfigurationPtr->verboseTriggerSynchDetails;
+	return engine->engineConfigurationPtr->verboseVVTDecoding;
 }
