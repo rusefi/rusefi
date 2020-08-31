@@ -15,8 +15,11 @@
 #include "can_hw.h"
 #include "can_dash.h"
 #include "obd2.h"
+#include "can_sensor.h"
 
 EXTERN_ENGINE;
+
+extern CanSensorBase* cansensors_head;
 
 CanWrite::CanWrite()
 	: PeriodicController("CAN TX", NORMALPRIO, 50)
@@ -29,6 +32,12 @@ void CanWrite::PeriodicTask(efitime_t nowNt) {
 	if (CONFIG(enableVerboseCanTx)) {
 		void sendCanVerbose();
 		sendCanVerbose();
+	}
+
+	CanSensorBase* current = cansensors_head;
+
+	while (current) {
+		current = current->request();
 	}
 
 	// Transmit dash data, if enabled
