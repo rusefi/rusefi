@@ -19,8 +19,7 @@ void ButtonShiftController::update() {
         upPinState = debounceUp->readPinEvent();
     }
     if (CONFIG(tcuDownshiftButtonPin) && CONFIG(tcuEnabled)) {
-//        downPinState = debounceDown->readPinEvent();
-downPinState = true;
+        downPinState = debounceDown->readPinEvent();
     }
     gear_e gear = getDesiredGear();
     if (upPinState) {
