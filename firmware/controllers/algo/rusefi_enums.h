@@ -29,7 +29,7 @@
  * http://rusefi.com/wiki/index.php?title=Manual:Engine_Type
  */
 typedef enum {
-	DEFAULT_FRANKENSO = 0,
+	DEFAULT_FRANKENSO = ET_DEFAULT_FRANKENSO,
 	AUDI_AAN = 1,
 	/**
 	 * 1995 Dodge Neon
@@ -66,7 +66,7 @@ typedef enum {
 
 	MRE_MIATA_NB2_ETB = 13,
 
-	FORD_ESCORT_GT = 14,
+	FORD_ESCORT_GT = ET_FORD_ESCORT_GT,
 
 	MRE_MIATA_NB2_MAF = ET_MRE_MIATA_NB2_MAF,
 
@@ -86,7 +86,10 @@ typedef enum {
 
 	SUBARU_2003_WRX = 22,
 
-	DODGE_NEON_2003_CAM = 23,
+	/**
+	 * microRusEFI used as Body Control Module BCM
+	 */
+	MRE_BODY_CONTROL = ET_MRE_BODY_CONTROL,
 	BMW_M73_M = 24,
 
 	BMW_E34 = ET_BMW_E34,
@@ -100,14 +103,14 @@ typedef enum {
 
 	MAZDA_626 = 28,
 
-	SACHS = 29,
+	SACHS = ET_SACHS,
 
 	// LED physical order set for older test fixtures
 	MRE_BOARD_OLD_TEST = 30,
 
 	MRE_BOARD_NEW_TEST = 31,
 
-	VW_ABA = 32,
+	VW_ABA = ET_VW_ABA,
 
 	DODGE_STRATUS = 33,
 
@@ -123,7 +126,7 @@ typedef enum {
 
 	LADA_KALINA = 39,
 
-	BMW_M73_F = 40,
+	BMW_M73_F = ET_BMW_M73_F,
 
 	// Frankenso board
 	MIATA_NA6_MAP = ET_FRANKENSO_MIATA_NA6,
@@ -182,7 +185,7 @@ typedef enum {
 
 	PROTEUS = 61,
 
-	VW_B6 = 62,
+	VW_B6 = ET_VW_B6,
 
 	BMW_M73_PROTEUS = ET_BMW_M73_PROTEUS,
 
@@ -415,6 +418,7 @@ typedef enum {
 	VVT_2JZ = 2,
 	/**
 	 * Mazda NB2 has three cam tooth. We synchronize based on gap ratio.
+	 * @see TT_VVT_MIATA_NB2
 	 */
 	MIATA_NB2 = 3,
 
@@ -422,7 +426,9 @@ typedef enum {
 	 * Single-tooth cam sensor mode where TDC and cam signal happen in the same 360 degree of 720 degree engine cycle
 	 */
 	VVT_FIRST_HALF = 4,
-
+	/**
+	 * @see TT_VVT_BOSCH_QUICK_START
+	 */
 	VVT_BOSCH_QUICK_START = 5,
 
 	Force_4_bytes_size_vvt_mode = ENUM_32_BITS,

@@ -59,7 +59,6 @@ public class Backend implements Closeable {
      * @see BinaryProtocolProxy#USER_IO_TIMEOUT
      */
     private static final int APPLICATION_INACTIVITY_TIMEOUT = 3 * Timeouts.MINUTE;
-    static final String AGE = "age";
     private static final ThreadFactory APPLICATION_CONNECTION_CLEANUP = new NamedThreadFactory("rusEFI Application connections Cleanup");
     private static final ThreadFactory GAUGE_POKER = new NamedThreadFactory("rusEFI gauge poker");
 
@@ -277,7 +276,7 @@ public class Backend implements Closeable {
             JsonObjectBuilder b = Json.createObjectBuilder()
                     .add(UserDetails.USER_ID, application.getUserDetails().getUserId())
                     .add(UserDetails.USERNAME, application.getUserDetails().getUserName())
-                    .add(AGE, application.getBirthday().getDuration())
+                    .add(SessionDetails.AGE, application.getBirthday().getDuration())
                     ;
             JsonObject applicationObject = addStreamStats(b, application.getClientStream())
                     .build();
@@ -308,7 +307,7 @@ public class Backend implements Closeable {
             JsonObjectBuilder objectBuilder = Json.createObjectBuilder()
                     .add(UserDetails.USER_ID, client.getUserDetails().getUserId())
                     .add(UserDetails.USERNAME, client.getUserDetails().getUserName())
-                    .add(AGE, client.getBirthday().getDuration())
+                    .add(SessionDetails.AGE, client.getBirthday().getDuration())
                     .add("OUTPUT_ROUND_TRIP", client.getOutputRoundAroundDuration())
                     .add(ProxyClient.IS_USED, client.getTwoKindSemaphore().isUsed())
                     .add(ControllerStateDetails.RPM, rpm)
@@ -318,6 +317,7 @@ public class Backend implements Closeable {
                     .add(ControllerInfo.ENGINE_MAKE, controllerInfo.getEngineMake())
                     .add(ControllerInfo.ENGINE_CODE, controllerInfo.getEngineCode())
                     .add(SessionDetails.IMPLEMENTATION, sessionDetails.getImplementation().name())
+                    .add(SessionDetails.LOCAL_IP, sessionDetails.getLocalIpAddress())
                     .add(SessionDetails.CONNECTOR_VERSION, sessionDetails.getConsoleVersion());
             objectBuilder = addStreamStats(objectBuilder, client.getStream());
             if (owner != null) {

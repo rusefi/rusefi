@@ -11,12 +11,19 @@
 #include "scaled_channel.h"
 #include "hal.h"
 
+/**
+ * Sensor which reads it's value from CAN
+ */
 class CanSensorBase : public StoredValueSensor {
 public:
 	CanSensorBase(uint32_t eid, SensorType type, efitick_t timeout)
 		: StoredValueSensor(type, timeout)
 		, m_eid(eid)
 	{
+	}
+
+	virtual CanSensorBase* request() {
+		return m_next;
 	}
 
 	void showInfo(Logging* logger, const char* sensorName) const override;
@@ -65,3 +72,8 @@ public:
 private:
 	const uint8_t m_offset;
 };
+
+class ObdCanSensor : public CanSensorBase {
+	ObdCanSensor(SensorType type);
+};
+

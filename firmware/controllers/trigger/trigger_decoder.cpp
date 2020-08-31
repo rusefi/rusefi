@@ -570,8 +570,9 @@ void TriggerState::decodeTriggerEvent(
 						scheduleMsg(logger, "index=%d NaN gap, you have noise issues?",
 								i);
 					} else {
-						scheduleMsg(logger, "rpm=%d time=%d index=%d: gap=%.3f expected from %.3f to %.3f error=%s",
-							GET_RPM(),
+						scheduleMsg(logger, "%s rpm=%d time=%d index=%d: gap=%.3f expected from %.3f to %.3f error=%s",
+								triggerConfiguration->getPrintPrefix(),
+								GET_RPM(),
 							/* cast is needed to make sure we do not put 64 bit value to stack*/ (int)getTimeNowSeconds(),
 							i,
 							gap,
