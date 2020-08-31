@@ -148,7 +148,7 @@ TEST(SensorInit, Clt) {
 	// 2003 neon sensor
 	CONFIG(clt.config) = {0, 30, 100, 32500, 7550, 700, 2700};
 
-	initNewThermistors(PASS_ENGINE_PARAMETER_SIGNATURE);
+	initThermistors(PASS_CONFIG_PARAMETER_SIGNATURE);
 
 	// Ensure the sensors were registered
 	auto s = const_cast<Sensor*>(Sensor::getSensorOfType(SensorType::Clt));
