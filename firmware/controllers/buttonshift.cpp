@@ -27,8 +27,10 @@ void ButtonShiftController::update() {
         switch (gear) {
             case REVERSE:
                 setDesiredGear(NEUTRAL);
+                break;
             case NEUTRAL:
                 setDesiredGear(GEAR_1);
+                break;
             case GEAR_1:
                 setDesiredGear(GEAR_2);
                 break;
