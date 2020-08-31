@@ -3052,7 +3052,7 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 		field = "MAP Averaging Logic @",				mapAveragingSchedulingAtIndex
 
 
-       help = helpGeneral, "rusEfi General Help"
+       help = helpGeneral, "rusEFI General Help"
         webHelp = "http://www.rusefi.com/"
         text = "<img src='https://rusefi.com/style/logo_100.gif'>"
 
