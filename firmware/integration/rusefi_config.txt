@@ -25,6 +25,13 @@
 ! each field is declared as
 ! type name;comment
 !
+!
+! Q: What is "@OFFSET@"?
+! A: That's a templace placeholder for field offset within the resuting data structure.
+!
+! Q: What is "[0:2]"?
+! A: That part of the bit declaration specified usage of three bits - from bit 0 to bit 2  
+!
 ! Q: how does 'custom' work?
 ! A: let's look at
 !  #define can_baudrate_e_enum "100kbps", "250kbps" , "500kbps", "1Mbps"
@@ -381,17 +388,25 @@ end_struct
 #define ET_FORD_FIESTA 4
 #define ET_FORD_INLINE_6 7
 #define ET_ROVER_V8 10
+#define ET_FORD_ESCORT_GT 14
 #define ET_BMW_E34 25
+#define ET_SACHS 29
+#define ET_VW_ABA 32
 #define ET_CAMARO 35
+#define ET_BMW_M73_F 40
+#define ET_DODGE_NEON_2003_CRANK 46
 
 #define ET_MRE_MIATA_NA6_VAF 12
 #define ET_MRE_MIATA_NB2_MAP 11
 #define ET_MRE_MIATA_NB2_MAF 15
+#define ET_MRE_BODY_CONTROL 23
 #define ET_MRE_OLD_TEST_BOARD 30
 #define ET_MRE_NEW_TEST_BOARD 31
 #define ET_MRE_DEFAULTS 60
 #define ET_MRE_MIATA_NA6_MAP 66
+#define ET_VW_B6 62
 
+#define ET_DEFAULT_FRANKENSO 0
 #define ET_FRANKENSO_MIATA_NA6 41
 #define ET_FRANKENSO_MIATA_NB2 47
 #define ET_FRANKENSO_MIATA_NA6_VAF 57
@@ -738,7 +753,7 @@ bit is_enabled_spi_2
 	bit enableVerboseCanTx;+CAN broadcast using custom rusEFI protocol\nenable can_broadcast/disable can_broadcast
 	bit onOffAlternatorLogic;+This will cause the alternator to be operated in a basic on or off mode, this is the simplest alternator control.
 	bit isCJ125Enabled;enable cj125/disable cj125
-	bit vvtCamSensorUseRise;+Use rise or fall signal front
+	bit vvtCamSensorUseRise;+Use rise or fall signal front\nget vvtCamSensorUseRise
 	bit measureMapOnlyInOneCylinder;+Useful for individual intakes
 	bit stepperForceParkingEveryRestart
 	bit isFasterEngineSpinUpEnabled;+Smarter cranking logic.\nSee also startOfCrankingPrimingPulse
@@ -869,9 +884,9 @@ custom maf_sensor_type_e 4 bits, S32, @OFFSET@, [0:1], @@maf_sensor_type_e_enum@
 	bit stftIgnoreErrorMagnitude;+If enabled, adjust at a constant rate instead of a rate proportional to the current lambda error.  This mode may be easier to tune, and more tolerant of sensor noise.  Use of this mode is required if you have a narrowband O2 sensor.;
 	bit dcMotorIdleValve;+Used on some German vehicles around late 90s: cable-operated throttle and DC motor idle air valve.\nSet the primary TPS to the cable-operated throttle's sensor\nSet the secondary TPS to the mini ETB's position sensor(s). 
 	bit enableSoftwareKnock
-	bit unusedBit_251_13
-	bit unusedBit_251_14
-	bit unusedBit_251_15
+	bit verboseVVTDecoding;enable vvt_details
+	bit invertCamVVTSignal;get invertCamVVTSignal
+	bit consumeObdSensors;enable consumeObdSensors
 	bit unusedBit_251_16
 	bit unusedBit_251_17
 	bit unusedBit_251_18
@@ -1285,9 +1300,9 @@ float[IGN_TPS_COUNT] ignitionTpsBins;;"TPS",   1,   0.0,        0,  100.0,   2
 
 float tChargeAirCoefMin;;"Min tCharge Coeff.",        1,     0,  0.0,    1.0,  4
 float tChargeAirCoefMax;;"Max tCharge Coeff.",        1,     0,  0.0,    1.0,  4
-float tChargeAirFlowMax;;"Max Air Flow, kg/h",        1,     0,  0.0,    1000.0,  1
-float tChargeAirIncrLimit;;"tChange Increment Limit, deg/sec",        1,     0,  0.0,    100.0,  1
-float tChargeAirDecrLimit;;"tChange Decrement Limit, deg/sec",        1,     0,  0.0,    100.0,  1
+float tChargeAirFlowMax;;"Max Air Flow (kg/h)",        1,     0,  0.0,    1000.0,  1
+float tChargeAirIncrLimit;;"tChange Increment Limit (deg/sec)",        1,     0,  0.0,    100.0,  1
+float tChargeAirDecrLimit;;"tChange Decrement Limit (deg/sec)",        1,     0,  0.0,    100.0,  1
 
 #define tChargeMode_e_enum "RPM+TPS (Default)", "Air Mass Interpolation"
 custom tChargeMode_e 4 bits,    U32,   @OFFSET@, [0:0], @@tChargeMode_e_enum@@
@@ -1392,7 +1407,7 @@ float[CLT_CRANKING_CURVE_SIZE] cltCrankingCorr    ;CLT-based cranking position m
 float[IDLE_ADVANCE_CURVE_SIZE] idleAdvanceBins;Optional timing advance table for Idle (see useSeparateAdvanceForIdle);"RPM",      1,     0,   0.0,    18000,   2
 float[IDLE_ADVANCE_CURVE_SIZE] idleAdvance    ;Optional timing advance table for Idle (see useSeparateAdvanceForIdle);"deg",      1,     0,     -20, 90,    2
 float[IDLE_VE_CURVE_SIZE] idleVeBins;Optional VE table for Idle (see useSeparateVEForIdle);"RPM",      1,     0,   0.0,    18000,   2
-float[IDLE_VE_CURVE_SIZE] idleVe;    Optional VE table for Idle (see useSeparateVEForIdle);,"%", 1, 0, 0, 999.0, 2
+float[IDLE_VE_CURVE_SIZE] idleVe;    Optional VE table for Idle (see useSeparateVEForIdle);"%", 1, 0, 0, 999.0, 2
 
 le_formula_t[FSIO_COMMAND_COUNT iterate] fsioFormulas;
 	le_formula_t timingMultiplier;
@@ -1582,7 +1597,7 @@ end_struct
 #define ENGINE_MAKE_BMW "BMW"
 #define ENGINE_MAKE_TOYOTA "Toyota"
 #define ENGINE_MAKE_MERCEDES "Mercedes"
-
+#define ENGINE_MAKE_VAG "VAG"
 
 #define CMD_MIL_BENCH "milbench"
 #define CMD_FUEL_BENCH "fuelbench"

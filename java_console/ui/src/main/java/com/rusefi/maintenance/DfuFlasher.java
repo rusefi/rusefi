@@ -55,7 +55,7 @@ public class DfuFlasher {
                 return null;
             });
             if (port == null) {
-                JOptionPane.showMessageDialog(ConsoleUI.getFrame(), "rusEfi serial port not detected");
+                JOptionPane.showMessageDialog(ConsoleUI.getFrame(), "rusEFI serial port not detected");
                 return;
             } else {
                 messages.append("Detected rusEFI on " + port + "\n");
