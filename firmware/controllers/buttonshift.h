@@ -9,8 +9,8 @@ public:
     void update();
     void init(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 private:
-    ButtonDebounce *debounceUp;
-    ButtonDebounce *debounceDown;
+    ButtonDebounce debounceUp;
+    ButtonDebounce debounceDown;
 };
 
 void initButtonShift(DECLARE_ENGINE_PARAMETER_SIGNATURE);
