@@ -71,7 +71,7 @@ static void initTpsFuncAndRedund(RedundantSensor& redund, LinearFunc& func, Func
 	}
 }
 
-void initTps(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+void initTps(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	float min = CONFIG(tpsErrorDetectionTooLow);
 	float max = CONFIG(tpsErrorDetectionTooHigh);
 
@@ -94,7 +94,7 @@ void initTps(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	}
 }
 
-void reconfigureTps(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+void reconfigureTps(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	float min = CONFIG(tpsErrorDetectionTooLow);
 	float max = CONFIG(tpsErrorDetectionTooHigh);
 
