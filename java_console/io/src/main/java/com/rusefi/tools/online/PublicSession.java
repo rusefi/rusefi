@@ -14,12 +14,24 @@ public class PublicSession {
      * Person currently in control of tuning session
      */
     private final String tunerName;
+    private final String age;
+    private final String implementation;
 
-    public PublicSession(UserDetails vehicleOwner, ControllerInfo controllerInfo, boolean isUsed, String tunerName) {
+    public PublicSession(UserDetails vehicleOwner, ControllerInfo controllerInfo, boolean isUsed, String tunerName, String age, String implementation) {
         this.vehicleOwner = vehicleOwner;
         this.controllerInfo = controllerInfo;
         this.isUsed = isUsed;
         this.tunerName = tunerName;
+        this.age = age;
+        this.implementation = implementation;
+    }
+
+    public String getImplementation() {
+        return implementation;
+    }
+
+    public String getAge() {
+        return age;
     }
 
     public UserDetails getVehicleOwner() {

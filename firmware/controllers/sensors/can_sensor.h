@@ -22,6 +22,10 @@ public:
 	{
 	}
 
+	virtual CanSensorBase* request() {
+		return m_next;
+	}
+
 	void showInfo(Logging* logger, const char* sensorName) const override;
 
 	CanSensorBase* processFrame(const CANRxFrame& frame, efitick_t nowNt) {
@@ -68,3 +72,8 @@ public:
 private:
 	const uint8_t m_offset;
 };
+
+class ObdCanSensor : public CanSensorBase {
+	ObdCanSensor(SensorType type);
+};
+

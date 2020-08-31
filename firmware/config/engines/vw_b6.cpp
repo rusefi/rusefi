@@ -19,7 +19,11 @@ void setVwPassatB6(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	engineConfiguration->trigger.type = TT_TOOTHED_WHEEL_60_2;
 	engineConfiguration->vvtMode = VVT_BOSCH_QUICK_START;
 
+	strcpy(CONFIG(engineMake), ENGINE_MAKE_VAG);
+	strcpy(CONFIG(engineCode), "BPY");
 
+
+	engineConfiguration->verboseVVTDecoding = true;
+	engineConfiguration->invertCamVVTSignal = true;
+	engineConfiguration->vvtCamSensorUseRise = true;
 }
-
-

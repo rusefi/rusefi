@@ -12,6 +12,7 @@ import com.rusefi.io.tcp.BinaryProtocolProxy;
 import com.rusefi.io.tcp.ServerSocketReference;
 import com.rusefi.io.tcp.TcpIoStream;
 import com.rusefi.proxy.NetworkConnector;
+import com.rusefi.proxy.NetworkConnectorContext;
 import com.rusefi.server.ApplicationRequest;
 import com.rusefi.server.rusEFISSLContext;
 import com.rusefi.tools.online.HttpUtil;
@@ -49,11 +50,12 @@ public class LocalApplicationProxy implements Closeable {
         this.authenticatorToProxyStream = authenticatorToProxyStream;
     }
 
-    public static HttpResponse requestSoftwareUpdate(int httpPort, ApplicationRequest applicationRequest) throws IOException {
+    public static HttpResponse requestSoftwareUpdate(int httpPort, ApplicationRequest applicationRequest, UpdateType type) throws IOException {
         HttpPost httpPost = new HttpPost(ProxyClient.getHttpAddress(httpPort) + ProxyClient.UPDATE_CONNECTOR_SOFTWARE);
 
         List<NameValuePair> form = new ArrayList<>();
         form.add(new BasicNameValuePair(ProxyClient.JSON, applicationRequest.toJson()));
+        form.add(new BasicNameValuePair(ProxyClient.UPDATE_TYPE, type.name()));
         UrlEncodedFormEntity entity = new UrlEncodedFormEntity(form, Consts.UTF_8);
 
         httpPost.setEntity(entity);
@@ -76,8 +78,15 @@ public class LocalApplicationProxy implements Closeable {
     public static ServerSocketReference startAndRun(LocalApplicationProxyContext context, ApplicationRequest applicationRequest, int jsonHttpPort, TcpIoStream.DisconnectListener disconnectListener, ConnectionListener connectionListener) throws IOException {
         String version = context.executeGet(ProxyClient.getHttpAddress(jsonHttpPort) + ProxyClient.VERSION_PATH);
         log.info("Server says version=" + version);
-        if (!version.contains(ProxyClient.BACKEND_VERSION))
-            throw new IOException("Unexpected backend version " + version + " while we want " + ProxyClient.BACKEND_VERSION);
+        if (!version.contains(ProxyClient.BACKEND_VERSION)) {
+            String message = "Unexpected backend version " + version + " while we want " + ProxyClient.BACKEND_VERSION;
+            log.error(message);
+            System.out.println(message);
+            /**
+             * let's give wrapper script a chance to update us
+             */
+            throw new IncompatibleBackendException(message);
+        }
 
         AbstractIoStream authenticatorToProxyStream = new TcpIoStream("authenticatorToProxyStream ", rusEFISSLContext.getSSLSocket(HttpUtil.RUSEFI_PROXY_HOSTNAME, context.serverPortForRemoteApplications()), disconnectListener);
         LocalApplicationProxy.sendHello(authenticatorToProxyStream, applicationRequest);

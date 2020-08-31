@@ -9,7 +9,8 @@ import static com.devexperts.logging.Logging.getLogging;
 
 public class NetworkConnectorContext {
     private static final Logging log = getLogging(NetworkConnectorContext.class);
-    private static final int UPDATE_SOFTWARE_EXIT_CODE = 15;
+    private static final int UPDATE_SBC_EXIT_CODE = 15;
+    public static final int UPDATE_FIRMWARE_EXIT_CODE = 16;
 
     public int reconnectDelay() {
         return 15; // this one is seconds
@@ -34,6 +35,11 @@ public class NetworkConnectorContext {
 
     public void onConnectorSoftwareUpdateRequest() {
         log.info("onConnectorSoftwareUpdateRequest");
-        System.exit(UPDATE_SOFTWARE_EXIT_CODE);
+        System.exit(UPDATE_SBC_EXIT_CODE);
+    }
+
+    public void onFirmwareUpdateRequest() {
+        log.info("onFirmwareUpdateRequest");
+        System.exit(UPDATE_FIRMWARE_EXIT_CODE);
     }
 }

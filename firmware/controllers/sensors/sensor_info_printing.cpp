@@ -14,7 +14,7 @@ void ProxySensor::showInfo(Logging* logger, const char* sensorName) const {
 
 void FunctionalSensor::showInfo(Logging* logger, const char* sensorName) const {
 	const auto [valid, value] = get();
-	scheduleMsg(logger, "Sensor \"%s\": Raw value: %.2f Valid: %d Converted value %.2f", sensorName, m_rawValue, valid, value);
+	scheduleMsg(logger, "Sensor \"%s\": Raw value: %.2f Valid: %s Converted value %.2f", sensorName, m_rawValue, boolToString(valid), value);
 
 	// now print out the underlying function's info
 	if (auto func = m_function) {
@@ -27,7 +27,7 @@ void FunctionalSensor::showInfo(Logging* logger, const char* sensorName) const {
 
 void CanSensorBase::showInfo(Logging* logger, const char* sensorName) const {
 	const auto [valid, value] = get();
-	scheduleMsg(logger, "CAN Sensor \"%s\": valid: %d value: %.2f", sensorName, valid, value);
+	scheduleMsg(logger, "CAN Sensor \"%s\": valid: %s value: %.2f", sensorName, boolToString(valid), value);
 }
 #endif // EFI_CAN_SUPPORT
 
@@ -38,7 +38,7 @@ void RedundantSensor::showInfo(Logging* logger, const char* sensorName) const {
 void LinearFunc::showInfo(Logging* logger, float testRawValue) const {
 	scheduleMsg(logger, "    Linear function slope: %.2f offset: %.2f min: %.1f max: %.1f", m_a, m_b, m_minOutput, m_maxOutput);
 	const auto [valid, value] = convert(testRawValue);
-	scheduleMsg(logger, "      raw value %.2f converts to %.2f valid: %d", testRawValue, value, valid);
+	scheduleMsg(logger, "      raw value %.2f converts to %.2f valid: %s", testRawValue, value, boolToString(valid));
 }
 
 void ResistanceFunc::showInfo(Logging* logger, float testInputValue) const {
@@ -48,5 +48,5 @@ void ResistanceFunc::showInfo(Logging* logger, float testInputValue) const {
 
 void ThermistorFunc::showInfo(Logging* logger, float testInputValue) const {
 	const auto [valid, value] = convert(testInputValue);
-	scheduleMsg(logger, "    %.1f ohms -> valid: %d. %.1f deg C", testInputValue, valid, value);
+	scheduleMsg(logger, "    %.1f ohms -> valid: %s. %.1f deg C", testInputValue, boolToString(valid), value);
 }
