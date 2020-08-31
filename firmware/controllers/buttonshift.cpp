@@ -13,14 +13,14 @@ void ButtonShiftController::init (DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 }
 
 void ButtonShiftController::update() {
-    bool upPinState = false;
-    bool downPinState = false;
+//    bool upPinState = false;
+//    bool downPinState = false;
     if (CONFIG(tcuUpshiftButtonPin) && CONFIG(tcuEnabled)) {
-        upPinState = debounceUp->readPinEvent();
+//        upPinState = debounceUp->readPinEvent();
 setDesiredGear(GEAR_1);
     }
     if (CONFIG(tcuDownshiftButtonPin) && CONFIG(tcuEnabled)) {
-        downPinState = debounceDown->readPinEvent();
+//        downPinState = debounceDown->readPinEvent();
     }
     gear_e gear = getDesiredGear();
 /*    if (upPinState) {
