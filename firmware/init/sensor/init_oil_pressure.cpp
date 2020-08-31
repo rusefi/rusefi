@@ -26,7 +26,7 @@ void configureOilPressure(LinearFunc& func, const oil_pressure_config_s& cfg) {
 	func.configure(cfg.v1, val1, cfg.v2, val2, /*minOutput*/ -5, greaterOutput);
 }
 
-void initOilPressure(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+void initOilPressure(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	// Only register if we have a sensor
 	auto channel = CONFIG(oilPressure.hwChannel);
 	if (channel == EFI_ADC_NONE) {
