@@ -11,8 +11,8 @@ ButtonDebounce::ButtonDebounce (int t, brain_pin_e p, pin_input_mode_e m) {
 }
 
 bool ButtonDebounce::readPinEvent() {
-    efitimems_t timeNow = currentTimeMillis();
-  /*  if ((timeNow - timeLast) < threshold) {
+/*    efitimems_t timeNow = currentTimeMillis();
+    if ((timeNow - timeLast) < threshold) {
         return false;
     }*/
     timeLast = timeNow;
