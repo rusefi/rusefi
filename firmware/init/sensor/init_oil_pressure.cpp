@@ -44,6 +44,6 @@ void initOilPressure(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	}
 }
 
-void reconfigureOilPressure(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+void reconfigureOilPressure(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	configureOilPressure(oilpSensorFunc, CONFIG(oilPressure));
 }
