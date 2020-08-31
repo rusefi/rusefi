@@ -22,7 +22,7 @@ void ButtonShiftController::update() {
         downPinState = debounceDown->readPinEvent();
     }
     gear_e gear = getDesiredGear();
-    if (upPinState) {
+    if (downPinState) {
         switch (gear) {
             case REVERSE:
                 setDesiredGear(NEUTRAL);
@@ -42,7 +42,7 @@ void ButtonShiftController::update() {
             default:
                 break;
         }
-    } else if (downPinState) {
+    } else if (upPinState) {
         switch (gear) {
             case NEUTRAL:
                 setDesiredGear(REVERSE);
