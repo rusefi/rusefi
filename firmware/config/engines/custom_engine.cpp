@@ -537,6 +537,8 @@ void mreBoardNewTest(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	engineConfiguration->ignitionPins[7 - 1] = TLE8888_PIN_11;
 	engineConfiguration->ignitionPins[8 - 1] = TLE8888_PIN_12;
 
+	engineConfiguration->afr.hwChannel = EFI_ADC_NONE;
+
 	engineConfiguration->ignitionPins[9 - 1] = GPIOB_1; // AV9
 	engineConfiguration->ignitionPins[10 - 1] = GPIOB_0; // AV8
 	engineConfiguration->ignitionPins[11 - 1] = GPIOA_4; // AV10
