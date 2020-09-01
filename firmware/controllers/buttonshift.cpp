@@ -82,4 +82,5 @@ void ButtonShiftController::update() {
 void initButtonShift(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
     buttonShiftController.init(PASS_ENGINE_PARAMETER_SIGNATURE);
     engine->gearController = &buttonShiftController;
+    INJECT_ENGINE_REFERENCE(&buttonShiftController);
 }
