@@ -20,7 +20,7 @@ public:
 private:
     gear_e currentGear = NEUTRAL;
 protected:
-    gear_e setCurrentGear(gear_e);
+    gear_e setCurrentGear(gear_e) const;
     void postState();
 };
 
@@ -31,7 +31,7 @@ public:
 private:
     gear_e desiredGear = NEUTRAL;
 protected:
-    gear_e setDesiredGear(gear_e);
+    gear_e setDesiredGear(gear_e) const;
     void postState();
     TransmissionControllerBase transmissionController;
 };
