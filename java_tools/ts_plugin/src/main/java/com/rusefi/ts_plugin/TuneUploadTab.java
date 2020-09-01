@@ -24,7 +24,7 @@ import java.util.Map;
 import java.util.function.Supplier;
 
 /**
- * 
+ * @see PluginBodySandbox
  */
 public class TuneUploadTab {
     private final JComponent content = new JPanel(new VerticalFlowLayout());
@@ -69,7 +69,7 @@ public class TuneUploadTab {
         };
         upload.setBackground(new Color(0x90EE90));
 
-        new Thread(new Runnable() {
+        Thread t = new Thread(new Runnable() {
             @Override
             public void run() {
                 while (true) {
@@ -97,7 +97,9 @@ public class TuneUploadTab {
                     }
                 }
             }
-        }).start();
+        });
+        t.setDaemon(true);
+        t.start();
 
         upload.addActionListener(new AbstractAction() {
             @Override

@@ -36,7 +36,7 @@ void init_lambda(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 
 		return;
 	}
-	
+
 	if (!lambdaSensor.Register()) {
 		warning(OBD_PCM_Processor_Fault, "Duplicate lambda sensor registration, ignoring");
 	}

@@ -25,6 +25,13 @@
 ! each field is declared as
 ! type name;comment
 !
+!
+! Q: What is "@OFFSET@"?
+! A: That's a templace placeholder for field offset within the resuting data structure.
+!
+! Q: What is "[0:2]"?
+! A: That part of the bit declaration specified usage of three bits - from bit 0 to bit 2  
+!
 ! Q: how does 'custom' work?
 ! A: let's look at
 !  #define can_baudrate_e_enum "100kbps", "250kbps" , "500kbps", "1Mbps"
@@ -300,7 +307,8 @@ custom output_pin_e 1 bits,    U08,   @OFFSET@, [0:7], @@output_pin_e_enum@@
 #define pin_output_mode_e_enum "default", "default inverted", "open collector", "open collector inverted"
 custom pin_output_mode_e 1 bits,    U08,   @OFFSET@, [0:1], @@pin_output_mode_e_enum@@
 
-custom pin_input_mode_e 1 scalar, U08,	@OFFSET@,	"todo", 1, 0, 0, 20, 1	
+#define pin_input_mode_e_enum "DEFAULT", "PULLUP", "PULLDOWN"
+custom pin_input_mode_e 1 bits, U08,	@OFFSET@,	[0:1], @@pin_input_mode_e_enum@@
 
 struct spi_pins
 	brain_pin_e mosiPin;
@@ -881,7 +889,7 @@ custom maf_sensor_type_e 4 bits, S32, @OFFSET@, [0:1], @@maf_sensor_type_e_enum@
 	bit enableSoftwareKnock
 	bit verboseVVTDecoding;enable vvt_details
 	bit invertCamVVTSignal;get invertCamVVTSignal
-	bit unusedBit_251_15
+	bit consumeObdSensors;enable consumeObdSensors
 	bit unusedBit_251_16
 	bit unusedBit_251_17
 	bit unusedBit_251_18
@@ -1295,9 +1303,9 @@ float[IGN_TPS_COUNT] ignitionTpsBins;;"TPS",   1,   0.0,        0,  100.0,   2
 
 float tChargeAirCoefMin;;"Min tCharge Coeff.",        1,     0,  0.0,    1.0,  4
 float tChargeAirCoefMax;;"Max tCharge Coeff.",        1,     0,  0.0,    1.0,  4
-float tChargeAirFlowMax;;"Max Air Flow, kg/h",        1,     0,  0.0,    1000.0,  1
-float tChargeAirIncrLimit;;"tChange Increment Limit, deg/sec",        1,     0,  0.0,    100.0,  1
-float tChargeAirDecrLimit;;"tChange Decrement Limit, deg/sec",        1,     0,  0.0,    100.0,  1
+float tChargeAirFlowMax;;"Max Air Flow (kg/h)",        1,     0,  0.0,    1000.0,  1
+float tChargeAirIncrLimit;;"tChange Increment Limit (deg/sec)",        1,     0,  0.0,    100.0,  1
+float tChargeAirDecrLimit;;"tChange Decrement Limit (deg/sec)",        1,     0,  0.0,    100.0,  1
 
 #define tChargeMode_e_enum "RPM+TPS (Default)", "Air Mass Interpolation"
 custom tChargeMode_e 4 bits,    U32,   @OFFSET@, [0:0], @@tChargeMode_e_enum@@
@@ -1398,7 +1406,7 @@ float[CLT_CRANKING_CURVE_SIZE] cltCrankingCorr    ;CLT-based cranking position m
 float[IDLE_ADVANCE_CURVE_SIZE] idleAdvanceBins;Optional timing advance table for Idle (see useSeparateAdvanceForIdle);"RPM",      1,     0,   0.0,    18000,   2
 float[IDLE_ADVANCE_CURVE_SIZE] idleAdvance    ;Optional timing advance table for Idle (see useSeparateAdvanceForIdle);"deg",      1,     0,     -20, 90,    2
 float[IDLE_VE_CURVE_SIZE] idleVeBins;Optional VE table for Idle (see useSeparateVEForIdle);"RPM",      1,     0,   0.0,    18000,   2
-float[IDLE_VE_CURVE_SIZE] idleVe;    Optional VE table for Idle (see useSeparateVEForIdle);,"%", 1, 0, 0, 999.0, 2
+float[IDLE_VE_CURVE_SIZE] idleVe;    Optional VE table for Idle (see useSeparateVEForIdle);"%", 1, 0, 0, 999.0, 2
 
 le_formula_t[FSIO_COMMAND_COUNT iterate] fsioFormulas;
 	le_formula_t timingMultiplier;

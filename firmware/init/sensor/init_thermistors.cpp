@@ -68,7 +68,7 @@ static void configureTempSensor(FunctionalSensor &sensor,
 	}
 }
 
-void initNewThermistors(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+void initThermistors(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	configureTempSensor(clt,
 						fclt,
 						CONFIG(clt),
@@ -90,7 +90,7 @@ void initNewThermistors(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 						false);
 }
 
-void reconfigureThermistors(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+void reconfigureThermistors(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	configTherm(clt,
 				fclt,
 				CONFIG(clt),

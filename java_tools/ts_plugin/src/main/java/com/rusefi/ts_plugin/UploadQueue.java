@@ -26,13 +26,15 @@ public class UploadQueue {
             return;
         isStarted = true;
         readOutbox();
-        new Thread(() -> {
+        Thread t = new Thread(() -> {
             try {
                 uploadLoop();
             } catch (InterruptedException e) {
                 throw new IllegalStateException(e);
             }
-        }, "Positing Thread").start();
+        }, "Posting Thread");
+        t.setDaemon(true);
+        t.start();
     }
 
     private static void readOutbox() {

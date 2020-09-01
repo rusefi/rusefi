@@ -14,6 +14,7 @@
 #define OBD_TEST_RESPONSE 0x7E8
 
 #define OBD_CURRENT_DATA 1
+#define _OBD_2 2
 #define OBD_STORED_DIAGNOSTIC_TROUBLE_CODES 3
 #define OBD_PENDING_DIAGNOSTIC_TROUBLE_CODES 7
 
@@ -42,3 +43,4 @@
 void obdOnCanPacketRx(const CANRxFrame& rx);
 #endif /* HAL_USE_CAN */
 
+#define ODB_RPM_MULT 4

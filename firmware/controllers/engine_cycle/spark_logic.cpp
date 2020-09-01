@@ -117,6 +117,9 @@ static void prepareCylinderIgnitionSchedule(angle_t dwellAngleDuration, floatms_
 	event->outputs[0] = output;
 	event->outputs[1] = secondOutput;
 	event->sparkAngle = sparkAngle;
+	// Stash which cylinder we're scheduling so that knock sensing knows which
+	// cylinder just fired
+	event->cylinderNumber = coilIndex;
 
 	angle_t dwellStartAngle = sparkAngle - dwellAngleDuration;
 	efiAssertVoid(CUSTOM_ERR_6590, !cisnan(dwellStartAngle), "findAngle#5");
@@ -206,7 +209,7 @@ if (engineConfiguration->debugMode == DBG_DWELL_METRIC) {
 	}
 
 #if EFI_SOFTWARE_KNOCK
-	startKnockSampling(event->cylinderIndex);
+	startKnockSampling(event->cylinderNumber);
 #endif
 }
 
