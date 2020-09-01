@@ -16,6 +16,7 @@ void initNewSensors(Logging* logger DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	initTps(PASS_ENGINE_PARAMETER_SIGNATURE);
 	initOilPressure(PASS_ENGINE_PARAMETER_SIGNATURE);
 	initNewThermistors(PASS_ENGINE_PARAMETER_SIGNATURE);
+	initLambda(PASS_ENGINE_PARAMETER_SIGNATURE);
 
 	// Init CLI functionality for sensors (mocking)
 	initSensorCli(logger);

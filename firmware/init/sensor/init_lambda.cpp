@@ -23,7 +23,7 @@ static FunctionPointerSensor lambdaSensor(SensorType::Lambda,
 	return afrWrapper.getLambda();
 });
 
-void init_lambda(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+void initLambda(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	INJECT_ENGINE_REFERENCE(&afrWrapper);
 
 	if (!lambdaSensor.Register()) {
