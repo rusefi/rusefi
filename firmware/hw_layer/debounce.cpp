@@ -7,7 +7,7 @@
  */
 #include "debounce.h"
 
-void ButtonDebounce::init (int t, prain_pin_e p, pin_input_mode_e m) {
+void ButtonDebounce::init (int t, brain_pin_e p, pin_input_mode_e m) {
     threshold = MS2NT(t);
     timeLast = 0;
     pin = p;
