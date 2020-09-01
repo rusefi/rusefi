@@ -193,14 +193,11 @@ void Engine::periodicSlowCallback(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	slowCallBackWasInvoked = true;
 
 #if HW_CHECK_MODE
-	// we need to skip some of the first measurments to have BiQuad filter happy
-	if (getSlowAdcCounter() > 1000) {
-		efiAssertVoid(OBD_PCM_Processor_Fault, CONFIG(clt).adcChannel != EFI_ADC_NONE, "No CLT setting");
-		assertCloseTo("clt", Sensor::get(SensorType::Clt).Value, 49.3);
-		assertCloseTo("iat", Sensor::get(SensorType::Iat).Value, 73.2);
-		assertCloseTo("aut1", Sensor::get(SensorType::AuxTemp1).Value, 13.8);
-		assertCloseTo("aut2", Sensor::get(SensorType::AuxTemp2).Value, 6.2);
-	}
+	efiAssertVoid(OBD_PCM_Processor_Fault, CONFIG(clt).adcChannel != EFI_ADC_NONE, "No CLT setting");
+	assertCloseTo("clt", Sensor::get(SensorType::Clt).Value, 49.3);
+	assertCloseTo("iat", Sensor::get(SensorType::Iat).Value, 73.2);
+	assertCloseTo("aut1", Sensor::get(SensorType::AuxTemp1).Value, 13.8);
+	assertCloseTo("aut2", Sensor::get(SensorType::AuxTemp2).Value, 6.2);
 #endif // HW_CHECK_MODE
 }
 

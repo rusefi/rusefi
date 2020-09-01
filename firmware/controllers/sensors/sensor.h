@@ -63,9 +63,7 @@ public:
 	// Register this sensor in the sensor registry.
 	// Returns true if registration succeeded, or false if
 	// another sensor of the same type is already registered.
-	// The return value should not be ignored: no error handling/reporting is
-	// done internally!
-	[[nodiscard]] bool Register();
+	bool Register();
 
 	// Print information about this sensor
 	virtual void showInfo(Logging* logger, const char* sensorName) const = 0;

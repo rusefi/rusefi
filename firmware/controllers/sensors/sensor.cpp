@@ -1,3 +1,4 @@
+#include "global.h"
 #include "sensor.h"
 #include "efilib.h"
 #include "loggingcentral.h"
@@ -84,6 +85,9 @@ bool Sensor::Register() {
 	// If there's somebody already here - a consumer tried to double-register a sensor
 	if (entry.getSensor()) {
 		// This sensor has already been registered. Don't re-register it.
+#if ! EFI_UNIT_TEST
+		firmwareError(CUSTOM_OBD_26, "Duplicate registration for %s sensor", s_sensorNames[getIndex()]);
+#endif
 		return false;
 	} else {
 		// put ourselves in the registry

@@ -10,6 +10,8 @@
 #include "stored_value_sensor.h"
 #include "scaled_channel.h"
 #include "hal.h"
+#include "can_msg_tx.h"
+#include "obd2.h"
 
 /**
  * Sensor which reads it's value from CAN
@@ -36,15 +38,19 @@ public:
 		return m_next;
 	}
 
+	uint32_t getEid() {
+		return m_eid;
+	}
+
 	void setNext(CanSensorBase* next) {
 		m_next = next;
 	}
 
 protected:
 	virtual void decodeFrame(const CANRxFrame& frame, efitick_t nowNt) = 0;
+	CanSensorBase* m_next = nullptr;
 
 private:
-	CanSensorBase* m_next = nullptr;
 	const uint32_t m_eid;
 };
 
@@ -73,7 +79,34 @@ private:
 	const uint8_t m_offset;
 };
 
-class ObdCanSensor : public CanSensorBase {
-	ObdCanSensor(SensorType type);
+template <typename TStorage, int TScale>
+class ObdCanSensor: public CanSensorBase {
+public:
+	ObdCanSensor(uint32_t eid, SensorType type, efitick_t timeout) :
+			CanSensorBase(eid, type, timeout) {
+	}
+
+	void decodeFrame(const CANRxFrame& frame, efitick_t nowNt) override {
+		// Compute the location of our data within the frame
+		const uint8_t* dataLocation = &frame.data8[0];
+
+		// Reinterpret as a scaled_channel - it already has the logic for decoding a scaled integer to a float
+		const auto scaler = reinterpret_cast<const scaled_channel<TStorage, TScale>*>(dataLocation);
+
+		// Actually do the conversion
+		float value = *scaler;
+		setValidValue(value, nowNt);
+	}
+
+	CanSensorBase* request() override {
+		{
+			CanTxMessage msg(OBD_TEST_REQUEST);
+			msg[0] = _OBD_2;
+			msg[1] = OBD_CURRENT_DATA;
+			msg[2] = getEid();
+
+		}
+		return m_next;
+	}
 };
 

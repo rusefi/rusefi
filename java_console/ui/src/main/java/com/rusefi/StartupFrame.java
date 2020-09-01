@@ -5,6 +5,7 @@ import com.rusefi.autoupdate.AutoupdateUtil;
 import com.rusefi.io.LinkManager;
 import com.rusefi.io.serial.BaudRateHolder;
 import com.rusefi.maintenance.*;
+import com.rusefi.ts_plugin.AudioPlayback;
 import com.rusefi.ui.util.HorizontalLine;
 import com.rusefi.ui.util.URLLabel;
 import com.rusefi.ui.util.UiUtils;
@@ -67,7 +68,8 @@ public class StartupFrame {
     private JLabel noPortsMessage = new JLabel("No ports found!");
 
     public StartupFrame() {
-        frame = new JFrame("rusEfi console version " + Launcher.CONSOLE_VERSION);
+//        AudioPlayback.start();
+        frame = new JFrame("rusEFI console version " + Launcher.CONSOLE_VERSION);
         frame.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
         frame.addWindowListener(new WindowAdapter() {
             @Override
