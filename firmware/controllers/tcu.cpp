@@ -19,7 +19,7 @@ gear_e TransmissionControllerBase::setCurrentGear(gear_e gear) {
     return getCurrentGear();
 }
 
-gear_e TransmissionControllerBase::getCurrentGear() {
+gear_e TransmissionControllerBase::getCurrentGear() const {
     return currentGear;
 }
 
@@ -29,7 +29,7 @@ void TransmissionControllerBase::postState() {
 #endif
 }
 
-gear_e GearControllerBase::getDesiredGear() {
+gear_e GearControllerBase::getDesiredGear() const {
     return desiredGear;
 }
 

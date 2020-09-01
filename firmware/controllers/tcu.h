@@ -16,22 +16,22 @@
 class TransmissionControllerBase {
 public:
     void update(gear_e);
-    gear_e getCurrentGear();
+    gear_e getCurrentGear() const;
 private:
     gear_e currentGear = NEUTRAL;
 protected:
-    gear_e setCurrentGear(gear_e) const;
+    gear_e setCurrentGear(gear_e);
     void postState();
 };
 
 class GearControllerBase {
 public:
     virtual void update();
-    gear_e getDesiredGear();
+    gear_e getDesiredGear() const;
 private:
     gear_e desiredGear = NEUTRAL;
 protected:
-    gear_e setDesiredGear(gear_e) const;
+    gear_e setDesiredGear(gear_e);
     void postState();
     TransmissionControllerBase transmissionController;
 };
