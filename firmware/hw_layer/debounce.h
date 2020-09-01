@@ -10,7 +10,7 @@
 
 class ButtonDebounce {
 public:
-    void init(int t, engine_configuration_s p, engine_configuration_s m);
+    void init(int t, brain_pin_e p, pin_input_mode_e m);
     bool readPinEvent();
 private:
     int threshold;

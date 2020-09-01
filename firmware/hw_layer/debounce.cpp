@@ -7,13 +7,13 @@
  */
 #include "debounce.h"
 
-void ButtonDebounce::init (int t, engine_configuration_s p, engine_configuration_s m) {
+void ButtonDebounce::init (int t, prain_pin_e p, pin_input_mode_e m) {
     threshold = MS2NT(t);
     timeLast = 0;
-    pin = CONFIG(p);
+    pin = p;
 #ifdef PAL_MODE_INPUT_PULLDOWN
     // getInputMode converts from pin_input_mode_e to iomode_t
-    mode = getInputMode(CONFIG(m));
+    mode = getInputMode(m);
     efiSetPadMode("Button", p, mode);
 #endif
 }
