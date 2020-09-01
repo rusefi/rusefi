@@ -1,3 +1,10 @@
+/**
+ * @file        buttonshift.cpp
+ * @brief       Polls pins for gear changes
+ *
+ * @date Aug 31, 2020
+ * @author David Holdeman, (c) 2020
+ */
 #include "buttonshift.h"
 #include "engine.h"
 
@@ -6,6 +13,7 @@ EXTERN_ENGINE;
 ButtonShiftController buttonShiftController;
 
 void ButtonShiftController::init (DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+    // 500 millisecond is maybe a little long?
     debounceUp.init(500, CONFIG(tcuUpshiftButtonPin), CONFIG(tcuUpshiftButtonPinMode));
     debounceDown.init(500, CONFIG(tcuDownshiftButtonPin), CONFIG(tcuDownshiftButtonPinMode));
 }
@@ -13,6 +21,7 @@ void ButtonShiftController::init (DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 void ButtonShiftController::update() {
     bool upPinState = false;
     bool downPinState = false;
+    // Don't read the pin if TCU is not enabled, or the pin is not configured
     if (CONFIG(tcuUpshiftButtonPin) && CONFIG(tcuEnabled)) {
         upPinState = debounceUp.readPinEvent();
     }
@@ -20,6 +29,7 @@ void ButtonShiftController::update() {
         downPinState = debounceDown.readPinEvent();
     }
     gear_e gear = getDesiredGear();
+    // Select new gear based on current desired gear.
     if (upPinState) {
         switch (gear) {
             case REVERSE:
@@ -61,7 +71,10 @@ void ButtonShiftController::update() {
                 break;
         }
     }
+    // We are responsible for telling the transmission controller
+    //  what gear we want.
     transmissionController.update(getDesiredGear());
+    // Post state to TS
     postState();
 }
 

@@ -1,3 +1,10 @@
+/**
+ * @file        buttonshift.cpp
+ * @brief       Polls pins for gear changes
+ *
+ * @date Aug 31, 2020
+ * @author David Holdeman, (c) 2020
+ */
 #pragma once
 
 #include "tcu.h"

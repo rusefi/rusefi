@@ -1,3 +1,10 @@
+/**
+ * @file        tcu.h
+ * @brief       Base classes for gear selection and transmission control
+ *
+ * @date Aug 31, 2020
+ * @author David Holdeman, (c) 2020
+ */
 #pragma once
 
 #include "global.h"
