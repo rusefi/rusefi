@@ -5,6 +5,7 @@
 #include "global.h"
 #include "function_pointer_sensor.h"
 #include "ego.h"
+#include "AemXseriesLambda.h"
 
 EXTERN_ENGINE;
 
@@ -23,9 +24,19 @@ static FunctionPointerSensor lambdaSensor(SensorType::Lambda,
 	return afrWrapper.getLambda();
 });
 
+static AemXSeriesWideband aem(0, SensorType::Lambda);
+
 void init_lambda(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	INJECT_ENGINE_REFERENCE(&afrWrapper);
 
+	if (CONFIG(enableAemXSeries)) {
+		if (!aem.Register()) {
+			warning(OBD_PCM_Processor_Fault, "Duplicate lambda sensor registration, ignoring");
+		}
+
+		return;
+	}
+	
 	if (!lambdaSensor.Register()) {
 		warning(OBD_PCM_Processor_Fault, "Duplicate lambda sensor registration, ignoring");
 	}

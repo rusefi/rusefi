@@ -108,16 +108,9 @@ bool hasAfrSensor(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	return engineConfiguration->afr.hwChannel != EFI_ADC_NONE;
 }
 
-extern float aemXSeriesLambda;
 extern float InnovateLC2AFR;
 
 float getAfr(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
-#if EFI_CAN_SUPPORT
-	if (CONFIG(enableAemXSeries)) {
-		return aemXSeriesLambda * 14.7f;
-	}
-#endif
-
 #if EFI_AUX_SERIAL
 	if (CONFIG(enableInnovateLC2))
 		return InnovateLC2AFR;
