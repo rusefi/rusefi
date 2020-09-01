@@ -14,20 +14,16 @@ ButtonShiftController buttonShiftController;
 
 void ButtonShiftController::init (DECLARE_ENGINE_PARAMETER_SIGNATURE) {
     // 500 millisecond is maybe a little long?
-    debounceUp.init(500, CONFIG(tcuUpshiftButtonPin), CONFIG(tcuUpshiftButtonPinMode));
-    debounceDown.init(500, CONFIG(tcuDownshiftButtonPin), CONFIG(tcuDownshiftButtonPinMode));
+    debounceUp.init(500, tcuUpshiftButtonPin, tcuUpshiftButtonPinMode);
+    debounceDown.init(500, tcuDownshiftButtonPin, tcuDownshiftButtonPinMode);
 }
 
 void ButtonShiftController::update() {
     bool upPinState = false;
     bool downPinState = false;
     // Don't read the pin if TCU is not enabled, or the pin is not configured
-    if (CONFIG(tcuUpshiftButtonPin) && CONFIG(tcuEnabled)) {
-        upPinState = debounceUp.readPinEvent();
-    }
-    if (CONFIG(tcuDownshiftButtonPin) && CONFIG(tcuEnabled)) {
-        downPinState = debounceDown.readPinEvent();
-    }
+    upPinState = debounceUp.readPinEvent();
+    downPinState = debounceDown.readPinEvent();
     gear_e gear = getDesiredGear();
     // Select new gear based on current desired gear.
     if (upPinState) {

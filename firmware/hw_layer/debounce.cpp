@@ -7,18 +7,21 @@
  */
 #include "debounce.h"
 
-void ButtonDebounce::init (int t, brain_pin_e p, pin_input_mode_e m) {
+void ButtonDebounce::init (int t, engine_configuration_s p, engine_configuration_s m) {
     threshold = MS2NT(t);
     timeLast = 0;
-    pin = p;
+    pin = CONFIG(p);
 #ifdef PAL_MODE_INPUT_PULLDOWN
     // getInputMode converts from pin_input_mode_e to iomode_t
-    mode = getInputMode(m);
+    mode = getInputMode(CONFIG(m));
     efiSetPadMode("Button", p, mode);
 #endif
 }
 
 bool ButtonDebounce::readPinEvent() {
+    if (!pin) {
+        return false;
+    }
     efitick_t timeNow = getTimeNowNt();
     // If it's been less than the threshold since we were last called
     if ((timeNow - timeLast) < threshold) {
