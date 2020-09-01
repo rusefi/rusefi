@@ -43,6 +43,7 @@ void serviceCanSubscribers(const CANRxFrame& frame, efitick_t nowNt) {
 void registerCanSensor(CanSensorBase& sensor) {
 	sensor.setNext(cansensors_head);
 	cansensors_head = &sensor;
+	sensor.Register();
 }
 
 void processCanRxMessage(const CANRxFrame& frame, Logging* logger, efitick_t nowNt) {
