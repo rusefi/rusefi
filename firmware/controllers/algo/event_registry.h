@@ -122,6 +122,7 @@ public:
 	 * [0, specs.cylindersCount)
 	 */
 	int cylinderIndex = 0;
+	int8_t cylinderNumber = 0;
 	char *name = nullptr;
 	DECLARE_ENGINE_PTR;
 	IgnitionOutputPin *getOutputForLoggins();
