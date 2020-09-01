@@ -11,18 +11,23 @@
 #include "can_sensor.h"
 #include "can.h"
 
+#define TIMEOUT MS2NT(100)
+
 CanSensor<int16_t, PACK_MULT_PERCENT> canPedalSensor(
 	CAN_DEFAULT_BASE + CAN_PEDAL_TPS_OFFSET, /*offset =*/ 0,
-	SensorType::AcceleratorPedal, MS2NT(100)
+	SensorType::AcceleratorPedal, TIMEOUT
+);
+
+ObdCanSensor<int16_t, ODB_RPM_MULT> obdCltSensor(
+	PID_RPM,
+	SensorType::Rpm, TIMEOUT
 );
 
 void initCanSensors() {
 #if EFI_CANBUS_SLAVE
 	registerCanSensor(canPedalSensor);
+	registerCanSensor(obdCltSensor);
 
-	if (!canPedalSensor.Register()) {
-		firmwareError(CUSTOM_INVALID_TPS_SETTING, "Duplicate registration for pedal sensor");
-	}
 #endif // EFI_CANBUS_SLAVE
 }
 #endif // EFI_CAN_SUPPORT
