@@ -43,4 +43,4 @@
 void obdOnCanPacketRx(const CANRxFrame& rx);
 #endif /* HAL_USE_CAN */
 
-#define ODB_RPM_MULT 4.0f
+#define ODB_RPM_MULT 4
