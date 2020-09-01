@@ -29,6 +29,11 @@ void TransmissionControllerBase::postState() {
 #endif
 }
 
+void GearControllerBase::update() {
+    transmissionController.update(getDesiredGear());
+    postState();
+}
+
 gear_e GearControllerBase::getDesiredGear() const {
     return desiredGear;
 }
