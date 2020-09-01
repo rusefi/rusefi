@@ -78,6 +78,8 @@ static void obdSendPacket(int mode, int PID, int numBytes, uint32_t iValue) {
 	}
 }
 
+#define _1_MODE 1
+
 static void obdSendValue(int mode, int PID, int numBytes, float value) {
 	efiAssertVoid(CUSTOM_ERR_6662, numBytes <= 2, "invalid numBytes");
 	int iValue = (int)efiRound(value, 1.0f);
@@ -120,40 +122,40 @@ static void handleGetDataRequest(const CANRxFrame& rx) {
 		break;
 	case PID_FUEL_SYSTEM_STATUS:
 		// todo: add statuses
-		obdSendValue(1, pid, 2, (2<<8)|(0));	// 2 = "Closed loop, using oxygen sensor feedback to determine fuel mix"
+		obdSendValue(_1_MODE, pid, 2, (2<<8)|(0));	// 2 = "Closed loop, using oxygen sensor feedback to determine fuel mix"
 		break;
 	case PID_ENGINE_LOAD:
-		obdSendValue(1, pid, 1, getFuelingLoad(PASS_ENGINE_PARAMETER_SIGNATURE) * 2.55f);
+		obdSendValue(_1_MODE, pid, 1, getFuelingLoad(PASS_ENGINE_PARAMETER_SIGNATURE) * 2.55f);
 		break;
 	case PID_COOLANT_TEMP:
-		obdSendValue(1, pid, 1, Sensor::get(SensorType::Clt).value_or(0) + 40.0f);
+		obdSendValue(_1_MODE, pid, 1, Sensor::get(SensorType::Clt).value_or(0) + 40.0f);
 		break;
 	case PID_STFT_BANK1:
-		obdSendValue(1, pid, 1, 128 * ENGINE(engineState.running.pidCorrection));
+		obdSendValue(_1_MODE, pid, 1, 128 * ENGINE(engineState.running.pidCorrection));
 		break;
 	case PID_INTAKE_MAP:
-		obdSendValue(1, pid, 1, getMap(PASS_ENGINE_PARAMETER_SIGNATURE));
+		obdSendValue(_1_MODE, pid, 1, getMap(PASS_ENGINE_PARAMETER_SIGNATURE));
 		break;
 	case PID_RPM:
-		obdSendValue(1, pid, 2, GET_RPM() * 4.0f);	//	rotation/min.	(A*256+B)/4
+		obdSendValue(_1_MODE, pid, 2, GET_RPM() * ODB_RPM_MULT);	//	rotation/min.	(A*256+B)/4
 		break;
 	case PID_SPEED:
-		obdSendValue(1, pid, 1, getVehicleSpeed());
+		obdSendValue(_1_MODE, pid, 1, getVehicleSpeed());
 		break;
 	case PID_TIMING_ADVANCE: {
 		float timing = engine->engineState.timingAdvance;
 		timing = (timing > 360.0f) ? (timing - 720.0f) : timing;
-		obdSendValue(1, pid, 1, (timing + 64.0f) * 2.0f);		// angle before TDC.	(A/2)-64
+		obdSendValue(_1_MODE, pid, 1, (timing + 64.0f) * 2.0f);		// angle before TDC.	(A/2)-64
 		break;
 		}
 	case PID_INTAKE_TEMP:
-		obdSendValue(1, pid, 1, Sensor::get(SensorType::Iat).value_or(0) + 40.0f);
+		obdSendValue(_1_MODE, pid, 1, Sensor::get(SensorType::Iat).value_or(0) + 40.0f);
 		break;
 	case PID_INTAKE_MAF:
-		obdSendValue(1, pid, 2, getRealMaf(PASS_ENGINE_PARAMETER_SIGNATURE) * 100.0f);	// grams/sec	(A*256+B)/100
+		obdSendValue(_1_MODE, pid, 2, getRealMaf(PASS_ENGINE_PARAMETER_SIGNATURE) * 100.0f);	// grams/sec	(A*256+B)/100
 		break;
 	case PID_THROTTLE:
-		obdSendValue(1, pid, 1, Sensor::get(SensorType::Tps1).value_or(0) * 2.55f);	// (A*100/255)
+		obdSendValue(_1_MODE, pid, 1, Sensor::get(SensorType::Tps1).value_or(0) * 2.55f);	// (A*100/255)
 		break;
 	case PID_FUEL_AIR_RATIO_1: {
 		float afr = getAfr(PASS_ENGINE_PARAMETER_SIGNATURE);
@@ -165,7 +167,7 @@ static void handleGetDataRequest(const CANRxFrame& rx) {
 		obdSendPacket(1, pid, 4, scaled << 16);
 		break;
 	} case PID_FUEL_RATE:
-		obdSendValue(1, pid, 2, engine->engineState.fuelConsumption.perSecondConsumption * 20.0f);	//	L/h.	(A*256+B)/20
+		obdSendValue(_1_MODE, pid, 2, engine->engineState.fuelConsumption.perSecondConsumption * 20.0f);	//	L/h.	(A*256+B)/20
 		break;
 	default:
 		// ignore unhandled PIDs
