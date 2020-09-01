@@ -35,7 +35,6 @@
 #include "engine_math.h"
 #include "fuel_math.h"
 #include "thermistors.h"
-#include "ego.h"
 
 EXTERN_ENGINE;
 
@@ -158,9 +157,9 @@ static void handleGetDataRequest(const CANRxFrame& rx) {
 		obdSendValue(_1_MODE, pid, 1, Sensor::get(SensorType::Tps1).value_or(0) * 2.55f);	// (A*100/255)
 		break;
 	case PID_FUEL_AIR_RATIO_1: {
-		float afr = getAfr(PASS_ENGINE_PARAMETER_SIGNATURE);
+		float lambda = Sensor::get(SensorType::Lambda).value_or(0);
 		// phi = 1 / lambda
-		float phi = clampF(0, 14.7f / afr, 1.99f);
+		float phi = clampF(0, 1 / lambda, 1.99f);
 
 		uint16_t scaled = phi * 32768;
 
