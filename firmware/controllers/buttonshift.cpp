@@ -69,7 +69,8 @@ void ButtonShiftController::update() {
     }
     // We are responsible for telling the transmission controller
     //  what gear we want.
-    transmissionController.update(getDesiredGear());
+//    transmissionController.update(getDesiredGear());
+    transmissionController.update(GEAR_2);
     // Post state to TS
     postState();
 }
