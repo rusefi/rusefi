@@ -74,6 +74,8 @@ static const char* s_sensorNames[] = {
 
 	"Aux Temp 1",
 	"Aux Temp 2",
+
+	"Lambda",
 };
 
 static_assert(efi::size(s_sensorNames) == efi::size(s_sensorRegistry));

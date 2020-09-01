@@ -48,6 +48,8 @@ enum class SensorType : unsigned char {
 	AuxTemp1,
 	AuxTemp2,
 
+	Lambda,
+
 	// Leave me at the end!
 	PlaceholderLast
 };
