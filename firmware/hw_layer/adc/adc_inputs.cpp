@@ -118,7 +118,7 @@ static adcsample_t getAvgAdcValue(int index, adcsample_t *samples, int bufDepth,
  */
 static ADCConversionGroup adcgrpcfgSlow = { FALSE, 0, nullptr, NULL,
 /* HW dependent part.*/
-ADC_TwoSamplingDelay_20Cycles,   // cr1
+0,   // cr1
 		ADC_CR2_SWSTART, // cr2
 /**
  * here we configure all possible channels for slow mode. Some channels would not actually
@@ -159,7 +159,7 @@ void adc_callback_fast(ADCDriver *adcp, adcsample_t *buffer, size_t n);
 
 static ADCConversionGroup adcgrpcfg_fast = { FALSE, 0 /* num_channels */, adc_callback_fast, NULL,
 /* HW dependent part.*/
-ADC_TwoSamplingDelay_5Cycles,   // cr1
+0,   // cr1
 		ADC_CR2_SWSTART, // cr2
 
 		/**
