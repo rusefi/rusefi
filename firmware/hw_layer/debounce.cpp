@@ -8,7 +8,7 @@
 #include "debounce.h"
 
 void ButtonDebounce::init (int t, brain_pin_e p, pin_input_mode_e m) {
-    threshold = t;
+    threshold = MS2NT(t);
     timeLast = 0;
     pin = p;
 #ifdef PAL_MODE_INPUT_PULLDOWN
@@ -19,7 +19,7 @@ void ButtonDebounce::init (int t, brain_pin_e p, pin_input_mode_e m) {
 }
 
 bool ButtonDebounce::readPinEvent() {
-    efitimems_t timeNow = currentTimeMillis();
+    efitick_t timeNow = getTimeNowNt();
     // If it's been less than the threshold since we were last called
     if ((timeNow - timeLast) < threshold) {
         return false;
