@@ -116,22 +116,29 @@ static adcsample_t getAvgAdcValue(int index, adcsample_t *samples, int bufDepth,
 /*
  * ADC conversion group.
  */
-static ADCConversionGroup adcgrpcfgSlow = { FALSE, 0, nullptr, NULL,
-/* HW dependent part.*/
-0,   // cr1
-		ADC_CR2_SWSTART, // cr2
-/**
- * here we configure all possible channels for slow mode. Some channels would not actually
- * be used hopefully that's fine to configure all possible channels.
- */
+static ADCConversionGroup adcgrpcfgSlow = {
+	.circular			= FALSE,
+	.num_channels		= 0,
+	.end_cb				= nullptr,
+	.error_cb			= nullptr,
+	/* HW dependent part.*/
+	.cr1				= 0,
+	.cr2				= ADC_CR2_SWSTART,
+	/**
+	 * here we configure all possible channels for slow mode. Some channels would not actually
+	 * be used hopefully that's fine to configure all possible channels.
+	 */
+	// sample times for channels 10...18
+	.smpr1 =
 		ADC_SMPR1_SMP_AN10(ADC_SAMPLING_SLOW) |
 		ADC_SMPR1_SMP_AN11(ADC_SAMPLING_SLOW) |
 		ADC_SMPR1_SMP_AN12(ADC_SAMPLING_SLOW) |
 		ADC_SMPR1_SMP_AN13(ADC_SAMPLING_SLOW) |
 		ADC_SMPR1_SMP_AN14(ADC_SAMPLING_SLOW) |
 		ADC_SMPR1_SMP_AN15(ADC_SAMPLING_SLOW) |
-		ADC_SMPR1_SMP_SENSOR(ADC_SAMPLE_144)
-		, // sample times for channels 10...18
+		ADC_SMPR1_SMP_SENSOR(ADC_SAMPLE_144),
+	// In this field must be specified the sample times for channels 0...9
+	.smpr2 =
 		ADC_SMPR2_SMP_AN0(ADC_SAMPLING_SLOW) |
 		ADC_SMPR2_SMP_AN1(ADC_SAMPLING_SLOW) |
 		ADC_SMPR2_SMP_AN2(ADC_SAMPLING_SLOW) |
@@ -141,39 +148,41 @@ static ADCConversionGroup adcgrpcfgSlow = { FALSE, 0, nullptr, NULL,
 		ADC_SMPR2_SMP_AN6(ADC_SAMPLING_SLOW) |
 		ADC_SMPR2_SMP_AN7(ADC_SAMPLING_SLOW) |
 		ADC_SMPR2_SMP_AN8(ADC_SAMPLING_SLOW) |
-		ADC_SMPR2_SMP_AN9(ADC_SAMPLING_SLOW)
-
-		, // In this field must be specified the sample times for channels 0...9
-
-		0,
-		0,
-
-		0, // Conversion group sequence 13...16 + sequence length
-		0, // Conversion group sequence 7...12
-		0  // Conversion group sequence 1...6
-		};
+		ADC_SMPR2_SMP_AN9(ADC_SAMPLING_SLOW),
+	.htr				= 0,
+	.ltr				= 0,
+	.sqr1				= 0, // Conversion group sequence 13...16 + sequence length
+	.sqr2				= 0, // Conversion group sequence 7...12
+	.sqr3				= 0  // Conversion group sequence 1...6
+};
 
 AdcDevice slowAdc(&adcgrpcfgSlow);
 
 void adc_callback_fast(ADCDriver *adcp, adcsample_t *buffer, size_t n);
 
-static ADCConversionGroup adcgrpcfg_fast = { FALSE, 0 /* num_channels */, adc_callback_fast, NULL,
-/* HW dependent part.*/
-0,   // cr1
-		ADC_CR2_SWSTART, // cr2
-
+static ADCConversionGroup adcgrpcfg_fast = {
+	.circular			= FALSE,
+	.num_channels		= 0,
+	.end_cb				= adc_callback_fast,
+	.error_cb			= nullptr,
+	/* HW dependent part.*/
+	.cr1				= 0,
+	.cr2				= ADC_CR2_SWSTART,
 		/**
 		 * here we configure all possible channels for fast mode. Some channels would not actually
          * be used hopefully that's fine to configure all possible channels.
 		 *
 		 */
+	// sample times for channels 10...18
+	.smpr1 =
 		ADC_SMPR1_SMP_AN10(ADC_SAMPLING_FAST) |
 		ADC_SMPR1_SMP_AN11(ADC_SAMPLING_FAST) |
 		ADC_SMPR1_SMP_AN12(ADC_SAMPLING_FAST) |
 		ADC_SMPR1_SMP_AN13(ADC_SAMPLING_FAST) |
 		ADC_SMPR1_SMP_AN14(ADC_SAMPLING_FAST) |
-		ADC_SMPR1_SMP_AN15(ADC_SAMPLING_FAST)
-		, // sample times for channels 10...18
+		ADC_SMPR1_SMP_AN15(ADC_SAMPLING_FAST),
+	// In this field must be specified the sample times for channels 0...9
+	.smpr2 =
 		ADC_SMPR2_SMP_AN0(ADC_SAMPLING_FAST) |
 		ADC_SMPR2_SMP_AN1(ADC_SAMPLING_FAST) |
 		ADC_SMPR2_SMP_AN2(ADC_SAMPLING_FAST) |
@@ -183,18 +192,13 @@ static ADCConversionGroup adcgrpcfg_fast = { FALSE, 0 /* num_channels */, adc_ca
 		ADC_SMPR2_SMP_AN6(ADC_SAMPLING_FAST) |
 		ADC_SMPR2_SMP_AN7(ADC_SAMPLING_FAST) |
 		ADC_SMPR2_SMP_AN8(ADC_SAMPLING_FAST) |
-		ADC_SMPR2_SMP_AN9(ADC_SAMPLING_FAST), // In this field must be specified the sample times for channels 0...9
-
-		0,
-		0,
-
-		0, // Conversion group sequence 13...16 + sequence length
-
-		0, // Conversion group sequence 7...12
-		0
-
-// Conversion group sequence 1...6
-		};
+		ADC_SMPR2_SMP_AN9(ADC_SAMPLING_FAST),
+	.htr				= 0,
+	.ltr				= 0,
+	.sqr1				= 0, // Conversion group sequence 13...16 + sequence length
+	.sqr2				= 0, // Conversion group sequence 7...12
+	.sqr3				= 0  // Conversion group sequence 1...6
+};
 
 AdcDevice fastAdc(&adcgrpcfg_fast);
 
