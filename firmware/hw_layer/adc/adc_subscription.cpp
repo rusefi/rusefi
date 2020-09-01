@@ -25,6 +25,7 @@ struct AdcSubscriptionEntry {
 	float VoltsPerAdcVolt;
 	adc_channel_e Channel;
 	Biquad Filter;
+	bool HasUpdated = false;
 };
 
 static size_t s_nextEntry = 0;
@@ -67,6 +68,14 @@ void AdcSubscription::UpdateSubscribers(efitick_t nowNt) {
 
 		float mcuVolts = getVoltage("sensor", entry.Channel);
 		float sensorVolts = mcuVolts * entry.VoltsPerAdcVolt;
+
+		// On the very first update, preload the filter as if we've been
+		// seeing this value for a long time.  This prevents a slow ramp-up
+		// towards the correct value just after startup
+		if (!entry.HasUpdated) {
+			entry.Filter.cookSteadyState(sensorVolts);
+			entry.HasUpdated = true;
+		}
 
 		float filtered = entry.Filter.filter(sensorVolts);
 

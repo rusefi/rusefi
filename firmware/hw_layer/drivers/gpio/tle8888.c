@@ -63,10 +63,6 @@ typedef enum {
 	TLE8888_FAILED
 } tle8888_drv_state;
 
-// tle8888_mode_e
-#define MODE_MANUAL 0x02
-#define MODE_HALL 0x03
-
 /* C0 */
 #define CMD_READ			(0 << 0)
 #define CMD_WRITE			(1 << 0)

@@ -240,7 +240,9 @@ typedef struct {
 
 	uint8_t pad; // 250
 
-	uint8_t unusedAtTheEnd[34]; // we have some unused bytes to allow compatible TS changes
+	int8_t knockLevels[12];
+
+	uint8_t unusedAtTheEnd[22]; // we have some unused bytes to allow compatible TS changes
 
 	// Temporary - will remove soon
 	TsDebugChannels* getDebugChannels() {
