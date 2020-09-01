@@ -345,7 +345,7 @@ enable2ndByteCanID = false
 
 ; Transmission
       tcuDesiredGear  = scalar,  S08,     247,   "gear",    1,         0
-      tcuCurrentGear  = scalar,  S08,     248,   "gear",    1,         0
+      tcuCurrentGear  = scalar,  S08,     249,   "gear",    1,         0
 
 ;
 ; see TunerStudioOutputChannels struct

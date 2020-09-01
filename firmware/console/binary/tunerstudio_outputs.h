@@ -233,11 +233,12 @@ typedef struct {
 	uint8_t sd_status; // 246
 
 	int8_t tcuDesiredGear; // 247
-	int8_t tcuCurrentGear; // 248
 
-	uint8_t pad; // 249
+	scaled_voltage rawPpsSecondary;		// 248
 
-	scaled_voltage rawPpsSecondary;		// 250
+	int8_t tcuCurrentGear; // 249
+
+	uint8_t pad; // 250
 
 	uint8_t unusedAtTheEnd[34]; // we have some unused bytes to allow compatible TS changes
 
