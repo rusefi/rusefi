@@ -899,7 +899,7 @@ custom maf_sensor_type_e 4 bits, S32, @OFFSET@, [0:1], @@maf_sensor_type_e_enum@
 	bit knockBankCyl10,Channel 2,Channel 1;
 	bit knockBankCyl11,Channel 2,Channel 1;
 	bit knockBankCyl12,Channel 2,Channel 1;
-	bit unusedBit_251_28
+	bit tcuEnabled
 	bit unusedBit_251_29
 	
 	etb_io[ETB_COUNT iterate] etbIo
@@ -1370,12 +1370,11 @@ uint8_t[4] unusedsw;;"units", 1, 0, -20, 100, 0
 	uint16_t mc33_t_hold_off;;"us",   1,   0.0,        0,  10000,   0
 	uint16_t mc33_t_hold_tot;;"us",   1,   0.0,        0,  10000,   0
 
-	bit tcuEnabled
 	pin_input_mode_e tcuUpshiftButtonPinMode
 	pin_input_mode_e tcuDownshiftButtonPinMode
 
 ! just a reminder that 'int' and 'float' are 4 bytes each
-	int[370] mainUnusedEnd;;"units", 1, 0, -20, 100, 0
+	int[371] mainUnusedEnd;;"units", 1, 0, -20, 100, 0
 
 ! end of engine_configuration_s
 end_struct
