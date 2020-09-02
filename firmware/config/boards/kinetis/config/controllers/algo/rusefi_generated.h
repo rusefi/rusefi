@@ -43,7 +43,6 @@
 #define air_pressure_sensor_config_s_size 16
 #define air_pressure_sensor_type_e_auto_enum "MT_CUSTOM", "MT_DENSO183", "MT_MPX4250", "MT_HONDA3BAR", "MT_DODGE_NEON_2003", "MT_SUBY_DENSO", "MT_GM_3_BAR", "MT_MPX4100", "MT_TOYOTA_89420_02010", "MT_MPX4250A", "MT_BOSCH_2_5", "MT_MAZDA_1_BAR"
 #define alignEngineSnifferAtTDC_offset 744
-#define alignmentFill_at_4514_offset 4514
 #define alternator_antiwindupFreq_offset 1764
 #define alternator_derivativeFilterLoss_offset 1760
 #define alternatorControl_dFactor_offset 1724
@@ -1148,7 +1147,7 @@
 #define showSdCardWarning_offset 76
 #define SIGNATURE_BOARD kin
 #define SIGNATURE_DATE 2020.09.02
-#define SIGNATURE_HASH 555686289
+#define SIGNATURE_HASH 4183924177
 #define silentTriggerError_offset 1464
 #define slowAdcAlpha_offset 2088
 #define sparkDwellRpmBins_offset 332
@@ -1249,7 +1248,10 @@
 #define tcu_solenoid8_offset 1199
 #define TCU_SOLENOID_COUNT 8
 #define tcuDownshiftButtonPin_offset 1819
+#define tcuDownshiftButtonPinMode_offset 4515
+#define tcuEnabled_offset 976
 #define tcuUpshiftButtonPin_offset 1818
+#define tcuUpshiftButtonPinMode_offset 4514
 #define test557pin_offset 3101
 #define thermistor_conf_s_size 28
 #define ThermistorConf_size 32
@@ -1455,7 +1457,7 @@
 #define ts_show_spi true
 #define ts_show_trigger_comparator true
 #define ts_show_tunerstudio_port true
-#define TS_SIGNATURE "rusEFI 2020.09.02.kin.555686289"
+#define TS_SIGNATURE "rusEFI 2020.09.02.kin.4183924177"
 #define TS_SINGLE_WRITE_COMMAND 'W'
 #define TS_SINGLE_WRITE_COMMAND_char W
 #define TS_TEST_COMMAND 't' // 0x74
@@ -1500,7 +1502,6 @@
 #define unusedAuxVoltage1_TODO_332_offset 2713
 #define unusedAuxVoltage2_TODO_332_offset 2714
 #define unusedBit4_1476_offset 1476
-#define unusedBit_251_28_offset 976
 #define unusedBit_251_29_offset 976
 #define unusedBit_284_30_offset 976
 #define unusedBit_284_31_offset 976
