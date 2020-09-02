@@ -27,6 +27,6 @@ SensorResult AemXSeriesWideband::decodeFrame(const CANRxFrame& frame) {
 		return unexpected;
 	}
 
-	// reports in 0.0001 lambda per bit
+	// reports in 0.0001 lambda per LSB
 	return 0.0001f * SWAP_UINT16(frame.data16[0]);
 }
