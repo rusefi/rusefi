@@ -7,7 +7,7 @@
 #define KNOCK_ADC_CH1 ADC_CHANNEL_IN3
 #define KNOCK_PIN_CH1 GPIOA_3
 
-// knock 2 - pin PF5 NOT used!
+// knock 2 - pin PF5 NOT used! - not used for MRE
 #define KNOCK_ADC_CH2 ADC_CHANNEL_IN15
 #define KNOCK_PIN_CH2 GPIOF_5
 
