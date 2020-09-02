@@ -345,16 +345,16 @@ enable2ndByteCanID = false
 
 ; Transmission
       tcuCurrentGear  = scalar,  S08,     247,   "gear",    1,         0
-      tcuDesiredGear  = scalar,  S08,     250,   "gear",    1,         0
+      tcuDesiredGear  = scalar,  S08,     262,   "gear",    1,         0
 
-	knock1 = scalar, S08, 251, "dbv", 1, 0
-	knock2 = scalar, S08, 252, "dbv", 1, 0
-	knock3 = scalar, S08, 253, "dbv", 1, 0
-	knock4 = scalar, S08, 254, "dbv", 1, 0
-	knock5 = scalar, S08, 255, "dbv", 1, 0
-	knock6 = scalar, S08, 256, "dbv", 1, 0
-	knock7 = scalar, S08, 257, "dbv", 1, 0
-	knock8 = scalar, S08, 258, "dbv", 1, 0
+	knock1 = scalar, S08, 250, "dbv", 1, 0
+	knock2 = scalar, S08, 251, "dbv", 1, 0
+	knock3 = scalar, S08, 252, "dbv", 1, 0
+	knock4 = scalar, S08, 253, "dbv", 1, 0
+	knock5 = scalar, S08, 254, "dbv", 1, 0
+	knock6 = scalar, S08, 255, "dbv", 1, 0
+	knock7 = scalar, S08, 256, "dbv", 1, 0
+	knock8 = scalar, S08, 257, "dbv", 1, 0
 
 ;
 ; see TunerStudioOutputChannels struct

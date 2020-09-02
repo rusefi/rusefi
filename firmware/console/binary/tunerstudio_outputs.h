@@ -236,9 +236,9 @@ typedef struct {
 
 	scaled_voltage rawPpsSecondary;		// 248
 
-	int8_t tcuDesiredGear; // 250
-
 	int8_t knockLevels[12];
+
+	int8_t tcuDesiredGear; // 262
 
 	uint8_t unusedAtTheEnd[22]; // we have some unused bytes to allow compatible TS changes
 
