@@ -18,6 +18,9 @@ void ButtonDebounce::init (int t, brain_pin_e p, pin_input_mode_e m) {
 #endif
 }
 
+/**
+@returns true if the button is pressed, and will not return true again within the set timeout
+*/
 bool ButtonDebounce::readPinEvent() {
     if (!pin) {
         return false;
