@@ -229,14 +229,18 @@ typedef struct {
 	scaled_voltage rawOilPressure;		// 242
 
 	int16_t tuneCrc16; // 244
-    uint8_t sd_status; // 246
-	uint8_t pad;
+
+	uint8_t sd_status; // 246
+
+	int8_t tcuCurrentGear; // 247
 
 	scaled_voltage rawPpsSecondary;		// 248
 
+	int8_t tcuDesiredGear; // 250
+
 	int8_t knockLevels[12];
 
-	uint8_t unusedAtTheEnd[26]; // we have some unused bytes to allow compatible TS changes
+	uint8_t unusedAtTheEnd[22]; // we have some unused bytes to allow compatible TS changes
 
 	// Temporary - will remove soon
 	TsDebugChannels* getDebugChannels() {
