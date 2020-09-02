@@ -2372,7 +2372,21 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 
 	dialog = softwareKnock, "Software Knock"
 		field = "Enable",				enableSoftwareKnock
-		field = "Band Freq override",	knockBandCustom, {enableSoftwareKnock}
+		field = "Knock filter frequency",	knockBandCustom, {enableSoftwareKnock}
+		field = ""
+		field = "Select the nearest sensor for each cylinder"
+		field = "Cylinder 1",			knockBankCyl1,  {enableSoftwareKnock}
+		field = "Cylinder 2",			knockBankCyl2,  {enableSoftwareKnock && cylindersCount >= 2}
+		field = "Cylinder 3",			knockBankCyl3,  {enableSoftwareKnock && cylindersCount >= 3}
+		field = "Cylinder 4",			knockBankCyl4,  {enableSoftwareKnock && cylindersCount >= 4}
+		field = "Cylinder 5",			knockBankCyl5,  {enableSoftwareKnock && cylindersCount >= 5}
+		field = "Cylinder 6",			knockBankCyl6,  {enableSoftwareKnock && cylindersCount >= 6}
+		field = "Cylinder 7",			knockBankCyl7,  {enableSoftwareKnock && cylindersCount >= 7}
+		field = "Cylinder 8",			knockBankCyl8,  {enableSoftwareKnock && cylindersCount >= 8}
+		field = "Cylinder 9",			knockBankCyl9,  {enableSoftwareKnock && cylindersCount >= 9}
+		field = "Cylinder 10",			knockBankCyl10, {enableSoftwareKnock && cylindersCount >= 10}
+		field = "Cylinder 11",			knockBankCyl11, {enableSoftwareKnock && cylindersCount >= 11}
+		field = "Cylinder 12",			knockBankCyl12, {enableSoftwareKnock && cylindersCount >= 12}
 
 ;			Engine->hip9011 Settings
 	dialog = hipFunction, "HIP9011 Settings (knock decoder)"
