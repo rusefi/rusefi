@@ -8,6 +8,7 @@
 #define KNOCK_PIN_CH1 GPIOF_4
 
 // knock 2 - pin PF5
+#define KNOCK_HAS_CH2 true
 #define KNOCK_ADC_CH2 ADC_CHANNEL_IN15
 #define KNOCK_PIN_CH2 GPIOF_5
 
