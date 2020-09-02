@@ -909,6 +909,18 @@
 #define joystickCPin_offset 941
 #define joystickDPin_offset 942
 #define knockBandCustom_offset 328
+#define knockBankCyl10_offset 976
+#define knockBankCyl11_offset 976
+#define knockBankCyl12_offset 976
+#define knockBankCyl1_offset 976
+#define knockBankCyl2_offset 976
+#define knockBankCyl3_offset 976
+#define knockBankCyl4_offset 976
+#define knockBankCyl5_offset 976
+#define knockBankCyl6_offset 976
+#define knockBankCyl7_offset 976
+#define knockBankCyl8_offset 976
+#define knockBankCyl9_offset 976
 #define knockDetectionWindowEnd_offset 1504
 #define knockDetectionWindowStart_offset 1500
 #define knockNoise_offset 1820
@@ -1135,8 +1147,8 @@
 #define showHumanReadableWarning_offset 976
 #define showSdCardWarning_offset 76
 #define SIGNATURE_BOARD all
-#define SIGNATURE_DATE 2020.08.30
-#define SIGNATURE_HASH 1488300921
+#define SIGNATURE_DATE 2020.09.02
+#define SIGNATURE_HASH 248208433
 #define silentTriggerError_offset 1464
 #define slowAdcAlpha_offset 2088
 #define sparkDwellRpmBins_offset 332
@@ -1443,7 +1455,7 @@
 #define ts_show_spi true
 #define ts_show_trigger_comparator false
 #define ts_show_tunerstudio_port true
-#define TS_SIGNATURE "rusEFI 2020.08.30.all.1488300921"
+#define TS_SIGNATURE "rusEFI 2020.09.02.all.248208433"
 #define TS_SINGLE_WRITE_COMMAND 'W'
 #define TS_SINGLE_WRITE_COMMAND_char W
 #define TS_TEST_COMMAND 't' // 0x74
@@ -1488,18 +1500,6 @@
 #define unusedAuxVoltage1_TODO_332_offset 2713
 #define unusedAuxVoltage2_TODO_332_offset 2714
 #define unusedBit4_1476_offset 1476
-#define unusedBit_251_16_offset 976
-#define unusedBit_251_17_offset 976
-#define unusedBit_251_18_offset 976
-#define unusedBit_251_19_offset 976
-#define unusedBit_251_20_offset 976
-#define unusedBit_251_21_offset 976
-#define unusedBit_251_22_offset 976
-#define unusedBit_251_23_offset 976
-#define unusedBit_251_24_offset 976
-#define unusedBit_251_25_offset 976
-#define unusedBit_251_26_offset 976
-#define unusedBit_251_27_offset 976
 #define unusedBit_251_28_offset 976
 #define unusedBit_251_29_offset 976
 #define unusedBit_284_30_offset 976
