@@ -42,7 +42,7 @@ HW_LAYER_EMS_CPP = $(HW_LAYER_EGT_CPP) \
 	$(PROJECT_DIR)/hw_layer/io_pins.cpp \
 	$(PROJECT_DIR)/hw_layer/rtc_helper.cpp \
 	$(PROJECT_DIR)/hw_layer/cdm_ion_sense.cpp \
-	$(PROJECT_DIR)/hw_layer/backup_ram.cpp
+	$(PROJECT_DIR)/hw_layer/backup_ram.cpp \
 	$(PROJECT_DIR)/hw_layer/debounce.cpp
 
 #
