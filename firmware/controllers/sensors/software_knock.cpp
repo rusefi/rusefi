@@ -124,9 +124,12 @@ void startKnockSampling(uint8_t cylinderIndex) {
 	constexpr int sampleRate = KNOCK_SAMPLE_RATE;
 	sampleCount = 0xFFFFFFFE & static_cast<size_t>(clampF(100, samplingSeconds * sampleRate, efi::size(sampleBuffer)));
 
+	// Select the appropriate conversion group - it will differ depending on which sensor this cylinder should listen on
 	auto conversionGroup = getConversionGroup(cylinderIndex);
 
+	// Stash the current cylinder's index so we can store the result appropriately
 	currentCylinderIndex = cylinderIndex;
+
 	adcStartConversionI(&KNOCK_ADC, conversionGroup, sampleBuffer, sampleCount);
 }
 
