@@ -49,7 +49,6 @@ CONTROLLERS_SRC_CPP = \
 	$(CONTROLLERS_DIR)/serial/serial_rx.cpp \
 	$(CONTROLLERS_DIR)/serial/serial_sensor.cpp \
 	$(CONTROLLERS_DIR)/tcu.cpp \
-	$(CONTROLLERS_DIR)/buttonshift.cpp \
 
 
 CONTROLLERS_INC=\
