@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEfi tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Sun Aug 30 19:39:58 UTC 2020
+// this file was generated automatically by rusEfi tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Wed Sep 02 11:22:23 UTC 2020
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -888,6 +888,18 @@ public class Fields {
 	public static final int joystickCPin_offset = 941;
 	public static final int joystickDPin_offset = 942;
 	public static final int knockBandCustom_offset = 328;
+	public static final int knockBankCyl10_offset = 976;
+	public static final int knockBankCyl11_offset = 976;
+	public static final int knockBankCyl12_offset = 976;
+	public static final int knockBankCyl1_offset = 976;
+	public static final int knockBankCyl2_offset = 976;
+	public static final int knockBankCyl3_offset = 976;
+	public static final int knockBankCyl4_offset = 976;
+	public static final int knockBankCyl5_offset = 976;
+	public static final int knockBankCyl6_offset = 976;
+	public static final int knockBankCyl7_offset = 976;
+	public static final int knockBankCyl8_offset = 976;
+	public static final int knockBankCyl9_offset = 976;
 	public static final int knockDetectionWindowEnd_offset = 1504;
 	public static final int knockDetectionWindowStart_offset = 1500;
 	public static final int knockNoise_offset = 1820;
@@ -1093,7 +1105,7 @@ public class Fields {
 	public static final int servoOutputPins8_offset = 3147;
 	public static final int showHumanReadableWarning_offset = 976;
 	public static final int showSdCardWarning_offset = 76;
-	public static final int SIGNATURE_HASH = 1488300921;
+	public static final int SIGNATURE_HASH = 248208433;
 	public static final int silentTriggerError_offset = 1464;
 	public static final int slowAdcAlpha_offset = 2088;
 	public static final int sparkDwellRpmBins_offset = 332;
@@ -1350,7 +1362,7 @@ public class Fields {
 	public static final char TS_SD_R_COMMAND = 'r';
 	public static final char TS_SD_W_COMMAND = 'w';
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI 2020.08.30.all.1488300921";
+	public static final String TS_SIGNATURE = "rusEFI 2020.09.02.all.248208433";
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final int tunerStudioSerialSpeed_offset = 728;
 	public static final int twoWireBatchIgnition_offset = 1476;
@@ -1392,18 +1404,6 @@ public class Fields {
 	public static final int unusedAuxVoltage1_TODO_332_offset = 2713;
 	public static final int unusedAuxVoltage2_TODO_332_offset = 2714;
 	public static final int unusedBit4_1476_offset = 1476;
-	public static final int unusedBit_251_16_offset = 976;
-	public static final int unusedBit_251_17_offset = 976;
-	public static final int unusedBit_251_18_offset = 976;
-	public static final int unusedBit_251_19_offset = 976;
-	public static final int unusedBit_251_20_offset = 976;
-	public static final int unusedBit_251_21_offset = 976;
-	public static final int unusedBit_251_22_offset = 976;
-	public static final int unusedBit_251_23_offset = 976;
-	public static final int unusedBit_251_24_offset = 976;
-	public static final int unusedBit_251_25_offset = 976;
-	public static final int unusedBit_251_26_offset = 976;
-	public static final int unusedBit_251_27_offset = 976;
 	public static final int unusedBit_251_28_offset = 976;
 	public static final int unusedBit_251_29_offset = 976;
 	public static final int unusedBit_284_30_offset = 976;
@@ -1968,18 +1968,18 @@ public class Fields {
 	public static final Field VERBOSEVVTDECODING = Field.create("VERBOSEVVTDECODING", 976, FieldType.BIT, 13);
 	public static final Field INVERTCAMVVTSIGNAL = Field.create("INVERTCAMVVTSIGNAL", 976, FieldType.BIT, 14);
 	public static final Field CONSUMEOBDSENSORS = Field.create("CONSUMEOBDSENSORS", 976, FieldType.BIT, 15);
-	public static final Field UNUSEDBIT_251_16 = Field.create("UNUSEDBIT_251_16", 976, FieldType.BIT, 16);
-	public static final Field UNUSEDBIT_251_17 = Field.create("UNUSEDBIT_251_17", 976, FieldType.BIT, 17);
-	public static final Field UNUSEDBIT_251_18 = Field.create("UNUSEDBIT_251_18", 976, FieldType.BIT, 18);
-	public static final Field UNUSEDBIT_251_19 = Field.create("UNUSEDBIT_251_19", 976, FieldType.BIT, 19);
-	public static final Field UNUSEDBIT_251_20 = Field.create("UNUSEDBIT_251_20", 976, FieldType.BIT, 20);
-	public static final Field UNUSEDBIT_251_21 = Field.create("UNUSEDBIT_251_21", 976, FieldType.BIT, 21);
-	public static final Field UNUSEDBIT_251_22 = Field.create("UNUSEDBIT_251_22", 976, FieldType.BIT, 22);
-	public static final Field UNUSEDBIT_251_23 = Field.create("UNUSEDBIT_251_23", 976, FieldType.BIT, 23);
-	public static final Field UNUSEDBIT_251_24 = Field.create("UNUSEDBIT_251_24", 976, FieldType.BIT, 24);
-	public static final Field UNUSEDBIT_251_25 = Field.create("UNUSEDBIT_251_25", 976, FieldType.BIT, 25);
-	public static final Field UNUSEDBIT_251_26 = Field.create("UNUSEDBIT_251_26", 976, FieldType.BIT, 26);
-	public static final Field UNUSEDBIT_251_27 = Field.create("UNUSEDBIT_251_27", 976, FieldType.BIT, 27);
+	public static final Field KNOCKBANKCYL1 = Field.create("KNOCKBANKCYL1", 976, FieldType.BIT, 16);
+	public static final Field KNOCKBANKCYL2 = Field.create("KNOCKBANKCYL2", 976, FieldType.BIT, 17);
+	public static final Field KNOCKBANKCYL3 = Field.create("KNOCKBANKCYL3", 976, FieldType.BIT, 18);
+	public static final Field KNOCKBANKCYL4 = Field.create("KNOCKBANKCYL4", 976, FieldType.BIT, 19);
+	public static final Field KNOCKBANKCYL5 = Field.create("KNOCKBANKCYL5", 976, FieldType.BIT, 20);
+	public static final Field KNOCKBANKCYL6 = Field.create("KNOCKBANKCYL6", 976, FieldType.BIT, 21);
+	public static final Field KNOCKBANKCYL7 = Field.create("KNOCKBANKCYL7", 976, FieldType.BIT, 22);
+	public static final Field KNOCKBANKCYL8 = Field.create("KNOCKBANKCYL8", 976, FieldType.BIT, 23);
+	public static final Field KNOCKBANKCYL9 = Field.create("KNOCKBANKCYL9", 976, FieldType.BIT, 24);
+	public static final Field KNOCKBANKCYL10 = Field.create("KNOCKBANKCYL10", 976, FieldType.BIT, 25);
+	public static final Field KNOCKBANKCYL11 = Field.create("KNOCKBANKCYL11", 976, FieldType.BIT, 26);
+	public static final Field KNOCKBANKCYL12 = Field.create("KNOCKBANKCYL12", 976, FieldType.BIT, 27);
 	public static final Field UNUSEDBIT_251_28 = Field.create("UNUSEDBIT_251_28", 976, FieldType.BIT, 28);
 	public static final Field UNUSEDBIT_251_29 = Field.create("UNUSEDBIT_251_29", 976, FieldType.BIT, 29);
 	public static final Field UNUSEDBIT_284_30 = Field.create("UNUSEDBIT_284_30", 976, FieldType.BIT, 30);
@@ -2992,18 +2992,18 @@ public class Fields {
 	VERBOSEVVTDECODING,
 	INVERTCAMVVTSIGNAL,
 	CONSUMEOBDSENSORS,
-	UNUSEDBIT_251_16,
-	UNUSEDBIT_251_17,
-	UNUSEDBIT_251_18,
-	UNUSEDBIT_251_19,
-	UNUSEDBIT_251_20,
-	UNUSEDBIT_251_21,
-	UNUSEDBIT_251_22,
-	UNUSEDBIT_251_23,
-	UNUSEDBIT_251_24,
-	UNUSEDBIT_251_25,
-	UNUSEDBIT_251_26,
-	UNUSEDBIT_251_27,
+	KNOCKBANKCYL1,
+	KNOCKBANKCYL2,
+	KNOCKBANKCYL3,
+	KNOCKBANKCYL4,
+	KNOCKBANKCYL5,
+	KNOCKBANKCYL6,
+	KNOCKBANKCYL7,
+	KNOCKBANKCYL8,
+	KNOCKBANKCYL9,
+	KNOCKBANKCYL10,
+	KNOCKBANKCYL11,
+	KNOCKBANKCYL12,
 	UNUSEDBIT_251_28,
 	UNUSEDBIT_251_29,
 	UNUSEDBIT_284_30,

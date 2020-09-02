@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Sun Aug 30 19:40:17 UTC 2020
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Wed Sep 02 11:22:35 UTC 2020
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -1783,40 +1783,40 @@ struct engine_configuration_s {
 	bool consumeObdSensors : 1;
 	/**
 	offset 976 bit 16 */
-	bool unusedBit_251_16 : 1;
+	bool knockBankCyl1 : 1;
 	/**
 	offset 976 bit 17 */
-	bool unusedBit_251_17 : 1;
+	bool knockBankCyl2 : 1;
 	/**
 	offset 976 bit 18 */
-	bool unusedBit_251_18 : 1;
+	bool knockBankCyl3 : 1;
 	/**
 	offset 976 bit 19 */
-	bool unusedBit_251_19 : 1;
+	bool knockBankCyl4 : 1;
 	/**
 	offset 976 bit 20 */
-	bool unusedBit_251_20 : 1;
+	bool knockBankCyl5 : 1;
 	/**
 	offset 976 bit 21 */
-	bool unusedBit_251_21 : 1;
+	bool knockBankCyl6 : 1;
 	/**
 	offset 976 bit 22 */
-	bool unusedBit_251_22 : 1;
+	bool knockBankCyl7 : 1;
 	/**
 	offset 976 bit 23 */
-	bool unusedBit_251_23 : 1;
+	bool knockBankCyl8 : 1;
 	/**
 	offset 976 bit 24 */
-	bool unusedBit_251_24 : 1;
+	bool knockBankCyl9 : 1;
 	/**
 	offset 976 bit 25 */
-	bool unusedBit_251_25 : 1;
+	bool knockBankCyl10 : 1;
 	/**
 	offset 976 bit 26 */
-	bool unusedBit_251_26 : 1;
+	bool knockBankCyl11 : 1;
 	/**
 	offset 976 bit 27 */
-	bool unusedBit_251_27 : 1;
+	bool knockBankCyl12 : 1;
 	/**
 	offset 976 bit 28 */
 	bool unusedBit_251_28 : 1;
@@ -3656,4 +3656,4 @@ struct persistent_config_s {
 typedef struct persistent_config_s persistent_config_s;
 
 // end
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Sun Aug 30 19:40:17 UTC 2020
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Wed Sep 02 11:22:35 UTC 2020
