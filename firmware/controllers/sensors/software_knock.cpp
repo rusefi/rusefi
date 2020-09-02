@@ -38,7 +38,7 @@ static void completionCallback(ADCDriver* adcp, adcsample_t*, size_t) {
 static void errorCallback(ADCDriver*, adcerror_t err) {
 }
 
-static const ADCConversionGroup adcConvGroup = { FALSE, 1, &completionCallback, &errorCallback,
+static const ADCConversionGroup adcConvGroupCh1 = { FALSE, 1, &completionCallback, &errorCallback,
 	0,
 	ADC_CR2_SWSTART,
 #ifdef MRE_SW_KNOCK_ADC
@@ -55,6 +55,52 @@ static const ADCConversionGroup adcConvGroup = { FALSE, 1, &completionCallback, 
 	0,	// sqr2
 	ADC_SQR3_SQ1_N(KNOCK_ADC_CH1)
 };
+
+// Not all boards have a second channel - configure it if it exists
+#if KNOCK_HAS_CH2
+static const ADCConversionGroup adcConvGroupCh2 = { FALSE, 1, &completionCallback, &errorCallback,
+	0,
+	ADC_CR2_SWSTART,
+	ADC_SMPR1_SMP_AN14(KNOCK_SAMPLE_TIME), // sample times for channels 10...18
+	0,
+
+	0,	// htr
+	0,	// ltr
+
+	0,	// sqr1
+	0,	// sqr2
+	ADC_SQR3_SQ1_N(KNOCK_ADC_CH2)
+};
+#endif // KNOCK_HAS_CH2
+
+static bool cylinderUsesChannel2(uint8_t cylinderIndex) {
+	// C/C++ can't index in to bit fields, we have to provide lookup ourselves
+	switch (cylinderIndex) {
+		case 0: return CONFIG(knockBankCyl1);
+		case 1: return CONFIG(knockBankCyl2);
+		case 2: return CONFIG(knockBankCyl3);
+		case 3: return CONFIG(knockBankCyl4);
+		case 4: return CONFIG(knockBankCyl5);
+		case 5: return CONFIG(knockBankCyl6);
+		case 6: return CONFIG(knockBankCyl7);
+		case 7: return CONFIG(knockBankCyl8);
+		case 8: return CONFIG(knockBankCyl9);
+		case 9: return CONFIG(knockBankCyl10);
+		case 10: return CONFIG(knockBankCyl11);
+		case 11: return CONFIG(knockBankCyl12);
+		default: return false;
+	}
+}
+
+const ADCConversionGroup* getConversionGroup(uint8_t cylinderIndex) {
+#if KNOCK_HAS_CH2
+	if (cylinderUsesChannel2(cylinderIndex)) {
+		return &adcConvGroupCh2;
+	}
+#endif // KNOCK_HAS_CH2
+
+	return &adcConvGroupCh1;
+}
 
 void startKnockSampling(uint8_t cylinderIndex) {
 	if (!CONFIG(enableSoftwareKnock)) {
@@ -82,8 +128,13 @@ void startKnockSampling(uint8_t cylinderIndex) {
 	constexpr int sampleRate = KNOCK_SAMPLE_RATE;
 	sampleCount = 0xFFFFFFFE & static_cast<size_t>(clampF(100, samplingSeconds * sampleRate, efi::size(sampleBuffer)));
 
+	// Select the appropriate conversion group - it will differ depending on which sensor this cylinder should listen on
+	auto conversionGroup = getConversionGroup(cylinderIndex);
+
+	// Stash the current cylinder's index so we can store the result appropriately
 	currentCylinderIndex = cylinderIndex;
-	adcStartConversionI(&KNOCK_ADC, &adcConvGroup, sampleBuffer, sampleCount);
+
+	adcStartConversionI(&KNOCK_ADC, conversionGroup, sampleBuffer, sampleCount);
 }
 
 class KnockThread : public ThreadController<256> {
@@ -92,7 +143,7 @@ public:
 	void ThreadTask() override;
 };
 
-KnockThread kt;
+static KnockThread kt;
 
 void initSoftwareKnock() {
 	chBSemObjectInit(&knockSem, TRUE);
