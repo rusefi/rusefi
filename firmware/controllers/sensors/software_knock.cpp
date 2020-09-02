@@ -153,7 +153,7 @@ void initSoftwareKnock() {
 		adcStart(&KNOCK_ADC, nullptr);
 
 		efiSetPadMode("knock ch1", KNOCK_PIN_CH1, PAL_MODE_INPUT_ANALOG);
-#ifndef MRE_SW_KNOCK_ADC		
+#if KNOCK_HAS_CH2		
 		efiSetPadMode("knock ch2", KNOCK_PIN_CH2, PAL_MODE_INPUT_ANALOG);
 #endif
 		kt.Start();
