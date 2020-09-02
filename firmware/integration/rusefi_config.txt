@@ -890,18 +890,18 @@ custom maf_sensor_type_e 4 bits, S32, @OFFSET@, [0:1], @@maf_sensor_type_e_enum@
 	bit verboseVVTDecoding;enable vvt_details
 	bit invertCamVVTSignal;get invertCamVVTSignal
 	bit consumeObdSensors;enable consumeObdSensors
-	bit knockBankCyl1,Channel 1,Channel 2;
-	bit knockBankCyl2,Channel 1,Channel 2;
-	bit knockBankCyl3,Channel 1,Channel 2;
-	bit knockBankCyl4,Channel 1,Channel 2;
-	bit knockBankCyl5,Channel 1,Channel 2;
-	bit knockBankCyl6,Channel 1,Channel 2;
-	bit knockBankCyl7,Channel 1,Channel 2;
-	bit knockBankCyl8,Channel 1,Channel 2;
-	bit knockBankCyl9,Channel 1,Channel 2;
-	bit knockBankCyl10,Channel 1,Channel 2;
-	bit knockBankCyl11,Channel 1,Channel 2;
-	bit knockBankCyl12,Channel 1,Channel 2;
+	bit knockBankCyl1,Channel 2,Channel 1;
+	bit knockBankCyl2,Channel 2,Channel 1;
+	bit knockBankCyl3,Channel 2,Channel 1;
+	bit knockBankCyl4,Channel 2,Channel 1;
+	bit knockBankCyl5,Channel 2,Channel 1;
+	bit knockBankCyl6,Channel 2,Channel 1;
+	bit knockBankCyl7,Channel 2,Channel 1;
+	bit knockBankCyl8,Channel 2,Channel 1;
+	bit knockBankCyl9,Channel 2,Channel 1;
+	bit knockBankCyl10,Channel 2,Channel 1;
+	bit knockBankCyl11,Channel 2,Channel 1;
+	bit knockBankCyl12,Channel 2,Channel 1;
 	bit unusedBit_251_28
 	bit unusedBit_251_29
 	
