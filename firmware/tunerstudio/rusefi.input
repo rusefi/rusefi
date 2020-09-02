@@ -343,6 +343,10 @@ enable2ndByteCanID = false
 	tuneCrc16         = scalar,  U16,    244, "crc16",           1,         0
     sd_status         = scalar,  U08,    246,  "", 1.0, 0.0
 
+; Transmission
+      tcuCurrentGear  = scalar,  S08,     247,   "gear",    1,         0
+      tcuDesiredGear  = scalar,  S08,     262,   "gear",    1,         0
+
 	knock1 = scalar, S08, 250, "dbv", 1, 0
 	knock2 = scalar, S08, 251, "dbv", 1, 0
 	knock3 = scalar, S08, 252, "dbv", 1, 0
@@ -973,6 +977,10 @@ gaugeCategory = Sensors - Raw
    rawOilPressureGauge  = rawOilPressure, "Raw Oil Pressure",  "volts", 0, 5, 0, 0, 5, 5, 3, 0
    rawPpsSecondaryGauge = rawPpsSecondary,"Raw Pedal Secondary","volts", 0, 5, 0, 0, 5, 5, 3, 0
 
+gaugeCategory = Transmission
+   desiredGearGauge = tcuDesiredGear, "Desired", "gear", -1, 10, -1, -1, 10, 10, 0, 0
+   currentGearGauge = tcuCurrentGear, "Current", "gear", -1, 10, -1, -1, 10, 10, 0, 0
+
 gaugeCategory = Knock
    knock1Gauge = knock1, "Knock Cyl 1", "dBv", -60, 10, -60, -60, 10, 10, 0, 0
    knock2Gauge = knock2, "Knock Cyl 2", "dBv", -60, 10, -60, -60, 10, 10, 0, 0
@@ -1055,7 +1063,7 @@ gaugeCategory = Knock
     indicator = { clutchDownState }, "clutch",   "cltch Down",   white, black, yellow,   black
     indicator = { brakePedalIndicator }, "brake",   "brake down",   white, black, red,   black
     indicator = { acSwitchIndicator }, "AC off",   "AC on",   white, black, blue,   white
-    
+
     ; error codes
     indicator = { ind_tps_error}, "tps",   "tps error",   white, black, red,   black
     indicator = { ind_clt_error}, "clt",   "clt error",   white, black, red,   black
@@ -1186,6 +1194,10 @@ gaugeCategory = Knock
    entry = etb1DutyCycle,  @@GAUGE_NAME_ETB_DUTY@@, float, "%.3f"
    entry = etbTarget,      "ETB Target", float, "%.3f"
    
+; Transmission
+   entry = tcuDesiredGear,  "Desired Gear", int, "%d"
+   entry = tcuCurrentGear,  "Current Gear", int, "%d"
+
    entry = knock1, "Knock 1", int, "%d"
    entry = knock2, "Knock 2", int, "%d"
    entry = knock3, "Knock 3", int, "%d"
@@ -1325,6 +1337,9 @@ menuDialog = main
 		subMenu = fsioCurve2,			    "FSIO Curve #2"
 		subMenu = fsioCurve3,			    "FSIO Curve #3"
 		subMenu = fsioCurve4,			    "FSIO Curve #4"
+
+		subMenu = std_separator
+		subMenu = tcuControls,			"Transmission Settings"
 
 	menu = "&Sensors"
 		# Base analog input settings
@@ -2373,7 +2388,6 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 		field = "Cylinder 11",			knockBankCyl11, {enableSoftwareKnock && cylindersCount >= 11}
 		field = "Cylinder 12",			knockBankCyl12, {enableSoftwareKnock && cylindersCount >= 12}
 
-
 ;			Engine->hip9011 Settings
 	dialog = hipFunction, "HIP9011 Settings (knock decoder)"
 		field = "Enabled",								isHip9011Enabled
@@ -2848,6 +2862,16 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 		field = "ADC #2",								fsioAdc2
 		field = "ADC #3",								fsioAdc3
 		field = "ADC #4",								fsioAdc4
+
+	dialog = shiftInputPanel
+		field = "TCU Enabled"		tcuEnabled
+		field = "Upshift Pin"		tcuUpshiftButtonPin,		{ tcuEnabled }
+		field = "Upshift Pin Mode"	tcuUpshiftButtonPinMode,	{ tcuEnabled }
+		field = "Downshift Pin"		tcuDownshiftButtonPin,		{ tcuEnabled }
+		field = "Downshift Pin Mode"	tcuDownshiftButtonPinMode,	{ tcuEnabled }
+
+	dialog = tcuControls, "Transmission Settings"
+		panel = shiftInputPanel
 
 ;Boost Open Loop
 
