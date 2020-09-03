@@ -66,7 +66,7 @@ class LaunchControl: public PeriodicTimerController {
 			return;
 		}
 
-		int rpm = GET_RPM_VALUE;
+		int rpm = GET_RPM();
 		int speed = getVehicleSpeed();
 		auto tps = Sensor::get(SensorType::DriverThrottleIntent);
 		int tpstreshold = engineConfiguration->launchTpsTreshold;
@@ -139,13 +139,13 @@ void setDefaultLaunchParameters(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 }
 
 void applyLaunchControlLimiting(bool *limitedSpark, bool *limitedFuel DECLARE_ENGINE_PARAMETER_SUFFIX) {
-	int rpm = GET_RPM_VALUE;
+	int rpm = GET_RPM();
 
 	int retardThresholdRpm = CONFIG(launchRpm) +
 		(CONFIG(enableLaunchRetard) ? CONFIG(launchAdvanceRpmRange) : 0) +
 		CONFIG(hardCutRpmRange);
 
-	if (retardThresholdRpm > GET_RPM_VALUE) {
+	if (retardThresholdRpm > GET_RPM()) {
 		*limitedSpark = engine->isLaunchCondition && engineConfiguration->launchSparkCutEnable;
 		*limitedFuel = engine->isLaunchCondition && engineConfiguration->launchFuelCutEnable;
 		engine->rpmHardCut = true;

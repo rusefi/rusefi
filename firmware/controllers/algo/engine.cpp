@@ -347,7 +347,7 @@ void Engine::OnTriggerInvalidIndex(int currentIndex) {
 	Engine *engine = this;
 	EXPAND_Engine;
 	// let's not show a warning if we are just starting to spin
-	if (GET_RPM_VALUE != 0) {
+	if (GET_RPM() != 0) {
 		warning(CUSTOM_SYNC_ERROR, "sync error: index #%d above total size %d", currentIndex, triggerCentral.triggerShape.getSize());
 		triggerCentral.triggerState.setTriggerErrorState();
 	}
