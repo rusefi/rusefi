@@ -46,8 +46,8 @@ public:
 		return value;
 	}
 
-	void showInfo(Logging* logger, float testInputValue) const {
-
+	void showInfo(Logging* logger, const char* sensorName) const override {
+		// todo: just print name and value?
 	}
 
 	StoredValueSensor(SensorType type, efitick_t timeoutNt)
