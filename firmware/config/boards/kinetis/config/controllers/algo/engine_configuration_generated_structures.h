@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Wed Sep 02 11:22:35 UTC 2020
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Wed Sep 02 19:41:04 UTC 2020
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -1819,7 +1819,7 @@ struct engine_configuration_s {
 	bool knockBankCyl12 : 1;
 	/**
 	offset 976 bit 28 */
-	bool unusedBit_251_28 : 1;
+	bool tcuEnabled : 1;
 	/**
 	offset 976 bit 29 */
 	bool unusedBit_251_29 : 1;
@@ -3355,10 +3355,13 @@ struct engine_configuration_s {
 	 */
 	uint16_t mc33_t_hold_tot;
 	/**
-	 * need 4 byte alignment
 	 * offset 4514
 	 */
-	uint8_t alignmentFill_at_4514[2];
+	pin_input_mode_e tcuUpshiftButtonPinMode;
+	/**
+	 * offset 4515
+	 */
+	pin_input_mode_e tcuDownshiftButtonPinMode;
 	/**
 	 * offset 4516
 	 */
@@ -3656,4 +3659,4 @@ struct persistent_config_s {
 typedef struct persistent_config_s persistent_config_s;
 
 // end
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Wed Sep 02 11:22:35 UTC 2020
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Wed Sep 02 19:41:04 UTC 2020
