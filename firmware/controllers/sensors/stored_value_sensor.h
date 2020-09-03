@@ -37,20 +37,26 @@ public:
 			return unexpected;
 		}
 
-		if (getTimeNowNt() - m_timeoutPeriod > m_lastUpdate) {
-			return unexpected;
+		if (m_timeoutPeriod != 0) { // zero m_timeoutPeriod means value lasts forever
+			if (getTimeNowNt() - m_timeoutPeriod > m_lastUpdate) {
+				return unexpected;
+			}
 		}
 
 		return value;
 	}
 
-protected:
-	explicit StoredValueSensor(SensorType type, efitick_t timeoutNt)
+	void showInfo(Logging* logger, float testInputValue) const {
+
+	}
+
+	StoredValueSensor(SensorType type, efitick_t timeoutNt)
 		: Sensor(type)
 		, m_timeoutPeriod(timeoutNt)
 	{
 	}
 
+protected:
 	// Invalidate the stored value.
 	void invalidate() {
 		m_isValid = false;
