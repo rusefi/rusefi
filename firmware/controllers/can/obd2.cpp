@@ -127,7 +127,7 @@ static void handleGetDataRequest(const CANRxFrame& rx) {
 		obdSendValue(_1_MODE, pid, 1, getFuelingLoad(PASS_ENGINE_PARAMETER_SIGNATURE) * 2.55f);
 		break;
 	case PID_COOLANT_TEMP:
-		obdSendValue(_1_MODE, pid, 1, Sensor::get(SensorType::Clt).value_or(0) + 40.0f);
+		obdSendValue(_1_MODE, pid, 1, Sensor::get(SensorType::Clt).value_or(0) + ODB_TEMP_EXTRA);
 		break;
 	case PID_STFT_BANK1:
 		obdSendValue(_1_MODE, pid, 1, 128 * ENGINE(engineState.running.pidCorrection));
@@ -148,7 +148,7 @@ static void handleGetDataRequest(const CANRxFrame& rx) {
 		break;
 		}
 	case PID_INTAKE_TEMP:
-		obdSendValue(_1_MODE, pid, 1, Sensor::get(SensorType::Iat).value_or(0) + 40.0f);
+		obdSendValue(_1_MODE, pid, 1, Sensor::get(SensorType::Iat).value_or(0) + ODB_TEMP_EXTRA);
 		break;
 	case PID_INTAKE_MAF:
 		obdSendValue(_1_MODE, pid, 2, getRealMaf(PASS_ENGINE_PARAMETER_SIGNATURE) * 100.0f);	// grams/sec	(A*256+B)/100

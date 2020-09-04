@@ -86,7 +86,9 @@ EXTERN_ENGINE;
 
 static Logging * logger;
 
-RpmCalculator::RpmCalculator() {
+RpmCalculator::RpmCalculator() :
+		rpmSensor(SensorType::Rpm, 0)
+	{
 #if !EFI_PROD_CODE
 	mockRpm = MOCK_UNDEFINED;
 #endif /* EFI_PROD_CODE */
@@ -132,6 +134,11 @@ void RpmCalculator::assignRpmValue(float floatRpmValue DECLARE_ENGINE_PARAMETER_
 	previousRpmValue = rpmValue;
 	// we still persist integer RPM! todo: figure out the next steps
 	rpmValue = floatRpmValue;
+
+	if (!CONFIG(consumeObdSensors)) {
+		rpmSensor.Register();
+	}
+
 	if (rpmValue <= 0) {
 		oneDegreeUs = NAN;
 	} else {
