@@ -10,6 +10,7 @@
 
 #include "globalaccess.h"
 #include "scheduler.h"
+#include "stored_value_sensor.h"
 
 // we use this value in case of noise on trigger input lines
 #define NOISY_RPM -1
@@ -64,6 +65,8 @@ public:
 	bool isRunning(DECLARE_ENGINE_PARAMETER_SIGNATURE) const;
 
 	bool checkIfSpinning(efitick_t nowNt DECLARE_ENGINE_PARAMETER_SUFFIX) const;
+
+	StoredValueSensor rpmSensor;
 
 	/**
 	 * This accessor is used in unit-tests.
