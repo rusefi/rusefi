@@ -19,8 +19,6 @@ public:
     PointerListNode *next = NULL;
 };
 
-extern PointerListNode buttonDebounceListHead;
-
 class ButtonDebounce {
 public:
     void init(int t, DECLARE_CONFIG_POINTERS(brain_pin_e, p), DECLARE_CONFIG_POINTERS(pin_input_mode_e, m));

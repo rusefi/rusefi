@@ -10,6 +10,8 @@
 #include "engine_configuration.h"
 #include "hardware.h"
 
+extern PointerListNode buttonDebounceListHead;
+
 void ButtonDebounce::init (int t, DECLARE_CONFIG_POINTERS(brain_pin_e, p), DECLARE_CONFIG_POINTERS(pin_input_mode_e, m)) {
     thisNode.pointer = this;
     PointerListNode *listItem = &buttonDebounceListHead;
