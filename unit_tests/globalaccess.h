@@ -23,4 +23,6 @@
 #define PASS_ENGINE_PARAMETER_SUFFIX , PASS_ENGINE_PARAMETER_SIGNATURE
 
 #define CONFIG(x) engineConfiguration->x
+#define CONFIG_POINTERS(x) &CONFIG(x), &activeConfiguration.x
+#define DECLARE_CONFIG_POINTERS(x, y) x *y, x *active_##y
 #define ENGINE(x) engine->x
