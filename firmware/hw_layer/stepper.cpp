@@ -50,7 +50,7 @@ void StepperMotor::ThreadTask() {
 	waitForSlowAdc();
 #endif
 #if EFI_SHAFT_POSITION_INPUT
-	bool isRunning = engine->rpmCalculator.isRunning(PASS_ENGINE_PARAMETER_SIGNATURE);
+	bool isRunning = engine->rpmCalculator.isRunning();
 #else
 	bool isRunning = false;
 #endif /* EFI_SHAFT_POSITION_INPUT */
