@@ -11,8 +11,6 @@
 #include "globalaccess.h"
 #include "io_pins.h"
 
-extern PointerListNode buttonDebounceListHead;
-
 class ButtonDebounce;
 
 class PointerListNode {
@@ -20,6 +18,8 @@ public:
     ButtonDebounce *pointer = NULL;
     PointerListNode *next = NULL;
 };
+
+extern PointerListNode buttonDebounceListHead;
 
 class ButtonDebounce {
 public:
