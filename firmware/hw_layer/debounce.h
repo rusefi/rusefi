@@ -11,6 +11,8 @@
 #include "globalaccess.h"
 #include "io_pins.h"
 
+extern PointerListNode buttonDebounceListHead;
+
 class ButtonDebounce;
 
 class PointerListNode {
