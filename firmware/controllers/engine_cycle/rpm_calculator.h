@@ -41,8 +41,10 @@ typedef enum {
 	RUNNING,
 } spinning_state_e;
 
-class RpmCalculator {
+class RpmCalculator : public StoredValueSensor {
 public:
+	DECLARE_ENGINE_PTR;
+
 #if !EFI_PROD_CODE
 	int mockRpm;
 #endif /* EFI_PROD_CODE */
@@ -50,23 +52,21 @@ public:
 	/**
 	 * Returns true if the engine is not spinning (RPM==0)
 	 */
-	bool isStopped(DECLARE_ENGINE_PARAMETER_SIGNATURE) const;
+	bool isStopped() const;
 	/**
 	 * Returns true if the engine is spinning up
 	 */
-	bool isSpinningUp(DECLARE_ENGINE_PARAMETER_SIGNATURE) const;
+	bool isSpinningUp() const;
 	/**
 	 * Returns true if the engine is cranking OR spinning up
 	 */
-	bool isCranking(DECLARE_ENGINE_PARAMETER_SIGNATURE) const;
+	bool isCranking() const;
 	/**
 	 * Returns true if the engine is running and not cranking
 	 */
-	bool isRunning(DECLARE_ENGINE_PARAMETER_SIGNATURE) const;
+	bool isRunning() const;
 
-	bool checkIfSpinning(efitick_t nowNt DECLARE_ENGINE_PARAMETER_SUFFIX) const;
-
-	StoredValueSensor rpmSensor;
+	bool checkIfSpinning(efitick_t nowNt) const;
 
 	/**
 	 * This accessor is used in unit-tests.
@@ -76,28 +76,28 @@ public:
 	/**
 	 * Should be called on every trigger event when the engine is just starting to spin up.
 	 */
-	void setSpinningUp(efitick_t nowNt DECLARE_ENGINE_PARAMETER_SUFFIX);
+	void setSpinningUp(efitick_t nowNt );
 	/**
 	 * Called if the synchronization is lost due to a trigger timeout.
 	 */
-	void setStopSpinning(DECLARE_ENGINE_PARAMETER_SIGNATURE);
+	void setStopSpinning();
 
 	/**
 	 * Just a getter for rpmValue
 	 * Also handles mockRpm if not EFI_PROD_CODE
 	 */
-	int getRpm(DECLARE_ENGINE_PARAMETER_SIGNATURE) const;
+	int getRpm() const;
 	/**
 	 * This method is invoked once per engine cycle right after we calculate new RPM value
 	 */
 	void onNewEngineCycle();
 	uint32_t getRevolutionCounterM(void) const;
-	void setRpmValue(float value DECLARE_ENGINE_PARAMETER_SUFFIX);
+	void setRpmValue(float value);
 	/**
 	 * The same as setRpmValue() but without state change.
 	 * We need this to be public because of calling rpmState->assignRpmValue() from rpmShaftPositionCallback()
 	 */
-	void assignRpmValue(float value DECLARE_ENGINE_PARAMETER_SUFFIX);
+	void assignRpmValue(float value);
 	uint32_t getRevolutionCounterSinceStart(void) const;
 	/**
 	 * RPM rate of change between current RPM and RPM measured during previous engine cycle
@@ -114,6 +114,11 @@ public:
 	 */
 	volatile floatus_t oneDegreeUs = NAN;
 	volatile efitick_t lastRpmEventTimeNt = 0;
+
+protected:
+	// Print sensor info - current RPM state
+	void showInfo(Logging* logger, const char* sensorName) const override;
+
 private:
 	/**
 	 * Sometimes we cannot afford to call isRunning() and the value is good enough
@@ -123,7 +128,7 @@ private:
 	/**
 	 * Should be called once we've realized engine is not spinning any more.
 	 */
-	void setStopped(DECLARE_ENGINE_PARAMETER_SIGNATURE);
+	void setStopped();
 
 	/**
 	 * This counter is incremented with each revolution of one of the shafts. Could be
@@ -145,7 +150,7 @@ private:
 };
 
 // Just a getter for rpmValue which also handles mockRpm if not EFI_PROD_CODE
-#define GET_RPM() ( ENGINE(rpmCalculator.getRpm(PASS_ENGINE_PARAMETER_SIGNATURE)) )
+#define GET_RPM() ( ENGINE(rpmCalculator.getRpm()) )
 
 #define isValidRpm(rpm) ((rpm) > 0 && (rpm) < UNREALISTIC_RPM)
 

@@ -471,7 +471,7 @@ void runFsio(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	 * todo: convert to FSIO?
 	 * open question if heater should be ON during cranking
 	 */
-	enginePins.o2heater.setValue(engine->rpmCalculator.isRunning(PASS_ENGINE_PARAMETER_SIGNATURE));
+	enginePins.o2heater.setValue(engine->rpmCalculator.isRunning());
 
 	if (CONFIG(acRelayPin) != GPIO_UNASSIGNED) {
 		setPinState("A/C", &enginePins.acRelay, acRelayLogic PASS_ENGINE_PARAMETER_SUFFIX);
@@ -767,7 +767,7 @@ void runHardcodedFsio(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 		enginePins.fuelPumpRelay.setValue((getTimeNowSeconds() < engineConfiguration->startUpFuelPumpDuration) || (engine->rpmCalculator.getRpm() > 0));
 	}
 	
-	enginePins.o2heater.setValue(engine->rpmCalculator.isRunning(PASS_ENGINE_PARAMETER_SIGNATURE));
+	enginePins.o2heater.setValue(engine->rpmCalculator.isRunning());
 }
 
 #endif /* EFI_FSIO */

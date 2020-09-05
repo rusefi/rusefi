@@ -421,7 +421,7 @@ static bool cjStartSpi(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 static bool cj125periodic(CJ125 *instance DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	{
 	efitick_t nowNt = getTimeNowNt();
-		bool isStopped = engine->rpmCalculator.isStopped(PASS_ENGINE_PARAMETER_SIGNATURE);
+		bool isStopped = engine->rpmCalculator.isStopped();
 
 		cjUpdateAnalogValues();
 		
