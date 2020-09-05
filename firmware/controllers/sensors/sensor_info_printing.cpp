@@ -2,6 +2,7 @@
 #include "proxy_sensor.h"
 #include "functional_sensor.h"
 #include "redundant_sensor.h"
+#include "rpm_calculator.h"
 #include "linear_func.h"
 #include "resistance_func.h"
 #include "thermistor_func.h"
@@ -33,6 +34,16 @@ void CanSensorBase::showInfo(Logging* logger, const char* sensorName) const {
 
 void RedundantSensor::showInfo(Logging* logger, const char* sensorName) const {
 	scheduleMsg(logger, "Sensor \"%s\" is redundant combining \"%s\" and \"%s\"", sensorName, getSensorName(m_first), getSensorName(m_second));
+}
+
+void RpmCalculator::showInfo(Logging* logger, const char* sensorName) const {
+	scheduleMsg(logger, "RPM sensor: stopped: %d spinning up: %d cranking: %d running: %d rpm: %f", 
+		isStopped(),
+		isSpinningUp(),
+		isCranking(),
+		isRunning(),
+		get().value_or(0)
+	);
 }
 
 void LinearFunc::showInfo(Logging* logger, float testRawValue) const {

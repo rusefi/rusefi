@@ -154,14 +154,14 @@ void touchTimeCounter() {
 static void onStartStopButtonToggle(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	engine->startStopStateToggleCounter++;
 
-	if (engine->rpmCalculator.isStopped(PASS_ENGINE_PARAMETER_SIGNATURE)) {
+	if (engine->rpmCalculator.isStopped()) {
 		engine->startStopStateLastPushTime = getTimeNowNt();
 
 		bool wasStarterEngaged = enginePins.starterControl.getAndSet(1);
 		if (!wasStarterEngaged) {
 			scheduleMsg(&sharedLogger, "Let's crank this engine for up to %dseconds!", CONFIG(startCrankingDuration));
 		}
-	} else if (engine->rpmCalculator.isRunning(PASS_ENGINE_PARAMETER_SIGNATURE)) {
+	} else if (engine->rpmCalculator.isRunning()) {
 		scheduleMsg(&sharedLogger, "Let's stop this engine!");
 		scheduleStopEngine();
 	}
@@ -192,7 +192,7 @@ void slowStartStopButtonCallback(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 
 
 	// todo: should this be simply FSIO?
-	if (engine->rpmCalculator.isRunning(PASS_ENGINE_PARAMETER_SIGNATURE)) {
+	if (engine->rpmCalculator.isRunning()) {
 		// turn starter off once engine is running
 		bool wasStarterEngaged = enginePins.starterControl.getAndSet(0);
 		if (wasStarterEngaged) {
