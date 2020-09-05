@@ -6,16 +6,39 @@
  * @author David Holdeman, (c) 2020
  */
 #include "debounce.h"
+#include "pin_repository.h"
+#include "engine_configuration.h"
+#include "hardware.h"
 
-void ButtonDebounce::init (int t, brain_pin_e p, pin_input_mode_e m) {
+void ButtonDebounce::init (int t, DECLARE_CONFIG_POINTERS(brain_pin_e, p), DECLARE_CONFIG_POINTERS(pin_input_mode_e, m)) {
+    thisNode.pointer = this;
+    PointerListNode *listItem = &buttonDebounceListHead;
+    if (listItem->pointer == NULL) {
+        buttonDebounceListHead = thisNode;
+    } else {
+        while (listItem->next != NULL) {
+            listItem = listItem->next;
+        }
+        listItem->next = &thisNode;
+    }
     threshold = MS2NT(t);
     timeLast = 0;
     pin = p;
+    active_pin = active_p;
+    oldPin = *p;
+    mode = m;
+    active_mode = active_m;
 #ifdef PAL_MODE_INPUT_PULLDOWN
     // getInputMode converts from pin_input_mode_e to iomode_t
-    mode = getInputMode(m);
-    efiSetPadMode("Button", p, mode);
+    efiSetPadMode("Button", *p, getInputMode(*m));
 #endif
+}
+
+void ButtonDebounce::updateConfiguration () {
+    if (isConfigurationChangedPointers(pin, active_pin) || isConfigurationChangedPointers(mode, active_mode)) {
+        brain_pin_markUnused(oldPin);
+        efiSetPadMode("Button", *pin, getInputMode(*mode));
+    }
 }
 
 /**
@@ -36,9 +59,9 @@ bool ButtonDebounce::readPinEvent() {
     //  for example to implement long button presses, it will be needed.
     readValue = false;
 #ifdef PAL_MODE_INPUT_PULLDOWN
-    readValue = efiReadPin(pin);
+    readValue = efiReadPin(oldPin);
     // Invert
-    if (mode != PAL_MODE_INPUT_PULLDOWN) {
+    if (getInputMode(*active_mode) == PAL_MODE_INPUT_PULLUP) {
         readValue = !readValue;
     }
 #endif

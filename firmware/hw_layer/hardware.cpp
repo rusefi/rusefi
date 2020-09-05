@@ -264,8 +264,21 @@ void stopSpi(spi_device_e device) {
  * this method is NOT currently invoked on ECU start
  * todo: maybe start invoking this method on ECU start so that peripheral start-up initialization and restart are unified?
  */
+
+PointerListNode buttonDebounceListHead;
+
 void applyNewHardwareSettings(void) {
     // all 'stop' methods need to go before we begin starting pins
+
+	PointerListNode *listItem = &buttonDebounceListHead;
+	while (listItem->pointer != NULL) {
+		listItem->pointer->updateConfiguration();
+		if (listItem->next != NULL) {
+			listItem = listItem->next;
+		} else {
+			break;
+		}
+	}
 
 #if EFI_SHAFT_POSITION_INPUT
 	stopTriggerInputPins();
@@ -275,7 +288,7 @@ void applyNewHardwareSettings(void) {
 #if (HAL_USE_PAL && EFI_JOYSTICK)
 	stopJoystickPins();
 #endif /* HAL_USE_PAL && EFI_JOYSTICK */
-       
+
 	enginePins.stopInjectionPins();
     enginePins.stopIgnitionPins();
 #if EFI_CAN_SUPPORT
