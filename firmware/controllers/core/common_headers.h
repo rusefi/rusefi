@@ -111,7 +111,7 @@
 // and then we consider 'x' as changed if it's just non-zero.
 extern bool isActiveConfigurationVoid;
 #define isConfigurationChanged(x) ((engineConfiguration->x != activeConfiguration.x) || (isActiveConfigurationVoid && engineConfiguration->x != 0))
-#define isConfigurationChangedPointers(x, y) ((*x != *y) || isActiveConfigurationVoid && *x != 0)
+#define isConfigurationChangedPointers(x, y) ((*x != *y) || (isActiveConfigurationVoid && *x != 0))
 #endif /* EFI_ACTIVE_CONFIGURATION_IN_FLASH */
 
 #define isPinOrModeChanged(pin, mode) (isConfigurationChanged(pin) || isConfigurationChanged(mode))
