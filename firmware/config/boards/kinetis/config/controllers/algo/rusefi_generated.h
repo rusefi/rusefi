@@ -259,6 +259,15 @@
 #define CMD_TRIGGER_HW_INPUT "trigger_hw_input"
 #define CMD_TRIGGER_PIN "set_trigger_input_pin"
 #define CMD_TRIGGERINFO "triggerinfo"
+#define CMD_TS_BENCH_AC_COMPRESSOR_RELAY 6
+#define CMD_TS_BENCH_AC_FAN_RELAY 5
+#define CMD_TS_BENCH_CATEGORY 22
+#define CMD_TS_BENCH_CHECK_ENGINE_LIGHT 7
+#define CMD_TS_BENCH_FAN_RELAY 4
+#define CMD_TS_BENCH_FUEL_PUMP 1
+#define CMD_TS_BENCH_MAIN_RELAY 0
+#define CMD_TS_BENCH_STARTER_DISABLE_RELAY 3
+#define CMD_TS_BENCH_STARTER_ENABLE_RELAY 2
 #define CMD_VSS_PIN "vss_pin"
 #define CMD_WRITECONFIG "writeconfig"
 #define coastingFuelCutClt_offset 3154
@@ -1149,7 +1158,7 @@
 #define showSdCardWarning_offset 76
 #define SIGNATURE_BOARD kin
 #define SIGNATURE_DATE 2020.09.06
-#define SIGNATURE_HASH 1338850663
+#define SIGNATURE_HASH 1195914285
 #define silentTriggerError_offset 1464
 #define slowAdcAlpha_offset 2088
 #define sparkDwellRpmBins_offset 332
@@ -1459,7 +1468,7 @@
 #define ts_show_spi true
 #define ts_show_trigger_comparator true
 #define ts_show_tunerstudio_port true
-#define TS_SIGNATURE "rusEFI 2020.09.06.kin.1338850663"
+#define TS_SIGNATURE "rusEFI 2020.09.06.kin.1195914285"
 #define TS_SINGLE_WRITE_COMMAND 'W'
 #define TS_SINGLE_WRITE_COMMAND_char W
 #define TS_TEST_COMMAND 't' // 0x74
