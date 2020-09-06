@@ -33,8 +33,6 @@ void setPinConfigurationOverrides(void) {
 
 	//NOT USED
 
-	engineConfiguration->baroSensor.hwChannel = EFI_ADC_NONE;
-	engineConfiguration->afr.hwChannel = EFI_ADC_NONE;
 	engineConfiguration->ignitionPins[8] = GPIO_UNASSIGNED;
 	engineConfiguration->ignitionPins[9] = GPIO_UNASSIGNED;
 	engineConfiguration->mainRelayPin = GPIO_UNASSIGNED;

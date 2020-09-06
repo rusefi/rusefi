@@ -329,14 +329,16 @@ bool AdcDevice::isHwUsed(adc_channel_e hwChannelIndex) const {
 void AdcDevice::enableChannel(adc_channel_e hwChannel) {
 	int logicChannel = channelCount++;
 
+	size_t channelAdcIndex = hwChannel - 1;
+
 	internalAdcIndexByHardwareIndex[hwChannel] = logicChannel;
 	hardwareIndexByIndernalAdcIndex[logicChannel] = hwChannel;
 	if (logicChannel < 6) {
-		hwConfig->sqr3 += (hwChannel) << (5 * logicChannel);
+		hwConfig->sqr3 += (channelAdcIndex) << (5 * logicChannel);
 	} else if (logicChannel < 12) {
-		hwConfig->sqr2 += (hwChannel) << (5 * (logicChannel - 6));
+		hwConfig->sqr2 += (channelAdcIndex) << (5 * (logicChannel - 6));
 	} else {
-		hwConfig->sqr1 += (hwChannel) << (5 * (logicChannel - 12));
+		hwConfig->sqr1 += (channelAdcIndex) << (5 * (logicChannel - 12));
 	}
 	// todo: support for more then 12 channels? not sure how needed it would be
 }
