@@ -61,9 +61,10 @@ float getVoltage(const char *msg, adc_channel_e hwChannel DECLARE_ENGINE_PARAMET
 	return adcToVolts(getAdcValue(msg, hwChannel));
 }
 
-AdcDevice::AdcDevice(ADCConversionGroup* hwConfig, adcsample_t *buf) {
+AdcDevice::AdcDevice(ADCConversionGroup* hwConfig, adcsample_t *buf, int buf_size) {
 	this->hwConfig = hwConfig;
 	this->samples = buf;
+	assert(buf_size % 32 == 0);
 	channelCount = 0;
 	conversionCount = 0;
 	errorsCount = 0;
@@ -170,7 +171,7 @@ static ADCConversionGroup adcgrpcfgSlow = {
 #endif /* ADC_MAX_CHANNELS_COUNT */
 };
 
-AdcDevice slowAdc(&adcgrpcfgSlow, slowAdcSampleBuf);
+AdcDevice slowAdc(&adcgrpcfgSlow, slowAdcSampleBuf, sizeof(slowAdcSampleBuf));
 
 void adc_callback_fast(ADCDriver *adcp, adcsample_t *buffer, size_t n);
 
@@ -218,7 +219,7 @@ static ADCConversionGroup adcgrpcfgFast = {
 #endif /* ADC_MAX_CHANNELS_COUNT */
 };
 
-AdcDevice fastAdc(&adcgrpcfgFast, fastAdcSampleBuf);
+AdcDevice fastAdc(&adcgrpcfgFast, fastAdcSampleBuf, sizeof(fastAdcSampleBuf));
 
 #if HAL_USE_GPT
 static void fast_adc_callback(GPTDriver*) {
