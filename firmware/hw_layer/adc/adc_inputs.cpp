@@ -375,6 +375,26 @@ adc_channel_e AdcDevice::getAdcHardwareIndexByInternalIndex(int index) const {
 static void printFullAdcReport(Logging *logger) {
 	scheduleMsg(logger, "fast %d slow %d", fastAdc.conversionCount, slowAdc.conversionCount);
 
+	for (int index = 0; index < fastAdc.size(); index++) {
+		appendMsgPrefix(logger);
+
+		adc_channel_e hwIndex = fastAdc.getAdcHardwareIndexByInternalIndex(index);
+
+		if (hwIndex != EFI_ADC_NONE && hwIndex != EFI_ADC_ERROR) {
+			ioportid_t port = getAdcChannelPort("print", hwIndex);
+			int pin = getAdcChannelPin(hwIndex);
+
+			int adcValue = getAvgAdcValue(hwIndex, fastAdc.samples, ADC_BUF_DEPTH_FAST, fastAdc.size());
+			appendPrintf(logger, " F ch%d %s%d", index, portname(port), pin);
+			appendPrintf(logger, " ADC%d 12bit=%d", hwIndex, adcValue);
+			float volts = adcToVolts(adcValue);
+			appendPrintf(logger, " v=%.2f", volts);
+
+			appendMsgPostfix(logger);
+			scheduleLogging(logger);
+		}
+	}
+
 	for (int index = 0; index < slowAdc.size(); index++) {
 		appendMsgPrefix(logger);
 
@@ -385,7 +405,7 @@ static void printFullAdcReport(Logging *logger) {
 			int pin = getAdcChannelPin(hwIndex);
 
 			int adcValue = slowAdc.getAdcValueByIndex(index);
-			appendPrintf(logger, " ch%d %s%d", index, portname(port), pin);
+			appendPrintf(logger, " S ch%d %s%d", index, portname(port), pin);
 			appendPrintf(logger, " ADC%d 12bit=%d", hwIndex, adcValue);
 			float volts = adcToVolts(adcValue);
 			appendPrintf(logger, " v=%.2f", volts);
