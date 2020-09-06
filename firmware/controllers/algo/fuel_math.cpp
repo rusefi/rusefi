@@ -326,7 +326,7 @@ floatms_t getInjectionDuration(int rpm DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	// Always update base fuel - some cranking modes use it
 	floatms_t baseFuel = getBaseFuel(rpm PASS_ENGINE_PARAMETER_SUFFIX);
 
-	bool isCranking = ENGINE(rpmCalculator).isCranking(PASS_ENGINE_PARAMETER_SIGNATURE);
+	bool isCranking = ENGINE(rpmCalculator).isCranking();
 	floatms_t fuelPerCycle = getFuel(isCranking, baseFuel PASS_ENGINE_PARAMETER_SUFFIX);
 	efiAssert(CUSTOM_ERR_ASSERT, !cisnan(fuelPerCycle), "NaN fuelPerCycle", 0);
 

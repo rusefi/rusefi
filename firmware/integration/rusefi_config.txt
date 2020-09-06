@@ -782,7 +782,8 @@ pin_output_mode_e hip9011IntHoldPinMode;
 	uint8_t mc33_hvolt;;"v",        1,     0,  40,    70,  0
 	uint8_t fsio_visible acIdleExtraMin;+Additional idle PID minValue while A/C is active;"Percent", 1, 0, 0, 255, 0
 
-	uint8_t[2] unusedHere;;"units", 1, 0, -20, 100, 0
+output_pin_e acFanPin;+Optional Radiator Fan used with A/C
+	pin_output_mode_e acFanPinMode;
 
 
 	pin_output_mode_e[FSIO_COMMAND_COUNT iterate] gpioPinModes;
@@ -886,7 +887,7 @@ custom maf_sensor_type_e 4 bits, S32, @OFFSET@, [0:1], @@maf_sensor_type_e_enum@
 	bit enableSoftwareKnock
 	bit verboseVVTDecoding;enable vvt_details
 	bit invertCamVVTSignal;get invertCamVVTSignal
-	bit consumeObdSensors;enable consumeObdSensors
+	bit consumeObdSensors;+This property is useful if using rusEFI as TCM or BCM only\nenable consumeObdSensors
 	bit knockBankCyl1,Channel 2,Channel 1;
 	bit knockBankCyl2,Channel 2,Channel 1;
 	bit knockBankCyl3,Channel 2,Channel 1;
@@ -905,7 +906,7 @@ custom maf_sensor_type_e 4 bits, S32, @OFFSET@, [0:1], @@maf_sensor_type_e_enum@
 	etb_io[ETB_COUNT iterate] etbIo
 
 
-    output_pin_e boostControlPin;
+    output_pin_e boostControlPin;+Wastegate control Solenoid
 	pin_output_mode_e boostControlPinMode;
     switch_input_pin_e antiLagActivatePin;
     switch_input_pin_e launchActivatePin;
@@ -1612,6 +1613,25 @@ end_struct
 
 #define CMD_RESET_ENGINE_SNIFFER "reset_engine_chart"
 #define CMD_FUNCTIONAL_TEST_MODE "test_mode"
+
+#define CMD_TS_IGNITION_CATEGORY 18
+#define CMD_TS_INJECTOR_CATEGORY 19
+
+
+// 0x16
+#define CMD_TS_BENCH_CATEGORY 22
+
+#define CMD_TS_BENCH_MAIN_RELAY 0
+#define CMD_TS_BENCH_FUEL_PUMP 1
+#define CMD_TS_BENCH_STARTER_ENABLE_RELAY 2
+#define CMD_TS_BENCH_STARTER_DISABLE_RELAY 3
+#define CMD_TS_BENCH_FAN_RELAY 4
+#define CMD_TS_BENCH_AC_FAN_RELAY 5
+#define CMD_TS_BENCH_AC_COMPRESSOR_RELAY 6
+#define CMD_TS_BENCH_CHECK_ENGINE_LIGHT 7
+#define CMD_TS_BENCH_IDLE_VALVE 8
+
+
 
 #define CMD_ENGINE_TYPE "engine_type"
 #define CMD_INJECTION "injection"

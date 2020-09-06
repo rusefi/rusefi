@@ -1391,7 +1391,7 @@ menuDialog = main
 		subMenu = lcdScreen,				"LCD" @@if_ts_show_lcd
 		subMenu = joystickPanel,			"Joystick" @@if_ts_show_joystick
 		subMenu = spiFunction,				"SPI"@@if_ts_show_spi
-		subMenu = monitoringSettings,		"rusEfi console"
+		subMenu = monitoringSettings,		"rusEFI console"
 		subMenu = std_separator
 		
 		subMenu = canBusMain,				"CAN Bus Communication"
@@ -1428,7 +1428,7 @@ menuDialog = main
 
 
       menu = "Help"
-         subMenu = helpGeneral,     "rusEfi Info"
+         subMenu = helpGeneral,     "rusEFI Info"
 
 
 [ControllerCommands]
@@ -1463,8 +1463,8 @@ cmd_test_spk15 = "@@TS_IO_TEST_COMMAND_char@@\x00\x12\x00\x0f"
 cmd_test_spk16 = "@@TS_IO_TEST_COMMAND_char@@\x00\x12\x00\x10"
 		
 		
-cmd_test_inj1  = "@@TS_IO_TEST_COMMAND_char@@\x00\x13\x00\x01"
-cmd_test_inj2  = "@@TS_IO_TEST_COMMAND_char@@\x00\x13\x00\x02"
+cmd_test_inj1  = "@@TS_IO_TEST_COMMAND_char@@@@CMD_TS_INJECTOR_CATEGORY@@\x00\x01"
+cmd_test_inj2  = "@@TS_IO_TEST_COMMAND_char@@@@CMD_TS_INJECTOR_CATEGORY@@\x00\x02"
 cmd_test_inj3  = "@@TS_IO_TEST_COMMAND_char@@\x00\x13\x00\x03"
 cmd_test_inj4  = "@@TS_IO_TEST_COMMAND_char@@\x00\x13\x00\x04"
 cmd_test_inj5  = "@@TS_IO_TEST_COMMAND_char@@\x00\x13\x00\x05"
@@ -1476,7 +1476,17 @@ cmd_test_inj10 = "@@TS_IO_TEST_COMMAND_char@@\x00\x13\x00\x0a"
 cmd_test_inj11 = "@@TS_IO_TEST_COMMAND_char@@\x00\x13\x00\x0b"
 cmd_test_inj12 = "@@TS_IO_TEST_COMMAND_char@@\x00\x13\x00\x0c"
 
-cmd_test_fuel_pump           = "@@TS_IO_TEST_COMMAND_char@@\x00\x14\x00\x01"
+
+cmd_test_main_relay     	 	= "@@TS_IO_TEST_COMMAND_char@@@@CMD_TS_BENCH_CATEGORY_16_hex@@@@CMD_TS_BENCH_MAIN_RELAY_16_hex@@"
+cmd_test_fuel_pump           	= "@@TS_IO_TEST_COMMAND_char@@@@CMD_TS_BENCH_CATEGORY_16_hex@@@@CMD_TS_BENCH_FUEL_PUMP_16_hex@@"
+cmd_test_starter_relay     	 	= "@@TS_IO_TEST_COMMAND_char@@@@CMD_TS_BENCH_CATEGORY_16_hex@@@@CMD_TS_BENCH_STARTER_ENABLE_RELAY_16_hex@@"
+cmd_test_starter_disable_relay 	= "@@TS_IO_TEST_COMMAND_char@@@@CMD_TS_BENCH_CATEGORY_16_hex@@@@CMD_TS_BENCH_STARTER_DISABLE_RELAY_16_hex@@"
+cmd_test_ac_relay     		 	= "@@TS_IO_TEST_COMMAND_char@@@@CMD_TS_BENCH_CATEGORY_16_hex@@@@CMD_TS_BENCH_AC_COMPRESSOR_RELAY_16_hex@@"
+cmd_test_radiator_fan        	= "@@TS_IO_TEST_COMMAND_char@@@@CMD_TS_BENCH_CATEGORY_16_hex@@@@CMD_TS_BENCH_FAN_RELAY_16_hex@@"
+cmd_test_check_engine_light  	= "@@TS_IO_TEST_COMMAND_char@@@@CMD_TS_BENCH_CATEGORY_16_hex@@@@CMD_TS_BENCH_CHECK_ENGINE_LIGHT_16_hex@@"
+cmd_test_idle_valve          	= "@@TS_IO_TEST_COMMAND_char@@@@CMD_TS_BENCH_CATEGORY_16_hex@@@@CMD_TS_BENCH_IDLE_VALVE_16_hex@@"
+
+
 cmd_calibrate_tps_1_closed   = "@@TS_IO_TEST_COMMAND_char@@\x00\x14\x00\x02"
 cmd_calibrate_tps_1_wot      = "@@TS_IO_TEST_COMMAND_char@@\x00\x14\x00\x03"
 cmd_calibrate_tps_2_closed   = "@@TS_IO_TEST_COMMAND_char@@\x00\x14\x00\x04"
@@ -1484,9 +1494,7 @@ cmd_calibrate_tps_2_wot      = "@@TS_IO_TEST_COMMAND_char@@\x00\x14\x00\x05"
 cmd_calibrate_pedal_up       = "@@TS_IO_TEST_COMMAND_char@@\x00\x14\x00\x06"
 cmd_calibrate_pedal_down     = "@@TS_IO_TEST_COMMAND_char@@\x00\x14\x00\x07"
 cmd_tle8888_init     		 = "@@TS_IO_TEST_COMMAND_char@@\x00\x14\x00\x08"
-cmd_test_ac_relay     		 = "@@TS_IO_TEST_COMMAND_char@@\x00\x14\x00\x09"
 cmd_write_config     		 = "@@TS_IO_TEST_COMMAND_char@@\x00\x14\x00\x0A"
-cmd_test_starter_relay     	 = "@@TS_IO_TEST_COMMAND_char@@\x00\x14\x00\x0B"
 cmd_etb_autotune             = "@@TS_IO_TEST_COMMAND_char@@\x00\x14\x00\x0C"
 cmd_enable_self_stim         = "@@TS_IO_TEST_COMMAND_char@@\x00\x14\x00\x0D"
 cmb_etb_auto_calibrate       = "@@TS_IO_TEST_COMMAND_char@@\x00\x14\x00\x0E"
@@ -1494,9 +1502,6 @@ cmb_etb_auto_calibrate_2     = "@@TS_IO_TEST_COMMAND_char@@\x00\x14\x00\x11"
 cmd_disable_self_stim        = "@@TS_IO_TEST_COMMAND_char@@\x00\x14\x00\x0F"
 cmd_etb_autotune_stop        = "@@TS_IO_TEST_COMMAND_char@@\x00\x14\x00\x10"
 
-cmd_test_radiator_fan        = "@@TS_IO_TEST_COMMAND_char@@\x00\x15\x00\x01"
-cmd_test_check_engine_light  = "@@TS_IO_TEST_COMMAND_char@@\x00\x16\x00\x01"
-cmd_test_idle_valve          = "@@TS_IO_TEST_COMMAND_char@@\x00\x17\x00\x01"
 cmd_cj125_calibrate          = "@@TS_IO_TEST_COMMAND_char@@\x00\x18\x00\x00"
 cmd_call_from_pit            = "@@TS_IO_TEST_COMMAND_char@@\x00\x20\x34\x56"
 cmd_stop_engine              = "@@TS_IO_TEST_COMMAND_char@@\x00\x79\x00\x00"
@@ -1654,8 +1659,8 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 
 	
 	dialog = triggerConfiguration
-		panel = triggerConfiguration_settings,	North
-		panel = triggerInputs,		South
+		panel = triggerConfiguration_settings,	North, { consumeObdSensors == 0 }
+		panel = triggerInputs,		South, { consumeObdSensors == 0 }
 
 ;			Engine->Injection Settings
 	dialog = injChars, "Injector Settings",	yAxis
@@ -2587,10 +2592,11 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 	dialog = canBus, "CAN Bus"
 		field = "Can Read Enabled",						canReadEnabled
 		field = "Can Write Enabled",					canWriteEnabled
+	    field = "consumeObdSensors",                    consumeObdSensors, { canReadEnabled == 1 && canWriteEnabled == 1}
 		field = "Can Nbc Type",							canNbcType
 		field = "Can Baud Rate",						canBaudRate
 		field = "Enable rusEFI CAN broadcast",			enableVerboseCanTx
-		field = "rusEfi CAN data base address",			verboseCanBaseAddress
+		field = "rusEFI CAN data base address",			verboseCanBaseAddress
 		field = "Can Sleep Period",						canSleepPeriodMs
 		field = "RX pin",								canRxPin @@if_ts_show_can_pins
 		field = "TX pin",								canTxPin @@if_ts_show_can_pins
@@ -2601,7 +2607,7 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 		field = "Can Nbc Type",							can2NbcType
 		field = "Can Baud Rate",						can2BaudRate
 		field = "Enable rusEFI CAN broadcast",			enableVerboseCan2Tx
-		field = "rusEfi CAN data base address",			verboseCan2BaseAddress
+		field = "rusEFI CAN data base address",			verboseCan2BaseAddress
 		field = "Can Sleep Period",						can2SleepPeriodMs
 		field = "RX pin",								can2RxPin @@if_ts_show_can_pins
 		field = "TX pin",								can2TxPin @@if_ts_show_can_pins
@@ -2653,7 +2659,7 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 		panel = gpsReceiver                       @@if_ts_show_gps
 
 				
-	dialog = monitoringSettings, "rusEfi Console Settings"			
+	dialog = monitoringSettings, "rusEFI Console Settings"
 		field = "Sensor Sniffer",         	    		sensorChartMode
 		field = "  Threshold",							sensorSnifferRpmThreshold
 		field = "  Each X cycle",						sensorChartFrequency
@@ -2822,7 +2828,7 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 		
 	dialog = fsioFormulas, "FSIO Formulas"
 		field = "!FSIO uses Reverse Polish Notation. Please read http://rusefi.com/s/fsio"
-		field = "#fsioinfo command in rusEfi console could be useful while troubleshooting those"
+		field = "#fsioinfo command in rusEFI console could be useful while troubleshooting those"
 		field = "#1",									fsioFormulas1
 		field = "#2",									fsioFormulas2
 		field = "#3",									fsioFormulas3
@@ -3013,8 +3019,8 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 		panel = testMisc,		East
 	
 	dialog = engineTypeDialog, "Popular vehicles"
-		field = "!These buttons send a command to rusEfi controller to apply preset values"
-		field = "!Once you send the command, please reconnect to rusEfi controller in order to read fresh values"			
+		field = "!These buttons send a command to rusEFI controller to apply preset values"
+		field = "!Once you send the command, please reconnect to rusEFI controller in order to read fresh values"
 		commandButton = "Frankenso Miata NA6 Stage 0", cmd_set_engine_type_Frankenso_Miata_NA6_VAF@@if_show_Frankenso_presets
 		commandButton = "Frankenso Miata NA6 Stage 1", cmd_set_engine_type_Frankenso_Miata_NA6_MAP@@if_show_Frankenso_presets
 		commandButton = "Frankenso Miata NB2 MAP",     cmd_set_engine_type_Frankenso_Miata_NB2@@if_show_Frankenso_presets
