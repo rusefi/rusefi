@@ -171,6 +171,8 @@ void EngineState::periodicFastCallback(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 
 	baroCorrection = getBaroCorrection(PASS_ENGINE_PARAMETER_SIGNATURE);
 
+	auto tps = Sensor::get(SensorType::Tps1);
+	updateTChargeK(rpm, tps.value_or(0) PASS_ENGINE_PARAMETER_SUFFIX);
 	ENGINE(injectionDuration) = getInjectionDuration(rpm PASS_ENGINE_PARAMETER_SUFFIX);
 
 	float fuelLoad = getFuelingLoad(PASS_ENGINE_PARAMETER_SIGNATURE);
