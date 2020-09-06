@@ -69,6 +69,13 @@
 #undef STM32_SPI_USE_SPI5
 #define STM32_SPI_USE_SPI5				TRUE
 
+/* default STM32_DMA_STREAM_ID(2, 4) used by ADC1 */
+#undef STM32_SPI_SPI5_TX_DMA_STREAM
+#define STM32_SPI_SPI5_TX_DMA_STREAM	STM32_DMA_STREAM_ID(2, 6)
+
+/* To remove futher possible conflict */
+#undef STM32_SPI_SPI6_RX_DMA_STREAM
+
 #undef STM32_ICU_USE_TIM3
 #define STM32_ICU_USE_TIM3				TRUE
 
