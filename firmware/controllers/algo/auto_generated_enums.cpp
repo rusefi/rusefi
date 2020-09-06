@@ -1,7 +1,7 @@
 #include "global.h"
 #include "rusefi_enums.h"
 #include "rusefi_hw_enums.h"
-// was generated automatically by rusEfi tool  from rusefi_hw_enums.h // was generated automatically by rusEfi tool  from rusefi_enums.h // by enum2string.jar tool on Wed Oct 28 05:05:48 UTC 2020
+// was generated automatically by rusEfi tool  from rusefi_hw_enums.h // was generated automatically by rusEfi tool  from rusefi_enums.h // by enum2string.jar tool on Sun Sep 06 18:55:36 MSK 2020
 // see also gen_config_and_enums.bat
 
 
@@ -38,6 +38,22 @@ case NOT_A_PEAK:
 }
 const char *getAdc_channel_e(adc_channel_e value){
 switch(value) {
+case EFI_ADC3_14:
+  return "EFI_ADC3_14";
+case EFI_ADC3_15:
+  return "EFI_ADC3_15";
+case EFI_ADC3_4:
+  return "EFI_ADC3_4";
+case EFI_ADC3_5:
+  return "EFI_ADC3_5";
+case EFI_ADC3_6:
+  return "EFI_ADC3_6";
+case EFI_ADC3_7:
+  return "EFI_ADC3_7";
+case EFI_ADC3_8:
+  return "EFI_ADC3_8";
+case EFI_ADC3_9:
+  return "EFI_ADC3_9";
 case EFI_ADC_0:
   return "EFI_ADC_0";
 case EFI_ADC_1:

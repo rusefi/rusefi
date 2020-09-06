@@ -9,6 +9,7 @@
 #include "global.h"
 #include "efi_gpio.h"
 #include "expected.h"
+#include "mcuconf.h"
 
 #ifndef EFI_PIN_ADC9
 #define EFI_PIN_ADC9 GPIOB_1
@@ -75,6 +76,24 @@ brain_pin_e getAdcChannelBrainPin(const char *msg, adc_channel_e hwChannel) {
 		return GPIOC_4;
 	case EFI_ADC_15:
 		return GPIOC_5;
+#if (STM32_ADC_USE_ADC3 == TRUE)
+	case EFI_ADC3_4:
+		return GPIOF_6;
+	case EFI_ADC3_5:
+		return GPIOF_7;
+	case EFI_ADC3_6:
+		return GPIOF_8;
+	case EFI_ADC3_7:
+		return GPIOF_9;
+	case EFI_ADC3_8:
+		return GPIOF_10;
+	case EFI_ADC3_9:
+		return GPIOF_3;
+	case EFI_ADC3_14:
+		return GPIOF_4;
+	case EFI_ADC3_15:
+		return GPIOF_5;
+#endif
 	default:
 		firmwareError(CUSTOM_ERR_ADC_UNKNOWN_CHANNEL, "Unknown hw channel %d [%s]", hwChannel, msg);
 		return GPIO_INVALID;
@@ -115,6 +134,24 @@ adc_channel_e getAdcChannel(brain_pin_e pin) {
 		return EFI_ADC_14;
 	case GPIOC_5:
 		return EFI_ADC_15;
+#if (STM32_ADC_USE_ADC3 == TRUE)
+	case GPIOF_6:
+		return EFI_ADC3_4;
+	case GPIOF_7:
+		return EFI_ADC3_5;
+	case GPIOF_8:
+		return EFI_ADC3_6;
+	case GPIOF_9:
+		return EFI_ADC3_7;
+	case GPIOF_10:
+		return EFI_ADC3_8;
+	case GPIOF_3:
+		return EFI_ADC3_9;
+	case GPIOF_4:
+		return EFI_ADC3_14;
+	case GPIOF_5:
+		return EFI_ADC3_15;
+#endif
 	case GPIO_UNASSIGNED:
 		return EFI_ADC_NONE;
 	default:
