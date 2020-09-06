@@ -20,5 +20,5 @@ float AirmassModelBase::getVe(int rpm, float load) const {
 	}
 
 	ENGINE(engineState.currentVe) = ve;
-	return ve;
+	return ve * 0.01f;
 }
