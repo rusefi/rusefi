@@ -246,25 +246,26 @@ typedef enum __attribute__ ((__packed__))
  */
 
 typedef enum __attribute__ ((__packed__)) {
-	EFI_ADC_0 = 0, // PA0
-	EFI_ADC_1 = 1, // PA1
-	EFI_ADC_2 = 2, // PA2
-	EFI_ADC_3 = 3, // PA3
-	EFI_ADC_4 = 4, // PA4
-	EFI_ADC_5 = 5, // PA5
-	EFI_ADC_6 = 6, // PA6
-	EFI_ADC_7 = 7, // PA7
-	EFI_ADC_8 = 8, // PB0
-	EFI_ADC_9 = 9, // PB1
-	EFI_ADC_10 = 10, // PC0
-	EFI_ADC_11 = 11, // PC1
-	EFI_ADC_12 = 12, // PC2
-	EFI_ADC_13 = 13, // PC3
-	EFI_ADC_14 = 14, // PC4
-	EFI_ADC_15 = 15, // PC5
+	EFI_ADC_NONE = 0,
+
+	EFI_ADC_0 = 1, // PA0
+	EFI_ADC_1 = 2, // PA1
+	EFI_ADC_2 = 3, // PA2
+	EFI_ADC_3 = 4, // PA3
+	EFI_ADC_4 = 5, // PA4
+	EFI_ADC_5 = 6, // PA5
+	EFI_ADC_6 = 7, // PA6
+	EFI_ADC_7 = 8, // PA7
+	EFI_ADC_8 = 9, // PB0
+	EFI_ADC_9 = 10, // PB1
+	EFI_ADC_10 = 11, // PC0
+	EFI_ADC_11 = 12, // PC1
+	EFI_ADC_12 = 13, // PC2
+	EFI_ADC_13 = 14, // PC3
+	EFI_ADC_14 = 15, // PC4
+	EFI_ADC_15 = 16, // PC5
 
 	// todo: bad choice of value since now we have ADC_CHANNEL_SENSOR and could end up with 17 and 18 also
-	EFI_ADC_NONE = 16,
 	EFI_ADC_ERROR = 17,
 } adc_channel_e;
 
