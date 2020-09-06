@@ -47,7 +47,7 @@ static bool shouldCorrect(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	}
 
 	// Don't correct if not running
-	if (!ENGINE(rpmCalculator).isRunning(PASS_ENGINE_PARAMETER_SIGNATURE)) {
+	if (!ENGINE(rpmCalculator).isRunning()) {
 		return false;
 	}
 

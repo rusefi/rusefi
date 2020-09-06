@@ -69,15 +69,17 @@ static void configureTempSensor(FunctionalSensor &sensor,
 }
 
 void initThermistors(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
-	configureTempSensor(clt,
+	if (!CONFIG(consumeObdSensors)) {
+		configureTempSensor(clt,
 						fclt,
 						CONFIG(clt),
 						CONFIG(useLinearCltSensor));
 
-	configureTempSensor(iat,
+		configureTempSensor(iat,
 						fiat,
 						CONFIG(iat),
 						CONFIG(useLinearIatSensor));
+	}
 
 	configureTempSensor(aux1,
 						faux1,
