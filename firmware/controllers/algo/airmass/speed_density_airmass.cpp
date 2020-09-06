@@ -26,7 +26,9 @@ AirmassResult SpeedDensityAirmass::getAirmass(int rpm) {
 	float adjustedMap = engine->engineState.sd.adjustedManifoldAirPressure = map + engine->engineState.sd.manifoldAirPressureAccelerationAdjustment;
 	efiAssert(CUSTOM_ERR_ASSERT, !cisnan(adjustedMap), "NaN adjustedMap", {});
 
-	float airMass = getAirmassImpl(ENGINE(engineState.currentBaroCorrectedVE), adjustedMap, tChargeK PASS_ENGINE_PARAMETER_SUFFIX);
+	float ve = getVe(rpm, adjustedMap);
+
+	float airMass = getAirmassImpl(ve, adjustedMap, tChargeK PASS_ENGINE_PARAMETER_SUFFIX);
 	if (cisnan(airMass)) {
 		warning(CUSTOM_ERR_6685, "NaN airMass");
 		return {};

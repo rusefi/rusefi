@@ -234,5 +234,5 @@ TEST(fuel, testTpsBasedVeDefect799) {
 
 	engine->engineState.periodicFastCallback(PASS_ENGINE_PARAMETER_SIGNATURE);
 	// value in the middle of the map as expected
-	ASSERT_EQ(107, engine->engineState.currentRawVE);
+	ASSERT_EQ(107, engine->engineState.currentVe);
 }

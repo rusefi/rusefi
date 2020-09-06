@@ -62,7 +62,6 @@
 #include "cdm_ion_sense.h"
 #include "binary_logging.h"
 
-extern afr_Map3D_t afrMap;
 extern bool main_loop_started;
 
 #if EFI_PROD_CODE
@@ -606,12 +605,12 @@ void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels DECLARE_
 	// 288
 	tsOutputChannels->injectionOffset = engine->engineState.injectionOffset;
 
+	// offset 112
+	tsOutputChannels->veValue = engine->engineState.currentVe;
+	tsOutputChannels->currentTargetAfr = ENGINE(engineState.targetAFR);
+
 	if (hasMapSensor(PASS_ENGINE_PARAMETER_SIGNATURE)) {
 		float mapValue = getMap(PASS_ENGINE_PARAMETER_SIGNATURE);
-		// // offset 112
-		tsOutputChannels->veValue = engine->engineState.currentBaroCorrectedVE * PERCENT_MULT;
-		// todo: bug here? target afr could work based on real MAF?
-		tsOutputChannels->currentTargetAfr = afrMap.getValue(rpm, mapValue);
 		// offset 40
 		tsOutputChannels->manifoldAirPressure = mapValue;
 	}
