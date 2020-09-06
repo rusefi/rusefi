@@ -9,7 +9,6 @@
 #include "global.h"
 #include "efi_gpio.h"
 #include "expected.h"
-#include "mcuconf.h"
 
 #ifndef EFI_PIN_ADC9
 #define EFI_PIN_ADC9 GPIOB_1
@@ -18,6 +17,7 @@
 #if EFI_PROD_CODE
 #include "mpu_util.h"
 #include "backup_ram.h"
+#include "mcuconf.h"
 #endif /* EFI_PROD_CODE */
 
 #if HAL_USE_ADC
