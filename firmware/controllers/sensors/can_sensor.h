@@ -91,6 +91,10 @@ public:
 			CanSensorBase(eid, type, timeout) {
 	}
 
+	SensorResult decodeFrame(const CANRxFrame& frame) override {
+		return unexpected;
+	}
+
 	CanSensorBase* request() override {
 		{
 			CanTxMessage msg(OBD_TEST_REQUEST);
