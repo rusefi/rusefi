@@ -15,7 +15,7 @@
 
 #if HAL_USE_ADC
 
-const char * getAdcMode(adc_channel_e hwChannel);
+adc_channel_mode_e getAdcMode(adc_channel_e hwChannel);
 void initAdcInputs();
 
 // deprecated - migrate to 'getAdcChannelBrainPin'

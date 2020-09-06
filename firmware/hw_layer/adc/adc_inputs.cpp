@@ -289,14 +289,14 @@ static GPTConfig fast_adc_config = {
 };
 #endif /* HAL_USE_GPT */
 
-const char * getAdcMode(adc_channel_e hwChannel) {
+adc_channel_mode_e getAdcMode(adc_channel_e hwChannel) {
 	if (slowAdc.isHwUsed(hwChannel)) {
-		return "slow";
+		return ADC_SLOW;
 	}
 	if (fastAdc.isHwUsed(hwChannel)) {
-		return "fast";
+		return ADC_FAST;
 	}
-	return "INACTIVE - need restart";
+	return ADC_OFF;
 }
 
 int AdcDevice::size() const {
