@@ -510,7 +510,26 @@ void mreBoardOldTest(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 }
 
 void mreBCM(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
+	for (int i = 0; i < IGNITION_PIN_COUNT;i++) {
+		engineConfiguration->ignitionPins[i] = GPIO_UNASSIGNED;
+	}
+	for (int i = 0; i < INJECTION_PIN_COUNT;i++) {
+		engineConfiguration->injectionPins[i] = GPIO_UNASSIGNED;
+	}
+	engineConfiguration->fanPin = GPIO_UNASSIGNED;
+	engineConfiguration->consumeObdSensors = true;
 
+	engineConfiguration->fsioOutputPins[0] = GPIOE_14;// "37 - Injector 1"
+	engineConfiguration->fsioOutputPins[1] = GPIOE_13;// "38 - Injector 2"
+	engineConfiguration->fsioOutputPins[2] = GPIOE_12;// "41 - Injector 3"
+	engineConfiguration->fsioOutputPins[3] = GPIOE_11;// "42 - Injector 4"
+// 	engineConfiguration->fsioOutputPins[4] = LS1
+// 			engineConfiguration->fsioOutputPins[5] = LS2
+
+				// engineConfiguration->fsioOutputPins[6] = GP1
+	engineConfiguration->fsioOutputPins[7] = TLE8888_PIN_22;// "34 - GP Out 2"
+	engineConfiguration->fsioOutputPins[8] = TLE8888_PIN_23;// "33 - GP Out 3"
+	engineConfiguration->fsioOutputPins[9] = TLE8888_PIN_24;// "43 - GP Out 4"
 }
 
 /**
