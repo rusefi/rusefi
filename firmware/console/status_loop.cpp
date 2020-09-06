@@ -609,7 +609,7 @@ void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels DECLARE_
 	if (hasMapSensor(PASS_ENGINE_PARAMETER_SIGNATURE)) {
 		float mapValue = getMap(PASS_ENGINE_PARAMETER_SIGNATURE);
 		// // offset 112
-		tsOutputChannels->veValue = engine->engineState.currentBaroCorrectedVE * PERCENT_MULT;
+		tsOutputChannels->veValue = engine->engineState.currentVe * PERCENT_MULT;
 		// todo: bug here? target afr could work based on real MAF?
 		tsOutputChannels->currentTargetAfr = afrMap.getValue(rpm, mapValue);
 		// offset 40
