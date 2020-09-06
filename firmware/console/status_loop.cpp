@@ -62,7 +62,6 @@
 #include "cdm_ion_sense.h"
 #include "binary_logging.h"
 
-extern afr_Map3D_t afrMap;
 extern bool main_loop_started;
 
 #if EFI_PROD_CODE
