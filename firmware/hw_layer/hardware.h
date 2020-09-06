@@ -59,6 +59,6 @@ class ButtonDebounce;
 
 class PointerListNode;
 
-extern PointerListNode buttonDebounceListHead;
+PointerListNode buttonDebounceListHead;
 
 #endif /* __cplusplus */
