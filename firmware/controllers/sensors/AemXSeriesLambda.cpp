@@ -1,4 +1,6 @@
 #include "global.h"
+
+#if EFI_CAN_SUPPORT
 #include "AemXSeriesLambda.h"
 #include "efilib.h"
 
@@ -30,3 +32,5 @@ SensorResult AemXSeriesWideband::decodeFrame(const CANRxFrame& frame) {
 	// reports in 0.0001 lambda per LSB
 	return 0.0001f * SWAP_UINT16(frame.data16[0]);
 }
+
+#endif
