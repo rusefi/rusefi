@@ -87,7 +87,7 @@ typedef enum {
 	SUBARU_2003_WRX = 22,
 
 	/**
-	 * microRusEFI used as Body Control Module BCM
+	 * microRusEFI used as Body Control Module BCM BCU
 	 */
 	MRE_BODY_CONTROL = ET_MRE_BODY_CONTROL,
 	BMW_M73_M = 24,
