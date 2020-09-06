@@ -265,8 +265,6 @@ void stopSpi(spi_device_e device) {
  * todo: maybe start invoking this method on ECU start so that peripheral start-up initialization and restart are unified?
  */
 
-PointerListNode buttonDebounceListHead;
-
 void applyNewHardwareSettings(void) {
     // all 'stop' methods need to go before we begin starting pins
 
