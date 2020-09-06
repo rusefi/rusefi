@@ -1,12 +1,12 @@
 #include "global.h"
-#include "AemXseriesLambda.h"
+#include "AemXSeriesLambda.h"
 #include "efilib.h"
 
 AemXSeriesWideband::AemXSeriesWideband(uint8_t sensorIndex, SensorType type)
 	: CanSensorBase(
 		0x180 + sensorIndex,	// 0th sensor is 0x180, others sequential above that
 		type,
-		MS2NT(21)	// transmits at 100hz, allow a frame to be missed
+		MS2NT(21)	// sensor transmits at 100hz, allow a frame to be missed
 	)
 {}
 

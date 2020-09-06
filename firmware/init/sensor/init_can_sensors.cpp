@@ -17,7 +17,7 @@ EXTERN_CONFIG
 
 #define TIMEOUT MS2NT(100)
 
-CanSensor<int16_t, PACK_MULT_PERCENT> canPedalSensor(
+PlainCanSensor<int16_t, PACK_MULT_PERCENT> canPedalSensor(
 	CAN_DEFAULT_BASE + CAN_PEDAL_TPS_OFFSET, /*offset =*/ 0,
 	SensorType::AcceleratorPedal, TIMEOUT
 );

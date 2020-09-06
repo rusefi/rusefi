@@ -5,7 +5,7 @@
 #include "global.h"
 #include "function_pointer_sensor.h"
 #include "ego.h"
-#include "AemXseriesLambda.h"
+#include "AemXSeriesLambda.h"
 
 EXTERN_ENGINE;
 

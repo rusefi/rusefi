@@ -60,9 +60,9 @@ private:
 };
 
 template <typename TStorage, int TScale>
-class CanSensor : public CanSensorBase {
+class PlainCanSensor : public CanSensorBase {
 public:
-	CanSensor(uint32_t eid, uint8_t offset, SensorType type, efitick_t timeout)
+	PlainCanSensor(uint32_t eid, uint8_t offset, SensorType type, efitick_t timeout)
 		: CanSensorBase(eid, type, timeout)
 		, m_offset(offset)
 	{
@@ -102,4 +102,3 @@ public:
 		return m_next;
 	}
 };
-
