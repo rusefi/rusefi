@@ -159,6 +159,64 @@ adc_channel_e getAdcChannel(brain_pin_e pin) {
 	}
 }
 
+/* We assume straight mapping ADC:
+ * slow - ADC1
+ * fast - ADC2
+ * AUX  - ADC3 (if exits) */
+
+static const adc_channel_e adcInternalIndexToChannelMap[][16] = {
+	/* ADC 1*/
+	{EFI_ADC_0, EFI_ADC_1, EFI_ADC_2, EFI_ADC_3, EFI_ADC_4, EFI_ADC_5, EFI_ADC_6, EFI_ADC_7,
+		EFI_ADC_8, EFI_ADC_9, EFI_ADC_10, EFI_ADC_11, EFI_ADC_12, EFI_ADC_13, EFI_ADC_14, EFI_ADC_15},
+	/* ADC 2*/
+	{EFI_ADC_0, EFI_ADC_1, EFI_ADC_2, EFI_ADC_3, EFI_ADC_4, EFI_ADC_5, EFI_ADC_6, EFI_ADC_7,
+		EFI_ADC_8, EFI_ADC_9, EFI_ADC_10, EFI_ADC_11, EFI_ADC_12, EFI_ADC_13, EFI_ADC_14, EFI_ADC_15},
+#if (STM32_ADC_USE_ADC3 == TRUE)
+	/* ADC 3*/
+	{EFI_ADC_0, EFI_ADC_1, EFI_ADC_2, EFI_ADC_3, EFI_ADC3_4, EFI_ADC3_5, EFI_ADC3_6, EFI_ADC3_7,
+		EFI_ADC3_8, EFI_ADC3_9, EFI_ADC_10, EFI_ADC_11, EFI_ADC_12, EFI_ADC_13, EFI_ADC3_14, EFI_ADC3_15},
+#endif
+};
+
+int getAdcInernalIndex(adc_channel_mode_e adc_type, adc_channel_e hwChannel)
+{
+	int i;
+	int adc_index = adc_type - ADC_SLOW;
+
+#if (STM32_ADC_USE_ADC3 == TRUE)
+	if (adc_type > ADC_AUX)
+		return -1;
+#else
+	if (adc_type > ADC_FAST)
+		return -1;
+#endif
+
+	for (i = 0; i < 16; i++) {
+		if (adcInternalIndexToChannelMap[adc_index][i] == hwChannel)
+			return i;
+	}
+
+	return -1;
+}
+
+adc_channel_e getHwChannelFromAdcIndex(adc_channel_mode_e adc_type, unsigned int ch_index)
+{
+	int adc_index = adc_type - ADC_SLOW;
+
+#if (STM32_ADC_USE_ADC3 == TRUE)
+	if (adc_type > ADC_AUX)
+		return EFI_ADC_ERROR;
+#else
+	if (adc_type > ADC_FAST)
+		return EFI_ADC_ERROR;
+#endif
+
+	if (ch_index > 15)
+		return EFI_ADC_ERROR;
+
+	return adcInternalIndexToChannelMap[adc_index][ch_index];
+}
+
 // deprecated - inline?
 ioportid_t getAdcChannelPort(const char *msg, adc_channel_e hwChannel) {
 	brain_pin_e brainPin = getAdcChannelBrainPin(msg, hwChannel);

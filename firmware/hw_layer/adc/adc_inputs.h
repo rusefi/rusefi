@@ -26,6 +26,8 @@ ioportid_t getAdcChannelPort(const char *msg, adc_channel_e hwChannel);
 
 adc_channel_e getAdcChannel(brain_pin_e pin);
 brain_pin_e getAdcChannelBrainPin(const char *msg, adc_channel_e hwChannel);
+int getAdcInernalIndex(adc_channel_mode_e adc_type, adc_channel_e hwChannel);
+adc_channel_e getHwChannelFromAdcIndex(adc_channel_mode_e adc_type, unsigned int ch_index);
 
 // wait until at least 1 slowADC sampling is complete
 void waitForSlowAdc(int lastAdcCounter = 0);
