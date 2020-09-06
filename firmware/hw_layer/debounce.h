@@ -34,6 +34,7 @@ private:
     pin_input_mode_e *mode;
     pin_input_mode_e *active_mode;
     bool readValue;
+    bool initialized = false;
 };
 
 #endif /* DEBOUNCE_INC */

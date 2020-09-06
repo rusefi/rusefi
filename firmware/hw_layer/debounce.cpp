@@ -13,15 +13,17 @@
 PointerListNode buttonDebounceListHead;
 
 void ButtonDebounce::init (int t, DECLARE_CONFIG_POINTERS(brain_pin_e, p), DECLARE_CONFIG_POINTERS(pin_input_mode_e, m)) {
-    thisNode.pointer = this;
-    PointerListNode *listItem = &buttonDebounceListHead;
-    if (listItem->pointer == NULL) {
-        buttonDebounceListHead = thisNode;
-    } else {
-        while (listItem->next != NULL) {
-            listItem = listItem->next;
+    if (!initialized) {
+        thisNode.pointer = this;
+        PointerListNode *listItem = &buttonDebounceListHead;
+        if (listItem->pointer == NULL) {
+            buttonDebounceListHead = thisNode;
+        } else {
+            while (listItem->next != NULL) {
+                listItem = listItem->next;
+            }
+            listItem->next = &thisNode;
         }
-        listItem->next = &thisNode;
     }
     threshold = MS2NT(t);
     timeLast = 0;
@@ -34,6 +36,7 @@ void ButtonDebounce::init (int t, DECLARE_CONFIG_POINTERS(brain_pin_e, p), DECLA
     // getInputMode converts from pin_input_mode_e to iomode_t
     efiSetPadMode("Button", *p, getInputMode(*m));
 #endif
+    initialized = true;
 }
 
 void ButtonDebounce::updateConfiguration () {
