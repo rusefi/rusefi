@@ -26,7 +26,7 @@ static FunctionPointerSensor lambdaSensor(SensorType::Lambda,
 
 static AemXSeriesWideband aem(0, SensorType::Lambda);
 
-void init_lambda(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+void initLambda(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	INJECT_ENGINE_REFERENCE(&afrWrapper);
 
 	if (CONFIG(enableAemXSeries)) {

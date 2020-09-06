@@ -85,7 +85,7 @@ private:
 };
 
 template <typename TStorage, int TScale>
-class ObdCanSensor : public CanSensor {
+class ObdCanSensor : public CanSensorBase {
 public:
 	ObdCanSensor(uint32_t eid, SensorType type, efitick_t timeout) :
 			CanSensorBase(eid, type, timeout) {
