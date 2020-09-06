@@ -20,9 +20,18 @@ typedef struct {
 
 class AdcDevice {
 public:
-	explicit AdcDevice(ADCConversionGroup* hwConfig, adcsample_t *buf, int buf_size);
-	void enableChannel(adc_channel_e hwChannelIndex);
-	void enableChannelAndPin(const char *msg, adc_channel_e hwChannelIndex);
+	explicit AdcDevice(ADCDriver *adcp, ADCConversionGroup* hwConfig, adc_channel_mode_e adc_mode, adcsample_t *buf, int buf_size);
+
+	int enableChannel(adc_channel_e hwChannelIndex);
+	int enableChannelAndPin(const char *msg, adc_channel_e hwChannelIndex);
+
+	int doConvertion(void);
+	int startConvertion(void);
+
+	adcsample_t getAvgAdcValueByIndex(int index);
+	/* TODO: need rework */
+	adcsample_t getAdcValueByIndex(int internalIndex) const;
+
 	adc_channel_e getAdcHardwareIndexByInternalIndex(int index) const;
 	int internalAdcIndexByHardwareIndex[ADC_MAX_CHANNELS_COUNT + 4];
 	bool isHwUsed(adc_channel_e hwChannel) const;
@@ -30,21 +39,24 @@ public:
 	void init(void);
 	int conversionCount;
 	int errorsCount;
-	int getAdcValueByIndex(int internalIndex) const;
 	void invalidateSamplesCache();
+	void cleanSamplesCache();
 
 	adcsample_t *samples;
+	int buf_depth;
 
 	int getAdcValueByHwChannel(int hwChannel) const;
 
 	adc_state values;
-	int channelCount;
 private:
+	adc_channel_mode_e mode;
+	ADCDriver *adcp;
 	ADCConversionGroup* hwConfig;
 	/**
 	 * Number of ADC channels in use
 	 */
-	 
+	int channelCount;
+	/* mapping */
 	adc_channel_e hardwareIndexByIndernalAdcIndex[ADC_MAX_CHANNELS_COUNT + 4];
 };
 

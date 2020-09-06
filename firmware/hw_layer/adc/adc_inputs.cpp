@@ -37,15 +37,26 @@
 #include "maf.h"
 #include "perf_trace.h"
 
+/* Depth of the conversion buffer, channels are sampled X times each.*/
+#define ADC_BUF_DEPTH_SLOW      8
+#define ADC_BUF_DEPTH_FAST      4
+#define ADC_BUF_DEPTH_AUX		ADC_BUF_DEPTH_SLOW
+
 // on F7 this must be aligned on a 32-byte boundary, and be a multiple of 32 bytes long.
 // When we invalidate the cache line(s) for ADC samples, we don't want to nuke any
 // adjacent data.
 // F4 does not care
 static __ALIGNED(32) adcsample_t slowAdcSampleBuf[ADC_BUF_DEPTH_SLOW * ADC_MAX_CHANNELS_COUNT];
 static __ALIGNED(32) adcsample_t fastAdcSampleBuf[ADC_BUF_DEPTH_FAST * ADC_MAX_CHANNELS_COUNT];
+#if (STM32_ADC_USE_ADC3 == TRUE)
+static __ALIGNED(32) adcsample_t auxAdcSampleBuf[ADC_BUF_DEPTH_SLOW * ADC_MAX_CHANNELS_COUNT];
+#endif
 
 static_assert(sizeof(slowAdcSampleBuf) % 32 == 0, "Slow ADC sample buffer size must be a multiple of 32 bytes");
 static_assert(sizeof(fastAdcSampleBuf) % 32 == 0, "Fast ADC sample buffer size must be a multiple of 32 bytes");
+#if (STM32_ADC_USE_ADC3 == TRUE)
+static_assert(sizeof(auxAdcSampleBuf) % 32 == 0, "AUX ADC sample buffer size must be a multiple of 32 bytes");
+#endif
 
 static adc_channel_mode_e adcHwChannelEnabled[HW_MAX_ADC_INDEX];
 
@@ -61,10 +72,14 @@ float getVoltage(const char *msg, adc_channel_e hwChannel DECLARE_ENGINE_PARAMET
 	return adcToVolts(getAdcValue(msg, hwChannel));
 }
 
-AdcDevice::AdcDevice(ADCConversionGroup* hwConfig, adcsample_t *buf, int buf_size) {
+AdcDevice::AdcDevice(ADCDriver *adcp, ADCConversionGroup* hwConfig, adc_channel_mode_e adc_mode, adcsample_t *buf, int buf_depth) {
+	this->adcp = adcp;
 	this->hwConfig = hwConfig;
+	this->mode = adc_mode;
 	this->samples = buf;
-	assert(buf_size % 32 == 0);
+	assert(buf_depth * sizeof(adcsample_t) * ADC_MAX_CHANNELS_COUNT % 32 == 0);
+	this->buf_depth = buf_depth;
+
 	channelCount = 0;
 	conversionCount = 0;
 	errorsCount = 0;
@@ -91,17 +106,11 @@ AdcDevice::AdcDevice(ADCConversionGroup* hwConfig, adcsample_t *buf, int buf_siz
 #define GPT_PERIOD_FAST 10  /* PWM period (in PWM ticks).    */
 #endif /* GPT_FREQ_FAST GPT_PERIOD_FAST */
 
-// is there a reason to have this configurable at runtime?
-#ifndef ADC_SLOW_DEVICE
-#define ADC_SLOW_DEVICE ADCD1
-#endif /* ADC_SLOW_DEVICE */
-
-// is there a reason to have this configurable at runtime?
-#ifndef ADC_FAST_DEVICE
-#define ADC_FAST_DEVICE ADCD2
-#endif /* ADC_FAST_DEVICE */
-
 static volatile int slowAdcCounter = 0;
+#if (STM32_ADC_USE_ADC3 == TRUE)
+static volatile int auxAdcCounter = 0;
+#endif
+
 static LoggingWithStorage logger("ADC");
 
 // todo: move this flag to Engine god object
@@ -109,21 +118,10 @@ static int adcDebugReporting = false;
 
 EXTERN_ENGINE;
 
-static adcsample_t getAvgAdcValue(int index, adcsample_t *samples, int bufDepth, int numChannels) {
-	uint32_t result = 0;
-	for (int i = 0; i < bufDepth; i++) {
-		result += samples[index];
-		index += numChannels;
-	}
-
-	// this truncation is guaranteed to not be lossy - the average can't be larger than adcsample_t
-	return static_cast<adcsample_t>(result / bufDepth);
-}
-
-
 // See https://github.com/rusefi/rusefi/issues/976 for discussion on these values
 #define ADC_SAMPLING_SLOW ADC_SAMPLE_56
 #define ADC_SAMPLING_FAST ADC_SAMPLE_28
+
 /*
  * ADC conversion group.
  */
@@ -171,8 +169,6 @@ static ADCConversionGroup adcgrpcfgSlow = {
 #endif /* ADC_MAX_CHANNELS_COUNT */
 };
 
-AdcDevice slowAdc(&adcgrpcfgSlow, slowAdcSampleBuf, sizeof(slowAdcSampleBuf));
-
 void adc_callback_fast(ADCDriver *adcp, adcsample_t *buffer, size_t n);
 
 static ADCConversionGroup adcgrpcfgFast = {
@@ -219,7 +215,53 @@ static ADCConversionGroup adcgrpcfgFast = {
 #endif /* ADC_MAX_CHANNELS_COUNT */
 };
 
-AdcDevice fastAdc(&adcgrpcfgFast, fastAdcSampleBuf, sizeof(fastAdcSampleBuf));
+#if (STM32_ADC_USE_ADC3 == TRUE)
+static ADCConversionGroup adcgrpcfgAux = {
+	.circular			= FALSE,
+	.num_channels		= 0,
+	.end_cb				= nullptr,
+	.error_cb			= nullptr,
+	/* HW dependent part.*/
+	.cr1				= 0,
+	.cr2				= ADC_CR2_SWSTART,
+	/**
+	 * here we configure all possible channels for slow mode. Some channels would not actually
+	 * be used hopefully that's fine to configure all possible channels.
+	 */
+	// sample times for channels 10...18
+	.smpr1 =
+		ADC_SMPR1_SMP_AN10(ADC_SAMPLING_SLOW) |
+		ADC_SMPR1_SMP_AN11(ADC_SAMPLING_SLOW) |
+		ADC_SMPR1_SMP_AN12(ADC_SAMPLING_SLOW) |
+		ADC_SMPR1_SMP_AN13(ADC_SAMPLING_SLOW) |
+		ADC_SMPR1_SMP_AN14(ADC_SAMPLING_SLOW) |
+		ADC_SMPR1_SMP_AN15(ADC_SAMPLING_SLOW) |
+		ADC_SMPR1_SMP_SENSOR(ADC_SAMPLE_144),
+	// In this field must be specified the sample times for channels 0...9
+	.smpr2 =
+		ADC_SMPR2_SMP_AN0(ADC_SAMPLING_SLOW) |
+		ADC_SMPR2_SMP_AN1(ADC_SAMPLING_SLOW) |
+		ADC_SMPR2_SMP_AN2(ADC_SAMPLING_SLOW) |
+		ADC_SMPR2_SMP_AN3(ADC_SAMPLING_SLOW) |
+		ADC_SMPR2_SMP_AN4(ADC_SAMPLING_SLOW) |
+		ADC_SMPR2_SMP_AN5(ADC_SAMPLING_SLOW) |
+		ADC_SMPR2_SMP_AN6(ADC_SAMPLING_SLOW) |
+		ADC_SMPR2_SMP_AN7(ADC_SAMPLING_SLOW) |
+		ADC_SMPR2_SMP_AN8(ADC_SAMPLING_SLOW) |
+		ADC_SMPR2_SMP_AN9(ADC_SAMPLING_SLOW),
+	.htr				= 0,
+	.ltr				= 0,
+	.sqr1				= 0, // Conversion group sequence 13...16 + sequence length
+	.sqr2				= 0, // Conversion group sequence 7...12
+	.sqr3				= 0  // Conversion group sequence 1...6
+};
+#endif
+
+AdcDevice slowAdc(&ADCD1, &adcgrpcfgSlow, ADC_SLOW, slowAdcSampleBuf, ADC_BUF_DEPTH_SLOW /* sizeof(slowAdcSampleBuf) */);
+AdcDevice fastAdc(&ADCD2, &adcgrpcfgFast, ADC_FAST, fastAdcSampleBuf, ADC_BUF_DEPTH_FAST /* sizeof(fastAdcSampleBuf) */);
+#if (STM32_ADC_USE_ADC3 == TRUE)
+AdcDevice auxAdc(&ADCD3, &adcgrpcfgAux, ADC_AUX, auxAdcSampleBuf, ADC_BUF_DEPTH_AUX /* sizeof(auxAdcSampleBuf) */);
+#endif
 
 #if HAL_USE_GPT
 static void fast_adc_callback(GPTDriver*) {
@@ -229,22 +271,7 @@ static void fast_adc_callback(GPTDriver*) {
 	 * will be executed in parallel to the current PWM cycle and will
 	 * terminate before the next PWM cycle.
 	 */
-	chSysLockFromISR()
-	;
-	if (ADC_FAST_DEVICE.state != ADC_READY &&
-	ADC_FAST_DEVICE.state != ADC_COMPLETE &&
-	ADC_FAST_DEVICE.state != ADC_ERROR) {
-		fastAdc.errorsCount++;
-		// todo: when? why? firmwareError(OBD_PCM_Processor_Fault, "ADC fast not ready?");
-		chSysUnlockFromISR()
-		;
-		return;
-	}
-
-	adcStartConversionI(&ADC_FAST_DEVICE, &adcgrpcfgFast, fastAdc.samples, ADC_BUF_DEPTH_FAST);
-	chSysUnlockFromISR()
-	;
-	fastAdc.conversionCount++;
+	fastAdc.startConvertion();
 #endif /* EFI_INTERNAL_ADC */
 }
 #endif /* HAL_USE_GPT */
@@ -283,15 +310,17 @@ int getInternalAdcValue(const char *msg, adc_channel_e hwChannel) {
 		int internalIndex = fastAdc.internalAdcIndexByHardwareIndex[hwChannel];
 // todo if ADC_BUF_DEPTH_FAST EQ 1
 //		return fastAdc.samples[internalIndex];
-		int value = getAvgAdcValue(internalIndex, fastAdc.samples, ADC_BUF_DEPTH_FAST, fastAdc.size());
+		int value = fastAdc.getAvgAdcValueByIndex(internalIndex);
 		return value;
-	}
-	if (adcHwChannelEnabled[hwChannel] != ADC_SLOW) {
-	    // todo: make this not happen during hardware continues integration
-		warning(CUSTOM_OBD_WRONG_ADC_MODE, "ADC is off [%s] index=%d", msg, hwChannel);
+	} else if (adcHwChannelEnabled[hwChannel] == ADC_SLOW) {
+		return slowAdc.getAdcValueByHwChannel(hwChannel);
+	} else if (adcHwChannelEnabled[hwChannel] == ADC_AUX) {
+		return auxAdc.getAdcValueByHwChannel(hwChannel);
 	}
 
-	return slowAdc.getAdcValueByHwChannel(hwChannel);
+	warning(CUSTOM_OBD_WRONG_ADC_MODE, "ADC is off [%s] index=%d", msg, hwChannel);
+
+	return 0;
 }
 
 #if HAL_USE_GPT
@@ -309,6 +338,11 @@ adc_channel_mode_e getAdcMode(adc_channel_e hwChannel) {
 	if (fastAdc.isHwUsed(hwChannel)) {
 		return ADC_FAST;
 	}
+#if (STM32_ADC_USE_ADC3 == TRUE)
+	if (auxAdc.isHwUsed(hwChannel)) {
+		return ADC_AUX;
+	}
+#endif
 	return ADC_OFF;
 }
 
@@ -321,7 +355,7 @@ int AdcDevice::getAdcValueByHwChannel(int hwChannel) const {
 	return values.adc_data[internalIndex];
 }
 
-int AdcDevice::getAdcValueByIndex(int internalIndex) const {
+adcsample_t AdcDevice::getAdcValueByIndex(int internalIndex) const {
 	return values.adc_data[internalIndex];
 }
 
@@ -332,14 +366,20 @@ void AdcDevice::invalidateSamplesCache() {
 	// anything like a CCI that maintains coherency across multiple bus masters.
 	// As a result, we have to manually invalidate the D-cache any time we (the CPU)
 	// would like to read something that somebody else wrote (ADC via DMA, in this case)
-	SCB_InvalidateDCache_by_Addr(reinterpret_cast<uint32_t*>(samples), sizeof(samples));
+	SCB_InvalidateDCache_by_Addr(reinterpret_cast<uint32_t*>(samples), sizeof(adcsample_t) * buf_depth * ADC_MAX_CHANNELS_COUNT);
+#endif /* STM32F7XX */
+}
+
+void AdcDevice::cleanSamplesCache() {
+#if defined(STM32F7XX)
+	SCB_CleanDCache_by_Addr(reinterpret_cast<uint32_t*>(samples), sizeof(adcsample_t) * buf_depth * ADC_MAX_CHANNELS_COUNT);
 #endif /* STM32F7XX */
 }
 
 void AdcDevice::init(void) {
 	hwConfig->num_channels = size();
-	/* driver does this internally */
-	//hwConfig->sqr1 += ADC_SQR1_NUM_CH(size());
+
+	adcStart(adcp, NULL);
 }
 
 bool AdcDevice::isHwUsed(adc_channel_e hwChannelIndex) const {
@@ -351,15 +391,19 @@ bool AdcDevice::isHwUsed(adc_channel_e hwChannelIndex) const {
 	return false;
 }
 
-void AdcDevice::enableChannel(adc_channel_e hwChannel) {
+int AdcDevice::enableChannel(adc_channel_e hwChannel) {
 	if (channelCount >= efi::size(values.adc_data)) {
 		firmwareError(OBD_PCM_Processor_Fault, "Too many ADC channels configured");
-		return;
+		return -1;
 	}
-
 	int logicChannel = channelCount++;
 
-	size_t channelAdcIndex = hwChannel - 1;
+	int channelAdcIndex = getAdcInernalIndex(mode, hwChannel);
+	/* channel is not supported by this ADC */
+	if (channelAdcIndex < 0) {
+		firmwareError(OBD_PCM_Processor_Fault, "Channel is not supported by this ADC");
+		return channelAdcIndex;
+	}
 
 	internalAdcIndexByHardwareIndex[hwChannel] = logicChannel;
 	hardwareIndexByIndernalAdcIndex[logicChannel] = hwChannel;
@@ -378,13 +422,72 @@ void AdcDevice::enableChannel(adc_channel_e hwChannel) {
 		hwConfig->sqr5 += (channelAdcIndex) << (5 * (logicChannel - 24));
 	}
 #endif /* ADC_MAX_CHANNELS_COUNT */
+
+	return 0;
 }
 
-void AdcDevice::enableChannelAndPin(const char *msg, adc_channel_e hwChannel) {
-	enableChannel(hwChannel);
+int AdcDevice::enableChannelAndPin(const char *msg, adc_channel_e hwChannel) {
+	int ret;
 
 	brain_pin_e pin = getAdcChannelBrainPin(msg, hwChannel);
+	/* No ADC function available on this pin */
+	if (pin == GPIO_INVALID)
+		return -1;
+
+	ret = enableChannel(hwChannel);
+	if (ret < 0)
+		return ret;
+
 	efiSetPadMode(msg, pin, PAL_MODE_INPUT_ANALOG);
+
+	return 0;
+}
+
+int AdcDevice::doConvertion(void) {
+	/* Do we need this? */
+	cleanSamplesCache();
+	msg_t result = adcConvert(adcp, hwConfig, samples, buf_depth);
+	invalidateSamplesCache();
+
+	// If something went wrong - try again later
+	if (result == MSG_RESET || result == MSG_TIMEOUT) {
+		errorsCount++;
+		return -1;
+	} else {
+		conversionCount++;
+		return 0;
+	}
+}
+
+int AdcDevice::startConvertion(void) {
+	chSysLockFromISR();
+
+	if (adcp->state != ADC_READY &&
+		adcp->state != ADC_COMPLETE &&
+		adcp->state != ADC_ERROR) {
+		errorsCount++;
+		// todo: when? why? firmwareError(OBD_PCM_Processor_Fault, "ADC fast not ready?");
+		chSysUnlockFromISR();
+		return -1;
+	}
+
+	adcStartConversionI(adcp, hwConfig, samples, buf_depth);
+	chSysUnlockFromISR();
+	
+	conversionCount++;
+
+	return 0;
+}
+
+adcsample_t AdcDevice::getAvgAdcValueByIndex(int index) {
+	uint32_t result = 0;
+	for (int i = 0; i < buf_depth; i++) {
+		result += samples[index];
+		index += channelCount;
+	}
+
+	// this truncation is guaranteed to not be lossy - the average can't be larger than adcsample_t
+	return static_cast<adcsample_t>(result / buf_depth);
 }
 
 static void printAdcValue(int channel) {
@@ -409,7 +512,7 @@ static void printFullAdcReport(Logging *logger) {
 			ioportid_t port = getAdcChannelPort("print", hwIndex);
 			int pin = getAdcChannelPin(hwIndex);
 
-			int adcValue = getAvgAdcValue(hwIndex, fastAdc.samples, ADC_BUF_DEPTH_FAST, fastAdc.size());
+			int adcValue = fastAdc.getAvgAdcValueByIndex(index);
 			logger->appendPrintf(" F ch%d %s%d", index, portname(port), pin);
 			logger->appendPrintf(" ADC%d 12bit=%d", hwIndex, adcValue);
 			float volts = adcToVolts(adcValue);
@@ -439,6 +542,28 @@ static void printFullAdcReport(Logging *logger) {
 			scheduleLogging(logger);
 		}
 	}
+
+#if (STM32_ADC_USE_ADC3 == TRUE)
+	for (int index = 0; index < auxAdc.size(); index++) {
+		appendMsgPrefix(logger);
+
+		adc_channel_e hwIndex = auxAdc.getAdcHardwareIndexByInternalIndex(index);
+
+		if (hwIndex != EFI_ADC_NONE && hwIndex != EFI_ADC_ERROR) {
+			ioportid_t port = getAdcChannelPort("print", hwIndex);
+			int pin = getAdcChannelPin(hwIndex);
+
+			int adcValue = auxAdc.getAdcValueByIndex(index);
+			logger->appendPrintf(" F ch%d %s%d", index, portname(port), pin);
+			logger->appendPrintf(" ADC%d 12bit=%d", hwIndex, adcValue);
+			float volts = adcToVolts(adcValue);
+			logger->appendPrintf(" v=%.2f", volts);
+
+			appendMsgPostfix(logger);
+			scheduleLogging(logger);
+		}
+	}
+#endif
 }
 
 static void setAdcDebugReporting(int value) {
@@ -474,14 +599,20 @@ public:
 		{
 			ScopePerf perf(PE::AdcConversionSlow);
 
-			slowAdc.conversionCount++;
-			msg_t result = adcConvert(&ADC_SLOW_DEVICE, &adcgrpcfgSlow, slowAdc.samples, ADC_BUF_DEPTH_SLOW);
+			int ret = slowAdc.doConvertion();
 
 			// If something went wrong - try again later
-			if (result == MSG_RESET || result == MSG_TIMEOUT) {
-				slowAdc.errorsCount++;
+			if (ret < 0) {
 				return;
 			}
+#if (STM32_ADC_USE_ADC3 == TRUE)
+			ret = auxAdc.doConvertion();
+
+			// If something went wrong - try again later
+			if (ret < 0) {
+				return;
+			}
+#endif
 
 #ifdef USE_ADC3_VBATT_HACK
 			void proteusAdcHack();
@@ -489,14 +620,12 @@ public:
 #endif
 		}
 
-		{
+		if (slowAdc.conversionCount) {
 			ScopePerf perf(PE::AdcProcessSlow);
-
-			slowAdc.invalidateSamplesCache();
 
 			/* Calculates the average values from the ADC samples.*/
 			for (int i = 0; i < slowAdc.size(); i++) {
-				adcsample_t value = getAvgAdcValue(i, slowAdc.samples, ADC_BUF_DEPTH_SLOW, slowAdc.size());
+				adcsample_t value = slowAdc.getAvgAdcValueByIndex(i);
 				adcsample_t prev = slowAdc.values.adc_data[i];
 				float result = (slowAdcCounter == 0) ? value :
 						CONFIG(slowAdcAlpha) * value + (1 - CONFIG(slowAdcAlpha)) * prev;
@@ -507,6 +636,28 @@ public:
 
 			AdcSubscription::UpdateSubscribers(nowNt);
 		}
+#if (STM32_ADC_USE_ADC3 == TRUE)
+		if (auxAdc.conversionCount) {
+			ScopePerf perf(PE::AdcProcessSlow);
+
+			auxAdc.invalidateSamplesCache();
+
+			/* Calculates the average values from the ADC samples.*/
+			for (int i = 0; i < auxAdc.size(); i++) {
+				adcsample_t value = auxAdc.getAvgAdcValueByIndex(i);
+				adcsample_t prev = auxAdc.values.adc_data[i];
+				/* TODO: still using slow adc settings */
+				float result = (auxAdcCounter == 0) ? value :
+						CONFIG(slowAdcAlpha) * value + (1 - CONFIG(slowAdcAlpha)) * prev;
+
+				auxAdc.values.adc_data[i] = (adcsample_t)result;
+			}
+			auxAdcCounter++;
+
+			/* todo? */
+			//AdcSubscription::UpdateSubscribers(nowNt);
+		}
+#endif
 	}
 };
 
@@ -521,8 +672,14 @@ void addChannel(const char *name, adc_channel_e setting, adc_channel_mode_e mode
 
 	adcHwChannelEnabled[setting] = mode;
 
-	AdcDevice& dev = (mode == ADC_SLOW) ? slowAdc : fastAdc;
-	dev.enableChannelAndPin(name, setting);
+	if (mode == ADC_SLOW)
+		slowAdc.enableChannelAndPin(name, setting);
+	else if (mode == ADC_FAST)
+		fastAdc.enableChannelAndPin(name, setting);
+#if (STM32_ADC_USE_ADC3 == TRUE)
+	else /* if (mode == ADC_AUX) */
+		auxAdc.enableChannelAndPin(name, setting);
+#endif
 }
 
 void removeChannel(const char *name, adc_channel_e setting) {
@@ -603,11 +760,6 @@ void initAdcInputs() {
 	addConsoleActionI("adcdebug", &setAdcDebugReporting);
 
 #if EFI_INTERNAL_ADC
-	/*
-	 * Initializes the ADC driver.
-	 */
-	adcStart(&ADC_SLOW_DEVICE, NULL);
-	adcStart(&ADC_FAST_DEVICE, NULL);
 	adcSTM32EnableTSVREFE(); // Internal temperature sensor
 
 	/* Enable this code only when you absolutly sure
@@ -629,6 +781,9 @@ void initAdcInputs() {
 #endif /* ADC_CHANNEL_SENSOR */
 
 	slowAdc.init();
+#if (STM32_ADC_USE_ADC3 == TRUE)
+	auxAdc.init();
+#endif
 
 	// Start the slow ADC thread
 	slowAdcController.Start();
