@@ -1,4 +1,5 @@
 #include "fuel_computer.h"
+#include "map.h"
 
 EXTERN_ENGINE;
 
@@ -42,7 +43,7 @@ float FuelComputer::getTargetLambdaLoadAxis(float defaultLoad) const {
 		case AFR_MAP: return getMap(PASS_ENGINE_PARAMETER_SIGNATURE);
 		// TPS/pedal default to 100% - failed TPS goes rich
 		case AFR_Tps: return Sensor::get(SensorType::Tps1).value_or(100);
-		case AFR_AccPedal: return Sensor::Get(SensorType::AcceleratorPedal).value_or(100);
+		case AFR_AccPedal: return Sensor::get(SensorType::AcceleratorPedal).value_or(100);
 		case AFR_CylFilling: return 100 * ENGINE(engineState.sd.airMassInOneCylinder) / ENGINE(standardAirCharge);
 		default: return 0;
 	}
