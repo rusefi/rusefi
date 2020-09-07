@@ -520,6 +520,15 @@ void mreBCM(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	engineConfiguration->consumeObdSensors = true;
 
 
+	engineConfiguration->fsio_setting[0] = 1500;
+	// simple warning light as default configuration
+	// set_fsio_expression 1 "rpm > fsio_setting(1)"
+	setFsio(0, GPIO_UNASSIGNED, RPM_ABOVE_USER_SETTING_1 PASS_CONFIG_PARAMETER_SUFFIX);
+
+	engineConfiguration->fsio_setting[2] = 1500;
+	setFsio(2, GPIO_UNASSIGNED, RPM_BELOW_USER_SETTING_3 PASS_CONFIG_PARAMETER_SUFFIX);
+
+
 #if (BOARD_TLE8888_COUNT > 0)
 	engineConfiguration->fsioOutputPins[0] = GPIOE_14;// "37 - Injector 1"
 	engineConfiguration->fsioOutputPins[1] = GPIOE_13;// "38 - Injector 2"
