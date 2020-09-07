@@ -79,11 +79,11 @@ private:
 	const uint8_t m_offset;
 };
 
-template <typename TStorage, int TScale>
+template <int Size, int TScale>
 class ObdCanSensor: public CanSensorBase {
 public:
-	ObdCanSensor(uint32_t eid, int PID, SensorType type, efitick_t timeout) :
-			CanSensorBase(eid, type, timeout) {
+	ObdCanSensor(int PID, SensorType type, efitick_t timeout) :
+			CanSensorBase(OBD_TEST_RESPONSE, type, timeout) {
 		this->PID = PID;
 	}
 
@@ -91,15 +91,16 @@ public:
 		if (frame.data8[2] != PID) {
 			return;
 		}
-		// Compute the location of our data within the frame
-		const uint8_t* dataLocation = &frame.data8[0];
 
-		// Reinterpret as a scaled_channel - it already has the logic for decoding a scaled integer to a float
-		const auto scaler = reinterpret_cast<const scaled_channel<TStorage, TScale>*>(dataLocation);
+		int iValue;
+		if (Size == 2) {
+			iValue = frame.data8[3] * 256 + frame.data8[4];
+		} else {
+			iValue = frame.data8[3];
+		}
 
-		// Actually do the conversion
-		float value = *scaler;
-		setValidValue(value, nowNt);
+		float fValue = 1.0 * iValue / TScale;
+		setValidValue(fValue, nowNt);
 	}
 
 	CanSensorBase* request() override {
@@ -107,8 +108,7 @@ public:
 			CanTxMessage msg(OBD_TEST_REQUEST);
 			msg[0] = _OBD_2;
 			msg[1] = OBD_CURRENT_DATA;
-			msg[2] = getEid();
-
+			msg[2] = PID;
 		}
 		return m_next;
 	}

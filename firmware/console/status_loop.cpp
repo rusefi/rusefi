@@ -467,7 +467,7 @@ extern HIP9011 instance;
 
 void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels DECLARE_ENGINE_PARAMETER_SUFFIX) {
 #if EFI_SHAFT_POSITION_INPUT
-	int rpm = GET_RPM();
+	int rpm = Sensor::get(SensorType::Rpm).Value;
 #else /* EFI_SHAFT_POSITION_INPUT */
 	int rpm = 0;
 #endif /* EFI_SHAFT_POSITION_INPUT */

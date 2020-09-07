@@ -22,13 +22,13 @@ CanSensor<int16_t, PACK_MULT_PERCENT> canPedalSensor(
 	SensorType::AcceleratorPedal, TIMEOUT
 );
 
-ObdCanSensor<int16_t, ODB_RPM_MULT> obdRpmSensor(
-		OBD_TEST_RESPONSE, PID_RPM,
+ObdCanSensor<2, ODB_RPM_MULT> obdRpmSensor(
+		PID_RPM,
 	SensorType::Rpm, TIMEOUT
 );
 
-ObdCanSensor<int16_t, 1> obdCltSensor(
-		OBD_TEST_RESPONSE, PID_COOLANT_TEMP,
+ObdCanSensor<1, 1> obdCltSensor(
+		PID_COOLANT_TEMP,
 	SensorType::Clt, TIMEOUT
 );
 
