@@ -5,8 +5,7 @@
  * @date Aug 31, 2020
  * @author David Holdeman, (c) 2020
  */
-#ifndef DEBOUNCE_INC
-#define DEBOUNCE_INC
+#pragma once
 
 #include "globalaccess.h"
 #include "io_pins.h"
@@ -15,8 +14,8 @@ class ButtonDebounce;
 
 class PointerListNode {
 public:
-    ButtonDebounce *pointer = NULL;
-    PointerListNode *next = NULL;
+    ButtonDebounce *pointer = nullptr;
+    PointerListNode *next = nullptr;
 };
 
 class ButtonDebounce {
@@ -28,13 +27,11 @@ public:
 private:
     int threshold;
     efitick_t timeLast;
-    brain_pin_e *pin;
-    brain_pin_e *active_pin;
+    brain_pin_e *pin = nullptr;
+    brain_pin_e *active_pin = nullptr;
     brain_pin_e oldPin;
-    pin_input_mode_e *mode;
-    pin_input_mode_e *active_mode;
-    bool readValue;
+    pin_input_mode_e *mode = nullptr;
+    pin_input_mode_e *active_mode = nullptr;
+    bool readValue = false;
     bool initialized = false;
 };
-
-#endif /* DEBOUNCE_INC */
