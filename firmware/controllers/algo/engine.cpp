@@ -24,6 +24,8 @@
 #include "map_averaging.h"
 #include "fsio_impl.h"
 #include "perf_trace.h"
+#include "backup_ram.h"
+#include "idle_thread.h"
 #include "sensor.h"
 #include "gppwm.h"
 #include "tachometer.h"
