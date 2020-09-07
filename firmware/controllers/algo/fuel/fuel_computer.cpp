@@ -7,6 +7,8 @@ mass_t FuelComputerBase::getCycleFuel(mass_t airmass, int rpm, float load) const
 	float lambda = getTargetLambda(rpm, load);
 	float afr = stoich * lambda;
 
+	// TODO: override target AFR load axis value
+	ENGINE(engineState.currentAfrLoad) = load;
 	ENGINE(engineState.targetAFR) = afr;
 
 	return airmass / afr;
