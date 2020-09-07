@@ -75,7 +75,7 @@ protected:
 
 	void saveStepperPos(int pos);
 	int loadStepperPos();
-	
+
 	void changeCurrentPosition(bool positive);
 	void postCurrentPosition(void);
 
