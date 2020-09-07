@@ -82,11 +82,15 @@ private:
 template <typename TStorage, int TScale>
 class ObdCanSensor: public CanSensorBase {
 public:
-	ObdCanSensor(uint32_t eid, SensorType type, efitick_t timeout) :
+	ObdCanSensor(uint32_t eid, int PID, SensorType type, efitick_t timeout) :
 			CanSensorBase(eid, type, timeout) {
+		this->PID = PID;
 	}
 
 	void decodeFrame(const CANRxFrame& frame, efitick_t nowNt) override {
+		if (frame.data8[2] != PID) {
+			return;
+		}
 		// Compute the location of our data within the frame
 		const uint8_t* dataLocation = &frame.data8[0];
 
@@ -108,5 +112,7 @@ public:
 		}
 		return m_next;
 	}
+
+	int PID;
 };
 
