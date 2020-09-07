@@ -374,7 +374,7 @@ public:
 	 * Needed by the stepper motor code to detect if it works.
 	 */
 	bool isMainRelayEnabled(DECLARE_ENGINE_PARAMETER_SIGNATURE) const;
-	
+
 	/**
 	 * Needed by EFI_MAIN_RELAY_CONTROL to handle fuel pump and shutdown timings correctly.
 	 * This method returns the number of seconds since the ignition voltage is present.
