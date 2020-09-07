@@ -29,7 +29,6 @@ private:
     efitick_t timeLast;
     brain_pin_e *pin = nullptr;
     brain_pin_e *active_pin = nullptr;
-    brain_pin_e oldPin;
     pin_input_mode_e *mode = nullptr;
     pin_input_mode_e *active_mode = nullptr;
     bool readValue = false;

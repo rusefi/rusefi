@@ -29,7 +29,6 @@ void ButtonDebounce::init (int t, DECLARE_CONFIG_POINTERS(brain_pin_e, p), DECLA
     timeLast = 0;
     pin = p;
     active_pin = active_p;
-    oldPin = *p;
     mode = m;
     active_mode = active_m;
 #ifdef PAL_MODE_INPUT_PULLDOWN
@@ -41,7 +40,7 @@ void ButtonDebounce::init (int t, DECLARE_CONFIG_POINTERS(brain_pin_e, p), DECLA
 
 void ButtonDebounce::updateConfiguration () {
     if (isConfigurationChangedPointers(pin, active_pin) || isConfigurationChangedPointers(mode, active_mode)) {
-        brain_pin_markUnused(oldPin);
+        brain_pin_markUnused(*active_pin);
         efiSetPadMode("Button", *pin, getInputMode(*mode));
     }
 }
@@ -64,7 +63,7 @@ bool ButtonDebounce::readPinEvent() {
     //  for example to implement long button presses, it will be needed.
     readValue = false;
 #ifdef PAL_MODE_INPUT_PULLDOWN
-    readValue = efiReadPin(oldPin);
+    readValue = efiReadPin(*active_pin);
     // Invert
     if (getInputMode(*active_mode) == PAL_MODE_INPUT_PULLUP) {
         readValue = !readValue;
