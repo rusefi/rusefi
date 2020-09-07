@@ -12,7 +12,7 @@
 
 ButtonDebounce* ButtonDebounce::s_firstDebounce = nullptr;
 
-void ButtonDebounce::init (int t, brain_pin_e *p, pin_input_mode_e *m) {
+void ButtonDebounce::init (int t, brain_pin_e *pin, pin_input_mode_e *mode) {
     if (!initialized) {
         ButtonDebounce *listItem = s_firstDebounce;
         if (listItem == nullptr) {
@@ -26,10 +26,10 @@ void ButtonDebounce::init (int t, brain_pin_e *p, pin_input_mode_e *m) {
     }
     threshold = MS2NT(t);
     timeLast = 0;
-    pin = p;
-    active_pin = *p;
-    mode = m;
-    active_mode = *m;
+    this->pin = pin;
+    active_pin = *pin;
+    this->mode = mode;
+    active_mode = *mode;
 #ifdef PAL_MODE_INPUT_PULLDOWN
     // getInputMode converts from pin_input_mode_e to iomode_t
     efiSetPadMode("Button", active_pin, getInputMode(active_mode));

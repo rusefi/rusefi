@@ -17,7 +17,6 @@ public:
     void updateConfiguration();
     bool readPinEvent();
     static void updateConfigurationList();
-    static ButtonDebounce* s_firstDebounce;
 private:
     int threshold;
     efitick_t timeLast;
@@ -28,6 +27,7 @@ private:
     bool readValue;
     bool initialized = false;
     ButtonDebounce *nextDebounce = nullptr;
+    static ButtonDebounce* s_firstDebounce;
 };
 
 #endif /* DEBOUNCE_INC */
