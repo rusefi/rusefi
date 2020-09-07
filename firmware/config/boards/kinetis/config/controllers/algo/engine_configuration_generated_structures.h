@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Sun Sep 06 22:26:35 UTC 2020
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Mon Sep 07 14:17:26 UTC 2020
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -1457,7 +1457,7 @@ struct engine_configuration_s {
 	bool useIdleTimingPidControl : 1;
 	/**
 	offset 744 bit 25 */
-	bool useTPSBasedVeTable : 1;
+	bool unused744b25 : 1;
 	/**
 	offset 744 bit 26 */
 	bool is_enabled_spi_4 : 1;
@@ -2594,17 +2594,21 @@ struct engine_configuration_s {
 	 */
 	can_baudrate_e canBaudRate;
 	/**
+	 * Override the Y axis (load) value used for the VE table.
+	 * Advanced users only: If you aren't sure you need this, you probably don't need this.
 	 * offset 2109
 	 */
-	uint8_t un1used_former_warmup_target_afr;
+	ve_override_e veOverrideMode;
 	/**
 	 * offset 2110
 	 */
 	can_baudrate_e can2BaudRate;
 	/**
+	 * Override the Y axis (load) value used for the AFR table.
+	 * Advanced users only: If you aren't sure you need this, you probably don't need this.
 	 * offset 2111
 	 */
-	uint8_t unused_former_warmup_target_afr2;
+	afr_override_e afrOverrideMode;
 	/**
 	 * offset 2112
 	 */
@@ -3666,4 +3670,4 @@ struct persistent_config_s {
 typedef struct persistent_config_s persistent_config_s;
 
 // end
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Sun Sep 06 22:26:35 UTC 2020
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Mon Sep 07 14:17:26 UTC 2020

@@ -25,6 +25,8 @@
 #define afr_alignmentFill_afr_offset 561
 #define afr_hwChannel_offset 560
 #define afr_offset 560
+#define afr_override_e_auto_enum "AFR_None", "AFR_MAP", "AFR_Tps", "AFR_AccPedal", "AFR_CylFilling"
+#define afr_override_e_enum "None", "MAP", "TPS", "Acc Pedal", "Cyl Filling %"
 #define afr_sensor_s_size 20
 #define afr_type_offset 692
 #define afr_v1_offset 564
@@ -32,6 +34,7 @@
 #define afr_value1_offset 568
 #define afr_value2_offset 576
 #define afrLoadBins_offset 18848
+#define afrOverrideMode_offset 2111
 #define afrRpmBins_offset 18912
 #define afrTable_offset 18592
 #define afterCrankingIACtaperDuration_offset 2036
@@ -1160,8 +1163,8 @@
 #define showHumanReadableWarning_offset 976
 #define showSdCardWarning_offset 76
 #define SIGNATURE_BOARD kin
-#define SIGNATURE_DATE 2020.09.06
-#define SIGNATURE_HASH 2634972561
+#define SIGNATURE_DATE 2020.09.07
+#define SIGNATURE_HASH 2414148739
 #define silentTriggerError_offset 1464
 #define slowAdcAlpha_offset 2088
 #define sparkDwellRpmBins_offset 332
@@ -1471,7 +1474,7 @@
 #define ts_show_spi true
 #define ts_show_trigger_comparator true
 #define ts_show_tunerstudio_port true
-#define TS_SIGNATURE "rusEFI 2020.09.06.kin.2634972561"
+#define TS_SIGNATURE "rusEFI 2020.09.07.kin.2414148739"
 #define TS_SINGLE_WRITE_COMMAND 'W'
 #define TS_SINGLE_WRITE_COMMAND_char W
 #define TS_TEST_COMMAND 't' // 0x74
@@ -1480,7 +1483,6 @@
 #define twoWireBatchInjection_offset 1476
 #define uart_device_e_auto_enum "UART_NONE", "UART_DEVICE_1", "UART_DEVICE_2", "UART_DEVICE_3", "UART_DEVICE_4"
 #define uartConsoleSerialSpeed_offset 2076
-#define un1used_former_warmup_target_afr_offset 2109
 #define unused1059_offset 3964
 #define unused1126_offset 2116
 #define unused1127_offset 2116
@@ -1497,6 +1499,7 @@
 #define unused2516_offset 2516
 #define unused3288_offset 3288
 #define unused6312_offset 6312
+#define unused744b25_offset 744
 #define unused806_offset 806
 #define unused_1484_bit_24_offset 1476
 #define unused_1484_bit_25_offset 1476
@@ -1507,7 +1510,6 @@
 #define unused_1484_bit_30_offset 1476
 #define unused_1484_bit_31_offset 1476
 #define unused_alFIn_offset 4024
-#define unused_former_warmup_target_afr2_offset 2111
 #define unused_former_warmup_target_afr_offset 2126
 #define unusedAt716_offset 716
 #define unusedAt720_offset 720
@@ -1589,15 +1591,17 @@
 #define useTLE8888_cranking_hack_offset 76
 #define useTpicAdvancedMode_offset 744
 #define useTPSAdvanceTable_offset 1476
-#define useTPSBasedVeTable_offset 744
 #define VBAT_INJECTOR_CURVE_SIZE 8
 #define vbattAdcChannel_offset 513
 #define vbattDividerCoeff_offset 464
+#define ve_override_e_auto_enum "VE_None", "VE_MAP", "VE_TPS"
+#define ve_override_e_enum "None", "MAP", "TPS"
 #define VEHICLE_INFO_SIZE 32
 #define vehicleName_offset 1160
 #define vehicleSpeedCoef_offset 476
 #define vehicleSpeedSensorInputPin_offset 968
 #define veLoadBins_offset 18464
+#define veOverrideMode_offset 2109
 #define verboseCan2BaseAddress_offset 2112
 #define verboseCanBaseAddress_offset 756
 #define verboseTLE8888_offset 744

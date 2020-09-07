@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEfi tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Sun Sep 06 22:26:23 UTC 2020
+// this file was generated automatically by rusEfi tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Mon Sep 07 14:17:13 UTC 2020
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -34,6 +34,7 @@ public class Fields {
 	public static final int afr_value1_offset = 568;
 	public static final int afr_value2_offset = 576;
 	public static final int afrLoadBins_offset = 18848;
+	public static final int afrOverrideMode_offset = 2111;
 	public static final int afrRpmBins_offset = 18912;
 	public static final int afrTable_offset = 18592;
 	public static final int afterCrankingIACtaperDuration_offset = 2036;
@@ -1118,7 +1119,7 @@ public class Fields {
 	public static final int servoOutputPins8_offset = 3147;
 	public static final int showHumanReadableWarning_offset = 976;
 	public static final int showSdCardWarning_offset = 76;
-	public static final int SIGNATURE_HASH = 1993688597;
+	public static final int SIGNATURE_HASH = 1681901319;
 	public static final int silentTriggerError_offset = 1464;
 	public static final int slowAdcAlpha_offset = 2088;
 	public static final int sparkDwellRpmBins_offset = 332;
@@ -1378,13 +1379,12 @@ public class Fields {
 	public static final char TS_SD_R_COMMAND = 'r';
 	public static final char TS_SD_W_COMMAND = 'w';
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI 2020.09.06.all.1993688597";
+	public static final String TS_SIGNATURE = "rusEFI 2020.09.07.all.1681901319";
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final int tunerStudioSerialSpeed_offset = 728;
 	public static final int twoWireBatchIgnition_offset = 1476;
 	public static final int twoWireBatchInjection_offset = 1476;
 	public static final int uartConsoleSerialSpeed_offset = 2076;
-	public static final int un1used_former_warmup_target_afr_offset = 2109;
 	public static final int unused1059_offset = 3964;
 	public static final int unused1126_offset = 2116;
 	public static final int unused1127_offset = 2116;
@@ -1401,6 +1401,7 @@ public class Fields {
 	public static final int unused2516_offset = 2516;
 	public static final int unused3288_offset = 3288;
 	public static final int unused6312_offset = 6312;
+	public static final int unused744b25_offset = 744;
 	public static final int unused806_offset = 806;
 	public static final int unused_1484_bit_24_offset = 1476;
 	public static final int unused_1484_bit_25_offset = 1476;
@@ -1411,7 +1412,6 @@ public class Fields {
 	public static final int unused_1484_bit_30_offset = 1476;
 	public static final int unused_1484_bit_31_offset = 1476;
 	public static final int unused_alFIn_offset = 4024;
-	public static final int unused_former_warmup_target_afr2_offset = 2111;
 	public static final int unused_former_warmup_target_afr_offset = 2126;
 	public static final int unusedAt716_offset = 716;
 	public static final int unusedAt720_offset = 720;
@@ -1493,7 +1493,6 @@ public class Fields {
 	public static final int useTLE8888_cranking_hack_offset = 76;
 	public static final int useTpicAdvancedMode_offset = 744;
 	public static final int useTPSAdvanceTable_offset = 1476;
-	public static final int useTPSBasedVeTable_offset = 744;
 	public static final int VBAT_INJECTOR_CURVE_SIZE = 8;
 	public static final int vbattAdcChannel_offset = 513;
 	public static final int vbattDividerCoeff_offset = 464;
@@ -1502,6 +1501,7 @@ public class Fields {
 	public static final int vehicleSpeedCoef_offset = 476;
 	public static final int vehicleSpeedSensorInputPin_offset = 968;
 	public static final int veLoadBins_offset = 18464;
+	public static final int veOverrideMode_offset = 2109;
 	public static final int verboseCan2BaseAddress_offset = 2112;
 	public static final int verboseCanBaseAddress_offset = 756;
 	public static final int verboseTLE8888_offset = 744;
@@ -1815,7 +1815,7 @@ public class Fields {
 	public static final Field USEIACTABLEFORCOASTING = Field.create("USEIACTABLEFORCOASTING", 744, FieldType.BIT, 22);
 	public static final Field USENOISELESSTRIGGERDECODER = Field.create("USENOISELESSTRIGGERDECODER", 744, FieldType.BIT, 23);
 	public static final Field USEIDLETIMINGPIDCONTROL = Field.create("USEIDLETIMINGPIDCONTROL", 744, FieldType.BIT, 24);
-	public static final Field USETPSBASEDVETABLE = Field.create("USETPSBASEDVETABLE", 744, FieldType.BIT, 25);
+	public static final Field UNUSED744B25 = Field.create("UNUSED744B25", 744, FieldType.BIT, 25);
 	public static final Field IS_ENABLED_SPI_4 = Field.create("IS_ENABLED_SPI_4", 744, FieldType.BIT, 26);
 	public static final Field PAUSEETBCONTROL = Field.create("PAUSEETBCONTROL", 744, FieldType.BIT, 27);
 	public static final Field ALIGNENGINESNIFFERATTDC = Field.create("ALIGNENGINESNIFFERATTDC", 744, FieldType.BIT, 28);
@@ -2254,9 +2254,11 @@ public class Fields {
 	public static final Field THROTTLEPEDALSECONDARYWOTVOLTAGE = Field.create("THROTTLEPEDALSECONDARYWOTVOLTAGE", 2104, FieldType.FLOAT);
 	public static final String[] can_baudrate_e = {"100kbps", "250kbps" , "500kbps", "1Mbps"};
 	public static final Field CANBAUDRATE = Field.create("CANBAUDRATE", 2108, FieldType.INT8, can_baudrate_e);
-	public static final Field UN1USED_FORMER_WARMUP_TARGET_AFR = Field.create("UN1USED_FORMER_WARMUP_TARGET_AFR", 2109, FieldType.INT8);
+	public static final String[] ve_override_e = {"None", "MAP", "TPS"};
+	public static final Field VEOVERRIDEMODE = Field.create("VEOVERRIDEMODE", 2109, FieldType.INT8, ve_override_e);
 	public static final Field CAN2BAUDRATE = Field.create("CAN2BAUDRATE", 2110, FieldType.INT8, can_baudrate_e);
-	public static final Field UNUSED_FORMER_WARMUP_TARGET_AFR2 = Field.create("UNUSED_FORMER_WARMUP_TARGET_AFR2", 2111, FieldType.INT8);
+	public static final String[] afr_override_e = {"None", "MAP", "TPS", "Acc Pedal", "Cyl Filling %"};
+	public static final Field AFROVERRIDEMODE = Field.create("AFROVERRIDEMODE", 2111, FieldType.INT8, afr_override_e);
 	public static final Field VERBOSECAN2BASEADDRESS = Field.create("VERBOSECAN2BASEADDRESS", 2112, FieldType.INT);
 	public static final Field ENABLEVERBOSECAN2TX = Field.create("ENABLEVERBOSECAN2TX", 2116, FieldType.BIT, 0);
 	public static final Field CAN2READENABLED = Field.create("CAN2READENABLED", 2116, FieldType.BIT, 1);
@@ -2845,7 +2847,7 @@ public class Fields {
 	USEIACTABLEFORCOASTING,
 	USENOISELESSTRIGGERDECODER,
 	USEIDLETIMINGPIDCONTROL,
-	USETPSBASEDVETABLE,
+	UNUSED744B25,
 	IS_ENABLED_SPI_4,
 	PAUSEETBCONTROL,
 	ALIGNENGINESNIFFERATTDC,
@@ -3278,9 +3280,9 @@ public class Fields {
 	THROTTLEPEDALSECONDARYUPVOLTAGE,
 	THROTTLEPEDALSECONDARYWOTVOLTAGE,
 	CANBAUDRATE,
-	UN1USED_FORMER_WARMUP_TARGET_AFR,
+	VEOVERRIDEMODE,
 	CAN2BAUDRATE,
-	UNUSED_FORMER_WARMUP_TARGET_AFR2,
+	AFROVERRIDEMODE,
 	VERBOSECAN2BASEADDRESS,
 	ENABLEVERBOSECAN2TX,
 	CAN2READENABLED,
