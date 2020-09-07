@@ -190,6 +190,8 @@ void RpmCalculator::setStopped(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	revolutionCounterSinceStart = 0;
 	if (rpmValue != 0) {
 		assignRpmValue(0 PASS_ENGINE_PARAMETER_SUFFIX);
+		// needed by 'useNoiselessTriggerDecoder'
+		engine->triggerCentral.resetAccumSignalData();
 		scheduleMsg(logger, "engine stopped");
 	}
 	state = STOPPED;
