@@ -13,7 +13,8 @@ HW_LAYER_DRIVERS = \
 	$(DRIVERS_DIR)/gpio/tle6240.c \
 	$(DRIVERS_DIR)/gpio/tle8888.c \
 	$(DRIVERS_DIR)/gpio/mc33972.c \
-	$(DRIVERS_DIR)/gpio/mc33810.c
+	$(DRIVERS_DIR)/gpio/mc33810.c \
+	$(DRIVERS_DIR)/gpio/drv8860.c \
 
 HW_LAYER_DRIVERS_CPP = \
 	$(DRIVERS_DIR)/can/can_hw.cpp \
