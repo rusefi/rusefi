@@ -174,6 +174,11 @@ public:
 	efitick_t stopEngineRequestTimeNt = 0;
 
 	/**
+	 * this is needed by getTimeIgnitionSeconds() and checkShutdown()
+	 */
+	efitick_t ignitionOnTimeNt = 0;
+
+	/**
 	 * This counter is incremented every time user adjusts ECU parameters online (either via rusEfi console or other
 	 * tuning software)
 	 */
@@ -295,14 +300,29 @@ public:
 
 	/**
 	 * Needed by EFI_MAIN_RELAY_CONTROL to shut down the engine correctly.
+	 * This method cancels shutdown if the ignition voltage is detected.
 	 */
-	void checkShutdown();
-	
+	void checkShutdown(DECLARE_ENGINE_PARAMETER_SIGNATURE);
+
 	/**
 	 * Allows to finish some long-term shutdown procedures (stepper motor parking etc.)
+	   Called when the ignition switch is turned off (vBatt is too low).
 	   Returns true if some operations are in progress on background.
 	 */
-	bool isInShutdownMode() const;
+	bool isInShutdownMode(DECLARE_ENGINE_PARAMETER_SIGNATURE) const;
+
+	/**
+	 * The stepper does not work if the main relay is turned off (it requires +12V).
+	 * Needed by the stepper motor code to detect if it works.
+	 */
+	bool isMainRelayEnabled(DECLARE_ENGINE_PARAMETER_SIGNATURE) const;
+	
+	/**
+	 * Needed by EFI_MAIN_RELAY_CONTROL to handle fuel pump and shutdown timings correctly.
+	 * This method returns the number of seconds since the ignition voltage is present.
+	 * The return value is float for more FSIO flexibility.
+	 */
+	float getTimeIgnitionSeconds(void) const;
 
 	monitoring_timestamps_s m;
 
