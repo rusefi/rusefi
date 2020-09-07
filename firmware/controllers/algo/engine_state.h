@@ -60,6 +60,8 @@ public:
 	efitick_t timeSinceLastTChargeK;
 
 	float currentVe = 0;
+	float currentVeLoad = 0;
+	float currentAfrLoad = 0;
 
 	int vssEventCounter = 0;
 

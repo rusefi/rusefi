@@ -983,3 +983,17 @@ typedef enum __attribute__ ((__packed__)) {
 	GPPWM_GreaterThan = 0,
 	GPPWM_LessThan = 1,
 } gppwm_compare_mode_e;
+
+typedef enum __attribute__ ((__packed__)) {
+	VE_None = 0,
+	VE_MAP = 1,
+	VE_TPS = 2,
+} ve_override_e;
+
+typedef enum __attribute__ ((__packed__)) {
+	AFR_None = 0,
+	AFR_MAP = 1,
+	AFR_Tps = 2,
+	AFR_AccPedal = 3,
+	AFR_CylFilling = 4,
+} afr_override_e;

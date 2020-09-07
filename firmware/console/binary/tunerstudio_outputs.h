@@ -158,8 +158,11 @@ typedef struct {
 	scaled_percent fuelTankLevel; // 98
 	float fuelConsumptionPerHour; // 100
 
+	// Y axis values for selectable tables
+	scaled_channel<uint16_t, 100> veTableYAxis;  // 104
+	scaled_channel<uint16_t, 100> afrTableYAxis; // 106
+
 	// Knock
-	uint32_t knockCount; // 104
 	float knockLevel; // 108
 
 	// Mode, firmware, protocol, run time
