@@ -1,4 +1,4 @@
-// was generated automatically by rusEfi tool  from rusefi_hw_enums.h // was generated automatically by rusEfi tool  from rusefi_enums.h // by enum2string.jar tool on Sun Jun 14 17:00:25 EDT 2020
+// was generated automatically by rusEfi tool  from rusefi_hw_enums.h // was generated automatically by rusEfi tool  from rusefi_enums.h // by enum2string.jar tool on Mon Sep 07 14:17:12 UTC 2020
 // see also gen_config_and_enums.bat
 
 
@@ -10,6 +10,7 @@ const char *getPidAutoTune_AutoTunerState(PidAutoTune_AutoTunerState value);
 const char *getPidAutoTune_Peak(PidAutoTune_Peak value);
 const char *getAdc_channel_e(adc_channel_e value);
 const char *getAdc_channel_mode_e(adc_channel_mode_e value);
+const char *getAfr_override_e(afr_override_e value);
 const char *getAir_pressure_sensor_type_e(air_pressure_sensor_type_e value);
 const char *getAntiLagActivationMode_e(antiLagActivationMode_e value);
 const char *getBoostType_e(boostType_e value);
@@ -52,4 +53,5 @@ const char *getTrigger_type_e(trigger_type_e value);
 const char *getTrigger_value_e(trigger_value_e value);
 const char *getTrigger_wheel_e(trigger_wheel_e value);
 const char *getUart_device_e(uart_device_e value);
+const char *getVe_override_e(ve_override_e value);
 const char *getVvt_mode_e(vvt_mode_e value);
