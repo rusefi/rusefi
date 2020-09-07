@@ -23,24 +23,21 @@ CanSensor<int16_t, PACK_MULT_PERCENT> canPedalSensor(
 );
 
 ObdCanSensor<int16_t, ODB_RPM_MULT> obdRpmSensor(
-	PID_RPM,
+		OBD_TEST_RESPONSE, PID_RPM,
 	SensorType::Rpm, TIMEOUT
 );
 
 ObdCanSensor<int16_t, 1> obdCltSensor(
-	PID_COOLANT_TEMP,
+		OBD_TEST_RESPONSE, PID_COOLANT_TEMP,
 	SensorType::Clt, TIMEOUT
 );
 
 
 void initCanSensors() {
-#if EFI_CANBUS_SLAVE
-	registerCanSensor(canPedalSensor);
 	if (CONFIG(consumeObdSensors)) {
+//		registerCanSensor(canPedalSensor);
 		registerCanSensor(obdRpmSensor);
-		registerCanSensor(obdCltSensor);
+//		registerCanSensor(obdCltSensor);
 	}
-
-#endif // EFI_CANBUS_SLAVE
 }
 #endif // EFI_CAN_SUPPORT

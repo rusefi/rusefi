@@ -204,6 +204,9 @@ void setBoardConfigurationOverrides(void) {
 	setupTle8888();
 	setupEtb();
 
+	engineConfiguration->canTxPin = GPIOB_6;
+	engineConfiguration->canRxPin = GPIOB_12;
+
 	// MRE has a special main relay control low side pin
 	// rusEfi firmware is totally not involved with main relay control on microRusEfi board
 	// todo: maybe even set EFI_MAIN_RELAY_CONTROL to FALSE for MRE configuration
