@@ -13,7 +13,7 @@
 
 class ButtonDebounce {
 public:
-    void init(int t, DECLARE_CONFIG_POINTERS(brain_pin_e, p), DECLARE_CONFIG_POINTERS(pin_input_mode_e, m));
+    void init(int t, brain_pin_e p, pin_input_mode_e m);
     void updateConfiguration();
     bool readPinEvent();
     static void updateConfigurationList();
