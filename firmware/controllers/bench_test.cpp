@@ -128,6 +128,16 @@ static void doRunFuel(int humanIndex, const char *delayStr, const char * onTimeS
 	pinbench(delayStr, onTimeStr, offTimeStr, countStr, &enginePins.injectors[humanIndex - 1], b);
 }
 
+static void doBenchTestFsio(int humanIndex, const char *delayStr, const char * onTimeStr, const char *offTimeStr,
+		const char *countStr) {
+	if (humanIndex < 1 || humanIndex > FSIO_COMMAND_COUNT) {
+		scheduleMsg(logger, "Invalid index: %d", humanIndex);
+		return;
+	}
+	brain_pin_e b = CONFIG(fsioOutputPins)[humanIndex - 1];
+	pinbench(delayStr, onTimeStr, offTimeStr, countStr, &enginePins.fsioOutputs[humanIndex - 1], b);
+}
+
 /**
  * delay 100, cylinder #2, 5ms ON, 1000ms OFF, repeat 2 times
  * fuelbench2 100 2 5 1000 2
@@ -303,10 +313,12 @@ void executeTSCommand(uint16_t subsystem, uint16_t index) {
 
     if (subsystem == 0x11) {
         clearWarnings();
-	} else if (subsystem == 0x12 && !running) {
+	} else if (subsystem == CMD_TS_IGNITION_CATEGORY && !running) {
 		doRunSpark(index, "300", "4", "400", "3");
-	} else if (subsystem == 0x13 && !running) {
+	} else if (subsystem == CMD_TS_INJECTOR_CATEGORY && !running) {
 		doRunFuel(index, "300", "4", "400", "3");
+	} else if (subsystem == CMD_TS_FSIO_CATEGORY && !running) {
+		doBenchTestFsio(index, "300", "4", "400", "3");
 	} else if (subsystem == 0x14) {
 		handleCommandX14(index);
 	} else if (subsystem == 0x15) {
@@ -325,7 +337,6 @@ void executeTSCommand(uint16_t subsystem, uint16_t index) {
 	} else if (subsystem == 0x20 && index == 0x3456) {
 		// call to pit
 		setCallFromPitStop(30000);
-	} else if (subsystem == 0x21) {
 	} else if (subsystem == 0x30) {
 		setEngineType(index);
 	} else if (subsystem == 0x31) {
