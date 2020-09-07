@@ -12,6 +12,7 @@
 #include "hal.h"
 #include "can_msg_tx.h"
 #include "obd2.h"
+#include "can.h"
 
 /**
  * Sensor which reads it's value from CAN
@@ -79,12 +80,13 @@ private:
 	const uint8_t m_offset;
 };
 
-template <int Size, int TScale>
+template <int Size, int Offset>
 class ObdCanSensor: public CanSensorBase {
 public:
-	ObdCanSensor(int PID, SensorType type, efitick_t timeout) :
-			CanSensorBase(OBD_TEST_RESPONSE, type, timeout) {
+	ObdCanSensor(int PID, float Scale, SensorType type) :
+			CanSensorBase(OBD_TEST_RESPONSE, type, CAN_TIMEOUT) {
 		this->PID = PID;
+		this->Scale = Scale;
 	}
 
 	void decodeFrame(const CANRxFrame& frame, efitick_t nowNt) override {
@@ -99,7 +101,7 @@ public:
 			iValue = frame.data8[3];
 		}
 
-		float fValue = 1.0 * iValue / TScale;
+		float fValue = (1.0 * iValue / Scale) - Offset;
 		setValidValue(fValue, nowNt);
 	}
 
@@ -114,5 +116,6 @@ public:
 	}
 
 	int PID;
+	float Scale;
 };
 

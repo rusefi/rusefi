@@ -14,6 +14,8 @@
 #define CAN_PEDAL_TPS_OFFSET 2
 #define CAN_SENSOR_1_OFFSET 3
 
+#define CAN_TIMEOUT MS2NT(100)
+
 class Logging;
 class CanSensorBase;
 

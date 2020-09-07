@@ -14,30 +14,43 @@
 EXTERN_CONFIG
 ;
 
-
-#define TIMEOUT MS2NT(100)
-
 CanSensor<int16_t, PACK_MULT_PERCENT> canPedalSensor(
 	CAN_DEFAULT_BASE + CAN_PEDAL_TPS_OFFSET, /*offset =*/ 0,
-	SensorType::AcceleratorPedal, TIMEOUT
+	SensorType::AcceleratorPedal, CAN_TIMEOUT
 );
 
-ObdCanSensor<2, ODB_RPM_MULT> obdRpmSensor(
-		PID_RPM,
-	SensorType::Rpm, TIMEOUT
+ObdCanSensor<2, 0> obdRpmSensor(
+		PID_RPM, ODB_RPM_MULT,
+	SensorType::Rpm
 );
 
-ObdCanSensor<1, 1> obdCltSensor(
-		PID_COOLANT_TEMP,
-	SensorType::Clt, TIMEOUT
+ObdCanSensor<1, ODB_TEMP_EXTRA> obdCltSensor(
+		PID_COOLANT_TEMP, 1,
+	SensorType::Clt
 );
 
+ObdCanSensor<1, ODB_TEMP_EXTRA> obdIatSensor(
+		PID_INTAKE_TEMP, 1,
+	SensorType::Iat
+);
+
+ObdCanSensor<1, 0> obdTpsSensor(
+		PID_INTAKE_TEMP, ODB_TPS_BYTE_PERCENT,
+	SensorType::Tps1
+);
+
+//ObdCanSensor<1, ODB_TPS_BYTE_PERCENT> obdTpsSensor(
+//		PID_ENGINE_LOAD,
+//	SensorType::Tps, TIMEOUT
+//);
 
 void initCanSensors() {
 	if (CONFIG(consumeObdSensors)) {
 //		registerCanSensor(canPedalSensor);
 		registerCanSensor(obdRpmSensor);
 //		registerCanSensor(obdCltSensor);
+		//		registerCanSensor(obdIatSensor);
+		//		registerCanSensor(obdTpsSensor);
 	}
 }
 #endif // EFI_CAN_SUPPORT
