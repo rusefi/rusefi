@@ -272,6 +272,7 @@
 #define CMD_TS_BENCH_MAIN_RELAY 0
 #define CMD_TS_BENCH_STARTER_DISABLE_RELAY 3
 #define CMD_TS_BENCH_STARTER_ENABLE_RELAY 2
+#define CMD_TS_FSIO_CATEGORY 33
 #define CMD_TS_IGNITION_CATEGORY 18
 #define CMD_TS_INJECTOR_CATEGORY 19
 #define CMD_VSS_PIN "vss_pin"
@@ -1168,7 +1169,7 @@
 #define showSdCardWarning_offset 76
 #define SIGNATURE_BOARD kin
 #define SIGNATURE_DATE 2020.09.07
-#define SIGNATURE_HASH 1437275241
+#define SIGNATURE_HASH 1105255675
 #define silentTriggerError_offset 1464
 #define slowAdcAlpha_offset 2088
 #define sparkDwellRpmBins_offset 332
@@ -1478,7 +1479,7 @@
 #define ts_show_spi true
 #define ts_show_trigger_comparator true
 #define ts_show_tunerstudio_port true
-#define TS_SIGNATURE "rusEFI 2020.09.07.kin.1437275241"
+#define TS_SIGNATURE "rusEFI 2020.09.07.kin.1105255675"
 #define TS_SINGLE_WRITE_COMMAND 'W'
 #define TS_SINGLE_WRITE_COMMAND_char W
 #define TS_TEST_COMMAND 't' // 0x74

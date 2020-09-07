@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEfi tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Mon Sep 07 14:49:25 UTC 2020
+// this file was generated automatically by rusEfi tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Mon Sep 07 21:06:19 UTC 2020
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -262,6 +262,7 @@ public class Fields {
 	public static final int CMD_TS_BENCH_MAIN_RELAY = 0;
 	public static final int CMD_TS_BENCH_STARTER_DISABLE_RELAY = 3;
 	public static final int CMD_TS_BENCH_STARTER_ENABLE_RELAY = 2;
+	public static final int CMD_TS_FSIO_CATEGORY = 33;
 	public static final int CMD_TS_IGNITION_CATEGORY = 18;
 	public static final int CMD_TS_INJECTOR_CATEGORY = 19;
 	public static final String CMD_VSS_PIN = "vss_pin";
@@ -1382,7 +1383,7 @@ public class Fields {
 	public static final char TS_SD_R_COMMAND = 'r';
 	public static final char TS_SD_W_COMMAND = 'w';
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI 2020.09.07.all.3195023341";
+	public static final String TS_SIGNATURE = "rusEFI 2020.09.07.all.2856052607";
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final int tunerStudioSerialSpeed_offset = 728;
 	public static final int twoWireBatchIgnition_offset = 1476;
