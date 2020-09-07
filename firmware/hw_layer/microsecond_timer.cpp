@@ -166,9 +166,9 @@ static void timerValidationCallback(void *arg) {
 
 	testSchedulingHappened = true;
 	efitimems_t actualTimeSinceScheduling = (currentTimeMillis() - testSchedulingStart);
-
+	
 	if (absI(actualTimeSinceScheduling - TEST_CALLBACK_DELAY) > TEST_CALLBACK_DELAY * TIMER_PRECISION_THRESHOLD) {
-		firmwareError(CUSTOM_ERR_TIMER_TEST_CALLBACK_WRONG_TIME, "hwTimer broken precision");
+		firmwareError(CUSTOM_ERR_TIMER_TEST_CALLBACK_WRONG_TIME, "hwTimer broken precision: %ld ms", actualTimeSinceScheduling);
 	}
 }
 
