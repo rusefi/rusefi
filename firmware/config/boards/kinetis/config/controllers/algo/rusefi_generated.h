@@ -6,6 +6,8 @@
 #define accelerometerSpiDevice_offset 2712
 #define acCutoffHighRpm_offset 1494
 #define acCutoffLowRpm_offset 1492
+#define acFanPin_offset 762
+#define acFanPinMode_offset 763
 #define acIdleExtraMin_offset 761
 #define acIdleExtraOffset_offset 711
 #define acIdleRpmBump_offset 1496
@@ -16,13 +18,15 @@
 #define activateAuxPid2_offset 76
 #define activateAuxPid3_offset 76
 #define activateAuxPid4_offset 76
-#define adc_channel_e_enum "PA2", "PA3", "INVALID", "PD3", "INVALID", "INVALID", "INVALID", "PB12", "PB13", "INVALID", "PE2", "INVALID", "PC14", "PC15", "PC16", "PC17", "Disabled", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID"
+#define adc_channel_e_enum "Disabled", "PA2", "PA3", "INVALID", "PD3", "INVALID", "INVALID", "INVALID", "PB12", "PB13", "INVALID", "PE2", "INVALID", "PC14", "PC15", "PC16", "PC17"
 #define adc_channel_mode_e_auto_enum "ADC_OFF", "ADC_SLOW", "ADC_FAST"
 #define ADC_CHANNEL_NONE 16
 #define adcVcc_offset 548
 #define afr_alignmentFill_afr_offset 561
 #define afr_hwChannel_offset 560
 #define afr_offset 560
+#define afr_override_e_auto_enum "AFR_None", "AFR_MAP", "AFR_Tps", "AFR_AccPedal", "AFR_CylFilling"
+#define afr_override_e_enum "None", "MAP", "TPS", "Acc Pedal", "Cyl Filling %"
 #define afr_sensor_s_size 20
 #define afr_type_offset 692
 #define afr_v1_offset 564
@@ -30,6 +34,7 @@
 #define afr_value1_offset 568
 #define afr_value2_offset 576
 #define afrLoadBins_offset 18848
+#define afrOverrideMode_offset 2111
 #define afrRpmBins_offset 18912
 #define afrTable_offset 18592
 #define afterCrankingIACtaperDuration_offset 2036
@@ -257,6 +262,18 @@
 #define CMD_TRIGGER_HW_INPUT "trigger_hw_input"
 #define CMD_TRIGGER_PIN "set_trigger_input_pin"
 #define CMD_TRIGGERINFO "triggerinfo"
+#define CMD_TS_BENCH_AC_COMPRESSOR_RELAY 6
+#define CMD_TS_BENCH_AC_FAN_RELAY 5
+#define CMD_TS_BENCH_CATEGORY 22
+#define CMD_TS_BENCH_CHECK_ENGINE_LIGHT 7
+#define CMD_TS_BENCH_FAN_RELAY 4
+#define CMD_TS_BENCH_FUEL_PUMP 1
+#define CMD_TS_BENCH_IDLE_VALVE 8
+#define CMD_TS_BENCH_MAIN_RELAY 0
+#define CMD_TS_BENCH_STARTER_DISABLE_RELAY 3
+#define CMD_TS_BENCH_STARTER_ENABLE_RELAY 2
+#define CMD_TS_IGNITION_CATEGORY 18
+#define CMD_TS_INJECTOR_CATEGORY 19
 #define CMD_VSS_PIN "vss_pin"
 #define CMD_WRITECONFIG "writeconfig"
 #define coastingFuelCutClt_offset 3154
@@ -432,7 +449,7 @@
 #define firingOrder_offset 404
 #define fixedModeTiming_offset 452
 #define fixedTiming_offset 2204
-#define FLASH_DATA_VERSION 10001
+#define FLASH_DATA_VERSION 10002
 #define frequencyReportingMapInputPin_offset 970
 #define FSIO_ANALOG_INPUT_COUNT 4
 #define FSIO_COMMAND_COUNT 16
@@ -1146,8 +1163,8 @@
 #define showHumanReadableWarning_offset 976
 #define showSdCardWarning_offset 76
 #define SIGNATURE_BOARD kin
-#define SIGNATURE_DATE 2020.09.04
-#define SIGNATURE_HASH 1437541878
+#define SIGNATURE_DATE 2020.09.07
+#define SIGNATURE_HASH 2414148739
 #define silentTriggerError_offset 1464
 #define slowAdcAlpha_offset 2088
 #define sparkDwellRpmBins_offset 332
@@ -1457,7 +1474,7 @@
 #define ts_show_spi true
 #define ts_show_trigger_comparator true
 #define ts_show_tunerstudio_port true
-#define TS_SIGNATURE "rusEFI 2020.09.04.kin.1437541878"
+#define TS_SIGNATURE "rusEFI 2020.09.07.kin.2414148739"
 #define TS_SINGLE_WRITE_COMMAND 'W'
 #define TS_SINGLE_WRITE_COMMAND_char W
 #define TS_TEST_COMMAND 't' // 0x74
@@ -1466,7 +1483,6 @@
 #define twoWireBatchInjection_offset 1476
 #define uart_device_e_auto_enum "UART_NONE", "UART_DEVICE_1", "UART_DEVICE_2", "UART_DEVICE_3", "UART_DEVICE_4"
 #define uartConsoleSerialSpeed_offset 2076
-#define un1used_former_warmup_target_afr_offset 2109
 #define unused1059_offset 3964
 #define unused1126_offset 2116
 #define unused1127_offset 2116
@@ -1483,6 +1499,7 @@
 #define unused2516_offset 2516
 #define unused3288_offset 3288
 #define unused6312_offset 6312
+#define unused744b25_offset 744
 #define unused806_offset 806
 #define unused_1484_bit_24_offset 1476
 #define unused_1484_bit_25_offset 1476
@@ -1493,7 +1510,6 @@
 #define unused_1484_bit_30_offset 1476
 #define unused_1484_bit_31_offset 1476
 #define unused_alFIn_offset 4024
-#define unused_former_warmup_target_afr2_offset 2111
 #define unused_former_warmup_target_afr_offset 2126
 #define unusedAt716_offset 716
 #define unusedAt720_offset 720
@@ -1503,35 +1519,34 @@
 #define unusedAuxVoltage2_TODO_332_offset 2714
 #define unusedBit4_1476_offset 1476
 #define unusedBit_251_29_offset 976
-#define unusedBit_284_30_offset 976
-#define unusedBit_284_31_offset 976
+#define unusedBit_285_30_offset 976
+#define unusedBit_285_31_offset 976
 #define unusedBit_34_31_offset 76
-#define unusedBit_477_10_offset 2116
-#define unusedBit_477_11_offset 2116
-#define unusedBit_477_12_offset 2116
-#define unusedBit_477_13_offset 2116
-#define unusedBit_477_14_offset 2116
-#define unusedBit_477_15_offset 2116
-#define unusedBit_477_16_offset 2116
-#define unusedBit_477_17_offset 2116
-#define unusedBit_477_18_offset 2116
-#define unusedBit_477_19_offset 2116
-#define unusedBit_477_20_offset 2116
-#define unusedBit_477_21_offset 2116
-#define unusedBit_477_22_offset 2116
-#define unusedBit_477_23_offset 2116
-#define unusedBit_477_24_offset 2116
-#define unusedBit_477_25_offset 2116
-#define unusedBit_477_26_offset 2116
-#define unusedBit_477_27_offset 2116
-#define unusedBit_477_28_offset 2116
-#define unusedBit_477_29_offset 2116
-#define unusedBit_477_30_offset 2116
-#define unusedBit_477_31_offset 2116
-#define unusedBit_477_8_offset 2116
-#define unusedBit_477_9_offset 2116
+#define unusedBit_478_10_offset 2116
+#define unusedBit_478_11_offset 2116
+#define unusedBit_478_12_offset 2116
+#define unusedBit_478_13_offset 2116
+#define unusedBit_478_14_offset 2116
+#define unusedBit_478_15_offset 2116
+#define unusedBit_478_16_offset 2116
+#define unusedBit_478_17_offset 2116
+#define unusedBit_478_18_offset 2116
+#define unusedBit_478_19_offset 2116
+#define unusedBit_478_20_offset 2116
+#define unusedBit_478_21_offset 2116
+#define unusedBit_478_22_offset 2116
+#define unusedBit_478_23_offset 2116
+#define unusedBit_478_24_offset 2116
+#define unusedBit_478_25_offset 2116
+#define unusedBit_478_26_offset 2116
+#define unusedBit_478_27_offset 2116
+#define unusedBit_478_28_offset 2116
+#define unusedBit_478_29_offset 2116
+#define unusedBit_478_30_offset 2116
+#define unusedBit_478_31_offset 2116
+#define unusedBit_478_8_offset 2116
+#define unusedBit_478_9_offset 2116
 #define unusedFlexFuelSensor_offset 3100
-#define unusedHere_offset 762
 #define unusedHereWeHave_offset 1464
 #define unusedOldBiquad_offset 2332
 #define unusedSomethingWasHere_offset 2417
@@ -1576,15 +1591,17 @@
 #define useTLE8888_cranking_hack_offset 76
 #define useTpicAdvancedMode_offset 744
 #define useTPSAdvanceTable_offset 1476
-#define useTPSBasedVeTable_offset 744
 #define VBAT_INJECTOR_CURVE_SIZE 8
 #define vbattAdcChannel_offset 513
 #define vbattDividerCoeff_offset 464
+#define ve_override_e_auto_enum "VE_None", "VE_MAP", "VE_TPS"
+#define ve_override_e_enum "None", "MAP", "TPS"
 #define VEHICLE_INFO_SIZE 32
 #define vehicleName_offset 1160
 #define vehicleSpeedCoef_offset 476
 #define vehicleSpeedSensorInputPin_offset 968
 #define veLoadBins_offset 18464
+#define veOverrideMode_offset 2109
 #define verboseCan2BaseAddress_offset 2112
 #define verboseCanBaseAddress_offset 756
 #define verboseTLE8888_offset 744

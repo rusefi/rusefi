@@ -65,7 +65,7 @@
 ! Any time an incompatible change is made to the configuration format stored in flash,
 ! update this string to the current date! It is required to also update TS_SIGNATURE above
 ! when this happens.
-#define FLASH_DATA_VERSION 10001
+#define FLASH_DATA_VERSION 10002
 
 ! all the sub-structures are going to be nested within the primary structure, that's
 ! needed to get a proper TunerStudio file
@@ -338,7 +338,7 @@ custom air_pressure_sensor_type_e 4 bits, U32, @OFFSET@, [0:3]  "Custom", "DENSO
 !
 ! lower 16 values are used on stm32 rusEfi, values above 16 are related to Kinetis work in progress
 ! 
-#define adc_channel_e_enum "PA0", "PA1", "PA2", "PA3", "PA4", "PA5", "PA6", "PA7", "PB0", "PB1", "PC0", "PC1", "PC2", "PC3", "PC4", "PC5", "Disabled", "PB12", "PB13", "PC14", "PC15", "PC16", "PC17", "PD3", "PD4", "PE2", "PE6", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID"
+#define adc_channel_e_enum "Disabled", "PA0", "PA1", "PA2", "PA3", "PA4", "PA5", "PA6", "PA7", "PB0", "PB1", "PC0", "PC1", "PC2", "PC3", "PC4", "PC5"
 custom adc_channel_e 1 bits, U08, @OFFSET@, [0:4]  @@adc_channel_e_enum@@
 
 struct air_pressure_sensor_config_s
@@ -761,7 +761,7 @@ bit is_enabled_spi_2
 	bit useIacTableForCoasting;+This setting allows the ECU to open the IAC during overrun conditions to help reduce engine breaking, this can be helpful for large engines in light weight cars. Used in Auto-PID Idle mode.
 	bit useNoiselessTriggerDecoder
 	bit useIdleTimingPidControl
-	bit useTPSBasedVeTable
+	bit unused744b25
 	bit is_enabled_spi_4
 	bit pauseEtbControl;+Disable the electronic throttle motor and DC idle motor for testing.\nThis mode is for testing ETB/DC idle position sensors, etc without actually driving the throttle.
 	bit alignEngineSnifferAtTDC
@@ -782,7 +782,8 @@ pin_output_mode_e hip9011IntHoldPinMode;
 	uint8_t mc33_hvolt;;"v",        1,     0,  40,    70,  0
 	uint8_t fsio_visible acIdleExtraMin;+Additional idle PID minValue while A/C is active;"Percent", 1, 0, 0, 255, 0
 
-	uint8_t[2] unusedHere;;"units", 1, 0, -20, 100, 0
+output_pin_e acFanPin;+Optional Radiator Fan used with A/C
+	pin_output_mode_e acFanPinMode;
 
 
 	pin_output_mode_e[FSIO_COMMAND_COUNT iterate] gpioPinModes;
@@ -905,7 +906,7 @@ custom maf_sensor_type_e 4 bits, S32, @OFFSET@, [0:1], @@maf_sensor_type_e_enum@
 	etb_io[ETB_COUNT iterate] etbIo
 
 
-    output_pin_e boostControlPin;
+    output_pin_e boostControlPin;+Wastegate control Solenoid
 	pin_output_mode_e boostControlPinMode;
     switch_input_pin_e antiLagActivatePin;
     switch_input_pin_e launchActivatePin;
@@ -1154,9 +1155,16 @@ int16_t tps2Max;Full throttle#2. tpsMax value as 10 bit ADC value. Not Voltage!\
 	#define can_baudrate_e_enum "100kbps", "250kbps" , "500kbps", "1Mbps"
 	custom can_baudrate_e 1 bits, U08, @OFFSET@, [0:1], @@can_baudrate_e_enum@@
 	can_baudrate_e canBaudRate; set can_baudrate
-	uint8_t un1used_former_warmup_target_afr;;"units", 1, 0, -20, 100, 0
+
+	#define ve_override_e_enum "None", "MAP", "TPS"
+	custom ve_override_e 1 bits, U08, @OFFSET@, [0:1]  @@ve_override_e_enum@@
+	ve_override_e veOverrideMode;+Override the Y axis (load) value used for the VE table.\nAdvanced users only: If you aren't sure you need this, you probably don't need this.
+
 	can_baudrate_e can2BaudRate;
-	uint8_t unused_former_warmup_target_afr2;;"units", 1, 0, -20, 100, 0
+
+	#define afr_override_e_enum "None", "MAP", "TPS", "Acc Pedal", "Cyl Filling %"
+	custom afr_override_e 1 bits, U08, @OFFSET@, [0:2], @@afr_override_e_enum@@
+	afr_override_e afrOverrideMode;+Override the Y axis (load) value used for the AFR table.\nAdvanced users only: If you aren't sure you need this, you probably don't need this.
 
 	uint32_t verboseCan2BaseAddress;;"", 1, 0, 0, 536870911, 0
 	bit enableVerboseCan2Tx;+CAN broadcast using custom rusEFI protocol\nenable can_broadcast/disable can_broadcast
@@ -1612,6 +1620,25 @@ end_struct
 
 #define CMD_RESET_ENGINE_SNIFFER "reset_engine_chart"
 #define CMD_FUNCTIONAL_TEST_MODE "test_mode"
+
+#define CMD_TS_IGNITION_CATEGORY 18
+#define CMD_TS_INJECTOR_CATEGORY 19
+
+
+// 0x16
+#define CMD_TS_BENCH_CATEGORY 22
+
+#define CMD_TS_BENCH_MAIN_RELAY 0
+#define CMD_TS_BENCH_FUEL_PUMP 1
+#define CMD_TS_BENCH_STARTER_ENABLE_RELAY 2
+#define CMD_TS_BENCH_STARTER_DISABLE_RELAY 3
+#define CMD_TS_BENCH_FAN_RELAY 4
+#define CMD_TS_BENCH_AC_FAN_RELAY 5
+#define CMD_TS_BENCH_AC_COMPRESSOR_RELAY 6
+#define CMD_TS_BENCH_CHECK_ENGINE_LIGHT 7
+#define CMD_TS_BENCH_IDLE_VALVE 8
+
+
 
 #define CMD_ENGINE_TYPE "engine_type"
 #define CMD_INJECTION "injection"

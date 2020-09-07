@@ -202,37 +202,3 @@ TEST(misc, testPinHelper) {
 	ASSERT_EQ(0, getElectricalValue(1, OM_INVERTED));
 	ASSERT_EQ(1, getElectricalValue(0, OM_INVERTED));
 }
-
-extern fuel_Map3D_t veMap;
-
-TEST(fuel, testTpsBasedVeDefect799) {
-
-	WITH_ENGINE_TEST_HELPER(FORD_ASPIRE_1996);
-
-	engineConfiguration->fuelAlgorithm = LM_SPEED_DENSITY;
-	CONFIG(useTPSBasedVeTable) = true;
-
-	int mapFrom = 100;
-	// set MAP axis range
-	setLinearCurve(config->veLoadBins, mapFrom, mapFrom + FUEL_LOAD_COUNT - 1, 1);
-
-	// RPM does not matter - set table values to match load axis
-	for (int load = 0; load < FUEL_LOAD_COUNT;load++) {
-		for (int rpmIndex = 0;rpmIndex < FUEL_RPM_COUNT;rpmIndex++) {
-			veMap.pointers[load][rpmIndex] = mapFrom + load;
-		}
-	}
-
-	// just validating that we set 3D map as we wanted
-	ASSERT_EQ(107, veMap.getValue(2000, 107));
-
-	// set TPS axis range which does not overlap MAP range for this test
-	setLinearCurve(CONFIG(ignitionTpsBins), 0, 15, 1);
-
-	engine->mockMapValue = 107;
-	Sensor::setMockValue(SensorType::Tps1, 7);
-
-	engine->engineState.periodicFastCallback(PASS_ENGINE_PARAMETER_SIGNATURE);
-	// value in the middle of the map as expected
-	ASSERT_EQ(107, engine->engineState.currentRawVE);
-}

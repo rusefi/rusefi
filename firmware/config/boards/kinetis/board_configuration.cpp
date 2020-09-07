@@ -74,20 +74,6 @@ void setBoardConfigurationOverrides(void) {
 
 	engineConfiguration->mapMinBufferLength = 4;
 
-	// todo:
-	engineConfiguration->map.sensor.hwChannel = EFI_ADC_NONE;
-	engineConfiguration->mafAdcChannel = EFI_ADC_NONE;
-	engineConfiguration->hipOutputChannel = EFI_ADC_NONE;
-	engineConfiguration->tps1_1AdcChannel = EFI_ADC_NONE;
-	engineConfiguration->fuelLevelSensor = EFI_ADC_NONE;
-	engineConfiguration->throttlePedalPositionAdcChannel = EFI_ADC_NONE;
-	engineConfiguration->vbattAdcChannel = EFI_ADC_NONE;
-	engineConfiguration->clt.adcChannel = EFI_ADC_NONE;
-	engineConfiguration->iat.adcChannel = EFI_ADC_NONE;
-	engineConfiguration->afr.hwChannel = EFI_ADC_NONE;
-	engineConfiguration->oilPressure.hwChannel = EFI_ADC_NONE;
-	engineConfiguration->acSwitchAdc = EFI_ADC_NONE;
-	
 	engineConfiguration->clt.adcChannel = EFI_ADC_14;
 
 	engineConfiguration->triggerInputPins[0] = GPIOE_7;

@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Fri Sep 04 03:29:33 UTC 2020
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Mon Sep 07 14:17:26 UTC 2020
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -1457,7 +1457,7 @@ struct engine_configuration_s {
 	bool useIdleTimingPidControl : 1;
 	/**
 	offset 744 bit 25 */
-	bool useTPSBasedVeTable : 1;
+	bool unused744b25 : 1;
 	/**
 	offset 744 bit 26 */
 	bool is_enabled_spi_4 : 1;
@@ -1513,9 +1513,14 @@ struct engine_configuration_s {
 	 */
 	uint8_t acIdleExtraMin;
 	/**
+	 * Optional Radiator Fan used with A/C
 	 * offset 762
 	 */
-	uint8_t unusedHere[2];
+	output_pin_e acFanPin;
+	/**
+	 * offset 763
+	 */
+	pin_output_mode_e acFanPinMode;
 	/**
 	 * offset 764
 	 */
@@ -1826,15 +1831,16 @@ struct engine_configuration_s {
 	bool unusedBit_251_29 : 1;
 	/**
 	offset 976 bit 30 */
-	bool unusedBit_284_30 : 1;
+	bool unusedBit_285_30 : 1;
 	/**
 	offset 976 bit 31 */
-	bool unusedBit_284_31 : 1;
+	bool unusedBit_285_31 : 1;
 	/**
 	 * offset 980
 	 */
 	etb_io etbIo[ETB_COUNT];
 	/**
+	 * Wastegate control Solenoid
 	 * offset 988
 	 */
 	output_pin_e boostControlPin;
@@ -2588,17 +2594,21 @@ struct engine_configuration_s {
 	 */
 	can_baudrate_e canBaudRate;
 	/**
+	 * Override the Y axis (load) value used for the VE table.
+	 * Advanced users only: If you aren't sure you need this, you probably don't need this.
 	 * offset 2109
 	 */
-	uint8_t un1used_former_warmup_target_afr;
+	ve_override_e veOverrideMode;
 	/**
 	 * offset 2110
 	 */
 	can_baudrate_e can2BaudRate;
 	/**
+	 * Override the Y axis (load) value used for the AFR table.
+	 * Advanced users only: If you aren't sure you need this, you probably don't need this.
 	 * offset 2111
 	 */
-	uint8_t unused_former_warmup_target_afr2;
+	afr_override_e afrOverrideMode;
 	/**
 	 * offset 2112
 	 */
@@ -2633,76 +2643,76 @@ struct engine_configuration_s {
 	bool unused1130 : 1;
 	/**
 	offset 2116 bit 8 */
-	bool unusedBit_477_8 : 1;
+	bool unusedBit_478_8 : 1;
 	/**
 	offset 2116 bit 9 */
-	bool unusedBit_477_9 : 1;
+	bool unusedBit_478_9 : 1;
 	/**
 	offset 2116 bit 10 */
-	bool unusedBit_477_10 : 1;
+	bool unusedBit_478_10 : 1;
 	/**
 	offset 2116 bit 11 */
-	bool unusedBit_477_11 : 1;
+	bool unusedBit_478_11 : 1;
 	/**
 	offset 2116 bit 12 */
-	bool unusedBit_477_12 : 1;
+	bool unusedBit_478_12 : 1;
 	/**
 	offset 2116 bit 13 */
-	bool unusedBit_477_13 : 1;
+	bool unusedBit_478_13 : 1;
 	/**
 	offset 2116 bit 14 */
-	bool unusedBit_477_14 : 1;
+	bool unusedBit_478_14 : 1;
 	/**
 	offset 2116 bit 15 */
-	bool unusedBit_477_15 : 1;
+	bool unusedBit_478_15 : 1;
 	/**
 	offset 2116 bit 16 */
-	bool unusedBit_477_16 : 1;
+	bool unusedBit_478_16 : 1;
 	/**
 	offset 2116 bit 17 */
-	bool unusedBit_477_17 : 1;
+	bool unusedBit_478_17 : 1;
 	/**
 	offset 2116 bit 18 */
-	bool unusedBit_477_18 : 1;
+	bool unusedBit_478_18 : 1;
 	/**
 	offset 2116 bit 19 */
-	bool unusedBit_477_19 : 1;
+	bool unusedBit_478_19 : 1;
 	/**
 	offset 2116 bit 20 */
-	bool unusedBit_477_20 : 1;
+	bool unusedBit_478_20 : 1;
 	/**
 	offset 2116 bit 21 */
-	bool unusedBit_477_21 : 1;
+	bool unusedBit_478_21 : 1;
 	/**
 	offset 2116 bit 22 */
-	bool unusedBit_477_22 : 1;
+	bool unusedBit_478_22 : 1;
 	/**
 	offset 2116 bit 23 */
-	bool unusedBit_477_23 : 1;
+	bool unusedBit_478_23 : 1;
 	/**
 	offset 2116 bit 24 */
-	bool unusedBit_477_24 : 1;
+	bool unusedBit_478_24 : 1;
 	/**
 	offset 2116 bit 25 */
-	bool unusedBit_477_25 : 1;
+	bool unusedBit_478_25 : 1;
 	/**
 	offset 2116 bit 26 */
-	bool unusedBit_477_26 : 1;
+	bool unusedBit_478_26 : 1;
 	/**
 	offset 2116 bit 27 */
-	bool unusedBit_477_27 : 1;
+	bool unusedBit_478_27 : 1;
 	/**
 	offset 2116 bit 28 */
-	bool unusedBit_477_28 : 1;
+	bool unusedBit_478_28 : 1;
 	/**
 	offset 2116 bit 29 */
-	bool unusedBit_477_29 : 1;
+	bool unusedBit_478_29 : 1;
 	/**
 	offset 2116 bit 30 */
-	bool unusedBit_477_30 : 1;
+	bool unusedBit_478_30 : 1;
 	/**
 	offset 2116 bit 31 */
-	bool unusedBit_477_31 : 1;
+	bool unusedBit_478_31 : 1;
 	/**
 	 * set can_mode X
 	 * offset 2120
@@ -3660,4 +3670,4 @@ struct persistent_config_s {
 typedef struct persistent_config_s persistent_config_s;
 
 // end
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Fri Sep 04 03:29:33 UTC 2020
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Mon Sep 07 14:17:26 UTC 2020

@@ -226,6 +226,12 @@ private:
 
 static BenchController instance;
 
+static void handleBenchCategory(uint16_t index) {
+	// cmd_test_check_engine_light
+	milBench();
+
+}
+
 static void handleCommandX14(uint16_t index) {
 	switch (index) {
 	case 1:
@@ -305,9 +311,8 @@ void executeTSCommand(uint16_t subsystem, uint16_t index) {
 		handleCommandX14(index);
 	} else if (subsystem == 0x15) {
 		fanBench();
-	} else if (subsystem == 0x16) {
-		// cmd_test_check_engine_light
-		milBench();
+	} else if (subsystem == CMD_TS_BENCH_CATEGORY) {
+		handleBenchCategory(index);
 	} else if (subsystem == 0x17) {
 		// cmd_test_idle_valve
 #if EFI_IDLE_CONTROL

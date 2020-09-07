@@ -46,17 +46,13 @@ public:
 		return value;
 	}
 
-	void showInfo(Logging* logger, const char* sensorName) const override {
-		// todo: just print name and value?
-	}
-
+protected:
 	StoredValueSensor(SensorType type, efitick_t timeoutNt)
 		: Sensor(type)
 		, m_timeoutPeriod(timeoutNt)
 	{
 	}
 
-protected:
 	// Invalidate the stored value.
 	void invalidate() {
 		m_isValid = false;

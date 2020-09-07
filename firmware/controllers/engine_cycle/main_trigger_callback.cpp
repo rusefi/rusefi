@@ -217,7 +217,7 @@ void InjectionEvent::onTriggerTooth(size_t trgEventIndex, int rpm, efitick_t now
 	}
 #endif /*EFI_PRINTF_FUEL_DETAILS */
 
-	bool isCranking = ENGINE(rpmCalculator).isCranking(PASS_ENGINE_PARAMETER_SIGNATURE);
+	bool isCranking = ENGINE(rpmCalculator).isCranking();
 	/**
 	 * todo: pre-calculate 'numberOfInjections'
 	 * see also injectorDutyCycle
@@ -464,7 +464,7 @@ static void mainTriggerCallback(trigger_event_e ckpSignalType, uint32_t trgEvent
 
 // Check if the engine is not stopped or cylinder cleanup is activated
 static bool isPrimeInjectionPulseSkipped(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
-	if (!engine->rpmCalculator.isStopped(PASS_ENGINE_PARAMETER_SIGNATURE))
+	if (!engine->rpmCalculator.isStopped())
 		return true;
 	return CONFIG(isCylinderCleanupEnabled) && (Sensor::get(SensorType::Tps1).value_or(0) > CLEANUP_MODE_TPS);
 }
@@ -520,7 +520,7 @@ void updatePrimeInjectionPulseState(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	if (counterWasReset)
 		return;
 
-	if (!engine->rpmCalculator.isStopped(PASS_ENGINE_PARAMETER_SIGNATURE)) {
+	if (!engine->rpmCalculator.isStopped()) {
 		backupRamSave(BACKUP_IGNITION_SWITCH_COUNTER, 0);
 		counterWasReset = true;
 	}

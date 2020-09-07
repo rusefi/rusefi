@@ -500,7 +500,7 @@ static percent_t automaticIdleController(float tpsPos DECLARE_ENGINE_PARAMETER_S
 
 		const auto [cltValid, clt] = Sensor::get(SensorType::Clt);
 #if EFI_SHAFT_POSITION_INPUT
-		bool isRunning = engine->rpmCalculator.isRunning(PASS_ENGINE_PARAMETER_SIGNATURE);
+		bool isRunning = engine->rpmCalculator.isRunning();
 #else
 		bool isRunning = false;
 #endif /* EFI_SHAFT_POSITION_INPUT */
