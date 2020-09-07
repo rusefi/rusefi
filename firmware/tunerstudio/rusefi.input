@@ -1463,6 +1463,10 @@ cmd_test_spk14 = "@@TS_IO_TEST_COMMAND_char@@\x00\x12\x00\x0e"
 cmd_test_spk15 = "@@TS_IO_TEST_COMMAND_char@@\x00\x12\x00\x0f"
 cmd_test_spk16 = "@@TS_IO_TEST_COMMAND_char@@\x00\x12\x00\x10"
 
+cmd_test_fsio1  = "@@TS_IO_TEST_COMMAND_char@@@@CMD_TS_FSIO_CATEGORY@@\x00\x01"
+cmd_test_fsio2  = "@@TS_IO_TEST_COMMAND_char@@@@CMD_TS_FSIO_CATEGORY@@\x00\x02"
+cmd_test_fsio2  = "@@TS_IO_TEST_COMMAND_char@@@@CMD_TS_FSIO_CATEGORY@@\x00\x03"
+
 		
 cmd_test_inj1  = "@@TS_IO_TEST_COMMAND_char@@@@CMD_TS_INJECTOR_CATEGORY@@\x00\x01"
 cmd_test_inj2  = "@@TS_IO_TEST_COMMAND_char@@@@CMD_TS_INJECTOR_CATEGORY@@\x00\x02"
@@ -1702,6 +1706,9 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 		commandButton = "Injector #10", cmd_test_inj10
 		commandButton = "Injector #11", cmd_test_inj11
 		commandButton = "Injector #12", cmd_test_inj12
+		commandButton = "FSIO#1,	cmd_test_fsio1
+		commandButton = "FSIO#2,	cmd_test_fsio2
+		commandButton = "FSIO#3,	cmd_test_fsio3
 
 	dialog = injectionSettingsEast, "", yAxis
 		panel = testInjectors
