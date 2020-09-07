@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Mon Sep 07 14:17:26 UTC 2020
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Mon Sep 07 14:49:39 UTC 2020
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -1952,7 +1952,23 @@ struct engine_configuration_s {
 	/**
 	 * offset 1200
 	 */
-	int unusedAtOldBoardConfigurationEnd[65];
+	spi_device_e drv8860spiDevice;
+	/**
+	 * offset 1201
+	 */
+	brain_pin_e drv8860_cs;
+	/**
+	 * offset 1202
+	 */
+	pin_output_mode_e drv8860_csPinMode;
+	/**
+	 * offset 1203
+	 */
+	brain_pin_e drv8860_miso;
+	/**
+	 * offset 1204
+	 */
+	int unusedAtOldBoardConfigurationEnd[64];
 	/**
 	 * offset 1460
 	 */
@@ -2643,76 +2659,76 @@ struct engine_configuration_s {
 	bool unused1130 : 1;
 	/**
 	offset 2116 bit 8 */
-	bool unusedBit_478_8 : 1;
+	bool unusedBit_482_8 : 1;
 	/**
 	offset 2116 bit 9 */
-	bool unusedBit_478_9 : 1;
+	bool unusedBit_482_9 : 1;
 	/**
 	offset 2116 bit 10 */
-	bool unusedBit_478_10 : 1;
+	bool unusedBit_482_10 : 1;
 	/**
 	offset 2116 bit 11 */
-	bool unusedBit_478_11 : 1;
+	bool unusedBit_482_11 : 1;
 	/**
 	offset 2116 bit 12 */
-	bool unusedBit_478_12 : 1;
+	bool unusedBit_482_12 : 1;
 	/**
 	offset 2116 bit 13 */
-	bool unusedBit_478_13 : 1;
+	bool unusedBit_482_13 : 1;
 	/**
 	offset 2116 bit 14 */
-	bool unusedBit_478_14 : 1;
+	bool unusedBit_482_14 : 1;
 	/**
 	offset 2116 bit 15 */
-	bool unusedBit_478_15 : 1;
+	bool unusedBit_482_15 : 1;
 	/**
 	offset 2116 bit 16 */
-	bool unusedBit_478_16 : 1;
+	bool unusedBit_482_16 : 1;
 	/**
 	offset 2116 bit 17 */
-	bool unusedBit_478_17 : 1;
+	bool unusedBit_482_17 : 1;
 	/**
 	offset 2116 bit 18 */
-	bool unusedBit_478_18 : 1;
+	bool unusedBit_482_18 : 1;
 	/**
 	offset 2116 bit 19 */
-	bool unusedBit_478_19 : 1;
+	bool unusedBit_482_19 : 1;
 	/**
 	offset 2116 bit 20 */
-	bool unusedBit_478_20 : 1;
+	bool unusedBit_482_20 : 1;
 	/**
 	offset 2116 bit 21 */
-	bool unusedBit_478_21 : 1;
+	bool unusedBit_482_21 : 1;
 	/**
 	offset 2116 bit 22 */
-	bool unusedBit_478_22 : 1;
+	bool unusedBit_482_22 : 1;
 	/**
 	offset 2116 bit 23 */
-	bool unusedBit_478_23 : 1;
+	bool unusedBit_482_23 : 1;
 	/**
 	offset 2116 bit 24 */
-	bool unusedBit_478_24 : 1;
+	bool unusedBit_482_24 : 1;
 	/**
 	offset 2116 bit 25 */
-	bool unusedBit_478_25 : 1;
+	bool unusedBit_482_25 : 1;
 	/**
 	offset 2116 bit 26 */
-	bool unusedBit_478_26 : 1;
+	bool unusedBit_482_26 : 1;
 	/**
 	offset 2116 bit 27 */
-	bool unusedBit_478_27 : 1;
+	bool unusedBit_482_27 : 1;
 	/**
 	offset 2116 bit 28 */
-	bool unusedBit_478_28 : 1;
+	bool unusedBit_482_28 : 1;
 	/**
 	offset 2116 bit 29 */
-	bool unusedBit_478_29 : 1;
+	bool unusedBit_482_29 : 1;
 	/**
 	offset 2116 bit 30 */
-	bool unusedBit_478_30 : 1;
+	bool unusedBit_482_30 : 1;
 	/**
 	offset 2116 bit 31 */
-	bool unusedBit_478_31 : 1;
+	bool unusedBit_482_31 : 1;
 	/**
 	 * set can_mode X
 	 * offset 2120
@@ -3670,4 +3686,4 @@ struct persistent_config_s {
 typedef struct persistent_config_s persistent_config_s;
 
 // end
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Mon Sep 07 14:17:26 UTC 2020
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Mon Sep 07 14:49:39 UTC 2020

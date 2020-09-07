@@ -333,6 +333,10 @@
 #define displayMode_offset 492
 #define dizzySparkOutputPin_offset 2226
 #define dizzySparkOutputPinMode_offset 2227
+#define drv8860_cs_offset 1201
+#define drv8860_csPinMode_offset 1202
+#define drv8860_miso_offset 1203
+#define drv8860spiDevice_offset 1200
 #define DWELL_CURVE_SIZE 8
 #define ego_sensor_e_auto_enum "ES_BPSX_D1", "ES_Innovate_MTX_L", "ES_14Point7_Free", "ES_NarrowBand", "ES_PLX", "ES_Custom", "ES_AEM"
 #define ego_sensor_e_enum "BPSX", "Innovate", "14Point7", "Narrow", "PLX", "Custom", "INVALID", "INVALID"
@@ -1164,7 +1168,7 @@
 #define showSdCardWarning_offset 76
 #define SIGNATURE_BOARD kin
 #define SIGNATURE_DATE 2020.09.07
-#define SIGNATURE_HASH 2414148739
+#define SIGNATURE_HASH 1437275241
 #define silentTriggerError_offset 1464
 #define slowAdcAlpha_offset 2088
 #define sparkDwellRpmBins_offset 332
@@ -1474,7 +1478,7 @@
 #define ts_show_spi true
 #define ts_show_trigger_comparator true
 #define ts_show_tunerstudio_port true
-#define TS_SIGNATURE "rusEFI 2020.09.07.kin.2414148739"
+#define TS_SIGNATURE "rusEFI 2020.09.07.kin.1437275241"
 #define TS_SINGLE_WRITE_COMMAND 'W'
 #define TS_SINGLE_WRITE_COMMAND_char W
 #define TS_TEST_COMMAND 't' // 0x74
@@ -1514,7 +1518,7 @@
 #define unusedAt716_offset 716
 #define unusedAt720_offset 720
 #define unusedAt724_offset 724
-#define unusedAtOldBoardConfigurationEnd_offset 1200
+#define unusedAtOldBoardConfigurationEnd_offset 1204
 #define unusedAuxVoltage1_TODO_332_offset 2713
 #define unusedAuxVoltage2_TODO_332_offset 2714
 #define unusedBit4_1476_offset 1476
@@ -1522,30 +1526,30 @@
 #define unusedBit_285_30_offset 976
 #define unusedBit_285_31_offset 976
 #define unusedBit_34_31_offset 76
-#define unusedBit_478_10_offset 2116
-#define unusedBit_478_11_offset 2116
-#define unusedBit_478_12_offset 2116
-#define unusedBit_478_13_offset 2116
-#define unusedBit_478_14_offset 2116
-#define unusedBit_478_15_offset 2116
-#define unusedBit_478_16_offset 2116
-#define unusedBit_478_17_offset 2116
-#define unusedBit_478_18_offset 2116
-#define unusedBit_478_19_offset 2116
-#define unusedBit_478_20_offset 2116
-#define unusedBit_478_21_offset 2116
-#define unusedBit_478_22_offset 2116
-#define unusedBit_478_23_offset 2116
-#define unusedBit_478_24_offset 2116
-#define unusedBit_478_25_offset 2116
-#define unusedBit_478_26_offset 2116
-#define unusedBit_478_27_offset 2116
-#define unusedBit_478_28_offset 2116
-#define unusedBit_478_29_offset 2116
-#define unusedBit_478_30_offset 2116
-#define unusedBit_478_31_offset 2116
-#define unusedBit_478_8_offset 2116
-#define unusedBit_478_9_offset 2116
+#define unusedBit_482_10_offset 2116
+#define unusedBit_482_11_offset 2116
+#define unusedBit_482_12_offset 2116
+#define unusedBit_482_13_offset 2116
+#define unusedBit_482_14_offset 2116
+#define unusedBit_482_15_offset 2116
+#define unusedBit_482_16_offset 2116
+#define unusedBit_482_17_offset 2116
+#define unusedBit_482_18_offset 2116
+#define unusedBit_482_19_offset 2116
+#define unusedBit_482_20_offset 2116
+#define unusedBit_482_21_offset 2116
+#define unusedBit_482_22_offset 2116
+#define unusedBit_482_23_offset 2116
+#define unusedBit_482_24_offset 2116
+#define unusedBit_482_25_offset 2116
+#define unusedBit_482_26_offset 2116
+#define unusedBit_482_27_offset 2116
+#define unusedBit_482_28_offset 2116
+#define unusedBit_482_29_offset 2116
+#define unusedBit_482_30_offset 2116
+#define unusedBit_482_31_offset 2116
+#define unusedBit_482_8_offset 2116
+#define unusedBit_482_9_offset 2116
 #define unusedFlexFuelSensor_offset 3100
 #define unusedHereWeHave_offset 1464
 #define unusedOldBiquad_offset 2332
