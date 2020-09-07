@@ -80,7 +80,7 @@ CAN_BTR_1k0 };
 
 static const CANConfig *canConfig = &canConfig500;
 
-class CanRead final : public ThreadController<256> {
+class CanRead final : public ThreadController<UTILITY_THREAD_STACK_SIZE> {
 public:
 	CanRead()
 		: ThreadController("CAN RX", NORMALPRIO)

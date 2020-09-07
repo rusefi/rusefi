@@ -124,7 +124,9 @@ void appendFast(Logging *logging, const char *text) {
  */
 void Logging::vappendPrintf(const char *fmt, va_list arg) {
 #if ! EFI_UNIT_TEST
-	efiAssertVoid(CUSTOM_ERR_6604, getCurrentRemainingStack() > 128, "lowstck#5b");
+	if (getCurrentRemainingStack() < 128) {
+		firmwareError(CUSTOM_ERR_6604, "lowstck#5b %s", chThdGetSelfX()->name);
+	}
 	int wasLocked = lockAnyContext();
 	intermediateLogging.vappendPrintfI(this, fmt, arg);
 	if (!wasLocked) {
