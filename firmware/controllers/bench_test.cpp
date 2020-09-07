@@ -148,6 +148,12 @@ static void fuelbench2(const char *delayStr, const char *indexStr, const char * 
 	doRunFuel(index, delayStr, onTimeStr, offTimeStr, countStr);
 }
 
+static void fsioBench2(const char *delayStr, const char *indexStr, const char * onTimeStr, const char *offTimeStr,
+		const char *countStr) {
+	int index = atoi(indexStr);
+	doBenchTestFsio(index, delayStr, onTimeStr, offTimeStr, countStr);
+}
+
 static void fanBenchExt(const char *durationMs) {
 	pinbench("0", durationMs, "100", "1", &enginePins.fanRelay, CONFIG(fanPin));
 }
@@ -370,6 +376,7 @@ void initBenchTest(Logging *sharedLogger) {
 	addConsoleActionSSS("sparkbench", sparkbench);
 
 	addConsoleActionSSSSS("fuelbench2", fuelbench2);
+	addConsoleActionSSSSS("fsiobench2", fsioBench2);
 	addConsoleActionSSSSS("sparkbench2", sparkbench2);
 	instance.setPeriod(200 /*ms*/);
 	instance.Start();
