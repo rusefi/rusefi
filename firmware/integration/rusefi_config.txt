@@ -1158,13 +1158,13 @@ int16_t tps2Max;Full throttle#2. tpsMax value as 10 bit ADC value. Not Voltage!\
 
 	#define ve_override_e_enum "None", "MAP", "TPS"
 	custom ve_override_e 1 bits, U08, @OFFSET@, [0:1]  @@ve_override_e_enum@@
-	ve_override_e veOverrideMode;
+	ve_override_e veOverrideMode;+Override the Y axis (load) value used for the VE table.\nAdvanced users only: If you aren't sure you need this, you probably don't need this.
 
 	can_baudrate_e can2BaudRate;
 
 	#define afr_override_e_enum "None", "MAP", "TPS", "Acc Pedal", "Cyl Filling %"
 	custom afr_override_e 1 bits, U08, @OFFSET@, [0:2], @@afr_override_e_enum@@
-	afr_override_e afrOverrideMode;
+	afr_override_e afrOverrideMode;+Override the Y axis (load) value used for the AFR table.\nAdvanced users only: If you aren't sure you need this, you probably don't need this.
 
 	uint32_t verboseCan2BaseAddress;;"", 1, 0, 0, 536870911, 0
 	bit enableVerboseCan2Tx;+CAN broadcast using custom rusEFI protocol\nenable can_broadcast/disable can_broadcast
