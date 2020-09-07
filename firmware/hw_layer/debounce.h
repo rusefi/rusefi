@@ -21,10 +21,9 @@ private:
     int threshold;
     efitick_t timeLast;
     brain_pin_e *pin;
-    brain_pin_e *active_pin;
-    brain_pin_e oldPin;
+    brain_pin_e active_pin;
     pin_input_mode_e *mode;
-    pin_input_mode_e *active_mode;
+    pin_input_mode_e active_mode;
     bool readValue;
     bool initialized = false;
     ButtonDebounce *nextDebounce = nullptr;
