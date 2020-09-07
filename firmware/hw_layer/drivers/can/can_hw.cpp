@@ -117,16 +117,11 @@ private:
 static CanRead canRead;
 static CanWrite canWrite;
 
-
 static void canInfo(void) {
 	if (!isCanEnabled) {
 		scheduleMsg(&logger, "CAN is not enabled, please enable & restart");
 		return;
 	}
-
-#if EFI_CANBUS_SLAVE
-	scheduleMsg(&logger, "CAN SLAVE MODE");
-#endif
 
 	scheduleMsg(&logger, "CAN TX %s", hwPortname(CONFIG_OVERRIDE(canTxPin)));
 	scheduleMsg(&logger, "CAN RX %s", hwPortname(CONFIG_OVERRIDE(canRxPin)));
