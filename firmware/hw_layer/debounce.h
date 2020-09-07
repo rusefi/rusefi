@@ -27,8 +27,9 @@ private:
     pin_input_mode_e *active_mode;
     bool readValue;
     bool initialized = false;
-    static ButtonDebounce *s_firstDebounce = nullptr;
     ButtonDebounce *nextDebounce = nullptr;
 };
+
+    static ButtonDebounce* ButtonDebounce::s_firstDebounce = nullptr;
 
 #endif /* DEBOUNCE_INC */
