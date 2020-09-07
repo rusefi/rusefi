@@ -10,7 +10,7 @@
 #include "engine_configuration.h"
 #include "hardware.h"
 
-void ButtonDebounce::init (int t, brain_pin_e p, pin_input_mode_e m) {
+void ButtonDebounce::init (int t, brain_pin_e &p, pin_input_mode_e &m) {
     if (!initialized) {
         ButtonDebounce *listItem = s_firstDebounce;
         if (listItem == nullptr) {
