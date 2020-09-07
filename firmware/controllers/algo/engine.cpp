@@ -25,6 +25,8 @@
 #include "map_averaging.h"
 #include "fsio_impl.h"
 #include "perf_trace.h"
+#include "backup_ram.h"
+#include "idle_thread.h"
 
 #if EFI_PROD_CODE
 #include "injector_central.h"
