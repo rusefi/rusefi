@@ -27,7 +27,7 @@ private:
     bool readValue;
     bool initialized = false;
     ButtonDebounce *nextDebounce = nullptr;
-    static constexpr ButtonDebounce* s_firstDebounce = nullptr;
+    static constexpr ButtonDebounce* s_firstDebounce;
 };
 
 #endif /* DEBOUNCE_INC */
