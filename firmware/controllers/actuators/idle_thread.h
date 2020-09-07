@@ -38,6 +38,7 @@ void setIdleDT(int value);
 void stopIdleHardware(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 void initIdleHardware(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 bool isIdleHardwareRestartNeeded();
+bool isIdleMotorBusy(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 void onConfigurationChangeIdleCallback(engine_configuration_s *previousConfiguration);
 float getIdlePidOffset(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 Pid * getIdlePid(DECLARE_ENGINE_PARAMETER_SIGNATURE);

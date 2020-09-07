@@ -677,6 +677,14 @@ bool isIdleHardwareRestartNeeded() {
 
 }
 
+bool isIdleMotorBusy(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+	if (!CONFIG(useStepperIdle)) {
+		// todo: check other motor types?
+		return false;
+	}
+	return iacMotor.isBusy();
+}
+
 void stopIdleHardware(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 #if EFI_PROD_CODE
 	brain_pin_markUnused(activeConfiguration.stepperEnablePin);
