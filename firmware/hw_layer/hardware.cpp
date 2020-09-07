@@ -268,15 +268,7 @@ void stopSpi(spi_device_e device) {
 void applyNewHardwareSettings(void) {
     // all 'stop' methods need to go before we begin starting pins
 
-	PointerListNode *listItem = &buttonDebounceListHead;
-	while (listItem->pointer != NULL) {
-		listItem->pointer->updateConfiguration();
-		if (listItem->next != NULL) {
-			listItem = listItem->next;
-		} else {
-			break;
-		}
-	}
+	ButtonDebounce::updateConfigurationList();
 
 #if EFI_SHAFT_POSITION_INPUT
 	stopTriggerInputPins();

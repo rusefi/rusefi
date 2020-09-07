@@ -44,8 +44,6 @@
  * access in unit tests
  */
 #define CONFIG(x) persistentState.persistentConfiguration.engineConfiguration.x
-#define CONFIG_POINTERS(x) &CONFIG(x), &activeConfiguration.x
-#define DECLARE_CONFIG_POINTERS(x, y) x *y, x *active_##y
 
 #ifdef __cplusplus
 

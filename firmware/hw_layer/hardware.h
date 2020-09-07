@@ -57,8 +57,4 @@ void setBor(int borValue);
 
 class ButtonDebounce;
 
-class PointerListNode;
-
-extern PointerListNode buttonDebounceListHead;
-
 #endif /* __cplusplus */
