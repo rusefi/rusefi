@@ -738,7 +738,11 @@ custom maf_sensor_type_e 4 bits, S32, @OFFSET@, [0:7], @@maf_sensor_type_e_enum@
 	bit todoClutchDownPinInverted
 	etb_io[ETB_COUNT iterate] etbIo
 ! our strategy is to get rid of "boardConfiguration" and make everything just "engineConfiguration". Please do not add new fields into legacy "bc" area.
-	int[119] unusedAtOldBoardConfigurationEnd;
+	int[118] unusedAtOldBoardConfigurationEnd;
+	spi_device_e drv8860spiDevice;
+	brain_pin_e       drv8860_cs;
+	pin_output_mode_e drv8860_csPinMode;
+	brain_pin_e       drv8860_miso;
 
 	bit vvtDisplayInverted
 	bit fuelClosedLoopCorrectionEnabled;+Enables lambda sensor closed loop feedback for fuelling.
