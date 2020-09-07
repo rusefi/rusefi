@@ -202,7 +202,7 @@ void RpmCalculator::setStopped() {
 	if (rpmValue != 0) {
 		assignRpmValue(0);
 		// needed by 'useNoiselessTriggerDecoder'
-		engine->triggerCentral.resetAccumSignalData();
+// todo Hellen merge		engine->triggerCentral.resetAccumSignalData();
 		scheduleMsg(logger, "engine stopped");
 	}
 	state = STOPPED;
