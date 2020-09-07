@@ -280,9 +280,9 @@ static void handleCommandX14(uint16_t index) {
 		return;
 	case 10:
 		// cmd_write_config
-#if EFI_PROD_CODE
+#if EFI_INTERNAL_FLASH
 		writeToFlashNow();
-#endif /* EFI_PROD_CODE */
+#endif /* EFI_INTERNAL_FLASH */
 		return;
 
 	}
