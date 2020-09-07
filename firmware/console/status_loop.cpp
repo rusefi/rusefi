@@ -532,6 +532,8 @@ void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels DECLARE_
 
 	tsOutputChannels->fuelingLoad = getFuelingLoad(PASS_ENGINE_PARAMETER_SIGNATURE);
 	tsOutputChannels->ignitionLoad = getIgnitionLoad(PASS_ENGINE_PARAMETER_SIGNATURE);
+	tsOutputChannels->veTableYAxis = ENGINE(engineState.currentVeLoad);
+	tsOutputChannels->afrTableYAxis = ENGINE(engineState.currentAfrLoad);
 
 	// KLUDGE? we always show VBatt because Proteus board has VBatt input sensor hardcoded
 	// offset 28
