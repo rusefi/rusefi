@@ -122,7 +122,7 @@ float getEngineValue(le_action_e action DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	case LE_METHOD_INTAKE_AIR:
 		return Sensor::get(SensorType::Iat).value_or(0);
 	case LE_METHOD_RPM:
-		return engine->rpmCalculator.getRpm();
+		return Sensor::get(SensorType::Rpm).value_or(0);
 	case LE_METHOD_MAF:
 		return getRealMaf(PASS_ENGINE_PARAMETER_SIGNATURE);
 	case LE_METHOD_MAP:
