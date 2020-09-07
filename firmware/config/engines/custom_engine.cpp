@@ -519,6 +519,8 @@ void mreBCM(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	engineConfiguration->fanPin = GPIO_UNASSIGNED;
 	engineConfiguration->consumeObdSensors = true;
 
+
+#if (BOARD_TLE8888_COUNT > 0)
 	engineConfiguration->fsioOutputPins[0] = GPIOE_14;// "37 - Injector 1"
 	engineConfiguration->fsioOutputPins[1] = GPIOE_13;// "38 - Injector 2"
 	engineConfiguration->fsioOutputPins[2] = GPIOE_12;// "41 - Injector 3"
@@ -530,6 +532,8 @@ void mreBCM(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	engineConfiguration->fsioOutputPins[7] = TLE8888_PIN_22;// "34 - GP Out 2"
 	engineConfiguration->fsioOutputPins[8] = TLE8888_PIN_23;// "33 - GP Out 3"
 	engineConfiguration->fsioOutputPins[9] = TLE8888_PIN_24;// "43 - GP Out 4"
+#endif /* BOARD_TLE8888_COUNT */
+
 }
 
 /**
