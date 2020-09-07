@@ -102,7 +102,7 @@ static floatms_t getCrankingSparkDwell(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	} else {
 		// technically this could be implemented via interpolate2d
 		float angle = engineConfiguration->crankingChargeAngle;
-		return getOneDegreeTimeMs(GET_RPM_VALUE) * angle;
+		return getOneDegreeTimeMs(GET_RPM()) * angle;
 	}
 }
 
@@ -112,7 +112,7 @@ static floatms_t getCrankingSparkDwell(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 floatms_t getSparkDwell(int rpm DECLARE_ENGINE_PARAMETER_SUFFIX) {
 #if EFI_ENGINE_CONTROL && EFI_SHAFT_POSITION_INPUT
 	float dwellMs;
-	if (ENGINE(rpmCalculator).isCranking(PASS_ENGINE_PARAMETER_SIGNATURE)) {
+	if (ENGINE(rpmCalculator).isCranking()) {
 		dwellMs = getCrankingSparkDwell(PASS_ENGINE_PARAMETER_SIGNATURE);
 	} else {
 		efiAssert(CUSTOM_ERR_ASSERT, !cisnan(rpm), "invalid rpm", NAN);
@@ -378,7 +378,7 @@ ignition_mode_e getCurrentIgnitionMode(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	ignition_mode_e ignitionMode = CONFIG(ignitionMode);
 #if EFI_SHAFT_POSITION_INPUT
 	// In spin-up cranking mode we don't have full phase sync. info yet, so wasted spark mode is better
-	if (ignitionMode == IM_INDIVIDUAL_COILS && ENGINE(rpmCalculator.isSpinningUp(PASS_ENGINE_PARAMETER_SIGNATURE)))
+	if (ignitionMode == IM_INDIVIDUAL_COILS && ENGINE(rpmCalculator.isSpinningUp()))
 		ignitionMode = IM_WASTED_SPARK;
 #endif /* EFI_SHAFT_POSITION_INPUT */
 	return ignitionMode;

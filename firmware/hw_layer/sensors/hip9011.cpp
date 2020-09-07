@@ -252,7 +252,7 @@ static void intHoldCallback(trigger_event_e ckpEventType, uint32_t index, efitic
 
 	ScopePerf perf(PE::Hip9011IntHoldCallback);
 
-	int rpm = GET_RPM_VALUE;
+	int rpm = GET_RPM();
 	if (!isValidRpm(rpm))
 		return;
 
@@ -309,7 +309,7 @@ void hipAdcCallback(adcsample_t adcValue) {
 		hipValueMax = maxF(engine->knockVolts, hipValueMax);
 		engine->knockLogic(engine->knockVolts);
 
-		instance.handleValue(GET_RPM_VALUE DEFINE_PARAM_SUFFIX(PASS_HIP_PARAMS));
+		instance.handleValue(GET_RPM() DEFINE_PARAM_SUFFIX(PASS_HIP_PARAMS));
 
 	}
 }

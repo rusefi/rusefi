@@ -15,7 +15,7 @@ TEST(fuel, testWallWettingEnrichmentMath) {
 	engineConfiguration->wwaeTau = 1.0f;
 	engineConfiguration->wwaeBeta = 0.40f;
 
-	engine->rpmCalculator.setRpmValue(3000 PASS_ENGINE_PARAMETER_SUFFIX);
+	engine->rpmCalculator.setRpmValue(3000);
 
 	WallFuel wallFuel;
 

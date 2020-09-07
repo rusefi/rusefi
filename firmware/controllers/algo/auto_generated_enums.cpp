@@ -1,7 +1,7 @@
 #include "global.h"
 #include "rusefi_enums.h"
 #include "rusefi_hw_enums.h"
-// was generated automatically by rusEfi tool  from rusefi_hw_enums.h // was generated automatically by rusEfi tool  from rusefi_enums.h // by enum2string.jar tool on Sat Aug 29 13:41:58 UTC 2020
+// was generated automatically by rusEfi tool  from rusefi_hw_enums.h // was generated automatically by rusEfi tool  from rusefi_enums.h // by enum2string.jar tool on Mon Sep 07 14:17:12 UTC 2020
 // see also gen_config_and_enums.bat
 
 
@@ -87,6 +87,21 @@ case ADC_SLOW:
   return "ADC_SLOW";
 case Force_4_bytes_size_adc_channel_mode:
   return "Force_4_bytes_size_adc_channel_mode";
+  }
+ return NULL;
+}
+const char *getAfr_override_e(afr_override_e value){
+switch(value) {
+case AFR_AccPedal:
+  return "AFR_AccPedal";
+case AFR_CylFilling:
+  return "AFR_CylFilling";
+case AFR_MAP:
+  return "AFR_MAP";
+case AFR_None:
+  return "AFR_None";
+case AFR_Tps:
+  return "AFR_Tps";
   }
  return NULL;
 }
@@ -1361,6 +1376,17 @@ case UART_DEVICE_4:
   return "UART_DEVICE_4";
 case UART_NONE:
   return "UART_NONE";
+  }
+ return NULL;
+}
+const char *getVe_override_e(ve_override_e value){
+switch(value) {
+case VE_MAP:
+  return "VE_MAP";
+case VE_None:
+  return "VE_None";
+case VE_TPS:
+  return "VE_TPS";
   }
  return NULL;
 }

@@ -16,6 +16,8 @@
 #include "accel_enrichment.h"
 #include "trigger_central.h"
 #include "local_version_holder.h"
+#include "buttonshift.h"
+#include "tcu.h"
 
 #if EFI_SIGNAL_EXECUTOR_ONE_TIMER
 // PROD real firmware uses this implementation
@@ -51,11 +53,6 @@ class AirmassModelBase;
 class IEtbController;
 class IFuelComputer;
 class IInjectorModel;
-
-class TCU {
-public:
-	gear_e currentGear = NEUTRAL;
-};
 
 class PrimaryTriggerConfiguration : public TriggerConfiguration {
 public:
@@ -94,10 +91,10 @@ public:
 
 	cyclic_buffer<int> triggerErrorDetection;
 
+	GearControllerBase *gearController;
+
 	PrimaryTriggerConfiguration primaryTriggerConfiguration;
 	VvtTriggerConfiguration vvtTriggerConfiguration;
-
-	TCU tcu;
 
 #if EFI_SHAFT_POSITION_INPUT
 	void OnTriggerStateDecodingError();

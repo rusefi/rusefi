@@ -17,6 +17,9 @@
 EXTERN_CONFIG
 extern LoggingWithStorage sharedLogger;
 
+extern int canWriteOk;
+extern int canWriteNotOk;
+
 /*static*/ CANDriver* CanTxMessage::s_device = nullptr;
 
 /*static*/ void CanTxMessage::setDevice(CANDriver* device) {
@@ -48,7 +51,12 @@ CanTxMessage::~CanTxMessage() {
 	}
 
 	// 100 ms timeout
-	canTransmit(device, CAN_ANY_MAILBOX, &m_frame, TIME_MS2I(100));
+	msg_t msg = canTransmit(device, CAN_ANY_MAILBOX, &m_frame, TIME_MS2I(100));
+	if (msg == MSG_OK) {
+		canWriteOk++;
+	} else {
+		canWriteNotOk++;
+	}
 }
 
 uint8_t& CanTxMessage::operator[](size_t index) {

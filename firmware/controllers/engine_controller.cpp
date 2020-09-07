@@ -57,6 +57,7 @@
 #include "tachometer.h"
 #include "gppwm.h"
 #include "date_stamp.h"
+#include "buttonshift.h"
 
 #if EFI_SENSOR_CHART
 #include "sensor_chart.h"
@@ -169,7 +170,7 @@ class EngineStateBlinkingTask : public PeriodicTimerController {
 	void PeriodicTask() override {
 		counter++;
 #if EFI_SHAFT_POSITION_INPUT
-		bool is_running = ENGINE(rpmCalculator).isRunning(PASS_ENGINE_PARAMETER_SIGNATURE);
+		bool is_running = ENGINE(rpmCalculator).isRunning();
 #else
 		bool is_running = false;
 #endif /* EFI_SHAFT_POSITION_INPUT */
@@ -178,7 +179,7 @@ class EngineStateBlinkingTask : public PeriodicTimerController {
 			// blink in running mode
 			enginePins.runningLedPin.setValue(counter % 2);
 		} else {
-			int is_cranking = ENGINE(rpmCalculator).isCranking(PASS_ENGINE_PARAMETER_SIGNATURE);
+			int is_cranking = ENGINE(rpmCalculator).isCranking();
 			enginePins.runningLedPin.setValue(is_cranking);
 		}
 	}
@@ -239,7 +240,7 @@ static void doPeriodicSlowCallback(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 		engine->rpmCalculator.setStopSpinning(PASS_ENGINE_PARAMETER_SIGNATURE);
 	}
 
-	if (ENGINE(directSelfStimulation) || engine->rpmCalculator.isStopped(PASS_ENGINE_PARAMETER_SIGNATURE)) {
+	if (ENGINE(directSelfStimulation) || engine->rpmCalculator.isStopped()) {
 		/**
 		 * rusEfi usually runs on hardware which halts execution while writing to internal flash, so we
 		 * postpone writes to until engine is stopped. Writes in case of self-stimulation are fine.
@@ -253,7 +254,7 @@ static void doPeriodicSlowCallback(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	}
 
 
-	if (!engine->rpmCalculator.isStopped(PASS_ENGINE_PARAMETER_SIGNATURE)) {
+	if (!engine->rpmCalculator.isStopped()) {
 		updatePrimeInjectionPulseState(PASS_ENGINE_PARAMETER_SIGNATURE);
 	}
 
@@ -263,6 +264,10 @@ static void doPeriodicSlowCallback(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 
 	engine->periodicSlowCallback(PASS_ENGINE_PARAMETER_SIGNATURE);
 #endif /* if EFI_ENGINE_CONTROL && EFI_SHAFT_POSITION_INPUT */
+
+	if (CONFIG(tcuEnabled)) {
+		engine->gearController->update();
+	}
 }
 
 void initPeriodicEvents(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
@@ -584,6 +589,8 @@ void commonInitEngineController(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_S
 	startIdleThread(sharedLogger PASS_ENGINE_PARAMETER_SUFFIX);
 #endif /* EFI_IDLE_CONTROL */
 
+	initButtonShift(PASS_ENGINE_PARAMETER_SIGNATURE);
+
 #if EFI_ELECTRONIC_THROTTLE_BODY
 	initElectronicThrottle(PASS_ENGINE_PARAMETER_SIGNATURE);
 #endif /* EFI_ELECTRONIC_THROTTLE_BODY */
@@ -701,7 +708,7 @@ void initEngineContoller(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX) 
  * UNUSED_SIZE constants.
  */
 #ifndef RAM_UNUSED_SIZE
-#define RAM_UNUSED_SIZE 6600
+#define RAM_UNUSED_SIZE 6100
 #endif
 #ifndef CCM_UNUSED_SIZE
 #define CCM_UNUSED_SIZE 2900

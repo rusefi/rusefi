@@ -18,7 +18,6 @@ public:
 
 	void showInfo(Logging* logger, float testRawValue) const override;
 
-private:
 	// Steinhart-Hart coefficients
 	float m_a = 0;
 	float m_b = 0;

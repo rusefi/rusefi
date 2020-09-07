@@ -163,3 +163,12 @@ TEST(SensorInit, Clt) {
 	EXPECT_POINT_INVALID(s, 0.0f);
 	EXPECT_POINT_INVALID(s, 5.0f);
 }
+
+TEST(SensorInit, Lambda) {
+	WITH_ENGINE_TEST_HELPER(TEST_ENGINE);
+
+	initLambda(PASS_ENGINE_PARAMETER_SIGNATURE);
+
+	auto s = Sensor::getSensorOfType(SensorType::Lambda);
+	ASSERT_NE(nullptr, s);
+}
