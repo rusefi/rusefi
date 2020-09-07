@@ -58,6 +58,8 @@ void ButtonDebounce::updateConfiguration () {
         brain_pin_markUnused(active_pin);
         efiSetPadMode("Button", *pin, getInputMode(*mode));
     }
+    active_pin = *pin;
+    active_mode = *mode;
 }
 
 /**
