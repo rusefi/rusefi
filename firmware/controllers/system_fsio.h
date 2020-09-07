@@ -45,6 +45,10 @@
 // Human-readable: rpm > fsio_setting(1)
 #define RPM_ABOVE_USER_SETTING_1 "rpm 1 fsio_setting >"
 
+// Human-readable: rpm < fsio_setting(3)
+#define RPM_BELOW_USER_SETTING_3 "rpm 3 fsio_setting <"
+
+
 // Human-readable: rpm > fsio_setting(2)
 #define RPM_ABOVE_USER_SETTING_2 "rpm 2 fsio_setting >"
 

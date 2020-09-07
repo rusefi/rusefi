@@ -139,8 +139,8 @@ static void doBenchTestFsio(int humanIndex, const char *delayStr, const char * o
 }
 
 /**
- * delay 100, cylinder #2, 5ms ON, 1000ms OFF, repeat 2 times
- * fuelbench2 100 2 5 1000 2
+ * delay 100, cylinder #2, 5ms ON, 1000ms OFF, repeat 3 times
+ * fuelbench2 100 2 5 1000 3
  */
 static void fuelbench2(const char *delayStr, const char *indexStr, const char * onTimeStr, const char *offTimeStr,
 		const char *countStr) {
@@ -148,6 +148,10 @@ static void fuelbench2(const char *delayStr, const char *indexStr, const char * 
 	doRunFuel(index, delayStr, onTimeStr, offTimeStr, countStr);
 }
 
+/**
+ * delay 100, channel #1, 5ms ON, 1000ms OFF, repeat 3 times
+ * fsiobench2 100 1 5 1000 3
+ */
 static void fsioBench2(const char *delayStr, const char *indexStr, const char * onTimeStr, const char *offTimeStr,
 		const char *countStr) {
 	int index = atoi(indexStr);
