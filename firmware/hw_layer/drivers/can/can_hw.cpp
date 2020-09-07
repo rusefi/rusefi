@@ -28,8 +28,8 @@
 EXTERN_ENGINE;
 
 static int canReadCounter = 0;
-static int canWriteOk = 0;
-static int canWriteNotOk = 0;
+int canWriteOk = 0;
+int canWriteNotOk = 0;
 static bool isCanEnabled = false;
 static LoggingWithStorage logger("CAN driver");
 
