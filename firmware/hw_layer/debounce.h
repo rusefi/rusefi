@@ -28,8 +28,7 @@ private:
     bool readValue;
     bool initialized = false;
     ButtonDebounce *nextDebounce = nullptr;
+    static ButtonDebounce* s_firstDebounce;
 };
-
-    static ButtonDebounce* ButtonDebounce::s_firstDebounce = nullptr;
 
 #endif /* DEBOUNCE_INC */
