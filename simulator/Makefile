@@ -20,6 +20,8 @@ RULESFILE = $(RULESPATH)/rules.mk
 include ../firmware/rusefi.mk
 RULESFILE = ../firmware/rusefi_rules.mk
 
+# used by USE_SMART_BUILD
+CONFDIR = .
 
 
 # Compiler options here.
