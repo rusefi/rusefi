@@ -76,7 +76,7 @@ bool ButtonDebounce::readPinEvent() {
     //  for example to implement long button presses, it will be needed.
     readValue = false;
 #ifdef PAL_MODE_INPUT_PULLDOWN
-    readValue = efiReadPin(oldPin);
+    readValue = efiReadPin(active_pin);
     // Invert
     if (getInputMode(active_mode) == PAL_MODE_INPUT_PULLUP) {
         readValue = !readValue;
