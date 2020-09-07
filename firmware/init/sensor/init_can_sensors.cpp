@@ -48,9 +48,9 @@ void initCanSensors() {
 	if (CONFIG(consumeObdSensors)) {
 //		registerCanSensor(canPedalSensor);
 		registerCanSensor(obdRpmSensor);
-//		registerCanSensor(obdCltSensor);
-		//		registerCanSensor(obdIatSensor);
-		//		registerCanSensor(obdTpsSensor);
+		registerCanSensor(obdCltSensor);
+		registerCanSensor(obdIatSensor);
+		registerCanSensor(obdTpsSensor);
 	}
 }
 #endif // EFI_CAN_SUPPORT
