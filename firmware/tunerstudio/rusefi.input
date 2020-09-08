@@ -1592,8 +1592,7 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 		field = "#Batch injection with individual wiring"
 		field = "Two wire batch emulation",				twoWireBatchInjection, {isInjectionEnabled == 1 && injectionMode == 2}
 		field = "Override VE table load axis",			veOverrideMode, { isInjectionEnabled }
-		;field = "Override AFR table load axis",			afrOverrideMode, { isInjectionEnabled }
-		; ^^^ Not yet implemented, hidden for now! ^^^
+		field = "Override AFR table load axis",			afrOverrideMode, { isInjectionEnabled }
 
 	dialog = ignitionOutputs, "Ignition Outputs"
 		field = "Ignition Pin Mode",         	        ignitionPinMode, {isIgnitionEnabled == 1}
