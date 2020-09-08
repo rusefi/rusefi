@@ -19,7 +19,10 @@ jobs:
       working-directory: ./firmware/
       run: bash gen_live_documentation.sh
 
-    - name: Print version
+    - name: Install gcc8
+      run: sudo apt-get install -y gcc-8
+
+    - name: Print GCC version
       working-directory: .
       run: gcc -v
 
