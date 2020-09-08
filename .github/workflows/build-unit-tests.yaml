@@ -24,7 +24,7 @@ jobs:
 
     - name: Print GCC version
       working-directory: .
-      run: gcc -v
+      run: update-alternatives --auto g++ ; update-alternatives --auto gcc ; update-alternatives --auto cpp-bin ; gcc -v
 
     - name: Build Tests
       working-directory: ./unit_tests/
