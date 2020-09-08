@@ -171,6 +171,7 @@ public:
 	OutputPin checkEnginePin;
 
 	NamedOutputPin tachOut;
+	// todo: remove this feature https://github.com/rusefi/rusefi/issues/1775
 	NamedOutputPin dizzyOutput;
 
 	OutputPin fsioOutputs[FSIO_COMMAND_COUNT];
