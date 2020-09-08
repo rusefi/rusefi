@@ -1,13 +1,15 @@
 #include "fuel_computer.h"
+#include "map.h"
 
 EXTERN_ENGINE;
 
 mass_t FuelComputerBase::getCycleFuel(mass_t airmass, int rpm, float load) const {
+	load = getTargetLambdaLoadAxis(load);
+	
 	float stoich = getStoichiometricRatio();
 	float lambda = getTargetLambda(rpm, load);
 	float afr = stoich * lambda;
 
-	// TODO: override target AFR load axis value
 	ENGINE(engineState.currentAfrLoad) = load;
 	ENGINE(engineState.targetAFR) = afr;
 
@@ -33,4 +35,16 @@ float FuelComputer::getTargetLambda(int rpm, float load) const {
 
 	// TODO: set the table value in lambda instead of afr
 	return m_afrTable->getValue(rpm, load) / 14.7f;
-};
+}
+
+float FuelComputer::getTargetLambdaLoadAxis(float defaultLoad) const {
+	switch(CONFIG(afrOverrideMode)) {
+		case AFR_None: return defaultLoad;
+		case AFR_MAP: return getMap(PASS_ENGINE_PARAMETER_SIGNATURE);
+		// TPS/pedal default to 100% - failed TPS goes rich
+		case AFR_Tps: return Sensor::get(SensorType::Tps1).value_or(100);
+		case AFR_AccPedal: return Sensor::get(SensorType::AcceleratorPedal).value_or(100);
+		case AFR_CylFilling: return 100 * ENGINE(engineState.sd.airMassInOneCylinder) / ENGINE(standardAirCharge);
+		default: return 0;
+	}
+}
