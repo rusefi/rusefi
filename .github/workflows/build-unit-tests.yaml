@@ -19,6 +19,10 @@ jobs:
       working-directory: ./firmware/
       run: bash gen_live_documentation.sh
 
+    - name: Print version
+      working-directory: .
+      run: gcc -v
+
     - name: Build Tests
       working-directory: ./unit_tests/
       run: make -j4
