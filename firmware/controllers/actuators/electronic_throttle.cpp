@@ -91,7 +91,7 @@
 #endif /* ETB_MAX_COUNT */
 
 static LoggingWithStorage logger("ETB");
-static pedal2tps_t pedal2tpsMap("Pedal2Tps", 1);
+static pedal2tps_t pedal2tpsMap("Pedal2Tps");
 
 EXTERN_ENGINE;
 
