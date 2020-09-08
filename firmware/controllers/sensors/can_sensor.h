@@ -84,7 +84,7 @@ template <int Size, int Offset>
 class ObdCanSensor: public CanSensorBase {
 public:
 	ObdCanSensor(int PID, float Scale, SensorType type) :
-			CanSensorBase(OBD_TEST_RESPONSE, type, CAN_TIMEOUT) {
+			CanSensorBase(OBD_TEST_RESPONSE, type, /* timeout, never expire */ 0) {
 		this->PID = PID;
 		this->Scale = Scale;
 	}
