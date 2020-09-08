@@ -30,7 +30,7 @@ void ButtonDebounce::init (int t, brain_pin_e *pin, pin_input_mode_e *mode) {
     active_pin = *pin;
     this->mode = mode;
     active_mode = *mode;
-#ifdef PAL_MODE_INPUT_PULLDOWN
+#ifndef EFI_UNIT_TEST
     // getInputMode converts from pin_input_mode_e to iomode_t
     efiSetPadMode("Button", active_pin, getInputMode(active_mode));
 #endif
@@ -55,8 +55,10 @@ void ButtonDebounce::updateConfiguration () {
 #else
     if (*pin != active_pin || *mode != active_mode || (isActiveConfigurationVoid && (*pin != 0 || *mode != 0))) {
 #endif /* EFI_ACTIVE_CONFIGURATION_IN_FLASH */
+#ifndef EFI_UNIT_TEST
         brain_pin_markUnused(active_pin);
         efiSetPadMode("Button", *pin, getInputMode(*mode));
+#endif /* EFI_UNIT_TEST */
     }
     active_pin = *pin;
     active_mode = *mode;
@@ -79,7 +81,7 @@ bool ButtonDebounce::readPinEvent() {
     //  but when a method is implemented to actually get the pin's state,
     //  for example to implement long button presses, it will be needed.
     readValue = false;
-#ifdef PAL_MODE_INPUT_PULLDOWN
+#ifndef EFI_UNIT_TEST
     readValue = efiReadPin(active_pin);
     // Invert
     if (getInputMode(active_mode) == PAL_MODE_INPUT_PULLUP) {
