@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Wed Sep 09 06:43:50 UTC 2020
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Wed Sep 09 20:53:44 UTC 2020
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -1286,7 +1286,6 @@ struct engine_configuration_s {
 	 */
 	pin_output_mode_e hip9011CsPinMode;
 	/**
-	 * This implementation produces one pulse per engine cycle. See also dizzySparkOutputPin.
 	 * offset 704
 	 */
 	output_pin_e tachOutputPin;
@@ -2803,14 +2802,14 @@ struct engine_configuration_s {
 	 */
 	pin_output_mode_e cj125CsPinMode;
 	/**
-	 * This implementation makes a pulse every time one of the coils is charged, using coil dwell for pulse width. See also tachOutputPin
 	 * offset 2226
 	 */
-	output_pin_e dizzySparkOutputPin;
+	uint8_t unusedDizzy;
 	/**
+	 * need 4 byte alignment
 	 * offset 2227
 	 */
-	pin_output_mode_e dizzySparkOutputPinMode;
+	uint8_t alignmentFill_at_2227;
 	/**
 	 * This is the IAC position during cranking, some engines start better if given more air during cranking to improve cylinder filling.
 	 * offset 2228
@@ -3443,7 +3442,7 @@ struct persistent_config_s {
 	/**
 	 * offset 6328
 	 */
-	boost_table_t boostTableClosedLoop;
+	boost_target_table_t boostTableClosedLoop;
 	/**
 	 * offset 6392
 	 */
@@ -3690,4 +3689,4 @@ struct persistent_config_s {
 typedef struct persistent_config_s persistent_config_s;
 
 // end
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Wed Sep 09 06:43:50 UTC 2020
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Wed Sep 09 20:53:44 UTC 2020

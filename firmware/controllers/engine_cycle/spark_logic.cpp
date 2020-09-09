@@ -69,11 +69,6 @@ static void fireSparkBySettingPinLow(IgnitionEvent *event, IgnitionOutputPin *ou
 	}
 
 	output->setLow();
-#if EFI_PROD_CODE
-	if (CONFIG(dizzySparkOutputPin) != GPIO_UNASSIGNED) {
-		enginePins.dizzyOutput.setLow();
-	}
-#endif /* EFI_PROD_CODE */
 }
 
 // todo: make this a class method?
@@ -246,11 +241,6 @@ static void startDwellByTurningSparkPinHigh(IgnitionEvent *event, IgnitionOutput
 	}
 
 	output->setHigh();
-#if EFI_PROD_CODE
-	if (CONFIG(dizzySparkOutputPin) != GPIO_UNASSIGNED) {
-		enginePins.dizzyOutput.setHigh();
-	}
-#endif /* EFI_PROD_CODE */
 }
 
 void turnSparkPinHigh(IgnitionEvent *event) {

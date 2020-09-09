@@ -48,6 +48,7 @@
 #define air_pressure_sensor_config_s_size 16
 #define air_pressure_sensor_type_e_auto_enum "MT_CUSTOM", "MT_DENSO183", "MT_MPX4250", "MT_HONDA3BAR", "MT_DODGE_NEON_2003", "MT_SUBY_DENSO", "MT_GM_3_BAR", "MT_MPX4100", "MT_TOYOTA_89420_02010", "MT_MPX4250A", "MT_BOSCH_2_5", "MT_MAZDA_1_BAR"
 #define alignEngineSnifferAtTDC_offset 744
+#define alignmentFill_at_2227_offset 2227
 #define alternator_antiwindupFreq_offset 1764
 #define alternator_derivativeFilterLoss_offset 1760
 #define alternatorControl_dFactor_offset 1724
@@ -332,8 +333,6 @@
 #define display_mode_e_auto_enum "DM_NONE", "DM_HD44780", "DM_HD44780_OVER_PCF8574"
 #define displayLogicLevelsInEngineSniffer_offset 76
 #define displayMode_offset 492
-#define dizzySparkOutputPin_offset 2226
-#define dizzySparkOutputPinMode_offset 2227
 #define drv8860_cs_offset 1201
 #define drv8860_csPinMode_offset 1202
 #define drv8860_miso_offset 1203
@@ -1120,7 +1119,6 @@
 #define PROTOCOL_CRANK1 "t1"
 #define PROTOCOL_CRANK2 "t2"
 #define PROTOCOL_CRANK3 "t3"
-#define PROTOCOL_DIZZY_NAME "dizzy"
 #define PROTOCOL_ENGINE_SNIFFER "wave_chart"
 #define PROTOCOL_ES_DOWN "d"
 #define PROTOCOL_ES_UP "u"
@@ -1169,7 +1167,7 @@
 #define showSdCardWarning_offset 76
 #define SIGNATURE_BOARD kin
 #define SIGNATURE_DATE 2020.09.09
-#define SIGNATURE_HASH 3274316507
+#define SIGNATURE_HASH 2515179660
 #define silentTriggerError_offset 1464
 #define slowAdcAlpha_offset 2088
 #define sparkDwellRpmBins_offset 332
@@ -1480,7 +1478,7 @@
 #define ts_show_spi true
 #define ts_show_trigger_comparator true
 #define ts_show_tunerstudio_port true
-#define TS_SIGNATURE "rusEFI 2020.09.09.kin.3274316507"
+#define TS_SIGNATURE "rusEFI 2020.09.09.kin.2515179660"
 #define TS_SINGLE_WRITE_COMMAND 'W'
 #define TS_SINGLE_WRITE_COMMAND_char W
 #define TS_TEST_COMMAND 't' // 0x74
@@ -1552,6 +1550,7 @@
 #define unusedBit_482_31_offset 2116
 #define unusedBit_482_8_offset 2116
 #define unusedBit_482_9_offset 2116
+#define unusedDizzy_offset 2226
 #define unusedFlexFuelSensor_offset 3100
 #define unusedHereWeHave_offset 1464
 #define unusedOldBiquad_offset 2332
