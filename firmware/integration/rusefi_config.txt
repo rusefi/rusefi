@@ -989,7 +989,7 @@ bit useFSIO13ForIdleMinValue;
 bit useFSIO6ForRevLimiter;
 
 	adc_channel_e hipOutputChannel;
-	adc_channel_e acSwitchAdc;A/C button input handled as analogue input
+	adc_channel_e acSwitch; A/C button input
 	adc_channel_e vRefAdcChannel;
 	uint8_t etbNeutralPosition;+Expected neutral position;"%",      1,      0,       0, 100,      0
 
@@ -1385,8 +1385,10 @@ uint8_t[4] unusedsw;;"units", 1, 0, -20, 100, 0
 	pin_input_mode_e tcuUpshiftButtonPinMode
 	pin_input_mode_e tcuDownshiftButtonPinMode
 
+	pin_input_mode_e AcSwitchMode
+
 ! just a reminder that 'int' and 'float' are 4 bytes each
-	int[371] mainUnusedEnd;;"units", 1, 0, -20, 100, 0
+	int[370] mainUnusedEnd;;"units", 1, 0, -20, 100, 0
 
 ! end of engine_configuration_s
 end_struct
