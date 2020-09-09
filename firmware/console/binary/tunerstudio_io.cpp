@@ -21,7 +21,6 @@ extern LoggingWithStorage tsLogger;
 
 #if EFI_PROD_CODE
 #include "pin_repository.h"
-#include "usbconsole.h"
 
 #if HAL_USE_SERIAL_USB
 // Assert that the USB tx/rx buffers are large enough to fit one full packet
