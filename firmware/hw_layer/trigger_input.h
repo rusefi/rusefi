@@ -21,4 +21,17 @@ void applyNewTriggerInputPins(void);
 void startTriggerInputPins(void);
 void stopTriggerInputPins(void);
 
+#if HAL_TRIGGER_USE_ADC && HAL_USE_ADC
+// This detector has 2 modes for low-RPM (ADC) and fast-RPM (EXTI)
+enum triggerAdcMode_t {
+	TRIGGER_NONE = 0,
+	TRIGGER_ADC,
+	TRIGGER_EXTI,
+};
+
+adc_channel_e getAdcChannelForTrigger(void);
+void addAdcChannelForTrigger(void);
+void triggerAdcCallback(adcsample_t value);
+#endif /* HAL_USE_ADC */
+
 #endif /* CRANK_INPUT_H_ */
