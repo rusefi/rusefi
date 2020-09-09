@@ -19,11 +19,13 @@
 #include "drivers/gpio/mc33972.h"
 #include "drivers/gpio/mc33810.h"
 #include "drivers/gpio/tle8888.h"
+#include "drivers/gpio/drv8860.h"
 
 EXTERN_CONFIG;
 static OutputPin tle8888Cs;
 static OutputPin tle6240Cs;
 static OutputPin mc33972Cs;
+static OutputPin drv8860Cs;
 
 // todo: migrate to TS or board config
 #ifndef TLE6240_RESET_PORT
@@ -139,8 +141,32 @@ struct tle8888_config tle8888_cfg = {
 };
 #endif
 
+#if (BOARD_DRV8860_COUNT > 0)
+struct drv8860_config drv8860 = {
+	.spi_bus = NULL /* TODO software lookup &SPID4 */,
+	.spi_config = {
+		.circular = false,
+		.end_cb = NULL,
+		.ssport = NULL,
+		.sspad = 0,
+		.cr1 =
+			SPI_CR1_16BIT_MODE |
+			SPI_CR1_SSM |
+			SPI_CR1_SSI |
+			((7 << SPI_CR1_BR_Pos) & SPI_CR1_BR) |	/* div = 32 */
+			SPI_CR1_MSTR |
+			SPI_CR1_CPOL |
+			0,
+		.cr2 = SPI_CR2_16BIT_MODE
+	},
+	.reset = {.port = DRV8860_RESET_PORT, .pad = DRV8860_RESET_PAD}
+};
+#endif /* (BOARD_DRV8860_COUNT > 0) */
+
 void initSmartGpio() {
+#if (BOARD_EXT_GPIOCHIPS > 0)
 	startSmartCsPins();
+#endif /* BOARD_EXT_GPIOCHIPS */
 	int ret = -1;
 
 #if (BOARD_TLE6240_COUNT > 0)
@@ -153,9 +179,9 @@ void initSmartGpio() {
 		ret = -1;
 	}
 	if (ret < 0)
-#endif /* (BOARD_TLE6240_COUNT > 0) */
 		/* whenever chip is disabled or error returned - occupy its gpio range */
 		gpiochip_use_gpio_base(TLE6240_OUTPUTS);
+#endif /* (BOARD_TLE6240_COUNT > 0) */
 
 #if (BOARD_MC33972_COUNT > 0)
 	if (engineConfiguration->mc33972_cs != GPIO_UNASSIGNED) {
@@ -169,9 +195,9 @@ void initSmartGpio() {
 		ret = -1;
 	}
 	if (ret < 0)
-#endif /* (BOARD_MC33972_COUNT > 0) */
 		/* whenever chip is disabled or error returned - occupy its gpio range */
 		gpiochip_use_gpio_base(MC33972_INPUTS);
+#endif /* (BOARD_MC33972_COUNT > 0) */
 
 #if (BOARD_TLE8888_COUNT > 0)
 	if (engineConfiguration->tle8888_cs != GPIO_UNASSIGNED) {
@@ -192,9 +218,25 @@ void initSmartGpio() {
 		ret = -1;
 	}
 	if (ret < 0)
-#endif /* (BOARD_TLE8888_COUNT > 0) */
 		/* whenever chip is disabled or error returned - occupy its gpio range */
 		gpiochip_use_gpio_base(TLE8888_OUTPUTS);
+#endif /* (BOARD_TLE8888_COUNT > 0) */
+
+#if (BOARD_DRV8860_COUNT > 0)
+	if (engineConfiguration->drv8860_cs != GPIO_UNASSIGNED) {
+		drv8860.spi_config.ssport = getHwPort("drv8860 CS", engineConfiguration->drv8860_cs);
+		drv8860.spi_config.sspad = getHwPin("drv8860 CS", engineConfiguration->drv8860_cs);
+		drv8860.spi_bus = getSpiDevice(engineConfiguration->drv8860spiDevice);
+		ret = drv8860_add(0, &drv8860);
+
+		efiAssertVoid(OBD_PCM_Processor_Fault, ret == DRV8860_PIN_1, "drv8860");
+	} else {
+		ret = -1;
+	}
+	if (ret < 0)
+		/* whenever chip is disabled or error returned - occupy its gpio range */
+		gpiochip_use_gpio_base(DRV8860_OUTPUTS);
+#endif /* (BOARD_DRV8860_COUNT > 0) */
 
 #if (BOARD_EXT_GPIOCHIPS > 0)
 	/* external chip init */
@@ -213,6 +255,9 @@ void stopSmartCsPins() {
 #if (BOARD_MC33972_COUNT > 0)
 	brain_pin_markUnused(activeConfiguration.mc33972_cs);
 #endif /* BOARD_MC33972_COUNT */
+#if (BOARD_DRV8860_COUNT > 0)
+	brain_pin_markUnused(activeConfiguration.drv8860_cs);
+#endif /* BOARD_DRV8860_COUNT */
 }
 
 void startSmartCsPins() {
@@ -231,6 +276,11 @@ void startSmartCsPins() {
 				&engineConfiguration->mc33972_csPinMode);
 	mc33972Cs.setValue(true);
 #endif /* BOARD_MC33972_COUNT */
+#if (BOARD_DRV8860_COUNT > 0)
+	drv8860Cs.initPin("drv8860 CS", engineConfiguration->drv8860_cs,
+				&engineConfiguration->drv8860_csPinMode);
+	drv8860Cs.setValue(true);
+#endif /* BOARD_DRV8860_COUNT */
 }
 #endif /* (BOARD_EXT_GPIOCHIPS > 0) */
 
