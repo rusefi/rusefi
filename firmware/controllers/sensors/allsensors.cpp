@@ -14,4 +14,15 @@ EXTERN_ENGINE;
 
 void initSensors(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	initMapDecoder(sharedLogger PASS_ENGINE_PARAMETER_SUFFIX);
+	acDebounce.init(15, &CONFIG(acSwitchPin), &CONFIG(acSwitchMode));
+}
+
+ButtonDebounce acDebounce;
+
+void getAcToggle(DECLARE_ENGINE_PARAMETER_SUFFIX) {
+	return acDebounce.readPinState();
+}
+
+void hasAcToggle(DECLARE_ENGINE_PARAMETER_SUFFIX) {
+	return (CONFIG(acSwitchPin) != GPIO_UNASSIGNED);
 }
