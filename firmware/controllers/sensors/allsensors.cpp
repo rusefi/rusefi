@@ -19,10 +19,10 @@ void initSensors(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	acDebounce.init(15, &CONFIG(acSwitch), &CONFIG(acSwitchMode));
 }
 
-bool getAcToggle(DECLARE_ENGINE_PARAMETER_SUFFIX) {
+bool getAcToggle(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	return acDebounce.readPinState();
 }
 
-bool hasAcToggle(DECLARE_ENGINE_PARAMETER_SUFFIX) {
+bool hasAcToggle(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	return (CONFIG(acSwitch) != GPIO_UNASSIGNED);
 }
