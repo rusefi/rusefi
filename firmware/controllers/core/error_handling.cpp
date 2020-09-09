@@ -67,13 +67,13 @@ char *getFirmwareError(void) {
 
 extern ioportid_t criticalErrorLedPort;
 extern ioportmask_t criticalErrorLedPin;
-extern uint8_t errorLedSetState;
+extern uint8_t criticalErrorLedState;
 
 /**
  * low-level function is used here to reduce stack usage
  */
 #define ON_CRITICAL_ERROR() \
-		palWritePad(criticalErrorLedPort, criticalErrorLedPin, errorLedSetState); \
+		palWritePad(criticalErrorLedPort, criticalErrorLedPin, criticalErrorLedState); \
 		turnAllPinsOff(); \
 		enginePins.communicationLedPin.setValue(1);
 #endif /* EFI_PROD_CODE */
