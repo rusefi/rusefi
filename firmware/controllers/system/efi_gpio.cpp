@@ -33,6 +33,7 @@ EnginePins enginePins;
 static Logging* logger;
 
 pin_output_mode_e DEFAULT_OUTPUT = OM_DEFAULT;
+pin_output_mode_e INVERTED_OUTPUT = OM_INVERTED;
 
 static const char *sparkNames[] = { "coil1", "coil2", "coil3", "coil4", "coil5", "coil6", "coil7", "coil8",
 		"coil9", "coil10", "coil11", "coil12"};
@@ -488,13 +489,19 @@ void OutputPin::unregisterOutput(brain_pin_e oldPin) {
 // by reducing stack requirement
 ioportid_t errorLedPort;
 ioportmask_t errorLedPin;
+uint8_t errorLedSetState;
+
+#ifndef LED_ERROR_BRAIN_PIN_MODE
+#define LED_ERROR_BRAIN_PIN_MODE DEFAULT_OUTPUT
+#endif /* LED_ERROR_BRAIN_PIN_MODE */
 
 void initPrimaryPins(Logging *sharedLogger) {
 	logger = sharedLogger;
 #if EFI_PROD_CODE
-	enginePins.errorLedPin.initPin("led: ERROR status", LED_ERROR_BRAIN_PIN);
+	enginePins.errorLedPin.initPin("led: ERROR status", LED_ERROR_BRAIN_PIN, &(LED_ERROR_BRAIN_PIN_MODE));
 	errorLedPort = getHwPort("primary", LED_ERROR_BRAIN_PIN);
 	errorLedPin = getHwPin("primary", LED_ERROR_BRAIN_PIN);
+	errorLedSetState = (LED_ERROR_BRAIN_PIN_MODE == INVERTED_OUTPUT) ? 0 : 1;
 #endif /* EFI_PROD_CODE */
 }
 
