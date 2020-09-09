@@ -68,7 +68,7 @@ void ButtonDebounce::updateConfiguration () {
 @returns true if the button is pressed, and will not return true again within the set timeout
 */
 bool ButtonDebounce::readPinEvent() {
-    readPin = false;
+    readValue = false;
     return readPinState();
 }
 
