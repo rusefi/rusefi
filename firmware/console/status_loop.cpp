@@ -202,7 +202,6 @@ void printOverallStatus(systime_t nowSeconds) {
 	printOutPin(PROTOCOL_VVT_NAME, engineConfiguration->camInputs[0]);
 	printOutPin(PROTOCOL_HIP_NAME, CONFIG(hip9011IntHoldPin));
 	printOutPin(PROTOCOL_TACH_NAME, CONFIG(tachOutputPin));
-	printOutPin(PROTOCOL_DIZZY_NAME, engineConfiguration->dizzySparkOutputPin);
 #if EFI_LOGIC_ANALYZER
 	printOutPin(PROTOCOL_WA_CHANNEL_1, CONFIG(logicAnalyzerPins)[0]);
 	printOutPin(PROTOCOL_WA_CHANNEL_2, CONFIG(logicAnalyzerPins)[1]);
@@ -409,7 +408,11 @@ class CommunicationBlinkingTask : public PeriodicTimerController {
 				offTimeMs = onTimeMs = 500;
 #endif // EFI_INTERNAL_FLASH
 			} else {
-				onTimeMs = is_usb_serial_ready() ? 3 * BLINKING_PERIOD_MS : BLINKING_PERIOD_MS;
+				onTimeMs =
+#if EFI_USB_SERIAL
+				is_usb_serial_ready() ? 3 * BLINKING_PERIOD_MS :
+#endif // EFI_USB_SERIAL
+				BLINKING_PERIOD_MS;
 				offTimeMs = 0.6 * onTimeMs;
 			}
 

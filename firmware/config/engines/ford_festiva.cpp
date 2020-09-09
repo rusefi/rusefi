@@ -174,8 +174,6 @@ void setFordEscortGt(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 
 	engineConfiguration->ignitionMode = IM_INDIVIDUAL_COILS;
 
-	engineConfiguration->dizzySparkOutputPin = GPIOE_14; // Frankenso high side - pin 1G;
-
 	/**
 	 * Outputs
 	 */

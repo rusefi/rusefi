@@ -13,6 +13,7 @@ class MockFuelComputer : public FuelComputerBase {
 public:
 	MOCK_METHOD(float, getStoichiometricRatio, (), (const, override));
 	MOCK_METHOD(float, getTargetLambda, (int rpm, float load), (const, override));
+	MOCK_METHOD(float, getTargetLambdaLoadAxis, (float defaultLoad), (const, override));
 };
 
 TEST(FuelComputer, getCycleFuel) {
@@ -21,6 +22,8 @@ TEST(FuelComputer, getCycleFuel) {
 	MockFuelComputer dut;
 	INJECT_ENGINE_REFERENCE(&dut);
 
+	EXPECT_CALL(dut, getTargetLambdaLoadAxis(FloatEq(0.8f)))
+		.WillOnce(Return(0.8f));
 	EXPECT_CALL(dut, getStoichiometricRatio())
 		.WillOnce(Return(3.0f));
 	EXPECT_CALL(dut, getTargetLambda(1000, FloatEq(0.8f)))

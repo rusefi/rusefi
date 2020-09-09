@@ -185,6 +185,10 @@ void acRelayBench(void) {
 	pinbench("0", "1000", "100", "1", &enginePins.acRelay, CONFIG(acRelayPin));
 }
 
+void mainRelayBench(void) {
+	pinbench("0", "1000", "100", "1", &enginePins.mainRelay, CONFIG(mainRelayPin));
+}
+
 void fuelPumpBench(void) {
 	fuelPumpBenchExt("3000");
 }
@@ -221,11 +225,6 @@ static void sparkbench(const char * onTimeStr, const char *offTimeStr, const cha
 	sparkbench2("0", "1", onTimeStr, offTimeStr, countStr);
 }
 
-
-void dizzyBench(void) {
-	pinbench("300", "5", "400", "3", &enginePins.dizzyOutput, engineConfiguration->dizzySparkOutputPin);
-}
-
 class BenchController : public PeriodicController<UTILITY_THREAD_STACK_SIZE> {
 public:
 	BenchController() : PeriodicController("BenchThread") { }
@@ -247,17 +246,30 @@ private:
 static BenchController instance;
 
 static void handleBenchCategory(uint16_t index) {
-	// cmd_test_check_engine_light
-	milBench();
+	switch(index) {
+	case CMD_TS_BENCH_MAIN_RELAY:
+		mainRelayBench();
+		return;
+	case CMD_TS_BENCH_FUEL_PUMP:
+		// cmd_test_fuel_pump
+		fuelPumpBench();
+		return;
+	case CMD_TS_BENCH_STARTER_ENABLE_RELAY:
+		starterRelayBench();
+		return;
+	case CMD_TS_BENCH_CHECK_ENGINE_LIGHT:
+		// cmd_test_check_engine_light
+		milBench();
+		return;
+	case CMD_TS_BENCH_AC_COMPRESSOR_RELAY:
+		acRelayBench();
+		return;
+	}
 
 }
 
 static void handleCommandX14(uint16_t index) {
 	switch (index) {
-	case 1:
-		// cmd_test_fuel_pump
-		fuelPumpBench();
-		return;
 	case 2:
 		grabTPSIsClosed();
 		return;
@@ -277,17 +289,11 @@ static void handleCommandX14(uint16_t index) {
 		requestTLE8888initialization();
 #endif
 		return;
-	case 9:
-		acRelayBench();
-		return;
 	case 0xA:
 		// cmd_write_config
 #if EFI_INTERNAL_FLASH
 		writeToFlashNow();
 #endif /* EFI_INTERNAL_FLASH */
-		return;
-	case 0xB:
-		starterRelayBench();
 		return;
 	case 0xD:
 		engine->directSelfStimulation = true;
@@ -372,7 +378,6 @@ void initBenchTest(Logging *sharedLogger) {
 	addConsoleActionS("fuelpumpbench2", fuelPumpBenchExt);
 	addConsoleAction("fanbench", fanBench);
 	addConsoleActionS("fanbench2", fanBenchExt);
-	addConsoleAction("dizzybench", dizzyBench); // this is useful for tach output testing
 
 	addConsoleAction(CMD_STARTER_BENCH, starterRelayBench);
 	addConsoleAction(CMD_MIL_BENCH, milBench);

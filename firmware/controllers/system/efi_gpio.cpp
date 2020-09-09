@@ -50,7 +50,6 @@ static const char *injectorShortNames[] = { PROTOCOL_INJ1_SHORT_NAME, "i2", "i3"
 static const char *auxValveShortNames[] = { "a1", "a2"};
 
 EnginePins::EnginePins() {
-	dizzyOutput.name = PROTOCOL_DIZZY_NAME;
 	tachOut.name = PROTOCOL_TACH_NAME;
 
 	static_assert(efi::size(sparkNames) >= IGNITION_PIN_COUNT, "Too many ignition pins"); 
@@ -132,7 +131,6 @@ void EnginePins::unregisterPins() {
 	unregisterOutputIfPinOrModeChanged(hipCs, hip9011CsPin, hip9011CsPinMode);
 	unregisterOutputIfPinOrModeChanged(triggerDecoderErrorPin, triggerErrorPin, triggerErrorPinMode);
 	unregisterOutputIfPinOrModeChanged(checkEnginePin, malfunctionIndicatorPin, malfunctionIndicatorPinMode);
-	unregisterOutputIfPinOrModeChanged(dizzyOutput, dizzySparkOutputPin, dizzySparkOutputPinMode);
 	unregisterOutputIfPinOrModeChanged(tachOut, tachOutputPin, tachOutputPinMode);
 	unregisterOutputIfPinOrModeChanged(idleSolenoidPin, idle.solenoidPin, idle.solenoidPinMode);
 	unregisterOutputIfPinOrModeChanged(secondIdleSolenoidPin, secondSolenoidPin, idle.solenoidPinMode);
@@ -200,11 +198,6 @@ void EnginePins::startIgnitionPins(void) {
 		if (isPinOrModeChanged(ignitionPins[i], ignitionPinMode)) {
 			output->initPin(output->name, CONFIG(ignitionPins)[i], &CONFIG(ignitionPinMode));
 		}
-	}
-	if (isPinOrModeChanged(dizzySparkOutputPin, dizzySparkOutputPinMode)) {
-		enginePins.dizzyOutput.initPin("Distributor", engineConfiguration->dizzySparkOutputPin,
-				&engineConfiguration->dizzySparkOutputPinMode);
-
 	}
 #endif /* EFI_PROD_CODE */
 }
