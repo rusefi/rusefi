@@ -39,7 +39,7 @@ TEST(idle, fsioPidParameters) {
 	applyFsioExpression(QUOTE(MAGIC_OFFSET_FOR_IDLE_MIN_VALUE), "ac_on_switch 0 cfg_acIdleExtraMin if" PASS_ENGINE_PARAMETER_SUFFIX);
 
 	ASSERT_EQ(1, hasAcToggle(PASS_ENGINE_PARAMETER_SIGNATURE));
-	Sensor::setMockValue(engineConfiguration->acSwitchAdc, 0);
+	Sensor::setMockValue(engineConfiguration->acSwitch, 0);
 	ASSERT_EQ(1, getAcToggle(PASS_ENGINE_PARAMETER_SIGNATURE));
 
 	eth.engine.periodicSlowCallback(PASS_ENGINE_PARAMETER_SIGNATURE);
