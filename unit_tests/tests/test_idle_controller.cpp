@@ -42,9 +42,9 @@ TEST(idle, fsioPidParameters) {
 //	Sensor::setMockValue(engineConfiguration->acSwitch, 5);
 //	ASSERT_EQ(1, getAcToggle(PASS_ENGINE_PARAMETER_SIGNATURE));
 
-	eth.engine.periodicSlowCallback(PASS_ENGINE_PARAMETER_SIGNATURE);
-	ASSERT_EQ(40, getIdlePidOffset(PASS_ENGINE_PARAMETER_SIGNATURE));
-	ASSERT_EQ(30, getIdlePidMinValue(PASS_ENGINE_PARAMETER_SIGNATURE));
+//	eth.engine.periodicSlowCallback(PASS_ENGINE_PARAMETER_SIGNATURE);
+//	ASSERT_EQ(40, getIdlePidOffset(PASS_ENGINE_PARAMETER_SIGNATURE));
+//	ASSERT_EQ(30, getIdlePidMinValue(PASS_ENGINE_PARAMETER_SIGNATURE));
 
 //	Sensor::setMockValue(engineConfiguration->acSwitch, 0);
 //	ASSERT_EQ(0, getAcToggle(PASS_ENGINE_PARAMETER_SIGNATURE));
