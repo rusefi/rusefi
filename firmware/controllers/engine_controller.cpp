@@ -350,7 +350,6 @@ static void printAnalogInfo(void) {
 	printAnalogChannelInfo("CJ UR", engineConfiguration->cj125ur);
 	printAnalogChannelInfo("CJ UA", engineConfiguration->cj125ua);
 
-	printAnalogChannelInfo("A/C sw", engineConfiguration->acSwitchAdc);
 	printAnalogChannelInfo("HIP9011", engineConfiguration->hipOutputChannel);
 
 	for (int i = 0; i < FSIO_ANALOG_INPUT_COUNT ; i++) {
