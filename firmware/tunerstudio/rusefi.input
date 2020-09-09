@@ -728,12 +728,12 @@ enable2ndByteCanID = false
       yBins       = tpsTpsAccelToRpmBins,  TPSValue
       zBins       = tpsTpsAccelTable
 
-       table = boostTableTbl,  boostMapOpen,  "Boost Open",   1
+       table = boostTableTbl,  boostMapOpen,  "Boost control duty cycle (open loop)",   1
       xBins       = boostRpmBins,  RPMValue
       yBins       = boostTpsBins,  TPSValue
       zBins       = boostTableOpenLoop
 
-	table = boostTable2Tbl,  boostMapClosed,  "Boost Closed",   1
+	table = boostTable2Tbl,  boostMapClosed,  "Boost control target",   1
       xBins       = boostRpmBins,  RPMValue
       yBins       = boostTpsBins,  TPSValue
       zBins       = boostTableClosedLoop
