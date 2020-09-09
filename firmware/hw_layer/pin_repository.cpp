@@ -114,6 +114,7 @@ static void reportPins(void) {
 static MemoryStream portNameStream;
 static char portNameBuffer[20];
 
+
 const char *hwPortname(brain_pin_e brainPin) {
 	if (brainPin == GPIO_INVALID) {
 		return "INVALID";
@@ -133,6 +134,7 @@ const char *hwPortname(brain_pin_e brainPin) {
 	}
 	#if (BOARD_EXT_GPIOCHIPS > 0)
 		else {
+
 			const char *pin_name = gpiochips_getPinName(brainPin);
 
 			if (pin_name) {
