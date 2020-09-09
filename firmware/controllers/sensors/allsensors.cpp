@@ -12,12 +12,12 @@
 
 EXTERN_ENGINE;
 
+ButtonDebounce acDebounce;
+
 void initSensors(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	initMapDecoder(sharedLogger PASS_ENGINE_PARAMETER_SUFFIX);
 	acDebounce.init(15, &CONFIG(acSwitch), &CONFIG(acSwitchMode));
 }
-
-ButtonDebounce acDebounce;
 
 bool getAcToggle(DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	return acDebounce.readPinState();
