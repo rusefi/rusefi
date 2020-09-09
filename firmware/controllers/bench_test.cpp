@@ -225,11 +225,6 @@ static void sparkbench(const char * onTimeStr, const char *offTimeStr, const cha
 	sparkbench2("0", "1", onTimeStr, offTimeStr, countStr);
 }
 
-
-void dizzyBench(void) {
-	pinbench("300", "5", "400", "3", &enginePins.dizzyOutput, engineConfiguration->dizzySparkOutputPin);
-}
-
 class BenchController : public PeriodicController<UTILITY_THREAD_STACK_SIZE> {
 public:
 	BenchController() : PeriodicController("BenchThread") { }
@@ -383,7 +378,6 @@ void initBenchTest(Logging *sharedLogger) {
 	addConsoleActionS("fuelpumpbench2", fuelPumpBenchExt);
 	addConsoleAction("fanbench", fanBench);
 	addConsoleActionS("fanbench2", fanBenchExt);
-	addConsoleAction("dizzybench", dizzyBench); // this is useful for tach output testing
 
 	addConsoleAction(CMD_STARTER_BENCH, starterRelayBench);
 	addConsoleAction(CMD_MIL_BENCH, milBench);

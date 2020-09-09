@@ -202,7 +202,6 @@ void printOverallStatus(systime_t nowSeconds) {
 	printOutPin(PROTOCOL_VVT_NAME, engineConfiguration->camInputs[0]);
 	printOutPin(PROTOCOL_HIP_NAME, CONFIG(hip9011IntHoldPin));
 	printOutPin(PROTOCOL_TACH_NAME, CONFIG(tachOutputPin));
-	printOutPin(PROTOCOL_DIZZY_NAME, engineConfiguration->dizzySparkOutputPin);
 #if EFI_LOGIC_ANALYZER
 	printOutPin(PROTOCOL_WA_CHANNEL_1, CONFIG(logicAnalyzerPins)[0]);
 	printOutPin(PROTOCOL_WA_CHANNEL_2, CONFIG(logicAnalyzerPins)[1]);
