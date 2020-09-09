@@ -7,8 +7,7 @@
  * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
-#ifndef HW_LAYER_TLE6240_H_
-#define HW_LAYER_TLE6240_H_
+#pragma once
 
 #include "efifeatures.h"
 #include <hal.h>
@@ -43,4 +42,3 @@ int tle6240_add(unsigned int index, const struct tle6240_config *cfg);
 }
 #endif /* __cplusplus */
 
-#endif /* HW_LAYER_TLE6240_H_ */
