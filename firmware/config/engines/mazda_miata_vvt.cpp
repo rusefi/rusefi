@@ -408,6 +408,7 @@ void setMazdaMiata2003EngineConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 
 	// high-side driver with +12v VP jumper
 	engineConfiguration->tachOutputPin = GPIOE_8; // tachometer
+	engineConfiguration->tachPulsePerRev = 2;
 
 	// set global_trigger_offset_angle 0
 	engineConfiguration->globalTriggerAngleOffset = 0;
