@@ -141,7 +141,7 @@ typedef Map3D<IGN_RPM_COUNT, IGN_LOAD_COUNT, float, float> ign_Map3D_t;
 typedef Map3D<FUEL_RPM_COUNT, FUEL_LOAD_COUNT, float, float> fuel_Map3D_t;
 typedef Map3D<BARO_CORR_SIZE, BARO_CORR_SIZE, float, float> baroCorr_Map3D_t;
 typedef Map3D<PEDAL_TO_TPS_SIZE, PEDAL_TO_TPS_SIZE, uint8_t, uint8_t> pedal2tps_t;
-typedef Map3D<BOOST_RPM_COUNT, BOOST_LOAD_COUNT, uint8_t, uint8_t> boostOpenLoop_Map3D_t;
+typedef Map3D<BOOST_RPM_COUNT, BOOST_LOAD_COUNT, uint8_t, uint8_t, efi::ratio<LOAD_1_BYTE_PACKING_MULT>> boostOpenLoop_Map3D_t;
 typedef Map3D<BOOST_RPM_COUNT, BOOST_LOAD_COUNT, uint8_t, uint8_t> boostClosedLoop_Map3D_t;
 typedef Map3D<IAC_PID_MULT_SIZE, IAC_PID_MULT_SIZE, uint8_t, uint8_t> iacPidMultiplier_t;
 typedef Map3D<GPPWM_RPM_COUNT, GPPWM_LOAD_COUNT, uint8_t, uint8_t> gppwm_Map3D_t;
