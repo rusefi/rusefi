@@ -11,6 +11,7 @@
 #include "error_handling.h"
 #include "interpolation.h"
 #include "efilib.h"
+#include "efi_ratio.h"
 
 // popular left edge of CLT-based correction curves
 #define CLT_CURVE_RANGE_FROM -40
@@ -24,7 +25,7 @@ public:
 /**
  * this helper class brings together 3D table with two 2D axis curves
  */
-template<int RPM_BIN_SIZE, int LOAD_BIN_SIZE, typename vType, typename kType, int TValueDivisor>
+template<int RPM_BIN_SIZE, int LOAD_BIN_SIZE, typename vType, typename kType, typename TValueMultiplier = efi::ratio<1>>
 class Map3D : public ValueProvider3D {
 public:
 	explicit Map3D(const char*name);
@@ -78,8 +79,8 @@ void Table2D<SIZE>::preCalc(float *bin, float *values) {
 }
 */
 
-template<int RPM_BIN_SIZE, int LOAD_BIN_SIZE, typename vType, typename kType, int TValueDivisor>
-void Map3D<RPM_BIN_SIZE, LOAD_BIN_SIZE, vType, kType, TValueDivisor>::init(vType table[RPM_BIN_SIZE][LOAD_BIN_SIZE],
+template<int RPM_BIN_SIZE, int LOAD_BIN_SIZE, typename vType, typename kType, typename TValueMultiplier>
+void Map3D<RPM_BIN_SIZE, LOAD_BIN_SIZE, vType, kType, TValueMultiplier>::init(vType table[RPM_BIN_SIZE][LOAD_BIN_SIZE],
 		const kType loadBins[LOAD_BIN_SIZE],
 		const kType rpmBins[RPM_BIN_SIZE]) {
 	// this method cannot use logger because it's invoked before everything
@@ -94,39 +95,39 @@ void Map3D<RPM_BIN_SIZE, LOAD_BIN_SIZE, vType, kType, TValueDivisor>::init(vType
 	this->rpmBins = rpmBins;
 }
 
-template<int RPM_BIN_SIZE, int LOAD_BIN_SIZE, typename vType, typename kType, int TValueDivisor>
-float Map3D<RPM_BIN_SIZE, LOAD_BIN_SIZE, vType, kType, TValueDivisor>::getValue(float xRpm, float y) const {
+template<int RPM_BIN_SIZE, int LOAD_BIN_SIZE, typename vType, typename kType, typename TValueMultiplier>
+float Map3D<RPM_BIN_SIZE, LOAD_BIN_SIZE, vType, kType, TValueMultiplier>::getValue(float xRpm, float y) const {
 	efiAssert(CUSTOM_ERR_ASSERT, initialized, "map not initialized", NAN);
 	if (cisnan(y)) {
 		warning(CUSTOM_PARAM_RANGE, "%s: y is NaN", name);
 		return NAN;
 	}
 	// todo: we have a bit of a mess: in TunerStudio, RPM is X-axis
-	return interpolate3d<vType, kType>(y, loadBins, LOAD_BIN_SIZE, xRpm, rpmBins, RPM_BIN_SIZE, pointers) / (float)TValueDivisor;
+	return interpolate3d<vType, kType>(y, loadBins, LOAD_BIN_SIZE, xRpm, rpmBins, RPM_BIN_SIZE, pointers) * TValueMultiplier::asFloat();
 }
 
-template<int RPM_BIN_SIZE, int LOAD_BIN_SIZE, typename vType, typename kType, int TValueDivisor>
-Map3D<RPM_BIN_SIZE, LOAD_BIN_SIZE, vType, kType, TValueDivisor>::Map3D(const char *name) {
+template<int RPM_BIN_SIZE, int LOAD_BIN_SIZE, typename vType, typename kType, typename TValueMultiplier>
+Map3D<RPM_BIN_SIZE, LOAD_BIN_SIZE, vType, kType, TValueMultiplier>::Map3D(const char *name) {
 	create(name);
 }
 
-template<int RPM_BIN_SIZE, int LOAD_BIN_SIZE, typename vType, typename kType, int TValueDivisor>
-void Map3D<RPM_BIN_SIZE, LOAD_BIN_SIZE, vType, kType, TValueDivisor>::create(const char *name) {
+template<int RPM_BIN_SIZE, int LOAD_BIN_SIZE, typename vType, typename kType, typename TValueMultiplier>
+void Map3D<RPM_BIN_SIZE, LOAD_BIN_SIZE, vType, kType, TValueMultiplier>::create(const char *name) {
 	this->name = name;
 	memset(&pointers, 0, sizeof(pointers));
 }
 
-template<int RPM_BIN_SIZE, int LOAD_BIN_SIZE, typename vType, typename kType, int TValueDivisor>
-void Map3D<RPM_BIN_SIZE, LOAD_BIN_SIZE, vType, kType, TValueDivisor>::setAll(vType value) {
+template<int RPM_BIN_SIZE, int LOAD_BIN_SIZE, typename vType, typename kType, typename TValueMultiplier>
+void Map3D<RPM_BIN_SIZE, LOAD_BIN_SIZE, vType, kType, TValueMultiplier>::setAll(vType value) {
 	efiAssertVoid(CUSTOM_ERR_6573, initialized, "map not initialized");
 	for (int l = 0; l < LOAD_BIN_SIZE; l++) {
 		for (int r = 0; r < RPM_BIN_SIZE; r++) {
-			pointers[l][r] = value * TValueDivisor;
+			pointers[l][r] = value / TValueMultiplier::asFloat();
 		}
 	}
 }
 
-template<int RPM_BIN_SIZE, int LOAD_BIN_SIZE, typename vType, typename kType, int TValueDivisor>
+template<int RPM_BIN_SIZE, int LOAD_BIN_SIZE, typename vType, typename kType, typename TValueMultiplier = efi::ratio<1>>
 void copy2DTable(const vType source[LOAD_BIN_SIZE][RPM_BIN_SIZE], vType destination[LOAD_BIN_SIZE][RPM_BIN_SIZE]) {
 	for (int k = 0; k < LOAD_BIN_SIZE; k++) {
 		for (int rpmIndex = 0; rpmIndex < RPM_BIN_SIZE; rpmIndex++) {
@@ -135,15 +136,15 @@ void copy2DTable(const vType source[LOAD_BIN_SIZE][RPM_BIN_SIZE], vType destinat
 	}
 }
 
-typedef Map3D<FUEL_RPM_COUNT, FUEL_LOAD_COUNT, uint8_t, float, PACK_MULT_AFR_CFG> afr_Map3D_t;
-typedef Map3D<IGN_RPM_COUNT, IGN_LOAD_COUNT, float, float, 1> ign_Map3D_t;
-typedef Map3D<FUEL_RPM_COUNT, FUEL_LOAD_COUNT, float, float, 1> fuel_Map3D_t;
-typedef Map3D<BARO_CORR_SIZE, BARO_CORR_SIZE, float, float, 1> baroCorr_Map3D_t;
-typedef Map3D<PEDAL_TO_TPS_SIZE, PEDAL_TO_TPS_SIZE, uint8_t, uint8_t, 1> pedal2tps_t;
-typedef Map3D<BOOST_RPM_COUNT, BOOST_LOAD_COUNT, uint8_t, uint8_t, 1> boostOpenLoop_Map3D_t;
-typedef Map3D<BOOST_RPM_COUNT, BOOST_LOAD_COUNT, uint8_t, uint8_t, 1> boostClosedLoop_Map3D_t;
-typedef Map3D<IAC_PID_MULT_SIZE, IAC_PID_MULT_SIZE, uint8_t, uint8_t, 1> iacPidMultiplier_t;
-typedef Map3D<GPPWM_RPM_COUNT, GPPWM_LOAD_COUNT, uint8_t, uint8_t, 1> gppwm_Map3D_t;
+typedef Map3D<FUEL_RPM_COUNT, FUEL_LOAD_COUNT, uint8_t, float, efi::ratio<1, PACK_MULT_AFR_CFG>> afr_Map3D_t;
+typedef Map3D<IGN_RPM_COUNT, IGN_LOAD_COUNT, float, float> ign_Map3D_t;
+typedef Map3D<FUEL_RPM_COUNT, FUEL_LOAD_COUNT, float, float> fuel_Map3D_t;
+typedef Map3D<BARO_CORR_SIZE, BARO_CORR_SIZE, float, float> baroCorr_Map3D_t;
+typedef Map3D<PEDAL_TO_TPS_SIZE, PEDAL_TO_TPS_SIZE, uint8_t, uint8_t> pedal2tps_t;
+typedef Map3D<BOOST_RPM_COUNT, BOOST_LOAD_COUNT, uint8_t, uint8_t> boostOpenLoop_Map3D_t;
+typedef Map3D<BOOST_RPM_COUNT, BOOST_LOAD_COUNT, uint8_t, uint8_t> boostClosedLoop_Map3D_t;
+typedef Map3D<IAC_PID_MULT_SIZE, IAC_PID_MULT_SIZE, uint8_t, uint8_t> iacPidMultiplier_t;
+typedef Map3D<GPPWM_RPM_COUNT, GPPWM_LOAD_COUNT, uint8_t, uint8_t> gppwm_Map3D_t;
 
 void setRpmBin(float array[], int size, float idleRpm, float topRpm);
 

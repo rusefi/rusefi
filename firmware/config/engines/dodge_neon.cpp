@@ -238,7 +238,7 @@ void setDodgeNeonNGCEngineConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	MEMCPY(config->ignitionTable, fromODB);
 #endif
 
-	copy2DTable<FSIO_TABLE_8, FSIO_TABLE_8, float, float, 1>(vBattTarget, config->fsioTable1);
+	copy2DTable<FSIO_TABLE_8, FSIO_TABLE_8, float, float>(vBattTarget, config->fsioTable1);
 
 	MEMCPY(config->veTable, veDodgeNeon2003Table);
 	//setMap(config->veTable, 50);
