@@ -1168,8 +1168,8 @@
 #define showHumanReadableWarning_offset 976
 #define showSdCardWarning_offset 76
 #define SIGNATURE_BOARD kin
-#define SIGNATURE_DATE 2020.09.07
-#define SIGNATURE_HASH 1105255675
+#define SIGNATURE_DATE 2020.09.09
+#define SIGNATURE_HASH 3274316507
 #define silentTriggerError_offset 1464
 #define slowAdcAlpha_offset 2088
 #define sparkDwellRpmBins_offset 332
@@ -1198,6 +1198,7 @@
 #define spi_pins_size 4
 #define startCrankingDuration_offset 826
 #define starterControlPin_offset 1772
+#define starterControlPinMode_offset 2126
 #define starterRelayDisableMode_offset 809
 #define starterRelayDisablePin_offset 808
 #define startOfCrankingPrimingPulse_offset 2032
@@ -1479,7 +1480,7 @@
 #define ts_show_spi true
 #define ts_show_trigger_comparator true
 #define ts_show_tunerstudio_port true
-#define TS_SIGNATURE "rusEFI 2020.09.07.kin.1105255675"
+#define TS_SIGNATURE "rusEFI 2020.09.09.kin.3274316507"
 #define TS_SINGLE_WRITE_COMMAND 'W'
 #define TS_SINGLE_WRITE_COMMAND_char W
 #define TS_TEST_COMMAND 't' // 0x74
@@ -1515,7 +1516,7 @@
 #define unused_1484_bit_30_offset 1476
 #define unused_1484_bit_31_offset 1476
 #define unused_alFIn_offset 4024
-#define unused_former_warmup_target_afr_offset 2126
+#define unused_former_warmup_target_afr_offset 2127
 #define unusedAt716_offset 716
 #define unusedAt720_offset 720
 #define unusedAt724_offset 724

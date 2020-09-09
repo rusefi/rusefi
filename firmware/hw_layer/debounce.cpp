@@ -68,13 +68,18 @@ void ButtonDebounce::updateConfiguration () {
 @returns true if the button is pressed, and will not return true again within the set timeout
 */
 bool ButtonDebounce::readPinEvent() {
+    readValue = false;
+    return readPinState();
+}
+
+bool ButtonDebounce::readPinState() {
     if (!pin) {
         return false;
     }
     efitick_t timeNow = getTimeNowNt();
     // If it's been less than the threshold since we were last called
     if ((timeNow - timeLast) < threshold) {
-        return false;
+        return readValue;
     }
     // readValue is a class variable, so it needs to be reset.
     // We don't actually need it to be a class variable in this method,

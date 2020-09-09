@@ -58,6 +58,7 @@
 #include "gppwm.h"
 #include "date_stamp.h"
 #include "buttonshift.h"
+#include "start_stop.h"
 
 #if EFI_SENSOR_CHART
 #include "sensor_chart.h"
@@ -589,6 +590,8 @@ void commonInitEngineController(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_S
 #endif /* EFI_IDLE_CONTROL */
 
 	initButtonShift(PASS_ENGINE_PARAMETER_SIGNATURE);
+
+	initStartStopButton(PASS_ENGINE_PARAMETER_SIGNATURE);
 
 #if EFI_ELECTRONIC_THROTTLE_BODY
 	initElectronicThrottle(PASS_ENGINE_PARAMETER_SIGNATURE);

@@ -1182,7 +1182,8 @@ int16_t tps2Max;Full throttle#2. tpsMax value as 10 bit ADC value. Not Voltage!\
 	can_nbc_e can2NbcType;set can_mode X
 	brain_pin_e can2TxPin;set_can2_tx_pin X
 	brain_pin_e can2RxPin;set_can2_rx_pin X	
-	uint8_t[6] unused_former_warmup_target_afr;;"units", 1, 0, -20, 100, 0
+	pin_output_mode_e starterControlPinMode;
+	uint8_t[5] unused_former_warmup_target_afr;;"units", 1, 0, -20, 100, 0
 
 	float boostCutPressure;kPa value at which we need to cut fuel and spark, 0 if not enabled;"kPa",        1,     0,    0, 500,     0
 
