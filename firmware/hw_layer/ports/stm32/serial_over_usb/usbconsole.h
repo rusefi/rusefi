@@ -5,8 +5,7 @@
  * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
-#ifndef USBCONSOLE_H_
-#define USBCONSOLE_H_
+#pragma once
 
 #define USB_SERIAL_DRIVER SD2
 
@@ -21,5 +20,3 @@ bool is_usb_serial_ready(void);
 #ifdef __cplusplus
 }
 #endif /* __cplusplus */
-
-#endif /* USBCONSOLE_H_ */

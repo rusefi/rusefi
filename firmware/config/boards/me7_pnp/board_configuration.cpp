@@ -43,7 +43,6 @@ void setPinConfigurationOverrides(void) {
 void setBoardConfigurationOverrides(void) {
 
 	// NOT USED
-	engineConfiguration->dizzySparkOutputPin = GPIO_UNASSIGNED;
 	engineConfiguration->externalKnockSenseAdc = EFI_ADC_NONE;
 	engineConfiguration->displayMode = DM_NONE;
 	engineConfiguration->HD44780_rs = GPIO_UNASSIGNED;

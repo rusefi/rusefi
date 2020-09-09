@@ -407,7 +407,7 @@ void setMazdaMiata2003EngineConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 
 
 	// high-side driver with +12v VP jumper
-	engineConfiguration->dizzySparkOutputPin = GPIOE_8; // tachometer
+	engineConfiguration->tachOutputPin = GPIOE_8; // tachometer
 
 	// set global_trigger_offset_angle 0
 	engineConfiguration->globalTriggerAngleOffset = 0;
@@ -594,7 +594,7 @@ static void setMiataNB2_MRE_common(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	// GPIOD_6: "13 - GP Out 6" - selected to +12v
 	engineConfiguration->alternatorControlPin = GPIOD_6;
 	// GPIOD_7: "14 - GP Out 5" - selected to +12v
-	engineConfiguration->dizzySparkOutputPin = GPIOD_7; // tachometer
+	engineConfiguration->tachOutputPin = GPIOD_7; // tachometer
 
 	// set cranking_fuel 9
 	engineConfiguration->cranking.baseFuel = 9; // higher value for return system NA conversion since lower fuel pressure
