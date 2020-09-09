@@ -339,10 +339,6 @@ void applyNewHardwareSettings(void) {
 		brain_pin_markUnused(activeConfiguration.clutchUpPin);
 	}
 
-	if (isPinOrModeChanged(startStopButtonPin, startStopButtonMode)) {
-		brain_pin_markUnused(activeConfiguration.startStopButtonPin);
-	}
-
 	enginePins.unregisterPins();
 
 #if EFI_SHAFT_POSITION_INPUT
@@ -501,12 +497,6 @@ void initHardware(Logging *l) {
 	// initSmartGpio depends on 'initSpiModules'
 	initSmartGpio(PASS_ENGINE_PARAMETER_SIGNATURE);
 #endif
-
-	if (CONFIG(startStopButtonPin) != GPIO_UNASSIGNED) {
-		efiSetPadMode("start/stop", CONFIG(startStopButtonPin),
-				getInputMode(CONFIG(startStopButtonMode)));
-	}
-
 
 	// output pins potentially depend on 'initSmartGpio'
 	initOutputPins(PASS_ENGINE_PARAMETER_SIGNATURE);
