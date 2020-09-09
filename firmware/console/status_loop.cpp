@@ -409,7 +409,11 @@ class CommunicationBlinkingTask : public PeriodicTimerController {
 				offTimeMs = onTimeMs = 500;
 #endif // EFI_INTERNAL_FLASH
 			} else {
-				onTimeMs = is_usb_serial_ready() ? 3 * BLINKING_PERIOD_MS : BLINKING_PERIOD_MS;
+				onTimeMs =
+#if EFI_USB_SERIAL
+				is_usb_serial_ready() ? 3 * BLINKING_PERIOD_MS :
+#endif // EFI_USB_SERIAL
+				BLINKING_PERIOD_MS;
 				offTimeMs = 0.6 * onTimeMs;
 			}
 
