@@ -222,7 +222,6 @@ public:
 
 
 	bool startStopState = false;
-	efitick_t startStopStateLastPushTime = 0;
 	int startStopStateToggleCounter = 0;
 
 	/**
