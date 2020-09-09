@@ -14,6 +14,7 @@ char * getPinNameByAdcChannel(const char *msg, adc_channel_e hwChannel, char *bu
 void initPeriodicEvents(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 void initEngineContoller(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX);
 void commonInitEngineController(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX);
+void initStartStopButton(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 
 void initDataStructures(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 void touchTimeCounter();

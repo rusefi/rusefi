@@ -9,8 +9,11 @@
 #pragma once
 #include "global.h"
 
-#if EFI_PROD_CODE
+#if HAL_USE_SERIAL_USB
 #include "usbconsole.h"
+#endif // HAL_USE_SERIAL_USB
+
+#if EFI_PROD_CODE
 #include "pin_repository.h"
 #endif
 
