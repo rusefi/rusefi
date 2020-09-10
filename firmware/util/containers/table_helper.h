@@ -40,13 +40,12 @@ public:
 			pointers[k] = table[k];
 		}
 
-		initialized = true;
 		this->loadBins = loadBins;
 		this->rpmBins = rpmBins;
 	}
 
 	float getValue(float xRpm, float y) const override {
-		efiAssert(CUSTOM_ERR_ASSERT, initialized, "map not initialized", NAN);
+		efiAssert(CUSTOM_ERR_ASSERT, loadBins, "map not initialized", NAN);
 		if (cisnan(y)) {
 			warning(CUSTOM_PARAM_RANGE, "%s: y is NaN", name);
 			return NAN;
@@ -57,7 +56,7 @@ public:
 	}
 
 	void setAll(vType value) {
-		efiAssertVoid(CUSTOM_ERR_6573, initialized, "map not initialized");
+		efiAssertVoid(CUSTOM_ERR_6573, loadBins, "map not initialized");
 		for (int l = 0; l < LOAD_BIN_SIZE; l++) {
 			for (int r = 0; r < RPM_BIN_SIZE; r++) {
 				pointers[l][r] = value / TValueMultiplier::asFloat();
@@ -74,7 +73,6 @@ private:
 
 	const kType *loadBins = NULL;
 	const kType *rpmBins = NULL;
-	bool initialized =  false;
 	const char *name;
 };
 
