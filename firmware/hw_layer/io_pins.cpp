@@ -10,6 +10,14 @@
 #include "global.h"
 #include "io_pins.h"
 
+#if ! EFI_PROD_CODE
+bool efiReadPin(brain_pin_e pin) {
+	return engine->engineState.mockPinStates[static_cast<int>(pin)];
+}
+#endif
+
+#if EFI_PROD_CODE
+
 #include "os_access.h"
 #include "efi_gpio.h"
 #include "drivers/gpio/gpio_ext.h"
@@ -28,9 +36,6 @@ EXTERN_ENGINE;
 static LoggingWithStorage logger("io_pins");
 
 bool efiReadPin(brain_pin_e pin) {
-#if ! EFI_PROD_CODE
-	return engine->engineState.mockPinStates[static_cast<int>(pin)];
-#endif
 	if (brain_pin_is_onchip(pin))
 		return palReadPad(getHwPort("readPin", pin), getHwPin("readPin", pin));
 	#if (BOARD_EXT_GPIOCHIPS > 0)
@@ -41,8 +46,6 @@ bool efiReadPin(brain_pin_e pin) {
 	/* incorrect pin */
 	return false;
 }
-
-#if EFI_PROD_CODE
 
 /**
  * This method would set an error condition if pin is already used
