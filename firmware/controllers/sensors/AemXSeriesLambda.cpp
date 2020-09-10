@@ -12,25 +12,28 @@ AemXSeriesWideband::AemXSeriesWideband(uint8_t sensorIndex, SensorType type)
 	)
 {}
 
-SensorResult AemXSeriesWideband::decodeFrame(const CANRxFrame& frame) {
+void AemXSeriesWideband::decodeFrame(const CANRxFrame& frame, efitick_t nowNt) {
 	if (frame.DLC != 8) {
-		return unexpected;
+		invalidate();
+		return;
 	}
 
 	// bit 6 indicates sensor fault
 	bool sensorFault = frame.data8[7] & 0x40;
 	if (sensorFault) {
-		return unexpected;
+		invalidate();
+		return;
 	}
 
 	// bit 7 indicates valid
 	bool valid = frame.data8[6] & 0x80;
 	if (!valid) {
-		return unexpected;
+		invalidate();
+		return;
 	}
 
 	// reports in 0.0001 lambda per LSB
-	return 0.0001f * SWAP_UINT16(frame.data16[0]);
+	setValidValue(0.0001f * SWAP_UINT16(frame.data16[0]), nowNt);
 }
 
 #endif

@@ -7,5 +7,5 @@ public:
 	AemXSeriesWideband(uint8_t sensorIndex, SensorType type);
 
 protected:
-	SensorResult decodeFrame(const CANRxFrame& frame) override;
+	void decodeFrame(const CANRxFrame& frame, efitick_t nowNt) override;
 };
