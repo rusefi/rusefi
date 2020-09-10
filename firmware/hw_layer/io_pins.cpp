@@ -10,6 +10,8 @@
 #include "global.h"
 #include "io_pins.h"
 
+EXTERN_ENGINE;
+
 #if ! EFI_PROD_CODE
 bool efiReadPin(brain_pin_e pin) {
 	return engine->engineState.mockPinStates[static_cast<int>(pin)];
@@ -27,7 +29,6 @@ bool efiReadPin(brain_pin_e pin) {
 #include "engine_configuration.h"
 #include "console_io.h"
 
-EXTERN_ENGINE;
 
 #if EFI_ENGINE_CONTROL
 #include "main_trigger_callback.h"
