@@ -10,14 +10,6 @@
 #include "global.h"
 #include "io_pins.h"
 
-#if ! EFI_PROD_CODE
-#include "engine_test_helper.h"
-
-bool efiReadPin(brain_pin_e pin) {
-	return engine->engineState.mockPinStates[static_cast<int>(pin)];
-}
-#endif
-
 #if EFI_PROD_CODE
 
 #include "os_access.h"
@@ -124,6 +116,6 @@ void efiIcuStart(const char *msg, ICUDriver *icup, const ICUConfig *config) {
 
 #else
 bool efiReadPin(brain_pin_e pin) {
-	return false;
+	return engine->engineState.mockPinStates[static_cast<int>(pin)];
 }
 #endif /* EFI_PROD_CODE */
