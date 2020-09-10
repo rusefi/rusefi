@@ -33,12 +33,7 @@ public:
 
 	CanSensorBase* processFrame(const CANRxFrame& frame, efitick_t nowNt) {
 		if (frame.EID == m_eid) {
-			auto result = decodeFrame(frame);
-			if (result) {
-				setValidValue(result.Value, nowNt);
-			} else {
-				invalidate();
-			}
+			decodeFrame(frame, nowNt);
 		}
 
 		return m_next;
@@ -53,7 +48,7 @@ public:
 	}
 
 protected:
-	virtual SensorResult decodeFrame(const CANRxFrame& frame) = 0;
+	virtual void decodeFrame(const CANRxFrame& frame) = 0;
 	CanSensorBase* m_next = nullptr;
 
 private:
@@ -61,15 +56,15 @@ private:
 };
 
 template <typename TStorage, int TScale>
-class PlainCanSensor : public CanSensorBase {
+class CanSensor : public CanSensorBase {
 public:
-	PlainCanSensor(uint32_t eid, uint8_t offset, SensorType type, efitick_t timeout)
+	CanSensor(uint32_t eid, uint8_t offset, SensorType type, efitick_t timeout)
 		: CanSensorBase(eid, type, timeout)
 		, m_offset(offset)
 	{
 	}
 
-	SensorResult decodeFrame(const CANRxFrame& frame) override {
+	void decodeFrame(const CANRxFrame& frame, efitick_t nowNt) override {
 		// Compute the location of our data within the frame
 		const uint8_t* dataLocation = &frame.data8[m_offset];
 
@@ -78,7 +73,7 @@ public:
 
 		// Actually do the conversion
 		float value = *scaler;
-		return value;
+		setValidValue(value, nowNt);
 	}
 
 private:
