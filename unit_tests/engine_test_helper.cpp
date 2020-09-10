@@ -24,6 +24,8 @@ extern engine_configuration_s & activeConfiguration;
 extern bool printTriggerDebug;
 extern bool printFuelDebug;
 
+bool mockPinStates[BRAIN_PIN_COUNT];
+
 EngineTestHelperBase::EngineTestHelperBase() { 
 	// todo: make this not a global variable, we need currentTimeProvider interface on engine
 	timeNowUs = 0; 
@@ -97,6 +99,7 @@ EngineTestHelper::~EngineTestHelper() {
 
 	// Cleanup
 	Sensor::resetRegistry();
+	memset(mockPinStates, 0, sizeof(mockPinStates));
 }
 
 static CompositeEvent compositeEvents[COMPOSITE_PACKET_COUNT];

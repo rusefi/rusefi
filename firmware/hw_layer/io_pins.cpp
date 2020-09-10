@@ -117,7 +117,9 @@ void efiIcuStart(const char *msg, ICUDriver *icup, const ICUConfig *config) {
 #endif /* HAL_USE_ICU */
 
 #else
+extern bool[] mockPinStates;
+
 bool efiReadPin(brain_pin_e pin) {
-	return engine->engineState.mockPinStates[static_cast<int>(pin)];
+	return mockPinStates[static_cast<int>(pin)];
 }
 #endif /* EFI_PROD_CODE */
