@@ -124,7 +124,12 @@ void appendFast(Logging *logging, const char *text) {
  */
 void Logging::vappendPrintf(const char *fmt, va_list arg) {
 #if ! EFI_UNIT_TEST
-	efiAssertVoid(CUSTOM_ERR_6604, getCurrentRemainingStack() > 128, "lowstck#5b");
+#if EFI_ENABLE_ASSERTS
+	// todo: Kinetis needs real getCurrentRemainingStack or mock
+	if (getCurrentRemainingStack() < 128) {
+		firmwareError(CUSTOM_ERR_6604, "lowstck#5b %s", chThdGetSelfX()->name);
+	}
+#endif // EFI_ENABLE_ASSERTS
 	int wasLocked = lockAnyContext();
 	intermediateLogging.vappendPrintfI(this, fmt, arg);
 	if (!wasLocked) {

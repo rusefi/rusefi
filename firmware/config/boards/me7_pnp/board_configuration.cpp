@@ -33,8 +33,6 @@ void setPinConfigurationOverrides(void) {
 
 	//NOT USED
 
-	engineConfiguration->baroSensor.hwChannel = EFI_ADC_NONE;
-	engineConfiguration->afr.hwChannel = EFI_ADC_NONE;
 	engineConfiguration->ignitionPins[8] = GPIO_UNASSIGNED;
 	engineConfiguration->ignitionPins[9] = GPIO_UNASSIGNED;
 	engineConfiguration->mainRelayPin = GPIO_UNASSIGNED;
@@ -45,7 +43,6 @@ void setPinConfigurationOverrides(void) {
 void setBoardConfigurationOverrides(void) {
 
 	// NOT USED
-	engineConfiguration->dizzySparkOutputPin = GPIO_UNASSIGNED;
 	engineConfiguration->externalKnockSenseAdc = EFI_ADC_NONE;
 	engineConfiguration->displayMode = DM_NONE;
 	engineConfiguration->HD44780_rs = GPIO_UNASSIGNED;

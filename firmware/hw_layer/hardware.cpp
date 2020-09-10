@@ -264,8 +264,11 @@ void stopSpi(spi_device_e device) {
  * this method is NOT currently invoked on ECU start
  * todo: maybe start invoking this method on ECU start so that peripheral start-up initialization and restart are unified?
  */
+
 void applyNewHardwareSettings(void) {
     // all 'stop' methods need to go before we begin starting pins
+
+	ButtonDebounce::updateConfigurationList();
 
 #if EFI_SHAFT_POSITION_INPUT
 	stopTriggerInputPins();
@@ -275,7 +278,7 @@ void applyNewHardwareSettings(void) {
 #if (HAL_USE_PAL && EFI_JOYSTICK)
 	stopJoystickPins();
 #endif /* HAL_USE_PAL && EFI_JOYSTICK */
-       
+
 	enginePins.stopInjectionPins();
     enginePins.stopIgnitionPins();
 #if EFI_CAN_SUPPORT
@@ -334,10 +337,6 @@ void applyNewHardwareSettings(void) {
 #endif
 	if (isPinOrModeChanged(clutchUpPin, clutchUpPinMode)) {
 		brain_pin_markUnused(activeConfiguration.clutchUpPin);
-	}
-
-	if (isPinOrModeChanged(startStopButtonPin, startStopButtonMode)) {
-		brain_pin_markUnused(activeConfiguration.startStopButtonPin);
 	}
 
 	enginePins.unregisterPins();
@@ -498,12 +497,6 @@ void initHardware(Logging *l) {
 	// initSmartGpio depends on 'initSpiModules'
 	initSmartGpio(PASS_ENGINE_PARAMETER_SIGNATURE);
 #endif
-
-	if (CONFIG(startStopButtonPin) != GPIO_UNASSIGNED) {
-		efiSetPadMode("start/stop", CONFIG(startStopButtonPin),
-				getInputMode(CONFIG(startStopButtonMode)));
-	}
-
 
 	// output pins potentially depend on 'initSmartGpio'
 	initOutputPins(PASS_ENGINE_PARAMETER_SIGNATURE);

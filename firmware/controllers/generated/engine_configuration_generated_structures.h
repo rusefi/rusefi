@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Sun Sep 06 04:28:03 UTC 2020
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Wed Sep 09 20:53:44 UTC 2020
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -1286,7 +1286,6 @@ struct engine_configuration_s {
 	 */
 	pin_output_mode_e hip9011CsPinMode;
 	/**
-	 * This implementation produces one pulse per engine cycle. See also dizzySparkOutputPin.
 	 * offset 704
 	 */
 	output_pin_e tachOutputPin;
@@ -1457,7 +1456,7 @@ struct engine_configuration_s {
 	bool useIdleTimingPidControl : 1;
 	/**
 	offset 744 bit 25 */
-	bool useTPSBasedVeTable : 1;
+	bool unused744b25 : 1;
 	/**
 	offset 744 bit 26 */
 	bool is_enabled_spi_4 : 1;
@@ -1952,7 +1951,23 @@ struct engine_configuration_s {
 	/**
 	 * offset 1200
 	 */
-	int unusedAtOldBoardConfigurationEnd[65];
+	spi_device_e drv8860spiDevice;
+	/**
+	 * offset 1201
+	 */
+	brain_pin_e drv8860_cs;
+	/**
+	 * offset 1202
+	 */
+	pin_output_mode_e drv8860_csPinMode;
+	/**
+	 * offset 1203
+	 */
+	brain_pin_e drv8860_miso;
+	/**
+	 * offset 1204
+	 */
+	int unusedAtOldBoardConfigurationEnd[64];
 	/**
 	 * offset 1460
 	 */
@@ -2594,17 +2609,21 @@ struct engine_configuration_s {
 	 */
 	can_baudrate_e canBaudRate;
 	/**
+	 * Override the Y axis (load) value used for the VE table.
+	 * Advanced users only: If you aren't sure you need this, you probably don't need this.
 	 * offset 2109
 	 */
-	uint8_t un1used_former_warmup_target_afr;
+	ve_override_e veOverrideMode;
 	/**
 	 * offset 2110
 	 */
 	can_baudrate_e can2BaudRate;
 	/**
+	 * Override the Y axis (load) value used for the AFR table.
+	 * Advanced users only: If you aren't sure you need this, you probably don't need this.
 	 * offset 2111
 	 */
-	uint8_t unused_former_warmup_target_afr2;
+	afr_override_e afrOverrideMode;
 	/**
 	 * offset 2112
 	 */
@@ -2639,76 +2658,76 @@ struct engine_configuration_s {
 	bool unused1130 : 1;
 	/**
 	offset 2116 bit 8 */
-	bool unusedBit_478_8 : 1;
+	bool unusedBit_482_8 : 1;
 	/**
 	offset 2116 bit 9 */
-	bool unusedBit_478_9 : 1;
+	bool unusedBit_482_9 : 1;
 	/**
 	offset 2116 bit 10 */
-	bool unusedBit_478_10 : 1;
+	bool unusedBit_482_10 : 1;
 	/**
 	offset 2116 bit 11 */
-	bool unusedBit_478_11 : 1;
+	bool unusedBit_482_11 : 1;
 	/**
 	offset 2116 bit 12 */
-	bool unusedBit_478_12 : 1;
+	bool unusedBit_482_12 : 1;
 	/**
 	offset 2116 bit 13 */
-	bool unusedBit_478_13 : 1;
+	bool unusedBit_482_13 : 1;
 	/**
 	offset 2116 bit 14 */
-	bool unusedBit_478_14 : 1;
+	bool unusedBit_482_14 : 1;
 	/**
 	offset 2116 bit 15 */
-	bool unusedBit_478_15 : 1;
+	bool unusedBit_482_15 : 1;
 	/**
 	offset 2116 bit 16 */
-	bool unusedBit_478_16 : 1;
+	bool unusedBit_482_16 : 1;
 	/**
 	offset 2116 bit 17 */
-	bool unusedBit_478_17 : 1;
+	bool unusedBit_482_17 : 1;
 	/**
 	offset 2116 bit 18 */
-	bool unusedBit_478_18 : 1;
+	bool unusedBit_482_18 : 1;
 	/**
 	offset 2116 bit 19 */
-	bool unusedBit_478_19 : 1;
+	bool unusedBit_482_19 : 1;
 	/**
 	offset 2116 bit 20 */
-	bool unusedBit_478_20 : 1;
+	bool unusedBit_482_20 : 1;
 	/**
 	offset 2116 bit 21 */
-	bool unusedBit_478_21 : 1;
+	bool unusedBit_482_21 : 1;
 	/**
 	offset 2116 bit 22 */
-	bool unusedBit_478_22 : 1;
+	bool unusedBit_482_22 : 1;
 	/**
 	offset 2116 bit 23 */
-	bool unusedBit_478_23 : 1;
+	bool unusedBit_482_23 : 1;
 	/**
 	offset 2116 bit 24 */
-	bool unusedBit_478_24 : 1;
+	bool unusedBit_482_24 : 1;
 	/**
 	offset 2116 bit 25 */
-	bool unusedBit_478_25 : 1;
+	bool unusedBit_482_25 : 1;
 	/**
 	offset 2116 bit 26 */
-	bool unusedBit_478_26 : 1;
+	bool unusedBit_482_26 : 1;
 	/**
 	offset 2116 bit 27 */
-	bool unusedBit_478_27 : 1;
+	bool unusedBit_482_27 : 1;
 	/**
 	offset 2116 bit 28 */
-	bool unusedBit_478_28 : 1;
+	bool unusedBit_482_28 : 1;
 	/**
 	offset 2116 bit 29 */
-	bool unusedBit_478_29 : 1;
+	bool unusedBit_482_29 : 1;
 	/**
 	offset 2116 bit 30 */
-	bool unusedBit_478_30 : 1;
+	bool unusedBit_482_30 : 1;
 	/**
 	offset 2116 bit 31 */
-	bool unusedBit_478_31 : 1;
+	bool unusedBit_482_31 : 1;
 	/**
 	 * set can_mode X
 	 * offset 2120
@@ -2727,7 +2746,11 @@ struct engine_configuration_s {
 	/**
 	 * offset 2126
 	 */
-	uint8_t unused_former_warmup_target_afr[6];
+	pin_output_mode_e starterControlPinMode;
+	/**
+	 * offset 2127
+	 */
+	uint8_t unused_former_warmup_target_afr[5];
 	/**
 	 * kPa value at which we need to cut fuel and spark, 0 if not enabled
 	 * offset 2132
@@ -2779,14 +2802,14 @@ struct engine_configuration_s {
 	 */
 	pin_output_mode_e cj125CsPinMode;
 	/**
-	 * This implementation makes a pulse every time one of the coils is charged, using coil dwell for pulse width. See also tachOutputPin
 	 * offset 2226
 	 */
-	output_pin_e dizzySparkOutputPin;
+	uint8_t unusedDizzy;
 	/**
+	 * need 4 byte alignment
 	 * offset 2227
 	 */
-	pin_output_mode_e dizzySparkOutputPinMode;
+	uint8_t alignmentFill_at_2227;
 	/**
 	 * This is the IAC position during cranking, some engines start better if given more air during cranking to improve cylinder filling.
 	 * offset 2228
@@ -3419,7 +3442,7 @@ struct persistent_config_s {
 	/**
 	 * offset 6328
 	 */
-	boost_table_t boostTableClosedLoop;
+	boost_target_table_t boostTableClosedLoop;
 	/**
 	 * offset 6392
 	 */
@@ -3666,4 +3689,4 @@ struct persistent_config_s {
 typedef struct persistent_config_s persistent_config_s;
 
 // end
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Sun Sep 06 04:28:03 UTC 2020
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Wed Sep 09 20:53:44 UTC 2020

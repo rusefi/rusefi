@@ -308,7 +308,7 @@ static void initTemperatureCurve(float *bins, float *values, int size, float def
 void prepareVoidConfiguration(engine_configuration_s *engineConfiguration) {
 	efiAssertVoid(OBD_PCM_Processor_Fault, engineConfiguration != NULL, "ec NULL");
 	memset(engineConfiguration, 0, sizeof(engine_configuration_s));
-	
+
 
 	// Now that GPIO_UNASSIGNED == 0 we do not really need explicit zero assignments since memset above does that
 	// todo: migrate 'EFI_ADC_NONE' to '0' and eliminate the need in this method altogether
@@ -325,7 +325,6 @@ void prepareVoidConfiguration(engine_configuration_s *engineConfiguration) {
 	engineConfiguration->auxTempSensor2.adcChannel = EFI_ADC_NONE;
 	engineConfiguration->baroSensor.hwChannel = EFI_ADC_NONE;
 	engineConfiguration->throttlePedalPositionAdcChannel = EFI_ADC_NONE;
-	engineConfiguration->throttlePedalPositionSecondAdcChannel = EFI_ADC_NONE;
 	engineConfiguration->oilPressure.hwChannel = EFI_ADC_NONE;
 	engineConfiguration->vRefAdcChannel = EFI_ADC_NONE;
 	engineConfiguration->vbattAdcChannel = EFI_ADC_NONE;
@@ -334,9 +333,7 @@ void prepareVoidConfiguration(engine_configuration_s *engineConfiguration) {
 /* this breaks unit tests lovely TODO: fix this?
 	engineConfiguration->tps1_1AdcChannel = EFI_ADC_NONE;
 */
-	engineConfiguration->tps1_2AdcChannel = EFI_ADC_NONE;
 	engineConfiguration->tps2_1AdcChannel = EFI_ADC_NONE;
-	engineConfiguration->tps2_2AdcChannel = EFI_ADC_NONE;
 	engineConfiguration->auxFastSensor1_adcChannel = EFI_ADC_NONE;
 	engineConfiguration->acSwitchAdc = EFI_ADC_NONE;
 	engineConfiguration->externalKnockSenseAdc = EFI_ADC_NONE;
@@ -345,10 +342,11 @@ void prepareVoidConfiguration(engine_configuration_s *engineConfiguration) {
 	engineConfiguration->afr.hwChannel = EFI_ADC_NONE;
 	engineConfiguration->high_fuel_pressure_sensor_1 = EFI_ADC_NONE;
 	engineConfiguration->high_fuel_pressure_sensor_2 = EFI_ADC_NONE;
-	
+
 	engineConfiguration->clutchDownPinMode = PI_PULLUP;
 	engineConfiguration->clutchUpPinMode = PI_PULLUP;
 	engineConfiguration->brakePedalPinMode = PI_PULLUP;
+
 }
 
 void setDefaultBasePins(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
@@ -698,7 +696,7 @@ void setDefaultGppwmParameters(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 			for (size_t k = 0; k < efi::size(cfg.rpmBins); k++) {
 				cfg.table[j][k] = z;
 			}
-			
+
 		}
 
 		for (size_t j = 0; j < efi::size(cfg.rpmBins); j++) {

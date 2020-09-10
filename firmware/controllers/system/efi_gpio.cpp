@@ -32,7 +32,8 @@ extern WaveChart waveChart;
 EnginePins enginePins;
 static Logging* logger;
 
-static const pin_output_mode_e DEFAULT_OUTPUT = OM_DEFAULT;
+static pin_output_mode_e DEFAULT_OUTPUT = OM_DEFAULT;
+pin_output_mode_e INVERTED_OUTPUT = OM_INVERTED;
 
 static const char *sparkNames[] = { "Coil 1", "Coil 2", "Coil 3", "Coil 4", "Coil 5", "Coil 6", "Coil 7", "Coil 8",
 		"Coil 9", "Coil 10", "Coil 11", "Coil 12"};
@@ -50,7 +51,6 @@ static const char *injectorShortNames[] = { PROTOCOL_INJ1_SHORT_NAME, "i2", "i3"
 static const char *auxValveShortNames[] = { "a1", "a2"};
 
 EnginePins::EnginePins() {
-	dizzyOutput.name = PROTOCOL_DIZZY_NAME;
 	tachOut.name = PROTOCOL_TACH_NAME;
 
 	static_assert(efi::size(sparkNames) >= IGNITION_PIN_COUNT, "Too many ignition pins"); 
@@ -132,7 +132,6 @@ void EnginePins::unregisterPins() {
 	unregisterOutputIfPinOrModeChanged(hipCs, hip9011CsPin, hip9011CsPinMode);
 	unregisterOutputIfPinOrModeChanged(triggerDecoderErrorPin, triggerErrorPin, triggerErrorPinMode);
 	unregisterOutputIfPinOrModeChanged(checkEnginePin, malfunctionIndicatorPin, malfunctionIndicatorPinMode);
-	unregisterOutputIfPinOrModeChanged(dizzyOutput, dizzySparkOutputPin, dizzySparkOutputPinMode);
 	unregisterOutputIfPinOrModeChanged(tachOut, tachOutputPin, tachOutputPinMode);
 	unregisterOutputIfPinOrModeChanged(idleSolenoidPin, idle.solenoidPin, idle.solenoidPinMode);
 	unregisterOutputIfPinOrModeChanged(secondIdleSolenoidPin, secondSolenoidPin, idle.solenoidPinMode);
@@ -200,11 +199,6 @@ void EnginePins::startIgnitionPins(void) {
 		if (isPinOrModeChanged(ignitionPins[i], ignitionPinMode)) {
 			output->initPin(output->name, CONFIG(ignitionPins)[i], &CONFIG(ignitionPinMode));
 		}
-	}
-	if (isPinOrModeChanged(dizzySparkOutputPin, dizzySparkOutputPinMode)) {
-		enginePins.dizzyOutput.initPin("Distributor", engineConfiguration->dizzySparkOutputPin,
-				&engineConfiguration->dizzySparkOutputPinMode);
-
 	}
 #endif /* EFI_PROD_CODE */
 }
@@ -505,13 +499,19 @@ void OutputPin::unregisterOutput(brain_pin_e oldPin) {
 // by reducing stack requirement
 ioportid_t criticalErrorLedPort;
 ioportmask_t criticalErrorLedPin;
+uint8_t criticalErrorLedState;
+
+#ifndef LED_ERROR_BRAIN_PIN_MODE
+#define LED_ERROR_BRAIN_PIN_MODE DEFAULT_OUTPUT
+#endif /* LED_ERROR_BRAIN_PIN_MODE */
 
 void initPrimaryPins(Logging *sharedLogger) {
 	logger = sharedLogger;
 #if EFI_PROD_CODE
-	enginePins.errorLedPin.initPin("led: CRITICAL status", LED_CRITICAL_ERROR_BRAIN_PIN);
+	enginePins.errorLedPin.initPin("led: CRITICAL status", LED_CRITICAL_ERROR_BRAIN_PIN, &(LED_ERROR_BRAIN_PIN_MODE));
 	criticalErrorLedPort = getHwPort("CRITICAL", LED_CRITICAL_ERROR_BRAIN_PIN);
 	criticalErrorLedPin = getHwPin("CRITICAL", LED_CRITICAL_ERROR_BRAIN_PIN);
+	criticalErrorLedState = (LED_ERROR_BRAIN_PIN_MODE == INVERTED_OUTPUT) ? 0 : 1;
 #endif /* EFI_PROD_CODE */
 }
 

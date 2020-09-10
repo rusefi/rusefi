@@ -4,8 +4,6 @@
  *
  * This implementation produces one pulse per engine cycle
  *
- * todo: these is a bit of duplication with dizzySparkOutputPin
- *
  * @date Aug 18, 2015
  * @author Andrey Belomutskiy, (c) 2012-2020
  */

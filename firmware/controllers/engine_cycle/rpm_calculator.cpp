@@ -201,6 +201,8 @@ void RpmCalculator::setStopped() {
 	revolutionCounterSinceStart = 0;
 	if (rpmValue != 0) {
 		assignRpmValue(0);
+		// needed by 'useNoiselessTriggerDecoder'
+		engine->triggerCentral.noiseFilter.resetAccumSignalData();
 		scheduleMsg(logger, "engine stopped");
 	}
 	state = STOPPED;

@@ -18,13 +18,15 @@
 #define activateAuxPid2_offset 76
 #define activateAuxPid3_offset 76
 #define activateAuxPid4_offset 76
-#define adc_channel_e_enum "PA0", "PA1", "PA2", "PA3", "PA4", "PA5", "PA6", "PA7", "PB0", "PB1", "PC0", "PC1", "PC2", "PC3", "PC4", "PC5", "Disabled", "PB12", "PB13", "PC14", "PC15", "PC16", "PC17", "PD3", "PD4", "PE2", "PE6", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID"
+#define adc_channel_e_enum "Disabled", "PA0", "PA1", "PA2", "PA3", "PA4", "PA5", "PA6", "PA7", "PB0", "PB1", "PC0", "PC1", "PC2", "PC3", "PC4", "PC5"
 #define adc_channel_mode_e_auto_enum "ADC_OFF", "ADC_SLOW", "ADC_FAST"
 #define ADC_CHANNEL_NONE 16
 #define adcVcc_offset 548
 #define afr_alignmentFill_afr_offset 561
 #define afr_hwChannel_offset 560
 #define afr_offset 560
+#define afr_override_e_auto_enum "AFR_None", "AFR_MAP", "AFR_Tps", "AFR_AccPedal", "AFR_CylFilling"
+#define afr_override_e_enum "None", "MAP", "TPS", "Acc Pedal", "Cyl Filling %"
 #define afr_sensor_s_size 20
 #define afr_type_offset 692
 #define afr_v1_offset 564
@@ -32,6 +34,7 @@
 #define afr_value1_offset 568
 #define afr_value2_offset 576
 #define afrLoadBins_offset 18848
+#define afrOverrideMode_offset 2111
 #define afrRpmBins_offset 18912
 #define afrTable_offset 18592
 #define afterCrankingIACtaperDuration_offset 2036
@@ -45,6 +48,7 @@
 #define air_pressure_sensor_config_s_size 16
 #define air_pressure_sensor_type_e_auto_enum "MT_CUSTOM", "MT_DENSO183", "MT_MPX4250", "MT_HONDA3BAR", "MT_DODGE_NEON_2003", "MT_SUBY_DENSO", "MT_GM_3_BAR", "MT_MPX4100", "MT_TOYOTA_89420_02010", "MT_MPX4250A", "MT_BOSCH_2_5", "MT_MAZDA_1_BAR"
 #define alignEngineSnifferAtTDC_offset 744
+#define alignmentFill_at_2227_offset 2227
 #define alternator_antiwindupFreq_offset 1764
 #define alternator_derivativeFilterLoss_offset 1760
 #define alternatorControl_dFactor_offset 1724
@@ -269,6 +273,7 @@
 #define CMD_TS_BENCH_MAIN_RELAY 0
 #define CMD_TS_BENCH_STARTER_DISABLE_RELAY 3
 #define CMD_TS_BENCH_STARTER_ENABLE_RELAY 2
+#define CMD_TS_FSIO_CATEGORY 33
 #define CMD_TS_IGNITION_CATEGORY 18
 #define CMD_TS_INJECTOR_CATEGORY 19
 #define CMD_VSS_PIN "vss_pin"
@@ -328,8 +333,10 @@
 #define display_mode_e_auto_enum "DM_NONE", "DM_HD44780", "DM_HD44780_OVER_PCF8574"
 #define displayLogicLevelsInEngineSniffer_offset 76
 #define displayMode_offset 492
-#define dizzySparkOutputPin_offset 2226
-#define dizzySparkOutputPinMode_offset 2227
+#define drv8860_cs_offset 1201
+#define drv8860_csPinMode_offset 1202
+#define drv8860_miso_offset 1203
+#define drv8860spiDevice_offset 1200
 #define DWELL_CURVE_SIZE 8
 #define ego_sensor_e_auto_enum "ES_BPSX_D1", "ES_Innovate_MTX_L", "ES_14Point7_Free", "ES_NarrowBand", "ES_PLX", "ES_Custom", "ES_AEM"
 #define ego_sensor_e_enum "BPSX", "Innovate", "14Point7", "Narrow", "PLX", "Custom", "INVALID", "INVALID"
@@ -446,7 +453,7 @@
 #define firingOrder_offset 404
 #define fixedModeTiming_offset 452
 #define fixedTiming_offset 2204
-#define FLASH_DATA_VERSION 10001
+#define FLASH_DATA_VERSION 10002
 #define frequencyReportingMapInputPin_offset 970
 #define FSIO_ANALOG_INPUT_COUNT 4
 #define FSIO_COMMAND_COUNT 16
@@ -1112,7 +1119,6 @@
 #define PROTOCOL_CRANK1 "t1"
 #define PROTOCOL_CRANK2 "t2"
 #define PROTOCOL_CRANK3 "t3"
-#define PROTOCOL_DIZZY_NAME "dizzy"
 #define PROTOCOL_ENGINE_SNIFFER "wave_chart"
 #define PROTOCOL_ES_DOWN "d"
 #define PROTOCOL_ES_UP "u"
@@ -1160,8 +1166,8 @@
 #define showHumanReadableWarning_offset 976
 #define showSdCardWarning_offset 76
 #define SIGNATURE_BOARD all
-#define SIGNATURE_DATE 2020.09.06
-#define SIGNATURE_HASH 1647322970
+#define SIGNATURE_DATE 2020.09.09
+#define SIGNATURE_HASH 2117182216
 #define silentTriggerError_offset 1464
 #define slowAdcAlpha_offset 2088
 #define sparkDwellRpmBins_offset 332
@@ -1190,6 +1196,7 @@
 #define spi_pins_size 4
 #define startCrankingDuration_offset 826
 #define starterControlPin_offset 1772
+#define starterControlPinMode_offset 2126
 #define starterRelayDisableMode_offset 809
 #define starterRelayDisablePin_offset 808
 #define startOfCrankingPrimingPulse_offset 2032
@@ -1471,7 +1478,7 @@
 #define ts_show_spi true
 #define ts_show_trigger_comparator false
 #define ts_show_tunerstudio_port true
-#define TS_SIGNATURE "rusEFI 2020.09.06.all.1647322970"
+#define TS_SIGNATURE "rusEFI 2020.09.09.all.2117182216"
 #define TS_SINGLE_WRITE_COMMAND 'W'
 #define TS_SINGLE_WRITE_COMMAND_char W
 #define TS_TEST_COMMAND 't' // 0x74
@@ -1480,7 +1487,6 @@
 #define twoWireBatchInjection_offset 1476
 #define uart_device_e_auto_enum "UART_NONE", "UART_DEVICE_1", "UART_DEVICE_2", "UART_DEVICE_3", "UART_DEVICE_4"
 #define uartConsoleSerialSpeed_offset 2076
-#define un1used_former_warmup_target_afr_offset 2109
 #define unused1059_offset 3964
 #define unused1126_offset 2116
 #define unused1127_offset 2116
@@ -1497,6 +1503,7 @@
 #define unused2516_offset 2516
 #define unused3288_offset 3288
 #define unused6312_offset 6312
+#define unused744b25_offset 744
 #define unused806_offset 806
 #define unused_1484_bit_24_offset 1476
 #define unused_1484_bit_25_offset 1476
@@ -1507,12 +1514,11 @@
 #define unused_1484_bit_30_offset 1476
 #define unused_1484_bit_31_offset 1476
 #define unused_alFIn_offset 4024
-#define unused_former_warmup_target_afr2_offset 2111
-#define unused_former_warmup_target_afr_offset 2126
+#define unused_former_warmup_target_afr_offset 2127
 #define unusedAt716_offset 716
 #define unusedAt720_offset 720
 #define unusedAt724_offset 724
-#define unusedAtOldBoardConfigurationEnd_offset 1200
+#define unusedAtOldBoardConfigurationEnd_offset 1204
 #define unusedAuxVoltage1_TODO_332_offset 2713
 #define unusedAuxVoltage2_TODO_332_offset 2714
 #define unusedBit4_1476_offset 1476
@@ -1520,30 +1526,31 @@
 #define unusedBit_285_30_offset 976
 #define unusedBit_285_31_offset 976
 #define unusedBit_34_31_offset 76
-#define unusedBit_478_10_offset 2116
-#define unusedBit_478_11_offset 2116
-#define unusedBit_478_12_offset 2116
-#define unusedBit_478_13_offset 2116
-#define unusedBit_478_14_offset 2116
-#define unusedBit_478_15_offset 2116
-#define unusedBit_478_16_offset 2116
-#define unusedBit_478_17_offset 2116
-#define unusedBit_478_18_offset 2116
-#define unusedBit_478_19_offset 2116
-#define unusedBit_478_20_offset 2116
-#define unusedBit_478_21_offset 2116
-#define unusedBit_478_22_offset 2116
-#define unusedBit_478_23_offset 2116
-#define unusedBit_478_24_offset 2116
-#define unusedBit_478_25_offset 2116
-#define unusedBit_478_26_offset 2116
-#define unusedBit_478_27_offset 2116
-#define unusedBit_478_28_offset 2116
-#define unusedBit_478_29_offset 2116
-#define unusedBit_478_30_offset 2116
-#define unusedBit_478_31_offset 2116
-#define unusedBit_478_8_offset 2116
-#define unusedBit_478_9_offset 2116
+#define unusedBit_482_10_offset 2116
+#define unusedBit_482_11_offset 2116
+#define unusedBit_482_12_offset 2116
+#define unusedBit_482_13_offset 2116
+#define unusedBit_482_14_offset 2116
+#define unusedBit_482_15_offset 2116
+#define unusedBit_482_16_offset 2116
+#define unusedBit_482_17_offset 2116
+#define unusedBit_482_18_offset 2116
+#define unusedBit_482_19_offset 2116
+#define unusedBit_482_20_offset 2116
+#define unusedBit_482_21_offset 2116
+#define unusedBit_482_22_offset 2116
+#define unusedBit_482_23_offset 2116
+#define unusedBit_482_24_offset 2116
+#define unusedBit_482_25_offset 2116
+#define unusedBit_482_26_offset 2116
+#define unusedBit_482_27_offset 2116
+#define unusedBit_482_28_offset 2116
+#define unusedBit_482_29_offset 2116
+#define unusedBit_482_30_offset 2116
+#define unusedBit_482_31_offset 2116
+#define unusedBit_482_8_offset 2116
+#define unusedBit_482_9_offset 2116
+#define unusedDizzy_offset 2226
 #define unusedFlexFuelSensor_offset 3100
 #define unusedHereWeHave_offset 1464
 #define unusedOldBiquad_offset 2332
@@ -1589,15 +1596,17 @@
 #define useTLE8888_cranking_hack_offset 76
 #define useTpicAdvancedMode_offset 744
 #define useTPSAdvanceTable_offset 1476
-#define useTPSBasedVeTable_offset 744
 #define VBAT_INJECTOR_CURVE_SIZE 8
 #define vbattAdcChannel_offset 513
 #define vbattDividerCoeff_offset 464
+#define ve_override_e_auto_enum "VE_None", "VE_MAP", "VE_TPS"
+#define ve_override_e_enum "None", "MAP", "TPS"
 #define VEHICLE_INFO_SIZE 32
 #define vehicleName_offset 1160
 #define vehicleSpeedCoef_offset 476
 #define vehicleSpeedSensorInputPin_offset 968
 #define veLoadBins_offset 18464
+#define veOverrideMode_offset 2109
 #define verboseCan2BaseAddress_offset 2112
 #define verboseCanBaseAddress_offset 756
 #define verboseTLE8888_offset 744
