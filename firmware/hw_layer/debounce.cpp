@@ -86,13 +86,11 @@ bool ButtonDebounce::readPinState() {
     //  but when a method is implemented to actually get the pin's state,
     //  for example to implement long button presses, it will be needed.
     readValue = false;
-#ifndef EFI_UNIT_TEST
     readValue = efiReadPin(active_pin);
     // Invert
     if (getInputMode(active_mode) == PAL_MODE_INPUT_PULLUP) {
         readValue = !readValue;
     }
-#endif
     if (readValue) {
         timeLast = timeNow;
     }
