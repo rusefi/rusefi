@@ -30,7 +30,7 @@ static LoggingWithStorage logger("io_pins");
 
 bool efiReadPin(brain_pin_e pin) {
 #if ! EFI_PROD_CODE
-	return engine->engineState->mockPinStates[static_cast<int>(pin)];
+	return engine->engineState.mockPinStates[static_cast<int>(pin)];
 #endif
 	if (brain_pin_is_onchip(pin))
 		return palReadPad(getHwPort("readPin", pin), getHwPin("readPin", pin));
