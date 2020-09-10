@@ -48,7 +48,7 @@ public:
 	}
 
 protected:
-	virtual void decodeFrame(const CANRxFrame& frame) = 0;
+	virtual void decodeFrame(const CANRxFrame& frame, efitick_t nowNt) = 0;
 	CanSensorBase* m_next = nullptr;
 
 private:
@@ -79,6 +79,7 @@ public:
 private:
 	const uint8_t m_offset;
 };
+
 template <int Size, int Offset>
 class ObdCanSensor: public CanSensorBase {
 public:
