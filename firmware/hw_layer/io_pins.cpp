@@ -9,11 +9,10 @@
 
 #include "global.h"
 #include "io_pins.h"
-#include "efi_gpio.h"
 
-EXTERN_ENGINE;
+#if EFI_UNIT_TEST
+#include "engine_test_helper.h"
 
-#if ! EFI_PROD_CODE
 bool efiReadPin(brain_pin_e pin) {
 	return engine->engineState.mockPinStates[static_cast<int>(pin)];
 }
@@ -21,14 +20,16 @@ bool efiReadPin(brain_pin_e pin) {
 
 #if EFI_PROD_CODE
 
-#include "pin_repository.h"
 #include "os_access.h"
+#include "efi_gpio.h"
 #include "drivers/gpio/gpio_ext.h"
 
+#include "pin_repository.h"
 #include "status_loop.h"
 #include "engine_configuration.h"
 #include "console_io.h"
 
+EXTERN_ENGINE;
 
 #if EFI_ENGINE_CONTROL
 #include "main_trigger_callback.h"
