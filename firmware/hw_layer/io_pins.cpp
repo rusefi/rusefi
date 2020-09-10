@@ -10,7 +10,7 @@
 #include "global.h"
 #include "io_pins.h"
 
-#if EFI_UNIT_TEST
+#if ! EFI_PROD_CODE
 #include "engine_test_helper.h"
 
 bool efiReadPin(brain_pin_e pin) {
