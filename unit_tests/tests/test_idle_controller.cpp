@@ -40,6 +40,7 @@ TEST(idle, fsioPidParameters) {
 
 	ASSERT_EQ(1, hasAcToggle(PASS_ENGINE_PARAMETER_SIGNATURE));
 	setMockState(engineConfiguration->acSwitch, true PASS_ENGINE_PARAMETER_SUFFIX);
+	timeNowUs += MS2US(15);
 	ASSERT_TRUE(getAcToggle(PASS_ENGINE_PARAMETER_SIGNATURE));
 
 	eth.engine.periodicSlowCallback(PASS_ENGINE_PARAMETER_SIGNATURE);
@@ -47,6 +48,7 @@ TEST(idle, fsioPidParameters) {
 	ASSERT_EQ(30, getIdlePidMinValue(PASS_ENGINE_PARAMETER_SIGNATURE));
 
 	setMockState(engineConfiguration->acSwitch, false PASS_ENGINE_PARAMETER_SUFFIX);
+	timeNowUs += MS2US(15);
 	ASSERT_FALSE(getAcToggle(PASS_ENGINE_PARAMETER_SIGNATURE));
 
 	eth.engine.periodicSlowCallback(PASS_ENGINE_PARAMETER_SIGNATURE);
