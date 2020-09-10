@@ -12,7 +12,7 @@ TEST(BoostControl, Setpoint) {
 
 	// Just pass TPS input to output
 	EXPECT_CALL(targetMap, getValue(_, _))
-		.WillRepeatedly([](float xRpm, float tps) { return tps; });
+		.WillRepeatedly([](float xRpm, float tps) { return tps * 2; });
 
 	WITH_ENGINE_TEST_HELPER(TEST_ENGINE);
 
@@ -54,7 +54,7 @@ TEST(BoostControl, OpenLoop) {
 
 	// Just pass MAP input to output
 	EXPECT_CALL(openMap, getValue(_, _))
-		.WillRepeatedly([](float xRpm, float tps) { return tps; });
+		.WillRepeatedly([](float xRpm, float tps) { return tps * 2; });
 
 	WITH_ENGINE_TEST_HELPER(TEST_ENGINE);
 
