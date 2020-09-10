@@ -28,104 +28,55 @@ public:
 template<int RPM_BIN_SIZE, int LOAD_BIN_SIZE, typename vType, typename kType, typename TValueMultiplier = efi::ratio<1>>
 class Map3D : public ValueProvider3D {
 public:
-	explicit Map3D(const char*name);
-	void init(vType table[RPM_BIN_SIZE][LOAD_BIN_SIZE], const kType loadBins[LOAD_BIN_SIZE], const kType rpmBins[RPM_BIN_SIZE]);
-	float getValue(float xRpm, float y) const override;
-	void setAll(vType value);
+	explicit Map3D(const char*name) {
+		create(name);
+	}
+
+	void init(vType table[RPM_BIN_SIZE][LOAD_BIN_SIZE], const kType loadBins[LOAD_BIN_SIZE], const kType rpmBins[RPM_BIN_SIZE]) {
+		// this method cannot use logger because it's invoked before everything
+		// that's because this method needs to be invoked before initial configuration processing
+		// and initial configuration load is done prior to logging initialization
+		for (int k = 0; k < LOAD_BIN_SIZE; k++) {
+			pointers[k] = table[k];
+		}
+
+		initialized = true;
+		this->loadBins = loadBins;
+		this->rpmBins = rpmBins;
+	}
+
+	float getValue(float xRpm, float y) const override {
+		efiAssert(CUSTOM_ERR_ASSERT, initialized, "map not initialized", NAN);
+		if (cisnan(y)) {
+			warning(CUSTOM_PARAM_RANGE, "%s: y is NaN", name);
+			return NAN;
+		}
+
+		// todo: we have a bit of a mess: in TunerStudio, RPM is X-axis
+		return interpolate3d<vType, kType>(y, loadBins, LOAD_BIN_SIZE, xRpm, rpmBins, RPM_BIN_SIZE, pointers) * TValueMultiplier::asFloat();
+	}
+
+	void setAll(vType value) {
+		efiAssertVoid(CUSTOM_ERR_6573, initialized, "map not initialized");
+		for (int l = 0; l < LOAD_BIN_SIZE; l++) {
+			for (int r = 0; r < RPM_BIN_SIZE; r++) {
+				pointers[l][r] = value / TValueMultiplier::asFloat();
+			}
+		}
+	}
+
 	vType *pointers[LOAD_BIN_SIZE];
 private:
-	void create(const char*name);
+	void create(const char* name) {
+		this->name = name;
+		memset(&pointers, 0, sizeof(pointers));
+	}
+
 	const kType *loadBins = NULL;
 	const kType *rpmBins = NULL;
 	bool initialized =  false;
 	const char *name;
 };
-
-/*
- * this dead code is a questionable performance optimization idea: instead of division every time
- * we want interpolation for a curve we can pre-calculate A and B and save the division at the cost of more RAM usage
- * Realistically we probably value RAM over CPU at this time and the costs are not justified.
-template<int SIZE>
-class Table2D {
-public:
-	Table2D();
-	void preCalc(float *bin, float *values);
-	float aTable[SIZE];
-	float bTable[SIZE];
-	float *bin;
-};
-template<int SIZE>
-Table2D<SIZE>::Table2D() {
-	bin = NULL;
-}
-
-template<int SIZE>
-void Table2D<SIZE>::preCalc(float *bin, float *values) {
-	this->bin = bin;
-	for (int i = 0; i < SIZE - 1; i++) {
-		float x1 = bin[i];
-		float x2 = bin[i + 1];
-		if (x1 == x2) {
-			warning(CUSTOM_INTEPOLATE_ERROR_4, "preCalc: Same x1 and x2 in interpolate: %.2f/%.2f", x1, x2);
-			return;
-		}
-
-		float y1 = values[i];
-		float y2 = values[i + 1];
-
-		aTable[i] = INTERPOLATION_A(x1, y1, x2, y2);
-		bTable[i] = y1 - aTable[i] * x1;
-	}
-}
-*/
-
-template<int RPM_BIN_SIZE, int LOAD_BIN_SIZE, typename vType, typename kType, typename TValueMultiplier>
-void Map3D<RPM_BIN_SIZE, LOAD_BIN_SIZE, vType, kType, TValueMultiplier>::init(vType table[RPM_BIN_SIZE][LOAD_BIN_SIZE],
-		const kType loadBins[LOAD_BIN_SIZE],
-		const kType rpmBins[RPM_BIN_SIZE]) {
-	// this method cannot use logger because it's invoked before everything
-	// that's because this method needs to be invoked before initial configuration processing
-	// and initial configuration load is done prior to logging initialization
-
-  for (int k = 0; k < LOAD_BIN_SIZE; k++) {
-		pointers[k] = table[k];
-  }
-	initialized = true;
-	this->loadBins = loadBins;
-	this->rpmBins = rpmBins;
-}
-
-template<int RPM_BIN_SIZE, int LOAD_BIN_SIZE, typename vType, typename kType, typename TValueMultiplier>
-float Map3D<RPM_BIN_SIZE, LOAD_BIN_SIZE, vType, kType, TValueMultiplier>::getValue(float xRpm, float y) const {
-	efiAssert(CUSTOM_ERR_ASSERT, initialized, "map not initialized", NAN);
-	if (cisnan(y)) {
-		warning(CUSTOM_PARAM_RANGE, "%s: y is NaN", name);
-		return NAN;
-	}
-	// todo: we have a bit of a mess: in TunerStudio, RPM is X-axis
-	return interpolate3d<vType, kType>(y, loadBins, LOAD_BIN_SIZE, xRpm, rpmBins, RPM_BIN_SIZE, pointers) * TValueMultiplier::asFloat();
-}
-
-template<int RPM_BIN_SIZE, int LOAD_BIN_SIZE, typename vType, typename kType, typename TValueMultiplier>
-Map3D<RPM_BIN_SIZE, LOAD_BIN_SIZE, vType, kType, TValueMultiplier>::Map3D(const char *name) {
-	create(name);
-}
-
-template<int RPM_BIN_SIZE, int LOAD_BIN_SIZE, typename vType, typename kType, typename TValueMultiplier>
-void Map3D<RPM_BIN_SIZE, LOAD_BIN_SIZE, vType, kType, TValueMultiplier>::create(const char *name) {
-	this->name = name;
-	memset(&pointers, 0, sizeof(pointers));
-}
-
-template<int RPM_BIN_SIZE, int LOAD_BIN_SIZE, typename vType, typename kType, typename TValueMultiplier>
-void Map3D<RPM_BIN_SIZE, LOAD_BIN_SIZE, vType, kType, TValueMultiplier>::setAll(vType value) {
-	efiAssertVoid(CUSTOM_ERR_6573, initialized, "map not initialized");
-	for (int l = 0; l < LOAD_BIN_SIZE; l++) {
-		for (int r = 0; r < RPM_BIN_SIZE; r++) {
-			pointers[l][r] = value / TValueMultiplier::asFloat();
-		}
-	}
-}
 
 template<int RPM_BIN_SIZE, int LOAD_BIN_SIZE, typename vType, typename kType, typename TValueMultiplier = efi::ratio<1>>
 void copy2DTable(const vType source[LOAD_BIN_SIZE][RPM_BIN_SIZE], vType destination[LOAD_BIN_SIZE][RPM_BIN_SIZE]) {
