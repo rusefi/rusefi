@@ -10,6 +10,7 @@
 #include "global.h"
 #include "io_pins.h"
 #include "efi_gpio.h"
+#include "engine.h"
 
 EXTERN_ENGINE;
 
