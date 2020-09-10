@@ -11,6 +11,8 @@
 #include "io_pins.h"
 #include "efi_gpio.h"
 
+EXTERN_ENGINE;
+
 #if EFI_PROD_CODE
 
 #include "os_access.h"
@@ -21,7 +23,6 @@
 #include "engine_configuration.h"
 #include "console_io.h"
 
-EXTERN_ENGINE;
 
 #if EFI_ENGINE_CONTROL
 #include "main_trigger_callback.h"
@@ -115,8 +116,6 @@ void efiIcuStart(const char *msg, ICUDriver *icup, const ICUConfig *config) {
 #endif /* HAL_USE_ICU */
 
 #else
-EXTERN_ENGINE;
-
 bool efiReadPin(brain_pin_e pin) {
 	return engine->engineState.mockPinStates[static_cast<int>(pin)];
 }
