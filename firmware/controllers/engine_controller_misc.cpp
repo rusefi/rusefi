@@ -71,6 +71,10 @@ void setMockVBattVoltage(float voltage DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	setMockVoltage(engineConfiguration->vbattAdcChannel, voltage PASS_ENGINE_PARAMETER_SUFFIX);
 }
 
+void setMockState(brain_pin_e pin, bool state DECLARE_ENGINE_PARAMETER_SUFFFIX) {
+	engine->mockPinStates[static_cast<int>(pin)] = state;
+}
+
 #endif /* EFI_ENABLE_MOCK_ADC */
 
 #if EFI_PROD_CODE
