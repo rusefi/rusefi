@@ -9,11 +9,11 @@
 
 #include "global.h"
 #include "io_pins.h"
+#include "efi_gpio.h"
 
 #if EFI_PROD_CODE
 
 #include "os_access.h"
-#include "efi_gpio.h"
 #include "drivers/gpio/gpio_ext.h"
 
 #include "pin_repository.h"
