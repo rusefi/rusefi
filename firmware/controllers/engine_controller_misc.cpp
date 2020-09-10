@@ -16,7 +16,7 @@ extern LoggingWithStorage sharedLogger;
 extern ButtonDebounce startStopButtonDebounce;
 
 #if ! EFI_PROD_CODE
-extern bool[] mockPinStates;
+extern bool mockPinStates[(1 << sizeof(brain_pin_e))];
 #endif
 
 #if ENABLE_PERF_TRACE

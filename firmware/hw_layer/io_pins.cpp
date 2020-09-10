@@ -117,7 +117,7 @@ void efiIcuStart(const char *msg, ICUDriver *icup, const ICUConfig *config) {
 #endif /* HAL_USE_ICU */
 
 #else
-extern bool[] mockPinStates;
+extern bool mockPinStates[(1 << sizeof(brain_pin_e))];
 
 bool efiReadPin(brain_pin_e pin) {
 	return mockPinStates[static_cast<int>(pin)];
