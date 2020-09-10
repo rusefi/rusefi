@@ -88,10 +88,12 @@ bool ButtonDebounce::readPinState() {
     //  for example to implement long button presses, it will be needed.
     readValue = false;
     readValue = efiReadPin(active_pin);
+#if EFI_PROD_CODE
     // Invert
     if (getInputMode(active_mode) == PAL_MODE_INPUT_PULLUP) {
         readValue = !readValue;
     }
+#endif
     if (readValue) {
         timeLast = timeNow;
     }
