@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEfi tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Wed Sep 09 20:53:44 UTC 2020
+// this file was generated automatically by rusEfi tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Fri Sep 11 02:17:42 UTC 2020
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -17,7 +17,8 @@ public class Fields {
 	public static final int acIdleRpmBump_offset = 1496;
 	public static final int acRelayPin_offset = 830;
 	public static final int acRelayPinMode_offset = 831;
-	public static final int acSwitchAdc_offset = 1469;
+	public static final int acSwitch_offset = 1469;
+	public static final int acSwitchMode_offset = 4516;
 	public static final int activateAuxPid1_offset = 76;
 	public static final int activateAuxPid2_offset = 76;
 	public static final int activateAuxPid3_offset = 76;
@@ -48,6 +49,7 @@ public class Fields {
 	public static final int air_pressure_sensor_config_s_size = 16;
 	public static final int alignEngineSnifferAtTDC_offset = 744;
 	public static final int alignmentFill_at_2227_offset = 2227;
+	public static final int alignmentFill_at_4517_offset = 4517;
 	public static final int alternator_antiwindupFreq_offset = 1764;
 	public static final int alternator_derivativeFilterLoss_offset = 1760;
 	public static final int alternatorControl_dFactor_offset = 1724;
@@ -966,7 +968,7 @@ public class Fields {
 	public static final int mafSensorType_offset = 948;
 	public static final int mainRelayPin_offset = 706;
 	public static final int mainRelayPinMode_offset = 752;
-	public static final int mainUnusedEnd_offset = 4516;
+	public static final int mainUnusedEnd_offset = 4520;
 	public static final int malfunctionIndicatorPin_offset = 660;
 	public static final int malfunctionIndicatorPinMode_offset = 661;
 	public static final int manIdlePosition_offset = 608;
@@ -1122,7 +1124,7 @@ public class Fields {
 	public static final int servoOutputPins8_offset = 3147;
 	public static final int showHumanReadableWarning_offset = 976;
 	public static final int showSdCardWarning_offset = 76;
-	public static final int SIGNATURE_HASH = 2117182216;
+	public static final int SIGNATURE_HASH = 327369018;
 	public static final int silentTriggerError_offset = 1464;
 	public static final int slowAdcAlpha_offset = 2088;
 	public static final int sparkDwellRpmBins_offset = 332;
@@ -1383,7 +1385,7 @@ public class Fields {
 	public static final char TS_SD_R_COMMAND = 'r';
 	public static final char TS_SD_W_COMMAND = 'w';
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI 2020.09.09.all.2117182216";
+	public static final String TS_SIGNATURE = "rusEFI 2020.09.11.all.327369018";
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final int tunerStudioSerialSpeed_offset = 728;
 	public static final int twoWireBatchIgnition_offset = 1476;
@@ -2117,7 +2119,7 @@ public class Fields {
 	public static final Field USEFSIO13FORIDLEMINVALUE = Field.create("USEFSIO13FORIDLEMINVALUE", 1464, FieldType.BIT, 30);
 	public static final Field USEFSIO6FORREVLIMITER = Field.create("USEFSIO6FORREVLIMITER", 1464, FieldType.BIT, 31);
 	public static final Field HIPOUTPUTCHANNEL = Field.create("HIPOUTPUTCHANNEL", 1468, FieldType.INT8, adc_channel_e);
-	public static final Field ACSWITCHADC = Field.create("ACSWITCHADC", 1469, FieldType.INT8, adc_channel_e);
+	public static final Field ACSWITCH = Field.create("ACSWITCH", 1469, FieldType.INT8, switch_input_pin_e);
 	public static final Field VREFADCCHANNEL = Field.create("VREFADCCHANNEL", 1470, FieldType.INT8, adc_channel_e);
 	public static final Field ETBNEUTRALPOSITION = Field.create("ETBNEUTRALPOSITION", 1471, FieldType.INT8);
 	public static final Field IDLEMODE = Field.create("IDLEMODE", 1472, FieldType.INT);
@@ -2538,6 +2540,7 @@ public class Fields {
 	public static final Field MC33_T_HOLD_TOT = Field.create("MC33_T_HOLD_TOT", 4512, FieldType.INT16);
 	public static final Field TCUUPSHIFTBUTTONPINMODE = Field.create("TCUUPSHIFTBUTTONPINMODE", 4514, FieldType.INT8, pin_input_mode_e);
 	public static final Field TCUDOWNSHIFTBUTTONPINMODE = Field.create("TCUDOWNSHIFTBUTTONPINMODE", 4515, FieldType.INT8, pin_input_mode_e);
+	public static final Field ACSWITCHMODE = Field.create("ACSWITCHMODE", 4516, FieldType.INT8, pin_input_mode_e);
 	public static final Field WARNING_MESSAGE = Field.create("WARNING_MESSAGE", 6000, 120, FieldType.STRING);
 	public static final Field BOOSTTABLEOPENLOOP = Field.create("BOOSTTABLEOPENLOOP", 6248, FieldType.INT);
 	public static final Field BOOSTTABLECLOSEDLOOP = Field.create("BOOSTTABLECLOSEDLOOP", 6328, FieldType.INT);
@@ -3150,7 +3153,7 @@ public class Fields {
 	USEFSIO13FORIDLEMINVALUE,
 	USEFSIO6FORREVLIMITER,
 	HIPOUTPUTCHANNEL,
-	ACSWITCHADC,
+	ACSWITCH,
 	VREFADCCHANNEL,
 	ETBNEUTRALPOSITION,
 	IDLEMODE,
@@ -3562,6 +3565,7 @@ public class Fields {
 	MC33_T_HOLD_TOT,
 	TCUUPSHIFTBUTTONPINMODE,
 	TCUDOWNSHIFTBUTTONPINMODE,
+	ACSWITCHMODE,
 	WARNING_MESSAGE,
 	BOOSTTABLEOPENLOOP,
 	BOOSTTABLECLOSEDLOOP,

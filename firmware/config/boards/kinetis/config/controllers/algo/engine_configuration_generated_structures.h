@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Wed Sep 09 20:54:03 UTC 2020
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Fri Sep 11 02:18:01 UTC 2020
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -2092,10 +2092,10 @@ struct engine_configuration_s {
 	 */
 	adc_channel_e hipOutputChannel;
 	/**
-	 * A/C button input handled as analogue input
+	 *  A/C button input
 	 * offset 1469
 	 */
-	adc_channel_e acSwitchAdc;
+	switch_input_pin_e acSwitch;
 	/**
 	 * offset 1470
 	 */
@@ -3395,7 +3395,16 @@ struct engine_configuration_s {
 	/**
 	 * offset 4516
 	 */
-	int mainUnusedEnd[371];
+	pin_input_mode_e acSwitchMode;
+	/**
+	 * need 4 byte alignment
+	 * offset 4517
+	 */
+	uint8_t alignmentFill_at_4517[3];
+	/**
+	 * offset 4520
+	 */
+	int mainUnusedEnd[370];
 	/** total size 6000*/
 };
 
@@ -3689,4 +3698,4 @@ struct persistent_config_s {
 typedef struct persistent_config_s persistent_config_s;
 
 // end
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Wed Sep 09 20:54:03 UTC 2020
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Fri Sep 11 02:18:01 UTC 2020
