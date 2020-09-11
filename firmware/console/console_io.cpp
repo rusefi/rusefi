@@ -51,12 +51,12 @@ EXTERN_ENGINE;
 #include "usbconsole.h"
 #define EFI_CONSOLE_USB_DEVICE SDU1
 #define SERIAL_USB_DRIVER SerialUSBDriver
-#endif /* HAL_USE_SERIAL_USB */
 
 #ifdef EFI_CONSOLE_USB_DEVICE
 extern SERIAL_USB_DRIVER EFI_CONSOLE_USB_DEVICE;
 #endif /* EFI_CONSOLE_USB_DEVICE */
 
+#endif /* HAL_USE_SERIAL_USB */
 
 // 10 seconds
 #define CONSOLE_WRITE_TIMEOUT 10000
