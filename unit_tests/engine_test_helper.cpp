@@ -91,6 +91,8 @@ EngineTestHelper::EngineTestHelper(engine_type_e engineType, configuration_callb
 	// Setup running in mock airmass mode
 	engineConfiguration->fuelAlgorithm = LM_MOCK;
 	engine->mockAirmassModel = &mockAirmass;
+
+	memset(mockPinStates, 0, sizeof(mockPinStates));
 }
 
 EngineTestHelper::~EngineTestHelper() {
