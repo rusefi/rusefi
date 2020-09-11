@@ -179,7 +179,7 @@ static char header[16];
 /**
  * this method should invoked on the main thread only
  */
-void printWithLength(char *line) {
+static void printWithLength(char *line) {
 #if ! EFI_UNIT_TEST
 	int len;
 	char *p;

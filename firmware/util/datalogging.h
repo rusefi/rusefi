@@ -95,5 +95,3 @@ void scheduleLogging(Logging *logging);
 #ifdef __cplusplus
 }
 #endif /* __cplusplus */
-
-void printWithLength(char *line);
