@@ -164,7 +164,7 @@ void sr5WriteData(ts_channel_s *tsChannel, const uint8_t * buffer, int size) {
 	UNUSED(tsChannel);
 	int transferred = size;
 	canAddToTxStreamTimeout(&TS_CAN_DEVICE, (size_t *)&transferred, buffer, BINARY_IO_TIMEOUT);
-#else
+#endif
 	if (tsChannel->channel == nullptr)
 		return;
 
