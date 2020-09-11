@@ -22,7 +22,6 @@ public:
 
 	void reset();
 
-	void initLoggingExt(const char *name, char *buffer, int bufferSize);
 	void vappendPrintf(const char *fmt, va_list arg);
 	void append(const char *text);
 	void appendFast(const char *text);
@@ -48,21 +47,21 @@ public:
 //private:
 	bool validateBuffer(const char *text, uint32_t extraLen);
 
-	const char *name = nullptr;
+	const char* const name = nullptr;
 
 	/**
 	 * Zero-terminated buffer of pending debug message
 	 *
 	 * Unless a larger external buffer is specified, this is just a pointer to DEFAULT_BUFFER
 	 */
-	char *buffer = nullptr;
+	char* const buffer = nullptr;
+	const int bufferSize = 0;
+
 	/**
 	 * This pointer is always pointing at the position within the buffer into which next
 	 * write operation would append additional data
 	 */
 	char *linePointer = nullptr;
-	int bufferSize = 0;
-	volatile bool isInitialized = false;
 };
 
 class LoggingWithStorage : public Logging {
@@ -70,8 +69,6 @@ public:
 	explicit LoggingWithStorage(const char *name);
 	char DEFAULT_BUFFER[200];
 };
-
-int isInitialized(Logging *logging);
 
 void initLoggingExt(Logging *logging, const char *name, char *buffer, int bufferSize);
 

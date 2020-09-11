@@ -74,11 +74,6 @@ static IntermediateLogging intermediateLogging;
  * @returns true if data does not fit into this buffer
  */
 bool Logging::validateBuffer(const char *text, uint32_t extraLen) {
-	if (!buffer) {
-		firmwareError(CUSTOM_ERR_LOGGING_NOT_READY, "Logging not initialized: %s", name);
-		return true;
-	}
-
 	if (remainingSize() < extraLen + 1) {
 #if EFI_PROD_CODE
 		const char * msg = extraLen > 50 ? "(long)" : text;
@@ -146,18 +141,6 @@ void Logging::appendPrintf(const char *fmt, ...) {
 	vappendPrintf(fmt, ap);
 	va_end(ap);
 #endif // EFI_UNIT_TEST
-}
-
-void Logging::initLoggingExt(const char *name, char *buffer, int bufferSize) {
-	this->name = name;
-	this->buffer = buffer;
-	this->bufferSize = bufferSize;
-	reset();
-	this->isInitialized = true;
-}
-
-int isInitialized(Logging *logging) {
-	return logging->isInitialized;
 }
 
 void Logging::appendFloat(float value, int precision) {
@@ -242,11 +225,6 @@ void appendMsgPostfix(Logging *logging) {
 }
 
 void Logging::reset() {
-	if (!buffer) {
-		firmwareError(ERROR_NULL_BUFFER, "Null buffer: %s", name);
-		return;
-	}
-
 	linePointer = buffer;
 	*linePointer = 0;
 }
@@ -270,12 +248,12 @@ void printMsg(Logging *logger, const char *fmt, ...) {
 	logger->reset();
 }
 
-Logging::Logging(char const *name, char *buffer, int bufferSize) {
-#if ! EFI_UNIT_TEST
-	initLoggingExt(name, buffer, bufferSize);
-#else
-	this->buffer = buffer;
-#endif /* ! EFI_UNIT_TEST */
+Logging::Logging(char const *name, char *buffer, int bufferSize)
+	: name(name)
+	, buffer(buffer)
+	, bufferSize(bufferSize)
+{
+	reset();
 }
 
 LoggingWithStorage::LoggingWithStorage(const char *name) : Logging(name, DEFAULT_BUFFER, sizeof(DEFAULT_BUFFER))   {
