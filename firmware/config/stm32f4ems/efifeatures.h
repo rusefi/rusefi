@@ -262,7 +262,7 @@
 #define EFI_USB_SERIAL TRUE
 #endif
 
-#define EFI_CONSOLE_USB_DEVICE (&SDU1)
+#define EFI_CONSOLE_USB_DEVICE SDU1
 
 /**
  * Should PnP engine configurations be included in the binary?
