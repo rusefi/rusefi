@@ -58,7 +58,7 @@ void scAddData(float angle, float value) {
 	}
 	if (!pendingData) {
 		pendingData = true;
-		resetLogging(&scLogging);
+		scLogging.reset();
 		// message header
 		scLogging.appendPrintf( "%s%s", PROTOCOL_ANALOG_CHART, DELIMETER);
 	}

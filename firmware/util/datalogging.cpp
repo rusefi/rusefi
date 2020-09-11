@@ -73,26 +73,27 @@ static IntermediateLogging intermediateLogging;
 /**
  * @returns true if data does not fit into this buffer
  */
-static ALWAYS_INLINE bool validateBuffer(Logging *logging, const char *text, uint32_t extraLen) {
-	if (logging->buffer == NULL) {
-		firmwareError(CUSTOM_ERR_LOGGING_NOT_READY, "Logging not initialized: %s", logging->name);
+bool Logging::validateBuffer(const char *text, uint32_t extraLen) {
+	if (!buffer) {
+		firmwareError(CUSTOM_ERR_LOGGING_NOT_READY, "Logging not initialized: %s", name);
 		return true;
 	}
 
-	if (remainingSize(logging) < extraLen + 1) {
+	if (remainingSize() < extraLen + 1) {
 #if EFI_PROD_CODE
 		const char * msg = extraLen > 50 ? "(long)" : text;
-		warning(CUSTOM_LOGGING_BUFFER_OVERFLOW, "output overflow %s %d [%s]", logging->name, extraLen, msg);
+		warning(CUSTOM_LOGGING_BUFFER_OVERFLOW, "output overflow %s %d [%s]", name, extraLen, msg);
 #endif /* EFI_PROD_CODE */
 		return true;
 	}
+
 	return false;
 }
 
 void Logging::append(const char *text) {
 	efiAssertVoid(CUSTOM_APPEND_NULL, text != NULL, "append NULL");
 	uint32_t extraLen = efiStrlen(text);
-	bool isCapacityProblem = validateBuffer(this, text, extraLen);
+	bool isCapacityProblem = validateBuffer(text, extraLen);
 	if (isCapacityProblem) {
 		return;
 	}
@@ -103,20 +104,14 @@ void Logging::append(const char *text) {
 	linePointer += extraLen;
 }
 
-// todo: inline
-void append(Logging *logging, const char *text) {
-	logging->append(text);
-}
-
 /**
  * @note This method if fast because it does not validate much, be sure what you are doing
  */
-void appendFast(Logging *logging, const char *text) {
-	char *s;
-	s = logging->linePointer;
+void Logging::appendFast(const char *text) {
+	char *s = linePointer;
 	while ((*s++ = *text++) != 0)
 		;
-	logging->linePointer = s - 1;
+	linePointer = s - 1;
 }
 
 /**
@@ -138,15 +133,6 @@ void Logging::vappendPrintf(const char *fmt, va_list arg) {
 #endif // EFI_UNIT_TEST
 }
 
-// todo: replace with logging->appendPrintf
-void appendPrintf(Logging *logging, const char *fmt, ...) {
-	efiAssertVoid(CUSTOM_APPEND_STACK, getCurrentRemainingStack() > 128, "lowstck#4");
-	va_list ap;
-	va_start(ap, fmt);
-	logging->vappendPrintf(fmt, ap);
-	va_end(ap);
-}
-
 void Logging::appendPrintf(const char *fmt, ...) {
 #if EFI_UNIT_TEST
 	va_list ap;
@@ -166,7 +152,7 @@ void Logging::initLoggingExt(const char *name, char *buffer, int bufferSize) {
 	this->name = name;
 	this->buffer = buffer;
 	this->bufferSize = bufferSize;
-	resetLogging(this);
+	reset();
 	this->isInitialized = true;
 }
 
@@ -174,7 +160,7 @@ int isInitialized(Logging *logging) {
 	return logging->isInitialized;
 }
 
-void appendFloat(Logging *logging, float value, int precision) {
+void Logging::appendFloat(float value, int precision) {
 	/**
 	 * todo: #1 this implementation is less than perfect
 	 * todo: #2 The only way to avoid double promotion would probably be using *float instead of float
@@ -182,26 +168,26 @@ void appendFloat(Logging *logging, float value, int precision) {
 	 */
 	switch (precision) {
 	case 1:
-		appendPrintf(logging, "%.1f", value);
+		appendPrintf("%.1f", value);
 		break;
 	case 2:
-		appendPrintf(logging, "%.2f", value);
+		appendPrintf("%.2f", value);
 		break;
 	case 3:
-		appendPrintf(logging, "%.3f", value);
+		appendPrintf("%.3f", value);
 		break;
 	case 4:
-		appendPrintf(logging, "%.4f", value);
+		appendPrintf("%.4f", value);
 		break;
 	case 5:
-		appendPrintf(logging, "%.5f", value);
+		appendPrintf("%.5f", value);
 		break;
 	case 6:
-		appendPrintf(logging, "%.6f", value);
+		appendPrintf("%.6f", value);
 		break;
 
 	default:
-		appendPrintf(logging, "%.2f", value);
+		appendPrintf("%.2f", value);
 	}
 }
 
@@ -248,21 +234,21 @@ void printWithLength(char *line) {
 }
 
 void appendMsgPrefix(Logging *logging) {
-	append(logging, PROTOCOL_MSG DELIMETER);
+	logging->append(PROTOCOL_MSG DELIMETER);
 }
 
 void appendMsgPostfix(Logging *logging) {
-	append(logging, DELIMETER);
+	logging->append(DELIMETER);
 }
 
-void resetLogging(Logging *logging) {
-	char *buffer = logging->buffer;
-	if (buffer == NULL) {
-		firmwareError(ERROR_NULL_BUFFER, "Null buffer: %s", logging->name);
+void Logging::reset() {
+	if (!buffer) {
+		firmwareError(ERROR_NULL_BUFFER, "Null buffer: %s", name);
 		return;
 	}
-	logging->linePointer = buffer;
-	logging->linePointer[0] = 0;
+
+	linePointer = buffer;
+	*linePointer = 0;
 }
 
 /**
@@ -279,19 +265,12 @@ void printMsg(Logging *logger, const char *fmt, ...) {
 	logger->vappendPrintf(fmt, ap);
 	va_end(ap);
 
-	append(logger, DELIMETER);
+	logger->append(DELIMETER);
 	printWithLength(logger->buffer);
-	resetLogging(logger);
+	logger->reset();
 }
 
-uint32_t remainingSize(Logging *logging) {
-	return logging->bufferSize - loggingSize(logging);
-}
-
-Logging::Logging() {
-}
-
-Logging::Logging(char const *name, char *buffer, int bufferSize) : Logging() {
+Logging::Logging(char const *name, char *buffer, int bufferSize) {
 #if ! EFI_UNIT_TEST
 	initLoggingExt(name, buffer, bufferSize);
 #else

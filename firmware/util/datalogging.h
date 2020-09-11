@@ -17,15 +17,39 @@
 // size of buffers?
 class Logging {
 public:
-	Logging();
+	Logging() = delete;
 	Logging(const char *name, char *buffer, int bufferSize);
+
+	void reset();
+
 	void initLoggingExt(const char *name, char *buffer, int bufferSize);
 	void vappendPrintf(const char *fmt, va_list arg);
 	void append(const char *text);
 	void appendFast(const char *text);
 	void appendPrintf(const char *fmt, ...);
+	void appendFloat(float value, int precision);
+
+	/**
+	 * This macro breaks the normal zero=termination constraint, please take care of this outside of this function
+	 */
+	void appendChar(char c) {
+		*linePointer = c;
+		linePointer++;
+	}
+
+	size_t loggingSize() const {
+		return (uintptr_t)linePointer - (uintptr_t)buffer;
+	}
+
+	size_t remainingSize() const {
+		return bufferSize - loggingSize();
+	}
+
+//private:
+	bool validateBuffer(const char *text, uint32_t extraLen);
+
 	const char *name = nullptr;
-	char SMALL_BUFFER[40];
+
 	/**
 	 * Zero-terminated buffer of pending debug message
 	 *
@@ -51,10 +75,6 @@ int isInitialized(Logging *logging);
 
 void initLoggingExt(Logging *logging, const char *name, char *buffer, int bufferSize);
 
-void appendFloat(Logging *logging, float value, int precision);
-
-void resetLogging(Logging *logging);
-
 void appendMsgPrefix(Logging *logging);
 void appendMsgPostfix(Logging *logging);
 
@@ -67,20 +87,7 @@ extern "C"
 #define lockOutputBuffer lockAnyContext
 #define unlockOutputBuffer unlockAnyContext
 
-uint32_t remainingSize(Logging *logging);
-
-#define loggingSize(logging) ((int) (logging)->linePointer - (int) ((logging)->buffer))
-
-
 void printMsg(Logging *logging, const char *fmt, ...);
-void appendPrintf(Logging *logging, const char *fmt, ...);
-void append(Logging *logging, const char *text);
-void appendFast(Logging *logging, const char *text);
-
-/**
- * This macro breaks the normal zero=termination constraint, please take care of this outside of this macro
- */
-#define appendChar(logging, symbol) {(logging)->linePointer[0] = (symbol);(logging)->linePointer++;}
 
 /**
  * this method copies the line into the intermediate buffer for later output by

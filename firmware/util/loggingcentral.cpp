@@ -82,7 +82,7 @@ void scheduleLogging(Logging *logging) {
 		if (!alreadyLocked) {
 			unlockOutputBuffer();
 		}
-		resetLogging(logging);
+		logging->reset();
 		return;
 	}
 	// memcpy is faster then strcpy because it is not looking for line terminator
@@ -91,7 +91,7 @@ void scheduleLogging(Logging *logging) {
 	if (!alreadyLocked) {
 		unlockOutputBuffer();
 	}
-	resetLogging(logging);
+	logging->reset();
 #endif /* EFI_TEXT_LOGGING */
 }
 
@@ -167,7 +167,7 @@ void scheduleMsg(Logging *logging, const char *format, ...) {
 		return;
 	}
 	int wasLocked = lockAnyContext();
-	resetLogging(logging); // todo: is 'reset' really needed here?
+	logging->reset(); // todo: is 'reset' really needed here?
 	appendMsgPrefix(logging);
 
 	va_list ap;

@@ -58,7 +58,7 @@ int waveChartUsedSize;
 //#define DEBUG_WAVE 1
 
 #if DEBUG_WAVE
-static Logging debugLogging;
+static LoggingWithStorage debugLogging("debug");
 #endif /* DEBUG_WAVE */
 
 static LoggingWithStorage logger("wave info");
@@ -76,11 +76,10 @@ static void resetNow(void) {
 }
 #endif
 
-WaveChart::WaveChart() {
+WaveChart::WaveChart() : logging("wave chart", WAVE_LOGGING_BUFFER, sizeof(WAVE_LOGGING_BUFFER)) {
 }
 
 void WaveChart::init() {
-	logging.initLoggingExt("wave chart", WAVE_LOGGING_BUFFER, sizeof(WAVE_LOGGING_BUFFER));
 	isInitialized = true;
 	reset();
 }
@@ -89,7 +88,7 @@ void WaveChart::reset() {
 #if DEBUG_WAVE
 	scheduleSimpleMsg(&debugLogging, "reset while at ", counter);
 #endif /* DEBUG_WAVE */
-	resetLogging(&logging);
+	logging.reset();
 	counter = 0;
 	startTimeNt = 0;
 	collectingData = false;
@@ -239,10 +238,6 @@ void initWaveChart(WaveChart *chart) {
 	chart->init();
 
 	printStatus();
-
-#if DEBUG_WAVE
-	initLoggingExt(&debugLogging, "wave chart debug", &debugLogging.DEFAULT_BUFFER, sizeof(debugLogging.DEFAULT_BUFFER));
-#endif
 
 #if EFI_HISTOGRAMS
 	initHistogram(&engineSnifferHisto, "wave chart");

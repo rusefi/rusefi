@@ -119,7 +119,7 @@ static void printToStream(MemoryStream *stream, const char *fmt, va_list ap) {
 }
 
 static void printWarning(const char *fmt, va_list ap) {
-	resetLogging(&logger); // todo: is 'reset' really needed here?
+	logger.reset(); // todo: is 'reset' really needed here?
 	appendMsgPrefix(&logger);
 
 	logger.append(WARNING_PREFIX);
