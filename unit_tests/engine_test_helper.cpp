@@ -24,6 +24,8 @@ extern engine_configuration_s & activeConfiguration;
 extern bool printTriggerDebug;
 extern bool printFuelDebug;
 
+// This has been made global so we don't need to worry about efiReadPin having access the object
+//  we store it in, every time we need to use efiReadPin.
 bool mockPinStates[BRAIN_PIN_COUNT];
 
 EngineTestHelperBase::EngineTestHelperBase() { 
