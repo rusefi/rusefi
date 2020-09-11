@@ -603,7 +603,8 @@ void doScheduleStopEngine(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	// todo: initiate stepper motor parking
 	// make sure we have stored all the info
 #if EFI_PROD_CODE
-	backupRamFlush();
+	//todo: FIX kinetis build with this line
+	//backupRamFlush();
 #endif // EFI_PROD_CODE
 }
 
