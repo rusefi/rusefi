@@ -335,7 +335,6 @@ void prepareVoidConfiguration(engine_configuration_s *engineConfiguration) {
 */
 	engineConfiguration->tps2_1AdcChannel = EFI_ADC_NONE;
 	engineConfiguration->auxFastSensor1_adcChannel = EFI_ADC_NONE;
-	engineConfiguration->acSwitchAdc = EFI_ADC_NONE;
 	engineConfiguration->externalKnockSenseAdc = EFI_ADC_NONE;
 	engineConfiguration->fuelLevelSensor = EFI_ADC_NONE;
 	engineConfiguration->hipOutputChannel = EFI_ADC_NONE;
