@@ -1,4 +1,4 @@
-/**
+	/**
  * @file	console_io.cpp
  *
  * @date Dec 29, 2012
@@ -244,7 +244,7 @@ BaseChannel * getConsoleChannel(void) {
 	return (BaseChannel *) &uartChannel;
 #endif /* EFI_CONSOLE_UART_DEVICE */
 
-#if defined(EFI_CONSOLE_USB_DEVICE)
+#if HAL_USE_SERIAL_USB
 	return (BaseChannel *) &EFI_CONSOLE_USB_DEVICE;
 #else
 	return nullptr;
