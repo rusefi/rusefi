@@ -49,8 +49,14 @@ EXTERN_ENGINE;
 #if HAL_USE_SERIAL_USB
 #include "usbcfg.h"
 #include "usbconsole.h"
-extern SerialUSBDriver SDU1;
+#define EFI_CONSOLE_USB_DEVICE SDU1
+#define SERIAL_USB_DRIVER SerialUSBDriver
 #endif /* HAL_USE_SERIAL_USB */
+
+#ifdef EFI_CONSOLE_USB_DEVICE
+extern SERIAL_USB_DRIVER EFI_CONSOLE_USB_DEVICE;
+#endif /* EFI_CONSOLE_USB_DEVICE */
+
 
 // 10 seconds
 #define CONSOLE_WRITE_TIMEOUT 10000
@@ -216,11 +222,11 @@ ts_channel_s primaryChannel;
 #if EFI_PROD_CODE || EFI_EGT
 
 bool isUsbSerial(BaseChannel * channel) {
-#if HAL_USE_SERIAL_USB
-	return channel == (BaseChannel *) &CONSOLE_USB_DEVICE;
+#if defined(EFI_CONSOLE_USB_DEVICE)
+	return channel == (BaseChannel *) &EFI_CONSOLE_USB_DEVICE;
 #else
 	return false;
-#endif
+#endif /* EFI_CONSOLE_USB_DEVICE */
 }
 BaseChannel * getConsoleChannel(void) {
 #if PRIMARY_UART_DMA_MODE
@@ -238,8 +244,8 @@ BaseChannel * getConsoleChannel(void) {
 	return (BaseChannel *) &uartChannel;
 #endif /* EFI_CONSOLE_UART_DEVICE */
 
-#if HAL_USE_SERIAL_USB
-	return (BaseChannel *) &CONSOLE_USB_DEVICE;
+#if defined(EFI_CONSOLE_USB_DEVICE)
+	return (BaseChannel *) &EFI_CONSOLE_USB_DEVICE;
 #else
 	return nullptr;
 #endif /* HAL_USE_SERIAL_USB */
@@ -289,6 +295,16 @@ static Logging *logger;
 void startConsole(Logging *sharedLogger, CommandHandler console_line_callback_p) {
 	logger = sharedLogger;
 	console_line_callback = console_line_callback_p;
+#if 0
+#if (defined(EFI_CONSOLE_USB_DEVICE) && ! EFI_SIMULATOR)
+	/**
+	 * This method contains a long delay, that's the reason why this is not done on the main thread
+	 * TODO: actually now with some refactoring this IS on the main thread :(
+	 */
+	usb_serial_start();
+	isSerialConsoleStarted = true;
+#endif /* EFI_CONSOLE_USB_DEVICE */
+#endif
 
 #if (defined(EFI_CONSOLE_SERIAL_DEVICE) || defined(EFI_CONSOLE_UART_DEVICE)) && ! EFI_SIMULATOR
 		efiSetPadMode("console RX", EFI_CONSOLE_RX_BRAIN_PIN, PAL_MODE_ALTERNATE(EFI_CONSOLE_AF));
