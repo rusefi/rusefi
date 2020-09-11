@@ -222,7 +222,7 @@ ts_channel_s primaryChannel;
 #if EFI_PROD_CODE || EFI_EGT
 
 bool isUsbSerial(BaseChannel * channel) {
-#if defined(EFI_CONSOLE_USB_DEVICE)
+#if HAL_USE_SERIAL_USB
 	return channel == (BaseChannel *) &EFI_CONSOLE_USB_DEVICE;
 #else
 	return false;
