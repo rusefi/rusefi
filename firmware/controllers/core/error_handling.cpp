@@ -137,7 +137,7 @@ static void printWarning(const char *fmt, va_list ap) {
 	}
 
 	logger.append(warningBuffer);
-	append(&logger, DELIMETER);
+	logger.append(DELIMETER);
 	scheduleLogging(&logger);
 }
 

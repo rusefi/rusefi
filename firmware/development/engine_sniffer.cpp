@@ -93,7 +93,7 @@ void WaveChart::reset() {
 	counter = 0;
 	startTimeNt = 0;
 	collectingData = false;
-	appendPrintf(&logging, "%s%s", PROTOCOL_ENGINE_SNIFFER, DELIMETER);
+	logging.appendPrintf( "%s%s", PROTOCOL_ENGINE_SNIFFER, DELIMETER);
 }
 
 void WaveChart::startDataCollection() {
@@ -144,8 +144,8 @@ void WaveChart::publishIfFull() {
 }
 
 void WaveChart::publish() {
-	appendPrintf(&logging, DELIMETER);
-	waveChartUsedSize = loggingSize(&logging);
+	logging.appendPrintf( DELIMETER);
+	waveChartUsedSize = logging.loggingSize();
 #if DEBUG_WAVE
 	Logging *l = &chart->logging;
 	scheduleSimpleMsg(&debugLogging, "IT'S TIME", strlen(l->buffer));
@@ -211,20 +211,20 @@ void WaveChart::addEvent3(const char *name, const char * msg) {
 	uint32_t diffNt = nowNt - startTimeNt;
 	uint32_t time100 = NT2US(diffNt / ENGINE_SNIFFER_UNIT_US);
 
-	if (remainingSize(&logging) > 35) {
+	if (logging.remainingSize() > 35) {
 		/**
 		 * printf is a heavy method, append is used here as a performance optimization
 		 */
-		appendFast(&logging, name);
-		appendChar(&logging, CHART_DELIMETER);
-		appendFast(&logging, msg);
-		appendChar(&logging, CHART_DELIMETER);
+		logging.appendFast(name);
+		logging.appendChar(CHART_DELIMETER);
+		logging.appendFast(msg);
+		logging.appendChar(CHART_DELIMETER);
 //		time100 -= startTime100;
 
 		itoa10(timeBuffer, time100);
-		appendFast(&logging, timeBuffer);
-		appendChar(&logging, CHART_DELIMETER);
-		logging.linePointer[0] = 0;
+		logging.appendFast(timeBuffer);
+		logging.appendChar(CHART_DELIMETER);
+		logging.appendChar('\0');
 	}
 	if (!alreadyLocked) {
 		unlockOutputBuffer();
