@@ -112,8 +112,8 @@ void setBoardConfigurationOverrides(void) {
 	engineConfiguration->hipOutputChannel = EFI_ADC_NONE;
 	engineConfiguration->fuelLevelSensor = EFI_ADC_NONE;
 	engineConfiguration->oilPressure.hwChannel = EFI_ADC_NONE;
-	engineConfiguration->acSwitchAdc = EFI_ADC_NONE;
 
+	engineConfiguration->acSwitch = GPIO_UNASSIGNED;
 	engineConfiguration->triggerInputPins[0] = GPIOB_0;
 	engineConfiguration->triggerInputPins[1] = GPIO_UNASSIGNED;
 	engineConfiguration->triggerInputPins[2] = GPIO_UNASSIGNED;
