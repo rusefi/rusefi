@@ -31,6 +31,8 @@ MAIN_RELAY_LOGIC=(vbatt > 5) | in_shutdown
 # could be used for simple variable intake geometry setups or warning light or starter block
 RPM_ABOVE_USER_SETTING_1=rpm > fsio_setting(1)
 
+RPM_BELOW_USER_SETTING_3=rpm < fsio_setting(3)
+
 # could be used for simple variable intake geometry setups or warning light or starter block
 RPM_ABOVE_USER_SETTING_1=rpm > fsio_setting(1)
 
