@@ -133,8 +133,13 @@ float getEngineValue(le_action_e action DECLARE_ENGINE_PARAMETER_SUFFIX) {
 		return engine->triggerCentral.getVVTPosition();
 #endif
 	case LE_METHOD_TIME_SINCE_BOOT:
+#if EFI_MAIN_RELAY_CONTROL
+		// in main relay control mode, we return the number of seconds since the ignition is turned on
+		// (or negative if the ignition key is switched off)
+		return engine->getTimeIgnitionSeconds();
+#else
 		return getTimeNowSeconds();
-
+#endif /* EFI_MAIN_RELAY_CONTROL */
 	case LE_METHOD_STARTUP_FUEL_PUMP_DURATION:
 		return engineConfiguration->startUpFuelPumpDuration;
 
@@ -454,6 +459,7 @@ void runFsio(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 
 #if EFI_MAIN_RELAY_CONTROL
 	if (CONFIG(mainRelayPin) != GPIO_UNASSIGNED)
+		// the MAIN_RELAY_LOGIC calls engine->isInShutdownMode()
 		setPinState("main_relay", &enginePins.mainRelay, mainRelayLogic PASS_ENGINE_PARAMETER_SUFFIX);
 #else /* EFI_MAIN_RELAY_CONTROL */
 	/**
@@ -744,6 +750,12 @@ void initFsioImpl(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX) {
 
 // "Limp-mode" implementation for some RAM-limited configs without FSIO
 void runHardcodedFsio(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+#if EFI_PROD_CODE
+	if (isRunningBenchTest()) {
+		return; // let's not mess with bench testing
+	}
+#endif /* EFI_PROD_CODE */
+
 	// see MAIN_RELAY_LOGIC
 	if (CONFIG(mainRelayPin) != GPIO_UNASSIGNED) {
 		enginePins.mainRelay.setValue((getTimeNowSeconds() < 2) || (getVBatt(PASS_ENGINE_PARAMETER_SIGNATURE) > LOW_VBATT) || engine->isInShutdownMode());
