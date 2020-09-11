@@ -18,6 +18,12 @@
 
 EXTERN_ENGINE;
 
+#if EFI_PROD_CODE
+
+// todo: that's about bench test mode, wrong header for sure!
+#include "bench_test.h"
+#endif // EFI_PROD_CODE
+
 #if EFI_FSIO
 
 #include "os_access.h"
@@ -164,8 +170,6 @@ float getEngineValue(le_action_e action DECLARE_ENGINE_PARAMETER_SUFFIX) {
 
 #include "pin_repository.h"
 #include "pwm_generator_logic.h"
-// todo: that's about bench test mode, wrong header for sure!
-#include "bench_test.h"
 
 static void setFsioAnalogInputPin(const char *indexStr, const char *pinName) {
 // todo: reduce code duplication between all "set pin methods"
