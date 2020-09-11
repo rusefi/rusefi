@@ -272,7 +272,7 @@
 // todo: switch to continuous ADC conversion for slow ADC?
 // https://github.com/rusefi/rusefi/issues/630
 // todo: switch to continues ADC conversion for fast ADC?
-#define EFI_INTERNAL_FAST_ADC_PWM	&PWMD4
+#define EFI_INTERNAL_FAST_ADC_GPT	&GPTD6
 
 #define EFI_SPI1_AF 5
 
@@ -383,7 +383,7 @@
 #undef TS_SERIAL_DEVICE
 #undef TS_UART_MODE
 #define EFI_CONSOLE_SERIAL_DEVICE (&SD1)
-//#define EFI_CONSOLE_USB_DEVICE (&SDU1)
+//#define EFI_CONSOLE_USB_DEVICE SDU1
 #define EFI_UART_ECHO_TEST_MODE TRUE
 #define TS_UART_DEVICE (&UARTD3)
 #define TS_SERIAL_DEVICE (&SD3)

@@ -250,7 +250,7 @@
 #define EFI_USB_SERIAL TRUE
 #endif
 
-#define EFI_CONSOLE_USB_DEVICE (&SDU1)
+#define EFI_CONSOLE_USB_DEVICE SDU1
 
 /**
  * While we embed multiple PnP configurations into the same firmware binary, these marcoses give us control
@@ -304,7 +304,7 @@
 // todo: switch to continues ADC conversion for slow ADC?
 // https://github.com/rusefi/rusefi/issues/630
 // todo: switch to continues ADC conversion for fast ADC?
-#define EFI_INTERNAL_FAST_ADC_PWM	&PWMD4
+#define EFI_INTERNAL_FAST_ADC_GPT	&GPTD6
 
 #define EFI_SPI1_AF 5
 

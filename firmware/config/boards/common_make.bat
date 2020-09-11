@@ -3,7 +3,7 @@ echo Entering %script_name%
 
 mkdir .dep
 rem todo: start using env variable for number of threads or for '-r'
-make -j4 -r
+make -r -j4 2> err.log
 if not exist build/rusefi.hex echo FAILED to compile by %script_name% with %PROJECT_BOARD% %DEBUG_LEVEL_OPT% and %EXTRA_PARAMS%
 if not exist build/rusefi.hex exit -1
 

@@ -265,7 +265,7 @@
 // todo: switch to continues ADC conversion for slow ADC?
 // https://github.com/rusefi/rusefi/issues/630
 // todo: switch to continues ADC conversion for fast ADC?
-#define EFI_INTERNAL_FAST_ADC_PWM	&PWMD2
+#define EFI_INTERNAL_FAST_ADC_GPT	&GPTD2
 
 // todo: why 64 SPLL prescaler doesn't work?
 // 168000000/64/128/1025 = ~20Hz
