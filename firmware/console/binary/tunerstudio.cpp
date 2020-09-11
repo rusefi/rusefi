@@ -497,7 +497,6 @@ void runBinaryProtocolLoop(ts_channel_s *tsChannel) {
 			logMsg("received %d\r\n", received);
 #endif
 
-
 		if (received != 1) {
 //			tunerStudioError("ERROR: no command");
 #if EFI_BLUETOOTH_SETUP
