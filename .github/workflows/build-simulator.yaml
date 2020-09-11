@@ -20,13 +20,7 @@ jobs:
     - name: Generate Configs
       working-directory: ./firmware/
       run: |
-        if [ "${{ matrix.build-target }}" = "kinetis" ]; then
-          cd config/boards/kinetis/config
-          bash gen_config.sh
-          [ $? -eq 0 ] || { echo "ERROR generating board kinetis kin"; exit 1; }
-        else
-          bash gen_config_board.sh ${{matrix.folder}} ${{matrix.build-target}}
-        fi
+        bash gen_config_default.sh
 
     - name: Compile Simulator
       working-directory: ./simulator/
