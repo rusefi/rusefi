@@ -49,7 +49,7 @@ void scAddData(float angle, float value) {
 			 * data after we have added some data - meaning it's time to flush
 			 */
 			// message terminator
-			scLogging.appendPrintf(DELIMETER);
+			appendPrintf(&scLogging, DELIMETER);
 			// output pending data
 			scheduleLogging(&scLogging);
 			pendingData = false;
@@ -58,13 +58,13 @@ void scAddData(float angle, float value) {
 	}
 	if (!pendingData) {
 		pendingData = true;
-		scLogging.reset();
+		resetLogging(&scLogging);
 		// message header
-		scLogging.appendPrintf( "%s%s", PROTOCOL_ANALOG_CHART, DELIMETER);
+		appendPrintf(&scLogging, "%s%s", PROTOCOL_ANALOG_CHART, DELIMETER);
 	}
 
-	if (scLogging.remainingSize() > 100) {
-		scLogging.appendPrintf( "%.2f|%.2f|", angle, value);
+	if (remainingSize(&scLogging) > 100) {
+		appendPrintf(&scLogging, "%.2f|%.2f|", angle, value);
 	}
 #endif /* EFI_TEXT_LOGGING */
 }

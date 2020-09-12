@@ -58,7 +58,7 @@ int waveChartUsedSize;
 //#define DEBUG_WAVE 1
 
 #if DEBUG_WAVE
-static LoggingWithStorage debugLogging("debug");
+static Logging debugLogging;
 #endif /* DEBUG_WAVE */
 
 static LoggingWithStorage logger("wave info");
@@ -76,10 +76,11 @@ static void resetNow(void) {
 }
 #endif
 
-WaveChart::WaveChart() : logging("wave chart", WAVE_LOGGING_BUFFER, sizeof(WAVE_LOGGING_BUFFER)) {
+WaveChart::WaveChart() {
 }
 
 void WaveChart::init() {
+	logging.initLoggingExt("wave chart", WAVE_LOGGING_BUFFER, sizeof(WAVE_LOGGING_BUFFER));
 	isInitialized = true;
 	reset();
 }
@@ -88,11 +89,11 @@ void WaveChart::reset() {
 #if DEBUG_WAVE
 	scheduleSimpleMsg(&debugLogging, "reset while at ", counter);
 #endif /* DEBUG_WAVE */
-	logging.reset();
+	resetLogging(&logging);
 	counter = 0;
 	startTimeNt = 0;
 	collectingData = false;
-	logging.appendPrintf( "%s%s", PROTOCOL_ENGINE_SNIFFER, DELIMETER);
+	appendPrintf(&logging, "%s%s", PROTOCOL_ENGINE_SNIFFER, DELIMETER);
 }
 
 void WaveChart::startDataCollection() {
@@ -143,8 +144,8 @@ void WaveChart::publishIfFull() {
 }
 
 void WaveChart::publish() {
-	logging.appendPrintf( DELIMETER);
-	waveChartUsedSize = logging.loggingSize();
+	appendPrintf(&logging, DELIMETER);
+	waveChartUsedSize = loggingSize(&logging);
 #if DEBUG_WAVE
 	Logging *l = &chart->logging;
 	scheduleSimpleMsg(&debugLogging, "IT'S TIME", strlen(l->buffer));
@@ -210,20 +211,20 @@ void WaveChart::addEvent3(const char *name, const char * msg) {
 	uint32_t diffNt = nowNt - startTimeNt;
 	uint32_t time100 = NT2US(diffNt / ENGINE_SNIFFER_UNIT_US);
 
-	if (logging.remainingSize() > 35) {
+	if (remainingSize(&logging) > 35) {
 		/**
 		 * printf is a heavy method, append is used here as a performance optimization
 		 */
-		logging.appendFast(name);
-		logging.appendChar(CHART_DELIMETER);
-		logging.appendFast(msg);
-		logging.appendChar(CHART_DELIMETER);
+		appendFast(&logging, name);
+		appendChar(&logging, CHART_DELIMETER);
+		appendFast(&logging, msg);
+		appendChar(&logging, CHART_DELIMETER);
 //		time100 -= startTime100;
 
 		itoa10(timeBuffer, time100);
-		logging.appendFast(timeBuffer);
-		logging.appendChar(CHART_DELIMETER);
-		logging.appendChar('\0');
+		appendFast(&logging, timeBuffer);
+		appendChar(&logging, CHART_DELIMETER);
+		logging.linePointer[0] = 0;
 	}
 	if (!alreadyLocked) {
 		unlockOutputBuffer();
@@ -238,6 +239,10 @@ void initWaveChart(WaveChart *chart) {
 	chart->init();
 
 	printStatus();
+
+#if DEBUG_WAVE
+	initLoggingExt(&debugLogging, "wave chart debug", &debugLogging.DEFAULT_BUFFER, sizeof(debugLogging.DEFAULT_BUFFER));
+#endif
 
 #if EFI_HISTOGRAMS
 	initHistogram(&engineSnifferHisto, "wave chart");
