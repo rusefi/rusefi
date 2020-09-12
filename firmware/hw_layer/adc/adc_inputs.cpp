@@ -38,10 +38,6 @@
 #include "maf.h"
 #include "perf_trace.h"
 
-/* Depth of the conversion buffer, channels are sampled X times each.*/
-#define ADC_BUF_DEPTH_SLOW      8
-#define ADC_BUF_DEPTH_FAST      4
-
 // on F7 this must be aligned on a 32-byte boundary, and be a multiple of 32 bytes long.
 // When we invalidate the cache line(s) for ADC samples, we don't want to nuke any
 // adjacent data.
@@ -76,6 +72,10 @@ AdcDevice::AdcDevice(ADCConversionGroup* hwConfig, adcsample_t *buf) {
 	hwConfig->sqr1 = 0;
 	hwConfig->sqr2 = 0;
 	hwConfig->sqr3 = 0;
+#if ADC_MAX_CHANNELS_COUNT > 16
+	hwConfig->sqr4 = 0;
+	hwConfig->sqr5 = 0;
+#endif /* ADC_MAX_CHANNELS_COUNT */
 	memset(hardwareIndexByIndernalAdcIndex, EFI_ADC_NONE, sizeof(hardwareIndexByIndernalAdcIndex));
 	memset(internalAdcIndexByHardwareIndex, 0xFFFFFFFF, sizeof(internalAdcIndexByHardwareIndex));
 }
@@ -164,7 +164,11 @@ static ADCConversionGroup adcgrpcfgSlow = {
 	.ltr				= 0,
 	.sqr1				= 0, // Conversion group sequence 13...16 + sequence length
 	.sqr2				= 0, // Conversion group sequence 7...12
-	.sqr3				= 0  // Conversion group sequence 1...6
+	.sqr3				= 0, // Conversion group sequence 1...6
+#if ADC_MAX_CHANNELS_COUNT > 16
+	.sqr4				= 0, // Conversion group sequence 19...24
+	.sqr5				= 0  // Conversion group sequence 25...30
+#endif /* ADC_MAX_CHANNELS_COUNT */
 };
 
 AdcDevice slowAdc(&adcgrpcfgSlow, slowAdcSampleBuf);
@@ -208,7 +212,11 @@ static ADCConversionGroup adcgrpcfgFast = {
 	.ltr				= 0,
 	.sqr1				= 0, // Conversion group sequence 13...16 + sequence length
 	.sqr2				= 0, // Conversion group sequence 7...12
-	.sqr3				= 0  // Conversion group sequence 1...6
+	.sqr3				= 0, // Conversion group sequence 1...6
+#if ADC_MAX_CHANNELS_COUNT > 16
+	.sqr4				= 0, // Conversion group sequence 19...24
+	.sqr5				= 0  // Conversion group sequence 25...30
+#endif /* ADC_MAX_CHANNELS_COUNT */
 };
 
 AdcDevice fastAdc(&adcgrpcfgFast, fastAdcSampleBuf);
@@ -349,10 +357,17 @@ void AdcDevice::enableChannel(adc_channel_e hwChannel) {
 		hwConfig->sqr3 += (channelAdcIndex) << (5 * logicChannel);
 	} else if (logicChannel < 12) {
 		hwConfig->sqr2 += (channelAdcIndex) << (5 * (logicChannel - 6));
-	} else {
+	} else if (logicChannel < 18) {
 		hwConfig->sqr1 += (channelAdcIndex) << (5 * (logicChannel - 12));
 	}
-	// todo: support for more then 12 channels? not sure how needed it would be
+#if ADC_MAX_CHANNELS_COUNT > 16
+	else if (logicChannel < 24) {
+		hwConfig->sqr4 += (channelAdcIndex) << (5 * (logicChannel - 18));
+	}
+	else if (logicChannel < 30) {
+		hwConfig->sqr5 += (channelAdcIndex) << (5 * (logicChannel - 24));
+	}
+#endif /* ADC_MAX_CHANNELS_COUNT */
 }
 
 void AdcDevice::enableChannelAndPin(const char *msg, adc_channel_e hwChannel) {
@@ -422,6 +437,10 @@ static void setAdcDebugReporting(int value) {
 }
 
 void waitForSlowAdc(int lastAdcCounter) {
+	// don't halt the firmware if there are no slow channels assigned
+	if (slowAdc.size() < 1)
+		return;
+
 	// we use slowAdcCounter instead of slowAdc.conversionCount because we need ADC_COMPLETE state
 	// todo: use sync.objects?
 	while (slowAdcCounter <= lastAdcCounter) {
@@ -562,7 +581,7 @@ static void configureInputs(void) {
 static SlowAdcController slowAdcController;
 
 void initAdcInputs() {
-	printMsg(&logger, "initAdcInputs()");
+	scheduleMsg(&logger, "initAdcInputs()");
 	if (ADC_BUF_DEPTH_FAST > MAX_ADC_GRP_BUF_DEPTH)
 		firmwareError(CUSTOM_ERR_ADC_DEPTH_FAST, "ADC_BUF_DEPTH_FAST too high");
 	if (ADC_BUF_DEPTH_SLOW > MAX_ADC_GRP_BUF_DEPTH)
@@ -617,7 +636,7 @@ void initAdcInputs() {
 
 	addConsoleActionI("adc", (VoidInt) printAdcValue);
 #else
-	printMsg(&logger, "ADC disabled");
+	scheduleMsg(&logger, "ADC disabled");
 #endif
 }
 
