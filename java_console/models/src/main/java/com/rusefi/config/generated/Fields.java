@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEfi tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Fri Sep 11 02:17:42 UTC 2020
+// this file was generated automatically by rusEfi tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Sat Sep 12 07:36:48 UTC 2020
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -810,7 +810,6 @@ public class Fields {
 	public static final int idleVeBins_offset = 6608;
 	public static final int IGN_LOAD_COUNT = 16;
 	public static final int IGN_RPM_COUNT = 16;
-	public static final int IGN_TPS_COUNT = 16;
 	public static final int IGNITION_PIN_COUNT = 12;
 	public static final int ignitionDwellForCrankingMs_offset = 100;
 	public static final int ignitionIatCorrLoadBins_offset = 13856;
@@ -834,7 +833,6 @@ public class Fields {
 	public static final int ignitionPins9_offset = 644;
 	public static final int ignitionRpmBins_offset = 17376;
 	public static final int ignitionTable_offset = 16288;
-	public static final int ignitionTpsBins_offset = 3800;
 	public static final int ignMathCalculateAtIndex_offset = 1488;
 	public static final String INDICATOR_NAME_AC_SWITCH = "AC switch";
 	public static final String INDICATOR_NAME_BRAKE_DOWN = "brake: down";
@@ -1124,7 +1122,6 @@ public class Fields {
 	public static final int servoOutputPins8_offset = 3147;
 	public static final int showHumanReadableWarning_offset = 976;
 	public static final int showSdCardWarning_offset = 76;
-	public static final int SIGNATURE_HASH = 327369018;
 	public static final int silentTriggerError_offset = 1464;
 	public static final int slowAdcAlpha_offset = 2088;
 	public static final int sparkDwellRpmBins_offset = 332;
@@ -1385,7 +1382,7 @@ public class Fields {
 	public static final char TS_SD_R_COMMAND = 'r';
 	public static final char TS_SD_W_COMMAND = 'w';
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI 2020.09.11.all.327369018";
+	public static final String TS_SIGNATURE = "rusEFI 2020.09.12.all.2398398176";
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final int tunerStudioSerialSpeed_offset = 728;
 	public static final int twoWireBatchIgnition_offset = 1476;

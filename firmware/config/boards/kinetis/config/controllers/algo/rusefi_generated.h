@@ -831,7 +831,6 @@
 #define idleVeBins_offset 6608
 #define IGN_LOAD_COUNT 16
 #define IGN_RPM_COUNT 16
-#define IGN_TPS_COUNT 16
 #define ignition_mode_e_auto_enum "IM_ONE_COIL", "IM_INDIVIDUAL_COILS", "IM_WASTED_SPARK", "IM_TWO_COILS"
 #define IGNITION_PIN_COUNT 12
 #define ignitionDwellForCrankingMs_offset 100
@@ -856,7 +855,6 @@
 #define ignitionPins9_offset 644
 #define ignitionRpmBins_offset 17376
 #define ignitionTable_offset 16288
-#define ignitionTpsBins_offset 3800
 #define ignMathCalculateAtIndex_offset 1488
 #define INDICATOR_NAME_AC_SWITCH "AC switch"
 #define INDICATOR_NAME_BRAKE_DOWN "brake: down"
@@ -1168,8 +1166,8 @@
 #define showHumanReadableWarning_offset 976
 #define showSdCardWarning_offset 76
 #define SIGNATURE_BOARD kin
-#define SIGNATURE_DATE 2020.09.11
-#define SIGNATURE_HASH 4166548158
+#define SIGNATURE_DATE 2020.09.12
+#define SIGNATURE_HASH 1697619300
 #define silentTriggerError_offset 1464
 #define slowAdcAlpha_offset 2088
 #define sparkDwellRpmBins_offset 332
@@ -1480,7 +1478,7 @@
 #define ts_show_spi true
 #define ts_show_trigger_comparator true
 #define ts_show_tunerstudio_port true
-#define TS_SIGNATURE "rusEFI 2020.09.11.kin.4166548158"
+#define TS_SIGNATURE "rusEFI 2020.09.12.kin.1697619300"
 #define TS_SINGLE_WRITE_COMMAND 'W'
 #define TS_SINGLE_WRITE_COMMAND_char W
 #define TS_TEST_COMMAND 't' // 0x74
