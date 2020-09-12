@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Sat Sep 12 00:22:23 UTC 2020
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Sat Sep 12 07:37:06 UTC 2020
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -3159,11 +3159,7 @@ struct engine_configuration_s {
 	/**
 	 * offset 3288
 	 */
-	uint8_t unused3288[512];
-	/**
-	 * offset 3800
-	 */
-	float ignitionTpsBins[IGN_TPS_COUNT];
+	uint8_t unused3288[576];
 	/**
 	 * offset 3864
 	 */
@@ -3698,4 +3694,4 @@ struct persistent_config_s {
 typedef struct persistent_config_s persistent_config_s;
 
 // end
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Sat Sep 12 00:22:23 UTC 2020
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Sat Sep 12 07:37:06 UTC 2020
