@@ -312,12 +312,12 @@ void printHistogram(Logging *logging, histogram_s *histogram) {
 	int report[5];
 	int len = hsReport(histogram, report);
 
-	logging->reset();
+	resetLogging(logging);
 	appendMsgPrefix(logging);
-	logging.appendPrintf("histogram %s *", histogram->name);
+	appendPrintf(logging, "histogram %s *", histogram->name);
 	for (int i = 0; i < len; i++)
-	logging.appendPrintf("%d ", report[i]);
-	logging.appendPrintf("*");
+	appendPrintf(logging, "%d ", report[i]);
+	appendPrintf(logging, "*");
 	appendMsgPostfix(logging);
 	scheduleLogging(logging);
 #else

@@ -16,7 +16,7 @@ efitimems_t currentTimeMillis(void) {
 	return mockTimeMs;
 }
 
-LoggingWithStorage logging("test");
+Logging logging;
 
 static float zigZagOffset = 0;
 

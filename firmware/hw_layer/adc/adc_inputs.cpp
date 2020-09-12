@@ -385,10 +385,10 @@ static void printFullAdcReport(Logging *logger) {
 			int pin = getAdcChannelPin(hwIndex);
 
 			int adcValue = getAvgAdcValue(hwIndex, fastAdc.samples, ADC_BUF_DEPTH_FAST, fastAdc.size());
-			logger->appendPrintf(" F ch%d %s%d", index, portname(port), pin);
-			logger->appendPrintf(" ADC%d 12bit=%d", hwIndex, adcValue);
+			appendPrintf(logger, " F ch%d %s%d", index, portname(port), pin);
+			appendPrintf(logger, " ADC%d 12bit=%d", hwIndex, adcValue);
 			float volts = adcToVolts(adcValue);
-			logger->appendPrintf(" v=%.2f", volts);
+			appendPrintf(logger, " v=%.2f", volts);
 
 			appendMsgPostfix(logger);
 			scheduleLogging(logger);
@@ -405,10 +405,10 @@ static void printFullAdcReport(Logging *logger) {
 			int pin = getAdcChannelPin(hwIndex);
 
 			int adcValue = slowAdc.getAdcValueByIndex(index);
-			logger->appendPrintf(" S ch%d %s%d", index, portname(port), pin);
-			logger->appendPrintf(" ADC%d 12bit=%d", hwIndex, adcValue);
+			appendPrintf(logger, " S ch%d %s%d", index, portname(port), pin);
+			appendPrintf(logger, " ADC%d 12bit=%d", hwIndex, adcValue);
 			float volts = adcToVolts(adcValue);
-			logger->appendPrintf(" v=%.2f", volts);
+			appendPrintf(logger, " v=%.2f", volts);
 
 			appendMsgPostfix(logger);
 			scheduleLogging(logger);
