@@ -1,5 +1,4 @@
 @echo off
-set PATH=G:\VStudio\arm-elf-gcc\bin;G:\VStudio\msys2\usr\bin;C:\Program Files\Java\jre\bin;G:\VStudio\Git\bin
 
 echo "Compiling for Cypress FM4 S6E2CxAH"
 rem TODO: somehow this -DDUMMY is helping us to not mess up the parameters, why?!
