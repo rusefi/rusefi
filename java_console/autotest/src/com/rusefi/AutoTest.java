@@ -319,7 +319,7 @@ public class AutoTest extends BaseTest {
         assertWaveNull(msg, chart, EngineChart.TRIGGER_2);
         sendComplexCommand("set " + "trigger_type" + " 1"); // TT_FORD_ASPIRE
         chart = nextChart();
-        assertTrue(msg, chart.get(EngineChart.TRIGGER_2) != null);
+        assertTrue(msg + " trigger2", chart.get(EngineChart.TRIGGER_2) != null);
     }
 
     private void testFordAspire() {

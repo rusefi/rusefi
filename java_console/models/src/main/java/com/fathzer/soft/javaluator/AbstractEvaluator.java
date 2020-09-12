@@ -1,6 +1,8 @@
 package com.fathzer.soft.javaluator;
 
 import java.util.*;
+import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
 
 /** An abstract evaluator, able to evaluate infix expressions.
  * <br>Some standard evaluators are included in the library, you can define your own by subclassing this class.
@@ -184,7 +186,13 @@ public abstract class AbstractEvaluator<T> {
 		System.out.println("doFunction " + function + " " + argCount);
 
 		if (function.getMinimumArgumentCount()>argCount || function.getMaximumArgumentCount()<argCount) {
-			throw new IllegalArgumentException("Invalid argument count for "+function.getName() + " while " + argCount);
+			Iterator<?> a = getArguments(values, argCount);
+			Iterable iterable = () -> a;
+
+			List actualList = (List) StreamSupport
+					.stream(iterable.spliterator(), false)
+					.collect(Collectors.toList());
+			throw new IllegalArgumentException("Invalid argument count for "+function.getName() + " while " + argCount + ": " + actualList);
 		}
 		values.push(evaluate(function, getArguments(values, argCount), evaluationContext));
 	}

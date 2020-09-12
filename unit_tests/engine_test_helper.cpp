@@ -24,6 +24,10 @@ extern engine_configuration_s & activeConfiguration;
 extern bool printTriggerDebug;
 extern bool printFuelDebug;
 
+// This has been made global so we don't need to worry about efiReadPin having access the object
+//  we store it in, every time we need to use efiReadPin.
+bool mockPinStates[BRAIN_PIN_COUNT];
+
 EngineTestHelperBase::EngineTestHelperBase() { 
 	// todo: make this not a global variable, we need currentTimeProvider interface on engine
 	timeNowUs = 0; 
@@ -87,6 +91,8 @@ EngineTestHelper::EngineTestHelper(engine_type_e engineType, configuration_callb
 	// Setup running in mock airmass mode
 	engineConfiguration->fuelAlgorithm = LM_MOCK;
 	engine->mockAirmassModel = &mockAirmass;
+
+	memset(mockPinStates, 0, sizeof(mockPinStates));
 }
 
 EngineTestHelper::~EngineTestHelper() {
@@ -97,6 +103,7 @@ EngineTestHelper::~EngineTestHelper() {
 
 	// Cleanup
 	Sensor::resetRegistry();
+	memset(mockPinStates, 0, sizeof(mockPinStates));
 }
 
 static CompositeEvent compositeEvents[COMPOSITE_PACKET_COUNT];

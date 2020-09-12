@@ -332,7 +332,9 @@ void Engine::OnTriggerStateProperState(efitick_t nowNt) {
 	Engine *engine = this;
 	EXPAND_Engine;
 
+#if EFI_SHAFT_POSITION_INPUT
 	triggerCentral.triggerState.runtimeStatistics(&triggerCentral.triggerFormDetails, nowNt PASS_ENGINE_PARAMETER_SUFFIX);
+#endif /* EFI_SHAFT_POSITION_INPUT */
 
 	rpmCalculator.setSpinningUp(nowNt);
 }
@@ -599,6 +601,11 @@ void doScheduleStopEngine(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	// let's close injectors or else if these happen to be open right now
 	enginePins.stopPins();
 	// todo: initiate stepper motor parking
+	// make sure we have stored all the info
+#if EFI_PROD_CODE
+	//todo: FIX kinetis build with this line
+	//backupRamFlush();
+#endif // EFI_PROD_CODE
 }
 
 void action_s::execute() {

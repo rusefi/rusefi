@@ -245,6 +245,11 @@ public class DoubleEvaluator extends AbstractEvaluator<Double> {
 		ParsePosition p = new ParsePosition(0);
 		Number result = FORMATTER.get().parse(literal, p);
 		if (p.getIndex() == 0 || p.getIndex() != literal.length()) {
+			/**
+			 * We are here if function is not know
+			 * TODO: shall we throw exception?
+			 */
+			System.err.println("Not known " + literal);
 			return 6666666.0; // let's return this magic in case of any function call
 //			throw new IllegalArgumentException(literal + " is not a number");
 		}

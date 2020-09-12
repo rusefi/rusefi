@@ -540,7 +540,6 @@ static void configureInputs(void) {
 	}
 	addChannel("AFR", engineConfiguration->afr.hwChannel, ADC_SLOW);
 	addChannel("Oil Pressure", engineConfiguration->oilPressure.hwChannel, ADC_SLOW);
-	addChannel("AC", engineConfiguration->acSwitchAdc, ADC_SLOW);
 	if (engineConfiguration->high_fuel_pressure_sensor_1 != INCOMPATIBLE_CONFIG_CHANGE) {
 		addChannel("HFP1", engineConfiguration->high_fuel_pressure_sensor_1, ADC_SLOW);
 	}

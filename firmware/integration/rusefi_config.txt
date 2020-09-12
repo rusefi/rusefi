@@ -7,7 +7,7 @@
 ! rusEfi configuration consists of two parts:
 ! First part is engine_configuration_s area, followed by a few tuning tables
 !
-! The only difference her is that engine_configuration_s area does not support hot modification while tuning tables could
+! The only difference here is that engine_configuration_s area does not support hot modification while tuning tables could
 ! be modified without burning changes
 !
 !
@@ -132,7 +132,6 @@ struct_no_prefix engine_configuration_s
 #define CRANKING_CURVE_SIZE 8
 
 #define IGN_LOAD_COUNT 16
-#define IGN_TPS_COUNT 16
 #define IGN_RPM_COUNT 16
 
 #define INJECTION_PIN_COUNT 12
@@ -990,7 +989,7 @@ bit useFSIO13ForIdleMinValue;
 bit useFSIO6ForRevLimiter;
 
 	adc_channel_e hipOutputChannel;
-	adc_channel_e acSwitchAdc;A/C button input handled as analogue input
+	switch_input_pin_e acSwitch; A/C button input
 	adc_channel_e vRefAdcChannel;
 	uint8_t etbNeutralPosition;+Expected neutral position;"%",      1,      0,       0, 100,      0
 
@@ -1308,8 +1307,7 @@ float[CRANKING_ADVANCE_CURVE_SIZE] crankingAdvance    ;+Optional timing advance 
 float[CLT_CURVE_SIZE] iacCoastingBins;CLT-based idle position for coasting (used in Auto-PID Idle mode);"C",        1,     0,   -100.0,    250.0,  2
 float[CLT_CURVE_SIZE] iacCoasting;    CLT-based idle position for coasting (used in Auto-PID Idle mode);"%",      1,     0,      0.0,    100.0,   2
 
-uint8_t[512] unused3288;;"units", 1, 0, -20, 100, 0
-float[IGN_TPS_COUNT] ignitionTpsBins;;"TPS",   1,   0.0,        0,  100.0,   2
+uint8_t[576] unused3288;;"units", 1, 0, -20, 100, 0
 
 float tChargeAirCoefMin;;"Min tCharge Coeff.",        1,     0,  0.0,    1.0,  4
 float tChargeAirCoefMax;;"Max tCharge Coeff.",        1,     0,  0.0,    1.0,  4
@@ -1386,8 +1384,10 @@ uint8_t[4] unusedsw;;"units", 1, 0, -20, 100, 0
 	pin_input_mode_e tcuUpshiftButtonPinMode
 	pin_input_mode_e tcuDownshiftButtonPinMode
 
+	pin_input_mode_e acSwitchMode
+
 ! just a reminder that 'int' and 'float' are 4 bytes each
-	int[371] mainUnusedEnd;;"units", 1, 0, -20, 100, 0
+	int[370] mainUnusedEnd;;"units", 1, 0, -20, 100, 0
 
 ! end of engine_configuration_s
 end_struct
