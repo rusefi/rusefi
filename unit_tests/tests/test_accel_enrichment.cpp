@@ -104,7 +104,7 @@ TEST(fuel, testAccelEnrichmentFractionalTps) {
 		}
 	}
 
-	Logging logger;
+	LoggingWithStorage logger("test");
 	initAccelEnrichment(&logger PASS_ENGINE_PARAMETER_SUFFIX);
 
 	engine->rpmCalculator.setRpmValue(600);
