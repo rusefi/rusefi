@@ -28,6 +28,10 @@ public:
 	void appendPrintf(const char *fmt, ...);
 	void appendFloat(float value, int precision);
 
+	void terminate() {
+		linePointer[0] = '\0';
+	}
+
 	/**
 	 * This macro breaks the normal zero=termination constraint, please take care of this outside of this function
 	 */

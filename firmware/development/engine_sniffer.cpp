@@ -223,8 +223,9 @@ void WaveChart::addEvent3(const char *name, const char * msg) {
 		itoa10(timeBuffer, time100);
 		logging.appendFast(timeBuffer);
 		logging.appendChar(CHART_DELIMETER);
-		logging.appendChar('\0');
+		logging.terminate();
 	}
+
 	if (!alreadyLocked) {
 		unlockOutputBuffer();
 	}
