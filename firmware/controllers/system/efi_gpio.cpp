@@ -343,6 +343,9 @@ void OutputPin::setValue(int logicValue) {
 	#else
 		if (port != GPIO_NULL) {
 			setPinValue(this, eValue, logicValue);
+		} else {
+			// even without physical pin sometimes it's nice to track logic pin value
+			currentLogicValue = logicValue;
 		}
 	#endif
 
