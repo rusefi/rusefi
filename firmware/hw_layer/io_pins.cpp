@@ -48,6 +48,11 @@ bool efiReadPin(brain_pin_e pin) {
  */
 void efiSetPadMode(const char *msg, brain_pin_e brainPin, iomode_t mode)
 {
+	if (brainPin == GPIO_UNASSIGNED) {
+		// No pin configured, nothing to do here.
+		return;
+	}
+
 	bool wasUsed = brain_pin_markUsed(brainPin, msg);
 
 	if (!wasUsed) {
