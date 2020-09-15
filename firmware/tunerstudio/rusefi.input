@@ -129,6 +129,7 @@ enable2ndByteCanID = false
         ; it seems that TS also needs to know the diff.size of a tooth
         calcField = toothTime,           "ToothTime",    "ms",       { time - pastValue(time, 1) }
 
+ 
 [VeAnalyze]
 
         ;    tableName,  lambdaTargetTableName, lambdaChannel, egoCorrectionChannel, activeCondition
@@ -382,6 +383,9 @@ enable2ndByteCanID = false
     wueAfrTargetOffset = array, S16, [ 16], ":1",   0.1, 0.0, -3.0, 3.0, 1;
     wueAnalRecommend   = array, U08, [ 16], "%",  1.00, 0.0, 100, 255.00, 0
 
+    gearCountArray = array, S08, [@@TCU_GEAR_COUNT@@], "Gear", 1, 0, -1, { @@TCU_GEAR_COUNT@@ - 2 }, 0, noMsqSave
+    solenoidCountArray = array, U08, [@@TCU_SOLENOID_COUNT@@], "Solenoid", 1, 0, 1, @@TCU_SOLENOID_COUNT@@, 0, noMsqSave
+
 ; These are inverted (false = "Yes") so that they default to enabled
 	enableLogDebugChannels = bits, U08, [0:0], "Yes", "No"
 	enableLogErrorList = bits, U08, [0:0], "Yes", "No"
@@ -489,6 +493,11 @@ enable2ndByteCanID = false
      requiresPowerCycle = fsioAdc4
 
      readOnly = warning_message
+
+	defaultValue = gearCountArray, -1 0 1 2 3 4 5 6 7 8
+	readOnly = gearCountArray
+	defaultValue = solenoidCountArray, 1 2 3 4 5 6 7 8
+	readOnly = solenoidCountArray
 
 
 [CurveEditor]
@@ -723,7 +732,7 @@ enable2ndByteCanID = false
 
 ; move table into a panel? or find a way to add a link to https://rusefi.com//wiki/index.php?title=Manual:Software:TPSTPS
    table = tpsTpsAccelTbl,  tpsTpsAccelMap,  "TPS/TPS Acceleration Extra Fuel(ms)",   1
-   	topicHelp = "tpstpsHelp"
+	topicHelp = "tpstpsHelp"
       xBins       = tpsTpsAccelFromRpmBins,  TPSValue
       yBins       = tpsTpsAccelToRpmBins,  TPSValue
       zBins       = tpsTpsAccelTable
@@ -765,7 +774,7 @@ enable2ndByteCanID = false
       xBins       = baroCorrRpmBins,  RPMValue
       yBins       = baroCorrPressureBins,  baroPressure
       zBins       = baroCorrTable
-;      gridHeight  = 2.0
+ ;      gridHeight  = 2.0
       gridOrient  = 250,   0, 340 ; Space 123 rotation of grid in degrees.
       upDownLabel = "(RICHER)", "(LEANER)"
 
@@ -798,7 +807,7 @@ enable2ndByteCanID = false
 
 
    table = injPhaseTableTbl,  injPhaseTableMap,  "Injection Phase",   1
-   		topicHelp = "fuelHelp"
+		topicHelp = "fuelHelp"
       ;       constant, variable
       xBins       = injPhaseRpmBins,  RPMValue
       yBins       = injPhaseLoadBins,  fuelingLoad
@@ -858,6 +867,12 @@ enable2ndByteCanID = false
 		xBins = gppwm4_rpmBins, RPMValue
 		yBins = gppwm4_loadBins, gppwm4_load
 		zBins = gppwm4_table
+
+	table = tcuSolenoidTableTbl,  tcuSolenoidTableMap,  "Solenoids Active By Gear",   1
+		yBins		= gearCountArray, tcuCurrentGear
+		xBins		= solenoidCountArray, tcuCurrentGear
+		zBins		= tcuSolenoidTable
+		xyLabels	= "Solenoid", "Gear"
 
 [GaugeConfigurations]
 
@@ -1341,6 +1356,7 @@ menuDialog = main
 
 		subMenu = std_separator
 		subMenu = tcuControls,			"Transmission Settings"
+		subMenu = tcuSolenoidTableTbl,		"TCU Solenoids"
 
 	menu = "&Sensors"
 		# Base analog input settings
@@ -2891,15 +2907,27 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 		field = "ADC #3",								fsioAdc3
 		field = "ADC #4",								fsioAdc4
 
-	dialog = shiftInputPanel
+	dialog = transmissionPanel
 		field = "TCU Enabled"		tcuEnabled
+
+	dialog = solenoidPanel, "Shift Solenoids"
+		field = "Solenoid 1 Pin"	tcu_solenoid1,		{ tcuEnabled }
+		field = "Solenoid 2 Pin"	tcu_solenoid2,		{ tcuEnabled }
+		field = "Solenoid 3 Pin"	tcu_solenoid3,		{ tcuEnabled }
+		field = "Solenoid 4 Pin"	tcu_solenoid4,		{ tcuEnabled }
+		field = "Solenoid 5 Pin"	tcu_solenoid5,		{ tcuEnabled }
+		field = "Solenoid 6 Pin"	tcu_solenoid6,		{ tcuEnabled }
+
+	dialog = buttonShiftInputPanel
 		field = "Upshift Pin"		tcuUpshiftButtonPin,		{ tcuEnabled }
 		field = "Upshift Pin Mode"	tcuUpshiftButtonPinMode,	{ tcuEnabled }
 		field = "Downshift Pin"		tcuDownshiftButtonPin,		{ tcuEnabled }
 		field = "Downshift Pin Mode"	tcuDownshiftButtonPinMode,	{ tcuEnabled }
 
 	dialog = tcuControls, "Transmission Settings"
-		panel = shiftInputPanel
+		panel = transmissionPanel
+		panel = solenoidPanel
+		panel = buttonShiftInputPanel
 
 ;Boost Open Loop
 
@@ -3238,4 +3266,3 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
  ;addTool = toolName, PanelName
  addTool = veTableGenerator, "VE Table Generator", veTableTbl
  addTool = afrTableGenerator, "AFR Table Generator", afrTableTbl
- 

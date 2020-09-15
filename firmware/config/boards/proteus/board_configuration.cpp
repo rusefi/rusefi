@@ -139,6 +139,18 @@ static void setupDefaultSensorInputs() {
 	engineConfiguration->map.sensor.hwChannel = EFI_ADC_10;
 }
 
+static void setupSdCard() {
+	engineConfiguration->isSdCardEnabled = true;
+
+	engineConfiguration->sdCardSpiDevice = SPI_DEVICE_3;
+	engineConfiguration->sdCardCsPin = GPIOD_2;
+
+	engineConfiguration->is_enabled_spi_3 = true;
+	engineConfiguration->spi3sckPin = GPIOC_10;
+	engineConfiguration->spi3misoPin = GPIOC_11;
+	engineConfiguration->spi3mosiPin = GPIOC_12;
+}
+
 void setPinConfigurationOverrides(void) {
 }
 
@@ -164,6 +176,7 @@ void setBoardConfigurationOverrides(void) {
 	setLedPins();
 	setupVbatt();
 	setupEtb();
+	setupSdCard();
 
 	// "required" hardware is done - set some reasonable defaults
 	setupDefaultSensorInputs();
