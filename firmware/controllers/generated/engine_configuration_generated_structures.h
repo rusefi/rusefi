@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Sat Sep 12 07:36:48 UTC 2020
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Tue Sep 15 08:35:14 UTC 2020
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -1949,6 +1949,10 @@ struct engine_configuration_s {
 	 */
 	output_pin_e tcu_solenoid[TCU_SOLENOID_COUNT];
 	/**
+	 * offset 1198
+	 */
+	uint8_t solenoidPadding[2];
+	/**
 	 * offset 1200
 	 */
 	spi_device_e drv8860spiDevice;
@@ -2658,76 +2662,76 @@ struct engine_configuration_s {
 	bool unused1130 : 1;
 	/**
 	offset 2116 bit 8 */
-	bool unusedBit_482_8 : 1;
+	bool unusedBit_483_8 : 1;
 	/**
 	offset 2116 bit 9 */
-	bool unusedBit_482_9 : 1;
+	bool unusedBit_483_9 : 1;
 	/**
 	offset 2116 bit 10 */
-	bool unusedBit_482_10 : 1;
+	bool unusedBit_483_10 : 1;
 	/**
 	offset 2116 bit 11 */
-	bool unusedBit_482_11 : 1;
+	bool unusedBit_483_11 : 1;
 	/**
 	offset 2116 bit 12 */
-	bool unusedBit_482_12 : 1;
+	bool unusedBit_483_12 : 1;
 	/**
 	offset 2116 bit 13 */
-	bool unusedBit_482_13 : 1;
+	bool unusedBit_483_13 : 1;
 	/**
 	offset 2116 bit 14 */
-	bool unusedBit_482_14 : 1;
+	bool unusedBit_483_14 : 1;
 	/**
 	offset 2116 bit 15 */
-	bool unusedBit_482_15 : 1;
+	bool unusedBit_483_15 : 1;
 	/**
 	offset 2116 bit 16 */
-	bool unusedBit_482_16 : 1;
+	bool unusedBit_483_16 : 1;
 	/**
 	offset 2116 bit 17 */
-	bool unusedBit_482_17 : 1;
+	bool unusedBit_483_17 : 1;
 	/**
 	offset 2116 bit 18 */
-	bool unusedBit_482_18 : 1;
+	bool unusedBit_483_18 : 1;
 	/**
 	offset 2116 bit 19 */
-	bool unusedBit_482_19 : 1;
+	bool unusedBit_483_19 : 1;
 	/**
 	offset 2116 bit 20 */
-	bool unusedBit_482_20 : 1;
+	bool unusedBit_483_20 : 1;
 	/**
 	offset 2116 bit 21 */
-	bool unusedBit_482_21 : 1;
+	bool unusedBit_483_21 : 1;
 	/**
 	offset 2116 bit 22 */
-	bool unusedBit_482_22 : 1;
+	bool unusedBit_483_22 : 1;
 	/**
 	offset 2116 bit 23 */
-	bool unusedBit_482_23 : 1;
+	bool unusedBit_483_23 : 1;
 	/**
 	offset 2116 bit 24 */
-	bool unusedBit_482_24 : 1;
+	bool unusedBit_483_24 : 1;
 	/**
 	offset 2116 bit 25 */
-	bool unusedBit_482_25 : 1;
+	bool unusedBit_483_25 : 1;
 	/**
 	offset 2116 bit 26 */
-	bool unusedBit_482_26 : 1;
+	bool unusedBit_483_26 : 1;
 	/**
 	offset 2116 bit 27 */
-	bool unusedBit_482_27 : 1;
+	bool unusedBit_483_27 : 1;
 	/**
 	offset 2116 bit 28 */
-	bool unusedBit_482_28 : 1;
+	bool unusedBit_483_28 : 1;
 	/**
 	offset 2116 bit 29 */
-	bool unusedBit_482_29 : 1;
+	bool unusedBit_483_29 : 1;
 	/**
 	offset 2116 bit 30 */
-	bool unusedBit_482_30 : 1;
+	bool unusedBit_483_30 : 1;
 	/**
 	offset 2116 bit 31 */
-	bool unusedBit_482_31 : 1;
+	bool unusedBit_483_31 : 1;
 	/**
 	 * set can_mode X
 	 * offset 2120
@@ -3586,7 +3590,11 @@ struct persistent_config_s {
 	/**
 	 * offset 15136
 	 */
-	uint8_t unused15136[1152];
+	tcubinary_table_t tcuSolenoidTable;
+	/**
+	 * offset 15196
+	 */
+	uint8_t unused15136[1092];
 	/**
 	 * offset 16288
 	 */
@@ -3694,4 +3702,4 @@ struct persistent_config_s {
 typedef struct persistent_config_s persistent_config_s;
 
 // end
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Sat Sep 12 07:36:48 UTC 2020
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Tue Sep 15 08:35:14 UTC 2020
