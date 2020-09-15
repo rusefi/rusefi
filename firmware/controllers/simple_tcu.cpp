@@ -15,7 +15,7 @@ void SimpleTransmissionController::SimpleTransmissionController() {
 
 void SimpleTransmissionController::update(gear_e gear) {
     for (int i = 1; i <= TCU_SOLENOID_COUNT; i++) {
-        i <= TCU_SOLENOID_COUNT ? tcuSolenoids[i].setValue(CONFIG(tcuSolenoidTable)[i][static_cast<int>(gear)])
+        tcuSolenoids[i].setValue(CONFIG(tcuSolenoidTable)[i][static_cast<int>(gear)])
     }
     setCurrentGear(gear);
     postState();
