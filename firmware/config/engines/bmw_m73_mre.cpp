@@ -102,18 +102,13 @@ void setEngineBMW_M73_microRusEfi(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 
 
 	engineConfiguration->canNbcType = CAN_BUS_NBC_NONE;
-#if EFI_CANBUS_SLAVE
-	engineConfiguration->canReadEnabled = true;
-	engineConfiguration->canWriteEnabled = false;
-#else /* EFI_CANBUS_SLAVE */
 	// set_analog_input_pin pps PA7
 	// EFI_ADC_7: "31 - AN volt 3" - PA7
 	CONFIG(throttlePedalPositionAdcChannel) = EFI_ADC_7;
 
-	engineConfiguration->canReadEnabled = false;
+	engineConfiguration->canReadEnabled = true;
 	engineConfiguration->canWriteEnabled = true;
 	CONFIG(enableVerboseCanTx) = true;
-#endif /* EFI_CANBUS_SLAVE */
 
 
 	// do I have VR wires flipped?

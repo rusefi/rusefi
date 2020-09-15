@@ -12,6 +12,7 @@
 #include "hal.h"
 #include "can_msg_tx.h"
 #include "obd2.h"
+#include "can.h"
 
 /**
  * Sensor which reads it's value from CAN
@@ -79,23 +80,29 @@ private:
 	const uint8_t m_offset;
 };
 
-template <typename TStorage, int TScale>
+template <int Size, int Offset>
 class ObdCanSensor: public CanSensorBase {
 public:
-	ObdCanSensor(uint32_t eid, SensorType type, efitick_t timeout) :
-			CanSensorBase(eid, type, timeout) {
+	ObdCanSensor(int PID, float Scale, SensorType type) :
+			CanSensorBase(OBD_TEST_RESPONSE, type, /* timeout, never expire */ 0) {
+		this->PID = PID;
+		this->Scale = Scale;
 	}
 
 	void decodeFrame(const CANRxFrame& frame, efitick_t nowNt) override {
-		// Compute the location of our data within the frame
-		const uint8_t* dataLocation = &frame.data8[0];
+		if (frame.data8[2] != PID) {
+			return;
+		}
 
-		// Reinterpret as a scaled_channel - it already has the logic for decoding a scaled integer to a float
-		const auto scaler = reinterpret_cast<const scaled_channel<TStorage, TScale>*>(dataLocation);
+		int iValue;
+		if (Size == 2) {
+			iValue = frame.data8[3] * 256 + frame.data8[4];
+		} else {
+			iValue = frame.data8[3];
+		}
 
-		// Actually do the conversion
-		float value = *scaler;
-		setValidValue(value, nowNt);
+		float fValue = (1.0 * iValue / Scale) - Offset;
+		setValidValue(fValue, nowNt);
 	}
 
 	CanSensorBase* request() override {
@@ -103,10 +110,15 @@ public:
 			CanTxMessage msg(OBD_TEST_REQUEST);
 			msg[0] = _OBD_2;
 			msg[1] = OBD_CURRENT_DATA;
-			msg[2] = getEid();
-
+			msg[2] = PID;
 		}
+		// let's sleep on write update after each OBD request, this would give read thread a chance to read response
+		// todo: smarter logic of all this with with semaphore not just sleep
+		chThdSleepMilliseconds(300);
 		return m_next;
 	}
+
+	int PID;
+	float Scale;
 };
 

@@ -171,7 +171,6 @@ public:
 	OutputPin checkEnginePin;
 
 	NamedOutputPin tachOut;
-	NamedOutputPin dizzyOutput;
 
 	OutputPin fsioOutputs[FSIO_COMMAND_COUNT];
 	OutputPin triggerDecoderErrorPin;

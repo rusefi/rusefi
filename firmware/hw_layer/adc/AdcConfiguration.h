@@ -9,7 +9,9 @@
 
 #if HAL_USE_ADC
 
+#ifndef ADC_MAX_CHANNELS_COUNT
 #define ADC_MAX_CHANNELS_COUNT 16
+#endif /* ADC_MAX_CHANNELS_COUNT */
 
 // this structure contains one multi-channel ADC state snapshot
 typedef struct {
@@ -18,11 +20,11 @@ typedef struct {
 
 class AdcDevice {
 public:
-	explicit AdcDevice(ADCConversionGroup* hwConfig);
+	explicit AdcDevice(ADCConversionGroup* hwConfig, adcsample_t *buf);
 	void enableChannel(adc_channel_e hwChannelIndex);
 	void enableChannelAndPin(const char *msg, adc_channel_e hwChannelIndex);
 	adc_channel_e getAdcHardwareIndexByInternalIndex(int index) const;
-	int internalAdcIndexByHardwareIndex[20];
+	int internalAdcIndexByHardwareIndex[ADC_MAX_CHANNELS_COUNT + 4];
 	bool isHwUsed(adc_channel_e hwChannel) const;
 	int size() const;
 	void init(void);
@@ -31,13 +33,7 @@ public:
 	int getAdcValueByIndex(int internalIndex) const;
 	void invalidateSamplesCache();
 
-	// on F7 this must be aligned on a 32-byte boundary, and be a multiple of 32 bytes long.
-	// When we invalidate the cache line(s) for ADC samples, we don't want to nuke any
-	// adjacent data.
-	// F4 does not care
-	__ALIGNED(32) adcsample_t samples[ADC_MAX_CHANNELS_COUNT * MAX_ADC_GRP_BUF_DEPTH];
-	// Assert multiple of 32 bytes long so we don't stomp on the data after the buffer
-	static_assert(sizeof(samples) % 32 == 0, "ADC sample buffer size must be a multiple of 32 bytes");
+	adcsample_t *samples;
 
 	int getAdcValueByHwChannel(int hwChannel) const;
 
@@ -48,8 +44,8 @@ private:
 	/**
 	 * Number of ADC channels in use
 	 */
-
-	adc_channel_e hardwareIndexByIndernalAdcIndex[20];
+	 
+	adc_channel_e hardwareIndexByIndernalAdcIndex[ADC_MAX_CHANNELS_COUNT + 4];
 };
 
 #endif /* HAL_USE_ADC */

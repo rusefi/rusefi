@@ -17,7 +17,7 @@ TEST(fuel, testTpsAccelEnrichmentMath) {
 
 	WITH_ENGINE_TEST_HELPER(FORD_ASPIRE_1996);
 
-	engine->rpmCalculator.setRpmValue(600 PASS_ENGINE_PARAMETER_SUFFIX);
+	engine->rpmCalculator.setRpmValue(600);
 	engine->periodicFastCallback(PASS_ENGINE_PARAMETER_SIGNATURE);
 
 	engine->tpsAccelEnrichment.setLength(4);
@@ -104,10 +104,10 @@ TEST(fuel, testAccelEnrichmentFractionalTps) {
 		}
 	}
 
-	Logging logger;
+	LoggingWithStorage logger("test");
 	initAccelEnrichment(&logger PASS_ENGINE_PARAMETER_SUFFIX);
 
-	engine->rpmCalculator.setRpmValue(600 PASS_ENGINE_PARAMETER_SUFFIX);
+	engine->rpmCalculator.setRpmValue(600);
 	engine->periodicFastCallback(PASS_ENGINE_PARAMETER_SIGNATURE);
 
 	engine->tpsAccelEnrichment.setLength(2);

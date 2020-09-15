@@ -67,12 +67,13 @@ char *getFirmwareError(void) {
 
 extern ioportid_t criticalErrorLedPort;
 extern ioportmask_t criticalErrorLedPin;
+extern uint8_t criticalErrorLedState;
 
 /**
  * low-level function is used here to reduce stack usage
  */
 #define ON_CRITICAL_ERROR() \
-		palWritePad(criticalErrorLedPort, criticalErrorLedPin, 1); \
+		palWritePad(criticalErrorLedPort, criticalErrorLedPin, criticalErrorLedState); \
 		turnAllPinsOff(); \
 		enginePins.communicationLedPin.setValue(1);
 #endif /* EFI_PROD_CODE */
@@ -118,7 +119,7 @@ static void printToStream(MemoryStream *stream, const char *fmt, va_list ap) {
 }
 
 static void printWarning(const char *fmt, va_list ap) {
-	resetLogging(&logger); // todo: is 'reset' really needed here?
+	logger.reset(); // todo: is 'reset' really needed here?
 	appendMsgPrefix(&logger);
 
 	logger.append(WARNING_PREFIX);
@@ -136,7 +137,7 @@ static void printWarning(const char *fmt, va_list ap) {
 	}
 
 	logger.append(warningBuffer);
-	append(&logger, DELIMETER);
+	logger.append(DELIMETER);
 	scheduleLogging(&logger);
 }
 

@@ -500,7 +500,7 @@ static percent_t automaticIdleController(float tpsPos DECLARE_ENGINE_PARAMETER_S
 
 		const auto [cltValid, clt] = Sensor::get(SensorType::Clt);
 #if EFI_SHAFT_POSITION_INPUT
-		bool isRunning = engine->rpmCalculator.isRunning(PASS_ENGINE_PARAMETER_SIGNATURE);
+		bool isRunning = engine->rpmCalculator.isRunning();
 #else
 		bool isRunning = false;
 #endif /* EFI_SHAFT_POSITION_INPUT */
@@ -658,7 +658,7 @@ static void applyIdleSolenoidPinState(int stateIndex, PwmConfig *state) /* pwm_g
 	OutputPin *output = state->outputPins[0];
 	int value = state->multiChannelStateSequence.getChannelState(/*channelIndex*/0, stateIndex);
 	if (!value /* always allow turning solenoid off */ ||
-			(GET_RPM_VALUE != 0 || timeToStopIdleTest != 0) /* do not run solenoid unless engine is spinning or bench testing in progress */
+			(GET_RPM() != 0 || timeToStopIdleTest != 0) /* do not run solenoid unless engine is spinning or bench testing in progress */
 			) {
 		output->setValue(value);
 	}
@@ -675,6 +675,14 @@ bool isIdleHardwareRestartNeeded() {
 			isConfigurationChanged(idle.solenoidPin) ||
 			isConfigurationChanged(secondSolenoidPin);
 
+}
+
+bool isIdleMotorBusy(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+	if (!CONFIG(useStepperIdle)) {
+		// todo: check other motor types?
+		return false;
+	}
+	return iacMotor.isBusy();
 }
 
 void stopIdleHardware(DECLARE_ENGINE_PARAMETER_SIGNATURE) {

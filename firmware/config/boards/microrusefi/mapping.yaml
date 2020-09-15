@@ -72,7 +72,7 @@ analog_inputs:
   EFI_ADC_2: "24 - AN temp 3"
   # PA3
   EFI_ADC_3: "22 - AN temp 4"
-  # PA4
+  # PA4 - also AUX REUSE
   EFI_ADC_4: "28 - AN volt 10"
   
   # PA6 pull-down R31
@@ -80,9 +80,9 @@ analog_inputs:
   
   # PA7
   EFI_ADC_7: "31 - AN volt 3"
-  # PB0
+  # PB0 - also AUX REUSE
   EFI_ADC_8: "36 - AN volt 8"
-  # PB1
+  # PB1 - also AUX REUSE
   EFI_ADC_9: "40 - AN volt 9"
   
   # PC0 MAP
@@ -95,7 +95,7 @@ analog_inputs:
   # PC3 TPS pull-down R41
   EFI_ADC_13: "20 - AN volt 5"
   
-  # PC4
+  # PC4 - also AUX REUSE
   EFI_ADC_14: "32 - AN volt 6"
   # PC5
   EFI_ADC_15: "30 - AN volt 7"

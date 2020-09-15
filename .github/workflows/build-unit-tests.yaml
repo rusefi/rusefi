@@ -4,7 +4,7 @@ on: [push,pull_request]
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
     
     steps:
     - uses: actions/checkout@v1
@@ -18,6 +18,13 @@ jobs:
     - name: Generate Live Documentation
       working-directory: ./firmware/
       run: bash gen_live_documentation.sh
+
+    - name: Install gcc8
+      run: sudo apt-get install -y gcc-8
+
+    - name: Print GCC version
+      working-directory: .
+      run: gcc -v
 
     - name: Build Tests
       working-directory: ./unit_tests/

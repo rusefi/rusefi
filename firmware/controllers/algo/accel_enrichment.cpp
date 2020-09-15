@@ -49,7 +49,7 @@ floatms_t WallFuel::adjust(floatms_t desiredFuel DECLARE_ENGINE_PARAMETER_SUFFIX
 		return desiredFuel;
 	}
 	// disable this correction for cranking
-	if (ENGINE(rpmCalculator).isCranking(PASS_ENGINE_PARAMETER_SIGNATURE)) {
+	if (ENGINE(rpmCalculator).isCranking()) {
 		return desiredFuel;
 	}
 

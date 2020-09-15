@@ -14,7 +14,7 @@ AirmassResult AlphaNAirmass::getAirmass(int rpm) {
 
 	// TODO: should this be barometric pressure and/or temperature compensated?
 	float airmass = getAirmassImpl(
-		ve / 100.0f,
+		ve,
 		101.325f,		// std atmosphere pressure
 		273.0f + 20.0f	// std atmosphere pressure
 		PASS_ENGINE_PARAMETER_SUFFIX

@@ -16,6 +16,8 @@
 #include "accel_enrichment.h"
 #include "trigger_central.h"
 #include "local_version_holder.h"
+#include "buttonshift.h"
+#include "tcu.h"
 
 #if EFI_SIGNAL_EXECUTOR_ONE_TIMER
 // PROD real firmware uses this implementation
@@ -51,11 +53,6 @@ class AirmassModelBase;
 class IEtbController;
 class IFuelComputer;
 class IInjectorModel;
-
-class TCU {
-public:
-	gear_e currentGear = NEUTRAL;
-};
 
 class PrimaryTriggerConfiguration : public TriggerConfiguration {
 public:
@@ -94,10 +91,10 @@ public:
 
 	cyclic_buffer<int> triggerErrorDetection;
 
+	GearControllerBase *gearController;
+
 	PrimaryTriggerConfiguration primaryTriggerConfiguration;
 	VvtTriggerConfiguration vvtTriggerConfiguration;
-
-	TCU tcu;
 
 #if EFI_SHAFT_POSITION_INPUT
 	void OnTriggerStateDecodingError();
@@ -225,8 +222,12 @@ public:
 
 
 	bool startStopState = false;
-	efitick_t startStopStateLastPushTime = 0;
 	int startStopStateToggleCounter = 0;
+
+	/**
+	 * this is needed by getTimeIgnitionSeconds() and checkShutdown()
+	 */
+	efitick_t ignitionOnTimeNt = 0;
 
 	/**
 	 * This counter is incremented every time user adjusts ECU parameters online (either via rusEfi console or other
@@ -356,14 +357,29 @@ public:
 
 	/**
 	 * Needed by EFI_MAIN_RELAY_CONTROL to shut down the engine correctly.
+	 * This method cancels shutdown if the ignition voltage is detected.
 	 */
-	void checkShutdown();
-	
+	void checkShutdown(DECLARE_ENGINE_PARAMETER_SIGNATURE);
+
 	/**
 	 * Allows to finish some long-term shutdown procedures (stepper motor parking etc.)
+	   Called when the ignition switch is turned off (vBatt is too low).
 	   Returns true if some operations are in progress on background.
 	 */
-	bool isInShutdownMode() const;
+	bool isInShutdownMode(DECLARE_ENGINE_PARAMETER_SIGNATURE) const;
+
+	/**
+	 * The stepper does not work if the main relay is turned off (it requires +12V).
+	 * Needed by the stepper motor code to detect if it works.
+	 */
+	bool isMainRelayEnabled(DECLARE_ENGINE_PARAMETER_SIGNATURE) const;
+
+	/**
+	 * Needed by EFI_MAIN_RELAY_CONTROL to handle fuel pump and shutdown timings correctly.
+	 * This method returns the number of seconds since the ignition voltage is present.
+	 * The return value is float for more FSIO flexibility.
+	 */
+	float getTimeIgnitionSeconds(void) const;
 
 	void knockLogic(float knockVolts DECLARE_ENGINE_PARAMETER_SUFFIX);
 	void printKnockState(void);

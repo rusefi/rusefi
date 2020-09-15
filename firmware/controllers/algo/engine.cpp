@@ -24,6 +24,8 @@
 #include "map_averaging.h"
 #include "fsio_impl.h"
 #include "perf_trace.h"
+#include "backup_ram.h"
+#include "idle_thread.h"
 #include "sensor.h"
 #include "gppwm.h"
 #include "tachometer.h"
@@ -138,7 +140,7 @@ static void cylinderCleanupControl(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 #if EFI_ENGINE_CONTROL
 	bool newValue;
 	if (engineConfiguration->isCylinderCleanupEnabled) {
-		newValue = !engine->rpmCalculator.isRunning(PASS_ENGINE_PARAMETER_SIGNATURE) && Sensor::get(SensorType::DriverThrottleIntent).value_or(0) > CLEANUP_MODE_TPS;
+		newValue = !engine->rpmCalculator.isRunning() && Sensor::get(SensorType::DriverThrottleIntent).value_or(0) > CLEANUP_MODE_TPS;
 	} else {
 		newValue = false;
 	}
@@ -162,7 +164,7 @@ void Engine::periodicSlowCallback(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	
 	watchdog();
 	updateSlowSensors(PASS_ENGINE_PARAMETER_SIGNATURE);
-	checkShutdown();
+	checkShutdown(PASS_ENGINE_PARAMETER_SIGNATURE);
 
 #if EFI_FSIO
 	runFsio(PASS_ENGINE_PARAMETER_SIGNATURE);
@@ -179,7 +181,7 @@ void Engine::periodicSlowCallback(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 #if (BOARD_TLE8888_COUNT > 0)
 	static efitick_t tle8888CrankingResetTime = 0;
 
-	if (CONFIG(useTLE8888_cranking_hack) && ENGINE(rpmCalculator).isCranking(PASS_ENGINE_PARAMETER_SIGNATURE)) {
+	if (CONFIG(useTLE8888_cranking_hack) && ENGINE(rpmCalculator).isCranking()) {
 		efitick_t nowNt = getTimeNowNt();
 		if (nowNt - tle8888CrankingResetTime > MS2NT(300)) {
 			requestTLE8888initialization();
@@ -330,9 +332,11 @@ void Engine::OnTriggerStateProperState(efitick_t nowNt) {
 	Engine *engine = this;
 	EXPAND_Engine;
 
+#if EFI_SHAFT_POSITION_INPUT
 	triggerCentral.triggerState.runtimeStatistics(&triggerCentral.triggerFormDetails, nowNt PASS_ENGINE_PARAMETER_SUFFIX);
+#endif /* EFI_SHAFT_POSITION_INPUT */
 
-	rpmCalculator.setSpinningUp(nowNt PASS_ENGINE_PARAMETER_SUFFIX);
+	rpmCalculator.setSpinningUp(nowNt);
 }
 
 void Engine::OnTriggerSynchronizationLost() {
@@ -340,14 +344,14 @@ void Engine::OnTriggerSynchronizationLost() {
 	EXPAND_Engine;
 
 	// Needed for early instant-RPM detection
-	engine->rpmCalculator.setStopSpinning(PASS_ENGINE_PARAMETER_SIGNATURE);
+	engine->rpmCalculator.setStopSpinning();
 }
 
 void Engine::OnTriggerInvalidIndex(int currentIndex) {
 	Engine *engine = this;
 	EXPAND_Engine;
 	// let's not show a warning if we are just starting to spin
-	if (GET_RPM_VALUE != 0) {
+	if (GET_RPM() != 0) {
 		warning(CUSTOM_SYNC_ERROR, "sync error: index #%d above total size %d", currentIndex, triggerCentral.triggerShape.getSize());
 		triggerCentral.triggerState.setTriggerErrorState();
 	}
@@ -468,38 +472,85 @@ void Engine::watchdog() {
 #endif
 }
 
-void Engine::checkShutdown() {
+void Engine::checkShutdown(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 #if EFI_MAIN_RELAY_CONTROL
-	int rpm = rpmCalculator.getRpm();
+	// if we are already in the "ignition_on" mode, then do nothing
+	if (ignitionOnTimeNt > 0) {
+		return;
+	}
 
-	/**
-	 * Something is weird here: "below 5.0 volts on battery" what is it about? Is this about
-	 * Frankenso powering everything while driver has already turned ignition off? or what is this condition about?
-	 */
-	const float vBattThreshold = 5.0f;
-	if (isValidRpm(rpm) && sensors.vBatt < vBattThreshold && stopEngineRequestTimeNt == 0) {
-		scheduleStopEngine();
-		// todo: add stepper motor parking
+	// here we are in the shutdown (the ignition is off) or initial mode (after the firmware fresh start)
+	const efitick_t engineStopWaitTimeoutUs = 500000LL;	// 0.5 sec
+	// in shutdown mode, we need a small cooldown time between the ignition off and on
+	if (stopEngineRequestTimeNt == 0 || (getTimeNowNt() - stopEngineRequestTimeNt) > US2NT(engineStopWaitTimeoutUs)) {
+		// if the ignition key is turned on again,
+		// we cancel the shutdown mode, but only if all shutdown procedures are complete
+		const float vBattThresholdOn = 8.0f;
+		if ((sensors.vBatt > vBattThresholdOn) && !isInShutdownMode(PASS_ENGINE_PARAMETER_SIGNATURE)) {
+			ignitionOnTimeNt = getTimeNowNt();
+			stopEngineRequestTimeNt = 0;
+			scheduleMsg(&engineLogger, "Ingition voltage detected! Cancel the engine shutdown!");
+		}
 	}
 #endif /* EFI_MAIN_RELAY_CONTROL */
 }
 
-bool Engine::isInShutdownMode() const {
+bool Engine::isInShutdownMode(DECLARE_ENGINE_PARAMETER_SIGNATURE) const {
 #if EFI_MAIN_RELAY_CONTROL
-	if (stopEngineRequestTimeNt == 0)	// the shutdown procedure is not started
+	// if we are in "ignition_on" mode and not in shutdown mode
+	if (stopEngineRequestTimeNt == 0 && ignitionOnTimeNt > 0) {
+		const float vBattThresholdOff = 5.0f;
+		// start the shutdown process if the ignition voltage dropped low
+		if (sensors.vBatt <= vBattThresholdOff) {
+			scheduleStopEngine();
+		}
+	}
+
+	// we are not in the shutdown mode?
+	if (stopEngineRequestTimeNt == 0) {
 		return false;
-	
-	const efitick_t engineStopWaitTimeoutNt = 5LL * 1000000LL;
-	// The engine is still spinning! Give it some time to stop (but wait no more than 5 secs)
-	if (isSpinning && (getTimeNowNt() - stopEngineRequestTimeNt) < US2NT(engineStopWaitTimeoutNt))
+	}
+
+	const efitick_t turnOffWaitTimeoutUs = 1LL * 1000000LL;
+	// We don't want any transients to step in, so we wait at least 1 second whatever happens.
+	// Also it's good to give the stepper motor some time to start moving to the initial position (or parking)
+	if ((getTimeNowNt() - stopEngineRequestTimeNt) < US2NT(turnOffWaitTimeoutUs))
 		return true;
-	// todo: add checks for stepper motor parking
+
+	const efitick_t engineSpinningWaitTimeoutUs = 5LL * 1000000LL;
+	// The engine is still spinning! Give it some time to stop (but wait no more than 5 secs)
+	if (isSpinning && (getTimeNowNt() - stopEngineRequestTimeNt) < US2NT(engineSpinningWaitTimeoutUs))
+		return true;
+
+	// The idle motor valve is still moving! Give it some time to park (but wait no more than 10 secs)
+	// Usually it can move to the initial 'cranking' position or zero 'parking' position.
+	const efitick_t idleMotorWaitTimeoutUs = 10LL * 1000000LL;
+	if (isIdleMotorBusy(PASS_ENGINE_PARAMETER_SIGNATURE) && (getTimeNowNt() - stopEngineRequestTimeNt) < US2NT(idleMotorWaitTimeoutUs))
+		return true;
 #endif /* EFI_MAIN_RELAY_CONTROL */
 	return false;
 }
 
+bool Engine::isMainRelayEnabled(DECLARE_ENGINE_PARAMETER_SIGNATURE) const {
+#if EFI_MAIN_RELAY_CONTROL
+	return enginePins.mainRelay.getLogicValue();
+#else
+	// if no main relay control, we assume it's always turned on
+	return true;
+#endif /* EFI_MAIN_RELAY_CONTROL */
+}
+
+
+float Engine::getTimeIgnitionSeconds(void) const {
+	// return negative if the ignition is turned off
+	if (ignitionOnTimeNt == 0)
+		return -1;
+	float numSeconds = (float)NT2US(getTimeNowNt() - ignitionOnTimeNt) / 1000000.0f;
+	return numSeconds;
+}
+
 injection_mode_e Engine::getCurrentInjectionMode(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
-	return rpmCalculator.isCranking(PASS_ENGINE_PARAMETER_SIGNATURE) ? CONFIG(crankingInjectionMode) : CONFIG(injectionMode);
+	return rpmCalculator.isCranking() ? CONFIG(crankingInjectionMode) : CONFIG(injectionMode);
 }
 
 // see also in TunerStudio project '[doesTriggerImplyOperationMode] tag
@@ -544,9 +595,17 @@ void Engine::periodicFastCallback(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 }
 
 void doScheduleStopEngine(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+	scheduleMsg(&engineLogger, "Starting doScheduleStopEngine");
 	engine->stopEngineRequestTimeNt = getTimeNowNt();
+	engine->ignitionOnTimeNt = 0;
 	// let's close injectors or else if these happen to be open right now
 	enginePins.stopPins();
+	// todo: initiate stepper motor parking
+	// make sure we have stored all the info
+#if EFI_PROD_CODE
+	//todo: FIX kinetis build with this line
+	//backupRamFlush();
+#endif // EFI_PROD_CODE
 }
 
 void action_s::execute() {

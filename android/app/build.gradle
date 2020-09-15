@@ -17,9 +17,10 @@ android {
 
     defaultConfig {
         applicationId "com.rusefi.app"
-        // Version 21 = Android_5.0_Lollipop
-        minSdkVersion 21
-        targetSdkVersion 30
+        // API level 19 = Android 4.4 () Samsung S4 is nicely rootable with KingRoot
+        // API level 21 = Android_5.0_Lollipop
+        minSdkVersion 19
+        targetSdkVersion 29
         versionCode 1
         versionName "1.0"
 

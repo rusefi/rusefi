@@ -158,8 +158,11 @@ typedef struct {
 	scaled_percent fuelTankLevel; // 98
 	float fuelConsumptionPerHour; // 100
 
+	// Y axis values for selectable tables
+	scaled_channel<uint16_t, 100> veTableYAxis;  // 104
+	scaled_channel<uint16_t, 100> afrTableYAxis; // 106
+
 	// Knock
-	uint32_t knockCount; // 104
 	float knockLevel; // 108
 
 	// Mode, firmware, protocol, run time
@@ -229,14 +232,18 @@ typedef struct {
 	scaled_voltage rawOilPressure;		// 242
 
 	int16_t tuneCrc16; // 244
-    uint8_t sd_status; // 246
-	uint8_t pad;
+
+	uint8_t sd_status; // 246
+
+	int8_t tcuCurrentGear; // 247
 
 	scaled_voltage rawPpsSecondary;		// 248
 
 	int8_t knockLevels[12];
 
-	uint8_t unusedAtTheEnd[26]; // we have some unused bytes to allow compatible TS changes
+	int8_t tcuDesiredGear; // 262
+
+	uint8_t unusedAtTheEnd[22]; // we have some unused bytes to allow compatible TS changes
 
 	// Temporary - will remove soon
 	TsDebugChannels* getDebugChannels() {

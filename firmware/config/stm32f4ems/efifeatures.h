@@ -80,6 +80,10 @@
 #define HAL_TRIGGER_USE_PAL FALSE
 #endif /* HAL_TRIGGER_USE_PAL */
 
+#ifndef HAL_TRIGGER_USE_ADC
+#define HAL_TRIGGER_USE_ADC FALSE
+#endif /* HAL_TRIGGER_USE_ADC */
+
 #ifndef HAL_VSS_USE_PAL
 #define HAL_VSS_USE_PAL FALSE
 #endif /* HAL_VSS_USE_PAL */
@@ -155,6 +159,10 @@
 
 #ifndef BOARD_TLE8888_COUNT
 #define BOARD_TLE8888_COUNT 	1
+#endif
+
+#ifndef BOARD_DRV8860_COUNT
+#define BOARD_DRV8860_COUNT         0
 #endif
 
 #define EFI_ANALOG_SENSORS TRUE
@@ -253,6 +261,8 @@
 #ifndef EFI_USB_SERIAL
 #define EFI_USB_SERIAL TRUE
 #endif
+
+#define EFI_CONSOLE_USB_DEVICE SDU1
 
 /**
  * Should PnP engine configurations be included in the binary?
@@ -388,6 +398,9 @@
 
 #ifndef LED_CRITICAL_ERROR_BRAIN_PIN
 #define LED_CRITICAL_ERROR_BRAIN_PIN GPIOD_14
+#endif
+#ifndef LED_ERROR_BRAIN_PIN_MODE
+#define LED_ERROR_BRAIN_PIN_MODE DEFAULT_OUTPUT
 #endif
 
 // USART1 -> check defined STM32_SERIAL_USE_USART1

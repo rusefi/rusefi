@@ -38,7 +38,7 @@ struct expected {
 	}
 
 	// Easy default value handling
-	constexpr float value_or(TValue valueIfInvalid) const {
+	constexpr TValue value_or(TValue valueIfInvalid) const {
 		return Valid ? Value : valueIfInvalid;
 	}
 

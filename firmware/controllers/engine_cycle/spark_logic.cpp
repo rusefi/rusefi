@@ -69,11 +69,6 @@ static void fireSparkBySettingPinLow(IgnitionEvent *event, IgnitionOutputPin *ou
 	}
 
 	output->setLow();
-#if EFI_PROD_CODE
-	if (CONFIG(dizzySparkOutputPin) != GPIO_UNASSIGNED) {
-		enginePins.dizzyOutput.setLow();
-	}
-#endif /* EFI_PROD_CODE */
 }
 
 // todo: make this a class method?
@@ -222,7 +217,7 @@ static void startDwellByTurningSparkPinHigh(IgnitionEvent *event, IgnitionOutput
 	// todo: no reason for this to be disabled in unit_test mode?!
 #if ! EFI_UNIT_TEST
 
-	if (GET_RPM_VALUE > 2 * engineConfiguration->cranking.rpm) {
+	if (GET_RPM() > 2 * engineConfiguration->cranking.rpm) {
 		const char *outputName = output->getName();
 		if (prevSparkName == outputName && getCurrentIgnitionMode(PASS_ENGINE_PARAMETER_SIGNATURE) != IM_ONE_COIL) {
 			warning(CUSTOM_OBD_SKIPPED_SPARK, "looks like skipped spark event %d %s", getRevolutionCounter(), outputName);
@@ -246,11 +241,6 @@ static void startDwellByTurningSparkPinHigh(IgnitionEvent *event, IgnitionOutput
 	}
 
 	output->setHigh();
-#if EFI_PROD_CODE
-	if (CONFIG(dizzySparkOutputPin) != GPIO_UNASSIGNED) {
-		enginePins.dizzyOutput.setHigh();
-	}
-#endif /* EFI_PROD_CODE */
 }
 
 void turnSparkPinHigh(IgnitionEvent *event) {

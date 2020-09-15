@@ -205,7 +205,7 @@ TEST(misc, testGetCoilDutyCycleIssue977) {
 	WITH_ENGINE_TEST_HELPER(FORD_ASPIRE_1996);
 
 	int rpm = 2000;
-	engine->rpmCalculator.setRpmValue(rpm PASS_ENGINE_PARAMETER_SUFFIX);
+	engine->rpmCalculator.setRpmValue(rpm);
 	ASSERT_EQ( 4,  getSparkDwell(rpm PASS_ENGINE_PARAMETER_SUFFIX)) << "running dwell";
 
 	ASSERT_NEAR( 26.66666, getCoilDutyCycle(rpm PASS_ENGINE_PARAMETER_SUFFIX), 0.0001);
@@ -224,13 +224,13 @@ TEST(misc, testFordAspire) {
 	engineConfiguration->crankingTimingAngle = 31;
 	engineConfiguration->useConstantDwellDuringCranking = false;
 
-	engine->rpmCalculator.setRpmValue(200 PASS_ENGINE_PARAMETER_SUFFIX);
+	engine->rpmCalculator.setRpmValue(200);
 	assertEqualsM("cranking dwell", 54.166670, getSparkDwell(200 PASS_ENGINE_PARAMETER_SUFFIX));
 	int rpm = 2000;
-	engine->rpmCalculator.setRpmValue(rpm PASS_ENGINE_PARAMETER_SUFFIX);
+	engine->rpmCalculator.setRpmValue(rpm);
 	ASSERT_EQ( 4,  getSparkDwell(rpm PASS_ENGINE_PARAMETER_SUFFIX)) << "running dwell";
 
-	engine->rpmCalculator.setRpmValue(6000 PASS_ENGINE_PARAMETER_SUFFIX);
+	engine->rpmCalculator.setRpmValue(6000);
 	assertEqualsM("higher rpm dwell", 3.25, getSparkDwell(6000 PASS_ENGINE_PARAMETER_SUFFIX));
 
 }
@@ -353,7 +353,7 @@ TEST(misc, testRpmCalculator) {
 	assertEqualsM("injection angle", 31.365, ie0->injectionStart.angleOffsetFromTriggerEvent);
 
 	eth.firePrimaryTriggerRise();
-	ASSERT_EQ(1500, eth.engine.rpmCalculator.rpmValue);
+	ASSERT_EQ(1500, eth.engine.rpmCalculator.getRpm());
 
 	assertEqualsM("dwell", 4.5, engine->engineState.dwellAngle);
 	assertEqualsM("fuel #2", 4.5450, engine->injectionDuration);
@@ -407,7 +407,7 @@ TEST(misc, testRpmCalculator) {
 
 	assertEqualsM("dwell", 4.5, eth.engine.engineState.dwellAngle);
 	assertEqualsM("fuel #3", 4.5450, eth.engine.injectionDuration);
-	ASSERT_EQ(1500, eth.engine.rpmCalculator.rpmValue);
+	ASSERT_EQ(1500, eth.engine.rpmCalculator.getRpm());
 
 	eth.assertInjectorUpEvent("ev 0/2", 0, -4849, 2);
 
@@ -1283,7 +1283,7 @@ TEST(big, testMissedSpark299) {
 
 	printf("*************************************************** testMissedSpark299 start\r\n");
 
-	ASSERT_EQ(3000, eth.engine.rpmCalculator.rpmValue);
+	ASSERT_EQ(3000, eth.engine.rpmCalculator.getRpm());
 
 	setWholeTimingTable(3);
 	eth.engine.periodicFastCallback(PASS_ENGINE_PARAMETER_SIGNATURE);

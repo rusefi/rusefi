@@ -62,7 +62,6 @@
 #include "cdm_ion_sense.h"
 #include "binary_logging.h"
 
-extern afr_Map3D_t afrMap;
 extern bool main_loop_started;
 
 #if EFI_PROD_CODE
@@ -177,7 +176,7 @@ static systime_t timeOfPreviousPrintVersion = (systime_t) -1;
 #if EFI_PROD_CODE
 static void printOutPin(const char *pinName, brain_pin_e hwPin) {
 	if (hwPin != GPIO_UNASSIGNED) {
-		appendPrintf(&logger, "%s%s%s@%s%s", PROTOCOL_OUTPIN, DELIMETER, pinName, hwPortname(hwPin), DELIMETER);
+		logger.appendPrintf("%s%s%s@%s%s", PROTOCOL_OUTPIN, DELIMETER, pinName, hwPortname(hwPin), DELIMETER);
 	}
 }
 #endif /* EFI_PROD_CODE */
@@ -203,7 +202,6 @@ void printOverallStatus(systime_t nowSeconds) {
 	printOutPin(PROTOCOL_VVT_NAME, engineConfiguration->camInputs[0]);
 	printOutPin(PROTOCOL_HIP_NAME, CONFIG(hip9011IntHoldPin));
 	printOutPin(PROTOCOL_TACH_NAME, CONFIG(tachOutputPin));
-	printOutPin(PROTOCOL_DIZZY_NAME, engineConfiguration->dizzySparkOutputPin);
 #if EFI_LOGIC_ANALYZER
 	printOutPin(PROTOCOL_WA_CHANNEL_1, CONFIG(logicAnalyzerPins)[0]);
 	printOutPin(PROTOCOL_WA_CHANNEL_2, CONFIG(logicAnalyzerPins)[1]);
@@ -304,7 +302,7 @@ static void showFuelInfo2(float rpm, float engineLoad) {
 	scheduleMsg(&logger, "base cranking fuel %.2f", engineConfiguration->cranking.baseFuel);
 	scheduleMsg(&logger2, "cranking fuel: %.2f", ENGINE(engineState.cranking.fuel));
 
-	if (!engine->rpmCalculator.isStopped(PASS_ENGINE_PARAMETER_SIGNATURE)) {
+	if (!engine->rpmCalculator.isStopped()) {
 		float iatCorrection = engine->engineState.running.intakeTemperatureCoefficient;
 		float cltCorrection = engine->engineState.running.coolantTemperatureCoefficient;
 		floatms_t injectorLag = engine->engineState.running.injectorLag;
@@ -410,7 +408,11 @@ class CommunicationBlinkingTask : public PeriodicTimerController {
 				offTimeMs = onTimeMs = 500;
 #endif // EFI_INTERNAL_FLASH
 			} else {
-				onTimeMs = is_usb_serial_ready() ? 3 * BLINKING_PERIOD_MS : BLINKING_PERIOD_MS;
+				onTimeMs =
+#if EFI_USB_SERIAL
+				is_usb_serial_ready() ? 3 * BLINKING_PERIOD_MS :
+#endif // EFI_USB_SERIAL
+				BLINKING_PERIOD_MS;
 				offTimeMs = 0.6 * onTimeMs;
 			}
 
@@ -468,7 +470,7 @@ extern HIP9011 instance;
 
 void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels DECLARE_ENGINE_PARAMETER_SUFFIX) {
 #if EFI_SHAFT_POSITION_INPUT
-	int rpm = GET_RPM();
+	int rpm = Sensor::get(SensorType::Rpm).Value;
 #else /* EFI_SHAFT_POSITION_INPUT */
 	int rpm = 0;
 #endif /* EFI_SHAFT_POSITION_INPUT */
@@ -533,6 +535,8 @@ void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels DECLARE_
 
 	tsOutputChannels->fuelingLoad = getFuelingLoad(PASS_ENGINE_PARAMETER_SIGNATURE);
 	tsOutputChannels->ignitionLoad = getIgnitionLoad(PASS_ENGINE_PARAMETER_SIGNATURE);
+	tsOutputChannels->veTableYAxis = ENGINE(engineState.currentVeLoad);
+	tsOutputChannels->afrTableYAxis = ENGINE(engineState.currentAfrLoad);
 
 	// KLUDGE? we always show VBatt because Proteus board has VBatt input sensor hardcoded
 	// offset 28
@@ -606,12 +610,12 @@ void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels DECLARE_
 	// 288
 	tsOutputChannels->injectionOffset = engine->engineState.injectionOffset;
 
+	// offset 112
+	tsOutputChannels->veValue = engine->engineState.currentVe;
+	tsOutputChannels->currentTargetAfr = ENGINE(engineState.targetAFR);
+
 	if (hasMapSensor(PASS_ENGINE_PARAMETER_SIGNATURE)) {
 		float mapValue = getMap(PASS_ENGINE_PARAMETER_SIGNATURE);
-		// // offset 112
-		tsOutputChannels->veValue = engine->engineState.currentBaroCorrectedVE * PERCENT_MULT;
-		// todo: bug here? target afr could work based on real MAF?
-		tsOutputChannels->currentTargetAfr = afrMap.getValue(rpm, mapValue);
 		// offset 40
 		tsOutputChannels->manifoldAirPressure = mapValue;
 	}
@@ -841,7 +845,7 @@ void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels DECLARE_
 		{
 			float instantRpm = engine->triggerCentral.triggerState.instantRpm;
 			tsOutputChannels->debugFloatField1 = instantRpm;
-			tsOutputChannels->debugFloatField2 = instantRpm / GET_RPM_VALUE;
+			tsOutputChannels->debugFloatField2 = instantRpm / GET_RPM();
 		}
 		break;
 	case DBG_ION:

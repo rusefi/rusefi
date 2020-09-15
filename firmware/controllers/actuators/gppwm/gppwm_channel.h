@@ -12,10 +12,10 @@ public:
 
 	void init(bool usePwm, SimplePwm* pwm, OutputPin* outputPin, const ValueProvider3D* table, const gppwm_channel* config);
 	void update();
-
-private:
 	float getOutput() const;
 	void setOutput(float result);
+
+private:
 
 	// Store the current state so we can apply hysteresis
 	bool m_state = false;

@@ -13,7 +13,8 @@
 using ::testing::Return;
 
 // This lets us inspect private state from unit tests
-#define private public
+// cool hack but probably should not be used, even conditional private/public compilation is more obvious
+//#define private public
 
 /**
  * These are usually used with ASSETR_NEAR(val1, val2, abs_error)

@@ -42,6 +42,16 @@
 #define ADC_BUF_DEPTH_SLOW      8
 #define ADC_BUF_DEPTH_FAST      4
 
+// on F7 this must be aligned on a 32-byte boundary, and be a multiple of 32 bytes long.
+// When we invalidate the cache line(s) for ADC samples, we don't want to nuke any
+// adjacent data.
+// F4 does not care
+static __ALIGNED(32) adcsample_t slowAdcSampleBuf[ADC_BUF_DEPTH_SLOW * ADC_MAX_CHANNELS_COUNT];
+static __ALIGNED(32) adcsample_t fastAdcSampleBuf[ADC_BUF_DEPTH_FAST * ADC_MAX_CHANNELS_COUNT];
+
+static_assert(sizeof(slowAdcSampleBuf) % 32 == 0, "Slow ADC sample buffer size must be a multiple of 32 bytes");
+static_assert(sizeof(fastAdcSampleBuf) % 32 == 0, "Fast ADC sample buffer size must be a multiple of 32 bytes");
+
 static adc_channel_mode_e adcHwChannelEnabled[HW_MAX_ADC_INDEX];
 
 EXTERN_ENGINE;
@@ -56,8 +66,9 @@ float getVoltage(const char *msg, adc_channel_e hwChannel DECLARE_ENGINE_PARAMET
 	return adcToVolts(getAdcValue(msg, hwChannel));
 }
 
-AdcDevice::AdcDevice(ADCConversionGroup* hwConfig) {
+AdcDevice::AdcDevice(ADCConversionGroup* hwConfig, adcsample_t *buf) {
 	this->hwConfig = hwConfig;
+	this->samples = buf;
 	channelCount = 0;
 	conversionCount = 0;
 	errorsCount = 0;
@@ -65,7 +76,7 @@ AdcDevice::AdcDevice(ADCConversionGroup* hwConfig) {
 	hwConfig->sqr1 = 0;
 	hwConfig->sqr2 = 0;
 	hwConfig->sqr3 = 0;
-	memset(hardwareIndexByIndernalAdcIndex, 0, sizeof(hardwareIndexByIndernalAdcIndex));
+	memset(hardwareIndexByIndernalAdcIndex, EFI_ADC_NONE, sizeof(hardwareIndexByIndernalAdcIndex));
 	memset(internalAdcIndexByHardwareIndex, 0xFFFFFFFF, sizeof(internalAdcIndexByHardwareIndex));
 }
 
@@ -156,11 +167,11 @@ static ADCConversionGroup adcgrpcfgSlow = {
 	.sqr3				= 0  // Conversion group sequence 1...6
 };
 
-AdcDevice slowAdc(&adcgrpcfgSlow);
+AdcDevice slowAdc(&adcgrpcfgSlow, slowAdcSampleBuf);
 
 void adc_callback_fast(ADCDriver *adcp, adcsample_t *buffer, size_t n);
 
-static ADCConversionGroup adcgrpcfg_fast = {
+static ADCConversionGroup adcgrpcfgFast = {
 	.circular			= FALSE,
 	.num_channels		= 0,
 	.end_cb				= adc_callback_fast,
@@ -200,7 +211,7 @@ static ADCConversionGroup adcgrpcfg_fast = {
 	.sqr3				= 0  // Conversion group sequence 1...6
 };
 
-AdcDevice fastAdc(&adcgrpcfg_fast);
+AdcDevice fastAdc(&adcgrpcfgFast, fastAdcSampleBuf);
 
 #if HAL_USE_GPT
 static void fast_adc_callback(GPTDriver*) {
@@ -222,7 +233,7 @@ static void fast_adc_callback(GPTDriver*) {
 		return;
 	}
 
-	adcStartConversionI(&ADC_FAST_DEVICE, &adcgrpcfg_fast, fastAdc.samples, ADC_BUF_DEPTH_FAST);
+	adcStartConversionI(&ADC_FAST_DEVICE, &adcgrpcfgFast, fastAdc.samples, ADC_BUF_DEPTH_FAST);
 	chSysUnlockFromISR()
 	;
 	fastAdc.conversionCount++;
@@ -278,14 +289,14 @@ static GPTConfig fast_adc_config = {
 };
 #endif /* HAL_USE_GPT */
 
-const char * getAdcMode(adc_channel_e hwChannel) {
+adc_channel_mode_e getAdcMode(adc_channel_e hwChannel) {
 	if (slowAdc.isHwUsed(hwChannel)) {
-		return "slow";
+		return ADC_SLOW;
 	}
 	if (fastAdc.isHwUsed(hwChannel)) {
-		return "fast";
+		return ADC_FAST;
 	}
-	return "INACTIVE - need restart";
+	return ADC_OFF;
 }
 
 int AdcDevice::size() const {
@@ -314,7 +325,8 @@ void AdcDevice::invalidateSamplesCache() {
 
 void AdcDevice::init(void) {
 	hwConfig->num_channels = size();
-	hwConfig->sqr1 += ADC_SQR1_NUM_CH(size());
+	/* driver does this internally */
+	//hwConfig->sqr1 += ADC_SQR1_NUM_CH(size());
 }
 
 bool AdcDevice::isHwUsed(adc_channel_e hwChannelIndex) const {
@@ -329,14 +341,16 @@ bool AdcDevice::isHwUsed(adc_channel_e hwChannelIndex) const {
 void AdcDevice::enableChannel(adc_channel_e hwChannel) {
 	int logicChannel = channelCount++;
 
+	size_t channelAdcIndex = hwChannel - 1;
+
 	internalAdcIndexByHardwareIndex[hwChannel] = logicChannel;
 	hardwareIndexByIndernalAdcIndex[logicChannel] = hwChannel;
 	if (logicChannel < 6) {
-		hwConfig->sqr3 += (hwChannel) << (5 * logicChannel);
+		hwConfig->sqr3 += (channelAdcIndex) << (5 * logicChannel);
 	} else if (logicChannel < 12) {
-		hwConfig->sqr2 += (hwChannel) << (5 * (logicChannel - 6));
+		hwConfig->sqr2 += (channelAdcIndex) << (5 * (logicChannel - 6));
 	} else {
-		hwConfig->sqr1 += (hwChannel) << (5 * (logicChannel - 12));
+		hwConfig->sqr1 += (channelAdcIndex) << (5 * (logicChannel - 12));
 	}
 	// todo: support for more then 12 channels? not sure how needed it would be
 }
@@ -361,6 +375,26 @@ adc_channel_e AdcDevice::getAdcHardwareIndexByInternalIndex(int index) const {
 static void printFullAdcReport(Logging *logger) {
 	scheduleMsg(logger, "fast %d slow %d", fastAdc.conversionCount, slowAdc.conversionCount);
 
+	for (int index = 0; index < fastAdc.size(); index++) {
+		appendMsgPrefix(logger);
+
+		adc_channel_e hwIndex = fastAdc.getAdcHardwareIndexByInternalIndex(index);
+
+		if (hwIndex != EFI_ADC_NONE && hwIndex != EFI_ADC_ERROR) {
+			ioportid_t port = getAdcChannelPort("print", hwIndex);
+			int pin = getAdcChannelPin(hwIndex);
+
+			int adcValue = getAvgAdcValue(hwIndex, fastAdc.samples, ADC_BUF_DEPTH_FAST, fastAdc.size());
+			logger->appendPrintf(" F ch%d %s%d", index, portname(port), pin);
+			logger->appendPrintf(" ADC%d 12bit=%d", hwIndex, adcValue);
+			float volts = adcToVolts(adcValue);
+			logger->appendPrintf(" v=%.2f", volts);
+
+			appendMsgPostfix(logger);
+			scheduleLogging(logger);
+		}
+	}
+
 	for (int index = 0; index < slowAdc.size(); index++) {
 		appendMsgPrefix(logger);
 
@@ -371,10 +405,10 @@ static void printFullAdcReport(Logging *logger) {
 			int pin = getAdcChannelPin(hwIndex);
 
 			int adcValue = slowAdc.getAdcValueByIndex(index);
-			appendPrintf(logger, " ch%d %s%d", index, portname(port), pin);
-			appendPrintf(logger, " ADC%d 12bit=%d", hwIndex, adcValue);
+			logger->appendPrintf(" S ch%d %s%d", index, portname(port), pin);
+			logger->appendPrintf(" ADC%d 12bit=%d", hwIndex, adcValue);
 			float volts = adcToVolts(adcValue);
-			appendPrintf(logger, " v=%.2f", volts);
+			logger->appendPrintf(" v=%.2f", volts);
 
 			appendMsgPostfix(logger);
 			scheduleLogging(logger);
@@ -506,7 +540,6 @@ static void configureInputs(void) {
 	}
 	addChannel("AFR", engineConfiguration->afr.hwChannel, ADC_SLOW);
 	addChannel("Oil Pressure", engineConfiguration->oilPressure.hwChannel, ADC_SLOW);
-	addChannel("AC", engineConfiguration->acSwitchAdc, ADC_SLOW);
 	if (engineConfiguration->high_fuel_pressure_sensor_1 != INCOMPATIBLE_CONFIG_CHANGE) {
 		addChannel("HFP1", engineConfiguration->high_fuel_pressure_sensor_1, ADC_SLOW);
 	}
@@ -547,6 +580,19 @@ void initAdcInputs() {
 	adcStart(&ADC_SLOW_DEVICE, NULL);
 	adcStart(&ADC_FAST_DEVICE, NULL);
 	adcSTM32EnableTSVREFE(); // Internal temperature sensor
+
+	/* Enable this code only when you absolutly sure
+	 * that there is no possible errors from ADC */
+#if 0
+	/* All ADC use DMA and DMA calls end_cb from its IRQ
+	 * If none of ADC users need error callback - we can disable
+	 * shared ADC IRQ and save some CPU ticks */
+	if ((adcgrpcfgSlow.error_cb == NULL) &&
+		(adcgrpcfgFast.error_cb == NULL)
+		/* TODO: Add ADC3? */) {
+		nvicDisableVector(STM32_ADC_NUMBER);
+	}
+#endif
 
 #if defined(ADC_CHANNEL_SENSOR)
 	// Internal temperature sensor, Available on ADC1 only
