@@ -65,7 +65,7 @@ public:
 	// 4 byte pointer is a bit of a memory waste here
 	const pin_output_mode_e *modePtr;
 	brain_pin_e brainPin;
-	cost brain_pin_e *brainPinPtr;
+	const brain_pin_e *brainPinPtr;
 	#if (BOARD_EXT_GPIOCHIPS > 0)
 		/* used for external pins */
 		bool ext;
