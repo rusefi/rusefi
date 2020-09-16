@@ -42,11 +42,11 @@ public:
 	 * outputMode being a pointer allow us to change configuration (for example invert logical pin) in configuration and get resuts applied
 	 * away, or at least I hope that's why
 	 */
-	void initPin(const char *msg, brain_pin_e brainPin, const pin_output_mode_e *outputMode);
+	void initPin(const char *msg, brain_pin_e &brainPin, const pin_output_mode_e *outputMode);
 	/**
 	 * same as above, with DEFAULT_OUTPUT mode
 	 */
-	void initPin(const char *msg, brain_pin_e brainPin);
+	void initPin(const char *msg, brain_pin_e &brainPin);
 	/**
 	 * dissociates pin from this output and un-registers it in pin repository
 	 */
@@ -61,11 +61,13 @@ public:
 
 
 #if EFI_GPIO_HARDWARE
-	ioportid_t port = 0;
-	uint8_t pin = 0;
+	pin_output_mode_e outputMode;
+	// 4 byte pointer is a bit of a memory waste here
+	const pin_output_mode_e *modePtr;
+	brain_pin_e brainPin;
+	cost brain_pin_e *brainPinPtr;
 	#if (BOARD_EXT_GPIOCHIPS > 0)
 		/* used for external pins */
-		brain_pin_e brainPin;
 		bool ext;
 	#endif
 #endif /* EFI_GPIO_HARDWARE */
@@ -74,12 +76,15 @@ public:
 	 * we track current pin status so that we do not touch the actual hardware if we want to write new pin bit
 	 * which is same as current pin value. This maybe helps in case of status leds, but maybe it's a total over-engineering
 	 */
+	static void updateConfigurationList();
+	void updateConfiguration();
+	const char* m_msg;
 private:
 	// todo: inline this method?
 	void setDefaultPinState(const pin_output_mode_e *defaultState);
 
-	// 4 byte pointer is a bit of a memory waste here
-	const pin_output_mode_e *modePtr;
+	OutputPin *nextOutput = nullptr;
+	static OutputPin* s_firstOutput;
 };
 
 
