@@ -299,7 +299,7 @@ OutputPin::OutputPin() {
 void OutputPin::updateConfigurationList() {
     OutputPin *listItem = s_firstOutput;
     while (listItem != nullptr) {
-        listItem->initPin(listItem->msg, listItem->brainPinPtr, listItem->modePtr);
+        listItem->initPin(listItem->m_msg, listItem->brainPinPtr, listItem->modePtr);
         if (listItem->nextOutput != nullptr) {
             listItem = listItem->nextOutput;
         } else {
@@ -310,7 +310,7 @@ void OutputPin::updateConfigurationList() {
 
 bool OutputPin::isInitialized() {
 #if EFI_GPIO_HARDWARE && EFI_PROD_CODE
-	return brainPin != NULL;
+	return (brainPinPtr != nullptr);
 #else /* EFI_GPIO_HARDWARE */
 	return true;
 #endif /* EFI_GPIO_HARDWARE */
@@ -340,6 +340,7 @@ void OutputPin::setValue(int logicValue) {
 	#if (BOARD_EXT_GPIOCHIPS > 0)
 		if (!this->ext) {
 			/* onchip pin */
+			ioportid_t port = getHwPort(m_msg, brainPin);
 			if (port != GPIO_NULL) {
 				setPinValue(this, eValue, logicValue);
 			}
@@ -350,6 +351,7 @@ void OutputPin::setValue(int logicValue) {
 			currentLogicValue = logicValue;
 		}
 	#else
+		ioportid_t port = getHwPort(m_msg, brainPin);
 		if (port != GPIO_NULL) {
 			setPinValue(this, eValue, logicValue);
 		} else {
