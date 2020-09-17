@@ -12,7 +12,10 @@
 
 ButtonDebounce* ButtonDebounce::s_firstDebounce = nullptr;
 
-void ButtonDebounce::init (int t, brain_pin_e *pin, pin_input_mode_e *mode) {
+/**
+We need to have a separate init function because we do not have the pin or mode in the context in which the class is originally created
+*/
+void ButtonDebounce::init (int threshold, brain_pin_e *pin, pin_input_mode_e *mode) {
     if (!initialized) {
         ButtonDebounce *listItem = s_firstDebounce;
         if (listItem == nullptr) {
@@ -24,11 +27,11 @@ void ButtonDebounce::init (int t, brain_pin_e *pin, pin_input_mode_e *mode) {
             listItem->nextDebounce = this;
         }
     }
-    threshold = MS2NT(t);
+    m_threshold = MS2NT(threshold);
     timeLast = 0;
-    this->pin = pin;
+    m_pin = pin;
     active_pin = *pin;
-    this->mode = mode;
+    m_mode = mode;
     active_mode = *mode;
 #ifndef EFI_UNIT_TEST
     // getInputMode converts from pin_input_mode_e to iomode_t
@@ -37,10 +40,10 @@ void ButtonDebounce::init (int t, brain_pin_e *pin, pin_input_mode_e *mode) {
     initialized = true;
 }
 
-void ButtonDebounce::updateConfigurationList () {
+void ButtonDebounce::stopConfigurationList () {
     ButtonDebounce *listItem = s_firstDebounce;
     while (listItem != nullptr) {
-        listItem->updateConfiguration();
+        listItem->stopConfiguration();
         if (listItem->nextDebounce != nullptr) {
             listItem = listItem->nextDebounce;
         } else {
@@ -49,19 +52,36 @@ void ButtonDebounce::updateConfigurationList () {
     }
 }
 
-void ButtonDebounce::updateConfiguration () {
+void ButtonDebounce::startConfigurationList () {
+    ButtonDebounce *listItem = s_firstDebounce;
+    while (listItem != nullptr) {
+        listItem->startConfiguration();
+        if (listItem->nextDebounce != nullptr) {
+            listItem = listItem->nextDebounce;
+        } else {
+            break;
+        }
+    }
+}
+
+void ButtonDebounce::stopConfiguration () {
 #ifndef EFI_ACTIVE_CONFIGURATION_IN_FLASH
-    if (*pin != active_pin || *mode != active_mode) {
+    if (*m_pin != active_pin || *m_mode != active_mode) {
 #else
-    if (*pin != active_pin || *mode != active_mode || (isActiveConfigurationVoid && (*pin != 0 || *mode != 0))) {
+    if (*m_pin != active_pin || *m_mode != active_mode || (isActiveConfigurationVoid && (*m_pin != 0 || *m_mode != 0))) {
 #endif /* EFI_ACTIVE_CONFIGURATION_IN_FLASH */
 #ifndef EFI_UNIT_TEST
         brain_pin_markUnused(active_pin);
-        efiSetPadMode("Button", *pin, getInputMode(*mode));
 #endif /* EFI_UNIT_TEST */
     }
-    active_pin = *pin;
-    active_mode = *mode;
+}
+
+void ButtonDebounce::startConfiguration () {
+#ifndef EFI_UNIT_TEST
+    efiSetPadMode("Button", *m_pin, getInputMode(*m_mode));
+#endif
+    active_pin = *m_pin;
+    active_mode = *m_mode;
 }
 
 /**
@@ -73,12 +93,12 @@ bool ButtonDebounce::readPinEvent() {
 }
 
 bool ButtonDebounce::readPinState() {
-    if (!pin) {
+    if (!m_pin) {
         return false;
     }
     efitick_t timeNow = getTimeNowNt();
     // If it's been less than the threshold since we were last called
-    if ((timeNow - timeLast) < threshold) {
+    if ((timeNow - timeLast) < m_threshold) {
         return readValue;
     }
     // readValue is a class variable, so it needs to be reset.
