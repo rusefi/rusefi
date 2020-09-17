@@ -142,12 +142,9 @@ public:
 	void startPins();
 	void reset();
 	bool stopPins();
-	void unregisterPins();
 	void startInjectionPins();
 	void startIgnitionPins();
 	void startAuxValves();
-	void stopInjectionPins();
-	void stopIgnitionPins();
 	OutputPin mainRelay;
 
 	// this one cranks engine

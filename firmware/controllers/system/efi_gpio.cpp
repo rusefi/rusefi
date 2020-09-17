@@ -87,18 +87,6 @@ EnginePins::EnginePins() {
     }                                                                              \
   }
 
-#define unregisterOutputIfPinChanged(output, pin) {                                \
-	if (isConfigurationChanged(pin)) {                                             \
-		(output).unregisterOutput(activeConfiguration.pin);                        \
-	}                                                                              \
-}
-
-#define unregisterOutputIfPinOrModeChanged(output, pin, mode) {                    \
-	if (isPinOrModeChanged(pin, mode)) {                                           \
-		(output).unregisterOutput(activeConfiguration.pin);                        \
-	}                                                                              \
-}
-
 #else /* EFI_PROD_CODE */
 
 #define setPinValue(outputPin, electricalValue, logicValue)                        \
@@ -123,37 +111,6 @@ bool EnginePins::stopPins() {
 	return result;
 }
 
-void EnginePins::unregisterPins() {
-#if EFI_ELECTRONIC_THROTTLE_BODY
-	unregisterEtbPins();
-#endif /* EFI_ELECTRONIC_THROTTLE_BODY */
-#if EFI_PROD_CODE
-	unregisterOutputIfPinOrModeChanged(fuelPumpRelay, fuelPumpPin, fuelPumpPinMode);
-	unregisterOutputIfPinOrModeChanged(fanRelay, fanPin, fanPinMode);
-	unregisterOutputIfPinOrModeChanged(acRelay, acRelayPin, acRelayPinMode);
-	unregisterOutputIfPinOrModeChanged(hipCs, hip9011CsPin, hip9011CsPinMode);
-	unregisterOutputIfPinOrModeChanged(triggerDecoderErrorPin, triggerErrorPin, triggerErrorPinMode);
-	unregisterOutputIfPinOrModeChanged(checkEnginePin, malfunctionIndicatorPin, malfunctionIndicatorPinMode);
-	unregisterOutputIfPinOrModeChanged(tachOut, tachOutputPin, tachOutputPinMode);
-	unregisterOutputIfPinOrModeChanged(idleSolenoidPin, idle.solenoidPin, idle.solenoidPinMode);
-	unregisterOutputIfPinOrModeChanged(secondIdleSolenoidPin, secondSolenoidPin, idle.solenoidPinMode);
-	unregisterOutputIfPinChanged(sdCsPin, sdCardCsPin);
-	unregisterOutputIfPinChanged(accelerometerCs, LIS302DLCsPin);
-
-	for (int i = 0;i < FSIO_COMMAND_COUNT;i++) {
-		unregisterOutputIfPinChanged(fsioOutputs[i], fsioOutputPins[i]);
-	}
-
-    unregisterOutputIfPinOrModeChanged(boostPin, boostControlPin, boostControlPinMode);
-	unregisterOutputIfPinOrModeChanged(alternatorPin, alternatorControlPin, alternatorControlPinMode);
-	unregisterOutputIfPinOrModeChanged(mainRelay, mainRelayPin, mainRelayPinMode);
-	unregisterOutputIfPinOrModeChanged(starterRelayDisable, starterRelayDisablePin, starterRelayDisableMode);
-
-	unregisterOutputIfPinChanged(starterControl, starterControlPin);
-
-#endif /* EFI_PROD_CODE */
-}
-
 void EnginePins::startPins() {
 	startInjectionPins();
 	startIgnitionPins();
@@ -167,22 +124,6 @@ void EnginePins::reset() {
 	for (int i = 0; i < IGNITION_PIN_COUNT;i++) {
 		coils[i].reset();
 	}
-}
-
-void EnginePins::stopIgnitionPins(void) {
-#if EFI_PROD_CODE
-	for (int i = 0; i < IGNITION_PIN_COUNT; i++) {
-		unregisterOutputIfPinOrModeChanged(enginePins.coils[i], ignitionPins[i], ignitionPinMode);
-	}
-#endif /* EFI_PROD_CODE */
-}
-
-void EnginePins::stopInjectionPins(void) {
-#if EFI_PROD_CODE
-	for (int i = 0; i < INJECTION_PIN_COUNT; i++) {
-		unregisterOutputIfPinOrModeChanged(enginePins.injectors[i], injectionPins[i], injectionPinMode);
-	}
-#endif /* EFI_PROD_CODE */
 }
 
 void EnginePins::startAuxValves(void) {
