@@ -335,7 +335,7 @@ void OutputPin::setValue(int logicValue) {
 #endif // ENABLE_PERF_TRACE
 
 #if EFI_PROD_CODE
-	efiAssertVoid(CUSTOM_ERR_6621, outputMode != NULL, "pin mode not initialized");
+	efiAssertVoid(CUSTOM_ERR_6621, &outputMode != nullptr, "pin mode not initialized");
 	efiAssertVoid(CUSTOM_ERR_6622, outputMode <= OM_OPENDRAIN_INVERTED, "invalid pin_output_mode_e");
 	int eValue = getElectricalValue(logicValue, outputMode);
 
