@@ -438,6 +438,11 @@ void OutputPin::initPin(const char *msg, brain_pin_e &brainPin) {
 	initPin(msg, brainPin, &DEFAULT_OUTPUT);
 }
 
+void OutputPin::initPin(const char *msg, brain_pin_e brainPin, const pin_output_mode_e *outputMode) {
+	this->brainPin = brainPin
+	initPin(msg, this->brainPin, outputMode)
+}
+
 /**
  * This method is used for digital GPIO pins only, for peripheral pins see mySetPadMode
  */
