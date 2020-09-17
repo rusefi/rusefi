@@ -43,6 +43,7 @@ public:
 	 * away, or at least I hope that's why
 	 */
 	void initPin(const char *msg, brain_pin_e &brainPin, const pin_output_mode_e *outputMode);
+	/* For passing brainPin by rvalue */
 	void initPinR(const char *msg, brain_pin_e brainPin, const pin_output_mode_e *outputMode);
 	/**
 	 * same as above, with DEFAULT_OUTPUT mode
