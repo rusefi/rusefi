@@ -330,7 +330,7 @@ void applyNewHardwareSettings(void) {
 
 	ButtonDebounce::updateConfigurationList();
 
-	OutputPin::updateConfigurationList();
+	OutputPin::stopConfigurationList();
 
 #if EFI_SHAFT_POSITION_INPUT
 	stopTriggerInputPins();
@@ -402,6 +402,8 @@ void applyNewHardwareSettings(void) {
 	}
 
 	enginePins.unregisterPins();
+
+	OutputPin::startConfigurationList();
 
 #if EFI_SHAFT_POSITION_INPUT
 	startTriggerInputPins();

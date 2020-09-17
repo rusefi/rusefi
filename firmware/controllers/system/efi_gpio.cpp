@@ -296,18 +296,45 @@ OutputPin* OutputPin::s_firstOutput = nullptr;
 
 OutputPin::OutputPin() {
 	modePtr = &DEFAULT_OUTPUT;
+	appendConfigurationList();
 }
 
-void OutputPin::updateConfigurationList() {
-    OutputPin *listItem = s_firstOutput;
-    while (listItem != nullptr) {
-        listItem->initPin(listItem->m_msg, *(listItem->brainPinPtr), listItem->modePtr);
-        if (listItem->nextOutput != nullptr) {
-            listItem = listItem->nextOutput;
-        } else {
-            break;
-        }
-    }
+void OutputPin::appendConfigurationList() {
+	if (!isInitialized()) {
+		OutputPin *listItem = s_firstOutput;
+		if (listItem == nullptr) {
+			s_firstOutput = this;
+		} else {
+			while (listItem->nextOutput != nullptr) {
+				listItem = listItem->nextOutput;
+			}
+			listItem->nextOutput = this;
+		}
+	}
+}
+
+void OutputPin::stopConfigurationList() {
+	OutputPin *listItem = s_firstOutput;
+	while (listItem != nullptr) {
+		unregisterOutputIfPinChanged(listItem, listItem->);
+		if (listItem->nextOutput != nullptr) {
+			listItem = listItem->nextOutput;
+		} else {
+			break;
+		}
+	}
+}
+
+void OutputPin::startConfigurationList() {
+	OutputPin *listItem = s_firstOutput;
+	while (listItem != nullptr) {
+		listItem->initPin(listItem->m_msg, *(listItem->brainPinPtr), listItem->modePtr);
+		if (listItem->nextOutput != nullptr) {
+			listItem = listItem->nextOutput;
+		} else {
+			break;
+		}
+	}
 }
 
 bool OutputPin::isInitialized() {
