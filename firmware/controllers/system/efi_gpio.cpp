@@ -81,7 +81,7 @@ EnginePins::EnginePins() {
   {                                                                                \
     if ((outputPin)->currentLogicValue != (logicValue)) {	\
 	  brain_pin_e tmppin = (outputPin)->brainPin;		\
-	  const char* tmpmsg = (outputPin)->m_msg		\
+	  const char* tmpmsg = (outputPin)->m_msg;		\
 	  palWritePad(getHwPort(tmpmsg,  tmppin), getHwPin(tmpmsg, tmppin), (electricalValue));         \
 	  (outputPin)->currentLogicValue = (logicValue);                               \
     }                                                                              \
