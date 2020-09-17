@@ -79,8 +79,10 @@ EnginePins::EnginePins() {
 #if EFI_PROD_CODE
 #define setPinValue(outputPin, electricalValue, logicValue)                        \
   {                                                                                \
-    if ((outputPin)->currentLogicValue != (logicValue)) {                          \
-	  palWritePad((outputPin)->port, (outputPin)->pin, (electricalValue));         \
+    if ((outputPin)->currentLogicValue != (logicValue)) {	\
+	  brain_pin_e tmppin = (outputPin)->brainPin;		\
+	  const char* tmpmsg = (outputPin)->m_msg		\
+	  palWritePad(getHwPort(tmpmsg,  tmppin), getHwPin(tmpmsg, tmppin), (electricalValue));         \
 	  (outputPin)->currentLogicValue = (logicValue);                               \
     }                                                                              \
   }
@@ -496,7 +498,7 @@ void OutputPin::unregisterOutput(brain_pin_e oldPin) {
 		scheduleMsg(logger, "unregistering %s", hwPortname(oldPin));
 #if EFI_GPIO_HARDWARE && EFI_PROD_CODE
 		brain_pin_markUnused(oldPin);
-		brainPin = nullptr;
+		brainPin = NULL;
 #endif /* EFI_GPIO_HARDWARE */
 	}
 }
