@@ -301,7 +301,7 @@ OutputPin::OutputPin() {
 void OutputPin::updateConfigurationList() {
     OutputPin *listItem = s_firstOutput;
     while (listItem != nullptr) {
-        listItem->initPin(listItem->m_msg, listItem->brainPinPtr, listItem->modePtr);
+        listItem->initPin(listItem->m_msg, listItem->*brainPinPtr, listItem->modePtr);
         if (listItem->nextOutput != nullptr) {
             listItem = listItem->nextOutput;
         } else {
