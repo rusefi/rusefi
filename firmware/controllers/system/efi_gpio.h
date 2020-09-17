@@ -64,12 +64,12 @@ public:
 #if EFI_GPIO_HARDWARE
 	pin_output_mode_e outputMode;
 	brain_pin_e brainPin;
-	brain_pin_e *brainPinPtr = nullptr;
 	#if (BOARD_EXT_GPIOCHIPS > 0)
 		/* used for external pins */
 		bool ext;
 	#endif
 #endif /* EFI_GPIO_HARDWARE */
+	brain_pin_e *brainPinPtr = nullptr;
 	// 4 byte pointer is a bit of a memory waste here
 	const pin_output_mode_e *modePtr = nullptr;
 	int8_t currentLogicValue = INITIAL_PIN_STATE;
