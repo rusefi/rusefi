@@ -77,7 +77,7 @@ public:
 	 * we track current pin status so that we do not touch the actual hardware if we want to write new pin bit
 	 * which is same as current pin value. This maybe helps in case of status leds, but maybe it's a total over-engineering
 	 */
-	static void appendConfigurationList();
+	void appendConfigurationList();
 	static void stopConfigurationList();
 	static void startConfigurationList();
 	const char* m_msg;

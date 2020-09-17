@@ -300,8 +300,8 @@ OutputPin::OutputPin() {
 }
 
 void OutputPin::appendConfigurationList() {
-	if (!isInitialized()) {
-		OutputPin *listItem = s_firstOutput;
+	OutputPin *listItem = s_firstOutput;
+	if (!listItem->isInitialized()) {
 		if (listItem == nullptr) {
 			s_firstOutput = this;
 		} else {
