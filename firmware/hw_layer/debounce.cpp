@@ -17,15 +17,8 @@ We need to have a separate init function because we do not have the pin or mode 
 */
 void ButtonDebounce::init (int threshold, brain_pin_e *pin, pin_input_mode_e *mode) {
     if (!initialized) {
-        ButtonDebounce *listItem = s_firstDebounce;
-        if (listItem == nullptr) {
-            s_firstDebounce = this;
-        } else {
-            while (listItem->nextDebounce != nullptr) {
-                listItem = listItem->nextDebounce;
-            }
-            listItem->nextDebounce = this;
-        }
+        nextDebounce = s_firstDebounce;
+        s_firstDebounce = this;
     }
     m_threshold = MS2NT(threshold);
     timeLast = 0;
