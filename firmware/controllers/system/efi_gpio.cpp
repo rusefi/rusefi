@@ -438,8 +438,8 @@ void OutputPin::initPin(const char *msg, brain_pin_e &brainPin) {
 	initPin(msg, brainPin, &DEFAULT_OUTPUT);
 }
 
-void OutputPin::initPin(const char *msg, brain_pin_e brainPin, const pin_output_mode_e *outputMode) {
-	this->brainPin = brainPin
+void OutputPin::initPinR(const char *msg, brain_pin_e brainPin, const pin_output_mode_e *outputMode) {
+	this->brainPin = brainPin;
 	initPin(msg, this->brainPin, outputMode)
 }
 
@@ -523,7 +523,7 @@ uint8_t criticalErrorLedState;
 void initPrimaryPins(Logging *sharedLogger) {
 	logger = sharedLogger;
 #if EFI_PROD_CODE
-	enginePins.errorLedPin.initPin("led: CRITICAL status", LED_CRITICAL_ERROR_BRAIN_PIN, &(LED_ERROR_BRAIN_PIN_MODE));
+	enginePins.errorLedPin.initPinR("led: CRITICAL status", LED_CRITICAL_ERROR_BRAIN_PIN, &(LED_ERROR_BRAIN_PIN_MODE));
 	criticalErrorLedPort = getHwPort("CRITICAL", LED_CRITICAL_ERROR_BRAIN_PIN);
 	criticalErrorLedPin = getHwPin("CRITICAL", LED_CRITICAL_ERROR_BRAIN_PIN);
 	criticalErrorLedState = (LED_ERROR_BRAIN_PIN_MODE == INVERTED_OUTPUT) ? 0 : 1;
