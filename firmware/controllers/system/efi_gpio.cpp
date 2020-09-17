@@ -511,10 +511,6 @@ void OutputPin::initPin(const char *msg, brain_pin_e &brainPin, const pin_output
 		}
 	#endif
 
-	if (this->brainPin != brainPin) {
-		brain_pin_markUnused(this->brainPin);
-	}
-
 	this->brainPin = brainPin;
 	this->currentLogicValue = INITIAL_PIN_STATE;
 
