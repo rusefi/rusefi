@@ -341,8 +341,6 @@ void applyNewHardwareSettings(void) {
 	stopJoystickPins();
 #endif /* HAL_USE_PAL && EFI_JOYSTICK */
 
-	enginePins.stopInjectionPins();
-    enginePins.stopIgnitionPins();
 #if EFI_CAN_SUPPORT
 	stopCanPins();
 #endif /* EFI_CAN_SUPPORT */
@@ -400,8 +398,6 @@ void applyNewHardwareSettings(void) {
 	if (isPinOrModeChanged(clutchUpPin, clutchUpPinMode)) {
 		brain_pin_markUnused(activeConfiguration.clutchUpPin);
 	}
-
-	enginePins.unregisterPins();
 
 	OutputPin::startConfigurationList();
 
