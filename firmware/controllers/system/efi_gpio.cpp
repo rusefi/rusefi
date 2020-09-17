@@ -50,7 +50,26 @@ static const char *injectorShortNames[] = { PROTOCOL_INJ1_SHORT_NAME, "i2", "i3"
 
 static const char *auxValveShortNames[] = { "a1", "a2"};
 
-EnginePins::EnginePins() {
+static RegisteredOutputPin * firstRegisteredOutput = nullptr;
+
+RegisteredOutputPin::RegisteredOutputPin(const char *name, short pinOffset,
+		short pinModeOffset) {
+	this->name = name;
+	this->pinOffset = pinOffset;
+	this->pinModeOffset = pinModeOffset;
+}
+
+void RegisteredOutputPin::unregister() {
+  //  pin_output_mode_e newMode = *(pin_output_mode_e *) (((void *) engineConfiguration)[pinModeOffset]);
+}
+
+
+EnginePins::EnginePins() :
+		mainRelay("mainRelay", mainRelayPin_offset, mainRelayPinMode_offset),
+		starterControl("starterControl", starterControlPin_offset, starterControlPinMode_offset),
+		starterRelayDisable("starterRelayDisable", starterRelayDisablePin_offset, starterRelayDisableMode_offset),
+		fanRelay("fanRelay", fanPin_offset, fanPinMode_offset)
+{
 	tachOut.name = PROTOCOL_TACH_NAME;
 
 	static_assert(efi::size(sparkNames) >= IGNITION_PIN_COUNT, "Too many ignition pins"); 
@@ -127,7 +146,6 @@ void EnginePins::unregisterPins() {
 #endif /* EFI_ELECTRONIC_THROTTLE_BODY */
 #if EFI_PROD_CODE
 	unregisterOutputIfPinOrModeChanged(fuelPumpRelay, fuelPumpPin, fuelPumpPinMode);
-	unregisterOutputIfPinOrModeChanged(fanRelay, fanPin, fanPinMode);
 	unregisterOutputIfPinOrModeChanged(acRelay, acRelayPin, acRelayPinMode);
 	unregisterOutputIfPinOrModeChanged(hipCs, hip9011CsPin, hip9011CsPinMode);
 	unregisterOutputIfPinOrModeChanged(triggerDecoderErrorPin, triggerErrorPin, triggerErrorPinMode);
@@ -144,10 +162,12 @@ void EnginePins::unregisterPins() {
 
     unregisterOutputIfPinOrModeChanged(boostPin, boostControlPin, boostControlPinMode);
 	unregisterOutputIfPinOrModeChanged(alternatorPin, alternatorControlPin, alternatorControlPinMode);
-	unregisterOutputIfPinOrModeChanged(mainRelay, mainRelayPin, mainRelayPinMode);
-	unregisterOutputIfPinOrModeChanged(starterRelayDisable, starterRelayDisablePin, starterRelayDisableMode);
 
-	unregisterOutputIfPinChanged(starterControl, starterControlPin);
+	RegisteredOutputPin * pin = firstRegisteredOutput;
+	while (pin != nullptr) {
+		pin->unregister();
+		pin = pin->next;
+	}
 
 #endif /* EFI_PROD_CODE */
 }
