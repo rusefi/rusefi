@@ -50,13 +50,16 @@ static const char *injectorShortNames[] = { PROTOCOL_INJ1_SHORT_NAME, "i2", "i3"
 
 static const char *auxValveShortNames[] = { "a1", "a2"};
 
-static RegisteredOutputPin * firstRegisteredOutput = nullptr;
+static RegisteredOutputPin * registeredOutputHead = nullptr;
 
 RegisteredOutputPin::RegisteredOutputPin(const char *name, short pinOffset,
 		short pinModeOffset) {
 	this->name = name;
 	this->pinOffset = pinOffset;
 	this->pinModeOffset = pinModeOffset;
+	// adding into head of the list is so easy and since we do not care about order that's what we shall do
+	this->next = registeredOutputHead;
+	registeredOutputHead = this;
 }
 
 void RegisteredOutputPin::unregister() {
@@ -163,7 +166,7 @@ void EnginePins::unregisterPins() {
     unregisterOutputIfPinOrModeChanged(boostPin, boostControlPin, boostControlPinMode);
 	unregisterOutputIfPinOrModeChanged(alternatorPin, alternatorControlPin, alternatorControlPinMode);
 
-	RegisteredOutputPin * pin = firstRegisteredOutput;
+	RegisteredOutputPin * pin = registeredOutputHead;
 	while (pin != nullptr) {
 		pin->unregister();
 		pin = pin->next;
