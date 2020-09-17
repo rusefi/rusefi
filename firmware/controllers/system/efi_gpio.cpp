@@ -316,7 +316,7 @@ void OutputPin::appendConfigurationList() {
 void OutputPin::stopConfigurationList() {
 	OutputPin *listItem = s_firstOutput;
 	while (listItem != nullptr) {
-		if (listItem->brainPin != listItem->*brainPinPtr) {
+		if (listItem->brainPin != *(listItem->brainPinPtr)) {
 			listItem->unregisterOutput(brainPin);
 		}
 		if (listItem->nextOutput != nullptr) {
