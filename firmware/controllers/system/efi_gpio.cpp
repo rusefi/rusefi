@@ -440,7 +440,7 @@ void OutputPin::initPin(const char *msg, brain_pin_e &brainPin) {
 
 void OutputPin::initPinR(const char *msg, brain_pin_e brainPin, const pin_output_mode_e *outputMode) {
 	this->brainPin = brainPin;
-	initPin(msg, this->brainPin, outputMode)
+	initPin(msg, this->brainPin, outputMode);
 }
 
 /**
