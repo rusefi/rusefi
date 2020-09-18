@@ -33,6 +33,12 @@ RedundantSensor pedal(SensorType::AcceleratorPedal, SensorType::AcceleratorPedal
 // This sensor indicates the driver's throttle intent - Pedal if we have one, TPS if not.
 ProxySensor driverIntent(SensorType::DriverThrottleIntent);
 
+// These sensors are TPS-like, so handle them in here too
+LinearFunc wastegateFunc(PACK_MULT_VOLTAGE);
+LinearFunc idlePosFunc(PACK_MULT_VOLTAGE);
+FunctionalSensor wastegateSens(SensorType::WastegatePosition, MS2NT(10));
+FunctionalSensor idlePositionSens(SensorType::IdlePositionSensor, MS2NT(10));
+
 static void configureTps(LinearFunc& func, float closed, float open, float min, float max) {
 	func.configure(
 		closed, 0,
@@ -82,6 +88,10 @@ void initTps(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 		initTpsFuncAndRedund(tps2, tpsFunc2s, tpsSens2s, CONFIG(tps2_2AdcChannel), CONFIG(tps2SecondaryMin), CONFIG(tps2SecondaryMax), min, max);
 		initTpsFunc(pedalFuncPrimary, pedalSensorPrimary, CONFIG(throttlePedalPositionAdcChannel), CONFIG(throttlePedalUpVoltage), CONFIG(throttlePedalWOTVoltage), min, max);
 		initTpsFuncAndRedund(pedal, pedalFuncSecondary, pedalSensorSecondary, CONFIG(throttlePedalPositionSecondAdcChannel), CONFIG(throttlePedalSecondaryUpVoltage), CONFIG(throttlePedalSecondaryWOTVoltage), min, max);
+
+		// TPS-like stuff that isn't actually a TPS
+		initTpsFunc(wastegateFunc, wastegateSens, CONFIG(wastegatePositionSensor), CONFIG(wastegatePositionMin), CONFIG(wastegatePositionMax), min, max);
+		initTpsFunc(idlePositionFunc, idlePositionSens, CONFIG(idlePositionSensor), CONFIG(idlePositionMin), CONFIG(idlePositionMax), min, max);
 	}
 
 	// Route the pedal or TPS to driverIntent as appropriate
@@ -107,4 +117,7 @@ void reconfigureTps(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 
 	configureTps(pedalFuncPrimary, CONFIG(throttlePedalUpVoltage), CONFIG(throttlePedalWOTVoltage), min, max);
 	configureTps(pedalFuncSecondary, CONFIG(throttlePedalSecondaryUpVoltage), CONFIG(throttlePedalSecondaryWOTVoltage), min, max);
+
+	configureTps(wastegateFunc, CONFIG(wastegatePositionSensor), CONFIG(wastegatePositionMin), CONFIG(wastegatePositionMax), min, max);
+	configureTps(idlePositionFunc, CONFIG(idlePositionSensor), CONFIG(idlePositionMin), CONFIG(idlePositionMax), min, max);
 }

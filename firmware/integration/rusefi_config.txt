@@ -724,8 +724,11 @@ pin_input_mode_e throttlePedalUpPinMode;
 		uint8_t fsio_visible acIdleExtraOffset;+Additional idle PID offset while A/C is active;"Percent", 1, 0, 0, 255, 0
 
 	int can2SleepPeriodMs;CANbus thread period, ms;"ms",    1,      0,       0,  1000.0,        2
-	int unusedAt716;;"units", 1, 0, -20, 100, 0
-	int unusedAt720;;"units", 1, 0, -20, 100, 0
+	uint16_t wastegatePositionMin;Voltage when the wastegate is closed.\nYou probably don't have one of these!;"mv", 1, 0, 0, 5000, 0
+	uint16_t wastegatePositionMax;Voltage when the wastegate is fully open.\nYou probably don't have one of these!;"mv", 1, 0, 0, 5000, 0
+	uint16_t idlePositionMin;Voltage when the idle valve is closed.\nYou probably don't have one of these!;"mv", 1, 0, 0, 5000, 0
+	uint16_t idlePositionMax;Voltage when the idle valve is open.\nYou probably don't have one of these!;"mv", 1, 0, 0, 5000, 0
+
 	int unusedAt724;;"units", 1, 0, -20, 100, 0
 
 	uint32_t tunerStudioSerialSpeed;Secondary TTL channel baud rate;"BPs",      1,      0,       0,1000000,      0
@@ -797,7 +800,7 @@ output_pin_e acFanPin;+Optional Radiator Fan used with A/C
 
 custom uart_device_e 1 bits,U32,   @OFFSET@, [0:1], "Off", "UART1", "UART2", "UART3" 
 	int16_t sdCardPeriodMs;+SD card logging period, in milliseconds;"ms",        1,     0,  0,    30000,  0
-	uint8_t unused806;;"units", 1, 0, -20, 100, 0
+	adc_channel_e idlePositionSensor;
 	brain_pin_e debugMapAveraging;
 	output_pin_e starterRelayDisablePin;
 	pin_output_mode_e starterRelayDisableMode;On some vehicles we can disable starter once engine is already running
@@ -1188,7 +1191,8 @@ int16_t tps2Max;Full throttle#2. tpsMax value as 10 bit ADC value. Not Voltage!\
 	brain_pin_e can2TxPin;set_can2_tx_pin X
 	brain_pin_e can2RxPin;set_can2_rx_pin X	
 	pin_output_mode_e starterControlPinMode;
-	uint8_t[5] unused_former_warmup_target_afr;;"units", 1, 0, -20, 100, 0
+	adc_channel_e wastegatePositionSensor;
+	uint8_t[4] unused_former_warmup_target_afr;;"units", 1, 0, -20, 100, 0
 
 	float boostCutPressure;kPa value at which we need to cut fuel and spark, 0 if not enabled;"kPa",        1,     0,    0, 500,     0
 
