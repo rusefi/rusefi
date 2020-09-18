@@ -8,11 +8,10 @@
  * At the moment rusEfi does not allow to have more than 16 ADC channels combined. At the moment there is no flexibility to use
  * any ADC pins, only the hardcoded choice of 16 pins.
  *
- * Slow ADC group is used for IAT, CLT, AFR, VBATT etc - this one is currently sampled at 20Hz
+ * Slow ADC group is used for IAT, CLT, AFR, VBATT etc - this one is currently sampled at 500Hz
  *
- * Fast ADC group is used for TPS, MAP, MAF HIP - this one is currently sampled at 10KHz
+ * Fast ADC group is used for MAP, MAF HIP - this one is currently sampled at 10KHz
  *  We need frequent MAP for map_averaging.cpp
- *  We need frequent TPS for better TPS/TPS enrichment and better ETB control
  *
  * 10KHz equals one measurement every 3.6 degrees at 6000 RPM
  *
@@ -543,6 +542,9 @@ static void configureInputs(void) {
 	addChannel("TPS 1 Secondary", engineConfiguration->tps1_2AdcChannel, ADC_SLOW);
 	addChannel("TPS 2 Primary", engineConfiguration->tps2_1AdcChannel, ADC_SLOW);
 	addChannel("TPS 2 Secondary", engineConfiguration->tps2_2AdcChannel, ADC_SLOW);
+
+	addChannel("Wastegate Position", engineConfiguration->wastegatePositionSensor, ADC_SLOW);
+	addChannel("Idle Position Sensor", engineConfiguration->idlePositionSensor, ADC_SLOW);
 
 	addChannel("Fuel Level", engineConfiguration->fuelLevelSensor, ADC_SLOW);
 	addChannel("Acc Pedal1", engineConfiguration->throttlePedalPositionAdcChannel, ADC_SLOW);
