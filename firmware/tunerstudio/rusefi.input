@@ -1406,6 +1406,7 @@ menuDialog = main
 		subMenu = speedSensor,				"Vehicle speed sensor"
 		subMenu = oilPressureSensor,		"Oil pressure"
 		subMenu = egtInputs,				"EGT" @@if_ts_show_egt
+		subMenu = wastegateIdlePos,			"Wastegate and idle position sensors"
 
 	menu = "&Controller"
 		subMenu = ecuStimulator,			"ECU stimulator"
@@ -1876,7 +1877,31 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 		panel = pedalSensorLeft, West
 		panel = pedalGauges, East
 
-    dialog = mc33Dialog, "GDI Dreams"
+	dialog = wastegatePosConfig, "Wastegate position sensor"
+		field = "Input pin",							wastegatePositionSensor
+		field = "Min (fully closed, most boost)",		wastegatePositionMin
+		field = "Max (fully open, least boost)",		wastegatePositionMax
+
+	dialog = idlePosConfig, "Wastegate position sensor"
+		field = "Input pin",							idlePositionSensor
+		field = "Min (valve closed, low idle)",			idlePositionMin
+		field = "Max (valve open, high idle)",			idlePositionMax
+
+	dialog = wastegateIdlePosLeft, ""
+		panel = wastegatePosConfig
+		panel = idlePosConfig
+
+	dialog = wastegateIdlePosGauges, ""
+		gauge = rawWastegatePositionGauge, West
+		gauge = wastegatePosGauge, East
+		gauge = rawIdlePositionSensorGauge
+		gauge = idlePosSensGauge
+
+	dialog = wastegateIdlePos, "", border
+		panel = wastegateIdlePosLeft, West
+		panel = wastegateIdlePosGauges, East
+
+    dialog = mc33Dialog, "Low-Z injector control (MC33816)"
     	field = "MC33816 cs",							mc33816_cs
 		field = "MC33816 rstb",							mc33816_rstb
 		field = "MC33816 flag0",						mc33816_flag0
