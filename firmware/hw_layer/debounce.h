@@ -29,7 +29,7 @@ private:
     brain_pin_e active_pin;
     pin_input_mode_e *m_mode;
     pin_input_mode_e active_mode;
-    bool readValue;
+    bool storedValue;
     bool initialized = false;
     ButtonDebounce *nextDebounce = nullptr;
     static ButtonDebounce* s_firstDebounce;
