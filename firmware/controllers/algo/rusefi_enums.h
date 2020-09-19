@@ -997,3 +997,11 @@ typedef enum __attribute__ ((__packed__)) {
 	AFR_AccPedal = 3,
 	AFR_CylFilling = 4,
 } afr_override_e;
+
+typedef enum __attribute__ ((__packed__)) {
+	ETB_None = 0,
+	ETB_Throttle1 = 1,
+	ETB_Throttle2 = 2,
+	ETB_IdleValve = 3,
+	ETB_Wastegate = 4,
+} etb_function_e;
