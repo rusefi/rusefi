@@ -50,6 +50,9 @@ enum class SensorType : unsigned char {
 
 	Lambda,
 
+	WastegatePosition,
+	IdlePosition,
+
 	// Leave me at the end!
 	PlaceholderLast
 };

@@ -334,7 +334,7 @@ void setMiataNA6_MAP_Frankenso(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	engineConfiguration->throttlePedalUpPin = GPIOA_7;
 
 	// green wire from 1Q/W17 to bottom of W46
-	engineConfiguration->acSwitchAdc = EFI_ADC_6; // PA6
+	engineConfiguration->acSwitch = GPIOA_6;
 
 #if ! EFI_UNIT_TEST
 	// W57 PE3 A/C compressor relay out
@@ -430,7 +430,7 @@ void setMiataNA6_MAP_MRE(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 
 
 	// EFI_ADC_3: "22 - AN temp 4"
-	engineConfiguration->acSwitchAdc = EFI_ADC_3;
+	engineConfiguration->acSwitch = GPIOA_6;
 
 	engineConfiguration->warningLedPin = GPIOD_13;
 	engineConfiguration->triggerErrorPin = GPIOE_1;

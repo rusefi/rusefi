@@ -351,7 +351,6 @@ static void printAnalogInfo(void) {
 	printAnalogChannelInfo("CJ UR", engineConfiguration->cj125ur);
 	printAnalogChannelInfo("CJ UA", engineConfiguration->cj125ua);
 
-	printAnalogChannelInfo("A/C sw", engineConfiguration->acSwitchAdc);
 	printAnalogChannelInfo("HIP9011", engineConfiguration->hipOutputChannel);
 
 	for (int i = 0; i < FSIO_ANALOG_INPUT_COUNT ; i++) {
@@ -711,7 +710,7 @@ void initEngineContoller(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX) 
  * UNUSED_SIZE constants.
  */
 #ifndef RAM_UNUSED_SIZE
-#define RAM_UNUSED_SIZE 6100
+#define RAM_UNUSED_SIZE 7500
 #endif
 #ifndef CCM_UNUSED_SIZE
 #define CCM_UNUSED_SIZE 2900

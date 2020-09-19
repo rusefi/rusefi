@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Wed Sep 09 20:53:44 UTC 2020
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Fri Sep 18 07:05:11 UTC 2020
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -1326,13 +1326,29 @@ struct engine_configuration_s {
 	 */
 	int can2SleepPeriodMs;
 	/**
+	 * Voltage when the wastegate is closed.
+	 * You probably don't have one of these!
 	 * offset 716
 	 */
-	int unusedAt716;
+	uint16_t wastegatePositionMin;
 	/**
+	 * Voltage when the wastegate is fully open.
+	 * You probably don't have one of these!
+	 * offset 718
+	 */
+	uint16_t wastegatePositionMax;
+	/**
+	 * Voltage when the idle valve is closed.
+	 * You probably don't have one of these!
 	 * offset 720
 	 */
-	int unusedAt720;
+	uint16_t idlePositionMin;
+	/**
+	 * Voltage when the idle valve is open.
+	 * You probably don't have one of these!
+	 * offset 722
+	 */
+	uint16_t idlePositionMax;
 	/**
 	 * offset 724
 	 */
@@ -1541,7 +1557,7 @@ struct engine_configuration_s {
 	/**
 	 * offset 806
 	 */
-	uint8_t unused806;
+	adc_channel_e idlePositionSensor;
 	/**
 	 * offset 807
 	 */
@@ -1830,10 +1846,10 @@ struct engine_configuration_s {
 	bool unusedBit_251_29 : 1;
 	/**
 	offset 976 bit 30 */
-	bool unusedBit_285_30 : 1;
+	bool unusedBit_287_30 : 1;
 	/**
 	offset 976 bit 31 */
-	bool unusedBit_285_31 : 1;
+	bool unusedBit_287_31 : 1;
 	/**
 	 * offset 980
 	 */
@@ -1948,6 +1964,10 @@ struct engine_configuration_s {
 	 * offset 1192
 	 */
 	output_pin_e tcu_solenoid[TCU_SOLENOID_COUNT];
+	/**
+	 * offset 1198
+	 */
+	uint8_t solenoidPadding[2];
 	/**
 	 * offset 1200
 	 */
@@ -2092,10 +2112,10 @@ struct engine_configuration_s {
 	 */
 	adc_channel_e hipOutputChannel;
 	/**
-	 * A/C button input handled as analogue input
+	 *  A/C button input
 	 * offset 1469
 	 */
-	adc_channel_e acSwitchAdc;
+	switch_input_pin_e acSwitch;
 	/**
 	 * offset 1470
 	 */
@@ -2658,76 +2678,76 @@ struct engine_configuration_s {
 	bool unused1130 : 1;
 	/**
 	offset 2116 bit 8 */
-	bool unusedBit_482_8 : 1;
+	bool unusedBit_485_8 : 1;
 	/**
 	offset 2116 bit 9 */
-	bool unusedBit_482_9 : 1;
+	bool unusedBit_485_9 : 1;
 	/**
 	offset 2116 bit 10 */
-	bool unusedBit_482_10 : 1;
+	bool unusedBit_485_10 : 1;
 	/**
 	offset 2116 bit 11 */
-	bool unusedBit_482_11 : 1;
+	bool unusedBit_485_11 : 1;
 	/**
 	offset 2116 bit 12 */
-	bool unusedBit_482_12 : 1;
+	bool unusedBit_485_12 : 1;
 	/**
 	offset 2116 bit 13 */
-	bool unusedBit_482_13 : 1;
+	bool unusedBit_485_13 : 1;
 	/**
 	offset 2116 bit 14 */
-	bool unusedBit_482_14 : 1;
+	bool unusedBit_485_14 : 1;
 	/**
 	offset 2116 bit 15 */
-	bool unusedBit_482_15 : 1;
+	bool unusedBit_485_15 : 1;
 	/**
 	offset 2116 bit 16 */
-	bool unusedBit_482_16 : 1;
+	bool unusedBit_485_16 : 1;
 	/**
 	offset 2116 bit 17 */
-	bool unusedBit_482_17 : 1;
+	bool unusedBit_485_17 : 1;
 	/**
 	offset 2116 bit 18 */
-	bool unusedBit_482_18 : 1;
+	bool unusedBit_485_18 : 1;
 	/**
 	offset 2116 bit 19 */
-	bool unusedBit_482_19 : 1;
+	bool unusedBit_485_19 : 1;
 	/**
 	offset 2116 bit 20 */
-	bool unusedBit_482_20 : 1;
+	bool unusedBit_485_20 : 1;
 	/**
 	offset 2116 bit 21 */
-	bool unusedBit_482_21 : 1;
+	bool unusedBit_485_21 : 1;
 	/**
 	offset 2116 bit 22 */
-	bool unusedBit_482_22 : 1;
+	bool unusedBit_485_22 : 1;
 	/**
 	offset 2116 bit 23 */
-	bool unusedBit_482_23 : 1;
+	bool unusedBit_485_23 : 1;
 	/**
 	offset 2116 bit 24 */
-	bool unusedBit_482_24 : 1;
+	bool unusedBit_485_24 : 1;
 	/**
 	offset 2116 bit 25 */
-	bool unusedBit_482_25 : 1;
+	bool unusedBit_485_25 : 1;
 	/**
 	offset 2116 bit 26 */
-	bool unusedBit_482_26 : 1;
+	bool unusedBit_485_26 : 1;
 	/**
 	offset 2116 bit 27 */
-	bool unusedBit_482_27 : 1;
+	bool unusedBit_485_27 : 1;
 	/**
 	offset 2116 bit 28 */
-	bool unusedBit_482_28 : 1;
+	bool unusedBit_485_28 : 1;
 	/**
 	offset 2116 bit 29 */
-	bool unusedBit_482_29 : 1;
+	bool unusedBit_485_29 : 1;
 	/**
 	offset 2116 bit 30 */
-	bool unusedBit_482_30 : 1;
+	bool unusedBit_485_30 : 1;
 	/**
 	offset 2116 bit 31 */
-	bool unusedBit_482_31 : 1;
+	bool unusedBit_485_31 : 1;
 	/**
 	 * set can_mode X
 	 * offset 2120
@@ -2750,7 +2770,11 @@ struct engine_configuration_s {
 	/**
 	 * offset 2127
 	 */
-	uint8_t unused_former_warmup_target_afr[5];
+	adc_channel_e wastegatePositionSensor;
+	/**
+	 * offset 2128
+	 */
+	uint8_t unused_former_warmup_target_afr[4];
 	/**
 	 * kPa value at which we need to cut fuel and spark, 0 if not enabled
 	 * offset 2132
@@ -3159,11 +3183,7 @@ struct engine_configuration_s {
 	/**
 	 * offset 3288
 	 */
-	uint8_t unused3288[512];
-	/**
-	 * offset 3800
-	 */
-	float ignitionTpsBins[IGN_TPS_COUNT];
+	uint8_t unused3288[576];
 	/**
 	 * offset 3864
 	 */
@@ -3395,7 +3415,16 @@ struct engine_configuration_s {
 	/**
 	 * offset 4516
 	 */
-	int mainUnusedEnd[371];
+	pin_input_mode_e acSwitchMode;
+	/**
+	 * need 4 byte alignment
+	 * offset 4517
+	 */
+	uint8_t alignmentFill_at_4517[3];
+	/**
+	 * offset 4520
+	 */
+	int mainUnusedEnd[370];
 	/** total size 6000*/
 };
 
@@ -3581,7 +3610,11 @@ struct persistent_config_s {
 	/**
 	 * offset 15136
 	 */
-	uint8_t unused15136[1152];
+	tcubinary_table_t tcuSolenoidTable;
+	/**
+	 * offset 15196
+	 */
+	uint8_t unused15136[1092];
 	/**
 	 * offset 16288
 	 */
@@ -3689,4 +3722,4 @@ struct persistent_config_s {
 typedef struct persistent_config_s persistent_config_s;
 
 // end
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Wed Sep 09 20:53:44 UTC 2020
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Fri Sep 18 07:05:11 UTC 2020

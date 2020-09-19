@@ -50,7 +50,38 @@ static const char *injectorShortNames[] = { PROTOCOL_INJ1_SHORT_NAME, "i2", "i3"
 
 static const char *auxValveShortNames[] = { "a1", "a2"};
 
-EnginePins::EnginePins() {
+static RegisteredOutputPin * registeredOutputHead = nullptr;
+
+RegisteredOutputPin::RegisteredOutputPin(const char *name, short pinOffset,
+		short pinModeOffset) {
+	this->name = name;
+	this->pinOffset = pinOffset;
+	this->pinModeOffset = pinModeOffset;
+	// adding into head of the list is so easy and since we do not care about order that's what we shall do
+	this->next = registeredOutputHead;
+	registeredOutputHead = this;
+}
+
+void RegisteredOutputPin::unregister() {
+#if EFI_PROD_CODE
+	brain_pin_e        curPin = *(brain_pin_e       *) ((void *) (&((char*)&activeConfiguration)[pinOffset]));
+	brain_pin_e        newPin = *(brain_pin_e       *) ((void *) (&((char*) engineConfiguration)[pinOffset]));
+
+    pin_output_mode_e curMode = *(pin_output_mode_e *) ((void *) (&((char*)&activeConfiguration)[pinModeOffset]));
+    pin_output_mode_e newMode = *(pin_output_mode_e *) ((void *) (&((char*) engineConfiguration)[pinModeOffset]));
+
+    if (curPin != newPin || curMode != newMode) {
+    	unregisterOutput(curPin);
+    }
+#endif // EFI_PROD_CODE
+}
+
+EnginePins::EnginePins() :
+		mainRelay("mainRelay", mainRelayPin_offset, mainRelayPinMode_offset),
+		starterControl("starterControl", starterControlPin_offset, starterControlPinMode_offset),
+		starterRelayDisable("starterRelayDisable", starterRelayDisablePin_offset, starterRelayDisableMode_offset),
+		fanRelay("fanRelay", fanPin_offset, fanPinMode_offset)
+{
 	tachOut.name = PROTOCOL_TACH_NAME;
 
 	static_assert(efi::size(sparkNames) >= IGNITION_PIN_COUNT, "Too many ignition pins"); 
@@ -127,7 +158,6 @@ void EnginePins::unregisterPins() {
 #endif /* EFI_ELECTRONIC_THROTTLE_BODY */
 #if EFI_PROD_CODE
 	unregisterOutputIfPinOrModeChanged(fuelPumpRelay, fuelPumpPin, fuelPumpPinMode);
-	unregisterOutputIfPinOrModeChanged(fanRelay, fanPin, fanPinMode);
 	unregisterOutputIfPinOrModeChanged(acRelay, acRelayPin, acRelayPinMode);
 	unregisterOutputIfPinOrModeChanged(hipCs, hip9011CsPin, hip9011CsPinMode);
 	unregisterOutputIfPinOrModeChanged(triggerDecoderErrorPin, triggerErrorPin, triggerErrorPinMode);
@@ -144,10 +174,12 @@ void EnginePins::unregisterPins() {
 
     unregisterOutputIfPinOrModeChanged(boostPin, boostControlPin, boostControlPinMode);
 	unregisterOutputIfPinOrModeChanged(alternatorPin, alternatorControlPin, alternatorControlPinMode);
-	unregisterOutputIfPinOrModeChanged(mainRelay, mainRelayPin, mainRelayPinMode);
-	unregisterOutputIfPinOrModeChanged(starterRelayDisable, starterRelayDisablePin, starterRelayDisableMode);
 
-	unregisterOutputIfPinChanged(starterControl, starterControlPin);
+	RegisteredOutputPin * pin = registeredOutputHead;
+	while (pin != nullptr) {
+		pin->unregister();
+		pin = pin->next;
+	}
 
 #endif /* EFI_PROD_CODE */
 }
@@ -343,6 +375,9 @@ void OutputPin::setValue(int logicValue) {
 	#else
 		if (port != GPIO_NULL) {
 			setPinValue(this, eValue, logicValue);
+		} else {
+			// even without physical pin sometimes it's nice to track logic pin value
+			currentLogicValue = logicValue;
 		}
 	#endif
 

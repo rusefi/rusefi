@@ -48,7 +48,6 @@ TEST(etb, initializationSingleThrottle) {
 	// Expect mock0 to be init with TPS 1, index 0, and PID params
 	EXPECT_CALL(mocks[0], init(SensorType::Tps1, _, 0, &engineConfiguration->etb, Ne(nullptr)));
 	EXPECT_CALL(mocks[0], reset);
-	EXPECT_CALL(mocks[0], start);
 
 	// We do not expect throttle #2 to be initialized
 
@@ -74,12 +73,10 @@ TEST(etb, initializationDualThrottle) {
 	// Expect mock0 to be init with TPS 1, index 0, and PID params
 	EXPECT_CALL(mocks[0], init(SensorType::Tps1, _, 0, &engineConfiguration->etb, Ne(nullptr)));
 	EXPECT_CALL(mocks[0], reset);
-	EXPECT_CALL(mocks[0], start);
 
 	// Expect mock1 to be init with TPS 2, index 1, and PID params
 	EXPECT_CALL(mocks[1], init(SensorType::Tps2, _, 1, &engineConfiguration->etb, Ne(nullptr)));
 	EXPECT_CALL(mocks[1], reset);
-	EXPECT_CALL(mocks[1], start);
 
 	doInitElectronicThrottle(PASS_ENGINE_PARAMETER_SIGNATURE);
 }
@@ -102,7 +99,6 @@ TEST(etb, initializationDcMotorIdleValveMode) {
 	// Expect mock0 to be init with TPS 2, index 0, and PID params
 	EXPECT_CALL(mocks[0], init(SensorType::Tps2, _, 0, &engineConfiguration->etb, Ne(nullptr)));
 	EXPECT_CALL(mocks[0], reset);
-	EXPECT_CALL(mocks[0], start);
 
 	// We do not expect throttle #2 to be initialized
 

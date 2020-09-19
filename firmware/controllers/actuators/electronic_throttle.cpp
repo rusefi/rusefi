@@ -91,7 +91,7 @@
 #endif /* ETB_MAX_COUNT */
 
 static LoggingWithStorage logger("ETB");
-static pedal2tps_t pedal2tpsMap("Pedal2Tps", 1);
+static pedal2tps_t pedal2tpsMap("Pedal2Tps");
 
 EXTERN_ENGINE;
 
@@ -395,7 +395,7 @@ void EtbController::setOutput(expected<percent_t> outputValue) {
 	}
 }
 
-void EtbController::update(efitick_t) {
+void EtbController::update() {
 #if EFI_TUNER_STUDIO
 	// Only debug throttle #0
 	if (m_myIndex == 0) {
@@ -484,11 +484,8 @@ void EtbController::autoCalibrateTps() {
  * Since ETB is a safety critical device, we need the hard RTOS guarantee that it will be scheduled over other less important tasks.
  */
 #include "periodic_thread_controller.h"
-struct EtbImpl final : public EtbController, public PeriodicController<512> {
-	EtbImpl() : PeriodicController("ETB", NORMALPRIO + 3, ETB_LOOP_FREQUENCY) {}
-
-	void PeriodicTask(efitick_t nowNt) override {
-
+struct EtbImpl final : public EtbController {
+	void update() override {
 #if EFI_TUNER_STUDIO
 	if (m_isAutocal) {
 		// Don't allow if engine is running!
@@ -547,16 +544,26 @@ struct EtbImpl final : public EtbController, public PeriodicController<512> {
 	}
 #endif /* EFI_TUNER_STUDIO */
 
-		EtbController::update(nowNt);
-	}
-
-	void start() override {
-		Start();
+		EtbController::update();
 	}
 };
 
 // real implementation (we mock for some unit tests)
-EtbImpl etbControllers[ETB_COUNT];
+static EtbImpl etbControllers[ETB_COUNT];
+
+struct EtbThread final : public PeriodicController<512> {
+	EtbThread() : PeriodicController("ETB", NORMALPRIO + 3, ETB_LOOP_FREQUENCY) {}
+
+	void PeriodicTask(efitick_t) override {
+		// Simply update all controllers
+		for (int i = 0 ; i < engine->etbActualCount; i++) {
+			etbControllers[i].update();
+		}
+	}
+};
+
+static EtbThread etbThread;
+
 #endif
 
 static void showEthInfo(void) {
@@ -820,9 +827,9 @@ void doInitElectronicThrottle(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 
 	etbPidReset(PASS_ENGINE_PARAMETER_SIGNATURE);
 
-	for (int i = 0 ; i < engine->etbActualCount; i++) {
-		engine->etbControllers[i]->start();
-	}
+#if !EFI_UNIT_TEST
+	etbThread.Start();
+#endif
 }
 
 void initElectronicThrottle(DECLARE_ENGINE_PARAMETER_SIGNATURE) {

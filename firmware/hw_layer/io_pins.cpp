@@ -9,10 +9,14 @@
 
 #include "global.h"
 #include "io_pins.h"
+#include "efi_gpio.h"
+#include "engine.h"
+
+EXTERN_ENGINE;
 
 #if EFI_PROD_CODE
+
 #include "os_access.h"
-#include "efi_gpio.h"
 #include "drivers/gpio/gpio_ext.h"
 
 #include "pin_repository.h"
@@ -20,7 +24,6 @@
 #include "engine_configuration.h"
 #include "console_io.h"
 
-EXTERN_ENGINE;
 
 #if EFI_ENGINE_CONTROL
 #include "main_trigger_callback.h"
@@ -45,6 +48,11 @@ bool efiReadPin(brain_pin_e pin) {
  */
 void efiSetPadMode(const char *msg, brain_pin_e brainPin, iomode_t mode)
 {
+	if (brainPin == GPIO_UNASSIGNED) {
+		// No pin configured, nothing to do here.
+		return;
+	}
+
 	bool wasUsed = brain_pin_markUsed(brainPin, msg);
 
 	if (!wasUsed) {
@@ -114,7 +122,9 @@ void efiIcuStart(const char *msg, ICUDriver *icup, const ICUConfig *config) {
 #endif /* HAL_USE_ICU */
 
 #else
+extern bool mockPinStates[(1 << sizeof(brain_pin_e))];
+
 bool efiReadPin(brain_pin_e pin) {
-	return false;
+	return mockPinStates[static_cast<int>(pin)];
 }
 #endif /* EFI_PROD_CODE */

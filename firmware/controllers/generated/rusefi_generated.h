@@ -13,7 +13,8 @@
 #define acIdleRpmBump_offset 1496
 #define acRelayPin_offset 830
 #define acRelayPinMode_offset 831
-#define acSwitchAdc_offset 1469
+#define acSwitch_offset 1469
+#define acSwitchMode_offset 4516
 #define activateAuxPid1_offset 76
 #define activateAuxPid2_offset 76
 #define activateAuxPid3_offset 76
@@ -49,6 +50,7 @@
 #define air_pressure_sensor_type_e_auto_enum "MT_CUSTOM", "MT_DENSO183", "MT_MPX4250", "MT_HONDA3BAR", "MT_DODGE_NEON_2003", "MT_SUBY_DENSO", "MT_GM_3_BAR", "MT_MPX4100", "MT_TOYOTA_89420_02010", "MT_MPX4250A", "MT_BOSCH_2_5", "MT_MAZDA_1_BAR"
 #define alignEngineSnifferAtTDC_offset 744
 #define alignmentFill_at_2227_offset 2227
+#define alignmentFill_at_4517_offset 4517
 #define alternator_antiwindupFreq_offset 1764
 #define alternator_derivativeFilterLoss_offset 1760
 #define alternatorControl_dFactor_offset 1724
@@ -795,6 +797,9 @@
 #define idlePidFalloffDeltaRpm_offset 3992
 #define idlePidRpmDeadZone_offset 1894
 #define idlePidRpmUpperLimit_offset 1484
+#define idlePositionMax_offset 722
+#define idlePositionMin_offset 720
+#define idlePositionSensor_offset 806
 #define idleRpmPid2_dFactor_offset 4048
 #define idleRpmPid2_iFactor_offset 4044
 #define idleRpmPid2_maxValue_offset 4058
@@ -829,7 +834,6 @@
 #define idleVeBins_offset 6608
 #define IGN_LOAD_COUNT 16
 #define IGN_RPM_COUNT 16
-#define IGN_TPS_COUNT 16
 #define ignition_mode_e_auto_enum "IM_ONE_COIL", "IM_INDIVIDUAL_COILS", "IM_WASTED_SPARK", "IM_TWO_COILS"
 #define IGNITION_PIN_COUNT 12
 #define ignitionDwellForCrankingMs_offset 100
@@ -854,7 +858,6 @@
 #define ignitionPins9_offset 644
 #define ignitionRpmBins_offset 17376
 #define ignitionTable_offset 16288
-#define ignitionTpsBins_offset 3800
 #define ignMathCalculateAtIndex_offset 1488
 #define INDICATOR_NAME_AC_SWITCH "AC switch"
 #define INDICATOR_NAME_BRAKE_DOWN "brake: down"
@@ -994,7 +997,7 @@
 #define mafSensorType_offset 948
 #define mainRelayPin_offset 706
 #define mainRelayPinMode_offset 752
-#define mainUnusedEnd_offset 4516
+#define mainUnusedEnd_offset 4520
 #define malfunctionIndicatorPin_offset 660
 #define malfunctionIndicatorPinMode_offset 661
 #define manIdlePosition_offset 608
@@ -1166,10 +1169,11 @@
 #define showHumanReadableWarning_offset 976
 #define showSdCardWarning_offset 76
 #define SIGNATURE_BOARD all
-#define SIGNATURE_DATE 2020.09.09
-#define SIGNATURE_HASH 2117182216
+#define SIGNATURE_DATE 2020.09.18
+#define SIGNATURE_HASH 2576577388
 #define silentTriggerError_offset 1464
 #define slowAdcAlpha_offset 2088
+#define solenoidPadding_offset 1198
 #define sparkDwellRpmBins_offset 332
 #define sparkDwellValues_offset 364
 #define specs_offset 396
@@ -1259,18 +1263,18 @@
 #define tChargeMode_e_auto_enum "TCHARGE_MODE_RPM_TPS", "TCHARGE_MODE_AIR_INTERP"
 #define tChargeMode_e_enum "RPM+TPS (Default)", "Air Mass Interpolation"
 #define tChargeMode_offset 3884
+#define TCU_GEAR_COUNT 10
 #define tcu_solenoid1_offset 1192
 #define tcu_solenoid2_offset 1193
 #define tcu_solenoid3_offset 1194
 #define tcu_solenoid4_offset 1195
 #define tcu_solenoid5_offset 1196
 #define tcu_solenoid6_offset 1197
-#define tcu_solenoid7_offset 1198
-#define tcu_solenoid8_offset 1199
-#define TCU_SOLENOID_COUNT 8
+#define TCU_SOLENOID_COUNT 6
 #define tcuDownshiftButtonPin_offset 1819
 #define tcuDownshiftButtonPinMode_offset 4515
 #define tcuEnabled_offset 976
+#define tcuSolenoidTable_offset 15136
 #define tcuUpshiftButtonPin_offset 1818
 #define tcuUpshiftButtonPinMode_offset 4514
 #define test557pin_offset 3101
@@ -1478,7 +1482,7 @@
 #define ts_show_spi true
 #define ts_show_trigger_comparator false
 #define ts_show_tunerstudio_port true
-#define TS_SIGNATURE "rusEFI 2020.09.09.all.2117182216"
+#define TS_SIGNATURE "rusEFI 2020.09.18.all.2576577388"
 #define TS_SINGLE_WRITE_COMMAND 'W'
 #define TS_SINGLE_WRITE_COMMAND_char W
 #define TS_TEST_COMMAND 't' // 0x74
@@ -1494,7 +1498,7 @@
 #define unused1129_offset 2116
 #define unused1130_offset 2116
 #define unused1476b20_offset 1476
-#define unused15136_offset 15136
+#define unused15136_offset 15196
 #define unused2432_offset 2432
 #define unused244_1_offset 2420
 #define unused244_2_offset 2424
@@ -1504,7 +1508,6 @@
 #define unused3288_offset 3288
 #define unused6312_offset 6312
 #define unused744b25_offset 744
-#define unused806_offset 806
 #define unused_1484_bit_24_offset 1476
 #define unused_1484_bit_25_offset 1476
 #define unused_1484_bit_26_offset 1476
@@ -1514,42 +1517,40 @@
 #define unused_1484_bit_30_offset 1476
 #define unused_1484_bit_31_offset 1476
 #define unused_alFIn_offset 4024
-#define unused_former_warmup_target_afr_offset 2127
-#define unusedAt716_offset 716
-#define unusedAt720_offset 720
+#define unused_former_warmup_target_afr_offset 2128
 #define unusedAt724_offset 724
 #define unusedAtOldBoardConfigurationEnd_offset 1204
 #define unusedAuxVoltage1_TODO_332_offset 2713
 #define unusedAuxVoltage2_TODO_332_offset 2714
 #define unusedBit4_1476_offset 1476
 #define unusedBit_251_29_offset 976
-#define unusedBit_285_30_offset 976
-#define unusedBit_285_31_offset 976
+#define unusedBit_287_30_offset 976
+#define unusedBit_287_31_offset 976
 #define unusedBit_34_31_offset 76
-#define unusedBit_482_10_offset 2116
-#define unusedBit_482_11_offset 2116
-#define unusedBit_482_12_offset 2116
-#define unusedBit_482_13_offset 2116
-#define unusedBit_482_14_offset 2116
-#define unusedBit_482_15_offset 2116
-#define unusedBit_482_16_offset 2116
-#define unusedBit_482_17_offset 2116
-#define unusedBit_482_18_offset 2116
-#define unusedBit_482_19_offset 2116
-#define unusedBit_482_20_offset 2116
-#define unusedBit_482_21_offset 2116
-#define unusedBit_482_22_offset 2116
-#define unusedBit_482_23_offset 2116
-#define unusedBit_482_24_offset 2116
-#define unusedBit_482_25_offset 2116
-#define unusedBit_482_26_offset 2116
-#define unusedBit_482_27_offset 2116
-#define unusedBit_482_28_offset 2116
-#define unusedBit_482_29_offset 2116
-#define unusedBit_482_30_offset 2116
-#define unusedBit_482_31_offset 2116
-#define unusedBit_482_8_offset 2116
-#define unusedBit_482_9_offset 2116
+#define unusedBit_485_10_offset 2116
+#define unusedBit_485_11_offset 2116
+#define unusedBit_485_12_offset 2116
+#define unusedBit_485_13_offset 2116
+#define unusedBit_485_14_offset 2116
+#define unusedBit_485_15_offset 2116
+#define unusedBit_485_16_offset 2116
+#define unusedBit_485_17_offset 2116
+#define unusedBit_485_18_offset 2116
+#define unusedBit_485_19_offset 2116
+#define unusedBit_485_20_offset 2116
+#define unusedBit_485_21_offset 2116
+#define unusedBit_485_22_offset 2116
+#define unusedBit_485_23_offset 2116
+#define unusedBit_485_24_offset 2116
+#define unusedBit_485_25_offset 2116
+#define unusedBit_485_26_offset 2116
+#define unusedBit_485_27_offset 2116
+#define unusedBit_485_28_offset 2116
+#define unusedBit_485_29_offset 2116
+#define unusedBit_485_30_offset 2116
+#define unusedBit_485_31_offset 2116
+#define unusedBit_485_8_offset 2116
+#define unusedBit_485_9_offset 2116
 #define unusedDizzy_offset 2226
 #define unusedFlexFuelSensor_offset 3100
 #define unusedHereWeHave_offset 1464
@@ -1624,6 +1625,9 @@
 #define warning_message_offset 6000
 #define warningLedPin_offset 2041
 #define warningPeriod_offset 1498
+#define wastegatePositionMax_offset 718
+#define wastegatePositionMin_offset 716
+#define wastegatePositionSensor_offset 2127
 #define wboHeaterPin_offset 673
 #define wwaeBeta_offset 1808
 #define wwaeTau_offset 1712
