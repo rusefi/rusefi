@@ -63,9 +63,18 @@ RegisteredOutputPin::RegisteredOutputPin(const char *name, short pinOffset,
 }
 
 void RegisteredOutputPin::unregister() {
-  //  pin_output_mode_e newMode = *(pin_output_mode_e *) (((void *) engineConfiguration)[pinModeOffset]);
-}
+#if EFI_PROD_CODE
+	brain_pin_e        curPin = *(brain_pin_e       *) ((void *) (&((char*)&activeConfiguration)[pinOffset]));
+	brain_pin_e        newPin = *(brain_pin_e       *) ((void *) (&((char*) engineConfiguration)[pinOffset]));
 
+    pin_output_mode_e curMode = *(pin_output_mode_e *) ((void *) (&((char*)&activeConfiguration)[pinModeOffset]));
+    pin_output_mode_e newMode = *(pin_output_mode_e *) ((void *) (&((char*) engineConfiguration)[pinModeOffset]));
+
+    if (curPin != newPin || curMode != newMode) {
+    	unregisterOutput(curPin);
+    }
+#endif // EFI_PROD_CODE
+}
 
 EnginePins::EnginePins() :
 		mainRelay("mainRelay", mainRelayPin_offset, mainRelayPinMode_offset),
