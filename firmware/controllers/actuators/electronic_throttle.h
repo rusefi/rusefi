@@ -27,7 +27,7 @@ class Logging;
 class IEtbController : public ClosedLoopController<percent_t, percent_t> {
 public:
 	DECLARE_ENGINE_PTR;
-	virtual void init(SensorType positionSensor, DcMotor *motor, int ownIndex, pid_s *pidParameters, const ValueProvider3D* pedalMap) = 0;
+	virtual void init(etb_function_e function, DcMotor *motor, pid_s *pidParameters, const ValueProvider3D* pedalMap) = 0;
 	virtual void reset() = 0;
 	virtual void setIdlePosition(percent_t pos) = 0;
 	virtual void update() = 0;
@@ -36,7 +36,7 @@ public:
 
 class EtbController : public IEtbController {
 public:
-	void init(SensorType positionSensor, DcMotor *motor, int ownIndex, pid_s *pidParameters, const ValueProvider3D* pedalMap) override;
+	void init(etb_function_e function, DcMotor *motor, pid_s *pidParameters, const ValueProvider3D* pedalMap) override;
 	void setIdlePosition(percent_t pos) override;
 	void reset() override;
 
@@ -52,7 +52,11 @@ public:
 
 	// Helpers for individual parts of throttle control
 	expected<percent_t> observePlant() const override;
+
 	expected<percent_t> getSetpoint() const override;
+	expected<percent_t> getSetpointEtb() const;
+	expected<percent_t> getSetpointWastegate() const;
+	expected<percent_t> getSetpointIdleValve() const;
 
 	expected<percent_t> getOpenLoop(percent_t target) const override;
 	expected<percent_t> getClosedLoop(percent_t setpoint, percent_t observation) override;
@@ -70,11 +74,11 @@ protected:
 	// This is set if an automatic TPS calibration should be run
 	bool m_isAutocal = false;
 
-	int getMyIndex() const { return m_myIndex; }
+	etb_function_e getFunction() const { return m_function; }
 	DcMotor* getMotor() { return m_motor; }
 
 private:
-	int m_myIndex = 0;
+	etb_function_e m_function = ETB_None;
 	SensorType m_positionSensor = SensorType::Invalid;
 	DcMotor *m_motor = nullptr;
 	Pid m_pid;
