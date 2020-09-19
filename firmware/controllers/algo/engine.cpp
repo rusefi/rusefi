@@ -153,7 +153,7 @@ static void cylinderCleanupControl(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 
 #if HW_CHECK_MODE
 static void assertCloseTo(const char * msg, float actual, float expected) {
-	if (actual < 0.9 * expected || actual > 1.1 * expected) {
+	if (actual < 0.75 * expected || actual > 1.25 * expected) {
 		firmwareError(OBD_PCM_Processor_Fault, "%s analog input validation failed %f vs %f", msg, actual, expected);
 	}
 }
