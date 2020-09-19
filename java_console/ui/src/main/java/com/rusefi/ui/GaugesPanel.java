@@ -88,7 +88,7 @@ public class GaugesPanel {
 
         prepareMessagesPanel();
 
-        lowerRpmPanel.add(new RpmLabel(uiContext,15).getContent());
+        lowerRpmPanel.add(new RpmLabel(uiContext,15, false).getContent());
 
         int rows = config.getIntProperty(GAUGES_ROWS, DEFAULT_ROWS);
         int columns = config.getIntProperty(GAUGES_COLUMNS, DEFAULT_COLUMNS);
