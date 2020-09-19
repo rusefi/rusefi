@@ -66,7 +66,7 @@ static bool shouldCorrect(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	return true;
 }
 
-static bool shouldUpdateCorrection(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+bool shouldUpdateCorrection(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	const auto& cfg = CONFIG(stft);
 
 	// Pause (but don't reset) correction if the AFR is off scale.
