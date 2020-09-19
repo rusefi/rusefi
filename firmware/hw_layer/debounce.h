@@ -19,7 +19,7 @@ public:
     bool readPinState();
     static void updateConfigurationList();
 private:
-    int threshold;
+    efitick_t threshold;
     efitick_t timeLast;
     brain_pin_e *pin;
     brain_pin_e active_pin;
