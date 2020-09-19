@@ -239,11 +239,18 @@ typedef struct {
 
 	scaled_voltage rawPpsSecondary;		// 248
 
-	int8_t knockLevels[12];
+	int8_t knockLevels[12];		// 250
 
 	int8_t tcuDesiredGear; // 262
+	int8_t padding2[1];		// 263
 
-	uint8_t unusedAtTheEnd[22]; // we have some unused bytes to allow compatible TS changes
+	scaled_voltage rawIdlePositionSensor;	// 264
+	scaled_voltage rawWastegatePositionSensor;	// 266
+
+	scaled_percent wastegatePosition;	// 268
+	scaled_percent idlePositionSensor;	// 270
+
+	uint8_t unusedAtTheEnd[16]; // we have some unused bytes to allow compatible TS changes
 
 	// Temporary - will remove soon
 	TsDebugChannels* getDebugChannels() {
