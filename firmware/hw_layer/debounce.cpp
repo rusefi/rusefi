@@ -15,7 +15,7 @@ ButtonDebounce* ButtonDebounce::s_firstDebounce = nullptr;
 /**
 We need to have a separate init function because we do not have the pin or mode in the context in which the class is originally created
 */
-void ButtonDebounce::init (int threshold, brain_pin_e *pin, pin_input_mode_e *mode) {
+void ButtonDebounce::init (efitimems_t threshold, brain_pin_e *pin, pin_input_mode_e *mode) {
     if (!initialized) {
         nextDebounce = s_firstDebounce;
         s_firstDebounce = this;

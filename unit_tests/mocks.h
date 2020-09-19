@@ -12,7 +12,7 @@ class MockEtb : public IEtbController {
 public:
 	// IEtbController mocks
 	MOCK_METHOD(void, reset, (), ());
-	MOCK_METHOD(void, start, (), (override));
+	MOCK_METHOD(void, update, (), (override));
 	MOCK_METHOD(void, init, (SensorType positionSensor, DcMotor* motor, int ownIndex, pid_s* pidParameters, const ValueProvider3D* pedalMap), (override));
 	MOCK_METHOD(void, setIdlePosition, (percent_t pos), (override));
 	MOCK_METHOD(void, autoCalibrateTps, (), (override));

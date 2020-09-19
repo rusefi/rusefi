@@ -1,4 +1,5 @@
 
+#include "engine_test_helper.h"
 #include "closed_loop_fuel_cell.h"
 #include "closed_loop_fuel.h"
 
@@ -78,4 +79,20 @@ TEST(ClosedLoopFuel, CellSelection) {
 	EXPECT_EQ(3, computeStftBin(2000, 50, cfg));
 	EXPECT_EQ(3, computeStftBin(4000, 50, cfg));
 	EXPECT_EQ(3, computeStftBin(10000, 50, cfg));
+}
+
+TEST(ClosedLoopFuel, afrLimits) {
+	WITH_ENGINE_TEST_HELPER(TEST_ENGINE);
+
+	engineConfiguration->stft.minAfr = 100;  // 10.0 AFR
+	engineConfiguration->stft.maxAfr = 180;  // 18.0 AFR
+
+	Sensor::setMockValue(SensorType::Lambda, 0.1f);
+	EXPECT_FALSE(shouldUpdateCorrection(PASS_ENGINE_PARAMETER_SIGNATURE));
+
+	Sensor::setMockValue(SensorType::Lambda, 1.0f);
+	EXPECT_TRUE(shouldUpdateCorrection(PASS_ENGINE_PARAMETER_SIGNATURE));
+
+	Sensor::setMockValue(SensorType::Lambda, 2.0f);
+	EXPECT_FALSE(shouldUpdateCorrection(PASS_ENGINE_PARAMETER_SIGNATURE));
 }
