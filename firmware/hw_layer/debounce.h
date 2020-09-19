@@ -23,7 +23,7 @@ public:
     static void stopConfigurationList();
     static void startConfigurationList();
 private:
-    int m_threshold;
+    efitimems_t m_threshold;
     efitick_t timeLast;
     brain_pin_e *m_pin;
     brain_pin_e active_pin;
