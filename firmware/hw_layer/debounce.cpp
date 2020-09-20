@@ -56,13 +56,14 @@ void ButtonDebounce::stopConfiguration () {
 #endif /* EFI_ACTIVE_CONFIGURATION_IN_FLASH */
 #ifndef EFI_UNIT_TEST
         brain_pin_markUnused(active_pin);
+        needsInit = true;
 #endif /* EFI_UNIT_TEST */
     }
 }
 
 void ButtonDebounce::startConfiguration () {
 #ifndef EFI_UNIT_TEST
-    if (getBrainUsedPin(brainPin_to_index(*m_pin)) == NULL) {
+    if (needsInit) {
         efiSetPadMode("Button", *m_pin, getInputMode(*m_mode));
     }
 #endif
