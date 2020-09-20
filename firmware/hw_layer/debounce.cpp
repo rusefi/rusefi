@@ -81,7 +81,7 @@ bool ButtonDebounce::readPinEvent() {
 }
 
 bool ButtonDebounce::readPinState() {
-    if (!m_pin) {
+    if (!*m_pin) {
         return false;
     }
     efitick_t timeNow = getTimeNowNt();
