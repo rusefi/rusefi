@@ -65,6 +65,7 @@ void ButtonDebounce::startConfiguration () {
 #ifndef EFI_UNIT_TEST
     if (needsInit) {
         efiSetPadMode("Button", *m_pin, getInputMode(*m_mode));
+        needsInit = false;
     }
 #endif
     active_pin = *m_pin;
