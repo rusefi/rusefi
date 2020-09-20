@@ -336,13 +336,14 @@ static int tle8888_update_output(struct tle8888_priv *chip)
 	}
 	/* TODO: set freewheeling bits in briconfig0? */
 
+	/* set value only for non-direct driven pins */
+	out_data &= ~chip->o_direct_mask;
+
 	/* output for push-pull pins is allways enabled
 	 * (at least until we start supporting hi-Z state) */
 	out_data |= chip->o_pp_mask;
 	/* TODO: apply hi-Z mask when support will be added */
 
-	/* set value only for non-direct driven pins */
-	out_data &= ~chip->o_direct_mask;
 	for (int i = 0; i < 4; i++) {
 		uint8_t od;
 
@@ -377,49 +378,49 @@ static int tle8888_update_status_and_diag(struct tle8888_priv *chip)
 	/* this is quite expensive to call tle8888_spi_rw on each register read
 	 * TODO: implement tle8888_spi_rw_array ? */
 
-//	/* request OutDiad0, ignore received */
-//	if ((ret = tle8888_spi_rw(chip, CMD_OUTDIAG(0), NULL)))
-//		return ret;
-//
-//	/* request OutDiad1, receive OutDiag0 */
-//	if ((ret = tle8888_spi_rw(chip, CMD_OUTDIAG(1), &rx)))
-//		return ret;
-//	chip->OutDiag[0] = getDataFromResponse(rx);
-//
-//	/* request OutDiad2, receive OutDiag1 */
-//	if ((ret = tle8888_spi_rw(chip, CMD_OUTDIAG(2), &rx)))
-//		return ret;
-//	chip->OutDiag[1] = getDataFromResponse(rx);
-//
-//	/* request OutDiad3, receive OutDiag2 */
-//	if ((ret = tle8888_spi_rw(chip, CMD_OUTDIAG(3), &rx)))
-//		return ret;
-//	chip->OutDiag[2] = getDataFromResponse(rx);
-//
-//	/* request OutDiad4, receive OutDiag3 */
-//	if ((ret = tle8888_spi_rw(chip, CMD_OUTDIAG(4), &rx)))
-//		return ret;
-//	chip->OutDiag[3] = getDataFromResponse(rx);
-//
-//	/* request BriDiag0, receive OutDiag4 */
-//	if ((ret = tle8888_spi_rw(chip, CMD_BRIDIAG(0), &rx)))
-//		return ret;
-//	chip->OutDiag[4] = getDataFromResponse(rx);
-//
-//	/* request BriDiag1, receive BriDiag0 */
-//	if ((ret = tle8888_spi_rw(chip, CMD_BRIDIAG(1), &rx)))
-//		return ret;
-//	chip->BriDiag[0] = getDataFromResponse(rx);
-//
-//	/* request IgnDiag, receive BriDiag1 */
-//	if ((ret = tle8888_spi_rw(chip, CMD_IGNDIAG, &rx)))
-//		return ret;
-//	chip->BriDiag[1] = getDataFromResponse(rx);
+	/* request OutDiad0, ignore received */
+	if ((ret = tle8888_spi_rw(chip, CMD_OUTDIAG(0), NULL)))
+		return ret;
+
+	/* request OutDiad1, receive OutDiag0 */
+	if ((ret = tle8888_spi_rw(chip, CMD_OUTDIAG(1), &rx)))
+		return ret;
+	chip->OutDiag[0] = getDataFromResponse(rx);
+
+	/* request OutDiad2, receive OutDiag1 */
+	if ((ret = tle8888_spi_rw(chip, CMD_OUTDIAG(2), &rx)))
+		return ret;
+	chip->OutDiag[1] = getDataFromResponse(rx);
+
+	/* request OutDiad3, receive OutDiag2 */
+	if ((ret = tle8888_spi_rw(chip, CMD_OUTDIAG(3), &rx)))
+		return ret;
+	chip->OutDiag[2] = getDataFromResponse(rx);
+
+	/* request OutDiad4, receive OutDiag3 */
+	if ((ret = tle8888_spi_rw(chip, CMD_OUTDIAG(4), &rx)))
+		return ret;
+	chip->OutDiag[3] = getDataFromResponse(rx);
+
+	/* request BriDiag0, receive OutDiag4 */
+	if ((ret = tle8888_spi_rw(chip, CMD_BRIDIAG(0), &rx)))
+		return ret;
+	chip->OutDiag[4] = getDataFromResponse(rx);
+
+	/* request BriDiag1, receive BriDiag0 */
+	if ((ret = tle8888_spi_rw(chip, CMD_BRIDIAG(1), &rx)))
+		return ret;
+	chip->BriDiag[0] = getDataFromResponse(rx);
+
+	/* request IgnDiag, receive BriDiag1 */
+	if ((ret = tle8888_spi_rw(chip, CMD_IGNDIAG, &rx)))
+		return ret;
+	chip->BriDiag[1] = getDataFromResponse(rx);
 
 	/* request OpStat0, receive IgnDiag */
 	if ((ret = tle8888_spi_rw(chip, CMD_OPSTAT(0), &rx)))
 		return ret;
-//	chip->IgnDiag = getDataFromResponse(rx);
+	chip->IgnDiag = getDataFromResponse(rx);
 
 	/* request OpStat1, receive OpStat0 */
 	if ((ret = tle8888_spi_rw(chip, CMD_OPSTAT(1), &rx)))
@@ -848,35 +849,20 @@ static int tle8888_chip_init_data(void * data) {
 		palSetPadMode(cfg->inj_en.port, cfg->inj_en.pad, PAL_MODE_OUTPUT_PUSHPULL);
 		palClearPort(cfg->inj_en.port, PAL_PORT_BIT(cfg->inj_en.pad));
 	}
-	for (int i = 0; i < TLE8888_DIRECT_MISC; i++) {
-		if (cfg->direct_io[i].port) {
-// TODO: we need this but that's incompatible configuration change
-//			ret |= gpio_pin_markUsed(cfg->direct_io[i].port, cfg->direct_io[i].pad, DRIVER_NAME " DIRECT IO");
-//			palSetPadMode(cfg->direct_io[i].port, cfg->direct_io[i].pad, PAL_MODE_OUTPUT_PUSHPULL);
-//			palClearPort(cfg->direct_io[i].port, PAL_PORT_BIT(cfg->direct_io[i].pad));
-		}
-	}
 
 	for (i = 0; i < TLE8888_DIRECT_MISC; i++) {
 		int out = cfg->direct_io[i].output;
+		/* in config counted from 1 */
+		uint32_t mask = (1 << (out - 1));
 
 		if ((out == 0) || (cfg->direct_io[i].port == NULL))
 			continue;
-
-		ret = gpio_pin_markUsed(cfg->direct_io[i].port, cfg->direct_io[i].pad, DRIVER_NAME " DIRECT IO");
-		if (ret) {
-			ret = -1;
-			goto err_gpios;
-		}
 
 		/* OUT1..4 driven direct only through dedicated pins */
 		if (out < 5) {
 			ret = -1;
 			goto err_gpios;
 		}
-
-		/* in config counted from 1 */
-		uint32_t mask = (1 << (out - 1));
 
 		/* check if output already occupied */
 		if (chip->o_direct_mask & mask) {
@@ -885,9 +871,17 @@ static int tle8888_chip_init_data(void * data) {
 			goto err_gpios;
 		}
 
-		/* enable direct drive and output enable */
+		/* configure source gpio */
+		ret = gpio_pin_markUsed(cfg->direct_io[i].port, cfg->direct_io[i].pad, DRIVER_NAME " DIRECT IO");
+		if (ret) {
+			ret = -1;
+			goto err_gpios;
+		}
+		palSetPadMode(cfg->direct_io[i].port, cfg->direct_io[i].pad, PAL_MODE_OUTPUT_PUSHPULL);
+		palClearPort(cfg->direct_io[i].port, PAL_PORT_BIT(cfg->direct_io[i].pad));
+
+		/* enable direct drive */
 		chip->o_direct_mask	|= mask;
-		chip->o_oe_mask		|= mask;
 
 		/* calculate INCONFIG - aux input mapping */
 		chip->InConfig[i] = out - 5;
@@ -906,6 +900,9 @@ static int tle8888_chip_init_data(void * data) {
 	chip->o_direct_mask |= 0x0f000000;
 	chip->o_oe_mask		|= 0x0f000000;
 
+	/* enable direct drive of IN9..12 */
+	chip->o_oe_mask		|= chip->o_direct_mask;
+
 	/* enable all ouputs
 	 * TODO: add API to enable/disable? */
 	chip->o_oe_mask		|= 0x0ffffff0;
@@ -923,8 +920,7 @@ err_gpios:
 		gpio_pin_markUnused(cfg->reset.port, cfg->reset.pad);
 	for (int i = 0; i < TLE8888_DIRECT_MISC; i++) {
 		if (cfg->direct_io[i].port) {
-// TODO: we need this but that's incompatible configuration change
-//			gpio_pin_markUnused(cfg->direct_io[i].port, cfg->direct_io[i].pad);
+			gpio_pin_markUnused(cfg->direct_io[i].port, cfg->direct_io[i].pad);
 		}
 	}
 
