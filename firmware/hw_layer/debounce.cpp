@@ -26,13 +26,8 @@ void ButtonDebounce::init (efitimems_t threshold, brain_pin_e *pin, pin_input_mo
     m_threshold = MS2NT(threshold);
     timeLast = 0;
     m_pin = pin;
-    active_pin = *pin;
     m_mode = mode;
-    active_mode = *mode;
-#ifndef EFI_UNIT_TEST
-    // getInputMode converts from pin_input_mode_e to iomode_t
-    efiSetPadMode("Button", active_pin, getInputMode(active_mode));
-#endif
+    startConfiguration();
     initialized = true;
 }
 
