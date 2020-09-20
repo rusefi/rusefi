@@ -62,7 +62,9 @@ void ButtonDebounce::stopConfiguration () {
 
 void ButtonDebounce::startConfiguration () {
 #ifndef EFI_UNIT_TEST
-    efiSetPadMode("Button", *m_pin, getInputMode(*m_mode));
+    if (getBrainUsedPin(brainPin_to_index(*m_pin)) == NULL) {
+        efiSetPadMode("Button", *m_pin, getInputMode(*m_mode));
+    }
 #endif
     active_pin = *m_pin;
     active_mode = *m_mode;
