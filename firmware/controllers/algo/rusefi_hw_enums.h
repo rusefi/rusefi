@@ -246,7 +246,7 @@ typedef enum __attribute__ ((__packed__))
  */
 
 typedef enum __attribute__ ((__packed__)) {
-	EFI_ADC_NONE = 0,
+	EFI_ADC_NONE = ADC_CHANNEL_NONE,
 
 	EFI_ADC_0 = 1, // PA0
 	EFI_ADC_1 = 2, // PA1
