@@ -12,7 +12,7 @@
 
 ButtonDebounce* ButtonDebounce::s_firstDebounce = nullptr;
 
-void ButtonDebounce::init (int t, brain_pin_e *pin, pin_input_mode_e *mode) {
+void ButtonDebounce::init (efitimems_t t, brain_pin_e *pin, pin_input_mode_e *mode) {
     if (!initialized) {
         ButtonDebounce *listItem = s_firstDebounce;
         if (listItem == nullptr) {
