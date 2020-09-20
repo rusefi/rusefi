@@ -159,7 +159,7 @@ typedef enum __attribute__ ((__packed__))
 } brain_pin_diag_e;
 
 typedef enum __attribute__ ((__packed__)) {
-	EFI_ADC_NONE = 0,
+	EFI_ADC_NONE = ADC_CHANNEL_NONE,
 
 	EFI_ADC_0 = 1,
 	EFI_ADC_1 = 2,
