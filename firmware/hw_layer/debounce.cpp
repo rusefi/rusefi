@@ -35,11 +35,7 @@ void ButtonDebounce::stopConfigurationList () {
     ButtonDebounce *listItem = s_firstDebounce;
     while (listItem != nullptr) {
         listItem->stopConfiguration();
-        if (listItem->nextDebounce != nullptr) {
-            listItem = listItem->nextDebounce;
-        } else {
-            break;
-        }
+        listItem = listItem->nextDebounce;
     }
 }
 
@@ -47,11 +43,7 @@ void ButtonDebounce::startConfigurationList () {
     ButtonDebounce *listItem = s_firstDebounce;
     while (listItem != nullptr) {
         listItem->startConfiguration();
-        if (listItem->nextDebounce != nullptr) {
-            listItem = listItem->nextDebounce;
-        } else {
-            break;
-        }
+        listItem = listItem->nextDebounce;
     }
 }
 
