@@ -128,6 +128,17 @@ public:
 	bool outOfOrder; // https://sourceforge.net/p/rusefi/tickets/319/
 };
 
+class RegisteredOutputPin : public OutputPin {
+public:
+	RegisteredOutputPin(const char *name, short pinOffset, short pinModeOffset);
+	void unregister();
+	RegisteredOutputPin *next;
+private:
+	const char *name;
+	short pinOffset;
+	short pinModeOffset;
+};
+
 class EnginePins {
 public:
 	EnginePins();
@@ -140,14 +151,13 @@ public:
 	void startAuxValves();
 	void stopInjectionPins();
 	void stopIgnitionPins();
-	OutputPin mainRelay;
-
+	RegisteredOutputPin mainRelay;
 	// this one cranks engine
-	OutputPin starterControl;
+	RegisteredOutputPin starterControl;
 	// this one prevents driver from cranknig engine
-	OutputPin starterRelayDisable;
+	RegisteredOutputPin starterRelayDisable;
 
-	OutputPin fanRelay;
+	RegisteredOutputPin fanRelay;
 	// see acRelayPin
 	OutputPin acRelay;
 	OutputPin fuelPumpRelay;
@@ -171,7 +181,6 @@ public:
 	OutputPin checkEnginePin;
 
 	NamedOutputPin tachOut;
-	NamedOutputPin dizzyOutput;
 
 	OutputPin fsioOutputs[FSIO_COMMAND_COUNT];
 	OutputPin triggerDecoderErrorPin;

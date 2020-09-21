@@ -1,6 +1,14 @@
+Sep, 7 2020 status
+* Stefan is happy enough with idle control and now manufacturing a batch of Miata NA6 & developing a Miata NB2 PnP board 
+* AndreiKA and AndreyB are merging Hellen code into rusEFI master
+* Matt is working on fueling and knock detection logic
+* AndreiKA and AndreyB are making rusEFI Online better
+* David is making TCU progress
+* GDI is slooooowly moving forward
+
 July, 19 2020 status
 * Stefan and AndreiKA are looking to improve miata idle (again!)
-* AndreiKA and AndreyB are focuses on rusEFI Online
+* AndreiKA and AndreyB are focused on rusEFI Online
 * Matt is dealing with a number of different scheduling defects
 * Miata NA base tune is getting closer
 * GDI is a bit on hold

@@ -15,7 +15,7 @@
 
 #if HAL_USE_ADC
 
-const char * getAdcMode(adc_channel_e hwChannel);
+adc_channel_mode_e getAdcMode(adc_channel_e hwChannel);
 void initAdcInputs();
 
 // deprecated - migrate to 'getAdcChannelBrainPin'
@@ -41,6 +41,16 @@ float getMCUInternalTemperature(void);
 void addChannel(const char *name, adc_channel_e setting, adc_channel_mode_e mode);
 void removeChannel(const char *name, adc_channel_e setting);
 
+/* Depth of the conversion buffer, channels are sampled X times each.*/
+#ifndef ADC_BUF_DEPTH_SLOW
+#define ADC_BUF_DEPTH_SLOW      8
+#endif /* ADC_BUF_DEPTH_SLOW */
+
+#ifndef ADC_BUF_DEPTH_FAST
+#define ADC_BUF_DEPTH_FAST      4
+#endif /* ADC_BUF_DEPTH_FAST */
+
+// todo: preprocessor way of doing 'max'?
 // max(ADC_BUF_DEPTH_SLOW, ADC_BUF_DEPTH_FAST)
 #define MAX_ADC_GRP_BUF_DEPTH 8
 

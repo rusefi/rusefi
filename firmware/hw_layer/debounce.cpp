@@ -6,44 +6,101 @@
  * @author David Holdeman, (c) 2020
  */
 #include "debounce.h"
+#include "pin_repository.h"
+#include "engine_configuration.h"
+#include "hardware.h"
 
-void ButtonDebounce::init (int t, brain_pin_e p, pin_input_mode_e m) {
-    threshold = MS2NT(t);
+ButtonDebounce* ButtonDebounce::s_firstDebounce = nullptr;
+
+/**
+We need to have a separate init function because we do not have the pin or mode in the context in which the class is originally created
+*/
+void ButtonDebounce::init (efitimems_t threshold, brain_pin_e *pin, pin_input_mode_e *mode) {
+   // we need to keep track of whether we have already been initialized due to the way unit tests run.
+    if (!initialized) {
+	// Link us to the list that is used to track ButtonDebounce instances, so that when the configuration changes,
+	//  they can be looped through and updated.
+        nextDebounce = s_firstDebounce;
+        s_firstDebounce = this;
+    }
+    m_threshold = MS2NT(threshold);
     timeLast = 0;
-    pin = p;
-#ifdef PAL_MODE_INPUT_PULLDOWN
-    // getInputMode converts from pin_input_mode_e to iomode_t
-    mode = getInputMode(m);
-    efiSetPadMode("Button", p, mode);
+    m_pin = pin;
+    m_mode = mode;
+    startConfiguration();
+    initialized = true;
+}
+
+void ButtonDebounce::stopConfigurationList () {
+    ButtonDebounce *listItem = s_firstDebounce;
+    while (listItem != nullptr) {
+        listItem->stopConfiguration();
+        listItem = listItem->nextDebounce;
+    }
+}
+
+void ButtonDebounce::startConfigurationList () {
+    ButtonDebounce *listItem = s_firstDebounce;
+    while (listItem != nullptr) {
+        listItem->startConfiguration();
+        listItem = listItem->nextDebounce;
+    }
+}
+
+void ButtonDebounce::stopConfiguration () {
+    // If the configuration has changed
+#ifndef EFI_ACTIVE_CONFIGURATION_IN_FLASH
+    if (*m_pin != active_pin || *m_mode != active_mode) {
+#else
+    if (*m_pin != active_pin || *m_mode != active_mode || (isActiveConfigurationVoid && (*m_pin != 0 || *m_mode != 0))) {
+#endif /* EFI_ACTIVE_CONFIGURATION_IN_FLASH */
+#ifndef EFI_UNIT_TEST
+        brain_pin_markUnused(active_pin);
+#endif /* EFI_UNIT_TEST */
+    }
+}
+
+void ButtonDebounce::startConfiguration () {
+#ifndef EFI_UNIT_TEST
+    efiSetPadMode("Button", *m_pin, getInputMode(*m_mode));
 #endif
+    active_pin = *m_pin;
+    active_mode = *m_mode;
 }
 
 /**
 @returns true if the button is pressed, and will not return true again within the set timeout
 */
 bool ButtonDebounce::readPinEvent() {
-    if (!pin) {
+    storedValue = false;
+    return readPinState();
+}
+
+bool ButtonDebounce::readPinState() {
+    if (!m_pin) {
         return false;
     }
     efitick_t timeNow = getTimeNowNt();
     // If it's been less than the threshold since we were last called
-    if ((timeNow - timeLast) < threshold) {
-        return false;
+    if ((timeNow - timeLast) < m_threshold) {
+        return storedValue;
     }
-    // readValue is a class variable, so it needs to be reset.
+    // storedValue is a class variable, so it needs to be reset.
     // We don't actually need it to be a class variable in this method,
     //  but when a method is implemented to actually get the pin's state,
     //  for example to implement long button presses, it will be needed.
-    readValue = false;
-#ifdef PAL_MODE_INPUT_PULLDOWN
-    readValue = efiReadPin(pin);
+    storedValue = false;
+#if EFI_PROD_CODE || EFI_UNIT_TEST
+    storedValue = efiReadPin(active_pin);
+#endif
+#if EFI_PROD_CODE
     // Invert
-    if (mode != PAL_MODE_INPUT_PULLDOWN) {
-        readValue = !readValue;
+    if (getInputMode(active_mode) == PAL_MODE_INPUT_PULLUP) {
+        storedValue = !storedValue;
     }
 #endif
-    if (readValue) {
+    if (storedValue) {
         timeLast = timeNow;
     }
-    return readValue;
+    return storedValue;
 }

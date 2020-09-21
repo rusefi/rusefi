@@ -20,6 +20,7 @@ public:
 protected:
 	virtual float getStoichiometricRatio() const = 0;
 	virtual float getTargetLambda(int rpm, float load) const = 0;
+	virtual float getTargetLambdaLoadAxis(float defaultLoad) const = 0;
 };
 
 // This class is a usable implemenation of a fuel model that reads real configuration
@@ -30,6 +31,7 @@ public:
 protected:
 	float getStoichiometricRatio() const override;
 	float getTargetLambda(int rpm, float load) const override;
+	float getTargetLambdaLoadAxis(float defaultLoad) const override;
 
 private:
 	const ValueProvider3D* const m_afrTable;

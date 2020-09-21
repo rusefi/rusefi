@@ -34,6 +34,9 @@ typedef enum {
 	BACKUP_CJ125_CALIBRATION_HEATER,
 
 	DFU_JUMP_REQUESTED,
+
+	/* The number of stored backup variables */
+	BACKUP_RAM_NUM,
 } backup_ram_e;
 
 
@@ -41,4 +44,6 @@ typedef enum {
 uint32_t backupRamLoad(backup_ram_e idx);
 // use backup-power RTC registers (non-volatile memory) to store the data
 void backupRamSave(backup_ram_e idx, uint32_t value);
+// make sure that all changes are saved before we shutdown the MCU
+void backupRamFlush(void);
 

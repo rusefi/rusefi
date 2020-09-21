@@ -58,6 +58,7 @@
 #include "gppwm.h"
 #include "date_stamp.h"
 #include "buttonshift.h"
+#include "start_stop.h"
 
 #if EFI_SENSOR_CHART
 #include "sensor_chart.h"
@@ -308,7 +309,7 @@ static void printAnalogChannelInfoExt(const char *name, adc_channel_e hwChannel,
 	}
 
 	float voltage = adcVoltage * dividerCoeff;
-	scheduleMsg(&logger, "%s ADC%d %s %s adc=%.2f/input=%.2fv/divider=%.2f", name, hwChannel, getAdcMode(hwChannel),
+	scheduleMsg(&logger, "%s ADC%d %s %s adc=%.2f/input=%.2fv/divider=%.2f", name, hwChannel, getAdc_channel_mode_e(getAdcMode(hwChannel)),
 			getPinNameByAdcChannel(name, hwChannel, pinNameBuffer), adcVoltage, voltage, dividerCoeff);
 #endif /* HAL_USE_ADC */
 }
@@ -350,7 +351,6 @@ static void printAnalogInfo(void) {
 	printAnalogChannelInfo("CJ UR", engineConfiguration->cj125ur);
 	printAnalogChannelInfo("CJ UA", engineConfiguration->cj125ua);
 
-	printAnalogChannelInfo("A/C sw", engineConfiguration->acSwitchAdc);
 	printAnalogChannelInfo("HIP9011", engineConfiguration->hipOutputChannel);
 
 	for (int i = 0; i < FSIO_ANALOG_INPUT_COUNT ; i++) {
@@ -591,6 +591,8 @@ void commonInitEngineController(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_S
 
 	initButtonShift(PASS_ENGINE_PARAMETER_SIGNATURE);
 
+	initStartStopButton(PASS_ENGINE_PARAMETER_SIGNATURE);
+
 #if EFI_ELECTRONIC_THROTTLE_BODY
 	initElectronicThrottle(PASS_ENGINE_PARAMETER_SIGNATURE);
 #endif /* EFI_ELECTRONIC_THROTTLE_BODY */
@@ -708,7 +710,7 @@ void initEngineContoller(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX) 
  * UNUSED_SIZE constants.
  */
 #ifndef RAM_UNUSED_SIZE
-#define RAM_UNUSED_SIZE 6100
+#define RAM_UNUSED_SIZE 7500
 #endif
 #ifndef CCM_UNUSED_SIZE
 #define CCM_UNUSED_SIZE 2900

@@ -181,6 +181,7 @@ void printSpiConfig(Logging *logging, const char *msg, spi_device_e device) {
 	scheduleMsg(logging, "%s %s sck=%s",  msg, getSpi_device_e(device), hwPortname(getSckPin(device)));
 }
 
+
 const char *hwPortname(brain_pin_e brainPin) {
 	if (brainPin == GPIO_INVALID) {
 		return "INVALID";
@@ -200,6 +201,7 @@ const char *hwPortname(brain_pin_e brainPin) {
 	}
 	#if (BOARD_EXT_GPIOCHIPS > 0)
 		else {
+
 			const char *pin_name = gpiochips_getPinName(brainPin);
 
 			if (pin_name) {

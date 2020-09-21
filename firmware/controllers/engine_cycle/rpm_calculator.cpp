@@ -201,6 +201,8 @@ void RpmCalculator::setStopped() {
 	revolutionCounterSinceStart = 0;
 	if (rpmValue != 0) {
 		assignRpmValue(0);
+		// needed by 'useNoiselessTriggerDecoder'
+		engine->triggerCentral.noiseFilter.resetAccumSignalData();
 		scheduleMsg(logger, "engine stopped");
 	}
 	state = STOPPED;
@@ -363,9 +365,11 @@ void initRpmCalculator(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	INJECT_ENGINE_REFERENCE(&ENGINE(rpmCalculator));
 
 	logger = sharedLogger;
+#if ! HW_CHECK_MODE
 	if (hasFirmwareError()) {
 		return;
 	}
+#endif // HW_CHECK_MODE
 
 	// Only register if not configured to read RPM over OBD2
 	if (!CONFIG(consumeObdSensors)) {

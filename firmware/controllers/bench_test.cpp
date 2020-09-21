@@ -128,14 +128,34 @@ static void doRunFuel(int humanIndex, const char *delayStr, const char * onTimeS
 	pinbench(delayStr, onTimeStr, offTimeStr, countStr, &enginePins.injectors[humanIndex - 1], b);
 }
 
+static void doBenchTestFsio(int humanIndex, const char *delayStr, const char * onTimeStr, const char *offTimeStr,
+		const char *countStr) {
+	if (humanIndex < 1 || humanIndex > FSIO_COMMAND_COUNT) {
+		scheduleMsg(logger, "Invalid index: %d", humanIndex);
+		return;
+	}
+	brain_pin_e b = CONFIG(fsioOutputPins)[humanIndex - 1];
+	pinbench(delayStr, onTimeStr, offTimeStr, countStr, &enginePins.fsioOutputs[humanIndex - 1], b);
+}
+
 /**
- * delay 100, cylinder #2, 5ms ON, 1000ms OFF, repeat 2 times
- * fuelbench2 100 2 5 1000 2
+ * delay 100, cylinder #2, 5ms ON, 1000ms OFF, repeat 3 times
+ * fuelbench2 100 2 5 1000 3
  */
 static void fuelbench2(const char *delayStr, const char *indexStr, const char * onTimeStr, const char *offTimeStr,
 		const char *countStr) {
 	int index = atoi(indexStr);
 	doRunFuel(index, delayStr, onTimeStr, offTimeStr, countStr);
+}
+
+/**
+ * delay 100, channel #1, 5ms ON, 1000ms OFF, repeat 3 times
+ * fsiobench2 100 1 5 1000 3
+ */
+static void fsioBench2(const char *delayStr, const char *indexStr, const char * onTimeStr, const char *offTimeStr,
+		const char *countStr) {
+	int index = atoi(indexStr);
+	doBenchTestFsio(index, delayStr, onTimeStr, offTimeStr, countStr);
 }
 
 static void fanBenchExt(const char *durationMs) {
@@ -163,6 +183,10 @@ void fuelPumpBenchExt(const char *durationMs) {
 
 void acRelayBench(void) {
 	pinbench("0", "1000", "100", "1", &enginePins.acRelay, CONFIG(acRelayPin));
+}
+
+void mainRelayBench(void) {
+	pinbench("0", "1000", "100", "1", &enginePins.mainRelay, CONFIG(mainRelayPin));
 }
 
 void fuelPumpBench(void) {
@@ -201,11 +225,6 @@ static void sparkbench(const char * onTimeStr, const char *offTimeStr, const cha
 	sparkbench2("0", "1", onTimeStr, offTimeStr, countStr);
 }
 
-
-void dizzyBench(void) {
-	pinbench("300", "5", "400", "3", &enginePins.dizzyOutput, engineConfiguration->dizzySparkOutputPin);
-}
-
 class BenchController : public PeriodicController<UTILITY_THREAD_STACK_SIZE> {
 public:
 	BenchController() : PeriodicController("BenchThread") { }
@@ -227,17 +246,30 @@ private:
 static BenchController instance;
 
 static void handleBenchCategory(uint16_t index) {
-	// cmd_test_check_engine_light
-	milBench();
+	switch(index) {
+	case CMD_TS_BENCH_MAIN_RELAY:
+		mainRelayBench();
+		return;
+	case CMD_TS_BENCH_FUEL_PUMP:
+		// cmd_test_fuel_pump
+		fuelPumpBench();
+		return;
+	case CMD_TS_BENCH_STARTER_ENABLE_RELAY:
+		starterRelayBench();
+		return;
+	case CMD_TS_BENCH_CHECK_ENGINE_LIGHT:
+		// cmd_test_check_engine_light
+		milBench();
+		return;
+	case CMD_TS_BENCH_AC_COMPRESSOR_RELAY:
+		acRelayBench();
+		return;
+	}
 
 }
 
 static void handleCommandX14(uint16_t index) {
 	switch (index) {
-	case 1:
-		// cmd_test_fuel_pump
-		fuelPumpBench();
-		return;
 	case 2:
 		grabTPSIsClosed();
 		return;
@@ -257,17 +289,11 @@ static void handleCommandX14(uint16_t index) {
 		requestTLE8888initialization();
 #endif
 		return;
-	case 9:
-		acRelayBench();
-		return;
 	case 0xA:
 		// cmd_write_config
-#if EFI_PROD_CODE
+#if EFI_INTERNAL_FLASH
 		writeToFlashNow();
-#endif /* EFI_PROD_CODE */
-		return;
-	case 0xB:
-		starterRelayBench();
+#endif /* EFI_INTERNAL_FLASH */
 		return;
 	case 0xD:
 		engine->directSelfStimulation = true;
@@ -303,10 +329,12 @@ void executeTSCommand(uint16_t subsystem, uint16_t index) {
 
     if (subsystem == 0x11) {
         clearWarnings();
-	} else if (subsystem == 0x12 && !running) {
+	} else if (subsystem == CMD_TS_IGNITION_CATEGORY && !running) {
 		doRunSpark(index, "300", "4", "400", "3");
-	} else if (subsystem == 0x13 && !running) {
+	} else if (subsystem == CMD_TS_INJECTOR_CATEGORY && !running) {
 		doRunFuel(index, "300", "4", "400", "3");
+	} else if (subsystem == CMD_TS_FSIO_CATEGORY && !running) {
+		doBenchTestFsio(index, "300", "4", "400", "3");
 	} else if (subsystem == 0x14) {
 		handleCommandX14(index);
 	} else if (subsystem == 0x15) {
@@ -325,7 +353,6 @@ void executeTSCommand(uint16_t subsystem, uint16_t index) {
 	} else if (subsystem == 0x20 && index == 0x3456) {
 		// call to pit
 		setCallFromPitStop(30000);
-	} else if (subsystem == 0x21) {
 	} else if (subsystem == 0x30) {
 		setEngineType(index);
 	} else if (subsystem == 0x31) {
@@ -351,7 +378,6 @@ void initBenchTest(Logging *sharedLogger) {
 	addConsoleActionS("fuelpumpbench2", fuelPumpBenchExt);
 	addConsoleAction("fanbench", fanBench);
 	addConsoleActionS("fanbench2", fanBenchExt);
-	addConsoleAction("dizzybench", dizzyBench); // this is useful for tach output testing
 
 	addConsoleAction(CMD_STARTER_BENCH, starterRelayBench);
 	addConsoleAction(CMD_MIL_BENCH, milBench);
@@ -359,6 +385,7 @@ void initBenchTest(Logging *sharedLogger) {
 	addConsoleActionSSS("sparkbench", sparkbench);
 
 	addConsoleActionSSSSS("fuelbench2", fuelbench2);
+	addConsoleActionSSSSS("fsiobench2", fsioBench2);
 	addConsoleActionSSSSS("sparkbench2", sparkbench2);
 	instance.setPeriod(200 /*ms*/);
 	instance.Start();

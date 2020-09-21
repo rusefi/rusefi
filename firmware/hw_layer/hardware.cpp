@@ -69,6 +69,8 @@
 
 EXTERN_ENGINE;
 
+extern bool hasFirmwareErrorFlag;
+
 static mutex_t spiMtx;
 
 #if HAL_USE_SPI
@@ -172,9 +174,55 @@ static Logging *sharedLogger;
 static int fastMapSampleIndex;
 static int hipSampleIndex;
 static int tpsSampleIndex;
+static int triggerSampleIndex;
 
 #if HAL_USE_ADC
 extern AdcDevice fastAdc;
+
+#if EFI_FASTER_UNIFORM_ADC
+static int adcCallbackCounter = 0;
+static volatile int averagedSamples[ADC_MAX_CHANNELS_COUNT];
+static adcsample_t avgBuf[ADC_MAX_CHANNELS_COUNT];
+
+void adc_callback_fast_internal(ADCDriver *adcp, adcsample_t *buffer, size_t n);
+
+void adc_callback_fast(ADCDriver *adcp, adcsample_t *buffer, size_t n) {
+	if (adcp->state == ADC_COMPLETE) {
+		fastAdc.invalidateSamplesCache();
+
+#if HAL_TRIGGER_USE_ADC
+		// we need to call this ASAP, because trigger processing is time-critical
+		if (triggerSampleIndex >= 0)
+			triggerAdcCallback(buffer[triggerSampleIndex]);
+#endif /* HAL_TRIGGER_USE_ADC */
+
+		// store the values for averaging
+		for (int i = fastAdc.size() - 1; i >= 0; i--) {
+			averagedSamples[i] += fastAdc.samples[i];
+		}
+
+		// if it's time to process the data
+		if (++adcCallbackCounter >= ADC_BUF_NUM_AVG) {
+			// get an average
+			for (int i = fastAdc.size() - 1; i >= 0; i--) {
+				avgBuf[i] = (adcsample_t)(averagedSamples[i] / ADC_BUF_NUM_AVG);	// todo: rounding?
+			}
+
+			// call the real callback (see below)
+			adc_callback_fast_internal(adcp, avgBuf, fastAdc.size());
+
+			// reset the avg buffer & counter
+			for (int i = fastAdc.size() - 1; i >= 0; i--) {
+				averagedSamples[i] = 0;
+			}
+			adcCallbackCounter = 0;
+		}
+	}
+}
+
+#define adc_callback_fast adc_callback_fast_internal
+
+#endif /* EFI_FASTER_UNIFORM_ADC */
 
 /**
  * This method is not in the adc* lower-level file because it is more business logic then hardware.
@@ -207,15 +255,15 @@ void adc_callback_fast(ADCDriver *adcp, adcsample_t *buffer, size_t n) {
 #endif /* EFI_SENSOR_CHART */
 
 #if EFI_MAP_AVERAGING
-		mapAveragingAdcCallback(fastAdc.samples[fastMapSampleIndex]);
+		mapAveragingAdcCallback(buffer[fastMapSampleIndex]);
 #endif /* EFI_MAP_AVERAGING */
 #if EFI_HIP_9011
 		if (CONFIG(isHip9011Enabled)) {
-			hipAdcCallback(fastAdc.samples[hipSampleIndex]);
+			hipAdcCallback(buffer[hipSampleIndex]);
 		}
 #endif /* EFI_HIP_9011 */
 //		if (tpsSampleIndex != TPS_IS_SLOW) {
-//			tpsFastAdc = fastAdc.samples[tpsSampleIndex];
+//			tpsFastAdc = buffer[tpsSampleIndex];
 //		}
 	}
 }
@@ -232,6 +280,11 @@ static void calcFastAdcIndexes(void) {
 	} else {
 		tpsSampleIndex = TPS_IS_SLOW;
 	}
+#if HAL_TRIGGER_USE_ADC
+	adc_channel_e triggerChannel = getAdcChannelForTrigger();
+	triggerSampleIndex = (triggerChannel == EFI_ADC_NONE) ?
+		-1 : fastAdc.internalAdcIndexByHardwareIndex[triggerChannel];
+#endif /* HAL_TRIGGER_USE_ADC */
 
 #endif/* HAL_USE_ADC */
 }
@@ -243,6 +296,13 @@ static void adcConfigListener(Engine *engine) {
 }
 
 void turnOnHardware(Logging *sharedLogger) {
+#if EFI_FASTER_UNIFORM_ADC
+	for (int i = 0; i < ADC_MAX_CHANNELS_COUNT; i++) {
+		averagedSamples[i] = 0;
+	}
+	adcCallbackCounter = 0;
+#endif /* EFI_FASTER_UNIFORM_ADC */
+
 #if EFI_SHAFT_POSITION_INPUT
 	turnOnTriggerInputPins(sharedLogger);
 #endif /* EFI_SHAFT_POSITION_INPUT */
@@ -264,8 +324,11 @@ void stopSpi(spi_device_e device) {
  * this method is NOT currently invoked on ECU start
  * todo: maybe start invoking this method on ECU start so that peripheral start-up initialization and restart are unified?
  */
+
 void applyNewHardwareSettings(void) {
     // all 'stop' methods need to go before we begin starting pins
+
+	ButtonDebounce::stopConfigurationList();
 
 #if EFI_SHAFT_POSITION_INPUT
 	stopTriggerInputPins();
@@ -275,7 +338,7 @@ void applyNewHardwareSettings(void) {
 #if (HAL_USE_PAL && EFI_JOYSTICK)
 	stopJoystickPins();
 #endif /* HAL_USE_PAL && EFI_JOYSTICK */
-       
+
 	enginePins.stopInjectionPins();
     enginePins.stopIgnitionPins();
 #if EFI_CAN_SUPPORT
@@ -297,7 +360,7 @@ void applyNewHardwareSettings(void) {
 	}
 #endif
 
-#if (BOARD_TLE6240_COUNT > 0)
+#if (BOARD_TLE6240_COUNT > 0) || (BOARD_DRV8860_COUNT > 0)
 	stopSmartCsPins();
 #endif /* (BOARD_MC33972_COUNT > 0) */
 
@@ -336,11 +399,9 @@ void applyNewHardwareSettings(void) {
 		brain_pin_markUnused(activeConfiguration.clutchUpPin);
 	}
 
-	if (isPinOrModeChanged(startStopButtonPin, startStopButtonMode)) {
-		brain_pin_markUnused(activeConfiguration.startStopButtonPin);
-	}
-
 	enginePins.unregisterPins();
+
+	ButtonDebounce::startConfigurationList();
 
 #if EFI_SHAFT_POSITION_INPUT
 	startTriggerInputPins();
@@ -480,6 +541,7 @@ void initHardware(Logging *l) {
 
 #if HAL_USE_ADC
 	initAdcInputs();
+
 	// wait for first set of ADC values so that we do not produce invalid sensor data
 	waitForSlowAdc(1);
 #endif /* HAL_USE_ADC */
@@ -498,12 +560,6 @@ void initHardware(Logging *l) {
 	// initSmartGpio depends on 'initSpiModules'
 	initSmartGpio(PASS_ENGINE_PARAMETER_SIGNATURE);
 #endif
-
-	if (CONFIG(startStopButtonPin) != GPIO_UNASSIGNED) {
-		efiSetPadMode("start/stop", CONFIG(startStopButtonPin),
-				getInputMode(CONFIG(startStopButtonMode)));
-	}
-
 
 	// output pins potentially depend on 'initSmartGpio'
 	initOutputPins(PASS_ENGINE_PARAMETER_SIGNATURE);
