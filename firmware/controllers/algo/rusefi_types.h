@@ -28,6 +28,7 @@ typedef unsigned int time_t;
 
 // time in seconds
 typedef time_t efitimesec_t;
+typedef uint16_t efitimesec16_t;
 
 /**
  * integer time in milliseconds (1/1_000 of a second)
@@ -98,6 +99,8 @@ typedef uint8_t pedal_to_tps_t[PEDAL_TO_TPS_SIZE][PEDAL_TO_TPS_SIZE];
 typedef uint8_t iac_pid_mult_t[IAC_PID_MULT_SIZE][IAC_PID_MULT_SIZE];
 
 typedef float baro_corr_table_t[BARO_CORR_SIZE][BARO_CORR_SIZE];
+
+typedef bool tcubinary_table_t[TCU_SOLENOID_COUNT][TCU_GEAR_COUNT];
 
 typedef float fsio_table_8x8_f32t[FSIO_TABLE_8][FSIO_TABLE_8];
 typedef float tps_tps_table_t[TPS_TPS_ACCEL_TABLE][TPS_TPS_ACCEL_TABLE];

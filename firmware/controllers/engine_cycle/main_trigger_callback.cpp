@@ -379,6 +379,7 @@ static void mainTriggerCallback(trigger_event_e ckpSignalType, uint32_t trgEvent
 		return;
 	}
 
+#if ! HW_CHECK_MODE
 	if (hasFirmwareError()) {
 		/**
 		 * In case on a major error we should not process any more events.
@@ -386,6 +387,8 @@ static void mainTriggerCallback(trigger_event_e ckpSignalType, uint32_t trgEvent
 		 */
 		return;
 	}
+#endif // HW_CHECK_MODE
+
 	efiAssertVoid(CUSTOM_STACK_6629, getCurrentRemainingStack() > EXPECTED_REMAINING_STACK, "lowstck#2a");
 
 #if EFI_CDM_INTEGRATION
