@@ -33,9 +33,7 @@ void initLambda(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 
 #if EFI_CAN_SUPPORT
 	if (CONFIG(enableAemXSeries)) {
-		if (!aem.Register()) {
-			warning(OBD_PCM_Processor_Fault, "Duplicate lambda sensor registration, ignoring");
-		}
+		registerCanSensor(aem);
 
 		return;
 	}
