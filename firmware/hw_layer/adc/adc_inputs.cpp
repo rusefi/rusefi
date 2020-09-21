@@ -346,6 +346,11 @@ bool AdcDevice::isHwUsed(adc_channel_e hwChannelIndex) const {
 }
 
 void AdcDevice::enableChannel(adc_channel_e hwChannel) {
+	if (channelCount >= efi::size(values.adc_data)) {
+		firmwareError(OBD_PCM_Processor_Fault, "Too many ADC channels configured");
+		return;
+	}
+
 	int logicChannel = channelCount++;
 
 	size_t channelAdcIndex = hwChannel - 1;
