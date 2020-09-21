@@ -193,7 +193,7 @@ struct_no_prefix engine_configuration_s
 
 #define TPS_TPS_ACCEL_TABLE 8
 #define MAP_ACCEL_TAPER 8
-#define ADC_CHANNEL_NONE 16
+#define ADC_CHANNEL_NONE 0
 
 #define BARO_CORR_SIZE 4
 
@@ -813,7 +813,7 @@ custom uart_device_e 1 bits,U32,   @OFFSET@, [0:1], "Off", "UART1", "UART2", "UA
 	uint16_t tps1SecondaryMin;;"ADC", 1, 0, 0, 1000, 0
 	uint16_t tps1SecondaryMax;;"ADC", 1, 0, 0, 1000, 0
 	int16_t antiLagRpmTreshold;;"rpm", 1, 0, 0, 20000, 0
-	int16_t startCrankingDuration;Maximum time to crank starter;"Seconds",      1,      0,       0, 30,      0
+	efitimesec16_t startCrankingDuration;Maximum time to crank starter;"Seconds",      1,      0,       0, 30,      0
 
 	brain_pin_e triggerErrorPin;+This pin is used for debugging - snap a logic analyzer on it and see if it's ever high
 	pin_output_mode_e triggerErrorPinMode;

@@ -328,7 +328,7 @@ void stopSpi(spi_device_e device) {
 void applyNewHardwareSettings(void) {
     // all 'stop' methods need to go before we begin starting pins
 
-	ButtonDebounce::updateConfigurationList();
+	ButtonDebounce::stopConfigurationList();
 
 #if EFI_SHAFT_POSITION_INPUT
 	stopTriggerInputPins();
@@ -400,6 +400,8 @@ void applyNewHardwareSettings(void) {
 	}
 
 	enginePins.unregisterPins();
+
+	ButtonDebounce::startConfigurationList();
 
 #if EFI_SHAFT_POSITION_INPUT
 	startTriggerInputPins();
