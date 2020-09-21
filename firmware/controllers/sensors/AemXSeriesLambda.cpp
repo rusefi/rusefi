@@ -33,7 +33,8 @@ void AemXSeriesWideband::decodeFrame(const CANRxFrame& frame, efitick_t nowNt) {
 	}
 
 	// reports in 0.0001 lambda per LSB
-	setValidValue(0.0001f * SWAP_UINT16(frame.data16[0]), nowNt);
+	uint16_t lambdaInt = SWAP_UINT16(frame.data16[0]);
+	setValidValue(0.0001f * lambdaInt, nowNt);
 }
 
 #endif
