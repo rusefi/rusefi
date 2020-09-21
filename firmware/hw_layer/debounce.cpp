@@ -47,6 +47,14 @@ void ButtonDebounce::startConfigurationList () {
     }
 }
 
+void ButtonDebounce::startConfigurationList () {
+    ButtonDebounce *listItem = s_firstDebounce;
+    while (listItem != nullptr) {
+        listItem->startConfiguration();
+        listItem = listItem->nextDebounce;
+    }
+}
+
 void ButtonDebounce::stopConfiguration () {
     // If the configuration has changed
 #ifndef EFI_ACTIVE_CONFIGURATION_IN_FLASH
