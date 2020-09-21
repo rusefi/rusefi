@@ -56,13 +56,17 @@ void ButtonDebounce::stopConfiguration () {
 #endif /* EFI_ACTIVE_CONFIGURATION_IN_FLASH */
 #ifndef EFI_UNIT_TEST
         brain_pin_markUnused(active_pin);
+        needsInit = true;
 #endif /* EFI_UNIT_TEST */
     }
 }
 
 void ButtonDebounce::startConfiguration () {
 #ifndef EFI_UNIT_TEST
-    efiSetPadMode("Button", *m_pin, getInputMode(*m_mode));
+    if (needsInit) {
+        efiSetPadMode("Button", *m_pin, getInputMode(*m_mode));
+        needsInit = false;
+    }
 #endif
     active_pin = *m_pin;
     active_mode = *m_mode;
@@ -77,7 +81,7 @@ bool ButtonDebounce::readPinEvent() {
 }
 
 bool ButtonDebounce::readPinState() {
-    if (!m_pin) {
+    if (*m_pin == GPIO_UNASSIGNED) {
         return false;
     }
     efitick_t timeNow = getTimeNowNt();
