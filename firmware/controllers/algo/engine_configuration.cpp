@@ -1181,7 +1181,9 @@ void resetConfigurationExt(Logging * logger, configuration_callback_t boardCallb
 	// set initial pin groups
 	setDefaultBasePins(PASS_CONFIG_PARAMETER_SIGNATURE);
 
-	boardCallback(engineConfiguration);
+	if (boardCallback != nullptr) {
+		boardCallback(engineConfiguration);
+	}
 
 #if EFI_PROD_CODE
 	// call overrided board-specific configuration setup, if needed (for custom boards only)
