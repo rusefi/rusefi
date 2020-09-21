@@ -63,7 +63,7 @@ void processW202(const CANRxFrame& frame) {
     
     tmp = (frame.data8[2] << 8);
     tmp |= frame.data8[3];
-    vssSpeed = ((float)tmp) * 0.0277;
+    vssSpeed = ((float)tmp) * 0.0625;
 }
 
 /* End of specific processing functions */
