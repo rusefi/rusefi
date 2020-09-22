@@ -41,7 +41,11 @@ static void errorCallback(ADCDriver*, adcerror_t err) {
 static const ADCConversionGroup adcConvGroupCh1 = { FALSE, 1, &completionCallback, &errorCallback,
 	0,
 	ADC_CR2_SWSTART,
+#ifdef MRE_SW_KNOCK_ADC
+	ADC_SMPR2_SMP_AN3(KNOCK_SAMPLE_TIME), // sample times for channels 10...18
+#else	
 	ADC_SMPR1_SMP_AN14(KNOCK_SAMPLE_TIME), // sample times for channels 10...18
+#endif
 	0,
 
 	0,	// htr
@@ -149,8 +153,9 @@ void initSoftwareKnock() {
 		adcStart(&KNOCK_ADC, nullptr);
 
 		efiSetPadMode("knock ch1", KNOCK_PIN_CH1, PAL_MODE_INPUT_ANALOG);
+#if KNOCK_HAS_CH2		
 		efiSetPadMode("knock ch2", KNOCK_PIN_CH2, PAL_MODE_INPUT_ANALOG);
-
+#endif
 		kt.Start();
 	}
 }
