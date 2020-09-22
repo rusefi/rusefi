@@ -1,6 +1,6 @@
 #include "simple_tcu.h"
 
-OutputPin tcuSolenoids[efi::size(tcu_solenoid)];
+RegisteredOutputPin tcuSolenoids[efi::size(tcu_solenoid)];
 
 void SimpleTransmissionController::SimpleTransmissionController() {
     for (int i = 0; i < efi::size(tcu_solenoid); i++) {
