@@ -360,6 +360,11 @@ enable2ndByteCanID = false
 	knock7 = scalar, S08, 256, "dbv", 1, 0
 	knock8 = scalar, S08, 257, "dbv", 1, 0
 
+	rawIdlePositionSensor = scalar,	 U16,    264, "V",{1/@@PACK_MULT_VOLTAGE@@}, 0.0
+	rawWastegatePosition  = scalar,	 U16,    266, "V",{1/@@PACK_MULT_VOLTAGE@@}, 0.0
+	wastegatePositionSensor = scalar,  S16,    268, "%",{1/@@PACK_MULT_PERCENT@@}, 0
+	idlePositionSensor    = scalar,  S16,    270, "%",{1/@@PACK_MULT_PERCENT@@}, 0
+
 ;
 ; see TunerStudioOutputChannels struct
 ;
@@ -889,6 +894,8 @@ gaugeCategory = Sensors - Extra 2
    knockLevelGauge   = knockLevel,"Knock level",           "volts",        0,      7,      10,     10,     100,   100,   1,   2
    fuelTankLevelGauge   = fuelTankLevel,"Fuel level",           "x",        0,      7,      10,     10,     100,   100,   1,   2
    speedToRpmRatioGauge = speedToRpmRatio, "speed2rpm", "",     0,   100,     0,    0,    100,  100,   4,   4
+   wastegatePosGauge = wastegatePositionSensor, "Wastegate position sensor",  "%",        0,    100,       0,      0,     100,   100,   1,   1
+   idlePosSensGauge  = idlePositionSensor,      "Idle position sensor",       "%",        0,    100,       0,      0,     100,   100,   1,   1
 
 gaugeCategory = ECU Status
    warningCounterGauge = warningCounter, "Warning count", "",     0,   100,     0,    0,    100,  100,   0,   0
@@ -993,6 +1000,8 @@ gaugeCategory = Sensors - Raw
    rawIatGauge          = rawIat        , "Raw IAT",           "volts", 0, 5, 0, 0, 5, 5, 3, 0
    rawOilPressureGauge  = rawOilPressure, "Raw Oil Pressure",  "volts", 0, 5, 0, 0, 5, 5, 3, 0
    rawPpsSecondaryGauge = rawPpsSecondary,"Raw Pedal Secondary","volts", 0, 5, 0, 0, 5, 5, 3, 0
+   rawIdlePositionSensorGauge  = rawIdlePositionSensor, "Raw Idle Position",  "volts", 0, 5, 0, 0, 5, 5, 3, 0
+   rawWastegatePositionGauge = rawWastegatePosition,"Raw Wastegate Position","volts", 0, 5, 0, 0, 5, 5, 3, 0
 
 gaugeCategory = Transmission
    desiredGearGauge = tcuDesiredGear, "Desired", "gear", -1, 10, -1, -1, 10, 10, 0, 0
@@ -1397,6 +1406,7 @@ menuDialog = main
 		subMenu = speedSensor,				"Vehicle speed sensor"
 		subMenu = oilPressureSensor,		"Oil pressure"
 		subMenu = egtInputs,				"EGT" @@if_ts_show_egt
+		subMenu = wastegateIdlePos,			"Wastegate and idle position sensors"
 
 	menu = "&Controller"
 		subMenu = ecuStimulator,			"ECU stimulator"
@@ -1436,8 +1446,8 @@ menuDialog = main
 		subMenu = etbTpsBiasCurve,			"Electronic throttle body bias curve" @@if_ts_show_etb
 		subMenu = pedalToTpsTbl,			"Electronic Pedal Map" @@if_ts_show_etb
 		subMenu = std_separator
-#        subMenu = smLaunchControl,			"Launch Control"
-#		subMenu = std_separator
+        subMenu = smLaunchControl,			"Launch Control"
+		subMenu = std_separator
 #		subMenu = smRollingLaunch,			"Rolling Launch"
 #		subMenu = std_separator
 #		subMenu = antiLag,        			"Antilag Setup"
@@ -1677,8 +1687,8 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 		field = "#Cam is primary if you have cam sensor"
 		field = "Primary channel", 						triggerInputPins1
 		field = "Invert Primary",						invertPrimaryTriggerSignal
-		field = "Secondary channel", 					triggerInputPins2,            { trigger_type != 0 && trigger_type != 8 && trigger_type != 9 && trigger_type != 18 && trigger_type != 20}
-		field = "Invert Secondary",						invertSecondaryTriggerSignal, { trigger_type != 0 && trigger_type != 8 && trigger_type != 9 && trigger_type != 18 && trigger_type != 20}
+		field = "Secondary channel", 					triggerInputPins2,            { trigger_type != @@TT_TT_TOOTHED_WHEEL@@ && trigger_type != @@TT_TT_TOOTHED_WHEEL_60_2@@ && trigger_type != @@TT_TT_TOOTHED_WHEEL_36_1@@ && trigger_type != @@TT_TT_ONE@@ && trigger_type != @@TT_TT_60_2_VW@@ && trigger_type != @@TT_TT_TOOTHED_WHEEL_36_2@@}
+		field = "Invert Secondary",						invertSecondaryTriggerSignal, { trigger_type != @@TT_TT_TOOTHED_WHEEL@@ && trigger_type != @@TT_TT_TOOTHED_WHEEL_60_2@@ && trigger_type != @@TT_TT_TOOTHED_WHEEL_36_1@@ && trigger_type != @@TT_TT_ONE@@ && trigger_type != @@TT_TT_60_2_VW@@ && trigger_type != @@TT_TT_TOOTHED_WHEEL_36_2@@}
 		field = "Cam Sync/VVT input",					camInputs1
 		field = "Invert Cam/VVT",                       invertCamVVTSignal
 		panel = triggerInputComparator @@if_ts_show_trigger_comparator
@@ -1867,7 +1877,31 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 		panel = pedalSensorLeft, West
 		panel = pedalGauges, East
 
-    dialog = mc33Dialog, "GDI Dreams"
+	dialog = wastegatePosConfig, "Wastegate position sensor"
+		field = "Input pin",							wastegatePositionSensor
+		field = "Min (fully closed, most boost)",		wastegatePositionMin
+		field = "Max (fully open, least boost)",		wastegatePositionMax
+
+	dialog = idlePosConfig, "Wastegate position sensor"
+		field = "Input pin",							idlePositionSensor
+		field = "Min (valve closed, low idle)",			idlePositionMin
+		field = "Max (valve open, high idle)",			idlePositionMax
+
+	dialog = wastegateIdlePosLeft, ""
+		panel = wastegatePosConfig
+		panel = idlePosConfig
+
+	dialog = wastegateIdlePosGauges, ""
+		gauge = rawWastegatePositionGauge, West
+		gauge = wastegatePosGauge, East
+		gauge = rawIdlePositionSensorGauge
+		gauge = idlePosSensGauge
+
+	dialog = wastegateIdlePos, "", border
+		panel = wastegateIdlePosLeft, West
+		panel = wastegateIdlePosGauges, East
+
+    dialog = mc33Dialog, "Low-Z injector control (MC33816)"
     	field = "MC33816 cs",							mc33816_cs
 		field = "MC33816 rstb",							mc33816_rstb
 		field = "MC33816 flag0",						mc33816_flag0
@@ -3130,7 +3164,7 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 		field = "Log recent errors list",				enableLogErrorList
 
 				;			Racing Features->Launch Control
-	dialog = smLaunchControl, "Launch Control Settings NOT WORKING"
+	dialog = smLaunchControl, "Launch Control Settings EXPERIMENTAL"
         field = "Enable Launch Control",               	launchControlEnabled
 		field = "Activation Mode",                      launchActivationMode
 	    field = "Switch Input",                     	launchActivatePin,  {launchActivationMode == 0 && launchControlEnabled == 1}
@@ -3142,6 +3176,7 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 		field = "Launch RPM",            	    		launchRpm,  {launchControlEnabled == 1}
 		field = "Extra Fuel",           				launchFuelAdded,  {launchControlEnabled == 1}
         field = "Boost Solenoid Duty",	                launchBoostDuty,  {launchControlEnabled == 1}
+		field = "Ignition Retard enable",               enableLaunchRetard,  {launchControlEnabled == 1}
 		field = "Ignition Retard",      				launchTimingRetard,  {launchControlEnabled == 1}
 		field = "Ignition Retard RPM Range",            launchTimingRpmRange,  {launchControlEnabled == 1}
 		field = "Smooth Retard Mode",                   launchSmoothRetard,  {launchControlEnabled == 1}

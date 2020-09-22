@@ -8,11 +8,10 @@
  * At the moment rusEfi does not allow to have more than 16 ADC channels combined. At the moment there is no flexibility to use
  * any ADC pins, only the hardcoded choice of 16 pins.
  *
- * Slow ADC group is used for IAT, CLT, AFR, VBATT etc - this one is currently sampled at 20Hz
+ * Slow ADC group is used for IAT, CLT, AFR, VBATT etc - this one is currently sampled at 500Hz
  *
- * Fast ADC group is used for TPS, MAP, MAF HIP - this one is currently sampled at 10KHz
+ * Fast ADC group is used for MAP, MAF HIP - this one is currently sampled at 10KHz
  *  We need frequent MAP for map_averaging.cpp
- *  We need frequent TPS for better TPS/TPS enrichment and better ETB control
  *
  * 10KHz equals one measurement every 3.6 degrees at 6000 RPM
  *
@@ -347,6 +346,11 @@ bool AdcDevice::isHwUsed(adc_channel_e hwChannelIndex) const {
 }
 
 void AdcDevice::enableChannel(adc_channel_e hwChannel) {
+	if (channelCount >= efi::size(values.adc_data)) {
+		firmwareError(OBD_PCM_Processor_Fault, "Too many ADC channels configured");
+		return;
+	}
+
 	int logicChannel = channelCount++;
 
 	size_t channelAdcIndex = hwChannel - 1;
@@ -544,6 +548,9 @@ static void configureInputs(void) {
 	addChannel("TPS 2 Primary", engineConfiguration->tps2_1AdcChannel, ADC_SLOW);
 	addChannel("TPS 2 Secondary", engineConfiguration->tps2_2AdcChannel, ADC_SLOW);
 
+	addChannel("Wastegate Position", engineConfiguration->wastegatePositionSensor, ADC_SLOW);
+	addChannel("Idle Position Sensor", engineConfiguration->idlePositionSensor, ADC_SLOW);
+
 	addChannel("Fuel Level", engineConfiguration->fuelLevelSensor, ADC_SLOW);
 	addChannel("Acc Pedal1", engineConfiguration->throttlePedalPositionAdcChannel, ADC_SLOW);
 	addChannel("Acc Pedal2", engineConfiguration->throttlePedalPositionSecondAdcChannel, ADC_SLOW);
@@ -553,18 +560,16 @@ static void configureInputs(void) {
 	addChannel("IAT", engineConfiguration->iat.adcChannel, ADC_SLOW);
 	addChannel("AUX Temp 1", engineConfiguration->auxTempSensor1.adcChannel, ADC_SLOW);
 	addChannel("AUX Temp 2", engineConfiguration->auxTempSensor2.adcChannel, ADC_SLOW);
-	if (engineConfiguration->auxFastSensor1_adcChannel != INCOMPATIBLE_CONFIG_CHANGE) {
-		// allow EFI_ADC_0 next time we have an incompatible configuration change
-		addChannel("AUXF#1", engineConfiguration->auxFastSensor1_adcChannel, ADC_FAST);
-	}
+
+	addChannel("AUXF#1", engineConfiguration->auxFastSensor1_adcChannel, ADC_FAST);
+
 	addChannel("AFR", engineConfiguration->afr.hwChannel, ADC_SLOW);
 	addChannel("Oil Pressure", engineConfiguration->oilPressure.hwChannel, ADC_SLOW);
-	if (engineConfiguration->high_fuel_pressure_sensor_1 != INCOMPATIBLE_CONFIG_CHANGE) {
-		addChannel("HFP1", engineConfiguration->high_fuel_pressure_sensor_1, ADC_SLOW);
-	}
-	if (engineConfiguration->high_fuel_pressure_sensor_2 != INCOMPATIBLE_CONFIG_CHANGE) {
-		addChannel("HFP2", engineConfiguration->high_fuel_pressure_sensor_2, ADC_SLOW);
-	}
+	addChannel("HFP1", engineConfiguration->high_fuel_pressure_sensor_1, ADC_SLOW);
+
+
+	addChannel("HFP2", engineConfiguration->high_fuel_pressure_sensor_2, ADC_SLOW);
+
 
 	if (CONFIG(isCJ125Enabled)) {
 		addChannel("CJ125 UR", engineConfiguration->cj125ur, ADC_SLOW);

@@ -26,12 +26,17 @@ public class RpmLabel {
     }
 
     public RpmLabel(UIContext uiContext, int size) {
+        this(uiContext, size, true);
+    }
+
+    public RpmLabel(UIContext uiContext, int size, boolean withCaption) {
         String initialLabel = uiContext.getLinkManager().isLogViewer() ? "LOG" : NO_CONNECTION;
         rpmValue.setText(initialLabel);
         rpmValue.setForeground(Color.red);
 
         content.setBorder(BorderFactory.createLineBorder(Color.white));
-        content.add(rpmCaption);
+        if (withCaption)
+            content.add(rpmCaption);
         content.add(rpmValue, "grow, wrap");
 
         RpmModel.getInstance().addListener(new RpmModel.RpmListener() {

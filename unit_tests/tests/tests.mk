@@ -15,6 +15,7 @@ TESTS_SRC_CPP = \
 	tests/ignition_injection/test_fuel_computer.cpp \
 	tests/ignition_injection/test_injector_model.cpp \
 	tests/test_util.cpp \
+	tests/test_hardware_reinit.cpp \
 	tests/test_ion.cpp \
 	tests/test_aux_valves.cpp \
 	tests/test_on_demand_parameters.cpp \
