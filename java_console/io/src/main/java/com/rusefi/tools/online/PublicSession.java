@@ -4,20 +4,38 @@ import com.rusefi.server.ControllerInfo;
 import com.rusefi.server.UserDetails;
 
 public class PublicSession {
-    private final UserDetails userDetails;
+    /**
+     * owner of physical ECU/vehicle
+     */
+    private final UserDetails vehicleOwner;
     private final ControllerInfo controllerInfo;
     private final boolean isUsed;
-    private final String ownerName;
+    /**
+     * Person currently in control of tuning session
+     */
+    private final String tunerName;
+    private final String age;
+    private final String implementation;
 
-    public PublicSession(UserDetails userDetails, ControllerInfo controllerInfo, boolean isUsed, String ownerName) {
-        this.userDetails = userDetails;
+    public PublicSession(UserDetails vehicleOwner, ControllerInfo controllerInfo, boolean isUsed, String tunerName, String age, String implementation) {
+        this.vehicleOwner = vehicleOwner;
         this.controllerInfo = controllerInfo;
         this.isUsed = isUsed;
-        this.ownerName = ownerName;
+        this.tunerName = tunerName;
+        this.age = age;
+        this.implementation = implementation;
     }
 
-    public UserDetails getUserDetails() {
-        return userDetails;
+    public String getImplementation() {
+        return implementation;
+    }
+
+    public String getAge() {
+        return age;
+    }
+
+    public UserDetails getVehicleOwner() {
+        return vehicleOwner;
     }
 
     public ControllerInfo getControllerInfo() {
@@ -28,17 +46,17 @@ public class PublicSession {
         return isUsed;
     }
 
-    public String getOwnerName() {
-        return ownerName;
+    public String getTunerName() {
+        return tunerName;
     }
 
     @Override
     public String toString() {
         return "PublicSession{" +
-                "userDetails=" + userDetails +
+                "userDetails=" + vehicleOwner +
                 ", controllerInfo=" + controllerInfo +
                 ", isUsed=" + isUsed +
-                ", ownerName='" + ownerName + '\'' +
+                ", ownerName='" + tunerName + '\'' +
                 '}';
     }
 }

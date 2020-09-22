@@ -3,6 +3,7 @@
 #include "adc_inputs.h"
 #include "engine.h"
 #include "perf_trace.h"
+#include "biquad.h"
 
 #include <iterator>
 
@@ -12,6 +13,7 @@ EXTERN_ENGINE;
 
 void AdcSubscription::SubscribeSensor(FunctionalSensor &sensor,
 									  adc_channel_e channel,
+									  float lowpassCutoff,
 									  float voltsPerAdcVolt /*= 0.0f*/)
 {
 }
@@ -22,6 +24,8 @@ struct AdcSubscriptionEntry {
 	FunctionalSensor *Sensor;
 	float VoltsPerAdcVolt;
 	adc_channel_e Channel;
+	Biquad Filter;
+	bool HasUpdated = false;
 };
 
 static size_t s_nextEntry = 0;
@@ -29,6 +33,7 @@ static AdcSubscriptionEntry s_entries[8];
 
 void AdcSubscription::SubscribeSensor(FunctionalSensor &sensor,
 									  adc_channel_e channel,
+									  float lowpassCutoff,
 									  float voltsPerAdcVolt /*= 0.0f*/) {
 	// Don't subscribe null channels
 	if (channel == EFI_ADC_NONE) {
@@ -50,6 +55,7 @@ void AdcSubscription::SubscribeSensor(FunctionalSensor &sensor,
 	entry.Sensor = &sensor;
 	entry.VoltsPerAdcVolt = voltsPerAdcVolt;
 	entry.Channel = channel;
+	entry.Filter.configureLowpass(SLOW_ADC_RATE, lowpassCutoff);
 
 	s_nextEntry++;
 }
@@ -63,7 +69,17 @@ void AdcSubscription::UpdateSubscribers(efitick_t nowNt) {
 		float mcuVolts = getVoltage("sensor", entry.Channel);
 		float sensorVolts = mcuVolts * entry.VoltsPerAdcVolt;
 
-		entry.Sensor->postRawValue(sensorVolts, nowNt);
+		// On the very first update, preload the filter as if we've been
+		// seeing this value for a long time.  This prevents a slow ramp-up
+		// towards the correct value just after startup
+		if (!entry.HasUpdated) {
+			entry.Filter.cookSteadyState(sensorVolts);
+			entry.HasUpdated = true;
+		}
+
+		float filtered = entry.Filter.filter(sensorVolts);
+
+		entry.Sensor->postRawValue(filtered, nowNt);
 	}
 }
 

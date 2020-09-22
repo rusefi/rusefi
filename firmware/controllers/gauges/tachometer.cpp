@@ -4,14 +4,11 @@
  *
  * This implementation produces one pulse per engine cycle
  *
- * todo: these is a bit of duplication with dizzySparkOutputPin
- *
  * @date Aug 18, 2015
  * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
 #include "tachometer.h"
-#include "trigger_central.h"
 #include "pwm_generator_logic.h"
 
 EXTERN_ENGINE;
@@ -21,30 +18,22 @@ static float tachFreq;
 static float duty;   
 
 #if EFI_UNIT_TEST
-float getTachFreq(void) {
+float getTachFreq() {
 	return tachFreq;
 }
 
-float getTachDuty(void) {
+float getTachDuty() {
 	return duty;
 }
 #endif
 
-static void tachSignalCallback(trigger_event_e ckpSignalType,
-		uint32_t index, efitick_t edgeTimestamp DECLARE_ENGINE_PARAMETER_SUFFIX) {
-	// only process at index configured to avoid too much cpu time for index 0?
-	if (index != (uint32_t)CONFIG(tachPulseTriggerIndex)) {
+static bool tachHasInit = false;
+
+void tachSignalCallback(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+	// Only do anything if tach enabled
+	if (!tachHasInit) {
 		return;
 	}
-
-#if EFI_UNIT_TEST
-	printf("tachSignalCallback(%d %d)\n", ckpSignalType, index);
-	printf("Current RPM: %d\n",GET_RPM());
-	UNUSED(edgeTimestamp);
-#else
-	UNUSED(ckpSignalType);
-	UNUSED(edgeTimestamp);
-#endif
 
 	// How many tach pulse periods do we have?
 	int periods = CONFIG(tachPulsePerRev);
@@ -74,10 +63,10 @@ static void tachSignalCallback(trigger_event_e ckpSignalType,
 	
 	tachControl.setSimplePwmDutyCycle(duty);	
 	tachControl.setFrequency(tachFreq);
-
 }
 
 void initTachometer(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+	tachHasInit = false;
 	if (CONFIG(tachOutputPin) == GPIO_UNASSIGNED) {
 		return;
 	}
@@ -89,7 +78,5 @@ void initTachometer(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 				&enginePins.tachOut,
 				NAN, 0.1f);
 
-#if EFI_SHAFT_POSITION_INPUT
-	addTriggerEventListener(tachSignalCallback, "tach", engine);
-#endif /* EFI_SHAFT_POSITION_INPUT */
+	tachHasInit = true;
 }

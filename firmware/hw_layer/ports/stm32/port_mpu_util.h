@@ -49,15 +49,6 @@ typedef enum {
 #define GPIO_AF_TIM9 3
 #endif
 
-// F4/F7 have the same ADC peripheral
-#ifndef ADC_TwoSamplingDelay_5Cycles
-#define ADC_TwoSamplingDelay_5Cycles ((uint32_t)0x00000000)
-#endif
-
-#ifndef ADC_TwoSamplingDelay_20Cycles
-#define ADC_TwoSamplingDelay_20Cycles ((uint32_t)0x00000F00)
-#endif
-
 #ifndef ADC_CR2_SWSTART
 #define ADC_CR2_SWSTART ((uint32_t)0x40000000)
 #endif

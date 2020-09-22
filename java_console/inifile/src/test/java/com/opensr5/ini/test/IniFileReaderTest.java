@@ -6,6 +6,7 @@ import com.opensr5.ini.IniFileReader;
 import com.opensr5.ini.RawIniFile;
 import com.opensr5.ini.field.ArrayIniField;
 import com.opensr5.ini.field.EnumIniField;
+import com.opensr5.ini.field.IniField;
 import org.jetbrains.annotations.NotNull;
 import org.junit.Test;
 
@@ -21,6 +22,14 @@ import static org.junit.Assert.assertNotNull;
 public class IniFileReaderTest {
     private static final String PAGE_READ = "    pageReadCommand     = \"X\",       \"X\",     \"X\"\n\n\n\n";
     private static final String SIGNATURE_UNIT_TEST = "  signature      = \"unit test\"\n";
+    private static final double EPS = 0.00001;
+
+    @Test
+    public void parseExpressions() {
+        assertEquals(0.1, IniField.parseDouble("{1/10}"), EPS);
+        assertEquals(0.1, IniField.parseDouble("{0.1}"), EPS);
+        assertEquals(0.1, IniField.parseDouble("0.1"), EPS);
+    }
 
     @Test
     public void testSplitWithEmptyUnits() {

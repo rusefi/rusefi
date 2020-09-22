@@ -9,13 +9,19 @@
 #pragma once
 #include "global.h"
 
-#if EFI_PROD_CODE
+#if HAL_USE_SERIAL_USB
 #include "usbconsole.h"
+#endif // HAL_USE_SERIAL_USB
+
+#if EFI_PROD_CODE
 #include "pin_repository.h"
 #endif
 
 #define TS_RESPONSE_UNDERRUN 0x80
 #define TS_RESPONSE_CRC_FAILURE 0x82
+#define TS_RESPONSE_UNRECOGNIZED_COMMAND 0x83
+#define TS_RESPONSE_OUT_OF_RANGE 0x84
+#define TS_RESPONSE_FRAMING_ERROR 0x8D
 
 typedef enum {
 	TS_PLAIN = 0,
@@ -41,10 +47,6 @@ struct ts_channel_s {
 // todo: double-check this
 #define CRC_WRAPPING_SIZE (CRC_VALUE_SIZE + 3)
 
-#if HAL_USE_SERIAL_USB
-#define CONSOLE_USB_DEVICE SDU1
-#endif /* HAL_USE_SERIAL_USB */
-
 void startTsPort(ts_channel_s *tsChannel);
 bool stopTsPort(ts_channel_s *tsChannel);
 
@@ -61,4 +63,5 @@ void sendOkResponse(ts_channel_s *tsChannel, ts_response_format_e mode);
 int sr5ReadData(ts_channel_s *tsChannel, uint8_t * buffer, int size);
 int sr5ReadDataTimeout(ts_channel_s *tsChannel, uint8_t * buffer, int size, int timeout);
 bool sr5IsReady(ts_channel_s *tsChannel);
+void sr5FlushData(ts_channel_s *tsChannel);
 

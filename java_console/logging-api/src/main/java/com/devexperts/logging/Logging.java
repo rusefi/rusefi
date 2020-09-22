@@ -194,6 +194,7 @@ public class Logging {
 				}
 			}
 		}
+/*
 		if (impl == null) {
 			try {
 				impl = (DefaultLogging)Class.forName("com.devexperts.logging.Log4jLogging").newInstance();
@@ -207,6 +208,7 @@ public class Logging {
 				}
 			}
 		}
+ */
 		if (impl == null) {
 			try {
 				impl = (DefaultLogging)Class.forName("com.devexperts.logging.Log4j2Logging").newInstance();

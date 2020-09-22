@@ -18,6 +18,7 @@
 *.iml text eol=lf
 *.txt text eol=lf
 *.ini text eol=lf
+*.rules text eol=lf
 
 # KiCad files
 *.dsn text eol=lf

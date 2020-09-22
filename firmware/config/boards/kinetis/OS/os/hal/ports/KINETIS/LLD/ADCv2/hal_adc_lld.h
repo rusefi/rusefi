@@ -123,11 +123,6 @@
 
 /** @} */
 
-// STM32-specific defines
-#ifndef ADC_TwoSamplingDelay_20Cycles
-#define ADC_TwoSamplingDelay_20Cycles ((uint32_t)0x00000F00)
-#endif
-
 #define ADC_SQR1_NUM_CH(n)     0
 
 /*===========================================================================*/

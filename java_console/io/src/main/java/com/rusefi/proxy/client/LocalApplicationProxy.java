@@ -2,6 +2,7 @@ package com.rusefi.proxy.client;
 
 import com.devexperts.logging.Logging;
 import com.rusefi.NamedThreadFactory;
+import com.rusefi.config.generated.Fields;
 import com.rusefi.io.IoStream;
 import com.rusefi.io.commands.GetOutputsCommand;
 import com.rusefi.io.commands.HelloCommand;
@@ -10,13 +11,25 @@ import com.rusefi.io.serial.StreamStatistics;
 import com.rusefi.io.tcp.BinaryProtocolProxy;
 import com.rusefi.io.tcp.ServerSocketReference;
 import com.rusefi.io.tcp.TcpIoStream;
+import com.rusefi.proxy.NetworkConnector;
+import com.rusefi.proxy.NetworkConnectorContext;
 import com.rusefi.server.ApplicationRequest;
 import com.rusefi.server.rusEFISSLContext;
 import com.rusefi.tools.online.HttpUtil;
 import com.rusefi.tools.online.ProxyClient;
+import org.apache.http.Consts;
+import org.apache.http.HttpResponse;
+import org.apache.http.NameValuePair;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.entity.UrlEncodedFormEntity;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.message.BasicNameValuePair;
 
 import java.io.Closeable;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -37,6 +50,20 @@ public class LocalApplicationProxy implements Closeable {
         this.authenticatorToProxyStream = authenticatorToProxyStream;
     }
 
+    public static HttpResponse requestSoftwareUpdate(int httpPort, ApplicationRequest applicationRequest, UpdateType type) throws IOException {
+        HttpPost httpPost = new HttpPost(ProxyClient.getHttpAddress(httpPort) + ProxyClient.UPDATE_CONNECTOR_SOFTWARE);
+
+        List<NameValuePair> form = new ArrayList<>();
+        form.add(new BasicNameValuePair(ProxyClient.JSON, applicationRequest.toJson()));
+        form.add(new BasicNameValuePair(ProxyClient.UPDATE_TYPE, type.name()));
+        UrlEncodedFormEntity entity = new UrlEncodedFormEntity(form, Consts.UTF_8);
+
+        httpPost.setEntity(entity);
+
+        HttpClient httpclient = new DefaultHttpClient();
+        return httpclient.execute(httpPost);
+    }
+
     public ApplicationRequest getApplicationRequest() {
         return applicationRequest;
     }
@@ -51,8 +78,15 @@ public class LocalApplicationProxy implements Closeable {
     public static ServerSocketReference startAndRun(LocalApplicationProxyContext context, ApplicationRequest applicationRequest, int jsonHttpPort, TcpIoStream.DisconnectListener disconnectListener, ConnectionListener connectionListener) throws IOException {
         String version = context.executeGet(ProxyClient.getHttpAddress(jsonHttpPort) + ProxyClient.VERSION_PATH);
         log.info("Server says version=" + version);
-        if (!version.contains(ProxyClient.BACKEND_VERSION))
-            throw new IOException("Unexpected backend version " + version + " while we want " + ProxyClient.BACKEND_VERSION);
+        if (!version.contains(ProxyClient.BACKEND_VERSION)) {
+            String message = "Unexpected backend version " + version + " while we want " + ProxyClient.BACKEND_VERSION;
+            log.error(message);
+            System.out.println(message);
+            /**
+             * let's give wrapper script a chance to update us
+             */
+            throw new IncompatibleBackendException(message);
+        }
 
         AbstractIoStream authenticatorToProxyStream = new TcpIoStream("authenticatorToProxyStream ", rusEFISSLContext.getSSLSocket(HttpUtil.RUSEFI_PROXY_HOSTNAME, context.serverPortForRemoteApplications()), disconnectListener);
         LocalApplicationProxy.sendHello(authenticatorToProxyStream, applicationRequest);
@@ -110,6 +144,13 @@ public class LocalApplicationProxy implements Closeable {
     @Override
     public void close() {
         serverHolder.close();
+        byte[] request = new byte[2];
+        request[0] = Fields.TS_ONLINE_PROTOCOL;
+        request[1] = NetworkConnector.DISCONNECT;
+        try {
+            authenticatorToProxyStream.sendPacket(request);
+        } catch (IOException ignored) {
+        }
         authenticatorToProxyStream.close();
     }
 

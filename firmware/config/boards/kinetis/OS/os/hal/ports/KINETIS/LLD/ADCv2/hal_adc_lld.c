@@ -266,12 +266,6 @@ void adc_lld_start(ADCDriver *adcp) {
 
   ADC12_GetDefaultConfig(&adcp->adc12Cfg);
   adcp->adc12Cfg.resolution = kADC12_Resolution12Bit;
-#if 0
-  // process STM32-compatible config (todo: this is just a test code for now)
-  // imitate sampling speed slowdown
-  if (adcp->grpp->cr1 & ADC_TwoSamplingDelay_20Cycles)
-      adcp->adc12Cfg.clockDivider = kADC12_ClockDivider8;
-#endif      
   ADC12_Init(adcp->adc, &adcp->adc12Cfg);
 #else
   adcp->channel_mask = adcp->grpp->channel_mask;

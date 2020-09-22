@@ -33,6 +33,12 @@ RedundantSensor pedal(SensorType::AcceleratorPedal, SensorType::AcceleratorPedal
 // This sensor indicates the driver's throttle intent - Pedal if we have one, TPS if not.
 ProxySensor driverIntent(SensorType::DriverThrottleIntent);
 
+// These sensors are TPS-like, so handle them in here too
+LinearFunc wastegateFunc(PACK_MULT_VOLTAGE);
+LinearFunc idlePosFunc(PACK_MULT_VOLTAGE);
+FunctionalSensor wastegateSens(SensorType::WastegatePosition, MS2NT(10));
+FunctionalSensor idlePosSens(SensorType::IdlePosition, MS2NT(10));
+
 static void configureTps(LinearFunc& func, float closed, float open, float min, float max) {
 	func.configure(
 		closed, 0,
@@ -51,7 +57,7 @@ static bool initTpsFunc(LinearFunc& func, FunctionalSensor& sensor, adc_channel_
 
 	sensor.setFunction(func);
 
-	AdcSubscription::SubscribeSensor(sensor, channel);
+	AdcSubscription::SubscribeSensor(sensor, channel, 200);
 
 	if (!sensor.Register()) {
 		firmwareError(CUSTOM_INVALID_TPS_SETTING, "Duplicate registration for sensor \"%s\"", sensor.getSensorName());
@@ -71,16 +77,22 @@ static void initTpsFuncAndRedund(RedundantSensor& redund, LinearFunc& func, Func
 	}
 }
 
-void initTps(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+void initTps(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	float min = CONFIG(tpsErrorDetectionTooLow);
 	float max = CONFIG(tpsErrorDetectionTooHigh);
 
-	initTpsFunc(tpsFunc1p, tpsSens1p, CONFIG(tps1_1AdcChannel), CONFIG(tpsMin), CONFIG(tpsMax), min, max);
-	initTpsFuncAndRedund(tps1, tpsFunc1s, tpsSens1s, CONFIG(tps1_2AdcChannel), CONFIG(tps1SecondaryMin), CONFIG(tps1SecondaryMax), min, max);
-	initTpsFunc(tpsFunc2p, tpsSens2p, CONFIG(tps2_1AdcChannel), CONFIG(tps2Min), CONFIG(tps2Max), min, max);
-	initTpsFuncAndRedund(tps2, tpsFunc2s, tpsSens2s, CONFIG(tps2_2AdcChannel), CONFIG(tps2SecondaryMin), CONFIG(tps2SecondaryMax), min, max);
-	initTpsFunc(pedalFuncPrimary, pedalSensorPrimary, CONFIG(throttlePedalPositionAdcChannel), CONFIG(throttlePedalUpVoltage), CONFIG(throttlePedalWOTVoltage), min, max);
-	initTpsFuncAndRedund(pedal, pedalFuncSecondary, pedalSensorSecondary, CONFIG(throttlePedalPositionSecondAdcChannel), CONFIG(throttlePedalSecondaryUpVoltage), CONFIG(throttlePedalSecondaryWOTVoltage), min, max);
+	if (!CONFIG(consumeObdSensors)) {
+		initTpsFunc(tpsFunc1p, tpsSens1p, CONFIG(tps1_1AdcChannel), CONFIG(tpsMin), CONFIG(tpsMax), min, max);
+		initTpsFuncAndRedund(tps1, tpsFunc1s, tpsSens1s, CONFIG(tps1_2AdcChannel), CONFIG(tps1SecondaryMin), CONFIG(tps1SecondaryMax), min, max);
+		initTpsFunc(tpsFunc2p, tpsSens2p, CONFIG(tps2_1AdcChannel), CONFIG(tps2Min), CONFIG(tps2Max), min, max);
+		initTpsFuncAndRedund(tps2, tpsFunc2s, tpsSens2s, CONFIG(tps2_2AdcChannel), CONFIG(tps2SecondaryMin), CONFIG(tps2SecondaryMax), min, max);
+		initTpsFunc(pedalFuncPrimary, pedalSensorPrimary, CONFIG(throttlePedalPositionAdcChannel), CONFIG(throttlePedalUpVoltage), CONFIG(throttlePedalWOTVoltage), min, max);
+		initTpsFuncAndRedund(pedal, pedalFuncSecondary, pedalSensorSecondary, CONFIG(throttlePedalPositionSecondAdcChannel), CONFIG(throttlePedalSecondaryUpVoltage), CONFIG(throttlePedalSecondaryWOTVoltage), min, max);
+
+		// TPS-like stuff that isn't actually a TPS
+		initTpsFunc(wastegateFunc, wastegateSens, CONFIG(wastegatePositionSensor), CONFIG(wastegatePositionMin), CONFIG(wastegatePositionMax), min, max);
+		initTpsFunc(idlePosFunc, idlePosSens, CONFIG(idlePositionSensor), CONFIG(idlePositionMin), CONFIG(idlePositionMax), min, max);
+	}
 
 	// Route the pedal or TPS to driverIntent as appropriate
 	if (CONFIG(throttlePedalPositionAdcChannel) != EFI_ADC_NONE) {
@@ -94,7 +106,7 @@ void initTps(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	}
 }
 
-void reconfigureTps(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+void reconfigureTps(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	float min = CONFIG(tpsErrorDetectionTooLow);
 	float max = CONFIG(tpsErrorDetectionTooHigh);
 
@@ -105,4 +117,7 @@ void reconfigureTps(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 
 	configureTps(pedalFuncPrimary, CONFIG(throttlePedalUpVoltage), CONFIG(throttlePedalWOTVoltage), min, max);
 	configureTps(pedalFuncSecondary, CONFIG(throttlePedalSecondaryUpVoltage), CONFIG(throttlePedalSecondaryWOTVoltage), min, max);
+
+	configureTps(wastegateFunc, CONFIG(wastegatePositionMin), CONFIG(wastegatePositionMax), min, max);
+	configureTps(idlePosFunc, CONFIG(idlePositionMin), CONFIG(idlePositionMax), min, max);
 }

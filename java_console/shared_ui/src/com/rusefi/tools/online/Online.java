@@ -1,5 +1,6 @@
 package com.rusefi.tools.online;
 
+import com.devexperts.logging.Logging;
 import com.rusefi.shared.FileUtil;
 import com.rusefi.tune.xml.Msq;
 import com.rusefi.ui.AuthTokenPanel;
@@ -12,6 +13,7 @@ import org.apache.http.entity.mime.MultipartEntity;
 import org.apache.http.entity.mime.content.FileBody;
 import org.apache.http.entity.mime.content.StringBody;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.jetbrains.annotations.Nullable;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.ParseException;
@@ -22,6 +24,8 @@ import java.io.File;
 import java.io.IOException;
 
 public class Online {
+    private final static Logging log = Logging.getLogging(Online.class);
+
     public static final String outputXmlFileName = FileUtil.RUSEFI_SETTINGS_FOLDER + File.separator + "output.msq";
     private static final String url = "https://rusefi.com/online/upload.php";
 
@@ -29,10 +33,11 @@ public class Online {
      * blocking call for http file upload
      */
     public static UploadResult upload(File fileName, String authTokenValue) {
-        try {
-            HttpClient httpclient = new DefaultHttpClient();
-            HttpPost httpPost = new HttpPost(url);
+        HttpClient httpclient = new DefaultHttpClient();
+        HttpPost httpPost = new HttpPost(url);
 
+        String responseString;
+        try {
             FileBody uploadFilePart = new FileBody(fileName);
             MultipartEntity reqEntity = new MultipartEntity();
             reqEntity.addPart("upload-file", uploadFilePart);
@@ -41,51 +46,61 @@ public class Online {
             httpPost.setEntity(reqEntity);
 
             HttpResponse response = httpclient.execute(httpPost);
-            System.out.println("response=" + response);
-            System.out.println("code " + response.getStatusLine().getStatusCode());
+            log.debug("response=" + response);
+            log.debug("code " + response.getStatusLine().getStatusCode());
+            responseString = HttpUtil.getResponse(response);
 
-            JSONObject object = HttpUtil.getJsonResponse(HttpUtil.getResponse(response));
+        } catch (IOException e) {
+            return new UploadResult(true, "Upload io ERROR " + e);
+        }
 
-            System.out.println("object=" + object);
+        try {
+            JSONObject object = HttpUtil.getJsonResponse(responseString);
+
+            log.debug("object=" + object);
             JSONArray info = (JSONArray) object.get("info");
             JSONArray error = (JSONArray) object.get("error");
             if (error != null) {
-                System.out.println("error " + error);
+                log.error("error " + error);
                 return new UploadResult(true, error);
             } else {
-                System.out.println("info " + info);
+                log.debug("info " + info);
                 return new UploadResult(false, info);
             }
 
-        } catch (IOException | ParseException e) {
-            return new UploadResult(true, "Error " + e);
+        } catch (ParseException e) {
+            return new UploadResult(true, "Upload Error " + responseString);
         }
     }
 
+    /**
+     * we are here in case of individual tune upload
+     */
     public static BasicFuture<UploadResult> uploadTune(Msq tune, AuthTokenPanel authTokenPanel, JComponent parent, FutureCallback<UploadResult> callback) {
+        try {
+            tune.writeXmlFile(outputXmlFileName);
+        } catch (JAXBException | IOException e) {
+            throw new IllegalStateException("While writing tune", e);
+        }
+
+        return uploadFile(parent, callback, outputXmlFileName);
+    }
+
+    @Nullable
+    public static BasicFuture<UploadResult> uploadFile(JComponent parent, FutureCallback<UploadResult> callback, final String fileName) {
         BasicFuture<UploadResult> result = new BasicFuture<>(callback);
-        String authToken = authTokenPanel.getToken();
-        if (!authTokenPanel.hasToken()) {
-            authTokenPanel.showError(parent);
+        String authToken = AuthTokenPanel.getAuthToken();
+        if (!AuthTokenPanel.hasToken()) {
+            AuthTokenPanel.showError(parent);
             return null;
         }
         new Thread(new Runnable() {
             @Override
             public void run() {
-                UploadResult array = doUpload(authToken, tune);
+                UploadResult array = upload(new File(fileName), authToken);
                 result.completed(array);
             }
         }).start();
         return result;
-    }
-
-    private static UploadResult doUpload(String authToken, Msq tune) {
-        try {
-            tune.writeXmlFile(outputXmlFileName);
-            // todo: network upload should not happen on UI thread
-            return upload(new File(outputXmlFileName), authToken);
-        } catch (JAXBException | IOException ex) {
-            return new UploadResult(true, "IO error " + ex);
-        }
     }
 }

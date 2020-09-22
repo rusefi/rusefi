@@ -21,10 +21,10 @@ public class StreamConnector implements LinkConnector {
     private final PortHolder portHolder;
     private final LinkManager linkManager;
 
-    public StreamConnector(LinkManager linkManager, String portName, Callable<IoStream> ioStreamCallable) {
+    public StreamConnector(LinkManager linkManager, Callable<IoStream> ioStreamCallable) {
         this.linkManager = linkManager;
 
-        portHolder = new PortHolder(portName, linkManager, ioStreamCallable);
+        portHolder = new PortHolder(linkManager, ioStreamCallable);
     }
 
     @Override
@@ -51,7 +51,7 @@ public class StreamConnector implements LinkConnector {
     @Override
     public void restart() {
         linkManager.execute(() -> {
-            MessagesCentral.getInstance().postMessage(StreamConnector.this.getClass(), "Restarting serial IO");
+            linkManager.messageListener.postMessage(StreamConnector.this.getClass(), "Restarting serial IO");
             portHolder.close();
             portHolder.connectAndReadConfiguration();
         });

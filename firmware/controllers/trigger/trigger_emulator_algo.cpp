@@ -77,9 +77,9 @@ static SingleChannelStateSequence waves[PWM_PHASE_MAX_WAVE_PER_PWM] = { SingleCh
 		SingleChannelStateSequence(pinStates3) };
 static SingleChannelStateSequence sr[PWM_PHASE_MAX_WAVE_PER_PWM] = { waves[0], waves[1], waves[2] };
 
-static float switchTimesBuffer[PWM_PHASE_MAX_COUNT];
+static float pwmSwitchTimesBuffer[PWM_PHASE_MAX_COUNT];
 
-PwmConfig triggerSignal(switchTimesBuffer, sr);
+PwmConfig triggerSignal(pwmSwitchTimesBuffer, sr);
 
 #define DO_NOT_STOP 999999999
 

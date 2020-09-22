@@ -27,6 +27,8 @@
 #include "maf_airmass.h"
 #include "speed_density_airmass.h"
 #include "fuel_math.h"
+#include "fuel_computer.h"
+#include "injector_model.h"
 #include "interpolation.h"
 #include "engine_configuration.h"
 #include "allsensors.h"
@@ -135,11 +137,13 @@ floatms_t getRunningFuel(floatms_t baseFuel DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	float postCrankingFuelCorrection = ENGINE(engineState.DISPLAY_PREFIX(running).DISPLAY_FIELD(postCrankingFuelCorrection));
 	DISPLAY_TEXT(eol);
 
+	float baroCorrection = ENGINE(engineState.baroCorrection);
+
 	efiAssert(CUSTOM_ERR_ASSERT, !cisnan(iatCorrection), "NaN iatCorrection", 0);
 	efiAssert(CUSTOM_ERR_ASSERT, !cisnan(cltCorrection), "NaN cltCorrection", 0);
 	efiAssert(CUSTOM_ERR_ASSERT, !cisnan(postCrankingFuelCorrection), "NaN postCrankingFuelCorrection", 0);
 
-	floatms_t runningFuel = baseFuel * iatCorrection * cltCorrection * postCrankingFuelCorrection * ENGINE(engineState.running.pidCorrection);
+	floatms_t runningFuel = baseFuel * baroCorrection * iatCorrection * cltCorrection * postCrankingFuelCorrection * ENGINE(engineState.running.pidCorrection);
 	efiAssert(CUSTOM_ERR_ASSERT, !cisnan(runningFuel), "NaN runningFuel", 0);
 	DISPLAY_TEXT(eol);
 
@@ -163,10 +167,10 @@ constexpr float convertToGramsPerSecond(float ccPerMinute) {
 /**
  * @return per cylinder injection time, in seconds
  */
-float getInjectionDurationForAirmass(float airMass, float afr DECLARE_ENGINE_PARAMETER_SUFFIX) {
+static float getInjectionDurationForFuelMass(float fuelMass DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	float gPerSec = convertToGramsPerSecond(CONFIG(injector.flow));
 
-	return airMass / (afr * gPerSec);
+	return fuelMass / gPerSec;
 }
 
 static SpeedDensityAirmass sdAirmass(veMap);
@@ -181,7 +185,13 @@ AirmassModelBase* getAirmassModel(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 #if EFI_UNIT_TEST
 		case LM_MOCK: return engine->mockAirmassModel;
 #endif
-		default: return nullptr;
+		default:
+			// this is a bad work-around for https://github.com/rusefi/rusefi/issues/1690 issue
+			warning(CUSTOM_ERR_ASSERT, "Invalid airmass mode %d", CONFIG(fuelAlgorithm));
+			return &sdAirmass;
+/* todo: this should be the implementation
+			return nullptr;
+*/
 	}
 }
 
@@ -202,17 +212,18 @@ floatms_t getBaseFuel(int rpm DECLARE_ENGINE_PARAMETER_SUFFIX) {
 
 	auto airmass = model->getAirmass(rpm);
 
-	// The airmass mode will tell us how to look up AFR - use the provided Y axis value
-	float targetAfr = afrMap.getValue(rpm, airmass.EngineLoadPercent);
-
 	// Plop some state for others to read
-	ENGINE(engineState.targetAFR) = targetAfr;
 	ENGINE(engineState.sd.airMassInOneCylinder) = airmass.CylinderAirmass;
 	ENGINE(engineState.fuelingLoad) = airmass.EngineLoadPercent;
 	// TODO: independently selectable ignition load mode
 	ENGINE(engineState.ignitionLoad) = airmass.EngineLoadPercent;
 
-	float baseFuel = getInjectionDurationForAirmass(airmass.CylinderAirmass, targetAfr PASS_ENGINE_PARAMETER_SUFFIX) * 1000;
+	float baseFuelMass = ENGINE(fuelComputer)->getCycleFuel(airmass.CylinderAirmass, rpm, airmass.EngineLoadPercent);
+	float baseFuel = getInjectionDurationForFuelMass(baseFuelMass PASS_ENGINE_PARAMETER_SUFFIX) * 1000;
+	if (cisnan(baseFuel)) {
+		// todo: we should not have this here but https://github.com/rusefi/rusefi/issues/1690
+		return 0;
+	}
 	efiAssert(CUSTOM_ERR_ASSERT, !cisnan(baseFuel), "NaN baseFuel", 0);
 
 	engine->engineState.baseFuel = baseFuel;
@@ -261,6 +272,31 @@ int getNumberOfInjections(injection_mode_e mode DECLARE_ENGINE_PARAMETER_SUFFIX)
 	}
 }
 
+float getInjectionModeDurationMultiplier(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+	injection_mode_e mode = ENGINE(getCurrentInjectionMode(PASS_ENGINE_PARAMETER_SIGNATURE));
+
+	switch (mode) {
+	case IM_SIMULTANEOUS: {
+		auto cylCount = engineConfiguration->specs.cylindersCount;
+
+		if (cylCount == 0) {
+			// we can end up here during configuration reset
+			return 0;
+		}
+
+		return 1.0f / cylCount;
+	}
+	case IM_SEQUENTIAL:
+	case IM_SINGLE_POINT:
+		return 1;
+	case IM_BATCH:
+		return 0.5f;
+	default:
+		firmwareError(CUSTOM_ERR_INVALID_INJECTION_MODE, "Unexpected injection_mode_e %d", mode);
+		return 0;
+	}
+}
+
 /**
  * This is more like MOSFET duty cycle since durations include injector lag
  * @see getCoilDutyCycle
@@ -287,31 +323,20 @@ floatms_t getInjectionDuration(int rpm DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	ScopePerf perf(PE::GetInjectionDuration);
 
 #if EFI_SHAFT_POSITION_INPUT
-	bool isCranking = ENGINE(rpmCalculator).isCranking(PASS_ENGINE_PARAMETER_SIGNATURE);
-	injection_mode_e mode = ENGINE(getCurrentInjectionMode(PASS_ENGINE_PARAMETER_SIGNATURE));
-	int numberOfInjections = getNumberOfInjections(mode PASS_ENGINE_PARAMETER_SUFFIX);
-	if (numberOfInjections == 0) {
-		warning(CUSTOM_CONFIG_NOT_READY, "config not ready");
-		return 0; // we can end up here during configuration reset
-	}
-
 	// Always update base fuel - some cranking modes use it
 	floatms_t baseFuel = getBaseFuel(rpm PASS_ENGINE_PARAMETER_SUFFIX);
 
+	bool isCranking = ENGINE(rpmCalculator).isCranking();
 	floatms_t fuelPerCycle = getFuel(isCranking, baseFuel PASS_ENGINE_PARAMETER_SUFFIX);
 	efiAssert(CUSTOM_ERR_ASSERT, !cisnan(fuelPerCycle), "NaN fuelPerCycle", 0);
 
-	if (mode == IM_SINGLE_POINT) {
-		// here we convert per-cylinder fuel amount into total engine amount since the single injector serves all cylinders
-		fuelPerCycle *= engineConfiguration->specs.cylindersCount;
-	}
 	// Fuel cut-off isn't just 0 or 1, it can be tapered
 	fuelPerCycle *= ENGINE(engineState.fuelCutoffCorrection);
 	// If no fuel, don't add injector lag
 	if (fuelPerCycle == 0.0f)
 		return 0;
 
-	floatms_t theoreticalInjectionLength = fuelPerCycle / numberOfInjections;
+	floatms_t theoreticalInjectionLength = fuelPerCycle * getInjectionModeDurationMultiplier(PASS_ENGINE_PARAMETER_SIGNATURE);
 	floatms_t injectorLag = ENGINE(engineState.running.injectorLag);
 	if (cisnan(injectorLag)) {
 		warning(CUSTOM_ERR_INJECTOR_LAG, "injectorLag not ready");
@@ -337,6 +362,9 @@ floatms_t getInjectorLag(float vBatt DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	return interpolate2d("lag", vBatt, engineConfiguration->injector.battLagCorrBins, engineConfiguration->injector.battLagCorr);
 }
 
+static FuelComputer fuelComputer(afrMap);
+static InjectorModel injectorModel;
+
 /**
  * @brief	Initialize fuel map data structure
  * @note this method has nothing to do with fuel map VALUES - it's job
@@ -345,6 +373,13 @@ floatms_t getInjectorLag(float vBatt DECLARE_ENGINE_PARAMETER_SUFFIX) {
 void initFuelMap(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	INJECT_ENGINE_REFERENCE(&sdAirmass);
 	INJECT_ENGINE_REFERENCE(&mafAirmass);
+	INJECT_ENGINE_REFERENCE(&alphaNAirmass);
+
+	INJECT_ENGINE_REFERENCE(&fuelComputer);
+	INJECT_ENGINE_REFERENCE(&injectorModel);
+
+	ENGINE(fuelComputer) = &fuelComputer;
+	ENGINE(injectorModel) = &injectorModel;
 
 #if (IGN_LOAD_COUNT == FUEL_LOAD_COUNT) && (IGN_RPM_COUNT == FUEL_RPM_COUNT)
 	fuelPhaseMap.init(config->injectionPhase, config->injPhaseLoadBins, config->injPhaseRpmBins);

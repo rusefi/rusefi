@@ -153,7 +153,7 @@ public class BinaryProtocol implements BinaryProtocolCommands {
         communicationLoggingListener = new CommunicationLoggingListener() {
             @Override
             public void onPortHolderMessage(Class clazz, String message) {
-                MessagesCentral.getInstance().postMessage(clazz, message);
+                linkManager.messageListener.postMessage(clazz, message);
             }
         };
 
@@ -322,7 +322,7 @@ public class BinaryProtocol implements BinaryProtocolCommands {
         setController(newVersion);
     }
 
-    private byte[] receivePacket(String msg, boolean allowLongResponse) throws EOFException {
+    private byte[] receivePacket(String msg, boolean allowLongResponse) throws IOException {
         long start = System.currentTimeMillis();
         synchronized (ioLock) {
             return incomingData.getPacket(msg, allowLongResponse, start);
@@ -362,11 +362,10 @@ public class BinaryProtocol implements BinaryProtocolCommands {
             int remainingSize = image.getSize() - offset;
             int requestSize = Math.min(remainingSize, Fields.BLOCKING_FACTOR);
 
-            byte packet[] = new byte[7];
+            byte packet[] = new byte[5];
             packet[0] = Fields.TS_READ_COMMAND;
-            putShort(packet, 1, 0); // page
-            putShort(packet, 3, swap16(offset));
-            putShort(packet, 5, swap16(requestSize));
+            putShort(packet, 1, swap16(offset));
+            putShort(packet, 3, swap16(requestSize));
 
             byte[] response = executeCommand(packet, "load image offset=" + offset);
 
@@ -408,8 +407,10 @@ public class BinaryProtocol implements BinaryProtocolCommands {
             int crcOfLocallyCachedConfiguration = IoHelper.getCrc32(localCached.getContent());
             log.info(String.format(CONFIGURATION_RUSEFI_BINARY + " Local cache CRC %x\n", crcOfLocallyCachedConfiguration));
 
-            byte packet[] = new byte[7];
+            byte packet[] = new byte[5];
             packet[0] = COMMAND_CRC_CHECK_COMMAND;
+            putShort(packet, 1, swap16(/*offset = */ 0));
+            putShort(packet, 3, swap16(localCached.getSize()));
             byte[] response = executeCommand(packet, "get CRC32");
 
             if (checkResponseCode(response, RESPONSE_OK) && response.length == 5) {
@@ -417,7 +418,9 @@ public class BinaryProtocol implements BinaryProtocolCommands {
                 // that's unusual - most of the protocol is LITTLE_ENDIAN
                 bb.order(ByteOrder.BIG_ENDIAN);
                 int crcFromController = bb.getInt();
-                log.info(String.format("From rusEFI CRC %x\n", crcFromController));
+                log.info(String.format("From rusEFI tune CRC32 0x%x %d\n", crcFromController, crcFromController));
+                short crc16FromController = (short) crcFromController;
+                log.info(String.format("From rusEFI tune CRC16 0x%x %d\n", crc16FromController, crc16FromController));
                 if (crcOfLocallyCachedConfiguration == crcFromController) {
                     return localCached;
                 }
@@ -462,19 +465,12 @@ public class BinaryProtocol implements BinaryProtocolCommands {
     }
 
     public void writeData(byte[] content, Integer offset, int size) {
-        if (size > Fields.BLOCKING_FACTOR) {
-            writeData(content, offset, Fields.BLOCKING_FACTOR);
-            writeData(content, offset + Fields.BLOCKING_FACTOR, size - Fields.BLOCKING_FACTOR);
-            return;
-        }
-
         isBurnPending = true;
 
-        byte packet[] = new byte[7 + size];
+        byte packet[] = new byte[5 + size];
         packet[0] = COMMAND_CHUNK_WRITE;
-        putShort(packet, 1, 0); // page
-        putShort(packet, 3, swap16(offset));
-        putShort(packet, 5, swap16(size));
+        putShort(packet, 1, swap16(offset));
+        putShort(packet, 3, swap16(size));
 
         System.arraycopy(content, offset, packet, 7, size);
 

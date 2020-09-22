@@ -57,10 +57,8 @@ public class AutoTest extends BaseTest {
         testBmwE34();
         testSachs();
         testRoverV8();
-        testMitsu();
         testCamaro();
         testCitroenBerlingo();
-        testMazda626();
         testFord6();
         testFordFiesta();
     }
@@ -72,14 +70,14 @@ public class AutoTest extends BaseTest {
     };
 
     private void testVW_60_2() {
-        setEngineType(32);
+        setEngineType(ET_VW_ABA);
         changeRpm(900);
         // first let's get to expected RPM
         assertRpmDoesNotJump(20000, 15, 30, FAIL, commandQueue);
     }
 
     private void testV12() {
-        setEngineType(40);
+        setEngineType(ET_BMW_M73_F);
         changeRpm(700);
         // first let's get to expected RPM
         assertRpmDoesNotJump(15000, 15, 30, FAIL, commandQueue);
@@ -101,7 +99,7 @@ public class AutoTest extends BaseTest {
     }
 
     private void testCustomEngine() {
-        setEngineType(0);
+        setEngineType(ET_DEFAULT_FRANKENSO);
         sendCommand("set_toothed_wheel 4 0");
 //        sendCommand("enable trigger_only_front");
 //        changeRpm(100);
@@ -122,7 +120,7 @@ public class AutoTest extends BaseTest {
     }
 
     private void testSachs() {
-        setEngineType(29);
+        setEngineType(ET_SACHS);
 //        String msg = "BMW";
         changeRpm(1200);
         // todo: add more content
@@ -151,16 +149,6 @@ public class AutoTest extends BaseTest {
         assertWave(msg, chart, EngineChart.MAP_AVERAGING, 0.139, x, x + 120, x + 240, x + 360, x + 480, x + 600);
     }
 
-    private void testMitsu() {
-        setEngineType(16);
-        sendCommand("disable cylinder_cleanup");
-//        String msg = "Mitsubishi";
-        changeRpm(200);
-
-        changeRpm(1200);
-        // todo: add more content
-    }
-
     private void testCitroenBerlingo() {
         setEngineType(ET_CITROEN_TU3JP);
 //        String msg = "Citroen";
@@ -168,23 +156,12 @@ public class AutoTest extends BaseTest {
         // todo: add more content
     }
 
-    private void testMazda626() {
-        setEngineType(28);
-        String msg = "mazda 626 default cranking";
-        changeRpm(200);
-        EngineChart chart;
-        chart = nextChart();
-
-        double x = 102;
-        assertWave(msg, chart, EngineChart.SPARK_1, 0.1944, x, x + 180, x + 360, x + 540);
-    }
-
     private EngineChart nextChart() {
         return TestingUtils.nextChart(commandQueue);
     }
 
     private void test2003DodgeNeon() {
-        setEngineType(23);
+        setEngineType(ET_DODGE_NEON_2003_CRANK);
         sendCommand("set wwaeTau 0");
         sendCommand("set wwaeBeta 0");
         sendCommand("set mock_map_voltage 1");
@@ -250,7 +227,7 @@ public class AutoTest extends BaseTest {
     }
 
     private void testMazdaProtege() {
-        setEngineType(14);
+        setEngineType(ET_FORD_ESCORT_GT);
         EngineChart chart;
         sendCommand("set mock_vbatt_voltage 1.395");
         changeRpm(200);
@@ -342,7 +319,7 @@ public class AutoTest extends BaseTest {
         assertWaveNull(msg, chart, EngineChart.TRIGGER_2);
         sendComplexCommand("set " + "trigger_type" + " 1"); // TT_FORD_ASPIRE
         chart = nextChart();
-        assertTrue(msg, chart.get(EngineChart.TRIGGER_2) != null);
+        assertTrue(msg + " trigger2", chart.get(EngineChart.TRIGGER_2) != null);
     }
 
     private void testFordAspire() {

@@ -250,7 +250,7 @@ void setConstantDwell(floatms_t dwellMs DECLARE_CONFIG_PARAMETER_SUFFIX) {
 void setAfrMap(afr_table_t table, float value) {
 	for (int l = 0; l < FUEL_LOAD_COUNT; l++) {
 		for (int rpmIndex = 0; rpmIndex < FUEL_RPM_COUNT; rpmIndex++) {
-			table[l][rpmIndex] = (int)(value * AFR_STORAGE_MULT);
+			table[l][rpmIndex] = (int)(value * PACK_MULT_AFR_CFG);
 		}
 	}
 }
@@ -308,7 +308,7 @@ static void initTemperatureCurve(float *bins, float *values, int size, float def
 void prepareVoidConfiguration(engine_configuration_s *engineConfiguration) {
 	efiAssertVoid(OBD_PCM_Processor_Fault, engineConfiguration != NULL, "ec NULL");
 	memset(engineConfiguration, 0, sizeof(engine_configuration_s));
-	
+
 
 	// Now that GPIO_UNASSIGNED == 0 we do not really need explicit zero assignments since memset above does that
 	// todo: migrate 'EFI_ADC_NONE' to '0' and eliminate the need in this method altogether
@@ -325,7 +325,6 @@ void prepareVoidConfiguration(engine_configuration_s *engineConfiguration) {
 	engineConfiguration->auxTempSensor2.adcChannel = EFI_ADC_NONE;
 	engineConfiguration->baroSensor.hwChannel = EFI_ADC_NONE;
 	engineConfiguration->throttlePedalPositionAdcChannel = EFI_ADC_NONE;
-	engineConfiguration->throttlePedalPositionSecondAdcChannel = EFI_ADC_NONE;
 	engineConfiguration->oilPressure.hwChannel = EFI_ADC_NONE;
 	engineConfiguration->vRefAdcChannel = EFI_ADC_NONE;
 	engineConfiguration->vbattAdcChannel = EFI_ADC_NONE;
@@ -334,21 +333,19 @@ void prepareVoidConfiguration(engine_configuration_s *engineConfiguration) {
 /* this breaks unit tests lovely TODO: fix this?
 	engineConfiguration->tps1_1AdcChannel = EFI_ADC_NONE;
 */
-	engineConfiguration->tps1_2AdcChannel = EFI_ADC_NONE;
 	engineConfiguration->tps2_1AdcChannel = EFI_ADC_NONE;
-	engineConfiguration->tps2_2AdcChannel = EFI_ADC_NONE;
 	engineConfiguration->auxFastSensor1_adcChannel = EFI_ADC_NONE;
-	engineConfiguration->acSwitchAdc = EFI_ADC_NONE;
 	engineConfiguration->externalKnockSenseAdc = EFI_ADC_NONE;
 	engineConfiguration->fuelLevelSensor = EFI_ADC_NONE;
 	engineConfiguration->hipOutputChannel = EFI_ADC_NONE;
 	engineConfiguration->afr.hwChannel = EFI_ADC_NONE;
 	engineConfiguration->high_fuel_pressure_sensor_1 = EFI_ADC_NONE;
 	engineConfiguration->high_fuel_pressure_sensor_2 = EFI_ADC_NONE;
-	
+
 	engineConfiguration->clutchDownPinMode = PI_PULLUP;
 	engineConfiguration->clutchUpPinMode = PI_PULLUP;
 	engineConfiguration->brakePedalPinMode = PI_PULLUP;
+
 }
 
 void setDefaultBasePins(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
@@ -698,7 +695,7 @@ void setDefaultGppwmParameters(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 			for (size_t k = 0; k < efi::size(cfg.rpmBins); k++) {
 				cfg.table[j][k] = z;
 			}
-			
+
 		}
 
 		for (size_t j = 0; j < efi::size(cfg.rpmBins); j++) {
@@ -745,6 +742,10 @@ static void setDefaultEngineConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 #if EFI_BOOST_CONTROL
     setDefaultBoostParameters(PASS_CONFIG_PARAMETER_SIGNATURE);
 #endif
+
+
+    // OBD-II default rate is 500kbps
+    CONFIG(canBaudRate) = B500KBPS;
 
 	CONFIG(mafSensorType) = Bosch0280218037;
 	setBosch0280218037(config);
@@ -832,6 +833,7 @@ static void setDefaultEngineConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	setLinearCurve(engineConfiguration->map.samplingWindow, 50, 50, 1);
 
 	setAfrMap(config->afrTable, 14.7);
+	engineConfiguration->stoichRatioPrimary = 14.7f / PACK_MULT_AFR_CFG;
 
 	setDefaultVETable(PASS_ENGINE_PARAMETER_SIGNATURE);
 
@@ -1179,7 +1181,9 @@ void resetConfigurationExt(Logging * logger, configuration_callback_t boardCallb
 	// set initial pin groups
 	setDefaultBasePins(PASS_CONFIG_PARAMETER_SIGNATURE);
 
-	boardCallback(engineConfiguration);
+	if (boardCallback != nullptr) {
+		boardCallback(engineConfiguration);
+	}
 
 #if EFI_PROD_CODE
 	// call overrided board-specific configuration setup, if needed (for custom boards only)
@@ -1223,6 +1227,9 @@ void resetConfigurationExt(Logging * logger, configuration_callback_t boardCallb
 		setIssue898(PASS_CONFIG_PARAMETER_SIGNATURE);
 		break;
 #endif // EFI_UNIT_TEST
+	case BMW_M73_PROTEUS:
+		setEngineBMW_M73_Proteus(PASS_CONFIG_PARAMETER_SIGNATURE);
+		break;
 #if EFI_INCLUDE_ENGINE_PRESETS
 	case DEFAULT_FRANKENSO:
 		setFrankensoConfiguration(PASS_CONFIG_PARAMETER_SIGNATURE);
@@ -1239,9 +1246,6 @@ void resetConfigurationExt(Logging * logger, configuration_callback_t boardCallb
 	case BMW_M73_MRE:
 	case BMW_M73_MRE_SLAVE:
 		setEngineBMW_M73_microRusEfi(PASS_CONFIG_PARAMETER_SIGNATURE);
-		break;
-	case BMW_M73_PROTEUS:
-		setEngineBMW_M73_Proteus(PASS_CONFIG_PARAMETER_SIGNATURE);
 		break;
 	case MRE_MIATA_NA6_VAF:
 		setMiataNA6_VAF_MRE(PASS_CONFIG_PARAMETER_SIGNATURE);
@@ -1261,7 +1265,9 @@ void resetConfigurationExt(Logging * logger, configuration_callback_t boardCallb
 	case DODGE_NEON_1995:
 		setDodgeNeon1995EngineConfiguration(PASS_CONFIG_PARAMETER_SIGNATURE);
 		break;
-	case DODGE_NEON_2003_CAM:
+	case MRE_BODY_CONTROL:
+		mreBCM(PASS_CONFIG_PARAMETER_SIGNATURE);
+		break;
 	case DODGE_NEON_2003_CRANK:
 		setDodgeNeonNGCEngineConfiguration(PASS_CONFIG_PARAMETER_SIGNATURE);
 		break;
@@ -1357,6 +1363,9 @@ void resetConfigurationExt(Logging * logger, configuration_callback_t boardCallb
 		break;
 	case DODGE_RAM:
 		setDodgeRam1996(PASS_CONFIG_PARAMETER_SIGNATURE);
+		break;
+	case VW_B6:
+		setVwPassatB6(PASS_CONFIG_PARAMETER_SIGNATURE);
 		break;
 	case VW_ABA:
 		setVwAba(PASS_CONFIG_PARAMETER_SIGNATURE);

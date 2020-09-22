@@ -1,15 +1,19 @@
 package com.rusefi.ts_plugin;
 
-import com.rusefi.auth.AutoTokenUtil;
+import com.rusefi.auth.AuthTokenUtil;
 import com.rusefi.autodetect.PortDetector;
 import com.rusefi.autoupdate.AutoupdateUtil;
 import com.rusefi.proxy.NetworkConnector;
 import com.rusefi.proxy.NetworkConnectorContext;
+import com.rusefi.tools.VehicleToken;
 import com.rusefi.ui.AuthTokenPanel;
 import com.rusefi.ui.util.URLLabel;
 import org.putgemin.VerticalFlowLayout;
 
 import javax.swing.*;
+import java.awt.*;
+import java.awt.datatransfer.Clipboard;
+import java.awt.datatransfer.StringSelection;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -20,7 +24,7 @@ public class BroadcastTab {
     private final JComponent content = new JPanel(new VerticalFlowLayout());
 
     private final JLabel status = new JLabel();
-    private final JButton disconnect = new JButton("Disconnect");
+    private final JButton disconnect = new JButton("Stop Broadcasting");
     private NetworkConnector networkConnector;
 
     public BroadcastTab() {
@@ -29,7 +33,7 @@ public class BroadcastTab {
 
         broadcast.addActionListener(e -> {
             String authToken = AuthTokenPanel.getAuthToken();
-            if (!AutoTokenUtil.isToken(authToken)) {
+            if (!AuthTokenUtil.isToken(authToken)) {
                 status.setText("Auth token is required to broadcast ECU");
                 return;
             }
@@ -51,6 +55,8 @@ public class BroadcastTab {
             }
         });
 
+        content.add(createVehicleTokenPanel());
+
         content.add(broadcast);
         content.add(status);
         content.add(disconnect);
@@ -58,6 +64,40 @@ public class BroadcastTab {
         content.add(new JLabel(PluginEntry.LOGO));
 
         AutoupdateUtil.trueLayout(content);
+    }
+
+    private Component createVehicleTokenPanel() {
+        JLabel label = new JLabel();
+        updateVehicleTokenLabel(label);
+
+        JButton copy = new JButton("Copy to clipboard");
+        copy.addActionListener(new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                StringSelection stringSelection = new StringSelection("" + VehicleToken.getOrCreate());
+                Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
+                clipboard.setContents(stringSelection, null);
+            }
+        });
+
+        JButton reset = new JButton("Reset");
+        reset.addActionListener(new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                VehicleToken.refresh();
+                updateVehicleTokenLabel(label);
+            }
+        });
+
+        JPanel panel = new JPanel(new FlowLayout());
+        panel.add(label);
+        panel.add(copy);
+        panel.add(reset);
+        return panel;
+    }
+
+    private void updateVehicleTokenLabel(JLabel label) {
+        label.setText("Vehicle access token: " + VehicleToken.getOrCreate());
     }
 
     private void startBroadcasting(String authToken, String autoDetectedPort) {
@@ -72,7 +112,7 @@ public class BroadcastTab {
             new Thread(() -> {
                 networkConnector = new NetworkConnector();
 
-                NetworkConnector.NetworkConnectorResult networkConnectorResult = networkConnector.start(authToken, autoDetectedPort, connectorContext);
+                NetworkConnector.NetworkConnectorResult networkConnectorResult = networkConnector.start(NetworkConnector.Implementation.Plugin, authToken, autoDetectedPort, connectorContext);
 
                 SwingUtilities.invokeLater(() -> status.setText("One time password to connect to this ECU: " + networkConnectorResult.getOneTimeToken()));
 

@@ -509,6 +509,42 @@ void mreBoardOldTest(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 #endif /* BOARD_TLE8888_COUNT */
 }
 
+void mreBCM(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
+	for (int i = 0; i < IGNITION_PIN_COUNT;i++) {
+		engineConfiguration->ignitionPins[i] = GPIO_UNASSIGNED;
+	}
+	for (int i = 0; i < INJECTION_PIN_COUNT;i++) {
+		engineConfiguration->injectionPins[i] = GPIO_UNASSIGNED;
+	}
+	engineConfiguration->fanPin = GPIO_UNASSIGNED;
+	engineConfiguration->consumeObdSensors = true;
+
+
+	engineConfiguration->fsio_setting[0] = 1500;
+	// simple warning light as default configuration
+	// set_fsio_expression 1 "rpm > fsio_setting(1)"
+	setFsio(0, GPIO_UNASSIGNED, RPM_ABOVE_USER_SETTING_1 PASS_CONFIG_PARAMETER_SUFFIX);
+
+	engineConfiguration->fsio_setting[2] = 1500;
+	setFsio(2, GPIO_UNASSIGNED, RPM_BELOW_USER_SETTING_3 PASS_CONFIG_PARAMETER_SUFFIX);
+
+
+#if (BOARD_TLE8888_COUNT > 0)
+	engineConfiguration->fsioOutputPins[0] = GPIOE_14;// "37 - Injector 1"
+	engineConfiguration->fsioOutputPins[1] = GPIOE_13;// "38 - Injector 2"
+	engineConfiguration->fsioOutputPins[2] = GPIOE_12;// "41 - Injector 3"
+	engineConfiguration->fsioOutputPins[3] = GPIOE_11;// "42 - Injector 4"
+// 	engineConfiguration->fsioOutputPins[4] = LS1
+// 			engineConfiguration->fsioOutputPins[5] = LS2
+
+				// engineConfiguration->fsioOutputPins[6] = GP1
+	engineConfiguration->fsioOutputPins[7] = TLE8888_PIN_22;// "34 - GP Out 2"
+	engineConfiguration->fsioOutputPins[8] = TLE8888_PIN_23;// "33 - GP Out 3"
+	engineConfiguration->fsioOutputPins[9] = TLE8888_PIN_24;// "43 - GP Out 4"
+#endif /* BOARD_TLE8888_COUNT */
+
+}
+
 /**
  * MRE_BOARD_NEW_TEST
  * set engine_type 31
@@ -533,10 +569,25 @@ void mreBoardNewTest(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	engineConfiguration->ignitionPins[7 - 1] = TLE8888_PIN_11;
 	engineConfiguration->ignitionPins[8 - 1] = TLE8888_PIN_12;
 
-	engineConfiguration->ignitionPins[9 - 1] = GPIOB_0;
-	engineConfiguration->ignitionPins[10 - 1] = GPIOB_1;
-	engineConfiguration->ignitionPins[11 - 1] = GPIO_UNASSIGNED;
-	engineConfiguration->ignitionPins[12 - 1] = GPIO_UNASSIGNED;
+	// LED #8
+	// TLE8888 half bridges (pushpull, lowside, or high-low)  IN12
+	// GPIOE_8: "35 - GP Out 1"
+	engineConfiguration->ignitionPins[9 - 1] = GPIOE_8;
+
+	// LED #1
+    // GPIOE_7: "34 - GP Out 2"
+	engineConfiguration->ignitionPins[10- 1] = TLE8888_PIN_22;//GPIOE_7;
+
+	// LED #2
+	// TLE8888_PIN_23: "33 - GP Out 3"
+	engineConfiguration->ignitionPins[11 - 1] = TLE8888_PIN_23;
+
+	// LED #7
+	// TLE8888_PIN_24: "43 - GP Out 4"
+	engineConfiguration->ignitionPins[12 - 1] = TLE8888_PIN_24;
+
+	engineConfiguration->afr.hwChannel = EFI_ADC_NONE;
+	engineConfiguration->throttlePedalPositionAdcChannel = EFI_ADC_NONE;
 
 
 
@@ -561,27 +612,17 @@ void mreBoardNewTest(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	engineConfiguration->injectionPins[6 - 1] = GPIOE_14;
 
 
-	engineConfiguration->injectionPins[7 - 1] = TLE8888_PIN_13;
+	engineConfiguration->injectionPins[7 - 1] = GPIOA_4; // AV10
+	engineConfiguration->injectionPins[8  - 1] = GPIOB_1; // AV9
+	engineConfiguration->injectionPins[9  - 1] = GPIOB_0; // AV8
+	engineConfiguration->injectionPins[10 - 1] = GPIOC_4; // AV6
 
-	engineConfiguration->injectionPins[8 - 1] = TLE8888_PIN_10;
+	engineConfiguration->injectionPins[11- 1] = TLE8888_PIN_13;
+
+	engineConfiguration->injectionPins[12- 1] = TLE8888_PIN_10;
 
 
-	// LED #8
-	// TLE8888 half bridges (pushpull, lowside, or high-low)  IN12
-	// GPIOE_8: "35 - GP Out 1"
-	engineConfiguration->injectionPins[9 - 1] = GPIOE_8;
 
-	// LED #1
-    // GPIOE_7: "34 - GP Out 2"
-	engineConfiguration->injectionPins[10- 1] = TLE8888_PIN_22;//GPIOE_7;
-
-	// LED #2
-	// TLE8888_PIN_23: "33 - GP Out 3"
-	engineConfiguration->injectionPins[11 - 1] = TLE8888_PIN_23;
-
-	// LED #7
-	// TLE8888_PIN_24: "43 - GP Out 4"
-	engineConfiguration->injectionPins[12 - 1] = TLE8888_PIN_24;
 
 
 #endif /* BOARD_TLE8888_COUNT */

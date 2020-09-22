@@ -2,6 +2,9 @@ package com.rusefi.server;
 
 import org.json.simple.JSONObject;
 
+/**
+ * rusEFI Online user - ID and username
+ */
 public class UserDetails {
     public static final String USER_ID = "user_id";
     public static final String USERNAME = "username";

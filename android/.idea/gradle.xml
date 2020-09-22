@@ -12,6 +12,7 @@
           <set>
             <option value="$PROJECT_DIR$" />
             <option value="$PROJECT_DIR$/app" />
+            <option value="$PROJECT_DIR$/../java_console/autoupdate" />
             <option value="$PROJECT_DIR$/../java_console/inifile" />
             <option value="$PROJECT_DIR$/../java_console/io" />
             <option value="$PROJECT_DIR$/../java_console/logging-api" />

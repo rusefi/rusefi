@@ -8,6 +8,8 @@
 
 using ::testing::StrictMock;
 using ::testing::FloatNear;
+using ::testing::InSequence;
+using ::testing::_;
 
 TEST(FuelMath, getStandardAirCharge) {
 	WITH_ENGINE_TEST_HELPER(TEST_ENGINE);
@@ -78,7 +80,7 @@ TEST(AirmassModes, AlphaNFailedTps) {
 	EXPECT_EQ(result.CylinderAirmass, 0);
 }
 
-TEST(misc, MafNormal) {
+TEST(AirmassModes, MafNormal) {
 	WITH_ENGINE_TEST_HELPER(FORD_ASPIRE_1996);
 	engineConfiguration->fuelAlgorithm = LM_REAL_MAF;
 	engineConfiguration->injector.flow = 200;
@@ -97,4 +99,42 @@ TEST(misc, MafNormal) {
 	// Check results
 	EXPECT_NEAR(0.277777f * 0.75f, airmass.CylinderAirmass, EPS4D);
 	EXPECT_NEAR(70.9814f, airmass.EngineLoadPercent, EPS4D);
+}
+
+TEST(AirmassModes, VeOverride) {
+	StrictMock<MockVp3d> veTable;
+
+	{
+		InSequence is;
+
+		// Default
+		EXPECT_CALL(veTable, getValue(_, 10.0f)).WillOnce(Return(0));
+		// TPS
+		EXPECT_CALL(veTable, getValue(_, 30.0f)).WillOnce(Return(0));
+	}
+
+	struct DummyAirmassModel : public AirmassModelBase {
+		DummyAirmassModel(const ValueProvider3D& veTable) : AirmassModelBase(veTable) {}
+
+		AirmassResult getAirmass(int rpm) override {
+			// Default load value 10, will be overriden
+			getVe(rpm, 10.0f);
+
+			return {};
+		}
+	};
+
+	WITH_ENGINE_TEST_HELPER(TEST_ENGINE);
+	DummyAirmassModel dut(veTable);
+	INJECT_ENGINE_REFERENCE(&dut);
+
+	// Use default mode - will call with 10
+	dut.getAirmass(0);
+	EXPECT_FLOAT_EQ(ENGINE(engineState.currentVeLoad), 10.0f);
+
+	// Override to TPS
+	CONFIG(veOverrideMode) = VE_TPS;
+	Sensor::setMockValue(SensorType::Tps1, 30.0f);
+	dut.getAirmass(0);
+	EXPECT_FLOAT_EQ(ENGINE(engineState.currentVeLoad), 30.0f);
 }

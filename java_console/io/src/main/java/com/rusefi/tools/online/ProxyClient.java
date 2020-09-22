@@ -2,6 +2,7 @@ package com.rusefi.tools.online;
 
 import com.rusefi.proxy.client.LocalApplicationProxy;
 import com.rusefi.server.ControllerInfo;
+import com.rusefi.server.SessionDetails;
 import com.rusefi.server.UserDetails;
 import org.jetbrains.annotations.NotNull;
 import org.json.simple.JSONArray;
@@ -19,7 +20,8 @@ public class ProxyClient {
     public static final String LIST_CONTROLLERS_PATH = "/list_controllers";
     public static final String LIST_APPLICATIONS_PATH = "/list_applications";
     public static final String VERSION_PATH = "/version";
-    public static final String BACKEND_VERSION = "0.0001";
+    public static final String UPDATE_CONNECTOR_SOFTWARE = "/update_connector_software";
+    public static final String BACKEND_VERSION = "0.0005";
     public static final String IS_USED = "isUsed";
     public static final String OWNER = "owner";
     /**
@@ -27,6 +29,8 @@ public class ProxyClient {
      * @see LocalApplicationProxy#SERVER_PORT_FOR_APPLICATIONS
      */
     public static final int SERVER_PORT_FOR_CONTROLLERS = getIntProperty("controllers.port", 8003);
+    public static final String JSON = "json";
+    public static final String UPDATE_TYPE = "type";
 
     public static List<PublicSession> getOnlineApplications(int httpPort) throws IOException {
         return getOnlineApplications(getHttpAddress(httpPort) + LIST_CONTROLLERS_PATH);
@@ -49,10 +53,12 @@ public class ProxyClient {
                 JSONObject element = (JSONObject) array.get(i);
 
                 ControllerInfo ci = ControllerInfo.valueOf(element);
-                UserDetails userDetails = UserDetails.valueOf(element);
+                UserDetails vehicleOwner = UserDetails.valueOf(element);
                 boolean isUsed = (Boolean) element.get(IS_USED);
                 String ownerName = (String) element.get(OWNER);
-                userLists.add(new PublicSession(userDetails, ci, isUsed, ownerName));
+                String age = (String) element.get(SessionDetails.AGE);
+                String implementation = (String) element.get(SessionDetails.IMPLEMENTATION);
+                userLists.add(new PublicSession(vehicleOwner, ci, isUsed, ownerName, age, implementation));
             }
 
             System.out.println("object=" + array);

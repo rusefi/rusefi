@@ -42,9 +42,11 @@ static int getTriggerZeroEventIndex(engine_type_e engineType) {
 
 	initDataStructures(PASS_ENGINE_PARAMETER_SIGNATURE);
 
+	const TriggerConfiguration * triggerConfiguration = &engine->primaryTriggerConfiguration;
+
 	TriggerWaveform * shape = &eth.engine.triggerCentral.triggerShape;
-	return eth.engine.triggerCentral.triggerState.findTriggerZeroEventIndex(shape, &engineConfiguration->trigger
-			PASS_CONFIG_PARAMETER_SUFFIX);
+	return eth.engine.triggerCentral.triggerState.findTriggerZeroEventIndex(shape, triggerConfiguration,
+			&engineConfiguration->trigger);
 }
 
 TEST(misc, testSkipped2_0) {
@@ -118,31 +120,33 @@ TEST(misc, testSomethingWeird) {
 	TriggerState state_;
 	TriggerState *sta = &state_;
 
+	const TriggerConfiguration * triggerConfiguration = &engine->primaryTriggerConfiguration;
+
 
 	ASSERT_FALSE(sta->shaft_is_synchronized) << "shaft_is_synchronized";
 	int r = 10;
-	sta->decodeTriggerEvent(&ENGINE(triggerCentral.triggerShape), nullptr, /* override */ nullptr,SHAFT_PRIMARY_FALLING, r PASS_CONFIG_PARAMETER_SUFFIX);
+	sta->decodeTriggerEvent(&ENGINE(triggerCentral.triggerShape), nullptr, /* override */ nullptr, triggerConfiguration, SHAFT_PRIMARY_FALLING, r);
 	ASSERT_FALSE(sta->shaft_is_synchronized) << "shaft_is_synchronized"; // still no synchronization
-	sta->decodeTriggerEvent(&ENGINE(triggerCentral.triggerShape), nullptr, /* override */ nullptr,SHAFT_PRIMARY_RISING, ++r PASS_CONFIG_PARAMETER_SUFFIX);
+	sta->decodeTriggerEvent(&ENGINE(triggerCentral.triggerShape), nullptr, /* override */ nullptr, triggerConfiguration, SHAFT_PRIMARY_RISING, ++r);
 	ASSERT_TRUE(sta->shaft_is_synchronized); // first signal rise synchronize
 	ASSERT_EQ(0, sta->getCurrentIndex());
-	sta->decodeTriggerEvent(&ENGINE(triggerCentral.triggerShape), nullptr, /* override */ nullptr,SHAFT_PRIMARY_FALLING, r++ PASS_CONFIG_PARAMETER_SUFFIX);
+	sta->decodeTriggerEvent(&ENGINE(triggerCentral.triggerShape), nullptr, /* override */ nullptr, triggerConfiguration, SHAFT_PRIMARY_FALLING, r++);
 	ASSERT_EQ(1, sta->getCurrentIndex());
 
 	for (int i = 2; i < 10;) {
-		sta->decodeTriggerEvent(&ENGINE(triggerCentral.triggerShape), nullptr, /* override */ nullptr,SHAFT_PRIMARY_RISING, r++ PASS_CONFIG_PARAMETER_SUFFIX);
+		sta->decodeTriggerEvent(&ENGINE(triggerCentral.triggerShape), nullptr, /* override */ nullptr, triggerConfiguration, SHAFT_PRIMARY_RISING, r++);
 		assertEqualsM("even", i++, sta->getCurrentIndex());
-		sta->decodeTriggerEvent(&ENGINE(triggerCentral.triggerShape), nullptr, /* override */ nullptr,SHAFT_PRIMARY_FALLING, r++ PASS_CONFIG_PARAMETER_SUFFIX);
+		sta->decodeTriggerEvent(&ENGINE(triggerCentral.triggerShape), nullptr, /* override */ nullptr, triggerConfiguration, SHAFT_PRIMARY_FALLING, r++);
 		assertEqualsM("odd", i++, sta->getCurrentIndex());
 	}
 
-	sta->decodeTriggerEvent(&ENGINE(triggerCentral.triggerShape), nullptr, /* override */ nullptr,SHAFT_PRIMARY_RISING, r++ PASS_CONFIG_PARAMETER_SUFFIX);
+	sta->decodeTriggerEvent(&ENGINE(triggerCentral.triggerShape), nullptr, /* override */ nullptr, triggerConfiguration, SHAFT_PRIMARY_RISING, r++);
 	ASSERT_EQ(10, sta->getCurrentIndex());
 
-	sta->decodeTriggerEvent(&ENGINE(triggerCentral.triggerShape), nullptr, /* override */ nullptr,SHAFT_PRIMARY_FALLING, r++ PASS_CONFIG_PARAMETER_SUFFIX);
+	sta->decodeTriggerEvent(&ENGINE(triggerCentral.triggerShape), nullptr, /* override */ nullptr, triggerConfiguration, SHAFT_PRIMARY_FALLING, r++);
 	ASSERT_EQ(11, sta->getCurrentIndex());
 
-	sta->decodeTriggerEvent(&ENGINE(triggerCentral.triggerShape), nullptr, /* override */ nullptr,SHAFT_PRIMARY_RISING, r++ PASS_CONFIG_PARAMETER_SUFFIX);
+	sta->decodeTriggerEvent(&ENGINE(triggerCentral.triggerShape), nullptr, /* override */ nullptr, triggerConfiguration, SHAFT_PRIMARY_RISING, r++);
 	ASSERT_EQ(0, sta->getCurrentIndex()); // new revolution
 }
 
@@ -162,13 +166,19 @@ TEST(misc, test1995FordInline6TriggerDecoder) {
 
 	event_trigger_position_s position;
 	ASSERT_EQ( 0,  engineConfiguration->globalTriggerAngleOffset) << "globalTriggerAngleOffset";
-	TRIGGER_WAVEFORM(findTriggerPosition(&position, 0, engineConfiguration->globalTriggerAngleOffset));
+	findTriggerPosition(&ENGINE(triggerCentral.triggerShape),
+			&ENGINE(triggerCentral.triggerFormDetails),
+			&position, 0, engineConfiguration->globalTriggerAngleOffset);
 	assertTriggerPosition(&position, 0, 0);
 
-	TRIGGER_WAVEFORM(findTriggerPosition(&position, 200, engineConfiguration->globalTriggerAngleOffset));
+	findTriggerPosition(&ENGINE(triggerCentral.triggerShape),
+			&ENGINE(triggerCentral.triggerFormDetails),
+			&position, 200, engineConfiguration->globalTriggerAngleOffset);
 	assertTriggerPosition(&position, 3, 20);
 
-	TRIGGER_WAVEFORM(findTriggerPosition(&position, 360, engineConfiguration->globalTriggerAngleOffset));
+	findTriggerPosition(&ENGINE(triggerCentral.triggerShape),
+			&ENGINE(triggerCentral.triggerFormDetails),
+			&position, 360, engineConfiguration->globalTriggerAngleOffset);
 	assertTriggerPosition(&position, 6, 0);
 
 	eth.applyTriggerWaveform();
@@ -195,7 +205,7 @@ TEST(misc, testGetCoilDutyCycleIssue977) {
 	WITH_ENGINE_TEST_HELPER(FORD_ASPIRE_1996);
 
 	int rpm = 2000;
-	engine->rpmCalculator.setRpmValue(rpm PASS_ENGINE_PARAMETER_SUFFIX);
+	engine->rpmCalculator.setRpmValue(rpm);
 	ASSERT_EQ( 4,  getSparkDwell(rpm PASS_ENGINE_PARAMETER_SUFFIX)) << "running dwell";
 
 	ASSERT_NEAR( 26.66666, getCoilDutyCycle(rpm PASS_ENGINE_PARAMETER_SUFFIX), 0.0001);
@@ -214,13 +224,13 @@ TEST(misc, testFordAspire) {
 	engineConfiguration->crankingTimingAngle = 31;
 	engineConfiguration->useConstantDwellDuringCranking = false;
 
-	engine->rpmCalculator.setRpmValue(200 PASS_ENGINE_PARAMETER_SUFFIX);
+	engine->rpmCalculator.setRpmValue(200);
 	assertEqualsM("cranking dwell", 54.166670, getSparkDwell(200 PASS_ENGINE_PARAMETER_SUFFIX));
 	int rpm = 2000;
-	engine->rpmCalculator.setRpmValue(rpm PASS_ENGINE_PARAMETER_SUFFIX);
+	engine->rpmCalculator.setRpmValue(rpm);
 	ASSERT_EQ( 4,  getSparkDwell(rpm PASS_ENGINE_PARAMETER_SUFFIX)) << "running dwell";
 
-	engine->rpmCalculator.setRpmValue(6000 PASS_ENGINE_PARAMETER_SUFFIX);
+	engine->rpmCalculator.setRpmValue(6000);
 	assertEqualsM("higher rpm dwell", 3.25, getSparkDwell(6000 PASS_ENGINE_PARAMETER_SUFFIX));
 
 }
@@ -316,8 +326,8 @@ TEST(misc, testRpmCalculator) {
 	ASSERT_EQ(0, GET_RPM());
 
 	// triggerIndexByAngle update is now fixed! prepareOutputSignals() wasn't reliably called
-	ASSERT_EQ(5, TRIGGER_WAVEFORM(triggerIndexByAngle[240]));
-	ASSERT_EQ(5, TRIGGER_WAVEFORM(triggerIndexByAngle[241]));
+	ASSERT_EQ(5, engine->triggerCentral.triggerFormDetails.triggerIndexByAngle[240]);
+	ASSERT_EQ(5, engine->triggerCentral.triggerFormDetails.triggerIndexByAngle[241]);
 
 	eth.fireTriggerEvents(/* count */ 48);
 
@@ -343,7 +353,7 @@ TEST(misc, testRpmCalculator) {
 	assertEqualsM("injection angle", 31.365, ie0->injectionStart.angleOffsetFromTriggerEvent);
 
 	eth.firePrimaryTriggerRise();
-	ASSERT_EQ(1500, eth.engine.rpmCalculator.rpmValue);
+	ASSERT_EQ(1500, eth.engine.rpmCalculator.getRpm());
 
 	assertEqualsM("dwell", 4.5, engine->engineState.dwellAngle);
 	assertEqualsM("fuel #2", 4.5450, engine->injectionDuration);
@@ -380,8 +390,8 @@ TEST(misc, testRpmCalculator) {
 	assertEqualsM("3/3", start + 14777, engine->executor.getForUnitTest(2)->momentX);
 	engine->executor.clear();
 
-	ASSERT_EQ(5, TRIGGER_WAVEFORM(triggerIndexByAngle[240]));
-	ASSERT_EQ(5, TRIGGER_WAVEFORM(triggerIndexByAngle[241]));
+	ASSERT_EQ(5, engine->triggerCentral.triggerFormDetails.triggerIndexByAngle[240]);
+	ASSERT_EQ(5, engine->triggerCentral.triggerFormDetails.triggerIndexByAngle[241]);
 
 
 	eth.fireFall(5);
@@ -397,7 +407,7 @@ TEST(misc, testRpmCalculator) {
 
 	assertEqualsM("dwell", 4.5, eth.engine.engineState.dwellAngle);
 	assertEqualsM("fuel #3", 4.5450, eth.engine.injectionDuration);
-	ASSERT_EQ(1500, eth.engine.rpmCalculator.rpmValue);
+	ASSERT_EQ(1500, eth.engine.rpmCalculator.getRpm());
 
 	eth.assertInjectorUpEvent("ev 0/2", 0, -4849, 2);
 
@@ -544,10 +554,10 @@ TEST(misc, testTriggerDecoder) {
 
 	testTriggerDecoder2("CAMARO_4", CAMARO_4, 40, 0.5, 0);
 
-	testTriggerDecoder3("neon NGC4", DODGE_NEON_2003_CAM, 6, 0.5000, 0.0, CHRYSLER_NGC4_GAP);
+	testTriggerDecoder3("neon NGC4", DODGE_NEON_2003_CRANK, 6, 0.5000, 0.0, CHRYSLER_NGC4_GAP);
 
 	{
-		WITH_ENGINE_TEST_HELPER(DODGE_NEON_2003_CAM);
+		WITH_ENGINE_TEST_HELPER(DODGE_NEON_2003_CRANK);
 
 		printf("!!!!!!!!!!!!!!!!!! Now trying with only rising edges !!!!!!!!!!!!!!!!!\r\n");
 		engineConfiguration->useOnlyRisingEdgeForTrigger = true;
@@ -1273,7 +1283,7 @@ TEST(big, testMissedSpark299) {
 
 	printf("*************************************************** testMissedSpark299 start\r\n");
 
-	ASSERT_EQ(3000, eth.engine.rpmCalculator.rpmValue);
+	ASSERT_EQ(3000, eth.engine.rpmCalculator.getRpm());
 
 	setWholeTimingTable(3);
 	eth.engine.periodicFastCallback(PASS_ENGINE_PARAMETER_SIGNATURE);

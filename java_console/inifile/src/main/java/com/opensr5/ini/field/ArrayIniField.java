@@ -98,7 +98,7 @@ public class ArrayIniField extends IniField {
         String size = list.get(4);
         String unit = list.get(5);
         String digits = list.get(10);
-        double multiplier = Double.parseDouble(list.get(6));
+        double multiplier = IniField.parseDouble(list.get(6));
 
         size = size.replaceAll("[\\]\\[x]", " ").trim();
         String dimentions[] = size.split(" ");

@@ -31,7 +31,7 @@ TEST(SensorInit, Tps) {
 	CONFIG(tpsMin) = 200;	// 1 volt
 	CONFIG(tpsMax) = 800;	// 4 volts
 
-	initTps(PASS_ENGINE_PARAMETER_SIGNATURE);
+	initTps(PASS_CONFIG_PARAMETER_SIGNATURE);
 
 	// Ensure the sensors were registered
 	auto s = const_cast<Sensor*>(Sensor::getSensorOfType(SensorType::Tps1Primary));
@@ -58,7 +58,7 @@ TEST(SensorInit, Pedal) {
 	CONFIG(throttlePedalUpVoltage) = 1;
 	CONFIG(throttlePedalWOTVoltage) = 4;
 
-	initTps(PASS_ENGINE_PARAMETER_SIGNATURE);
+	initTps(PASS_CONFIG_PARAMETER_SIGNATURE);
 
 	// Ensure the sensors were registered
 	auto s = const_cast<Sensor*>(Sensor::getSensorOfType(SensorType::AcceleratorPedalPrimary));
@@ -84,7 +84,7 @@ TEST(SensorInit, DriverIntentNoPedal) {
 	// We have no pedal - so we should get the TPS
 	CONFIG(throttlePedalPositionAdcChannel) = EFI_ADC_NONE;
 
-	initTps(PASS_ENGINE_PARAMETER_SIGNATURE);
+	initTps(PASS_CONFIG_PARAMETER_SIGNATURE);
 
 	// Ensure a sensor got set
 	ASSERT_TRUE(Sensor::hasSensor(SensorType::DriverThrottleIntent));
@@ -104,7 +104,7 @@ TEST(SensorInit, DriverIntentWithPedal) {
 	// We have a pedal, so we should get it
 	CONFIG(throttlePedalPositionAdcChannel) = EFI_ADC_0;
 
-	initTps(PASS_ENGINE_PARAMETER_SIGNATURE);
+	initTps(PASS_CONFIG_PARAMETER_SIGNATURE);
 
 	// Ensure a sensor got set
 	ASSERT_TRUE(Sensor::hasSensor(SensorType::DriverThrottleIntent));
@@ -126,7 +126,7 @@ TEST(SensorInit, OilPressure) {
 	CONFIG(oilPressure.value1) = 0;
 	CONFIG(oilPressure.value2) = 1000;
 
-	initOilPressure(PASS_ENGINE_PARAMETER_SIGNATURE);
+	initOilPressure(PASS_CONFIG_PARAMETER_SIGNATURE);
 
 	// Ensure the sensors were registered
 	auto s = const_cast<Sensor*>(Sensor::getSensorOfType(SensorType::OilPressure));
@@ -148,7 +148,7 @@ TEST(SensorInit, Clt) {
 	// 2003 neon sensor
 	CONFIG(clt.config) = {0, 30, 100, 32500, 7550, 700, 2700};
 
-	initNewThermistors(PASS_ENGINE_PARAMETER_SIGNATURE);
+	initThermistors(PASS_CONFIG_PARAMETER_SIGNATURE);
 
 	// Ensure the sensors were registered
 	auto s = const_cast<Sensor*>(Sensor::getSensorOfType(SensorType::Clt));
@@ -162,4 +162,13 @@ TEST(SensorInit, Clt) {
 	// Test out of range
 	EXPECT_POINT_INVALID(s, 0.0f);
 	EXPECT_POINT_INVALID(s, 5.0f);
+}
+
+TEST(SensorInit, Lambda) {
+	WITH_ENGINE_TEST_HELPER(TEST_ENGINE);
+
+	initLambda(PASS_ENGINE_PARAMETER_SIGNATURE);
+
+	auto s = Sensor::getSensorOfType(SensorType::Lambda);
+	ASSERT_NE(nullptr, s);
 }

@@ -14,9 +14,11 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 public class EnumToStringTest {
-    public static void process(Reader reader) throws IOException {
-        EnumsReader.process(reader);
-        EnumToString.outputData();
+    public static EnumsReader process(Reader reader) throws IOException {
+        EnumsReader enumsReader = new EnumsReader();
+        enumsReader.process(reader);
+        EnumToString.outputData(enumsReader);
+        return enumsReader;
     }
 
     @Test
@@ -33,14 +35,14 @@ public class EnumToStringTest {
     @Test
     public void parseEnum() throws IOException {
         EnumToString.clear();
-        process(new StringReader(
+        EnumsReader enumsReader = process(new StringReader(
                 "typedef enum {\n" +
                         "\tGPIO_UNASSIGNED = 0,\n" +
                         "\tGPIO_INVALID = 1,\n" +
                         "\tGPIO_HEX = 0xA1,\n" +
                         "}brain_pin_e;"));
 
-        List<Value> values = new ArrayList<>(EnumsReader.enums.get("brain_pin_e").values());
+        List<Value> values = new ArrayList<>(enumsReader.getEnums().get("brain_pin_e").values());
         assertEquals(3, values.size());
         Value first = values.get(0);
         assertEquals("GPIO_HEX", first.getName());

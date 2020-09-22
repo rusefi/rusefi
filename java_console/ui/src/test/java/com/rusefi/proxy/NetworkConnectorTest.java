@@ -76,7 +76,7 @@ public class NetworkConnectorTest {
             }
         };
         NetworkConnector networkConnector = new NetworkConnector();
-        networkConnector.start(TestHelper.TEST_TOKEN_1, TestHelper.LOCALHOST + ":" + controllerPort, connectorContext, reconnectListener);
+        networkConnector.start(NetworkConnector.Implementation.Unknown, TestHelper.TEST_TOKEN_1, TestHelper.LOCALHOST + ":" + controllerPort, connectorContext, reconnectListener);
 
         assertLatch(reconnectCounter);
 

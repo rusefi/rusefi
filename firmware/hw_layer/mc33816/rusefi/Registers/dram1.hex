@@ -3,21 +3,21 @@
 //   Asic ID: MC33816
 //   Version: 
 //   DRAM
-//   Date: Thursday, December 26, 2019
-//   Author: Andrey
+//   Date: Sunday, August 02, 2020
+//   Author: DEV
 //
-0x00D4,             
-0x0069,             
-0x0041,             
-0x010E,             
-0x0BB8,             
-0x010E,             
-0x010E,             
+0x00F0,             
+0x00F0,             
+0x008C,             
+0x2000,             
+0x01F4,             
+0x00B4,             
+0x003C,             
 0xEA60,             
 0x0000,             
-0x0000,             
-0x0000,             
-0x0000,             
+0x003D,             
+0x6000,             
+0x003C,             
 0x0000,             
 0x0000,             
 0x0000,             

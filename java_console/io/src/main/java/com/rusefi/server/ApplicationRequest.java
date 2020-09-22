@@ -9,25 +9,25 @@ public class ApplicationRequest {
     private static final String SESSION = "session";
 
     private final SessionDetails sessionDetails;
-    private final UserDetails targetUser;
+    private final UserDetails vehicleOwner;
 
-    public ApplicationRequest(SessionDetails sessionDetails, UserDetails targetUser) {
+    public ApplicationRequest(SessionDetails sessionDetails, UserDetails vehicleOwner) {
         this.sessionDetails = sessionDetails;
-        this.targetUser = targetUser;
+        this.vehicleOwner = vehicleOwner;
     }
 
     public SessionDetails getSessionDetails() {
         return sessionDetails;
     }
 
-    public UserDetails getTargetUser() {
-        return targetUser;
+    public UserDetails getVehicleOwner() {
+        return vehicleOwner;
     }
 
     public String toJson() {
         JSONObject jsonObject = new JSONObject();
         jsonObject.put(SESSION, sessionDetails.toJson());
-        targetUser.put(jsonObject);
+        vehicleOwner.put(jsonObject);
         return jsonObject.toJSONString();
     }
 
@@ -45,20 +45,20 @@ public class ApplicationRequest {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         ApplicationRequest that = (ApplicationRequest) o;
-        return targetUser == that.targetUser &&
+        return vehicleOwner == that.vehicleOwner &&
                 sessionDetails.equals(that.sessionDetails);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(sessionDetails, targetUser);
+        return Objects.hash(sessionDetails, vehicleOwner);
     }
 
     @Override
     public String toString() {
         return "ApplicationRequest{" +
                 "sessionDetails=" + sessionDetails +
-                ", targetUserId=" + targetUser +
+                ", targetUserId=" + vehicleOwner +
                 '}';
     }
 }

@@ -60,7 +60,7 @@ static void configureTempSensor(FunctionalSensor &sensor,
 
 	configTherm(sensor, p, config, isLinear);
 
-	AdcSubscription::SubscribeSensor(sensor, channel);
+	AdcSubscription::SubscribeSensor(sensor, channel, 2);
 
 	// Register & subscribe
 	if (!sensor.Register()) {
@@ -68,16 +68,18 @@ static void configureTempSensor(FunctionalSensor &sensor,
 	}
 }
 
-void initNewThermistors(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
-	configureTempSensor(clt,
+void initThermistors(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
+	if (!CONFIG(consumeObdSensors)) {
+		configureTempSensor(clt,
 						fclt,
 						CONFIG(clt),
 						CONFIG(useLinearCltSensor));
 
-	configureTempSensor(iat,
+		configureTempSensor(iat,
 						fiat,
 						CONFIG(iat),
 						CONFIG(useLinearIatSensor));
+	}
 
 	configureTempSensor(aux1,
 						faux1,
@@ -90,7 +92,7 @@ void initNewThermistors(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 						false);
 }
 
-void reconfigureThermistors(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+void reconfigureThermistors(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	configTherm(clt,
 				fclt,
 				CONFIG(clt),

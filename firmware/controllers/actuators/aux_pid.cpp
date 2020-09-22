@@ -70,7 +70,7 @@ public:
 
 			}
 
-			float rpm = GET_RPM_VALUE;
+			float rpm = GET_RPM();
 
 			// todo: make this configurable?
 			bool enabledAtCurrentRpm = rpm > engineConfiguration->cranking.rpm;

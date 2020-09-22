@@ -20,7 +20,17 @@ struct TriggerStateListener {
 	virtual void OnTriggerSyncronization(bool wasSynchronized) = 0;
 	virtual void OnTriggerInvalidIndex(int currentIndex) = 0;
 	virtual void OnTriggerSynchronizationLost() = 0;
-#endif
+#endif // EFI_SHAFT_POSITION_INPUT
+};
+
+class TriggerConfiguration {
+public:
+	virtual bool isUseOnlyRisingEdgeForTrigger() const = 0;
+	virtual bool isSilentTriggerError() const = 0;
+	virtual bool isVerboseTriggerSynchDetails() const = 0;
+	virtual const char * getPrintPrefix() const = 0;
+	virtual debug_mode_e getDebugMode() const = 0;
+	virtual trigger_type_e getType() const = 0;
 };
 
 typedef void (*TriggerStateCallback)(TriggerState *);
@@ -68,17 +78,21 @@ public:
 	void incrementTotalEventCounter();
 	efitime_t getTotalEventCounter() const;
 
-	void decodeTriggerEvent(TriggerWaveform *triggerShape, const TriggerStateCallback triggerCycleCallback,
+	void decodeTriggerEvent(
+			const TriggerWaveform *triggerShape,
+			const TriggerStateCallback triggerCycleCallback,
 			TriggerStateListener * triggerStateListener,
-			trigger_event_e const signal, efitime_t nowUs DECLARE_CONFIG_PARAMETER_SUFFIX);
+			const TriggerConfiguration * triggerConfiguration,
+			const trigger_event_e signal,
+			const efitime_t nowUs);
 
 	bool validateEventCounters(TriggerWaveform *triggerShape) const;
-	void onShaftSynchronization(const TriggerStateCallback triggerCycleCallback,
-			efitick_t nowNt, TriggerWaveform *triggerShape);
+	void onShaftSynchronization(
+			const TriggerStateCallback triggerCycleCallback,
+			const efitick_t nowNt,
+			const TriggerWaveform *triggerShape);
 
-
-	bool isValidIndex(TriggerWaveform *triggerShape) const;
-	float getTriggerDutyCycle(int index);
+	bool isValidIndex(const TriggerWaveform *triggerShape) const;
 
 	/**
 	 * TRUE if we know where we are
@@ -119,8 +133,10 @@ public:
 	 */
 	efitick_t startOfCycleNt;
 
-	uint32_t findTriggerZeroEventIndex(TriggerWaveform * shape, trigger_config_s const*triggerConfig
-			DECLARE_CONFIG_PARAMETER_SUFFIX);
+	uint32_t findTriggerZeroEventIndex(TriggerWaveform * shape,
+			const TriggerConfiguration * triggerConfiguration,
+			trigger_config_s const*triggerConfig
+			);
 
 private:
 	void resetCurrentCycleState();
@@ -160,9 +176,9 @@ public:
 	 */
 	float prevInstantRpmValue = 0;
 	void movePreSynchTimestamps(DECLARE_ENGINE_PARAMETER_SIGNATURE);
-	float calculateInstantRpm(int *prevIndex, efitick_t nowNt DECLARE_ENGINE_PARAMETER_SUFFIX);
+	float calculateInstantRpm(TriggerFormDetails *triggerFormDetails, int *prevIndex, efitick_t nowNt DECLARE_ENGINE_PARAMETER_SUFFIX);
 #if EFI_ENGINE_CONTROL && EFI_SHAFT_POSITION_INPUT
-	void runtimeStatistics(efitick_t nowNt DECLARE_ENGINE_PARAMETER_SUFFIX);
+	void runtimeStatistics(TriggerFormDetails *triggerFormDetails, efitick_t nowNt DECLARE_ENGINE_PARAMETER_SUFFIX);
 #endif
 	/**
 	 * Update timeOfLastEvent[] on every trigger event - even without synchronization
@@ -175,10 +191,9 @@ angle_t getEngineCycle(operation_mode_e operationMode);
 
 class Engine;
 
-void initTriggerDecoder(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 void initTriggerDecoderLogger(Logging *sharedLogger);
 
-bool isTriggerDecoderError(DECLARE_ENGINE_PARAMETER_SIGNATURE);
+void calculateTriggerSynchPoint(TriggerWaveform *shape,
+		TriggerState *state DECLARE_ENGINE_PARAMETER_SUFFIX);
 
-void calculateTriggerSynchPoint(TriggerWaveform *shape, TriggerState *state DECLARE_ENGINE_PARAMETER_SUFFIX);
-
+void prepareEventAngles(TriggerWaveform *shape, TriggerFormDetails *details DECLARE_ENGINE_PARAMETER_SUFFIX);

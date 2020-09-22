@@ -12,7 +12,7 @@
  *
  * For version see engine_controller.cpp getRusEfiVersion
  *
- * @section sec_into
+ * @section sec_intro Intro
  *
  * rusEfi is implemented based on the idea that with modern 100+ MHz microprocessors the relatively
  * undemanding task of internal combustion engine control could be implemented in a high-level, processor-independent
@@ -50,11 +50,11 @@
  *
  * @section sec_timers Timers
  * At the moment rusEfi is build using 5 times:
- * 1) 1MHz microsecond_timer.cpp
- * 2) 10KHz fast ADC callback pwmpcb_fast adc_inputs.cpp
- * 3) slow ADC callback pwmpcb_slow adc_inputs.cpp
- * 4) periodicFastTimer engine_controller.cpp
- * 5) periodicSlowTimer engine_controller.cpp
+ * <BR>1) 1MHz microsecond_timer.cpp
+ * <BR>2) 10KHz fast ADC callback pwmpcb_fast adc_inputs.cpp
+ * <BR>3) slow ADC callback pwmpcb_slow adc_inputs.cpp
+ * <BR>4) periodicFastTimer engine_controller.cpp
+ * <BR>5) periodicSlowTimer engine_controller.cpp
  *
  *
  *
@@ -96,7 +96,7 @@
  * @section sec_fuel_injection Fuel Injection
  *
  *
- * @sectuion sec_misc Misc
+ * @section sec_misc Misc
  *
  * <BR>See main_trigger_callback.cpp for main trigger event handler
  * <BR>See fuel_math.cpp for details on fuel amount logic
@@ -195,6 +195,7 @@ void runRusEfi(void) {
 	// we need a special binary for final assembly check. We cannot afford to require too much software or too many steps
 	// to be executed at the place of assembly
 
+	CONFIG(triggerSimulatorFrequency) = 180;
 	engine->directSelfStimulation = true;
 #endif // HW_CHECK_MODE
 

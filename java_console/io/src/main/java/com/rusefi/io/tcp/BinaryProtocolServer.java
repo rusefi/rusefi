@@ -2,6 +2,7 @@ package com.rusefi.io.tcp;
 
 import com.devexperts.logging.Logging;
 import com.opensr5.ConfigurationImage;
+import com.rusefi.CompatibleFunction;
 import com.rusefi.Listener;
 import com.rusefi.NamedThreadFactory;
 import com.rusefi.Timeouts;
@@ -72,7 +73,7 @@ public class BinaryProtocolServer implements BinaryProtocolCommands {
     public void start(LinkManager linkManager, int port, Listener serverSocketCreationCallback, Context context) throws IOException {
         log.info("BinaryProtocolServer on " + port);
 
-        Function<Socket, Runnable> clientSocketRunnableFactory = clientSocket -> () -> {
+        CompatibleFunction<Socket, Runnable> clientSocketRunnableFactory = clientSocket -> () -> {
             try {
                 runProxy(linkManager, clientSocket, context);
             } catch (IOException e) {
@@ -92,11 +93,11 @@ public class BinaryProtocolServer implements BinaryProtocolCommands {
      * @param serverSocketCreationCallback this callback is invoked once we open the server socket
      * @return
      */
-    public static ServerSocketReference tcpServerSocket(int port, String threadName, Function<Socket, Runnable> socketRunnableFactory, Listener serverSocketCreationCallback) throws IOException {
+    public static ServerSocketReference tcpServerSocket(int port, String threadName, CompatibleFunction<Socket, Runnable> socketRunnableFactory, Listener serverSocketCreationCallback) throws IOException {
         return tcpServerSocket(socketRunnableFactory, port, threadName, serverSocketCreationCallback, PLAIN_SOCKET_FACTORY);
     }
 
-    public static ServerSocketReference tcpServerSocket(Function<Socket, Runnable> clientSocketRunnableFactory, int port, String threadName, Listener serverSocketCreationCallback, ServerSocketFunction nonSecureSocketFunction) throws IOException {
+    public static ServerSocketReference tcpServerSocket(CompatibleFunction<Socket, Runnable> clientSocketRunnableFactory, int port, String threadName, Listener serverSocketCreationCallback, ServerSocketFunction nonSecureSocketFunction) throws IOException {
         ThreadFactory threadFactory = getThreadFactory(threadName);
 
         Objects.requireNonNull(serverSocketCreationCallback, "serverSocketCreationCallback");
@@ -125,7 +126,14 @@ public class BinaryProtocolServer implements BinaryProtocolCommands {
 
     @NotNull
     public static ThreadFactory getThreadFactory(String threadName) {
-        return THREAD_FACTORIES_BY_NAME.computeIfAbsent(threadName, NamedThreadFactory::new);
+        synchronized (THREAD_FACTORIES_BY_NAME) {
+            ThreadFactory threadFactory = THREAD_FACTORIES_BY_NAME.get(threadName);
+            if (threadFactory == null) {
+                threadFactory = new NamedThreadFactory(threadName);
+                THREAD_FACTORIES_BY_NAME.put(threadName, threadFactory);
+            }
+            return threadFactory;
+        }
     }
 
     @SuppressWarnings("InfiniteLoopStatement")
@@ -383,7 +391,7 @@ public class BinaryProtocolServer implements BinaryProtocolCommands {
         int crc = in.readInt();
         int fromPacket = IoHelper.getCrc32(packet);
         if (crc != fromPacket)
-            throw new IllegalStateException("CRC mismatch crc=" + Integer.toString(crc, 16) + " vs packet=" + Integer.toString(fromPacket, 16) + " len=" + packet.length + " data: " + IoStream.printHexBinary(packet));
+            throw new IOException("CRC mismatch crc=" + Integer.toString(crc, 16) + " vs packet=" + Integer.toString(fromPacket, 16) + " len=" + packet.length + " data: " + IoStream.printHexBinary(packet));
         in.onPacketArrived();
         return new Packet(packet, crc);
     }
@@ -400,7 +408,6 @@ public class BinaryProtocolServer implements BinaryProtocolCommands {
     }
 
     private void handleWrite(LinkManager linkManager, byte[] packet, DataInputStream dis, TcpIoStream stream) throws IOException {
-        dis.readShort(); // page
         int offset = swap16(dis.readShort());
         int count = swap16(dis.readShort());
         log.info("TS_CHUNK_WRITE_COMMAND: offset=" + offset + " count=" + count);
@@ -410,14 +417,13 @@ public class BinaryProtocolServer implements BinaryProtocolCommands {
     }
 
     private void handleRead(LinkManager linkManager, DataInputStream dis, TcpIoStream stream) throws IOException {
-        short page = dis.readShort();
         int offset = swap16(dis.readShort());
         int count = swap16(dis.readShort());
         if (count <= 0) {
             log.info("Error: negative read request " + offset + "/" + count);
         } else {
             if (log.debugEnabled())
-                log.debug("read " + page + "/" + offset + "/" + count);
+                log.debug("read " + offset + "/" + count);
             BinaryProtocolState bp = linkManager.getBinaryProtocolState();
             byte[] response = new byte[1 + count];
             response[0] = (byte) TS_OK.charAt(0);

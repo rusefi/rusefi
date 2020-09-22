@@ -15,14 +15,6 @@ typedef enum {
 	BOR_Level_3 = 3
 } BOR_Level_t;
 
-#ifndef ADC_TwoSamplingDelay_5Cycles
-#define ADC_TwoSamplingDelay_5Cycles ((uint32_t)0x00000000)
-#endif
-
-#ifndef ADC_TwoSamplingDelay_20Cycles
-#define ADC_TwoSamplingDelay_20Cycles ((uint32_t)0x00000F00)
-#endif
-
 #ifndef ADC_CR2_SWSTART
 #define ADC_CR2_SWSTART ((uint32_t)0x40000000)
 #endif

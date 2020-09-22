@@ -46,6 +46,8 @@ brain_pin_e getSckPin(spi_device_e device);
 
 #if EFI_PROD_CODE
 #include "engine.h"
+#include "debounce.h"
+
 void applyNewHardwareSettings(void);
 void initHardware(Logging *logging);
 #endif /* EFI_PROD_CODE */
@@ -53,5 +55,6 @@ void initHardware(Logging *logging);
 void showBor(void);
 void setBor(int borValue);
 
-#endif /* __cplusplus */
+class ButtonDebounce;
 
+#endif /* __cplusplus */

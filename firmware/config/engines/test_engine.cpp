@@ -17,6 +17,7 @@
 
 EXTERN_CONFIG;
 
+// TEST_ENGINE
 void setTestEngineConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	setDefaultFrankensoConfiguration(PASS_CONFIG_PARAMETER_SIGNATURE);
 
@@ -31,6 +32,7 @@ void setTestEngineConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	engineConfiguration->useOnlyRisingEdgeForTrigger = false;
 
 	engineConfiguration->mafAdcChannel = EFI_ADC_1;
+	engineConfiguration->tps1_1AdcChannel = EFI_ADC_2;
 	engineConfiguration->vbattAdcChannel = EFI_ADC_NONE;
 
 	setWholeIatCorrTimingTable(0 PASS_CONFIG_PARAMETER_SUFFIX);

@@ -889,11 +889,15 @@ static void enableOrDisable(const char *param, bool isEnabled) {
 		engineConfiguration->canReadEnabled = isEnabled;
 	} else if (strEqualCaseInsensitive(param, "can_write")) {
 		engineConfiguration->canWriteEnabled = isEnabled;
-	} else if (strEqualCaseInsensitive(param, "injection")) {
+	} else if (strEqualCaseInsensitive(param, CMD_INJECTION)) {
 		engineConfiguration->isInjectionEnabled = isEnabled;
 	} else if (strEqualCaseInsensitive(param, "trigger_details")) {
 		engineConfiguration->verboseTriggerSynchDetails = isEnabled;
-	} else if (strEqualCaseInsensitive(param, "ignition")) {
+	} else if (strEqualCaseInsensitive(param, "vvt_details")) {
+		engineConfiguration->verboseVVTDecoding = isEnabled;
+	} else if (strEqualCaseInsensitive(param, "invertCamVVTSignal")) {
+		engineConfiguration->invertCamVVTSignal = isEnabled;
+	} else if (strEqualCaseInsensitive(param, CMD_IGNITION)) {
 		engineConfiguration->isIgnitionEnabled = isEnabled;
 	} else if (strEqualCaseInsensitive(param, CMD_SELF_STIMULATION)) {
 		engine->directSelfStimulation = isEnabled;
@@ -1073,6 +1077,10 @@ static void getValue(const char *paramStr) {
 		scheduleMsg(&logger, "is_enabled_spi_2=%s", boolToString(engineConfiguration->is_enabled_spi_2));
 	} else if (strEqualCaseInsensitive(paramStr, "is_enabled_spi_3")) {
 		scheduleMsg(&logger, "is_enabled_spi_3=%s", boolToString(engineConfiguration->is_enabled_spi_3));
+	} else if (strEqualCaseInsensitive(paramStr, "vvtCamSensorUseRise")) {
+		scheduleMsg(&logger, "vvtCamSensorUseRise=%s", boolToString(engineConfiguration->vvtCamSensorUseRise));
+	} else if (strEqualCaseInsensitive(paramStr, "invertCamVVTSignal")) {
+		scheduleMsg(&logger, "invertCamVVTSignal=%s", boolToString(engineConfiguration->invertCamVVTSignal));
 	} else if (strEqualCaseInsensitive(paramStr, "isHip9011Enabled")) {
 		scheduleMsg(&logger, "isHip9011Enabled=%d", engineConfiguration->isHip9011Enabled);
 	}
@@ -1288,6 +1296,8 @@ static void setValue(const char *paramStr, const char *valueStr) {
 		engineConfiguration->vvtMode = (vvt_mode_e)valueI;
 	} else if (strEqualCaseInsensitive(paramStr, "operation_mode")) {
 		engineConfiguration->ambiguousOperationMode = (operation_mode_e)valueI;
+	} else if (strEqualCaseInsensitive(paramStr, "vvtCamSensorUseRise")) {
+		engineConfiguration->vvtCamSensorUseRise = valueI;
 	} else if (strEqualCaseInsensitive(paramStr, "wwaeTau")) {
 		engineConfiguration->wwaeTau = valueF;
 	} else if (strEqualCaseInsensitive(paramStr, "wwaeBeta")) {

@@ -114,21 +114,28 @@ float actualSynchGap;
 
 static Logging * logger = nullptr;
 
-/**
- * @return TRUE is something is wrong with trigger decoding
- */
-bool isTriggerDecoderError(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
-	return engine->triggerErrorDetection.sum(6) > 4;
+void TriggerWaveform::initializeSyncPoint(TriggerState *state,
+			const TriggerConfiguration * triggerConfiguration,
+					trigger_config_s const*triggerConfig) {
+	triggerShapeSynchPointIndex = state->findTriggerZeroEventIndex(this,
+			triggerConfiguration, triggerConfig);
 }
 
-void calculateTriggerSynchPoint(TriggerWaveform *shape, TriggerState *state DECLARE_ENGINE_PARAMETER_SUFFIX) {
+/**
+ * Calculate 'shape.triggerShapeSynchPointIndex' value using 'TriggerState *state'
+ */
+void calculateTriggerSynchPoint(TriggerWaveform *shape,
+		TriggerState *state DECLARE_ENGINE_PARAMETER_SUFFIX) {
+	state->resetTriggerState();
 #if EFI_PROD_CODE
 	efiAssertVoid(CUSTOM_TRIGGER_STACK, getCurrentRemainingStack() > EXPECTED_REMAINING_STACK, "calc s");
 #endif
 	trigger_config_s const*triggerConfig = &engineConfiguration->trigger;
 
 	engine->triggerErrorDetection.clear();
-	shape->triggerShapeSynchPointIndex = state->findTriggerZeroEventIndex(shape, triggerConfig PASS_CONFIG_PARAMETER_SUFFIX);
+	shape->initializeSyncPoint(state,
+			&engine->primaryTriggerConfiguration,
+			triggerConfig);
 
 	int length = shape->getLength();
 	engine->engineCycleEventCount = length;
@@ -138,22 +145,31 @@ void calculateTriggerSynchPoint(TriggerWaveform *shape, TriggerState *state DECL
 		shape->setShapeDefinitionError(true);
 		return;
 	}
+	if (shape->getSize() == 0) {
+		firmwareError(CUSTOM_ERR_TRIGGER_ZERO, "triggerShape size is zero");
+	}
+}
 
+void prepareEventAngles(TriggerWaveform *shape,
+		TriggerFormDetails *details DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	float firstAngle = shape->getAngle(shape->triggerShapeSynchPointIndex);
-	assertAngleRange(shape->triggerShapeSynchPointIndex, "firstAngle", CUSTOM_TRIGGER_SYNC_ANGLE);
+	assertAngleRange(firstAngle, "firstAngle", CUSTOM_TRIGGER_SYNC_ANGLE);
 
 	int riseOnlyIndex = 0;
+
+	int length = shape->getLength();
+
+	memset(details->eventAngles, 0, sizeof(details->eventAngles));
 
 	for (int eventIndex = 0; eventIndex < length; eventIndex++) {
 		if (eventIndex == 0) {
 			// explicit check for zero to avoid issues where logical zero is not exactly zero due to float nature
-			shape->eventAngles[0] = 0;
+			details->eventAngles[0] = 0;
 			// this value would be used in case of front-only
-			shape->eventAngles[1] = 0;
-			shape->riseOnlyIndexes[0] = 0;
+			details->eventAngles[1] = 0;
 		} else {
 			assertAngleRange(shape->triggerShapeSynchPointIndex, "triggerShapeSynchPointIndex", CUSTOM_TRIGGER_SYNC_ANGLE2);
-			unsigned int triggerDefinitionCoordinate = (shape->triggerShapeSynchPointIndex + eventIndex) % engine->engineCycleEventCount;
+			unsigned int triggerDefinitionCoordinate = (shape->triggerShapeSynchPointIndex + eventIndex) % length;
 			efiAssertVoid(CUSTOM_TRIGGER_CYCLE, engine->engineCycleEventCount != 0, "zero engineCycleEventCount");
 			int triggerDefinitionIndex = triggerDefinitionCoordinate >= shape->privateTriggerDefinitionSize ? triggerDefinitionCoordinate - shape->privateTriggerDefinitionSize : triggerDefinitionCoordinate;
 			float angle = shape->getAngle(triggerDefinitionCoordinate) - firstAngle;
@@ -162,14 +178,12 @@ void calculateTriggerSynchPoint(TriggerWaveform *shape, TriggerState *state DECL
 			if (engineConfiguration->useOnlyRisingEdgeForTrigger) {
 				if (shape->isRiseEvent[triggerDefinitionIndex]) {
 					riseOnlyIndex += 2;
-					shape->eventAngles[riseOnlyIndex] = angle;
-					shape->eventAngles[riseOnlyIndex + 1] = angle;
+					details->eventAngles[riseOnlyIndex] = angle;
+					details->eventAngles[riseOnlyIndex + 1] = angle;
 				}
 			} else {
-				shape->eventAngles[eventIndex] = angle;
+				details->eventAngles[eventIndex] = angle;
 			}
-
-			shape->riseOnlyIndexes[eventIndex] = riseOnlyIndex;
 		}
 	}
 }
@@ -190,13 +204,14 @@ void TriggerStateWithRunningStatistics::movePreSynchTimestamps(DECLARE_ENGINE_PA
 	}
 }
 
-float TriggerStateWithRunningStatistics::calculateInstantRpm(int *prevIndexOut, efitick_t nowNt DECLARE_ENGINE_PARAMETER_SUFFIX) {
+float TriggerStateWithRunningStatistics::calculateInstantRpm(TriggerFormDetails *triggerFormDetails,
+		int *prevIndexOut, efitick_t nowNt DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	int current_index = currentCycle.current_index; // local copy so that noone changes the value on us
 	timeOfLastEvent[current_index] = nowNt;
 	/**
 	 * Here we calculate RPM based on last 90 degrees
 	 */
-	angle_t currentAngle = TRIGGER_WAVEFORM(eventAngles[current_index]);
+	angle_t currentAngle = triggerFormDetails->eventAngles[current_index];
 	// todo: make this '90' depend on cylinder count or trigger shape?
 	if (cisnan(currentAngle)) {
 		return NOISY_RPM;
@@ -204,14 +219,14 @@ float TriggerStateWithRunningStatistics::calculateInstantRpm(int *prevIndexOut, 
 	angle_t previousAngle = currentAngle - 90;
 	fixAngle(previousAngle, "prevAngle", CUSTOM_ERR_TRIGGER_ANGLE_RANGE);
 	// todo: prevIndex should be pre-calculated
-	int prevIndex = TRIGGER_WAVEFORM(triggerIndexByAngle[(int)previousAngle]);
+	int prevIndex = triggerFormDetails->triggerIndexByAngle[(int)previousAngle];
 
 	if (prevIndexOut) {
 		*prevIndexOut = prevIndex;
 	}
 
 	// now let's get precise angle for that event
-	angle_t prevIndexAngle = TRIGGER_WAVEFORM(eventAngles[prevIndex]);
+	angle_t prevIndexAngle = triggerFormDetails->eventAngles[prevIndex];
 	efitick_t time90ago = timeOfLastEvent[prevIndex];
 	if (time90ago == 0) {
 		return prevInstantRpmValue;
@@ -252,16 +267,16 @@ void TriggerStateWithRunningStatistics::setLastEventTimeForInstantRpm(efitick_t 
 	spinningEvents[spinningEventIndex++] = nowNt;
 }
 
-void TriggerStateWithRunningStatistics::runtimeStatistics(efitick_t nowNt DECLARE_ENGINE_PARAMETER_SUFFIX) {
+void TriggerStateWithRunningStatistics::runtimeStatistics(TriggerFormDetails *triggerFormDetails, efitick_t nowNt DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	if (engineConfiguration->debugMode == DBG_INSTANT_RPM) {
-		instantRpm = calculateInstantRpm(NULL, nowNt PASS_ENGINE_PARAMETER_SUFFIX);
+		instantRpm = calculateInstantRpm(triggerFormDetails, NULL, nowNt PASS_ENGINE_PARAMETER_SUFFIX);
 	}
 	if (ENGINE(sensorChartMode) == SC_RPM_ACCEL || ENGINE(sensorChartMode) == SC_DETAILED_RPM) {
 		int prevIndex;
-		instantRpm = calculateInstantRpm(&prevIndex, nowNt PASS_ENGINE_PARAMETER_SUFFIX);
+		instantRpm = calculateInstantRpm(triggerFormDetails, &prevIndex, nowNt PASS_ENGINE_PARAMETER_SUFFIX);
 
 #if EFI_SENSOR_CHART
-		angle_t currentAngle = TRIGGER_WAVEFORM(eventAngles[currentCycle.current_index]);
+		angle_t currentAngle = triggerFormDetails->eventAngles[currentCycle.current_index];
 		if (CONFIG(sensorChartMode) == SC_DETAILED_RPM) {
 			scAddData(currentAngle, instantRpm);
 		} else {
@@ -271,7 +286,7 @@ void TriggerStateWithRunningStatistics::runtimeStatistics(efitick_t nowNt DECLAR
 	}
 }
 
-bool TriggerState::isValidIndex(TriggerWaveform *triggerShape) const {
+bool TriggerState::isValidIndex(const TriggerWaveform *triggerShape) const {
 	return currentCycle.current_index < triggerShape->getSize();
 }
 
@@ -300,7 +315,7 @@ static trigger_value_e eventType[6] = { TV_FALL, TV_RISE, TV_FALL, TV_RISE, TV_F
 		/* odd event - start accumulation */ \
 		currentCycle.timeOfPreviousEventNt[triggerWheel] = nowNt; \
 	} \
-	if (engineConfiguration->useOnlyRisingEdgeForTrigger) {currentCycle.current_index++;} \
+	if (triggerConfiguration->isUseOnlyRisingEdgeForTrigger()) {currentCycle.current_index++;} \
 	currentCycle.current_index++; \
 	PRINT_INC_INDEX; \
 }
@@ -352,8 +367,10 @@ bool TriggerState::validateEventCounters(TriggerWaveform *triggerShape) const {
 	return isDecodingError;
 }
 
-void TriggerState::onShaftSynchronization(const TriggerStateCallback triggerCycleCallback,
-		efitick_t nowNt, TriggerWaveform *triggerShape) {
+void TriggerState::onShaftSynchronization(
+		const TriggerStateCallback triggerCycleCallback,
+		const efitick_t nowNt,
+		const TriggerWaveform *triggerShape) {
 
 
 	if (triggerCycleCallback) {
@@ -382,9 +399,13 @@ void TriggerState::onShaftSynchronization(const TriggerStateCallback triggerCycl
  * @param signal type of event which just happened
  * @param nowNt current time
  */
-void TriggerState::decodeTriggerEvent(TriggerWaveform *triggerShape, const TriggerStateCallback triggerCycleCallback,
+void TriggerState::decodeTriggerEvent(
+		const TriggerWaveform *triggerShape,
+		const TriggerStateCallback triggerCycleCallback,
 		TriggerStateListener * triggerStateListener,
-		trigger_event_e const signal, efitick_t nowNt DECLARE_CONFIG_PARAMETER_SUFFIX) {
+		const TriggerConfiguration * triggerConfiguration,
+		const trigger_event_e signal,
+		const efitick_t nowNt) {
 	ScopePerf perf(PE::DecodeTriggerEvent);
 	
 	if (nowNt - previousShaftEventTimeNt > NT_PER_SECOND) {
@@ -400,7 +421,7 @@ void TriggerState::decodeTriggerEvent(TriggerWaveform *triggerShape, const Trigg
 	previousShaftEventTimeNt = nowNt;
 
 
-	bool useOnlyRisingEdgeForTrigger = CONFIG(useOnlyRisingEdgeForTrigger);
+	bool useOnlyRisingEdgeForTrigger = triggerConfiguration->isUseOnlyRisingEdgeForTrigger();
 
 
 	efiAssertVoid(CUSTOM_TRIGGER_UNEXPECTED, signal <= SHAFT_3RD_RISING, "unexpected signal");
@@ -434,7 +455,7 @@ void TriggerState::decodeTriggerEvent(TriggerWaveform *triggerShape, const Trigg
 #if EFI_UNIT_TEST
 		if (printTriggerTrace) {
 			printf("%s isLessImportant %s now=%d index=%d\r\n",
-					getTrigger_type_e(engineConfiguration->trigger.type),
+					getTrigger_type_e(triggerConfiguration->getType()),
 					getTrigger_event_e(signal),
 					(int)nowNt,
 					currentCycle.current_index);
@@ -451,7 +472,7 @@ void TriggerState::decodeTriggerEvent(TriggerWaveform *triggerShape, const Trigg
 #if EFI_UNIT_TEST
 		if (printTriggerTrace) {
 			printf("%s event %s %d\r\n",
-					getTrigger_type_e(engineConfiguration->trigger.type),
+					getTrigger_type_e(triggerConfiguration->getType()),
 					getTrigger_event_e(signal),
 					nowNt);
 		}
@@ -503,7 +524,7 @@ void TriggerState::decodeTriggerEvent(TriggerWaveform *triggerShape, const Trigg
 
 			currentGap = 1.0 * toothDurations[0] / toothDurations[1];
 
-			if (CONFIG(debugMode) == DBG_TRIGGER_COUNTERS) {
+			if (triggerConfiguration->getDebugMode() == DBG_TRIGGER_COUNTERS) {
 #if EFI_TUNER_STUDIO
 				tsOutputChannels.debugFloatField6 = currentGap;
 				tsOutputChannels.debugIntField3 = currentCycle.current_index;
@@ -529,14 +550,14 @@ void TriggerState::decodeTriggerEvent(TriggerWaveform *triggerShape, const Trigg
 			 * todo: figure out exact threshold as a function of RPM and tooth count?
 			 * Open question what is 'triggerShape->getSize()' for 60/2 is it 58 or 58*2 or 58*4?
 			 */
-			bool silentTriggerError = triggerShape->getSize() > 40 && CONFIG(silentTriggerError);
+			bool silentTriggerError = triggerShape->getSize() > 40 && triggerConfiguration->isSilentTriggerError();
 
 #if EFI_UNIT_TEST
 			actualSynchGap = 1.0 * toothDurations[0] / toothDurations[1];
 #endif /* EFI_UNIT_TEST */
 
 #if EFI_PROD_CODE || EFI_SIMULATOR
-			if (CONFIG(verboseTriggerSynchDetails) || (someSortOfTriggerError && !silentTriggerError)) {
+			if (triggerConfiguration->isVerboseTriggerSynchDetails() || (someSortOfTriggerError && !silentTriggerError)) {
 				for (int i = 0;i<GAP_TRACKING_LENGTH;i++) {
 					float ratioFrom = triggerShape->syncronizationRatioFrom[i];
 					if (cisnan(ratioFrom)) {
@@ -549,8 +570,9 @@ void TriggerState::decodeTriggerEvent(TriggerWaveform *triggerShape, const Trigg
 						scheduleMsg(logger, "index=%d NaN gap, you have noise issues?",
 								i);
 					} else {
-						scheduleMsg(logger, "rpm=%d time=%d index=%d: gap=%.3f expected from %.3f to %.3f error=%s",
-							GET_RPM(),
+						scheduleMsg(logger, "%s rpm=%d time=%d index=%d: gap=%.3f expected from %.3f to %.3f error=%s",
+								triggerConfiguration->getPrintPrefix(),
+								GET_RPM(),
 							/* cast is needed to make sure we do not put 64 bit value to stack*/ (int)getTimeNowSeconds(),
 							i,
 							gap,
@@ -594,7 +616,7 @@ void TriggerState::decodeTriggerEvent(TriggerWaveform *triggerShape, const Trigg
 					triggerShape->getSize());
 			}
 #endif /* EFI_UNIT_TEST */
-			unsigned int endOfCycleIndex = triggerShape->getSize() - (CONFIG(useOnlyRisingEdgeForTrigger) ? 2 : 1);
+			unsigned int endOfCycleIndex = triggerShape->getSize() - (triggerConfiguration->isUseOnlyRisingEdgeForTrigger() ? 2 : 1);
 
 
 			isSynchronizationPoint = !shaft_is_synchronized || (currentCycle.current_index >= endOfCycleIndex);
@@ -613,7 +635,7 @@ void TriggerState::decodeTriggerEvent(TriggerWaveform *triggerShape, const Trigg
 #if EFI_UNIT_TEST
 		if (printTriggerTrace) {
 			printf("decodeTriggerEvent %s isSynchronizationPoint=%d index=%d %s\r\n",
-					getTrigger_type_e(engineConfiguration->trigger.type),
+					getTrigger_type_e(triggerConfiguration->getType()),
 					isSynchronizationPoint, currentCycle.current_index,
 					getTrigger_event_e(signal));
 		}
@@ -645,6 +667,7 @@ void TriggerState::decodeTriggerEvent(TriggerWaveform *triggerShape, const Trigg
 	}
 	if (!isValidIndex(triggerShape) && triggerStateListener) {
 		triggerStateListener->OnTriggerInvalidIndex(currentCycle.current_index);
+		return;
 	}
 	if (someSortOfTriggerError) {
 		if (getTimeNowNt() - lastDecodingErrorTime > NT_PER_SECOND) {
@@ -673,7 +696,8 @@ static void onFindIndexCallback(TriggerState *state) {
  * This function finds the index of synchronization event within TriggerWaveform
  */
 uint32_t TriggerState::findTriggerZeroEventIndex(TriggerWaveform * shape,
-		trigger_config_s const*triggerConfig DECLARE_CONFIG_PARAMETER_SUFFIX) {
+		const TriggerConfiguration * triggerConfiguration,
+		trigger_config_s const*triggerConfig) {
 	UNUSED(triggerConfig);
 #if EFI_PROD_CODE
 	efiAssert(CUSTOM_ERR_ASSERT, getCurrentRemainingStack() > 128, "findPos", -1);
@@ -690,7 +714,9 @@ uint32_t TriggerState::findTriggerZeroEventIndex(TriggerWaveform * shape,
 	// todo: should this variable be declared 'static' to reduce stack usage?
 	TriggerStimulatorHelper helper;
 
-	uint32_t syncIndex = helper.findTriggerSyncPoint(shape, this PASS_CONFIG_PARAMETER_SUFFIX);
+	uint32_t syncIndex = helper.findTriggerSyncPoint(shape,
+			triggerConfiguration,
+			this);
 	if (syncIndex == EFI_ERROR_CODE) {
 		return syncIndex;
 	}
@@ -709,20 +735,14 @@ uint32_t TriggerState::findTriggerZeroEventIndex(TriggerWaveform * shape,
 	 * todo: add a comment why are we doing '2 * shape->getSize()' here?
 	 */
 
-	helper.assertSyncPositionAndSetDutyCycle(onFindIndexCallback, syncIndex, this, shape PASS_CONFIG_PARAMETER_SUFFIX);
+	helper.assertSyncPositionAndSetDutyCycle(onFindIndexCallback, triggerConfiguration,
+			syncIndex, this, shape);
 
 	return syncIndex % shape->getSize();
 }
 
 void initTriggerDecoderLogger(Logging *sharedLogger) {
 	logger = sharedLogger;
-}
-
- void initTriggerDecoder(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
-#if EFI_GPIO_HARDWARE
-	enginePins.triggerDecoderErrorPin.initPin("led: trigger debug", CONFIG(triggerErrorPin),
-			&CONFIG(triggerErrorPinMode));
-#endif /* EFI_GPIO_HARDWARE */
 }
 
 #endif /* EFI_SHAFT_POSITION_INPUT */

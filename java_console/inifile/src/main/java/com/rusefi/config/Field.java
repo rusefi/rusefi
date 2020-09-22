@@ -208,6 +208,7 @@ public class Field {
     }
 
     public String getStringValue(ConfigurationImage image) {
+        Objects.requireNonNull(image, "image");
         if (type != STRING)
             throw new IllegalStateException("Not a string parameter " + name);
         ByteBuffer bb = image.getByteBuffer(offset, stringSize);

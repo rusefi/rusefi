@@ -37,7 +37,7 @@ AirmassResult MafAirmass::getAirmassImpl(float massAirFlow, int rpm) const {
 	float airChargeLoad = 100 * cylinderAirmass / ENGINE(standardAirCharge);
 	
 	//Correct air mass by VE table
-	float correctedAirmass = cylinderAirmass * getVe(rpm, airChargeLoad) / 100;
+	float correctedAirmass = cylinderAirmass * getVe(rpm, airChargeLoad);
 
 	return {
 		correctedAirmass,

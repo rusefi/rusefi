@@ -14,6 +14,7 @@ char * getPinNameByAdcChannel(const char *msg, adc_channel_e hwChannel, char *bu
 void initPeriodicEvents(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 void initEngineContoller(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX);
 void commonInitEngineController(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX);
+void initStartStopButton(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 
 void initDataStructures(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 void touchTimeCounter();
@@ -30,6 +31,7 @@ void setMockAfrVoltage(float voltage DECLARE_ENGINE_PARAMETER_SUFFIX);
 void setMockMafVoltage(float voltage DECLARE_ENGINE_PARAMETER_SUFFIX);
 void setMockIatVoltage(float voltage DECLARE_ENGINE_PARAMETER_SUFFIX);
 void setMockCltVoltage(float voltage DECLARE_ENGINE_PARAMETER_SUFFIX);
+void setMockState(brain_pin_e pin, bool state DECLARE_ENGINE_PARAMETER_SUFFIX);
 
 void printCurrentState(Logging *logging, int seconds, const char *engineTypeName, const char *firmwareBuildId);
 

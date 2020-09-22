@@ -65,7 +65,8 @@ public class ConsoleTools {
         registerTool("network_authenticator", strings -> LocalApplicationProxy.start(), "rusEFI Online Authenticator");
 
         registerTool("print_auth_token", args -> printAuthToken(), "Print current rusEFI Online authentication token.");
-        registerTool(SET_AUTH_TOKEN, ConsoleTools::setAuthToken, "Set rusEFI authentication token.");
+        registerTool("print_vehicle_token", args -> printVehicleToken(), "Prints vehicle access token.");
+        registerTool(SET_AUTH_TOKEN, ConsoleTools::setAuthToken, "Set rusEFI Online authentication token.");
         registerTool("upload_tune", ConsoleTools::uploadTune, "Upload specified tune file to rusEFI Online using auth token from settings");
 
         registerTool("read_tune", args -> readTune(), "Read tune from controller");
@@ -171,6 +172,11 @@ public class ConsoleTools {
         String newToken = args[1];
         System.out.println("Saving auth token " + newToken);
         AuthTokenPanel.setAuthToken(newToken);
+    }
+
+    private static void printVehicleToken() {
+        int vehicleToken = VehicleToken.getOrCreate();
+        System.out.println("Vehicle token: " + vehicleToken);
     }
 
     private static void printAuthToken() {

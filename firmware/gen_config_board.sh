@@ -43,6 +43,7 @@ java -DSystemOut.name=gen_config_board \
 	-ts_output_name generated/rusefi_${SHORT_BOARDNAME}.ini \
 	-signature tunerstudio/generated/signature_${SHORT_BOARDNAME}.txt \
 	-signature_destination controllers/generated/signature_${SHORT_BOARDNAME}.h \
+	-enumInputFile controllers/algo/rusefi_enums.h \
 	-prepend tunerstudio/generated/${BOARDNAME}_prefix.txt \
 	-prepend config/boards/${BOARDNAME}/prepend.txt
 

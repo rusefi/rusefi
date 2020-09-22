@@ -9,3 +9,5 @@ include ':inifile'
 project(':inifile').projectDir = new File('../java_console/inifile')
 include ':models'
 project(':models').projectDir = new File('../java_console/models')
+include ':autoupdate'
+project(':autoupdate').projectDir = new File('../java_console/autoupdate')

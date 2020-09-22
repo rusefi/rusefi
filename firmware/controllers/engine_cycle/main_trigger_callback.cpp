@@ -217,7 +217,7 @@ void InjectionEvent::onTriggerTooth(size_t trgEventIndex, int rpm, efitick_t now
 	}
 #endif /*EFI_PRINTF_FUEL_DETAILS */
 
-	bool isCranking = ENGINE(rpmCalculator).isCranking(PASS_ENGINE_PARAMETER_SIGNATURE);
+	bool isCranking = ENGINE(rpmCalculator).isCranking();
 	/**
 	 * todo: pre-calculate 'numberOfInjections'
 	 * see also injectorDutyCycle
@@ -268,7 +268,7 @@ void InjectionEvent::onTriggerTooth(size_t trgEventIndex, int rpm, efitick_t now
 	if (printFuelDebug) {
 		InjectorOutputPin *output = outputs[0];
 		printf("handleFuelInjectionEvent fuelout %s injection_duration %dus engineCycleDuration=%.1fms\t\n", output->name, (int)durationUs,
-				(int)MS2US(getCrankshaftRevolutionTimeMs(GET_RPM_VALUE)) / 1000.0);
+				(int)MS2US(getCrankshaftRevolutionTimeMs(GET_RPM())) / 1000.0);
 	}
 #endif /*EFI_PRINTF_FUEL_DETAILS */
 
@@ -379,6 +379,7 @@ static void mainTriggerCallback(trigger_event_e ckpSignalType, uint32_t trgEvent
 		return;
 	}
 
+#if ! HW_CHECK_MODE
 	if (hasFirmwareError()) {
 		/**
 		 * In case on a major error we should not process any more events.
@@ -386,6 +387,8 @@ static void mainTriggerCallback(trigger_event_e ckpSignalType, uint32_t trgEvent
 		 */
 		return;
 	}
+#endif // HW_CHECK_MODE
+
 	efiAssertVoid(CUSTOM_STACK_6629, getCurrentRemainingStack() > EXPECTED_REMAINING_STACK, "lowstck#2a");
 
 #if EFI_CDM_INTEGRATION
@@ -403,7 +406,7 @@ static void mainTriggerCallback(trigger_event_e ckpSignalType, uint32_t trgEvent
 		return;
 	}
 
-	int rpm = GET_RPM_VALUE;
+	int rpm = GET_RPM();
 	if (rpm == 0) {
 		// this happens while we just start cranking
 		// todo: check for 'trigger->is_synchnonized?'
@@ -464,7 +467,7 @@ static void mainTriggerCallback(trigger_event_e ckpSignalType, uint32_t trgEvent
 
 // Check if the engine is not stopped or cylinder cleanup is activated
 static bool isPrimeInjectionPulseSkipped(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
-	if (!engine->rpmCalculator.isStopped(PASS_ENGINE_PARAMETER_SIGNATURE))
+	if (!engine->rpmCalculator.isStopped())
 		return true;
 	return CONFIG(isCylinderCleanupEnabled) && (Sensor::get(SensorType::Tps1).value_or(0) > CLEANUP_MODE_TPS);
 }
@@ -520,7 +523,7 @@ void updatePrimeInjectionPulseState(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	if (counterWasReset)
 		return;
 
-	if (!engine->rpmCalculator.isStopped(PASS_ENGINE_PARAMETER_SIGNATURE)) {
+	if (!engine->rpmCalculator.isStopped()) {
 		backupRamSave(BACKUP_IGNITION_SWITCH_COUNTER, 0);
 		counterWasReset = true;
 	}

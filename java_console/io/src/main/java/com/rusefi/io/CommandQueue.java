@@ -100,7 +100,7 @@ public class CommandQueue {
         }
 
         if (counter != 1)
-            MessagesCentral.getInstance().postMessage(CommandQueue.class, "Took " + counter + " attempts");
+            linkManager.messageListener.postMessage(CommandQueue.class, "Took " + counter + " attempts");
     }
 
     public CommandQueue(LinkManager linkManager) {
@@ -109,7 +109,7 @@ public class CommandQueue {
             @SuppressWarnings("InfiniteLoopStatement")
             @Override
             public void run() {
-                MessagesCentral.getInstance().postMessage(COMMAND_QUEUE_CLASS, "SerialIO started");
+                linkManager.messageListener.postMessage(COMMAND_QUEUE_CLASS, "SerialIO started");
                 while (true) {
                     try {
                         sendPendingCommand();
@@ -134,13 +134,12 @@ public class CommandQueue {
      * TODO: add example, todo: refactor method and add unit test
      */
     public void handleConfirmationMessage(final String message) {
-        MessagesCentral mc = MessagesCentral.getInstance();
         String confirmation = LinkManager.unpackConfirmation(message);
         if (confirmation == null)
-            mc.postMessage(CommandQueue.class, "Broken confirmation length: " + message);
+            linkManager.messageListener.postMessage(CommandQueue.class, "Broken confirmation length: " + message);
         pendingConfirmations.add(confirmation);
         if (LinkManager.LOG_LEVEL.isDebugEnabled())
-            mc.postMessage(CommandQueue.class, "got valid conf! " + confirmation + ", still pending: " + pendingCommands.size());
+            linkManager.messageListener.postMessage(CommandQueue.class, "got valid conf! " + confirmation + ", still pending: " + pendingCommands.size());
 
 //        FileLog.MAIN.logLine("templog got valid conf " + confirmation + " " + System.currentTimeMillis() + " " + new Date());
 

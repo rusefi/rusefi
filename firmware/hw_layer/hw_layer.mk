@@ -1,5 +1,3 @@
-HW_LAYER_EGT = $(PROJECT_DIR)/hw_layer/serial_over_usb/usbcfg.c \
-	$(PROJECT_DIR)/hw_layer/serial_over_usb/usbconsole.c
 
 HW_LAYER_INC=	$(PROJECT_DIR)/hw_layer $(PROJECT_DIR)/hw_layer/adc \
 	$(PROJECT_DIR)/hw_layer/digital_input \
@@ -42,10 +40,10 @@ HW_LAYER_EMS_CPP = $(HW_LAYER_EGT_CPP) \
 	$(PROJECT_DIR)/hw_layer/io_pins.cpp \
 	$(PROJECT_DIR)/hw_layer/rtc_helper.cpp \
 	$(PROJECT_DIR)/hw_layer/cdm_ion_sense.cpp \
-	$(PROJECT_DIR)/hw_layer/backup_ram.cpp
+	$(PROJECT_DIR)/hw_layer/debounce.cpp
 
 #
 # '-include' is a magic kind of 'include' which would survive if file to be included is not found
 #	
 -include $(PROJECT_DIR)/hw_layer/$(CPU_HWLAYER)/hw_ports.mk
-	
+

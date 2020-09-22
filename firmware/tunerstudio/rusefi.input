@@ -33,7 +33,7 @@ enable2ndByteCanID = false
 
 [MegaTune]
  ; https://rusefi.com/forum/viewtopic.php?p=36201#p36201
- 	signature    = @@TS_SIGNATURE@@ 
+ 	signature    = @@TS_SIGNATURE@@
 
 [TunerStudio]
    queryCommand   = "S"
@@ -46,16 +46,14 @@ enable2ndByteCanID = false
 
    endianness          = little
    nPages              = 1
-  
 
    pageIdentifier      = "\x00\x00"
-   pageReadCommand     = "@@TS_READ_COMMAND_char@@\x00\x00%2o%2c"
-   burnCommand         = "@@TS_BURN_COMMAND_char@@\x00\x00"
-   pageActivate        = "@@TS_PAGE_COMMAND_char@@\x00\x00"
-   pageValueWrite      = "@@TS_SINGLE_WRITE_COMMAND_char@@\x00\x00%2o%v"
-   pageChunkWrite      = "@@TS_CHUNK_WRITE_COMMAND_char@@\x00\x00%2o%2c%v"
-   ; todo: make this command shorter one day, no need to have all these zeros
-   crc32CheckCommand   = "k\x00\x00\x00\x00\x00\x00"
+   pageReadCommand     = "@@TS_READ_COMMAND_char@@%2o%2c"
+   burnCommand         = "@@TS_BURN_COMMAND_char@@"
+   pageActivate        = "@@TS_PAGE_COMMAND_char@@"
+   pageValueWrite      = "@@TS_SINGLE_WRITE_COMMAND_char@@%2o%v"
+   pageChunkWrite      = "@@TS_CHUNK_WRITE_COMMAND_char@@%2o%2c%v"
+   crc32CheckCommand   = "@@TS_CRC_CHECK_COMMAND_char@@%2o%2c"
    retrieveConfigError = "e"
 
 ;communication settings
@@ -67,7 +65,7 @@ enable2ndByteCanID = false
    
  ; delayAfterPortOpen = 500  
    
-   blockingFactor = 256 ; max chunk size
+   blockingFactor = @@BLOCKING_FACTOR@@ ; max chunk size
 ;end communication settings
 
    ;  name      			= bits,   type, offset,  bits
@@ -131,6 +129,7 @@ enable2ndByteCanID = false
         ; it seems that TS also needs to know the diff.size of a tooth
         calcField = toothTime,           "ToothTime",    "ms",       { time - pastValue(time, 1) }
 
+ 
 [VeAnalyze]
 
         ;    tableName,  lambdaTargetTableName, lambdaChannel, egoCorrectionChannel, activeCondition
@@ -269,8 +268,11 @@ enable2ndByteCanID = false
       fuelTankLevel   = scalar,  S16,     98, "amount",{1/@@PACK_MULT_PERCENT@@},         0
       fuelConsumptionPerHour=scalar,F32, 100,    "kPa",      1,      0.0
 
+; Y axis values for selectable tables
+      veTableYAxis    = scalar, U16,     104,      "%",     0.01, 0
+      afrTableYAxis   = scalar, U16,     106,      "%",     0.01, 0
+
 ; Knock
-      knockCount      = scalar,  U32,    104,"counter",      1,         0
       knockLevel      = scalar,  F32,    108,  "Volts",      1,         0
 
 ; Mode, firmware, protocol, run time
@@ -284,7 +286,7 @@ enable2ndByteCanID = false
       calibrationValue = scalar, F32, 128, "", 1, 0
       calibrationMode = scalar, U08, 132, "", 1, 0
       ; 1 bytes padding1
-      
+
       fuelingLoad     = scalar, U16,     134,      "%",     0.01, 0
       ignitionLoad    = scalar, U16,     136,      "%",     0.01, 0
 
@@ -339,10 +341,29 @@ enable2ndByteCanID = false
       rawClt          = scalar,	 U16,    238, "V",{1/@@PACK_MULT_VOLTAGE@@}, 0.0
       rawIat          = scalar,	 U16,    240, "V",{1/@@PACK_MULT_VOLTAGE@@}, 0.0
       rawOilPressure  = scalar,	 U16,    242, "V",{1/@@PACK_MULT_VOLTAGE@@}, 0.0
+      rawPpsSecondary = scalar,	 U16,    248, "V",{1/@@PACK_MULT_VOLTAGE@@}, 0.0
 
 	; we use this to match logs to tunes
 	tuneCrc16         = scalar,  U16,    244, "crc16",           1,         0
     sd_status         = scalar,  U08,    246,  "", 1.0, 0.0
+
+; Transmission
+      tcuCurrentGear  = scalar,  S08,     247,   "gear",    1,         0
+      tcuDesiredGear  = scalar,  S08,     262,   "gear",    1,         0
+
+	knock1 = scalar, S08, 250, "dbv", 1, 0
+	knock2 = scalar, S08, 251, "dbv", 1, 0
+	knock3 = scalar, S08, 252, "dbv", 1, 0
+	knock4 = scalar, S08, 253, "dbv", 1, 0
+	knock5 = scalar, S08, 254, "dbv", 1, 0
+	knock6 = scalar, S08, 255, "dbv", 1, 0
+	knock7 = scalar, S08, 256, "dbv", 1, 0
+	knock8 = scalar, S08, 257, "dbv", 1, 0
+
+	rawIdlePositionSensor = scalar,	 U16,    264, "V",{1/@@PACK_MULT_VOLTAGE@@}, 0.0
+	rawWastegatePosition  = scalar,	 U16,    266, "V",{1/@@PACK_MULT_VOLTAGE@@}, 0.0
+	wastegatePositionSensor = scalar,  S16,    268, "%",{1/@@PACK_MULT_PERCENT@@}, 0
+	idlePositionSensor    = scalar,  S16,    270, "%",{1/@@PACK_MULT_PERCENT@@}, 0
 
 ;
 ; see TunerStudioOutputChannels struct
@@ -367,6 +388,9 @@ enable2ndByteCanID = false
     wueAfrTargetOffset = array, S16, [ 16], ":1",   0.1, 0.0, -3.0, 3.0, 1;
     wueAnalRecommend   = array, U08, [ 16], "%",  1.00, 0.0, 100, 255.00, 0
 
+    gearCountArray = array, S08, [@@TCU_GEAR_COUNT@@], "Gear", 1, 0, -1, { @@TCU_GEAR_COUNT@@ - 2 }, 0, noMsqSave
+    solenoidCountArray = array, U08, [@@TCU_SOLENOID_COUNT@@], "Solenoid", 1, 0, 1, @@TCU_SOLENOID_COUNT@@, 0, noMsqSave
+
 ; These are inverted (false = "Yes") so that they default to enabled
 	enableLogDebugChannels = bits, U08, [0:0], "Yes", "No"
 	enableLogErrorList = bits, U08, [0:0], "Yes", "No"
@@ -378,8 +402,8 @@ enable2ndByteCanID = false
 ;                                            DBG_ALTERNATOR_PID    DBG_TPS_ACCEL         DBG_2        DBG_IDLE_CONTROL
     debugFieldF1List = bits,   U08,   [0:7], "Controller Output",  "From TPS",           "",          "Controller Output",        "Idle output",         "Channel 1 Rise Counter",    "",           "",            "VVT Event Position","",          "Ign IAT Corr",      "",      "",         "",         "",            "",           "",             "ETB Controller Output", "",                "",           "df1",          "df1",           "22df1",          "fsio 1",  "24:df1",     "CJ125: output",  "",          "",         "",       "",     "",     "",               "TPS1 Pri/Sec Diff",    "",    "",      "",      "Boost Open Loop Duty",  "S unused"      "",           "Osc Amplitude",  "",              "fsio 8",    "idle offset",""
     debugFieldF2List = bits,   U08,   [0:7], "I-Term",             "To TPS",             "",          "I-Term",                   "Idle df2",            "Channel 2 Rise Counter",    "",           "",            "VVT Ratio",         "",          "Ign CLT Corr",      "",      "",         "",         "",            "",           "",             "ETB I-Term",            "",                "",           "df2",          "df2",           "22df2",          "fsio 2",  "24:df2",     "CJ125: i-term",  "",          "",         "",       "",     "",     "",               "TPS2 Pri/Sec Diff",    "",    "",      "",      "Boost Closed Loop Duty","S unused"      "",           "Duty Amplitude", "",              "fsio 9",    "idle min",   ""
-    debugFieldF3List = bits,   U08,   [0:7], "Previous Error",     "Current TPS<>TPS",   "",          "prev error",               "Idle df3",            "ICU sum",                   "",           "",            "",                  "",          "Ign FSIO Adj",      "",      "",         "",         "",            "",           "",             "ETB err",               "",                "",           "df3",          "df3",           "22df3",          "fsio 3",  "24:df3",     "CJ125: err",     "",          "",         "",       "",     "",     "",               "",                     "",    "",      "",      "",                      "S unused"      "",           "Tu",             "",              "fsio 10",   "",           ""
-    debugFieldF4List = bits,   U08,   [0:7], "I Gain",             "Extra Fuel",         "",          "I Gain",                   "Idle df4",            "VVT rise",                  "",           "",            "",                  "",          "Ign PID Adj",       "",      "",         "",         "",            "",           "",             "ETB I setting",         "",                "",           "df4",          "df4",           "22df4",          "fsio 4",  "24:df4",     "CJ125: UA",      "",          "",         "",       "",     "",     "",               "",                     "",    "",      "",      "",                      "S unused"      "",           "Ku",             "",              "fsio 11",   "",           ""
+    debugFieldF3List = bits,   U08,   [0:7], "Previous Error",     "Current TPS<>TPS",   "",          "prev error",               "Idle df3",            "ICU sum",                   "",           "",            "",                  "",          "Ign FSIO Adj",      "",      "",         "",         "",            "",           "",             "ETB err",               "",                "",           "df3",          "df3",           "22df3",          "fsio 3",  "24:df3",     "CJ125: err",     "",          "",         "",       "",     "",     "",               "TPS1/2 Diff",          "",    "",      "",      "",                      "S unused"      "",           "Tu",             "",              "fsio 10",   "",           ""
+    debugFieldF4List = bits,   U08,   [0:7], "I Gain",             "Extra Fuel",         "",          "I Gain",                   "Idle df4",            "VVT rise",                  "",           "",            "",                  "",          "Ign PID Adj",       "",      "",         "",         "",            "",           "",             "ETB I setting",         "",                "",           "df4",          "df4",           "22df4",          "fsio 4",  "24:df4",     "CJ125: UA",      "",          "",         "",       "",     "",     "",               "Acc Pedal Pri/Sec Diff","",   "",      "",      "",                      "S unused"      "",           "Ku",             "",              "fsio 11",   "",           ""
     debugFieldF5List = bits,   U08,   [0:7], "D Gain",             "df5",                "df5",       "D Gain",                   "Idle df5",            "VVT fall",                  "df5",        "",            "",                  "",          "",                  "",      "",         "",         "",            "",           "",             "ETB D setting",         "df5",             "df5",        "df5",          "df5",           "22df5",          "fsio 5",  "24:df5",     "CJ125: UR",      "",          "",         "",       "",     "",     "",               "",                     "",    "",      "",      "",                      "S unused"      "",           "Kp",             "",              "fsio 12",   "",           ""
     debugFieldF6List = bits,   U08,   [0:7], "D Term",             "",                   "",          "D Term",                   "Idle df6",            "Current Gap",               "",           "",            "",                  "",          "",                  "",      "",         "",         "",            "",           "",             "ETB df6",               "",                "",           "df6",          "df6",           "22df6",          "fsio 6",  "24:df6",     "cj: f7",         "",          "",         "",       "",     "",     "",               "",                     "",    "",      "",      "",                      "S unused"      "",           "Ki",             "",              "fsio 13",   "",           ""
     debugFieldF7List = bits,   U08,   [0:7], "Max-Value",          "",                   "",          "Max-Value",                "Idle df7",            "",                          "",           "",            "",                  "",          "",                  "",      "",         "",         "",            "",           "",             "ETB df7",               "",                "",           "df7",          "df7",           "22df7",          "fsio 7",  "24:df7",     "cj: f7",         "",          "",         "",       "",     "",     "",               "",                     "",    "",      "",      "",                      "S unused"      "",           "Kd",             "",              "fsio 14",   "",           ""
@@ -405,6 +429,14 @@ enable2ndByteCanID = false
 	maintainConstantValue = tps1SecondaryMax, { (calibrationMode == 6 ) ? calibrationValue : tps1SecondaryMax }
 	maintainConstantValue = tps1SecondaryMin, { (calibrationMode == 7 ) ? calibrationValue : tps1SecondaryMin }
 
+	; TPS 2 Primary
+	maintainConstantValue = tps2Max, { (calibrationMode == 8 ) ? calibrationValue : tps2Max }
+	maintainConstantValue = tps2Min, { (calibrationMode == 9 ) ? calibrationValue : tps2Min }
+
+	; TPS 2 Secondary
+	maintainConstantValue = tps2SecondaryMax, { (calibrationMode == 10 ) ? calibrationValue : tps2SecondaryMax }
+	maintainConstantValue = tps2SecondaryMin, { (calibrationMode == 11 ) ? calibrationValue : tps2SecondaryMin }
+
 	; ETB Auto Gain Calibration
 	maintainConstantValue = etb_pFactor, { (calibrationMode == 3 ) ? calibrationValue : etb_pFactor }
 	maintainConstantValue = etb_iFactor, { (calibrationMode == 4 ) ? calibrationValue : etb_iFactor }
@@ -417,7 +449,7 @@ enable2ndByteCanID = false
 
      requiresPowerCycle = etb_use_two_wires
      requiresPowerCycle = etbFreq
-     
+
      requiresPowerCycle = idle_solenoidFrequency
      requiresPowerCycle = boostPwmFrequency
      requiresPowerCycle = alternatorPwmFrequency
@@ -425,7 +457,7 @@ enable2ndByteCanID = false
      requiresPowerCycle = auxPidFrequency2
      requiresPowerCycle = auxPidFrequency3
      requiresPowerCycle = auxPidFrequency4
-     
+
      requiresPowerCycle = fsioOutputPins1
      requiresPowerCycle = fsioOutputPins2
      requiresPowerCycle = fsioOutputPins3
@@ -442,7 +474,7 @@ enable2ndByteCanID = false
      requiresPowerCycle = fsioOutputPins14
      requiresPowerCycle = fsioOutputPins15
      requiresPowerCycle = fsioOutputPins16
-     
+
      requiresPowerCycle = fsioFrequency1
      requiresPowerCycle = fsioFrequency2
      requiresPowerCycle = fsioFrequency3
@@ -459,13 +491,18 @@ enable2ndByteCanID = false
      requiresPowerCycle = fsioFrequency14
      requiresPowerCycle = fsioFrequency15
      requiresPowerCycle = fsioFrequency16
-     
+
      requiresPowerCycle = fsioAdc1
      requiresPowerCycle = fsioAdc2
      requiresPowerCycle = fsioAdc3
      requiresPowerCycle = fsioAdc4
-     
+
      readOnly = warning_message
+
+	defaultValue = gearCountArray, -1 0 1 2 3 4 5 6 7 8
+	readOnly = gearCountArray
+	defaultValue = solenoidCountArray, 1 2 3 4 5 6 7 8
+	readOnly = solenoidCountArray
 
 
 [CurveEditor]
@@ -526,8 +563,8 @@ enable2ndByteCanID = false
 
 	curve = dwellCorrection, "Dwell time RPM based"
       columnLabel = "RPM", "Dwell"
-      xAxis       =  0, 8000, 10
-      yAxis       =  0,  30, 10
+      xAxis       =  0, 8000, 9
+      yAxis       =  0,  8, 9
       xBins       = sparkDwellRpmBins, RPMValue
       yBins       = sparkDwellValues
       gauge       = RPMGauge
@@ -548,13 +585,12 @@ enable2ndByteCanID = false
       yBins       = map_samplingWindow
 	  gauge       = MAPGauge
 
-   curve = injectorsDeadTime, "Injector Dead Time by VBatt"
+   curve = injectorsDeadTime, "Injector dead time"
       columnLabel = "Voltage", "Dead Time"
-      xAxis       =  8, 21, 10
-      yAxis       = -3,  3, 10
+      xAxis       =  8, 16, 9
+      yAxis       = 0, 2, 5
       xBins       = injector_battLagCorrBins, VBatt
       yBins       = injector_battLagCorr
-      gauge       = VBattGauge
       
    curve = mafDecodingCurve, "MAF sensor"
       columnLabel = "Voltage", "kg/hour"
@@ -566,7 +602,7 @@ enable2ndByteCanID = false
 
    curve = iatFuelCorrCurve, "Intake air temperature fuel Multiplier"
       columnLabel = "Coolant", "Multiplier"
-      xAxis       =  -40, 120, 10
+      xAxis       =  -40, 120, 9
       yAxis       =  0,  2, 11
       xBins       = iatFuelCorrBins, intake
       yBins       = iatFuelCorr
@@ -574,15 +610,15 @@ enable2ndByteCanID = false
 	
 	curve = cltTimingCorrCurve, "Warmup timing correction"
       columnLabel = "Coolant", "Extra"
-      xAxis       =  -40, 120, 10
-      yAxis       =  0,  50, 10
+      xAxis       =  -40, 120, 9
+      yAxis       =  0,  20, 9
       xBins       = cltTimingBins, coolant
       yBins       = cltTimingExtra
       gauge       = CLTGauge
 
 	curve = cltFuelCorrCurve, "Warmup fuel manual Multiplier"
       columnLabel = "Coolant", "Multiplier"
-      xAxis       =  -40, 100, 10
+      xAxis       =  -40, 120, 9
       yAxis       =  0,  3, 10
       xBins       = cltFuelCorrBins, coolant
       yBins       = cltFuelCorr
@@ -590,7 +626,7 @@ enable2ndByteCanID = false
 
 	curve = crankingCltCurve, "Cranking Coolant Temperature Multiplier"
       columnLabel = "Coolant", "Multiplier"
-      xAxis       =  -40, 100, 10
+      xAxis       =  -40, 120, 9
       yAxis       =  0,  3, 10
       xBins       = crankingFuelBins, coolant
       yBins       = crankingFuelCoef
@@ -606,7 +642,7 @@ enable2ndByteCanID = false
 
 	curve = crankingTpsCurve, "Cranking TPS Multiplier"
       columnLabel = "TPS", "Multiplier"
-      xAxis       =  0, 100, 10
+      xAxis       =  0, 100, 11
       yAxis       =  0,  3, 10
       xBins       = crankingTpsBins, TPSValue
       yBins       = crankingTpsCoef
@@ -614,8 +650,8 @@ enable2ndByteCanID = false
 
 	curve = crankingDurationCurve, "Cranking Duration Multiplier"
       columnLabel = "Engine Cycle", "Multiplier"
-      xAxis       =  0, 1000, 10
-      yAxis       =  0,  3, 10
+      xAxis       =  0, 50, 11
+      yAxis       =  0,  5, 6
       xBins       = crankingCycleBins
       yBins       = crankingCycleCoef
 
@@ -630,7 +666,7 @@ enable2ndByteCanID = false
 
 	curve = iacCoastingCurve, "Coasting IAC Position for Auto-Idle"
       columnLabel = "Coolant", "Multiplier"
-      xAxis       = -40, 120, 10
+      xAxis       = -40, 120, 9
       yAxis       =  0,  100, 10
       xBins       = iacCoastingBins, coolant
       yBins       = iacCoasting
@@ -638,7 +674,7 @@ enable2ndByteCanID = false
 
 	curve = cltCrankingCurve, "Cranking Idle Air multiplier"
       columnLabel = "Coolant", "Multiplier"
-      xAxis       = -40, 120, 10
+      xAxis       = -40, 120, 9
       yAxis       =  0,  3, 10
       xBins       = cltCrankingCorrBins, coolant
       yBins       = cltCrankingCorr
@@ -646,7 +682,7 @@ enable2ndByteCanID = false
 
 	curve = cltIdleRPMCurve, "Idle Target RPM"
       columnLabel = "Coolant", "RPM"
-      xAxis       = -40, 120, 10
+      xAxis       = -40, 120, 9
       yAxis       =  0, 8000, 10
       xBins       = cltIdleRpmBins, coolant
       yBins       = cltIdleRpm, RPMValue
@@ -701,22 +737,22 @@ enable2ndByteCanID = false
 
 ; move table into a panel? or find a way to add a link to https://rusefi.com//wiki/index.php?title=Manual:Software:TPSTPS
    table = tpsTpsAccelTbl,  tpsTpsAccelMap,  "TPS/TPS Acceleration Extra Fuel(ms)",   1
-   	topicHelp = "tpstpsHelp"
+	topicHelp = "tpstpsHelp"
       xBins       = tpsTpsAccelFromRpmBins,  TPSValue
       yBins       = tpsTpsAccelToRpmBins,  TPSValue
       zBins       = tpsTpsAccelTable
 
-       table = boostTableTbl,  boostMapOpen,  "Boost Open",   1
+       table = boostTableTbl,  boostMapOpen,  "Boost control duty cycle (open loop)",   1
       xBins       = boostRpmBins,  RPMValue
       yBins       = boostTpsBins,  TPSValue
       zBins       = boostTableOpenLoop
 
-	table = boostTable2Tbl,  boostMapClosed,  "Boost Closed",   1
+	table = boostTable2Tbl,  boostMapClosed,  "Boost control target",   1
       xBins       = boostRpmBins,  RPMValue
       yBins       = boostTpsBins,  TPSValue
       zBins       = boostTableClosedLoop
 
-    
+
       
    table = fsioTable1Tbl,  fsioTable1Map,  "FSIO Table #1",   1
       xBins       = fsioTable1RpmBins,  RPMValue
@@ -743,7 +779,7 @@ enable2ndByteCanID = false
       xBins       = baroCorrRpmBins,  RPMValue
       yBins       = baroCorrPressureBins,  baroPressure
       zBins       = baroCorrTable
-;      gridHeight  = 2.0
+ ;      gridHeight  = 2.0
       gridOrient  = 250,   0, 340 ; Space 123 rotation of grid in degrees.
       upDownLabel = "(RICHER)", "(LEANER)"
 
@@ -768,7 +804,7 @@ enable2ndByteCanID = false
    table = veTableTbl,  veTableMap,  "VE Table",   1
       ;       constant, variable
       xBins       = veRpmBins,  RPMValue
-      yBins       = veLoadBins,  fuelingLoad
+      yBins       = veLoadBins, veTableYAxis
       zBins       = veTable
 ;      gridHeight  = 2.0
       gridOrient  = 250,   0, 340 ; Space 123 rotation of grid in degrees.
@@ -776,7 +812,7 @@ enable2ndByteCanID = false
 
 
    table = injPhaseTableTbl,  injPhaseTableMap,  "Injection Phase",   1
-   		topicHelp = "fuelHelp"
+		topicHelp = "fuelHelp"
       ;       constant, variable
       xBins       = injPhaseRpmBins,  RPMValue
       yBins       = injPhaseLoadBins,  fuelingLoad
@@ -798,7 +834,7 @@ enable2ndByteCanID = false
    table = afrTableTbl,  afrTableMap,  "Target AFR Table",   1
       ;       constant, variable
       xBins       = afrRpmBins,  RPMValue
-      yBins       = afrLoadBins,  fuelingLoad
+      yBins       = afrLoadBins, afrTableYAxis
       zBins       = afrTable
 ;      gridHeight  = 2.0
       gridOrient  = 250,   0, 340 ; Space 123 rotation of grid in degrees.
@@ -837,6 +873,12 @@ enable2ndByteCanID = false
 		yBins = gppwm4_loadBins, gppwm4_load
 		zBins = gppwm4_table
 
+	table = tcuSolenoidTableTbl,  tcuSolenoidTableMap,  "Solenoids Active By Gear",   1
+		yBins		= gearCountArray, tcuCurrentGear
+		xBins		= solenoidCountArray, tcuCurrentGear
+		zBins		= tcuSolenoidTable
+		xyLabels	= "Solenoid", "Gear"
+
 [GaugeConfigurations]
 
 gaugeCategory = Sensors - Extra 2
@@ -849,10 +891,11 @@ gaugeCategory = Sensors - Extra 2
    egt7Gauge         = egt7, "EGT#7", "C", 0, 2000
    egt8Gauge         = egt8, "EGT#8", "C", 0, 2000
    rpmAccelerationGa = rpmAcceleration,     "rpm delta",        "dRpm",        0,      3,       0,      1,       3,     4,   1,   1
-   knockCountGauge   = knockCount,"Knock count",           "count",        0,    120,      10,     10,     100,   100,   1,   1
    knockLevelGauge   = knockLevel,"Knock level",           "volts",        0,      7,      10,     10,     100,   100,   1,   2
    fuelTankLevelGauge   = fuelTankLevel,"Fuel level",           "x",        0,      7,      10,     10,     100,   100,   1,   2
    speedToRpmRatioGauge = speedToRpmRatio, "speed2rpm", "",     0,   100,     0,    0,    100,  100,   4,   4
+   wastegatePosGauge = wastegatePositionSensor, "Wastegate position sensor",  "%",        0,    100,       0,      0,     100,   100,   1,   1
+   idlePosSensGauge  = idlePositionSensor,      "Idle position sensor",       "%",        0,    100,       0,      0,     100,   100,   1,   1
 
 gaugeCategory = ECU Status
    warningCounterGauge = warningCounter, "Warning count", "",     0,   100,     0,    0,    100,  100,   0,   0
@@ -868,6 +911,7 @@ gaugeCategory = ECU Status
    recentErrorCode7Gauge = recentErrorCode7, "Error#8", "",     0,  18000,     0,    0,   18000, 18000,   0,   0
    firmwareVersionGauge  = firmwareVersion , "ECU Software Version", "%",     0,   100,     0,    0,    100,  100,   0,   0
    timeSecondsGauge     =   seconds, "Uptime", "sec",     0,   100,     0,    0,    100,  100,   0,   0
+   tuneCrc16Gauge = tuneCrc16, "tune CRC16", "",     0,  64000,     0,    0,   64000, 64000,   0,   0
 
 
 gaugeCategory = Debug  
@@ -955,6 +999,23 @@ gaugeCategory = Sensors - Raw
    rawCltGauge          = rawClt        , "Raw CLT",           "volts", 0, 5, 0, 0, 5, 5, 3, 0
    rawIatGauge          = rawIat        , "Raw IAT",           "volts", 0, 5, 0, 0, 5, 5, 3, 0
    rawOilPressureGauge  = rawOilPressure, "Raw Oil Pressure",  "volts", 0, 5, 0, 0, 5, 5, 3, 0
+   rawPpsSecondaryGauge = rawPpsSecondary,"Raw Pedal Secondary","volts", 0, 5, 0, 0, 5, 5, 3, 0
+   rawIdlePositionSensorGauge  = rawIdlePositionSensor, "Raw Idle Position",  "volts", 0, 5, 0, 0, 5, 5, 3, 0
+   rawWastegatePositionGauge = rawWastegatePosition,"Raw Wastegate Position","volts", 0, 5, 0, 0, 5, 5, 3, 0
+
+gaugeCategory = Transmission
+   desiredGearGauge = tcuDesiredGear, "Desired", "gear", -1, 10, -1, -1, 10, 10, 0, 0
+   currentGearGauge = tcuCurrentGear, "Current", "gear", -1, 10, -1, -1, 10, 10, 0, 0
+
+gaugeCategory = Knock
+   knock1Gauge = knock1, "Knock Cyl 1", "dBv", -60, 10, -60, -60, 10, 10, 0, 0
+   knock2Gauge = knock2, "Knock Cyl 2", "dBv", -60, 10, -60, -60, 10, 10, 0, 0
+   knock3Gauge = knock3, "Knock Cyl 3", "dBv", -60, 10, -60, -60, 10, 10, 0, 0
+   knock4Gauge = knock4, "Knock Cyl 4", "dBv", -60, 10, -60, -60, 10, 10, 0, 0
+   knock5Gauge = knock5, "Knock Cyl 5", "dBv", -60, 10, -60, -60, 10, 10, 0, 0
+   knock6Gauge = knock6, "Knock Cyl 6", "dBv", -60, 10, -60, -60, 10, 10, 0, 0
+   knock7Gauge = knock7, "Knock Cyl 7", "dBv", -60, 10, -60, -60, 10, 10, 0, 0
+   knock8Gauge = knock8, "Knock Cyl 8", "dBv", -60, 10, -60, -60, 10, 10, 0, 0
 
 [WueAnalyze]
     
@@ -1013,14 +1074,14 @@ gaugeCategory = Sensors - Raw
    indicator = { sd_status & 8}, "SD Log", "SD Log",           white, black, green, black
    indicator = { sd_status & 16}, "SD Err", "SD Err",           white, black, red, black
     
-	; this is required so that the "config error" feature works in TS 
+	; this is required so that the "config error" feature works in TS
 	; don't change this line - TS is looking for an indicator with particular text/styling
 	; you don't even have to show it by default
 	indicator = { ind_hasFatalError }, "Config Error", "Config Error", white, black, red,   black
 
 	; minor info	
     indicator = { ind_fan}, "fan off",   "fan on",   white, black, green,   black
-    indicator = { isCylinderCleanupActivated}, "no cyl cleanup",   "cyl cleanup",   white, black, yellow,   black    
+    indicator = { isCylinderCleanupActivated}, "no cyl cleanup",   "cyl cleanup",   white, black, yellow,   black
     indicator = { needBurn }, "config ok",  "unsaved changes",   white, black, yellow,   black
     indicator = { hasSdCard}, "no SD",   "with SD",   white, black, green,   black
     indicator = { ind_fuel_pump}, "pump off",   "pump on",   white, black, green,   black
@@ -1028,7 +1089,7 @@ gaugeCategory = Sensors - Raw
     indicator = { clutchDownState }, "clutch",   "cltch Down",   white, black, yellow,   black
     indicator = { brakePedalIndicator }, "brake",   "brake down",   white, black, red,   black
     indicator = { acSwitchIndicator }, "AC off",   "AC on",   white, black, blue,   white
-    
+
     ; error codes
     indicator = { ind_tps_error}, "tps",   "tps error",   white, black, red,   black
     indicator = { ind_clt_error}, "clt",   "clt error",   white, black, red,   black
@@ -1045,7 +1106,7 @@ gaugeCategory = Sensors - Raw
 
 [KeyActions]
 	showPanel = spi,  spiFunction
-	showPanel = con,  connection 
+	showPanel = con,  connection
 
 [Datalog]
    ;       Channel          Label          Type    Format
@@ -1066,7 +1127,6 @@ gaugeCategory = Sensors - Raw
    entry = ignitionLoad,    @@GAUGE_NAME_IGNITION_LOAD@@, float, "%.1f"
    entry = ignitionAdvance,	@@GAUGE_NAME_TIMING_ADVANCE@@,	   float,  "%.2f"
    entry = knockLevel,	    @@GAUGE_NAME_KNOCK_LEVEL@@, 	   float,  "%.2f"
-   entry = knockCount,		@@GAUGE_NAME_KNOCK_COUNTER@@,	   int,    "%d"
    entry = vehicleSpeedKph,	@@GAUGE_NAME_VVS@@,	   float,  "%.2f"
    entry = speedToRpmRatio, "s2rpm",	   float,  "%.3f"
    entry = rpmAcceleration, "dRPM",        float,  "%.3f"
@@ -1159,7 +1219,19 @@ gaugeCategory = Sensors - Raw
    entry = etb1DutyCycle,  @@GAUGE_NAME_ETB_DUTY@@, float, "%.3f"
    entry = etbTarget,      "ETB Target", float, "%.3f"
    
-   
+; Transmission
+   entry = tcuDesiredGear,  "Desired Gear", int, "%d"
+   entry = tcuCurrentGear,  "Current Gear", int, "%d"
+
+   entry = knock1, "Knock 1", int, "%d"
+   entry = knock2, "Knock 2", int, "%d"
+   entry = knock3, "Knock 3", int, "%d"
+   entry = knock4, "Knock 4", int, "%d"
+   entry = knock5, "Knock 5", int, "%d"
+   entry = knock6, "Knock 6", int, "%d"
+   entry = knock7, "Knock 7", int, "%d"
+   entry = knock8, "Knock 8", int, "%d"
+
 ;     tpsADC          = U16,    "ADC",
 ;     alignmet        = U16,    "al",
 ;     atmPres         = F32,    "pres",
@@ -1194,30 +1266,30 @@ menuDialog = main
 
 	menu = "Fuel"
 		# basic
-		subMenu = injectionSettings,		"Injection settings"
-		subMenu = injectionDeadTime,		"Injector dead time", 0, {isInjectionEnabled == 1}
+		subMenu = injectorConfig,			"Injection configuration"
+		subMenu = injectionSettings,		"Injection hardware", 0, {isInjectionEnabled == 1}
 		subMenu = std_separator
 
-		# Targets & closed loop
+		# Air mass model
+		subMenu = veTableDialog,			"VE", 0, {isInjectionEnabled == 1}
+		subMenu = tChargeSettings,			"Charge temperature estimation", 0, {isInjectionEnabled == 1}
+		subMenu = baroCorrTbl,				"Barometric pressure correction", 0, {isInjectionEnabled == 1 && fuelAlgorithm == LM_SPEED_DENSITY}
+		subMenu = std_separator
+
+		# Fuel model
 		subMenu = afrTableTbl,				"Target AFR", 0, {isInjectionEnabled == 1}
+		subMenu = cltFuelCorrCurve,			"CLT multiplier", 0, {isInjectionEnabled == 1}
+		subMenu = iatFuelCorrCurve,			"IAT multiplier", 0, {isInjectionEnabled == 1}
 		subMenu = fuelClosedLoopDialog, 	"Closed loop fuel correction", 0, {isInjectionEnabled == 1}
 		subMenu = coastingFuelCutControl, 	"Deceleration fuel cutoff (DFCO)", 0, {isInjectionEnabled == 1}
 		subMenu = std_separator
 
-		# Fuel table/VE
-		subMenu = veTableDialog,			"VE", 0, {isInjectionEnabled == 1}
+		# Injector model
 		subMenu = injPhaseTableTbl,         "Injection phase", 0, {isInjectionEnabled == 1}
 		subMenu = std_separator
 
-		# Corrections
-		subMenu = cltFuelCorrCurve,			"CLT multiplier", 0, {isInjectionEnabled == 1}
-		subMenu = iatFuelCorrCurve,			"IAT multiplier", 0, {isInjectionEnabled == 1}
-		subMenu = baroCorrTbl,				"Baro multiplier", 0, {isInjectionEnabled == 1 && fuelAlgorithm == LM_SPEED_DENSITY}
-		subMenu = tChargeSettings,			"tCharge settings", 0, {isInjectionEnabled == 1}
-		subMenu = std_separator
-
 		# Accel enrichment
-		subMenu = AccelEnrich,				"Accel/decel enrichment/enleanment", 0, {isInjectionEnabled == 1}
+		subMenu = AccelEnrich,				"Acceleration enrichment", 0, {isInjectionEnabled == 1}
 		subMenu = tpsTpsAccelTbl, 			"TPS/TPS acceleration extra fuel", 0, {isInjectionEnabled == 1}
 		subMenu = mapAccelTaper,			"Engine load AE taper", 0, {isInjectionEnabled == 1}
 
@@ -1267,7 +1339,7 @@ menuDialog = main
 		subMenu = cltIdleCurve,				"CLT multiplier"
 		subMenu = iacCoastingCurve,			"Coasting IAC Position for Auto-Idle", 0, {useIacTableForCoasting == 1}
 
-	menu = "&Advanced" 
+	menu = "&Advanced"
         subMenu = boostDialog,          "Boost Control"
 		subMenu = boostPidDialog,        "Closed Loop Boost",    { boostType == 1 }
 
@@ -1290,6 +1362,10 @@ menuDialog = main
 		subMenu = fsioCurve2,			    "FSIO Curve #2"
 		subMenu = fsioCurve3,			    "FSIO Curve #3"
 		subMenu = fsioCurve4,			    "FSIO Curve #4"
+
+		subMenu = std_separator
+		subMenu = tcuControls,			"Transmission Settings"
+		subMenu = tcuSolenoidTableTbl,		"TCU Solenoids"
 
 	menu = "&Sensors"
 		# Base analog input settings
@@ -1330,6 +1406,7 @@ menuDialog = main
 		subMenu = speedSensor,				"Vehicle speed sensor"
 		subMenu = oilPressureSensor,		"Oil pressure"
 		subMenu = egtInputs,				"EGT" @@if_ts_show_egt
+		subMenu = wastegateIdlePos,			"Wastegate and idle position sensors"
 
 	menu = "&Controller"
 		subMenu = ecuStimulator,			"ECU stimulator"
@@ -1341,14 +1418,14 @@ menuDialog = main
 		subMenu = lcdScreen,				"LCD" @@if_ts_show_lcd
 		subMenu = joystickPanel,			"Joystick" @@if_ts_show_joystick
 		subMenu = spiFunction,				"SPI"@@if_ts_show_spi
-		subMenu = monitoringSettings,		"rusEfi console"
+		subMenu = monitoringSettings,		"rusEFI console"
 		subMenu = std_separator
 		
 		subMenu = canBusMain,				"CAN Bus Communication"
 		subMenu = sdCard,					"SD Card Logger" @@if_ts_show_sd_card
 		subMenu = connection,            	"Connection"
 		subMenu = tle8888,					"TLE8888"
-		
+
 		subMenu = allPins1,					"Full pinout 1/3" @@if_ts_show_full_pinout
 		subMenu = allPins2,					"Full pinout 2/3" @@if_ts_show_full_pinout
 		subMenu = allPins3_1_and_2  		"Full pinout 3/3" @@if_ts_show_full_pinout
@@ -1362,12 +1439,13 @@ menuDialog = main
 		subMenu = std_separator
 		
 		subMenu = hipFunction,				"HIP9011 settings (knock sensor) (alpha version)" @@if_ts_show_hip9011
+		subMenu = softwareKnock,			"Software Knock" @@if_ts_show_software_knock
 		subMenu = std_separator
 
 		subMenu = etbDialog,				"Electronic throttle body (beta version)" @@if_ts_show_etb
 		subMenu = etbTpsBiasCurve,			"Electronic throttle body bias curve" @@if_ts_show_etb
 		subMenu = pedalToTpsTbl,			"Electronic Pedal Map" @@if_ts_show_etb
-		subMenu = std_separator		
+		subMenu = std_separator
 #        subMenu = smLaunchControl,			"Launch Control"
 #		subMenu = std_separator
 #		subMenu = smRollingLaunch,			"Rolling Launch"
@@ -1377,7 +1455,7 @@ menuDialog = main
 
 
       menu = "Help"
-         subMenu = helpGeneral,     "rusEfi Info"
+         subMenu = helpGeneral,     "rusEFI Info"
 
 
 [ControllerCommands]
@@ -1410,10 +1488,22 @@ cmd_test_spk13 = "@@TS_IO_TEST_COMMAND_char@@\x00\x12\x00\x0d"
 cmd_test_spk14 = "@@TS_IO_TEST_COMMAND_char@@\x00\x12\x00\x0e"
 cmd_test_spk15 = "@@TS_IO_TEST_COMMAND_char@@\x00\x12\x00\x0f"
 cmd_test_spk16 = "@@TS_IO_TEST_COMMAND_char@@\x00\x12\x00\x10"
+
+cmd_test_fsio1  = "@@TS_IO_TEST_COMMAND_char@@@@CMD_TS_FSIO_CATEGORY_16_hex@@\x00\x01"
+cmd_test_fsio2  = "@@TS_IO_TEST_COMMAND_char@@@@CMD_TS_FSIO_CATEGORY_16_hex@@\x00\x02"
+cmd_test_fsio3  = "@@TS_IO_TEST_COMMAND_char@@@@CMD_TS_FSIO_CATEGORY@@\x00\x03"
+cmd_test_fsio4  = "@@TS_IO_TEST_COMMAND_char@@@@CMD_TS_FSIO_CATEGORY@@\x00\x04"
+cmd_test_fsio5  = "@@TS_IO_TEST_COMMAND_char@@@@CMD_TS_FSIO_CATEGORY@@\x00\x05"
+cmd_test_fsio6  = "@@TS_IO_TEST_COMMAND_char@@@@CMD_TS_FSIO_CATEGORY@@\x00\x06"
+cmd_test_fsio7  = "@@TS_IO_TEST_COMMAND_char@@@@CMD_TS_FSIO_CATEGORY@@\x00\x07"
+cmd_test_fsio8  = "@@TS_IO_TEST_COMMAND_char@@@@CMD_TS_FSIO_CATEGORY@@\x00\x08"
+cmd_test_fsio9  = "@@TS_IO_TEST_COMMAND_char@@@@CMD_TS_FSIO_CATEGORY@@\x00\x09"
+cmd_test_fsio10 = "@@TS_IO_TEST_COMMAND_char@@@@CMD_TS_FSIO_CATEGORY@@\x00\x0a"
+cmd_test_fsio11 = "@@TS_IO_TEST_COMMAND_char@@@@CMD_TS_FSIO_CATEGORY@@\x00\x0b"
+
 		
-		
-cmd_test_inj1  = "@@TS_IO_TEST_COMMAND_char@@\x00\x13\x00\x01"
-cmd_test_inj2  = "@@TS_IO_TEST_COMMAND_char@@\x00\x13\x00\x02"
+cmd_test_inj1  = "@@TS_IO_TEST_COMMAND_char@@@@CMD_TS_INJECTOR_CATEGORY_16_hex@@\x00\x01"
+cmd_test_inj2  = "@@TS_IO_TEST_COMMAND_char@@@@CMD_TS_INJECTOR_CATEGORY_16_hex@@\x00\x02"
 cmd_test_inj3  = "@@TS_IO_TEST_COMMAND_char@@\x00\x13\x00\x03"
 cmd_test_inj4  = "@@TS_IO_TEST_COMMAND_char@@\x00\x13\x00\x04"
 cmd_test_inj5  = "@@TS_IO_TEST_COMMAND_char@@\x00\x13\x00\x05"
@@ -1424,12 +1514,18 @@ cmd_test_inj9  = "@@TS_IO_TEST_COMMAND_char@@\x00\x13\x00\x09"
 cmd_test_inj10 = "@@TS_IO_TEST_COMMAND_char@@\x00\x13\x00\x0a"
 cmd_test_inj11 = "@@TS_IO_TEST_COMMAND_char@@\x00\x13\x00\x0b"
 cmd_test_inj12 = "@@TS_IO_TEST_COMMAND_char@@\x00\x13\x00\x0c"
-cmd_test_inj13 = "@@TS_IO_TEST_COMMAND_char@@\x00\x13\x00\x0d"
-cmd_test_inj14 = "@@TS_IO_TEST_COMMAND_char@@\x00\x13\x00\x0e"
-cmd_test_inj15 = "@@TS_IO_TEST_COMMAND_char@@\x00\x13\x00\x0f"
-cmd_test_inj16 = "@@TS_IO_TEST_COMMAND_char@@\x00\x13\x00\x10"
 
-cmd_test_fuel_pump           = "@@TS_IO_TEST_COMMAND_char@@\x00\x14\x00\x01"
+
+cmd_test_main_relay     	 	= "@@TS_IO_TEST_COMMAND_char@@@@CMD_TS_BENCH_CATEGORY_16_hex@@@@CMD_TS_BENCH_MAIN_RELAY_16_hex@@"
+cmd_test_fuel_pump           	= "@@TS_IO_TEST_COMMAND_char@@@@CMD_TS_BENCH_CATEGORY_16_hex@@@@CMD_TS_BENCH_FUEL_PUMP_16_hex@@"
+cmd_test_starter_relay     	 	= "@@TS_IO_TEST_COMMAND_char@@@@CMD_TS_BENCH_CATEGORY_16_hex@@@@CMD_TS_BENCH_STARTER_ENABLE_RELAY_16_hex@@"
+cmd_test_starter_disable_relay 	= "@@TS_IO_TEST_COMMAND_char@@@@CMD_TS_BENCH_CATEGORY_16_hex@@@@CMD_TS_BENCH_STARTER_DISABLE_RELAY_16_hex@@"
+cmd_test_ac_relay     		 	= "@@TS_IO_TEST_COMMAND_char@@@@CMD_TS_BENCH_CATEGORY_16_hex@@@@CMD_TS_BENCH_AC_COMPRESSOR_RELAY_16_hex@@"
+cmd_test_radiator_fan        	= "@@TS_IO_TEST_COMMAND_char@@@@CMD_TS_BENCH_CATEGORY_16_hex@@@@CMD_TS_BENCH_FAN_RELAY_16_hex@@"
+cmd_test_check_engine_light  	= "@@TS_IO_TEST_COMMAND_char@@@@CMD_TS_BENCH_CATEGORY_16_hex@@@@CMD_TS_BENCH_CHECK_ENGINE_LIGHT_16_hex@@"
+cmd_test_idle_valve          	= "@@TS_IO_TEST_COMMAND_char@@@@CMD_TS_BENCH_CATEGORY_16_hex@@@@CMD_TS_BENCH_IDLE_VALVE_16_hex@@"
+
+
 cmd_calibrate_tps_1_closed   = "@@TS_IO_TEST_COMMAND_char@@\x00\x14\x00\x02"
 cmd_calibrate_tps_1_wot      = "@@TS_IO_TEST_COMMAND_char@@\x00\x14\x00\x03"
 cmd_calibrate_tps_2_closed   = "@@TS_IO_TEST_COMMAND_char@@\x00\x14\x00\x04"
@@ -1437,18 +1533,14 @@ cmd_calibrate_tps_2_wot      = "@@TS_IO_TEST_COMMAND_char@@\x00\x14\x00\x05"
 cmd_calibrate_pedal_up       = "@@TS_IO_TEST_COMMAND_char@@\x00\x14\x00\x06"
 cmd_calibrate_pedal_down     = "@@TS_IO_TEST_COMMAND_char@@\x00\x14\x00\x07"
 cmd_tle8888_init     		 = "@@TS_IO_TEST_COMMAND_char@@\x00\x14\x00\x08"
-cmd_test_ac_relay     		 = "@@TS_IO_TEST_COMMAND_char@@\x00\x14\x00\x09"
 cmd_write_config     		 = "@@TS_IO_TEST_COMMAND_char@@\x00\x14\x00\x0A"
-cmd_test_starter_relay     	 = "@@TS_IO_TEST_COMMAND_char@@\x00\x14\x00\x0B"
 cmd_etb_autotune             = "@@TS_IO_TEST_COMMAND_char@@\x00\x14\x00\x0C"
 cmd_enable_self_stim         = "@@TS_IO_TEST_COMMAND_char@@\x00\x14\x00\x0D"
 cmb_etb_auto_calibrate       = "@@TS_IO_TEST_COMMAND_char@@\x00\x14\x00\x0E"
+cmb_etb_auto_calibrate_2     = "@@TS_IO_TEST_COMMAND_char@@\x00\x14\x00\x11"
 cmd_disable_self_stim        = "@@TS_IO_TEST_COMMAND_char@@\x00\x14\x00\x0F"
 cmd_etb_autotune_stop        = "@@TS_IO_TEST_COMMAND_char@@\x00\x14\x00\x10"
 
-cmd_test_radiator_fan        = "@@TS_IO_TEST_COMMAND_char@@\x00\x15\x00\x01"
-cmd_test_check_engine_light  = "@@TS_IO_TEST_COMMAND_char@@\x00\x16\x00\x01"
-cmd_test_idle_valve          = "@@TS_IO_TEST_COMMAND_char@@\x00\x17\x00\x01"
 cmd_cj125_calibrate          = "@@TS_IO_TEST_COMMAND_char@@\x00\x18\x00\x00"
 cmd_call_from_pit            = "@@TS_IO_TEST_COMMAND_char@@\x00\x20\x34\x56"
 cmd_stop_engine              = "@@TS_IO_TEST_COMMAND_char@@\x00\x79\x00\x00"
@@ -1463,6 +1555,10 @@ cmd_dfu         			 = "@@TS_IO_TEST_COMMAND_char@@\x00\xba\x00\x00"
 
 ; MRE_MIATA_NB2_MAP = 11
 cmd_set_engine_type_microRusEFI_Miata_NB2_MAP		= "@@TS_IO_TEST_COMMAND_char@@\x00\x30@@ET_MRE_MIATA_NB2_MAP_16_hex@@"
+
+cmd_set_engine_type_microRusEFI_VW_B6		= "@@TS_IO_TEST_COMMAND_char@@\x00\x30@@ET_VW_B6_16_hex@@"
+cmd_set_engine_type_microRusEFI_MRE_BODY_CONTROL		= "@@TS_IO_TEST_COMMAND_char@@\x00\x30@@ET_MRE_BODY_CONTROL_16_hex@@"
+
 
 ; MRE_MIATA_NA6 12
 cmd_set_engine_type_microRusEFI_Miata_NA6_VAF			= "@@TS_IO_TEST_COMMAND_char@@\x00\x30@@ET_MRE_MIATA_NA6_VAF_16_hex@@"
@@ -1521,20 +1617,15 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 		field = "Mode",							injectionMode, {isInjectionEnabled == 1}
 		field = "#Batch injection with individual wiring"
 		field = "Two wire batch emulation",				twoWireBatchInjection, {isInjectionEnabled == 1 && injectionMode == 2}
-		field = "Use TPS instead of Load for VE table",	useTPSBasedVeTable, {isInjectionEnabled == 1 && fuelAlgorithm == LM_SPEED_DENSITY}
-		field = "#Enabled for TPS-Based 'VE Autotune Mode' in Project Settings"
-		field = "Use TPS instead of Load for VE table",	useTPSBasedVeTable, {0}
+		field = "Override VE table load axis",			veOverrideMode, { isInjectionEnabled }
+		field = "Override AFR table load axis",			afrOverrideMode, { isInjectionEnabled }
 
 	dialog = ignitionOutputs, "Ignition Outputs"
 		field = "Ignition Pin Mode",         	        ignitionPinMode, {isIgnitionEnabled == 1}
 		field = "Ignition Pin 1",                       ignitionPins1, {isIgnitionEnabled == 1}
 		; see rusefi_config.txt comment next to 'ignitionPin2logic' which says
 		; this section is auto-generated by FiringOrderTSLogic.java
-@@FIRINGORDER@@		
-		field = "This is useful to have tachometer working"
-		field = "   while converting from distributor"
-		field = "Dizzy out Pin",         	    	    dizzySparkOutputPin, {isIgnitionEnabled == 1}
-		field = "Dizzy out Pin Mode",                   dizzySparkOutputPinMode, {isIgnitionEnabled == 1}
+@@FIRINGORDER@@
 
 	dialog = ignitionBasic, ""
 		field = "Enabled",						isIgnitionEnabled
@@ -1587,7 +1678,7 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 	    field = "VVT mode",								vvtMode, {trigger_type != 80}
 	    field = "VVT use rise front",					vvtCamSensorUseRise, {trigger_type != 80}
 	    field = "VVT position display offset",			vvtOffset
-	    field = "print verbose sync details to console",verboseTriggerSynchDetails
+	    field = "print verbose VVT sync details to console",verboseVVTDecoding
 	    field = "Do not print messages in case of sync error",  silentTriggerError
 	    field = "Enable noise filtering",				useNoiselessTriggerDecoder, {trigger_type == @@TRIGGER_TYPE_60_2@@ || trigger_type == @@TRIGGER_TYPE_36_1@@}
 
@@ -1599,22 +1690,23 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 		field = "Secondary channel", 					triggerInputPins2,            { trigger_type != 0 && trigger_type != 8 && trigger_type != 9 && trigger_type != 18 && trigger_type != 20}
 		field = "Invert Secondary",						invertSecondaryTriggerSignal, { trigger_type != 0 && trigger_type != 8 && trigger_type != 9 && trigger_type != 18 && trigger_type != 20}
 		field = "Cam Sync/VVT input",					camInputs1
+		field = "Invert Cam/VVT",                       invertCamVVTSignal
 		panel = triggerInputComparator @@if_ts_show_trigger_comparator
 
-	
+
 	dialog = triggerConfiguration
-		panel = triggerConfiguration_settings,	North
-		panel = triggerInputs,		South
+		panel = triggerConfiguration_settings,	North, { consumeObdSensors == 0 }
+		panel = triggerInputs,		South, { consumeObdSensors == 0 }
 
 ;			Engine->Injection Settings
 	dialog = injChars, "Injector Settings",	yAxis
 		field = "Injector Flow",			injector_flow, {isInjectionEnabled == 1}
 
+	dialog = fuelParams, "Fuel characteristics", yAxis
+		field = "Stoichiometric ratio",		stoichRatioPrimary, {isInjectionEnabled == 1}
+
 	dialog = injectorOutputSettings, "Injector Outputs",	yAxis
-		field = "!ECU reboot needed to apply these settings"
-		field = "injection Pin Mode",       			injectionPinMode, {isInjectionEnabled == 1}
-		field = "With batched injection without 'Two wire batch emulation'"
-		field = "   fill only first count / 2 values"
+		field = "Use only first half of pins for batch mode"
 		field = "Injection Pin 1",						injectionPins1, {isInjectionEnabled == 1}
 		field = "Injection Pin 2",						injectionPins2, {isInjectionEnabled == 1 && injectionMode != 3 && cylindersCount > 1}
 		field = "Injection Pin 3",						injectionPins3, {isInjectionEnabled == 1 && injectionMode != 3 && cylindersCount > 2}
@@ -1626,19 +1718,52 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 		field = "Injection Pin 9 ",						injectionPins9, {isInjectionEnabled == 1 && cylindersCount > 8}
 		field = "Injection Pin 10 ",	    			injectionPins10, {isInjectionEnabled == 1 && cylindersCount > 9}
 		field = "Injection Pin 11 ",					injectionPins11, {isInjectionEnabled == 1 && cylindersCount > 10}
-		field = "Injection Pin 12 ",					injectionPins12, {isInjectionEnabled == 1 && cylindersCount > 11}	
-	
-	dialog = injectionBasic, ""
+		field = "Injection Pin 12 ",					injectionPins12, {isInjectionEnabled == 1 && cylindersCount > 11}
+		field = ""
+		field = "injection Pin Mode",       			injectionPinMode, {isInjectionEnabled == 1}
+
+	dialog = testInjectors, "Injector Test"
+		commandButton = "Injector #1", cmd_test_inj1
+		commandButton = "Injector #2", cmd_test_inj2
+		commandButton = "Injector #3", cmd_test_inj3
+		commandButton = "Injector #4", cmd_test_inj4
+		commandButton = "Injector #5", cmd_test_inj5
+		commandButton = "Injector #6", cmd_test_inj6
+		commandButton = "Injector #7", cmd_test_inj7
+		commandButton = "Injector #8", cmd_test_inj8
+		commandButton = "Injector #9", cmd_test_inj9
+		commandButton = "Injector #10", cmd_test_inj10
+		commandButton = "Injector #11", cmd_test_inj11
+		commandButton = "Injector #12", cmd_test_inj12
+		commandButton = "FSIO#1",	cmd_test_fsio1
+		commandButton = "FSIO#2",	cmd_test_fsio2
+		commandButton = "FSIO#3",	cmd_test_fsio3
+		commandButton = "FSIO#4",	cmd_test_fsio4
+		commandButton = "FSIO#5",	cmd_test_fsio5
+		commandButton = "FSIO#6",	cmd_test_fsio6
+		commandButton = "FSIO#7",	cmd_test_fsio7
+		commandButton = "FSIO#8",	cmd_test_fsio8
+		commandButton = "FSIO#9",	cmd_test_fsio9
+		commandButton = "FSIO#10",	cmd_test_fsio10
+
+	dialog = injectionSettingsEast, "", yAxis
+		panel = testInjectors
+		field = ""
+
+	dialog = injectionSettingsWest, "", yAxis
+		panel = injectorOutputSettings
+		field = ""
+
+	dialog = injectionSettings, "", xAxis
+        panel = injectionSettingsWest
+		panel = injectionSettingsEast
+
+	dialog = injectorConfig, "", yAxis
 		topicHelp = "fuelHelp"
 		panel = baseInjection
 		panel = injChars
-
-	dialog = injectionSettings, "", xAxis
-        panel = injectionBasic
-        panel = injectorOutputSettings
-
-	dialog = injectionDeadTime,	"", yAxis
-		panel = injectorsDeadTime,		East
+		panel = fuelParams
+		panel = injectorsDeadTime
 
 	dialog = ignitionCylExtra, "Ignition Cylinder Extra Timing"
 		field = "Extra cyl #1",                       timing_offset_cylinder1
@@ -1715,6 +1840,7 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 		field = "Secondary sensor",				tps1_2AdcChannel
 		field = "Secondary min",				tps1SecondaryMin, {tps1_2AdcChannel != @@ADC_CHANNEL_NONE@@}
 		field = "Secondary max",				tps1SecondaryMax, {tps1_2AdcChannel != @@ADC_CHANNEL_NONE@@}
+		commandButton = "Auto Calibrate TPS 1", cmb_etb_auto_calibrate, {tps1_2AdcChannel != @@ADC_CHANNEL_NONE@@ && throttlePedalPositionAdcChannel != @@ADC_CHANNEL_NONE@@}
 
 	dialog = tpsNum2, "Throttle #2"
 		field = "Primary sensor",				tps2_1AdcChannel
@@ -1723,6 +1849,7 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 		field = "Secondary sensor",				tps2_2AdcChannel
 		field = "Secondary min",				tps2SecondaryMin, {tps2_2AdcChannel != @@ADC_CHANNEL_NONE@@}
 		field = "Secondary max",				tps2SecondaryMax, {tps2_2AdcChannel != @@ADC_CHANNEL_NONE@@}
+		commandButton = "Auto Calibrate TPS 2", cmb_etb_auto_calibrate_2, {tps2_2AdcChannel != @@ADC_CHANNEL_NONE@@ && throttlePedalPositionAdcChannel != @@ADC_CHANNEL_NONE@@}
 
 	dialog = tpsLimits, "TPS Limits"
 		field = "TPS minimum valid value",	tpsErrorDetectionTooLow, {tps1_1AdcChannel != @@ADC_CHANNEL_NONE@@}
@@ -1744,12 +1871,37 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 	dialog = pedalGauges
 		gauge = pedalPositionGauge
 		gauge = rawPpsPrimaryGauge
+		gauge = rawPpsSecondaryGauge
 
 	dialog = pedalSensor, "Accelerator pedal", border
 		panel = pedalSensorLeft, West
 		panel = pedalGauges, East
 
-    dialog = mc33Dialog, "GDI Dreams" 
+	dialog = wastegatePosConfig, "Wastegate position sensor"
+		field = "Input pin",							wastegatePositionSensor
+		field = "Min (fully closed, most boost)",		wastegatePositionMin
+		field = "Max (fully open, least boost)",		wastegatePositionMax
+
+	dialog = idlePosConfig, "Wastegate position sensor"
+		field = "Input pin",							idlePositionSensor
+		field = "Min (valve closed, low idle)",			idlePositionMin
+		field = "Max (valve open, high idle)",			idlePositionMax
+
+	dialog = wastegateIdlePosLeft, ""
+		panel = wastegatePosConfig
+		panel = idlePosConfig
+
+	dialog = wastegateIdlePosGauges, ""
+		gauge = rawWastegatePositionGauge, West
+		gauge = wastegatePosGauge, East
+		gauge = rawIdlePositionSensorGauge
+		gauge = idlePosSensGauge
+
+	dialog = wastegateIdlePos, "", border
+		panel = wastegateIdlePosLeft, West
+		panel = wastegateIdlePosGauges, East
+
+    dialog = mc33Dialog, "Low-Z injector control (MC33816)"
     	field = "MC33816 cs",							mc33816_cs
 		field = "MC33816 rstb",							mc33816_rstb
 		field = "MC33816 flag0",						mc33816_flag0
@@ -1768,7 +1920,7 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 		field = "Hold current target",					mc33_i_hold
 		field = "mc33_t_hold_off ?????",				mc33_t_hold_off
 		field = "Maximum injection duration",			mc33_t_hold_tot
-    
+
 
 ;			Sensor Inputs
 	dialog = otherSensorInputs,					"Other Sensor Inputs"
@@ -1779,7 +1931,8 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 		field = "Clutch up inverted",					clutchUpPinMode
 		field = "Throttle Up switch",					throttlePedalUpPin
 		field = "Brake pedal switch",					brakePedalPin
-		field = "A/C switch",							acSwitchAdc
+		field = "A/C switch",						acSwitch
+		field = "A/C switch mode",					acSwitchMode
 
 	dialog = triggerInputComparator, "Built-in Comparator Settings (Kinetis-only)"
 		field = "Comparator Center Point Voltage", triggerCompCenterVolt
@@ -1818,7 +1971,7 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 		field = "clutchDownPin",						clutchDownPin
 		field = "clutchUpPin",							clutchUpPin
 		field = "brakePedalPin",						brakePedalPin
-		field = "A/C Switch",							acSwitchAdc
+		field = "A/C Switch",							acSwitch
 		field = "Aux Temperature #1",					auxTempSensor1_adcChannel
 		field = "Aux Temperature #2",					auxTempSensor2_adcChannel
 		field = "Aux Fast Analog",						auxFastSensor1_adcChannel
@@ -1843,7 +1996,6 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 
 	dialog = allPins1_2
 		field = "Tachometer output Pin",					tachOutputPin
-		field = "Dizzy out Pin",         	    	    dizzySparkOutputPin
 		field = "O2 heater pin",						o2heaterPin
 		field = "Idle Solenoid Pin",					idle_solenoidPin
 		field = "Second Idle Solenoid Pin",				secondSolenoidPin
@@ -1959,6 +2111,10 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 		field = "LIS302DLCsPin",						LIS302DLCsPin
 		field = "MIL / Check Engine",					malfunctionIndicatorPin
 		field = "Saab CDM knock",						cdmInputPin
+		field = "DRV8860 CS",							drv8860_cs
+		field = "DRV8860 CS Mode",						drv8860_csPinMode
+		field = "DRV8860 MISO pin",						drv8860_miso
+		field = "DRV8860 SPI",							drv8860spiDevice
 		field = "comm status light",					communicationLedPin
 		field = "running status light",					runningLedPin
 
@@ -2057,7 +2213,7 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 	dialog = iatSensor, "IAT Sensor", border
 		panel = iat_thermistor, West
 		panel = iatGauges, East
-		
+
 ;			Sensors->Oil pressure sensor
 	dialog = oilp_settings, "Oil Pressure Sensor"
 		field = "Oil Pressure ADC input",				oilPressure_hwChannel
@@ -2293,6 +2449,24 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 		field = "Pin mode",				malfunctionIndicatorPinMode	
 		field = "Warning Period",									warningPeriod
 
+	dialog = softwareKnock, "Software Knock"
+		field = "Enable",				enableSoftwareKnock
+		field = "Knock filter frequency",	knockBandCustom, {enableSoftwareKnock}
+		field = ""
+		field = "Select the nearest sensor for each cylinder"
+		field = "Cylinder 1",			knockBankCyl1,  {enableSoftwareKnock}
+		field = "Cylinder 2",			knockBankCyl2,  {enableSoftwareKnock && cylindersCount >= 2}
+		field = "Cylinder 3",			knockBankCyl3,  {enableSoftwareKnock && cylindersCount >= 3}
+		field = "Cylinder 4",			knockBankCyl4,  {enableSoftwareKnock && cylindersCount >= 4}
+		field = "Cylinder 5",			knockBankCyl5,  {enableSoftwareKnock && cylindersCount >= 5}
+		field = "Cylinder 6",			knockBankCyl6,  {enableSoftwareKnock && cylindersCount >= 6}
+		field = "Cylinder 7",			knockBankCyl7,  {enableSoftwareKnock && cylindersCount >= 7}
+		field = "Cylinder 8",			knockBankCyl8,  {enableSoftwareKnock && cylindersCount >= 8}
+		field = "Cylinder 9",			knockBankCyl9,  {enableSoftwareKnock && cylindersCount >= 9}
+		field = "Cylinder 10",			knockBankCyl10, {enableSoftwareKnock && cylindersCount >= 10}
+		field = "Cylinder 11",			knockBankCyl11, {enableSoftwareKnock && cylindersCount >= 11}
+		field = "Cylinder 12",			knockBankCyl12, {enableSoftwareKnock && cylindersCount >= 12}
+
 ;			Engine->hip9011 Settings
 	dialog = hipFunction, "HIP9011 Settings (knock decoder)"
 		field = "Enabled",								isHip9011Enabled
@@ -2446,7 +2620,7 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 		panel = batteryDialog
 		panel = alternator
 		panel = startStopDialog
-		
+
 	dialog = speedSensorAnalog
 		field = "Input pin",					vehicleSpeedSensorInputPin
 		field = "revolution to speed mult",				vehicleSpeedCoef
@@ -2462,7 +2636,7 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 	dialog = speedSensor, "Speed sensor", xAxis
 		panel = speedSensorLeft
 		gauge = VSSGauge
-		
+
 ;			Engine->Other inputs	
 	dialog = analogInputSettings, "Analog Input Settings"
 		field = "!ECU reboot needed to apply these settings"
@@ -2471,13 +2645,11 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 		field = "Smoothing factor",						slowAdcAlpha
 
 	dialog = tachSettings, "Tachometer output"
-		field = "!See also dizzySparkOutputPin"
 		field = "Pin",									tachOutputPin
 		field = "Pin mode",								tachOutputPinMode
 		field = "Rise at trigger index",				tachPulseTriggerIndex
 		field = "Pulse duration is duty cycle",			tachPulseDurationAsDutyCycle
 		field = "Pulse duration",						tachPulseDuractionMs
-; todo: finish implementation under #907
 		field = "Pulse per Rev",                        tachPulsePerRev
 
 
@@ -2492,10 +2664,11 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 	dialog = canBus, "CAN Bus"
 		field = "Can Read Enabled",						canReadEnabled
 		field = "Can Write Enabled",					canWriteEnabled
+	    field = "consumeObdSensors",                    consumeObdSensors, { canReadEnabled == 1 && canWriteEnabled == 1}
 		field = "Can Nbc Type",							canNbcType
 		field = "Can Baud Rate",						canBaudRate
 		field = "Enable rusEFI CAN broadcast",			enableVerboseCanTx
-		field = "rusEfi CAN data base address",			verboseCanBaseAddress
+		field = "rusEFI CAN data base address",			verboseCanBaseAddress
 		field = "Can Sleep Period",						canSleepPeriodMs
 		field = "RX pin",								canRxPin @@if_ts_show_can_pins
 		field = "TX pin",								canTxPin @@if_ts_show_can_pins
@@ -2506,7 +2679,7 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 		field = "Can Nbc Type",							can2NbcType
 		field = "Can Baud Rate",						can2BaudRate
 		field = "Enable rusEFI CAN broadcast",			enableVerboseCan2Tx
-		field = "rusEfi CAN data base address",			verboseCan2BaseAddress
+		field = "rusEFI CAN data base address",			verboseCan2BaseAddress
 		field = "Can Sleep Period",						can2SleepPeriodMs
 		field = "RX pin",								can2RxPin @@if_ts_show_can_pins
 		field = "TX pin",								can2TxPin @@if_ts_show_can_pins
@@ -2558,7 +2731,7 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 		panel = gpsReceiver                       @@if_ts_show_gps
 
 				
-	dialog = monitoringSettings, "rusEfi Console Settings"			
+	dialog = monitoringSettings, "rusEFI Console Settings"
 		field = "Sensor Sniffer",         	    		sensorChartMode
 		field = "  Threshold",							sensorSnifferRpmThreshold
 		field = "  Each X cycle",						sensorChartFrequency
@@ -2727,7 +2900,7 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 		
 	dialog = fsioFormulas, "FSIO Formulas"
 		field = "!FSIO uses Reverse Polish Notation. Please read http://rusefi.com/s/fsio"
-		field = "#fsioinfo command in rusEfi console could be useful while troubleshooting those"
+		field = "#fsioinfo command in rusEFI console could be useful while troubleshooting those"
 		field = "#1",									fsioFormulas1
 		field = "#2",									fsioFormulas2
 		field = "#3",									fsioFormulas3
@@ -2737,10 +2910,10 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 
 		field = "use FSIO #5 for critical engine stop", useFSIO5ForCriticalIssueEngineStop
 		field = "#5",									fsioFormulas5
-		
+
 		field = "use FSIO #6 for rev limiter", useFSIO6ForRevLimiter
 		field = "#6",									fsioFormulas6
-		
+
 		field = "#7",									fsioFormulas7
 
 		field = "use FSIO #8 for servo #1",	useFSIO8ForServo1
@@ -2768,6 +2941,28 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 		field = "ADC #3",								fsioAdc3
 		field = "ADC #4",								fsioAdc4
 
+	dialog = transmissionPanel
+		field = "TCU Enabled"		tcuEnabled
+
+	dialog = solenoidPanel, "Shift Solenoids"
+		field = "Solenoid 1 Pin"	tcu_solenoid1,		{ tcuEnabled }
+		field = "Solenoid 2 Pin"	tcu_solenoid2,		{ tcuEnabled }
+		field = "Solenoid 3 Pin"	tcu_solenoid3,		{ tcuEnabled }
+		field = "Solenoid 4 Pin"	tcu_solenoid4,		{ tcuEnabled }
+		field = "Solenoid 5 Pin"	tcu_solenoid5,		{ tcuEnabled }
+		field = "Solenoid 6 Pin"	tcu_solenoid6,		{ tcuEnabled }
+
+	dialog = buttonShiftInputPanel
+		field = "Upshift Pin"		tcuUpshiftButtonPin,		{ tcuEnabled }
+		field = "Upshift Pin Mode"	tcuUpshiftButtonPinMode,	{ tcuEnabled }
+		field = "Downshift Pin"		tcuDownshiftButtonPin,		{ tcuEnabled }
+		field = "Downshift Pin Mode"	tcuDownshiftButtonPinMode,	{ tcuEnabled }
+
+	dialog = tcuControls, "Transmission Settings"
+		panel = transmissionPanel
+		panel = solenoidPanel
+		panel = buttonShiftInputPanel
+
 ;Boost Open Loop
 
         dialog = boost_left, ""
@@ -2775,8 +2970,8 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
                 field = "Control Mode",                     boostType, { isBoostControlEnabled }
 		field = "Output",							boostControlPin, { isBoostControlEnabled }
 		field = "Output Mode",                      boostControlPinMode, { isBoostControlEnabled }
-		field = "Frequency",						boostPwmFrequency, { isBoostControlEnabled } 
-		
+		field = "Frequency",						boostPwmFrequency, { isBoostControlEnabled }
+
          dialog = boostDialog, "", border
                 panel = boost_left, West
                 panel = boostTableTbl, Center
@@ -2784,20 +2979,20 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 ;Boost Closed Loop
 
          dialog = boostPidleft, ""
-                field = "P Gain", 	                        boostPid_pFactor, { isBoostControlEnabled && boostType == 1 }				
-	        field = "I Gain",                            boostPid_iFactor, { isBoostControlEnabled && boostType == 1 }			
-	        field = "D Gain",                            boostPid_dFactor, { isBoostControlEnabled && boostType == 1 }						
-	        field = "Control Period",                    boostPid_periodMs, { isBoostControlEnabled && boostType == 1 }			
-	        field = "Min Duty",                          boostPid_minValue, { isBoostControlEnabled && boostType == 1 }			
-	        field = "Max Duty",                          boostPid_maxValue, { isBoostControlEnabled && boostType == 1 }	
+                field = "P Gain", 	                        boostPid_pFactor, { isBoostControlEnabled && boostType == 1 }
+	        field = "I Gain",                            boostPid_iFactor, { isBoostControlEnabled && boostType == 1 }
+	        field = "D Gain",                            boostPid_dFactor, { isBoostControlEnabled && boostType == 1 }
+	        field = "Control Period",                    boostPid_periodMs, { isBoostControlEnabled && boostType == 1 }
+	        field = "Min Duty",                          boostPid_minValue, { isBoostControlEnabled && boostType == 1 }
+	        field = "Max Duty",                          boostPid_maxValue, { isBoostControlEnabled && boostType == 1 }
 
          dialog = boostTableDialog, "", card
                 panel = boostTable2Tbl
 
 	dialog = boostPidDialog, "", border
                 panel = boostPidleft, West
-                panel = boostTableDialog, Center	
-				
+                panel = boostTableDialog, Center
+
 	help = veTableDialogHelp, "Volumetric Efficiency"
         text = "Volumetric Efficiency is used to calculate fuel in Speed Density mode"
         webHelp = "https://rusefi.com/s/fuel"
@@ -2849,10 +3044,13 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 		panel = hbridgeHardware,						{ throttlePedalPositionAdcChannel != @@ADC_CHANNEL_NONE@@ || (useStepperIdle && useHbridges) || dcMotorIdleValve }
 
 	dialog = etbAutotune, "PID Autotune"
+		field = "First step: calibrate TPS and hit 'Burn'"
+		commandButton = "Auto Calibrate TPS 1", cmb_etb_auto_calibrate
+		commandButton = "Auto Calibrate TPS 2", cmb_etb_auto_calibrate_2
+		field = "Second step"
 		commandButton = "Start ETB PID Autotune", cmd_etb_autotune
 		commandButton = "Stop ETB PID Autotune", cmd_etb_autotune_stop
 
-		commandButton = "Auto Calibrate TPS", cmb_etb_auto_calibrate
 
 		field = "!Set debug mode below to 'ETB Autotune' to show more detail"
 		field = "Debug mode",							debugMode
@@ -2880,17 +3078,11 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 		commandButton = "Spark #6", cmd_test_spk6
 		commandButton = "Spark #7", cmd_test_spk7
 		commandButton = "Spark #8", cmd_test_spk8
-		
-	dialog = testInjectors, "Fuel"
-		commandButton = "Injector #1", cmd_test_inj1
-		commandButton = "Injector #2", cmd_test_inj2
-		commandButton = "Injector #3", cmd_test_inj3
-		commandButton = "Injector #4", cmd_test_inj4
-		commandButton = "Injector #5", cmd_test_inj5
-		commandButton = "Injector #6", cmd_test_inj6
-		commandButton = "Injector #7", cmd_test_inj7
-		commandButton = "Injector #8", cmd_test_inj8
-		
+		commandButton = "Spark #9", cmd_test_spk9
+		commandButton = "Spark #10",cmd_test_spk10
+		commandButton = "Spark #11",cmd_test_spk11
+		commandButton = "Spark #12",cmd_test_spk12
+
 	dialog = testMisc, "Misc"
 ;		commandButton = "Come To Pit", cmd_call_from_pit
 		commandButton = "Fuel Pump", cmd_test_fuel_pump
@@ -2911,8 +3103,8 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 		panel = testMisc,		East
 	
 	dialog = engineTypeDialog, "Popular vehicles"
-		field = "!These buttons send a command to rusEfi controller to apply preset values"
-		field = "!Once you send the command, please reconnect to rusEfi controller in order to read fresh values"			
+		field = "!These buttons send a command to rusEFI controller to apply preset values"
+		field = "!Once you send the command, please reconnect to rusEFI controller in order to read fresh values"
 		commandButton = "Frankenso Miata NA6 Stage 0", cmd_set_engine_type_Frankenso_Miata_NA6_VAF@@if_show_Frankenso_presets
 		commandButton = "Frankenso Miata NA6 Stage 1", cmd_set_engine_type_Frankenso_Miata_NA6_MAP@@if_show_Frankenso_presets
 		commandButton = "Frankenso Miata NB2 MAP",     cmd_set_engine_type_Frankenso_Miata_NB2@@if_show_Frankenso_presets
@@ -2922,6 +3114,8 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 		commandButton = "microRusEfi Miata NB2 MAP",   cmd_set_engine_type_microRusEFI_Miata_NB2_MAP@@if_show_microRusEFI_presets
 		commandButton = "microRusEFI Miata NB2 MAF",   cmd_set_engine_type_microRusEFI_Miata_NB2_MAF@@if_show_microRusEFI_presets
 		commandButton = "microRusEFI Defaults",		   cmd_set_engine_type_microRusEFI_Defaults@@if_show_microRusEFI_presets
+		commandButton = "microRusEFI B6 test",			cmd_set_engine_type_microRusEFI_VW_B6@@if_show_microRusEFI_presets
+		commandButton = "microRusEFI BCM",				cmd_set_engine_type_microRusEFI_MRE_BODY_CONTROL@@if_show_microRusEFI_presets
 
 		commandButton = "Proteus M73 v12",     		cmd_set_engine_type_Proteus_M73@@if_show_Proteus_presets
 
@@ -2983,7 +3177,7 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 		field = "Ignition Cut",    						launchSparkCutEnable,  {launchControlEnabled == 1}
 		field = "Fuel Cut",	    						launchFuelCutEnable,  {launchControlEnabled == 1}
 		field = "Hard Cut RPM Range",                   hardCutRpmRange,  {launchControlEnabled == 1}
-		
+
 
 
 
@@ -3014,7 +3208,7 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 		field = "MAP Averaging Logic @",				mapAveragingSchedulingAtIndex
 
 
-       help = helpGeneral, "rusEfi General Help"
+       help = helpGeneral, "rusEFI General Help"
         webHelp = "http://www.rusefi.com/"
         text = "<img src='https://rusefi.com/style/logo_100.gif'>"
 
@@ -3106,4 +3300,3 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
  ;addTool = toolName, PanelName
  addTool = veTableGenerator, "VE Table Generator", veTableTbl
  addTool = afrTableGenerator, "AFR Table Generator", afrTableTbl
- 

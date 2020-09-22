@@ -118,7 +118,7 @@ struct Sensors2 {
 };
 
 static void populateFrame(Sensors2& msg) {
-    msg.afr = getAfr();
+    msg.afr = Sensor::get(SensorType::Lambda).value_or(0) * 14.7f;
     msg.oilPressure = Sensor::get(SensorType::OilPressure).value_or(-1);
     msg.vvtPos = engine->triggerCentral.getVVTPosition();
     msg.vbatt = getVBatt();

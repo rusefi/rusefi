@@ -5,6 +5,7 @@
  * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
+#include "software_knock.h"
 #include "spark_logic.h"
 #include "os_access.h"
 #include "engine_math.h"
@@ -68,11 +69,6 @@ static void fireSparkBySettingPinLow(IgnitionEvent *event, IgnitionOutputPin *ou
 	}
 
 	output->setLow();
-#if EFI_PROD_CODE
-	if (CONFIG(dizzySparkOutputPin) != GPIO_UNASSIGNED) {
-		enginePins.dizzyOutput.setLow();
-	}
-#endif /* EFI_PROD_CODE */
 }
 
 // todo: make this a class method?
@@ -116,6 +112,9 @@ static void prepareCylinderIgnitionSchedule(angle_t dwellAngleDuration, floatms_
 	event->outputs[0] = output;
 	event->outputs[1] = secondOutput;
 	event->sparkAngle = sparkAngle;
+	// Stash which cylinder we're scheduling so that knock sensing knows which
+	// cylinder just fired
+	event->cylinderNumber = coilIndex;
 
 	angle_t dwellStartAngle = sparkAngle - dwellAngleDuration;
 	efiAssertVoid(CUSTOM_ERR_6590, !cisnan(dwellStartAngle), "findAngle#5");
@@ -203,6 +202,10 @@ if (engineConfiguration->debugMode == DBG_DWELL_METRIC) {
 		// If all events have been scheduled, prepare for next time.
 		prepareCylinderIgnitionSchedule(dwellAngleDuration, sparkDwell, event PASS_ENGINE_PARAMETER_SUFFIX);
 	}
+
+#if EFI_SOFTWARE_KNOCK
+	startKnockSampling(event->cylinderNumber);
+#endif
 }
 
 static void startDwellByTurningSparkPinHigh(IgnitionEvent *event, IgnitionOutputPin *output) {
@@ -214,7 +217,7 @@ static void startDwellByTurningSparkPinHigh(IgnitionEvent *event, IgnitionOutput
 	// todo: no reason for this to be disabled in unit_test mode?!
 #if ! EFI_UNIT_TEST
 
-	if (GET_RPM_VALUE > 2 * engineConfiguration->cranking.rpm) {
+	if (GET_RPM() > 2 * engineConfiguration->cranking.rpm) {
 		const char *outputName = output->getName();
 		if (prevSparkName == outputName && getCurrentIgnitionMode(PASS_ENGINE_PARAMETER_SIGNATURE) != IM_ONE_COIL) {
 			warning(CUSTOM_OBD_SKIPPED_SPARK, "looks like skipped spark event %d %s", getRevolutionCounter(), outputName);
@@ -238,11 +241,6 @@ static void startDwellByTurningSparkPinHigh(IgnitionEvent *event, IgnitionOutput
 	}
 
 	output->setHigh();
-#if EFI_PROD_CODE
-	if (CONFIG(dizzySparkOutputPin) != GPIO_UNASSIGNED) {
-		enginePins.dizzyOutput.setHigh();
-	}
-#endif /* EFI_PROD_CODE */
 }
 
 void turnSparkPinHigh(IgnitionEvent *event) {

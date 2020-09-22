@@ -63,9 +63,7 @@ public:
 	// Register this sensor in the sensor registry.
 	// Returns true if registration succeeded, or false if
 	// another sensor of the same type is already registered.
-	// The return value should not be ignored: no error handling/reporting is
-	// done internally!
-	[[nodiscard]] bool Register();
+	bool Register();
 
 	// Print information about this sensor
 	virtual void showInfo(Logging* logger, const char* sensorName) const = 0;
@@ -122,6 +120,13 @@ public:
 	 */
 	const char* getSensorName() { return getSensorName(m_type); }
 
+	// Retrieve the current reading from the sensor.
+	//
+	// Override this in a particular sensor's implementation.  As reading sensors is in many hot paths,
+	// it is unwise to synchronously read the sensor or do anything otherwise costly here.  At the most,
+	// this should be field lookup and simple math.
+	virtual SensorResult get() const = 0;
+
 protected:
 	// Protected constructor - only subclasses call this
 	explicit Sensor(SensorType type)
@@ -130,12 +135,6 @@ protected:
 	static const char* getSensorName(SensorType type);
 
 private:
-	// Retrieve the current reading from the sensor.
-	//
-	// Override this in a particular sensor's implementation.  As reading sensors is in many hot paths,
-	// it is unwise to synchronously read the sensor or do anything otherwise costly here.  At the most,
-	// this should be field lookup and simple math.
-	virtual SensorResult get() const = 0;
 
 	/*
 	 * Get an unconverted value from the sensor, if available.

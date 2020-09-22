@@ -15,7 +15,7 @@
 #include "status_loop.h"
 
 #if EFI_TEXT_LOGGING
-static char LOGGING_BUFFER[5000] CCM_OPTIONAL;
+static char LOGGING_BUFFER[SC_BUFFER_SIZE] CCM_OPTIONAL;
 static Logging scLogging("analog chart", LOGGING_BUFFER, sizeof(LOGGING_BUFFER));
 #endif /* EFI_TEXT_LOGGING */
 
@@ -49,7 +49,7 @@ void scAddData(float angle, float value) {
 			 * data after we have added some data - meaning it's time to flush
 			 */
 			// message terminator
-			appendPrintf(&scLogging, DELIMETER);
+			scLogging.appendPrintf(DELIMETER);
 			// output pending data
 			scheduleLogging(&scLogging);
 			pendingData = false;
@@ -58,13 +58,13 @@ void scAddData(float angle, float value) {
 	}
 	if (!pendingData) {
 		pendingData = true;
-		resetLogging(&scLogging);
+		scLogging.reset();
 		// message header
-		appendPrintf(&scLogging, "%s%s", PROTOCOL_ANALOG_CHART, DELIMETER);
+		scLogging.appendPrintf( "%s%s", PROTOCOL_ANALOG_CHART, DELIMETER);
 	}
 
-	if (remainingSize(&scLogging) > 100) {
-		appendPrintf(&scLogging, "%.2f|%.2f|", angle, value);
+	if (scLogging.remainingSize() > 100) {
+		scLogging.appendPrintf( "%.2f|%.2f|", angle, value);
 	}
 #endif /* EFI_TEXT_LOGGING */
 }

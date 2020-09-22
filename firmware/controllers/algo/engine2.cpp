@@ -108,15 +108,11 @@ TransmissionState::TransmissionState() {
 
 EngineState::EngineState() {
 	timeSinceLastTChargeK = getTimeNowNt();
-
-#if ! EFI_PROD_CODE
-	memset(mockPinStates, 0, sizeof(mockPinStates));
-#endif /* EFI_PROD_CODE */
 }
 
 void EngineState::updateSlowSensors(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	// this feeds rusEfi console Live Data
-	engine->engineState.isCrankingState = ENGINE(rpmCalculator).isCranking(PASS_ENGINE_PARAMETER_SIGNATURE);
+	engine->engineState.isCrankingState = ENGINE(rpmCalculator).isCranking();
 }
 
 void EngineState::periodicFastCallback(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
@@ -127,7 +123,7 @@ void EngineState::periodicFastCallback(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 		warning(CUSTOM_SLOW_NOT_INVOKED, "Slow not invoked yet");
 	}
 	efitick_t nowNt = getTimeNowNt();
-	if (ENGINE(rpmCalculator).isCranking(PASS_ENGINE_PARAMETER_SIGNATURE)) {
+	if (ENGINE(rpmCalculator).isCranking()) {
 		crankingTime = nowNt;
 		timeSinceCranking = 0.0f;
 	} else {
@@ -135,12 +131,9 @@ void EngineState::periodicFastCallback(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	}
 	updateAuxValves(PASS_ENGINE_PARAMETER_SIGNATURE);
 
-	int rpm = ENGINE(rpmCalculator).getRpm(PASS_ENGINE_PARAMETER_SIGNATURE);
+	int rpm = ENGINE(rpmCalculator).getRpm();
 	sparkDwell = getSparkDwell(rpm PASS_ENGINE_PARAMETER_SUFFIX);
 	dwellAngle = cisnan(rpm) ? NAN :  sparkDwell / getOneDegreeTimeMs(rpm);
-	if (hasAfrSensor(PASS_ENGINE_PARAMETER_SIGNATURE)) {
-		engine->sensors.currentAfr = getAfr(PASS_ENGINE_PARAMETER_SIGNATURE);
-	}
 
 	// todo: move this into slow callback, no reason for IAT corr to be here
 	running.intakeTemperatureCoefficient = getIatFuelCorrection(PASS_ENGINE_PARAMETER_SIGNATURE);
@@ -174,32 +167,8 @@ void EngineState::periodicFastCallback(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 
 	baroCorrection = getBaroCorrection(PASS_ENGINE_PARAMETER_SIGNATURE);
 
-	multispark.count = getMultiSparkCount(rpm PASS_ENGINE_PARAMETER_SUFFIX);
-
-	if (engineConfiguration->fuelAlgorithm == LM_SPEED_DENSITY) {
-		auto tps = Sensor::get(SensorType::Tps1);
-		updateTChargeK(rpm, tps.value_or(0) PASS_ENGINE_PARAMETER_SUFFIX);
-		float map = getMap(PASS_ENGINE_PARAMETER_SIGNATURE);
-
-		/**
-		 * *0.01 because of https://sourceforge.net/p/rusefi/tickets/153/
-		 */
-		if (CONFIG(useTPSBasedVeTable)) {
-			// todo: should we have 'veTpsMap' fuel_Map3D_t variable here?
-			currentRawVE = interpolate3d<float, float>(tps.value_or(50), CONFIG(ignitionTpsBins), IGN_TPS_COUNT, rpm, config->veRpmBins, FUEL_RPM_COUNT, veMap.pointers);
-		} else {
-			currentRawVE = veMap.getValue(rpm, map);
-		}
-
-		// get VE from the separate table for Idle
-		if (tps.Valid && CONFIG(useSeparateVeForIdle)) {
-			float idleVe = interpolate2d("idleVe", rpm, config->idleVeBins, config->idleVe);
-			// interpolate between idle table and normal (running) table using TPS threshold
-			currentRawVE = interpolateClamped(0.0f, idleVe, CONFIG(idlePidDeactivationTpsThreshold), currentRawVE, tps.Value);
-		}
-		currentBaroCorrectedVE = baroCorrection * currentRawVE * PERCENT_DIV;
-	}
-
+	auto tps = Sensor::get(SensorType::Tps1);
+	updateTChargeK(rpm, tps.value_or(0) PASS_ENGINE_PARAMETER_SUFFIX);
 	ENGINE(injectionDuration) = getInjectionDuration(rpm PASS_ENGINE_PARAMETER_SUFFIX);
 
 	float fuelLoad = getFuelingLoad(PASS_ENGINE_PARAMETER_SIGNATURE);
@@ -207,6 +176,7 @@ void EngineState::periodicFastCallback(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 
 	float ignitionLoad = getIgnitionLoad(PASS_ENGINE_PARAMETER_SIGNATURE);
 	timingAdvance = getAdvance(rpm, ignitionLoad PASS_ENGINE_PARAMETER_SUFFIX);
+	multispark.count = getMultiSparkCount(rpm PASS_ENGINE_PARAMETER_SUFFIX);
 #endif // EFI_ENGINE_CONTROL
 }
 
@@ -281,3 +251,58 @@ void printCurrentState(Logging *logging, int seconds, const char *engineTypeName
 			DELIMETER);
 }
 
+PrimaryTriggerConfiguration::PrimaryTriggerConfiguration(Engine *engine) {
+	this->engine = engine;
+}
+
+bool PrimaryTriggerConfiguration::isUseOnlyRisingEdgeForTrigger() const {
+	return engine->engineConfigurationPtr->useOnlyRisingEdgeForTrigger;
+}
+
+debug_mode_e PrimaryTriggerConfiguration::getDebugMode() const {
+	return engine->engineConfigurationPtr->debugMode;
+}
+
+trigger_type_e PrimaryTriggerConfiguration::getType() const {
+	return engine->engineConfigurationPtr->trigger.type;
+}
+
+bool PrimaryTriggerConfiguration::isSilentTriggerError() const {
+	return engine->engineConfigurationPtr->silentTriggerError;
+}
+
+const char * PrimaryTriggerConfiguration::getPrintPrefix() const {
+	return "TRG ";
+}
+
+bool PrimaryTriggerConfiguration::isVerboseTriggerSynchDetails() const {
+	return engine->engineConfigurationPtr->verboseTriggerSynchDetails;
+}
+
+VvtTriggerConfiguration::VvtTriggerConfiguration(Engine *engine) {
+	this->engine = engine;
+}
+
+bool VvtTriggerConfiguration::isUseOnlyRisingEdgeForTrigger() const {
+	return engine->engineConfigurationPtr->vvtCamSensorUseRise;
+}
+
+const char * VvtTriggerConfiguration::getPrintPrefix() const {
+	return "VVT ";
+}
+
+debug_mode_e VvtTriggerConfiguration::getDebugMode() const {
+	return engine->engineConfigurationPtr->debugMode;
+}
+
+trigger_type_e VvtTriggerConfiguration::getType() const {
+	return engine->triggerCentral.vvtTriggerType;
+}
+
+bool VvtTriggerConfiguration::isSilentTriggerError() const {
+	return engine->engineConfigurationPtr->silentTriggerError;
+}
+
+bool VvtTriggerConfiguration::isVerboseTriggerSynchDetails() const {
+	return engine->engineConfigurationPtr->verboseVVTDecoding;
+}

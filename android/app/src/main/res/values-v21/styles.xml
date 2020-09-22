@@ -1,0 +1,8 @@
+<!--
+https://stackoverflow.com/questions/47090526/caused-by-java-lang-unsupportedoperationexception-failed-to-resolve-attribute/47090603
+https://stackoverflow.com/questions/27780713/do-i-need-to-use-a-theme-appcompat-theme-or-descendant-for-v21-styles-too
+-->
+<resources>
+    <style name="AppTheme" parent="AppBaseTheme">
+    </style>
+</resources>

@@ -6,3 +6,6 @@
 #define Tbypass 5;
 #define Thold_off 6;
 #define Thold_tot 7;
+#define SCV_I_hold 9;
+#define SCV_Thold_tot 10;
+#define SCV_Thold_off 11;

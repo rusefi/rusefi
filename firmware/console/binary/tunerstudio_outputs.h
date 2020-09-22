@@ -28,6 +28,10 @@ enum class TsCalMode : uint8_t {
 	EtbKd = 5,
 	Tps1SecondaryMax = 6,
 	Tps1SecondaryMin = 7,
+	Tps2Max = 8,
+	Tps2Min = 9,
+	Tps2SecondaryMax = 10,
+	Tps2SecondaryMin = 11,
 };
 
 /**
@@ -154,8 +158,11 @@ typedef struct {
 	scaled_percent fuelTankLevel; // 98
 	float fuelConsumptionPerHour; // 100
 
+	// Y axis values for selectable tables
+	scaled_channel<uint16_t, 100> veTableYAxis;  // 104
+	scaled_channel<uint16_t, 100> afrTableYAxis; // 106
+
 	// Knock
-	uint32_t knockCount; // 104
 	float knockLevel; // 108
 
 	// Mode, firmware, protocol, run time
@@ -225,9 +232,25 @@ typedef struct {
 	scaled_voltage rawOilPressure;		// 242
 
 	int16_t tuneCrc16; // 244
-    uint8_t sd_status; // 246
 
-	uint8_t unusedAtTheEnd[41]; // we have some unused bytes to allow compatible TS changes
+	uint8_t sd_status; // 246
+
+	int8_t tcuCurrentGear; // 247
+
+	scaled_voltage rawPpsSecondary;		// 248
+
+	int8_t knockLevels[12];		// 250
+
+	int8_t tcuDesiredGear; // 262
+	int8_t padding2[1];		// 263
+
+	scaled_voltage rawIdlePositionSensor;	// 264
+	scaled_voltage rawWastegatePositionSensor;	// 266
+
+	scaled_percent wastegatePosition;	// 268
+	scaled_percent idlePositionSensor;	// 270
+
+	uint8_t unusedAtTheEnd[16]; // we have some unused bytes to allow compatible TS changes
 
 	// Temporary - will remove soon
 	TsDebugChannels* getDebugChannels() {

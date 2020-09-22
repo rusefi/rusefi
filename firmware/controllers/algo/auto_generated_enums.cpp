@@ -1,7 +1,7 @@
 #include "global.h"
 #include "rusefi_enums.h"
 #include "rusefi_hw_enums.h"
-// was generated automatically by rusEfi tool  from rusefi_hw_enums.h // was generated automatically by rusEfi tool  from rusefi_enums.h // by enum2string.jar tool on Wed Jul 29 15:37:22 EDT 2020
+// was generated automatically by rusEfi tool  from rusefi_hw_enums.h // was generated automatically by rusEfi tool  from rusefi_enums.h // by enum2string.jar tool on Mon Sep 07 14:17:12 UTC 2020
 // see also gen_config_and_enums.bat
 
 
@@ -87,6 +87,21 @@ case ADC_SLOW:
   return "ADC_SLOW";
 case Force_4_bytes_size_adc_channel_mode:
   return "Force_4_bytes_size_adc_channel_mode";
+  }
+ return NULL;
+}
+const char *getAfr_override_e(afr_override_e value){
+switch(value) {
+case AFR_AccPedal:
+  return "AFR_AccPedal";
+case AFR_CylFilling:
+  return "AFR_CylFilling";
+case AFR_MAP:
+  return "AFR_MAP";
+case AFR_None:
+  return "AFR_None";
+case AFR_Tps:
+  return "AFR_Tps";
   }
  return NULL;
 }
@@ -764,8 +779,6 @@ case DEFAULT_FRANKENSO:
   return "DEFAULT_FRANKENSO";
 case DODGE_NEON_1995:
   return "DODGE_NEON_1995";
-case DODGE_NEON_2003_CAM:
-  return "DODGE_NEON_2003_CAM";
 case DODGE_NEON_2003_CRANK:
   return "DODGE_NEON_2003_CRANK";
 case DODGE_RAM:
@@ -834,6 +847,8 @@ case MRE_BOARD_NEW_TEST:
   return "MRE_BOARD_NEW_TEST";
 case MRE_BOARD_OLD_TEST:
   return "MRE_BOARD_OLD_TEST";
+case MRE_BODY_CONTROL:
+  return "MRE_BODY_CONTROL";
 case MRE_MIATA_NA6_MAP:
   return "MRE_MIATA_NA6_MAP";
 case MRE_MIATA_NA6_VAF:
@@ -1232,8 +1247,6 @@ case TT_3_1_CAM:
   return "TT_3_1_CAM";
 case TT_60_2_VW:
   return "TT_60_2_VW";
-case TT_BOSCH_QUICK_START:
-  return "TT_BOSCH_QUICK_START";
 case TT_DODGE_NEON_1995:
   return "TT_DODGE_NEON_1995";
 case TT_DODGE_NEON_1995_ONLY_CRANK:
@@ -1286,8 +1299,6 @@ case TT_MAZDA_SOHC_4:
   return "TT_MAZDA_SOHC_4";
 case TT_MAZDA_Z5:
   return "TT_MAZDA_Z5";
-case TT_MIATA_NB2_VVT_CAM:
-  return "TT_MIATA_NB2_VVT_CAM";
 case TT_MIATA_VVT:
   return "TT_MIATA_VVT";
 case TT_MINI_COOPER_R50:
@@ -1302,8 +1313,6 @@ case TT_ONE:
   return "TT_ONE";
 case TT_ONE_PLUS_ONE:
   return "TT_ONE_PLUS_ONE";
-case TT_ONE_PLUS_TOOTHED_WHEEL_60_2:
-  return "TT_ONE_PLUS_TOOTHED_WHEEL_60_2";
 case TT_RENIX_44_2_2:
   return "TT_RENIX_44_2_2";
 case TT_RENIX_66_2_2_2:
@@ -1324,6 +1333,12 @@ case TT_TOOTHED_WHEEL_60_2:
   return "TT_TOOTHED_WHEEL_60_2";
 case TT_UNUSED:
   return "TT_UNUSED";
+case TT_VVT_BOSCH_QUICK_START:
+  return "TT_VVT_BOSCH_QUICK_START";
+case TT_VVT_JZ:
+  return "TT_VVT_JZ";
+case TT_VVT_MIATA_NB2:
+  return "TT_VVT_MIATA_NB2";
   }
  return NULL;
 }
@@ -1364,6 +1379,17 @@ case UART_NONE:
   }
  return NULL;
 }
+const char *getVe_override_e(ve_override_e value){
+switch(value) {
+case VE_MAP:
+  return "VE_MAP";
+case VE_None:
+  return "VE_None";
+case VE_TPS:
+  return "VE_TPS";
+  }
+ return NULL;
+}
 const char *getVvt_mode_e(vvt_mode_e value){
 switch(value) {
 case Force_4_bytes_size_vvt_mode:
@@ -1372,6 +1398,8 @@ case MIATA_NB2:
   return "MIATA_NB2";
 case VVT_2JZ:
   return "VVT_2JZ";
+case VVT_BOSCH_QUICK_START:
+  return "VVT_BOSCH_QUICK_START";
 case VVT_FIRST_HALF:
   return "VVT_FIRST_HALF";
 case VVT_INACTIVE:

@@ -47,7 +47,7 @@ static bool shouldCorrect(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	}
 
 	// Don't correct if not running
-	if (!ENGINE(rpmCalculator).isRunning(PASS_ENGINE_PARAMETER_SIGNATURE)) {
+	if (!ENGINE(rpmCalculator).isRunning()) {
 		return false;
 	}
 
@@ -66,13 +66,13 @@ static bool shouldCorrect(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	return true;
 }
 
-static bool shouldUpdateCorrection(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+bool shouldUpdateCorrection(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	const auto& cfg = CONFIG(stft);
 
 	// Pause (but don't reset) correction if the AFR is off scale.
 	// It's probably a transient and poorly tuned transient correction
-	float afr = ENGINE(sensors.currentAfr);
-	if (afr < (cfg.minAfr * 0.1f) || afr > (cfg.maxAfr * 0.1f)) {
+	auto afr = Sensor::get(SensorType::Lambda).value_or(0) * 14.7f;
+	if (!afr || afr < (cfg.minAfr * 0.1f) || afr > (cfg.maxAfr * 0.1f)) {
 		return false;
 	}
 

@@ -187,7 +187,4 @@ void setCitroenBerlingoTU3JPConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 #if IGN_LOAD_COUNT == DEFAULT_IGN_LOAD_COUNT
 	MEMCPY(config->ignitionTable, default_tps_advance_table);
 #endif
-
-	engineConfiguration->dizzySparkOutputPin = GPIOE_3;
-	engineConfiguration->dizzySparkOutputPinMode = OM_INVERTED;
 }

@@ -5,6 +5,9 @@
  * todo: this file should be split into two - one for CAN transport level ONLY and
  * another one with actual messages
  *
+ * @see can_verbose.cpp for higher level logic
+ * @see obd2.cpp for OBD-II messages via CAN
+ *
  * @date Dec 11, 2013
  * @author Andrey Belomutskiy, (c) 2012-2020
  */
@@ -25,8 +28,8 @@
 EXTERN_ENGINE;
 
 static int canReadCounter = 0;
-static int canWriteOk = 0;
-static int canWriteNotOk = 0;
+int canWriteOk = 0;
+int canWriteNotOk = 0;
 static bool isCanEnabled = false;
 static LoggingWithStorage logger("CAN driver");
 
@@ -77,7 +80,7 @@ CAN_BTR_1k0 };
 
 static const CANConfig *canConfig = &canConfig500;
 
-class CanRead final : public ThreadController<256> {
+class CanRead final : public ThreadController<UTILITY_THREAD_STACK_SIZE> {
 public:
 	CanRead()
 		: ThreadController("CAN RX", NORMALPRIO)
@@ -114,16 +117,11 @@ private:
 static CanRead canRead;
 static CanWrite canWrite;
 
-
 static void canInfo(void) {
 	if (!isCanEnabled) {
 		scheduleMsg(&logger, "CAN is not enabled, please enable & restart");
 		return;
 	}
-
-#if EFI_CANBUS_SLAVE
-	scheduleMsg(&logger, "CAN SLAVE MODE");
-#endif
 
 	scheduleMsg(&logger, "CAN TX %s", hwPortname(CONFIG_OVERRIDE(canTxPin)));
 	scheduleMsg(&logger, "CAN RX %s", hwPortname(CONFIG_OVERRIDE(canRxPin)));

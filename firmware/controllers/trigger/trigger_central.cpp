@@ -85,9 +85,11 @@ void addTriggerEventListener(ShaftPositionListener listener, const char *name, E
 	engine->triggerCentral.addEventListener(listener, name, engine);
 }
 
-#define miataNb2VVTRatioFrom (8.50 * 0.75)
-#define miataNb2VVTRatioTo (14)
 #define miataNbIndex (0)
+
+static bool vvtWithRealDecoder(vvt_mode_e vvtMode) {
+	return vvtMode == MIATA_NB2 || vvtMode == VVT_BOSCH_QUICK_START;
+}
 
 void hwHandleVvtCamSignal(trigger_value_e front, efitick_t nowNt DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	TriggerCentral *tc = &engine->triggerCentral;
@@ -110,7 +112,8 @@ void hwHandleVvtCamSignal(trigger_value_e front, efitick_t nowNt DECLARE_ENGINE_
 	}
 
 
-	if (CONFIG(vvtCamSensorUseRise) ^ (front != TV_FALL)) {
+	if (!vvtWithRealDecoder(engineConfiguration->vvtMode) && (CONFIG(vvtCamSensorUseRise) ^ (front != TV_FALL))) {
+		// todo: there should be a way to always use real trigger code for this logic?
 		return;
 	}
 
@@ -145,13 +148,21 @@ void hwHandleVvtCamSignal(trigger_value_e front, efitick_t nowNt DECLARE_ENGINE_
 		return;
 	}
 
+	ENGINE(triggerCentral).vvtState.decodeTriggerEvent(
+			&ENGINE(triggerCentral).vvtShape,
+			nullptr,
+			nullptr,
+			&engine->vvtTriggerConfiguration,
+			front == TV_RISE ? SHAFT_PRIMARY_RISING : SHAFT_PRIMARY_FALLING, nowNt);
+
+
 	tc->vvtCamCounter++;
 
 	efitick_t offsetNt = nowNt - tc->timeAtVirtualZeroNt;
 	angle_t currentPosition = NT2US(offsetNt) / oneDegreeUs;
 	// convert engine cycle angle into trigger cycle angle
 	currentPosition -= tdcPosition();
-	fixAngle(currentPosition, "currentPosition", CUSTOM_ERR_6558);
+	// https://github.com/rusefi/rusefi/issues/1713 currentPosition could be negative that's expected
 
 	tc->currentVVTEventPosition = currentPosition;
 	if (engineConfiguration->debugMode == DBG_VVT) {
@@ -170,29 +181,11 @@ void hwHandleVvtCamSignal(trigger_value_e front, efitick_t nowNt DECLARE_ENGINE_
 		}
 		break;
 	case MIATA_NB2:
+	case VVT_BOSCH_QUICK_START:
 	 {
-		uint32_t currentDuration = nowNt - tc->previousVvtCamTime;
-		float ratio = ((float) currentDuration) / tc->previousVvtCamDuration;
-
-		if (engineConfiguration->debugMode == DBG_VVT) {
-#if EFI_TUNER_STUDIO
-			tsOutputChannels.debugFloatField2 = ratio;
-#endif /* EFI_TUNER_STUDIO */
-		}
-
-
-		tc->previousVvtCamDuration = currentDuration;
-		tc->previousVvtCamTime = nowNt;
-
-		if (engineConfiguration->verboseTriggerSynchDetails) {
-			scheduleMsg(logger, "vvt ratio %.2f", ratio);
-		}
-		if (ratio < miataNb2VVTRatioFrom || ratio > miataNb2VVTRatioTo) {
+		if (engine->triggerCentral.vvtState.currentCycle.current_index != 0) {
 			// this is not NB2 sync tooth - exiting
 			return;
-		}
-		if (engineConfiguration->verboseTriggerSynchDetails) {
-			scheduleMsg(logger, "looks good: vvt ratio %.2f", ratio);
 		}
 		if (engineConfiguration->debugMode == DBG_VVT) {
 #if EFI_TUNER_STUDIO
@@ -291,7 +284,8 @@ void hwHandleShaftSignal(trigger_event_e signal, efitick_t timestamp) {
 	// for effective noise filtering, we need both signal edges, 
 	// so we pass them to handleShaftSignal() and defer this test
 	if (!CONFIG(useNoiselessTriggerDecoder)) {
-		if (!isUsefulSignal(signal PASS_CONFIG_PARAMETER_SUFFIX)) {
+		const TriggerConfiguration * triggerConfiguration = &engine->primaryTriggerConfiguration;
+		if (!isUsefulSignal(signal, triggerConfiguration)) {
 			/**
 			 * no need to process VR falls further
 			 */
@@ -435,8 +429,9 @@ void TriggerCentral::handleShaftSignal(trigger_event_e signal, efitick_t timesta
 		if (!noiseFilter.noiseFilter(timestamp, &triggerState, signal PASS_ENGINE_PARAMETER_SUFFIX)) {
 			return;
 		}
+		const TriggerConfiguration * triggerConfiguration = &engine->primaryTriggerConfiguration;
 		// moved here from hwHandleShaftSignal()
-		if (!isUsefulSignal(signal PASS_CONFIG_PARAMETER_SUFFIX)) {
+		if (!isUsefulSignal(signal, triggerConfiguration)) {
 			return;
 		}
 	}
@@ -452,7 +447,10 @@ void TriggerCentral::handleShaftSignal(trigger_event_e signal, efitick_t timesta
 	 * This invocation changes the state of triggerState
 	 */
 	triggerState.decodeTriggerEvent(&triggerShape,
-			nullptr, engine, signal, timestamp PASS_CONFIG_PARAMETER_SUFFIX);
+			nullptr,
+			engine,
+			&engine->primaryTriggerConfiguration,
+			signal, timestamp);
 
 	/**
 	 * If we only have a crank position sensor with four stroke, here we are extending crank revolutions with a 360 degree
@@ -502,12 +500,13 @@ EXTERN_ENGINE;
 
 static void triggerShapeInfo(void) {
 #if EFI_PROD_CODE || EFI_SIMULATOR
-	TriggerWaveform *s = &engine->triggerCentral.triggerShape;
+	TriggerWaveform *shape = &engine->triggerCentral.triggerShape;
+	TriggerFormDetails *triggerFormDetails = &engine->triggerCentral.triggerFormDetails;
 	scheduleMsg(logger, "useRise=%s", boolToString(TRIGGER_WAVEFORM(useRiseEdge)));
 	scheduleMsg(logger, "gap from %.2f to %.2f", TRIGGER_WAVEFORM(syncronizationRatioFrom[0]), TRIGGER_WAVEFORM(syncronizationRatioTo[0]));
 
-	for (size_t i = 0; i < s->getSize(); i++) {
-		scheduleMsg(logger, "event %d %.2f", i, s->eventAngles[i]);
+	for (size_t i = 0; i < shape->getSize(); i++) {
+		scheduleMsg(logger, "event %d %.2f", i, triggerFormDetails->eventAngles[i]);
 	}
 #endif
 }
@@ -546,24 +545,25 @@ void printAllTriggers() {
 		engineConfiguration->trigger.type = tt;
 		engineConfiguration->ambiguousOperationMode = FOUR_STROKE_CAM_SENSOR;
 
-		TriggerWaveform *s = &engine->triggerCentral.triggerShape;
+		TriggerWaveform *shape = &engine->triggerCentral.triggerShape;
+		TriggerFormDetails *triggerFormDetails = &engine->triggerCentral.triggerFormDetails;
 		engine->initializeTriggerWaveform(NULL PASS_ENGINE_PARAMETER_SUFFIX);
 
-		if (s->shapeDefinitionError) {
+		if (shape->shapeDefinitionError) {
 			printf("Trigger error %d\r\n", triggerId);
 			exit(-1);
 		}
 
-		fprintf(fp, "TRIGGERTYPE %d %d %s %.2f\n", triggerId, s->getLength(), getTrigger_type_e(tt), s->tdcPosition);
+		fprintf(fp, "TRIGGERTYPE %d %d %s %.2f\n", triggerId, shape->getLength(), getTrigger_type_e(tt), shape->tdcPosition);
 
-		fprintf(fp, "# duty %.2f %.2f\n", s->expectedDutyCycle[0], s->expectedDutyCycle[1]);
+		fprintf(fp, "# duty %.2f %.2f\n", shape->expectedDutyCycle[0], shape->expectedDutyCycle[1]);
 
-		for (int i = 0; i < s->getLength(); i++) {
+		for (int i = 0; i < shape->getLength(); i++) {
 
-			int triggerDefinitionCoordinate = (s->getTriggerWaveformSynchPointIndex() + i) % s->getSize();
+			int triggerDefinitionCoordinate = (shape->getTriggerWaveformSynchPointIndex() + i) % shape->getSize();
 
 
-			fprintf(fp, "event %d %d %.2f\n", i, s->triggerSignals[triggerDefinitionCoordinate], s->eventAngles[i]);
+			fprintf(fp, "event %d %d %.2f\n", i, shape->triggerSignals[triggerDefinitionCoordinate], triggerFormDetails->eventAngles[i]);
 		}
 
 	}
@@ -789,8 +789,15 @@ void initTriggerCentral(Logging *sharedLogger) {
 	addConsoleAction(CMD_TRIGGERINFO, triggerInfo);
 	addConsoleAction("trigger_shape_info", triggerShapeInfo);
 	addConsoleAction("reset_trigger", resetRunningTriggerCounters);
-#endif
+#endif // EFI_PROD_CODE || EFI_SIMULATOR
 
 }
 
-#endif
+/**
+ * @return TRUE is something is wrong with trigger decoding
+ */
+bool isTriggerDecoderError(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+	return engine->triggerErrorDetection.sum(6) > 4;
+}
+
+#endif // EFI_SHAFT_POSITION_INPUT

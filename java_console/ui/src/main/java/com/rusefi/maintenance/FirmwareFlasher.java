@@ -28,7 +28,7 @@ public class FirmwareFlasher {
     private static final String SUCCESS_MESSAGE_TAG = "shutdown command invoked";
     private static final String FAILED_MESSAGE_TAG = "failed";
     private static final String NO_DRIVER_MESSAGE_TAG = "failed with LIBUSB_ERROR_NOT_SUPPORTED";
-    public static final String TITLE = "rusEfi ST-LINK Firmware Flasher";
+    public static final String TITLE = "rusEFI ST-LINK Firmware Flasher";
     public static final String DONE = "DONE!";
 
     private final JButton button;

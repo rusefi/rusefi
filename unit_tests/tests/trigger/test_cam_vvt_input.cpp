@@ -159,7 +159,7 @@ TEST(sensors, testNB2CamInput) {
 	// this third important front would give us first comparison between two real gaps
 	hwHandleVvtCamSignal(TV_RISE, getTimeNowNt() PASS_ENGINE_PARAMETER_SUFFIX);
 
-	ASSERT_NEAR(-67.6, engine->triggerCentral.getVVTPosition(), EPS3D);
+	ASSERT_NEAR(-67.6 - 720 - 720, engine->triggerCentral.getVVTPosition(), EPS3D);
 	// actually position based on VVT!
 	ASSERT_EQ(totalRevolutionCountBeforeVvtSync + 2, engine->triggerCentral.triggerState.getTotalRevolutionCounter());
 }

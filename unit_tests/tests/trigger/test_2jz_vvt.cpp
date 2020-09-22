@@ -32,5 +32,5 @@ TEST(sensors, test2jz) {
 	hwHandleVvtCamSignal(TV_RISE, getTimeNowNt() PASS_ENGINE_PARAMETER_SUFFIX);
 
 	// currentPosition
-	ASSERT_NEAR(608.2, engine->triggerCentral.currentVVTEventPosition, EPS3D);
+	ASSERT_NEAR(608.2 - 720, engine->triggerCentral.currentVVTEventPosition, EPS3D);
 }

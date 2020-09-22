@@ -55,6 +55,13 @@ Above mentioned modules are known to work unless stated otherwise
 
 [Our older ECU board](frankenstein)
 
+### More rusEFI hardware
+
+* [PnP MRE 55 pin TE](https://github.com/rusefi/hw_55_te)
+* [PnP MRE 68 pin VAG](https://github.com/rusefi/hw_68_vag/)
+* [Proteus](https://github.com/mck1117/proteus)
+* Hellen TODO
+
 # More info
 
 ![IBOM](../misc/www/images/ibom_icon.png) [Interactive Html Boms](https://rusefi.com/docs/ibom/)
@@ -63,10 +70,7 @@ See [Hardware status forum thread](http://rusefi.com/forum/viewtopic.php?f=4&t=2
 todo: move hardware status content into git
 
 # Important note
-rusEfi uses KICAD 4 only.
-We are unhappy with how each major version of KiCAD
-seems to break backwords compatibility in a major way and we plan to skip KiCAD version 5
-and evaluate KICAD version 6 once it's available.
+rusEFI is currently transitioning from KiCAD 4 to KiCAD 5.
 
 
 # Important note

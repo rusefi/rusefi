@@ -36,17 +36,17 @@ public class TwoKindSemaphore {
 
     /**
      * @return true if acquired successfully, false if not
-     * @param userDetails
+     * @param tuner
      */
-    public boolean acquireForLongTermUsage(UserDetails userDetails) {
-        return acquireForLongTermUsage(userDetails, 10);
+    public boolean acquireForLongTermUsage(UserDetails tuner) {
+        return acquireForLongTermUsage(tuner, 10);
     }
 
-    public boolean acquireForLongTermUsage(UserDetails userDetails, int timeout) {
+    public boolean acquireForLongTermUsage(UserDetails tuner, int timeout) {
         try {
             boolean isAcquired = semaphore.tryAcquire(LONG_TERM, timeout, TimeUnit.SECONDS);
             if (isAcquired) {
-                owner = userDetails;
+                owner = tuner;
             }
             return isAcquired;
         } catch (InterruptedException e) {

@@ -37,7 +37,6 @@ public:
 	Accelerometer accelerometer;
 
 	float vBatt = 0;
-	float currentAfr = 0;
 	/**
 	 * that's fuel in tank - just a gauge
 	 */

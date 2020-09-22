@@ -13,6 +13,11 @@
 EXTERN_ENGINE;
 
 extern LoggingWithStorage sharedLogger;
+extern ButtonDebounce startStopButtonDebounce;
+
+#if ! EFI_PROD_CODE
+extern bool mockPinStates[(1 << sizeof(brain_pin_e))];
+#endif
 
 #if ENABLE_PERF_TRACE
 static uint8_t nextThreadId = 0;
@@ -68,6 +73,12 @@ void setMockMapVoltage(float voltage DECLARE_ENGINE_PARAMETER_SUFFIX) {
 
 void setMockVBattVoltage(float voltage DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	setMockVoltage(engineConfiguration->vbattAdcChannel, voltage PASS_ENGINE_PARAMETER_SUFFIX);
+}
+
+void setMockState(brain_pin_e pin, bool state DECLARE_ENGINE_PARAMETER_SUFFIX) {
+#if ! EFI_PROD_CODE
+	mockPinStates[static_cast<int>(pin)] = state;
+#endif
 }
 
 #endif /* EFI_ENABLE_MOCK_ADC */
@@ -155,58 +166,34 @@ static void onStartStopButtonToggle(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	engine->startStopStateToggleCounter++;
 
 	if (engine->rpmCalculator.isStopped(PASS_ENGINE_PARAMETER_SIGNATURE)) {
-		engine->startStopStateLastPushTime = getTimeNowNt();
-
 		bool wasStarterEngaged = enginePins.starterControl.getAndSet(1);
 		if (!wasStarterEngaged) {
 			scheduleMsg(&sharedLogger, "Let's crank this engine for up to %dseconds!", CONFIG(startCrankingDuration));
 		}
-	} else if (engine->rpmCalculator.isRunning(PASS_ENGINE_PARAMETER_SIGNATURE)) {
+	} else if (engine->rpmCalculator.isRunning()) {
 		scheduleMsg(&sharedLogger, "Let's stop this engine!");
 		scheduleStopEngine();
 	}
 }
 
-static bool isFirstStartStopCallback = true;
-
 void slowStartStopButtonCallback(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
-	if (CONFIG(startStopButtonPin) != GPIO_UNASSIGNED) {
 #if EFI_PROD_CODE
-		bool startStopState = efiReadPin(CONFIG(startStopButtonPin));
+	bool startStopState = startStopButtonDebounce.readPinEvent();
 
-		if (isFirstStartStopCallback) {
-			// we just remember initial value on first callback and do not react to it
-			isFirstStartStopCallback = false;
-		} else if (startStopState && !engine->startStopState) {
-			// we are here on transition from 0 to 1
-			onStartStopButtonToggle(PASS_ENGINE_PARAMETER_SIGNATURE);
-		}
-		engine->startStopState = startStopState;
+	if (startStopState && !engine->startStopState) {
+		// we are here on transition from 0 to 1
+		onStartStopButtonToggle(PASS_ENGINE_PARAMETER_SIGNATURE);
+	}
+	engine->startStopState = startStopState;
 #endif /* EFI_PROD_CODE */
-	}
-
-	if (engine->startStopStateLastPushTime == 0) {
-		// nothing is going on with startStop button
-		return;
-	}
-
 
 	// todo: should this be simply FSIO?
-	if (engine->rpmCalculator.isRunning(PASS_ENGINE_PARAMETER_SIGNATURE)) {
+	if (engine->rpmCalculator.isRunning()) {
 		// turn starter off once engine is running
 		bool wasStarterEngaged = enginePins.starterControl.getAndSet(0);
 		if (wasStarterEngaged) {
 			scheduleMsg(&sharedLogger, "Engine runs we can disengage the starter");
 		}
-		engine->startStopStateLastPushTime = 0;
-	}
-
-	if (getTimeNowNt() - engine->startStopStateLastPushTime > NT_PER_SECOND * CONFIG(startCrankingDuration)) {
-		bool wasStarterEngaged = enginePins.starterControl.getAndSet(0);
-		if (wasStarterEngaged) {
-			scheduleMsg(&sharedLogger, "Cranking timeout %dseconds", CONFIG(startCrankingDuration));
-		}
-		engine->startStopStateLastPushTime = 0;
 	}
 }
 

@@ -12,8 +12,6 @@
 #include "trigger_decoder.h"
 #include "trigger_central_generated.h"
 
-
-
 class Engine;
 typedef void (*ShaftPositionListener)(trigger_event_e signal, uint32_t index, efitick_t edgeTimestamp DECLARE_ENGINE_PARAMETER_SUFFIX);
 
@@ -44,10 +42,10 @@ public:
 	int getHwEventCounter(int index) const;
 	void resetCounters();
 	void validateCamVvtCounters();
-	TriggerStateWithRunningStatistics triggerState;
 
 	TriggerNoiseFilter noiseFilter;
 
+	trigger_type_e vvtTriggerType;
 	angle_t getVVTPosition();
 
 	// latest VVT event position (could be not synchronization event)
@@ -62,14 +60,16 @@ public:
 
 	efitick_t vvtSyncTimeNt = 0;
 
+	TriggerStateWithRunningStatistics triggerState;
 	TriggerWaveform triggerShape;
 
-	efitick_t previousVvtCamTime = DEEP_IN_THE_PAST_SECONDS * NT_PER_SECOND;
-	efitick_t previousVvtCamDuration = 0;
+	TriggerState vvtState;
+	TriggerWaveform vvtShape;
+
+	TriggerFormDetails triggerFormDetails;
 
 private:
 	IntListenerArray<15> triggerListeneres;
-
 };
 
 void triggerInfo(void);
@@ -86,5 +86,7 @@ void resetMaxValues();
 void onConfigurationChangeTriggerCallback(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 bool checkIfTriggerConfigChanged(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 bool isTriggerConfigChanged(DECLARE_ENGINE_PARAMETER_SIGNATURE);
+
+bool isTriggerDecoderError(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 
 #define SYMMETRICAL_CRANK_SENSOR_DIVIDER 4

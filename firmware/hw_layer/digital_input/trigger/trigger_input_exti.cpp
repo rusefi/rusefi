@@ -70,7 +70,7 @@ static void cam_callback(void *arg) {
 
 	bool rise = (palReadLine(pal_line) == PAL_HIGH);
 
-	if (rise) {
+	if (rise ^ engineConfiguration->invertCamVVTSignal) {
 		hwHandleVvtCamSignal(TV_RISE, stamp);
 	} else {
 		hwHandleVvtCamSignal(TV_FALL, stamp);

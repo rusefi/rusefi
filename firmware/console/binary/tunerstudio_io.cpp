@@ -21,11 +21,22 @@ extern LoggingWithStorage tsLogger;
 
 #if EFI_PROD_CODE
 #include "pin_repository.h"
-#include "usbconsole.h"
 
 #if HAL_USE_SERIAL_USB
-extern SerialUSBDriver SDU1;
+// Assert that the USB tx/rx buffers are large enough to fit one full packet
+static_assert(SERIAL_USB_BUFFERS_SIZE >= BLOCKING_FACTOR + 10);
+#define SERIAL_USB_DRIVER SerialUSBDriver
+#define TS_USB_DEVICE EFI_CONSOLE_USB_DEVICE // SDU1
 #endif /* HAL_USE_SERIAL_USB */
+
+#ifdef TS_USB_DEVICE
+extern SERIAL_USB_DRIVER TS_USB_DEVICE;
+#endif /* TS_USB_DEVICE */
+
+#ifdef TS_CAN_DEVICE
+#include "tunerstudio_can.h"
+#endif /* TS_CAN_DEVICE */
+
 
 #if TS_UART_DMA_MODE
 #elif TS_UART_MODE
@@ -35,8 +46,10 @@ static UARTConfig tsUartConfig = {
 	.speed = 0, .cr1 = 0, .cr2 = 0/*USART_CR2_STOP1_BITS*/ | USART_CR2_LINEN, .cr3 = 0,
 	.timeout_cb = NULL, .rxhalf_cb = NULL
 };
-#else
+#elif defined(TS_SERIAL_DEVICE)
 static SerialConfig tsSerialConfig = { .speed = 0, .cr1 = 0, .cr2 = USART_CR2_STOP1_BITS | USART_CR2_LINEN, .cr3 = 0 };
+#elif defined(TS_CAN_DEVICE)
+static CANConfig tsCanConfig = { CAN_MCR_ABOM | CAN_MCR_AWUM | CAN_MCR_TXFP, CAN_BTR_500 };
 #endif /* TS_UART_DMA_MODE */
 #endif /* EFI_PROD_CODE */
 
@@ -45,9 +58,9 @@ void startTsPort(ts_channel_s *tsChannel) {
 	tsChannel->channel = (BaseChannel *) NULL;
 
 	#if EFI_PROD_CODE
-		#if defined(CONSOLE_USB_DEVICE)
+		#if defined(TS_USB_DEVICE)
 #if defined(TS_UART_DEVICE)
-#error 	"cannot have TS_UART_DEVICE and CONSOLE_USB_DEVICE"
+#error 	"cannot have TS_UART_DEVICE and TS_USB_DEVICE"
 #endif
 			print("TunerStudio over USB serial");
 			/**
@@ -56,9 +69,9 @@ void startTsPort(ts_channel_s *tsChannel) {
 			 */
 			usb_serial_start();
 			// if console uses UART then TS uses USB
-			tsChannel->channel = (BaseChannel *) &CONSOLE_USB_DEVICE;
+			tsChannel->channel = (BaseChannel *) &TS_USB_DEVICE;
 			return;
-		#endif /* CONSOLE_USB_DEVICE */
+		#endif /* TS_USB_DEVICE */
 		#if defined(TS_UART_DEVICE) || defined(TS_SERIAL_DEVICE)
 			if (CONFIG(useSerialPort)) {
 
@@ -88,6 +101,19 @@ void startTsPort(ts_channel_s *tsChannel) {
 				#endif
 			}
 		#endif /* TS_UART_DMA_MODE || TS_UART_MODE */
+		#if defined(TS_CAN_DEVICE)
+			/*if (CONFIG(useCanForTs))*/ {
+				print("TunerStudio over CAN");
+
+				efiSetPadMode("ts can rx", GPIOG_13/*CONFIG(canRxPin)*/, PAL_MODE_ALTERNATE(TS_CAN_AF)); // CAN2_RX2_0
+				efiSetPadMode("ts can tx", GPIOG_14/*CONFIG(canTxPin)*/, PAL_MODE_ALTERNATE(TS_CAN_AF)); // CAN2_TX2_0
+
+				canStart(&TS_CAN_DEVICE, &tsCanConfig);
+				canInit(&TS_CAN_DEVICE);
+
+				//tsChannel->channel = (BaseChannel *) &TS_CAN_DEVICE;
+			}
+		#endif /* TS_CAN_DEVICE */
 	#else  /* EFI_PROD_CODE */
 		tsChannel->channel = (BaseChannel *) TS_SIMULATOR_PORT;
 	#endif /* EFI_PROD_CODE */
@@ -109,6 +135,11 @@ bool stopTsPort(ts_channel_s *tsChannel) {
 				sdStop(TS_SERIAL_DEVICE);
 			#endif /* TS_SERIAL_DEVICE */
 		}
+		#if defined(TS_CAN_DEVICE)
+		/*if (CONFIG(useCanForTs))*/ {
+			canStop(&TS_CAN_DEVICE);
+		}
+		#endif /* TS_CAN_DEVICE */
 		tsChannel->channel = (BaseChannel *) NULL;
 		return true;
 	#else  /* EFI_PROD_CODE */
@@ -125,12 +156,15 @@ void sr5WriteData(ts_channel_s *tsChannel, const uint8_t * buffer, int size) {
 
 #if (PRIMARY_UART_DMA_MODE || TS_UART_DMA_MODE || TS_UART_MODE) && EFI_PROD_CODE
 	if (tsChannel->uartp != nullptr) {
-		int transferred = size;
-		uartSendTimeout(tsChannel->uartp, (size_t *)&transferred, buffer, BINARY_IO_TIMEOUT);
-		return;
+	    int transferred = size;
+	    uartSendTimeout(tsChannel->uartp, (size_t *)&transferred, buffer, BINARY_IO_TIMEOUT);
+        return;
 	}
-#endif // UART
-
+#elif defined(TS_CAN_DEVICE)
+	UNUSED(tsChannel);
+	int transferred = size;
+	canAddToTxStreamTimeout(&TS_CAN_DEVICE, (size_t *)&transferred, buffer, BINARY_IO_TIMEOUT);
+#endif
 	if (tsChannel->channel == nullptr)
 		return;
 
@@ -172,6 +206,11 @@ int sr5ReadDataTimeout(ts_channel_s *tsChannel, uint8_t * buffer, int size, int 
 	size_t received = (size_t)size;
 	uartReceiveTimeout(TS_UART_DEVICE, &received, buffer, timeout);
 	return (int)received;
+#elif defined(TS_CAN_DEVICE)
+	UNUSED(tsChannel);
+	size_t received = (size_t)size;
+	canStreamReceiveTimeout(&TS_CAN_DEVICE, &received, buffer, timeout);
+	return (int)received;
 #else /* TS_UART_DMA_MODE */
 	if (tsChannel->channel == nullptr)
 		return 0;
@@ -193,6 +232,19 @@ void sr5WriteCrcPacket(ts_channel_s *tsChannel, const uint8_t responseCode, cons
 	uint8_t *writeBuffer = tsChannel->writeBuffer;
 	uint8_t *crcBuffer = &tsChannel->writeBuffer[3];
 
+#if defined(TS_CAN_DEVICE) && defined(TS_CAN_DEVICE_SHORT_PACKETS_IN_ONE_FRAME)
+	// a special case for short packets: we can sent them in 1 frame, without CRC & size,
+	// because the CAN protocol is already protected by its own checksum.
+	if ((size + 1) <= 7) {
+		sr5WriteData(tsChannel, &responseCode, 1);      // header without size
+		if (size > 0) {
+			sr5WriteData(tsChannel, (const uint8_t*)buf, size);      // body
+		}
+		sr5FlushData(tsChannel);
+		return;
+	}
+#endif /* TS_CAN_DEVICE */
+
 	*(uint16_t *) writeBuffer = SWAP_UINT16(size + 1);   // packet size including command
 	*(uint8_t *) (writeBuffer + 2) = responseCode;
 
@@ -207,14 +259,17 @@ void sr5WriteCrcPacket(ts_channel_s *tsChannel, const uint8_t responseCode, cons
 		sr5WriteData(tsChannel, (const uint8_t*)buf, size);      // body
 	}
 	sr5WriteData(tsChannel, crcBuffer, 4);      // CRC footer
+	sr5FlushData(tsChannel);
 }
 
 void sr5SendResponse(ts_channel_s *tsChannel, ts_response_format_e mode, const uint8_t * buffer, int size) {
 	if (mode == TS_CRC) {
 		sr5WriteCrcPacket(tsChannel, TS_RESPONSE_OK, buffer, size);
 	} else {
-		if (size > 0)
+		if (size > 0) {
 			sr5WriteData(tsChannel, buffer, size);
+			sr5FlushData(tsChannel);
+		}
 	}
 }
 
@@ -226,5 +281,12 @@ bool sr5IsReady(ts_channel_s *tsChannel) {
 	}
 #endif /* EFI_USB_SERIAL */
 	return true;
+}
+
+void sr5FlushData(ts_channel_s *tsChannel) {
+#if defined(TS_CAN_DEVICE)
+	UNUSED(tsChannel);
+	canFlushTxStream(&TS_CAN_DEVICE);
+#endif /* TS_CAN_DEVICE */
 }
 

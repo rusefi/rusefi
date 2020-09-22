@@ -48,17 +48,17 @@ float RpmCalculator::getRpmAcceleration() const {
 	return 1.0 * previousRpmValue / rpmValue;
 }
 
-bool RpmCalculator::isStopped(DECLARE_ENGINE_PARAMETER_SIGNATURE) const {
+bool RpmCalculator::isStopped() const {
 	// Spinning-up with zero RPM means that the engine is not ready yet, and is treated as 'stopped'.
 	return state == STOPPED || (state == SPINNING_UP && rpmValue == 0);
 }
 
-bool RpmCalculator::isCranking(DECLARE_ENGINE_PARAMETER_SIGNATURE) const {
+bool RpmCalculator::isCranking() const {
 	// Spinning-up with non-zero RPM is suitable for all engine math, as good as cranking
 	return state == CRANKING || (state == SPINNING_UP && rpmValue > 0);
 }
 
-bool RpmCalculator::isSpinningUp(DECLARE_ENGINE_PARAMETER_SIGNATURE) const {
+bool RpmCalculator::isSpinningUp() const {
 	return state == SPINNING_UP;
 }
 
@@ -71,7 +71,7 @@ uint32_t RpmCalculator::getRevolutionCounterSinceStart(void) const {
  * See NOISY_RPM
  */
 // todo: migrate to float return result or add a float version? this would have with calculations
-int RpmCalculator::getRpm(DECLARE_ENGINE_PARAMETER_SIGNATURE) const {
+int RpmCalculator::getRpm() const {
 #if !EFI_PROD_CODE
 	if (mockRpm != MOCK_UNDEFINED) {
 		return mockRpm;
@@ -86,7 +86,9 @@ EXTERN_ENGINE;
 
 static Logging * logger;
 
-RpmCalculator::RpmCalculator() {
+RpmCalculator::RpmCalculator() :
+		StoredValueSensor(SensorType::Rpm, 0)
+	{
 #if !EFI_PROD_CODE
 	mockRpm = MOCK_UNDEFINED;
 #endif /* EFI_PROD_CODE */
@@ -100,14 +102,14 @@ RpmCalculator::RpmCalculator() {
 /**
  * @return true if there was a full shaft revolution within the last second
  */
-bool RpmCalculator::isRunning(DECLARE_ENGINE_PARAMETER_SIGNATURE) const {
+bool RpmCalculator::isRunning() const {
 	return state == RUNNING;
 }
 
 /**
  * @return true if engine is spinning (cranking or running)
  */
-bool RpmCalculator::checkIfSpinning(efitick_t nowNt DECLARE_ENGINE_PARAMETER_SUFFIX) const {
+bool RpmCalculator::checkIfSpinning(efitick_t nowNt) const {
 	if (ENGINE(needToStopEngine(nowNt))) {
 		return false;
 	}
@@ -128,13 +130,17 @@ bool RpmCalculator::checkIfSpinning(efitick_t nowNt DECLARE_ENGINE_PARAMETER_SUF
 	return true;
 }
 
-void RpmCalculator::assignRpmValue(float floatRpmValue DECLARE_ENGINE_PARAMETER_SUFFIX) {
+void RpmCalculator::assignRpmValue(float floatRpmValue) {
 	previousRpmValue = rpmValue;
 	// we still persist integer RPM! todo: figure out the next steps
 	rpmValue = floatRpmValue;
+
 	if (rpmValue <= 0) {
 		oneDegreeUs = NAN;
+		invalidate();
 	} else {
+		setValidValue(floatRpmValue, 0);	// 0 for current time since RPM sensor never times out
+
 		// here it's really important to have more precise float RPM value, see #796
 		oneDegreeUs = getOneDegreeTimeUs(floatRpmValue);
 		if (previousRpmValue == 0) {
@@ -147,8 +153,8 @@ void RpmCalculator::assignRpmValue(float floatRpmValue DECLARE_ENGINE_PARAMETER_
 	}
 }
 
-void RpmCalculator::setRpmValue(float value DECLARE_ENGINE_PARAMETER_SUFFIX) {
-	assignRpmValue(value PASS_ENGINE_PARAMETER_SUFFIX);
+void RpmCalculator::setRpmValue(float value) {
+	assignRpmValue(value);
 	spinning_state_e oldState = state;
 	// Change state
 	if (rpmValue == 0) {
@@ -191,31 +197,33 @@ uint32_t RpmCalculator::getRevolutionCounterM(void) const {
 	return revolutionCounterSinceBoot;
 }
 
-void RpmCalculator::setStopped(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+void RpmCalculator::setStopped() {
 	revolutionCounterSinceStart = 0;
 	if (rpmValue != 0) {
-		assignRpmValue(0 PASS_ENGINE_PARAMETER_SUFFIX);
+		assignRpmValue(0);
+		// needed by 'useNoiselessTriggerDecoder'
+		engine->triggerCentral.noiseFilter.resetAccumSignalData();
 		scheduleMsg(logger, "engine stopped");
 	}
 	state = STOPPED;
 }
 
-void RpmCalculator::setStopSpinning(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+void RpmCalculator::setStopSpinning() {
 	isSpinning = false;
-	setStopped(PASS_ENGINE_PARAMETER_SIGNATURE);
+	setStopped();
 }
 
-void RpmCalculator::setSpinningUp(efitick_t nowNt DECLARE_ENGINE_PARAMETER_SUFFIX) {
+void RpmCalculator::setSpinningUp(efitick_t nowNt) {
 	if (!CONFIG(isFasterEngineSpinUpEnabled))
 		return;
 	// Only a completely stopped and non-spinning engine can enter the spinning-up state.
-	if (isStopped(PASS_ENGINE_PARAMETER_SIGNATURE) && !isSpinning) {
+	if (isStopped() && !isSpinning) {
 		state = SPINNING_UP;
 		engine->triggerCentral.triggerState.spinningEventIndex = 0;
 		isSpinning = true;
 	}
 	// update variables needed by early instant RPM calc.
-	if (isSpinningUp(PASS_ENGINE_PARAMETER_SIGNATURE)) {
+	if (isSpinningUp()) {
 		engine->triggerCentral.triggerState.setLastEventTimeForInstantRpm(nowNt PASS_ENGINE_PARAMETER_SUFFIX);
 	}
 	/**
@@ -238,7 +246,7 @@ void rpmShaftPositionCallback(trigger_event_e ckpSignalType,
 	RpmCalculator *rpmState = &engine->rpmCalculator;
 
 	if (index == 0) {
-		bool hadRpmRecently = rpmState->checkIfSpinning(nowNt PASS_ENGINE_PARAMETER_SUFFIX);
+		bool hadRpmRecently = rpmState->checkIfSpinning(nowNt);
 
 		if (hadRpmRecently) {
 			efitick_t diffNt = nowNt - rpmState->lastRpmEventTimeNt;
@@ -250,11 +258,11 @@ void rpmShaftPositionCallback(trigger_event_e ckpSignalType,
 		 *
 		 */
 			if (diffNt == 0) {
-				rpmState->setRpmValue(NOISY_RPM PASS_ENGINE_PARAMETER_SUFFIX);
+				rpmState->setRpmValue(NOISY_RPM);
 			} else {
 				int mult = (int)getEngineCycle(engine->getOperationMode(PASS_ENGINE_PARAMETER_SIGNATURE)) / 360;
 				float rpm = 60.0 * NT_PER_SECOND * mult / diffNt;
-				rpmState->setRpmValue(rpm > UNREALISTIC_RPM ? NOISY_RPM : rpm PASS_ENGINE_PARAMETER_SUFFIX);
+				rpmState->setRpmValue(rpm > UNREALISTIC_RPM ? NOISY_RPM : rpm);
 			}
 		}
 		rpmState->onNewEngineCycle();
@@ -272,16 +280,17 @@ void rpmShaftPositionCallback(trigger_event_e ckpSignalType,
 	}
 #endif /* EFI_SENSOR_CHART */
 
-	if (rpmState->isSpinningUp(PASS_ENGINE_PARAMETER_SIGNATURE)) {
+	if (rpmState->isSpinningUp()) {
 		// we are here only once trigger is synchronized for the first time
 		// while transitioning  from 'spinning' to 'running'
 		// Replace 'normal' RPM with instant RPM for the initial spin-up period
 		engine->triggerCentral.triggerState.movePreSynchTimestamps(PASS_ENGINE_PARAMETER_SIGNATURE);
 		int prevIndex;
-		int instantRpm = engine->triggerCentral.triggerState.calculateInstantRpm(&prevIndex, nowNt PASS_ENGINE_PARAMETER_SUFFIX);
+		int instantRpm = engine->triggerCentral.triggerState.calculateInstantRpm(&engine->triggerCentral.triggerFormDetails,
+				&prevIndex, nowNt PASS_ENGINE_PARAMETER_SUFFIX);
 		// validate instant RPM - we shouldn't skip the cranking state
 		instantRpm = minI(instantRpm, CONFIG(cranking.rpm) - 1);
-		rpmState->assignRpmValue(instantRpm PASS_ENGINE_PARAMETER_SUFFIX);
+		rpmState->assignRpmValue(instantRpm);
 #if 0
 		scheduleMsg(logger, "** RPM: idx=%d sig=%d iRPM=%d", index, ckpSignalType, instantRpm);
 #endif
@@ -353,9 +362,18 @@ float getCrankshaftAngleNt(efitick_t timeNt DECLARE_ENGINE_PARAMETER_SUFFIX) {
 }
 
 void initRpmCalculator(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX) {
+	INJECT_ENGINE_REFERENCE(&ENGINE(rpmCalculator));
+
 	logger = sharedLogger;
+#if ! HW_CHECK_MODE
 	if (hasFirmwareError()) {
 		return;
+	}
+#endif // HW_CHECK_MODE
+
+	// Only register if not configured to read RPM over OBD2
+	if (!CONFIG(consumeObdSensors)) {
+		ENGINE(rpmCalculator).Register();
 	}
 
 #if !EFI_UNIT_TEST

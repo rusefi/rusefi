@@ -1,6 +1,7 @@
 #include "closed_loop_fuel_cell.h"
 #include "engine.h"
 #include "engine_configuration_generated_structures.h"
+#include "sensor.h"
 
 EXTERN_ENGINE;
 
@@ -48,7 +49,14 @@ float ClosedLoopFuelCellBase::getAdjustment() const {
 }
 
 float ClosedLoopFuelCellImpl::getLambdaError(DECLARE_ENGINE_PARAMETER_SIGNATURE) const {
-	return (ENGINE(sensors.currentAfr) - ENGINE(engineState.targetAFR)) / 14.7f;
+	auto lambda = Sensor::get(SensorType::Lambda);
+
+	// Failed sensor -> no error
+	if (!lambda) {
+		return 0;
+	}
+
+	return lambda.Value - (ENGINE(engineState.targetAFR) / 14.7f);
 }
 
 #define MAX_ADJ (0.25f)

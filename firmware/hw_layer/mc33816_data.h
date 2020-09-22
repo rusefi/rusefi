@@ -7,7 +7,7 @@
 
 #pragma once
 
-extern const unsigned short MC33816_code_RAM1[62];    // CODE RAM CH 1
+extern const unsigned short MC33816_code_RAM1[88];    // CODE RAM CH 1
 extern const unsigned short MC33816_code_RAM2[43];    // CODE RAM CH 2
 extern const unsigned short MC33816_data_RAM[128];    // DATA RAM
 extern const unsigned short MC33816_main_config[29];  // main configurations

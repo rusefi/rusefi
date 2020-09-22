@@ -39,7 +39,7 @@ public class UploadView {
         return PersistentConfiguration.getConfig().getRoot().getBoolProperty(AUTO_UPLOAD, false);
     }
 
-    public void setResult(UploadResult result) {
+    public static void setResult(UploadResult result, JLabel uploadState) {
         uploadState.setText(result.getFirstMessage());
         uploadState.setVisible(true);
     }
