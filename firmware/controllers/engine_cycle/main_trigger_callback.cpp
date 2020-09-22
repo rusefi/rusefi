@@ -434,7 +434,7 @@ static void mainTriggerCallback(trigger_event_e ckpSignalType, uint32_t trgEvent
 	if ((!limitedSpark)&&(!limitedFuel))
 	{
 		/* in case we are not already on a limited conditions, check launch as well */
-		applyLaunchControlLimiting(&limitedSpark,&limitedFuel PASS_ENGINE_PARAMETER_SIGNATURE);
+		applyLaunchControlLimiting(&limitedSpark,&limitedFuel PASS_ENGINE_PARAMETER_SUFFIX);
 	}
 #endif
 	if (trgEventIndex == 0) {
