@@ -386,6 +386,13 @@ struct ThermistorConf @brief Thermistor curve parameters
 	adc_channel_e adcChannel;
 end_struct
 
+#define TT_TT_TOOTHED_WHEEL 0
+#define TT_TT_TOOTHED_WHEEL_60_2 8
+#define TT_TT_TOOTHED_WHEEL_36_1 9
+#define TT_TT_ONE 18
+#define TT_TT_60_2_VW 20
+#define TT_TT_TOOTHED_WHEEL_36_2 48
+
 #define ET_DODGE_NEON_1995 2
 #define ET_FORD_ASPIRE 3
 #define ET_FORD_FIESTA 4

@@ -10,4 +10,8 @@ TEST(hardware, reinit) {
 
 	ButtonDebounce::stopConfigurationList();
 	ButtonDebounce::startConfigurationList();
+
+
+	resetConfigurationExt(nullptr, nullptr, ROVER_V8 PASS_ENGINE_PARAMETER_SUFFIX);
+	resetConfigurationExt(nullptr, nullptr, MIATA_NA6_MAP PASS_ENGINE_PARAMETER_SUFFIX);
 }

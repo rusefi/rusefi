@@ -33,4 +33,5 @@ private:
     bool initialized = false;
     ButtonDebounce *nextDebounce = nullptr;
     static ButtonDebounce* s_firstDebounce;
+    bool needsInit = false;
 };

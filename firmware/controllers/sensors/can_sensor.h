@@ -121,4 +121,3 @@ public:
 	int PID;
 	float Scale;
 };
-

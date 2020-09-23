@@ -6,8 +6,7 @@
  * @author andreika <prometheus.pcb@gmail.com>
  */
 
-#ifndef RUSEFI_HW_ENUMS_H_
-#define RUSEFI_HW_ENUMS_H_
+#pragma once
 
 // todo: migrate/unify with pin_output_mode_e? rename? something is messy here
 // this enum is currently only used for SPI pins
@@ -181,7 +180,3 @@ typedef enum __attribute__ ((__packed__)) {
 	// todo: bad choice of value since now we have ADC_CHANNEL_SENSOR and could end up with 17 and 18 also
 	EFI_ADC_ERROR = 17,
 } adc_channel_e;
-
-#define INCOMPATIBLE_CONFIG_CHANGE EFI_ADC_0
-
-#endif /* RUSEFI_HW_ENUMS_H_ */
