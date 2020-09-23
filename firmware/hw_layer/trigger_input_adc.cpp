@@ -388,15 +388,15 @@ void triggerAdcCallback(adcsample_t value) {
 	}
 	else {
 		//!!!!!!!!!!
-		toggleLed(2, 0);
+		//toggleLed(2, 0);
 
 		return;	// both are positive/negative/zero: not interested!
 	}
 
 	//!!!!!!!!!!
-	toggleLed(2, -1);
+	//toggleLed(2, -1);
 	//!!!!!!!!!!
-	toggleLed(3, 0);
+	//toggleLed(3, 0);
 
  	if (isSignalWeak) {
 		 if (minDeltaThresholdCntPos >= DELTA_THRESHOLD_CNT_LOW && minDeltaThresholdCntNeg >= DELTA_THRESHOLD_CNT_LOW) {
