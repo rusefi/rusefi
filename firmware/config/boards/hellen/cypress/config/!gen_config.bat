@@ -1,36 +1,3 @@
 @echo off
 
-rem This batch files reads rusefi_config.txt and produses firmware persistent configuration headers
-rem the storage section of rusefi.ini is updated as well
-
-cd ../../../../..
-
-pwd
-
-java ^
- -DSystemOut.name=gen_config ^
- -cp ../java_tools/ConfigDefinition.jar;../java_tools/configuration_definition/lib/snakeyaml.jar ^
- com.rusefi.board_generator.BoardReader ^
- -board hellen/cypress ^
- -firmware_path . ^
- -out config/boards/hellen/cypress/config/tunerstudio ^
- -enumInputFile controllers/algo/rusefi_enums.h ^
- -enumInputFile config/boards/hellen/cypress/rusefi_hw_enums.h
-
-mkdir build_cypress
-
-java ^
- -DSystemOut.name=gen_config ^
- -Drusefi.generator.lazyfile.enabled=true ^
- -jar ../java_tools/ConfigDefinition.jar ^
- -definition integration/rusefi_config.txt ^
- -ts_destination tunerstudio ^
- -with_c_defines false ^
- -initialize_to_zero false ^
- -ts_output_name rusefi_cypress.ini ^
- -c_defines config/boards/hellen/cypress/config/controllers/algo/rusefi_generated.h ^
- -c_destination config/boards/hellen/cypress/config/controllers/algo/engine_configuration_generated_structures.h ^
- -prepend config/boards/hellen/cypress/config/rusefi_config_cypress.txt ^
- -prepend config/boards/hellen/cypress/config/tunerstudio/cypress_prefix.txt ^
- -skip build_cypress/config.gen
-
+sh.exe gen_config.sh
