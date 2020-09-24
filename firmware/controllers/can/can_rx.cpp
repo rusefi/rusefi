@@ -27,7 +27,6 @@ static void printPacket(const CANRxFrame& rx, Logging* logger) {
 	}
 }
 
-volatile float aemXSeriesLambda = 0;
 volatile float canMap = 0;
 
 CanSensorBase* cansensors_head = nullptr;
@@ -56,18 +55,13 @@ void processCanRxMessage(const CANRxFrame& frame, Logging* logger, efitick_t now
 	//Vss is configurable, should we handle it here:
 	processCanRxVss(frame, nowNt);
 
-	// TODO: if/when we support multiple lambda sensors, sensor N
-	// has address 0x0180 + N where N = [0, 15]
-	if (frame.SID == 0x0180) {
-		// AEM x-series lambda sensor reports in 0.0001 lambda per bit
-		uint16_t lambdaInt = SWAP_UINT16(frame.data16[0]);
-		aemXSeriesLambda = 0.0001f * lambdaInt;
 #if EFI_CANBUS_SLAVE
-	} else if (frame.EID == CONFIG(verboseCanBaseAddress) + CAN_SENSOR_1_OFFSET) {
+	if (frame.EID == CONFIG(verboseCanBaseAddress) + CAN_SENSOR_1_OFFSET) {
 		int16_t mapScaled = *reinterpret_cast<const int16_t*>(&frame.data8[0]);
 		canMap = mapScaled / (1.0 * PACK_MULT_PRESSURE);
+	} else
 #endif
-	} else {
+	{
 		obdOnCanPacketRx(frame);
 	}
 }

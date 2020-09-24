@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEfi tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Fri Sep 18 07:05:11 UTC 2020
+// this file was generated automatically by rusEfi tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Tue Sep 22 08:58:43 UTC 2020
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -23,7 +23,7 @@ public class Fields {
 	public static final int activateAuxPid2_offset = 76;
 	public static final int activateAuxPid3_offset = 76;
 	public static final int activateAuxPid4_offset = 76;
-	public static final int ADC_CHANNEL_NONE = 16;
+	public static final int ADC_CHANNEL_NONE = 0;
 	public static final int adcVcc_offset = 548;
 	public static final int afr_alignmentFill_afr_offset = 561;
 	public static final int afr_hwChannel_offset = 560;
@@ -1125,6 +1125,7 @@ public class Fields {
 	public static final int servoOutputPins8_offset = 3147;
 	public static final int showHumanReadableWarning_offset = 976;
 	public static final int showSdCardWarning_offset = 76;
+	public static final int SIGNATURE_HASH = 640464925;
 	public static final int silentTriggerError_offset = 1464;
 	public static final int slowAdcAlpha_offset = 2088;
 	public static final int solenoidPadding_offset = 1198;
@@ -1386,8 +1387,14 @@ public class Fields {
 	public static final char TS_SD_R_COMMAND = 'r';
 	public static final char TS_SD_W_COMMAND = 'w';
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI 2020.09.18.all.2576577388";
+	public static final String TS_SIGNATURE = "rusEFI 2020.09.22.all.640464925";
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
+	public static final int TT_TT_60_2_VW = 20;
+	public static final int TT_TT_ONE = 18;
+	public static final int TT_TT_TOOTHED_WHEEL = 0;
+	public static final int TT_TT_TOOTHED_WHEEL_36_1 = 9;
+	public static final int TT_TT_TOOTHED_WHEEL_36_2 = 48;
+	public static final int TT_TT_TOOTHED_WHEEL_60_2 = 8;
 	public static final int tunerStudioSerialSpeed_offset = 728;
 	public static final int twoWireBatchIgnition_offset = 1476;
 	public static final int twoWireBatchInjection_offset = 1476;

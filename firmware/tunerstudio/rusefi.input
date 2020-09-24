@@ -1446,8 +1446,8 @@ menuDialog = main
 		subMenu = etbTpsBiasCurve,			"Electronic throttle body bias curve" @@if_ts_show_etb
 		subMenu = pedalToTpsTbl,			"Electronic Pedal Map" @@if_ts_show_etb
 		subMenu = std_separator
-#        subMenu = smLaunchControl,			"Launch Control"
-#		subMenu = std_separator
+        subMenu = smLaunchControl,			"Launch Control"
+		subMenu = std_separator
 #		subMenu = smRollingLaunch,			"Rolling Launch"
 #		subMenu = std_separator
 #		subMenu = antiLag,        			"Antilag Setup"
@@ -1687,8 +1687,8 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 		field = "#Cam is primary if you have cam sensor"
 		field = "Primary channel", 						triggerInputPins1
 		field = "Invert Primary",						invertPrimaryTriggerSignal
-		field = "Secondary channel", 					triggerInputPins2,            { trigger_type != 0 && trigger_type != 8 && trigger_type != 9 && trigger_type != 18 && trigger_type != 20}
-		field = "Invert Secondary",						invertSecondaryTriggerSignal, { trigger_type != 0 && trigger_type != 8 && trigger_type != 9 && trigger_type != 18 && trigger_type != 20}
+		field = "Secondary channel", 					triggerInputPins2,            { trigger_type != @@TT_TT_TOOTHED_WHEEL@@ && trigger_type != @@TT_TT_TOOTHED_WHEEL_60_2@@ && trigger_type != @@TT_TT_TOOTHED_WHEEL_36_1@@ && trigger_type != @@TT_TT_ONE@@ && trigger_type != @@TT_TT_60_2_VW@@ && trigger_type != @@TT_TT_TOOTHED_WHEEL_36_2@@}
+		field = "Invert Secondary",						invertSecondaryTriggerSignal, { trigger_type != @@TT_TT_TOOTHED_WHEEL@@ && trigger_type != @@TT_TT_TOOTHED_WHEEL_60_2@@ && trigger_type != @@TT_TT_TOOTHED_WHEEL_36_1@@ && trigger_type != @@TT_TT_ONE@@ && trigger_type != @@TT_TT_60_2_VW@@ && trigger_type != @@TT_TT_TOOTHED_WHEEL_36_2@@}
 		field = "Cam Sync/VVT input",					camInputs1
 		field = "Invert Cam/VVT",                       invertCamVVTSignal
 		panel = triggerInputComparator @@if_ts_show_trigger_comparator
@@ -3158,7 +3158,7 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 		field = "Log recent errors list",				enableLogErrorList
 
 				;			Racing Features->Launch Control
-	dialog = smLaunchControl, "Launch Control Settings NOT WORKING"
+	dialog = smLaunchControl, "Launch Control Settings EXPERIMENTAL"
         field = "Enable Launch Control",               	launchControlEnabled
 		field = "Activation Mode",                      launchActivationMode
 	    field = "Switch Input",                     	launchActivatePin,  {launchActivationMode == 0 && launchControlEnabled == 1}
@@ -3170,6 +3170,7 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 		field = "Launch RPM",            	    		launchRpm,  {launchControlEnabled == 1}
 		field = "Extra Fuel",           				launchFuelAdded,  {launchControlEnabled == 1}
         field = "Boost Solenoid Duty",	                launchBoostDuty,  {launchControlEnabled == 1}
+		field = "Ignition Retard enable",               enableLaunchRetard,  {launchControlEnabled == 1}
 		field = "Ignition Retard",      				launchTimingRetard,  {launchControlEnabled == 1}
 		field = "Ignition Retard RPM Range",            launchTimingRpmRange,  {launchControlEnabled == 1}
 		field = "Smooth Retard Mode",                   launchSmoothRetard,  {launchControlEnabled == 1}

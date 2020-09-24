@@ -193,7 +193,7 @@ struct_no_prefix engine_configuration_s
 
 #define TPS_TPS_ACCEL_TABLE 8
 #define MAP_ACCEL_TAPER 8
-#define ADC_CHANNEL_NONE 16
+#define ADC_CHANNEL_NONE 0
 
 #define BARO_CORR_SIZE 4
 
@@ -385,6 +385,13 @@ struct ThermistorConf @brief Thermistor curve parameters
 	thermistor_conf_s config;
 	adc_channel_e adcChannel;
 end_struct
+
+#define TT_TT_TOOTHED_WHEEL 0
+#define TT_TT_TOOTHED_WHEEL_60_2 8
+#define TT_TT_TOOTHED_WHEEL_36_1 9
+#define TT_TT_ONE 18
+#define TT_TT_60_2_VW 20
+#define TT_TT_TOOTHED_WHEEL_36_2 48
 
 #define ET_DODGE_NEON_1995 2
 #define ET_FORD_ASPIRE 3
@@ -813,7 +820,7 @@ custom uart_device_e 1 bits,U32,   @OFFSET@, [0:1], "Off", "UART1", "UART2", "UA
 	uint16_t tps1SecondaryMin;;"ADC", 1, 0, 0, 1000, 0
 	uint16_t tps1SecondaryMax;;"ADC", 1, 0, 0, 1000, 0
 	int16_t antiLagRpmTreshold;;"rpm", 1, 0, 0, 20000, 0
-	int16_t startCrankingDuration;Maximum time to crank starter;"Seconds",      1,      0,       0, 30,      0
+	efitimesec16_t startCrankingDuration;Maximum time to crank starter;"Seconds",      1,      0,       0, 30,      0
 
 	brain_pin_e triggerErrorPin;+This pin is used for debugging - snap a logic analyzer on it and see if it's ever high
 	pin_output_mode_e triggerErrorPinMode;

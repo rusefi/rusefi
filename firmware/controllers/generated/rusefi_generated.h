@@ -21,7 +21,7 @@
 #define activateAuxPid4_offset 76
 #define adc_channel_e_enum "Disabled", "PA0", "PA1", "PA2", "PA3", "PA4", "PA5", "PA6", "PA7", "PB0", "PB1", "PC0", "PC1", "PC2", "PC3", "PC4", "PC5"
 #define adc_channel_mode_e_auto_enum "ADC_OFF", "ADC_SLOW", "ADC_FAST"
-#define ADC_CHANNEL_NONE 16
+#define ADC_CHANNEL_NONE 0
 #define adcVcc_offset 548
 #define afr_alignmentFill_afr_offset 561
 #define afr_hwChannel_offset 560
@@ -1169,8 +1169,8 @@
 #define showHumanReadableWarning_offset 976
 #define showSdCardWarning_offset 76
 #define SIGNATURE_BOARD all
-#define SIGNATURE_DATE 2020.09.18
-#define SIGNATURE_HASH 2576577388
+#define SIGNATURE_DATE 2020.09.22
+#define SIGNATURE_HASH 640464925
 #define silentTriggerError_offset 1464
 #define slowAdcAlpha_offset 2088
 #define solenoidPadding_offset 1198
@@ -1482,10 +1482,16 @@
 #define ts_show_spi true
 #define ts_show_trigger_comparator false
 #define ts_show_tunerstudio_port true
-#define TS_SIGNATURE "rusEFI 2020.09.18.all.2576577388"
+#define TS_SIGNATURE "rusEFI 2020.09.22.all.640464925"
 #define TS_SINGLE_WRITE_COMMAND 'W'
 #define TS_SINGLE_WRITE_COMMAND_char W
 #define TS_TEST_COMMAND 't' // 0x74
+#define TT_TT_60_2_VW 20
+#define TT_TT_ONE 18
+#define TT_TT_TOOTHED_WHEEL 0
+#define TT_TT_TOOTHED_WHEEL_36_1 9
+#define TT_TT_TOOTHED_WHEEL_36_2 48
+#define TT_TT_TOOTHED_WHEEL_60_2 8
 #define tunerStudioSerialSpeed_offset 728
 #define twoWireBatchIgnition_offset 1476
 #define twoWireBatchInjection_offset 1476
