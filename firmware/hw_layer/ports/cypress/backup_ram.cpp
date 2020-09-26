@@ -1,12 +1,13 @@
 /**
  * @file	backup_ram.cpp
+ * @brief	NVRAM emulation using Internal Flash (flash_int driver)
  *
  * @date May 22, 2020
  */
 
 #include "global.h"
 #include "backup_ram.h"
-#include "flash.h"
+#include "flash_int.h"
 
 #define BACKUP_NOT_INITIALIZED 0xFFFF
 #define BACKUP_SAVED           0x5555
@@ -23,7 +24,7 @@ static void backupInit(void) {
 	static_assert(backupSize <= BACKUP_FLASH_SIZE, "Backup flash overflow");
 
 	// first, load the whole buffer into the memory
-	flashRead((flashaddr_t)BACKUP_FLASH_ADDR, (char *)backupRam, backupSize);
+	intFlashRead((flashaddr_t)BACKUP_FLASH_ADDR, (char *)backupRam, backupSize);
 	// check if we have a reliable properly saved data
 	if (backupRam[backupStateOffset] != BACKUP_SAVED) {	
 		// zero is the default value
@@ -33,7 +34,7 @@ static void backupInit(void) {
 	// we cannot trust the saved data anymore, until it's saved in backupRamFlush()
 	// so we mark is as 'pending'
 	backupRam[backupStateOffset] = BACKUP_PENDING;
-	flashWrite(BACKUP_FLASH_ADDR + backupStateOffset, (char *)backupRam, sizeof(backupRam[backupStateOffset]));
+	intFlashWrite(BACKUP_FLASH_ADDR + backupStateOffset, (char *)backupRam, sizeof(backupRam[backupStateOffset]));
 	
 	wasLoaded = true;
 }
@@ -64,11 +65,11 @@ void backupRamFlush(void) {
     syssts_t sts = chSysGetStatusAndLockX();
 
 	// rewrite the whole sector
-	flashErase((flashaddr_t)BACKUP_FLASH_ADDR, BACKUP_FLASH_SIZE);
+	intFlashErase((flashaddr_t)BACKUP_FLASH_ADDR, BACKUP_FLASH_SIZE);
 	// mark the data as valid & saved
 	backupRam[backupStateOffset] = BACKUP_SAVED;
 	// save the data to the flash
-	flashWrite((flashaddr_t)BACKUP_FLASH_ADDR, (char *)backupRam, backupSize);
+	intFlashWrite((flashaddr_t)BACKUP_FLASH_ADDR, (char *)backupRam, backupSize);
 
     // Leaving the critical zone
     chSysRestoreStatusX(sts);

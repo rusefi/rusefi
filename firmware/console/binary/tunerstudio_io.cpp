@@ -34,7 +34,7 @@ extern SERIAL_USB_DRIVER TS_USB_DEVICE;
 #endif /* TS_USB_DEVICE */
 
 #ifdef TS_CAN_DEVICE
-#include "tunerstudio_can.h"
+#include "serial_can.h"
 #endif /* TS_CAN_DEVICE */
 
 

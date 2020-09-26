@@ -305,6 +305,9 @@ public:
 	 */
 	bool isFunctionalTestMode = false;
 
+	/**
+	 * See also triggerSimulatorFrequency
+	 */
 	bool directSelfStimulation = false;
 
 	void resetEngineSnifferIfInTestMode();

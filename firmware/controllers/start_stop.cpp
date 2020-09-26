@@ -6,5 +6,6 @@ EXTERN_ENGINE;
 ButtonDebounce startStopButtonDebounce;
 
 void initStartStopButton(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
-	startStopButtonDebounce.init(CONFIG(startCrankingDuration), &CONFIG(startStopButtonPin), &CONFIG(startStopButtonMode));
+	/* startCrankingDuration is efitimesec_t, so we need to multiply it by 1000 to get milliseconds*/
+	startStopButtonDebounce.init((CONFIG(startCrankingDuration)*1000), &CONFIG(startStopButtonPin), &CONFIG(startStopButtonMode));
 }

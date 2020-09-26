@@ -50,7 +50,45 @@ static const char *injectorShortNames[] = { PROTOCOL_INJ1_SHORT_NAME, "i2", "i3"
 
 static const char *auxValveShortNames[] = { "a1", "a2"};
 
-EnginePins::EnginePins() {
+static RegisteredOutputPin * registeredOutputHead = nullptr;
+
+RegisteredOutputPin::RegisteredOutputPin(const char *name, short pinOffset,
+		short pinModeOffset) {
+	this->name = name;
+	this->pinOffset = pinOffset;
+	this->pinModeOffset = pinModeOffset;
+	// adding into head of the list is so easy and since we do not care about order that's what we shall do
+	this->next = registeredOutputHead;
+	registeredOutputHead = this;
+}
+
+void RegisteredOutputPin::unregister() {
+#if EFI_PROD_CODE
+	brain_pin_e        curPin = *(brain_pin_e       *) ((void *) (&((char*)&activeConfiguration)[pinOffset]));
+	brain_pin_e        newPin = *(brain_pin_e       *) ((void *) (&((char*) engineConfiguration)[pinOffset]));
+
+    pin_output_mode_e curMode = *(pin_output_mode_e *) ((void *) (&((char*)&activeConfiguration)[pinModeOffset]));
+    pin_output_mode_e newMode = *(pin_output_mode_e *) ((void *) (&((char*) engineConfiguration)[pinModeOffset]));
+
+    if (curPin != newPin || curMode != newMode) {
+    	unregisterOutput(curPin);
+    }
+#endif // EFI_PROD_CODE
+}
+
+#define CONFIG_OFFSET(x) x##_offset
+// todo: pin and pinMode should be combined into a composite entity
+// todo: one of the impediments is code generator hints handling (we need custom hints and those are not handled nice for fields of structs?)
+#define CONFIG_PIN_OFFSETS(x) CONFIG_OFFSET(x##Pin), CONFIG_OFFSET(x##PinMode)
+
+
+EnginePins::EnginePins() :
+		mainRelay("mainRelay", CONFIG_OFFSET(mainRelayPin), CONFIG_OFFSET(mainRelayPinMode)),
+		starterControl("starterControl", CONFIG_PIN_OFFSETS(starterControl)),
+		// todo: rename starterRelayDisableMode to starterRelayDisablePinMode
+		starterRelayDisable("starterRelayDisable", starterRelayDisablePin_offset, starterRelayDisableMode_offset),
+		fanRelay("fanRelay", CONFIG_PIN_OFFSETS(fan))
+{
 	tachOut.name = PROTOCOL_TACH_NAME;
 
 	static_assert(efi::size(sparkNames) >= IGNITION_PIN_COUNT, "Too many ignition pins"); 
@@ -127,7 +165,6 @@ void EnginePins::unregisterPins() {
 #endif /* EFI_ELECTRONIC_THROTTLE_BODY */
 #if EFI_PROD_CODE
 	unregisterOutputIfPinOrModeChanged(fuelPumpRelay, fuelPumpPin, fuelPumpPinMode);
-	unregisterOutputIfPinOrModeChanged(fanRelay, fanPin, fanPinMode);
 	unregisterOutputIfPinOrModeChanged(acRelay, acRelayPin, acRelayPinMode);
 	unregisterOutputIfPinOrModeChanged(hipCs, hip9011CsPin, hip9011CsPinMode);
 	unregisterOutputIfPinOrModeChanged(triggerDecoderErrorPin, triggerErrorPin, triggerErrorPinMode);
@@ -144,10 +181,12 @@ void EnginePins::unregisterPins() {
 
     unregisterOutputIfPinOrModeChanged(boostPin, boostControlPin, boostControlPinMode);
 	unregisterOutputIfPinOrModeChanged(alternatorPin, alternatorControlPin, alternatorControlPinMode);
-	unregisterOutputIfPinOrModeChanged(mainRelay, mainRelayPin, mainRelayPinMode);
-	unregisterOutputIfPinOrModeChanged(starterRelayDisable, starterRelayDisablePin, starterRelayDisableMode);
 
-	unregisterOutputIfPinChanged(starterControl, starterControlPin);
+	RegisteredOutputPin * pin = registeredOutputHead;
+	while (pin != nullptr) {
+		pin->unregister();
+		pin = pin->next;
+	}
 
 #endif /* EFI_PROD_CODE */
 }

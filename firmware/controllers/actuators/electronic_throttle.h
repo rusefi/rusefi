@@ -30,7 +30,7 @@ public:
 	virtual void init(SensorType positionSensor, DcMotor *motor, int ownIndex, pid_s *pidParameters, const ValueProvider3D* pedalMap) = 0;
 	virtual void reset() = 0;
 	virtual void setIdlePosition(percent_t pos) = 0;
-	virtual void start() = 0;
+	virtual void update() = 0;
 	virtual void autoCalibrateTps() = 0;
 };
 
@@ -39,9 +39,9 @@ public:
 	void init(SensorType positionSensor, DcMotor *motor, int ownIndex, pid_s *pidParameters, const ValueProvider3D* pedalMap) override;
 	void setIdlePosition(percent_t pos) override;
 	void reset() override;
-	void start() override {}
 
-	void update(efitick_t nowNt);
+	// Update the controller's state: read sensors, send output, etc
+	void update();
 
 	// Called when the configuration may have changed.  Controller will
 	// reset if necessary.
