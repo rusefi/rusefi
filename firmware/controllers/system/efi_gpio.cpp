@@ -76,11 +76,18 @@ void RegisteredOutputPin::unregister() {
 #endif // EFI_PROD_CODE
 }
 
+#define CONFIG_OFFSET(x) x##_offset
+// todo: pin and pinMode should be combined into a composite entity
+// todo: one of the impediments is code generator hints handling (we need custom hints and those are not handled nice for fields of structs?)
+#define CONFIG_PIN_OFFSETS(x) CONFIG_OFFSET(x##Pin), CONFIG_OFFSET(x##PinMode)
+
+
 EnginePins::EnginePins() :
-		mainRelay("mainRelay", mainRelayPin_offset, mainRelayPinMode_offset),
-		starterControl("starterControl", starterControlPin_offset, starterControlPinMode_offset),
+		mainRelay("mainRelay", CONFIG_OFFSET(mainRelayPin), CONFIG_OFFSET(mainRelayPinMode)),
+		starterControl("starterControl", CONFIG_PIN_OFFSETS(starterControl)),
+		// todo: rename starterRelayDisableMode to starterRelayDisablePinMode
 		starterRelayDisable("starterRelayDisable", starterRelayDisablePin_offset, starterRelayDisableMode_offset),
-		fanRelay("fanRelay", fanPin_offset, fanPinMode_offset)
+		fanRelay("fanRelay", CONFIG_PIN_OFFSETS(fan))
 {
 	tachOut.name = PROTOCOL_TACH_NAME;
 
