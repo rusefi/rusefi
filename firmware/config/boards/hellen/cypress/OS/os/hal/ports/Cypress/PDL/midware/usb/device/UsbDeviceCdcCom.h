@@ -72,7 +72,7 @@
      
 #if ((FM_PERIPHERAL_USB_DEVICE_ENABLED == ON) && (USBDEVICECDCCOM_ENABLED == ON))
 
-#include "UsbDevice.h"
+#include "usbdevice.h"
 
 /* C binding of definitions if building with C++ compiler */
 #ifdef __cplusplus
