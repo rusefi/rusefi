@@ -159,8 +159,8 @@ public:
 
 	RegisteredOutputPin fanRelay;
 	// see acRelayPin
-	OutputPin acRelay;
-	OutputPin fuelPumpRelay;
+	RegisteredOutputPin acRelay;
+	RegisteredOutputPin fuelPumpRelay;
 	OutputPin o2heater;
 	/**
 	 * brain board RED LED by default
@@ -171,20 +171,20 @@ public:
 	OutputPin runningLedPin; // green LED on brain board by default
 
 	OutputPin debugTriggerSync;
-	OutputPin boostPin;
-	OutputPin idleSolenoidPin;
-	OutputPin secondIdleSolenoidPin;
-	OutputPin alternatorPin;
+	RegisteredOutputPin boostPin;
+	RegisteredOutputPin idleSolenoidPin;
+	RegisteredOutputPin secondIdleSolenoidPin;
+	RegisteredOutputPin alternatorPin;
 	/**
 	 * this one is usually on the gauge cluster, not on the ECU
 	 */
-	OutputPin checkEnginePin;
+	RegisteredOutputPin checkEnginePin;
 
 	NamedOutputPin tachOut;
 
 	OutputPin fsioOutputs[FSIO_COMMAND_COUNT];
-	OutputPin triggerDecoderErrorPin;
-	OutputPin hipCs;
+	RegisteredOutputPin triggerDecoderErrorPin;
+	RegisteredOutputPin hipCs;
 	OutputPin sdCsPin;
 	OutputPin accelerometerCs;
 

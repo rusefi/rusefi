@@ -87,24 +87,35 @@ EnginePins::EnginePins() :
 		starterControl("starterControl", CONFIG_PIN_OFFSETS(starterControl)),
 		// todo: rename starterRelayDisableMode to starterRelayDisablePinMode
 		starterRelayDisable("starterRelayDisable", starterRelayDisablePin_offset, starterRelayDisableMode_offset),
-		fanRelay("fanRelay", CONFIG_PIN_OFFSETS(fan))
+		fanRelay("fanRelay", CONFIG_PIN_OFFSETS(fan)),
+		acRelay("acRelay", CONFIG_PIN_OFFSETS(acRelay)),
+		fuelPumpRelay("fuelPump", CONFIG_PIN_OFFSETS(fuelPump)),
+	    boostPin("boostPin", CONFIG_PIN_OFFSETS(boostControl)),
+		idleSolenoidPin("idleSolenoid", idle_solenoidPin_offset, idle_solenoidPinMode_offset),
+		secondIdleSolenoidPin("secondIdleSolenoid", CONFIG_OFFSET(secondSolenoidPin), idle_solenoidPinMode_offset),
+		alternatorPin("alternatorPin", CONFIG_PIN_OFFSETS(alternatorControl)),
+		checkEnginePin("checkEnginePin", CONFIG_PIN_OFFSETS(malfunctionIndicator)),
+		// todo: NamedOutputPin vs RegisteredOutputPin
+		//		tachOut("tachOut", CONFIG_PIN_OFFSETS(tachOutput)),
+		triggerDecoderErrorPin("triggerDecoderErrorPin", CONFIG_PIN_OFFSETS(triggerError)),
+		hipCs("hipCs", CONFIG_PIN_OFFSETS(hip9011Cs))
 {
 	tachOut.name = PROTOCOL_TACH_NAME;
 
-	static_assert(efi::size(sparkNames) >= IGNITION_PIN_COUNT, "Too many ignition pins"); 
+	static_assert(efi::size(sparkNames) >= IGNITION_PIN_COUNT, "Too many ignition pins");
 	for (int i = 0; i < IGNITION_PIN_COUNT;i++) {
 		enginePins.coils[i].name = sparkNames[i];
 		enginePins.coils[i].shortName = sparkShortNames[i];
 	}
 
-	static_assert(efi::size(injectorNames) >= INJECTION_PIN_COUNT, "Too many injection pins"); 
+	static_assert(efi::size(injectorNames) >= INJECTION_PIN_COUNT, "Too many injection pins");
 	for (int i = 0; i < INJECTION_PIN_COUNT;i++) {
 		enginePins.injectors[i].injectorIndex = i;
 		enginePins.injectors[i].name = injectorNames[i];
 		enginePins.injectors[i].shortName = injectorShortNames[i];
 	}
 
-	static_assert(efi::size(auxValveShortNames) >= AUX_DIGITAL_VALVE_COUNT, "Too many aux valve pins"); 
+	static_assert(efi::size(auxValveShortNames) >= AUX_DIGITAL_VALVE_COUNT, "Too many aux valve pins");
 	for (int i = 0; i < AUX_DIGITAL_VALVE_COUNT;i++) {
 		enginePins.auxValve[i].name = auxValveShortNames[i];
 	}
@@ -164,14 +175,8 @@ void EnginePins::unregisterPins() {
 	unregisterEtbPins();
 #endif /* EFI_ELECTRONIC_THROTTLE_BODY */
 #if EFI_PROD_CODE
-	unregisterOutputIfPinOrModeChanged(fuelPumpRelay, fuelPumpPin, fuelPumpPinMode);
-	unregisterOutputIfPinOrModeChanged(acRelay, acRelayPin, acRelayPinMode);
-	unregisterOutputIfPinOrModeChanged(hipCs, hip9011CsPin, hip9011CsPinMode);
-	unregisterOutputIfPinOrModeChanged(triggerDecoderErrorPin, triggerErrorPin, triggerErrorPinMode);
-	unregisterOutputIfPinOrModeChanged(checkEnginePin, malfunctionIndicatorPin, malfunctionIndicatorPinMode);
 	unregisterOutputIfPinOrModeChanged(tachOut, tachOutputPin, tachOutputPinMode);
-	unregisterOutputIfPinOrModeChanged(idleSolenoidPin, idle.solenoidPin, idle.solenoidPinMode);
-	unregisterOutputIfPinOrModeChanged(secondIdleSolenoidPin, secondSolenoidPin, idle.solenoidPinMode);
+	// todo: add pinMode
 	unregisterOutputIfPinChanged(sdCsPin, sdCardCsPin);
 	unregisterOutputIfPinChanged(accelerometerCs, LIS302DLCsPin);
 
@@ -179,8 +184,6 @@ void EnginePins::unregisterPins() {
 		unregisterOutputIfPinChanged(fsioOutputs[i], fsioOutputPins[i]);
 	}
 
-    unregisterOutputIfPinOrModeChanged(boostPin, boostControlPin, boostControlPinMode);
-	unregisterOutputIfPinOrModeChanged(alternatorPin, alternatorControlPin, alternatorControlPinMode);
 
 	RegisteredOutputPin * pin = registeredOutputHead;
 	while (pin != nullptr) {
