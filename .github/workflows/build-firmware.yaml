@@ -17,7 +17,7 @@ jobs:
         include:
           # Board configurations
           - build-target: cypress
-            folder: hellen/cypress
+            folder: hellen
 
           - build-target: frankenso_na6
             folder: frankenso
