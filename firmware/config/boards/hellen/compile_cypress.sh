@@ -16,4 +16,4 @@ export DEBUG_LEVEL_OPT="-O2"
 
 cd ../../..
 
-bash ./config/boards/common_make.sh
+bash config/boards/common_make.sh
