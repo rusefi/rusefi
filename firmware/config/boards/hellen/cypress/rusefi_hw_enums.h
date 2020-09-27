@@ -288,13 +288,4 @@ typedef enum __attribute__ ((__packed__)) {
 
 	// todo: bad choice of value since now we have ADC_CHANNEL_SENSOR and could end up with 17 and 18 also
 	EFI_ADC_ERROR = 33,
-#if EFI_UNIT_TEST
-	/**
-	 * these values are unfortunately visible to BoardReader
-	 * and TunerStudio would need these ordinals to fit into field size
-	 */
-    TEST_MAF_CHANNEL = 34,
-    TEST_CLT_CHANNEL = 35,
-    TEST_IAT_CHANNEL = 36,
-#endif /* EFI_UNIT_TEST */
 } adc_channel_e;
