@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on hellen_cypress_gen_config.bat integration/rusefi_config.txt Mon Sep 21 18:14:28 EEST 2020
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on hellen_cypress_gen_config.bat integration/rusefi_config.txt Sun Sep 27 15:03:04 UTC 2020
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -1352,7 +1352,7 @@ struct engine_configuration_s {
 	/**
 	 * offset 724
 	 */
-	int unusedAt724;
+	uint8_t unusedAt724[4];
 	/**
 	 * Secondary TTL channel baud rate
 	 * offset 728
@@ -1570,7 +1570,7 @@ struct engine_configuration_s {
 	 * On some vehicles we can disable starter once engine is already running
 	 * offset 809
 	 */
-	pin_output_mode_e starterRelayDisableMode;
+	pin_output_mode_e starterRelayDisablePinMode;
 	/**
 	 * Some Subaru and some Mazda use double-solenoid idle air valve
 	 * offset 810
@@ -2828,7 +2828,7 @@ struct engine_configuration_s {
 	/**
 	 * offset 2226
 	 */
-	uint8_t unusedDizzy;
+	pin_output_mode_e sdCardCsPinMode;
 	/**
 	 * need 4 byte alignment
 	 * offset 2227
@@ -2901,7 +2901,11 @@ struct engine_configuration_s {
 	/**
 	 * offset 2417
 	 */
-	uint8_t unusedSomethingWasHere[3];
+	pin_output_mode_e LIS302DLCsPinMode;
+	/**
+	 * offset 2418
+	 */
+	uint8_t unusedSomethingWasHere[2];
 	/**
 	 * offset 2420
 	 */
@@ -3722,4 +3726,4 @@ struct persistent_config_s {
 typedef struct persistent_config_s persistent_config_s;
 
 // end
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on hellen_cypress_gen_config.bat integration/rusefi_config.txt Mon Sep 21 18:14:28 EEST 2020
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on hellen_cypress_gen_config.bat integration/rusefi_config.txt Sun Sep 27 15:03:04 UTC 2020
