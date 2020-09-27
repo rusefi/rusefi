@@ -19,7 +19,7 @@ done
 cd config/boards/kinetis/config
 bash gen_config.sh
 [ $? -eq 0 ] || { echo "ERROR generating board kinetis kin"; exit 1; }
-cd ../../../..
+
 
 cd ../../../..
 cd config/boards/hellen/cypress/config
