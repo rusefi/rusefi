@@ -437,7 +437,6 @@ float[VBAT_INJECTOR_CURVE_SIZE] battLagCorr;ms delay between injector open and c
 
 end_struct
 
-
 injector_s injector
 
 

@@ -22,11 +22,6 @@ bash gen_config.sh
 
 cd config/boards/hellen/cypress/config
 bash gen_config.sh
-[ $? -eq 0 ] || { echo "ERROR generating board hellen cypress"; exit 1; }
-
-
-#cd config/boards/hellen/cypress/config
-#bash gen_config.sh
-#[ $? -eq 0 ] || { echo "ERROR generating board hellen_cypress hellen_cypress"; exit 1; }
+[ $? -eq 0 ] || { echo "ERROR generating board hellen_cypress hellen_cypress"; exit 1; }
 
 exit 0
