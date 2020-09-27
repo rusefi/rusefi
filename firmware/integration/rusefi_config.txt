@@ -424,7 +424,6 @@ end_struct
 #define ET_CITROEN_TU3JP 65
 
 
-
 custom engine_type_e 4 bits, S32, @OFFSET@,   [0:6], @@engine_type_e_auto_enum@@
 engine_type_e engineType;http://rusefi.com/wiki/index.php?title=Manual:Engine_Type\nset engine_type X
 
