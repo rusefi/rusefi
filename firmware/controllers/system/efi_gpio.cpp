@@ -85,8 +85,7 @@ void RegisteredOutputPin::unregister() {
 EnginePins::EnginePins() :
 		mainRelay("mainRelay", CONFIG_OFFSET(mainRelayPin), CONFIG_OFFSET(mainRelayPinMode)),
 		starterControl("starterControl", CONFIG_PIN_OFFSETS(starterControl)),
-		// todo: rename starterRelayDisableMode to starterRelayDisablePinMode
-		starterRelayDisable("starterRelayDisable", starterRelayDisablePin_offset, starterRelayDisableMode_offset),
+		starterRelayDisable("starterRelayDisable", CONFIG_PIN_OFFSETS(starterRelayDisable)),
 		fanRelay("fanRelay", CONFIG_PIN_OFFSETS(fan)),
 		acRelay("acRelay", CONFIG_PIN_OFFSETS(acRelay)),
 		fuelPumpRelay("fuelPump", CONFIG_PIN_OFFSETS(fuelPump)),
