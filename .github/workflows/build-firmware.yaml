@@ -12,10 +12,13 @@ jobs:
       matrix:
         # What boards should we build for? In the 'include' section below,
         # set up what each of these boards needs to build.
-        build-target: [frankenso_na6, kinetis, mre_f4, mre_f4_hardware_QC_special_build, mre_f7, prometheus_405, prometheus_469, proteus_f4, proteus_f7, stm32f746_nucleo, stm32f767_nucleo]
+        build-target: [cypress, frankenso_na6, kinetis, mre_f4, mre_f4_hardware_QC_special_build, mre_f7, prometheus_405, prometheus_469, proteus_f4, proteus_f7, stm32f746_nucleo, stm32f767_nucleo]
         
         include:
           # Board configurations
+          - build-target: cypress
+            folder: hellen
+
           - build-target: frankenso_na6
             folder: frankenso
             ini-file: rusefi_frankenso_na6.ini
@@ -77,6 +80,10 @@ jobs:
           cd config/boards/kinetis/config
           bash gen_config.sh
           [ $? -eq 0 ] || { echo "ERROR generating board kinetis kin"; exit 1; }
+        elif [ "${{ matrix.build-target }}" = "cypress" ]; then
+          cd config/boards/hellen/cypress/config
+          bash gen_config.sh
+          [ $? -eq 0 ] || { echo "ERROR generating board hellen_cypress hellen_cypress"; exit 1; }
         else
           bash gen_config_board.sh ${{matrix.folder}} ${{matrix.build-target}}
         fi
