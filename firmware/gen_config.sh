@@ -20,6 +20,11 @@ cd config/boards/kinetis/config
 bash gen_config.sh
 [ $? -eq 0 ] || { echo "ERROR generating board kinetis kin"; exit 1; }
 
+cd config/boards/hellen/cypress/config
+bash gen_config.sh
+[ $? -eq 0 ] || { echo "ERROR generating board hellen cypress"; exit 1; }
+
+
 #cd config/boards/hellen/cypress/config
 #bash gen_config.sh
 #[ $? -eq 0 ] || { echo "ERROR generating board hellen_cypress hellen_cypress"; exit 1; }
