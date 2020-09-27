@@ -21,7 +21,10 @@ else
 fi
 cp build/rusefi.bin deliver/
 
-echo "$SCRIPT_NAME: deliver folder"
+echo "$SCRIPT_NAME: build folder content:"
+ls -l build
+
+echo "$SCRIPT_NAME: deliver folder content:"
 ls -l deliver
 
 bash config/boards/clean_env_variables.sh

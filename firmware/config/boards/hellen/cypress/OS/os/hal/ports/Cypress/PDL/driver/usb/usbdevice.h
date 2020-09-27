@@ -33,7 +33,7 @@
 * so agrees to indemnify Cypress against all liability.                        *
 *******************************************************************************/
 /******************************************************************************/
-/** \file UsbDevice.h
+/** \file usbdevice.h
  **
  ** A detailed description is available at 
  ** @link UsbDeviceGroup USB Device Module description @endlink

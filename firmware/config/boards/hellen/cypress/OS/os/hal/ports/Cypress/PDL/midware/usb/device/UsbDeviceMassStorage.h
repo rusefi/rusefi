@@ -65,7 +65,7 @@
      
 #if ((FM_PERIPHERAL_USB_DEVICE_ENABLED == ON) && (USBDEVICEMASSSTORAGE_ENABLED == ON))
 
-#include "UsbDevice.h"
+#include "usbdevice.h"
 #include "base_types.h"
 
 /* C binding of definitions if building with C++ compiler */

@@ -97,7 +97,7 @@ static void printOutputs(const engine_configuration_s *engineConfiguration) {
 	scheduleMsg(&logger, "mainRelay: mode %s @ %s", getPin_output_mode_e(engineConfiguration->mainRelayPinMode),
 			hwPortname(engineConfiguration->mainRelayPin));
 
-	scheduleMsg(&logger, "starterRelay: mode %s @ %s", getPin_output_mode_e(engineConfiguration->starterRelayDisableMode),
+	scheduleMsg(&logger, "starterRelay: mode %s @ %s", getPin_output_mode_e(engineConfiguration->starterRelayDisablePinMode),
 			hwPortname(engineConfiguration->starterRelayDisablePin));
 
 	scheduleMsg(&logger, "alternator field: mode %s @ %s",
