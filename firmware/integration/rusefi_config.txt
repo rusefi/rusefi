@@ -439,7 +439,6 @@ end_struct
 
 injector_s injector
 
-
 bit isForcedInduction;
 bit activateAuxPid1;
 bit isVerboseAuxPid1;
