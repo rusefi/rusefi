@@ -424,7 +424,7 @@ void initOutputPins(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	enginePins.fuelPumpRelay.initPin("Fuel pump", CONFIG(fuelPumpPin), &CONFIG(fuelPumpPinMode));
 
 	enginePins.mainRelay.initPin("Main relay", CONFIG(mainRelayPin), &CONFIG(mainRelayPinMode));
-	enginePins.starterRelayDisable.initPin("Starter disable", CONFIG(starterRelayDisablePin), &CONFIG(starterRelayDisableMode));
+	enginePins.starterRelayDisable.initPin("Starter disable", CONFIG(starterRelayDisablePin), &CONFIG(starterRelayDisablePinMode));
 	enginePins.starterControl.initPin("Starter control", CONFIG(starterControlPin));
 
 	enginePins.fanRelay.initPin("Fan", CONFIG(fanPin), &CONFIG(fanPinMode));
