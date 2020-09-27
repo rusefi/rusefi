@@ -980,6 +980,7 @@
 #define LDS_TRIGGER_STATE_STATE_INDEX 11
 #define LE_COMMAND_LENGTH 200
 #define LIS302DLCsPin_offset 2043
+#define LIS302DLCsPinMode_offset 2417
 #define LOAD_1_BYTE_PACKING_MULT 2
 #define log_format_e_auto_enum "LF_NATIVE", "LM_MLV"
 #define logFormat_offset 496
@@ -1144,6 +1145,7 @@
 #define rpmHardLimit_offset 416
 #define runningLedPin_offset 1813
 #define sdCardCsPin_offset 707
+#define sdCardCsPinMode_offset 2226
 #define sdCardPeriodMs_offset 804
 #define sdCardSpiDevice_offset 2592
 #define secondSolenoidPin_offset 810
@@ -1169,8 +1171,8 @@
 #define showHumanReadableWarning_offset 976
 #define showSdCardWarning_offset 76
 #define SIGNATURE_BOARD all
-#define SIGNATURE_DATE 2020.09.22
-#define SIGNATURE_HASH 640464925
+#define SIGNATURE_DATE 2020.09.27
+#define SIGNATURE_HASH 2491114718
 #define silentTriggerError_offset 1464
 #define slowAdcAlpha_offset 2088
 #define solenoidPadding_offset 1198
@@ -1201,8 +1203,8 @@
 #define startCrankingDuration_offset 826
 #define starterControlPin_offset 1772
 #define starterControlPinMode_offset 2126
-#define starterRelayDisableMode_offset 809
 #define starterRelayDisablePin_offset 808
+#define starterRelayDisablePinMode_offset 809
 #define startOfCrankingPrimingPulse_offset 2032
 #define startStopButtonMode_offset 1773
 #define startStopButtonPin_offset 811
@@ -1482,7 +1484,7 @@
 #define ts_show_spi true
 #define ts_show_trigger_comparator false
 #define ts_show_tunerstudio_port true
-#define TS_SIGNATURE "rusEFI 2020.09.22.all.640464925"
+#define TS_SIGNATURE "rusEFI 2020.09.27.all.2491114718"
 #define TS_SINGLE_WRITE_COMMAND 'W'
 #define TS_SINGLE_WRITE_COMMAND_char W
 #define TS_TEST_COMMAND 't' // 0x74
@@ -1557,11 +1559,10 @@
 #define unusedBit_485_31_offset 2116
 #define unusedBit_485_8_offset 2116
 #define unusedBit_485_9_offset 2116
-#define unusedDizzy_offset 2226
 #define unusedFlexFuelSensor_offset 3100
 #define unusedHereWeHave_offset 1464
 #define unusedOldBiquad_offset 2332
-#define unusedSomethingWasHere_offset 2417
+#define unusedSomethingWasHere_offset 2418
 #define unusedSpiPadding4_offset 2593
 #define unusedSpiPadding5_offset 2715
 #define unusedSpiPadding8_offset 4009
