@@ -9,7 +9,7 @@
 
 #if EFI_INTERNAL_FLASH
 
-#include "flash.h"
+#include "flash_int.h"
 #include <string.h>
 
 
@@ -48,7 +48,7 @@ static  __attribute__((optimize("O0"))) int flashSectorEraseAtAddress(volatile u
 	return MFlash_SectorErase((uint16_t*)sectorStart) != Ok ? FLASH_RETURN_BAD_FLASH : FLASH_RETURN_SUCCESS;
 }
 
-int  __attribute__((optimize("O0"))) flashErase(flashaddr_t address, size_t size) {
+int  __attribute__((optimize("O0"))) intFlashErase(flashaddr_t address, size_t size) {
 	// todo: this is a temporary hack
 	// todo: why the code below doesn't work with -O2?!
 	if (flashSectorEraseAtAddress(address) != FLASH_RETURN_SUCCESS) {
@@ -80,13 +80,13 @@ int  __attribute__((optimize("O0"))) flashErase(flashaddr_t address, size_t size
 	return FLASH_RETURN_SUCCESS;
 }
 
-int flashWrite(flashaddr_t address, const char* buffer, size_t size) {
+int intFlashWrite(flashaddr_t address, const char* buffer, size_t size) {
 	uint32_t sizeInWords = alignToWord(size) >> 1;
 	return MFlash_WriteData16Bit((uint16_t*)address, (uint16_t*)buffer, sizeInWords) == Ok ? FLASH_RETURN_SUCCESS : FLASH_RETURN_BAD_FLASH;
 	//return MFlash_WriteData16Bit_Fm0Type3CrSecureArea((uint16_t*)address, (uint16_t*)buffer, sizeInWords) == Ok ? 0 : -1;
 }
 
-bool flashIsErased(flashaddr_t address, size_t size) {
+bool intFlashIsErased(flashaddr_t address, size_t size) {
 	/* Check for default set bits in the flash memory
 	 * For efficiency, compare flashdata_t values as much as possible,
 	 * then, fallback to byte per byte comparison. */
@@ -106,7 +106,7 @@ bool flashIsErased(flashaddr_t address, size_t size) {
 	return TRUE;
 }
 
-bool flashCompare(flashaddr_t address, const char* buffer, size_t size) {
+bool intFlashCompare(flashaddr_t address, const char* buffer, size_t size) {
 	/* For efficiency, compare flashdata_t values as much as possible,
 	 * then, fallback to byte per byte comparison. */
 	while (size >= sizeof(flashdata_t)) {
@@ -127,7 +127,7 @@ bool flashCompare(flashaddr_t address, const char* buffer, size_t size) {
 	return TRUE;
 }
 
-int flashRead(flashaddr_t address, char* buffer, size_t size) {
+int intFlashRead(flashaddr_t address, char* buffer, size_t size) {
 	memcpy(buffer, (char*) address, size);
 	return FLASH_RETURN_SUCCESS;
 }

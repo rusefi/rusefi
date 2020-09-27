@@ -34,15 +34,15 @@ EngineTestHelperBase::EngineTestHelperBase() {
 	EnableToothLogger();
 }
 
-EngineTestHelper::EngineTestHelper(engine_type_e engineType, configuration_callback_t boardCallback)
-	: EngineTestHelper(engineType, boardCallback, {}) {
+EngineTestHelper::EngineTestHelper(engine_type_e engineType, configuration_callback_t configurationCallback)
+	: EngineTestHelper(engineType, configurationCallback, {}) {
 }
 
 EngineTestHelper::EngineTestHelper(engine_type_e engineType, const std::unordered_map<SensorType, float>& sensorValues)
 	: EngineTestHelper(engineType, &emptyCallbackWithConfiguration, sensorValues) {
 }
 
-EngineTestHelper::EngineTestHelper(engine_type_e engineType, configuration_callback_t boardCallback, const std::unordered_map<SensorType, float>& sensorValues) {
+EngineTestHelper::EngineTestHelper(engine_type_e engineType, configuration_callback_t configurationCallback, const std::unordered_map<SensorType, float>& sensorValues) {
 	Sensor::setMockValue(SensorType::Clt, 70);
 	Sensor::setMockValue(SensorType::Iat, 30);
 
@@ -77,7 +77,7 @@ EngineTestHelper::EngineTestHelper(engine_type_e engineType, configuration_callb
 
 	initDataStructures(PASS_ENGINE_PARAMETER_SIGNATURE);
 
-	resetConfigurationExt(NULL, boardCallback, engineType PASS_ENGINE_PARAMETER_SUFFIX);
+	resetConfigurationExt(NULL, configurationCallback, engineType PASS_ENGINE_PARAMETER_SUFFIX);
 
 	commonInitEngineController(NULL PASS_ENGINE_PARAMETER_SUFFIX);
 

@@ -145,7 +145,7 @@ void applyLaunchControlLimiting(bool *limitedSpark, bool *limitedFuel DECLARE_EN
 		(CONFIG(enableLaunchRetard) ? CONFIG(launchAdvanceRpmRange) : 0) +
 		CONFIG(hardCutRpmRange);
 
-	if (retardThresholdRpm > GET_RPM()) {
+	if (retardThresholdRpm < GET_RPM()) {
 		*limitedSpark = engine->isLaunchCondition && engineConfiguration->launchSparkCutEnable;
 		*limitedFuel = engine->isLaunchCondition && engineConfiguration->launchFuelCutEnable;
 		engine->rpmHardCut = true;

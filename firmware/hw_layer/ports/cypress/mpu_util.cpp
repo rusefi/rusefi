@@ -11,7 +11,7 @@
 #if EFI_PROD_CODE
 
 #include "mpu_util.h"
-#include "flash.h"
+#include "flash_int.h"
 #include "engine.h"
 #include "pin_repository.h"
 #include "os_util.h"
@@ -247,6 +247,14 @@ size_t flashSectorSize(flashsector_t sector) {
 	else if ((sector >= 5 && sector <= 11) || (sector >= 17 && sector <= 23))
 		return 128 * 1024;
 	return 0;
+}
+
+uintptr_t getFlashAddrFirstCopy() {
+	return FLASH_ADDR;
+}
+
+uintptr_t getFlashAddrSecondCopy() {
+	return FLASH_ADDR_SECOND_COPY;
 }
 
 #endif /* EFI_PROD_CODE */
