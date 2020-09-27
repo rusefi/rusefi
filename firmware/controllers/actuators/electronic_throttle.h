@@ -27,7 +27,10 @@ class Logging;
 class IEtbController : public ClosedLoopController<percent_t, percent_t> {
 public:
 	DECLARE_ENGINE_PTR;
-	virtual void init(etb_function_e function, DcMotor *motor, pid_s *pidParameters, const ValueProvider3D* pedalMap) = 0;
+
+	// Initialize the throttle.
+	// returns true if the throttle was initialized, false otherwise.
+	virtual bool init(etb_function_e function, DcMotor *motor, pid_s *pidParameters, const ValueProvider3D* pedalMap) = 0;
 	virtual void reset() = 0;
 	virtual void setIdlePosition(percent_t pos) = 0;
 	virtual void update() = 0;
@@ -36,7 +39,7 @@ public:
 
 class EtbController : public IEtbController {
 public:
-	void init(etb_function_e function, DcMotor *motor, pid_s *pidParameters, const ValueProvider3D* pedalMap) override;
+	bool init(etb_function_e function, DcMotor *motor, pid_s *pidParameters, const ValueProvider3D* pedalMap) override;
 	void setIdlePosition(percent_t pos) override;
 	void reset() override;
 

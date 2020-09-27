@@ -160,12 +160,19 @@ static percent_t currentEtbDuty;
 // this macro clamps both positive and negative percentages from about -100% to 100%
 #define ETB_PERCENT_TO_DUTY(x) (clampF(-ETB_DUTY_LIMIT, 0.01f * (x), ETB_DUTY_LIMIT))
 
-void EtbController::init(etb_function_e function, DcMotor *motor, pid_s *pidParameters, const ValueProvider3D* pedalMap) {
+bool EtbController::init(etb_function_e function, DcMotor *motor, pid_s *pidParameters, const ValueProvider3D* pedalMap) {
+	if (function == ETB_None) {
+		// if not configured, don't init.
+		return false;
+	}
+
 	m_function = function;
 	m_positionSensor = functionToPositionSensor(function);
 	m_motor = motor;
 	m_pid.initPidClass(pidParameters);
 	m_pedalMap = pedalMap;
+
+	return true;
 }
 
 void EtbController::reset() {
@@ -416,6 +423,11 @@ void EtbController::setOutput(expected<percent_t> outputValue) {
 }
 
 void EtbController::update() {
+	// If we didn't get initialized, fail fast
+	if (!m_motor) {
+		return;
+	}
+
 #if EFI_TUNER_STUDIO
 	// Only debug throttle #1
 	if (m_function == ETB_Throttle1) {

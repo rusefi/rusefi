@@ -46,7 +46,7 @@ TEST(etb, initializationSingleThrottle) {
 	Sensor::setMockValue(SensorType::AcceleratorPedalPrimary, 0);
 
 	// Expect mock0 to be init as throttle 1, and PID params
-	EXPECT_CALL(mocks[0], init(ETB_Throttle1, _, &engineConfiguration->etb, Ne(nullptr)));
+	EXPECT_CALL(mocks[0], init(ETB_Throttle1, _, &engineConfiguration->etb, Ne(nullptr))).WillOnce(Return(true));
 	EXPECT_CALL(mocks[0], reset);
 
 	// We do not expect throttle #2 to be initialized
@@ -71,41 +71,26 @@ TEST(etb, initializationDualThrottle) {
 	Sensor::setMockValue(SensorType::Tps2, 25.0f);
 
 	// Expect mock0 to be init as throttle 1, and PID params
-	EXPECT_CALL(mocks[0], init(ETB_Throttle1, _, &engineConfiguration->etb, Ne(nullptr)));
+	EXPECT_CALL(mocks[0], init(ETB_Throttle1, _, &engineConfiguration->etb, Ne(nullptr))).WillOnce(Return(true));
 	EXPECT_CALL(mocks[0], reset);
 
 	// Expect mock1 to be init as throttle 2, and PID params
-	EXPECT_CALL(mocks[1], init(ETB_Throttle2, _, &engineConfiguration->etb, Ne(nullptr)));
+	EXPECT_CALL(mocks[1], init(ETB_Throttle2, _, &engineConfiguration->etb, Ne(nullptr))).WillOnce(Return(true));
 	EXPECT_CALL(mocks[1], reset);
 
 	doInitElectronicThrottle(PASS_ENGINE_PARAMETER_SIGNATURE);
 }
 
-TEST(etb, initializationDcMotorIdleValveMode) {
-	StrictMock<MockEtb> mocks[ETB_COUNT];
+TEST(etb, initializationNoFunction) {
+	StrictMock<MockMotor> motor;
 
-	WITH_ENGINE_TEST_HELPER(TEST_ENGINE);
+	EtbController dut;
 
-	// Enable VW idle mode
-	engineConfiguration->dcMotorIdleValve = true;
+	// When init called with ETB_None, should ignore the provided params and return false
+	EXPECT_FALSE(dut.init(ETB_None, &motor, nullptr, nullptr));
 
-	for (int i = 0; i < ETB_COUNT; i++) {
-		engine->etbControllers[i] = &mocks[i];
-		EXPECT_CALL(mocks[i], setIdlePosition(33.0f));
-	}
-
-	// No accelerator pedal configured - this mode doesn't use it
-
-	// Expect mock0 to be init as an idle valve, and PID params
-	EXPECT_CALL(mocks[0], init(ETB_IdleValve, _, &engineConfiguration->etb, Ne(nullptr)));
-	EXPECT_CALL(mocks[0], reset);
-
-	// We do not expect throttle #2 to be initialized
-
-	doInitElectronicThrottle(PASS_ENGINE_PARAMETER_SIGNATURE);
-
-
-	applyIACposition(33.0f PASS_ENGINE_PARAMETER_SUFFIX);
+	// This should no-op, it shouldn't call motor.set(float duty)
+	dut.setOutput(0.5f);
 }
 
 TEST(etb, idlePlumbing) {
@@ -293,7 +278,7 @@ TEST(etb, setOutputInvalid) {
 
 	EtbController etb;
 	INJECT_ENGINE_REFERENCE(&etb);
-	etb.init(ETB_None, &motor, nullptr, nullptr);
+	etb.init(ETB_Throttle1, &motor, nullptr, nullptr);
 
 	// Should be disabled in case of unexpected
 	EXPECT_CALL(motor, disable());
@@ -307,7 +292,7 @@ TEST(etb, setOutputValid) {
 
 	EtbController etb;
 	INJECT_ENGINE_REFERENCE(&etb);
-	etb.init(ETB_None, &motor, nullptr, nullptr);
+	etb.init(ETB_Throttle1, &motor, nullptr, nullptr);
 
 	// Should be enabled and value set
 	EXPECT_CALL(motor, enable());
@@ -323,7 +308,7 @@ TEST(etb, setOutputValid2) {
 
 	EtbController etb;
 	INJECT_ENGINE_REFERENCE(&etb);
-	etb.init(ETB_None, &motor, nullptr, nullptr);
+	etb.init(ETB_Throttle1, &motor, nullptr, nullptr);
 
 	// Should be enabled and value set
 	EXPECT_CALL(motor, enable());
@@ -339,7 +324,7 @@ TEST(etb, setOutputOutOfRangeHigh) {
 
 	EtbController etb;
 	INJECT_ENGINE_REFERENCE(&etb);
-	etb.init(ETB_None, &motor, nullptr, nullptr);
+	etb.init(ETB_Throttle1, &motor, nullptr, nullptr);
 
 	// Should be enabled and value set
 	EXPECT_CALL(motor, enable());
@@ -355,7 +340,7 @@ TEST(etb, setOutputOutOfRangeLow) {
 
 	EtbController etb;
 	INJECT_ENGINE_REFERENCE(&etb);
-	etb.init(ETB_None, &motor, nullptr, nullptr);
+	etb.init(ETB_Throttle1, &motor, nullptr, nullptr);
 
 	// Should be enabled and value set
 	EXPECT_CALL(motor, enable());
@@ -371,7 +356,7 @@ TEST(etb, setOutputPauseControl) {
 
 	EtbController etb;
 	INJECT_ENGINE_REFERENCE(&etb);
-	etb.init(ETB_None, &motor, nullptr, nullptr);
+	etb.init(ETB_Throttle1, &motor, nullptr, nullptr);
 
 	// Pause control - should get no output
 	engineConfiguration->pauseEtbControl = true;
@@ -389,7 +374,7 @@ TEST(etb, closedLoopPid) {
 	pid.minValue = -60;
 
 	EtbController etb;
-	etb.init(ETB_None, nullptr, &pid, nullptr);
+	etb.init(ETB_Throttle1, nullptr, &pid, nullptr);
 
 	// Disable autotune for now
 	Engine e;
