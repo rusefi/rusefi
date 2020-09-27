@@ -822,18 +822,14 @@ void doInitElectronicThrottle(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	addConsoleActionI("etb_freq", setEtbFrequency);
 #endif /* EFI_PROD_CODE */
 
-	// If you don't have a pedal (or VW idle valve mode), we have no business here.
-	if (!CONFIG(dcMotorIdleValve) && !Sensor::hasSensor(SensorType::AcceleratorPedalPrimary)) {
+	// If you don't have a pedal we have no business here.
+	if (!Sensor::hasSensor(SensorType::AcceleratorPedalPrimary)) {
 		return;
 	}
 
 	pedal2tpsMap.init(config->pedalToTpsTable, config->pedalToTpsPedalBins, config->pedalToTpsRpmBins);
 
-	if (CONFIG(dcMotorIdleValve)) {
-		engine->etbActualCount = 1;
-	} else {
-		engine->etbActualCount = Sensor::hasSensor(SensorType::Tps2) ? 2 : 1;
-	}
+	engine->etbActualCount = Sensor::hasSensor(SensorType::Tps2) ? 2 : 1;
 
 	for (int i = 0 ; i < engine->etbActualCount; i++) {
 		auto motor = initDcMotor(i, CONFIG(etb_use_two_wires) PASS_ENGINE_PARAMETER_SUFFIX);

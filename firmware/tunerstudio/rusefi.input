@@ -3036,12 +3036,11 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 
 	dialog = etbDialogLeft
 		field = "https://rusefi.com/s/etb"
-		field = "Late 90s German DC Motor idle",		dcMotorIdleValve, { throttlePedalPositionAdcChannel == @@ADC_CHANNEL_NONE@@ }
 		field = "Detailed status in console",			isVerboseETB
 		field = "Disable ETB Motor",					pauseEtbControl
 		; we need the term about stepper idle in here, because there's a bug in TS that you can't have different visibility
 		; criteria for the same panel when used in multiple places
-		panel = hbridgeHardware,						{ throttlePedalPositionAdcChannel != @@ADC_CHANNEL_NONE@@ || (useStepperIdle && useHbridges) || dcMotorIdleValve }
+		panel = hbridgeHardware,						{ throttlePedalPositionAdcChannel != @@ADC_CHANNEL_NONE@@ || (useStepperIdle && useHbridges) }
 
 	dialog = etbAutotune, "PID Autotune"
 		field = "First step: calibrate TPS and hit 'Burn'"
@@ -3057,7 +3056,7 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 
 	dialog = etbDialogRight
 		panel = etbIdleDialog, {  throttlePedalPositionAdcChannel != @@ADC_CHANNEL_NONE@@  }
-		panel = etbPidDialog,  { (throttlePedalPositionAdcChannel != @@ADC_CHANNEL_NONE@@) || dcMotorIdleValve }
+		panel = etbPidDialog,  { (throttlePedalPositionAdcChannel != @@ADC_CHANNEL_NONE@@) }
 		panel = etbAutotune
 
 		; Neutral position handling not yet implemented!
