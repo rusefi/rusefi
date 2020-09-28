@@ -56,6 +56,21 @@ switch_inputs:
   GPIOE_13: "Digital 4"
   GPIOE_14: "Digital 5"
   GPIOE_15: "Digital 6"
+  GPIOA_0: "Analog Volt 5"
+  GPIOA_1: "Analog Volt 6"
+  GPIOA_2: "Analog Volt 7"
+  GPIOA_3: "Analog Volt 8"
+  GPIOA_4: "Analog Volt 9"
+  GPIOA_5: "Analog Volt 10"
+  GPIOA_6: "Analog Volt 11"
+  GPIOB_0: "Analog Temp 3"
+  GPIOB_1: "Analog Temp 4"
+  GPIOC_0: "Analog Volt 1"
+  GPIOC_1: "Analog Volt 2"
+  GPIOC_2: "Analog Volt 3"
+  GPIOC_3: "Analog Volt 4"
+  GPIOC_4: "Analog Temp 1"
+  GPIOC_5: "Analog Temp 2"
 
 analog_inputs:
   # PA0
