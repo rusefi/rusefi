@@ -15,7 +15,7 @@
 
 class ButtonDebounce {
 public:
-    void init(efitimems_t threshold, brain_pin_e *pin, pin_input_mode_e *mode);
+    void init(efitimems_t threshold, brain_pin_e &pin, pin_input_mode_e &mode);
     void stopConfiguration();
     void startConfiguration();
     bool readPinEvent();
