@@ -1405,7 +1405,7 @@ uint8_t[4] unusedsw;;"units", 1, 0, -20, 100, 0
 	pin_output_mode_e[TCU_SOLENOID_COUNT iterate] tcu_solenoid_mode;
 
 ! just a reminder that 'int' and 'float' are 4 bytes each
-	int[370] mainUnusedEnd;;"units", 1, 0, -20, 100, 0
+	int[369] mainUnusedEnd;;"units", 1, 0, -20, 100, 0
 
 ! end of engine_configuration_s
 end_struct
