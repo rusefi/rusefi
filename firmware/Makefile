@@ -55,6 +55,9 @@ ifeq ($(USE_CPPOPT),)
   USE_CPPOPT = -std=c++17 -Wno-register -fno-rtti -fno-threadsafe-statics -fno-exceptions -fno-use-cxa-atexit
 endif
 
+# Hellen is one of the boards which cares
+USE_CPPOPT += -Wno-error=tautological-compare
+
 # Enable this if you want the linker to remove unused code and data
 ifeq ($(USE_LINK_GC),)
   USE_LINK_GC = yes

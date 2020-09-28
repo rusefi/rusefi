@@ -3,6 +3,8 @@
 SCRIPT_NAME="common_make.sh"
 echo "Entering $SCRIPT_NAME"
 
+cd ../../..
+
 mkdir .dep
 # todo: start using env variable for number of threads or for '-r'
 make -j4 -r
@@ -21,7 +23,10 @@ else
 fi
 cp build/rusefi.bin deliver/
 
-echo "$SCRIPT_NAME: deliver folder"
+echo "$SCRIPT_NAME: build folder content:"
+ls -l build
+
+echo "$SCRIPT_NAME: deliver folder content:"
 ls -l deliver
 
 bash config/boards/clean_env_variables.sh

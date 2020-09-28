@@ -224,10 +224,6 @@ void applyIACposition(percent_t position DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	} else if (CONFIG(useStepperIdle)) {
 		iacMotor.setTargetPosition(duty * engineConfiguration->idleStepperTotalSteps);
 #endif /* EFI_UNIT_TEST */
-	} else if (CONFIG(dcMotorIdleValve)) {
-#if EFI_ELECTRONIC_THROTTLE_BODY
-		setEtbIdlePosition(position PASS_ENGINE_PARAMETER_SUFFIX);
-#endif // EFI_ELECTRONIC_THROTTLE_BODY
 	} else {
 		if (!CONFIG(isDoubleSolenoidIdle)) {
 			idleSolenoidOpen.setSimplePwmDutyCycle(duty);

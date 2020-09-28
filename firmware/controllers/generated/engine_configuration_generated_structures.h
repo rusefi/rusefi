@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Tue Sep 22 08:58:43 UTC 2020
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Mon Sep 28 20:34:08 UTC 2020
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -1352,7 +1352,7 @@ struct engine_configuration_s {
 	/**
 	 * offset 724
 	 */
-	int unusedAt724;
+	uint8_t unusedAt724[4];
 	/**
 	 * Secondary TTL channel baud rate
 	 * offset 728
@@ -1570,7 +1570,7 @@ struct engine_configuration_s {
 	 * On some vehicles we can disable starter once engine is already running
 	 * offset 809
 	 */
-	pin_output_mode_e starterRelayDisableMode;
+	pin_output_mode_e starterRelayDisablePinMode;
 	/**
 	 * Some Subaru and some Mazda use double-solenoid idle air valve
 	 * offset 810
@@ -1781,11 +1781,8 @@ struct engine_configuration_s {
 	offset 976 bit 10 */
 	bool stftIgnoreErrorMagnitude : 1;
 	/**
-	 * Used on some German vehicles around late 90s: cable-operated throttle and DC motor idle air valve.
-	 * Set the primary TPS to the cable-operated throttle's sensor
-	 * Set the secondary TPS to the mini ETB's position sensor(s).
 	offset 976 bit 11 */
-	bool dcMotorIdleValve : 1;
+	bool unused976b11 : 1;
 	/**
 	offset 976 bit 12 */
 	bool enableSoftwareKnock : 1;
@@ -2776,7 +2773,8 @@ struct engine_configuration_s {
 	 */
 	uint8_t unused_former_warmup_target_afr[4];
 	/**
-	 * kPa value at which we need to cut fuel and spark, 0 if not enabled
+	 * MAP value above which fuel is cut in case of overboost.
+	 * 0 to disable overboost cut.
 	 * offset 2132
 	 */
 	float boostCutPressure;
@@ -2828,7 +2826,7 @@ struct engine_configuration_s {
 	/**
 	 * offset 2226
 	 */
-	uint8_t unusedDizzy;
+	pin_output_mode_e sdCardCsPinMode;
 	/**
 	 * need 4 byte alignment
 	 * offset 2227
@@ -2901,7 +2899,11 @@ struct engine_configuration_s {
 	/**
 	 * offset 2417
 	 */
-	uint8_t unusedSomethingWasHere[3];
+	pin_output_mode_e LIS302DLCsPinMode;
+	/**
+	 * offset 2418
+	 */
+	uint8_t unusedSomethingWasHere[2];
 	/**
 	 * offset 2420
 	 */
@@ -3722,4 +3724,4 @@ struct persistent_config_s {
 typedef struct persistent_config_s persistent_config_s;
 
 // end
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Tue Sep 22 08:58:43 UTC 2020
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Mon Sep 28 20:34:08 UTC 2020

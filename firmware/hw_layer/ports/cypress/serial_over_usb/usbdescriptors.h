@@ -166,9 +166,9 @@ const uint8_t au8ReportDescriptor2[1]; // Not used
 
 const stc_usbdevice_stringdescriptor_t pstcStringDescriptors[] =
 {
-{"Spansion International Inc.",NULL},    //Manufacturer String
-{"rusEFI ECU Comm Port",NULL},    //Product String
-{"1.0",NULL},    //Serial Number String
+{(uint8_t*)"Spansion International Inc.",NULL},    //Manufacturer String
+{(uint8_t*)"rusEFI ECU Comm Port",NULL},    //Product String
+{(uint8_t*)"1.0",NULL},    //Serial Number String
 };
 
 

@@ -13,3 +13,8 @@ java -DSystemOut.name=gen_enum_to_string \
 pwd
 cd config/boards/kinetis/config
 bash kinetis_gen_enum_to_string.sh
+cd ../../../..
+
+cd config/boards/hellen/cypress/config
+bash hellen_cypress_gen_enum_to_string.sh
+cd ../../../../..
