@@ -956,17 +956,15 @@ custom maf_sensor_type_e 4 bits, S32, @OFFSET@, [0:1], @@maf_sensor_type_e_enum@
 
 	output_pin_e[TCU_SOLENOID_COUNT iterate] tcu_solenoid;
 
-	uint8_t[2] solenoidPadding;;"units", 1, 0, -20, 100, 0
+	custom etb_function_e 1 bits, U08, @OFFSET@, [0:2], "None", "Throttle 1", "Throttle 2", "Idle Valve", "Wastegate"
+	etb_function_e[ETB_COUNT iterate] etbFunctions
 
 	spi_device_e drv8860spiDevice;
 	brain_pin_e       drv8860_cs;
 	pin_output_mode_e drv8860_csPinMode;
 	brain_pin_e       drv8860_miso;
 
-	custom etb_function_e 3 bits, S08, @OFFSET@, [0:2], "None", "Throttle 1", "Throttle 2", "Idle Valve", "Wastegate"
-	etb_function_e[ETB_COUNT iterate] etbFunctions
-
-	uint8_t[250] unusedAtOldBoardConfigurationEnd;;"units", 1, 0, -20, 100, 0
+	int[64] unusedAtOldBoardConfigurationEnd;;"units", 1, 0, -20, 100, 0
 
 	uint16_t tps2SecondaryMin;;"ADC", 1, 0, 0, 1000, 0
 	uint16_t tps2SecondaryMax;;"ADC", 1, 0, 0, 1000, 0
