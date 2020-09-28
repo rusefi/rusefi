@@ -6,5 +6,5 @@ export PROJECT_BOARD=prometheus/f469
 export EXTRA_PARAMS=-DSHORT_BOARD_NAME=prometheus_469
 export USE_BOOTLOADER=yes
 
-bash config/boards/common_make.sh
+bash ../common_make.sh
 

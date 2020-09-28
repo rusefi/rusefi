@@ -17,5 +17,5 @@ export EXTRA_PARAMS="-DDUMMY -DSTM32F746xx \
  -DSTATUS_LOGGING_BUFFER_SIZE=1400 \
  -DCCM_UNUSED_SIZE=10"
 export DEBUG_LEVEL_OPT="-O2"
-bash config/boards/common_make.sh
+bash ../common_make.sh
 

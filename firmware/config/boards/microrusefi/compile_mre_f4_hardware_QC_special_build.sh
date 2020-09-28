@@ -9,6 +9,6 @@ export DEFAULT_ENGINE_TYPE=-DDEFAULT_ENGINE_TYPE=MRE_BOARD_NEW_TEST
 # this QC configuration is used to assert our status with debug info
 export DEBUG_LEVEL_OPT="-O0 -ggdb -g3"
 
-bash config/boards/common_make.sh
+bash ../common_make.sh
 
 

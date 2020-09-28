@@ -16,5 +16,5 @@ export EXTRA_PARAMS="-DDUMMY -DSTM32F767xx \
 # Do not forget to comment out following line if looking to debug!
 export DEBUG_LEVEL_OPT="-O2"
 
-bash config/boards/common_make.sh
+bash ../common_make.sh
 

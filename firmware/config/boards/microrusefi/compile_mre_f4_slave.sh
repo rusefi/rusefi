@@ -6,6 +6,6 @@ export EXTRA_PARAMS=-DDUMMY -DEFI_CANBUS_SLAVE=TRUE -DSHORT_BOARD_NAME=mre_f4
 
 export DEFAULT_ENGINE_TYPE = -DDEFAULT_ENGINE_TYPE=BMW_M73_MRE_SLAVE
 
-bash config/boards/common_make.sh
+bash ../common_make.sh
 
 

@@ -20,4 +20,4 @@ export USE_BOOTLOADER=no
 
 # make -r -j4
 
-bash config/boards/common_make.sh
+bash ../common_make.sh

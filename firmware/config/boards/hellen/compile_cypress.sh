@@ -14,4 +14,4 @@ export USE_FATFS="no"
 export USE_BOOTLOADER="no"
 export DEBUG_LEVEL_OPT="-O2"
 
-bash config/boards/common_make.sh
+bash ../common_make.sh
