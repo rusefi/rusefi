@@ -30,10 +30,9 @@ echo "Invoking $COMPILE_SCRIPT"
 
 bash $COMPILE_SCRIPT
 
-cd ../../..
-[ -e ./build/rusefi.hex ] || { echo "Just to confirm - FAILED to compile with $COMPILE_SCRIPT"; exit 1; }
+[ -e ../../../build/rusefi.hex ] || { echo "Just to confirm - FAILED to compile with $COMPILE_SCRIPT"; exit 1; }
 
-cd ..
+cd ../../../..
 # We are back at root rusEFI folder
 pwd
 

@@ -3,6 +3,8 @@
 SCRIPT_NAME="common_make.sh"
 echo "Entering $SCRIPT_NAME"
 
+cd ../../..
+
 mkdir .dep
 # todo: start using env variable for number of threads or for '-r'
 make -j4 -r
