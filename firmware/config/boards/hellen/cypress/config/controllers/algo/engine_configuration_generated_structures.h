@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on hellen_cypress_gen_config.bat integration/rusefi_config.txt Sun Sep 27 15:03:04 UTC 2020
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on hellen_cypress_gen_config.bat integration/rusefi_config.txt Mon Sep 28 18:47:03 UTC 2020
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -2776,7 +2776,8 @@ struct engine_configuration_s {
 	 */
 	uint8_t unused_former_warmup_target_afr[4];
 	/**
-	 * kPa value at which we need to cut fuel and spark, 0 if not enabled
+	 * MAP value above which fuel is cut in case of overboost.
+	 * 0 to disable overboost cut.
 	 * offset 2132
 	 */
 	float boostCutPressure;
@@ -3726,4 +3727,4 @@ struct persistent_config_s {
 typedef struct persistent_config_s persistent_config_s;
 
 // end
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on hellen_cypress_gen_config.bat integration/rusefi_config.txt Sun Sep 27 15:03:04 UTC 2020
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on hellen_cypress_gen_config.bat integration/rusefi_config.txt Mon Sep 28 18:47:03 UTC 2020
