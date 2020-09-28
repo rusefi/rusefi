@@ -1,7 +1,7 @@
 #include "global.h"
 #include "rusefi_enums.h"
 #include "rusefi_hw_enums.h"
-// was generated automatically by rusEfi tool  from rusefi_hw_enums.h // was generated automatically by rusEfi tool  from rusefi_enums.h // by enum2string.jar tool on Mon Sep 07 14:17:12 UTC 2020
+// was generated automatically by rusEfi tool  from rusefi_hw_enums.h // was generated automatically by rusEfi tool  from rusefi_enums.h // by enum2string.jar tool on Mon Sep 28 20:34:06 UTC 2020
 // see also gen_config_and_enums.bat
 
 
@@ -903,6 +903,21 @@ case VW_B6:
   return "VW_B6";
 case ZIL_130:
   return "ZIL_130";
+  }
+ return NULL;
+}
+const char *getEtb_function_e(etb_function_e value){
+switch(value) {
+case ETB_IdleValve:
+  return "ETB_IdleValve";
+case ETB_None:
+  return "ETB_None";
+case ETB_Throttle1:
+  return "ETB_Throttle1";
+case ETB_Throttle2:
+  return "ETB_Throttle2";
+case ETB_Wastegate:
+  return "ETB_Wastegate";
   }
  return NULL;
 }
