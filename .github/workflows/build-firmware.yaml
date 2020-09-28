@@ -18,6 +18,7 @@ jobs:
           # Board configurations
           - build-target: cypress
             folder: hellen
+            ini-file: rusefi_hellen_cypress.ini
 
           - build-target: frankenso_na6
             folder: frankenso
@@ -25,6 +26,7 @@ jobs:
             
           - build-target: kinetis
             folder: kinetis
+            ini-file: rusefi_kinetis.ini
 
           - build-target: mre_f4
             folder: microrusefi
