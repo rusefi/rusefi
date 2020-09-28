@@ -895,7 +895,7 @@ custom maf_sensor_type_e 4 bits, S32, @OFFSET@, [0:1], @@maf_sensor_type_e_enum@
 	bit enableInnovateLC2
 	bit showHumanReadableWarning
 	bit stftIgnoreErrorMagnitude;+If enabled, adjust at a constant rate instead of a rate proportional to the current lambda error.  This mode may be easier to tune, and more tolerant of sensor noise.  Use of this mode is required if you have a narrowband O2 sensor.;
-	bit dcMotorIdleValve;+Used on some German vehicles around late 90s: cable-operated throttle and DC motor idle air valve.\nSet the primary TPS to the cable-operated throttle's sensor\nSet the secondary TPS to the mini ETB's position sensor(s). 
+	bit unused976b11;
 	bit enableSoftwareKnock
 	bit verboseVVTDecoding;enable vvt_details
 	bit invertCamVVTSignal;get invertCamVVTSignal
