@@ -838,9 +838,14 @@ void doInitElectronicThrottle(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 		// If this motor is actually set up, init the etb
 		if (motor)
 		{
+			auto controller = engine->etbControllers[i];
+			if (!controller) {
+				continue;
+			}
+
 			auto func = CONFIG(etbFunctions[i]);
 
-			anyEtbConfigured |= engine->etbControllers[i]->init(func, motor, &engineConfiguration->etb, &pedal2tpsMap);
+			anyEtbConfigured |= controller->init(func, motor, &engineConfiguration->etb, &pedal2tpsMap);
 			INJECT_ENGINE_REFERENCE(engine->etbControllers[i]);
 		}
 	}
