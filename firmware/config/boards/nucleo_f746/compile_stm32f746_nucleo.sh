@@ -5,7 +5,6 @@
 SCRIPT_NAME="compile_nucleo_f746.sh"
 echo "Entering $SCRIPT_NAME"
 
-cd ../../..
 export PROJECT_BOARD=nucleo_f746
 export PROJECT_CPU=ARCH_STM32F7
 export EXTRA_PARAMS="-DDUMMY -DSTM32F746xx \
