@@ -1146,19 +1146,6 @@ case Internal_ForceMyEnumIntSize_maf_sensor:
   }
  return NULL;
 }
-const char *getMass_storage_e(mass_storage_e value){
-switch(value) {
-case Force_4_bytes_size_mass_storage:
-  return "Force_4_bytes_size_mass_storage";
-case MS_ALWAYS:
-  return "MS_ALWAYS";
-case MS_AUTO:
-  return "MS_AUTO";
-case MS_NEVER:
-  return "MS_NEVER";
-  }
- return NULL;
-}
 const char *getOperation_mode_e(operation_mode_e value){
 switch(value) {
 case FOUR_STROKE_CAM_SENSOR:

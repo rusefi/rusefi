@@ -358,7 +358,6 @@ void setDodgeNeonNGCEngineConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	engineConfiguration->clt.adcChannel = EFI_ADC_12;
 
 	engineConfiguration->sensorChartMode = SC_MAP;
-	engineConfiguration->isFastAdcEnabled = true;
 	engineConfiguration->map.sensor.type = MT_DODGE_NEON_2003;
 
 	engineConfiguration->hip9011Gain = 0.3;

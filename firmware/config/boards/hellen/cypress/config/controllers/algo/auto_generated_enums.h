@@ -38,7 +38,6 @@ const char *getInjection_mode_e(injection_mode_e value);
 const char *getLaunchActivationMode_e(launchActivationMode_e value);
 const char *getLog_format_e(log_format_e value);
 const char *getMaf_sensor_type_e(maf_sensor_type_e value);
-const char *getMass_storage_e(mass_storage_e value);
 const char *getOperation_mode_e(operation_mode_e value);
 const char *getPin_input_mode_e(pin_input_mode_e value);
 const char *getPin_mode_e(pin_mode_e value);

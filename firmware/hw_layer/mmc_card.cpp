@@ -397,28 +397,27 @@ static void MMCmount(void) {
 		return;
 	}
 
-//	if (engineConfiguration->storageMode == MS_ALWAYS) {
 #if HAL_USE_USB_MSD
-	  msdObjectInit(&USBMSD1);
+	msdObjectInit(&USBMSD1);
 
 	BaseBlockDevice *bbdp = (BaseBlockDevice*)&MMCD1;
-	  msdStart(&USBMSD1, usb_driver, bbdp, blkbuf, NULL);
+	msdStart(&USBMSD1, usb_driver, bbdp, blkbuf, NULL);
 
-//		  const usb_msd_driver_state_t msd_driver_state = msdInit(ms_usb_driver, bbdp, &UMSD1, USB_MS_DATA_EP, USB_MSD_INTERFACE_NUMBER);
-	//	  UMSD1.chp = NULL;
+	//const usb_msd_driver_state_t msd_driver_state = msdInit(ms_usb_driver, bbdp, &UMSD1, USB_MS_DATA_EP, USB_MSD_INTERFACE_NUMBER);
+	//UMSD1.chp = NULL;
 
-		  /*Disconnect the USB Bus*/
-		  usbDisconnectBus(usb_driver);
-		  chThdSleepMilliseconds(200);
-//
-//		  /*Start the useful functions*/
-//		  msdStart(&UMSD1);
-		  usbStart(usb_driver, &msdusbcfg);
-//
-		  /*Connect the USB Bus*/
-		  usbConnectBus(usb_driver);
+	/*Disconnect the USB Bus*/
+	usbDisconnectBus(usb_driver);
+	chThdSleepMilliseconds(200);
+
+	///*Start the useful functions*/
+	//msdStart(&UMSD1);
+	usbStart(usb_driver, &msdusbcfg);
+
+	/*Connect the USB Bus*/
+	usbConnectBus(usb_driver);
 #endif
-	//}
+
 
 
 	UNLOCK_SD_SPI;

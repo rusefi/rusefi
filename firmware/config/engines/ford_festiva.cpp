@@ -121,7 +121,6 @@ void setFordEscortGt(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	// Denso 195500-2180
 	engineConfiguration->injector.flow = 265;
 
-	engineConfiguration->isFastAdcEnabled = true;
 	engineConfiguration->map.sensor.type = MT_DENSO183;
 	/**
 	 * pin PA4: jumper W47<>W47 - ecu plug 3I
