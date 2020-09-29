@@ -50,7 +50,7 @@
 #define air_pressure_sensor_type_e_auto_enum "MT_CUSTOM", "MT_DENSO183", "MT_MPX4250", "MT_HONDA3BAR", "MT_DODGE_NEON_2003", "MT_SUBY_DENSO", "MT_GM_3_BAR", "MT_MPX4100", "MT_TOYOTA_89420_02010", "MT_MPX4250A", "MT_BOSCH_2_5", "MT_MAZDA_1_BAR"
 #define alignEngineSnifferAtTDC_offset 744
 #define alignmentFill_at_2227_offset 2227
-#define alignmentFill_at_4517_offset 4517
+#define alignmentFill_at_4523_offset 4523
 #define alternator_antiwindupFreq_offset 1764
 #define alternator_derivativeFilterLoss_offset 1760
 #define alternatorControl_dFactor_offset 1724
@@ -997,7 +997,7 @@
 #define mafSensorType_offset 948
 #define mainRelayPin_offset 706
 #define mainRelayPinMode_offset 752
-#define mainUnusedEnd_offset 4520
+#define mainUnusedEnd_offset 4524
 #define malfunctionIndicatorPin_offset 660
 #define malfunctionIndicatorPinMode_offset 661
 #define manIdlePosition_offset 608
@@ -1171,7 +1171,7 @@
 #define showSdCardWarning_offset 76
 #define SIGNATURE_BOARD kin
 #define SIGNATURE_DATE 2020.09.29
-#define SIGNATURE_HASH 2682474740
+#define SIGNATURE_HASH 1661141786
 #define silentTriggerError_offset 1464
 #define slowAdcAlpha_offset 2088
 #define solenoidPadding_offset 1198
@@ -1272,6 +1272,12 @@
 #define tcu_solenoid5_offset 1196
 #define tcu_solenoid6_offset 1197
 #define TCU_SOLENOID_COUNT 6
+#define tcu_solenoid_mode1_offset 4517
+#define tcu_solenoid_mode2_offset 4518
+#define tcu_solenoid_mode3_offset 4519
+#define tcu_solenoid_mode4_offset 4520
+#define tcu_solenoid_mode5_offset 4521
+#define tcu_solenoid_mode6_offset 4522
 #define tcuDownshiftButtonPin_offset 1819
 #define tcuDownshiftButtonPinMode_offset 4515
 #define tcuEnabled_offset 976
@@ -1481,7 +1487,7 @@
 #define ts_show_spi true
 #define ts_show_trigger_comparator true
 #define ts_show_tunerstudio_port true
-#define TS_SIGNATURE "rusEFI 2020.09.29.kin.2682474740"
+#define TS_SIGNATURE "rusEFI 2020.09.29.kin.1661141786"
 #define TS_SINGLE_WRITE_COMMAND 'W'
 #define TS_SINGLE_WRITE_COMMAND_char W
 #define TS_TEST_COMMAND 't' // 0x74

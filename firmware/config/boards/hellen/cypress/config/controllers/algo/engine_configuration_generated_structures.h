@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on hellen_cypress_gen_config.bat integration/rusefi_config.txt Tue Sep 29 01:20:34 UTC 2020
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on hellen_cypress_gen_config.bat integration/rusefi_config.txt Tue Sep 29 01:40:40 UTC 2020
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -3419,14 +3419,18 @@ struct engine_configuration_s {
 	 */
 	pin_input_mode_e acSwitchMode;
 	/**
-	 * need 4 byte alignment
 	 * offset 4517
 	 */
-	uint8_t alignmentFill_at_4517[3];
+	pin_output_mode_e tcu_solenoid_mode[TCU_SOLENOID_COUNT];
 	/**
-	 * offset 4520
+	 * need 4 byte alignment
+	 * offset 4523
 	 */
-	int mainUnusedEnd[370];
+	uint8_t alignmentFill_at_4523;
+	/**
+	 * offset 4524
+	 */
+	int mainUnusedEnd[369];
 	/** total size 6000*/
 };
 
@@ -3724,4 +3728,4 @@ struct persistent_config_s {
 typedef struct persistent_config_s persistent_config_s;
 
 // end
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on hellen_cypress_gen_config.bat integration/rusefi_config.txt Tue Sep 29 01:20:34 UTC 2020
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on hellen_cypress_gen_config.bat integration/rusefi_config.txt Tue Sep 29 01:40:40 UTC 2020
