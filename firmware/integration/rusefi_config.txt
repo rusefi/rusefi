@@ -90,9 +90,6 @@ struct_no_prefix engine_configuration_s
 
 #define ETB_BIAS_CURVE_LENGTH 8
 
-#define TRIGGER_TYPE_60_2 8
-#define TRIGGER_TYPE_36_1 9
-
 #define TOOTH_PACKET_COUNT 1000
 #define TOOTH_PACKET_SIZE 2
 #define TOOTH_DATA_LENGTH @@TOOTH_PACKET_SIZE@@*@@TOOTH_PACKET_COUNT@@
