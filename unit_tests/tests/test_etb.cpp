@@ -27,8 +27,8 @@ TEST(etb, initializationNoPedal) {
 		engine->etbControllers[i] = &mocks[i];
 	}
 
-	EXPECT_CALL(mocks[0], init(ETB_None, _, _, _)).WillOnce(Return(false));
-	EXPECT_CALL(mocks[1], init(ETB_None, _, _, _)).WillOnce(Return(false));
+	EXPECT_CALL(mocks[0], init(ETB_Throttle1, _, _, _)).WillOnce(Return(false));
+	EXPECT_CALL(mocks[1], init(ETB_Throttle2, _, _, _)).WillOnce(Return(false));
 
 	// This shouldn't throw, since no throttles are configured, but no pedal is configured either
 	EXPECT_NO_FATAL_ERROR(doInitElectronicThrottle(PASS_ENGINE_PARAMETER_SIGNATURE));
@@ -42,6 +42,9 @@ TEST(etb, initializationMissingThrottle) {
 	for (int i = 0; i < ETB_COUNT; i++) {
 		engine->etbControllers[i] = &mocks[i];
 	}
+
+	engineConfiguration->etbFunctions[0] = ETB_None;
+	engineConfiguration->etbFunctions[1] = ETB_None;
 
 	EXPECT_CALL(mocks[0], init(ETB_None, _, _, _)).WillOnce(Return(false));
 	EXPECT_CALL(mocks[1], init(ETB_None, _, _, _)).WillOnce(Return(false));
