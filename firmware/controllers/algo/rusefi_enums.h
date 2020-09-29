@@ -216,7 +216,7 @@ typedef enum {
  * @see http://rusefi.com/wiki/index.php?title=Manual:Software:Trigger
  */
 typedef enum {
-	TT_TOOTHED_WHEEL = 0,
+	TT_TOOTHED_WHEEL = TT_TT_TOOTHED_WHEEL,
 	TT_FORD_ASPIRE = 1,
 	TT_DODGE_NEON_1995 = 2,
 	/**
@@ -234,8 +234,8 @@ typedef enum {
 	 * "60/2"
 	 * See also TT_ONE_PLUS_TOOTHED_WHEEL_60_2
 	 */
-	TT_TOOTHED_WHEEL_60_2 = 8,
-	TT_TOOTHED_WHEEL_36_1 = 9,
+	TT_TOOTHED_WHEEL_60_2 = TT_TT_TOOTHED_WHEEL_60_2,
+	TT_TOOTHED_WHEEL_36_1 = TT_TT_TOOTHED_WHEEL_36_1,
 
 	TT_HONDA_4_24_1 = 10,
 
@@ -260,13 +260,13 @@ typedef enum {
 	// "1+60/2"
 	TT_VVT_JZ = 17,
 	// just one channel with just one tooth
-	TT_ONE = 18,
+	TT_ONE = TT_TT_ONE,
 
 	TT_DODGE_RAM = 19,
 	/**
 	 * It looks like this is the VR shape if you have your wires flipped
 	 */
-	TT_60_2_VW = 20,
+	TT_60_2_VW = TT_TT_60_2_VW,
 
 	TT_HONDA_1_24 = 21,
 
@@ -354,7 +354,7 @@ typedef enum {
 
 	TT_VVT_BOSCH_QUICK_START = 47,
 
-	TT_TOOTHED_WHEEL_36_2 = 48,
+	TT_TOOTHED_WHEEL_36_2 = TT_TT_TOOTHED_WHEEL_36_2,
 
 	TT_SUBARU_SVX = 49,
 
