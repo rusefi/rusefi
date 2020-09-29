@@ -597,6 +597,10 @@ void TriggerWaveform::initializeTriggerWaveform(Logging *logger, operation_mode_
 		configureHondaAccordCDDip(this);
 		break;
 
+	case TT_1_16:
+		configureOnePlus16(this);
+		break;
+
 	case TT_HONDA_CBR_600:
 		configureHondaCbr600(this);
 		break;
