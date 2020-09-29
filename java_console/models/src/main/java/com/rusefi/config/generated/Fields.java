@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEfi tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Tue Sep 29 01:40:21 UTC 2020
+// this file was generated automatically by rusEfi tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Tue Sep 29 10:36:02 UTC 2020
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -878,7 +878,6 @@ public class Fields {
 	public static final int isDoubleSolenoidIdle_offset = 76;
 	public static final int isEngineChartEnabled_offset = 1464;
 	public static final int isEngineControlEnabled_offset = 744;
-	public static final int isFastAdcEnabled_offset = 744;
 	public static final int isFasterEngineSpinUpEnabled_offset = 744;
 	public static final int isForcedInduction_offset = 76;
 	public static final int isHip9011Enabled_offset = 744;
@@ -893,7 +892,6 @@ public class Fields {
 	public static final int issue_294_29_offset = 76;
 	public static final int issue_294_30_offset = 76;
 	public static final int issue_294_31_offset = 76;
-	public static final int isTunerStudioEnabled_offset = 1476;
 	public static final int isVerboseAlternator_offset = 744;
 	public static final int isVerboseAuxPid1_offset = 76;
 	public static final int isVerboseAuxPid2_offset = 76;
@@ -1111,7 +1109,6 @@ public class Fields {
 	public static final int sdCardPeriodMs_offset = 804;
 	public static final int sdCardSpiDevice_offset = 2592;
 	public static final int secondSolenoidPin_offset = 810;
-	public static final int secondTriggerChannelEnabled_offset = 1476;
 	public static final int sensorChartFrequency_offset = 520;
 	public static final int sensorChartMode_offset = 944;
 	public static final int sensorSnifferRpmThreshold_offset = 412;
@@ -1196,7 +1193,6 @@ public class Fields {
 	public static final int stft_startupDelay_offset = 1071;
 	public static final int stftIgnoreErrorMagnitude_offset = 976;
 	public static final int stoichRatioPrimary_offset = 4005;
-	public static final int storageMode_offset = 2260;
 	public static final int tachOutputPin_offset = 704;
 	public static final int tachOutputPinMode_offset = 705;
 	public static final int tachPulseDuractionMs_offset = 1704;
@@ -1391,7 +1387,7 @@ public class Fields {
 	public static final char TS_SD_R_COMMAND = 'r';
 	public static final char TS_SD_W_COMMAND = 'w';
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI 2020.09.29.all.2295871646";
+	public static final String TS_SIGNATURE = "rusEFI 2020.09.29.all.3319335477";
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final int TT_TT_60_2_VW = 20;
 	public static final int TT_TT_ONE = 18;
@@ -1410,7 +1406,10 @@ public class Fields {
 	public static final int unused1129_offset = 2116;
 	public static final int unused1130_offset = 2116;
 	public static final int unused1476b20_offset = 1476;
+	public static final int unused1476b3_offset = 1476;
+	public static final int unused1476b8_offset = 1476;
 	public static final int unused15136_offset = 15196;
+	public static final int unused2260_offset = 2260;
 	public static final int unused2432_offset = 2432;
 	public static final int unused244_1_offset = 2420;
 	public static final int unused244_2_offset = 2424;
@@ -1420,6 +1419,7 @@ public class Fields {
 	public static final int unused3288_offset = 3288;
 	public static final int unused6312_offset = 6312;
 	public static final int unused744b25_offset = 744;
+	public static final int unused744b4_offset = 744;
 	public static final int unused976b11_offset = 976;
 	public static final int unused_1484_bit_24_offset = 1476;
 	public static final int unused_1484_bit_25_offset = 1476;
@@ -1814,7 +1814,7 @@ public class Fields {
 	public static final Field IS_ENABLED_SPI_2 = Field.create("IS_ENABLED_SPI_2", 744, FieldType.BIT, 1);
 	public static final Field IS_ENABLED_SPI_3 = Field.create("IS_ENABLED_SPI_3", 744, FieldType.BIT, 2);
 	public static final Field ISSDCARDENABLED = Field.create("ISSDCARDENABLED", 744, FieldType.BIT, 3);
-	public static final Field ISFASTADCENABLED = Field.create("ISFASTADCENABLED", 744, FieldType.BIT, 4);
+	public static final Field UNUSED744B4 = Field.create("UNUSED744B4", 744, FieldType.BIT, 4);
 	public static final Field ISENGINECONTROLENABLED = Field.create("ISENGINECONTROLENABLED", 744, FieldType.BIT, 5);
 	public static final Field ISHIP9011ENABLED = Field.create("ISHIP9011ENABLED", 744, FieldType.BIT, 6);
 	public static final Field ISVERBOSEALTERNATOR = Field.create("ISVERBOSEALTERNATOR", 744, FieldType.BIT, 7);
@@ -2137,12 +2137,12 @@ public class Fields {
 	public static final Field ISINJECTIONENABLED = Field.create("ISINJECTIONENABLED", 1476, FieldType.BIT, 0);
 	public static final Field ISIGNITIONENABLED = Field.create("ISIGNITIONENABLED", 1476, FieldType.BIT, 1);
 	public static final Field ISCYLINDERCLEANUPENABLED = Field.create("ISCYLINDERCLEANUPENABLED", 1476, FieldType.BIT, 2);
-	public static final Field SECONDTRIGGERCHANNELENABLED = Field.create("SECONDTRIGGERCHANNELENABLED", 1476, FieldType.BIT, 3);
+	public static final Field UNUSED1476B3 = Field.create("UNUSED1476B3", 1476, FieldType.BIT, 3);
 	public static final Field UNUSEDBIT4_1476 = Field.create("UNUSEDBIT4_1476", 1476, FieldType.BIT, 4);
 	public static final Field ISMAPAVERAGINGENABLED = Field.create("ISMAPAVERAGINGENABLED", 1476, FieldType.BIT, 5);
 	public static final Field OVERRIDECRANKINGIACSETTING = Field.create("OVERRIDECRANKINGIACSETTING", 1476, FieldType.BIT, 6);
 	public static final Field USESEPARATEADVANCEFORIDLE = Field.create("USESEPARATEADVANCEFORIDLE", 1476, FieldType.BIT, 7);
-	public static final Field ISTUNERSTUDIOENABLED = Field.create("ISTUNERSTUDIOENABLED", 1476, FieldType.BIT, 8);
+	public static final Field UNUSED1476B8 = Field.create("UNUSED1476B8", 1476, FieldType.BIT, 8);
 	public static final Field ISWAVEANALYZERENABLED = Field.create("ISWAVEANALYZERENABLED", 1476, FieldType.BIT, 9);
 	public static final Field USESEPARATEVEFORIDLE = Field.create("USESEPARATEVEFORIDLE", 1476, FieldType.BIT, 10);
 	public static final Field VERBOSETRIGGERSYNCHDETAILS = Field.create("VERBOSETRIGGERSYNCHDETAILS", 1476, FieldType.BIT, 11);
@@ -2346,8 +2346,7 @@ public class Fields {
 	public static final Field AUXPIDFREQUENCY3 = Field.create("AUXPIDFREQUENCY3", 2252, FieldType.INT16);
 	public static final Field AUXPIDFREQUENCY4 = Field.create("AUXPIDFREQUENCY4", 2254, FieldType.INT16);
 	public static final Field ALTERNATORPWMFREQUENCY = Field.create("ALTERNATORPWMFREQUENCY", 2256, FieldType.INT);
-	public static final String[] mass_storage_e = {"Auto", "Always", "Never", "INVALID"};
-	public static final Field STORAGEMODE = Field.create("STORAGEMODE", 2260, FieldType.INT, mass_storage_e);
+	public static final Field UNUSED2260 = Field.create("UNUSED2260", 2260, FieldType.INT);
 	public static final String[] vvt_mode_e = {"Inactive", "Second half", "2GZ", "Miata NB2", "First half", "Bosch Quick Start", "mode6", "mode7"};
 	public static final Field VVTMODE = Field.create("VVTMODE", 2328, FieldType.INT, vvt_mode_e);
 	public static final Field TLE8888MODE = Field.create("TLE8888MODE", 2416, FieldType.INT8);
@@ -2861,7 +2860,7 @@ public class Fields {
 	IS_ENABLED_SPI_2,
 	IS_ENABLED_SPI_3,
 	ISSDCARDENABLED,
-	ISFASTADCENABLED,
+	UNUSED744B4,
 	ISENGINECONTROLENABLED,
 	ISHIP9011ENABLED,
 	ISVERBOSEALTERNATOR,
@@ -3180,12 +3179,12 @@ public class Fields {
 	ISINJECTIONENABLED,
 	ISIGNITIONENABLED,
 	ISCYLINDERCLEANUPENABLED,
-	SECONDTRIGGERCHANNELENABLED,
+	UNUSED1476B3,
 	UNUSEDBIT4_1476,
 	ISMAPAVERAGINGENABLED,
 	OVERRIDECRANKINGIACSETTING,
 	USESEPARATEADVANCEFORIDLE,
-	ISTUNERSTUDIOENABLED,
+	UNUSED1476B8,
 	ISWAVEANALYZERENABLED,
 	USESEPARATEVEFORIDLE,
 	VERBOSETRIGGERSYNCHDETAILS,
@@ -3385,7 +3384,7 @@ public class Fields {
 	AUXPIDFREQUENCY3,
 	AUXPIDFREQUENCY4,
 	ALTERNATORPWMFREQUENCY,
-	STORAGEMODE,
+	UNUSED2260,
 	VVTMODE,
 	TLE8888MODE,
 	LIS302DLCSPINMODE,

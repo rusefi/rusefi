@@ -901,7 +901,6 @@
 #define isDoubleSolenoidIdle_offset 76
 #define isEngineChartEnabled_offset 1464
 #define isEngineControlEnabled_offset 744
-#define isFastAdcEnabled_offset 744
 #define isFasterEngineSpinUpEnabled_offset 744
 #define isForcedInduction_offset 76
 #define isHip9011Enabled_offset 744
@@ -916,7 +915,6 @@
 #define issue_294_29_offset 76
 #define issue_294_30_offset 76
 #define issue_294_31_offset 76
-#define isTunerStudioEnabled_offset 1476
 #define isVerboseAlternator_offset 744
 #define isVerboseAuxPid1_offset 76
 #define isVerboseAuxPid2_offset 76
@@ -1026,8 +1024,6 @@
 #define mapHighValueVoltage_offset 2212
 #define mapLowValueVoltage_offset 2208
 #define mapMinBufferLength_offset 812
-#define mass_storage_e_auto_enum "MS_AUTO", "MS_ALWAYS", "MS_NEVER"
-#define mass_storage_e_enum "Auto", "Always", "Never", "INVALID"
 #define max31855_cs1_offset 796
 #define max31855_cs2_offset 797
 #define max31855_cs3_offset 798
@@ -1148,7 +1144,6 @@
 #define sdCardPeriodMs_offset 804
 #define sdCardSpiDevice_offset 2592
 #define secondSolenoidPin_offset 810
-#define secondTriggerChannelEnabled_offset 1476
 #define sensor_chart_e_auto_enum "SC_OFF", "SC_TRIGGER", "SC_MAP", "SC_RPM_ACCEL", "SC_DETAILED_RPM", "SC_AUX_FAST1"
 #define sensor_chart_e_enum "none", "trigger", "MAP", "RPM ACCEL", "DETAILED RPM", "Fast Aux1", "INVALID", "INVALID"
 #define sensorChartFrequency_offset 520
@@ -1171,7 +1166,7 @@
 #define showSdCardWarning_offset 76
 #define SIGNATURE_BOARD all
 #define SIGNATURE_DATE 2020.09.29
-#define SIGNATURE_HASH 2295871646
+#define SIGNATURE_HASH 3319335477
 #define silentTriggerError_offset 1464
 #define slowAdcAlpha_offset 2088
 #define solenoidPadding_offset 1198
@@ -1243,7 +1238,6 @@
 #define stft_startupDelay_offset 1071
 #define stftIgnoreErrorMagnitude_offset 976
 #define stoichRatioPrimary_offset 4005
-#define storageMode_offset 2260
 #define switch_input_pin_e_enum "NONE", "INVALID", "PA0", "PA1", "PA2", "PA3", "PA4", "PA5", "PA6", "PA7", "PA8", "PA9", "PA10", "PA11", "PA12", "PA13", "PA14", "PA15", "PB0", "PB1", "PB2", "PB3", "PB4", "PB5", "PB6", "PB7", "PB8", "PB9", "PB10", "PB11", "PB12", "PB13", "PB14", "PB15", "PC0", "PC1", "PC2", "PC3", "PC4", "PC5", "PC6", "PC7", "PC8", "PC9", "PC10", "PC11", "PC12", "PC13", "PC14", "PC15", "PD0", "PD1", "PD2", "PD3", "PD4", "PD5", "PD6", "PD7", "PD8", "PD9", "PD10", "PD11", "PD12", "PD13", "PD14", "PD15", "PE0", "PE1", "PE2", "PE3", "PE4", "PE5", "PE6","PE7","PE8","PE9","PE10","PE11","PE12","PE13","PE14","PE15", "PF0","PF1","PF2","PF3","PF4","PF5","PF6","PF7","PF8","PF9","PF10","PF11","PF12","PF13","PF14","PF15", "PG0","PG1","PG2","PG3","PG4","PG5","PG6","PG7","PG8","PG9","PG10","PG11","PG12","PG13","PG14","PG15", "PH0","PH1","PH2","PH3","PH4","PH5","PH6","PH7","PH8","PH9","PH10","PH11","PH12","PH13","PH14","PH15","INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID"
 #define tachOutputPin_offset 704
 #define tachOutputPinMode_offset 705
@@ -1487,7 +1481,7 @@
 #define ts_show_spi true
 #define ts_show_trigger_comparator false
 #define ts_show_tunerstudio_port true
-#define TS_SIGNATURE "rusEFI 2020.09.29.all.2295871646"
+#define TS_SIGNATURE "rusEFI 2020.09.29.all.3319335477"
 #define TS_SINGLE_WRITE_COMMAND 'W'
 #define TS_SINGLE_WRITE_COMMAND_char W
 #define TS_TEST_COMMAND 't' // 0x74
@@ -1509,7 +1503,10 @@
 #define unused1129_offset 2116
 #define unused1130_offset 2116
 #define unused1476b20_offset 1476
+#define unused1476b3_offset 1476
+#define unused1476b8_offset 1476
 #define unused15136_offset 15196
+#define unused2260_offset 2260
 #define unused2432_offset 2432
 #define unused244_1_offset 2420
 #define unused244_2_offset 2424
@@ -1519,6 +1516,7 @@
 #define unused3288_offset 3288
 #define unused6312_offset 6312
 #define unused744b25_offset 744
+#define unused744b4_offset 744
 #define unused976b11_offset 976
 #define unused_1484_bit_24_offset 1476
 #define unused_1484_bit_25_offset 1476

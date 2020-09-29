@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on hellen_cypress_gen_config.bat integration/rusefi_config.txt Tue Sep 29 01:40:40 UTC 2020
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on hellen_cypress_gen_config.bat integration/rusefi_config.txt Tue Sep 29 10:36:25 UTC 2020
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -1397,7 +1397,7 @@ struct engine_configuration_s {
 	bool isSdCardEnabled : 1;
 	/**
 	offset 744 bit 4 */
-	bool isFastAdcEnabled : 1;
+	bool unused744b4 : 1;
 	/**
 	offset 744 bit 5 */
 	bool isEngineControlEnabled : 1;
@@ -2141,7 +2141,7 @@ struct engine_configuration_s {
 	bool isCylinderCleanupEnabled : 1;
 	/**
 	offset 1476 bit 3 */
-	bool secondTriggerChannelEnabled : 1;
+	bool unused1476b3 : 1;
 	/**
 	offset 1476 bit 4 */
 	bool unusedBit4_1476 : 1;
@@ -2158,7 +2158,7 @@ struct engine_configuration_s {
 	bool useSeparateAdvanceForIdle : 1;
 	/**
 	offset 1476 bit 8 */
-	bool isTunerStudioEnabled : 1;
+	bool unused1476b8 : 1;
 	/**
 	offset 1476 bit 9 */
 	bool isWaveAnalyzerEnabled : 1;
@@ -2864,7 +2864,7 @@ struct engine_configuration_s {
 	/**
 	 * offset 2260
 	 */
-	mass_storage_e storageMode;
+	int unused2260;
 	/**
 	 * Narrow Band WBO Approximation
 	 * offset 2264
@@ -3728,4 +3728,4 @@ struct persistent_config_s {
 typedef struct persistent_config_s persistent_config_s;
 
 // end
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on hellen_cypress_gen_config.bat integration/rusefi_config.txt Tue Sep 29 01:40:40 UTC 2020
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on hellen_cypress_gen_config.bat integration/rusefi_config.txt Tue Sep 29 10:36:25 UTC 2020
