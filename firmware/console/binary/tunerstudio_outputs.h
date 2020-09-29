@@ -59,7 +59,7 @@ typedef struct {
 	unsigned int isO2HeaterOn : 1; // bit 7
 	unsigned int checkEngine : 1; // bit 8
 	unsigned int needBurn : 1; // bit 9
-	unsigned int secondTriggerChannelEnabled : 1; // bit 10
+	unsigned int unusedBit10 : 1; // bit 10
 	unsigned int clutchUpState : 1; // bit 11
 	unsigned int clutchDownState : 1; // bit 12
 	unsigned int knockEverIndicator : 1; // bit 13

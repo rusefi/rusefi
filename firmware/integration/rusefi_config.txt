@@ -273,9 +273,6 @@ custom debug_mode_e 4 bits,    U32,   @OFFSET@, [0:5], @@debug_mode_e_enum@@
 #define vvt_mode_e_enum "Inactive", "Second half", "2GZ", "Miata NB2", "First half", "Bosch Quick Start", "mode6", "mode7"
 custom vvt_mode_e 4 bits,    U32,   @OFFSET@, [0:2], @@vvt_mode_e_enum@@
 
-#define mass_storage_e_enum "Auto", "Always", "Never", "INVALID"
-custom mass_storage_e 4 bits, U32, @OFFSET@, [0:1], @@mass_storage_e_enum@@
-
 ! At the moment TIM1, TIM2, TIM3 and TIM9 are configured as ICU
 ! todo: as of ChibiOS3, only channels 1 & 2 are allowed to capture input, that's a ChibiOS driver limitation
 ! https://github.com/ChibiOS/ChibiOS-Drivers/blob/master/inc/timcap_driver.h is an alternative driver if channels 3 & 4 really become an issue
@@ -748,7 +745,7 @@ bit is_enabled_spi_1
 bit is_enabled_spi_2
 	bit is_enabled_spi_3
 	bit isSdCardEnabled;enable sd/disable sd
-	bit isFastAdcEnabled
+	bit unused744b4
 	bit isEngineControlEnabled
 	bit isHip9011Enabled
 	bit isVerboseAlternator
@@ -1010,12 +1007,12 @@ custom idle_mode_e 4 bits,    U32,   @OFFSET@, [0:0], "Automatic", "Manual"
 	bit isInjectionEnabled;+Enable fuel injection - This is default off for new projects as a safety feature, set to "true" to enable fuel injection and further injector settings.
 	bit isIgnitionEnabled;+Enable ignition - This is default off for new projects as a safety feature, set to "true" to enable ignition and further ignition settings.
 	bit isCylinderCleanupEnabled;+When enabled if TPS is held above 95% no fuel is injected while cranking to clear excess fuel from the cylinders. 
-	bit secondTriggerChannelEnabled
+	bit unused1476b3
 	bit unusedBit4_1476
 	bit isMapAveragingEnabled
 	bit overrideCrankingIacSetting;+This setting overrides the normal multiplication values that have been set for the idle air control valve during cranking. If this setting is enabled the "IAC multiplier" table in the Cranking settings tab needs to be adjusted appropriately or potentially no IAC opening will occur.
 	bit useSeparateAdvanceForIdle;+This activates a separate ignition timing table for idle conditions, this can help idle stability by using ignition retard and advance either side of the desired idle speed. Extra retard at low idle speeds will prevent stalling and extra advance at high idle speeds can help reduce engine power and slow the idle speed.
-	bit isTunerStudioEnabled
+	bit unused1476b8
 	bit isWaveAnalyzerEnabled
 	bit useSeparateVeForIdle;+This activates a separate fuel table for Idle, this allows fine tuning of the idle fuelling.
 	bit verboseTriggerSynchDetails;+enable trigger_details
@@ -1222,7 +1219,7 @@ float[MAP_ACCEL_TAPER] mapAccelTaperMult;;"mult",      1,     0,   0.0,    300, 
 
 	fsio_pwm_freq_t[AUX_PID_COUNT iterate] auxPidFrequency;
 	int alternatorPwmFrequency;;"Hz",        1,     0,  0,    3000.0,  0
-	mass_storage_e storageMode;
+	int unused2260;;"units", 1, 0, -20, 100, 0
 
 	float[NARROW_BAND_WIDE_BAND_CONVERSION_SIZE] narrowToWideOxygenBins;Narrow Band WBO Approximation;"V",        1,     0,   -10.0,    10.0,  3
 	float[NARROW_BAND_WIDE_BAND_CONVERSION_SIZE] narrowToWideOxygen;;"ratio",      1,     0,      -40.0,    40.0,   2

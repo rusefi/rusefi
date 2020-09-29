@@ -684,7 +684,7 @@ void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels DECLARE_
 	tsOutputChannels->isInjectionEnabled = engineConfiguration->isInjectionEnabled;
 	tsOutputChannels->isCylinderCleanupEnabled = engineConfiguration->isCylinderCleanupEnabled;
 	tsOutputChannels->isCylinderCleanupActivated = engine->isCylinderCleanupMode;
-	tsOutputChannels->secondTriggerChannelEnabled = engineConfiguration->secondTriggerChannelEnabled;
+
 #if EFI_VEHICLE_SPEED
 	float vehicleSpeed = getVehicleSpeed();
 	tsOutputChannels->vehicleSpeedKph = vehicleSpeed;
