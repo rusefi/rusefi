@@ -952,8 +952,6 @@ static void setDefaultEngineConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	// performance optimization
 	engineConfiguration->sensorChartMode = SC_OFF;
 
-	engineConfiguration->storageMode = MS_AUTO;
-
 	engineConfiguration->specs.firingOrder = FO_1_3_4_2;
 	engineConfiguration->crankingInjectionMode = IM_SIMULTANEOUS;
 	engineConfiguration->injectionMode = IM_SEQUENTIAL;
@@ -1037,10 +1035,8 @@ static void setDefaultEngineConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	engineConfiguration->isInjectionEnabled = true;
 	engineConfiguration->isIgnitionEnabled = true;
 	engineConfiguration->isCylinderCleanupEnabled = false; // this feature is evil if one does not have TPS, better turn off by default
-	engineConfiguration->secondTriggerChannelEnabled = true;
 
 	engineConfiguration->isMapAveragingEnabled = true;
-	engineConfiguration->isTunerStudioEnabled = true;
 	engineConfiguration->isWaveAnalyzerEnabled = true;
 
 	engineConfiguration->debugMode = DBG_ALTERNATOR_PID;
@@ -1076,10 +1072,7 @@ static void setDefaultEngineConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 
 	engineConfiguration->hip9011Gain = 1;
 
-	engineConfiguration->isFastAdcEnabled = true;
 	engineConfiguration->isEngineControlEnabled = true;
-
-	engineConfiguration->isVerboseAlternator = false;
 
 	engineConfiguration->engineLoadAccelLength = 6;
 	engineConfiguration->engineLoadAccelEnrichmentThreshold = 5; // kPa

@@ -628,16 +628,14 @@ void initAdcInputs() {
 	// Start the slow ADC thread
 	slowAdcController.Start();
 
-	if (CONFIG(isFastAdcEnabled)) {
-		fastAdc.init();
-		/*
-		 * Initializes the PWM driver.
-		 */
+	fastAdc.init();
+	/*
+		* Initializes the PWM driver.
+		*/
 #if HAL_USE_GPT
-		gptStart(EFI_INTERNAL_FAST_ADC_GPT, &fast_adc_config);
-		gptStartContinuous(EFI_INTERNAL_FAST_ADC_GPT, GPT_PERIOD_FAST);
+	gptStart(EFI_INTERNAL_FAST_ADC_GPT, &fast_adc_config);
+	gptStartContinuous(EFI_INTERNAL_FAST_ADC_GPT, GPT_PERIOD_FAST);
 #endif /* HAL_USE_GPT */
-	}
 
 	addConsoleActionI("adc", (VoidInt) printAdcValue);
 #else
