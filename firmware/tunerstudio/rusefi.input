@@ -978,7 +978,7 @@ gaugeCategory = Fueling
    
    injectorLagMsGauge = injectorLagMs,       @@GAUGE_NAME_INJECTOR_LAG@@,      "mSec",        0,   25.5,     1.0,    1.2,      20,    25,   3, 1
    fuelRunningGauge     = fuelRunning,       @@GAUGE_NAME_FUEL_RUNNING@@,      "mSec",        0,   25.5,     1.0,    1.2,      20,    25,   3, 1
-   baseFuelGauge     = baseFuel,       @@GAUGE_NAME_FUEL_BASE@@,      "mSec",        0,   25.5,     1.0,    1.2,      20,    25,   3, 1
+   baseFuelGauge     = baseFuel,       @@GAUGE_NAME_FUEL_BASE@@,      "mSec",        0,   100, 0, 0, 100, 100,   2, 0
    fuelPidCorrectionGauge = fuelPidCorrection,       @@GAUGE_NAME_FUEL_PID_CORR@@,      "%",        -10,   10,     -8, -5, 5, 8,   3, 1
    fuelingLoadGauge = fuelingLoad, @@GAUGE_NAME_FUEL_LOAD@@, "%", 0, 300, 0, 0, 300, 300, 1, 1
 
