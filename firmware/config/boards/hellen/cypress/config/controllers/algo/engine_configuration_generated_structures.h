@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on hellen_cypress_gen_config.bat integration/rusefi_config.txt Thu Oct 01 00:21:23 UTC 2020
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on hellen_cypress_gen_config.bat integration/rusefi_config.txt Thu Oct 01 04:05:39 UTC 2020
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -3728,4 +3728,4 @@ struct persistent_config_s {
 typedef struct persistent_config_s persistent_config_s;
 
 // end
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on hellen_cypress_gen_config.bat integration/rusefi_config.txt Thu Oct 01 00:21:23 UTC 2020
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on hellen_cypress_gen_config.bat integration/rusefi_config.txt Thu Oct 01 04:05:39 UTC 2020

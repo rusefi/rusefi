@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEfi tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Thu Oct 01 00:21:02 UTC 2020
+// this file was generated automatically by rusEfi tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Thu Oct 01 04:05:22 UTC 2020
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -1124,7 +1124,7 @@ public class Fields {
 	public static final int servoOutputPins8_offset = 3147;
 	public static final int showHumanReadableWarning_offset = 976;
 	public static final int showSdCardWarning_offset = 76;
-	public static final int SIGNATURE_HASH = 1339089994;
+	public static final int SIGNATURE_HASH = 2003788993;
 	public static final int silentTriggerError_offset = 1464;
 	public static final int slowAdcAlpha_offset = 2088;
 	public static final int solenoidPadding_offset = 1198;
@@ -1378,7 +1378,12 @@ public class Fields {
 	public static final char TS_READ_COMMAND = 'R';
 	public static final int TS_RESPONSE_BURN_OK = 4;
 	public static final int TS_RESPONSE_COMMAND_OK = 7;
+	public static final int TS_RESPONSE_CRC_FAILURE = 0x82;
+	public static final int TS_RESPONSE_FRAMING_ERROR = 0x8D;
 	public static final int TS_RESPONSE_OK = 0;
+	public static final int TS_RESPONSE_OUT_OF_RANGE = 0x84;
+	public static final int TS_RESPONSE_UNDERRUN = 0x80;
+	public static final int TS_RESPONSE_UNRECOGNIZED_COMMAND = 0x83;
 	public static final int TS_SD_PROTOCOL_DO = 1;
 	public static final int TS_SD_PROTOCOL_FETCH_COMPRESSED = 8;
 	public static final int TS_SD_PROTOCOL_FETCH_DATA = 0x14;
@@ -1389,7 +1394,7 @@ public class Fields {
 	public static final char TS_SD_R_COMMAND = 'r';
 	public static final char TS_SD_W_COMMAND = 'w';
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI 2020.10.01.all.1339089994";
+	public static final String TS_SIGNATURE = "rusEFI 2020.10.01.all.2003788993";
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final int TT_TT_60_2_VW = 20;
 	public static final int TT_TT_ONE = 18;
