@@ -112,11 +112,11 @@ typedef struct {
 	scaled_angle vvtPosition; // 42
 
 	// Fuel math
-	scaled_channel<uint16_t, 1000> chargeAirMass; // 44
+	scaled_channel<uint16_t, 1000> chargeAirMass; // 44  cylinder airmass in mg, 0-65 grams
 	scaled_ms crankingFuelMs; // 46
 	scaled_afr currentTargetAfr; // 48
 	// This is the raw value we take from the fuel map or base fuel algorithm, before the corrections
-	scaled_ms fuelBase; // 50
+	scaled_fuel_mass_mg fuelBase; // 50
 	// Total fuel with CLT, IAT and TPS acceleration without injector lag corrections per cycle, as pulse per cycle
 	scaled_ms fuelRunning; // 52
 	// Actual last injection time - including all compensation and injection mode
