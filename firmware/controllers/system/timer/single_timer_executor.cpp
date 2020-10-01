@@ -76,9 +76,6 @@ void SingleTimerExecutor::scheduleByTimestamp(efitimeus_t timeUs, action_s actio
 void SingleTimerExecutor::scheduleByTimestampNt(efitime_t nt, action_s action) {
 	ScopePerf perf(PE::SingleTimerExecutorScheduleByTimestamp);
 
-	// TODO: fixme!
-	scheduling_s* scheduling = nullptr;
-
 #if EFI_ENABLE_ASSERTS
 	int deltaTimeUs = NT2US(nt - getTimeNowNt());
 
@@ -95,7 +92,7 @@ void SingleTimerExecutor::scheduleByTimestampNt(efitime_t nt, action_s action) {
 		// this would guard the queue and disable interrupts
 		alreadyLocked = lockAnyContext();
 	}
-	bool needToResetTimer = queue.insertTask(scheduling, nt, action);
+	bool needToResetTimer = queue.insertTask(nt, action);
 	if (!reentrantFlag) {
 		executeAllPendingActions();
 		if (needToResetTimer) {

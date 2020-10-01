@@ -48,12 +48,12 @@ public:
 	// See comment in EventQueue::executeAll for info about lateDelay - it sets the 
 	// time gap between events for which we will wait instead of rescheduling the next
 	// event in a group of events near one another.
-	EventQueue(efitime_t lateDelay = 0) : lateDelay(lateDelay) {}
+	explicit EventQueue(efitime_t lateDelay = 0) : lateDelay(lateDelay) {}
 
 	/**
 	 * O(size) - linear search in sorted linked list
 	 */
-	bool insertTask(scheduling_s *scheduling, efitime_t timeX, action_s action);
+	bool insertTask(efitime_t timeX, action_s action);
 
 	int executeAll(efitime_t now);
 

@@ -29,8 +29,11 @@ uint32_t maxSchedulingPrecisionLoss = 0;
 /**
  * @return true if inserted into the head of the list
  */
-bool EventQueue::insertTask(scheduling_s *scheduling, efitime_t timeX, action_s action) {
+bool EventQueue::insertTask(efitime_t timeX, action_s action) {
 	ScopePerf perf(PE::EventQueueInsertTask);
+
+	// TODO: fixme!
+	scheduling_s* scheduling = nullptr;
 
 #if EFI_UNIT_TEST
 	assertListIsSorted();
