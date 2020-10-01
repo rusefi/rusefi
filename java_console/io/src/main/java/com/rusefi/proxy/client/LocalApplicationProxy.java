@@ -36,11 +36,17 @@ import java.util.concurrent.atomic.AtomicInteger;
 import static com.devexperts.logging.Logging.getLogging;
 import static com.rusefi.binaryprotocol.BinaryProtocol.sleep;
 
+/**
+ * Remote user process which facilitates connection between local tuning application and real ECU via rusEFI proxy service
+ */
 public class LocalApplicationProxy implements Closeable {
     private static final ThreadFactory THREAD_FACTORY = new NamedThreadFactory("gauge poking");
     private static final Logging log = getLogging(LocalApplicationProxy.class);
     public static final int SERVER_PORT_FOR_APPLICATIONS = HttpUtil.getIntProperty("applications.port", 8002);
     private final ApplicationRequest applicationRequest;
+    /**
+     * local TCP server socket which local tuning application connects to
+     */
     private final ServerSocketReference serverHolder;
     private final IoStream authenticatorToProxyStream;
 
@@ -48,6 +54,10 @@ public class LocalApplicationProxy implements Closeable {
         this.applicationRequest = applicationRequest;
         this.serverHolder = serverHolder;
         this.authenticatorToProxyStream = authenticatorToProxyStream;
+    }
+
+    public IoStream getAuthenticatorToProxyStream() {
+        return authenticatorToProxyStream;
     }
 
     public static HttpResponse requestSoftwareUpdate(int httpPort, ApplicationRequest applicationRequest, UpdateType type) throws IOException {
