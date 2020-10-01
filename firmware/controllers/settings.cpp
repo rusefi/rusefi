@@ -97,7 +97,7 @@ static void printOutputs(const engine_configuration_s *engineConfiguration) {
 	scheduleMsg(&logger, "mainRelay: mode %s @ %s", getPin_output_mode_e(engineConfiguration->mainRelayPinMode),
 			hwPortname(engineConfiguration->mainRelayPin));
 
-	scheduleMsg(&logger, "starterRelay: mode %s @ %s", getPin_output_mode_e(engineConfiguration->starterRelayDisableMode),
+	scheduleMsg(&logger, "starterRelay: mode %s @ %s", getPin_output_mode_e(engineConfiguration->starterRelayDisablePinMode),
 			hwPortname(engineConfiguration->starterRelayDisablePin));
 
 	scheduleMsg(&logger, "alternator field: mode %s @ %s",
@@ -216,11 +216,9 @@ void printConfiguration(const engine_configuration_s *engineConfiguration) {
 
 	printOutputs(engineConfiguration);
 
-	scheduleMsg(&logger, "map_avg=%s/ts=%s/wa=%s/fastAdc=%s",
+	scheduleMsg(&logger, "map_avg=%s/wa=%s",
 			boolToString(engineConfiguration->isMapAveragingEnabled),
-			boolToString(engineConfiguration->isTunerStudioEnabled),
-			boolToString(engineConfiguration->isWaveAnalyzerEnabled),
-			boolToString(engineConfiguration->isFastAdcEnabled));
+			boolToString(engineConfiguration->isWaveAnalyzerEnabled));
 
 	scheduleMsg(&logger, "isManualSpinningMode=%s/isCylinderCleanupEnabled=%s",
 			boolToString(engineConfiguration->isManualSpinningMode),
@@ -815,9 +813,7 @@ static void setSpiMode(int index, bool mode) {
 }
 
 static void enableOrDisable(const char *param, bool isEnabled) {
-	if (strEqualCaseInsensitive(param, "fastadc")) {
-		engineConfiguration->isFastAdcEnabled = isEnabled;
-	} else if (strEqualCaseInsensitive(param, CMD_TRIGGER_HW_INPUT)) {
+	if (strEqualCaseInsensitive(param, CMD_TRIGGER_HW_INPUT)) {
 		engine->hwTriggerInputEnabled = isEnabled;
 	} else if (strEqualCaseInsensitive(param, "useTLE8888_cranking_hack")) {
 		CONFIG(useTLE8888_cranking_hack) = isEnabled;
@@ -905,8 +901,6 @@ static void enableOrDisable(const char *param, bool isEnabled) {
 		engineConfiguration->isEngineControlEnabled = isEnabled;
 	} else if (strEqualCaseInsensitive(param, "map_avg")) {
 		engineConfiguration->isMapAveragingEnabled = isEnabled;
-	} else if (strEqualCaseInsensitive(param, "tunerstudio")) {
-		engineConfiguration->isTunerStudioEnabled = isEnabled;
 	} else if (strEqualCaseInsensitive(param, "logic_analyzer")) {
 		engineConfiguration->isWaveAnalyzerEnabled = isEnabled;
 	} else if (strEqualCaseInsensitive(param, "manual_spinning")) {

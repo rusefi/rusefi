@@ -1,7 +1,7 @@
 #include "global.h"
 #include "rusefi_enums.h"
 #include "rusefi_hw_enums.h"
-// was generated automatically by rusEfi tool  from rusefi_hw_enums.h // was generated automatically by rusEfi tool  from rusefi_enums.h // by enum2string.jar tool on Mon Sep 07 14:17:13 UTC 2020
+// was generated automatically by rusEfi tool  from rusefi_hw_enums.h // was generated automatically by rusEfi tool  from rusefi_enums.h // by enum2string.jar tool on Tue Sep 29 01:20:11 UTC 2020
 // see also gen_config_and_enums.bat
 
 
@@ -768,6 +768,21 @@ case ZIL_130:
   }
  return NULL;
 }
+const char *getEtb_function_e(etb_function_e value){
+switch(value) {
+case ETB_IdleValve:
+  return "ETB_IdleValve";
+case ETB_None:
+  return "ETB_None";
+case ETB_Throttle1:
+  return "ETB_Throttle1";
+case ETB_Throttle2:
+  return "ETB_Throttle2";
+case ETB_Wastegate:
+  return "ETB_Wastegate";
+  }
+ return NULL;
+}
 const char *getGear_e(gear_e value){
 switch(value) {
 case GEAR_1:
@@ -924,19 +939,6 @@ case DensoTODO:
   return "DensoTODO";
 case Internal_ForceMyEnumIntSize_maf_sensor:
   return "Internal_ForceMyEnumIntSize_maf_sensor";
-  }
- return NULL;
-}
-const char *getMass_storage_e(mass_storage_e value){
-switch(value) {
-case Force_4_bytes_size_mass_storage:
-  return "Force_4_bytes_size_mass_storage";
-case MS_ALWAYS:
-  return "MS_ALWAYS";
-case MS_AUTO:
-  return "MS_AUTO";
-case MS_NEVER:
-  return "MS_NEVER";
   }
  return NULL;
 }
@@ -1099,6 +1101,8 @@ const char *getTrigger_type_e(trigger_type_e value){
 switch(value) {
 case Force_4_bytes_size_trigger_type:
   return "Force_4_bytes_size_trigger_type";
+case TT_1_16:
+  return "TT_1_16";
 case TT_2JZ_1_12:
   return "TT_2JZ_1_12";
 case TT_2JZ_3_34:

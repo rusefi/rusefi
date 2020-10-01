@@ -16,10 +16,8 @@ export USE_FATFS=no
 export USE_BOOTLOADER=no
 # -DCH_DBG_ENABLE_CHECKS=FALSE
 
-cd ../../..
-
 # rm -f ${BUILDDIR}/rusefi_kinetis.*
 
 # make -r -j4
 
-bash config/boards/common_make.sh
+bash ../common_make.sh

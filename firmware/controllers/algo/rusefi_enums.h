@@ -216,7 +216,7 @@ typedef enum {
  * @see http://rusefi.com/wiki/index.php?title=Manual:Software:Trigger
  */
 typedef enum {
-	TT_TOOTHED_WHEEL = 0,
+	TT_TOOTHED_WHEEL = TT_TT_TOOTHED_WHEEL,
 	TT_FORD_ASPIRE = 1,
 	TT_DODGE_NEON_1995 = 2,
 	/**
@@ -234,8 +234,8 @@ typedef enum {
 	 * "60/2"
 	 * See also TT_ONE_PLUS_TOOTHED_WHEEL_60_2
 	 */
-	TT_TOOTHED_WHEEL_60_2 = 8,
-	TT_TOOTHED_WHEEL_36_1 = 9,
+	TT_TOOTHED_WHEEL_60_2 = TT_TT_TOOTHED_WHEEL_60_2,
+	TT_TOOTHED_WHEEL_36_1 = TT_TT_TOOTHED_WHEEL_36_1,
 
 	TT_HONDA_4_24_1 = 10,
 
@@ -260,13 +260,13 @@ typedef enum {
 	// "1+60/2"
 	TT_VVT_JZ = 17,
 	// just one channel with just one tooth
-	TT_ONE = 18,
+	TT_ONE = TT_TT_ONE,
 
 	TT_DODGE_RAM = 19,
 	/**
 	 * It looks like this is the VR shape if you have your wires flipped
 	 */
-	TT_60_2_VW = 20,
+	TT_60_2_VW = TT_TT_60_2_VW,
 
 	TT_HONDA_1_24 = 21,
 
@@ -354,9 +354,11 @@ typedef enum {
 
 	TT_VVT_BOSCH_QUICK_START = 47,
 
-	TT_TOOTHED_WHEEL_36_2 = 48,
+	TT_TOOTHED_WHEEL_36_2 = TT_TT_TOOTHED_WHEEL_36_2,
 
 	TT_SUBARU_SVX = 49,
+
+	TT_1_16 = 50,
 
 	// do not forget to edit "#define trigger_type_e_enum" line in integration/rusefi_config.txt file to propogate new value to rusefi.ini TS project
 	// do not forget to invoke "gen_config.bat" once you make changes to integration/rusefi_config.txt
@@ -364,7 +366,7 @@ typedef enum {
 	//
 	// Another point: once you add a new trigger, run get_trigger_images.bat which would run rusefi_test.exe from unit_tests
 	//
-	TT_UNUSED = 50, // this is used if we want to iterate over all trigger types
+	TT_UNUSED = 51, // this is used if we want to iterate over all trigger types
 
 	Force_4_bytes_size_trigger_type = ENUM_32_BITS,
 } trigger_type_e;
@@ -656,13 +658,6 @@ typedef enum {
 	W202 = 1,
 	Force_4_bytes_size_can_vss_nbc_e = ENUM_32_BITS,
 } can_vss_nbc_e;
-
-typedef enum {
-	MS_AUTO = 0,
-	MS_ALWAYS = 1,
-	MS_NEVER = 2,
-	Force_4_bytes_size_mass_storage = ENUM_32_BITS,
-} mass_storage_e;
 
 typedef enum {
 	ES_BPSX_D1 = 0,
@@ -997,3 +992,11 @@ typedef enum __attribute__ ((__packed__)) {
 	AFR_AccPedal = 3,
 	AFR_CylFilling = 4,
 } afr_override_e;
+
+typedef enum __attribute__ ((__packed__)) {
+	ETB_None = 0,
+	ETB_Throttle1 = 1,
+	ETB_Throttle2 = 2,
+	ETB_IdleValve = 3,
+	ETB_Wastegate = 4,
+} etb_function_e;
