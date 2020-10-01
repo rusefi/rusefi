@@ -222,11 +222,11 @@ public class Backend implements Closeable {
         synchronized (lock) {
             ControllerConnectionState state = controllersByKey.get(controllerKey);
             if (state == null) {
-                // no such controller
+                log.info("no such controller: " + controllerKey);
                 return null;
             }
             if (!state.getTwoKindSemaphore().acquireForLongTermUsage(userDetails)) {
-                // someone is already talking to this controller
+                log.info("someone is already talking to this controller: " + controllerKey);
                 return null;
             }
             return state;
