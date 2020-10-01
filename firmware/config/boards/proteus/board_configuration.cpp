@@ -10,6 +10,7 @@
 #include "engine_math.h"
 #include "allsensors.h"
 #include "fsio_impl.h"
+#include "config_overrides.h"
 
 EXTERN_ENGINE;
 
@@ -43,14 +44,10 @@ static const brain_pin_e ignPins[] = {
 	GPIOG_2,
 };
 
-static const ConfigOverrides configOverrides = {
+const ConfigOverrides configOverrides = {
 	.canTxPin = GPIOD_1,
 	.canRxPin = GPIOD_0,
 };
-
-const ConfigOverrides& getConfigOverrides() {
-	return configOverrides;
-}
 
 static void setInjectorPins() {
 	copyArray(engineConfiguration->injectionPins, injPins);

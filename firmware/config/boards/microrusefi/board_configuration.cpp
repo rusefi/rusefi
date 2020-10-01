@@ -24,17 +24,14 @@
 #include "allsensors.h"
 #include "fsio_impl.h"
 #include "engine_configuration.h"
+#include "config_overrides.h"
 
 EXTERN_ENGINE;
 
-static const ConfigOverrides configOverrides = {
+const ConfigOverrides configOverrides = {
 	.canTxPin = GPIOB_6,
 	.canRxPin = GPIOB_12,
 };
-
-const ConfigOverrides& getConfigOverrides() {
-	return configOverrides;
-}
 
 static void setInjectorPins() {
 	engineConfiguration->injectionPins[0] = GPIOE_14;

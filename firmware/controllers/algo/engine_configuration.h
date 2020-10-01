@@ -9,6 +9,10 @@
 #pragma once
 
 #include "persistent_configuration.h"
+#include "config_override_helper.h"
+
+// From config/boards/<board name>
+#include "config_overrides.h"
 
 #ifndef DEFAULT_ENGINE_TYPE
 #define DEFAULT_ENGINE_TYPE DEFAULT_FRANKENSO
@@ -65,22 +69,25 @@ void resetConfigurationExt(Logging * logger, configuration_callback_t boardCallb
 void resetConfigurationExt(Logging * logger, engine_type_e engineType DECLARE_ENGINE_PARAMETER_SUFFIX);
 #endif /* __cplusplus */
 
-struct ConfigOverrides {
-	// CAN pinout
-	brain_pin_e canTxPin;
-	brain_pin_e canRxPin;
-};
 
 const ConfigOverrides& getConfigOverrides();
 
-// If the overide value is default initialized
-// Use the value from config if not overriden
-// Otherwise use the override
-// the == decltype(CONFIG(__x__)){} part means
-// - take the type of the corresponding config field
-// - default construct (ie, 0) an object of the corresponding type
-// - check if the override value matches that (GPIO_UNASSIGNED, SPI_NONE, etc)
-// If it matches, that field hasn't been overridden, so read from the config.
+// This macro is for reading config values that may be overridden
+// for a particular board, and their values from the flash config
+// ignored.  For example, a user shouldn't be able to pick which SPI device
+// the SD card is wired to on a board with hard wired SD card.
+//
+// To override a value
+//  - Add it to the list below (allow_override_for)
+//  - Add it to the ConfigOverrides struct for your board
+//  - Add the override value to the function getConfigOverrides in board_configuration.cpp
 #define CONFIG_OVERRIDE(__x__) (			\
-	(( getConfigOverrides().__x__ ) == decltype(CONFIG(__x__)){}) \
+	(CONFIG_HAS_OVERRIDE(__x__)) \
 	? (CONFIG( __x__ )) : ( getConfigOverrides().__x__ ))
+
+// This declares possible config fields we want to be able to override
+namespace efi::overrides {
+	// List every config entry we want to be able to override
+	allow_override_for(canTxPin);
+	allow_override_for(canRxPin);
+}
