@@ -69,5 +69,7 @@ private:
 	 */
 	scheduling_s *head = nullptr;
 	const efitime_t lateDelay;
+
+	scheduling_pool m_pool;
 };
 

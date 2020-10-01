@@ -32,8 +32,10 @@ uint32_t maxSchedulingPrecisionLoss = 0;
 bool EventQueue::insertTask(efitime_t timeX, action_s action) {
 	ScopePerf perf(PE::EventQueueInsertTask);
 
-	// TODO: fixme!
-	scheduling_s* scheduling = nullptr;
+	scheduling_s* scheduling = m_pool.get();
+	if (!scheduling) {
+		// TODO: handle expended scheduling pool!
+	}
 
 #if EFI_UNIT_TEST
 	assertListIsSorted();
@@ -161,10 +163,13 @@ int EventQueue::executeAll(efitime_t now) {
 		printf("QUEUE: execute current=%d param=%d\r\n", (long)current, (long)current->action.getArgument());
 #endif
 
+		auto action = current->action;
+		m_pool.release(current);
+
 		// Execute the current element
 		{
 			ScopePerf perf2(PE::EventQueueExecuteCallback);
-			current->action.execute();
+			action.execute();
 		}
 
 #if EFI_UNIT_TEST

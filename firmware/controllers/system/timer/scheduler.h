@@ -54,6 +54,19 @@ struct scheduling_s {
 	action_s action;
 };
 
+class scheduling_pool {
+public:
+	scheduling_pool();
+
+	scheduling_s* get();
+	void release(scheduling_s*);
+private:
+	scheduling_s* m_next = nullptr;
+	scheduling_s m_pool[32];
+
+	size_t m_inUseCount = 0;
+};
+
 struct ExecutorInterface {
 	/**
 	 * see also scheduleByAngle
