@@ -36,9 +36,6 @@ public:
 	DECLARE_ENGINE_PTR;
 	event_trigger_position_s injectionStart;
 
-	scheduling_s signalTimerUp;
-	scheduling_s endOfInjectionEvent;
-
 	/**
 	 * we need atomic flag so that we do not schedule a new pair of up/down before previous down was executed.
 	 *
@@ -81,7 +78,6 @@ private:
 
 class AngleBasedEvent {
 public:
-	scheduling_s scheduling;
 	event_trigger_position_s position;
 	action_s action;
 	/**
@@ -96,7 +92,6 @@ class IgnitionEvent {
 public:
 	IgnitionEvent();
 	IgnitionOutputPin *outputs[MAX_OUTPUTS_FOR_IGNITION];
-	scheduling_s dwellStartTimer;
 	AngleBasedEvent sparkEvent;
 
 	// How many additional sparks should we fire after the first one?

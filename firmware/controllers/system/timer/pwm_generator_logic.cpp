@@ -37,7 +37,6 @@ SimplePwm::SimplePwm(const char *name) : SimplePwm()  {
 }
 
 PwmConfig::PwmConfig() {
-	memset((void*)&scheduling, 0, sizeof(scheduling));
 	memset((void*)&safe, 0, sizeof(safe));
 	dbgNestingLevel = 0;
 	periodNt = NAN;
@@ -273,7 +272,7 @@ static void timerCallback(PwmConfig *state) {
 		return;
 	}
 
-	state->executor->scheduleByTimestampNt(&state->scheduling, switchTimeNt, { timerCallback, state });
+	state->executor->scheduleByTimestampNt(switchTimeNt, { timerCallback, state });
 	state->dbgNestingLevel--;
 }
 

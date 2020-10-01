@@ -48,7 +48,7 @@ scheduling_s* TestExecutor::getForUnitTest(int index) {
 	return schedulingQueue.getElementAtIndexForUnitText(index);
 }
 
-void TestExecutor::scheduleByTimestamp(scheduling_s *scheduling, efitimeus_t timeUs, action_s action) {
+void TestExecutor::scheduleByTimestamp(efitimeus_t timeUs, action_s action) {
 	if (debugSignalExecutor) {
 		printf("scheduleByTime %d\r\n", timeUs);
 	}
@@ -61,13 +61,13 @@ void TestExecutor::scheduleByTimestamp(scheduling_s *scheduling, efitimeus_t tim
 	schedulingQueue.insertTask(scheduling, timeUs, action);
 }
 
-void TestExecutor::scheduleByTimestampNt(scheduling_s* scheduling, efitick_t timeNt, action_s action) {
+void TestExecutor::scheduleByTimestampNt(efitick_t timeNt, action_s action) {
 	if (m_mockExecutor) {
-		m_mockExecutor->scheduleByTimestampNt(scheduling, timeNt, action);
+		m_mockExecutor->scheduleByTimestampNt(timeNt, action);
 		return;
 	}
 
-	scheduleByTimestamp(scheduling, NT2US(timeNt), action);
+	scheduleByTimestamp(NT2US(timeNt), action);
 }
 
 void TestExecutor::setMockExecutor(ExecutorInterface* exec) {

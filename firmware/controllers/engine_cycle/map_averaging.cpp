@@ -96,12 +96,6 @@ static float currentPressure = NO_VALUE_YET;
 EXTERN_ENGINE;
 
 /**
- * here we have averaging start and averaging end points for each cylinder
- */
-static scheduling_s startTimer[INJECTION_PIN_COUNT][2];
-static scheduling_s endTimer[INJECTION_PIN_COUNT][2];
-
-/**
  * that's a performance optimization: let's not bother averaging
  * if we are outside of of the window
  */
@@ -109,7 +103,7 @@ static bool isAveraging = false;
 
 static void endAveraging(void *arg);
 
-static void startAveraging(scheduling_s *endAveragingScheduling) {
+static void startAveraging(void*) {
 	efiAssertVoid(CUSTOM_ERR_6649, getCurrentRemainingStack() > 128, "lowstck#9");
 
 	bool wasLocked = lockAnyContext();
@@ -124,7 +118,7 @@ static void startAveraging(scheduling_s *endAveragingScheduling) {
 	mapAveragingPin.setHigh();
 
 #if ! EFI_UNIT_TEST
-	scheduleByAngle(endAveragingScheduling, getTimeNowNt(), ENGINE(engineState.mapAveragingDuration),
+	scheduleByAngle(getTimeNowNt(), ENGINE(engineState.mapAveragingDuration),
 		endAveraging PASS_ENGINE_PARAMETER_SUFFIX);
 #endif
 }
@@ -316,8 +310,7 @@ static void mapAveragingTriggerCallback(trigger_event_e ckpEventType,
 		// at the moment we schedule based on time prediction based on current RPM and angle
 		// we are loosing precision in case of changing RPM - the further away is the event the worse is precision
 		// todo: schedule this based on closest trigger event, same as ignition works
-		scheduleByAngle(&startTimer[i][structIndex], edgeTimestamp, samplingStart,
-				{ startAveraging, &endTimer[i][structIndex] } PASS_ENGINE_PARAMETER_SUFFIX);
+		scheduleByAngle(edgeTimestamp, samplingStart, { startAveraging } PASS_ENGINE_PARAMETER_SUFFIX);
 	}
 #endif
 }

@@ -297,8 +297,6 @@ void rpmShaftPositionCallback(trigger_event_e ckpSignalType,
 	}
 }
 
-static scheduling_s tdcScheduler[2];
-
 static char rpmBuffer[_MAX_FILLER];
 
 /**
@@ -338,7 +336,7 @@ static void tdcMarkCallback(trigger_event_e ckpSignalType,
 			angle_t tdcPosition = tdcPosition();
 			// we need a positive angle offset here
 			fixAngle(tdcPosition, "tdcPosition", CUSTOM_ERR_6553);
-			scheduleByAngle(&tdcScheduler[revIndex2], edgeTimestamp, tdcPosition,
+			scheduleByAngle(edgeTimestamp, tdcPosition,
 					{ onTdcCallback, engine } PASS_ENGINE_PARAMETER_SUFFIX);
 		}
 	}
@@ -388,14 +386,14 @@ void initRpmCalculator(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX) {
  * The callback would be executed once after the duration of time which
  * it takes the crankshaft to rotate to the specified angle.
  */
-efitick_t scheduleByAngle(scheduling_s *timer, efitick_t edgeTimestamp, angle_t angle,
+efitick_t scheduleByAngle(efitick_t edgeTimestamp, angle_t angle,
 		action_s action DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	float delayUs = ENGINE(rpmCalculator.oneDegreeUs) * angle;
 
 	efitime_t delayNt = US2NT(delayUs);
 	efitime_t delayedTime = edgeTimestamp + delayNt;
 
-	ENGINE(executor.scheduleByTimestampNt(timer, delayedTime, action));
+	ENGINE(executor.scheduleByTimestampNt(delayedTime, action));
 
 	return delayedTime;
 }

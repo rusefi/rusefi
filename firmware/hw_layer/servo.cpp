@@ -27,8 +27,6 @@ THD_WORKING_AREA(servoThreadStack, UTILITY_THREAD_STACK_SIZE * 3);
 
 static OutputPin pins[SERVO_COUNT];
 
-static scheduling_s servoTurnSignalOff;
-
 // todo: extract common 'pin off' callback?
 static void servoTachPinLow(OutputPin *pin) {
 	pin->setValue(false);
@@ -49,7 +47,7 @@ static msg_t seThread(void *arg) {
 
 		float durationMs = 0 + position * 0.02f;
 
-		engine->executor.scheduleForLater(&servoTurnSignalOff, (int)MS2US(durationMs), { &servoTachPinLow, pin });
+		engine->executor.scheduleForLater((int)MS2US(durationMs), { &servoTachPinLow, pin });
 
 
 		chThdSleepMilliseconds(19);

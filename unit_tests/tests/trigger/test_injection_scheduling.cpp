@@ -30,9 +30,9 @@ TEST(injectionScheduling, NormalDutyCycle) {
 
 		// Should schedule one normal injection:
 		// rising edge now
-		EXPECT_CALL(mockExec, scheduleByTimestampNt(&event.signalTimerUp, nowNt + 0, _));
+		EXPECT_CALL(mockExec, scheduleByTimestampNt(nowNt + 0, _));
 		// falling edge 10ms later
-		EXPECT_CALL(mockExec, scheduleByTimestampNt(&event.endOfInjectionEvent, nowNt + MS2NT(20), _));
+		EXPECT_CALL(mockExec, scheduleByTimestampNt(nowNt + MS2NT(20), _));
 	}
 
 	engine->rpmCalculator.oneDegreeUs = 100;

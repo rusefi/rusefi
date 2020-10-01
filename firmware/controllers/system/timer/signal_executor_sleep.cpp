@@ -37,12 +37,12 @@ bool printSchedulerDebug = true;
 
 #if EFI_SIGNAL_EXECUTOR_SLEEP
 
-void SleepExecutor::scheduleByTimestamp(scheduling_s *scheduling, efitimeus_t timeUs, action_s action) {
-	scheduleForLater(scheduling, timeUs - getTimeNowUs(), action);
+void SleepExecutor::scheduleByTimestamp(efitimeus_t timeUs, action_s action) {
+	scheduleForLater(timeUs - getTimeNowUs(), action);
 }
 
-void SleepExecutor::scheduleByTimestampNt(scheduling_s* scheduling, efitick_t timeNt, action_s action) {
-	scheduleByTimestamp(scheduling, NT2US(timeNt), action);
+void SleepExecutor::scheduleByTimestampNt(efitick_t timeNt, action_s action) {
+	scheduleByTimestamp(NT2US(timeNt), action);
 }
 
 static void timerCallback(scheduling_s *scheduling) {
@@ -93,8 +93,8 @@ static void doScheduleForLater(scheduling_s *scheduling, int delayUs, action_s a
 	}
 }
 
-void SleepExecutor::scheduleForLater(scheduling_s *scheduling, int delayUs, action_s action) {
-	doScheduleForLater(scheduling, delayUs, action);
+void SleepExecutor::scheduleForLater(int delayUs, action_s action) {
+	doScheduleForLater(delayUs, action);
 }
 
 #endif /* EFI_SIGNAL_EXECUTOR_SLEEP */

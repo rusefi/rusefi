@@ -58,7 +58,7 @@ struct ExecutorInterface {
 	/**
 	 * see also scheduleByAngle
 	 */
-	virtual void scheduleByTimestamp(scheduling_s *scheduling, efitimeus_t timeUs, action_s action) = 0;
-	virtual void scheduleByTimestampNt(scheduling_s *scheduling, efitime_t timeUs, action_s action) = 0;
-	virtual void scheduleForLater(scheduling_s *scheduling, int delayUs, action_s action) = 0;
+	virtual void scheduleByTimestamp(efitimeus_t timeUs, action_s action) = 0;
+	virtual void scheduleByTimestampNt(efitime_t timeUs, action_s action) = 0;
+	virtual void scheduleForLater(int delayUs, action_s action) = 0;
 };

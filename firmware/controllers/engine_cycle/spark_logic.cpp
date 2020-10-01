@@ -194,8 +194,8 @@ if (engineConfiguration->debugMode == DBG_DWELL_METRIC) {
 		efitick_t nextFiring = nextDwellStart + engine->engineState.multispark.dwell;
 
 		// We can schedule both of these right away, since we're going for "asap" not "particular angle"
-		engine->executor.scheduleByTimestampNt(&event->dwellStartTimer, nextDwellStart, { &turnSparkPinHigh, event });
-		engine->executor.scheduleByTimestampNt(&event->sparkEvent.scheduling, nextFiring, { fireSparkAndPrepareNextSchedule, event });
+		engine->executor.scheduleByTimestampNt(nextDwellStart, { &turnSparkPinHigh, event });
+		engine->executor.scheduleByTimestampNt(nextFiring, { fireSparkAndPrepareNextSchedule, event });
 	}
 	else
 	{
@@ -290,10 +290,7 @@ bool scheduleOrQueue(AngleBasedEvent *event,
 		/**
 		 * Spark should be fired before the next trigger event - time-based delay is best precision possible
 		 */
-		scheduling_s * sDown = &event->scheduling;
-
 		scheduleByAngle(
-			sDown,
 			edgeTimestamp,
 			event->position.angleOffsetFromTriggerEvent,
 			action
@@ -360,7 +357,7 @@ static ALWAYS_INLINE void handleSparkEvent(bool limitedSpark, uint32_t trgEventI
 		 * This way we make sure that coil dwell started while spark was enabled would fire and not burn
 		 * the coil.
 		 */
-		engine->executor.scheduleByTimestampNt(&event->dwellStartTimer, edgeTimestamp + US2NT(chargeDelayUs), { &turnSparkPinHigh, event });
+		engine->executor.scheduleByTimestampNt(edgeTimestamp + US2NT(chargeDelayUs), { &turnSparkPinHigh, event });
 
 		event->sparksRemaining = ENGINE(engineState.multispark.count);
 	} else {
@@ -459,14 +456,11 @@ static void scheduleAllSparkEventsUntilNextTriggerTooth(uint32_t trgEventIndex, 
 			// time to fire a spark which was scheduled previously
 			LL_DELETE2(ENGINE(angleBasedEventsHead), current, nextToothEvent);
 
-			scheduling_s * sDown = &current->scheduling;
-
 #if SPARK_EXTREME_LOGGING
 	scheduleMsg(logger, "time to invoke ind=%d %d %d", trgEventIndex, getRevolutionCounter(), (int)getTimeNowUs());
 #endif /* SPARK_EXTREME_LOGGING */
 
 			scheduleByAngle(
-				sDown,
 				edgeTimestamp,
 				current->position.angleOffsetFromTriggerEvent,
 				current->action

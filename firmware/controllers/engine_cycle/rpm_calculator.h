@@ -170,5 +170,5 @@ float getCrankshaftAngleNt(efitick_t timeNt DECLARE_ENGINE_PARAMETER_SUFFIX);
 #define addEngineSnifferEvent(n, msg) {}
 #endif /* EFI_ENGINE_SNIFFER */
 
-efitick_t scheduleByAngle(scheduling_s *timer, efitick_t edgeTimestamp, angle_t angle, action_s action DECLARE_ENGINE_PARAMETER_SUFFIX);
+efitick_t scheduleByAngle(efitick_t edgeTimestamp, angle_t angle, action_s action DECLARE_ENGINE_PARAMETER_SUFFIX);
 

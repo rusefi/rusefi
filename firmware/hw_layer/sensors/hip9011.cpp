@@ -75,9 +75,6 @@ static unsigned char tx_buff[1];
 static unsigned char rx_buff[1];
 static char pinNameBuffer[16];
 
-static scheduling_s startTimer[2];
-static scheduling_s endTimer[2];
-
 static Logging *logger;
 
 // SPI_CR1_BR_1 // 5MHz
@@ -256,14 +253,13 @@ static void intHoldCallback(trigger_event_e ckpEventType, uint32_t index, efitic
 	if (!isValidRpm(rpm))
 		return;
 
-	int structIndex = getRevolutionCounter() % 2;
 	// todo: schedule this based on closest trigger event, same as ignition works
-	scheduleByAngle(&startTimer[structIndex], edgeTimestamp, engineConfiguration->knockDetectionWindowStart,
+	scheduleByAngle(edgeTimestamp, engineConfiguration->knockDetectionWindowStart,
 			&startIntegration);
 #if EFI_PROD_CODE
 	hipLastExecutionCount = lastExecutionCount;
 #endif /* EFI_PROD_CODE */
-	scheduleByAngle(&endTimer[structIndex], edgeTimestamp, engineConfiguration->knockDetectionWindowEnd,
+	scheduleByAngle(edgeTimestamp, engineConfiguration->knockDetectionWindowEnd,
 			&endIntegration);
 }
 

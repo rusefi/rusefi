@@ -146,8 +146,6 @@ static constexpr GPTConfig gpt5cfg = { 1000000, /* 1 MHz timer clock.*/
 		hwTimerCallback, /* Timer callback.*/
 0, 0 };
 
-static scheduling_s watchDogBuddy;
-
 static void watchDogBuddyCallback(void *arg) {
 	(void)arg;
 	/**
@@ -155,7 +153,7 @@ static void watchDogBuddyCallback(void *arg) {
 	 * watchdog happy by ensuring that we have scheduler activity even in case of very broken configuration
 	 * without any PWM or input pins
 	 */
-	engine->executor.scheduleForLater(&watchDogBuddy, MS2US(1000), watchDogBuddyCallback);
+	engine->executor.scheduleForLater(MS2US(1000), watchDogBuddyCallback);
 }
 
 static volatile bool testSchedulingHappened = false;
@@ -182,8 +180,7 @@ static void validateHardwareTimer() {
 	}
 	testSchedulingStart = currentTimeMillis();
 
-	// to save RAM let's use 'watchDogBuddy' here once before we enable watchdog
-	engine->executor.scheduleForLater(&watchDogBuddy, MS2US(TEST_CALLBACK_DELAY), timerValidationCallback);
+	engine->executor.scheduleForLater(MS2US(TEST_CALLBACK_DELAY), timerValidationCallback);
 
 	chThdSleepMilliseconds(2 * TEST_CALLBACK_DELAY);
 	if (!testSchedulingHappened) {
