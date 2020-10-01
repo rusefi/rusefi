@@ -37,6 +37,7 @@ import java.util.concurrent.*;
 
 import static com.devexperts.logging.Logging.getLogging;
 import static com.rusefi.binaryprotocol.IoHelper.*;
+import static com.rusefi.config.generated.Fields.*;
 
 /**
  * This object represents logical state of physical connection.
@@ -370,7 +371,7 @@ public class BinaryProtocol implements BinaryProtocolCommands {
             byte[] response = executeCommand(packet, "load image offset=" + offset);
 
             if (!checkResponseCode(response, RESPONSE_OK) || response.length != requestSize + 1) {
-                String code = (response == null || response.length == 0) ? "empty" : "code " + response[0];
+                String code = (response == null || response.length == 0) ? "empty" : "code " + getCode(response);
                 String info = response == null ? "NO RESPONSE" : (code + " size " + response.length);
                 log.info("readImage: ERROR UNEXPECTED Something is wrong, retrying... " + info);
                 continue;
@@ -390,6 +391,21 @@ public class BinaryProtocol implements BinaryProtocolCommands {
             System.err.println("Ignoring " + e);
         }
         return image;
+    }
+
+    private static String getCode(byte[] response) {
+        int b = response[0];
+        switch (b) {
+            case TS_RESPONSE_CRC_FAILURE:
+                return "CRC_FAILURE";
+            case TS_RESPONSE_UNRECOGNIZED_COMMAND:
+                return "UNRECOGNIZED_COMMAND";
+            case TS_RESPONSE_OUT_OF_RANGE:
+                return "OUT_OF_RANGE";
+            case TS_RESPONSE_FRAMING_ERROR:
+                return "FRAMING_ERROR";
+        }
+        return Integer.toString(b);
     }
 
     private ConfigurationImage getAndValidateLocallyCached() {
