@@ -17,12 +17,6 @@
 #include "pin_repository.h"
 #endif
 
-#define TS_RESPONSE_UNDERRUN 0x80
-#define TS_RESPONSE_CRC_FAILURE 0x82
-#define TS_RESPONSE_UNRECOGNIZED_COMMAND 0x83
-#define TS_RESPONSE_OUT_OF_RANGE 0x84
-#define TS_RESPONSE_FRAMING_ERROR 0x8D
-
 typedef enum {
 	TS_PLAIN = 0,
 	TS_CRC = 1
