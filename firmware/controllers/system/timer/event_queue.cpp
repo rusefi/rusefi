@@ -36,7 +36,7 @@ bool EventQueue::insertTask(efitime_t timeX, action_s action) {
 	if (!scheduling) {
 		// TODO: should we execute the action in case of full sched?
 		firmwareError(OBD_PCM_Processor_Fault, "ran out of scheduling_s");
-		return;
+		return false;
 	}
 
 #if EFI_UNIT_TEST
