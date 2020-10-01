@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEfi tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Tue Sep 29 10:36:02 UTC 2020
+// this file was generated automatically by rusEfi tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Thu Oct 01 00:21:02 UTC 2020
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -606,7 +606,7 @@ public class Fields {
 	public static final String GAUGE_NAME_ETB_ERROR = "ETB position error";
 	public static final String GAUGE_NAME_ETB_TARGET = "ETB position target";
 	public static final String GAUGE_NAME_FUEL_BARO_CORR = "fuel: Barometric pressure correction";
-	public static final String GAUGE_NAME_FUEL_BASE = "fuel: base";
+	public static final String GAUGE_NAME_FUEL_BASE = "fuel: base mass";
 	public static final String GAUGE_NAME_FUEL_CHARGE_TEMP = "fuel: Estimated charge temperature";
 	public static final String GAUGE_NAME_FUEL_CLT_CORR = "fuel: CLT correction";
 	public static final String GAUGE_NAME_FUEL_CRANKING = "fuel: cranking";
@@ -1060,6 +1060,7 @@ public class Fields {
 	public static final int PACK_MULT_AFR = 1000;
 	public static final int PACK_MULT_AFR_CFG = 10;
 	public static final int PACK_MULT_ANGLE = 50;
+	public static final int PACK_MULT_FUEL_MASS = 100;
 	public static final int PACK_MULT_MASS_FLOW = 10;
 	public static final int PACK_MULT_MS = 300;
 	public static final int PACK_MULT_PERCENT = 100;
@@ -1123,6 +1124,7 @@ public class Fields {
 	public static final int servoOutputPins8_offset = 3147;
 	public static final int showHumanReadableWarning_offset = 976;
 	public static final int showSdCardWarning_offset = 76;
+	public static final int SIGNATURE_HASH = 1339089994;
 	public static final int silentTriggerError_offset = 1464;
 	public static final int slowAdcAlpha_offset = 2088;
 	public static final int solenoidPadding_offset = 1198;
@@ -1387,7 +1389,7 @@ public class Fields {
 	public static final char TS_SD_R_COMMAND = 'r';
 	public static final char TS_SD_W_COMMAND = 'w';
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI 2020.09.29.all.3319335477";
+	public static final String TS_SIGNATURE = "rusEFI 2020.10.01.all.1339089994";
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final int TT_TT_60_2_VW = 20;
 	public static final int TT_TT_ONE = 18;
