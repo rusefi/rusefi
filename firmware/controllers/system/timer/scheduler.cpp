@@ -33,9 +33,8 @@ scheduling_s* scheduling_pool::get() {
 	if (retVal) {
 		m_next = retVal->nextScheduling_s;
 		retVal->nextScheduling_s = nullptr;
+		m_inUseCount++;
 	}
-
-	m_inUseCount++;
 
 	return retVal;
 }
