@@ -373,6 +373,7 @@ public class Backend implements Closeable {
 
     public void close(ControllerConnectionState inactiveClient) {
         inactiveClient.close();
+        log.info("Closing " + inactiveClient);
         synchronized (lock) {
             // in case of exception in the initialization phase we do not even add client into the the collection
             controllersByKey.remove(inactiveClient.getControllerKey());
