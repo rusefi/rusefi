@@ -76,8 +76,6 @@ public class Backend implements Closeable {
     private final Object lock = new Object();
 
     @GuardedBy("lock")
-    private final Set<ControllerConnectionState> controllers = new HashSet<>();
-    @GuardedBy("lock")
     private final HashMap<ControllerKey, ControllerConnectionState> controllersByKey = new HashMap<>();
     @GuardedBy("lock")
     private final Set<ApplicationConnectionState> applications = new HashSet<>();
@@ -357,7 +355,7 @@ public class Backend implements Closeable {
 
         List<ControllerConnectionState> controllers;
         synchronized (lock) {
-            controllers = new ArrayList<>(this.controllers);
+            controllers = new ArrayList<>(this.controllersByKey.values());
         }
 
         for (ControllerConnectionState controllerConnectionState : controllers) {
@@ -369,7 +367,6 @@ public class Backend implements Closeable {
     public void register(ControllerConnectionState controllerConnectionState) {
         Objects.requireNonNull(controllerConnectionState.getControllerKey(), "ControllerKey");
         synchronized (lock) {
-            controllers.add(controllerConnectionState);
             controllersByKey.put(controllerConnectionState.getControllerKey(), controllerConnectionState);
         }
     }
@@ -378,7 +375,6 @@ public class Backend implements Closeable {
         inactiveClient.close();
         synchronized (lock) {
             // in case of exception in the initialization phase we do not even add client into the the collection
-            controllers.remove(inactiveClient);
             controllersByKey.remove(inactiveClient.getControllerKey());
         }
     }
@@ -397,7 +393,7 @@ public class Backend implements Closeable {
 
     public List<ControllerConnectionState> getControllers() {
         synchronized (lock) {
-            return new ArrayList<>(controllers);
+            return new ArrayList<>(controllersByKey.values());
         }
     }
 
@@ -409,7 +405,7 @@ public class Backend implements Closeable {
 
     public int getControllersCount() {
         synchronized (lock) {
-            return controllers.size();
+            return controllersByKey.size();
         }
     }
 
