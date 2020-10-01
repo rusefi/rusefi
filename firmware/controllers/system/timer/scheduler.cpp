@@ -3,7 +3,7 @@
  *
  * @date October 1, 2020
  */
-#include "scheduler.h"
+#include "scheduler.cpp"
 
 void action_s::execute() {
 	efiAssertVoid(CUSTOM_ERR_ASSERT, callback != NULL, "callback==null1");
