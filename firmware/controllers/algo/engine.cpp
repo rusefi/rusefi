@@ -607,17 +607,3 @@ void doScheduleStopEngine(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	//backupRamFlush();
 #endif // EFI_PROD_CODE
 }
-
-void action_s::execute() {
-	efiAssertVoid(CUSTOM_ERR_ASSERT, callback != NULL, "callback==null1");
-	callback(param);
-}
-
-schfunc_t action_s::getCallback() const {
-	return callback;
-}
-
-void * action_s::getArgument() const {
-	return param;
-}
-
