@@ -62,7 +62,7 @@ public:
 	void release(scheduling_s*);
 private:
 	scheduling_s* m_next = nullptr;
-	scheduling_s m_pool[32];
+	scheduling_s m_pool[128];
 
 	size_t m_inUseCount = 0;
 };
