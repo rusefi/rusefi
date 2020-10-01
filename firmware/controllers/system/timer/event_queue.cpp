@@ -34,7 +34,9 @@ bool EventQueue::insertTask(efitime_t timeX, action_s action) {
 
 	scheduling_s* scheduling = m_pool.get();
 	if (!scheduling) {
-		// TODO: handle expended scheduling pool!
+		// TODO: should we execute the action in case of full sched?
+		firmwareError(OBD_PCM_Processor_Fault, "ran out of scheduling_s");
+		return;
 	}
 
 #if EFI_UNIT_TEST
