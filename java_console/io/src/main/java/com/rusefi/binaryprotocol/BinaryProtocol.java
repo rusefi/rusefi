@@ -394,7 +394,7 @@ public class BinaryProtocol implements BinaryProtocolCommands {
     }
 
     private static String getCode(byte[] response) {
-        int b = response[0];
+        int b = response[0] & 0xff;
         switch (b) {
             case TS_RESPONSE_CRC_FAILURE:
                 return "CRC_FAILURE";
