@@ -28,6 +28,7 @@ uint32_t maxSchedulingPrecisionLoss = 0;
 
 /**
  * @return true if inserted into the head of the list
+ * please note that simulator does not use this code at all - simulator uses signal_executor_sleep
  */
 bool EventQueue::insertTask(efitime_t timeX, action_s action) {
 	ScopePerf perf(PE::EventQueueInsertTask);
@@ -44,21 +45,8 @@ bool EventQueue::insertTask(efitime_t timeX, action_s action) {
 #endif /* EFI_UNIT_TEST */
 	efiAssert(CUSTOM_ERR_ASSERT, action.getCallback() != NULL, "NULL callback", false);
 
-// please note that simulator does not use this code at all - simulator uses signal_executor_sleep
-
-	if (scheduling->isScheduled) {
-#if EFI_UNIT_TEST
-		if (verboseMode) {
-			printf("Already scheduled was %d\r\n", (int)scheduling->momentX);
-			printf("Already scheduled now %d\r\n", (int)timeX);
-		}
-#endif /* EFI_UNIT_TEST */
-		return false;
-	}
-
 	scheduling->momentX = timeX;
 	scheduling->action = action;
-	scheduling->isScheduled = true;
 
 	if (head == NULL || timeX < head->momentX) {
 		// here we insert into head of the linked list
@@ -156,10 +144,9 @@ int EventQueue::executeAll(efitime_t now) {
 
 		executionCounter++;
 
-		// step the head forward, unlink this element, clear scheduled flag
+		// step the head forward, unlink this element
 		head = current->nextScheduling_s;
 		current->nextScheduling_s = nullptr;
-		current->isScheduled = false;
 
 #if EFI_UNIT_TEST
 		printf("QUEUE: execute current=%d param=%d\r\n", (long)current, (long)current->action.getArgument());
@@ -227,7 +214,6 @@ void EventQueue::clear(void) {
 
 		// Reset this element
 		x->momentX = 0;
-		x->isScheduled = false;
 		x->nextScheduling_s = nullptr;
 		x->action = {};
 	}

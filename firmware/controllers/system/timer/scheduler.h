@@ -44,7 +44,6 @@ struct scheduling_s {
 	 * timestamp represented as 64-bit value of ticks since MCU start
 	 */
 	volatile efitime_t momentX = 0;
-	bool isScheduled = false;
 
 	/**
 	 * Scheduler implementation uses a sorted linked list of these scheduling records.
