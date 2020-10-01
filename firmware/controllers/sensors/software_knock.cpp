@@ -65,7 +65,6 @@ static const ADCConversionGroup adcConvGroupCh1 = { FALSE, 1, &completionCallbac
 	smpr1,
 	// sample times for channels 0...9
 	smpr2,
-	0,
 
 	0,	// htr
 	0,	// ltr
