@@ -3,6 +3,8 @@
 SCRIPT_NAME="common_make.sh"
 echo "Entering $SCRIPT_NAME"
 
+cd ../../..
+
 mkdir .dep
 # todo: start using env variable for number of threads or for '-r'
 make -j4 -r
@@ -19,6 +21,8 @@ else
  chmod u+x ../misc/encedo_hex2dfu/hex2dfu.bin
  ../misc/encedo_hex2dfu/hex2dfu.bin -i build/rusefi.hex -o deliver/rusefi.dfu
 fi
+# rusEFI console does not use .hex files but for Cypress that's the primary binary format
+cp build/rusefi.hex deliver/
 cp build/rusefi.bin deliver/
 
 echo "$SCRIPT_NAME: build folder content:"

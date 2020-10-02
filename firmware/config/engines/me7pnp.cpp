@@ -45,7 +45,6 @@ void vag_18_Turbo(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 
 	//Analog Inputs
 
-	engineConfiguration->isFastAdcEnabled = true;
 	engineConfiguration->map.sensor.type = MT_GM_3_BAR;
 	setCommonNTCSensor(&engineConfiguration->clt, 2700);
 	setCommonNTCSensor(&engineConfiguration->iat, 2700);

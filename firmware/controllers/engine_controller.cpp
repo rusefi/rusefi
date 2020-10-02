@@ -304,10 +304,6 @@ static void printAnalogChannelInfoExt(const char *name, adc_channel_e hwChannel,
 		return;
 	}
 
-	if (fastAdc.isHwUsed(hwChannel)) {
-		scheduleMsg(&logger, "fast enabled=%s", boolToString(CONFIG(isFastAdcEnabled)));
-	}
-
 	float voltage = adcVoltage * dividerCoeff;
 	scheduleMsg(&logger, "%s ADC%d %s %s adc=%.2f/input=%.2fv/divider=%.2f", name, hwChannel, getAdc_channel_mode_e(getAdcMode(hwChannel)),
 			getPinNameByAdcChannel(name, hwChannel, pinNameBuffer), adcVoltage, voltage, dividerCoeff);
@@ -556,9 +552,7 @@ void commonInitEngineController(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_S
 
 
 #if EFI_TUNER_STUDIO
-	if (engineConfiguration->isTunerStudioEnabled) {
-		startTunerStudioConnectivity();
-	}
+	startTunerStudioConnectivity();
 #endif /* EFI_TUNER_STUDIO */
 
 #if EFI_PROD_CODE || EFI_SIMULATOR
