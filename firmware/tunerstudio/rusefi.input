@@ -1665,6 +1665,8 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 
 		; see also in firmware '[doesTriggerImplyOperationMode]' tag
 		field = "Operation mode / speed",				ambiguousOperationMode
+		field = "#Please use '4 stroke with cam' only if primary trigger sensor is actually on cam"
+		field = "#Separate cam input not part of Trigger Pattern does not count here"
 		field = "With VR sensors only rising edge has reliable position"
 		field = "use only rising edge",					useOnlyRisingEdgeForTrigger    
 	    field = "!Reminder that 4-stroke cycle is 720 degrees"
