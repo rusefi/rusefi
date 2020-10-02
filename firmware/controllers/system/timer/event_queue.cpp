@@ -152,6 +152,7 @@ int EventQueue::executeAll(efitime_t now) {
 		printf("QUEUE: execute current=%d param=%d\r\n", (long)current, (long)current->action.getArgument());
 #endif
 
+		// Grab the action data, and return the scheduling_s to the pool
 		auto action = current->action;
 		m_pool.release(current);
 
