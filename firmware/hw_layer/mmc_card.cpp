@@ -140,7 +140,7 @@ static void sdStatistics(void) {
 	printMmcPinout();
 	scheduleMsg(&logger, "SD enabled=%s status=%s", boolToString(CONFIG(isSdCardEnabled)),
 			sdStatus);
-	printSpiConfig(&logger, "SD", engineConfiguration->sdCardSpiDevice);
+	printSpiConfig(&logger, "SD", CONFIG(sdCardSpiDevice));
 	if (isSdCardAlive()) {
 		scheduleMsg(&logger, "filename=%s size=%d", logName, totalLoggedBytes);
 	}
@@ -444,7 +444,7 @@ static THD_FUNCTION(MMCmonThread, arg) {
 	chRegSetThreadName("MMC_Monitor");
 
 	while (true) {
-		if (engineConfiguration->debugMode == DBG_SD_CARD) {
+		if (CONFIG(debugMode) == DBG_SD_CARD) {
 			tsOutputChannels.debugIntField1 = totalLoggedBytes;
 			tsOutputChannels.debugIntField2 = totalWritesCounter;
 			tsOutputChannels.debugIntField3 = totalSyncCounter;
@@ -467,8 +467,9 @@ static THD_FUNCTION(MMCmonThread, arg) {
 			chThdSleepMilliseconds(100);
 		}
 
-		if (engineConfiguration->sdCardPeriodMs > 0) {
-			chThdSleepMilliseconds(engineConfiguration->sdCardPeriodMs);
+		auto period = CONFIG(sdCardPeriodMs);
+		if (period > 0) {
+			chThdSleepMilliseconds(period);
 		}
 	}
 }
@@ -487,7 +488,7 @@ void initMmcCard(void) {
 	// todo: reuse initSpiCs method?
 	hs_spicfg.ssport = ls_spicfg.ssport = getHwPort("mmc", CONFIG(sdCardCsPin));
 	hs_spicfg.sspad = ls_spicfg.sspad = getHwPin("mmc", CONFIG(sdCardCsPin));
-	mmccfg.spip = getSpiDevice(engineConfiguration->sdCardSpiDevice);
+	mmccfg.spip = getSpiDevice(CONFIG(sdCardSpiDevice));
 
 	/**
 	 * FYI: SPI does not work with CCM memory, be sure to have main() stack in RAM, not in CCMRAM

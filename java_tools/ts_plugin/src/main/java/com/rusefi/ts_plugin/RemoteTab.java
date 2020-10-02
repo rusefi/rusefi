@@ -61,6 +61,7 @@ public class RemoteTab {
             return new Dimension(100, size.height);
         }
     };
+    private final Listener listener;
 
 
     private StreamStatusControl streamStatusControl = null;
@@ -69,7 +70,8 @@ public class RemoteTab {
 
     private final Executor listDownloadExecutor = Executors.newSingleThreadExecutor(new NamedThreadFactory("online list downloader", true));
 
-    public RemoteTab() {
+    public RemoteTab(Listener listener) {
+        this.listener = listener;
         JButton refresh = new JButton("Refresh Remote Controllers List");
         refresh.addActionListener(e -> requestControllersList());
 
@@ -259,6 +261,7 @@ public class RemoteTab {
             streamStatusControl = new StreamStatusControl(authenticatorToProxyStream);
         }
 
+        listener.onConnected();
         setStatus("Connected to " + userDetails.getUserName(),
                 new JLabel("You can now connect your TunerStudio to IP address localhost and port " + getLocalPort()),
                 new URLLabel(SignatureHelper.getUrl(controllerInfo.getSignature()).first),
@@ -318,5 +321,9 @@ public class RemoteTab {
 
     public JComponent getContent() {
         return scroll;
+    }
+
+    interface Listener {
+        void onConnected();
     }
 }

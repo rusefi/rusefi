@@ -276,7 +276,7 @@ void firmwareError(obd_code_e code, const char *fmt, ...) {
 	}
 
 #else
-	printf("firmwareError [%s]\r\n", fmt);
+	printf("\x1B[31m>>>>>>>>>> firmwareError [%s]\r\n\x1B[0m", fmt);
 
 	va_list ap;
 	va_start(ap, fmt);

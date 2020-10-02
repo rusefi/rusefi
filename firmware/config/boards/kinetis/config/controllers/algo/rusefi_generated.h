@@ -624,7 +624,7 @@
 #define GAUGE_NAME_ETB_ERROR "ETB position error"
 #define GAUGE_NAME_ETB_TARGET "ETB position target"
 #define GAUGE_NAME_FUEL_BARO_CORR "fuel: Barometric pressure correction"
-#define GAUGE_NAME_FUEL_BASE "fuel: base"
+#define GAUGE_NAME_FUEL_BASE "fuel: base mass"
 #define GAUGE_NAME_FUEL_CHARGE_TEMP "fuel: Estimated charge temperature"
 #define GAUGE_NAME_FUEL_CLT_CORR "fuel: CLT correction"
 #define GAUGE_NAME_FUEL_CRANKING "fuel: cranking"
@@ -1090,6 +1090,7 @@
 #define PACK_MULT_AFR 1000
 #define PACK_MULT_AFR_CFG 10
 #define PACK_MULT_ANGLE 50
+#define PACK_MULT_FUEL_MASS 100
 #define PACK_MULT_MASS_FLOW 10
 #define PACK_MULT_MS 300
 #define PACK_MULT_PERCENT 100
@@ -1165,8 +1166,8 @@
 #define showHumanReadableWarning_offset 976
 #define showSdCardWarning_offset 76
 #define SIGNATURE_BOARD kin
-#define SIGNATURE_DATE 2020.09.29
-#define SIGNATURE_HASH 771895729
+#define SIGNATURE_DATE 2020.10.01
+#define SIGNATURE_HASH 2629066565
 #define silentTriggerError_offset 1464
 #define slowAdcAlpha_offset 2088
 #define solenoidPadding_offset 1198
@@ -1447,7 +1448,12 @@
 #define TS_READ_COMMAND_char R
 #define TS_RESPONSE_BURN_OK 4
 #define TS_RESPONSE_COMMAND_OK 7
+#define TS_RESPONSE_CRC_FAILURE 0x82
+#define TS_RESPONSE_FRAMING_ERROR 0x8D
 #define TS_RESPONSE_OK 0
+#define TS_RESPONSE_OUT_OF_RANGE 0x84
+#define TS_RESPONSE_UNDERRUN 0x80
+#define TS_RESPONSE_UNRECOGNIZED_COMMAND 0x83
 #define TS_SD_PROTOCOL_DO 1
 #define TS_SD_PROTOCOL_FETCH_COMPRESSED 8
 #define TS_SD_PROTOCOL_FETCH_DATA 0x14
@@ -1481,7 +1487,7 @@
 #define ts_show_spi true
 #define ts_show_trigger_comparator true
 #define ts_show_tunerstudio_port true
-#define TS_SIGNATURE "rusEFI 2020.09.29.kin.771895729"
+#define TS_SIGNATURE "rusEFI 2020.10.01.kin.2629066565"
 #define TS_SINGLE_WRITE_COMMAND 'W'
 #define TS_SINGLE_WRITE_COMMAND_char W
 #define TS_TEST_COMMAND 't' // 0x74

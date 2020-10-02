@@ -179,6 +179,7 @@ struct_no_prefix engine_configuration_s
 #define TPS_1_BYTE_PACKING_MULT 2
 #define LOAD_1_BYTE_PACKING_MULT 2
 #define PACK_MULT_AFR_CFG 10
+#define PACK_MULT_FUEL_MASS 100
 #define FSIO_TABLE_8 8
 
 #define FSIO_CURVE_8 8
@@ -1587,7 +1588,7 @@ end_struct
 #define GAUGE_NAME_FUEL_CRANKING "fuel: cranking"
 #define GAUGE_NAME_FUEL_RUNNING "fuel: running"
 #define GAUGE_NAME_FUEL_LAST_INJECTION  "fuel: Last injection"
-#define GAUGE_NAME_FUEL_BASE "fuel: base"
+#define GAUGE_NAME_FUEL_BASE "fuel: base mass"
 #define GAUGE_NAME_FUEL_PID_CORR "fuel: Short-term fuel trim"
 #define GAUGE_NAME_FUEL_WALL_AMOUNT "fuel: wall amount"
 #define GAUGE_NAME_FUEL_WALL_CORRECTION "fuel: wall corr ms"
@@ -1674,6 +1675,12 @@ end_struct
 
 #define PROTOCOL_MSG "msg"
 #define PROTOCOL_HELLO_PREFIX "***"
+
+#define TS_RESPONSE_UNDERRUN 0x80
+#define TS_RESPONSE_CRC_FAILURE 0x82
+#define TS_RESPONSE_UNRECOGNIZED_COMMAND 0x83
+#define TS_RESPONSE_OUT_OF_RANGE 0x84
+#define TS_RESPONSE_FRAMING_ERROR 0x8D
 
 #define MLQ_HEADER_SIZE 22
 #define MLQ_FIELD_HEADER_SIZE 55

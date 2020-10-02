@@ -2,6 +2,8 @@ package com.rusefi.ts_plugin;
 
 import com.rusefi.proxy.client.LocalApplicationProxy;
 
+import java.util.concurrent.CopyOnWriteArrayList;
+
 public enum RemoteTabController {
     /**
      * TunerStudio likes to close plugin panel, we need a singleton to preserve the state
@@ -11,9 +13,15 @@ public enum RemoteTabController {
     private State state = State.NOT_CONNECTED;
     private LocalApplicationProxy localApplicationProxy;
 
+    public final CopyOnWriteArrayList<Listener> listeners = new CopyOnWriteArrayList<>();
+
     public synchronized void setState(State state) {
-        this.state = state;
         localApplicationProxy = null;
+        if (state != this.state) {
+            this.state = state;
+            for (Listener listener : listeners)
+                listener.onChange(state);
+        }
     }
 
     public synchronized State getState() {
@@ -33,5 +41,9 @@ public enum RemoteTabController {
         NOT_CONNECTED,
         CONNECTING,
         CONNECTED
+    }
+
+    interface Listener {
+        void onChange(State state);
     }
 }
