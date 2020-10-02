@@ -226,7 +226,7 @@ floatms_t getBaseFuel(int rpm DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	}
 	efiAssert(CUSTOM_ERR_ASSERT, !cisnan(baseFuel), "NaN baseFuel", 0);
 
-	engine->engineState.baseFuel = baseFuel;
+	engine->engineState.baseFuel = baseFuelMass;
 
 	return tpsAccelEnrich + baseFuel;
 }

@@ -97,8 +97,6 @@ void setBmwE34(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 
 	engineConfiguration->malfunctionIndicatorPin = GPIO_UNASSIGNED;
 
-//	bc->isFastAdcEnabled = true;
-
 	engineConfiguration->injectionPinMode = OM_INVERTED;
 	engineConfiguration->injectionPins[0] = GPIOB_8; // #1
 	engineConfiguration->injectionPins[1] = GPIOE_2; // #2

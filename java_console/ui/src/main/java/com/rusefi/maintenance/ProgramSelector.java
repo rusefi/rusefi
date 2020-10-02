@@ -17,7 +17,7 @@ public class ProgramSelector {
     private static final String MANUAL_DFU = "Manual DFU";
     private static final String ST_LINK = "ST-LINK";
 
-    private static final String HELP = "https://github.com/rusefi/rusefi/wiki/HOWTO_Update_Firmware";
+    private static final String HELP = "https://github.com/rusefi/rusefi/wiki/HOWTO-Update-Firmware";
 
     private final JPanel controls = new JPanel(new FlowLayout());
     private final JComboBox mode = new JComboBox();

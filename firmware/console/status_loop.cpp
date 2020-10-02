@@ -547,7 +547,7 @@ void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels DECLARE_
 	tsOutputChannels->baroPressure = hasBaroSensor() ? getBaroPressure() : 0;
 #endif /* EFI_ANALOG_SENSORS */
 	// 48
-	tsOutputChannels->fuelBase = engine->engineState.baseFuel;
+	tsOutputChannels->fuelBase = engine->engineState.baseFuel * 1000;	// Convert grams to mg
 	// 64
 	tsOutputChannels->actualLastInjection = ENGINE(actualLastInjection);
 
@@ -684,7 +684,7 @@ void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels DECLARE_
 	tsOutputChannels->isInjectionEnabled = engineConfiguration->isInjectionEnabled;
 	tsOutputChannels->isCylinderCleanupEnabled = engineConfiguration->isCylinderCleanupEnabled;
 	tsOutputChannels->isCylinderCleanupActivated = engine->isCylinderCleanupMode;
-	tsOutputChannels->secondTriggerChannelEnabled = engineConfiguration->secondTriggerChannelEnabled;
+
 #if EFI_VEHICLE_SPEED
 	float vehicleSpeed = getVehicleSpeed();
 	tsOutputChannels->vehicleSpeedKph = vehicleSpeed;
