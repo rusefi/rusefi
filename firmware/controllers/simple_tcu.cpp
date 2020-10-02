@@ -1,4 +1,8 @@
 #include "simple_tcu.h"
+#include "efi_gpio.h"
+#include "engine_configuration.h"
+
+EXTERN_CONFIG;
 
 RegisteredOutputPin tcuSolenoids[efi::size(tcu_solenoid)];
 
