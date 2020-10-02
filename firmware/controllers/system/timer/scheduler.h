@@ -61,7 +61,12 @@ public:
 	void release(scheduling_s*);
 private:
 	scheduling_s* m_next = nullptr;
-	scheduling_s m_pool[128];
+
+	// Here's the napkin math that determined this size:
+	// worst case is a v12 with a single tooth cam wheel, which means
+	// 12cyl * (ign + inj) * (rise + fall) = 48
+	// Plus 50% extra for pwm and such, we get 72
+	scheduling_s m_pool[72];
 
 	size_t m_inUseCount = 0;
 };
