@@ -249,6 +249,7 @@
 #define CMD_DISABLE "disable"
 #define CMD_ENABLE "enable"
 #define CMD_ENGINE_TYPE "engine_type"
+#define CMD_ENGINESNIFFERRPMTHRESHOLD "engineSnifferRpmThreshold"
 #define CMD_ETB_DUTY "set_etb_duty"
 #define CMD_FUEL_BENCH "fuelbench"
 #define CMD_FUNCTIONAL_TEST_MODE "test_mode"
@@ -1170,7 +1171,7 @@
 #define showSdCardWarning_offset 76
 #define SIGNATURE_BOARD all
 #define SIGNATURE_DATE 2020.10.03
-#define SIGNATURE_HASH 3669808363
+#define SIGNATURE_HASH 495359842
 #define silentTriggerError_offset 1464
 #define slowAdcAlpha_offset 2088
 #define sparkDwellRpmBins_offset 332
@@ -1489,7 +1490,7 @@
 #define ts_show_spi true
 #define ts_show_trigger_comparator false
 #define ts_show_tunerstudio_port true
-#define TS_SIGNATURE "rusEFI 2020.10.03.all.3669808363"
+#define TS_SIGNATURE "rusEFI 2020.10.03.all.495359842"
 #define TS_SINGLE_WRITE_COMMAND 'W'
 #define TS_SINGLE_WRITE_COMMAND_char W
 #define TS_TEST_COMMAND 't' // 0x74
@@ -1634,7 +1635,7 @@
 #define veTable_offset 17440
 #define VOLTAGE_1_BYTE_PACKING_DIV 0.02
 #define vRefAdcChannel_offset 1470
-#define vvt_mode_e_auto_enum "VVT_INACTIVE", "VVT_SECOND_HALF", "VVT_2JZ", "MIATA_NB2", "VVT_FIRST_HALF", "VVT_BOSCH_QUICK_START"
+#define vvt_mode_e_auto_enum "VVT_INACTIVE", "VVT_SECOND_HALF", "VVT_2JZ", "MIATA_NB2", "VVT_FIRST_HALF", "VVT_BOSCH_QUICK_START", "VVT_4_1"
 #define vvt_mode_e_enum "Inactive", "Single Tooth Second Half", "2GZ", "Miata NB2", "Single Tooth First Half", "Bosch Quick Start", "4/1", "mode7"
 #define vvtCamSensorUseRise_offset 744
 #define vvtMode_offset 2328
