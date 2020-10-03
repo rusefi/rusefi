@@ -32,6 +32,7 @@ public class IniFileModel {
     public Map<String, IniField> allIniFields = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
 
     public Map<String, String> tooltips = new TreeMap<>();
+    public Map<String, String> protocolMeta = new TreeMap<>();
     private boolean isConstantsSection;
     private String currentSection;
 
@@ -141,10 +142,16 @@ public class IniFileModel {
                 isConstantsSection = first.equals("[Constants]");
             }
 
-            if (isInsidePageDefinition && isConstantsSection) {
-                if (list.size() > 1)
-                    handleFieldDefinition(list);
-                return;
+            if (isConstantsSection) {
+                if (isInsidePageDefinition) {
+                    if (list.size() > 1)
+                        handleFieldDefinition(list);
+                    return;
+                } else {
+                    if (list.size() > 1) {
+                        protocolMeta.put(list.get(0), list.get(1));
+                    }
+                }
             }
 
 
