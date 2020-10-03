@@ -7,6 +7,7 @@ import com.opensr5.io.ConfigurationImageFile;
 import com.opensr5.io.DataListener;
 import com.rusefi.ConfigurationImageDiff;
 import com.rusefi.NamedThreadFactory;
+import com.rusefi.SignatureHelper;
 import com.rusefi.Timeouts;
 import com.rusefi.composite.CompositeEvent;
 import com.rusefi.composite.CompositeParser;
@@ -17,6 +18,7 @@ import com.rusefi.core.Sensor;
 import com.rusefi.core.SensorCentral;
 import com.rusefi.io.*;
 import com.rusefi.io.commands.GetOutputsCommand;
+import com.rusefi.io.commands.HelloCommand;
 import com.rusefi.stream.LogicdataStreamFile;
 import com.rusefi.stream.StreamFile;
 import com.rusefi.stream.TSHighSpeedLog;
@@ -228,6 +230,14 @@ public class BinaryProtocol implements BinaryProtocolCommands {
      * @return true if everything fine
      */
     public boolean connectAndReadConfiguration(DataListener listener) {
+        try {
+            HelloCommand.send(stream);
+            String response = HelloCommand.getHelloResponse(incomingData);
+            System.out.println("Got " + response);
+            SignatureHelper.downloadIfNotAvailable(SignatureHelper.getUrl(response));
+        } catch (IOException e) {
+            return false;
+        }
 //        switchToBinaryProtocol();
         readImage(Fields.TOTAL_CONFIG_SIZE);
         if (isClosed)
