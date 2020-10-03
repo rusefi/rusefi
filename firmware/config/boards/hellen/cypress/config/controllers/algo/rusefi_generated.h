@@ -1170,7 +1170,7 @@
 #define showSdCardWarning_offset 76
 #define SIGNATURE_BOARD hellen_cypress
 #define SIGNATURE_DATE 2020.10.03
-#define SIGNATURE_HASH 198158381
+#define SIGNATURE_HASH 1022910303
 #define silentTriggerError_offset 1464
 #define slowAdcAlpha_offset 2088
 #define sparkDwellRpmBins_offset 332
@@ -1489,7 +1489,7 @@
 #define ts_show_spi true
 #define ts_show_trigger_comparator false
 #define ts_show_tunerstudio_port true
-#define TS_SIGNATURE "rusEFI 2020.10.03.hellen_cypress.198158381"
+#define TS_SIGNATURE "rusEFI 2020.10.03.hellen_cypress.1022910303"
 #define TS_SINGLE_WRITE_COMMAND 'W'
 #define TS_SINGLE_WRITE_COMMAND_char W
 #define TS_TEST_COMMAND 't' // 0x74
@@ -1635,7 +1635,7 @@
 #define VOLTAGE_1_BYTE_PACKING_DIV 0.02
 #define vRefAdcChannel_offset 1470
 #define vvt_mode_e_auto_enum "VVT_INACTIVE", "VVT_SECOND_HALF", "VVT_2JZ", "MIATA_NB2", "VVT_FIRST_HALF", "VVT_BOSCH_QUICK_START"
-#define vvt_mode_e_enum "Inactive", "Second half", "2GZ", "Miata NB2", "First half", "Bosch Quick Start", "mode6", "mode7"
+#define vvt_mode_e_enum "Inactive", "Single Tooth Second Half", "2GZ", "Miata NB2", "Single Tooth First Half", "Bosch Quick Start", "mode6", "mode7"
 #define vvtCamSensorUseRise_offset 744
 #define vvtMode_offset 2328
 #define vvtOffset_offset 2052
