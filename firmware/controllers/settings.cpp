@@ -1269,7 +1269,7 @@ static void setValue(const char *paramStr, const char *valueStr) {
 		engineConfiguration->warningPeriod = valueI;
 	} else if (strEqualCaseInsensitive(paramStr, "dwell")) {
 		setConstantDwell(valueF PASS_CONFIG_PARAMETER_SUFFIX);
-	} else if (strEqualCaseInsensitive(paramStr, "engineSnifferRpmThreshold")) {
+	} else if (strEqualCaseInsensitive(paramStr, CMD_ENGINESNIFFERRPMTHRESHOLD)) {
 		engineConfiguration->engineSnifferRpmThreshold = valueI;
 // migrate to new laucnh fields?
 		//	} else if (strEqualCaseInsensitive(paramStr, "step1rpm")) {
