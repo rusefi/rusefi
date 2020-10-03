@@ -85,6 +85,8 @@ trigger_type_e getVvtTriggerType(vvt_mode_e vvtMode) {
 		return TT_ONE;
 	case VVT_SECOND_HALF:
 		return TT_ONE;
+	case VVT_4_1:
+		return TT_ONE;
 	default:
 		return TT_ONE;
 	}

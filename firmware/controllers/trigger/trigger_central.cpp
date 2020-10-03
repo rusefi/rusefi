@@ -86,7 +86,9 @@ void addTriggerEventListener(ShaftPositionListener listener, const char *name, E
 #define miataNbIndex (0)
 
 static bool vvtWithRealDecoder(vvt_mode_e vvtMode) {
-	return vvtMode == MIATA_NB2 || vvtMode == VVT_BOSCH_QUICK_START;
+	return vvtMode == MIATA_NB2
+			|| vvtMode == VVT_BOSCH_QUICK_START
+			|| vvtMode == VVT_4_1;
 }
 
 void hwHandleVvtCamSignal(trigger_value_e front, efitick_t nowNt DECLARE_ENGINE_PARAMETER_SUFFIX) {
