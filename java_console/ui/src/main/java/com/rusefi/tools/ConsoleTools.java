@@ -384,6 +384,7 @@ public class ConsoleTools {
 
         System.out.println("Signature: " + SerialAutoChecker.SIGNATURE);
         System.out.println("It says " + messages);
+        System.out.println("Ini file: " + SignatureHelper.getUrl(SerialAutoChecker.SIGNATURE).first);
         System.exit(0);
     }
 
