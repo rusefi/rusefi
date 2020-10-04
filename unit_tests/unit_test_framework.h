@@ -32,5 +32,3 @@ void assertEqualsM(const char *msg, float expected, float actual);
 void assertEqualsLM(const char *msg, long expected, long actual);
 void assertEqualsM4(const char *prefix, const char *msg, float expected, float actual);
 
-#define EXPECT_NO_FATAL_ERROR EXPECT_NO_THROW
-#define EXPECT_FATAL_ERROR(expr) EXPECT_THROW((expr), std::logic_error)
