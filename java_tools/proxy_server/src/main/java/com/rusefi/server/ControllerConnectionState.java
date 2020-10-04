@@ -111,7 +111,7 @@ public class ControllerConnectionState {
         String localFileName = SignatureHelper.downloadIfNotAvailable(p);
         if (localFileName == null)
             throw new IOException("Unable to download " + p.second);
-        iniFileModel.readIniFile(localFileName);
+//        iniFileModel.readIniFile(localFileName);
 
         controllerKey = new ControllerKey(userDetails.getUserId(), sessionDetails.getControllerInfo());
         log.info("User " + userDetails);
