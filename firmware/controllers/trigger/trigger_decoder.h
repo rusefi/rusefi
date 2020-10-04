@@ -65,6 +65,8 @@ typedef struct {
  */
 class TriggerState : public trigger_state_s {
 public:
+	DECLARE_ENGINE_PTR;
+
 	TriggerState();
 	/**
 	 * current trigger processing index, between zero and #size

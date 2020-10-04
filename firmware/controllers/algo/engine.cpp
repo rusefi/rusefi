@@ -94,6 +94,7 @@ trigger_type_e getVvtTriggerType(vvt_mode_e vvtMode) {
 
 void Engine::initializeTriggerWaveform(Logging *logger DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	static TriggerState initState;
+	INJECT_ENGINE_REFERENCE(&initState);
 
 #if EFI_ENGINE_CONTROL && EFI_SHAFT_POSITION_INPUT
 	// we have a confusing threading model so some synchronization would not hurt
@@ -394,10 +395,21 @@ void Engine::OnTriggerSyncronization(bool wasSynchronized) {
 }
 #endif
 
+void Engine::injectEngineReferences() {
+	Engine *engine = this;
+	EXPAND_Engine;
+
+	INJECT_ENGINE_REFERENCE(&primaryTriggerConfiguration);
+	INJECT_ENGINE_REFERENCE(&vvtTriggerConfiguration);
+	triggerCentral.init(PASS_ENGINE_PARAMETER_SIGNATURE);
+}
+
 void Engine::setConfig(persistent_config_s *config) {
 	this->config = config;
 	engineConfigurationPtr = &config->engineConfiguration;
 	memset(config, 0, sizeof(persistent_config_s));
+
+	injectEngineReferences();
 }
 
 void Engine::printKnockState(void) {

@@ -390,6 +390,8 @@ private:
 	 */
 	bool isSpinning = false;
 	void reset();
+
+	void injectEngineReferences();
 };
 
 void prepareShapes(DECLARE_ENGINE_PARAMETER_SIGNATURE);

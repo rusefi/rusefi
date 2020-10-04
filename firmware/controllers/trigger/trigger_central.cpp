@@ -51,6 +51,11 @@ TriggerCentral::TriggerCentral() : trigger_central_s() {
 	noiseFilter.resetAccumSignalData();
 }
 
+void TriggerCentral::init(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+	INJECT_ENGINE_REFERENCE(&triggerState);
+	INJECT_ENGINE_REFERENCE(&vvtState);
+}
+
 void TriggerNoiseFilter::resetAccumSignalData() {
 	memset(lastSignalTimes, 0xff, sizeof(lastSignalTimes));	// = -1
 	memset(accumSignalPeriods, 0, sizeof(accumSignalPeriods));
