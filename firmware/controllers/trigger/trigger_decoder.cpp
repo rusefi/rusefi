@@ -532,7 +532,7 @@ void TriggerState::decodeTriggerEvent(
 			}
 
 			bool isSync = true;
-			for (int i = 0;i<GAP_TRACKING_LENGTH;i++) {
+			for (int i = 0;i<triggerShape->gapTrackingLength;i++) {
 				bool isGapCondition = cisnan(triggerShape->syncronizationRatioFrom[i]) || (toothDurations[i] > toothDurations[i + 1] * triggerShape->syncronizationRatioFrom[i]
 					&& toothDurations[i] < toothDurations[i + 1] * triggerShape->syncronizationRatioTo[i]);
 
@@ -558,7 +558,7 @@ void TriggerState::decodeTriggerEvent(
 
 #if EFI_PROD_CODE || EFI_SIMULATOR
 			if (triggerConfiguration->isVerboseTriggerSynchDetails() || (someSortOfTriggerError && !silentTriggerError)) {
-				for (int i = 0;i<GAP_TRACKING_LENGTH;i++) {
+				for (int i = 0;i<triggerShape->gapTrackingLength;i++) {
 					float ratioFrom = triggerShape->syncronizationRatioFrom[i];
 					if (cisnan(ratioFrom)) {
 						// we do not track gap at this depth
@@ -585,7 +585,7 @@ void TriggerState::decodeTriggerEvent(
 #else
 			if (printTriggerTrace) {
 				float gap = 1.0 * toothDurations[0] / toothDurations[1];
-				for (int i = 0;i<GAP_TRACKING_LENGTH;i++) {
+				for (int i = 0;i<triggerShape->gapTrackingLength;i++) {
 					float gap = 1.0 * toothDurations[i] / toothDurations[i + 1];
 					print("index=%d: gap=%.2f expected from %.2f to %.2f error=%s\r\n",
 							i,
@@ -659,7 +659,7 @@ void TriggerState::decodeTriggerEvent(
 			;
 		}
 
-		for (int i = GAP_TRACKING_LENGTH; i > 0; i--) {
+		for (int i = triggerShape->gapTrackingLength; i > 0; i--) {
 			toothDurations[i] = toothDurations[i - 1];
 		}
 
