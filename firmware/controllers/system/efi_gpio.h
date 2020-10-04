@@ -77,6 +77,7 @@ public:
 private:
 	// todo: inline this method?
 	void setDefaultPinState(const pin_output_mode_e *defaultState);
+	void setOnchipValue(int electricalValue, int logicValue);
 
 	// 4 byte pointer is a bit of a memory waste here
 	const pin_output_mode_e *modePtr;
