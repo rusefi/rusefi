@@ -74,7 +74,7 @@ public class BenchTestPane {
                     List<Entry> data = Entry.parseBuffer(packet);
 
                     int rpm = RpmModel.getInstance().getValue();
-                    String fileName = Logger.getDate() + "_rpm_" + rpm + "_rusEfi_trace" + ".json";
+                    String fileName = Logger.getDate() + "_rpm_" + rpm + "_rusEFI_trace" + ".json";
 
 
                     JsonOutput.writeToStream(data, new FileOutputStream(fileName));

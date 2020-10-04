@@ -272,7 +272,7 @@ void hwHandleShaftSignal(trigger_event_e signal, efitick_t timestamp) {
 	// We want to do this before anything else as we
 	// actually want to capture any noise/jitter that may be occurring
 
-	bool logLogicState = CONFIG(displayLogicLevelsInEngineSniffer && engineConfiguration->useOnlyRisingEdgeForTrigger);
+	bool logLogicState = CONFIG(displayLogicLevelsInEngineSniffer) && CONFIG(useOnlyRisingEdgeForTrigger);
 
 	if (!logLogicState) {
 		// we log physical state even if displayLogicLevelsInEngineSniffer if both fronts are used by decoder
