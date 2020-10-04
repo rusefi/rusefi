@@ -309,7 +309,6 @@ void hwHandleShaftSignal(trigger_event_e signal, efitick_t timestamp) {
 		maxTriggerReentraint = triggerReentraint;
 	triggerReentraint++;
 
-	efiAssertVoid(CUSTOM_ERR_6636, getCurrentRemainingStack() > 128, "lowstck#8");
 	ENGINE(triggerCentral).handleShaftSignal(signal, timestamp PASS_ENGINE_PARAMETER_SUFFIX);
 
 	triggerReentraint--;
