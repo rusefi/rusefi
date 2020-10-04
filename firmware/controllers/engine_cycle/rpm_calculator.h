@@ -156,7 +156,7 @@ private:
 
 void rpmShaftPositionCallback(trigger_event_e ckpSignalType, uint32_t index, efitick_t edgeTimestamp DECLARE_ENGINE_PARAMETER_SUFFIX);
 
-void tdcMarkCallback(trigger_event_e ckpSignalType,
+void tdcMarkCallback(
 		uint32_t index0, efitick_t edgeTimestamp DECLARE_ENGINE_PARAMETER_SUFFIX);
 
 /**

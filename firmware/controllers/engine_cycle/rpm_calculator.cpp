@@ -325,9 +325,8 @@ static void onTdcCallback(Engine *engine) {
 /**
  * This trigger callback schedules the actual physical TDC callback in relation to trigger synchronization point.
  */
-void tdcMarkCallback(trigger_event_e ckpSignalType,
+void tdcMarkCallback(
 		uint32_t index0, efitick_t edgeTimestamp DECLARE_ENGINE_PARAMETER_SUFFIX) {
-	(void) ckpSignalType;
 	bool isTriggerSynchronizationPoint = index0 == 0;
 	if (isTriggerSynchronizationPoint && ENGINE(isEngineChartEnabled)) {
 		// two instances of scheduling_s are needed to properly handle event overlap

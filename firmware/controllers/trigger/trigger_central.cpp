@@ -489,12 +489,12 @@ void TriggerCentral::handleShaftSignal(trigger_event_e signal, efitick_t timesta
 		rpmShaftPositionCallback(signal, triggerIndexForListeners, timestamp PASS_ENGINE_PARAMETER_SUFFIX);
 
 #if !EFI_UNIT_TEST
-		tdcMarkCallback(signal, triggerIndexForListeners, timestamp PASS_ENGINE_PARAMETER_SUFFIX);
+		tdcMarkCallback(triggerIndexForListeners, timestamp PASS_ENGINE_PARAMETER_SUFFIX);
 #endif
 
 #if !EFI_UNIT_TEST
 #if EFI_SHAFT_POSITION_INPUT
-		mapAveragingTriggerCallback(signal, triggerIndexForListeners, timestamp PASS_ENGINE_PARAMETER_SUFFIX);
+		mapAveragingTriggerCallback(triggerIndexForListeners, timestamp PASS_ENGINE_PARAMETER_SUFFIX);
 #endif /* EFI_SHAFT_POSITION_INPUT */
 #endif /* EFI_UNIT_TEST */
 
@@ -509,7 +509,7 @@ void TriggerCentral::handleShaftSignal(trigger_event_e signal, efitick_t timesta
 			(listener)(signal, triggerIndexForListeners, timestamp PASS_ENGINE_PARAMETER_SUFFIX);
 		}
 
-		mainTriggerCallback(signal, triggerIndexForListeners, timestamp PASS_ENGINE_PARAMETER_SUFFIX);
+		mainTriggerCallback(triggerIndexForListeners, timestamp PASS_ENGINE_PARAMETER_SUFFIX);
 
 
 	}
