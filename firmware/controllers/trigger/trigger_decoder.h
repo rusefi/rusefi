@@ -25,11 +25,11 @@ struct TriggerStateListener {
 
 class TriggerConfiguration {
 public:
+	DECLARE_ENGINE_PTR;
+
 	virtual bool isUseOnlyRisingEdgeForTrigger() const = 0;
-	virtual bool isSilentTriggerError() const = 0;
 	virtual bool isVerboseTriggerSynchDetails() const = 0;
 	virtual const char * getPrintPrefix() const = 0;
-	virtual debug_mode_e getDebugMode() const = 0;
 	virtual trigger_type_e getType() const = 0;
 };
 

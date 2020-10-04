@@ -245,11 +245,11 @@ void Engine::onTriggerSignalEvent(efitick_t nowNt) {
 	lastTriggerToothEventTimeNt = nowNt;
 }
 
-Engine::Engine() : primaryTriggerConfiguration(this), vvtTriggerConfiguration(this) {
+Engine::Engine() {
 	reset();
 }
 
-Engine::Engine(persistent_config_s *config) : primaryTriggerConfiguration(this), vvtTriggerConfiguration(this) {
+Engine::Engine(persistent_config_s *config) {
 	setConfig(config);
 	reset();
 }

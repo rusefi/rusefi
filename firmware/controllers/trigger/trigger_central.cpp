@@ -429,8 +429,8 @@ void TriggerCentral::handleShaftSignal(trigger_event_e signal, efitick_t timesta
 		if (!noiseFilter.noiseFilter(timestamp, &triggerState, signal PASS_ENGINE_PARAMETER_SUFFIX)) {
 			return;
 		}
-		const TriggerConfiguration * triggerConfiguration = &ENGINE(primaryTriggerConfiguration);
-		// moved here from hwHandleShaftSignal()
+		const TriggerConfiguration* triggerConfiguration = &ENGINE(primaryTriggerConfiguration);
+
 		if (!isUsefulSignal(signal, triggerConfiguration)) {
 			return;
 		}
