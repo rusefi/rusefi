@@ -34,9 +34,10 @@ public:
  * Probably not: we have an instance of TriggerState which is used for trigger initialization,
  * also composition probably better than inheritance here
  */
-class TriggerCentral : public trigger_central_s {
+class TriggerCentral final : public trigger_central_s {
 public:
 	TriggerCentral();
+	void init(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 	void addEventListener(ShaftPositionListener handler, const char *name, Engine *engine);
 	void handleShaftSignal(trigger_event_e signal, efitick_t timestamp DECLARE_ENGINE_PARAMETER_SUFFIX);
 	int getHwEventCounter(int index) const;

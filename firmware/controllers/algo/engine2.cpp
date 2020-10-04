@@ -251,24 +251,12 @@ void printCurrentState(Logging *logging, int seconds, const char *engineTypeName
 			DELIMETER);
 }
 
-PrimaryTriggerConfiguration::PrimaryTriggerConfiguration(Engine *engine) {
-	this->engine = engine;
-}
-
 bool PrimaryTriggerConfiguration::isUseOnlyRisingEdgeForTrigger() const {
-	return engine->engineConfigurationPtr->useOnlyRisingEdgeForTrigger;
-}
-
-debug_mode_e PrimaryTriggerConfiguration::getDebugMode() const {
-	return engine->engineConfigurationPtr->debugMode;
+	return CONFIG(useOnlyRisingEdgeForTrigger);
 }
 
 trigger_type_e PrimaryTriggerConfiguration::getType() const {
-	return engine->engineConfigurationPtr->trigger.type;
-}
-
-bool PrimaryTriggerConfiguration::isSilentTriggerError() const {
-	return engine->engineConfigurationPtr->silentTriggerError;
+	return CONFIG(trigger.type);
 }
 
 const char * PrimaryTriggerConfiguration::getPrintPrefix() const {
@@ -276,33 +264,21 @@ const char * PrimaryTriggerConfiguration::getPrintPrefix() const {
 }
 
 bool PrimaryTriggerConfiguration::isVerboseTriggerSynchDetails() const {
-	return engine->engineConfigurationPtr->verboseTriggerSynchDetails;
-}
-
-VvtTriggerConfiguration::VvtTriggerConfiguration(Engine *engine) {
-	this->engine = engine;
+	return CONFIG(verboseTriggerSynchDetails);
 }
 
 bool VvtTriggerConfiguration::isUseOnlyRisingEdgeForTrigger() const {
-	return engine->engineConfigurationPtr->vvtCamSensorUseRise;
+	return CONFIG(vvtCamSensorUseRise);
 }
 
 const char * VvtTriggerConfiguration::getPrintPrefix() const {
 	return "VVT ";
 }
 
-debug_mode_e VvtTriggerConfiguration::getDebugMode() const {
-	return engine->engineConfigurationPtr->debugMode;
-}
-
 trigger_type_e VvtTriggerConfiguration::getType() const {
 	return engine->triggerCentral.vvtTriggerType;
 }
 
-bool VvtTriggerConfiguration::isSilentTriggerError() const {
-	return engine->engineConfigurationPtr->silentTriggerError;
-}
-
 bool VvtTriggerConfiguration::isVerboseTriggerSynchDetails() const {
-	return engine->engineConfigurationPtr->verboseVVTDecoding;
+	return CONFIG(verboseVVTDecoding);
 }
