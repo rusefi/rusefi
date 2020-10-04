@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Sat Oct 03 23:29:19 UTC 2020
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Sun Oct 04 02:01:34 UTC 2020
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -1964,7 +1964,7 @@ struct engine_configuration_s {
 	/**
 	 * offset 1198
 	 */
-	etb_function_e etbFunctions[ETB_COUNT];
+	uint8_t solenoidPadding[2];
 	/**
 	 * offset 1200
 	 */
@@ -3728,4 +3728,4 @@ struct persistent_config_s {
 typedef struct persistent_config_s persistent_config_s;
 
 // end
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Sat Oct 03 23:29:19 UTC 2020
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Sun Oct 04 02:01:34 UTC 2020
