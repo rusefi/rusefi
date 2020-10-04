@@ -51,6 +51,11 @@ TriggerCentral::TriggerCentral() : trigger_central_s() {
 	noiseFilter.resetAccumSignalData();
 }
 
+void TriggerCentral::init(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+	INJECT_ENGINE_REFERENCE(&triggerState);
+	INJECT_ENGINE_REFERENCE(&vvtState);
+}
+
 void TriggerNoiseFilter::resetAccumSignalData() {
 	memset(lastSignalTimes, 0xff, sizeof(lastSignalTimes));	// = -1
 	memset(accumSignalPeriods, 0, sizeof(accumSignalPeriods));
@@ -429,8 +434,8 @@ void TriggerCentral::handleShaftSignal(trigger_event_e signal, efitick_t timesta
 		if (!noiseFilter.noiseFilter(timestamp, &triggerState, signal PASS_ENGINE_PARAMETER_SUFFIX)) {
 			return;
 		}
-		const TriggerConfiguration * triggerConfiguration = &ENGINE(primaryTriggerConfiguration);
-		// moved here from hwHandleShaftSignal()
+		const TriggerConfiguration* triggerConfiguration = &ENGINE(primaryTriggerConfiguration);
+
 		if (!isUsefulSignal(signal, triggerConfiguration)) {
 			return;
 		}
