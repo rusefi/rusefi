@@ -267,6 +267,7 @@ void rpmShaftPositionCallback(trigger_event_e ckpSignalType,
 		}
 		rpmState->onNewEngineCycle();
 		rpmState->lastRpmEventTimeNt = nowNt;
+		engine->isRpmHardLimit = GET_RPM() > engine->getRpmHardLimit(PASS_ENGINE_PARAMETER_SIGNATURE);
 	}
 
 

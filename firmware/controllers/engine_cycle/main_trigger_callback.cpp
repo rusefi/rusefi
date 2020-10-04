@@ -375,7 +375,7 @@ static void mainTriggerCallback(trigger_event_e ckpSignalType, uint32_t trgEvent
 	(void) ckpSignalType;
 
 
-	if (engineConfiguration->vvtMode == MIATA_NB2 && engine->triggerCentral.vvtSyncTimeNt == 0) {
+	if (CONFIG(vvtMode) == MIATA_NB2 && ENGINE(triggerCentral.vvtSyncTimeNt) == 0) {
 		// this is a bit spaghetti code for sure
 		// do not spark & do not fuel until we have VVT sync. NB2 is a special case
 		// due to symmetrical crank wheel and we need to make sure no spark happens out of sync
@@ -421,8 +421,8 @@ static void mainTriggerCallback(trigger_event_e ckpSignalType, uint32_t trgEvent
 		// TODO: add 'pin shutdown' invocation somewhere - coils might be still open here!
 		return;
 	}
-	bool limitedSpark = rpm > engine->getRpmHardLimit(PASS_ENGINE_PARAMETER_SIGNATURE);
-	bool limitedFuel = rpm > engine->getRpmHardLimit(PASS_ENGINE_PARAMETER_SIGNATURE);
+	bool limitedSpark = ENGINE(isRpmHardLimit);
+	bool limitedFuel = ENGINE(isRpmHardLimit);
 
 	if (CONFIG(boostCutPressure) != 0) {
 		if (getMap(PASS_ENGINE_PARAMETER_SIGNATURE) > CONFIG(boostCutPressure)) {
@@ -431,10 +431,9 @@ static void mainTriggerCallback(trigger_event_e ckpSignalType, uint32_t trgEvent
 		}
 	}
 #if EFI_LAUNCH_CONTROL
-	if ((!limitedSpark)&&(!limitedFuel))
-	{
+	if (engine->isLaunchCondition && !limitedSpark && !limitedFuel) {
 		/* in case we are not already on a limited conditions, check launch as well */
-		applyLaunchControlLimiting(&limitedSpark,&limitedFuel PASS_ENGINE_PARAMETER_SUFFIX);
+		applyLaunchControlLimiting(&limitedSpark, &limitedFuel PASS_ENGINE_PARAMETER_SUFFIX);
 	}
 #endif
 	if (trgEventIndex == 0) {

@@ -284,7 +284,7 @@ void hwHandleShaftSignal(trigger_event_e signal, efitick_t timestamp) {
 	// for effective noise filtering, we need both signal edges, 
 	// so we pass them to handleShaftSignal() and defer this test
 	if (!CONFIG(useNoiselessTriggerDecoder)) {
-		const TriggerConfiguration * triggerConfiguration = &engine->primaryTriggerConfiguration;
+		const TriggerConfiguration * triggerConfiguration = &ENGINE(primaryTriggerConfiguration);
 		if (!isUsefulSignal(signal, triggerConfiguration)) {
 			/**
 			 * no need to process VR falls further
@@ -310,7 +310,7 @@ void hwHandleShaftSignal(trigger_event_e signal, efitick_t timestamp) {
 	triggerReentraint++;
 
 	efiAssertVoid(CUSTOM_ERR_6636, getCurrentRemainingStack() > 128, "lowstck#8");
-	engine->triggerCentral.handleShaftSignal(signal, timestamp PASS_ENGINE_PARAMETER_SUFFIX);
+	ENGINE(triggerCentral).handleShaftSignal(signal, timestamp PASS_ENGINE_PARAMETER_SUFFIX);
 
 	triggerReentraint--;
 	triggerDuration = getTimeNowLowerNt() - triggerHandlerEntryTime;
@@ -414,8 +414,6 @@ bool TriggerNoiseFilter::noiseFilter(efitick_t nowNt,
  * This method is NOT invoked for VR falls.
  */
 void TriggerCentral::handleShaftSignal(trigger_event_e signal, efitick_t timestamp DECLARE_ENGINE_PARAMETER_SUFFIX) {
-	efiAssertVoid(CUSTOM_CONF_NULL, engine!=NULL, "configuration");
-
 	if (triggerShape.shapeDefinitionError) {
 		// trigger is broken, we cannot do anything here
 		warning(CUSTOM_ERR_UNEXPECTED_SHAFT_EVENT, "Shaft event while trigger is mis-configured");
@@ -429,7 +427,7 @@ void TriggerCentral::handleShaftSignal(trigger_event_e signal, efitick_t timesta
 		if (!noiseFilter.noiseFilter(timestamp, &triggerState, signal PASS_ENGINE_PARAMETER_SUFFIX)) {
 			return;
 		}
-		const TriggerConfiguration * triggerConfiguration = &engine->primaryTriggerConfiguration;
+		const TriggerConfiguration * triggerConfiguration = &ENGINE(primaryTriggerConfiguration);
 		// moved here from hwHandleShaftSignal()
 		if (!isUsefulSignal(signal, triggerConfiguration)) {
 			return;
