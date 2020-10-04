@@ -358,12 +358,14 @@ bool OutputPin::getAndSet(int logicValue) {
 }
 
 void OutputPin::setOnchipValue(int electricalValue, int logicValue) {
+#if EFI_PROD_CODE
 	if (port != GPIO_NULL) {
 		setPinValue(this, electricalValue, logicValue);
 	} else {
 		// even without physical pin sometimes it's nice to track logic pin value
 		currentLogicValue = logicValue;
 	}
+#endif // EFI_PROD_CODE
 }
 
 void OutputPin::setValue(int logicValue) {
