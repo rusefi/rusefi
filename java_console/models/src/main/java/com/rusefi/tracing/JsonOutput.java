@@ -12,7 +12,7 @@ import java.util.List;
  * This class helps to write JSON files readable by chrome://tracing/
  * <p>
  * See https://github.com/catapult-project/catapult/blob/master/tracing/README.md
- * @see PerfTraceTool
+ * @see PerfTraceTool code generator for EnumNames.java
  */
 public class JsonOutput {
 
