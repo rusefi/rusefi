@@ -35,6 +35,8 @@ public class SignatureHelper {
     }
 
     public static void downloadIfNotAvailable(Pair<String, String> p) {
+        if (p == null)
+            return;
         new File(LOCAL_INI).mkdirs();
         String localIniFile = LOCAL_INI + File.separator + p.second;
         File file = new File(localIniFile);
