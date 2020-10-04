@@ -25,6 +25,9 @@
 #include "rpm_calculator.h"
 #include "tooth_logger.h"
 #include "perf_trace.h"
+#include "map_averaging.h"
+#include "main_trigger_callback.h"
+
 
 #if EFI_PROD_CODE
 #include "pin_repository.h"
@@ -482,6 +485,22 @@ void TriggerCentral::handleShaftSignal(trigger_event_e signal, efitick_t timesta
 	scheduleMsg(logger, "trigger %d %d %d", triggerIndexForListeners, getRevolutionCounter(), (int)getTimeNowUs());
 #endif /* TRIGGER_EXTREME_LOGGING */
 
+
+		rpmShaftPositionCallback(signal, triggerIndexForListeners, timestamp PASS_ENGINE_PARAMETER_SUFFIX);
+
+#if !EFI_UNIT_TEST
+		tdcMarkCallback(signal, triggerIndexForListeners, timestamp PASS_ENGINE_PARAMETER_SUFFIX);
+#endif
+
+#if !EFI_UNIT_TEST
+#if EFI_SHAFT_POSITION_INPUT
+		mapAveragingTriggerCallback(signal, triggerIndexForListeners, timestamp PASS_ENGINE_PARAMETER_SUFFIX);
+#endif /* EFI_SHAFT_POSITION_INPUT */
+#endif /* EFI_UNIT_TEST */
+
+//auxValveTriggerCallback
+
+
 		/**
 		 * Here we invoke all the listeners - the main engine control logic is inside these listeners
 		 */
@@ -489,6 +508,9 @@ void TriggerCentral::handleShaftSignal(trigger_event_e signal, efitick_t timesta
 			ShaftPositionListener listener = (ShaftPositionListener) (void*) triggerListeneres.callbacks[i];
 			(listener)(signal, triggerIndexForListeners, timestamp PASS_ENGINE_PARAMETER_SUFFIX);
 		}
+
+		mainTriggerCallback(signal, triggerIndexForListeners, timestamp PASS_ENGINE_PARAMETER_SUFFIX);
+
 
 	}
 }

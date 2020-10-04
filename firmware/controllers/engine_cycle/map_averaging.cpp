@@ -267,7 +267,7 @@ void refreshMapAveragingPreCalc(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 /**
  * Shaft Position callback used to schedule start and end of MAP averaging
  */
-static void mapAveragingTriggerCallback(trigger_event_e ckpEventType,
+void mapAveragingTriggerCallback(trigger_event_e ckpEventType,
 		uint32_t index, efitick_t edgeTimestamp DECLARE_ENGINE_PARAMETER_SUFFIX) {
 
 	ScopePerf perf(PE::MapAveragingTriggerCallback);
@@ -351,10 +351,6 @@ void initMapAveraging(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	logger = sharedLogger;
 
 #if !EFI_UNIT_TEST
-#if EFI_SHAFT_POSITION_INPUT
-	addTriggerEventListener(&mapAveragingTriggerCallback, "MAP averaging", engine);
-#endif /* EFI_SHAFT_POSITION_INPUT */
-
 	addConsoleAction("faststat", showMapStats);
 #endif /* EFI_UNIT_TEST */
 

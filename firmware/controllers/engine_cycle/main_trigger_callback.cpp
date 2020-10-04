@@ -368,7 +368,7 @@ uint32_t *cyccnt = (uint32_t*) &DWT->CYCCNT;
  * This is the main trigger event handler.
  * Both injection and ignition are controlled from this method.
  */
-static void mainTriggerCallback(trigger_event_e ckpSignalType, uint32_t trgEventIndex, efitick_t edgeTimestamp DECLARE_ENGINE_PARAMETER_SUFFIX) {
+void mainTriggerCallback(trigger_event_e ckpSignalType, uint32_t trgEventIndex, efitick_t edgeTimestamp DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	ScopePerf perf(PE::MainTriggerCallback);
 
 	(void) ckpSignalType;
@@ -559,7 +559,6 @@ void initMainEventListener(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX
 		printMsg(logger, "!!!!!!!!!!!!!!!!!!! injection disabled");
 #endif
 
-	addTriggerEventListener(mainTriggerCallback, "main loop", engine);
 
     // We start prime injection pulse at the early init stage - don't wait for the engine to start spinning!
     if (CONFIG(startOfCrankingPrimingPulse) > 0)
