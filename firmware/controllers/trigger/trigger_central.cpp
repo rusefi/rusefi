@@ -493,9 +493,9 @@ void TriggerCentral::handleShaftSignal(trigger_event_e signal, efitick_t timesta
 #endif
 
 #if !EFI_UNIT_TEST
-#if EFI_SHAFT_POSITION_INPUT
+#if EFI_SHAFT_POSITION_INPUT && EFI_MAP_AVERAGING
 		mapAveragingTriggerCallback(triggerIndexForListeners, timestamp PASS_ENGINE_PARAMETER_SUFFIX);
-#endif /* EFI_SHAFT_POSITION_INPUT */
+#endif /* EFI_SHAFT_POSITION_INPUT && EFI_MAP_AVERAGING */
 #endif /* EFI_UNIT_TEST */
 
 //auxValveTriggerCallback
