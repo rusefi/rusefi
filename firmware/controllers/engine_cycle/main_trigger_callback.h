@@ -15,6 +15,8 @@
 
 void initMainEventListener(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX);
 
+void mainTriggerCallback(trigger_event_e ckpSignalType, uint32_t trgEventIndex, efitick_t edgeTimestamp DECLARE_ENGINE_PARAMETER_SUFFIX);
+
 void startPrimeInjectionPulse(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 
 void startSimultaniousInjection(Engine *engine);
