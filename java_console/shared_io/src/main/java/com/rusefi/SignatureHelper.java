@@ -34,14 +34,14 @@ public class SignatureHelper {
         return new Pair("https://rusefi.com/online/ini/rusefi/" + year + SLASH + month + SLASH + day + SLASH + bundle + SLASH + fileName, fileName);
     }
 
-    public static void downloadIfNotAvailable(Pair<String, String> p) {
+    public static String downloadIfNotAvailable(Pair<String, String> p) {
         if (p == null)
-            return;
+            return null;
         new File(LOCAL_INI).mkdirs();
         String localIniFile = LOCAL_INI + File.separator + p.second;
         File file = new File(localIniFile);
         if (file.exists() && file.length() > 10000)
-            return;
+            return localIniFile;
         try (BufferedInputStream in = new BufferedInputStream(new URL(p.first).openStream());
              FileOutputStream fileOutputStream = new FileOutputStream(localIniFile)) {
             byte[] dataBuffer = new byte[32 * 1024];
@@ -49,8 +49,10 @@ public class SignatureHelper {
             while ((bytesRead = in.read(dataBuffer, 0, dataBuffer.length)) != -1) {
                 fileOutputStream.write(dataBuffer, 0, bytesRead);
             }
+            return localIniFile;
         } catch (IOException e) {
             System.err.println(e.getMessage());
+            return null;
         }
     }
 }
