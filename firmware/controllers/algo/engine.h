@@ -124,7 +124,6 @@ public:
 	bool applyLaunchExtraFuel = false;
 	bool setLaunchBoostDuty = false;
 	bool applyLaunchControlRetard = false;
-	bool rpmHardCut = false;
 #endif /* EFI_LAUNCH_CONTROL */
 
 	/**
@@ -274,6 +273,7 @@ public:
 	efitimeus_t acSwitchLastChangeTime = 0;
 
 	bool isRunningPwmTest = false;
+	bool isRpmHardLimit = false;
 
 	int getRpmHardLimit(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 
