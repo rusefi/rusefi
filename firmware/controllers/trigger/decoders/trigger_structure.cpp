@@ -83,6 +83,7 @@ void TriggerWaveform::initialize(operation_mode_e operationMode) {
 		// NaN means do not use this gap ratio
 		setTriggerSynchronizationGap3(gapIndex, NAN, 100000);
 	}
+	gapTrackingLength = 1;
 
 	tdcPosition = 0;
 	shapeDefinitionError = useOnlyPrimaryForSync = false;
@@ -335,6 +336,7 @@ void TriggerWaveform::setTriggerSynchronizationGap3(int gapIndex, float syncRati
 		// we have a special case here - only sync with one gap has this feature
 		this->syncRatioAvg = (int)efiRound((syncRatioFrom + syncRatioTo) * 0.5f, 1.0f);
 	}
+	gapTrackingLength = maxI(1 + gapIndex, gapTrackingLength);
 
 #if EFI_UNIT_TEST
 	if (printTriggerDebug) {
@@ -595,6 +597,10 @@ void TriggerWaveform::initializeTriggerWaveform(Logging *logger, operation_mode_
 
 	case TT_HONDA_1_4_24:
 		configureHondaAccordCDDip(this);
+		break;
+
+	case TT_1_16:
+		configureOnePlus16(this);
 		break;
 
 	case TT_HONDA_CBR_600:

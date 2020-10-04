@@ -39,7 +39,6 @@ EXTERN_CONFIG;
 
 static void setHondaAccordConfigurationCommon(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	engineConfiguration->map.sensor.type = MT_DENSO183;
-	engineConfiguration->isFastAdcEnabled = true;
 
 	// set ignition_mode 0
 	engineConfiguration->ignitionMode = IM_ONE_COIL;

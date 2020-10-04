@@ -48,9 +48,10 @@ import static com.rusefi.ui.storage.PersistentConfiguration.getConfig;
 public class RemoteTab {
     private static final String APPLICATION_PORT = "application_port";
     public static final String HOWTO_REMOTE_TUNING = "https://github.com/rusefi/rusefi/wiki/HOWTO-Remote-Tuning";
+    private static final String UPDATE_ECU_FIRMWARE = "Update ECU firmware";
+    private static final String UPDATE_REMOTE_CONNECTOR_SOFTWARE = "Update Remote Connector Software";
     private final JComponent content = new JPanel(new BorderLayout());
     private final JScrollPane scroll = new JScrollPane(content, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
-
 
     private final JPanel list = new JPanel(new VerticalFlowLayout());
     private final JTextField oneTimePasswordControl = new JTextField("0") {
@@ -61,6 +62,7 @@ public class RemoteTab {
             return new Dimension(100, size.height);
         }
     };
+    private final Listener listener;
 
 
     private StreamStatusControl streamStatusControl = null;
@@ -69,7 +71,8 @@ public class RemoteTab {
 
     private final Executor listDownloadExecutor = Executors.newSingleThreadExecutor(new NamedThreadFactory("online list downloader", true));
 
-    public RemoteTab() {
+    public RemoteTab(Listener listener) {
+        this.listener = listener;
         JButton refresh = new JButton("Refresh Remote Controllers List");
         refresh.addActionListener(e -> requestControllersList());
 
@@ -182,7 +185,7 @@ public class RemoteTab {
 
                 if (publicSession.getImplementation().equals(NetworkConnector.Implementation.SBC.name())) {
 
-                    JButton updateSoftware = new JButton("Update Remote Connector Software");
+                    JButton updateSoftware = new JButton(UPDATE_REMOTE_CONNECTOR_SOFTWARE);
                     updateSoftware.addActionListener(new AbstractAction() {
                         @Override
                         public void actionPerformed(ActionEvent e) {
@@ -192,7 +195,7 @@ public class RemoteTab {
                     bottomPanel.add(updateSoftware);
                 }
 
-                JButton updateFirmware = new JButton("Update ECU firmware");
+                JButton updateFirmware = new JButton(UPDATE_ECU_FIRMWARE);
                 updateFirmware.addActionListener(new AbstractAction() {
                     @Override
                     public void actionPerformed(ActionEvent e) {
@@ -259,6 +262,7 @@ public class RemoteTab {
             streamStatusControl = new StreamStatusControl(authenticatorToProxyStream);
         }
 
+        listener.onConnected();
         setStatus("Connected to " + userDetails.getUserName(),
                 new JLabel("You can now connect your TunerStudio to IP address localhost and port " + getLocalPort()),
                 new URLLabel(SignatureHelper.getUrl(controllerInfo.getSignature()).first),
@@ -318,5 +322,9 @@ public class RemoteTab {
 
     public JComponent getContent() {
         return scroll;
+    }
+
+    interface Listener {
+        void onConnected();
     }
 }

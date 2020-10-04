@@ -91,7 +91,7 @@ public class RealHwTest {
     }
 
     private static void runRealHardwareTest(String port) {
-        LinkManager linkManager = new LinkManager();
+        LinkManager linkManager = new LinkManager().setCompositeLogicEnabled(false);
         IoUtil.realHardwareConnect(linkManager, port);
         // first run tests which require real hardware
         new HardwareTests(linkManager.getCommandQueue()).runRealHardwareTests();

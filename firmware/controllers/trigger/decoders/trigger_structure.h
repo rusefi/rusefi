@@ -87,6 +87,10 @@ public:
 	 */
 	bool isSynchronizationNeeded;
 	/**
+	 * number of consecutive trigger gaps needed to synchronize
+	 */
+	int gapTrackingLength = 1;
+	/**
 	 * special case for triggers which do not provide exact TDC location
 	 * For example pick-up in distributor with mechanical ignition firing order control.
 	 */

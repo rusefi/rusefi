@@ -105,7 +105,7 @@ public class FullServerTest {
                 }
 
                 @Override
-                public void onConnectorSoftwareUpdateRequest() {
+                public void onConnectorSoftwareUpdateToLatestRequest() {
                     softwareUpdateRequest.countDown();
                 }
             };

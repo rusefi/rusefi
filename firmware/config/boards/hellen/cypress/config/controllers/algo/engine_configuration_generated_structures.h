@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on hellen_cypress_gen_config.bat integration/rusefi_config.txt Sun Sep 27 15:03:04 UTC 2020
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on hellen_cypress_gen_config.bat integration/rusefi_config.txt Sun Oct 04 02:01:51 UTC 2020
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -1397,7 +1397,7 @@ struct engine_configuration_s {
 	bool isSdCardEnabled : 1;
 	/**
 	offset 744 bit 4 */
-	bool isFastAdcEnabled : 1;
+	bool unused744b4 : 1;
 	/**
 	offset 744 bit 5 */
 	bool isEngineControlEnabled : 1;
@@ -1781,11 +1781,8 @@ struct engine_configuration_s {
 	offset 976 bit 10 */
 	bool stftIgnoreErrorMagnitude : 1;
 	/**
-	 * Used on some German vehicles around late 90s: cable-operated throttle and DC motor idle air valve.
-	 * Set the primary TPS to the cable-operated throttle's sensor
-	 * Set the secondary TPS to the mini ETB's position sensor(s).
 	offset 976 bit 11 */
-	bool dcMotorIdleValve : 1;
+	bool unused976b11 : 1;
 	/**
 	offset 976 bit 12 */
 	bool enableSoftwareKnock : 1;
@@ -2144,7 +2141,7 @@ struct engine_configuration_s {
 	bool isCylinderCleanupEnabled : 1;
 	/**
 	offset 1476 bit 3 */
-	bool secondTriggerChannelEnabled : 1;
+	bool unused1476b3 : 1;
 	/**
 	offset 1476 bit 4 */
 	bool unusedBit4_1476 : 1;
@@ -2161,7 +2158,7 @@ struct engine_configuration_s {
 	bool useSeparateAdvanceForIdle : 1;
 	/**
 	offset 1476 bit 8 */
-	bool isTunerStudioEnabled : 1;
+	bool unused1476b8 : 1;
 	/**
 	offset 1476 bit 9 */
 	bool isWaveAnalyzerEnabled : 1;
@@ -2776,7 +2773,8 @@ struct engine_configuration_s {
 	 */
 	uint8_t unused_former_warmup_target_afr[4];
 	/**
-	 * kPa value at which we need to cut fuel and spark, 0 if not enabled
+	 * MAP value above which fuel is cut in case of overboost.
+	 * 0 to disable overboost cut.
 	 * offset 2132
 	 */
 	float boostCutPressure;
@@ -2866,7 +2864,7 @@ struct engine_configuration_s {
 	/**
 	 * offset 2260
 	 */
-	mass_storage_e storageMode;
+	int unused2260;
 	/**
 	 * Narrow Band WBO Approximation
 	 * offset 2264
@@ -3421,14 +3419,18 @@ struct engine_configuration_s {
 	 */
 	pin_input_mode_e acSwitchMode;
 	/**
-	 * need 4 byte alignment
 	 * offset 4517
 	 */
-	uint8_t alignmentFill_at_4517[3];
+	pin_output_mode_e tcu_solenoid_mode[TCU_SOLENOID_COUNT];
 	/**
-	 * offset 4520
+	 * need 4 byte alignment
+	 * offset 4523
 	 */
-	int mainUnusedEnd[370];
+	uint8_t alignmentFill_at_4523;
+	/**
+	 * offset 4524
+	 */
+	int mainUnusedEnd[369];
 	/** total size 6000*/
 };
 
@@ -3726,4 +3728,4 @@ struct persistent_config_s {
 typedef struct persistent_config_s persistent_config_s;
 
 // end
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on hellen_cypress_gen_config.bat integration/rusefi_config.txt Sun Sep 27 15:03:04 UTC 2020
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on hellen_cypress_gen_config.bat integration/rusefi_config.txt Sun Oct 04 02:01:51 UTC 2020

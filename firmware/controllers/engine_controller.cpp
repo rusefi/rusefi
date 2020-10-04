@@ -232,6 +232,9 @@ static void doPeriodicSlowCallback(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 		engine->triggerCentral.vvtSyncTimeNt = 0;
 	}
 
+	// for performance reasons this assertion related to mainTriggerCallback should better be here
+	efiAssertVoid(CUSTOM_IGN_MATH_STATE, !CONFIG(useOnlyRisingEdgeForTrigger) || CONFIG(ignMathCalculateAtIndex) % 2 == 0, "invalid ignMathCalculateAtIndex");
+
 
 	/**
 	 * Update engine RPM state if needed (check timeouts).
@@ -302,10 +305,6 @@ static void printAnalogChannelInfoExt(const char *name, adc_channel_e hwChannel,
 	if (hwChannel == EFI_ADC_NONE) {
 		scheduleMsg(&logger, "ADC is not assigned for %s", name);
 		return;
-	}
-
-	if (fastAdc.isHwUsed(hwChannel)) {
-		scheduleMsg(&logger, "fast enabled=%s", boolToString(CONFIG(isFastAdcEnabled)));
 	}
 
 	float voltage = adcVoltage * dividerCoeff;
@@ -556,9 +555,7 @@ void commonInitEngineController(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_S
 
 
 #if EFI_TUNER_STUDIO
-	if (engineConfiguration->isTunerStudioEnabled) {
-		startTunerStudioConnectivity();
-	}
+	startTunerStudioConnectivity();
 #endif /* EFI_TUNER_STUDIO */
 
 #if EFI_PROD_CODE || EFI_SIMULATOR

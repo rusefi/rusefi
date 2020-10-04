@@ -16,7 +16,7 @@ ButtonDebounce acDebounce;
 
 void initSensors(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	initMapDecoder(sharedLogger PASS_ENGINE_PARAMETER_SUFFIX);
-	acDebounce.init(15, &CONFIG(acSwitch), &CONFIG(acSwitchMode));
+	acDebounce.init(15, CONFIG(acSwitch), CONFIG(acSwitchMode));
 }
 
 bool getAcToggle(DECLARE_ENGINE_PARAMETER_SIGNATURE) {

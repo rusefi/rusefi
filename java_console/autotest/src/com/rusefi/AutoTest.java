@@ -71,16 +71,18 @@ public class AutoTest extends BaseTest {
 
     private void testVW_60_2() {
         setEngineType(ET_VW_ABA);
+        // trying to disable engine sniffer to help https://github.com/rusefi/rusefi/issues/1849
+        sendCommand("set " + CMD_ENGINESNIFFERRPMTHRESHOLD + " 100");
         changeRpm(900);
         // first let's get to expected RPM
-        assertRpmDoesNotJump(20000, 15, 30, FAIL, commandQueue);
+        assertRpmDoesNotJump(10000, 15, 30, FAIL, commandQueue);
     }
 
     private void testV12() {
         setEngineType(ET_BMW_M73_F);
         changeRpm(700);
         // first let's get to expected RPM
-        assertRpmDoesNotJump(15000, 15, 30, FAIL, commandQueue);
+        assertRpmDoesNotJump(10000, 15, 30, FAIL, commandQueue);
     }
 
     public static void assertRpmDoesNotJump(int rpm, int settleTime, int testDuration, Function<String, Object> callback, CommandQueue commandQueue) {

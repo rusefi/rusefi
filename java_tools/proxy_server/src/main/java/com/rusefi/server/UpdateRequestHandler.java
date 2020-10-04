@@ -51,8 +51,10 @@ public class UpdateRequestHandler implements Take {
                 try {
                     if (type.equals(UpdateType.FIRMWARE.name())) {
                         state.invokeOnlineCommand(NetworkConnector.UPDATE_FIRMWARE);
+                    } else if (type.equals(UpdateType.CONTROLLER_RELEASE.name())) {
+                        state.invokeOnlineCommand(NetworkConnector.UPDATE_FIRMWARE);
                     } else {
-                        state.invokeOnlineCommand(NetworkConnector.UPDATE_CONNECTOR_SOFTWARE);
+                        state.invokeOnlineCommand(NetworkConnector.UPDATE_CONNECTOR_SOFTWARE_LATEST);
                     }
                 } catch (IOException e) {
                     throw new IllegalStateException(e);
