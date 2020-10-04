@@ -172,8 +172,6 @@ bool EtbController::init(etb_function_e function, DcMotor *motor, pid_s *pidPara
 	m_pid.initPidClass(pidParameters);
 	m_pedalMap = pedalMap;
 
-	reset();
-
 	return true;
 }
 
@@ -758,10 +756,6 @@ void setDefaultEtbParameters(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 		}
 	}
 
-	// Default is to run each throttle off its respective hbridge
-	engineConfiguration->etbFunctions[0] = ETB_Throttle1;
-	engineConfiguration->etbFunctions[1] = ETB_Throttle2;
-
 	engineConfiguration->etbFreq = DEFAULT_ETB_PWM_FREQUENCY;
 
 	// voltage, not ADC like with TPS
@@ -828,40 +822,27 @@ void doInitElectronicThrottle(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	addConsoleActionI("etb_freq", setEtbFrequency);
 #endif /* EFI_PROD_CODE */
 
+	// If you don't have a pedal we have no business here.
+	if (!Sensor::hasSensor(SensorType::AcceleratorPedalPrimary)) {
+		return;
+	}
+
 	pedal2tpsMap.init(config->pedalToTpsTable, config->pedalToTpsPedalBins, config->pedalToTpsRpmBins);
 
-	// TODO: remove etbActualCount
-	engine->etbActualCount = ETB_COUNT;
+	engine->etbActualCount = Sensor::hasSensor(SensorType::Tps2) ? 2 : 1;
 
-	bool mustHaveEtbConfigured = Sensor::hasSensor(SensorType::AcceleratorPedalPrimary);
-	bool anyEtbConfigured = false;
-
-	for (int i = 0 ; i < ETB_COUNT; i++) {
+	for (int i = 0 ; i < engine->etbActualCount; i++) {
 		auto motor = initDcMotor(i, CONFIG(etb_use_two_wires) PASS_ENGINE_PARAMETER_SUFFIX);
 
 		// If this motor is actually set up, init the etb
 		if (motor)
 		{
-			auto controller = engine->etbControllers[i];
-			if (!controller) {
-				continue;
-			}
+			// TODO: configure per-motor in config so wastegate/VW idle works
+			auto func = i == 0 ? ETB_Throttle1 : ETB_Throttle2;
 
-			auto func = CONFIG(etbFunctions[i]);
-
-			anyEtbConfigured |= controller->init(func, motor, &engineConfiguration->etb, &pedal2tpsMap);
+			engine->etbControllers[i]->init(func, motor, &engineConfiguration->etb, &pedal2tpsMap);
 			INJECT_ENGINE_REFERENCE(engine->etbControllers[i]);
 		}
-	}
-
-	if (!anyEtbConfigured) {
-		// It's not valid to have a PPS without any ETBs - check that at least one ETB was enabled along with the pedal
-		if (mustHaveEtbConfigured) {
-			firmwareError(OBD_PCM_Processor_Fault, "A pedal position sensor was configured, but no electronic throttles are configured.");
-		}
-
-		// Don't start the thread if no throttles are in use.
-		return;
 	}
 
 #if 0 && ! EFI_UNIT_TEST
@@ -876,6 +857,8 @@ void doInitElectronicThrottle(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 		startupPositionError = true;
 	}
 #endif /* EFI_UNIT_TEST */
+
+	etbPidReset(PASS_ENGINE_PARAMETER_SIGNATURE);
 
 #if !EFI_UNIT_TEST
 	etbThread.Start();

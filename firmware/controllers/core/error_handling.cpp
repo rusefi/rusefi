@@ -236,10 +236,6 @@ void onUnlockHook(void) {
 #endif /* ENABLE_PERF_TRACE */
 }
 
-#if EFI_SIMULATOR || EFI_UNIT_TEST
-#include <stdexcept>
-#endif
-
 void firmwareError(obd_code_e code, const char *fmt, ...) {
 #if EFI_PROD_CODE
 	if (hasFirmwareErrorFlag)
@@ -289,7 +285,7 @@ void firmwareError(obd_code_e code, const char *fmt, ...) {
 	printf("\r\n");
 
 #if EFI_SIMULATOR || EFI_UNIT_TEST
-	throw std::logic_error(fmt);
+	throw "fatal error";
 #endif /* EFI_SIMULATOR */
 #endif
 }
