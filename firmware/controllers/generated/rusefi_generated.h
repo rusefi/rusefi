@@ -409,7 +409,6 @@
 #define ETB_BIAS_CURVE_LENGTH 8
 #define ETB_COUNT 2
 #define etb_dFactor_offset 1744
-#define etb_function_e_auto_enum "ETB_None", "ETB_Throttle1", "ETB_Throttle2", "ETB_IdleValve", "ETB_Wastegate"
 #define etb_iFactor_offset 1740
 #define etb_io_size 4
 #define etb_iTermMax_offset 3958
@@ -425,8 +424,6 @@
 #define etbBiasValues_offset 3920
 #define etbDeadband_offset 3960
 #define etbFreq_offset 2514
-#define etbFunctions1_offset 1198
-#define etbFunctions2_offset 1199
 #define etbIdleThrottleRange_offset 4012
 #define etbIo1_controlPin1_offset 982
 #define etbIo1_directionPin1_offset 980
@@ -1170,10 +1167,11 @@
 #define showHumanReadableWarning_offset 976
 #define showSdCardWarning_offset 76
 #define SIGNATURE_BOARD all
-#define SIGNATURE_DATE 2020.10.03
-#define SIGNATURE_HASH 495359842
+#define SIGNATURE_DATE 2020.10.04
+#define SIGNATURE_HASH 3125318339
 #define silentTriggerError_offset 1464
 #define slowAdcAlpha_offset 2088
+#define solenoidPadding_offset 1198
 #define sparkDwellRpmBins_offset 332
 #define sparkDwellValues_offset 364
 #define specs_offset 396
@@ -1490,7 +1488,7 @@
 #define ts_show_spi true
 #define ts_show_trigger_comparator false
 #define ts_show_tunerstudio_port true
-#define TS_SIGNATURE "rusEFI 2020.10.03.all.495359842"
+#define TS_SIGNATURE "rusEFI 2020.10.04.all.3125318339"
 #define TS_SINGLE_WRITE_COMMAND 'W'
 #define TS_SINGLE_WRITE_COMMAND_char W
 #define TS_TEST_COMMAND 't' // 0x74
