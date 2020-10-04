@@ -195,7 +195,6 @@ void InjectionEvent::onTriggerTooth(size_t trgEventIndex, int rpm, efitick_t now
 	// set engine_type seems to be resetting those references (todo: where exactly? why exactly?) so an event during
 	// engine_type would not end well
 	efiAssertVoid(CUSTOM_ERR_ASSERT, engineConfiguration != nullptr, "assert#1");
-	efiAssertVoid(CUSTOM_ERR_ASSERT, getCurrentRemainingStack() > 128, "assert#2");
 
 	uint32_t eventIndex = injectionStart.triggerEventIndex;
 // right after trigger change we are still using old & invalid fuel schedule. good news is we do not change trigger on the fly in real life
@@ -392,8 +391,6 @@ static void mainTriggerCallback(trigger_event_e ckpSignalType, uint32_t trgEvent
 	}
 #endif // HW_CHECK_MODE
 
-	efiAssertVoid(CUSTOM_STACK_6629, getCurrentRemainingStack() > EXPECTED_REMAINING_STACK, "lowstck#2a");
-
 #if EFI_CDM_INTEGRATION
 	if (trgEventIndex == 0 && CONFIG(cdmInputPin) != GPIO_UNASSIGNED) {
 		int cdmKnockValue = getCurrentCdmValue(engine->triggerCentral.triggerState.getTotalRevolutionCounter());
@@ -425,6 +422,7 @@ static void mainTriggerCallback(trigger_event_e ckpSignalType, uint32_t trgEvent
 	bool limitedFuel = ENGINE(isRpmHardLimit);
 
 	if (CONFIG(boostCutPressure) != 0) {
+		// todo: move part of this to periodicFast? probably not cool to decode MAP sensor inside trigger callback?
 		if (getMap(PASS_ENGINE_PARAMETER_SIGNATURE) > CONFIG(boostCutPressure)) {
 			limitedSpark = true;
 			limitedFuel = true;
@@ -451,8 +449,6 @@ static void mainTriggerCallback(trigger_event_e ckpSignalType, uint32_t trgEvent
 			engine->periodicFastCallback(PASS_ENGINE_PARAMETER_SIGNATURE);
 		}
 	}
-
-	efiAssertVoid(CUSTOM_IGN_MATH_STATE, !CONFIG(useOnlyRisingEdgeForTrigger) || CONFIG(ignMathCalculateAtIndex) % 2 == 0, "invalid ignMathCalculateAtIndex");
 
 	if (trgEventIndex == (uint32_t)CONFIG(ignMathCalculateAtIndex)) {
 		if (CONFIG(externalKnockSenseAdc) != EFI_ADC_NONE) {
