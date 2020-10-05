@@ -30,7 +30,7 @@ public:
 	explicit TriggerConfiguration(const char* printPrefix) : PrintPrefix(printPrefix) {}
 	void update();
 
-	const char* PrintPrefix;
+	const char* const PrintPrefix;
 	bool UseOnlyRisingEdgeForTrigger;
 	bool VerboseTriggerSynchDetails;
 	trigger_type_e TriggerType;
