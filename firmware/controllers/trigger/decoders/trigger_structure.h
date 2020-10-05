@@ -256,9 +256,11 @@ public:
 	 */
 	int triggerShapeSynchPointIndex;
 
-	void initializeSyncPoint(TriggerState *state,
-			const TriggerConfiguration * triggerConfiguration,
-					trigger_config_s const*triggerConfig);
+	void initializeSyncPoint(
+			TriggerState& state,
+			const TriggerConfiguration& triggerConfiguration,
+			const trigger_config_s& triggerConfig
+			);
 
 private:
 	trigger_shape_helper h;

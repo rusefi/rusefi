@@ -109,8 +109,8 @@ void Engine::initializeTriggerWaveform(Logging *logger DECLARE_ENGINE_PARAMETER_
 	 	 * 'initState' instance of TriggerState is used only to initialize 'this' TriggerWaveform instance
 	 	 * #192 BUG real hardware trigger events could be coming even while we are initializing trigger
 	 	 */
-		calculateTriggerSynchPoint(&ENGINE(triggerCentral.triggerShape),
-				&initState PASS_ENGINE_PARAMETER_SUFFIX);
+		calculateTriggerSynchPoint(ENGINE(triggerCentral.triggerShape),
+				initState PASS_ENGINE_PARAMETER_SUFFIX);
 
 		engine->engineCycleEventCount = TRIGGER_WAVEFORM(getLength());
 	}
@@ -124,9 +124,9 @@ void Engine::initializeTriggerWaveform(Logging *logger DECLARE_ENGINE_PARAMETER_
 				engineConfiguration->ambiguousOperationMode,
 				engine->engineConfigurationPtr->vvtCamSensorUseRise, &config);
 
-		ENGINE(triggerCentral).vvtShape.initializeSyncPoint(&initState,
-				&engine->vvtTriggerConfiguration,
-				&config);
+		ENGINE(triggerCentral).vvtShape.initializeSyncPoint(initState,
+				engine->vvtTriggerConfiguration,
+				config);
 	}
 
 	if (!alreadyLocked) {
@@ -370,7 +370,7 @@ void Engine::OnTriggerSyncronization(bool wasSynchronized) {
 		/**
 	 	 * We can check if things are fine by comparing the number of events in a cycle with the expected number of event.
 	 	 */
-		bool isDecodingError = triggerCentral.triggerState.validateEventCounters(&triggerCentral.triggerShape);
+		bool isDecodingError = triggerCentral.triggerState.validateEventCounters(triggerCentral.triggerShape);
 
 		enginePins.triggerDecoderErrorPin.setValue(isDecodingError);
 
