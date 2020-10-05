@@ -12,7 +12,7 @@
 #include "persistent_configuration.h"
 #include "engine_configuration_generated_structures.h"
 #include "globalaccess.h"
-#include "simple_transmission.h"
+#include "simple_tcu.h"
 
 class TransmissionControllerBase {
 public:
