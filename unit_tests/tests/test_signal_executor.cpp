@@ -6,7 +6,6 @@
  */
 
 #include "global.h"
-#include <time.h>
 
 #include "test_signal_executor.h"
 #include "io_pins.h"
@@ -91,7 +90,7 @@ TEST(misc, testSignalExecutor) {
 	print("*************************************** testSignalExecutor\r\n");
 
 	EventQueue eq;
-	ASSERT_EQ(EMPTY_QUEUE, eq.getNextEventTime(0));
+	ASSERT_EQ(eq.getNextEventTime(0), unexpected);
 	scheduling_s s1;
 	scheduling_s s2;
 	scheduling_s s3;
@@ -131,7 +130,7 @@ TEST(misc, testSignalExecutor) {
 
 	callbackCounter = 0;
 	eq.insertTask(&s1, 10, callback);
-	ASSERT_EQ(10, eq.getNextEventTime(0));
+	ASSERT_EQ(10, eq.getNextEventTime(0).value_or(-1));
 
 	eq.executeAll(1);
 	ASSERT_EQ( 0,  callbackCounter) << "callbacks not expected";
@@ -139,14 +138,14 @@ TEST(misc, testSignalExecutor) {
 	eq.executeAll(11);
 	ASSERT_EQ(1, callbackCounter);
 
-	ASSERT_EQ(EMPTY_QUEUE, eq.getNextEventTime(0));
+	ASSERT_EQ(eq.getNextEventTime(0), unexpected);
 
 	eq.insertTask(&s1, 10, callback);
 	eq.insertTask(&s2, 13, callback);
-	ASSERT_EQ(10, eq.getNextEventTime(0));
+	ASSERT_EQ(10, eq.getNextEventTime(0).value_or(-1));
 
 	eq.executeAll(1);
-	ASSERT_EQ(10, eq.getNextEventTime(0));
+	ASSERT_EQ(10, eq.getNextEventTime(0).value_or(-1));
 
 	eq.executeAll(100);
 	ASSERT_EQ(0, eq.size());
