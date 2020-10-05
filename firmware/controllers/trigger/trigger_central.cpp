@@ -157,10 +157,10 @@ void hwHandleVvtCamSignal(trigger_value_e front, efitick_t nowNt DECLARE_ENGINE_
 	}
 
 	ENGINE(triggerCentral).vvtState.decodeTriggerEvent(
-			&ENGINE(triggerCentral).vvtShape,
+			ENGINE(triggerCentral).vvtShape,
 			nullptr,
 			nullptr,
-			&engine->vvtTriggerConfiguration,
+			engine->vvtTriggerConfiguration,
 			front == TV_RISE ? SHAFT_PRIMARY_RISING : SHAFT_PRIMARY_FALLING, nowNt);
 
 
@@ -292,8 +292,7 @@ void hwHandleShaftSignal(trigger_event_e signal, efitick_t timestamp) {
 	// for effective noise filtering, we need both signal edges, 
 	// so we pass them to handleShaftSignal() and defer this test
 	if (!CONFIG(useNoiselessTriggerDecoder)) {
-		const TriggerConfiguration * triggerConfiguration = &ENGINE(primaryTriggerConfiguration);
-		if (!isUsefulSignal(signal, triggerConfiguration)) {
+		if (!isUsefulSignal(signal, ENGINE(primaryTriggerConfiguration))) {
 			/**
 			 * no need to process VR falls further
 			 */
@@ -434,9 +433,7 @@ void TriggerCentral::handleShaftSignal(trigger_event_e signal, efitick_t timesta
 		if (!noiseFilter.noiseFilter(timestamp, &triggerState, signal PASS_ENGINE_PARAMETER_SUFFIX)) {
 			return;
 		}
-		const TriggerConfiguration* triggerConfiguration = &ENGINE(primaryTriggerConfiguration);
-
-		if (!isUsefulSignal(signal, triggerConfiguration)) {
+		if (!isUsefulSignal(signal, ENGINE(primaryTriggerConfiguration))) {
 			return;
 		}
 	}
@@ -451,10 +448,10 @@ void TriggerCentral::handleShaftSignal(trigger_event_e signal, efitick_t timesta
 	/**
 	 * This invocation changes the state of triggerState
 	 */
-	triggerState.decodeTriggerEvent(&triggerShape,
+	triggerState.decodeTriggerEvent(triggerShape,
 			nullptr,
 			engine,
-			&engine->primaryTriggerConfiguration,
+			engine->primaryTriggerConfiguration,
 			signal, timestamp);
 
 	/**
@@ -483,7 +480,7 @@ void TriggerCentral::handleShaftSignal(trigger_event_e signal, efitick_t timesta
 		return;
 	}
 
-	if (triggerState.isValidIndex(&ENGINE(triggerCentral.triggerShape))) {
+	if (triggerState.isValidIndex(ENGINE(triggerCentral.triggerShape))) {
 		ScopePerf perf(PE::ShaftPositionListeners);
 
 #if TRIGGER_EXTREME_LOGGING
