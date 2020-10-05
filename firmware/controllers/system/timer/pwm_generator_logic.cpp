@@ -175,8 +175,6 @@ void PwmConfig::handleCycleStart() {
  * @return Next time for signal toggle
  */
 efitick_t PwmConfig::togglePwmState() {
-	ScopePerf perf(PE::PwmConfigTogglePwmState);
-
 	if (isStopRequested) {
 		return 0;
 	}
