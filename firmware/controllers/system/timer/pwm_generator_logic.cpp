@@ -21,7 +21,7 @@
  * We need to limit the number of iterations in order to avoid precision loss while calculating
  * next toggle time
  */
-#define ITERATION_LIMIT 1000
+#define ITERATION_LIMIT 100
 
 // 1% duty cycle
 #define ZERO_PWM_THRESHOLD 0.01
@@ -123,7 +123,7 @@ static efitick_t getNextSwitchTimeNt(PwmConfig *state) {
 	 * Once 'iteration' gets relatively high, we might lose calculation precision here.
 	 * This is addressed by ITERATION_LIMIT
 	 */
-	efitick_t timeToSwitchNt = (efitick_t) ((iteration + switchTime) * periodNt);
+	uint32_t timeToSwitchNt = (uint32_t)((iteration + switchTime) * periodNt);
 
 #if DEBUG_PWM
 	scheduleMsg(&logger, "start=%d timeToSwitch=%d", state->safe.start, timeToSwitch);
@@ -175,8 +175,6 @@ void PwmConfig::handleCycleStart() {
  * @return Next time for signal toggle
  */
 efitick_t PwmConfig::togglePwmState() {
-	ScopePerf perf(PE::PwmConfigTogglePwmState);
-
 	if (isStopRequested) {
 		return 0;
 	}
@@ -224,20 +222,6 @@ efitick_t PwmConfig::togglePwmState() {
 #if DEBUG_PWM
 	scheduleMsg(&logger, "%s: nextSwitchTime %d", state->name, nextSwitchTime);
 #endif /* DEBUG_PWM */
-	// signed value is needed here
-//	int64_t timeToSwitch = nextSwitchTimeUs - getTimeNowUs();
-//	if (timeToSwitch < 1) {
-//		/**
-//		 * We are here if we are late for a state transition.
-//		 * At 12000RPM=200Hz with a 60 toothed wheel we need to change state every
-//		 * 1000000 / 200 / 120 = ~41 uS. We are kind of OK.
-//		 *
-//		 * We are also here after a flash write. Flash write freezes the whole chip for a couple of seconds,
-//		 * so PWM generation and trigger simulation generation would have to recover from this time lag.
-//		 */
-//		//todo: introduce error and test this error handling		warning(OBD_PCM_Processor_Fault, "PWM: negative switch time");
-//		timeToSwitch = 10;
-//	}
 
 	safe.phaseIndex++;
 	if (safe.phaseIndex == phaseCount || mode != PM_NORMAL) {

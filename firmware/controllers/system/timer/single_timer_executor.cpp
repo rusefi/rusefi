@@ -36,7 +36,6 @@
 EXTERN_ENGINE;
 
 uint32_t hwSetTimerDuration;
-uint32_t lastExecutionCount;
 
 void globalTimerCallback() {
 	efiAssertVoid(CUSTOM_ERR_6624, getCurrentRemainingStack() > EXPECTED_REMAINING_STACK, "lowstck#2y");
@@ -126,16 +125,13 @@ void SingleTimerExecutor::executeAllPendingActions() {
 	 * next listeners.
 	 * TODO: add a counter & figure out a limit of iterations?
 	 */
-	int totalExecuted = 0;
-	while (shouldExecute > 0) {
-		/**
-		 * It's worth noting that that the actions might be adding new actions into the queue
-		 */
+
+	bool didExecute;
+	do {
 		efitick_t nowNt = getTimeNowNt();
-		shouldExecute = queue.executeAll(nowNt);
-		totalExecuted += shouldExecute;
-	}
-	lastExecutionCount = totalExecuted;
+		didExecute = queue.executeOne(nowNt);
+	} while (didExecute);
+
 	if (!isLocked()) {
 		firmwareError(CUSTOM_ERR_LOCK_ISSUE, "Someone has stolen my lock");
 		return;
@@ -162,6 +158,7 @@ void SingleTimerExecutor::scheduleTimerCallback() {
 	efiAssertVoid(CUSTOM_ERR_6625, nextEventTimeNt.Value > nowNt, "setTimer constraint");
 
 	int32_t hwAlarmTime = NT2US((int32_t)nextEventTimeNt.Value - (int32_t)nowNt);
+
 	setHardwareUsTimer(hwAlarmTime == 0 ? 1 : hwAlarmTime);
 }
 

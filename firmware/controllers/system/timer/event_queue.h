@@ -52,6 +52,7 @@ public:
 	bool insertTask(scheduling_s *scheduling, efitime_t timeX, action_s action);
 
 	int executeAll(efitime_t now);
+	bool executeOne(efitime_t now);
 
 	expected<efitime_t> getNextEventTime(efitime_t nowUs) const;
 	void clear(void);

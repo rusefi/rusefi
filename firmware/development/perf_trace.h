@@ -51,7 +51,7 @@ enum class PE : uint8_t {
 	EventQueueExecuteCallback,
 	PwmGeneratorCallback,
 	TunerStudioHandleCrcCommand,
-	PwmConfigTogglePwmState,
+	Unused,
 	PwmConfigStateChangeCallback,
 	Temporary1,
 	Temporary2,
