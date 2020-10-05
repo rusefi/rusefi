@@ -96,6 +96,10 @@ void Engine::initializeTriggerWaveform(Logging *logger DECLARE_ENGINE_PARAMETER_
 	static TriggerState initState;
 	INJECT_ENGINE_REFERENCE(&initState);
 
+	// Re-read config in case it's changed
+	primaryTriggerConfiguration.update();
+	vvtTriggerConfiguration.update();
+
 #if EFI_ENGINE_CONTROL && EFI_SHAFT_POSITION_INPUT
 	// we have a confusing threading model so some synchronization would not hurt
 	bool alreadyLocked = lockAnyContext();
@@ -164,7 +168,11 @@ static void assertCloseTo(const char * msg, float actual, float expected) {
 
 void Engine::periodicSlowCallback(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	ScopePerf perf(PE::EnginePeriodicSlowCallback);
-	
+
+	// Re-read config in case it's changed
+	primaryTriggerConfiguration.update();
+	vvtTriggerConfiguration.update();
+
 	watchdog();
 	updateSlowSensors(PASS_ENGINE_PARAMETER_SIGNATURE);
 	checkShutdown(PASS_ENGINE_PARAMETER_SIGNATURE);
@@ -401,6 +409,9 @@ void Engine::injectEngineReferences() {
 
 	INJECT_ENGINE_REFERENCE(&primaryTriggerConfiguration);
 	INJECT_ENGINE_REFERENCE(&vvtTriggerConfiguration);
+
+	primaryTriggerConfiguration.update();
+	vvtTriggerConfiguration.update();
 	triggerCentral.init(PASS_ENGINE_PARAMETER_SIGNATURE);
 }
 

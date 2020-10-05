@@ -22,7 +22,7 @@ static const bool isRisingEdge[HW_EVENT_TYPES] = { false, true, false, true, fal
  * @return true if front should be decoded further, false if we are not interested
  */
 bool isUsefulSignal(trigger_event_e signal, const TriggerConfiguration& triggerConfiguration) {
-	return !triggerConfiguration.isUseOnlyRisingEdgeForTrigger() || isRisingEdge[(int) signal];
+	return !triggerConfiguration.UseOnlyRisingEdgeForTrigger || isRisingEdge[(int) signal];
 }
 
 #if EFI_UNIT_TEST
@@ -122,7 +122,7 @@ void TriggerStimulatorHelper::assertSyncPositionAndSetDutyCycle(
 	}
 	int revolutionCounter = state.getTotalRevolutionCounter();
 	if (revolutionCounter != GAP_TRACKING_LENGTH + 1) {
-		warning(CUSTOM_OBD_TRIGGER_WAVEFORM, "sync failed/wrong gap parameters trigger=%s rc=%d", getTrigger_type_e(triggerConfiguration.getType()), revolutionCounter);
+		warning(CUSTOM_OBD_TRIGGER_WAVEFORM, "sync failed/wrong gap parameters trigger=%s rc=%d", getTrigger_type_e(triggerConfiguration.TriggerType), revolutionCounter);
 		shape.setShapeDefinitionError(true);
 		return;
 	}
