@@ -65,7 +65,9 @@ static volatile bool hwStarted = false;
  */
 void setHardwareUsTimer(int32_t deltaTimeUs) {
 	efiAssertVoid(OBD_PCM_Processor_Fault, hwStarted, "HW.started");
+
 	setHwTimerCounter++;
+
 	/**
 	 * #259 BUG error: not positive deltaTimeUs
 	 * Once in a while we night get an interrupt where we do not expect it
@@ -74,8 +76,12 @@ void setHardwareUsTimer(int32_t deltaTimeUs) {
 		timerFreezeCounter++;
 		warning(CUSTOM_OBD_LOCAL_FREEZE, "local freeze cnt=%d", timerFreezeCounter);
 	}
-	if (deltaTimeUs < 2)
-		deltaTimeUs = 2; // for some reason '1' does not really work
+
+	// We need the timer to fire after we return - 1 doesn't work as it may actually schedule in the past
+	if (deltaTimeUs < 2) {
+		deltaTimeUs = 2;
+	}
+
 	efiAssertVoid(CUSTOM_DELTA_NOT_POSITIVE, deltaTimeUs > 0, "not positive deltaTimeUs");
 	if (deltaTimeUs >= TOO_FAR_INTO_FUTURE_US) {
 		// we are trying to set callback for too far into the future. This does not look right at all
@@ -83,16 +89,21 @@ void setHardwareUsTimer(int32_t deltaTimeUs) {
 		return;
 	}
 
+	// If already set, reset the timer
 	if (GPTDEVICE.state == GPT_ONESHOT) {
 		gptStopTimerI(&GPTDEVICE);
 	}
+
 	if (GPTDEVICE.state != GPT_READY) {
 		firmwareError(CUSTOM_HW_TIMER, "HW timer state %d/%d", GPTDEVICE.state, setHwTimerCounter);
 		return;
 	}
+
 	if (hasFirmwareError()) {
 		return;
 	}
+
+	// Start the timer
 	gptStartOneShotI(&GPTDEVICE, deltaTimeUs);
 
 	lastSetTimerTimeNt = getTimeNowNt();
@@ -103,8 +114,7 @@ void setHardwareUsTimer(int32_t deltaTimeUs) {
 
 void globalTimerCallback();
 
-static void hwTimerCallback(GPTDriver *gptp) {
-	(void)gptp;
+static void hwTimerCallback(GPTDriver*) {
 	timerCallbackCounter++;
 	isTimerPending = false;
 
@@ -148,8 +158,7 @@ static constexpr GPTConfig gpt5cfg = { 1000000, /* 1 MHz timer clock.*/
 
 static scheduling_s watchDogBuddy;
 
-static void watchDogBuddyCallback(void *arg) {
-	(void)arg;
+static void watchDogBuddyCallback(void*) {
 	/**
 	 * the purpose of this periodic activity is to make watchdogControllerInstance
 	 * watchdog happy by ensuring that we have scheduler activity even in case of very broken configuration
@@ -161,9 +170,7 @@ static void watchDogBuddyCallback(void *arg) {
 static volatile bool testSchedulingHappened = false;
 static efitimems_t testSchedulingStart;
 
-static void timerValidationCallback(void *arg) {
-	(void)arg;
-
+static void timerValidationCallback(void*) {
 	testSchedulingHappened = true;
 	efitimems_t actualTimeSinceScheduling = (currentTimeMillis() - testSchedulingStart);
 	
