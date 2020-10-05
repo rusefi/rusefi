@@ -2956,7 +2956,7 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 		field = "Solenoid 5 Pin Mode"	tcu_solenoid_mode5,	{ tcuEnabled }
 		field = "Solenoid 6 Pin Mode"	tcu_solenoid_mode6,	{ tcuEnabled }
 
-	dialog = buttonShiftInputPanel
+	dialog = buttonShiftInputPanel, "Switch/Button Shift"
 		field = "Upshift Pin"		tcuUpshiftButtonPin,		{ tcuEnabled }
 		field = "Upshift Pin Mode"	tcuUpshiftButtonPinMode,	{ tcuEnabled }
 		field = "Downshift Pin"		tcuDownshiftButtonPin,		{ tcuEnabled }

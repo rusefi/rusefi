@@ -4,7 +4,7 @@
 
 EXTERN_CONFIG;
 
-RegisteredOutputPin tcuSolenoids[efi::size(CONFIG(tcu_solenoid))];
+OutputPin tcuSolenoids[efi::size(CONFIG(tcu_solenoid))];
 
 SimpleTransmissionController::SimpleTransmissionController() {
     for (int i = 0; i < efi::size(CONFIG(tcu_solenoid)); i++) {
