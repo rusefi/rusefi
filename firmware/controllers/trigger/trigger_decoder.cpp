@@ -318,7 +318,7 @@ static trigger_value_e eventType[6] = { TV_FALL, TV_RISE, TV_FALL, TV_RISE, TV_F
 		/* odd event - start accumulation */ \
 		currentCycle.timeOfPreviousEventNt[triggerWheel] = nowNt; \
 	} \
-	if (triggerConfiguration.isUseOnlyRisingEdgeForTrigger()) {currentCycle.current_index++;} \
+	if (triggerConfiguration.UseOnlyRisingEdgeForTrigger) {currentCycle.current_index++;} \
 	currentCycle.current_index++; \
 	PRINT_INC_INDEX; \
 }
@@ -424,8 +424,7 @@ void TriggerState::decodeTriggerEvent(
 	previousShaftEventTimeNt = nowNt;
 
 
-	bool useOnlyRisingEdgeForTrigger = triggerConfiguration.isUseOnlyRisingEdgeForTrigger();
-
+	bool useOnlyRisingEdgeForTrigger = triggerConfiguration.UseOnlyRisingEdgeForTrigger;
 
 	efiAssertVoid(CUSTOM_TRIGGER_UNEXPECTED, signal <= SHAFT_3RD_RISING, "unexpected signal");
 
@@ -458,7 +457,7 @@ void TriggerState::decodeTriggerEvent(
 #if EFI_UNIT_TEST
 		if (printTriggerTrace) {
 			printf("%s isLessImportant %s now=%d index=%d\r\n",
-					getTrigger_type_e(triggerConfiguration.getType()),
+					getTrigger_type_e(triggerConfiguration.TriggerType),
 					getTrigger_event_e(signal),
 					(int)nowNt,
 					currentCycle.current_index);
@@ -474,7 +473,7 @@ void TriggerState::decodeTriggerEvent(
 #if !EFI_PROD_CODE
 		if (printTriggerTrace) {
 			printf("%s event %s %d\r\n",
-					getTrigger_type_e(triggerConfiguration.getType()),
+					getTrigger_type_e(triggerConfiguration.TriggerType),
 					getTrigger_event_e(signal),
 					nowNt);
 			printf("decodeTriggerEvent ratio %.2f: current=%d previous=%d\r\n", 1.0 * toothDurations[0] / toothDurations[1],
@@ -547,7 +546,7 @@ void TriggerState::decodeTriggerEvent(
 #endif /* EFI_UNIT_TEST */
 
 #if EFI_PROD_CODE || EFI_SIMULATOR
-			if (triggerConfiguration.isVerboseTriggerSynchDetails() || (someSortOfTriggerError && !silentTriggerError)) {
+			if (triggerConfiguration.VerboseTriggerSynchDetails || (someSortOfTriggerError && !silentTriggerError)) {
 				for (int i = 0;i<triggerShape.gapTrackingLength;i++) {
 					float ratioFrom = triggerShape.syncronizationRatioFrom[i];
 					if (cisnan(ratioFrom)) {
@@ -561,7 +560,7 @@ void TriggerState::decodeTriggerEvent(
 								i);
 					} else {
 						scheduleMsg(logger, "%s rpm=%d time=%d index=%d: gap=%.3f expected from %.3f to %.3f error=%s",
-								triggerConfiguration.getPrintPrefix(),
+								triggerConfiguration.PrintPrefix,
 								GET_RPM(),
 							/* cast is needed to make sure we do not put 64 bit value to stack*/ (int)getTimeNowSeconds(),
 							i,
@@ -594,7 +593,7 @@ void TriggerState::decodeTriggerEvent(
 			 * in case of noise the counter could be above the expected number of events, that's why 'more or equals' and not just 'equals'
 			 */
 
-			unsigned int endOfCycleIndex = triggerShape.getSize() - (triggerConfiguration.isUseOnlyRisingEdgeForTrigger() ? 2 : 1);
+			unsigned int endOfCycleIndex = triggerShape.getSize() - (triggerConfiguration.UseOnlyRisingEdgeForTrigger ? 2 : 1);
 
 			isSynchronizationPoint = !shaft_is_synchronized || (currentCycle.current_index >= endOfCycleIndex);
 

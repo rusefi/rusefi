@@ -27,9 +27,17 @@ class TriggerConfiguration {
 public:
 	DECLARE_ENGINE_PTR;
 
+	explicit TriggerConfiguration(const char* printPrefix) : PrintPrefix(printPrefix) {}
+	void update();
+
+	const char* PrintPrefix;
+	bool UseOnlyRisingEdgeForTrigger;
+	bool VerboseTriggerSynchDetails;
+	trigger_type_e TriggerType;
+
+protected:
 	virtual bool isUseOnlyRisingEdgeForTrigger() const = 0;
 	virtual bool isVerboseTriggerSynchDetails() const = 0;
-	virtual const char * getPrintPrefix() const = 0;
 	virtual trigger_type_e getType() const = 0;
 };
 
