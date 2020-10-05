@@ -35,11 +35,6 @@
 #include "engine.h"
 EXTERN_ENGINE;
 
-/**
- * these fields are global in order to facilitate debugging
- */
-static efitime_t nextEventTimeNt = 0;
-
 uint32_t hwSetTimerDuration;
 uint32_t lastExecutionCount;
 
@@ -158,14 +153,16 @@ void SingleTimerExecutor::scheduleTimerCallback() {
 	 * Let's grab fresh time value
 	 */
 	efitick_t nowNt = getTimeNowNt();
-	nextEventTimeNt = queue.getNextEventTime(nowNt);
-	efiAssertVoid(CUSTOM_ERR_6625, nextEventTimeNt > nowNt, "setTimer constraint");
-	if (nextEventTimeNt == EMPTY_QUEUE)
+	expected<efitick_t> nextEventTimeNt = queue.getNextEventTime(nowNt);
+
+	if (!nextEventTimeNt) {
 		return; // no pending events in the queue
-	int32_t hwAlarmTime = NT2US((int32_t)nextEventTimeNt - (int32_t)nowNt);
-	uint32_t beforeHwSetTimer = getTimeNowLowerNt();
+	}
+
+	efiAssertVoid(CUSTOM_ERR_6625, nextEventTimeNt.Value > nowNt, "setTimer constraint");
+
+	int32_t hwAlarmTime = NT2US((int32_t)nextEventTimeNt.Value - (int32_t)nowNt);
 	setHardwareUsTimer(hwAlarmTime == 0 ? 1 : hwAlarmTime);
-	hwSetTimerDuration = getTimeNowLowerNt() - beforeHwSetTimer;
 }
 
 void initSingleTimerExecutorHardware(void) {

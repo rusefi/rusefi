@@ -603,7 +603,6 @@ extern PwmConfig triggerSignal;
 #endif /* #if EFI_PROD_CODE */
 
 extern uint32_t hipLastExecutionCount;
-extern uint32_t hwSetTimerDuration;
 
 extern uint32_t maxLockedDuration;
 extern uint32_t maxEventCallbackDuration;
@@ -737,7 +736,6 @@ void triggerInfo(void) {
 #if EFI_HIP_9011
 	scheduleMsg(logger, "hipLastExecutionCount=%d", hipLastExecutionCount);
 #endif /* EFI_HIP_9011 */
-	scheduleMsg(logger, "hwSetTimerDuration=%d", hwSetTimerDuration);
 
 	scheduleMsg(logger, "totalTriggerHandlerMaxTime=%d", triggerMaxDuration);
 	scheduleMsg(logger, "maxPrecisionCallbackDuration=%d", maxPrecisionCallbackDuration);
