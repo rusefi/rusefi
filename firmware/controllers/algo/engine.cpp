@@ -96,6 +96,10 @@ void Engine::initializeTriggerWaveform(Logging *logger DECLARE_ENGINE_PARAMETER_
 	static TriggerState initState;
 	INJECT_ENGINE_REFERENCE(&initState);
 
+	// Re-read config in case it's changed
+	primaryTriggerConfiguration.update();
+	vvtTriggerConfiguration.update();
+
 #if EFI_ENGINE_CONTROL && EFI_SHAFT_POSITION_INPUT
 	// we have a confusing threading model so some synchronization would not hurt
 	bool alreadyLocked = lockAnyContext();
