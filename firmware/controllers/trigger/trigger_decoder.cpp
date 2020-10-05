@@ -609,7 +609,7 @@ void TriggerState::decodeTriggerEvent(
 #if EFI_UNIT_TEST
 		if (printTriggerTrace) {
 			printf("decodeTriggerEvent %s isSynchronizationPoint=%d index=%d %s\r\n",
-					getTrigger_type_e(triggerConfiguration.getType()),
+					getTrigger_type_e(triggerConfiguration.TriggerType),
 					isSynchronizationPoint, currentCycle.current_index,
 					getTrigger_event_e(signal));
 		}
