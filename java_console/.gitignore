@@ -11,3 +11,4 @@ DfuSe
 rusefi_*.*
 triggers
 unit_test*.xml
+*trace.json

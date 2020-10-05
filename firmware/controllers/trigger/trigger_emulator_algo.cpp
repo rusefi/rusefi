@@ -21,10 +21,11 @@ int getPreviousIndex(const int currentIndex, const int size) {
 	return (currentIndex + size - 1) % size;
 }
 
-bool needEvent(const int currentIndex, const int size, MultiChannelStateSequence *multiChannelStateSequence, int channelIndex) {
+bool needEvent(const int currentIndex, const int size, const MultiChannelStateSequence& mcss, int channelIndex) {
 	int prevIndex = getPreviousIndex(currentIndex, size);
-	pin_state_t previousValue = multiChannelStateSequence->getChannelState(channelIndex, /*phaseIndex*/prevIndex);
-	pin_state_t currentValue = multiChannelStateSequence->getChannelState(channelIndex, /*phaseIndex*/currentIndex);
+	pin_state_t previousValue = mcss.getChannelState(channelIndex, /*phaseIndex*/prevIndex);
+	pin_state_t currentValue = mcss.getChannelState(channelIndex, /*phaseIndex*/currentIndex);
+
 	return previousValue != currentValue;
 }
 
@@ -53,7 +54,7 @@ void TriggerEmulatorHelper::handleEmulatorCallback(PwmConfig *state, int stateIn
 
 	for (size_t i = 0; i < efi::size(emulatorOutputs); i++)
 	{
-		if (needEvent(stateIndex, state->phaseCount, &state->multiChannelStateSequence, i)) {
+		if (needEvent(stateIndex, state->phaseCount, state->multiChannelStateSequence, i)) {
 			pin_state_t currentValue = multiChannelStateSequence->getChannelState(/*phaseIndex*/i, stateIndex);
 			
 			constexpr trigger_event_e riseEvents[] = { SHAFT_PRIMARY_RISING, SHAFT_SECONDARY_RISING, SHAFT_3RD_RISING };

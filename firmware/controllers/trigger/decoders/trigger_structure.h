@@ -87,6 +87,10 @@ public:
 	 */
 	bool isSynchronizationNeeded;
 	/**
+	 * number of consecutive trigger gaps needed to synchronize
+	 */
+	int gapTrackingLength = 1;
+	/**
 	 * special case for triggers which do not provide exact TDC location
 	 * For example pick-up in distributor with mechanical ignition firing order control.
 	 */
@@ -252,9 +256,11 @@ public:
 	 */
 	int triggerShapeSynchPointIndex;
 
-	void initializeSyncPoint(TriggerState *state,
-			const TriggerConfiguration * triggerConfiguration,
-					trigger_config_s const*triggerConfig);
+	void initializeSyncPoint(
+			TriggerState& state,
+			const TriggerConfiguration& triggerConfiguration,
+			const trigger_config_s& triggerConfig
+			);
 
 private:
 	trigger_shape_helper h;

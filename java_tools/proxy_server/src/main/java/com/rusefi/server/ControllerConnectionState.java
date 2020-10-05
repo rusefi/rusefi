@@ -1,9 +1,12 @@
 package com.rusefi.server;
 
 import com.devexperts.logging.Logging;
+import com.opensr5.ini.IniFileModel;
+import com.rusefi.SignatureHelper;
 import com.rusefi.auth.AuthTokenUtil;
 import com.rusefi.binaryprotocol.IncomingDataBuffer;
 import com.rusefi.config.generated.Fields;
+import com.rusefi.core.Pair;
 import com.rusefi.core.SensorsHolder;
 import com.rusefi.io.IoStream;
 import com.rusefi.io.commands.GetOutputsCommand;
@@ -39,6 +42,7 @@ public class ControllerConnectionState {
     private final SensorsHolder sensorsHolder = new SensorsHolder();
     private final Birthday birthday = new Birthday();
     private int outputRoundAroundDuration;
+    private final IniFileModel iniFileModel = new IniFileModel();
 
     public ControllerConnectionState(Socket clientSocket, UserDetailsResolver userDetailsResolver) {
         this.clientSocket = clientSocket;
@@ -101,6 +105,14 @@ public class ControllerConnectionState {
         if (userDetails == null) {
             throw new IOException("Unable to resolve " + sessionDetails.getAuthToken());
         }
+        Pair<String, String> p = SignatureHelper.getUrl(sessionDetails.getControllerInfo().getSignature());
+        if (p == null)
+            throw new IOException("Invalid signature response");
+        String localFileName = SignatureHelper.downloadIfNotAvailable(p);
+        if (localFileName == null)
+            throw new IOException("Unable to download " + p.second);
+//        iniFileModel.readIniFile(localFileName);
+
         controllerKey = new ControllerKey(userDetails.getUserId(), sessionDetails.getControllerInfo());
         log.info("User " + userDetails);
     }

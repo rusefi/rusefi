@@ -1,9 +1,6 @@
 package com.opensr5.ini.test;
 
-import com.opensr5.ini.IniFileMetaInfo;
-import com.opensr5.ini.IniFileModel;
-import com.opensr5.ini.IniFileReader;
-import com.opensr5.ini.RawIniFile;
+import com.opensr5.ini.*;
 import com.opensr5.ini.field.ArrayIniField;
 import com.opensr5.ini.field.EnumIniField;
 import com.opensr5.ini.field.IniField;
@@ -11,9 +8,9 @@ import org.jetbrains.annotations.NotNull;
 import org.junit.Test;
 
 import java.io.ByteArrayInputStream;
+import java.util.Arrays;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.*;
 
 /**
  * Andrey Belomutskiy, (c) 2013-2020
@@ -113,6 +110,26 @@ public class IniFileReaderTest {
     }
 
     @Test
+    public void testProtocolMeta() {
+        String string =
+                "[Constants]\n" +
+                        "   crc32CheckCommand   = \"k\\x00\\x00\\x00\\x00\\x00\\x00\"\n" +
+                        "page = 1\n" +
+                        "primingSquirtDurationMs\t\t\t= scalar, F32,\t96,\t\"*C\", 1, 0, -40, 200, 1\n" +
+                        "";
+        RawIniFile lines = IniFileReader.read(new ByteArrayInputStream(string.getBytes()));
+        IniFileModel model = new IniFileModel().readIniFile(lines);
+        assertEquals(1, model.allIniFields.size());
+
+        String crcProtocol = model.protocolMeta.get("crc32CheckCommand");
+        assertEquals("k\\x00\\x00\\x00\\x00\\x00\\x00", crcProtocol);
+
+        byte[] expected = {'k', 0, 0, 0, 0, 0, 0};
+
+        assertTrue(Arrays.equals(expected, ProtocolCommand.parse(crcProtocol).getBytes()));
+    }
+
+    @Test
     public void testEasyFields() {
         String string = "page = 1\n" +
                 "[Constants]\n" +
@@ -174,9 +191,8 @@ public class IniFileReaderTest {
                 " \tname2\t\t\t= array, F32,\t108,\t[8],\t\"\", 1, 0, 0.0, 18000, 2\n" +
                 "[Constants]\n" +
                 " \tname\t\t\t= array, F32,\t108,\t[8],\t\"\", 1, 0, 0.0, 18000, 2\n" +
-                        "[PcVariables]\n" +
-        " \tname3\t\t\t= array, F32,\t108,\t[8],\t\"\", 1, 0, 0.0, 18000, 2\n"
-                ;
+                "[PcVariables]\n" +
+                " \tname3\t\t\t= array, F32,\t108,\t[8],\t\"\", 1, 0, 0.0, 18000, 2\n";
 
         RawIniFile lines = IniFileReader.read(new ByteArrayInputStream(string.getBytes()));
         IniFileModel model = new IniFileModel().readIniFile(lines);

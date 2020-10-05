@@ -3,7 +3,6 @@ package com.rusefi.proxy.client;
 import com.rusefi.BackendTestHelper;
 import com.rusefi.TestHelper;
 import com.rusefi.Timeouts;
-import com.rusefi.binaryprotocol.BinaryProtocolCommands;
 import com.rusefi.config.generated.Fields;
 import com.rusefi.io.IoStream;
 import com.rusefi.io.commands.GetOutputsCommand;
@@ -78,14 +77,14 @@ public class LocalApplicationProxyTest {
 
                 byte[] protocolResponse = new byte[TS_PROTOCOL.length()];
                 // request
-                applicationConnection.write(new byte[] {BinaryProtocolCommands.COMMAND_PROTOCOL});
+                applicationConnection.write(new byte[] {Fields.TS_COMMAND_F});
                 applicationConnection.flush();
                 // response
                 applicationConnection.getDataBuffer().read(protocolResponse);
                 assertArrayEquals(protocolResponse, TS_PROTOCOL.getBytes());
 
                 // request again
-                applicationConnection.write(new byte[] {BinaryProtocolCommands.COMMAND_PROTOCOL});
+                applicationConnection.write(new byte[] {Fields.TS_COMMAND_F});
                 applicationConnection.flush();
                 // response again
                 applicationConnection.getDataBuffer().read(protocolResponse);

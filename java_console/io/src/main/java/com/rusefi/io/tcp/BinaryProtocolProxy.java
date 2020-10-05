@@ -16,10 +16,8 @@ import java.io.DataInputStream;
 import java.io.IOException;
 import java.net.Socket;
 import java.util.concurrent.atomic.AtomicInteger;
-import java.util.function.Function;
 
 import static com.devexperts.logging.Logging.getLogging;
-import static com.rusefi.binaryprotocol.BinaryProtocolCommands.COMMAND_PROTOCOL;
 import static com.rusefi.config.generated.Fields.TS_PROTOCOL;
 import static com.rusefi.shared.FileUtil.close;
 
@@ -52,7 +50,7 @@ public class BinaryProtocolProxy {
          */
         while (!targetEcu.isClosed()) {
             byte firstByte = clientStream.getDataBuffer().readByte(timeoutMs);
-            if (firstByte == COMMAND_PROTOCOL) {
+            if (firstByte == Fields.TS_COMMAND_F) {
                 clientStream.write(TS_PROTOCOL.getBytes());
                 clientStream.flush();
                 continue;

@@ -1,4 +1,8 @@
 #!/bin/bash
+#
+# broadcast.sh
+# this file is part of rusEFI
+#
 while true
 do
  java -jar console/rusefi_console.jar network_connector
