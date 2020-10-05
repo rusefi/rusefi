@@ -251,6 +251,12 @@ void printCurrentState(Logging *logging, int seconds, const char *engineTypeName
 			DELIMETER);
 }
 
+void TriggerConfiguration::update() {
+	UseOnlyRisingEdgeForTrigger = isUseOnlyRisingEdgeForTrigger();
+	VerboseTriggerSynchDetails = isVerboseTriggerSynchDetails();
+	TriggerType = getType();
+}
+
 bool PrimaryTriggerConfiguration::isUseOnlyRisingEdgeForTrigger() const {
 	return CONFIG(useOnlyRisingEdgeForTrigger);
 }
@@ -259,20 +265,12 @@ trigger_type_e PrimaryTriggerConfiguration::getType() const {
 	return CONFIG(trigger.type);
 }
 
-const char * PrimaryTriggerConfiguration::getPrintPrefix() const {
-	return "TRG ";
-}
-
 bool PrimaryTriggerConfiguration::isVerboseTriggerSynchDetails() const {
 	return CONFIG(verboseTriggerSynchDetails);
 }
 
 bool VvtTriggerConfiguration::isUseOnlyRisingEdgeForTrigger() const {
 	return CONFIG(vvtCamSensorUseRise);
-}
-
-const char * VvtTriggerConfiguration::getPrintPrefix() const {
-	return "VVT ";
 }
 
 trigger_type_e VvtTriggerConfiguration::getType() const {

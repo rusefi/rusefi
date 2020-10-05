@@ -56,20 +56,22 @@ class IInjectorModel;
 
 class PrimaryTriggerConfiguration final : public TriggerConfiguration {
 public:
-	bool isUseOnlyRisingEdgeForTrigger() const;
-	const char * getPrintPrefix() const;
-	bool isVerboseTriggerSynchDetails() const;
-	debug_mode_e getDebugMode() const;
-	trigger_type_e getType() const;
+	PrimaryTriggerConfiguration() : TriggerConfiguration("TRG ") {}
+
+protected:
+	bool isUseOnlyRisingEdgeForTrigger() const override;
+	bool isVerboseTriggerSynchDetails() const override;
+	trigger_type_e getType() const override;
 };
 
 class VvtTriggerConfiguration final : public TriggerConfiguration {
 public:
-	bool isUseOnlyRisingEdgeForTrigger() const;
-	const char * getPrintPrefix() const;
-	bool isVerboseTriggerSynchDetails() const;
-	debug_mode_e getDebugMode() const;
-	trigger_type_e getType() const;
+	VvtTriggerConfiguration() : TriggerConfiguration("TRG ") {}
+
+protected:
+	bool isUseOnlyRisingEdgeForTrigger() const override;
+	bool isVerboseTriggerSynchDetails() const override;
+	trigger_type_e getType() const override;
 };
 
 class Engine final : public TriggerStateListener {
