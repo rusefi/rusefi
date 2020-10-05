@@ -33,5 +33,5 @@ private:
 protected:
     gear_e setDesiredGear(gear_e);
     void postState();
-    TransmissionControllerBase transmissionController;
+    SimpleTransmissionController transmissionController;
 };
