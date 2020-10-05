@@ -82,8 +82,7 @@ bool EventQueue::insertTask(scheduling_s *scheduling, efitime_t timeX, action_s 
  * This method is always invoked under a lock
  * @return Get the timestamp of the soonest pending action, skipping all the actions in the past
  */
-efitime_t EventQueue::getNextEventTime(efitime_t nowX) const {
-	
+expected<efitime_t> EventQueue::getNextEventTime(efitime_t nowX) const {
 	if (head != NULL) {
 		if (head->momentX <= nowX) {
 			/**
@@ -99,7 +98,8 @@ efitime_t EventQueue::getNextEventTime(efitime_t nowX) const {
 			return head->momentX;
 		}
 	}
-	return EMPTY_QUEUE;
+
+	return unexpected;
 }
 
 /**
