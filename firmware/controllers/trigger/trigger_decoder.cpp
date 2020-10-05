@@ -423,7 +423,6 @@ void TriggerState::decodeTriggerEvent(
 	}
 	previousShaftEventTimeNt = nowNt;
 
-
 	bool useOnlyRisingEdgeForTrigger = triggerConfiguration.UseOnlyRisingEdgeForTrigger;
 
 	efiAssertVoid(CUSTOM_TRIGGER_UNEXPECTED, signal <= SHAFT_3RD_RISING, "unexpected signal");
