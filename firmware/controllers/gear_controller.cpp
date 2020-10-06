@@ -1,3 +1,4 @@
+#include "gear_controller.h"
 #include "tunerstudio_outputs.h"
 
 void GearControllerBase::update() {
