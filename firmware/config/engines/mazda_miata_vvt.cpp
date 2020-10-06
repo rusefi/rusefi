@@ -596,6 +596,7 @@ static void setMiataNB2_MRE_common(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	engineConfiguration->alternatorControlPin = GPIOD_6;
 	// GPIOD_7: "14 - GP Out 5" - selected to +12v
 	engineConfiguration->tachOutputPin = GPIOD_7; // tachometer
+	CONFIG(tachPulsePerRev) = 2;
 
 	// set cranking_fuel 9
 	engineConfiguration->cranking.baseFuel = 9; // higher value for return system NA conversion since lower fuel pressure
