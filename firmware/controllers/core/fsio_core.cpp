@@ -86,6 +86,11 @@ void LEElement::init(le_action_e action, float fValue) {
 	this->fValue = fValue;
 }
 
+void LEElement::init(le_action_e action, bool bValue) {
+	this->action = action;
+	this->fValue = bValue ? 1 : 0;
+}
+
 LECalculator::LECalculator() {
 	reset();
 }
@@ -135,6 +140,48 @@ void LECalculator::push(le_action_e action, float value) {
 	}
 }
 
+static float doBinaryBoolean(le_action_e action, float lhs, float rhs) {
+	bool v1 = float2bool(lhs);
+	bool v2 = float2bool(rhs);
+	
+	switch (action) {
+		case LE_OPERATOR_AND:
+			return v1 && v2;
+		case LE_OPERATOR_OR:
+			return v1 || v2;
+		default:
+			return NAN;
+	}
+}
+
+static float doBinaryNumeric(le_action_e action, float v1, float v2) {
+	// Process based on the action type
+	switch (action) {
+		case LE_OPERATOR_ADDITION:
+			return v1 + v2;
+		case LE_OPERATOR_SUBTRACTION:
+			return v1 - v2;
+		case LE_OPERATOR_MULTIPLICATION:
+			return v1 * v2;
+		case LE_OPERATOR_DIVISION:
+			return v1 / v2;
+		case LE_OPERATOR_LESS:
+			return v1 < v2;
+		case LE_OPERATOR_MORE:
+			return v1 > v2;
+		case LE_OPERATOR_LESS_OR_EQUAL:
+			return v1 <= v2;
+		case LE_OPERATOR_MORE_OR_EQUAL:
+			return v1 >= v2;
+		case LE_METHOD_MIN:
+			return minF(v1, v2);
+		case LE_METHOD_MAX:
+			return maxF(v1, v2);
+		default:
+			return NAN;
+	}
+}
+
 /**
  * @return true in case of error, false otherwise
  */
@@ -143,91 +190,48 @@ bool LECalculator::processElement(LEElement *element DECLARE_ENGINE_PARAMETER_SU
 	efiAssert(CUSTOM_ERR_ASSERT, getCurrentRemainingStack() > 64, "FSIO logic", false);
 #endif
 	switch (element->action) {
-
+	// Literal values
 	case LE_NUMERIC_VALUE:
 		push(element->action, element->fValue);
 		break;
-	case LE_OPERATOR_AND: {
-		float v1 = pop(LE_OPERATOR_AND);
-		float v2 = pop(LE_OPERATOR_AND);
-
-		push(element->action, float2bool(v1) && float2bool(v2));
-	}
+	case LE_BOOLEAN_VALUE:
+		push(element->action, element->fValue != 0);
 		break;
+	// Boolean input binary operators
+	case LE_OPERATOR_AND:
 	case LE_OPERATOR_OR: {
 		float v1 = pop(LE_OPERATOR_OR);
 		float v2 = pop(LE_OPERATOR_OR);
 
-		push(element->action, float2bool(v1) || float2bool(v2));
-	}
-		break;
-	case LE_OPERATOR_LESS: {
-		// elements on stack are in reverse order
-		float v2 = pop(LE_OPERATOR_LESS);
-		float v1 = pop(LE_OPERATOR_LESS);
+		auto result = doBinaryBoolean(element->action, v1, v2);
 
-		push(element->action, v1 < v2);
+		push(element->action, result);
 	}
 		break;
+	// Numeric input binary operators
+	case LE_OPERATOR_ADDITION:
+	case LE_OPERATOR_SUBTRACTION:
+	case LE_OPERATOR_MULTIPLICATION:
+	case LE_OPERATOR_DIVISION:
+	case LE_OPERATOR_LESS:
+	case LE_OPERATOR_MORE:
+	case LE_OPERATOR_LESS_OR_EQUAL:
+	case LE_OPERATOR_MORE_OR_EQUAL:
+	case LE_METHOD_MIN:
+	case LE_METHOD_MAX: {
+		// elements on stack are in reverse order
+		float v2 = pop(element->action);
+		float v1 = pop(element->action);
+
+		auto result = doBinaryNumeric(element->action, v1, v2);
+
+		push(element->action, result);
+	}
+		break;
+	// Boolean input unary operator
 	case LE_OPERATOR_NOT: {
 		float v = pop(LE_OPERATOR_NOT);
 		push(element->action, !float2bool(v));
-	}
-		break;
-	case LE_OPERATOR_MORE: {
-		// elements on stack are in reverse order
-		float v2 = pop(LE_OPERATOR_MORE);
-		float v1 = pop(LE_OPERATOR_MORE);
-
-		push(element->action, v1 > v2);
-	}
-		break;
-	case LE_OPERATOR_ADDITION: {
-		// elements on stack are in reverse order
-		float v2 = pop(LE_OPERATOR_MORE);
-		float v1 = pop(LE_OPERATOR_MORE);
-
-		push(element->action, v1 + v2);
-	}
-		break;
-	case LE_OPERATOR_SUBTRACTION: {
-		// elements on stack are in reverse order
-		float v2 = pop(LE_OPERATOR_MORE);
-		float v1 = pop(LE_OPERATOR_MORE);
-
-		push(element->action, v1 - v2);
-	}
-		break;
-	case LE_OPERATOR_MULTIPLICATION: {
-		// elements on stack are in reverse order
-		float v2 = pop(LE_OPERATOR_MORE);
-		float v1 = pop(LE_OPERATOR_MORE);
-
-		push(element->action, v1 * v2);
-	}
-		break;
-	case LE_OPERATOR_DIVISION: {
-		// elements on stack are in reverse order
-		float v2 = pop(LE_OPERATOR_MORE);
-		float v1 = pop(LE_OPERATOR_MORE);
-
-		push(element->action, v1 / v2);
-	}
-		break;
-	case LE_OPERATOR_LESS_OR_EQUAL: {
-		// elements on stack are in reverse order
-		float v2 = pop(LE_OPERATOR_LESS_OR_EQUAL);
-		float v1 = pop(LE_OPERATOR_LESS_OR_EQUAL);
-
-		push(element->action, v1 <= v2);
-	}
-		break;
-	case LE_OPERATOR_MORE_OR_EQUAL: {
-		// elements on stack are in reverse order
-		float v2 = pop(LE_OPERATOR_MORE_OR_EQUAL);
-		float v1 = pop(LE_OPERATOR_MORE_OR_EQUAL);
-
-		push(element->action, v1 >= v2);
 	}
 		break;
 	case LE_METHOD_IF: {
@@ -236,18 +240,6 @@ bool LECalculator::processElement(LEElement *element DECLARE_ENGINE_PARAMETER_SU
 		float vTrue = pop(LE_METHOD_IF);
 		float vCond = pop(LE_METHOD_IF);
 		push(element->action, vCond != 0 ? vTrue : vFalse);
-	}
-		break;
-	case LE_METHOD_MAX: {
-		float v2 = pop(LE_METHOD_MAX);
-		float v1 = pop(LE_METHOD_MAX);
-		push(element->action, maxF(v1, v2));
-	}
-		break;
-	case LE_METHOD_MIN: {
-		float v2 = pop(LE_METHOD_MIN);
-		float v1 = pop(LE_METHOD_MIN);
-		push(element->action, minF(v1, v2));
 	}
 		break;
 	case LE_METHOD_FSIO_SETTING: {
@@ -282,6 +274,7 @@ bool LECalculator::processElement(LEElement *element DECLARE_ENGINE_PARAMETER_SU
 		break;
 	case LE_METHOD_FSIO_DIGITAL_INPUT:
 		// todo: implement code for digital input!!!
+		return true;
 	case LE_METHOD_FSIO_ANALOG_INPUT:
 	{
 		int index = clampF(0, pop(LE_METHOD_FSIO_ANALOG_INPUT), FSIO_ANALOG_INPUT_COUNT - 1);
@@ -370,6 +363,13 @@ bool isNumeric(const char* line) {
 	return line[0] >= '0' && line[0] <= '9';
 }
 
+bool isBoolean(const char* line) {
+	bool isTrue = 0 == strcmp(line, "true");
+	bool isFalse = 0 == strcmp(line, "false");
+
+	return isTrue || isFalse;
+}
+
 /**
  * @return pointer at the position after the consumed token, null if no token consumed
  */
@@ -427,6 +427,8 @@ LEElement *LEElementPool::parseExpression(const char * line) {
 
 		if (isNumeric(parsingBuffer)) {
 			n->init(LE_NUMERIC_VALUE, atoff(parsingBuffer));
+		} else if (isBoolean(parsingBuffer)) {
+			n->init(LE_BOOLEAN_VALUE, parsingBuffer[0] == 't');
 		} else {
 			le_action_e action = parseAction(parsingBuffer);
 			if (action == LE_UNDEFINED) {
