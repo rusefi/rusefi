@@ -250,6 +250,7 @@ public class Backend implements Closeable {
         this.serverPortForControllers = serverPortForControllers;
         log.info("Starting controller connector at " + serverPortForControllers);
         controllerConnector = BinaryProtocolServer.tcpServerSocket(controllerSocket -> () -> {
+            log.info("New connection from " + controllerSocket.getRemoteSocketAddress());
             totalSessions.incrementAndGet();
             ControllerConnectionState controllerConnectionState = new ControllerConnectionState(controllerSocket, getUserDetailsResolver());
             try {

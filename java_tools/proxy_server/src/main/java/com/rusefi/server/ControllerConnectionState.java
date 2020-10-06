@@ -94,11 +94,13 @@ public class ControllerConnectionState {
     public void requestControllerInfo() throws IOException {
         HelloCommand.send(stream);
         String jsonString = HelloCommand.getHelloResponse(incomingData);
-        if (jsonString == null)
-            return;
+        if (jsonString == null) {
+            throw new IOException("Invalid HELLO response");
+        }
         sessionDetails = SessionDetails.valueOf(jsonString);
-        if (!AuthTokenUtil.isToken(sessionDetails.getAuthToken()))
+        if (!AuthTokenUtil.isToken(sessionDetails.getAuthToken())) {
             throw new IOException("Invalid token in " + jsonString);
+        }
 
         log.info(sessionDetails.getAuthToken() + " New client: " + sessionDetails.getControllerInfo());
         userDetails = userDetailsResolver.apply(sessionDetails.getAuthToken());
