@@ -2,6 +2,7 @@ package com.rusefi.server;
 
 import com.rusefi.proxy.NetworkConnector;
 import com.rusefi.tools.online.HttpUtil;
+import org.jetbrains.annotations.Nullable;
 import org.json.simple.JSONObject;
 
 import java.net.InetAddress;
@@ -29,6 +30,7 @@ public class SessionDetails {
     private final String authToken;
     private final NetworkConnector.Implementation implementation;
     private final int consoleVersion;
+    @Nullable
     private final String localIpAddress;
 
     public SessionDetails(NetworkConnector.Implementation implementation, ControllerInfo controllerInfo, String authToken, int oneTimeCode, int consoleVersion) {
@@ -49,7 +51,7 @@ public class SessionDetails {
     public SessionDetails(NetworkConnector.Implementation implementation, ControllerInfo controllerInfo, String authToken, int oneTimeCode, int consoleVersion, String localIpAddress) {
         this.implementation = Objects.requireNonNull(implementation);
         this.consoleVersion = consoleVersion;
-        this.localIpAddress = Objects.requireNonNull(localIpAddress);
+        this.localIpAddress = localIpAddress;
         Objects.requireNonNull(controllerInfo);
         Objects.requireNonNull(authToken);
         this.controllerInfo = controllerInfo;
