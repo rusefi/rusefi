@@ -12,7 +12,6 @@
 #include "persistent_configuration.h"
 #include "engine_configuration_generated_structures.h"
 #include "globalaccess.h"
-#include "simple_tcu.h"
 
 class TransmissionControllerBase {
 public:
@@ -23,16 +22,4 @@ private:
 protected:
     gear_e setCurrentGear(gear_e);
     void postState();
-};
-
-class GearControllerBase {
-public:
-    virtual void update();
-    gear_e getDesiredGear() const;
-private:
-    gear_e desiredGear = NEUTRAL;
-protected:
-    gear_e setDesiredGear(gear_e);
-    void postState();
-    SimpleTransmissionController transmissionController;
 };
