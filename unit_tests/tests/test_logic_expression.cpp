@@ -15,7 +15,7 @@
 
 #define TEST_POOL_SIZE 256
 
-float getEngineValue(le_action_e action DECLARE_ENGINE_PARAMETER_SUFFIX) {
+FsioValue getEngineValue(le_action_e action DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	switch(action) {
 	case LE_METHOD_FAN:
 		return engine->fsioState.mockFan;
@@ -36,7 +36,7 @@ float getEngineValue(le_action_e action DECLARE_ENGINE_PARAMETER_SUFFIX) {
 #include "fsio_getters.def"
 	default:
 	firmwareError(OBD_PCM_Processor_Fault, "FSIO: No mock value for %d", action);
-		return NAN;
+		return unexpected;
 	}
 }
 

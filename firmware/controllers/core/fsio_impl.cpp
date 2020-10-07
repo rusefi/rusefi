@@ -113,8 +113,8 @@ static LEElement * mainRelayLogic;
 static Logging *logger;
 #if EFI_PROD_CODE || EFI_SIMULATOR
 
-float getEngineValue(le_action_e action DECLARE_ENGINE_PARAMETER_SUFFIX) {
-	efiAssert(CUSTOM_ERR_ASSERT, engine!=NULL, "getLEValue", NAN);
+FsioValue getEngineValue(le_action_e action DECLARE_ENGINE_PARAMETER_SUFFIX) {
+	efiAssert(CUSTOM_ERR_ASSERT, engine!=NULL, "getLEValue", unexpected);
 	switch (action) {
 	case LE_METHOD_FAN:
 		return enginePins.fanRelay.getLogicValue();
@@ -162,7 +162,7 @@ float getEngineValue(le_action_e action DECLARE_ENGINE_PARAMETER_SUFFIX) {
 #include "fsio_getters.def"
 	default:
 		warning(CUSTOM_FSIO_UNEXPECTED, "FSIO ERROR no data for action=%d", action);
-		return NAN;
+		return unexpected;
 	}
 }
 
