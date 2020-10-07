@@ -317,16 +317,17 @@ void configureHondaAccordShifted(TriggerWaveform *s) {
 void configureOnePlus16(TriggerWaveform *s) {
 	s->initialize(FOUR_STROKE_CAM_SENSOR);
 
-	int totalTeethCount = 16;
-	int skippedCount = 0;
+	int count = 16;
+	float tooth = s->getCycleDuration() / count;
+	float width = tooth / 2; // for VR we only handle rises so width does not matter much
 
-	s->addEvent720(2, T_PRIMARY, TV_RISE);
-	addSkippedToothTriggerEvents(T_SECONDARY, s, totalTeethCount, skippedCount, 0.5, 0, 360, 2, 20);
-	s->addEvent720(20, T_PRIMARY, TV_FALL);
-	addSkippedToothTriggerEvents(T_SECONDARY, s, totalTeethCount, skippedCount, 0.5, 0, 360, 20, NO_RIGHT_FILTER);
+	s->addEventAngle(1, T_PRIMARY, TV_RISE);
+	s->addEventAngle(5, T_PRIMARY, TV_FALL);
 
-	addSkippedToothTriggerEvents(T_SECONDARY, s, totalTeethCount, skippedCount, 0.5, 360, 360, NO_LEFT_FILTER,
-	NO_RIGHT_FILTER);
+	for (int i = 1; i <= count; i++) {
+		s->addEventAngle(tooth * i - width, T_SECONDARY, TV_RISE);
+		s->addEventAngle(tooth * i,         T_SECONDARY, TV_FALL);
+	}
 
 	s->isSynchronizationNeeded = false;
 	s->useOnlyPrimaryForSync = true;
