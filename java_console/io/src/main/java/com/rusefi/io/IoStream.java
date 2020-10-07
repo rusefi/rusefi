@@ -52,7 +52,12 @@ public interface IoStream extends WriteStream, Closeable, StreamStatistics {
         write(packet.getPacket());
         writeInt(packet.getCrc());
         flush();
+        onActivity();
     }
+
+    long latestActivityTime();
+
+    void onActivity();
 
     default void sendPacket(byte[] plainPacket) throws IOException {
         if (plainPacket.length == 0)
