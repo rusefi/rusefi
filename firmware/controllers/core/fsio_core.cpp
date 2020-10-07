@@ -440,10 +440,12 @@ LEElement *LEElementPool::parseExpression(const char * line) {
 			n->init(action);
 		}
 
+		// If this is the first time through, set the first element.
 		if (!first) {
 			first = n;
 		}
 
+		// If not the first, link the list
 		if (last) {
 			last->next = n;
 		}
