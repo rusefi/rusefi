@@ -264,6 +264,8 @@ public class SdCardReaderPanel {
                 filePanel.add(delete);
 
                 fileList.add(filePanel);
+                fileList.revalidate();
+                AutoupdateUtil.trueLayout(fileList);
 
                 log.info("Filename " + fileName + " size " + fileSize);
 
