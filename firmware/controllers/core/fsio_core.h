@@ -16,6 +16,7 @@ typedef enum {
 
 	LE_UNDEFINED = 0 ,
 	LE_NUMERIC_VALUE = 1,
+	LE_BOOLEAN_VALUE = 126,
 	LE_OPERATOR_LESS = 2,
 	LE_OPERATOR_MORE = 3,
 	LE_OPERATOR_LESS_OR_EQUAL = 4,
@@ -66,9 +67,10 @@ class LEElement {
 public:
 	LEElement();
 	void clear();
-//	void init(le_action_e action, int iValue);
+
 	void init(le_action_e action);
-	void init(le_action_e action, float fValue);
+	void init(le_action_e action, float value);
+	void init(le_action_e action, bool value);
 
 	le_action_e action;
 	float fValue;
