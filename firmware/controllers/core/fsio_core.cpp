@@ -406,23 +406,22 @@ le_action_e parseAction(const char * line) {
 static char parsingBuffer[64];
 
 LEElement *LEElementPool::parseExpression(const char * line) {
-
 	LEElement *first = nullptr;
 	LEElement *last = nullptr;
 
 	while (true) {
 		line = getNextToken(line, parsingBuffer, sizeof(parsingBuffer));
 
-		if (line == nullptr) {
+		if (!line) {
 			/**
-			 * No more tokens in this line
+			 * No more tokens in this line, parsing complete!
 			 */
 			return first;
 		}
 
 		LEElement *n = next();
-		if (n == nullptr) {
-			return first;
+		if (!n) {
+			return nullptr;
 		}
 
 		if (isNumeric(parsingBuffer)) {
@@ -441,15 +440,16 @@ LEElement *LEElementPool::parseExpression(const char * line) {
 			n->init(action);
 		}
 
-		if (first == nullptr) {
+		if (!first) {
 			first = n;
-			last = n;
-		} else {
-			last->next = n;
-			last = last->next;
 		}
+
+		if (last) {
+			last->next = n;
+		}
+
+		last = n;
 	}
-	return first;
 }
 
 #endif /* EFI_FSIO */
