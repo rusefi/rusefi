@@ -140,7 +140,7 @@ void LECalculator::push(le_action_e action, float value) {
 	}
 }
 
-static float doBinaryBoolean(le_action_e action, float lhs, float rhs) {
+static FsioValue doBinaryBoolean(le_action_e action, float lhs, float rhs) {
 	bool v1 = float2bool(lhs);
 	bool v2 = float2bool(rhs);
 	
@@ -150,11 +150,11 @@ static float doBinaryBoolean(le_action_e action, float lhs, float rhs) {
 		case LE_OPERATOR_OR:
 			return v1 || v2;
 		default:
-			return NAN;
+			return unexpected;
 	}
 }
 
-static float doBinaryNumeric(le_action_e action, float v1, float v2) {
+static FsioValue doBinaryNumeric(le_action_e action, float v1, float v2) {
 	// Process based on the action type
 	switch (action) {
 		case LE_OPERATOR_ADDITION:
@@ -178,36 +178,31 @@ static float doBinaryNumeric(le_action_e action, float v1, float v2) {
 		case LE_METHOD_MAX:
 			return maxF(v1, v2);
 		default:
-			return NAN;
+			return unexpected;
 	}
 }
 
 /**
  * @return true in case of error, false otherwise
  */
-bool LECalculator::processElement(LEElement *element DECLARE_ENGINE_PARAMETER_SUFFIX) {
+FsioValue LECalculator::processElement(LEElement *element DECLARE_ENGINE_PARAMETER_SUFFIX) {
 #if EFI_PROD_CODE
-	efiAssert(CUSTOM_ERR_ASSERT, getCurrentRemainingStack() > 64, "FSIO logic", false);
+	efiAssert(CUSTOM_ERR_ASSERT, getCurrentRemainingStack() > 64, "FSIO logic", unexpected);
 #endif
 	switch (element->action) {
 	// Literal values
 	case LE_NUMERIC_VALUE:
-		push(element->action, element->fValue);
-		break;
+		return element->fValue;
 	case LE_BOOLEAN_VALUE:
-		push(element->action, element->fValue != 0);
-		break;
+		return element->fValue != 0;
 	// Boolean input binary operators
 	case LE_OPERATOR_AND:
 	case LE_OPERATOR_OR: {
 		float v1 = pop(LE_OPERATOR_OR);
 		float v2 = pop(LE_OPERATOR_OR);
 
-		auto result = doBinaryBoolean(element->action, v1, v2);
-
-		push(element->action, result);
+		return doBinaryBoolean(element->action, v1, v2);
 	}
-		break;
 	// Numeric input binary operators
 	case LE_OPERATOR_ADDITION:
 	case LE_OPERATOR_SUBTRACTION:
@@ -223,74 +218,64 @@ bool LECalculator::processElement(LEElement *element DECLARE_ENGINE_PARAMETER_SU
 		float v2 = pop(element->action);
 		float v1 = pop(element->action);
 
-		auto result = doBinaryNumeric(element->action, v1, v2);
-
-		push(element->action, result);
+		return doBinaryNumeric(element->action, v1, v2);
 	}
-		break;
 	// Boolean input unary operator
 	case LE_OPERATOR_NOT: {
 		float v = pop(LE_OPERATOR_NOT);
-		push(element->action, !float2bool(v));
+		return !float2bool(v) ? 1 : 0;
 	}
-		break;
 	case LE_METHOD_IF: {
 		// elements on stack are in reverse order
 		float vFalse = pop(LE_METHOD_IF);
 		float vTrue = pop(LE_METHOD_IF);
 		float vCond = pop(LE_METHOD_IF);
-		push(element->action, vCond != 0 ? vTrue : vFalse);
+		return vCond != 0 ? vTrue : vFalse;
 	}
-		break;
 	case LE_METHOD_FSIO_SETTING: {
 		float humanIndex = pop(LE_METHOD_FSIO_SETTING);
 		int index = (int) humanIndex - 1;
 		if (index >= 0 && index < FSIO_COMMAND_COUNT) {
-			push(element->action, CONFIG(fsio_setting)[index]);
+			return CONFIG(fsio_setting)[index];
 		} else {
-			push(element->action, NAN);
+			return unexpected;
 		}
 	}
-		break;
 	case LE_METHOD_FSIO_TABLE: {
 		float i = pop(LE_METHOD_FSIO_TABLE);
 		float yValue = pop(LE_METHOD_FSIO_TABLE);
 		float xValue = pop(LE_METHOD_FSIO_TABLE);
 		int index = (int) i;
 		if (index < 1 || index > MAX_TABLE_INDEX) {
-			push(element->action, NAN);
+			return unexpected;
 		} else {
 			if (index == 1) {
 				fsio8_Map3D_f32t *t = &fsioTable1;
 
-				push(element->action, t->getValue(xValue, yValue));
+				return t->getValue(xValue, yValue);
 			} else {
 				fsio8_Map3D_u8t *t = fsio8t_tables[index];
 
-				push(element->action, t->getValue(xValue, yValue));
+				return t->getValue(xValue, yValue);
 			}
 		}
 	}
-		break;
 	case LE_METHOD_FSIO_DIGITAL_INPUT:
 		// todo: implement code for digital input!!!
-		return true;
+		return unexpected;
 	case LE_METHOD_FSIO_ANALOG_INPUT:
 	{
 		int index = clampF(0, pop(LE_METHOD_FSIO_ANALOG_INPUT), FSIO_ANALOG_INPUT_COUNT - 1);
-		push(element->action, getVoltage("fsio", engineConfiguration->fsioAdc[index] PASS_ENGINE_PARAMETER_SUFFIX));
+		return getVoltage("fsio", engineConfiguration->fsioAdc[index] PASS_ENGINE_PARAMETER_SUFFIX);
 	}
-		break;
 	case LE_METHOD_KNOCK:
-		push(element->action, ENGINE(knockCount));
-		break;
+		return ENGINE(knockCount);
 	case LE_UNDEFINED:
 		warning(CUSTOM_UNKNOWN_FSIO, "FSIO undefined action");
-		return true;
+		return unexpected;
 	default:
-		push(element->action, getEngineValue(element->action PASS_ENGINE_PARAMETER_SUFFIX));
+		return getEngineValue(element->action PASS_ENGINE_PARAMETER_SUFFIX);
 	}
-	return false;
 }
 
 float LECalculator::getValue2(float selfValue, LEElement *fistElementInList DECLARE_ENGINE_PARAMETER_SUFFIX) {
@@ -318,11 +303,14 @@ float LECalculator::getValue(float selfValue DECLARE_ENGINE_PARAMETER_SUFFIX) {
 		if (element->action == LE_METHOD_SELF) {
 			push(element->action, selfValue);
 		} else {
-			bool isError = processElement(element PASS_ENGINE_PARAMETER_SUFFIX);
-			if (isError) {
+			FsioValue result = processElement(element PASS_ENGINE_PARAMETER_SUFFIX);
+
+			if (!result) {
 				// error already reported
 				return NAN;
 			}
+
+			push(element->action, result.Value);
 		}
 		element = element->next;
 		counter++;
