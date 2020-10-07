@@ -276,6 +276,7 @@ public class Backend implements Closeable {
                     .add(UserDetails.USER_ID, application.getUserDetails().getUserId())
                     .add(UserDetails.USERNAME, application.getUserDetails().getUserName())
                     .add(SessionDetails.AGE, application.getBirthday().getDuration())
+                    .add("idle", humanReadableFormat(System.currentTimeMillis() - application.getClientStream().latestActivityTime()))
                     ;
             JsonObject applicationObject = addStreamStats(b, application.getClientStream())
                     .build();
