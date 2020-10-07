@@ -82,8 +82,7 @@ public class SdCardReaderPanel {
         packet = new byte[3];
         packet[0] = Fields.TS_SD_R_COMMAND;
         packet[2] = Fields.TS_SD_PROTOCOL_RTC;
-        stream.sendPacket(packet);
-        response = stream.getDataBuffer().getPacket("RTC status");
+        response = stream.sendAndGetPacket(packet, "RTC status", false);
         log.info("RTC response " + IoStream.printHexBinary(response));
         if (response == null)
             throw new IOException("RTC No packet");
@@ -92,8 +91,7 @@ public class SdCardReaderPanel {
         packet[0] = Fields.TS_SD_W_COMMAND;
         packet[2] = TS_SD_PROTOCOL_FETCH_INFO;
         packet[6] = Fields.TS_SD_PROTOCOL_READ_DIR;
-        stream.sendPacket(packet);
-        response = stream.getDataBuffer().getPacket("read dir command");
+        response = stream.sendAndGetPacket(packet, "read dir command", false);
         if (response == null)
             throw new IOException("Read Dir No packet");
         log.info("read dir command " + IoStream.printHexBinary(response));
@@ -104,8 +102,7 @@ public class SdCardReaderPanel {
         packet[2] = TS_SD_PROTOCOL_FETCH_INFO;
         packet[5] = 0x02;
         packet[6] = 0x02;
-        stream.sendPacket(packet);
-        response = stream.getDataBuffer().getPacket("read command", true);
+        response = stream.sendAndGetPacket(packet, "read command", true);
         if (response == null)
             throw new IOException("No packet");
         log.info("read command " + IoStream.printHexBinary(response));
@@ -130,8 +127,7 @@ public class SdCardReaderPanel {
 
         FileOutputStream fos = null;
         try {
-            stream.sendPacket(packet);
-            byte[] response = stream.getDataBuffer().getPacket("Download file");
+            byte[] response = stream.sendAndGetPacket(packet, "Download file", false);
             log.info("Download file " + IoStream.printHexBinary(response));
             setStatus("Downloading " + fileName);
 
@@ -146,8 +142,8 @@ public class SdCardReaderPanel {
                 packet[3] = (byte) chunk;
                 packet[4] = (byte) (chunk >> 8);
 
-                stream.sendPacket(packet);
-                response = stream.getDataBuffer().getPacket("Get file", true);
+                // we are competing with gauge poking thread for instance
+                response = stream.sendAndGetPacket(packet, "Get file", true);
 
                 if (response == null) {
                     log.info("No content response");
