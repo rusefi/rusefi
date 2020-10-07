@@ -39,8 +39,9 @@ public class NetworkConnector implements Closeable {
      */
     public static final byte DISCONNECT = 14;
     public static final byte UPDATE_CONNECTOR_SOFTWARE_LATEST = 15;
-    public static final byte UPDATE_FIRMWARE = 16;
+    public static final byte UPDATE_FIRMWARE_LATEST = 16;
     public static final byte UPDATE_CONNECTOR_SOFTWARE_RELEASE = 17;
+    public static final byte UPDATE_FIRMWARE_RELEASE = 17;
     private final static Logging log = Logging.getLogging(NetworkConnector.class);
     private boolean isClosed;
 
@@ -147,8 +148,10 @@ public class NetworkConnector implements Closeable {
                         context.onConnectorSoftwareUpdateToLatestRequest();
                     } else if (connectorCommand == NetworkConnector.UPDATE_CONNECTOR_SOFTWARE_RELEASE) {
                         context.onConnectorSoftwareUpdateToReleaseRequest();
-                    } else if (connectorCommand == NetworkConnector.UPDATE_FIRMWARE) {
-                        context.onFirmwareUpdateRequest();
+                    } else if (connectorCommand == NetworkConnector.UPDATE_FIRMWARE_LATEST) {
+                        context.onFirmwareUpdateToLatestRequest();
+                    } else if (connectorCommand == NetworkConnector.UPDATE_FIRMWARE_RELEASE) {
+                        context.onFirmwareUpdateToReleaseRequest();
                     }
                     return;
                 }
