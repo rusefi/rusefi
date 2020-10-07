@@ -45,8 +45,13 @@ public class NetworkConnectorContext {
         System.exit(UPDATE_RELEASE_SBC_EXIT_CODE);
     }
 
-    public void onFirmwareUpdateRequest() {
+    public void onFirmwareUpdateToLatestRequest() {
         log.info("onFirmwareUpdateRequest");
         System.exit(UPDATE_LATEST_FIRMWARE_EXIT_CODE);
+    }
+
+    public void onFirmwareUpdateToReleaseRequest() {
+        log.info("onFirmwareUpdateRequest");
+        System.exit(UPDATE_RELEASE_FIRMWARE_EXIT_CODE);
     }
 }

@@ -76,7 +76,7 @@ public class Updater {
             public void run() {
                 ConnectionAndMeta connectionAndMeta;
                 try {
-                    connectionAndMeta = new ConnectionAndMeta(PLUGIN_BODY_JAR).invoke();
+                    connectionAndMeta = new ConnectionAndMeta(PLUGIN_BODY_JAR).invoke(ConnectionAndMeta.BASE_URL_LATEST);
                 } catch (Exception e) {
                     e.printStackTrace();
                     return;
