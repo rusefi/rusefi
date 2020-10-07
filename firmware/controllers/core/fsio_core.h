@@ -63,6 +63,8 @@ typedef enum {
 
 } le_action_e;
 
+using FsioValue = expected<float>;
+
 class LEElement {
 public:
 	LEElement();
@@ -113,7 +115,7 @@ public:
 	int currentCalculationLogPosition;
 private:
 	void push(le_action_e action, float value);
-	bool processElement(LEElement *element DECLARE_ENGINE_PARAMETER_SUFFIX);
+	FsioValue processElement(LEElement *element DECLARE_ENGINE_PARAMETER_SUFFIX);
 	float pop(le_action_e action);
 	LEElement *first;
 	calc_stack_t stack;
