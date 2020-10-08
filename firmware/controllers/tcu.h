@@ -16,6 +16,7 @@
 class TransmissionControllerBase {
 public:
     void update(gear_e);
+    virtual void init();
     gear_e getCurrentGear() const;
 private:
     gear_e currentGear = NEUTRAL;

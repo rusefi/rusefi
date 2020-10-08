@@ -1,6 +1,10 @@
 #include "gear_controller.h"
 #include "tunerstudio_outputs.h"
 
+GearControllerBase::GearControllerBase() {
+    transmissionController.init();
+}
+
 void GearControllerBase::update() {
     transmissionController.update(getDesiredGear());
     postState();
