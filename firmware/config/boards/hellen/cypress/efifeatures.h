@@ -301,8 +301,9 @@
 
 #undef TS_UART_DEVICE
 #undef TS_SERIAL_DEVICE
-//#define TS_USB_DEVICE SDU1
-#undef TS_USB_DEVICE
+
+#define TS_USB_DEVICE SDU1
+//#undef TS_USB_DEVICE
 
 // todo: add CAN support
 //#define TS_CAN_DEVICE CAND1

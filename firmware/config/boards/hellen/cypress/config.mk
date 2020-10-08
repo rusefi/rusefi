@@ -10,7 +10,7 @@ CPU_HWLAYER = ports/cypress
 
 GENERATED_ENUMS_DIR = $(BOARD_DIR)/config/controllers/algo
 
-EXTRA_PARAMS += -DFIRMWARE_ID=\"cypress\"
+EXTRA_PARAMS += -DFIRMWARE_ID=\"cypress\" -DSHORT_BOARD_NAME=hellen_cypress
 # -nodefaultlibs -lc -lgcc -ltinyc
 
 # used by USE_SMART_BUILD
