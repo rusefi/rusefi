@@ -367,7 +367,8 @@ public class BinaryProtocolServer {
             protocolCommandHandler.handle();
             return 0;
         }
-        return first * 256 + in.readByte(ioTimeout);
+        byte secondByte = in.readByte(ioTimeout);
+        return IoHelper.getInt(first, secondByte);
     }
 
     public static Packet readPromisedBytes(DataInputStream in, int length) throws IOException {
