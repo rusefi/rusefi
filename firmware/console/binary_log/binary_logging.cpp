@@ -10,8 +10,16 @@
 #include "efitime.h"
 #include "crc.h"
 
+
+#define TIME_PRECISION 1000
+
+// floating number of seconds with millisecond precision
+scaled_channel<uint32_t, TIME_PRECISION> packedTime;
+
 static const LogField fields[] = {
 	{tsOutputChannels.rpm, GAUGE_NAME_RPM, "rpm", 0},
+	{packedTime, GAUGE_NAME_TIME, "sec", 0},
+	{tsOutputChannels.totalTriggerErrorCounter, GAUGE_NAME_TRG_ERR, "err", 0},
 	{tsOutputChannels.vehicleSpeedKph, GAUGE_NAME_VVS, "kph", 0},
 	{tsOutputChannels.internalMcuTemperature, GAUGE_NAME_CPU_TEMP, "C", 0},
 	{tsOutputChannels.coolantTemperature, GAUGE_NAME_CLT, "C", 1},
@@ -107,6 +115,8 @@ size_t writeBlock(char* buffer) {
 	uint16_t timestamp = getTimeNowUs() / 10;
 	buffer[2] = timestamp >> 8;
 	buffer[3] = timestamp & 0xFF;
+
+	packedTime = currentTimeMillis() * 1.0 / TIME_PRECISION;
 
 	// Offset 4 = field data
 	const char* dataBlockStart = buffer + 4;
