@@ -8,6 +8,7 @@ OutputPin tcuSolenoids[efi::size(CONFIG(tcu_solenoid))];
 
 SimpleTransmissionController::SimpleTransmissionController() {
     for (int i = 0; i < efi::size(CONFIG(tcu_solenoid)); i++) {
+scheduleMsg(&sharedLogger, "foo");
 //        tcuSolenoids[i].initPin("Transmission Solenoid", CONFIG(tcu_solenoid[i]), &CONFIG(tcu_solenoid_mode[i]));
     }
 }
