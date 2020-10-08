@@ -94,6 +94,11 @@ trigger_type_e getVvtTriggerType(vvt_mode_e vvtMode) {
 
 void Engine::initializeTriggerWaveform(Logging *logger DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	static TriggerState initState;
+	INJECT_ENGINE_REFERENCE(&initState);
+
+	// Re-read config in case it's changed
+	primaryTriggerConfiguration.update();
+	vvtTriggerConfiguration.update();
 
 #if EFI_ENGINE_CONTROL && EFI_SHAFT_POSITION_INPUT
 	// we have a confusing threading model so some synchronization would not hurt
@@ -108,8 +113,8 @@ void Engine::initializeTriggerWaveform(Logging *logger DECLARE_ENGINE_PARAMETER_
 	 	 * 'initState' instance of TriggerState is used only to initialize 'this' TriggerWaveform instance
 	 	 * #192 BUG real hardware trigger events could be coming even while we are initializing trigger
 	 	 */
-		calculateTriggerSynchPoint(&ENGINE(triggerCentral.triggerShape),
-				&initState PASS_ENGINE_PARAMETER_SUFFIX);
+		calculateTriggerSynchPoint(ENGINE(triggerCentral.triggerShape),
+				initState PASS_ENGINE_PARAMETER_SUFFIX);
 
 		engine->engineCycleEventCount = TRIGGER_WAVEFORM(getLength());
 	}
@@ -123,9 +128,9 @@ void Engine::initializeTriggerWaveform(Logging *logger DECLARE_ENGINE_PARAMETER_
 				engineConfiguration->ambiguousOperationMode,
 				engine->engineConfigurationPtr->vvtCamSensorUseRise, &config);
 
-		ENGINE(triggerCentral).vvtShape.initializeSyncPoint(&initState,
-				&engine->vvtTriggerConfiguration,
-				&config);
+		ENGINE(triggerCentral).vvtShape.initializeSyncPoint(initState,
+				engine->vvtTriggerConfiguration,
+				config);
 	}
 
 	if (!alreadyLocked) {
@@ -163,7 +168,11 @@ static void assertCloseTo(const char * msg, float actual, float expected) {
 
 void Engine::periodicSlowCallback(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	ScopePerf perf(PE::EnginePeriodicSlowCallback);
-	
+
+	// Re-read config in case it's changed
+	primaryTriggerConfiguration.update();
+	vvtTriggerConfiguration.update();
+
 	watchdog();
 	updateSlowSensors(PASS_ENGINE_PARAMETER_SIGNATURE);
 	checkShutdown(PASS_ENGINE_PARAMETER_SIGNATURE);
@@ -245,11 +254,11 @@ void Engine::onTriggerSignalEvent(efitick_t nowNt) {
 	lastTriggerToothEventTimeNt = nowNt;
 }
 
-Engine::Engine() : primaryTriggerConfiguration(this), vvtTriggerConfiguration(this) {
+Engine::Engine() {
 	reset();
 }
 
-Engine::Engine(persistent_config_s *config) : primaryTriggerConfiguration(this), vvtTriggerConfiguration(this) {
+Engine::Engine(persistent_config_s *config) {
 	setConfig(config);
 	reset();
 }
@@ -369,7 +378,7 @@ void Engine::OnTriggerSyncronization(bool wasSynchronized) {
 		/**
 	 	 * We can check if things are fine by comparing the number of events in a cycle with the expected number of event.
 	 	 */
-		bool isDecodingError = triggerCentral.triggerState.validateEventCounters(&triggerCentral.triggerShape);
+		bool isDecodingError = triggerCentral.triggerState.validateEventCounters(triggerCentral.triggerShape);
 
 		enginePins.triggerDecoderErrorPin.setValue(isDecodingError);
 
@@ -394,10 +403,24 @@ void Engine::OnTriggerSyncronization(bool wasSynchronized) {
 }
 #endif
 
+void Engine::injectEngineReferences() {
+	Engine *engine = this;
+	EXPAND_Engine;
+
+	INJECT_ENGINE_REFERENCE(&primaryTriggerConfiguration);
+	INJECT_ENGINE_REFERENCE(&vvtTriggerConfiguration);
+
+	primaryTriggerConfiguration.update();
+	vvtTriggerConfiguration.update();
+	triggerCentral.init(PASS_ENGINE_PARAMETER_SIGNATURE);
+}
+
 void Engine::setConfig(persistent_config_s *config) {
 	this->config = config;
 	engineConfigurationPtr = &config->engineConfiguration;
 	memset(config, 0, sizeof(persistent_config_s));
+
+	injectEngineReferences();
 }
 
 void Engine::printKnockState(void) {

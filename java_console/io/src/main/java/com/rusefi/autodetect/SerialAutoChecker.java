@@ -1,7 +1,6 @@
 package com.rusefi.autodetect;
 
 import com.devexperts.logging.Logging;
-import com.rusefi.binaryprotocol.BinaryProtocolCommands;
 import com.rusefi.binaryprotocol.IncomingDataBuffer;
 import com.rusefi.config.generated.Fields;
 import com.rusefi.io.IoStream;
@@ -42,7 +41,7 @@ public class SerialAutoChecker implements Runnable {
         try {
             HelloCommand.send(stream);
             byte[] response = incomingData.getPacket("");
-            if (!checkResponseCode(response, BinaryProtocolCommands.RESPONSE_OK))
+            if (!checkResponseCode(response, (byte) Fields.TS_RESPONSE_OK))
                 return;
             String signature = new String(response, 1, response.length - 1);
             SIGNATURE = signature;

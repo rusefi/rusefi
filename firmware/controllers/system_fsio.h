@@ -1,6 +1,6 @@
 // this https://en.wikipedia.org/wiki/Reverse_Polish_notation is generated automatically
 // from controllers/system_fsio.txt
-// on 2020-09-10_21_37_44_443
+// on 2020-10-07_19_21_50_355
 //
 //
 // in this file we define system FSIO expressions
@@ -18,8 +18,8 @@
 // Human-readable: (fan and (coolant > cfg_fanOffTemperature)) | (coolant > cfg_fanOnTemperature) | is_clt_broken
 #define FAN_CONTROL_LOGIC "fan coolant cfg_fanofftemperature > and coolant cfg_fanontemperature > | is_clt_broken |"
 
-// Human-readable: (time_since_boot >= 0 & time_since_boot < startup_fuel_pump_duration) | (rpm > 0)
-#define FUEL_PUMP_LOGIC "time_since_boot 0 time_since_boot & >= startup_fuel_pump_duration < rpm 0 > |"
+// Human-readable: ((time_since_boot >= 0) & (time_since_boot < startup_fuel_pump_duration)) | (rpm > 0)
+#define FUEL_PUMP_LOGIC "time_since_boot 0 >= time_since_boot startup_fuel_pump_duration < & rpm 0 > |"
 
 // Human-readable: vbatt < 14.5
 #define ALTERNATOR_LOGIC "vbatt 14.5 <"

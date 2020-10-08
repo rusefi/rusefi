@@ -2,13 +2,12 @@ package com.rusefi.ui.livedocs;
 
 import com.rusefi.binaryprotocol.BinaryProtocol;
 import com.rusefi.config.Field;
+import com.rusefi.config.generated.Fields;
 import com.rusefi.ldmp.StateDictionary;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.rusefi.binaryprotocol.BinaryProtocolCommands.COMMAND_GET_STRUCT;
-import static com.rusefi.binaryprotocol.BinaryProtocolCommands.RESPONSE_OK;
 import static com.rusefi.binaryprotocol.IoHelper.putShort;
 import static com.rusefi.binaryprotocol.IoHelper.swap16;
 
@@ -43,12 +42,12 @@ public enum LiveDocsRegistry {
         int size = Field.getStructureSize(values);
 
         byte[] packet = new byte[5];
-        packet[0] = COMMAND_GET_STRUCT;
+        packet[0] = Fields.TS_GET_STRUCT;
         putShort(packet, 1, swap16(liveDocRequestId)); // offset
         putShort(packet, 3, swap16(size));
 
         byte[] responseWithCode = binaryProtocol.executeCommand(packet, "get LiveDoc");
-        if (responseWithCode == null || responseWithCode.length != (size + 1) || responseWithCode[0] != RESPONSE_OK)
+        if (responseWithCode == null || responseWithCode.length != (size + 1) || responseWithCode[0] != Fields.TS_RESPONSE_OK)
             return;
 
         byte[] response = new byte[size];

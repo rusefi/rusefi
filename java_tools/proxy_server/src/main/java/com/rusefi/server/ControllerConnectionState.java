@@ -1,6 +1,7 @@
 package com.rusefi.server;
 
 import com.devexperts.logging.Logging;
+import com.opensr5.ini.IniFileModel;
 import com.rusefi.SignatureHelper;
 import com.rusefi.auth.AuthTokenUtil;
 import com.rusefi.binaryprotocol.IncomingDataBuffer;
@@ -41,6 +42,7 @@ public class ControllerConnectionState {
     private final SensorsHolder sensorsHolder = new SensorsHolder();
     private final Birthday birthday = new Birthday();
     private int outputRoundAroundDuration;
+    private final IniFileModel iniFileModel = new IniFileModel();
 
     public ControllerConnectionState(Socket clientSocket, UserDetailsResolver userDetailsResolver) {
         this.clientSocket = clientSocket;
@@ -92,11 +94,13 @@ public class ControllerConnectionState {
     public void requestControllerInfo() throws IOException {
         HelloCommand.send(stream);
         String jsonString = HelloCommand.getHelloResponse(incomingData);
-        if (jsonString == null)
-            return;
+        if (jsonString == null) {
+            throw new IOException("Invalid HELLO response");
+        }
         sessionDetails = SessionDetails.valueOf(jsonString);
-        if (!AuthTokenUtil.isToken(sessionDetails.getAuthToken()))
+        if (!AuthTokenUtil.isToken(sessionDetails.getAuthToken())) {
             throw new IOException("Invalid token in " + jsonString);
+        }
 
         log.info(sessionDetails.getAuthToken() + " New client: " + sessionDetails.getControllerInfo());
         userDetails = userDetailsResolver.apply(sessionDetails.getAuthToken());
@@ -104,7 +108,12 @@ public class ControllerConnectionState {
             throw new IOException("Unable to resolve " + sessionDetails.getAuthToken());
         }
         Pair<String, String> p = SignatureHelper.getUrl(sessionDetails.getControllerInfo().getSignature());
-        SignatureHelper.downloadIfNotAvailable(p);
+        if (p == null)
+            throw new IOException("Invalid signature response");
+        String localFileName = SignatureHelper.downloadIfNotAvailable(p);
+        if (localFileName == null)
+            throw new IOException("Unable to download " + p.second);
+//        iniFileModel.readIniFile(localFileName);
 
         controllerKey = new ControllerKey(userDetails.getUserId(), sessionDetails.getControllerInfo());
         log.info("User " + userDetails);

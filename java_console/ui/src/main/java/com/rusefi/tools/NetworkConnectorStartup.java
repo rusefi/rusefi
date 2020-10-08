@@ -39,7 +39,7 @@ public class NetworkConnectorStartup {
                         log.error(message);
                         System.out.println(message);
                         // let's give wrapper bash script a chance to update software
-                        System.exit(NetworkConnectorContext.UPDATE_FIRMWARE_EXIT_CODE);
+                        System.exit(NetworkConnectorContext.UPDATE_RELEASE_FIRMWARE_EXIT_CODE);
                     }
                 } catch (IOException e) {
                     log.error("Ignoring", e);

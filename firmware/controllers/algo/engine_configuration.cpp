@@ -743,6 +743,7 @@ static void setDefaultEngineConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
     setDefaultBoostParameters(PASS_CONFIG_PARAMETER_SIGNATURE);
 #endif
 
+    CONFIG(tachPulsePerRev) = 1;
 
     // OBD-II default rate is 500kbps
     CONFIG(canBaudRate) = B500KBPS;

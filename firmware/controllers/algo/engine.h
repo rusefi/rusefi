@@ -54,33 +54,27 @@ class IEtbController;
 class IFuelComputer;
 class IInjectorModel;
 
-class PrimaryTriggerConfiguration : public TriggerConfiguration {
+class PrimaryTriggerConfiguration final : public TriggerConfiguration {
 public:
-	PrimaryTriggerConfiguration(Engine *engine);
-	bool isUseOnlyRisingEdgeForTrigger() const;
-	const char * getPrintPrefix() const;
-	bool isSilentTriggerError() const;
-	bool isVerboseTriggerSynchDetails() const;
-	debug_mode_e getDebugMode() const;
-	trigger_type_e getType() const;
-private:
-	Engine *engine;
+	PrimaryTriggerConfiguration() : TriggerConfiguration("TRG ") {}
+
+protected:
+	bool isUseOnlyRisingEdgeForTrigger() const override;
+	bool isVerboseTriggerSynchDetails() const override;
+	trigger_type_e getType() const override;
 };
 
-class VvtTriggerConfiguration : public TriggerConfiguration {
+class VvtTriggerConfiguration final : public TriggerConfiguration {
 public:
-	VvtTriggerConfiguration(Engine *engine);
-	bool isUseOnlyRisingEdgeForTrigger() const;
-	const char * getPrintPrefix() const;
-	bool isSilentTriggerError() const;
-	bool isVerboseTriggerSynchDetails() const;
-	debug_mode_e getDebugMode() const;
-	trigger_type_e getType() const;
-private:
-	Engine *engine;
+	VvtTriggerConfiguration() : TriggerConfiguration("TRG ") {}
+
+protected:
+	bool isUseOnlyRisingEdgeForTrigger() const override;
+	bool isVerboseTriggerSynchDetails() const override;
+	trigger_type_e getType() const override;
 };
 
-class Engine : public TriggerStateListener {
+class Engine final : public TriggerStateListener {
 public:
 	explicit Engine(persistent_config_s *config);
 	Engine();
@@ -398,6 +392,8 @@ private:
 	 */
 	bool isSpinning = false;
 	void reset();
+
+	void injectEngineReferences();
 };
 
 void prepareShapes(DECLARE_ENGINE_PARAMETER_SIGNATURE);
