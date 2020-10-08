@@ -15,7 +15,7 @@ do
  fi
  # in java code that's UPDATE_RELEASE_SBC_EXIT_CODE magic number
  if [ $exit_status -eq 17 ]; then
-    echo Connector software update to latest was requested
+    echo Connector software update to release was requested
     bin/update_bundle_release.sh
  fi
  # in java code that's UPDATE_FIRMWARE_EXIT_CODE magic number
