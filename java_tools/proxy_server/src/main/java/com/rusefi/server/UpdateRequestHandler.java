@@ -46,10 +46,11 @@ public class UpdateRequestHandler implements Take {
             if (state == null)
                 throw new IOException("Not acquired " + tuner);
 
+            UpdateType type = UpdateType.valueOf(updateTypeString);
+
             // should controller communication happen on http thread or not?
             new Thread(() -> {
                 try {
-                    UpdateType type = UpdateType.valueOf(updateTypeString);
                     state.invokeOnlineCommand(type.getCode());
                 } catch (IOException e) {
                     throw new IllegalStateException(e);
@@ -58,7 +59,7 @@ public class UpdateRequestHandler implements Take {
                 }
             }).start();
 
-            log.debug("Update request " + tuner);
+            log.debug("Update request " + tuner + " " + type);
         } catch (IOException e) {
             objectBuilder.add("result", "error: " + e);
             return new RsJson(objectBuilder.build());
