@@ -6,6 +6,7 @@ import com.rusefi.Listener;
 import com.rusefi.Timeouts;
 import com.rusefi.binaryprotocol.BinaryProtocol;
 import com.rusefi.binaryprotocol.IncomingDataBuffer;
+import com.rusefi.binaryprotocol.IoHelper;
 import com.rusefi.config.generated.Fields;
 import com.rusefi.io.IoStream;
 import com.rusefi.proxy.NetworkConnector;
@@ -80,7 +81,7 @@ public class BinaryProtocolProxy {
     @NotNull
     private static BinaryProtocolServer.Packet readClientRequest(IncomingDataBuffer in, byte firstByte) throws IOException {
         byte secondByte = in.readByte();
-        int length = firstByte * 256 + secondByte;
+        int length = IoHelper.getInt(firstByte, secondByte);
 
         return BinaryProtocolServer.readPromisedBytes(in, length);
     }

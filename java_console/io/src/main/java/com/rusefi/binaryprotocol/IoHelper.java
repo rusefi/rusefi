@@ -65,4 +65,8 @@ public class IoHelper {
     public static boolean checkResponseCode(byte[] response, byte code) {
         return response != null && response.length > 0 && response[0] == code;
     }
+
+    public static int getInt(byte firstByte, byte secondByte) {
+        return firstByte * 256 + (secondByte & 0xFF);
+    }
 }
