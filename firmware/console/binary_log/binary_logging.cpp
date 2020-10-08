@@ -14,7 +14,7 @@
 #define TIME_PRECISION 1000
 
 // floating number of seconds with millisecond precision
-scaled_channel<uint32_t, TIME_PRECISION> packedTime;
+static scaled_channel<uint32_t, TIME_PRECISION> packedTime;
 
 static const LogField fields[] = {
 	{tsOutputChannels.rpm, GAUGE_NAME_RPM, "rpm", 0},
