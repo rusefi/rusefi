@@ -4,8 +4,6 @@
 
 EXTERN_CONFIG;
 
-static Logging *sharedLogger;
-
 OutputPin tcuSolenoids[efi::size(CONFIG(tcu_solenoid))];
 
 SimpleTransmissionController::SimpleTransmissionController() {
