@@ -29,10 +29,12 @@ public class Autoupdate {
         String bundleFullName = readBundleFullName();
 
         if (args.length > 0 && args[0].equalsIgnoreCase("release")) {
+            System.out.println("Release update requested");
             handleBundle(bundleFullName, UpdateMode.ALWAYS, ConnectionAndMeta.BASE_URL_RELEASE);
             return;
         }
-        
+
+        System.out.println("Latest update requested");
         UpdateMode mode = getMode();
         if (mode != UpdateMode.NEVER) {
             if (bundleFullName != null) {
@@ -73,6 +75,7 @@ public class Autoupdate {
         try {
             String zipFileName = bundleFullName + "_autoupdate" + ".zip";
             ConnectionAndMeta connectionAndMeta = new ConnectionAndMeta(zipFileName).invoke(baseUrl);
+            System.out.println("Remote file " + zipFileName);
             System.out.println("Server has " + connectionAndMeta.getCompleteFileSize() + " from " + new Date(connectionAndMeta.getLastModified()));
 
             if (AutoupdateUtil.hasExistingFile(zipFileName, connectionAndMeta.getCompleteFileSize(), connectionAndMeta.getLastModified())) {
