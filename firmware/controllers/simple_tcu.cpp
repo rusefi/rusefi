@@ -1,9 +1,12 @@
 #include "simple_tcu.h"
 #include "efi_gpio.h"
+#include "engine.h"
 #include "global.h"
 #include "engine_configuration.h"
 
 EXTERN_CONFIG;
+
+static Logging *sharedLogger;
 
 OutputPin tcuSolenoids[efi::size(CONFIG(tcu_solenoid))];
 
