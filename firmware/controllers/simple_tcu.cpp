@@ -1,6 +1,6 @@
 #include "simple_tcu.h"
 #include "efi_gpio.h"
-#include "engine.h"
+#include "global.h"
 #include "engine_configuration.h"
 
 EXTERN_CONFIG;
