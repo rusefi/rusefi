@@ -520,7 +520,7 @@ int sensorSnifferRpmThreshold;+Disable sensor sniffer above this rpm;"RPM",     
 
 
 custom engine_load_mode_e 4 bits, U32, @OFFSET@, [0:2], @@engine_load_mode_e_enum@@
-engine_load_mode_e fuelAlgorithm;+This setting controls which fuel quantity control algorithm is used.\nSee also useTPSAdvanceTable\nset algorithm X
+engine_load_mode_e fuelAlgorithm;+This setting controls which fuel quantity control algorithm is used.
 
 
 custom injection_mode_e 4 bits, U32, @OFFSET@, [0:1], "Simultaneous", "Sequential", "Batch", "Single Point"
@@ -535,7 +535,7 @@ ignition_mode_e ignitionMode;+"Single Coil" is for use on distributed ignition s
 angle_t ignitionOffset;+this value could be used to offset the whole ignition timing table by a constant;"RPM",    1,      0,       0,  3000.0,      0
 
 custom timing_mode_e 4 bits, U32, @OFFSET@ [0:0], "dynamic", "fixed"
-timing_mode_e timingMode;+Dynamic uses the timing map to decide the ignition timing, Static timing fixes the timing to the value set below (only use for checking static timing).
+timing_mode_e timingMode;+Dynamic uses the timing map to decide the ignition timing, Static timing fixes the timing to the value set below (only use for checking static timing with a timing light).
 
 angle_t fixedModeTiming;+This value is the ignition timing used when in 'fixed timing' mode, i.e. constant timing\nThis mode is useful when adjusting distributor location.;"RPM",    1,      0,       0,  3000.0,      0
 
@@ -1025,7 +1025,7 @@ custom idle_mode_e 4 bits,    U32,   @OFFSET@, [0:0], "Automatic", "Manual"
 bit useFixedBaroCorrFromMap
 bit useSeparateAdvanceForCranking;+This activates a separate advance table for cranking conditions, this allows cranking advance to be RPM dependant.
 bit useAdvanceCorrectionsForCranking;+This enables the various ignition corrections during cranking (IAT, CLT, FSIO and PID idle).
-bit useTPSAdvanceTable;+This flag allows to use TPS for ignition lookup while in Speed Density Fuel Mode
+bit unused1476b19;
 bit unused1476b20;
 bit useIacPidMultTable;+This flag allows to use a special 'PID Multiplier' table (0.0-1.0) to compensate for nonlinear nature of IAC-RPM controller
 bit isBoostControlEnabled;
@@ -1194,7 +1194,8 @@ int16_t tps2Max;Full throttle#2. tpsMax value as 10 bit ADC value. Not Voltage!\
 	brain_pin_e can2RxPin;set_can2_rx_pin X	
 	pin_output_mode_e starterControlPinMode;
 	adc_channel_e wastegatePositionSensor;
-	uint8_t[4] unused_former_warmup_target_afr;;"units", 1, 0, -20, 100, 0
+	afr_override_e ignOverrideMode;+Override the Y axis (load) value used for the ignition table.\nAdvanced users only: If you aren't sure you need this, you probably don't need this.
+	uint8_t[3] unused_former_warmup_target_afr;;"units", 1, 0, -20, 100, 0
 
 	float boostCutPressure;+MAP value above which fuel is cut in case of overboost.\n0 to disable overboost cut.;"kPa (absolute)",        1,     0,    0, 500,     0
 
