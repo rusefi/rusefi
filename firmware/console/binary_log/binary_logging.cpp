@@ -48,18 +48,18 @@ static const LogField fields[] = {
 	{tsOutputChannels.tpsAccelFuel, GAUGE_NAME_FUEL_TPS_EXTRA, "ms", 3},
 	{tsOutputChannels.ignitionAdvance, GAUGE_NAME_TIMING_ADVANCE, "deg", 1},
 	{tsOutputChannels.sparkDwell, GAUGE_COIL_DWELL_TIME, "ms", 1},
-//	{tsOutputChannels.coilDutyCycle, GAUGE_NAME_DWELL_DUTY, "%", 0},
+	{tsOutputChannels.coilDutyCycle, GAUGE_NAME_DWELL_DUTY, "%", 0},
 	{tsOutputChannels.idlePosition, GAUGE_NAME_IAC, "%", 1},
 	{tsOutputChannels.etbTarget, "ETB Target", "%", 2},
 	{tsOutputChannels.etb1DutyCycle, "ETB Duty", "%", 1},
 	{tsOutputChannels.etb1Error, "ETB Error", "%", 3},
-//	{tsOutputChannels.fuelTankLevel, "fuel level", "%", 0},
+	{tsOutputChannels.fuelTankLevel, "fuel level", "%", 0},
 	{tsOutputChannels.fuelingLoad, GAUGE_NAME_FUEL_LOAD, "%", 1},
 	{tsOutputChannels.ignitionLoad, GAUGE_NAME_IGNITION_LOAD, "%", 1},
 	{tsOutputChannels.massAirFlow, GAUGE_NAME_AIR_FLOW, "kg/h", 1},
 };
 
-void writeHeader(char* buffer) {
+size_t writeHeader(char* buffer) {
 	// File format: MLVLG\0
 	strncpy(buffer, "MLVLG", 6);
 
@@ -77,11 +77,7 @@ void writeHeader(char* buffer) {
 	buffer[12] = 0;
 	buffer[13] = 0;
 
-	// Data begin index - always begin at 4096 = 0x800 bytes to allow space for header
-	buffer[14] = 0;
-	buffer[15] = 0;
-	buffer[16] = 0x08;
-	buffer[17] = 0x00;
+	// Index 14-17 are written at the end - header end offset
 
 	// Record length - length of a single data record: sum size of all fields
 	uint16_t recLength = 0;
@@ -96,12 +92,23 @@ void writeHeader(char* buffer) {
 	buffer[20] = 0;
 	buffer[21] = efi::size(fields);
 
+	size_t headerSize = MLQ_HEADER_SIZE;
+
 	// Write the actual logger fields, offset 22
 	char* entryHeaders = buffer + MLQ_HEADER_SIZE;
 	for (size_t i = 0; i < efi::size(fields); i++) {
 		size_t sz = fields[i].writeHeader(entryHeaders);
 		entryHeaders += sz;
+		headerSize += sz;
 	}
+
+	// Data begin index: begins immediately after the header
+	buffer[14] = 0;
+	buffer[15] = 0;
+	buffer[16] = (headerSize >> 8) & 0xFF;
+	buffer[17] = headerSize & 0xFF;
+
+	return headerSize;
 }
 
 static uint8_t blockRollCounter = 0;
