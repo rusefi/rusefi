@@ -105,6 +105,7 @@ public class TestHelper {
 
     public static void assertLatch(String message, CountDownLatch reconnectCounter) throws InterruptedException {
         assertTrue(message, reconnectCounter.await(READ_IMAGE_TIMEOUT, TimeUnit.MILLISECONDS));
+        System.out.println(message + " is good");
     }
 
     public static void assertLatch(CountDownLatch reconnectCounter) throws InterruptedException {
