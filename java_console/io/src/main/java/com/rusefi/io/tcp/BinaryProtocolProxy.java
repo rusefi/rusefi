@@ -16,7 +16,6 @@ import java.io.ByteArrayInputStream;
 import java.io.DataInputStream;
 import java.io.IOException;
 import java.net.Socket;
-import java.util.concurrent.atomic.AtomicInteger;
 
 import static com.devexperts.logging.Logging.getLogging;
 import static com.rusefi.config.generated.Fields.TS_PROTOCOL;
@@ -31,12 +30,12 @@ public class BinaryProtocolProxy {
      */
     public static final int USER_IO_TIMEOUT = 10 * Timeouts.MINUTE;
 
-    public static ServerSocketReference createProxy(IoStream targetEcuSocket, int serverProxyPort, AtomicInteger relayCommandCounter) throws IOException {
+    public static ServerSocketReference createProxy(IoStream targetEcuSocket, int serverProxyPort, ClientApplicationActivityListener clientApplicationActivityListener) throws IOException {
         CompatibleFunction<Socket, Runnable> clientSocketRunnableFactory = clientSocket -> () -> {
             TcpIoStream clientStream = null;
             try {
                 clientStream = new TcpIoStream("[[proxy]] ", clientSocket);
-                runProxy(targetEcuSocket, clientStream, relayCommandCounter, USER_IO_TIMEOUT);
+                runProxy(targetEcuSocket, clientStream, clientApplicationActivityListener, USER_IO_TIMEOUT);
             } catch (IOException e) {
                 log.error("BinaryProtocolProxy::run " + e);
                 close(clientStream);
@@ -45,7 +44,14 @@ public class BinaryProtocolProxy {
         return BinaryProtocolServer.tcpServerSocket(serverProxyPort, "proxy", clientSocketRunnableFactory, Listener.empty());
     }
 
-    public static void runProxy(IoStream targetEcu, IoStream clientStream, AtomicInteger relayCommandCounter, int timeoutMs) throws IOException {
+    public interface ClientApplicationActivityListener {
+        ClientApplicationActivityListener VOID = () -> {
+        };
+
+        void onActivity();
+    }
+
+    public static void runProxy(IoStream targetEcu, IoStream clientStream, ClientApplicationActivityListener listener, int timeoutMs) throws IOException {
         /*
          * Each client socket is running on it's own thread
          */
@@ -60,6 +66,7 @@ public class BinaryProtocolProxy {
             byte[] packet = clientRequest.getPacket();
             if (packet.length > 1 && packet[0] == Fields.TS_ONLINE_PROTOCOL && packet[1] == NetworkConnector.DISCONNECT)
                 throw new IOException("User requested disconnect");
+            listener.onActivity();
 
             /**
              * Two reasons for synchronization:
@@ -70,7 +77,6 @@ public class BinaryProtocolProxy {
             synchronized (targetEcu) {
                 sendToTarget(targetEcu, clientRequest);
                 controllerResponse = targetEcu.readPacket();
-                relayCommandCounter.incrementAndGet();
             }
 
             log.info("Relaying controller response length=" + controllerResponse.getPacket().length);
