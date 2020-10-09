@@ -7,6 +7,7 @@ import com.opensr5.ini.IniFileModel;
 import com.rusefi.TsTuneReader;
 import com.rusefi.ui.util.FrameHelper;
 
+import javax.swing.*;
 import java.util.ArrayList;
 import java.util.Objects;
 
@@ -38,7 +39,9 @@ public class PluginBodySandbox {
         doReturn(new String[]{PROJECT_NAME}).when(controllerAccess).getEcuConfigurationNames();
         doReturn(controllerParameterServer).when(controllerAccess).getControllerParameterServer();
 
-        new FrameHelper().showFrame(new PluginEntry(() -> controllerAccess).getContent());
+        FrameHelper frameHelper = new FrameHelper();
+        frameHelper.getFrame().setDefaultCloseOperation(JDialog.EXIT_ON_CLOSE);
+        frameHelper.showFrame(new PluginEntry(() -> controllerAccess).getContent());
     }
 
 }

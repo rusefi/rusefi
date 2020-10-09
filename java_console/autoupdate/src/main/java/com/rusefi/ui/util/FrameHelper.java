@@ -1,8 +1,10 @@
 package com.rusefi.ui.util;
 
 import javax.swing.*;
+import java.awt.*;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.util.Arrays;
 
 /**
  * Date: 3/24/13
@@ -38,6 +40,11 @@ public class FrameHelper {
             @Override
             public void windowClosed(WindowEvent ev) {
                 onWindowClosed();
+                for (Thread t : Thread.getAllStackTraces().keySet()) {
+                    if (!t.isDaemon())
+                        System.out.println("Non-daemon thread: " + t);
+                }
+                System.out.println(Arrays.toString(Frame.getFrames()));
             }
         });
         frame.add(component);
