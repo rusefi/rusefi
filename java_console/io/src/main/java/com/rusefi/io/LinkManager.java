@@ -7,7 +7,6 @@ import com.rusefi.NamedThreadFactory;
 import com.rusefi.binaryprotocol.BinaryProtocol;
 import com.rusefi.binaryprotocol.BinaryProtocolState;
 import com.rusefi.core.EngineState;
-import com.rusefi.core.MessagesCentral;
 import com.rusefi.io.serial.StreamConnector;
 import com.rusefi.io.serial.SerialIoStreamJSerialComm;
 import com.rusefi.io.tcp.TcpConnector;
@@ -15,7 +14,6 @@ import com.rusefi.io.tcp.TcpIoStream;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.Closeable;
-import java.net.Socket;
 import java.util.Arrays;
 import java.util.Objects;
 import java.util.concurrent.*;
@@ -213,14 +211,8 @@ public class LinkManager implements Closeable {
                 @Override
                 public IoStream call() {
                     messageListener.postMessage(getClass(), "Opening port: " + port);
-                    Socket socket;
                     try {
-                        int portPart = TcpConnector.getTcpPort(port);
-                        String hostname = TcpConnector.getHostname(port);
-                        socket = new Socket(hostname, portPart);
-                        TcpIoStream tcpIoStream = new TcpIoStream("[start] ", socket);
-
-                        return tcpIoStream;
+                        return TcpIoStream.open(port);
                     } catch (Throwable e) {
                         stateListener.onConnectionFailed();
                         return null;
