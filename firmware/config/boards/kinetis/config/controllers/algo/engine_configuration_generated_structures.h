@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Fri Oct 09 06:10:41 UTC 2020
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Fri Oct 09 21:18:30 UTC 2020
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -861,8 +861,6 @@ struct engine_configuration_s {
 	int rpmHardLimit;
 	/**
 	 * This setting controls which fuel quantity control algorithm is used.
-	 * See also useTPSAdvanceTable
-	 * set algorithm X
 	 * offset 420
 	 */
 	engine_load_mode_e fuelAlgorithm;
@@ -903,7 +901,7 @@ struct engine_configuration_s {
 	 */
 	angle_t ignitionOffset;
 	/**
-	 * Dynamic uses the timing map to decide the ignition timing, Static timing fixes the timing to the value set below (only use for checking static timing).
+	 * Dynamic uses the timing map to decide the ignition timing, Static timing fixes the timing to the value set below (only use for checking static timing with a timing light).
 	 * offset 448
 	 */
 	timing_mode_e timingMode;
@@ -2203,9 +2201,8 @@ struct engine_configuration_s {
 	offset 1476 bit 18 */
 	bool useAdvanceCorrectionsForCranking : 1;
 	/**
-	 * This flag allows to use TPS for ignition lookup while in Speed Density Fuel Mode
 	offset 1476 bit 19 */
-	bool useTPSAdvanceTable : 1;
+	bool unused1476b19 : 1;
 	/**
 	offset 1476 bit 20 */
 	bool unused1476b20 : 1;
@@ -2770,9 +2767,15 @@ struct engine_configuration_s {
 	 */
 	adc_channel_e wastegatePositionSensor;
 	/**
+	 * Override the Y axis (load) value used for the ignition table.
+	 * Advanced users only: If you aren't sure you need this, you probably don't need this.
 	 * offset 2128
 	 */
-	uint8_t unused_former_warmup_target_afr[4];
+	afr_override_e ignOverrideMode;
+	/**
+	 * offset 2129
+	 */
+	uint8_t unused_former_warmup_target_afr[3];
 	/**
 	 * MAP value above which fuel is cut in case of overboost.
 	 * 0 to disable overboost cut.
@@ -3729,4 +3732,4 @@ struct persistent_config_s {
 typedef struct persistent_config_s persistent_config_s;
 
 // end
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Fri Oct 09 06:10:41 UTC 2020
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Fri Oct 09 21:18:30 UTC 2020
