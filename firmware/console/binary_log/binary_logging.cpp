@@ -16,10 +16,12 @@
 // floating number of seconds with millisecond precision
 static scaled_channel<uint32_t, TIME_PRECISION> packedTime;
 
+// todo: we are at the edge of sdLogBuffer size and at the moment we have no code to make sure buffer does not overflow
+// todo: make this logic smarter
 static const LogField fields[] = {
 	{tsOutputChannels.rpm, GAUGE_NAME_RPM, "rpm", 0},
-	{packedTime, GAUGE_NAME_TIME, "sec", 0},
-	{tsOutputChannels.totalTriggerErrorCounter, GAUGE_NAME_TRG_ERR, "err", 0},
+//	{packedTime, GAUGE_NAME_TIME, "sec", 0},
+//	{tsOutputChannels.totalTriggerErrorCounter, GAUGE_NAME_TRG_ERR, "err", 0},
 	{tsOutputChannels.vehicleSpeedKph, GAUGE_NAME_VVS, "kph", 0},
 	{tsOutputChannels.internalMcuTemperature, GAUGE_NAME_CPU_TEMP, "C", 0},
 	{tsOutputChannels.coolantTemperature, GAUGE_NAME_CLT, "C", 1},
