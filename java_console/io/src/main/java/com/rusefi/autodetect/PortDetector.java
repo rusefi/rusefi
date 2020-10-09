@@ -30,6 +30,9 @@ public class PortDetector {
      */
     @Nullable
     public static String autoDetectSerial(Function<IoStream, Void> callback) {
+        String rusEfiAddress = System.getProperty("rusefi.address");
+        if (rusEfiAddress != null)
+            return rusEfiAddress;
         String[] serialPorts = getPortNames();
         if (serialPorts.length == 0) {
             log.error("No serial ports detected");

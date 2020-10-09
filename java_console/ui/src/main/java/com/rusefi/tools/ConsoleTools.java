@@ -311,9 +311,6 @@ public class ConsoleTools {
 
     @Nullable
     private static String autoDetectPort() {
-        String rusEfiAddress = System.getProperty("rusefi.address");
-        if (rusEfiAddress != null)
-            return rusEfiAddress;
         String autoDetectedPort = PortDetector.autoDetectSerial(null);
         if (autoDetectedPort == null) {
             System.err.println(RUS_EFI_NOT_DETECTED);
