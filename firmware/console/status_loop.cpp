@@ -147,15 +147,15 @@ void writeLogLine() {
 	if (!main_loop_started)
 		return;
 
-	size_t length = efi::size(sdLogBuffer);
-
+	size_t length;
 	if (binaryLogCount == 0) {
-		memset(sdLogBuffer, 0xAA, length);
-		writeHeader(sdLogBuffer);
+		length = writeHeader(sdLogBuffer);
 	} else {
 		updateTunerStudioState(&tsOutputChannels);
 		length = writeBlock(sdLogBuffer);
 	}
+
+	efiAssertVoid(OBD_PCM_Processor_Fault, length <= efi::size(sdLogBuffer), "SD log buffer overflow");
 
 	appendToLog(sdLogBuffer, length);
 
