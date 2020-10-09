@@ -1,7 +1,7 @@
 #include "gear_controller.h"
 #include "tunerstudio_outputs.h"
 
-GearControllerBase::GearControllerBase() {
+void GearControllerBase::init() {
     transmissionController.init();
 }
 

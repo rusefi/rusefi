@@ -11,7 +11,7 @@ class GearControllerBase {
 public:
     virtual void update();
     gear_e getDesiredGear() const;
-    GearControllerBase();
+    virtual void init();
 private:
     gear_e desiredGear = NEUTRAL;
 protected:

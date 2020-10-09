@@ -16,6 +16,7 @@ void ButtonShiftController::init (DECLARE_ENGINE_PARAMETER_SIGNATURE) {
     // 500 millisecond is maybe a little long?
     debounceUp.init(500, CONFIG(tcuUpshiftButtonPin), CONFIG(tcuUpshiftButtonPinMode));
     debounceDown.init(500, CONFIG(tcuDownshiftButtonPin), CONFIG(tcuDownshiftButtonPinMode));
+    transmissionController.init();
 }
 
 void ButtonShiftController::update() {
