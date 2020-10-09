@@ -27,5 +27,5 @@ public:
 void initTriggerEmulatorLogic(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX);
 
 int getPreviousIndex(const int currentIndex, const int size);
-bool needEvent(const int currentIndex, const int size, MultiChannelStateSequence *multiChannelStateSequence, int channelIndex);
+bool needEvent(const int currentIndex, const int size, const MultiChannelStateSequence& mcss, int channelIndex);
 

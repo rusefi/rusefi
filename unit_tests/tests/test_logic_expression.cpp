@@ -15,7 +15,7 @@
 
 #define TEST_POOL_SIZE 256
 
-float getEngineValue(le_action_e action DECLARE_ENGINE_PARAMETER_SUFFIX) {
+FsioValue getEngineValue(le_action_e action DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	switch(action) {
 	case LE_METHOD_FAN:
 		return engine->fsioState.mockFan;
@@ -36,11 +36,11 @@ float getEngineValue(le_action_e action DECLARE_ENGINE_PARAMETER_SUFFIX) {
 #include "fsio_getters.def"
 	default:
 	firmwareError(OBD_PCM_Processor_Fault, "FSIO: No mock value for %d", action);
-		return NAN;
+		return unexpected;
 	}
 }
 
-static void testParsing(void) {
+TEST(fsio, testParsing) {
 	char buffer[64];
 
 	ASSERT_TRUE(strEqualCaseInsensitive("hello", "HELlo"));
@@ -95,7 +95,7 @@ static void testExpression2(float selfValue, const char *line, float expected, E
 
 	EXPAND_Engine;
 
-	ASSERT_EQ(expected, c.getValue2(selfValue, element PASS_ENGINE_PARAMETER_SUFFIX)) << line;
+	ASSERT_NEAR(expected, c.getValue2(selfValue, element PASS_ENGINE_PARAMETER_SUFFIX), EPS4D) << line;
 }
 
 static void testExpression2(float selfValue, const char *line, float expected, const std::unordered_map<SensorType, float>& sensorVals = {}) {
@@ -105,10 +105,6 @@ static void testExpression2(float selfValue, const char *line, float expected, c
 
 static void testExpression(const char *line, float expectedValue, const std::unordered_map<SensorType, float>& sensorVals = {}) {
 	testExpression2(0, line, expectedValue, sensorVals);
-}
-
-TEST(fsio, testIfFunction) {
-	testExpression("1 22 33 if", 22);
 }
 
 TEST(fsio, testHysteresisSelf) {
@@ -144,8 +140,58 @@ TEST(fsio, testHysteresisSelf) {
 	ASSERT_EQ(1, selfValue);
 }
 
+TEST(fsio, testLiterals) {
+	// Constants - single token
+	testExpression("123", 123.0f);
+	testExpression("true", 1);
+	testExpression("false", 0);
+}
+
+TEST(fsio, mathOperators) {
+	// Test basic operations
+	testExpression("123 456 +", 579);
+	testExpression("123 456 -", -333);
+	testExpression("123 456 *", 56088);
+	testExpression("123 456 /", 0.269737f);
+}
+
+TEST(fsio, comparisonOperators) {
+	// Comparison operators
+	testExpression("123 456 >", 0);
+	testExpression("123 456 >=", 0);
+	testExpression("123 456 <", 1);
+	testExpression("123 456 <=", 1);
+	testExpression("123 456 min", 123);
+	testExpression("123 456 max", 456);
+}
+
+TEST(fsio, booleanOperators) {
+	// Boolean operators
+	testExpression("true true and", 1);
+	testExpression("true false and", 0);
+	testExpression("true false or", 1);
+	testExpression("false false or", 0);
+	// (both ways to write and/or)
+	testExpression("true true &", 1);
+	testExpression("true false &", 0);
+	testExpression("true false |", 1);
+	testExpression("false false |", 0);
+
+	// not operator
+	testExpression("true not", 0);
+	testExpression("false not", 1);
+}
+
+TEST(fsio, extraOperators) {
+	// Self operator
+	testExpression2(123, "self 1 +", 124);
+
+	// ternary operator
+	testExpression("1 22 33 if", 22);
+	testExpression("0 22 33 if", 33);
+}
+
 TEST(fsio, testLogicExpressions) {
-	testParsing();
 	{
 
 	WITH_ENGINE_TEST_HELPER(FORD_INLINE_6_1995);
@@ -153,13 +199,13 @@ TEST(fsio, testLogicExpressions) {
 	LECalculator c;
 
 	LEElement value1;
-	value1.init(LE_NUMERIC_VALUE, 123.0);
+	value1.init(LE_NUMERIC_VALUE, 123.0f);
 	c.add(&value1);
 
 	assertEqualsM("123", 123.0, c.getValue(0 PASS_ENGINE_PARAMETER_SUFFIX));
 
 	LEElement value2;
-	value2.init(LE_NUMERIC_VALUE, 321.0);
+	value2.init(LE_NUMERIC_VALUE, 321.0f);
 	c.add(&value2);
 
 	LEElement value3;
@@ -180,7 +226,7 @@ TEST(fsio, testLogicExpressions) {
 	e->init(LE_METHOD_TIME_SINCE_BOOT);
 
 	e = pool.next();
-	e->init(LE_NUMERIC_VALUE, 4);
+	e->init(LE_NUMERIC_VALUE, 4.0f);
 
 	e = pool.next();
 	e->init(LE_OPERATOR_LESS);
@@ -189,7 +235,7 @@ TEST(fsio, testLogicExpressions) {
 	e->init(LE_METHOD_RPM);
 
 	e = pool.next();
-	e->init(LE_NUMERIC_VALUE, 0);
+	e->init(LE_NUMERIC_VALUE, 0.0f);
 
 	e = pool.next();
 	e->init(LE_OPERATOR_MORE);
@@ -217,11 +263,6 @@ TEST(fsio, testLogicExpressions) {
 	testExpression("coolant 90 >", 1, sensorVals);
 	testExpression("fan not coolant 90 > and", 1, sensorVals);
 
-	testExpression("100 200 1 if", 200);
-	testExpression("10 99 max", 99);
-
-	testExpression2(123, "10 self max", 123);
-
 	testExpression("fan NOT coolant 90 > AND fan coolant 85 > AND OR", 1, sensorVals);
 
 	{
@@ -237,12 +278,6 @@ TEST(fsio, testLogicExpressions) {
 		ASSERT_EQ(102, c.calcLogAction[0]);
 		ASSERT_EQ(0, c.calcLogValue[0]);
 	}
-
-
-	testExpression("0 1 &", 0);
-	testExpression("0 1 |", 1);
-
-	testExpression("0 1 >", 0);
 
 	{
 		WITH_ENGINE_TEST_HELPER_SENS(FORD_INLINE_6_1995, sensorVals);

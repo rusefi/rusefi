@@ -433,6 +433,11 @@ typedef enum {
 	 */
 	VVT_BOSCH_QUICK_START = 5,
 
+	/**
+	 * 1.8l Toyota 1ZZ-FE https://rusefi.com/forum/viewtopic.php?f=3&t=1735
+	 */
+	VVT_4_1 = 6,
+
 	Force_4_bytes_size_vvt_mode = ENUM_32_BITS,
 } vvt_mode_e;
 

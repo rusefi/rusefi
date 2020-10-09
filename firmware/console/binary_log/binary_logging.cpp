@@ -10,8 +10,18 @@
 #include "efitime.h"
 #include "crc.h"
 
+
+#define TIME_PRECISION 1000
+
+// floating number of seconds with millisecond precision
+static scaled_channel<uint32_t, TIME_PRECISION> packedTime;
+
+// todo: we are at the edge of sdLogBuffer size and at the moment we have no code to make sure buffer does not overflow
+// todo: make this logic smarter
 static const LogField fields[] = {
 	{tsOutputChannels.rpm, GAUGE_NAME_RPM, "rpm", 0},
+	{packedTime, GAUGE_NAME_TIME, "sec", 0},
+	{tsOutputChannels.totalTriggerErrorCounter, GAUGE_NAME_TRG_ERR, "err", 0},
 	{tsOutputChannels.vehicleSpeedKph, GAUGE_NAME_VVS, "kph", 0},
 	{tsOutputChannels.internalMcuTemperature, GAUGE_NAME_CPU_TEMP, "C", 0},
 	{tsOutputChannels.coolantTemperature, GAUGE_NAME_CLT, "C", 1},
@@ -38,12 +48,12 @@ static const LogField fields[] = {
 	{tsOutputChannels.tpsAccelFuel, GAUGE_NAME_FUEL_TPS_EXTRA, "ms", 3},
 	{tsOutputChannels.ignitionAdvance, GAUGE_NAME_TIMING_ADVANCE, "deg", 1},
 	{tsOutputChannels.sparkDwell, GAUGE_COIL_DWELL_TIME, "ms", 1},
-	{tsOutputChannels.coilDutyCycle, GAUGE_NAME_DWELL_DUTY, "%", 0},
+//	{tsOutputChannels.coilDutyCycle, GAUGE_NAME_DWELL_DUTY, "%", 0},
 	{tsOutputChannels.idlePosition, GAUGE_NAME_IAC, "%", 1},
 	{tsOutputChannels.etbTarget, "ETB Target", "%", 2},
 	{tsOutputChannels.etb1DutyCycle, "ETB Duty", "%", 1},
 	{tsOutputChannels.etb1Error, "ETB Error", "%", 3},
-	{tsOutputChannels.fuelTankLevel, "fuel level", "%", 0},
+//	{tsOutputChannels.fuelTankLevel, "fuel level", "%", 0},
 	{tsOutputChannels.fuelingLoad, GAUGE_NAME_FUEL_LOAD, "%", 1},
 	{tsOutputChannels.ignitionLoad, GAUGE_NAME_IGNITION_LOAD, "%", 1},
 	{tsOutputChannels.massAirFlow, GAUGE_NAME_AIR_FLOW, "kg/h", 1},
@@ -107,6 +117,8 @@ size_t writeBlock(char* buffer) {
 	uint16_t timestamp = getTimeNowUs() / 10;
 	buffer[2] = timestamp >> 8;
 	buffer[3] = timestamp & 0xFF;
+
+	packedTime = currentTimeMillis() * 1.0 / TIME_PRECISION;
 
 	// Offset 4 = field data
 	const char* dataBlockStart = buffer + 4;

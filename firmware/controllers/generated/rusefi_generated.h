@@ -249,6 +249,7 @@
 #define CMD_DISABLE "disable"
 #define CMD_ENABLE "enable"
 #define CMD_ENGINE_TYPE "engine_type"
+#define CMD_ENGINESNIFFERRPMTHRESHOLD "engineSnifferRpmThreshold"
 #define CMD_ETB_DUTY "set_etb_duty"
 #define CMD_FUEL_BENCH "fuelbench"
 #define CMD_FUNCTIONAL_TEST_MODE "test_mode"
@@ -408,6 +409,7 @@
 #define ETB_BIAS_CURVE_LENGTH 8
 #define ETB_COUNT 2
 #define etb_dFactor_offset 1744
+#define etb_function_e_auto_enum "ETB_None", "ETB_Throttle1", "ETB_Throttle2", "ETB_IdleValve", "ETB_Wastegate"
 #define etb_iFactor_offset 1740
 #define etb_io_size 4
 #define etb_iTermMax_offset 3958
@@ -423,6 +425,8 @@
 #define etbBiasValues_offset 3920
 #define etbDeadband_offset 3960
 #define etbFreq_offset 2514
+#define etbFunctions1_offset 1198
+#define etbFunctions2_offset 1199
 #define etbIdleThrottleRange_offset 4012
 #define etbIo1_controlPin1_offset 982
 #define etbIo1_directionPin1_offset 980
@@ -1166,11 +1170,10 @@
 #define showHumanReadableWarning_offset 976
 #define showSdCardWarning_offset 76
 #define SIGNATURE_BOARD all
-#define SIGNATURE_DATE 2020.10.01
-#define SIGNATURE_HASH 2003788993
+#define SIGNATURE_DATE 2020.10.08
+#define SIGNATURE_HASH 495359842
 #define silentTriggerError_offset 1464
 #define slowAdcAlpha_offset 2088
-#define solenoidPadding_offset 1198
 #define sparkDwellRpmBins_offset 332
 #define sparkDwellValues_offset 364
 #define specs_offset 396
@@ -1487,7 +1490,7 @@
 #define ts_show_spi true
 #define ts_show_trigger_comparator false
 #define ts_show_tunerstudio_port true
-#define TS_SIGNATURE "rusEFI 2020.10.01.all.2003788993"
+#define TS_SIGNATURE "rusEFI 2020.10.08.all.495359842"
 #define TS_SINGLE_WRITE_COMMAND 'W'
 #define TS_SINGLE_WRITE_COMMAND_char W
 #define TS_TEST_COMMAND 't' // 0x74
@@ -1632,8 +1635,8 @@
 #define veTable_offset 17440
 #define VOLTAGE_1_BYTE_PACKING_DIV 0.02
 #define vRefAdcChannel_offset 1470
-#define vvt_mode_e_auto_enum "VVT_INACTIVE", "VVT_SECOND_HALF", "VVT_2JZ", "MIATA_NB2", "VVT_FIRST_HALF", "VVT_BOSCH_QUICK_START"
-#define vvt_mode_e_enum "Inactive", "Second half", "2GZ", "Miata NB2", "First half", "Bosch Quick Start", "mode6", "mode7"
+#define vvt_mode_e_auto_enum "VVT_INACTIVE", "VVT_SECOND_HALF", "VVT_2JZ", "MIATA_NB2", "VVT_FIRST_HALF", "VVT_BOSCH_QUICK_START", "VVT_4_1"
+#define vvt_mode_e_enum "Inactive", "Single Tooth Second Half", "2GZ", "Miata NB2", "Single Tooth First Half", "Bosch Quick Start", "4/1", "mode7"
 #define vvtCamSensorUseRise_offset 744
 #define vvtMode_offset 2328
 #define vvtOffset_offset 2052

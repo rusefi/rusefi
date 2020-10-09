@@ -9,6 +9,7 @@
 #pragma once
 
 #include "fsio_core.h"
+#include "expected.h"
 #include "engine.h"
 #include "table_helper.h"
 #include "system_fsio.h"
@@ -29,8 +30,8 @@
 typedef Map3D<FSIO_TABLE_8, FSIO_TABLE_8, float, float> fsio8_Map3D_f32t;
 typedef Map3D<FSIO_TABLE_8, FSIO_TABLE_8, uint8_t, float> fsio8_Map3D_u8t;
 
+expected<float> getEngineValue(le_action_e action DECLARE_ENGINE_PARAMETER_SUFFIX);
 
-float getEngineValue(le_action_e action DECLARE_ENGINE_PARAMETER_SUFFIX);
 /**
  * set_fsio_output_pin 7 PE3
  * set_rpn_expression 1 "rpm 0 fsio_setting <"

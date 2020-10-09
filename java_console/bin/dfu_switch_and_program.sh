@@ -1,5 +1,6 @@
 #!/bin/bash
 dfu_file=$(ls *dfu | head -1)
+echo dfu_switch_and_program.sh $dfu_file
 if [ -z "$dfu_file" ]
 then
       echo "No .dfu file(s) found"

@@ -51,5 +51,6 @@ public class EnumNames {
 	"GlobalLock",
 	"GlobalUnlock",
 	"SoftwareKnockProcess",
+	"LogTriggerTooth",
 	};
 }

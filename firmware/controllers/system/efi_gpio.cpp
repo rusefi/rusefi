@@ -357,6 +357,17 @@ bool OutputPin::getAndSet(int logicValue) {
 	return oldValue;
 }
 
+void OutputPin::setOnchipValue(int electricalValue, int logicValue) {
+#if EFI_PROD_CODE
+	if (port != GPIO_NULL) {
+		setPinValue(this, electricalValue, logicValue);
+	} else {
+		// even without physical pin sometimes it's nice to track logic pin value
+		currentLogicValue = logicValue;
+	}
+#endif // EFI_PROD_CODE
+}
+
 void OutputPin::setValue(int logicValue) {
 #if ENABLE_PERF_TRACE
 // todo: https://github.com/rusefi/rusefi/issues/1638
@@ -367,14 +378,11 @@ void OutputPin::setValue(int logicValue) {
 	efiAssertVoid(CUSTOM_ERR_6621, modePtr!=NULL, "pin mode not initialized");
 	pin_output_mode_e mode = *modePtr;
 	efiAssertVoid(CUSTOM_ERR_6622, mode <= OM_OPENDRAIN_INVERTED, "invalid pin_output_mode_e");
-	int eValue = getElectricalValue(logicValue, mode);
+	int electricalValue = getElectricalValue(logicValue, mode);
 
 	#if (BOARD_EXT_GPIOCHIPS > 0)
 		if (!this->ext) {
-			/* onchip pin */
-			if (port != GPIO_NULL) {
-				setPinValue(this, eValue, logicValue);
-			}
+			setOnchipValue(electricalValue, logicValue);
 		} else {
 			/* external pin */
 			gpiochips_writePad(this->brainPin, logicValue);
@@ -382,12 +390,7 @@ void OutputPin::setValue(int logicValue) {
 			currentLogicValue = logicValue;
 		}
 	#else
-		if (port != GPIO_NULL) {
-			setPinValue(this, eValue, logicValue);
-		} else {
-			// even without physical pin sometimes it's nice to track logic pin value
-			currentLogicValue = logicValue;
-		}
+		setOnchipValue(electricalValue, logicValue);
 	#endif
 
 #else /* EFI_PROD_CODE */

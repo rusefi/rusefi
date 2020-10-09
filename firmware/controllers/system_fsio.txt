@@ -13,7 +13,7 @@
 # (self and (coolant > fan_off_setting)) | (coolant > fan_on_setting) | is_clt_broken
 FAN_CONTROL_LOGIC=(fan and (coolant > cfg_fanOffTemperature)) | (coolant > cfg_fanOnTemperature) | is_clt_broken
 
-FUEL_PUMP_LOGIC=(time_since_boot >= 0 & time_since_boot < startup_fuel_pump_duration) | (rpm > 0)
+FUEL_PUMP_LOGIC=((time_since_boot >= 0) & (time_since_boot < startup_fuel_pump_duration)) | (rpm > 0)
 
 ALTERNATOR_LOGIC=vbatt < 14.5
 

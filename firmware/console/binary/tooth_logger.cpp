@@ -8,6 +8,7 @@
 #include "tooth_logger.h"
 
 #include "global.h"
+#include "perf_trace.h"
 
 #if EFI_TOOTH_LOGGER
 
@@ -97,6 +98,7 @@ static void SetNextCompositeEntry(efitick_t timestamp, bool trigger1, bool trigg
 }
 
 void LogTriggerTooth(trigger_event_e tooth, efitick_t timestamp DECLARE_ENGINE_PARAMETER_SUFFIX) {
+	ScopePerf perf(PE::LogTriggerTooth);
 	// bail if we aren't enabled
 	if (!ToothLoggerEnabled) {
 		return;

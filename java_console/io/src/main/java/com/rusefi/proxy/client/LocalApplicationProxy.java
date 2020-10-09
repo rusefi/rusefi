@@ -113,11 +113,8 @@ public class LocalApplicationProxy implements Closeable {
                     sleep(context.gaugePokingPeriod());
                     byte[] commandPacket = GetOutputsCommand.createRequest();
 
-                    synchronized (authenticatorToProxyStream) {
-                        authenticatorToProxyStream.sendPacket(commandPacket);
-                        // we do not really need the data, we just need to take response from the socket
-                        authenticatorToProxyStream.readPacket();
-                    }
+                    // we do not really need the data, we just need to take response from the socket
+                    authenticatorToProxyStream.sendAndGetPacket(commandPacket, "Gauge Poker", false);
                 }
 
                 if (isTimeForApplicationToConnect(context, start) && relayCommandCounter.get() < 4) {

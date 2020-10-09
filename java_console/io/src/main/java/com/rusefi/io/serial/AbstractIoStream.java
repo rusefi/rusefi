@@ -10,6 +10,7 @@ public abstract class AbstractIoStream implements IoStream {
 
     protected StreamStats streamStats = new StreamStats();
     private final AtomicInteger bytesOut = new AtomicInteger();
+    private long latestActivity;
 
     @Override
     public StreamStats getStreamStats() {
@@ -28,6 +29,15 @@ public abstract class AbstractIoStream implements IoStream {
 
     @Override
     public void flush() throws IOException {
+    }
+
+    @Override
+    public void onActivity() {
+        latestActivity = System.currentTimeMillis();
+    }
+
+    public long latestActivityTime() {
+        return latestActivity;
     }
 
     @Override
@@ -57,6 +67,7 @@ public abstract class AbstractIoStream implements IoStream {
                 maxPacketGap = (int) Math.max(maxPacketGap, now - previousPacketArrivalTime);
             }
             previousPacketArrivalTime = now;
+            AbstractIoStream.this.onActivity();
         }
 
         public void onArrived(int length) {

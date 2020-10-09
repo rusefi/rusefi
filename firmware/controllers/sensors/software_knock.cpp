@@ -38,15 +38,33 @@ static void completionCallback(ADCDriver* adcp, adcsample_t*, size_t) {
 static void errorCallback(ADCDriver*, adcerror_t err) {
 }
 
+static const uint32_t smpr1 = 
+	ADC_SMPR1_SMP_AN10(KNOCK_SAMPLE_TIME) |
+	ADC_SMPR1_SMP_AN11(KNOCK_SAMPLE_TIME) |
+	ADC_SMPR1_SMP_AN12(KNOCK_SAMPLE_TIME) |
+	ADC_SMPR1_SMP_AN13(KNOCK_SAMPLE_TIME) |
+	ADC_SMPR1_SMP_AN14(KNOCK_SAMPLE_TIME) |
+	ADC_SMPR1_SMP_AN15(KNOCK_SAMPLE_TIME);
+
+static const uint32_t smpr2 =
+	ADC_SMPR2_SMP_AN0(KNOCK_SAMPLE_TIME) |
+	ADC_SMPR2_SMP_AN1(KNOCK_SAMPLE_TIME) |
+	ADC_SMPR2_SMP_AN2(KNOCK_SAMPLE_TIME) |
+	ADC_SMPR2_SMP_AN3(KNOCK_SAMPLE_TIME) |
+	ADC_SMPR2_SMP_AN4(KNOCK_SAMPLE_TIME) |
+	ADC_SMPR2_SMP_AN5(KNOCK_SAMPLE_TIME) |
+	ADC_SMPR2_SMP_AN6(KNOCK_SAMPLE_TIME) |
+	ADC_SMPR2_SMP_AN7(KNOCK_SAMPLE_TIME) |
+	ADC_SMPR2_SMP_AN8(KNOCK_SAMPLE_TIME) |
+	ADC_SMPR2_SMP_AN9(KNOCK_SAMPLE_TIME);
+
 static const ADCConversionGroup adcConvGroupCh1 = { FALSE, 1, &completionCallback, &errorCallback,
 	0,
 	ADC_CR2_SWSTART,
-#ifdef MRE_SW_KNOCK_ADC
-	ADC_SMPR2_SMP_AN3(KNOCK_SAMPLE_TIME), // sample times for channels 10...18
-#else	
-	ADC_SMPR1_SMP_AN14(KNOCK_SAMPLE_TIME), // sample times for channels 10...18
-#endif
-	0,
+	// sample times for channels 10...18
+	smpr1,
+	// sample times for channels 0...9
+	smpr2,
 
 	0,	// htr
 	0,	// ltr
@@ -61,8 +79,10 @@ static const ADCConversionGroup adcConvGroupCh1 = { FALSE, 1, &completionCallbac
 static const ADCConversionGroup adcConvGroupCh2 = { FALSE, 1, &completionCallback, &errorCallback,
 	0,
 	ADC_CR2_SWSTART,
-	ADC_SMPR1_SMP_AN14(KNOCK_SAMPLE_TIME), // sample times for channels 10...18
-	0,
+	// sample times for channels 10...18
+	smpr1,
+	// sample times for channels 0...9
+	smpr2,
 
 	0,	// htr
 	0,	// ltr

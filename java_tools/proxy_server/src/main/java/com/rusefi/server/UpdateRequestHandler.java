@@ -34,26 +34,24 @@ public class UpdateRequestHandler implements Take {
             RqForm rqForm = new RqFormBase(req);
 
             String json = rqForm.param(ProxyClient.JSON).iterator().next();
-            String type = rqForm.param(ProxyClient.UPDATE_TYPE).iterator().next();
+            String updateTypeString = rqForm.param(ProxyClient.UPDATE_TYPE).iterator().next();
 
             ApplicationRequest applicationRequest = ApplicationRequest.valueOf(json);
             UserDetails tuner = backend.getUserDetailsResolver().apply(applicationRequest.getSessionDetails().getAuthToken());
 
             ControllerKey key = new ControllerKey(applicationRequest.getVehicleOwner().getUserId(), applicationRequest.getSessionDetails().getControllerInfo());
-            log.info("Online Request for " + key + ": " + type);
+            log.info("Online Request for " + key + ": " + updateTypeString);
 
             ControllerConnectionState state = backend.acquire(key, tuner);
             if (state == null)
                 throw new IOException("Not acquired " + tuner);
 
+            UpdateType type = UpdateType.valueOf(updateTypeString);
+
             // should controller communication happen on http thread or not?
             new Thread(() -> {
                 try {
-                    if (type.equals(UpdateType.FIRMWARE.name())) {
-                        state.invokeOnlineCommand(NetworkConnector.UPDATE_FIRMWARE);
-                    } else {
-                        state.invokeOnlineCommand(NetworkConnector.UPDATE_CONNECTOR_SOFTWARE);
-                    }
+                    state.invokeOnlineCommand(type.getCode());
                 } catch (IOException e) {
                     throw new IllegalStateException(e);
                 } finally {
@@ -61,7 +59,7 @@ public class UpdateRequestHandler implements Take {
                 }
             }).start();
 
-            log.debug("Update request " + tuner);
+            log.debug("Update request " + tuner + " " + type);
         } catch (IOException e) {
             objectBuilder.add("result", "error: " + e);
             return new RsJson(objectBuilder.build());

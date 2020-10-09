@@ -40,7 +40,7 @@ public class DfuUpload {
                 @Override
                 public void run() {
                     try {
-                        ConnectionAndMeta c = new ConnectionAndMeta(BUNDLE_FILE).invoke();
+                        ConnectionAndMeta c = new ConnectionAndMeta(BUNDLE_FILE).invoke(ConnectionAndMeta.BASE_URL_LATEST);
                         ConnectionAndMeta.downloadFile(localFullFile, c, new ConnectionAndMeta.DownloadProgressListener() {
                             @Override
                             public void onPercentage(final int currentProgress) {

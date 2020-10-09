@@ -1,12 +1,8 @@
 package com.rusefi;
 
-import com.opensr5.Logger;
 import com.rusefi.binaryprotocol.BinaryProtocol;
 import com.rusefi.config.generated.Fields;
-import com.rusefi.tracing.Entry;
-import com.rusefi.tracing.JsonOutput;
 import com.rusefi.ui.MessagesView;
-import com.rusefi.ui.RpmModel;
 import com.rusefi.ui.UIContext;
 import com.rusefi.ui.util.UiUtils;
 import org.jetbrains.annotations.NotNull;
@@ -15,13 +11,8 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.util.List;
 
 import static com.rusefi.CommandControl.TEST;
-import static com.rusefi.binaryprotocol.BinaryProtocolCommands.RESPONSE_OK;
-import static com.rusefi.binaryprotocol.IoHelper.checkResponseCode;
 
 public class BenchTestPane {
     private final JPanel content = new JPanel(new GridLayout(2, 5));
@@ -62,25 +53,7 @@ public class BenchTestPane {
             @Override
             public void actionPerformed(ActionEvent e) {
                 BinaryProtocol bp = uiContext.getLinkManager().getCurrentStreamState();
-                bp.executeCommand(new byte[]{Fields.TS_PERF_TRACE_BEGIN}, "begin trace");
-
-                try {
-                    Thread.sleep(500);
-
-                    byte[] packet = bp.executeCommand(new byte[]{Fields.TS_PERF_TRACE_GET_BUFFER}, "get trace", true);
-                    if (!checkResponseCode(packet, RESPONSE_OK) || ((packet.length - 1) % 8) != 0)
-                        throw new IllegalStateException("Unexpected packet");
-
-                    List<Entry> data = Entry.parseBuffer(packet);
-
-                    int rpm = RpmModel.getInstance().getValue();
-                    String fileName = Logger.getDate() + "_rpm_" + rpm + "_rusEfi_trace" + ".json";
-
-
-                    JsonOutput.writeToStream(data, new FileOutputStream(fileName));
-                } catch (IOException | InterruptedException e1) {
-                    throw new IllegalStateException(e1);
-                }
+                PerformanceTraceHelper.grabPerformanceTrace(bp);
             }
         });
         return UiUtils.wrap(button);

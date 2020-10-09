@@ -25,11 +25,19 @@ struct TriggerStateListener {
 
 class TriggerConfiguration {
 public:
+	DECLARE_ENGINE_PTR;
+
+	explicit TriggerConfiguration(const char* printPrefix) : PrintPrefix(printPrefix) {}
+	void update();
+
+	const char* const PrintPrefix;
+	bool UseOnlyRisingEdgeForTrigger;
+	bool VerboseTriggerSynchDetails;
+	trigger_type_e TriggerType;
+
+protected:
 	virtual bool isUseOnlyRisingEdgeForTrigger() const = 0;
-	virtual bool isSilentTriggerError() const = 0;
 	virtual bool isVerboseTriggerSynchDetails() const = 0;
-	virtual const char * getPrintPrefix() const = 0;
-	virtual debug_mode_e getDebugMode() const = 0;
 	virtual trigger_type_e getType() const = 0;
 };
 
@@ -65,6 +73,8 @@ typedef struct {
  */
 class TriggerState : public trigger_state_s {
 public:
+	DECLARE_ENGINE_PTR;
+
 	TriggerState();
 	/**
 	 * current trigger processing index, between zero and #size
@@ -79,20 +89,20 @@ public:
 	efitime_t getTotalEventCounter() const;
 
 	void decodeTriggerEvent(
-			const TriggerWaveform *triggerShape,
+			const TriggerWaveform& triggerShape,
 			const TriggerStateCallback triggerCycleCallback,
-			TriggerStateListener * triggerStateListener,
-			const TriggerConfiguration * triggerConfiguration,
+			TriggerStateListener* triggerStateListener,
+			const TriggerConfiguration& triggerConfiguration,
 			const trigger_event_e signal,
 			const efitime_t nowUs);
 
-	bool validateEventCounters(TriggerWaveform *triggerShape) const;
+	bool validateEventCounters(const TriggerWaveform& triggerShape) const;
 	void onShaftSynchronization(
 			const TriggerStateCallback triggerCycleCallback,
 			const efitick_t nowNt,
-			const TriggerWaveform *triggerShape);
+			const TriggerWaveform& triggerShape);
 
-	bool isValidIndex(const TriggerWaveform *triggerShape) const;
+	bool isValidIndex(const TriggerWaveform& triggerShape) const;
 
 	/**
 	 * TRUE if we know where we are
@@ -133,9 +143,10 @@ public:
 	 */
 	efitick_t startOfCycleNt;
 
-	uint32_t findTriggerZeroEventIndex(TriggerWaveform * shape,
-			const TriggerConfiguration * triggerConfiguration,
-			trigger_config_s const*triggerConfig
+	uint32_t findTriggerZeroEventIndex(
+			TriggerWaveform& shape,
+			const TriggerConfiguration& triggerConfiguration,
+			const trigger_config_s& triggerConfig
 			);
 
 private:
@@ -193,7 +204,9 @@ class Engine;
 
 void initTriggerDecoderLogger(Logging *sharedLogger);
 
-void calculateTriggerSynchPoint(TriggerWaveform *shape,
-		TriggerState *state DECLARE_ENGINE_PARAMETER_SUFFIX);
+void calculateTriggerSynchPoint(
+	TriggerWaveform& shape,
+	TriggerState& state
+	DECLARE_ENGINE_PARAMETER_SUFFIX);
 
 void prepareEventAngles(TriggerWaveform *shape, TriggerFormDetails *details DECLARE_ENGINE_PARAMETER_SUFFIX);
