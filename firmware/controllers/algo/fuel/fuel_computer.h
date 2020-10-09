@@ -36,3 +36,5 @@ protected:
 private:
 	const ValueProvider3D* const m_afrTable;
 };
+
+float getLoadOverride(float defaultLoad, afr_override_e overrideMode DECLARE_ENGINE_PARAMETER_SUFFIX);
