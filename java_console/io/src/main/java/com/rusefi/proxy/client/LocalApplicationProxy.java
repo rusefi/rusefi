@@ -33,6 +33,7 @@ import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.atomic.AtomicLong;
 
 import static com.devexperts.logging.Logging.getLogging;
+import static com.rusefi.Timeouts.BINARY_IO_TIMEOUT;
 import static com.rusefi.Timeouts.SECOND;
 import static com.rusefi.binaryprotocol.BinaryProtocol.sleep;
 
@@ -111,7 +112,7 @@ public class LocalApplicationProxy implements Closeable {
             try {
                 while (true) {
                     sleep(context.gaugePokingPeriod());
-                    if (isTimeForApplicationToConnect(lastActivity.get(), SECOND * 5)) {
+                    if (isTimeForApplicationToConnect(lastActivity.get(), BINARY_IO_TIMEOUT / 2)) {
                         byte[] commandPacket = GetOutputsCommand.createRequest();
                         // we do not really need the data, we just need to take response from the socket
                         authenticatorToProxyStream.sendAndGetPacket(commandPacket, "Gauge Poker", false);
