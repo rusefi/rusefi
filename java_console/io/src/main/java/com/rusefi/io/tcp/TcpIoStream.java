@@ -39,6 +39,15 @@ public class TcpIoStream extends AbstractIoStream {
         this.dataBuffer = IncomingDataBuffer.createDataBuffer(loggingPrefix, this);
     }
 
+    @NotNull
+    public static TcpIoStream open(String port) throws TcpConnector.InvalidTcpPort, IOException {
+        int portPart = TcpConnector.getTcpPort(port);
+        String hostname = TcpConnector.getHostname(port);
+        Socket socket = new Socket(hostname, portPart);
+
+        return new TcpIoStream("[start] ", socket);
+    }
+
     @Override
     public void close() {
         // we need to guarantee only one onDisconnect invocation for retry logic to be healthy

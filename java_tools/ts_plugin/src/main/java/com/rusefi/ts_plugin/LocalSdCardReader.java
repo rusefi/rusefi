@@ -1,11 +1,14 @@
 package com.rusefi.ts_plugin;
 
 import com.efiAnalytics.plugin.ecu.ControllerAccess;
+import com.rusefi.binaryprotocol.BinaryProtocol;
 import com.rusefi.io.ConnectionStateListener;
 import com.rusefi.io.IoStream;
+import com.rusefi.io.LinkManager;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.Objects;
 import java.util.function.Supplier;
 
 public class LocalSdCardReader {
@@ -28,7 +31,11 @@ public class LocalSdCardReader {
         sdCardReaderPanel = new SdCardReaderPanel(controllerAccessSupplier, new Supplier<IoStream>() {
             @Override
             public IoStream get() {
-                return connectPanel.getControllerConnector().getConnector().getBinaryProtocol().getStream();
+                LinkManager controllerConnector = connectPanel.getControllerConnector();
+                Objects.requireNonNull(controllerConnector, "controllerConnector");
+                BinaryProtocol binaryProtocol = controllerConnector.getConnector().getBinaryProtocol();
+                Objects.requireNonNull(binaryProtocol, "binaryProtocol");
+                return binaryProtocol.getStream();
             }
         }, content.getParent());
 

@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Sun Oct 04 02:01:34 UTC 2020
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Fri Oct 09 06:10:20 UTC 2020
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -915,7 +915,8 @@ struct engine_configuration_s {
 	angle_t fixedModeTiming;
 	/**
 	 * Angle between Top Dead Center (TDC) and the first trigger event.
-	 * Knowing this angle allows us to control timing and other angles in reference to TDC.
+	 * Positive value in case of synchnization point before TDC and negative in case of synchnization point after TDC
+	 * .Knowing this angle allows us to control timing and other angles in reference to TDC.
 	 * set global_trigger_offset_angle X
 	 * offset 456
 	 */
@@ -1964,7 +1965,7 @@ struct engine_configuration_s {
 	/**
 	 * offset 1198
 	 */
-	uint8_t solenoidPadding[2];
+	etb_function_e etbFunctions[ETB_COUNT];
 	/**
 	 * offset 1200
 	 */
@@ -3728,4 +3729,4 @@ struct persistent_config_s {
 typedef struct persistent_config_s persistent_config_s;
 
 // end
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Sun Oct 04 02:01:34 UTC 2020
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Fri Oct 09 06:10:20 UTC 2020

@@ -119,7 +119,7 @@ static void setWarningEnabled(int value) {
 
 #if EFI_FILE_LOGGING
 // this one needs to be in main ram so that SD card SPI DMA works fine
-static char sdLogBuffer[2048] MAIN_RAM;
+static char sdLogBuffer[2200] MAIN_RAM;
 static uint64_t binaryLogCount = 0;
 
 #endif /* EFI_FILE_LOGGING */
@@ -147,15 +147,15 @@ void writeLogLine() {
 	if (!main_loop_started)
 		return;
 
-	size_t length = efi::size(sdLogBuffer);
-
+	size_t length;
 	if (binaryLogCount == 0) {
-		memset(sdLogBuffer, 0xAA, length);
-		writeHeader(sdLogBuffer);
+		length = writeHeader(sdLogBuffer);
 	} else {
 		updateTunerStudioState(&tsOutputChannels);
 		length = writeBlock(sdLogBuffer);
 	}
+
+	efiAssertVoid(OBD_PCM_Processor_Fault, length <= efi::size(sdLogBuffer), "SD log buffer overflow");
 
 	appendToLog(sdLogBuffer, length);
 

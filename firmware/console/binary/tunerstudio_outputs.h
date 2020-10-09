@@ -196,7 +196,7 @@ typedef struct {
 	// we want a hash of engineMake+engineCode+vehicleName in the log file in order to match TS logs to rusEFI Online tune
 	int16_t engineMakeCodeNameCrc16; // 138
 	// Errors
-	int totalTriggerErrorCounter; // 140
+	scaled_channel<uint32_t> totalTriggerErrorCounter; // 140
 	int orderingErrorCounter; // 144
 	int16_t warningCounter; // 148
 	int16_t lastErrorCode; // 150

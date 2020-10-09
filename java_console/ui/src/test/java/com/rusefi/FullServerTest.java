@@ -120,6 +120,10 @@ public class FullServerTest {
             SessionDetails authenticatorSessionDetails = new SessionDetails(NetworkConnector.Implementation.Unknown, controllerInfo, TEST_TOKEN_3, networkConnectorResult.getOneTimeToken(), rusEFIVersion.CONSOLE_VERSION);
             ApplicationRequest applicationRequest = new ApplicationRequest(authenticatorSessionDetails, userDetailsResolver.apply(TestHelper.TEST_TOKEN_1));
 
+            HttpResponse response = LocalApplicationProxy.requestSoftwareUpdate(httpPort, applicationRequest, UpdateType.CONTROLLER);
+            log.info("requestSoftwareUpdate response: " + response.toString());
+            assertLatch("update requested", softwareUpdateRequest);
+
             // start authenticator
             LocalApplicationProxy.startAndRun(localApplicationProxyContext, applicationRequest, httpPort,
                     TcpIoStream.DisconnectListener.VOID,
@@ -152,18 +156,12 @@ public class FullServerTest {
             assertEquals(1, applicationClosed.getCount());
 
             // now let's test that application connector would be terminated by server due to inactivity
+            log.info("**************************************");
             log.info("Sleeping twice the application timeout");
-            assertTrue("applicationClosed", applicationClosed.await(3 * applicationTimeout, TimeUnit.MILLISECONDS));
+            log.info("**************************************");
+            assertLatch("applicationClosed", applicationClosed, 3 * applicationTimeout);
 
             assertEquals("applications size", 0, backend.getApplications().size());
-
-
-            HttpResponse response = LocalApplicationProxy.requestSoftwareUpdate(httpPort, applicationRequest, UpdateType.CONTROLLER);
-            log.info(response.toString());
-
-            assertTrue("update requested", softwareUpdateRequest.await(3 * applicationTimeout, TimeUnit.MILLISECONDS));
-
         }
     }
-
 }

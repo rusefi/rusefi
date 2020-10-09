@@ -42,7 +42,7 @@ public class TcpConnector {
             return confirmation.substring(0, length);
         }
         */
-    static class InvalidTcpPort extends Exception {
+    public static class InvalidTcpPort extends IOException {
     }
 
     public static int getTcpPort(String port) throws InvalidTcpPort {

@@ -114,7 +114,6 @@ echo "Removing static content from ${CONSOLE_FOLDER} and $DRIVERS_FOLDER"
 rm -rf $CONSOLE_FOLDER/*.exe
 rm -rf $CONSOLE_FOLDER/DfuSe
 rm -rf $CONSOLE_FOLDER/openocd
-rm -rf $CONSOLE_FOLDER/rusefi_autoupdate.jar
 rm -rf $DRIVERS_FOLDER
 
 # for autoupdate we do not want the unique folder name with timestamp

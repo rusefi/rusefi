@@ -26,12 +26,20 @@ public class Autoupdate {
     private static final String COM_RUSEFI_LAUNCHER = "com.rusefi.Launcher";
 
     public static void main(String[] args) {
+        String bundleFullName = readBundleFullName();
+
+        if (args.length > 0 && args[0].equalsIgnoreCase("release")) {
+            System.out.println("Release update requested");
+            handleBundle(bundleFullName, UpdateMode.ALWAYS, ConnectionAndMeta.BASE_URL_RELEASE);
+            return;
+        }
+
+        System.out.println("Latest update requested");
         UpdateMode mode = getMode();
         if (mode != UpdateMode.NEVER) {
-            String bundleFullName = readBundleFullName();
             if (bundleFullName != null) {
                 System.out.println("Handling " + bundleFullName);
-                handleBundle(bundleFullName, mode);
+                handleBundle(bundleFullName, mode, ConnectionAndMeta.BASE_URL_LATEST);
             }
         } else {
             System.out.println("Update mode: NEVER");
@@ -63,10 +71,11 @@ public class Autoupdate {
         }
     }
 
-    private static void handleBundle(String bundleFullName, UpdateMode mode) {
+    private static void handleBundle(String bundleFullName, UpdateMode mode, String baseUrl) {
         try {
             String zipFileName = bundleFullName + "_autoupdate" + ".zip";
-            ConnectionAndMeta connectionAndMeta = new ConnectionAndMeta(zipFileName).invoke();
+            ConnectionAndMeta connectionAndMeta = new ConnectionAndMeta(zipFileName).invoke(baseUrl);
+            System.out.println("Remote file " + zipFileName);
             System.out.println("Server has " + connectionAndMeta.getCompleteFileSize() + " from " + new Date(connectionAndMeta.getLastModified()));
 
             if (AutoupdateUtil.hasExistingFile(zipFileName, connectionAndMeta.getCompleteFileSize(), connectionAndMeta.getLastModified())) {
