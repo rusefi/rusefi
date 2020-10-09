@@ -215,8 +215,7 @@ floatms_t getBaseFuel(int rpm DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	// Plop some state for others to read
 	ENGINE(engineState.sd.airMassInOneCylinder) = airmass.CylinderAirmass;
 	ENGINE(engineState.fuelingLoad) = airmass.EngineLoadPercent;
-	// TODO: independently selectable ignition load mode
-	ENGINE(engineState.ignitionLoad) = airmass.EngineLoadPercent;
+	ENGINE(engineState.ignitionLoad) = getLoadOverride(airmass.EngineLoadPercent, CONFIG(ignOverrideMode) PASS_ENGINE_PARAMETER_SUFFIX);
 
 	float baseFuelMass = ENGINE(fuelComputer)->getCycleFuel(airmass.CylinderAirmass, rpm, airmass.EngineLoadPercent);
 	float baseFuel = getInjectionDurationForFuelMass(baseFuelMass PASS_ENGINE_PARAMETER_SUFFIX) * 1000;
