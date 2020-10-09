@@ -13,12 +13,12 @@ import com.rusefi.binaryprotocol.IncomingDataBuffer;
 import com.rusefi.binaryprotocol.MsqFactory;
 import com.rusefi.config.generated.Fields;
 import com.rusefi.core.EngineState;
+import com.rusefi.core.Pair;
 import com.rusefi.core.ResponseBuffer;
 import com.rusefi.io.ConnectionStateListener;
 import com.rusefi.io.ConnectionStatusLogic;
 import com.rusefi.io.IoStream;
 import com.rusefi.io.LinkManager;
-import com.rusefi.io.serial.SerialIoStreamJSerialComm;
 import com.rusefi.io.tcp.BinaryProtocolServer;
 import com.rusefi.maintenance.ExecHelper;
 import com.rusefi.proxy.client.LocalApplicationProxy;
@@ -150,7 +150,7 @@ public class ConsoleTools {
         String autoDetectedPort = autoDetectPort();
         if (autoDetectedPort == null)
             return;
-        IoStream stream = SerialIoStreamJSerialComm.openPort(autoDetectedPort);
+        IoStream stream = LinkManager.open(autoDetectedPort);
         byte[] commandBytes = BinaryProtocol.getTextCommandBytes(command);
         stream.sendPacket(commandBytes);
     }
@@ -311,6 +311,9 @@ public class ConsoleTools {
 
     @Nullable
     private static String autoDetectPort() {
+        String rusEfiAddress = System.getProperty("rusefi.address");
+        if (rusEfiAddress != null)
+            return rusEfiAddress;
         String autoDetectedPort = PortDetector.autoDetectSerial(null);
         if (autoDetectedPort == null) {
             System.err.println(RUS_EFI_NOT_DETECTED);
@@ -335,14 +338,13 @@ public class ConsoleTools {
         Online.upload(new File(Online.outputXmlFileName), authToken);
     }
 
-    static void detect(String[] strings) throws IOException, InterruptedException {
+    static void detect(String[] strings) throws IOException {
         String autoDetectedPort = autoDetectPort();
         if (autoDetectedPort == null) {
             System.out.println(RUS_EFI_NOT_DETECTED);
             return;
         }
-        IoStream stream = SerialIoStreamJSerialComm.openPort(autoDetectedPort);
-        Logger logger = FileLog.LOGGER;
+        IoStream stream = LinkManager.open(autoDetectedPort);
         IncomingDataBuffer incomingData = stream.getDataBuffer();
         byte[] commandBytes = BinaryProtocol.getTextCommandBytes("hello");
         stream.sendPacket(commandBytes);
@@ -385,11 +387,13 @@ public class ConsoleTools {
 
         System.out.println("Signature: " + SerialAutoChecker.SIGNATURE);
         System.out.println("It says " + messages);
-        System.out.println("Ini file: " + SignatureHelper.getUrl(SerialAutoChecker.SIGNATURE).first);
+        Pair<String, String> stringPair = SignatureHelper.getUrl(SerialAutoChecker.SIGNATURE);
+        if (stringPair != null)
+            System.out.println("Ini file: " + stringPair.first);
         System.exit(0);
     }
 
     interface ConsoleTool {
-        void runTool(String args[]) throws Exception;
+        void runTool(String[] args) throws Exception;
     }
 }
