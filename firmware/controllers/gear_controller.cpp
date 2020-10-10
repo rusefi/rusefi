@@ -1,8 +1,5 @@
 #include "gear_controller.h"
 #include "tunerstudio_outputs.h"
-#include "engine_configuration.h"
-
-EXTERN_CONFIG;
 
 void GearControllerBase::init() {
     INJECT_ENGINE_REFERENCE(&transmissionController);
