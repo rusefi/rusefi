@@ -9,6 +9,8 @@
 
 class GearControllerBase {
 public:
+    DECLARE_ENGINE_PTR;
+
     virtual void update();
     gear_e getDesiredGear() const;
     virtual void init();
