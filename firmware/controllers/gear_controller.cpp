@@ -2,8 +2,8 @@
 #include "tunerstudio_outputs.h"
 
 void GearControllerBase::init() {
-    transmissionController.init();
     INJECT_ENGINE_REFERENCE(&transmissionController);
+    transmissionController.init();
 }
 
 void GearControllerBase::update() {
