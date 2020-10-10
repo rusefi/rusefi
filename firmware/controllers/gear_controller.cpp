@@ -3,6 +3,7 @@
 
 void GearControllerBase::init() {
     transmissionController.init();
+    INJECT_ENGINE_REFERENCE(&transmissionController);
 }
 
 void GearControllerBase::update() {
