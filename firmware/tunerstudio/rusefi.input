@@ -1989,6 +1989,7 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 		field = "trigger stimulator pin #2", 			triggerSimulatorPins3
 		field = high_fuel_pressure_sensor_1,			high_fuel_pressure_sensor_1
 		field = high_fuel_pressure_sensor_2,			high_fuel_pressure_sensor_2
+		field = low_fuel_pressure_sensor,				low_fuel_pressure_sensor
 		field = "Warning Led",							warningLedPin
 		field = "tle6240_cs",							tle6240_cs
 		field = "tle6240 SPI",							tle6240spiDevice
