@@ -17,12 +17,6 @@
 #include "mpu_util.h"
 #endif
 
-/**
- * We need to limit the number of iterations in order to avoid precision loss while calculating
- * next toggle time
- */
-#define ITERATION_LIMIT 100
-
 // 1% duty cycle
 #define ZERO_PWM_THRESHOLD 0.01
 
