@@ -656,7 +656,7 @@ float mapFrequency0Kpa;;"Hz",      1,      0,       0, 100000,      2
 float mapFrequency100Kpa;;"Hz",      1,      0,       0, 100000,      2
 
 ! todo: rename to triggerSimulatorRpm
-	int triggerSimulatorFrequency;+Same RPM is used for two ways of producing simulated RPM. See also triggerSimulatorPins (with wires)\nSee also directSelfStimulation (no wires, bypassing input hardware)\nrpm X;"Rpm",     1,      0,       0,30000,      0
+	int triggerSimulatorFrequency;+Same RPM is used for two ways of producing simulated RPM. See also triggerSimulatorPins (with wires)\nSee also directSelfStimulation (no wires, bypassing input hardware)\nrpm X\nTODO: rename to triggerSimulatorRpm;"Rpm",     1,      0,       0,30000,      0
 
 	output_pin_e[INJECTION_PIN_COUNT iterate] injectionPins;
 	output_pin_e[IGNITION_PIN_COUNT iterate] ignitionPins;
