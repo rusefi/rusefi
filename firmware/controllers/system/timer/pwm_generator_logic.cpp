@@ -155,7 +155,7 @@ void PwmConfig::handleCycleStart() {
 		uint32_t iterationLimit = (0xFFFFFFFF / periodNt) - 2;
 
 		efiAssertVoid(CUSTOM_ERR_6580, periodNt != 0, "period not initialized");
-		efiAssertVoid(CUSTOM_ERR_6580, iterationLimit > =, "iterationLimit invalid");
+		efiAssertVoid(CUSTOM_ERR_6580, iterationLimit > 0, "iterationLimit invalid");
 		if (safe.periodNt != periodNt || safe.iteration == iterationLimit) {
 			/**
 			 * period length has changed - we need to reset internal state
