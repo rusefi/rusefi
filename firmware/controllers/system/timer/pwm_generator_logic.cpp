@@ -152,7 +152,7 @@ void PwmConfig::handleCycleStart() {
 		pwmCycleCallback(this);
 	}
 		// Compute the maximum number of iterations without overflowing a uint32_t worth of timestamp
-		uint32_t iterationLimit = (0xFFFFFFFF / (uint32_t)periodNt) - 2;
+		uint32_t iterationLimit = (0xFFFFFFFF / periodNt) - 2;
 
 		efiAssertVoid(CUSTOM_ERR_6580, periodNt != 0, "period not initialized");
 		efiAssertVoid(CUSTOM_ERR_6580, iterationLimit > 0, "iterationLimit invalid");
