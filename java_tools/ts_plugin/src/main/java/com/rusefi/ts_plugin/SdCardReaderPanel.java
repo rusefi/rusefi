@@ -217,7 +217,7 @@ public class SdCardReaderPanel {
 
     private void requestFileList() {
         int fileCount = 0;
-
+        status.setText("Reading file list...");
         try {
             byte[] response = getDirContent();
 
