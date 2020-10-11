@@ -401,7 +401,7 @@ void mreBoardOldTest(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 #if (BOARD_TLE8888_COUNT > 0)
 	engineConfiguration->debugMode = DBG_TLE8888;
 
-	engineConfiguration->triggerSimulatorFrequency = 60;
+	engineConfiguration->triggerSimulatorFrequency = HW_CHECK_RPM;
 	// set cranking_rpm 500
 	engineConfiguration->cranking.rpm = 100;
 	// set cranking_dwell 200
