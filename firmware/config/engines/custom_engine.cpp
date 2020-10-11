@@ -586,7 +586,7 @@ void mreBoardNewTest(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	// TLE8888_PIN_24: "43 - GP Out 4"
 	engineConfiguration->ignitionPins[12 - 1] = TLE8888_PIN_24;
 
-	engineConfiguration->afr.hwChannel = EFI_ADC_NONE;
+	engineConfiguration->afr.hwChannel = EFI_ADC_6;
 	engineConfiguration->throttlePedalPositionAdcChannel = EFI_ADC_NONE;
 
 
