@@ -17,12 +17,6 @@
 #include "mpu_util.h"
 #endif
 
-/**
- * We need to limit the number of iterations in order to avoid precision loss while calculating
- * next toggle time
- */
-#define ITERATION_LIMIT 100
-
 // 1% duty cycle
 #define ZERO_PWM_THRESHOLD 0.01
 
@@ -121,7 +115,7 @@ static efitick_t getNextSwitchTimeNt(PwmConfig *state) {
 
 	/**
 	 * Once 'iteration' gets relatively high, we might lose calculation precision here.
-	 * This is addressed by ITERATION_LIMIT
+	 * This is addressed by iterationLimit below, using any many cycles as possible without overflowing timeToSwitchNt
 	 */
 	uint32_t timeToSwitchNt = (uint32_t)((iteration + switchTime) * periodNt);
 
@@ -157,8 +151,12 @@ void PwmConfig::handleCycleStart() {
 	if (pwmCycleCallback != NULL) {
 		pwmCycleCallback(this);
 	}
+		// Compute the maximum number of iterations without overflowing a uint32_t worth of timestamp
+		uint32_t iterationLimit = (0xFFFFFFFF / periodNt) - 2;
+
 		efiAssertVoid(CUSTOM_ERR_6580, periodNt != 0, "period not initialized");
-		if (safe.periodNt != periodNt || safe.iteration == ITERATION_LIMIT) {
+		efiAssertVoid(CUSTOM_ERR_6580, iterationLimit > 0, "iterationLimit invalid");
+		if (safe.periodNt != periodNt || safe.iteration == iterationLimit) {
 			/**
 			 * period length has changed - we need to reset internal state
 			 */
