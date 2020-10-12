@@ -8,7 +8,7 @@ struct Writer {
 };
 
 template <int TBufferSize>
-class BufferedFileWriter : public Writer {
+class BufferedWriter : public Writer {
 public:
 	size_t write(const char* buffer, size_t count) override {
 		size_t bytesFlushed = 0;

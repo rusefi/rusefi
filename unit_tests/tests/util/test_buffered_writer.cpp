@@ -1,4 +1,4 @@
-#include "buffered_file_writer.h"
+#include "buffered_writer.h"
 #include <gtest/gtest.h>
 #include <gmock/gmock.h>
 
@@ -7,21 +7,21 @@ using ::testing::Return;
 using ::testing::StrictMock;
 
 template <int TBufferSize>
-struct MockBufferedWriter : public BufferedFileWriter<TBufferSize>
+struct MockBufferedWriter : public BufferedWriter<TBufferSize>
 {
 	MOCK_METHOD(size_t, writeInternal, (const char*, size_t), (override));
 };
 
 static const char* testBuffer = "abcdefghijklmnopqrstuvwxyz0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
 
-TEST(BufferedFileWriter, WriteSmall) {
+TEST(BufferedWriter, WriteSmall) {
 	// No calls to dut expected
 	StrictMock<MockBufferedWriter<10>> dut;
 
 	EXPECT_EQ(0, dut.write(testBuffer, 5));
 }
 
-TEST(BufferedFileWriter, WriteSmallFlush) {
+TEST(BufferedWriter, WriteSmallFlush) {
 	StrictMock<MockBufferedWriter<10>> dut;
 	EXPECT_CALL(dut, writeInternal(_, 5)).WillOnce(Return(5));
 
@@ -30,7 +30,7 @@ TEST(BufferedFileWriter, WriteSmallFlush) {
 	EXPECT_EQ(dut.flush(), 5);
 }
 
-TEST(BufferedFileWriter, WriteMultipleSmall) {
+TEST(BufferedWriter, WriteMultipleSmall) {
 	StrictMock<MockBufferedWriter<10>> dut;
 	{
 		EXPECT_CALL(dut, writeInternal(_, 10)).WillOnce(Return(10));
@@ -46,7 +46,7 @@ TEST(BufferedFileWriter, WriteMultipleSmall) {
 	EXPECT_EQ(dut.flush(), 2);
 }
 
-TEST(BufferedFileWriter, WriteSingleFullBufferSize) {
+TEST(BufferedWriter, WriteSingleFullBufferSize) {
 	StrictMock<MockBufferedWriter<50>> dut;
 
 	EXPECT_CALL(dut, writeInternal(_, 50)).WillOnce(Return(50));
@@ -57,7 +57,7 @@ TEST(BufferedFileWriter, WriteSingleFullBufferSize) {
 	EXPECT_EQ(0, dut.flush());
 }
 
-TEST(BufferedFileWriter, WriteLarge) {
+TEST(BufferedWriter, WriteLarge) {
 	StrictMock<MockBufferedWriter<10>> dut;
 
 	{
@@ -69,7 +69,7 @@ TEST(BufferedFileWriter, WriteLarge) {
 	EXPECT_EQ(0, dut.flush());
 }
 
-TEST(BufferedFileWriter, WriteLargeAfterSmall) {
+TEST(BufferedWriter, WriteLargeAfterSmall) {
 	StrictMock<MockBufferedWriter<10>> dut;
 
 	{
