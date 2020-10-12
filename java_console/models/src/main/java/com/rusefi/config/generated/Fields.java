@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEfi tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Fri Oct 09 06:10:20 UTC 2020
+// this file was generated automatically by rusEfi tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Sun Oct 11 23:07:00 UTC 2020
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -839,6 +839,7 @@ public class Fields {
 	public static final int ignitionRpmBins_offset = 17376;
 	public static final int ignitionTable_offset = 16288;
 	public static final int ignMathCalculateAtIndex_offset = 1488;
+	public static final int ignOverrideMode_offset = 2128;
 	public static final String INDICATOR_NAME_AC_SWITCH = "AC switch";
 	public static final String INDICATOR_NAME_BRAKE_DOWN = "brake: down";
 	public static final String INDICATOR_NAME_CLUTCH_DOWN = "clutch: down";
@@ -963,6 +964,7 @@ public class Fields {
 	public static final int logicAnalyzerPins2_offset = 749;
 	public static final int logicAnalyzerPins3_offset = 750;
 	public static final int logicAnalyzerPins4_offset = 751;
+	public static final int low_fuel_pressure_sensor_offset = 2131;
 	public static final int MAF_DECODING_COUNT = 256;
 	public static final int mafAdcChannel_offset = 543;
 	public static final int mafDecoding_offset = 10784;
@@ -1395,7 +1397,7 @@ public class Fields {
 	public static final char TS_SD_R_COMMAND = 'r';
 	public static final char TS_SD_W_COMMAND = 'w';
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI 2020.10.09.all.3908213068";
+	public static final String TS_SIGNATURE = "rusEFI 2020.10.11.all.2205707407";
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final int TT_TT_60_2_VW = 20;
 	public static final int TT_TT_ONE = 18;
@@ -1413,6 +1415,7 @@ public class Fields {
 	public static final int unused1128_offset = 2116;
 	public static final int unused1129_offset = 2116;
 	public static final int unused1130_offset = 2116;
+	public static final int unused1476b19_offset = 1476;
 	public static final int unused1476b20_offset = 1476;
 	public static final int unused1476b3_offset = 1476;
 	public static final int unused1476b8_offset = 1476;
@@ -1438,7 +1441,7 @@ public class Fields {
 	public static final int unused_1484_bit_30_offset = 1476;
 	public static final int unused_1484_bit_31_offset = 1476;
 	public static final int unused_alFIn_offset = 4024;
-	public static final int unused_former_warmup_target_afr_offset = 2128;
+	public static final int unused_former_warmup_target_afr_offset = 2129;
 	public static final int unusedAt724_offset = 724;
 	public static final int unusedAtOldBoardConfigurationEnd_offset = 1204;
 	public static final int unusedAuxVoltage1_TODO_332_offset = 2713;
@@ -1516,7 +1519,6 @@ public class Fields {
 	public static final int useStepperIdle_offset = 744;
 	public static final int useTLE8888_cranking_hack_offset = 76;
 	public static final int useTpicAdvancedMode_offset = 744;
-	public static final int useTPSAdvanceTable_offset = 1476;
 	public static final int VBAT_INJECTOR_CURVE_SIZE = 8;
 	public static final int vbattAdcChannel_offset = 513;
 	public static final int vbattDividerCoeff_offset = 464;
@@ -2163,7 +2165,7 @@ public class Fields {
 	public static final Field USEFIXEDBAROCORRFROMMAP = Field.create("USEFIXEDBAROCORRFROMMAP", 1476, FieldType.BIT, 16);
 	public static final Field USESEPARATEADVANCEFORCRANKING = Field.create("USESEPARATEADVANCEFORCRANKING", 1476, FieldType.BIT, 17);
 	public static final Field USEADVANCECORRECTIONSFORCRANKING = Field.create("USEADVANCECORRECTIONSFORCRANKING", 1476, FieldType.BIT, 18);
-	public static final Field USETPSADVANCETABLE = Field.create("USETPSADVANCETABLE", 1476, FieldType.BIT, 19);
+	public static final Field UNUSED1476B19 = Field.create("UNUSED1476B19", 1476, FieldType.BIT, 19);
 	public static final Field UNUSED1476B20 = Field.create("UNUSED1476B20", 1476, FieldType.BIT, 20);
 	public static final Field USEIACPIDMULTTABLE = Field.create("USEIACPIDMULTTABLE", 1476, FieldType.BIT, 21);
 	public static final Field ISBOOSTCONTROLENABLED = Field.create("ISBOOSTCONTROLENABLED", 1476, FieldType.BIT, 22);
@@ -2329,6 +2331,8 @@ public class Fields {
 	public static final Field CAN2RXPIN = Field.create("CAN2RXPIN", 2125, FieldType.INT8, brain_pin_e);
 	public static final Field STARTERCONTROLPINMODE = Field.create("STARTERCONTROLPINMODE", 2126, FieldType.INT8, pin_output_mode_e);
 	public static final Field WASTEGATEPOSITIONSENSOR = Field.create("WASTEGATEPOSITIONSENSOR", 2127, FieldType.INT8, adc_channel_e);
+	public static final Field IGNOVERRIDEMODE = Field.create("IGNOVERRIDEMODE", 2128, FieldType.INT8, afr_override_e);
+	public static final Field LOW_FUEL_PRESSURE_SENSOR = Field.create("LOW_FUEL_PRESSURE_SENSOR", 2131, FieldType.INT8, adc_channel_e);
 	public static final Field BOOSTCUTPRESSURE = Field.create("BOOSTCUTPRESSURE", 2132, FieldType.FLOAT);
 	public static final Field FSIOADC1 = Field.create("FSIOADC1", 2200, FieldType.INT8, adc_channel_e);
 	public static final Field FSIOADC2 = Field.create("FSIOADC2", 2201, FieldType.INT8, adc_channel_e);
@@ -3207,7 +3211,7 @@ public class Fields {
 	USEFIXEDBAROCORRFROMMAP,
 	USESEPARATEADVANCEFORCRANKING,
 	USEADVANCECORRECTIONSFORCRANKING,
-	USETPSADVANCETABLE,
+	UNUSED1476B19,
 	UNUSED1476B20,
 	USEIACPIDMULTTABLE,
 	ISBOOSTCONTROLENABLED,
@@ -3369,6 +3373,8 @@ public class Fields {
 	CAN2RXPIN,
 	STARTERCONTROLPINMODE,
 	WASTEGATEPOSITIONSENSOR,
+	IGNOVERRIDEMODE,
+	LOW_FUEL_PRESSURE_SENSOR,
 	BOOSTCUTPRESSURE,
 	FSIOADC1,
 	FSIOADC2,

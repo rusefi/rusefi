@@ -401,7 +401,7 @@ void mreBoardOldTest(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 #if (BOARD_TLE8888_COUNT > 0)
 	engineConfiguration->debugMode = DBG_TLE8888;
 
-	engineConfiguration->triggerSimulatorFrequency = 60;
+	engineConfiguration->triggerSimulatorFrequency = HW_CHECK_RPM;
 	// set cranking_rpm 500
 	engineConfiguration->cranking.rpm = 100;
 	// set cranking_dwell 200
@@ -586,7 +586,7 @@ void mreBoardNewTest(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	// TLE8888_PIN_24: "43 - GP Out 4"
 	engineConfiguration->ignitionPins[12 - 1] = TLE8888_PIN_24;
 
-	engineConfiguration->afr.hwChannel = EFI_ADC_NONE;
+	engineConfiguration->afr.hwChannel = EFI_ADC_6;
 	engineConfiguration->throttlePedalPositionAdcChannel = EFI_ADC_NONE;
 
 

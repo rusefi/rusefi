@@ -862,6 +862,7 @@
 #define ignitionRpmBins_offset 17376
 #define ignitionTable_offset 16288
 #define ignMathCalculateAtIndex_offset 1488
+#define ignOverrideMode_offset 2128
 #define INDICATOR_NAME_AC_SWITCH "AC switch"
 #define INDICATOR_NAME_BRAKE_DOWN "brake: down"
 #define INDICATOR_NAME_CLUTCH_DOWN "clutch: down"
@@ -990,6 +991,7 @@
 #define logicAnalyzerPins2_offset 749
 #define logicAnalyzerPins3_offset 750
 #define logicAnalyzerPins4_offset 751
+#define low_fuel_pressure_sensor_offset 2131
 #define MAF_DECODING_COUNT 256
 #define maf_sensor_type_e_auto_enum "CUSTOM", "Bosch0280218037", "Bosch0280218004", "DensoTODO"
 #define maf_sensor_type_e_enum "v0", "v1", "v2", "v3"
@@ -1170,8 +1172,8 @@
 #define showHumanReadableWarning_offset 976
 #define showSdCardWarning_offset 76
 #define SIGNATURE_BOARD kin
-#define SIGNATURE_DATE 2020.10.09
-#define SIGNATURE_HASH 53060296
+#define SIGNATURE_DATE 2020.10.11
+#define SIGNATURE_HASH 1755535115
 #define silentTriggerError_offset 1464
 #define slowAdcAlpha_offset 2088
 #define sparkDwellRpmBins_offset 332
@@ -1490,7 +1492,7 @@
 #define ts_show_spi true
 #define ts_show_trigger_comparator true
 #define ts_show_tunerstudio_port true
-#define TS_SIGNATURE "rusEFI 2020.10.09.kin.53060296"
+#define TS_SIGNATURE "rusEFI 2020.10.11.kin.1755535115"
 #define TS_SINGLE_WRITE_COMMAND 'W'
 #define TS_SINGLE_WRITE_COMMAND_char W
 #define TS_TEST_COMMAND 't' // 0x74
@@ -1511,6 +1513,7 @@
 #define unused1128_offset 2116
 #define unused1129_offset 2116
 #define unused1130_offset 2116
+#define unused1476b19_offset 1476
 #define unused1476b20_offset 1476
 #define unused1476b3_offset 1476
 #define unused1476b8_offset 1476
@@ -1536,7 +1539,7 @@
 #define unused_1484_bit_30_offset 1476
 #define unused_1484_bit_31_offset 1476
 #define unused_alFIn_offset 4024
-#define unused_former_warmup_target_afr_offset 2128
+#define unused_former_warmup_target_afr_offset 2129
 #define unusedAt724_offset 724
 #define unusedAtOldBoardConfigurationEnd_offset 1204
 #define unusedAuxVoltage1_TODO_332_offset 2713
@@ -1614,7 +1617,6 @@
 #define useStepperIdle_offset 744
 #define useTLE8888_cranking_hack_offset 76
 #define useTpicAdvancedMode_offset 744
-#define useTPSAdvanceTable_offset 1476
 #define VBAT_INJECTOR_CURVE_SIZE 8
 #define vbattAdcChannel_offset 513
 #define vbattDividerCoeff_offset 464

@@ -207,6 +207,12 @@ void Engine::periodicSlowCallback(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 
 #if HW_CHECK_MODE
 	efiAssertVoid(OBD_PCM_Processor_Fault, CONFIG(clt).adcChannel != EFI_ADC_NONE, "No CLT setting");
+	efitimesec_t secondsNow = getTimeNowSeconds();
+	if (secondsNow > 2 && secondsNow < 180) {
+//		assertCloseTo("RPM", Sensor::get(SensorType::Rpm).Value, HW_CHECK_RPM);
+	} else if (secondsNow > 180) {
+		CONFIG(triggerSimulatorFrequency) = 5 * HW_CHECK_RPM;
+	}
 	assertCloseTo("clt", Sensor::get(SensorType::Clt).Value, 49.3);
 	assertCloseTo("iat", Sensor::get(SensorType::Iat).Value, 73.2);
 	assertCloseTo("aut1", Sensor::get(SensorType::AuxTemp1).Value, 13.8);
