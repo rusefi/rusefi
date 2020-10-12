@@ -212,7 +212,7 @@ void Engine::periodicSlowCallback(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	if (secondsNow > 2 && secondsNow < 180) {
 		assertCloseTo("RPM", Sensor::get(SensorType::Rpm).Value, HW_CHECK_RPM);
 	} else if (!hasFirmwareError() && secondsNow > 180) {
-		static isHappyTest = false;
+		static bool isHappyTest = false;
 		if (!isHappyTest) {
 			setTriggerEmulatorRPM(5 * HW_CHECK_RPM);
 			scheduleMsg(&engineLogger, "TEST PASSED");
