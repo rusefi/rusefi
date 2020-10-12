@@ -7,7 +7,7 @@
 
 #include "engine_controller.h"
 #include "perf_trace.h"
-#include "counter64.h"
+#include "os_access.h"
 #include "settings.h"
 
 EXTERN_ENGINE;
@@ -84,8 +84,6 @@ void setMockState(brain_pin_e pin, bool state DECLARE_ENGINE_PARAMETER_SUFFIX) {
 #endif /* EFI_ENABLE_MOCK_ADC */
 
 #if EFI_PROD_CODE
-static Overflow64Counter halTime;
-
 /**
  * 64-bit result would not overflow, but that's complex stuff for our 32-bit MCU
  */
@@ -95,71 +93,22 @@ efitimeus_t getTimeNowUs(void) {
 	return getTimeNowNt() / (CORE_CLOCK / 1000000);
 }
 
-//todo: macro to save method invocation
+volatile uint32_t lastLowerNt = 0;
+volatile uint32_t upperTimeNt = 0;
+
 efitick_t getTimeNowNt(void) {
-#if EFI_PROD_CODE
-    /* Entering a reentrant critical zone.*/
-    syssts_t sts = chSysGetStatusAndLockX();
-	efitime_t localH = halTime.state.highBits;
-	uint32_t localLow = halTime.state.lowBits;
+	chibios_rt::CriticalSectionLocker csl;
 
-	uint32_t value = getTimeNowLowerNt();
+	uint32_t stamp = getTimeNowLowerNt();
 
-	if (value < localLow) {
-		// new value less than previous value means there was an overflow in that 32 bit counter
-		localH += 0x100000000LL;
+	// Lower 32 bits of the timer has wrapped - time to step upper bits
+	if (stamp < lastLowerNt) {
+		upperTimeNt++;
 	}
 
-	efitime_t result = localH + value;
+	lastLowerNt = stamp;
 
-    /* Leaving the critical zone.*/
-    chSysRestoreStatusX(sts);
-	return result;
-#else /* EFI_PROD_CODE */
-// todo: why is this implementation not used?
-	/**
-	 * this method is lock-free and thread-safe, that's because the 'update' method
-	 * is atomic with a critical zone requirement.
-	 *
-	 * http://stackoverflow.com/questions/5162673/how-to-read-two-32bit-counters-as-a-64bit-integer-without-race-condition
-	 */
-	efitime_t localH;
-	efitime_t localH2;
-	uint32_t localLow;
-	int counter = 0;
-	do {
-		localH = halTime.state.highBits;
-		localLow = halTime.state.lowBits;
-		localH2 = halTime.state.highBits;
-#if EFI_PROD_CODE
-		if (counter++ == 10000)
-			chDbgPanic("lock-free frozen");
-#endif /* EFI_PROD_CODE */
-	} while (localH != localH2);
-	/**
-	 * We need to take current counter after making a local 64 bit snapshot
-	 */
-	uint32_t value = getTimeNowLowerNt();
-
-	if (value < localLow) {
-		// new value less than previous value means there was an overflow in that 32 bit counter
-		localH += 0x100000000LL;
-	}
-
-	return localH + value;
-#endif /* EFI_PROD_CODE */
-
-}
-
-void touchTimeCounter() {
-	/**
-	 * We need to push current value into the 64 bit counter often enough so that we do not miss an overflow
-	 */
-    /* Entering a reentrant critical zone.*/
-    syssts_t sts = chSysGetStatusAndLockX();
-	updateAndSet(&halTime.state, getTimeNowLowerNt());
-    /* Leaving the critical zone.*/
-    chSysRestoreStatusX(sts);
+	return ((int64_t)upperTimeNt << 32) | stamp;
 }
 
 static void onStartStopButtonToggle(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
