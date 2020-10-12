@@ -20,6 +20,10 @@ extern "C"
 
 #ifdef __cplusplus
 }
+
+// ChibiOS c++ wrappers
+#include "ch.hpp"
+
 #endif /* __cplusplus */
 
 #include "io_pins.h"
