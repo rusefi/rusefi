@@ -35,6 +35,7 @@
 #endif /* EFI_TUNER_STUDIO */
 
 #if EFI_PROD_CODE
+#include "trigger_emulator_algo.h"
 #include "bench_test.h"
 #else
 #define isRunningBenchTest() true
@@ -209,9 +210,14 @@ void Engine::periodicSlowCallback(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	efiAssertVoid(OBD_PCM_Processor_Fault, CONFIG(clt).adcChannel != EFI_ADC_NONE, "No CLT setting");
 	efitimesec_t secondsNow = getTimeNowSeconds();
 	if (secondsNow > 2 && secondsNow < 180) {
-//		assertCloseTo("RPM", Sensor::get(SensorType::Rpm).Value, HW_CHECK_RPM);
-	} else if (secondsNow > 180) {
-		CONFIG(triggerSimulatorFrequency) = 5 * HW_CHECK_RPM;
+		assertCloseTo("RPM", Sensor::get(SensorType::Rpm).Value, HW_CHECK_RPM);
+	} else if (!hasFirmwareError() && secondsNow > 180) {
+		static isHappyTest = false;
+		if (!isHappyTest) {
+			setTriggerEmulatorRPM(5 * HW_CHECK_RPM);
+			scheduleMsg(&engineLogger, "TEST PASSED");
+			isHappyTest = true;
+		}
 	}
 	assertCloseTo("clt", Sensor::get(SensorType::Clt).Value, 49.3);
 	assertCloseTo("iat", Sensor::get(SensorType::Iat).Value, 73.2);
