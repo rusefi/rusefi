@@ -70,6 +70,8 @@ case EFI_ADC_8:
   return "EFI_ADC_8";
 case EFI_ADC_9:
   return "EFI_ADC_9";
+case EFI_ADC_TEMP_SENSOR:
+  return "EFI_ADC_TEMP_SENSOR";
 case EFI_ADC_ERROR:
   return "EFI_ADC_ERROR";
 case EFI_ADC_NONE:
