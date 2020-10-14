@@ -96,7 +96,7 @@ efitimeus_t getTimeNowUs(void) {
 volatile uint32_t lastLowerNt = 0;
 volatile uint32_t upperTimeNt = 0;
 
-efitick_t getTimeNowNt(void) {
+efitick_t getTimeNowNt() {
 	chibios_rt::CriticalSectionLocker csl;
 
 	uint32_t stamp = getTimeNowLowerNt();
@@ -110,6 +110,37 @@ efitick_t getTimeNowNt(void) {
 
 	return ((int64_t)upperTimeNt << 32) | stamp;
 }
+
+/*	//Alternative lock free implementation (probably actually slower!)
+	// this method is lock-free and thread-safe, that's because the 'update' method
+	// is atomic with a critical zone requirement.
+	//
+	// http://stackoverflow.com/questions/5162673/how-to-read-two-32bit-counters-as-a-64bit-integer-without-race-condition
+
+etitick_t getTimeNowNt() {
+	efitime_t localH;
+	efitime_t localH2;
+	uint32_t localLow;
+	int counter = 0;
+	do {
+		localH = halTime.state.highBits;
+		localLow = halTime.state.lowBits;
+		localH2 = halTime.state.highBits;
+		if (counter++ == 10000)
+			chDbgPanic("lock-free frozen");
+	} while (localH != localH2);
+
+	// We need to take current counter after making a local 64 bit snapshot
+	uint32_t value = getTimeNowLowerNt();
+
+	if (value < localLow) {
+		// new value less than previous value means there was an overflow in that 32 bit counter
+		localH += 0x100000000LL;
+	}
+
+	return localH + value;
+}
+*/
 
 static void onStartStopButtonToggle(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	engine->startStopStateToggleCounter++;
