@@ -50,7 +50,6 @@
 #include "spark_logic.h"
 #include "aux_valves.h"
 #include "accelerometer.h"
-#include "counter64.h"
 #include "perf_trace.h"
 #include "boost_control.h"
 #include "launch_control.h"
@@ -220,8 +219,6 @@ static void doPeriodicSlowCallback(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 #if EFI_ENGINE_CONTROL && EFI_SHAFT_POSITION_INPUT
 	efiAssertVoid(CUSTOM_ERR_6661, getCurrentRemainingStack() > 64, "lowStckOnEv");
 #if EFI_PROD_CODE
-	touchTimeCounter();
-
 	slowStartStopButtonCallback(PASS_ENGINE_PARAMETER_SIGNATURE);
 #endif /* EFI_PROD_CODE */
 
@@ -707,7 +704,7 @@ void initEngineContoller(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX) 
  * UNUSED_SIZE constants.
  */
 #ifndef RAM_UNUSED_SIZE
-#define RAM_UNUSED_SIZE 2350
+#define RAM_UNUSED_SIZE 4000
 #endif
 #ifndef CCM_UNUSED_SIZE
 #define CCM_UNUSED_SIZE 2900

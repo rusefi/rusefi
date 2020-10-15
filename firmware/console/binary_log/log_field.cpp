@@ -1,4 +1,5 @@
 #include "log_field.h"
+#include "buffered_writer.h"
 
 #include <cstring>
 
@@ -16,7 +17,9 @@ static void copyFloat(char* buffer, float value) {
 	memcpy_swapend(buffer, reinterpret_cast<char*>(&value), sizeof(float));
 }
 
-size_t LogField::writeHeader(char* buffer) const {
+void LogField::writeHeader(Writer& outBuffer) const {
+	char buffer[MLQ_FIELD_HEADER_SIZE];
+
 	// Offset 0, length 1 = type
 	buffer[0] = static_cast<char>(m_type);
 
@@ -40,7 +43,7 @@ size_t LogField::writeHeader(char* buffer) const {
 	buffer[54] = m_digits;
 
 	// Total size = 55
-	return MLQ_FIELD_HEADER_SIZE;
+	outBuffer.write(buffer, MLQ_FIELD_HEADER_SIZE);
 }
 
 size_t LogField::writeData(char* buffer) const {
