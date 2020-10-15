@@ -22,7 +22,6 @@
 #include "crc.h"
 #include "fl_stack.h"
 #include "io_pins.h"
-#include "counter64.h"
 #include "efi_gpio.h"
 #include "efilib.h"
 
@@ -64,20 +63,6 @@ TEST(util, crc) {
 	c = crc32(line, 1);
 	c = crc32inc(line + 1, c, 8 - 1);
 	assertEqualsM("crc32 line inc", 0x4775a7b1, c);
-}
-
-
-TEST(util, Overflow64Counter) {
-	print("*************************************** testOverflow64Counter\r\n");
-
-	Overflow64Counter o;
-	ASSERT_EQ(0, o.update(0));
-	ASSERT_EQ(10, o.update(10));
-
-	ASSERT_EQ(20, o.update(20));
-
-	// overflow
-	ASSERT_EQ(4294967296, o.update(0));
 }
 
 TEST(util, cyclicBufferContains) {
