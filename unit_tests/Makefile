@@ -27,6 +27,7 @@ ifeq ($(USE_OPT),)
   USE_OPT += -fprofile-arcs -ftest-coverage
   USE_OPT += -Werror=missing-field-initializers
   USE_OPT += -Wno-unused-parameter -Wno-unused-function
+  USE_OPT += -fsingle-precision-constant
 endif
 
 
