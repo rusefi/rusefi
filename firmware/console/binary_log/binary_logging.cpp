@@ -3,13 +3,13 @@
  * See also mlq_file_format.txt
  */
 
-
+#include "binary_logging.h"
 #include "tunerstudio_outputs.h"
 #include "log_field.h"
 #include "efilib.h"
 #include "efitime.h"
 #include "crc.h"
-
+#include "buffered_writer.h"
 
 #define TIME_PRECISION 1000
 
@@ -59,7 +59,8 @@ static const LogField fields[] = {
 	{tsOutputChannels.massAirFlow, GAUGE_NAME_AIR_FLOW, "kg/h", 1},
 };
 
-size_t writeHeader(char* buffer) {
+void writeHeader(Writer& outBuffer) {
+	char buffer[MLQ_HEADER_SIZE];
 	// File format: MLVLG\0
 	strncpy(buffer, "MLVLG", 6);
 
@@ -77,7 +78,13 @@ size_t writeHeader(char* buffer) {
 	buffer[12] = 0;
 	buffer[13] = 0;
 
-	// Index 14-17 are written at the end - header end offset
+	size_t headerSize = MLQ_HEADER_SIZE + efi::size(fields) * 55;
+
+	// Data begin index: begins immediately after the header
+	buffer[14] = 0;
+	buffer[15] = 0;
+	buffer[16] = (headerSize >> 8) & 0xFF;
+	buffer[17] = headerSize & 0xFF;
 
 	// Record length - length of a single data record: sum size of all fields
 	uint16_t recLength = 0;
@@ -92,23 +99,12 @@ size_t writeHeader(char* buffer) {
 	buffer[20] = 0;
 	buffer[21] = efi::size(fields);
 
-	size_t headerSize = MLQ_HEADER_SIZE;
+	outBuffer.write(buffer, MLQ_HEADER_SIZE);
 
 	// Write the actual logger fields, offset 22
-	char* entryHeaders = buffer + MLQ_HEADER_SIZE;
 	for (size_t i = 0; i < efi::size(fields); i++) {
-		size_t sz = fields[i].writeHeader(entryHeaders);
-		entryHeaders += sz;
-		headerSize += sz;
+		fields[i].writeHeader(outBuffer);
 	}
-
-	// Data begin index: begins immediately after the header
-	buffer[14] = 0;
-	buffer[15] = 0;
-	buffer[16] = (headerSize >> 8) & 0xFF;
-	buffer[17] = headerSize & 0xFF;
-
-	return headerSize;
 }
 
 static uint8_t blockRollCounter = 0;

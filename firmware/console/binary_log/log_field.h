@@ -4,6 +4,7 @@
 #include <cstdint>
 #include <cstddef>
 
+struct Writer;
 class LogField {
 public:
 	template <typename TValue, int TMult = 1>
@@ -34,8 +35,7 @@ public:
 	}
 
 	// Write the header data describing this field.
-	// Returns the number of bytes written.
-	size_t writeHeader(char* buffer) const;
+	void writeHeader(Writer& outBuffer) const;
 
 	// Write the field's data to the buffer.
 	// Returns the number of bytes written.
