@@ -267,5 +267,5 @@ typedef enum __attribute__ ((__packed__)) {
 
 	EFI_ADC_TEMP_SENSOR = 17, // Internal temp sensor
 
-	EFI_ADC_ERROR = 100,
+	EFI_ADC_ERROR = 50,
 } adc_channel_e;
