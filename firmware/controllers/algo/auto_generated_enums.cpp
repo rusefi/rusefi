@@ -1,7 +1,7 @@
 #include "global.h"
 #include "rusefi_enums.h"
 #include "rusefi_hw_enums.h"
-// was generated automatically by rusEfi tool  from rusefi_hw_enums.h // was generated automatically by rusEfi tool  from rusefi_enums.h // by enum2string.jar tool on Sat Oct 03 14:41:42 UTC 2020
+// was generated automatically by rusEfi tool  from rusefi_hw_enums.h // was generated automatically by rusEfi tool  from rusefi_enums.h // by enum2string.jar tool on Thu Oct 15 02:41:44 UTC 2020
 // see also gen_config_and_enums.bat
 
 
@@ -70,12 +70,12 @@ case EFI_ADC_8:
   return "EFI_ADC_8";
 case EFI_ADC_9:
   return "EFI_ADC_9";
-case EFI_ADC_TEMP_SENSOR:
-  return "EFI_ADC_TEMP_SENSOR";
 case EFI_ADC_ERROR:
   return "EFI_ADC_ERROR";
 case EFI_ADC_NONE:
   return "EFI_ADC_NONE";
+case EFI_ADC_TEMP_SENSOR:
+  return "EFI_ADC_TEMP_SENSOR";
   }
  return NULL;
 }
