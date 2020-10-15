@@ -47,7 +47,6 @@ TEST(etb, initializationSingleThrottle) {
 
 	// Expect mock0 to be init as throttle 1, and PID params
 	EXPECT_CALL(mocks[0], init(ETB_Throttle1, _, &engineConfiguration->etb, Ne(nullptr))).WillOnce(Return(true));
-	EXPECT_CALL(mocks[0], reset);
 
 	// We do not expect throttle #2 to be initialized
 
@@ -72,11 +71,9 @@ TEST(etb, initializationDualThrottle) {
 
 	// Expect mock0 to be init as throttle 1, and PID params
 	EXPECT_CALL(mocks[0], init(ETB_Throttle1, _, &engineConfiguration->etb, Ne(nullptr))).WillOnce(Return(true));
-	EXPECT_CALL(mocks[0], reset);
 
 	// Expect mock1 to be init as throttle 2, and PID params
 	EXPECT_CALL(mocks[1], init(ETB_Throttle2, _, &engineConfiguration->etb, Ne(nullptr))).WillOnce(Return(true));
-	EXPECT_CALL(mocks[1], reset);
 
 	doInitElectronicThrottle(PASS_ENGINE_PARAMETER_SIGNATURE);
 }
