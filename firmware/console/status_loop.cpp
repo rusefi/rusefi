@@ -61,6 +61,7 @@
 #include "periodic_thread_controller.h"
 #include "cdm_ion_sense.h"
 #include "binary_logging.h"
+#include "buffered_writer.h"
 
 extern bool main_loop_started;
 
@@ -142,7 +143,7 @@ static float getAirFlowGauge(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	return hasMafSensor() ? getRealMaf(PASS_ENGINE_PARAMETER_SIGNATURE) : engine->engineState.airFlow;
 }
 
-void writeLogLine() {
+void writeLogLine(Writer& buffer) {
 #if EFI_FILE_LOGGING
 	if (!main_loop_started)
 		return;
@@ -157,7 +158,7 @@ void writeLogLine() {
 
 	efiAssertVoid(OBD_PCM_Processor_Fault, length <= efi::size(sdLogBuffer), "SD log buffer overflow");
 
-	appendToLog(sdLogBuffer, length);
+	buffer.write(sdLogBuffer, length);
 
 	binaryLogCount++;
 #endif /* EFI_FILE_LOGGING */
