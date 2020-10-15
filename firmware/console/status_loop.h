@@ -13,5 +13,7 @@ void updateDevConsoleState(void);
 void prepareTunerStudioOutputs(void);
 void startStatusThreads(void);
 void initStatusLoop(void);
-void writeLogLine(void);
+
+struct Writer;
+void writeLogLine(Writer& buffer);
 void printOverallStatus(systime_t nowSeconds);
