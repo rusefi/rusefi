@@ -1,18 +1,32 @@
 #include "log_field.h"
+#include "buffered_writer.h"
 
 #include <gmock/gmock.h>
 
+using ::testing::_;
 using ::testing::ElementsAre;
+using ::testing::StrictMock;
+
+class MockWriter : public Writer {
+public:
+	MOCK_METHOD(size_t, write, (const char* buffer, size_t count), (override));
+	MOCK_METHOD(size_t, flush, (), (override));
+};
 
 TEST(BinaryLogField, FieldHeader) {
 	scaled_channel<int8_t, 10> channel;
 	LogField field(channel, "name", "units", 2);
 
-	char buffer[56];
-	memset(buffer, 0xAA, sizeof(buffer));
+	char buffer[55];
+	StrictMock<MockWriter> bufWriter;
+	EXPECT_CALL(bufWriter, write(_, 55))
+		.WillOnce([&] (const char* buf, size_t count) {
+			memcpy(buffer, buf, count);
+			return 0;
+		});
 
 	// Should write 55 bytes
-	EXPECT_EQ(55, field.writeHeader(buffer));
+	field.writeHeader(bufWriter);
 
 	// Expect correctly written header
 	EXPECT_THAT(buffer, ElementsAre(
@@ -28,10 +42,7 @@ TEST(BinaryLogField, FieldHeader) {
 		// Transform - we always use 0
 		0, 0, 0, 0,
 		// Digits - 2, as configured
-		2,
-
-		// After end should be 0xAA, not touched
-		0xAA
+		2
 	));
 }
 
