@@ -25,6 +25,7 @@
 #include "engine_configuration.h"
 #include "status_loop.h"
 #include "usb_msd_cfg.h"
+#include "buffered_writer.h"
 
 #include "rtc_helper.h"
 
@@ -304,49 +305,6 @@ static void listDirectory(const char *path) {
 	UNLOCK_SD_SPI;
 }
 
-static int errorReported = FALSE; // this is used to report the error only once
-
-#if 0
-void readLogFileContent(char *buffer, short fileId, short offset, short length) {
-}
-#endif
-
-/**
- * @brief Appends specified line to the current log file
- */
-void appendToLog(const char *line, size_t lineLength) {
-	UINT bytesWritten;
-
-	if (!isSdCardAlive()) {
-		if (!errorReported)
-			scheduleMsg(&logger, "appendToLog Error: No File system is mounted");
-		errorReported = TRUE;
-		return;
-	}
-
-	totalLoggedBytes += lineLength;
-	LOCK_SD_SPI;
-	FRESULT err = f_write(&FDLogFile, line, lineLength, &bytesWritten);
-	if (bytesWritten < lineLength) {
-		printError("write error or disk full", err); // error or disk full
-		mmcUnMount();
-	} else {
-		writeCounter++;
-		totalWritesCounter++;
-		if (writeCounter >= F_SYNC_FREQUENCY) {
-			/**
-			 * Performance optimization: not f_sync after each line, f_sync is probably a heavy operation
-			 * todo: one day someone should actually measure the relative cost of f_sync
-			 */
-			f_sync(&FDLogFile);
-			totalSyncCounter++;
-			writeCounter = 0;
-		}
-	}
-
-	UNLOCK_SD_SPI;
-}
-
 /*
  * MMC card un-mount.
  */
@@ -439,6 +397,39 @@ static void MMCmount(void) {
 	}
 }
 
+class SdLogBufferWriter final : public BufferedWriter<512> {
+	size_t writeInternal(const char* buffer, size_t count) override {
+		size_t bytesWritten;
+
+		totalLoggedBytes += count;
+
+		LOCK_SD_SPI;
+		FRESULT err = f_write(&FDLogFile, buffer, count, &bytesWritten);
+
+		if (bytesWritten != count) {
+			printError("write error or disk full", err); // error or disk full
+			mmcUnMount();
+		} else {
+			writeCounter++;
+			totalWritesCounter++;
+			if (writeCounter >= F_SYNC_FREQUENCY) {
+				/**
+				 * Performance optimization: not f_sync after each line, f_sync is probably a heavy operation
+				 * todo: one day someone should actually measure the relative cost of f_sync
+				 */
+				f_sync(&FDLogFile);
+				totalSyncCounter++;
+				writeCounter = 0;
+			}
+		}
+
+		UNLOCK_SD_SPI;
+		return bytesWritten;
+	}
+};
+
+static SdLogBufferWriter logBuffer MAIN_RAM;
+
 static THD_FUNCTION(MMCmonThread, arg) {
 	(void)arg;
 	chRegSetThreadName("MMC_Monitor");
@@ -462,7 +453,7 @@ static THD_FUNCTION(MMCmonThread, arg) {
 		}
 
 		if (isSdCardAlive()) {
-			writeLogLine();
+			writeLogLine(logBuffer);
 		} else {
 			chThdSleepMilliseconds(100);
 		}
@@ -501,9 +492,6 @@ void initMmcCard(void) {
 	chThdCreateStatic(mmcThreadStack, sizeof(mmcThreadStack), LOWPRIO, (tfunc_t)(void*) MMCmonThread, NULL);
 
 	addConsoleAction("mountsd", MMCmount);
-	addConsoleActionS("appendtolog", [](const char* str) {
-		appendToLog(str, strlen(str));
-	});
 	addConsoleAction("umountsd", mmcUnMount);
 	addConsoleActionS("ls", listDirectory);
 	addConsoleActionS("del", removeFile);

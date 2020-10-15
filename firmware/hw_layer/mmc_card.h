@@ -16,7 +16,6 @@
 bool isLogFile(const char *fileName);
 void initMmcCard(void);
 bool isSdCardAlive(void);
-void appendToLog(const char *line, size_t length);
 
 void readLogFileContent(char *buffer, short fileId, short offset, short length);
 
