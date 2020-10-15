@@ -172,6 +172,8 @@ bool EtbController::init(etb_function_e function, DcMotor *motor, pid_s *pidPara
 	m_pid.initPidClass(pidParameters);
 	m_pedalMap = pedalMap;
 
+	reset();
+
 	return true;
 }
 
@@ -756,6 +758,10 @@ void setDefaultEtbParameters(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 		}
 	}
 
+	// Default is to run each throttle off its respective hbridge
+	engineConfiguration->etbFunctions[0] = ETB_Throttle1;
+	engineConfiguration->etbFunctions[1] = ETB_Throttle2;
+
 	engineConfiguration->etbFreq = DEFAULT_ETB_PWM_FREQUENCY;
 
 	// voltage, not ADC like with TPS
@@ -831,16 +837,23 @@ void doInitElectronicThrottle(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 
 	engine->etbActualCount = Sensor::hasSensor(SensorType::Tps2) ? 2 : 1;
 
+	bool anyEtbConfigured = false;
+
 	for (int i = 0 ; i < engine->etbActualCount; i++) {
 		auto motor = initDcMotor(i, CONFIG(etb_use_two_wires) PASS_ENGINE_PARAMETER_SUFFIX);
 
 		// If this motor is actually set up, init the etb
 		if (motor)
 		{
+			auto controller = engine->etbControllers[i];
+			if (!controller) {
+				continue;
+			}
+
 			// TODO: configure per-motor in config so wastegate/VW idle works
 			auto func = i == 0 ? ETB_Throttle1 : ETB_Throttle2;
 
-			engine->etbControllers[i]->init(func, motor, &engineConfiguration->etb, &pedal2tpsMap);
+			anyEtbConfigured |= controller->init(func, motor, &engineConfiguration->etb, &pedal2tpsMap);
 			INJECT_ENGINE_REFERENCE(engine->etbControllers[i]);
 		}
 	}
@@ -857,8 +870,6 @@ void doInitElectronicThrottle(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 		startupPositionError = true;
 	}
 #endif /* EFI_UNIT_TEST */
-
-	etbPidReset(PASS_ENGINE_PARAMETER_SIGNATURE);
 
 #if !EFI_UNIT_TEST
 	etbThread.Start();
