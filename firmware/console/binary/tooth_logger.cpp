@@ -98,7 +98,6 @@ static void SetNextCompositeEntry(efitick_t timestamp, bool trigger1, bool trigg
 }
 
 void LogTriggerTooth(trigger_event_e tooth, efitick_t timestamp DECLARE_ENGINE_PARAMETER_SUFFIX) {
-	ScopePerf perf(PE::LogTriggerTooth);
 	// bail if we aren't enabled
 	if (!ToothLoggerEnabled) {
 		return;
@@ -108,6 +107,8 @@ void LogTriggerTooth(trigger_event_e tooth, efitick_t timestamp DECLARE_ENGINE_P
 	if (engine->rpmCalculator.getRpm() > 4000) {
 		return;
 	}
+
+	ScopePerf perf(PE::LogTriggerTooth);
 
 /*
 		// We currently only support the primary trigger falling edge
