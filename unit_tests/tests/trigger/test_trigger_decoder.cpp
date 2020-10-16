@@ -515,32 +515,9 @@ TEST(misc, testTriggerDecoder) {
 		WITH_ENGINE_TEST_HELPER(MITSU_4G93);
 
 
-//		TriggerWaveform *t = &eth.engine.triggerShape;
-//		ASSERT_EQ(1, t->eventAngles[1]);
-//		ASSERT_EQ( 0,  t->triggerIndexByAngle[56]) << "index at 0";
-//		ASSERT_EQ( 1,  t->triggerIndexByAngle[57]) << "index at 1";
-//
-//		ASSERT_EQ(270, t->eventAngles[5]);
-//		ASSERT_EQ( 4,  t->triggerIndexByAngle[269]) << "index at 269";
-//		ASSERT_EQ( 5,  t->triggerIndexByAngle[270]) << "index at 270";
-//		ASSERT_EQ( 5,  t->triggerIndexByAngle[271]) << "index at 271";
-//
-//		ASSERT_EQ(306, t->eventAngles[6]);
-//		ASSERT_EQ(5, t->triggerIndexByAngle[305]);
-//		ASSERT_EQ(6, t->triggerIndexByAngle[306]);
-//		ASSERT_EQ(6, t->triggerIndexByAngle[307]);
-//
-//		ASSERT_EQ(666, t->eventAngles[11]);
-//		ASSERT_EQ( 10,  t->triggerIndexByAngle[665]) << "index for 665";
-//		ASSERT_EQ( 11,  t->triggerIndexByAngle[668]) << "index for 668";
-
-
 		eth.persistentConfig.engineConfiguration.useOnlyRisingEdgeForTrigger = false;
 		eth.persistentConfig.engineConfiguration.sensorChartMode = SC_DETAILED_RPM;
 		applyNonPersistentConfiguration(NULL PASS_ENGINE_PARAMETER_SUFFIX);
-
-//		assertEqualsM2("rpm#1", 16666.9746, eth.engine.triggerCentral.triggerState.instantRpmValue[0], 0.5);
-//		assertEqualsM2("rpm#2", 16666.3750, eth.engine.triggerCentral.triggerState.instantRpmValue[1], 0.5);
 
 	}
 	testTriggerDecoder2("miata 1990", MIATA_1990, 11, 0.2985, 0.3890);
@@ -563,7 +540,7 @@ TEST(misc, testTriggerDecoder) {
 
 	testTriggerDecoder2("sachs", SACHS, 0, 0.4800, 0.000);
 
-	testTriggerDecoder2("vw ABA", VW_ABA, 114, 0.5000, 0.0);
+	testTriggerDecoder2("vw ABA", VW_ABA, 0, 0.51666, 0.0);
 }
 
 extern fuel_Map3D_t fuelMap;
