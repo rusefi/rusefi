@@ -44,8 +44,8 @@ void globalTimerCallback() {
 }
 
 SingleTimerExecutor::SingleTimerExecutor()
-	// 10us is roughly double the cost of the interrupt + overhead of a single timer event
-	: queue(US2NT(10))
+	// 8us is roughly the cost of the interrupt + overhead of a single timer event
+	: queue(US2NT(8))
 {
 }
 
