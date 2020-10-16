@@ -96,11 +96,11 @@ void SingleTimerExecutor::scheduleByTimestampNt(scheduling_s* scheduling, efitim
 
 void SingleTimerExecutor::onTimerCallback() {
 	timerCallbackCounter++;
-	bool alreadyLocked = lockAnyContext();
+
+	chibios_rt::CriticalSectionLocker csl;
+
 	executeAllPendingActions();
 	scheduleTimerCallback();
-	if (!alreadyLocked)
-		unlockAnyContext();
 }
 
 /*
