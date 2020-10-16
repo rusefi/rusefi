@@ -120,14 +120,12 @@ static void setWarningEnabled(int value) {
 
 #if EFI_FILE_LOGGING
 // this one needs to be in main ram so that SD card SPI DMA works fine
-static char sdLogBuffer[2200] MAIN_RAM;
+static char sdLogBuffer[100] MAIN_RAM;
 static uint64_t binaryLogCount = 0;
 
 #endif /* EFI_FILE_LOGGING */
 
 EXTERN_ENGINE;
-
-static char buf[6];
 
 /**
  * This is useful if we are changing engine mode dynamically
@@ -148,17 +146,14 @@ void writeLogLine(Writer& buffer) {
 	if (!main_loop_started)
 		return;
 
-	size_t length;
 	if (binaryLogCount == 0) {
-		length = writeHeader(sdLogBuffer);
+		writeHeader(buffer);
 	} else {
 		updateTunerStudioState(&tsOutputChannels);
-		length = writeBlock(sdLogBuffer);
+		size_t length = writeBlock(sdLogBuffer);
+		efiAssertVoid(OBD_PCM_Processor_Fault, length <= efi::size(sdLogBuffer), "SD log buffer overflow");
+		buffer.write(sdLogBuffer, length);
 	}
-
-	efiAssertVoid(OBD_PCM_Processor_Fault, length <= efi::size(sdLogBuffer), "SD log buffer overflow");
-
-	buffer.write(sdLogBuffer, length);
 
 	binaryLogCount++;
 #endif /* EFI_FILE_LOGGING */
@@ -773,7 +768,6 @@ void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels DECLARE_
 	case DBG_FSIO_ADC:
 		// todo: implement a proper loop
 		if (engineConfiguration->fsioAdc[0] != EFI_ADC_NONE) {
-			strcpy(buf, "adcX");
 			tsOutputChannels->debugFloatField1 = getVoltage("fsio", engineConfiguration->fsioAdc[0] PASS_ENGINE_PARAMETER_SUFFIX);
 		}
 		break;

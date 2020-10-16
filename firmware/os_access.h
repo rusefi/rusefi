@@ -9,19 +9,14 @@
 
 #pragma once
 
-#ifdef __cplusplus
-extern "C"
-{
-#endif /* __cplusplus */
-
 #include <ch.h>
 #include <hal.h>
 #include "chprintf.h"
+#include "io_pins.h"
 
 #ifdef __cplusplus
-}
+// ChibiOS c++ wrappers
+#include "ch.hpp"
 #endif /* __cplusplus */
-
-#include "io_pins.h"
 
 #define HAS_OS_ACCESS

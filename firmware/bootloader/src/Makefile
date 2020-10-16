@@ -139,6 +139,7 @@ include $(CHIBIOS)/os/hal/osal/rt/osal.mk
 # RTOS files (optional).
 include $(CHIBIOS)/os/rt/rt.mk
 include $(CHIBIOS)/os/common/ports/ARMCMx/compilers/GCC/mk/port_v7m.mk
+include $(CHIBIOS)/os/various/cpp_wrappers/chcpp.mk
 
 include $(CONFIG)/boards/$(PROJECT_BOARD)/board.mk
 include $(PROJECT_DIR)/init/init.mk

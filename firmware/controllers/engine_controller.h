@@ -17,7 +17,6 @@ void commonInitEngineController(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_S
 void initStartStopButton(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 
 void initDataStructures(DECLARE_ENGINE_PARAMETER_SIGNATURE);
-void touchTimeCounter();
 
 void slowStartStopButtonCallback(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 
