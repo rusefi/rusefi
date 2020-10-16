@@ -10,7 +10,7 @@
 #include "scheduler.h"
 #include "event_queue.h"
 
-class SingleTimerExecutor : public ExecutorInterface {
+class SingleTimerExecutor final : public ExecutorInterface {
 public:
 	SingleTimerExecutor();
 	void scheduleByTimestamp(scheduling_s *scheduling, efitimeus_t timeUs, action_s action) override;

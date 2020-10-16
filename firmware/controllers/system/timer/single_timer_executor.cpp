@@ -44,8 +44,8 @@ void globalTimerCallback() {
 }
 
 SingleTimerExecutor::SingleTimerExecutor()
-	// 10us is roughly double the cost of the interrupt + overhead of a single timer event
-	: queue(US2NT(10))
+	// 8us is roughly the cost of the interrupt + overhead of a single timer event
+	: queue(US2NT(8))
 {
 }
 
@@ -71,39 +71,36 @@ void SingleTimerExecutor::scheduleByTimestampNt(scheduling_s* scheduling, efitim
 	ScopePerf perf(PE::SingleTimerExecutorScheduleByTimestamp);
 
 #if EFI_ENABLE_ASSERTS
-	int deltaTimeUs = NT2US(nt - getTimeNowNt());
+	int32_t deltaTimeNt = (int32_t)nt - getTimeNowLowerNt();
 
-	if (deltaTimeUs >= TOO_FAR_INTO_FUTURE_US) {
+	if (deltaTimeNt >= TOO_FAR_INTO_FUTURE_NT) {
 		// we are trying to set callback for too far into the future. This does not look right at all
-		firmwareError(CUSTOM_ERR_TASK_TIMER_OVERFLOW, "scheduleByTimestampNt() too far: %d", deltaTimeUs);
+		firmwareError(CUSTOM_ERR_TASK_TIMER_OVERFLOW, "scheduleByTimestampNt() too far: %d", deltaTimeNt);
 		return;
 	}
 #endif
 
 	scheduleCounter++;
-	bool alreadyLocked = true;
-	if (!reentrantFlag) {
-		// this would guard the queue and disable interrupts
-		alreadyLocked = lockAnyContext();
-	}
+
+	// Lock for queue insertion - we may already be locked, but that's ok
+	chibios_rt::CriticalSectionLocker csl;
+
 	bool needToResetTimer = queue.insertTask(scheduling, nt, action);
 	if (!reentrantFlag) {
 		executeAllPendingActions();
 		if (needToResetTimer) {
 			scheduleTimerCallback();
 		}
-		if (!alreadyLocked)
-			unlockAnyContext();
 	}
 }
 
 void SingleTimerExecutor::onTimerCallback() {
 	timerCallbackCounter++;
-	bool alreadyLocked = lockAnyContext();
+
+	chibios_rt::CriticalSectionLocker csl;
+
 	executeAllPendingActions();
 	scheduleTimerCallback();
-	if (!alreadyLocked)
-		unlockAnyContext();
 }
 
 /*
@@ -119,7 +116,7 @@ void SingleTimerExecutor::executeAllPendingActions() {
 	 * further invocations
 	 */
 	reentrantFlag = true;
-	int shouldExecute = 1;
+
 	/**
 	 * in real life it could be that while we executing listeners time passes and it's already time to execute
 	 * next listeners.
