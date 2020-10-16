@@ -829,14 +829,15 @@ void doInitElectronicThrottle(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 #endif /* EFI_PROD_CODE */
 
 	// If you don't have a pedal we have no business here.
-	if (!Sensor::hasSensor(SensorType::AcceleratorPedalPrimary)) {
-		return;
+	if (Sensor::hasSensor(SensorType::AcceleratorPedalPrimary)) {
+		engine->etbActualCount = Sensor::hasSensor(SensorType::Tps2) ? 2 : 1;
+	} else {
+		engine->etbActualCount = 0;
 	}
 
 	pedal2tpsMap.init(config->pedalToTpsTable, config->pedalToTpsPedalBins, config->pedalToTpsRpmBins);
 
-	engine->etbActualCount = Sensor::hasSensor(SensorType::Tps2) ? 2 : 1;
-
+	bool mustHaveEtbConfigured = Sensor::hasSensor(SensorType::AcceleratorPedalPrimary);
 	bool anyEtbConfigured = false;
 
 	for (int i = 0 ; i < engine->etbActualCount; i++) {
@@ -856,6 +857,16 @@ void doInitElectronicThrottle(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 			anyEtbConfigured |= controller->init(func, motor, &engineConfiguration->etb, &pedal2tpsMap);
 			INJECT_ENGINE_REFERENCE(engine->etbControllers[i]);
 		}
+	}
+
+	if (!anyEtbConfigured) {
+		// It's not valid to have a PPS without any ETBs - check that at least one ETB was enabled along with the pedal
+		if (mustHaveEtbConfigured) {
+			firmwareError(OBD_PCM_Processor_Fault, "A pedal position sensor was configured, but no electronic throttles are configured.");
+		}
+
+		// Don't start the thread if no throttles are in use.
+		return;
 	}
 
 #if 0 && ! EFI_UNIT_TEST
