@@ -269,9 +269,6 @@ void refreshMapAveragingPreCalc(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
  */
 void mapAveragingTriggerCallback(
 		uint32_t index, efitick_t edgeTimestamp DECLARE_ENGINE_PARAMETER_SUFFIX) {
-
-	ScopePerf perf(PE::MapAveragingTriggerCallback);
-	
 #if EFI_ENGINE_CONTROL
 	// this callback is invoked on interrupt thread
 	if (index != (uint32_t)CONFIG(mapAveragingSchedulingAtIndex))
@@ -281,6 +278,8 @@ void mapAveragingTriggerCallback(
 	if (!isValidRpm(rpm)) {
 		return;
 	}
+
+	ScopePerf perf(PE::MapAveragingTriggerCallback);
 
 	if (CONFIG(mapMinBufferLength) != mapMinBufferLength) {
 		applyMapMinBufferLength(PASS_ENGINE_PARAMETER_SIGNATURE);

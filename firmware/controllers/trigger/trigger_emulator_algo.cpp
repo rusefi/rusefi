@@ -150,7 +150,7 @@ static void emulatorApplyPinState(int stateIndex, PwmConfig *state) /* pwm_gen_c
 
 #if EFI_PROD_CODE
 	// Only set pins if they're configured - no need to waste the cycles otherwise
-	if (hasStimPins) {
+	else if (hasStimPins) {
 		applyPinState(stateIndex, state);
 	}
 #endif /* EFI_PROD_CODE */
