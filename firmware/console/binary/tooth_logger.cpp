@@ -104,6 +104,11 @@ void LogTriggerTooth(trigger_event_e tooth, efitick_t timestamp DECLARE_ENGINE_P
 		return;
 	}
 
+	// Don't log at significant engine speed
+	if (engine->rpmCalculator.getRpm() > 4000) {
+		return;
+	}
+
 /*
 		// We currently only support the primary trigger falling edge
     	// (this is the edge that VR sensors are accurate on)
