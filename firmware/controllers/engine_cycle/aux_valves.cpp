@@ -130,7 +130,7 @@ void initAuxValves(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX) {
 		return;
 	}
 
-	updateAuxValves(PASS_ENGINE_PARAMETER_SIGNATURE);
+	recalculateAuxValveTiming(PASS_ENGINE_PARAMETER_SIGNATURE);
 
 	for (int valveIndex = 0; valveIndex < AUX_DIGITAL_VALVE_COUNT; valveIndex++) {
 
@@ -156,7 +156,7 @@ void initAuxValves(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX) {
 //	addTriggerEventListener(auxValveTriggerCallback, "AuxV", engine);
 }
 
-void updateAuxValves(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+void recalculateAuxValveTiming(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	if (engineConfiguration->auxValves[0] == GPIO_UNASSIGNED) {
 		return;
 	}
