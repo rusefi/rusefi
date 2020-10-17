@@ -11,9 +11,9 @@
  * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
-#include "logic_analyzer.h"
-
 #include "global.h"
+#include "engine.h"
+#include "logic_analyzer.h"
 #include "os_access.h"
 #include "eficonsole.h"
 #include "pin_repository.h"
@@ -22,7 +22,6 @@
 #include "trigger_central.h"
 #include "os_util.h"
 #include "engine_math.h"
-#include "engine.h"
 #include "rpm_calculator.h"
 #include "engine_sniffer.h"
 
@@ -128,7 +127,7 @@ WaveReader::WaveReader() {
 	hw = nullptr;
 }
 
-static void waTriggerEventListener(trigger_event_e ckpSignalType, uint32_t index, efitick_t edgeTimestamp DECLARE_ENGINE_PARAMETER_SUFFIX) {
+void waTriggerEventListener(trigger_event_e ckpSignalType, uint32_t index, efitick_t edgeTimestamp DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	(void)ckpSignalType;
 	if (index != 0) {
 		return;
@@ -226,10 +225,6 @@ void initWaveAnalyzer(Logging *sharedLogger) {
 	initWave(PROTOCOL_WA_CHANNEL_2, 1);
 	initWave(PROTOCOL_WA_CHANNEL_3, 2);
 	initWave(PROTOCOL_WA_CHANNEL_4, 3);
-
-#if EFI_SHAFT_POSITION_INPUT
-	addTriggerEventListener(waTriggerEventListener, "wave analyzer", engine);
-#endif
 
 	addConsoleAction("waveinfo", showWaveInfo);
 
