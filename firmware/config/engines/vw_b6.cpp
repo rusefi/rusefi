@@ -29,7 +29,13 @@ void setVwPassatB6(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	engineConfiguration->invertCamVVTSignal = true;
 	engineConfiguration->vvtCamSensorUseRise = true;
 
+	// EFI_ADC_7: "31 - AN volt 3" - PA7
+	engineConfiguration->throttlePedalPositionAdcChannel = EFI_ADC_7;
 
+	// "26 - AN volt 2"
+	engineConfiguration->high_fuel_pressure_sensor_1 = EFI_ADC_6;
+	// "19 - AN volt 4"
+	engineConfiguration->low_fuel_pressure_sensor = EFI_ADC_12;
 
 	CONFIG(isSdCardEnabled) = false;
 
