@@ -16,6 +16,8 @@
 #include "listener_array.h"
 #include "pwm_generator_logic.h"
 #include "tooth_logger.h"
+#include "hip9011.h"
+#include "logic_analyzer.h"
 
 #include "settings.h"
 #include "engine_math.h"
@@ -46,7 +48,6 @@ trigger_central_s::trigger_central_s() : hwEventCounters() {
 }
 
 TriggerCentral::TriggerCentral() : trigger_central_s() {
-	clearCallbacks(&triggerListeneres);
 	triggerState.resetTriggerState();
 	noiseFilter.resetAccumSignalData();
 }
@@ -72,23 +73,8 @@ EXTERN_ENGINE;
 
 static Logging *logger;
 
-void TriggerCentral::addEventListener(ShaftPositionListener listener, const char *name, Engine *engine) {
-	print("registerCkpListener: %s\r\n", name);
-	triggerListeneres.registerCallback((VoidInt)(void*)listener, engine);
-}
-
 angle_t TriggerCentral::getVVTPosition() {
 	return vvtPosition;
-}
-
-/**
- * @brief Adds a trigger event listener
- *
- * Trigger event listener would be invoked on each trigger event. For example, for a 60/2 wheel
- * that would be 116 events: 58 SHAFT_PRIMARY_RISING and 58 SHAFT_PRIMARY_FALLING events.
- */
-void addTriggerEventListener(ShaftPositionListener listener, const char *name, Engine *engine) {
-	engine->triggerCentral.addEventListener(listener, name, engine);
 }
 
 #define miataNbIndex (0)
@@ -487,7 +473,6 @@ void TriggerCentral::handleShaftSignal(trigger_event_e signal, efitick_t timesta
 	scheduleMsg(logger, "trigger %d %d %d", triggerIndexForListeners, getRevolutionCounter(), (int)getTimeNowUs());
 #endif /* TRIGGER_EXTREME_LOGGING */
 
-
 		rpmShaftPositionCallback(signal, triggerIndexForListeners, timestamp PASS_ENGINE_PARAMETER_SUFFIX);
 
 #if !EFI_UNIT_TEST
@@ -495,25 +480,22 @@ void TriggerCentral::handleShaftSignal(trigger_event_e signal, efitick_t timesta
 #endif
 
 #if !EFI_UNIT_TEST
-#if EFI_SHAFT_POSITION_INPUT && EFI_MAP_AVERAGING
+#if EFI_MAP_AVERAGING
 		mapAveragingTriggerCallback(triggerIndexForListeners, timestamp PASS_ENGINE_PARAMETER_SUFFIX);
-#endif /* EFI_SHAFT_POSITION_INPUT && EFI_MAP_AVERAGING */
+#endif /* EFI_MAP_AVERAGING */
 #endif /* EFI_UNIT_TEST */
 
-//auxValveTriggerCallback
-
-
-		/**
-		 * Here we invoke all the listeners - the main engine control logic is inside these listeners
-		 */
-		for (int i = 0; i < triggerListeneres.currentListenersCount; i++) {
-			ShaftPositionListener listener = (ShaftPositionListener) (void*) triggerListeneres.callbacks[i];
-			(listener)(signal, triggerIndexForListeners, timestamp PASS_ENGINE_PARAMETER_SUFFIX);
+#if EFI_HIP_9011
+		if (CONFIG(isHip9011Enabled)) {
+			intHoldCallback(signal, triggerIndexForListeners, timestamp PASS_ENGINE_PARAMETER_SUFFIX);
 		}
+#endif
+
+#if EFI_LOGIC_ANALYZER
+		waTriggerEventListener(signal, triggerIndexForListeners, timestamp PASS_ENGINE_PARAMETER_SUFFIX);
+#endif
 
 		mainTriggerCallback(triggerIndexForListeners, timestamp PASS_ENGINE_PARAMETER_SUFFIX);
-
-
 	}
 }
 
