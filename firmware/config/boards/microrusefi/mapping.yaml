@@ -78,7 +78,7 @@ analog_inputs:
   # PA6 pull-down R31
   EFI_ADC_6: "26 - AN volt 2"
   
-  # PA7
+  # PA7 - usually PPS Pedal Position Sensor
   EFI_ADC_7: "31 - AN volt 3"
   # PB0 - also AUX REUSE
   EFI_ADC_8: "36 - AN volt 8"
