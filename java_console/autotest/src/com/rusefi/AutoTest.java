@@ -75,14 +75,14 @@ public class AutoTest extends BaseTest {
         sendCommand("set " + CMD_ENGINESNIFFERRPMTHRESHOLD + " 100");
         changeRpm(900);
         // first let's get to expected RPM
-        assertRpmDoesNotJump(20000, 5, 40, FAIL, commandQueue);
+        assertRpmDoesNotJump(16000, 5, 40, FAIL, commandQueue);
     }
 
     private void testV12() {
         setEngineType(ET_BMW_M73_F);
         changeRpm(700);
         // first let's get to expected RPM
-        assertRpmDoesNotJump(20000, 5, 40, FAIL, commandQueue);
+        assertRpmDoesNotJump(16000, 5, 40, FAIL, commandQueue);
         testCaseBug1873();
     }
 
