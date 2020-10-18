@@ -54,5 +54,7 @@ void initWaveAnalyzer(Logging *sharedLogger);
 void printWave(Logging *logging);
 void showWaveInfo(void);
 
+void waTriggerEventListener(trigger_event_e ckpSignalType, uint32_t index, efitick_t edgeTimestamp DECLARE_ENGINE_PARAMETER_SUFFIX);
+
 #endif /* EFI_LOGIC_ANALYZER */
 
