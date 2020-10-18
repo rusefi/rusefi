@@ -27,9 +27,34 @@ TEST(etb, initializationNoPedal) {
 		engine->etbControllers[i] = &mocks[i];
 	}
 
-	// We expect no throttle init stuff to be called - lack of pedal should disable ETB
+	EXPECT_CALL(mocks[0], init(ETB_Throttle1, _, _, _)).WillOnce(Return(false));
+	EXPECT_CALL(mocks[1], init(ETB_Throttle2, _, _, _)).WillOnce(Return(false));
 
-	doInitElectronicThrottle(PASS_ENGINE_PARAMETER_SIGNATURE);
+	// This shouldn't throw, since no throttles are configured, but no pedal is configured either
+	EXPECT_NO_FATAL_ERROR(doInitElectronicThrottle(PASS_ENGINE_PARAMETER_SIGNATURE));
+}
+
+TEST(etb, initializationMissingThrottle) {
+	StrictMock<MockEtb> mocks[ETB_COUNT];
+
+	WITH_ENGINE_TEST_HELPER(TEST_ENGINE);
+
+	for (int i = 0; i < ETB_COUNT; i++) {
+		engine->etbControllers[i] = &mocks[i];
+	}
+
+	engineConfiguration->etbFunctions[0] = ETB_None;
+	engineConfiguration->etbFunctions[1] = ETB_None;
+
+	EXPECT_CALL(mocks[0], init(ETB_None, _, _, _)).WillOnce(Return(false));
+	EXPECT_CALL(mocks[1], init(ETB_None, _, _, _)).WillOnce(Return(false));
+
+	// Must have a sensor configured before init
+	Sensor::setMockValue(SensorType::AcceleratorPedal, 0);
+	Sensor::setMockValue(SensorType::AcceleratorPedalPrimary, 0);
+
+	// This should throw: a pedal is configured but no throttles
+	EXPECT_FATAL_ERROR(doInitElectronicThrottle(PASS_ENGINE_PARAMETER_SIGNATURE));
 }
 
 TEST(etb, initializationSingleThrottle) {
@@ -45,10 +70,39 @@ TEST(etb, initializationSingleThrottle) {
 	Sensor::setMockValue(SensorType::AcceleratorPedal, 0);
 	Sensor::setMockValue(SensorType::AcceleratorPedalPrimary, 0);
 
+	engineConfiguration->etbFunctions[0] = ETB_Throttle1;
+	engineConfiguration->etbFunctions[1] = ETB_None;
+
 	// Expect mock0 to be init as throttle 1, and PID params
 	EXPECT_CALL(mocks[0], init(ETB_Throttle1, _, &engineConfiguration->etb, Ne(nullptr))).WillOnce(Return(true));
 
-	// We do not expect throttle #2 to be initialized
+	// Expect mock1 to be init as none
+	EXPECT_CALL(mocks[1], init(ETB_None, _, _, _)).WillOnce(Return(true));
+
+	doInitElectronicThrottle(PASS_ENGINE_PARAMETER_SIGNATURE);
+}
+
+TEST(etb, initializationSingleThrottleInSecondSlot) {
+	StrictMock<MockEtb> mocks[ETB_COUNT];
+
+	WITH_ENGINE_TEST_HELPER(TEST_ENGINE);
+
+	for (int i = 0; i < ETB_COUNT; i++) {
+		engine->etbControllers[i] = &mocks[i];
+	}
+
+	// Must have a sensor configured before init
+	Sensor::setMockValue(SensorType::AcceleratorPedal, 0);
+	Sensor::setMockValue(SensorType::AcceleratorPedalPrimary, 0);
+
+	engineConfiguration->etbFunctions[0] = ETB_None;
+	engineConfiguration->etbFunctions[1] = ETB_Throttle1;
+
+	// Expect mock0 to be init as none
+	EXPECT_CALL(mocks[0], init(ETB_None, _, _, _)).WillOnce(Return(true));
+
+	// Expect mock1 to be init as throttle 1, and PID params
+	EXPECT_CALL(mocks[1], init(ETB_Throttle1, _, &engineConfiguration->etb, Ne(nullptr))).WillOnce(Return(true));
 
 	doInitElectronicThrottle(PASS_ENGINE_PARAMETER_SIGNATURE);
 }
@@ -68,6 +122,9 @@ TEST(etb, initializationDualThrottle) {
 
 	// The presence of a second TPS indicates dual throttle
 	Sensor::setMockValue(SensorType::Tps2, 25.0f);
+
+	engineConfiguration->etbFunctions[0] = ETB_Throttle1;
+	engineConfiguration->etbFunctions[1] = ETB_Throttle2;
 
 	// Expect mock0 to be init as throttle 1, and PID params
 	EXPECT_CALL(mocks[0], init(ETB_Throttle1, _, &engineConfiguration->etb, Ne(nullptr))).WillOnce(Return(true));
