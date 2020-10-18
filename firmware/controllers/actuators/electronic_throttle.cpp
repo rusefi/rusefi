@@ -828,19 +828,15 @@ void doInitElectronicThrottle(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	addConsoleActionI("etb_freq", setEtbFrequency);
 #endif /* EFI_PROD_CODE */
 
-	// If you don't have a pedal we have no business here.
-	if (Sensor::hasSensor(SensorType::AcceleratorPedalPrimary)) {
-		engine->etbActualCount = Sensor::hasSensor(SensorType::Tps2) ? 2 : 1;
-	} else {
-		engine->etbActualCount = 0;
-	}
-
 	pedal2tpsMap.init(config->pedalToTpsTable, config->pedalToTpsPedalBins, config->pedalToTpsRpmBins);
+
+	// TODO: remove etbActualCount
+	engine->etbActualCount = ETB_COUNT;
 
 	bool mustHaveEtbConfigured = Sensor::hasSensor(SensorType::AcceleratorPedalPrimary);
 	bool anyEtbConfigured = false;
 
-	for (int i = 0 ; i < engine->etbActualCount; i++) {
+	for (int i = 0 ; i < ETB_COUNT; i++) {
 		auto motor = initDcMotor(i, CONFIG(etb_use_two_wires) PASS_ENGINE_PARAMETER_SUFFIX);
 
 		// If this motor is actually set up, init the etb
@@ -851,8 +847,7 @@ void doInitElectronicThrottle(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 				continue;
 			}
 
-			// TODO: configure per-motor in config so wastegate/VW idle works
-			auto func = i == 0 ? ETB_Throttle1 : ETB_Throttle2;
+			auto func = CONFIG(etbFunctions[i]);
 
 			anyEtbConfigured |= controller->init(func, motor, &engineConfiguration->etb, &pedal2tpsMap);
 			INJECT_ENGINE_REFERENCE(engine->etbControllers[i]);
