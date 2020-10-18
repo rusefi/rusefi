@@ -41,24 +41,31 @@ void setVwPassatB6(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 
 	CONFIG(mc33816spiDevice) = SPI_DEVICE_3;
 	setBoschHDEV_5_injectors(PASS_CONFIG_PARAMETER_SIGNATURE);
+	// RED
 	engineConfiguration->spi3mosiPin = GPIOC_12;
+	// YELLOW
 	engineConfiguration->spi3misoPin = GPIOC_11;
+	// BROWN
 	engineConfiguration->spi3sckPin = GPIOC_10;
 	engineConfiguration->sdCardCsPin = GPIO_UNASSIGNED;
 	CONFIG(is_enabled_spi_3) = true;
 
 
-	// blue wire
-	CONFIG(mc33816_cs) = GPIOB_9;
-	// J18 green wire
-	CONFIG(mc33816_rstb) = GPIOB_7;
-	// J9 yellow wire
-	CONFIG(mc33816_driven) = GPIOC_13;
-	// J6 white wire
-	CONFIG(mc33816_flag0) = GPIOE_9;
+	// J8 orange
+	CONFIG(mc33816_cs) = GPIOB_8;
+	// J8 Grey
+	CONFIG(mc33816_rstb) = GPIOA_15;
+	// J8 Dark BLUE
+	CONFIG(mc33816_driven) = GPIOB_9;
+	// J9 violet
+	CONFIG(mc33816_flag0) = GPIOC_13;
 
-	// J10
+	// J10 Dark BLUE
 	engineConfiguration->injectionPins[0] = GPIOE_6;
-	// J11
+	// J11 green
 	engineConfiguration->injectionPins[1] = GPIOE_5;
+	// J18 grey
+	engineConfiguration->injectionPins[2] = GPIOB_7;
+	// J6 white
+	engineConfiguration->injectionPins[3] = GPIOE_0;
 }
