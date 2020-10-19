@@ -854,7 +854,7 @@ void doInitElectronicThrottle(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 			auto func = CONFIG(etbFunctions[i]);
 			auto pid = getEtbPidForFunction(func PASS_ENGINE_PARAMETER_SUFFIX);
 
-			anyEtbConfigured |= controller->init(func, motor, &engineConfiguration->etb, &pedal2tpsMap);
+			anyEtbConfigured |= controller->init(func, motor, pid, &pedal2tpsMap);
 			INJECT_ENGINE_REFERENCE(engine->etbControllers[i]);
 		}
 	}
