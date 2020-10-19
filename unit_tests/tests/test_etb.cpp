@@ -289,6 +289,25 @@ TEST(etb, setpointIdleValveController) {
 	EXPECT_FLOAT_EQ(100, etb.getSetpoint().value_or(-1));
 }
 
+TEST(etb, setpointWastegateController) {
+	EtbController etb;
+
+	etb.init(ETB_Wastegate, nullptr, nullptr, nullptr);
+
+	etb.setWastegatePosition(0);
+	EXPECT_FLOAT_EQ(0, etb.getSetpoint().value_or(-1));
+	etb.setWastegatePosition(50);
+	EXPECT_FLOAT_EQ(50, etb.getSetpoint().value_or(-1));
+	etb.setWastegatePosition(100);
+	EXPECT_FLOAT_EQ(100, etb.getSetpoint().value_or(-1));
+
+	// Out of range should be clamped
+	etb.setWastegatePosition(-10);
+	EXPECT_FLOAT_EQ(0, etb.getSetpoint().value_or(-1));
+	etb.setWastegatePosition(110);
+	EXPECT_FLOAT_EQ(100, etb.getSetpoint().value_or(-1));
+}
+
 TEST(etb, etbTpsSensor) {
 	// Throw some distinct values on the TPS sensors so we can identify that we're getting the correct one
 	Sensor::setMockValue(SensorType::Tps1, 25.0f);

@@ -199,6 +199,10 @@ void EtbController::setIdlePosition(percent_t pos) {
 	m_idlePosition = pos;
 }
 
+void EtbController::setWastegatePosition(percent_t pos) {
+	m_wastegatePosition = pos;
+}
+
 expected<percent_t> EtbController::getSetpoint() const {
 	switch (m_function) {
 		case ETB_Throttle1:
@@ -223,8 +227,7 @@ expected<percent_t> EtbController::getSetpointIdleValve() const {
 }
 
 expected<percent_t> EtbController::getSetpointWastegate() const {
-	// TODO: implement me!
-	return unexpected;
+	return clampF(0, m_wastegatePosition, 100);
 }
 
 expected<percent_t> EtbController::getSetpointEtb() const {
@@ -721,9 +724,7 @@ void etbAutocal(size_t throttleIndex) {
 		return;
 	}
 
-	auto etb = engine->etbControllers[throttleIndex];
-
-	if (etb) {
+	if (auto etb = engine->etbControllers[throttleIndex]) {
 		etb->autoCalibrateTps();
 	}
 }
@@ -894,10 +895,16 @@ void initElectronicThrottle(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 
 void setEtbIdlePosition(percent_t pos DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	for (int i = 0; i < ETB_COUNT; i++) {
-		auto etb = engine->etbControllers[i];
-
-		if (etb) {
+		if (auto etb = engine->etbControllers[i]) {
 			etb->setIdlePosition(pos);
+		}
+	}
+}
+
+void setEtbWastegatePosition(percent_t pos DECLARE_ENGINE_PARAMETER_SUFFIX) {
+	for (int i = 0; i < ETB_COUNT; i++) {
+		if (auto etb = engine->etbControllers[i]) {
+			etb->setWastegatePosition(pos);
 		}
 	}
 }
