@@ -18,6 +18,7 @@
 #include "pin_repository.h"
 #include "pwm_generator_logic.h"
 #include "pid_auto_tune.h"
+#include "electronic_throttle.h"
 
 #define NO_PIN_PERIOD 500
 
@@ -144,6 +145,8 @@ void BoostController::setOutput(expected<float> output) {
 	if (m_pwm) {
 		m_pwm->setSimplePwmDutyCycle(duty);
 	}
+
+	setEtbWastegatePosition(duty PASS_ENGINE_PARAMETER_SUFFIX);
 }
 
 void BoostController::PeriodicTask() {
