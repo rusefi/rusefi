@@ -33,6 +33,7 @@ public:
 	virtual bool init(etb_function_e function, DcMotor *motor, pid_s *pidParameters, const ValueProvider3D* pedalMap) = 0;
 	virtual void reset() = 0;
 	virtual void setIdlePosition(percent_t pos) = 0;
+	virtual void setWastegatePosition(percent_t pos) = 0;
 	virtual void update() = 0;
 	virtual void autoCalibrateTps() = 0;
 };
@@ -41,6 +42,7 @@ class EtbController : public IEtbController {
 public:
 	bool init(etb_function_e function, DcMotor *motor, pid_s *pidParameters, const ValueProvider3D* pedalMap) override;
 	void setIdlePosition(percent_t pos) override;
+	void setWastegatePosition(percent_t pos) override;
 	void reset() override;
 
 	// Update the controller's state: read sensors, send output, etc
@@ -91,6 +93,7 @@ private:
 	const ValueProvider3D* m_pedalMap = nullptr;
 
 	float m_idlePosition = 0;
+	float m_wastegatePosition = 0;
 
 	// Autotune helpers
 	bool m_lastIsPositive = false;
@@ -109,7 +112,9 @@ private:
 
 void initElectronicThrottle(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 void doInitElectronicThrottle(DECLARE_ENGINE_PARAMETER_SIGNATURE);
+
 void setEtbIdlePosition(percent_t pos DECLARE_ENGINE_PARAMETER_SUFFIX);
+void setEtbWastegatePosition(percent_t pos DECLARE_ENGINE_PARAMETER_SUFFIX);
 
 void setDefaultEtbBiasCurve(DECLARE_CONFIG_PARAMETER_SIGNATURE);
 void setDefaultEtbParameters(DECLARE_CONFIG_PARAMETER_SIGNATURE);
