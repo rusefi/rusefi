@@ -1,4 +1,4 @@
-// this file was generated automatically by rusEfi tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Sun Oct 11 23:07:00 UTC 2020
+// this file was generated automatically by rusEfi tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Mon Oct 19 12:05:36 UTC 2020
 
 // by class com.rusefi.output.FileFsioSettingsConsumer
 	case FSIO_SETTING_FANONTEMPERATURE:
@@ -27,6 +27,10 @@
 		return "cfg_idleRpmPid_minValue";
 	case FSIO_SETTING_STARTUPFUELPUMPDURATION:
 		return "cfg_startUpFuelPumpDuration";
+	case FSIO_SETTING_ETBWASTEGATEPID_OFFSET:
+		return "cfg_etbWastegatePid_offset";
+	case FSIO_SETTING_ETBWASTEGATEPID_MINVALUE:
+		return "cfg_etbWastegatePid_minValue";
 	case FSIO_SETTING_AUXPID1_OFFSET:
 		return "cfg_auxPid1_offset";
 	case FSIO_SETTING_AUXPID1_MINVALUE:

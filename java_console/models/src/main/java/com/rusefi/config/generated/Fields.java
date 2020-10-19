@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEfi tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Sun Oct 11 23:07:00 UTC 2020
+// this file was generated automatically by rusEfi tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Mon Oct 19 12:05:36 UTC 2020
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -430,6 +430,14 @@ public class Fields {
 	public static final int etbIo2_disablePin_offset = 987;
 	public static final int etbIo2_offset = 984;
 	public static final int etbNeutralPosition_offset = 1471;
+	public static final int etbWastegatePid_dFactor_offset = 2524;
+	public static final int etbWastegatePid_iFactor_offset = 2520;
+	public static final int etbWastegatePid_maxValue_offset = 2534;
+	public static final int etbWastegatePid_minValue_offset = 2532;
+	public static final int etbWastegatePid_offset = 2516;
+	public static final int etbWastegatePid_offset_offset = 2528;
+	public static final int etbWastegatePid_periodMs_offset = 2530;
+	public static final int etbWastegatePid_pFactor_offset = 2516;
 	public static final int externalKnockSenseAdc_offset = 3103;
 	public static final int extraInjectionOffset_offset = 432;
 	public static final int fanOffTemperature_offset = 472;
@@ -1397,7 +1405,7 @@ public class Fields {
 	public static final char TS_SD_R_COMMAND = 'r';
 	public static final char TS_SD_W_COMMAND = 'w';
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI 2020.10.11.all.2205707407";
+	public static final String TS_SIGNATURE = "rusEFI 2020.10.19.all.4083595509";
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final int TT_TT_60_2_VW = 20;
 	public static final int TT_TT_ONE = 18;
@@ -1426,7 +1434,7 @@ public class Fields {
 	public static final int unused244_2_offset = 2424;
 	public static final int unused244_3_offset = 2428;
 	public static final int unused2508_offset = 2508;
-	public static final int unused2516_offset = 2516;
+	public static final int unused2536_offset = 2536;
 	public static final int unused3288_offset = 3288;
 	public static final int unused6312_offset = 6312;
 	public static final int unused744b25_offset = 744;
@@ -2388,6 +2396,13 @@ public class Fields {
 	public static final Field AUXTEMPSENSOR2_BIAS_RESISTOR = Field.create("AUXTEMPSENSOR2_BIAS_RESISTOR", 2500, FieldType.FLOAT);
 	public static final Field AUXTEMPSENSOR2_ADCCHANNEL = Field.create("AUXTEMPSENSOR2_ADCCHANNEL", 2504, FieldType.INT8, adc_channel_e);
 	public static final Field ETBFREQ = Field.create("ETBFREQ", 2514, FieldType.INT16);
+	public static final Field ETBWASTEGATEPID_PFACTOR = Field.create("ETBWASTEGATEPID_PFACTOR", 2516, FieldType.FLOAT);
+	public static final Field ETBWASTEGATEPID_IFACTOR = Field.create("ETBWASTEGATEPID_IFACTOR", 2520, FieldType.FLOAT);
+	public static final Field ETBWASTEGATEPID_DFACTOR = Field.create("ETBWASTEGATEPID_DFACTOR", 2524, FieldType.FLOAT);
+	public static final Field ETBWASTEGATEPID_OFFSET = Field.create("ETBWASTEGATEPID_OFFSET", 2528, FieldType.INT16);
+	public static final Field ETBWASTEGATEPID_PERIODMS = Field.create("ETBWASTEGATEPID_PERIODMS", 2530, FieldType.INT16);
+	public static final Field ETBWASTEGATEPID_MINVALUE = Field.create("ETBWASTEGATEPID_MINVALUE", 2532, FieldType.INT16);
+	public static final Field ETBWASTEGATEPID_MAXVALUE = Field.create("ETBWASTEGATEPID_MAXVALUE", 2534, FieldType.INT16);
 	public static final Field TIMING_OFFSET_CYLINDER1 = Field.create("TIMING_OFFSET_CYLINDER1", 2540, FieldType.INT);
 	public static final Field TIMING_OFFSET_CYLINDER2 = Field.create("TIMING_OFFSET_CYLINDER2", 2544, FieldType.INT);
 	public static final Field TIMING_OFFSET_CYLINDER3 = Field.create("TIMING_OFFSET_CYLINDER3", 2548, FieldType.INT);
@@ -3429,6 +3444,13 @@ public class Fields {
 	AUXTEMPSENSOR2_BIAS_RESISTOR,
 	AUXTEMPSENSOR2_ADCCHANNEL,
 	ETBFREQ,
+	ETBWASTEGATEPID_PFACTOR,
+	ETBWASTEGATEPID_IFACTOR,
+	ETBWASTEGATEPID_DFACTOR,
+	ETBWASTEGATEPID_OFFSET,
+	ETBWASTEGATEPID_PERIODMS,
+	ETBWASTEGATEPID_MINVALUE,
+	ETBWASTEGATEPID_MAXVALUE,
 	TIMING_OFFSET_CYLINDER1,
 	TIMING_OFFSET_CYLINDER2,
 	TIMING_OFFSET_CYLINDER3,

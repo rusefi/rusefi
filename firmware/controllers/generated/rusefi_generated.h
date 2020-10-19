@@ -449,6 +449,14 @@
 #define etbIo2_disablePin_offset 987
 #define etbIo2_offset 984
 #define etbNeutralPosition_offset 1471
+#define etbWastegatePid_dFactor_offset 2524
+#define etbWastegatePid_iFactor_offset 2520
+#define etbWastegatePid_maxValue_offset 2534
+#define etbWastegatePid_minValue_offset 2532
+#define etbWastegatePid_offset 2516
+#define etbWastegatePid_offset_offset 2528
+#define etbWastegatePid_periodMs_offset 2530
+#define etbWastegatePid_pFactor_offset 2516
 #define externalKnockSenseAdc_offset 3103
 #define extraInjectionOffset_offset 432
 #define fanOffTemperature_offset 472
@@ -1172,8 +1180,8 @@
 #define showHumanReadableWarning_offset 976
 #define showSdCardWarning_offset 76
 #define SIGNATURE_BOARD all
-#define SIGNATURE_DATE 2020.10.11
-#define SIGNATURE_HASH 2205707407
+#define SIGNATURE_DATE 2020.10.19
+#define SIGNATURE_HASH 4083595509
 #define silentTriggerError_offset 1464
 #define slowAdcAlpha_offset 2088
 #define sparkDwellRpmBins_offset 332
@@ -1492,7 +1500,7 @@
 #define ts_show_spi true
 #define ts_show_trigger_comparator false
 #define ts_show_tunerstudio_port true
-#define TS_SIGNATURE "rusEFI 2020.10.11.all.2205707407"
+#define TS_SIGNATURE "rusEFI 2020.10.19.all.4083595509"
 #define TS_SINGLE_WRITE_COMMAND 'W'
 #define TS_SINGLE_WRITE_COMMAND_char W
 #define TS_TEST_COMMAND 't' // 0x74
@@ -1524,7 +1532,7 @@
 #define unused244_2_offset 2424
 #define unused244_3_offset 2428
 #define unused2508_offset 2508
-#define unused2516_offset 2516
+#define unused2536_offset 2536
 #define unused3288_offset 3288
 #define unused6312_offset 6312
 #define unused744b25_offset 744

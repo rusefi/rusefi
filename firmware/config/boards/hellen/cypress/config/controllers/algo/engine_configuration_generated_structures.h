@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on hellen_cypress_gen_config.bat integration/rusefi_config.txt Sun Oct 11 23:07:20 UTC 2020
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on hellen_cypress_gen_config.bat integration/rusefi_config.txt Mon Oct 19 12:05:57 UTC 2020
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -2960,7 +2960,11 @@ struct engine_configuration_s {
 	/**
 	 * offset 2516
 	 */
-	uint8_t unused2516[24];
+	pid_s etbWastegatePid;
+	/**
+	 * offset 2536
+	 */
+	uint8_t unused2536[4];
 	/**
 	 * per-cylinder timing correction
 	 * offset 2540
@@ -3737,4 +3741,4 @@ struct persistent_config_s {
 typedef struct persistent_config_s persistent_config_s;
 
 // end
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on hellen_cypress_gen_config.bat integration/rusefi_config.txt Sun Oct 11 23:07:20 UTC 2020
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on hellen_cypress_gen_config.bat integration/rusefi_config.txt Mon Oct 19 12:05:57 UTC 2020
