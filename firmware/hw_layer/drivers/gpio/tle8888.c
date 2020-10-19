@@ -64,6 +64,8 @@ typedef enum {
 	TLE8888_FAILED
 } tle8888_drv_state;
 
+#define REG_INVALID			0x00
+
 /* C0 */
 #define CMD_READ			(0 << 0)
 #define CMD_WRITE			(1 << 0)
@@ -90,7 +92,8 @@ typedef enum {
 #define CMD_LOCK			CMD_WR(0x1e, 0x02)
 
 /* Status registers */
-#define CMD_OPSTAT(n)		CMD_R(0x34 + ((n) & 0x01))
+#define REG_OPSTAT(n)		(0x34 + ((n) & 0x01))
+#define CMD_OPSTAT(n)		CMD_R(REG_OPSTAT(n))
 #define REG_WWDSTAT			0x36
 #define CMD_WWDSTAT			CMD_R(REG_WWDSTAT)
 #define REG_FWDSTAT(n)		(0x37 + ((n) & 0x01))
@@ -99,7 +102,8 @@ typedef enum {
 #define CMD_TECSTAT			CMD_R(REG_TECSTAT)
 
 /* Diagnostic */
-#define CMD_DIAG(n)			CMD_R(0x20 + ((n) & 0x01))
+#define REG_DIAG(n)			(0x20 + ((n) & 0x01))
+#define CMD_DIAG(n)			CMD_R(REG_DIAG(n))
 #define CMD_VRSDIAG(n)		CMD_R(0x22 + ((n) & 0x01))
 #define CMD_COMDIAG			CMD_R(0x24)
 #define CMD_OUTDIAG(n)		CMD_R(0x25 + ((n) & 0x07))
@@ -164,7 +168,6 @@ static THD_WORKING_AREA(tle8888_thread_1_wa, 256);
 // todo: much of state is currently global while technically it should be per-chip. but we
 // are lazy and in reality it's usually one chip per board
 
-static int selfResetCounter = 0;
 static int lowVoltageResetCounter = 0;
 static int requestedResetCounter = 0;
 int tle8888reinitializationCounter = 0;
@@ -197,6 +200,9 @@ struct tle8888_priv {
 	/* direct drive mapping registers */
 	uint32_t					InConfig[TLE8888_DIRECT_MISC];
 
+	/* last accessed register, for validation on next SPI access */
+	uint8_t						last_reg;
+
 	/* diagnostic registers */
 	uint8_t						OutDiag[5];
 	uint8_t						BriDiag[2];
@@ -216,7 +222,13 @@ struct tle8888_priv {
 	systime_t					wwd_ts;
 	systime_t					fwd_ts;
 
-	bool						com_error;
+	/* chip needs reintialization due to some critical issue */
+	bool						need_init;
+
+	/* statistic */
+	int							por_cnt;
+	int							wdr_cnt;
+	int							comfe_cnt;
 };
 
 static struct tle8888_priv chips[BOARD_TLE8888_COUNT];
@@ -248,7 +260,7 @@ void tle8888PostState(TsDebugChannels *debugChannels) {
 	debugChannels->debugIntField5 = tle8888reinitializationCounter;
 
 	debugChannels->debugFloatField3 = chips[0].OpStat[1];
-	debugChannels->debugFloatField4 = selfResetCounter * 1000000 + requestedResetCounter * 10000 + lowVoltageResetCounter;
+	debugChannels->debugFloatField4 = chips[0].por_cnt * 1000000 + requestedResetCounter * 10000 + lowVoltageResetCounter;
 	debugChannels->debugFloatField5 = 0;
 	debugChannels->debugFloatField6 = 0;
 }
@@ -298,6 +310,35 @@ static int tle8888_spi_rw(struct tle8888_priv *chip, uint16_t tx, uint16_t *rx)
 
 	if (rx)
 		*rx = spiRxb;
+
+	uint8_t reg = getRegisterFromResponse(spiRxb);
+	if ((chip->last_reg != REG_INVALID) && (chip->last_reg != reg)) {
+		/* unexpected SPI answers */
+		if (reg == REG_OPSTAT(0)) {
+			/* after power on reset: the address and the content of the
+			 * status register OpStat0 is transmitted with the next SPI
+			 * transmission */
+			chip->por_cnt++;
+		} else if (reg == REG_FWDSTAT(1)) {
+			/* after watchdog reset: the address and the content of the
+			 * diagnosis register FWDStat1 is transmitted with the first
+			 * SPI transmission after the low to high transition of RST */
+			chip->wdr_cnt++;
+		} else if (reg == REG_DIAG(0)) {
+			/* after an invalid communication frame: the address and the
+			 * content of the diagnosis register Diag0 is transmitted
+			 * with the next SPI transmission and the bit COMFE in
+			 * diagnosis register ComDiag is set to "1" */
+			chip->comfe_cnt++;
+		}
+		/* during power on reset: SPI commands are ignored, SDO is always
+		 * tristate */
+		/* during watchdog reset: SPI commands are ignored, SDO has the
+		 * value of the status flag */
+		chip->need_init = true;
+	}
+
+	chip->last_reg = getRegisterFromResponse(tx);
 
 	/* no errors for now */
 	return 0;
@@ -500,6 +541,8 @@ static int tle8888_chip_reset(struct tle8888_priv *chip) {
 	 */
 	chThdSleepMilliseconds(3);
 
+	chip->last_reg = REG_INVALID;
+
 	return ret;
 }
 
@@ -588,11 +631,7 @@ static int tle8888_fwd_feed(struct tle8888_priv *chip) {
 	/* here we get response of the 'FWDStat1' above */
 	tle8888_spi_rw(chip, CMD_WDDIAG, &reg);
 
-	/* communication error */
-	if (getRegisterFromResponse(reg) != REG_FWDSTAT(1))
-		return -1;
 	uint8_t data = getDataFromResponse(reg);
-
 	uint8_t fwdquest = data & 0xF;
 	uint8_t fwdrespc = (data >> 4) & 3;
 	/* Table lines are filled in reverse order (like in DS) */
@@ -654,20 +693,12 @@ static int tle8888_wd_feed(struct tle8888_priv *chip) {
 		tle8888_spi_rw(chip, CMD_TECSTAT, &fwd_reg);
 		tle8888_spi_rw(chip, CMD_TECSTAT, &tec_reg);
 
-		// sanity checking that we are looking at the right responses
-		if ((getRegisterFromResponse(wwd_reg) == REG_WWDSTAT) &&
-			(getRegisterFromResponse(fwd_reg) == REG_FWDSTAT(0)) &&
-			(getRegisterFromResponse(tec_reg) == REG_TECSTAT)) {
-			chip->wwd_err_cnt = getDataFromResponse(wwd_reg) & 0x7f;
-			chip->fwd_err_cnt = getDataFromResponse(fwd_reg) & 0x7f;
-			chip->tot_err_cnt = getDataFromResponse(tec_reg) & 0x7f;
+		chip->wwd_err_cnt = getDataFromResponse(wwd_reg) & 0x7f;
+		chip->fwd_err_cnt = getDataFromResponse(fwd_reg) & 0x7f;
+		chip->tot_err_cnt = getDataFromResponse(tec_reg) & 0x7f;
 
-			chip->wd_happy = ((chip->wwd_err_cnt == 0) &&
-							  (chip->fwd_err_cnt == 0));
-		} else {
-			chip->wd_happy = false;
-			chip->com_error = true;
-		}
+		chip->wd_happy = ((chip->wwd_err_cnt == 0) &&
+						  (chip->fwd_err_cnt == 0));
 
 		return tle8888_wd_get_status(chip);
 	} else {
@@ -738,14 +769,18 @@ static THD_FUNCTION(tle8888_driver_thread, p) {
 				/* WD is not happy */
 				continue;
 			}
-			/* happiness state has changed */
-			if (chip->wd_happy != wd_happy) {
-				if (chip->wd_happy) {
-					/* re-init chip! */
-					tle8888_chip_init(chip);
-					/* sync pins state */
-					tle8888_update_output(chip);
-				}
+			/* happiness state has changed! */
+			if ((chip->wd_happy != wd_happy) && (chip->wd_happy)) {
+				chip->need_init = true;
+			}
+
+			if (chip->need_init) {
+				/* clear first, as flag can be raised again during init */
+				chip->need_init = false;
+				/* re-init chip! */
+				tle8888_chip_init(chip);
+				/* sync pins state */
+				tle8888_update_output(chip);
 			}
 
 			if (chip->diag_ts <= chVTGetSystemTimeX()) {
@@ -757,13 +792,6 @@ static THD_FUNCTION(tle8888_driver_thread, p) {
 
 				chip->diag_ts = chTimeAddX(chVTGetSystemTimeX(), TIME_MS2I(DIAG_PERIOD_MS));
 			}
-#if 0
-			/* if bit OE is cleared - reset happened */
-			if (!(chip->OpStat[1] & (1 << 6))) {
-				needInitialSpi = true;
-				selfResetCounter++;
-			}
-#endif
 		}
 	}
 }
