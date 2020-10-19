@@ -15,14 +15,10 @@
 #include "boost_control.h"
 #include "sensor.h"
 #include "map.h"
-#include "io_pins.h"
-#include "engine_configuration.h"
-#include "pwm_generator_logic.h"
-#include "engine_controller.h"
 #include "pin_repository.h"
 #include "pwm_generator_logic.h"
 #include "pid_auto_tune.h"
-#include "local_version_holder.h"
+
 #define NO_PIN_PERIOD 500
 
 #if defined(HAS_OS_ACCESS)
