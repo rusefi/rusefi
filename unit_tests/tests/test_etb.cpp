@@ -135,6 +135,31 @@ TEST(etb, initializationDualThrottle) {
 	doInitElectronicThrottle(PASS_ENGINE_PARAMETER_SIGNATURE);
 }
 
+TEST(etb, initializationWastegate) {
+	StrictMock<MockEtb> mocks[ETB_COUNT];
+
+	WITH_ENGINE_TEST_HELPER(TEST_ENGINE);
+
+	for (int i = 0; i < ETB_COUNT; i++) {
+		engine->etbControllers[i] = &mocks[i];
+	}
+
+	// Must have a sensor configured before init
+	Sensor::setMockValue(SensorType::AcceleratorPedal, 0);
+	Sensor::setMockValue(SensorType::AcceleratorPedalPrimary, 0);
+
+	engineConfiguration->etbFunctions[0] = ETB_Wastegate;
+	engineConfiguration->etbFunctions[1] = ETB_None;
+
+	// Expect mock0 to be init as throttle 1, and PID wastegate params
+	EXPECT_CALL(mocks[0], init(ETB_Wastegate, _, &engineConfiguration->etbWastegatePid, Ne(nullptr))).WillOnce(Return(true));
+
+	// Expect mock1 to be init as none
+	EXPECT_CALL(mocks[1], init(ETB_None, _, _, _)).WillOnce(Return(true));
+
+	doInitElectronicThrottle(PASS_ENGINE_PARAMETER_SIGNATURE);
+}
+
 TEST(etb, initializationNoFunction) {
 	StrictMock<MockMotor> motor;
 
