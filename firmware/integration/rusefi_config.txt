@@ -1246,7 +1246,8 @@ tle8888_mode_e tle8888mode;
 	ThermistorConf auxTempSensor2;todo: finish implementation #332
 	uint8_t[6] unused2508;;"units", 1, 0, -20, 100, 0
 	int16_t etbFreq;;"Hz",      1,     0,    0, 30000,      0
-	uint8_t[24] unused2516;;"units", 1, 0, -20, 100, 0
+	pid_s etbWastegatePid;
+	uint8_t[4] unused2536;;"units", 1, 0, -20, 100, 0
 
 	custom cfg_float_t_1f 4 scalar,  F32,   @OFFSET@, 		"Val",	   1,	   0,       -20000000, 20000000,	  1
 	cfg_float_t_1f[IGNITION_PIN_COUNT iterate] timing_offset_cylinder;per-cylinder timing correction

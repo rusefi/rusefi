@@ -1340,7 +1340,8 @@ menuDialog = main
 
 	menu = "&Advanced"
         subMenu = boostDialog,          "Boost Control"
-		subMenu = boostPidDialog,        "Closed Loop Boost",    { boostType == 1 }
+		subMenu = boostPidDialog,        "Closed Loop Boost",    { isBoostControlEnabled && boostType == 1 }
+		subMenu = boostEtbPid,			"ETB-style Wastegate Actuator", { isBoostControlEnabled }
 
 		subMenu = std_separator
 		subMenu = gppwm1, "General Purpose PWM 1"
@@ -2985,7 +2986,7 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 ;Boost Closed Loop
 
          dialog = boostPidleft, ""
-                field = "P Gain", 	                        boostPid_pFactor, { isBoostControlEnabled && boostType == 1 }
+            field = "P Gain", 	                        boostPid_pFactor, { isBoostControlEnabled && boostType == 1 }
 	        field = "I Gain",                            boostPid_iFactor, { isBoostControlEnabled && boostType == 1 }
 	        field = "D Gain",                            boostPid_dFactor, { isBoostControlEnabled && boostType == 1 }
 	        field = "Control Period",                    boostPid_periodMs, { isBoostControlEnabled && boostType == 1 }
@@ -2998,6 +2999,16 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 	dialog = boostPidDialog, "", border
                 panel = boostPidleft, West
                 panel = boostTableDialog, Center
+
+	dialog = boostEtbPid, ""
+		field = "!This section is for advanced users only!"
+		field = "H-Bridge #1 function",					etbFunctions1
+		field = "H-Bridge #2 function",					etbFunctions2
+		field = "P gain",							etbWastegatePid_pFactor,  { isBoostControlEnabled }
+		field = "I gain",							etbWastegatePid_iFactor,  { isBoostControlEnabled }
+		field = "D gain",							etbWastegatePid_dFactor,  { isBoostControlEnabled }
+		field = "PID min",							etbWastegatePid_minValue, { isBoostControlEnabled }
+		field = "PID max",							etbWastegatePid_maxValue, { isBoostControlEnabled }
 
 	help = veTableDialogHelp, "Volumetric Efficiency"
         text = "Volumetric Efficiency is used to calculate fuel in Speed Density mode"

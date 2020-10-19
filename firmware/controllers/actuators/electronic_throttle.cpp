@@ -820,6 +820,13 @@ void unregisterEtbPins() {
 	// todo: we probably need an implementation here?!
 }
 
+static pid_s* getEtbPidForFunction(etb_function_e function DECLARE_ENGINE_PARAMETER_SUFFIX) {
+	switch (function) {
+		case ETB_Wastegate: return &CONFIG(etbWastegatePid);
+		default: return &CONFIG(etb);
+	}
+}
+
 void doInitElectronicThrottle(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	efiAssertVoid(OBD_PCM_Processor_Fault, engine->etbControllers != NULL, "etbControllers NULL");
 #if EFI_PROD_CODE
@@ -845,8 +852,9 @@ void doInitElectronicThrottle(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 			}
 
 			auto func = CONFIG(etbFunctions[i]);
+			auto pid = getEtbPidForFunction(func PASS_ENGINE_PARAMETER_SUFFIX);
 
-			anyEtbConfigured |= controller->init(func, motor, &engineConfiguration->etb, &pedal2tpsMap);
+			anyEtbConfigured |= controller->init(func, motor, pid, &pedal2tpsMap);
 			INJECT_ENGINE_REFERENCE(engine->etbControllers[i]);
 		}
 	}
