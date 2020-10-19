@@ -95,10 +95,6 @@ PinRepository::PinRepository() {
 }
 
 #if (BOARD_TLE8888_COUNT > 0)
-/* DEBUG */
-extern "C" {
-	extern void tle8888_read_reg(uint16_t reg, uint16_t *val);
-}
 void tle8888_dump_regs(void)
 {
 	// since responses are always in the NEXT transmission we will have this one first
@@ -227,7 +223,7 @@ void initPinRepository(void) {
 
 #if (BOARD_TLE8888_COUNT > 0)
 	addConsoleAction("tle8888", tle8888_dump_regs);
-	addConsoleAction("tle8888init", requestTLE8888initialization);
+	addConsoleAction("tle8888init", tle8888_req_init);
 #endif
 }
 

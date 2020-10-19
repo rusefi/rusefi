@@ -796,11 +796,6 @@ static THD_FUNCTION(tle8888_driver_thread, p) {
 	}
 }
 
-void requestTLE8888initialization(void) {
-//	needInitialSpi = true;
-	requestedResetCounter++;
-}
-
 /*==========================================================================*/
 /* Driver interrupt handlers.												*/
 /*==========================================================================*/
@@ -1151,6 +1146,15 @@ void tle8888_read_reg(uint16_t reg, uint16_t *val)
 	struct tle8888_priv *chip = &chips[0];
 
 	tle8888_spi_rw(chip, CMD_R(reg), val);
+}
+
+void tle8888_req_init(void)
+{
+	struct tle8888_priv *chip = &chips[0];
+
+	chip->need_init = true;
+
+	requestedResetCounter++;
 }
 
 #else /* BOARD_TLE8888_COUNT > 0 */
