@@ -106,16 +106,23 @@ TEST(BoostControl, ClosedLoop) {
 }
 
 TEST(BoostControl, SetOutput) {
-	StrictMock<MockPwm> pwm;
-	BoostController bc;
+	WITH_ENGINE_TEST_HELPER(TEST_ENGINE);
 
+	StrictMock<MockPwm> pwm;
+	StrictMock<MockEtb> etb;
+	BoostController bc;
+	INJECT_ENGINE_REFERENCE(&bc);
+
+	// ETB wastegate position & PWM should both be set
+	EXPECT_CALL(etb, setWastegatePosition(0.25f));
 	EXPECT_CALL(pwm, setSimplePwmDutyCycle(0.25f));
 
 	// Don't crash if not init'd (don't deref null ptr m_pwm)
 	EXPECT_NO_THROW(bc.setOutput(25.0f));
 
-	// Init with mock PWM device
+	// Init with mock PWM device and ETB
 	bc.init(&pwm, nullptr, nullptr, nullptr);
+	engine->etbControllers[0] = &etb;
 
 	bc.setOutput(25.0f);
 }
