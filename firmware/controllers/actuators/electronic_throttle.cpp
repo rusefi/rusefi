@@ -593,7 +593,7 @@ struct EtbThread final : public PeriodicController<512> {
 
 	void PeriodicTask(efitick_t) override {
 		// Simply update all controllers
-		for (int i = 0 ; i < engine->etbActualCount; i++) {
+		for (int i = 0 ; i < ETB_COUNT; i++) {
 			etbControllers[i].update();
 		}
 	}
@@ -605,10 +605,6 @@ static EtbThread etbThread;
 
 static void showEthInfo(void) {
 #if EFI_PROD_CODE
-	if (engine->etbActualCount == 0) {
-		scheduleMsg(&logger, "ETB DISABLED since no PPS");
-	}
-
 	scheduleMsg(&logger, "etbAutoTune=%d",
 			engine->etbAutoTune);
 
@@ -619,8 +615,8 @@ static void showEthInfo(void) {
 			hwPortname(CONFIG(etbIo[0].controlPin1)),
 			currentEtbDuty,
 			engineConfiguration->etbFreq);
-	int i;
-	for (i = 0; i < engine->etbActualCount; i++) {
+
+	for (int i = 0; i < ETB_COUNT; i++) {
 		scheduleMsg(&logger, "ETB%d", i);
 		scheduleMsg(&logger, " dir1=%s", hwPortname(CONFIG(etbIo[i].directionPin1)));
 		scheduleMsg(&logger, " dir2=%s", hwPortname(CONFIG(etbIo[i].directionPin2)));
@@ -633,8 +629,11 @@ static void showEthInfo(void) {
 }
 
 static void etbPidReset(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
-	for (int i = 0 ; i < engine->etbActualCount; i++) {
-		engine->etbControllers[i]->reset();
+	for (int i = 0 ; i < ETB_COUNT; i++) {
+		if (auto controller = engine->etbControllers[i]) {
+			controller->reset();
+		}
+		
 	}
 }
 
@@ -655,7 +654,7 @@ void setThrottleDutyCycle(percent_t level) {
 
 	float dc = ETB_PERCENT_TO_DUTY(level);
 	directPwmValue = dc;
-	for (int i = 0 ; i < engine->etbActualCount; i++) {
+	for (int i = 0 ; i < ETB_COUNT; i++) {
 		setDcMotorDuty(i, dc);
 	}
 	scheduleMsg(&logger, "duty ETB duty=%f", dc);
@@ -664,7 +663,7 @@ void setThrottleDutyCycle(percent_t level) {
 static void setEtbFrequency(int frequency) {
 	engineConfiguration->etbFreq = frequency;
 
-	for (int i = 0 ; i < engine->etbActualCount; i++) {
+	for (int i = 0 ; i < ETB_COUNT; i++) {
 		setDcMotorFrequency(i, frequency);
 	}
 }
@@ -672,7 +671,7 @@ static void setEtbFrequency(int frequency) {
 static void etbReset() {
 	scheduleMsg(&logger, "etbReset");
 	
-	for (int i = 0 ; i < engine->etbActualCount; i++) {
+	for (int i = 0 ; i < ETB_COUNT; i++) {
 		setDcMotorDuty(i, 0);
 	}
 
@@ -829,9 +828,6 @@ void doInitElectronicThrottle(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 #endif /* EFI_PROD_CODE */
 
 	pedal2tpsMap.init(config->pedalToTpsTable, config->pedalToTpsPedalBins, config->pedalToTpsRpmBins);
-
-	// TODO: remove etbActualCount
-	engine->etbActualCount = ETB_COUNT;
 
 	bool mustHaveEtbConfigured = Sensor::hasSensor(SensorType::AcceleratorPedalPrimary);
 	bool anyEtbConfigured = false;

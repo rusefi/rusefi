@@ -121,11 +121,6 @@ public:
 #endif /* EFI_LAUNCH_CONTROL */
 
 	/**
-	 * if 2nd TPS is not configured we do not run 2nd ETB
-	 */
-	int etbActualCount = 0;
-
-	/**
 	 * By the way 32-bit value should hold at least 400 hours of events at 6K RPM x 12 events per revolution
 	 */
 	int globalSparkIdCounter = 0;
