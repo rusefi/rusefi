@@ -1,4 +1,4 @@
-// this file was generated automatically by rusEfi tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Sun Oct 11 23:07:00 UTC 2020
+// this file was generated automatically by rusEfi tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Mon Oct 19 12:05:36 UTC 2020
 
 // by class com.rusefi.output.FileFsioSettingsConsumer
 static LENameOrdinalPair lefanOnTemperature(FSIO_SETTING_FANONTEMPERATURE, "cfg_fanOnTemperature");
@@ -14,6 +14,8 @@ static LENameOrdinalPair leetb_minValue(FSIO_SETTING_ETB_MINVALUE, "cfg_etb_minV
 static LENameOrdinalPair leidleRpmPid_offset(FSIO_SETTING_IDLERPMPID_OFFSET, "cfg_idleRpmPid_offset");
 static LENameOrdinalPair leidleRpmPid_minValue(FSIO_SETTING_IDLERPMPID_MINVALUE, "cfg_idleRpmPid_minValue");
 static LENameOrdinalPair lestartUpFuelPumpDuration(FSIO_SETTING_STARTUPFUELPUMPDURATION, "cfg_startUpFuelPumpDuration");
+static LENameOrdinalPair leetbWastegatePid_offset(FSIO_SETTING_ETBWASTEGATEPID_OFFSET, "cfg_etbWastegatePid_offset");
+static LENameOrdinalPair leetbWastegatePid_minValue(FSIO_SETTING_ETBWASTEGATEPID_MINVALUE, "cfg_etbWastegatePid_minValue");
 static LENameOrdinalPair leauxPid1_offset(FSIO_SETTING_AUXPID1_OFFSET, "cfg_auxPid1_offset");
 static LENameOrdinalPair leauxPid1_minValue(FSIO_SETTING_AUXPID1_MINVALUE, "cfg_auxPid1_minValue");
 static LENameOrdinalPair leauxPid2_offset(FSIO_SETTING_AUXPID2_OFFSET, "cfg_auxPid2_offset");
