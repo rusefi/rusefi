@@ -29,6 +29,9 @@
 #include "sensor.h"
 #include "gppwm.h"
 #include "tachometer.h"
+#if EFI_MC33816
+ #include "mc33816.h"
+#endif // EFI_MC33816
 
 #if EFI_TUNER_STUDIO
 #include "tunerstudio_outputs.h"
@@ -256,6 +259,10 @@ void Engine::updateSlowSensors(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	// nasty value injection into C driver which would not be able to access Engine class
 	vBattForTle8888 = sensors.vBatt;
 #endif /* BOARD_TLE8888_COUNT */
+
+#if EFI_MC33816
+	initMc33816IfNeeded();
+#endif // EFI_MC33816
 
 	engineState.running.injectorLag = getInjectorLag(sensors.vBatt PASS_ENGINE_PARAMETER_SUFFIX);
 #endif

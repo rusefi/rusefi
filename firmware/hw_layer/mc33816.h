@@ -27,3 +27,5 @@ enum {
 };
 
 void initMc33816(Logging *logger);
+void initMc33816IfNeeded();
+
