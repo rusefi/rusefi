@@ -187,11 +187,11 @@ static void setTimings() {
 void setBoostVoltage(float volts)
 {
 	// Sanity checks, Datasheet says not too high, nor too low
-	if(volts > 65.0f) {
+	if (volts > 65.0f) {
 		firmwareError(OBD_PCM_Processor_Fault, "DI Boost voltage setpoint too high: %.1f", volts);
 		return;
 	}
-	if(volts < 10.0f) {
+	if (volts < 10.0f) {
 		firmwareError(OBD_PCM_Processor_Fault, "DI Boost voltage setpoint too low: %.1f", volts);
 		return;
 	}
@@ -568,14 +568,14 @@ static void mcRestart() {
     driven.setValue(1); // driven = HV
     chThdSleepMilliseconds(10); // Give it a moment
     mcDriverStatus = readDriverStatus();
-    if(!checkDrivenEnabled(mcDriverStatus)){
+    if (!checkDrivenEnabled(mcDriverStatus)) {
     	firmwareError(OBD_PCM_Processor_Fault, "MC33 Driven did not stick!");
     	mcShutdown();
     	return;
     }
 
     mcDriverStatus = readDriverStatus();
-    if(checkUndervoltVccP(mcDriverStatus)){
+    if (checkUndervoltVccP(mcDriverStatus)) {
     	firmwareError(OBD_PCM_Processor_Fault, "MC33 VccP Under-Voltage After Driven"); // Likely DC-DC LS7 is dead!
     	mcShutdown();
     	return;
