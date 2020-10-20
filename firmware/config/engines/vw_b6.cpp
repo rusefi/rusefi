@@ -68,4 +68,22 @@ void setVwPassatB6(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	engineConfiguration->injectionPins[2] = GPIOB_7;
 	// J6 white
 	engineConfiguration->injectionPins[3] = GPIOE_0;
+
+
+	engineConfiguration->gppwm[0].pwmFrequency = 25;
+	engineConfiguration->gppwm[0].loadAxis = GPPWM_FuelLoad;
+	// for now I just want to stop radiator whine
+	// todo: enable cooling!
+	engineConfiguration->gppwm[0].dutyIfError = 10;
+	for (int load = 0; load < GPPWM_LOAD_COUNT; load++) {
+		for (int r = 0; r < GPPWM_RPM_COUNT; r++) {
+			engineConfiguration->gppwm[0].table[load][r] = 10;
+		}
+	}
+
+	engineConfiguration->gppwm[0].pin = GPIOE_10; // "3 - Lowside 2"
+
+
+	engineConfiguration->idle.solenoidPin = GPIO_UNASSIGNED;
+	engineConfiguration->fanPin = GPIO_UNASSIGNED;
 }
