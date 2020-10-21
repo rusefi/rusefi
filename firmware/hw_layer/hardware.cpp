@@ -143,28 +143,6 @@ SPIDriver * getSpiDevice(spi_device_e spiDevice) {
 }
 #endif
 
-#if HAL_USE_I2C
-#if defined(STM32F7XX)
-// values calculated with STM32CubeMX tool, 100kHz I2C clock for Nucleo-767 @168 MHz, PCK1=42MHz
-#define HAL_I2C_F7_100_TIMINGR 0x00A0A3F7
-static I2CConfig i2cfg = { HAL_I2C_F7_100_TIMINGR, 0, 0 };	// todo: does it work?
-#else /* defined(STM32F4XX) */
-static I2CConfig i2cfg = { OPMODE_I2C, 100000, STD_DUTY_CYCLE, };
-#endif /* defined(STM32F4XX) */
-
-//static char txbuf[1];
-
-static void sendI2Cbyte(int addr, int data) {
-	(void)addr;
-	(void)data;
-//	i2cAcquireBus(&I2CD1);
-//	txbuf[0] = data;
-//	i2cMasterTransmit(&I2CD1, addr, txbuf, 1, NULL, 0);
-//	i2cReleaseBus(&I2CD1);
-}
-
-#endif
-
 static Logging *sharedLogger;
 
 #if EFI_PROD_CODE
@@ -618,26 +596,9 @@ void initHardware(Logging *l) {
 	initAdcDriver();
 #endif
 
-#if HAL_USE_I2C
-	addConsoleActionII("i2c", sendI2Cbyte);
-#endif
-
 #if EFI_AUX_SERIAL
 	initAuxSerial();
 #endif /* EFI_AUX_SERIAL */
-
-//	USBMassStorageDriver UMSD1;
-
-//	while (true) {
-//		for (int addr = 0x20; addr < 0x28; addr++) {
-//			sendI2Cbyte(addr, 0);
-//			int err = i2cGetErrors(&I2CD1);
-//			print("I2C: err=%x from %d\r\n", err, addr);
-//			chThdSleepMilliseconds(5);
-//			sendI2Cbyte(addr, 255);
-//			chThdSleepMilliseconds(5);
-//		}
-//	}
 
 #if EFI_VEHICLE_SPEED
 	initVehicleSpeed(sharedLogger);
