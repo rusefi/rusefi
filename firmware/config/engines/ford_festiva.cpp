@@ -151,7 +151,7 @@ void setFordEscortGt(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 
 	setLinearCurve(config->ignitionLoadBins, 20, 105, 5);
 	setWholeTimingTable_d(10 PASS_CONFIG_PARAMETER_SUFFIX);
-	setAfrMap(config->afrTable, 13.5);
+	setLambdaMap(config->lambdaTable, 0.92);
 
 	setSingleCoilDwell(PASS_CONFIG_PARAMETER_SIGNATURE);
 	engineConfiguration->ignitionMode = IM_ONE_COIL;

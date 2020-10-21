@@ -247,10 +247,10 @@ void setConstantDwell(floatms_t dwellMs DECLARE_CONFIG_PARAMETER_SUFFIX) {
 	setLinearCurve(engineConfiguration->sparkDwellValues, dwellMs, dwellMs, 0.01);
 }
 
-void setAfrMap(afr_table_t table, float value) {
+void setLambdaMap(lambda_table_t table, float value) {
 	for (int l = 0; l < FUEL_LOAD_COUNT; l++) {
 		for (int rpmIndex = 0; rpmIndex < FUEL_RPM_COUNT; rpmIndex++) {
-			table[l][rpmIndex] = (int)(value * PACK_MULT_AFR_CFG);
+			table[l][rpmIndex] = (int)(value * PACK_MULT_LAMBDA_CFG);
 		}
 	}
 }
@@ -276,7 +276,7 @@ void setWholeIgnitionIatCorr(float value DECLARE_CONFIG_PARAMETER_SUFFIX) {
 void setFuelTablesLoadBin(float minValue, float maxValue DECLARE_CONFIG_PARAMETER_SUFFIX) {
 	setLinearCurve(config->injPhaseLoadBins, minValue, maxValue, 1);
 	setLinearCurve(config->veLoadBins, minValue, maxValue, 1);
-	setLinearCurve(config->afrLoadBins, minValue, maxValue, 1);
+	setLinearCurve(config->lambdaLoadBins, minValue, maxValue, 1);
 }
 
 void setTimingMap(ignition_table_t map, float value) {
@@ -833,7 +833,7 @@ static void setDefaultEngineConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	setLinearCurve(engineConfiguration->map.samplingWindowBins, 800, 7000, 1);
 	setLinearCurve(engineConfiguration->map.samplingWindow, 50, 50, 1);
 
-	setAfrMap(config->afrTable, 14.7);
+	setLambdaMap(config->lambdaTable, 1.0f);
 	engineConfiguration->stoichRatioPrimary = 14.7f / PACK_MULT_AFR_CFG;
 
 	setDefaultVETable(PASS_ENGINE_PARAMETER_SIGNATURE);

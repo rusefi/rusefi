@@ -43,7 +43,7 @@ EXTERN_ENGINE;
 
 fuel_Map3D_t fuelPhaseMap("fl ph");
 extern fuel_Map3D_t veMap;
-extern afr_Map3D_t lambdaMap;
+extern lambda_Map3D_t lambdaMap;
 extern baroCorr_Map3D_t baroCorrMap;
 
 #if EFI_ENGINE_CONTROL
