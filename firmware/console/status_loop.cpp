@@ -524,7 +524,7 @@ void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels DECLARE_
 	tsOutputChannels->massAirFlowVoltage = hasMafSensor() ? getMafVoltage(PASS_ENGINE_PARAMETER_SIGNATURE) : 0;
 
 	// offset 20
-	tsOutputChannels->airFuelRatio = Sensor::get(SensorType::Lambda).value_or(0) * 14.7f;
+	tsOutputChannels->lambda = Sensor::get(SensorType::Lambda).value_or(0);
 
 	// offset 24
 	tsOutputChannels->engineLoad = getEngineLoadT(PASS_ENGINE_PARAMETER_SIGNATURE);

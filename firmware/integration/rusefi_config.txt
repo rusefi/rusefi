@@ -173,6 +173,7 @@ struct_no_prefix engine_configuration_s
 #define PACK_ADD_TEMPERATURE 40
 #define PACK_MULT_MS 300
 #define PACK_MULT_AFR 1000
+#define PACK_MULT_LAMBDA 10000
 #define PACK_MULT_ANGLE 50
 #define PACK_MULT_VOLTAGE 1000
 #define PACK_MULT_MASS_FLOW 10
@@ -1480,9 +1481,9 @@ ve_table_t veTable;
 float[FUEL_LOAD_COUNT] veLoadBins;;"kPa",	1,   0.0,        0,  400.0,   2
 float[FUEL_RPM_COUNT] veRpmBins;;"RPM",	   1,   0.0,        0,  18000.0, 2
 
-afr_table_t afrTable;
-float[FUEL_LOAD_COUNT] afrLoadBins;;"",	1,   0.0,        0,  500.0,   2
-float[FUEL_RPM_COUNT] afrRpmBins;;"RPM",	   1,   0.0,        0,  18000.0, 2
+lambda_table_t lambdaTable;
+float[FUEL_LOAD_COUNT] lambdaLoadBins;;"",	1,   0.0,        0,  500.0,   2
+float[FUEL_RPM_COUNT] lambdaRpmBins;;"RPM",	   1,   0.0,        0,  18000.0, 2
 
 ! ve_table_t ve2Table;
 ! float[FUEL_LOAD_COUNT] ve2LoadBins;;"kPa",	1,   0.0,        0,  500.0,   2
@@ -1602,7 +1603,7 @@ end_struct
 #define GAUGE_NAME_FUEL_INJ_DUTY "fuel: injector duty cycle"
 #define GAUGE_NAME_TCHARGE "fuel: SD tCharge"
 #define GAUGE_NAME_TARGET_AFR "fuel: target AFR"
-#define GAUGE_NAME_AFR "Air/Fuel Ratio"
+#define GAUGE_NAME_LAMBDA "Lambda"
 #define GAUGE_NAME_IAC "Idle Air Valve"
 
 #define GAUGE_NAME_DWELL_DUTY "dwell: coil duty cycle"
