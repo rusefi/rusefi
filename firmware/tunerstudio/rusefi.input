@@ -1276,7 +1276,7 @@ menuDialog = main
 		subMenu = std_separator
 
 		# Fuel model
-		subMenu = lambdaTableTbl,				"Target AFR", 0, {isInjectionEnabled == 1}
+		subMenu = lambdaTableTbl,				"Target lambda", 0, {isInjectionEnabled == 1}
 		subMenu = cltFuelCorrCurve,			"CLT multiplier", 0, {isInjectionEnabled == 1}
 		subMenu = iatFuelCorrCurve,			"IAT multiplier", 0, {isInjectionEnabled == 1}
 		subMenu = fuelClosedLoopDialog, 	"Closed loop fuel correction", 0, {isInjectionEnabled == 1}
