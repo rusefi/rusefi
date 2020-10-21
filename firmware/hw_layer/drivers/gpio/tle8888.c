@@ -182,8 +182,6 @@ static uint16_t spiRxb = 0, spiTxb = 0;
 /* Driver private data */
 struct tle8888_priv {
 	const struct tle8888_config	*cfg;
-	/* cached output state - state last send to chip */
-	uint32_t					o_state_cached;
 	/* state to be sent to chip */
 	uint32_t					o_state;
 	/* direct driven output mask */
@@ -194,6 +192,8 @@ struct tle8888_priv {
 	/* this is overhead to store 4 bits in uint32_t
 	 * but I don't want any magic shift math */
 	uint32_t					o_pp_mask;
+	/* cached CONT registers state - value last send to chip */
+	uint32_t					cont_data_cached;
 
 	tle8888_drv_state			drv_state;
 
@@ -420,37 +420,37 @@ static int tle8888_update_output(struct tle8888_priv *chip)
 
 	/* TODO: lock? */
 
-	uint32_t briconfig0 = 0;
-	uint32_t out_data = chip->o_state;
+	uint8_t briconfig0 = 0;
 
 	/* calculate briconfig0 */
-	uint32_t pp_low = out_data & chip->o_pp_mask;
 	for (i = 20; i < 24; i++) {
-		if (pp_low & BIT(i)) {
-			/* low-side switch mode */
-		} else {
-			/* else enable high-side switch mode */
-			briconfig0 |= BIT((i - 20) * 2);
+		if (chip->o_pp_mask & BIT(i)) {
+			if (chip->o_state & BIT(i)) {
+				/* low-side switch mode */
+			} else {
+				/* else enable high-side switch mode */
+				briconfig0 |= BIT((i - 20) * 2);
+			}
 		}
 	}
 	/* TODO: set freewheeling bits in briconfig0? */
 	/* TODO: apply hi-Z mask when support will be added */
 
 	/* set value only for non-direct driven pins */
-	out_data &= ~chip->o_direct_mask;
+	uint32_t cont_data = chip->o_state & ~chip->o_direct_mask;
 
 	/* output for push-pull pins is allways enabled
 	 * (at least until we start supporting hi-Z state) */
-	out_data |= chip->o_pp_mask;
+	cont_data |= chip->o_pp_mask;
 
 	uint16_t tx[] = {
 		/* bridge config */
 		CMD_BRICONFIG(0, briconfig0),
 		/* output enables */
-		CMD_CONT(0, out_data >>  0),
-		CMD_CONT(1, out_data >>  8),
-		CMD_CONT(2, out_data >> 16),
-		CMD_CONT(3, out_data >> 24)
+		CMD_CONT(0, cont_data >>  0),
+		CMD_CONT(1, cont_data >>  8),
+		CMD_CONT(2, cont_data >> 16),
+		CMD_CONT(3, cont_data >> 24)
 	};
 	ret = tle8888_spi_rw_array(chip, tx, NULL, ARRAY_SIZE(tx));
 
@@ -458,7 +458,7 @@ static int tle8888_update_output(struct tle8888_priv *chip)
 
 	if (ret == 0) {
 		/* atomic */
-		chip->o_state_cached = out_data;
+		chip->cont_data_cached = cont_data;
 	}
 
 	return ret;
@@ -1152,8 +1152,8 @@ int tle8888_add(unsigned int index, const struct tle8888_config *cfg) {
 
 	chip->cfg = cfg;
 	chip->o_state = 0;
-	chip->o_state_cached = 0;
 	chip->o_direct_mask = 0;
+	chip->cont_data_cached = 0;
 	chip->drv_state = TLE8888_WAIT_INIT;
 
 	/* register, return gpio chip base */
