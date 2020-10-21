@@ -56,6 +56,7 @@ float ClosedLoopFuelCellImpl::getLambdaError(DECLARE_ENGINE_PARAMETER_SIGNATURE)
 		return 0;
 	}
 
+	// TODO: compare to target lambda, this isn't going to work with flex fuel
 	return lambda.Value - (ENGINE(engineState.targetAFR) / 14.7f);
 }
 
