@@ -43,7 +43,7 @@ EXTERN_ENGINE;
 
 fuel_Map3D_t fuelPhaseMap("fl ph");
 extern fuel_Map3D_t veMap;
-extern afr_Map3D_t afrMap;
+extern afr_Map3D_t lambdaMap;
 extern baroCorr_Map3D_t baroCorrMap;
 
 #if EFI_ENGINE_CONTROL
@@ -361,7 +361,7 @@ floatms_t getInjectorLag(float vBatt DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	return interpolate2d("lag", vBatt, engineConfiguration->injector.battLagCorrBins, engineConfiguration->injector.battLagCorr);
 }
 
-static FuelComputer fuelComputer(afrMap);
+static FuelComputer fuelComputer(lambdaMap);
 static InjectorModel injectorModel;
 
 /**
