@@ -166,15 +166,8 @@ const uint8_t tle8888_fwd_responses[16][4] = {
 // are lazy and in reality it's usually one chip per board
 
 static int lowVoltageResetCounter = 0;
-static int requestedResetCounter = 0;
-int tle8888reinitializationCounter = 0;
 
 float vBattForTle8888 = 0;
-
-// set debug_mode 31
-static int tle8888SpiCounter = 0;
-static uint16_t spiRxb = 0, spiTxb = 0;
-
 
 /* Driver private data */
 struct tle8888_priv {
@@ -233,6 +226,11 @@ struct tle8888_priv {
 	int							por_cnt;
 	int							wdr_cnt;
 	int							comfe_cnt;
+	int							init_cnt;
+	int							init_req_cnt;
+	int							spi_cnt;
+	uint16_t					tx;
+	uint16_t					rx;
 };
 
 static struct tle8888_priv chips[BOARD_TLE8888_COUNT];
@@ -247,24 +245,21 @@ static const char* tle8888_pin_names[TLE8888_OUTPUTS] = {
 	"TLE8888.IGN1",		"TLE8888.IGN2",		"TLE8888.IGN3",		"TLE8888.IGN4"
 };
 
-#define getWindowWatchdog()		(chips[0].wwd_err_cnt)
-#define getFunctionalWatchdog()	(chips[0].fwd_err_cnt)
-#define getTotalErrorCounter()	(chips[0].tot_err_cnt)
-
 #if EFI_TUNER_STUDIO
 // set debug_mode 31
 void tle8888PostState(TsDebugChannels *debugChannels) {
+	struct tle8888_priv *chip = &chips[0];
 
-	debugChannels->debugIntField1 = getWindowWatchdog();
-	debugChannels->debugIntField2 = getFunctionalWatchdog();
-	debugChannels->debugIntField3 = getTotalErrorCounter();
-	//debugChannels->debugIntField1 = tle8888SpiCounter;
-	//debugChannels->debugIntField2 = spiTxb;
-	//debugChannels->debugIntField3 = spiRxb;
-	debugChannels->debugIntField5 = tle8888reinitializationCounter;
+	debugChannels->debugIntField1 = chip->wwd_err_cnt;
+	debugChannels->debugIntField2 = chip->fwd_err_cnt;
+	debugChannels->debugIntField3 = chip->tot_err_cnt;
+	//debugChannels->debugIntField1 = chip->spi_cnt;
+	//debugChannels->debugIntField2 = chip->tx;
+	//debugChannels->debugIntField3 = chip->rx;
+	debugChannels->debugIntField5 = chip->init_cnt;
 
-	debugChannels->debugFloatField3 = chips[0].OpStat[1];
-	debugChannels->debugFloatField4 = chips[0].por_cnt * 1000000 + requestedResetCounter * 10000 + lowVoltageResetCounter;
+	debugChannels->debugFloatField3 = chip->OpStat[1];
+	debugChannels->debugFloatField4 = chip->por_cnt * 1000000 + chip->init_req_cnt * 10000 + lowVoltageResetCounter;
 	debugChannels->debugFloatField5 = 0;
 	debugChannels->debugFloatField6 = 0;
 }
@@ -318,9 +313,10 @@ static int tle8888_spi_validate(struct tle8888_priv *chip, uint16_t rx)
 /**
  * @returns -1 in case of communication error
  */
-static int tle8888_spi_rw(struct tle8888_priv *chip, uint16_t tx, uint16_t *rx)
+static int tle8888_spi_rw(struct tle8888_priv *chip, uint16_t tx, uint16_t *rx_ptr)
 {
 	int ret;
+	uint16_t rx;
 	SPIDriver *spi = get_bus(chip);
 
 	/**
@@ -338,21 +334,23 @@ static int tle8888_spi_rw(struct tle8888_priv *chip, uint16_t tx, uint16_t *rx)
 	/* Slave Select assertion. */
 	spiSelect(spi);
 	/* Atomic transfer operations. */
-	spiRxb = spiPolledExchange(spi, tx);
+	rx = spiPolledExchange(spi, tx);
 	//spiExchange(spi, 2, &tx, &rxb); 8 bit version just in case?
 	/* Slave Select de-assertion. */
 	spiUnselect(spi);
 	/* Ownership release. */
 	spiReleaseBus(spi);
 
-	spiTxb = tx;
-	tle8888SpiCounter++;
+	/* statisctic and debug */
+	chip->tx = tx;
+	chip->rx = rx;
+	chip->spi_cnt++;
 
-	if (rx)
-		*rx = spiRxb;
+	if (rx_ptr)
+		*rx_ptr = rx;
 
 	/* validate reply and save last accessed register */
-	ret = tle8888_spi_validate(chip, spiRxb);
+	ret = tle8888_spi_validate(chip, rx);
 	chip->last_reg = getRegisterFromResponse(tx);
 
 	/* no errors for now */
@@ -392,11 +390,10 @@ static int tle8888_spi_rw_array(struct tle8888_priv *chip, const uint16_t *tx, u
 		/* Slave Select de-assertion. */
 		spiUnselect(spi);
 
-		#ifdef TLE8888_DEBUG
-			spiTxb = tx[i];
-			spiRxb = rxdata;
-			tle8888SpiCounter++;
-		#endif
+		/* statistic and debug */
+		chip->tx = tx[i];
+		chip->rx = rxdata;
+		chip->spi_cnt++;
 
 		/* validate reply and save last accessed register */
 		ret = tle8888_spi_validate(chip, rxdata);
@@ -616,9 +613,8 @@ static int tle8888_chip_init(struct tle8888_priv *chip)
 {
 	int ret;
 
-	#ifdef TLE8888_DEBUG
-		tle8888reinitializationCounter++;
-	#endif
+	/* statistic */
+	chip->init_cnt++;
 
 	uint16_t tx[] = {
 		/* unlock */
@@ -1219,8 +1215,7 @@ void tle8888_req_init(void)
 	struct tle8888_priv *chip = &chips[0];
 
 	chip->need_init = true;
-
-	requestedResetCounter++;
+	chip->init_req_cnt++;
 }
 
 #else /* BOARD_TLE8888_COUNT > 0 */
