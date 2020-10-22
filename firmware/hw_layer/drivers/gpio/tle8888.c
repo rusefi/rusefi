@@ -55,8 +55,6 @@ EXTERN_ENGINE_CONFIGURATION;
 
 #define DRIVER_NAME				"tle8888"
 
-static bool drv_task_ready = false;
-
 typedef enum {
 	TLE8888_DISABLED = 0,
 	TLE8888_WAIT_INIT,
@@ -166,10 +164,6 @@ const uint8_t tle8888_fwd_responses[16][4] = {
 /* Driver local variables and types.										*/
 /*==========================================================================*/
 
-/* OS */
-SEMAPHORE_DECL(tle8888_wake, 10 /* or BOARD_TLE8888_COUNT ? */);
-static THD_WORKING_AREA(tle8888_thread_1_wa, 256);
-
 // todo: much of state is currently global while technically it should be per-chip. but we
 // are lazy and in reality it's usually one chip per board
 
@@ -187,6 +181,12 @@ static uint16_t spiRxb = 0, spiTxb = 0;
 /* Driver private data */
 struct tle8888_priv {
 	const struct tle8888_config	*cfg;
+
+	/* thread stuff */
+	thread_t 					*thread;
+	THD_WORKING_AREA(thread_wa, 256);
+	semaphore_t					wake;
+
 	/* state to be sent to chip */
 	uint32_t					o_state;
 	/* direct driven output mask */
@@ -560,11 +560,9 @@ static int tle8888_update_direct_output(struct tle8888_priv *chip, int pin, int 
 
 static int tle8888_wake_driver(struct tle8888_priv *chip)
 {
-	(void)chip;
-
     /* Entering a reentrant critical zone.*/
     syssts_t sts = chSysGetStatusAndLockX();
-	chSemSignalI(&tle8888_wake);
+	chSemSignalI(&chip->wake);
 	if (!port_is_isr_context()) {
 		/**
 		 * chSemSignalI above requires rescheduling
@@ -759,12 +757,13 @@ static int tle8888_calc_sleep_interval(struct tle8888_priv *chip) {
 /*==========================================================================*/
 
 static THD_FUNCTION(tle8888_driver_thread, p) {
-	(void)p;
+	struct tle8888_priv *chip = p;
 
 	chRegSetThreadName(DRIVER_NAME);
 
 	while (1) {
-		msg_t msg = chSemWaitTimeout(&tle8888_wake, tle8888_calc_sleep_interval(&chips[0]));
+		int ret;
+		msg_t msg = chSemWaitTimeout(&chip->wake, tle8888_calc_sleep_interval(chip));
 
 		/* should we care about msg == MSG_TIMEOUT? */
 		(void)msg;
@@ -782,52 +781,48 @@ static THD_FUNCTION(tle8888_driver_thread, p) {
 		// todo: super-lazy implementation with only first chip!
 		//watchdogLogic(&chips[0]);
 
-		for (int i = 0; i < BOARD_TLE8888_COUNT; i++) {
-			int ret;
-			struct tle8888_priv *chip = &chips[i];
-			bool wd_happy = chip->wd_happy;
+		if ((chip->cfg == NULL) ||
+			(chip->drv_state == TLE8888_DISABLED) ||
+			(chip->drv_state == TLE8888_FAILED))
+			continue;
 
-			if ((chip->cfg == NULL) ||
-				(chip->drv_state == TLE8888_DISABLED) ||
-				(chip->drv_state == TLE8888_FAILED))
-				continue;
+		bool wd_happy = chip->wd_happy;
 
-			/* update outputs only if WD is happy */
-			if (wd_happy) {
-				ret = tle8888_update_output(chip);
-				if (ret) {
-					/* set state to TLE8888_FAILED? */
-				}
+		/* update outputs only if WD is happy */
+		if (wd_happy) {
+			ret = tle8888_update_output(chip);
+			if (ret) {
+				/* set state to TLE8888_FAILED? */
+			}
+		}
+
+		ret = tle8888_wd_feed(chip);
+		if (ret < 0) {
+			/* WD is not happy */
+			continue;
+		}
+		/* happiness state has changed! */
+		if ((chip->wd_happy != wd_happy) && (chip->wd_happy)) {
+			chip->need_init = true;
+		}
+
+		if (chip->need_init) {
+			/* clear first, as flag can be raised again during init */
+			chip->need_init = false;
+			/* re-init chip! */
+			tle8888_chip_init(chip);
+			/* sync pins state */
+			tle8888_update_output(chip);
+		}
+
+		if (chip->diag_ts <= chVTGetSystemTimeX()) {
+			/* this is expensive call, will do a lot of spi transfers... */
+			ret = tle8888_update_status_and_diag(chip);
+			if (ret) {
+				/* set state to TLE8888_FAILED or force reinit? */
 			}
 
-			ret = tle8888_wd_feed(chip);
-			if (ret < 0) {
-				/* WD is not happy */
-				continue;
-			}
-			/* happiness state has changed! */
-			if ((chip->wd_happy != wd_happy) && (chip->wd_happy)) {
-				chip->need_init = true;
-			}
-
-			if (chip->need_init) {
-				/* clear first, as flag can be raised again during init */
-				chip->need_init = false;
-				/* re-init chip! */
-				tle8888_chip_init(chip);
-				/* sync pins state */
-				tle8888_update_output(chip);
-			}
-
-			if (chip->diag_ts <= chVTGetSystemTimeX()) {
-				/* this is expensive call, will do a lot of spi transfers... */
-				ret = tle8888_update_status_and_diag(chip);
-				if (ret) {
-					/* set state to TLE8888_FAILED or force reinit? */
-				}
-
-				chip->diag_ts = chTimeAddX(chVTGetSystemTimeX(), TIME_MS2I(DIAG_PERIOD_MS));
-			}
+			chip->diag_ts = chTimeAddX(chVTGetSystemTimeX(), TIME_MS2I(DIAG_PERIOD_MS));
 		}
 	}
 }
@@ -1090,18 +1085,18 @@ static int tle8888_init(void * data)
 	if (ret)
 		return ret;
 
-	ret = tle8888_chip_init(chip);
-	if (ret)
-		return ret;
+	/* force init from driver thread */
+	chip->need_init = true;
 
+	/* instance is ready */
 	chip->drv_state = TLE8888_READY;
 
-	/* one task for all TLE8888 instances, so create only once */
-	if (!drv_task_ready) {
-		chThdCreateStatic(tle8888_thread_1_wa, sizeof(tle8888_thread_1_wa),
-						  NORMALPRIO + 1, tle8888_driver_thread, NULL);
-		drv_task_ready = true;
-	}
+	/* init semaphore */
+	chSemObjectInit(&chip->wake, 10);
+
+	/* start thread */
+	chip->thread = chThdCreateStatic(chip->thread_wa, sizeof(chip->thread_wa),
+									 NORMALPRIO + 1, tle8888_driver_thread, chip);
 
 	return 0;
 }
@@ -1117,7 +1112,9 @@ static int tle8888_deinit(void *data)
 	if (cfg->inj_en.port)
 		palClearPort(cfg->inj_en.port, PAL_PORT_BIT(cfg->inj_en.pad));
 
-	/* TODO: stop task? */
+	/* stop thread */
+	chThdTerminate(chip->thread);
+
 	return 0;
 }
 
