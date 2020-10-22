@@ -1723,6 +1723,18 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 		field = ""
 		field = "injection Pin Mode",       			injectionPinMode, {isInjectionEnabled == 1}
 
+	dialog = testFsio, "FSIO Test"
+		commandButton = "FSIO#1",	cmd_test_fsio1
+		commandButton = "FSIO#2",	cmd_test_fsio2
+		commandButton = "FSIO#3",	cmd_test_fsio3
+		commandButton = "FSIO#4",	cmd_test_fsio4
+		commandButton = "FSIO#5",	cmd_test_fsio5
+		commandButton = "FSIO#6",	cmd_test_fsio6
+		commandButton = "FSIO#7",	cmd_test_fsio7
+		commandButton = "FSIO#8",	cmd_test_fsio8
+		commandButton = "FSIO#9",	cmd_test_fsio9
+		commandButton = "FSIO#10",	cmd_test_fsio10
+
 	dialog = testInjectors, "Injector Test"
 		commandButton = "Injector #1", cmd_test_inj1
 		commandButton = "Injector #2", cmd_test_inj2
@@ -1736,16 +1748,6 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 		commandButton = "Injector #10", cmd_test_inj10
 		commandButton = "Injector #11", cmd_test_inj11
 		commandButton = "Injector #12", cmd_test_inj12
-		commandButton = "FSIO#1",	cmd_test_fsio1
-		commandButton = "FSIO#2",	cmd_test_fsio2
-		commandButton = "FSIO#3",	cmd_test_fsio3
-		commandButton = "FSIO#4",	cmd_test_fsio4
-		commandButton = "FSIO#5",	cmd_test_fsio5
-		commandButton = "FSIO#6",	cmd_test_fsio6
-		commandButton = "FSIO#7",	cmd_test_fsio7
-		commandButton = "FSIO#8",	cmd_test_fsio8
-		commandButton = "FSIO#9",	cmd_test_fsio9
-		commandButton = "FSIO#10",	cmd_test_fsio10
 
 	dialog = injectionSettingsEast, "", yAxis
 		panel = testInjectors
@@ -3115,10 +3117,11 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 		commandButton = "Reset to DFU", cmd_dfu
 
 	; bench test	
-	dialog = ioTest, "Bench Test & Commands", border
-		panel = testSpark,		West
-		panel = testInjectors,	Center
-		panel = testMisc,		East
+	dialog = ioTest, "Bench Test & Commands", xAxis
+		panel = testSpark
+		panel = testInjectors
+		panel = testFsio
+		panel = testMisc
 	
 	dialog = engineTypeDialog, "Popular vehicles"
 		field = "!These buttons send a command to rusEFI controller to apply preset values"
