@@ -64,8 +64,7 @@ typedef enum {
 	TLE8888_FAILED
 } tle8888_drv_state;
 
-#define REG_INVALID			0x00
-
+/* SPI communication helpers */
 /* C0 */
 #define CMD_READ			(0 << 0)
 #define CMD_WRITE			(1 << 0)
@@ -74,22 +73,36 @@ typedef enum {
 /* CD7:0 */
 #define CMD_REG_DATA(d)		(((d) & 0xff) << 8)
 
-#define CMD_WR(a, d)		(CMD_WRITE | CMD_REG_ADDR(a) | CMD_REG_DATA(d))
+#define CMD_W(a, d)			(CMD_WRITE | CMD_REG_ADDR(a) | CMD_REG_DATA(d))
 #define CMD_R(a)			(CMD_READ | CMD_REG_ADDR(a))
 
-#define CMD_CMD0(d)			CMD_WR(0x01, d)
+#define REG_INVALID			0x00
+
+/* Command registers */
+#define CMD_CMD0(d)			CMD_W(0x01, d)
 /* Window watchdog open WWDOWT window time = 12.8 mS - fixed value for TLE8888QK */
-#define CMD_WWDSERVICECMD	CMD_WR(0x15, 0x03)
-#define CMD_FWDRESPCMD(d)	CMD_WR(0x16, d)
-#define CMD_FWDRESPSYNCCMD(d)	CMD_WR(0x17, d)
+#define CMD_WWDSERVICECMD	CMD_W(0x15, 0x03)
+#define CMD_FWDRESPCMD(d)	CMD_W(0x16, d)
+#define CMD_FWDRESPSYNCCMD(d)	CMD_W(0x17, d)
 
 #define CMD_SR_CODE			0x1a
-#define CMD_SR				CMD_WR(CMD_SR_CODE, 0x03)
+#define CMD_SR				CMD_W(CMD_SR_CODE, 0x03)
 // 0x238 = 568
-#define CMD_OE_SET			CMD_WR(0x1c, 0x02)
-#define CMD_OE_CLR			CMD_WR(0x1c, 0x01)
-#define CMD_UNLOCK			CMD_WR(0x1e, 0x01)
-#define CMD_LOCK			CMD_WR(0x1e, 0x02)
+#define CMD_OE_SET			CMD_W(0x1c, 0x02)
+#define CMD_OE_CLR			CMD_W(0x1c, 0x01)
+#define CMD_UNLOCK			CMD_W(0x1e, 0x01)
+#define CMD_LOCK			CMD_W(0x1e, 0x02)
+
+/* Diagnostic registers */
+#define REG_DIAG(n)			(0x20 + ((n) & 0x01))
+#define CMD_DIAG(n)			CMD_R(REG_DIAG(n))
+#define CMD_VRSDIAG(n)		CMD_R(0x22 + ((n) & 0x01))
+#define CMD_COMDIAG			CMD_R(0x24)
+#define CMD_OUTDIAG(n)		CMD_R(0x25 + ((n) & 0x07))
+#define CMD_PPOVDIAG		CMD_R(0x2a)
+#define CMD_BRIDIAG(n)		CMD_R(0x2b + ((n) & 0x01))
+#define CMD_IGNDIAG			CMD_R(0x2d)
+#define CMD_WDDIAG			CMD_R(0x2e)
 
 /* Status registers */
 #define REG_OPSTAT(n)		(0x34 + ((n) & 0x01))
@@ -101,28 +114,20 @@ typedef enum {
 #define REG_TECSTAT			0x39
 #define CMD_TECSTAT			CMD_R(REG_TECSTAT)
 
-/* Diagnostic */
-#define REG_DIAG(n)			(0x20 + ((n) & 0x01))
-#define CMD_DIAG(n)			CMD_R(REG_DIAG(n))
-#define CMD_VRSDIAG(n)		CMD_R(0x22 + ((n) & 0x01))
-#define CMD_COMDIAG			CMD_R(0x24)
-#define CMD_OUTDIAG(n)		CMD_R(0x25 + ((n) & 0x07))
-#define CMD_PPOVDIAG		CMD_R(0x2a)
-#define CMD_BRIDIAG(n)		CMD_R(0x2b + ((n) & 0x01))
-#define CMD_IGNDIAG			CMD_R(0x2d)
-#define CMD_WDDIAG			CMD_R(0x2e)
+/* Configuration registers */
+#define CMD_OUTCONFIG(n, d)	CMD_W(0x40 + (n), d)
+#define CMD_BRICONFIG(n, d)	CMD_W(0x46 + ((n) & 0x01), d)
+#define CMD_IGNCONFIG(d)	CMD_W(0x48, d)
+#define CMD_VRSCONFIG(n, d)	CMD_W(0x49 + ((n) & 0x03), d)
+#define CMD_OPCONFIG0(d)	CMD_W(0x4e, d)
+#define CMD_INCONFIG(n, d)	CMD_W(0x53 + ((n) & 0x03), d)
+#define CMD_DDCONFIG(n, d)	CMD_W(0x57 + ((n) & 0x03), d)
+#define CMD_OECONFIG(n, d)	CMD_W(0x5b + ((n) & 0x03), d)
 
-#define CMD_OUTCONFIG(n, d)	CMD_WR(0x40 + (n), d)
-#define CMD_BRICONFIG(n, d)	CMD_WR(0x46 + ((n) & 0x01), d)
-#define CMD_IGNCONFIG(d)	CMD_WR(0x48, d)
-#define CMD_VRSCONFIG(n, d)	CMD_WR(0x49 + ((n) & 0x03), d)
-#define CMD_OPCONFIG0(d)	CMD_WR(0x4e, d)
-#define CMD_INCONFIG(n, d)	CMD_WR(0x53 + ((n) & 0x03), d)
-#define CMD_DDCONFIG(n, d)	CMD_WR(0x57 + ((n) & 0x03), d)
-#define CMD_OECONFIG(n, d)	CMD_WR(0x5b + ((n) & 0x03), d)
-#define CMD_CONT(n, d)		CMD_WR(0x7b + ((n) & 0x03), d)
+/* Control registers */
+#define CMD_CONT(n, d)		CMD_W(0x7b + ((n) & 0x03), d)
 
-// Looks like reset value is 113.6ms? 1.6ms * 0x47
+/* Looks like reset value is 113.6ms? 1.6ms * 0x47 */
 #define FWD_PERIOD_MS		(20)
 
 /* Default closed window time is 0b0011.1111 * 1.6 = 100.8mS
