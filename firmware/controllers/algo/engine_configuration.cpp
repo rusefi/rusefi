@@ -393,7 +393,6 @@ void setDefaultSdCardParameters(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	engineConfiguration->is_enabled_spi_3 = true;
 	engineConfiguration->sdCardSpiDevice = SPI_DEVICE_3;
 	engineConfiguration->sdCardCsPin = GPIOD_4;
-	engineConfiguration->isSdCardEnabled = true;
 
 #if EFI_PROD_CODE
 	// call overrided board-specific SD card configuration setup, if needed (for custom boards only)
