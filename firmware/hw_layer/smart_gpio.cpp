@@ -144,7 +144,7 @@ struct tle8888_config tle8888_cfg = {
 		[0] = {.output =  5},
 		[1] = {.output =  6},
 		[2] = {.output = 21},
-		[3] = {.output = 15},
+		[3] = {.output = 22},
 	},
 	.ign_en =  {.port = GPIOD,	.pad = 10},
 	.inj_en =  {.port = GPIOD,	.pad = 11},

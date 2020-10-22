@@ -5,10 +5,10 @@
 
 outputs:
   # TLE8888 injector channels
-  GPIOE_14: "37 - Injector 1"
-  GPIOE_13: "38 - Injector 2"
-  GPIOE_12: "41 - Injector 3"
-  GPIOE_11: "42 - Injector 4"
+  TLE8888_PIN_1: "37 - Injector 1"
+  TLE8888_PIN_2: "38 - Injector 2"
+  TLE8888_PIN_3: "41 - Injector 3"
+  TLE8888_PIN_4: "42 - Injector 4"
   # TC4427 ignition outputs (5v)
   GPIOD_4: "9 - Ignition 1"
   GPIOD_3: "10 - Ignition 2"
@@ -18,17 +18,18 @@ outputs:
   GPIOD_7: "14 - GP Out 5"
   GPIOD_6: "13 - GP Out 6"
 
-  # default VVT TLE8888 high current low side: VVT1 TLE8888_IN10 / TLE8888_OUT6
-  GPIOE_9:  "7 - Lowside 1"
-  # default Idle Air Control TLE8888 high current low side: VVT2 TLE8888_IN9 / TLE8888_OUT5
-  GPIOE_10: "3 - Lowside 2"
+  # default VVT TLE8888 high current low side: VVT1 TLE8888_OUT6
+  TLE8888_PIN_6: "7 - Lowside 1"
+  # default Idle Air Control TLE8888 high current low side: VVT2 TLE8888_OUT5
+  TLE8888_PIN_5: "3 - Lowside 2"
 
-  # TLE8888 half bridges (pushpull, lowside, or high-low)  TLE8888_IN11 / TLE8888_OUT21#91
-  GPIOE_8: "35 - GP Out 1"
-  # TLE8888 half bridges (pushpull, lowside, or high-low)  IN? / TLE8888_OUT22#89
-  # this should work but it does not GPIOE_7: "34 - GP Out 2"
+  # TLE8888 half bridges (pushpull, lowside, or high-low) TLE8888_OUT21#91
+  TLE8888_PIN_21: "35 - GP Out 1"
+  # TLE8888 half bridges (pushpull, lowside, or high-low) TLE8888_OUT22#89
   TLE8888_PIN_22: "34 - GP Out 2"
+  # TLE8888 half bridges (pushpull, lowside, or high-low) TLE8888_OUT23
   TLE8888_PIN_23: "33 - GP Out 3"
+  # TLE8888 half bridges (pushpull, lowside, or high-low) TLE8888_OUT24
   TLE8888_PIN_24: "43 - GP Out 4"
 
   # J2
