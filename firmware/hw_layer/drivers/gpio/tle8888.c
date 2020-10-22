@@ -791,15 +791,19 @@ static int tle8888_calc_sleep_interval(struct tle8888_priv *chip) {
 
 static THD_FUNCTION(tle8888_driver_thread, p) {
 	struct tle8888_priv *chip = p;
+	sysinterval_t poll_interval = 0;
 
 	chRegSetThreadName(DRIVER_NAME);
 
 	while (1) {
 		int ret;
-		msg_t msg = chSemWaitTimeout(&chip->wake, tle8888_calc_sleep_interval(chip));
+		msg_t msg = chSemWaitTimeout(&chip->wake, poll_interval);
 
 		/* should we care about msg == MSG_TIMEOUT? */
 		(void)msg;
+
+		/* default polling interval */
+		poll_interval = TIME_MS2I(DIAG_PERIOD_MS);
 
 #if 0
 		if (vBattForTle8888 < LOW_VBATT) {
@@ -865,6 +869,8 @@ static THD_FUNCTION(tle8888_driver_thread, p) {
 
 			chip->diag_ts = chTimeAddX(chVTGetSystemTimeX(), TIME_MS2I(DIAG_PERIOD_MS));
 		}
+
+		poll_interval = tle8888_calc_sleep_interval(chip);
 	}
 }
 
