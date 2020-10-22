@@ -202,7 +202,7 @@ struct tle8888_priv {
 	tle8888_drv_state			drv_state;
 
 	/* direct drive mapping registers */
-	uint32_t					InConfig[TLE8888_DIRECT_MISC];
+	uint8_t						InConfig[TLE8888_DIRECT_MISC];
 
 	/* last accessed register, for validation on next SPI access */
 	uint8_t						last_reg;
