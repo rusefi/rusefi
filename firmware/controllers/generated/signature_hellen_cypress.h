@@ -3,6 +3,6 @@
 //
 
 #define SIGNATURE_BOARD hellen_cypress
-#define SIGNATURE_DATE 2020.10.19
-#define SIGNATURE_HASH 1235335563
-#define TS_SIGNATURE "rusEFI 2020.10.19.hellen_cypress.1235335563"
+#define SIGNATURE_DATE 2020.10.22
+#define SIGNATURE_HASH 417408006
+#define TS_SIGNATURE "rusEFI 2020.10.22.hellen_cypress.417408006"

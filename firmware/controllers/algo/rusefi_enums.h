@@ -697,7 +697,7 @@ typedef brain_pin_e output_pin_e;
 typedef enum {
 	DBG_ALTERNATOR_PID = 0,
 	DBG_TPS_ACCEL = 1,
-	DBG_2 = 2,
+	DBG_GPPWM = 2,
 	DBG_IDLE_CONTROL = 3,
 	DBG_EL_ACCEL = 4,
 	DBG_TRIGGER_COUNTERS = 5,

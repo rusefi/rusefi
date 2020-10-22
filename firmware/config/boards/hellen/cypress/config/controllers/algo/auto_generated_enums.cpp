@@ -1,7 +1,7 @@
 #include "global.h"
 #include "rusefi_enums.h"
 #include "rusefi_hw_enums.h"
-// was generated automatically by rusEfi tool  from rusefi_hw_enums.h // was generated automatically by rusEfi tool  from rusefi_enums.h // by enum2string.jar tool on Sat Oct 03 14:41:44 UTC 2020
+// was generated automatically by rusEfi tool  from rusefi_hw_enums.h // was generated automatically by rusEfi tool  from rusefi_enums.h // by enum2string.jar tool on Thu Oct 22 02:51:01 UTC 2020
 // see also gen_config_and_enums.bat
 
 
@@ -675,8 +675,6 @@ const char *getDebug_mode_e(debug_mode_e value){
 switch(value) {
 case DBG_16:
   return "DBG_16";
-case DBG_2:
-  return "DBG_2";
 case DBG_34:
   return "DBG_34";
 case DBG_43:
@@ -729,6 +727,8 @@ case DBG_FSIO_SPECIAL:
   return "DBG_FSIO_SPECIAL";
 case DBG_FUEL_PID_CORRECTION:
   return "DBG_FUEL_PID_CORRECTION";
+case DBG_GPPWM:
+  return "DBG_GPPWM";
 case DBG_IDLE_CONTROL:
   return "DBG_IDLE_CONTROL";
 case DBG_IGNITION_TIMING:
