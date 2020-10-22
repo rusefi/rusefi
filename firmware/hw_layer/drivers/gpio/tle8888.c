@@ -605,15 +605,28 @@ static int tle8888_chip_init(struct tle8888_priv *chip)
 		CMD_INCONFIG(1, chip->InConfig[1]),
 		CMD_INCONFIG(2, chip->InConfig[2]),
 		CMD_INCONFIG(3, chip->InConfig[3]),
-	#if 1
-		/* defaults from datasheet */
-		CMD_OUTCONFIG(0, 0xff),
-		CMD_OUTCONFIG(1, 0x3f),
-		CMD_OUTCONFIG(2, 0x3f),
-		CMD_OUTCONFIG(3, 0x30),
-		CMD_OUTCONFIG(4, 0x3f),
-		CMD_OUTCONFIG(5, 0x3f),
-	#endif
+		/* Diagnnostic settings */
+		/* Enable open load detection and disable switch off
+		 * in case of overcurrent for OUTPUT1..4 */
+		CMD_OUTCONFIG(0, BIT(7) | BIT(5) | BIT(3) | BIT(1)),
+		/* Enable open load detection and disable switch off
+		 * in case of overcurrent for OUTPUT5..7 */
+		CMD_OUTCONFIG(1, BIT(5) | BIT(3) | BIT(1)),
+		/* Enable open load detection and set short to bat
+		 * thresholt to 125 mV (default) for OUTPUT8..13 */
+		CMD_OUTCONFIG(2, (0x0 << 6) | BIT(5) | BIT(4) | BIT(3) | BIT(2) | BIT(1) | BIT(0)),
+		/* Enable open load detection and disable switch off
+		 * in case of overcurrent for OUTPUT14
+		 * Set short to bat threshold to 125mV (default) for
+		 * OUTPUT12..13 and OUTPUT10..11 */
+		CMD_OUTCONFIG(3, BIT(5) | (0x0 << 2) | (0x0 << 0)),
+		/* No delayed off function for OUTPUT17
+		 * Enable open load detection and disable switch off
+		 * in case of overcurrent for OUTPUT15..17 */
+		CMD_OUTCONFIG(4, BIT(5) | BIT(3) | BIT(1)),
+		/* Enable open load detection and disable switch off
+		 * in case of overcurrent for OUTPUT18..20 */
+		CMD_OUTCONFIG(5, BIT(5) | BIT(3) | BIT(1)),
 		/* set OE and DD registers */
 		CMD_OECONFIG(0, chip->o_oe_mask >>  0),
 		CMD_DDCONFIG(0, chip->o_direct_mask >> 0),
