@@ -877,6 +877,8 @@ static void enableOrDisable(const char *param, bool isEnabled) {
 		engine->knockDebug = isEnabled;
 	} else if (strEqualCaseInsensitive(param, "altcontrol")) {
 		engineConfiguration->isAlternatorControlEnabled = isEnabled;
+	} else if (strEqualCaseInsensitive(param, "sd")) {
+		engineConfiguration->isSdCardEnabled = isEnabled;
 	} else if (strEqualCaseInsensitive(param, CMD_FUNCTIONAL_TEST_MODE)) {
 		engine->isFunctionalTestMode = isEnabled;
 	} else if (strEqualCaseInsensitive(param, "can_read")) {

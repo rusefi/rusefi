@@ -139,7 +139,7 @@ static void printMmcPinout(void) {
 
 static void sdStatistics(void) {
 	printMmcPinout();
-	scheduleMsg(&logger, "SD SPI=%s status=%s", (int)CONFIG(sdCardSpiDevice),
+	scheduleMsg(&logger, "SD enabled=%s status=%s", boolToString(CONFIG(isSdCardEnabled)),
 			sdStatus);
 	printSpiConfig(&logger, "SD", CONFIG(sdCardSpiDevice));
 	if (isSdCardAlive()) {
@@ -472,7 +472,7 @@ bool isSdCardAlive(void) {
 void initMmcCard(void) {
 	logName[0] = 0;
 	addConsoleAction("sdinfo", sdStatistics);
-	if (CONFIG(sdCardSpiDevice) == SPI_NONE) {
+	if (!CONFIG(isSdCardEnabled)) {
 		return;
 	}
 

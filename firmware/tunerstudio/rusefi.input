@@ -2696,11 +2696,12 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 		field = "Serial Baud Rate",						auxSerialSpeed @@if_ts_show_auxserial_pins
 	
 	dialog = sdCard, "SD Card Logger"
+		field = "Enable SD Card",						isSdCardEnabled
+		field = "showSdCardWarning",					showSdCardWarning
+		field = "CS Pin",								sdCardCsPin
 		field = "SPI",									sdCardSpiDevice
-		field = "CS Pin",								sdCardCsPin,		{ sdCardSpiDevice }
-		field = "showSdCardWarning",					showSdCardWarning,	{ sdCardSpiDevice }
-		field = "log format",							logFormat,			{ sdCardSpiDevice }
-		field = "Write Period",							sdCardPeriodMs,		{ sdCardSpiDevice }
+		field = "log format",							logFormat
+		field = "Write Period",							sdCardPeriodMs
 	
 	dialog = gpsReceiver, "GPS Receiver" 
 		field = "gps RX", 								gps_rx_pin
