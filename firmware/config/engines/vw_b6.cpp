@@ -8,6 +8,7 @@
 #include "engine.h"
 #include "vw_b6.h"
 #include "custom_engine.h"
+#include "table_helper.h"
 
 EXTERN_CONFIG;
 
@@ -75,6 +76,7 @@ void setVwPassatB6(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	// for now I just want to stop radiator whine
 	// todo: enable cooling!
 	engineConfiguration->gppwm[0].dutyIfError = 10;
+	setTable(engineConfiguration->gppwm[0].table, (uint8_t)10);
 	for (int load = 0; load < GPPWM_LOAD_COUNT; load++) {
 		for (int r = 0; r < GPPWM_RPM_COUNT; r++) {
 			engineConfiguration->gppwm[0].table[load][r] = 10;
@@ -86,4 +88,7 @@ void setVwPassatB6(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 
 	engineConfiguration->idle.solenoidPin = GPIO_UNASSIGNED;
 	engineConfiguration->fanPin = GPIO_UNASSIGNED;
+
+	CONFIG(useETBforIdleControl) = true;
+	engineConfiguration->crankingInjectionMode = IM_SEQUENTIAL;
 }
