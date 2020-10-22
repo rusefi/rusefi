@@ -84,7 +84,6 @@ typedef enum {
 
 #define CMD_SR_CODE			0x1a
 #define CMD_SR				CMD_W(CMD_SR_CODE, 0x03)
-// 0x238 = 568
 #define CMD_OE_SET			CMD_W(0x1c, 0x02)
 #define CMD_OE_CLR			CMD_W(0x1c, 0x01)
 #define CMD_UNLOCK			CMD_W(0x1e, 0x01)
@@ -578,6 +577,27 @@ static int tle8888_wake_driver(struct tle8888_priv *chip)
 	return 0;
 }
 
+static brain_pin_diag_e tle8888_2b_to_diag_no_temp(unsigned int bits)
+{
+	if (bits == 0x01)
+		return PIN_SHORT_TO_BAT;
+	if (bits == 0x02)
+		return PIN_OPEN;
+	if (bits == 0x03)
+		return PIN_SHORT_TO_GND;
+	return PIN_OK;
+}
+
+static brain_pin_diag_e tle8888_2b_to_diag_with_temp(unsigned int bits)
+{
+	brain_pin_diag_e diag = tle8888_2b_to_diag_no_temp(bits);
+
+	if (diag == PIN_SHORT_TO_BAT)
+		diag |= PIN_DRIVER_OVERTEMP;
+
+	return diag;
+}
+
 static int tle8888_chip_reset(struct tle8888_priv *chip) {
 	int ret;
 
@@ -911,27 +931,6 @@ static int tle8888_writePad(void *data, unsigned int pin, int value) {
 	return 0;
 }
 
-static brain_pin_diag_e tle8888_2b_to_diag_no_temp(unsigned int bits)
-{
-	if (bits == 0x01)
-		return PIN_SHORT_TO_BAT;
-	if (bits == 0x02)
-		return PIN_OPEN;
-	if (bits == 0x03)
-		return PIN_SHORT_TO_GND;
-	return PIN_OK;
-}
-
-static brain_pin_diag_e tle8888_2b_to_diag_with_temp(unsigned int bits)
-{
-	brain_pin_diag_e diag = tle8888_2b_to_diag_no_temp(bits);
-
-	if (diag == PIN_SHORT_TO_BAT)
-		diag |= PIN_DRIVER_OVERTEMP;
-
-	return diag;
-}
-
 static brain_pin_diag_e tle8888_getDiag(void *data, unsigned int pin)
 {
 	if ((pin >= TLE8888_OUTPUTS) || (data == NULL))
@@ -1007,8 +1006,6 @@ static int tle8888_chip_init_data(void * data) {
 	chip->o_pp_mask		= 0;
 
 	/* mark pins used */
-	// we do not initialize CS pin so we should not be marking it used - i'm sad
-	//ret = gpio_pin_markUsed(cfg->spi_config.ssport, cfg->spi_config.sspad, DRIVER_NAME " CS");
 	if (cfg->reset.port != NULL) {
 		ret |= gpio_pin_markUsed(cfg->reset.port, cfg->reset.pad, DRIVER_NAME " RST");
 		palSetPadMode(cfg->reset.port, cfg->reset.pad, PAL_MODE_OUTPUT_PUSHPULL);
@@ -1091,7 +1088,6 @@ static int tle8888_chip_init_data(void * data) {
 
 err_gpios:
 	/* unmark pins */
-	//gpio_pin_markUnused(cfg->spi_config.ssport, cfg->spi_config.sspad);
 	if (cfg->inj_en.port != NULL)
 		gpio_pin_markUnused(cfg->inj_en.port, cfg->inj_en.pad);
 	if (cfg->ign_en.port != NULL)
