@@ -838,6 +838,14 @@ static THD_FUNCTION(tle8888_driver_thread, p) {
 			if (ret) {
 				/* set state to TLE8888_FAILED or force reinit? */
 			}
+			/* TODO:
+			 * Procedure to switch on after failure condition occurred:
+			 *  - Read out of diagnosis bits
+			 *  - Second read out to verify that the failure conditions are not
+			 *    remaining
+			 *  - Set of the dedicated output enable bit of the affected channel
+			 *    if the diagnosis bit is not active anymore
+			 *  - Switch on of the channel */
 
 			chip->diag_ts = chTimeAddX(chVTGetSystemTimeX(), TIME_MS2I(DIAG_PERIOD_MS));
 		}
