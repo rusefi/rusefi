@@ -209,6 +209,7 @@ struct tle8888_priv {
 
 	/* diagnostic registers */
 	uint8_t						OutDiag[5];
+	uint8_t						PPOVDiag;
 	uint8_t						BriDiag[2];
 	uint8_t						IgnDiag;
 	/* status registers */
@@ -481,6 +482,7 @@ static int tle8888_update_status_and_diag(struct tle8888_priv *chip)
 		CMD_OUTDIAG(2),
 		CMD_OUTDIAG(3),
 		CMD_OUTDIAG(4),
+		CMD_PPOVDIAG,
 		CMD_BRIDIAG(0),
 		CMD_BRIDIAG(1),
 		CMD_IGNDIAG,
@@ -502,11 +504,12 @@ static int tle8888_update_status_and_diag(struct tle8888_priv *chip)
 		chip->OutDiag[2] = getDataFromResponse(rx[2 + 1]);
 		chip->OutDiag[3] = getDataFromResponse(rx[3 + 1]);
 		chip->OutDiag[4] = getDataFromResponse(rx[4 + 1]);
-		chip->BriDiag[0] = getDataFromResponse(rx[5 + 1]);
-		chip->BriDiag[1] = getDataFromResponse(rx[6 + 1]);
-		chip->IgnDiag    = getDataFromResponse(rx[7 + 1]);
-		chip->OpStat[0]  = getDataFromResponse(rx[8 + 1]);
-		chip->OpStat[1]  = getDataFromResponse(rx[9 + 1]);
+		chip->PPOVDiag   = getDataFromResponse(rx[5 + 1]);
+		chip->BriDiag[0] = getDataFromResponse(rx[6 + 1]);
+		chip->BriDiag[1] = getDataFromResponse(rx[7 + 1]);
+		chip->IgnDiag    = getDataFromResponse(rx[8 + 1]);
+		chip->OpStat[0]  = getDataFromResponse(rx[9 + 1]);
+		chip->OpStat[1]  = getDataFromResponse(rx[10 + 1]);
 	}
 
 	return ret;
@@ -928,24 +931,40 @@ static brain_pin_diag_e tle8888_getDiag(void *data, unsigned int pin)
 
 	struct tle8888_priv *chip = (struct tle8888_priv *)data;
 
+	/* OUT1..OUT4, indexes 0..3 */
 	if (pin < 4)
 		return tle8888_2b_to_diag_with_temp((chip->OutDiag[0] >> ((pin - 0) * 2)) & 0x03);
-	if (pin < 8) {
+	/* OUT5..OUT7, indexes 4..6 */
+	if (pin < 7) {
+		return tle8888_2b_to_diag_with_temp((chip->OutDiag[1] >> ((pin - 4) * 2)) & 0x03);
+	}
+	/* OUT8 to OUT13, indexes 7..12 */
+	if (pin < 13) {
+		brain_pin_diag_e ret;
+
+		/* OUT8 */
 		if (pin == 7)
-			return tle8888_2b_to_diag_no_temp((chip->OutDiag[1] >> ((pin - 4) * 2)) & 0x03);
-		else
-			return tle8888_2b_to_diag_with_temp((chip->OutDiag[1] >> ((pin - 4) * 2)) & 0x03);
+			ret = tle8888_2b_to_diag_no_temp((chip->OutDiag[1] >> 6) & 0x03);
+		/* OUT9..OUT12 */
+		else if (pin < 12)
+			ret = tle8888_2b_to_diag_no_temp((chip->OutDiag[2] >> ((pin - 8) * 2)) & 0x03);
+		/* OUT13 */
+		else /* if (pin == 12) */
+			ret = tle8888_2b_to_diag_no_temp((chip->OutDiag[3] >> 0) & 0x03);
+
+		/* overvoltage bit */
+		if (chip->PPOVDiag & BIT(pin - 7))
+			ret |= PIN_SHORT_TO_BAT;
+
+		return ret;
 	}
-	if (pin < 12)
-		return tle8888_2b_to_diag_with_temp((chip->OutDiag[2] >> ((pin - 8) * 2)) & 0x03);
-	if (pin < 16) {
-		if (pin == 12)
-			return tle8888_2b_to_diag_no_temp((chip->OutDiag[3] >> ((pin - 12) * 2)) & 0x03);
-		else
-			return tle8888_2b_to_diag_with_temp((chip->OutDiag[3] >> ((pin - 12) * 2)) & 0x03);
-	}
+	/* OUT14 to OUT16, indexes 13..15 */
+	if (pin < 16)
+		return tle8888_2b_to_diag_with_temp((chip->OutDiag[3] >> ((pin - 13 + 1) * 2)) & 0x03);
+	/* OUT17 to OUT20, indexes 16..19 */
 	if (pin < 20)
 		return tle8888_2b_to_diag_with_temp((chip->OutDiag[4] >> ((pin - 16) * 2)) & 0x03);
+	/* OUT21..OUT24, indexes 20..23 */
 	if (pin < 24) {
 		/* half bridges */
 		brain_pin_diag_e diag;
