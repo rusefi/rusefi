@@ -30,7 +30,6 @@
  */
 
 #include "global.h"
-#include "common.h"
 
 #include "gpio/tle8888.h"
 
@@ -747,9 +746,11 @@ static int tle8888_calc_sleep_interval(struct tle8888_priv *chip) {
 	sysinterval_t fwd_delay = chTimeDiffX(now, chip->fwd_ts);
 	sysinterval_t diag_delay = chTimeDiffX(now, chip->diag_ts);
 
-	sysinterval_t min = MIN(wwd_delay, MIN(fwd_delay, diag_delay));
-
-	return (min > 0) ? min : 0;
+	if ((diag_delay <= wwd_delay) && (diag_delay <= fwd_delay))
+		return diag_delay;
+	if (fwd_delay <= wwd_delay)
+		return fwd_delay;
+	return wwd_delay;
 }
 
 /*==========================================================================*/
