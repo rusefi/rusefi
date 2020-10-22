@@ -28,7 +28,9 @@ void initGpPwm(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 		auto& cfg = CONFIG(gppwm)[i];
 
 		// If no pin, don't enable this channel.
-		if (cfg.pin == GPIO_UNASSIGNED) continue;
+		if (cfg.pin == GPIO_UNASSIGNED) {
+			continue;
+		}
 
 		// Determine frequency and whether PWM is enabled
 		float freq = cfg.pwmFrequency;
