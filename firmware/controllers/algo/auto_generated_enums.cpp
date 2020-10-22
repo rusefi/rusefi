@@ -611,8 +611,8 @@ const char *getDebug_mode_e(debug_mode_e value){
 switch(value) {
 case DBG_16:
   return "DBG_16";
-case DBG_2:
-  return "DBG_2";
+case DBG_GPPWM:
+  return "DBG_GPPWM";
 case DBG_34:
   return "DBG_34";
 case DBG_43:

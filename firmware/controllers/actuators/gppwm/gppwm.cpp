@@ -50,7 +50,17 @@ void initGpPwm(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 }
 
 void updateGppwm() {
+	// There are only 8 debug float fields, this will overflow if more channels
+	static_assert(efi::size(channels) <= 8);
+
 	for (size_t i = 0; i < efi::size(channels); i++) {
-		channels[i].update();
+		float result = channels[i].update();
+
+#ifdef EFI_TUNER_STUDIO
+		if (CONFIG(debugMode) == DBG_GPPWM) {
+			float* debugFloats = &tsOutputChannels.debugFloatField1;
+			debugFloats[i] = result;
+		}
+#endif
 	}
 }
