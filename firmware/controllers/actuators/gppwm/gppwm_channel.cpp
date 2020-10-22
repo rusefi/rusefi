@@ -89,7 +89,7 @@ percent_t GppwmChannel::getOutput() const {
 float GppwmChannel::update() {
 	// Without a config, nothing to do.
 	if (!m_config) {
-		return;
+		return 0;
 	}
 
 	float output = getOutput();
