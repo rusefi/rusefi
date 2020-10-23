@@ -17,7 +17,7 @@ static FunctionalSensor fuelPressureSensorLow(SensorType::FuelPressureLow, /* ti
 static LinearFunc fuelPressureFuncHigh;
 static FunctionalSensor fuelPressureSensorHigh(SensorType::FuelPressureHigh, /* timeout = */ MS2NT(50));
 
-void configureFluidPressure(LinearFunc& func, const linear_sensor_s& cfg) {
+static void configureFluidPressure(LinearFunc& func, const linear_sensor_s& cfg) {
 	float val1 = cfg.value1;
 	float val2 = cfg.value2;
 
@@ -29,7 +29,7 @@ void configureFluidPressure(LinearFunc& func, const linear_sensor_s& cfg) {
 	func.configure(cfg.v1, val1, cfg.v2, val2, /*minOutput*/ -5, greaterOutput);
 }
 
-void initFluidPressure(LinearFunc& func, FunctionalSensor& sensor, const linear_sensor_s& cfg, float bandwidth) {
+static void initFluidPressure(LinearFunc& func, FunctionalSensor& sensor, const linear_sensor_s& cfg, float bandwidth) {
 	auto channel = cfg.hwChannel;
 
 	// Only register if we have a sensor
@@ -49,10 +49,12 @@ void initFluidPressure(LinearFunc& func, FunctionalSensor& sensor, const linear_
 
 void initOilPressure(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	initFluidPressure(oilpSensorFunc, oilpSensor, CONFIG(oilPressure), 10);
-	initFluidPressure(fuelPressureFuncLow, fuelPressureSensorLow, CONFIG(oilPressure), 10);
-	initFluidPressure(fuelPressureFuncHigh, fuelPressureSensorHigh, CONFIG(oilPressure), 100);
+	initFluidPressure(fuelPressureFuncLow, fuelPressureSensorLow, CONFIG(lowPressureFuel), 10);
+	initFluidPressure(fuelPressureFuncHigh, fuelPressureSensorHigh, CONFIG(highPressureFuel), 100);
 }
 
 void reconfigureOilPressure(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	configureFluidPressure(oilpSensorFunc, CONFIG(oilPressure));
+	configureFluidPressure(fuelPressureFuncLow, CONFIG(lowPressureFuel));
+	configureFluidPressure(fuelPressureFuncHigh, CONFIG(highPressureFuel));
 }
