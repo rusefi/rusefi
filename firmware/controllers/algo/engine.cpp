@@ -263,8 +263,6 @@ void Engine::updateSlowSensors(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 #if EFI_MC33816
 	initMc33816IfNeeded();
 #endif // EFI_MC33816
-
-	engineState.running.injectorLag = getInjectorLag(sensors.vBatt PASS_ENGINE_PARAMETER_SUFFIX);
 #endif
 }
 
