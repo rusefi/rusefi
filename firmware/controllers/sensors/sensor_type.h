@@ -26,6 +26,9 @@ enum class SensorType : unsigned char {
 
 	OilPressure,
 
+	FuelPressureLow,
+	FuelPressureHigh,
+
 	// This is the "resolved" position, potentially composited out of the following two
 	Tps1,
 	// This is the first sensor

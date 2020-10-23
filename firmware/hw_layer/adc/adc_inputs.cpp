@@ -571,9 +571,8 @@ static void configureInputs(void) {
 	addChannel("AFR", engineConfiguration->afr.hwChannel, ADC_SLOW);
 	addChannel("Oil Pressure", engineConfiguration->oilPressure.hwChannel, ADC_SLOW);
 
-	addChannel("HFP1", engineConfiguration->high_fuel_pressure_sensor_1, ADC_SLOW);
-	addChannel("HFP2", engineConfiguration->high_fuel_pressure_sensor_2, ADC_SLOW);
-	addChannel("LFP", engineConfiguration->low_fuel_pressure_sensor, ADC_SLOW);
+	addChannel("LFP", engineConfiguration->lowPressureFuel.hwChannel, ADC_SLOW);
+	addChannel("HFP", engineConfiguration->highPressureFuel.hwChannel, ADC_SLOW);
 
 
 	if (CONFIG(isCJ125Enabled)) {

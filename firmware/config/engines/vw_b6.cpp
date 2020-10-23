@@ -36,9 +36,9 @@ void setVwPassatB6(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	engineConfiguration->throttlePedalPositionAdcChannel = EFI_ADC_7;
 
 	// "26 - AN volt 2"
-	engineConfiguration->high_fuel_pressure_sensor_1 = EFI_ADC_6;
+	engineConfiguration->highPressureFuel.hwChannel = EFI_ADC_6;
 	// "19 - AN volt 4"
-	engineConfiguration->low_fuel_pressure_sensor = EFI_ADC_12;
+	engineConfiguration->lowPressureFuel.hwChannel = EFI_ADC_12;
 
 	CONFIG(isSdCardEnabled) = false;
 
