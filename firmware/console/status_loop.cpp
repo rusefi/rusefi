@@ -519,19 +519,11 @@ void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels DECLARE_
 	tsOutputChannels->rawClt = Sensor::getRaw(SensorType::Clt);
 	tsOutputChannels->rawIat = Sensor::getRaw(SensorType::Iat);
 	tsOutputChannels->rawOilPressure = Sensor::getRaw(SensorType::OilPressure);
+	tsOutputChannels->rawLowFuelPressure = Sensor::getRaw(SensorType::FuelPressureLow);
+	tsOutputChannels->rawHighFuelPressure = Sensor::getRaw(SensorType::FuelPressureHigh);
 
 	// offset 16
 	tsOutputChannels->massAirFlowVoltage = hasMafSensor() ? getMafVoltage(PASS_ENGINE_PARAMETER_SIGNATURE) : 0;
-
-
-	if (engineConfiguration->high_fuel_pressure_sensor_1 != EFI_ADC_NONE) {
-		tsOutputChannels->highFuelPressure1 = getVoltage("highFP", engineConfiguration->high_fuel_pressure_sensor_1 PASS_ENGINE_PARAMETER_SUFFIX);
-	}
-
-	if (engineConfiguration->low_fuel_pressure_sensor != EFI_ADC_NONE) {
-		tsOutputChannels->lowFuelPressure = getVoltage("lowFP", engineConfiguration->low_fuel_pressure_sensor PASS_ENGINE_PARAMETER_SUFFIX);
-	}
-
 
 	// offset 20
 	tsOutputChannels->airFuelRatio = Sensor::get(SensorType::Lambda).value_or(0) * 14.7f;
