@@ -325,9 +325,8 @@ static void printAnalogInfo(void) {
 	printAnalogChannelInfo("TPS1 Secondary", engineConfiguration->tps1_2AdcChannel);
 	printAnalogChannelInfo("TPS2 Primary", engineConfiguration->tps2_1AdcChannel);
 	printAnalogChannelInfo("TPS2 Secondary", engineConfiguration->tps2_2AdcChannel);
-	printAnalogChannelInfo("LPF", engineConfiguration->low_fuel_pressure_sensor);
-	printAnalogChannelInfo("HPF1", engineConfiguration->high_fuel_pressure_sensor_1);
-	printAnalogChannelInfo("HPF2", engineConfiguration->high_fuel_pressure_sensor_2);
+	printAnalogChannelInfo("LPF", engineConfiguration->lowPressureFuel.hwChannel);
+	printAnalogChannelInfo("HPF", engineConfiguration->highPressureFuel.hwChannel);
 	printAnalogChannelInfo("pPS1", engineConfiguration->throttlePedalPositionAdcChannel);
 	printAnalogChannelInfo("pPS2", engineConfiguration->throttlePedalPositionSecondAdcChannel);
 	printAnalogChannelInfo("CLT", engineConfiguration->clt.adcChannel);
