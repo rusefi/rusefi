@@ -98,7 +98,7 @@ void setVwPassatB6(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 		}
 	}
 */
-	coolantControl->pin = GPIOE_10; // "3 - Lowside 2"
+	coolantControl->pin = TLE8888_PIN_5; // "3 - Lowside 2"
 
 
 	engineConfiguration->idle.solenoidPin = GPIO_UNASSIGNED;

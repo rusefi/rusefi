@@ -37,10 +37,10 @@ const ConfigOverrides& getConfigOverrides() {
 }
 
 static void setInjectorPins() {
-	engineConfiguration->injectionPins[0] = TLE8888_PIN_1; //GPIOE_14;
-	engineConfiguration->injectionPins[1] = TLE8888_PIN_2; //GPIOE_13;
-	engineConfiguration->injectionPins[2] = TLE8888_PIN_3; //GPIOE_12;
-	engineConfiguration->injectionPins[3] = TLE8888_PIN_4; //GPIOE_11;
+	engineConfiguration->injectionPins[0] = TLE8888_PIN_1;
+	engineConfiguration->injectionPins[1] = TLE8888_PIN_2;
+	engineConfiguration->injectionPins[2] = TLE8888_PIN_3;
+	engineConfiguration->injectionPins[3] = TLE8888_PIN_4;
 
 	// Disable remainder
 	for (int i = 4; i < INJECTION_PIN_COUNT;i++) {
@@ -211,7 +211,7 @@ void setBoardConfigurationOverrides(void) {
 	// rusEfi firmware is totally not involved with main relay control on microRusEfi board
 	// todo: maybe even set EFI_MAIN_RELAY_CONTROL to FALSE for MRE configuration
 	// TLE8888 half bridges (pushpull, lowside, or high-low)  TLE8888_IN11 / TLE8888_OUT21
-	// GPIOE_8: "35 - GP Out 1"
+	// TLE8888_PIN_21: "35 - GP Out 1"
 	engineConfiguration->fuelPumpPin = TLE8888_PIN_21;
 
 	engineConfiguration->sdCardSpiDevice = SPI_DEVICE_3;
