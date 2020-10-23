@@ -30,7 +30,8 @@ void configureFluidPressure(LinearFunc& func, const linear_sensor_s& cfg) {
 }
 
 void initFluidPressure(LinearFunc& func, FunctionalSensor& sensor, const linear_sensor_s& cfg, float bandwidth) {
-	auto channel = cfg.channel;
+	auto channel = cfg.hwChannel;
+
 	// Only register if we have a sensor
 	if (channel == EFI_ADC_NONE) {
 		return;
@@ -47,9 +48,9 @@ void initFluidPressure(LinearFunc& func, FunctionalSensor& sensor, const linear_
 }
 
 void initOilPressure(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
-	initFluidPressure(oilpSensorFunc, oilpSensor, CONFIG(oilPressure));
-	initFluidPressure(fuelPressureFuncLow, fuelPressureSensorLow, CONFIG(oilPressure));
-	initFluidPressure(fuelPressureFuncHigh, fuelPressureSensorHigh, CONFIG(oilPressure));
+	initFluidPressure(oilpSensorFunc, oilpSensor, CONFIG(oilPressure), 10);
+	initFluidPressure(fuelPressureFuncLow, fuelPressureSensorLow, CONFIG(oilPressure), 10);
+	initFluidPressure(fuelPressureFuncHigh, fuelPressureSensorHigh, CONFIG(oilPressure), 100);
 }
 
 void reconfigureOilPressure(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
