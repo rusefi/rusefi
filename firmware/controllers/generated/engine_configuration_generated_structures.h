@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Thu Oct 22 02:51:02 UTC 2020
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Fri Oct 23 11:33:01 UTC 2020
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -318,11 +318,11 @@ struct thermistor_conf_s {
 typedef struct thermistor_conf_s thermistor_conf_s;
 
 /**
- * @brief Oil pressure sensor interpolation
+ * @brief Linear sensor interpolation
 
 */
-// start of oil_pressure_config_s
-struct oil_pressure_config_s {
+// start of linear_sensor_s
+struct linear_sensor_s {
 	/**
 	 * offset 0
 	 */
@@ -350,7 +350,7 @@ struct oil_pressure_config_s {
 	/** total size 20*/
 };
 
-typedef struct oil_pressure_config_s oil_pressure_config_s;
+typedef struct linear_sensor_s linear_sensor_s;
 
 /**
  * @brief Thermistor curve parameters
@@ -1022,11 +1022,11 @@ struct engine_configuration_s {
 	/**
 	 * offset 541
 	 */
-	adc_channel_e high_fuel_pressure_sensor_1;
+	uint8_t unused541;
 	/**
 	 * offset 542
 	 */
-	adc_channel_e high_fuel_pressure_sensor_2;
+	uint8_t unused542;
 	/**
 	 * See hasMafSensor
 	 * offset 543
@@ -2776,11 +2776,7 @@ struct engine_configuration_s {
 	/**
 	 * offset 2129
 	 */
-	uint8_t unused_former_warmup_target_afr[2];
-	/**
-	 * offset 2131
-	 */
-	adc_channel_e low_fuel_pressure_sensor;
+	uint8_t unused_former_warmup_target_afr[3];
 	/**
 	 * MAP value above which fuel is cut in case of overboost.
 	 * 0 to disable overboost cut.
@@ -3058,7 +3054,7 @@ struct engine_configuration_s {
 	/**
 	 * offset 2692
 	 */
-	oil_pressure_config_s oilPressure;
+	linear_sensor_s oilPressure;
 	/**
 	 * offset 2712
 	 */
@@ -3198,7 +3194,15 @@ struct engine_configuration_s {
 	/**
 	 * offset 3288
 	 */
-	uint8_t unused3288[576];
+	linear_sensor_s highPressureFuel;
+	/**
+	 * offset 3308
+	 */
+	linear_sensor_s lowPressureFuel;
+	/**
+	 * offset 3328
+	 */
+	uint8_t unused3328[536];
 	/**
 	 * offset 3864
 	 */
@@ -3741,4 +3745,4 @@ struct persistent_config_s {
 typedef struct persistent_config_s persistent_config_s;
 
 // end
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Thu Oct 22 02:51:02 UTC 2020
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Fri Oct 23 11:33:01 UTC 2020

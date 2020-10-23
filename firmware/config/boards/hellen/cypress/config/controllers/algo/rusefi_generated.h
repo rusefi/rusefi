@@ -646,6 +646,8 @@
 #define GAUGE_NAME_FUEL_LAST_INJECTION "fuel: Last injection"
 #define GAUGE_NAME_FUEL_LOAD "fuel: load"
 #define GAUGE_NAME_FUEL_PID_CORR "fuel: Short-term fuel trim"
+#define GAUGE_NAME_FUEL_PRESSURE_HIGH "Fuel pressure (high)"
+#define GAUGE_NAME_FUEL_PRESSURE_LOW "Fuel pressure (low)"
 #define GAUGE_NAME_FUEL_RUNNING "fuel: running"
 #define GAUGE_NAME_FUEL_TPS_EXTRA "fuel: TPS acceleration extra fuel ms"
 #define GAUGE_NAME_FUEL_TPS_ROC "fuel: TPS change"
@@ -755,8 +757,13 @@
 #define HD44780_rs_offset 650
 #define HD44780height_offset 508
 #define HD44780width_offset 504
-#define high_fuel_pressure_sensor_1_offset 541
-#define high_fuel_pressure_sensor_2_offset 542
+#define highPressureFuel_alignmentFill_offset 3289
+#define highPressureFuel_hwChannel_offset 3288
+#define highPressureFuel_offset 3288
+#define highPressureFuel_v1_offset 3292
+#define highPressureFuel_v2_offset 3300
+#define highPressureFuel_value1_offset 3296
+#define highPressureFuel_value2_offset 3304
 #define hip9011CsPin_offset 753
 #define hip9011CsPinMode_offset 703
 #define hip9011Gain_offset 3952
@@ -989,6 +996,7 @@
 #define LDS_TRIGGER_CENTRAL_STATE_INDEX 6
 #define LDS_TRIGGER_STATE_STATE_INDEX 11
 #define LE_COMMAND_LENGTH 200
+#define linear_sensor_s_size 20
 #define LIS302DLCsPin_offset 2043
 #define LIS302DLCsPinMode_offset 2417
 #define LOAD_1_BYTE_PACKING_MULT 2
@@ -999,7 +1007,13 @@
 #define logicAnalyzerPins2_offset 749
 #define logicAnalyzerPins3_offset 750
 #define logicAnalyzerPins4_offset 751
-#define low_fuel_pressure_sensor_offset 2131
+#define lowPressureFuel_alignmentFill_offset 3309
+#define lowPressureFuel_hwChannel_offset 3308
+#define lowPressureFuel_offset 3308
+#define lowPressureFuel_v1_offset 3312
+#define lowPressureFuel_v2_offset 3320
+#define lowPressureFuel_value1_offset 3316
+#define lowPressureFuel_value2_offset 3324
 #define MAF_DECODING_COUNT 256
 #define maf_sensor_type_e_auto_enum "CUSTOM", "Bosch0280218037", "Bosch0280218004", "DensoTODO"
 #define maf_sensor_type_e_enum "v0", "v1", "v2", "v3"
@@ -1088,7 +1102,6 @@
 #define noAccelAfterHardLimitPeriodSecs_offset 1536
 #define o2heaterPin_offset 742
 #define o2heaterPinModeTodO_offset 743
-#define oil_pressure_config_s_size 20
 #define oilPressure_alignmentFill_offset 2693
 #define oilPressure_hwChannel_offset 2692
 #define oilPressure_offset 2692
@@ -1105,6 +1118,7 @@
 #define PACK_MULT_AFR_CFG 10
 #define PACK_MULT_ANGLE 50
 #define PACK_MULT_FUEL_MASS 100
+#define PACK_MULT_HIGH_PRESSURE 10
 #define PACK_MULT_MASS_FLOW 10
 #define PACK_MULT_MS 300
 #define PACK_MULT_PERCENT 100
@@ -1180,8 +1194,8 @@
 #define showHumanReadableWarning_offset 976
 #define showSdCardWarning_offset 76
 #define SIGNATURE_BOARD hellen_cypress
-#define SIGNATURE_DATE 2020.10.22
-#define SIGNATURE_HASH 417408006
+#define SIGNATURE_DATE 2020.10.23
+#define SIGNATURE_HASH 922574575
 #define silentTriggerError_offset 1464
 #define slowAdcAlpha_offset 2088
 #define sparkDwellRpmBins_offset 332
@@ -1500,7 +1514,7 @@
 #define ts_show_spi true
 #define ts_show_trigger_comparator false
 #define ts_show_tunerstudio_port true
-#define TS_SIGNATURE "rusEFI 2020.10.22.hellen_cypress.417408006"
+#define TS_SIGNATURE "rusEFI 2020.10.23.hellen_cypress.922574575"
 #define TS_SINGLE_WRITE_COMMAND 'W'
 #define TS_SINGLE_WRITE_COMMAND_char W
 #define TS_TEST_COMMAND 't' // 0x74
@@ -1533,7 +1547,9 @@
 #define unused244_3_offset 2428
 #define unused2508_offset 2508
 #define unused2536_offset 2536
-#define unused3288_offset 3288
+#define unused3328_offset 3328
+#define unused541_offset 541
+#define unused542_offset 542
 #define unused6312_offset 6312
 #define unused744b25_offset 744
 #define unused744b4_offset 744

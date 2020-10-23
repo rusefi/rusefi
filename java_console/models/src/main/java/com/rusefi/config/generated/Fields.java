@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEfi tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Thu Oct 22 02:51:02 UTC 2020
+// this file was generated automatically by rusEfi tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Fri Oct 23 11:33:01 UTC 2020
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -627,6 +627,8 @@ public class Fields {
 	public static final String GAUGE_NAME_FUEL_LAST_INJECTION = "fuel: Last injection";
 	public static final String GAUGE_NAME_FUEL_LOAD = "fuel: load";
 	public static final String GAUGE_NAME_FUEL_PID_CORR = "fuel: Short-term fuel trim";
+	public static final String GAUGE_NAME_FUEL_PRESSURE_HIGH = "Fuel pressure (high)";
+	public static final String GAUGE_NAME_FUEL_PRESSURE_LOW = "Fuel pressure (low)";
 	public static final String GAUGE_NAME_FUEL_RUNNING = "fuel: running";
 	public static final String GAUGE_NAME_FUEL_TPS_EXTRA = "fuel: TPS acceleration extra fuel ms";
 	public static final String GAUGE_NAME_FUEL_TPS_ROC = "fuel: TPS change";
@@ -734,8 +736,13 @@ public class Fields {
 	public static final int HD44780_rs_offset = 650;
 	public static final int HD44780height_offset = 508;
 	public static final int HD44780width_offset = 504;
-	public static final int high_fuel_pressure_sensor_1_offset = 541;
-	public static final int high_fuel_pressure_sensor_2_offset = 542;
+	public static final int highPressureFuel_alignmentFill_offset = 3289;
+	public static final int highPressureFuel_hwChannel_offset = 3288;
+	public static final int highPressureFuel_offset = 3288;
+	public static final int highPressureFuel_v1_offset = 3292;
+	public static final int highPressureFuel_v2_offset = 3300;
+	public static final int highPressureFuel_value1_offset = 3296;
+	public static final int highPressureFuel_value2_offset = 3304;
 	public static final int hip9011CsPin_offset = 753;
 	public static final int hip9011CsPinMode_offset = 703;
 	public static final int hip9011Gain_offset = 3952;
@@ -963,6 +970,7 @@ public class Fields {
 	public static final int LDS_TRIGGER_CENTRAL_STATE_INDEX = 6;
 	public static final int LDS_TRIGGER_STATE_STATE_INDEX = 11;
 	public static final int LE_COMMAND_LENGTH = 200;
+	public static final int linear_sensor_s_size = 20;
 	public static final int LIS302DLCsPin_offset = 2043;
 	public static final int LIS302DLCsPinMode_offset = 2417;
 	public static final int LOAD_1_BYTE_PACKING_MULT = 2;
@@ -972,7 +980,13 @@ public class Fields {
 	public static final int logicAnalyzerPins2_offset = 749;
 	public static final int logicAnalyzerPins3_offset = 750;
 	public static final int logicAnalyzerPins4_offset = 751;
-	public static final int low_fuel_pressure_sensor_offset = 2131;
+	public static final int lowPressureFuel_alignmentFill_offset = 3309;
+	public static final int lowPressureFuel_hwChannel_offset = 3308;
+	public static final int lowPressureFuel_offset = 3308;
+	public static final int lowPressureFuel_v1_offset = 3312;
+	public static final int lowPressureFuel_v2_offset = 3320;
+	public static final int lowPressureFuel_value1_offset = 3316;
+	public static final int lowPressureFuel_value2_offset = 3324;
 	public static final int MAF_DECODING_COUNT = 256;
 	public static final int mafAdcChannel_offset = 543;
 	public static final int mafDecoding_offset = 10784;
@@ -1059,7 +1073,6 @@ public class Fields {
 	public static final int noAccelAfterHardLimitPeriodSecs_offset = 1536;
 	public static final int o2heaterPin_offset = 742;
 	public static final int o2heaterPinModeTodO_offset = 743;
-	public static final int oil_pressure_config_s_size = 20;
 	public static final int oilPressure_alignmentFill_offset = 2693;
 	public static final int oilPressure_hwChannel_offset = 2692;
 	public static final int oilPressure_offset = 2692;
@@ -1074,6 +1087,7 @@ public class Fields {
 	public static final int PACK_MULT_AFR_CFG = 10;
 	public static final int PACK_MULT_ANGLE = 50;
 	public static final int PACK_MULT_FUEL_MASS = 100;
+	public static final int PACK_MULT_HIGH_PRESSURE = 10;
 	public static final int PACK_MULT_MASS_FLOW = 10;
 	public static final int PACK_MULT_MS = 300;
 	public static final int PACK_MULT_PERCENT = 100;
@@ -1405,7 +1419,7 @@ public class Fields {
 	public static final char TS_SD_R_COMMAND = 'r';
 	public static final char TS_SD_W_COMMAND = 'w';
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI 2020.10.22.all.2720408952";
+	public static final String TS_SIGNATURE = "rusEFI 2020.10.23.all.2352635793";
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final int TT_TT_60_2_VW = 20;
 	public static final int TT_TT_ONE = 18;
@@ -1435,7 +1449,9 @@ public class Fields {
 	public static final int unused244_3_offset = 2428;
 	public static final int unused2508_offset = 2508;
 	public static final int unused2536_offset = 2536;
-	public static final int unused3288_offset = 3288;
+	public static final int unused3328_offset = 3328;
+	public static final int unused541_offset = 541;
+	public static final int unused542_offset = 542;
 	public static final int unused6312_offset = 6312;
 	public static final int unused744b25_offset = 744;
 	public static final int unused744b4_offset = 744;
@@ -1698,8 +1714,8 @@ public class Fields {
 	public static final Field TRIGGER_CUSTOMTOTALTOOTHCOUNT = Field.create("TRIGGER_CUSTOMTOTALTOOTHCOUNT", 532, FieldType.INT);
 	public static final Field TRIGGER_CUSTOMSKIPPEDTOOTHCOUNT = Field.create("TRIGGER_CUSTOMSKIPPEDTOOTHCOUNT", 536, FieldType.INT);
 	public static final Field HIP9011SPIDEVICE = Field.create("HIP9011SPIDEVICE", 540, FieldType.INT8);
-	public static final Field HIGH_FUEL_PRESSURE_SENSOR_1 = Field.create("HIGH_FUEL_PRESSURE_SENSOR_1", 541, FieldType.INT8, adc_channel_e);
-	public static final Field HIGH_FUEL_PRESSURE_SENSOR_2 = Field.create("HIGH_FUEL_PRESSURE_SENSOR_2", 542, FieldType.INT8, adc_channel_e);
+	public static final Field UNUSED541 = Field.create("UNUSED541", 541, FieldType.INT8);
+	public static final Field UNUSED542 = Field.create("UNUSED542", 542, FieldType.INT8);
 	public static final Field MAFADCCHANNEL = Field.create("MAFADCCHANNEL", 543, FieldType.INT8, adc_channel_e);
 	public static final Field GLOBALFUELCORRECTION = Field.create("GLOBALFUELCORRECTION", 544, FieldType.FLOAT);
 	public static final Field ADCVCC = Field.create("ADCVCC", 548, FieldType.FLOAT);
@@ -2340,7 +2356,6 @@ public class Fields {
 	public static final Field STARTERCONTROLPINMODE = Field.create("STARTERCONTROLPINMODE", 2126, FieldType.INT8, pin_output_mode_e);
 	public static final Field WASTEGATEPOSITIONSENSOR = Field.create("WASTEGATEPOSITIONSENSOR", 2127, FieldType.INT8, adc_channel_e);
 	public static final Field IGNOVERRIDEMODE = Field.create("IGNOVERRIDEMODE", 2128, FieldType.INT8, afr_override_e);
-	public static final Field LOW_FUEL_PRESSURE_SENSOR = Field.create("LOW_FUEL_PRESSURE_SENSOR", 2131, FieldType.INT8, adc_channel_e);
 	public static final Field BOOSTCUTPRESSURE = Field.create("BOOSTCUTPRESSURE", 2132, FieldType.FLOAT);
 	public static final Field FSIOADC1 = Field.create("FSIOADC1", 2200, FieldType.INT8, adc_channel_e);
 	public static final Field FSIOADC2 = Field.create("FSIOADC2", 2201, FieldType.INT8, adc_channel_e);
@@ -2493,6 +2508,16 @@ public class Fields {
 	public static final Field COASTINGFUELCUTCLT = Field.create("COASTINGFUELCUTCLT", 3154, FieldType.INT16);
 	public static final Field PIDEXTRAFORLOWRPM = Field.create("PIDEXTRAFORLOWRPM", 3156, FieldType.INT16);
 	public static final Field COASTINGFUELCUTMAP = Field.create("COASTINGFUELCUTMAP", 3158, FieldType.INT16);
+	public static final Field HIGHPRESSUREFUEL_HWCHANNEL = Field.create("HIGHPRESSUREFUEL_HWCHANNEL", 3288, FieldType.INT8, adc_channel_e);
+	public static final Field HIGHPRESSUREFUEL_V1 = Field.create("HIGHPRESSUREFUEL_V1", 3292, FieldType.FLOAT);
+	public static final Field HIGHPRESSUREFUEL_VALUE1 = Field.create("HIGHPRESSUREFUEL_VALUE1", 3296, FieldType.FLOAT);
+	public static final Field HIGHPRESSUREFUEL_V2 = Field.create("HIGHPRESSUREFUEL_V2", 3300, FieldType.FLOAT);
+	public static final Field HIGHPRESSUREFUEL_VALUE2 = Field.create("HIGHPRESSUREFUEL_VALUE2", 3304, FieldType.FLOAT);
+	public static final Field LOWPRESSUREFUEL_HWCHANNEL = Field.create("LOWPRESSUREFUEL_HWCHANNEL", 3308, FieldType.INT8, adc_channel_e);
+	public static final Field LOWPRESSUREFUEL_V1 = Field.create("LOWPRESSUREFUEL_V1", 3312, FieldType.FLOAT);
+	public static final Field LOWPRESSUREFUEL_VALUE1 = Field.create("LOWPRESSUREFUEL_VALUE1", 3316, FieldType.FLOAT);
+	public static final Field LOWPRESSUREFUEL_V2 = Field.create("LOWPRESSUREFUEL_V2", 3320, FieldType.FLOAT);
+	public static final Field LOWPRESSUREFUEL_VALUE2 = Field.create("LOWPRESSUREFUEL_VALUE2", 3324, FieldType.FLOAT);
 	public static final Field TCHARGEAIRCOEFMIN = Field.create("TCHARGEAIRCOEFMIN", 3864, FieldType.FLOAT);
 	public static final Field TCHARGEAIRCOEFMAX = Field.create("TCHARGEAIRCOEFMAX", 3868, FieldType.FLOAT);
 	public static final Field TCHARGEAIRFLOWMAX = Field.create("TCHARGEAIRFLOWMAX", 3872, FieldType.FLOAT);
@@ -2762,8 +2787,8 @@ public class Fields {
 	TRIGGER_CUSTOMTOTALTOOTHCOUNT,
 	TRIGGER_CUSTOMSKIPPEDTOOTHCOUNT,
 	HIP9011SPIDEVICE,
-	HIGH_FUEL_PRESSURE_SENSOR_1,
-	HIGH_FUEL_PRESSURE_SENSOR_2,
+	UNUSED541,
+	UNUSED542,
 	MAFADCCHANNEL,
 	GLOBALFUELCORRECTION,
 	ADCVCC,
@@ -3389,7 +3414,6 @@ public class Fields {
 	STARTERCONTROLPINMODE,
 	WASTEGATEPOSITIONSENSOR,
 	IGNOVERRIDEMODE,
-	LOW_FUEL_PRESSURE_SENSOR,
 	BOOSTCUTPRESSURE,
 	FSIOADC1,
 	FSIOADC2,
@@ -3540,6 +3564,16 @@ public class Fields {
 	COASTINGFUELCUTCLT,
 	PIDEXTRAFORLOWRPM,
 	COASTINGFUELCUTMAP,
+	HIGHPRESSUREFUEL_HWCHANNEL,
+	HIGHPRESSUREFUEL_V1,
+	HIGHPRESSUREFUEL_VALUE1,
+	HIGHPRESSUREFUEL_V2,
+	HIGHPRESSUREFUEL_VALUE2,
+	LOWPRESSUREFUEL_HWCHANNEL,
+	LOWPRESSUREFUEL_V1,
+	LOWPRESSUREFUEL_VALUE1,
+	LOWPRESSUREFUEL_V2,
+	LOWPRESSUREFUEL_VALUE2,
 	TCHARGEAIRCOEFMIN,
 	TCHARGEAIRCOEFMAX,
 	TCHARGEAIRFLOWMAX,
