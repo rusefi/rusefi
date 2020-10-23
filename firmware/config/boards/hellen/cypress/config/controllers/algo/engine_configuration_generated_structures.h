@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on hellen_cypress_gen_config.bat integration/rusefi_config.txt Fri Oct 23 16:24:50 UTC 2020
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on hellen_cypress_gen_config.bat integration/rusefi_config.txt Fri Oct 23 19:47:42 UTC 2020
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -2774,9 +2774,14 @@ struct engine_configuration_s {
 	 */
 	afr_override_e ignOverrideMode;
 	/**
+	 * Select which fuel pressure sensor measures the pressure of the fuel at your injectors.
 	 * offset 2129
 	 */
-	uint8_t unused_former_warmup_target_afr[3];
+	injector_pressure_type_e injectorPressureType;
+	/**
+	 * offset 2130
+	 */
+	uint8_t unused_former_warmup_target_afr[2];
 	/**
 	 * MAP value above which fuel is cut in case of overboost.
 	 * 0 to disable overboost cut.
@@ -3745,4 +3750,4 @@ struct persistent_config_s {
 typedef struct persistent_config_s persistent_config_s;
 
 // end
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on hellen_cypress_gen_config.bat integration/rusefi_config.txt Fri Oct 23 16:24:50 UTC 2020
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on hellen_cypress_gen_config.bat integration/rusefi_config.txt Fri Oct 23 19:47:42 UTC 2020

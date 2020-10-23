@@ -1,7 +1,7 @@
 #include "global.h"
 #include "rusefi_enums.h"
 #include "rusefi_hw_enums.h"
-// was generated automatically by rusEfi tool  from rusefi_hw_enums.h // was generated automatically by rusEfi tool  from rusefi_enums.h // by enum2string.jar tool on Thu Oct 22 02:50:59 UTC 2020
+// was generated automatically by rusEfi tool  from rusefi_hw_enums.h // was generated automatically by rusEfi tool  from rusefi_enums.h // by enum2string.jar tool on Fri Oct 23 19:47:24 UTC 2020
 // see also gen_config_and_enums.bat
 
 
@@ -1040,6 +1040,15 @@ case IM_SIMULTANEOUS:
   return "IM_SIMULTANEOUS";
 case IM_SINGLE_POINT:
   return "IM_SINGLE_POINT";
+  }
+ return NULL;
+}
+const char *getInjector_pressure_type_e(injector_pressure_type_e value){
+switch(value) {
+case IPT_High:
+  return "IPT_High";
+case IPT_Low:
+  return "IPT_Low";
   }
  return NULL;
 }
