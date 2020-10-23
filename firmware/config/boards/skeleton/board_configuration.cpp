@@ -195,13 +195,13 @@ void setBoardConfigurationOverrides(void) {
 
 	// Configure the TLE8888 half bridges (pushpull, lowside, or high-low)
 	// TLE8888_IN11 -> TLE8888_OUT21
-	// GPIOE_8: "35 - GP Out 1"
-	engineConfiguration->fuelPumpPin = GPIOE_8;
+	// TLE8888_PIN_21: "35 - GP Out 1"
+	engineConfiguration->fuelPumpPin = TLE8888_PIN_21;
 
 
 	// TLE8888 high current low side: VVT2 IN9 / OUT5
-	// GPIOE_10: "3 - Lowside 2"
-	engineConfiguration->idle.solenoidPin = GPIOE_10;
+	// TLE8888_PIN_4: "3 - Lowside 2"
+	engineConfiguration->idle.solenoidPin = TLE8888_PIN_5;
 
 
 	// TLE8888_PIN_22: "34 - GP Out 2"

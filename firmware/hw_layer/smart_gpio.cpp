@@ -122,20 +122,29 @@ struct tle8888_config tle8888_cfg = {
 		.cr2 = SPI_CR2_16BIT_MODE
 	},
 	.reset =  {.port = NULL,	.pad = 0},
-	.direct_io = {
-		[0] = {.port = GPIOE,	.pad = 10,	.output =  5},
-		[1] = {.port = GPIOE,	.pad = 9,	.output =  6},
-		[2] = {.port = GPIOE,	.pad = 8,	.output = 21},
-		[3] = {.port = NULL,	.pad = 0,	.output = 15},
-//		[3] = {.port = GPIOE,	.pad = 7,	.output = 22},
-
-
-/*
-		[0] = {.port = NULL,	.pad = 0,	.output = 9},
-		[1] = {.port = NULL,	.pad = 0,	.output = 10},
-		[2] = {.port = NULL,	.pad = 0,	.output = 11},
-		[3] = {.port = NULL,	.pad = 0,	.output = 12},
-*/
+	.direct_gpio = {
+		/* IN1..4 -> OUT1..OUT4 (Injectors) */
+		[0] = {.port = GPIOE,	.pad = 14},
+		[1] = {.port = GPIOE,	.pad = 13},
+		[2] = {.port = GPIOE,	.pad = 12},
+		[3] = {.port = GPIOE,	.pad = 11},
+		/* IN5..8 -> IGN1..IGN4 (Ignotors) */
+		/* Not used */
+		[4] = {.port = NULL,	.pad = 0},
+		[5] = {.port = NULL,	.pad = 0},
+		[6] = {.port = NULL,	.pad = 0},
+		[7] = {.port = NULL,	.pad = 0},
+		/* Remapable IN9..12 */
+		[8] = {.port = GPIOE,	.pad = 10},
+		[9] = {.port = GPIOE,	.pad = 9},
+		[10] = {.port = GPIOE,	.pad = 8},
+		[11] = {.port = GPIOE,	.pad = 7},
+	},
+	.direct_maps = {
+		[0] = {.output =  5},
+		[1] = {.output =  6},
+		[2] = {.output = 21},
+		[3] = {.output = 22},
 	},
 	.ign_en =  {.port = GPIOD,	.pad = 10},
 	.inj_en =  {.port = GPIOD,	.pad = 11},
