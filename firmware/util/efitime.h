@@ -53,6 +53,7 @@ efitimeus_t getTimeNowUs(void);
  *
  * See getTimeNowLowerNt for a quicker version which returns only lower 32 bits
  * Lower 32 bits are enough if all we need is to measure relatively short time durations
+ * (BTW 2^32 cpu cycles at 168MHz is 25.59 seconds)
  */
 efitick_t getTimeNowNt(void);
 

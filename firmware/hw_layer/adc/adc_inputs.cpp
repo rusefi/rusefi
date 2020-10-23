@@ -248,13 +248,18 @@ static void fast_adc_callback(GPTDriver*) {
 }
 #endif /* HAL_USE_GPT */
 
-float getMCUInternalTemperature(void) {
+float getMCUInternalTemperature() {
 #if defined(ADC_CHANNEL_SENSOR)
-	float TemperatureValue = adcToVolts(slowAdc.getAdcValueByHwChannel(ADC_CHANNEL_SENSOR));
-	TemperatureValue -= 0.760; // Subtract the reference voltage at 25 deg C
-	TemperatureValue /= .0025; // Divide by slope 2.5mV
+	float TemperatureValue = adcToVolts(slowAdc.getAdcValueByHwChannel(EFI_ADC_TEMP_SENSOR));
+	TemperatureValue -= 0.760f; // Subtract the reference voltage at 25 deg C
+	TemperatureValue /= 0.0025f; // Divide by slope 2.5mV
 
 	TemperatureValue += 25.0; // Add the 25 deg C
+
+	if (TemperatureValue > 150.0f || TemperatureValue < -50.0f) {
+		firmwareError(OBD_PCM_Processor_Fault, "Invalid CPU temperature measured!");
+	}
+
 	return TemperatureValue;
 #else
 	return 0;
@@ -565,10 +570,9 @@ static void configureInputs(void) {
 
 	addChannel("AFR", engineConfiguration->afr.hwChannel, ADC_SLOW);
 	addChannel("Oil Pressure", engineConfiguration->oilPressure.hwChannel, ADC_SLOW);
-	addChannel("HFP1", engineConfiguration->high_fuel_pressure_sensor_1, ADC_SLOW);
 
-
-	addChannel("HFP2", engineConfiguration->high_fuel_pressure_sensor_2, ADC_SLOW);
+	addChannel("LFP", engineConfiguration->lowPressureFuel.hwChannel, ADC_SLOW);
+	addChannel("HFP", engineConfiguration->highPressureFuel.hwChannel, ADC_SLOW);
 
 
 	if (CONFIG(isCJ125Enabled)) {
@@ -620,7 +624,7 @@ void initAdcInputs() {
 
 #if defined(ADC_CHANNEL_SENSOR)
 	// Internal temperature sensor, Available on ADC1 only
-	slowAdc.enableChannel((adc_channel_e)ADC_CHANNEL_SENSOR);
+	slowAdc.enableChannel(EFI_ADC_TEMP_SENSOR);
 #endif /* ADC_CHANNEL_SENSOR */
 
 	slowAdc.init();

@@ -50,7 +50,9 @@ CONTROLLERS_SRC_CPP = \
 	$(CONTROLLERS_DIR)/serial/serial_sensor.cpp \
 	$(CONTROLLERS_DIR)/buttonshift.cpp \
 	$(CONTROLLERS_DIR)/tcu.cpp \
+	$(CONTROLLERS_DIR)/gear_controller.cpp \
 	$(CONTROLLERS_DIR)/start_stop.cpp \
+	$(CONTROLLERS_DIR)/simple_tcu.cpp \
 
 CONTROLLERS_INC=\
 	$(CONTROLLERS_DIR) \

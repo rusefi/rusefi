@@ -203,7 +203,7 @@ public class Backend implements Closeable {
                     applications.add(applicationConnectionState);
                 }
 
-                BinaryProtocolProxy.runProxy(state.getStream(), applicationClientStream, new AtomicInteger(), BinaryProtocolProxy.USER_IO_TIMEOUT);
+                BinaryProtocolProxy.runProxy(state.getStream(), applicationClientStream, BinaryProtocolProxy.ClientApplicationActivityListener.VOID, BinaryProtocolProxy.USER_IO_TIMEOUT);
 
             } catch (Throwable e) {
                 log.info("Application Connector: Got error " + e);
@@ -250,6 +250,7 @@ public class Backend implements Closeable {
         this.serverPortForControllers = serverPortForControllers;
         log.info("Starting controller connector at " + serverPortForControllers);
         controllerConnector = BinaryProtocolServer.tcpServerSocket(controllerSocket -> () -> {
+            log.info("New connection from " + controllerSocket.getRemoteSocketAddress());
             totalSessions.incrementAndGet();
             ControllerConnectionState controllerConnectionState = new ControllerConnectionState(controllerSocket, getUserDetailsResolver());
             try {
@@ -275,6 +276,7 @@ public class Backend implements Closeable {
                     .add(UserDetails.USER_ID, application.getUserDetails().getUserId())
                     .add(UserDetails.USERNAME, application.getUserDetails().getUserName())
                     .add(SessionDetails.AGE, application.getBirthday().getDuration())
+                    .add("idle", humanReadableFormat(System.currentTimeMillis() - application.getClientStream().latestActivityTime()))
                     ;
             JsonObject applicationObject = addStreamStats(b, application.getClientStream())
                     .build();

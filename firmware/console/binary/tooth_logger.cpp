@@ -8,6 +8,7 @@
 #include "tooth_logger.h"
 
 #include "global.h"
+#include "perf_trace.h"
 
 #if EFI_TOOTH_LOGGER
 
@@ -101,6 +102,13 @@ void LogTriggerTooth(trigger_event_e tooth, efitick_t timestamp DECLARE_ENGINE_P
 	if (!ToothLoggerEnabled) {
 		return;
 	}
+
+	// Don't log at significant engine speed
+	if (engine->rpmCalculator.getRpm() > 4000) {
+		return;
+	}
+
+	ScopePerf perf(PE::LogTriggerTooth);
 
 /*
 		// We currently only support the primary trigger falling edge

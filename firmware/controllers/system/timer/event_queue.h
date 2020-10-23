@@ -7,13 +7,9 @@
 
 #include "scheduler.h"
 #include "utlist.h"
+#include "expected.h"
 
 #pragma once
-
-/**
- * this is a large value which is expected to be larger than any real time
- */
-#define EMPTY_QUEUE 0x0FFFFFFFFFFFFFFFLL
 
 #define QUEUE_LENGTH_LIMIT 1000
 
@@ -56,8 +52,9 @@ public:
 	bool insertTask(scheduling_s *scheduling, efitime_t timeX, action_s action);
 
 	int executeAll(efitime_t now);
+	bool executeOne(efitime_t now);
 
-	efitime_t getNextEventTime(efitime_t nowUs) const;
+	expected<efitime_t> getNextEventTime(efitime_t nowUs) const;
 	void clear(void);
 	int size(void) const;
 	scheduling_s *getElementAtIndexForUnitText(int index);

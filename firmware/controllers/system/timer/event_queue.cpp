@@ -82,8 +82,7 @@ bool EventQueue::insertTask(scheduling_s *scheduling, efitime_t timeX, action_s 
  * This method is always invoked under a lock
  * @return Get the timestamp of the soonest pending action, skipping all the actions in the past
  */
-efitime_t EventQueue::getNextEventTime(efitime_t nowX) const {
-	
+expected<efitime_t> EventQueue::getNextEventTime(efitime_t nowX) const {
 	if (head != NULL) {
 		if (head->momentX <= nowX) {
 			/**
@@ -99,7 +98,8 @@ efitime_t EventQueue::getNextEventTime(efitime_t nowX) const {
 			return head->momentX;
 		}
 	}
-	return EMPTY_QUEUE;
+
+	return unexpected;
 }
 
 /**
@@ -120,57 +120,63 @@ int EventQueue::executeAll(efitime_t now) {
 	assertListIsSorted();
 #endif
 
-	while (true) {
-		// Read the head every time - a previously executed event could
-		// have inserted something new at the head
-		scheduling_s* current = head;
+	bool didExecute;
+	do {
+		didExecute = executeOne(now);
+		executionCounter += didExecute ? 1 : 0;
+	} while (didExecute);
 
-		// Queue is empty - bail
-		if (!current) {
-			break;
-		}
+	return executionCounter;
+}
 
-		// If the next event is far in the future, we'll reschedule
-		// and execute it next time.
-		// We do this when the next event is close enough that the overhead of
-		// resetting the timer and scheduling an new interrupt is greater than just
-		// waiting for the time to arrive.  On current CPUs, this is reasonable to set
-		// around 10 microseconds.
-		if (current->momentX > now + lateDelay) {
-			break;
-		}
+bool EventQueue::executeOne(efitime_t now) {
+	// Read the head every time - a previously executed event could
+	// have inserted something new at the head
+	scheduling_s* current = head;
 
-		// near future - spin wait for the event to happen and avoid the
-		// overhead of rescheduling the timer.
-		// yes, that's a busy wait but that's what we need here
-		while (current->momentX > getTimeNowNt()) {
-			UNIT_TEST_BUSY_WAIT_CALLBACK();
-		}
+	// Queue is empty - bail
+	if (!current) {
+		return false;
+	}
 
-		executionCounter++;
+	// If the next event is far in the future, we'll reschedule
+	// and execute it next time.
+	// We do this when the next event is close enough that the overhead of
+	// resetting the timer and scheduling an new interrupt is greater than just
+	// waiting for the time to arrive.  On current CPUs, this is reasonable to set
+	// around 10 microseconds.
+	if (current->momentX > now + lateDelay) {
+		return false;
+	}
 
-		// step the head forward, unlink this element, clear scheduled flag
-		head = current->nextScheduling_s;
-		current->nextScheduling_s = nullptr;
-		current->isScheduled = false;
+	// near future - spin wait for the event to happen and avoid the
+	// overhead of rescheduling the timer.
+	// yes, that's a busy wait but that's what we need here
+	while (current->momentX > getTimeNowNt()) {
+		UNIT_TEST_BUSY_WAIT_CALLBACK();
+	}
+
+	// step the head forward, unlink this element, clear scheduled flag
+	head = current->nextScheduling_s;
+	current->nextScheduling_s = nullptr;
+	current->isScheduled = false;
 
 #if EFI_UNIT_TEST
-		printf("QUEUE: execute current=%d param=%d\r\n", (long)current, (long)current->action.getArgument());
+	printf("QUEUE: execute current=%d param=%d\r\n", (long)current, (long)current->action.getArgument());
 #endif
 
-		// Execute the current element
-		{
-			ScopePerf perf2(PE::EventQueueExecuteCallback);
-			current->action.execute();
-		}
+	// Execute the current element
+	{
+		ScopePerf perf2(PE::EventQueueExecuteCallback);
+		current->action.execute();
+	}
 
 #if EFI_UNIT_TEST
 	// (tests only) Ensure we didn't break anything
 	assertListIsSorted();
 #endif
-	}
 
-	return executionCounter;
+	return true;
 }
 
 int EventQueue::size(void) const {

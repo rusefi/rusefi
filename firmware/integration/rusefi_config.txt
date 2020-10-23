@@ -66,7 +66,7 @@
 ! Any time an incompatible change is made to the configuration format stored in flash,
 ! update this string to the current date! It is required to also update TS_SIGNATURE above
 ! when this happens.
-#define FLASH_DATA_VERSION 10002
+#define FLASH_DATA_VERSION 10003
 
 ! all the sub-structures are going to be nested within the primary structure, that's
 ! needed to get a proper TunerStudio file
@@ -168,6 +168,7 @@ struct_no_prefix engine_configuration_s
 
 ! These are used currently only for output channels - but could be for config as well
 #define PACK_MULT_PRESSURE 30
+#define PACK_MULT_HIGH_PRESSURE 10
 #define PACK_MULT_PERCENT 100
 #define PACK_MULT_TEMPERATURE 100
 #define PACK_ADD_TEMPERATURE 40
@@ -205,7 +206,7 @@ custom fuel_table_t	4*@@FUEL_RPM_COUNT@@x@@FUEL_LOAD_COUNT@@ array,   F32,   @OF
 custom ve_table_t 4*@@FUEL_RPM_COUNT@@x@@FUEL_LOAD_COUNT@@ array,   F32,   @OFFSET@, [@@FUEL_RPM_COUNT@@x@@FUEL_LOAD_COUNT@@],"%", 1, 0, 0, 999.0, 2
 custom afr_table_t @@FUEL_RPM_COUNT@@x@@FUEL_LOAD_COUNT@@ array,   U08,   @OFFSET@, [@@FUEL_RPM_COUNT@@x@@FUEL_LOAD_COUNT@@],"deg",	   {1/@@PACK_MULT_AFR_CFG@@},     0,        0,  25.0,     1 
 
-custom tcubinary_table_t @@TCU_SOLENOID_COUNT@@x@@TCU_GEAR_COUNT@@ array,   U08,   @OFFSET@, [@@TCU_SOLENOID_COUNT@@x@@TCU_GEAR_COUNT@@],"onoff", 1,     0,        0,  1,  0
+custom tcubinary_table_t @@TCU_GEAR_COUNT@@x@@TCU_SOLENOID_COUNT@@ array,   U08,   @OFFSET@, [@@TCU_GEAR_COUNT@@x@@TCU_SOLENOID_COUNT@@],"onoff", 1,     0,        0,  1,  0
 
 custom fsio_table_8x8_u8t	@@FSIO_TABLE_8@@x@@FSIO_TABLE_8@@ array,   U08,   @OFFSET@, [@@FSIO_TABLE_8@@x@@FSIO_TABLE_8@@],"value",      1,     0,      0.0,   255.0,   0
 custom fsio_table_8x8_f32t	4*@@FSIO_TABLE_8@@x@@FSIO_TABLE_8@@ array,   F32,   @OFFSET@, [@@FSIO_TABLE_8@@x@@FSIO_TABLE_8@@],"value",      1,     0,      0.0,   30000.0,   2
@@ -268,10 +269,10 @@ float baseFuel;+Base duration of the fuel injection during cranking, this is mod
 int16_t rpm;+This sets the RPM limit below which the ECU will use cranking fuel and ignition logic, typically this is around 350-450rpm. \nset cranking_rpm X;"RPM",      1,     0,    0, 3000,      0
 end_struct
 
-#define debug_mode_e_enum "Alternator PID", "TPS acceleration enrichment", "INVALID", "Idle Control", "Engine Load accl enrich", "Trigger Counters", "FSIO_ADC", "AUX_PID_1", "VVT input", "Cranking", "Timing", "Closed-loop fuel corr PID", "VSS", "SD card", "sr5", "Knock", "mode16", "Electronic Throttle", "Executor", "Bench Test / TS commands", "Aux Valves", "Analog inputs #1", "INSTANT_RPM", "FSIO_EXPRESSION_1_7", "Status", "CJ125", "CAN", "MAP", "Metrics", "ETB#2", "Ion Sense", "TLE8888", "Analog inputs #2", "Dwell Metric", "INVALID", "ETB Logic", "Boost Control", "Start/Stop", "Launch", "ETB Autotune", "FSIO_COMPOSITE_LOG", "FSIO_EXPRESSION_8_14", "FSIO_SPECIAL", "Mode43", "Mode44"
+#define debug_mode_e_enum "Alternator PID", "TPS acceleration enrichment", "GPPWM", "Idle Control", "Engine Load accl enrich", "Trigger Counters", "FSIO_ADC", "AUX_PID_1", "VVT input", "Cranking", "Timing", "Closed-loop fuel corr PID", "VSS", "SD card", "sr5", "Knock", "mode16", "Electronic Throttle", "Executor", "Bench Test / TS commands", "Aux Valves", "Analog inputs #1", "INSTANT_RPM", "FSIO_EXPRESSION_1_7", "Status", "CJ125", "CAN", "MAP", "Metrics", "ETB#2", "Ion Sense", "TLE8888", "Analog inputs #2", "Dwell Metric", "INVALID", "ETB Logic", "Boost Control", "Start/Stop", "Launch", "ETB Autotune", "FSIO_COMPOSITE_LOG", "FSIO_EXPRESSION_8_14", "FSIO_SPECIAL", "Mode43", "Mode44"
 custom debug_mode_e 4 bits,    U32,   @OFFSET@, [0:5], @@debug_mode_e_enum@@
 
-#define vvt_mode_e_enum "Inactive", "Second half", "2GZ", "Miata NB2", "First half", "Bosch Quick Start", "mode6", "mode7"
+#define vvt_mode_e_enum "Inactive", "Single Tooth Second Half", "2GZ", "Miata NB2", "Single Tooth First Half", "Bosch Quick Start", "4/1", "mode7"
 custom vvt_mode_e 4 bits,    U32,   @OFFSET@, [0:2], @@vvt_mode_e_enum@@
 
 ! At the moment TIM1, TIM2, TIM3 and TIM9 are configured as ICU
@@ -368,13 +369,13 @@ float resistance_3;;"Ohm",      1,     0,    0, 200000,     1
 	float bias_resistor;+Pull-up resistor value on your board;"Ohm",      1,     0,    0, 200000,     1
 end_struct
 
-struct oil_pressure_config_s @brief Oil pressure sensor interpolation
+struct linear_sensor_s @brief Linear sensor interpolation
 	adc_channel_e hwChannel;
 	uint8_t[3] alignmentFill;;"unit",      1,     0,    0, 100,     0
 	float v1;;         "volts",    1,    0.0,       0,    10.0,        2
-	float value1;;     "kPa",    1,      0.0,       0,  1000.0,        2
+	float value1;;     "kPa",    1,      0.0,       0,  1000000.0,        2
 	float v2;;         "volts",    1,    0.0,       0,    10.0,        2
-	float value2;;     "kPa",    1,      0.0,       0,  1000.0,        2
+	float value2;;     "kPa",    1,      0.0,       0,  1000000.0,        2
 end_struct
 
 struct ThermistorConf @brief Thermistor curve parameters
@@ -520,7 +521,7 @@ int sensorSnifferRpmThreshold;+Disable sensor sniffer above this rpm;"RPM",     
 
 
 custom engine_load_mode_e 4 bits, U32, @OFFSET@, [0:2], @@engine_load_mode_e_enum@@
-engine_load_mode_e fuelAlgorithm;+This setting controls which fuel quantity control algorithm is used.\nSee also useTPSAdvanceTable\nset algorithm X
+engine_load_mode_e fuelAlgorithm;+This setting controls which fuel quantity control algorithm is used.
 
 
 custom injection_mode_e 4 bits, U32, @OFFSET@, [0:1], "Simultaneous", "Sequential", "Batch", "Single Point"
@@ -535,11 +536,11 @@ ignition_mode_e ignitionMode;+"Single Coil" is for use on distributed ignition s
 angle_t ignitionOffset;+this value could be used to offset the whole ignition timing table by a constant;"RPM",    1,      0,       0,  3000.0,      0
 
 custom timing_mode_e 4 bits, U32, @OFFSET@ [0:0], "dynamic", "fixed"
-timing_mode_e timingMode;+Dynamic uses the timing map to decide the ignition timing, Static timing fixes the timing to the value set below (only use for checking static timing).
+timing_mode_e timingMode;+Dynamic uses the timing map to decide the ignition timing, Static timing fixes the timing to the value set below (only use for checking static timing with a timing light).
 
 angle_t fixedModeTiming;+This value is the ignition timing used when in 'fixed timing' mode, i.e. constant timing\nThis mode is useful when adjusting distributor location.;"RPM",    1,      0,       0,  3000.0,      0
 
-angle_t globalTriggerAngleOffset;+Angle between Top Dead Center (TDC) and the first trigger event.\nKnowing this angle allows us to control timing and other angles in reference to TDC.\nset global_trigger_offset_angle X;"deg",    1,      0,       -720,  720, 0
+angle_t globalTriggerAngleOffset;+Angle between Top Dead Center (TDC) and the first trigger event.\nPositive value in case of synchnization point before TDC and negative in case of synchnization point after TDC\n.Knowing this angle allows us to control timing and other angles in reference to TDC.\nset global_trigger_offset_angle X;"deg btdc",    1,      0,       -720,  720, 0
 
 
 
@@ -601,8 +602,8 @@ trigger_config_s trigger;
 
 custom spi_device_e 1 bits,U32,   @OFFSET@, [0:2], "Off", "SPI1", "SPI2", "SPI3", "SPI4", "INVALID", "INVALID", "INVALID" 
 	spi_device_e hip9011SpiDevice;
-	adc_channel_e high_fuel_pressure_sensor_1;
-	adc_channel_e high_fuel_pressure_sensor_2;
+	uint8_t unused541;;"unit",      1,     0,    0, 100,     0
+	uint8_t unused542;;"unit",      1,     0,    0, 100,     0
 	adc_channel_e mafAdcChannel;See hasMafSensor
 	
 	
@@ -656,7 +657,7 @@ float mapFrequency0Kpa;;"Hz",      1,      0,       0, 100000,      2
 float mapFrequency100Kpa;;"Hz",      1,      0,       0, 100000,      2
 
 ! todo: rename to triggerSimulatorRpm
-	int triggerSimulatorFrequency;+Same RPM is used for two ways of producing simulated RPM. See also triggerSimulatorPins (with wires)\nSee also directSelfStimulation (no wires, bypassing input hardware)\nrpm X;"Rpm",     1,      0,       0,30000,      0
+	int triggerSimulatorFrequency;+Same RPM is used for two ways of producing simulated RPM. See also triggerSimulatorPins (with wires)\nSee also directSelfStimulation (no wires, bypassing input hardware)\nrpm X\nTODO: rename to triggerSimulatorRpm;"Rpm",     1,      0,       0,30000,      0
 
 	output_pin_e[INJECTION_PIN_COUNT iterate] injectionPins;
 	output_pin_e[IGNITION_PIN_COUNT iterate] ignitionPins;
@@ -951,7 +952,8 @@ custom maf_sensor_type_e 4 bits, S32, @OFFSET@, [0:1], @@maf_sensor_type_e_enum@
 
 	output_pin_e[TCU_SOLENOID_COUNT iterate] tcu_solenoid;
 
-	uint8_t[2] solenoidPadding;;"units", 1, 0, -20, 100, 0
+	custom etb_function_e 1 bits, U08, @OFFSET@, [0:2], "None", "Throttle 1", "Throttle 2", "Idle Valve", "Wastegate"
+	etb_function_e[ETB_COUNT iterate] etbFunctions
 
 	spi_device_e drv8860spiDevice;
 	brain_pin_e       drv8860_cs;
@@ -1024,7 +1026,7 @@ custom idle_mode_e 4 bits,    U32,   @OFFSET@, [0:0], "Automatic", "Manual"
 bit useFixedBaroCorrFromMap
 bit useSeparateAdvanceForCranking;+This activates a separate advance table for cranking conditions, this allows cranking advance to be RPM dependant.
 bit useAdvanceCorrectionsForCranking;+This enables the various ignition corrections during cranking (IAT, CLT, FSIO and PID idle).
-bit useTPSAdvanceTable;+This flag allows to use TPS for ignition lookup while in Speed Density Fuel Mode
+bit unused1476b19;
 bit unused1476b20;
 bit useIacPidMultTable;+This flag allows to use a special 'PID Multiplier' table (0.0-1.0) to compensate for nonlinear nature of IAC-RPM controller
 bit isBoostControlEnabled;
@@ -1193,7 +1195,8 @@ int16_t tps2Max;Full throttle#2. tpsMax value as 10 bit ADC value. Not Voltage!\
 	brain_pin_e can2RxPin;set_can2_rx_pin X	
 	pin_output_mode_e starterControlPinMode;
 	adc_channel_e wastegatePositionSensor;
-	uint8_t[4] unused_former_warmup_target_afr;;"units", 1, 0, -20, 100, 0
+	afr_override_e ignOverrideMode;+Override the Y axis (load) value used for the ignition table.\nAdvanced users only: If you aren't sure you need this, you probably don't need this.
+	uint8_t[3] unused_former_warmup_target_afr;;"units", 1, 0, -20, 100, 0
 
 	float boostCutPressure;+MAP value above which fuel is cut in case of overboost.\n0 to disable overboost cut.;"kPa (absolute)",        1,     0,    0, 500,     0
 
@@ -1243,7 +1246,8 @@ tle8888_mode_e tle8888mode;
 	ThermistorConf auxTempSensor2;todo: finish implementation #332
 	uint8_t[6] unused2508;;"units", 1, 0, -20, 100, 0
 	int16_t etbFreq;;"Hz",      1,     0,    0, 30000,      0
-	uint8_t[24] unused2516;;"units", 1, 0, -20, 100, 0
+	pid_s etbWastegatePid;
+	uint8_t[4] unused2536;;"units", 1, 0, -20, 100, 0
 
 	custom cfg_float_t_1f 4 scalar,  F32,   @OFFSET@, 		"Val",	   1,	   0,       -20000000, 20000000,	  1
 	cfg_float_t_1f[IGNITION_PIN_COUNT iterate] timing_offset_cylinder;per-cylinder timing correction
@@ -1278,7 +1282,7 @@ tle8888_mode_e tle8888mode;
 
 	pid_s[AUX_PID_COUNT iterate] auxPid;
 
-	oil_pressure_config_s oilPressure;
+	linear_sensor_s oilPressure;
 
 	spi_device_e accelerometerSpiDevice;
 	uint8_t[1] unusedAuxVoltage1_TODO_332;;"units", 1, 0, -20, 100, 0
@@ -1318,7 +1322,10 @@ float[CRANKING_ADVANCE_CURVE_SIZE] crankingAdvance    ;+Optional timing advance 
 float[CLT_CURVE_SIZE] iacCoastingBins;CLT-based idle position for coasting (used in Auto-PID Idle mode);"C",        1,     0,   -100.0,    250.0,  2
 float[CLT_CURVE_SIZE] iacCoasting;    CLT-based idle position for coasting (used in Auto-PID Idle mode);"%",      1,     0,      0.0,    100.0,   2
 
-uint8_t[576] unused3288;;"units", 1, 0, -20, 100, 0
+	linear_sensor_s highPressureFuel;
+	linear_sensor_s lowPressureFuel;
+
+uint8_t[536] unused3328;;"units", 1, 0, -20, 100, 0
 
 float tChargeAirCoefMin;;"Min tCharge Coeff.",        1,     0,  0.0,    1.0,  4
 float tChargeAirCoefMax;;"Max tCharge Coeff.",        1,     0,  0.0,    1.0,  4
@@ -1550,6 +1557,9 @@ end_struct
 #define GAUGE_NAME_ETB_ERROR "ETB position error"
 #define GAUGE_NAME_ETB_DUTY "ETB Duty"
 
+#define GAUGE_NAME_FUEL_PRESSURE_LOW "Fuel pressure (low)"
+#define GAUGE_NAME_FUEL_PRESSURE_HIGH "Fuel pressure (high)"
+
 #define GAUGE_NAME_ACCEL_X "Acceleration: X"
 #define GAUGE_NAME_ACCEL_Y "Acceleration: Y"
 #define GAUGE_NAME_ACCEL_Z "Acceleration: Z"
@@ -1626,6 +1636,7 @@ end_struct
 #define ENGINE_MAKE_MERCEDES "Mercedes"
 #define ENGINE_MAKE_VAG "VAG"
 
+#define CMD_ENGINESNIFFERRPMTHRESHOLD "engineSnifferRpmThreshold"
 #define CMD_MIL_BENCH "milbench"
 #define CMD_FUEL_BENCH "fuelbench"
 #define CMD_STARTER_BENCH "starterbench"

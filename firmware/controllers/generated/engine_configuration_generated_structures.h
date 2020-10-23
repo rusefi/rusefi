@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Thu Oct 01 04:05:22 UTC 2020
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Fri Oct 23 16:24:30 UTC 2020
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -318,11 +318,11 @@ struct thermistor_conf_s {
 typedef struct thermistor_conf_s thermistor_conf_s;
 
 /**
- * @brief Oil pressure sensor interpolation
+ * @brief Linear sensor interpolation
 
 */
-// start of oil_pressure_config_s
-struct oil_pressure_config_s {
+// start of linear_sensor_s
+struct linear_sensor_s {
 	/**
 	 * offset 0
 	 */
@@ -350,7 +350,7 @@ struct oil_pressure_config_s {
 	/** total size 20*/
 };
 
-typedef struct oil_pressure_config_s oil_pressure_config_s;
+typedef struct linear_sensor_s linear_sensor_s;
 
 /**
  * @brief Thermistor curve parameters
@@ -861,8 +861,6 @@ struct engine_configuration_s {
 	int rpmHardLimit;
 	/**
 	 * This setting controls which fuel quantity control algorithm is used.
-	 * See also useTPSAdvanceTable
-	 * set algorithm X
 	 * offset 420
 	 */
 	engine_load_mode_e fuelAlgorithm;
@@ -903,7 +901,7 @@ struct engine_configuration_s {
 	 */
 	angle_t ignitionOffset;
 	/**
-	 * Dynamic uses the timing map to decide the ignition timing, Static timing fixes the timing to the value set below (only use for checking static timing).
+	 * Dynamic uses the timing map to decide the ignition timing, Static timing fixes the timing to the value set below (only use for checking static timing with a timing light).
 	 * offset 448
 	 */
 	timing_mode_e timingMode;
@@ -915,7 +913,8 @@ struct engine_configuration_s {
 	angle_t fixedModeTiming;
 	/**
 	 * Angle between Top Dead Center (TDC) and the first trigger event.
-	 * Knowing this angle allows us to control timing and other angles in reference to TDC.
+	 * Positive value in case of synchnization point before TDC and negative in case of synchnization point after TDC
+	 * .Knowing this angle allows us to control timing and other angles in reference to TDC.
 	 * set global_trigger_offset_angle X
 	 * offset 456
 	 */
@@ -1023,11 +1022,11 @@ struct engine_configuration_s {
 	/**
 	 * offset 541
 	 */
-	adc_channel_e high_fuel_pressure_sensor_1;
+	uint8_t unused541;
 	/**
 	 * offset 542
 	 */
-	adc_channel_e high_fuel_pressure_sensor_2;
+	uint8_t unused542;
 	/**
 	 * See hasMafSensor
 	 * offset 543
@@ -1105,6 +1104,7 @@ struct engine_configuration_s {
 	 * Same RPM is used for two ways of producing simulated RPM. See also triggerSimulatorPins (with wires)
 	 * See also directSelfStimulation (no wires, bypassing input hardware)
 	 * rpm X
+	 * TODO: rename to triggerSimulatorRpm
 	 * offset 620
 	 */
 	int triggerSimulatorFrequency;
@@ -1964,7 +1964,7 @@ struct engine_configuration_s {
 	/**
 	 * offset 1198
 	 */
-	uint8_t solenoidPadding[2];
+	etb_function_e etbFunctions[ETB_COUNT];
 	/**
 	 * offset 1200
 	 */
@@ -2202,9 +2202,8 @@ struct engine_configuration_s {
 	offset 1476 bit 18 */
 	bool useAdvanceCorrectionsForCranking : 1;
 	/**
-	 * This flag allows to use TPS for ignition lookup while in Speed Density Fuel Mode
 	offset 1476 bit 19 */
-	bool useTPSAdvanceTable : 1;
+	bool unused1476b19 : 1;
 	/**
 	offset 1476 bit 20 */
 	bool unused1476b20 : 1;
@@ -2769,9 +2768,15 @@ struct engine_configuration_s {
 	 */
 	adc_channel_e wastegatePositionSensor;
 	/**
+	 * Override the Y axis (load) value used for the ignition table.
+	 * Advanced users only: If you aren't sure you need this, you probably don't need this.
 	 * offset 2128
 	 */
-	uint8_t unused_former_warmup_target_afr[4];
+	afr_override_e ignOverrideMode;
+	/**
+	 * offset 2129
+	 */
+	uint8_t unused_former_warmup_target_afr[3];
 	/**
 	 * MAP value above which fuel is cut in case of overboost.
 	 * 0 to disable overboost cut.
@@ -2951,7 +2956,11 @@ struct engine_configuration_s {
 	/**
 	 * offset 2516
 	 */
-	uint8_t unused2516[24];
+	pid_s etbWastegatePid;
+	/**
+	 * offset 2536
+	 */
+	uint8_t unused2536[4];
 	/**
 	 * per-cylinder timing correction
 	 * offset 2540
@@ -3045,7 +3054,7 @@ struct engine_configuration_s {
 	/**
 	 * offset 2692
 	 */
-	oil_pressure_config_s oilPressure;
+	linear_sensor_s oilPressure;
 	/**
 	 * offset 2712
 	 */
@@ -3185,7 +3194,15 @@ struct engine_configuration_s {
 	/**
 	 * offset 3288
 	 */
-	uint8_t unused3288[576];
+	linear_sensor_s highPressureFuel;
+	/**
+	 * offset 3308
+	 */
+	linear_sensor_s lowPressureFuel;
+	/**
+	 * offset 3328
+	 */
+	uint8_t unused3328[536];
 	/**
 	 * offset 3864
 	 */
@@ -3728,4 +3745,4 @@ struct persistent_config_s {
 typedef struct persistent_config_s persistent_config_s;
 
 // end
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Thu Oct 01 04:05:22 UTC 2020
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Fri Oct 23 16:24:30 UTC 2020

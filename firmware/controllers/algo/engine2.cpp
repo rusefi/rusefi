@@ -129,7 +129,7 @@ void EngineState::periodicFastCallback(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	} else {
 		timeSinceCranking = nowNt - crankingTime;
 	}
-	updateAuxValves(PASS_ENGINE_PARAMETER_SIGNATURE);
+	recalculateAuxValveTiming(PASS_ENGINE_PARAMETER_SIGNATURE);
 
 	int rpm = ENGINE(rpmCalculator).getRpm();
 	sparkDwell = getSparkDwell(rpm PASS_ENGINE_PARAMETER_SUFFIX);
@@ -251,58 +251,32 @@ void printCurrentState(Logging *logging, int seconds, const char *engineTypeName
 			DELIMETER);
 }
 
-PrimaryTriggerConfiguration::PrimaryTriggerConfiguration(Engine *engine) {
-	this->engine = engine;
+void TriggerConfiguration::update() {
+	UseOnlyRisingEdgeForTrigger = isUseOnlyRisingEdgeForTrigger();
+	VerboseTriggerSynchDetails = isVerboseTriggerSynchDetails();
+	TriggerType = getType();
 }
 
 bool PrimaryTriggerConfiguration::isUseOnlyRisingEdgeForTrigger() const {
-	return engine->engineConfigurationPtr->useOnlyRisingEdgeForTrigger;
-}
-
-debug_mode_e PrimaryTriggerConfiguration::getDebugMode() const {
-	return engine->engineConfigurationPtr->debugMode;
+	return CONFIG(useOnlyRisingEdgeForTrigger);
 }
 
 trigger_type_e PrimaryTriggerConfiguration::getType() const {
-	return engine->engineConfigurationPtr->trigger.type;
-}
-
-bool PrimaryTriggerConfiguration::isSilentTriggerError() const {
-	return engine->engineConfigurationPtr->silentTriggerError;
-}
-
-const char * PrimaryTriggerConfiguration::getPrintPrefix() const {
-	return "TRG ";
+	return CONFIG(trigger.type);
 }
 
 bool PrimaryTriggerConfiguration::isVerboseTriggerSynchDetails() const {
-	return engine->engineConfigurationPtr->verboseTriggerSynchDetails;
-}
-
-VvtTriggerConfiguration::VvtTriggerConfiguration(Engine *engine) {
-	this->engine = engine;
+	return CONFIG(verboseTriggerSynchDetails);
 }
 
 bool VvtTriggerConfiguration::isUseOnlyRisingEdgeForTrigger() const {
-	return engine->engineConfigurationPtr->vvtCamSensorUseRise;
-}
-
-const char * VvtTriggerConfiguration::getPrintPrefix() const {
-	return "VVT ";
-}
-
-debug_mode_e VvtTriggerConfiguration::getDebugMode() const {
-	return engine->engineConfigurationPtr->debugMode;
+	return CONFIG(vvtCamSensorUseRise);
 }
 
 trigger_type_e VvtTriggerConfiguration::getType() const {
 	return engine->triggerCentral.vvtTriggerType;
 }
 
-bool VvtTriggerConfiguration::isSilentTriggerError() const {
-	return engine->engineConfigurationPtr->silentTriggerError;
-}
-
 bool VvtTriggerConfiguration::isVerboseTriggerSynchDetails() const {
-	return engine->engineConfigurationPtr->verboseVVTDecoding;
+	return CONFIG(verboseVVTDecoding);
 }

@@ -1,6 +1,8 @@
 /**
  * @file rfi_perftest.cpp
  *
+ * Method execution time micro test.
+ *
  * @date Nov 30, 2012
  * @author Andrey Belomutskiy, (c) 2012-2020
  */

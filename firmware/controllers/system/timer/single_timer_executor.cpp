@@ -35,13 +35,7 @@
 #include "engine.h"
 EXTERN_ENGINE;
 
-/**
- * these fields are global in order to facilitate debugging
- */
-static efitime_t nextEventTimeNt = 0;
-
 uint32_t hwSetTimerDuration;
-uint32_t lastExecutionCount;
 
 void globalTimerCallback() {
 	efiAssertVoid(CUSTOM_ERR_6624, getCurrentRemainingStack() > EXPECTED_REMAINING_STACK, "lowstck#2y");
@@ -50,8 +44,8 @@ void globalTimerCallback() {
 }
 
 SingleTimerExecutor::SingleTimerExecutor()
-	// 10us is roughly double the cost of the interrupt + overhead of a single timer event
-	: queue(US2NT(10))
+	// 8us is roughly the cost of the interrupt + overhead of a single timer event
+	: queue(US2NT(8))
 {
 }
 
@@ -77,39 +71,36 @@ void SingleTimerExecutor::scheduleByTimestampNt(scheduling_s* scheduling, efitim
 	ScopePerf perf(PE::SingleTimerExecutorScheduleByTimestamp);
 
 #if EFI_ENABLE_ASSERTS
-	int deltaTimeUs = NT2US(nt - getTimeNowNt());
+	int32_t deltaTimeNt = (int32_t)nt - getTimeNowLowerNt();
 
-	if (deltaTimeUs >= TOO_FAR_INTO_FUTURE_US) {
+	if (deltaTimeNt >= TOO_FAR_INTO_FUTURE_NT) {
 		// we are trying to set callback for too far into the future. This does not look right at all
-		firmwareError(CUSTOM_ERR_TASK_TIMER_OVERFLOW, "scheduleByTimestampNt() too far: %d", deltaTimeUs);
+		firmwareError(CUSTOM_ERR_TASK_TIMER_OVERFLOW, "scheduleByTimestampNt() too far: %d", deltaTimeNt);
 		return;
 	}
 #endif
 
 	scheduleCounter++;
-	bool alreadyLocked = true;
-	if (!reentrantFlag) {
-		// this would guard the queue and disable interrupts
-		alreadyLocked = lockAnyContext();
-	}
+
+	// Lock for queue insertion - we may already be locked, but that's ok
+	chibios_rt::CriticalSectionLocker csl;
+
 	bool needToResetTimer = queue.insertTask(scheduling, nt, action);
 	if (!reentrantFlag) {
 		executeAllPendingActions();
 		if (needToResetTimer) {
 			scheduleTimerCallback();
 		}
-		if (!alreadyLocked)
-			unlockAnyContext();
 	}
 }
 
 void SingleTimerExecutor::onTimerCallback() {
 	timerCallbackCounter++;
-	bool alreadyLocked = lockAnyContext();
+
+	chibios_rt::CriticalSectionLocker csl;
+
 	executeAllPendingActions();
 	scheduleTimerCallback();
-	if (!alreadyLocked)
-		unlockAnyContext();
 }
 
 /*
@@ -125,22 +116,19 @@ void SingleTimerExecutor::executeAllPendingActions() {
 	 * further invocations
 	 */
 	reentrantFlag = true;
-	int shouldExecute = 1;
+
 	/**
 	 * in real life it could be that while we executing listeners time passes and it's already time to execute
 	 * next listeners.
 	 * TODO: add a counter & figure out a limit of iterations?
 	 */
-	int totalExecuted = 0;
-	while (shouldExecute > 0) {
-		/**
-		 * It's worth noting that that the actions might be adding new actions into the queue
-		 */
+
+	bool didExecute;
+	do {
 		efitick_t nowNt = getTimeNowNt();
-		shouldExecute = queue.executeAll(nowNt);
-		totalExecuted += shouldExecute;
-	}
-	lastExecutionCount = totalExecuted;
+		didExecute = queue.executeOne(nowNt);
+	} while (didExecute);
+
 	if (!isLocked()) {
 		firmwareError(CUSTOM_ERR_LOCK_ISSUE, "Someone has stolen my lock");
 		return;
@@ -158,14 +146,17 @@ void SingleTimerExecutor::scheduleTimerCallback() {
 	 * Let's grab fresh time value
 	 */
 	efitick_t nowNt = getTimeNowNt();
-	nextEventTimeNt = queue.getNextEventTime(nowNt);
-	efiAssertVoid(CUSTOM_ERR_6625, nextEventTimeNt > nowNt, "setTimer constraint");
-	if (nextEventTimeNt == EMPTY_QUEUE)
+	expected<efitick_t> nextEventTimeNt = queue.getNextEventTime(nowNt);
+
+	if (!nextEventTimeNt) {
 		return; // no pending events in the queue
-	int32_t hwAlarmTime = NT2US((int32_t)nextEventTimeNt - (int32_t)nowNt);
-	uint32_t beforeHwSetTimer = getTimeNowLowerNt();
+	}
+
+	efiAssertVoid(CUSTOM_ERR_6625, nextEventTimeNt.Value > nowNt, "setTimer constraint");
+
+	int32_t hwAlarmTime = NT2US((int32_t)nextEventTimeNt.Value - (int32_t)nowNt);
+
 	setHardwareUsTimer(hwAlarmTime == 0 ? 1 : hwAlarmTime);
-	hwSetTimerDuration = getTimeNowLowerNt() - beforeHwSetTimer;
 }
 
 void initSingleTimerExecutorHardware(void) {

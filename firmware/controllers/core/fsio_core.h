@@ -16,6 +16,7 @@ typedef enum {
 
 	LE_UNDEFINED = 0 ,
 	LE_NUMERIC_VALUE = 1,
+	LE_BOOLEAN_VALUE = 126,
 	LE_OPERATOR_LESS = 2,
 	LE_OPERATOR_MORE = 3,
 	LE_OPERATOR_LESS_OR_EQUAL = 4,
@@ -62,13 +63,16 @@ typedef enum {
 
 } le_action_e;
 
+using FsioValue = expected<float>;
+
 class LEElement {
 public:
 	LEElement();
 	void clear();
-//	void init(le_action_e action, int iValue);
+
 	void init(le_action_e action);
-	void init(le_action_e action, float fValue);
+	void init(le_action_e action, float value);
+	void init(le_action_e action, bool value);
 
 	le_action_e action;
 	float fValue;
@@ -111,7 +115,7 @@ public:
 	int currentCalculationLogPosition;
 private:
 	void push(le_action_e action, float value);
-	bool processElement(LEElement *element DECLARE_ENGINE_PARAMETER_SUFFIX);
+	FsioValue processElement(LEElement *element DECLARE_ENGINE_PARAMETER_SUFFIX);
 	float pop(le_action_e action);
 	LEElement *first;
 	calc_stack_t stack;

@@ -196,7 +196,7 @@ typedef struct {
 	// we want a hash of engineMake+engineCode+vehicleName in the log file in order to match TS logs to rusEFI Online tune
 	int16_t engineMakeCodeNameCrc16; // 138
 	// Errors
-	int totalTriggerErrorCounter; // 140
+	scaled_channel<uint32_t> totalTriggerErrorCounter; // 140
 	int orderingErrorCounter; // 144
 	int16_t warningCounter; // 148
 	int16_t lastErrorCode; // 150
@@ -250,7 +250,13 @@ typedef struct {
 	scaled_percent wastegatePosition;	// 268
 	scaled_percent idlePositionSensor;	// 270
 
-	uint8_t unusedAtTheEnd[16]; // we have some unused bytes to allow compatible TS changes
+	scaled_voltage rawLowFuelPressure; // 272
+	scaled_voltage rawHighFuelPressure; // 274
+
+	scaled_pressure lowFuelPressure;	// 276
+	scaled_high_pressure highFuelPressure;	// 278
+
+	uint8_t unusedAtTheEnd[8]; // we have some unused bytes to allow compatible TS changes
 
 	// Temporary - will remove soon
 	TsDebugChannels* getDebugChannels() {

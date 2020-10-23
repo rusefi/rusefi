@@ -71,26 +71,36 @@ public class AutoTest extends BaseTest {
 
     private void testVW_60_2() {
         setEngineType(ET_VW_ABA);
+        // trying to disable engine sniffer to help https://github.com/rusefi/rusefi/issues/1849
+        sendCommand("set " + CMD_ENGINESNIFFERRPMTHRESHOLD + " 100");
         changeRpm(900);
         // first let's get to expected RPM
-        assertRpmDoesNotJump(20000, 15, 30, FAIL, commandQueue);
+        assertRpmDoesNotJump(16000, 5, 40, FAIL, commandQueue);
     }
 
     private void testV12() {
         setEngineType(ET_BMW_M73_F);
         changeRpm(700);
         // first let's get to expected RPM
-        assertRpmDoesNotJump(15000, 15, 30, FAIL, commandQueue);
+        assertRpmDoesNotJump(16000, 5, 40, FAIL, commandQueue);
+        testCaseBug1873();
+    }
+
+    private void testCaseBug1873() {
+        assertRpmDoesNotJump(60, 5, 110, FAIL, commandQueue);
     }
 
     public static void assertRpmDoesNotJump(int rpm, int settleTime, int testDuration, Function<String, Object> callback, CommandQueue commandQueue) {
         IoUtil.changeRpm(commandQueue, rpm);
         sleepSeconds(settleTime);
         AtomicReference<String> result = new AtomicReference<>();
+        long start = System.currentTimeMillis();
         SensorCentral.SensorListener listener = value -> {
             double actualRpm = SensorCentral.getInstance().getValue(Sensor.RPM);
-            if (!isCloseEnough(rpm, actualRpm))
-                result.set("Got " + actualRpm + " while trying to stay at " + rpm);
+            if (!isCloseEnough(rpm, actualRpm)) {
+                long seconds = (System.currentTimeMillis() - start) / 1000;
+                result.set("Got " + actualRpm + " while trying to stay at " + rpm + " after " + seconds + " seconds");
+            }
         };
         SensorCentral.getInstance().addListener(Sensor.RPM, listener);
         sleepSeconds(testDuration);

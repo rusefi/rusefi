@@ -33,9 +33,15 @@ import static com.rusefi.binaryprotocol.BinaryProtocol.sleep;
  * see NetworkConnectorStartup
  */
 public class NetworkConnector implements Closeable {
+    /**
+     * @see NetworkConnectorContext
+     * See broadcash.sh
+     */
     public static final byte DISCONNECT = 14;
-    public static final byte UPDATE_CONNECTOR_SOFTWARE = 15;
-    public static final byte UPDATE_FIRMWARE = 16;
+    public static final byte UPDATE_CONNECTOR_SOFTWARE_LATEST = 15;
+    public static final byte UPDATE_FIRMWARE_LATEST = 16;
+    public static final byte UPDATE_CONNECTOR_SOFTWARE_RELEASE = 17;
+    public static final byte UPDATE_FIRMWARE_RELEASE = 17;
     private final static Logging log = Logging.getLogging(NetworkConnector.class);
     private boolean isClosed;
 
@@ -138,10 +144,14 @@ public class NetworkConnector implements Closeable {
                 if (command == Fields.TS_ONLINE_PROTOCOL) {
                     byte connectorCommand = packet.getPacket()[1];
                     log.info("Got connector command " + packet.getPacket());
-                    if (connectorCommand == NetworkConnector.UPDATE_CONNECTOR_SOFTWARE) {
-                        context.onConnectorSoftwareUpdateRequest();
-                    } else if (connectorCommand == NetworkConnector.UPDATE_FIRMWARE) {
-                        context.onFirmwareUpdateRequest();
+                    if (connectorCommand == NetworkConnector.UPDATE_CONNECTOR_SOFTWARE_LATEST) {
+                        context.onConnectorSoftwareUpdateToLatestRequest();
+                    } else if (connectorCommand == NetworkConnector.UPDATE_CONNECTOR_SOFTWARE_RELEASE) {
+                        context.onConnectorSoftwareUpdateToReleaseRequest();
+                    } else if (connectorCommand == NetworkConnector.UPDATE_FIRMWARE_LATEST) {
+                        context.onFirmwareUpdateToLatestRequest();
+                    } else if (connectorCommand == NetworkConnector.UPDATE_FIRMWARE_RELEASE) {
+                        context.onFirmwareUpdateToReleaseRequest();
                     }
                     return;
                 }

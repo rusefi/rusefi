@@ -194,8 +194,6 @@ void runRusEfi(void) {
 #if HW_CHECK_MODE
 	// we need a special binary for final assembly check. We cannot afford to require too much software or too many steps
 	// to be executed at the place of assembly
-
-	CONFIG(triggerSimulatorFrequency) = 180;
 	engine->directSelfStimulation = true;
 #endif // HW_CHECK_MODE
 

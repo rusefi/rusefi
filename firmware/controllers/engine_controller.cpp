@@ -50,7 +50,6 @@
 #include "spark_logic.h"
 #include "aux_valves.h"
 #include "accelerometer.h"
-#include "counter64.h"
 #include "perf_trace.h"
 #include "boost_control.h"
 #include "launch_control.h"
@@ -220,8 +219,6 @@ static void doPeriodicSlowCallback(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 #if EFI_ENGINE_CONTROL && EFI_SHAFT_POSITION_INPUT
 	efiAssertVoid(CUSTOM_ERR_6661, getCurrentRemainingStack() > 64, "lowStckOnEv");
 #if EFI_PROD_CODE
-	touchTimeCounter();
-
 	slowStartStopButtonCallback(PASS_ENGINE_PARAMETER_SIGNATURE);
 #endif /* EFI_PROD_CODE */
 
@@ -231,6 +228,9 @@ static void doPeriodicSlowCallback(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 		// loss of VVT sync
 		engine->triggerCentral.vvtSyncTimeNt = 0;
 	}
+
+	// for performance reasons this assertion related to mainTriggerCallback should better be here
+	efiAssertVoid(CUSTOM_IGN_MATH_STATE, !CONFIG(useOnlyRisingEdgeForTrigger) || CONFIG(ignMathCalculateAtIndex) % 2 == 0, "invalid ignMathCalculateAtIndex");
 
 
 	/**
@@ -325,6 +325,8 @@ static void printAnalogInfo(void) {
 	printAnalogChannelInfo("TPS1 Secondary", engineConfiguration->tps1_2AdcChannel);
 	printAnalogChannelInfo("TPS2 Primary", engineConfiguration->tps2_1AdcChannel);
 	printAnalogChannelInfo("TPS2 Secondary", engineConfiguration->tps2_2AdcChannel);
+	printAnalogChannelInfo("LPF", engineConfiguration->lowPressureFuel.hwChannel);
+	printAnalogChannelInfo("HPF", engineConfiguration->highPressureFuel.hwChannel);
 	printAnalogChannelInfo("pPS1", engineConfiguration->throttlePedalPositionAdcChannel);
 	printAnalogChannelInfo("pPS2", engineConfiguration->throttlePedalPositionSecondAdcChannel);
 	printAnalogChannelInfo("CLT", engineConfiguration->clt.adcChannel);
@@ -704,7 +706,7 @@ void initEngineContoller(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX) 
  * UNUSED_SIZE constants.
  */
 #ifndef RAM_UNUSED_SIZE
-#define RAM_UNUSED_SIZE 3000
+#define RAM_UNUSED_SIZE 4000
 #endif
 #ifndef CCM_UNUSED_SIZE
 #define CCM_UNUSED_SIZE 2900

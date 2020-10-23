@@ -12,7 +12,6 @@ import com.rusefi.io.tcp.BinaryProtocolProxy;
 import com.rusefi.io.tcp.ServerSocketReference;
 import com.rusefi.io.tcp.TcpIoStream;
 import com.rusefi.proxy.NetworkConnector;
-import com.rusefi.proxy.NetworkConnectorContext;
 import com.rusefi.server.ApplicationRequest;
 import com.rusefi.server.rusEFISSLContext;
 import com.rusefi.tools.online.HttpUtil;
@@ -31,16 +30,18 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ThreadFactory;
-import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicLong;
 
 import static com.devexperts.logging.Logging.getLogging;
+import static com.rusefi.Timeouts.BINARY_IO_TIMEOUT;
+import static com.rusefi.Timeouts.SECOND;
 import static com.rusefi.binaryprotocol.BinaryProtocol.sleep;
 
 /**
  * Remote user process which facilitates connection between local tuning application and real ECU via rusEFI proxy service
  */
 public class LocalApplicationProxy implements Closeable {
-    private static final ThreadFactory THREAD_FACTORY = new NamedThreadFactory("gauge poking");
+    private static final ThreadFactory THREAD_FACTORY = new NamedThreadFactory("gauge poking", true);
     private static final Logging log = getLogging(LocalApplicationProxy.class);
     public static final int SERVER_PORT_FOR_APPLICATIONS = HttpUtil.getIntProperty("applications.port", 8002);
     private final ApplicationRequest applicationRequest;
@@ -101,29 +102,29 @@ public class LocalApplicationProxy implements Closeable {
         AbstractIoStream authenticatorToProxyStream = new TcpIoStream("authenticatorToProxyStream ", rusEFISSLContext.getSSLSocket(HttpUtil.RUSEFI_PROXY_HOSTNAME, context.serverPortForRemoteApplications()), disconnectListener);
         LocalApplicationProxy.sendHello(authenticatorToProxyStream, applicationRequest);
 
-        AtomicInteger relayCommandCounter = new AtomicInteger();
+        AtomicLong lastActivity = new AtomicLong(System.currentTimeMillis());
+        BinaryProtocolProxy.ClientApplicationActivityListener clientApplicationActivityListener = () -> lastActivity.set(System.currentTimeMillis());
 
         /**
          * We need to entertain proxy server and remote controller while user has already connected to proxy but has not yet started TunerStudio
          */
         THREAD_FACTORY.newThread(() -> {
-            long start = System.currentTimeMillis();
             try {
-                while (relayCommandCounter.get() < 4 && !isTimeForApplicationToConnect(context, start)) {
+                while (true) {
                     sleep(context.gaugePokingPeriod());
-                    byte[] commandPacket = GetOutputsCommand.createRequest();
-
-                    synchronized (authenticatorToProxyStream) {
-                        authenticatorToProxyStream.sendPacket(commandPacket);
+                    if (isTimeForApplicationToConnect(lastActivity.get(), BINARY_IO_TIMEOUT / 2)) {
+                        byte[] commandPacket = GetOutputsCommand.createRequest();
                         // we do not really need the data, we just need to take response from the socket
-                        authenticatorToProxyStream.readPacket();
+                        authenticatorToProxyStream.sendAndGetPacket(commandPacket, "Gauge Poker", false);
+                    }
+
+                    if (isTimeForApplicationToConnect(lastActivity.get(), context.startUpIdle())) {
+                        // we should not keep controller blocked since we are not connecting application, time to auto-disconnect
+                        authenticatorToProxyStream.close();
+                        disconnectListener.onDisconnect("Giving up connection");
                     }
                 }
 
-                if (isTimeForApplicationToConnect(context, start) && relayCommandCounter.get() < 4) {
-                    // we should not keep controller blocked since we are not connecting application, time to auto-disconnect
-                    authenticatorToProxyStream.close();
-                }
 
             } catch (IOException e) {
                 log.error("Gauge poker", e);
@@ -131,14 +132,14 @@ public class LocalApplicationProxy implements Closeable {
         }).start();
 
 
-        ServerSocketReference serverHolder = BinaryProtocolProxy.createProxy(authenticatorToProxyStream, context.authenticatorPort(), relayCommandCounter);
+        ServerSocketReference serverHolder = BinaryProtocolProxy.createProxy(authenticatorToProxyStream, context.authenticatorPort(), clientApplicationActivityListener);
         LocalApplicationProxy localApplicationProxy = new LocalApplicationProxy(applicationRequest, serverHolder, authenticatorToProxyStream);
         connectionListener.onConnected(localApplicationProxy, authenticatorToProxyStream);
         return serverHolder;
     }
 
-    private static boolean isTimeForApplicationToConnect(LocalApplicationProxyContext context, long start) {
-        return System.currentTimeMillis() - start > context.startUpIdle();
+    private static boolean isTimeForApplicationToConnect(long start, int idle) {
+        return System.currentTimeMillis() - start > idle;
     }
 
     public static void sendHello(IoStream authenticatorToProxyStream, ApplicationRequest applicationRequest) throws IOException {

@@ -29,12 +29,16 @@
 #include "sensor.h"
 #include "gppwm.h"
 #include "tachometer.h"
+#if EFI_MC33816
+ #include "mc33816.h"
+#endif // EFI_MC33816
 
 #if EFI_TUNER_STUDIO
 #include "tunerstudio_outputs.h"
 #endif /* EFI_TUNER_STUDIO */
 
 #if EFI_PROD_CODE
+#include "trigger_emulator_algo.h"
 #include "bench_test.h"
 #else
 #define isRunningBenchTest() true
@@ -85,6 +89,8 @@ trigger_type_e getVvtTriggerType(vvt_mode_e vvtMode) {
 		return TT_ONE;
 	case VVT_SECOND_HALF:
 		return TT_ONE;
+	case VVT_4_1:
+		return TT_ONE;
 	default:
 		return TT_ONE;
 	}
@@ -92,6 +98,11 @@ trigger_type_e getVvtTriggerType(vvt_mode_e vvtMode) {
 
 void Engine::initializeTriggerWaveform(Logging *logger DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	static TriggerState initState;
+	INJECT_ENGINE_REFERENCE(&initState);
+
+	// Re-read config in case it's changed
+	primaryTriggerConfiguration.update();
+	vvtTriggerConfiguration.update();
 
 #if EFI_ENGINE_CONTROL && EFI_SHAFT_POSITION_INPUT
 	// we have a confusing threading model so some synchronization would not hurt
@@ -106,8 +117,8 @@ void Engine::initializeTriggerWaveform(Logging *logger DECLARE_ENGINE_PARAMETER_
 	 	 * 'initState' instance of TriggerState is used only to initialize 'this' TriggerWaveform instance
 	 	 * #192 BUG real hardware trigger events could be coming even while we are initializing trigger
 	 	 */
-		calculateTriggerSynchPoint(&ENGINE(triggerCentral.triggerShape),
-				&initState PASS_ENGINE_PARAMETER_SUFFIX);
+		calculateTriggerSynchPoint(ENGINE(triggerCentral.triggerShape),
+				initState PASS_ENGINE_PARAMETER_SUFFIX);
 
 		engine->engineCycleEventCount = TRIGGER_WAVEFORM(getLength());
 	}
@@ -121,9 +132,9 @@ void Engine::initializeTriggerWaveform(Logging *logger DECLARE_ENGINE_PARAMETER_
 				engineConfiguration->ambiguousOperationMode,
 				engine->engineConfigurationPtr->vvtCamSensorUseRise, &config);
 
-		ENGINE(triggerCentral).vvtShape.initializeSyncPoint(&initState,
-				&engine->vvtTriggerConfiguration,
-				&config);
+		ENGINE(triggerCentral).vvtShape.initializeSyncPoint(initState,
+				engine->vvtTriggerConfiguration,
+				config);
 	}
 
 	if (!alreadyLocked) {
@@ -161,7 +172,11 @@ static void assertCloseTo(const char * msg, float actual, float expected) {
 
 void Engine::periodicSlowCallback(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	ScopePerf perf(PE::EnginePeriodicSlowCallback);
-	
+
+	// Re-read config in case it's changed
+	primaryTriggerConfiguration.update();
+	vvtTriggerConfiguration.update();
+
 	watchdog();
 	updateSlowSensors(PASS_ENGINE_PARAMETER_SIGNATURE);
 	checkShutdown(PASS_ENGINE_PARAMETER_SIGNATURE);
@@ -184,7 +199,7 @@ void Engine::periodicSlowCallback(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	if (CONFIG(useTLE8888_cranking_hack) && ENGINE(rpmCalculator).isCranking()) {
 		efitick_t nowNt = getTimeNowNt();
 		if (nowNt - tle8888CrankingResetTime > MS2NT(300)) {
-			requestTLE8888initialization();
+			tle8888_req_init();
 			// let's reset TLE8888 every 300ms while cranking since that's the best we can do to deal with undervoltage reset
 			// PS: oh yes, it's a horrible design! Please suggest something better!
 			tle8888CrankingResetTime = nowNt;
@@ -196,6 +211,17 @@ void Engine::periodicSlowCallback(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 
 #if HW_CHECK_MODE
 	efiAssertVoid(OBD_PCM_Processor_Fault, CONFIG(clt).adcChannel != EFI_ADC_NONE, "No CLT setting");
+	efitimesec_t secondsNow = getTimeNowSeconds();
+	if (secondsNow > 2 && secondsNow < 180) {
+		assertCloseTo("RPM", Sensor::get(SensorType::Rpm).Value, HW_CHECK_RPM);
+	} else if (!hasFirmwareError() && secondsNow > 180) {
+		static bool isHappyTest = false;
+		if (!isHappyTest) {
+			setTriggerEmulatorRPM(5 * HW_CHECK_RPM);
+			scheduleMsg(&engineLogger, "TEST PASSED");
+			isHappyTest = true;
+		}
+	}
 	assertCloseTo("clt", Sensor::get(SensorType::Clt).Value, 49.3);
 	assertCloseTo("iat", Sensor::get(SensorType::Iat).Value, 73.2);
 	assertCloseTo("aut1", Sensor::get(SensorType::AuxTemp1).Value, 13.8);
@@ -234,6 +260,10 @@ void Engine::updateSlowSensors(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	vBattForTle8888 = sensors.vBatt;
 #endif /* BOARD_TLE8888_COUNT */
 
+#if EFI_MC33816
+	initMc33816IfNeeded();
+#endif // EFI_MC33816
+
 	engineState.running.injectorLag = getInjectorLag(sensors.vBatt PASS_ENGINE_PARAMETER_SUFFIX);
 #endif
 }
@@ -243,11 +273,11 @@ void Engine::onTriggerSignalEvent(efitick_t nowNt) {
 	lastTriggerToothEventTimeNt = nowNt;
 }
 
-Engine::Engine() : primaryTriggerConfiguration(this), vvtTriggerConfiguration(this) {
+Engine::Engine() {
 	reset();
 }
 
-Engine::Engine(persistent_config_s *config) : primaryTriggerConfiguration(this), vvtTriggerConfiguration(this) {
+Engine::Engine(persistent_config_s *config) {
 	setConfig(config);
 	reset();
 }
@@ -367,7 +397,7 @@ void Engine::OnTriggerSyncronization(bool wasSynchronized) {
 		/**
 	 	 * We can check if things are fine by comparing the number of events in a cycle with the expected number of event.
 	 	 */
-		bool isDecodingError = triggerCentral.triggerState.validateEventCounters(&triggerCentral.triggerShape);
+		bool isDecodingError = triggerCentral.triggerState.validateEventCounters(triggerCentral.triggerShape);
 
 		enginePins.triggerDecoderErrorPin.setValue(isDecodingError);
 
@@ -392,10 +422,24 @@ void Engine::OnTriggerSyncronization(bool wasSynchronized) {
 }
 #endif
 
+void Engine::injectEngineReferences() {
+	Engine *engine = this;
+	EXPAND_Engine;
+
+	INJECT_ENGINE_REFERENCE(&primaryTriggerConfiguration);
+	INJECT_ENGINE_REFERENCE(&vvtTriggerConfiguration);
+
+	primaryTriggerConfiguration.update();
+	vvtTriggerConfiguration.update();
+	triggerCentral.init(PASS_ENGINE_PARAMETER_SIGNATURE);
+}
+
 void Engine::setConfig(persistent_config_s *config) {
 	this->config = config;
 	engineConfigurationPtr = &config->engineConfiguration;
 	memset(config, 0, sizeof(persistent_config_s));
+
+	injectEngineReferences();
 }
 
 void Engine::printKnockState(void) {
@@ -607,17 +651,3 @@ void doScheduleStopEngine(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	//backupRamFlush();
 #endif // EFI_PROD_CODE
 }
-
-void action_s::execute() {
-	efiAssertVoid(CUSTOM_ERR_ASSERT, callback != NULL, "callback==null1");
-	callback(param);
-}
-
-schfunc_t action_s::getCallback() const {
-	return callback;
-}
-
-void * action_s::getArgument() const {
-	return param;
-}
-

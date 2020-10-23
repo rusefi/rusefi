@@ -172,6 +172,8 @@ bool EtbController::init(etb_function_e function, DcMotor *motor, pid_s *pidPara
 	m_pid.initPidClass(pidParameters);
 	m_pedalMap = pedalMap;
 
+	reset();
+
 	return true;
 }
 
@@ -195,6 +197,10 @@ expected<percent_t> EtbController::observePlant() const {
 
 void EtbController::setIdlePosition(percent_t pos) {
 	m_idlePosition = pos;
+}
+
+void EtbController::setWastegatePosition(percent_t pos) {
+	m_wastegatePosition = pos;
 }
 
 expected<percent_t> EtbController::getSetpoint() const {
@@ -221,8 +227,7 @@ expected<percent_t> EtbController::getSetpointIdleValve() const {
 }
 
 expected<percent_t> EtbController::getSetpointWastegate() const {
-	// TODO: implement me!
-	return unexpected;
+	return clampF(0, m_wastegatePosition, 100);
 }
 
 expected<percent_t> EtbController::getSetpointEtb() const {
@@ -591,7 +596,7 @@ struct EtbThread final : public PeriodicController<512> {
 
 	void PeriodicTask(efitick_t) override {
 		// Simply update all controllers
-		for (int i = 0 ; i < engine->etbActualCount; i++) {
+		for (int i = 0 ; i < ETB_COUNT; i++) {
 			etbControllers[i].update();
 		}
 	}
@@ -603,10 +608,6 @@ static EtbThread etbThread;
 
 static void showEthInfo(void) {
 #if EFI_PROD_CODE
-	if (engine->etbActualCount == 0) {
-		scheduleMsg(&logger, "ETB DISABLED since no PPS");
-	}
-
 	scheduleMsg(&logger, "etbAutoTune=%d",
 			engine->etbAutoTune);
 
@@ -617,8 +618,8 @@ static void showEthInfo(void) {
 			hwPortname(CONFIG(etbIo[0].controlPin1)),
 			currentEtbDuty,
 			engineConfiguration->etbFreq);
-	int i;
-	for (i = 0; i < engine->etbActualCount; i++) {
+
+	for (int i = 0; i < ETB_COUNT; i++) {
 		scheduleMsg(&logger, "ETB%d", i);
 		scheduleMsg(&logger, " dir1=%s", hwPortname(CONFIG(etbIo[i].directionPin1)));
 		scheduleMsg(&logger, " dir2=%s", hwPortname(CONFIG(etbIo[i].directionPin2)));
@@ -631,8 +632,11 @@ static void showEthInfo(void) {
 }
 
 static void etbPidReset(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
-	for (int i = 0 ; i < engine->etbActualCount; i++) {
-		engine->etbControllers[i]->reset();
+	for (int i = 0 ; i < ETB_COUNT; i++) {
+		if (auto controller = engine->etbControllers[i]) {
+			controller->reset();
+		}
+		
 	}
 }
 
@@ -653,7 +657,7 @@ void setThrottleDutyCycle(percent_t level) {
 
 	float dc = ETB_PERCENT_TO_DUTY(level);
 	directPwmValue = dc;
-	for (int i = 0 ; i < engine->etbActualCount; i++) {
+	for (int i = 0 ; i < ETB_COUNT; i++) {
 		setDcMotorDuty(i, dc);
 	}
 	scheduleMsg(&logger, "duty ETB duty=%f", dc);
@@ -662,7 +666,7 @@ void setThrottleDutyCycle(percent_t level) {
 static void setEtbFrequency(int frequency) {
 	engineConfiguration->etbFreq = frequency;
 
-	for (int i = 0 ; i < engine->etbActualCount; i++) {
+	for (int i = 0 ; i < ETB_COUNT; i++) {
 		setDcMotorFrequency(i, frequency);
 	}
 }
@@ -670,7 +674,7 @@ static void setEtbFrequency(int frequency) {
 static void etbReset() {
 	scheduleMsg(&logger, "etbReset");
 	
-	for (int i = 0 ; i < engine->etbActualCount; i++) {
+	for (int i = 0 ; i < ETB_COUNT; i++) {
 		setDcMotorDuty(i, 0);
 	}
 
@@ -720,9 +724,7 @@ void etbAutocal(size_t throttleIndex) {
 		return;
 	}
 
-	auto etb = engine->etbControllers[throttleIndex];
-
-	if (etb) {
+	if (auto etb = engine->etbControllers[throttleIndex]) {
 		etb->autoCalibrateTps();
 	}
 }
@@ -755,6 +757,10 @@ void setDefaultEtbParameters(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 			config->pedalToTpsTable[pedalIndex][rpmIndex] = config->pedalToTpsPedalBins[pedalIndex];
 		}
 	}
+
+	// Default is to run each throttle off its respective hbridge
+	engineConfiguration->etbFunctions[0] = ETB_Throttle1;
+	engineConfiguration->etbFunctions[1] = ETB_Throttle2;
 
 	engineConfiguration->etbFreq = DEFAULT_ETB_PWM_FREQUENCY;
 
@@ -814,6 +820,13 @@ void unregisterEtbPins() {
 	// todo: we probably need an implementation here?!
 }
 
+static pid_s* getEtbPidForFunction(etb_function_e function DECLARE_ENGINE_PARAMETER_SUFFIX) {
+	switch (function) {
+		case ETB_Wastegate: return &CONFIG(etbWastegatePid);
+		default: return &CONFIG(etb);
+	}
+}
+
 void doInitElectronicThrottle(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	efiAssertVoid(OBD_PCM_Processor_Fault, engine->etbControllers != NULL, "etbControllers NULL");
 #if EFI_PROD_CODE
@@ -822,27 +835,38 @@ void doInitElectronicThrottle(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	addConsoleActionI("etb_freq", setEtbFrequency);
 #endif /* EFI_PROD_CODE */
 
-	// If you don't have a pedal we have no business here.
-	if (!Sensor::hasSensor(SensorType::AcceleratorPedalPrimary)) {
-		return;
-	}
-
 	pedal2tpsMap.init(config->pedalToTpsTable, config->pedalToTpsPedalBins, config->pedalToTpsRpmBins);
 
-	engine->etbActualCount = Sensor::hasSensor(SensorType::Tps2) ? 2 : 1;
+	bool mustHaveEtbConfigured = Sensor::hasSensor(SensorType::AcceleratorPedalPrimary);
+	bool anyEtbConfigured = false;
 
-	for (int i = 0 ; i < engine->etbActualCount; i++) {
+	for (int i = 0 ; i < ETB_COUNT; i++) {
 		auto motor = initDcMotor(i, CONFIG(etb_use_two_wires) PASS_ENGINE_PARAMETER_SUFFIX);
 
 		// If this motor is actually set up, init the etb
 		if (motor)
 		{
-			// TODO: configure per-motor in config so wastegate/VW idle works
-			auto func = i == 0 ? ETB_Throttle1 : ETB_Throttle2;
+			auto controller = engine->etbControllers[i];
+			if (!controller) {
+				continue;
+			}
 
-			engine->etbControllers[i]->init(func, motor, &engineConfiguration->etb, &pedal2tpsMap);
+			auto func = CONFIG(etbFunctions[i]);
+			auto pid = getEtbPidForFunction(func PASS_ENGINE_PARAMETER_SUFFIX);
+
+			anyEtbConfigured |= controller->init(func, motor, pid, &pedal2tpsMap);
 			INJECT_ENGINE_REFERENCE(engine->etbControllers[i]);
 		}
+	}
+
+	if (!anyEtbConfigured) {
+		// It's not valid to have a PPS without any ETBs - check that at least one ETB was enabled along with the pedal
+		if (mustHaveEtbConfigured) {
+			firmwareError(OBD_PCM_Processor_Fault, "A pedal position sensor was configured, but no electronic throttles are configured.");
+		}
+
+		// Don't start the thread if no throttles are in use.
+		return;
 	}
 
 #if 0 && ! EFI_UNIT_TEST
@@ -857,8 +881,6 @@ void doInitElectronicThrottle(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 		startupPositionError = true;
 	}
 #endif /* EFI_UNIT_TEST */
-
-	etbPidReset(PASS_ENGINE_PARAMETER_SIGNATURE);
 
 #if !EFI_UNIT_TEST
 	etbThread.Start();
@@ -881,10 +903,16 @@ void initElectronicThrottle(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 
 void setEtbIdlePosition(percent_t pos DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	for (int i = 0; i < ETB_COUNT; i++) {
-		auto etb = engine->etbControllers[i];
-
-		if (etb) {
+		if (auto etb = engine->etbControllers[i]) {
 			etb->setIdlePosition(pos);
+		}
+	}
+}
+
+void setEtbWastegatePosition(percent_t pos DECLARE_ENGINE_PARAMETER_SUFFIX) {
+	for (int i = 0; i < ETB_COUNT; i++) {
+		if (auto etb = engine->etbControllers[i]) {
+			etb->setWastegatePosition(pos);
 		}
 	}
 }

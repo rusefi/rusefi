@@ -267,14 +267,10 @@ void refreshMapAveragingPreCalc(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 /**
  * Shaft Position callback used to schedule start and end of MAP averaging
  */
-static void mapAveragingTriggerCallback(trigger_event_e ckpEventType,
+void mapAveragingTriggerCallback(
 		uint32_t index, efitick_t edgeTimestamp DECLARE_ENGINE_PARAMETER_SUFFIX) {
-
-	ScopePerf perf(PE::MapAveragingTriggerCallback);
-	
 #if EFI_ENGINE_CONTROL
 	// this callback is invoked on interrupt thread
-	UNUSED(ckpEventType);
 	if (index != (uint32_t)CONFIG(mapAveragingSchedulingAtIndex))
 		return;
 
@@ -283,6 +279,8 @@ static void mapAveragingTriggerCallback(trigger_event_e ckpEventType,
 		return;
 	}
 
+	ScopePerf perf(PE::MapAveragingTriggerCallback);
+
 	if (CONFIG(mapMinBufferLength) != mapMinBufferLength) {
 		applyMapMinBufferLength(PASS_ENGINE_PARAMETER_SIGNATURE);
 	}
@@ -290,12 +288,14 @@ static void mapAveragingTriggerCallback(trigger_event_e ckpEventType,
 	measurementsPerRevolution = measurementsPerRevolutionCounter;
 	measurementsPerRevolutionCounter = 0;
 
+	// todo: this could be pre-calculated
 	int samplingCount = CONFIG(measureMapOnlyInOneCylinder) ? 1 : engineConfiguration->specs.cylindersCount;
 
 	for (int i = 0; i < samplingCount; i++) {
 		angle_t samplingStart = ENGINE(engineState.mapAveragingStart[i]);
 
 		angle_t samplingDuration = ENGINE(engineState.mapAveragingDuration);
+		// todo: this assertion could be moved out of trigger handler
 		assertAngleRange(samplingDuration, "samplingDuration", CUSTOM_ERR_6563);
 		if (samplingDuration <= 0) {
 			warning(CUSTOM_MAP_ANGLE_PARAM, "map sampling angle should be positive");
@@ -310,6 +310,7 @@ static void mapAveragingTriggerCallback(trigger_event_e ckpEventType,
 			return;
 		}
 
+		// todo: pre-calculate samplingEnd for each cylinder
 		fixAngle(samplingEnd, "samplingEnd", CUSTOM_ERR_6563);
 		// only if value is already prepared
 		int structIndex = getRevolutionCounter() % 2;
@@ -351,10 +352,6 @@ void initMapAveraging(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	logger = sharedLogger;
 
 #if !EFI_UNIT_TEST
-#if EFI_SHAFT_POSITION_INPUT
-	addTriggerEventListener(&mapAveragingTriggerCallback, "MAP averaging", engine);
-#endif /* EFI_SHAFT_POSITION_INPUT */
-
 	addConsoleAction("faststat", showMapStats);
 #endif /* EFI_UNIT_TEST */
 

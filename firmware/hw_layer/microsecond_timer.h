@@ -15,7 +15,8 @@ extern "C"
 void initMicrosecondTimer(void);
 void setHardwareUsTimer(int32_t deltaTimeUs);
 
-#define TOO_FAR_INTO_FUTURE_US 10 * US_PER_SECOND
+#define TOO_FAR_INTO_FUTURE_US (10 * US_PER_SECOND)
+#define TOO_FAR_INTO_FUTURE_NT US2NT(TOO_FAR_INTO_FUTURE_US)
 
 #ifdef __cplusplus
 }

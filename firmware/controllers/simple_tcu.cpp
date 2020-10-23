@@ -1,16 +1,22 @@
 #include "simple_tcu.h"
+#include "efi_gpio.h"
+#include "engine_configuration.h"
 
-RegisteredOutputPin tcuSolenoids[efi::size(tcu_solenoid)];
+EXTERN_CONFIG;
 
-void SimpleTransmissionController::SimpleTransmissionController() {
-    for (int i = 0; i < efi::size(tcu_solenoid); i++) {
-        tcuSolenoids[i].initPin("Transmission Solenoid", CONFIG(tcu_solenoid[i]), CONFIG{tcu_solenoid_mode[i]});
+OutputPin tcuSolenoids[TCU_SOLENOID_COUNT];
+
+void SimpleTransmissionController::init() {
+    for (int i = 0; i < efi::size(CONFIG(tcu_solenoid)); i++) {
+        tcuSolenoids[i].initPin("Transmission Solenoid", CONFIG(tcu_solenoid)[i], &CONFIG(tcu_solenoid_mode)[i]);
     }
 }
 
 void SimpleTransmissionController::update(gear_e gear) {
-    for (int i = 0; i < efi::size(tcu_solenoid); i++) {
-        tcuSolenoids[i].setValue(CONFIG(tcuSolenoidTable)[i][static_cast<int>(gear)])
+    for (int i = 0; i < efi::size(CONFIG(tcu_solenoid)); i++) {
+#ifndef EFI_UNIT_TEST
+        tcuSolenoids[i].setValue(config->tcuSolenoidTable[static_cast<int>(gear) + 1][i]);
+#endif
     }
     setCurrentGear(gear);
     postState();
