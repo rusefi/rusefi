@@ -365,8 +365,8 @@ enable2ndByteCanID = false
 	idlePositionSensor    = scalar,  S16,    270, "%",{1/@@PACK_MULT_PERCENT@@}, 0
 	rawLowFuelPressure    = scalar,  U16,     272, "V",{1/@@PACK_MULT_VOLTAGE@@}, 0
 	rawHighFuelPressure   = scalar,  U16,     274, "V",{1/@@PACK_MULT_VOLTAGE@@}, 0
-	highFuelPressure      = scalar,  S16,     276, "bar", {1/@@PACK_MULT_HIGH_PRESSURE@@}, 0
-	lowFuelPressure       = scalar,  S16,     278, "kpa", {1/@@PACK_MULT_PRESSURE@@}, 0
+	lowFuelPressure       = scalar,  S16,     276, "kpa", {1/@@PACK_MULT_PRESSURE@@}, 0
+	highFuelPressure      = scalar,  S16,     278, "bar", {1/@@PACK_MULT_HIGH_PRESSURE@@}, 0
 
 ;
 ; see TunerStudioOutputChannels struct
