@@ -805,6 +805,12 @@ typedef enum {
 	/**
 	 * Bosch 2.5 Bar TMap Map Sensor with IAT
 	 * 20 kPa at 0.40V, 250 kPa at 4.65V
+	 * 4 pin:
+	 *    Pin 1 : Sensor Ground
+	 *    Pin 2 : Temp Signal
+	 *    Pin 3 : 5v
+	 *    Pin 4 : Map Signal
+	 * Volkswagen Passat B6
 	 */
 
 	MT_BOSCH_2_5 = 10,
