@@ -364,6 +364,9 @@ enable2ndByteCanID = false
 	wastegatePositionSensor = scalar,  S16,    268, "%",{1/@@PACK_MULT_PERCENT@@}, 0
 	idlePositionSensor    = scalar,  S16,    270, "%",{1/@@PACK_MULT_PERCENT@@}, 0
 
+	lowFPValue        = scalar,  U16,     272,        "V",,{1/@@PACK_MULT_VOLTAGE@@},,         0
+	highFP1Value        = scalar,  U16,     274,        "V",,{1/@@PACK_MULT_VOLTAGE@@},,         0
+
 ;
 ; see TunerStudioOutputChannels struct
 ;
@@ -1001,6 +1004,8 @@ gaugeCategory = Sensors - Raw
    rawPpsSecondaryGauge = rawPpsSecondary,"Raw Pedal Secondary","volts", 0, 5, 0, 0, 5, 5, 3, 0
    rawIdlePositionSensorGauge  = rawIdlePositionSensor, "Raw Idle Position",  "volts", 0, 5, 0, 0, 5, 5, 3, 0
    rawWastegatePositionGauge = rawWastegatePosition,"Raw Wastegate Position","volts", 0, 5, 0, 0, 5, 5, 3, 0
+   lowFPValueGauge = lowFPValue,"Raw low fuel voltage","volts", 0, 5, 0, 0, 5, 5, 3, 0
+   highFP1ValueGauge = highFP1Value,"Raw high1 fuel voltage","volts", 0, 5, 0, 0, 5, 5, 3, 0
 
 gaugeCategory = Transmission
    desiredGearGauge = tcuDesiredGear, "Desired", "gear", -1, 10, -1, -1, 10, 10, 0, 0
