@@ -250,7 +250,10 @@ typedef struct {
 	scaled_percent wastegatePosition;	// 268
 	scaled_percent idlePositionSensor;	// 270
 
-	uint8_t unusedAtTheEnd[16]; // we have some unused bytes to allow compatible TS changes
+	scaled_voltage lowFuelPressure; // 272
+	scaled_voltage highFuelPressure1; // 274
+
+	uint8_t unusedAtTheEnd[12]; // we have some unused bytes to allow compatible TS changes
 
 	// Temporary - will remove soon
 	TsDebugChannels* getDebugChannels() {
