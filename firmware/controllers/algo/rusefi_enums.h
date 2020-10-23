@@ -1011,3 +1011,8 @@ typedef enum __attribute__ ((__packed__)) {
 	ETB_IdleValve = 3,
 	ETB_Wastegate = 4,
 } etb_function_e;
+
+typedef enum __attribute__ ((__packed__)) {
+	IPT_Low = 0,
+	IPT_High = 1,
+} injector_pressure_type_e;
