@@ -1196,7 +1196,11 @@ int16_t tps2Max;Full throttle#2. tpsMax value as 10 bit ADC value. Not Voltage!\
 	pin_output_mode_e starterControlPinMode;
 	adc_channel_e wastegatePositionSensor;
 	afr_override_e ignOverrideMode;+Override the Y axis (load) value used for the ignition table.\nAdvanced users only: If you aren't sure you need this, you probably don't need this.
-	uint8_t[3] unused_former_warmup_target_afr;;"units", 1, 0, -20, 100, 0
+
+	custom injector_pressure_type_e 1 bits, U08, @OFFSET@, [0:0], "Low", "High"
+	injector_pressure_type_e injectorPressureType;+Select which fuel pressure sensor measures the pressure of the fuel at your injectors.
+
+	uint8_t[2] unused_former_warmup_target_afr;;"units", 1, 0, -20, 100, 0
 
 	float boostCutPressure;+MAP value above which fuel is cut in case of overboost.\n0 to disable overboost cut.;"kPa (absolute)",        1,     0,    0, 500,     0
 
