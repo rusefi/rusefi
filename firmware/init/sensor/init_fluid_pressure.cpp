@@ -4,6 +4,7 @@
 #include "error_handling.h"
 #include "global.h"
 #include "functional_sensor.h"
+#include "proxy_sensor.h"
 #include "linear_func.h"
 
 EXTERN_ENGINE;
@@ -16,6 +17,8 @@ static FunctionalSensor fuelPressureSensorLow(SensorType::FuelPressureLow, /* ti
 
 static LinearFunc fuelPressureFuncHigh;
 static FunctionalSensor fuelPressureSensorHigh(SensorType::FuelPressureHigh, /* timeout = */ MS2NT(50));
+
+static ProxySensor injectorPressure(SensorType::FuelPressureInjector);
 
 static void configureFluidPressure(LinearFunc& func, const linear_sensor_s& cfg) {
 	float val1 = cfg.value1;
@@ -51,6 +54,16 @@ void initOilPressure(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	initFluidPressure(oilpSensorFunc, oilpSensor, CONFIG(oilPressure), 10);
 	initFluidPressure(fuelPressureFuncLow, fuelPressureSensorLow, CONFIG(lowPressureFuel), 10);
 	initFluidPressure(fuelPressureFuncHigh, fuelPressureSensorHigh, CONFIG(highPressureFuel), 100);
+
+	injectorPressure.setProxiedSensor(
+		CONFIG(injectorPressureType) == IPT_High
+		? SensorType::FuelPressureHigh
+		: SensorType::FuelPressureLow
+	);
+
+	if (!injectorPressure.Register()) {
+		firmwareError(OBD_PCM_Processor_Fault, "Duplicate sensor registration");
+	}
 }
 
 void reconfigureOilPressure(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
