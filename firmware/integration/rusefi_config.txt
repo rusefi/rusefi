@@ -168,6 +168,7 @@ struct_no_prefix engine_configuration_s
 
 ! These are used currently only for output channels - but could be for config as well
 #define PACK_MULT_PRESSURE 30
+#define PACK_MULT_HIGH_PRESSURE 10
 #define PACK_MULT_PERCENT 100
 #define PACK_MULT_TEMPERATURE 100
 #define PACK_ADD_TEMPERATURE 40
@@ -368,13 +369,13 @@ float resistance_3;;"Ohm",      1,     0,    0, 200000,     1
 	float bias_resistor;+Pull-up resistor value on your board;"Ohm",      1,     0,    0, 200000,     1
 end_struct
 
-struct oil_pressure_config_s @brief Oil pressure sensor interpolation
+struct linear_sensor_s @brief Linear sensor interpolation
 	adc_channel_e hwChannel;
 	uint8_t[3] alignmentFill;;"unit",      1,     0,    0, 100,     0
 	float v1;;         "volts",    1,    0.0,       0,    10.0,        2
-	float value1;;     "kPa",    1,      0.0,       0,  1000.0,        2
+	float value1;;     "kPa",    1,      0.0,       0,  1000000.0,        2
 	float v2;;         "volts",    1,    0.0,       0,    10.0,        2
-	float value2;;     "kPa",    1,      0.0,       0,  1000.0,        2
+	float value2;;     "kPa",    1,      0.0,       0,  1000000.0,        2
 end_struct
 
 struct ThermistorConf @brief Thermistor curve parameters
@@ -601,8 +602,8 @@ trigger_config_s trigger;
 
 custom spi_device_e 1 bits,U32,   @OFFSET@, [0:2], "Off", "SPI1", "SPI2", "SPI3", "SPI4", "INVALID", "INVALID", "INVALID" 
 	spi_device_e hip9011SpiDevice;
-	adc_channel_e high_fuel_pressure_sensor_1;
-	adc_channel_e high_fuel_pressure_sensor_2;
+	uint8_t unused541;;"unit",      1,     0,    0, 100,     0
+	uint8_t unused542;;"unit",      1,     0,    0, 100,     0
 	adc_channel_e mafAdcChannel;See hasMafSensor
 	
 	
@@ -1195,8 +1196,7 @@ int16_t tps2Max;Full throttle#2. tpsMax value as 10 bit ADC value. Not Voltage!\
 	pin_output_mode_e starterControlPinMode;
 	adc_channel_e wastegatePositionSensor;
 	afr_override_e ignOverrideMode;+Override the Y axis (load) value used for the ignition table.\nAdvanced users only: If you aren't sure you need this, you probably don't need this.
-	uint8_t[2] unused_former_warmup_target_afr;;"units", 1, 0, -20, 100, 0
-	adc_channel_e low_fuel_pressure_sensor;
+	uint8_t[3] unused_former_warmup_target_afr;;"units", 1, 0, -20, 100, 0
 
 	float boostCutPressure;+MAP value above which fuel is cut in case of overboost.\n0 to disable overboost cut.;"kPa (absolute)",        1,     0,    0, 500,     0
 
@@ -1282,7 +1282,7 @@ tle8888_mode_e tle8888mode;
 
 	pid_s[AUX_PID_COUNT iterate] auxPid;
 
-	oil_pressure_config_s oilPressure;
+	linear_sensor_s oilPressure;
 
 	spi_device_e accelerometerSpiDevice;
 	uint8_t[1] unusedAuxVoltage1_TODO_332;;"units", 1, 0, -20, 100, 0
@@ -1322,7 +1322,10 @@ float[CRANKING_ADVANCE_CURVE_SIZE] crankingAdvance    ;+Optional timing advance 
 float[CLT_CURVE_SIZE] iacCoastingBins;CLT-based idle position for coasting (used in Auto-PID Idle mode);"C",        1,     0,   -100.0,    250.0,  2
 float[CLT_CURVE_SIZE] iacCoasting;    CLT-based idle position for coasting (used in Auto-PID Idle mode);"%",      1,     0,      0.0,    100.0,   2
 
-uint8_t[576] unused3288;;"units", 1, 0, -20, 100, 0
+	linear_sensor_s highPressureFuel;
+	linear_sensor_s lowPressureFuel;
+
+uint8_t[536] unused3328;;"units", 1, 0, -20, 100, 0
 
 float tChargeAirCoefMin;;"Min tCharge Coeff.",        1,     0,  0.0,    1.0,  4
 float tChargeAirCoefMax;;"Max tCharge Coeff.",        1,     0,  0.0,    1.0,  4
@@ -1553,6 +1556,9 @@ end_struct
 #define GAUGE_NAME_ETB_TARGET "ETB position target"
 #define GAUGE_NAME_ETB_ERROR "ETB position error"
 #define GAUGE_NAME_ETB_DUTY "ETB Duty"
+
+#define GAUGE_NAME_FUEL_PRESSURE_LOW "Fuel pressure (low)"
+#define GAUGE_NAME_FUEL_PRESSURE_HIGH "Fuel pressure (high)"
 
 #define GAUGE_NAME_ACCEL_X "Acceleration: X"
 #define GAUGE_NAME_ACCEL_Y "Acceleration: Y"

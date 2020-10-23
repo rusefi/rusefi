@@ -363,9 +363,10 @@ enable2ndByteCanID = false
 	rawWastegatePosition  = scalar,	 U16,    266, "V",{1/@@PACK_MULT_VOLTAGE@@}, 0.0
 	wastegatePositionSensor = scalar,  S16,    268, "%",{1/@@PACK_MULT_PERCENT@@}, 0
 	idlePositionSensor    = scalar,  S16,    270, "%",{1/@@PACK_MULT_PERCENT@@}, 0
-
-	lowFPValue        = scalar,  U16,     272,        "V",,{1/@@PACK_MULT_VOLTAGE@@},,         0
-	highFP1Value        = scalar,  U16,     274,        "V",,{1/@@PACK_MULT_VOLTAGE@@},,         0
+	rawLowFuelPressure    = scalar,  U16,     272, "V",{1/@@PACK_MULT_VOLTAGE@@}, 0
+	rawHighFuelPressure   = scalar,  U16,     274, "V",{1/@@PACK_MULT_VOLTAGE@@}, 0
+	lowFuelPressure       = scalar,  S16,     276, "kpa", {1/@@PACK_MULT_PRESSURE@@}, 0
+	highFuelPressure      = scalar,  S16,     278, "bar", {1/@@PACK_MULT_HIGH_PRESSURE@@}, 0
 
 ;
 ; see TunerStudioOutputChannels struct
@@ -953,6 +954,8 @@ gaugeCategory = Sensors - Extra 1
    idleAirValvePositionGauge = idleAirValvePosition, "Idle position", "%",     0,   100,     0,    0,    100,  100,   1,   1
    AuxT1Gauge        = auxt1,     "Aux temp 1",        "deg C",      -40,    140,     -15,      1,      95,   110,   1,   1
    AuxT2Gauge        = auxt2,     "Aux temp 2",        "deg C",      -40,    140,     -15,      1,      95,   110,   1,   1
+   lowFuelPressureGauge = lowFuelPressure, @@GAUGE_NAME_FUEL_PRESSURE_LOW@@, "kPa", 0, 700, 0, 0, 700, 700, 1, 0
+   highFuelPressureGauge = highFuelPressure, @@GAUGE_NAME_FUEL_PRESSURE_HIGH@@, "bar", 0, 200, 0, 0, 200, 200, 1, 0
 
 gaugeCategory = Ignition
    ignadvGauge = ignitionAdvance,       "Ignition timing",   "degrees",     -100,    100,    -999,   -999,     999,   999,   1, 1
@@ -1004,8 +1007,8 @@ gaugeCategory = Sensors - Raw
    rawPpsSecondaryGauge = rawPpsSecondary,"Raw Pedal Secondary","volts", 0, 5, 0, 0, 5, 5, 3, 0
    rawIdlePositionSensorGauge  = rawIdlePositionSensor, "Raw Idle Position",  "volts", 0, 5, 0, 0, 5, 5, 3, 0
    rawWastegatePositionGauge = rawWastegatePosition,"Raw Wastegate Position","volts", 0, 5, 0, 0, 5, 5, 3, 0
-   lowFPValueGauge = lowFPValue,"Raw low fuel voltage","volts", 0, 5, 0, 0, 5, 5, 3, 0
-   highFP1ValueGauge = highFP1Value,"Raw high1 fuel voltage","volts", 0, 5, 0, 0, 5, 5, 3, 0
+   rawLowFuelPressureGauge = rawLowFuelPressure,"Raw fuel pressure (low) voltage","volts", 0, 5, 0, 0, 5, 5, 3, 0
+   rawHighFuelPressureGauge = rawHighFuelPressure,"Raw fuel pressure (high) voltage","volts", 0, 5, 0, 0, 5, 5, 3, 0
 
 gaugeCategory = Transmission
    desiredGearGauge = tcuDesiredGear, "Desired", "gear", -1, 10, -1, -1, 10, 10, 0, 0
@@ -1139,8 +1142,8 @@ gaugeCategory = Knock
    entry = throttlePedalPosition,   @@GAUGE_NAME_THROTTLE_PEDAL@@,       float,  "%.3f"
    entry = totalTriggerErrorCounter, @@GAUGE_NAME_TRG_ERR@@,int,    "%d"
    entry = idleAirValvePosition, @@GAUGE_NAME_IAC@@, float,  "%.3f"
-   entry = lowFPValue, "low pressure", float,  "%.3f"
-   entry = highFP1Value, "high pressure", float,  "%.3f"
+   entry = lowFuelPressure, @@GAUGE_NAME_FUEL_PRESSURE_LOW@@, float,  "%.3f"
+   entry = highFuelPressure, @@GAUGE_NAME_FUEL_PRESSURE_HIGH@@, float,  "%.3f"
 
    entry = injectorLagMs,   @@GAUGE_NAME_INJECTOR_LAG@@, float,  "%.3f"
    entry = fuelRunning,     @@GAUGE_NAME_FUEL_RUNNING@@, float,  "%.3f"
@@ -1411,6 +1414,7 @@ menuDialog = main
 		# Misc sensors
 		subMenu = speedSensor,				"Vehicle speed sensor"
 		subMenu = oilPressureSensor,		"Oil pressure"
+		subMenu = fuelPressureSensor,		"Fuel pressure"
 		subMenu = egtInputs,				"EGT" @@if_ts_show_egt
 		subMenu = wastegateIdlePos,			"Wastegate and idle position sensors"
 
@@ -1996,9 +2000,6 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 		field = "trigger stimulator pin #1", 			triggerSimulatorPins1
 		field = "trigger stimulator pin #2", 			triggerSimulatorPins2
 		field = "trigger stimulator pin #2", 			triggerSimulatorPins3
-		field = high_fuel_pressure_sensor_1,			high_fuel_pressure_sensor_1
-		field = high_fuel_pressure_sensor_2,			high_fuel_pressure_sensor_2
-		field = low_fuel_pressure_sensor,				low_fuel_pressure_sensor
 		field = "Warning Led",							warningLedPin
 		field = "tle6240_cs",							tle6240_cs
 		field = "tle6240 SPI",							tle6240spiDevice
@@ -2239,6 +2240,29 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 	dialog = oilPressureSensor, "", border
 		panel = oilp_settings, West
 		panel = oilPressureGauges, East
+
+	dialog = fuelp_settings, "Fuel Pressure Sensor"
+		field = "Fuel low pressure ADC input",			lowPressureFuel_hwChannel
+		field = "low voltage",							lowPressureFuel_v1, {lowPressureFuel_hwChannel != @@ADC_CHANNEL_NONE@@}
+		field = "low pressure",							lowPressureFuel_value1, {lowPressureFuel_hwChannel != @@ADC_CHANNEL_NONE@@}
+		field = "high voltage",							lowPressureFuel_v2, {lowPressureFuel_hwChannel != @@ADC_CHANNEL_NONE@@}
+		field = "high pressure",						lowPressureFuel_value2, {lowPressureFuel_hwChannel != @@ADC_CHANNEL_NONE@@}
+
+		field = "Fuel high pressure ADC input",			highPressureFuel_hwChannel
+		field = "low voltage",							highPressureFuel_v1, {highPressureFuel_hwChannel != @@ADC_CHANNEL_NONE@@}
+		field = "low pressure",							highPressureFuel_value1, {highPressureFuel_hwChannel != @@ADC_CHANNEL_NONE@@}
+		field = "high voltage",							highPressureFuel_v2, {highPressureFuel_hwChannel != @@ADC_CHANNEL_NONE@@}
+		field = "high pressure",						highPressureFuel_value2, {highPressureFuel_hwChannel != @@ADC_CHANNEL_NONE@@}
+
+	dialog = fuelPressureGauges
+		gauge = lowFuelPressureGauge
+		gauge = rawLowFuelPressureGauge
+		gauge = highFuelPressureGauge
+		gauge = rawHighFuelPressureGauge
+
+	dialog = fuelPressureSensor, "", border
+		panel = fuelp_settings, West
+		panel = fuelPressureGauges, East
 
 ;			Sensors->MAP sensor
 	dialog = mapSensorAnalog, "MAP sensor", yAxis		
