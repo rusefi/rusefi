@@ -168,6 +168,7 @@ struct_no_prefix engine_configuration_s
 
 ! These are used currently only for output channels - but could be for config as well
 #define PACK_MULT_PRESSURE 30
+#define PACK_MULT_HIGH_PRESSURE 10
 #define PACK_MULT_PERCENT 100
 #define PACK_MULT_TEMPERATURE 100
 #define PACK_ADD_TEMPERATURE 40
@@ -372,9 +373,9 @@ struct linear_sensor_s @brief Linear sensor interpolation
 	adc_channel_e hwChannel;
 	uint8_t[3] alignmentFill;;"unit",      1,     0,    0, 100,     0
 	float v1;;         "volts",    1,    0.0,       0,    10.0,        2
-	float value1;;     "kPa",    1,      0.0,       0,  1000.0,        2
+	float value1;;     "kPa",    1,      0.0,       0,  1000000.0,        2
 	float v2;;         "volts",    1,    0.0,       0,    10.0,        2
-	float value2;;     "kPa",    1,      0.0,       0,  1000.0,        2
+	float value2;;     "kPa",    1,      0.0,       0,  1000000.0,        2
 end_struct
 
 struct ThermistorConf @brief Thermistor curve parameters
@@ -1555,6 +1556,9 @@ end_struct
 #define GAUGE_NAME_ETB_TARGET "ETB position target"
 #define GAUGE_NAME_ETB_ERROR "ETB position error"
 #define GAUGE_NAME_ETB_DUTY "ETB Duty"
+
+#define GAUGE_NAME_FUEL_PRESSURE_LOW "Fuel pressure (low)"
+#define GAUGE_NAME_FUEL_PRESSURE_HIGH "Fuel pressure (high)"
 
 #define GAUGE_NAME_ACCEL_X "Acceleration: X"
 #define GAUGE_NAME_ACCEL_Y "Acceleration: Y"
