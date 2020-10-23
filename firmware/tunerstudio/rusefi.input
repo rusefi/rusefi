@@ -1712,6 +1712,7 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 ;			Engine->Injection Settings
 	dialog = injChars, "Injector Settings",	yAxis
 		field = "Injector Flow",			injector_flow, {isInjectionEnabled == 1}
+		field = "Fuel rail pressure sensor", injectorPressureType, { isInjectionEnabled && (highPressureFuel_hwChannel || lowPressureFuel_hwChannel) }
 
 	dialog = fuelParams, "Fuel characteristics", yAxis
 		field = "Stoichiometric ratio",		stoichRatioPrimary, {isInjectionEnabled == 1}
