@@ -1,7 +1,7 @@
 #include "global.h"
 #include "rusefi_enums.h"
 #include "rusefi_hw_enums.h"
-// was generated automatically by rusEfi tool  from rusefi_hw_enums.h // was generated automatically by rusEfi tool  from rusefi_enums.h // by enum2string.jar tool on Mon Sep 07 14:17:12 UTC 2020
+// was generated automatically by rusEfi tool  from rusefi_hw_enums.h // was generated automatically by rusEfi tool  from rusefi_enums.h // by enum2string.jar tool on Fri Oct 23 19:47:24 UTC 2020
 // see also gen_config_and_enums.bat
 
 
@@ -74,6 +74,8 @@ case EFI_ADC_ERROR:
   return "EFI_ADC_ERROR";
 case EFI_ADC_NONE:
   return "EFI_ADC_NONE";
+case EFI_ADC_TEMP_SENSOR:
+  return "EFI_ADC_TEMP_SENSOR";
   }
  return NULL;
 }
@@ -609,8 +611,6 @@ const char *getDebug_mode_e(debug_mode_e value){
 switch(value) {
 case DBG_16:
   return "DBG_16";
-case DBG_2:
-  return "DBG_2";
 case DBG_34:
   return "DBG_34";
 case DBG_43:
@@ -663,6 +663,8 @@ case DBG_FSIO_SPECIAL:
   return "DBG_FSIO_SPECIAL";
 case DBG_FUEL_PID_CORRECTION:
   return "DBG_FUEL_PID_CORRECTION";
+case DBG_GPPWM:
+  return "DBG_GPPWM";
 case DBG_IDLE_CONTROL:
   return "DBG_IDLE_CONTROL";
 case DBG_IGNITION_TIMING:
@@ -906,6 +908,21 @@ case ZIL_130:
   }
  return NULL;
 }
+const char *getEtb_function_e(etb_function_e value){
+switch(value) {
+case ETB_IdleValve:
+  return "ETB_IdleValve";
+case ETB_None:
+  return "ETB_None";
+case ETB_Throttle1:
+  return "ETB_Throttle1";
+case ETB_Throttle2:
+  return "ETB_Throttle2";
+case ETB_Wastegate:
+  return "ETB_Wastegate";
+  }
+ return NULL;
+}
 const char *getGear_e(gear_e value){
 switch(value) {
 case GEAR_1:
@@ -1026,6 +1043,15 @@ case IM_SINGLE_POINT:
   }
  return NULL;
 }
+const char *getInjector_pressure_type_e(injector_pressure_type_e value){
+switch(value) {
+case IPT_High:
+  return "IPT_High";
+case IPT_Low:
+  return "IPT_Low";
+  }
+ return NULL;
+}
 const char *getLaunchActivationMode_e(launchActivationMode_e value){
 switch(value) {
 case ALWAYS_ACTIVE_LAUNCH:
@@ -1062,19 +1088,6 @@ case DensoTODO:
   return "DensoTODO";
 case Internal_ForceMyEnumIntSize_maf_sensor:
   return "Internal_ForceMyEnumIntSize_maf_sensor";
-  }
- return NULL;
-}
-const char *getMass_storage_e(mass_storage_e value){
-switch(value) {
-case Force_4_bytes_size_mass_storage:
-  return "Force_4_bytes_size_mass_storage";
-case MS_ALWAYS:
-  return "MS_ALWAYS";
-case MS_AUTO:
-  return "MS_AUTO";
-case MS_NEVER:
-  return "MS_NEVER";
   }
  return NULL;
 }
@@ -1237,6 +1250,8 @@ const char *getTrigger_type_e(trigger_type_e value){
 switch(value) {
 case Force_4_bytes_size_trigger_type:
   return "Force_4_bytes_size_trigger_type";
+case TT_1_16:
+  return "TT_1_16";
 case TT_2JZ_1_12:
   return "TT_2JZ_1_12";
 case TT_2JZ_3_34:
@@ -1398,6 +1413,8 @@ case MIATA_NB2:
   return "MIATA_NB2";
 case VVT_2JZ:
   return "VVT_2JZ";
+case VVT_4_1:
+  return "VVT_4_1";
 case VVT_BOSCH_QUICK_START:
   return "VVT_BOSCH_QUICK_START";
 case VVT_FIRST_HALF:

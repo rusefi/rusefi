@@ -170,7 +170,6 @@ enable2ndByteCanID = false
 	  ind_o2_heater   = bits,    U32,      0,    [7:7], "true", "false";
       ind_check_engine= bits,    U32,      0,    [8:8], "true", "false";
       needBurn        = bits,    U32,      0,    [9:9], "true", "false";
-      ind_2nd_trigger_en=bits,   U32,      0,  [10:10], "true", "false";
       clutchUpState    =bits,    U32,      0,  [11:11], "true", "false";
       clutchDownState  =bits,    U32,      0,  [12:12], "true", "false";
       knockEverIndicator=bits,   U32,      0,  [13:13], "true", "false";
@@ -228,7 +227,7 @@ enable2ndByteCanID = false
       chargeAirMass   = scalar,  U16,     44,        "g",0.001,         0
       crankingFuelMs  = scalar,  U16,     46,     "ms",{1/@@PACK_MULT_MS@@},     0.0
       currentTargetAfr= scalar,  U16,     48,    "ratio",,{1/@@PACK_MULT_AFR@@},,         0
-      baseFuel        = scalar,  U16,     50,     "ms",{1/@@PACK_MULT_MS@@},       0
+      baseFuel        = scalar,  U16,     50,     "mg",{1/@@PACK_MULT_FUEL_MASS@@},       0
       fuelRunning     = scalar,  U16,     52,     "ms",{1/@@PACK_MULT_MS@@},       0
       actualLastInjection=scalar,U16,     54,     "ms",{1/@@PACK_MULT_MS@@},     0.0
       injectorDutyCycle=scalar,  U08,     56,        "%",  0.5,         0
@@ -360,6 +359,15 @@ enable2ndByteCanID = false
 	knock7 = scalar, S08, 256, "dbv", 1, 0
 	knock8 = scalar, S08, 257, "dbv", 1, 0
 
+	rawIdlePositionSensor = scalar,	 U16,    264, "V",{1/@@PACK_MULT_VOLTAGE@@}, 0.0
+	rawWastegatePosition  = scalar,	 U16,    266, "V",{1/@@PACK_MULT_VOLTAGE@@}, 0.0
+	wastegatePositionSensor = scalar,  S16,    268, "%",{1/@@PACK_MULT_PERCENT@@}, 0
+	idlePositionSensor    = scalar,  S16,    270, "%",{1/@@PACK_MULT_PERCENT@@}, 0
+	rawLowFuelPressure    = scalar,  U16,     272, "V",{1/@@PACK_MULT_VOLTAGE@@}, 0
+	rawHighFuelPressure   = scalar,  U16,     274, "V",{1/@@PACK_MULT_VOLTAGE@@}, 0
+	lowFuelPressure       = scalar,  S16,     276, "kpa", {1/@@PACK_MULT_PRESSURE@@}, 0
+	highFuelPressure      = scalar,  S16,     278, "bar", {1/@@PACK_MULT_HIGH_PRESSURE@@}, 0
+
 ;
 ; see TunerStudioOutputChannels struct
 ;
@@ -393,12 +401,12 @@ enable2ndByteCanID = false
 ; wall of debug mode :)
 ; https://rusefi.com/wiki/index.php?title=Manual:Debug_fields
 ;                                            0                     1                     2            3                           4                      5                            6             7              8                    9            10                   11       12           13          14             15            16              17                       18                 19            20              21               22                23         24           25                26           27         28        29      30       31                32                      33     34       35       36                       37              38            39                40               41           42           43
-;											 Alternator            TPS Acceleration      Warmup-Pid   Idle                        Engine Load Acc        Trigger Counters                                          VVT                  Cranking     Ignition Timing                                                                                     ETB PID                                                                                                     FSIO_1_7                 CJ125             CAN                                                TLE8888           Analog inputs 2         Boost                    Start           Launcher      ETB Autotune                                                FSIO_8_14    FSIO_SPECIAL
-;                                            DBG_ALTERNATOR_PID    DBG_TPS_ACCEL         DBG_2        DBG_IDLE_CONTROL
-    debugFieldF1List = bits,   U08,   [0:7], "Controller Output",  "From TPS",           "",          "Controller Output",        "Idle output",         "Channel 1 Rise Counter",    "",           "",            "VVT Event Position","",          "Ign IAT Corr",      "",      "",         "",         "",            "",           "",             "ETB Controller Output", "",                "",           "df1",          "df1",           "22df1",          "fsio 1",  "24:df1",     "CJ125: output",  "",          "",         "",       "",     "",     "",               "TPS1 Pri/Sec Diff",    "",    "",      "",      "Boost Open Loop Duty",  "S unused"      "",           "Osc Amplitude",  "",              "fsio 8",    "idle offset",""
-    debugFieldF2List = bits,   U08,   [0:7], "I-Term",             "To TPS",             "",          "I-Term",                   "Idle df2",            "Channel 2 Rise Counter",    "",           "",            "VVT Ratio",         "",          "Ign CLT Corr",      "",      "",         "",         "",            "",           "",             "ETB I-Term",            "",                "",           "df2",          "df2",           "22df2",          "fsio 2",  "24:df2",     "CJ125: i-term",  "",          "",         "",       "",     "",     "",               "TPS2 Pri/Sec Diff",    "",    "",      "",      "Boost Closed Loop Duty","S unused"      "",           "Duty Amplitude", "",              "fsio 9",    "idle min",   ""
-    debugFieldF3List = bits,   U08,   [0:7], "Previous Error",     "Current TPS<>TPS",   "",          "prev error",               "Idle df3",            "ICU sum",                   "",           "",            "",                  "",          "Ign FSIO Adj",      "",      "",         "",         "",            "",           "",             "ETB err",               "",                "",           "df3",          "df3",           "22df3",          "fsio 3",  "24:df3",     "CJ125: err",     "",          "",         "",       "",     "",     "",               "TPS1/2 Diff",          "",    "",      "",      "",                      "S unused"      "",           "Tu",             "",              "fsio 10",   "",           ""
-    debugFieldF4List = bits,   U08,   [0:7], "I Gain",             "Extra Fuel",         "",          "I Gain",                   "Idle df4",            "VVT rise",                  "",           "",            "",                  "",          "Ign PID Adj",       "",      "",         "",         "",            "",           "",             "ETB I setting",         "",                "",           "df4",          "df4",           "22df4",          "fsio 4",  "24:df4",     "CJ125: UA",      "",          "",         "",       "",     "",     "",               "Acc Pedal Pri/Sec Diff","",   "",      "",      "",                      "S unused"      "",           "Ku",             "",              "fsio 11",   "",           ""
+;											 Alternator            TPS Acceleration      GPPWM        Idle                        Engine Load Acc        Trigger Counters                                          VVT                  Cranking     Ignition Timing                                                                                     ETB PID                                                                                                     FSIO_1_7                 CJ125             CAN                                                TLE8888           Analog inputs 2         Boost                    Start           Launcher      ETB Autotune                                                FSIO_8_14    FSIO_SPECIAL
+;                                            DBG_ALTERNATOR_PID    DBG_TPS_ACCEL         DBG_GPPWM    DBG_IDLE_CONTROL
+    debugFieldF1List = bits,   U08,   [0:7], "Controller Output",  "From TPS",           "GPPWM 1",   "Controller Output",        "Idle output",         "Channel 1 Rise Counter",    "",           "",            "VVT Event Position","",          "Ign IAT Corr",      "",      "",         "",         "",            "",           "",             "ETB Controller Output", "",                "",           "df1",          "df1",           "22df1",          "fsio 1",  "24:df1",     "CJ125: output",  "",          "",         "",       "",     "",     "",               "TPS1 Pri/Sec Diff",    "",    "",      "",      "Boost Open Loop Duty",  "S unused"      "",           "Osc Amplitude",  "",              "fsio 8",    "idle offset",""
+    debugFieldF2List = bits,   U08,   [0:7], "I-Term",             "To TPS",             "GPPWM 2",   "I-Term",                   "Idle df2",            "Channel 2 Rise Counter",    "",           "",            "VVT Ratio",         "",          "Ign CLT Corr",      "",      "",         "",         "",            "",           "",             "ETB I-Term",            "",                "",           "df2",          "df2",           "22df2",          "fsio 2",  "24:df2",     "CJ125: i-term",  "",          "",         "",       "",     "",     "",               "TPS2 Pri/Sec Diff",    "",    "",      "",      "Boost Closed Loop Duty","S unused"      "",           "Duty Amplitude", "",              "fsio 9",    "idle min",   ""
+    debugFieldF3List = bits,   U08,   [0:7], "Previous Error",     "Current TPS<>TPS",   "GPPWM 3",   "prev error",               "Idle df3",            "ICU sum",                   "",           "",            "",                  "",          "Ign FSIO Adj",      "",      "",         "",         "",            "",           "",             "ETB err",               "",                "",           "df3",          "df3",           "22df3",          "fsio 3",  "24:df3",     "CJ125: err",     "",          "",         "",       "",     "",     "",               "TPS1/2 Diff",          "",    "",      "",      "",                      "S unused"      "",           "Tu",             "",              "fsio 10",   "",           ""
+    debugFieldF4List = bits,   U08,   [0:7], "I Gain",             "Extra Fuel",         "GPPWM 4",   "I Gain",                   "Idle df4",            "VVT rise",                  "",           "",            "",                  "",          "Ign PID Adj",       "",      "",         "",         "",            "",           "",             "ETB I setting",         "",                "",           "df4",          "df4",           "22df4",          "fsio 4",  "24:df4",     "CJ125: UA",      "",          "",         "",       "",     "",     "",               "Acc Pedal Pri/Sec Diff","",   "",      "",      "",                      "S unused"      "",           "Ku",             "",              "fsio 11",   "",           ""
     debugFieldF5List = bits,   U08,   [0:7], "D Gain",             "df5",                "df5",       "D Gain",                   "Idle df5",            "VVT fall",                  "df5",        "",            "",                  "",          "",                  "",      "",         "",         "",            "",           "",             "ETB D setting",         "df5",             "df5",        "df5",          "df5",           "22df5",          "fsio 5",  "24:df5",     "CJ125: UR",      "",          "",         "",       "",     "",     "",               "",                     "",    "",      "",      "",                      "S unused"      "",           "Kp",             "",              "fsio 12",   "",           ""
     debugFieldF6List = bits,   U08,   [0:7], "D Term",             "",                   "",          "D Term",                   "Idle df6",            "Current Gap",               "",           "",            "",                  "",          "",                  "",      "",         "",         "",            "",           "",             "ETB df6",               "",                "",           "df6",          "df6",           "22df6",          "fsio 6",  "24:df6",     "cj: f7",         "",          "",         "",       "",     "",     "",               "",                     "",    "",      "",      "",                      "S unused"      "",           "Ki",             "",              "fsio 13",   "",           ""
     debugFieldF7List = bits,   U08,   [0:7], "Max-Value",          "",                   "",          "Max-Value",                "Idle df7",            "",                          "",           "",            "",                  "",          "",                  "",      "",         "",         "",            "",           "",             "ETB df7",               "",                "",           "df7",          "df7",           "22df7",          "fsio 7",  "24:df7",     "cj: f7",         "",          "",         "",       "",     "",     "",               "",                     "",    "",      "",      "",                      "S unused"      "",           "Kd",             "",              "fsio 14",   "",           ""
@@ -889,6 +897,8 @@ gaugeCategory = Sensors - Extra 2
    knockLevelGauge   = knockLevel,"Knock level",           "volts",        0,      7,      10,     10,     100,   100,   1,   2
    fuelTankLevelGauge   = fuelTankLevel,"Fuel level",           "x",        0,      7,      10,     10,     100,   100,   1,   2
    speedToRpmRatioGauge = speedToRpmRatio, "speed2rpm", "",     0,   100,     0,    0,    100,  100,   4,   4
+   wastegatePosGauge = wastegatePositionSensor, "Wastegate position sensor",  "%",        0,    100,       0,      0,     100,   100,   1,   1
+   idlePosSensGauge  = idlePositionSensor,      "Idle position sensor",       "%",        0,    100,       0,      0,     100,   100,   1,   1
 
 gaugeCategory = ECU Status
    warningCounterGauge = warningCounter, "Warning count", "",     0,   100,     0,    0,    100,  100,   0,   0
@@ -944,6 +954,8 @@ gaugeCategory = Sensors - Extra 1
    idleAirValvePositionGauge = idleAirValvePosition, "Idle position", "%",     0,   100,     0,    0,    100,  100,   1,   1
    AuxT1Gauge        = auxt1,     "Aux temp 1",        "deg C",      -40,    140,     -15,      1,      95,   110,   1,   1
    AuxT2Gauge        = auxt2,     "Aux temp 2",        "deg C",      -40,    140,     -15,      1,      95,   110,   1,   1
+   lowFuelPressureGauge = lowFuelPressure, @@GAUGE_NAME_FUEL_PRESSURE_LOW@@, "kPa", 0, 700, 0, 0, 700, 700, 1, 0
+   highFuelPressureGauge = highFuelPressure, @@GAUGE_NAME_FUEL_PRESSURE_HIGH@@, "bar", 0, 200, 0, 0, 200, 200, 1, 0
 
 gaugeCategory = Ignition
    ignadvGauge = ignitionAdvance,       "Ignition timing",   "degrees",     -100,    100,    -999,   -999,     999,   999,   1, 1
@@ -972,7 +984,7 @@ gaugeCategory = Fueling
    
    injectorLagMsGauge = injectorLagMs,       @@GAUGE_NAME_INJECTOR_LAG@@,      "mSec",        0,   25.5,     1.0,    1.2,      20,    25,   3, 1
    fuelRunningGauge     = fuelRunning,       @@GAUGE_NAME_FUEL_RUNNING@@,      "mSec",        0,   25.5,     1.0,    1.2,      20,    25,   3, 1
-   baseFuelGauge     = baseFuel,       @@GAUGE_NAME_FUEL_BASE@@,      "mSec",        0,   25.5,     1.0,    1.2,      20,    25,   3, 1
+   baseFuelGauge     = baseFuel,       @@GAUGE_NAME_FUEL_BASE@@,      "mSec",        0,   100, 0, 0, 100, 100,   2, 0
    fuelPidCorrectionGauge = fuelPidCorrection,       @@GAUGE_NAME_FUEL_PID_CORR@@,      "%",        -10,   10,     -8, -5, 5, 8,   3, 1
    fuelingLoadGauge = fuelingLoad, @@GAUGE_NAME_FUEL_LOAD@@, "%", 0, 300, 0, 0, 300, 300, 1, 1
 
@@ -993,6 +1005,10 @@ gaugeCategory = Sensors - Raw
    rawIatGauge          = rawIat        , "Raw IAT",           "volts", 0, 5, 0, 0, 5, 5, 3, 0
    rawOilPressureGauge  = rawOilPressure, "Raw Oil Pressure",  "volts", 0, 5, 0, 0, 5, 5, 3, 0
    rawPpsSecondaryGauge = rawPpsSecondary,"Raw Pedal Secondary","volts", 0, 5, 0, 0, 5, 5, 3, 0
+   rawIdlePositionSensorGauge  = rawIdlePositionSensor, "Raw Idle Position",  "volts", 0, 5, 0, 0, 5, 5, 3, 0
+   rawWastegatePositionGauge = rawWastegatePosition,"Raw Wastegate Position","volts", 0, 5, 0, 0, 5, 5, 3, 0
+   rawLowFuelPressureGauge = rawLowFuelPressure,"Raw fuel pressure (low) voltage","volts", 0, 5, 0, 0, 5, 5, 3, 0
+   rawHighFuelPressureGauge = rawHighFuelPressure,"Raw fuel pressure (high) voltage","volts", 0, 5, 0, 0, 5, 5, 3, 0
 
 gaugeCategory = Transmission
    desiredGearGauge = tcuDesiredGear, "Desired", "gear", -1, 10, -1, -1, 10, 10, 0, 0
@@ -1126,7 +1142,8 @@ gaugeCategory = Knock
    entry = throttlePedalPosition,   @@GAUGE_NAME_THROTTLE_PEDAL@@,       float,  "%.3f"
    entry = totalTriggerErrorCounter, @@GAUGE_NAME_TRG_ERR@@,int,    "%d"
    entry = idleAirValvePosition, @@GAUGE_NAME_IAC@@, float,  "%.3f"
-
+   entry = lowFuelPressure, @@GAUGE_NAME_FUEL_PRESSURE_LOW@@, float,  "%.3f"
+   entry = highFuelPressure, @@GAUGE_NAME_FUEL_PRESSURE_HIGH@@, float,  "%.3f"
 
    entry = injectorLagMs,   @@GAUGE_NAME_INJECTOR_LAG@@, float,  "%.3f"
    entry = fuelRunning,     @@GAUGE_NAME_FUEL_RUNNING@@, float,  "%.3f"
@@ -1295,7 +1312,7 @@ menuDialog = main
 		; subMenu = multisparkSettings,		"Multispark", 0, {isIgnitionEnabled == 1}
 		subMenu = std_separator
 
-		subMenu = ignitionTableTbl,			"Ignition advance", 0, {isIgnitionEnabled == 1 && useTPSAdvanceTable == 0}
+		subMenu = ignitionTableTbl,			"Ignition advance", 0, {isIgnitionEnabled}
 		subMenu = std_separator
 
 		# corrections
@@ -1332,7 +1349,8 @@ menuDialog = main
 
 	menu = "&Advanced"
         subMenu = boostDialog,          "Boost Control"
-		subMenu = boostPidDialog,        "Closed Loop Boost",    { boostType == 1 }
+		subMenu = boostPidDialog,        "Closed Loop Boost",    { isBoostControlEnabled && boostType == 1 }
+		subMenu = boostEtbPid,			"ETB-style Wastegate Actuator", { isBoostControlEnabled }
 
 		subMenu = std_separator
 		subMenu = gppwm1, "General Purpose PWM 1"
@@ -1396,7 +1414,9 @@ menuDialog = main
 		# Misc sensors
 		subMenu = speedSensor,				"Vehicle speed sensor"
 		subMenu = oilPressureSensor,		"Oil pressure"
+		subMenu = fuelPressureSensor,		"Fuel pressure"
 		subMenu = egtInputs,				"EGT" @@if_ts_show_egt
+		subMenu = wastegateIdlePos,			"Wastegate and idle position sensors"
 
 	menu = "&Controller"
 		subMenu = ecuStimulator,			"ECU stimulator"
@@ -1436,8 +1456,8 @@ menuDialog = main
 		subMenu = etbTpsBiasCurve,			"Electronic throttle body bias curve" @@if_ts_show_etb
 		subMenu = pedalToTpsTbl,			"Electronic Pedal Map" @@if_ts_show_etb
 		subMenu = std_separator
-#        subMenu = smLaunchControl,			"Launch Control"
-#		subMenu = std_separator
+        subMenu = smLaunchControl,			"Launch Control"
+		subMenu = std_separator
 #		subMenu = smRollingLaunch,			"Rolling Launch"
 #		subMenu = std_separator
 #		subMenu = antiLag,        			"Antilag Setup"
@@ -1620,12 +1640,11 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 	dialog = ignitionBasic, ""
 		field = "Enabled",						isIgnitionEnabled
 		field = "Mode",							ignitionMode, {isIgnitionEnabled == 1}
-		field = "#Wasted spark with individual coils"
 		field = "Two wire wasted",				twoWireBatchIgnition, {isIgnitionEnabled == 1 && ignitionMode == 2}
-		field = "Timing Mode",					timingMode, {isIgnitionEnabled == 1}
-		field = "Use TPS-based Advance Table",	useTPSAdvanceTable, {isIgnitionEnabled == 1}
+		field = "Override ignition table load axis",	ignOverrideMode, {isIgnitionEnabled}
 		field = "#Use fixed timing while validating with a timing gun"
-		field = "Fixed Timinig",				fixedTiming, {isIgnitionEnabled == 1 && timingMode == 1}
+		field = "Timing Mode",					timingMode, {isIgnitionEnabled == 1}
+		field = "Fixed Timing",				fixedTiming, {isIgnitionEnabled == 1 && timingMode == 1}
 
 	dialog = ignitionSettings, "", xAxis
 		panel = ignitionBasic
@@ -1656,11 +1675,13 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 
 		; see also in firmware '[doesTriggerImplyOperationMode]' tag
 		field = "Operation mode / speed",				ambiguousOperationMode
+		field = "#Please use '4 stroke with cam' only if primary trigger sensor is actually on cam"
+		field = "#Separate cam input not part of Trigger Pattern does not count here"
 		field = "With VR sensors only rising edge has reliable position"
 		field = "use only rising edge",					useOnlyRisingEdgeForTrigger    
 	    field = "!Reminder that 4-stroke cycle is 720 degrees"
 	    field = "!For well-known trigger types use '0' trigger angle offset"
-	    field = "Trigger Angle Offset",         		globalTriggerAngleOffset
+	    field = "Trigger Angle Advance",         		globalTriggerAngleOffset
 	    field = "Display only interesting",				displayLogicLevelsInEngineSniffer
 
 	dialog = triggerConfiguration_IO,	"Advanced Trigger"
@@ -1670,15 +1691,15 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 	    field = "VVT position display offset",			vvtOffset
 	    field = "print verbose VVT sync details to console",verboseVVTDecoding
 	    field = "Do not print messages in case of sync error",  silentTriggerError
-	    field = "Enable noise filtering",				useNoiselessTriggerDecoder, {trigger_type == @@TRIGGER_TYPE_60_2@@ || trigger_type == @@TRIGGER_TYPE_36_1@@}
+	    field = "Enable noise filtering",				useNoiselessTriggerDecoder, {trigger_type == @@TT_TT_TOOTHED_WHEEL_60_2@@ || trigger_type == @@TT_TT_TOOTHED_WHEEL_36_1@@}
 
 	dialog = triggerInputs,					"Trigger Inputs"
 		field = "!ECU reboot needed to apply these settings"
 		field = "#Cam is primary if you have cam sensor"
 		field = "Primary channel", 						triggerInputPins1
 		field = "Invert Primary",						invertPrimaryTriggerSignal
-		field = "Secondary channel", 					triggerInputPins2,            { trigger_type != 0 && trigger_type != 8 && trigger_type != 9 && trigger_type != 18 && trigger_type != 20}
-		field = "Invert Secondary",						invertSecondaryTriggerSignal, { trigger_type != 0 && trigger_type != 8 && trigger_type != 9 && trigger_type != 18 && trigger_type != 20}
+		field = "Secondary channel", 					triggerInputPins2,            { trigger_type != @@TT_TT_TOOTHED_WHEEL@@ && trigger_type != @@TT_TT_TOOTHED_WHEEL_60_2@@ && trigger_type != @@TT_TT_TOOTHED_WHEEL_36_1@@ && trigger_type != @@TT_TT_ONE@@ && trigger_type != @@TT_TT_60_2_VW@@ && trigger_type != @@TT_TT_TOOTHED_WHEEL_36_2@@}
+		field = "Invert Secondary",						invertSecondaryTriggerSignal, { trigger_type != @@TT_TT_TOOTHED_WHEEL@@ && trigger_type != @@TT_TT_TOOTHED_WHEEL_60_2@@ && trigger_type != @@TT_TT_TOOTHED_WHEEL_36_1@@ && trigger_type != @@TT_TT_ONE@@ && trigger_type != @@TT_TT_60_2_VW@@ && trigger_type != @@TT_TT_TOOTHED_WHEEL_36_2@@}
 		field = "Cam Sync/VVT input",					camInputs1
 		field = "Invert Cam/VVT",                       invertCamVVTSignal
 		panel = triggerInputComparator @@if_ts_show_trigger_comparator
@@ -1691,6 +1712,7 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 ;			Engine->Injection Settings
 	dialog = injChars, "Injector Settings",	yAxis
 		field = "Injector Flow",			injector_flow, {isInjectionEnabled == 1}
+		field = "Fuel rail pressure sensor", injectorPressureType, { isInjectionEnabled && (highPressureFuel_hwChannel || lowPressureFuel_hwChannel) }
 
 	dialog = fuelParams, "Fuel characteristics", yAxis
 		field = "Stoichiometric ratio",		stoichRatioPrimary, {isInjectionEnabled == 1}
@@ -1712,6 +1734,18 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 		field = ""
 		field = "injection Pin Mode",       			injectionPinMode, {isInjectionEnabled == 1}
 
+	dialog = testFsio, "FSIO Test"
+		commandButton = "FSIO#1",	cmd_test_fsio1
+		commandButton = "FSIO#2",	cmd_test_fsio2
+		commandButton = "FSIO#3",	cmd_test_fsio3
+		commandButton = "FSIO#4",	cmd_test_fsio4
+		commandButton = "FSIO#5",	cmd_test_fsio5
+		commandButton = "FSIO#6",	cmd_test_fsio6
+		commandButton = "FSIO#7",	cmd_test_fsio7
+		commandButton = "FSIO#8",	cmd_test_fsio8
+		commandButton = "FSIO#9",	cmd_test_fsio9
+		commandButton = "FSIO#10",	cmd_test_fsio10
+
 	dialog = testInjectors, "Injector Test"
 		commandButton = "Injector #1", cmd_test_inj1
 		commandButton = "Injector #2", cmd_test_inj2
@@ -1725,16 +1759,6 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 		commandButton = "Injector #10", cmd_test_inj10
 		commandButton = "Injector #11", cmd_test_inj11
 		commandButton = "Injector #12", cmd_test_inj12
-		commandButton = "FSIO#1",	cmd_test_fsio1
-		commandButton = "FSIO#2",	cmd_test_fsio2
-		commandButton = "FSIO#3",	cmd_test_fsio3
-		commandButton = "FSIO#4",	cmd_test_fsio4
-		commandButton = "FSIO#5",	cmd_test_fsio5
-		commandButton = "FSIO#6",	cmd_test_fsio6
-		commandButton = "FSIO#7",	cmd_test_fsio7
-		commandButton = "FSIO#8",	cmd_test_fsio8
-		commandButton = "FSIO#9",	cmd_test_fsio9
-		commandButton = "FSIO#10",	cmd_test_fsio10
 
 	dialog = injectionSettingsEast, "", yAxis
 		panel = testInjectors
@@ -1867,7 +1891,31 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 		panel = pedalSensorLeft, West
 		panel = pedalGauges, East
 
-    dialog = mc33Dialog, "GDI Dreams"
+	dialog = wastegatePosConfig, "Wastegate position sensor"
+		field = "Input pin",							wastegatePositionSensor
+		field = "Min (fully closed, most boost)",		wastegatePositionMin
+		field = "Max (fully open, least boost)",		wastegatePositionMax
+
+	dialog = idlePosConfig, "Wastegate position sensor"
+		field = "Input pin",							idlePositionSensor
+		field = "Min (valve closed, low idle)",			idlePositionMin
+		field = "Max (valve open, high idle)",			idlePositionMax
+
+	dialog = wastegateIdlePosLeft, ""
+		panel = wastegatePosConfig
+		panel = idlePosConfig
+
+	dialog = wastegateIdlePosGauges, ""
+		gauge = rawWastegatePositionGauge, West
+		gauge = wastegatePosGauge, East
+		gauge = rawIdlePositionSensorGauge
+		gauge = idlePosSensGauge
+
+	dialog = wastegateIdlePos, "", border
+		panel = wastegateIdlePosLeft, West
+		panel = wastegateIdlePosGauges, East
+
+    dialog = mc33Dialog, "Low-Z injector control (MC33816)"
     	field = "MC33816 cs",							mc33816_cs
 		field = "MC33816 rstb",							mc33816_rstb
 		field = "MC33816 flag0",						mc33816_flag0
@@ -1953,8 +2001,6 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 		field = "trigger stimulator pin #1", 			triggerSimulatorPins1
 		field = "trigger stimulator pin #2", 			triggerSimulatorPins2
 		field = "trigger stimulator pin #2", 			triggerSimulatorPins3
-		field = high_fuel_pressure_sensor_1,			high_fuel_pressure_sensor_1
-		field = high_fuel_pressure_sensor_2,			high_fuel_pressure_sensor_2
 		field = "Warning Led",							warningLedPin
 		field = "tle6240_cs",							tle6240_cs
 		field = "tle6240 SPI",							tle6240spiDevice
@@ -2196,6 +2242,29 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 		panel = oilp_settings, West
 		panel = oilPressureGauges, East
 
+	dialog = fuelp_settings, "Fuel Pressure Sensor"
+		field = "Fuel low pressure ADC input",			lowPressureFuel_hwChannel
+		field = "low voltage",							lowPressureFuel_v1, {lowPressureFuel_hwChannel != @@ADC_CHANNEL_NONE@@}
+		field = "low pressure",							lowPressureFuel_value1, {lowPressureFuel_hwChannel != @@ADC_CHANNEL_NONE@@}
+		field = "high voltage",							lowPressureFuel_v2, {lowPressureFuel_hwChannel != @@ADC_CHANNEL_NONE@@}
+		field = "high pressure",						lowPressureFuel_value2, {lowPressureFuel_hwChannel != @@ADC_CHANNEL_NONE@@}
+
+		field = "Fuel high pressure ADC input",			highPressureFuel_hwChannel
+		field = "low voltage",							highPressureFuel_v1, {highPressureFuel_hwChannel != @@ADC_CHANNEL_NONE@@}
+		field = "low pressure",							highPressureFuel_value1, {highPressureFuel_hwChannel != @@ADC_CHANNEL_NONE@@}
+		field = "high voltage",							highPressureFuel_v2, {highPressureFuel_hwChannel != @@ADC_CHANNEL_NONE@@}
+		field = "high pressure",						highPressureFuel_value2, {highPressureFuel_hwChannel != @@ADC_CHANNEL_NONE@@}
+
+	dialog = fuelPressureGauges
+		gauge = lowFuelPressureGauge
+		gauge = rawLowFuelPressureGauge
+		gauge = highFuelPressureGauge
+		gauge = rawHighFuelPressureGauge
+
+	dialog = fuelPressureSensor, "", border
+		panel = fuelp_settings, West
+		panel = fuelPressureGauges, East
+
 ;			Sensors->MAP sensor
 	dialog = mapSensorAnalog, "MAP sensor", yAxis		
 		field = "MAP ADC input", 						map_sensor_hwChannel
@@ -2400,7 +2469,7 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 
 	dialog = starterRelay, "Starter relay output"
 		field = "Pin",  					starterRelayDisablePin
-		field = "Pin mode",			        starterRelayDisableMode
+		field = "Pin mode",			        starterRelayDisablePinMode
 		
 	dialog = statusLeds, "Status LEDs"
 		field = "Running status LED",					runningLedPin
@@ -2665,7 +2734,6 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 		field = "CS Pin",								sdCardCsPin
 		field = "SPI",									sdCardSpiDevice
 		field = "log format",							logFormat
-		field = "Mass Storage",							storageMode
 		field = "Write Period",							sdCardPeriodMs
 	
 	dialog = gpsReceiver, "GPS Receiver" 
@@ -2917,8 +2985,14 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 		field = "Solenoid 4 Pin"	tcu_solenoid4,		{ tcuEnabled }
 		field = "Solenoid 5 Pin"	tcu_solenoid5,		{ tcuEnabled }
 		field = "Solenoid 6 Pin"	tcu_solenoid6,		{ tcuEnabled }
+		field = "Solenoid 1 Pin Mode"	tcu_solenoid_mode1,	{ tcuEnabled }
+		field = "Solenoid 2 Pin Mode"	tcu_solenoid_mode2,	{ tcuEnabled }
+		field = "Solenoid 3 Pin Mode"	tcu_solenoid_mode3,	{ tcuEnabled }
+		field = "Solenoid 4 Pin Mode"	tcu_solenoid_mode4,	{ tcuEnabled }
+		field = "Solenoid 5 Pin Mode"	tcu_solenoid_mode5,	{ tcuEnabled }
+		field = "Solenoid 6 Pin Mode"	tcu_solenoid_mode6,	{ tcuEnabled }
 
-	dialog = buttonShiftInputPanel
+	dialog = buttonShiftInputPanel, "Switch/Button Shift"
 		field = "Upshift Pin"		tcuUpshiftButtonPin,		{ tcuEnabled }
 		field = "Upshift Pin Mode"	tcuUpshiftButtonPinMode,	{ tcuEnabled }
 		field = "Downshift Pin"		tcuDownshiftButtonPin,		{ tcuEnabled }
@@ -2945,7 +3019,7 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 ;Boost Closed Loop
 
          dialog = boostPidleft, ""
-                field = "P Gain", 	                        boostPid_pFactor, { isBoostControlEnabled && boostType == 1 }
+            field = "P Gain", 	                        boostPid_pFactor, { isBoostControlEnabled && boostType == 1 }
 	        field = "I Gain",                            boostPid_iFactor, { isBoostControlEnabled && boostType == 1 }
 	        field = "D Gain",                            boostPid_dFactor, { isBoostControlEnabled && boostType == 1 }
 	        field = "Control Period",                    boostPid_periodMs, { isBoostControlEnabled && boostType == 1 }
@@ -2958,6 +3032,16 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 	dialog = boostPidDialog, "", border
                 panel = boostPidleft, West
                 panel = boostTableDialog, Center
+
+	dialog = boostEtbPid, ""
+		field = "!This section is for advanced users only!"
+		field = "H-Bridge #1 function",					etbFunctions1
+		field = "H-Bridge #2 function",					etbFunctions2
+		field = "P gain",							etbWastegatePid_pFactor,  { isBoostControlEnabled }
+		field = "I gain",							etbWastegatePid_iFactor,  { isBoostControlEnabled }
+		field = "D gain",							etbWastegatePid_dFactor,  { isBoostControlEnabled }
+		field = "PID min",							etbWastegatePid_minValue, { isBoostControlEnabled }
+		field = "PID max",							etbWastegatePid_maxValue, { isBoostControlEnabled }
 
 	help = veTableDialogHelp, "Volumetric Efficiency"
         text = "Volumetric Efficiency is used to calculate fuel in Speed Density mode"
@@ -3002,12 +3086,13 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 
 	dialog = etbDialogLeft
 		field = "https://rusefi.com/s/etb"
-		field = "Late 90s German DC Motor idle",		dcMotorIdleValve, { throttlePedalPositionAdcChannel == @@ADC_CHANNEL_NONE@@ }
 		field = "Detailed status in console",			isVerboseETB
 		field = "Disable ETB Motor",					pauseEtbControl
+		field = "H-Bridge #1 function",					etbFunctions1
+		field = "H-Bridge #2 function",					etbFunctions2
 		; we need the term about stepper idle in here, because there's a bug in TS that you can't have different visibility
 		; criteria for the same panel when used in multiple places
-		panel = hbridgeHardware,						{ throttlePedalPositionAdcChannel != @@ADC_CHANNEL_NONE@@ || (useStepperIdle && useHbridges) || dcMotorIdleValve }
+		panel = hbridgeHardware,						{ throttlePedalPositionAdcChannel != @@ADC_CHANNEL_NONE@@ || (useStepperIdle && useHbridges) }
 
 	dialog = etbAutotune, "PID Autotune"
 		field = "First step: calibrate TPS and hit 'Burn'"
@@ -3023,7 +3108,7 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 
 	dialog = etbDialogRight
 		panel = etbIdleDialog, {  throttlePedalPositionAdcChannel != @@ADC_CHANNEL_NONE@@  }
-		panel = etbPidDialog,  { (throttlePedalPositionAdcChannel != @@ADC_CHANNEL_NONE@@) || dcMotorIdleValve }
+		panel = etbPidDialog,  { (throttlePedalPositionAdcChannel != @@ADC_CHANNEL_NONE@@) }
 		panel = etbAutotune
 
 		; Neutral position handling not yet implemented!
@@ -3063,10 +3148,11 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 		commandButton = "Reset to DFU", cmd_dfu
 
 	; bench test	
-	dialog = ioTest, "Bench Test & Commands", border
-		panel = testSpark,		West
-		panel = testInjectors,	Center
-		panel = testMisc,		East
+	dialog = ioTest, "Bench Test & Commands", xAxis
+		panel = testSpark
+		panel = testInjectors
+		panel = testFsio
+		panel = testMisc
 	
 	dialog = engineTypeDialog, "Popular vehicles"
 		field = "!These buttons send a command to rusEFI controller to apply preset values"
@@ -3124,7 +3210,7 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 		field = "Log recent errors list",				enableLogErrorList
 
 				;			Racing Features->Launch Control
-	dialog = smLaunchControl, "Launch Control Settings NOT WORKING"
+	dialog = smLaunchControl, "Launch Control Settings EXPERIMENTAL"
         field = "Enable Launch Control",               	launchControlEnabled
 		field = "Activation Mode",                      launchActivationMode
 	    field = "Switch Input",                     	launchActivatePin,  {launchActivationMode == 0 && launchControlEnabled == 1}
@@ -3136,6 +3222,7 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 		field = "Launch RPM",            	    		launchRpm,  {launchControlEnabled == 1}
 		field = "Extra Fuel",           				launchFuelAdded,  {launchControlEnabled == 1}
         field = "Boost Solenoid Duty",	                launchBoostDuty,  {launchControlEnabled == 1}
+		field = "Ignition Retard enable",               enableLaunchRetard,  {launchControlEnabled == 1}
 		field = "Ignition Retard",      				launchTimingRetard,  {launchControlEnabled == 1}
 		field = "Ignition Retard RPM Range",            launchTimingRpmRange,  {launchControlEnabled == 1}
 		field = "Smooth Retard Mode",                   launchSmoothRetard,  {launchControlEnabled == 1}

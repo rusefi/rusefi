@@ -19,21 +19,9 @@
  * 4 INJ channels - OUT1..4 - IN5..8 */
 #define TLE8888_DIRECT_OUTPUTS		(4 + 4 + TLE8888_DIRECT_MISC)
 
-// Looks like reset value is 113.6ms? 1.6ms * 0x47
-#define Functional_Watchdog_PERIOD_MS 20
-
-// we can change this value on TLE8888QK but we probably do not have a reason to change
-#define Window_watchdog_close_window_time_ms 100.8
-
 #define getRegisterFromResponse(x) (((x) >> 1) & 0x7f)
 #define getDataFromResponse(x) (((x) >> 8) & 0xff)
 
-// unchangeable value for TLE8888QK
-// unused for now
-//#define Window_watchdog_open_window_time_ms 12.8
-
-/* DOTO: add irq support */
-#define TLE8888_POLL_INTERVAL_MS	7
 
 /* note that spi transfer should be LSB first */
 struct tle8888_config {
@@ -45,12 +33,15 @@ struct tle8888_config {
 		uint_fast8_t	pad;
 	} reset;
 	struct {
-		/* MCU port-pin routed to IN9..12 */
+		/* MCU port-pin routed to IN1..12 */
 		ioportid_t		port;
 		uint_fast8_t	pad;
+	} direct_gpio[TLE8888_DIRECT_OUTPUTS];
+	/* IN9..IN12 to output mapping */
+	struct {
 		/* ...used to drive output (starts from 1, as in DS, coders gonna hate) */
 		int 			output;
-	} direct_io[TLE8888_DIRECT_MISC];
+	} direct_maps[TLE8888_DIRECT_MISC];
 	struct {
 		ioportid_t		port;
 		uint_fast8_t	pad;
@@ -71,7 +62,10 @@ extern "C"
  * @return return gpio chip base
  */
 int tle8888_add(unsigned int index, const struct tle8888_config *cfg);
-void requestTLE8888initialization(void);
+
+/* debug */
+void tle8888_read_reg(uint16_t reg, uint16_t *val);
+void tle8888_req_init(void);
 
 #if EFI_TUNER_STUDIO
 #include "tunerstudio_debug_struct.h"

@@ -11,6 +11,9 @@ import java.security.cert.X509Certificate;
 import java.util.Objects;
 
 public class ConnectionAndMeta {
+    public static final String BASE_URL_RELEASE = "https://github.com/rusefi/rusefi/releases/latest/download/";
+    public static final String BASE_URL_LATEST = "https://rusefi.com/build_server/autoupdate/";
+
     private static final int BUFFER_SIZE = 32 * 1024;
     public static final int STEPS = 1000;
     private String zipFileName;
@@ -68,12 +71,12 @@ public class ConnectionAndMeta {
         return lastModified;
     }
 
-    public ConnectionAndMeta invoke() throws IOException, NoSuchAlgorithmException, KeyManagementException {
+    public ConnectionAndMeta invoke(String baseUrl) throws IOException, NoSuchAlgorithmException, KeyManagementException {
         // user can have java with expired certificates or funny proxy, we shall accept any certificate :(
         SSLContext ctx = SSLContext.getInstance("TLS");
         ctx.init(new KeyManager[0], new TrustManager[]{new AcceptAnyCertificateTrustManager()}, new SecureRandom());
 
-        URL url = new URL("https://rusefi.com/build_server/autoupdate/" + zipFileName);
+        URL url = new URL(baseUrl + zipFileName);
         httpConnection = (HttpsURLConnection) url.openConnection();
         httpConnection.setSSLSocketFactory(ctx.getSocketFactory());
         completeFileSize = httpConnection.getContentLength();

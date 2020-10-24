@@ -141,14 +141,14 @@ void setDefaultLaunchParameters(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 void applyLaunchControlLimiting(bool *limitedSpark, bool *limitedFuel DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	int rpm = GET_RPM();
 
+	// todo: pre-calculate 'retardThresholdRpm' less often that on each 'applyLaunchControlLimiting' invocation
 	int retardThresholdRpm = CONFIG(launchRpm) +
 		(CONFIG(enableLaunchRetard) ? CONFIG(launchAdvanceRpmRange) : 0) +
 		CONFIG(hardCutRpmRange);
 
-	if (retardThresholdRpm > GET_RPM()) {
-		*limitedSpark = engine->isLaunchCondition && engineConfiguration->launchSparkCutEnable;
-		*limitedFuel = engine->isLaunchCondition && engineConfiguration->launchFuelCutEnable;
-		engine->rpmHardCut = true;
+	if (retardThresholdRpm < GET_RPM()) {
+		*limitedSpark = engineConfiguration->launchSparkCutEnable;
+		*limitedFuel = engineConfiguration->launchFuelCutEnable;
 	}
 }
 

@@ -50,23 +50,71 @@ static const char *injectorShortNames[] = { PROTOCOL_INJ1_SHORT_NAME, "i2", "i3"
 
 static const char *auxValveShortNames[] = { "a1", "a2"};
 
-EnginePins::EnginePins() {
+static RegisteredOutputPin * registeredOutputHead = nullptr;
+
+RegisteredOutputPin::RegisteredOutputPin(const char *name, short pinOffset,
+		short pinModeOffset) {
+	this->name = name;
+	this->pinOffset = pinOffset;
+	this->pinModeOffset = pinModeOffset;
+	// adding into head of the list is so easy and since we do not care about order that's what we shall do
+	this->next = registeredOutputHead;
+	registeredOutputHead = this;
+}
+
+void RegisteredOutputPin::unregister() {
+#if EFI_PROD_CODE
+	brain_pin_e        curPin = *(brain_pin_e       *) ((void *) (&((char*)&activeConfiguration)[pinOffset]));
+	brain_pin_e        newPin = *(brain_pin_e       *) ((void *) (&((char*) engineConfiguration)[pinOffset]));
+
+    pin_output_mode_e curMode = *(pin_output_mode_e *) ((void *) (&((char*)&activeConfiguration)[pinModeOffset]));
+    pin_output_mode_e newMode = *(pin_output_mode_e *) ((void *) (&((char*) engineConfiguration)[pinModeOffset]));
+
+    if (curPin != newPin || curMode != newMode) {
+    	unregisterOutput(curPin);
+    }
+#endif // EFI_PROD_CODE
+}
+
+#define CONFIG_OFFSET(x) x##_offset
+// todo: pin and pinMode should be combined into a composite entity
+// todo: one of the impediments is code generator hints handling (we need custom hints and those are not handled nice for fields of structs?)
+#define CONFIG_PIN_OFFSETS(x) CONFIG_OFFSET(x##Pin), CONFIG_OFFSET(x##PinMode)
+
+
+EnginePins::EnginePins() :
+		mainRelay("mainRelay", CONFIG_OFFSET(mainRelayPin), CONFIG_OFFSET(mainRelayPinMode)),
+		starterControl("starterControl", CONFIG_PIN_OFFSETS(starterControl)),
+		starterRelayDisable("starterRelayDisable", CONFIG_PIN_OFFSETS(starterRelayDisable)),
+		fanRelay("fanRelay", CONFIG_PIN_OFFSETS(fan)),
+		acRelay("acRelay", CONFIG_PIN_OFFSETS(acRelay)),
+		fuelPumpRelay("fuelPump", CONFIG_PIN_OFFSETS(fuelPump)),
+	    boostPin("boostPin", CONFIG_PIN_OFFSETS(boostControl)),
+		idleSolenoidPin("idleSolenoid", idle_solenoidPin_offset, idle_solenoidPinMode_offset),
+		secondIdleSolenoidPin("secondIdleSolenoid", CONFIG_OFFSET(secondSolenoidPin), idle_solenoidPinMode_offset),
+		alternatorPin("alternatorPin", CONFIG_PIN_OFFSETS(alternatorControl)),
+		checkEnginePin("checkEnginePin", CONFIG_PIN_OFFSETS(malfunctionIndicator)),
+		// todo: NamedOutputPin vs RegisteredOutputPin
+		//		tachOut("tachOut", CONFIG_PIN_OFFSETS(tachOutput)),
+		triggerDecoderErrorPin("triggerDecoderErrorPin", CONFIG_PIN_OFFSETS(triggerError)),
+		hipCs("hipCs", CONFIG_PIN_OFFSETS(hip9011Cs))
+{
 	tachOut.name = PROTOCOL_TACH_NAME;
 
-	static_assert(efi::size(sparkNames) >= IGNITION_PIN_COUNT, "Too many ignition pins"); 
+	static_assert(efi::size(sparkNames) >= IGNITION_PIN_COUNT, "Too many ignition pins");
 	for (int i = 0; i < IGNITION_PIN_COUNT;i++) {
 		enginePins.coils[i].name = sparkNames[i];
 		enginePins.coils[i].shortName = sparkShortNames[i];
 	}
 
-	static_assert(efi::size(injectorNames) >= INJECTION_PIN_COUNT, "Too many injection pins"); 
+	static_assert(efi::size(injectorNames) >= INJECTION_PIN_COUNT, "Too many injection pins");
 	for (int i = 0; i < INJECTION_PIN_COUNT;i++) {
 		enginePins.injectors[i].injectorIndex = i;
 		enginePins.injectors[i].name = injectorNames[i];
 		enginePins.injectors[i].shortName = injectorShortNames[i];
 	}
 
-	static_assert(efi::size(auxValveShortNames) >= AUX_DIGITAL_VALVE_COUNT, "Too many aux valve pins"); 
+	static_assert(efi::size(auxValveShortNames) >= AUX_DIGITAL_VALVE_COUNT, "Too many aux valve pins");
 	for (int i = 0; i < AUX_DIGITAL_VALVE_COUNT;i++) {
 		enginePins.auxValve[i].name = auxValveShortNames[i];
 	}
@@ -126,15 +174,8 @@ void EnginePins::unregisterPins() {
 	unregisterEtbPins();
 #endif /* EFI_ELECTRONIC_THROTTLE_BODY */
 #if EFI_PROD_CODE
-	unregisterOutputIfPinOrModeChanged(fuelPumpRelay, fuelPumpPin, fuelPumpPinMode);
-	unregisterOutputIfPinOrModeChanged(fanRelay, fanPin, fanPinMode);
-	unregisterOutputIfPinOrModeChanged(acRelay, acRelayPin, acRelayPinMode);
-	unregisterOutputIfPinOrModeChanged(hipCs, hip9011CsPin, hip9011CsPinMode);
-	unregisterOutputIfPinOrModeChanged(triggerDecoderErrorPin, triggerErrorPin, triggerErrorPinMode);
-	unregisterOutputIfPinOrModeChanged(checkEnginePin, malfunctionIndicatorPin, malfunctionIndicatorPinMode);
 	unregisterOutputIfPinOrModeChanged(tachOut, tachOutputPin, tachOutputPinMode);
-	unregisterOutputIfPinOrModeChanged(idleSolenoidPin, idle.solenoidPin, idle.solenoidPinMode);
-	unregisterOutputIfPinOrModeChanged(secondIdleSolenoidPin, secondSolenoidPin, idle.solenoidPinMode);
+	// todo: add pinMode
 	unregisterOutputIfPinChanged(sdCsPin, sdCardCsPin);
 	unregisterOutputIfPinChanged(accelerometerCs, LIS302DLCsPin);
 
@@ -142,12 +183,12 @@ void EnginePins::unregisterPins() {
 		unregisterOutputIfPinChanged(fsioOutputs[i], fsioOutputPins[i]);
 	}
 
-    unregisterOutputIfPinOrModeChanged(boostPin, boostControlPin, boostControlPinMode);
-	unregisterOutputIfPinOrModeChanged(alternatorPin, alternatorControlPin, alternatorControlPinMode);
-	unregisterOutputIfPinOrModeChanged(mainRelay, mainRelayPin, mainRelayPinMode);
-	unregisterOutputIfPinOrModeChanged(starterRelayDisable, starterRelayDisablePin, starterRelayDisableMode);
 
-	unregisterOutputIfPinChanged(starterControl, starterControlPin);
+	RegisteredOutputPin * pin = registeredOutputHead;
+	while (pin != nullptr) {
+		pin->unregister();
+		pin = pin->next;
+	}
 
 #endif /* EFI_PROD_CODE */
 }
@@ -316,6 +357,17 @@ bool OutputPin::getAndSet(int logicValue) {
 	return oldValue;
 }
 
+void OutputPin::setOnchipValue(int electricalValue, int logicValue) {
+#if EFI_PROD_CODE
+	if (port != GPIO_NULL) {
+		setPinValue(this, electricalValue, logicValue);
+	} else {
+		// even without physical pin sometimes it's nice to track logic pin value
+		currentLogicValue = logicValue;
+	}
+#endif // EFI_PROD_CODE
+}
+
 void OutputPin::setValue(int logicValue) {
 #if ENABLE_PERF_TRACE
 // todo: https://github.com/rusefi/rusefi/issues/1638
@@ -326,14 +378,11 @@ void OutputPin::setValue(int logicValue) {
 	efiAssertVoid(CUSTOM_ERR_6621, modePtr!=NULL, "pin mode not initialized");
 	pin_output_mode_e mode = *modePtr;
 	efiAssertVoid(CUSTOM_ERR_6622, mode <= OM_OPENDRAIN_INVERTED, "invalid pin_output_mode_e");
-	int eValue = getElectricalValue(logicValue, mode);
+	int electricalValue = getElectricalValue(logicValue, mode);
 
 	#if (BOARD_EXT_GPIOCHIPS > 0)
 		if (!this->ext) {
-			/* onchip pin */
-			if (port != GPIO_NULL) {
-				setPinValue(this, eValue, logicValue);
-			}
+			setOnchipValue(electricalValue, logicValue);
 		} else {
 			/* external pin */
 			gpiochips_writePad(this->brainPin, logicValue);
@@ -341,12 +390,7 @@ void OutputPin::setValue(int logicValue) {
 			currentLogicValue = logicValue;
 		}
 	#else
-		if (port != GPIO_NULL) {
-			setPinValue(this, eValue, logicValue);
-		} else {
-			// even without physical pin sometimes it's nice to track logic pin value
-			currentLogicValue = logicValue;
-		}
+		setOnchipValue(electricalValue, logicValue);
 	#endif
 
 #else /* EFI_PROD_CODE */
@@ -383,7 +427,7 @@ void initOutputPins(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	enginePins.fuelPumpRelay.initPin("Fuel pump", CONFIG(fuelPumpPin), &CONFIG(fuelPumpPinMode));
 
 	enginePins.mainRelay.initPin("Main relay", CONFIG(mainRelayPin), &CONFIG(mainRelayPinMode));
-	enginePins.starterRelayDisable.initPin("Starter disable", CONFIG(starterRelayDisablePin), &CONFIG(starterRelayDisableMode));
+	enginePins.starterRelayDisable.initPin("Starter disable", CONFIG(starterRelayDisablePin), &CONFIG(starterRelayDisablePinMode));
 	enginePins.starterControl.initPin("Starter control", CONFIG(starterControlPin));
 
 	enginePins.fanRelay.initPin("Fan", CONFIG(fanPin), &CONFIG(fanPinMode));

@@ -236,6 +236,10 @@ void onUnlockHook(void) {
 #endif /* ENABLE_PERF_TRACE */
 }
 
+#if EFI_SIMULATOR || EFI_UNIT_TEST
+#include <stdexcept>
+#endif
+
 void firmwareError(obd_code_e code, const char *fmt, ...) {
 #if EFI_PROD_CODE
 	if (hasFirmwareErrorFlag)
@@ -276,7 +280,7 @@ void firmwareError(obd_code_e code, const char *fmt, ...) {
 	}
 
 #else
-	printf("firmwareError [%s]\r\n", fmt);
+	printf("\x1B[31m>>>>>>>>>> firmwareError [%s]\r\n\x1B[0m", fmt);
 
 	va_list ap;
 	va_start(ap, fmt);
@@ -285,7 +289,7 @@ void firmwareError(obd_code_e code, const char *fmt, ...) {
 	printf("\r\n");
 
 #if EFI_SIMULATOR || EFI_UNIT_TEST
-	throw "fatal error";
+	throw std::logic_error(fmt);
 #endif /* EFI_SIMULATOR */
 #endif
 }

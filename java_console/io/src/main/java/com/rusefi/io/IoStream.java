@@ -52,7 +52,12 @@ public interface IoStream extends WriteStream, Closeable, StreamStatistics {
         write(packet.getPacket());
         writeInt(packet.getCrc());
         flush();
+        onActivity();
     }
+
+    long latestActivityTime();
+
+    void onActivity();
 
     default void sendPacket(byte[] plainPacket) throws IOException {
         if (plainPacket.length == 0)
@@ -86,5 +91,13 @@ public interface IoStream extends WriteStream, Closeable, StreamStatistics {
 
     default short readShort() throws EOFException {
         return getDataBuffer().readShort();
+    }
+
+    default byte[] sendAndGetPacket(byte[] packet, String message, boolean allowLongResponse) throws IOException {
+        // synchronization is needed for example to help SD card download to live with gauge poker
+        synchronized (this) {
+            sendPacket(packet);
+            return getDataBuffer().getPacket(message, allowLongResponse);
+        }
     }
 }

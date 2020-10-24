@@ -25,6 +25,7 @@
 #include "engine_configuration.h"
 #include "status_loop.h"
 #include "usb_msd_cfg.h"
+#include "buffered_writer.h"
 
 #include "rtc_helper.h"
 
@@ -140,7 +141,7 @@ static void sdStatistics(void) {
 	printMmcPinout();
 	scheduleMsg(&logger, "SD enabled=%s status=%s", boolToString(CONFIG(isSdCardEnabled)),
 			sdStatus);
-	printSpiConfig(&logger, "SD", engineConfiguration->sdCardSpiDevice);
+	printSpiConfig(&logger, "SD", CONFIG(sdCardSpiDevice));
 	if (isSdCardAlive()) {
 		scheduleMsg(&logger, "filename=%s size=%d", logName, totalLoggedBytes);
 	}
@@ -304,49 +305,6 @@ static void listDirectory(const char *path) {
 	UNLOCK_SD_SPI;
 }
 
-static int errorReported = FALSE; // this is used to report the error only once
-
-#if 0
-void readLogFileContent(char *buffer, short fileId, short offset, short length) {
-}
-#endif
-
-/**
- * @brief Appends specified line to the current log file
- */
-void appendToLog(const char *line, size_t lineLength) {
-	UINT bytesWritten;
-
-	if (!isSdCardAlive()) {
-		if (!errorReported)
-			scheduleMsg(&logger, "appendToLog Error: No File system is mounted");
-		errorReported = TRUE;
-		return;
-	}
-
-	totalLoggedBytes += lineLength;
-	LOCK_SD_SPI;
-	FRESULT err = f_write(&FDLogFile, line, lineLength, &bytesWritten);
-	if (bytesWritten < lineLength) {
-		printError("write error or disk full", err); // error or disk full
-		mmcUnMount();
-	} else {
-		writeCounter++;
-		totalWritesCounter++;
-		if (writeCounter >= F_SYNC_FREQUENCY) {
-			/**
-			 * Performance optimization: not f_sync after each line, f_sync is probably a heavy operation
-			 * todo: one day someone should actually measure the relative cost of f_sync
-			 */
-			f_sync(&FDLogFile);
-			totalSyncCounter++;
-			writeCounter = 0;
-		}
-	}
-
-	UNLOCK_SD_SPI;
-}
-
 /*
  * MMC card un-mount.
  */
@@ -397,28 +355,27 @@ static void MMCmount(void) {
 		return;
 	}
 
-//	if (engineConfiguration->storageMode == MS_ALWAYS) {
 #if HAL_USE_USB_MSD
-	  msdObjectInit(&USBMSD1);
+	msdObjectInit(&USBMSD1);
 
 	BaseBlockDevice *bbdp = (BaseBlockDevice*)&MMCD1;
-	  msdStart(&USBMSD1, usb_driver, bbdp, blkbuf, NULL);
+	msdStart(&USBMSD1, usb_driver, bbdp, blkbuf, NULL);
 
-//		  const usb_msd_driver_state_t msd_driver_state = msdInit(ms_usb_driver, bbdp, &UMSD1, USB_MS_DATA_EP, USB_MSD_INTERFACE_NUMBER);
-	//	  UMSD1.chp = NULL;
+	//const usb_msd_driver_state_t msd_driver_state = msdInit(ms_usb_driver, bbdp, &UMSD1, USB_MS_DATA_EP, USB_MSD_INTERFACE_NUMBER);
+	//UMSD1.chp = NULL;
 
-		  /*Disconnect the USB Bus*/
-		  usbDisconnectBus(usb_driver);
-		  chThdSleepMilliseconds(200);
-//
-//		  /*Start the useful functions*/
-//		  msdStart(&UMSD1);
-		  usbStart(usb_driver, &msdusbcfg);
-//
-		  /*Connect the USB Bus*/
-		  usbConnectBus(usb_driver);
+	/*Disconnect the USB Bus*/
+	usbDisconnectBus(usb_driver);
+	chThdSleepMilliseconds(200);
+
+	///*Start the useful functions*/
+	//msdStart(&UMSD1);
+	usbStart(usb_driver, &msdusbcfg);
+
+	/*Connect the USB Bus*/
+	usbConnectBus(usb_driver);
 #endif
-	//}
+
 
 
 	UNLOCK_SD_SPI;
@@ -440,12 +397,45 @@ static void MMCmount(void) {
 	}
 }
 
+class SdLogBufferWriter final : public BufferedWriter<512> {
+	size_t writeInternal(const char* buffer, size_t count) override {
+		size_t bytesWritten;
+
+		totalLoggedBytes += count;
+
+		LOCK_SD_SPI;
+		FRESULT err = f_write(&FDLogFile, buffer, count, &bytesWritten);
+
+		if (bytesWritten != count) {
+			printError("write error or disk full", err); // error or disk full
+			mmcUnMount();
+		} else {
+			writeCounter++;
+			totalWritesCounter++;
+			if (writeCounter >= F_SYNC_FREQUENCY) {
+				/**
+				 * Performance optimization: not f_sync after each line, f_sync is probably a heavy operation
+				 * todo: one day someone should actually measure the relative cost of f_sync
+				 */
+				f_sync(&FDLogFile);
+				totalSyncCounter++;
+				writeCounter = 0;
+			}
+		}
+
+		UNLOCK_SD_SPI;
+		return bytesWritten;
+	}
+};
+
+static SdLogBufferWriter logBuffer MAIN_RAM;
+
 static THD_FUNCTION(MMCmonThread, arg) {
 	(void)arg;
 	chRegSetThreadName("MMC_Monitor");
 
 	while (true) {
-		if (engineConfiguration->debugMode == DBG_SD_CARD) {
+		if (CONFIG(debugMode) == DBG_SD_CARD) {
 			tsOutputChannels.debugIntField1 = totalLoggedBytes;
 			tsOutputChannels.debugIntField2 = totalWritesCounter;
 			tsOutputChannels.debugIntField3 = totalSyncCounter;
@@ -463,13 +453,14 @@ static THD_FUNCTION(MMCmonThread, arg) {
 		}
 
 		if (isSdCardAlive()) {
-			writeLogLine();
+			writeLogLine(logBuffer);
 		} else {
 			chThdSleepMilliseconds(100);
 		}
 
-		if (engineConfiguration->sdCardPeriodMs > 0) {
-			chThdSleepMilliseconds(engineConfiguration->sdCardPeriodMs);
+		auto period = CONFIG(sdCardPeriodMs);
+		if (period > 0) {
+			chThdSleepMilliseconds(period);
 		}
 	}
 }
@@ -485,10 +476,12 @@ void initMmcCard(void) {
 		return;
 	}
 
+	efiAssertVoid(OBD_PCM_Processor_Fault, CONFIG(sdCardSpiDevice) != SPI_NONE, "SD card enabled, but no SPI device configured!");
+
 	// todo: reuse initSpiCs method?
 	hs_spicfg.ssport = ls_spicfg.ssport = getHwPort("mmc", CONFIG(sdCardCsPin));
 	hs_spicfg.sspad = ls_spicfg.sspad = getHwPin("mmc", CONFIG(sdCardCsPin));
-	mmccfg.spip = getSpiDevice(engineConfiguration->sdCardSpiDevice);
+	mmccfg.spip = getSpiDevice(CONFIG(sdCardSpiDevice));
 
 	/**
 	 * FYI: SPI does not work with CCM memory, be sure to have main() stack in RAM, not in CCMRAM
@@ -501,9 +494,6 @@ void initMmcCard(void) {
 	chThdCreateStatic(mmcThreadStack, sizeof(mmcThreadStack), LOWPRIO, (tfunc_t)(void*) MMCmonThread, NULL);
 
 	addConsoleAction("mountsd", MMCmount);
-	addConsoleActionS("appendtolog", [](const char* str) {
-		appendToLog(str, strlen(str));
-	});
 	addConsoleAction("umountsd", mmcUnMount);
 	addConsoleActionS("ls", listDirectory);
 	addConsoleActionS("del", removeFile);

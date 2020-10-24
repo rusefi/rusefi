@@ -7,6 +7,7 @@ import com.opensr5.io.ConfigurationImageFile;
 import com.opensr5.io.DataListener;
 import com.rusefi.ConfigurationImageDiff;
 import com.rusefi.NamedThreadFactory;
+import com.rusefi.SignatureHelper;
 import com.rusefi.Timeouts;
 import com.rusefi.composite.CompositeEvent;
 import com.rusefi.composite.CompositeParser;
@@ -17,6 +18,7 @@ import com.rusefi.core.Sensor;
 import com.rusefi.core.SensorCentral;
 import com.rusefi.io.*;
 import com.rusefi.io.commands.GetOutputsCommand;
+import com.rusefi.io.commands.HelloCommand;
 import com.rusefi.stream.LogicdataStreamFile;
 import com.rusefi.stream.StreamFile;
 import com.rusefi.stream.TSHighSpeedLog;
@@ -37,6 +39,7 @@ import java.util.concurrent.*;
 
 import static com.devexperts.logging.Logging.getLogging;
 import static com.rusefi.binaryprotocol.IoHelper.*;
+import static com.rusefi.config.generated.Fields.*;
 
 /**
  * This object represents logical state of physical connection.
@@ -47,7 +50,7 @@ import static com.rusefi.binaryprotocol.IoHelper.*;
  * Andrey Belomutskiy, (c) 2013-2020
  * 3/6/2015
  */
-public class BinaryProtocol implements BinaryProtocolCommands {
+public class BinaryProtocol {
     private static final Logging log = getLogging(BinaryProtocol.class);
     private static final ThreadFactory THREAD_FACTORY = new NamedThreadFactory("text pull");
 
@@ -227,6 +230,14 @@ public class BinaryProtocol implements BinaryProtocolCommands {
      * @return true if everything fine
      */
     public boolean connectAndReadConfiguration(DataListener listener) {
+        try {
+            HelloCommand.send(stream);
+            String response = HelloCommand.getHelloResponse(incomingData);
+            System.out.println("Got " + response);
+            SignatureHelper.downloadIfNotAvailable(SignatureHelper.getUrl(response));
+        } catch (IOException e) {
+            return false;
+        }
 //        switchToBinaryProtocol();
         readImage(Fields.TOTAL_CONFIG_SIZE);
         if (isClosed)
@@ -369,8 +380,8 @@ public class BinaryProtocol implements BinaryProtocolCommands {
 
             byte[] response = executeCommand(packet, "load image offset=" + offset);
 
-            if (!checkResponseCode(response, RESPONSE_OK) || response.length != requestSize + 1) {
-                String code = (response == null || response.length == 0) ? "empty" : "code " + response[0];
+            if (!checkResponseCode(response, (byte) Fields.TS_RESPONSE_OK) || response.length != requestSize + 1) {
+                String code = (response == null || response.length == 0) ? "empty" : "code " + getCode(response);
                 String info = response == null ? "NO RESPONSE" : (code + " size " + response.length);
                 log.info("readImage: ERROR UNEXPECTED Something is wrong, retrying... " + info);
                 continue;
@@ -392,6 +403,21 @@ public class BinaryProtocol implements BinaryProtocolCommands {
         return image;
     }
 
+    private static String getCode(byte[] response) {
+        int b = response[0] & 0xff;
+        switch (b) {
+            case TS_RESPONSE_CRC_FAILURE:
+                return "CRC_FAILURE";
+            case TS_RESPONSE_UNRECOGNIZED_COMMAND:
+                return "UNRECOGNIZED_COMMAND";
+            case TS_RESPONSE_OUT_OF_RANGE:
+                return "OUT_OF_RANGE";
+            case TS_RESPONSE_FRAMING_ERROR:
+                return "FRAMING_ERROR";
+        }
+        return Integer.toString(b);
+    }
+
     private ConfigurationImage getAndValidateLocallyCached() {
         if (DISABLE_LOCAL_CACHE)
             return null;
@@ -408,12 +434,12 @@ public class BinaryProtocol implements BinaryProtocolCommands {
             log.info(String.format(CONFIGURATION_RUSEFI_BINARY + " Local cache CRC %x\n", crcOfLocallyCachedConfiguration));
 
             byte packet[] = new byte[5];
-            packet[0] = COMMAND_CRC_CHECK_COMMAND;
+            packet[0] = Fields.TS_CRC_CHECK_COMMAND;
             putShort(packet, 1, swap16(/*offset = */ 0));
             putShort(packet, 3, swap16(localCached.getSize()));
             byte[] response = executeCommand(packet, "get CRC32");
 
-            if (checkResponseCode(response, RESPONSE_OK) && response.length == 5) {
+            if (checkResponseCode(response, (byte) Fields.TS_RESPONSE_OK) && response.length == 5) {
                 ByteBuffer bb = ByteBuffer.wrap(response, 1, 4);
                 // that's unusual - most of the protocol is LITTLE_ENDIAN
                 bb.order(ByteOrder.BIG_ENDIAN);
@@ -468,7 +494,7 @@ public class BinaryProtocol implements BinaryProtocolCommands {
         isBurnPending = true;
 
         byte packet[] = new byte[5 + size];
-        packet[0] = COMMAND_CHUNK_WRITE;
+        packet[0] = Fields.TS_CHUNK_WRITE_COMMAND;
         putShort(packet, 1, swap16(offset));
         putShort(packet, 3, swap16(size));
 
@@ -477,7 +503,7 @@ public class BinaryProtocol implements BinaryProtocolCommands {
         long start = System.currentTimeMillis();
         while (!isClosed && (System.currentTimeMillis() - start < Timeouts.BINARY_IO_TIMEOUT)) {
             byte[] response = executeCommand(packet, "writeImage");
-            if (!checkResponseCode(response, RESPONSE_OK) || response.length != 1) {
+            if (!checkResponseCode(response, (byte) Fields.TS_RESPONSE_OK) || response.length != 1) {
                 log.error("writeData: Something is wrong, retrying...");
                 continue;
             }
@@ -493,8 +519,8 @@ public class BinaryProtocol implements BinaryProtocolCommands {
         while (true) {
             if (isClosed)
                 return;
-            byte[] response = executeCommand(new byte[]{COMMAND_BURN}, "burn");
-            if (!checkResponseCode(response, RESPONSE_BURN_OK) || response.length != 1) {
+            byte[] response = executeCommand(new byte[]{Fields.TS_BURN_COMMAND}, "burn");
+            if (!checkResponseCode(response, (byte) Fields.TS_RESPONSE_BURN_OK) || response.length != 1) {
                 continue;
             }
             break;
@@ -530,7 +556,7 @@ public class BinaryProtocol implements BinaryProtocolCommands {
         long start = System.currentTimeMillis();
         while (!isClosed && (System.currentTimeMillis() - start < Timeouts.BINARY_IO_TIMEOUT)) {
             byte[] response = executeCommand(command, "execute", false);
-            if (!checkResponseCode(response, RESPONSE_COMMAND_OK) || response.length != 1) {
+            if (!checkResponseCode(response, (byte) Fields.TS_RESPONSE_COMMAND_OK) || response.length != 1) {
                 continue;
             }
             return false;
@@ -571,7 +597,7 @@ public class BinaryProtocol implements BinaryProtocolCommands {
         isCompositeLoggerEnabled = true;
 
         byte[] response = executeCommand(packet, "composite log", true);
-        if (checkResponseCode(response, RESPONSE_OK)) {
+        if (checkResponseCode(response, (byte) Fields.TS_RESPONSE_OK)) {
             List<CompositeEvent> events = CompositeParser.parse(response);
             createCompositesIfNeeded();
             for (StreamFile composite : compositeLogs)
@@ -586,7 +612,7 @@ public class BinaryProtocol implements BinaryProtocolCommands {
         byte[] packet = GetOutputsCommand.createRequest();
 
         byte[] response = executeCommand(packet, "output channels", false);
-        if (response == null || response.length != (Fields.TS_OUTPUT_SIZE + 1) || response[0] != RESPONSE_OK)
+        if (response == null || response.length != (Fields.TS_OUTPUT_SIZE + 1) || response[0] != Fields.TS_RESPONSE_OK)
             return false;
 
         state.setCurrentOutputs(response);

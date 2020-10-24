@@ -1,14 +1,22 @@
+<div align="center">
+
+<img src="https://raw.githubusercontent.com/wiki/rusefi/rusefi/Images/logo_new.png" alt="rusEFI" width="600" />
+
+<b>GPL open-source DIY ECU</b>
+
+[![Release](https://img.shields.io/github/v/release/rusefi/rusefi?style=flat)](https://github.com/rusefi/rusefi/releases/latest) ![Last Commit](https://img.shields.io/github/last-commit/rusefi/rusefi?style=flat)
+[![Rusefi on Slack](https://img.shields.io/badge/slack-rusefi-orange.svg?style=flat&logo=slack)](https://rusefi.slack.com)
+</div>
+
 # rusEFI
-A GPL open-source DIY ECU
 
-current binaries are always available at http://rusefi.com/build_server/
+Current binaries are always available on our [build server](http://rusefi.com/build_server/)
 
-[![paypal](https://www.paypalobjects.com/en_US/i/btn/btn_donateCC_LG.gif)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=6YSSN35GWYS3A)
-
+[![paypal](https://img.shields.io/badge/%E2%99%A5%EF%B8%8Fdonate-orange)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=6YSSN35GWYS3A)
 
 [![Tindie](http://rusefi.com/wiki/images/1/1c/Tindie-smalls.png)](https://www.tindie.com/stores/russian/)
 
-## Cloning the repository
+# Cloning the repository
 
 Important note - we now use submodules:
 
@@ -114,9 +122,3 @@ See https://rusefi.com/forum/viewtopic.php?f=5&t=9
 | 08/03/2013	| r13	    | wideband O2 input, better idling algorithm, serial-over-USB
 | 07/05/2013	| r10	    | Second CKP, sequential injection.
 | 06/19/2013	| r9	    | Initial version - batch injection & ignition with advance table lookup.
-
-## Cloning the repository
-
-Important note - we now use submodules:
-
-`git submodule update --init`

@@ -309,43 +309,9 @@ void prepareVoidConfiguration(engine_configuration_s *engineConfiguration) {
 	efiAssertVoid(OBD_PCM_Processor_Fault, engineConfiguration != NULL, "ec NULL");
 	memset(engineConfiguration, 0, sizeof(engine_configuration_s));
 
-
-	// Now that GPIO_UNASSIGNED == 0 we do not really need explicit zero assignments since memset above does that
-	// todo: migrate 'EFI_ADC_NONE' to '0' and eliminate the need in this method altogether
-	for (int i = 0; i < FSIO_ANALOG_INPUT_COUNT ; i++) {
-		engineConfiguration->fsioAdc[i] = EFI_ADC_NONE;
-	}
-
-	engineConfiguration->clt.adcChannel = EFI_ADC_NONE;
-	engineConfiguration->iat.adcChannel = EFI_ADC_NONE;
-
-	engineConfiguration->cj125ua = EFI_ADC_NONE;
-	engineConfiguration->cj125ur = EFI_ADC_NONE;
-	engineConfiguration->auxTempSensor1.adcChannel = EFI_ADC_NONE;
-	engineConfiguration->auxTempSensor2.adcChannel = EFI_ADC_NONE;
-	engineConfiguration->baroSensor.hwChannel = EFI_ADC_NONE;
-	engineConfiguration->throttlePedalPositionAdcChannel = EFI_ADC_NONE;
-	engineConfiguration->oilPressure.hwChannel = EFI_ADC_NONE;
-	engineConfiguration->vRefAdcChannel = EFI_ADC_NONE;
-	engineConfiguration->vbattAdcChannel = EFI_ADC_NONE;
-	engineConfiguration->map.sensor.hwChannel = EFI_ADC_NONE;
-	engineConfiguration->mafAdcChannel = EFI_ADC_NONE;
-/* this breaks unit tests lovely TODO: fix this?
-	engineConfiguration->tps1_1AdcChannel = EFI_ADC_NONE;
-*/
-	engineConfiguration->tps2_1AdcChannel = EFI_ADC_NONE;
-	engineConfiguration->auxFastSensor1_adcChannel = EFI_ADC_NONE;
-	engineConfiguration->externalKnockSenseAdc = EFI_ADC_NONE;
-	engineConfiguration->fuelLevelSensor = EFI_ADC_NONE;
-	engineConfiguration->hipOutputChannel = EFI_ADC_NONE;
-	engineConfiguration->afr.hwChannel = EFI_ADC_NONE;
-	engineConfiguration->high_fuel_pressure_sensor_1 = EFI_ADC_NONE;
-	engineConfiguration->high_fuel_pressure_sensor_2 = EFI_ADC_NONE;
-
 	engineConfiguration->clutchDownPinMode = PI_PULLUP;
 	engineConfiguration->clutchUpPinMode = PI_PULLUP;
 	engineConfiguration->brakePedalPinMode = PI_PULLUP;
-
 }
 
 void setDefaultBasePins(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
@@ -743,6 +709,7 @@ static void setDefaultEngineConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
     setDefaultBoostParameters(PASS_CONFIG_PARAMETER_SIGNATURE);
 #endif
 
+    CONFIG(tachPulsePerRev) = 1;
 
     // OBD-II default rate is 500kbps
     CONFIG(canBaudRate) = B500KBPS;
@@ -952,8 +919,6 @@ static void setDefaultEngineConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	// performance optimization
 	engineConfiguration->sensorChartMode = SC_OFF;
 
-	engineConfiguration->storageMode = MS_AUTO;
-
 	engineConfiguration->specs.firingOrder = FO_1_3_4_2;
 	engineConfiguration->crankingInjectionMode = IM_SIMULTANEOUS;
 	engineConfiguration->injectionMode = IM_SEQUENTIAL;
@@ -1037,10 +1002,8 @@ static void setDefaultEngineConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	engineConfiguration->isInjectionEnabled = true;
 	engineConfiguration->isIgnitionEnabled = true;
 	engineConfiguration->isCylinderCleanupEnabled = false; // this feature is evil if one does not have TPS, better turn off by default
-	engineConfiguration->secondTriggerChannelEnabled = true;
 
 	engineConfiguration->isMapAveragingEnabled = true;
-	engineConfiguration->isTunerStudioEnabled = true;
 	engineConfiguration->isWaveAnalyzerEnabled = true;
 
 	engineConfiguration->debugMode = DBG_ALTERNATOR_PID;
@@ -1076,10 +1039,7 @@ static void setDefaultEngineConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 
 	engineConfiguration->hip9011Gain = 1;
 
-	engineConfiguration->isFastAdcEnabled = true;
 	engineConfiguration->isEngineControlEnabled = true;
-
-	engineConfiguration->isVerboseAlternator = false;
 
 	engineConfiguration->engineLoadAccelLength = 6;
 	engineConfiguration->engineLoadAccelEnrichmentThreshold = 5; // kPa
@@ -1181,7 +1141,9 @@ void resetConfigurationExt(Logging * logger, configuration_callback_t boardCallb
 	// set initial pin groups
 	setDefaultBasePins(PASS_CONFIG_PARAMETER_SIGNATURE);
 
-	boardCallback(engineConfiguration);
+	if (boardCallback != nullptr) {
+		boardCallback(engineConfiguration);
+	}
 
 #if EFI_PROD_CODE
 	// call overrided board-specific configuration setup, if needed (for custom boards only)

@@ -38,7 +38,11 @@ float FuelComputer::getTargetLambda(int rpm, float load) const {
 }
 
 float FuelComputer::getTargetLambdaLoadAxis(float defaultLoad) const {
-	switch(CONFIG(afrOverrideMode)) {
+	return getLoadOverride(defaultLoad, CONFIG(afrOverrideMode) PASS_ENGINE_PARAMETER_SUFFIX);
+}
+
+float getLoadOverride(float defaultLoad, afr_override_e overrideMode DECLARE_ENGINE_PARAMETER_SUFFIX) {
+	switch(overrideMode) {
 		case AFR_None: return defaultLoad;
 		case AFR_MAP: return getMap(PASS_ENGINE_PARAMETER_SIGNATURE);
 		// TPS/pedal default to 100% - failed TPS goes rich

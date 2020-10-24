@@ -34,10 +34,10 @@ public:
  * Probably not: we have an instance of TriggerState which is used for trigger initialization,
  * also composition probably better than inheritance here
  */
-class TriggerCentral : public trigger_central_s {
+class TriggerCentral final : public trigger_central_s {
 public:
 	TriggerCentral();
-	void addEventListener(ShaftPositionListener handler, const char *name, Engine *engine);
+	void init(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 	void handleShaftSignal(trigger_event_e signal, efitick_t timestamp DECLARE_ENGINE_PARAMETER_SUFFIX);
 	int getHwEventCounter(int index) const;
 	void resetCounters();
@@ -67,9 +67,6 @@ public:
 	TriggerWaveform vvtShape;
 
 	TriggerFormDetails triggerFormDetails;
-
-private:
-	IntListenerArray<15> triggerListeneres;
 };
 
 void triggerInfo(void);
@@ -79,7 +76,6 @@ void hwHandleVvtCamSignal(trigger_value_e front, efitick_t timestamp DECLARE_ENG
 void initTriggerCentral(Logging *sharedLogger);
 void printAllTriggers();
 
-void addTriggerEventListener(ShaftPositionListener handler, const char *name, Engine *engine);
 int isSignalDecoderError(void);
 void resetMaxValues();
 

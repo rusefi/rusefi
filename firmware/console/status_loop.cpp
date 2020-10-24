@@ -61,6 +61,7 @@
 #include "periodic_thread_controller.h"
 #include "cdm_ion_sense.h"
 #include "binary_logging.h"
+#include "buffered_writer.h"
 
 extern bool main_loop_started;
 
@@ -119,14 +120,12 @@ static void setWarningEnabled(int value) {
 
 #if EFI_FILE_LOGGING
 // this one needs to be in main ram so that SD card SPI DMA works fine
-static char sdLogBuffer[2048] MAIN_RAM;
+static char sdLogBuffer[100] MAIN_RAM;
 static uint64_t binaryLogCount = 0;
 
 #endif /* EFI_FILE_LOGGING */
 
 EXTERN_ENGINE;
-
-static char buf[6];
 
 /**
  * This is useful if we are changing engine mode dynamically
@@ -142,22 +141,19 @@ static float getAirFlowGauge(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	return hasMafSensor() ? getRealMaf(PASS_ENGINE_PARAMETER_SIGNATURE) : engine->engineState.airFlow;
 }
 
-void writeLogLine() {
+void writeLogLine(Writer& buffer) {
 #if EFI_FILE_LOGGING
 	if (!main_loop_started)
 		return;
 
-	size_t length = efi::size(sdLogBuffer);
-
 	if (binaryLogCount == 0) {
-		memset(sdLogBuffer, 0xAA, length);
-		writeHeader(sdLogBuffer);
+		writeHeader(buffer);
 	} else {
 		updateTunerStudioState(&tsOutputChannels);
-		length = writeBlock(sdLogBuffer);
+		size_t length = writeBlock(sdLogBuffer);
+		efiAssertVoid(OBD_PCM_Processor_Fault, length <= efi::size(sdLogBuffer), "SD log buffer overflow");
+		buffer.write(sdLogBuffer, length);
 	}
-
-	appendToLog(sdLogBuffer, length);
 
 	binaryLogCount++;
 #endif /* EFI_FILE_LOGGING */
@@ -523,6 +519,8 @@ void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels DECLARE_
 	tsOutputChannels->rawClt = Sensor::getRaw(SensorType::Clt);
 	tsOutputChannels->rawIat = Sensor::getRaw(SensorType::Iat);
 	tsOutputChannels->rawOilPressure = Sensor::getRaw(SensorType::OilPressure);
+	tsOutputChannels->rawLowFuelPressure = Sensor::getRaw(SensorType::FuelPressureLow);
+	tsOutputChannels->rawHighFuelPressure = Sensor::getRaw(SensorType::FuelPressureHigh);
 
 	// offset 16
 	tsOutputChannels->massAirFlowVoltage = hasMafSensor() ? getMafVoltage(PASS_ENGINE_PARAMETER_SIGNATURE) : 0;
@@ -547,7 +545,7 @@ void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels DECLARE_
 	tsOutputChannels->baroPressure = hasBaroSensor() ? getBaroPressure() : 0;
 #endif /* EFI_ANALOG_SENSORS */
 	// 48
-	tsOutputChannels->fuelBase = engine->engineState.baseFuel;
+	tsOutputChannels->fuelBase = engine->engineState.baseFuel * 1000;	// Convert grams to mg
 	// 64
 	tsOutputChannels->actualLastInjection = ENGINE(actualLastInjection);
 
@@ -607,6 +605,12 @@ void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels DECLARE_
 	tsOutputChannels->accelerationY = engine->sensors.accelerometer.y;
 	// 280
 	tsOutputChannels->oilPressure = Sensor::get(SensorType::OilPressure).Value;
+
+	// Low pressure is directly in kpa
+	tsOutputChannels->lowFuelPressure = Sensor::get(SensorType::FuelPressureLow).Value;
+	// High pressure is in bar, aka 100 kpa
+	tsOutputChannels->highFuelPressure = Sensor::get(SensorType::FuelPressureHigh).Value * 0.01f;
+
 	// 288
 	tsOutputChannels->injectionOffset = engine->engineState.injectionOffset;
 
@@ -660,6 +664,12 @@ void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels DECLARE_
 	tsOutputChannels->idlePosition = getIdlePosition();
 #endif
 
+	tsOutputChannels->idlePositionSensor = Sensor::get(SensorType::IdlePosition).value_or(0);
+	tsOutputChannels->rawIdlePositionSensor = Sensor::getRaw(SensorType::IdlePosition);
+
+	tsOutputChannels->wastegatePosition = Sensor::get(SensorType::WastegatePosition).value_or(0);
+	tsOutputChannels->rawWastegatePositionSensor = Sensor::getRaw(SensorType::WastegatePosition);
+
 #if EFI_PROD_CODE
 	tsOutputChannels->isTriggerError = isTriggerErrorNow();
 
@@ -678,7 +688,7 @@ void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels DECLARE_
 	tsOutputChannels->isInjectionEnabled = engineConfiguration->isInjectionEnabled;
 	tsOutputChannels->isCylinderCleanupEnabled = engineConfiguration->isCylinderCleanupEnabled;
 	tsOutputChannels->isCylinderCleanupActivated = engine->isCylinderCleanupMode;
-	tsOutputChannels->secondTriggerChannelEnabled = engineConfiguration->secondTriggerChannelEnabled;
+
 #if EFI_VEHICLE_SPEED
 	float vehicleSpeed = getVehicleSpeed();
 	tsOutputChannels->vehicleSpeedKph = vehicleSpeed;
@@ -766,7 +776,6 @@ void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels DECLARE_
 	case DBG_FSIO_ADC:
 		// todo: implement a proper loop
 		if (engineConfiguration->fsioAdc[0] != EFI_ADC_NONE) {
-			strcpy(buf, "adcX");
 			tsOutputChannels->debugFloatField1 = getVoltage("fsio", engineConfiguration->fsioAdc[0] PASS_ENGINE_PARAMETER_SUFFIX);
 		}
 		break;

@@ -56,69 +56,6 @@ void plainPinTurnOff(NamedOutputPin *output) {
 	output->setLow();
 }
 
-/*
-static void auxValveTriggerCallback(trigger_event_e ckpSignalType,
-		uint32_t index DECLARE_ENGINE_PARAMETER_SUFFIX) {
-	UNUSED(ckpSignalType);
-
-	if (index != engine->auxSchedulingIndex) {
-		return;
-	}
-	int rpm = GET_RPM();
-	if (!isValidRpm(rpm)) {
-		return;
-	}
-*/
-	/**
-	 * Sometimes previous event has not yet been executed by the time we are scheduling new events.
-	 * We use this array alternation in order to bring events that are scheled and waiting to be executed from
-	 * events which are already being scheduled
-	 */
-/*
-	int engineCycleAlternation = engine->triggerCentral.triggerState.getTotalRevolutionCounter() % CYCLE_ALTERNATION;
-
-	for (int valveIndex = 0; valveIndex < AUX_DIGITAL_VALVE_COUNT; valveIndex++) {
-
-		NamedOutputPin *output = &enginePins.auxValve[valveIndex];
-
-		for (int phaseIndex = 0; phaseIndex < 2; phaseIndex++) {
-*/
-/* I believe a more correct implementation is the following:
- * here we properly account for trigger angle position in engine cycle coordinates
-			// todo: at the moment this logic is assuming four-stroke 720-degree engine cycle
-			angle_t extra = phaseIndex * 360 // cycle opens twice per 720 engine cycle
-					+ valveIndex * 180 // 2nd valve is operating at 180 offset to first
-					+ tdcPosition() // engine cycle position to trigger cycle position conversion
-					- ENGINE(triggerCentral.triggerShape.eventAngles[SCHEDULING_TRIGGER_INDEX])
-					;
-*/
-/*
-			angle_t extra = phaseIndex * 360 + valveIndex * 180;
-			angle_t onTime = extra + engine->engineState.auxValveStart;
-			scheduling_s *onEvent = &engine->auxTurnOnEvent[valveIndex][phaseIndex][engineCycleAlternation];
-			scheduling_s *offEvent = &engine->auxTurnOffEvent[valveIndex][phaseIndex][engineCycleAlternation];
-			bool isOverlap = onEvent->isScheduled || offEvent->isScheduled;
-			if (isOverlap) {
-				enginePins.debugTriggerSync.setValue(1);
-			}
-
-			fixAngle(onTime, "onTime", CUSTOM_ERR_6556);
-			scheduleByAngle(onEvent,
-					onTime,
-					&plainPinTurnOn, output PASS_ENGINE_PARAMETER_SUFFIX);
-			angle_t offTime = extra + engine->engineState.auxValveEnd;
-			fixAngle(offTime, "offTime", CUSTOM_ERR_6557);
-			scheduleByAngle(offEvent,
-					offTime,
-					&plainPinTurnOff, output PASS_ENGINE_PARAMETER_SUFFIX);
-			if (isOverlap) {
-				enginePins.debugTriggerSync.setValue(0);
-			}
-		}
-	}
-}
-*/
-
 void initAuxValves(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	UNUSED(sharedLogger);
 	if (engineConfiguration->auxValves[0] == GPIO_UNASSIGNED) {
@@ -130,7 +67,7 @@ void initAuxValves(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX) {
 		return;
 	}
 
-	updateAuxValves(PASS_ENGINE_PARAMETER_SIGNATURE);
+	recalculateAuxValveTiming(PASS_ENGINE_PARAMETER_SIGNATURE);
 
 	for (int valveIndex = 0; valveIndex < AUX_DIGITAL_VALVE_COUNT; valveIndex++) {
 
@@ -151,12 +88,9 @@ void initAuxValves(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX) {
 					);
 		}
 	}
-
-
-//	addTriggerEventListener(auxValveTriggerCallback, "AuxV", engine);
 }
 
-void updateAuxValves(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+void recalculateAuxValveTiming(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	if (engineConfiguration->auxValves[0] == GPIO_UNASSIGNED) {
 		return;
 	}

@@ -1,4 +1,5 @@
 #include <cstddef>
 
-void writeHeader(char* buffer);
+struct Writer;
+void writeHeader(Writer& buffer);
 size_t writeBlock(char* buffer);

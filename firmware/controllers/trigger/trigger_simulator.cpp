@@ -21,36 +21,39 @@ static const bool isRisingEdge[HW_EVENT_TYPES] = { false, true, false, true, fal
  * todo: should this method be invoked somewhere deeper? at the moment we have too many usages too high
  * @return true if front should be decoded further, false if we are not interested
  */
-bool isUsefulSignal(trigger_event_e signal, const TriggerConfiguration * triggerConfiguration) {
-	return !triggerConfiguration->isUseOnlyRisingEdgeForTrigger() || isRisingEdge[(int) signal];
+bool isUsefulSignal(trigger_event_e signal, const TriggerConfiguration& triggerConfiguration) {
+	return !triggerConfiguration.UseOnlyRisingEdgeForTrigger || isRisingEdge[(int) signal];
 }
 
 #if EFI_UNIT_TEST
 extern bool printTriggerDebug;
 #endif /* ! EFI_UNIT_TEST */
 
-void TriggerStimulatorHelper::feedSimulatedEvent(const TriggerStateCallback triggerCycleCallback,
-		const TriggerConfiguration * triggerConfiguration,
-		TriggerState *state, TriggerWaveform * shape, int i
+void TriggerStimulatorHelper::feedSimulatedEvent(
+		const TriggerStateCallback triggerCycleCallback,
+		const TriggerConfiguration& triggerConfiguration,
+		TriggerState& state,
+		const TriggerWaveform& shape,
+		int i
 		) {
-	efiAssertVoid(CUSTOM_ERR_6593, shape->getSize() > 0, "size not zero");
-	int stateIndex = i % shape->getSize();
-	int size = shape->getSize();
+	efiAssertVoid(CUSTOM_ERR_6593, shape.getSize() > 0, "size not zero");
+	int stateIndex = i % shape.getSize();
+	int size = shape.getSize();
 
-	int loopIndex = i / shape->getSize();
+	int loopIndex = i / shape.getSize();
 
-	int time = (int) (SIMULATION_CYCLE_PERIOD * (loopIndex + shape->wave.getSwitchTime(stateIndex)));
+	int time = (int) (SIMULATION_CYCLE_PERIOD * (loopIndex + shape.wave.getSwitchTime(stateIndex)));
 
-	MultiChannelStateSequence *multiChannelStateSequence = &shape->wave;
+	const MultiChannelStateSequence& multiChannelStateSequence = shape.wave;
 
 #if EFI_UNIT_TEST
-	int prevIndex = getPreviousIndex(stateIndex, shape->getSize());
+	int prevIndex = getPreviousIndex(stateIndex, shape.getSize());
 
-	pin_state_t primaryWheelState = multiChannelStateSequence->getChannelState(0, prevIndex);
-	pin_state_t newPrimaryWheelState = multiChannelStateSequence->getChannelState(0, stateIndex);
+	pin_state_t primaryWheelState = multiChannelStateSequence.getChannelState(0, prevIndex);
+	pin_state_t newPrimaryWheelState = multiChannelStateSequence.getChannelState(0, stateIndex);
 
-	pin_state_t secondaryWheelState = multiChannelStateSequence->getChannelState(1, prevIndex);
-	pin_state_t newSecondaryWheelState = multiChannelStateSequence->getChannelState(1, stateIndex);
+	pin_state_t secondaryWheelState = multiChannelStateSequence.getChannelState(1, prevIndex);
+	pin_state_t newSecondaryWheelState = multiChannelStateSequence.getChannelState(1, stateIndex);
 
 //	pin_state_t thirdWheelState = multiChannelStateSequence->getChannelState(2, prevIndex);
 //	pin_state_t new3rdWheelState = multiChannelStateSequence->getChannelState(2, stateIndex);
@@ -65,10 +68,10 @@ void TriggerStimulatorHelper::feedSimulatedEvent(const TriggerStateCallback trig
 	// todo: code duplication with TriggerEmulatorHelper::handleEmulatorCallback?
 
 	if (needEvent(stateIndex, size, multiChannelStateSequence, 0)) {
-		pin_state_t currentValue = multiChannelStateSequence->getChannelState(/*phaseIndex*/0, stateIndex);
+		pin_state_t currentValue = multiChannelStateSequence.getChannelState(/*phaseIndex*/0, stateIndex);
 		trigger_event_e event = currentValue ? SHAFT_PRIMARY_RISING : SHAFT_PRIMARY_FALLING;
 		if (isUsefulSignal(event, triggerConfiguration)) {
-			state->decodeTriggerEvent(shape,
+			state.decodeTriggerEvent(shape,
 					triggerCycleCallback,
 					/* override */ nullptr,
 					triggerConfiguration,
@@ -77,10 +80,10 @@ void TriggerStimulatorHelper::feedSimulatedEvent(const TriggerStateCallback trig
 	}
 
 	if (needEvent(stateIndex, size, multiChannelStateSequence, 1)) {
-		pin_state_t currentValue = multiChannelStateSequence->getChannelState(/*phaseIndex*/1, stateIndex);
+		pin_state_t currentValue = multiChannelStateSequence.getChannelState(/*phaseIndex*/1, stateIndex);
 		trigger_event_e event = currentValue ? SHAFT_SECONDARY_RISING : SHAFT_SECONDARY_FALLING;
 		if (isUsefulSignal(event, triggerConfiguration)) {
-			state->decodeTriggerEvent(shape,
+			state.decodeTriggerEvent(shape,
 					triggerCycleCallback,
 					/* override */ nullptr,
 					triggerConfiguration,
@@ -89,10 +92,10 @@ void TriggerStimulatorHelper::feedSimulatedEvent(const TriggerStateCallback trig
 	}
 
 	if (needEvent(stateIndex, size, multiChannelStateSequence, 2)) {
-		pin_state_t currentValue = multiChannelStateSequence->getChannelState(/*phaseIndex*/2, stateIndex);
+		pin_state_t currentValue = multiChannelStateSequence.getChannelState(/*phaseIndex*/2, stateIndex);
 		trigger_event_e event = currentValue ? SHAFT_3RD_RISING : SHAFT_3RD_FALLING;
 		if (isUsefulSignal(event, triggerConfiguration)) {
-			state->decodeTriggerEvent(shape,
+			state.decodeTriggerEvent(shape,
 					triggerCycleCallback,
 					/* override */ nullptr,
 					triggerConfiguration,
@@ -101,48 +104,52 @@ void TriggerStimulatorHelper::feedSimulatedEvent(const TriggerStateCallback trig
 	}
 }
 
-void TriggerStimulatorHelper::assertSyncPositionAndSetDutyCycle(const TriggerStateCallback triggerCycleCallback,
-		const TriggerConfiguration * triggerConfiguration,
-		const uint32_t syncIndex, TriggerState *state, TriggerWaveform * shape
+void TriggerStimulatorHelper::assertSyncPositionAndSetDutyCycle(
+		const TriggerStateCallback triggerCycleCallback,
+		const TriggerConfiguration& triggerConfiguration,
+		const uint32_t syncIndex,
+		TriggerState& state,
+		TriggerWaveform& shape
 		) {
 
 	/**
 	 * let's feed two more cycles to validate shape definition
 	 */
-	for (uint32_t i = syncIndex + 1; i <= syncIndex + GAP_TRACKING_LENGTH * shape->getSize(); i++) {
+	for (uint32_t i = syncIndex + 1; i <= syncIndex + GAP_TRACKING_LENGTH * shape.getSize(); i++) {
 		feedSimulatedEvent(triggerCycleCallback,
 				triggerConfiguration,
 				state, shape, i);
 	}
-	int revolutionCounter = state->getTotalRevolutionCounter();
+	int revolutionCounter = state.getTotalRevolutionCounter();
 	if (revolutionCounter != GAP_TRACKING_LENGTH + 1) {
-		warning(CUSTOM_OBD_TRIGGER_WAVEFORM, "sync failed/wrong gap parameters trigger=%s rc=%d", getTrigger_type_e(triggerConfiguration->getType()), revolutionCounter);
-		shape->setShapeDefinitionError(true);
+		warning(CUSTOM_OBD_TRIGGER_WAVEFORM, "sync failed/wrong gap parameters trigger=%s rc=%d", getTrigger_type_e(triggerConfiguration.TriggerType), revolutionCounter);
+		shape.setShapeDefinitionError(true);
 		return;
 	}
-	shape->shapeDefinitionError = false;
+	shape.shapeDefinitionError = false;
 
 	for (int i = 0; i < PWM_PHASE_MAX_WAVE_PER_PWM; i++) {
-		shape->expectedDutyCycle[i] = 1.0 * state->expectedTotalTime[i] / SIMULATION_CYCLE_PERIOD;
+		shape.expectedDutyCycle[i] = 1.0 * state.expectedTotalTime[i] / SIMULATION_CYCLE_PERIOD;
 	}
 }
 
 /**
  * @return trigger synchronization point index, or error code if not found
  */
-uint32_t TriggerStimulatorHelper::findTriggerSyncPoint(TriggerWaveform * shape,
-		const TriggerConfiguration * triggerConfiguration,
-		 TriggerState *state) {
+uint32_t TriggerStimulatorHelper::findTriggerSyncPoint(
+		TriggerWaveform& shape,
+		const TriggerConfiguration& triggerConfiguration,
+		TriggerState& state) {
 	for (int i = 0; i < 4 * PWM_PHASE_MAX_COUNT; i++) {
 		feedSimulatedEvent(nullptr,
 				triggerConfiguration,
 				state, shape, i);
 
-		if (state->shaft_is_synchronized) {
+		if (state.shaft_is_synchronized) {
 			return i;
 		}
 	}
-	shape->setShapeDefinitionError(true);
+	shape.setShapeDefinitionError(true);
 	warning(CUSTOM_ERR_TRIGGER_SYNC, "findTriggerZeroEventIndex() failed");
 	return EFI_ERROR_CODE;
 }

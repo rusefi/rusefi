@@ -16,6 +16,8 @@
 #include "listener_array.h"
 #include "pwm_generator_logic.h"
 #include "tooth_logger.h"
+#include "hip9011.h"
+#include "logic_analyzer.h"
 
 #include "settings.h"
 #include "engine_math.h"
@@ -25,6 +27,9 @@
 #include "rpm_calculator.h"
 #include "tooth_logger.h"
 #include "perf_trace.h"
+#include "map_averaging.h"
+#include "main_trigger_callback.h"
+
 
 #if EFI_PROD_CODE
 #include "pin_repository.h"
@@ -40,14 +45,16 @@ WaveChart waveChart;
 #endif /* EFI_ENGINE_SNIFFER */
 
 trigger_central_s::trigger_central_s() : hwEventCounters() {
-	static_assert(TRIGGER_TYPE_60_2 == TT_TOOTHED_WHEEL_60_2, "One day we will have one source of this magic constant");
-	static_assert(TRIGGER_TYPE_36_1 == TT_TOOTHED_WHEEL_36_1, "One day we will have one source of this magic constant");
 }
 
 TriggerCentral::TriggerCentral() : trigger_central_s() {
-	clearCallbacks(&triggerListeneres);
 	triggerState.resetTriggerState();
 	noiseFilter.resetAccumSignalData();
+}
+
+void TriggerCentral::init(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+	INJECT_ENGINE_REFERENCE(&triggerState);
+	INJECT_ENGINE_REFERENCE(&vvtState);
 }
 
 void TriggerNoiseFilter::resetAccumSignalData() {
@@ -66,29 +73,16 @@ EXTERN_ENGINE;
 
 static Logging *logger;
 
-void TriggerCentral::addEventListener(ShaftPositionListener listener, const char *name, Engine *engine) {
-	print("registerCkpListener: %s\r\n", name);
-	triggerListeneres.registerCallback((VoidInt)(void*)listener, engine);
-}
-
 angle_t TriggerCentral::getVVTPosition() {
 	return vvtPosition;
-}
-
-/**
- * @brief Adds a trigger event listener
- *
- * Trigger event listener would be invoked on each trigger event. For example, for a 60/2 wheel
- * that would be 116 events: 58 SHAFT_PRIMARY_RISING and 58 SHAFT_PRIMARY_FALLING events.
- */
-void addTriggerEventListener(ShaftPositionListener listener, const char *name, Engine *engine) {
-	engine->triggerCentral.addEventListener(listener, name, engine);
 }
 
 #define miataNbIndex (0)
 
 static bool vvtWithRealDecoder(vvt_mode_e vvtMode) {
-	return vvtMode == MIATA_NB2 || vvtMode == VVT_BOSCH_QUICK_START;
+	return vvtMode == MIATA_NB2
+			|| vvtMode == VVT_BOSCH_QUICK_START
+			|| vvtMode == VVT_4_1;
 }
 
 void hwHandleVvtCamSignal(trigger_value_e front, efitick_t nowNt DECLARE_ENGINE_PARAMETER_SUFFIX) {
@@ -149,10 +143,10 @@ void hwHandleVvtCamSignal(trigger_value_e front, efitick_t nowNt DECLARE_ENGINE_
 	}
 
 	ENGINE(triggerCentral).vvtState.decodeTriggerEvent(
-			&ENGINE(triggerCentral).vvtShape,
+			ENGINE(triggerCentral).vvtShape,
 			nullptr,
 			nullptr,
-			&engine->vvtTriggerConfiguration,
+			engine->vvtTriggerConfiguration,
 			front == TV_RISE ? SHAFT_PRIMARY_RISING : SHAFT_PRIMARY_FALLING, nowNt);
 
 
@@ -272,7 +266,7 @@ void hwHandleShaftSignal(trigger_event_e signal, efitick_t timestamp) {
 	// We want to do this before anything else as we
 	// actually want to capture any noise/jitter that may be occurring
 
-	bool logLogicState = CONFIG(displayLogicLevelsInEngineSniffer && engineConfiguration->useOnlyRisingEdgeForTrigger);
+	bool logLogicState = CONFIG(displayLogicLevelsInEngineSniffer) && CONFIG(useOnlyRisingEdgeForTrigger);
 
 	if (!logLogicState) {
 		// we log physical state even if displayLogicLevelsInEngineSniffer if both fronts are used by decoder
@@ -284,8 +278,7 @@ void hwHandleShaftSignal(trigger_event_e signal, efitick_t timestamp) {
 	// for effective noise filtering, we need both signal edges, 
 	// so we pass them to handleShaftSignal() and defer this test
 	if (!CONFIG(useNoiselessTriggerDecoder)) {
-		const TriggerConfiguration * triggerConfiguration = &engine->primaryTriggerConfiguration;
-		if (!isUsefulSignal(signal, triggerConfiguration)) {
+		if (!isUsefulSignal(signal, ENGINE(primaryTriggerConfiguration))) {
 			/**
 			 * no need to process VR falls further
 			 */
@@ -309,8 +302,7 @@ void hwHandleShaftSignal(trigger_event_e signal, efitick_t timestamp) {
 		maxTriggerReentraint = triggerReentraint;
 	triggerReentraint++;
 
-	efiAssertVoid(CUSTOM_ERR_6636, getCurrentRemainingStack() > 128, "lowstck#8");
-	engine->triggerCentral.handleShaftSignal(signal, timestamp PASS_ENGINE_PARAMETER_SUFFIX);
+	ENGINE(triggerCentral).handleShaftSignal(signal, timestamp PASS_ENGINE_PARAMETER_SUFFIX);
 
 	triggerReentraint--;
 	triggerDuration = getTimeNowLowerNt() - triggerHandlerEntryTime;
@@ -414,8 +406,6 @@ bool TriggerNoiseFilter::noiseFilter(efitick_t nowNt,
  * This method is NOT invoked for VR falls.
  */
 void TriggerCentral::handleShaftSignal(trigger_event_e signal, efitick_t timestamp DECLARE_ENGINE_PARAMETER_SUFFIX) {
-	efiAssertVoid(CUSTOM_CONF_NULL, engine!=NULL, "configuration");
-
 	if (triggerShape.shapeDefinitionError) {
 		// trigger is broken, we cannot do anything here
 		warning(CUSTOM_ERR_UNEXPECTED_SHAFT_EVENT, "Shaft event while trigger is mis-configured");
@@ -429,9 +419,7 @@ void TriggerCentral::handleShaftSignal(trigger_event_e signal, efitick_t timesta
 		if (!noiseFilter.noiseFilter(timestamp, &triggerState, signal PASS_ENGINE_PARAMETER_SUFFIX)) {
 			return;
 		}
-		const TriggerConfiguration * triggerConfiguration = &engine->primaryTriggerConfiguration;
-		// moved here from hwHandleShaftSignal()
-		if (!isUsefulSignal(signal, triggerConfiguration)) {
+		if (!isUsefulSignal(signal, ENGINE(primaryTriggerConfiguration))) {
 			return;
 		}
 	}
@@ -446,10 +434,10 @@ void TriggerCentral::handleShaftSignal(trigger_event_e signal, efitick_t timesta
 	/**
 	 * This invocation changes the state of triggerState
 	 */
-	triggerState.decodeTriggerEvent(&triggerShape,
+	triggerState.decodeTriggerEvent(triggerShape,
 			nullptr,
 			engine,
-			&engine->primaryTriggerConfiguration,
+			engine->primaryTriggerConfiguration,
 			signal, timestamp);
 
 	/**
@@ -478,21 +466,36 @@ void TriggerCentral::handleShaftSignal(trigger_event_e signal, efitick_t timesta
 		return;
 	}
 
-	if (triggerState.isValidIndex(&ENGINE(triggerCentral.triggerShape))) {
+	if (triggerState.isValidIndex(ENGINE(triggerCentral.triggerShape))) {
 		ScopePerf perf(PE::ShaftPositionListeners);
 
 #if TRIGGER_EXTREME_LOGGING
 	scheduleMsg(logger, "trigger %d %d %d", triggerIndexForListeners, getRevolutionCounter(), (int)getTimeNowUs());
 #endif /* TRIGGER_EXTREME_LOGGING */
 
-		/**
-		 * Here we invoke all the listeners - the main engine control logic is inside these listeners
-		 */
-		for (int i = 0; i < triggerListeneres.currentListenersCount; i++) {
-			ShaftPositionListener listener = (ShaftPositionListener) (void*) triggerListeneres.callbacks[i];
-			(listener)(signal, triggerIndexForListeners, timestamp PASS_ENGINE_PARAMETER_SUFFIX);
-		}
+		rpmShaftPositionCallback(signal, triggerIndexForListeners, timestamp PASS_ENGINE_PARAMETER_SUFFIX);
 
+#if !EFI_UNIT_TEST
+		tdcMarkCallback(triggerIndexForListeners, timestamp PASS_ENGINE_PARAMETER_SUFFIX);
+#endif
+
+#if !EFI_UNIT_TEST
+#if EFI_MAP_AVERAGING
+		mapAveragingTriggerCallback(triggerIndexForListeners, timestamp PASS_ENGINE_PARAMETER_SUFFIX);
+#endif /* EFI_MAP_AVERAGING */
+#endif /* EFI_UNIT_TEST */
+
+#if EFI_HIP_9011
+		if (CONFIG(isHip9011Enabled)) {
+			intHoldCallback(signal, triggerIndexForListeners, timestamp PASS_ENGINE_PARAMETER_SUFFIX);
+		}
+#endif
+
+#if EFI_LOGIC_ANALYZER
+		waTriggerEventListener(signal, triggerIndexForListeners, timestamp PASS_ENGINE_PARAMETER_SUFFIX);
+#endif
+
+		mainTriggerCallback(triggerIndexForListeners, timestamp PASS_ENGINE_PARAMETER_SUFFIX);
 	}
 }
 
@@ -579,7 +582,6 @@ extern PwmConfig triggerSignal;
 #endif /* #if EFI_PROD_CODE */
 
 extern uint32_t hipLastExecutionCount;
-extern uint32_t hwSetTimerDuration;
 
 extern uint32_t maxLockedDuration;
 extern uint32_t maxEventCallbackDuration;
@@ -713,7 +715,6 @@ void triggerInfo(void) {
 #if EFI_HIP_9011
 	scheduleMsg(logger, "hipLastExecutionCount=%d", hipLastExecutionCount);
 #endif /* EFI_HIP_9011 */
-	scheduleMsg(logger, "hwSetTimerDuration=%d", hwSetTimerDuration);
 
 	scheduleMsg(logger, "totalTriggerHandlerMaxTime=%d", triggerMaxDuration);
 	scheduleMsg(logger, "maxPrecisionCallbackDuration=%d", maxPrecisionCallbackDuration);

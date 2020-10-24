@@ -42,11 +42,11 @@ static int getTriggerZeroEventIndex(engine_type_e engineType) {
 
 	initDataStructures(PASS_ENGINE_PARAMETER_SIGNATURE);
 
-	const TriggerConfiguration * triggerConfiguration = &engine->primaryTriggerConfiguration;
+	const auto& triggerConfiguration = engine->primaryTriggerConfiguration;
 
-	TriggerWaveform * shape = &eth.engine.triggerCentral.triggerShape;
+	TriggerWaveform& shape = eth.engine.triggerCentral.triggerShape;
 	return eth.engine.triggerCentral.triggerState.findTriggerZeroEventIndex(shape, triggerConfiguration,
-			&engineConfiguration->trigger);
+			engineConfiguration->trigger);
 }
 
 TEST(misc, testSkipped2_0) {
@@ -113,47 +113,42 @@ static void assertTriggerPosition(event_trigger_position_s *position, int eventI
 }
 
 TEST(misc, testSomethingWeird) {
-	printf("*************************************************** testSomethingWeird\r\n");
-
 	WITH_ENGINE_TEST_HELPER(FORD_INLINE_6_1995);
 
 	TriggerState state_;
 	TriggerState *sta = &state_;
 
-	const TriggerConfiguration * triggerConfiguration = &engine->primaryTriggerConfiguration;
+	const auto& triggerConfiguration = engine->primaryTriggerConfiguration;
 
 
 	ASSERT_FALSE(sta->shaft_is_synchronized) << "shaft_is_synchronized";
 	int r = 10;
-	sta->decodeTriggerEvent(&ENGINE(triggerCentral.triggerShape), nullptr, /* override */ nullptr, triggerConfiguration, SHAFT_PRIMARY_FALLING, r);
+	sta->decodeTriggerEvent(ENGINE(triggerCentral.triggerShape), nullptr, /* override */ nullptr, triggerConfiguration, SHAFT_PRIMARY_FALLING, r);
 	ASSERT_FALSE(sta->shaft_is_synchronized) << "shaft_is_synchronized"; // still no synchronization
-	sta->decodeTriggerEvent(&ENGINE(triggerCentral.triggerShape), nullptr, /* override */ nullptr, triggerConfiguration, SHAFT_PRIMARY_RISING, ++r);
+	sta->decodeTriggerEvent(ENGINE(triggerCentral.triggerShape), nullptr, /* override */ nullptr, triggerConfiguration, SHAFT_PRIMARY_RISING, ++r);
 	ASSERT_TRUE(sta->shaft_is_synchronized); // first signal rise synchronize
 	ASSERT_EQ(0, sta->getCurrentIndex());
-	sta->decodeTriggerEvent(&ENGINE(triggerCentral.triggerShape), nullptr, /* override */ nullptr, triggerConfiguration, SHAFT_PRIMARY_FALLING, r++);
+	sta->decodeTriggerEvent(ENGINE(triggerCentral.triggerShape), nullptr, /* override */ nullptr, triggerConfiguration, SHAFT_PRIMARY_FALLING, r++);
 	ASSERT_EQ(1, sta->getCurrentIndex());
 
 	for (int i = 2; i < 10;) {
-		sta->decodeTriggerEvent(&ENGINE(triggerCentral.triggerShape), nullptr, /* override */ nullptr, triggerConfiguration, SHAFT_PRIMARY_RISING, r++);
+		sta->decodeTriggerEvent(ENGINE(triggerCentral.triggerShape), nullptr, /* override */ nullptr, triggerConfiguration, SHAFT_PRIMARY_RISING, r++);
 		assertEqualsM("even", i++, sta->getCurrentIndex());
-		sta->decodeTriggerEvent(&ENGINE(triggerCentral.triggerShape), nullptr, /* override */ nullptr, triggerConfiguration, SHAFT_PRIMARY_FALLING, r++);
+		sta->decodeTriggerEvent(ENGINE(triggerCentral.triggerShape), nullptr, /* override */ nullptr, triggerConfiguration, SHAFT_PRIMARY_FALLING, r++);
 		assertEqualsM("odd", i++, sta->getCurrentIndex());
 	}
 
-	sta->decodeTriggerEvent(&ENGINE(triggerCentral.triggerShape), nullptr, /* override */ nullptr, triggerConfiguration, SHAFT_PRIMARY_RISING, r++);
+	sta->decodeTriggerEvent(ENGINE(triggerCentral.triggerShape), nullptr, /* override */ nullptr, triggerConfiguration, SHAFT_PRIMARY_RISING, r++);
 	ASSERT_EQ(10, sta->getCurrentIndex());
 
-	sta->decodeTriggerEvent(&ENGINE(triggerCentral.triggerShape), nullptr, /* override */ nullptr, triggerConfiguration, SHAFT_PRIMARY_FALLING, r++);
+	sta->decodeTriggerEvent(ENGINE(triggerCentral.triggerShape), nullptr, /* override */ nullptr, triggerConfiguration, SHAFT_PRIMARY_FALLING, r++);
 	ASSERT_EQ(11, sta->getCurrentIndex());
 
-	sta->decodeTriggerEvent(&ENGINE(triggerCentral.triggerShape), nullptr, /* override */ nullptr, triggerConfiguration, SHAFT_PRIMARY_RISING, r++);
+	sta->decodeTriggerEvent(ENGINE(triggerCentral.triggerShape), nullptr, /* override */ nullptr, triggerConfiguration, SHAFT_PRIMARY_RISING, r++);
 	ASSERT_EQ(0, sta->getCurrentIndex()); // new revolution
 }
 
 TEST(misc, test1995FordInline6TriggerDecoder) {
-
-	printf("*************************************************** test1995FordInline6TriggerDecoder\r\n");
-
 	ASSERT_EQ( 0,  getTriggerZeroEventIndex(FORD_INLINE_6_1995)) << "triggerIndex ";
 
 	WITH_ENGINE_TEST_HELPER(FORD_INLINE_6_1995);
@@ -520,32 +515,9 @@ TEST(misc, testTriggerDecoder) {
 		WITH_ENGINE_TEST_HELPER(MITSU_4G93);
 
 
-//		TriggerWaveform *t = &eth.engine.triggerShape;
-//		ASSERT_EQ(1, t->eventAngles[1]);
-//		ASSERT_EQ( 0,  t->triggerIndexByAngle[56]) << "index at 0";
-//		ASSERT_EQ( 1,  t->triggerIndexByAngle[57]) << "index at 1";
-//
-//		ASSERT_EQ(270, t->eventAngles[5]);
-//		ASSERT_EQ( 4,  t->triggerIndexByAngle[269]) << "index at 269";
-//		ASSERT_EQ( 5,  t->triggerIndexByAngle[270]) << "index at 270";
-//		ASSERT_EQ( 5,  t->triggerIndexByAngle[271]) << "index at 271";
-//
-//		ASSERT_EQ(306, t->eventAngles[6]);
-//		ASSERT_EQ(5, t->triggerIndexByAngle[305]);
-//		ASSERT_EQ(6, t->triggerIndexByAngle[306]);
-//		ASSERT_EQ(6, t->triggerIndexByAngle[307]);
-//
-//		ASSERT_EQ(666, t->eventAngles[11]);
-//		ASSERT_EQ( 10,  t->triggerIndexByAngle[665]) << "index for 665";
-//		ASSERT_EQ( 11,  t->triggerIndexByAngle[668]) << "index for 668";
-
-
 		eth.persistentConfig.engineConfiguration.useOnlyRisingEdgeForTrigger = false;
 		eth.persistentConfig.engineConfiguration.sensorChartMode = SC_DETAILED_RPM;
 		applyNonPersistentConfiguration(NULL PASS_ENGINE_PARAMETER_SUFFIX);
-
-//		assertEqualsM2("rpm#1", 16666.9746, eth.engine.triggerCentral.triggerState.instantRpmValue[0], 0.5);
-//		assertEqualsM2("rpm#2", 16666.3750, eth.engine.triggerCentral.triggerState.instantRpmValue[1], 0.5);
 
 	}
 	testTriggerDecoder2("miata 1990", MIATA_1990, 11, 0.2985, 0.3890);
@@ -568,7 +540,7 @@ TEST(misc, testTriggerDecoder) {
 
 	testTriggerDecoder2("sachs", SACHS, 0, 0.4800, 0.000);
 
-	testTriggerDecoder2("vw ABA", VW_ABA, 114, 0.5000, 0.0);
+	testTriggerDecoder2("vw ABA", VW_ABA, 0, 0.51666, 0.0);
 }
 
 extern fuel_Map3D_t fuelMap;

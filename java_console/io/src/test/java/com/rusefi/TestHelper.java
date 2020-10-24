@@ -1,5 +1,6 @@
 package com.rusefi;
 
+import com.devexperts.logging.Logging;
 import com.opensr5.ConfigurationImage;
 import com.opensr5.Logger;
 import com.opensr5.ini.field.ScalarIniField;
@@ -24,10 +25,12 @@ import java.net.Socket;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
+import static com.devexperts.logging.Logging.getLogging;
 import static com.rusefi.Timeouts.READ_IMAGE_TIMEOUT;
 import static org.junit.Assert.assertTrue;
 
 public class TestHelper {
+    private static final Logging log = getLogging(TestHelper.class);
     public static final String LOCALHOST = "localhost";
     public static final String TEST_SIGNATURE_1 = "rusEFI 2020.07.06.frankenso_na6.2468827536";
     public static final String TEST_SIGNATURE_2 = "rusEFI 2020.07.11.proteus_f4.1986715563";
@@ -104,7 +107,14 @@ public class TestHelper {
     }
 
     public static void assertLatch(String message, CountDownLatch reconnectCounter) throws InterruptedException {
-        assertTrue(message, reconnectCounter.await(READ_IMAGE_TIMEOUT, TimeUnit.MILLISECONDS));
+        assertLatch(message, reconnectCounter, READ_IMAGE_TIMEOUT);
+    }
+
+    public static void assertLatch(String message, CountDownLatch reconnectCounter, int timeout) throws InterruptedException {
+        assertTrue(message, reconnectCounter.await(timeout, TimeUnit.MILLISECONDS));
+        log.info("*******************");
+        log.info(message + " is good");
+        log.info("*******************");
     }
 
     public static void assertLatch(CountDownLatch reconnectCounter) throws InterruptedException {

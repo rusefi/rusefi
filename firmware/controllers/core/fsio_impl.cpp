@@ -54,6 +54,7 @@ static LENameOrdinalPair leMap(LE_METHOD_MAP, "map");
 static LENameOrdinalPair leVBatt(LE_METHOD_VBATT, "vbatt");
 static LENameOrdinalPair leFan(LE_METHOD_FAN, "fan");
 static LENameOrdinalPair leCoolant(LE_METHOD_COOLANT, "coolant");
+static LENameOrdinalPair leIntakeTemp(LE_METHOD_INTAKE_AIR, "iat");
 static LENameOrdinalPair leIsCoolantBroken(LE_METHOD_IS_COOLANT_BROKEN, "is_clt_broken");
 // @returns boolean state of A/C toggle switch
 static LENameOrdinalPair leAcToggle(LE_METHOD_AC_TOGGLE, "ac_on_switch");
@@ -112,8 +113,8 @@ static LEElement * mainRelayLogic;
 static Logging *logger;
 #if EFI_PROD_CODE || EFI_SIMULATOR
 
-float getEngineValue(le_action_e action DECLARE_ENGINE_PARAMETER_SUFFIX) {
-	efiAssert(CUSTOM_ERR_ASSERT, engine!=NULL, "getLEValue", NAN);
+FsioValue getEngineValue(le_action_e action DECLARE_ENGINE_PARAMETER_SUFFIX) {
+	efiAssert(CUSTOM_ERR_ASSERT, engine!=NULL, "getLEValue", unexpected);
 	switch (action) {
 	case LE_METHOD_FAN:
 		return enginePins.fanRelay.getLogicValue();
@@ -161,7 +162,7 @@ float getEngineValue(le_action_e action DECLARE_ENGINE_PARAMETER_SUFFIX) {
 #include "fsio_getters.def"
 	default:
 		warning(CUSTOM_FSIO_UNEXPECTED, "FSIO ERROR no data for action=%d", action);
-		return NAN;
+		return unexpected;
 	}
 }
 

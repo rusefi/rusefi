@@ -28,8 +28,6 @@ void setBoardConfigurationOverrides(void) {
 
 	engineConfiguration->isEngineChartEnabled = false;
 
-	engineConfiguration->consoleLoopPeriodMs = 200;
-
 	setAlgorithm(LM_SPEED_DENSITY PASS_CONFIG_PARAMETER_SUFFIX);
 
 	engineConfiguration->specs.cylindersCount = 4;

@@ -27,21 +27,26 @@ class Logging;
 class IEtbController : public ClosedLoopController<percent_t, percent_t> {
 public:
 	DECLARE_ENGINE_PTR;
-	virtual void init(SensorType positionSensor, DcMotor *motor, int ownIndex, pid_s *pidParameters, const ValueProvider3D* pedalMap) = 0;
+
+	// Initialize the throttle.
+	// returns true if the throttle was initialized, false otherwise.
+	virtual bool init(etb_function_e function, DcMotor *motor, pid_s *pidParameters, const ValueProvider3D* pedalMap) = 0;
 	virtual void reset() = 0;
 	virtual void setIdlePosition(percent_t pos) = 0;
-	virtual void start() = 0;
+	virtual void setWastegatePosition(percent_t pos) = 0;
+	virtual void update() = 0;
 	virtual void autoCalibrateTps() = 0;
 };
 
 class EtbController : public IEtbController {
 public:
-	void init(SensorType positionSensor, DcMotor *motor, int ownIndex, pid_s *pidParameters, const ValueProvider3D* pedalMap) override;
+	bool init(etb_function_e function, DcMotor *motor, pid_s *pidParameters, const ValueProvider3D* pedalMap) override;
 	void setIdlePosition(percent_t pos) override;
+	void setWastegatePosition(percent_t pos) override;
 	void reset() override;
-	void start() override {}
 
-	void update(efitick_t nowNt);
+	// Update the controller's state: read sensors, send output, etc
+	void update();
 
 	// Called when the configuration may have changed.  Controller will
 	// reset if necessary.
@@ -52,7 +57,11 @@ public:
 
 	// Helpers for individual parts of throttle control
 	expected<percent_t> observePlant() const override;
+
 	expected<percent_t> getSetpoint() const override;
+	expected<percent_t> getSetpointEtb() const;
+	expected<percent_t> getSetpointWastegate() const;
+	expected<percent_t> getSetpointIdleValve() const;
 
 	expected<percent_t> getOpenLoop(percent_t target) const override;
 	expected<percent_t> getClosedLoop(percent_t setpoint, percent_t observation) override;
@@ -70,11 +79,11 @@ protected:
 	// This is set if an automatic TPS calibration should be run
 	bool m_isAutocal = false;
 
-	int getMyIndex() const { return m_myIndex; }
+	etb_function_e getFunction() const { return m_function; }
 	DcMotor* getMotor() { return m_motor; }
 
 private:
-	int m_myIndex = 0;
+	etb_function_e m_function = ETB_None;
 	SensorType m_positionSensor = SensorType::Invalid;
 	DcMotor *m_motor = nullptr;
 	Pid m_pid;
@@ -84,6 +93,7 @@ private:
 	const ValueProvider3D* m_pedalMap = nullptr;
 
 	float m_idlePosition = 0;
+	float m_wastegatePosition = 0;
 
 	// Autotune helpers
 	bool m_lastIsPositive = false;
@@ -102,7 +112,9 @@ private:
 
 void initElectronicThrottle(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 void doInitElectronicThrottle(DECLARE_ENGINE_PARAMETER_SIGNATURE);
+
 void setEtbIdlePosition(percent_t pos DECLARE_ENGINE_PARAMETER_SUFFIX);
+void setEtbWastegatePosition(percent_t pos DECLARE_ENGINE_PARAMETER_SUFFIX);
 
 void setDefaultEtbBiasCurve(DECLARE_CONFIG_PARAMETER_SIGNATURE);
 void setDefaultEtbParameters(DECLARE_CONFIG_PARAMETER_SIGNATURE);

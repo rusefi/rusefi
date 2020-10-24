@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Wed Sep 16 04:06:17 UTC 2020
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Fri Oct 23 19:47:25 UTC 2020
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -318,11 +318,11 @@ struct thermistor_conf_s {
 typedef struct thermistor_conf_s thermistor_conf_s;
 
 /**
- * @brief Oil pressure sensor interpolation
+ * @brief Linear sensor interpolation
 
 */
-// start of oil_pressure_config_s
-struct oil_pressure_config_s {
+// start of linear_sensor_s
+struct linear_sensor_s {
 	/**
 	 * offset 0
 	 */
@@ -350,7 +350,7 @@ struct oil_pressure_config_s {
 	/** total size 20*/
 };
 
-typedef struct oil_pressure_config_s oil_pressure_config_s;
+typedef struct linear_sensor_s linear_sensor_s;
 
 /**
  * @brief Thermistor curve parameters
@@ -861,8 +861,6 @@ struct engine_configuration_s {
 	int rpmHardLimit;
 	/**
 	 * This setting controls which fuel quantity control algorithm is used.
-	 * See also useTPSAdvanceTable
-	 * set algorithm X
 	 * offset 420
 	 */
 	engine_load_mode_e fuelAlgorithm;
@@ -903,7 +901,7 @@ struct engine_configuration_s {
 	 */
 	angle_t ignitionOffset;
 	/**
-	 * Dynamic uses the timing map to decide the ignition timing, Static timing fixes the timing to the value set below (only use for checking static timing).
+	 * Dynamic uses the timing map to decide the ignition timing, Static timing fixes the timing to the value set below (only use for checking static timing with a timing light).
 	 * offset 448
 	 */
 	timing_mode_e timingMode;
@@ -915,7 +913,8 @@ struct engine_configuration_s {
 	angle_t fixedModeTiming;
 	/**
 	 * Angle between Top Dead Center (TDC) and the first trigger event.
-	 * Knowing this angle allows us to control timing and other angles in reference to TDC.
+	 * Positive value in case of synchnization point before TDC and negative in case of synchnization point after TDC
+	 * .Knowing this angle allows us to control timing and other angles in reference to TDC.
 	 * set global_trigger_offset_angle X
 	 * offset 456
 	 */
@@ -1023,11 +1022,11 @@ struct engine_configuration_s {
 	/**
 	 * offset 541
 	 */
-	adc_channel_e high_fuel_pressure_sensor_1;
+	uint8_t unused541;
 	/**
 	 * offset 542
 	 */
-	adc_channel_e high_fuel_pressure_sensor_2;
+	uint8_t unused542;
 	/**
 	 * See hasMafSensor
 	 * offset 543
@@ -1105,6 +1104,7 @@ struct engine_configuration_s {
 	 * Same RPM is used for two ways of producing simulated RPM. See also triggerSimulatorPins (with wires)
 	 * See also directSelfStimulation (no wires, bypassing input hardware)
 	 * rpm X
+	 * TODO: rename to triggerSimulatorRpm
 	 * offset 620
 	 */
 	int triggerSimulatorFrequency;
@@ -1326,17 +1326,33 @@ struct engine_configuration_s {
 	 */
 	int can2SleepPeriodMs;
 	/**
+	 * Voltage when the wastegate is closed.
+	 * You probably don't have one of these!
 	 * offset 716
 	 */
-	int unusedAt716;
+	uint16_t wastegatePositionMin;
 	/**
+	 * Voltage when the wastegate is fully open.
+	 * You probably don't have one of these!
+	 * offset 718
+	 */
+	uint16_t wastegatePositionMax;
+	/**
+	 * Voltage when the idle valve is closed.
+	 * You probably don't have one of these!
 	 * offset 720
 	 */
-	int unusedAt720;
+	uint16_t idlePositionMin;
+	/**
+	 * Voltage when the idle valve is open.
+	 * You probably don't have one of these!
+	 * offset 722
+	 */
+	uint16_t idlePositionMax;
 	/**
 	 * offset 724
 	 */
-	int unusedAt724;
+	uint8_t unusedAt724[4];
 	/**
 	 * Secondary TTL channel baud rate
 	 * offset 728
@@ -1381,7 +1397,7 @@ struct engine_configuration_s {
 	bool isSdCardEnabled : 1;
 	/**
 	offset 744 bit 4 */
-	bool isFastAdcEnabled : 1;
+	bool unused744b4 : 1;
 	/**
 	offset 744 bit 5 */
 	bool isEngineControlEnabled : 1;
@@ -1541,7 +1557,7 @@ struct engine_configuration_s {
 	/**
 	 * offset 806
 	 */
-	uint8_t unused806;
+	adc_channel_e idlePositionSensor;
 	/**
 	 * offset 807
 	 */
@@ -1554,7 +1570,7 @@ struct engine_configuration_s {
 	 * On some vehicles we can disable starter once engine is already running
 	 * offset 809
 	 */
-	pin_output_mode_e starterRelayDisableMode;
+	pin_output_mode_e starterRelayDisablePinMode;
 	/**
 	 * Some Subaru and some Mazda use double-solenoid idle air valve
 	 * offset 810
@@ -1593,7 +1609,7 @@ struct engine_configuration_s {
 	 * Maximum time to crank starter
 	 * offset 826
 	 */
-	int16_t startCrankingDuration;
+	efitimesec16_t startCrankingDuration;
 	/**
 	 * This pin is used for debugging - snap a logic analyzer on it and see if it's ever high
 	 * offset 828
@@ -1765,11 +1781,8 @@ struct engine_configuration_s {
 	offset 976 bit 10 */
 	bool stftIgnoreErrorMagnitude : 1;
 	/**
-	 * Used on some German vehicles around late 90s: cable-operated throttle and DC motor idle air valve.
-	 * Set the primary TPS to the cable-operated throttle's sensor
-	 * Set the secondary TPS to the mini ETB's position sensor(s).
 	offset 976 bit 11 */
-	bool dcMotorIdleValve : 1;
+	bool unused976b11 : 1;
 	/**
 	offset 976 bit 12 */
 	bool enableSoftwareKnock : 1;
@@ -1830,10 +1843,10 @@ struct engine_configuration_s {
 	bool unusedBit_251_29 : 1;
 	/**
 	offset 976 bit 30 */
-	bool unusedBit_285_30 : 1;
+	bool unusedBit_287_30 : 1;
 	/**
 	offset 976 bit 31 */
-	bool unusedBit_285_31 : 1;
+	bool unusedBit_287_31 : 1;
 	/**
 	 * offset 980
 	 */
@@ -1951,7 +1964,7 @@ struct engine_configuration_s {
 	/**
 	 * offset 1198
 	 */
-	uint8_t solenoidPadding[2];
+	etb_function_e etbFunctions[ETB_COUNT];
 	/**
 	 * offset 1200
 	 */
@@ -2128,7 +2141,7 @@ struct engine_configuration_s {
 	bool isCylinderCleanupEnabled : 1;
 	/**
 	offset 1476 bit 3 */
-	bool secondTriggerChannelEnabled : 1;
+	bool unused1476b3 : 1;
 	/**
 	offset 1476 bit 4 */
 	bool unusedBit4_1476 : 1;
@@ -2145,7 +2158,7 @@ struct engine_configuration_s {
 	bool useSeparateAdvanceForIdle : 1;
 	/**
 	offset 1476 bit 8 */
-	bool isTunerStudioEnabled : 1;
+	bool unused1476b8 : 1;
 	/**
 	offset 1476 bit 9 */
 	bool isWaveAnalyzerEnabled : 1;
@@ -2189,9 +2202,8 @@ struct engine_configuration_s {
 	offset 1476 bit 18 */
 	bool useAdvanceCorrectionsForCranking : 1;
 	/**
-	 * This flag allows to use TPS for ignition lookup while in Speed Density Fuel Mode
 	offset 1476 bit 19 */
-	bool useTPSAdvanceTable : 1;
+	bool unused1476b19 : 1;
 	/**
 	offset 1476 bit 20 */
 	bool unused1476b20 : 1;
@@ -2662,76 +2674,76 @@ struct engine_configuration_s {
 	bool unused1130 : 1;
 	/**
 	offset 2116 bit 8 */
-	bool unusedBit_483_8 : 1;
+	bool unusedBit_485_8 : 1;
 	/**
 	offset 2116 bit 9 */
-	bool unusedBit_483_9 : 1;
+	bool unusedBit_485_9 : 1;
 	/**
 	offset 2116 bit 10 */
-	bool unusedBit_483_10 : 1;
+	bool unusedBit_485_10 : 1;
 	/**
 	offset 2116 bit 11 */
-	bool unusedBit_483_11 : 1;
+	bool unusedBit_485_11 : 1;
 	/**
 	offset 2116 bit 12 */
-	bool unusedBit_483_12 : 1;
+	bool unusedBit_485_12 : 1;
 	/**
 	offset 2116 bit 13 */
-	bool unusedBit_483_13 : 1;
+	bool unusedBit_485_13 : 1;
 	/**
 	offset 2116 bit 14 */
-	bool unusedBit_483_14 : 1;
+	bool unusedBit_485_14 : 1;
 	/**
 	offset 2116 bit 15 */
-	bool unusedBit_483_15 : 1;
+	bool unusedBit_485_15 : 1;
 	/**
 	offset 2116 bit 16 */
-	bool unusedBit_483_16 : 1;
+	bool unusedBit_485_16 : 1;
 	/**
 	offset 2116 bit 17 */
-	bool unusedBit_483_17 : 1;
+	bool unusedBit_485_17 : 1;
 	/**
 	offset 2116 bit 18 */
-	bool unusedBit_483_18 : 1;
+	bool unusedBit_485_18 : 1;
 	/**
 	offset 2116 bit 19 */
-	bool unusedBit_483_19 : 1;
+	bool unusedBit_485_19 : 1;
 	/**
 	offset 2116 bit 20 */
-	bool unusedBit_483_20 : 1;
+	bool unusedBit_485_20 : 1;
 	/**
 	offset 2116 bit 21 */
-	bool unusedBit_483_21 : 1;
+	bool unusedBit_485_21 : 1;
 	/**
 	offset 2116 bit 22 */
-	bool unusedBit_483_22 : 1;
+	bool unusedBit_485_22 : 1;
 	/**
 	offset 2116 bit 23 */
-	bool unusedBit_483_23 : 1;
+	bool unusedBit_485_23 : 1;
 	/**
 	offset 2116 bit 24 */
-	bool unusedBit_483_24 : 1;
+	bool unusedBit_485_24 : 1;
 	/**
 	offset 2116 bit 25 */
-	bool unusedBit_483_25 : 1;
+	bool unusedBit_485_25 : 1;
 	/**
 	offset 2116 bit 26 */
-	bool unusedBit_483_26 : 1;
+	bool unusedBit_485_26 : 1;
 	/**
 	offset 2116 bit 27 */
-	bool unusedBit_483_27 : 1;
+	bool unusedBit_485_27 : 1;
 	/**
 	offset 2116 bit 28 */
-	bool unusedBit_483_28 : 1;
+	bool unusedBit_485_28 : 1;
 	/**
 	offset 2116 bit 29 */
-	bool unusedBit_483_29 : 1;
+	bool unusedBit_485_29 : 1;
 	/**
 	offset 2116 bit 30 */
-	bool unusedBit_483_30 : 1;
+	bool unusedBit_485_30 : 1;
 	/**
 	offset 2116 bit 31 */
-	bool unusedBit_483_31 : 1;
+	bool unusedBit_485_31 : 1;
 	/**
 	 * set can_mode X
 	 * offset 2120
@@ -2754,9 +2766,25 @@ struct engine_configuration_s {
 	/**
 	 * offset 2127
 	 */
-	uint8_t unused_former_warmup_target_afr[5];
+	adc_channel_e wastegatePositionSensor;
 	/**
-	 * kPa value at which we need to cut fuel and spark, 0 if not enabled
+	 * Override the Y axis (load) value used for the ignition table.
+	 * Advanced users only: If you aren't sure you need this, you probably don't need this.
+	 * offset 2128
+	 */
+	afr_override_e ignOverrideMode;
+	/**
+	 * Select which fuel pressure sensor measures the pressure of the fuel at your injectors.
+	 * offset 2129
+	 */
+	injector_pressure_type_e injectorPressureType;
+	/**
+	 * offset 2130
+	 */
+	uint8_t unused_former_warmup_target_afr[2];
+	/**
+	 * MAP value above which fuel is cut in case of overboost.
+	 * 0 to disable overboost cut.
 	 * offset 2132
 	 */
 	float boostCutPressure;
@@ -2808,7 +2836,7 @@ struct engine_configuration_s {
 	/**
 	 * offset 2226
 	 */
-	uint8_t unusedDizzy;
+	pin_output_mode_e sdCardCsPinMode;
 	/**
 	 * need 4 byte alignment
 	 * offset 2227
@@ -2846,7 +2874,7 @@ struct engine_configuration_s {
 	/**
 	 * offset 2260
 	 */
-	mass_storage_e storageMode;
+	int unused2260;
 	/**
 	 * Narrow Band WBO Approximation
 	 * offset 2264
@@ -2881,7 +2909,11 @@ struct engine_configuration_s {
 	/**
 	 * offset 2417
 	 */
-	uint8_t unusedSomethingWasHere[3];
+	pin_output_mode_e LIS302DLCsPinMode;
+	/**
+	 * offset 2418
+	 */
+	uint8_t unusedSomethingWasHere[2];
 	/**
 	 * offset 2420
 	 */
@@ -2929,7 +2961,11 @@ struct engine_configuration_s {
 	/**
 	 * offset 2516
 	 */
-	uint8_t unused2516[24];
+	pid_s etbWastegatePid;
+	/**
+	 * offset 2536
+	 */
+	uint8_t unused2536[4];
 	/**
 	 * per-cylinder timing correction
 	 * offset 2540
@@ -3023,7 +3059,7 @@ struct engine_configuration_s {
 	/**
 	 * offset 2692
 	 */
-	oil_pressure_config_s oilPressure;
+	linear_sensor_s oilPressure;
 	/**
 	 * offset 2712
 	 */
@@ -3163,7 +3199,15 @@ struct engine_configuration_s {
 	/**
 	 * offset 3288
 	 */
-	uint8_t unused3288[576];
+	linear_sensor_s highPressureFuel;
+	/**
+	 * offset 3308
+	 */
+	linear_sensor_s lowPressureFuel;
+	/**
+	 * offset 3328
+	 */
+	uint8_t unused3328[536];
 	/**
 	 * offset 3864
 	 */
@@ -3397,14 +3441,18 @@ struct engine_configuration_s {
 	 */
 	pin_input_mode_e acSwitchMode;
 	/**
-	 * need 4 byte alignment
 	 * offset 4517
 	 */
-	uint8_t alignmentFill_at_4517[3];
+	pin_output_mode_e tcu_solenoid_mode[TCU_SOLENOID_COUNT];
 	/**
-	 * offset 4520
+	 * need 4 byte alignment
+	 * offset 4523
 	 */
-	int mainUnusedEnd[370];
+	uint8_t alignmentFill_at_4523;
+	/**
+	 * offset 4524
+	 */
+	int mainUnusedEnd[369];
 	/** total size 6000*/
 };
 
@@ -3702,4 +3750,4 @@ struct persistent_config_s {
 typedef struct persistent_config_s persistent_config_s;
 
 // end
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Wed Sep 16 04:06:17 UTC 2020
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Fri Oct 23 19:47:25 UTC 2020

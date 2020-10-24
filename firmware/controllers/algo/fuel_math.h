@@ -26,7 +26,7 @@ float getBaroCorrection(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 int getNumberOfInjections(injection_mode_e mode DECLARE_ENGINE_PARAMETER_SUFFIX);
 angle_t getInjectionOffset(float rpm, float load DECLARE_ENGINE_PARAMETER_SUFFIX);
 float getIatFuelCorrection(DECLARE_ENGINE_PARAMETER_SIGNATURE);
-floatms_t getInjectorLag(float vBatt DECLARE_ENGINE_PARAMETER_SUFFIX);
+
 float getCltFuelCorrection(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 float getFuelCutOffCorrection(efitick_t nowNt, int rpm DECLARE_ENGINE_PARAMETER_SUFFIX);
 angle_t getCltTimingCorrection(DECLARE_ENGINE_PARAMETER_SIGNATURE);

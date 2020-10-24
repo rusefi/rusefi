@@ -30,8 +30,8 @@ void setVwAba(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 
 
 	setOperationMode(engineConfiguration, FOUR_STROKE_CRANK_SENSOR);
-//	engineConfiguration->trigger.type = TT_TOOTHED_WHEEL_60_2;
-	engineConfiguration->trigger.type = TT_60_2_VW;
+	engineConfiguration->trigger.type = TT_TOOTHED_WHEEL_60_2;
+	engineConfiguration->useOnlyRisingEdgeForTrigger = true;
 
 	engineConfiguration->mafAdcChannel = EFI_ADC_1;
 

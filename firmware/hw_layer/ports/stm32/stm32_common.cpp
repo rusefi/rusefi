@@ -39,6 +39,8 @@
 // ADC_CHANNEL_IN15 // PC5
 
 brain_pin_e getAdcChannelBrainPin(const char *msg, adc_channel_e hwChannel) {
+	static_assert(EFI_ADC_NONE == ADC_CHANNEL_NONE);
+
 	// todo: replace this with an array :)
 	switch (hwChannel) {
 	case EFI_ADC_0:

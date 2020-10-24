@@ -76,8 +76,6 @@ public class Backend implements Closeable {
     private final Object lock = new Object();
 
     @GuardedBy("lock")
-    private final Set<ControllerConnectionState> controllers = new HashSet<>();
-    @GuardedBy("lock")
     private final HashMap<ControllerKey, ControllerConnectionState> controllersByKey = new HashMap<>();
     @GuardedBy("lock")
     private final Set<ApplicationConnectionState> applications = new HashSet<>();
@@ -205,7 +203,7 @@ public class Backend implements Closeable {
                     applications.add(applicationConnectionState);
                 }
 
-                BinaryProtocolProxy.runProxy(state.getStream(), applicationClientStream, new AtomicInteger(), BinaryProtocolProxy.USER_IO_TIMEOUT);
+                BinaryProtocolProxy.runProxy(state.getStream(), applicationClientStream, BinaryProtocolProxy.ClientApplicationActivityListener.VOID, BinaryProtocolProxy.USER_IO_TIMEOUT);
 
             } catch (Throwable e) {
                 log.info("Application Connector: Got error " + e);
@@ -222,11 +220,11 @@ public class Backend implements Closeable {
         synchronized (lock) {
             ControllerConnectionState state = controllersByKey.get(controllerKey);
             if (state == null) {
-                // no such controller
+                log.info("no such controller: " + controllerKey);
                 return null;
             }
             if (!state.getTwoKindSemaphore().acquireForLongTermUsage(userDetails)) {
-                // someone is already talking to this controller
+                log.info("someone is already talking to this controller: " + controllerKey);
                 return null;
             }
             return state;
@@ -252,6 +250,7 @@ public class Backend implements Closeable {
         this.serverPortForControllers = serverPortForControllers;
         log.info("Starting controller connector at " + serverPortForControllers);
         controllerConnector = BinaryProtocolServer.tcpServerSocket(controllerSocket -> () -> {
+            log.info("New connection from " + controllerSocket.getRemoteSocketAddress());
             totalSessions.incrementAndGet();
             ControllerConnectionState controllerConnectionState = new ControllerConnectionState(controllerSocket, getUserDetailsResolver());
             try {
@@ -277,6 +276,7 @@ public class Backend implements Closeable {
                     .add(UserDetails.USER_ID, application.getUserDetails().getUserId())
                     .add(UserDetails.USERNAME, application.getUserDetails().getUserName())
                     .add(SessionDetails.AGE, application.getBirthday().getDuration())
+                    .add("idle", humanReadableFormat(System.currentTimeMillis() - application.getClientStream().latestActivityTime()))
                     ;
             JsonObject applicationObject = addStreamStats(b, application.getClientStream())
                     .build();
@@ -357,7 +357,7 @@ public class Backend implements Closeable {
 
         List<ControllerConnectionState> controllers;
         synchronized (lock) {
-            controllers = new ArrayList<>(this.controllers);
+            controllers = new ArrayList<>(this.controllersByKey.values());
         }
 
         for (ControllerConnectionState controllerConnectionState : controllers) {
@@ -369,16 +369,15 @@ public class Backend implements Closeable {
     public void register(ControllerConnectionState controllerConnectionState) {
         Objects.requireNonNull(controllerConnectionState.getControllerKey(), "ControllerKey");
         synchronized (lock) {
-            controllers.add(controllerConnectionState);
             controllersByKey.put(controllerConnectionState.getControllerKey(), controllerConnectionState);
         }
     }
 
     public void close(ControllerConnectionState inactiveClient) {
         inactiveClient.close();
+        log.info("Closing " + inactiveClient);
         synchronized (lock) {
             // in case of exception in the initialization phase we do not even add client into the the collection
-            controllers.remove(inactiveClient);
             controllersByKey.remove(inactiveClient.getControllerKey());
         }
     }
@@ -397,7 +396,7 @@ public class Backend implements Closeable {
 
     public List<ControllerConnectionState> getControllers() {
         synchronized (lock) {
-            return new ArrayList<>(controllers);
+            return new ArrayList<>(controllersByKey.values());
         }
     }
 
@@ -409,7 +408,7 @@ public class Backend implements Closeable {
 
     public int getControllersCount() {
         synchronized (lock) {
-            return controllers.size();
+            return controllersByKey.size();
         }
     }
 

@@ -17,7 +17,7 @@ ifeq ($(CONFDIR),)
 endif
 
 # disable some modules to shrink bootloader binary
-DDEFS += -DHAL_USE_ADC=FALSE -DHAL_USE_CAN=FALSE -DHAL_USE_EXT=FALSE -DHAL_USE_GPT=FALSE -DHAL_USE_I2C=FALSE -DHAL_USE_ICU=FALSE -DHAL_USE_PWM=FALSE -DHAL_USE_RTC=FALSE -DHAL_USE_I2C=FALSE 
+DDEFS += -DHAL_USE_ADC=FALSE -DHAL_USE_CAN=FALSE -DHAL_USE_EXT=FALSE -DHAL_USE_GPT=FALSE -DHAL_USE_ICU=FALSE -DHAL_USE_PWM=FALSE -DHAL_USE_RTC=FALSE
 #disable ChibiOS flsah driver and prevent header from include
 DDEFS += -DHAL_USE_FLASH=FALSE
 
@@ -139,6 +139,7 @@ include $(CHIBIOS)/os/hal/osal/rt/osal.mk
 # RTOS files (optional).
 include $(CHIBIOS)/os/rt/rt.mk
 include $(CHIBIOS)/os/common/ports/ARMCMx/compilers/GCC/mk/port_v7m.mk
+include $(CHIBIOS)/os/various/cpp_wrappers/chcpp.mk
 
 include $(CONFIG)/boards/$(PROJECT_BOARD)/board.mk
 include $(PROJECT_DIR)/init/init.mk

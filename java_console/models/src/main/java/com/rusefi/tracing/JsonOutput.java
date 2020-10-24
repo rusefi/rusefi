@@ -2,15 +2,17 @@ package com.rusefi.tracing;
 
 import com.rusefi.PerfTraceTool;
 
-import java.io.*;
-import java.util.Arrays;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
+import java.io.Writer;
 import java.util.List;
 
 /**
  * This class helps to write JSON files readable by chrome://tracing/
  * <p>
  * See https://github.com/catapult-project/catapult/blob/master/tracing/README.md
- * @see PerfTraceTool
+ * @see PerfTraceTool code generator for EnumNames.java
  */
 public class JsonOutput {
 
@@ -38,21 +40,7 @@ public class JsonOutput {
             "{\"name\":\"process_name\",\"ph\":\"M\",\"pid\":60,\"tid\":0,\"args\":{\"name\":\"DMA2s4\"}}," +
             "{\"name\":\"process_name\",\"ph\":\"M\",\"pid\":67,\"tid\":0,\"args\":{\"name\":\"USB\"}}"
             ;
-    private static final String EOL = "\r\n";
-
-    public static void main(String[] args) throws IOException {
-        /**
-         * that's just a test I assume?
-         */
-        List<Entry> testEntries = Arrays.asList(
-                new Entry("hello", Phase.B, 0.1, 0, 0),
-                new Entry("hello2", Phase.B, 0.2, 0, 0),
-                new Entry("hello2", Phase.E, 0.3, 0, 0),
-                new Entry("hello", Phase.E, 0.4, 0, 0)
-        );
-
-        writeToStream(testEntries, new FileOutputStream("hello_trace.json"));
-    }
+    private static final String EOL = "\n";
 
     public static void writeToStream(List<Entry> testEntries, OutputStream outputStream) throws IOException {
 

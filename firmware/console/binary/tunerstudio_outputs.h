@@ -59,7 +59,7 @@ typedef struct {
 	unsigned int isO2HeaterOn : 1; // bit 7
 	unsigned int checkEngine : 1; // bit 8
 	unsigned int needBurn : 1; // bit 9
-	unsigned int secondTriggerChannelEnabled : 1; // bit 10
+	unsigned int unusedBit10 : 1; // bit 10
 	unsigned int clutchUpState : 1; // bit 11
 	unsigned int clutchDownState : 1; // bit 12
 	unsigned int knockEverIndicator : 1; // bit 13
@@ -112,11 +112,11 @@ typedef struct {
 	scaled_angle vvtPosition; // 42
 
 	// Fuel math
-	scaled_channel<uint16_t, 1000> chargeAirMass; // 44
+	scaled_channel<uint16_t, 1000> chargeAirMass; // 44  cylinder airmass in mg, 0-65 grams
 	scaled_ms crankingFuelMs; // 46
 	scaled_afr currentTargetAfr; // 48
 	// This is the raw value we take from the fuel map or base fuel algorithm, before the corrections
-	scaled_ms fuelBase; // 50
+	scaled_fuel_mass_mg fuelBase; // 50
 	// Total fuel with CLT, IAT and TPS acceleration without injector lag corrections per cycle, as pulse per cycle
 	scaled_ms fuelRunning; // 52
 	// Actual last injection time - including all compensation and injection mode
@@ -196,7 +196,7 @@ typedef struct {
 	// we want a hash of engineMake+engineCode+vehicleName in the log file in order to match TS logs to rusEFI Online tune
 	int16_t engineMakeCodeNameCrc16; // 138
 	// Errors
-	int totalTriggerErrorCounter; // 140
+	scaled_channel<uint32_t> totalTriggerErrorCounter; // 140
 	int orderingErrorCounter; // 144
 	int16_t warningCounter; // 148
 	int16_t lastErrorCode; // 150
@@ -239,11 +239,24 @@ typedef struct {
 
 	scaled_voltage rawPpsSecondary;		// 248
 
-	int8_t knockLevels[12];
+	int8_t knockLevels[12];		// 250
 
 	int8_t tcuDesiredGear; // 262
+	int8_t padding2[1];		// 263
 
-	uint8_t unusedAtTheEnd[22]; // we have some unused bytes to allow compatible TS changes
+	scaled_voltage rawIdlePositionSensor;	// 264
+	scaled_voltage rawWastegatePositionSensor;	// 266
+
+	scaled_percent wastegatePosition;	// 268
+	scaled_percent idlePositionSensor;	// 270
+
+	scaled_voltage rawLowFuelPressure; // 272
+	scaled_voltage rawHighFuelPressure; // 274
+
+	scaled_pressure lowFuelPressure;	// 276
+	scaled_high_pressure highFuelPressure;	// 278
+
+	uint8_t unusedAtTheEnd[8]; // we have some unused bytes to allow compatible TS changes
 
 	// Temporary - will remove soon
 	TsDebugChannels* getDebugChannels() {

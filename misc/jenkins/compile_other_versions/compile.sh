@@ -33,7 +33,7 @@ bash $COMPILE_SCRIPT
 [ -e ../../../build/rusefi.hex ] || { echo "Just to confirm - FAILED to compile with $COMPILE_SCRIPT"; exit 1; }
 
 cd ../../../..
-# We are back at root rusEfi folder
+# We are back at root rusEFI folder
 pwd
 
 echo "exiting $SCRIPT_NAME"

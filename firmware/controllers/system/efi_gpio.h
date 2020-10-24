@@ -77,6 +77,7 @@ public:
 private:
 	// todo: inline this method?
 	void setDefaultPinState(const pin_output_mode_e *defaultState);
+	void setOnchipValue(int electricalValue, int logicValue);
 
 	// 4 byte pointer is a bit of a memory waste here
 	const pin_output_mode_e *modePtr;
@@ -128,6 +129,17 @@ public:
 	bool outOfOrder; // https://sourceforge.net/p/rusefi/tickets/319/
 };
 
+class RegisteredOutputPin : public OutputPin {
+public:
+	RegisteredOutputPin(const char *name, short pinOffset, short pinModeOffset);
+	void unregister();
+	RegisteredOutputPin *next;
+private:
+	const char *name;
+	short pinOffset;
+	short pinModeOffset;
+};
+
 class EnginePins {
 public:
 	EnginePins();
@@ -140,17 +152,16 @@ public:
 	void startAuxValves();
 	void stopInjectionPins();
 	void stopIgnitionPins();
-	OutputPin mainRelay;
-
+	RegisteredOutputPin mainRelay;
 	// this one cranks engine
-	OutputPin starterControl;
+	RegisteredOutputPin starterControl;
 	// this one prevents driver from cranknig engine
-	OutputPin starterRelayDisable;
+	RegisteredOutputPin starterRelayDisable;
 
-	OutputPin fanRelay;
+	RegisteredOutputPin fanRelay;
 	// see acRelayPin
-	OutputPin acRelay;
-	OutputPin fuelPumpRelay;
+	RegisteredOutputPin acRelay;
+	RegisteredOutputPin fuelPumpRelay;
 	OutputPin o2heater;
 	/**
 	 * brain board RED LED by default
@@ -161,20 +172,20 @@ public:
 	OutputPin runningLedPin; // green LED on brain board by default
 
 	OutputPin debugTriggerSync;
-	OutputPin boostPin;
-	OutputPin idleSolenoidPin;
-	OutputPin secondIdleSolenoidPin;
-	OutputPin alternatorPin;
+	RegisteredOutputPin boostPin;
+	RegisteredOutputPin idleSolenoidPin;
+	RegisteredOutputPin secondIdleSolenoidPin;
+	RegisteredOutputPin alternatorPin;
 	/**
 	 * this one is usually on the gauge cluster, not on the ECU
 	 */
-	OutputPin checkEnginePin;
+	RegisteredOutputPin checkEnginePin;
 
 	NamedOutputPin tachOut;
 
 	OutputPin fsioOutputs[FSIO_COMMAND_COUNT];
-	OutputPin triggerDecoderErrorPin;
-	OutputPin hipCs;
+	RegisteredOutputPin triggerDecoderErrorPin;
+	RegisteredOutputPin hipCs;
 	OutputPin sdCsPin;
 	OutputPin accelerometerCs;
 

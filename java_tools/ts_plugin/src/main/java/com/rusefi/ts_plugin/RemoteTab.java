@@ -51,7 +51,6 @@ public class RemoteTab {
     private final JComponent content = new JPanel(new BorderLayout());
     private final JScrollPane scroll = new JScrollPane(content, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
 
-
     private final JPanel list = new JPanel(new VerticalFlowLayout());
     private final JTextField oneTimePasswordControl = new JTextField("0") {
         @Override
@@ -61,6 +60,7 @@ public class RemoteTab {
             return new Dimension(100, size.height);
         }
     };
+    private final Listener listener;
 
 
     private StreamStatusControl streamStatusControl = null;
@@ -69,7 +69,8 @@ public class RemoteTab {
 
     private final Executor listDownloadExecutor = Executors.newSingleThreadExecutor(new NamedThreadFactory("online list downloader", true));
 
-    public RemoteTab() {
+    public RemoteTab(Listener listener) {
+        this.listener = listener;
         JButton refresh = new JButton("Refresh Remote Controllers List");
         refresh.addActionListener(e -> requestControllersList());
 
@@ -182,24 +183,33 @@ public class RemoteTab {
 
                 if (publicSession.getImplementation().equals(NetworkConnector.Implementation.SBC.name())) {
 
-                    JButton updateSoftware = new JButton("Update Remote Connector Software");
-                    updateSoftware.addActionListener(new AbstractAction() {
+                    JPanel updateSoftwarePanel = new JPanel(new FlowLayout());
+
+
+                    JButton updateSoftwareLatest = new JButton("Update Connector to Latest");
+                    updateSoftwareLatest.addActionListener(new AbstractAction() {
                         @Override
                         public void actionPerformed(ActionEvent e) {
-                            requestUpdate(publicSession, updateSoftware, UpdateType.CONTROLLER);
+                            requestUpdate(publicSession, updateSoftwareLatest, UpdateType.CONTROLLER);
                         }
                     });
-                    bottomPanel.add(updateSoftware);
+
+                    JButton updateSoftwareRelease = new JButton("Update Connector to Release");
+                    updateSoftwareRelease.addActionListener(new AbstractAction() {
+                        @Override
+                        public void actionPerformed(ActionEvent e) {
+                            requestUpdate(publicSession, updateSoftwareRelease, UpdateType.CONTROLLER_RELEASE);
+                        }
+                    });
+                    updateSoftwarePanel.add(updateSoftwareLatest);
+                    updateSoftwarePanel.add(updateSoftwareRelease);
+
+                    bottomPanel.add(updateSoftwarePanel);
                 }
 
-                JButton updateFirmware = new JButton("Update ECU firmware");
-                updateFirmware.addActionListener(new AbstractAction() {
-                    @Override
-                    public void actionPerformed(ActionEvent e) {
-                        requestUpdate(publicSession, updateFirmware, UpdateType.FIRMWARE);
-                    }
-                });
-                bottomPanel.add(updateFirmware);
+                JPanel updateFirmwarePanel = createUpdateFirmwarePanel(publicSession);
+
+                bottomPanel.add(updateFirmwarePanel);
             }
         }
 
@@ -216,6 +226,31 @@ public class RemoteTab {
         userPanel.setBorder(BorderFactory.createLineBorder(Color.BLACK));
 
         return userPanel;
+    }
+
+    @NotNull
+    private JPanel createUpdateFirmwarePanel(PublicSession publicSession) {
+        JButton updateFirmwareLatest = new JButton("Update ECU to latest");
+        updateFirmwareLatest.addActionListener(new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                requestUpdate(publicSession, updateFirmwareLatest, UpdateType.FIRMWARE);
+            }
+        });
+
+        JButton updateFirmwareRelease = new JButton("Update ECU to release");
+        updateFirmwareRelease.addActionListener(new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                requestUpdate(publicSession, updateFirmwareRelease, UpdateType.FIRMWARE_RELEASE);
+            }
+        });
+
+
+        JPanel updateFirmwarePanel = new JPanel(new FlowLayout());
+        updateFirmwarePanel.add(updateFirmwareLatest);
+        updateFirmwarePanel.add(updateFirmwareRelease);
+        return updateFirmwarePanel;
     }
 
     private void requestUpdate(PublicSession publicSession, JButton updateSoftware, UpdateType type) {
@@ -259,6 +294,7 @@ public class RemoteTab {
             streamStatusControl = new StreamStatusControl(authenticatorToProxyStream);
         }
 
+        listener.onConnected();
         setStatus("Connected to " + userDetails.getUserName(),
                 new JLabel("You can now connect your TunerStudio to IP address localhost and port " + getLocalPort()),
                 new URLLabel(SignatureHelper.getUrl(controllerInfo.getSignature()).first),
@@ -284,7 +320,7 @@ public class RemoteTab {
 
             TcpIoStream.DisconnectListener disconnectListener = message -> SwingUtilities.invokeLater(() -> {
                 System.out.println("Disconnected " + message);
-                setStatus("Disconnected");
+                setStatus("Disconnected: " + message);
                 RemoteTabController.INSTANCE.setState(RemoteTabController.State.NOT_CONNECTED);
                 ServerSocketReference serverHolder = serverHolderAtomicReference.get();
                 if (serverHolder != null)
@@ -318,5 +354,9 @@ public class RemoteTab {
 
     public JComponent getContent() {
         return scroll;
+    }
+
+    interface Listener {
+        void onConnected();
     }
 }

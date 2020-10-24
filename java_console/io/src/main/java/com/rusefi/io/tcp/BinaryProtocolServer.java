@@ -40,7 +40,7 @@ import static com.rusefi.config.generated.Fields.*;
  * 11/24/15
  */
 
-public class BinaryProtocolServer implements BinaryProtocolCommands {
+public class BinaryProtocolServer {
     public static final String TEST_FILE = "test_log.mlg.Z";
     private static final Logging log = getLogging(BinaryProtocolServer.class);
     private static final int DEFAULT_PROXY_PORT = 2390;
@@ -169,11 +169,11 @@ public class BinaryProtocolServer implements BinaryProtocolCommands {
 
             if (command == Fields.TS_HELLO_COMMAND) {
                 new HelloCommand(Fields.TS_SIGNATURE).handle(stream);
-            } else if (command == COMMAND_PROTOCOL) {
+            } else if (command == Fields.TS_COMMAND_F) {
                 stream.sendPacket((TS_OK + TS_PROTOCOL).getBytes());
             } else if (command == Fields.TS_GET_FIRMWARE_VERSION) {
                 stream.sendPacket((TS_OK + "rusEFI proxy").getBytes());
-            } else if (command == COMMAND_CRC_CHECK_COMMAND) {
+            } else if (command == Fields.TS_CRC_CHECK_COMMAND) {
                 handleCrc(linkManager, stream);
             } else if (command == Fields.TS_PAGE_COMMAND) {
                 stream.sendPacket(TS_OK.getBytes());
@@ -363,11 +363,12 @@ public class BinaryProtocolServer implements BinaryProtocolCommands {
 
     public static int getPacketLength(IncomingDataBuffer in, Handler protocolCommandHandler, int ioTimeout) throws IOException {
         byte first = in.readByte(ioTimeout);
-        if (first == COMMAND_PROTOCOL) {
+        if (first == Fields.TS_COMMAND_F) {
             protocolCommandHandler.handle();
             return 0;
         }
-        return first * 256 + in.readByte(ioTimeout);
+        byte secondByte = in.readByte(ioTimeout);
+        return IoHelper.getInt(first, secondByte);
     }
 
     public static Packet readPromisedBytes(DataInputStream in, int length) throws IOException {

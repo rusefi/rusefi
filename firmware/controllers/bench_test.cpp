@@ -286,7 +286,7 @@ static void handleCommandX14(uint16_t index) {
 		return;
 	case 8:
 #if (BOARD_TLE8888_COUNT > 0)
-		requestTLE8888initialization();
+		tle8888_req_init();
 #endif
 		return;
 	case 0xA:

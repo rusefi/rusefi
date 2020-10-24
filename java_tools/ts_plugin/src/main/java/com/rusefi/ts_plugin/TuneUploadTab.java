@@ -5,6 +5,7 @@ import com.efiAnalytics.plugin.ecu.ControllerException;
 import com.efiAnalytics.plugin.ecu.ControllerParameterChangeListener;
 import com.opensr5.ini.IniFileModel;
 import com.opensr5.ini.field.IniField;
+import com.rusefi.NamedThreadFactory;
 import com.rusefi.TsTuneReader;
 import com.rusefi.config.generated.Fields;
 import com.rusefi.tools.online.Online;
@@ -21,6 +22,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.util.Date;
 import java.util.Map;
+import java.util.concurrent.ThreadFactory;
 import java.util.function.Supplier;
 
 /**
@@ -30,6 +32,7 @@ public class TuneUploadTab {
     private final JComponent content = new JPanel(new VerticalFlowLayout());
     // 2 seconds aggregation by default
     private static final int AUTO_UPDATE_AGGREGATION = Integer.parseInt(System.getProperty("autoupload.aggregation", "2000"));
+    private static final ThreadFactory THREAD_FACTORY = new NamedThreadFactory("Tune Upload", true);
 
     private static final String REO_URL = "https://rusefi.com/online/";
     private final AuthTokenPanel tokenPanel = new AuthTokenPanel();
@@ -69,7 +72,7 @@ public class TuneUploadTab {
         };
         upload.setBackground(new Color(0x90EE90));
 
-        Thread t = new Thread(new Runnable() {
+        Thread t = THREAD_FACTORY.newThread(new Runnable() {
             @Override
             public void run() {
                 while (true) {
@@ -98,7 +101,6 @@ public class TuneUploadTab {
                 }
             }
         });
-        t.setDaemon(true);
         t.start();
 
         upload.addActionListener(new AbstractAction() {

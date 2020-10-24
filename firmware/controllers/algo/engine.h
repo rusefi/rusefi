@@ -17,7 +17,7 @@
 #include "trigger_central.h"
 #include "local_version_holder.h"
 #include "buttonshift.h"
-#include "tcu.h"
+#include "gear_controller.h"
 
 #if EFI_SIGNAL_EXECUTOR_ONE_TIMER
 // PROD real firmware uses this implementation
@@ -54,33 +54,27 @@ class IEtbController;
 class IFuelComputer;
 class IInjectorModel;
 
-class PrimaryTriggerConfiguration : public TriggerConfiguration {
+class PrimaryTriggerConfiguration final : public TriggerConfiguration {
 public:
-	PrimaryTriggerConfiguration(Engine *engine);
-	bool isUseOnlyRisingEdgeForTrigger() const;
-	const char * getPrintPrefix() const;
-	bool isSilentTriggerError() const;
-	bool isVerboseTriggerSynchDetails() const;
-	debug_mode_e getDebugMode() const;
-	trigger_type_e getType() const;
-private:
-	Engine *engine;
+	PrimaryTriggerConfiguration() : TriggerConfiguration("TRG ") {}
+
+protected:
+	bool isUseOnlyRisingEdgeForTrigger() const override;
+	bool isVerboseTriggerSynchDetails() const override;
+	trigger_type_e getType() const override;
 };
 
-class VvtTriggerConfiguration : public TriggerConfiguration {
+class VvtTriggerConfiguration final : public TriggerConfiguration {
 public:
-	VvtTriggerConfiguration(Engine *engine);
-	bool isUseOnlyRisingEdgeForTrigger() const;
-	const char * getPrintPrefix() const;
-	bool isSilentTriggerError() const;
-	bool isVerboseTriggerSynchDetails() const;
-	debug_mode_e getDebugMode() const;
-	trigger_type_e getType() const;
-private:
-	Engine *engine;
+	VvtTriggerConfiguration() : TriggerConfiguration("TRG ") {}
+
+protected:
+	bool isUseOnlyRisingEdgeForTrigger() const override;
+	bool isVerboseTriggerSynchDetails() const override;
+	trigger_type_e getType() const override;
 };
 
-class Engine : public TriggerStateListener {
+class Engine final : public TriggerStateListener {
 public:
 	explicit Engine(persistent_config_s *config);
 	Engine();
@@ -124,13 +118,7 @@ public:
 	bool applyLaunchExtraFuel = false;
 	bool setLaunchBoostDuty = false;
 	bool applyLaunchControlRetard = false;
-	bool rpmHardCut = false;
 #endif /* EFI_LAUNCH_CONTROL */
-
-	/**
-	 * if 2nd TPS is not configured we do not run 2nd ETB
-	 */
-	int etbActualCount = 0;
 
 	/**
 	 * By the way 32-bit value should hold at least 400 hours of events at 6K RPM x 12 events per revolution
@@ -274,6 +262,7 @@ public:
 	efitimeus_t acSwitchLastChangeTime = 0;
 
 	bool isRunningPwmTest = false;
+	bool isRpmHardLimit = false;
 
 	int getRpmHardLimit(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 
@@ -305,6 +294,9 @@ public:
 	 */
 	bool isFunctionalTestMode = false;
 
+	/**
+	 * See also triggerSimulatorFrequency
+	 */
 	bool directSelfStimulation = false;
 
 	void resetEngineSnifferIfInTestMode();
@@ -395,6 +387,8 @@ private:
 	 */
 	bool isSpinning = false;
 	void reset();
+
+	void injectEngineReferences();
 };
 
 void prepareShapes(DECLARE_ENGINE_PARAMETER_SIGNATURE);
@@ -403,3 +397,7 @@ void prepareOutputSignals(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 
 void validateConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 void doScheduleStopEngine(DECLARE_ENGINE_PARAMETER_SIGNATURE);
+
+#define HW_CHECK_RPM 200
+
+
