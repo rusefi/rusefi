@@ -98,11 +98,15 @@ static void SetNextCompositeEntry(efitick_t timestamp, bool trigger1, bool trigg
 	//If we hit the end, loop
 	if ((firstBuffer) && (NextIdx >= (COMPOSITE_PACKET_COUNT/2))) {
 		/* first half is full */
+#if EFI_TUNER_STUDIO		
 		tsOutputChannels.toothLogReady = true;
+#endif		
 		firstBuffer = false;
 	}
 	if ((!firstBuffer) && (NextIdx >= sizeof(buffer) / sizeof(buffer[0]))) {
+#if EFI_TUNER_STUDIO		
 		tsOutputChannels.toothLogReady = true;
+#endif		
 		NextIdx = 0;
 		firstBuffer = true;
 	}
@@ -229,10 +233,14 @@ void DisableToothLogger() {
 
 ToothLoggerBuffer GetToothLoggerBuffer() {
 	if (firstBuffer) {
+#if EFI_TUNER_STUDIO		
 		tsOutputChannels.toothLogReady = false;
+#endif		
 		return { reinterpret_cast<uint8_t*>(ptr_buffer_second), (sizeof(buffer)/2) };
 	} else {
+#if EFI_TUNER_STUDIO		
 		tsOutputChannels.toothLogReady = false;
+#endif		
 		return { reinterpret_cast<uint8_t*>(ptr_buffer_first), (sizeof(buffer)/2) };
 	}
 }
