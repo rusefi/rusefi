@@ -159,20 +159,6 @@ floatms_t getRunningFuel(floatms_t baseFuel DECLARE_ENGINE_PARAMETER_SUFFIX) {
 
 /* DISPLAY_ENDIF */
 
-constexpr float convertToGramsPerSecond(float ccPerMinute) {
-	float ccPerSecond = ccPerMinute / 60;
-	return ccPerSecond * 0.72f;	// 0.72g/cc fuel density
-}
-
-/**
- * @return per cylinder injection time, in seconds
- */
-static float getInjectionDurationForFuelMass(float fuelMass DECLARE_ENGINE_PARAMETER_SUFFIX) {
-	float gPerSec = convertToGramsPerSecond(CONFIG(injector.flow));
-
-	return fuelMass / gPerSec;
-}
-
 static SpeedDensityAirmass sdAirmass(veMap);
 static MafAirmass mafAirmass(veMap);
 static AlphaNAirmass alphaNAirmass(veMap);
@@ -218,7 +204,10 @@ floatms_t getBaseFuel(int rpm DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	ENGINE(engineState.ignitionLoad) = getLoadOverride(airmass.EngineLoadPercent, CONFIG(ignOverrideMode) PASS_ENGINE_PARAMETER_SUFFIX);
 
 	float baseFuelMass = ENGINE(fuelComputer)->getCycleFuel(airmass.CylinderAirmass, rpm, airmass.EngineLoadPercent);
-	float baseFuel = getInjectionDurationForFuelMass(baseFuelMass PASS_ENGINE_PARAMETER_SUFFIX) * 1000;
+
+	ENGINE(injectorModel)->prepare();
+	float baseFuel = ENGINE(injectorModel)->getInjectionDuration(baseFuelMass);
+
 	if (cisnan(baseFuel)) {
 		// todo: we should not have this here but https://github.com/rusefi/rusefi/issues/1690
 		return 0;
@@ -345,20 +334,6 @@ floatms_t getInjectionDuration(int rpm DECLARE_ENGINE_PARAMETER_SUFFIX) {
 #else
 	return 0;
 #endif
-}
-
-/**
- * @brief	Injector lag correction
- * @param	vBatt	Battery voltage.
- * @return	Time in ms for injection opening time based on current battery voltage
- */
-floatms_t getInjectorLag(float vBatt DECLARE_ENGINE_PARAMETER_SUFFIX) {
-	if (cisnan(vBatt)) {
-		warning(OBD_System_Voltage_Malfunction, "vBatt=%.2f", vBatt);
-		return 0;
-	}
-	
-	return interpolate2d("lag", vBatt, engineConfiguration->injector.battLagCorrBins, engineConfiguration->injector.battLagCorr);
 }
 
 static FuelComputer fuelComputer(afrMap);
