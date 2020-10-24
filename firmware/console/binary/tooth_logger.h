@@ -45,3 +45,4 @@ struct ToothLoggerBuffer
 
 // Get a reference to the buffer
 ToothLoggerBuffer GetToothLoggerBuffer();
+void ToothLoggerBufferSent();
