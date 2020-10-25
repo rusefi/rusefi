@@ -211,6 +211,9 @@ typedef enum __attribute__ ((__packed__)) {
 	TLE8888_PIN_26 = 193,
 	TLE8888_PIN_27 = 194,
 	TLE8888_PIN_28 = 195,
+	TLE8888_PIN_MR = 196,
+	TLE8888_PIN_KEY = 197,
+	TLE8888_PIN_WAKE = 198,
 } brain_pin_e;
 
 /* Plase keep updating this define */

@@ -1,7 +1,7 @@
 #include "global.h"
 #include "rusefi_enums.h"
 #include "rusefi_hw_enums.h"
-// was generated automatically by rusEfi tool  from rusefi_hw_enums.h // was generated automatically by rusEfi tool  from rusefi_enums.h // by enum2string.jar tool on Wed Oct 28 05:05:48 UTC 2020
+// was generated automatically by rusEfi tool  from rusefi_hw_enums.h // was generated automatically by rusEfi tool  from rusefi_enums.h // by enum2string.jar tool on Sun Oct 25 19:16:11 MSK 2020
 // see also gen_config_and_enums.bat
 
 
@@ -535,6 +535,12 @@ case TLE8888_PIN_8:
   return "TLE8888_PIN_8";
 case TLE8888_PIN_9:
   return "TLE8888_PIN_9";
+case TLE8888_PIN_KEY:
+  return "TLE8888_PIN_KEY";
+case TLE8888_PIN_MR:
+  return "TLE8888_PIN_MR";
+case TLE8888_PIN_WAKE:
+  return "TLE8888_PIN_WAKE";
   }
  return NULL;
 }
