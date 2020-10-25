@@ -205,8 +205,15 @@ floatms_t getBaseFuel(int rpm DECLARE_ENGINE_PARAMETER_SUFFIX) {
 
 	float baseFuelMass = ENGINE(fuelComputer)->getCycleFuel(airmass.CylinderAirmass, rpm, airmass.EngineLoadPercent);
 
+	// Fudge it by the global correction factor
+	baseFuelMass *= CONFIG(globalFuelCorrection);
+
 	ENGINE(injectorModel)->prepare();
 	float baseFuel = ENGINE(injectorModel)->getInjectionDuration(baseFuelMass);
+
+	// Ugh, there's a bug that means we have to cancel out the deadtime.
+	// See https://github.com/rusefi/rusefi/issues/1903
+	baseFuel -= engine->engineState.running.injectorLag;
 
 	if (cisnan(baseFuel)) {
 		// todo: we should not have this here but https://github.com/rusefi/rusefi/issues/1690
@@ -330,7 +337,7 @@ floatms_t getInjectionDuration(int rpm DECLARE_ENGINE_PARAMETER_SUFFIX) {
 		warning(CUSTOM_ERR_INJECTOR_LAG, "injectorLag not ready");
 		return 0; // we can end up here during configuration reset
 	}
-	return theoreticalInjectionLength * engineConfiguration->globalFuelCorrection + injectorLag;
+	return theoreticalInjectionLength + injectorLag;
 #else
 	return 0;
 #endif
