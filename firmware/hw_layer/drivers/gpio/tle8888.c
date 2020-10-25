@@ -105,6 +105,9 @@ typedef enum {
 /* Status registers */
 #define REG_OPSTAT(n)		(0x34 + ((n) & 0x01))
 #define CMD_OPSTAT(n)		CMD_R(REG_OPSTAT(n))
+#define REG_OPSTAT_MR		BIT(3)
+#define REG_OPSTAT_WAKE		BIT(1)
+#define REG_OPSTAT_KEY		BIT(0)
 #define REG_WWDSTAT			0x36
 #define CMD_WWDSTAT			CMD_R(REG_WWDSTAT)
 #define REG_FWDSTAT(n)		(0x37 + ((n) & 0x01))
@@ -248,7 +251,7 @@ static const char* tle8888_pin_names[TLE8888_SIGNALS] = {
 	"TLE8888.OUT17",	"TLE8888.OUT18",	"TLE8888.OUT19",	"TLE8888.OUT20",
 	"TLE8888.OUT21",	"TLE8888.OUT22",	"TLE8888.OUT23",	"TLE8888.OUT24",
 	"TLE8888.IGN1",		"TLE8888.IGN2",		"TLE8888.IGN3",		"TLE8888.IGN4",
-	"TLE8888.MR"
+	"TLE8888.MR",		"TLE8888.KEY",		"TLE8888.WAKE"
 };
 
 #if EFI_TUNER_STUDIO
@@ -947,6 +950,29 @@ static int tle8888_writePad(void *data, unsigned int pin, int value) {
 	return 0;
 }
 
+static int tle8888_readPad(void *data, unsigned int pin) {
+	if ((pin >= TLE8888_OUTPUTS) || (data == NULL))
+		return -1;
+
+	struct tle8888_priv *chip = (struct tle8888_priv *)data;
+
+	if (pin < TLE8888_OUTPUTS_REGULAR) {
+		/* return output state */
+		/* DOTO: check that pins is disabled by diagnostic? */
+		return !!(chip->o_data_cached & BIT(pin));
+	} else if (pin == TLE8888_OUTPUT_MR) {
+		/* Main relay can be enabled by KEY input, so report real state */
+		return !!(chip->OpStat[0] & REG_OPSTAT_MR);
+	} else if (pin == TLE8888_INPUT_KEY) {
+		return !!(chip->OpStat[0] & REG_OPSTAT_KEY);
+	}  if (pin == TLE8888_INPUT_WAKE) {
+		return !!(chip->OpStat[0] & REG_OPSTAT_WAKE);
+	}
+
+	/* unknown pin */
+	return -1;
+}
+
 static brain_pin_diag_e tle8888_getOutputDiag(struct tle8888_priv *chip, unsigned int pin)
 {
 	/* OUT1..OUT4, indexes 0..3 */
@@ -1189,7 +1215,7 @@ static int tle8888_deinit(void *data)
 struct gpiochip_ops tle8888_ops = {
 	.setPadMode	= tle8888_setPadMode,
 	.writePad	= tle8888_writePad,
-	.readPad	= NULL,	/* chip outputs only */
+	.readPad	= tle8888_readPad,
 	.getDiag	= tle8888_getDiag,
 	.init		= tle8888_init,
 	.deinit 	= tle8888_deinit,
