@@ -71,8 +71,6 @@ EXTERN_ENGINE;
 
 extern bool hasFirmwareErrorFlag;
 
-static mutex_t spiMtx;
-
 #if HAL_USE_SPI
 extern bool isSpiInitialized[5];
 
@@ -85,14 +83,12 @@ bool rtcWorks = true;
  * Only one consumer can use SPI bus at a given time
  */
 void lockSpi(spi_device_e device) {
-	UNUSED(device);
 	efiAssertVoid(CUSTOM_STACK_SPI, getCurrentRemainingStack() > 128, "lockSpi");
-	// todo: different locks for different SPI devices!
-	chMtxLock(&spiMtx);
+	spiAcquireBus(getSpiDevice(device));
 }
 
 void unlockSpi(spi_device_e device) {
-	chMtxUnlock(&spiMtx);
+	spiReleaseBus(getSpiDevice(device));
 }
 
 static void initSpiModules(engine_configuration_s *engineConfiguration) {
@@ -450,8 +446,6 @@ void initHardware(Logging *l) {
 	// todo: enable protection. it's disabled because it takes
 	// 10 extra seconds to re-flash the chip
 	//flashProtect();
-
-	chMtxObjectInit(&spiMtx);
 
 #if EFI_HISTOGRAMS
 	/**
