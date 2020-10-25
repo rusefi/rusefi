@@ -320,8 +320,8 @@
 #define cutSparkOnHardLimit_offset 1464
 #define cylinderBore_offset 408
 #define cylindersCount_offset 400
-#define debug_mode_e_auto_enum "DBG_ALTERNATOR_PID", "DBG_TPS_ACCEL", "DBG_2", "DBG_IDLE_CONTROL", "DBG_EL_ACCEL", "DBG_TRIGGER_COUNTERS", "DBG_FSIO_ADC", "DBG_AUX_PID_1", "DBG_VVT", "DBG_CRANKING_DETAILS", "DBG_IGNITION_TIMING", "DBG_FUEL_PID_CORRECTION", "DBG_VEHICLE_SPEED_SENSOR", "DBG_SD_CARD", "DBG_SR5_PROTOCOL", "DBG_KNOCK", "DBG_16", "DBG_ELECTRONIC_THROTTLE_PID", "DBG_EXECUTOR", "DBG_BENCH_TEST", "DBG_AUX_VALVES", "DBG_ANALOG_INPUTS", "DBG_INSTANT_RPM", "DBG_FSIO_EXPRESSION_1_7", "DBG_STATUS", "DBG_CJ125", "DBG_CAN", "DBG_MAP", "DBG_METRICS", "DBG_ELECTRONIC_THROTTLE_EXTRA", "DBG_ION", "DBG_TLE8888", "DBG_ANALOG_INPUTS2", "DBG_DWELL_METRIC", "DBG_34", "DBG_ETB_LOGIC", "DBG_BOOST", "DBG_START_STOP", "DBG_LAUNCH", "DBG_ETB_AUTOTUNE", "DBG_COMPOSITE_LOG", "DBG_FSIO_EXPRESSION_8_14", "DBG_FSIO_SPECIAL", "DBG_43", "DBG_44"
-#define debug_mode_e_enum "Alternator PID", "TPS acceleration enrichment", "INVALID", "Idle Control", "Engine Load accl enrich", "Trigger Counters", "FSIO_ADC", "AUX_PID_1", "VVT input", "Cranking", "Timing", "Closed-loop fuel corr PID", "VSS", "SD card", "sr5", "Knock", "mode16", "Electronic Throttle", "Executor", "Bench Test / TS commands", "Aux Valves", "Analog inputs #1", "INSTANT_RPM", "FSIO_EXPRESSION_1_7", "Status", "CJ125", "CAN", "MAP", "Metrics", "ETB#2", "Ion Sense", "TLE8888", "Analog inputs #2", "Dwell Metric", "INVALID", "ETB Logic", "Boost Control", "Start/Stop", "Launch", "ETB Autotune", "FSIO_COMPOSITE_LOG", "FSIO_EXPRESSION_8_14", "FSIO_SPECIAL", "Mode43", "Mode44"
+#define debug_mode_e_auto_enum "DBG_ALTERNATOR_PID", "DBG_TPS_ACCEL", "DBG_GPPWM", "DBG_IDLE_CONTROL", "DBG_EL_ACCEL", "DBG_TRIGGER_COUNTERS", "DBG_FSIO_ADC", "DBG_AUX_PID_1", "DBG_VVT", "DBG_CRANKING_DETAILS", "DBG_IGNITION_TIMING", "DBG_FUEL_PID_CORRECTION", "DBG_VEHICLE_SPEED_SENSOR", "DBG_SD_CARD", "DBG_SR5_PROTOCOL", "DBG_KNOCK", "DBG_16", "DBG_ELECTRONIC_THROTTLE_PID", "DBG_EXECUTOR", "DBG_BENCH_TEST", "DBG_AUX_VALVES", "DBG_ANALOG_INPUTS", "DBG_INSTANT_RPM", "DBG_FSIO_EXPRESSION_1_7", "DBG_STATUS", "DBG_CJ125", "DBG_CAN", "DBG_MAP", "DBG_METRICS", "DBG_ELECTRONIC_THROTTLE_EXTRA", "DBG_ION", "DBG_TLE8888", "DBG_ANALOG_INPUTS2", "DBG_DWELL_METRIC", "DBG_34", "DBG_ETB_LOGIC", "DBG_BOOST", "DBG_START_STOP", "DBG_LAUNCH", "DBG_ETB_AUTOTUNE", "DBG_COMPOSITE_LOG", "DBG_FSIO_EXPRESSION_8_14", "DBG_FSIO_SPECIAL", "DBG_43", "DBG_44"
+#define debug_mode_e_enum "Alternator PID", "TPS acceleration enrichment", "GPPWM", "Idle Control", "Engine Load accl enrich", "Trigger Counters", "FSIO_ADC", "AUX_PID_1", "VVT input", "Cranking", "Timing", "Closed-loop fuel corr PID", "VSS", "SD card", "sr5", "Knock", "mode16", "Electronic Throttle", "Executor", "Bench Test / TS commands", "Aux Valves", "Analog inputs #1", "INSTANT_RPM", "FSIO_EXPRESSION_1_7", "Status", "CJ125", "CAN", "MAP", "Metrics", "ETB#2", "Ion Sense", "TLE8888", "Analog inputs #2", "Dwell Metric", "INVALID", "ETB Logic", "Boost Control", "Start/Stop", "Launch", "ETB Autotune", "FSIO_COMPOSITE_LOG", "FSIO_EXPRESSION_8_14", "FSIO_SPECIAL", "Mode43", "Mode44"
 #define debugMapAveraging_offset 807
 #define debugMode_offset 2092
 #define debugTriggerSync_offset 676
@@ -466,7 +466,7 @@
 #define firingOrder_offset 404
 #define fixedModeTiming_offset 452
 #define fixedTiming_offset 2204
-#define FLASH_DATA_VERSION 10002
+#define FLASH_DATA_VERSION 10003
 #define frequencyReportingMapInputPin_offset 970
 #define FSIO_ANALOG_INPUT_COUNT 4
 #define FSIO_COMMAND_COUNT 16
@@ -646,6 +646,8 @@
 #define GAUGE_NAME_FUEL_LAST_INJECTION "fuel: Last injection"
 #define GAUGE_NAME_FUEL_LOAD "fuel: load"
 #define GAUGE_NAME_FUEL_PID_CORR "fuel: Short-term fuel trim"
+#define GAUGE_NAME_FUEL_PRESSURE_HIGH "Fuel pressure (high)"
+#define GAUGE_NAME_FUEL_PRESSURE_LOW "Fuel pressure (low)"
 #define GAUGE_NAME_FUEL_RUNNING "fuel: running"
 #define GAUGE_NAME_FUEL_TPS_EXTRA "fuel: TPS acceleration extra fuel ms"
 #define GAUGE_NAME_FUEL_TPS_ROC "fuel: TPS change"
@@ -755,8 +757,13 @@
 #define HD44780_rs_offset 650
 #define HD44780height_offset 508
 #define HD44780width_offset 504
-#define high_fuel_pressure_sensor_1_offset 541
-#define high_fuel_pressure_sensor_2_offset 542
+#define highPressureFuel_alignmentFill_offset 3289
+#define highPressureFuel_hwChannel_offset 3288
+#define highPressureFuel_offset 3288
+#define highPressureFuel_v1_offset 3292
+#define highPressureFuel_v2_offset 3300
+#define highPressureFuel_value1_offset 3296
+#define highPressureFuel_value2_offset 3304
 #define hip9011CsPin_offset 753
 #define hip9011CsPinMode_offset 703
 #define hip9011Gain_offset 3952
@@ -896,7 +903,9 @@
 #define injector_battLagCorrBins_offset 12
 #define injector_flow_offset 8
 #define injector_offset 8
+#define injector_pressure_type_e_auto_enum "IPT_Low", "IPT_High"
 #define injector_s_size 68
+#define injectorPressureType_offset 2129
 #define injPhaseLoadBins_offset 15008
 #define injPhaseRpmBins_offset 15072
 #define invertCamVVTSignal_offset 976
@@ -989,6 +998,7 @@
 #define LDS_TRIGGER_CENTRAL_STATE_INDEX 6
 #define LDS_TRIGGER_STATE_STATE_INDEX 11
 #define LE_COMMAND_LENGTH 200
+#define linear_sensor_s_size 20
 #define LIS302DLCsPin_offset 2043
 #define LIS302DLCsPinMode_offset 2417
 #define LOAD_1_BYTE_PACKING_MULT 2
@@ -999,7 +1009,13 @@
 #define logicAnalyzerPins2_offset 749
 #define logicAnalyzerPins3_offset 750
 #define logicAnalyzerPins4_offset 751
-#define low_fuel_pressure_sensor_offset 2131
+#define lowPressureFuel_alignmentFill_offset 3309
+#define lowPressureFuel_hwChannel_offset 3308
+#define lowPressureFuel_offset 3308
+#define lowPressureFuel_v1_offset 3312
+#define lowPressureFuel_v2_offset 3320
+#define lowPressureFuel_value1_offset 3316
+#define lowPressureFuel_value2_offset 3324
 #define MAF_DECODING_COUNT 256
 #define maf_sensor_type_e_auto_enum "CUSTOM", "Bosch0280218037", "Bosch0280218004", "DensoTODO"
 #define maf_sensor_type_e_enum "v0", "v1", "v2", "v3"
@@ -1088,7 +1104,6 @@
 #define noAccelAfterHardLimitPeriodSecs_offset 1536
 #define o2heaterPin_offset 742
 #define o2heaterPinModeTodO_offset 743
-#define oil_pressure_config_s_size 20
 #define oilPressure_alignmentFill_offset 2693
 #define oilPressure_hwChannel_offset 2692
 #define oilPressure_offset 2692
@@ -1105,6 +1120,7 @@
 #define PACK_MULT_AFR_CFG 10
 #define PACK_MULT_ANGLE 50
 #define PACK_MULT_FUEL_MASS 100
+#define PACK_MULT_HIGH_PRESSURE 10
 #define PACK_MULT_MASS_FLOW 10
 #define PACK_MULT_MS 300
 #define PACK_MULT_PERCENT 100
@@ -1180,8 +1196,8 @@
 #define showHumanReadableWarning_offset 976
 #define showSdCardWarning_offset 76
 #define SIGNATURE_BOARD all
-#define SIGNATURE_DATE 2020.10.19
-#define SIGNATURE_HASH 4083595509
+#define SIGNATURE_DATE 2020.10.23
+#define SIGNATURE_HASH 2595471579
 #define silentTriggerError_offset 1464
 #define slowAdcAlpha_offset 2088
 #define sparkDwellRpmBins_offset 332
@@ -1500,7 +1516,7 @@
 #define ts_show_spi true
 #define ts_show_trigger_comparator false
 #define ts_show_tunerstudio_port true
-#define TS_SIGNATURE "rusEFI 2020.10.19.all.4083595509"
+#define TS_SIGNATURE "rusEFI 2020.10.23.all.2595471579"
 #define TS_SINGLE_WRITE_COMMAND 'W'
 #define TS_SINGLE_WRITE_COMMAND_char W
 #define TS_TEST_COMMAND 't' // 0x74
@@ -1533,7 +1549,9 @@
 #define unused244_3_offset 2428
 #define unused2508_offset 2508
 #define unused2536_offset 2536
-#define unused3288_offset 3288
+#define unused3328_offset 3328
+#define unused541_offset 541
+#define unused542_offset 542
 #define unused6312_offset 6312
 #define unused744b25_offset 744
 #define unused744b4_offset 744
@@ -1547,7 +1565,7 @@
 #define unused_1484_bit_30_offset 1476
 #define unused_1484_bit_31_offset 1476
 #define unused_alFIn_offset 4024
-#define unused_former_warmup_target_afr_offset 2129
+#define unused_former_warmup_target_afr_offset 2130
 #define unusedAt724_offset 724
 #define unusedAtOldBoardConfigurationEnd_offset 1204
 #define unusedAuxVoltage1_TODO_332_offset 2713

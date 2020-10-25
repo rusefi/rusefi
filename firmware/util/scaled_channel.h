@@ -51,6 +51,7 @@ using scaled_temperature = scaled_channel<int16_t, PACK_MULT_TEMPERATURE>;	// +-
 using scaled_ms = scaled_channel<int16_t, PACK_MULT_MS>;				// +- 100ms at 0.003ms precision
 using scaled_percent = scaled_channel<int16_t, PACK_MULT_PERCENT>;		// +-327% at 0.01% resolution
 using scaled_pressure = scaled_channel<uint16_t, PACK_MULT_PRESSURE>;		// 0-2000kPa (~300psi) at 0.03kPa resolution
+using scaled_high_pressure = scaled_channel<uint16_t, PACK_MULT_HIGH_PRESSURE>;	// 0-6553 bar (~95k psi) at 0.1 bar resolution
 using scaled_angle = scaled_channel<int16_t, PACK_MULT_ANGLE>;			// +-655 degrees at 0.02 degree resolution
 using scaled_voltage = scaled_channel<uint16_t, PACK_MULT_VOLTAGE>;		// 0-65v at 1mV resolution
 using scaled_afr = scaled_channel<uint16_t, PACK_MULT_AFR>;			// 0-65afr at 0.001 resolution

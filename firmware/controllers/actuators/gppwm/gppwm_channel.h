@@ -11,7 +11,7 @@ public:
 	DECLARE_ENGINE_PTR;
 
 	void init(bool usePwm, SimplePwm* pwm, OutputPin* outputPin, const ValueProvider3D* table, const gppwm_channel* config);
-	void update();
+	float update();
 	percent_t getOutput() const;
 	void setOutput(float result);
 

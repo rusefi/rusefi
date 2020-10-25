@@ -519,6 +519,8 @@ void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels DECLARE_
 	tsOutputChannels->rawClt = Sensor::getRaw(SensorType::Clt);
 	tsOutputChannels->rawIat = Sensor::getRaw(SensorType::Iat);
 	tsOutputChannels->rawOilPressure = Sensor::getRaw(SensorType::OilPressure);
+	tsOutputChannels->rawLowFuelPressure = Sensor::getRaw(SensorType::FuelPressureLow);
+	tsOutputChannels->rawHighFuelPressure = Sensor::getRaw(SensorType::FuelPressureHigh);
 
 	// offset 16
 	tsOutputChannels->massAirFlowVoltage = hasMafSensor() ? getMafVoltage(PASS_ENGINE_PARAMETER_SIGNATURE) : 0;
@@ -603,6 +605,12 @@ void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels DECLARE_
 	tsOutputChannels->accelerationY = engine->sensors.accelerometer.y;
 	// 280
 	tsOutputChannels->oilPressure = Sensor::get(SensorType::OilPressure).Value;
+
+	// Low pressure is directly in kpa
+	tsOutputChannels->lowFuelPressure = Sensor::get(SensorType::FuelPressureLow).Value;
+	// High pressure is in bar, aka 100 kpa
+	tsOutputChannels->highFuelPressure = Sensor::get(SensorType::FuelPressureHigh).Value * 0.01f;
+
 	// 288
 	tsOutputChannels->injectionOffset = engine->engineState.injectionOffset;
 

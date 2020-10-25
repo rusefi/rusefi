@@ -6,4 +6,8 @@
  6) RESOLVED IN R0.1 check for flipped pins. pins 39 and 50 are wrong.  
  7) RESOLVED IN R0.1 ?D2?, D11_1, D10, D10_1, D11 and D11_2 are likely botched. Check them against MC33816 R0.2 layout. dual package into one package
  8) RESOLVED IN R0.1 D9 is likely botched, wrong footprint pins, verify against MC33816 R0.2 layout. 
- 9)                                 Update BoostV indicator LED per https://rusefi.com/forum/viewtopic.php?f=4&t=1337&start=75
+ 9)                  Update BoostV indicator LED per https://rusefi.com/forum/viewtopic.php?f=4&t=1337&start=75
+10)                  terminals usability is asking for improvements. Ideally can we move more terminals to the edge of the board?
+11)                  migrate to lower profile capacitors anticipating future case
+12)                  silkscreen not hidden under headers
+13)

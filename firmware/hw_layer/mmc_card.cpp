@@ -476,6 +476,8 @@ void initMmcCard(void) {
 		return;
 	}
 
+	efiAssertVoid(OBD_PCM_Processor_Fault, CONFIG(sdCardSpiDevice) != SPI_NONE, "SD card enabled, but no SPI device configured!");
+
 	// todo: reuse initSpiCs method?
 	hs_spicfg.ssport = ls_spicfg.ssport = getHwPort("mmc", CONFIG(sdCardCsPin));
 	hs_spicfg.sspad = ls_spicfg.sspad = getHwPin("mmc", CONFIG(sdCardCsPin));

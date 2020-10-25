@@ -199,7 +199,7 @@ void Engine::periodicSlowCallback(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	if (CONFIG(useTLE8888_cranking_hack) && ENGINE(rpmCalculator).isCranking()) {
 		efitick_t nowNt = getTimeNowNt();
 		if (nowNt - tle8888CrankingResetTime > MS2NT(300)) {
-			requestTLE8888initialization();
+			tle8888_req_init();
 			// let's reset TLE8888 every 300ms while cranking since that's the best we can do to deal with undervoltage reset
 			// PS: oh yes, it's a horrible design! Please suggest something better!
 			tle8888CrankingResetTime = nowNt;
@@ -263,8 +263,6 @@ void Engine::updateSlowSensors(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 #if EFI_MC33816
 	initMc33816IfNeeded();
 #endif // EFI_MC33816
-
-	engineState.running.injectorLag = getInjectorLag(sensors.vBatt PASS_ENGINE_PARAMETER_SUFFIX);
 #endif
 }
 

@@ -58,6 +58,10 @@ static const char* s_sensorNames[] = {
 
 	"Oil Pressure",
 
+	"Fuel Pressure (LP)",
+	"Fuel Pressure (HP)",
+	"Fuel Pressure (injector)",
+
 	"TPS 1",
 	"TPS 1 Primary",
 	"TPS 1 Secondary",

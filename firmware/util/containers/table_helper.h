@@ -119,4 +119,13 @@ void setArrayValues(TValue (&array)[TSize], TValue value) {
 	}
 }
 
+template <typename TElement, size_t N, size_t M>
+constexpr void setTable(TElement (&dest)[N][M], const TElement value) {
+	for (size_t n = 0; n < N; n++) {
+		for (size_t m = 0; m < M; m++) {
+			dest[n][m] = value;
+		}
+	}
+}
+
 void setRpmTableBin(float array[], int size);

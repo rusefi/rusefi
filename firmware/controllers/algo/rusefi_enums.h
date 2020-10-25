@@ -697,7 +697,7 @@ typedef brain_pin_e output_pin_e;
 typedef enum {
 	DBG_ALTERNATOR_PID = 0,
 	DBG_TPS_ACCEL = 1,
-	DBG_2 = 2,
+	DBG_GPPWM = 2,
 	DBG_IDLE_CONTROL = 3,
 	DBG_EL_ACCEL = 4,
 	DBG_TRIGGER_COUNTERS = 5,
@@ -805,6 +805,12 @@ typedef enum {
 	/**
 	 * Bosch 2.5 Bar TMap Map Sensor with IAT
 	 * 20 kPa at 0.40V, 250 kPa at 4.65V
+	 * 4 pin:
+	 *    Pin 1 : Sensor Ground
+	 *    Pin 2 : Temp Signal
+	 *    Pin 3 : 5v
+	 *    Pin 4 : Map Signal
+	 * Volkswagen Passat B6
 	 */
 
 	MT_BOSCH_2_5 = 10,
@@ -1005,3 +1011,8 @@ typedef enum __attribute__ ((__packed__)) {
 	ETB_IdleValve = 3,
 	ETB_Wastegate = 4,
 } etb_function_e;
+
+typedef enum __attribute__ ((__packed__)) {
+	IPT_Low = 0,
+	IPT_High = 1,
+} injector_pressure_type_e;

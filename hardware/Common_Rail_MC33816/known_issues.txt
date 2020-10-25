@@ -19,4 +19,5 @@
 19)                    Can we connect connect TP6 to VCCIO since both are 3v?
 20)                    silkscreen font should be larger for DRIVER RSTB etc  https://raw.githubusercontent.com/wiki/rusefi/rusefi/Hardware/MC33816_test_board/MC33816_test_board_3_2_assembled.jpg
 21)                    silkscreen for FLAG0 etc is covered by header plastic https://raw.githubusercontent.com/wiki/rusefi/rusefi/Hardware/MC33816_test_board/MC33816_test_board_3_2_assembled.jpg
-22)
+22)                    move TP7=GND to a safer location on the edge of the PCB
+23)
