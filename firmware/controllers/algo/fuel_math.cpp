@@ -55,8 +55,8 @@ DISPLAY(DISPLAY_FIELD(dwellAngle))
 DISPLAY(DISPLAY_FIELD(cltTimingCorrection))
 DISPLAY_TEXT(eol);
 
-DISPLAY(DISPLAY_IF(isCrankingState)) floatms_t getCrankingFuel3(
-	floatms_t baseFuel,
+DISPLAY(DISPLAY_IF(isCrankingState)) float getCrankingFuel3(
+	float baseFuel,
 		uint32_t revolutionCounterSinceStart DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	// these magic constants are in Celsius
 	float baseCrankingFuel;
@@ -282,7 +282,7 @@ percent_t getInjectorDutyCycle(int rpm DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	return 100 * totalInjectiorAmountPerCycle / engineCycleDuration;
 }
 
-static floatms_t getCycleFuelMass(bool isCranking, floatms_t baseFuelMass DECLARE_ENGINE_PARAMETER_SUFFIX) {
+static float getCycleFuelMass(bool isCranking, float baseFuelMass DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	if (isCranking) {
 		return getCrankingFuel(baseFuelMass PASS_ENGINE_PARAMETER_SUFFIX);
 	} else {
@@ -445,7 +445,7 @@ float getBaroCorrection(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 /**
  * @return Duration of fuel injection while craning
  */
-floatms_t getCrankingFuel(float baseFuel DECLARE_ENGINE_PARAMETER_SUFFIX) {
+float getCrankingFuel(float baseFuel DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	return getCrankingFuel3(baseFuel, engine->rpmCalculator.getRevolutionCounterSinceStart() PASS_ENGINE_PARAMETER_SUFFIX);
 }
 
