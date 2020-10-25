@@ -15,7 +15,7 @@ public:
 	virtual floatms_t getDeadtime() const = 0;
 	virtual float getInjectorMassFlowRate() const = 0;
 
-	virtual void postState(float deadTime) const {};
+	virtual void postState(float deadTime) const { (void)deadTime; };
 
 private:
 	float m_deadtime = 0;
