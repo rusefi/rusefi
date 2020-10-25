@@ -265,7 +265,7 @@ end_struct
 custom ego_sensor_e 4 bits, S32, @OFFSET@, [0:2], @@ego_sensor_e_enum@@
 
 struct cranking_parameters_s
-float baseFuel;+Base mass of the fuel injection during cranking, this is modified by the multipliers for CLT, IAT, TPS ect, to give the final cranking pulse width.;"milligram",       1,     0,    0, 500,     1
+float baseFuel;+Base mass of the fuel injection during cranking, this is modified by the multipliers for CLT, IAT, TPS ect, to give the final cranking pulse width.;"mg",       1,     0,    0, 500,     1
 int16_t rpm;+This sets the RPM limit below which the ECU will use cranking fuel and ignition logic, typically this is around 350-450rpm. \nset cranking_rpm X;"RPM",      1,     0,    0, 3000,      0
 end_struct
 
