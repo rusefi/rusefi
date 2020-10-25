@@ -11,6 +11,7 @@ mass_t FuelComputerBase::getCycleFuel(mass_t airmass, int rpm, float load) const
 	float afr = stoich * lambda;
 
 	ENGINE(engineState.currentAfrLoad) = load;
+	ENGINE(engineState.targetLambda) = lambda;
 	ENGINE(engineState.targetAFR) = afr;
 
 	return airmass / afr;
