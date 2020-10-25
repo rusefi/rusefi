@@ -211,6 +211,10 @@ floatms_t getBaseFuel(int rpm DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	ENGINE(injectorModel)->prepare();
 	float baseFuel = ENGINE(injectorModel)->getInjectionDuration(baseFuelMass);
 
+	// Ugh, there's a bug that means we have to cancel out the deadtime.
+	// See https://github.com/rusefi/rusefi/issues/1903
+	baseFuel -= engine->engineState.running.injectorLag;
+
 	if (cisnan(baseFuel)) {
 		// todo: we should not have this here but https://github.com/rusefi/rusefi/issues/1690
 		return 0;
