@@ -34,7 +34,7 @@ public class DetachedSensor {
      */
     private static final Collection<Sensor> MOCKABLE = Arrays.asList(
             Sensor.CLT,
-            Sensor.AFR,
+            Sensor.Lambda,
             Sensor.IAT,
             Sensor.MAF,
             Sensor.MAP,
