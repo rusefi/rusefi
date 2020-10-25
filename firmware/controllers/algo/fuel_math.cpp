@@ -344,7 +344,6 @@ floatms_t getInjectionDuration(int rpm DECLARE_ENGINE_PARAMETER_SUFFIX) {
 }
 
 static FuelComputer fuelComputer(lambdaMap);
-
 static InjectorModel injectorModel;
 
 /**
