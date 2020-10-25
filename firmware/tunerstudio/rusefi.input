@@ -2798,7 +2798,7 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 	dialog = crankingFuel, "Fuel"
 		field = "Injection mode",						crankingInjectionMode
 		field = "Fuel Source For Cranking",             useRunningMathForCranking
-		field = "Base fuel pulse width", 				cranking_baseFuel, {useRunningMathForCranking == 0}
+		field = "Base fuel mass", 				cranking_baseFuel, {useRunningMathForCranking == 0}
 
 	dialog = crankingIAC, "IAC"
 		field = "Cranking IAC position",					crankingIACposition
