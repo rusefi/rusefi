@@ -138,3 +138,51 @@ TEST(AirmassModes, VeOverride) {
 	dut.getAirmass(0);
 	EXPECT_FLOAT_EQ(ENGINE(engineState.currentVeLoad), 30.0f);
 }
+
+void setInjectionMode(int value DECLARE_ENGINE_PARAMETER_SUFFIX);
+extern WarningCodeState unitTestWarningCodeState;
+
+TEST(FuelMath, testDifferentInjectionModes) {
+	WITH_ENGINE_TEST_HELPER(TEST_ENGINE);
+	setupSimpleTestEngineWithMafAndTT_ONE_trigger(&eth);
+
+	EXPECT_CALL(eth.mockAirmass, getAirmass(_))
+		.WillRepeatedly(Return(AirmassResult{1.3440001f, 50.0f}));
+
+	setInjectionMode((int)IM_BATCH PASS_ENGINE_PARAMETER_SUFFIX);
+	engine->periodicFastCallback(PASS_ENGINE_PARAMETER_SIGNATURE);
+	EXPECT_FLOAT_EQ( 20,  engine->injectionDuration) << "injection while batch";
+
+	setInjectionMode((int)IM_SIMULTANEOUS PASS_ENGINE_PARAMETER_SUFFIX);
+	engine->periodicFastCallback(PASS_ENGINE_PARAMETER_SIGNATURE);
+	EXPECT_FLOAT_EQ( 10,  engine->injectionDuration) << "injection while simultaneous";
+
+	setInjectionMode((int)IM_SEQUENTIAL PASS_ENGINE_PARAMETER_SUFFIX);
+	engine->periodicFastCallback(PASS_ENGINE_PARAMETER_SIGNATURE);
+	EXPECT_FLOAT_EQ( 40,  engine->injectionDuration) << "injection while IM_SEQUENTIAL";
+
+	setInjectionMode((int)IM_SINGLE_POINT PASS_ENGINE_PARAMETER_SUFFIX);
+	engine->periodicFastCallback(PASS_ENGINE_PARAMETER_SIGNATURE);
+	EXPECT_FLOAT_EQ( 40,  engine->injectionDuration) << "injection while IM_SINGLE_POINT";
+	EXPECT_EQ( 0, unitTestWarningCodeState.recentWarnings.getCount()) << "warningCounter#testDifferentInjectionModes";
+}
+
+TEST(FuelMath, deadtime) {
+	WITH_ENGINE_TEST_HELPER(TEST_ENGINE);
+
+	setupSimpleTestEngineWithMafAndTT_ONE_trigger(&eth);
+
+	EXPECT_CALL(eth.mockAirmass, getAirmass(_))
+		.WillRepeatedly(Return(AirmassResult{1.3440001f, 50.0f}));
+
+	// First test with no deadtime
+	engine->periodicFastCallback(PASS_ENGINE_PARAMETER_SIGNATURE);
+	EXPECT_FLOAT_EQ( 20,  engine->injectionDuration);
+
+	// Now add some deadtime
+	setArrayValues(engineConfiguration->injector.battLagCorr, 2.0f);
+
+	// Should have deadtime now!
+	engine->periodicFastCallback(PASS_ENGINE_PARAMETER_SIGNATURE);
+	EXPECT_FLOAT_EQ( 20 + 2,  engine->injectionDuration);
+}

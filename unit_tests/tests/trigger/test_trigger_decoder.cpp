@@ -921,7 +921,7 @@ void doTestFuelSchedulerBug299smallAndMedium(int startUpDelayMs) {
 	ASSERT_EQ(CUSTOM_OBD_SKIPPED_FUEL, unitTestWarningCodeState.recentWarnings.get(0));
 }
 
-static void setInjectionMode(int value DECLARE_ENGINE_PARAMETER_SUFFIX) {
+void setInjectionMode(int value DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	engineConfiguration->injectionMode = (injection_mode_e) value;
 	incrementGlobalConfigurationVersion(PASS_ENGINE_PARAMETER_SIGNATURE);
 }
@@ -984,31 +984,6 @@ TEST(big, testSequential) {
 	assertInjectionEvent("#1_i_@", &t->elements[1],	2, 1, 126 + 180);	// Cyl 3
 	assertInjectionEvent("#2@", &t->elements[2],	3, 0, 126);	// Cyl 4
 	assertInjectionEvent("inj#3@", &t->elements[3],	1, 0, 126 + 180);	// Cyl 2
-}
-
-TEST(big, testDifferentInjectionModes) {
-	WITH_ENGINE_TEST_HELPER(TEST_ENGINE);
-	setupSimpleTestEngineWithMafAndTT_ONE_trigger(&eth);
-
-	EXPECT_CALL(eth.mockAirmass, getAirmass(_))
-		.WillRepeatedly(Return(AirmassResult{1.3440001f, 50.0f}));
-
-	setInjectionMode((int)IM_BATCH PASS_ENGINE_PARAMETER_SUFFIX);
-	engine->periodicFastCallback(PASS_ENGINE_PARAMETER_SIGNATURE);
-	EXPECT_FLOAT_EQ( 20,  engine->injectionDuration) << "injection while batch";
-
-	setInjectionMode((int)IM_SIMULTANEOUS PASS_ENGINE_PARAMETER_SUFFIX);
-	engine->periodicFastCallback(PASS_ENGINE_PARAMETER_SIGNATURE);
-	EXPECT_FLOAT_EQ( 10,  engine->injectionDuration) << "injection while simultaneous";
-
-	setInjectionMode((int)IM_SEQUENTIAL PASS_ENGINE_PARAMETER_SUFFIX);
-	engine->periodicFastCallback(PASS_ENGINE_PARAMETER_SIGNATURE);
-	EXPECT_FLOAT_EQ( 40,  engine->injectionDuration) << "injection while IM_SEQUENTIAL";
-
-	setInjectionMode((int)IM_SINGLE_POINT PASS_ENGINE_PARAMETER_SUFFIX);
-	engine->periodicFastCallback(PASS_ENGINE_PARAMETER_SIGNATURE);
-	EXPECT_FLOAT_EQ( 40,  engine->injectionDuration) << "injection while IM_SINGLE_POINT";
-	EXPECT_EQ( 0,  unitTestWarningCodeState.recentWarnings.getCount()) << "warningCounter#testDifferentInjectionModes";
 }
 
 TEST(big, testFuelSchedulerBug299smallAndLarge) {
