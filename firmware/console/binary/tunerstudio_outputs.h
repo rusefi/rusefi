@@ -103,7 +103,7 @@ typedef struct {
 	scaled_pressure manifoldAirPressure; // 30
 	scaled_pressure baroPressure; // 32
 
-	scaled_afr airFuelRatio; // 34
+	scaled_lambda lambda; // 34
 	scaled_channel<uint16_t, 100> engineLoad; // 36
 
 	// misc sensors

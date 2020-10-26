@@ -79,4 +79,6 @@ public:
 #endif /* EFI_ENABLE_MOCK_ADC */
 
 	multispark_state multispark;
+
+	float targetLambda = 0.0f;
 };

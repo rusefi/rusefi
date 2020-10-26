@@ -26,7 +26,7 @@ protected:
 // This class is a usable implemenation of a fuel model that reads real configuration
 class FuelComputer final : public FuelComputerBase {
 public:
-	FuelComputer(const ValueProvider3D& afrTable);
+	FuelComputer(const ValueProvider3D& lambdaTable);
 
 protected:
 	float getStoichiometricRatio() const override;
@@ -34,7 +34,7 @@ protected:
 	float getTargetLambdaLoadAxis(float defaultLoad) const override;
 
 private:
-	const ValueProvider3D* const m_afrTable;
+	const ValueProvider3D* const m_lambdaTable;
 };
 
 float getLoadOverride(float defaultLoad, afr_override_e overrideMode DECLARE_ENGINE_PARAMETER_SUFFIX);

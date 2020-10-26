@@ -27,7 +27,7 @@ void setOperationMode(engine_configuration_s *engineConfiguration, operation_mod
 void prepareVoidConfiguration(engine_configuration_s *activeConfiguration);
 void setTargetRpmCurve(int rpm DECLARE_CONFIG_PARAMETER_SUFFIX);
 int getTargetRpmForIdleCorrection(DECLARE_ENGINE_PARAMETER_SIGNATURE);
-void setAfrMap(afr_table_t table, float value);
+void setLambdaMap(lambda_table_t table, float value);
 /**
  * See also setLinearCurve()
  */
