@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Mon Oct 26 02:28:06 UTC 2020
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Mon Oct 26 11:25:03 UTC 2020
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -115,7 +115,9 @@ typedef struct pid_s pid_s;
 // start of cranking_parameters_s
 struct cranking_parameters_s {
 	/**
-	 * Base duration of the fuel injection during cranking, this is modified by the multipliers for CLT, IAT, TPS ect, to give the final cranking pulse width.
+	 * Base mass of the per-cylinder fuel injected during cranking. This is then modified by the multipliers for CLT, IAT, TPS ect, to give the final cranking pulse width.
+	 * A reasonable starting point is 60mg per liter per cylinder.
+	 * ex: 2 liter 4 cyl = 500cc/cyl, so 30mg cranking fuel.
 	 * offset 0
 	 */
 	float baseFuel;
@@ -3750,4 +3752,4 @@ struct persistent_config_s {
 typedef struct persistent_config_s persistent_config_s;
 
 // end
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Mon Oct 26 02:28:06 UTC 2020
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Mon Oct 26 11:25:03 UTC 2020

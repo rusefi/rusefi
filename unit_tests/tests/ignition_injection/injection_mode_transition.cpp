@@ -49,7 +49,7 @@ TEST(fuelControl, transitionIssue1592) {
 	engineConfiguration->globalTriggerAngleOffset = 20;
 
 	// Yes, this is a ton of fuel but it makes the repro easier
-	engineConfiguration->cranking.baseFuel = 89;
+	engineConfiguration->cranking.baseFuel = 213.6;
 	engineConfiguration->cranking.rpm = 500;
 
 	// Test the transition from batch cranking to sequential running

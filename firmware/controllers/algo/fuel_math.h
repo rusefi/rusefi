@@ -13,11 +13,6 @@
 void initFuelMap(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 
 /**
- * @return total injection time into all cylinders, before CLT & IAT corrections
- */
-floatms_t getBaseFuel(int rpm DECLARE_ENGINE_PARAMETER_SUFFIX);
-
-/**
  * @return baseFuel with CLT and IAT corrections
  */
 floatms_t getRunningFuel(floatms_t baseFuel DECLARE_ENGINE_PARAMETER_SUFFIX);
@@ -30,8 +25,8 @@ float getIatFuelCorrection(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 float getCltFuelCorrection(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 float getFuelCutOffCorrection(efitick_t nowNt, int rpm DECLARE_ENGINE_PARAMETER_SUFFIX);
 angle_t getCltTimingCorrection(DECLARE_ENGINE_PARAMETER_SIGNATURE);
-floatms_t getCrankingFuel(floatms_t baseFuel DECLARE_ENGINE_PARAMETER_SUFFIX);
-floatms_t getCrankingFuel3(floatms_t baseFuel, uint32_t revolutionCounterSinceStart DECLARE_ENGINE_PARAMETER_SUFFIX);
+float getCrankingFuel(float baseFuel DECLARE_ENGINE_PARAMETER_SUFFIX);
+float getCrankingFuel3(float baseFuel, uint32_t revolutionCounterSinceStart DECLARE_ENGINE_PARAMETER_SUFFIX);
 floatms_t getInjectionDuration(int rpm DECLARE_ENGINE_PARAMETER_SUFFIX);
 percent_t getInjectorDutyCycle(int rpm DECLARE_ENGINE_PARAMETER_SUFFIX);
 
