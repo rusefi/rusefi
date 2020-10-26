@@ -90,7 +90,7 @@ enable2ndByteCanID = false
 
    pageButtons  = "&EGO"
    gauge1       = RPMGauge	
-   gauge2       = afr1Gauge
+   gauge2       = lambda1Gauge
    gauge3		= MAPGauge
    gauge4		= veValueGauge
 
@@ -135,8 +135,8 @@ enable2ndByteCanID = false
 [VeAnalyze]
 
         ;    tableName,  lambdaTargetTableName, lambdaChannel, egoCorrectionChannel, activeCondition
-       veAnalyzeMap = veTableTbl, afrTableTbl, AFRValue, egoCorrection, { 1 }
-       lambdaTargetTables = afrTableTbl, afrTSCustom
+       veAnalyzeMap = veTableTbl, lambdaTableTbl, lambdaValue, egoCorrection, { 1 }
+       lambdaTargetTables = lambdaTableTbl, afrTSCustom
 
        ; filter =  Name,        "DisplayName", outputChannel, operator, defaultVal, userAdjustable
         filter = minRPMFilter, "Minimum RPM", RPMValue,           <       , 500,      , true
@@ -214,7 +214,7 @@ enable2ndByteCanID = false
       massAirFlowValue= scalar,  U16,     28,     "Kg/h", {1/@@PACK_MULT_MASS_FLOW@@},         0
       MAPValue        = scalar,  U16,     30,     "kPa",{1/@@PACK_MULT_PRESSURE@@},       0.0
       baroPressure    = scalar,  U16,     32,     "kPa",{1/@@PACK_MULT_PRESSURE@@},       0.0
-      AFRValue        = scalar,  U16,     34,      "AFR",,{1/@@PACK_MULT_AFR@@},,       0.0
+      lambdaValue     = scalar,  U16,     34,      "",,{1/@@PACK_MULT_LAMBDA@@},,       0.0
       engineLoad      = scalar,  U16,     36,        "%",{1/@@PACK_MULT_PERCENT@@},       0.0 ; Blend of MAP and TPS, depends on algorithm
 
 ; misc sensors
@@ -529,7 +529,7 @@ enable2ndByteCanID = false
       yAxis       =  0,  28, 10
       xBins       = narrowToWideOxygenBins
       yBins       = narrowToWideOxygen
-      gauge       = afr1Gauge
+      gauge       = lambda1Gauge
 
    curve = fsioCurve1, "FSIO Curve #1"
       columnLabel = "X", "Y"
@@ -707,7 +707,7 @@ enable2ndByteCanID = false
       yAxis       = 0, 250, 10
       xBins       = idleVeBins, RPMValue
       yBins       = idleVe
-      gauge       = afr1Gauge
+      gauge       = lambda1Gauge
     
 	curve = crankingAdvanceCurve, "Cranking Advance Angle"
       columnLabel = "RPM", "degrees"
@@ -836,11 +836,11 @@ enable2ndByteCanID = false
       upDownLabel = "(Later)", "(Sooner)"
 
 
-   table = afrTableTbl,  afrTableMap,  "Target AFR Table",   1
+   table = lambdaTableTbl,  lambdaTableMap,  "Target Lambda Table",   1
       ;       constant, variable
-      xBins       = afrRpmBins,  RPMValue
-      yBins       = afrLoadBins, afrTableYAxis
-      zBins       = afrTable
+      xBins       = lambdaRpmBins,  RPMValue
+      yBins       = lambdaLoadBins, afrTableYAxis
+      zBins       = lambdaTable
 ;      gridHeight  = 2.0
       gridOrient  = 250,   0, 340 ; Space 123 rotation of grid in degrees.
       upDownLabel = "(RICHER)", "(LEANER)"
@@ -938,7 +938,7 @@ gaugeCategory = Sensors - Basic
    RPMGauge        = RPMValue,           "RPM - engine speed",       "RPM",       0,   15000,     200,    500,    6000,  6000,   0,   0
    CLTGauge          = coolant,       "Coolant temp",        "deg C",      -40,    140,     -15,      1,      95,   110,   1,   1
    IATGauge          = intake,     "Intake air temp",        "deg C",      -40,    140,     -15,      1,      95,   110,   1,   1
-   afr1Gauge         = AFRValue, "Air fuel ratio",          "",       10,   19.4,      12,     13,      15,    16,   2,   2
+   lambda1Gauge      = lambdaValue, "Lambda",        "",       0.65,   1.2,      0.7,     0.75,      1.1,    1.15,   3,   2
    MAFGauge			 = MAFValue,          "Mass air flow",         "v",        0,      5,       0,      1,       3,     4,   1,   1
    VBattGauge        = VBatt,      "Battery voltage",         "V",        8,     21,       9,     10,      17,    19,   1,   1
    MAPGauge     	 = MAPValue,               "MAP",       "kPa",        0,    300,      10,     10,     200,   200,   0,   0	
@@ -1029,9 +1029,9 @@ gaugeCategory = Knock
 [WueAnalyze]
     
 ;                    wueCurveName, afrTempCompensationCurve, lambdaTargetTableName, lambdaChannel, coolantTempChannel, egoCorrectionChannel, wueChannel, activeCondition
-     wueAnalyzeMap = wueAnalyzer_warmup_curve, wueAfrTargetOffsetCurve, afrTableTbl, AFRValue, coolant, cltCorrection, egoCorrection
+     wueAnalyzeMap = wueAnalyzer_warmup_curve, wueAfrTargetOffsetCurve, lambdaTableTbl, lambdaValue, coolant, cltCorrection, egoCorrection
 
-     lambdaTargetTables = afrTableTbl, afrTSCustom
+     lambdaTargetTables = lambdaTableTbl, afrTSCustom
 
      wuePercentOffset = 0 ; for working with 0 based enrichment set to 100
      option = disableLiveUpdates
@@ -1062,7 +1062,7 @@ gaugeCategory = Knock
    gauge2 = CLTGauge
    gauge3 = TPSGauge
    gauge4 = MAPGauge
-   gauge5 = afr1Gauge
+   gauge5 = lambda1Gauge
    gauge6 = VBattGauge
    gauge7 = dwellGauge
    gauge8 = ignadvGauge
@@ -1129,7 +1129,7 @@ gaugeCategory = Knock
    entry = TPS2Value,       @@GAUGE_NAME_TPS2@@,        float, "%.2f"
    entry = MAFValue,        @@GAUGE_NAME_MAF@@,         float,  "%.2f"
    entry = MAPValue,        @@GAUGE_NAME_MAP@@,         float,  "%.1f"
-   entry = AFRValue,        @@GAUGE_NAME_AFR@@,         float,  "%.2f"
+   entry = lambdaValue,     @@GAUGE_NAME_LAMBDA@@,         float,  "%.2f"
    entry = VBatt,           @@GAUGE_NAME_VBAT@@,       float,  "%.2f"
    entry = engineLoad,	    @@GAUGE_NAME_ENGINE_LOAD@@, 	   float,  "%.1f"
    entry = fuelingLoad,     @@GAUGE_NAME_FUEL_LOAD@@,     float, "%.1f"
@@ -1287,7 +1287,7 @@ menuDialog = main
 		subMenu = std_separator
 
 		# Fuel model
-		subMenu = afrTableTbl,				"Target AFR", 0, {isInjectionEnabled == 1}
+		subMenu = lambdaTableTbl,				"Target lambda", 0, {isInjectionEnabled == 1}
 		subMenu = cltFuelCorrCurve,			"CLT multiplier", 0, {isInjectionEnabled == 1}
 		subMenu = iatFuelCorrCurve,			"IAT multiplier", 0, {isInjectionEnabled == 1}
 		subMenu = fuelClosedLoopDialog, 	"Closed loop fuel correction", 0, {isInjectionEnabled == 1}
@@ -3354,4 +3354,3 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 [Tools]
  ;addTool = toolName, PanelName
  addTool = veTableGenerator, "VE Table Generator", veTableTbl
- addTool = afrTableGenerator, "AFR Table Generator", afrTableTbl

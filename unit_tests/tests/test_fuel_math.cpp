@@ -84,7 +84,6 @@ TEST(AirmassModes, MafNormal) {
 	WITH_ENGINE_TEST_HELPER(FORD_ASPIRE_1996);
 	engineConfiguration->fuelAlgorithm = LM_REAL_MAF;
 	engineConfiguration->injector.flow = 200;
-	setAfrMap(config->afrTable, 13);
 
 	MockVp3d veTable;
 	// Ensure that the correct cell is read from the VE table

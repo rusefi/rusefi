@@ -44,7 +44,7 @@ public class GaugesPanel {
 
             Sensor.injectorLagMs,
             Sensor.lastErrorCode,
-            Sensor.AFR,
+            Sensor.Lambda,
             Sensor.VBATT,
             Sensor.VSS,
 
