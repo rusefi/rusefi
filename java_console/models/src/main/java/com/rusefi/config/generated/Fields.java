@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEfi tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Fri Oct 23 19:47:25 UTC 2020
+// this file was generated automatically by rusEfi tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Sun Oct 25 23:59:19 PDT 2020
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -34,10 +34,7 @@ public class Fields {
 	public static final int afr_v2_offset = 572;
 	public static final int afr_value1_offset = 568;
 	public static final int afr_value2_offset = 576;
-	public static final int afrLoadBins_offset = 18848;
 	public static final int afrOverrideMode_offset = 2111;
-	public static final int afrRpmBins_offset = 18912;
-	public static final int afrTable_offset = 18592;
 	public static final int afterCrankingIACtaperDuration_offset = 2036;
 	public static final int AFTERSTART_DECAY_CURVE_SIZE = 8;
 	public static final int AFTERSTART_ENRICH_CURVE_SIZE = 8;
@@ -592,7 +589,6 @@ public class Fields {
 	public static final String GAUGE_NAME_ACCEL_X = "Acceleration: X";
 	public static final String GAUGE_NAME_ACCEL_Y = "Acceleration: Y";
 	public static final String GAUGE_NAME_ACCEL_Z = "Acceleration: Z";
-	public static final String GAUGE_NAME_AFR = "Air/Fuel Ratio";
 	public static final String GAUGE_NAME_AIR_FLOW = "MAF air flow";
 	public static final String GAUGE_NAME_AIR_MASS = "air mass";
 	public static final String GAUGE_NAME_BARO_PRESSURE = "Barometric pressure";
@@ -641,6 +637,7 @@ public class Fields {
 	public static final String GAUGE_NAME_INJECTOR_LAG = "fuel: injector lag";
 	public static final String GAUGE_NAME_KNOCK_COUNTER = "knock: counter";
 	public static final String GAUGE_NAME_KNOCK_LEVEL = "knock: current level";
+	public static final String GAUGE_NAME_LAMBDA = "Lambda";
 	public static final String GAUGE_NAME_MAF = "MAF";
 	public static final String GAUGE_NAME_MAP = "MAP";
 	public static final String GAUGE_NAME_RPM = "RPM";
@@ -943,6 +940,9 @@ public class Fields {
 	public static final int knockNoise_offset = 1820;
 	public static final int knockNoiseRpmBins_offset = 1852;
 	public static final int knockVThreshold_offset = 1512;
+	public static final int lambdaLoadBins_offset = 18848;
+	public static final int lambdaRpmBins_offset = 18912;
+	public static final int lambdaTable_offset = 18592;
 	public static final int launchActivateDelay_offset = 1060;
 	public static final int launchActivatePin_offset = 991;
 	public static final int launchActivationMode_offset = 1020;
@@ -1089,6 +1089,8 @@ public class Fields {
 	public static final int PACK_MULT_ANGLE = 50;
 	public static final int PACK_MULT_FUEL_MASS = 100;
 	public static final int PACK_MULT_HIGH_PRESSURE = 10;
+	public static final int PACK_MULT_LAMBDA = 10000;
+	public static final int PACK_MULT_LAMBDA_CFG = 147;
 	public static final int PACK_MULT_MASS_FLOW = 10;
 	public static final int PACK_MULT_MS = 300;
 	public static final int PACK_MULT_PERCENT = 100;
@@ -1152,6 +1154,7 @@ public class Fields {
 	public static final int servoOutputPins8_offset = 3147;
 	public static final int showHumanReadableWarning_offset = 976;
 	public static final int showSdCardWarning_offset = 76;
+	public static final int SIGNATURE_HASH = 957126994;
 	public static final int silentTriggerError_offset = 1464;
 	public static final int slowAdcAlpha_offset = 2088;
 	public static final int sparkDwellRpmBins_offset = 332;
@@ -1420,7 +1423,7 @@ public class Fields {
 	public static final char TS_SD_R_COMMAND = 'r';
 	public static final char TS_SD_W_COMMAND = 'w';
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI 2020.10.23.all.2595471579";
+	public static final String TS_SIGNATURE = "rusEFI 2020.10.25.all.957126994";
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final int TT_TT_60_2_VW = 20;
 	public static final int TT_TT_ONE = 18;
@@ -2643,7 +2646,7 @@ public class Fields {
 	public static final Field TCUSOLENOIDTABLE = Field.create("TCUSOLENOIDTABLE", 15136, FieldType.INT);
 	public static final Field IGNITIONTABLE = Field.create("IGNITIONTABLE", 16288, FieldType.INT);
 	public static final Field VETABLE = Field.create("VETABLE", 17440, FieldType.INT);
-	public static final Field AFRTABLE = Field.create("AFRTABLE", 18592, FieldType.INT);
+	public static final Field LAMBDATABLE = Field.create("LAMBDATABLE", 18592, FieldType.INT);
 	public static final Field TPSTPSACCELTABLE = Field.create("TPSTPSACCELTABLE", 18976, FieldType.INT);
 	public static final Field FSIOTABLE1 = Field.create("FSIOTABLE1", 19296, FieldType.INT);
 	public static final Field FSIOTABLE2 = Field.create("FSIOTABLE2", 19616, FieldType.INT);
@@ -3698,7 +3701,7 @@ public class Fields {
 	TCUSOLENOIDTABLE,
 	IGNITIONTABLE,
 	VETABLE,
-	AFRTABLE,
+	LAMBDATABLE,
 	TPSTPSACCELTABLE,
 	FSIOTABLE1,
 	FSIOTABLE2,
