@@ -55,15 +55,16 @@ DISPLAY(DISPLAY_FIELD(dwellAngle))
 DISPLAY(DISPLAY_FIELD(cltTimingCorrection))
 DISPLAY_TEXT(eol);
 
-DISPLAY(DISPLAY_IF(isCrankingState)) floatms_t getCrankingFuel3(
-	floatms_t baseFuel,
+DISPLAY(DISPLAY_IF(isCrankingState)) float getCrankingFuel3(
+	float baseFuel,
 		uint32_t revolutionCounterSinceStart DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	// these magic constants are in Celsius
 	float baseCrankingFuel;
 	if (engineConfiguration->useRunningMathForCranking) {
 		baseCrankingFuel = baseFuel;
 	} else {
-		baseCrankingFuel = engineConfiguration->cranking.baseFuel;
+		// parameter is in milligrams, convert to grams
+		baseCrankingFuel = engineConfiguration->cranking.baseFuel * 0.001f;
 	}
 	/**
 	 * Cranking fuel changes over time
@@ -105,7 +106,7 @@ DISPLAY(DISPLAY_IF(isCrankingState)) floatms_t getCrankingFuel3(
 			* engine->engineState.cranking.tpsCoefficient;
 
 	DISPLAY_TEXT(Cranking_fuel);
-	engine->engineState.DISPLAY_PREFIX(cranking).DISPLAY_FIELD(fuel) = crankingFuel;
+	engine->engineState.DISPLAY_PREFIX(cranking).DISPLAY_FIELD(fuel) = crankingFuel * 1000;
 
 	if (crankingFuel <= 0) {
 		warning(CUSTOM_ERR_ZERO_CRANKING_FUEL, "Cranking fuel value %f", crankingFuel);
@@ -148,7 +149,7 @@ floatms_t getRunningFuel(floatms_t baseFuel DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	DISPLAY_TEXT(eol);
 
 	DISPLAY_TEXT(Running_fuel);
-	ENGINE(engineState.DISPLAY_PREFIX(running).DISPLAY_FIELD(fuel)) = runningFuel;
+	ENGINE(engineState.DISPLAY_PREFIX(running).DISPLAY_FIELD(fuel)) = runningFuel * 1000;
 	DISPLAY_TEXT(eol);
 
 	DISPLAY_TEXT(Injector_lag);
@@ -181,16 +182,9 @@ AirmassModelBase* getAirmassModel(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	}
 }
 
-/**
- * per-cylinder fuel amount
- * todo: rename this method since it's now base+TPSaccel
- */
-floatms_t getBaseFuel(int rpm DECLARE_ENGINE_PARAMETER_SUFFIX) {
+// Per-cylinder base fuel mass
+static float getBaseFuelMass(int rpm DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	ScopePerf perf(PE::GetBaseFuel);
-
-	floatms_t tpsAccelEnrich = ENGINE(tpsAccelEnrichment.getTpsEnrichment(PASS_ENGINE_PARAMETER_SIGNATURE));
-	efiAssert(CUSTOM_ERR_ASSERT, !cisnan(tpsAccelEnrich), "NaN tpsAccelEnrich", 0);
-	ENGINE(engineState.tpsAccelEnrich) = tpsAccelEnrich;
 
 	// airmass modes - get airmass first, then convert to fuel
 	auto model = getAirmassModel(PASS_ENGINE_PARAMETER_SIGNATURE);
@@ -207,23 +201,9 @@ floatms_t getBaseFuel(int rpm DECLARE_ENGINE_PARAMETER_SUFFIX) {
 
 	// Fudge it by the global correction factor
 	baseFuelMass *= CONFIG(globalFuelCorrection);
-
-	ENGINE(injectorModel)->prepare();
-	float baseFuel = ENGINE(injectorModel)->getInjectionDuration(baseFuelMass);
-
-	// Ugh, there's a bug that means we have to cancel out the deadtime.
-	// See https://github.com/rusefi/rusefi/issues/1903
-	baseFuel -= engine->engineState.running.injectorLag;
-
-	if (cisnan(baseFuel)) {
-		// todo: we should not have this here but https://github.com/rusefi/rusefi/issues/1690
-		return 0;
-	}
-	efiAssert(CUSTOM_ERR_ASSERT, !cisnan(baseFuel), "NaN baseFuel", 0);
-
 	engine->engineState.baseFuel = baseFuelMass;
 
-	return tpsAccelEnrich + baseFuel;
+	return baseFuelMass;
 }
 
 angle_t getInjectionOffset(float rpm, float load DECLARE_ENGINE_PARAMETER_SUFFIX) {
@@ -302,11 +282,11 @@ percent_t getInjectorDutyCycle(int rpm DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	return 100 * totalInjectiorAmountPerCycle / engineCycleDuration;
 }
 
-static floatms_t getFuel(bool isCranking, floatms_t baseFuel DECLARE_ENGINE_PARAMETER_SUFFIX) {
+static float getCycleFuelMass(bool isCranking, float baseFuelMass DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	if (isCranking) {
-		return getCrankingFuel(baseFuel PASS_ENGINE_PARAMETER_SUFFIX);
+		return getCrankingFuel(baseFuelMass PASS_ENGINE_PARAMETER_SUFFIX);
 	} else {
-		return getRunningFuel(baseFuel PASS_ENGINE_PARAMETER_SUFFIX);
+		return getRunningFuel(baseFuelMass PASS_ENGINE_PARAMETER_SUFFIX);
 	}
 }
 
@@ -319,25 +299,28 @@ floatms_t getInjectionDuration(int rpm DECLARE_ENGINE_PARAMETER_SUFFIX) {
 
 #if EFI_SHAFT_POSITION_INPUT
 	// Always update base fuel - some cranking modes use it
-	floatms_t baseFuel = getBaseFuel(rpm PASS_ENGINE_PARAMETER_SUFFIX);
+	float baseFuelMass = getBaseFuelMass(rpm PASS_ENGINE_PARAMETER_SUFFIX);
 
 	bool isCranking = ENGINE(rpmCalculator).isCranking();
-	floatms_t fuelPerCycle = getFuel(isCranking, baseFuel PASS_ENGINE_PARAMETER_SUFFIX);
-	efiAssert(CUSTOM_ERR_ASSERT, !cisnan(fuelPerCycle), "NaN fuelPerCycle", 0);
+	float cycleFuelMass = getCycleFuelMass(isCranking, baseFuelMass PASS_ENGINE_PARAMETER_SUFFIX);
+	efiAssert(CUSTOM_ERR_ASSERT, !cisnan(cycleFuelMass), "NaN cycleFuelMass", 0);
 
 	// Fuel cut-off isn't just 0 or 1, it can be tapered
-	fuelPerCycle *= ENGINE(engineState.fuelCutoffCorrection);
-	// If no fuel, don't add injector lag
-	if (fuelPerCycle == 0.0f)
-		return 0;
+	cycleFuelMass *= ENGINE(engineState.fuelCutoffCorrection);
 
-	floatms_t theoreticalInjectionLength = fuelPerCycle * getInjectionModeDurationMultiplier(PASS_ENGINE_PARAMETER_SIGNATURE);
-	floatms_t injectorLag = ENGINE(engineState.running.injectorLag);
-	if (cisnan(injectorLag)) {
-		warning(CUSTOM_ERR_INJECTOR_LAG, "injectorLag not ready");
-		return 0; // we can end up here during configuration reset
-	}
-	return theoreticalInjectionLength + injectorLag;
+	float durationMultiplier = getInjectionModeDurationMultiplier(PASS_ENGINE_PARAMETER_SIGNATURE);
+	float injectionFuelMass = cycleFuelMass * durationMultiplier;
+
+	ENGINE(injectorModel)->prepare();
+
+	// TODO: move everything below here to injector scheduling, so that wall wetting works properly
+	floatms_t injectionDuration = ENGINE(injectorModel)->getInjectionDuration(injectionFuelMass);
+
+	floatms_t tpsAccelEnrich = ENGINE(tpsAccelEnrichment.getTpsEnrichment(PASS_ENGINE_PARAMETER_SIGNATURE));
+	efiAssert(CUSTOM_ERR_ASSERT, !cisnan(tpsAccelEnrich), "NaN tpsAccelEnrich", 0);
+	ENGINE(engineState.tpsAccelEnrich) = tpsAccelEnrich;
+
+	return injectionDuration + (durationMultiplier * tpsAccelEnrich);
 #else
 	return 0;
 #endif
@@ -462,7 +445,7 @@ float getBaroCorrection(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 /**
  * @return Duration of fuel injection while craning
  */
-floatms_t getCrankingFuel(float baseFuel DECLARE_ENGINE_PARAMETER_SUFFIX) {
+float getCrankingFuel(float baseFuel DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	return getCrankingFuel3(baseFuel, engine->rpmCalculator.getRevolutionCounterSinceStart() PASS_ENGINE_PARAMETER_SUFFIX);
 }
 
