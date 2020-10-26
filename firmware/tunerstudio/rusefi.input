@@ -106,7 +106,7 @@ enable2ndByteCanID = false
         dataReadyCondition = { toothLogReady }
         continuousRead = true
         ; each packet is @@COMPOSITE_PACKET_SIZE@@ and we have @@COMPOSITE_PACKET_COUNT@@ of those
-        dataLength = @@COMPOSITE_DATA_LENGTH@@
+        dataLength = @@COMPOSITE_DATA_LENGTH_HALF@@
 
 ;tooth
        ; recordDef = headerLen, footerLen, recordLen
@@ -124,7 +124,9 @@ enable2ndByteCanID = false
         recordField = secLevel,          "SecLevel",     1,          1,          1.0,    "Flag"
         recordField = trigger,           "Trigger",      2,          1,          1.0,    "Flag"
         recordField = sync,              "Sync",         3,          1,          1.0,    "Flag"
-		recordField = time,              "Time",         8,         32,         0.01,    "ms"
+		recordField = coil,              "Coil",         4,          1,          1.0,    "Flag"
+		recordField = inj,               "Injector",     5,          1,          1.0,    "Flag"
+		recordField = time,              "Time",         8,         32,         0.001,    "ms"
 
         ; it seems that TS also needs to know the diff.size of a tooth
         calcField = toothTime,           "ToothTime",    "ms",       { time - pastValue(time, 1) }

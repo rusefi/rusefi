@@ -59,8 +59,25 @@ event_inputs:
   GPIOC_6: "45 - VR/Hall Crank"
 
 switch_inputs:
-  GPIOE_10: "Brake Switch"
-  GPIOG_1: "Clutch Switch"
+  GPIOA_0: "18 - AN temp 1"
+  GPIOA_1: "23 - AN temp 2"
+  GPIOA_2: "24 - AN temp 3"
+  GPIOA_3: "22 - AN temp 4"
+  GPIOA_4: "28 - AN volt 10"
+
+  # RC filter input for hall
+  GPIOA_5: "25 - Hall Cam"
+
+  GPIOA_6: "26 - AN volt 2"
+  GPIOA_7: "31 - AN volt 3"
+  GPIOB_0: "36 - AN volt 8"
+  GPIOB_1: "40 - AN volt 9"
+  GPIOC_0: "27 - AN volt 1"
+  # GPIOC_1: Skipped - battery sense
+  GPIOC_2: "19 - AN volt 4"
+  GPIOC_3: "20 - AN volt 5"
+  GPIOC_4: "32 - AN volt 6"
+  GPIOC_5: "30 - AN volt 7"
 
 analog_inputs:
   # PA0 CLT
