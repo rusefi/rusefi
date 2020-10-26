@@ -203,6 +203,11 @@ static float getBaseFuelMass(int rpm DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	baseFuelMass *= CONFIG(globalFuelCorrection);
 	engine->engineState.baseFuel = baseFuelMass;
 
+	if (cisnan(baseFuelMass)) {
+		// todo: we should not have this here but https://github.com/rusefi/rusefi/issues/1690 
+		return 0;
+	}
+
 	return baseFuelMass;
 }
 
