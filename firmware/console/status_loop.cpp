@@ -720,7 +720,7 @@ void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels DECLARE_
 	tsOutputChannels->ignitionAdvance = timing > 360 ? timing - 720 : timing;
 	// 60
 	tsOutputChannels->sparkDwell = ENGINE(engineState.sparkDwell);
-	tsOutputChannels->crankingFuelMs = ENGINE(engineState.cranking.fuel);
+	tsOutputChannels->crankingFuelMass = ENGINE(engineState.cranking.fuel);
 	tsOutputChannels->chargeAirMass = engine->engineState.sd.airMassInOneCylinder;
 
 	tsOutputChannels->coilDutyCycle = getCoilDutyCycle(rpm PASS_ENGINE_PARAMETER_SUFFIX);

@@ -38,5 +38,11 @@ float InjectorModelBase::getInjectionDuration(float fuelMassGram) const {
 	// TODO: support injector nonlinearity correction
 
 	floatms_t baseDuration = fuelMassGram / m_massFlowRate * 1000;
-	return baseDuration + m_deadtime;
+
+	if (baseDuration <= 0) {
+		// If 0 duration, don't add deadtime, just skip the injection.
+		return 0.0f;
+	} else {
+		return baseDuration + m_deadtime;
+	}
 }

@@ -227,10 +227,10 @@ enable2ndByteCanID = false
 
 ; fuel math
       chargeAirMass   = scalar,  U16,     44,        "g",0.001,         0
-      crankingFuelMs  = scalar,  U16,     46,     "ms",{1/@@PACK_MULT_MS@@},     0.0
+      crankingFuelMs  = scalar,  U16,     46,     "mg",{1/@@PACK_MULT_FUEL_MASS@@},     0.0
       currentTargetAfr= scalar,  U16,     48,    "ratio",,{1/@@PACK_MULT_AFR@@},,         0
       baseFuel        = scalar,  U16,     50,     "mg",{1/@@PACK_MULT_FUEL_MASS@@},       0
-      fuelRunning     = scalar,  U16,     52,     "ms",{1/@@PACK_MULT_MS@@},       0
+      fuelRunning     = scalar,  U16,     52,     "mg",{1/@@PACK_MULT_FUEL_MASS@@},       0
       actualLastInjection=scalar,U16,     54,     "ms",{1/@@PACK_MULT_MS@@},     0.0
       injectorDutyCycle=scalar,  U08,     56,        "%",  0.5,         0
       veValue         = scalar,  U08,     57,    "ratio",  0.5,         0
@@ -977,16 +977,16 @@ gaugeCategory = Fueling
    ;Name               Var            Title                 Units        Lo      Hi      LoD    LoW       HiW   HiD    vd  ld
    tChargeGauge          = tCharge,     @@GAUGE_NAME_FUEL_CHARGE_TEMP@@,        "deg C",      -40,    140,     -15,      1,      95,   110,   1,   1
    baroCorrectionGauge  = baroCorrection,@@GAUGE_NAME_FUEL_BARO_CORR@@,           "ratio",        0.5,    1.5,      0.6,     0.7,     1.3,   1.4,   1,   1
-   crankingFuelGauge = crankingFuelMs,   @@GAUGE_NAME_FUEL_CRANKING@@,      "mSec",        0,   25.5,     1.0,    1.2,      20,    25,   3, 1
+   crankingFuelGauge = crankingFuelMs,   @@GAUGE_NAME_FUEL_CRANKING@@,      "mg",        0,   100,     0, 0,      100,    100,   3, 1
    iatCorrectionGauge = iatCorrection, @@GAUGE_NAME_FUEL_IAT_CORR@@, "mult",     0,   3,     0,    0,    3,  3,   2,   2
    cltCorrectionGauge = cltCorrection, @@GAUGE_NAME_FUEL_CLT_CORR@@, "mult",     0,   3,     0,    0,    3,  3,   2,   2
    injectorDutyCycleGauge=injectorDutyCycle, @@GAUGE_NAME_FUEL_INJ_DUTY@@,"%",      0,    120,      10,     10,     100,   100,   1,   1
    actualLastInjectionGauge   = actualLastInjection,     @@GAUGE_NAME_FUEL_LAST_INJECTION@@, "mSec",        0,   25.5,     1.0,    1.2,      20,    25,   3, 1
    veValueGauge      = veValue,                 "fuel: VE",            "",        0,    120,      10,     10,     100,   100,   1,   1
    
-   injectorLagMsGauge = injectorLagMs,       @@GAUGE_NAME_INJECTOR_LAG@@,      "mSec",        0,   25.5,     1.0,    1.2,      20,    25,   3, 1
-   fuelRunningGauge     = fuelRunning,       @@GAUGE_NAME_FUEL_RUNNING@@,      "mSec",        0,   25.5,     1.0,    1.2,      20,    25,   3, 1
-   baseFuelGauge     = baseFuel,       @@GAUGE_NAME_FUEL_BASE@@,      "mSec",        0,   100, 0, 0, 100, 100,   2, 0
+   injectorLagMsGauge = injectorLagMs,       @@GAUGE_NAME_INJECTOR_LAG@@,      "mSec",        0,   10,     0,    0,      10,    10,   3, 1
+   fuelRunningGauge     = fuelRunning,       @@GAUGE_NAME_FUEL_RUNNING@@,      "mg",        0,   100,     0,    0,      100,    100,   3, 1
+   baseFuelGauge     = baseFuel,       @@GAUGE_NAME_FUEL_BASE@@,      "mg",        0,   100, 0, 0, 100, 100,   2, 0
    fuelPidCorrectionGauge = fuelPidCorrection,       @@GAUGE_NAME_FUEL_PID_CORR@@,      "%",        -10,   10,     -8, -5, 5, 8,   3, 1
    fuelingLoadGauge = fuelingLoad, @@GAUGE_NAME_FUEL_LOAD@@, "%", 0, 300, 0, 0, 300, 300, 1, 1
 
@@ -2800,7 +2800,7 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 	dialog = crankingFuel, "Fuel"
 		field = "Injection mode",						crankingInjectionMode
 		field = "Fuel Source For Cranking",             useRunningMathForCranking
-		field = "Base fuel pulse width", 				cranking_baseFuel, {useRunningMathForCranking == 0}
+		field = "Base fuel mass", 				cranking_baseFuel, {useRunningMathForCranking == 0}
 
 	dialog = crankingIAC, "IAC"
 		field = "Cranking IAC position",					crankingIACposition
