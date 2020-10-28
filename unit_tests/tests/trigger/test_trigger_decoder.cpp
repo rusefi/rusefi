@@ -300,6 +300,10 @@ extern bool_t debugSignalExecutor;
 
 TEST(misc, testRpmCalculator) {
 	WITH_ENGINE_TEST_HELPER(FORD_INLINE_6_1995);
+
+	// These tests were written when the default target AFR was 14.0, so replicate that
+	engineConfiguration->stoichRatioPrimary = 140;
+
 	EXPECT_CALL(eth.mockAirmass, getAirmass(_))
 		.WillRepeatedly(Return(AirmassResult{0.1008f, 50.0f}));
 

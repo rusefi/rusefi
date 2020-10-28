@@ -27,9 +27,6 @@
 #include "status_loop.h"
 #endif
 
-extern fuel_Map3D_t veMap;
-extern afr_Map3D_t afrMap;
-
 EXTERN_ENGINE;
 
 // this does not look exactly right

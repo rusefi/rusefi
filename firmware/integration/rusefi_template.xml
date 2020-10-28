@@ -134,15 +134,15 @@
 
         <table type="3D" name="Target AFR"
         category="Fuel"
-        storageaddress="@@afrTable_offset_hex@@" sizex="@@FUEL_LOAD_COUNT@@"
+        storageaddress="@@lambdaTable_offset_hex@@" sizex="@@FUEL_LOAD_COUNT@@"
                sizey="@@FUEL_RPM_COUNT@@" storagetype="uint8" endian="big">
-            <scaling units="Engine Load" expression="x/10" to_byte="x*10" format="0.00" fineincrement=".1"
+            <scaling units="Engine Load" expression="x/147" to_byte="x*147" format="0.00" fineincrement=".01"
                      coarseincrement="1"/>
-            <table type="X Axis" storageaddress="@@afrRpmBins_offset_hex@@" storagetype="float" endian="big">
+            <table type="X Axis" storageaddress="@@lambdaRpmBins_offset_hex@@" storagetype="float" endian="big">
                 <scaling units="RPM" expression="x" to_byte="x" format="0.00" fineincrement=".1"
                          coarseincrement="1"/>
             </table>
-            <table type="Y Axis" storageaddress="@@afrLoadBins_offset_hex@@" storagetype="float" endian="big">
+            <table type="Y Axis" storageaddress="@@lambdaLoadBins_offset_hex@@" storagetype="float" endian="big">
                 <scaling units="engine_load" expression="x" to_byte="x" format="0.00" fineincrement=".1" coarseincrement="1"/>
             </table>
         </table>

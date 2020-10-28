@@ -43,7 +43,7 @@ EXTERN_ENGINE;
 
 fuel_Map3D_t fuelPhaseMap("fl ph");
 extern fuel_Map3D_t veMap;
-extern afr_Map3D_t afrMap;
+extern lambda_Map3D_t lambdaMap;
 extern baroCorr_Map3D_t baroCorrMap;
 
 #if EFI_ENGINE_CONTROL
@@ -203,6 +203,11 @@ static float getBaseFuelMass(int rpm DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	baseFuelMass *= CONFIG(globalFuelCorrection);
 	engine->engineState.baseFuel = baseFuelMass;
 
+	if (cisnan(baseFuelMass)) {
+		// todo: we should not have this here but https://github.com/rusefi/rusefi/issues/1690 
+		return 0;
+	}
+
 	return baseFuelMass;
 }
 
@@ -326,7 +331,7 @@ floatms_t getInjectionDuration(int rpm DECLARE_ENGINE_PARAMETER_SUFFIX) {
 #endif
 }
 
-static FuelComputer fuelComputer(afrMap);
+static FuelComputer fuelComputer(lambdaMap);
 static InjectorModel injectorModel;
 
 /**

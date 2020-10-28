@@ -34,10 +34,7 @@
 #define afr_v2_offset 572
 #define afr_value1_offset 568
 #define afr_value2_offset 576
-#define afrLoadBins_offset 18848
 #define afrOverrideMode_offset 2111
-#define afrRpmBins_offset 18912
-#define afrTable_offset 18592
 #define afterCrankingIACtaperDuration_offset 2036
 #define AFTERSTART_DECAY_CURVE_SIZE 8
 #define AFTERSTART_ENRICH_CURVE_SIZE 8
@@ -289,7 +286,7 @@
 #define coastingFuelCutTps_offset 3152
 #define communicationLedPin_offset 1812
 #define COMPOSITE_DATA_LENGTH 2500
-#define COMPOSITE_DATA_LENGTH_HALF 2500/2
+#define COMPOSITE_DATA_LENGTH_HALF 1250
 #define COMPOSITE_PACKET_COUNT 500
 #define COMPOSITE_PACKET_SIZE 5
 #define compressionRatio_offset 732
@@ -612,7 +609,6 @@
 #define GAUGE_NAME_ACCEL_X "Acceleration: X"
 #define GAUGE_NAME_ACCEL_Y "Acceleration: Y"
 #define GAUGE_NAME_ACCEL_Z "Acceleration: Z"
-#define GAUGE_NAME_AFR "Air/Fuel Ratio"
 #define GAUGE_NAME_AIR_FLOW "MAF air flow"
 #define GAUGE_NAME_AIR_MASS "air mass"
 #define GAUGE_NAME_BARO_PRESSURE "Barometric pressure"
@@ -661,6 +657,7 @@
 #define GAUGE_NAME_INJECTOR_LAG "fuel: injector lag"
 #define GAUGE_NAME_KNOCK_COUNTER "knock: counter"
 #define GAUGE_NAME_KNOCK_LEVEL "knock: current level"
+#define GAUGE_NAME_LAMBDA "Lambda"
 #define GAUGE_NAME_MAF "MAF"
 #define GAUGE_NAME_MAP "MAP"
 #define GAUGE_NAME_RPM "RPM"
@@ -969,6 +966,9 @@
 #define knockNoise_offset 1820
 #define knockNoiseRpmBins_offset 1852
 #define knockVThreshold_offset 1512
+#define lambdaLoadBins_offset 18848
+#define lambdaRpmBins_offset 18912
+#define lambdaTable_offset 18592
 #define launchActivateDelay_offset 1060
 #define launchActivatePin_offset 991
 #define launchActivationMode_e_auto_enum "SWITCH_INPUT_LAUNCH", "CLUTCH_INPUT_LAUNCH", "ALWAYS_ACTIVE_LAUNCH"
@@ -1122,6 +1122,8 @@
 #define PACK_MULT_ANGLE 50
 #define PACK_MULT_FUEL_MASS 100
 #define PACK_MULT_HIGH_PRESSURE 10
+#define PACK_MULT_LAMBDA 10000
+#define PACK_MULT_LAMBDA_CFG 147
 #define PACK_MULT_MASS_FLOW 10
 #define PACK_MULT_MS 300
 #define PACK_MULT_PERCENT 100
@@ -1197,8 +1199,8 @@
 #define showHumanReadableWarning_offset 976
 #define showSdCardWarning_offset 76
 #define SIGNATURE_BOARD kin
-#define SIGNATURE_DATE 2020.10.26
-#define SIGNATURE_HASH 592903605
+#define SIGNATURE_DATE 2020.10.27
+#define SIGNATURE_HASH 1607624172
 #define silentTriggerError_offset 1464
 #define slowAdcAlpha_offset 2088
 #define sparkDwellRpmBins_offset 332
@@ -1517,7 +1519,7 @@
 #define ts_show_spi true
 #define ts_show_trigger_comparator true
 #define ts_show_tunerstudio_port true
-#define TS_SIGNATURE "rusEFI 2020.10.26.kin.592903605"
+#define TS_SIGNATURE "rusEFI 2020.10.27.kin.1607624172"
 #define TS_SINGLE_WRITE_COMMAND 'W'
 #define TS_SINGLE_WRITE_COMMAND_char W
 #define TS_TEST_COMMAND 't' // 0x74

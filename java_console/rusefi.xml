@@ -1,6 +1,6 @@
 <roms>
 
-<!-- was generated automatically by rusEfi tool ConfigDefinition.jar based on gen_config.sh Mon Oct 26 11:24:49 UTC 2020 -->
+<!-- was generated automatically by rusEfi tool ConfigDefinition.jar based on gen_config.sh Tue Oct 27 12:24:02 UTC 2020 -->
 
     <rom>
         <romid>
@@ -136,7 +136,7 @@
         category="Fuel"
         storageaddress="48a0" sizex="16"
                sizey="16" storagetype="uint8" endian="big">
-            <scaling units="Engine Load" expression="x/10" to_byte="x*10" format="0.00" fineincrement=".1"
+            <scaling units="Engine Load" expression="x/147" to_byte="x*147" format="0.00" fineincrement=".01"
                      coarseincrement="1"/>
             <table type="X Axis" storageaddress="49e0" storagetype="float" endian="big">
                 <scaling units="RPM" expression="x" to_byte="x" format="0.00" fineincrement=".1"
