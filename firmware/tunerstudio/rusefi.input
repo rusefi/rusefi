@@ -952,12 +952,12 @@ gaugeCategory = Sensors - Extra 1
    atmPresCGauge     = baroPressure,          @@GAUGE_NAME_BARO_PRESSURE@@,       "kPa",        0,   1024,       0,      0,       0,     0,   0,   0
    vvtPositionGauge = vvtPosition, @@GAUGE_NAME_VVT@@, "deg",     0,   100,     0,    0,    720,  720,   0,   0
    internalMcuTemperatureGauge = internalMcuTemperature, @@GAUGE_NAME_ECU_TEMPERATURE@@, "C",     0,   100,     0,    0,    75,  100,   0,   0
-   OilPressGauge   	 = oilPressure,   "Oil Pressure",       "kPa",        0,    750,      35,     75,     550,   700,   0,   0	
+   OilPressGauge   	 = oilPressure,   @@GAUGE_NAME_OIL_PRESSURE@@,       @@GAUGE_NAME_OIL_PRESSURE_UNITS@@,        0,    750,      35,     75,     550,   700,   0,   0	
    idleAirValvePositionGauge = idleAirValvePosition, "Idle position", "%",     0,   100,     0,    0,    100,  100,   1,   1
    AuxT1Gauge        = auxt1,     "Aux temp 1",        "deg C",      -40,    140,     -15,      1,      95,   110,   1,   1
    AuxT2Gauge        = auxt2,     "Aux temp 2",        "deg C",      -40,    140,     -15,      1,      95,   110,   1,   1
-   lowFuelPressureGauge = lowFuelPressure, @@GAUGE_NAME_FUEL_PRESSURE_LOW@@, "kPa", 0, 700, 0, 0, 700, 700, 1, 0
-   highFuelPressureGauge = highFuelPressure, @@GAUGE_NAME_FUEL_PRESSURE_HIGH@@, "bar", 0, 200, 0, 0, 200, 200, 1, 0
+   lowFuelPressureGauge = lowFuelPressure, @@GAUGE_NAME_FUEL_PRESSURE_LOW@@, @@GAUGE_NAME_FUEL_PRESSURE_LOW_UNITS@@, 0, 700, 0, 0, 700, 700, 1, 0
+   highFuelPressureGauge = highFuelPressure, @@GAUGE_NAME_FUEL_PRESSURE_HIGH@@, @@GAUGE_NAME_FUEL_PRESSURE_HIGH_UNITS@@, 0, 200, 0, 0, 200, 200, 1, 0
 
 gaugeCategory = Ignition
    ignadvGauge = ignitionAdvance,       "Ignition timing",   "degrees",     -100,    100,    -999,   -999,     999,   999,   1, 1
