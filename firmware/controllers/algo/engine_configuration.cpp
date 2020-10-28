@@ -1164,6 +1164,9 @@ void resetConfigurationExt(Logging * logger, configuration_callback_t boardCallb
 		// all basic settings are already set in prepareVoidConfiguration(), no need to set anything here
 		// nothing to do - we do it all in setBoardConfigurationOverrides
 		break;
+	case MIATA_PROTEUS_TCU:
+		setMiataNB2_Proteus_TCU(PASS_CONFIG_PARAMETER_SIGNATURE);
+		break;
 	case MRE_BOARD_OLD_TEST:
 		mreBoardOldTest(PASS_CONFIG_PARAMETER_SIGNATURE);
 		break;
