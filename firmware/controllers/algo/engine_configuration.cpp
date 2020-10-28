@@ -1160,9 +1160,6 @@ void resetConfigurationExt(Logging * logger, configuration_callback_t boardCallb
 // todo: is it time to replace MICRO_RUS_EFI, PROTEUS, PROMETHEUS_DEFAULTS with MINIMAL_PINS? maybe rename MINIMAL_PINS to DEFAULT?
 	case PROTEUS:
 	case PROMETHEUS_DEFAULTS:
-	case DAIHATSU:
-	case DODGE_STRATUS:
-	case SUZUKI_VITARA:
 	case MINIMAL_PINS:
 		// all basic settings are already set in prepareVoidConfiguration(), no need to set anything here
 		// nothing to do - we do it all in setBoardConfigurationOverrides

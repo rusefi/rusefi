@@ -30,7 +30,7 @@
  */
 typedef enum {
 	DEFAULT_FRANKENSO = ET_DEFAULT_FRANKENSO,
-	AUDI_AAN = 1,
+	MIATA_PROTEUS_TCU = 1,
 	/**
 	 * 1995 Dodge Neon
 	 * http://rusefi.com/forum/viewtopic.php?t=360
@@ -112,13 +112,13 @@ typedef enum {
 
 	VW_ABA = ET_VW_ABA,
 
-	DODGE_STRATUS = 33,
+	UNUSED_33 = 33,
 
-	DAIHATSU = 34,
+	UNUSED_34 = 34,
 
 	CAMARO_4 = ET_CAMARO,
 
-	SUZUKI_VITARA = 36,
+	UNUSED_36 = 36,
 
 	CHEVY_C20_1973 = 37,
 
