@@ -11,10 +11,9 @@ All notable user-facing or behavior-altering changes will be doucmented in this 
 ### Added
  -   High & low pressure fuel sensor channels
  -   Electronic throttle-style wastegate control found on some VW turbos (and VGTs)
+ -   Improved TLE8888 driver on microRusEfi 
 
 ## October 2020 Release - "Sausage Pizza Day"
-
-### Breaking Changes
 
 ### Added
  -   `iat` as FSIO variable to read intake air temperature
