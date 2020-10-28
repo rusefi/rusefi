@@ -1,7 +1,7 @@
 #include "global.h"
 #include "rusefi_enums.h"
 #include "rusefi_hw_enums.h"
-// was generated automatically by rusEfi tool  from rusefi_hw_enums.h // was generated automatically by rusEfi tool  from rusefi_enums.h // by enum2string.jar tool on Fri Oct 23 19:47:25 UTC 2020
+// was generated automatically by rusEfi tool  from rusefi_hw_enums.h // was generated automatically by rusEfi tool  from rusefi_enums.h // by enum2string.jar tool on Wed Oct 28 05:05:49 UTC 2020
 // see also gen_config_and_enums.bat
 
 
@@ -615,8 +615,6 @@ case LM_SPEED_DENSITY:
 }
 const char *getEngine_type_e(engine_type_e value){
 switch(value) {
-case AUDI_AAN:
-  return "AUDI_AAN";
 case BMW_E34:
   return "BMW_E34";
 case BMW_M73_F:
@@ -635,8 +633,6 @@ case CHEVY_C20_1973:
   return "CHEVY_C20_1973";
 case CITROEN_TU3JP:
   return "CITROEN_TU3JP";
-case DAIHATSU:
-  return "DAIHATSU";
 case DEFAULT_FRANKENSO:
   return "DEFAULT_FRANKENSO";
 case DODGE_NEON_1995:
@@ -645,8 +641,6 @@ case DODGE_NEON_2003_CRANK:
   return "DODGE_NEON_2003_CRANK";
 case DODGE_RAM:
   return "DODGE_RAM";
-case DODGE_STRATUS:
-  return "DODGE_STRATUS";
 case ETB_BENCH_ENGINE:
   return "ETB_BENCH_ENGINE";
 case FORD_ASPIRE_1996:
@@ -699,6 +693,8 @@ case MIATA_NA6_MAP:
   return "MIATA_NA6_MAP";
 case MIATA_NA6_VAF:
   return "MIATA_NA6_VAF";
+case MIATA_PROTEUS_TCU:
+  return "MIATA_PROTEUS_TCU";
 case MICRO_RUS_EFI:
   return "MICRO_RUS_EFI";
 case MINIMAL_PINS:
@@ -735,8 +731,6 @@ case SUBARUEJ20G_DEFAULTS:
   return "SUBARUEJ20G_DEFAULTS";
 case SUBARU_2003_WRX:
   return "SUBARU_2003_WRX";
-case SUZUKI_VITARA:
-  return "SUZUKI_VITARA";
 case TEST_33816:
   return "TEST_33816";
 case TEST_CIVIC_4_0_BOTH:
@@ -757,6 +751,12 @@ case TOYOTA_2JZ_GTE_VVTi:
   return "TOYOTA_2JZ_GTE_VVTi";
 case TOYOTA_JZS147:
   return "TOYOTA_JZS147";
+case UNUSED_33:
+  return "UNUSED_33";
+case UNUSED_34:
+  return "UNUSED_34";
+case UNUSED_36:
+  return "UNUSED_36";
 case VAG_18_TURBO:
   return "VAG_18_TURBO";
 case VW_ABA:
