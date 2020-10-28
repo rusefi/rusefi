@@ -9,6 +9,7 @@
 #include "vw_b6.h"
 #include "custom_engine.h"
 #include "table_helper.h"
+#include "map.h"
 
 EXTERN_CONFIG;
 
@@ -37,8 +38,19 @@ void setVwPassatB6(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 
 	// "26 - AN volt 2"
 	engineConfiguration->highPressureFuel.hwChannel = EFI_ADC_6;
+	// todo: calibration
+	engineConfiguration->highPressureFuel.v1 = 0.5; /* volts */;
+	engineConfiguration->highPressureFuel.value1 = 0.5;
+	engineConfiguration->highPressureFuel.v2 = 4.5; /* volts */;
+	engineConfiguration->highPressureFuel.value2 = 4.5;
+
 	// "19 - AN volt 4"
 	engineConfiguration->lowPressureFuel.hwChannel = EFI_ADC_12;
+	engineConfiguration->lowPressureFuel.v1 = 0.5; /* volts */;
+	engineConfiguration->lowPressureFuel.value1 = PSI2KPA(0);
+	engineConfiguration->lowPressureFuel.v2 = 4.5; /* volts */;
+	// todo: what's the proper calibration of this Bosch sensor? is it really 200psi?
+	engineConfiguration->lowPressureFuel.value2 = PSI2KPA(200);
 
 	CONFIG(isSdCardEnabled) = false;
 
