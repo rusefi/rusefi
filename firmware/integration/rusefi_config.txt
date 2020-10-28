@@ -1565,13 +1565,19 @@ end_struct
 #define GAUGE_NAME_ETB_DUTY "ETB Duty"
 
 #define GAUGE_NAME_FUEL_PRESSURE_LOW "Fuel pressure (low)"
+#define GAUGE_NAME_FUEL_PRESSURE_LOW_UNITS "kPa"
+
 #define GAUGE_NAME_FUEL_PRESSURE_HIGH "Fuel pressure (high)"
+#define GAUGE_NAME_FUEL_PRESSURE_HIGH_UNITS "bar"
 
 #define GAUGE_NAME_ACCEL_X "Acceleration: X"
 #define GAUGE_NAME_ACCEL_Y "Acceleration: Y"
 #define GAUGE_NAME_ACCEL_Z "Acceleration: Z"
 
 #define GAUGE_NAME_BARO_PRESSURE "Barometric pressure"
+
+#define GAUGE_NAME_OIL_PRESSURE "Oil Pressure"
+#define GAUGE_NAME_OIL_PRESSURE_UNITS "kPa"
 
 #define GAUGE_NAME_ECU_TEMPERATURE "ECU temperature"
 
