@@ -153,14 +153,8 @@ const char* getConfigurationName(engine_type_e engineType) {
 		return "BMWe34";
 	case VW_ABA:
 		return "VW_ABA";
-	case DODGE_STRATUS:
-		return "DODGE_STRATUS";
 	case SACHS:
 		return "SACHS";
-	case DAIHATSU:
-		return "DAIHATSU";
-	case SUZUKI_VITARA:
-		return "SUZUKI_VITARA";
 	case CAMARO_4:
 		return "CAMARO_4";
 	case CHEVY_C20_1973:

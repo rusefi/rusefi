@@ -698,3 +698,8 @@ void setMiataNB2_MRE_MAF(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 
 	engineConfiguration->fuelAlgorithm = LM_REAL_MAF;
 }
+
+void setMiataNB2_Proteus_TCU(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
+
+}
+
