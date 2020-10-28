@@ -56,7 +56,7 @@ float ClosedLoopFuelCellImpl::getLambdaError(DECLARE_ENGINE_PARAMETER_SIGNATURE)
 		return 0;
 	}
 
-	return lambda.Value - (ENGINE(engineState.targetAFR) / 14.7f);
+	return lambda.Value - ENGINE(engineState.targetLambda);
 }
 
 #define MAX_ADJ (0.25f)

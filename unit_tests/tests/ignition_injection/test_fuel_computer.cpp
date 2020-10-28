@@ -34,11 +34,11 @@ TEST(FuelComputer, getCycleFuel) {
 }
 
 TEST(FuelComputer, LambdaLookup) {
-	MockVp3d afrTable;
-	FuelComputer dut(afrTable);
+	MockVp3d lambdaTable;
+	FuelComputer dut(lambdaTable);
 
-	EXPECT_CALL(afrTable, getValue(1500, FloatEq(0.7f)))
-		.WillOnce(Return(14.7f));
+	EXPECT_CALL(lambdaTable, getValue(1500, FloatEq(0.7f)))
+		.WillOnce(Return(0.85f));
 
-	EXPECT_FLOAT_EQ(dut.getTargetLambda(1500, 0.7f), 1.0f);
+	EXPECT_FLOAT_EQ(dut.getTargetLambda(1500, 0.7f), 0.85f);
 }

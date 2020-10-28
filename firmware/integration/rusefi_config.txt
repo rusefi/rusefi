@@ -97,7 +97,7 @@ struct_no_prefix engine_configuration_s
 #define COMPOSITE_PACKET_COUNT 500
 #define COMPOSITE_PACKET_SIZE 5
 #define COMPOSITE_DATA_LENGTH @@COMPOSITE_PACKET_SIZE@@*@@COMPOSITE_PACKET_COUNT@@
-#define COMPOSITE_DATA_LENGTH_HALF @@COMPOSITE_DATA_LENGTH@@/2
+#define COMPOSITE_DATA_LENGTH_HALF 1250
 
 #define MAP_ANGLE_SIZE 8
 #define MAP_WINDOW_SIZE 8
@@ -175,12 +175,14 @@ struct_no_prefix engine_configuration_s
 #define PACK_ADD_TEMPERATURE 40
 #define PACK_MULT_MS 300
 #define PACK_MULT_AFR 1000
+#define PACK_MULT_LAMBDA 10000
 #define PACK_MULT_ANGLE 50
 #define PACK_MULT_VOLTAGE 1000
 #define PACK_MULT_MASS_FLOW 10
 #define TPS_1_BYTE_PACKING_MULT 2
 #define LOAD_1_BYTE_PACKING_MULT 2
 #define PACK_MULT_AFR_CFG 10
+#define PACK_MULT_LAMBDA_CFG 147
 #define PACK_MULT_FUEL_MASS 100
 #define FSIO_TABLE_8 8
 
@@ -205,7 +207,7 @@ struct_no_prefix engine_configuration_s
 
 custom fuel_table_t	4*@@FUEL_RPM_COUNT@@x@@FUEL_LOAD_COUNT@@ array,   F32,   @OFFSET@, [@@FUEL_RPM_COUNT@@x@@FUEL_LOAD_COUNT@@],"ms",      1,     0,      0.0,   500.0,   2
 custom ve_table_t 4*@@FUEL_RPM_COUNT@@x@@FUEL_LOAD_COUNT@@ array,   F32,   @OFFSET@, [@@FUEL_RPM_COUNT@@x@@FUEL_LOAD_COUNT@@],"%", 1, 0, 0, 999.0, 2
-custom afr_table_t @@FUEL_RPM_COUNT@@x@@FUEL_LOAD_COUNT@@ array,   U08,   @OFFSET@, [@@FUEL_RPM_COUNT@@x@@FUEL_LOAD_COUNT@@],"deg",	   {1/@@PACK_MULT_AFR_CFG@@},     0,        0,  25.0,     1 
+custom lambda_table_t @@FUEL_RPM_COUNT@@x@@FUEL_LOAD_COUNT@@ array,   U08,   @OFFSET@, [@@FUEL_RPM_COUNT@@x@@FUEL_LOAD_COUNT@@],"deg",	   {1/@@PACK_MULT_LAMBDA_CFG@@},     0,        0.6,  1.5,     2
 
 custom tcubinary_table_t @@TCU_GEAR_COUNT@@x@@TCU_SOLENOID_COUNT@@ array,   U08,   @OFFSET@, [@@TCU_GEAR_COUNT@@x@@TCU_SOLENOID_COUNT@@],"onoff", 1,     0,        0,  1,  0
 
@@ -1487,9 +1489,9 @@ ve_table_t veTable;
 float[FUEL_LOAD_COUNT] veLoadBins;;"kPa",	1,   0.0,        0,  400.0,   2
 float[FUEL_RPM_COUNT] veRpmBins;;"RPM",	   1,   0.0,        0,  18000.0, 2
 
-afr_table_t afrTable;
-float[FUEL_LOAD_COUNT] afrLoadBins;;"",	1,   0.0,        0,  500.0,   2
-float[FUEL_RPM_COUNT] afrRpmBins;;"RPM",	   1,   0.0,        0,  18000.0, 2
+lambda_table_t lambdaTable;
+float[FUEL_LOAD_COUNT] lambdaLoadBins;;"",	1,   0.0,        0,  500.0,   2
+float[FUEL_RPM_COUNT] lambdaRpmBins;;"RPM",	   1,   0.0,        0,  18000.0, 2
 
 ! ve_table_t ve2Table;
 ! float[FUEL_LOAD_COUNT] ve2LoadBins;;"kPa",	1,   0.0,        0,  500.0,   2
@@ -1612,7 +1614,7 @@ end_struct
 #define GAUGE_NAME_FUEL_INJ_DUTY "fuel: injector duty cycle"
 #define GAUGE_NAME_TCHARGE "fuel: SD tCharge"
 #define GAUGE_NAME_TARGET_AFR "fuel: target AFR"
-#define GAUGE_NAME_AFR "Air/Fuel Ratio"
+#define GAUGE_NAME_LAMBDA "Lambda"
 #define GAUGE_NAME_IAC "Idle Air Valve"
 
 #define GAUGE_NAME_DWELL_DUTY "dwell: coil duty cycle"

@@ -125,7 +125,7 @@ public class FuelTunePane {
         rightPanel.add(grid.panel);
 
         grid.panel.add(GaugesGridElement.read(uiContext, config.getChild("1"), Sensor.RPM));
-        grid.panel.add(GaugesGridElement.read(uiContext, config.getChild("2"), Sensor.AFR));
+        grid.panel.add(GaugesGridElement.read(uiContext, config.getChild("2"), Sensor.Lambda));
 
         JPanel middlePanel = new JPanel(new GridLayout(1, 2));
         middlePanel.add(veTable);
@@ -292,7 +292,7 @@ public class FuelTunePane {
                     return;
                 int rpm = (int) value;
                 double engineLoad = sc.getValue(Sensor.MAP);
-                double afr = sc.getValue(Sensor.AFR);
+                double afr = sc.getValue(Sensor.Lambda);
                 // todo: add UI for pre-conditions
                 double deltaTps = sc.getValue(Sensor.deltaTps);
                 double clt = sc.getValue(Sensor.CLT);

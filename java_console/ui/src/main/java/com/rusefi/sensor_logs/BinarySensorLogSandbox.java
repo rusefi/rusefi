@@ -28,7 +28,7 @@ public class BinarySensorLogSandbox {
                 Sensor.etbTarget,
                 Sensor.etb1DutyCycle,
                 Sensor.totalTriggerErrorCounter,
-                Sensor.AFR,
+                Sensor.Lambda,
                 Sensor.TARGET_AFR,
                 Sensor.FIRMWARE_VERSION,
                 Sensor.CLT);
