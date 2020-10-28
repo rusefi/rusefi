@@ -32,6 +32,9 @@ static void configureFluidPressure(LinearFunc& func, const linear_sensor_s& cfg)
 	func.configure(cfg.v1, val1, cfg.v2, val2, /*minOutput*/ -5, greaterOutput);
 }
 
+/**
+ * @param bandwidth Hertz, used by low pass filter in to analog subscribers
+ */
 static void initFluidPressure(LinearFunc& func, FunctionalSensor& sensor, const linear_sensor_s& cfg, float bandwidth) {
 	auto channel = cfg.hwChannel;
 
