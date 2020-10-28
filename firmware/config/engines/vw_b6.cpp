@@ -114,6 +114,8 @@ void setVwPassatB6(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	coolantControl->pin = TLE8888_PIN_5; // "3 - Lowside 2"
 
 
+	engineConfiguration->injector.flow = 300;
+
 	engineConfiguration->idle.solenoidPin = GPIO_UNASSIGNED;
 	engineConfiguration->fanPin = GPIO_UNASSIGNED;
 
