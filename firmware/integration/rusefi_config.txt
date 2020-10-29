@@ -1088,7 +1088,7 @@ custom pin_mode_e 1 bits,    U08,   @OFFSET@, [0:6], @@pin_mode_e_enum@@
 	float[CRANKING_CURVE_SIZE] crankingTpsBins;;"%",        1,     0,    0.0,    100.0,  2
 	
 	float tachPulseDuractionMs;;"ms",        1,     0,    0.0,    100.0,  2
-	int tachPulseTriggerIndex;+Trigger cycle index at which we start tach pulse (performance consideration);"index",     1,     0,    0.0,    360.0,  0
+	int unused1708;;"units", 1, 0, -20, 100, 0
 	
 	float wwaeTau;+Length of time the deposited wall fuel takes to dissipate after the start of acceleration. ;"Seconds",        1,     0,    0.0,    3.0,  2
 	pid_s alternatorControl;
