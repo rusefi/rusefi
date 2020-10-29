@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on hellen_cypress_gen_config.bat integration/rusefi_config.txt Wed Oct 28 04:17:44 UTC 2020
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on hellen_cypress_gen_config.bat integration/rusefi_config.txt Thu Oct 29 19:27:48 UTC 2020
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -2340,10 +2340,9 @@ struct engine_configuration_s {
 	 */
 	float tachPulseDuractionMs;
 	/**
-	 * Trigger cycle index at which we start tach pulse (performance consideration)
 	 * offset 1708
 	 */
-	int tachPulseTriggerIndex;
+	int unused1708;
 	/**
 	 * Length of time the deposited wall fuel takes to dissipate after the start of acceleration. 
 	 * offset 1712
@@ -3752,4 +3751,4 @@ struct persistent_config_s {
 typedef struct persistent_config_s persistent_config_s;
 
 // end
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on hellen_cypress_gen_config.bat integration/rusefi_config.txt Wed Oct 28 04:17:44 UTC 2020
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on hellen_cypress_gen_config.bat integration/rusefi_config.txt Thu Oct 29 19:27:48 UTC 2020

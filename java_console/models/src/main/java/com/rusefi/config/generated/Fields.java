@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEfi tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Wed Oct 28 04:17:22 UTC 2020
+// this file was generated automatically by rusEfi tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Thu Oct 29 19:27:26 UTC 2020
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -1159,6 +1159,7 @@ public class Fields {
 	public static final int servoOutputPins8_offset = 3147;
 	public static final int showHumanReadableWarning_offset = 976;
 	public static final int showSdCardWarning_offset = 76;
+	public static final int SIGNATURE_HASH = 1669026467;
 	public static final int silentTriggerError_offset = 1464;
 	public static final int slowAdcAlpha_offset = 2088;
 	public static final int sparkDwellRpmBins_offset = 332;
@@ -1233,7 +1234,6 @@ public class Fields {
 	public static final int tachPulseDuractionMs_offset = 1704;
 	public static final int tachPulseDurationAsDutyCycle_offset = 1464;
 	public static final int tachPulsePerRev_offset = 1775;
-	public static final int tachPulseTriggerIndex_offset = 1708;
 	public static final int targetVBatt_offset = 2024;
 	public static final int tChargeAirCoefMax_offset = 3868;
 	public static final int tChargeAirCoefMin_offset = 3864;
@@ -1427,7 +1427,7 @@ public class Fields {
 	public static final char TS_SD_R_COMMAND = 'r';
 	public static final char TS_SD_W_COMMAND = 'w';
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI 2020.10.28.all.2879625863";
+	public static final String TS_SIGNATURE = "rusEFI 2020.10.29.all.1669026467";
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final int TT_TT_60_2_VW = 20;
 	public static final int TT_TT_ONE = 18;
@@ -1450,6 +1450,7 @@ public class Fields {
 	public static final int unused1476b3_offset = 1476;
 	public static final int unused1476b8_offset = 1476;
 	public static final int unused15136_offset = 15196;
+	public static final int unused1708_offset = 1708;
 	public static final int unused2260_offset = 2260;
 	public static final int unused2432_offset = 2432;
 	public static final int unused244_1_offset = 2420;
@@ -2243,7 +2244,7 @@ public class Fields {
 	public static final Field MAPAVERAGINGSCHEDULINGATINDEX = Field.create("MAPAVERAGINGSCHEDULINGATINDEX", 1540, FieldType.INT);
 	public static final Field BAROCORRTABLE = Field.create("BAROCORRTABLE", 1576, FieldType.INT);
 	public static final Field TACHPULSEDURACTIONMS = Field.create("TACHPULSEDURACTIONMS", 1704, FieldType.FLOAT);
-	public static final Field TACHPULSETRIGGERINDEX = Field.create("TACHPULSETRIGGERINDEX", 1708, FieldType.INT);
+	public static final Field UNUSED1708 = Field.create("UNUSED1708", 1708, FieldType.INT);
 	public static final Field WWAETAU = Field.create("WWAETAU", 1712, FieldType.FLOAT);
 	public static final Field ALTERNATORCONTROL_PFACTOR = Field.create("ALTERNATORCONTROL_PFACTOR", 1716, FieldType.FLOAT);
 	public static final Field ALTERNATORCONTROL_IFACTOR = Field.create("ALTERNATORCONTROL_IFACTOR", 1720, FieldType.FLOAT);
@@ -3306,7 +3307,7 @@ public class Fields {
 	MAPAVERAGINGSCHEDULINGATINDEX,
 	BAROCORRTABLE,
 	TACHPULSEDURACTIONMS,
-	TACHPULSETRIGGERINDEX,
+	UNUSED1708,
 	WWAETAU,
 	ALTERNATORCONTROL_PFACTOR,
 	ALTERNATORCONTROL_IFACTOR,
