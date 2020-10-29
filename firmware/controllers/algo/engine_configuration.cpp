@@ -750,7 +750,6 @@ static void setDefaultEngineConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	initTemperatureCurve(IAT_FUEL_CORRECTION_CURVE, 1);
 
 	engineConfiguration->tachPulseDuractionMs = 4;
-	engineConfiguration->tachPulseTriggerIndex = 4;
 
 	engineConfiguration->auxPid[0].minValue = 10;
 	engineConfiguration->auxPid[0].maxValue = 90;
