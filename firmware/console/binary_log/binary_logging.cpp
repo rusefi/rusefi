@@ -38,6 +38,7 @@ static const LogField fields[] = {
 	{tsOutputChannels.vvtPosition, GAUGE_NAME_VVT, "deg", 1},
 	{tsOutputChannels.chargeAirMass, GAUGE_NAME_AIR_MASS, "g", 3},
 	{tsOutputChannels.currentTargetAfr, GAUGE_NAME_TARGET_AFR, "afr", 2},
+	{tsOutputChannels.targetLambda, GAUGE_NAME_TARGET_LAMBDA, "", 3},
 	{tsOutputChannels.fuelBase, GAUGE_NAME_FUEL_BASE, "ms", 3},
 	{tsOutputChannels.fuelRunning, GAUGE_NAME_FUEL_RUNNING, "ms", 3},
 	{tsOutputChannels.actualLastInjection, GAUGE_NAME_FUEL_LAST_INJECTION, "ms", 3},
