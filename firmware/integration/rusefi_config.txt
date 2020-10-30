@@ -1620,6 +1620,7 @@ end_struct
 #define GAUGE_NAME_FUEL_INJ_DUTY "fuel: injector duty cycle"
 #define GAUGE_NAME_TCHARGE "fuel: SD tCharge"
 #define GAUGE_NAME_TARGET_AFR "fuel: target AFR"
+#define GAUGE_NAME_TARGET_LAMBDA "fuel: target lambda"
 #define GAUGE_NAME_LAMBDA "Lambda"
 #define GAUGE_NAME_IAC "Idle Air Valve"
 

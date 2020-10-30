@@ -369,6 +369,7 @@ enable2ndByteCanID = false
 	rawHighFuelPressure   = scalar,  U16,     274, "V",{1/@@PACK_MULT_VOLTAGE@@}, 0
 	lowFuelPressure       = scalar,  S16,     276, "kpa", {1/@@PACK_MULT_PRESSURE@@}, 0
 	highFuelPressure      = scalar,  S16,     278, "bar", {1/@@PACK_MULT_HIGH_PRESSURE@@}, 0
+	targetLambda     = scalar,  U16,     280,      "",{1/@@PACK_MULT_LAMBDA@@},       0.0
 
 ;
 ; see TunerStudioOutputChannels struct
@@ -1156,6 +1157,7 @@ gaugeCategory = Knock
    entry = injectorDutyCycle,@@GAUGE_NAME_FUEL_INJ_DUTY@@,float,"%.3f"
    entry = coilDutyCycle,	@@GAUGE_NAME_DWELL_DUTY@@,	float,"%.3f"
    entry = currentTargetAfr,@@GAUGE_NAME_TARGET_AFR@@,	float,"%.3f"
+   entry = targetLambda, @@GAUGE_NAME_TARGET_LAMBDA@@,	float,"%.4f"
 
    entry = accelerationX,	@@GAUGE_NAME_ACCEL_X@@,	float,"%.2f", { LIS302DLCsPin != 0 }
    entry = accelerationY,	@@GAUGE_NAME_ACCEL_Y@@,	float,"%.2f", { LIS302DLCsPin != 0 }

@@ -617,6 +617,7 @@ void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels DECLARE_
 	// offset 112
 	tsOutputChannels->veValue = engine->engineState.currentVe;
 	tsOutputChannels->currentTargetAfr = ENGINE(engineState.targetAFR);
+	tsOutputChannels->targetLambda = ENGINE(engineState.targetLambda);
 
 	if (hasMapSensor(PASS_ENGINE_PARAMETER_SIGNATURE)) {
 		float mapValue = getMap(PASS_ENGINE_PARAMETER_SIGNATURE);
