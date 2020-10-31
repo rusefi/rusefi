@@ -1132,6 +1132,7 @@ gaugeCategory = Knock
    entry = TPS2Value,       @@GAUGE_NAME_TPS2@@,        float, "%.2f"
    entry = MAFValue,        @@GAUGE_NAME_MAF@@,         float,  "%.2f"
    entry = MAPValue,        @@GAUGE_NAME_MAP@@,         float,  "%.1f"
+   entry = AFRValue,        @@GAUGE_NAME_AFR@@,         float,  "%.2f"
    entry = lambdaValue,     @@GAUGE_NAME_LAMBDA@@,         float,  "%.2f"
    entry = VBatt,           @@GAUGE_NAME_VBAT@@,       float,  "%.2f"
    entry = engineLoad,	    @@GAUGE_NAME_ENGINE_LOAD@@, 	   float,  "%.1f"
