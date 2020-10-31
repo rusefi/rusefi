@@ -81,4 +81,5 @@ public:
 	multispark_state multispark;
 
 	float targetLambda = 0.0f;
+	float stoichiometricRatio = 0.0f;
 };

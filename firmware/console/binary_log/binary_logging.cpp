@@ -30,6 +30,7 @@ static const LogField fields[] = {
 	{tsOutputChannels.throttle2Position, GAUGE_NAME_TPS2, "%", 2},
 	{tsOutputChannels.pedalPosition, GAUGE_NAME_THROTTLE_PEDAL, "%", 2},
 	{tsOutputChannels.manifoldAirPressure, GAUGE_NAME_MAP, "kPa", 1},
+	{tsOutputChannels.airFuelRatio, GAUGE_NAME_AFR, "afr", 2},
 	{tsOutputChannels.lambda, GAUGE_NAME_LAMBDA, "", 3},
 	{tsOutputChannels.vBatt, GAUGE_NAME_VBAT, "v", 2},
 	{tsOutputChannels.oilPressure, GAUGE_NAME_OIL_PRESSURE, GAUGE_NAME_FUEL_PRESSURE_HIGH_UNITS, 0},
