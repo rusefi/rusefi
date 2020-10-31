@@ -210,15 +210,15 @@ enable2ndByteCanID = false
       tpsADC          = scalar,  U16,     24,      "ADC",    1,       0.0;
 
 ; air flow/mass measurments
-      MAFValue        = scalar,  U16,     26,        "V",,{1/@@PACK_MULT_VOLTAGE@@},,         0
+      MAFValue        = scalar,  U16,     26,        "V",{1/@@PACK_MULT_VOLTAGE@@},         0
       massAirFlowValue= scalar,  U16,     28,     "Kg/h", {1/@@PACK_MULT_MASS_FLOW@@},         0
       MAPValue        = scalar,  U16,     30,     "kPa",{1/@@PACK_MULT_PRESSURE@@},       0.0
       baroPressure    = scalar,  U16,     32,     "kPa",{1/@@PACK_MULT_PRESSURE@@},       0.0
-      lambdaValue     = scalar,  U16,     34,      "",,{1/@@PACK_MULT_LAMBDA@@},,       0.0
+      lambdaValue     = scalar,  U16,     34,      "",{1/@@PACK_MULT_LAMBDA@@},       0.0
       engineLoad      = scalar,  U16,     36,        "%",{1/@@PACK_MULT_PERCENT@@},       0.0 ; Blend of MAP and TPS, depends on algorithm
 
 ; misc sensors
-      VBatt           = scalar,	 U16,     38,        "V",,{1/@@PACK_MULT_VOLTAGE@@},,       0.0
+      VBatt           = scalar,	 U16,     38,        "V",{1/@@PACK_MULT_VOLTAGE@@},       0.0
       oilPressure     = scalar,  U16,     40,     "kPa",{1/@@PACK_MULT_PRESSURE@@},       0.0
       vvtPosition     = scalar,  U16,     42,      "deg",{1/@@PACK_MULT_ANGLE@@},         0
 
@@ -228,7 +228,7 @@ enable2ndByteCanID = false
 ; fuel math
       chargeAirMass   = scalar,  U16,     44,        "g",0.001,         0
       crankingFuelMs  = scalar,  U16,     46,     "mg",{1/@@PACK_MULT_FUEL_MASS@@},     0.0
-      currentTargetAfr= scalar,  U16,     48,    "ratio",,{1/@@PACK_MULT_AFR@@},,         0
+      currentTargetAfr= scalar,  U16,     48,    "ratio",{1/@@PACK_MULT_AFR@@},         0
       baseFuel        = scalar,  U16,     50,     "mg",{1/@@PACK_MULT_FUEL_MASS@@},       0
       fuelRunning     = scalar,  U16,     52,     "mg",{1/@@PACK_MULT_FUEL_MASS@@},       0
       actualLastInjection=scalar,U16,     54,     "ms",{1/@@PACK_MULT_MS@@},     0.0
@@ -370,7 +370,7 @@ enable2ndByteCanID = false
 	lowFuelPressure       = scalar,  S16,     276, "kpa", {1/@@PACK_MULT_PRESSURE@@}, 0
 	highFuelPressure      = scalar,  S16,     278, "bar", {1/@@PACK_MULT_HIGH_PRESSURE@@}, 0
 	targetLambda     = scalar,  U16,     280,      "",{1/@@PACK_MULT_LAMBDA@@},       0.0
-	AFRValue        = scalar,  U16,     282,      "AFR",,{1/@@PACK_MULT_AFR@@},,       0.0
+	AFRValue        = scalar,  U16,     282,      "AFR",{1/@@PACK_MULT_AFR@@},       0.0
 
 ;
 ; see TunerStudioOutputChannels struct
