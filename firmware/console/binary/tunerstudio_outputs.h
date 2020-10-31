@@ -257,8 +257,9 @@ typedef struct {
 	scaled_high_pressure highFuelPressure;	// 278
 
 	scaled_lambda targetLambda; // 280
+	scaled_afr airFuelRatio; // 282
 
-	uint8_t unusedAtTheEnd[6]; // we have some unused bytes to allow compatible TS changes
+	uint8_t unusedAtTheEnd[4]; // we have some unused bytes to allow compatible TS changes
 
 	// Temporary - will remove soon
 	TsDebugChannels* getDebugChannels() {
