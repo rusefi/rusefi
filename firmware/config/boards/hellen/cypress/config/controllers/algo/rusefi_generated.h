@@ -609,6 +609,7 @@
 #define GAUGE_NAME_ACCEL_X "Acceleration: X"
 #define GAUGE_NAME_ACCEL_Y "Acceleration: Y"
 #define GAUGE_NAME_ACCEL_Z "Acceleration: Z"
+#define GAUGE_NAME_AFR "Air/Fuel Ratio"
 #define GAUGE_NAME_AIR_FLOW "MAF air flow"
 #define GAUGE_NAME_AIR_MASS "air mass"
 #define GAUGE_NAME_BARO_PRESSURE "Barometric pressure"
@@ -1204,8 +1205,8 @@
 #define showHumanReadableWarning_offset 976
 #define showSdCardWarning_offset 76
 #define SIGNATURE_BOARD hellen_cypress
-#define SIGNATURE_DATE 2020.10.30
-#define SIGNATURE_HASH 4229790604
+#define SIGNATURE_DATE 2020.10.31
+#define SIGNATURE_HASH 2270023730
 #define silentTriggerError_offset 1464
 #define slowAdcAlpha_offset 2088
 #define sparkDwellRpmBins_offset 332
@@ -1523,7 +1524,7 @@
 #define ts_show_spi true
 #define ts_show_trigger_comparator false
 #define ts_show_tunerstudio_port true
-#define TS_SIGNATURE "rusEFI 2020.10.30.hellen_cypress.4229790604"
+#define TS_SIGNATURE "rusEFI 2020.10.31.hellen_cypress.2270023730"
 #define TS_SINGLE_WRITE_COMMAND 'W'
 #define TS_SINGLE_WRITE_COMMAND_char W
 #define TS_TEST_COMMAND 't' // 0x74
