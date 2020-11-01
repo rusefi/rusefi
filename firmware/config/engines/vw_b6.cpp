@@ -38,11 +38,14 @@ void setVwPassatB6(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 
 	// "26 - AN volt 2"
 	engineConfiguration->highPressureFuel.hwChannel = EFI_ADC_6;
+	/**
+	 * PSS-140
+	 */
 	// todo: calibration
 	engineConfiguration->highPressureFuel.v1 = 0.5; /* volts */;
-	engineConfiguration->highPressureFuel.value1 = 0.5;
+	engineConfiguration->highPressureFuel.value1 = 0;
 	engineConfiguration->highPressureFuel.v2 = 4.5; /* volts */;
-	engineConfiguration->highPressureFuel.value2 = 4.5;
+	engineConfiguration->highPressureFuel.value2 = BAR2KPA(140);
 
 	// "19 - AN volt 4"
 	engineConfiguration->lowPressureFuel.hwChannel = EFI_ADC_12;
