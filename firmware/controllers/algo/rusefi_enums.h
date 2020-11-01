@@ -375,6 +375,7 @@ typedef enum {
 	ADC_OFF = 0,
 	ADC_SLOW = 1,
 	ADC_FAST = 2,
+	ADC_AUX = 3,
 
 	Force_4_bytes_size_adc_channel_mode = ENUM_32_BITS,
 } adc_channel_mode_e;

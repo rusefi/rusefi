@@ -265,7 +265,16 @@ typedef enum __attribute__ ((__packed__)) {
 	EFI_ADC_14 = 15, // PC4
 	EFI_ADC_15 = 16, // PC5
 
-	EFI_ADC_TEMP_SENSOR = 17, // Internal temp sensor
+	EFI_ADC3_4 = 17, // PF6
+	EFI_ADC3_5 = 18, // PF7
+	EFI_ADC3_6 = 19, // PF8
+	EFI_ADC3_7 = 20, // PF9
+	EFI_ADC3_8 = 21, // PF10
+	EFI_ADC3_9 = 22, // PF3
+	EFI_ADC3_14 = 23, // PF4
+	EFI_ADC3_15 = 24, // PF5
+
+	EFI_ADC_TEMP_SENSOR = 25, // Internal temp sensor
 
 	EFI_ADC_ERROR = 50,
 } adc_channel_e;
