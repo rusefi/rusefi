@@ -1,7 +1,7 @@
 #include "global.h"
 #include "rusefi_enums.h"
 #include "rusefi_hw_enums.h"
-// was generated automatically by rusEfi tool  from rusefi_hw_enums.h // was generated automatically by rusEfi tool  from rusefi_enums.h // by enum2string.jar tool on Sun Sep 06 18:55:36 MSK 2020
+// was generated automatically by rusEfi tool  from rusefi_hw_enums.h // was generated automatically by rusEfi tool  from rusefi_enums.h // by enum2string.jar tool on Sun Nov 01 16:41:39 MSK 2020
 // see also gen_config_and_enums.bat
 
 
@@ -97,6 +97,8 @@ case EFI_ADC_TEMP_SENSOR:
 }
 const char *getAdc_channel_mode_e(adc_channel_mode_e value){
 switch(value) {
+case ADC_AUX:
+  return "ADC_AUX";
 case ADC_FAST:
   return "ADC_FAST";
 case ADC_OFF:
