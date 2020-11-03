@@ -34,7 +34,7 @@
 //#include "usb_msd.h"
 
 #include "AdcConfiguration.h"
-#include "idle_thread.h"
+#include "idle_hardware.h"
 #include "mcp3208.h"
 #include "hip9011.h"
 #include "histogram.h"
@@ -406,7 +406,7 @@ void applyNewHardwareSettings(void) {
 
 #if EFI_IDLE_CONTROL
 	if (isIdleRestartNeeded) {
-		 initIdleHardware();
+		 initIdleHardware(sharedLogger);
 	}
 #endif
 
