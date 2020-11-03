@@ -8,11 +8,10 @@
 #include "engine_test_helper.h"
 
 TEST(cranking, testFasterEngineSpinningUp) {
-	printf("*************************************************** testFasterEngineSpinningUp\r\n");
-
 	WITH_ENGINE_TEST_HELPER(TEST_ENGINE);
 	// turn on FasterEngineSpinUp mode
 	engineConfiguration->isFasterEngineSpinUpEnabled = true;
+	engineConfiguration->cranking.baseFuel = 12;
 
 	// set ignition mode
 	engineConfiguration->ignitionMode = IM_INDIVIDUAL_COILS;
