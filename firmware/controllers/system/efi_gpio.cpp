@@ -438,6 +438,13 @@ void initOutputPins(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	enginePins.secondIdleSolenoidPin.initPin("Idle Valve#2", CONFIG(secondSolenoidPin));
 	enginePins.alternatorPin.initPin("Alternator control", CONFIG(alternatorControlPin));
 
+	enginePins.triggerDecoderErrorPin.initPin("led: trigger debug", CONFIG(triggerErrorPin),
+			&CONFIG(triggerErrorPinMode));
+
+#if EFI_SHAFT_POSITION_INPUT
+	// todo: migrate remaining OutputPin to RegisteredOutputPin in order to get consistent dynamic pin init/deinit
+	enginePins.debugTriggerSync.initPin("debug: sync", CONFIG(debugTriggerSync));
+#endif // EFI_SHAFT_POSITION_INPUT
 
 	enginePins.o2heater.initPin("O2 heater", CONFIG(o2heaterPin));
 
