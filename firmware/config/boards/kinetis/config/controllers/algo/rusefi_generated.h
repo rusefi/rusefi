@@ -59,7 +59,7 @@
 #define alternatorControl_periodMs_offset 1730
 #define alternatorControl_pFactor_offset 1716
 #define alternatorControlPin_offset 665
-#define alternatorControlPinMode_offset 542
+#define alternatorControlPinMode_offset 666
 #define alternatorOffAboveTps_offset 2028
 #define alternatorPwmFrequency_offset 2256
 #define ambiguousOperationMode_offset 488
@@ -156,7 +156,7 @@
 #define BOOST_LOAD_COUNT 8
 #define BOOST_RPM_COUNT 8
 #define boostControlPin_offset 988
-#define boostControlPinMode_offset 541
+#define boostControlPinMode_offset 989
 #define boostCutPressure_offset 2132
 #define boostPid_dFactor_offset 1000
 #define boostPid_iFactor_offset 996
@@ -1208,7 +1208,7 @@
 #define showSdCardWarning_offset 76
 #define SIGNATURE_BOARD kin
 #define SIGNATURE_DATE 2020.11.03
-#define SIGNATURE_HASH 1981466823
+#define SIGNATURE_HASH 2737856072
 #define silentTriggerError_offset 1464
 #define slowAdcAlpha_offset 2088
 #define sparkDwellRpmBins_offset 332
@@ -1526,7 +1526,7 @@
 #define ts_show_spi true
 #define ts_show_trigger_comparator true
 #define ts_show_tunerstudio_port true
-#define TS_SIGNATURE "rusEFI 2020.11.03.kin.1981466823"
+#define TS_SIGNATURE "rusEFI 2020.11.03.kin.2737856072"
 #define TS_SINGLE_WRITE_COMMAND 'W'
 #define TS_SINGLE_WRITE_COMMAND_char W
 #define TS_TEST_COMMAND 't' // 0x74
@@ -1561,6 +1561,8 @@
 #define unused2508_offset 2508
 #define unused2536_offset 2536
 #define unused3328_offset 3328
+#define unused541_offset 541
+#define unused542_offset 542
 #define unused6312_offset 6312
 #define unused744b25_offset 744
 #define unused744b4_offset 744
