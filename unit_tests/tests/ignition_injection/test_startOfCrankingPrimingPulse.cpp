@@ -10,6 +10,8 @@
 TEST(engine, testPlainCrankingWithoutAdvancedFeatures) {
 	WITH_ENGINE_TEST_HELPER(TEST_ENGINE);
 
+	engineConfiguration->cranking.baseFuel = 12;
+
 	setupSimpleTestEngineWithMafAndTT_ONE_trigger(&eth);
 	ASSERT_EQ( 0,  GET_RPM()) << "RPM=0";
 

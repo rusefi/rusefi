@@ -110,9 +110,7 @@ void setMazdaMiata2003EngineConfigurationNaFuelRail(DECLARE_CONFIG_PARAMETER_SIG
 
 	setEgoSensor(ES_14Point7_Free PASS_CONFIG_PARAMETER_SUFFIX);
 
-
-	// set cranking_fuel 9
-	engineConfiguration->cranking.baseFuel = 9; // higher value for return system NA conversion since lower fuel pressure
+	engineConfiguration->cranking.baseFuel = 27; // higher value for return system NA conversion since lower fuel pressure
 	engineConfiguration->vbattDividerCoeff = 9.30; // actual value on my new board
 
 	engineConfiguration->useConstantDwellDuringCranking = true;
