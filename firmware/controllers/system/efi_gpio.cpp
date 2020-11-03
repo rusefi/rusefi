@@ -196,7 +196,7 @@ void EnginePins::unregisterPins() {
 #endif /* EFI_PROD_CODE */
 }
 
-void EnginePins::startPins() {
+void EnginePins::startPins(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 #if EFI_ENGINE_CONTROL
 	startInjectionPins();
 	startIgnitionPins();
