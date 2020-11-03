@@ -776,6 +776,8 @@
 #define hip9011PrescalerAndSDO_offset 324
 #define hip9011SpiDevice_offset 540
 #define hipOutputChannel_offset 1468
+#define hpfpValvePin_offset 2130
+#define hpfpValvePinMode_offset 2131
 #define HW_MAX_ADC_INDEX 17
 #define IAC_PID_MULT_SIZE 8
 #define iacByTpsTaper_offset 2038
@@ -1205,8 +1207,8 @@
 #define showHumanReadableWarning_offset 976
 #define showSdCardWarning_offset 76
 #define SIGNATURE_BOARD all
-#define SIGNATURE_DATE 2020.10.31
-#define SIGNATURE_HASH 1320974065
+#define SIGNATURE_DATE 2020.11.03
+#define SIGNATURE_HASH 1004388977
 #define silentTriggerError_offset 1464
 #define slowAdcAlpha_offset 2088
 #define sparkDwellRpmBins_offset 332
@@ -1524,7 +1526,7 @@
 #define ts_show_spi true
 #define ts_show_trigger_comparator false
 #define ts_show_tunerstudio_port true
-#define TS_SIGNATURE "rusEFI 2020.10.31.all.1320974065"
+#define TS_SIGNATURE "rusEFI 2020.11.03.all.1004388977"
 #define TS_SINGLE_WRITE_COMMAND 'W'
 #define TS_SINGLE_WRITE_COMMAND_char W
 #define TS_TEST_COMMAND 't' // 0x74
@@ -1574,7 +1576,6 @@
 #define unused_1484_bit_30_offset 1476
 #define unused_1484_bit_31_offset 1476
 #define unused_alFIn_offset 4024
-#define unused_former_warmup_target_afr_offset 2130
 #define unusedAt724_offset 724
 #define unusedAtOldBoardConfigurationEnd_offset 1204
 #define unusedAuxVoltage1_TODO_332_offset 2713
