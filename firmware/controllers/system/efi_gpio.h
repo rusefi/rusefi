@@ -143,7 +143,7 @@ private:
 class EnginePins {
 public:
 	EnginePins();
-	void startPins();
+	void startPins(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 	void reset();
 	bool stopPins();
 	void unregisterPins();
