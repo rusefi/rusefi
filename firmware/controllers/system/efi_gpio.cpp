@@ -196,6 +196,12 @@ void EnginePins::unregisterPins() {
 #endif /* EFI_PROD_CODE */
 }
 
+#define initIfPinOrModeChanged(output, name, pin, pinMode) \
+	if (isPinOrModeChanged(pin, pinMode)) { \
+		output.initPin(name, CONFIG(pin), &CONFIG(pinMode)); \
+	}
+
+
 void EnginePins::startPins(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 #if EFI_ENGINE_CONTROL
 	startInjectionPins();
@@ -206,10 +212,10 @@ void EnginePins::startPins(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	starterControl.initPin("Starter control", CONFIG(starterControlPin));
 #endif /* EFI_ENGINE_CONTROL */
 
-	mainRelay.initPin("Main relay", CONFIG(mainRelayPin), &CONFIG(mainRelayPinMode));
+	initIfPinOrModeChanged(mainRelay, "Main relay", mainRelayPin, mainRelayPinMode);
 
-	fanRelay.initPin("Fan", CONFIG(fanPin), &CONFIG(fanPinMode));
-	acRelay.initPin("A/C relay", CONFIG(acRelayPin), &CONFIG(acRelayPinMode));
+	initIfPinOrModeChanged(fanRelay, "Fan", fanPin, fanPinMode);
+	initIfPinOrModeChanged(acRelay, "A/C relay", acRelayPin, acRelayPinMode);
 	// todo: should we move this code closer to the fuel pump logic?
 	fuelPumpRelay.initPin("Fuel pump", CONFIG(fuelPumpPin), &CONFIG(fuelPumpPinMode));
 	boostPin.initPin("Boost", CONFIG(boostControlPin));
