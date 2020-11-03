@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEfi tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Tue Nov 03 15:52:58 UTC 2020
+// this file was generated automatically by rusEfi tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Tue Nov 03 16:38:56 UTC 2020
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -58,7 +58,7 @@ public class Fields {
 	public static final int alternatorControl_periodMs_offset = 1730;
 	public static final int alternatorControl_pFactor_offset = 1716;
 	public static final int alternatorControlPin_offset = 665;
-	public static final int alternatorControlPinMode_offset = 666;
+	public static final int alternatorControlPinMode_offset = 542;
 	public static final int alternatorOffAboveTps_offset = 2028;
 	public static final int alternatorPwmFrequency_offset = 2256;
 	public static final int ambiguousOperationMode_offset = 488;
@@ -153,7 +153,7 @@ public class Fields {
 	public static final int BOOST_LOAD_COUNT = 8;
 	public static final int BOOST_RPM_COUNT = 8;
 	public static final int boostControlPin_offset = 988;
-	public static final int boostControlPinMode_offset = 989;
+	public static final int boostControlPinMode_offset = 541;
 	public static final int boostCutPressure_offset = 2132;
 	public static final int boostPid_dFactor_offset = 1000;
 	public static final int boostPid_iFactor_offset = 996;
@@ -1163,7 +1163,6 @@ public class Fields {
 	public static final int servoOutputPins8_offset = 3147;
 	public static final int showHumanReadableWarning_offset = 976;
 	public static final int showSdCardWarning_offset = 76;
-	public static final int SIGNATURE_HASH = 1004388977;
 	public static final int silentTriggerError_offset = 1464;
 	public static final int slowAdcAlpha_offset = 2088;
 	public static final int sparkDwellRpmBins_offset = 332;
@@ -1431,7 +1430,7 @@ public class Fields {
 	public static final char TS_SD_R_COMMAND = 'r';
 	public static final char TS_SD_W_COMMAND = 'w';
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI 2020.11.03.all.1004388977";
+	public static final String TS_SIGNATURE = "rusEFI 2020.11.03.all.4009186558";
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final int TT_TT_60_2_VW = 20;
 	public static final int TT_TT_ONE = 18;
@@ -1463,8 +1462,6 @@ public class Fields {
 	public static final int unused2508_offset = 2508;
 	public static final int unused2536_offset = 2536;
 	public static final int unused3328_offset = 3328;
-	public static final int unused541_offset = 541;
-	public static final int unused542_offset = 542;
 	public static final int unused6312_offset = 6312;
 	public static final int unused744b25_offset = 744;
 	public static final int unused744b4_offset = 744;
@@ -1726,8 +1723,9 @@ public class Fields {
 	public static final Field TRIGGER_CUSTOMTOTALTOOTHCOUNT = Field.create("TRIGGER_CUSTOMTOTALTOOTHCOUNT", 532, FieldType.INT);
 	public static final Field TRIGGER_CUSTOMSKIPPEDTOOTHCOUNT = Field.create("TRIGGER_CUSTOMSKIPPEDTOOTHCOUNT", 536, FieldType.INT);
 	public static final Field HIP9011SPIDEVICE = Field.create("HIP9011SPIDEVICE", 540, FieldType.INT8);
-	public static final Field UNUSED541 = Field.create("UNUSED541", 541, FieldType.INT8);
-	public static final Field UNUSED542 = Field.create("UNUSED542", 542, FieldType.INT8);
+	public static final String[] pin_output_mode_e = {"default", "default inverted", "open collector", "open collector inverted"};
+	public static final Field BOOSTCONTROLPINMODE = Field.create("BOOSTCONTROLPINMODE", 541, FieldType.INT8, pin_output_mode_e);
+	public static final Field ALTERNATORCONTROLPINMODE = Field.create("ALTERNATORCONTROLPINMODE", 542, FieldType.INT8, pin_output_mode_e);
 	public static final Field MAFADCCHANNEL = Field.create("MAFADCCHANNEL", 543, FieldType.INT8, adc_channel_e);
 	public static final Field GLOBALFUELCORRECTION = Field.create("GLOBALFUELCORRECTION", 544, FieldType.FLOAT);
 	public static final Field ADCVCC = Field.create("ADCVCC", 548, FieldType.FLOAT);
@@ -1745,7 +1743,6 @@ public class Fields {
 	public static final Field THROTTLEPEDALPOSITIONADCCHANNEL = Field.create("THROTTLEPEDALPOSITIONADCCHANNEL", 580, FieldType.INT8, adc_channel_e);
 	public static final String[] brain_pin_e = {"NONE", "INVALID", "PA0", "PA1", "PA2", "PA3", "PA4", "PA5", "PA6", "PA7", "PA8", "PA9", "PA10", "PA11", "PA12", "PA13", "PA14", "PA15", "PB0", "PB1", "PB2", "PB3", "PB4", "PB5", "PB6", "PB7", "PB8", "PB9", "PB10", "PB11", "PB12", "PB13", "PB14", "PB15", "PC0", "PC1", "PC2", "PC3", "PC4", "PC5", "PC6", "PC7", "PC8", "PC9", "PC10", "PC11", "PC12", "PC13", "PC14", "PC15", "PD0", "PD1", "PD2", "PD3", "PD4", "PD5", "PD6", "PD7", "PD8", "PD9", "PD10", "PD11", "PD12", "PD13", "PD14", "PD15", "PE0", "PE1", "PE2", "PE3", "PE4", "PE5", "PE6","PE7","PE8","PE9","PE10","PE11","PE12","PE13","PE14","PE15", "PF0","PF1","PF2","PF3","PF4","PF5","PF6","PF7","PF8","PF9","PF10","PF11","PF12","PF13","PF14","PF15", "PG0","PG1","PG2","PG3","PG4","PG5","PG6","PG7","PG8","PG9","PG10","PG11","PG12","PG13","PG14","PG15", "PH0","PH1","PH2","PH3","PH4","PH5","PH6","PH7","PH8","PH9","PH10","PH11","PH12","PH13","PH14","PH15","INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID"};
 	public static final Field TLE6240_CS = Field.create("TLE6240_CS", 581, FieldType.INT8, brain_pin_e);
-	public static final String[] pin_output_mode_e = {"default", "default inverted", "open collector", "open collector inverted"};
 	public static final Field TLE6240_CSPINMODE = Field.create("TLE6240_CSPINMODE", 582, FieldType.INT8, pin_output_mode_e);
 	public static final String[] switch_input_pin_e = {"NONE", "INVALID", "PA0", "PA1", "PA2", "PA3", "PA4", "PA5", "PA6", "PA7", "PA8", "PA9", "PA10", "PA11", "PA12", "PA13", "PA14", "PA15", "PB0", "PB1", "PB2", "PB3", "PB4", "PB5", "PB6", "PB7", "PB8", "PB9", "PB10", "PB11", "PB12", "PB13", "PB14", "PB15", "PC0", "PC1", "PC2", "PC3", "PC4", "PC5", "PC6", "PC7", "PC8", "PC9", "PC10", "PC11", "PC12", "PC13", "PC14", "PC15", "PD0", "PD1", "PD2", "PD3", "PD4", "PD5", "PD6", "PD7", "PD8", "PD9", "PD10", "PD11", "PD12", "PD13", "PD14", "PD15", "PE0", "PE1", "PE2", "PE3", "PE4", "PE5", "PE6","PE7","PE8","PE9","PE10","PE11","PE12","PE13","PE14","PE15", "PF0","PF1","PF2","PF3","PF4","PF5","PF6","PF7","PF8","PF9","PF10","PF11","PF12","PF13","PF14","PF15", "PG0","PG1","PG2","PG3","PG4","PG5","PG6","PG7","PG8","PG9","PG10","PG11","PG12","PG13","PG14","PG15", "PH0","PH1","PH2","PH3","PH4","PH5","PH6","PH7","PH8","PH9","PH10","PH11","PH12","PH13","PH14","PH15","INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID"};
 	public static final Field THROTTLEPEDALUPPIN = Field.create("THROTTLEPEDALUPPIN", 583, FieldType.INT8, switch_input_pin_e);
@@ -2802,8 +2799,8 @@ public class Fields {
 	TRIGGER_CUSTOMTOTALTOOTHCOUNT,
 	TRIGGER_CUSTOMSKIPPEDTOOTHCOUNT,
 	HIP9011SPIDEVICE,
-	UNUSED541,
-	UNUSED542,
+	BOOSTCONTROLPINMODE,
+	ALTERNATORCONTROLPINMODE,
 	MAFADCCHANNEL,
 	GLOBALFUELCORRECTION,
 	ADCVCC,

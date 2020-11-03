@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Tue Nov 03 15:53:08 UTC 2020
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Tue Nov 03 16:39:10 UTC 2020
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -1024,11 +1024,11 @@ struct engine_configuration_s {
 	/**
 	 * offset 541
 	 */
-	uint8_t unused541;
+	pin_output_mode_e boostControlPinMode;
 	/**
 	 * offset 542
 	 */
-	uint8_t unused542;
+	pin_output_mode_e alternatorControlPinMode;
 	/**
 	 * See hasMafSensor
 	 * offset 543
@@ -3755,4 +3755,4 @@ struct persistent_config_s {
 typedef struct persistent_config_s persistent_config_s;
 
 // end
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Tue Nov 03 15:53:08 UTC 2020
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Tue Nov 03 16:39:10 UTC 2020
