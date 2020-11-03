@@ -201,6 +201,11 @@ void EnginePins::unregisterPins() {
 		output.initPin(name, CONFIG(pin), &CONFIG(pinMode)); \
 	}
 
+#define initIfPinChanged(output, name, pin) \
+	if (isConfigurationChanged(pin)) { \
+		output.initPin(name, CONFIG(pin)); \
+	}
+
 
 void EnginePins::startPins(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 #if EFI_ENGINE_CONTROL
@@ -217,15 +222,15 @@ void EnginePins::startPins(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	initIfPinOrModeChanged(fanRelay, "Fan", fanPin, fanPinMode);
 	initIfPinOrModeChanged(acRelay, "A/C relay", acRelayPin, acRelayPinMode);
 	// todo: should we move this code closer to the fuel pump logic?
-	fuelPumpRelay.initPin("Fuel pump", CONFIG(fuelPumpPin), &CONFIG(fuelPumpPinMode));
-	boostPin.initPin("Boost", CONFIG(boostControlPin));
+	initIfPinOrModeChanged(fuelPumpRelay, "Fuel pump", fuelPumpPin, fuelPumpPinMode);
+	initIfPinChanged(boostPin, "Boost", boostControlPin);
 
-	idleSolenoidPin.initPin("Idle Valve", CONFIG(idle).solenoidPin);
-	secondIdleSolenoidPin.initPin("Idle Valve#2", CONFIG(secondSolenoidPin));
-	alternatorPin.initPin("Alternator control", CONFIG(alternatorControlPin));
+	initIfPinChanged(idleSolenoidPin, "Idle Valve", idle.solenoidPin);
+	initIfPinChanged(secondIdleSolenoidPin, "Idle Valve#2", secondSolenoidPin);
+	initIfPinChanged(alternatorPin, "Alternator control", alternatorControlPin);
 
-	triggerDecoderErrorPin.initPin("led: trigger debug", CONFIG(triggerErrorPin),
-			&CONFIG(triggerErrorPinMode));
+	initIfPinOrModeChanged(triggerDecoderErrorPin, "led: trigger debug", triggerErrorPin,
+			triggerErrorPinMode);
 
 }
 
