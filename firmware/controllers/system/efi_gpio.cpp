@@ -84,6 +84,7 @@ void RegisteredOutputPin::unregister() {
 
 EnginePins::EnginePins() :
 		mainRelay("mainRelay", CONFIG_PIN_OFFSETS(mainRelay)),
+		hpfpValve("hpfpValve", CONFIG_PIN_OFFSETS(hpfpValve)),
 		starterControl("starterControl", CONFIG_PIN_OFFSETS(starterControl)),
 		starterRelayDisable("starterRelayDisable", CONFIG_PIN_OFFSETS(starterRelayDisable)),
 		fanRelay("fanRelay", CONFIG_PIN_OFFSETS(fan)),

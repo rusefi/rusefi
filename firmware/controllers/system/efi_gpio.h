@@ -148,6 +148,10 @@ public:
 	bool stopPins();
 	void unregisterPins();
 	RegisteredOutputPin mainRelay;
+	/**
+	 * High Pressure Fuel Pump valve control
+	 */
+	RegisteredOutputPin hpfpValve;
 	// this one cranks engine
 	RegisteredOutputPin starterControl;
 	// this one prevents driver from cranking engine
