@@ -155,7 +155,7 @@ public:
 	RegisteredOutputPin mainRelay;
 	// this one cranks engine
 	RegisteredOutputPin starterControl;
-	// this one prevents driver from cranknig engine
+	// this one prevents driver from cranking engine
 	RegisteredOutputPin starterRelayDisable;
 
 	RegisteredOutputPin fanRelay;
