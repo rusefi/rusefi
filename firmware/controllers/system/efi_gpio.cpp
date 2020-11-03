@@ -84,6 +84,7 @@ void RegisteredOutputPin::unregister() {
 
 EnginePins::EnginePins() :
 		mainRelay("mainRelay", CONFIG_PIN_OFFSETS(mainRelay)),
+		hpfpValve("hpfpValve", CONFIG_PIN_OFFSETS(hpfpValve)),
 		starterControl("starterControl", CONFIG_PIN_OFFSETS(starterControl)),
 		starterRelayDisable("starterRelayDisable", CONFIG_PIN_OFFSETS(starterRelayDisable)),
 		fanRelay("fanRelay", CONFIG_PIN_OFFSETS(fan)),
@@ -170,6 +171,9 @@ bool EnginePins::stopPins() {
 }
 
 void EnginePins::unregisterPins() {
+	stopInjectionPins();
+    stopIgnitionPins();
+
 #if EFI_ELECTRONIC_THROTTLE_BODY
 	unregisterEtbPins();
 #endif /* EFI_ELECTRONIC_THROTTLE_BODY */
@@ -193,10 +197,36 @@ void EnginePins::unregisterPins() {
 #endif /* EFI_PROD_CODE */
 }
 
-void EnginePins::startPins() {
+#define initIfPinOrModeChanged(output, name, pin, pinMode) \
+	if (isPinOrModeChanged(pin, pinMode)) { \
+		output.initPin(name, CONFIG(pin), &CONFIG(pinMode)); \
+	}
+
+void EnginePins::startPins(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+#if EFI_ENGINE_CONTROL
 	startInjectionPins();
 	startIgnitionPins();
 	startAuxValves();
+
+	starterRelayDisable.initPin("Starter disable", CONFIG(starterRelayDisablePin), &CONFIG(starterRelayDisablePinMode));
+	starterControl.initPin("Starter control", CONFIG(starterControlPin));
+#endif /* EFI_ENGINE_CONTROL */
+
+	initIfPinOrModeChanged(mainRelay, "Main relay", mainRelayPin, mainRelayPinMode);
+
+	initIfPinOrModeChanged(fanRelay, "Fan", fanPin, fanPinMode);
+	initIfPinOrModeChanged(acRelay, "A/C relay", acRelayPin, acRelayPinMode);
+	// todo: should we move this code closer to the fuel pump logic?
+	initIfPinOrModeChanged(fuelPumpRelay, "Fuel pump", fuelPumpPin, fuelPumpPinMode);
+	initIfPinOrModeChanged(boostPin, "Boost", boostControlPin, boostControlPinMode);
+
+	initIfPinOrModeChanged(idleSolenoidPin, "Idle Valve", idle.solenoidPin, idle.solenoidPinMode);
+	initIfPinOrModeChanged(secondIdleSolenoidPin, "Idle Valve#2", secondSolenoidPin, idle.solenoidPinMode);
+	initIfPinOrModeChanged(alternatorPin, "Alternator control", alternatorControlPin, alternatorControlPinMode);
+
+	initIfPinOrModeChanged(triggerDecoderErrorPin, "led: trigger debug", triggerErrorPin,
+			triggerErrorPinMode);
+
 }
 
 void EnginePins::reset() {
@@ -422,24 +452,6 @@ void initOutputPins(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 #if HAL_USE_SPI
 	enginePins.sdCsPin.initPin("SD CS", CONFIG(sdCardCsPin));
 #endif /* HAL_USE_SPI */
-
-
-	enginePins.mainRelay.initPin("Main relay", CONFIG(mainRelayPin), &CONFIG(mainRelayPinMode));
-	enginePins.starterRelayDisable.initPin("Starter disable", CONFIG(starterRelayDisablePin), &CONFIG(starterRelayDisablePinMode));
-	enginePins.starterControl.initPin("Starter control", CONFIG(starterControlPin));
-
-	enginePins.fanRelay.initPin("Fan", CONFIG(fanPin), &CONFIG(fanPinMode));
-	enginePins.acRelay.initPin("A/C relay", CONFIG(acRelayPin), &CONFIG(acRelayPinMode));
-	// todo: should we move this code closer to the fuel pump logic?
-	enginePins.fuelPumpRelay.initPin("Fuel pump", CONFIG(fuelPumpPin), &CONFIG(fuelPumpPinMode));
-	enginePins.boostPin.initPin("Boost", CONFIG(boostControlPin));
-
-	enginePins.idleSolenoidPin.initPin("Idle Valve", CONFIG(idle).solenoidPin);
-	enginePins.secondIdleSolenoidPin.initPin("Idle Valve#2", CONFIG(secondSolenoidPin));
-	enginePins.alternatorPin.initPin("Alternator control", CONFIG(alternatorControlPin));
-
-	enginePins.triggerDecoderErrorPin.initPin("led: trigger debug", CONFIG(triggerErrorPin),
-			&CONFIG(triggerErrorPinMode));
 
 #if EFI_SHAFT_POSITION_INPUT
 	// todo: migrate remaining OutputPin to RegisteredOutputPin in order to get consistent dynamic pin init/deinit

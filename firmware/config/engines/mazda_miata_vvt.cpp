@@ -419,7 +419,7 @@ void setMazdaMiata2003EngineConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	// set cranking_timing_angle 10
 	engineConfiguration->crankingTimingAngle = 10;
 	// set cranking_fuel 4
-	engineConfiguration->cranking.baseFuel = 4; // this value for return-less NB miata fuel system, higher pressure
+	engineConfiguration->cranking.baseFuel = 27; // this value for return-less NB miata fuel system, higher pressure
 
 /**
  * Saab attempt
@@ -531,25 +531,23 @@ void setMazdaMiata2003EngineConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	engineConfiguration->etb.minValue = -60;
 	engineConfiguration->etb.maxValue = 50;
 
-	engineConfiguration->cranking.baseFuel = 1;
-	config->crankingFuelCoef[0] = 28; // base cranking fuel adjustment coefficient
+	config->crankingFuelCoef[0] = 2.8; // base cranking fuel adjustment coefficient
 	config->crankingFuelBins[0] = -20; // temperature in C
-	config->crankingFuelCoef[1] = 22;
+	config->crankingFuelCoef[1] = 2.2;
 	config->crankingFuelBins[1] = -10;
-	config->crankingFuelCoef[2] = 18;
+	config->crankingFuelCoef[2] = 1.8;
 	config->crankingFuelBins[2] = 5;
-	config->crankingFuelCoef[3] = 15;
+	config->crankingFuelCoef[3] = 1.5;
 	config->crankingFuelBins[3] = 30;
 
-	config->crankingFuelCoef[4] = 10;
+	config->crankingFuelCoef[4] = 1.0;
 	config->crankingFuelBins[4] = 35;
-	config->crankingFuelCoef[5] = 10;
+	config->crankingFuelCoef[5] = 1.0;
 	config->crankingFuelBins[5] = 50;
-	config->crankingFuelCoef[6] = 10;
+	config->crankingFuelCoef[6] = 1.0;
 	config->crankingFuelBins[6] = 65;
-	config->crankingFuelCoef[7] = 10;
+	config->crankingFuelCoef[7] = 1.0;
 	config->crankingFuelBins[7] = 90;
-
 }
 
 /**
@@ -599,9 +597,6 @@ static void setMiataNB2_MRE_common(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	CONFIG(tachPulsePerRev) = 2;
 
 	CONFIG(isSdCardEnabled) = true;
-
-	// set cranking_fuel 9
-	engineConfiguration->cranking.baseFuel = 9; // higher value for return system NA conversion since lower fuel pressure
 
 	engineConfiguration->useConstantDwellDuringCranking = true;
 	engineConfiguration->ignitionDwellForCrankingMs = 8;

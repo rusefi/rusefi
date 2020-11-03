@@ -905,7 +905,7 @@ static void setDefaultEngineConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	 * Cranking defaults
 	 */
 	engineConfiguration->startUpFuelPumpDuration = 4;
-	engineConfiguration->cranking.baseFuel = 12;
+	engineConfiguration->cranking.baseFuel = 27;
 	engineConfiguration->crankingChargeAngle = 70;
 
 

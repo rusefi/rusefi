@@ -107,7 +107,7 @@ void m73engine(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	engineConfiguration->ignitionMode = IM_TWO_COILS;
 
 	// set cranking_fuel 15
-	engineConfiguration->cranking.baseFuel = 15;
+	engineConfiguration->cranking.baseFuel = 30;
 }
 
 
