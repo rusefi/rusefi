@@ -12,12 +12,26 @@
 #include <hal.h>
 #include "efifeatures.h"
 
-#define TLE8888_OUTPUTS				28
+#define TLE8888_OUTPUTS_REGULAR		28
+
+#define TLE8888_OUTPUT_MR			(TLE8888_OUTPUTS_REGULAR + 0)
+
+/* regular outputs + MR output */
+#define TLE8888_OUTPUTS				(TLE8888_OUTPUTS_REGULAR + 1)
 /* 4 misc channels */
 #define TLE8888_DIRECT_MISC			4
 /* 4 IGN channels - INJ1..4 - IN1..4
  * 4 INJ channels - OUT1..4 - IN5..8 */
 #define TLE8888_DIRECT_OUTPUTS		(4 + 4 + TLE8888_DIRECT_MISC)
+
+/* Inputs */
+#define TLE8888_INPUT_KEY			(TLE8888_OUTPUTS + 0)
+#define TLE8888_INPUT_WAKE			(TLE8888_OUTPUTS + 1)
+
+/* KEY and WAKE */
+#define TLE8888_INPUTS				2
+
+#define TLE8888_SIGNALS				(TLE8888_OUTPUTS + TLE8888_INPUTS)
 
 #define getRegisterFromResponse(x) (((x) >> 1) & 0x7f)
 #define getDataFromResponse(x) (((x) >> 8) & 0xff)

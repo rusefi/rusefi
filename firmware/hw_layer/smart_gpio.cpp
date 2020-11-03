@@ -230,7 +230,7 @@ void initSmartGpio() {
 	}
 	if (ret < 0)
 		/* whenever chip is disabled or error returned - occupy its gpio range */
-		gpiochip_use_gpio_base(TLE8888_OUTPUTS);
+		gpiochip_use_gpio_base(TLE8888_SIGNALS);
 #endif /* (BOARD_TLE8888_COUNT > 0) */
 
 #if (BOARD_DRV8860_COUNT > 0)
