@@ -146,8 +146,7 @@ angle_t getAdvanceCorrections(int rpm DECLARE_ENGINE_PARAMETER_SUFFIX) {
 				shouldResetTimingPid = false;
 			}
 			// get PID value (this is not an actual Advance Angle, but just a additive correction!)
-			percent_t timingRawCorr = idleTimingPid.getOutput(targetRpm, rpm,
-					/* is this the right dTime? this period is not exactly the period at which this code is invoked*/engineConfiguration->idleTimingPid.periodMs);
+			percent_t timingRawCorr = idleTimingPid.getOutput(targetRpm, rpm, FAST_CALLBACK_PERIOD_MS / 1000.0f);
 			// tps idle-running falloff
 			pidTimingCorrection = interpolateClamped(0.0f, timingRawCorr, CONFIG(idlePidDeactivationTpsThreshold), 0.0f, tps);
 			// rpm falloff

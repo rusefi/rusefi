@@ -155,7 +155,7 @@ class PeriodicSlowController : public PeriodicTimerController {
 
 	int getPeriodMs() override {
 		// no reason to have this configurable, looks like everyone is happy with 20Hz
-		return 50;
+		return SLOW_CALLBACK_PERIOD_MS;
 	}
 };
 
