@@ -32,26 +32,19 @@
 #if EFI_IDLE_CONTROL
 #include "engine_configuration.h"
 #include "rpm_calculator.h"
-#include "pwm_generator_logic.h"
 #include "idle_thread.h"
+#include "idle_hardware.h"
 #include "engine_math.h"
 
 #include "engine.h"
 #include "periodic_task.h"
 #include "allsensors.h"
 #include "sensor.h"
-#include "electronic_throttle.h"
-
-
 #include "dc_motors.h"
-#if ! EFI_UNIT_TEST
-#include "stepper.h"
-#include "pin_repository.h"
-static StepDirectionStepper iacStepperHw;
-static DualHBridgeStepper iacHbridgeHw;
-static StepperMotor iacMotor;
-#endif /* EFI_UNIT_TEST */
 
+#if EFI_TUNER_STUDIO
+#include "stepper.h"
+#endif
 
 static Logging *logger;
 
@@ -62,8 +55,6 @@ EXTERN_ENGINE;
 #endif
 
 // todo: move all static vars to engine->engineState.idle?
-
-static bool prettyClose = false;
 
 static bool shouldResetPid = false;
 // The idea of 'mightResetPid' is to reset PID only once - each time when TPS > idlePidDeactivationTpsThreshold.
@@ -134,21 +125,10 @@ float getIdlePidMinValue(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	return getIdlePid(PASS_ENGINE_PARAMETER_SIGNATURE)->getMinValue();
 }
 
-// todo: extract interface for idle valve hardware, with solenoid and stepper implementations?
-static SimplePwm idleSolenoidOpen("idle open");
-static SimplePwm idleSolenoidClose("idle close");
-
 static uint32_t lastCrankingCyclesCounter = 0;
 static float lastCrankingIacPosition;
 
 static iacPidMultiplier_t iacPidMultMap("iacPidMultiplier");
-
-/**
- * When the IAC position value change is insignificant (lower than this threshold), leave the poor valve alone
- * todo: why do we have this logic? is this ever useful?
- * See
- */
-static percent_t idlePositionSensitivityThreshold = 0.0f;
 
 #if ! EFI_UNIT_TEST
 
@@ -202,47 +182,6 @@ void setIdleMode(idle_mode_e value DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	showIdleInfo();
 }
 
-#endif // EFI_UNIT_TEST
-
-void applyIACposition(percent_t position DECLARE_ENGINE_PARAMETER_SUFFIX) {
-	/**
-	 * currently idle level is an percent value (0-100 range), and PWM takes a float in the 0..1 range
-	 * todo: unify?
-	 */
-	float duty = PERCENT_TO_DUTY(position);
-
-	if (CONFIG(useETBforIdleControl)) {
-		if (!Sensor::hasSensor(SensorType::AcceleratorPedal)) {
-			firmwareError(CUSTOM_NO_ETB_FOR_IDLE, "No ETB to use for idle");
-			return;
-		}
-
-#if EFI_ELECTRONIC_THROTTLE_BODY
-		setEtbIdlePosition(position PASS_ENGINE_PARAMETER_SUFFIX);
-#endif // EFI_ELECTRONIC_THROTTLE_BODY
-#if ! EFI_UNIT_TEST
-	} else if (CONFIG(useStepperIdle)) {
-		iacMotor.setTargetPosition(duty * engineConfiguration->idleStepperTotalSteps);
-#endif /* EFI_UNIT_TEST */
-	} else {
-		if (!CONFIG(isDoubleSolenoidIdle)) {
-			idleSolenoidOpen.setSimplePwmDutyCycle(duty);
-		} else {
-			/* use 0.01..0.99 range */
-			float idle_range = 0.98; /* move to config? */
-			float idle_open, idle_close;
-
-			idle_open = 0.01 + idle_range * duty;
-			idle_close = 0.01 + idle_range * (1.0 - duty);
-
-			idleSolenoidOpen.setSimplePwmDutyCycle(idle_open);
-			idleSolenoidClose.setSimplePwmDutyCycle(idle_close);
-		}
-	}
-}
-
-#if ! EFI_UNIT_TEST
-
 percent_t getIdlePosition(void) {
 	return engine->engineState.idle.currentIdlePosition;
 }
@@ -272,7 +211,7 @@ static percent_t manualIdleController(float cltCorrection DECLARE_ENGINE_PARAMET
  */
 static percent_t blipIdlePosition;
 static efitimeus_t timeToStopBlip = 0;
-static efitimeus_t timeToStopIdleTest = 0;
+efitimeus_t timeToStopIdleTest = 0;
 
 /**
  * I use this questionable feature to tune acceleration enrichment
@@ -449,8 +388,7 @@ static percent_t automaticIdleController(float tpsPos DECLARE_ENGINE_PARAMETER_S
 		engine->engineState.isAutomaticIdle = tps.Valid && engineConfiguration->idleMode == IM_AUTO;
 
 		if (engineConfiguration->isVerboseIAC && engine->engineState.isAutomaticIdle) {
-			scheduleMsg(logger, "Idle state %s%s", getIdle_state_e(engine->engineState.idle.idleState),
-					(prettyClose ? " pretty close" : ""));
+			scheduleMsg(logger, "Idle state %s", getIdle_state_e(engine->engineState.idle.idleState));
 			getIdlePid(PASS_ENGINE_PARAMETER_SIGNATURE)->showPidStatus(logger, "idle");
 		}
 
@@ -563,15 +501,10 @@ static percent_t automaticIdleController(float tpsPos DECLARE_ENGINE_PARAMETER_S
 			} else {
 #if EFI_TUNER_STUDIO
 				tsOutputChannels.debugFloatField1 = iacPosition;
+				extern StepperMotor iacMotor;
 				tsOutputChannels.debugIntField1 = iacMotor.getTargetPosition();
 #endif /* EFI_TUNER_STUDIO */
 			}
-		}
-
-		prettyClose = absF(iacPosition - engine->engineState.idle.currentIdlePosition) < idlePositionSensitivityThreshold;
-		// The threshold is dependent on IAC type (see initIdleHardware())
-		if (prettyClose) {
-			return; // value is pretty close, let's leave the poor valve alone
 		}
 
 		engine->engineState.idle.currentIdlePosition = iacPosition;
@@ -600,8 +533,6 @@ void setDefaultIdleParameters(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 void onConfigurationChangeIdleCallback(engine_configuration_s *previousConfiguration) {
 	shouldResetPid = !getIdlePid(PASS_ENGINE_PARAMETER_SIGNATURE)->isSame(&previousConfiguration->idleRpmPid);
 	mustResetPid = shouldResetPid;
-	idleSolenoidOpen.setFrequency(CONFIG(idle).solenoidFrequency);
-	idleSolenoidClose.setFrequency(CONFIG(idle).solenoidFrequency);
 }
 
 void setTargetIdleRpm(int value) {
@@ -648,115 +579,6 @@ void startIdleBench(void) {
 	showIdleInfo();
 }
 
-static void applyIdleSolenoidPinState(int stateIndex, PwmConfig *state) /* pwm_gen_callback */ {
-	efiAssertVoid(CUSTOM_ERR_6645, stateIndex < PWM_PHASE_MAX_COUNT, "invalid stateIndex");
-	efiAssertVoid(CUSTOM_ERR_6646, state->multiChannelStateSequence.waveCount == 1, "invalid idle waveCount");
-	OutputPin *output = state->outputPins[0];
-	int value = state->multiChannelStateSequence.getChannelState(/*channelIndex*/0, stateIndex);
-	if (!value /* always allow turning solenoid off */ ||
-			(GET_RPM() != 0 || timeToStopIdleTest != 0) /* do not run solenoid unless engine is spinning or bench testing in progress */
-			) {
-		output->setValue(value);
-	}
-}
-
-bool isIdleHardwareRestartNeeded() {
-	return  isConfigurationChanged(stepperEnablePin) ||
-			isConfigurationChanged(stepperEnablePinMode) ||
-			isConfigurationChanged(idle.stepperStepPin) ||
-			isConfigurationChanged(idle.solenoidFrequency) ||
-			isConfigurationChanged(useStepperIdle) ||
-//			isConfigurationChanged() ||
-			isConfigurationChanged(useETBforIdleControl) ||
-			isConfigurationChanged(idle.solenoidPin) ||
-			isConfigurationChanged(secondSolenoidPin);
-
-}
-
-bool isIdleMotorBusy(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
-	if (!CONFIG(useStepperIdle)) {
-		// todo: check other motor types?
-		return false;
-	}
-	return iacMotor.isBusy();
-}
-
-void stopIdleHardware(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
-#if EFI_PROD_CODE
-	brain_pin_markUnused(activeConfiguration.stepperEnablePin);
-	brain_pin_markUnused(activeConfiguration.idle.stepperStepPin);
-	brain_pin_markUnused(activeConfiguration.idle.solenoidPin);
-	brain_pin_markUnused(activeConfiguration.secondSolenoidPin);
-//	brain_pin_markUnused(activeConfiguration.idle.);
-//	brain_pin_markUnused(activeConfiguration.idle.);
-//	brain_pin_markUnused(activeConfiguration.idle.);
-//	brain_pin_markUnused(activeConfiguration.idle.);
-#endif /* EFI_PROD_CODE */
-}
-
-void initIdleHardware(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
-	if (CONFIG(useStepperIdle)) {
-		StepperHw* hw;
-
-		if (CONFIG(useHbridges)) {
-			auto motorA = initDcMotor(2, /*useTwoWires*/ true PASS_ENGINE_PARAMETER_SUFFIX);
-			auto motorB = initDcMotor(3, /*useTwoWires*/ true PASS_ENGINE_PARAMETER_SUFFIX);
-
-			if (motorA && motorB) {
-				iacHbridgeHw.initialize(
-					motorA,
-					motorB,
-					CONFIG(idleStepperReactionTime)
-				);
-			}
-
-			hw = &iacHbridgeHw;
-		} else {
-			iacStepperHw.initialize(
-				CONFIG(idle).stepperStepPin,
-				CONFIG(idle).stepperDirectionPin,
-				CONFIG(stepperDirectionPinMode),
-				CONFIG(idleStepperReactionTime),
-				CONFIG(stepperEnablePin),
-				CONFIG(stepperEnablePinMode)
-			);
-
-			hw = &iacStepperHw;
-		}
-
-		iacMotor.initialize(hw, CONFIG(idleStepperTotalSteps), logger);
-
-		// This greatly improves PID accuracy for steppers with a small number of steps
-		idlePositionSensitivityThreshold = 1.0f / engineConfiguration->idleStepperTotalSteps;
-	} else if (!engineConfiguration->useETBforIdleControl) {
-		/**
-		 * Start PWM for idleValvePin
-		 */
-		// todo: even for double-solenoid mode we can probably use same single SimplePWM
-		// todo: open question why do we pass 'OutputPin' into 'startSimplePwmExt' if we have custom applyIdleSolenoidPinState listener anyway?
-		if (!CONFIG(isDoubleSolenoidIdle)) {
-			startSimplePwm(&idleSolenoidOpen, "Idle Valve",
-					&engine->executor,
-					&enginePins.idleSolenoidPin,
-					CONFIG(idle).solenoidFrequency, PERCENT_TO_DUTY(CONFIG(manIdlePosition)),
-					(pwm_gen_callback*)applyIdleSolenoidPinState);
-		} else {
-			startSimplePwm(&idleSolenoidOpen, "Idle Valve Open",
-					&engine->executor,
-					&enginePins.idleSolenoidPin,
-					CONFIG(idle).solenoidFrequency, PERCENT_TO_DUTY(CONFIG(manIdlePosition)),
-					(pwm_gen_callback*)applyIdleSolenoidPinState);
-
-			startSimplePwm(&idleSolenoidClose, "Idle Valve Close",
-					&engine->executor,
-					&enginePins.secondIdleSolenoidPin,
-					CONFIG(idle).solenoidFrequency, PERCENT_TO_DUTY(CONFIG(manIdlePosition)),
-					(pwm_gen_callback*)applyIdleSolenoidPinState);
-		}
-		idlePositionSensitivityThreshold = 0.0f;
-	}
-}
-
 #endif /* EFI_UNIT_TEST */
 
 void startIdleThread(Logging*sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX) {
@@ -768,7 +590,7 @@ void startIdleThread(Logging*sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX) {
 #if ! EFI_UNIT_TEST
 	// todo: we still have to explicitly init all hardware on start in addition to handling configuration change via
 	// 'applyNewHardwareSettings' todo: maybe unify these two use-cases?
-	initIdleHardware(PASS_ENGINE_PARAMETER_SIGNATURE);
+	initIdleHardware(sharedLogger PASS_ENGINE_PARAMETER_SUFFIX);
 #endif /* EFI_UNIT_TEST */
 
 	DISPLAY_STATE(Engine)
