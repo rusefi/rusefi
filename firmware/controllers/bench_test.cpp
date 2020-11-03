@@ -321,7 +321,7 @@ static void handleCommandX14(uint16_t index) {
 	}
 }
 
-extern bool shouldInhibitConfigRead;
+extern bool rebootForPresetPending;
 
 // todo: this is probably a wrong place for this method now
 void executeTSCommand(uint16_t subsystem, uint16_t index) {
@@ -356,11 +356,11 @@ void executeTSCommand(uint16_t subsystem, uint16_t index) {
 		// call to pit
 		setCallFromPitStop(30000);
 	} else if (subsystem == 0x30) {
-		shouldInhibitConfigRead = true;
+		rebootForPresetPending = true;
 		firmwareError(OBD_PCM_Processor_Fault, "\nPlease power cycle the ECU to apply preset!\n");
 		setEngineType(index);
 	} else if (subsystem == 0x31) {
-		shouldInhibitConfigRead = true;
+		rebootForPresetPending = true;
 		firmwareError(OBD_PCM_Processor_Fault, "\nPlease power cycle the ECU to apply preset!\n");
 		setEngineType(DEFAULT_ENGINE_TYPE);
 	} else if (subsystem == 0x79) {
