@@ -40,7 +40,7 @@ void vag_18_Turbo(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	engineConfiguration->injectionPinMode = OM_OPENDRAIN_INVERTED;
 	engineConfiguration->isCylinderCleanupEnabled = true;
 	engineConfiguration->rpmHardLimit = 8000;
-	engineConfiguration->cranking.baseFuel = 4;
+	engineConfiguration->cranking.baseFuel = 28;
 
 
 	//Analog Inputs
