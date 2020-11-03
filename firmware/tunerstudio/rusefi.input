@@ -2003,6 +2003,8 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 		field = flag0,									mc33816_flag0
 		field = mc33816_driven,							mc33816_driven
 		field = mc33816spiDevice,						mc33816spiDevice
+		field = hpfpValcePin,							hpfpValvePin
+		field = hpfpValcePinMode,						hpfpValvePinMode
 
 	dialog = allPins1_1
 		field = "trigger stimulator pin #1", 			triggerSimulatorPins1

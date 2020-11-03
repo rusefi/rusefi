@@ -143,16 +143,15 @@ private:
 class EnginePins {
 public:
 	EnginePins();
-	void startPins();
+	void startPins(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 	void reset();
 	bool stopPins();
 	void unregisterPins();
-	void startInjectionPins();
-	void startIgnitionPins();
-	void startAuxValves();
-	void stopInjectionPins();
-	void stopIgnitionPins();
 	RegisteredOutputPin mainRelay;
+	/**
+	 * High Pressure Fuel Pump valve control
+	 */
+	RegisteredOutputPin hpfpValve;
 	// this one cranks engine
 	RegisteredOutputPin starterControl;
 	// this one prevents driver from cranking engine
@@ -192,6 +191,13 @@ public:
 	InjectorOutputPin injectors[INJECTION_PIN_COUNT];
 	IgnitionOutputPin coils[IGNITION_PIN_COUNT];
 	NamedOutputPin auxValve[AUX_DIGITAL_VALVE_COUNT];
+private:
+	void startInjectionPins();
+	void startIgnitionPins();
+	void startAuxValves();
+
+	void stopInjectionPins();
+	void stopIgnitionPins();
 };
 
 #endif /* __cplusplus */
