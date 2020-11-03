@@ -77,6 +77,8 @@ typedef enum {
 
 /* Command registers */
 #define CMD_CMD0(d)			CMD_W(0x01, d)
+#define REG_CMD0_MRSE		BIT(0)
+#define REG_CMD0_MRON		BIT(1)
 /* Window watchdog open WWDOWT window time = 12.8 mS - fixed value for TLE8888QK */
 #define CMD_WWDSERVICECMD	CMD_W(0x15, 0x03)
 #define CMD_FWDRESPCMD(d)	CMD_W(0x16, d)
@@ -103,6 +105,9 @@ typedef enum {
 /* Status registers */
 #define REG_OPSTAT(n)		(0x34 + ((n) & 0x01))
 #define CMD_OPSTAT(n)		CMD_R(REG_OPSTAT(n))
+#define REG_OPSTAT_MR		BIT(3)
+#define REG_OPSTAT_WAKE		BIT(1)
+#define REG_OPSTAT_KEY		BIT(0)
 #define REG_WWDSTAT			0x36
 #define CMD_WWDSTAT			CMD_R(REG_WWDSTAT)
 #define REG_FWDSTAT(n)		(0x37 + ((n) & 0x01))
@@ -188,8 +193,8 @@ struct tle8888_priv {
 	/* this is overhead to store 4 bits in uint32_t
 	 * but I don't want any magic shift math */
 	uint32_t					o_pp_mask;
-	/* cached CONT registers state - value last send to chip */
-	uint32_t					cont_data_cached;
+	/* cached output registers state - value last send to chip */
+	uint32_t					o_data_cached;
 
 	tle8888_drv_state			drv_state;
 
@@ -222,6 +227,9 @@ struct tle8888_priv {
 	/* chip needs reintialization due to some critical issue */
 	bool						need_init;
 
+	/* main relay output */
+	bool						mr_manual;
+
 	/* statistic */
 	int							por_cnt;
 	int							wdr_cnt;
@@ -235,14 +243,15 @@ struct tle8888_priv {
 
 static struct tle8888_priv chips[BOARD_TLE8888_COUNT];
 
-static const char* tle8888_pin_names[TLE8888_OUTPUTS] = {
+static const char* tle8888_pin_names[TLE8888_SIGNALS] = {
 	"TLE8888.INJ1",		"TLE8888.INJ2",		"TLE8888.INJ3",		"TLE8888.INJ4",
 	"TLE8888.OUT5",		"TLE8888.OUT6",		"TLE8888.OUT7",		"TLE8888.OUT8",
 	"TLE8888.OUT9",		"TLE8888.OUT10",	"TLE8888.OUT11",	"TLE8888.OUT12",
 	"TLE8888.OUT13",	"TLE8888.OUT14",	"TLE8888.OUT15",	"TLE8888.OUT16",
 	"TLE8888.OUT17",	"TLE8888.OUT18",	"TLE8888.OUT19",	"TLE8888.OUT20",
 	"TLE8888.OUT21",	"TLE8888.OUT22",	"TLE8888.OUT23",	"TLE8888.OUT24",
-	"TLE8888.IGN1",		"TLE8888.IGN2",		"TLE8888.IGN3",		"TLE8888.IGN4"
+	"TLE8888.IGN1",		"TLE8888.IGN2",		"TLE8888.IGN3",		"TLE8888.IGN4",
+	"TLE8888.MR",		"TLE8888.KEY",		"TLE8888.WAKE"
 };
 
 #if EFI_TUNER_STUDIO
@@ -438,20 +447,23 @@ static int tle8888_update_output(struct tle8888_priv *chip)
 	/* TODO: apply hi-Z mask when support will be added */
 
 	/* set value only for non-direct driven pins */
-	uint32_t cont_data = chip->o_state & ~chip->o_direct_mask;
+	uint32_t o_data = chip->o_state & ~chip->o_direct_mask;
 
 	/* output for push-pull pins is allways enabled
 	 * (at least until we start supporting hi-Z state) */
-	cont_data |= chip->o_pp_mask;
+	o_data |= chip->o_pp_mask;
 
 	uint16_t tx[] = {
 		/* bridge config */
 		CMD_BRICONFIG(0, briconfig0),
 		/* output enables */
-		CMD_CONT(0, cont_data >>  0),
-		CMD_CONT(1, cont_data >>  8),
-		CMD_CONT(2, cont_data >> 16),
-		CMD_CONT(3, cont_data >> 24)
+		CMD_CONT(0, o_data >>  0),
+		CMD_CONT(1, o_data >>  8),
+		CMD_CONT(2, o_data >> 16),
+		CMD_CONT(3, o_data >> 24),
+		/* Main Relay output: manual vs auto-mode */
+		CMD_CMD0((chip->mr_manual ? REG_CMD0_MRSE : 0x0) |
+				 ((o_data & BIT(TLE8888_OUTPUT_MR)) ? REG_CMD0_MRON : 0x0))
 	};
 	ret = tle8888_spi_rw_array(chip, tx, NULL, ARRAY_SIZE(tx));
 
@@ -459,7 +471,7 @@ static int tle8888_update_output(struct tle8888_priv *chip)
 
 	if (ret == 0) {
 		/* atomic */
-		chip->cont_data_cached = cont_data;
+		chip->o_data_cached = o_data;
 	}
 
 	return ret;
@@ -884,13 +896,18 @@ static THD_FUNCTION(tle8888_driver_thread, p) {
 
 static int tle8888_setPadMode(void *data, unsigned int pin, iomode_t mode) {
 
-	if ((pin >= TLE8888_OUTPUTS) || (data == NULL))
+	if ((pin >= TLE8888_SIGNALS) || (data == NULL))
 		return -1;
+
+	struct tle8888_priv *chip = (struct tle8888_priv *)data;
+
+	/* if someone has requested MR pin - switch it to manual mode */
+	if (pin == TLE8888_OUTPUT_MR) {
+		chip->mr_manual = true;
+	}
 
 	/* do not enalbe PP mode yet */
 #if 0
-	struct tle8888_priv *chip = (struct tle8888_priv *)data;
-
 	/* only OUT21..OUT24 support mode change: PP vs OD */
 	if ((pin < 20) || (pin > 23))
 		return 0;
@@ -933,13 +950,31 @@ static int tle8888_writePad(void *data, unsigned int pin, int value) {
 	return 0;
 }
 
-static brain_pin_diag_e tle8888_getDiag(void *data, unsigned int pin)
-{
+static int tle8888_readPad(void *data, unsigned int pin) {
 	if ((pin >= TLE8888_OUTPUTS) || (data == NULL))
-		return PIN_INVALID;
+		return -1;
 
 	struct tle8888_priv *chip = (struct tle8888_priv *)data;
 
+	if (pin < TLE8888_OUTPUTS_REGULAR) {
+		/* return output state */
+		/* DOTO: check that pins is disabled by diagnostic? */
+		return !!(chip->o_data_cached & BIT(pin));
+	} else if (pin == TLE8888_OUTPUT_MR) {
+		/* Main relay can be enabled by KEY input, so report real state */
+		return !!(chip->OpStat[0] & REG_OPSTAT_MR);
+	} else if (pin == TLE8888_INPUT_KEY) {
+		return !!(chip->OpStat[0] & REG_OPSTAT_KEY);
+	}  if (pin == TLE8888_INPUT_WAKE) {
+		return !!(chip->OpStat[0] & REG_OPSTAT_WAKE);
+	}
+
+	/* unknown pin */
+	return -1;
+}
+
+static brain_pin_diag_e tle8888_getOutputDiag(struct tle8888_priv *chip, unsigned int pin)
+{
 	/* OUT1..OUT4, indexes 0..3 */
 	if (pin < 4)
 		return tle8888_2b_to_diag_with_temp((chip->OutDiag[0] >> ((pin - 0) * 2)) & 0x03);
@@ -994,6 +1029,26 @@ static brain_pin_diag_e tle8888_getDiag(void *data, unsigned int pin)
 		return tle8888_2b_to_diag_with_temp((chip->IgnDiag >> ((pin - 24) * 2)) & 0x03);
 
 	return PIN_OK;
+}
+
+static brain_pin_diag_e tle8888_getInputDiag(struct tle8888_priv *chip, unsigned int pin)
+{
+	(void)chip; (void)pin;
+
+	return PIN_OK;
+}
+
+static brain_pin_diag_e tle8888_getDiag(void *data, unsigned int pin)
+{
+	if ((pin >= TLE8888_SIGNALS) || (data == NULL))
+		return PIN_INVALID;
+
+	struct tle8888_priv *chip = (struct tle8888_priv *)data;
+
+	if (pin < TLE8888_OUTPUTS)
+		return tle8888_getOutputDiag(chip, pin);
+	else
+		return tle8888_getInputDiag(chip, pin);
 }
 
 static int tle8888_chip_init_data(void * data) {
@@ -1160,7 +1215,7 @@ static int tle8888_deinit(void *data)
 struct gpiochip_ops tle8888_ops = {
 	.setPadMode	= tle8888_setPadMode,
 	.writePad	= tle8888_writePad,
-	.readPad	= NULL,	/* chip outputs only */
+	.readPad	= tle8888_readPad,
 	.getDiag	= tle8888_getDiag,
 	.init		= tle8888_init,
 	.deinit 	= tle8888_deinit,
@@ -1194,11 +1249,11 @@ int tle8888_add(unsigned int index, const struct tle8888_config *cfg) {
 	chip->cfg = cfg;
 	chip->o_state = 0;
 	chip->o_direct_mask = 0;
-	chip->cont_data_cached = 0;
+	chip->o_data_cached = 0;
 	chip->drv_state = TLE8888_WAIT_INIT;
 
 	/* register, return gpio chip base */
-	int ret = gpiochip_register(DRIVER_NAME, &tle8888_ops, TLE8888_OUTPUTS, chip);
+	int ret = gpiochip_register(DRIVER_NAME, &tle8888_ops, TLE8888_SIGNALS, chip);
 
 	/* set default pin names, board init code can rewrite */
 	gpiochips_setPinNames(ret, tle8888_pin_names);

@@ -700,6 +700,11 @@ static void setDefaultEngineConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	setDefaultIdleParameters(PASS_CONFIG_PARAMETER_SIGNATURE);
 #endif /* EFI_IDLE_CONTROL */
 
+#if !EFI_UNIT_TEST
+	// todo: this is a reasonable default for what kinds of engines exactly?
+	engineConfiguration->wwaeTau = 0.3;
+	engineConfiguration->wwaeBeta = 0.3;
+#endif // EFI_UNIT_TEST
 
 #if EFI_ELECTRONIC_THROTTLE_BODY
 	setDefaultEtbParameters(PASS_CONFIG_PARAMETER_SIGNATURE);
