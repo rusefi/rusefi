@@ -83,7 +83,7 @@ void RegisteredOutputPin::unregister() {
 
 
 EnginePins::EnginePins() :
-		mainRelay("mainRelay", CONFIG_OFFSET(mainRelayPin), CONFIG_OFFSET(mainRelayPinMode)),
+		mainRelay("mainRelay", CONFIG_PIN_OFFSETS(mainRelay)),
 		starterControl("starterControl", CONFIG_PIN_OFFSETS(starterControl)),
 		starterRelayDisable("starterRelayDisable", CONFIG_PIN_OFFSETS(starterRelayDisable)),
 		fanRelay("fanRelay", CONFIG_PIN_OFFSETS(fan)),
@@ -423,16 +423,23 @@ void initOutputPins(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	enginePins.sdCsPin.initPin("SD CS", CONFIG(sdCardCsPin));
 #endif /* HAL_USE_SPI */
 
-	// todo: should we move this code closer to the fuel pump logic?
-	enginePins.fuelPumpRelay.initPin("Fuel pump", CONFIG(fuelPumpPin), &CONFIG(fuelPumpPinMode));
 
 	enginePins.mainRelay.initPin("Main relay", CONFIG(mainRelayPin), &CONFIG(mainRelayPinMode));
 	enginePins.starterRelayDisable.initPin("Starter disable", CONFIG(starterRelayDisablePin), &CONFIG(starterRelayDisablePinMode));
 	enginePins.starterControl.initPin("Starter control", CONFIG(starterControlPin));
 
 	enginePins.fanRelay.initPin("Fan", CONFIG(fanPin), &CONFIG(fanPinMode));
-	enginePins.o2heater.initPin("O2 heater", CONFIG(o2heaterPin));
 	enginePins.acRelay.initPin("A/C relay", CONFIG(acRelayPin), &CONFIG(acRelayPinMode));
+	// todo: should we move this code closer to the fuel pump logic?
+	enginePins.fuelPumpRelay.initPin("Fuel pump", CONFIG(fuelPumpPin), &CONFIG(fuelPumpPinMode));
+	enginePins.boostPin.initPin("Boost", CONFIG(boostControlPin));
+
+	enginePins.idleSolenoidPin.initPin("Idle Valve", CONFIG(idle).solenoidPin);
+	enginePins.secondIdleSolenoidPin.initPin("Idle Valve#2", CONFIG(secondSolenoidPin));
+	enginePins.alternatorPin.initPin("Alternator control", CONFIG(alternatorControlPin));
+
+
+	enginePins.o2heater.initPin("O2 heater", CONFIG(o2heaterPin));
 
 #endif /* EFI_GPIO_HARDWARE */
 }
