@@ -735,21 +735,21 @@ void initIdleHardware(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 		// todo: even for double-solenoid mode we can probably use same single SimplePWM
 		// todo: open question why do we pass 'OutputPin' into 'startSimplePwmExt' if we have custom applyIdleSolenoidPinState listener anyway?
 		if (!CONFIG(isDoubleSolenoidIdle)) {
-			startSimplePwmExt(&idleSolenoidOpen, "Idle Valve",
+			startSimplePwm(&idleSolenoidOpen, "Idle Valve",
 					&engine->executor,
-					CONFIG(idle).solenoidPin, &enginePins.idleSolenoidPin,
+					&enginePins.idleSolenoidPin,
 					CONFIG(idle).solenoidFrequency, PERCENT_TO_DUTY(CONFIG(manIdlePosition)),
 					(pwm_gen_callback*)applyIdleSolenoidPinState);
 		} else {
-			startSimplePwmExt(&idleSolenoidOpen, "Idle Valve Open",
+			startSimplePwm(&idleSolenoidOpen, "Idle Valve Open",
 					&engine->executor,
-					CONFIG(idle).solenoidPin, &enginePins.idleSolenoidPin,
+					&enginePins.idleSolenoidPin,
 					CONFIG(idle).solenoidFrequency, PERCENT_TO_DUTY(CONFIG(manIdlePosition)),
 					(pwm_gen_callback*)applyIdleSolenoidPinState);
 
-			startSimplePwmExt(&idleSolenoidClose, "Idle Valve Close",
+			startSimplePwm(&idleSolenoidClose, "Idle Valve Close",
 					&engine->executor,
-					CONFIG(secondSolenoidPin), &enginePins.secondIdleSolenoidPin,
+					&enginePins.secondIdleSolenoidPin,
 					CONFIG(idle).solenoidFrequency, PERCENT_TO_DUTY(CONFIG(manIdlePosition)),
 					(pwm_gen_callback*)applyIdleSolenoidPinState);
 		}

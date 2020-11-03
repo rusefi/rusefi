@@ -313,8 +313,6 @@ void applyNewHardwareSettings(void) {
 	stopJoystickPins();
 #endif /* HAL_USE_PAL && EFI_JOYSTICK */
 
-	enginePins.stopInjectionPins();
-    enginePins.stopIgnitionPins();
 #if EFI_CAN_SUPPORT
 	stopCanPins();
 #endif /* EFI_CAN_SUPPORT */
@@ -377,6 +375,8 @@ void applyNewHardwareSettings(void) {
 
 	ButtonDebounce::startConfigurationList();
 
+
+
 #if EFI_SHAFT_POSITION_INPUT
 	startTriggerInputPins();
 #endif /* EFI_SHAFT_POSITION_INPUT */
@@ -389,8 +389,7 @@ void applyNewHardwareSettings(void) {
 	startHD44780_pins();
 #endif /* #if EFI_HD44780_LCD */
 
-	enginePins.startInjectionPins();
-	enginePins.startIgnitionPins();
+	enginePins.startPins();
 
 #if EFI_CAN_SUPPORT
 	startCanPins();
@@ -535,6 +534,11 @@ void initHardware(Logging *l) {
 
 	// output pins potentially depend on 'initSmartGpio'
 	initOutputPins(PASS_ENGINE_PARAMETER_SIGNATURE);
+#if EFI_PROD_CODE && EFI_ENGINE_CONTROL
+	enginePins.startPins();
+
+#endif /* EFI_PROD_CODE && EFI_ENGINE_CONTROL */
+
 
 #if EFI_MC33816
 	initMc33816(sharedLogger);

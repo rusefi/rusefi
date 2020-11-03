@@ -187,11 +187,10 @@ void startBoostPin() {
 		return;
 	}
 
-	startSimplePwmExt(
+	startSimplePwm(
 		&boostPwmControl,
 		"Boost",
 		&engine->executor,
-		CONFIG(boostControlPin),
 		&enginePins.boostPin,
 		engineConfiguration->boostPwmFrequency,
 		0.5f

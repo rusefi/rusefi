@@ -330,12 +330,6 @@ static void initStatusLeds(void) {
 
 	enginePins.warningLedPin.initPin("led: warning status", engineConfiguration->warningLedPin);
 	enginePins.runningLedPin.initPin("led: running status", engineConfiguration->runningLedPin);
-
-	enginePins.debugTriggerSync.initPin("debug: sync", CONFIG(debugTriggerSync));
-#if EFI_GPIO_HARDWARE && EFI_SHAFT_POSITION_INPUT
-	enginePins.triggerDecoderErrorPin.initPin("led: trigger debug", CONFIG(triggerErrorPin),
-			&CONFIG(triggerErrorPinMode));
-#endif /* EFI_GPIO_HARDWARE */
 }
 
 #if EFI_PROD_CODE
