@@ -605,8 +605,8 @@ trigger_config_s trigger;
 
 custom spi_device_e 1 bits,U32,   @OFFSET@, [0:2], "Off", "SPI1", "SPI2", "SPI3", "SPI4", "INVALID", "INVALID", "INVALID" 
 	spi_device_e hip9011SpiDevice;
-	uint8_t unused541;;"unit",      1,     0,    0, 100,     0
-	uint8_t unused542;;"unit",      1,     0,    0, 100,     0
+	pin_output_mode_e boostControlPinMode;
+	pin_output_mode_e alternatorControlPinMode;
 	adc_channel_e mafAdcChannel;See hasMafSensor
 	
 	
