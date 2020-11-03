@@ -372,8 +372,18 @@ static void handleWriteValueCommand(ts_channel_s *tsChannel, ts_response_format_
 //	scheduleMsg(logger, "va=%d", configWorkingCopy.boardConfiguration.idleValvePin);
 }
 
+// This is used to prevent TS from reading when we have just applied a preset, to prevent TS getting confused.
+// At the same time an ECU reboot is forced by triggering a fatal error, informing the user to please restart
+// the ECU.  Forcing a reboot will force TS to re-read the tune CRC, 
+bool shouldInhibitConfigRead = false;
+
 static void handlePageReadCommand(ts_channel_s *tsChannel, ts_response_format_e mode, uint16_t offset, uint16_t count) {
 	tsState.readPageCommandsCounter++;
+
+	if (shouldInhibitConfigRead) {
+		sendErrorCode(tsChannel, TS_RESPONSE_UNRECOGNIZED_COMMAND);
+		return;
+	}
 
 #if EFI_TUNER_STUDIO_VERBOSE
 	scheduleMsg(&tsLogger, "READ mode=%d offset=%d size=%d", mode, offset, count);
