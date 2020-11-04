@@ -698,6 +698,13 @@ void setMiataNB2_MRE_MAF(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
  * https://github.com/rusefi/rusefi/wiki/HOWTO-TCU-A42DE-on-Proteus
  */
 void setMiataNB2_Proteus_TCU(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
+	engineConfiguration->tcuEnabled = true;
+
+	// "Highside 2"
+	engineConfiguration->tcu_solenoid[0] = GPIOA_8;
+	// "Highside 1"
+	engineConfiguration->tcu_solenoid[1] = GPIOA_9;
+
 	// "Digital 1"
 	engineConfiguration->tcuUpshiftButtonPin = GPIOC_6;
 	// "Digital 6"
