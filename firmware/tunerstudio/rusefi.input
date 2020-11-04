@@ -882,7 +882,7 @@ enable2ndByteCanID = false
 
 	table = tcuSolenoidTableTbl,  tcuSolenoidTableMap,  "Solenoids Active By Gear",   1
 		yBins		= gearCountArray, tcuCurrentGear
-		xBins		= solenoidCountArray
+		xBins		= solenoidCountArray, tcuCurrentGear
 		zBins		= tcuSolenoidTable
 		xyLabels	= "Solenoid", "Gear"
 
