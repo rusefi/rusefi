@@ -702,5 +702,25 @@ void setMiataNB2_Proteus_TCU(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	engineConfiguration->tcuUpshiftButtonPin = GPIOC_6;
 	// "Digital 6"
 	engineConfiguration->tcuDownshiftButtonPin = GPIOE_15;
+
+	// R
+	config->tcuSolenoidTable[0][0] = 1;
+	config->tcuSolenoidTable[0][1] = 0;
+	// P/N
+	config->tcuSolenoidTable[1][0] = 1;
+	config->tcuSolenoidTable[1][1] = 0;
+	// 1
+	config->tcuSolenoidTable[2][0] = 1;
+	config->tcuSolenoidTable[2][1] = 0;
+	// 2
+	config->tcuSolenoidTable[3][0] = 1;
+	config->tcuSolenoidTable[3][1] = 1;
+	// 3
+	config->tcuSolenoidTable[4][0] = 0;
+	config->tcuSolenoidTable[4][1] = 1;
+	// 4
+	config->tcuSolenoidTable[5][0] = 0;
+	config->tcuSolenoidTable[5][1] = 0;
+
 }
 
