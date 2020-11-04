@@ -321,6 +321,17 @@ static void handleCommandX14(uint16_t index) {
 	}
 }
 
+extern bool rebootForPresetPending;
+
+static void fatalErrorForPresetApply() {
+	rebootForPresetPending = true;
+	firmwareError(OBD_PCM_Processor_Fault,
+		"\n\nTo complete preset apply:\n"
+		"   1. Close TunerStudio\n"
+		"   2. Power cycle ECU\n"
+		"   3. Open TunerStudio and reconnect\n\n");
+}
+
 // todo: this is probably a wrong place for this method now
 void executeTSCommand(uint16_t subsystem, uint16_t index) {
 	scheduleMsg(logger, "IO test subsystem=%d index=%d", subsystem, index);
@@ -354,8 +365,10 @@ void executeTSCommand(uint16_t subsystem, uint16_t index) {
 		// call to pit
 		setCallFromPitStop(30000);
 	} else if (subsystem == 0x30) {
+		fatalErrorForPresetApply();
 		setEngineType(index);
 	} else if (subsystem == 0x31) {
+		fatalErrorForPresetApply();
 		setEngineType(DEFAULT_ENGINE_TYPE);
 	} else if (subsystem == 0x79) {
 		scheduleStopEngine();

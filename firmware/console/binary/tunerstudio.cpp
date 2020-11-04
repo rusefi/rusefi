@@ -304,6 +304,11 @@ static bool validateOffsetCount(size_t offset, size_t count, ts_channel_s *tsCha
 	return false;
 }
 
+// This is used to prevent TS from reading/writing when we have just applied a preset, to prevent TS getting confused.
+// At the same time an ECU reboot is forced by triggering a fatal error, informing the user to please restart
+// the ECU.  Forcing a reboot will force TS to re-read the tune CRC, 
+bool rebootForPresetPending = false;
+
 /**
  * This command is needed to make the whole transfer a bit faster
  * @note See also handleWriteValueCommand
@@ -318,9 +323,12 @@ static void handleWriteChunkCommand(ts_channel_s *tsChannel, ts_response_format_
 		return;
 	}
 
-	uint8_t * addr = (uint8_t *) (getWorkingPageAddr() + offset);
-	memcpy(addr, content, count);
-	onlineApplyWorkingCopyBytes(offset, count);
+	// Skip the write if a preset was just loaded - we don't want to overwrite it
+	if (!rebootForPresetPending) {
+		uint8_t * addr = (uint8_t *) (getWorkingPageAddr() + offset);
+		memcpy(addr, content, count);
+		onlineApplyWorkingCopyBytes(offset, count);
+	}
 
 	sendOkResponse(tsChannel, mode);
 }
@@ -365,15 +373,21 @@ static void handleWriteValueCommand(ts_channel_s *tsChannel, ts_response_format_
 		scheduleMsg(&tsLogger, "offset %d: value=%d", offset, value);
 	}
 
-	getWorkingPageAddr()[offset] = value;
+	// Skip the write if a preset was just loaded - we don't want to overwrite it
+	if (!rebootForPresetPending) {
+		getWorkingPageAddr()[offset] = value;
 
-	onlineApplyWorkingCopyBytes(offset, 1);
-
-//	scheduleMsg(logger, "va=%d", configWorkingCopy.boardConfiguration.idleValvePin);
+		onlineApplyWorkingCopyBytes(offset, 1);
+	}
 }
 
 static void handlePageReadCommand(ts_channel_s *tsChannel, ts_response_format_e mode, uint16_t offset, uint16_t count) {
 	tsState.readPageCommandsCounter++;
+
+	if (rebootForPresetPending) {
+		sendErrorCode(tsChannel, TS_RESPONSE_UNRECOGNIZED_COMMAND);
+		return;
+	}
 
 #if EFI_TUNER_STUDIO_VERBOSE
 	scheduleMsg(&tsLogger, "READ mode=%d offset=%d size=%d", mode, offset, count);
@@ -413,11 +427,15 @@ static void handleBurnCommand(ts_channel_s *tsChannel, ts_response_format_e mode
 
 	scheduleMsg(&tsLogger, "got B (Burn) %s", mode == TS_PLAIN ? "plain" : "CRC");
 
+	// Skip the burn if a preset was just loaded - we don't want to overwrite it
+	if (!rebootForPresetPending) {
 #if !defined(EFI_NO_CONFIG_WORKING_COPY)
-	memcpy(&persistentState.persistentConfiguration, &configWorkingCopy, sizeof(persistent_config_s));
+		memcpy(&persistentState.persistentConfiguration, &configWorkingCopy, sizeof(persistent_config_s));
 #endif /* EFI_NO_CONFIG_WORKING_COPY */
 
-	requestBurn();
+		requestBurn();
+	}
+
 	sendResponseCode(mode, tsChannel, TS_RESPONSE_BURN_OK);
 	scheduleMsg(&tsLogger, "BURN in %dms", currentTimeMillis() - nowMs);
 }
