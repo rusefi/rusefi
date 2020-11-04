@@ -700,6 +700,21 @@ void setMiataNB2_MRE_MAF(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 void setMiataNB2_Proteus_TCU(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	engineConfiguration->tcuEnabled = true;
 
+	engineConfiguration->trigger.type = TT_TOOTHED_WHEEL;
+	engineConfiguration->trigger.customTotalToothCount = 10;
+	engineConfiguration->trigger.customSkippedToothCount = 0;
+
+
+	// "VR 1"
+	engineConfiguration->triggerInputPins[0] = GPIOE_7;
+
+	engineConfiguration->vehicleSpeedCoef = 1;
+	// "VR 2"
+	engineConfiguration->vehicleSpeedSensorInputPin = GPIOE_8;
+
+
+
+
 	// "Highside 2"
 	engineConfiguration->tcu_solenoid[0] = GPIOA_8;
 	// "Highside 1"
