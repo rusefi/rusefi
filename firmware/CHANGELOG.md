@@ -35,6 +35,7 @@ All notable user-facing or behavior-altering changes will be documented in this 
  -   High & low pressure fuel sensor channels
  -   Electronic throttle-style wastegate control found on some VW turbos (and VGTs)
  -   Improved TLE8888 driver on microRusEfi 
+ -   Improved setting ECU presets/defaults from TunerStudio
 
 ## October 2020 Release - "Sausage Pizza Day"
 
