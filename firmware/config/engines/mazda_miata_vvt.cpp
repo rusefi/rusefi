@@ -694,7 +694,13 @@ void setMiataNB2_MRE_MAF(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	engineConfiguration->fuelAlgorithm = LM_REAL_MAF;
 }
 
+/**
+ * https://github.com/rusefi/rusefi/wiki/HOWTO-TCU-A42DE-on-Proteus
+ */
 void setMiataNB2_Proteus_TCU(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
-
+	// "Digital 1"
+	engineConfiguration->tcuUpshiftButtonPin = GPIOC_6;
+	// "Digital 6"
+	engineConfiguration->tcuDownshiftButtonPin = GPIOE_15;
 }
 
