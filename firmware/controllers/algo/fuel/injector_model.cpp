@@ -19,6 +19,7 @@ constexpr float convertToGramsPerSecond(float ccPerMinute) {
 float InjectorModel::getAbsoluteRailPressure() const {
 	switch (CONFIG(injectorCompensationMode)) {
 		case ICM_FixedRailPressure:
+			// TODO: should this add baro pressure instead of 1atm?
 			return (CONFIG(fuelReferencePressure) + 101.325f);
 		case ICM_SensedRailPressure:
 			// TODO: what happens when the sensor fails?

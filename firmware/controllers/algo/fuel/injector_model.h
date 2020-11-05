@@ -24,7 +24,7 @@ private:
 	float m_massFlowRate = 0;
 };
 
-class InjectorModel final : public InjectorModelBase {
+class InjectorModel : public InjectorModelBase {
 public:
 	DECLARE_ENGINE_PTR;
 
