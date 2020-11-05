@@ -78,10 +78,10 @@ bool RegisteredOutputPin::isPinConfigurationChanged() {
 void RegisteredOutputPin::init() {
 #if EFI_PROD_CODE
 	brain_pin_e        newPin = *(brain_pin_e       *) ((void *) (&((char*) engineConfiguration)[pinOffset]));
-    pin_output_mode_e newMode = *(pin_output_mode_e *) ((void *) (&((char*) engineConfiguration)[pinModeOffset]));
+    pin_output_mode_e *newMode = (pin_output_mode_e *) ((void *) (&((char*) engineConfiguration)[pinModeOffset]));
 
     if (isPinConfigurationChanged()) {
-		this->initPin(name, newPin, &newMode);
+		this->initPin(name, newPin, newMode);
     }
 #endif // EFI_PROD_CODE
 }
