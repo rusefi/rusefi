@@ -36,6 +36,12 @@ public class TSProjectConsumer implements ConfigurationConsumer {
     private int writeTunerStudio(ConfigField configField, String prefix, Writer tsHeader, int tsPosition, ConfigField next, int bitIndex) throws IOException {
         String nameWithPrefix = prefix + configField.getName();
 
+        if (configField.isDirective() && configField.getComment() != null) {
+            tsHeader.write(configField.getComment());
+            tsHeader.write(EOL);
+            return tsPosition;
+        }
+
         if (configField.getComment() != null && configField.getComment().startsWith(ConfigField.TS_COMMENT_TAG + "")) {
             settingContextHelp.append("\t" + nameWithPrefix + " = \"" + configField.getCommentContent() + "\"" + EOL);
         }
@@ -119,9 +125,23 @@ public class TSProjectConsumer implements ConfigurationConsumer {
 
     private int writeTunerStudio(ConfigStructure configStructure, String prefix, Writer tsHeader, int tsPosition) throws IOException {
         BitState bitState = new BitState();
+        ConfigField prev = ConfigField.VOID;
+        int prevTsPosition = tsPosition;
         for (int i = 0; i < configStructure.tsFields.size(); i++) {
             ConfigField next = i == configStructure.tsFields.size() - 1 ? ConfigField.VOID : configStructure.tsFields.get(i + 1);
             ConfigField cf = configStructure.tsFields.get(i);
+
+            // if duplicate names, use previous position
+            if (cf.getName().equals(prev.getName())) {
+                tsPosition = prevTsPosition;
+            }
+
+            // Update 'prev' state needed for duplicate names recognition
+            if (!cf.isDirective()) {
+                prevTsPosition = tsPosition;
+                prev = cf;
+            }
+
             tsPosition = writeTunerStudio(cf, prefix, tsHeader, tsPosition, next, bitState.get());
 
             bitState.incrementBitIndex(cf, next);
