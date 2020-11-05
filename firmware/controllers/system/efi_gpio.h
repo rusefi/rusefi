@@ -132,12 +132,14 @@ public:
 class RegisteredOutputPin : public OutputPin {
 public:
 	RegisteredOutputPin(const char *name, short pinOffset, short pinModeOffset);
+	void init();
 	void unregister();
 	RegisteredOutputPin *next;
 private:
 	const char *name;
 	short pinOffset;
 	short pinModeOffset;
+	bool isPinConfigurationChanged();
 };
 
 class EnginePins {
