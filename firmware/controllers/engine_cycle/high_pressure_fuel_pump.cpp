@@ -10,3 +10,6 @@
 
 #include "high_pressure_fuel_pump.h"
 
+void initHPFP(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+
+}
