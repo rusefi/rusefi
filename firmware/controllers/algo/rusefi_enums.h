@@ -30,7 +30,7 @@
  */
 typedef enum {
 	DEFAULT_FRANKENSO = ET_DEFAULT_FRANKENSO,
-	MIATA_PROTEUS_TCU = 1,
+	MIATA_PROTEUS_TCU = ET_MIATA_TCU_PROTEUS,
 	/**
 	 * 1995 Dodge Neon
 	 * http://rusefi.com/forum/viewtopic.php?t=360
