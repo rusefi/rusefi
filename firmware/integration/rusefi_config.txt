@@ -1243,8 +1243,12 @@ custom tle8888_mode_e 1 bits, U08, @OFFSET@, [0:1], "Auto", "SemiAuto", "Manual"
 tle8888_mode_e tle8888mode;
 
 	pin_output_mode_e LIS302DLCsPinMode;
-	uint8_t[2] unusedSomethingWasHere;;"units", 1, 0, -20, 100, 0
-	float unused244_1;;"units", 1, 0, -20, 100, 0
+
+	custom injector_compensation_mode_e 1 bits, U08, @OFFSET@, [0:1], "None", "Fixed rail pressure", "Sensed Rail Pressure"
+	injector_compensation_mode_e injectorCompensationMode;
+
+	uint8_t unused2419;;"units", 1, 0, -20, 100, 0
+	float fuelReferencePressure;;"kPa", 1, 0, 0, 700000, 0
 	float unused244_2;;"units", 1, 0, -20, 100, 0
 	float unused244_3;;"units", 1, 0, -20, 100, 0
 	float unused2432;;"units", 1, 0, -20, 100, 0

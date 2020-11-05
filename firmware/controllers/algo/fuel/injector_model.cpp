@@ -15,10 +15,38 @@ constexpr float convertToGramsPerSecond(float ccPerMinute) {
 	return ccPerSecond * 0.72f;	// 0.72g/cc fuel density
 }
 
+float InjectorModel::getAbsoluteRailPressure() const {
+	switch (CONFIG(injectorCompensationMode)) {
+		case ICM_FixedRailPressure:
+			return (CONFIG(fuelReferencePressure) + 101.325f);
+		case ICM_SensedRailPressure:
+			return Sensor::get(SensorType::FuelPressureInjector);
+	}
+}
+
+float InjectorModel::getInjectorFlowRatio() const {
+	// Compensation disabled, use reference flow.
+	if (CONFIG(injectorCompensationMode) == ICM_None) {
+		return 1.0f;
+	}
+
+	float referencePressure = CONFIG(fuelReferencePressure);
+	float absRailPressure = getActualPressure();
+
+	float map = getMap(PASS_ENGINE_PARAMETER_SIGNATURE);
+
+	float pressureDelta = absRailPressure - map;
+
+	return sqrtf(actualPressure / referencePressure);
+}
+
 float InjectorModel::getInjectorMassFlowRate() const {
 	// TODO: injector flow dependent upon rail pressure (and temperature/ethanol content?)
 	auto injectorVolumeFlow = CONFIG(injector.flow);
-	return convertToGramsPerSecond(injectorVolumeFlow);
+
+	float flowRatio = getInjectorFlowRatio();
+
+	return flowRatio * convertToGramsPerSecond(injectorVolumeFlow);
 }
 
 float InjectorModel::getDeadtime() const {

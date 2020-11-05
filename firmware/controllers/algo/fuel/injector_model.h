@@ -14,6 +14,8 @@ public:
 
 	virtual floatms_t getDeadtime() const = 0;
 	virtual float getInjectorMassFlowRate() const = 0;
+	virtual float getInjectorFlowRatio() const = 0;
+	virtual float getAbsoluteRailPressure() const = 0;
 
 	virtual void postState(float deadTime) const { (void)deadTime; };
 
@@ -29,4 +31,6 @@ public:
 	void postState(float deadtime) const override;
 	floatms_t getDeadtime() const override;
 	float getInjectorMassFlowRate() const override;
+	float getInjectorFlowRatio() const override;
+	float getAbsoluteRailPressure() const override;
 };
