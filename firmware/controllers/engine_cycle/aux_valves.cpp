@@ -1,5 +1,5 @@
 /*
- * aux_valves.cpp
+ * @file aux_valves.cpp
  *
  *
  * Here we have two auxilary digital on/off outputs which would open once per each 360 degrees of engine crank revolution.
