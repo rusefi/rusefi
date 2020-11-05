@@ -22,7 +22,11 @@
 
 EXTERN_ENGINE;
 
-void plainPinTurnOn(AuxActor *current) {
+static void plainPinTurnOff(NamedOutputPin *output) {
+	output->setLow();
+}
+
+void auxPlainPinTurnOn(AuxActor *current) {
 	NamedOutputPin *output = &enginePins.auxValve[current->valveIndex];
 	output->setHigh();
 
@@ -35,7 +39,7 @@ void plainPinTurnOn(AuxActor *current) {
 			TRIGGER_EVENT_UNDEFINED,
 			getTimeNowNt(),
 			current->extra + engine->engineState.auxValveStart,
-			{ plainPinTurnOn, current }
+			{ auxPlainPinTurnOn, current }
 			PASS_ENGINE_PARAMETER_SUFFIX
 			);
 
@@ -51,10 +55,6 @@ void plainPinTurnOn(AuxActor *current) {
 			PASS_ENGINE_PARAMETER_SUFFIX
 			);
 	}
-
-void plainPinTurnOff(NamedOutputPin *output) {
-	output->setLow();
-}
 
 void initAuxValves(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	UNUSED(sharedLogger);
@@ -83,7 +83,7 @@ void initAuxValves(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX) {
 					TRIGGER_EVENT_UNDEFINED,
 					getTimeNowNt(),
 					actor->extra + engine->engineState.auxValveStart,
-					{ plainPinTurnOn, actor }
+					{ auxPlainPinTurnOn, actor }
 					PASS_ENGINE_PARAMETER_SUFFIX
 					);
 		}
