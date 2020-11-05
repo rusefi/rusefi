@@ -227,8 +227,15 @@ public class ReaderState {
     private static void processField(ReaderState state, String line) {
 
         ConfigField cf = ConfigField.parse(state, line);
-        if (cf == null)
-            throw new IllegalStateException("Cannot parse line [" + line + "]");
+
+        if (cf == null) {
+            if (ConfigField.isPreprocessorDirective(state, line)) {
+                cf = new ConfigField(state, "", line, null,
+                        ConfigField.DIRECTIVE_T, 0, null, false, false, null, 0, null, null);
+            } else {
+                throw new IllegalStateException("Cannot parse line [" + line + "]");
+            }
+        }
 
         if (state.stack.isEmpty())
             throw new IllegalStateException(cf.getName() + ": Not enclosed in a struct");
@@ -250,6 +257,8 @@ public class ReaderState {
                         cf.getType(), 1, cf.getTsInfo(), false, false, cf.getName(), i, null, null);
                 structure.addTs(element);
             }
+        } else if (cf.isDirective()) {
+            structure.addTs(cf);
         } else {
             structure.addBoth(cf);
         }
