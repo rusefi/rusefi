@@ -39,6 +39,7 @@
 #include "allsensors.h"
 #include "electronic_throttle.h"
 #include "map_averaging.h"
+#include "high_pressure_fuel_pump.h"
 #include "malfunction_central.h"
 #include "malfunction_indicator.h"
 #include "speed_density.h"
@@ -623,6 +624,7 @@ void commonInitEngineController(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_S
 		 */
 		initSparkLogic(sharedLogger);
 		initMainEventListener(sharedLogger PASS_ENGINE_PARAMETER_SUFFIX);
+		initHPFP(PASS_ENGINE_PARAMETER_SIGNATURE);
 	}
 #endif /* EFI_ENGINE_CONTROL */
 
