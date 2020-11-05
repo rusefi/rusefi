@@ -11,5 +11,4 @@
 
 void initAuxValves(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX);
 void recalculateAuxValveTiming(DECLARE_ENGINE_PARAMETER_SIGNATURE);
-void plainPinTurnOn(AuxActor *current);
-void plainPinTurnOff(NamedOutputPin *output);
+void auxPlainPinTurnOn(AuxActor *current);
