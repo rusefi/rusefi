@@ -90,7 +90,11 @@ enable2ndByteCanID = false
 
    pageButtons  = "&EGO"
    gauge1       = RPMGauge	
+#if LAMBDA
    gauge2       = lambda1Gauge
+#else
+   gauge2       = afr1Gauge
+#endif
    gauge3		= MAPGauge
    gauge4		= veValueGauge
 
@@ -135,8 +139,13 @@ enable2ndByteCanID = false
 [VeAnalyze]
 
         ;    tableName,  lambdaTargetTableName, lambdaChannel, egoCorrectionChannel, activeCondition
+#if LAMBDA
        veAnalyzeMap = veTableTbl, lambdaTableTbl, lambdaValue, egoCorrection, { 1 }
        lambdaTargetTables = lambdaTableTbl, afrTSCustom
+#else
+       veAnalyzeMap = veTableTbl, afrTableTbl, AFRValue, egoCorrection, { 1 }
+       lambdaTargetTables = afrTableTbl, afrTSCustom
+#endif
 
        ; filter =  Name,        "DisplayName", outputChannel, operator, defaultVal, userAdjustable
         filter = minRPMFilter, "Minimum RPM", RPMValue,           <       , 500,      , true
@@ -531,7 +540,11 @@ enable2ndByteCanID = false
       yAxis       =  0,  28, 10
       xBins       = narrowToWideOxygenBins
       yBins       = narrowToWideOxygen
+#if LAMBDA
       gauge       = lambda1Gauge
+#else
+      gauge       = afr1Gauge
+#endif
 
    curve = fsioCurve1, "FSIO Curve #1"
       columnLabel = "X", "Y"
@@ -709,7 +722,11 @@ enable2ndByteCanID = false
       yAxis       = 0, 250, 10
       xBins       = idleVeBins, RPMValue
       yBins       = idleVe
+#if LAMBDA
       gauge       = lambda1Gauge
+#else
+      gauge       = afr1Gauge
+#endif
     
 	curve = crankingAdvanceCurve, "Cranking Advance Angle"
       columnLabel = "RPM", "degrees"
@@ -838,7 +855,11 @@ enable2ndByteCanID = false
       upDownLabel = "(Later)", "(Sooner)"
 
 
+#if LAMBDA
    table = lambdaTableTbl,  lambdaTableMap,  "Target Lambda Table",   1
+#else
+   table = afrTableTbl,  afrTableMap,  "Target AFR Table",   1
+#endif
       ;       constant, variable
       xBins       = lambdaRpmBins,  RPMValue
       yBins       = lambdaLoadBins, afrTableYAxis
@@ -1032,9 +1053,13 @@ gaugeCategory = Knock
 [WueAnalyze]
     
 ;                    wueCurveName, afrTempCompensationCurve, lambdaTargetTableName, lambdaChannel, coolantTempChannel, egoCorrectionChannel, wueChannel, activeCondition
+#if LAMBDA
      wueAnalyzeMap = wueAnalyzer_warmup_curve, wueAfrTargetOffsetCurve, lambdaTableTbl, lambdaValue, coolant, cltCorrection, egoCorrection
-
      lambdaTargetTables = lambdaTableTbl, afrTSCustom
+#else
+     wueAnalyzeMap = wueAnalyzer_warmup_curve, wueAfrTargetOffsetCurve, afrTableTbl, AFRValue, coolant, cltCorrection, egoCorrection
+     lambdaTargetTables = afrTableTbl, afrTSCustom
+#endif
 
      wuePercentOffset = 0 ; for working with 0 based enrichment set to 100
      option = disableLiveUpdates
@@ -1065,7 +1090,11 @@ gaugeCategory = Knock
    gauge2 = CLTGauge
    gauge3 = TPSGauge
    gauge4 = MAPGauge
+#if LAMBDA
    gauge5 = lambda1Gauge
+#else
+   gauge5 = afr1Gauge
+#endif
    gauge6 = VBattGauge
    gauge7 = dwellGauge
    gauge8 = ignadvGauge
@@ -1292,7 +1321,11 @@ menuDialog = main
 		subMenu = std_separator
 
 		# Fuel model
+#if LAMBDA
 		subMenu = lambdaTableTbl,				"Target lambda", 0, {isInjectionEnabled == 1}
+#else
+		subMenu = afrTableTbl,				"Target AFR", 0, {isInjectionEnabled == 1}
+#endif
 		subMenu = cltFuelCorrCurve,			"CLT multiplier", 0, {isInjectionEnabled == 1}
 		subMenu = iatFuelCorrCurve,			"IAT multiplier", 0, {isInjectionEnabled == 1}
 		subMenu = fuelClosedLoopDialog, 	"Closed loop fuel correction", 0, {isInjectionEnabled == 1}
@@ -3361,3 +3394,8 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 [Tools]
  ;addTool = toolName, PanelName
  addTool = veTableGenerator, "VE Table Generator", veTableTbl
+#if LAMBDA
+#else
+ addTool = afrTableGenerator, "AFR Table Generator", afrTableTbl
+#endif
+
