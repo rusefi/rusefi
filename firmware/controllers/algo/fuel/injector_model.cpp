@@ -1,4 +1,5 @@
 #include "injector_model.h"
+#include "map.h"
 
 EXTERN_ENGINE;
 
@@ -20,7 +21,9 @@ float InjectorModel::getAbsoluteRailPressure() const {
 		case ICM_FixedRailPressure:
 			return (CONFIG(fuelReferencePressure) + 101.325f);
 		case ICM_SensedRailPressure:
-			return Sensor::get(SensorType::FuelPressureInjector);
+			// TODO: what happens when the sensor fails?
+			return Sensor::get(SensorType::FuelPressureInjector).value_or(0);
+		default: return 0;
 	}
 }
 
@@ -31,13 +34,13 @@ float InjectorModel::getInjectorFlowRatio() const {
 	}
 
 	float referencePressure = CONFIG(fuelReferencePressure);
-	float absRailPressure = getActualPressure();
+	float absRailPressure = getAbsoluteRailPressure();
 
 	float map = getMap(PASS_ENGINE_PARAMETER_SIGNATURE);
 
 	float pressureDelta = absRailPressure - map;
 
-	return sqrtf(actualPressure / referencePressure);
+	return sqrtf(pressureDelta / referencePressure);
 }
 
 float InjectorModel::getInjectorMassFlowRate() const {
