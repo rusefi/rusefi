@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Thu Nov 05 20:36:43 UTC 2020
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Fri Nov 06 19:37:11 UTC 2020
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -1064,6 +1064,7 @@ struct engine_configuration_s {
 	 * See throttlePedalPositionSecondAdcChannel for second channel
 	 * See also tps1_1AdcChannel
 	 * set_analog_input_pin pps X
+	 * See throttlePedalUpVoltage and throttlePedalWOTVoltage
 	 * offset 580
 	 */
 	adc_channel_e throttlePedalPositionAdcChannel;
@@ -1258,6 +1259,7 @@ struct engine_configuration_s {
 	 * Electronic throttle pedal position input
 	 * Second channel
 	 * See also tps1_1AdcChannel
+	 * See throttlePedalSecondaryUpVoltage and throttlePedalSecondaryWOTVoltage
 	 * offset 683
 	 */
 	adc_channel_e throttlePedalPositionSecondAdcChannel;
@@ -3755,4 +3757,4 @@ struct persistent_config_s {
 typedef struct persistent_config_s persistent_config_s;
 
 // end
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Thu Nov 05 20:36:43 UTC 2020
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Fri Nov 06 19:37:11 UTC 2020
