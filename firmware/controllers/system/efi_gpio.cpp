@@ -104,8 +104,8 @@ void RegisteredOutputPin::unregister() {
 EnginePins::EnginePins() :
 		mainRelay("Main relay", CONFIG_PIN_OFFSETS(mainRelay)),
 		hpfpValve("hpfpValve", CONFIG_PIN_OFFSETS(hpfpValve)),
-		starterControl("starterControl", CONFIG_PIN_OFFSETS(starterControl)),
-		starterRelayDisable("starterRelayDisable", CONFIG_PIN_OFFSETS(starterRelayDisable)),
+		starterControl("Starter control", CONFIG_PIN_OFFSETS(starterControl)),
+		starterRelayDisable("Starter disable", CONFIG_PIN_OFFSETS(starterRelayDisable)),
 		fanRelay("Fan", CONFIG_PIN_OFFSETS(fan)),
 		acRelay("A/C relay", CONFIG_PIN_OFFSETS(acRelay)),
 		fuelPumpRelay("Fuel pump", CONFIG_PIN_OFFSETS(fuelPump)),
@@ -221,9 +221,6 @@ void EnginePins::startPins(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	startInjectionPins();
 	startIgnitionPins();
 	startAuxValves();
-
-	starterRelayDisable.initPin("Starter disable", CONFIG(starterRelayDisablePin), &CONFIG(starterRelayDisablePinMode));
-	starterControl.initPin("Starter control", CONFIG(starterControlPin));
 #endif /* EFI_ENGINE_CONTROL */
 
 	RegisteredOutputPin * pin = registeredOutputHead;
