@@ -127,6 +127,13 @@ void SingleTimerExecutor::executeAllPendingActions() {
 	do {
 		efitick_t nowNt = getTimeNowNt();
 		didExecute = queue.executeOne(nowNt);
+
+		// If locked (ie, interrupts disabled), briefly enable/disable them
+		// to flush any pending interrupts
+		// This is safe to do here because it's the same as if the just executed
+		// action added a new event to the queue
+		unlockAnyContext();
+		lockAnyContext();
 	} while (didExecute);
 
 	if (!isLocked()) {
