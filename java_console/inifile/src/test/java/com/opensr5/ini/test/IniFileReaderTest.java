@@ -203,4 +203,29 @@ public class IniFileReaderTest {
         assertEquals(1, field.getCols());
         assertEquals(8, field.getRows());
     }
+
+    @Test
+    public void testDirectives() {
+        String string = "page = 1\n" +
+                "[Constants]\n" +
+                "#if LAMBDA\n" +
+                "\tname\t= bits,    U32,   \t744, [0:2], \"false\"\n" +
+                "#else\n" +
+                "\tname\t= bits,    U32,   \t744, [3:4], \"false\", \"true\"\n" +
+                "#endif";
+
+        RawIniFile lines = IniFileReader.read(new ByteArrayInputStream(string.getBytes()));
+        IniFileModel model = new IniFileModel().readIniFile(lines);
+
+        assertEquals(1, model.allIniFields.size());
+
+        EnumIniField field = (EnumIniField) model.allIniFields.get("name");
+        // todo: we need the first field to be added, not the second one
+        //assertEquals(0, field.getBitPosition());
+        //assertEquals(2, field.getBitSize0());
+        //assertEquals(1, field.getEnums().size());
+        assertEquals(3, field.getBitPosition());
+        assertEquals(1, field.getBitSize0());
+        assertEquals(2, field.getEnums().size());
+    }
 }
