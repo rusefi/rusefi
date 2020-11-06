@@ -1,4 +1,5 @@
 #include "injector_model.h"
+#include "tunerstudio_outputs.h"
 #include "map.h"
 
 EXTERN_ENGINE;
@@ -40,8 +41,18 @@ float InjectorModel::getInjectorFlowRatio() const {
 	float map = getMap(PASS_ENGINE_PARAMETER_SIGNATURE);
 
 	float pressureDelta = absRailPressure - map;
+	float pressureRatio = pressureDelta / referencePressure;
+	float flowRatio = sqrtf(pressureRatio);
 
-	return sqrtf(pressureDelta / referencePressure);
+#if EFI_TUNER_STUDIO
+	if (CONFIG(debugMode) == DBG_INJECTOR_COMPENSATION) {
+		tsOutputChannels.debugFloatField1 = pressureDelta;
+		tsOutputChannels.debugFloatField2 = pressureRatio;
+		tsOutputChannels.debugFloatField3 = flowRatio;
+	}
+#endif // EFI_TUNER_STUDIO
+
+	return flowRatio;
 }
 
 float InjectorModel::getInjectorMassFlowRate() const {
