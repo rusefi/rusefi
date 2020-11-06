@@ -56,7 +56,7 @@ float InjectorModel::getInjectorFlowRatio() const {
 }
 
 float InjectorModel::getInjectorMassFlowRate() const {
-	// TODO: injector flow dependent upon rail pressure (and temperature/ethanol content?)
+	// TODO: injector flow dependent upon temperature/ethanol content?
 	auto injectorVolumeFlow = CONFIG(injector.flow);
 
 	float flowRatio = getInjectorFlowRatio();
