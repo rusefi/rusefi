@@ -289,7 +289,8 @@ void setEngineBMW_M73_Proteus(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	// set vbatt_divider 8.16
 	// engineConfiguration->vbattDividerCoeff = (49.0f / 10.0f) * 16.8f / 10.0f;
 	// todo: figure out exact values from TLE8888 breakout board used by Manhattan
-	engineConfiguration->vbattDividerCoeff = 7.6;
+	// engineConfiguration->vbattDividerCoeff = 7.6; // is that Proteus 0.2 value?
+
 
 
 	// GPIOE_0:  "Lowside 14"
