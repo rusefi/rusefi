@@ -588,6 +588,7 @@ void commonInitEngineController(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_S
 
 	initButtonShift(PASS_ENGINE_PARAMETER_SIGNATURE);
 
+	initButtonDebounce(sharedLogger);
 	initStartStopButton(PASS_ENGINE_PARAMETER_SIGNATURE);
 
 #if EFI_ELECTRONIC_THROTTLE_BODY
