@@ -97,12 +97,7 @@ bool ButtonDebounce::readPinState() {
     // storedValue is a class variable, so it needs to be reset.
     // We don't actually need it to be a class variable in this method,
     //  but when a method is implemented to actually get the pin's state,
-    ButtonDebounce *listItem = s_firstDebounce;
-    while (listItem != nullptr) {
-        listItem->stopConfiguration();
-        listItem = listItem->nextDebounce;
-    }
-   //  for example to implement long button presses, it will be needed.
+    //  for example to implement long button presses, it will be needed.
     storedValue = false;
 #if EFI_PROD_CODE || EFI_UNIT_TEST
     storedValue = efiReadPin(active_pin);
