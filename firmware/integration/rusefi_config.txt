@@ -1249,7 +1249,7 @@ tle8888_mode_e tle8888mode;
 	injector_compensation_mode_e injectorCompensationMode;
 
 	uint8_t unused2419;;"units", 1, 0, -20, 100, 0
-	float fuelReferencePressure;;"kPa", 1, 0, 0, 700000, 0
+	float fuelReferencePressure;+This is the pressure at which your injector flow is known.\nFor example if your injectors flow 400cc/min at 3.5 bar, enter 350kpa here.;"kPa", 1, 0, 0, 700000, 0
 	float unused244_2;;"units", 1, 0, -20, 100, 0
 	float unused244_3;;"units", 1, 0, -20, 100, 0
 	float unused2432;;"units", 1, 0, -20, 100, 0
