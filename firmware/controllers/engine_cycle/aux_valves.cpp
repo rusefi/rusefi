@@ -26,9 +26,8 @@ static void plainPinTurnOff(NamedOutputPin *output) {
 	output->setLow();
 }
 
-void auxPlainPinTurnOn(AuxActor *current) {
-	NamedOutputPin *output = &enginePins.auxValve[current->valveIndex];
-	output->setHigh();
+
+static void scheduleOpen(AuxActor *current) {
 
 #if EFI_UNIT_TEST
 	Engine *engine = current->engine;
@@ -42,6 +41,18 @@ void auxPlainPinTurnOn(AuxActor *current) {
 			{ auxPlainPinTurnOn, current }
 			PASS_ENGINE_PARAMETER_SUFFIX
 			);
+}
+
+void auxPlainPinTurnOn(AuxActor *current) {
+	NamedOutputPin *output = &enginePins.auxValve[current->valveIndex];
+	output->setHigh();
+
+#if EFI_UNIT_TEST
+	Engine *engine = current->engine;
+	EXPAND_Engine;
+#endif /* EFI_UNIT_TEST */
+
+	scheduleOpen(current);
 
 	angle_t duration = engine->engineState.auxValveEnd - engine->engineState.auxValveStart;
 
@@ -78,14 +89,7 @@ void initAuxValves(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX) {
 			actor->extra = phaseIndex * 360 + valveIndex * 180;
 
 			INJECT_ENGINE_REFERENCE(actor);
-
-			scheduleOrQueue(&actor->open,
-					TRIGGER_EVENT_UNDEFINED,
-					getTimeNowNt(),
-					actor->extra + engine->engineState.auxValveStart,
-					{ auxPlainPinTurnOn, actor }
-					PASS_ENGINE_PARAMETER_SUFFIX
-					);
+			scheduleOpen(actor);
 		}
 	}
 }
