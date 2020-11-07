@@ -297,6 +297,7 @@ void setEngineBMW_M73_Proteus(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	CONFIG(starterControlPin) = GPIOE_0;
 	// GPIOE_12: "Digital 3"
 	CONFIG(startStopButtonPin) = GPIOE_12;
+	CONFIG(startStopButtonMode) = PI_PULLUP;
 
 
 	// EFI_ADC_12: "Analog Volt 3"
@@ -308,9 +309,9 @@ void setEngineBMW_M73_Proteus(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	// EFI_ADC_1: "Analog Volt 6"
 	engineConfiguration->throttlePedalPositionAdcChannel = EFI_ADC_1;
 	engineConfiguration->throttlePedalUpVoltage = 0;
-	engineConfiguration->throttlePedalWOTVoltage = 4.4;
-	engineConfiguration->throttlePedalSecondaryUpVoltage = 0.5;
-	engineConfiguration->throttlePedalSecondaryWOTVoltage = 4.4;
+	engineConfiguration->throttlePedalWOTVoltage = 4.9;
+	engineConfiguration->throttlePedalSecondaryUpVoltage = 0.73;
+	engineConfiguration->throttlePedalSecondaryWOTVoltage = 4.9;
 
 	// EFI_ADC_2: "Analog Volt 7"
 	engineConfiguration->throttlePedalPositionSecondAdcChannel = EFI_ADC_2;
