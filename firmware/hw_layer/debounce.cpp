@@ -98,9 +98,10 @@ bool ButtonDebounce::readPinState() {
     // We don't actually need it to be a class variable in this method,
     //  but when a method is implemented to actually get the pin's state,
     //  for example to implement long button presses, it will be needed.
-    storedValue = false;
 #if EFI_PROD_CODE || EFI_UNIT_TEST
     storedValue = efiReadPin(active_pin);
+#else
+    storedValue = false;
 #endif
 #if EFI_PROD_CODE
     // Invert
