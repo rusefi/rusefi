@@ -466,7 +466,7 @@ bit rollingLaunchEnabled;
 bit antiLagEnabled;
 bit useRunningMathForCranking,Fuel Map,Fixed;
 bit displayLogicLevelsInEngineSniffer;
-bit issue_294_26;
+bit useTLE8888_stepper;
 bit issue_294_27;
 bit issue_294_28;
 bit issue_294_29;
