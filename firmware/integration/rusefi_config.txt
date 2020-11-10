@@ -735,7 +735,8 @@ pin_input_mode_e throttlePedalUpPinMode;
 	uint16_t idlePositionMax;Voltage when the idle valve is open.\nYou probably don't have one of these!;"mv", 1, 0, 0, 5000, 0
 
 
-	uint8_t[4] unusedAt724;;"units", 1, 0, -20, 100, 0
+	uint16_t tempHpfpStart;;"units", 1, 0, -20, 100, 0
+	uint16_t tempHpfpDuration;;"units", 1, 0, -20, 100, 0
 
 	uint32_t tunerStudioSerialSpeed;Secondary TTL channel baud rate;"BPs",      1,      0,       0,1000000,      0
 
