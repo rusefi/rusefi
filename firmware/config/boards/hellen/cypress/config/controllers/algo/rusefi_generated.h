@@ -1166,6 +1166,7 @@
 #define PROTOCOL_ES_UP "u"
 #define PROTOCOL_HELLO_PREFIX "***"
 #define PROTOCOL_HIP_NAME "HIP"
+#define PROTOCOL_HPFP_NAME "hpfp"
 #define PROTOCOL_INJ1_SHORT_NAME "i1"
 #define PROTOCOL_MSG "msg"
 #define PROTOCOL_OUTPIN "outpin"
@@ -1208,8 +1209,8 @@
 #define showHumanReadableWarning_offset 976
 #define showSdCardWarning_offset 76
 #define SIGNATURE_BOARD hellen_cypress
-#define SIGNATURE_DATE 2020.11.06
-#define SIGNATURE_HASH 3365505632
+#define SIGNATURE_DATE 2020.11.10
+#define SIGNATURE_HASH 720281854
 #define silentTriggerError_offset 1464
 #define slowAdcAlpha_offset 2088
 #define sparkDwellRpmBins_offset 332
@@ -1527,7 +1528,7 @@
 #define ts_show_spi true
 #define ts_show_trigger_comparator false
 #define ts_show_tunerstudio_port true
-#define TS_SIGNATURE "rusEFI 2020.11.06.hellen_cypress.3365505632"
+#define TS_SIGNATURE "rusEFI 2020.11.10.hellen_cypress.720281854"
 #define TS_SINGLE_WRITE_COMMAND 'W'
 #define TS_SINGLE_WRITE_COMMAND_char W
 #define TS_TEST_COMMAND 't' // 0x74
