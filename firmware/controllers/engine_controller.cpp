@@ -625,7 +625,9 @@ void commonInitEngineController(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_S
 		 */
 		initSparkLogic(sharedLogger);
 		initMainEventListener(sharedLogger PASS_ENGINE_PARAMETER_SUFFIX);
+#dif EFI_HPFP
 		initHPFP(PASS_ENGINE_PARAMETER_SIGNATURE);
+#endif // EFI_HPFP
 	}
 #endif /* EFI_ENGINE_CONTROL */
 
