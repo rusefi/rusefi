@@ -1738,6 +1738,7 @@ end_struct
 #define PROTOCOL_VVT_NAME "VVT"
 #define PROTOCOL_HIP_NAME "HIP"
 #define PROTOCOL_TACH_NAME "tach"
+#define PROTOCOL_HPFP_NAME "hpfp"
 
 #define PROTOCOL_WA_CHANNEL_1 "input1"
 #define PROTOCOL_WA_CHANNEL_2 "input2"
