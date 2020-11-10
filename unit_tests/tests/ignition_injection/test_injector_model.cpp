@@ -11,7 +11,7 @@ public:
 	MOCK_METHOD(floatms_t, getDeadtime, (), (const, override));
 	MOCK_METHOD(float, getInjectorMassFlowRate, (), (const, override));
 	MOCK_METHOD(float, getInjectorFlowRatio, (), (const, override));
-	MOCK_METHOD(float, getAbsoluteRailPressure, (), (const, override));
+	MOCK_METHOD(expected<float>, getAbsoluteRailPressure, (), (const, override));
 };
 
 TEST(InjectorModel, Prepare) {
@@ -61,7 +61,7 @@ struct TesterGetFlowRate : public InjectorModel {
 };
 
 struct TesterGetRailPressure : public InjectorModel {
-	MOCK_METHOD(float, getAbsoluteRailPressure, (), (const, override));
+	MOCK_METHOD(expected<float>, getAbsoluteRailPressure, (), (const, override));
 };
 
 class FlowRateFixture : public ::testing::TestWithParam<float> {

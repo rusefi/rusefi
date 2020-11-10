@@ -33,5 +33,5 @@ public:
 	floatms_t getDeadtime() const override;
 	float getInjectorMassFlowRate() const override;
 	float getInjectorFlowRatio() const override;
-	float getAbsoluteRailPressure() const override;
+	expected<float> getAbsoluteRailPressure() const override;
 };
