@@ -39,6 +39,22 @@
 // Ignore USB VBUS pin (we're never a host, only a device)
 #define BOARD_OTG_NOVBUSSENS TRUE
 
+/* SPI storage */
+#define EFI_FLASH_SPI_CS_GPIO GPIOE
+#define EFI_FLASH_SPI_CS_PIN 15
+
+#define EFI_FLASH_SPI_AF 5U
+#define EFI_FLASH_SPI_SCK GPIOB_13
+#define EFI_FLASH_SPI_MISO GPIOB_14
+#define EFI_FLASH_SPI_MOSI GPIOB_15
+#define EFI_FLASH_SDPID SPID2
+
+#define EFI_FLASH_WP GPIOB_10
+#define EFI_FLASH_HOLD GPIOB_11
+
+/* 8 Mbytes */
+#define EFI_FLASH_SIZE (8 * 1024 * 1024)
+
 /*
  * Default to input mode, with internal pulldown resistor enabled.
  */

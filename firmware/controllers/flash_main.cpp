@@ -16,6 +16,10 @@
 #include "flash_int.h"
 #include "engine_math.h"
 
+#if (EFI_FLASH_SPI == TRUE)
+#include "m25q.h"
+#endif
+
 #if EFI_TUNER_STUDIO
 #include "tunerstudio.h"
 #endif
@@ -31,6 +35,18 @@ static Logging* logger;
 extern persistent_config_container_s persistentState;
 
 extern engine_configuration_s *engineConfiguration;
+
+/* Select internal vs external flash */
+#if (EFI_FLASH_SPI == TRUE)
+
+extern M25QDriver W25Flash;
+#define FLASH_DEVICE W25Flash
+
+#else
+
+#define FLASH_DEVICE EFLD1
+
+#endif
 
 /**
  * https://sourceforge.net/p/rusefi/tickets/335/
@@ -73,7 +89,7 @@ int eraseAndFlashCopy(flashaddr_t storageAddress, const TStorage& data)
 	flash_sector_t sector;
 
 	/* Base Flash should be argument */
-	BaseFlash *bf = getBaseFlash(&EFLD1);
+	BaseFlash *bf = getBaseFlash(&FLASH_DEVICE);
 
 	fdesc = flashGetDescriptor(bf);
 
@@ -169,7 +185,7 @@ static persisted_configuration_state_e doReadConfiguration(flashaddr_t address, 
 	printMsg(logger, "readFromFlash %x", address);
 #if (HAL_USE_FLASH == TRUE)
 	/* Base Flash should be argument */
-	BaseFlash *bf = getBaseFlash(&EFLD1);
+	BaseFlash *bf = getBaseFlash(&FLASH_DEVICE);
 	const flash_descriptor_t *fdesc = flashGetDescriptor(bf);
 	flash_offset_t offset = (flash_offset_t)address;
 
