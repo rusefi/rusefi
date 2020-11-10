@@ -83,7 +83,9 @@ private:
 	const pin_output_mode_e *modePtr;
 };
 
-
+/**
+ * OutputPin which is reported on Engine Sniffer
+ */
 class NamedOutputPin : public OutputPin {
 public:
 	NamedOutputPin();
@@ -129,6 +131,9 @@ public:
 	bool outOfOrder; // https://sourceforge.net/p/rusefi/tickets/319/
 };
 
+/**
+ * OutputPin with semi-automated init/deinit on configuration change
+ */
 class RegisteredOutputPin : public OutputPin {
 public:
 	RegisteredOutputPin(const char *name, short pinOffset, short pinModeOffset);
