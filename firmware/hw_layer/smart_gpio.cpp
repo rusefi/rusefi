@@ -149,6 +149,7 @@ struct tle8888_config tle8888_cfg = {
 	.ign_en =  {.port = GPIOD,	.pad = 10},
 	.inj_en =  {.port = GPIOD,	.pad = 11},
 	.mode = TL_AUTO,
+	.stepper = false
 };
 #endif
 
@@ -220,6 +221,7 @@ void initSmartGpio() {
 		tle8888_cfg.spi_bus = getSpiDevice(engineConfiguration->tle8888spiDevice);
 
 		tle8888_cfg.mode = engineConfiguration->tle8888mode;
+		tle8888_cfg.stepper = engineConfiguration->useTLE8888_stepper;
 
 		/* spi_bus == null checked in _add function */
 		ret = tle8888_add(0, &tle8888_cfg);
