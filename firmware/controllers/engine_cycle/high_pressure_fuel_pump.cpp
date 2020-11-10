@@ -35,6 +35,11 @@ static void plainPinTurnOff(RegisteredNamedOutputPin *output) {
 void hpfpPlainPinTurnOn(HpfpActor *current);
 
 static void handle(HpfpActor *actor) {
+#if EFI_UNIT_TEST
+	Engine *engine = actor->engine;
+	EXPAND_Engine;
+#endif /* EFI_UNIT_TEST */
+
 	scheduleOrQueue(&actor->open,
 	TRIGGER_EVENT_UNDEFINED, getTimeNowNt(), actor->extra + CONFIG(tempHpfpStart),
 		{hpfpPlainPinTurnOn, actor }
