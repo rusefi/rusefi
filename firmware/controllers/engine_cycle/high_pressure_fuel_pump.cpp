@@ -11,6 +11,8 @@
 #include "high_pressure_fuel_pump.h"
 #include "spark_logic.h"
 
+#if EFI_HPFP
+
 EXTERN_ENGINE
 ;
 
@@ -73,3 +75,5 @@ void initHPFP(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 		handle(actor);
 	}
 }
+
+#endif // EFI_HPFP
