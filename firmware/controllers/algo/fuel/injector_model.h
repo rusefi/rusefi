@@ -1,6 +1,7 @@
 #pragma once
 
 #include "engine.h"
+#include "expected.h"
 
 struct IInjectorModel {
 	virtual void prepare() = 0;
@@ -15,7 +16,7 @@ public:
 	virtual floatms_t getDeadtime() const = 0;
 	virtual float getInjectorMassFlowRate() const = 0;
 	virtual float getInjectorFlowRatio() const = 0;
-	virtual float getAbsoluteRailPressure() const = 0;
+	virtual expected<float> getAbsoluteRailPressure() const = 0;
 
 	virtual void postState(float deadTime) const { (void)deadTime; };
 

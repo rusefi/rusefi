@@ -158,3 +158,18 @@ TEST(InjectorModel, RailPressureSensed) {
 	Sensor::setMockValue(SensorType::FuelPressureInjector, 300);
 	EXPECT_FLOAT_EQ(300, dut.getAbsoluteRailPressure());
 }
+
+TEST(InjectorModel, FailedPressureSensor) {
+	InjectorModel dut;
+
+	WITH_ENGINE_TEST_HELPER(TEST_ENGINE);
+	INJECT_ENGINE_REFERENCE(&dut);
+
+	// Reference pressure is 350kpa
+	engineConfiguration->injectorCompensationMode = ICM_SensedRailPressure;
+
+	// Sensor is broken!
+	Sensor::resetMockValue(SensorType::FuelPressureInjector);
+
+	EXPECT_EQ(1.0f, dut.getInjectorFlowRatio());
+}

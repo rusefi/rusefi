@@ -17,15 +17,15 @@ constexpr float convertToGramsPerSecond(float ccPerMinute) {
 	return ccPerSecond * 0.72f;	// 0.72g/cc fuel density
 }
 
-float InjectorModel::getAbsoluteRailPressure() const {
+expected<float> InjectorModel::getAbsoluteRailPressure() const {
 	switch (CONFIG(injectorCompensationMode)) {
 		case ICM_FixedRailPressure:
 			// TODO: should this add baro pressure instead of 1atm?
 			return (CONFIG(fuelReferencePressure) + 101.325f);
 		case ICM_SensedRailPressure:
 			// TODO: what happens when the sensor fails?
-			return Sensor::get(SensorType::FuelPressureInjector).value_or(0);
-		default: return 0;
+			return Sensor::get(SensorType::FuelPressureInjector);
+		default: return unexpected;
 	}
 }
 
@@ -36,7 +36,12 @@ float InjectorModel::getInjectorFlowRatio() const {
 	}
 
 	float referencePressure = CONFIG(fuelReferencePressure);
-	float absRailPressure = getAbsoluteRailPressure();
+	expected<float> absRailPressure = getAbsoluteRailPressure();
+
+	// If sensor failed, best we can do is disable correction
+	if (!absRailPressure) {
+		return 1.0f;
+	}
 
 	float map = getMap(PASS_ENGINE_PARAMETER_SIGNATURE);
 
