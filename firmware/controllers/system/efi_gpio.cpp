@@ -123,6 +123,7 @@ EnginePins::EnginePins() :
 		hipCs("hipCs", CONFIG_PIN_OFFSETS(hip9011Cs))
 {
 	tachOut.name = PROTOCOL_TACH_NAME;
+	hpfpValve.name = PROTOCOL_HPFP_NAME;
 
 	static_assert(efi::size(sparkNames) >= IGNITION_PIN_COUNT, "Too many ignition pins");
 	for (int i = 0; i < IGNITION_PIN_COUNT;i++) {
