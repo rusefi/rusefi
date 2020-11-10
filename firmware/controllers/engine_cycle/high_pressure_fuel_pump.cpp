@@ -9,7 +9,62 @@
  */
 
 #include "high_pressure_fuel_pump.h"
+#include "spark_logic.h"
+
+EXTERN_ENGINE
+;
+
+#define LOBE_COUNT 3
+
+class HpfpActor {
+public:
+	angle_t extra;
+	int phaseIndex;
+
+	AngleBasedEvent open;
+	AngleBasedEvent close;
+	DECLARE_ENGINE_PTR;
+};
+
+static HpfpActor actors[LOBE_COUNT];
+
+static void plainPinTurnOff(RegisteredNamedOutputPin *output) {
+	output->setLow();
+}
+
+void hpfpPlainPinTurnOn(HpfpActor *current);
+
+static void handle(HpfpActor *actor) {
+	scheduleOrQueue(&actor->open,
+	TRIGGER_EVENT_UNDEFINED, getTimeNowNt(), actor->extra + CONFIG(tempHpfpStart),
+		{hpfpPlainPinTurnOn, actor }
+	PASS_ENGINE_PARAMETER_SUFFIX
+	);
+
+	scheduleOrQueue(&actor->close,
+	TRIGGER_EVENT_UNDEFINED, getTimeNowNt(),
+			actor->extra + CONFIG(tempHpfpStart) + CONFIG(tempHpfpDuration),
+			{ plainPinTurnOff, &enginePins.hpfpValve }
+	PASS_ENGINE_PARAMETER_SUFFIX
+			);
+}
+
+void hpfpPlainPinTurnOn(HpfpActor *current) {
+	RegisteredNamedOutputPin *output = &enginePins.hpfpValve;
+	output->setHigh();
+	handle(current);
+}
 
 void initHPFP(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+	if (engineConfiguration->hpfpValvePin == GPIO_UNASSIGNED) {
+		return;
+	}
 
+	for (int i = 0; i < LOBE_COUNT; i++) {
+		HpfpActor *actor = &actors[i];
+		INJECT_ENGINE_REFERENCE(actor);
+
+		actor->extra = 720 / LOBE_COUNT * i;
+		handle(actor);
+	}
 }
