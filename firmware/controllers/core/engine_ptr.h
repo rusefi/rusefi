@@ -2,6 +2,7 @@
 
 #include "efifeatures.h"
 
+#ifdef __cplusplus
 class Engine;
 struct engine_configuration_s;
 struct persistent_config_s;
@@ -62,6 +63,4 @@ struct persistent_config_s;
 		(void)engineConfiguration; \
 		(void)config;
 
-
-
-
+#endif // def __cplusplus
