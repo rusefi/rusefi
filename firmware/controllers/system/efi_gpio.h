@@ -86,7 +86,7 @@ private:
 /**
  * OutputPin which is reported on Engine Sniffer
  */
-class NamedOutputPin : public OutputPin {
+class NamedOutputPin : public virtual OutputPin {
 public:
 	NamedOutputPin();
 	explicit NamedOutputPin(const char *name);
@@ -99,11 +99,11 @@ public:
 	 */
 	bool stop();
 	// todo: char pointer is a bit of a memory waste here, we can reduce RAM usage by software-based getName() method
-	const char *name;
+	const char *name = nullptr;
 	/**
 	 * rusEfi Engine Sniffer protocol uses these short names to reduce bytes usage
 	 */
-	const char *shortName = NULL;
+	const char *shortName = nullptr;
 };
 
 class InjectorOutputPin final : public NamedOutputPin {
@@ -134,17 +134,22 @@ public:
 /**
  * OutputPin with semi-automated init/deinit on configuration change
  */
-class RegisteredOutputPin : public OutputPin {
+class RegisteredOutputPin : public virtual OutputPin {
 public:
-	RegisteredOutputPin(const char *name, short pinOffset, short pinModeOffset);
+	RegisteredOutputPin(const char *registrationName, short pinOffset, short pinModeOffset);
 	void init();
 	void unregister();
 	RegisteredOutputPin *next;
 private:
-	const char *name;
+	const char *registrationName;
 	short pinOffset;
 	short pinModeOffset;
 	bool isPinConfigurationChanged();
+};
+
+class RegisteredNamedOutputPin : public RegisteredOutputPin, public NamedOutputPin {
+public:
+		RegisteredNamedOutputPin(const char *name, short pinOffset, short pinModeOffset);
 };
 
 class EnginePins {
@@ -187,7 +192,7 @@ public:
 	 */
 	RegisteredOutputPin checkEnginePin;
 
-	NamedOutputPin tachOut;
+	RegisteredNamedOutputPin tachOut;
 
 	OutputPin fsioOutputs[FSIO_COMMAND_COUNT];
 	RegisteredOutputPin triggerDecoderErrorPin;
