@@ -8,8 +8,12 @@
 
 #pragma once
 
-#include "engine.h"
+#include "engine_ptr.h"
+#include "rusefi_types.h"
 #include "periodic_task.h"
+
+class Logging;
+class Pid;
 
 class IdleController : public PeriodicTimerController {
 public:
@@ -24,7 +28,7 @@ percent_t getIdlePosition(void);
 void applyIACposition(percent_t position DECLARE_ENGINE_PARAMETER_SUFFIX);
 void setManualIdleValvePosition(int positionPercent);
 
-void startIdleThread(Logging*sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX);
+void startIdleThread(Logging* sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX);
 void setDefaultIdleParameters(DECLARE_CONFIG_PARAMETER_SIGNATURE);
 void startIdleBench(void);
 void setIdleDT(int value);
