@@ -28,6 +28,7 @@ void setLadaKalina(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	engineConfiguration->useStepperIdle = true;
 	engineConfiguration->useHbridges = true;
 	engineConfiguration->idleMode = IM_AUTO;
+	engineConfiguration->useTLE8888_stepper = true;
 }
 
 #else
