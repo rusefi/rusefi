@@ -1963,6 +1963,8 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 		field = "MC33816 SPI Device",					mc33972spiDevice
 		field = hpfpValcePin,							hpfpValvePin
 		field = hpfpValcePinMode,						hpfpValvePinMode
+		field = tempHpfpStart, tempHpfpStart 
+		field = tempHpfpDuration, tempHpfpDuration 
 
 		field = "Boost voltage",						mc33_hvolt
 
