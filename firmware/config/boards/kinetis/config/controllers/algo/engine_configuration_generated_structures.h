@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Tue Nov 10 03:09:11 UTC 2020
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Tue Nov 10 17:38:42 UTC 2020
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -731,7 +731,7 @@ struct engine_configuration_s {
 	bool displayLogicLevelsInEngineSniffer : 1;
 	/**
 	offset 76 bit 25 */
-	bool issue_294_26 : 1;
+	bool useTLE8888_stepper : 1;
 	/**
 	offset 76 bit 26 */
 	bool issue_294_27 : 1;
@@ -3761,4 +3761,4 @@ struct persistent_config_s {
 typedef struct persistent_config_s persistent_config_s;
 
 // end
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Tue Nov 10 03:09:11 UTC 2020
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Tue Nov 10 17:38:42 UTC 2020

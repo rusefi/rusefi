@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEfi tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Tue Nov 10 03:08:56 UTC 2020
+// this file was generated automatically by rusEfi tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Tue Nov 10 17:38:23 UTC 2020
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -913,7 +913,6 @@ public class Fields {
 	public static final int isManualSpinningMode_offset = 1476;
 	public static final int isMapAveragingEnabled_offset = 1476;
 	public static final int isSdCardEnabled_offset = 744;
-	public static final int issue_294_26_offset = 76;
 	public static final int issue_294_27_offset = 76;
 	public static final int issue_294_28_offset = 76;
 	public static final int issue_294_29_offset = 76;
@@ -1165,7 +1164,7 @@ public class Fields {
 	public static final int servoOutputPins8_offset = 3147;
 	public static final int showHumanReadableWarning_offset = 976;
 	public static final int showSdCardWarning_offset = 76;
-	public static final int SIGNATURE_HASH = 1746148817;
+	public static final int SIGNATURE_HASH = 1075224951;
 	public static final int silentTriggerError_offset = 1464;
 	public static final int slowAdcAlpha_offset = 2088;
 	public static final int sparkDwellRpmBins_offset = 332;
@@ -1435,7 +1434,7 @@ public class Fields {
 	public static final char TS_SD_R_COMMAND = 'r';
 	public static final char TS_SD_W_COMMAND = 'w';
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI 2020.11.10.all.1746148817";
+	public static final String TS_SIGNATURE = "rusEFI 2020.11.10.all.1075224951";
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final int TT_TT_60_2_VW = 20;
 	public static final int TT_TT_ONE = 18;
@@ -1557,6 +1556,7 @@ public class Fields {
 	public static final int useSerialPort_offset = 744;
 	public static final int useStepperIdle_offset = 744;
 	public static final int useTLE8888_cranking_hack_offset = 76;
+	public static final int useTLE8888_stepper_offset = 76;
 	public static final int useTpicAdvancedMode_offset = 744;
 	public static final int VBAT_INJECTOR_CURVE_SIZE = 8;
 	public static final int vbattAdcChannel_offset = 513;
@@ -1615,7 +1615,7 @@ public class Fields {
 	public static final Field ANTILAGENABLED = Field.create("ANTILAGENABLED", 76, FieldType.BIT, 22);
 	public static final Field USERUNNINGMATHFORCRANKING = Field.create("USERUNNINGMATHFORCRANKING", 76, FieldType.BIT, 23);
 	public static final Field DISPLAYLOGICLEVELSINENGINESNIFFER = Field.create("DISPLAYLOGICLEVELSINENGINESNIFFER", 76, FieldType.BIT, 24);
-	public static final Field ISSUE_294_26 = Field.create("ISSUE_294_26", 76, FieldType.BIT, 25);
+	public static final Field USETLE8888_STEPPER = Field.create("USETLE8888_STEPPER", 76, FieldType.BIT, 25);
 	public static final Field ISSUE_294_27 = Field.create("ISSUE_294_27", 76, FieldType.BIT, 26);
 	public static final Field ISSUE_294_28 = Field.create("ISSUE_294_28", 76, FieldType.BIT, 27);
 	public static final Field ISSUE_294_29 = Field.create("ISSUE_294_29", 76, FieldType.BIT, 28);
@@ -2696,7 +2696,7 @@ public class Fields {
 	ANTILAGENABLED,
 	USERUNNINGMATHFORCRANKING,
 	DISPLAYLOGICLEVELSINENGINESNIFFER,
-	ISSUE_294_26,
+	USETLE8888_STEPPER,
 	ISSUE_294_27,
 	ISSUE_294_28,
 	ISSUE_294_29,

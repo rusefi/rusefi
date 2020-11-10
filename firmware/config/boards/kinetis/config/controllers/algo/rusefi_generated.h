@@ -938,7 +938,6 @@
 #define isManualSpinningMode_offset 1476
 #define isMapAveragingEnabled_offset 1476
 #define isSdCardEnabled_offset 744
-#define issue_294_26_offset 76
 #define issue_294_27_offset 76
 #define issue_294_28_offset 76
 #define issue_294_29_offset 76
@@ -1210,7 +1209,7 @@
 #define showSdCardWarning_offset 76
 #define SIGNATURE_BOARD kin
 #define SIGNATURE_DATE 2020.11.10
-#define SIGNATURE_HASH 4042883560
+#define SIGNATURE_HASH 3640343886
 #define silentTriggerError_offset 1464
 #define slowAdcAlpha_offset 2088
 #define sparkDwellRpmBins_offset 332
@@ -1530,7 +1529,7 @@
 #define ts_show_spi true
 #define ts_show_trigger_comparator true
 #define ts_show_tunerstudio_port true
-#define TS_SIGNATURE "rusEFI 2020.11.10.kin.4042883560"
+#define TS_SIGNATURE "rusEFI 2020.11.10.kin.3640343886"
 #define TS_SINGLE_WRITE_COMMAND 'W'
 #define TS_SINGLE_WRITE_COMMAND_char W
 #define TS_TEST_COMMAND 't' // 0x74
@@ -1655,6 +1654,7 @@
 #define useSerialPort_offset 744
 #define useStepperIdle_offset 744
 #define useTLE8888_cranking_hack_offset 76
+#define useTLE8888_stepper_offset 76
 #define useTpicAdvancedMode_offset 744
 #define VBAT_INJECTOR_CURVE_SIZE 8
 #define vbattAdcChannel_offset 513

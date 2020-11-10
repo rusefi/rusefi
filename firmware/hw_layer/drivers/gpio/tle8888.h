@@ -65,6 +65,9 @@ struct tle8888_config {
 		uint_fast8_t	pad;
 	} inj_en;
 	tle8888_mode_e mode;
+	/* this is workaround to enable PP mode for OUT21..OUT24
+	 * until users won't call setPinMode */
+	bool			stepper;
 };
 
 #ifdef __cplusplus
