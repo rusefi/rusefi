@@ -45,6 +45,7 @@ float InjectorModel::getInjectorFlowRatio() const {
 
 	float map = getMap(PASS_ENGINE_PARAMETER_SIGNATURE);
 
+	// TODO: what to do when pressureDelta is less than 0?
 	float pressureDelta = absRailPressure.Value - map;
 	float pressureRatio = pressureDelta / referencePressure;
 	float flowRatio = sqrtf(pressureRatio);
@@ -57,6 +58,7 @@ float InjectorModel::getInjectorFlowRatio() const {
 	}
 #endif // EFI_TUNER_STUDIO
 
+	// TODO: should the flow ratio be clamped?
 	return flowRatio;
 }
 
