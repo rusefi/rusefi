@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Tue Nov 10 17:38:23 UTC 2020
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Wed Nov 11 04:12:24 UTC 2020
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -2924,11 +2924,17 @@ struct engine_configuration_s {
 	/**
 	 * offset 2418
 	 */
-	uint8_t unusedSomethingWasHere[2];
+	injector_compensation_mode_e injectorCompensationMode;
 	/**
+	 * offset 2419
+	 */
+	uint8_t unused2419;
+	/**
+	 * This is the pressure at which your injector flow is known.
+	 * For example if your injectors flow 400cc/min at 3.5 bar, enter 350kpa here.
 	 * offset 2420
 	 */
-	float unused244_1;
+	float fuelReferencePressure;
 	/**
 	 * offset 2424
 	 */
@@ -3761,4 +3767,4 @@ struct persistent_config_s {
 typedef struct persistent_config_s persistent_config_s;
 
 // end
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Tue Nov 10 17:38:23 UTC 2020
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Wed Nov 11 04:12:24 UTC 2020
