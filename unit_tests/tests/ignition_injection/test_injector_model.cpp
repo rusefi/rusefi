@@ -138,7 +138,7 @@ TEST(InjectorModel, RailPressureFixed) {
 	engineConfiguration->injectorCompensationMode = ICM_FixedRailPressure;
 
 	// Should be reference pressure + 1 atm
-	EXPECT_FLOAT_EQ(101.325f + 350.0f, dut.getAbsoluteRailPressure());
+	EXPECT_FLOAT_EQ(101.325f + 350.0f, dut.getAbsoluteRailPressure().value_or(0));
 }
 
 TEST(InjectorModel, RailPressureSensed) {
@@ -152,11 +152,11 @@ TEST(InjectorModel, RailPressureSensed) {
 
 	// Should just return rail sensor value
 	Sensor::setMockValue(SensorType::FuelPressureInjector, 100);
-	EXPECT_FLOAT_EQ(100, dut.getAbsoluteRailPressure());
+	EXPECT_FLOAT_EQ(100, dut.getAbsoluteRailPressure().value_or(-1));
 	Sensor::setMockValue(SensorType::FuelPressureInjector, 200);
-	EXPECT_FLOAT_EQ(200, dut.getAbsoluteRailPressure());
+	EXPECT_FLOAT_EQ(200, dut.getAbsoluteRailPressure().value_or(-1));
 	Sensor::setMockValue(SensorType::FuelPressureInjector, 300);
-	EXPECT_FLOAT_EQ(300, dut.getAbsoluteRailPressure());
+	EXPECT_FLOAT_EQ(300, dut.getAbsoluteRailPressure().value_or(-1));
 }
 
 TEST(InjectorModel, FailedPressureSensor) {

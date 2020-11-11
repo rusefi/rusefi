@@ -45,7 +45,7 @@ float InjectorModel::getInjectorFlowRatio() const {
 
 	float map = getMap(PASS_ENGINE_PARAMETER_SIGNATURE);
 
-	float pressureDelta = absRailPressure - map;
+	float pressureDelta = absRailPressure.Value - map;
 	float pressureRatio = pressureDelta / referencePressure;
 	float flowRatio = sqrtf(pressureRatio);
 
