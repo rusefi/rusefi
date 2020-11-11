@@ -677,8 +677,6 @@ case DBG_16:
   return "DBG_16";
 case DBG_34:
   return "DBG_34";
-case DBG_43:
-  return "DBG_43";
 case DBG_44:
   return "DBG_44";
 case DBG_ALTERNATOR_PID:
@@ -733,6 +731,8 @@ case DBG_IDLE_CONTROL:
   return "DBG_IDLE_CONTROL";
 case DBG_IGNITION_TIMING:
   return "DBG_IGNITION_TIMING";
+case DBG_INJECTOR_COMPENSATION:
+  return "DBG_INJECTOR_COMPENSATION";
 case DBG_INSTANT_RPM:
   return "DBG_INSTANT_RPM";
 case DBG_ION:

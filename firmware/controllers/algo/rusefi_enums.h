@@ -758,7 +758,7 @@ typedef enum {
 	DBG_COMPOSITE_LOG = 40,
 	DBG_FSIO_EXPRESSION_8_14 = 41,
 	DBG_FSIO_SPECIAL = 42,
-	DBG_43 = 43,
+	DBG_INJECTOR_COMPENSATION = 43,
 	DBG_44 = 44,
 
 	Force_4_bytes_size_debug_mode_e = ENUM_32_BITS,
@@ -1016,3 +1016,9 @@ typedef enum __attribute__ ((__packed__)) {
 	IPT_Low = 0,
 	IPT_High = 1,
 } injector_pressure_type_e;
+
+typedef enum __attribute__ ((__packed__)) {
+	ICM_None = 0,
+	ICM_FixedRailPressure = 1,
+	ICM_SensedRailPressure = 2,
+} injector_compensation_mode_e;
