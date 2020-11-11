@@ -26,7 +26,7 @@
 #include "os_util.h"
 
 void chVTSetAny(virtual_timer_t *vtp, systime_t time, vtfunc_t vtfunc, void *par) {
-	bool wasLocked = lockAnyContext();
+	syssts_t sts = chSysGetStatusAndLockX();
 
 	/**
 	 * todo: this could be simplified once we migrate to ChibiOS 3.0
@@ -37,9 +37,7 @@ void chVTSetAny(virtual_timer_t *vtp, systime_t time, vtfunc_t vtfunc, void *par
 	}
 
 	chVTSetI(vtp, time, vtfunc, par);
-	if (!wasLocked) {
-		unlockAnyContext();
-	}
+	chSysRestoreStatusX(sts);
 }
 
 /**
@@ -50,9 +48,7 @@ bool lockAnyContext(void) {
 	int alreadyLocked = isLocked();
 	if (alreadyLocked)
 		return true;
-#if USE_PORT_LOCK
-	port_lock();
-#else /* #if USE_PORT_LOCK */
+
 	if (isIsrContext()) {
 		chSysLockFromISR()
 		;
@@ -60,7 +56,7 @@ bool lockAnyContext(void) {
 		chSysLock()
 		;
 	}
-#endif /* #if USE_PORT_LOCK */
+
 	return false;
 }
 
@@ -68,9 +64,6 @@ bool lockAnyContext(void) {
  * TODO: refactor to new 'chSysRestoreStatusX(sts);' pattern
  */
 void unlockAnyContext(void) {
-#if USE_PORT_LOCK
-	port_unlock();
-#else /* #if USE_PORT_LOCK */
 	if (isIsrContext()) {
 		chSysUnlockFromISR()
 		;
@@ -78,7 +71,6 @@ void unlockAnyContext(void) {
 		chSysUnlock()
 		;
 	}
-#endif /* #if USE_PORT_LOCK */
 }
 
 #endif /* EFI_UNIT_TEST */

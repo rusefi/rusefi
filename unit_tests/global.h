@@ -100,8 +100,11 @@ void print(const char *fmt, ...);
 
 #define CONFIG_PARAM(x) (x)
 
-#define lockAnyContext() false
-
-#define unlockAnyContext() {}
+#ifdef __cplusplus
+namespace chibios_rt {
+	// Noop for unit tests - this does real lock in FW/sim
+	class CriticalSectionLocker { };
+}
+#endif
 
 #define UNIT_TEST_BUSY_WAIT_CALLBACK() { 	timeNowUs++; }
