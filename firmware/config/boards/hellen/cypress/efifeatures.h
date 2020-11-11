@@ -383,7 +383,6 @@
 		[7] = {.port = NULL, .pad = 0},
 
 #define EFI_BOSCH_YAW FALSE
-#define ADC_SNIFFER FALSE
 
 #define GPTDEVICE GPTD1
 
