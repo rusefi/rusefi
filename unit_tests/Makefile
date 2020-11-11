@@ -36,7 +36,7 @@ endif
 #USE_OPT += -Wno-error=format= -Wno-error=register -Wno-error=write-strings
 
 # See explanation in main firmware Makefile for these three defines
-USE_OPT += -DEFI_UNIT_TEST=TRUE -DEFI_PROD_CODE=FALSE -DEFI_SIMULATOR=FALSE
+USE_OPT += -DEFI_UNIT_TEST=1 -DEFI_PROD_CODE=0 -DEFI_SIMULATOR=0
 
 ifeq ($(CCACHE_DIR),)
  $(info No CCACHE_DIR)
