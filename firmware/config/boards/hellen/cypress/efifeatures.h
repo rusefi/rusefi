@@ -201,12 +201,6 @@
 #define EFI_EMULATE_POSITION_SENSORS TRUE
 
 /**
- * This macros is used to hide pieces of the code from unit tests, so it only makes sense in folders exposed to the tests project.
- * This macros is NOT about taking out logging in general.
- */
-#define EFI_PROD_CODE TRUE
-
-/**
  * Do we need file logging (like SD card) logic?
  */
 #ifndef EFI_FILE_LOGGING
@@ -351,8 +345,6 @@
 #define LED_ERROR_BRAIN_PIN_MODE INVERTED_OUTPUT
 
 #define EFI_WARNING_LED FALSE
-
-#define EFI_UNIT_TEST FALSE
 
 #undef CONSOLE_MODE_SWITCH_PORT
 #undef CONFIG_RESET_SWITCH_PORT

@@ -40,7 +40,8 @@ ifeq ($(USE_OPT),)
 	endif
 endif
 
-USE_OPT += $(RUSEFI_OPT)
+# See explanation in main firmware Makefile for these three defines
+USE_OPT += $(RUSEFI_OPT) -DEFI_UNIT_TEST=FALSE -DEFI_SIMULATOR=TRUE -DEFI_PROD_CODE=FALSE
 
 ifeq ($(CCACHE_DIR),)
  $(info No CCACHE_DIR)
