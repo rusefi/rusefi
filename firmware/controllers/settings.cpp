@@ -996,12 +996,6 @@ const plain_get_integer_s getI_plain[] = {
 //		{"bor", setBor},
 //		{"can_mode", setCanType},
 //		{"idle_rpm", setTargetIdleRpm},
-//		{"idle_dt", setIdleDT},
-		//		{"", },
-		//		{"", },
-		//		{"", },
-		//		{"", },
-		//		{"", },
 };
 
 const plain_get_float_s getF_plain[] = {
@@ -1208,7 +1202,6 @@ const command_i_s commandsI[] = {{"ignition_mode", setIgnitionMode},
 #if EFI_IDLE_CONTROL
 		{"idle_position", setManualIdleValvePosition},
 		{"idle_rpm", setTargetIdleRpm},
-		{"idle_dt", setIdleDT},
 #endif /* EFI_IDLE_CONTROL */
 #endif /* EFI_PROD_CODE */
 

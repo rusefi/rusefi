@@ -182,7 +182,7 @@ void setIdleMode(idle_mode_e value DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	showIdleInfo();
 }
 
-percent_t getIdlePosition(void) {
+percent_t getIdlePosition() {
 	return engine->engineState.idle.currentIdlePosition;
 }
 
@@ -329,7 +329,7 @@ static percent_t automaticIdleController(float tpsPos DECLARE_ENGINE_PARAMETER_S
 	// If errorAmpCoef > 1.0, then PID thinks that RPM is lower than it is, and controls IAC more aggressively
 	getIdlePid(PASS_ENGINE_PARAMETER_SIGNATURE)->setErrorAmplification(errorAmpCoef);
 
-	percent_t newValue = getIdlePid(PASS_ENGINE_PARAMETER_SIGNATURE)->getOutput(targetRpm, rpm);
+	percent_t newValue = getIdlePid(PASS_ENGINE_PARAMETER_SIGNATURE)->getOutput(targetRpm, rpm, SLOW_CALLBACK_PERIOD_MS / 1000.0f);
 	engine->engineState.idle.idleState = PID_VALUE;
 
 	// the state of PID has been changed, so we might reset it now, but only when needed (see idlePidDeactivationTpsThreshold)
@@ -368,12 +368,8 @@ static percent_t automaticIdleController(float tpsPos DECLARE_ENGINE_PARAMETER_S
 	return newValue;
 }
 
-	int IdleController::getPeriodMs() {
-		return GET_PERIOD_LIMITED(&engineConfiguration->idleRpmPid);
-	}
-
-	void IdleController::PeriodicTask() {
-		efiAssertVoid(OBD_PCM_Processor_Fault, engineConfiguration != NULL, "engineConfiguration pointer");
+	float IdleController::getIdlePosition() {
+		efiAssert(OBD_PCM_Processor_Fault, engineConfiguration != NULL, "engineConfiguration pointer", 0);
 	/*
 	 * Here we have idle logic thread - actual stepper movement is implemented in a separate
 	 * working thread,
@@ -508,10 +504,21 @@ static percent_t automaticIdleController(float tpsPos DECLARE_ENGINE_PARAMETER_S
 		}
 
 		engine->engineState.idle.currentIdlePosition = iacPosition;
-		applyIACposition(engine->engineState.idle.currentIdlePosition PASS_ENGINE_PARAMETER_SUFFIX);
+
+		return iacPosition;
+}
+
+void IdleController::update() {
+	float position = getIdlePosition();
+	applyIACposition(position PASS_ENGINE_PARAMETER_SUFFIX);
 }
 
 IdleController idleControllerInstance;
+
+void updateIdleControl()
+{
+	idleControllerInstance.update();
+}
 
 static void applyPidSettings(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	getIdlePid(PASS_ENGINE_PARAMETER_SIGNATURE)->updateFactors(engineConfiguration->idleRpmPid.pFactor, engineConfiguration->idleRpmPid.iFactor, engineConfiguration->idleRpmPid.dFactor);
@@ -522,7 +529,6 @@ void setDefaultIdleParameters(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	engineConfiguration->idleRpmPid.pFactor = 0.1f;
 	engineConfiguration->idleRpmPid.iFactor = 0.05f;
 	engineConfiguration->idleRpmPid.dFactor = 0.0f;
-	engineConfiguration->idleRpmPid.periodMs = 10;
 
 	engineConfiguration->idlerpmpid_iTermMin = -200;
 	engineConfiguration->idlerpmpid_iTermMax =  200;
@@ -560,12 +566,6 @@ void setIdleIFactor(float value) {
 
 void setIdleDFactor(float value) {
 	engineConfiguration->idleRpmPid.dFactor = value;
-	applyPidSettings();
-	showIdleInfo();
-}
-
-void setIdleDT(int value) {
-	engineConfiguration->idleRpmPid.periodMs = value;
 	applyPidSettings();
 	showIdleInfo();
 }
@@ -636,8 +636,6 @@ void startIdleThread(Logging*sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX) {
 
 
 	//scheduleMsg(logger, "initial idle %d", idlePositionController.value);
-
-	idleControllerInstance.Start();
 
 #if ! EFI_UNIT_TEST
 	// this is neutral/no gear switch input. on Miata it's wired both to clutch pedal and neutral in gearbox
