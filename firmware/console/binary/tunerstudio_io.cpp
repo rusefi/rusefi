@@ -250,12 +250,12 @@ void sr5WriteCrcPacket(ts_channel_s *tsChannel, const uint8_t responseCode, cons
 	}
 
 	// Index 0/1 = packet size (big endian)
-	*(uint16_t *) scratchBuffer = SWAP_UINT16(size + 1);
+	*(uint16_t*)scratchBuffer = SWAP_UINT16(size + 1);
 	// Index 2 = response code
-	*(uint8_t *) (scratchBuffer + 2) = responseCode;
+	scratchBuffer[2] = responseCode;
 
 	// CRC is computed on the responseCode and payload but not length
-	uint32_t crc = crc32((void *) (scratchBuffer + 2), size + 1); // command part of CRC
+	uint32_t crc = crc32(&scratchBuffer[2], size + 1); // command part of CRC
 
 	// Place the CRC at the end
 	*reinterpret_cast<uint32_t*>(&scratchBuffer[size + 3]) = SWAP_UINT32(crc);
@@ -290,6 +290,8 @@ void sr5FlushData(ts_channel_s *tsChannel) {
 #if defined(TS_CAN_DEVICE)
 	UNUSED(tsChannel);
 	canFlushTxStream(&TS_CAN_DEVICE);
+#else
+	UNUSED(tsChannel);
 #endif /* TS_CAN_DEVICE */
 }
 
