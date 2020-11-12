@@ -1,7 +1,7 @@
 #include "global.h"
 #include "rusefi_enums.h"
 #include "rusefi_hw_enums.h"
-// was generated automatically by rusEfi tool  from rusefi_hw_enums.h // was generated automatically by rusEfi tool  from rusefi_enums.h // by enum2string.jar tool on Wed Oct 28 05:05:49 UTC 2020
+// was generated automatically by rusEfi tool  from rusefi_hw_enums.h // was generated automatically by rusEfi tool  from rusefi_enums.h // by enum2string.jar tool on Wed Nov 11 04:12:23 UTC 2020
 // see also gen_config_and_enums.bat
 
 
@@ -677,8 +677,6 @@ case DBG_16:
   return "DBG_16";
 case DBG_34:
   return "DBG_34";
-case DBG_43:
-  return "DBG_43";
 case DBG_44:
   return "DBG_44";
 case DBG_ALTERNATOR_PID:
@@ -733,6 +731,8 @@ case DBG_IDLE_CONTROL:
   return "DBG_IDLE_CONTROL";
 case DBG_IGNITION_TIMING:
   return "DBG_IGNITION_TIMING";
+case DBG_INJECTOR_COMPENSATION:
+  return "DBG_INJECTOR_COMPENSATION";
 case DBG_INSTANT_RPM:
   return "DBG_INSTANT_RPM";
 case DBG_ION:
@@ -1104,6 +1104,17 @@ case IM_SIMULTANEOUS:
   return "IM_SIMULTANEOUS";
 case IM_SINGLE_POINT:
   return "IM_SINGLE_POINT";
+  }
+ return NULL;
+}
+const char *getInjector_compensation_mode_e(injector_compensation_mode_e value){
+switch(value) {
+case ICM_FixedRailPressure:
+  return "ICM_FixedRailPressure";
+case ICM_None:
+  return "ICM_None";
+case ICM_SensedRailPressure:
+  return "ICM_SensedRailPressure";
   }
  return NULL;
 }
