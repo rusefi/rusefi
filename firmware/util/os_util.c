@@ -40,41 +40,7 @@ void chVTSetAny(virtual_timer_t *vtp, systime_t time, vtfunc_t vtfunc, void *par
 	chSysRestoreStatusX(sts);
 }
 
-/**
- * @return TRUE if already in locked context
- * TODO: refactor to new 'syssts_t sts = chSysGetStatusAndLockX();' pattern
- */
-bool lockAnyContext(void) {
-	int alreadyLocked = isLocked();
-	if (alreadyLocked)
-		return true;
-
-	if (isIsrContext()) {
-		chSysLockFromISR()
-		;
-	} else {
-		chSysLock()
-		;
-	}
-
-	return false;
-}
-
-/**
- * TODO: refactor to new 'chSysRestoreStatusX(sts);' pattern
- */
-void unlockAnyContext(void) {
-	if (isIsrContext()) {
-		chSysUnlockFromISR()
-		;
-	} else {
-		chSysUnlock()
-		;
-	}
-}
-
 #endif /* EFI_UNIT_TEST */
-
 
 /**
  * See also getRemainingStack()
@@ -92,4 +58,3 @@ int getMaxUsedStack(uint8_t *ptr, int size) {
 #endif /* EFI_UNIT_TEST */
 	return 0;
 }
-

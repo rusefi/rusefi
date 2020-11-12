@@ -69,9 +69,6 @@ void printToConsole(char *p);
 
 int getRemainingStack(thread_t *otp);
 
-// todo: move somewhere else?
-bool lockAnyContext(void);
-void unlockAnyContext(void);
 void applyNewConfiguration(void);
 
 #ifdef __cplusplus
