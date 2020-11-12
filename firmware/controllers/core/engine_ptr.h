@@ -1,6 +1,16 @@
 #pragma once
 
-#include "efifeatures.h"
+#ifndef EFI_UNIT_TEST
+#error EFI_UNIT_TEST must be defined!
+#endif
+
+#ifndef EFI_SIMULATOR
+#error EFI_SIMULATOR must be defined!
+#endif
+
+#ifndef EFI_PROD_CODE
+#error EFI_PROD_CODE must be defined!
+#endif
 
 #ifdef __cplusplus
 class Engine;
