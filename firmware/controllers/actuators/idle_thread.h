@@ -15,15 +15,16 @@
 class Logging;
 class Pid;
 
-class IdleController : public PeriodicTimerController {
+class IdleController {
 public:
 	DECLARE_ENGINE_PTR;
 
-	int getPeriodMs() override;
-	void PeriodicTask() override;
+	float getIdlePosition();
+	void update();
 };
 
-percent_t getIdlePosition(void);
+void updateIdleControl();
+percent_t getIdlePosition();
 
 void applyIACposition(percent_t position DECLARE_ENGINE_PARAMETER_SUFFIX);
 void setManualIdleValvePosition(int positionPercent);
@@ -31,14 +32,12 @@ void setManualIdleValvePosition(int positionPercent);
 void startIdleThread(Logging* sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX);
 void setDefaultIdleParameters(DECLARE_CONFIG_PARAMETER_SIGNATURE);
 void startIdleBench(void);
-void setIdleDT(int value);
 void setIdleOffset(float value);
 void setIdlePFactor(float value);
 void setIdleIFactor(float value);
 void setIdleDFactor(float value);
 void setIdleMode(idle_mode_e value DECLARE_ENGINE_PARAMETER_SUFFIX);
 void setTargetIdleRpm(int value);
-void setIdleDT(int value);
 void onConfigurationChangeIdleCallback(engine_configuration_s *previousConfiguration);
 float getIdlePidOffset(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 Pid * getIdlePid(DECLARE_ENGINE_PARAMETER_SIGNATURE);
