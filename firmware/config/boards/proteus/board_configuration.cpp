@@ -137,6 +137,9 @@ static void setupDefaultSensorInputs() {
 
 	// MAP = Analog volt 1 = PC0
 	engineConfiguration->map.sensor.hwChannel = EFI_ADC_10;
+
+	// pin #28 WBO AFR "Analog Volt 10"
+	engineConfiguration->afr.hwChannel = EFI_ADC_5;
 }
 
 static void setupSdCard() {

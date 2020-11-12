@@ -39,6 +39,7 @@
 #include "allsensors.h"
 #include "electronic_throttle.h"
 #include "map_averaging.h"
+#include "high_pressure_fuel_pump.h"
 #include "malfunction_central.h"
 #include "malfunction_indicator.h"
 #include "speed_density.h"
@@ -587,6 +588,7 @@ void commonInitEngineController(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_S
 
 	initButtonShift(PASS_ENGINE_PARAMETER_SIGNATURE);
 
+	initButtonDebounce(sharedLogger);
 	initStartStopButton(PASS_ENGINE_PARAMETER_SIGNATURE);
 
 #if EFI_ELECTRONIC_THROTTLE_BODY
@@ -623,6 +625,9 @@ void commonInitEngineController(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_S
 		 */
 		initSparkLogic(sharedLogger);
 		initMainEventListener(sharedLogger PASS_ENGINE_PARAMETER_SUFFIX);
+#if EFI_HPFP
+		initHPFP(PASS_ENGINE_PARAMETER_SIGNATURE);
+#endif // EFI_HPFP
 	}
 #endif /* EFI_ENGINE_CONTROL */
 
@@ -704,7 +709,7 @@ void initEngineContoller(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX) 
  * UNUSED_SIZE constants.
  */
 #ifndef RAM_UNUSED_SIZE
-#define RAM_UNUSED_SIZE 4000
+#define RAM_UNUSED_SIZE 3400
 #endif
 #ifndef CCM_UNUSED_SIZE
 #define CCM_UNUSED_SIZE 2900

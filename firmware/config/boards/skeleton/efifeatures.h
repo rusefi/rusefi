@@ -64,6 +64,8 @@
 #define EFI_POTENTIOMETER FALSE
 // MC33816 Programmable Gate Driver over SPI
 #define EFI_MC33816 FALSE
+
+#define EFI_HPFP FALSE
 // MAX31855 Thermocouple interface over SPI
 #define EFI_MAX_31855 FALSE
 // MCP3208 ADC over SPI

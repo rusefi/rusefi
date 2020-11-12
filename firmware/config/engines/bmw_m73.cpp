@@ -289,13 +289,15 @@ void setEngineBMW_M73_Proteus(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	// set vbatt_divider 8.16
 	// engineConfiguration->vbattDividerCoeff = (49.0f / 10.0f) * 16.8f / 10.0f;
 	// todo: figure out exact values from TLE8888 breakout board used by Manhattan
-	engineConfiguration->vbattDividerCoeff = 7.6;
+	// engineConfiguration->vbattDividerCoeff = 7.6; // is that Proteus 0.2 value?
+
 
 
 	// GPIOE_0:  "Lowside 14"
 	CONFIG(starterControlPin) = GPIOE_0;
 	// GPIOE_12: "Digital 3"
 	CONFIG(startStopButtonPin) = GPIOE_12;
+	CONFIG(startStopButtonMode) = PI_PULLUP;
 
 
 	// EFI_ADC_12: "Analog Volt 3"
@@ -306,6 +308,11 @@ void setEngineBMW_M73_Proteus(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	engineConfiguration->tps2_2AdcChannel = EFI_ADC_0;
 	// EFI_ADC_1: "Analog Volt 6"
 	engineConfiguration->throttlePedalPositionAdcChannel = EFI_ADC_1;
+	engineConfiguration->throttlePedalUpVoltage = 0;
+	engineConfiguration->throttlePedalWOTVoltage = 4.9;
+	engineConfiguration->throttlePedalSecondaryUpVoltage = 0.73;
+	engineConfiguration->throttlePedalSecondaryWOTVoltage = 4.9;
+
 	// EFI_ADC_2: "Analog Volt 7"
 	engineConfiguration->throttlePedalPositionSecondAdcChannel = EFI_ADC_2;
 

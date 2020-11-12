@@ -29,6 +29,8 @@ public class ConfigStructure {
 
     public final BitState readingBitState = new BitState();
 
+    private ConfigField cPrevField = ConfigField.VOID;
+
     public ConfigStructure(String name, String comment, boolean withPrefix, boolean withConstructor) {
         this.name = name;
         this.comment = comment;
@@ -75,12 +77,18 @@ public class ConfigStructure {
     }
 
     public void addBoth(ConfigField cf) {
-        cFields.add(cf);
+        addC(cf);
         tsFields.add(cf);
     }
 
     public void addC(ConfigField cf) {
+        // skip duplicate names
+        if (cf.getName().equals(cPrevField.getName()))
+            return;
+
         cFields.add(cf);
+
+        cPrevField = cf;
     }
 
     public void addTs(ConfigField cf) {

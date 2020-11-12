@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Tue Nov 03 17:20:30 UTC 2020
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Wed Nov 11 04:12:45 UTC 2020
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -731,7 +731,7 @@ struct engine_configuration_s {
 	bool displayLogicLevelsInEngineSniffer : 1;
 	/**
 	offset 76 bit 25 */
-	bool issue_294_26 : 1;
+	bool useTLE8888_stepper : 1;
 	/**
 	offset 76 bit 26 */
 	bool issue_294_27 : 1;
@@ -1064,6 +1064,7 @@ struct engine_configuration_s {
 	 * See throttlePedalPositionSecondAdcChannel for second channel
 	 * See also tps1_1AdcChannel
 	 * set_analog_input_pin pps X
+	 * See throttlePedalUpVoltage and throttlePedalWOTVoltage
 	 * offset 580
 	 */
 	adc_channel_e throttlePedalPositionAdcChannel;
@@ -1258,6 +1259,7 @@ struct engine_configuration_s {
 	 * Electronic throttle pedal position input
 	 * Second channel
 	 * See also tps1_1AdcChannel
+	 * See throttlePedalSecondaryUpVoltage and throttlePedalSecondaryWOTVoltage
 	 * offset 683
 	 */
 	adc_channel_e throttlePedalPositionSecondAdcChannel;
@@ -1354,7 +1356,11 @@ struct engine_configuration_s {
 	/**
 	 * offset 724
 	 */
-	uint8_t unusedAt724[4];
+	uint16_t tempHpfpStart;
+	/**
+	 * offset 726
+	 */
+	uint16_t tempHpfpDuration;
 	/**
 	 * Secondary TTL channel baud rate
 	 * offset 728
@@ -1845,10 +1851,10 @@ struct engine_configuration_s {
 	bool unusedBit_251_29 : 1;
 	/**
 	offset 976 bit 30 */
-	bool unusedBit_287_30 : 1;
+	bool unusedBit_288_30 : 1;
 	/**
 	offset 976 bit 31 */
-	bool unusedBit_287_31 : 1;
+	bool unusedBit_288_31 : 1;
 	/**
 	 * offset 980
 	 */
@@ -2675,76 +2681,76 @@ struct engine_configuration_s {
 	bool unused1130 : 1;
 	/**
 	offset 2116 bit 8 */
-	bool unusedBit_485_8 : 1;
+	bool unusedBit_486_8 : 1;
 	/**
 	offset 2116 bit 9 */
-	bool unusedBit_485_9 : 1;
+	bool unusedBit_486_9 : 1;
 	/**
 	offset 2116 bit 10 */
-	bool unusedBit_485_10 : 1;
+	bool unusedBit_486_10 : 1;
 	/**
 	offset 2116 bit 11 */
-	bool unusedBit_485_11 : 1;
+	bool unusedBit_486_11 : 1;
 	/**
 	offset 2116 bit 12 */
-	bool unusedBit_485_12 : 1;
+	bool unusedBit_486_12 : 1;
 	/**
 	offset 2116 bit 13 */
-	bool unusedBit_485_13 : 1;
+	bool unusedBit_486_13 : 1;
 	/**
 	offset 2116 bit 14 */
-	bool unusedBit_485_14 : 1;
+	bool unusedBit_486_14 : 1;
 	/**
 	offset 2116 bit 15 */
-	bool unusedBit_485_15 : 1;
+	bool unusedBit_486_15 : 1;
 	/**
 	offset 2116 bit 16 */
-	bool unusedBit_485_16 : 1;
+	bool unusedBit_486_16 : 1;
 	/**
 	offset 2116 bit 17 */
-	bool unusedBit_485_17 : 1;
+	bool unusedBit_486_17 : 1;
 	/**
 	offset 2116 bit 18 */
-	bool unusedBit_485_18 : 1;
+	bool unusedBit_486_18 : 1;
 	/**
 	offset 2116 bit 19 */
-	bool unusedBit_485_19 : 1;
+	bool unusedBit_486_19 : 1;
 	/**
 	offset 2116 bit 20 */
-	bool unusedBit_485_20 : 1;
+	bool unusedBit_486_20 : 1;
 	/**
 	offset 2116 bit 21 */
-	bool unusedBit_485_21 : 1;
+	bool unusedBit_486_21 : 1;
 	/**
 	offset 2116 bit 22 */
-	bool unusedBit_485_22 : 1;
+	bool unusedBit_486_22 : 1;
 	/**
 	offset 2116 bit 23 */
-	bool unusedBit_485_23 : 1;
+	bool unusedBit_486_23 : 1;
 	/**
 	offset 2116 bit 24 */
-	bool unusedBit_485_24 : 1;
+	bool unusedBit_486_24 : 1;
 	/**
 	offset 2116 bit 25 */
-	bool unusedBit_485_25 : 1;
+	bool unusedBit_486_25 : 1;
 	/**
 	offset 2116 bit 26 */
-	bool unusedBit_485_26 : 1;
+	bool unusedBit_486_26 : 1;
 	/**
 	offset 2116 bit 27 */
-	bool unusedBit_485_27 : 1;
+	bool unusedBit_486_27 : 1;
 	/**
 	offset 2116 bit 28 */
-	bool unusedBit_485_28 : 1;
+	bool unusedBit_486_28 : 1;
 	/**
 	offset 2116 bit 29 */
-	bool unusedBit_485_29 : 1;
+	bool unusedBit_486_29 : 1;
 	/**
 	offset 2116 bit 30 */
-	bool unusedBit_485_30 : 1;
+	bool unusedBit_486_30 : 1;
 	/**
 	offset 2116 bit 31 */
-	bool unusedBit_485_31 : 1;
+	bool unusedBit_486_31 : 1;
 	/**
 	 * set can_mode X
 	 * offset 2120
@@ -2918,11 +2924,17 @@ struct engine_configuration_s {
 	/**
 	 * offset 2418
 	 */
-	uint8_t unusedSomethingWasHere[2];
+	injector_compensation_mode_e injectorCompensationMode;
 	/**
+	 * offset 2419
+	 */
+	uint8_t unused2419;
+	/**
+	 * This is the pressure at which your injector flow is known.
+	 * For example if your injectors flow 400cc/min at 3.5 bar, enter 350kpa here.
 	 * offset 2420
 	 */
-	float unused244_1;
+	float fuelReferencePressure;
 	/**
 	 * offset 2424
 	 */
@@ -3755,4 +3767,4 @@ struct persistent_config_s {
 typedef struct persistent_config_s persistent_config_s;
 
 // end
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Tue Nov 03 17:20:30 UTC 2020
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Wed Nov 11 04:12:45 UTC 2020

@@ -694,7 +694,57 @@ void setMiataNB2_MRE_MAF(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	engineConfiguration->fuelAlgorithm = LM_REAL_MAF;
 }
 
+/**
+ * https://github.com/rusefi/rusefi/wiki/HOWTO-TCU-A42DE-on-Proteus
+ */
 void setMiataNB2_Proteus_TCU(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
+	engineConfiguration->tcuEnabled = true;
+
+	engineConfiguration->trigger.type = TT_TOOTHED_WHEEL;
+	engineConfiguration->trigger.customTotalToothCount = 10;
+	engineConfiguration->trigger.customSkippedToothCount = 0;
+
+
+	// "VR 1"
+	engineConfiguration->triggerInputPins[0] = GPIOE_7;
+
+	engineConfiguration->vehicleSpeedCoef = 1;
+	// "VR 2"
+	engineConfiguration->vehicleSpeedSensorInputPin = GPIOE_8;
+
+
+
+
+	// "Highside 2"
+	engineConfiguration->tcu_solenoid[0] = GPIOA_8;
+	// "Highside 1"
+	engineConfiguration->tcu_solenoid[1] = GPIOA_9;
+
+	// "Digital 1" green
+	engineConfiguration->tcuUpshiftButtonPin = GPIOC_6;
+	CONFIG(tcuUpshiftButtonPinMode) = PI_PULLUP;
+	// "Digital 6" white
+	engineConfiguration->tcuDownshiftButtonPin = GPIOE_15;
+	CONFIG(tcuDownshiftButtonPinMode) = PI_PULLUP;
+
+	// R
+	config->tcuSolenoidTable[0][0] = 1;
+	config->tcuSolenoidTable[0][1] = 0;
+	// P/N
+	config->tcuSolenoidTable[1][0] = 1;
+	config->tcuSolenoidTable[1][1] = 0;
+	// 1
+	config->tcuSolenoidTable[2][0] = 1;
+	config->tcuSolenoidTable[2][1] = 0;
+	// 2
+	config->tcuSolenoidTable[3][0] = 1;
+	config->tcuSolenoidTable[3][1] = 1;
+	// 3
+	config->tcuSolenoidTable[4][0] = 0;
+	config->tcuSolenoidTable[4][1] = 1;
+	// 4
+	config->tcuSolenoidTable[5][0] = 0;
+	config->tcuSolenoidTable[5][1] = 0;
 
 }
 

@@ -339,6 +339,12 @@ void printTPSInfo(void) {
 			engineConfiguration->throttlePedalUpVoltage,
 			engineConfiguration->throttlePedalWOTVoltage);
 
+	auto pps = Sensor::get(SensorType::AcceleratorPedal);
+
+	if (!pps.Valid) {
+		scheduleMsg(&logger, "PPS not valid");
+	}
+
 	printTpsSenser("TPS", SensorType::Tps1, engineConfiguration->tpsMin, engineConfiguration->tpsMax, engineConfiguration->tps1_1AdcChannel);
 	printTpsSenser("TPS2", SensorType::Tps2, engineConfiguration->tps2Min, engineConfiguration->tps2Max, engineConfiguration->tps2_1AdcChannel);
 }
@@ -1283,6 +1289,10 @@ static void setValue(const char *paramStr, const char *valueStr) {
 		engineConfiguration->wwaeTau = valueF;
 	} else if (strEqualCaseInsensitive(paramStr, "wwaeBeta")) {
 		engineConfiguration->wwaeBeta = valueF;
+	} else if (strEqualCaseInsensitive(paramStr, "tempHpfpStart")) {
+		engineConfiguration->tempHpfpStart = valueF;
+	} else if (strEqualCaseInsensitive(paramStr, "tempHpfpDuration")) {
+		engineConfiguration->tempHpfpDuration = valueF;
 	} else if (strEqualCaseInsensitive(paramStr, "cranking_dwell")) {
 		engineConfiguration->ignitionDwellForCrankingMs = valueF;
 #if EFI_PROD_CODE
