@@ -590,10 +590,6 @@ void initHardware(Logging *l) {
 	initServo();
 #endif
 
-#if ADC_SNIFFER
-	initAdcDriver();
-#endif
-
 #if EFI_AUX_SERIAL
 	initAuxSerial();
 #endif /* EFI_AUX_SERIAL */

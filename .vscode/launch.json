@@ -5,7 +5,7 @@
 	"version": "0.2.0",
 	"configurations": [
 		{
-			"name": "(gdb) Launch",
+			"name": "Debug Unit Tests",
 			"type": "cppdbg",
 			"request": "launch",
 			"program": "${workspaceFolder}/unit_tests/build/rusefi_test",
@@ -23,6 +23,32 @@
 					"ignoreFailures": true
 				}
 			]
-		}
+		},
+		{
+            "name": "Debug F40x",
+            "type": "cortex-debug",
+            "request": "launch",
+            "cwd": "${workspaceFolder}",
+            "executable": "${workspaceRoot}/firmware/build/rusefi.elf",
+            "device": "STM32F407V",
+            "v1": false,
+            "svdFile": "${workspaceRoot}/firmware/ext/cmsis-svd/data/STMicro/STM32F405.svd",
+            "servertype": "openocd",
+            "configFiles": ["interface/stlink.cfg", "target/stm32f4x.cfg"],
+            "runToMain": true
+		},
+		{
+            "name": "Debug F42x",
+            "type": "cortex-debug",
+            "request": "launch",
+            "cwd": "${workspaceFolder}",
+            "executable": "${workspaceRoot}/firmware/build/rusefi.elf",
+            "device": "STM32F429Z",
+            "v1": false,
+            "svdFile": "${workspaceRoot}/firmware/ext/cmsis-svd/data/STMicro/STM32F427.svd",
+            "servertype": "openocd",
+            "configFiles": ["interface/stlink.cfg", "target/stm32f4x.cfg"],
+            "runToMain": true
+        }
 	]
 }

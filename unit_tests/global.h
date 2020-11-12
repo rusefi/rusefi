@@ -28,11 +28,6 @@ typedef uint32_t ioportmask_t;
 // this is needed by all DECLARE_ENGINE_PARAMETER_* usages
 #include "engine_configuration_generated_structures.h"
 
-#ifdef __cplusplus
-// this is needed by all DECLARE_ENGINE_PARAMETER_* usages
-class Engine;
-#endif /* __cplusplus */
-
 
 #ifdef __cplusplus
 // todo: include it right here? #include "unit_test_framework.h"

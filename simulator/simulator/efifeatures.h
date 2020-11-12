@@ -67,8 +67,6 @@
 
 #define CONSOLE_MAX_ACTIONS 256
 
-#define EFI_SIMULATOR TRUE
-#define EFI_PROD_CODE FALSE
 #define TS_UART_DMA_MODE FALSE
 
 #define EFI_MAP_AVERAGING TRUE
@@ -156,8 +154,6 @@
  * This is the size of the MemoryStream used by chvprintf
  */
 #define INTERMEDIATE_LOGGING_BUFFER_SIZE 2000
-
-#define EFI_UNIT_TEST FALSE
 
 #define EFI_BOARD_TEST FALSE
 #define EFI_JOYSTICK FALSE

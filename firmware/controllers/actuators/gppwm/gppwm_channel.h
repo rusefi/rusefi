@@ -2,6 +2,9 @@
 
 #include "gppwm.h"
 
+#include "rusefi_types.h"
+
+struct gppwm_channel;
 class OutputPin;
 class SimplePwm;
 class ValueProvider3D;
@@ -16,7 +19,6 @@ public:
 	void setOutput(float result);
 
 private:
-
 	// Store the current state so we can apply hysteresis
 	bool m_state = false;
 
