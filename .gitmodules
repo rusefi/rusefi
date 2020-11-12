@@ -15,3 +15,6 @@
 [submodule "hardware/InteractiveHtmlBom"]
 	path = hardware/InteractiveHtmlBom
 	url = https://github.com/openscopeproject/InteractiveHtmlBom.git
+[submodule "firmware/ext/cmsis-svd"]
+	path = firmware/ext/cmsis-svd
+	url = https://github.com/posborne/cmsis-svd
