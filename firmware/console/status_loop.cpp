@@ -177,7 +177,7 @@ static void printOutPin(const char *pinName, brain_pin_e hwPin) {
 }
 #endif /* EFI_PROD_CODE */
 
-void printOverallStatus(systime_t nowSeconds) {
+void printOverallStatus(efitimesec_t nowSeconds) {
 #if EFI_ENGINE_SNIFFER
 	waveChart.publishIfFull();
 #endif /* EFI_ENGINE_SNIFFER */
