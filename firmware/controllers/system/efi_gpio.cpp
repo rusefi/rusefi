@@ -52,9 +52,13 @@ static const char *auxValveShortNames[] = { "a1", "a2"};
 
 static RegisteredOutputPin * registeredOutputHead = nullptr;
 
-RegisteredOutputPin::RegisteredOutputPin(const char *name, short pinOffset,
+RegisteredNamedOutputPin::RegisteredNamedOutputPin(const char *name, short pinOffset,
+		short pinModeOffset) : RegisteredOutputPin(name, pinOffset, pinModeOffset) {
+}
+
+RegisteredOutputPin::RegisteredOutputPin(const char *registrationName, short pinOffset,
 		short pinModeOffset) {
-	this->name = name;
+	this->registrationName = registrationName;
 	this->pinOffset = pinOffset;
 	this->pinModeOffset = pinModeOffset;
 	// adding into head of the list is so easy and since we do not care about order that's what we shall do
@@ -81,7 +85,7 @@ void RegisteredOutputPin::init() {
     pin_output_mode_e *newMode = (pin_output_mode_e *) ((void *) (&((char*) engineConfiguration)[pinModeOffset]));
 
     if (isPinConfigurationChanged()) {
-		this->initPin(name, newPin, newMode);
+		this->initPin(registrationName, newPin, newMode);
     }
 #endif // EFI_PROD_CODE
 }
@@ -114,12 +118,12 @@ EnginePins::EnginePins() :
 		secondIdleSolenoidPin("Idle Valve#2", CONFIG_OFFSET(secondSolenoidPin), idle_solenoidPinMode_offset),
 		alternatorPin("Alternator control", CONFIG_PIN_OFFSETS(alternatorControl)),
 		checkEnginePin("checkEnginePin", CONFIG_PIN_OFFSETS(malfunctionIndicator)),
-		// todo: NamedOutputPin vs RegisteredOutputPin
-		//		tachOut("tachOut", CONFIG_PIN_OFFSETS(tachOutput)),
+		tachOut("tachOut", CONFIG_PIN_OFFSETS(tachOutput)),
 		triggerDecoderErrorPin("led: trigger debug", CONFIG_PIN_OFFSETS(triggerError)),
 		hipCs("hipCs", CONFIG_PIN_OFFSETS(hip9011Cs))
 {
 	tachOut.name = PROTOCOL_TACH_NAME;
+	hpfpValve.name = PROTOCOL_HPFP_NAME;
 
 	static_assert(efi::size(sparkNames) >= IGNITION_PIN_COUNT, "Too many ignition pins");
 	for (int i = 0; i < IGNITION_PIN_COUNT;i++) {
@@ -197,7 +201,6 @@ void EnginePins::unregisterPins() {
 	unregisterEtbPins();
 #endif /* EFI_ELECTRONIC_THROTTLE_BODY */
 #if EFI_PROD_CODE
-	unregisterOutputIfPinOrModeChanged(tachOut, tachOutputPin, tachOutputPinMode);
 	// todo: add pinMode
 	unregisterOutputIfPinChanged(sdCsPin, sdCardCsPin);
 	unregisterOutputIfPinChanged(accelerometerCs, LIS302DLCsPin);
@@ -289,7 +292,10 @@ void EnginePins::startInjectionPins(void) {
 }
 
 NamedOutputPin::NamedOutputPin() : OutputPin() {
-	name = NULL;
+}
+
+NamedOutputPin::NamedOutputPin(const char *name) : OutputPin() {
+	this->name = name;
 }
 
 const char *NamedOutputPin::getName() const {
@@ -297,11 +303,7 @@ const char *NamedOutputPin::getName() const {
 }
 
 const char *NamedOutputPin::getShortName() const {
-	return shortName == NULL ? name : shortName;
-}
-
-NamedOutputPin::NamedOutputPin(const char *name) : OutputPin() {
-	this->name = name;
+	return shortName == nullptr ? name : shortName;
 }
 
 void NamedOutputPin::setHigh() {

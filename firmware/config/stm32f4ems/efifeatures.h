@@ -31,6 +31,8 @@
 
 #define EFI_MC33816 TRUE
 
+#define EFI_HPFP TRUE
+
 #define HAL_USE_USB_MSD FALSE
 
 #define EFI_ENABLE_CRITICAL_ENGINE_STOP TRUE
@@ -240,16 +242,6 @@
 #ifndef EFI_EMULATE_POSITION_SENSORS
 #define EFI_EMULATE_POSITION_SENSORS TRUE
 #endif
-
-/**
- * This macros is used to hide hardware-specific pieces of the code from unit tests and simulator, so it only makes
- * sense in folders exposed to the tests projects (simulator and unit tests).
- * This macros is NOT about taking out logging in general.
- * See also EFI_UNIT_TEST
- * See also EFI_SIMULATOR
- * todo: do we want to rename any of these three options?
- */
-#define EFI_PROD_CODE TRUE
 
 /**
  * Do we need file logging (like SD card) logic?

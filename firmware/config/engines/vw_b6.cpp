@@ -127,6 +127,8 @@ void setVwPassatB6(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	engineConfiguration->etb.offset = 0;
 
 	engineConfiguration->injector.flow = 300;
+	engineConfiguration->tempHpfpStart = 120;
+	engineConfiguration->tempHpfpDuration = 30;
 
 	engineConfiguration->idle.solenoidPin = GPIO_UNASSIGNED;
 	engineConfiguration->fanPin = GPIO_UNASSIGNED;

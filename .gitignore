@@ -14,7 +14,7 @@ doxygen/
 /.idea
 workspace.xml
 java_console_binary
-.vscode
+.vscode/.*
 *.cmp
 *.net
 err.txt

@@ -1130,9 +1130,10 @@ static int tle8888_chip_init_data(void * data) {
 		}
 	}
 
-	/* HACK HERE if you want to enable PP for OUT21..OUT24
-	 * without approprirate call to setPinMode */
-	//chip->o_pp_mask		|= BIT(20) | BIT(21) | BIT(22) | BIT(23);
+	/* Enable Push-Pull mode for OUT21..OUT24 */
+	if (cfg->stepper) {
+		chip->o_pp_mask	|= BIT(20) | BIT(21) | BIT(22) | BIT(23);
+	}
 
 	/* enable all direct driven */
 	chip->o_oe_mask		|= chip->o_direct_mask;

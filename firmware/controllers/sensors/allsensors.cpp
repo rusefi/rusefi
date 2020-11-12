@@ -12,7 +12,7 @@
 
 EXTERN_ENGINE;
 
-ButtonDebounce acDebounce;
+ButtonDebounce acDebounce("ac");
 
 void initSensors(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	initMapDecoder(sharedLogger PASS_ENGINE_PARAMETER_SUFFIX);

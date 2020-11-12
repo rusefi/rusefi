@@ -11,6 +11,11 @@
 #include "hardware.h"
 
 ButtonDebounce* ButtonDebounce::s_firstDebounce = nullptr;
+static Logging *logger;
+
+ButtonDebounce::ButtonDebounce(const char *name) {
+	this->name = name;
+}
 
 /**
 We need to have a separate init function because we do not have the pin or mode in the context in which the class is originally created
@@ -93,9 +98,10 @@ bool ButtonDebounce::readPinState() {
     // We don't actually need it to be a class variable in this method,
     //  but when a method is implemented to actually get the pin's state,
     //  for example to implement long button presses, it will be needed.
-    storedValue = false;
 #if EFI_PROD_CODE || EFI_UNIT_TEST
     storedValue = efiReadPin(active_pin);
+#else
+    storedValue = false;
 #endif
 #if EFI_PROD_CODE
     // Invert
@@ -107,4 +113,24 @@ bool ButtonDebounce::readPinState() {
         timeLast = timeNow;
     }
     return storedValue;
+}
+
+void ButtonDebounce::debug() {
+    ButtonDebounce *listItem = s_firstDebounce;
+    while (listItem != nullptr) {
+#if EFI_PROD_CODE || EFI_UNIT_TEST
+        scheduleMsg(logger, "%s timeLast %d", listItem->name, listItem->timeLast);
+        scheduleMsg(logger, "pin %d", efiReadPin(listItem->active_pin));
+#endif
+
+        listItem = listItem->nextDebounce;
+    }
+}
+
+void initButtonDebounce(Logging *sharedLogger) {
+	logger = sharedLogger;
+
+#if !EFI_UNIT_TEST
+	addConsoleAction("debounce", ButtonDebounce::debug);
+#endif /* EFI_UNIT_TEST */
 }
