@@ -229,9 +229,6 @@ int sr5ReadData(ts_channel_s *tsChannel, uint8_t * buffer, int size) {
  * Adds size to the beginning of a packet and a crc32 at the end. Then send the packet.
  */
 void sr5WriteCrcPacket(ts_channel_s *tsChannel, const uint8_t responseCode, const void *buf, const uint16_t size) {
-	uint8_t *writeBuffer = tsChannel->writeBuffer;
-	uint8_t *crcBuffer = &tsChannel->writeBuffer[3];
-
 #if defined(TS_CAN_DEVICE) && defined(TS_CAN_DEVICE_SHORT_PACKETS_IN_ONE_FRAME)
 	// a special case for short packets: we can sent them in 1 frame, without CRC & size,
 	// because the CAN protocol is already protected by its own checksum.
@@ -245,20 +242,26 @@ void sr5WriteCrcPacket(ts_channel_s *tsChannel, const uint8_t responseCode, cons
 	}
 #endif /* TS_CAN_DEVICE */
 
-	*(uint16_t *) writeBuffer = SWAP_UINT16(size + 1);   // packet size including command
-	*(uint8_t *) (writeBuffer + 2) = responseCode;
+	auto scratchBuffer = tsChannel->crcReadBuffer;
 
-	// CRC on whole packet
-	uint32_t crc = crc32((void *) (writeBuffer + 2), 1); // command part of CRC
-	crc = crc32inc((void *) buf, crc, (uint32_t) (size)); // combined with packet CRC
-
-	*(uint32_t *) (crcBuffer) = SWAP_UINT32(crc);
-
-	sr5WriteData(tsChannel, writeBuffer, 3);      // header
-	if (size > 0) {
-		sr5WriteData(tsChannel, (const uint8_t*)buf, size);      // body
+	// If transmitting data, copy it in to place in the scratch buffer
+	if (size) {
+		memcpy(scratchBuffer + 3, buf, size);
 	}
-	sr5WriteData(tsChannel, crcBuffer, 4);      // CRC footer
+
+	// Index 0/1 = packet size (big endian)
+	*(uint16_t *) scratchBuffer = SWAP_UINT16(size + 1);
+	// Index 2 = response code
+	*(uint8_t *) (scratchBuffer + 2) = responseCode;
+
+	// CRC is computed on the responseCode and payload but not length
+	uint32_t crc = crc32((void *) (scratchBuffer + 2), size + 1); // command part of CRC
+
+	// Place the CRC at the end
+	*reinterpret_cast<uint32_t*>(&scratchBuffer[size + 3]) = SWAP_UINT32(crc);
+
+	// Write to the underlying stream
+	sr5WriteData(tsChannel, reinterpret_cast<uint8_t*>(scratchBuffer), size + 7);
 	sr5FlushData(tsChannel);
 }
 
