@@ -228,7 +228,7 @@ int sr5ReadData(ts_channel_s *tsChannel, uint8_t * buffer, int size) {
 /**
  * Adds size to the beginning of a packet and a crc32 at the end. Then send the packet.
  */
-void sr5WriteCrcPacket(ts_channel_s *tsChannel, const uint8_t responseCode, const void *buf, const uint16_t size) {
+void sr5WriteCrcPacket(ts_channel_s *tsChannel, const uint8_t responseCode, const void *buf, size_t size) {
 #if defined(TS_CAN_DEVICE) && defined(TS_CAN_DEVICE_SHORT_PACKETS_IN_ONE_FRAME)
 	// a special case for short packets: we can sent them in 1 frame, without CRC & size,
 	// because the CAN protocol is already protected by its own checksum.
@@ -243,6 +243,11 @@ void sr5WriteCrcPacket(ts_channel_s *tsChannel, const uint8_t responseCode, cons
 #endif /* TS_CAN_DEVICE */
 
 	auto scratchBuffer = tsChannel->crcReadBuffer;
+
+	// don't transmit a null buffer...
+	if (!buf) {
+		size = 0;
+	}
 
 	// If transmitting data, copy it in to place in the scratch buffer
 	if (size) {
