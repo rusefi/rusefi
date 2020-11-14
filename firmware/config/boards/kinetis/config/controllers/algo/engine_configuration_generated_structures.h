@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Wed Nov 11 04:12:45 UTC 2020
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Sat Nov 14 23:07:43 UTC 2020
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -751,14 +751,14 @@ struct engine_configuration_s {
 	offset 76 bit 31 */
 	bool unusedBit_34_31 : 1;
 	/**
-	 * Closed throttle. todo: extract these two fields into a structure
+	 * Closed throttle, 1 volt = 200 units.
 	 * See also tps1_1AdcChannel
 	 * set tps_min X
 	 * offset 80
 	 */
 	int16_t tpsMin;
 	/**
-	 * Full throttle. tpsMax value as 10 bit ADC value. Not Voltage!
+	 * Full throttle.
 	 * See also tps1_1AdcChannel
 	 * set tps_max X
 	 * offset 82
@@ -1338,6 +1338,7 @@ struct engine_configuration_s {
 	/**
 	 * Voltage when the wastegate is fully open.
 	 * You probably don't have one of these!
+	 * 1 volt = 1000 units
 	 * offset 718
 	 */
 	uint16_t wastegatePositionMax;
@@ -1350,6 +1351,7 @@ struct engine_configuration_s {
 	/**
 	 * Voltage when the idle valve is open.
 	 * You probably don't have one of these!
+	 * 1 volt = 1000 units
 	 * offset 722
 	 */
 	uint16_t idlePositionMax;
@@ -3767,4 +3769,4 @@ struct persistent_config_s {
 typedef struct persistent_config_s persistent_config_s;
 
 // end
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Wed Nov 11 04:12:45 UTC 2020
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Sat Nov 14 23:07:43 UTC 2020
