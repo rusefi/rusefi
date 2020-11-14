@@ -474,8 +474,9 @@ bit issue_294_30;
 bit issue_294_31,si_example,nada_example;
 
 
-int16_t tpsMin;Closed throttle. todo: extract these two fields into a structure\nSee also tps1_1AdcChannel\nset tps_min X;"ADC",      1,     0,    0, 1023,      0
-int16_t tpsMax;Full throttle. tpsMax value as 10 bit ADC value. Not Voltage!\nSee also tps1_1AdcChannel\nset tps_max X;"ADC",      1,     0,    0, 1023,      0
+!todo: extract these two fields into a structure
+int16_t tpsMin;+Closed throttle, 1 volt = 200 units.\nSee also tps1_1AdcChannel\nset tps_min X;"ADC",      1,     0,    0, 1023,      0
+int16_t tpsMax;+Full throttle.\nSee also tps1_1AdcChannel\nset tps_max X;"ADC",      1,     0,    0, 1023,      0
 
 int16_t tpsErrorDetectionTooLow;+TPS error detection: what throttle % is unrealistically low?\nAlso used for accelerator pedal error detection if so equiped.;"%",       1,     0,    -10, 0,     0
 int16_t tpsErrorDetectionTooHigh;+TPS error detection: what throttle % is unrealistically high?\nAlso used for accelerator pedal error detection if so equiped.;"%",       1,     0,    100, 110,     0
@@ -728,17 +729,17 @@ custom adc_channel_mode_e 4 bits,    U32,   @OFFSET@, [0:1], "Off", "Slow", "Fas
 pin_input_mode_e throttlePedalUpPinMode;
 		uint8_t fsio_visible acIdleExtraOffset;+Additional idle PID offset while A/C is active;"Percent", 1, 0, 0, 255, 0
 
-	int can2SleepPeriodMs;CANbus thread period, ms;"ms",    1,      0,       0,  1000.0,        2
-	uint16_t wastegatePositionMin;Voltage when the wastegate is closed.\nYou probably don't have one of these!;"mv", 1, 0, 0, 5000, 0
-	uint16_t wastegatePositionMax;Voltage when the wastegate is fully open.\nYou probably don't have one of these!;"mv", 1, 0, 0, 5000, 0
-	uint16_t idlePositionMin;Voltage when the idle valve is closed.\nYou probably don't have one of these!;"mv", 1, 0, 0, 5000, 0
-	uint16_t idlePositionMax;Voltage when the idle valve is open.\nYou probably don't have one of these!;"mv", 1, 0, 0, 5000, 0
+	int can2SleepPeriodMs;+CANbus thread period, ms;"ms",    1,      0,       0,  1000.0,        2
+	uint16_t wastegatePositionMin;+Voltage when the wastegate is closed.\nYou probably don't have one of these!;"mv", 1, 0, 0, 5000, 0
+	uint16_t wastegatePositionMax;+Voltage when the wastegate is fully open.\nYou probably don't have one of these!\n1 volt = 1000 units;"mv", 1, 0, 0, 5000, 0
+	uint16_t idlePositionMin;+Voltage when the idle valve is closed.\nYou probably don't have one of these!;"mv", 1, 0, 0, 5000, 0
+	uint16_t idlePositionMax;+Voltage when the idle valve is open.\nYou probably don't have one of these!\n1 volt = 1000 units;"mv", 1, 0, 0, 5000, 0
 
 
 	uint16_t tempHpfpStart;;"units", 1, 0, -20, 100, 0
 	uint16_t tempHpfpDuration;;"units", 1, 0, -20, 100, 0
 
-	uint32_t tunerStudioSerialSpeed;Secondary TTL channel baud rate;"BPs",      1,      0,       0,1000000,      0
+	uint32_t tunerStudioSerialSpeed;+Secondary TTL channel baud rate;"BPs",      1,      0,       0,1000000,      0
 
 	float compressionRatio;+Just for reference really, not taken into account by any logic at this point;"CR",        1,     0,  0,    300.0,  1
 
