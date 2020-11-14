@@ -249,6 +249,9 @@ void sr5WriteCrcPacket(ts_channel_s *tsChannel, const uint8_t responseCode, cons
 		size = 0;
 	}
 
+	// don't transmit too large a buffer
+	efiAssertVoid(OBD_PCM_Processor_Fault, size <= BLOCKING_FACTOR + 7, "sr5WriteCrcPacket tried to transmit too large a packet")
+
 	// If transmitting data, copy it in to place in the scratch buffer
 	if (size) {
 		memcpy(scratchBuffer + 3, buf, size);
