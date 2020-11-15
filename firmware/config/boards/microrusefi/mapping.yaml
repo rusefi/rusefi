@@ -37,6 +37,11 @@ outputs:
   GPIOB_8:  "AUX J2 PB8"
   GPIOB_9:  "AUX J2 PB9"
   GPIOC_12: "AUX J2 PC12"
+  GPIOE_0:  "AUX J6 PE0"
+  GPIOE_6:  "AUX J10 PE6"
+  GPIOE_5:  "AUX J11 PE5"
+  GPIOB_7:  "AUX J18 PB7"
+
   GPIOB_0: "AUX AV8 reuse"
   GPIOB_1: "AUX AV9 reuse"
   GPIOA_4: "AUX AV10 reuse"
