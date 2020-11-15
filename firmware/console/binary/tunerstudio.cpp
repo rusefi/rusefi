@@ -678,13 +678,14 @@ static void handleGetText(ts_channel_s *tsChannel) {
 }
 
 static void handleExecuteCommand(ts_channel_s *tsChannel, char *data, int incomingPacketSize) {
-	sr5WriteCrcPacket(tsChannel, TS_RESPONSE_COMMAND_OK, nullptr, 0);
 	data[incomingPacketSize] = 0;
 	char *trimmed = efiTrim(data);
 #if EFI_SIMULATOR
 			logMsg("execute [%s]\r\n", trimmed);
 #endif
 	(console_line_callback)(trimmed);
+
+	sr5WriteCrcPacket(tsChannel, TS_RESPONSE_COMMAND_OK, nullptr, 0);
 }
 
 /**
