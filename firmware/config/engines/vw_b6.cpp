@@ -116,6 +116,11 @@ void setVwPassatB6(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 */
 	coolantControl->pin = TLE8888_PIN_5; // "3 - Lowside 2"
 
+
+	// "7 - Lowside 1"
+	engineConfiguration->hpfpValvePin = TLE8888_PIN_6;
+
+
 	// set tps_min 890
 	engineConfiguration->tpsMin = 890; // convert 12to10 bit (ADC/4)
 	// set tps_max 70
