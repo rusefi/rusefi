@@ -50,7 +50,7 @@ bool stopTsPort(ts_channel_s *tsChannel);
 #define SR5_READ_TIMEOUT TIME_MS2I(1000)
 
 void sr5WriteData(ts_channel_s *tsChannel, const uint8_t * buffer, int size);
-void sr5WriteCrcPacket(ts_channel_s *tsChannel, const uint8_t responseCode, const void *buf, size_t size);
+void sr5WriteCrcPacket(ts_channel_s *tsChannel, uint8_t responseCode, const uint8_t* buf, size_t size);
 void sr5SendResponse(ts_channel_s *tsChannel, ts_response_format_e mode, const uint8_t * buffer, int size);
 void sendOkResponse(ts_channel_s *tsChannel, ts_response_format_e mode);
 int sr5ReadData(ts_channel_s *tsChannel, uint8_t * buffer, int size);
