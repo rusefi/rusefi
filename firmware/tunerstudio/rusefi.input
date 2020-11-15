@@ -1962,8 +1962,8 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 		field = "MC33816 rstb",							mc33816_rstb
 		field = "MC33816 flag0",						mc33816_flag0
 		field = "MC33816 SPI Device",					mc33972spiDevice
-		field = hpfpValcePin,							hpfpValvePin
-		field = hpfpValcePinMode,						hpfpValvePinMode
+		field = "HPFP Valve Pin",						hpfpValvePin
+		field = "HPFP Valve Pin Mode",					hpfpValvePinMode
 		field = tempHpfpStart, tempHpfpStart 
 		field = tempHpfpDuration, tempHpfpDuration 
 
