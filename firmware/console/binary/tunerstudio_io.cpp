@@ -264,6 +264,7 @@ static void sr5WriteCrcPacketLarge(ts_channel_s* tsChannel, uint8_t responseCode
 	uint32_t crc = crc32((void*)(headerBuffer + 2), 1);
 	// Data part of CRC
 	crc = crc32inc((void*)buf, crc, size);
+	*(uint32_t*)crcBuffer = SWAP_UINT32(crc);
 
 	// Write header
 	sr5WriteData(tsChannel, headerBuffer, sizeof(headerBuffer));
@@ -299,12 +300,12 @@ void sr5WriteCrcPacket(ts_channel_s *tsChannel, uint8_t responseCode, const uint
 	}
 #endif /* TS_CAN_DEVICE */
 
-	/*if (size <= BLOCKING_FACTOR + 7) {
+	if (size <= BLOCKING_FACTOR + 7) {
 		// small packets use small packet optimization
 		sr5WriteCrcPacketSmall(tsChannel, responseCode, buf, size);
-	} else {*/
+	} else {
 		sr5WriteCrcPacketLarge(tsChannel, responseCode, buf, size);
-	//}
+	}
 
 	sr5FlushData(tsChannel);
 }
