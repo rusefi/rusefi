@@ -22,8 +22,10 @@ typedef struct {
 	volatile int readPos;
 	// secondary FIFO buffer for async. transfer
 	uint8_t buffer[TS_FIFO_BUFFER_SIZE];
+#if EFI_PROD_CODE || EFI_SIMULATOR
 	// input FIFO Rx queue
 	input_queue_t fifoRxQueue;
+#endif
 } uart_dma_s;
 
 #if TS_UART_DMA_MODE || PRIMARY_UART_DMA_MODE
