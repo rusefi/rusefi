@@ -17,6 +17,11 @@ public class HardwareTests extends BaseTest {
         super(commandQueue);
     }
 
+    /**
+     * This test relies on jumpers connecting physical pins on Discovery:
+     * PD1<>PC6
+     * PD2<>PA5
+     */
     public void runRealHardwareTests() {
         sendCommand(getEnableCommand(Fields.CMD_TRIGGER_HW_INPUT));
         enableFunctionalMode();
