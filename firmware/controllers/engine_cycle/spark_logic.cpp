@@ -45,8 +45,6 @@ int isIgnitionTimingError(void) {
 }
 
 static void fireSparkBySettingPinLow(IgnitionEvent *event, IgnitionOutputPin *output) {
-	output->setLow();
-
 #if EFI_UNIT_TEST
 	Engine *engine = event->engine;
 #endif /* EFI_UNIT_TEST */
@@ -69,6 +67,8 @@ static void fireSparkBySettingPinLow(IgnitionEvent *event, IgnitionOutputPin *ou
 		warning(CUSTOM_OUT_OF_ORDER_COIL, "out-of-order coil off %s", output->getName());
 		output->outOfOrder = true;
 	}
+
+	output->setLow();
 }
 
 // todo: make this a class method?
