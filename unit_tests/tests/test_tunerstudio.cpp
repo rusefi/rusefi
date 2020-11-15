@@ -4,7 +4,6 @@
 extern int sr5TestWriteDataIndex;
 extern uint8_t st5TestBuffer[16000];
 
-
 #define CODE 2
 #define PAYLOAD "123"
 #define SIZE strlen(PAYLOAD)
@@ -28,8 +27,8 @@ static void assertCrcPacket() {
 	ASSERT_EQ(st5TestBuffer[9], 87);
 }
 
-
 TEST(binary, testWriteCrc) {
+	static ts_channel_s test;
 
 	sr5TestWriteDataIndex = 0;
 	sr5WriteCrcPacket(nullptr, CODE, (const uint8_t * )PAYLOAD, SIZE);
@@ -40,7 +39,6 @@ TEST(binary, testWriteCrc) {
 	assertCrcPacket();
 
 	sr5TestWriteDataIndex = 0;
-//	sr5WriteCrcPacketSmall(nullptr, CODE, (const uint8_t * )PAYLOAD, SIZE);
-//	assertCrcPacket();
-
+	sr5WriteCrcPacketSmall(&test, CODE, (const uint8_t * )PAYLOAD, SIZE);
+	assertCrcPacket();
 }
