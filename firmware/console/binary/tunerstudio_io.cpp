@@ -149,12 +149,14 @@ bool stopTsPort(ts_channel_s *tsChannel) {
 }
 
 #if EFI_UNIT_TEST
-void sr5WriteData(ts_channel_s *tsChannel, const uint8_t * buffer, int size) {
+int sr5TestWriteDataIndex = 0;
+uint8_t st5TestBuffer[16000];
 
+void sr5WriteData(ts_channel_s *tsChannel, const uint8_t * buffer, int size) {
+	memcpy(&st5TestBuffer[sr5TestWriteDataIndex], buffer, size);
+	sr5TestWriteDataIndex += size;
 }
 #endif // EFI_UNIT_TEST
-
-
 
 #if EFI_PROD_CODE || EFI_SIMULATOR
 void sr5WriteData(ts_channel_s *tsChannel, const uint8_t * buffer, int size) {
