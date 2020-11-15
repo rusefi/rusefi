@@ -4,14 +4,12 @@
 extern int sr5TestWriteDataIndex;
 extern uint8_t st5TestBuffer[16000];
 
-TEST(binary, testWriteCrc) {
-	sr5TestWriteDataIndex = 0;
 
 #define CODE 2
 #define PAYLOAD "123"
 #define SIZE strlen(PAYLOAD)
 
-	sr5WriteCrcPacket(nullptr, CODE, (const uint8_t * )PAYLOAD, SIZE);
+static void assertCrcPacket() {
 	ASSERT_EQ(sr5TestWriteDataIndex, SIZE + 7);
 
 	// todo: proper uint16 comparison
@@ -28,6 +26,21 @@ TEST(binary, testWriteCrc) {
 	ASSERT_EQ(st5TestBuffer[7], 68);
 	ASSERT_EQ(st5TestBuffer[8], 173);
 	ASSERT_EQ(st5TestBuffer[9], 87);
+}
 
+
+TEST(binary, testWriteCrc) {
+
+	sr5TestWriteDataIndex = 0;
+	sr5WriteCrcPacket(nullptr, CODE, (const uint8_t * )PAYLOAD, SIZE);
+	assertCrcPacket();
+
+	sr5TestWriteDataIndex = 0;
+	sr5WriteCrcPacketLarge(nullptr, CODE, (const uint8_t * )PAYLOAD, SIZE);
+	assertCrcPacket();
+
+	sr5TestWriteDataIndex = 0;
+//	sr5WriteCrcPacketSmall(nullptr, CODE, (const uint8_t * )PAYLOAD, SIZE);
+//	assertCrcPacket();
 
 }

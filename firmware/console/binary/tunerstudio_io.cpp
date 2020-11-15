@@ -236,7 +236,7 @@ int sr5ReadData(ts_channel_s *tsChannel, uint8_t * buffer, int size) {
 }
 #endif // EFI_PROD_CODE || EFI_SIMULATOR
 
-static void sr5WriteCrcPacketSmall(ts_channel_s* tsChannel, uint8_t responseCode, const uint8_t* buf, size_t size) {
+void sr5WriteCrcPacketSmall(ts_channel_s* tsChannel, uint8_t responseCode, const uint8_t* buf, size_t size) {
 	auto scratchBuffer = tsChannel->scratchBuffer;
 
 	// don't transmit too large a buffer
@@ -265,7 +265,7 @@ static void sr5WriteCrcPacketSmall(ts_channel_s* tsChannel, uint8_t responseCode
 	sr5WriteData(tsChannel, reinterpret_cast<uint8_t*>(scratchBuffer), size + 7);
 }
 
-static void sr5WriteCrcPacketLarge(ts_channel_s* tsChannel, uint8_t responseCode, const uint8_t* buf, size_t size) {
+void sr5WriteCrcPacketLarge(ts_channel_s* tsChannel, uint8_t responseCode, const uint8_t* buf, size_t size) {
 	uint8_t headerBuffer[3];
 	uint8_t crcBuffer[4];
 
