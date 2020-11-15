@@ -30,7 +30,18 @@ static void assertCrcPacket() {
 TEST(binary, testWriteCrc) {
 	static ts_channel_s test;
 
+	// Let it pick which impl (small vs large) to use
 	sr5TestWriteDataIndex = 0;
 	sr5WriteCrcPacket(&test, CODE, (const uint8_t * )PAYLOAD, SIZE);
+	assertCrcPacket();
+
+	// Force the large impl
+	sr5TestWriteDataIndex = 0;
+	sr5WriteCrcPacketLarge(&test, CODE, (const uint8_t * )PAYLOAD, SIZE);
+	assertCrcPacket();
+
+	// Force the small impl
+	sr5TestWriteDataIndex = 0;
+	sr5WriteCrcPacketSmall(&test, CODE, (const uint8_t * )PAYLOAD, SIZE);
 	assertCrcPacket();
 }
