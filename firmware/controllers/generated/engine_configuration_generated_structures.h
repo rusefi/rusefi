@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Sat Nov 14 23:07:26 UTC 2020
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Sun Nov 15 22:33:11 UTC 2020
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -2790,7 +2790,7 @@ struct engine_configuration_s {
 	/**
 	 * offset 2130
 	 */
-	brain_pin_e hpfpValvePin;
+	output_pin_e hpfpValvePin;
 	/**
 	 * offset 2131
 	 */
@@ -3769,4 +3769,4 @@ struct persistent_config_s {
 typedef struct persistent_config_s persistent_config_s;
 
 // end
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Sat Nov 14 23:07:26 UTC 2020
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Sun Nov 15 22:33:11 UTC 2020
