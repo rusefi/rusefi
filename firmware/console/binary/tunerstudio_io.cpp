@@ -55,9 +55,9 @@ static CANConfig tsCanConfig = { CAN_MCR_ABOM | CAN_MCR_AWUM | CAN_MCR_TXFP, CAN
 
 
 void startTsPort(ts_channel_s *tsChannel) {
-	tsChannel->channel = (BaseChannel *) NULL;
 
 	#if EFI_PROD_CODE
+	tsChannel->channel = (BaseChannel *) NULL;
 		#if defined(TS_USB_DEVICE)
 #if defined(TS_UART_DEVICE)
 #error 	"cannot have TS_UART_DEVICE and TS_USB_DEVICE"
@@ -114,7 +114,7 @@ void startTsPort(ts_channel_s *tsChannel) {
 				//tsChannel->channel = (BaseChannel *) &TS_CAN_DEVICE;
 			}
 		#endif /* TS_CAN_DEVICE */
-	#else  /* EFI_PROD_CODE */
+	#elif EFI_SIMULATOR /* EFI_PROD_CODE */
 		tsChannel->channel = (BaseChannel *) TS_SIMULATOR_PORT;
 	#endif /* EFI_PROD_CODE */
 }
@@ -148,6 +148,15 @@ bool stopTsPort(ts_channel_s *tsChannel) {
 	#endif /* EFI_PROD_CODE */
 }
 
+#if EFI_UNIT_TEST
+void sr5WriteData(ts_channel_s *tsChannel, const uint8_t * buffer, int size) {
+
+}
+#endif // EFI_UNIT_TEST
+
+
+
+#if EFI_PROD_CODE || EFI_SIMULATOR
 void sr5WriteData(ts_channel_s *tsChannel, const uint8_t * buffer, int size) {
         efiAssertVoid(CUSTOM_ERR_6570, getCurrentRemainingStack() > 64, "tunerStudioWriteData");
 #if EFI_SIMULATOR
@@ -223,6 +232,7 @@ int sr5ReadDataTimeout(ts_channel_s *tsChannel, uint8_t * buffer, int size, int 
 int sr5ReadData(ts_channel_s *tsChannel, uint8_t * buffer, int size) {
 	return sr5ReadDataTimeout(tsChannel, buffer, size, SR5_READ_TIMEOUT);
 }
+#endif // EFI_PROD_CODE || EFI_SIMULATOR
 
 static void sr5WriteCrcPacketSmall(ts_channel_s* tsChannel, uint8_t responseCode, const uint8_t* buf, size_t size) {
 	auto scratchBuffer = tsChannel->scratchBuffer;
