@@ -224,30 +224,8 @@ int sr5ReadData(ts_channel_s *tsChannel, uint8_t * buffer, int size) {
 	return sr5ReadDataTimeout(tsChannel, buffer, size, SR5_READ_TIMEOUT);
 }
 
-
-/**
- * Adds size to the beginning of a packet and a crc32 at the end. Then send the packet.
- */
-void sr5WriteCrcPacket(ts_channel_s *tsChannel, const uint8_t responseCode, const void *buf, size_t size) {
-#if defined(TS_CAN_DEVICE) && defined(TS_CAN_DEVICE_SHORT_PACKETS_IN_ONE_FRAME)
-	// a special case for short packets: we can sent them in 1 frame, without CRC & size,
-	// because the CAN protocol is already protected by its own checksum.
-	if ((size + 1) <= 7) {
-		sr5WriteData(tsChannel, &responseCode, 1);      // header without size
-		if (size > 0) {
-			sr5WriteData(tsChannel, (const uint8_t*)buf, size);      // body
-		}
-		sr5FlushData(tsChannel);
-		return;
-	}
-#endif /* TS_CAN_DEVICE */
-
+static void sr5WriteCrcPacketSmall(ts_channel_s* tsChannel, uint8_t responseCode, const uint8_t* buf, size_t size) {
 	auto scratchBuffer = tsChannel->scratchBuffer;
-
-	// don't transmit a null buffer...
-	if (!buf) {
-		size = 0;
-	}
 
 	// don't transmit too large a buffer
 	efiAssertVoid(OBD_PCM_Processor_Fault, size <= BLOCKING_FACTOR + 7, "sr5WriteCrcPacket tried to transmit too large a packet")
@@ -273,6 +251,62 @@ void sr5WriteCrcPacket(ts_channel_s *tsChannel, const uint8_t responseCode, cons
 
 	// Write to the underlying stream
 	sr5WriteData(tsChannel, reinterpret_cast<uint8_t*>(scratchBuffer), size + 7);
+}
+
+static void sr5WriteCrcPacketLarge(ts_channel_s* tsChannel, uint8_t responseCode, const uint8_t* buf, size_t size) {
+	uint8_t headerBuffer[3];
+	uint8_t crcBuffer[4];
+
+	*(uint16_t*)headerBuffer = SWAP_UINT16(size + 1);
+	*(uint8_t*)(headerBuffer + 2) = responseCode;
+
+	// Command part of CRC
+	uint32_t crc = crc32((void*)(headerBuffer + 2), 1);
+	// Data part of CRC
+	crc = crc32inc((void*)buf, crc, size);
+	*(uint32_t*)crcBuffer = SWAP_UINT32(crc);
+
+	// Write header
+	sr5WriteData(tsChannel, headerBuffer, sizeof(headerBuffer));
+
+	// If data, write that
+	if (size) {
+		sr5WriteData(tsChannel, buf, size);
+	}
+
+	// Lastly the CRC footer
+	sr5WriteData(tsChannel, crcBuffer, sizeof(crcBuffer));
+}
+
+/**
+ * Adds size to the beginning of a packet and a crc32 at the end. Then send the packet.
+ */
+void sr5WriteCrcPacket(ts_channel_s *tsChannel, uint8_t responseCode, const uint8_t* buf, size_t size) {
+	// don't transmit a null buffer...
+	if (!buf) {
+		size = 0;
+	}
+
+#if defined(TS_CAN_DEVICE) && defined(TS_CAN_DEVICE_SHORT_PACKETS_IN_ONE_FRAME)
+	// a special case for short packets: we can sent them in 1 frame, without CRC & size,
+	// because the CAN protocol is already protected by its own checksum.
+	if ((size + 1) <= 7) {
+		sr5WriteData(tsChannel, &responseCode, 1);      // header without size
+		if (size > 0) {
+			sr5WriteData(tsChannel, (const uint8_t*)buf, size);      // body
+		}
+		sr5FlushData(tsChannel);
+		return;
+	}
+#endif /* TS_CAN_DEVICE */
+
+	if (size <= BLOCKING_FACTOR + 7) {
+		// small packets use small packet optimization
+		sr5WriteCrcPacketSmall(tsChannel, responseCode, buf, size);
+	} else {
+		sr5WriteCrcPacketLarge(tsChannel, responseCode, buf, size);
+	}
+
 	sr5FlushData(tsChannel);
 }
 
