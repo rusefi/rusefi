@@ -1206,7 +1206,7 @@ int16_t tps2Max;Full throttle#2. tpsMax value as 10 bit ADC value. Not Voltage!\
 	custom injector_pressure_type_e 1 bits, U08, @OFFSET@, [0:0], "Low", "High"
 	injector_pressure_type_e injectorPressureType;+Select which fuel pressure sensor measures the pressure of the fuel at your injectors.
 
-	brain_pin_e hpfpValvePin;
+	output_pin_e hpfpValvePin;
 	pin_output_mode_e hpfpValvePinMode;
 
 	float boostCutPressure;+MAP value above which fuel is cut in case of overboost.\n0 to disable overboost cut.;"kPa (absolute)",        1,     0,    0, 500,     0
