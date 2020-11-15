@@ -31,14 +31,6 @@ TEST(binary, testWriteCrc) {
 	static ts_channel_s test;
 
 	sr5TestWriteDataIndex = 0;
-	sr5WriteCrcPacket(nullptr, CODE, (const uint8_t * )PAYLOAD, SIZE);
-	assertCrcPacket();
-
-	sr5TestWriteDataIndex = 0;
-	sr5WriteCrcPacketLarge(nullptr, CODE, (const uint8_t * )PAYLOAD, SIZE);
-	assertCrcPacket();
-
-	sr5TestWriteDataIndex = 0;
-	sr5WriteCrcPacketSmall(&test, CODE, (const uint8_t * )PAYLOAD, SIZE);
+	sr5WriteCrcPacket(&test, CODE, (const uint8_t * )PAYLOAD, SIZE);
 	assertCrcPacket();
 }
