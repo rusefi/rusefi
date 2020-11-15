@@ -242,7 +242,7 @@ void sr5WriteCrcPacket(ts_channel_s *tsChannel, const uint8_t responseCode, cons
 	}
 #endif /* TS_CAN_DEVICE */
 
-	auto scratchBuffer = tsChannel->crcReadBuffer;
+	auto scratchBuffer = tsChannel->scratchBuffer;
 
 	// don't transmit a null buffer...
 	if (!buf) {

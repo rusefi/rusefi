@@ -29,7 +29,7 @@ struct ts_channel_s {
 	/**
 	 * See 'blockingFactor' in rusefi.ini
 	 */
-	char crcReadBuffer[BLOCKING_FACTOR + 30];
+	char scratchBuffer[BLOCKING_FACTOR + 30];
 
 #if TS_UART_DMA_MODE || PRIMARY_UART_DMA_MODE || TS_UART_MODE
 	UARTDriver *uartp = nullptr;
