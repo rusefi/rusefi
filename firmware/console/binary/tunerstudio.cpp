@@ -510,21 +510,21 @@ void runBinaryProtocolLoop(ts_channel_s *tsChannel) {
 
 		uint16_t incomingPacketSize = firstByte << 8 | secondByte;
 
-		if (incomingPacketSize == 0 || incomingPacketSize > (sizeof(tsChannel->crcReadBuffer) - CRC_WRAPPING_SIZE)) {
+		if (incomingPacketSize == 0 || incomingPacketSize > (sizeof(tsChannel->scratchBuffer) - CRC_WRAPPING_SIZE)) {
 			scheduleMsg(&tsLogger, "TunerStudio: invalid size: %d", incomingPacketSize);
 			tunerStudioError("ERROR: CRC header size");
 			sendErrorCode(tsChannel, TS_RESPONSE_UNDERRUN);
 			continue;
 		}
 
-		received = sr5ReadData(tsChannel, (uint8_t* )tsChannel->crcReadBuffer, 1);
+		received = sr5ReadData(tsChannel, (uint8_t* )tsChannel->scratchBuffer, 1);
 		if (received != 1) {
 			tunerStudioError("ERROR: did not receive command");
 			sendErrorCode(tsChannel, TS_RESPONSE_UNDERRUN);
 			continue;
 		}
 
-		char command = tsChannel->crcReadBuffer[0];
+		char command = tsChannel->scratchBuffer[0];
 		if (!isKnownCommand(command)) {
 			scheduleMsg(&tsLogger, "unexpected command %x", command);
 			sendErrorCode(tsChannel, TS_RESPONSE_UNRECOGNIZED_COMMAND);
@@ -535,7 +535,7 @@ void runBinaryProtocolLoop(ts_channel_s *tsChannel) {
 			logMsg("command %c\r\n", command);
 #endif
 
-		received = sr5ReadData(tsChannel, (uint8_t * ) (tsChannel->crcReadBuffer + 1),
+		received = sr5ReadData(tsChannel, (uint8_t * ) (tsChannel->scratchBuffer + 1),
 				incomingPacketSize + CRC_VALUE_SIZE - 1);
 		int expectedSize = incomingPacketSize + CRC_VALUE_SIZE - 1;
 		if (received != expectedSize) {
@@ -546,24 +546,24 @@ void runBinaryProtocolLoop(ts_channel_s *tsChannel) {
 			continue;
 		}
 
-		uint32_t expectedCrc = *(uint32_t*) (tsChannel->crcReadBuffer + incomingPacketSize);
+		uint32_t expectedCrc = *(uint32_t*) (tsChannel->scratchBuffer + incomingPacketSize);
 
 		expectedCrc = SWAP_UINT32(expectedCrc);
 
-		uint32_t actualCrc = crc32(tsChannel->crcReadBuffer, incomingPacketSize);
+		uint32_t actualCrc = crc32(tsChannel->scratchBuffer, incomingPacketSize);
 		if (actualCrc != expectedCrc) {
-			scheduleMsg(&tsLogger, "TunerStudio: CRC %x %x %x %x", tsChannel->crcReadBuffer[incomingPacketSize + 0],
-					tsChannel->crcReadBuffer[incomingPacketSize + 1], tsChannel->crcReadBuffer[incomingPacketSize + 2],
-					tsChannel->crcReadBuffer[incomingPacketSize + 3]);
+			scheduleMsg(&tsLogger, "TunerStudio: CRC %x %x %x %x", tsChannel->scratchBuffer[incomingPacketSize + 0],
+					tsChannel->scratchBuffer[incomingPacketSize + 1], tsChannel->scratchBuffer[incomingPacketSize + 2],
+					tsChannel->scratchBuffer[incomingPacketSize + 3]);
 
-			scheduleMsg(&tsLogger, "TunerStudio: command %c actual CRC %x/expected %x", tsChannel->crcReadBuffer[0],
+			scheduleMsg(&tsLogger, "TunerStudio: command %c actual CRC %x/expected %x", tsChannel->scratchBuffer[0],
 					actualCrc, expectedCrc);
 			tunerStudioError("ERROR: CRC issue");
 			sendErrorCode(tsChannel, TS_RESPONSE_CRC_FAILURE);
 			continue;
 		}
 
-		int success = tunerStudioHandleCrcCommand(tsChannel, tsChannel->crcReadBuffer, incomingPacketSize);
+		int success = tunerStudioHandleCrcCommand(tsChannel, tsChannel->scratchBuffer, incomingPacketSize);
 		if (!success)
 			print("got unexpected TunerStudio command %x:%c\r\n", command, command);
 

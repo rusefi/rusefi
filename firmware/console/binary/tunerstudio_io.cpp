@@ -228,10 +228,7 @@ int sr5ReadData(ts_channel_s *tsChannel, uint8_t * buffer, int size) {
 /**
  * Adds size to the beginning of a packet and a crc32 at the end. Then send the packet.
  */
-void sr5WriteCrcPacket(ts_channel_s *tsChannel, const uint8_t responseCode, const void *buf, const uint16_t size) {
-	uint8_t *writeBuffer = tsChannel->writeBuffer;
-	uint8_t *crcBuffer = &tsChannel->writeBuffer[3];
-
+void sr5WriteCrcPacket(ts_channel_s *tsChannel, const uint8_t responseCode, const void *buf, size_t size) {
 #if defined(TS_CAN_DEVICE) && defined(TS_CAN_DEVICE_SHORT_PACKETS_IN_ONE_FRAME)
 	// a special case for short packets: we can sent them in 1 frame, without CRC & size,
 	// because the CAN protocol is already protected by its own checksum.
@@ -245,20 +242,37 @@ void sr5WriteCrcPacket(ts_channel_s *tsChannel, const uint8_t responseCode, cons
 	}
 #endif /* TS_CAN_DEVICE */
 
-	*(uint16_t *) writeBuffer = SWAP_UINT16(size + 1);   // packet size including command
-	*(uint8_t *) (writeBuffer + 2) = responseCode;
+	auto scratchBuffer = tsChannel->scratchBuffer;
 
-	// CRC on whole packet
-	uint32_t crc = crc32((void *) (writeBuffer + 2), 1); // command part of CRC
-	crc = crc32inc((void *) buf, crc, (uint32_t) (size)); // combined with packet CRC
-
-	*(uint32_t *) (crcBuffer) = SWAP_UINT32(crc);
-
-	sr5WriteData(tsChannel, writeBuffer, 3);      // header
-	if (size > 0) {
-		sr5WriteData(tsChannel, (const uint8_t*)buf, size);      // body
+	// don't transmit a null buffer...
+	if (!buf) {
+		size = 0;
 	}
-	sr5WriteData(tsChannel, crcBuffer, 4);      // CRC footer
+
+	// don't transmit too large a buffer
+	efiAssertVoid(OBD_PCM_Processor_Fault, size <= BLOCKING_FACTOR + 7, "sr5WriteCrcPacket tried to transmit too large a packet")
+
+	// If transmitting data, copy it in to place in the scratch buffer
+	// We want to prevent the data changing itself (higher priority threads could write
+	// tsOutputChannels) during the CRC computation.  Instead compute the CRC on our
+	// local buffer that nobody else will write.
+	if (size) {
+		memcpy(scratchBuffer + 3, buf, size);
+	}
+
+	// Index 0/1 = packet size (big endian)
+	*(uint16_t*)scratchBuffer = SWAP_UINT16(size + 1);
+	// Index 2 = response code
+	scratchBuffer[2] = responseCode;
+
+	// CRC is computed on the responseCode and payload but not length
+	uint32_t crc = crc32(&scratchBuffer[2], size + 1); // command part of CRC
+
+	// Place the CRC at the end
+	*reinterpret_cast<uint32_t*>(&scratchBuffer[size + 3]) = SWAP_UINT32(crc);
+
+	// Write to the underlying stream
+	sr5WriteData(tsChannel, reinterpret_cast<uint8_t*>(scratchBuffer), size + 7);
 	sr5FlushData(tsChannel);
 }
 
@@ -287,6 +301,8 @@ void sr5FlushData(ts_channel_s *tsChannel) {
 #if defined(TS_CAN_DEVICE)
 	UNUSED(tsChannel);
 	canFlushTxStream(&TS_CAN_DEVICE);
+#else
+	UNUSED(tsChannel);
 #endif /* TS_CAN_DEVICE */
 }
 
