@@ -207,7 +207,7 @@ void sendOkResponse(ts_channel_s *tsChannel, ts_response_format_e mode) {
 }
 
 static void sendErrorCode(ts_channel_s *tsChannel, uint8_t code) {
-	sr5WriteCrcPacket(tsChannel, code, NULL, 0);
+	sr5WriteCrcPacket(tsChannel, code, nullptr, 0);
 }
 
 static void handlePageSelectCommand(ts_channel_s *tsChannel, ts_response_format_e mode) {
@@ -414,7 +414,7 @@ void requestBurn(void) {
 
 static void sendResponseCode(ts_response_format_e mode, ts_channel_s *tsChannel, const uint8_t responseCode) {
 	if (mode == TS_CRC) {
-		sr5WriteCrcPacket(tsChannel, responseCode, NULL, 0);
+		sr5WriteCrcPacket(tsChannel, responseCode, nullptr, 0);
 	}
 }
 
@@ -671,14 +671,14 @@ static void handleGetText(ts_channel_s *tsChannel) {
 			logMsg("get test sending [%d]\r\n", outputSize);
 #endif
 
-	sr5WriteCrcPacket(tsChannel, TS_RESPONSE_COMMAND_OK, output, outputSize);
+	sr5WriteCrcPacket(tsChannel, TS_RESPONSE_COMMAND_OK, reinterpret_cast<uint8_t*>(output), outputSize);
 #if EFI_SIMULATOR
 			logMsg("sent [%d]\r\n", outputSize);
 #endif
 }
 
 static void handleExecuteCommand(ts_channel_s *tsChannel, char *data, int incomingPacketSize) {
-	sr5WriteCrcPacket(tsChannel, TS_RESPONSE_COMMAND_OK, NULL, 0);
+	sr5WriteCrcPacket(tsChannel, TS_RESPONSE_COMMAND_OK, nullptr, 0);
 	data[incomingPacketSize] = 0;
 	char *trimmed = efiTrim(data);
 #if EFI_SIMULATOR
