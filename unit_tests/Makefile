@@ -104,6 +104,7 @@ include $(PROJECT_DIR)/config/engines/engines.mk
 include $(PROJECT_DIR)/controllers/controllers.mk
 include $(PROJECT_DIR)/development/development.mk
 include $(PROJECT_DIR)/console/console.mk
+include $(PROJECT_DIR)/console/binary/tunerstudio.mk
 include $(PROJECT_DIR)/hw_layer/hw_layer.mk
 include $(PROJECT_DIR)/hw_layer/drivers/drivers.mk
 include $(PROJECT_DIR)/hw_layer/sensors/sensors.mk
@@ -143,6 +144,7 @@ CPPSRC = $(UTILSRC_CPP) \
 	$(TESTS_SRC_CPP) \
 	$(SYSTEMSRC_CPP) \
 	$(HW_LAYER_EMS_CPP) \
+	$(TUNERSTUDIO_SRC_CPP) \
 	$(HW_SENSORS_SRC) \
 	$(TRIGGER_SRC_CPP) \
 	$(INIT_SRC_CPP) \
