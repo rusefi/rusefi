@@ -26,7 +26,6 @@
 #include "status_loop.h"
 #include "usb_msd_cfg.h"
 #include "buffered_writer.h"
-#include "os_access.h"
 
 #include "rtc_helper.h"
 
