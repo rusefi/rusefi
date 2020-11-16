@@ -22,5 +22,6 @@ void readLogFileContent(char *buffer, short fileId, short offset, short length);
 void handleTsR(ts_channel_s *tsChannel, char *input);
 void handleTsW(ts_channel_s *tsChannel, char *input);
 
-#define LOCK_SD_SPI lockSpi(engineConfiguration->sdCardSpiDevice)
-#define UNLOCK_SD_SPI unlockSpi(engineConfiguration->sdCardSpiDevice)
+extern spi_device_e mmcSpiDevice;
+#define LOCK_SD_SPI lockSpi(mmcSpiDevice)
+#define UNLOCK_SD_SPI unlockSpi(mmcSpiDevice)
