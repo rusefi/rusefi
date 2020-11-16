@@ -199,7 +199,7 @@ static void validateHardwareTimer() {
 	}
 }
 
-void initMicrosecondTimer(void) {
+void initMicrosecondTimer() {
 	gptStart(&GPTDEVICE, &gpt5cfg);
 	efiAssertVoid(CUSTOM_ERR_TIMER_STATE, GPTDEVICE.state == GPT_READY, "hw state");
 	hwStarted = true;
