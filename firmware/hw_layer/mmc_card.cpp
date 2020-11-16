@@ -435,6 +435,11 @@ static THD_FUNCTION(MMCmonThread, arg) {
 	chRegSetThreadName("MMC_Monitor");
 
 	while (true) {
+		// if the SPI device got un-picked somehow, cancel SD card
+		if (CONFIG(sdCardSpiDevice) == SPI_NONE) {
+			return;
+		}
+
 		if (CONFIG(debugMode) == DBG_SD_CARD) {
 			tsOutputChannels.debugIntField1 = totalLoggedBytes;
 			tsOutputChannels.debugIntField2 = totalWritesCounter;
@@ -491,7 +496,7 @@ void initMmcCard(void) {
 	mmcObjectInit(&MMCD1); 						// Initializes an instance.
 	mmcStart(&MMCD1, &mmccfg);
 
-	chThdCreateStatic(mmcThreadStack, sizeof(mmcThreadStack), LOWPRIO, (tfunc_t)(void*) MMCmonThread, NULL);
+	chThdCreateStatic(mmcThreadStack, sizeof(mmcThreadStack), NORMALPRIO, (tfunc_t)(void*) MMCmonThread, NULL);
 
 	addConsoleAction("mountsd", MMCmount);
 	addConsoleAction("umountsd", mmcUnMount);
