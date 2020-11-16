@@ -93,8 +93,8 @@ void setVwPassatB6(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	lowPressureFuelPumpControl->loadAxis = GPPWM_FuelLoad;
 	lowPressureFuelPumpControl->dutyIfError = 50;
 	setTable(lowPressureFuelPumpControl->table, (uint8_t)50);
-	// TLE8888_PIN_24: "43 - GP Out 4"
-	lowPressureFuelPumpControl->pin = TLE8888_PIN_24;
+	// "42 - Injector 4", somehow GP4 did not work? not enough current? not happy with diode?
+	lowPressureFuelPumpControl->pin = TLE8888_PIN_4;
 
 
 	gppwm_channel *coolantControl = &engineConfiguration->gppwm[0];
