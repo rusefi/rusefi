@@ -63,8 +63,10 @@ static volatile bool hwStarted = false;
  * sets the alarm to the specified number of microseconds from now.
  * This function should be invoked under kernel lock which would disable interrupts.
  */
-void setHardwareUsTimer(int32_t deltaTimeUs) {
+void setHardwareSchedulerTimer(efitick_t nowNt, efitick_t setTimeNt) {
 	efiAssertVoid(OBD_PCM_Processor_Fault, hwStarted, "HW.started");
+
+	int32_t deltaTimeUs = NT2US((int32_t)setTimeNt - (int32_t)nowNt);
 
 	setHwTimerCounter++;
 
@@ -82,10 +84,9 @@ void setHardwareUsTimer(int32_t deltaTimeUs) {
 		deltaTimeUs = 2;
 	}
 
-	efiAssertVoid(CUSTOM_DELTA_NOT_POSITIVE, deltaTimeUs > 0, "not positive deltaTimeUs");
 	if (deltaTimeUs >= TOO_FAR_INTO_FUTURE_US) {
 		// we are trying to set callback for too far into the future. This does not look right at all
-		firmwareError(CUSTOM_ERR_TIMER_OVERFLOW, "setHardwareUsTimer() too far: %d", deltaTimeUs);
+		firmwareError(CUSTOM_ERR_TIMER_OVERFLOW, "setHardwareSchedulerTimer() too far: %d", deltaTimeUs);
 		return;
 	}
 
@@ -198,7 +199,7 @@ static void validateHardwareTimer() {
 	}
 }
 
-void initMicrosecondTimer(void) {
+void initMicrosecondTimer() {
 	gptStart(&GPTDEVICE, &gpt5cfg);
 	efiAssertVoid(CUSTOM_ERR_TIMER_STATE, GPTDEVICE.state == GPT_READY, "hw state");
 	hwStarted = true;
