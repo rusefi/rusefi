@@ -7,18 +7,8 @@
 
 #pragma once
 
-#ifdef __cplusplus
-extern "C"
-{
-#endif /* __cplusplus */
-
-void initMicrosecondTimer(void);
-void setHardwareUsTimer(int32_t deltaTimeUs);
+void initMicrosecondTimer();
+void setHardwareSchedulerTimer(efitick_t nowNt, efitick_t setTimeNt);
 
 #define TOO_FAR_INTO_FUTURE_US (10 * US_PER_SECOND)
 #define TOO_FAR_INTO_FUTURE_NT US2NT(TOO_FAR_INTO_FUTURE_US)
-
-#ifdef __cplusplus
-}
-#endif /* __cplusplus */
-
