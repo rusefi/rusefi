@@ -94,22 +94,9 @@ public:
 	}
 };
 
-static DcHardware dcHardware[ETB_COUNT * 2];
+static DcHardware dcHardware[ETB_COUNT + DC_PER_STEPPER];
 
-// We needed more H-bridge configs - so the IO configs are split
-// across two arrays of settings to preserve config compatibility
-const dc_io& getConfigForMotor(size_t index DECLARE_ENGINE_PARAMETER_SUFFIX) {
-	size_t firstSize = efi::size(engineConfiguration->etbIo);
-
-	if (index < firstSize) {
-		return engineConfiguration->etbIo[index];
-	}
-
-	return engineConfiguration->stepperDcIo[index - firstSize];
-}
-
-DcMotor* initDcMotor(size_t index, bool useTwoWires DECLARE_ENGINE_PARAMETER_SUFFIX) {
-	const auto& io = getConfigForMotor(index PASS_ENGINE_PARAMETER_SUFFIX);
+DcMotor* initDcMotor(const dc_io& io, size_t index, bool useTwoWires DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	auto& hw = dcHardware[index];
 
 	hw.start(
