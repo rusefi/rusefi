@@ -433,16 +433,6 @@
 #define etbIo1_directionPin2_offset 981
 #define etbIo1_disablePin_offset 983
 #define etbIo1_offset 980
-#define etbIo21_controlPin1_offset 1090
-#define etbIo21_directionPin1_offset 1088
-#define etbIo21_directionPin2_offset 1089
-#define etbIo21_disablePin_offset 1091
-#define etbIo21_offset 1088
-#define etbIo22_controlPin1_offset 1094
-#define etbIo22_directionPin1_offset 1092
-#define etbIo22_directionPin2_offset 1093
-#define etbIo22_disablePin_offset 1095
-#define etbIo22_offset 1092
 #define etbIo2_controlPin1_offset 986
 #define etbIo2_directionPin1_offset 984
 #define etbIo2_directionPin2_offset 985
@@ -1213,7 +1203,7 @@
 #define showSdCardWarning_offset 76
 #define SIGNATURE_BOARD all
 #define SIGNATURE_DATE 2020.11.17
-#define SIGNATURE_HASH 1960145373
+#define SIGNATURE_HASH 2711056554
 #define silentTriggerError_offset 1464
 #define slowAdcAlpha_offset 2088
 #define sparkDwellRpmBins_offset 332
@@ -1249,6 +1239,16 @@
 #define startStopButtonMode_offset 1773
 #define startStopButtonPin_offset 811
 #define startUpFuelPumpDuration_offset 1892
+#define stepperDcIo1_controlPin1_offset 1090
+#define stepperDcIo1_directionPin1_offset 1088
+#define stepperDcIo1_directionPin2_offset 1089
+#define stepperDcIo1_disablePin_offset 1091
+#define stepperDcIo1_offset 1088
+#define stepperDcIo2_controlPin1_offset 1094
+#define stepperDcIo2_directionPin1_offset 1092
+#define stepperDcIo2_directionPin2_offset 1093
+#define stepperDcIo2_disablePin_offset 1095
+#define stepperDcIo2_offset 1092
 #define stepperDirectionPinMode_offset 3102
 #define stepperEnablePin_offset 3104
 #define stepperEnablePinMode_offset 2605
@@ -1533,7 +1533,7 @@
 #define ts_show_spi true
 #define ts_show_trigger_comparator false
 #define ts_show_tunerstudio_port true
-#define TS_SIGNATURE "rusEFI 2020.11.17.all.1960145373"
+#define TS_SIGNATURE "rusEFI 2020.11.17.all.2711056554"
 #define TS_SINGLE_WRITE_COMMAND 'W'
 #define TS_SINGLE_WRITE_COMMAND_char W
 #define TS_TEST_COMMAND 't' // 0x74
