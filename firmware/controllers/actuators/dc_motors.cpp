@@ -98,7 +98,7 @@ static DcHardware dcHardware[ETB_COUNT * 2];
 
 // We needed more H-bridge configs - so the IO configs are split
 // across two arrays of settings to preserve config compatibility
-const etb_io& getConfigForMotor(size_t index DECLARE_ENGINE_PARAMETER_SUFFIX) {
+const dc_io& getConfigForMotor(size_t index DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	size_t firstSize = efi::size(engineConfiguration->etbIo);
 
 	if (index < firstSize) {

@@ -120,6 +120,7 @@ struct_no_prefix engine_configuration_s
 #define TCU_GEAR_COUNT 10
 
 #define ETB_COUNT 2
+#define DC_PER_STEPPER 2
 
 #define AUX_DIGITAL_VALVE_COUNT 2
 
@@ -647,7 +648,7 @@ struct idle_hardware_s
 	pin_output_mode_e solenoidPinMode;
 end_struct
 
-struct etb_io
+struct dc_io
 	brain_pin_e directionPin1;
 	brain_pin_e directionPin2;
 	brain_pin_e controlPin1;
@@ -917,7 +918,7 @@ custom maf_sensor_type_e 4 bits, S32, @OFFSET@, [0:1], @@maf_sensor_type_e_enum@
 	bit tcuEnabled
 	bit unusedBit_251_29
 	
-	etb_io[ETB_COUNT iterate] etbIo
+	dc_io[ETB_COUNT iterate] etbIo
 
 
     output_pin_e boostControlPin;+Wastegate control Solenoid
@@ -950,7 +951,7 @@ custom maf_sensor_type_e 4 bits, S32, @OFFSET@, [0:1], @@maf_sensor_type_e_enum@
 
 	stft_s stft
 
-	etb_io[ETB_COUNT iterate] etbIo2
+	dc_io[DC_PER_STEPPER iterate] etbIo2
 
 	vehicle_info_t engineMake;+For example, BMW, GM or Chevrolet\nREQUIRED for rusEFI Online
 	vehicle_info_t engineCode;+For example, LS1 or NB2\nREQUIRED for rusEFI Online
