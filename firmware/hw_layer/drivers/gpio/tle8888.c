@@ -643,9 +643,18 @@ static int tle8888_chip_init(struct tle8888_priv *chip)
 		/* Enable open load detection and disable switch off
 		 * in case of overcurrent for OUTPUT5..7 */
 		CMD_OUTCONFIG(1, BIT(5) | BIT(3) | BIT(1)),
+#if 1
+		/* MRE 0.5.? share same outputs between OUTPUT8..13
+		 * and analog inputs. Disable diagnostic pull-down
+		 * not to affect analog inputs.
+		 * Disable open load detection and set short to bat
+		 * thresholt to 125 mV (default) for OUTPUT8..13 */
+		CMD_OUTCONFIG(2, (0x0 << 6) | 0x00),	
+#else
 		/* Enable open load detection and set short to bat
 		 * thresholt to 125 mV (default) for OUTPUT8..13 */
 		CMD_OUTCONFIG(2, (0x0 << 6) | BIT(5) | BIT(4) | BIT(3) | BIT(2) | BIT(1) | BIT(0)),
+#endif
 		/* Enable open load detection and disable switch off
 		 * in case of overcurrent for OUTPUT14
 		 * Set short to bat threshold to 125mV (default) for
