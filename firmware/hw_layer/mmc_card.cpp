@@ -436,7 +436,7 @@ static THD_FUNCTION(MMCmonThread, arg) {
 	chRegSetThreadName("MMC_Monitor");
 
 	while (true) {
-				// if the SPI device got un-picked somehow, cancel SD card
+		// if the SPI device got un-picked somehow, cancel SD card
 		if (CONFIG(sdCardSpiDevice) == SPI_NONE) {
 			return;
 		}
