@@ -186,8 +186,8 @@ enable2ndByteCanID = false
       knockNowIndicator=bits,    U32,      0,  [14:14], "true", "false";
       brakePedalIndicator=bits,  U32,      0,  [15:15], "true", "false";
       toothLogReady      =bits,  U32,      0,  [16:16], "true", "false";
-      acSwitchIndicator =bits,   U32,      0,  [17:17], "true", "false";
-      ind_tps_error   = bits,    U32,      0,  [18:18], "true", "false";
+      acSwitchState     =bits,   U32,      0,  [17:17], "true", "false";
+      isTpsError      = bits,    U32,      0,  [18:18], "true", "false";
       ind_clt_error   = bits,    U32,      0,  [19:19], "true", "false";
 ; not implemented
 ;      ind_map_error   = bits,    U32,      0,  [20:20], "true", "false";
@@ -1128,10 +1128,10 @@ gaugeCategory = Knock
     indicator = { clutchUpState }, "clutch",   "cltch Up",   white, black, red,   black
     indicator = { clutchDownState }, "clutch",   "cltch Down",   white, black, yellow,   black
     indicator = { brakePedalIndicator }, "brake",   "brake down",   white, black, red,   black
-    indicator = { acSwitchIndicator }, "AC off",   "AC on",   white, black, blue,   white
+    indicator = { acSwitchState }, "AC off",   "AC on",   white, black, blue,   white
 
     ; error codes
-    indicator = { ind_tps_error}, "tps",   "tps error",   white, black, red,   black
+    indicator = { isTpsError}, "tps",   "tps error",   white, black, red,   black
     indicator = { ind_clt_error}, "clt",   "clt error",   white, black, red,   black
     indicator = { ind_iat_error}, "iat",   "iat error",   white, black, red,   black
 
@@ -1254,7 +1254,7 @@ gaugeCategory = Knock
    entry = clutchUpState,   @@INDICATOR_NAME_CLUTCH_UP@@,int,"%d"
    entry = clutchDownState,   @@INDICATOR_NAME_CLUTCH_DOWN@@,int,"%d"
    entry = brakePedalIndicator,   @@INDICATOR_NAME_BRAKE_DOWN@@,int,"%d"
-   entry = acSwitchIndicator,   @@INDICATOR_NAME_AC_SWITCH@@,int,"%d"
+   entry = acSwitchState,   @@INDICATOR_NAME_AC_SWITCH@@,int,"%d"
    entry = ind_fan, "radiator fan",int,"%d"
 
 ; Electronic throttle body
