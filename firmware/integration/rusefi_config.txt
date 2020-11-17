@@ -951,7 +951,7 @@ custom maf_sensor_type_e 4 bits, S32, @OFFSET@, [0:1], @@maf_sensor_type_e_enum@
 
 	stft_s stft
 
-	dc_io[DC_PER_STEPPER iterate] etbIo2
+	dc_io[DC_PER_STEPPER iterate] stepperDcIo
 
 	vehicle_info_t engineMake;+For example, BMW, GM or Chevrolet\nREQUIRED for rusEFI Online
 	vehicle_info_t engineCode;+For example, LS1 or NB2\nREQUIRED for rusEFI Online

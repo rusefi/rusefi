@@ -105,7 +105,7 @@ const dc_io& getConfigForMotor(size_t index DECLARE_ENGINE_PARAMETER_SUFFIX) {
 		return engineConfiguration->etbIo[index];
 	}
 
-	return engineConfiguration->etbIo2[index - firstSize];
+	return engineConfiguration->stepperDcIo[index - firstSize];
 }
 
 DcMotor* initDcMotor(size_t index, bool useTwoWires DECLARE_ENGINE_PARAMETER_SUFFIX) {
