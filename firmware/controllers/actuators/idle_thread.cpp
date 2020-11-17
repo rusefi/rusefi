@@ -146,12 +146,12 @@ static void showIdleInfo(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	if (CONFIG(useStepperIdle)) {
 		if (CONFIG(useHbridges)) {
 			scheduleMsg(logger, "Coil A:");
-			scheduleMsg(logger, " pin1=%s", hwPortname(CONFIG(etbIo2[0].directionPin1)));
-			scheduleMsg(logger, " pin2=%s", hwPortname(CONFIG(etbIo2[0].directionPin2)));
+			scheduleMsg(logger, " pin1=%s", hwPortname(CONFIG(stepperDcIo[0].directionPin1)));
+			scheduleMsg(logger, " pin2=%s", hwPortname(CONFIG(stepperDcIo[0].directionPin2)));
 			showDcMotorInfo(logger, 2);
 			scheduleMsg(logger, "Coil B:");
-			scheduleMsg(logger, " pin1=%s", hwPortname(CONFIG(etbIo2[1].directionPin1)));
-			scheduleMsg(logger, " pin2=%s", hwPortname(CONFIG(etbIo2[1].directionPin2)));
+			scheduleMsg(logger, " pin1=%s", hwPortname(CONFIG(stepperDcIo[1].directionPin1)));
+			scheduleMsg(logger, " pin2=%s", hwPortname(CONFIG(stepperDcIo[1].directionPin2)));
 			showDcMotorInfo(logger, 3);
 		} else {
 			scheduleMsg(logger, "directionPin=%s reactionTime=%.2f", hwPortname(CONFIG(idle).stepperDirectionPin),
