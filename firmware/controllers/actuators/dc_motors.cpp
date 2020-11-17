@@ -19,7 +19,7 @@
 
 EXTERN_ENGINE;
 
-class EtbHardware {
+class DcHardware {
 private:
 	OutputPin m_pinEnable;
 	OutputPin m_pinDir1;
@@ -31,7 +31,7 @@ private:
 	SimplePwm m_pwmDir2;
 
 public:
-	EtbHardware() : dcMotor(&m_pwmEnable, &m_pwmDir1, &m_pwmDir2, &m_disablePin) {}
+	DcHardware() : dcMotor(&m_pwmEnable, &m_pwmDir1, &m_pwmDir2, &m_disablePin) {}
 
 	TwoPinDcMotor dcMotor;
 	
@@ -94,7 +94,7 @@ public:
 	}
 };
 
-static EtbHardware etbHardware[ETB_COUNT * 2];
+static DcHardware dcHardware[ETB_COUNT * 2];
 
 // We needed more H-bridge configs - so the IO configs are split
 // across two arrays of settings to preserve config compatibility
@@ -110,7 +110,7 @@ const etb_io& getConfigForMotor(size_t index DECLARE_ENGINE_PARAMETER_SUFFIX) {
 
 DcMotor* initDcMotor(size_t index, bool useTwoWires DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	const auto& io = getConfigForMotor(index PASS_ENGINE_PARAMETER_SUFFIX);
-	auto& hw = etbHardware[index];
+	auto& hw = dcHardware[index];
 
 	hw.start(
 		useTwoWires,
@@ -126,17 +126,17 @@ DcMotor* initDcMotor(size_t index, bool useTwoWires DECLARE_ENGINE_PARAMETER_SUF
 }
 
 void setDcMotorFrequency(size_t index, int hz) {
-	etbHardware[index].setFrequency(hz);
+	dcHardware[index].setFrequency(hz);
 }
 
 void setDcMotorDuty(size_t index, float duty) {
-	etbHardware[index].dcMotor.set(duty);
+	dcHardware[index].dcMotor.set(duty);
 }
 
 
 void showDcMotorInfo(Logging* logger, int i) {
-	EtbHardware *etb = &etbHardware[i];
+	DcHardware *dc = &dcHardware[i];
 
-	scheduleMsg(logger, " motor: dir=%d DC=%f", etb->dcMotor.isOpenDirection(), etb->dcMotor.get());
+	scheduleMsg(logger, " motor: dir=%d DC=%f", dc->dcMotor.isOpenDirection(), dc->dcMotor.get());
 }
 
