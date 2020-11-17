@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Sun Nov 15 22:33:28 UTC 2020
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Tue Nov 17 00:45:12 UTC 2020
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -604,8 +604,8 @@ struct idle_hardware_s {
 
 typedef struct idle_hardware_s idle_hardware_s;
 
-// start of etb_io
-struct etb_io {
+// start of dc_io
+struct dc_io {
 	/**
 	 * offset 0
 	 */
@@ -625,7 +625,7 @@ struct etb_io {
 	/** total size 4*/
 };
 
-typedef struct etb_io etb_io;
+typedef struct dc_io dc_io;
 
 // start of engine_configuration_s
 struct engine_configuration_s {
@@ -1860,7 +1860,7 @@ struct engine_configuration_s {
 	/**
 	 * offset 980
 	 */
-	etb_io etbIo[ETB_COUNT];
+	dc_io etbIo[ETB_COUNT];
 	/**
 	 * Wastegate control Solenoid
 	 * offset 988
@@ -1947,7 +1947,7 @@ struct engine_configuration_s {
 	/**
 	 * offset 1088
 	 */
-	etb_io etbIo2[ETB_COUNT];
+	dc_io etbIo2[DC_PER_STEPPER];
 	/**
 	 * For example, BMW, GM or Chevrolet
 	 * REQUIRED for rusEFI Online
@@ -3769,4 +3769,4 @@ struct persistent_config_s {
 typedef struct persistent_config_s persistent_config_s;
 
 // end
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Sun Nov 15 22:33:28 UTC 2020
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Tue Nov 17 00:45:12 UTC 2020
