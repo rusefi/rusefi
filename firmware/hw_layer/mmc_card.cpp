@@ -51,6 +51,11 @@ static int writeCounter = 0;
 static int totalWritesCounter = 0;
 static int totalSyncCounter = 0;
 
+/**
+ * on't re-read SD card spi device after boot - it could change mid transaction (TS thread could preempt),
+ * which will cause disaster (usually multiple-unlock of the same mutex in UNLOCK_SD_SPI)
+ */
+
 spi_device_e mmcSpiDevice = SPI_NONE;
 
 #define LOG_INDEX_FILENAME "index.txt"
