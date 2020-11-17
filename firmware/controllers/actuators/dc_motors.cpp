@@ -59,37 +59,29 @@ public:
 
 // no need to complicate event queue with ETB PWM in unit tests
 #if ! EFI_UNIT_TEST
-		if (useTwoWires) {
-			startSimplePwmHard(&m_pwmDir1, "ETB Dir 1",
-				executor,
-				pinDir1,
-				&m_pinDir1,
-				clampedFrequency,
-				0
-			);
+		startSimplePwmHard(&m_pwmEnable, "ETB Enable",
+			executor,
+			pinEnable,
+			&m_pinEnable,
+			clampedFrequency,
+			0
+		);
 
-			startSimplePwmHard(&m_pwmDir2, "ETB Dir 2",
-				executor,
-				pinDir2,
-				&m_pinDir2,
-				clampedFrequency,
-				0
-			);
+		startSimplePwmHard(&m_pwmDir1, "ETB Dir 1",
+			executor,
+			pinDir1,
+			&m_pinDir1,
+			clampedFrequency,
+			0
+		);
 
-			m_pinEnable.initPin("ETB Enable", pinEnable);
-
-		} else {
-			m_pinDir1.initPin("ETB Dir 1", pinDir1);
-			m_pinDir2.initPin("ETB Dir 2", pinDir2);
-
-			startSimplePwmHard(&m_pwmEnable, "ETB Enable",
-				executor,
-				pinEnable,
-				&m_pinEnable,
-				clampedFrequency,
-				0
-			);
-		}
+		startSimplePwmHard(&m_pwmDir2, "ETB Dir 2",
+			executor,
+			pinDir2,
+			&m_pinDir2,
+			clampedFrequency,
+			0
+		);
 #endif /* EFI_UNIT_TEST */
 	}
 };
