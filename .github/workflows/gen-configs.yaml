@@ -36,6 +36,8 @@ jobs:
 
     # Commit changes and catch the error that occurs if nothing has been changed (without catching other errors)
     - name: Commit changes
+      env:
+        ACTIONS_ALLOW_UNSECURE_COMMANDS: 'true'
       run: |
         git config --local user.email "action@github.com"
         git config --local user.name "GitHub build-firmware Action"
