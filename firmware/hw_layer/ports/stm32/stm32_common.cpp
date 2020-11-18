@@ -325,7 +325,3 @@ bool isValidSerialRxPin(brain_pin_e pin) {
 }
 
 #endif /*EFI_AUX_SERIAL*/
-
-uint32_t getTimeNowLowerNt() {
-	return port_rt_get_counter_value();
-}
