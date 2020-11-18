@@ -1,7 +1,12 @@
 .container {
     max-width: 800px; }
   .header {
-    margin-top: 6rem;
+    /* margin-top: 6rem; */
+    background-image: linear-gradient( 180deg, rgba(0, 0, 0, 0.7) 0%, rgba(0, 0, 0, 0.25) 100%),url('../images/site/bg.jpg');
+    background-attachment:fixed;
+    /* background-size: cover; */
+    background-size: 100%;
+    padding-top: 6rem;
     text-align: center; }
   .value-prop {
     margin-top: 1rem; }
@@ -14,7 +19,7 @@
     letter-spacing: .2rem;
     font-weight: 600; }
   .docs-section {
-    border-top: 1px solid #eee;
+    /* border-top: 1px solid #eee; */
     padding: 4rem 0;
     margin-bottom: 0;}
   .value-img {
@@ -68,7 +73,7 @@
     position: relative;
     overflow: hidden;
     border-radius: 6px;
-    border: 1px solid #eee;
+    /* border: 1px solid #eee; */
     height: 250px; }
   .example-screenshot {
     width: 100%;
@@ -97,7 +102,8 @@
   /* Larger than phone */
   @media (min-width: 550px) {
     .header {
-      margin-top: 18rem; }
+      /* margin-top: 18rem;  */
+      padding-top: 18rem;}
     .value-props {
       margin-top: 9rem;
       margin-bottom: 7rem; }
@@ -131,8 +137,9 @@
       height: 5.5rem;
       background: #fff;
       z-index: 99;
-      border-top: 1px solid #eee;
-      border-bottom: 1px solid #eee; }
+      /* border-top: 1px solid #eee;
+      border-bottom: 1px solid #eee; */
+     }
     .navbar-spacer {
       display: none; }
     .navbar > .container {
@@ -175,7 +182,7 @@
       top: 0;
       left: 0;
       background: #fff;
-      border: 1px solid #eee;
+      /* border: 1px solid #eee; */
       border-radius: 4px;
       top: 92%;
       left: -25%;
@@ -228,8 +235,30 @@
       border-bottom-width: 0; }
     .popover-link:hover {
       color: #fff;
-      background: #e45d1f; }
+      background: #f15a24; }
     .popover-link:hover,
     .popover-item:first-child .popover-link:hover:after {
-      border-bottom-color: #e45d1f; }
+      border-bottom-color: #f15a24; }
+  }
+
+
+  .title,
+  .value-props {
+    color: rgb(230, 230, 230);
+  }
+
+  #intro,
+  #shop {
+    background-color: rgb(250, 250, 250);
+  }
+
+  .dl-link {
+    margin-left: 25rem;  }
+
+  td.oddrow {
+    background-color: rgb(230, 230, 230);
+  }
+
+  td.evenrow {
+    background-color: #91919100;
   }
