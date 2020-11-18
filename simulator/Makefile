@@ -128,6 +128,8 @@ else
   include ${CHIBIOS}/os/hal/ports/simulator/posix/platform.mk
 endif
 
+include $(CHIBIOS)/os/various/cpp_wrappers/chcpp.mk
+
 include $(PROJECT_DIR)/console/binary/tunerstudio.mk
 include $(PROJECT_DIR)/console/console.mk
 include $(PROJECT_DIR)/config/engines/engines.mk
