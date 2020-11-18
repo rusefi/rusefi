@@ -36,5 +36,6 @@ void chDbgAssert(int c, char *msg, void *arg) {
 	}
 }
 
-
-
+uint32_t getTimeNowLowerNt(void) {
+	return 0;
+}
