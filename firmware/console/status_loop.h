@@ -7,7 +7,7 @@
 
 #pragma once
 
-#include "engine.h"
+#include "rusefi_types.h"
 
 void updateDevConsoleState(void);
 void prepareTunerStudioOutputs(void);
@@ -16,4 +16,4 @@ void initStatusLoop(void);
 
 struct Writer;
 void writeLogLine(Writer& buffer);
-void printOverallStatus(systime_t nowSeconds);
+void printOverallStatus(efitimesec_t nowSeconds);

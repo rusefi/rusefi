@@ -31,6 +31,7 @@
 #endif /* EFI_UNIT_TEST */
 
 #define FAST_CALLBACK_PERIOD_MS 5
+#define SLOW_CALLBACK_PERIOD_MS 50
 
 class RpmCalculator;
 class AirmassModelBase;

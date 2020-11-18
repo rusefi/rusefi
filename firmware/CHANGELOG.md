@@ -37,6 +37,9 @@ All notable user-facing or behavior-altering changes will be documented in this 
  -   Improved TLE8888 driver on microRusEfi 
  -   Improved setting ECU presets/defaults from TunerStudio
 
+### Fixed
+ -   Improved TunerStudio protocol reliability - should see fewer CRC errors now
+
 ## October 2020 Release - "Sausage Pizza Day"
 
 ### Added

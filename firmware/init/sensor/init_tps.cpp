@@ -78,8 +78,8 @@ static void initTpsFuncAndRedund(RedundantSensor& redund, LinearFunc& func, Func
 }
 
 void initTps(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
-	float min = CONFIG(tpsErrorDetectionTooLow);
-	float max = CONFIG(tpsErrorDetectionTooHigh);
+	percent_t min = CONFIG(tpsErrorDetectionTooLow);
+	percent_t max = CONFIG(tpsErrorDetectionTooHigh);
 
 	if (!CONFIG(consumeObdSensors)) {
 		initTpsFunc(tpsFunc1p, tpsSens1p, CONFIG(tps1_1AdcChannel), CONFIG(tpsMin), CONFIG(tpsMax), min, max);

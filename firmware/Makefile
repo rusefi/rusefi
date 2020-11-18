@@ -43,7 +43,10 @@ ifeq ($(USE_OPT),)
   USE_OPT = $(EXTRA_PARAMS) $(DEBUG_LEVEL_OPT) $(RFLAGS) -fomit-frame-pointer -falign-functions=16 -fsingle-precision-constant
 endif
 
-USE_OPT += $(RUSEFI_OPT)
+# EFI_UNIT_TEST determines if we are running in a unit test (hide things from hw/sim)
+# EFI_PROD_CODE determines if we are running on real hardware (hide things from tests/sim)
+# EFI_SIMULATOR determines if we are running in the simulator (hide things from hw/tests)
+USE_OPT += $(RUSEFI_OPT) -DEFI_UNIT_TEST=0 -DEFI_PROD_CODE=1 -DEFI_SIMULATOR=0
 
 # C specific options here (added to USE_OPT).
 ifeq ($(USE_COPT),)

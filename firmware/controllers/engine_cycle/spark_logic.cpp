@@ -130,6 +130,14 @@ static void prepareCylinderIgnitionSchedule(angle_t dwellAngleDuration, floatms_
 }
 
 void fireSparkAndPrepareNextSchedule(IgnitionEvent *event) {
+	for (int i = 0; i< MAX_OUTPUTS_FOR_IGNITION;i++) {
+		IgnitionOutputPin *output = event->outputs[i];
+
+		if (output) {
+			fireSparkBySettingPinLow(event, output);
+		}
+	}
+
 	efitick_t nowNt = getTimeNowNt();
 
 #if EFI_UNIT_TEST
@@ -141,13 +149,6 @@ void fireSparkAndPrepareNextSchedule(IgnitionEvent *event) {
 	LogTriggerCoilState(nowNt, false PASS_ENGINE_PARAMETER_SUFFIX);
 #endif // EFI_TOOTH_LOGGER
 
-	for (int i = 0; i< MAX_OUTPUTS_FOR_IGNITION;i++) {
-		IgnitionOutputPin *output = event->outputs[i];
-
-		if (output) {
-			fireSparkBySettingPinLow(event, output);
-		}
-	}
 #if !EFI_UNIT_TEST
 if (engineConfiguration->debugMode == DBG_DWELL_METRIC) {
 #if EFI_TUNER_STUDIO

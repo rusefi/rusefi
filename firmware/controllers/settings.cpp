@@ -996,12 +996,6 @@ const plain_get_integer_s getI_plain[] = {
 //		{"bor", setBor},
 //		{"can_mode", setCanType},
 //		{"idle_rpm", setTargetIdleRpm},
-//		{"idle_dt", setIdleDT},
-		//		{"", },
-		//		{"", },
-		//		{"", },
-		//		{"", },
-		//		{"", },
 };
 
 const plain_get_float_s getF_plain[] = {
@@ -1208,7 +1202,6 @@ const command_i_s commandsI[] = {{"ignition_mode", setIgnitionMode},
 #if EFI_IDLE_CONTROL
 		{"idle_position", setManualIdleValvePosition},
 		{"idle_rpm", setTargetIdleRpm},
-		{"idle_dt", setIdleDT},
 #endif /* EFI_IDLE_CONTROL */
 #endif /* EFI_PROD_CODE */
 
@@ -1296,6 +1289,10 @@ static void setValue(const char *paramStr, const char *valueStr) {
 		engineConfiguration->wwaeTau = valueF;
 	} else if (strEqualCaseInsensitive(paramStr, "wwaeBeta")) {
 		engineConfiguration->wwaeBeta = valueF;
+	} else if (strEqualCaseInsensitive(paramStr, "tempHpfpStart")) {
+		engineConfiguration->tempHpfpStart = valueF;
+	} else if (strEqualCaseInsensitive(paramStr, "tempHpfpDuration")) {
+		engineConfiguration->tempHpfpDuration = valueF;
 	} else if (strEqualCaseInsensitive(paramStr, "cranking_dwell")) {
 		engineConfiguration->ignitionDwellForCrankingMs = valueF;
 #if EFI_PROD_CODE

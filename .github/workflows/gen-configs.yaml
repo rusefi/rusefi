@@ -42,7 +42,7 @@ jobs:
         git status
         OUT=$(git commit -am "Auto-generated configs and docs" 2>&1) || echo "commit failed, finding out why"
         if echo "$OUT" | grep 'nothing to commit'; then
-          echo "::set-env name=NOCOMMIT::true"
+          echo "name=NOCOMMIT::true" >> $GITHUB_ENV
           exit 0
         elif echo "$OUT" | grep 'changed'; then
           exit 0

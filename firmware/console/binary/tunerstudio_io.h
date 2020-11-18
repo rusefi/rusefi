@@ -26,11 +26,10 @@ struct ts_channel_s {
 #if ! EFI_UNIT_TEST
 	BaseChannel * channel = nullptr;
 #endif
-	uint8_t writeBuffer[7];	// size(2 bytes) + response(1 byte) + crc32 (4 bytes)
 	/**
 	 * See 'blockingFactor' in rusefi.ini
 	 */
-	char crcReadBuffer[BLOCKING_FACTOR + 30];
+	char scratchBuffer[BLOCKING_FACTOR + 30];
 
 #if TS_UART_DMA_MODE || PRIMARY_UART_DMA_MODE || TS_UART_MODE
 	UARTDriver *uartp = nullptr;
@@ -51,7 +50,9 @@ bool stopTsPort(ts_channel_s *tsChannel);
 #define SR5_READ_TIMEOUT TIME_MS2I(1000)
 
 void sr5WriteData(ts_channel_s *tsChannel, const uint8_t * buffer, int size);
-void sr5WriteCrcPacket(ts_channel_s *tsChannel, const uint8_t responseCode, const void *buf, const uint16_t size);
+void sr5WriteCrcPacketSmall(ts_channel_s* tsChannel, uint8_t responseCode, const uint8_t* buf, size_t size);
+void sr5WriteCrcPacketLarge(ts_channel_s* tsChannel, uint8_t responseCode, const uint8_t* buf, size_t size);
+void sr5WriteCrcPacket(ts_channel_s *tsChannel, uint8_t responseCode, const uint8_t* buf, size_t size);
 void sr5SendResponse(ts_channel_s *tsChannel, ts_response_format_e mode, const uint8_t * buffer, int size);
 void sendOkResponse(ts_channel_s *tsChannel, ts_response_format_e mode);
 int sr5ReadData(ts_channel_s *tsChannel, uint8_t * buffer, int size);

@@ -29,6 +29,7 @@
 
 EXTERN_ENGINE;
 
+static bool isInitializaed = false;
 
 static OutputPin chipSelect;
 static OutputPin resetB;
@@ -59,6 +60,9 @@ static bool validateChipId() {
 }
 
 static void showStats() {
+	if (!isInitializaed) {
+		scheduleMsg(logger, "WAITINIG FOR VBatt...");
+	}
 	// x9D is product code or something, and 43 is the revision?
 	scheduleMsg(logger, "MC 0x%x %s", mcChipId, validateChipId() ? "hooray!" : "not hooray :(");
 
@@ -586,7 +590,6 @@ void initMc33816IfNeeded() {
 	if (!haveMc33816) {
 		return;
 	}
-	static bool isInitializaed = false;
 	if (engine->sensors.vBatt < LOW_VBATT) {
 		isInitializaed = false;
 	} else {

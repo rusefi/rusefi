@@ -93,8 +93,8 @@ void setVwPassatB6(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	lowPressureFuelPumpControl->loadAxis = GPPWM_FuelLoad;
 	lowPressureFuelPumpControl->dutyIfError = 50;
 	setTable(lowPressureFuelPumpControl->table, (uint8_t)50);
-	// TLE8888_PIN_24: "43 - GP Out 4"
-	lowPressureFuelPumpControl->pin = TLE8888_PIN_24;
+	// "42 - Injector 4", somehow GP4 did not work? not enough current? not happy with diode?
+	lowPressureFuelPumpControl->pin = TLE8888_PIN_4;
 
 
 	gppwm_channel *coolantControl = &engineConfiguration->gppwm[0];
@@ -116,6 +116,11 @@ void setVwPassatB6(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 */
 	coolantControl->pin = TLE8888_PIN_5; // "3 - Lowside 2"
 
+
+	// "7 - Lowside 1"
+	engineConfiguration->hpfpValvePin = TLE8888_PIN_6;
+
+
 	// set tps_min 890
 	engineConfiguration->tpsMin = 890; // convert 12to10 bit (ADC/4)
 	// set tps_max 70
@@ -127,6 +132,8 @@ void setVwPassatB6(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	engineConfiguration->etb.offset = 0;
 
 	engineConfiguration->injector.flow = 300;
+	engineConfiguration->tempHpfpStart = 120;
+	engineConfiguration->tempHpfpDuration = 30;
 
 	engineConfiguration->idle.solenoidPin = GPIO_UNASSIGNED;
 	engineConfiguration->fanPin = GPIO_UNASSIGNED;

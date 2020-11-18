@@ -841,7 +841,7 @@ void doInitElectronicThrottle(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	bool anyEtbConfigured = false;
 
 	for (int i = 0 ; i < ETB_COUNT; i++) {
-		auto motor = initDcMotor(i, CONFIG(etb_use_two_wires) PASS_ENGINE_PARAMETER_SUFFIX);
+		auto motor = initDcMotor(engineConfiguration->etbIo[i], i, CONFIG(etb_use_two_wires) PASS_ENGINE_PARAMETER_SUFFIX);
 
 		// If this motor is actually set up, init the etb
 		if (motor)

@@ -207,7 +207,7 @@ void sendOkResponse(ts_channel_s *tsChannel, ts_response_format_e mode) {
 }
 
 static void sendErrorCode(ts_channel_s *tsChannel, uint8_t code) {
-	sr5WriteCrcPacket(tsChannel, code, NULL, 0);
+	sr5WriteCrcPacket(tsChannel, code, nullptr, 0);
 }
 
 static void handlePageSelectCommand(ts_channel_s *tsChannel, ts_response_format_e mode) {
@@ -414,7 +414,7 @@ void requestBurn(void) {
 
 static void sendResponseCode(ts_response_format_e mode, ts_channel_s *tsChannel, const uint8_t responseCode) {
 	if (mode == TS_CRC) {
-		sr5WriteCrcPacket(tsChannel, responseCode, NULL, 0);
+		sr5WriteCrcPacket(tsChannel, responseCode, nullptr, 0);
 	}
 }
 
@@ -510,21 +510,21 @@ void runBinaryProtocolLoop(ts_channel_s *tsChannel) {
 
 		uint16_t incomingPacketSize = firstByte << 8 | secondByte;
 
-		if (incomingPacketSize == 0 || incomingPacketSize > (sizeof(tsChannel->crcReadBuffer) - CRC_WRAPPING_SIZE)) {
+		if (incomingPacketSize == 0 || incomingPacketSize > (sizeof(tsChannel->scratchBuffer) - CRC_WRAPPING_SIZE)) {
 			scheduleMsg(&tsLogger, "TunerStudio: invalid size: %d", incomingPacketSize);
 			tunerStudioError("ERROR: CRC header size");
 			sendErrorCode(tsChannel, TS_RESPONSE_UNDERRUN);
 			continue;
 		}
 
-		received = sr5ReadData(tsChannel, (uint8_t* )tsChannel->crcReadBuffer, 1);
+		received = sr5ReadData(tsChannel, (uint8_t* )tsChannel->scratchBuffer, 1);
 		if (received != 1) {
 			tunerStudioError("ERROR: did not receive command");
 			sendErrorCode(tsChannel, TS_RESPONSE_UNDERRUN);
 			continue;
 		}
 
-		char command = tsChannel->crcReadBuffer[0];
+		char command = tsChannel->scratchBuffer[0];
 		if (!isKnownCommand(command)) {
 			scheduleMsg(&tsLogger, "unexpected command %x", command);
 			sendErrorCode(tsChannel, TS_RESPONSE_UNRECOGNIZED_COMMAND);
@@ -535,7 +535,7 @@ void runBinaryProtocolLoop(ts_channel_s *tsChannel) {
 			logMsg("command %c\r\n", command);
 #endif
 
-		received = sr5ReadData(tsChannel, (uint8_t * ) (tsChannel->crcReadBuffer + 1),
+		received = sr5ReadData(tsChannel, (uint8_t * ) (tsChannel->scratchBuffer + 1),
 				incomingPacketSize + CRC_VALUE_SIZE - 1);
 		int expectedSize = incomingPacketSize + CRC_VALUE_SIZE - 1;
 		if (received != expectedSize) {
@@ -546,24 +546,24 @@ void runBinaryProtocolLoop(ts_channel_s *tsChannel) {
 			continue;
 		}
 
-		uint32_t expectedCrc = *(uint32_t*) (tsChannel->crcReadBuffer + incomingPacketSize);
+		uint32_t expectedCrc = *(uint32_t*) (tsChannel->scratchBuffer + incomingPacketSize);
 
 		expectedCrc = SWAP_UINT32(expectedCrc);
 
-		uint32_t actualCrc = crc32(tsChannel->crcReadBuffer, incomingPacketSize);
+		uint32_t actualCrc = crc32(tsChannel->scratchBuffer, incomingPacketSize);
 		if (actualCrc != expectedCrc) {
-			scheduleMsg(&tsLogger, "TunerStudio: CRC %x %x %x %x", tsChannel->crcReadBuffer[incomingPacketSize + 0],
-					tsChannel->crcReadBuffer[incomingPacketSize + 1], tsChannel->crcReadBuffer[incomingPacketSize + 2],
-					tsChannel->crcReadBuffer[incomingPacketSize + 3]);
+			scheduleMsg(&tsLogger, "TunerStudio: CRC %x %x %x %x", tsChannel->scratchBuffer[incomingPacketSize + 0],
+					tsChannel->scratchBuffer[incomingPacketSize + 1], tsChannel->scratchBuffer[incomingPacketSize + 2],
+					tsChannel->scratchBuffer[incomingPacketSize + 3]);
 
-			scheduleMsg(&tsLogger, "TunerStudio: command %c actual CRC %x/expected %x", tsChannel->crcReadBuffer[0],
+			scheduleMsg(&tsLogger, "TunerStudio: command %c actual CRC %x/expected %x", tsChannel->scratchBuffer[0],
 					actualCrc, expectedCrc);
 			tunerStudioError("ERROR: CRC issue");
 			sendErrorCode(tsChannel, TS_RESPONSE_CRC_FAILURE);
 			continue;
 		}
 
-		int success = tunerStudioHandleCrcCommand(tsChannel, tsChannel->crcReadBuffer, incomingPacketSize);
+		int success = tunerStudioHandleCrcCommand(tsChannel, tsChannel->scratchBuffer, incomingPacketSize);
 		if (!success)
 			print("got unexpected TunerStudio command %x:%c\r\n", command, command);
 
@@ -671,20 +671,21 @@ static void handleGetText(ts_channel_s *tsChannel) {
 			logMsg("get test sending [%d]\r\n", outputSize);
 #endif
 
-	sr5WriteCrcPacket(tsChannel, TS_RESPONSE_COMMAND_OK, output, outputSize);
+	sr5WriteCrcPacket(tsChannel, TS_RESPONSE_COMMAND_OK, reinterpret_cast<uint8_t*>(output), outputSize);
 #if EFI_SIMULATOR
 			logMsg("sent [%d]\r\n", outputSize);
 #endif
 }
 
 static void handleExecuteCommand(ts_channel_s *tsChannel, char *data, int incomingPacketSize) {
-	sr5WriteCrcPacket(tsChannel, TS_RESPONSE_COMMAND_OK, NULL, 0);
 	data[incomingPacketSize] = 0;
 	char *trimmed = efiTrim(data);
 #if EFI_SIMULATOR
 			logMsg("execute [%s]\r\n", trimmed);
 #endif
 	(console_line_callback)(trimmed);
+
+	sr5WriteCrcPacket(tsChannel, TS_RESPONSE_COMMAND_OK, nullptr, 0);
 }
 
 /**

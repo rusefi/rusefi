@@ -26,8 +26,6 @@
 
 #define efiSetPadMode(msg, brainPin, mode) {}
 
-#define EFI_UNIT_TEST FALSE
-
 #define hasOsPanicError() (FALSE)
 
 #define US_TO_NT_MULTIPLIER 100
