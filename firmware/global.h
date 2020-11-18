@@ -20,6 +20,9 @@
 // *** https://github.com/rusefi/rusefi/issues/1007 ***
 #include "common_headers.h"
 
+// for US_TO_NT_MULTIPLIER
+#include "mpu_util.h"
+
 // this is about MISRA not liking 'time.h'. todo: figure out something
 #if defined __GNUC__
 // GCC
@@ -95,9 +98,6 @@ typedef unsigned int time_t;
 #else /* !EFI_USE_CCM */
 #define CCM_OPTIONAL
 #endif /* EFI_USE_CCM */
-
-// 168 ticks in microsecond in case of 168MHz 407
-#define US_TO_NT_MULTIPLIER (CORE_CLOCK / 1000000)
 
 /**
  * converts efitimeus_t to efitick_t

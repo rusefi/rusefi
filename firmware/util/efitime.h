@@ -69,12 +69,10 @@ efitimems_t currentTimeMillis(void);
  */
 efitimesec_t getTimeNowSeconds(void);
 
+// Get a monotonically increasing (but wrapping) 32-bit timer value
+uint32_t getTimeNowLowerNt(void);
+
 #ifdef __cplusplus
 }
 #endif /* __cplusplus */
 
-#if EFI_PROD_CODE || EFI_SIMULATOR
- #define getTimeNowLowerNt() port_rt_get_counter_value()
-#else
- #define getTimeNowLowerNt() 0
-#endif

@@ -257,5 +257,9 @@ uintptr_t getFlashAddrSecondCopy() {
 	return FLASH_ADDR_SECOND_COPY;
 }
 
+uint32_t getTimeNowLowerNt() {
+	return port_rt_get_counter_value();
+}
+
 #endif /* EFI_PROD_CODE */
 

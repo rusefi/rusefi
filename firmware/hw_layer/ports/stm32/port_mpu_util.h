@@ -10,6 +10,12 @@
 
 #include "device_mpu_util.h"
 
+// 168 ticks in microsecond in case of 168MHz 407
+#define US_TO_NT_MULTIPLIER (CORE_CLOCK / 1000000)
+
+// Scheduler queue GPT device - use TIM5
+#define GPTDEVICE GPTD5
+
 typedef enum {
 	BOR_Level_None = OB_BOR_OFF, // 0x0C=12  Supply voltage ranges from 1.62 to 2.10 V
 	BOR_Level_1 = OB_BOR_LEVEL1, // 0x08     Supply voltage ranges from 2.10 to 2.40 V
