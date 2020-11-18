@@ -104,6 +104,8 @@ jobs:
 
     # Build machines don't have arm-none-eabi gcc, so let's download it and put it on the path
     - name: Download & Install GCC
+      env:
+        ACTIONS_ALLOW_UNSECURE_COMMANDS: 'true'
       run: | # Compiler hosted on our other git repo - avoids having to download from the nice folks at ARM every time
         wget 'https://github.com/rusefi/build_support/raw/master/gcc-arm-none-eabi-9-2020-q2-update-x86_64-linux.tar.xz' -O compiler.tar.xz
         tar -xvf compiler.tar.xz
@@ -204,6 +206,8 @@ jobs:
 
     # Build machines don't have arm-none-eabi gcc, so let's download it and put it on the path
     - name: Download & Install GCC
+      env:
+        ACTIONS_ALLOW_UNSECURE_COMMANDS: 'true'
       run: | # Compiler hosted on our other git repo - avoids having to download from the nice folks at ARM every time
         wget 'https://github.com/rusefi/build_support/raw/master/gcc-arm-none-eabi-9-2020-q2-update-x86_64-linux.tar.xz' -O compiler.tar.xz
         tar -xvf compiler.tar.xz
