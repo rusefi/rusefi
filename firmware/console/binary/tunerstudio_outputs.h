@@ -103,7 +103,7 @@ typedef struct {
 	scaled_pressure manifoldAirPressure; // 30
 	scaled_pressure baroPressure; // 32
 
-	scaled_afr airFuelRatio; // 34
+	scaled_lambda lambda; // 34
 	scaled_channel<uint16_t, 100> engineLoad; // 36
 
 	// misc sensors
@@ -113,12 +113,12 @@ typedef struct {
 
 	// Fuel math
 	scaled_channel<uint16_t, 1000> chargeAirMass; // 44  cylinder airmass in mg, 0-65 grams
-	scaled_ms crankingFuelMs; // 46
+	scaled_fuel_mass_mg crankingFuelMass; // 46
 	scaled_afr currentTargetAfr; // 48
 	// This is the raw value we take from the fuel map or base fuel algorithm, before the corrections
 	scaled_fuel_mass_mg fuelBase; // 50
 	// Total fuel with CLT, IAT and TPS acceleration without injector lag corrections per cycle, as pulse per cycle
-	scaled_ms fuelRunning; // 52
+	scaled_fuel_mass_mg fuelRunning; // 52
 	// Actual last injection time - including all compensation and injection mode
 	scaled_ms actualLastInjection; // 54
 	scaled_channel<uint8_t, 2> injectorDutyCycle; // 56
@@ -256,7 +256,10 @@ typedef struct {
 	scaled_pressure lowFuelPressure;	// 276
 	scaled_high_pressure highFuelPressure;	// 278
 
-	uint8_t unusedAtTheEnd[8]; // we have some unused bytes to allow compatible TS changes
+	scaled_lambda targetLambda; // 280
+	scaled_afr airFuelRatio; // 282
+
+	uint8_t unusedAtTheEnd[4]; // we have some unused bytes to allow compatible TS changes
 
 	// Temporary - will remove soon
 	TsDebugChannels* getDebugChannels() {

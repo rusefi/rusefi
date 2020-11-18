@@ -54,7 +54,7 @@ void setMazda626EngineConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	engineConfiguration->crankingChargeAngle = 70;
 
 	// set cranking_fuel 9
-	engineConfiguration->cranking.baseFuel = 2.5;
+	engineConfiguration->cranking.baseFuel = 30;
 
 	engineConfiguration->rpmHardLimit = 7400;
 

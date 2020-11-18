@@ -129,6 +129,9 @@ public class IniFileModel {
             if (RawIniFile.Line.isCommentLine(rawText))
                 return;
 
+            if (RawIniFile.Line.isPreprocessorDirective(rawText))
+                return;
+
             trim(list);
 
             if (list.isEmpty())
@@ -180,6 +183,9 @@ public class IniFileModel {
     }
 
     private void registerField(IniField field) {
+        // todo: only the first occurrence should matter, but com.rusefi.ui.TuneReadWriteTest is failing when uncommented :(
+        //if (allIniFields.containsKey(field.getName()))
+        //	return;
         allIniFields.put(field.getName(), field);
     }
 

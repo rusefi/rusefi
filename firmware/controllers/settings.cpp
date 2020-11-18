@@ -153,14 +153,8 @@ const char* getConfigurationName(engine_type_e engineType) {
 		return "BMWe34";
 	case VW_ABA:
 		return "VW_ABA";
-	case DODGE_STRATUS:
-		return "DODGE_STRATUS";
 	case SACHS:
 		return "SACHS";
-	case DAIHATSU:
-		return "DAIHATSU";
-	case SUZUKI_VITARA:
-		return "SUZUKI_VITARA";
 	case CAMARO_4:
 		return "CAMARO_4";
 	case CHEVY_C20_1973:
@@ -344,6 +338,12 @@ void printTPSInfo(void) {
 	scheduleMsg(&logger, "pedal up %f / down %f",
 			engineConfiguration->throttlePedalUpVoltage,
 			engineConfiguration->throttlePedalWOTVoltage);
+
+	auto pps = Sensor::get(SensorType::AcceleratorPedal);
+
+	if (!pps.Valid) {
+		scheduleMsg(&logger, "PPS not valid");
+	}
 
 	printTpsSenser("TPS", SensorType::Tps1, engineConfiguration->tpsMin, engineConfiguration->tpsMax, engineConfiguration->tps1_1AdcChannel);
 	printTpsSenser("TPS2", SensorType::Tps2, engineConfiguration->tps2Min, engineConfiguration->tps2Max, engineConfiguration->tps2_1AdcChannel);
@@ -996,12 +996,6 @@ const plain_get_integer_s getI_plain[] = {
 //		{"bor", setBor},
 //		{"can_mode", setCanType},
 //		{"idle_rpm", setTargetIdleRpm},
-//		{"idle_dt", setIdleDT},
-		//		{"", },
-		//		{"", },
-		//		{"", },
-		//		{"", },
-		//		{"", },
 };
 
 const plain_get_float_s getF_plain[] = {
@@ -1208,7 +1202,6 @@ const command_i_s commandsI[] = {{"ignition_mode", setIgnitionMode},
 #if EFI_IDLE_CONTROL
 		{"idle_position", setManualIdleValvePosition},
 		{"idle_rpm", setTargetIdleRpm},
-		{"idle_dt", setIdleDT},
 #endif /* EFI_IDLE_CONTROL */
 #endif /* EFI_PROD_CODE */
 
@@ -1296,6 +1289,10 @@ static void setValue(const char *paramStr, const char *valueStr) {
 		engineConfiguration->wwaeTau = valueF;
 	} else if (strEqualCaseInsensitive(paramStr, "wwaeBeta")) {
 		engineConfiguration->wwaeBeta = valueF;
+	} else if (strEqualCaseInsensitive(paramStr, "tempHpfpStart")) {
+		engineConfiguration->tempHpfpStart = valueF;
+	} else if (strEqualCaseInsensitive(paramStr, "tempHpfpDuration")) {
+		engineConfiguration->tempHpfpDuration = valueF;
 	} else if (strEqualCaseInsensitive(paramStr, "cranking_dwell")) {
 		engineConfiguration->ignitionDwellForCrankingMs = valueF;
 #if EFI_PROD_CODE

@@ -20,14 +20,15 @@ void setLadaKalina(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	/* PRE uses TLE8888_PIN_22 for fan */
 	engineConfiguration->fanPin = GPIO_UNASSIGNED;
 	// TLE8888 two bridge drivers for stepper
-	engineConfiguration->etbIo2[0].directionPin1 = TLE8888_PIN_21;
-	engineConfiguration->etbIo2[0].directionPin2 = TLE8888_PIN_22;
-	engineConfiguration->etbIo2[1].directionPin1 = TLE8888_PIN_23;
-	engineConfiguration->etbIo2[1].directionPin2 = TLE8888_PIN_24;
+	engineConfiguration->stepperDcIo[0].directionPin1 = TLE8888_PIN_21;
+	engineConfiguration->stepperDcIo[0].directionPin2 = TLE8888_PIN_22;
+	engineConfiguration->stepperDcIo[1].directionPin1 = TLE8888_PIN_23;
+	engineConfiguration->stepperDcIo[1].directionPin2 = TLE8888_PIN_24;
 	/* IDLE configuration */
 	engineConfiguration->useStepperIdle = true;
 	engineConfiguration->useHbridges = true;
 	engineConfiguration->idleMode = IM_AUTO;
+	engineConfiguration->useTLE8888_stepper = true;
 }
 
 #else

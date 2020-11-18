@@ -83,8 +83,10 @@ private:
 	const pin_output_mode_e *modePtr;
 };
 
-
-class NamedOutputPin : public OutputPin {
+/**
+ * OutputPin which is reported on Engine Sniffer
+ */
+class NamedOutputPin : public virtual OutputPin {
 public:
 	NamedOutputPin();
 	explicit NamedOutputPin(const char *name);
@@ -97,11 +99,11 @@ public:
 	 */
 	bool stop();
 	// todo: char pointer is a bit of a memory waste here, we can reduce RAM usage by software-based getName() method
-	const char *name;
+	const char *name = nullptr;
 	/**
 	 * rusEfi Engine Sniffer protocol uses these short names to reduce bytes usage
 	 */
-	const char *shortName = NULL;
+	const char *shortName = nullptr;
 };
 
 class InjectorOutputPin final : public NamedOutputPin {
@@ -129,33 +131,42 @@ public:
 	bool outOfOrder; // https://sourceforge.net/p/rusefi/tickets/319/
 };
 
-class RegisteredOutputPin : public OutputPin {
+/**
+ * OutputPin with semi-automated init/deinit on configuration change
+ */
+class RegisteredOutputPin : public virtual OutputPin {
 public:
-	RegisteredOutputPin(const char *name, short pinOffset, short pinModeOffset);
+	RegisteredOutputPin(const char *registrationName, short pinOffset, short pinModeOffset);
+	void init();
 	void unregister();
 	RegisteredOutputPin *next;
 private:
-	const char *name;
+	const char *registrationName;
 	short pinOffset;
 	short pinModeOffset;
+	bool isPinConfigurationChanged();
+};
+
+class RegisteredNamedOutputPin : public RegisteredOutputPin, public NamedOutputPin {
+public:
+		RegisteredNamedOutputPin(const char *name, short pinOffset, short pinModeOffset);
 };
 
 class EnginePins {
 public:
 	EnginePins();
-	void startPins();
+	void startPins(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 	void reset();
 	bool stopPins();
 	void unregisterPins();
-	void startInjectionPins();
-	void startIgnitionPins();
-	void startAuxValves();
-	void stopInjectionPins();
-	void stopIgnitionPins();
 	RegisteredOutputPin mainRelay;
+	/**
+	 * High Pressure Fuel Pump valve control
+	 */
+	RegisteredNamedOutputPin hpfpValve;
 	// this one cranks engine
 	RegisteredOutputPin starterControl;
-	// this one prevents driver from cranknig engine
+	// this one prevents driver from cranking engine
 	RegisteredOutputPin starterRelayDisable;
 
 	RegisteredOutputPin fanRelay;
@@ -181,7 +192,7 @@ public:
 	 */
 	RegisteredOutputPin checkEnginePin;
 
-	NamedOutputPin tachOut;
+	RegisteredNamedOutputPin tachOut;
 
 	OutputPin fsioOutputs[FSIO_COMMAND_COUNT];
 	RegisteredOutputPin triggerDecoderErrorPin;
@@ -192,6 +203,13 @@ public:
 	InjectorOutputPin injectors[INJECTION_PIN_COUNT];
 	IgnitionOutputPin coils[IGNITION_PIN_COUNT];
 	NamedOutputPin auxValve[AUX_DIGITAL_VALVE_COUNT];
+private:
+	void startInjectionPins();
+	void startIgnitionPins();
+	void startAuxValves();
+
+	void stopInjectionPins();
+	void stopIgnitionPins();
 };
 
 #endif /* __cplusplus */

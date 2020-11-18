@@ -31,6 +31,7 @@ TESTS_SRC_CPP = \
 	tests/test_fuel_map.cpp \
 	tests/test_fuel_wall_wetting.cpp \
 	tests/test_one_cylinder_logic.cpp \
+	tests/test_tunerstudio.cpp \
 	tests/test_pwm_generator.cpp \
 	tests/test_logic_expression.cpp \
 	tests/test_signal_executor.cpp \

@@ -40,7 +40,7 @@ public class TcpIoStream extends AbstractIoStream {
     }
 
     @NotNull
-    public static TcpIoStream open(String port) throws TcpConnector.InvalidTcpPort, IOException {
+    public static TcpIoStream open(String port) throws IOException {
         int portPart = TcpConnector.getTcpPort(port);
         String hostname = TcpConnector.getHostname(port);
         Socket socket = new Socket(hostname, portPart);

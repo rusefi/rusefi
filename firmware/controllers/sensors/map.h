@@ -28,8 +28,12 @@ float validateMap(float mapKPa DECLARE_ENGINE_PARAMETER_SUFFIX);
 
 #define KPA_PER_PSI 6.89475728f
 
+#define PSI2KPA(psi)  (KPA_PER_PSI * (psi))
+
+#define BAR2KPA(bar) (100 * (bar))
+
 // PSI (relative to atmosphere) to kPa (relative to vacuum)
-#define PSI2KPA(psi)  (101.32500411216164f + KPA_PER_PSI * (psi))
+#define PSI2KPA_RELATIVE(psi)  (101.32500411216164f + PSI2KPA(psi))
 
 #define INHG2KPA(inhg) ((inhg) * 3.386375)
 #define KPA2INHG(kpa) ((kpa) / 3.386375)

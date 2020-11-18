@@ -83,7 +83,7 @@ analog_inputs:
   EFI_ADC_3: "Analog Volt 8"
   # PA4 - pin #17
   EFI_ADC_4: "Analog Volt 9"
-  # PA5
+  # PA5 - pin #28 WBO AFR
   EFI_ADC_5: "Analog Volt 10"
   # PA6 - pin #18
   EFI_ADC_6: "Analog Volt 11"

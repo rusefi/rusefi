@@ -19,7 +19,9 @@ import com.rusefi.io.ConnectionStateListener;
 import com.rusefi.io.ConnectionStatusLogic;
 import com.rusefi.io.IoStream;
 import com.rusefi.io.LinkManager;
+import com.rusefi.io.tcp.BinaryProtocolProxy;
 import com.rusefi.io.tcp.BinaryProtocolServer;
+import com.rusefi.io.tcp.ServerSocketReference;
 import com.rusefi.maintenance.ExecHelper;
 import com.rusefi.proxy.client.LocalApplicationProxy;
 import com.rusefi.tools.online.Online;
@@ -78,10 +80,28 @@ public class ConsoleTools {
         registerTool("lightui", strings -> lightUI(), "Start lightweight GUI for tiny screens");
         registerTool("dfu", DfuTool::run, "Program specified file into ECU via DFU");
 
+        registerTool("local_proxy", ConsoleTools::localProxy, "Detect rusEFI ECU and proxy serial <> TCP");
 
         registerTool("detect", ConsoleTools::detect, "Find attached rusEFI");
         registerTool("reboot_ecu", args -> sendCommand(Fields.CMD_REBOOT), "Sends a command to reboot rusEFI controller.");
         registerTool(Fields.CMD_REBOOT_DFU, args -> sendCommand(Fields.CMD_REBOOT_DFU), "Sends a command to switch rusEFI controller into DFU mode.");
+    }
+
+    private static void localProxy(String[] strings) throws IOException {
+        String autoDetectedPort = autoDetectPort();
+        if (autoDetectedPort == null) {
+            System.out.println(RUS_EFI_NOT_DETECTED);
+            return;
+        }
+        IoStream ecuStream = LinkManager.open(autoDetectedPort);
+
+        ServerSocketReference serverHolder = BinaryProtocolProxy.createProxy(ecuStream, 29001, new BinaryProtocolProxy.ClientApplicationActivityListener() {
+            @Override
+            public void onActivity() {
+
+            }
+        });
+
     }
 
     private static void version(String[] strings) {

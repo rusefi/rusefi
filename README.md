@@ -37,7 +37,6 @@ Important note - we now use submodules:
 
  * Forum http://rusefi.com/forum
  * Documentation https://github.com/rusefi/rusefi/wiki
- * Legacy Wiki: http://rusefi.com/wiki
  * Doxygen documentation is available at http://rusefi.com/docs/html
  * General source code Q&A is at http://rusefi.com/forum/viewtopic.php?f=5&t=10
  * Facebook https://www.facebook.com/rusEfiECU
@@ -52,6 +51,7 @@ See https://rusefi.com/forum/viewtopic.php?f=5&t=9
 
 | Release date  | Revision  | Details |
 | ------------  | --------- | ------- |
+| 10/28/2020    |           | [changelog has moved](firmwre/CHANGELOG.md) |
 | 07/26/2020    | r24635    | improvement #1637: DC motor idle air valve for late 90s German vehicles |
 | 07/21/2020    |           | bugfix #1592 injectors could stay open on transition from cranking to running under certain conditions | 
 | 06/17/2020    | r23656    | bugfix #1491 major performance/scheduling improvement |

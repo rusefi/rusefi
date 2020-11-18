@@ -10,6 +10,8 @@
 TEST(engine, testPlainCrankingWithoutAdvancedFeatures) {
 	WITH_ENGINE_TEST_HELPER(TEST_ENGINE);
 
+	engineConfiguration->cranking.baseFuel = 12;
+
 	setupSimpleTestEngineWithMafAndTT_ONE_trigger(&eth);
 	ASSERT_EQ( 0,  GET_RPM()) << "RPM=0";
 
@@ -24,7 +26,8 @@ TEST(engine, testPlainCrankingWithoutAdvancedFeatures) {
 	ASSERT_EQ( 4,  engine->executor.size()) << "plain#2";
 
 	eth.assertEvent5("sim start", 0, (void*)startSimultaniousInjection, 100000 - 1875);
-	eth.assertEvent5("sim end", 1, (void*)endSimultaniousInjection, 100000);
+	// -1 because ugh floating point math
+	eth.assertEvent5("sim end", 1, (void*)endSimultaniousInjection, 100000 - 1);
 }
 
 

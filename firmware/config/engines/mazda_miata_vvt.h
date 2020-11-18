@@ -40,3 +40,10 @@ void setMiataNB2_MRE_MAP(DECLARE_CONFIG_PARAMETER_SIGNATURE);
  * set engine_type 15
  */
 void setMiataNB2_MRE_MAF(DECLARE_CONFIG_PARAMETER_SIGNATURE);
+
+/**
+ * https://github.com/rusefi/rusefi/wiki/Mazda-Miata-2001
+ * set engine_type 1
+ */
+void setMiataNB2_Proteus_TCU(DECLARE_CONFIG_PARAMETER_SIGNATURE);
+

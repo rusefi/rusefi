@@ -52,9 +52,13 @@ static const char *auxValveShortNames[] = { "a1", "a2"};
 
 static RegisteredOutputPin * registeredOutputHead = nullptr;
 
-RegisteredOutputPin::RegisteredOutputPin(const char *name, short pinOffset,
+RegisteredNamedOutputPin::RegisteredNamedOutputPin(const char *name, short pinOffset,
+		short pinModeOffset) : RegisteredOutputPin(name, pinOffset, pinModeOffset) {
+}
+
+RegisteredOutputPin::RegisteredOutputPin(const char *registrationName, short pinOffset,
 		short pinModeOffset) {
-	this->name = name;
+	this->registrationName = registrationName;
 	this->pinOffset = pinOffset;
 	this->pinModeOffset = pinModeOffset;
 	// adding into head of the list is so easy and since we do not care about order that's what we shall do
@@ -62,15 +66,34 @@ RegisteredOutputPin::RegisteredOutputPin(const char *name, short pinOffset,
 	registeredOutputHead = this;
 }
 
-void RegisteredOutputPin::unregister() {
+bool RegisteredOutputPin::isPinConfigurationChanged() {
 #if EFI_PROD_CODE
 	brain_pin_e        curPin = *(brain_pin_e       *) ((void *) (&((char*)&activeConfiguration)[pinOffset]));
 	brain_pin_e        newPin = *(brain_pin_e       *) ((void *) (&((char*) engineConfiguration)[pinOffset]));
 
     pin_output_mode_e curMode = *(pin_output_mode_e *) ((void *) (&((char*)&activeConfiguration)[pinModeOffset]));
     pin_output_mode_e newMode = *(pin_output_mode_e *) ((void *) (&((char*) engineConfiguration)[pinModeOffset]));
+    return curPin != newPin || curMode != newMode;
+#else
+    return false;
+#endif // EFI_PROD_CODE
+}
 
-    if (curPin != newPin || curMode != newMode) {
+void RegisteredOutputPin::init() {
+#if EFI_PROD_CODE
+	brain_pin_e        newPin = *(brain_pin_e       *) ((void *) (&((char*) engineConfiguration)[pinOffset]));
+    pin_output_mode_e *newMode = (pin_output_mode_e *) ((void *) (&((char*) engineConfiguration)[pinModeOffset]));
+
+    if (isPinConfigurationChanged()) {
+		this->initPin(registrationName, newPin, newMode);
+    }
+#endif // EFI_PROD_CODE
+}
+
+void RegisteredOutputPin::unregister() {
+#if EFI_PROD_CODE
+	brain_pin_e        curPin = *(brain_pin_e       *) ((void *) (&((char*)&activeConfiguration)[pinOffset]));
+    if (isPinConfigurationChanged()) {
     	unregisterOutput(curPin);
     }
 #endif // EFI_PROD_CODE
@@ -83,23 +106,24 @@ void RegisteredOutputPin::unregister() {
 
 
 EnginePins::EnginePins() :
-		mainRelay("mainRelay", CONFIG_OFFSET(mainRelayPin), CONFIG_OFFSET(mainRelayPinMode)),
-		starterControl("starterControl", CONFIG_PIN_OFFSETS(starterControl)),
-		starterRelayDisable("starterRelayDisable", CONFIG_PIN_OFFSETS(starterRelayDisable)),
-		fanRelay("fanRelay", CONFIG_PIN_OFFSETS(fan)),
-		acRelay("acRelay", CONFIG_PIN_OFFSETS(acRelay)),
-		fuelPumpRelay("fuelPump", CONFIG_PIN_OFFSETS(fuelPump)),
-	    boostPin("boostPin", CONFIG_PIN_OFFSETS(boostControl)),
-		idleSolenoidPin("idleSolenoid", idle_solenoidPin_offset, idle_solenoidPinMode_offset),
-		secondIdleSolenoidPin("secondIdleSolenoid", CONFIG_OFFSET(secondSolenoidPin), idle_solenoidPinMode_offset),
-		alternatorPin("alternatorPin", CONFIG_PIN_OFFSETS(alternatorControl)),
+		mainRelay("Main relay", CONFIG_PIN_OFFSETS(mainRelay)),
+		hpfpValve("hpfpValve", CONFIG_PIN_OFFSETS(hpfpValve)),
+		starterControl("Starter control", CONFIG_PIN_OFFSETS(starterControl)),
+		starterRelayDisable("Starter disable", CONFIG_PIN_OFFSETS(starterRelayDisable)),
+		fanRelay("Fan", CONFIG_PIN_OFFSETS(fan)),
+		acRelay("A/C relay", CONFIG_PIN_OFFSETS(acRelay)),
+		fuelPumpRelay("Fuel pump", CONFIG_PIN_OFFSETS(fuelPump)),
+	    boostPin("Boost", CONFIG_PIN_OFFSETS(boostControl)),
+		idleSolenoidPin("Idle Valve", idle_solenoidPin_offset, idle_solenoidPinMode_offset),
+		secondIdleSolenoidPin("Idle Valve#2", CONFIG_OFFSET(secondSolenoidPin), idle_solenoidPinMode_offset),
+		alternatorPin("Alternator control", CONFIG_PIN_OFFSETS(alternatorControl)),
 		checkEnginePin("checkEnginePin", CONFIG_PIN_OFFSETS(malfunctionIndicator)),
-		// todo: NamedOutputPin vs RegisteredOutputPin
-		//		tachOut("tachOut", CONFIG_PIN_OFFSETS(tachOutput)),
-		triggerDecoderErrorPin("triggerDecoderErrorPin", CONFIG_PIN_OFFSETS(triggerError)),
+		tachOut("tachOut", CONFIG_PIN_OFFSETS(tachOutput)),
+		triggerDecoderErrorPin("led: trigger debug", CONFIG_PIN_OFFSETS(triggerError)),
 		hipCs("hipCs", CONFIG_PIN_OFFSETS(hip9011Cs))
 {
 	tachOut.name = PROTOCOL_TACH_NAME;
+	hpfpValve.name = PROTOCOL_HPFP_NAME;
 
 	static_assert(efi::size(sparkNames) >= IGNITION_PIN_COUNT, "Too many ignition pins");
 	for (int i = 0; i < IGNITION_PIN_COUNT;i++) {
@@ -170,11 +194,13 @@ bool EnginePins::stopPins() {
 }
 
 void EnginePins::unregisterPins() {
+	stopInjectionPins();
+    stopIgnitionPins();
+
 #if EFI_ELECTRONIC_THROTTLE_BODY
 	unregisterEtbPins();
 #endif /* EFI_ELECTRONIC_THROTTLE_BODY */
 #if EFI_PROD_CODE
-	unregisterOutputIfPinOrModeChanged(tachOut, tachOutputPin, tachOutputPinMode);
 	// todo: add pinMode
 	unregisterOutputIfPinChanged(sdCsPin, sdCardCsPin);
 	unregisterOutputIfPinChanged(accelerometerCs, LIS302DLCsPin);
@@ -193,10 +219,18 @@ void EnginePins::unregisterPins() {
 #endif /* EFI_PROD_CODE */
 }
 
-void EnginePins::startPins() {
+void EnginePins::startPins(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+#if EFI_ENGINE_CONTROL
 	startInjectionPins();
 	startIgnitionPins();
 	startAuxValves();
+#endif /* EFI_ENGINE_CONTROL */
+
+	RegisteredOutputPin * pin = registeredOutputHead;
+	while (pin != nullptr) {
+		pin->init();
+		pin = pin->next;
+	}
 }
 
 void EnginePins::reset() {
@@ -258,7 +292,10 @@ void EnginePins::startInjectionPins(void) {
 }
 
 NamedOutputPin::NamedOutputPin() : OutputPin() {
-	name = NULL;
+}
+
+NamedOutputPin::NamedOutputPin(const char *name) : OutputPin() {
+	this->name = name;
 }
 
 const char *NamedOutputPin::getName() const {
@@ -266,11 +303,7 @@ const char *NamedOutputPin::getName() const {
 }
 
 const char *NamedOutputPin::getShortName() const {
-	return shortName == NULL ? name : shortName;
-}
-
-NamedOutputPin::NamedOutputPin(const char *name) : OutputPin() {
-	this->name = name;
+	return shortName == nullptr ? name : shortName;
 }
 
 void NamedOutputPin::setHigh() {
@@ -423,45 +456,13 @@ void initOutputPins(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	enginePins.sdCsPin.initPin("SD CS", CONFIG(sdCardCsPin));
 #endif /* HAL_USE_SPI */
 
-	// todo: should we move this code closer to the fuel pump logic?
-	enginePins.fuelPumpRelay.initPin("Fuel pump", CONFIG(fuelPumpPin), &CONFIG(fuelPumpPinMode));
+#if EFI_SHAFT_POSITION_INPUT
+	// todo: migrate remaining OutputPin to RegisteredOutputPin in order to get consistent dynamic pin init/deinit
+	enginePins.debugTriggerSync.initPin("debug: sync", CONFIG(debugTriggerSync));
+#endif // EFI_SHAFT_POSITION_INPUT
 
-	enginePins.mainRelay.initPin("Main relay", CONFIG(mainRelayPin), &CONFIG(mainRelayPinMode));
-	enginePins.starterRelayDisable.initPin("Starter disable", CONFIG(starterRelayDisablePin), &CONFIG(starterRelayDisablePinMode));
-	enginePins.starterControl.initPin("Starter control", CONFIG(starterControlPin));
-
-	enginePins.fanRelay.initPin("Fan", CONFIG(fanPin), &CONFIG(fanPinMode));
 	enginePins.o2heater.initPin("O2 heater", CONFIG(o2heaterPin));
-	enginePins.acRelay.initPin("A/C relay", CONFIG(acRelayPin), &CONFIG(acRelayPinMode));
 
-	// digit 1
-	/*
-	 ledRegister(LED_HUGE_0, GPIOB, 2);
-	 ledRegister(LED_HUGE_1, GPIOE, 7);
-	 ledRegister(LED_HUGE_2, GPIOE, 8);
-	 ledRegister(LED_HUGE_3, GPIOE, 9);
-	 ledRegister(LED_HUGE_4, GPIOE, 10);
-	 ledRegister(LED_HUGE_5, GPIOE, 11);
-	 ledRegister(LED_HUGE_6, GPIOE, 12);
-
-	 // digit 2
-	 ledRegister(LED_HUGE_7, GPIOE, 13);
-	 ledRegister(LED_HUGE_8, GPIOE, 14);
-	 ledRegister(LED_HUGE_9, GPIOE, 15);
-	 ledRegister(LED_HUGE_10, GPIOB, 10);
-	 ledRegister(LED_HUGE_11, GPIOB, 11);
-	 ledRegister(LED_HUGE_12, GPIOB, 12);
-	 ledRegister(LED_HUGE_13, GPIOB, 13);
-
-	 // digit 3
-	 ledRegister(LED_HUGE_14, GPIOE, 0);
-	 ledRegister(LED_HUGE_15, GPIOE, 2);
-	 ledRegister(LED_HUGE_16, GPIOE, 4);
-	 ledRegister(LED_HUGE_17, GPIOE, 6);
-	 ledRegister(LED_HUGE_18, GPIOE, 5);
-	 ledRegister(LED_HUGE_19, GPIOE, 3);
-	 ledRegister(LED_HUGE_20, GPIOE, 1);
-	 */
 #endif /* EFI_GPIO_HARDWARE */
 }
 

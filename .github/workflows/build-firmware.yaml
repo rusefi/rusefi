@@ -105,25 +105,26 @@ jobs:
     # Build machines don't have arm-none-eabi gcc, so let's download it and put it on the path
     - name: Download & Install GCC
       run: | # Compiler hosted on our other git repo - avoids having to download from the nice folks at ARM every time
-        wget 'https://github.com/rusefi/build_support/raw/master/gcc-arm-none-eabi-9-2019-q4-major-x86_64-linux.tar.xz' -O compiler.tar.xz
+        wget 'https://github.com/rusefi/build_support/raw/master/gcc-arm-none-eabi-9-2020-q2-update-x86_64-linux.tar.xz' -O compiler.tar.xz
         tar -xvf compiler.tar.xz
-        echo "::add-path::`pwd`/gcc-arm-none-eabi-9-2019-q4-major/bin"
-  
-    - name: Install multilib, mingw, and ncftp
-      run: |
-        sudo apt-get update
-        sudo apt-get install gcc-multilib g++-multilib g++-mingw-w64 gcc-mingw-w64 ncftp
+        echo "`pwd`/gcc-arm-none-eabi-9-2020-q2-update/bin" >> $GITHUB_PATH
 
     # Make sure the compiler we just downloaded works - just print out the version
     - name: Test Compiler
       run: arm-none-eabi-gcc -v
 
+    - name: Install multilib, mingw, and ncftp
+      run: |
+        sudo apt-get update
+        sudo apt-get install gcc-multilib g++-multilib g++-mingw-w64 gcc-mingw-w64 ncftp
+
+
     - name: Set FTP variables
       run: |
         if [ "${{github.event_name}}" = "push" ] && [ "${{github.ref}}" = "refs/heads/master" ]; then
-          echo "::set-env name=RUSEFI_FTP_SERVER::${{secrets.RUSEFI_FTP_SERVER}}";
-          echo "::set-env name=RUSEFI_BUILD_FTP_USER::${{secrets.RUSEFI_BUILD_FTP_USER}}";
-          echo "::set-env name=RUSEFI_BUILD_FTP_PASS::${{secrets.RUSEFI_BUILD_FTP_PASS}}";
+          echo "name=RUSEFI_FTP_SERVER::${{secrets.RUSEFI_FTP_SERVER}}" >> $GITHUB_ENV;
+          echo "name=RUSEFI_BUILD_FTP_USER::${{secrets.RUSEFI_BUILD_FTP_USER}}" >> $GITHUB_ENV;
+          echo "name=RUSEFI_BUILD_FTP_PASS::${{secrets.RUSEFI_BUILD_FTP_PASS}}" >> $GITHUB_ENV;
         fi
 
     # Build rusEFI console
@@ -204,9 +205,9 @@ jobs:
     # Build machines don't have arm-none-eabi gcc, so let's download it and put it on the path
     - name: Download & Install GCC
       run: | # Compiler hosted on our other git repo - avoids having to download from the nice folks at ARM every time
-        wget 'https://github.com/rusefi/build_support/raw/master/gcc-arm-none-eabi-9-2019-q4-major-x86_64-linux.tar.xz' -O compiler.tar.xz
+        wget 'https://github.com/rusefi/build_support/raw/master/gcc-arm-none-eabi-9-2020-q2-update-x86_64-linux.tar.xz' -O compiler.tar.xz
         tar -xvf compiler.tar.xz
-        echo "::add-path::`pwd`/gcc-arm-none-eabi-9-2019-q4-major/bin"
+        echo "`pwd`/gcc-arm-none-eabi-9-2020-q2-update/bin" >> $GITHUB_PATH
   
     - name: Install multilib, mingw, and ncftp
       run: |
@@ -220,9 +221,9 @@ jobs:
     - name: Set FTP variables
       run: |
         if [ "${{github.event_name}}" = "push" ] && [ "${{github.ref}}" = "refs/heads/master" ]; then
-          echo "::set-env name=RUSEFI_FTP_SERVER::${{secrets.RUSEFI_FTP_SERVER}}";
-          echo "::set-env name=RUSEFI_BUILD_FTP_USER::${{secrets.RUSEFI_BUILD_FTP_USER}}";
-          echo "::set-env name=RUSEFI_BUILD_FTP_PASS::${{secrets.RUSEFI_BUILD_FTP_PASS}}";
+          echo "name=RUSEFI_FTP_SERVER::${{secrets.RUSEFI_FTP_SERVER}}" >> $GITHUB_ENV;
+          echo "name=RUSEFI_BUILD_FTP_USER::${{secrets.RUSEFI_BUILD_FTP_USER}}" >> $GITHUB_ENV;
+          echo "name=RUSEFI_BUILD_FTP_PASS::${{secrets.RUSEFI_BUILD_FTP_PASS}}" >> $GITHUB_ENV;
         fi
 
     - name: Build Primary Bundle

@@ -17,7 +17,6 @@ TEST(tachometer, testPulsePerRev) {
     engineConfiguration->tachPulsePerRev = 4;
     engineConfiguration->tachPulseDuractionMs = 0.5f;
     engineConfiguration->tachPulseDurationAsDutyCycle = true;
-    engineConfiguration->tachPulseTriggerIndex = 0;
 
     // Set predictable trigger settings
     engineConfiguration->trigger.customTotalToothCount = 8;

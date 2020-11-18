@@ -26,6 +26,7 @@
 #include "perf_trace.h"
 #include "backup_ram.h"
 #include "idle_thread.h"
+#include "idle_hardware.h"
 #include "sensor.h"
 #include "gppwm.h"
 #include "tachometer.h"
@@ -188,6 +189,8 @@ void Engine::periodicSlowCallback(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 #endif /* EFI_FSIO */
 
 	updateGppwm();
+
+	updateIdleControl();
 
 	cylinderCleanupControl(PASS_ENGINE_PARAMETER_SIGNATURE);
 

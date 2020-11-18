@@ -34,7 +34,7 @@
 //#include "usb_msd.h"
 
 #include "AdcConfiguration.h"
-#include "idle_thread.h"
+#include "idle_hardware.h"
 #include "mcp3208.h"
 #include "hip9011.h"
 #include "histogram.h"
@@ -71,8 +71,6 @@ EXTERN_ENGINE;
 
 extern bool hasFirmwareErrorFlag;
 
-static mutex_t spiMtx;
-
 #if HAL_USE_SPI
 extern bool isSpiInitialized[5];
 
@@ -85,14 +83,12 @@ bool rtcWorks = true;
  * Only one consumer can use SPI bus at a given time
  */
 void lockSpi(spi_device_e device) {
-	UNUSED(device);
 	efiAssertVoid(CUSTOM_STACK_SPI, getCurrentRemainingStack() > 128, "lockSpi");
-	// todo: different locks for different SPI devices!
-	chMtxLock(&spiMtx);
+	spiAcquireBus(getSpiDevice(device));
 }
 
 void unlockSpi(spi_device_e device) {
-	chMtxUnlock(&spiMtx);
+	spiReleaseBus(getSpiDevice(device));
 }
 
 static void initSpiModules(engine_configuration_s *engineConfiguration) {
@@ -317,8 +313,6 @@ void applyNewHardwareSettings(void) {
 	stopJoystickPins();
 #endif /* HAL_USE_PAL && EFI_JOYSTICK */
 
-	enginePins.stopInjectionPins();
-    enginePins.stopIgnitionPins();
 #if EFI_CAN_SUPPORT
 	stopCanPins();
 #endif /* EFI_CAN_SUPPORT */
@@ -381,6 +375,8 @@ void applyNewHardwareSettings(void) {
 
 	ButtonDebounce::startConfigurationList();
 
+
+
 #if EFI_SHAFT_POSITION_INPUT
 	startTriggerInputPins();
 #endif /* EFI_SHAFT_POSITION_INPUT */
@@ -393,8 +389,7 @@ void applyNewHardwareSettings(void) {
 	startHD44780_pins();
 #endif /* #if EFI_HD44780_LCD */
 
-	enginePins.startInjectionPins();
-	enginePins.startIgnitionPins();
+	enginePins.startPins();
 
 #if EFI_CAN_SUPPORT
 	startCanPins();
@@ -411,7 +406,7 @@ void applyNewHardwareSettings(void) {
 
 #if EFI_IDLE_CONTROL
 	if (isIdleRestartNeeded) {
-		 initIdleHardware();
+		 initIdleHardware(sharedLogger);
 	}
 #endif
 
@@ -450,8 +445,6 @@ void initHardware(Logging *l) {
 	// todo: enable protection. it's disabled because it takes
 	// 10 extra seconds to re-flash the chip
 	//flashProtect();
-
-	chMtxObjectInit(&spiMtx);
 
 #if EFI_HISTOGRAMS
 	/**
@@ -541,6 +534,11 @@ void initHardware(Logging *l) {
 
 	// output pins potentially depend on 'initSmartGpio'
 	initOutputPins(PASS_ENGINE_PARAMETER_SIGNATURE);
+#if EFI_PROD_CODE && EFI_ENGINE_CONTROL
+	enginePins.startPins();
+
+#endif /* EFI_PROD_CODE && EFI_ENGINE_CONTROL */
+
 
 #if EFI_MC33816
 	initMc33816(sharedLogger);
@@ -590,10 +588,6 @@ void initHardware(Logging *l) {
 
 #if EFI_SERVO
 	initServo();
-#endif
-
-#if ADC_SNIFFER
-	initAdcDriver();
 #endif
 
 #if EFI_AUX_SERIAL

@@ -75,13 +75,6 @@ static const ignition_table_t miataNA8_maf_advance_table = { {/*0  engineLoad=1.
 		+29.712, /*12 5760.0*/+28.651, /*13 6173.0*/+28.045, /*14 6586.0*/+27.228, /*15 7000.0*/+27.784 } };
 #endif
 
-static void setDefaultCrankingFuel(engine_configuration_s *engineConfiguration) {
-	// todo: set cranking parameters method based on injectors and displacement?
-
-	// set cranking_fuel 5
-	engineConfiguration->cranking.baseFuel = 5;
-}
-
 EXTERN_ENGINE;
 
 static void commonMiataNa(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
@@ -108,7 +101,7 @@ static void commonMiataNa(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	engineConfiguration->ignitionPins[3] = GPIO_UNASSIGNED;
 	engineConfiguration->ignitionPinMode = OM_DEFAULT;
 
-	setDefaultCrankingFuel(engineConfiguration);
+	engineConfiguration->cranking.baseFuel = 24;
 
 	engineConfiguration->triggerSimulatorPinModes[0] = OM_OPENDRAIN;
 	engineConfiguration->triggerSimulatorPinModes[1] = OM_OPENDRAIN;

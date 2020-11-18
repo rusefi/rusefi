@@ -21,10 +21,13 @@ public class ConfigField {
 
     private static final Pattern FIELD = Pattern.compile(typePattern + "\\s(" + namePattern + ")(" + commentPattern + ")?(;(.*))?");
 
+    private static final Pattern DIRECTIVE = Pattern.compile("#(if\\s" + namePattern + "|else|elif\\s\" + namePattern + \"|endif)");
+
     public static final char TS_COMMENT_TAG = '+';
     public static final String ENUM_SUFFIX = "_enum";
     public static final String VOID_NAME = "";
     public static final String BOOLEAN_T = "boolean";
+    public static final String DIRECTIVE_T = "directive";
 
     private final String name;
     private final String comment;
@@ -103,6 +106,10 @@ public class ConfigField {
         return BOOLEAN_T.equalsIgnoreCase(type);
     }
 
+    public boolean isDirective() {
+        return DIRECTIVE_T.equalsIgnoreCase(type);
+    }
+
     private boolean isVoid() {
         return name.equals(VOID_NAME);
     }
@@ -150,6 +157,11 @@ public class ConfigField {
         SystemOut.println("comment " + comment);
 
         return field;
+    }
+
+    public static boolean isPreprocessorDirective(ReaderState state, String line) {
+        Matcher matcher = DIRECTIVE.matcher(line);
+        return matcher.matches();
     }
 
     public int getSize(ConfigField next) {

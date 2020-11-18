@@ -8,11 +8,10 @@
 #include "engine_test_helper.h"
 
 TEST(cranking, testFasterEngineSpinningUp) {
-	printf("*************************************************** testFasterEngineSpinningUp\r\n");
-
 	WITH_ENGINE_TEST_HELPER(TEST_ENGINE);
 	// turn on FasterEngineSpinUp mode
 	engineConfiguration->isFasterEngineSpinUpEnabled = true;
+	engineConfiguration->cranking.baseFuel = 12;
 
 	// set ignition mode
 	engineConfiguration->ignitionMode = IM_INDIVIDUAL_COILS;
@@ -52,7 +51,7 @@ TEST(cranking, testFasterEngineSpinningUp) {
 	ASSERT_EQ(IM_WASTED_SPARK, getCurrentIgnitionMode(PASS_ENGINE_PARAMETER_SIGNATURE));
 	// check real events
 	eth.assertEvent5("inj start#1", 0, (void*)startSimultaniousInjection, 98125);
-	eth.assertEvent5("inj end#1", 1, (void*)endSimultaniousInjection, 100000);
+	eth.assertEvent5("inj end#1", 1, (void*)endSimultaniousInjection, 99999);
 
 	// skip the rest of the cycle
 	eth.fireFall(200);
@@ -74,7 +73,7 @@ TEST(cranking, testFasterEngineSpinningUp) {
 	ASSERT_EQ( 4,  engine->executor.size()) << "plain#2";
 	// check real events
 	eth.assertEvent5("inj start#2", 0, (void*)startSimultaniousInjection, 148125);
-	eth.assertEvent5("inj end#2", 1, (void*)endSimultaniousInjection, 150000);
+	eth.assertEvent5("inj end#2", 1, (void*)endSimultaniousInjection, 149999);
 
 	// skip, clear & advance 1 more revolution at higher RPM
 	eth.fireFall(60);
@@ -94,7 +93,7 @@ TEST(cranking, testFasterEngineSpinningUp) {
 	// check real events for sequential injection
 	// Note: See addFuelEvents() fix inside setRpmValue()!
 	eth.assertEvent5("inj start#3", 0, (void*)turnInjectionPinHigh, -31875);
-	eth.assertEvent5("inj end#3", 1, (void*)turnInjectionPinLow, -30000);
+	eth.assertEvent5("inj end#3", 1, (void*)turnInjectionPinLow, -30001);
 }
 
 static void doTestFasterEngineSpinningUp60_2(int startUpDelayMs, int rpm1, int expectedRpm) {

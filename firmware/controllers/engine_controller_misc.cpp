@@ -87,10 +87,9 @@ void setMockState(brain_pin_e pin, bool state DECLARE_ENGINE_PARAMETER_SUFFIX) {
 /**
  * 64-bit result would not overflow, but that's complex stuff for our 32-bit MCU
  */
-//todo: macro to save method invocation
 efitimeus_t getTimeNowUs(void) {
 	ScopePerf perf(PE::GetTimeNowUs);
-	return getTimeNowNt() / (CORE_CLOCK / 1000000);
+	return NT2US(getTimeNowNt());
 }
 
 volatile uint32_t lastLowerNt = 0;

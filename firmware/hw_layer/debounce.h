@@ -15,6 +15,7 @@
 
 class ButtonDebounce {
 public:
+	ButtonDebounce(const char *name);
     void init(efitimems_t threshold, brain_pin_e &pin, pin_input_mode_e &mode);
     void stopConfiguration();
     void startConfiguration();
@@ -22,7 +23,9 @@ public:
     bool readPinState();
     static void stopConfigurationList();
     static void startConfigurationList();
+    static void debug();
 private:
+    const char *name;
     efitick_t m_threshold;
     efitick_t timeLast;
     brain_pin_e *m_pin;
@@ -35,3 +38,5 @@ private:
     static ButtonDebounce* s_firstDebounce;
     bool needsInit = false;
 };
+
+void initButtonDebounce(Logging *sharedLogger);

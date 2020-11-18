@@ -1,5 +1,5 @@
 /*
- * aux_valves.cpp
+ * @file aux_valves.cpp
  *
  *
  * Here we have two auxilary digital on/off outputs which would open once per each 360 degrees of engine crank revolution.
@@ -22,9 +22,12 @@
 
 EXTERN_ENGINE;
 
-void plainPinTurnOn(AuxActor *current) {
-	NamedOutputPin *output = &enginePins.auxValve[current->valveIndex];
-	output->setHigh();
+static void plainPinTurnOff(NamedOutputPin *output) {
+	output->setLow();
+}
+
+
+static void scheduleOpen(AuxActor *current) {
 
 #if EFI_UNIT_TEST
 	Engine *engine = current->engine;
@@ -35,9 +38,21 @@ void plainPinTurnOn(AuxActor *current) {
 			TRIGGER_EVENT_UNDEFINED,
 			getTimeNowNt(),
 			current->extra + engine->engineState.auxValveStart,
-			{ plainPinTurnOn, current }
+			{ auxPlainPinTurnOn, current }
 			PASS_ENGINE_PARAMETER_SUFFIX
 			);
+}
+
+void auxPlainPinTurnOn(AuxActor *current) {
+	NamedOutputPin *output = &enginePins.auxValve[current->valveIndex];
+	output->setHigh();
+
+#if EFI_UNIT_TEST
+	Engine *engine = current->engine;
+	EXPAND_Engine;
+#endif /* EFI_UNIT_TEST */
+
+	scheduleOpen(current);
 
 	angle_t duration = engine->engineState.auxValveEnd - engine->engineState.auxValveStart;
 
@@ -51,10 +66,6 @@ void plainPinTurnOn(AuxActor *current) {
 			PASS_ENGINE_PARAMETER_SUFFIX
 			);
 	}
-
-void plainPinTurnOff(NamedOutputPin *output) {
-	output->setLow();
-}
 
 void initAuxValves(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	UNUSED(sharedLogger);
@@ -78,14 +89,7 @@ void initAuxValves(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX) {
 			actor->extra = phaseIndex * 360 + valveIndex * 180;
 
 			INJECT_ENGINE_REFERENCE(actor);
-
-			scheduleOrQueue(&actor->open,
-					TRIGGER_EVENT_UNDEFINED,
-					getTimeNowNt(),
-					actor->extra + engine->engineState.auxValveStart,
-					{ plainPinTurnOn, actor }
-					PASS_ENGINE_PARAMETER_SUFFIX
-					);
+			scheduleOpen(actor);
 		}
 	}
 }

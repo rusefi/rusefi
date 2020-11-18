@@ -43,7 +43,7 @@ static void setPrometheusDefaults(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	engineConfiguration->specs.displacement = 1.645;
 	engineConfiguration->injector.flow = 200;
 	
-	engineConfiguration->cranking.baseFuel = 5;		// ???
+	engineConfiguration->cranking.baseFuel = 25;		// ???
 	engineConfiguration->crankingChargeAngle = 70;
 	engineConfiguration->cranking.rpm = 600;
 
