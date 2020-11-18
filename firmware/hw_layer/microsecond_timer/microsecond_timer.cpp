@@ -36,18 +36,18 @@ EXTERN_ENGINE;
 uint32_t maxPrecisionCallbackDuration = 0;
 
 static efitick_t lastSetTimerTimeNt;
-static volatile bool isTimerPending = false;
+static bool isTimerPending = false;
 
-static volatile int timerCallbackCounter = 0;
-static volatile int timerRestartCounter = 0;
+static int timerCallbackCounter = 0;
+static int timerRestartCounter = 0;
 
 static const char * msg;
 
 static char buff[32];
 
 static int timerFreezeCounter = 0;
-static volatile int setHwTimerCounter = 0;
-static volatile bool hwStarted = false;
+static int setHwTimerCounter = 0;
+static bool hwStarted = false;
 
 /**
  * sets the alarm to the specified number of microseconds from now.
