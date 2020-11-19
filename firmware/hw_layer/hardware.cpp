@@ -534,11 +534,10 @@ void initHardware(Logging *l) {
 
 	// output pins potentially depend on 'initSmartGpio'
 	initOutputPins(PASS_ENGINE_PARAMETER_SIGNATURE);
-#if EFI_PROD_CODE && EFI_ENGINE_CONTROL
-	enginePins.startPins();
 
-#endif /* EFI_PROD_CODE && EFI_ENGINE_CONTROL */
-
+#if EFI_ENGINE_CONTROL
+	enginePins.startPins(PASS_ENGINE_PARAMETER_SIGNATURE);
+#endif /* EFI_ENGINE_CONTROL */
 
 #if EFI_MC33816
 	initMc33816(sharedLogger);
