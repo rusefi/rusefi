@@ -192,7 +192,8 @@ void WaveChart::addEvent3(const char *name, const char * msg) {
 		return;
 	}
 
-	bool alreadyLocked = lockOutputBuffer(); // we have multiple threads writing to the same output buffer
+	// we have multiple threads writing to the same output buffer
+	chibios_rt::CriticalSectionLocker csl;
 
 	if (counter == 0) {
 		startTimeNt = nowNt;
@@ -225,10 +226,6 @@ void WaveChart::addEvent3(const char *name, const char * msg) {
 		logging.appendFast(timeBuffer);
 		logging.appendChar(CHART_DELIMETER);
 		logging.terminate();
-	}
-
-	if (!alreadyLocked) {
-		unlockOutputBuffer();
 	}
 #endif /* EFI_TEXT_LOGGING */
 }

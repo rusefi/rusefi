@@ -121,6 +121,7 @@ include $(CHIBIOS)/os/hal/osal/rt/osal.mk
 include $(CHIBIOS)/os/rt/rt.mk
 include $(CHIBIOS)/os/common/ports/SIMIA32/compilers/GCC/port.mk
 # Other files (optional).
+include $(CHIBIOS)/os/various/cpp_wrappers/chcpp.mk
 
 ifeq ($(OS),Windows_NT)
   include ${CHIBIOS}/os/hal/ports/simulator/win32/platform.mk
@@ -191,6 +192,7 @@ INCDIR = . \
           $(KERNINC) \
           $(OSALINC) \
           $(HALINC) \
+          $(CHCPPINC) \
           $(PLATFORMINC) \
           $(BOARDINC) \
           $(UTIL_INC) \

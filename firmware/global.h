@@ -110,16 +110,3 @@ typedef unsigned int time_t;
 #define NT2US(nt) ((nt) / US_TO_NT_MULTIPLIER)
 
 #define UNIT_TEST_BUSY_WAIT_CALLBACK() {}
-
-#ifdef __cplusplus
-extern "C"
-{
-#endif
-
-bool lockAnyContext(void);
-void unlockAnyContext(void);
-
-#ifdef __cplusplus
-}
-#endif
-

@@ -347,11 +347,9 @@ static int mc33810_wake_driver(struct mc33810_priv *chip)
 
 	if (isIsrContext()) {
 		// this is for normal runtime
-		int wasLocked = lockAnyContext();
+		syssts_s sts = chSysGetStatusAndLockX();
 		chSemSignalI(&mc33810_wake);
-		if (!wasLocked) {
-			unlockAnyContext();
-		}
+		chSysRestoreStatusX(sts);
 	} else {
 		// this is for start-up to not hang up
 		chSemSignal(&mc33810_wake);
