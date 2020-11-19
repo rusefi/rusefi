@@ -584,6 +584,7 @@ void startIdleBench(void) {
 void startIdleThread(Logging*sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	logger = sharedLogger;
 	INJECT_ENGINE_REFERENCE(&idleControllerInstance);
+	INJECT_ENGINE_REFERENCE(&industrialWithOverrideIdlePid);
 
 	getIdlePid(PASS_ENGINE_PARAMETER_SIGNATURE)->initPidClass(&engineConfiguration->idleRpmPid);
 
