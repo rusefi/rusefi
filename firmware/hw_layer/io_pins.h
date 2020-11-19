@@ -10,7 +10,6 @@
 
 #include "global.h"
 
-#define INITIAL_PIN_STATE -1
 #define GPIO_NULL NULL
 
 // mode >= 0  is always true since that's an unsigned

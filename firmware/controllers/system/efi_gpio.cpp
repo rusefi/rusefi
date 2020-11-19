@@ -352,7 +352,7 @@ void InjectorOutputPin::reset() {
 	}
 
 	// todo: this could be refactored by calling some super-reset method
-	currentLogicValue = INITIAL_PIN_STATE;
+	currentLogicValue = 0;
 }
 
 IgnitionOutputPin::IgnitionOutputPin() {
@@ -524,7 +524,7 @@ void OutputPin::initPin(const char *msg, brain_pin_e brainPin, const pin_output_
 		}
 	#endif
 
-	this->currentLogicValue = INITIAL_PIN_STATE;
+	this->currentLogicValue = 0;
 
 	// The order of the next two calls may look strange, which is a good observation.
 	// We call them in this order so that the pin is set to a known state BEFORE
