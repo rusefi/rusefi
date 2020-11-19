@@ -110,6 +110,21 @@ public class IniFileReaderTest {
     }
 
     @Test
+    public void testConditional() {
+        String string = "page = 1\n" +
+                "[Constants]\n" +
+                "#if LAMBDA\n" +
+                "\tlambdaTable\t\t\t\t\t = array, U08, 18592, [16x16],\"deg\", 0.006802721088435374, 0, 0.6, 1.5, 2\n" +
+                "#else\n" +
+                "\tlambdaTable\t\t\t\t\t = array, U08, 18592, [16x16],\"deg\", 0.1, 0, 0, 25.0, 1\n" +
+                "#endif\n";
+        RawIniFile lines = IniFileReader.read(new ByteArrayInputStream(string.getBytes()));
+        IniFileModel model = new IniFileModel().readIniFile(lines);
+
+        assertEquals(1, model.allIniFields.size());
+    }
+
+    @Test
     public void testProtocolMeta() {
         String string =
                 "[Constants]\n" +
