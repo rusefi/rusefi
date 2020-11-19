@@ -74,7 +74,7 @@ public:
 	brain_pin_e brainPin;
 #endif /* EFI_GPIO_HARDWARE */
 
-	int8_t currentLogicValue = INITIAL_PIN_STATE;
+	int8_t currentLogicValue = 0;
 	/**
 	 * we track current pin status so that we do not touch the actual hardware if we want to write new pin bit
 	 * which is same as current pin value. This maybe helps in case of status leds, but maybe it's a total over-engineering

@@ -149,6 +149,7 @@ static void onStartStopButtonToggle(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	if (engine->rpmCalculator.isStopped()) {
 		bool wasStarterEngaged = enginePins.starterControl.getAndSet(1);
 		if (!wasStarterEngaged) {
+		    engine->startStopStateLastPushTime = getTimeNowNt();
 			scheduleMsg(&sharedLogger, "Let's crank this engine for up to %dseconds!", CONFIG(startCrankingDuration));
 		}
 	} else if (engine->rpmCalculator.isRunning()) {
@@ -167,12 +168,26 @@ void slowStartStopButtonCallback(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	}
 	engine->startStopState = startStopState;
 
+	if (engine->startStopStateLastPushTime == 0) {
+   		// nothing is going on with startStop button
+   		return;
+   	}
+
 	// todo: should this be simply FSIO?
 	if (engine->rpmCalculator.isRunning()) {
 		// turn starter off once engine is running
 		bool wasStarterEngaged = enginePins.starterControl.getAndSet(0);
 		if (wasStarterEngaged) {
 			scheduleMsg(&sharedLogger, "Engine runs we can disengage the starter");
+			engine->startStopStateLastPushTime = 0;
+		}
+	}
+
+	if (getTimeNowNt() - engine->startStopStateLastPushTime > NT_PER_SECOND * CONFIG(startCrankingDuration)) {
+		bool wasStarterEngaged = enginePins.starterControl.getAndSet(0);
+		if (wasStarterEngaged) {
+			scheduleMsg(&sharedLogger, "Cranking timeout %d seconds", CONFIG(startCrankingDuration));
+			engine->startStopStateLastPushTime = 0;
 		}
 	}
 }

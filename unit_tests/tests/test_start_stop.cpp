@@ -10,6 +10,8 @@
 
 TEST(start, startStop) {
 	WITH_ENGINE_TEST_HELPER(BMW_M73_PROTEUS);
+	eth.smartMoveTimeForwardSeconds(1); // '0' time has special meaning for implementation so let's move forward
+
 	// this is a pull-up, so 'true' on start-up
 	setMockState(engineConfiguration->startStopButtonPin, true);
 
@@ -33,8 +35,6 @@ TEST(start, startStop) {
 
 	eth.smartMoveTimeForwardSeconds(5);
 	slowStartStopButtonCallback(PASS_ENGINE_PARAMETER_SIGNATURE);
-	// todo: FIX THIS, starter wire should go off on timeout!
-	ASSERT_TRUE(efiReadPin(engineConfiguration->starterControlPin));
-
-
+	// starter is now OFF due to timeout
+	ASSERT_FALSE(efiReadPin(engineConfiguration->starterControlPin));
 }
