@@ -52,7 +52,7 @@ static bool getActivateSwitchCondition(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	}
 }
 
-class LaunchControl: public PeriodicTimerController {
+class LaunchControl : public PeriodicTimerController {
 	efitick_t launchTimer;
 
 	DECLARE_ENGINE_PTR;
@@ -61,28 +61,46 @@ class LaunchControl: public PeriodicTimerController {
 		return 50;
 	}
 
+	bool isInsideSpeedCondition() const {
+		int speed = getVehicleSpeed();
+		return (CONFIG(launchSpeedTreshold) > speed) || !engineConfiguration->launchDisableBySpeed;
+	}
+
+	bool isInsideTpsCondition() const {
+		auto tps = Sensor::get(SensorType::DriverThrottleIntent);
+
+		// Disallow launch without valid TPS
+		if (!tps.Valid) {
+			return false;
+		}
+
+		return CONFIG(launchTpsTreshold) < tps.Value;
+	}
+
+	bool isLaunchConditionMet(int rpm) const {
+		bool activateSwitchCondition = getActivateSwitchCondition(PASS_ENGINE_PARAMETER_SIGNATURE);
+
+		// TODO shadowm60: move this condition to its own function too
+		int launchRpm = engineConfiguration->launchRpm;
+		bool rpmCondition = (launchRpm < rpm);
+
+		bool speedCondition = isInsideSpeedCondition();
+		bool tpsCondition = isInsideTpsCondition();
+
+		return speedCondition && activateSwitchCondition && rpmCondition && tpsCondition;
+	}
+
 	void PeriodicTask() override {
 		if (!CONFIG(launchControlEnabled)) {
 			return;
 		}
 
 		int rpm = GET_RPM();
-		int speed = getVehicleSpeed();
-		auto tps = Sensor::get(SensorType::DriverThrottleIntent);
-		int tpstreshold = engineConfiguration->launchTpsTreshold;
+		bool combinedConditions = isLaunchConditionMet(rpm);
+
 		float timeDelay = engineConfiguration->launchActivateDelay;
 		int cutRpmRange = engineConfiguration->hardCutRpmRange;
 		int launchAdvanceRpmRange = engineConfiguration->launchTimingRpmRange;
-		int launchRpm = engineConfiguration->launchRpm;
-
-		bool activateSwitchCondition = getActivateSwitchCondition(PASS_ENGINE_PARAMETER_SIGNATURE);
-
-		bool rpmCondition = (launchRpm < rpm);
-		bool tpsCondition = tps.Valid && (tpstreshold < tps.Value);
-
-		bool speedCondition = (CONFIG(launchSpeedTreshold) > speed) || !engineConfiguration->launchDisableBySpeed;
-
-		bool combinedConditions = speedCondition && activateSwitchCondition && rpmCondition && tpsCondition;
 
 		if (!combinedConditions) {
 			// conditions not met, reset timer
