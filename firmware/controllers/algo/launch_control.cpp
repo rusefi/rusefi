@@ -52,92 +52,92 @@ static bool getActivateSwitchCondition(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	}
 }
 
-class LaunchControl : public PeriodicTimerController {
-	efitick_t launchTimer;
-
-	DECLARE_ENGINE_PTR;
-
+class LaunchControlImpl : public LaunchControlBase, public PeriodicTimerController {
 	int getPeriodMs() override {
 		return 50;
 	}
 
-	bool isInsideSpeedCondition() const {
-		int speed = getVehicleSpeed();
-		return (CONFIG(launchSpeedTreshold) > speed) || !engineConfiguration->launchDisableBySpeed;
-	}
-
-	bool isInsideTpsCondition() const {
-		auto tps = Sensor::get(SensorType::DriverThrottleIntent);
-
-		// Disallow launch without valid TPS
-		if (!tps.Valid) {
-			return false;
-		}
-
-		return CONFIG(launchTpsTreshold) < tps.Value;
-	}
-
-	bool isLaunchConditionMet(int rpm) const {
-		bool activateSwitchCondition = getActivateSwitchCondition(PASS_ENGINE_PARAMETER_SIGNATURE);
-
-		// TODO shadowm60: move this condition to its own function too
-		int launchRpm = engineConfiguration->launchRpm;
-		bool rpmCondition = (launchRpm < rpm);
-
-		bool speedCondition = isInsideSpeedCondition();
-		bool tpsCondition = isInsideTpsCondition();
-
-		return speedCondition && activateSwitchCondition && rpmCondition && tpsCondition;
-	}
-
-	void PeriodicTask() override {
-		if (!CONFIG(launchControlEnabled)) {
-			return;
-		}
-
-		int rpm = GET_RPM();
-		bool combinedConditions = isLaunchConditionMet(rpm);
-
-		float timeDelay = engineConfiguration->launchActivateDelay;
-		int cutRpmRange = engineConfiguration->hardCutRpmRange;
-		int launchAdvanceRpmRange = engineConfiguration->launchTimingRpmRange;
-
-		if (!combinedConditions) {
-			// conditions not met, reset timer
-			launchTimer = getTimeNowNt();
-			engine->isLaunchCondition = false;
-			engine->setLaunchBoostDuty = false;
-			engine->applyLaunchControlRetard = false;
-			engine->applyLaunchExtraFuel = false;
-		} else {
-			// If conditions are met...
-			if ((getTimeNowNt() - launchTimer > MS2NT(timeDelay * 1000)) && combinedConditions) {
-				engine->isLaunchCondition = true;           // ...enable launch!
-				engine->applyLaunchExtraFuel = true;
-			}
-			if (engineConfiguration->enableLaunchBoost) {
-				engine->setLaunchBoostDuty = true;           // ...enable boost!
-			}
-			if (engineConfiguration->enableLaunchRetard) {
-				engine->applyLaunchControlRetard = true;    // ...enable retard!
-			}
-		}
-		if (engineConfiguration->debugMode == DBG_LAUNCH) {
-#if EFI_TUNER_STUDIO
-			tsOutputChannels.debugIntField1 = rpmCondition;
-			tsOutputChannels.debugIntField2 = tpsCondition;
-			tsOutputChannels.debugIntField3 = speedCondition;
-			tsOutputChannels.debugIntField4 = activateSwitchCondition;
-			tsOutputChannels.debugIntField5 = engine->clutchDownState;
-			tsOutputChannels.debugFloatField1 = engine->launchActivatePinState;
-			tsOutputChannels.debugFloatField2 = engine->isLaunchCondition;
-			tsOutputChannels.debugFloatField3 = combinedConditions;
-#endif /* EFI_TUNER_STUDIO */
-		}
+	void PeriodicTask() {
+		update();
 	}
 };
 
-static LaunchControl Launch;
+bool LaunchControlBase::isInsideSpeedCondition() const {
+	int speed = getVehicleSpeed();
+	return (CONFIG(launchSpeedTreshold) > speed) || !engineConfiguration->launchDisableBySpeed;
+}
+
+bool LaunchControlBase::isInsideTpsCondition() const {
+	auto tps = Sensor::get(SensorType::DriverThrottleIntent);
+
+	// Disallow launch without valid TPS
+	if (!tps.Valid) {
+		return false;
+	}
+
+	return CONFIG(launchTpsTreshold) < tps.Value;
+}
+
+bool LaunchControlBase::isLaunchConditionMet(int rpm) const {
+	bool activateSwitchCondition = getActivateSwitchCondition(PASS_ENGINE_PARAMETER_SIGNATURE);
+
+	// TODO shadowm60: move this condition to its own function too
+	int launchRpm = engineConfiguration->launchRpm;
+	bool rpmCondition = (launchRpm < rpm);
+
+	bool speedCondition = isInsideSpeedCondition();
+	bool tpsCondition = isInsideTpsCondition();
+
+	return speedCondition && activateSwitchCondition && rpmCondition && tpsCondition;
+}
+
+void LaunchControlBase::update() {
+	if (!CONFIG(launchControlEnabled)) {
+		return;
+	}
+
+	int rpm = GET_RPM();
+	bool combinedConditions = isLaunchConditionMet(rpm);
+
+	float timeDelay = engineConfiguration->launchActivateDelay;
+	int cutRpmRange = engineConfiguration->hardCutRpmRange;
+	int launchAdvanceRpmRange = engineConfiguration->launchTimingRpmRange;
+
+	if (!combinedConditions) {
+		// conditions not met, reset timer
+		launchTimer = getTimeNowNt();
+		engine->isLaunchCondition = false;
+		engine->setLaunchBoostDuty = false;
+		engine->applyLaunchControlRetard = false;
+		engine->applyLaunchExtraFuel = false;
+	} else {
+		// If conditions are met...
+		if ((getTimeNowNt() - launchTimer > MS2NT(timeDelay * 1000)) && combinedConditions) {
+			engine->isLaunchCondition = true;           // ...enable launch!
+			engine->applyLaunchExtraFuel = true;
+		}
+		if (engineConfiguration->enableLaunchBoost) {
+			engine->setLaunchBoostDuty = true;           // ...enable boost!
+		}
+		if (engineConfiguration->enableLaunchRetard) {
+			engine->applyLaunchControlRetard = true;    // ...enable retard!
+		}
+	}
+	if (engineConfiguration->debugMode == DBG_LAUNCH) {
+#if EFI_TUNER_STUDIO
+		tsOutputChannels.debugIntField1 = rpmCondition;
+		tsOutputChannels.debugIntField2 = tpsCondition;
+		tsOutputChannels.debugIntField3 = speedCondition;
+		tsOutputChannels.debugIntField4 = activateSwitchCondition;
+		tsOutputChannels.debugIntField5 = engine->clutchDownState;
+		tsOutputChannels.debugFloatField1 = engine->launchActivatePinState;
+		tsOutputChannels.debugFloatField2 = engine->isLaunchCondition;
+		tsOutputChannels.debugFloatField3 = combinedConditions;
+#endif /* EFI_TUNER_STUDIO */
+	}
+}
+
+static LaunchControlImpl Launch;
 
 void setDefaultLaunchParameters(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	engineConfiguration->launchRpm = 4000;    // Rpm to trigger Launch condition
