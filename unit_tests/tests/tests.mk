@@ -29,6 +29,7 @@ TESTS_SRC_CPP = \
 	tests/test_idle_controller.cpp \
 	tests/test_issue_898.cpp \
 	tests/test_etb.cpp \
+	tests/test_launch.cpp \
 	tests/test_fuel_map.cpp \
 	tests/test_fuel_wall_wetting.cpp \
 	tests/test_one_cylinder_logic.cpp \
