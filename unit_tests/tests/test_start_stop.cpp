@@ -5,6 +5,11 @@
  * @author Andrey Belomutskiy, (c) 2012-2020
 */
 
-#include "test_signal_executor.h"
+#include "engine_test_helper.h"
+#include "engine_controller.h"
 
-
+TEST(start, startStop) {
+	WITH_ENGINE_TEST_HELPER(BMW_M73_PROTEUS);
+	// this is a pull-up, so 'true' on start-up
+	setMockState(engineConfiguration->starterControlPin, true PASS_ENGINE_PARAMETER_SUFFIX);
+}
