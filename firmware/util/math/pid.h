@@ -12,6 +12,8 @@
 
 #if EFI_PROD_CODE || EFI_SIMULATOR
 #include "tunerstudio_outputs.h"
+#else
+#include "engine.h"
 #endif
 
 // See PidCic below
@@ -36,6 +38,8 @@ class Logging;
 class Pid : public pid_state_s {
 
 public:
+	DECLARE_ENGINE_PTR;
+
 	Pid();
 	explicit Pid(pid_s *parameters);
 	void initPidClass(pid_s *parameters);
