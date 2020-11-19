@@ -52,7 +52,6 @@ EngineTestHelper::EngineTestHelper(engine_type_e engineType, configuration_callb
 
 	unitTestWarningCodeState.clear();
 
-
 	memset(&activeConfiguration, 0, sizeof(activeConfiguration));
 
 	enginePins.reset();
@@ -78,6 +77,8 @@ EngineTestHelper::EngineTestHelper(engine_type_e engineType, configuration_callb
 	initDataStructures(PASS_ENGINE_PARAMETER_SIGNATURE);
 
 	resetConfigurationExt(NULL, configurationCallback, engineType PASS_ENGINE_PARAMETER_SUFFIX);
+
+	enginePins.startPins(PASS_ENGINE_PARAMETER_SIGNATURE);
 
 	commonInitEngineController(NULL PASS_ENGINE_PARAMETER_SUFFIX);
 
