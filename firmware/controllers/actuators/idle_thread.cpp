@@ -50,10 +50,6 @@ static Logging *logger;
 
 EXTERN_ENGINE;
 
-#if EFI_UNIT_TEST
-	Engine *unitTestEngine;
-#endif
-
 // todo: move all static vars to engine->engineState.idle?
 
 static bool shouldResetPid = false;
@@ -74,7 +70,6 @@ class PidWithOverrides : public PidIndustrial {
 public:
 	float getOffset() const override {
 #if EFI_UNIT_TEST
-	Engine *engine = unitTestEngine;
 	EXPAND_Engine;
 #endif
 		float result = parameters->offset;
@@ -88,7 +83,6 @@ public:
 
 	float getMinValue() const override {
 #if EFI_UNIT_TEST
-	Engine *engine = unitTestEngine;
 	EXPAND_Engine;
 #endif
 	float result = parameters->minValue;
