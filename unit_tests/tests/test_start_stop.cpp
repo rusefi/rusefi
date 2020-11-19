@@ -13,17 +13,17 @@ TEST(start, startStop) {
 	// this is a pull-up, so 'true' on start-up
 	setMockState(engineConfiguration->startStopButtonPin, true);
 
-	ASSERT_EQ(efiReadPin(engineConfiguration->starterControlPin), false);
+	ASSERT_FALSE(efiReadPin(engineConfiguration->starterControlPin));
 
 	slowStartStopButtonCallback(PASS_ENGINE_PARAMETER_SIGNATURE);
-	ASSERT_EQ(efiReadPin(engineConfiguration->starterControlPin), false);
+	ASSERT_FALSE(efiReadPin(engineConfiguration->starterControlPin));
 
 
 	eth.smartMoveTimeForwardSeconds(10);
-	// inverted since pull-up
+	// hit 'start' button! inverted since pull-up
 	setMockState(engineConfiguration->startStopButtonPin, false);
 	slowStartStopButtonCallback(PASS_ENGINE_PARAMETER_SIGNATURE);
-	ASSERT_EQ(efiReadPin(engineConfiguration->starterControlPin), true);
+	ASSERT_TRUE(efiReadPin(engineConfiguration->starterControlPin));
 
 	eth.smartMoveTimeForwardSeconds(5);
 	slowStartStopButtonCallback(PASS_ENGINE_PARAMETER_SIGNATURE);
@@ -34,7 +34,7 @@ TEST(start, startStop) {
 	eth.smartMoveTimeForwardSeconds(5);
 	slowStartStopButtonCallback(PASS_ENGINE_PARAMETER_SIGNATURE);
 	// todo: FIX THIS, starter wire should go off on timeout!
-	ASSERT_EQ(efiReadPin(engineConfiguration->starterControlPin), true);
+	ASSERT_TRUE(efiReadPin(engineConfiguration->starterControlPin));
 
 
 }
