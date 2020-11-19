@@ -11,5 +11,9 @@
 TEST(start, startStop) {
 	WITH_ENGINE_TEST_HELPER(BMW_M73_PROTEUS);
 	// this is a pull-up, so 'true' on start-up
-	setMockState(engineConfiguration->starterControlPin, true PASS_ENGINE_PARAMETER_SUFFIX);
+	setMockState(engineConfiguration->startStopButtonPin, true PASS_ENGINE_PARAMETER_SUFFIX);
+
+	ASSERT_EQ(efiReadPin(engineConfiguration->starterControlPin), 0);
+
+	slowStartStopButtonCallback(PASS_ENGINE_PARAMETER_SIGNATURE);
 }
