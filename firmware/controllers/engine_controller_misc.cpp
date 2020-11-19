@@ -155,6 +155,8 @@ static void onStartStopButtonToggle(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	}
 }
 
+#endif /* EFI_PROD_CODE */
+
 void slowStartStopButtonCallback(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 #if EFI_PROD_CODE
 	bool startStopState = startStopButtonDebounce.readPinEvent();
@@ -175,6 +177,3 @@ void slowStartStopButtonCallback(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 		}
 	}
 }
-
-
-#endif /* EFI_PROD_CODE */
