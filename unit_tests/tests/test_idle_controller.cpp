@@ -19,12 +19,8 @@
 extern IdleController idleControllerInstance;
 extern int timeNowUs;
 
-extern Engine *unitTestEngine;
-
 TEST(idle, fsioPidParameters) {
 	WITH_ENGINE_TEST_HELPER(MIATA_NA6_MAP);
-
-	unitTestEngine = engine;
 
 	engineConfiguration->idleRpmPid.offset = 40;
 	engineConfiguration->acIdleExtraOffset = 10;
