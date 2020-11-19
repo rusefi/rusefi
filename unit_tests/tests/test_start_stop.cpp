@@ -25,4 +25,16 @@ TEST(start, startStop) {
 	slowStartStopButtonCallback(PASS_ENGINE_PARAMETER_SIGNATURE);
 	ASSERT_EQ(efiReadPin(engineConfiguration->starterControlPin), true);
 
+	eth.smartMoveTimeForwardSeconds(5);
+	slowStartStopButtonCallback(PASS_ENGINE_PARAMETER_SIGNATURE);
+
+	eth.smartMoveTimeForwardSeconds(5);
+	slowStartStopButtonCallback(PASS_ENGINE_PARAMETER_SIGNATURE);
+
+	eth.smartMoveTimeForwardSeconds(5);
+	slowStartStopButtonCallback(PASS_ENGINE_PARAMETER_SIGNATURE);
+	// todo: FIX THIS, starter wire should go off on timeout!
+	ASSERT_EQ(efiReadPin(engineConfiguration->starterControlPin), true);
+
+
 }
