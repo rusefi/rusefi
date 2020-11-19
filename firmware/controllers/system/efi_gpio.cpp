@@ -11,6 +11,7 @@
 #include "efi_gpio.h"
 #include "drivers/gpio/gpio_ext.h"
 #include "perf_trace.h"
+#include "engine_controller.h"
 
 #if EFI_GPIO_HARDWARE
 #include "pin_repository.h"
@@ -75,19 +76,17 @@ bool RegisteredOutputPin::isPinConfigurationChanged() {
     pin_output_mode_e newMode = *(pin_output_mode_e *) ((void *) (&((char*) engineConfiguration)[pinModeOffset]));
     return curPin != newPin || curMode != newMode;
 #else
-    return false;
+    return true;
 #endif // EFI_PROD_CODE
 }
 
-void RegisteredOutputPin::init() {
-#if EFI_PROD_CODE
+void RegisteredOutputPin::init(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	brain_pin_e        newPin = *(brain_pin_e       *) ((void *) (&((char*) engineConfiguration)[pinOffset]));
     pin_output_mode_e *newMode = (pin_output_mode_e *) ((void *) (&((char*) engineConfiguration)[pinModeOffset]));
 
     if (isPinConfigurationChanged()) {
 		this->initPin(registrationName, newPin, newMode);
     }
-#endif // EFI_PROD_CODE
 }
 
 void RegisteredOutputPin::unregister() {
@@ -176,6 +175,7 @@ EnginePins::EnginePins() :
     if ((outputPin)->currentLogicValue != (logicValue)) {                          \
 	  (outputPin)->currentLogicValue = (logicValue);                               \
     }                                                                              \
+	setMockState((outputPin)->brainPin, logicValue);                               \
   }
 #endif /* EFI_PROD_CODE */
 
@@ -228,7 +228,7 @@ void EnginePins::startPins(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 
 	RegisteredOutputPin * pin = registeredOutputHead;
 	while (pin != nullptr) {
-		pin->init();
+		pin->init(PASS_ENGINE_PARAMETER_SIGNATURE);
 		pin = pin->next;
 	}
 }
@@ -471,6 +471,10 @@ void OutputPin::initPin(const char *msg, brain_pin_e brainPin) {
 }
 
 void OutputPin::initPin(const char *msg, brain_pin_e brainPin, const pin_output_mode_e *outputMode) {
+#if EFI_UNIT_TEST
+	this->brainPin = brainPin;
+#endif
+
 #if EFI_GPIO_HARDWARE && EFI_PROD_CODE
 	if (brainPin == GPIO_UNASSIGNED)
 		return;
