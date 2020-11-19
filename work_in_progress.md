@@ -1,3 +1,8 @@
+Nov, 18 2020 status
+* GDI test mule was damaged during GDI tests
+* Matt is working on fueling, wideband and knock detection logic
+* TCU first hardware tests are getting closer!
+
 Sep, 7 2020 status
 * Stefan is happy enough with idle control and now manufacturing a batch of Miata NA6 & developing a Miata NB2 PnP board 
 * AndreiKA and AndreyB are merging Hellen code into rusEFI master
