@@ -103,12 +103,10 @@ bool ButtonDebounce::readPinState() {
 #else
     storedValue = false;
 #endif
-#if EFI_PROD_CODE
     // Invert
-    if (getInputMode(active_mode) == PAL_MODE_INPUT_PULLUP) {
+    if (active_mode == PI_PULLUP) {
         storedValue = !storedValue;
     }
-#endif
     if (storedValue) {
         timeLast = timeNow;
     }
