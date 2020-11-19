@@ -204,6 +204,10 @@ void EngineTestHelper::moveTimeForwardUs(int deltaTimeUs) {
 	timeNowUs += deltaTimeUs;
 }
 
+void EngineTestHelper::smartMoveTimeForwardSeconds(int deltaTimeSeconds) {
+	smartMoveTimeForwardUs(MS2US(1000 * deltaTimeSeconds));
+}
+
 /**
  * this method executed all pending events wile
  */
