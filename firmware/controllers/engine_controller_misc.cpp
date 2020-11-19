@@ -150,7 +150,9 @@ static void onStartStopButtonToggle(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 		bool wasStarterEngaged = enginePins.starterControl.getAndSet(1);
 		if (!wasStarterEngaged) {
 		    engine->startStopStateLastPushTime = getTimeNowNt();
-			scheduleMsg(&sharedLogger, "Let's crank this engine for up to %dseconds!", CONFIG(startCrankingDuration));
+		    scheduleMsg(&sharedLogger, "Let's crank this engine for up to %d seconds via %s!",
+		    		CONFIG(startCrankingDuration),
+					hwPortname(CONFIG(starterControlPin)));
 		}
 	} else if (engine->rpmCalculator.isRunning()) {
 		scheduleMsg(&sharedLogger, "Let's stop this engine!");
