@@ -88,6 +88,15 @@ bool LaunchControlBase::isLaunchConditionMet(int rpm) const {
 	bool speedCondition = isInsideSpeedCondition();
 	bool tpsCondition = isInsideTpsCondition();
 
+#if EFI_TUNER_STUDIO
+	if (engineConfiguration->debugMode == DBG_LAUNCH) {
+		tsOutputChannels.debugIntField1 = rpmCondition;
+		tsOutputChannels.debugIntField2 = tpsCondition;
+		tsOutputChannels.debugIntField3 = speedCondition;
+		tsOutputChannels.debugIntField4 = activateSwitchCondition;
+	}
+#endif /* EFI_TUNER_STUDIO */
+
 	return speedCondition && activateSwitchCondition && rpmCondition && tpsCondition;
 }
 
@@ -123,18 +132,15 @@ void LaunchControlBase::update() {
 			engine->applyLaunchControlRetard = true;    // ...enable retard!
 		}
 	}
-	if (engineConfiguration->debugMode == DBG_LAUNCH) {
+
 #if EFI_TUNER_STUDIO
-		tsOutputChannels.debugIntField1 = rpmCondition;
-		tsOutputChannels.debugIntField2 = tpsCondition;
-		tsOutputChannels.debugIntField3 = speedCondition;
-		tsOutputChannels.debugIntField4 = activateSwitchCondition;
+	if (engineConfiguration->debugMode == DBG_LAUNCH) {
 		tsOutputChannels.debugIntField5 = engine->clutchDownState;
 		tsOutputChannels.debugFloatField1 = engine->launchActivatePinState;
 		tsOutputChannels.debugFloatField2 = engine->isLaunchCondition;
 		tsOutputChannels.debugFloatField3 = combinedConditions;
-#endif /* EFI_TUNER_STUDIO */
 	}
+#endif /* EFI_TUNER_STUDIO */
 }
 
 static LaunchControlImpl Launch;
