@@ -10,6 +10,7 @@
  */
 
 #include "global.h"
+#include "os_access.h"
 #include "efilib.h"
 
 #if EFI_UNIT_TEST || EFI_SIMULATOR
@@ -64,7 +65,7 @@ static LoggingCentral loggingCentral;
  * This method appends the content of specified thread-local logger into the global buffer
  * of logging content.
  */
-void scheduleLogging(Logging *logging) {
+static void scheduleLoggingInternal(Logging *logging) {
 #if EFI_TEXT_LOGGING
 #ifdef EFI_PRINT_MESSAGES_TO_TERMINAL
 	print(logging->buffer);
@@ -73,26 +74,23 @@ void scheduleLogging(Logging *logging) {
 	// this could be done without locking
 	int newLength = efiStrlen(logging->buffer);
 
-	bool alreadyLocked = lockOutputBuffer();
+	chibios_rt::CriticalSectionLocker csl;
 	if (loggingCentral.accumulatedSize + newLength >= MAX_DL_CAPACITY) {
 		/**
 		 * if no one is consuming the data we have to drop it
 		 * this happens in case of serial-over-USB, todo: find a better solution?
 		 */
-		if (!alreadyLocked) {
-			unlockOutputBuffer();
-		}
-		logging->reset();
 		return;
 	}
 	// memcpy is faster then strcpy because it is not looking for line terminator
 	memcpy(accumulationBuffer + loggingCentral.accumulatedSize, logging->buffer, newLength + 1);
 	loggingCentral.accumulatedSize += newLength;
-	if (!alreadyLocked) {
-		unlockOutputBuffer();
-	}
-	logging->reset();
 #endif /* EFI_TEXT_LOGGING */
+}
+
+void scheduleLogging(Logging* logging) {
+	scheduleLoggingInternal(logging);
+	logging->reset();
 }
 
 /**
@@ -106,7 +104,7 @@ char * swapOutputBuffers(int *actualOutputBufferSize) {
 	int expectedOutputSize;
 #endif /* EFI_ENABLE_ASSERTS */
 	{ // start of critical section
-		bool alreadyLocked = lockOutputBuffer();
+		chibios_rt::CriticalSectionLocker csl;
 		/**
 		 * we cannot output under syslock, we simply rotate which buffer is which
 		 */
@@ -120,10 +118,6 @@ char * swapOutputBuffers(int *actualOutputBufferSize) {
 		accumulationBuffer = temp;
 		loggingCentral.accumulatedSize = 0;
 		accumulationBuffer[0] = 0;
-
-		if (!alreadyLocked) {
-			unlockOutputBuffer();
-		}
 	} // end of critical section
 
 	*actualOutputBufferSize = efiStrlen(outputBuffer);
@@ -166,7 +160,8 @@ void scheduleMsg(Logging *logging, const char *format, ...) {
 		warning(CUSTOM_ERR_LOGGING_NULL, "logging NULL");
 		return;
 	}
-	int wasLocked = lockAnyContext();
+
+	chibios_rt::CriticalSectionLocker csl;
 	logging->reset(); // todo: is 'reset' really needed here?
 	appendMsgPrefix(logging);
 
@@ -177,9 +172,6 @@ void scheduleMsg(Logging *logging, const char *format, ...) {
 
 	appendMsgPostfix(logging);
 	scheduleLogging(logging);
-	if (!wasLocked) {
-		unlockAnyContext();
-	}
 #endif /* EFI_TEXT_LOGGING */
 #endif /* EFI_UNIT_TEST */
 }

@@ -20,6 +20,12 @@ TEST(start, startStop) {
 	slowStartStopButtonCallback(PASS_ENGINE_PARAMETER_SIGNATURE);
 	ASSERT_FALSE(efiReadPin(engineConfiguration->starterControlPin));
 
+	// startup 'timeout' duration of time is a special case so let's sleep a bit
+	eth.smartMoveTimeForwardSeconds(10);
+	slowStartStopButtonCallback(PASS_ENGINE_PARAMETER_SIGNATURE);
+	ASSERT_FALSE(efiReadPin(engineConfiguration->starterControlPin));
+
+
 
 	eth.smartMoveTimeForwardSeconds(10);
 	// hit 'start' button! inverted since pull-up

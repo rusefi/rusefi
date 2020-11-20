@@ -19,6 +19,7 @@
 #include "speed_density.h"
 #include "advance_map.h"
 #include "os_util.h"
+#include "os_access.h"
 #include "settings.h"
 #include "aux_valves.h"
 #include "map_averaging.h"
@@ -107,7 +108,7 @@ void Engine::initializeTriggerWaveform(Logging *logger DECLARE_ENGINE_PARAMETER_
 
 #if EFI_ENGINE_CONTROL && EFI_SHAFT_POSITION_INPUT
 	// we have a confusing threading model so some synchronization would not hurt
-	bool alreadyLocked = lockAnyContext();
+	chibios_rt::CriticalSectionLocker csl;
 
 	TRIGGER_WAVEFORM(initializeTriggerWaveform(logger,
 			engineConfiguration->ambiguousOperationMode,
@@ -136,10 +137,6 @@ void Engine::initializeTriggerWaveform(Logging *logger DECLARE_ENGINE_PARAMETER_
 		ENGINE(triggerCentral).vvtShape.initializeSyncPoint(initState,
 				engine->vvtTriggerConfiguration,
 				config);
-	}
-
-	if (!alreadyLocked) {
-		unlockAnyContext();
 	}
 
 	if (!TRIGGER_WAVEFORM(shapeDefinitionError)) {

@@ -67,15 +67,6 @@ static size_t _writet(void *ip, const uint8_t *bp, size_t n, sysinterval_t timeo
 static msg_t _put(void *ip, uint8_t b) {
 	(void)ip;
 	UsbDeviceCdcCom_SendByte(b);
-/*
-	// uartSendTimeout() needs interrupts to wait for the end of transfer, so we have to unlock them temporary
-	bool wasLocked = isLocked();
-	if (wasLocked)
-		unlockAnyContext();
-	_putt(ip, b, CONSOLE_WRITE_TIMEOUT);
-	if (wasLocked)
-		lockAnyContext();
-*/
 	return MSG_OK;
 }
 static size_t _write(void *ip, const uint8_t *bp, size_t n) {
