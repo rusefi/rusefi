@@ -33,24 +33,11 @@ extern TunerStudioOutputChannels tsOutputChannels;
 
 EXTERN_ENGINE;
 
-static bool getActivateSwitchCondition(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
-	switch (engineConfiguration->launchActivationMode) {
-	case SWITCH_INPUT_LAUNCH:
-		if (CONFIG(launchActivatePin) != GPIO_UNASSIGNED) {
-			engine->launchActivatePinState = efiReadPin(CONFIG(launchActivatePin));
-		}
-		return engine->launchActivatePinState;
+#define RETART_THD_CALC	CONFIG(launchRpm) +\
+						(CONFIG(enableLaunchRetard) ? CONFIG(launchAdvanceRpmRange) : 0) +\
+						CONFIG(hardCutRpmRange)
+static int retardThresholdRpm;
 
-	case CLUTCH_INPUT_LAUNCH:
-		if (CONFIG(clutchDownPin) != GPIO_UNASSIGNED) {
-			engine->clutchDownState = efiReadPin(CONFIG(clutchDownPin));
-		}
-		return engine->clutchDownState;
-	default:
-		// ALWAYS_ACTIVE_LAUNCH
-		return true;
-	}
-}
 
 class LaunchControlImpl : public LaunchControlBase, public PeriodicTimerController {
 	int getPeriodMs() override {
@@ -62,11 +49,53 @@ class LaunchControlImpl : public LaunchControlBase, public PeriodicTimerControll
 	}
 };
 
+/**
+ * We can have active condition from switch or from clutch.
+ * In case we are dependent on VSS we just return true.
+ */
+bool LaunchControlBase::isInsideSwitchCondition() const {
+	switch (CONFIG(launchActivationMode)) {
+	case SWITCH_INPUT_LAUNCH:
+		if (CONFIG(launchActivatePin) != GPIO_UNASSIGNED) {
+			//todo: we should take into consideration if this sw is pulled high or low!
+			engine->launchActivatePinState = efiReadPin(CONFIG(launchActivatePin));
+		}
+		return engine->launchActivatePinState;
+
+	case CLUTCH_INPUT_LAUNCH:
+		if (CONFIG(clutchDownPin) != GPIO_UNASSIGNED) {
+			engine->clutchDownState = efiReadPin(CONFIG(clutchDownPin));
+			
+			if (CONFIG(clutchDownPinMode) == PI_PULLDOWN)
+			{
+				return !engine->clutchDownState;
+			} else {
+				return engine->clutchDownState;
+			}
+		} else {
+			return false;
+		}
+		
+	default:
+		// ALWAYS_ACTIVE_LAUNCH
+		return true;
+	}
+}
+
+/**
+ * Returns True in case Vehicle speed is less then trashold. 
+ * This condiiion would only return true based on speed if DisablebySpeed is true
+ * The condition logic is written in that way, that if we do not use disable by speed
+ * then we have to return true, and trust that we would disable by other condition!
+ */ 
 bool LaunchControlBase::isInsideSpeedCondition() const {
 	int speed = getVehicleSpeed();
 	return (CONFIG(launchSpeedTreshold) > speed) || !engineConfiguration->launchDisableBySpeed;
 }
 
+/**
+ * Returns false if TPS is invalid or TPS > preset trashold
+ */
 bool LaunchControlBase::isInsideTpsCondition() const {
 	auto tps = Sensor::get(SensorType::DriverThrottleIntent);
 
@@ -78,13 +107,18 @@ bool LaunchControlBase::isInsideTpsCondition() const {
 	return CONFIG(launchTpsTreshold) < tps.Value;
 }
 
+/**
+ * Condition is true as soon as we are above LaunchRpm
+ */
+bool LaunchControlBase::isInsideRPMCondition(int rpm) const {
+	int launchRpm = CONFIG(launchRpm);
+	return (launchRpm < rpm);
+}
+
 bool LaunchControlBase::isLaunchConditionMet(int rpm) const {
-	bool activateSwitchCondition = getActivateSwitchCondition(PASS_ENGINE_PARAMETER_SIGNATURE);
 
-	// TODO shadowm60: move this condition to its own function too
-	int launchRpm = engineConfiguration->launchRpm;
-	bool rpmCondition = (launchRpm < rpm);
-
+	bool activateSwitchCondition = isInsideSwitchCondition();
+	bool rpmCondition = isInsideRPMCondition(rpm);
 	bool speedCondition = isInsideSpeedCondition();
 	bool tpsCondition = isInsideTpsCondition();
 
@@ -108,9 +142,13 @@ void LaunchControlBase::update() {
 	int rpm = GET_RPM();
 	bool combinedConditions = isLaunchConditionMet(rpm);
 
-	float timeDelay = engineConfiguration->launchActivateDelay;
-	int cutRpmRange = engineConfiguration->hardCutRpmRange;
-	int launchAdvanceRpmRange = engineConfiguration->launchTimingRpmRange;
+	float timeDelay = CONFIG(launchActivateDelay);
+	int cutRpmRange = CONFIG(hardCutRpmRange);
+	int launchAdvanceRpmRange = CONFIG(launchTimingRpmRange);
+
+	//recalculate in periodic task, this way we save time in applyLaunchControlLimiting
+	//and still recalculat in case user changed the values
+	retardThresholdRpm = RETART_THD_CALC;
 
 	if (!combinedConditions) {
 		// conditions not met, reset timer
@@ -125,16 +163,16 @@ void LaunchControlBase::update() {
 			engine->isLaunchCondition = true;           // ...enable launch!
 			engine->applyLaunchExtraFuel = true;
 		}
-		if (engineConfiguration->enableLaunchBoost) {
+		if (CONFIG(enableLaunchBoost)) {
 			engine->setLaunchBoostDuty = true;           // ...enable boost!
 		}
-		if (engineConfiguration->enableLaunchRetard) {
+		if (CONFIG(enableLaunchRetard)) {
 			engine->applyLaunchControlRetard = true;    // ...enable retard!
 		}
 	}
 
 #if EFI_TUNER_STUDIO
-	if (engineConfiguration->debugMode == DBG_LAUNCH) {
+	if (CONFIG(debugMode) == DBG_LAUNCH) {
 		tsOutputChannels.debugIntField5 = engine->clutchDownState;
 		tsOutputChannels.debugFloatField1 = engine->launchActivatePinState;
 		tsOutputChannels.debugFloatField2 = engine->isLaunchCondition;
@@ -163,12 +201,6 @@ void setDefaultLaunchParameters(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 }
 
 void applyLaunchControlLimiting(bool *limitedSpark, bool *limitedFuel DECLARE_ENGINE_PARAMETER_SUFFIX) {
-	int rpm = GET_RPM();
-
-	// todo: pre-calculate 'retardThresholdRpm' less often that on each 'applyLaunchControlLimiting' invocation
-	int retardThresholdRpm = CONFIG(launchRpm) +
-		(CONFIG(enableLaunchRetard) ? CONFIG(launchAdvanceRpmRange) : 0) +
-		CONFIG(hardCutRpmRange);
 
 	if (retardThresholdRpm < GET_RPM()) {
 		*limitedSpark = engineConfiguration->launchSparkCutEnable;
@@ -178,6 +210,7 @@ void applyLaunchControlLimiting(bool *limitedSpark, bool *limitedFuel DECLARE_EN
 
 void initLaunchControl(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	logger = sharedLogger;
+	retardThresholdRpm = RETART_THD_CALC;
 	Launch.Start();
 }
 
