@@ -14,8 +14,8 @@ ButtonShiftController buttonShiftController;
 
 
 ButtonShiftController::ButtonShiftController() :
-		debounceUp("up"),
-		debounceDown("down")
+		debounceUp("gear_up"),
+		debounceDown("gear_down")
 		{
 
 }

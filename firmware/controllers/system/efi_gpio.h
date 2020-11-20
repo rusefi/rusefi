@@ -145,8 +145,8 @@ public:
 	void init(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 	void unregister();
 	RegisteredOutputPin *next;
-private:
 	const char *registrationName;
+private:
 	short pinOffset;
 	short pinModeOffset;
 	bool isPinConfigurationChanged();
@@ -162,6 +162,7 @@ public:
 	EnginePins();
 	void startPins(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 	void reset();
+	static void debug();
 	bool stopPins();
 	void unregisterPins();
 	RegisteredOutputPin mainRelay;

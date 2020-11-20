@@ -219,6 +219,16 @@ void EnginePins::unregisterPins() {
 #endif /* EFI_PROD_CODE */
 }
 
+void EnginePins::debug() {
+#if EFI_PROD_CODE
+	RegisteredOutputPin * pin = registeredOutputHead;
+	while (pin != nullptr) {
+		scheduleMsg(logger, "%s %d", pin->registrationName, pin->currentLogicValue);
+		pin = pin->next;
+	}
+#endif // EFI_PROD_CODE
+}
+
 void EnginePins::startPins(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 #if EFI_ENGINE_CONTROL
 	startInjectionPins();
@@ -564,6 +574,8 @@ void initPrimaryPins(Logging *sharedLogger) {
 	criticalErrorLedPort = getHwPort("CRITICAL", LED_CRITICAL_ERROR_BRAIN_PIN);
 	criticalErrorLedPin = getHwPin("CRITICAL", LED_CRITICAL_ERROR_BRAIN_PIN);
 	criticalErrorLedState = (LED_ERROR_BRAIN_PIN_MODE == INVERTED_OUTPUT) ? 0 : 1;
+
+	addConsoleAction("gpio_pins", EnginePins::debug);
 #endif /* EFI_PROD_CODE */
 }
 
