@@ -38,3 +38,4 @@ echo -e "\nGenerating rusEFI unit test HTML"
 
 echo -e "\nUploading HTML"
 ncftpput -m -R -v -u "$1" -p "$2" "$3" /unit_tests_coverage gcov/*
+echo -e "\nHappy End."
