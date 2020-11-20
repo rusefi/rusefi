@@ -275,8 +275,16 @@ expected<percent_t> EtbController::getSetpointEtb() const {
 }
 
 expected<percent_t> EtbController::getOpenLoop(percent_t target) const {
-	float ff = interpolate2d("etbb", target, engineConfiguration->etbBiasBins, engineConfiguration->etbBiasValues);
+	float ff = 0;
+
+	// Don't apply open loop for wastegate/idle valve, only real ETB
+	if (m_function != ETB_Wastegate
+		&& m_function != ETB_IdleValve) {
+		ff = interpolate2d("etbb", target, engineConfiguration->etbBiasBins, engineConfiguration->etbBiasValues);
+	}
+
 	engine->engineState.etbFeedForward = ff;
+
 	return ff;
 }
 
