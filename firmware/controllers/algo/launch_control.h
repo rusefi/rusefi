@@ -23,6 +23,8 @@ public:
 
 	bool isInsideSpeedCondition() const;
 	bool isInsideTpsCondition() const;
+	bool isInsideSwitchCondition() const;
+	bool isInsideRPMCondition(int rpm) const;
 
 	bool isLaunchConditionMet(int rpm) const;
 
