@@ -379,6 +379,7 @@ float tanf_taylor(float x) {
 	// This is only specified from [0, pi/2 - 0.01)
 	// Inside that range it has an error of less than 0.1%, and it gets worse as theta -> pi/2
 
+	// Precompute some exponents of x
 	float x2 = x * x;
 	float x3 = x2 * x;
 	float x4 = x3 * x;
