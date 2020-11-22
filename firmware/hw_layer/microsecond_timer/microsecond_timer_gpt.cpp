@@ -1,7 +1,7 @@
 #include "global.h"
 #include "port_microsecond_timer.h"
 
-#if EFI_PROD_CODE
+#if EFI_PROD_CODE && HAL_USE_GPT
 
 void portSetHardwareSchedulerTimer(efitick_t nowNt, efitick_t setTimeNt) {
 	int32_t deltaTimeUs = NT2US((int32_t)setTimeNt - (int32_t)nowNt);
