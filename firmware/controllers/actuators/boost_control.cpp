@@ -159,7 +159,6 @@ void BoostController::PeriodicTask() {
 BoostController boostController;
 
 void setDefaultBoostParameters(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
-	engineConfiguration->isBoostControlEnabled = true;
 	engineConfiguration->boostPwmFrequency = 55;
 	engineConfiguration->boostPid.offset = 0;
 	engineConfiguration->boostPid.pFactor = 0.5;
@@ -179,10 +178,16 @@ void setDefaultBoostParameters(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 			config->boostTableClosedLoop[loadIndex][rpmIndex] = config->boostTpsBins[loadIndex];
 		}
 	}
+
+	// Defaults for ETB-style wastegate actuator
+	CONFIG(etbWastegatePid).pFactor = 1;
+	CONFIG(etbWastegatePid).minValue = -60;
+	CONFIG(etbWastegatePid).maxValue = 60;
 }
 
 void startBoostPin() {
 #if !EFI_UNIT_TEST
+	// Only init if a pin is set, no need to start PWM without a pin
 	if (CONFIG(boostControlPin) == GPIO_UNASSIGNED){
 		return;
 	}
@@ -209,11 +214,21 @@ void onConfigurationChangeBoostCallback(engine_configuration_s *previousConfigur
 }
 
 void initBoostCtrl(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX) {
-#if !EFI_UNIT_TEST
-	if (CONFIG(boostControlPin) == GPIO_UNASSIGNED){
+	if (!CONFIG(isBoostControlEnabled)) {
 		return;
 	}
-#endif
+
+	bool hasAnyEtbWastegate = false;
+
+	for (size_t i = 0; i < efi::size(CONFIG(etbFunctions)); i++) {
+		hasAnyEtbWastegate |= CONFIG(etbFunctions)[i] == ETB_Wastegate;
+	}
+
+	// If we have neither a boost PWM pin nor ETB wastegate, nothing more to do
+	if ((CONFIG(boostControlPin) == GPIO_UNASSIGNED)
+		&& !hasAnyEtbWastegate) {
+		return;
+	}
 
 	logger = sharedLogger;
 
