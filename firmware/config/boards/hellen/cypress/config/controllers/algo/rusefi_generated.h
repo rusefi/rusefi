@@ -269,6 +269,11 @@
 #define CMD_TS_BENCH_CHECK_ENGINE_LIGHT 7
 #define CMD_TS_BENCH_FAN_RELAY 4
 #define CMD_TS_BENCH_FUEL_PUMP 1
+#define CMD_TS_BENCH_GPPWM1_VALVE 10
+#define CMD_TS_BENCH_GPPWM2_VALVE 11
+#define CMD_TS_BENCH_GPPWM3_VALVE 12
+#define CMD_TS_BENCH_GPPWM4_VALVE 13
+#define CMD_TS_BENCH_HPFP_VALVE 9
 #define CMD_TS_BENCH_IDLE_VALVE 8
 #define CMD_TS_BENCH_MAIN_RELAY 0
 #define CMD_TS_BENCH_STARTER_DISABLE_RELAY 3
@@ -1205,7 +1210,7 @@
 #define showSdCardWarning_offset 76
 #define SIGNATURE_BOARD hellen_cypress
 #define SIGNATURE_DATE 2020.11.22
-#define SIGNATURE_HASH 2052026216
+#define SIGNATURE_HASH 1730384411
 #define silentTriggerError_offset 1464
 #define slowAdcAlpha_offset 2088
 #define sparkDwellRpmBins_offset 332
@@ -1535,7 +1540,7 @@
 #define ts_show_spi true
 #define ts_show_trigger_comparator false
 #define ts_show_tunerstudio_port true
-#define TS_SIGNATURE "rusEFI 2020.11.22.hellen_cypress.2052026216"
+#define TS_SIGNATURE "rusEFI 2020.11.22.hellen_cypress.1730384411"
 #define TS_SINGLE_WRITE_COMMAND 'W'
 #define TS_SINGLE_WRITE_COMMAND_char W
 #define TS_TEST_COMMAND 't' // 0x74

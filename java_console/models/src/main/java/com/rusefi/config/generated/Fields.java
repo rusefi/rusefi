@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEfi tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Sun Nov 22 03:00:33 UTC 2020
+// this file was generated automatically by rusEfi tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Sun Nov 22 05:10:40 UTC 2020
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -259,6 +259,11 @@ public class Fields {
 	public static final int CMD_TS_BENCH_CHECK_ENGINE_LIGHT = 7;
 	public static final int CMD_TS_BENCH_FAN_RELAY = 4;
 	public static final int CMD_TS_BENCH_FUEL_PUMP = 1;
+	public static final int CMD_TS_BENCH_GPPWM1_VALVE = 10;
+	public static final int CMD_TS_BENCH_GPPWM2_VALVE = 11;
+	public static final int CMD_TS_BENCH_GPPWM3_VALVE = 12;
+	public static final int CMD_TS_BENCH_GPPWM4_VALVE = 13;
+	public static final int CMD_TS_BENCH_HPFP_VALVE = 9;
 	public static final int CMD_TS_BENCH_IDLE_VALVE = 8;
 	public static final int CMD_TS_BENCH_MAIN_RELAY = 0;
 	public static final int CMD_TS_BENCH_STARTER_DISABLE_RELAY = 3;
@@ -1438,7 +1443,7 @@ public class Fields {
 	public static final char TS_SD_R_COMMAND = 'r';
 	public static final char TS_SD_W_COMMAND = 'w';
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI 2020.11.22.all.3015625131";
+	public static final String TS_SIGNATURE = "rusEFI 2020.11.22.all.2933011672";
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final int TT_TT_60_2_VW = 20;
 	public static final int TT_TT_ONE = 18;
