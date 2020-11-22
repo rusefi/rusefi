@@ -254,6 +254,9 @@ static void handleBenchCategory(uint16_t index) {
 	case CMD_TS_BENCH_MAIN_RELAY:
 		mainRelayBench();
 		return;
+	case CMD_TS_BENCH_HPFP_VALVE:
+		hpfpValveBench();
+		return;
 	case CMD_TS_BENCH_FUEL_PUMP:
 		// cmd_test_fuel_pump
 		fuelPumpBench();
