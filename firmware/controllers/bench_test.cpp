@@ -190,7 +190,7 @@ void mainRelayBench(void) {
 }
 
 void hpfpValveBench(void) {
-	pinbench("1000", "1000", "100", "3", &enginePins.hpfpValve, CONFIG(hpfpValvePin));
+	pinbench(/*delay*/"1000", /* onTime */"20", /*oftime*/"500", "3", &enginePins.hpfpValve, CONFIG(hpfpValvePin));
 }
 
 void fuelPumpBench(void) {
