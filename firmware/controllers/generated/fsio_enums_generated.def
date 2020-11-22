@@ -1,4 +1,4 @@
-// this file was generated automatically by rusEfi tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Sun Nov 22 03:00:33 UTC 2020
+// this file was generated automatically by rusEfi tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Sun Nov 22 05:10:40 UTC 2020
 
 // by class com.rusefi.output.FileFsioSettingsConsumer
 	FSIO_SETTING_FANONTEMPERATURE = 1000,
