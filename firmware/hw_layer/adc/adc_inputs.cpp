@@ -76,7 +76,7 @@ AdcDevice::AdcDevice(ADCConversionGroup* hwConfig, adcsample_t *buf) {
 	hwConfig->sqr5 = 0;
 #endif /* ADC_MAX_CHANNELS_COUNT */
 	memset(hardwareIndexByIndernalAdcIndex, EFI_ADC_NONE, sizeof(hardwareIndexByIndernalAdcIndex));
-	memset(internalAdcIndexByHardwareIndex, 0xFFFFFFFF, sizeof(internalAdcIndexByHardwareIndex));
+	memset(internalAdcIndexByHardwareIndex, EFI_ADC_ERROR, sizeof(internalAdcIndexByHardwareIndex));
 }
 
 #if !defined(GPT_FREQ_FAST) || !defined(GPT_PERIOD_FAST)
@@ -315,13 +315,21 @@ int AdcDevice::size() const {
 	return channelCount;
 }
 
-int AdcDevice::getAdcValueByHwChannel(int hwChannel) const {
-	int internalIndex = internalAdcIndexByHardwareIndex[hwChannel];
+int AdcDevice::getAdcValueByIndex(int internalIndex) const {
+	if (internalIndex >= size()) {
+		firmwareError(OBD_PCM_Processor_Fault, "ADC channel index out of range");
+		return 0;
+	}
 	return values.adc_data[internalIndex];
 }
 
-int AdcDevice::getAdcValueByIndex(int internalIndex) const {
-	return values.adc_data[internalIndex];
+int AdcDevice::getAdcValueByHwChannel(adc_channel_e hwChannel) const {
+	if (hwChannel >= ARRAY_SIZE(internalAdcIndexByHardwareIndex)) {
+		firmwareError(OBD_PCM_Processor_Fault, "ADC hwChannel out of range");
+		return 0;
+	}
+	int internalIndex = internalAdcIndexByHardwareIndex[hwChannel];
+	return getAdcValueByIndex(internalIndex);
 }
 
 void AdcDevice::invalidateSamplesCache() {
@@ -351,7 +359,7 @@ bool AdcDevice::isHwUsed(adc_channel_e hwChannelIndex) const {
 }
 
 void AdcDevice::enableChannel(adc_channel_e hwChannel) {
-	if (channelCount >= efi::size(values.adc_data)) {
+	if (channelCount >= ADC_MAX_CHANNELS_COUNT) {
 		firmwareError(OBD_PCM_Processor_Fault, "Too many ADC channels configured");
 		return;
 	}
