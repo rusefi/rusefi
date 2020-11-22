@@ -1177,9 +1177,9 @@ gaugeCategory = Knock
    entry = totalTriggerErrorCounter, @@GAUGE_NAME_TRG_ERR@@,int,    "%d"
    entry = idleAirValvePosition, @@GAUGE_NAME_IAC@@, float,  "%.3f"
    entry = lowFuelPressure, @@GAUGE_NAME_FUEL_PRESSURE_LOW@@, float,  "%.3f"
-;   entry = rawLowFuelPressureGauge, @@GAUGE_NAME_RAW_FUEL_PRESSURE_LOW@@, float,  "%.3f"
+;   entry = rawLowFuelPressure, @@GAUGE_NAME_RAW_FUEL_PRESSURE_LOW@@, float,  "%.3f"
    entry = highFuelPressure, @@GAUGE_NAME_FUEL_PRESSURE_HIGH@@, float,  "%.3f"
-;   entry = rawHighFuelPressureGauge, @@GAUGE_NAME_RAW_FUEL_PRESSURE_HIGH@@, float,  "%.3f"
+;   entry = rawHighFuelPressure, @@GAUGE_NAME_RAW_FUEL_PRESSURE_HIGH@@, float,  "%.3f"
 
    entry = injectorLagMs,   @@GAUGE_NAME_INJECTOR_LAG@@, float,  "%.3f"
    entry = fuelRunning,     @@GAUGE_NAME_FUEL_RUNNING@@, float,  "%.3f"
