@@ -317,7 +317,7 @@ int AdcDevice::size() const {
 
 int AdcDevice::getAdcValueByIndex(int internalIndex) const {
 	if (internalIndex >= size()) {
-		firmwareError(OBD_PCM_Processor_Fault, "ADC channel index out of range");
+		firmwareError(OBD_PCM_Processor_Fault, "ADC channel index out of range %d", internalIndex);
 		return 0;
 	}
 	return values.adc_data[internalIndex];
