@@ -813,7 +813,7 @@ custom uart_device_e 1 bits,U32,   @OFFSET@, [0:1], "Off", "UART1", "UART2", "UA
 	brain_pin_e debugMapAveraging;
 	output_pin_e starterRelayDisablePin;
 	pin_output_mode_e starterRelayDisablePinMode;On some vehicles we can disable starter once engine is already running
-	brain_pin_e secondSolenoidPin;Some Subaru and some Mazda use double-solenoid idle air valve
+	output_pin_e secondSolenoidPin;Some Subaru and some Mazda use double-solenoid idle air valve
 	switch_input_pin_e startStopButtonPin;See also starterControlPin
 	
 	int mapMinBufferLength;;"count",        1,     0,  0,    24,  0
