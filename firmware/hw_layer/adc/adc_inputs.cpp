@@ -76,7 +76,7 @@ AdcDevice::AdcDevice(ADCConversionGroup* hwConfig, adcsample_t *buf) {
 	hwConfig->sqr5 = 0;
 #endif /* ADC_MAX_CHANNELS_COUNT */
 	memset(hardwareIndexByIndernalAdcIndex, EFI_ADC_NONE, sizeof(hardwareIndexByIndernalAdcIndex));
-	memset(internalAdcIndexByHardwareIndex, 0xFFFFFFFF, sizeof(internalAdcIndexByHardwareIndex));
+	memset(internalAdcIndexByHardwareIndex, EFI_ADC_ERROR, sizeof(internalAdcIndexByHardwareIndex));
 }
 
 #if !defined(GPT_FREQ_FAST) || !defined(GPT_PERIOD_FAST)
@@ -315,13 +315,21 @@ int AdcDevice::size() const {
 	return channelCount;
 }
 
-int AdcDevice::getAdcValueByHwChannel(int hwChannel) const {
-	int internalIndex = internalAdcIndexByHardwareIndex[hwChannel];
+int AdcDevice::getAdcValueByIndex(int internalIndex) const {
+	if (internalIndex >= size()) {
+		firmwareError(OBD_PCM_Processor_Fault, "ADC channel index out of range %d", internalIndex);
+		return 0;
+	}
 	return values.adc_data[internalIndex];
 }
 
-int AdcDevice::getAdcValueByIndex(int internalIndex) const {
-	return values.adc_data[internalIndex];
+int AdcDevice::getAdcValueByHwChannel(adc_channel_e hwChannel) const {
+	if (hwChannel >= ARRAY_SIZE(internalAdcIndexByHardwareIndex)) {
+		firmwareError(OBD_PCM_Processor_Fault, "ADC hwChannel out of range");
+		return 0;
+	}
+	int internalIndex = internalAdcIndexByHardwareIndex[hwChannel];
+	return getAdcValueByIndex(internalIndex);
 }
 
 void AdcDevice::invalidateSamplesCache() {
@@ -351,7 +359,7 @@ bool AdcDevice::isHwUsed(adc_channel_e hwChannelIndex) const {
 }
 
 void AdcDevice::enableChannel(adc_channel_e hwChannel) {
-	if (channelCount >= efi::size(values.adc_data)) {
+	if (channelCount >= ADC_MAX_CHANNELS_COUNT) {
 		firmwareError(OBD_PCM_Processor_Fault, "Too many ADC channels configured");
 		return;
 	}
@@ -363,18 +371,18 @@ void AdcDevice::enableChannel(adc_channel_e hwChannel) {
 	internalAdcIndexByHardwareIndex[hwChannel] = logicChannel;
 	hardwareIndexByIndernalAdcIndex[logicChannel] = hwChannel;
 	if (logicChannel < 6) {
-		hwConfig->sqr3 += (channelAdcIndex) << (5 * logicChannel);
+		hwConfig->sqr3 |= channelAdcIndex << (5 * logicChannel);
 	} else if (logicChannel < 12) {
-		hwConfig->sqr2 += (channelAdcIndex) << (5 * (logicChannel - 6));
+		hwConfig->sqr2 |= channelAdcIndex << (5 * (logicChannel - 6));
 	} else if (logicChannel < 18) {
-		hwConfig->sqr1 += (channelAdcIndex) << (5 * (logicChannel - 12));
+		hwConfig->sqr1 |= channelAdcIndex << (5 * (logicChannel - 12));
 	}
 #if ADC_MAX_CHANNELS_COUNT > 16
 	else if (logicChannel < 24) {
-		hwConfig->sqr4 += (channelAdcIndex) << (5 * (logicChannel - 18));
+		hwConfig->sqr4 |= channelAdcIndex << (5 * (logicChannel - 18));
 	}
 	else if (logicChannel < 30) {
-		hwConfig->sqr5 += (channelAdcIndex) << (5 * (logicChannel - 24));
+		hwConfig->sqr5 |= channelAdcIndex << (5 * (logicChannel - 24));
 	}
 #endif /* ADC_MAX_CHANNELS_COUNT */
 }

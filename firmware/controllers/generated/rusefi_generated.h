@@ -250,6 +250,7 @@
 #define CMD_ETB_DUTY "set_etb_duty"
 #define CMD_FUEL_BENCH "fuelbench"
 #define CMD_FUNCTIONAL_TEST_MODE "test_mode"
+#define CMD_HPFP_BENCH "hpfpbench"
 #define CMD_IGNITION "ignition"
 #define CMD_INJECTION "injection"
 #define CMD_MIL_BENCH "milbench"
@@ -269,6 +270,11 @@
 #define CMD_TS_BENCH_CHECK_ENGINE_LIGHT 7
 #define CMD_TS_BENCH_FAN_RELAY 4
 #define CMD_TS_BENCH_FUEL_PUMP 1
+#define CMD_TS_BENCH_GPPWM1_VALVE 10
+#define CMD_TS_BENCH_GPPWM2_VALVE 11
+#define CMD_TS_BENCH_GPPWM3_VALVE 12
+#define CMD_TS_BENCH_GPPWM4_VALVE 13
+#define CMD_TS_BENCH_HPFP_VALVE 9
 #define CMD_TS_BENCH_IDLE_VALVE 8
 #define CMD_TS_BENCH_MAIN_RELAY 0
 #define CMD_TS_BENCH_STARTER_DISABLE_RELAY 3
@@ -658,6 +664,8 @@
 #define GAUGE_NAME_MAP "MAP"
 #define GAUGE_NAME_OIL_PRESSURE "Oil Pressure"
 #define GAUGE_NAME_OIL_PRESSURE_UNITS "kPa"
+#define GAUGE_NAME_RAW_FUEL_PRESSURE_HIGH "Fuel pressure raw (high)"
+#define GAUGE_NAME_RAW_FUEL_PRESSURE_LOW "Fuel pressure raw (low)"
 #define GAUGE_NAME_RPM "RPM"
 #define GAUGE_NAME_TARGET_AFR "fuel: target AFR"
 #define GAUGE_NAME_TARGET_LAMBDA "fuel: target lambda"
@@ -1202,8 +1210,8 @@
 #define showHumanReadableWarning_offset 976
 #define showSdCardWarning_offset 76
 #define SIGNATURE_BOARD all
-#define SIGNATURE_DATE 2020.11.17
-#define SIGNATURE_HASH 2711056554
+#define SIGNATURE_DATE 2020.11.22
+#define SIGNATURE_HASH 3844568942
 #define silentTriggerError_offset 1464
 #define slowAdcAlpha_offset 2088
 #define sparkDwellRpmBins_offset 332
@@ -1533,7 +1541,7 @@
 #define ts_show_spi true
 #define ts_show_trigger_comparator false
 #define ts_show_tunerstudio_port true
-#define TS_SIGNATURE "rusEFI 2020.11.17.all.2711056554"
+#define TS_SIGNATURE "rusEFI 2020.11.22.all.3844568942"
 #define TS_SINGLE_WRITE_COMMAND 'W'
 #define TS_SINGLE_WRITE_COMMAND_char W
 #define TS_TEST_COMMAND 't' // 0x74

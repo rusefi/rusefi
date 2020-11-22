@@ -36,13 +36,15 @@ jobs:
 
     # Commit changes and catch the error that occurs if nothing has been changed (without catching other errors)
     - name: Commit changes
+      env:
+        ACTIONS_ALLOW_UNSECURE_COMMANDS: 'true'
       run: |
         git config --local user.email "action@github.com"
         git config --local user.name "GitHub build-firmware Action"
         git status
         OUT=$(git commit -am "Auto-generated configs and docs" 2>&1) || echo "commit failed, finding out why"
         if echo "$OUT" | grep 'nothing to commit'; then
-          echo "name=NOCOMMIT::true" >> $GITHUB_ENV
+          echo "::set-env name=NOCOMMIT::true"
           exit 0
         elif echo "$OUT" | grep 'changed'; then
           exit 0

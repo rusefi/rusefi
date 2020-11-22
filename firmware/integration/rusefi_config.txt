@@ -1578,9 +1578,11 @@ end_struct
 #define GAUGE_NAME_ETB_ERROR "ETB position error"
 #define GAUGE_NAME_ETB_DUTY "ETB Duty"
 
+#define GAUGE_NAME_RAW_FUEL_PRESSURE_LOW "Fuel pressure raw (low)"
 #define GAUGE_NAME_FUEL_PRESSURE_LOW "Fuel pressure (low)"
 #define GAUGE_NAME_FUEL_PRESSURE_LOW_UNITS "kPa"
 
+#define GAUGE_NAME_RAW_FUEL_PRESSURE_HIGH "Fuel pressure raw (high)"
 #define GAUGE_NAME_FUEL_PRESSURE_HIGH "Fuel pressure (high)"
 #define GAUGE_NAME_FUEL_PRESSURE_HIGH_UNITS "bar"
 
@@ -1669,6 +1671,7 @@ end_struct
 #define CMD_MIL_BENCH "milbench"
 #define CMD_FUEL_BENCH "fuelbench"
 #define CMD_STARTER_BENCH "starterbench"
+#define CMD_HPFP_BENCH "hpfpbench"
 #define CMD_PINS "pins"
 #define CMD_CALIBRATE_PEDAL_UP "calibrate_pedal_up"
 #define CMD_CALIBRATE_PEDAL_DOWN "calibrate_pedal_down"
@@ -1698,7 +1701,11 @@ end_struct
 #define CMD_TS_BENCH_AC_COMPRESSOR_RELAY 6
 #define CMD_TS_BENCH_CHECK_ENGINE_LIGHT 7
 #define CMD_TS_BENCH_IDLE_VALVE 8
-
+#define CMD_TS_BENCH_HPFP_VALVE 9
+#define CMD_TS_BENCH_GPPWM1_VALVE 10
+#define CMD_TS_BENCH_GPPWM2_VALVE 11
+#define CMD_TS_BENCH_GPPWM3_VALVE 12
+#define CMD_TS_BENCH_GPPWM4_VALVE 13
 
 
 #define CMD_ENGINE_TYPE "engine_type"

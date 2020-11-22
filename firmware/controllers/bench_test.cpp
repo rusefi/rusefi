@@ -189,6 +189,10 @@ void mainRelayBench(void) {
 	pinbench("0", "1000", "100", "1", &enginePins.mainRelay, CONFIG(mainRelayPin));
 }
 
+void hpfpValveBench(void) {
+	pinbench(/*delay*/"1000", /* onTime */"20", /*oftime*/"500", "3", &enginePins.hpfpValve, CONFIG(hpfpValvePin));
+}
+
 void fuelPumpBench(void) {
 	fuelPumpBenchExt("3000");
 }
@@ -249,6 +253,9 @@ static void handleBenchCategory(uint16_t index) {
 	switch(index) {
 	case CMD_TS_BENCH_MAIN_RELAY:
 		mainRelayBench();
+		return;
+	case CMD_TS_BENCH_HPFP_VALVE:
+		hpfpValveBench();
 		return;
 	case CMD_TS_BENCH_FUEL_PUMP:
 		// cmd_test_fuel_pump
@@ -396,6 +403,7 @@ void initBenchTest(Logging *sharedLogger) {
 	addConsoleAction(CMD_MIL_BENCH, milBench);
 	addConsoleActionSSS(CMD_FUEL_BENCH, fuelbench);
 	addConsoleActionSSS("sparkbench", sparkbench);
+	addConsoleAction(CMD_HPFP_BENCH, hpfpValveBench);
 
 	addConsoleActionSSSSS("fuelbench2", fuelbench2);
 	addConsoleActionSSSSS("fsiobench2", fsioBench2);

@@ -289,3 +289,6 @@ typedef enum __attribute__ ((__packed__)) {
 	// todo: bad choice of value since now we have ADC_CHANNEL_SENSOR and could end up with 17 and 18 also
 	EFI_ADC_ERROR = 33,
 } adc_channel_e;
+
+/* Plase keep updating this define */
+#define EFI_ADC_LAST	EFI_ADC_31

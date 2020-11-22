@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEfi tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Tue Nov 17 00:53:17 UTC 2020
+// this file was generated automatically by rusEfi tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Sun Nov 22 05:44:51 UTC 2020
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -240,6 +240,7 @@ public class Fields {
 	public static final String CMD_ETB_DUTY = "set_etb_duty";
 	public static final String CMD_FUEL_BENCH = "fuelbench";
 	public static final String CMD_FUNCTIONAL_TEST_MODE = "test_mode";
+	public static final String CMD_HPFP_BENCH = "hpfpbench";
 	public static final String CMD_IGNITION = "ignition";
 	public static final String CMD_INJECTION = "injection";
 	public static final String CMD_MIL_BENCH = "milbench";
@@ -259,6 +260,11 @@ public class Fields {
 	public static final int CMD_TS_BENCH_CHECK_ENGINE_LIGHT = 7;
 	public static final int CMD_TS_BENCH_FAN_RELAY = 4;
 	public static final int CMD_TS_BENCH_FUEL_PUMP = 1;
+	public static final int CMD_TS_BENCH_GPPWM1_VALVE = 10;
+	public static final int CMD_TS_BENCH_GPPWM2_VALVE = 11;
+	public static final int CMD_TS_BENCH_GPPWM3_VALVE = 12;
+	public static final int CMD_TS_BENCH_GPPWM4_VALVE = 13;
+	public static final int CMD_TS_BENCH_HPFP_VALVE = 9;
 	public static final int CMD_TS_BENCH_IDLE_VALVE = 8;
 	public static final int CMD_TS_BENCH_MAIN_RELAY = 0;
 	public static final int CMD_TS_BENCH_STARTER_DISABLE_RELAY = 3;
@@ -639,6 +645,8 @@ public class Fields {
 	public static final String GAUGE_NAME_MAP = "MAP";
 	public static final String GAUGE_NAME_OIL_PRESSURE = "Oil Pressure";
 	public static final String GAUGE_NAME_OIL_PRESSURE_UNITS = "kPa";
+	public static final String GAUGE_NAME_RAW_FUEL_PRESSURE_HIGH = "Fuel pressure raw (high)";
+	public static final String GAUGE_NAME_RAW_FUEL_PRESSURE_LOW = "Fuel pressure raw (low)";
 	public static final String GAUGE_NAME_RPM = "RPM";
 	public static final String GAUGE_NAME_TARGET_AFR = "fuel: target AFR";
 	public static final String GAUGE_NAME_TARGET_LAMBDA = "fuel: target lambda";
@@ -1436,7 +1444,7 @@ public class Fields {
 	public static final char TS_SD_R_COMMAND = 'r';
 	public static final char TS_SD_W_COMMAND = 'w';
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI 2020.11.17.all.2711056554";
+	public static final String TS_SIGNATURE = "rusEFI 2020.11.22.all.3844568942";
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final int TT_TT_60_2_VW = 20;
 	public static final int TT_TT_ONE = 18;
