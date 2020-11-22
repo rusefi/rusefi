@@ -118,6 +118,7 @@ adc_channel_e getAdcChannel(brain_pin_e pin) {
 	case GPIO_UNASSIGNED:
 		return EFI_ADC_NONE;
 	default:
+		firmwareError(OBD_PCM_Processor_Fault, "getAdcChannel %d", pin);
 		return EFI_ADC_ERROR;
 	}
 }
