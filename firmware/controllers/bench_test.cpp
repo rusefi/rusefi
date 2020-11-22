@@ -403,6 +403,7 @@ void initBenchTest(Logging *sharedLogger) {
 	addConsoleAction(CMD_MIL_BENCH, milBench);
 	addConsoleActionSSS(CMD_FUEL_BENCH, fuelbench);
 	addConsoleActionSSS("sparkbench", sparkbench);
+	addConsoleAction(CMD_HPFP_BENCH, hpfpValveBench);
 
 	addConsoleActionSSSSS("fuelbench2", fuelbench2);
 	addConsoleActionSSSSS("fsiobench2", fsioBench2);
