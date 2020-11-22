@@ -189,6 +189,10 @@ void mainRelayBench(void) {
 	pinbench("0", "1000", "100", "1", &enginePins.mainRelay, CONFIG(mainRelayPin));
 }
 
+void hpfpValveBench(void) {
+	pinbench("0", "1000", "100", "1", &enginePins.hpfpValve, CONFIG(hpfpValvePin));
+}
+
 void fuelPumpBench(void) {
 	fuelPumpBenchExt("3000");
 }
