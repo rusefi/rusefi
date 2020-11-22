@@ -137,7 +137,7 @@ void PwmConfig::setFrequency(float frequency) {
 	/**
 	 * see #handleCycleStart()
 	 */
-	periodNt = US2NT(frequency2periodUs(frequency));
+	periodNt = USF2NT(frequency2periodUs(frequency));
 }
 
 void PwmConfig::stop() {
