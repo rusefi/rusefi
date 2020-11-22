@@ -24,8 +24,7 @@ public:
 	void enableChannel(adc_channel_e hwChannelIndex);
 	void enableChannelAndPin(const char *msg, adc_channel_e hwChannelIndex);
 	adc_channel_e getAdcHardwareIndexByInternalIndex(int index) const;
-	/* We use adc_channel_e as index for following array */
-	char internalAdcIndexByHardwareIndex[EFI_ADC_LAST + 1];
+	int internalAdcIndexByHardwareIndex[ADC_MAX_CHANNELS_COUNT + 4];
 	bool isHwUsed(adc_channel_e hwChannel) const;
 	int size() const;
 	void init(void);
@@ -39,14 +38,13 @@ public:
 	int getAdcValueByHwChannel(adc_channel_e hwChannel) const;
 
 	adc_state values;
+	int channelCount;
 private:
 	ADCConversionGroup* hwConfig;
 	/**
 	 * Number of ADC channels in use
 	 */
-	unsigned char channelCount;
-
-	/* STM32 has up-to 4 additional channels routed to internal voltage sources */
+	 
 	adc_channel_e hardwareIndexByIndernalAdcIndex[ADC_MAX_CHANNELS_COUNT + 4];
 };
 
