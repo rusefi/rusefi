@@ -466,9 +466,9 @@ void initHardware(Logging *l) {
 
 #ifdef CONFIG_RESET_SWITCH_PORT
 // this pin is not configurable at runtime so that we have a reliable way to reset configuration
-#define SHOULD_INGORE_FLASH() (palReadPad(CONFIG_RESET_SWITCH_PORT, CONFIG_RESET_SWITCH_PIN) == 0)
+#define SHOULD_IGNORE_FLASH() (palReadPad(CONFIG_RESET_SWITCH_PORT, CONFIG_RESET_SWITCH_PIN) == 0)
 #else
-#define SHOULD_INGORE_FLASH() (false)
+#define SHOULD_IGNORE_FLASH() (false)
 #endif // CONFIG_RESET_SWITCH_PORT
 
 #ifdef CONFIG_RESET_SWITCH_PORT
@@ -482,7 +482,7 @@ void initHardware(Logging *l) {
 	 *
 	 * interesting fact that we have another read from flash before we get here
 	 */
-	if (SHOULD_INGORE_FLASH()) {
+	if (SHOULD_IGNORE_FLASH()) {
 		engineConfiguration->engineType = DEFAULT_ENGINE_TYPE;
 		resetConfigurationExt(sharedLogger, engineConfiguration->engineType PASS_ENGINE_PARAMETER_SUFFIX);
 		writeToFlashNow();
