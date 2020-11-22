@@ -272,3 +272,6 @@ typedef enum __attribute__ ((__packed__)) {
 
 	EFI_ADC_ERROR = 50,
 } adc_channel_e;
+
+/* Plase keep updating this define */
+#define EFI_ADC_LAST	EFI_ADC_TEMP_SENSOR
