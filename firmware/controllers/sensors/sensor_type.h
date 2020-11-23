@@ -26,8 +26,8 @@ enum class SensorType : unsigned char {
 
 	OilPressure,
 
-	FuelPressureLow,
-	FuelPressureHigh,
+	FuelPressureLow, // in kPa
+	FuelPressureHigh, // in kPa
 	FuelPressureInjector,
 
 	// This is the "resolved" position, potentially composited out of the following two
