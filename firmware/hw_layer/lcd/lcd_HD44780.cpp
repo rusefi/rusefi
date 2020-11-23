@@ -21,13 +21,13 @@ EXTERN_ENGINE;
 
 static Logging *logger;
 
-// enum {
-// 	LCD_HD44780_DISPLAY_CLEAR = 0x01,
-// 	LCD_HD44780_SHIFT_CURSOR_RIGHT = 0x06,
-// 	LCD_HD44780_DISPLAY_ON = 0x0C,
-// 	LCD_HD44780_4_BIT_BUS = 0x20,
-// 	LCD_HD44780_RESET = 0x30,
-// 	LCD_HD44780_DDRAM_ADDR = 0x80,
+enum {
+	LCD_HD44780_DISPLAY_CLEAR = 0x01,
+	LCD_HD44780_SHIFT_CURSOR_RIGHT = 0x06,
+	LCD_HD44780_DISPLAY_ON = 0x0C,
+	LCD_HD44780_4_BIT_BUS = 0x20,
+	LCD_HD44780_RESET = 0x30,
+	LCD_HD44780_DDRAM_ADDR = 0x80,
 
 //	LCD_2X16_8_BIT_BUS = 0x30,
 //	LCD_2X16_LINE_ONE = 0x20,
@@ -47,7 +47,7 @@ static Logging *logger;
 //	LCD_2X16_BUSY_FLAG = 0x80,
 //	LCD_2X16_COMMAND = 0x01,
 //	LCD_2X16_DATA = 0x00,
-// } lcd_HD44780_command;
+} /*lcd_HD44780_command*/;
 
 // http://web.alfredstate.edu/weimandn/lcd/lcd_addressing/lcd_addressing_index.html
 static const int lineStart[] = { 0, 0x40, 0x14, 0x54 };
