@@ -277,12 +277,12 @@ static void enable_flash() {
 }
 
 static void download_RAM(int target) {
-   unsigned short memory_area = 0;         // memory area
-   unsigned short start_address = 0;      // start address
-   unsigned short codeWidthRegAddr = 0;   // code width register address
-   unsigned short size = 0;               // size of RAM data
-   unsigned short command = 0;            // command data
-   const unsigned short *RAM_ptr;               // pointer to array of data to be sent to the chip
+   uint16_t memory_area = 0;         // memory area
+   uint16_t start_address = 0;      // start address
+   uint16_t codeWidthRegAddr = 0;   // code width register address
+   uint16_t size = 0;               // size of RAM data
+   uint16_t command = 0;            // command data
+   const uint16_t *RAM_ptr;               // pointer to array of data to be sent to the chip
 
 
    //Why Again? For Every time, just in case?
@@ -344,11 +344,11 @@ static void download_RAM(int target) {
 }
 
 static void download_register(int r_target) {
-	   unsigned short r_start_address = 0;  // start address
-	   unsigned short r_size = 0;           // size of configuration data
-	   unsigned short r_command = 0;        // command data
-	   unsigned short remainder_size = 0;   // remainder size
-	   const unsigned short *reg_ptr;            // pointer to array of data to be sent to the chip
+	   uint16_t r_start_address = 0;  // start address
+	   uint16_t r_size = 0;           // size of configuration data
+	   uint16_t r_command = 0;        // command data
+	   uint16_t remainder_size = 0;   // remainder size
+	   const uint16_t *reg_ptr;            // pointer to array of data to be sent to the chip
 
 	   switch(r_target)                     // selects target
 	   {
