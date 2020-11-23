@@ -1,7 +1,8 @@
 #include "global.h"
-#include "port_microsecond_timer.h"
 
 #if EFI_PROD_CODE && HAL_USE_PWM
+
+#include "port_microsecond_timer.h"
 
 #define SCHEDULER_PWM_DEVICE PWMD5
 
