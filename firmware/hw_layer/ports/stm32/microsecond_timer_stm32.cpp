@@ -7,6 +7,9 @@
 #define SCHEDULER_PWM_DEVICE PWMD5
 
 void portSetHardwareSchedulerTimer(efitick_t nowNt, efitick_t setTimeNt) {
+	// This implementation doesn't need the current time, only the target time
+	UNUSED(nowNt);
+
 	pwm_lld_enable_channel(&SCHEDULER_PWM_DEVICE, 0, setTimeNt);
 	pwmEnableChannelNotificationI(&SCHEDULER_PWM_DEVICE, 0);
 }
