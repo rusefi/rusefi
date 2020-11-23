@@ -63,8 +63,6 @@ extern SERIAL_USB_DRIVER EFI_CONSOLE_USB_DEVICE;
 
 static bool isSerialConsoleStarted = false;
 
-static event_listener_t consoleEventListener;
-
 bool consoleByteArrived = false;
 
 void onDataArrived(void) {

@@ -148,7 +148,10 @@ static Logging *sharedLogger;
 static int fastMapSampleIndex;
 static int hipSampleIndex;
 static int tpsSampleIndex;
+
+#if HAL_TRIGGER_USE_ADC
 static int triggerSampleIndex;
+#endif
 
 #if HAL_USE_ADC
 extern AdcDevice fastAdc;
