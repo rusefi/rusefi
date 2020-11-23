@@ -47,7 +47,7 @@ enum {
 //	LCD_2X16_BUSY_FLAG = 0x80,
 //	LCD_2X16_COMMAND = 0x01,
 //	LCD_2X16_DATA = 0x00,
-} lcd_HD44780_command;
+} /*lcd_HD44780_command*/;
 
 // http://web.alfredstate.edu/weimandn/lcd/lcd_addressing/lcd_addressing_index.html
 static const int lineStart[] = { 0, 0x40, 0x14, 0x54 };

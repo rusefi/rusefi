@@ -142,7 +142,7 @@ static void lcdPrintf(const char *fmt, ...) {
 	lcd_HD44780_print_string(lcdLineBuffer);
 }
 
-static void showLine(lcd_line_e line, int screenY) {
+static void showLine(lcd_line_e line, int /*screenY*/) {
 	static char buffer[_MAX_FILLER + 2];
 
 	switch (line) {

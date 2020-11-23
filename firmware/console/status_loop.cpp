@@ -279,11 +279,6 @@ void updateDevConsoleState(void) {
  */
 
 static void showFuelInfo2(float rpm, float engineLoad) {
-
-	float baseFuelMs = 0; // TODO 
-
-	float magicAir = SpeedDensityBase::getAirmassImpl(1, 100, convertCelsiusToKelvin(20) PASS_ENGINE_PARAMETER_SUFFIX);
-
 	scheduleMsg(&logger, "inj flow %.2fcc/min displacement %.2fL", engineConfiguration->injector.flow,
 			engineConfiguration->specs.displacement);
 
@@ -303,13 +298,9 @@ static void showFuelInfo2(float rpm, float engineLoad) {
 		float cltCorrection = engine->engineState.running.coolantTemperatureCoefficient;
 		floatms_t injectorLag = engine->engineState.running.injectorLag;
 		scheduleMsg(&logger2, "rpm=%.2f engineLoad=%.2f", rpm, engineLoad);
-		scheduleMsg(&logger2, "baseFuel=%.2f", baseFuelMs);
 
 		scheduleMsg(&logger2, "iatCorrection=%.2f cltCorrection=%.2f injectorLag=%.2f", iatCorrection, cltCorrection,
 				injectorLag);
-
-		float value = getRunningFuel(baseFuelMs PASS_ENGINE_PARAMETER_SUFFIX);
-		scheduleMsg(&logger2, "injection pulse width: %.2f", value);
 	}
 #endif
 }

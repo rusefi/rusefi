@@ -277,14 +277,12 @@ static void enable_flash() {
 }
 
 static void download_RAM(int target) {
-   unsigned short memory_area = 0;         // memory area
-   unsigned short start_address = 0;      // start address
-   unsigned short codeWidthRegAddr = 0;   // code width register address
-   unsigned short size = 0;               // size of RAM data
-   unsigned short command = 0;            // command data
-   unsigned short data = 0;               // RAM data
-   unsigned int k = 0;                    // used in loop for writing RAM data to the chip
-   const unsigned short *RAM_ptr;               // pointer to array of data to be sent to the chip
+   uint16_t memory_area = 0;         // memory area
+   uint16_t start_address = 0;      // start address
+   uint16_t codeWidthRegAddr = 0;   // code width register address
+   uint16_t size = 0;               // size of RAM data
+   uint16_t command = 0;            // command data
+   const uint16_t *RAM_ptr;               // pointer to array of data to be sent to the chip
 
 
    //Why Again? For Every time, just in case?
@@ -341,26 +339,16 @@ static void download_RAM(int target) {
    command = start_address << 5;
    spi_writew(command);           // sends start address command
 
-   /*
-   for(k = 0; k < size; k++)          // downloads RAM
-   {
-      data = *RAM_ptr;                // retrieves data to be sent
-      spi_writew(data);           // sends data
-      RAM_ptr++;
-   }
-   */
    spiSend(driver, size, RAM_ptr);
    spiUnselect(driver);
 }
 
 static void download_register(int r_target) {
-	   unsigned short r_start_address = 0;  // start address
-	   unsigned short r_size = 0;           // size of configuration data
-	   unsigned short r_command = 0;        // command data
-	   unsigned short r_data = 0;           // configuration data
-	   int n = 0;                           // used for loop for writing data to the chip
-	   unsigned short remainder_size = 0;   // remainder size
-	   const unsigned short *reg_ptr;            // pointer to array of data to be sent to the chip
+	   uint16_t r_start_address = 0;  // start address
+	   uint16_t r_size = 0;           // size of configuration data
+	   uint16_t r_command = 0;        // command data
+	   uint16_t remainder_size = 0;   // remainder size
+	   const uint16_t *reg_ptr;            // pointer to array of data to be sent to the chip
 
 	   switch(r_target)                     // selects target
 	   {
