@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Sun Nov 22 05:44:51 UTC 2020
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Sun Nov 22 23:31:54 UTC 2020
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -1585,7 +1585,7 @@ struct engine_configuration_s {
 	 * Some Subaru and some Mazda use double-solenoid idle air valve
 	 * offset 810
 	 */
-	brain_pin_e secondSolenoidPin;
+	output_pin_e secondSolenoidPin;
 	/**
 	 * See also starterControlPin
 	 * offset 811
@@ -3769,4 +3769,4 @@ struct persistent_config_s {
 typedef struct persistent_config_s persistent_config_s;
 
 // end
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Sun Nov 22 05:44:51 UTC 2020
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Sun Nov 22 23:31:54 UTC 2020
