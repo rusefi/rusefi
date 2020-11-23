@@ -175,6 +175,7 @@
     /* Popover */
     .popover.open {
       display: block;
+      white-space: nowrap;
     }
     .popover {
       display: none;

@@ -79,18 +79,18 @@
     </div>
   </div>
 
-    <nav class="navbar">
-      <div class="container">
-        <ul class="navbar-list">
-          <li class="navbar-item"><a class="navbar-link" href="index.html#intro">Intro</a></li>
-          <li class="navbar-item">
-            <a class="navbar-link" href="#" data-popover="#codeNavPopover">Hardware</a>
-            <div id="codeNavPopover" class="popover">
-              <ul class="popover-list">
-                <li class="popover-item">
-                  <a class="popover-link" href="index.html#microrusefi">microRusEFI</a>
-                  <!-- </li> -->
-                  <!-- <li class="popover-item">
+  <nav class="navbar">
+    <div class="container">
+      <ul class="navbar-list">
+        <li class="navbar-item"><a class="navbar-link" href="index.html#intro">Intro</a></li>
+        <li class="navbar-item">
+          <a class="navbar-link" href="#" data-popover="#hardwareNavPopover">Hardware</a>
+          <div id="hardwareNavPopover" class="popover">
+            <ul class="popover-list">
+              <li class="popover-item">
+                <a class="popover-link" href="index.html#microrusefi">microRusEFI</a>
+                <!-- </li> -->
+                <!-- <li class="popover-item">
                   <a class="popover-link" href="index.html#proteus">Proteus</a>
                 </li>
                 <li class="popover-item">
@@ -105,145 +105,157 @@
                 <li class="popover-item">
                   <a class="popover-link" href="#code">Prometheus</a>
                 </li> -->
-              </ul>
-            </div>
-          </li>
-          <li class="navbar-item"><a class="navbar-link" href="index.html#shop">Shop</a></li>
-          <li class="navbar-item"><a class="navbar-link" href="index.html#links">Links</a></li>
-          <li class="navbar-item dl-link"><a class="navbar-link"
-              href="https://github.com/rusefi/rusefi/wiki/Download">Download</a></li>
-        </ul>
-      </div>
-    </nav>
-
-    <!-- Intro -->
-    <div class="docs-section" id="intro">
-      <div class="container">
-        <h6 class="docs-header">Intro</h6>
-        <p>Modern 32 bit chips are a game changer for Do-It-Yourself Engine Management</p>
-        <p>rusEFI is the next generation of open source, DIY automotive engine management. With the availability of cheap
-          yet extremely powerful micro-controllers, we can make a very simple and powerful engine management system
-          possible!</p>
-        <br>
-        rusEFI is designed around the STM32 series, utilizing high performance floating point MCUs running a Real-Time Operating System.
-        This ensures high performance and a very stable and dependable product. <br>
-        The currently supported features are:
-        <br><br>
-        <table class="u-half-width">
-          <thead>
-            <tr>
-              <th>Feature</th>
-              <th>Supported</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td class='oddrow'>Batch injection</td>
-              <td class='oddrow'><i class="fa fa-check-circle-o fa-2x" aria-hidden="true"></i></td>
-            </tr>
-            <tr>
-              <td class='evenrow'>Sequential Injection up to 12 cylinders</td>
-              <td class='evenrow'><i class="fa fa-check-circle-o fa-2x" aria-hidden="true"></i></td>
-            </tr>
-            <tr>
-              <td class='oddrow'>Sequential Ignition up to 12 cylinders</td>
-              <td class='oddrow'><i class="fa fa-check-circle-o fa-2x" aria-hidden="true"></i></td>
-            </tr>
-            <tr>
-              <td class='evenrow'>Wasted Ignition</td>
-              <td class='evenrow'><i class="fa fa-check-circle-o fa-2x" aria-hidden="true"></i></td>
-            </tr>
-            <tr>
-              <td class='oddrow'>Direct Injection</td>
-              <td class='oddrow'><i class="fa fa-circle-o fa-2x" aria-hidden="true"></i></td>
-            </tr>
-            <tr>
-              <td class='evenrow'>Rotary Engines</td>
-              <td class='evenrow'><i class="fa fa-times fa-2x" aria-hidden="true"></i></td>
-            </tr>
-            <tr>
-              <td class='oddrow'>Closed Loop Fueling</td>
-              <td class='oddrow'><i class="fa fa-check-circle-o fa-2x" aria-hidden="true"></i></td>
-            </tr>
-            <tr>
-              <td class='evenrow'>Electronic Throttle Body</td>
-              <td class='evenrow'><i class="fa fa-check-circle-o fa-2x" aria-hidden="true"></i></td>
-            </tr>
-            <tr>
-              <td class='oddrow'>Knock Sensing</td>
-              <td class='oddrow'><i class="fa fa-circle-o fa-2x" aria-hidden="true"></i></td>
-            </tr>
-            <tr>
-              <td class='evenrow'>Boost Control</td>
-              <td class='evenrow'><i class="fa fa-circle-o fa-2x" aria-hidden="true"></i></td>
-            </tr>
-            <tr>
-              <td class='oddrow'>Launch Control</td>
-              <td class='oddrow'><i class="fa fa-times fa-2x" aria-hidden="true"></i></td>
-            </tr>
-            <tr>
-              <td class='evenrow'>Flat Shifting</td>
-              <td class='evenrow'><i class="fa fa-times fa-2x" aria-hidden="true"></i></td>
-            </tr>
-            <tr>
-              <td class='oddrow'>Automatic Transmission Control</td>
-              <td class='oddrow'><i class="fa fa-circle-o fa-2x" aria-hidden="true"></i></td>
-            </tr>
-            <tr>
-              <td>Acceleration enrichment - wall wetting/fuel trip/tau factor</td>
-              <td><i class="fa fa-check-circle-o fa-2x" aria-hidden="true"></i></td>
-            </tr>
-          </tbody>
-        </table>
-    
-        <p>
-        <div class=glossary>
-          <i class="fa fa-check-circle-o" aria-hidden="true"></i> Supported
-          <i class="fa fa-circle-o" aria-hidden="true"></i> In Development
-          <i class="fa fa-times" aria-hidden="true"></i> Currently not supported
-        </div>
-        </p>
-      </div>
+            </ul>
+          </div>
+        </li>
+        <li class="navbar-item"><a class="navbar-link" href="index.html#shop">Shop</a></li>
+        <li class="navbar-item">
+          <a class="navbar-link" href="#" data-popover="#linksNavPopover">Links</a>
+          <div id="linksNavPopover" class="popover">
+            <ul class="popover-list">
+              <li class="popover-item">
+                <a class="popover-link" href="http://www.rusefi.com/online">rusEFI online</a>
+              </li>
+              <li class="popover-item">
+                <a class="popover-link" href="http://www.rusefi.com/forum">Forum</a>
+              </li>
+            </ul>
+          </div>
+        </li>
+        <li class="navbar-item dl-link"><a class="navbar-link"
+            href="https://github.com/rusefi/rusefi/wiki/Download">Download</a></li>
+      </ul>
     </div>
+  </nav>
 
-    <!-- Microrusefi -->
-    <div class="docs-section" id="microrusefi">
-      <div class="container">
-        <h6 class="docs-header">microRusEFI</h6>
-        <img src="images/site/rusefi_mreheader.png" width="100%">
-        <p>microRusEFI is a small & cheap Engine Management System board designed for fully sequential 1, 2, 3 and 4
-          cylinder applications.<br>
-          microRusEFI uses a waterproof connector and its aluminum enclosure could be sealed.<br>
-          microRusEfi supports dual Hall shaft position sensor input or 1xHall + 1xVR shaft position sensor input (A few
-          resistors must be replaced on the PCB to switch from one setup to another)<br>
-          Open-source design available in <a href="https://github.com/rusefi/hw_microRusEfi">this repository</a>, or
-          available as a kit or completely assembled. <br>
-          This is an excellent option for racing series that allow modifications inside the stock ECU case.
-        </p>
-        <b>Features</b>
-        <ul>
-          <li>Primary VR or Hall input (configurable with few resistor changes)</li>
-          <li>Secondary Hall input</li>
-          <li>4 analog thermistor (temperature) inputs</li>
-          <li>10 analog voltage inputs (0-5v)</li>
-          <li>4 high-Z injector outputs</li>
-          <li>2 high-current low side outputs for IAC/VVT/other solenoids</li>
-          <li>Dedicated main relay control output</li>
-          <li>4 low-current low side outputs for relays or warning lights</li>
-          <li>4 5v logic-level ignition outputs</li>
-          <li>2 logic level outputs (5v/12v configurable, requires resistor changes)</li>
-          <li>Electronic throttle body (drive by wire)</li>
-          <li>CAN connectivity on the plug</li>
-          <li>USB connectivity on the plug</li>
-          <li>SPI and TTL available on PCB</li>
-        </ul>
-        <a class="button button-primary" href="https://www.ebay.com/itm/333532119947">Get microRusEFI hardware</a>
+  <!-- Intro -->
+  <div class="docs-section" id="intro">
+    <div class="container">
+      <h6 class="docs-header">Intro</h6>
+      <p>Modern 32 bit chips are a game changer for Do-It-Yourself Engine Management</p>
+      <p>rusEFI is the next generation of open source, DIY automotive engine management. With the availability of cheap
+        yet extremely powerful micro-controllers, we can make a very simple and powerful engine management system
+        possible!</p>
+      rusEFI is designed around the STM32 series, utilizing high performance floating point MCUs running a Real-Time
+      Operating System.
+      This ensures high performance and a very stable and dependable product. <br>
+      The currently supported features are:
+      <br><br>
+      <table class="u-half-width">
+        <thead>
+          <tr>
+            <th>Feature</th>
+            <th>Supported</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class='oddrow'>Batch injection</td>
+            <td class='oddrow'><i class="fa fa-check-circle-o fa-2x" aria-hidden="true"></i></td>
+          </tr>
+          <tr>
+            <td class='evenrow'>Sequential Injection up to 12 cylinders</td>
+            <td class='evenrow'><i class="fa fa-check-circle-o fa-2x" aria-hidden="true"></i></td>
+          </tr>
+          <tr>
+            <td class='oddrow'>Sequential Ignition up to 12 cylinders</td>
+            <td class='oddrow'><i class="fa fa-check-circle-o fa-2x" aria-hidden="true"></i></td>
+          </tr>
+          <tr>
+            <td class='evenrow'>Wasted Ignition</td>
+            <td class='evenrow'><i class="fa fa-check-circle-o fa-2x" aria-hidden="true"></i></td>
+          </tr>
+          <tr>
+            <td class='oddrow'>Direct Injection</td>
+            <td class='oddrow'><i class="fa fa-circle-o fa-2x" aria-hidden="true"></i></td>
+          </tr>
+          <tr>
+            <td class='evenrow'>Rotary Engines</td>
+            <td class='evenrow'><i class="fa fa-times fa-2x" aria-hidden="true"></i></td>
+          </tr>
+          <tr>
+            <td class='oddrow'>Closed Loop Fueling</td>
+            <td class='oddrow'><i class="fa fa-check-circle-o fa-2x" aria-hidden="true"></i></td>
+          </tr>
+          <tr>
+            <td class='evenrow'>Electronic Throttle Body</td>
+            <td class='evenrow'><i class="fa fa-check-circle-o fa-2x" aria-hidden="true"></i></td>
+          </tr>
+          <tr>
+            <td class='oddrow'>Knock Sensing</td>
+            <td class='oddrow'><i class="fa fa-circle-o fa-2x" aria-hidden="true"></i></td>
+          </tr>
+          <tr>
+            <td class='evenrow'>Boost Control</td>
+            <td class='evenrow'><i class="fa fa-circle-o fa-2x" aria-hidden="true"></i></td>
+          </tr>
+          <tr>
+            <td class='oddrow'>Launch Control</td>
+            <td class='oddrow'><i class="fa fa-times fa-2x" aria-hidden="true"></i></td>
+          </tr>
+          <tr>
+            <td class='evenrow'>Flat Shifting</td>
+            <td class='evenrow'><i class="fa fa-times fa-2x" aria-hidden="true"></i></td>
+          </tr>
+          <tr>
+            <td class='oddrow'>Automatic Transmission Control</td>
+            <td class='oddrow'><i class="fa fa-circle-o fa-2x" aria-hidden="true"></i></td>
+          </tr>
+          <tr>
+            <td>Acceleration enrichment - wall wetting/fuel trip/tau factor</td>
+            <td><i class="fa fa-check-circle-o fa-2x" aria-hidden="true"></i></td>
+          </tr>
+        </tbody>
+      </table>
+
+      <p>
+      <div class=glossary>
+        <i class="fa fa-check-circle-o" aria-hidden="true"></i> Supported
+        <i class="fa fa-circle-o" aria-hidden="true"></i> In Development
+        <i class="fa fa-times" aria-hidden="true"></i> Currently not supported
       </div>
+      </p>
     </div>
+  </div>
 
-    <!-- Shop -->
-    <div class="docs-section" id="shop">
-      <div class="container">
+  <!-- Microrusefi -->
+  <div class="docs-section" id="microrusefi">
+    <div class="container">
+      <h6 class="docs-header">microRusEFI</h6>
+      <img src="images/site/rusefi_mreheader.png" width="100%">
+      <p>microRusEFI is a small & cheap Engine Management System board designed for fully sequential 1, 2, 3 and 4
+        cylinder applications.<br>
+        microRusEFI uses a waterproof connector and its aluminum enclosure could be sealed.<br>
+        microRusEfi supports dual Hall shaft position sensor input or 1xHall + 1xVR shaft position sensor input (A few
+        resistors must be replaced on the PCB to switch from one setup to another)<br>
+        Open-source design available in <a href="https://github.com/rusefi/hw_microRusEfi">this repository</a>, or
+        available as a kit or completely assembled. <br>
+        This is an excellent option for racing series that allow modifications inside the stock ECU case.
+      </p>
+      <b>Features</b>
+      <ul>
+        <li>Primary VR or Hall input (configurable with few resistor changes)</li>
+        <li>Secondary Hall input</li>
+        <li>4 analog thermistor (temperature) inputs</li>
+        <li>10 analog voltage inputs (0-5v)</li>
+        <li>4 high-Z injector outputs</li>
+        <li>2 high-current low side outputs for IAC/VVT/other solenoids</li>
+        <li>Dedicated main relay control output</li>
+        <li>4 low-current low side outputs for relays or warning lights</li>
+        <li>4 5v logic-level ignition outputs</li>
+        <li>2 logic level outputs (5v/12v configurable, requires resistor changes)</li>
+        <li>Electronic throttle body (drive by wire)</li>
+        <li>CAN connectivity on the plug</li>
+        <li>USB connectivity on the plug</li>
+        <li>SPI and TTL available on PCB</li>
+      </ul>
+      <a class="button button-primary" href="https://www.ebay.com/itm/333532119947">Get microRusEFI hardware</a>
+    </div>
+  </div>
+
+  <!-- Shop -->
+  <div class="docs-section" id="shop">
+    <div class="container">
       <h6 class="docs-header">Shop</h6>
       <p>The following rusEFI hardware is currently available on eBay:</p>
       <div class="docs-example">
@@ -349,49 +361,49 @@
         </table>
       </div>
     </div>
-    </div>
+  </div>
 
-    <!-- Links -->
-    <div class="docs-section examples" id="links">
-      <div class="container">
-        <h6 class="docs-header">Links</h6>
-        <div class="row example">
-          <a class="example-screenshot-wrapper" target="_blank">
-            <img class="example-screenshot" src="images/site/reonline.png">
-          </a>
-          <div class="one-half offset-by-one-half column">
-            <h6 class="example-header">rusEFI online</h6>
-            <p class="example-description">Upload, share and view your tune <br> Right in the browser <br> with rusEFI
-              online</p>
-            <a class="button" href="https://rusefi.com/online/" target="_blank">rusEFI online</a>
-          </div>
-        </div>
-        <div class="row example">
-          <a class="example-screenshot-wrapper" target="_blank">
-            <img class="example-screenshot" src="images/site/reforum.png">
-          </a>
-          <div class="one-half offset-by-one-half column">
-            <h6 class="example-header">rusEFI forum</h6>
-            <p class="example-description">Got a question? <br> This a great place to start exploring to see what rusEFI
-              has to offer</p>
-            <a class="button" href="https://rusefi.com/forum/" target="_blank">rusEFI forum</a>
-          </div>
-        </div>
-        <br>
-      </div>
-    
-    </div>
-
-    <div class="footer">
-      <div class="container">
-        <a href="https://www.facebook.com/rusEfiECU/"><i class="fa fa-facebook fa-2x" aria-hidden="true"></i></a>
-        <a href="https://www.youtube.com/user/rusefi"><i class="fa fa-youtube-play fa-2x" aria-hidden="true"></i></a>
-        <a
-          href="https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=arro239%40gmail%2ecom&lc=US&item_name=rusEfi&currency_code=USD&bn=PP%2dDonationsBF%3abtn_donateCC_LG%2egif%3aNonHosted">
-          <i class="fa fa-paypal fa-2x" aria-hidden="true"></i>
+  <!-- Links -->
+  <div class="docs-section examples" id="links">
+    <div class="container">
+      <h6 class="docs-header">Links</h6>
+      <div class="row example">
+        <a class="example-screenshot-wrapper" target="_blank">
+          <img class="example-screenshot" src="images/site/reonline.png">
         </a>
+        <div class="one-half offset-by-one-half column">
+          <h6 class="example-header">rusEFI online</h6>
+          <p class="example-description">Upload, share and view your tune <br> Right in the browser <br> with rusEFI
+            online</p>
+          <a class="button" href="https://rusefi.com/online/" target="_blank">rusEFI online</a>
+        </div>
       </div>
+      <div class="row example">
+        <a class="example-screenshot-wrapper" target="_blank">
+          <img class="example-screenshot" src="images/site/reforum.png">
+        </a>
+        <div class="one-half offset-by-one-half column">
+          <h6 class="example-header">rusEFI forum</h6>
+          <p class="example-description">Got a question? <br> This a great place to start exploring to see what rusEFI
+            has to offer</p>
+          <a class="button" href="https://rusefi.com/forum/" target="_blank">rusEFI forum</a>
+        </div>
+      </div>
+      <br>
     </div>
+
+  </div>
+
+  <div class="footer">
+    <div class="container">
+      <a href="https://www.facebook.com/rusEfiECU/"><i class="fa fa-facebook fa-2x" aria-hidden="true"></i></a>
+      <a href="https://www.youtube.com/user/rusefi"><i class="fa fa-youtube-play fa-2x" aria-hidden="true"></i></a>
+      <a
+        href="https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=arro239%40gmail%2ecom&lc=US&item_name=rusEfi&currency_code=USD&bn=PP%2dDonationsBF%3abtn_donateCC_LG%2egif%3aNonHosted">
+        <i class="fa fa-paypal fa-2x" aria-hidden="true"></i>
+      </a>
+    </div>
+  </div>
 
   <!-- </div> -->
 
