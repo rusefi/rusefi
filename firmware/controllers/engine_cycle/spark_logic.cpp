@@ -319,7 +319,7 @@ bool scheduleOrQueue(AngleBasedEvent *event,
 	}
 }
 
-static ALWAYS_INLINE void handleSparkEvent(bool limitedSpark, uint32_t trgEventIndex, IgnitionEvent *event,
+static void handleSparkEvent(bool limitedSpark, uint32_t trgEventIndex, IgnitionEvent *event,
 		int rpm, efitick_t edgeTimestamp DECLARE_ENGINE_PARAMETER_SUFFIX) {
 
 	angle_t sparkAngle = event->sparkAngle;
@@ -421,7 +421,7 @@ void initializeIgnitionActions(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	list->isReady = true;
 }
 
-static ALWAYS_INLINE void prepareIgnitionSchedule(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+static void prepareIgnitionSchedule(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	ScopePerf perf(PE::PrepareIgnitionSchedule);
 	
 	/**
