@@ -19,8 +19,17 @@
 
 #define MS2US(MS_TIME) ((MS_TIME) * 1000)
 
+// microseconds to ticks
+
+#define US2NT(us) (((efitime_t)(us)) * US_TO_NT_MULTIPLIER)
+#define USF2NT(us_float) ((us_float) * US_TO_NT_MULTIPLIER)
+
+// And back
+#define NT2US(x) ((x) / US_TO_NT_MULTIPLIER)
+
 // milliseconds to ticks
 #define MS2NT(msTime) US2NT(MS2US(msTime))
+#define MSF2NT(msTimeFloat) USF2NT(MS2US(msTimeFloat))
 
 /**
  * We use this 'deep in past, before ECU has ever started' value as a way to unify
