@@ -30,8 +30,6 @@
 
 #define US_TO_NT_MULTIPLIER 100
 
-#define ALWAYS_INLINE
-
 #define US2NT(x) (US_TO_NT_MULTIPLIER * (x))
 
 #define NT2US(x) ((x) / US_TO_NT_MULTIPLIER)

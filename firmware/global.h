@@ -27,12 +27,9 @@
 #if defined __GNUC__
 // GCC
 #include <sys/types.h>
-#define ALWAYS_INLINE __attribute__((always_inline)) inline
 #else
 // IAR
 typedef unsigned int time_t;
-// todo: what's the IAR option?
-#define ALWAYS_INLINE INLINE
 #endif
 
 #ifdef __cplusplus
