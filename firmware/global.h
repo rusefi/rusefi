@@ -96,14 +96,4 @@ typedef unsigned int time_t;
 #define CCM_OPTIONAL
 #endif /* EFI_USE_CCM */
 
-/**
- * converts efitimeus_t to efitick_t
- */
-#define US2NT(us) (((efitime_t)(us))*US_TO_NT_MULTIPLIER)
-
-/**
- * converts efitick_t to efitimeus_t
- */
-#define NT2US(nt) ((nt) / US_TO_NT_MULTIPLIER)
-
 #define UNIT_TEST_BUSY_WAIT_CALLBACK() {}
