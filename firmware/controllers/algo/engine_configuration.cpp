@@ -740,7 +740,7 @@ static void setDefaultEngineConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 
 	CONFIG(mapMinBufferLength) = 1;
 
-	CONFIG(startCrankingDuration) = 7;
+	CONFIG(startCrankingDuration) = 3;
 
 	CONFIG(compressionRatio) = 9;
 
