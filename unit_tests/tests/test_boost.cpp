@@ -15,6 +15,7 @@ TEST(BoostControl, Setpoint) {
 		.WillRepeatedly([](float xRpm, float tps) { return tps * 2; });
 
 	WITH_ENGINE_TEST_HELPER(TEST_ENGINE);
+	engineConfiguration->boostType = CLOSED_LOOP;
 
 	BoostController bc;
 	INJECT_ENGINE_REFERENCE(&bc);
