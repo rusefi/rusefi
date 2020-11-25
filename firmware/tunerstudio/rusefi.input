@@ -1704,6 +1704,7 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 		field = "Number of Cylinders",					cylindersCount
 		field = "Engine Displacement",         			displacement
 		field = "Firing Order",							firingOrder
+		field = "Vehicle Weight",						vehicleWeight
 ; this field is useful for rusEFI online catalog
 		field = "Compression Ratio",					compressionRatio
 ; this field is useful for rusEFI online catalog
