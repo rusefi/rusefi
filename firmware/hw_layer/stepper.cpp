@@ -195,7 +195,7 @@ bool StepDirectionStepper::pulse() {
 }
 
 void StepperHw::pause() const {
-	chThdSleepMilliseconds(m_reactionTime);
+	chThdSleepMicroseconds((int)(MS2US(m_reactionTime)));
 }
 
 void StepperHw::setReactionTime(float ms) {
