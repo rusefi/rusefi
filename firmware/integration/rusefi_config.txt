@@ -967,7 +967,9 @@ custom maf_sensor_type_e 4 bits, S32, @OFFSET@, [0:1], @@maf_sensor_type_e_enum@
 	pin_output_mode_e drv8860_csPinMode;
 	brain_pin_e       drv8860_miso;
 
-	int[64] unusedAtOldBoardConfigurationEnd;;"units", 1, 0, -20, 100, 0
+	int[63] unusedAtOldBoardConfigurationEnd;;"units", 1, 0, -20, 100, 0
+	uint16_t vehicleWeight;;"kg", 1, 0, 0, 10000, 0
+	uint16_t unusedHereHereHere;;"ADC", 1, 0, 0, 1000, 0
 
 	uint16_t tps2SecondaryMin;;"ADC", 1, 0, 0, 1000, 0
 	uint16_t tps2SecondaryMax;;"ADC", 1, 0, 0, 1000, 0
