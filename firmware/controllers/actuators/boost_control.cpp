@@ -67,6 +67,12 @@ expected<float> BoostController::observePlant() const {
 }
 
 expected<float> BoostController::getSetpoint() const {
+	// If we're in open loop only mode, disregard any target computation.
+	// Open loop needs to work even in case of invalid closed loop config
+	if (engineConfiguration->boostType != CLOSED_LOOP) {
+		return 0;
+	}
+
 	float rpm = GET_RPM();
 
 	auto tps = Sensor::get(SensorType::DriverThrottleIntent);
