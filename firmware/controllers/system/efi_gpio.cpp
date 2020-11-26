@@ -551,7 +551,7 @@ void OutputPin::initPin(const char *msg, brain_pin_e brainPin, const pin_output_
 				actualValue = !actualValue;
 			}
 			if (actualValue) {
-				firmwareError(OBD_PCM_Processor_Fault, "startup pin state %s %d %d", hwPortname(brainPin), actualValue, *outputMode);
+				firmwareError(OBD_PCM_Processor_Fault, "%s: startup pin state %s value=%d mode=%s", msg, hwPortname(brainPin), actualValue, getPin_output_mode_e(*outputMode));
 			}
 		}
 	}
