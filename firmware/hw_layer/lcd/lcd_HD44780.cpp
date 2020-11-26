@@ -169,12 +169,12 @@ static void lcdInfo(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 }
 
 void stopHD44780_pins() {
-	brain_pin_markUnused(activeConfiguration.HD44780_rs);
-	brain_pin_markUnused(activeConfiguration.HD44780_e);
-	brain_pin_markUnused(activeConfiguration.HD44780_db4);
-	brain_pin_markUnused(activeConfiguration.HD44780_db5);
-	brain_pin_markUnused(activeConfiguration.HD44780_db6);
-	brain_pin_markUnused(activeConfiguration.HD44780_db7);
+	efiSetPadUnused(activeConfiguration.HD44780_rs);
+	efiSetPadUnused(activeConfiguration.HD44780_e);
+	efiSetPadUnused(activeConfiguration.HD44780_db4);
+	efiSetPadUnused(activeConfiguration.HD44780_db5);
+	efiSetPadUnused(activeConfiguration.HD44780_db6);
+	efiSetPadUnused(activeConfiguration.HD44780_db7);
 }
 
 void startHD44780_pins() {

@@ -371,7 +371,7 @@ void applyNewHardwareSettings(void) {
 	stopBoostPin();
 #endif
 	if (isPinOrModeChanged(clutchUpPin, clutchUpPinMode)) {
-		brain_pin_markUnused(activeConfiguration.clutchUpPin);
+		efiSetPadUnused(activeConfiguration.clutchUpPin);
 	}
 
 	enginePins.unregisterPins();
