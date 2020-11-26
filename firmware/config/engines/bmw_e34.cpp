@@ -132,7 +132,10 @@ void setBmwE34(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 
 	// idle
 	engineConfiguration->idle.solenoidPin = GPIOC_14;
+	/*
+	 * this configuration is used on HW CI - in HW CI 'inverted' would rightfully fail unless there is pull-up
 	engineConfiguration->idle.solenoidPinMode = OM_INVERTED;
+*/
 	engineConfiguration->idle.solenoidFrequency = 300;
 	engineConfiguration->manIdlePosition = 50; // set_idle_pwm 50
 
