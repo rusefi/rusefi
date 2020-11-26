@@ -157,22 +157,7 @@
                                      DEFAULT_GPIO_SPEED(14) |          \
                                      DEFAULT_GPIO_SPEED(15))
 
-#define VAL_GPIO_ODR_ALL_DEFAULT     (PIN_ODR_HIGH(0) |           \
-                                     PIN_ODR_HIGH(1) |             \
-                                     PIN_ODR_HIGH(2) |             \
-                                     PIN_ODR_HIGH(3) |             \
-                                     PIN_ODR_HIGH(4) |             \
-                                     PIN_ODR_HIGH(5) |              \
-                                     PIN_ODR_HIGH(6) |              \
-                                     PIN_ODR_HIGH(7) |              \
-                                     PIN_ODR_HIGH(8) |             \
-                                     PIN_ODR_HIGH(9) |          \
-                                     PIN_ODR_HIGH(10) |        \
-                                     PIN_ODR_HIGH(11) |        \
-                                     PIN_ODR_HIGH(12) |        \
-                                     PIN_ODR_HIGH(13) |            \
-                                     PIN_ODR_HIGH(14) |            \
-                                     PIN_ODR_HIGH(15))
+#define VAL_GPIO_ODR_ALL_DEFAULT    0
 
 #define VAL_GPIO_PUPDR_ALL_DEFAULT (EFI_DR_DEFAULT(0) |        \
                                      EFI_DR_DEFAULT(1) |       \
