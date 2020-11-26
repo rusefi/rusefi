@@ -212,7 +212,7 @@ void startBoostPin() {
 
 void stopBoostPin() {
 #if !EFI_UNIT_TEST
-	brain_pin_markUnused(activeConfiguration.boostControlPin);
+	efiSetPadUnused(activeConfiguration.boostControlPin);
 #endif /* EFI_UNIT_TEST */
 }
 

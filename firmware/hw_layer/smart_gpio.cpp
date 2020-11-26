@@ -260,16 +260,16 @@ void initSmartGpio() {
 #if (BOARD_EXT_GPIOCHIPS > 0)
 void stopSmartCsPins() {
 #if (BOARD_TLE8888_COUNT > 0)
-	brain_pin_markUnused(activeConfiguration.tle8888_cs);
+	efiSetPadUnused(activeConfiguration.tle8888_cs);
 #endif /* BOARD_TLE8888_COUNT */
 #if (BOARD_TLE6240_COUNT > 0)
-	brain_pin_markUnused(activeConfiguration.tle6240_cs);
+	efiSetPadUnused(activeConfiguration.tle6240_cs);
 #endif /* BOARD_TLE6240_COUNT */
 #if (BOARD_MC33972_COUNT > 0)
-	brain_pin_markUnused(activeConfiguration.mc33972_cs);
+	efiSetPadUnused(activeConfiguration.mc33972_cs);
 #endif /* BOARD_MC33972_COUNT */
 #if (BOARD_DRV8860_COUNT > 0)
-	brain_pin_markUnused(activeConfiguration.drv8860_cs);
+	efiSetPadUnused(activeConfiguration.drv8860_cs);
 #endif /* BOARD_DRV8860_COUNT */
 }
 

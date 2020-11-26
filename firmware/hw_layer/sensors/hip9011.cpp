@@ -386,8 +386,8 @@ static msg_t hipThread(void *arg) {
 
 void stopHip9001_pins() {
 #if EFI_PROD_CODE
-	brain_pin_markUnused(activeConfiguration.hip9011IntHoldPin);
-	brain_pin_markUnused(activeConfiguration.hip9011CsPin);
+	efiSetPadUnused(activeConfiguration.hip9011IntHoldPin);
+	efiSetPadUnused(activeConfiguration.hip9011CsPin);
 #endif /* EFI_PROD_CODE */
 }
 
