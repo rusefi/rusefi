@@ -11,6 +11,7 @@
 #include "efi_gpio.h"
 #include "drivers/gpio/gpio_ext.h"
 #include "perf_trace.h"
+#include "engine_controller.h"
 
 #if EFI_GPIO_HARDWARE
 #include "pin_repository.h"
@@ -75,19 +76,17 @@ bool RegisteredOutputPin::isPinConfigurationChanged() {
     pin_output_mode_e newMode = *(pin_output_mode_e *) ((void *) (&((char*) engineConfiguration)[pinModeOffset]));
     return curPin != newPin || curMode != newMode;
 #else
-    return false;
+    return true;
 #endif // EFI_PROD_CODE
 }
 
-void RegisteredOutputPin::init() {
-#if EFI_PROD_CODE
+void RegisteredOutputPin::init(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	brain_pin_e        newPin = *(brain_pin_e       *) ((void *) (&((char*) engineConfiguration)[pinOffset]));
     pin_output_mode_e *newMode = (pin_output_mode_e *) ((void *) (&((char*) engineConfiguration)[pinModeOffset]));
 
     if (isPinConfigurationChanged()) {
 		this->initPin(registrationName, newPin, newMode);
     }
-#endif // EFI_PROD_CODE
 }
 
 void RegisteredOutputPin::unregister() {
@@ -176,6 +175,7 @@ EnginePins::EnginePins() :
     if ((outputPin)->currentLogicValue != (logicValue)) {                          \
 	  (outputPin)->currentLogicValue = (logicValue);                               \
     }                                                                              \
+	setMockState((outputPin)->brainPin, logicValue);                               \
   }
 #endif /* EFI_PROD_CODE */
 
@@ -219,6 +219,16 @@ void EnginePins::unregisterPins() {
 #endif /* EFI_PROD_CODE */
 }
 
+void EnginePins::debug() {
+#if EFI_PROD_CODE
+	RegisteredOutputPin * pin = registeredOutputHead;
+	while (pin != nullptr) {
+		scheduleMsg(logger, "%s %d", pin->registrationName, pin->currentLogicValue);
+		pin = pin->next;
+	}
+#endif // EFI_PROD_CODE
+}
+
 void EnginePins::startPins(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 #if EFI_ENGINE_CONTROL
 	startInjectionPins();
@@ -228,7 +238,7 @@ void EnginePins::startPins(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 
 	RegisteredOutputPin * pin = registeredOutputHead;
 	while (pin != nullptr) {
-		pin->init();
+		pin->init(PASS_ENGINE_PARAMETER_SIGNATURE);
 		pin = pin->next;
 	}
 }
@@ -352,7 +362,7 @@ void InjectorOutputPin::reset() {
 	}
 
 	// todo: this could be refactored by calling some super-reset method
-	currentLogicValue = INITIAL_PIN_STATE;
+	currentLogicValue = 0;
 }
 
 IgnitionOutputPin::IgnitionOutputPin() {
@@ -471,6 +481,10 @@ void OutputPin::initPin(const char *msg, brain_pin_e brainPin) {
 }
 
 void OutputPin::initPin(const char *msg, brain_pin_e brainPin, const pin_output_mode_e *outputMode) {
+#if EFI_UNIT_TEST
+	this->brainPin = brainPin;
+#endif
+
 #if EFI_GPIO_HARDWARE && EFI_PROD_CODE
 	if (brainPin == GPIO_UNASSIGNED)
 		return;
@@ -520,7 +534,7 @@ void OutputPin::initPin(const char *msg, brain_pin_e brainPin, const pin_output_
 		}
 	#endif
 
-	this->currentLogicValue = INITIAL_PIN_STATE;
+	this->currentLogicValue = 0;
 
 	// The order of the next two calls may look strange, which is a good observation.
 	// We call them in this order so that the pin is set to a known state BEFORE
@@ -528,6 +542,20 @@ void OutputPin::initPin(const char *msg, brain_pin_e brainPin, const pin_output_
 	// mystery state being driven on the pin (potentially dangerous).
 	setDefaultPinState(outputMode);
 	efiSetPadMode(msg, brainPin, mode);
+	if (brain_pin_is_onchip(brainPin)) {
+		int actualValue = palReadPad(port, pin);
+		// we had enough drama with pin configuration in board.h and else that we shall self-check
+		// todo: handle OM_OPENDRAIN and OM_OPENDRAIN_INVERTED as well
+		if (*outputMode == OM_DEFAULT || *outputMode == OM_INVERTED) {
+			if (*outputMode == OM_INVERTED) {
+				actualValue = !actualValue;
+			}
+			if (actualValue) {
+				firmwareError(OBD_PCM_Processor_Fault, "startup pin state %s %d %d", hwPortname(brainPin), actualValue, *outputMode);
+			}
+		}
+	}
+
 #endif /* EFI_GPIO_HARDWARE */
 }
 
@@ -535,7 +563,7 @@ void OutputPin::unregisterOutput(brain_pin_e oldPin) {
 	if (oldPin != GPIO_UNASSIGNED) {
 		scheduleMsg(logger, "unregistering %s", hwPortname(oldPin));
 #if EFI_GPIO_HARDWARE && EFI_PROD_CODE
-		brain_pin_markUnused(oldPin);
+		efiSetPadUnused(oldPin);
 		port = nullptr;
 #endif /* EFI_GPIO_HARDWARE */
 	}
@@ -560,6 +588,8 @@ void initPrimaryPins(Logging *sharedLogger) {
 	criticalErrorLedPort = getHwPort("CRITICAL", LED_CRITICAL_ERROR_BRAIN_PIN);
 	criticalErrorLedPin = getHwPin("CRITICAL", LED_CRITICAL_ERROR_BRAIN_PIN);
 	criticalErrorLedState = (LED_ERROR_BRAIN_PIN_MODE == INVERTED_OUTPUT) ? 0 : 1;
+
+	addConsoleAction("gpio_pins", EnginePins::debug);
 #endif /* EFI_PROD_CODE */
 }
 

@@ -250,6 +250,7 @@
 #define CMD_ETB_DUTY "set_etb_duty"
 #define CMD_FUEL_BENCH "fuelbench"
 #define CMD_FUNCTIONAL_TEST_MODE "test_mode"
+#define CMD_HPFP_BENCH "hpfpbench"
 #define CMD_IGNITION "ignition"
 #define CMD_INJECTION "injection"
 #define CMD_MIL_BENCH "milbench"
@@ -269,6 +270,11 @@
 #define CMD_TS_BENCH_CHECK_ENGINE_LIGHT 7
 #define CMD_TS_BENCH_FAN_RELAY 4
 #define CMD_TS_BENCH_FUEL_PUMP 1
+#define CMD_TS_BENCH_GPPWM1_VALVE 10
+#define CMD_TS_BENCH_GPPWM2_VALVE 11
+#define CMD_TS_BENCH_GPPWM3_VALVE 12
+#define CMD_TS_BENCH_GPPWM4_VALVE 13
+#define CMD_TS_BENCH_HPFP_VALVE 9
 #define CMD_TS_BENCH_IDLE_VALVE 8
 #define CMD_TS_BENCH_MAIN_RELAY 0
 #define CMD_TS_BENCH_STARTER_DISABLE_RELAY 3
@@ -658,6 +664,8 @@
 #define GAUGE_NAME_MAP "MAP"
 #define GAUGE_NAME_OIL_PRESSURE "Oil Pressure"
 #define GAUGE_NAME_OIL_PRESSURE_UNITS "kPa"
+#define GAUGE_NAME_RAW_FUEL_PRESSURE_HIGH "Fuel pressure raw (high)"
+#define GAUGE_NAME_RAW_FUEL_PRESSURE_LOW "Fuel pressure raw (low)"
 #define GAUGE_NAME_RPM "RPM"
 #define GAUGE_NAME_TARGET_AFR "fuel: target AFR"
 #define GAUGE_NAME_TARGET_LAMBDA "fuel: target lambda"
@@ -1202,8 +1210,8 @@
 #define showHumanReadableWarning_offset 976
 #define showSdCardWarning_offset 76
 #define SIGNATURE_BOARD all
-#define SIGNATURE_DATE 2020.11.17
-#define SIGNATURE_HASH 2711056554
+#define SIGNATURE_DATE 2020.11.25
+#define SIGNATURE_HASH 866796046
 #define silentTriggerError_offset 1464
 #define slowAdcAlpha_offset 2088
 #define sparkDwellRpmBins_offset 332
@@ -1533,7 +1541,7 @@
 #define ts_show_spi true
 #define ts_show_trigger_comparator false
 #define ts_show_tunerstudio_port true
-#define TS_SIGNATURE "rusEFI 2020.11.17.all.2711056554"
+#define TS_SIGNATURE "rusEFI 2020.11.25.all.866796046"
 #define TS_SINGLE_WRITE_COMMAND 'W'
 #define TS_SINGLE_WRITE_COMMAND_char W
 #define TS_TEST_COMMAND 't' // 0x74
@@ -1591,31 +1599,32 @@
 #define unusedBit_288_30_offset 976
 #define unusedBit_288_31_offset 976
 #define unusedBit_34_31_offset 76
-#define unusedBit_486_10_offset 2116
-#define unusedBit_486_11_offset 2116
-#define unusedBit_486_12_offset 2116
-#define unusedBit_486_13_offset 2116
-#define unusedBit_486_14_offset 2116
-#define unusedBit_486_15_offset 2116
-#define unusedBit_486_16_offset 2116
-#define unusedBit_486_17_offset 2116
-#define unusedBit_486_18_offset 2116
-#define unusedBit_486_19_offset 2116
-#define unusedBit_486_20_offset 2116
-#define unusedBit_486_21_offset 2116
-#define unusedBit_486_22_offset 2116
-#define unusedBit_486_23_offset 2116
-#define unusedBit_486_24_offset 2116
-#define unusedBit_486_25_offset 2116
-#define unusedBit_486_26_offset 2116
-#define unusedBit_486_27_offset 2116
-#define unusedBit_486_28_offset 2116
-#define unusedBit_486_29_offset 2116
-#define unusedBit_486_30_offset 2116
-#define unusedBit_486_31_offset 2116
-#define unusedBit_486_8_offset 2116
-#define unusedBit_486_9_offset 2116
+#define unusedBit_488_10_offset 2116
+#define unusedBit_488_11_offset 2116
+#define unusedBit_488_12_offset 2116
+#define unusedBit_488_13_offset 2116
+#define unusedBit_488_14_offset 2116
+#define unusedBit_488_15_offset 2116
+#define unusedBit_488_16_offset 2116
+#define unusedBit_488_17_offset 2116
+#define unusedBit_488_18_offset 2116
+#define unusedBit_488_19_offset 2116
+#define unusedBit_488_20_offset 2116
+#define unusedBit_488_21_offset 2116
+#define unusedBit_488_22_offset 2116
+#define unusedBit_488_23_offset 2116
+#define unusedBit_488_24_offset 2116
+#define unusedBit_488_25_offset 2116
+#define unusedBit_488_26_offset 2116
+#define unusedBit_488_27_offset 2116
+#define unusedBit_488_28_offset 2116
+#define unusedBit_488_29_offset 2116
+#define unusedBit_488_30_offset 2116
+#define unusedBit_488_31_offset 2116
+#define unusedBit_488_8_offset 2116
+#define unusedBit_488_9_offset 2116
 #define unusedFlexFuelSensor_offset 3100
+#define unusedHereHereHere_offset 1458
 #define unusedHereWeHave_offset 1464
 #define unusedOldBiquad_offset 2332
 #define unusedSpiPadding4_offset 2593
@@ -1668,6 +1677,7 @@
 #define vehicleName_offset 1160
 #define vehicleSpeedCoef_offset 476
 #define vehicleSpeedSensorInputPin_offset 968
+#define vehicleWeight_offset 1456
 #define veLoadBins_offset 18464
 #define veOverrideMode_offset 2109
 #define verboseCan2BaseAddress_offset 2112

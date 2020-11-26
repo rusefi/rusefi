@@ -63,8 +63,6 @@ extern SERIAL_USB_DRIVER EFI_CONSOLE_USB_DEVICE;
 
 static bool isSerialConsoleStarted = false;
 
-static event_listener_t consoleEventListener;
-
 bool consoleByteArrived = false;
 
 void onDataArrived(void) {
@@ -182,11 +180,26 @@ static msg_t _put(void *ip, uint8_t b) {
 #else
 	// uartSendTimeout() needs interrupts to wait for the end of transfer, so we have to unlock them temporary
 	bool wasLocked = isLocked();
-	if (wasLocked)
-		unlockAnyContext();
+	if (wasLocked) {
+		if (isIsrContext()) {
+			chSysUnlockFromISR()
+			;
+		} else {
+			chSysUnlock()
+			;
+		}
+	}
+
 	_putt(ip, b, CONSOLE_WRITE_TIMEOUT);
-	if (wasLocked)
-		lockAnyContext();
+	
+	// Relock if we were locked before
+	if (wasLocked) {
+		if (isIsrContext()) {
+			chSysLockFromISR();
+		} else {
+			chSysLock();
+		}
+	}
 #endif /* UART_USE_BLOCKING_WRITE */
 	return MSG_OK;
 }

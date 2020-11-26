@@ -16,6 +16,7 @@ TESTS_SRC_CPP = \
 	tests/ignition_injection/test_injector_model.cpp \
 	tests/util/test_buffered_writer.cpp \
 	tests/test_util.cpp \
+	tests/test_start_stop.cpp \
 	tests/test_hardware_reinit.cpp \
 	tests/test_ion.cpp \
 	tests/test_aux_valves.cpp \
@@ -28,6 +29,7 @@ TESTS_SRC_CPP = \
 	tests/test_idle_controller.cpp \
 	tests/test_issue_898.cpp \
 	tests/test_etb.cpp \
+	tests/test_launch.cpp \
 	tests/test_fuel_map.cpp \
 	tests/test_fuel_wall_wetting.cpp \
 	tests/test_one_cylinder_logic.cpp \

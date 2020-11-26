@@ -90,6 +90,7 @@ public:
 
 	PrimaryTriggerConfiguration primaryTriggerConfiguration;
 	VvtTriggerConfiguration vvtTriggerConfiguration;
+	efitick_t startStopStateLastPushTime = 0;
 
 #if EFI_SHAFT_POSITION_INPUT
 	void OnTriggerStateDecodingError();

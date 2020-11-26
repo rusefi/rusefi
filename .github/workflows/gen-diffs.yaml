@@ -25,11 +25,13 @@ jobs:
       run: git clone https://github.com/chuckwagoncomputing/KiCad-Diff.git
 
     - name: Set FTP variables
+      env:
+        ACTIONS_ALLOW_UNSECURE_COMMANDS: 'true'
       run: |
         if [ "${{github.event_name}}" = "push" ] && [ "${{github.ref}}" = "refs/heads/master" ]; then
-          echo "name=RUSEFI_FTP_SERVER::${{secrets.RUSEFI_FTP_SERVER}}" >> $GITHUB_ENV;
-          echo "name=RUSEFI_DOXYGEN_FTP_USER::${{secrets.RUSEFI_DOXYGEN_FTP_USER}}" >> $GITHUB_ENV;
-          echo "name=RUSEFI_DOXYGEN_FTP_PASS::${{secrets.RUSEFI_DOXYGEN_FTP_PASS}}" >> $GITHUB_ENV;
+          echo "::set-env name=RUSEFI_FTP_SERVER::${{secrets.RUSEFI_FTP_SERVER}}";
+          echo "::set-env name=RUSEFI_DOXYGEN_FTP_USER::${{secrets.RUSEFI_DOXYGEN_FTP_USER}}";
+          echo "::set-env name=RUSEFI_DOXYGEN_FTP_PASS::${{secrets.RUSEFI_DOXYGEN_FTP_PASS}}";
         fi
 
     - name: Generate diffs

@@ -108,9 +108,22 @@ void initVehicleSpeed(Logging *l) {
 }
 #else  /* EFI_VEHICLE_SPEED */
 
+#if EFI_UNIT_TEST
+static float mockVehicleSpeed = 0.0; // in kilometers per hour
+
+void setMockVehicleSpeed(float speedKPH) {
+	mockVehicleSpeed = speedKPH;
+}
+float getVehicleSpeed(void) {
+	
+	// Mock return to be used in unit tests
+	return mockVehicleSpeed;	
+}
+#else
 float getVehicleSpeed(void) {
 	
 	// no VSS support
 	return 0;	
 }
+#endif /* EFI_UNIT_TEST */
 #endif /* EFI_VEHICLE_SPEED */

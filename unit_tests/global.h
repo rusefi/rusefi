@@ -58,12 +58,6 @@ void print(const char *fmt, ...);
 #define VCS_VERSION "321"
 #define RUS_EFI_VERSION_TAG "rusEfiVersion"
 
-#define ALWAYS_INLINE INLINE
-
-#define US2NT(x) (US_TO_NT_MULTIPLIER * (x))
-
-#define NT2US(x) ((x) / US_TO_NT_MULTIPLIER)
-
 #define INLINE inline
 
 #define EFI_ERROR_CODE 0xffffffff
@@ -95,8 +89,11 @@ void print(const char *fmt, ...);
 
 #define CONFIG_PARAM(x) (x)
 
-#define lockAnyContext() false
-
-#define unlockAnyContext() {}
+#ifdef __cplusplus
+namespace chibios_rt {
+	// Noop for unit tests - this does real lock in FW/sim
+	class CriticalSectionLocker { };
+}
+#endif
 
 #define UNIT_TEST_BUSY_WAIT_CALLBACK() { 	timeNowUs++; }

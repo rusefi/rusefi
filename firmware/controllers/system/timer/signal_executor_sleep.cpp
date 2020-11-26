@@ -23,6 +23,7 @@
  */
 
 #include "global.h"
+#include "os_access.h"
 #include "scheduler.h"
 #include "main_trigger_callback.h"
 
@@ -69,7 +70,8 @@ static void doScheduleForLater(scheduling_s *scheduling, int delayUs, action_s a
 		return;
 	}
 
-	bool alreadyLocked = lockAnyContext();
+	chibios_rt::CriticalSectionLocker csl;
+
 	scheduling->action = action;
 	int isArmed = chVTIsArmedI(&scheduling->timer);
 	if (isArmed) {
@@ -88,9 +90,6 @@ static void doScheduleForLater(scheduling_s *scheduling, int delayUs, action_s a
 #endif /* EFI_SIMULATOR */
 
 	chVTSetI(&scheduling->timer, delaySt, (vtfunc_t)timerCallback, scheduling);
-	if (!alreadyLocked) {
-		unlockAnyContext();
-	}
 }
 
 void SleepExecutor::scheduleForLater(scheduling_s *scheduling, int delayUs, action_s action) {

@@ -617,6 +617,7 @@ void mreBoardNewTest(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 
 void setBoschHDEV_5_injectors(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	// This is the configuration for bosch HDEV 5 injectors
+	// all times in microseconds/us
 	CONFIG(mc33_hvolt) = 65;
 	CONFIG(mc33_i_boost) = 13000;
 	CONFIG(mc33_i_peak) = 9400;

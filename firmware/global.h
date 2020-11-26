@@ -20,16 +20,16 @@
 // *** https://github.com/rusefi/rusefi/issues/1007 ***
 #include "common_headers.h"
 
+// for US_TO_NT_MULTIPLIER
+#include "mpu_util.h"
+
 // this is about MISRA not liking 'time.h'. todo: figure out something
 #if defined __GNUC__
 // GCC
 #include <sys/types.h>
-#define ALWAYS_INLINE __attribute__((always_inline)) inline
 #else
 // IAR
 typedef unsigned int time_t;
-// todo: what's the IAR option?
-#define ALWAYS_INLINE INLINE
 #endif
 
 #ifdef __cplusplus
@@ -96,30 +96,4 @@ typedef unsigned int time_t;
 #define CCM_OPTIONAL
 #endif /* EFI_USE_CCM */
 
-// 168 ticks in microsecond in case of 168MHz 407
-#define US_TO_NT_MULTIPLIER (CORE_CLOCK / 1000000)
-
-/**
- * converts efitimeus_t to efitick_t
- */
-#define US2NT(us) (((efitime_t)(us))*US_TO_NT_MULTIPLIER)
-
-/**
- * converts efitick_t to efitimeus_t
- */
-#define NT2US(nt) ((nt) / US_TO_NT_MULTIPLIER)
-
 #define UNIT_TEST_BUSY_WAIT_CALLBACK() {}
-
-#ifdef __cplusplus
-extern "C"
-{
-#endif
-
-bool lockAnyContext(void);
-void unlockAnyContext(void);
-
-#ifdef __cplusplus
-}
-#endif
-

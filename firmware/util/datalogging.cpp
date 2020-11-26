@@ -120,11 +120,8 @@ void Logging::vappendPrintf(const char *fmt, va_list arg) {
 		firmwareError(CUSTOM_ERR_6604, "lowstck#5b %s", chThdGetSelfX()->name);
 	}
 #endif // EFI_ENABLE_ASSERTS
-	int wasLocked = lockAnyContext();
+	chibios_rt::CriticalSectionLocker csl;
 	intermediateLogging.vappendPrintfI(this, fmt, arg);
-	if (!wasLocked) {
-		unlockAnyContext();
-	}
 #endif // EFI_UNIT_TEST
 }
 

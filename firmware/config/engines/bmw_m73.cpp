@@ -229,8 +229,14 @@ GPIOA_6
 	engineConfiguration->injectionPins[9] = GPIO_UNASSIGNED;
 	engineConfiguration->injectionPins[10] = GPIO_UNASSIGNED;
 	engineConfiguration->injectionPins[11] = GPIO_UNASSIGNED;
+}
 
 
+static void toyota89281_33010_pedal_position_sensor(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
+	engineConfiguration->throttlePedalUpVoltage = 0;
+	engineConfiguration->throttlePedalWOTVoltage = 4.1;
+	engineConfiguration->throttlePedalSecondaryUpVoltage = 0.73;
+	engineConfiguration->throttlePedalSecondaryWOTVoltage = 4.9;
 }
 
 /**
@@ -308,10 +314,7 @@ void setEngineBMW_M73_Proteus(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	engineConfiguration->tps2_2AdcChannel = EFI_ADC_0;
 	// EFI_ADC_1: "Analog Volt 6"
 	engineConfiguration->throttlePedalPositionAdcChannel = EFI_ADC_1;
-	engineConfiguration->throttlePedalUpVoltage = 0;
-	engineConfiguration->throttlePedalWOTVoltage = 4.9;
-	engineConfiguration->throttlePedalSecondaryUpVoltage = 0.73;
-	engineConfiguration->throttlePedalSecondaryWOTVoltage = 4.9;
+	toyota89281_33010_pedal_position_sensor(PASS_CONFIG_PARAMETER_SIGNATURE);
 
 	// EFI_ADC_2: "Analog Volt 7"
 	engineConfiguration->throttlePedalPositionSecondAdcChannel = EFI_ADC_2;

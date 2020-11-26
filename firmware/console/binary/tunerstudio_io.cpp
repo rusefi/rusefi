@@ -311,17 +311,13 @@ void sr5WriteCrcPacket(ts_channel_s *tsChannel, uint8_t responseCode, const uint
 		return;
 	}
 #endif /* TS_CAN_DEVICE */
-
-/*
 	if (size <= BLOCKING_FACTOR + 7) {
 		// small packets use small packet optimization
 		sr5WriteCrcPacketSmall(tsChannel, responseCode, buf, size);
 	} else {
-*/
 		sr5WriteCrcPacketLarge(tsChannel, responseCode, buf, size);
-/*
 	}
-*/
+
 	sr5FlushData(tsChannel);
 }
 

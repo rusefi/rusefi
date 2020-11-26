@@ -35,7 +35,7 @@ static void completionCallback(ADCDriver* adcp, adcsample_t*, size_t) {
 	}
 }
 
-static void errorCallback(ADCDriver*, adcerror_t err) {
+static void errorCallback(ADCDriver*, adcerror_t) {
 }
 
 static const uint32_t smpr1 = 
@@ -91,7 +91,6 @@ static const ADCConversionGroup adcConvGroupCh2 = { FALSE, 1, &completionCallbac
 	0,	// sqr2
 	ADC_SQR3_SQ1_N(KNOCK_ADC_CH2)
 };
-#endif // KNOCK_HAS_CH2
 
 static bool cylinderUsesChannel2(uint8_t cylinderIndex) {
 	// C/C++ can't index in to bit fields, we have to provide lookup ourselves
@@ -111,6 +110,8 @@ static bool cylinderUsesChannel2(uint8_t cylinderIndex) {
 		default: return false;
 	}
 }
+
+#endif // KNOCK_HAS_CH2
 
 const ADCConversionGroup* getConversionGroup(uint8_t cylinderIndex) {
 #if KNOCK_HAS_CH2

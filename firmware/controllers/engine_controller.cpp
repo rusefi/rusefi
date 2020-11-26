@@ -219,9 +219,9 @@ static void resetAccel(void) {
 static void doPeriodicSlowCallback(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 #if EFI_ENGINE_CONTROL && EFI_SHAFT_POSITION_INPUT
 	efiAssertVoid(CUSTOM_ERR_6661, getCurrentRemainingStack() > 64, "lowStckOnEv");
-#if EFI_PROD_CODE
+
 	slowStartStopButtonCallback(PASS_ENGINE_PARAMETER_SIGNATURE);
-#endif /* EFI_PROD_CODE */
+
 
 	efitick_t nowNt = getTimeNowNt();
 

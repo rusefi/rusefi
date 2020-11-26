@@ -12,14 +12,10 @@
  */
 
 #include "global.h"
-#include "os_access.h"
 #include "microsecond_timer.h"
-#include "scheduler.h"
-#include "os_util.h"
+#include "port_microsecond_timer.h"
 
-// https://my.st.com/public/STe2ecommunities/mcu/Lists/cortex_mx_stm32/Flat.aspx?RootFolder=https%3a%2f%2fmy.st.com%2fpublic%2fSTe2ecommunities%2fmcu%2fLists%2fcortex_mx_stm32%2fInterrupt%20on%20CEN%20bit%20setting%20in%20TIM7&FolderCTID=0x01200200770978C69A1141439FE559EB459D7580009C4E14902C3CDE46A77F0FFD06506F5B&currentviews=474
-
-#if EFI_PROD_CODE && HAL_USE_GPT
+#if EFI_PROD_CODE
 
 #include "periodic_task.h"
 #include "engine.h"
@@ -39,25 +35,19 @@ EXTERN_ENGINE;
  */
 uint32_t maxPrecisionCallbackDuration = 0;
 
-// must be one of 32 bit times
-#ifndef GPTDEVICE
-#define GPTDEVICE GPTD5
-#endif /* GPTDEVICE */
+static efitick_t lastSetTimerTimeNt;
+static bool isTimerPending = false;
 
-static volatile efitick_t lastSetTimerTimeNt;
-static int lastSetTimerValue;
-static volatile bool isTimerPending = false;
-
-static volatile int timerCallbackCounter = 0;
-static volatile int timerRestartCounter = 0;
+static int timerCallbackCounter = 0;
+static int timerRestartCounter = 0;
 
 static const char * msg;
 
 static char buff[32];
 
 static int timerFreezeCounter = 0;
-static volatile int setHwTimerCounter = 0;
-static volatile bool hwStarted = false;
+static int setHwTimerCounter = 0;
+static bool hwStarted = false;
 
 /**
  * sets the alarm to the specified number of microseconds from now.
@@ -66,56 +56,47 @@ static volatile bool hwStarted = false;
 void setHardwareSchedulerTimer(efitick_t nowNt, efitick_t setTimeNt) {
 	efiAssertVoid(OBD_PCM_Processor_Fault, hwStarted, "HW.started");
 
-	int32_t deltaTimeUs = NT2US((int32_t)setTimeNt - (int32_t)nowNt);
+	// How many ticks in the future is this event?
+	auto timeDeltaNt = setTimeNt - nowNt;
 
 	setHwTimerCounter++;
 
 	/**
-	 * #259 BUG error: not positive deltaTimeUs
+	 * #259 BUG error: not positive deltaTimeNt
 	 * Once in a while we night get an interrupt where we do not expect it
 	 */
-	if (deltaTimeUs <= 0) {
+	if (timeDeltaNt <= 0) {
 		timerFreezeCounter++;
 		warning(CUSTOM_OBD_LOCAL_FREEZE, "local freeze cnt=%d", timerFreezeCounter);
 	}
 
 	// We need the timer to fire after we return - 1 doesn't work as it may actually schedule in the past
-	if (deltaTimeUs < 2) {
-		deltaTimeUs = 2;
+	if (timeDeltaNt < US2NT(2)) {
+		timeDeltaNt = US2NT(2);
 	}
 
-	if (deltaTimeUs >= TOO_FAR_INTO_FUTURE_US) {
+	if (timeDeltaNt >= TOO_FAR_INTO_FUTURE_NT) {
 		// we are trying to set callback for too far into the future. This does not look right at all
-		firmwareError(CUSTOM_ERR_TIMER_OVERFLOW, "setHardwareSchedulerTimer() too far: %d", deltaTimeUs);
+		firmwareError(CUSTOM_ERR_TIMER_OVERFLOW, "setHardwareSchedulerTimer() too far: %d", timeDeltaNt);
 		return;
 	}
 
-	// If already set, reset the timer
-	if (GPTDEVICE.state == GPT_ONESHOT) {
-		gptStopTimerI(&GPTDEVICE);
-	}
-
-	if (GPTDEVICE.state != GPT_READY) {
-		firmwareError(CUSTOM_HW_TIMER, "HW timer state %d/%d", GPTDEVICE.state, setHwTimerCounter);
-		return;
-	}
-
+	// Skip scheduling if there's a firmware error active
 	if (hasFirmwareError()) {
 		return;
 	}
 
-	// Start the timer
-	gptStartOneShotI(&GPTDEVICE, deltaTimeUs);
+	// Do the actual hardware-specific timer set operation
+	portSetHardwareSchedulerTimer(nowNt, setTimeNt);
 
 	lastSetTimerTimeNt = getTimeNowNt();
-	lastSetTimerValue = deltaTimeUs;
 	isTimerPending = true;
 	timerRestartCounter++;
 }
 
 void globalTimerCallback();
 
-static void hwTimerCallback(GPTDriver*) {
+void portMicrosecondTimerCallback() {
 	timerCallbackCounter++;
 	isTimerPending = false;
 
@@ -132,7 +113,7 @@ class MicrosecondTimerWatchdogController : public PeriodicTimerController {
 		efitick_t nowNt = getTimeNowNt();
 		if (nowNt >= lastSetTimerTimeNt + 2 * CORE_CLOCK) {
 			strcpy(buff, "no_event");
-			itoa10(&buff[8], lastSetTimerValue);
+			itoa10(&buff[8], lastSetTimerTimeNt);
 			firmwareError(CUSTOM_ERR_SCHEDULING_ERROR, buff);
 			return;
 		}
@@ -148,14 +129,6 @@ class MicrosecondTimerWatchdogController : public PeriodicTimerController {
 };
 
 static MicrosecondTimerWatchdogController watchdogControllerInstance;
-
-/*
- * The specific 1MHz frequency is important here since 'setHardwareUsTimer' method takes microsecond parameter
- * For any arbitrary frequency to work we would need an additional layer of conversion.
- */
-static constexpr GPTConfig gpt5cfg = { 1000000, /* 1 MHz timer clock.*/
-		hwTimerCallback, /* Timer callback.*/
-0, 0 };
 
 static scheduling_s watchDogBuddy;
 
@@ -200,8 +173,8 @@ static void validateHardwareTimer() {
 }
 
 void initMicrosecondTimer() {
-	gptStart(&GPTDEVICE, &gpt5cfg);
-	efiAssertVoid(CUSTOM_ERR_TIMER_STATE, GPTDEVICE.state == GPT_READY, "hw state");
+	portInitMicrosecondTimer();
+
 	hwStarted = true;
 
 	lastSetTimerTimeNt = getTimeNowNt();

@@ -258,4 +258,3 @@ uintptr_t getFlashAddrSecondCopy() {
 }
 
 #endif /* EFI_PROD_CODE */
-

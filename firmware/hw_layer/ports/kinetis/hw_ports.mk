@@ -10,4 +10,5 @@ HW_LAYER_EMS_CPP += $(PROJECT_DIR)/hw_layer/ports/kinetis/mpu_util.cpp \
 	$(PROJECT_DIR)/hw_layer/ports/kinetis/kinetis_pins.cpp \
 	$(PROJECT_DIR)/hw_layer/ports/kinetis/backup_ram.cpp \
 	$(PROJECT_DIR)/hw_layer/ports/kinetis/kinetis_common.cpp \
-	$(PROJECT_DIR)/hw_layer/trigger_input_comp.cpp
+	$(PROJECT_DIR)/hw_layer/trigger_input_comp.cpp \
+	$(PROJECT_DIR)/hw_layer/microsecond_timer/microsecond_timer_gpt.cpp \

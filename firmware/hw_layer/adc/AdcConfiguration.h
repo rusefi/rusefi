@@ -35,7 +35,7 @@ public:
 
 	adcsample_t *samples;
 
-	int getAdcValueByHwChannel(int hwChannel) const;
+	int getAdcValueByHwChannel(adc_channel_e hwChannel) const;
 
 	adc_state values;
 	int channelCount;

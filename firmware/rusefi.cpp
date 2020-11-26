@@ -152,9 +152,8 @@ void rebootNow(void) {
  */
 static void scheduleReboot(void) {
 	scheduleMsg(&sharedLogger, "Rebooting in 3 seconds...");
-	lockAnyContext();
+	chibios_rt::CriticalSectionLocker csl;
 	chVTSetI(&resetTimer, TIME_MS2I(3000), (vtfunc_t) rebootNow, NULL);
-	unlockAnyContext();
 }
 
 void runRusEfi(void) {

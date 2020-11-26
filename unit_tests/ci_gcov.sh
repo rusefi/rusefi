@@ -6,7 +6,7 @@
 #
 
 if [ ! "$1" ] || [ ! "$2" ] || [ ! "$3" ]; then
- echo "No Secrets"
+ echo "No FTP Secrets, not even generating coverage"
  exit 0
 fi
 
@@ -26,16 +26,16 @@ xargs -L 1 -I {} cp {} . < source_files.txt
 
 cp ../build/obj/* .
 
-echo -e "\nGenerating coverage"
+echo -e "\nGenerating rusEFI unit test coverage"
 gcov *.c* > gcov.log 2>gcov.err
 
-echo -e "\nCollecting coverage"
+echo -e "\nCollecting rusEFI unit test coverage"
 lcov --capture --directory . --output-file coverage.info
 
-echo -e "\nGenerating HTML"
+echo -e "\nGenerating rusEFI unit test HTML"
 genhtml coverage.info --output-directory gcov
+echo -e "\nGenerating rusEFI unit test HTML"
 
-if [ -n "$RUSEFI_FTP_SERVER" ]; then
- echo -e "\nUploading HTML"
- ncftpput -m -R -v -u "$1" -p "$2" "$3" /unit_tests_coverage gcov/*
-fi
+echo -e "\nUploading HTML"
+ncftpput -m -R -v -u "$1" -p "$2" "$3" /unit_tests_coverage gcov/*
+echo -e "\nHappy End."

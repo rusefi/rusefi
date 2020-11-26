@@ -30,12 +30,6 @@
 
 #define US_TO_NT_MULTIPLIER 100
 
-#define ALWAYS_INLINE
-
-#define US2NT(x) (US_TO_NT_MULTIPLIER * (x))
-
-#define NT2US(x) ((x) / US_TO_NT_MULTIPLIER)
-
 // need to fight 32bit int overflow
 
 #define MY_US2ST(x) ((x) / 10)
@@ -67,9 +61,6 @@ void printToConsole(char *p);
 
 int getRemainingStack(thread_t *otp);
 
-// todo: move somewhere else?
-bool lockAnyContext(void);
-void unlockAnyContext(void);
 void applyNewConfiguration(void);
 
 #ifdef __cplusplus

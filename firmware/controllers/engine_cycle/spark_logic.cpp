@@ -319,7 +319,7 @@ bool scheduleOrQueue(AngleBasedEvent *event,
 	}
 }
 
-static ALWAYS_INLINE void handleSparkEvent(bool limitedSpark, uint32_t trgEventIndex, IgnitionEvent *event,
+static void handleSparkEvent(bool limitedSpark, uint32_t trgEventIndex, IgnitionEvent *event,
 		int rpm, efitick_t edgeTimestamp DECLARE_ENGINE_PARAMETER_SUFFIX) {
 
 	angle_t sparkAngle = event->sparkAngle;
@@ -333,14 +333,13 @@ static ALWAYS_INLINE void handleSparkEvent(bool limitedSpark, uint32_t trgEventI
 		return;
 	}
 
-	floatus_t chargeDelayUs = ENGINE(rpmCalculator.oneDegreeUs) * event->dwellPosition.angleOffsetFromTriggerEvent;
-	int isIgnitionError = chargeDelayUs < 0;
+	float angleOffset = event->dwellPosition.angleOffsetFromTriggerEvent;
+	int isIgnitionError = angleOffset < 0;
 	ignitionErrorDetection.add(isIgnitionError);
 	if (isIgnitionError) {
 #if EFI_PROD_CODE
-		scheduleMsg(logger, "Negative spark delay=%.2f", chargeDelayUs);
+		scheduleMsg(logger, "Negative spark delay=%.1f deg", angleOffset);
 #endif /* EFI_PROD_CODE */
-		chargeDelayUs = 0;
 		return;
 	}
 
@@ -351,7 +350,7 @@ static ALWAYS_INLINE void handleSparkEvent(bool limitedSpark, uint32_t trgEventI
 	 */
 	if (!limitedSpark) {
 #if SPARK_EXTREME_LOGGING
-		scheduleMsg(logger, "scheduling sparkUp ind=%d %d %s now=%d %d later id=%d", trgEventIndex, getRevolutionCounter(), event->getOutputForLoggins()->name, (int)getTimeNowUs(), (int)chargeDelayUs,
+		scheduleMsg(logger, "scheduling sparkUp ind=%d %d %s now=%d %d later id=%d", trgEventIndex, getRevolutionCounter(), event->getOutputForLoggins()->name, (int)getTimeNowUs(), (int)angleOffset,
 				event->sparkId);
 #endif /* SPARK_EXTREME_LOGGING */
 
@@ -361,7 +360,7 @@ static ALWAYS_INLINE void handleSparkEvent(bool limitedSpark, uint32_t trgEventI
 		 * This way we make sure that coil dwell started while spark was enabled would fire and not burn
 		 * the coil.
 		 */
-		engine->executor.scheduleByTimestampNt(&event->dwellStartTimer, edgeTimestamp + US2NT(chargeDelayUs), { &turnSparkPinHigh, event });
+		scheduleByAngle(&event->dwellStartTimer, edgeTimestamp, angleOffset, { &turnSparkPinHigh, event } PASS_ENGINE_PARAMETER_SUFFIX);
 
 		event->sparksRemaining = ENGINE(engineState.multispark.count);
 	} else {
@@ -421,7 +420,7 @@ void initializeIgnitionActions(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	list->isReady = true;
 }
 
-static ALWAYS_INLINE void prepareIgnitionSchedule(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+static void prepareIgnitionSchedule(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	ScopePerf perf(PE::PrepareIgnitionSchedule);
 	
 	/**

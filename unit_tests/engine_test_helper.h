@@ -54,6 +54,7 @@ public:
 	void smartFireRise(float delayMs);
 	void smartFireFall(float delayMs);
 	void smartMoveTimeForwardUs(int deltaTimeUs);
+	void smartMoveTimeForwardSeconds(int deltaTimeSeconds);
 	void smartFireTriggerEvents2(int count, float delayMs);
 
 	/**

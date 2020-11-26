@@ -8,6 +8,12 @@
 
 #pragma once
 
+// 168 ticks in microsecond in case of 168MHz 407
+#define US_TO_NT_MULTIPLIER (CORE_CLOCK / 1000000)
+
+// Scheduler queue GPT device
+#define GPTDEVICE GPTD1
+
 typedef enum {
 	BOR_Level_None = 0,
 	BOR_Level_1 = 1,
