@@ -570,6 +570,17 @@ static void setIgnitionPin(const char *indexStr, const char *pinName) {
 	incrementGlobalConfigurationVersion(PASS_ENGINE_PARAMETER_SIGNATURE);
 }
 
+// this method is useful for desperate time debugging
+static void readPin(const char *pinName) {
+	brain_pin_e pin = parseBrainPin(pinName);
+	if (pin == GPIO_INVALID) {
+		scheduleMsg(&logger, "invalid pin name [%s]", pinName);
+		return;
+	}
+	int physicalValue = palReadPad(getHwPort("read", pin), getHwPin("read", pin));
+	scheduleMsg(&logger, "pin %s value %d", hwPortname(pin), physicalValue);
+}
+
 static void setIndividualPin(const char *pinName, brain_pin_e *targetPin, const char *name) {
 	brain_pin_e pin = parseBrainPin(pinName);
 	if (pin == GPIO_INVALID) {
@@ -1376,6 +1387,7 @@ void initSettings(void) {
 	addConsoleActionS("set_cj125_heater_pin", setCj125HeaterPin);
 	addConsoleActionS("set_trigger_sync_pin", setTriggerSyncPin);
 
+	addConsoleActionS("readpin", readPin);
 	addConsoleActionS("set_can_rx_pin", setCanRxPin);
 	addConsoleActionS("set_can_tx_pin", setCanTxPin);
 
