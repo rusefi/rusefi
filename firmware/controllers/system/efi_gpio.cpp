@@ -395,7 +395,8 @@ void OutputPin::toggle() {
 }
 
 bool OutputPin::getAndSet(int logicValue) {
-	bool oldValue = currentLogicValue;
+	// Compare against 1 since it could also be INITIAL_PIN_STATE (aka 0)
+	bool oldValue = currentLogicValue == 1;
 	setValue(logicValue);
 	return oldValue;
 }
