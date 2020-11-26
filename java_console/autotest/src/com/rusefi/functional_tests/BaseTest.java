@@ -62,12 +62,14 @@ public class BaseTest {
         sendCommand(getDisableCommand(Fields.CMD_SELF_STIMULATION));
         sendCommand(getDisableCommand(Fields.CMD_INJECTION));
         sendCommand(getDisableCommand(Fields.CMD_IGNITION));
+        sendCommand(getDisableCommand(Fields.CMD_PWM));
         // changing engine type while engine is running does not work well - we rightfully
         // get invalid configuration critical errors
         sleepSeconds(2);
         sendCommand("set " + Fields.CMD_ENGINE_TYPE + " " + type, COMPLEX_COMMAND_RETRY, Timeouts.SET_ENGINE_TIMEOUT);
         // TODO: document the reason for this sleep?!
         sleepSeconds(3);
+        sendCommand(getEnableCommand(Fields.CMD_PWM));
         sendCommand(getEnableCommand(Fields.CMD_SELF_STIMULATION));
     }
 }
