@@ -58,7 +58,7 @@ void efiSetPadMode(const char *msg, brain_pin_e brainPin, iomode_t mode)
 	if (!wasUsed) {
 		/*check if on-chip pin or external */
 		if (brain_pin_is_onchip(brainPin)) {
-			/* on-cip */
+			/* on-chip */
 			ioportid_t port = getHwPort(msg, brainPin);
 			ioportmask_t pin = getHwPin(msg, brainPin);
 			/* paranoid */
@@ -84,8 +84,11 @@ void efiSetPadUnused(brain_pin_e brainPin)
 		ioportid_t port = getHwPort("unused", brainPin);
 		ioportmask_t pin = getHwPin("unused", brainPin);
 
-		/* input with pull up, is it safe? */
+		/* input with pull up, is it safe?
+		 * todo: shall we reuse 'default state' constants with board.h?
+		 * */
 		palSetPadMode(port, pin, mode);
+		palWritePad(port, pin, false);
 	}
 	#if (BOARD_EXT_GPIOCHIPS > 0)
 		else {
