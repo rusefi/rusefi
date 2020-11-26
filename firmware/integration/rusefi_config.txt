@@ -1713,6 +1713,7 @@ end_struct
 #define CMD_ENGINE_TYPE "engine_type"
 #define CMD_INJECTION "injection"
 #define CMD_IGNITION "ignition"
+#define CMD_PWM "pwm"
 #define CMD_TRIGGERINFO "triggerinfo"
 #define CMD_WRITECONFIG "writeconfig"
 #define CMD_DATE "date"
