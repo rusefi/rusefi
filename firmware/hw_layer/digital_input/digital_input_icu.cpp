@@ -217,7 +217,7 @@ void stopDigitalCapture(const char *msg, brain_pin_e brainPin) {
 	if (brainPin == GPIO_UNASSIGNED) {
 		return;
 	}
-	brain_pin_markUnused(brainPin);
+	efiSetPadUnused(brainPin);
 
 	ICUDriver *driver = getInputCaptureDriver(msg, brainPin);
 	if (driver == NULL) {

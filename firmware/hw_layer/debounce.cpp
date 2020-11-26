@@ -60,7 +60,7 @@ void ButtonDebounce::stopConfiguration () {
     if (*m_pin != active_pin || *m_mode != active_mode || (isActiveConfigurationVoid && (*m_pin != 0 || *m_mode != 0))) {
 #endif /* EFI_ACTIVE_CONFIGURATION_IN_FLASH */
 #ifndef EFI_UNIT_TEST
-        brain_pin_markUnused(active_pin);
+    	efiSetPadUnused(active_pin);
         needsInit = true;
 #endif /* EFI_UNIT_TEST */
     }

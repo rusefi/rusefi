@@ -291,9 +291,9 @@ void stopSpi(spi_device_e device) {
 		return; // not turned on
 	}
 	isSpiInitialized[device] = false;
-	brain_pin_markUnused(getSckPin(device));
-	brain_pin_markUnused(getMisoPin(device));
-	brain_pin_markUnused(getMosiPin(device));
+	efiSetPadUnused(getSckPin(device));
+	efiSetPadUnused(getMisoPin(device));
+	efiSetPadUnused(getMosiPin(device));
 #endif /* HAL_USE_SPI */
 }
 
