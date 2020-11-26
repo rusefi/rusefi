@@ -59,6 +59,12 @@ public class BaseTest {
         log.info("AUTOTEST setEngineType " + type);
         currentEngineType = type;
 //        sendCommand(CMD_PINS);
+        /*
+         * we need to stop all activity - that means:
+         * - stopping input event
+         * - waiting for scheduled actuator actions to run out
+         * - disabling PWM
+         */
         sendCommand(getDisableCommand(Fields.CMD_SELF_STIMULATION));
         sendCommand(getDisableCommand(Fields.CMD_INJECTION));
         sendCommand(getDisableCommand(Fields.CMD_IGNITION));
