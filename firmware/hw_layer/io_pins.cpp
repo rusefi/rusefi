@@ -88,7 +88,7 @@ void efiSetPadUnused(brain_pin_e brainPin)
 		 * todo: shall we reuse 'default state' constants with board.h?
 		 * */
 		palSetPadMode(port, pin, mode);
-		palWritePad(port, pin, false);
+		palWritePad(port, pin, 0);
 	}
 	#if (BOARD_EXT_GPIOCHIPS > 0)
 		else {
