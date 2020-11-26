@@ -716,6 +716,8 @@ void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels DECLARE_
 	switch (engineConfiguration->debugMode)	{
 	case DBG_START_STOP:
 		tsOutputChannels->debugIntField1 = engine->startStopStateToggleCounter;
+		tsOutputChannels->debugIntField2 = enginePins.starterControl.getLogicValue();
+		tsOutputChannels->debugIntField3 = enginePins.starterRelayDisable.getLogicValue();
 		break;
 	case DBG_STATUS:
 		tsOutputChannels->debugFloatField1 = timeSeconds;

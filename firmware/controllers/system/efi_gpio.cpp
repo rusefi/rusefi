@@ -542,6 +542,20 @@ void OutputPin::initPin(const char *msg, brain_pin_e brainPin, const pin_output_
 	// mystery state being driven on the pin (potentially dangerous).
 	setDefaultPinState(outputMode);
 	efiSetPadMode(msg, brainPin, mode);
+	if (brain_pin_is_onchip(brainPin)) {
+		int actualValue = palReadPad(port, pin);
+		// we had enough drama with pin configuration in board.h and else that we shall self-check
+		// todo: handle OM_OPENDRAIN and OM_OPENDRAIN_INVERTED as well
+		if (*outputMode == OM_DEFAULT || *outputMode == OM_INVERTED) {
+			if (*outputMode == OM_INVERTED) {
+				actualValue = !actualValue;
+			}
+			if (actualValue) {
+				firmwareError(OBD_PCM_Processor_Fault, "startup pin state %s %d %d", hwPortname(brainPin), actualValue, *outputMode);
+			}
+		}
+	}
+
 #endif /* EFI_GPIO_HARDWARE */
 }
 
@@ -549,7 +563,7 @@ void OutputPin::unregisterOutput(brain_pin_e oldPin) {
 	if (oldPin != GPIO_UNASSIGNED) {
 		scheduleMsg(logger, "unregistering %s", hwPortname(oldPin));
 #if EFI_GPIO_HARDWARE && EFI_PROD_CODE
-		brain_pin_markUnused(oldPin);
+		efiSetPadUnused(oldPin);
 		port = nullptr;
 #endif /* EFI_GPIO_HARDWARE */
 	}
