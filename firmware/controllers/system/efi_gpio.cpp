@@ -442,7 +442,7 @@ void OutputPin::setValue(int logicValue) {
 }
 
 bool OutputPin::getLogicValue() const {
-	// Compare against 1 since it could also be INITIAL_PIN_STATE (aka 0)
+	// Compare against 1 since it could also be INITIAL_PIN_STATE (which means 0, but we haven't initialized the pin yet)
 	return currentLogicValue == 1;
 }
 
