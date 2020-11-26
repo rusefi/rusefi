@@ -255,6 +255,7 @@
 #define CMD_INJECTION "injection"
 #define CMD_MIL_BENCH "milbench"
 #define CMD_PINS "pins"
+#define CMD_PWM "pwm"
 #define CMD_REBOOT "reboot"
 #define CMD_REBOOT_DFU "reboot_dfu"
 #define CMD_RESET_ENGINE_SNIFFER "reset_engine_chart"
@@ -1210,8 +1211,8 @@
 #define showHumanReadableWarning_offset 976
 #define showSdCardWarning_offset 76
 #define SIGNATURE_BOARD kin
-#define SIGNATURE_DATE 2020.11.25
-#define SIGNATURE_HASH 2873613879
+#define SIGNATURE_DATE 2020.11.26
+#define SIGNATURE_HASH 3414075599
 #define silentTriggerError_offset 1464
 #define slowAdcAlpha_offset 2088
 #define sparkDwellRpmBins_offset 332
@@ -1541,7 +1542,7 @@
 #define ts_show_spi true
 #define ts_show_trigger_comparator true
 #define ts_show_tunerstudio_port true
-#define TS_SIGNATURE "rusEFI 2020.11.25.kin.2873613879"
+#define TS_SIGNATURE "rusEFI 2020.11.26.kin.3414075599"
 #define TS_SINGLE_WRITE_COMMAND 'W'
 #define TS_SINGLE_WRITE_COMMAND_char W
 #define TS_TEST_COMMAND 't' // 0x74
