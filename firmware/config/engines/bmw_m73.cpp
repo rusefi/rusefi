@@ -93,6 +93,7 @@ void m73engine(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	strcpy(CONFIG(engineCode), "M73");
 	engineConfiguration->specs.firingOrder = FO_1_7_5_11_3_9_6_12_2_8_4_10;
 	CONFIG(isFasterEngineSpinUpEnabled) = true;
+	CONFIG(fuelAlgorithm) = LM_ALPHA_N;
 
 	engineConfiguration->vvtMode = VVT_FIRST_HALF;
 
