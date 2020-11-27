@@ -395,7 +395,7 @@ void OutputPin::toggle() {
 }
 
 bool OutputPin::getAndSet(int logicValue) {
-	bool oldValue = currentLogicValue;
+	bool oldValue = getLogicValue();
 	setValue(logicValue);
 	return oldValue;
 }
@@ -442,7 +442,8 @@ void OutputPin::setValue(int logicValue) {
 }
 
 bool OutputPin::getLogicValue() const {
-	return currentLogicValue;
+	// Compare against 1 since it could also be INITIAL_PIN_STATE (which means 0, but we haven't initialized the pin yet)
+	return currentLogicValue == 1;
 }
 
 void OutputPin::setDefaultPinState(const pin_output_mode_e *outputMode) {
