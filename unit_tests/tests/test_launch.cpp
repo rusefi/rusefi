@@ -131,3 +131,64 @@ TEST(LaunchControl, CombinedCondition) {
 	EXPECT_FALSE(dut.isLaunchConditionMet(3200));
 
 }
+
+TEST(LaunchControl, CompleteRun) {
+	bool spark, fuel;
+	WITH_ENGINE_TEST_HELPER(TEST_ENGINE);
+
+	extern LaunchControlBase lc;
+	INJECT_ENGINE_REFERENCE(&lc);
+
+	//load default config
+	setDefaultLaunchParameters(PASS_CONFIG_PARAMETER_SIGNATURE);
+
+	//check VSS normal usage
+	engineConfiguration->launchActivationMode = ALWAYS_ACTIVE_LAUNCH;
+    engineConfiguration->launchSpeedTreshold = 30; 
+	engineConfiguration->launchDisableBySpeed = 1;
+	engineConfiguration->launchRpm = 3000;
+	engineConfiguration->launchTpsTreshold = 10;
+	engineConfiguration->launchControlEnabled = 1; 
+	//valid TPS
+	Sensor::setMockValue(SensorType::DriverThrottleIntent, 20.0f);
+	
+	setMockVehicleSpeed(10);
+	engine->rpmCalculator.mockRpm = 1200;
+
+	//update condition check
+    updateLaunchConditions(PASS_ENGINE_PARAMETER_SIGNATURE);
+
+	//check if we have some sort of cut? we should not have at this point
+
+	applyLaunchControlLimiting(&spark, &fuel PASS_ENGINE_PARAMETER_SUFFIX);
+	EXPECT_FALSE(spark);
+	EXPECT_FALSE(fuel);
+
+
+	engine->rpmCalculator.mockRpm = 3510;
+	//update condition check
+    updateLaunchConditions(PASS_ENGINE_PARAMETER_SIGNATURE);
+
+
+	//we have a 3 seconds delay to actually enable it!
+	eth.smartMoveTimeForwardSeconds(1);
+	updateLaunchConditions(PASS_ENGINE_PARAMETER_SIGNATURE);
+	applyLaunchControlLimiting(&spark, &fuel PASS_ENGINE_PARAMETER_SUFFIX);
+	
+	EXPECT_FALSE(spark);
+	EXPECT_FALSE(fuel);
+
+	eth.smartMoveTimeForwardSeconds(3);
+	updateLaunchConditions(PASS_ENGINE_PARAMETER_SIGNATURE);
+	applyLaunchControlLimiting(&spark, &fuel PASS_ENGINE_PARAMETER_SUFFIX);
+
+	EXPECT_TRUE(spark);
+	EXPECT_FALSE(fuel);
+
+	setMockVehicleSpeed(40);
+	updateLaunchConditions(PASS_ENGINE_PARAMETER_SIGNATURE);
+	applyLaunchControlLimiting(&spark, &fuel PASS_ENGINE_PARAMETER_SUFFIX);
+	EXPECT_FALSE(spark);
+	EXPECT_FALSE(fuel);
+
+}

@@ -27,6 +27,7 @@
 static bool isInit = false;
 static Logging *logger;
 static efitick_t launchTimer = 0;
+
 LaunchControlBase lc;
 
 #if EFI_TUNER_STUDIO
@@ -37,7 +38,6 @@ extern TunerStudioOutputChannels tsOutputChannels;
 EXTERN_ENGINE;
 
 static int retardThresholdRpm;
-
 
 /**
  * We can have active condition from switch or from clutch.
@@ -126,13 +126,16 @@ bool LaunchControlBase::isLaunchConditionMet(int rpm) const {
 
 //void LaunchControlBase::update() {
 void updateLaunchConditions(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+
 	if (!CONFIG(launchControlEnabled)) {
 		return;
 	}
 
+#if ! EFI_UNIT_TEST
 	if(!isInit) {
 		return;
 	}
+#endif
 
 	int rpm = GET_RPM();
 	bool combinedConditions = lc.isLaunchConditionMet(rpm);
@@ -193,13 +196,16 @@ void setDefaultLaunchParameters(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	engineConfiguration->enableLaunchBoost = true;
 	engineConfiguration->launchSmoothRetard = true; //interpolates the advance linear from launchrpm to fully retarded at launchtimingrpmrange
 	engineConfiguration->antiLagRpmTreshold = 3000;
+
 }
 
 void applyLaunchControlLimiting(bool *limitedSpark, bool *limitedFuel DECLARE_ENGINE_PARAMETER_SUFFIX) {
-
-	if (retardThresholdRpm < GET_RPM()) {
+	if (( engine->isLaunchCondition ) && ( retardThresholdRpm < GET_RPM() )) {
 		*limitedSpark = engineConfiguration->launchSparkCutEnable;
 		*limitedFuel = engineConfiguration->launchFuelCutEnable;
+	} else {
+		*limitedSpark = false;
+		*limitedFuel = false;
 	}
 }
 
