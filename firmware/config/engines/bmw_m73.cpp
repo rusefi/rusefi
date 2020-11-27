@@ -299,6 +299,10 @@ void setEngineBMW_M73_Proteus(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	// engineConfiguration->vbattDividerCoeff = 7.6; // is that Proteus 0.2 value?
 
 
+	// no idea why https://github.com/rusefi/rusefi/wiki/HOWTO-M73-v12-on-Proteus uses non default CLT pin
+	// AT3, Proteus pin #31
+	engineConfiguration->clt.adcChannel = EFI_ADC_9;
+
 
 	// GPIOE_0:  "Lowside 14"
 	CONFIG(starterControlPin) = GPIOE_0;
