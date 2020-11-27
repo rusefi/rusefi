@@ -24,7 +24,10 @@
 #include "engine_state.h"
 #include "advance_map.h"
 
+static bool isInit = false;
 static Logging *logger;
+static efitick_t launchTimer = 0;
+LaunchControlBase lc;
 
 #if EFI_TUNER_STUDIO
 #include "tunerstudio_outputs.h"
@@ -33,21 +36,8 @@ extern TunerStudioOutputChannels tsOutputChannels;
 
 EXTERN_ENGINE;
 
-#define RETART_THD_CALC	CONFIG(launchRpm) +\
-						(CONFIG(enableLaunchRetard) ? CONFIG(launchAdvanceRpmRange) : 0) +\
-						CONFIG(hardCutRpmRange)
 static int retardThresholdRpm;
 
-
-class LaunchControlImpl : public LaunchControlBase, public PeriodicTimerController {
-	int getPeriodMs() override {
-		return 50;
-	}
-
-	void PeriodicTask() {
-		update();
-	}
-};
 
 /**
  * We can have active condition from switch or from clutch.
@@ -134,13 +124,18 @@ bool LaunchControlBase::isLaunchConditionMet(int rpm) const {
 	return speedCondition && activateSwitchCondition && rpmCondition && tpsCondition;
 }
 
-void LaunchControlBase::update() {
+//void LaunchControlBase::update() {
+void updateLaunchConditions(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	if (!CONFIG(launchControlEnabled)) {
 		return;
 	}
 
+	if(!isInit) {
+		return;
+	}
+
 	int rpm = GET_RPM();
-	bool combinedConditions = isLaunchConditionMet(rpm);
+	bool combinedConditions = lc.isLaunchConditionMet(rpm);
 
 	float timeDelay = CONFIG(launchActivateDelay);
 	int cutRpmRange = CONFIG(hardCutRpmRange);
@@ -148,7 +143,9 @@ void LaunchControlBase::update() {
 
 	//recalculate in periodic task, this way we save time in applyLaunchControlLimiting
 	//and still recalculat in case user changed the values
-	retardThresholdRpm = RETART_THD_CALC;
+	retardThresholdRpm = CONFIG(launchRpm) +\
+						(CONFIG(enableLaunchRetard) ? CONFIG(launchAdvanceRpmRange) : 0) +\
+						CONFIG(hardCutRpmRange);
 
 	if (!combinedConditions) {
 		// conditions not met, reset timer
@@ -181,8 +178,6 @@ void LaunchControlBase::update() {
 #endif /* EFI_TUNER_STUDIO */
 }
 
-static LaunchControlImpl Launch;
-
 void setDefaultLaunchParameters(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	engineConfiguration->launchRpm = 4000;    // Rpm to trigger Launch condition
 	engineConfiguration->launchTimingRetard = 10; // retard in absolute degrees ATDC
@@ -210,8 +205,10 @@ void applyLaunchControlLimiting(bool *limitedSpark, bool *limitedFuel DECLARE_EN
 
 void initLaunchControl(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	logger = sharedLogger;
-	retardThresholdRpm = RETART_THD_CALC;
-	Launch.Start();
+	retardThresholdRpm = CONFIG(launchRpm) +\
+						(CONFIG(enableLaunchRetard) ? CONFIG(launchAdvanceRpmRange) : 0) +\
+						CONFIG(hardCutRpmRange);
+	isInit = true;
 }
 
 #endif /* EFI_LAUNCH_CONTROL */

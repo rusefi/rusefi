@@ -19,6 +19,10 @@
 #include "closed_loop_fuel.h"
 #include "sensor.h"
 
+#if EFI_LAUNCH_CONTROL
+#include "launch_control.h"
+#endif
+
 #if EFI_PROD_CODE
 #include "svnversion.h"
 #endif
@@ -174,6 +178,11 @@ void EngineState::periodicFastCallback(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	float ignitionLoad = getIgnitionLoad(PASS_ENGINE_PARAMETER_SIGNATURE);
 	timingAdvance = getAdvance(rpm, ignitionLoad PASS_ENGINE_PARAMETER_SUFFIX);
 	multispark.count = getMultiSparkCount(rpm PASS_ENGINE_PARAMETER_SUFFIX);
+
+#if EFI_LAUNCH_CONTROL
+	updateLaunchConditions(PASS_ENGINE_PARAMETER_SIGNATURE);
+#endif //EFI_LAUNCH_CONTROL
+
 #endif // EFI_ENGINE_CONTROL
 }
 
