@@ -17,6 +17,8 @@
 #include "sensor.h"
 #include "mocks.h"
 
+#include <unordered_map>
+
 extern EnginePins enginePins;
 
 class EngineTestHelperBase
