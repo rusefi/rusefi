@@ -156,8 +156,8 @@ static brain_pin_e currentTxPin = GPIO_UNASSIGNED;
 static brain_pin_e currentRxPin = GPIO_UNASSIGNED;
 
 void stopCanPins(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
-	brain_pin_markUnused(currentTxPin);
-	brain_pin_markUnused(currentRxPin);
+	efiSetPadUnused(currentTxPin);
+	efiSetPadUnused(currentRxPin);
 }
 
 void startCanPins(DECLARE_ENGINE_PARAMETER_SIGNATURE) {

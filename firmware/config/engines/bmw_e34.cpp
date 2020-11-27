@@ -97,7 +97,11 @@ void setBmwE34(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 
 	engineConfiguration->malfunctionIndicatorPin = GPIO_UNASSIGNED;
 
+/*
+ * this configuration is used on HW CI - in HW CI 'inverted' would rightfully fail unless there is pull-up
 	engineConfiguration->injectionPinMode = OM_INVERTED;
+	*/
+
 	engineConfiguration->injectionPins[0] = GPIOB_8; // #1
 	engineConfiguration->injectionPins[1] = GPIOE_2; // #2
 	engineConfiguration->injectionPins[2] = GPIOE_3; // #3
@@ -105,7 +109,10 @@ void setBmwE34(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	engineConfiguration->injectionPins[4] = GPIOE_5; // #5
 	engineConfiguration->injectionPins[5] = GPIOE_6; // #6
 
+	/*
+	 * this configuration is used on HW CI - in HW CI 'inverted' would rightfully fail unless there is pull-up
 	engineConfiguration->ignitionPinMode = OM_INVERTED;
+*/
 
 	engineConfiguration->ignitionPins[0] = GPIOB_5; // #1
 	engineConfiguration->ignitionPins[2] = GPIOB_6; // #3
@@ -125,7 +132,10 @@ void setBmwE34(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 
 	// idle
 	engineConfiguration->idle.solenoidPin = GPIOC_14;
+	/*
+	 * this configuration is used on HW CI - in HW CI 'inverted' would rightfully fail unless there is pull-up
 	engineConfiguration->idle.solenoidPinMode = OM_INVERTED;
+*/
 	engineConfiguration->idle.solenoidFrequency = 300;
 	engineConfiguration->manIdlePosition = 50; // set_idle_pwm 50
 

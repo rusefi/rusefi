@@ -898,6 +898,8 @@ static void enableOrDisable(const char *param, bool isEnabled) {
 		engineConfiguration->canWriteEnabled = isEnabled;
 	} else if (strEqualCaseInsensitive(param, CMD_INJECTION)) {
 		engineConfiguration->isInjectionEnabled = isEnabled;
+	} else if (strEqualCaseInsensitive(param, CMD_PWM)) {
+		engine->isPwmEnabled = isEnabled;
 	} else if (strEqualCaseInsensitive(param, "trigger_details")) {
 		engineConfiguration->verboseTriggerSynchDetails = isEnabled;
 	} else if (strEqualCaseInsensitive(param, "vvt_details")) {
