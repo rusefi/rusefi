@@ -14,6 +14,15 @@
 
 EXTERN_CONFIG;
 
+void setNissanPrimeraEngineConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
+	setDefaultFrankensoConfiguration(PASS_CONFIG_PARAMETER_SIGNATURE);
+
+	engineConfiguration->trigger.type = TT_NISSAN_SR20VE;
+
+	engineConfiguration->auxValves[0] = GPIOE_14;
+	engineConfiguration->auxValves[1] = GPIOE_12;
+}
+
 void setNissanPrimeraEngineConfiguration_360(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	engineConfiguration->trigger.type = TT_NISSAN_SR20VE_360;
 }
