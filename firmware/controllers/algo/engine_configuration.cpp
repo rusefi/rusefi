@@ -1168,6 +1168,7 @@ void resetConfigurationExt(Logging * logger, configuration_callback_t boardCallb
 // todo: is it time to replace MICRO_RUS_EFI, PROTEUS, PROMETHEUS_DEFAULTS with MINIMAL_PINS? maybe rename MINIMAL_PINS to DEFAULT?
 	case PROTEUS:
 	case PROMETHEUS_DEFAULTS:
+	case MIATA_1994_DEVIATOR:
 	case MINIMAL_PINS:
 		// all basic settings are already set in prepareVoidConfiguration(), no need to set anything here
 		// nothing to do - we do it all in setBoardConfigurationOverrides
@@ -1310,9 +1311,6 @@ void resetConfigurationExt(Logging * logger, configuration_callback_t boardCallb
 		break;
 	case MIATA_1990:
 		setMiata1990(PASS_CONFIG_PARAMETER_SIGNATURE);
-		break;
-	case MIATA_1994_DEVIATOR:
-		setMiata1994_d(PASS_CONFIG_PARAMETER_SIGNATURE);
 		break;
 	case MIATA_1996:
 		setMiata1996(PASS_CONFIG_PARAMETER_SIGNATURE);
