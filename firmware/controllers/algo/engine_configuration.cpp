@@ -69,11 +69,9 @@
 #include "me7pnp.h"
 #include "vw_b6.h"
 #include "chevrolet_camaro_4.h"
-#include "chevrolet_c20_1973.h"
 #include "toyota_jzs147.h"
 #include "ford_festiva.h"
 #include "lada_kalina.h"
-#include "zil130.h"
 #include "honda_600.h"
 #include "boost_control.h"
 #if EFI_IDLE_CONTROL
@@ -1168,6 +1166,9 @@ void resetConfigurationExt(Logging * logger, configuration_callback_t boardCallb
 // todo: is it time to replace MICRO_RUS_EFI, PROTEUS, PROMETHEUS_DEFAULTS with MINIMAL_PINS? maybe rename MINIMAL_PINS to DEFAULT?
 	case PROTEUS:
 	case PROMETHEUS_DEFAULTS:
+	case NISSAN_PRIMERA:
+	case CHEVY_C20_1973:
+	case ZIL_130:
 	case MIATA_1994_DEVIATOR:
 	case MINIMAL_PINS:
 		// all basic settings are already set in prepareVoidConfiguration(), no need to set anything here
@@ -1249,14 +1250,8 @@ void resetConfigurationExt(Logging * logger, configuration_callback_t boardCallb
 	case FORD_FIESTA:
 		setFordFiestaDefaultEngineConfiguration(PASS_ENGINE_PARAMETER_SIGNATURE);
 		break;
-	case NISSAN_PRIMERA:
-		setNissanPrimeraEngineConfiguration(PASS_CONFIG_PARAMETER_SIGNATURE);
-		break;
 	case HONDA_ACCORD_CD:
 		setHondaAccordConfigurationThreeWires(PASS_CONFIG_PARAMETER_SIGNATURE);
-		break;
-	case ZIL_130:
-		setZil130(PASS_CONFIG_PARAMETER_SIGNATURE);
 		break;
 	case MIATA_NA6_MAP:
 		setMiataNA6_MAP_Frankenso(PASS_CONFIG_PARAMETER_SIGNATURE);
@@ -1356,9 +1351,6 @@ void resetConfigurationExt(Logging * logger, configuration_callback_t boardCallb
 		break;
 	case CAMARO_4:
 		setCamaro4(PASS_CONFIG_PARAMETER_SIGNATURE);
-		break;
-	case CHEVY_C20_1973:
-		set1973c20(PASS_CONFIG_PARAMETER_SIGNATURE);
 		break;
 	case TOYOTA_2JZ_GTE_VVTi:
 		setToyota_2jz_vics(PASS_CONFIG_PARAMETER_SIGNATURE);
