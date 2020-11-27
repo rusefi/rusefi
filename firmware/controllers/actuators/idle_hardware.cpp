@@ -55,14 +55,6 @@ void applyIACposition(percent_t position DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	float duty = PERCENT_TO_DUTY(position);
 
 	if (CONFIG(useETBforIdleControl)) {
-		if (!Sensor::hasSensor(SensorType::AcceleratorPedal)) {
-//todo: something is wrong here in unit test mode?
-#if !EFI_UNIT_TEST
-			firmwareError(CUSTOM_NO_ETB_FOR_IDLE, "No ETB to use for idle");
-#endif
-			return;
-		}
-
 #if EFI_ELECTRONIC_THROTTLE_BODY
 		setEtbIdlePosition(position PASS_ENGINE_PARAMETER_SUFFIX);
 #endif // EFI_ELECTRONIC_THROTTLE_BODY
