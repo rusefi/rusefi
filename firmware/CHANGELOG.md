@@ -25,7 +25,10 @@ Release template (copy/paste this for new release):
 
 All notable user-facing or behavior-altering changes will be documented in this file.
 
-## November 2020 Release
+## XXX 202X Release
+
+
+## November 2020 Release - "Black Friday"
 
 ### Breaking Changes
  -   "AFR target" table is now "Lambda target" table.  It should convert itself correctly, but a backup of that table is recommended when updating firmware/ini.
@@ -34,7 +37,7 @@ All notable user-facing or behavior-altering changes will be documented in this 
 ### Added
  -   High & low pressure fuel sensor channels
  -   Electronic throttle-style wastegate control found on some VW turbos (and VGTs)
- -   Improved TLE8888 driver on microRusEfi 
+ -   Improved TLE8888 driver on microRusEFI 
  -   Improved setting ECU presets/defaults from TunerStudio
 
 ### Fixed
@@ -44,7 +47,7 @@ All notable user-facing or behavior-altering changes will be documented in this 
 
 ### Added
  -   `iat` as FSIO variable to read intake air temperature
- -   [ALPHA] Software based knock detection on Proteus v0.4+.  Possible on microRusEfi and Frankenso too with hardware modification.
+ -   [ALPHA] Software based knock detection on Proteus v0.4+.  Possible on microRusEFI and Frankenso too with hardware modification.
  -   [ALPHA] Early framing work for automatic transmission control!
 
 ### Fixed

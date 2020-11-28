@@ -93,6 +93,7 @@ void m73engine(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	strcpy(CONFIG(engineCode), "M73");
 	engineConfiguration->specs.firingOrder = FO_1_7_5_11_3_9_6_12_2_8_4_10;
 	CONFIG(isFasterEngineSpinUpEnabled) = true;
+	CONFIG(fuelAlgorithm) = LM_ALPHA_N;
 
 	engineConfiguration->vvtMode = VVT_FIRST_HALF;
 
@@ -297,6 +298,10 @@ void setEngineBMW_M73_Proteus(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	// todo: figure out exact values from TLE8888 breakout board used by Manhattan
 	// engineConfiguration->vbattDividerCoeff = 7.6; // is that Proteus 0.2 value?
 
+
+	// no idea why https://github.com/rusefi/rusefi/wiki/HOWTO-M73-v12-on-Proteus uses non default CLT pin
+	// AT3, Proteus pin #31
+	engineConfiguration->clt.adcChannel = EFI_ADC_9;
 
 
 	// GPIOE_0:  "Lowside 14"

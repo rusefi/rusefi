@@ -456,8 +456,7 @@ typedef enum {
 	 */
 	LM_REAL_MAF = 4,
 
-	// todo: rename after LM_ALPHA_N is removed
-	LM_ALPHA_N_2 = 5,
+	LM_ALPHA_N = 5,
 
 	// This mode is for unit testing only, so that tests don't have to rely on a particular real airmass mode
 	LM_MOCK = 100,
