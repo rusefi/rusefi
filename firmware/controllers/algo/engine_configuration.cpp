@@ -1168,7 +1168,6 @@ void resetConfigurationExt(Logging * logger, configuration_callback_t boardCallb
 	case PROMETHEUS_DEFAULTS:
 	case CHEVY_C20_1973:
 	case ZIL_130:
-	case MIATA_1994_DEVIATOR:
 	case MINIMAL_PINS:
 		// all basic settings are already set in prepareVoidConfiguration(), no need to set anything here
 		// nothing to do - we do it all in setBoardConfigurationOverrides
@@ -1218,6 +1217,9 @@ void resetConfigurationExt(Logging * logger, configuration_callback_t boardCallb
 		break;
 	case MRE_MIATA_NA6_VAF:
 		setMiataNA6_VAF_MRE(PASS_CONFIG_PARAMETER_SIGNATURE);
+		break;
+	case MRE_MIATA_94_MAP:
+		setMiata94_MAP_MRE(PASS_CONFIG_PARAMETER_SIGNATURE);
 		break;
 	case MRE_MIATA_NA6_MAP:
 		setMiataNA6_MAP_MRE(PASS_CONFIG_PARAMETER_SIGNATURE);
