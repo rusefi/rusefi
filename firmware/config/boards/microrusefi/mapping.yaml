@@ -37,6 +37,11 @@ outputs:
   GPIOB_8:  "AUX J2 PB8"
   GPIOB_9:  "AUX J2 PB9"
   GPIOC_12: "AUX J2 PC12"
+  GPIOE_0:  "AUX J6 PE0"
+  GPIOE_6:  "AUX J10 PE6"
+  GPIOE_5:  "AUX J11 PE5"
+  GPIOB_7:  "AUX J18 PB7"
+
   GPIOB_0: "AUX AV8 reuse"
   GPIOB_1: "AUX AV9 reuse"
   GPIOA_4: "AUX AV10 reuse"
@@ -59,8 +64,25 @@ event_inputs:
   GPIOC_6: "45 - VR/Hall Crank"
 
 switch_inputs:
-  GPIOE_10: "Brake Switch"
-  GPIOG_1: "Clutch Switch"
+  GPIOA_0: "18 - AN temp 1"
+  GPIOA_1: "23 - AN temp 2"
+  GPIOA_2: "24 - AN temp 3"
+  GPIOA_3: "22 - AN temp 4"
+  GPIOA_4: "28 - AN volt 10"
+
+  # RC filter input for hall
+  GPIOA_5: "25 - Hall Cam"
+
+  GPIOA_6: "26 - AN volt 2"
+  GPIOA_7: "31 - AN volt 3"
+  GPIOB_0: "36 - AN volt 8"
+  GPIOB_1: "40 - AN volt 9"
+  GPIOC_0: "27 - AN volt 1"
+  # GPIOC_1: Skipped - battery sense
+  GPIOC_2: "19 - AN volt 4"
+  GPIOC_3: "20 - AN volt 5"
+  GPIOC_4: "32 - AN volt 6"
+  GPIOC_5: "30 - AN volt 7"
 
 analog_inputs:
   # PA0 CLT

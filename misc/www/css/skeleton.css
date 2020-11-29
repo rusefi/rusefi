@@ -160,7 +160,7 @@ p {
 a {
   color: #db6a1e; }
 a:hover {
-  color: #ce4c0f; }
+  color: #f15a24; }
 
 
 /* Buttons
@@ -324,7 +324,7 @@ pre > code {
 –––––––––––––––––––––––––––––––––––––––––––––––––– */
 th,
 td {
-  padding: 12px 15px;
+  padding: 0px 0px 0px 15px;
   text-align: left;
   border-bottom: 1px solid #E1E1E1; }
 th:first-child,

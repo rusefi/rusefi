@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Fri Oct 23 19:47:25 UTC 2020
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Sun Nov 29 03:21:46 UTC 2020
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -115,7 +115,9 @@ typedef struct pid_s pid_s;
 // start of cranking_parameters_s
 struct cranking_parameters_s {
 	/**
-	 * Base duration of the fuel injection during cranking, this is modified by the multipliers for CLT, IAT, TPS ect, to give the final cranking pulse width.
+	 * Base mass of the per-cylinder fuel injected during cranking. This is then modified by the multipliers for CLT, IAT, TPS ect, to give the final cranking pulse width.
+	 * A reasonable starting point is 60mg per liter per cylinder.
+	 * ex: 2 liter 4 cyl = 500cc/cyl, so 30mg cranking fuel.
 	 * offset 0
 	 */
 	float baseFuel;
@@ -602,8 +604,8 @@ struct idle_hardware_s {
 
 typedef struct idle_hardware_s idle_hardware_s;
 
-// start of etb_io
-struct etb_io {
+// start of dc_io
+struct dc_io {
 	/**
 	 * offset 0
 	 */
@@ -623,7 +625,7 @@ struct etb_io {
 	/** total size 4*/
 };
 
-typedef struct etb_io etb_io;
+typedef struct dc_io dc_io;
 
 // start of engine_configuration_s
 struct engine_configuration_s {
@@ -729,7 +731,7 @@ struct engine_configuration_s {
 	bool displayLogicLevelsInEngineSniffer : 1;
 	/**
 	offset 76 bit 25 */
-	bool issue_294_26 : 1;
+	bool useTLE8888_stepper : 1;
 	/**
 	offset 76 bit 26 */
 	bool issue_294_27 : 1;
@@ -749,14 +751,14 @@ struct engine_configuration_s {
 	offset 76 bit 31 */
 	bool unusedBit_34_31 : 1;
 	/**
-	 * Closed throttle. todo: extract these two fields into a structure
+	 * Closed throttle, 1 volt = 200 units.
 	 * See also tps1_1AdcChannel
 	 * set tps_min X
 	 * offset 80
 	 */
 	int16_t tpsMin;
 	/**
-	 * Full throttle. tpsMax value as 10 bit ADC value. Not Voltage!
+	 * Full throttle.
 	 * See also tps1_1AdcChannel
 	 * set tps_max X
 	 * offset 82
@@ -1062,6 +1064,7 @@ struct engine_configuration_s {
 	 * See throttlePedalPositionSecondAdcChannel for second channel
 	 * See also tps1_1AdcChannel
 	 * set_analog_input_pin pps X
+	 * See throttlePedalUpVoltage and throttlePedalWOTVoltage
 	 * offset 580
 	 */
 	adc_channel_e throttlePedalPositionAdcChannel;
@@ -1256,6 +1259,7 @@ struct engine_configuration_s {
 	 * Electronic throttle pedal position input
 	 * Second channel
 	 * See also tps1_1AdcChannel
+	 * See throttlePedalSecondaryUpVoltage and throttlePedalSecondaryWOTVoltage
 	 * offset 683
 	 */
 	adc_channel_e throttlePedalPositionSecondAdcChannel;
@@ -1334,6 +1338,7 @@ struct engine_configuration_s {
 	/**
 	 * Voltage when the wastegate is fully open.
 	 * You probably don't have one of these!
+	 * 1 volt = 1000 units
 	 * offset 718
 	 */
 	uint16_t wastegatePositionMax;
@@ -1346,13 +1351,18 @@ struct engine_configuration_s {
 	/**
 	 * Voltage when the idle valve is open.
 	 * You probably don't have one of these!
+	 * 1 volt = 1000 units
 	 * offset 722
 	 */
 	uint16_t idlePositionMax;
 	/**
 	 * offset 724
 	 */
-	uint8_t unusedAt724[4];
+	uint16_t tempHpfpStart;
+	/**
+	 * offset 726
+	 */
+	uint16_t tempHpfpDuration;
 	/**
 	 * Secondary TTL channel baud rate
 	 * offset 728
@@ -1575,7 +1585,7 @@ struct engine_configuration_s {
 	 * Some Subaru and some Mazda use double-solenoid idle air valve
 	 * offset 810
 	 */
-	brain_pin_e secondSolenoidPin;
+	output_pin_e secondSolenoidPin;
 	/**
 	 * See also starterControlPin
 	 * offset 811
@@ -1843,14 +1853,14 @@ struct engine_configuration_s {
 	bool unusedBit_251_29 : 1;
 	/**
 	offset 976 bit 30 */
-	bool unusedBit_287_30 : 1;
+	bool unusedBit_288_30 : 1;
 	/**
 	offset 976 bit 31 */
-	bool unusedBit_287_31 : 1;
+	bool unusedBit_288_31 : 1;
 	/**
 	 * offset 980
 	 */
-	etb_io etbIo[ETB_COUNT];
+	dc_io etbIo[ETB_COUNT];
 	/**
 	 * Wastegate control Solenoid
 	 * offset 988
@@ -1937,7 +1947,7 @@ struct engine_configuration_s {
 	/**
 	 * offset 1088
 	 */
-	etb_io etbIo2[ETB_COUNT];
+	dc_io stepperDcIo[DC_PER_STEPPER];
 	/**
 	 * For example, BMW, GM or Chevrolet
 	 * REQUIRED for rusEFI Online
@@ -1984,7 +1994,15 @@ struct engine_configuration_s {
 	/**
 	 * offset 1204
 	 */
-	int unusedAtOldBoardConfigurationEnd[64];
+	int unusedAtOldBoardConfigurationEnd[63];
+	/**
+	 * offset 1456
+	 */
+	uint16_t vehicleWeight;
+	/**
+	 * offset 1458
+	 */
+	uint16_t unusedHereHereHere;
 	/**
 	 * offset 1460
 	 */
@@ -2338,10 +2356,9 @@ struct engine_configuration_s {
 	 */
 	float tachPulseDuractionMs;
 	/**
-	 * Trigger cycle index at which we start tach pulse (performance consideration)
 	 * offset 1708
 	 */
-	int tachPulseTriggerIndex;
+	int unused1708;
 	/**
 	 * Length of time the deposited wall fuel takes to dissipate after the start of acceleration. 
 	 * offset 1712
@@ -2674,76 +2691,76 @@ struct engine_configuration_s {
 	bool unused1130 : 1;
 	/**
 	offset 2116 bit 8 */
-	bool unusedBit_485_8 : 1;
+	bool unusedBit_488_8 : 1;
 	/**
 	offset 2116 bit 9 */
-	bool unusedBit_485_9 : 1;
+	bool unusedBit_488_9 : 1;
 	/**
 	offset 2116 bit 10 */
-	bool unusedBit_485_10 : 1;
+	bool unusedBit_488_10 : 1;
 	/**
 	offset 2116 bit 11 */
-	bool unusedBit_485_11 : 1;
+	bool unusedBit_488_11 : 1;
 	/**
 	offset 2116 bit 12 */
-	bool unusedBit_485_12 : 1;
+	bool unusedBit_488_12 : 1;
 	/**
 	offset 2116 bit 13 */
-	bool unusedBit_485_13 : 1;
+	bool unusedBit_488_13 : 1;
 	/**
 	offset 2116 bit 14 */
-	bool unusedBit_485_14 : 1;
+	bool unusedBit_488_14 : 1;
 	/**
 	offset 2116 bit 15 */
-	bool unusedBit_485_15 : 1;
+	bool unusedBit_488_15 : 1;
 	/**
 	offset 2116 bit 16 */
-	bool unusedBit_485_16 : 1;
+	bool unusedBit_488_16 : 1;
 	/**
 	offset 2116 bit 17 */
-	bool unusedBit_485_17 : 1;
+	bool unusedBit_488_17 : 1;
 	/**
 	offset 2116 bit 18 */
-	bool unusedBit_485_18 : 1;
+	bool unusedBit_488_18 : 1;
 	/**
 	offset 2116 bit 19 */
-	bool unusedBit_485_19 : 1;
+	bool unusedBit_488_19 : 1;
 	/**
 	offset 2116 bit 20 */
-	bool unusedBit_485_20 : 1;
+	bool unusedBit_488_20 : 1;
 	/**
 	offset 2116 bit 21 */
-	bool unusedBit_485_21 : 1;
+	bool unusedBit_488_21 : 1;
 	/**
 	offset 2116 bit 22 */
-	bool unusedBit_485_22 : 1;
+	bool unusedBit_488_22 : 1;
 	/**
 	offset 2116 bit 23 */
-	bool unusedBit_485_23 : 1;
+	bool unusedBit_488_23 : 1;
 	/**
 	offset 2116 bit 24 */
-	bool unusedBit_485_24 : 1;
+	bool unusedBit_488_24 : 1;
 	/**
 	offset 2116 bit 25 */
-	bool unusedBit_485_25 : 1;
+	bool unusedBit_488_25 : 1;
 	/**
 	offset 2116 bit 26 */
-	bool unusedBit_485_26 : 1;
+	bool unusedBit_488_26 : 1;
 	/**
 	offset 2116 bit 27 */
-	bool unusedBit_485_27 : 1;
+	bool unusedBit_488_27 : 1;
 	/**
 	offset 2116 bit 28 */
-	bool unusedBit_485_28 : 1;
+	bool unusedBit_488_28 : 1;
 	/**
 	offset 2116 bit 29 */
-	bool unusedBit_485_29 : 1;
+	bool unusedBit_488_29 : 1;
 	/**
 	offset 2116 bit 30 */
-	bool unusedBit_485_30 : 1;
+	bool unusedBit_488_30 : 1;
 	/**
 	offset 2116 bit 31 */
-	bool unusedBit_485_31 : 1;
+	bool unusedBit_488_31 : 1;
 	/**
 	 * set can_mode X
 	 * offset 2120
@@ -2781,7 +2798,11 @@ struct engine_configuration_s {
 	/**
 	 * offset 2130
 	 */
-	uint8_t unused_former_warmup_target_afr[2];
+	output_pin_e hpfpValvePin;
+	/**
+	 * offset 2131
+	 */
+	pin_output_mode_e hpfpValvePinMode;
 	/**
 	 * MAP value above which fuel is cut in case of overboost.
 	 * 0 to disable overboost cut.
@@ -2913,11 +2934,17 @@ struct engine_configuration_s {
 	/**
 	 * offset 2418
 	 */
-	uint8_t unusedSomethingWasHere[2];
+	injector_compensation_mode_e injectorCompensationMode;
 	/**
+	 * offset 2419
+	 */
+	uint8_t unused2419;
+	/**
+	 * This is the pressure at which your injector flow is known.
+	 * For example if your injectors flow 400cc/min at 3.5 bar, enter 350kpa here.
 	 * offset 2420
 	 */
-	float unused244_1;
+	float fuelReferencePressure;
 	/**
 	 * offset 2424
 	 */
@@ -3670,15 +3697,15 @@ struct persistent_config_s {
 	/**
 	 * offset 18592
 	 */
-	afr_table_t afrTable;
+	lambda_table_t lambdaTable;
 	/**
 	 * offset 18848
 	 */
-	float afrLoadBins[FUEL_LOAD_COUNT];
+	float lambdaLoadBins[FUEL_LOAD_COUNT];
 	/**
 	 * offset 18912
 	 */
-	float afrRpmBins[FUEL_RPM_COUNT];
+	float lambdaRpmBins[FUEL_RPM_COUNT];
 	/**
 	 * offset 18976
 	 */
@@ -3750,4 +3777,4 @@ struct persistent_config_s {
 typedef struct persistent_config_s persistent_config_s;
 
 // end
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Fri Oct 23 19:47:25 UTC 2020
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Sun Nov 29 03:21:46 UTC 2020

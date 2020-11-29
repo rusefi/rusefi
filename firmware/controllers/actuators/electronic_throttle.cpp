@@ -275,8 +275,16 @@ expected<percent_t> EtbController::getSetpointEtb() const {
 }
 
 expected<percent_t> EtbController::getOpenLoop(percent_t target) const {
-	float ff = interpolate2d("etbb", target, engineConfiguration->etbBiasBins, engineConfiguration->etbBiasValues);
+	float ff = 0;
+
+	// Don't apply open loop for wastegate/idle valve, only real ETB
+	if (m_function != ETB_Wastegate
+		&& m_function != ETB_IdleValve) {
+		ff = interpolate2d("etbb", target, engineConfiguration->etbBiasBins, engineConfiguration->etbBiasValues);
+	}
+
 	engine->engineState.etbFeedForward = ff;
+
 	return ff;
 }
 
@@ -841,7 +849,7 @@ void doInitElectronicThrottle(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	bool anyEtbConfigured = false;
 
 	for (int i = 0 ; i < ETB_COUNT; i++) {
-		auto motor = initDcMotor(i, CONFIG(etb_use_two_wires) PASS_ENGINE_PARAMETER_SUFFIX);
+		auto motor = initDcMotor(engineConfiguration->etbIo[i], i, CONFIG(etb_use_two_wires) PASS_ENGINE_PARAMETER_SUFFIX);
 
 		// If this motor is actually set up, init the etb
 		if (motor)
@@ -902,6 +910,11 @@ void initElectronicThrottle(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 }
 
 void setEtbIdlePosition(percent_t pos DECLARE_ENGINE_PARAMETER_SUFFIX) {
+	if (!Sensor::hasSensor(SensorType::AcceleratorPedal)) {
+		firmwareError(CUSTOM_NO_ETB_FOR_IDLE, "No ETB to use for idle");
+		return;
+	}
+
 	for (int i = 0; i < ETB_COUNT; i++) {
 		if (auto etb = engine->etbControllers[i]) {
 			etb->setIdlePosition(pos);

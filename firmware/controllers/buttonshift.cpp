@@ -12,6 +12,14 @@ EXTERN_ENGINE;
 
 ButtonShiftController buttonShiftController;
 
+
+ButtonShiftController::ButtonShiftController() :
+		debounceUp("gear_up"),
+		debounceDown("gear_down")
+		{
+
+}
+
 void ButtonShiftController::init (DECLARE_ENGINE_PARAMETER_SIGNATURE) {
     // 500 millisecond is maybe a little long?
     debounceUp.init(500, CONFIG(tcuUpshiftButtonPin), CONFIG(tcuUpshiftButtonPinMode));

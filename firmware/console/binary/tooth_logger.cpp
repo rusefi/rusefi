@@ -29,7 +29,7 @@ typedef struct __attribute__ ((packed)) {
 	// unfortunately all these fields are required by TS...
 	bool priLevel : 1;
 	bool secLevel : 1;
-	bool isTDC : 1;
+	bool trigger : 1;
 	bool sync : 1;
 	bool coil : 1;
 	bool injector : 1;
@@ -40,13 +40,16 @@ typedef struct __attribute__ ((packed)) {
  * If we can read buffer at 50Hz we want buffer to be about 400 elements.
  */
 static composite_logger_s buffer[COMPOSITE_PACKET_COUNT] CCM_OPTIONAL;
+static composite_logger_s *ptr_buffer_first = &buffer[0];
+static composite_logger_s *ptr_buffer_second = &buffer[(COMPOSITE_PACKET_COUNT/2)-1];
 static size_t NextIdx = 0;
 static volatile bool ToothLoggerEnabled = false;
-
+static volatile bool firstBuffer = true;
 static uint32_t lastEdgeTimestamp = 0;
 
 static bool trigger1 = false;
 static bool trigger2 = false;
+static bool trigger = false;
 // any coil, all coils thrown together
 static bool coil = false;
 // same about injectors
@@ -65,7 +68,7 @@ int copyCompositeEvents(CompositeEvent *events) {
 		event->timestamp = SWAP_UINT32(buffer[i].timestamp);
 		event->primaryTrigger = buffer[i].priLevel;
 		event->secondaryTrigger = buffer[i].secLevel;
-		event->isTDC = buffer[i].isTDC;
+		event->isTDC = buffer[i].trigger;
 		event->sync = buffer[i].sync;
 		event->coil = buffer[i].coil;
 		event->injector = buffer[i].injector;
@@ -76,13 +79,14 @@ int copyCompositeEvents(CompositeEvent *events) {
 #endif // EFI_UNIT_TEST
 
 static void SetNextCompositeEntry(efitick_t timestamp, bool trigger1, bool trigger2,
-		bool isTDC DECLARE_ENGINE_PARAMETER_SUFFIX) {
+		bool trigger DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	uint32_t nowUs = NT2US(timestamp);
+	
 	// TS uses big endian, grumble
 	buffer[NextIdx].timestamp = SWAP_UINT32(nowUs);
 	buffer[NextIdx].priLevel = trigger1;
 	buffer[NextIdx].secLevel = trigger2;
-	buffer[NextIdx].isTDC = isTDC;
+	buffer[NextIdx].trigger = trigger;
 	buffer[NextIdx].sync = engine->triggerCentral.triggerState.shaft_is_synchronized;
 	buffer[NextIdx].coil = coil;
 	buffer[NextIdx].injector = injector;
@@ -91,10 +95,24 @@ static void SetNextCompositeEntry(efitick_t timestamp, bool trigger1, bool trigg
 
 	static_assert(sizeof(composite_logger_s) == COMPOSITE_PACKET_SIZE, "composite packet size");
 
-	// If we hit the end, loop
-	if (NextIdx >= sizeof(buffer) / sizeof(buffer[0])) {
-		NextIdx = 0;
+	//If we hit the end, loop
+	if ((firstBuffer) && (NextIdx >= (COMPOSITE_PACKET_COUNT/2))) {
+		/* first half is full */
+#if EFI_TUNER_STUDIO		
+		tsOutputChannels.toothLogReady = true;
+#endif		
+		firstBuffer = false;
 	}
+	if ((!firstBuffer) && (NextIdx >= sizeof(buffer) / sizeof(buffer[0]))) {
+#if EFI_TUNER_STUDIO		
+		tsOutputChannels.toothLogReady = true;
+#endif		
+		NextIdx = 0;
+		firstBuffer = true;
+	}
+
+	/////tsOutputChannels.toothLogReady = true;
+
 }
 
 void LogTriggerTooth(trigger_event_e tooth, efitick_t timestamp DECLARE_ENGINE_PARAMETER_SUFFIX) {
@@ -129,21 +147,25 @@ void LogTriggerTooth(trigger_event_e tooth, efitick_t timestamp DECLARE_ENGINE_P
 	switch (tooth) {
 	case SHAFT_PRIMARY_FALLING:
 		trigger1 = false;
+		trigger = false;
 		break;
 	case SHAFT_PRIMARY_RISING:
 		trigger1 = true;
+		trigger = false;
 		break;
 	case SHAFT_SECONDARY_FALLING:
 		trigger2 = false;
+		trigger = true;
 		break;
 	case SHAFT_SECONDARY_RISING:
 		trigger2 = true;
+		trigger = true;
 		break;
 	default:
 		break;
 	}
 
-	SetNextCompositeEntry(timestamp, trigger1, trigger2, false PASS_ENGINE_PARAMETER_SUFFIX);
+	SetNextCompositeEntry(timestamp, trigger1, trigger2, trigger PASS_ENGINE_PARAMETER_SUFFIX);
 }
 
 void LogTriggerTopDeadCenter(efitick_t timestamp DECLARE_ENGINE_PARAMETER_SUFFIX) {
@@ -151,8 +173,9 @@ void LogTriggerTopDeadCenter(efitick_t timestamp DECLARE_ENGINE_PARAMETER_SUFFIX
 	if (!ToothLoggerEnabled) {
 		return;
 	}
-	SetNextCompositeEntry(timestamp, trigger1, trigger2, true PASS_ENGINE_PARAMETER_SUFFIX);
-	SetNextCompositeEntry(timestamp + 10, trigger1, trigger2, false PASS_ENGINE_PARAMETER_SUFFIX);
+	UNUSED(timestamp);
+	//SetNextCompositeEntry(timestamp, trigger1, trigger2, true PASS_ENGINE_PARAMETER_SUFFIX);
+	//SetNextCompositeEntry(timestamp + 10, trigger1, trigger2, false PASS_ENGINE_PARAMETER_SUFFIX);
 }
 
 void LogTriggerCoilState(efitick_t timestamp, bool state DECLARE_ENGINE_PARAMETER_SUFFIX) {
@@ -160,7 +183,8 @@ void LogTriggerCoilState(efitick_t timestamp, bool state DECLARE_ENGINE_PARAMETE
 		return;
 	}
 	coil = state;
-	SetNextCompositeEntry(timestamp, trigger1, trigger2, false PASS_ENGINE_PARAMETER_SUFFIX);
+	UNUSED(timestamp);
+	//SetNextCompositeEntry(timestamp, trigger1, trigger2, trigger PASS_ENGINE_PARAMETER_SUFFIX);
 }
 
 void LogTriggerInjectorState(efitick_t timestamp, bool state DECLARE_ENGINE_PARAMETER_SUFFIX) {
@@ -168,7 +192,8 @@ void LogTriggerInjectorState(efitick_t timestamp, bool state DECLARE_ENGINE_PARA
 		return;
 	}
 	injector = state;
-	SetNextCompositeEntry(timestamp, trigger1, trigger2, false PASS_ENGINE_PARAMETER_SUFFIX);
+	UNUSED(timestamp);
+	//SetNextCompositeEntry(timestamp, trigger1, trigger2, trigger PASS_ENGINE_PARAMETER_SUFFIX);
 }
 
 void EnableToothLogger() {
@@ -189,7 +214,7 @@ void EnableToothLogger() {
 	// nb: this is a lie, as we may not have written anything
 	// yet.  However, we can let it continuously read out the buffer
 	// as we update it, which looks pretty nice.
-	tsOutputChannels.toothLogReady = true;
+	tsOutputChannels.toothLogReady = false;
 #endif // EFI_TUNER_STUDIO
 }
 
@@ -207,7 +232,18 @@ void DisableToothLogger() {
 }
 
 ToothLoggerBuffer GetToothLoggerBuffer() {
-	return { reinterpret_cast<uint8_t*>(buffer), sizeof(buffer) };
+	if (firstBuffer) {
+#if EFI_TUNER_STUDIO		
+		tsOutputChannels.toothLogReady = false;
+#endif		
+		return { reinterpret_cast<uint8_t*>(ptr_buffer_second), (sizeof(buffer)/2) };
+	} else {
+#if EFI_TUNER_STUDIO		
+		tsOutputChannels.toothLogReady = false;
+#endif		
+		return { reinterpret_cast<uint8_t*>(ptr_buffer_first), (sizeof(buffer)/2) };
+	}
 }
+
 
 #endif /* EFI_TOOTH_LOGGER */

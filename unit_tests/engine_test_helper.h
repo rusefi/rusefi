@@ -17,6 +17,8 @@
 #include "sensor.h"
 #include "mocks.h"
 
+#include <unordered_map>
+
 extern EnginePins enginePins;
 
 class EngineTestHelperBase
@@ -54,6 +56,7 @@ public:
 	void smartFireRise(float delayMs);
 	void smartFireFall(float delayMs);
 	void smartMoveTimeForwardUs(int deltaTimeUs);
+	void smartMoveTimeForwardSeconds(int deltaTimeSeconds);
 	void smartFireTriggerEvents2(int count, float delayMs);
 
 	/**

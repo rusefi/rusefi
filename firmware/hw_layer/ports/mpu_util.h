@@ -4,6 +4,8 @@
 
 #include "port_mpu_util.h"
 
+#ifdef __cplusplus
+
 // Base MCU
 void baseMCUInit(void);
 void jump_to_bootloader();
@@ -45,7 +47,6 @@ typedef enum {
 BOR_Level_t BOR_Get(void);
 BOR_Result_t BOR_Set(BOR_Level_t BORValue);
 
-#ifdef __cplusplus
 extern "C"
 {
 #endif /* __cplusplus */

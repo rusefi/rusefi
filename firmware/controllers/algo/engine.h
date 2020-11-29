@@ -31,6 +31,7 @@
 #endif /* EFI_UNIT_TEST */
 
 #define FAST_CALLBACK_PERIOD_MS 5
+#define SLOW_CALLBACK_PERIOD_MS 50
 
 class RpmCalculator;
 class AirmassModelBase;
@@ -78,6 +79,7 @@ class Engine final : public TriggerStateListener {
 public:
 	explicit Engine(persistent_config_s *config);
 	Engine();
+	bool isPwmEnabled = true;
 
 	IEtbController *etbControllers[ETB_COUNT] = {nullptr};
 	IFuelComputer *fuelComputer = nullptr;
@@ -89,6 +91,7 @@ public:
 
 	PrimaryTriggerConfiguration primaryTriggerConfiguration;
 	VvtTriggerConfiguration vvtTriggerConfiguration;
+	efitick_t startStopStateLastPushTime = 0;
 
 #if EFI_SHAFT_POSITION_INPUT
 	void OnTriggerStateDecodingError();

@@ -47,7 +47,7 @@ enum {
 //	LCD_2X16_BUSY_FLAG = 0x80,
 //	LCD_2X16_COMMAND = 0x01,
 //	LCD_2X16_DATA = 0x00,
-} lcd_HD44780_command;
+} /*lcd_HD44780_command*/;
 
 // http://web.alfredstate.edu/weimandn/lcd/lcd_addressing/lcd_addressing_index.html
 static const int lineStart[] = { 0, 0x40, 0x14, 0x54 };
@@ -169,12 +169,12 @@ static void lcdInfo(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 }
 
 void stopHD44780_pins() {
-	brain_pin_markUnused(activeConfiguration.HD44780_rs);
-	brain_pin_markUnused(activeConfiguration.HD44780_e);
-	brain_pin_markUnused(activeConfiguration.HD44780_db4);
-	brain_pin_markUnused(activeConfiguration.HD44780_db5);
-	brain_pin_markUnused(activeConfiguration.HD44780_db6);
-	brain_pin_markUnused(activeConfiguration.HD44780_db7);
+	efiSetPadUnused(activeConfiguration.HD44780_rs);
+	efiSetPadUnused(activeConfiguration.HD44780_e);
+	efiSetPadUnused(activeConfiguration.HD44780_db4);
+	efiSetPadUnused(activeConfiguration.HD44780_db5);
+	efiSetPadUnused(activeConfiguration.HD44780_db6);
+	efiSetPadUnused(activeConfiguration.HD44780_db7);
 }
 
 void startHD44780_pins() {

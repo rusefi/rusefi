@@ -6,6 +6,8 @@ import org.jetbrains.annotations.Nullable;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Andrey Belomutskiy, (c) 2013-2020
@@ -80,6 +82,9 @@ public class RawIniFile {
         private String rawText;
         private String[] tokens;
 
+        private static final String namePattern = "[[\\w\\d\\s_]]+";
+        private static final Pattern DIRECTIVE = Pattern.compile("#(if\\s" + namePattern + "|else|elif\\s\" + namePattern + \"|endif)");
+
         public Line(String rawText) {
             this.rawText = rawText;
             tokens = IniFileReader.splitTokens(rawText);
@@ -91,6 +96,12 @@ public class RawIniFile {
 
         public static boolean isCommentLine(String rawText) {
             return rawText.trim().startsWith(";");
+        }
+
+
+        public static boolean isPreprocessorDirective(String rawText) {
+            Matcher matcher = DIRECTIVE.matcher(rawText);
+            return matcher.matches();
         }
 
         public String getRawText() {

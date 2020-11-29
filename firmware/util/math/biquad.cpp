@@ -8,7 +8,7 @@
 #include "biquad.h"
 #include "error_handling.h"
 
-#include <math.h>
+#include "efilib.h"
 
 Biquad::Biquad() {
 // Default to passthru
@@ -23,7 +23,7 @@ void Biquad::reset() {
 }
 
 static float getK(float samplingFrequency, float cutoff) {
-	return tanf(3.14159f * cutoff / samplingFrequency);
+	return tanf_taylor(3.14159f * cutoff / samplingFrequency);
 }
 
 static float getNorm(float K, float Q) {

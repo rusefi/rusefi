@@ -6,7 +6,7 @@
  * http://rusefi.com/wiki/index.php?title=Vehicle:Mazda_Protege_1993
  *
  * MIATA_1990 = 19 (Frankenstein board)
- * MIATA_1994_DEVIATOR = 20
+ * MRE_MIATA_94_MAP = 20
  * MIATA_1996 = 21
  * set engine_type 21
  *
@@ -75,13 +75,6 @@ static const ignition_table_t miataNA8_maf_advance_table = { {/*0  engineLoad=1.
 		+29.712, /*12 5760.0*/+28.651, /*13 6173.0*/+28.045, /*14 6586.0*/+27.228, /*15 7000.0*/+27.784 } };
 #endif
 
-static void setDefaultCrankingFuel(engine_configuration_s *engineConfiguration) {
-	// todo: set cranking parameters method based on injectors and displacement?
-
-	// set cranking_fuel 5
-	engineConfiguration->cranking.baseFuel = 5;
-}
-
 EXTERN_ENGINE;
 
 static void commonMiataNa(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
@@ -108,7 +101,7 @@ static void commonMiataNa(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	engineConfiguration->ignitionPins[3] = GPIO_UNASSIGNED;
 	engineConfiguration->ignitionPinMode = OM_DEFAULT;
 
-	setDefaultCrankingFuel(engineConfiguration);
+	engineConfiguration->cranking.baseFuel = 24;
 
 	engineConfiguration->triggerSimulatorPinModes[0] = OM_OPENDRAIN;
 	engineConfiguration->triggerSimulatorPinModes[1] = OM_OPENDRAIN;
@@ -252,26 +245,6 @@ static void setMiata1994_common(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	engineConfiguration->clt.adcChannel = EFI_ADC_12;
 	engineConfiguration->iat.adcChannel = EFI_ADC_11;
 // end of 1994 commond
-}
-
-/**
- * Frankenso board
- * set engine_type 20
- */
-void setMiata1994_d(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
-	setMiata1994_common(PASS_CONFIG_PARAMETER_SIGNATURE);
-
-	engineConfiguration->vbattDividerCoeff = ((float) (8.2 + 33)) / 8.2 * 2;
-	/**
-	 * This board was avoiding PE0 & PE1 mosfets altogether
-	 */
-	engineConfiguration->injectionPins[0] = GPIOD_7; // avoiding PE1
-	engineConfiguration->injectionPins[1] = GPIOE_2;
-	engineConfiguration->injectionPins[2] = GPIOB_8;
-	engineConfiguration->injectionPins[3] = GPIOB_7;
-
-	// todo: add the diode? change idle valve logic?
-	engineConfiguration->idle.solenoidPin = GPIO_UNASSIGNED;
 }
 
 /**

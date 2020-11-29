@@ -220,25 +220,23 @@ static void setMiataNA6_settings(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	// chartsize 200
 	engineConfiguration->engineChartSize = 200;
 
-	// maybe adjust CLT correction?
-	// set cranking_fuel 8
-	engineConfiguration->cranking.baseFuel = 1;
-	config->crankingFuelCoef[0] = 28; // base cranking fuel adjustment coefficient
+	engineConfiguration->cranking.baseFuel = 24;
+	config->crankingFuelCoef[0] = 2.8; // base cranking fuel adjustment coefficient
 	config->crankingFuelBins[0] = -20; // temperature in C
-	config->crankingFuelCoef[1] = 22;
+	config->crankingFuelCoef[1] = 2.2;
 	config->crankingFuelBins[1] = -10;
-	config->crankingFuelCoef[2] = 18;
+	config->crankingFuelCoef[2] = 1.8;
 	config->crankingFuelBins[2] = 5;
-	config->crankingFuelCoef[3] = 15;
+	config->crankingFuelCoef[3] = 1.5;
 	config->crankingFuelBins[3] = 30;
 
-	config->crankingFuelCoef[4] = 10;
+	config->crankingFuelCoef[4] = 1.0;
 	config->crankingFuelBins[4] = 35;
-	config->crankingFuelCoef[5] = 10;
+	config->crankingFuelCoef[5] = 1.0;
 	config->crankingFuelBins[5] = 50;
-	config->crankingFuelCoef[6] = 10;
+	config->crankingFuelCoef[6] = 1.0;
 	config->crankingFuelBins[6] = 65;
-	config->crankingFuelCoef[7] = 10;
+	config->crankingFuelCoef[7] = 1.0;
 	config->crankingFuelBins[7] = 90;
 
 	engineConfiguration->specs.displacement = 1.6;
@@ -423,7 +421,6 @@ void setMiataNA6_MAP_MRE(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	engineConfiguration->idleTimingPid.dFactor = 0.0;
 	engineConfiguration->idleTimingPid.minValue = -13;
 	engineConfiguration->idleTimingPid.maxValue = 13;
-	engineConfiguration->idleTimingPid.periodMs = 8;
 	engineConfiguration->idleTimingPidWorkZone = 150;
 	engineConfiguration->idlePidFalloffDeltaRpm = 50;
 	engineConfiguration->idleTimingPidDeadZone = 10;
@@ -461,3 +458,14 @@ void setMiataNA6_MAP_MRE(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 
 #endif /* BOARD_TLE8888_COUNT */
 }
+
+void setMiata94_MAP_MRE(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
+	setMiataNA6_MAP_MRE(PASS_CONFIG_PARAMETER_SIGNATURE);
+
+	engineConfiguration->injectionMode = IM_SEQUENTIAL;
+	engineConfiguration->specs.displacement = 1.68;
+	strcpy(CONFIG(engineMake), ENGINE_MAKE_MAZDA);
+	strcpy(CONFIG(engineCode), "94");
+
+}
+

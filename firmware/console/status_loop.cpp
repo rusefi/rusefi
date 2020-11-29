@@ -177,7 +177,7 @@ static void printOutPin(const char *pinName, brain_pin_e hwPin) {
 }
 #endif /* EFI_PROD_CODE */
 
-void printOverallStatus(systime_t nowSeconds) {
+void printOverallStatus(efitimesec_t nowSeconds) {
 #if EFI_ENGINE_SNIFFER
 	waveChart.publishIfFull();
 #endif /* EFI_ENGINE_SNIFFER */
@@ -279,11 +279,6 @@ void updateDevConsoleState(void) {
  */
 
 static void showFuelInfo2(float rpm, float engineLoad) {
-
-	float baseFuelMs = 0; // TODO 
-
-	float magicAir = SpeedDensityBase::getAirmassImpl(1, 100, convertCelsiusToKelvin(20) PASS_ENGINE_PARAMETER_SUFFIX);
-
 	scheduleMsg(&logger, "inj flow %.2fcc/min displacement %.2fL", engineConfiguration->injector.flow,
 			engineConfiguration->specs.displacement);
 
@@ -303,13 +298,9 @@ static void showFuelInfo2(float rpm, float engineLoad) {
 		float cltCorrection = engine->engineState.running.coolantTemperatureCoefficient;
 		floatms_t injectorLag = engine->engineState.running.injectorLag;
 		scheduleMsg(&logger2, "rpm=%.2f engineLoad=%.2f", rpm, engineLoad);
-		scheduleMsg(&logger2, "baseFuel=%.2f", baseFuelMs);
 
 		scheduleMsg(&logger2, "iatCorrection=%.2f cltCorrection=%.2f injectorLag=%.2f", iatCorrection, cltCorrection,
 				injectorLag);
-
-		float value = getRunningFuel(baseFuelMs PASS_ENGINE_PARAMETER_SUFFIX);
-		scheduleMsg(&logger2, "injection pulse width: %.2f", value);
 	}
 #endif
 }
@@ -325,17 +316,10 @@ static OutputPin *leds[] = { &enginePins.warningLedPin, &enginePins.runningLedPi
 
 static void initStatusLeds(void) {
 	enginePins.communicationLedPin.initPin("led: comm status", engineConfiguration->communicationLedPin);
-	// we initialize this here so that we can blink it on start-up
-	enginePins.checkEnginePin.initPin("Check engine light", CONFIG(malfunctionIndicatorPin), &CONFIG(malfunctionIndicatorPinMode));
+	// checkEnginePin is already initialized by the time we get here
 
 	enginePins.warningLedPin.initPin("led: warning status", engineConfiguration->warningLedPin);
 	enginePins.runningLedPin.initPin("led: running status", engineConfiguration->runningLedPin);
-
-	enginePins.debugTriggerSync.initPin("debug: sync", CONFIG(debugTriggerSync));
-#if EFI_GPIO_HARDWARE && EFI_SHAFT_POSITION_INPUT
-	enginePins.triggerDecoderErrorPin.initPin("led: trigger debug", CONFIG(triggerErrorPin),
-			&CONFIG(triggerErrorPinMode));
-#endif /* EFI_GPIO_HARDWARE */
 }
 
 #if EFI_PROD_CODE
@@ -526,7 +510,9 @@ void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels DECLARE_
 	tsOutputChannels->massAirFlowVoltage = hasMafSensor() ? getMafVoltage(PASS_ENGINE_PARAMETER_SIGNATURE) : 0;
 
 	// offset 20
-	tsOutputChannels->airFuelRatio = Sensor::get(SensorType::Lambda).value_or(0) * 14.7f;
+	float lambdaValue = Sensor::get(SensorType::Lambda).value_or(0);
+	tsOutputChannels->lambda = lambdaValue;
+	tsOutputChannels->airFuelRatio = lambdaValue * ENGINE(engineState.stoichiometricRatio);
 
 	// offset 24
 	tsOutputChannels->engineLoad = getEngineLoadT(PASS_ENGINE_PARAMETER_SIGNATURE);
@@ -617,6 +603,7 @@ void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels DECLARE_
 	// offset 112
 	tsOutputChannels->veValue = engine->engineState.currentVe;
 	tsOutputChannels->currentTargetAfr = ENGINE(engineState.targetAFR);
+	tsOutputChannels->targetLambda = ENGINE(engineState.targetLambda);
 
 	if (hasMapSensor(PASS_ENGINE_PARAMETER_SIGNATURE)) {
 		float mapValue = getMap(PASS_ENGINE_PARAMETER_SIGNATURE);
@@ -720,7 +707,7 @@ void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels DECLARE_
 	tsOutputChannels->ignitionAdvance = timing > 360 ? timing - 720 : timing;
 	// 60
 	tsOutputChannels->sparkDwell = ENGINE(engineState.sparkDwell);
-	tsOutputChannels->crankingFuelMs = ENGINE(engineState.cranking.fuel);
+	tsOutputChannels->crankingFuelMass = ENGINE(engineState.cranking.fuel);
 	tsOutputChannels->chargeAirMass = engine->engineState.sd.airMassInOneCylinder;
 
 	tsOutputChannels->coilDutyCycle = getCoilDutyCycle(rpm PASS_ENGINE_PARAMETER_SUFFIX);
@@ -729,6 +716,8 @@ void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels DECLARE_
 	switch (engineConfiguration->debugMode)	{
 	case DBG_START_STOP:
 		tsOutputChannels->debugIntField1 = engine->startStopStateToggleCounter;
+		tsOutputChannels->debugIntField2 = enginePins.starterControl.getLogicValue();
+		tsOutputChannels->debugIntField3 = enginePins.starterRelayDisable.getLogicValue();
 		break;
 	case DBG_STATUS:
 		tsOutputChannels->debugFloatField1 = timeSeconds;

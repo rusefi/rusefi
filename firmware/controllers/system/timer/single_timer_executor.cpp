@@ -154,9 +154,7 @@ void SingleTimerExecutor::scheduleTimerCallback() {
 
 	efiAssertVoid(CUSTOM_ERR_6625, nextEventTimeNt.Value > nowNt, "setTimer constraint");
 
-	int32_t hwAlarmTime = NT2US((int32_t)nextEventTimeNt.Value - (int32_t)nowNt);
-
-	setHardwareUsTimer(hwAlarmTime == 0 ? 1 : hwAlarmTime);
+	setHardwareSchedulerTimer(nowNt, nextEventTimeNt.Value);
 }
 
 void initSingleTimerExecutorHardware(void) {

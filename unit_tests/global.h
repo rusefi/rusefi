@@ -28,11 +28,6 @@ typedef uint32_t ioportmask_t;
 // this is needed by all DECLARE_ENGINE_PARAMETER_* usages
 #include "engine_configuration_generated_structures.h"
 
-#ifdef __cplusplus
-// this is needed by all DECLARE_ENGINE_PARAMETER_* usages
-class Engine;
-#endif /* __cplusplus */
-
 
 #ifdef __cplusplus
 // todo: include it right here? #include "unit_test_framework.h"
@@ -62,12 +57,6 @@ void print(const char *fmt, ...);
 #define US_TO_NT_MULTIPLIER 100
 #define VCS_VERSION "321"
 #define RUS_EFI_VERSION_TAG "rusEfiVersion"
-
-#define ALWAYS_INLINE INLINE
-
-#define US2NT(x) (US_TO_NT_MULTIPLIER * (x))
-
-#define NT2US(x) ((x) / US_TO_NT_MULTIPLIER)
 
 #define INLINE inline
 
@@ -100,8 +89,11 @@ void print(const char *fmt, ...);
 
 #define CONFIG_PARAM(x) (x)
 
-#define lockAnyContext() false
-
-#define unlockAnyContext() {}
+#ifdef __cplusplus
+namespace chibios_rt {
+	// Noop for unit tests - this does real lock in FW/sim
+	class CriticalSectionLocker { };
+}
+#endif
 
 #define UNIT_TEST_BUSY_WAIT_CALLBACK() { 	timeNowUs++; }

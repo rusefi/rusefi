@@ -85,9 +85,6 @@ extern "C"
 {
 #endif /* __cplusplus */
 
-#define lockOutputBuffer lockAnyContext
-#define unlockOutputBuffer unlockAnyContext
-
 void printMsg(Logging *logging, const char *fmt, ...);
 
 /**

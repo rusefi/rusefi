@@ -161,13 +161,10 @@ void initAlternatorCtrl(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	if (CONFIG(alternatorControlPin) == GPIO_UNASSIGNED)
 		return;
 
-	if (CONFIG(onOffAlternatorLogic)) {
-		enginePins.alternatorPin.initPin("Alternator control", CONFIG(alternatorControlPin));
-	} else {
-		startSimplePwmExt(&alternatorControl,
+	if (!CONFIG(onOffAlternatorLogic)) {
+		startSimplePwm(&alternatorControl,
 				"Alternator control",
 				&engine->executor,
-				CONFIG(alternatorControlPin),
 				&enginePins.alternatorPin,
 				engineConfiguration->alternatorPwmFrequency, 0.1, (pwm_gen_callback*)applyAlternatorPinState);
 	}

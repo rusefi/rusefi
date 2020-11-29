@@ -28,7 +28,7 @@ EXTERN_ENGINE;
 
 fuel_Map3D_t veMap("VE");
 fuel_Map3D_t ve2Map("VE2");
-afr_Map3D_t afrMap("AFR");
+lambda_Map3D_t lambdaMap("lambda");
 baroCorr_Map3D_t baroCorrMap("baro");
 
 #define tpMin 0
@@ -120,8 +120,8 @@ void setDefaultVETable(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 //	setLinearCurve(engineConfiguration->ve2LoadBins, 10, 300, 1);
 //	ve2Map.setAll(0.81);
 
-	setRpmTableBin(config->afrRpmBins, FUEL_RPM_COUNT);
-	afrMap.setAll(14.7);
+	setRpmTableBin(config->lambdaRpmBins, FUEL_RPM_COUNT);
+	lambdaMap.setAll(1.0);
 
 	setRpmTableBin(engineConfiguration->baroCorrRpmBins, BARO_CORR_SIZE);
 	setLinearCurve(engineConfiguration->baroCorrPressureBins, 75, 105, 1);
@@ -136,6 +136,6 @@ void setDefaultVETable(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 void initSpeedDensity(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	veMap.init(config->veTable, config->veLoadBins, config->veRpmBins);
 //	ve2Map.init(engineConfiguration->ve2Table, engineConfiguration->ve2LoadBins, engineConfiguration->ve2RpmBins);
-	afrMap.init(config->afrTable, config->afrLoadBins, config->afrRpmBins);
+	lambdaMap.init(config->lambdaTable, config->lambdaLoadBins, config->lambdaRpmBins);
 	baroCorrMap.init(engineConfiguration->baroCorrTable, engineConfiguration->baroCorrPressureBins, engineConfiguration->baroCorrRpmBins);
 }

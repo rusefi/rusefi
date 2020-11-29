@@ -84,6 +84,10 @@ float limitRateOfChange(float newValue, float oldValue, float incrLimitPerSec, f
 // bogus results outside the range -2 < x < 0.
 float expf_taylor(float x);
 
+// @brief Compute tan(theta) using a ratio of the Taylor series for sin and cos
+// Valid for the range [0, pi/2 - 0.01]
+float tanf_taylor(float theta);
+
 #ifdef __cplusplus
 }
 

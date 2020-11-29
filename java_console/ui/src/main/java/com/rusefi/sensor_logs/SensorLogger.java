@@ -25,7 +25,7 @@ public class SensorLogger {
             Sensor.IAT,
             Sensor.MAF,
             Sensor.MAP,
-            Sensor.AFR,
+            Sensor.Lambda,
 
             Sensor.PPS,
             Sensor.ETB_CONTROL_QUALITY,

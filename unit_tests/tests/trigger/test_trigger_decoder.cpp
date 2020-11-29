@@ -300,6 +300,10 @@ extern bool_t debugSignalExecutor;
 
 TEST(misc, testRpmCalculator) {
 	WITH_ENGINE_TEST_HELPER(FORD_INLINE_6_1995);
+
+	// These tests were written when the default target AFR was 14.0, so replicate that
+	engineConfiguration->stoichRatioPrimary = 140;
+
 	EXPECT_CALL(eth.mockAirmass, getAirmass(_))
 		.WillRepeatedly(Return(AirmassResult{0.1008f, 50.0f}));
 
@@ -521,7 +525,6 @@ TEST(misc, testTriggerDecoder) {
 
 	}
 	testTriggerDecoder2("miata 1990", MIATA_1990, 11, 0.2985, 0.3890);
-	testTriggerDecoder3("miata 1994", MIATA_1994_DEVIATOR, 11, 0.2985, 0.3890, MIATA_NA_GAP);
 	testTriggerDecoder3("citroen", CITROEN_TU3JP, 0, 0.4833, 0.0, 2.9994);
 
 	testTriggerDecoder2("CAMARO_4", CAMARO_4, 40, 0.5, 0);

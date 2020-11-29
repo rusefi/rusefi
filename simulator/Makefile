@@ -40,7 +40,8 @@ ifeq ($(USE_OPT),)
 	endif
 endif
 
-USE_OPT += $(RUSEFI_OPT)
+# See explanation in main firmware Makefile for these three defines
+USE_OPT += $(RUSEFI_OPT) -DEFI_UNIT_TEST=0 -DEFI_PROD_CODE=0 -DEFI_SIMULATOR=1
 
 ifeq ($(CCACHE_DIR),)
  $(info No CCACHE_DIR)
@@ -120,6 +121,7 @@ include $(CHIBIOS)/os/hal/osal/rt/osal.mk
 include $(CHIBIOS)/os/rt/rt.mk
 include $(CHIBIOS)/os/common/ports/SIMIA32/compilers/GCC/port.mk
 # Other files (optional).
+include $(CHIBIOS)/os/various/cpp_wrappers/chcpp.mk
 
 ifeq ($(OS),Windows_NT)
   include ${CHIBIOS}/os/hal/ports/simulator/win32/platform.mk
@@ -190,6 +192,7 @@ INCDIR = . \
           $(KERNINC) \
           $(OSALINC) \
           $(HALINC) \
+          $(CHCPPINC) \
           $(PLATFORMINC) \
           $(BOARDINC) \
           $(UTIL_INC) \

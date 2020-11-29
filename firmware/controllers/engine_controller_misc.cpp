@@ -75,9 +75,12 @@ void setMockVBattVoltage(float voltage DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	setMockVoltage(engineConfiguration->vbattAdcChannel, voltage PASS_ENGINE_PARAMETER_SUFFIX);
 }
 
-void setMockState(brain_pin_e pin, bool state DECLARE_ENGINE_PARAMETER_SUFFIX) {
-#if ! EFI_PROD_CODE
+void setMockState(brain_pin_e pin, bool state) {
+#if EFI_UNIT_TEST
 	mockPinStates[static_cast<int>(pin)] = state;
+#else
+	UNUSED(pin);
+	UNUSED(state);
 #endif
 }
 
@@ -87,10 +90,9 @@ void setMockState(brain_pin_e pin, bool state DECLARE_ENGINE_PARAMETER_SUFFIX) {
 /**
  * 64-bit result would not overflow, but that's complex stuff for our 32-bit MCU
  */
-//todo: macro to save method invocation
 efitimeus_t getTimeNowUs(void) {
 	ScopePerf perf(PE::GetTimeNowUs);
-	return getTimeNowNt() / (CORE_CLOCK / 1000000);
+	return NT2US(getTimeNowNt());
 }
 
 volatile uint32_t lastLowerNt = 0;
@@ -142,22 +144,27 @@ etitick_t getTimeNowNt() {
 }
 */
 
+#endif /* EFI_PROD_CODE */
+
 static void onStartStopButtonToggle(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	engine->startStopStateToggleCounter++;
 
-	if (engine->rpmCalculator.isStopped(PASS_ENGINE_PARAMETER_SIGNATURE)) {
+	if (engine->rpmCalculator.isStopped()) {
 		bool wasStarterEngaged = enginePins.starterControl.getAndSet(1);
 		if (!wasStarterEngaged) {
-			scheduleMsg(&sharedLogger, "Let's crank this engine for up to %dseconds!", CONFIG(startCrankingDuration));
+		    engine->startStopStateLastPushTime = getTimeNowNt();
+		    scheduleMsg(&sharedLogger, "Let's crank this engine for up to %d seconds via %s!",
+		    		CONFIG(startCrankingDuration),
+					hwPortname(CONFIG(starterControlPin)));
 		}
 	} else if (engine->rpmCalculator.isRunning()) {
 		scheduleMsg(&sharedLogger, "Let's stop this engine!");
-		scheduleStopEngine();
+		doScheduleStopEngine(PASS_ENGINE_PARAMETER_SIGNATURE);
 	}
 }
 
+
 void slowStartStopButtonCallback(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
-#if EFI_PROD_CODE
 	bool startStopState = startStopButtonDebounce.readPinEvent();
 
 	if (startStopState && !engine->startStopState) {
@@ -165,7 +172,11 @@ void slowStartStopButtonCallback(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 		onStartStopButtonToggle(PASS_ENGINE_PARAMETER_SIGNATURE);
 	}
 	engine->startStopState = startStopState;
-#endif /* EFI_PROD_CODE */
+
+	if (engine->startStopStateLastPushTime == 0) {
+   		// nothing is going on with startStop button
+   		return;
+   	}
 
 	// todo: should this be simply FSIO?
 	if (engine->rpmCalculator.isRunning()) {
@@ -173,9 +184,15 @@ void slowStartStopButtonCallback(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 		bool wasStarterEngaged = enginePins.starterControl.getAndSet(0);
 		if (wasStarterEngaged) {
 			scheduleMsg(&sharedLogger, "Engine runs we can disengage the starter");
+			engine->startStopStateLastPushTime = 0;
+		}
+	}
+
+	if (getTimeNowNt() - engine->startStopStateLastPushTime > NT_PER_SECOND * CONFIG(startCrankingDuration)) {
+		bool wasStarterEngaged = enginePins.starterControl.getAndSet(0);
+		if (wasStarterEngaged) {
+			scheduleMsg(&sharedLogger, "Cranking timeout %d seconds", CONFIG(startCrankingDuration));
+			engine->startStopStateLastPushTime = 0;
 		}
 	}
 }
-
-
-#endif /* EFI_PROD_CODE */

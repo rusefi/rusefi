@@ -51,6 +51,13 @@ static int writeCounter = 0;
 static int totalWritesCounter = 0;
 static int totalSyncCounter = 0;
 
+/**
+ * on't re-read SD card spi device after boot - it could change mid transaction (TS thread could preempt),
+ * which will cause disaster (usually multiple-unlock of the same mutex in UNLOCK_SD_SPI)
+ */
+
+spi_device_e mmcSpiDevice = SPI_NONE;
+
 #define LOG_INDEX_FILENAME "index.txt"
 
 #define RUSEFI_LOG_PREFIX "re_"
@@ -93,7 +100,6 @@ static SPIConfig ls_spicfg = {
 		.cr2 = 0};
 
 /* MMC/SD over SPI driver configuration.*/
-// don't forget check if STM32_SPI_USE_SPI2 defined and spi has init with correct GPIO in hardware.cpp
 static MMCConfig mmccfg = { NULL, &ls_spicfg, &hs_spicfg };
 
 /**
@@ -141,7 +147,7 @@ static void sdStatistics(void) {
 	printMmcPinout();
 	scheduleMsg(&logger, "SD enabled=%s status=%s", boolToString(CONFIG(isSdCardEnabled)),
 			sdStatus);
-	printSpiConfig(&logger, "SD", CONFIG(sdCardSpiDevice));
+	printSpiConfig(&logger, "SD", mmcSpiDevice);
 	if (isSdCardAlive()) {
 		scheduleMsg(&logger, "filename=%s size=%d", logName, totalLoggedBytes);
 	}
@@ -435,6 +441,11 @@ static THD_FUNCTION(MMCmonThread, arg) {
 	chRegSetThreadName("MMC_Monitor");
 
 	while (true) {
+		// if the SPI device got un-picked somehow, cancel SD card
+		if (CONFIG(sdCardSpiDevice) == SPI_NONE) {
+			return;
+		}
+
 		if (CONFIG(debugMode) == DBG_SD_CARD) {
 			tsOutputChannels.debugIntField1 = totalLoggedBytes;
 			tsOutputChannels.debugIntField2 = totalWritesCounter;
@@ -476,12 +487,14 @@ void initMmcCard(void) {
 		return;
 	}
 
-	efiAssertVoid(OBD_PCM_Processor_Fault, CONFIG(sdCardSpiDevice) != SPI_NONE, "SD card enabled, but no SPI device configured!");
+	mmcSpiDevice = CONFIG(sdCardSpiDevice);
+
+	efiAssertVoid(OBD_PCM_Processor_Fault, mmcSpiDevice != SPI_NONE, "SD card enabled, but no SPI device configured!");
 
 	// todo: reuse initSpiCs method?
 	hs_spicfg.ssport = ls_spicfg.ssport = getHwPort("mmc", CONFIG(sdCardCsPin));
 	hs_spicfg.sspad = ls_spicfg.sspad = getHwPin("mmc", CONFIG(sdCardCsPin));
-	mmccfg.spip = getSpiDevice(CONFIG(sdCardSpiDevice));
+	mmccfg.spip = getSpiDevice(mmcSpiDevice);
 
 	/**
 	 * FYI: SPI does not work with CCM memory, be sure to have main() stack in RAM, not in CCMRAM

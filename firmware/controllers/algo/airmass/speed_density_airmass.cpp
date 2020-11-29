@@ -19,7 +19,10 @@ AirmassResult SpeedDensityAirmass::getAirmass(int rpm) {
 	}
 
 	float map = getMap(PASS_ENGINE_PARAMETER_SIGNATURE);
-	efiAssert(CUSTOM_ERR_ASSERT, !cisnan(map), "NaN map", {});
+	if (cisnan(map)) {
+		warning(CUSTOM_ERR_TCHARGE_NOT_READY2, "map not ready"); // this could happen during HW CI during configuration reset
+		return {};
+	}
 
 	engine->engineState.sd.manifoldAirPressureAccelerationAdjustment = engine->engineLoadAccelEnrichment.getEngineLoadEnrichment(PASS_ENGINE_PARAMETER_SIGNATURE);
 

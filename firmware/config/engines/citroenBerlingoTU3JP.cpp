@@ -74,7 +74,7 @@ void setCitroenBerlingoTU3JPConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	/**
 	 * Algorithm Alpha-N setting
 	 */
-	setAlgorithm(LM_ALPHA_N_2 PASS_CONFIG_PARAMETER_SUFFIX);
+	setAlgorithm(LM_ALPHA_N PASS_CONFIG_PARAMETER_SUFFIX);
 	setTimingRpmBin(800, 7000 PASS_CONFIG_PARAMETER_SUFFIX);
 
 	/**

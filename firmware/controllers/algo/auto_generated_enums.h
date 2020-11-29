@@ -1,4 +1,4 @@
-// was generated automatically by rusEfi tool  from rusefi_hw_enums.h // was generated automatically by rusEfi tool  from rusefi_enums.h // by enum2string.jar tool on Fri Oct 23 19:47:24 UTC 2020
+// was generated automatically by rusEfi tool  from rusefi_hw_enums.h // was generated automatically by rusEfi tool  from rusefi_enums.h // by enum2string.jar tool on Wed Nov 11 04:12:23 UTC 2020
 // see also gen_config_and_enums.bat
 
 
@@ -35,6 +35,7 @@ const char *getIdle_mode_e(idle_mode_e value);
 const char *getIdle_state_e(idle_state_e value);
 const char *getIgnition_mode_e(ignition_mode_e value);
 const char *getInjection_mode_e(injection_mode_e value);
+const char *getInjector_compensation_mode_e(injector_compensation_mode_e value);
 const char *getInjector_pressure_type_e(injector_pressure_type_e value);
 const char *getLaunchActivationMode_e(launchActivationMode_e value);
 const char *getLog_format_e(log_format_e value);

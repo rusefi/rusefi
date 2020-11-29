@@ -15,9 +15,9 @@
 15) RESOLVED IN R0.3.2 Noxz is asking to move C21 to next to C22
 16) RESOLVED IN R0.3.2 terminals usability is asking for improvements. Ideally can we move more terminals to the edge of the board? ADDED TP2, TP3, TP4, TP5, TP7, TP7, and TP8 
 17) RESOLVED IN R0.3.2 Add many LED's for easier diagnostics like PT2000 board. 
-18)                    Update BoostV indicator LED per https://rusefi.com/forum/viewtopic.php?f=4&t=1337&start=75
-19)                    Can we connect connect TP6 to VCCIO since both are 3v?
-20)                    silkscreen font should be larger for DRIVER RSTB etc  https://raw.githubusercontent.com/wiki/rusefi/rusefi/Hardware/MC33816_test_board/MC33816_test_board_3_2_assembled.jpg
-21)                    silkscreen for FLAG0 etc is covered by header plastic https://raw.githubusercontent.com/wiki/rusefi/rusefi/Hardware/MC33816_test_board/MC33816_test_board_3_2_assembled.jpg
-22)                    move TP7=GND to a safer location on the edge of the PCB
+18) RESOLVED IN R0.3.3 Update BoostV indicator LED per https://rusefi.com/forum/viewtopic.php?f=4&t=1337&start=75
+19) RESOLVED IN R0.3.3 Can we connect connect TP6 to VCCIO since both are 3v?
+20) RESOLVED IN R0.3.3 silkscreen font should be larger for DRIVER RSTB etc  https://raw.githubusercontent.com/wiki/rusefi/rusefi/Hardware/MC33816_test_board/MC33816_test_board_3_2_assembled.jpg
+21) RESOLVED IN R0.3.3 silkscreen for FLAG0 etc is covered by header plastic https://raw.githubusercontent.com/wiki/rusefi/rusefi/Hardware/MC33816_test_board/MC33816_test_board_3_2_assembled.jpg
+22) RESOLVED IN R0.3.3 move TP7=GND to a safer location on the edge of the PCB
 23)

@@ -419,7 +419,7 @@ void setMazdaMiata2003EngineConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	// set cranking_timing_angle 10
 	engineConfiguration->crankingTimingAngle = 10;
 	// set cranking_fuel 4
-	engineConfiguration->cranking.baseFuel = 4; // this value for return-less NB miata fuel system, higher pressure
+	engineConfiguration->cranking.baseFuel = 27; // this value for return-less NB miata fuel system, higher pressure
 
 /**
  * Saab attempt
@@ -531,25 +531,23 @@ void setMazdaMiata2003EngineConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	engineConfiguration->etb.minValue = -60;
 	engineConfiguration->etb.maxValue = 50;
 
-	engineConfiguration->cranking.baseFuel = 1;
-	config->crankingFuelCoef[0] = 28; // base cranking fuel adjustment coefficient
+	config->crankingFuelCoef[0] = 2.8; // base cranking fuel adjustment coefficient
 	config->crankingFuelBins[0] = -20; // temperature in C
-	config->crankingFuelCoef[1] = 22;
+	config->crankingFuelCoef[1] = 2.2;
 	config->crankingFuelBins[1] = -10;
-	config->crankingFuelCoef[2] = 18;
+	config->crankingFuelCoef[2] = 1.8;
 	config->crankingFuelBins[2] = 5;
-	config->crankingFuelCoef[3] = 15;
+	config->crankingFuelCoef[3] = 1.5;
 	config->crankingFuelBins[3] = 30;
 
-	config->crankingFuelCoef[4] = 10;
+	config->crankingFuelCoef[4] = 1.0;
 	config->crankingFuelBins[4] = 35;
-	config->crankingFuelCoef[5] = 10;
+	config->crankingFuelCoef[5] = 1.0;
 	config->crankingFuelBins[5] = 50;
-	config->crankingFuelCoef[6] = 10;
+	config->crankingFuelCoef[6] = 1.0;
 	config->crankingFuelBins[6] = 65;
-	config->crankingFuelCoef[7] = 10;
+	config->crankingFuelCoef[7] = 1.0;
 	config->crankingFuelBins[7] = 90;
-
 }
 
 /**
@@ -599,9 +597,6 @@ static void setMiataNB2_MRE_common(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	CONFIG(tachPulsePerRev) = 2;
 
 	CONFIG(isSdCardEnabled) = true;
-
-	// set cranking_fuel 9
-	engineConfiguration->cranking.baseFuel = 9; // higher value for return system NA conversion since lower fuel pressure
 
 	engineConfiguration->useConstantDwellDuringCranking = true;
 	engineConfiguration->ignitionDwellForCrankingMs = 8;
@@ -698,3 +693,58 @@ void setMiataNB2_MRE_MAF(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 
 	engineConfiguration->fuelAlgorithm = LM_REAL_MAF;
 }
+
+/**
+ * https://github.com/rusefi/rusefi/wiki/HOWTO-TCU-A42DE-on-Proteus
+ */
+void setMiataNB2_Proteus_TCU(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
+	engineConfiguration->tcuEnabled = true;
+
+	engineConfiguration->trigger.type = TT_TOOTHED_WHEEL;
+	engineConfiguration->trigger.customTotalToothCount = 10;
+	engineConfiguration->trigger.customSkippedToothCount = 0;
+
+
+	// "VR 1"
+	engineConfiguration->triggerInputPins[0] = GPIOE_7;
+
+	engineConfiguration->vehicleSpeedCoef = 1;
+	// "VR 2"
+	engineConfiguration->vehicleSpeedSensorInputPin = GPIOE_8;
+
+
+
+
+	// "Highside 2"
+	engineConfiguration->tcu_solenoid[0] = GPIOA_8;
+	// "Highside 1"
+	engineConfiguration->tcu_solenoid[1] = GPIOA_9;
+
+	// "Digital 1" green
+	engineConfiguration->tcuUpshiftButtonPin = GPIOC_6;
+	CONFIG(tcuUpshiftButtonPinMode) = PI_PULLUP;
+	// "Digital 6" white
+	engineConfiguration->tcuDownshiftButtonPin = GPIOE_15;
+	CONFIG(tcuDownshiftButtonPinMode) = PI_PULLUP;
+
+	// R
+	config->tcuSolenoidTable[0][0] = 1;
+	config->tcuSolenoidTable[0][1] = 0;
+	// P/N
+	config->tcuSolenoidTable[1][0] = 1;
+	config->tcuSolenoidTable[1][1] = 0;
+	// 1
+	config->tcuSolenoidTable[2][0] = 1;
+	config->tcuSolenoidTable[2][1] = 0;
+	// 2
+	config->tcuSolenoidTable[3][0] = 1;
+	config->tcuSolenoidTable[3][1] = 1;
+	// 3
+	config->tcuSolenoidTable[4][0] = 0;
+	config->tcuSolenoidTable[4][1] = 1;
+	// 4
+	config->tcuSolenoidTable[5][0] = 0;
+	config->tcuSolenoidTable[5][1] = 0;
+
+}
+

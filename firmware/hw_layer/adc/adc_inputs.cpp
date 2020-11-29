@@ -315,7 +315,7 @@ int AdcDevice::size() const {
 	return channelCount;
 }
 
-int AdcDevice::getAdcValueByHwChannel(int hwChannel) const {
+int AdcDevice::getAdcValueByHwChannel(adc_channel_e hwChannel) const {
 	int internalIndex = internalAdcIndexByHardwareIndex[hwChannel];
 	return values.adc_data[internalIndex];
 }
@@ -363,18 +363,18 @@ void AdcDevice::enableChannel(adc_channel_e hwChannel) {
 	internalAdcIndexByHardwareIndex[hwChannel] = logicChannel;
 	hardwareIndexByIndernalAdcIndex[logicChannel] = hwChannel;
 	if (logicChannel < 6) {
-		hwConfig->sqr3 += (channelAdcIndex) << (5 * logicChannel);
+		hwConfig->sqr3 |= channelAdcIndex << (5 * logicChannel);
 	} else if (logicChannel < 12) {
-		hwConfig->sqr2 += (channelAdcIndex) << (5 * (logicChannel - 6));
+		hwConfig->sqr2 |= channelAdcIndex << (5 * (logicChannel - 6));
 	} else if (logicChannel < 18) {
-		hwConfig->sqr1 += (channelAdcIndex) << (5 * (logicChannel - 12));
+		hwConfig->sqr1 |= channelAdcIndex << (5 * (logicChannel - 12));
 	}
 #if ADC_MAX_CHANNELS_COUNT > 16
 	else if (logicChannel < 24) {
-		hwConfig->sqr4 += (channelAdcIndex) << (5 * (logicChannel - 18));
+		hwConfig->sqr4 |= channelAdcIndex << (5 * (logicChannel - 18));
 	}
 	else if (logicChannel < 30) {
-		hwConfig->sqr5 += (channelAdcIndex) << (5 * (logicChannel - 24));
+		hwConfig->sqr5 |= channelAdcIndex << (5 * (logicChannel - 24));
 	}
 #endif /* ADC_MAX_CHANNELS_COUNT */
 }

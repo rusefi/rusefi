@@ -11,6 +11,11 @@
 #include "hardware.h"
 
 ButtonDebounce* ButtonDebounce::s_firstDebounce = nullptr;
+static Logging *logger;
+
+ButtonDebounce::ButtonDebounce(const char *name) {
+	this->name = name;
+}
 
 /**
 We need to have a separate init function because we do not have the pin or mode in the context in which the class is originally created
@@ -55,7 +60,7 @@ void ButtonDebounce::stopConfiguration () {
     if (*m_pin != active_pin || *m_mode != active_mode || (isActiveConfigurationVoid && (*m_pin != 0 || *m_mode != 0))) {
 #endif /* EFI_ACTIVE_CONFIGURATION_IN_FLASH */
 #ifndef EFI_UNIT_TEST
-        brain_pin_markUnused(active_pin);
+    	efiSetPadUnused(active_pin);
         needsInit = true;
 #endif /* EFI_UNIT_TEST */
     }
@@ -93,18 +98,37 @@ bool ButtonDebounce::readPinState() {
     // We don't actually need it to be a class variable in this method,
     //  but when a method is implemented to actually get the pin's state,
     //  for example to implement long button presses, it will be needed.
-    storedValue = false;
 #if EFI_PROD_CODE || EFI_UNIT_TEST
     storedValue = efiReadPin(active_pin);
+#else
+    storedValue = false;
 #endif
-#if EFI_PROD_CODE
     // Invert
-    if (getInputMode(active_mode) == PAL_MODE_INPUT_PULLUP) {
+    if (active_mode == PI_PULLUP) {
         storedValue = !storedValue;
     }
-#endif
     if (storedValue) {
         timeLast = timeNow;
     }
     return storedValue;
+}
+
+void ButtonDebounce::debug() {
+    ButtonDebounce *listItem = s_firstDebounce;
+    while (listItem != nullptr) {
+#if EFI_PROD_CODE || EFI_UNIT_TEST
+        scheduleMsg(logger, "%s timeLast %d", listItem->name, listItem->timeLast);
+        scheduleMsg(logger, "physical state %d value %d", efiReadPin(listItem->active_pin), listItem->storedValue);
+#endif
+
+        listItem = listItem->nextDebounce;
+    }
+}
+
+void initButtonDebounce(Logging *sharedLogger) {
+	logger = sharedLogger;
+
+#if !EFI_UNIT_TEST
+	addConsoleAction("debounce", ButtonDebounce::debug);
+#endif /* EFI_UNIT_TEST */
 }

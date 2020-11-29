@@ -74,7 +74,7 @@ TEST(misc, testFuelMap) {
 
 	engine->engineState.mockAdcState.setMockVoltage(EFI_ADC_10, 0 PASS_ENGINE_PARAMETER_SUFFIX);
 
-	engineConfiguration->cranking.baseFuel = 4;
+	engineConfiguration->cranking.baseFuel = 4000;
 
 	// Should use 20 degree correction in case of failed sensor
 	Sensor::resetMockValue(SensorType::Clt);
