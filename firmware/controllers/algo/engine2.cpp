@@ -18,10 +18,8 @@
 #include "perf_trace.h"
 #include "closed_loop_fuel.h"
 #include "sensor.h"
-
-#if EFI_LAUNCH_CONTROL
 #include "launch_control.h"
-#endif
+
 
 #if EFI_PROD_CODE
 #include "svnversion.h"

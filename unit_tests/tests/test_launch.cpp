@@ -34,6 +34,7 @@ TEST(LaunchControl, VSSCondition) {
 	INJECT_ENGINE_REFERENCE(&dut);
 
 	// Test Speed trashold
+	engineConfiguration->launchActivationMode = ALWAYS_ACTIVE_LAUNCH;
     engineConfiguration->launchSpeedTreshold = 30; 
 	engineConfiguration->launchDisableBySpeed = 1;
 	setMockVehicleSpeed(10);
@@ -42,15 +43,6 @@ TEST(LaunchControl, VSSCondition) {
 	setMockVehicleSpeed(40);
 	EXPECT_FALSE(dut.isInsideSpeedCondition());
 
-	//we do not want to disable launch by speed
-    engineConfiguration->launchSpeedTreshold = 30; 
-	engineConfiguration->launchDisableBySpeed = 0;
-
-	setMockVehicleSpeed(10.0);
-    EXPECT_TRUE(dut.isInsideSpeedCondition());
-
-	setMockVehicleSpeed(40.0);
-	EXPECT_TRUE(dut.isInsideSpeedCondition());
 }
 
 TEST(LaunchControl, RPMCondition) {
@@ -73,11 +65,11 @@ TEST(LaunchControl, SwitchInputCondition) {
 	INJECT_ENGINE_REFERENCE(&dut);
 
 	//activation based on VSS
-	engineConfiguration->launchActivationMode=ALWAYS_ACTIVE_LAUNCH;
+	engineConfiguration->launchActivationMode = ALWAYS_ACTIVE_LAUNCH;
 	EXPECT_TRUE(dut.isInsideSwitchCondition());
 
 	//active by switch
-	engineConfiguration->launchActivationMode=SWITCH_INPUT_LAUNCH;
+	engineConfiguration->launchActivationMode = SWITCH_INPUT_LAUNCH;
 	engineConfiguration->launchActivatePin = GPIOG_1;
 	setMockState(engineConfiguration->launchActivatePin, true);
 	EXPECT_TRUE(dut.isInsideSwitchCondition());
@@ -86,7 +78,7 @@ TEST(LaunchControl, SwitchInputCondition) {
 	EXPECT_FALSE(dut.isInsideSwitchCondition());
 
 	//by clutch
-	engineConfiguration->launchActivationMode=CLUTCH_INPUT_LAUNCH;
+	engineConfiguration->launchActivationMode = CLUTCH_INPUT_LAUNCH;
 	engineConfiguration->clutchDownPin = GPIOG_2;
 	engineConfiguration->clutchDownPinMode = PI_PULLUP;
 	setMockState(engineConfiguration->clutchDownPin, true);
@@ -136,8 +128,9 @@ TEST(LaunchControl, CompleteRun) {
 	bool spark, fuel;
 	WITH_ENGINE_TEST_HELPER(TEST_ENGINE);
 
-	extern LaunchControlBase lc;
-	INJECT_ENGINE_REFERENCE(&lc);
+	LoggingWithStorage logger("test");
+
+	initLaunchControl(&logger,PASS_ENGINE_PARAMETER_SIGNATURE);
 
 	//load default config
 	setDefaultLaunchParameters(PASS_CONFIG_PARAMETER_SIGNATURE);

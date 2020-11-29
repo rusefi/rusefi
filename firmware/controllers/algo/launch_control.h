@@ -26,9 +26,10 @@ public:
 	bool isInsideTpsCondition() const;
 	bool isInsideSwitchCondition() const;
 	bool isInsideRPMCondition(int rpm) const;
-
 	bool isLaunchConditionMet(int rpm) const;
 
 private:
+	efitick_t launchTimer;
+	
 	
 };

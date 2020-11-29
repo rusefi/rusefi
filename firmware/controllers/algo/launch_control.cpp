@@ -26,9 +26,8 @@
 
 static bool isInit = false;
 static Logging *logger;
-static efitick_t launchTimer = 0;
 
-LaunchControlBase lc;
+LaunchControlBase launchInstance;
 
 #if EFI_TUNER_STUDIO
 #include "tunerstudio_outputs.h"
@@ -46,7 +45,6 @@ static int retardThresholdRpm;
 bool LaunchControlBase::isInsideSwitchCondition() const {
 	switch (CONFIG(launchActivationMode)) {
 	case SWITCH_INPUT_LAUNCH:
-		engineConfiguration->launchDisableBySpeed = 0;
 		if (CONFIG(launchActivatePin) != GPIO_UNASSIGNED) {
 			//todo: we should take into consideration if this sw is pulled high or low!
 			engine->launchActivatePinState = efiReadPin(CONFIG(launchActivatePin));
@@ -54,7 +52,6 @@ bool LaunchControlBase::isInsideSwitchCondition() const {
 		return engine->launchActivatePinState;
 
 	case CLUTCH_INPUT_LAUNCH:
-		engineConfiguration->launchDisableBySpeed = 0;
 		if (CONFIG(clutchDownPin) != GPIO_UNASSIGNED) {
 			engine->clutchDownState = efiReadPin(CONFIG(clutchDownPin));
 			
@@ -70,7 +67,6 @@ bool LaunchControlBase::isInsideSwitchCondition() const {
 		
 	default:
 		// ALWAYS_ACTIVE_LAUNCH
-		engineConfiguration->launchDisableBySpeed = 1;
 		return true;
 	}
 }
@@ -83,7 +79,8 @@ bool LaunchControlBase::isInsideSwitchCondition() const {
  */ 
 bool LaunchControlBase::isInsideSpeedCondition() const {
 	int speed = getVehicleSpeed();
-	return (CONFIG(launchSpeedTreshold) > speed) || !engineConfiguration->launchDisableBySpeed;
+	
+	return (CONFIG(launchSpeedTreshold) > speed) || (!(CONFIG(launchActivationMode) ==  ALWAYS_ACTIVE_LAUNCH));
 }
 
 /**
@@ -127,8 +124,11 @@ bool LaunchControlBase::isLaunchConditionMet(int rpm) const {
 	return speedCondition && activateSwitchCondition && rpmCondition && tpsCondition;
 }
 
-//void LaunchControlBase::update() {
 void updateLaunchConditions(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+	launchInstance.update();
+}
+
+void LaunchControlBase::update() {
 
 	if (!CONFIG(launchControlEnabled)) {
 		return;
@@ -141,17 +141,13 @@ void updateLaunchConditions(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 #endif
 
 	int rpm = GET_RPM();
-	bool combinedConditions = lc.isLaunchConditionMet(rpm);
-
+	bool combinedConditions = isLaunchConditionMet(rpm);
 	float timeDelay = CONFIG(launchActivateDelay);
-	int cutRpmRange = CONFIG(hardCutRpmRange);
-	int launchAdvanceRpmRange = CONFIG(launchTimingRpmRange);
 
 	//recalculate in periodic task, this way we save time in applyLaunchControlLimiting
 	//and still recalculat in case user changed the values
-	retardThresholdRpm = CONFIG(launchRpm) +\
-						(CONFIG(enableLaunchRetard) ? CONFIG(launchAdvanceRpmRange) : 0) +\
-						CONFIG(hardCutRpmRange);
+	retardThresholdRpm = CONFIG(launchRpm) + (CONFIG(enableLaunchRetard) ? 
+	                     CONFIG(launchAdvanceRpmRange) : 0) + CONFIG(hardCutRpmRange);
 
 	if (!combinedConditions) {
 		// conditions not met, reset timer
@@ -214,9 +210,10 @@ void applyLaunchControlLimiting(bool *limitedSpark, bool *limitedFuel DECLARE_EN
 
 void initLaunchControl(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	logger = sharedLogger;
-	retardThresholdRpm = CONFIG(launchRpm) +\
-						(CONFIG(enableLaunchRetard) ? CONFIG(launchAdvanceRpmRange) : 0) +\
-						CONFIG(hardCutRpmRange);
+	INJECT_ENGINE_REFERENCE(&launchInstance);
+
+	retardThresholdRpm = CONFIG(launchRpm) + (CONFIG(enableLaunchRetard) ? 
+						 CONFIG(launchAdvanceRpmRange) : 0) + CONFIG(hardCutRpmRange);
 	isInit = true;
 }
 
