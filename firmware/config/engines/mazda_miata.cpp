@@ -6,7 +6,7 @@
  * http://rusefi.com/wiki/index.php?title=Vehicle:Mazda_Protege_1993
  *
  * MIATA_1990 = 19 (Frankenstein board)
- * MIATA_1994_DEVIATOR = 20
+ * MRE_MIATA_94_MAP = 20
  * MIATA_1996 = 21
  * set engine_type 21
  *
