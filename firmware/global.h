@@ -27,12 +27,9 @@
 #if defined __GNUC__
 // GCC
 #include <sys/types.h>
-#define ALWAYS_INLINE __attribute__((always_inline)) inline
 #else
 // IAR
 typedef unsigned int time_t;
-// todo: what's the IAR option?
-#define ALWAYS_INLINE INLINE
 #endif
 
 #ifdef __cplusplus
@@ -98,15 +95,5 @@ typedef unsigned int time_t;
 #else /* !EFI_USE_CCM */
 #define CCM_OPTIONAL
 #endif /* EFI_USE_CCM */
-
-/**
- * converts efitimeus_t to efitick_t
- */
-#define US2NT(us) (((efitime_t)(us))*US_TO_NT_MULTIPLIER)
-
-/**
- * converts efitick_t to efitimeus_t
- */
-#define NT2US(nt) ((nt) / US_TO_NT_MULTIPLIER)
 
 #define UNIT_TEST_BUSY_WAIT_CALLBACK() {}

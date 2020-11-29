@@ -255,6 +255,7 @@
 #define CMD_INJECTION "injection"
 #define CMD_MIL_BENCH "milbench"
 #define CMD_PINS "pins"
+#define CMD_PWM "pwm"
 #define CMD_REBOOT "reboot"
 #define CMD_REBOOT_DFU "reboot_dfu"
 #define CMD_RESET_ENGINE_SNIFFER "reset_engine_chart"
@@ -361,7 +362,7 @@
 #define enableVerboseCan2Tx_offset 2116
 #define enableVerboseCanTx_offset 744
 #define engine_configuration_s_size 6000
-#define engine_load_mode_e_auto_enum "INVALID", "INVALID", "INVALID", "LM_SPEED_DENSITY", "LM_REAL_MAF", "LM_ALPHA_N_2", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "LM_MOCK"
+#define engine_load_mode_e_auto_enum "INVALID", "INVALID", "INVALID", "LM_SPEED_DENSITY", "LM_REAL_MAF", "LM_ALPHA_N", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "LM_MOCK"
 #define engine_load_mode_e_enum "INVALID", "INVALID", "INVALID", "Speed Density", "MAF Air Charge", "Alpha-N", "INVALID"
 #define ENGINE_MAKE_BMW "BMW"
 #define ENGINE_MAKE_GM "GM"
@@ -403,6 +404,7 @@
 #define ET_MIATA_TCU_PROTEUS 1
 #define ET_MRE_BODY_CONTROL 23
 #define ET_MRE_DEFAULTS 60
+#define ET_MRE_MIATA_94_MAP 20
 #define ET_MRE_MIATA_NA6_MAP 66
 #define ET_MRE_MIATA_NA6_VAF 12
 #define ET_MRE_MIATA_NB2_MAF 15
@@ -1210,8 +1212,8 @@
 #define showHumanReadableWarning_offset 976
 #define showSdCardWarning_offset 76
 #define SIGNATURE_BOARD all
-#define SIGNATURE_DATE 2020.11.22
-#define SIGNATURE_HASH 4111359558
+#define SIGNATURE_DATE 2020.11.29
+#define SIGNATURE_HASH 104376296
 #define silentTriggerError_offset 1464
 #define slowAdcAlpha_offset 2088
 #define sparkDwellRpmBins_offset 332
@@ -1541,7 +1543,7 @@
 #define ts_show_spi true
 #define ts_show_trigger_comparator false
 #define ts_show_tunerstudio_port true
-#define TS_SIGNATURE "rusEFI 2020.11.22.all.4111359558"
+#define TS_SIGNATURE "rusEFI 2020.11.29.all.104376296"
 #define TS_SINGLE_WRITE_COMMAND 'W'
 #define TS_SINGLE_WRITE_COMMAND_char W
 #define TS_TEST_COMMAND 't' // 0x74
@@ -1599,31 +1601,32 @@
 #define unusedBit_288_30_offset 976
 #define unusedBit_288_31_offset 976
 #define unusedBit_34_31_offset 76
-#define unusedBit_486_10_offset 2116
-#define unusedBit_486_11_offset 2116
-#define unusedBit_486_12_offset 2116
-#define unusedBit_486_13_offset 2116
-#define unusedBit_486_14_offset 2116
-#define unusedBit_486_15_offset 2116
-#define unusedBit_486_16_offset 2116
-#define unusedBit_486_17_offset 2116
-#define unusedBit_486_18_offset 2116
-#define unusedBit_486_19_offset 2116
-#define unusedBit_486_20_offset 2116
-#define unusedBit_486_21_offset 2116
-#define unusedBit_486_22_offset 2116
-#define unusedBit_486_23_offset 2116
-#define unusedBit_486_24_offset 2116
-#define unusedBit_486_25_offset 2116
-#define unusedBit_486_26_offset 2116
-#define unusedBit_486_27_offset 2116
-#define unusedBit_486_28_offset 2116
-#define unusedBit_486_29_offset 2116
-#define unusedBit_486_30_offset 2116
-#define unusedBit_486_31_offset 2116
-#define unusedBit_486_8_offset 2116
-#define unusedBit_486_9_offset 2116
+#define unusedBit_488_10_offset 2116
+#define unusedBit_488_11_offset 2116
+#define unusedBit_488_12_offset 2116
+#define unusedBit_488_13_offset 2116
+#define unusedBit_488_14_offset 2116
+#define unusedBit_488_15_offset 2116
+#define unusedBit_488_16_offset 2116
+#define unusedBit_488_17_offset 2116
+#define unusedBit_488_18_offset 2116
+#define unusedBit_488_19_offset 2116
+#define unusedBit_488_20_offset 2116
+#define unusedBit_488_21_offset 2116
+#define unusedBit_488_22_offset 2116
+#define unusedBit_488_23_offset 2116
+#define unusedBit_488_24_offset 2116
+#define unusedBit_488_25_offset 2116
+#define unusedBit_488_26_offset 2116
+#define unusedBit_488_27_offset 2116
+#define unusedBit_488_28_offset 2116
+#define unusedBit_488_29_offset 2116
+#define unusedBit_488_30_offset 2116
+#define unusedBit_488_31_offset 2116
+#define unusedBit_488_8_offset 2116
+#define unusedBit_488_9_offset 2116
 #define unusedFlexFuelSensor_offset 3100
+#define unusedHereHereHere_offset 1458
 #define unusedHereWeHave_offset 1464
 #define unusedOldBiquad_offset 2332
 #define unusedSpiPadding4_offset 2593
@@ -1676,6 +1679,7 @@
 #define vehicleName_offset 1160
 #define vehicleSpeedCoef_offset 476
 #define vehicleSpeedSensorInputPin_offset 968
+#define vehicleWeight_offset 1456
 #define veLoadBins_offset 18464
 #define veOverrideMode_offset 2109
 #define verboseCan2BaseAddress_offset 2112
