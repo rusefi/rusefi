@@ -152,7 +152,8 @@ TEST(LaunchControl, CompleteRun) {
     updateLaunchConditions(PASS_ENGINE_PARAMETER_SIGNATURE);
 
 	//check if we have some sort of cut? we should not have at this point
-
+	spark = false;
+	fuel = false;
 	applyLaunchControlLimiting(&spark, &fuel PASS_ENGINE_PARAMETER_SUFFIX);
 	EXPECT_FALSE(spark);
 	EXPECT_FALSE(fuel);
@@ -166,6 +167,8 @@ TEST(LaunchControl, CompleteRun) {
 	//we have a 3 seconds delay to actually enable it!
 	eth.smartMoveTimeForwardSeconds(1);
 	updateLaunchConditions(PASS_ENGINE_PARAMETER_SIGNATURE);
+	spark = false;
+	fuel = false;
 	applyLaunchControlLimiting(&spark, &fuel PASS_ENGINE_PARAMETER_SUFFIX);
 	
 	EXPECT_FALSE(spark);
@@ -173,6 +176,8 @@ TEST(LaunchControl, CompleteRun) {
 
 	eth.smartMoveTimeForwardSeconds(3);
 	updateLaunchConditions(PASS_ENGINE_PARAMETER_SIGNATURE);
+	spark = false;
+	fuel = false;
 	applyLaunchControlLimiting(&spark, &fuel PASS_ENGINE_PARAMETER_SUFFIX);
 
 	EXPECT_TRUE(spark);
@@ -180,6 +185,8 @@ TEST(LaunchControl, CompleteRun) {
 
 	setMockVehicleSpeed(40);
 	updateLaunchConditions(PASS_ENGINE_PARAMETER_SIGNATURE);
+	spark = false;
+	fuel = false;
 	applyLaunchControlLimiting(&spark, &fuel PASS_ENGINE_PARAMETER_SUFFIX);
 	EXPECT_FALSE(spark);
 	EXPECT_FALSE(fuel);

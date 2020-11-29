@@ -202,18 +202,13 @@ void applyLaunchControlLimiting(bool *limitedSpark, bool *limitedFuel DECLARE_EN
 	if (( engine->isLaunchCondition ) && ( retardThresholdRpm < GET_RPM() )) {
 		*limitedSpark = engineConfiguration->launchSparkCutEnable;
 		*limitedFuel = engineConfiguration->launchFuelCutEnable;
-	} else {
-		*limitedSpark = false;
-		*limitedFuel = false;
-	}
+	} 
 }
 
 void initLaunchControl(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	logger = sharedLogger;
 	INJECT_ENGINE_REFERENCE(&launchInstance);
 
-	retardThresholdRpm = CONFIG(launchRpm) + (CONFIG(enableLaunchRetard) ? 
-						 CONFIG(launchAdvanceRpmRange) : 0) + CONFIG(hardCutRpmRange);
 	isInit = true;
 }
 
