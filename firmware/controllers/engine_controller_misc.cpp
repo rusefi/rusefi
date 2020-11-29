@@ -78,6 +78,9 @@ void setMockVBattVoltage(float voltage DECLARE_ENGINE_PARAMETER_SUFFIX) {
 void setMockState(brain_pin_e pin, bool state) {
 #if EFI_UNIT_TEST
 	mockPinStates[static_cast<int>(pin)] = state;
+#else
+	UNUSED(pin);
+	UNUSED(state);
 #endif
 }
 

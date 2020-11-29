@@ -145,22 +145,10 @@ const char* getConfigurationName(engine_type_e engineType) {
 		return "Mi4G93";
 	case MIATA_1990:
 		return "MX590";
-	case MIATA_1994_DEVIATOR:
-		return "MX594d";
 	case MIATA_1996:
 		return "MX596";
 	case BMW_E34:
 		return "BMWe34";
-	case VW_ABA:
-		return "VW_ABA";
-	case SACHS:
-		return "SACHS";
-	case CAMARO_4:
-		return "CAMARO_4";
-	case CHEVY_C20_1973:
-		return "CHEVY C20";
-	case DODGE_RAM:
-		return "DODGE_RAM";
 	default:
 		return getEngine_type_e(engineType);
 	}
@@ -570,6 +558,17 @@ static void setIgnitionPin(const char *indexStr, const char *pinName) {
 	incrementGlobalConfigurationVersion(PASS_ENGINE_PARAMETER_SIGNATURE);
 }
 
+// this method is useful for desperate time debugging
+static void readPin(const char *pinName) {
+	brain_pin_e pin = parseBrainPin(pinName);
+	if (pin == GPIO_INVALID) {
+		scheduleMsg(&logger, "invalid pin name [%s]", pinName);
+		return;
+	}
+	int physicalValue = palReadPad(getHwPort("read", pin), getHwPin("read", pin));
+	scheduleMsg(&logger, "pin %s value %d", hwPortname(pin), physicalValue);
+}
+
 static void setIndividualPin(const char *pinName, brain_pin_e *targetPin, const char *name) {
 	brain_pin_e pin = parseBrainPin(pinName);
 	if (pin == GPIO_INVALID) {
@@ -887,6 +886,8 @@ static void enableOrDisable(const char *param, bool isEnabled) {
 		engineConfiguration->canWriteEnabled = isEnabled;
 	} else if (strEqualCaseInsensitive(param, CMD_INJECTION)) {
 		engineConfiguration->isInjectionEnabled = isEnabled;
+	} else if (strEqualCaseInsensitive(param, CMD_PWM)) {
+		engine->isPwmEnabled = isEnabled;
 	} else if (strEqualCaseInsensitive(param, "trigger_details")) {
 		engineConfiguration->verboseTriggerSynchDetails = isEnabled;
 	} else if (strEqualCaseInsensitive(param, "vvt_details")) {
@@ -1376,6 +1377,7 @@ void initSettings(void) {
 	addConsoleActionS("set_cj125_heater_pin", setCj125HeaterPin);
 	addConsoleActionS("set_trigger_sync_pin", setTriggerSyncPin);
 
+	addConsoleActionS("readpin", readPin);
 	addConsoleActionS("set_can_rx_pin", setCanRxPin);
 	addConsoleActionS("set_can_tx_pin", setCanTxPin);
 

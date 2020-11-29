@@ -134,7 +134,7 @@ void startAuxPins(void) {
 void stopAuxPins(void) {
 #if EFI_PROD_CODE
 	for (int i = 0;i < AUX_PID_COUNT;i++) {
-		brain_pin_markUnused(activeConfiguration.auxPidPins[i]);
+		efiSetPadUnused(activeConfiguration.auxPidPins[i]);
 	}
 #endif /* EFI_PROD_CODE */
 }

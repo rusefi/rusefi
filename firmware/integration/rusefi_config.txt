@@ -409,6 +409,7 @@ end_struct
 #define ET_DODGE_NEON_2003_CRANK 46
 
 #define ET_MRE_MIATA_NA6_VAF 12
+#define ET_MRE_MIATA_94_MAP 20
 #define ET_MRE_MIATA_NB2_MAP 11
 #define ET_MRE_MIATA_NB2_MAF 15
 #define ET_MRE_BODY_CONTROL 23
@@ -967,7 +968,9 @@ custom maf_sensor_type_e 4 bits, S32, @OFFSET@, [0:1], @@maf_sensor_type_e_enum@
 	pin_output_mode_e drv8860_csPinMode;
 	brain_pin_e       drv8860_miso;
 
-	int[64] unusedAtOldBoardConfigurationEnd;;"units", 1, 0, -20, 100, 0
+	int[63] unusedAtOldBoardConfigurationEnd;;"units", 1, 0, -20, 100, 0
+	uint16_t vehicleWeight;;"kg", 1, 0, 0, 10000, 0
+	uint16_t unusedHereHereHere;;"ADC", 1, 0, 0, 1000, 0
 
 	uint16_t tps2SecondaryMin;;"ADC", 1, 0, 0, 1000, 0
 	uint16_t tps2SecondaryMax;;"ADC", 1, 0, 0, 1000, 0
@@ -1711,6 +1714,7 @@ end_struct
 #define CMD_ENGINE_TYPE "engine_type"
 #define CMD_INJECTION "injection"
 #define CMD_IGNITION "ignition"
+#define CMD_PWM "pwm"
 #define CMD_TRIGGERINFO "triggerinfo"
 #define CMD_WRITECONFIG "writeconfig"
 #define CMD_DATE "date"

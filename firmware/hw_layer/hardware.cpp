@@ -148,7 +148,10 @@ static Logging *sharedLogger;
 static int fastMapSampleIndex;
 static int hipSampleIndex;
 static int tpsSampleIndex;
+
+#if HAL_TRIGGER_USE_ADC
 static int triggerSampleIndex;
+#endif
 
 #if HAL_USE_ADC
 extern AdcDevice fastAdc;
@@ -288,9 +291,9 @@ void stopSpi(spi_device_e device) {
 		return; // not turned on
 	}
 	isSpiInitialized[device] = false;
-	brain_pin_markUnused(getSckPin(device));
-	brain_pin_markUnused(getMisoPin(device));
-	brain_pin_markUnused(getMosiPin(device));
+	efiSetPadUnused(getSckPin(device));
+	efiSetPadUnused(getMisoPin(device));
+	efiSetPadUnused(getMosiPin(device));
 #endif /* HAL_USE_SPI */
 }
 
@@ -368,7 +371,7 @@ void applyNewHardwareSettings(void) {
 	stopBoostPin();
 #endif
 	if (isPinOrModeChanged(clutchUpPin, clutchUpPinMode)) {
-		brain_pin_markUnused(activeConfiguration.clutchUpPin);
+		efiSetPadUnused(activeConfiguration.clutchUpPin);
 	}
 
 	enginePins.unregisterPins();
