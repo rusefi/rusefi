@@ -404,6 +404,7 @@
 #define ET_MIATA_TCU_PROTEUS 1
 #define ET_MRE_BODY_CONTROL 23
 #define ET_MRE_DEFAULTS 60
+#define ET_MRE_MIATA_94_MAP 20
 #define ET_MRE_MIATA_NA6_MAP 66
 #define ET_MRE_MIATA_NA6_VAF 12
 #define ET_MRE_MIATA_NB2_MAF 15
@@ -1211,8 +1212,8 @@
 #define showHumanReadableWarning_offset 976
 #define showSdCardWarning_offset 76
 #define SIGNATURE_BOARD hellen_cypress
-#define SIGNATURE_DATE 2020.11.26
-#define SIGNATURE_HASH 2590151221
+#define SIGNATURE_DATE 2020.11.29
+#define SIGNATURE_HASH 3486056747
 #define silentTriggerError_offset 1464
 #define slowAdcAlpha_offset 2088
 #define sparkDwellRpmBins_offset 332
@@ -1542,7 +1543,7 @@
 #define ts_show_spi true
 #define ts_show_trigger_comparator false
 #define ts_show_tunerstudio_port true
-#define TS_SIGNATURE "rusEFI 2020.11.26.hellen_cypress.2590151221"
+#define TS_SIGNATURE "rusEFI 2020.11.29.hellen_cypress.3486056747"
 #define TS_SINGLE_WRITE_COMMAND 'W'
 #define TS_SINGLE_WRITE_COMMAND_char W
 #define TS_TEST_COMMAND 't' // 0x74
