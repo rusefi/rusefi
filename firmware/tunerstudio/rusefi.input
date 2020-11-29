@@ -158,6 +158,11 @@ enable2ndByteCanID = false
          filter = minTps, "Minimum TPS", TPSValue,       <       , 1,       , true
 
 
+;
+; in order to add new TunerStudio gauge you need to chagne two places
+; 1) add a line here in '[OutputChannels]'
+; 2) in rusEFI firmware make a change to tunerstudio_outputs.h
+;
 [OutputChannels]
 
    ochGetCommand    = "O%2o%2c"
@@ -1148,6 +1153,10 @@ gaugeCategory = Knock
 	showPanel = spi,  spiFunction
 	showPanel = con,  connection
 
+;
+; this section defines how we log output channels
+; see [OutputChannels]
+;
 [Datalog]
    ;       Channel          Label          Type    Format
    entry = time,            @@GAUGE_NAME_TIME@@,        float,  "%.3f"
