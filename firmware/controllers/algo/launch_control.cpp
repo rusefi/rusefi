@@ -159,7 +159,7 @@ void LaunchControlBase::update() {
 		engine->applyLaunchExtraFuel = false;
 	} else {
 		// If conditions are met...
-		if ((getTimeNowNt() - launchTimer > MS2NT(timeDelay * 1000)) && combinedConditions) {
+		if ((getTimeNowNt() - launchTimer > MSF2NT(timeDelay * 1000)) && combinedConditions) {
 			engine->isLaunchCondition = true;           // ...enable launch!
 			engine->applyLaunchExtraFuel = true;
 		}
