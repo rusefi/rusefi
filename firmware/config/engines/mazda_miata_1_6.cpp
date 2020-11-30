@@ -465,8 +465,10 @@ void setMiataNA6_MAP_MRE(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 void setMiata94_MAP_MRE(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	setMiataNA6_MAP_MRE(PASS_CONFIG_PARAMETER_SIGNATURE);
 
+#if (BOARD_TLE8888_COUNT > 0)
 	// "35 - GP Out 1"
 	engineConfiguration->fuelPumpPin = TLE8888_PIN_21;
+#endif /* BOARD_TLE8888_COUNT */
 
 	engineConfiguration->injectionMode = IM_SEQUENTIAL;
 	engineConfiguration->specs.displacement = 1.8;
