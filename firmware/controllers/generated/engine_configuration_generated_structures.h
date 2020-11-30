@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Sun Nov 29 03:21:46 UTC 2020
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Mon Nov 30 05:13:27 UTC 2020
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -2020,6 +2020,7 @@ struct engine_configuration_s {
 	bool fuelClosedLoopCorrectionEnabled : 1;
 	/**
 	 * Print details into rusEfi console
+	 * enable verbose_idle
 	offset 1464 bit 2 */
 	bool isVerboseIAC : 1;
 	/**
@@ -3777,4 +3778,4 @@ struct persistent_config_s {
 typedef struct persistent_config_s persistent_config_s;
 
 // end
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Sun Nov 29 03:21:46 UTC 2020
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Mon Nov 30 05:13:27 UTC 2020
