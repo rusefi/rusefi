@@ -1,10 +1,23 @@
+/**
+ * @file	microsecond_timer_stm32.cpp
+ *
+ * A single upcounting timer (currently TIM5) is used as a single timebase both for time
+ * measurement and event scheduling.  This helps reduce jitter by not making another time
+ * measurement at the time of scheduling.
+ * 
+ * This implementation only works on stm32 because it sets hardware registers directly.
+ * ChibiOS doesn't support using timers in output compare mode, only PMW, so we have to 
+ * manually configure the timer in outupt compare mode.
+ * 
+ * @date Dec 1, 2020
+ * @author Matthew Kennedy, (c) 2012-2020
+ */
+
 #include "global.h"
 
 #if EFI_PROD_CODE && HAL_USE_PWM
 
 #include "port_microsecond_timer.h"
-
-#define SCHEDULER_PWM_DEVICE PWMD5
 
 void portSetHardwareSchedulerTimer(efitick_t nowNt, efitick_t setTimeNt) {
 	// This implementation doesn't need the current time, only the target time
@@ -46,7 +59,7 @@ void portInitMicrosecondTimer() {
 uint32_t getTimeNowLowerNt() {
 	// Using the same timer for measurement and scheduling improves
 	// precision and reduces jitter.
-	return TIM5->CNT;
+	return SCHEDULER_TIMER_DEVICE->CNT;
 }
 
 #endif // EFI_PROD_CODE
