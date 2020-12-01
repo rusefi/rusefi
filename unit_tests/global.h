@@ -58,12 +58,6 @@ void print(const char *fmt, ...);
 #define VCS_VERSION "321"
 #define RUS_EFI_VERSION_TAG "rusEfiVersion"
 
-#define ALWAYS_INLINE INLINE
-
-#define US2NT(x) (US_TO_NT_MULTIPLIER * (x))
-
-#define NT2US(x) ((x) / US_TO_NT_MULTIPLIER)
-
 #define INLINE inline
 
 #define EFI_ERROR_CODE 0xffffffff

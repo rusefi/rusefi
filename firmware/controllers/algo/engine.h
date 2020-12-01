@@ -79,6 +79,7 @@ class Engine final : public TriggerStateListener {
 public:
 	explicit Engine(persistent_config_s *config);
 	Engine();
+	bool isPwmEnabled = true;
 
 	IEtbController *etbControllers[ETB_COUNT] = {nullptr};
 	IFuelComputer *fuelComputer = nullptr;

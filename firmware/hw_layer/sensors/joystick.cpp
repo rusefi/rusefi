@@ -95,9 +95,9 @@ static bool isJoystickEnabled() {
 }
 
 void stopJoystickPins() {
-	brain_pin_markUnused(activeConfiguration.joystickCenterPin);
-	brain_pin_markUnused(activeConfiguration.joystickAPin);
-	brain_pin_markUnused(activeConfiguration.joystickDPin);
+	efiSetPadUnused(activeConfiguration.joystickCenterPin);
+	efiSetPadUnused(activeConfiguration.joystickAPin);
+	efiSetPadUnused(activeConfiguration.joystickDPin);
 }
 
 void startJoystickPins() {

@@ -50,8 +50,8 @@ void enableAuxSerial(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 }
 
 void stopAuxSerialPins(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
-	brain_pin_markUnused(activeConfiguration.auxSerialTxPin);
-	brain_pin_markUnused(activeConfiguration.auxSerialRxPin);
+	efiSetPadUnused(activeConfiguration.auxSerialTxPin);
+	efiSetPadUnused(activeConfiguration.auxSerialRxPin);
 }
 
 void startAuxSerialPins(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
