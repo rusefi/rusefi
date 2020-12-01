@@ -158,7 +158,7 @@ void LaunchControlBase::update() {
 		engine->applyLaunchExtraFuel = false;
 	} else {
 		// If conditions are met...
-		if (m_launchTimer.hasElapsedMs(timeDelay) && combinedConditions) {
+		if (m_launchTimer.hasElapsedMs(timeDelay*1000) && combinedConditions) {
 			engine->isLaunchCondition = true;           // ...enable launch!
 			engine->applyLaunchExtraFuel = true;
 		}
