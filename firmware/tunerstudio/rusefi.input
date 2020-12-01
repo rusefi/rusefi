@@ -3277,13 +3277,14 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 		field = "Activation Mode",                      launchActivationMode
 	    field = "Switch Input",                     	launchActivatePin,  {launchActivationMode == 0 && launchControlEnabled == 1}
 		field = "Clutch Input", 						clutchDownPin,      {launchActivationMode == 1 && launchControlEnabled == 1}
+		field = "Clutch Input inverted",				clutchDownPinMode,  {launchActivationMode == 1 && launchControlEnabled == 1}
 		field = ""
 		field = "Rpm Treshold",                         launchRpmTreshold,  {launchControlEnabled == 1}
 		field = "Speed Treshold",                       launchSpeedTreshold,  {launchControlEnabled == 1}
         field = ""
 		field = "Launch RPM",            	    		launchRpm,  {launchControlEnabled == 1}
-		field = "Extra Fuel",           				launchFuelAdded,  {launchControlEnabled == 1}
-        field = "Boost Solenoid Duty",	                launchBoostDuty,  {launchControlEnabled == 1}
+		;field = "Extra Fuel",           				launchFuelAdded,  {launchControlEnabled == 1}
+        ;field = "Boost Solenoid Duty",	                launchBoostDuty,  {launchControlEnabled == 1}
 		field = "Ignition Retard enable",               enableLaunchRetard,  {launchControlEnabled == 1}
 		field = "Ignition Retard",      				launchTimingRetard,  {launchControlEnabled == 1}
 		field = "Ignition Retard RPM Range",            launchTimingRpmRange,  {launchControlEnabled == 1}
