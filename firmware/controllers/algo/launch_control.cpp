@@ -151,14 +151,14 @@ void LaunchControlBase::update() {
 
 	if (!combinedConditions) {
 		// conditions not met, reset timer
-		launchTimer = getTimeNowNt();
+		m_launchTimer.reset();
 		engine->isLaunchCondition = false;
 		engine->setLaunchBoostDuty = false;
 		engine->applyLaunchControlRetard = false;
 		engine->applyLaunchExtraFuel = false;
 	} else {
 		// If conditions are met...
-		if ((getTimeNowNt() - launchTimer > MS2NT(timeDelay * 1000)) && combinedConditions) {
+		if (m_launchTimer.hasElapsedMs(timeDelay) && combinedConditions) {
 			engine->isLaunchCondition = true;           // ...enable launch!
 			engine->applyLaunchExtraFuel = true;
 		}

@@ -1,7 +1,7 @@
 #include "global.h"
 #include "rusefi_enums.h"
 #include "rusefi_hw_enums.h"
-// was generated automatically by rusEfi tool  from rusefi_hw_enums.h // was generated automatically by rusEfi tool  from rusefi_enums.h // by enum2string.jar tool on Wed Nov 11 04:12:23 UTC 2020
+// was generated automatically by rusEfi tool  from rusefi_hw_enums.h // was generated automatically by rusEfi tool  from rusefi_enums.h // by enum2string.jar tool on Sun Nov 29 03:50:35 UTC 2020
 // see also gen_config_and_enums.bat
 
 
@@ -889,8 +889,6 @@ case MAZDA_MIATA_NB1:
   return "MAZDA_MIATA_NB1";
 case MIATA_1990:
   return "MIATA_1990";
-case MIATA_1994_DEVIATOR:
-  return "MIATA_1994_DEVIATOR";
 case MIATA_1996:
   return "MIATA_1996";
 case MIATA_NA6_MAP:
@@ -911,6 +909,8 @@ case MRE_BOARD_OLD_TEST:
   return "MRE_BOARD_OLD_TEST";
 case MRE_BODY_CONTROL:
   return "MRE_BODY_CONTROL";
+case MRE_MIATA_94_MAP:
+  return "MRE_MIATA_94_MAP";
 case MRE_MIATA_NA6_MAP:
   return "MRE_MIATA_NA6_MAP";
 case MRE_MIATA_NA6_VAF:

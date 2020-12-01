@@ -145,22 +145,10 @@ const char* getConfigurationName(engine_type_e engineType) {
 		return "Mi4G93";
 	case MIATA_1990:
 		return "MX590";
-	case MIATA_1994_DEVIATOR:
-		return "MX594d";
 	case MIATA_1996:
 		return "MX596";
 	case BMW_E34:
 		return "BMWe34";
-	case VW_ABA:
-		return "VW_ABA";
-	case SACHS:
-		return "SACHS";
-	case CAMARO_4:
-		return "CAMARO_4";
-	case CHEVY_C20_1973:
-		return "CHEVY C20";
-	case DODGE_RAM:
-		return "DODGE_RAM";
 	default:
 		return getEngine_type_e(engineType);
 	}

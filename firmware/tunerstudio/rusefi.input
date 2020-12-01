@@ -158,6 +158,11 @@ enable2ndByteCanID = false
          filter = minTps, "Minimum TPS", TPSValue,       <       , 1,       , true
 
 
+;
+; in order to add new TunerStudio gauge you need to chagne two places
+; 1) add a line here in '[OutputChannels]'
+; 2) in rusEFI firmware make a change to tunerstudio_outputs.h
+;
 [OutputChannels]
 
    ochGetCommand    = "O%2o%2c"
@@ -1148,6 +1153,10 @@ gaugeCategory = Knock
 	showPanel = spi,  spiFunction
 	showPanel = con,  connection
 
+;
+; this section defines how we log output channels
+; see [OutputChannels]
+;
 [Datalog]
    ;       Channel          Label          Type    Format
    entry = time,            @@GAUGE_NAME_TIME@@,        float,  "%.3f"
@@ -1616,6 +1625,8 @@ cmd_set_engine_type_microRusEFI_MRE_BODY_CONTROL		= "@@TS_IO_TEST_COMMAND_char@@
 cmd_set_engine_type_microRusEFI_Miata_NA6_VAF			= "@@TS_IO_TEST_COMMAND_char@@\x00\x30@@ET_MRE_MIATA_NA6_VAF_16_hex@@"
 
 cmd_set_engine_type_microRusEFI_Miata_NA6_MAP			= "@@TS_IO_TEST_COMMAND_char@@\x00\x30@@ET_MRE_MIATA_NA6_MAP_16_hex@@"
+
+cmd_set_engine_type_microRusEFI_Miata_94_MAP			= "@@TS_IO_TEST_COMMAND_char@@\x00\x30@@ET_MRE_MIATA_94_MAP_16_hex@@"
 
 
 ; MRE_MIATA_NB2_MAF = 15
@@ -3213,6 +3224,7 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 
 		commandButton = "microRusEFI Miata NA6 VAF",   cmd_set_engine_type_microRusEFI_Miata_NA6_VAF@@if_show_microRusEFI_presets
 		commandButton = "microRusEFI Miata NA6 MAP",   cmd_set_engine_type_microRusEFI_Miata_NA6_MAP@@if_show_microRusEFI_presets
+		commandButton = "microRusEFI Miata 94/95 MAP", cmd_set_engine_type_microRusEFI_Miata_94_MAP@@if_show_microRusEFI_presets
 		commandButton = "microRusEfi Miata NB2 MAP",   cmd_set_engine_type_microRusEFI_Miata_NB2_MAP@@if_show_microRusEFI_presets
 		commandButton = "microRusEFI Miata NB2 MAF",   cmd_set_engine_type_microRusEFI_Miata_NB2_MAF@@if_show_microRusEFI_presets
 		commandButton = "microRusEFI Defaults",		   cmd_set_engine_type_microRusEFI_Defaults@@if_show_microRusEFI_presets
