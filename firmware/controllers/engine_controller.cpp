@@ -59,6 +59,7 @@
 #include "date_stamp.h"
 #include "buttonshift.h"
 #include "start_stop.h"
+#include "dynoview.h"
 
 #if EFI_SENSOR_CHART
 #include "sensor_chart.h"
@@ -603,6 +604,10 @@ void commonInitEngineController(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_S
 
 #if EFI_LAUNCH_CONTROL
 	initLaunchControl(sharedLogger PASS_ENGINE_PARAMETER_SUFFIX);
+#endif
+
+#if EFI_DYNO_VIEW
+	initDynoView(sharedLogger PASS_ENGINE_PARAMETER_SUFFIX);
 #endif
 
 #if EFI_SHAFT_POSITION_INPUT

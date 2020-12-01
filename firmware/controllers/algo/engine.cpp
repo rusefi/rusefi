@@ -31,6 +31,7 @@
 #include "sensor.h"
 #include "gppwm.h"
 #include "tachometer.h"
+#include "dynoview.h"
 #if EFI_MC33816
  #include "mc33816.h"
 #endif // EFI_MC33816
@@ -205,6 +206,10 @@ void Engine::periodicSlowCallback(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 			tle8888CrankingResetTime = nowNt;
 		}
 	}
+#endif
+
+#if EFI_DYNO_VIEW
+	updateDynoView(PASS_ENGINE_PARAMETER_SIGNATURE);
 #endif
 
 	slowCallBackWasInvoked = true;
