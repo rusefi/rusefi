@@ -8,6 +8,7 @@
 #pragma once
 
 #include "engine_ptr.h"
+#include "timer.h"
 
 class Logging;
 void initLaunchControl(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX);
@@ -29,5 +30,5 @@ public:
 	bool isLaunchConditionMet(int rpm) const;
 
 private:
-	efitick_t launchTimer = 0;
+	Timer m_launchTimer;
 };
