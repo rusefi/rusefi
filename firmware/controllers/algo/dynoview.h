@@ -13,13 +13,20 @@ class Logging;
 void initDynoView(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX);
 void updateDynoView(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 void updateDynoViewCan(DECLARE_ENGINE_PARAMETER_SIGNATURE);
+float getDynoviewAcceleration(DECLARE_ENGINE_PARAMETER_SIGNATURE);
+int getDynoviewPower(DECLARE_ENGINE_PARAMETER_SIGNATURE);
+
+typedef enum{
+    ICU = 0,
+    CAN,
+}vssSrc;
 
 class DynoViewBase {
 public:
 	DECLARE_ENGINE_PTR;
 
 	// Update the state of the launch control system
-	void update();
+	void update(vssSrc src);
     void updateAcceleration(efitick_t deltaTime, float deltaSpeed);
     void updateHP();
     float getAcceleration();

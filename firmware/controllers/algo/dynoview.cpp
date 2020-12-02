@@ -22,28 +22,53 @@ EXTERN_ENGINE;
 
 DynoViewBase dynoInstance;
 
-void DynoViewBase::update(){
+void DynoViewBase::update(vssSrc src){
 
     efitimeus_t timeNow, deltaTime;
     float speed,deltaSpeed;
     timeNow = getTimeNowUs();
     speed = getVehicleSpeed();
+    if (src == ICU) {
+        speed = efiRound(speed,1.0);
+    } else {
+        //use speed with 0.1 precision
+        speed = efiRound(speed,0.1);
+    }
 
     if(timeStamp != 0) {
 
-        deltaTime = timeNow - timeStamp;
-        if (vss > speed) {
-            deltaSpeed = (vss - speed)*(-1);
-        } else {
-            deltaSpeed = speed - vss;
+        if ( vss!= speed ) {
+            deltaTime = timeNow - timeStamp;
+            if (vss > speed) {
+                deltaSpeed = (vss - speed)*(-1);
+            } else {
+                deltaSpeed = speed - vss;
+            }
+
+            updateAcceleration(deltaTime, deltaSpeed);
+#if EFI_TUNER_STUDIO
+	        if (CONFIG(debugMode) == DBG_44) {
+		        tsOutputChannels.debugIntField1 = deltaTime;
+		        tsOutputChannels.debugFloatField1 = vss;
+		        tsOutputChannels.debugFloatField2 = speed;
+		        tsOutputChannels.debugFloatField3 = deltaSpeed;
+	        }
+#endif /* EFI_TUNER_STUDIO */        
+            updateHP();
+
+            //save data
+            timeStamp = timeNow;
+            vss = speed;
         }
 
-        updateAcceleration(deltaTime, deltaSpeed);
-        updateHP();
+
+    } else {
+        //ensure we grab init values
+        timeStamp = timeNow;
+        vss = speed;
     }
 
-    timeStamp = timeNow;
-    vss = speed;
+
 
 }
 
@@ -107,6 +132,14 @@ int DynoViewBase::getEngineTorque() {
     return (engineTorque/0.73756);
 }
 
+float getDynoviewAcceleration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+    return dynoInstance.getAcceleration();
+}
+
+int getDynoviewPower(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+    return dynoInstance.getEnginePower();
+}
+
 /**
  * Periodic update function called from SlowCallback.
  * Only updates if we have Vss from input pin.
@@ -114,7 +147,7 @@ int DynoViewBase::getEngineTorque() {
 void updateDynoView(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
     if ((CONFIG(vehicleSpeedSensorInputPin) != GPIO_UNASSIGNED) &&
         (!CONFIG(enableCanVss))) {
-        dynoInstance.update();
+        dynoInstance.update(ICU);
     }
 }
 
@@ -127,7 +160,7 @@ void updateDynoViewCan(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
         return;
     }
     
-    dynoInstance.update();
+    dynoInstance.update(CAN);
 }
 
 void initDynoView(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX) {
