@@ -384,6 +384,7 @@ enable2ndByteCanID = false
 	highFuelPressure      = scalar,  S16,     278, "bar", {1/@@PACK_MULT_HIGH_PRESSURE@@}, 0
 	targetLambda     = scalar,  U16,     280,      "",{1/@@PACK_MULT_LAMBDA@@},       0.0
 	AFRValue        = scalar,  U16,     282,      "AFR",{1/@@PACK_MULT_AFR@@},       0.0
+	VssAcceleration = scalar,  U16,     284,      "m/s2" {1/@@PACK_MULT_MS@@}, 0.0
 
 ;
 ; see TunerStudioOutputChannels struct
@@ -1054,6 +1055,9 @@ gaugeCategory = Knock
    knock7Gauge = knock7, "Knock Cyl 7", "dBv", -60, 10, -60, -60, 10, 10, 0, 0
    knock8Gauge = knock8, "Knock Cyl 8", "dBv", -60, 10, -60, -60, 10, 10, 0, 0
 
+gaugeCategory = DynoView
+	accelGauge = VssAcceleration, "Vehicle acceleration",    "m/s2",       -10,   10,      -6,     -4,      4,    6,   2,   2
+
 [WueAnalyze]
     
 ;                    wueCurveName, afrTempCompensationCurve, lambdaTargetTableName, lambdaChannel, coolantTempChannel, egoCorrectionChannel, wueChannel, activeCondition
@@ -1285,6 +1289,8 @@ gaugeCategory = Knock
    entry = knock6, "Knock 6", int, "%d"
    entry = knock7, "Knock 7", int, "%d"
    entry = knock8, "Knock 8", int, "%d"
+
+   entry = VssAcceleration, "Accel", float, "%.3f"
 
 ;     tpsADC          = U16,    "ADC",
 ;     alignmet        = U16,    "al",

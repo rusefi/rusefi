@@ -259,7 +259,9 @@ typedef struct {
 	scaled_lambda targetLambda; // 280
 	scaled_afr airFuelRatio; // 282
 
-	uint8_t unusedAtTheEnd[4]; // we have some unused bytes to allow compatible TS changes
+	scaled_ms VssAcceleration; //284
+	//288
+	uint8_t unusedAtTheEnd[2]; // we have some unused bytes to allow compatible TS changes
 
 	// Temporary - will remove soon
 	TsDebugChannels* getDebugChannels() {
