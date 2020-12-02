@@ -54,4 +54,6 @@ private:
     int engineHP;
     //Torque in lb-ft
     int engineTorque;
+    //sign
+    uint8_t direction;
 };

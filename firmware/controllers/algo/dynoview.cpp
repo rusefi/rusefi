@@ -24,8 +24,8 @@ DynoViewBase dynoInstance;
 
 void DynoViewBase::update(vssSrc src){
 
-    efitimeus_t timeNow, deltaTime;
-    float speed,deltaSpeed;
+    efitimeus_t timeNow, deltaTime = 0.0;
+    float speed,deltaSpeed = 0.0;
     timeNow = getTimeNowUs();
     speed = getVehicleSpeed();
     if (src == ICU) {
@@ -40,27 +40,30 @@ void DynoViewBase::update(vssSrc src){
         if ( vss!= speed ) {
             deltaTime = timeNow - timeStamp;
             if (vss > speed) {
-                deltaSpeed = (vss - speed)*(-1);
+                deltaSpeed = (vss - speed);
+                direction = 1;
             } else {
                 deltaSpeed = speed - vss;
+                direction = 0;
             }
-
-            updateAcceleration(deltaTime, deltaSpeed);
-#if EFI_TUNER_STUDIO
-	        if (CONFIG(debugMode) == DBG_44) {
-		        tsOutputChannels.debugIntField1 = deltaTime;
-		        tsOutputChannels.debugFloatField1 = vss;
-		        tsOutputChannels.debugFloatField2 = speed;
-		        tsOutputChannels.debugFloatField3 = deltaSpeed;
-	        }
-#endif /* EFI_TUNER_STUDIO */        
-            updateHP();
 
             //save data
             timeStamp = timeNow;
             vss = speed;
         }
-
+        
+        //updating here would display acceleration = 0 at constant speed
+        updateAcceleration(deltaTime, deltaSpeed);
+#if EFI_TUNER_STUDIO
+	    if (CONFIG(debugMode) == DBG_44) {
+		    tsOutputChannels.debugIntField1 = deltaTime;
+		    tsOutputChannels.debugFloatField1 = vss;
+		    tsOutputChannels.debugFloatField2 = speed;
+		    tsOutputChannels.debugFloatField3 = deltaSpeed;
+            tsOutputChannels.debugFloatField4 = acceleration;
+	    }
+#endif /* EFI_TUNER_STUDIO */        
+        updateHP();
 
     } else {
         //ensure we grab init values
@@ -79,8 +82,11 @@ void DynoViewBase::update(vssSrc src){
 void DynoViewBase::updateAcceleration(efitimeus_t deltaTime, float deltaSpeed) {
     if (deltaSpeed != 0.0) {
         acceleration = ((deltaSpeed / 3.6) / (deltaTime / 1000000.0));
+        if (direction) {
+            acceleration *= -1;
+        }
     } else {
-        acceleration = 0;
+        acceleration = 0.0;
     }
 }
 
@@ -97,11 +103,15 @@ void DynoViewBase::updateHP() {
 
     //these are actually at the wheel
     //we would need final drive to calcualte the correct torque at the wheel
-    engineForce = CONFIG(vehicleWeight) * acceleration;
-    enginePower = engineForce * (vss / 3.6);
-    engineHP = enginePower / 746;
-    if (isValidRpm(GET_RPM())) { 
-        engineTorque = ((engineHP * 5252) / GET_RPM());  
+    if (acceleration != 0) {
+        engineForce = CONFIG(vehicleWeight) * acceleration;
+        enginePower = engineForce * (vss / 3.6);
+        engineHP = enginePower / 746;
+        if (isValidRpm(GET_RPM())) { 
+            engineTorque = ((engineHP * 5252) / GET_RPM());  
+        }
+    } else {
+        //we should calculate static power
     }
 
 }
@@ -131,6 +141,7 @@ int DynoViewBase::getEngineHP() {
 int DynoViewBase::getEngineTorque() {
     return (engineTorque/0.73756);
 }
+
 
 float getDynoviewAcceleration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
     return dynoInstance.getAcceleration();
