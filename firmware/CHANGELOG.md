@@ -27,7 +27,7 @@ All notable user-facing or behavior-altering changes will be documented in this 
 
 ## XXX 202X Release
 
-## December National Mutt Day
+## December 2020 National Mutt Day
 
 ### Fixed
  -  minor bugfix - engine sniffer missing pin names #1995
