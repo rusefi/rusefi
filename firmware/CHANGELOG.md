@@ -27,7 +27,11 @@ All notable user-facing or behavior-altering changes will be documented in this 
 
 ## XXX 202X Release
 
+## December National Mutt Day
 
+### Fixed
+ -  minor bugfix - engine sniffer missing pin names #1995
+ 
 ## November 2020 Release - "Black Friday"
 
 ### Breaking Changes
@@ -41,7 +45,7 @@ All notable user-facing or behavior-altering changes will be documented in this 
  -   Improved setting ECU presets/defaults from TunerStudio
 
 ### Fixed
- -   Improved TunerStudio protocol reliability - should see fewer CRC errors now
+ -   Improved TunerStudio protocol reliability - should see fewer CRC errors now #1943
 
 ## October 2020 Release - "Sausage Pizza Day"
 
