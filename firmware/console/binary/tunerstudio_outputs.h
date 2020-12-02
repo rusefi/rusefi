@@ -261,7 +261,7 @@ typedef struct {
 
 	scaled_ms VssAcceleration; //284
 	//288
-	uint8_t unusedAtTheEnd[2]; // we have some unused bytes to allow compatible TS changes
+	uint8_t unusedAtTheEnd[54]; // we have some unused bytes to allow compatible TS changes
 
 	// Temporary - will remove soon
 	TsDebugChannels* getDebugChannels() {
