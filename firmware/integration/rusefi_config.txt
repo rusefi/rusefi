@@ -47,11 +47,8 @@
 !
 !
 
-
-
 !
 ! this is here so that rusEfi console can access it, too
-! [IMPORTANT] every time TS_OUTPUT_SIZE is changed make sure to increment TS_SIGNATURE above
 !
 #define TS_OUTPUT_SIZE 340
 
