@@ -1055,6 +1055,9 @@ gaugeCategory = Knock
    knock7Gauge = knock7, "Knock Cyl 7", "dBv", -60, 10, -60, -60, 10, 10, 0, 0
    knock8Gauge = knock8, "Knock Cyl 8", "dBv", -60, 10, -60, -60, 10, 10, 0, 0
 
+gaugeCategory = DynoView
+	accelGauge = VssAcceleration, "Vehicle acceleration",    "m/s2",       -10,   10,      -6,     -4,      4,    6,   2,   2
+
 [WueAnalyze]
     
 ;                    wueCurveName, afrTempCompensationCurve, lambdaTargetTableName, lambdaChannel, coolantTempChannel, egoCorrectionChannel, wueChannel, activeCondition
