@@ -34,7 +34,7 @@ static void hwTimerCallback(PWMDriver*) {
 
 static constexpr PWMConfig timerConfig = {
 	SCHEDULER_TIMER_FREQ,
-	(uint32_t)-1,	// timer period = 2^32 counts
+	UINT32_MAX,		// timer period = 2^32 counts
 	nullptr,		// No update callback
 	{
 		{PWM_OUTPUT_DISABLED, hwTimerCallback},	// Channel 0 = timer callback, others unused
