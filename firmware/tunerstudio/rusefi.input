@@ -384,13 +384,13 @@ enable2ndByteCanID = false
 	highFuelPressure      = scalar,  S16,     278, "bar", {1/@@PACK_MULT_HIGH_PRESSURE@@}, 0
 	targetLambda     = scalar,  U16,     280,      "",{1/@@PACK_MULT_LAMBDA@@},       0.0
 	AFRValue        = scalar,  U16,     282,      "AFR",{1/@@PACK_MULT_AFR@@},       0.0
-	VssAcceleration = scalar,  U16,     284,      "m/s2" {1/@@PACK_MULT_MS@@}, 0.0
+	VssAcceleration = scalar,  U16,     284,      "m/s2", {1/@@PACK_MULT_MS@@}, 0.0
 
 ;
 ; see TunerStudioOutputChannels struct
 ;
 
-; todo: generate this section programatically
+; todo: generate this section programmatically
 	LM_SPEED_DENSITY = {3},
 	LM_REAL_MAF = {4}
 
