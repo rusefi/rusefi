@@ -32,7 +32,7 @@ void DynoViewBase::update(vssSrc src){
         speed = efiRound(speed,1.0);
     } else {
         //use speed with 0.1 precision
-        speed = efiRound(speed,0.1);
+        speed = efiRound(speed,0.001);
     }
 
     if(timeStamp != 0) {

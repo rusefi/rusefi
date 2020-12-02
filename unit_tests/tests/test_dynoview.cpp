@@ -27,13 +27,13 @@ TEST(DynoView, VSS_T1) {
     eth.moveTimeForwardMs(50);
 	
 	setMockVehicleSpeed(18.0);
-    dut.update();
+    dut.update(ICU);
 
     //delay 50ms
     //eth.moveTimeForwardMs(50);
     eth.smartMoveTimeForwardSeconds(20);
     setMockVehicleSpeed(126.0);
-    dut.update();
+    dut.update(ICU);
 
     std::cerr.precision(17);
     std::cerr << dut.getAcceleration() << std::endl; 
@@ -51,7 +51,7 @@ TEST(DynoView, algo) {
 
     //to capture vss
 	setMockVehicleSpeed(35*3.6);
-    dut.update();
+    dut.update(ICU);
 
     dut.setAcceleration(1.5);
     dut.updateHP();
@@ -77,12 +77,12 @@ TEST(DynoView, VSS_fast) {
     eth.moveTimeForwardMs(50);
 	
 	setMockVehicleSpeed(50.0);
-    dut.update();
+    dut.update(CAN);
 
     //delay 50ms
     eth.moveTimeForwardMs(50);
     setMockVehicleSpeed(50.252);
-    dut.update();
+    dut.update(CAN);
 
     ASSERT_EQ(1259,dut.getEngineForce());
     printResults(&dut);
@@ -101,12 +101,12 @@ TEST(DynoView, VSS_Torque) {
     eth.moveTimeForwardMs(50);
 	
 	setMockVehicleSpeed(80.0);
-    dut.update();
+    dut.update(CAN);
 
     //delay 50ms
     eth.moveTimeForwardMs(50);
     setMockVehicleSpeed(80.504);
-    dut.update();
+    dut.update(CAN);
 
     ASSERT_EQ(242,dut.getEngineTorque());
     printResults(&dut);
