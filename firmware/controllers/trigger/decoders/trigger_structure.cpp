@@ -476,10 +476,7 @@ void TriggerWaveform::initializeTriggerWaveform(Logging *logger, operation_mode_
 		initializeMazdaMiataVVtTestShape(this);
 		break;
 
-	case TT_MAZDA_Z5:
-		initialize_Mazda_Engine_z5_Shape(this);
-		break;
-
+	case TT_UNUSED_42:
 	case TT_VVT_MIATA_NB2:
 		initializeMazdaMiataVVtCamShape(this);
 		break;
