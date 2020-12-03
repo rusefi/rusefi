@@ -218,7 +218,7 @@ typedef enum {
 	TT_UNUSED_42 = 42,
 
 	TT_TOOTHED_WHEEL = TT_TT_TOOTHED_WHEEL,
-	TT_FORD_ASPIRE = 1,
+	TT_FORD_ASPIRE = TT_TT_FORD_ASPIRE,
 	TT_DODGE_NEON_1995 = 2,
 	/**
 	 * https://rusefi.com/wiki/index.php?title=Manual:Software:Trigger#Mazda_Miata_NA
@@ -237,7 +237,8 @@ typedef enum {
 	TT_TOOTHED_WHEEL_60_2 = TT_TT_TOOTHED_WHEEL_60_2,
 	TT_TOOTHED_WHEEL_36_1 = TT_TT_TOOTHED_WHEEL_36_1,
 
-	TT_HONDA_4_24_1 = 10,
+	// todo: remove this weird trigger?
+	TT_HONDA_4_24_1 = TT_TT_HONDA_4_24_1,
 
 	// todo: this really looks to be same as Miata_NA shall we remove?
 	TT_MITSUBISHI = 11,
@@ -245,7 +246,7 @@ typedef enum {
 	// this makes sense because mechanical spark distribution does not require synchronization
 	TT_HONDA_4_24 = 12,
 
-	TT_HONDA_1_4_24 = 13,
+	TT_HONDA_1_4_24 = TT_TT_HONDA_1_4_24,
 
 	// cam-based
 	TT_DODGE_NEON_2003_CAM = 14,
@@ -269,7 +270,7 @@ typedef enum {
 	 */
 	TT_60_2_VW = TT_TT_60_2_VW,
 
-	TT_HONDA_1_24 = 21,
+	TT_HONDA_1_24 = TT_TT_HONDA_1_24,
 
 	TT_DODGE_STRATUS = 22,
 
@@ -292,7 +293,7 @@ typedef enum {
 
 	TT_2JZ_1_12 = TT_TT_2JZ_1_12,
 
-	TT_HONDA_CBR_600_CUSTOM = 30,
+	TT_UNUSED_30 = 30,
 
 	// skipped 3/1 with cam sensor for testing
 	TT_3_1_CAM = 31,
@@ -350,9 +351,9 @@ typedef enum {
 	 */
 	TT_RENIX_66_2_2_2 = TT_TT_RENIX_66_2_2_2,
 
-	TT_HONDA_K_12_1 = 46,
+	TT_HONDA_K_12_1 = TT_TT_HONDA_K_12_1,
 
-	TT_VVT_BOSCH_QUICK_START = 47,
+	TT_VVT_BOSCH_QUICK_START = TT_TT_VVT_BOSCH_QUICK_START,
 
 	TT_TOOTHED_WHEEL_36_2 = TT_TT_TOOTHED_WHEEL_36_2,
 
