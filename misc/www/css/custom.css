@@ -1,11 +1,13 @@
 .container {
-    max-width: 800px; }
+    max-width: 800px; 
+    overflow-y: hidden;
+  }
   .header {
     /* margin-top: 6rem; */
     background-image: linear-gradient( 180deg, rgba(0, 0, 0, 0.7) 0%, rgba(0, 0, 0, 0.25) 100%),url('../images/site/bg.jpg');
     background-attachment:fixed;
-    /* background-size: cover; */
-    background-size: 100%;
+    background-size: cover;
+    background-repeat: no-repeat;
     padding-top: 6rem;
     text-align: center; }
   .value-prop {
@@ -94,13 +96,22 @@
     margin-left: 2rem;
   }
   .footer {
-    padding-top: 1rem;
-    margin-bottom: 1rem;
+    background-color: #222;
+    padding-top: 2rem;
+    padding-bottom: 1rem;
     text-align: center;
+  }
+
+  .footer a{
+    margin-left: 1rem;
+    margin-right: 1rem;
   }
   
   /* Larger than phone */
   @media (min-width: 550px) {
+    .container {
+      overflow-y: visible;
+    }
     .header {
       /* margin-top: 18rem;  */
       padding-top: 18rem;}
@@ -127,6 +138,9 @@
   
   /* Larger than tablet */
   @media (min-width: 750px) {
+    .container {
+      overflow-y: visible;
+    }
     /* Navbar */
     .navbar + .docs-section {
       border-top-width: 0; }
@@ -143,7 +157,7 @@
     .navbar-spacer {
       display: none; }
     .navbar > .container {
-      width: 100%; }
+      width: 80%; }
     .navbar-list {
       list-style: none;
       margin-bottom: 0; }
@@ -254,7 +268,8 @@
   }
 
   .dl-link {
-    margin-left: 25rem;  }
+    /* margin-left: 25rem;   */
+    float: right;}
 
   td.oddrow {
     background-color: rgb(230, 230, 230);
