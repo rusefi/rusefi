@@ -45,10 +45,14 @@ public class TriggerImage {
                 return "Miata NA";
             case Fields.TT_TT_MAZDA_MIATA_NB1:
                 return "Miata NB";
+            case Fields.TT_TT_SUBARU_SVX:
+                return "Subaru SVX";
             case Fields.TT_TT_SUBARU_7_6:
                 return "Subaru 7/6";
             case Fields.TT_TT_GM_LS_24:
                 return "GM 24x";
+            case Fields.TT_TT_GM_7X:
+                return "GM 7x";
             case Fields.TT_TT_ONE:
                 return "Single Tooth";
             case Fields.TT_TT_2JZ_1_12:
