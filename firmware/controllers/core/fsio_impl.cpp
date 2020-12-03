@@ -139,6 +139,7 @@ FsioValue getEngineValue(le_action_e action DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	case LE_METHOD_EXHAUST_VVT:
 		return engine->triggerCentral.getVVTPosition();
 #endif
+	case LE_METHOD_TIME_SINCE_TRIGGER_EVENT:
 	case LE_METHOD_TIME_SINCE_BOOT:
 #if EFI_MAIN_RELAY_CONTROL
 		// in main relay control mode, we return the number of seconds since the ignition is turned on
@@ -781,7 +782,7 @@ void runHardcodedFsio(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	}
 	// see FUEL_PUMP_LOGIC
 	if (CONFIG(fuelPumpPin) != GPIO_UNASSIGNED) {
-		enginePins.fuelPumpRelay.setValue((getTimeNowSeconds() < engineConfiguration->startUpFuelPumpDuration) || (engine->rpmCalculator.getRpm() > 0));
+		enginePins.fuelPumpRelay.setValue((getTimeNowSeconds() < engine->triggerActivitySecond + engineConfiguration->startUpFuelPumpDuration) || (engine->rpmCalculator.getRpm() > 0));
 	}
 	
 	enginePins.o2heater.setValue(engine->rpmCalculator.isRunning());
