@@ -83,21 +83,12 @@ public class TriggerImage {
     }
 
     private static void readTrigger(BufferedReader reader, String line, TriggerPanel triggerPanel) throws IOException {
-        String[] tokens = line.split(" ");
-        String idStr = tokens[1];
-        String eventCountStr = tokens[2];
-        String triggerName = tokens[3];
-        System.out.println("Processing " + line + " " + idStr);
-        triggerPanel.tdcPosition = Double.parseDouble(tokens[4]);
-        int eventCount = Integer.parseInt(eventCountStr);
-        int id = Integer.parseInt(idStr);
-
+        TriggerWheelInfo triggerWheelInfo = TriggerWheelInfo.readTriggerWheelInfo(line, reader);
 //        if (id != 20)
 //            return;
 
-        System.out.println("id=" + id + ", count=" + eventCount + ", name=" + triggerName);
-
-        List<WaveState> waves = readTrigger(reader, eventCount);
+        triggerPanel.tdcPosition = triggerWheelInfo.tdcPosition;
+        List<WaveState> waves = triggerWheelInfo.waves;
 
         EngineReport re0 = new EngineReport(waves.get(0).list, 720, 720 * (1 + EXTRA_COUNT));
         System.out.println(re0);
@@ -134,17 +125,17 @@ public class TriggerImage {
         if (isThirdVisible)
             triggerPanel.add(upDownImage2);
 
-        triggerPanel.name = triggerName;
-        triggerPanel.id = id;
+        triggerPanel.name = triggerWheelInfo.triggerName;
+        triggerPanel.id = triggerWheelInfo.id;
 
         UiUtils.trueLayout(triggerPanel);
         UiUtils.trueRepaint(triggerPanel);
         new File(OUTPUT_FOLDER).mkdir();
-        UiUtils.saveImage(OUTPUT_FOLDER + File.separator + "trigger_" + id + ".png", triggerPanel);
+        UiUtils.saveImage(OUTPUT_FOLDER + File.separator + "trigger_" + triggerWheelInfo.id + ".png", triggerPanel);
     }
 
     @NotNull
-    private static List<WaveState> readTrigger(BufferedReader reader, int count) throws IOException {
+    static List<WaveState> readTrigger(BufferedReader reader, int count) throws IOException {
         String line;
         String[] tokens;
         List<Signal> signals = new ArrayList<>();
