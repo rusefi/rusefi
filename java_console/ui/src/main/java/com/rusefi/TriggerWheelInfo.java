@@ -11,12 +11,14 @@ class TriggerWheelInfo {
     final double tdcPosition;
     final String triggerName;
     final List<WaveState> waves;
+    final List<TriggerSignal> signals;
 
-    public TriggerWheelInfo(int id, double tdcPosition, String triggerName, List<WaveState> waves) {
+    public TriggerWheelInfo(int id, double tdcPosition, String triggerName, List<WaveState> waves, List<TriggerSignal> signals) {
         this.id = id;
         this.tdcPosition = tdcPosition;
         this.triggerName = triggerName;
         this.waves = waves;
+        this.signals = signals;
     }
 
     static TriggerWheelInfo readTriggerWheelInfo(String line, BufferedReader reader) throws IOException {
@@ -31,9 +33,10 @@ class TriggerWheelInfo {
 
         System.out.println("id=" + id + ", count=" + eventCount + ", name=" + triggerName);
 
-        List<WaveState> waves = TriggerImage.readTrigger(reader, eventCount);
+        List<TriggerSignal> signals = TriggerImage.readSignals(reader, eventCount);
 
+        List<WaveState> waves = TriggerImage.convertSignalsToWaves(signals);
 
-        return new TriggerWheelInfo(id, tdcPosition, triggerName, waves);
+        return new TriggerWheelInfo(id, tdcPosition, triggerName, waves, signals);
     }
 }
