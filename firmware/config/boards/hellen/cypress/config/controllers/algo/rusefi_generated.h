@@ -1213,7 +1213,7 @@
 #define showSdCardWarning_offset 76
 #define SIGNATURE_BOARD hellen_cypress
 #define SIGNATURE_DATE 2020.12.03
-#define SIGNATURE_HASH 1620303848
+#define SIGNATURE_HASH 1492308929
 #define silentTriggerError_offset 1464
 #define slowAdcAlpha_offset 2088
 #define sparkDwellRpmBins_offset 332
@@ -1543,16 +1543,19 @@
 #define ts_show_spi true
 #define ts_show_trigger_comparator false
 #define ts_show_tunerstudio_port true
-#define TS_SIGNATURE "rusEFI 2020.12.03.hellen_cypress.1620303848"
+#define TS_SIGNATURE "rusEFI 2020.12.03.hellen_cypress.1492308929"
 #define TS_SINGLE_WRITE_COMMAND 'W'
 #define TS_SINGLE_WRITE_COMMAND_char W
 #define TS_TEST_COMMAND 't' // 0x74
 #define TT_TT_2JZ_1_12 29
 #define TT_TT_36_2_2_2 23
 #define TT_TT_60_2_VW 20
+#define TT_TT_FORD_ASPIRE 1
+#define TT_TT_GM_7X 7
 #define TT_TT_GM_LS_24 27
 #define TT_TT_JEEP_18_2_2_2 37
 #define TT_TT_JEEP_4_CYL 40
+#define TT_TT_MAZDA_DOHC_1_4 15
 #define TT_TT_MAZDA_MIATA_NA 3
 #define TT_TT_MAZDA_MIATA_NB1 4
 #define TT_TT_ONE 18
