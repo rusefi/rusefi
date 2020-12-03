@@ -181,7 +181,8 @@ public:
 	/**
 	 * These signals are used for trigger export only
 	 */
-	int triggerSignals[PWM_PHASE_MAX_COUNT];
+	int triggerSignalIndeces[PWM_PHASE_MAX_COUNT];
+	int triggerSignalStates[PWM_PHASE_MAX_COUNT];
 #endif
 
 	MultiChannelStateSequence wave;
