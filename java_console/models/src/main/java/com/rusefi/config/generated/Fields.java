@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEfi tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Thu Dec 03 14:35:57 UTC 2020
+// this file was generated automatically by rusEfi tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Thu Dec 03 15:50:29 UTC 2020
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -1167,6 +1167,7 @@ public class Fields {
 	public static final int servoOutputPins8_offset = 3147;
 	public static final int showHumanReadableWarning_offset = 976;
 	public static final int showSdCardWarning_offset = 76;
+	public static final int SIGNATURE_HASH = 1206769475;
 	public static final int silentTriggerError_offset = 1464;
 	public static final int slowAdcAlpha_offset = 2088;
 	public static final int sparkDwellRpmBins_offset = 332;
@@ -1446,8 +1447,9 @@ public class Fields {
 	public static final char TS_SD_R_COMMAND = 'r';
 	public static final char TS_SD_W_COMMAND = 'w';
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI 2020.12.03.all.3407248928";
+	public static final String TS_SIGNATURE = "rusEFI 2020.12.03.all.1206769475";
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
+	public static final int TT_TT_1_16 = 50;
 	public static final int TT_TT_2JZ_1_12 = 29;
 	public static final int TT_TT_2JZ_3_34 = 25;
 	public static final int TT_TT_36_2_2_2 = 23;
@@ -1470,6 +1472,7 @@ public class Fields {
 	public static final int TT_TT_ONE = 18;
 	public static final int TT_TT_RENIX_44_2_2 = 44;
 	public static final int TT_TT_RENIX_66_2_2_2 = 45;
+	public static final int TT_TT_ROVER_K = 26;
 	public static final int TT_TT_SUBARU_7_6 = 36;
 	public static final int TT_TT_SUBARU_SVX = 49;
 	public static final int TT_TT_TOOTHED_WHEEL = 0;
