@@ -402,6 +402,7 @@ end_struct
 #define TT_TT_HONDA_1_24 21
 #define TT_TT_36_2_2_2 23
 #define TT_TT_2JZ_3_34 25
+#define TT_TT_ROVER_K 26
 #define TT_TT_GM_LS_24 27
 #define TT_TT_HONDA_CBR_600 28
 #define TT_TT_2JZ_1_12 29
@@ -415,6 +416,7 @@ end_struct
 #define TT_TT_VVT_BOSCH_QUICK_START 47
 #define TT_TT_TOOTHED_WHEEL_36_2 48
 #define TT_TT_SUBARU_SVX 49
+#define TT_TT_1_16 50
 
 #define ET_DODGE_NEON_1995 2
 #define ET_FORD_ASPIRE 3
