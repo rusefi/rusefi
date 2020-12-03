@@ -1,6 +1,5 @@
 
 TRIGGER_DECODERS_SRC_CPP = \
-	$(CONTROLLERS_DIR)/trigger/decoders/trigger_bmw.cpp \
 	$(CONTROLLERS_DIR)/trigger/decoders/trigger_mazda.cpp \
 	$(CONTROLLERS_DIR)/trigger/decoders/trigger_chrysler.cpp \
 	$(CONTROLLERS_DIR)/trigger/decoders/trigger_structure.cpp \

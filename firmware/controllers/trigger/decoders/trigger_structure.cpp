@@ -22,7 +22,6 @@
 #include "global.h"
 #include "os_access.h"
 #include "engine.h"
-#include "trigger_bmw.h"
 #include "trigger_chrysler.h"
 #include "trigger_gm.h"
 #include "trigger_nissan.h"
@@ -546,10 +545,7 @@ void TriggerWaveform::initializeTriggerWaveform(Logging *logger, operation_mode_
 		configureMazdaProtegeSOHC(this);
 		break;
 
-	case TT_MINI_COOPER_R50:
-		configureMiniCooperTriggerWaveform(this);
-		break;
-
+	case TT_UNUSED_6:
 	case TT_VVT_JZ:
 		setToothedWheelConfiguration(this, 3, 0, ambiguousOperationMode);
 		break;
