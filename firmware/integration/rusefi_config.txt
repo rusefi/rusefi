@@ -390,7 +390,15 @@ end_struct
 #define TT_TT_TOOTHED_WHEEL_36_1 9
 #define TT_TT_ONE 18
 #define TT_TT_60_2_VW 20
+#define TT_TT_36_2_2_2 23
+#define TT_TT_2JZ_1_12 29
+#define TT_TT_SUBARU_7_6 36
+#define TT_TT_JEEP_18_2_2_2 37
+#define TT_TT_JEEP_4_CYL 40
+#define TT_TT_RENIX_44_2_2 44
+#define TT_RENIX_66_2_2_2 45
 #define TT_TT_TOOTHED_WHEEL_36_2 48
+#define TT_TT_SUBARU_SVX 49
 
 #define ET_DODGE_NEON_1995 2
 #define ET_FORD_ASPIRE 3
