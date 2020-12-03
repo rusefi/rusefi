@@ -396,7 +396,7 @@ end_struct
 #define TT_TT_JEEP_18_2_2_2 37
 #define TT_TT_JEEP_4_CYL 40
 #define TT_TT_RENIX_44_2_2 44
-#define TT_RENIX_66_2_2_2 45
+#define TT_TT_RENIX_66_2_2_2 45
 #define TT_TT_TOOTHED_WHEEL_36_2 48
 #define TT_TT_SUBARU_SVX 49
 
