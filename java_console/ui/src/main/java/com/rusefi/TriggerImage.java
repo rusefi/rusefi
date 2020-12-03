@@ -1,5 +1,6 @@
 package com.rusefi;
 
+import com.rusefi.config.generated.Fields;
 import com.rusefi.trigger.WaveState;
 import com.rusefi.ui.engine.UpDownImage;
 import com.rusefi.ui.util.FrameHelper;
@@ -16,8 +17,8 @@ import java.util.Date;
 import java.util.List;
 
 /**
- * This utility produces images of trigger signals supported by rusEfi
- *
+ * This utility produces images of trigger signals supported by rusEFI
+ * <p>
  * 06/23/15
  * Andrey Belomutskiy, (c) 2013-2020
  */
@@ -27,12 +28,16 @@ public class TriggerImage {
     private static final String INPUT_FILE_NAME = "triggers.txt";
     private static final String TOP_MESSAGE = StartupFrame.LINK_TEXT;
     private static final String DEFAULT_WORK_FOLDER = ".." + File.separator + "unit_tests";
+
+    public static final int WHEEL_BORDER = 20;
+    public static final int WHEEL_DIAMETER = 300;
+
     /**
      * number of extra frames
      */
     public static int EXTRA_COUNT = 1;
 
-    public static void main(String[] args) throws IOException, InvocationTargetException, InterruptedException {
+    public static void main(String[] args) throws InvocationTargetException, InterruptedException {
         final String workingFolder;
         if (args.length != 1) {
             workingFolder = DEFAULT_WORK_FOLDER;
@@ -42,6 +47,7 @@ public class TriggerImage {
 
         FrameHelper f = new FrameHelper();
 
+        JPanel content = new JPanel(new BorderLayout());
         final TriggerPanel triggerPanel = new TriggerPanel() {
             @Override
             public Dimension getPreferredSize() {
@@ -49,13 +55,18 @@ public class TriggerImage {
             }
         };
 
-        f.showFrame(triggerPanel);
+        JPanel topPanel = new JPanel();
+        content.add(topPanel, BorderLayout.NORTH);
+        content.add(triggerPanel, BorderLayout.CENTER);
+
+        f.showFrame(content);
+        f.getFrame().setSize(900, 700);
 
         SwingUtilities.invokeAndWait(new Runnable() {
             @Override
             public void run() {
                 try {
-                    generateImages(workingFolder, triggerPanel);
+                    generateImages(workingFolder, triggerPanel, topPanel);
                 } catch (IOException e) {
                     throw new IllegalStateException(e);
                 }
@@ -64,7 +75,7 @@ public class TriggerImage {
         System.exit(-1);
     }
 
-    private static void generateImages(String workingFolder, TriggerPanel trigger) throws IOException {
+    private static void generateImages(String workingFolder, TriggerPanel trigger, JPanel topPanel) throws IOException {
         String fileName = workingFolder + File.separator + INPUT_FILE_NAME;
         BufferedReader br = new BufferedReader(new FileReader(fileName));
 
@@ -77,15 +88,35 @@ public class TriggerImage {
             }
 
             if (line.startsWith(TRIGGERTYPE)) {
-                readTrigger(br, line, trigger);
+                readTrigger(br, line, trigger, topPanel);
             }
         }
     }
 
-    private static void readTrigger(BufferedReader reader, String line, TriggerPanel triggerPanel) throws IOException {
+    private static void readTrigger(BufferedReader reader, String line, TriggerPanel triggerPanel, JPanel topPanel) throws IOException {
         TriggerWheelInfo triggerWheelInfo = TriggerWheelInfo.readTriggerWheelInfo(line, reader);
-//        if (id != 20)
+//        if (triggerWheelInfo.id != Fields.TT_TT_SUBARU_7_6)
 //            return;
+
+        JPanel clock = new JPanel() {
+            @Override
+            public void paint(Graphics g) {
+                super.paint(g);
+
+                g.setColor(Color.black);
+
+                g.drawArc(WHEEL_BORDER, WHEEL_BORDER, WHEEL_DIAMETER, WHEEL_DIAMETER, 0, 90);
+            }
+
+            @Override
+            public Dimension getPreferredSize() {
+                return new Dimension(WHEEL_DIAMETER + 2 * WHEEL_BORDER, WHEEL_DIAMETER + 2 * WHEEL_BORDER);
+            }
+        };
+        clock.setBackground(Color.orange);
+
+        topPanel.removeAll();
+//        topPanel.add(clock);
 
         triggerPanel.tdcPosition = triggerWheelInfo.tdcPosition;
         List<WaveState> waves = triggerWheelInfo.waves;
@@ -125,13 +156,21 @@ public class TriggerImage {
         if (isThirdVisible)
             triggerPanel.add(upDownImage2);
 
-        triggerPanel.name = triggerWheelInfo.triggerName;
-        triggerPanel.id = triggerWheelInfo.id;
+        triggerPanel.name = getTriggerName(triggerWheelInfo);
+//        triggerPanel.id = "#" + triggerWheelInfo.id;
 
         UiUtils.trueLayout(triggerPanel);
         UiUtils.trueRepaint(triggerPanel);
         new File(OUTPUT_FOLDER).mkdir();
         UiUtils.saveImage(OUTPUT_FOLDER + File.separator + "trigger_" + triggerWheelInfo.id + ".png", triggerPanel);
+    }
+
+    private static String getTriggerName(TriggerWheelInfo triggerName) {
+        switch (triggerName.id) {
+            case Fields.TT_TT_SUBARU_7_6:
+                return "Subaru 7/6";
+        }
+        return triggerName.triggerName;
     }
 
     @NotNull
@@ -207,7 +246,7 @@ public class TriggerImage {
 
     private static class TriggerPanel extends JPanel {
         public String name = "";
-        public int id;
+        public String id;
         public double tdcPosition;
 
         @Override
@@ -231,7 +270,8 @@ public class TriggerImage {
             int h = getHeight();
 
             g.drawString(name, 0, (int) (h * 0.75));
-            g.drawString("#" + id, 0, (int) (h * 0.9));
+            if (id != null)
+                g.drawString(id, 0, (int) (h * 0.9));
 
             g.setColor(Color.green);
             int tdcFontSize = (int) (f.getSize() * 1.5);
