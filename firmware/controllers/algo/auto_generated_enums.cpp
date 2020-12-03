@@ -1333,8 +1333,8 @@ case TT_MAZDA_Z5:
   return "TT_MAZDA_Z5";
 case TT_MIATA_VVT:
   return "TT_MIATA_VVT";
-case TT_MINI_COOPER_R50:
-  return "TT_MINI_COOPER_R50";
+case TT_UNUSED_6:
+  return "TT_UNUSED_6";
 case TT_MITSUBISHI:
   return "TT_MITSUBISHI";
 case TT_NISSAN_SR20VE:

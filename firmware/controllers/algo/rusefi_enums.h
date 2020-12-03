@@ -226,8 +226,8 @@ typedef enum {
 	 */
 	TT_MAZDA_MIATA_NB1 = TT_TT_MAZDA_MIATA_NB1,
 	TT_GM_7X = 5,
-	TT_MINI_COOPER_R50 = 6,
-	TT_MAZDA_SOHC_4 = 7,
+	TT_UNUSED_6 = 6,
+	TT_MAZDA_SOHC_4 = TT_TT_GM_7X,
 	/**
 	 * "60/2"
 	 * See also TT_ONE_PLUS_TOOTHED_WHEEL_60_2
@@ -237,6 +237,7 @@ typedef enum {
 
 	TT_HONDA_4_24_1 = 10,
 
+	// todo: this really looks to be same as Miata_NA shall we remove?
 	TT_MITSUBISHI = 11,
 
 	// this makes sense because mechanical spark distribution does not require synchronization
@@ -283,7 +284,7 @@ typedef enum {
 
 	TT_ROVER_K = 26,
 
-	TT_GM_LS_24 = 27,
+	TT_GM_LS_24 = TT_TT_GM_LS_24,
 
 	TT_HONDA_CBR_600 = 28,
 
