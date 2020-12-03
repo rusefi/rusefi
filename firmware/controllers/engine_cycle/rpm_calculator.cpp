@@ -386,7 +386,8 @@ efitick_t scheduleByAngle(scheduling_s *timer, efitick_t edgeTimestamp, angle_t 
 		action_s action DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	float delayUs = ENGINE(rpmCalculator.oneDegreeUs) * angle;
 
-	efitime_t delayNt = US2NT(delayUs);
+    // 'delayNt' is below 10 seconds here so we use 32 bit type for performance reasons
+	int32_t delayNt = USF2NT(delayUs);
 	efitime_t delayedTime = edgeTimestamp + delayNt;
 
 	ENGINE(executor.scheduleByTimestampNt(timer, delayedTime, action));
