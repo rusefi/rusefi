@@ -20,6 +20,8 @@
 #define MS2US(MS_TIME) ((MS_TIME) * 1000)
 
 // microseconds to ticks
+// since only about 20 seconds of ticks fit in 32 bits this macro is casting parameter into 64 bits 'efitime_t' type
+// please note that int64 <-> float is a heavy operation thus we have 'USF2NT' below
 #define US2NT(us) (((efitime_t)(us)) * US_TO_NT_MULTIPLIER)
 
 // microseconds to ticks, but floating point
