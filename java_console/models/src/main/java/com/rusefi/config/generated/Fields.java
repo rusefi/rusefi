@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEfi tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Wed Dec 02 19:11:37 UTC 2020
+// this file was generated automatically by rusEfi tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Thu Dec 03 01:21:24 UTC 2020
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -1446,10 +1446,18 @@ public class Fields {
 	public static final char TS_SD_R_COMMAND = 'r';
 	public static final char TS_SD_W_COMMAND = 'w';
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI 2020.12.02.all.3750468854";
+	public static final String TS_SIGNATURE = "rusEFI 2020.12.03.all.3862852086";
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
+	public static final int TT_RENIX_66_2_2_2 = 45;
+	public static final int TT_TT_2JZ_1_12 = 29;
+	public static final int TT_TT_36_2_2_2 = 23;
 	public static final int TT_TT_60_2_VW = 20;
+	public static final int TT_TT_JEEP_18_2_2_2 = 37;
+	public static final int TT_TT_JEEP_4_CYL = 40;
 	public static final int TT_TT_ONE = 18;
+	public static final int TT_TT_RENIX_44_2_2 = 44;
+	public static final int TT_TT_SUBARU_7_6 = 36;
+	public static final int TT_TT_SUBARU_SVX = 49;
 	public static final int TT_TT_TOOTHED_WHEEL = 0;
 	public static final int TT_TT_TOOTHED_WHEEL_36_1 = 9;
 	public static final int TT_TT_TOOTHED_WHEEL_36_2 = 48;

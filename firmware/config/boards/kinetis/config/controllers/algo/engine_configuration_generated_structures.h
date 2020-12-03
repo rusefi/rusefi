@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Wed Dec 02 19:11:59 UTC 2020
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Thu Dec 03 01:21:46 UTC 2020
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -3778,4 +3778,4 @@ struct persistent_config_s {
 typedef struct persistent_config_s persistent_config_s;
 
 // end
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Wed Dec 02 19:11:59 UTC 2020
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Thu Dec 03 01:21:46 UTC 2020
