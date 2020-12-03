@@ -566,7 +566,11 @@ void printAllTriggers() {
 			int triggerDefinitionCoordinate = (shape->getTriggerWaveformSynchPointIndex() + i) % shape->getSize();
 
 
-			fprintf(fp, "event %d %d %.2f\n", i, shape->triggerSignals[triggerDefinitionCoordinate], triggerFormDetails->eventAngles[i]);
+			fprintf(fp, "event %d %d %d %.2f\n",
+					i,
+					shape->triggerSignalIndeces[triggerDefinitionCoordinate],
+					shape->triggerSignalStates[triggerDefinitionCoordinate],
+					triggerFormDetails->eventAngles[i]);
 		}
 
 	}
