@@ -102,7 +102,8 @@ void TriggerWaveform::initialize(operation_mode_e operationMode) {
 	previousAngle = 0;
 	memset(isRiseEvent, 0, sizeof(isRiseEvent));
 #if EFI_UNIT_TEST
-	memset(&triggerSignals, 0, sizeof(triggerSignals));
+	memset(&triggerSignalIndeces, 0, sizeof(triggerSignalIndeces));
+	memset(&triggerSignalStates, 0, sizeof(triggerSignalStates));
 #endif
 }
 
@@ -228,8 +229,8 @@ void TriggerWaveform::addEvent(angle_t angle, trigger_wheel_e const channelIndex
 	}
 
 #if EFI_UNIT_TEST
-	int signal = channelIndex * 1000 + stateParam;
-	triggerSignals[privateTriggerDefinitionSize] = signal;
+	triggerSignalIndeces[privateTriggerDefinitionSize] = channelIndex;
+	triggerSignalStates[privateTriggerDefinitionSize] = stateParam;
 #endif
 
 

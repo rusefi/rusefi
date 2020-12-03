@@ -187,12 +187,11 @@ public class TriggerImage {
             tokens = line.split(" ");
             if (tokens.length < 4)
                 throw new IllegalStateException("Unexpected [" + line + "]");
-            String signalStr = tokens[2];
-            int signal = Integer.parseInt(signalStr);
-            String angleStr = tokens[3];
-            double angle = Double.parseDouble(angleStr);
+            int signalIndex = Integer.parseInt(tokens[2]);
+            int signalState = Integer.parseInt(tokens[3]);
+            double angle = Double.parseDouble(tokens[4]);
 
-            Signal s = new Signal(signal, angle);
+            Signal s = new Signal(signalIndex, signalState, angle);
 //            System.out.println(s);
             signals.add(s);
             index++;
@@ -201,7 +200,7 @@ public class TriggerImage {
         List<Signal> toShow = new ArrayList<>(signals);
         for (int i = 1; i <= 2 + EXTRA_COUNT; i++) {
             for (Signal s : signals)
-                toShow.add(new Signal(s.signal, s.angle + i * 720));
+                toShow.add(new Signal(s.waveIndex, s.state, s.angle + i * 720));
         }
 
         List<WaveState> waves = new ArrayList<>();
@@ -210,10 +209,9 @@ public class TriggerImage {
         waves.add(new WaveState());
 
         for (Signal s : toShow) {
-            int waveIndex = s.signal / 1000;
-            WaveState.trigger_value_e signal = (s.signal % 1000 == 0) ? WaveState.trigger_value_e.TV_LOW : WaveState.trigger_value_e.TV_HIGH;
+            WaveState.trigger_value_e signal = (s.state == 0) ? WaveState.trigger_value_e.TV_LOW : WaveState.trigger_value_e.TV_HIGH;
 
-            WaveState waveState = waves.get(waveIndex);
+            WaveState waveState = waves.get(s.waveIndex);
             waveState.handle(signal, s.angle);
         }
         for (WaveState wave : waves)
@@ -227,18 +225,20 @@ public class TriggerImage {
     }
 
     private static class Signal {
-        private final int signal;
         private final double angle;
+        private final int state;
+        private final int waveIndex;
 
-        public Signal(int signal, double angle) {
-            this.signal = signal;
+        public Signal(int waveIndex, int state, double angle) {
+            this.waveIndex = waveIndex;
+            this.state = state;
             this.angle = angle;
         }
 
         @Override
         public String toString() {
             return "Signal{" +
-                    "signal=" + signal +
+                    "signal=" + waveIndex +
                     ", angle=" + angle +
                     '}';
         }
