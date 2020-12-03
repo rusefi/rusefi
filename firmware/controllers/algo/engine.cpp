@@ -268,7 +268,6 @@ void Engine::updateSlowSensors(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 
 void Engine::onTriggerSignalEvent(efitick_t nowNt) {
 	isSpinning = true;
-	lastTriggerToothEventTimeNt = nowNt;
 }
 
 Engine::Engine() {
@@ -486,7 +485,7 @@ void Engine::watchdog() {
 	efitick_t nowNt = getTimeNowNt();
 // note that we are ignoring the number of tooth here - we
 // check for duration between tooth as if we only have one tooth per revolution which is not the case
-#define REVOLUTION_TIME_HIGH_THRESHOLD (60 * 1000000LL / RPM_LOW_THRESHOLD)
+#define REVOLUTION_TIME_HIGH_THRESHOLD (60.0f / RPM_LOW_THRESHOLD)
 	/**
 	 * todo: better watch dog implementation should be implemented - see
 	 * http://sourceforge.net/p/rusefi/tickets/96/
@@ -494,8 +493,8 @@ void Engine::watchdog() {
 	 * note that the result of this subtraction could be negative, that would happen if
 	 * we have a trigger event between the time we've invoked 'getTimeNow' and here
 	 */
-	efitick_t timeSinceLastTriggerEvent = nowNt - lastTriggerToothEventTimeNt;
-	if (timeSinceLastTriggerEvent < US2NT(REVOLUTION_TIME_HIGH_THRESHOLD)) {
+	float timeSinceTrigger = triggerCentral.getTimeSinceTriggerEvent(nowNt);
+	if (timeSinceTrigger < REVOLUTION_TIME_HIGH_THRESHOLD)) {
 		return;
 	}
 	isSpinning = false;
