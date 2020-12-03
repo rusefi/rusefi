@@ -386,11 +386,14 @@ struct ThermistorConf @brief Thermistor curve parameters
 end_struct
 
 #define TT_TT_TOOTHED_WHEEL 0
+#define TT_TT_MAZDA_MIATA_NA 3
+#define TT_TT_MAZDA_MIATA_NB1 4
 #define TT_TT_TOOTHED_WHEEL_60_2 8
 #define TT_TT_TOOTHED_WHEEL_36_1 9
 #define TT_TT_ONE 18
 #define TT_TT_60_2_VW 20
 #define TT_TT_36_2_2_2 23
+#define TT_TT_GM_LS_24 27
 #define TT_TT_2JZ_1_12 29
 #define TT_TT_SUBARU_7_6 36
 #define TT_TT_JEEP_18_2_2_2 37
