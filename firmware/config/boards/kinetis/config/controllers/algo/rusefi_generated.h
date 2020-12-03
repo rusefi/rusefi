@@ -1213,7 +1213,7 @@
 #define showSdCardWarning_offset 76
 #define SIGNATURE_BOARD kin
 #define SIGNATURE_DATE 2020.12.03
-#define SIGNATURE_HASH 2127818191
+#define SIGNATURE_HASH 4241303436
 #define silentTriggerError_offset 1464
 #define slowAdcAlpha_offset 2088
 #define sparkDwellRpmBins_offset 332
@@ -1543,11 +1543,10 @@
 #define ts_show_spi true
 #define ts_show_trigger_comparator true
 #define ts_show_tunerstudio_port true
-#define TS_SIGNATURE "rusEFI 2020.12.03.kin.2127818191"
+#define TS_SIGNATURE "rusEFI 2020.12.03.kin.4241303436"
 #define TS_SINGLE_WRITE_COMMAND 'W'
 #define TS_SINGLE_WRITE_COMMAND_char W
 #define TS_TEST_COMMAND 't' // 0x74
-#define TT_RENIX_66_2_2_2 45
 #define TT_TT_2JZ_1_12 29
 #define TT_TT_36_2_2_2 23
 #define TT_TT_60_2_VW 20
@@ -1555,6 +1554,7 @@
 #define TT_TT_JEEP_4_CYL 40
 #define TT_TT_ONE 18
 #define TT_TT_RENIX_44_2_2 44
+#define TT_TT_RENIX_66_2_2_2 45
 #define TT_TT_SUBARU_7_6 36
 #define TT_TT_SUBARU_SVX 49
 #define TT_TT_TOOTHED_WHEEL 0
