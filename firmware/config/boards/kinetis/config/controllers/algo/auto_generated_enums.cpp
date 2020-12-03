@@ -1183,8 +1183,8 @@ case TT_MAZDA_MIATA_VVT_TEST:
   return "TT_MAZDA_MIATA_VVT_TEST";
 case TT_MAZDA_SOHC_4:
   return "TT_MAZDA_SOHC_4";
-case TT_MAZDA_Z5:
-  return "TT_MAZDA_Z5";
+case TT_UNUSED_42:
+  return "TT_UNUSED_42";
 case TT_MIATA_VVT:
   return "TT_MIATA_VVT";
 case TT_MITSUBISHI:
