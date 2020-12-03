@@ -17,6 +17,11 @@ public:
 	// If the elapsed time is longer than 2^32 timer tick counts,
 	// then a time period representing 2^32 counts will be returned.
 	float getElapsedSeconds() const;
+	float getElapsedSeconds(efitick_t nowNt) const;
+
+	// Perform an atomic update event based on the passed timestamp,
+	// returning the delta between the last reset and the provided timestamp
+	float getElapsedSecondsAndReset(efitick_t nowNt);
 
 private:
 	efitick_t m_lastReset = INT64_MIN;
