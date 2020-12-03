@@ -393,9 +393,12 @@ end_struct
 #define TT_TT_TOOTHED_WHEEL_60_2 8
 #define TT_TT_TOOTHED_WHEEL_36_1 9
 #define TT_TT_MAZDA_DOHC_1_4 15
+#define TT_TT_VVT_JZ 17
 #define TT_TT_ONE 18
 #define TT_TT_60_2_VW 20
+#define TT_TT_HONDA_1_24 21
 #define TT_TT_36_2_2_2 23
+#define TT_TT_2JZ_3_34 25
 #define TT_TT_GM_LS_24 27
 #define TT_TT_2JZ_1_12 29
 #define TT_TT_SUBARU_7_6 36
