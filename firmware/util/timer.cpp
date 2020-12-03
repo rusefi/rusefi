@@ -37,5 +37,7 @@ float Timer::getElapsedSeconds() const {
 		delta = UINT32_MAX - 1;
 	}
 
-	return NT2US(delta);
+	auto delta32 = (uint32_t)delta;
+
+	return NT2US(delta32);
 }
