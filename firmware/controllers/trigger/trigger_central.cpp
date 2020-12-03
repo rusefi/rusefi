@@ -426,6 +426,8 @@ void TriggerCentral::handleShaftSignal(trigger_event_e signal, efitick_t timesta
 
 	engine->onTriggerSignalEvent(timestamp);
 
+	m_lastEventTimer.reset(timestamp);
+
 	int eventIndex = (int) signal;
 	efiAssertVoid(CUSTOM_TRIGGER_EVENT_TYPE, eventIndex >= 0 && eventIndex < HW_EVENT_TYPES, "signal type");
 	hwEventCounters[eventIndex]++;
