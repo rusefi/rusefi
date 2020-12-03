@@ -315,10 +315,10 @@ typedef enum {
 	 */
 	TT_MAZDA_MIATA_VVT_TEST = 35,
 
-	TT_SUBARU_7_6 = 36,
+	TT_SUBARU_7_6 = TT_TT_SUBARU_7_6,
 
 	// this one is 6 cylinder, see TT_JEEP_4_cyl for 4 cylinders
-	TT_JEEP_18_2_2_2 = 37,
+	TT_JEEP_18_2_2_2 = TT_TT_JEEP_18_2_2_2,
 
 	/*
 	 * See also TT_NISSAN_SR20VE
@@ -341,12 +341,12 @@ typedef enum {
 	 */
 	TT_VVT_MIATA_NB2 = 43,
 
-	TT_RENIX_44_2_2 = 44,
+	TT_RENIX_44_2_2 = TT_TT_RENIX_44_2_2,
 
 	/**
 	 * Same as TT_RENIX_44_2_2 but repeated three times, not two.
 	 */
-	TT_RENIX_66_2_2_2 = 45,
+	TT_RENIX_66_2_2_2 = TT_TT_RENIX_66_2_2_2,
 
 	TT_HONDA_K_12_1 = 46,
 
@@ -354,7 +354,7 @@ typedef enum {
 
 	TT_TOOTHED_WHEEL_36_2 = TT_TT_TOOTHED_WHEEL_36_2,
 
-	TT_SUBARU_SVX = 49,
+	TT_SUBARU_SVX = TT_TT_SUBARU_SVX,
 
 	TT_1_16 = 50,
 
