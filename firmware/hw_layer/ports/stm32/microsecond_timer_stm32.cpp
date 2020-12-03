@@ -53,7 +53,7 @@ void portInitMicrosecondTimer() {
 	// We want to be able to set the compare register without waiting for an update event
 	// (which would take 358 seconds at 12mhz timer speed), so we have to use normal upcounting
 	// output compare mode instead.
-	SCHEDULER_TIMER_DEVICE->CCMR1 = 0x00006810;
+	SCHEDULER_TIMER_DEVICE->CCMR1 = STM32_TIM_CCMR1_OC1M(1);
 }
 
 uint32_t getTimeNowLowerNt() {
