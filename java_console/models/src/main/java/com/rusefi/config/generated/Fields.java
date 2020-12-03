@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEfi tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Thu Dec 03 06:33:55 UTC 2020
+// this file was generated automatically by rusEfi tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Thu Dec 03 14:35:57 UTC 2020
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -1446,16 +1446,21 @@ public class Fields {
 	public static final char TS_SD_R_COMMAND = 'r';
 	public static final char TS_SD_W_COMMAND = 'w';
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI 2020.12.03.all.3594459943";
+	public static final String TS_SIGNATURE = "rusEFI 2020.12.03.all.3407248928";
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final int TT_TT_2JZ_1_12 = 29;
 	public static final int TT_TT_2JZ_3_34 = 25;
 	public static final int TT_TT_36_2_2_2 = 23;
+	public static final int TT_TT_3_1_CAM = 31;
 	public static final int TT_TT_60_2_VW = 20;
 	public static final int TT_TT_FORD_ASPIRE = 1;
 	public static final int TT_TT_GM_7X = 5;
 	public static final int TT_TT_GM_LS_24 = 27;
 	public static final int TT_TT_HONDA_1_24 = 21;
+	public static final int TT_TT_HONDA_1_4_24 = 13;
+	public static final int TT_TT_HONDA_4_24_1 = 10;
+	public static final int TT_TT_HONDA_CBR_600 = 28;
+	public static final int TT_TT_HONDA_K_12_1 = 46;
 	public static final int TT_TT_JEEP_18_2_2_2 = 37;
 	public static final int TT_TT_JEEP_4_CYL = 40;
 	public static final int TT_TT_MAZDA_DOHC_1_4 = 15;
@@ -1471,6 +1476,7 @@ public class Fields {
 	public static final int TT_TT_TOOTHED_WHEEL_36_1 = 9;
 	public static final int TT_TT_TOOTHED_WHEEL_36_2 = 48;
 	public static final int TT_TT_TOOTHED_WHEEL_60_2 = 8;
+	public static final int TT_TT_VVT_BOSCH_QUICK_START = 47;
 	public static final int TT_TT_VVT_JZ = 17;
 	public static final int tunerStudioSerialSpeed_offset = 728;
 	public static final int twoWireBatchIgnition_offset = 1476;
