@@ -220,11 +220,11 @@ typedef enum {
 	/**
 	 * https://rusefi.com/wiki/index.php?title=Manual:Software:Trigger#Mazda_Miata_NA
 	 */
-	TT_MAZDA_MIATA_NA = 3,
+	TT_MAZDA_MIATA_NA = TT_TT_MAZDA_MIATA_NA,
 	/**
 	 * NB1 means non-VVT NB, 99 and 00 1.8 engine
 	 */
-	TT_MAZDA_MIATA_NB1 = 4,
+	TT_MAZDA_MIATA_NB1 = TT_TT_MAZDA_MIATA_NB1,
 	TT_GM_7X = 5,
 	TT_MINI_COOPER_R50 = 6,
 	TT_MAZDA_SOHC_4 = 7,

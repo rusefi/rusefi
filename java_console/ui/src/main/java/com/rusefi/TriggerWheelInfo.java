@@ -1,10 +1,13 @@
 package com.rusefi;
 
+import com.rusefi.config.generated.Fields;
 import com.rusefi.trigger.WaveState;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.util.List;
+import java.util.stream.Collectors;
 
 class TriggerWheelInfo {
     final int id;
@@ -38,5 +41,50 @@ class TriggerWheelInfo {
         List<WaveState> waves = TriggerImage.convertSignalsToWaves(signals);
 
         return new TriggerWheelInfo(id, tdcPosition, triggerName, waves, signals);
+    }
+
+    @NotNull
+    List<TriggerSignal> getFirstWheeTriggerSignals() {
+        List<TriggerSignal> firstWheel = getTriggerSignals(0);
+        if (isFirstCrankBased()) {
+            return takeFirstHalf(firstWheel);
+        } else {
+            return compressAngle(firstWheel);
+        }
+    }
+
+    @NotNull
+    private List<TriggerSignal> getTriggerSignals(int index) {
+        return signals.stream().filter(signal -> signal.waveIndex == index).collect(Collectors.toList());
+    }
+
+    @NotNull
+    private List<TriggerSignal> takeFirstHalf(List<TriggerSignal> wheel) {
+        return wheel.stream().filter(triggerSignal -> triggerSignal.angle < 360).collect(Collectors.toList());
+    }
+
+    /**
+     * this is about converting 720 cycle of crank wheel shape into normal 360 circle range
+     */
+    @NotNull
+    private static List<TriggerSignal> compressAngle(List<TriggerSignal> wheel) {
+        return wheel.stream().map(triggerSignal -> new TriggerSignal(triggerSignal.waveIndex, triggerSignal.state, triggerSignal.angle / 2)).collect(Collectors.toList());
+    }
+
+    public List<TriggerSignal> getSecondWheeTriggerSignals() {
+        List<TriggerSignal> secondWheel = getTriggerSignals(1);
+        if (isSecondCamBased()) {
+            return compressAngle(secondWheel);
+        } else {
+            return takeFirstHalf(secondWheel);
+        }
+    }
+
+    private boolean isFirstCrankBased() {
+        return id == Fields.TT_TT_GM_LS_24;
+    }
+
+    private boolean isSecondCamBased() {
+        return id == Fields.TT_TT_MAZDA_MIATA_NA;
     }
 }

@@ -39,6 +39,30 @@ public class TriggerImage {
      */
     public static int EXTRA_COUNT = 1;
 
+    private static String getTriggerName(TriggerWheelInfo triggerName) {
+        switch (triggerName.id) {
+            case Fields.TT_TT_MAZDA_MIATA_NA:
+                return "Miata NA";
+            case Fields.TT_TT_MAZDA_MIATA_NB1:
+                return "Miata NB";
+            case Fields.TT_TT_SUBARU_7_6:
+                return "Subaru 7/6";
+            case Fields.TT_TT_GM_LS_24:
+                return "GM 24x";
+            case Fields.TT_TT_ONE:
+                return "Single Tooth";
+            case Fields.TT_TT_2JZ_1_12:
+                return "2JZ 1/12";
+            case Fields.TT_TT_JEEP_18_2_2_2:
+                return "18/2/2/2";
+            case Fields.TT_TT_RENIX_44_2_2:
+                return "44/2/2";
+            case Fields.TT_TT_RENIX_66_2_2_2:
+                return "66/2/2/2";
+        }
+        return triggerName.triggerName;
+    }
+
     public static void main(String[] args) throws InvocationTargetException, InterruptedException {
         final String workingFolder;
         if (args.length != 1) {
@@ -57,7 +81,7 @@ public class TriggerImage {
             }
         };
 
-        JPanel topPanel = new JPanel();
+        JPanel topPanel = new JPanel(new FlowLayout());
         content.add(topPanel, BorderLayout.NORTH);
         content.add(triggerPanel, BorderLayout.CENTER);
 
@@ -100,16 +124,19 @@ public class TriggerImage {
 //        if (triggerWheelInfo.id != Fields.TT_TT_SUBARU_7_6)
 //            return;
 
-        List<TriggerSignal> firstWheel = triggerWheelInfo.signals.stream().filter(signal -> signal.waveIndex == 0).collect(Collectors.toList());
-
-        if (1 == 1) {
-            firstWheel = compressAngle(firstWheel);
-        }
-
-        JPanel clock = createWheelPanel(firstWheel);
 
         topPanel.removeAll();
-        topPanel.add(clock);
+
+        JPanel firstWheelControl = createWheelPanel(triggerWheelInfo.getFirstWheeTriggerSignals());
+
+        topPanel.add(firstWheelControl);
+        topPanel.add(StartupFrame.createLogoLabel());
+
+        if (!triggerWheelInfo.waves.get(1).list.isEmpty()) {
+            JPanel secondWheelControl = createWheelPanel(triggerWheelInfo.getSecondWheeTriggerSignals());
+            topPanel.add(secondWheelControl);
+        }
+
         UiUtils.trueLayout(topPanel);
         UiUtils.trueLayout(content);
 
@@ -161,11 +188,6 @@ public class TriggerImage {
     }
 
     @NotNull
-    private static List<TriggerSignal> compressAngle(List<TriggerSignal> firstWheel) {
-        return firstWheel.stream().map(triggerSignal -> new TriggerSignal(triggerSignal.waveIndex, triggerSignal.state, triggerSignal.angle / 2)).collect(Collectors.toList());
-    }
-
-    @NotNull
     private static JPanel createWheelPanel(List<TriggerSignal> wheel) {
         JPanel clock = new JPanel() {
             @Override
@@ -178,7 +200,7 @@ public class TriggerImage {
 
                     drawRadialLine(g, current.angle);
 
-                    double nextAngle = i == wheel.size() - 1 ? 360 : wheel.get(i + 1).angle;
+                    double nextAngle = i == wheel.size() - 1 ? 360 + wheel.get(0).angle : wheel.get(i + 1).angle;
                     int arcDuration = (int) (nextAngle - current.angle);
                     if (current.state == 0) {
                         g.drawArc(WHEEL_BORDER, WHEEL_BORDER, WHEEL_DIAMETER, WHEEL_DIAMETER, (int) current.angle, arcDuration);
@@ -194,7 +216,7 @@ public class TriggerImage {
                 return new Dimension(WHEEL_DIAMETER + 2 * WHEEL_BORDER, WHEEL_DIAMETER + 2 * WHEEL_BORDER);
             }
         };
-        clock.setBackground(Color.orange);
+//        clock.setBackground(Color.orange);
         return clock;
     }
 
@@ -211,14 +233,6 @@ public class TriggerImage {
         int largeY = (int) (WHEEL_DIAMETER / 2 * Math.cos(radianAngle));
 
         g.drawLine(center + smallX, center + smallY, center + largeX, center + largeY);
-    }
-
-    private static String getTriggerName(TriggerWheelInfo triggerName) {
-        switch (triggerName.id) {
-            case Fields.TT_TT_SUBARU_7_6:
-                return "Subaru 7/6";
-        }
-        return triggerName.triggerName;
     }
 
     @NotNull
