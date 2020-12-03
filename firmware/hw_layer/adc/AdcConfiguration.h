@@ -28,8 +28,8 @@ public:
 	bool isHwUsed(adc_channel_e hwChannel) const;
 	int size() const;
 	void init(void);
-	int conversionCount;
-	int errorsCount;
+	uint32_t conversionCount = 0;
+	uint32_t errorsCount = 0;
 	int getAdcValueByIndex(int internalIndex) const;
 	void invalidateSamplesCache();
 
@@ -38,7 +38,7 @@ public:
 	int getAdcValueByHwChannel(adc_channel_e hwChannel) const;
 
 	adc_state values;
-	int channelCount;
+	size_t channelCount = 0;
 private:
 	ADCConversionGroup* hwConfig;
 	/**
