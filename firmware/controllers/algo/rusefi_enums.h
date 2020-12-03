@@ -270,7 +270,7 @@ typedef enum {
 
 	TT_DODGE_STRATUS = 22,
 
-	TT_36_2_2_2 = 23,
+	TT_36_2_2_2 = TT_TT_36_2_2_2,
 
 	/**
 	 * only the 4 tooth signal, without the 360 signal
@@ -287,7 +287,7 @@ typedef enum {
 
 	TT_HONDA_CBR_600 = 28,
 
-	TT_2JZ_1_12 = 29,
+	TT_2JZ_1_12 = TT_TT_2JZ_1_12,
 
 	TT_HONDA_CBR_600_CUSTOM = 30,
 
