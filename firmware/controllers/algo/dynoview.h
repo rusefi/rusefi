@@ -21,7 +21,7 @@ typedef enum{
     CAN,
 }vssSrc;
 
-class DynoViewBase {
+class DynoView {
 public:
 	DECLARE_ENGINE_PTR;
 

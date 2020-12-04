@@ -20,9 +20,9 @@ extern TunerStudioOutputChannels tsOutputChannels;
 
 EXTERN_ENGINE;
 
-DynoViewBase dynoInstance;
+DynoView dynoInstance;
 
-void DynoViewBase::update(vssSrc src){
+void DynoView::update(vssSrc src) {
 
     efitimeus_t timeNow, deltaTime = 0.0;
     float speed,deltaSpeed = 0.0;
@@ -31,20 +31,20 @@ void DynoViewBase::update(vssSrc src){
     if (src == ICU) {
         speed = efiRound(speed,1.0);
     } else {
-        //use speed with 0.1 precision
+        //use speed with 0.001 precision from source CAN
         speed = efiRound(speed,0.001);
     }
 
     if(timeStamp != 0) {
 
-        if ( vss!= speed ) {
+        if (vss != speed) {
             deltaTime = timeNow - timeStamp;
             if (vss > speed) {
                 deltaSpeed = (vss - speed);
-                direction = 1;
+                direction = 1; //decceleration
             } else {
                 deltaSpeed = speed - vss;
-                direction = 0;
+                direction = 0; //acceleration
             }
 
             //save data
@@ -70,19 +70,17 @@ void DynoViewBase::update(vssSrc src){
         timeStamp = timeNow;
         vss = speed;
     }
-
-
-
 }
 
 /**
  * input units: deltaSpeed in km/h
  *              deltaTime in uS
  */
-void DynoViewBase::updateAcceleration(efitimeus_t deltaTime, float deltaSpeed) {
+void DynoView::updateAcceleration(efitimeus_t deltaTime, float deltaSpeed) {
     if (deltaSpeed != 0.0) {
         acceleration = ((deltaSpeed / 3.6) / (deltaTime / 1000000.0));
         if (direction) {
+            //decceleration
             acceleration *= -1;
         }
     } else {
@@ -99,7 +97,7 @@ void DynoViewBase::updateAcceleration(efitimeus_t deltaTime, float deltaSpeed) {
  * https://www.youtube.com/watch?v=FnN2asvFmIs
  * we do not take resistence into account right now.
  */
-void DynoViewBase::updateHP() {
+void DynoView::updateHP() {
 
     //these are actually at the wheel
     //we would need final drive to calcualte the correct torque at the wheel
@@ -117,28 +115,28 @@ void DynoViewBase::updateHP() {
 }
 
 #if EFI_UNIT_TEST
-void DynoViewBase::setAcceleration(float a) {
+void DynoView::setAcceleration(float a) {
     acceleration = a;
 }
 #endif
 
-float DynoViewBase::getAcceleration() {
+float DynoView::getAcceleration() {
     return acceleration;
 }
 
-int DynoViewBase::getEngineForce() {
+int DynoView::getEngineForce() {
     return engineForce;
 }
 
-int DynoViewBase::getEnginePower() {
+int DynoView::getEnginePower() {
     return (enginePower/1000);
 }
 
-int DynoViewBase::getEngineHP() {
+int DynoView::getEngineHP() {
     return engineHP;
 }
 
-int DynoViewBase::getEngineTorque() {
+int DynoView::getEngineTorque() {
     return (engineTorque/0.73756);
 }
 

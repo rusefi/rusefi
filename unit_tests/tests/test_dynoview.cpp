@@ -19,7 +19,7 @@ void printResults(DynoViewBase *dut) {
 TEST(DynoView, VSS_T1) {
 	WITH_ENGINE_TEST_HELPER(TEST_ENGINE);
 
-	DynoViewBase dut;
+	DynoView dut;
 	INJECT_ENGINE_REFERENCE(&dut);
 
 	// Test Speed trashold
@@ -43,7 +43,7 @@ TEST(DynoView, VSS_T1) {
 TEST(DynoView, algo) {
 	WITH_ENGINE_TEST_HELPER(TEST_ENGINE);
 
-	DynoViewBase dut;
+	DynoView dut;
 	INJECT_ENGINE_REFERENCE(&dut);
 
 	// Test Speed trashold
@@ -68,7 +68,7 @@ TEST(DynoView, algo) {
 TEST(DynoView, VSS_fast) {
 	WITH_ENGINE_TEST_HELPER(TEST_ENGINE);
 
-	DynoViewBase dut;
+	DynoView dut;
 	INJECT_ENGINE_REFERENCE(&dut);
 
 	// Test Speed trashold
@@ -92,7 +92,7 @@ TEST(DynoView, VSS_fast) {
 TEST(DynoView, VSS_Torque) {
 	WITH_ENGINE_TEST_HELPER(TEST_ENGINE);
 
-	DynoViewBase dut;
+	DynoView dut;
 	INJECT_ENGINE_REFERENCE(&dut);
 
 	// Test Speed trashold
