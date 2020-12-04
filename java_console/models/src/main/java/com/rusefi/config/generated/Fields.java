@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEfi tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Fri Dec 04 04:25:27 UTC 2020
+// this file was generated automatically by rusEfi tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Fri Dec 04 05:20:41 UTC 2020
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -1446,7 +1446,7 @@ public class Fields {
 	public static final char TS_SD_R_COMMAND = 'r';
 	public static final char TS_SD_W_COMMAND = 'w';
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI 2020.12.04.all.3259177060";
+	public static final String TS_SIGNATURE = "rusEFI 2020.12.04.all.4166480101";
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final int TT_TT_1_16 = 50;
 	public static final int TT_TT_2JZ_1_12 = 29;
@@ -1454,6 +1454,7 @@ public class Fields {
 	public static final int TT_TT_36_2_2_2 = 23;
 	public static final int TT_TT_3_1_CAM = 31;
 	public static final int TT_TT_60_2_VW = 20;
+	public static final int TT_TT_CHRYSLER_NGC_36_2_2 = 30;
 	public static final int TT_TT_DAIHATSU = 6;
 	public static final int TT_TT_FORD_ASPIRE = 1;
 	public static final int TT_TT_FORD_ST170 = 42;
