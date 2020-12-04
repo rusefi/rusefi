@@ -63,6 +63,8 @@ public class TriggerImage {
                 return "GM 24x";
             case Fields.TT_TT_GM_7X:
                 return "GM 7x";
+            case Fields.TT_TT_CHRYSLER_NGC_36_2_2:
+                return "Chrysler NGC 36/2/2";
             case Fields.TT_TT_ONE:
                 return "Single Tooth";
             case Fields.TT_TT_2JZ_1_12:
