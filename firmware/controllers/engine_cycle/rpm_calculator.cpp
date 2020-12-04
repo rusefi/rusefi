@@ -359,7 +359,7 @@ float getCrankshaftAngleNt(efitick_t timeNt DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	 */
 	int rpm = GET_RPM();
 
-	float oneDegreeSeconds = (60 / 360) / rpm;
+	float oneDegreeSeconds = (60.0f / 360) / rpm;
 
 	return rpm == 0 ? NAN : timeSinceZeroAngle / oneDegreeSeconds;
 }
