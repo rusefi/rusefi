@@ -10,4 +10,5 @@
 #include "trigger_structure.h"
 
 void configureFiatIAQ_P8(TriggerWaveform * s);
+void configureDaihatsu4(TriggerWaveform * s);
 

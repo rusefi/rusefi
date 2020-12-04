@@ -555,7 +555,7 @@ void printAllTriggers() {
 		engine->initializeTriggerWaveform(NULL PASS_ENGINE_PARAMETER_SUFFIX);
 
 		if (shape->shapeDefinitionError) {
-			printf("Trigger error %d\r\n", triggerId);
+			printf("Trigger shapeDefinitionError %d\r\n", triggerId);
 			exit(-1);
 		}
 

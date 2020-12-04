@@ -32,13 +32,15 @@ efitick_t getTimeNowNt(void) {
 LoggingWithStorage sharedLogger("main");
 
 extern bool printTriggerDebug;
+extern bool printTriggerTrace;
 bool verboseMode = false;
 
 GTEST_API_ int main(int argc, char **argv) {
 //	printTriggerDebug = true;
+//	printTriggerTrace = true;
 
 	//	resizeMap();
-	printf("Success 20200510\r\n");
+	printf("Success 20201203\r\n");
 	printAllTriggers();
 
 	testing::InitGoogleTest(&argc, argv);
