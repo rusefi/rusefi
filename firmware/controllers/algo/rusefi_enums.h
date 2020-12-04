@@ -214,7 +214,6 @@ typedef enum {
  * @see http://rusefi.com/wiki/index.php?title=Manual:Software:Trigger
  */
 typedef enum {
-	TT_UNUSED_6 = 6,
 	TT_UNUSED_42 = 42,
 
 	TT_TOOTHED_WHEEL = TT_TT_TOOTHED_WHEEL,
@@ -230,6 +229,7 @@ typedef enum {
 	TT_MAZDA_MIATA_NB1 = TT_TT_MAZDA_MIATA_NB1,
 	TT_GM_7X = TT_TT_GM_7X,
 	TT_MAZDA_SOHC_4 = TT_TT_MAZDA_SOHC_4,
+	TT_TT_DAIHATSU = 6,
 	/**
 	 * "60/2"
 	 * See also TT_ONE_PLUS_TOOTHED_WHEEL_60_2

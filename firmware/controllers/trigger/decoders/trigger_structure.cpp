@@ -542,7 +542,7 @@ void TriggerWaveform::initializeTriggerWaveform(Logging *logger, operation_mode_
 		configureMazdaProtegeSOHC(this);
 		break;
 
-	case TT_UNUSED_6:
+	case TT_TT_DAIHATSU:
 	case TT_VVT_JZ:
 		setToothedWheelConfiguration(this, 3, 0, ambiguousOperationMode);
 		break;

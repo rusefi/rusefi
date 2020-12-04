@@ -1421,8 +1421,8 @@ case TT_UNUSED_30:
   return "TT_UNUSED_30";
 case TT_UNUSED_42:
   return "TT_UNUSED_42";
-case TT_UNUSED_6:
-  return "TT_UNUSED_6";
+case TT_TT_DAIHATSU:
+  return "TT_TT_DAIHATSU";
 case TT_VVT_BOSCH_QUICK_START:
   return "TT_VVT_BOSCH_QUICK_START";
 case TT_VVT_JZ:
