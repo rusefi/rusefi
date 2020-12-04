@@ -25,3 +25,27 @@ void configureFiatIAQ_P8(TriggerWaveform * s) {
 	s->setTriggerSynchronizationGap(3);
 }
 
+
+void configureDaihatsu4(TriggerWaveform * s) {
+	s->initialize(FOUR_STROKE_CAM_SENSOR);
+
+	s->isSynchronizationNeeded = true;
+
+	int width = 10;
+
+	s->setTriggerSynchronizationGap(0.125);
+
+	s->addEvent720(30 - width, T_PRIMARY, TV_RISE);
+	s->addEvent720(30, T_PRIMARY, TV_FALL);
+
+
+	s->addEvent720(s->getCycleDuration() / 3 - width, T_PRIMARY, TV_RISE);
+	s->addEvent720(s->getCycleDuration() / 3, T_PRIMARY, TV_FALL);
+
+	s->addEvent720(s->getCycleDuration() / 3 * 2 - width, T_PRIMARY, TV_RISE);
+	s->addEvent720(s->getCycleDuration() / 3 * 2, T_PRIMARY, TV_FALL);
+
+	s->addEvent720(s->getCycleDuration() - width, T_PRIMARY, TV_RISE);
+	s->addEvent720(s->getCycleDuration(), T_PRIMARY, TV_FALL);
+
+}

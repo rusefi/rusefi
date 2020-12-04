@@ -543,6 +543,9 @@ void TriggerWaveform::initializeTriggerWaveform(Logging *logger, operation_mode_
 		break;
 
 	case TT_TT_DAIHATSU:
+		configureDaihatsu4(this);
+		break;
+
 	case TT_VVT_JZ:
 		setToothedWheelConfiguration(this, 3, 0, ambiguousOperationMode);
 		break;
