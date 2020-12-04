@@ -35,13 +35,20 @@ extern bool printTriggerDebug;
 extern bool printTriggerTrace;
 bool verboseMode = false;
 
+trigger_type_e focusOnTrigger = TT_UNUSED;
+
 GTEST_API_ int main(int argc, char **argv) {
-//	printTriggerDebug = true;
-//	printTriggerTrace = true;
+	if (focusOnTrigger != TT_UNUSED) {
+		printTriggerDebug = true;
+		printTriggerTrace = true;
+	}
 
 	//	resizeMap();
 	printf("Success 20201203\r\n");
 	printAllTriggers();
+	if (focusOnTrigger != TT_UNUSED) {
+		return;
+	}
 
 	testing::InitGoogleTest(&argc, argv);
 	// uncomment if you only want to run selected tests
