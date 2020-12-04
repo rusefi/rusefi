@@ -214,20 +214,21 @@ typedef enum {
  * @see http://rusefi.com/wiki/index.php?title=Manual:Software:Trigger
  */
 typedef enum {
+
 	TT_TOOTHED_WHEEL = TT_TT_TOOTHED_WHEEL,
-	TT_FORD_ASPIRE = 1,
+	TT_FORD_ASPIRE = TT_TT_FORD_ASPIRE,
 	TT_DODGE_NEON_1995 = 2,
 	/**
 	 * https://rusefi.com/wiki/index.php?title=Manual:Software:Trigger#Mazda_Miata_NA
 	 */
-	TT_MAZDA_MIATA_NA = 3,
+	TT_MAZDA_MIATA_NA = TT_TT_MAZDA_MIATA_NA,
 	/**
 	 * NB1 means non-VVT NB, 99 and 00 1.8 engine
 	 */
-	TT_MAZDA_MIATA_NB1 = 4,
-	TT_GM_7X = 5,
-	TT_MINI_COOPER_R50 = 6,
-	TT_MAZDA_SOHC_4 = 7,
+	TT_MAZDA_MIATA_NB1 = TT_TT_MAZDA_MIATA_NB1,
+	TT_GM_7X = TT_TT_GM_7X,
+	TT_MAZDA_SOHC_4 = TT_TT_MAZDA_SOHC_4,
+	TT_DAIHATSU = TT_TT_DAIHATSU,
 	/**
 	 * "60/2"
 	 * See also TT_ONE_PLUS_TOOTHED_WHEEL_60_2
@@ -235,19 +236,21 @@ typedef enum {
 	TT_TOOTHED_WHEEL_60_2 = TT_TT_TOOTHED_WHEEL_60_2,
 	TT_TOOTHED_WHEEL_36_1 = TT_TT_TOOTHED_WHEEL_36_1,
 
-	TT_HONDA_4_24_1 = 10,
+	// todo: remove this weird trigger?
+	TT_HONDA_4_24_1 = TT_TT_HONDA_4_24_1,
 
+	// todo: this really looks to be same as Miata_NA shall we remove?
 	TT_MITSUBISHI = 11,
 
 	// this makes sense because mechanical spark distribution does not require synchronization
 	TT_HONDA_4_24 = 12,
 
-	TT_HONDA_1_4_24 = 13,
+	TT_HONDA_1_4_24 = TT_TT_HONDA_1_4_24,
 
 	// cam-based
 	TT_DODGE_NEON_2003_CAM = 14,
 
-	TT_MAZDA_DOHC_1_4 = 15,
+	TT_MAZDA_DOHC_1_4 = TT_TT_MAZDA_DOHC_1_4,
 
 	/**
 	 * "1+1" - one tooth on primary channel, one tooth on secondary channel
@@ -256,7 +259,7 @@ typedef enum {
 	 */
 	TT_ONE_PLUS_ONE = 16,
 	// "1+60/2"
-	TT_VVT_JZ = 17,
+	TT_VVT_JZ = TT_TT_VVT_JZ,
 	// just one channel with just one tooth
 	TT_ONE = TT_TT_ONE,
 
@@ -266,11 +269,11 @@ typedef enum {
 	 */
 	TT_60_2_VW = TT_TT_60_2_VW,
 
-	TT_HONDA_1_24 = 21,
+	TT_HONDA_1_24 = TT_TT_HONDA_1_24,
 
 	TT_DODGE_STRATUS = 22,
 
-	TT_36_2_2_2 = 23,
+	TT_36_2_2_2 = TT_TT_36_2_2_2,
 
 	/**
 	 * only the 4 tooth signal, without the 360 signal
@@ -279,17 +282,17 @@ typedef enum {
 	 */
 	TT_NISSAN_SR20VE = 24,
 
-	TT_2JZ_3_34 = 25,
+	TT_2JZ_3_34 = TT_TT_2JZ_3_34,
 
 	TT_ROVER_K = 26,
 
-	TT_GM_LS_24 = 27,
+	TT_GM_LS_24 = TT_TT_GM_LS_24,
 
 	TT_HONDA_CBR_600 = 28,
 
-	TT_2JZ_1_12 = 29,
+	TT_2JZ_1_12 = TT_TT_2JZ_1_12,
 
-	TT_HONDA_CBR_600_CUSTOM = 30,
+	TT_CHRYSLER_NGC_36_2_2 = TT_TT_CHRYSLER_NGC_36_2_2,
 
 	// skipped 3/1 with cam sensor for testing
 	TT_3_1_CAM = 31,
@@ -302,7 +305,7 @@ typedef enum {
 	 * for VVT simulated trigger signal we have https://github.com/rusefi/rusefi/issues/566 gap
 	 * See also TT_MAZDA_MIATA_VVT_TEST
 	 */
-	TT_MIATA_VVT = 33,
+	TT_MIATA_VVT = TT_TT_MIATA_VVT,
 
 	/**
 	 * This is a different version of TT_HONDA_ACCORD_1_24
@@ -315,10 +318,10 @@ typedef enum {
 	 */
 	TT_MAZDA_MIATA_VVT_TEST = 35,
 
-	TT_SUBARU_7_6 = 36,
+	TT_SUBARU_7_6 = TT_TT_SUBARU_7_6,
 
 	// this one is 6 cylinder, see TT_JEEP_4_cyl for 4 cylinders
-	TT_JEEP_18_2_2_2 = 37,
+	TT_JEEP_18_2_2_2 = TT_TT_JEEP_18_2_2_2,
 
 	/*
 	 * See also TT_NISSAN_SR20VE
@@ -328,33 +331,33 @@ typedef enum {
 	TT_DODGE_NEON_1995_ONLY_CRANK = 39,
 
 	// Jeep XJ 2500cc 4 cylinder. See also TT_JEEP_18_2_2_2 for 6 cylinders
-	TT_JEEP_4_CYL = 40,
+	TT_JEEP_4_CYL = TT_TT_JEEP_4_CYL,
 
 	// magneti marelli Fiat/Lancia IAW P8 from the 90', 2.0 16 v turbo engine - Lancia Coupe
 	// https://rusefi.com/forum/viewtopic.php?f=5&t=1440
 	TT_FIAT_IAW_P8 = 41,
 
-	TT_MAZDA_Z5 = 42,
+	TT_FORD_ST170 = TT_TT_FORD_ST170,
 
 	/**
 	 * cam sensor of Mazda Miata NB2 - the VVT signal shape
 	 */
 	TT_VVT_MIATA_NB2 = 43,
 
-	TT_RENIX_44_2_2 = 44,
+	TT_RENIX_44_2_2 = TT_TT_RENIX_44_2_2,
 
 	/**
 	 * Same as TT_RENIX_44_2_2 but repeated three times, not two.
 	 */
-	TT_RENIX_66_2_2_2 = 45,
+	TT_RENIX_66_2_2_2 = TT_TT_RENIX_66_2_2_2,
 
-	TT_HONDA_K_12_1 = 46,
+	TT_HONDA_K_12_1 = TT_TT_HONDA_K_12_1,
 
-	TT_VVT_BOSCH_QUICK_START = 47,
+	TT_VVT_BOSCH_QUICK_START = TT_TT_VVT_BOSCH_QUICK_START,
 
 	TT_TOOTHED_WHEEL_36_2 = TT_TT_TOOTHED_WHEEL_36_2,
 
-	TT_SUBARU_SVX = 49,
+	TT_SUBARU_SVX = TT_TT_SUBARU_SVX,
 
 	TT_1_16 = 50,
 
@@ -435,6 +438,8 @@ typedef enum {
 	 * 1.8l Toyota 1ZZ-FE https://rusefi.com/forum/viewtopic.php?f=3&t=1735
 	 */
 	VVT_4_1 = 6,
+
+	VVT_FORD_ST170 = 7,
 
 	Force_4_bytes_size_vvt_mode = ENUM_32_BITS,
 } vvt_mode_e;

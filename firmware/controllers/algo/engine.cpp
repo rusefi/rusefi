@@ -94,6 +94,8 @@ trigger_type_e getVvtTriggerType(vvt_mode_e vvtMode) {
 		return TT_ONE;
 	case VVT_4_1:
 		return TT_ONE;
+	case VVT_FORD_ST170:
+		return TT_FORD_ST170;
 	default:
 		return TT_ONE;
 	}

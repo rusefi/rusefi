@@ -64,9 +64,6 @@ float getVoltage(const char *msg, adc_channel_e hwChannel DECLARE_ENGINE_PARAMET
 AdcDevice::AdcDevice(ADCConversionGroup* hwConfig, adcsample_t *buf) {
 	this->hwConfig = hwConfig;
 	this->samples = buf;
-	channelCount = 0;
-	conversionCount = 0;
-	errorsCount = 0;
 
 	hwConfig->sqr1 = 0;
 	hwConfig->sqr2 = 0;
@@ -342,7 +339,7 @@ void AdcDevice::init(void) {
 }
 
 bool AdcDevice::isHwUsed(adc_channel_e hwChannelIndex) const {
-	for (int i = 0; i < channelCount; i++) {
+	for (size_t i = 0; i < channelCount; i++) {
 		if (hardwareIndexByIndernalAdcIndex[i] == hwChannelIndex) {
 			return true;
 		}

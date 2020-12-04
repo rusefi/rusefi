@@ -1,7 +1,7 @@
 #include "global.h"
 #include "rusefi_enums.h"
 #include "rusefi_hw_enums.h"
-// was generated automatically by rusEfi tool  from rusefi_hw_enums.h // was generated automatically by rusEfi tool  from rusefi_enums.h // by enum2string.jar tool on Sun Nov 29 03:50:35 UTC 2020
+// was generated automatically by rusEfi tool  from rusefi_hw_enums.h // was generated automatically by rusEfi tool  from rusefi_enums.h // by enum2string.jar tool on Fri Dec 04 00:17:48 EST 2020
 // see also gen_config_and_enums.bat
 
 
@@ -1337,6 +1337,10 @@ case TT_3_1_CAM:
   return "TT_3_1_CAM";
 case TT_60_2_VW:
   return "TT_60_2_VW";
+case TT_CHRYSLER_NGC_36_2_2:
+  return "TT_CHRYSLER_NGC_36_2_2";
+case TT_DAIHATSU:
+  return "TT_DAIHATSU";
 case TT_DODGE_NEON_1995:
   return "TT_DODGE_NEON_1995";
 case TT_DODGE_NEON_1995_ONLY_CRANK:
@@ -1353,6 +1357,8 @@ case TT_FIAT_IAW_P8:
   return "TT_FIAT_IAW_P8";
 case TT_FORD_ASPIRE:
   return "TT_FORD_ASPIRE";
+case TT_FORD_ST170:
+  return "TT_FORD_ST170";
 case TT_GM_7X:
   return "TT_GM_7X";
 case TT_GM_LS_24:
@@ -1369,8 +1375,6 @@ case TT_HONDA_ACCORD_1_24_SHIFTED:
   return "TT_HONDA_ACCORD_1_24_SHIFTED";
 case TT_HONDA_CBR_600:
   return "TT_HONDA_CBR_600";
-case TT_HONDA_CBR_600_CUSTOM:
-  return "TT_HONDA_CBR_600_CUSTOM";
 case TT_HONDA_K_12_1:
   return "TT_HONDA_K_12_1";
 case TT_JEEP_18_2_2_2:
@@ -1387,12 +1391,8 @@ case TT_MAZDA_MIATA_VVT_TEST:
   return "TT_MAZDA_MIATA_VVT_TEST";
 case TT_MAZDA_SOHC_4:
   return "TT_MAZDA_SOHC_4";
-case TT_MAZDA_Z5:
-  return "TT_MAZDA_Z5";
 case TT_MIATA_VVT:
   return "TT_MIATA_VVT";
-case TT_MINI_COOPER_R50:
-  return "TT_MINI_COOPER_R50";
 case TT_MITSUBISHI:
   return "TT_MITSUBISHI";
 case TT_NISSAN_SR20VE:
@@ -1494,6 +1494,8 @@ case VVT_BOSCH_QUICK_START:
   return "VVT_BOSCH_QUICK_START";
 case VVT_FIRST_HALF:
   return "VVT_FIRST_HALF";
+case VVT_FORD_ST170:
+  return "VVT_FORD_ST170";
 case VVT_INACTIVE:
   return "VVT_INACTIVE";
 case VVT_SECOND_HALF:
