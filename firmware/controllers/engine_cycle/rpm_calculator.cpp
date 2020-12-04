@@ -352,11 +352,6 @@ void tdcMarkCallback(
 float getCrankshaftAngleNt(efitick_t timeNt DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	float timeSinceZeroAngle = engine->rpmCalculator.lastTdcTimer.getElapsedSeconds(timeNt);
 
-	/**
-	 * even if we use 'getOneDegreeTimeUs' macros here, it looks like the
-	 * compiler is not smart enough to figure out that "A / ( B / C)" could be optimized into
-	 * "A * C / B" in order to replace a slower division with a faster multiplication.
-	 */
 	int rpm = GET_RPM();
 
 	float oneDegreeSeconds = (60.0f / 360) / rpm;
