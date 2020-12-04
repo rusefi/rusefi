@@ -428,7 +428,7 @@ void TriggerWaveform::prepareShape(TriggerFormDetails *details DECLARE_ENGINE_PA
 }
 
 void TriggerWaveform::setTriggerSynchronizationGap(float syncRatio) {
-	setTriggerSynchronizationGap3(/*gapIndex*/0, syncRatio * 0.75f, syncRatio * 1.25f);
+	setTriggerSynchronizationGap3(/*gapIndex*/0, syncRatio * TRIGGER_GAP_DEVIATION_LOW, syncRatio * TRIGGER_GAP_DEVIATION_HIGH);
 }
 
 void TriggerWaveform::setSecondTriggerSynchronizationGap2(float syncRatioFrom, float syncRatioTo) {
@@ -436,11 +436,11 @@ void TriggerWaveform::setSecondTriggerSynchronizationGap2(float syncRatioFrom, f
 }
 
 void TriggerWaveform::setThirdTriggerSynchronizationGap(float syncRatio) {
-	setTriggerSynchronizationGap3(/*gapIndex*/2, syncRatio * 0.75f, syncRatio * 1.25f);
+	setTriggerSynchronizationGap3(/*gapIndex*/2, syncRatio * TRIGGER_GAP_DEVIATION_LOW, syncRatio * TRIGGER_GAP_DEVIATION_HIGH);
 }
 
 void TriggerWaveform::setSecondTriggerSynchronizationGap(float syncRatio) {
-	setTriggerSynchronizationGap3(/*gapIndex*/1, syncRatio * 0.75f, syncRatio * 1.25f);
+	setTriggerSynchronizationGap3(/*gapIndex*/1, syncRatio * TRIGGER_GAP_DEVIATION_LOW, syncRatio * TRIGGER_GAP_DEVIATION_HIGH);
 }
 
 
