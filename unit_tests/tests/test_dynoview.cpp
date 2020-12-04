@@ -6,7 +6,7 @@
 #include <gtest/gtest.h>
 
 
-void printResults(DynoViewBase *dut) {
+void printResults(DynoView *dut) {
     std::cerr.precision(32);
     std::cerr << "Acceleration m/s " << dut->getAcceleration() << std::endl; 
     std::cerr << "Car force in N " << dut->getEngineForce() << std::endl;
