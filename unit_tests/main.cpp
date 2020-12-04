@@ -1,6 +1,6 @@
 /**
  * @file main.cpp
- * @file First step towards unit-testing rusEfi algorithms
+ * @file Unit tests (and some integration tests to be fair) of rusEFI
  *
  * @author Andrey Belomutskiy, (c) 2012-2020
  */
