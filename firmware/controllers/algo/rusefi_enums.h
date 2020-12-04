@@ -305,7 +305,7 @@ typedef enum {
 	 * for VVT simulated trigger signal we have https://github.com/rusefi/rusefi/issues/566 gap
 	 * See also TT_MAZDA_MIATA_VVT_TEST
 	 */
-	TT_MIATA_VVT = 33,
+	TT_MIATA_VVT = TT_TT_MIATA_VVT,
 
 	/**
 	 * This is a different version of TT_HONDA_ACCORD_1_24
