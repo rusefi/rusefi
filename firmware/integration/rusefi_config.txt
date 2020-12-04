@@ -407,6 +407,7 @@ end_struct
 #define TT_TT_GM_LS_24 27
 #define TT_TT_HONDA_CBR_600 28
 #define TT_TT_2JZ_1_12 29
+#define TT_TT_CHRYSLER_NGC_36_2_2 30
 #define TT_TT_3_1_CAM 31
 #define TT_TT_SUBARU_7_6 36
 #define TT_TT_JEEP_18_2_2_2 37
