@@ -82,6 +82,7 @@ angle_t TriggerCentral::getVVTPosition() {
 static bool vvtWithRealDecoder(vvt_mode_e vvtMode) {
 	return vvtMode == MIATA_NB2
 			|| vvtMode == VVT_BOSCH_QUICK_START
+			|| vvtMode == VVT_FORD_ST170
 			|| vvtMode == VVT_4_1;
 }
 
