@@ -292,7 +292,7 @@ typedef enum {
 
 	TT_2JZ_1_12 = TT_TT_2JZ_1_12,
 
-	TT_UNUSED_30 = 30,
+	TT_CHRYSLER_NGC_36_2_2 = TT_TT_CHRYSLER_NGC_36_2_2,
 
 	// skipped 3/1 with cam sensor for testing
 	TT_3_1_CAM = 31,

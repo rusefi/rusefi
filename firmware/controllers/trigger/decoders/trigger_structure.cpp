@@ -607,7 +607,10 @@ void TriggerWaveform::initializeTriggerWaveform(Logging *logger, operation_mode_
 		configureHondaCbr600(this);
 		break;
 
-	case TT_UNUSED_30:
+	case TT_CHRYSLER_NGC_36_2_2:
+		configureChryslerNGC_36_2_2(this);
+		break;
+
 	case TT_MITSUBISHI:
 		initializeMitsubishi4g18(this);
 		break;

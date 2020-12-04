@@ -1,7 +1,7 @@
 #include "global.h"
 #include "rusefi_enums.h"
 #include "rusefi_hw_enums.h"
-// was generated automatically by rusEfi tool  from rusefi_hw_enums.h // was generated automatically by rusEfi tool  from rusefi_enums.h // by enum2string.jar tool on Thu Dec 03 23:48:51 EST 2020
+// was generated automatically by rusEfi tool  from rusefi_hw_enums.h // was generated automatically by rusEfi tool  from rusefi_enums.h // by enum2string.jar tool on Fri Dec 04 00:17:47 EST 2020
 // see also gen_config_and_enums.bat
 
 
@@ -1279,6 +1279,8 @@ case TT_3_1_CAM:
   return "TT_3_1_CAM";
 case TT_60_2_VW:
   return "TT_60_2_VW";
+case TT_CHRYSLER_NGC_36_2_2:
+  return "TT_CHRYSLER_NGC_36_2_2";
 case TT_DAIHATSU:
   return "TT_DAIHATSU";
 case TT_DODGE_NEON_1995:
@@ -1363,8 +1365,6 @@ case TT_TOOTHED_WHEEL_60_2:
   return "TT_TOOTHED_WHEEL_60_2";
 case TT_UNUSED:
   return "TT_UNUSED";
-case TT_UNUSED_30:
-  return "TT_UNUSED_30";
 case TT_VVT_BOSCH_QUICK_START:
   return "TT_VVT_BOSCH_QUICK_START";
 case TT_VVT_JZ:
