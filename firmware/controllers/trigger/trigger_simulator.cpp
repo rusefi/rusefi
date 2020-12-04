@@ -14,6 +14,10 @@
 
 EXTERN_ENGINE;
 
+#if EFI_UNIT_TEST
+	extern bool printTriggerTrace;
+#endif
+
 // this is not the only place where we have 'isUpEvent'. todo: reuse
 static const bool isRisingEdge[HW_EVENT_TYPES] = { false, true, false, true, false, true };
 
@@ -127,6 +131,14 @@ void TriggerStimulatorHelper::assertSyncPositionAndSetDutyCycle(
 		return;
 	}
 	shape.shapeDefinitionError = false;
+#if EFI_UNIT_TEST
+		if (printTriggerTrace) {
+			printf("Happy %s revolutionCounter=%d\r\n",
+					getTrigger_type_e(triggerConfiguration.TriggerType),
+					revolutionCounter);
+		}
+#endif /* EFI_UNIT_TEST */
+
 
 	for (int i = 0; i < PWM_PHASE_MAX_WAVE_PER_PWM; i++) {
 		shape.expectedDutyCycle[i] = 1.0 * state.expectedTotalTime[i] / SIMULATION_CYCLE_PERIOD;
