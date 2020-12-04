@@ -56,6 +56,7 @@ void initializeMazdaMiataNaShape(TriggerWaveform *s) {
 void initializeMazdaMiataNb2Crank(TriggerWaveform *s) {
 	/**
 	 * Note how we use 0..180 range while defining FOUR_STROKE_SYMMETRICAL_CRANK_SENSOR trigger
+	 * Note that only half of the physical wheel is defined here!
 	 */
 	s->initialize(FOUR_STROKE_SYMMETRICAL_CRANK_SENSOR);
 
