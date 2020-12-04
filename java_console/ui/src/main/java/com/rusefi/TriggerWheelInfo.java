@@ -85,6 +85,7 @@ class TriggerWheelInfo {
                 id == Fields.TT_TT_HONDA_K_12_1 ||
                 id == Fields.TT_TT_RENIX_44_2_2 ||
                 id == Fields.TT_TT_RENIX_66_2_2_2 ||
+                id == Fields.TT_TT_MIATA_VVT ||
                 id == Fields.TT_TT_GM_7X;
     }
 
