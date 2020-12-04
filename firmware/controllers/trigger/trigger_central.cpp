@@ -520,6 +520,7 @@ static void triggerShapeInfo(void) {
 #if EFI_UNIT_TEST
 #include <stdlib.h>
 
+extern trigger_type_e focusOnTrigger;
 #define TRIGGERS_FILE_NAME "triggers.txt"
 
 /**
@@ -538,6 +539,10 @@ void printAllTriggers() {
 	//printTriggerDebug = true;
 	for (int triggerId = 1; triggerId < TT_UNUSED; triggerId++) {
 		trigger_type_e tt = (trigger_type_e) triggerId;
+
+		if (focusOnTrigger != TT_UNUSED && tt != focusOnTrigger) {
+				continue;
+		}
 
 		printf("Exporting %s\r\n", getTrigger_type_e(tt));
 
