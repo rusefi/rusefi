@@ -33,8 +33,8 @@ public class TriggerImage {
     private static final String DEFAULT_WORK_FOLDER = ".." + File.separator + "unit_tests";
 
     private static final int WHEEL_BORDER = 20;
-    private static final int WHEEL_DIAMETER = 300;
-    private static final int SMALL_DIAMETER = 250;
+    private static final int WHEEL_DIAMETER = 500;
+    private static final int SMALL_DIAMETER = 420;
 
     /**
      * number of extra frames
@@ -43,12 +43,18 @@ public class TriggerImage {
 
     private static String getTriggerName(TriggerWheelInfo triggerName) {
         switch (triggerName.id) {
+            case Fields.TT_TT_FORD_ASPIRE:
+                return "Ford Aspire";
+            case Fields.TT_TT_VVT_BOSCH_QUICK_START:
+                return "Bosch Quick Start";
             case Fields.TT_TT_MAZDA_MIATA_NA:
                 return "Miata NA";
             case Fields.TT_TT_MAZDA_MIATA_NB1:
                 return "Miata NB";
             case Fields.TT_TT_SUBARU_SVX:
                 return "Subaru SVX";
+            case Fields.TT_TT_HONDA_K_12_1:
+                return "Honda K 1/12";
             case Fields.TT_TT_HONDA_1_24:
                 return "Honda 1+24";
             case Fields.TT_TT_SUBARU_7_6:
@@ -61,6 +67,8 @@ public class TriggerImage {
                 return "Single Tooth";
             case Fields.TT_TT_2JZ_1_12:
                 return "2JZ 1/12";
+            case Fields.TT_TT_JEEP_4_CYL:
+                return "Jeep 4 cylinder";
             case Fields.TT_TT_JEEP_18_2_2_2:
                 return "18/2/2/2";
             case Fields.TT_TT_RENIX_44_2_2:
@@ -334,7 +342,7 @@ public class TriggerImage {
 
             int h = getHeight();
 
-            g.drawString(name, 0, (int) (h * 0.75));
+            g.drawString(name, 50, (int) (h * 0.75));
             if (id != null)
                 g.drawString(id, 0, (int) (h * 0.9));
 
