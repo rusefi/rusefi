@@ -214,7 +214,6 @@ typedef enum {
  * @see http://rusefi.com/wiki/index.php?title=Manual:Software:Trigger
  */
 typedef enum {
-	TT_UNUSED_42 = 42,
 
 	TT_TOOTHED_WHEEL = TT_TT_TOOTHED_WHEEL,
 	TT_FORD_ASPIRE = TT_TT_FORD_ASPIRE,
@@ -338,6 +337,7 @@ typedef enum {
 	// https://rusefi.com/forum/viewtopic.php?f=5&t=1440
 	TT_FIAT_IAW_P8 = 41,
 
+	TT_FORD_ST170 = TT_TT_FORD_ST170,
 
 	/**
 	 * cam sensor of Mazda Miata NB2 - the VVT signal shape
@@ -438,6 +438,8 @@ typedef enum {
 	 * 1.8l Toyota 1ZZ-FE https://rusefi.com/forum/viewtopic.php?f=3&t=1735
 	 */
 	VVT_4_1 = 6,
+
+	VVT_FORD_ST170 = 7,
 
 	Force_4_bytes_size_vvt_mode = ENUM_32_BITS,
 } vvt_mode_e;

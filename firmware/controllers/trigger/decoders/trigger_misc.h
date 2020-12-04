@@ -11,4 +11,5 @@
 
 void configureFiatIAQ_P8(TriggerWaveform * s);
 void configureDaihatsu4(TriggerWaveform * s);
+void configureFordST170(TriggerWaveform * s);
 

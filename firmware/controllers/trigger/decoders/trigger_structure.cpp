@@ -476,7 +476,10 @@ void TriggerWaveform::initializeTriggerWaveform(Logging *logger, operation_mode_
 		initializeMazdaMiataVVtTestShape(this);
 		break;
 
-	case TT_UNUSED_42:
+	case TT_FORD_ST170:
+		configureFordST170(this);
+		break;
+
 	case TT_VVT_MIATA_NB2:
 		initializeMazdaMiataVVtCamShape(this);
 		break;
