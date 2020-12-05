@@ -61,9 +61,10 @@ float getVoltage(const char *msg, adc_channel_e hwChannel DECLARE_ENGINE_PARAMET
 	return adcToVolts(getAdcValue(msg, hwChannel));
 }
 
-AdcDevice::AdcDevice(ADCConversionGroup* hwConfig, adcsample_t *buf) {
+AdcDevice::AdcDevice(ADCConversionGroup* hwConfig, adcsample_t *buf, size_t buf_len) {
 	this->hwConfig = hwConfig;
 	this->samples = buf;
+	this->buf_len = buf_len;
 
 	hwConfig->sqr1 = 0;
 	hwConfig->sqr2 = 0;
@@ -167,7 +168,7 @@ static ADCConversionGroup adcgrpcfgSlow = {
 #endif /* ADC_MAX_CHANNELS_COUNT */
 };
 
-AdcDevice slowAdc(&adcgrpcfgSlow, slowAdcSampleBuf);
+AdcDevice slowAdc(&adcgrpcfgSlow, slowAdcSampleBuf, ARRAY_SIZE(slowAdcSampleBuf));
 
 void adc_callback_fast(ADCDriver *adcp, adcsample_t *buffer, size_t n);
 
@@ -215,7 +216,7 @@ static ADCConversionGroup adcgrpcfgFast = {
 #endif /* ADC_MAX_CHANNELS_COUNT */
 };
 
-AdcDevice fastAdc(&adcgrpcfgFast, fastAdcSampleBuf);
+AdcDevice fastAdc(&adcgrpcfgFast, fastAdcSampleBuf, ARRAY_SIZE(fastAdcSampleBuf));
 
 #if HAL_USE_GPT
 static void fast_adc_callback(GPTDriver*) {
@@ -328,7 +329,7 @@ void AdcDevice::invalidateSamplesCache() {
 	// anything like a CCI that maintains coherency across multiple bus masters.
 	// As a result, we have to manually invalidate the D-cache any time we (the CPU)
 	// would like to read something that somebody else wrote (ADC via DMA, in this case)
-	SCB_InvalidateDCache_by_Addr(reinterpret_cast<uint32_t*>(samples), sizeof(samples));
+	SCB_InvalidateDCache_by_Addr(reinterpret_cast<uint32_t*>(samples), sizeof(*samples) * buf_len);
 #endif /* STM32F7XX */
 }
 
