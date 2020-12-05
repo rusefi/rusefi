@@ -69,12 +69,12 @@ TEST(fuelControl, transitionIssue1592) {
 		// Check that the action is correct - we don't care about the timing necessarily
 		auto sched_open = engine->executor.getForUnitTest(0);
 		ASSERT_EQ(sched_open->action.getArgument(), inj2);
-		ASSERT_EQ(sched_open->action.getCallback(), &turnInjectionPinHigh);
+		ASSERT_EQ(sched_open->action.getCallback(), (void(*)(void*))turnInjectionPinHigh);
 
 		auto sched_close = engine->executor.getForUnitTest(1);
 		// Next action should be closing the same injector
 		ASSERT_EQ(sched_close->action.getArgument(), inj2);
-		ASSERT_EQ(sched_close->action.getCallback(), &turnInjectionPinLow);
+		ASSERT_EQ(sched_close->action.getCallback(), (void(*)(void*))turnInjectionPinLow);
 	}
 
 	// Run the engine for some revs
