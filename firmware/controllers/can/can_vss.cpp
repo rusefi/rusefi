@@ -13,6 +13,7 @@
 #include "engine_configuration.h"
 #include "engine.h"
 #include "vehicle_speed.h"
+#include "dynoview.h"
 
 EXTERN_ENGINE;
 
@@ -98,6 +99,9 @@ void processCanRxVss(const CANRxFrame& frame, efitick_t nowNt) {
             break;
     }
 
+#if EFI_DYNO_VIEW
+    updateDynoViewCan(PASS_ENGINE_PARAMETER_SIGNATURE);
+#endif
 }
 
 float getVehicleCanSpeed(void) {
