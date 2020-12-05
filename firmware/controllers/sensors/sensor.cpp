@@ -7,43 +7,10 @@
 // It stores whether the sensor should use a mock value,
 // the value to use, and if not a pointer to the sensor that
 // can provide a real value.
-class SensorRegistryEntry {
-public:
-	Sensor *getSensor() {
-		return sensor;
-	}
-
-	void setSensor(Sensor * sensor) {
-		this->sensor = sensor;
-	}
-
-	bool isMock() {
-		return useMock;
-	}
-
-	void setMockValue(float value) {
-		mockValue = value;
-		useMock = true;
-	}
-
-	float getMockValue() {
-		return mockValue;
-	}
-
-	void resetMock() {
-		useMock = false;
-		mockValue = 0.0f;
-	}
-
-	void reset() {
-		sensor = nullptr;
-		resetMock();
-	}
-
-private:
-	bool useMock = false;
+struct SensorRegistryEntry {
+	bool useMock;
 	float mockValue;
-	Sensor *sensor = nullptr;
+	Sensor *sensor;
 };
 
 static SensorRegistryEntry s_sensorRegistry[static_cast<size_t>(SensorType::PlaceholderLast)] = {};
@@ -92,7 +59,7 @@ bool Sensor::Register() {
 	auto &entry = s_sensorRegistry[getIndex()];
 
 	// If there's somebody already here - a consumer tried to double-register a sensor
-	if (entry.getSensor()) {
+	if (entry.sensor) {
 		// This sensor has already been registered. Don't re-register it.
 #if ! EFI_UNIT_TEST
 		firmwareError(CUSTOM_OBD_26, "Duplicate registration for %s sensor", s_sensorNames[getIndex()]);
@@ -100,7 +67,7 @@ bool Sensor::Register() {
 		return false;
 	} else {
 		// put ourselves in the registry
-		entry.setSensor(this);
+		entry.sensor = this;
 		return true;
 	}
 }
@@ -110,7 +77,9 @@ bool Sensor::Register() {
 	for (size_t i = 0; i < efi::size(s_sensorRegistry); i++) {
 		auto &entry = s_sensorRegistry[i];
 
-		entry.reset();
+		entry.sensor = nullptr;
+		entry.useMock = false;
+		entry.mockValue = 0.0f;
 	}
 }
 
@@ -126,7 +95,7 @@ bool Sensor::Register() {
 
 /*static*/ const Sensor *Sensor::getSensorOfType(SensorType type) {
 	auto entry = getEntryForType(type);
-	return entry ? entry->getSensor() : nullptr;
+	return entry ? entry->sensor : nullptr;
 }
 
 /*static*/ SensorResult Sensor::get(SensorType type) {
@@ -138,12 +107,12 @@ bool Sensor::Register() {
 	}
 
 	// Next check for mock
-	if (entry->isMock()) {
-		return entry->getMockValue();
+	if (entry->useMock) {
+		return entry->mockValue;
 	}
 
 	// Get the sensor out of the entry
-	const Sensor *s = entry->getSensor();
+	const Sensor *s = entry->sensor;
 	if (s) {
 		// If we found the sensor, ask it for a result.
 		return s->get();
@@ -161,7 +130,7 @@ bool Sensor::Register() {
 		return 0;
 	}
 
-	const auto s = entry->getSensor();
+	const auto s = entry->sensor;
 	if (s) {
 		return s->getRaw();
 	}
@@ -177,14 +146,15 @@ bool Sensor::Register() {
 		return false;
 	}
 
-	return entry->isMock() || entry->getSensor();
+	return entry->useMock || entry->sensor;
 }
 
 /*static*/ void Sensor::setMockValue(SensorType type, float value) {
 	auto entry = getEntryForType(type);
 
 	if (entry) {
-		entry->setMockValue(value);
+		entry->mockValue = value;
+		entry->useMock = true;
 	}
 }
 
@@ -201,7 +171,7 @@ bool Sensor::Register() {
 	auto entry = getEntryForType(type);
 
 	if (entry) {
-		entry->resetMock();
+		entry->useMock = false;
 	}
 }
 
@@ -210,7 +180,7 @@ bool Sensor::Register() {
 	for (size_t i = 0; i < efi::size(s_sensorRegistry); i++) {
 		auto &entry = s_sensorRegistry[i];
 
-		entry.resetMock();
+		entry.useMock = false;
 	}
 }
 
@@ -224,10 +194,10 @@ bool Sensor::Register() {
 		auto& entry = s_sensorRegistry[i];
 		const char* name = s_sensorNames[i];
 
-		if (entry.isMock()) {
-			scheduleMsg(logger, "Sensor \"%s\" mocked with value %.2f", name, entry.getMockValue());
+		if (entry.useMock) {
+			scheduleMsg(logger, "Sensor \"%s\" mocked with value %.2f", name, entry.mockValue);
 		} else {
-			const auto sensor = entry.getSensor();
+			const auto sensor = entry.sensor;
 
 			if (sensor) {
 				sensor->showInfo(logger, name);
