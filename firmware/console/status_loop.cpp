@@ -62,6 +62,7 @@
 #include "cdm_ion_sense.h"
 #include "binary_logging.h"
 #include "buffered_writer.h"
+#include "dynoview.h"
 
 extern bool main_loop_started;
 
@@ -490,6 +491,8 @@ void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels DECLARE_
 
 	SensorResult tps2 = Sensor::get(SensorType::Tps2);
 	tsOutputChannels->throttle2Position = tps2.Value;
+	// If we don't have a TPS2 at all, don't turn on the failure light
+	tsOutputChannels->isTps2Error = !tps2.Valid && Sensor::hasSensor(SensorType::Tps2);
 
 	SensorResult pedal = Sensor::get(SensorType::AcceleratorPedal);
 	tsOutputChannels->pedalPosition = pedal.Value;
@@ -610,6 +613,10 @@ void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels DECLARE_
 		// offset 40
 		tsOutputChannels->manifoldAirPressure = mapValue;
 	}
+
+#if EFI_DYNO_VIEW
+	tsOutputChannels->VssAcceleration = getDynoviewAcceleration(PASS_ENGINE_PARAMETER_SIGNATURE);
+#endif
 
 	//tsOutputChannels->knockCount = engine->knockCount;
 	//tsOutputChannels->knockLevel = engine->knockVolts;
