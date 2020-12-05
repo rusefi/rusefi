@@ -47,7 +47,7 @@ static void setDefaultCustomMaps(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 
 void setHonda600(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	setDefaultFrankensoConfiguration(PASS_CONFIG_PARAMETER_SIGNATURE);
-	engineConfiguration->trigger.type = TT_HONDA_CBR_600_CUSTOM;
+	engineConfiguration->trigger.type = TT_HONDA_CBR_600;
 	engineConfiguration->fuelAlgorithm = LM_ALPHA_N;
 
 	// upside down wiring

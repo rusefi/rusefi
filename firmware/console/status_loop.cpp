@@ -62,6 +62,7 @@
 #include "cdm_ion_sense.h"
 #include "binary_logging.h"
 #include "buffered_writer.h"
+#include "dynoview.h"
 
 extern bool main_loop_started;
 
@@ -610,6 +611,10 @@ void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels DECLARE_
 		// offset 40
 		tsOutputChannels->manifoldAirPressure = mapValue;
 	}
+
+#if EFI_DYNO_VIEW
+	tsOutputChannels->VssAcceleration = getDynoviewAcceleration(PASS_ENGINE_PARAMETER_SIGNATURE);
+#endif
 
 	//tsOutputChannels->knockCount = engine->knockCount;
 	//tsOutputChannels->knockLevel = engine->knockVolts;
