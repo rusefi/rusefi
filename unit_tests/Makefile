@@ -293,8 +293,6 @@ ULIBDIR =
 
 # List all user libraries here
 ULIBS = -lm
-
-# TODO: does linux need -lgcov?
 ULIBS += --coverage
 
 #
