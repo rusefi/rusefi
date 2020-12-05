@@ -58,21 +58,25 @@ TEST(SensorInit, TpsValuesTooClose) {
 	CONFIG(tpsMin) = 200;	// 1.00 volt
 	CONFIG(tpsMax) = 298;	// 1.49 volts
 	EXPECT_FATAL_ERROR(initTps(PASS_CONFIG_PARAMETER_SIGNATURE));
+	Sensor::resetRegistry();
 
 	// Should fail, -0.49 volts apart
 	CONFIG(tpsMin) = 298;	// 1.49 volt
 	CONFIG(tpsMax) = 200;	// 1.00 volts
 	EXPECT_FATAL_ERROR(initTps(PASS_CONFIG_PARAMETER_SIGNATURE));
+	Sensor::resetRegistry();
 
 	// Should succeed, 0.51 volts apart
 	CONFIG(tpsMin) = 200;	// 1.00 volt
 	CONFIG(tpsMax) = 302;	// 1.51 volts
 	EXPECT_NO_FATAL_ERROR(initTps(PASS_CONFIG_PARAMETER_SIGNATURE));
+	Sensor::resetRegistry();
 
 	// Should succeed, -0.51 volts apart
 	CONFIG(tpsMin) = 302;	// 1.51 volt
 	CONFIG(tpsMax) = 200;	// 1.00 volts
 	EXPECT_NO_FATAL_ERROR(initTps(PASS_CONFIG_PARAMETER_SIGNATURE));
+	Sensor::resetRegistry();
 }
 
 TEST(SensorInit, Pedal) {
