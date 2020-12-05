@@ -912,7 +912,7 @@ enable2ndByteCanID = false
 		xBins		= solenoidCountArray, tcuCurrentGear
 		yBins		= gearCountArray, tcuCurrentGear
 		zBins		= tcuSolenoidTable
-		xyLabels	= "Gear", "Solenoid"
+		xyLabels	= "Solenoid", "Gear"
 
 [GaugeConfigurations]
 
