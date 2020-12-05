@@ -80,6 +80,8 @@ enable2ndByteCanID = false
 ; CONFIG_DEFINITION_END
 	idleRpmPid_offset = "Constant base value"
 
+	; TS will try to use legacy temp units in some cases, showing "deg F" on a CLT gauge that's actually deg C
+	useLegacyFTempUnits = false
 
 [Tuning]
    spotDepth       =   2 ; 0 = no indicators, 1 = Z only, 2 = XYZ indicators.
@@ -384,12 +386,13 @@ enable2ndByteCanID = false
 	highFuelPressure      = scalar,  S16,     278, "bar", {1/@@PACK_MULT_HIGH_PRESSURE@@}, 0
 	targetLambda     = scalar,  U16,     280,      "",{1/@@PACK_MULT_LAMBDA@@},       0.0
 	AFRValue        = scalar,  U16,     282,      "AFR",{1/@@PACK_MULT_AFR@@},       0.0
+	VssAcceleration = scalar,  S16,     284,      "m/s2", {1/@@PACK_MULT_MS@@}, 0.0
 
 ;
 ; see TunerStudioOutputChannels struct
 ;
 
-; todo: generate this section programatically
+; todo: generate this section programmatically
 	LM_SPEED_DENSITY = {3},
 	LM_REAL_MAF = {4}
 
@@ -1054,6 +1057,9 @@ gaugeCategory = Knock
    knock7Gauge = knock7, "Knock Cyl 7", "dBv", -60, 10, -60, -60, 10, 10, 0, 0
    knock8Gauge = knock8, "Knock Cyl 8", "dBv", -60, 10, -60, -60, 10, 10, 0, 0
 
+gaugeCategory = DynoView
+	accelGauge = VssAcceleration, "Vehicle acceleration",    "m/s2",       -10,   10,      -6,     -4,      4,    6,   2,   2
+
 [WueAnalyze]
     
 ;                    wueCurveName, afrTempCompensationCurve, lambdaTargetTableName, lambdaChannel, coolantTempChannel, egoCorrectionChannel, wueChannel, activeCondition
@@ -1285,6 +1291,8 @@ gaugeCategory = Knock
    entry = knock6, "Knock 6", int, "%d"
    entry = knock7, "Knock 7", int, "%d"
    entry = knock8, "Knock 8", int, "%d"
+
+   entry = VssAcceleration, "Accel", float, "%.3f"
 
 ;     tpsADC          = U16,    "ADC",
 ;     alignmet        = U16,    "al",
@@ -3277,13 +3285,14 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 		field = "Activation Mode",                      launchActivationMode
 	    field = "Switch Input",                     	launchActivatePin,  {launchActivationMode == 0 && launchControlEnabled == 1}
 		field = "Clutch Input", 						clutchDownPin,      {launchActivationMode == 1 && launchControlEnabled == 1}
+		field = "Clutch Input inverted",				clutchDownPinMode,  {launchActivationMode == 1 && launchControlEnabled == 1}
 		field = ""
 		field = "Rpm Treshold",                         launchRpmTreshold,  {launchControlEnabled == 1}
 		field = "Speed Treshold",                       launchSpeedTreshold,  {launchControlEnabled == 1}
         field = ""
 		field = "Launch RPM",            	    		launchRpm,  {launchControlEnabled == 1}
-		field = "Extra Fuel",           				launchFuelAdded,  {launchControlEnabled == 1}
-        field = "Boost Solenoid Duty",	                launchBoostDuty,  {launchControlEnabled == 1}
+		;field = "Extra Fuel",           				launchFuelAdded,  {launchControlEnabled == 1}
+        ;field = "Boost Solenoid Duty",	                launchBoostDuty,  {launchControlEnabled == 1}
 		field = "Ignition Retard enable",               enableLaunchRetard,  {launchControlEnabled == 1}
 		field = "Ignition Retard",      				launchTimingRetard,  {launchControlEnabled == 1}
 		field = "Ignition Retard RPM Range",            launchTimingRpmRange,  {launchControlEnabled == 1}

@@ -250,6 +250,7 @@ size_t getMultiSparkCount(int rpm DECLARE_ENGINE_PARAMETER_SUFFIX) {
 		floatus_t multiDelay = CONFIG(multisparkSparkDuration);
 		floatus_t multiDwell = CONFIG(multisparkDwell);
 
+        // dwell times are below 10 seconds here so we use 32 bit type for performance reasons
 		ENGINE(engineState.multispark.delay) = (uint32_t)USF2NT(multiDelay);
 		ENGINE(engineState.multispark.dwell) = (uint32_t)USF2NT(multiDwell);
 

@@ -1,6 +1,8 @@
-rusEfi is trying to use latest stable ChibiOS with minimal changes
+rusEFI is trying to use latest stable ChibiOS with minimal changes
 
-At the moment rusEfi custom version of ChibiOS has the following changes:
+At the moment rusEFI uses https://github.com/rusefi/ChibiOS/tree/stable_18.2.rusefi
+
+rusEFI custom version of ChibiOS has the following changes:
 
 *) minor OS monitoring and maintainability fixes:
    chDbgStackOverflowPanic allows to know which thread has stack overflow

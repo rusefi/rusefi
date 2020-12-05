@@ -11,6 +11,7 @@
 #include "listener_array.h"
 #include "trigger_decoder.h"
 #include "trigger_central_generated.h"
+#include "timer.h"
 
 class Engine;
 typedef void (*ShaftPositionListener)(trigger_event_e signal, uint32_t index, efitick_t edgeTimestamp DECLARE_ENGINE_PARAMETER_SUFFIX);
@@ -43,6 +44,10 @@ public:
 	void resetCounters();
 	void validateCamVvtCounters();
 
+	float getTimeSinceTriggerEvent() const {
+		return m_lastEventTimer.getElapsedSeconds();
+	}
+
 	TriggerNoiseFilter noiseFilter;
 
 	trigger_type_e vvtTriggerType;
@@ -67,6 +72,9 @@ public:
 	TriggerWaveform vvtShape;
 
 	TriggerFormDetails triggerFormDetails;
+
+	// Keep track of the last time we got a valid trigger event
+	Timer m_lastEventTimer;
 };
 
 void triggerInfo(void);

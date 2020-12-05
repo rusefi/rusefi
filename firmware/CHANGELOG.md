@@ -27,7 +27,15 @@ All notable user-facing or behavior-altering changes will be documented in this 
 
 ## XXX 202X Release
 
+### Added
+ - DAIHATSU 3/4 cylinder trigger https://rusefi.com/images/triggers/trigger_6.png
+ - Ford ST170 VVT cam trigger https://rusefi.com/images/triggers/trigger_42.png
 
+## December 2020 National Mutt Day
+
+### Fixed
+ -  minor bugfix - engine sniffer missing pin names #1995
+ 
 ## November 2020 Release - "Black Friday"
 
 ### Breaking Changes
@@ -41,7 +49,7 @@ All notable user-facing or behavior-altering changes will be documented in this 
  -   Improved setting ECU presets/defaults from TunerStudio
 
 ### Fixed
- -   Improved TunerStudio protocol reliability - should see fewer CRC errors now
+ -   Improved TunerStudio protocol reliability - should see fewer CRC errors now #1943
 
 ## October 2020 Release - "Sausage Pizza Day"
 
