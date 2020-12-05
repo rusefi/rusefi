@@ -133,7 +133,7 @@ bool RpmCalculator::checkIfSpinning(efitick_t nowNt) const {
 void RpmCalculator::assignRpmValue(float floatRpmValue) {
 	previousRpmValue = rpmValue;
 	// we still persist integer RPM! todo: figure out the next steps
-	rpmValue = efiRound(floatRpmValue, 1);
+	rpmValue = floatRpmValue + 0.5f;
 
 	if (rpmValue <= 0) {
 		oneDegreeUs = NAN;
