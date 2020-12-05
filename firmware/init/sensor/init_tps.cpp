@@ -67,7 +67,7 @@ static bool initTpsFunc(LinearFunc& func, FunctionalSensor& sensor, adc_channel_
 	}
 
 	// If the configuration was invalid, don't continues to configure the sensor
-	if (!configureTps(func, closed, open, min, max)) {
+	if (!configureTps(func, closed, open, min, max, sensor.getSensorName())) {
 		return;
 	}
 
