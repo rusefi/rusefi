@@ -62,6 +62,7 @@
 #include "cdm_ion_sense.h"
 #include "binary_logging.h"
 #include "buffered_writer.h"
+#include "dynoview.h"
 
 extern bool main_loop_started;
 
@@ -167,7 +168,7 @@ static LoggingWithStorage logger2("main event handler");
  * Time when the firmware version was reported last time, in seconds
  * TODO: implement a request/response instead of just constantly sending this out
  */
-static systime_t timeOfPreviousPrintVersion = (systime_t) -1;
+static systime_t timeOfPreviousPrintVersion = 0;
 
 #if EFI_PROD_CODE
 static void printOutPin(const char *pinName, brain_pin_e hwPin) {
@@ -610,6 +611,10 @@ void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels DECLARE_
 		// offset 40
 		tsOutputChannels->manifoldAirPressure = mapValue;
 	}
+
+#if EFI_DYNO_VIEW
+	tsOutputChannels->VssAcceleration = getDynoviewAcceleration(PASS_ENGINE_PARAMETER_SIGNATURE);
+#endif
 
 	//tsOutputChannels->knockCount = engine->knockCount;
 	//tsOutputChannels->knockLevel = engine->knockVolts;

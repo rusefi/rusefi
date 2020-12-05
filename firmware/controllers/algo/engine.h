@@ -80,6 +80,7 @@ public:
 	explicit Engine(persistent_config_s *config);
 	Engine();
 	bool isPwmEnabled = true;
+	int triggerActivitySecond = 0;
 
 	IEtbController *etbControllers[ETB_COUNT] = {nullptr};
 	IFuelComputer *fuelComputer = nullptr;

@@ -136,8 +136,9 @@ void PwmConfig::setFrequency(float frequency) {
 	}
 	/**
 	 * see #handleCycleStart()
+	 * 'periodNt' is below 10 seconds here so we use 32 bit type for performance reasons
 	 */
-	periodNt = US2NT(frequency2periodUs(frequency));
+	periodNt = USF2NT(frequency2periodUs(frequency));
 }
 
 void PwmConfig::stop() {
