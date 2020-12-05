@@ -143,7 +143,10 @@ static ADCConversionGroup adcgrpcfgSlow = {
 		ADC_SMPR1_SMP_AN13(ADC_SAMPLING_SLOW) |
 		ADC_SMPR1_SMP_AN14(ADC_SAMPLING_SLOW) |
 		ADC_SMPR1_SMP_AN15(ADC_SAMPLING_SLOW) |
-		ADC_SMPR1_SMP_SENSOR(ADC_SAMPLE_144),
+#if defined(STM32F7XX)
+		ADC_SMPR1_SMP_VBAT(ADC_SAMPLE_144)    |	/* input18 - temperature and vbat input on some STM32F7xx */
+#endif
+		ADC_SMPR1_SMP_SENSOR(ADC_SAMPLE_144),	/* input16 - temperature sensor input on STM32F4xx */
 	// In this field must be specified the sample times for channels 0...9
 	.smpr2 =
 		ADC_SMPR2_SMP_AN0(ADC_SAMPLING_SLOW) |
@@ -254,7 +257,7 @@ float getMCUInternalTemperature() {
 	TemperatureValue += 25.0; // Add the 25 deg C
 
 	if (TemperatureValue > 150.0f || TemperatureValue < -50.0f) {
-		firmwareError(OBD_PCM_Processor_Fault, "Invalid CPU temperature measured!");
+		firmwareError(OBD_PCM_Processor_Fault, "Invalid CPU temperature measured %f", TemperatureValue);
 	}
 
 	return TemperatureValue;
@@ -356,6 +359,11 @@ void AdcDevice::enableChannel(adc_channel_e hwChannel) {
 	int logicChannel = channelCount++;
 
 	size_t channelAdcIndex = hwChannel - 1;
+#if defined(STM32F7XX)
+	/* the temperature sensor is internally connected to ADC1_IN18 */
+	if (hwChannel == EFI_ADC_TEMP_SENSOR)
+		channelAdcIndex = 18;
+#endif
 
 	internalAdcIndexByHardwareIndex[hwChannel] = logicChannel;
 	hardwareIndexByIndernalAdcIndex[logicChannel] = hwChannel;
@@ -605,6 +613,12 @@ void initAdcInputs() {
 	adcStart(&ADC_SLOW_DEVICE, NULL);
 	adcStart(&ADC_FAST_DEVICE, NULL);
 	adcSTM32EnableTSVREFE(); // Internal temperature sensor
+#if defined(STM32F7XX)
+	/* the temperature sensor is internally
+	 * connected to the same input channel as VBAT. Only one conversion,
+	 * temperature sensor or VBAT, must be selected at a time. */
+	adcSTM32DisableVBATE();
+#endif
 
 	/* Enable this code only when you absolutly sure
 	 * that there is no possible errors from ADC */
