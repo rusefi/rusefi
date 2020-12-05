@@ -8,9 +8,9 @@
 // the value to use, and if not a pointer to the sensor that
 // can provide a real value.
 struct SensorRegistryEntry {
-	bool useMock;
+	bool useMock = false;
 	float mockValue;
-	Sensor *sensor;
+	Sensor *sensor = nullptr;
 };
 
 static SensorRegistryEntry s_sensorRegistry[static_cast<size_t>(SensorType::PlaceholderLast)] = {};
