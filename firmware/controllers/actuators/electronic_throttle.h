@@ -46,7 +46,7 @@ public:
 	void reset() override;
 
 	// Update the controller's state: read sensors, send output, etc
-	void update();
+	void update() override;
 
 	// Called when the configuration may have changed.  Controller will
 	// reset if necessary.
@@ -104,10 +104,7 @@ private:
 	// These are set to correct order of magnitude starting points
 	// so we converge more quickly on the correct values
 	float m_a = 8;
-	float m_tu = 0.1f; 
-
-	uint8_t m_autotuneCounter = 0;
-	uint8_t m_autotuneCurrentParam = 0;
+	float m_tu = 0.1f;
 };
 
 void initElectronicThrottle(DECLARE_ENGINE_PARAMETER_SIGNATURE);

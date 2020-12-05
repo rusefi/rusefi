@@ -47,7 +47,7 @@ extern "C"
 {
 #endif /* __cplusplus */
 
-char *validateSecureLine(char *line);
+char *validateSecureLine(const char *line);
 void resetConsoleActions(void);
 void helpCommand(void);
 void initConsoleLogic(Logging *sharedLogger);

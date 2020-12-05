@@ -50,7 +50,7 @@ typedef unsigned int time_t;
  * project-wide default thread stack size
  * See also PORT_INT_REQUIRED_STACK
  * See getRemainingStack()
- * See getMaxUsedStack() and CountFreeStackSpace()
+ * See CountFreeStackSpace()
  * See "threadsinfo" command cmd_threads
  */
 #ifndef UTILITY_THREAD_STACK_SIZE

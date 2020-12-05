@@ -480,7 +480,7 @@ void initConsoleLogic(Logging *sharedLogger) {
  * @return NULL if input line validation failed, reference to line payload if validation succeeded.
  * @see sendOutConfirmation() for command confirmation processing.
  */
-char *validateSecureLine(char *line) {
+char *validateSecureLine(const char *line) {
 	if (line == NULL)
 		return NULL;
 	if (strncmp(SECURE_LINE_PREFIX, line, SECURE_LINE_PREFIX_LENGTH) == 0) {
