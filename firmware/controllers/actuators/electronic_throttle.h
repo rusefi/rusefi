@@ -36,6 +36,7 @@ public:
 	virtual void setWastegatePosition(percent_t pos) = 0;
 	virtual void update() = 0;
 	virtual void autoCalibrateTps() = 0;
+	virtual void fault() = 0;
 };
 
 class EtbController : public IEtbController {
@@ -75,6 +76,14 @@ public:
 	// Use the throttle to automatically calibrate the relevant throttle position sensor(s).
 	void autoCalibrateTps() override;
 
+	void accumulateErrorAndFault(percent_t setpoint, percent_t observation);
+
+	float getErrorIntegral() const {
+		return m_errorIntegral;
+	}
+
+	void fault() override;
+
 protected:
 	// This is set if an automatic TPS calibration should be run
 	bool m_isAutocal = false;
@@ -108,6 +117,9 @@ private:
 
 	uint8_t m_autotuneCounter = 0;
 	uint8_t m_autotuneCurrentParam = 0;
+
+	float m_errorIntegral = 0;
+	bool m_isFaulted = 0;
 };
 
 void initElectronicThrottle(DECLARE_ENGINE_PARAMETER_SIGNATURE);

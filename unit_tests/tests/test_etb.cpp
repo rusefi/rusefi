@@ -466,7 +466,7 @@ TEST(etb, setOutputPauseControl) {
 }
 
 TEST(etb, closedLoopPid) {
-	pid_s pid = {};
+	pid_s pid{};
 	pid.pFactor = 5;
 	pid.maxValue = 75;
 	pid.minValue = -60;
@@ -487,4 +487,89 @@ TEST(etb, closedLoopPid) {
 	// Test PID limiting
 	EXPECT_FLOAT_EQ(etb.getClosedLoop(50, 70).value_or(-1), -60);
 	EXPECT_FLOAT_EQ(etb.getClosedLoop(50, 30).value_or(-1), 75);
+}
+
+class FaultMockedEtb : public EtbController {
+public:
+	MOCK_METHOD(void, fault, (), (override));
+};
+
+void doEtbIterationsWithError(EtbController& etb, int iterations) {
+	// Error of 8% - will run the integrator up to the limit in exactly 1 second
+	float setpoint = 13;
+	float actual = 5;
+
+	for (int i = 0; i < iterations; i++) {
+		etb.accumulateErrorAndFault(setpoint, actual);
+	}
+}
+
+TEST(etb, errorIntegratorIgnoreSmallError) {
+	StrictMock<FaultMockedEtb> etb;
+	etb.init(ETB_Throttle1, nullptr, nullptr, nullptr);
+
+	// Sit with a 1% error for a very long time
+	for (size_t i = 0; i < ETB_LOOP_FREQUENCY * 100; i++)
+	{
+		etb.accumulateErrorAndFault(10, 9);
+	}
+
+	// Small errors like this should be ignored
+	EXPECT_EQ(etb.getErrorIntegral(), 0);
+}
+
+TEST(etb, errorIntegratorNoFault) {
+	StrictMock<FaultMockedEtb> etb;
+	etb.init(ETB_Throttle1, nullptr, nullptr, nullptr);
+
+	// Accumulate that error for almost 1 "second"
+	doEtbIterationsWithError(etb, ETB_LOOP_FREQUENCY - 1);
+
+	EXPECT_NEAR(etb.getErrorIntegral(), (ETB_LOOP_FREQUENCY - 1.0f) / (ETB_LOOP_FREQUENCY) * 5, EPS4D);
+}
+
+TEST(etb, errorIntegratorFault) {
+	StrictMock<FaultMockedEtb> etb;
+	etb.init(ETB_Throttle1, nullptr, nullptr, nullptr);
+
+	// We expect exactly one fault
+	EXPECT_CALL(etb, fault()).WillOnce(Return());
+
+	// Accumulate that error for just over 1 "second"
+	doEtbIterationsWithError(etb, ETB_LOOP_FREQUENCY + 1);
+
+	// Error should be zero as it was reset by the last update
+	EXPECT_EQ(etb.getErrorIntegral(), 0);
+
+	// Continued error shouldn't immediately result in another call to fault()
+	doEtbIterationsWithError(etb, 10);
+}
+
+TEST(etb, faultHandling) {
+	WITH_ENGINE_TEST_HELPER(TEST_ENGINE);
+	StrictMock<MockMotor> motor;
+
+	EtbController etb;
+	INJECT_ENGINE_REFERENCE(&etb);
+	etb.init(ETB_Throttle1, &motor, nullptr, nullptr);
+
+	{
+		// The following must happen in exactly this sequence:
+		::testing::InSequence is;
+
+		// Should be enabled and value set
+		EXPECT_CALL(motor, enable());
+		EXPECT_CALL(motor, set(0.25f))
+			.WillOnce(Return(false));
+
+		// Once faulted, the motor should be disabled
+		EXPECT_CALL(motor, disable());
+	}
+
+	// First test without fault
+	etb.setOutput(25.0f);
+
+	// Now fault the throttle
+	etb.fault();
+	etb.setOutput(25.0f);
 }

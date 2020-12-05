@@ -416,6 +416,36 @@ expected<percent_t> EtbController::getClosedLoop(percent_t target, percent_t obs
 	}
 }
 
+void EtbController::accumulateErrorAndFault(percent_t setpoint, percent_t observation) {
+	// Ignore faults when battery is low (aka ignition switch is off)
+	if (getVBatt() < 3) {
+		return;
+	}
+
+	// Integrate the absolute value of the error
+	percent_t error = absF(setpoint - observation);
+	// Ignore small errors completely
+	if (error < 5) error = 0;
+
+	float newIntegral = m_errorIntegral + error / ETB_LOOP_FREQUENCY;
+
+	// Bleed down at 3% per second
+	float subtractAmount = 3.0f / ETB_LOOP_FREQUENCY;
+	newIntegral -= subtractAmount;
+	if (newIntegral < 0) newIntegral = 0;
+
+	if (newIntegral > 5) {
+		fault();
+		newIntegral = 0;
+	}
+
+	m_errorIntegral = newIntegral;
+}
+
+void EtbController::fault() {
+	m_isFaulted = true;
+}
+
 void EtbController::setOutput(expected<percent_t> outputValue) {
 #if EFI_TUNER_STUDIO
 	// Only report first-throttle stats
@@ -426,8 +456,8 @@ void EtbController::setOutput(expected<percent_t> outputValue) {
 
 	if (!m_motor) return;
 
-	// If output is valid and we aren't paused, output to motor.
-	if (outputValue && !engineConfiguration->pauseEtbControl) {
+	// If output is valid and we aren't paused or faulted, output to motor.
+	if (!m_isFaulted && outputValue && !engineConfiguration->pauseEtbControl) {
 		m_motor->enable();
 		m_motor->set(ETB_PERCENT_TO_DUTY(outputValue.Value));
 	} else {
