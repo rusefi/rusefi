@@ -1,7 +1,7 @@
 #include "gear_controller.h"
 #include "tunerstudio_outputs.h"
 
-void GearControllerBase::init() {
+void GearControllerBase::init(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
     INJECT_ENGINE_REFERENCE(&transmissionController);
     transmissionController.init();
 }

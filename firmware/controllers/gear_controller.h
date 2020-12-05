@@ -13,7 +13,7 @@ public:
 
     virtual void update();
     gear_e getDesiredGear() const;
-    virtual void init();
+    virtual void init(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 private:
     gear_e desiredGear = NEUTRAL;
 protected:
