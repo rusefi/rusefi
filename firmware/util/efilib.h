@@ -92,9 +92,8 @@ float tanf_taylor(float theta);
 }
 
 #include <cstddef>
-#include <cmath>
 
-#define IS_NEGATIVE_ZERO(value) (std::signbit(value) && value==0)
+#define IS_NEGATIVE_ZERO(value) (__builtin_signbit(value) && value==0)
 #define fixNegativeZero(value) (IS_NEGATIVE_ZERO(value) ? 0 : value)
 
 // C++ helpers go here
