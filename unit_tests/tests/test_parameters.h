@@ -14,6 +14,6 @@ class TestParameters {
 public:
 	unordered_map<string, float> values;
 	TestParameters* put(string key, float value);
-	float get(string key) const;
+	float get(string key);
 };
 
