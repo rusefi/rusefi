@@ -15,6 +15,7 @@
 			"cwd": "${workspaceFolder}/unit_tests/build/",
 			"environment": [],
 			"externalConsole": false,
+			"MIMode": "gdb",
 			"setupCommands": [
 				{
 					"description": "Enable pretty-printing for gdb",
