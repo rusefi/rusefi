@@ -15,6 +15,8 @@
 
 #define EFI_LAUNCH_CONTROL TRUE
 
+#define EFI_DYNO_VIEW TRUE
+
 #define EFI_FSIO TRUE
 
 #ifndef EFI_CDM_INTEGRATION

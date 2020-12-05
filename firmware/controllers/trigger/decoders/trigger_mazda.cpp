@@ -54,19 +54,21 @@ void initializeMazdaMiataNaShape(TriggerWaveform *s) {
 
 // TT_MIATA_VVT
 void initializeMazdaMiataNb2Crank(TriggerWaveform *s) {
+	/**
+	 * Note how we use 0..180 range while defining FOUR_STROKE_SYMMETRICAL_CRANK_SENSOR trigger
+	 * Note that only half of the physical wheel is defined here!
+	 */
 	s->initialize(FOUR_STROKE_SYMMETRICAL_CRANK_SENSOR);
-
-	float o = 40;
 
 	s->tdcPosition = 60 + 655;
 
 	s->setTriggerSynchronizationGap2(0.35f, 0.98f);
 	// 384
-	s->addEventAngle(o + 56.0f, T_PRIMARY, TV_FALL);
+	s->addEventAngle(96.0f, T_PRIMARY, TV_FALL);
 	// 400
-	s->addEventAngle(o + 60.0f, T_PRIMARY, TV_RISE);
-	s->addEventAngle(o + 136.0f, T_PRIMARY, TV_FALL);
-	s->addEventAngle(o + 140.0f, T_PRIMARY, TV_RISE);
+	s->addEventAngle(100.0f, T_PRIMARY, TV_RISE);
+	s->addEventAngle(176.0f, T_PRIMARY, TV_FALL);
+	s->addEventAngle(180.0f, T_PRIMARY, TV_RISE);
 }
 
 static void initializeMazdaMiataNb1ShapeWithOffset(TriggerWaveform *s, float offset) {
