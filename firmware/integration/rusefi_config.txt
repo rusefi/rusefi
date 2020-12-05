@@ -47,13 +47,10 @@
 !
 !
 
-
-
 !
 ! this is here so that rusEfi console can access it, too
-! [IMPORTANT] every time TS_OUTPUT_SIZE is changed make sure to increment TS_SIGNATURE above
 !
-#define TS_OUTPUT_SIZE 288
+#define TS_OUTPUT_SIZE 340
 
 !
 ! this is used to confirm that firmware and TunerStudio are using the same rusefi.ini version
@@ -389,11 +386,41 @@ struct ThermistorConf @brief Thermistor curve parameters
 end_struct
 
 #define TT_TT_TOOTHED_WHEEL 0
+#define TT_TT_FORD_ASPIRE 1
+#define TT_TT_MAZDA_MIATA_NA 3
+#define TT_TT_MAZDA_MIATA_NB1 4
+#define TT_TT_GM_7X 5
+#define TT_TT_DAIHATSU 6
+#define TT_TT_MAZDA_SOHC_4 7
 #define TT_TT_TOOTHED_WHEEL_60_2 8
 #define TT_TT_TOOTHED_WHEEL_36_1 9
+#define TT_TT_HONDA_4_24_1 10
+#define TT_TT_HONDA_1_4_24 13
+#define TT_TT_MAZDA_DOHC_1_4 15
+#define TT_TT_VVT_JZ 17
 #define TT_TT_ONE 18
 #define TT_TT_60_2_VW 20
+#define TT_TT_HONDA_1_24 21
+#define TT_TT_36_2_2_2 23
+#define TT_TT_2JZ_3_34 25
+#define TT_TT_ROVER_K 26
+#define TT_TT_GM_LS_24 27
+#define TT_TT_HONDA_CBR_600 28
+#define TT_TT_2JZ_1_12 29
+#define TT_TT_CHRYSLER_NGC_36_2_2 30
+#define TT_TT_3_1_CAM 31
+#define TT_TT_MIATA_VVT 33
+#define TT_TT_SUBARU_7_6 36
+#define TT_TT_JEEP_18_2_2_2 37
+#define TT_TT_JEEP_4_CYL 40
+#define TT_TT_FORD_ST170 42
+#define TT_TT_RENIX_44_2_2 44
+#define TT_TT_RENIX_66_2_2_2 45
+#define TT_TT_HONDA_K_12_1 46
+#define TT_TT_VVT_BOSCH_QUICK_START 47
 #define TT_TT_TOOTHED_WHEEL_36_2 48
+#define TT_TT_SUBARU_SVX 49
+#define TT_TT_1_16 50
 
 #define ET_DODGE_NEON_1995 2
 #define ET_FORD_ASPIRE 3
@@ -977,7 +1004,7 @@ custom maf_sensor_type_e 4 bits, S32, @OFFSET@, [0:1], @@maf_sensor_type_e_enum@
 
 	bit unusedHereWeHave
 	bit fuelClosedLoopCorrectionEnabled;+Enables lambda sensor closed loop feedback for fuelling.
-	bit isVerboseIAC;+Print details into rusEfi console
+	bit isVerboseIAC;+Print details into rusEfi console\nenable verbose_idle
 	bit isVerboseETB;+Prints ETB details to rusEFI console
 	bit useConstantDwellDuringCranking;+If set to true, will use the specified duration for cranking dwell. If set to false, will use the specified dwell angle.  Unless you have a really good reason to, leave this set to true to use duration mode.
 	bit isEngineChartEnabled;+This options enables data for 'engine sniffer' tab in console, which comes at some CPU price 

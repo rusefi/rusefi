@@ -14,6 +14,10 @@
 
 EXTERN_ENGINE;
 
+#if EFI_UNIT_TEST
+	extern bool printTriggerTrace;
+#endif
+
 // this is not the only place where we have 'isUpEvent'. todo: reuse
 static const bool isRisingEdge[HW_EVENT_TYPES] = { false, true, false, true, false, true };
 
@@ -112,21 +116,32 @@ void TriggerStimulatorHelper::assertSyncPositionAndSetDutyCycle(
 		TriggerWaveform& shape
 		) {
 
+// todo: is anything limiting this TEST_REVOLUTIONS? why does value '8' not work for example?
+#define TEST_REVOLUTIONS 6
+
 	/**
 	 * let's feed two more cycles to validate shape definition
 	 */
-	for (uint32_t i = syncIndex + 1; i <= syncIndex + GAP_TRACKING_LENGTH * shape.getSize(); i++) {
+	for (uint32_t i = syncIndex + 1; i <= syncIndex + TEST_REVOLUTIONS * shape.getSize(); i++) {
 		feedSimulatedEvent(triggerCycleCallback,
 				triggerConfiguration,
 				state, shape, i);
 	}
 	int revolutionCounter = state.getTotalRevolutionCounter();
-	if (revolutionCounter != GAP_TRACKING_LENGTH + 1) {
-		warning(CUSTOM_OBD_TRIGGER_WAVEFORM, "sync failed/wrong gap parameters trigger=%s rc=%d", getTrigger_type_e(triggerConfiguration.TriggerType), revolutionCounter);
+	if (revolutionCounter != TEST_REVOLUTIONS + 1) {
+		warning(CUSTOM_OBD_TRIGGER_WAVEFORM, "sync failed/wrong gap parameters trigger=%s revolutionCounter=%d", getTrigger_type_e(triggerConfiguration.TriggerType), revolutionCounter);
 		shape.setShapeDefinitionError(true);
 		return;
 	}
 	shape.shapeDefinitionError = false;
+#if EFI_UNIT_TEST
+		if (printTriggerTrace) {
+			printf("Happy %s revolutionCounter=%d\r\n",
+					getTrigger_type_e(triggerConfiguration.TriggerType),
+					revolutionCounter);
+		}
+#endif /* EFI_UNIT_TEST */
+
 
 	for (int i = 0; i < PWM_PHASE_MAX_WAVE_PER_PWM; i++) {
 		shape.expectedDutyCycle[i] = 1.0 * state.expectedTotalTime[i] / SIMULATION_CYCLE_PERIOD;

@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEfi tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Sun Nov 29 03:21:46 UTC 2020
+// this file was generated automatically by rusEfi tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Fri Dec 04 16:38:29 UTC 2020
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -1167,7 +1167,7 @@ public class Fields {
 	public static final int servoOutputPins8_offset = 3147;
 	public static final int showHumanReadableWarning_offset = 976;
 	public static final int showSdCardWarning_offset = 76;
-	public static final int SIGNATURE_HASH = 104376296;
+	public static final int SIGNATURE_HASH = 768848914;
 	public static final int silentTriggerError_offset = 1464;
 	public static final int slowAdcAlpha_offset = 2088;
 	public static final int sparkDwellRpmBins_offset = 332;
@@ -1423,7 +1423,7 @@ public class Fields {
 	public static final char TS_IO_TEST_COMMAND = 'Z';
 	public static final char TS_ONLINE_PROTOCOL = 'z';
 	public static final char TS_OUTPUT_COMMAND = 'O';
-	public static final int TS_OUTPUT_SIZE = 288;
+	public static final int TS_OUTPUT_SIZE = 340;
 	public static final char TS_PAGE_COMMAND = 'P';
 	public static final char TS_PERF_TRACE_BEGIN = '_';
 	public static final char TS_PERF_TRACE_GET_BUFFER = 'b';
@@ -1447,14 +1447,44 @@ public class Fields {
 	public static final char TS_SD_R_COMMAND = 'r';
 	public static final char TS_SD_W_COMMAND = 'w';
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI 2020.11.29.all.104376296";
+	public static final String TS_SIGNATURE = "rusEFI 2020.12.04.all.768848914";
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
+	public static final int TT_TT_1_16 = 50;
+	public static final int TT_TT_2JZ_1_12 = 29;
+	public static final int TT_TT_2JZ_3_34 = 25;
+	public static final int TT_TT_36_2_2_2 = 23;
+	public static final int TT_TT_3_1_CAM = 31;
 	public static final int TT_TT_60_2_VW = 20;
+	public static final int TT_TT_CHRYSLER_NGC_36_2_2 = 30;
+	public static final int TT_TT_DAIHATSU = 6;
+	public static final int TT_TT_FORD_ASPIRE = 1;
+	public static final int TT_TT_FORD_ST170 = 42;
+	public static final int TT_TT_GM_7X = 5;
+	public static final int TT_TT_GM_LS_24 = 27;
+	public static final int TT_TT_HONDA_1_24 = 21;
+	public static final int TT_TT_HONDA_1_4_24 = 13;
+	public static final int TT_TT_HONDA_4_24_1 = 10;
+	public static final int TT_TT_HONDA_CBR_600 = 28;
+	public static final int TT_TT_HONDA_K_12_1 = 46;
+	public static final int TT_TT_JEEP_18_2_2_2 = 37;
+	public static final int TT_TT_JEEP_4_CYL = 40;
+	public static final int TT_TT_MAZDA_DOHC_1_4 = 15;
+	public static final int TT_TT_MAZDA_MIATA_NA = 3;
+	public static final int TT_TT_MAZDA_MIATA_NB1 = 4;
+	public static final int TT_TT_MAZDA_SOHC_4 = 7;
+	public static final int TT_TT_MIATA_VVT = 33;
 	public static final int TT_TT_ONE = 18;
+	public static final int TT_TT_RENIX_44_2_2 = 44;
+	public static final int TT_TT_RENIX_66_2_2_2 = 45;
+	public static final int TT_TT_ROVER_K = 26;
+	public static final int TT_TT_SUBARU_7_6 = 36;
+	public static final int TT_TT_SUBARU_SVX = 49;
 	public static final int TT_TT_TOOTHED_WHEEL = 0;
 	public static final int TT_TT_TOOTHED_WHEEL_36_1 = 9;
 	public static final int TT_TT_TOOTHED_WHEEL_36_2 = 48;
 	public static final int TT_TT_TOOTHED_WHEEL_60_2 = 8;
+	public static final int TT_TT_VVT_BOSCH_QUICK_START = 47;
+	public static final int TT_TT_VVT_JZ = 17;
 	public static final int tunerStudioSerialSpeed_offset = 728;
 	public static final int twoWireBatchIgnition_offset = 1476;
 	public static final int twoWireBatchInjection_offset = 1476;
