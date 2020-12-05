@@ -909,10 +909,10 @@ enable2ndByteCanID = false
 		zBins = gppwm4_table
 
 	table = tcuSolenoidTableTbl,  tcuSolenoidTableMap,  "Solenoids Active By Gear",   1
-		yBins		= gearCountArray, tcuCurrentGear
-		xBins		= solenoidCountArray, tcuCurrentGear
+		yBins		= solenoidCountArray, tcuCurrentGear
+		xBins		= gearCountArray, tcuCurrentGear
 		zBins		= tcuSolenoidTable
-		xyLabels	= "Solenoid", "Gear"
+		xyLabels	= "Gear", "Solenoid"
 
 [GaugeConfigurations]
 
