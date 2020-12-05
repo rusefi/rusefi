@@ -43,7 +43,7 @@ float Timer::getElapsedSeconds(efitick_t nowNt) const {
 
 	auto delta32 = (uint32_t)delta;
 
-	return NT2US(delta32);
+	return 1e-6 * NT2US(delta32);
 }
 
 float Timer::getElapsedSecondsAndReset(efitick_t nowNt) {
