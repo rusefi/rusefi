@@ -69,9 +69,7 @@ public:
 		// If there's somebody already here - a consumer tried to double-register a sensor
 		if (m_sensor) {
 			// This sensor has already been registered. Don't re-register it.
-	#if ! EFI_UNIT_TEST
-			firmwareError(CUSTOM_OBD_26, "Duplicate registration for %s sensor", sensor->getSensorName());
-	#endif
+			firmwareError(CUSTOM_OBD_26, "Duplicate registration for sensor \"%s\"", sensor->getSensorName());
 			return false;
 		} else {
 			// Put the sensor in the registry
