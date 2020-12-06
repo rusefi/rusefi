@@ -31,6 +31,7 @@
 #include "sensor.h"
 #include "gppwm.h"
 #include "tachometer.h"
+#include "dynoview.h"
 #if EFI_MC33816
  #include "mc33816.h"
 #endif // EFI_MC33816
@@ -93,6 +94,8 @@ trigger_type_e getVvtTriggerType(vvt_mode_e vvtMode) {
 		return TT_ONE;
 	case VVT_4_1:
 		return TT_ONE;
+	case VVT_FORD_ST170:
+		return TT_FORD_ST170;
 	default:
 		return TT_ONE;
 	}
@@ -205,6 +208,10 @@ void Engine::periodicSlowCallback(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 			tle8888CrankingResetTime = nowNt;
 		}
 	}
+#endif
+
+#if EFI_DYNO_VIEW
+	updateDynoView(PASS_ENGINE_PARAMETER_SIGNATURE);
 #endif
 
 	slowCallBackWasInvoked = true;

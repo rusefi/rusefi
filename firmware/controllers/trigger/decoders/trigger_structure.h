@@ -13,6 +13,10 @@
 
 #define FOUR_STROKE_ENGINE_CYCLE 720
 
+#define TRIGGER_GAP_DEVIATION 0.25f
+#define TRIGGER_GAP_DEVIATION_LOW (1.0f - TRIGGER_GAP_DEVIATION)
+#define TRIGGER_GAP_DEVIATION_HIGH (1.0f + TRIGGER_GAP_DEVIATION)
+
 #if EFI_ENABLE_ASSERTS
 #define assertAngleRange(angle, msg, code) if (angle > 10000000 || angle < -10000000) { firmwareError(code, "angle range %s %.2f", msg, angle);angle = 0;}
 #else
@@ -68,7 +72,8 @@ class TriggerState;
 class TriggerFormDetails;
 class TriggerConfiguration;
 
-#define GAP_TRACKING_LENGTH 4
+// https://github.com/rusefi/rusefi/issues/2010 shows the corner case wheel with huge depth requirement
+#define GAP_TRACKING_LENGTH 18
 
 /**
  * @brief Trigger shape has all the fields needed to describe and decode trigger signal.

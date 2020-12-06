@@ -82,6 +82,7 @@ angle_t TriggerCentral::getVVTPosition() {
 static bool vvtWithRealDecoder(vvt_mode_e vvtMode) {
 	return vvtMode == MIATA_NB2
 			|| vvtMode == VVT_BOSCH_QUICK_START
+			|| vvtMode == VVT_FORD_ST170
 			|| vvtMode == VVT_4_1;
 }
 
@@ -519,6 +520,7 @@ static void triggerShapeInfo(void) {
 #if EFI_UNIT_TEST
 #include <stdlib.h>
 
+extern trigger_type_e focusOnTrigger;
 #define TRIGGERS_FILE_NAME "triggers.txt"
 
 /**
@@ -538,6 +540,10 @@ void printAllTriggers() {
 	for (int triggerId = 1; triggerId < TT_UNUSED; triggerId++) {
 		trigger_type_e tt = (trigger_type_e) triggerId;
 
+		if (focusOnTrigger != TT_UNUSED && tt != focusOnTrigger) {
+				continue;
+		}
+
 		printf("Exporting %s\r\n", getTrigger_type_e(tt));
 
 		persistent_config_s pc;
@@ -555,7 +561,7 @@ void printAllTriggers() {
 		engine->initializeTriggerWaveform(NULL PASS_ENGINE_PARAMETER_SUFFIX);
 
 		if (shape->shapeDefinitionError) {
-			printf("Trigger error %d\r\n", triggerId);
+			printf("Trigger shapeDefinitionError %d\r\n", triggerId);
 			exit(-1);
 		}
 

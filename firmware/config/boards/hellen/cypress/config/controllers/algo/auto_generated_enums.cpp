@@ -1,7 +1,7 @@
 #include "global.h"
 #include "rusefi_enums.h"
 #include "rusefi_hw_enums.h"
-// was generated automatically by rusEfi tool  from rusefi_hw_enums.h // was generated automatically by rusEfi tool  from rusefi_enums.h // by enum2string.jar tool on Thu Dec 03 15:50:29 UTC 2020
+// was generated automatically by rusEfi tool  from rusefi_hw_enums.h // was generated automatically by rusEfi tool  from rusefi_enums.h // by enum2string.jar tool on Fri Dec 04 00:17:48 EST 2020
 // see also gen_config_and_enums.bat
 
 
@@ -1337,6 +1337,10 @@ case TT_3_1_CAM:
   return "TT_3_1_CAM";
 case TT_60_2_VW:
   return "TT_60_2_VW";
+case TT_CHRYSLER_NGC_36_2_2:
+  return "TT_CHRYSLER_NGC_36_2_2";
+case TT_DAIHATSU:
+  return "TT_DAIHATSU";
 case TT_DODGE_NEON_1995:
   return "TT_DODGE_NEON_1995";
 case TT_DODGE_NEON_1995_ONLY_CRANK:
@@ -1353,6 +1357,8 @@ case TT_FIAT_IAW_P8:
   return "TT_FIAT_IAW_P8";
 case TT_FORD_ASPIRE:
   return "TT_FORD_ASPIRE";
+case TT_FORD_ST170:
+  return "TT_FORD_ST170";
 case TT_GM_7X:
   return "TT_GM_7X";
 case TT_GM_LS_24:
@@ -1417,12 +1423,6 @@ case TT_TOOTHED_WHEEL_60_2:
   return "TT_TOOTHED_WHEEL_60_2";
 case TT_UNUSED:
   return "TT_UNUSED";
-case TT_UNUSED_30:
-  return "TT_UNUSED_30";
-case TT_UNUSED_42:
-  return "TT_UNUSED_42";
-case TT_UNUSED_6:
-  return "TT_UNUSED_6";
 case TT_VVT_BOSCH_QUICK_START:
   return "TT_VVT_BOSCH_QUICK_START";
 case TT_VVT_JZ:
@@ -1494,6 +1494,8 @@ case VVT_BOSCH_QUICK_START:
   return "VVT_BOSCH_QUICK_START";
 case VVT_FIRST_HALF:
   return "VVT_FIRST_HALF";
+case VVT_FORD_ST170:
+  return "VVT_FORD_ST170";
 case VVT_INACTIVE:
   return "VVT_INACTIVE";
 case VVT_SECOND_HALF:

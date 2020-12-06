@@ -574,3 +574,41 @@ void initJeep_XJ_4cyl_2500(TriggerWaveform *s) {
 	s->addEvent720(596 + offset, T_PRIMARY, TV_FALL); // 720
 
 }
+
+void configureChryslerNGC_36_2_2(TriggerWaveform *s) {
+	s->initialize(FOUR_STROKE_CAM_SENSOR);
+
+	float wide = 30 * 2;
+	float narrow = 10 * 2;
+
+	s->isSynchronizationNeeded = true;
+	s->setTriggerSynchronizationGap(3.5);
+	for (int i = 1; i < 15; i++) {
+		s->setTriggerSynchronizationGap3(/*gapIndex*/i, TRIGGER_GAP_DEVIATION_LOW, TRIGGER_GAP_DEVIATION_HIGH);
+	}
+	s->setTriggerSynchronizationGap3(/*gapIndex*/15, 0.4 * TRIGGER_GAP_DEVIATION_LOW, 0.4 * TRIGGER_GAP_DEVIATION_HIGH);
+
+	float base = 0;
+
+	for (int i = 0; i < 14; i++) {
+		s->addEventAngle(base + narrow / 2, T_PRIMARY, TV_RISE);
+		s->addEventAngle(base + narrow, T_PRIMARY, TV_FALL);
+		base += narrow;
+	}
+
+	s->addEventAngle(base + narrow / 2, T_PRIMARY, TV_RISE);
+	base += narrow / 2;
+	s->addEventAngle(base + wide, T_PRIMARY, TV_FALL);
+	base += wide;
+
+	for (int i = 0; i < 16; i++) {
+		s->addEventAngle(base + narrow / 2, T_PRIMARY, TV_RISE);
+		s->addEventAngle(base + narrow, T_PRIMARY, TV_FALL);
+		base += narrow;
+	}
+
+	// one small tooth at the end of the engine cycle
+	s->addEventAngle(s->getCycleDuration() - narrow / 2, T_PRIMARY, TV_RISE);
+	s->addEventAngle(s->getCycleDuration(), T_PRIMARY, TV_FALL);
+	s->useOnlyPrimaryForSync = true;
+}

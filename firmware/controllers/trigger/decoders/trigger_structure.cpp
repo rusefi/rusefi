@@ -240,7 +240,7 @@ void TriggerWaveform::addEvent(angle_t angle, trigger_wheel_e const channelIndex
 		expectedEventCount[channelIndex]++;
 	}
 
-	efiAssertVoid(CUSTOM_ERR_6599, angle > 0, "angle should be positive");
+	efiAssertVoid(CUSTOM_ERR_6599, angle > 0 && angle <= 1, "angle should be positive not above 1");
 	if (privateTriggerDefinitionSize > 0) {
 		if (angle <= previousAngle) {
 			warning(CUSTOM_ERR_TRG_ANGLE_ORDER, "invalid angle order: new=%.2f/%f and prev=%.2f/%f, size=%d",
@@ -330,6 +330,7 @@ void TriggerWaveform::setTriggerSynchronizationGap2(float syncRatioFrom, float s
 
 void TriggerWaveform::setTriggerSynchronizationGap3(int gapIndex, float syncRatioFrom, float syncRatioTo) {
 	isSynchronizationNeeded = true;
+	efiAssertVoid(OBD_PCM_Processor_Fault, gapIndex >= 0 && gapIndex < GAP_TRACKING_LENGTH, "gapIndex out of range");
 	this->syncronizationRatioFrom[gapIndex] = syncRatioFrom;
 	this->syncronizationRatioTo[gapIndex] = syncRatioTo;
 	if (gapIndex == 0) {
@@ -427,7 +428,7 @@ void TriggerWaveform::prepareShape(TriggerFormDetails *details DECLARE_ENGINE_PA
 }
 
 void TriggerWaveform::setTriggerSynchronizationGap(float syncRatio) {
-	setTriggerSynchronizationGap3(/*gapIndex*/0, syncRatio * 0.75f, syncRatio * 1.25f);
+	setTriggerSynchronizationGap3(/*gapIndex*/0, syncRatio * TRIGGER_GAP_DEVIATION_LOW, syncRatio * TRIGGER_GAP_DEVIATION_HIGH);
 }
 
 void TriggerWaveform::setSecondTriggerSynchronizationGap2(float syncRatioFrom, float syncRatioTo) {
@@ -435,11 +436,11 @@ void TriggerWaveform::setSecondTriggerSynchronizationGap2(float syncRatioFrom, f
 }
 
 void TriggerWaveform::setThirdTriggerSynchronizationGap(float syncRatio) {
-	setTriggerSynchronizationGap3(/*gapIndex*/2, syncRatio * 0.75f, syncRatio * 1.25f);
+	setTriggerSynchronizationGap3(/*gapIndex*/2, syncRatio * TRIGGER_GAP_DEVIATION_LOW, syncRatio * TRIGGER_GAP_DEVIATION_HIGH);
 }
 
 void TriggerWaveform::setSecondTriggerSynchronizationGap(float syncRatio) {
-	setTriggerSynchronizationGap3(/*gapIndex*/1, syncRatio * 0.75f, syncRatio * 1.25f);
+	setTriggerSynchronizationGap3(/*gapIndex*/1, syncRatio * TRIGGER_GAP_DEVIATION_LOW, syncRatio * TRIGGER_GAP_DEVIATION_HIGH);
 }
 
 
@@ -476,7 +477,10 @@ void TriggerWaveform::initializeTriggerWaveform(Logging *logger, operation_mode_
 		initializeMazdaMiataVVtTestShape(this);
 		break;
 
-	case TT_UNUSED_42:
+	case TT_FORD_ST170:
+		configureFordST170(this);
+		break;
+
 	case TT_VVT_MIATA_NB2:
 		initializeMazdaMiataVVtCamShape(this);
 		break;
@@ -542,7 +546,10 @@ void TriggerWaveform::initializeTriggerWaveform(Logging *logger, operation_mode_
 		configureMazdaProtegeSOHC(this);
 		break;
 
-	case TT_UNUSED_6:
+	case TT_TT_DAIHATSU:
+		configureDaihatsu4(this);
+		break;
+
 	case TT_VVT_JZ:
 		setToothedWheelConfiguration(this, 3, 0, ambiguousOperationMode);
 		break;
@@ -601,7 +608,10 @@ void TriggerWaveform::initializeTriggerWaveform(Logging *logger, operation_mode_
 		configureHondaCbr600(this);
 		break;
 
-	case TT_UNUSED_30:
+	case TT_CHRYSLER_NGC_36_2_2:
+		configureChryslerNGC_36_2_2(this);
+		break;
+
 	case TT_MITSUBISHI:
 		initializeMitsubishi4g18(this);
 		break;

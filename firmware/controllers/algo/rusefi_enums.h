@@ -214,8 +214,6 @@ typedef enum {
  * @see http://rusefi.com/wiki/index.php?title=Manual:Software:Trigger
  */
 typedef enum {
-	TT_UNUSED_6 = 6,
-	TT_UNUSED_42 = 42,
 
 	TT_TOOTHED_WHEEL = TT_TT_TOOTHED_WHEEL,
 	TT_FORD_ASPIRE = TT_TT_FORD_ASPIRE,
@@ -230,6 +228,7 @@ typedef enum {
 	TT_MAZDA_MIATA_NB1 = TT_TT_MAZDA_MIATA_NB1,
 	TT_GM_7X = TT_TT_GM_7X,
 	TT_MAZDA_SOHC_4 = TT_TT_MAZDA_SOHC_4,
+	TT_DAIHATSU = TT_TT_DAIHATSU,
 	/**
 	 * "60/2"
 	 * See also TT_ONE_PLUS_TOOTHED_WHEEL_60_2
@@ -293,7 +292,7 @@ typedef enum {
 
 	TT_2JZ_1_12 = TT_TT_2JZ_1_12,
 
-	TT_UNUSED_30 = 30,
+	TT_CHRYSLER_NGC_36_2_2 = TT_TT_CHRYSLER_NGC_36_2_2,
 
 	// skipped 3/1 with cam sensor for testing
 	TT_3_1_CAM = 31,
@@ -306,7 +305,7 @@ typedef enum {
 	 * for VVT simulated trigger signal we have https://github.com/rusefi/rusefi/issues/566 gap
 	 * See also TT_MAZDA_MIATA_VVT_TEST
 	 */
-	TT_MIATA_VVT = 33,
+	TT_MIATA_VVT = TT_TT_MIATA_VVT,
 
 	/**
 	 * This is a different version of TT_HONDA_ACCORD_1_24
@@ -338,6 +337,7 @@ typedef enum {
 	// https://rusefi.com/forum/viewtopic.php?f=5&t=1440
 	TT_FIAT_IAW_P8 = 41,
 
+	TT_FORD_ST170 = TT_TT_FORD_ST170,
 
 	/**
 	 * cam sensor of Mazda Miata NB2 - the VVT signal shape
@@ -438,6 +438,8 @@ typedef enum {
 	 * 1.8l Toyota 1ZZ-FE https://rusefi.com/forum/viewtopic.php?f=3&t=1735
 	 */
 	VVT_4_1 = 6,
+
+	VVT_FORD_ST170 = 7,
 
 	Force_4_bytes_size_vvt_mode = ENUM_32_BITS,
 } vvt_mode_e;

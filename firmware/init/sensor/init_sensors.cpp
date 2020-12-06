@@ -39,8 +39,6 @@ static void initSensorCli(Logging* logger) {
 	addConsoleAction("show_sensors", []() { Sensor::showAllSensorInfo(s_logger); });
 	addConsoleActionI("show_sensor", 
 		[](int idx) {
-			if (auto s = Sensor::getSensorOfType(static_cast<SensorType>(idx))) {
-				s->showAllSensorInfo(s_logger);
-			}
+			Sensor::showInfo(s_logger, static_cast<SensorType>(idx));
 		});
 }

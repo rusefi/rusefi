@@ -39,12 +39,25 @@ LinearFunc idlePosFunc(PACK_MULT_VOLTAGE);
 FunctionalSensor wastegateSens(SensorType::WastegatePosition, MS2NT(10));
 FunctionalSensor idlePosSens(SensorType::IdlePosition, MS2NT(10));
 
-static void configureTps(LinearFunc& func, float closed, float open, float min, float max) {
+static bool configureTps(LinearFunc& func, float closed, float open, float min, float max, const char* msg) {
+	float scaledClosed = closed / func.getDivideInput();
+	float scaledOpen = open / func.getDivideInput();
+
+	float split = absF(scaledOpen - scaledClosed);
+
+	// If the voltage for closed vs. open is very near, something is wrong with your calibration
+	if (split < 0.5f) {
+		firmwareError(OBD_Throttle_Position_Sensor_Circuit_Malfunction, "Sensor \"%s\" problem: open/closed calibration values are too close together.  Please check your wiring!", msg);
+		return false;
+	}
+
 	func.configure(
 		closed, 0,
 		open, 100, 
 		min, max
 	);
+
+	return true;
 }
 
 static bool initTpsFunc(LinearFunc& func, FunctionalSensor& sensor, adc_channel_e channel, float closed, float open, float min, float max) {
@@ -53,7 +66,10 @@ static bool initTpsFunc(LinearFunc& func, FunctionalSensor& sensor, adc_channel_
 		return false;
 	}
 
-	configureTps(func, closed, open, min, max);
+	// If the configuration was invalid, don't continues to configure the sensor
+	if (!configureTps(func, closed, open, min, max, sensor.getSensorName())) {
+		return false;
+	}
 
 	sensor.setFunction(func);
 
@@ -110,14 +126,14 @@ void reconfigureTps(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	float min = CONFIG(tpsErrorDetectionTooLow);
 	float max = CONFIG(tpsErrorDetectionTooHigh);
 
-	configureTps(tpsFunc1p, CONFIG(tpsMin), CONFIG(tpsMax), min, max);
-	configureTps(tpsFunc1s, CONFIG(tps1SecondaryMin), CONFIG(tps1SecondaryMax), min, max);
-	configureTps(tpsFunc2p, CONFIG(tps2Min), CONFIG(tps2Max), min, max);
-	configureTps(tpsFunc2s, CONFIG(tps2SecondaryMin), CONFIG(tps2SecondaryMax), min, max);
+	configureTps(tpsFunc1p, CONFIG(tpsMin), CONFIG(tpsMax), min, max, tpsSens1p.getSensorName());
+	configureTps(tpsFunc1s, CONFIG(tps1SecondaryMin), CONFIG(tps1SecondaryMax), min, max, tpsSens1s.getSensorName());
+	configureTps(tpsFunc2p, CONFIG(tps2Min), CONFIG(tps2Max), min, max, tpsSens2p.getSensorName());
+	configureTps(tpsFunc2s, CONFIG(tps2SecondaryMin), CONFIG(tps2SecondaryMax), min, max, tpsSens2s.getSensorName());
 
-	configureTps(pedalFuncPrimary, CONFIG(throttlePedalUpVoltage), CONFIG(throttlePedalWOTVoltage), min, max);
-	configureTps(pedalFuncSecondary, CONFIG(throttlePedalSecondaryUpVoltage), CONFIG(throttlePedalSecondaryWOTVoltage), min, max);
+	configureTps(pedalFuncPrimary, CONFIG(throttlePedalUpVoltage), CONFIG(throttlePedalWOTVoltage), min, max, pedalSensorPrimary.getSensorName());
+	configureTps(pedalFuncSecondary, CONFIG(throttlePedalSecondaryUpVoltage), CONFIG(throttlePedalSecondaryWOTVoltage), min, max, pedalSensorSecondary.getSensorName());
 
-	configureTps(wastegateFunc, CONFIG(wastegatePositionMin), CONFIG(wastegatePositionMax), min, max);
-	configureTps(idlePosFunc, CONFIG(idlePositionMin), CONFIG(idlePositionMax), min, max);
+	configureTps(wastegateFunc, CONFIG(wastegatePositionMin), CONFIG(wastegatePositionMax), min, max, wastegateSens.getSensorName());
+	configureTps(idlePosFunc, CONFIG(idlePositionMin), CONFIG(idlePositionMax), min, max, idlePosSens.getSensorName());
 }
