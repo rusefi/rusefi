@@ -93,6 +93,11 @@ public:
 	static float getRaw(SensorType type);
 
 	/*
+	 * Get whether a sensor is redundant (a composite of multiple other sensors that can check consistency between them)
+	 */
+	static bool isRedundant(SensorType type);
+
+	/*
 	 * Query whether there is a sensor of a particular type currently registered.
 	 */
 	static bool hasSensor(SensorType type);
@@ -135,6 +140,14 @@ public:
 	 */
 	virtual float getRaw() const {
 		return 0;
+	}
+
+	/*
+	 * Get whether this sensor is redundant (backed by multiple other sensors)
+	 */
+	virtual bool isRedundant() const {
+		// By default sensors are not redundant
+		return false;
 	}
 
 protected:
