@@ -34,6 +34,10 @@ public class UpDownImage extends JPanel {
     private static final int LINE_SIZE = 20;
     public static final Color TIME_SCALE_COLOR = Color.red;
     public static final Color ENGINE_CYCLE_COLOR = Color.green;
+    private static final BasicStroke TIME_SCALE_STROKE = new BasicStroke(1, BasicStroke.CAP_BUTT, BasicStroke.JOIN_BEVEL, 10.0f,
+            new float[]{7.0f, 21.0f}, 0.0f);
+    private static final BasicStroke ENGINE_CYCLE_STROKE = new BasicStroke(1, BasicStroke.CAP_BUTT, BasicStroke.JOIN_BEVEL, 10.0f,
+            new float[]{21.0f, 7.0f}, 0.0f);
 
     private long lastUpdateTime;
     private EngineReport engineReport;
@@ -167,11 +171,14 @@ public class UpDownImage extends JPanel {
         g.setColor(getBackground());
         g.fillRect(0, 0, d.width, d.height);
 
+        if (showMouseOverText)
+            paintScaleLines(g2, d);
+
+        drawStartOfRevolution(g2, d);
+
         for (EngineReport.UpDown upDown : engineReport.getList())
             paintUpDown(d, upDown, g);
 
-        if (showMouseOverText)
-            paintScaleLines(g2, d);
 
         g2.setColor(Color.black);
 
@@ -201,7 +208,6 @@ public class UpDownImage extends JPanel {
             g.drawString(FORMAT.format(new Date(lastUpdateTime)), 5, ++line * LINE_SIZE);
         }
 
-        drawStartOfRevolution(g2, d);
     }
 
     private void drawStartOfRevolution(Graphics2D g2, Dimension d) {
@@ -210,7 +216,7 @@ public class UpDownImage extends JPanel {
 
         RevolutionLog time2rpm = RevolutionLog.parseRevolutions(revolutions);
 
-        g2.setStroke(new BasicStroke());
+        g2.setStroke(ENGINE_CYCLE_STROKE);
         for (int time : time2rpm.keySet()) {
             int x = translator.timeToScreen(time, d.width);
             g2.setColor(ENGINE_CYCLE_COLOR);
@@ -228,15 +234,12 @@ public class UpDownImage extends JPanel {
         return false;
     }
 
-    private static final BasicStroke LONG_STROKE = new BasicStroke(1, BasicStroke.CAP_BUTT, BasicStroke.JOIN_BEVEL, 10.0f,
-            new float[]{21.0f, 7.0f}, 0.0f);
-
     /**
      * This method draws a vertical line every 100 milliseconds
      */
     private void paintScaleLines(Graphics2D g2, Dimension d) {
         int fromMs = translator.getMinTime() / TIMESCALE_MULT;
-        g2.setStroke(LONG_STROKE);
+        g2.setStroke(TIME_SCALE_STROKE);
         g2.setColor(TIME_SCALE_COLOR);
 
         int toMs = translator.getMaxTime() / TIMESCALE_MULT;

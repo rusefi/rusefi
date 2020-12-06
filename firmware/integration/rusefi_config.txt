@@ -421,6 +421,8 @@ end_struct
 #define TT_TT_TOOTHED_WHEEL_36_2 48
 #define TT_TT_SUBARU_SVX 49
 #define TT_TT_1_16 50
+#define TT_TT_51 51
+
 
 #define ET_DODGE_NEON_1995 2
 #define ET_FORD_ASPIRE 3

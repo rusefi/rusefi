@@ -71,6 +71,9 @@ public:
 	// Print information about all sensors
 	static void showAllSensorInfo(Logging* logger);
 
+	// Print information about a particular sensor
+	static void showInfo(Logging* logger, SensorType type);
+
 	// Remove all sensors from the sensor registry - tread carefully if you use this outside of a unit test
 	static void resetRegistry();
 
@@ -127,6 +130,13 @@ public:
 	// this should be field lookup and simple math.
 	virtual SensorResult get() const = 0;
 
+	/*
+	 * Get an unconverted value from the sensor, if available.
+	 */
+	virtual float getRaw() const {
+		return 0;
+	}
+
 protected:
 	// Protected constructor - only subclasses call this
 	explicit Sensor(SensorType type)
@@ -135,14 +145,6 @@ protected:
 	static const char* getSensorName(SensorType type);
 
 private:
-
-	/*
-	 * Get an unconverted value from the sensor, if available.
-	 */
-	virtual float getRaw() const {
-		return 0;
-	}
-
 	const SensorType m_type;
 
 	// Get this sensor's index in the list

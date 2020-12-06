@@ -22,7 +22,7 @@ ifeq ($(USE_OPT),)
   #USE_OPT = $(RFLAGS) -O2 -fgnu89-inline -ggdb -fomit-frame-pointer -falign-functions=16 -std=gnu99 -Werror-implicit-function-declaration -Werror -Wno-error=pointer-sign -Wno-error=unused-function -Wno-error=unused-variable -Wno-error=sign-compare -Wno-error=unused-parameter -Wno-error=missing-field-initializers
   USE_OPT = -c -Wall -O0 -ggdb -g3
   USE_OPT += -fprofile-arcs -ftest-coverage
-USE_OPT += -Werror=missing-field-initializers
+  USE_OPT += -Werror=missing-field-initializers
 endif
 
 
