@@ -14,7 +14,7 @@
 class ButtonShiftController: public GearControllerBase {
 public:
 	ButtonShiftController();
-    DECLARE_ENGINE_PTR;
+
     void update() override;
     void init(DECLARE_ENGINE_PARAMETER_SIGNATURE) override;
 private:
