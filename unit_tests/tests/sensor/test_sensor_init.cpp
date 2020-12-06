@@ -52,8 +52,6 @@ TEST(SensorInit, Tps) {
 }
 
 TEST(SensorInit, TpsValuesTooClose) {
-	/*
-	 * todo: fix this, this fails HW CI at the moment
 	WITH_ENGINE_TEST_HELPER(TEST_ENGINE);
 
 	// Should fail, 0.49 volts apart
@@ -82,12 +80,18 @@ TEST(SensorInit, TpsValuesTooClose) {
 
 	// With no pin, it should be ok that they are the same
 	// Should succeed, -0.51 volts apart
-	CONFIG(tps1_1AdcChannel) = ADC_CHANNEL_NONE;
+	CONFIG(tps1_1AdcChannel) = EFI_ADC_NONE;
 	CONFIG(tpsMin) = 200;	// 1.00 volt
 	CONFIG(tpsMax) = 200;	// 1.00 volts
 	EXPECT_NO_FATAL_ERROR(initTps(PASS_CONFIG_PARAMETER_SIGNATURE));
 	Sensor::resetRegistry();
-	*/
+
+	// Test a random bogus pin index, shouldn't fail
+	CONFIG(tps1_1AdcChannel) = static_cast<adc_channel_e>(175);
+	CONFIG(tpsMin) = 200;	// 1.00 volt
+	CONFIG(tpsMax) = 200;	// 1.00 volt
+	EXPECT_NO_FATAL_ERROR(initTps(PASS_CONFIG_PARAMETER_SIGNATURE));
+	Sensor::resetRegistry();
 }
 
 TEST(SensorInit, Pedal) {

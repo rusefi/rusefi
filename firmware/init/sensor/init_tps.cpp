@@ -47,13 +47,10 @@ static bool configureTps(LinearFunc& func, float closed, float open, float min, 
 
 	// If the voltage for closed vs. open is very near, something is wrong with your calibration
 	if (split < 0.5f) {
-/*
- * todo: fix this, this fails HW CI at the moment
 		firmwareError(OBD_Throttle_Position_Sensor_Circuit_Malfunction, "Sensor \"%s\" problem: open %f/closed %f calibration values are too close together.  Please check your wiring!", msg,
 				open,
 				closed);
 		return false;
-*/
 	}
 
 	func.configure(
@@ -67,7 +64,7 @@ static bool configureTps(LinearFunc& func, float closed, float open, float min, 
 
 static bool initTpsFunc(LinearFunc& func, FunctionalSensor& sensor, adc_channel_e channel, float closed, float open, float min, float max) {
 	// Only register if we have a sensor
-	if (channel == EFI_ADC_NONE) {
+	if (channel == EFI_ADC_NONE || channel > EFI_ADC_LAST_CHANNEL) {
 		return false;
 	}
 

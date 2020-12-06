@@ -267,6 +267,7 @@ typedef enum __attribute__ ((__packed__)) {
 	EFI_ADC_13 = 14, // PC3
 	EFI_ADC_14 = 15, // PC4
 	EFI_ADC_15 = 16, // PC5
+	EFI_ADC_LAST_CHANNEL = 16, // Please keep this in sync with the last valid channel index!
 
 	EFI_ADC_TEMP_SENSOR = 17, // Internal temp sensor
 
