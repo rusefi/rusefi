@@ -104,8 +104,6 @@ case EFI_ADC_9:
   return "EFI_ADC_9";
 case EFI_ADC_ERROR:
   return "EFI_ADC_ERROR";
-case EFI_ADC_LAST_CHANNEL:
-  return "EFI_ADC_LAST_CHANNEL";
 case EFI_ADC_NONE:
   return "EFI_ADC_NONE";
   }
