@@ -508,10 +508,10 @@ void Engine::watchdog() {
 	ignitionEvents.isReady = false;
 #if EFI_PROD_CODE || EFI_SIMULATOR
 	scheduleMsg(&engineLogger, "engine has STOPPED");
-	scheduleMsg(&engineLogger, "templog engine has STOPPED [%x][%x] [%x][%x] %d",
+	scheduleMsg(&engineLogger, "templog engine has STOPPED [%x][%x] [%x][%x] %f",
 			(int)(nowNt >> 32), (int)nowNt,
 			(int)(lastTriggerToothEventTimeNt >> 32), (int)lastTriggerToothEventTimeNt,
-			(int)timeSinceLastTriggerEvent
+			timeSinceTrigger
 			);
 	triggerInfo();
 #endif
