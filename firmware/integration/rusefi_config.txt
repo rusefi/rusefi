@@ -434,6 +434,7 @@ end_struct
 #define ET_SACHS 29
 #define ET_VW_ABA 32
 #define ET_CAMARO 35
+#define ET_MRE_SUBARU_EJ18 37
 #define ET_BMW_M73_F 40
 #define ET_DODGE_NEON_2003_CRANK 46
 

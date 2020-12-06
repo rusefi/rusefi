@@ -1166,7 +1166,6 @@ void resetConfigurationExt(Logging * logger, configuration_callback_t boardCallb
 // todo: is it time to replace MICRO_RUS_EFI, PROTEUS, PROMETHEUS_DEFAULTS with MINIMAL_PINS? maybe rename MINIMAL_PINS to DEFAULT?
 	case PROTEUS:
 	case PROMETHEUS_DEFAULTS:
-	case MRE_SUBARU_EJ18:
 	case ZIL_130:
 	case MINIMAL_PINS:
 		// all basic settings are already set in prepareVoidConfiguration(), no need to set anything here
@@ -1183,6 +1182,9 @@ void resetConfigurationExt(Logging * logger, configuration_callback_t boardCallb
 		break;
 	case TEST_ENGINE:
 		setTestEngineConfiguration(PASS_CONFIG_PARAMETER_SIGNATURE);
+		break;
+	case MRE_SUBARU_EJ18:
+		setSubaruEJ18_MRE(PASS_CONFIG_PARAMETER_SIGNATURE);
 		break;
 #if EFI_UNIT_TEST
 	case TEST_ISSUE_366_BOTH:
