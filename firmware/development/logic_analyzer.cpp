@@ -230,4 +230,12 @@ void initWaveAnalyzer(Logging *sharedLogger) {
 
 }
 
+void startLogicAnalyzerPins(void) {
+
+}
+
+void stopLogicAnalyzerPins(void) {
+
+}
+
 #endif /* EFI_LOGIC_ANALYZER */

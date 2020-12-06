@@ -14,7 +14,7 @@ import static com.devexperts.logging.Logging.getLogging;
 import static com.rusefi.Timeouts.SECOND;
 
 /**
- * A few jumper wires are used to test some subsystems as realistically as possible:
+ * The following jumper wires are used to test some subsystems as realistically as possible:
  * PD1 <=> PC6
  * PD2 <=> PA5
  * <p>
