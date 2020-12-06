@@ -569,7 +569,7 @@ void printAllTriggers() {
 
 		fprintf(fp, "# duty %.2f %.2f\n", shape->expectedDutyCycle[0], shape->expectedDutyCycle[1]);
 
-		for (int i = 0; i < shape->getLength(); i++) {
+		for (size_t i = 0; i < shape->getLength(); i++) {
 
 			int triggerDefinitionCoordinate = (shape->getTriggerWaveformSynchPointIndex() + i) % shape->getSize();
 
