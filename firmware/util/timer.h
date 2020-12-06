@@ -18,6 +18,7 @@ public:
 	// then a time period representing 2^32 counts will be returned.
 	float getElapsedSeconds() const;
 	float getElapsedSeconds(efitick_t nowNt) const;
+	float getElapsedUs(efitick_t nowNt) const;
 
 	// Perform an atomic update event based on the passed timestamp,
 	// returning the delta between the last reset and the provided timestamp
