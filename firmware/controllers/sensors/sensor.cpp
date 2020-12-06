@@ -118,8 +118,8 @@ public:
 	float getRaw() const {
 		const auto sensor = m_sensor;
 
-		if (m_sensor) {
-			return m_sensor->getRaw();
+		if (sensor) {
+			return sensor->getRaw();
 		}
 
 		// We've exhausted all valid ways to return something - sensor not found.
