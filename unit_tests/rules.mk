@@ -54,16 +54,33 @@ ADEFS 	  = $(DADEFS) $(UADEFS)
 LIBS      = $(DLIBS) $(ULIBS)
 
 # Various settings
-#MCFLAGS   = -mcpu=$(MCU)
-ODFLAGS	  = -x --syms
-ASFLAGS   = $(MCFLAGS) -Wa,-amhls=$(LSTDIR)/$(notdir $(<:.s=.lst)) $(ADEFS)
-ASXFLAGS  = $(MCFLAGS) -Wa,-amhls=$(LSTDIR)/$(notdir $(<:.S=.lst)) $(ADEFS)
-CFLAGS    = $(MCFLAGS) $(OPT) $(COPT) $(CWARN) -Wa,-alms=$(LSTDIR)/$(notdir $(<:.c=.lst)) $(DEFS)
-CPPFLAGS  = $(MCFLAGS) $(OPT) $(CPPOPT) $(CPPWARN) -Wa,-alms=$(LSTDIR)/$(notdir $(<:.cpp=.lst)) $(DEFS)
-ifeq ($(USE_LINK_GC),yes)
-  LDFLAGS = $(MCFLAGS) -Wl,-Map=$(BUILDDIR)/$(PROJECT).map,--cref,--no-warn-mismatch,--gc-sections $(LLIBDIR)
+IS_MAC = no
+ifneq ($(OS),Windows_NT)
+	UNAME_S := $(shell uname -s)
+    ifeq ($(UNAME_S),Darwin)
+        IS_MAC = yes
+    endif
+endif
+
+ifeq ($(IS_MAC),yes)
+	ODFLAGS	  = -x --syms
+	ASFLAGS   = $(MCFLAGS) -Wa,-amhls=$(LSTDIR)/$(notdir $(<:.s=.lst)) $(ADEFS)
+	ASXFLAGS  = $(MCFLAGS) -Wa,-amhls=$(LSTDIR)/$(notdir $(<:.S=.lst)) $(ADEFS)
+	CFLAGS    = $(MCFLAGS) $(OPT) $(COPT)   $(CWARN)   $(DEFS)
+	CPPFLAGS  = $(MCFLAGS) $(OPT) $(CPPOPT) $(CPPWARN) $(DEFS)
+	LDFLAGS = $(MCFLAGS) $(LLIBDIR)
 else
-  LDFLAGS = $(MCFLAGS) -Wl,-Map=$(BUILDDIR)/$(PROJECT).map,--cref,--no-warn-mismatch $(LLIBDIR)
+	# not mac
+	ODFLAGS	  = -x --syms
+	ASFLAGS   = $(MCFLAGS) -Wa,-amhls=$(LSTDIR)/$(notdir $(<:.s=.lst)) $(ADEFS)
+	ASXFLAGS  = $(MCFLAGS) -Wa,-amhls=$(LSTDIR)/$(notdir $(<:.S=.lst)) $(ADEFS)
+	CFLAGS    = $(MCFLAGS) $(OPT) $(COPT) $(CWARN) -Wa,-alms=$(LSTDIR)/$(notdir $(<:.c=.lst)) $(DEFS)
+	CPPFLAGS  = $(MCFLAGS) $(OPT) $(CPPOPT) $(CPPWARN) -Wa,-alms=$(LSTDIR)/$(notdir $(<:.cpp=.lst)) $(DEFS)
+	ifeq ($(USE_LINK_GC),yes)
+	  LDFLAGS = $(MCFLAGS) -Wl,-Map=$(BUILDDIR)/$(PROJECT).map,--cref,--no-warn-mismatch,--gc-sections $(LLIBDIR)
+	else
+	  LDFLAGS = $(MCFLAGS) -Wl,-Map=$(BUILDDIR)/$(PROJECT).map,--cref,--no-warn-mismatch $(LLIBDIR)
+	endif
 endif
 
 # Generate dependency information
