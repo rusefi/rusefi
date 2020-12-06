@@ -135,8 +135,6 @@ void RpmCalculator::assignRpmValue(float floatRpmValue) {
 	// we still persist integer RPM! todo: figure out the next steps
 	rpmValue = efiRound(floatRpmValue, 1);
 
-	printf("assignRpmValue %f %d\n", floatRpmValue, rpmValue);
-
 	if (rpmValue <= 0) {
 		oneDegreeUs = NAN;
 		invalidate();
