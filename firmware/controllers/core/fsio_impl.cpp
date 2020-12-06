@@ -141,7 +141,7 @@ FsioValue getEngineValue(le_action_e action DECLARE_ENGINE_PARAMETER_SUFFIX) {
 		return engine->triggerCentral.getVVTPosition();
 #endif
 	case LE_METHOD_TIME_SINCE_TRIGGER_EVENT:
-		return engine->triggerCentral.getTimeSinceTriggerEvent();
+		return engine->triggerCentral.getTimeSinceTriggerEvent(getTimeNowNt());
 	case LE_METHOD_TIME_SINCE_BOOT:
 #if EFI_MAIN_RELAY_CONTROL
 		// in main relay control mode, we return the number of seconds since the ignition is turned on

@@ -11,6 +11,7 @@
 #include "globalaccess.h"
 #include "scheduler.h"
 #include "stored_value_sensor.h"
+#include "timer.h"
 
 // we use this value in case of noise on trigger input lines
 #define NOISY_RPM -1
@@ -113,7 +114,8 @@ public:
 	 * NaN while engine is not spinning
 	 */
 	volatile floatus_t oneDegreeUs = NAN;
-	volatile efitick_t lastRpmEventTimeNt = 0;
+
+	Timer lastTdcTimer;
 
 protected:
 	// Print sensor info - current RPM state
