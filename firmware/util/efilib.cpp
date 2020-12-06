@@ -35,7 +35,7 @@ float efiFloor(float value, float precision) {
  */
 float efiRound(float value, float precision) {
 	efiAssert(CUSTOM_ERR_ASSERT, precision != 0, "zero precision", NAN);
-	float a = rintf (value / precision);
+	float a = round(value / precision);
 	return fixNegativeZero(a * precision);
 }
 
