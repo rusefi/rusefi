@@ -20,12 +20,12 @@ ButtonShiftController::ButtonShiftController() :
 
 }
 
-void ButtonShiftController::init (DECLARE_ENGINE_PARAMETER_SIGNATURE) {
-    // 500 millisecond is maybe a little long?
-    debounceUp.init(500, CONFIG(tcuUpshiftButtonPin), CONFIG(tcuUpshiftButtonPinMode));
-    debounceDown.init(500, CONFIG(tcuDownshiftButtonPin), CONFIG(tcuDownshiftButtonPinMode));
-    INJECT_ENGINE_REFERENCE(&transmissionController);
-    transmissionController.init();
+void ButtonShiftController::init(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+	// 500 millisecond is maybe a little long?
+	debounceUp.init(500, CONFIG(tcuUpshiftButtonPin), CONFIG(tcuUpshiftButtonPinMode));
+	debounceDown.init(500, CONFIG(tcuDownshiftButtonPin), CONFIG(tcuDownshiftButtonPinMode));
+
+	GearControllerBase::init(PASS_ENGINE_PARAMETER_SIGNATURE);
 }
 
 void ButtonShiftController::update() {
@@ -77,11 +77,8 @@ void ButtonShiftController::update() {
                 break;
         }
     }
-    // We are responsible for telling the transmission controller
-    //  what gear we want.
-    transmissionController.update(getDesiredGear());
-    // Post state to TS
-    postState();
+
+	GearControllerBase::update();
 }
 
 
