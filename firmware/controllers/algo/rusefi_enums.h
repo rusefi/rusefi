@@ -122,7 +122,7 @@ typedef enum {
 
 	UNUSED_36 = 36,
 
-	CHEVY_C20_1973 = 37,
+	MRE_SUBARU_EJ18 = 37,
 
 	TOYOTA_JZS147 = 38, // 2JZ-GTE NON VVTi
 
