@@ -82,7 +82,7 @@ TEST(SensorInit, TpsValuesTooClose) {
 	// Should succeed, -0.51 volts apart
 	CONFIG(tps1_1AdcChannel) = EFI_ADC_NONE;
 	CONFIG(tpsMin) = 200;	// 1.00 volt
-	CONFIG(tpsMax) = 200;	// 1.00 volts
+	CONFIG(tpsMax) = 200;	// 1.00 volt
 	EXPECT_NO_FATAL_ERROR(initTps(PASS_CONFIG_PARAMETER_SIGNATURE));
 	Sensor::resetRegistry();
 
