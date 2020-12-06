@@ -247,7 +247,8 @@ void StartupFuelPumping::update(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 #endif
 
 void printCurrentState(Logging *logging, int seconds, const char *engineTypeName, const char *firmwareBuildId) {
-	logging->appendPrintf("%s%s%d@%s%s %s %d%s", PROTOCOL_VERSION_TAG, DELIMETER,
+	// VersionChecker in rusEFI console is parsing these version string, please follow the expected format
+	logging->appendPrintf("%s%s%d@%s %s %s %d%s", PROTOCOL_VERSION_TAG, DELIMETER,
 			getRusEfiVersion(), VCS_VERSION,
 			firmwareBuildId,
 			engineTypeName,
