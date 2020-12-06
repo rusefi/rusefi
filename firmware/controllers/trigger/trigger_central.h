@@ -61,7 +61,7 @@ public:
 	/**
 	 * this is similar to TriggerState#startOfCycleNt but with the crank-only sensor magic
 	 */
-	efitick_t timeAtVirtualZeroNt = 0;
+	Timer virtualZeroTimer;
 
 	efitick_t vvtSyncTimeNt = 0;
 
