@@ -135,6 +135,8 @@ void RpmCalculator::assignRpmValue(float floatRpmValue) {
 	// we still persist integer RPM! todo: figure out the next steps
 	rpmValue = efiRound(floatRpmValue, 1);
 
+	printf("assignRpmValue %f %d\n", floatRpmValue, rpmValue);
+
 	if (rpmValue <= 0) {
 		oneDegreeUs = NAN;
 		invalidate();
@@ -286,10 +288,10 @@ void rpmShaftPositionCallback(trigger_event_e ckpSignalType,
 		// Replace 'normal' RPM with instant RPM for the initial spin-up period
 		engine->triggerCentral.triggerState.movePreSynchTimestamps(PASS_ENGINE_PARAMETER_SIGNATURE);
 		int prevIndex;
-		int instantRpm = engine->triggerCentral.triggerState.calculateInstantRpm(&engine->triggerCentral.triggerFormDetails,
+		float instantRpm = engine->triggerCentral.triggerState.calculateInstantRpm(&engine->triggerCentral.triggerFormDetails,
 				&prevIndex, nowNt PASS_ENGINE_PARAMETER_SUFFIX);
 		// validate instant RPM - we shouldn't skip the cranking state
-		instantRpm = minI(instantRpm, CONFIG(cranking.rpm) - 1);
+		instantRpm = minF(instantRpm, CONFIG(cranking.rpm) - 1);
 		rpmState->assignRpmValue(instantRpm);
 #if 0
 		scheduleMsg(logger, "** RPM: idx=%d sig=%d iRPM=%d", index, ckpSignalType, instantRpm);
