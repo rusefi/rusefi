@@ -34,11 +34,6 @@ void setFlatInjectorLag(float value DECLARE_CONFIG_PARAMETER_SUFFIX);
  */
 #define getOneDegreeTimeUs(rpm) (1000000.0f * 60 / 360 / (rpm))
 
-/**
- * @return float, time needed to rotate crankshaft by one degree, in native clicks.
- */
-#define getOneDegreeTimeNt(rpm) (US2NT(1000000) * 60.0f / 360 / (rpm))
-
 floatms_t getCrankshaftRevolutionTimeMs(int rpm);
 floatms_t getEngineCycleDuration(int rpm DECLARE_ENGINE_PARAMETER_SUFFIX);
 

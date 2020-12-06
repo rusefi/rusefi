@@ -1,5 +1,6 @@
 #include "mock/mock_sensor.h"
 #include "stored_value_sensor.h"
+#include "unit_test_framework.h"
 
 #include <gtest/gtest.h>
 
@@ -49,7 +50,7 @@ TEST_F(SensorBasic, DoubleRegister) {
 
 	// And then do it again!
 	MockSensor dut2(SensorType::Tps1);
-	EXPECT_FALSE(dut2.Register());
+	EXPECT_FATAL_ERROR(dut2.Register());
 
 	// Make sure that we get the first DUT back - not the second
 	auto shouldBeDut = Sensor::getSensorOfType(SensorType::Tps1);
