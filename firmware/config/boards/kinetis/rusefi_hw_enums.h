@@ -176,10 +176,7 @@ typedef enum __attribute__ ((__packed__)) {
 	EFI_ADC_13 = 14,
 	EFI_ADC_14 = 15,
 	EFI_ADC_15 = 16,
-	EFI_ADC_LAST_CHANNEL = EFI_ADC_15 + 1,	// Please keep this in sync with the last valid channel index!
+	EFI_ADC_LAST_CHANNEL = 17,	// Please keep this in sync with the last valid channel index!
 
 	EFI_ADC_ERROR = 50,
 } adc_channel_e;
-
-/* Plase keep updating this define */
-#define EFI_ADC_LAST	EFI_ADC_15

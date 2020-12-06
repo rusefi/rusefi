@@ -270,7 +270,7 @@ typedef enum __attribute__ ((__packed__)) {
 
 	EFI_ADC_TEMP_SENSOR = 17, // Internal temp sensor
 
-	EFI_ADC_LAST_CHANNEL = EFI_ADC_TEMP_SENSOR + 1,	// Please keep this in sync with the last valid channel index!
+	EFI_ADC_LAST_CHANNEL = 18,	// Please keep this in sync with the last valid channel index!
 
 	EFI_ADC_ERROR = 50,
 } adc_channel_e;
