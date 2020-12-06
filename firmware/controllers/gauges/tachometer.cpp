@@ -38,7 +38,7 @@ void tachSignalCallback(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	// How many tach pulse periods do we have?
 	int periods = CONFIG(tachPulsePerRev);
 
-	if (periods == 0 || periods > 10){
+	if (periods == 0 || periods > 10) {
 		firmwareError(CUSTOM_ERR_6709, "Invalid tachometer pulse per rev: %d", periods);
 		return;
 	}
