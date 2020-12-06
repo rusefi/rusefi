@@ -501,7 +501,7 @@ void Engine::watchdog() {
 	 * we have a trigger event between the time we've invoked 'getTimeNow' and here
 	 */
 	float timeSinceTrigger = triggerCentral.getTimeSinceTriggerEvent(nowNt);
-	if (timeSinceTrigger < REVOLUTION_TIME_HIGH_THRESHOLD)) {
+	if (timeSinceTrigger < REVOLUTION_TIME_HIGH_THRESHOLD) {
 		return;
 	}
 	isSpinning = false;
