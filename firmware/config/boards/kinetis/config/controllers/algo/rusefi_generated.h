@@ -1212,8 +1212,8 @@
 #define showHumanReadableWarning_offset 976
 #define showSdCardWarning_offset 76
 #define SIGNATURE_BOARD kin
-#define SIGNATURE_DATE 2020.12.04
-#define SIGNATURE_HASH 3040749611
+#define SIGNATURE_DATE 2020.12.06
+#define SIGNATURE_HASH 588595051
 #define silentTriggerError_offset 1464
 #define slowAdcAlpha_offset 2088
 #define sparkDwellRpmBins_offset 332
@@ -1543,7 +1543,7 @@
 #define ts_show_spi true
 #define ts_show_trigger_comparator true
 #define ts_show_tunerstudio_port true
-#define TS_SIGNATURE "rusEFI 2020.12.04.kin.3040749611"
+#define TS_SIGNATURE "rusEFI 2020.12.06.kin.588595051"
 #define TS_SINGLE_WRITE_COMMAND 'W'
 #define TS_SINGLE_WRITE_COMMAND_char W
 #define TS_TEST_COMMAND 't' // 0x74
@@ -1552,6 +1552,7 @@
 #define TT_TT_2JZ_3_34 25
 #define TT_TT_36_2_2_2 23
 #define TT_TT_3_1_CAM 31
+#define TT_TT_51 51
 #define TT_TT_60_2_VW 20
 #define TT_TT_CHRYSLER_NGC_36_2_2 30
 #define TT_TT_DAIHATSU 6

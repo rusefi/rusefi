@@ -18,16 +18,12 @@ include $(PROJECT_DIR)/rusefi_rules.mk
 
 # Compiler options here.
 ifeq ($(USE_OPT),)
-# As of Jan 2016 we are producing 64 bit unit tests on Windows which needs 64 bit GDB
-# Previouslyt we had to download 32 bit version of GDB maybe from http://www.equation.com/servlet/equation.cmd?fa=gdb
-#
 # -O2 is needed for mingw, without it there is a linking issue to isnanf?!?!
   #USE_OPT = $(RFLAGS) -O2 -fgnu89-inline -ggdb -fomit-frame-pointer -falign-functions=16 -std=gnu99 -Werror-implicit-function-declaration -Werror -Wno-error=pointer-sign -Wno-error=unused-function -Wno-error=unused-variable -Wno-error=sign-compare -Wno-error=unused-parameter -Wno-error=missing-field-initializers
   USE_OPT = -c -Wall -O0 -ggdb -g3
   USE_OPT += -fprofile-arcs -ftest-coverage
   USE_OPT += -Werror=missing-field-initializers
   USE_OPT += -Wno-unused-parameter -Wno-unused-function
-  USE_OPT += -fsingle-precision-constant
 endif
 
 
@@ -297,7 +293,7 @@ ULIBDIR =
 
 # List all user libraries here
 ULIBS = -lm
-ULIBS += -lgcov --coverage
+ULIBS += --coverage
 
 #
 # End of user defines
