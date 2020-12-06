@@ -31,7 +31,11 @@ bool Timer::hasElapsedUs(float microseconds) const {
 }
 
 float Timer::getElapsedSeconds() const {
-	auto delta = getTimeNowNt() - m_lastReset;
+	return getElapsedSeconds(getTimeNowNt());
+}
+
+float Timer::getElapsedSeconds(efitick_t nowNt) const {
+	auto delta = nowNt - m_lastReset;
 
 	if (delta > UINT32_MAX - 1) {
 		delta = UINT32_MAX - 1;
@@ -39,5 +43,13 @@ float Timer::getElapsedSeconds() const {
 
 	auto delta32 = (uint32_t)delta;
 
-	return NT2US(delta32);
+	return 1e-6 * NT2US(delta32);
+}
+
+float Timer::getElapsedSecondsAndReset(efitick_t nowNt) {
+	float result = getElapsedSeconds(nowNt);
+
+	reset(nowNt);
+
+	return result;
 }
