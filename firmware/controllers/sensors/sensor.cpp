@@ -118,12 +118,22 @@ public:
 	float getRaw() const {
 		const auto sensor = m_sensor;
 
-		if (m_sensor) {
-			return m_sensor->getRaw();
+		if (sensor) {
+			return sensor->getRaw();
 		}
 
 		// We've exhausted all valid ways to return something - sensor not found.
 		return 0;
+	}
+
+	bool isRedundant() const {
+		const auto sensor = m_sensor;
+
+		if (sensor) {
+			return sensor->isRedundant();
+		}
+
+		return false;
 	}
 
 private:
@@ -179,6 +189,12 @@ bool Sensor::Register() {
 	const auto entry = getEntryForType(type);
 
 	return entry ? entry->getRaw() : 0;
+}
+
+/*static*/ bool Sensor::isRedundant(SensorType type) {
+	const auto entry = getEntryForType(type);
+
+	return entry ? entry->isRedundant() : false;
 }
 
 /*static*/ bool Sensor::hasSensor(SensorType type) {
