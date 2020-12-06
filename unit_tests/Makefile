@@ -242,7 +242,7 @@ TOPT = -mthumb -DTHUMB
 CWARN = -Wall -Wextra -Wstrict-prototypes -pedantic -Wmissing-prototypes -Wold-style-definition
 
 # Define C++ warning options here
-CPPWARN = -Wall -Wextra -Wno-unused-parameter -Wno-unused-function -Wno-unused-variable -Wno-format -Wno-literal-conversion -Wno-unused-parameter
+CPPWARN = -Wall -Wextra -Wno-unused-parameter -Wno-unused-function -Wno-unused-variable -Wno-format -Wno-literal-conversion -Wno-unused-parameter -Wno-unused-private-field
 
 #
 # Compiler settings
