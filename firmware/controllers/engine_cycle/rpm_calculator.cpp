@@ -132,7 +132,9 @@ bool RpmCalculator::checkIfSpinning(efitick_t nowNt) const {
 
 void RpmCalculator::assignRpmValue(float floatRpmValue) {
 	previousRpmValue = rpmValue;
-	// we still persist integer RPM! todo: figure out the next steps
+
+	// Round to the nearest integer RPM - some other parts of the ECU expect integer, so that's what we hand out.
+	// TODO: RPM should eventually switch to floating point across the ECU
 	rpmValue = efiRound(floatRpmValue, 1);
 
 	if (rpmValue <= 0) {
