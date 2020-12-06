@@ -67,7 +67,7 @@ static bool configureTps(LinearFunc& func, float closed, float open, float min, 
 
 static bool initTpsFunc(LinearFunc& func, FunctionalSensor& sensor, adc_channel_e channel, float closed, float open, float min, float max) {
 	// Only register if we have a sensor
-	if (channel == EFI_ADC_NONE) {
+	if (channel == EFI_ADC_NONE || channel >= EFI_ADC_LAST_CHANNEL) {
 		return false;
 	}
 
