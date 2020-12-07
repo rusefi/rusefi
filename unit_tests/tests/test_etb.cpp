@@ -295,6 +295,15 @@ TEST(etb, setpointIdle) {
 	EXPECT_FLOAT_EQ(55, etb.getSetpoint().value_or(-1));
 }
 
+TEST(etb, setpointNoPedalMap) {
+	EtbController etb;
+
+	// Don't pass a pedal map
+	etb.init(ETB_Throttle1, nullptr, nullptr, nullptr);
+
+	EXPECT_EQ(etb.getSetpoint(), unexpected);
+}
+
 TEST(etb, setpointIdleValveController) {
 	EtbController etb;
 
