@@ -91,7 +91,6 @@ TEST(SensorInit, TpsValuesTooClose) {
 	CONFIG(tpsMin) = 200;	// 1.00 volt
 	CONFIG(tpsMax) = 200;	// 1.00 volt
 	EXPECT_NO_FATAL_ERROR(initTps(PASS_CONFIG_PARAMETER_SIGNATURE));
-	EXPECT_NO_FATAL_ERROR(initTps(PASS_CONFIG_PARAMETER_SIGNATURE));
 	Sensor::resetRegistry();
 }
 
