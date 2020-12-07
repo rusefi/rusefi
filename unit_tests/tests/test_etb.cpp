@@ -175,10 +175,36 @@ TEST(etb, initializationNoFunction) {
 TEST(etb, initializationNotRedundantTps) {
 	EtbController dut;
 
+	// Needs pedal for init
+	Sensor::setMockValue(SensorType::AcceleratorPedal, 0.0f);
+
 	// Not redundant, should fail upon init
 	Sensor::setMockValue(SensorType::Tps1, 0.0f, false);
 
 	EXPECT_FATAL_ERROR(dut.init(ETB_Throttle1, nullptr, nullptr, nullptr));
+}
+
+TEST(etb, initializationNoThrottles) {
+	// This tests the case where you don't want an ETB, and expect everything to go fine
+	EtbController duts[2];
+
+	WITH_ENGINE_TEST_HELPER(TEST_ENGINE);
+
+	for (int i = 0; i < ETB_COUNT; i++) {
+		engine->etbControllers[i] = &duts[i];
+	}
+
+	// Configure ETB functions, but no pedal
+	engineConfiguration->etbFunctions[0] = ETB_Throttle1;
+	engineConfiguration->etbFunctions[1] = ETB_Throttle2;
+
+	// No pedal - don't init ETBs
+	Sensor::resetMockValue(SensorType::AcceleratorPedal);
+
+	// Not redundant TPS (aka cable throttle)
+	Sensor::setMockValue(SensorType::Tps1, 0.0f, false);
+
+	EXPECT_NO_FATAL_ERROR(doInitElectronicThrottle(PASS_ENGINE_PARAMETER_SIGNATURE));
 }
 
 TEST(etb, idlePlumbing) {
@@ -314,7 +340,7 @@ TEST(etb, setpointNoPedalMap) {
 	EtbController etb;
 
 	// Must have TPS initialized for ETB setup
-//	Sensor::setMockValue(SensorType::Tps1, 0.0f, true);
+	Sensor::setMockValue(SensorType::Tps1, 0.0f, true);
 
 	// Don't pass a pedal map
 	etb.init(ETB_Throttle1, nullptr, nullptr, nullptr);
