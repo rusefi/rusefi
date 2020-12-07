@@ -313,6 +313,9 @@ TEST(etb, setpointIdle) {
 TEST(etb, setpointNoPedalMap) {
 	EtbController etb;
 
+	// Must have TPS initialized for ETB setup
+	Sensor::setMockValue(SensorType::Tps1, 0.0f, true);
+
 	// Don't pass a pedal map
 	etb.init(ETB_Throttle1, nullptr, nullptr, nullptr);
 
