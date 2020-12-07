@@ -676,7 +676,7 @@ static void setTriggerInputPin(const char *indexStr, const char *pinName) {
 
 static void setTriggerSimulatorMode(const char *indexStr, const char *modeCode) {
 	int index = atoi(indexStr);
-	if (index < 0 || index >= TRIGGER_SIMULATOR_PIN_COUNT || absI(index) == ERROR_CODE) {
+	if (index < 0 || index >= TRIGGER_SIMULATOR_PIN_COUNT) {
 		return;
 	}
 	int mode = atoi(modeCode);
@@ -688,7 +688,7 @@ static void setTriggerSimulatorMode(const char *indexStr, const char *modeCode) 
 
 static void setEgtCSPin(const char *indexStr, const char *pinName) {
 	int index = atoi(indexStr);
-	if (index < 0 || index >= EGT_CHANNEL_COUNT || absI(index) == ERROR_CODE)
+	if (index < 0 || index >= EGT_CHANNEL_COUNT)
 		return;
 	brain_pin_e pin = parseBrainPin(pinName);
 	if (pin == GPIO_INVALID) {
@@ -702,7 +702,7 @@ static void setEgtCSPin(const char *indexStr, const char *pinName) {
 
 static void setTriggerSimulatorPin(const char *indexStr, const char *pinName) {
 	int index = atoi(indexStr);
-	if (index < 0 || index >= TRIGGER_SIMULATOR_PIN_COUNT || absI(index) == ERROR_CODE)
+	if (index < 0 || index >= TRIGGER_SIMULATOR_PIN_COUNT)
 		return;
 	brain_pin_e pin = parseBrainPin(pinName);
 	if (pin == GPIO_INVALID) {
