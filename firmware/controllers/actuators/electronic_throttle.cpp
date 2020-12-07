@@ -169,6 +169,20 @@ bool EtbController::init(etb_function_e function, DcMotor *motor, pid_s *pidPara
 
 	m_function = function;
 	m_positionSensor = functionToPositionSensor(function);
+
+	// If we are a throttle, require redundant TPS sensor
+	if (function == ETB_Throttle1 || function == ETB_Throttle2) {
+		if (!Sensor::isRedundant(m_positionSensor)) {
+			firmwareError(
+				OBD_Throttle_Position_Sensor_Circuit_Malfunction,
+				"Use of electronic throttle requires %s to be redundant.",
+				Sensor::getSensorName(m_positionSensor)
+			);
+
+			return false;
+		}
+	}
+
 	m_motor = motor;
 	m_pid.initPidClass(pidParameters);
 	m_pedalMap = pedalMap;
