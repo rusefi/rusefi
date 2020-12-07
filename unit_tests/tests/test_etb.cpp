@@ -6,7 +6,7 @@
  */
 
 #include "engine_test_helper.h"
-#include "electronic_throttle.h"
+#include "electronic_throttle_impl.h"
 #include "dc_motor.h"
 #include "engine_controller.h"
 #include "sensor.h"
