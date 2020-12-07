@@ -27,8 +27,8 @@ TEST(etb, initializationNoPedal) {
 		engine->etbControllers[i] = &mocks[i];
 	}
 
-	EXPECT_CALL(mocks[0], init(ETB_Throttle1, _, _, _)).WillOnce(Return(false));
-	EXPECT_CALL(mocks[1], init(ETB_Throttle2, _, _, _)).WillOnce(Return(false));
+	EXPECT_CALL(mocks[0], init(ETB_Throttle1, _, _, _, false)).WillOnce(Return(false));
+	EXPECT_CALL(mocks[1], init(ETB_Throttle2, _, _, _, false)).WillOnce(Return(false));
 
 	// This shouldn't throw, since no throttles are configured, but no pedal is configured either
 	EXPECT_NO_FATAL_ERROR(doInitElectronicThrottle(PASS_ENGINE_PARAMETER_SIGNATURE));
@@ -46,8 +46,8 @@ TEST(etb, initializationMissingThrottle) {
 	engineConfiguration->etbFunctions[0] = ETB_None;
 	engineConfiguration->etbFunctions[1] = ETB_None;
 
-	EXPECT_CALL(mocks[0], init(ETB_None, _, _, _)).WillOnce(Return(false));
-	EXPECT_CALL(mocks[1], init(ETB_None, _, _, _)).WillOnce(Return(false));
+	EXPECT_CALL(mocks[0], init(ETB_None, _, _, _, true)).WillOnce(Return(false));
+	EXPECT_CALL(mocks[1], init(ETB_None, _, _, _, true)).WillOnce(Return(false));
 
 	// Must have a sensor configured before init
 	Sensor::setMockValue(SensorType::AcceleratorPedal, 0);
@@ -74,10 +74,10 @@ TEST(etb, initializationSingleThrottle) {
 	engineConfiguration->etbFunctions[1] = ETB_None;
 
 	// Expect mock0 to be init as throttle 1, and PID params
-	EXPECT_CALL(mocks[0], init(ETB_Throttle1, _, &engineConfiguration->etb, Ne(nullptr))).WillOnce(Return(true));
+	EXPECT_CALL(mocks[0], init(ETB_Throttle1, _, &engineConfiguration->etb, Ne(nullptr), true)).WillOnce(Return(true));
 
 	// Expect mock1 to be init as none
-	EXPECT_CALL(mocks[1], init(ETB_None, _, _, _)).WillOnce(Return(true));
+	EXPECT_CALL(mocks[1], init(ETB_None, _, _, _, true)).WillOnce(Return(true));
 
 	doInitElectronicThrottle(PASS_ENGINE_PARAMETER_SIGNATURE);
 }
@@ -99,10 +99,10 @@ TEST(etb, initializationSingleThrottleInSecondSlot) {
 	engineConfiguration->etbFunctions[1] = ETB_Throttle1;
 
 	// Expect mock0 to be init as none
-	EXPECT_CALL(mocks[0], init(ETB_None, _, _, _)).WillOnce(Return(true));
+	EXPECT_CALL(mocks[0], init(ETB_None, _, _, _, true)).WillOnce(Return(true));
 
 	// Expect mock1 to be init as throttle 1, and PID params
-	EXPECT_CALL(mocks[1], init(ETB_Throttle1, _, &engineConfiguration->etb, Ne(nullptr))).WillOnce(Return(true));
+	EXPECT_CALL(mocks[1], init(ETB_Throttle1, _, &engineConfiguration->etb, Ne(nullptr), true)).WillOnce(Return(true));
 
 	doInitElectronicThrottle(PASS_ENGINE_PARAMETER_SIGNATURE);
 }
@@ -127,10 +127,10 @@ TEST(etb, initializationDualThrottle) {
 	engineConfiguration->etbFunctions[1] = ETB_Throttle2;
 
 	// Expect mock0 to be init as throttle 1, and PID params
-	EXPECT_CALL(mocks[0], init(ETB_Throttle1, _, &engineConfiguration->etb, Ne(nullptr))).WillOnce(Return(true));
+	EXPECT_CALL(mocks[0], init(ETB_Throttle1, _, &engineConfiguration->etb, Ne(nullptr), true)).WillOnce(Return(true));
 
 	// Expect mock1 to be init as throttle 2, and PID params
-	EXPECT_CALL(mocks[1], init(ETB_Throttle2, _, &engineConfiguration->etb, Ne(nullptr))).WillOnce(Return(true));
+	EXPECT_CALL(mocks[1], init(ETB_Throttle2, _, &engineConfiguration->etb, Ne(nullptr), true)).WillOnce(Return(true));
 
 	doInitElectronicThrottle(PASS_ENGINE_PARAMETER_SIGNATURE);
 }
@@ -144,18 +144,14 @@ TEST(etb, initializationWastegate) {
 		engine->etbControllers[i] = &mocks[i];
 	}
 
-	// Must have a sensor configured before init
-	Sensor::setMockValue(SensorType::AcceleratorPedal, 0);
-	Sensor::setMockValue(SensorType::AcceleratorPedalPrimary, 0);
-
 	engineConfiguration->etbFunctions[0] = ETB_Wastegate;
 	engineConfiguration->etbFunctions[1] = ETB_None;
 
 	// Expect mock0 to be init as throttle 1, and PID wastegate params
-	EXPECT_CALL(mocks[0], init(ETB_Wastegate, _, &engineConfiguration->etbWastegatePid, Ne(nullptr))).WillOnce(Return(true));
+	EXPECT_CALL(mocks[0], init(ETB_Wastegate, _, &engineConfiguration->etbWastegatePid, Ne(nullptr), false)).WillOnce(Return(true));
 
 	// Expect mock1 to be init as none
-	EXPECT_CALL(mocks[1], init(ETB_None, _, _, _)).WillOnce(Return(true));
+	EXPECT_CALL(mocks[1], init(ETB_None, _, _, _, false)).WillOnce(Return(true));
 
 	doInitElectronicThrottle(PASS_ENGINE_PARAMETER_SIGNATURE);
 }
@@ -166,7 +162,7 @@ TEST(etb, initializationNoFunction) {
 	EtbController dut;
 
 	// When init called with ETB_None, should ignore the provided params and return false
-	EXPECT_FALSE(dut.init(ETB_None, &motor, nullptr, nullptr));
+	EXPECT_FALSE(dut.init(ETB_None, &motor, nullptr, nullptr, false));
 
 	// This should no-op, it shouldn't call motor.set(float duty)
 	dut.setOutput(0.5f);
@@ -181,7 +177,7 @@ TEST(etb, initializationNotRedundantTps) {
 	// Not redundant, should fail upon init
 	Sensor::setMockValue(SensorType::Tps1, 0.0f, false);
 
-	EXPECT_FATAL_ERROR(dut.init(ETB_Throttle1, nullptr, nullptr, nullptr));
+	EXPECT_FATAL_ERROR(dut.init(ETB_Throttle1, nullptr, nullptr, nullptr, true));
 }
 
 TEST(etb, initializationNoThrottles) {
@@ -246,7 +242,7 @@ TEST(etb, testSetpointOnlyPedal) {
 	// Must have TPS initialized for ETB setup
 	Sensor::setMockValue(SensorType::Tps1, 0.0f, true);
 
-	etb.init(ETB_Throttle1, nullptr, nullptr, &pedalMap);
+	etb.init(ETB_Throttle1, nullptr, nullptr, &pedalMap, true);
 
 	// Check endpoints and midpoint
 	Sensor::setMockValue(SensorType::AcceleratorPedal, 0.0f);
@@ -299,7 +295,7 @@ TEST(etb, setpointIdle) {
 		.WillRepeatedly([](float xRpm, float y) {
 			return y;
 		});
-	etb.init(ETB_Throttle1, nullptr, nullptr, &pedalMap);
+	etb.init(ETB_Throttle1, nullptr, nullptr, &pedalMap, true);
 
 	// No idle range, should just pass pedal
 	Sensor::setMockValue(SensorType::AcceleratorPedal, 0.0f);
@@ -343,7 +339,7 @@ TEST(etb, setpointNoPedalMap) {
 	Sensor::setMockValue(SensorType::Tps1, 0.0f, true);
 
 	// Don't pass a pedal map
-	etb.init(ETB_Throttle1, nullptr, nullptr, nullptr);
+	etb.init(ETB_Throttle1, nullptr, nullptr, nullptr, true);
 
 	EXPECT_EQ(etb.getSetpoint(), unexpected);
 }
@@ -351,7 +347,7 @@ TEST(etb, setpointNoPedalMap) {
 TEST(etb, setpointIdleValveController) {
 	EtbController etb;
 
-	etb.init(ETB_IdleValve, nullptr, nullptr, nullptr);
+	etb.init(ETB_IdleValve, nullptr, nullptr, nullptr, false);
 
 	etb.setIdlePosition(0);
 	EXPECT_FLOAT_EQ(0, etb.getSetpoint().value_or(-1));
@@ -370,7 +366,7 @@ TEST(etb, setpointIdleValveController) {
 TEST(etb, setpointWastegateController) {
 	EtbController etb;
 
-	etb.init(ETB_Wastegate, nullptr, nullptr, nullptr);
+	etb.init(ETB_Wastegate, nullptr, nullptr, nullptr, false);
 
 	etb.setWastegatePosition(0);
 	EXPECT_FLOAT_EQ(0, etb.getSetpoint().value_or(-1));
@@ -396,28 +392,28 @@ TEST(etb, etbTpsSensor) {
 	// Test first throttle
 	{
 		EtbController etb;
-		etb.init(ETB_Throttle1, nullptr, nullptr, nullptr);
+		etb.init(ETB_Throttle1, nullptr, nullptr, nullptr, true);
 		EXPECT_EQ(etb.observePlant().Value, 25.0f);
 	}
 
 	// Test second throttle
 	{
 		EtbController etb;
-		etb.init(ETB_Throttle2, nullptr, nullptr, nullptr);
+		etb.init(ETB_Throttle2, nullptr, nullptr, nullptr, true);
 		EXPECT_EQ(etb.observePlant().Value, 75.0f);
 	}
 
 	// Test wastegate control
 	{
 		EtbController etb;
-		etb.init(ETB_Wastegate, nullptr, nullptr, nullptr);
+		etb.init(ETB_Wastegate, nullptr, nullptr, nullptr, true);
 		EXPECT_EQ(etb.observePlant().Value, 33.0f);
 	}
 
 	// Test idle valve control
 	{
 		EtbController etb;
-		etb.init(ETB_IdleValve, nullptr, nullptr, nullptr);
+		etb.init(ETB_IdleValve, nullptr, nullptr, nullptr, true);
 		EXPECT_EQ(etb.observePlant().Value, 66.0f);
 	}
 }
@@ -429,7 +425,7 @@ TEST(etb, setOutputInvalid) {
 
 	EtbController etb;
 	INJECT_ENGINE_REFERENCE(&etb);
-	etb.init(ETB_Throttle1, &motor, nullptr, nullptr);
+	etb.init(ETB_Throttle1, &motor, nullptr, nullptr, true);
 
 	// Should be disabled in case of unexpected
 	EXPECT_CALL(motor, disable());
@@ -446,7 +442,7 @@ TEST(etb, setOutputValid) {
 
 	EtbController etb;
 	INJECT_ENGINE_REFERENCE(&etb);
-	etb.init(ETB_Throttle1, &motor, nullptr, nullptr);
+	etb.init(ETB_Throttle1, &motor, nullptr, nullptr, true);
 
 	// Should be enabled and value set
 	EXPECT_CALL(motor, enable());
@@ -465,7 +461,7 @@ TEST(etb, setOutputValid2) {
 
 	EtbController etb;
 	INJECT_ENGINE_REFERENCE(&etb);
-	etb.init(ETB_Throttle1, &motor, nullptr, nullptr);
+	etb.init(ETB_Throttle1, &motor, nullptr, nullptr, true);
 
 	// Should be enabled and value set
 	EXPECT_CALL(motor, enable());
@@ -484,7 +480,7 @@ TEST(etb, setOutputOutOfRangeHigh) {
 
 	EtbController etb;
 	INJECT_ENGINE_REFERENCE(&etb);
-	etb.init(ETB_Throttle1, &motor, nullptr, nullptr);
+	etb.init(ETB_Throttle1, &motor, nullptr, nullptr, true);
 
 	// Should be enabled and value set
 	EXPECT_CALL(motor, enable());
@@ -503,7 +499,7 @@ TEST(etb, setOutputOutOfRangeLow) {
 
 	EtbController etb;
 	INJECT_ENGINE_REFERENCE(&etb);
-	etb.init(ETB_Throttle1, &motor, nullptr, nullptr);
+	etb.init(ETB_Throttle1, &motor, nullptr, nullptr, true);
 
 	// Should be enabled and value set
 	EXPECT_CALL(motor, enable());
@@ -522,7 +518,7 @@ TEST(etb, setOutputPauseControl) {
 
 	EtbController etb;
 	INJECT_ENGINE_REFERENCE(&etb);
-	etb.init(ETB_Throttle1, &motor, nullptr, nullptr);
+	etb.init(ETB_Throttle1, &motor, nullptr, nullptr, true);
 
 	// Pause control - should get no output
 	engineConfiguration->pauseEtbControl = true;
@@ -543,7 +539,7 @@ TEST(etb, closedLoopPid) {
 	Sensor::setMockValue(SensorType::Tps1, 0.0f, true);
 
 	EtbController etb;
-	etb.init(ETB_Throttle1, nullptr, &pid, nullptr);
+	etb.init(ETB_Throttle1, nullptr, &pid, nullptr, true);
 
 	// Disable autotune for now
 	Engine e;
@@ -565,7 +561,7 @@ TEST(etb, openLoopThrottle) {
 
 	EtbController etb;
 	INJECT_ENGINE_REFERENCE(&etb);
-	etb.init(ETB_Throttle1, nullptr, nullptr, nullptr);
+	etb.init(ETB_Throttle1, nullptr, nullptr, nullptr, true);
 
 	// Map [0, 100] -> [-50, 50]
 	setLinearCurve(engineConfiguration->etbBiasBins, 0, 100);
@@ -583,7 +579,7 @@ TEST(etb, openLoopNonThrottle) {
 
 	EtbController etb;
 	INJECT_ENGINE_REFERENCE(&etb);
-	etb.init(ETB_Wastegate, nullptr, nullptr, nullptr);
+	etb.init(ETB_Wastegate, nullptr, nullptr, nullptr, false);
 
 	// Map [0, 100] -> [-50, 50]
 	setLinearCurve(engineConfiguration->etbBiasBins, 0, 100);
