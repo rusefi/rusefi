@@ -75,8 +75,7 @@
 
 #if EFI_ELECTRONIC_THROTTLE_BODY
 
-#include "electronic_throttle_impl.h"
-#include "engine.h"
+#include "electronic_throttle.h"
 #include "tps.h"
 #include "sensor.h"
 #include "dc_motor.h"
