@@ -92,6 +92,9 @@ TEST(SensorInit, TpsValuesTooClose) {
 	CONFIG(tpsMax) = 200;	// 1.00 volt
 	EXPECT_NO_FATAL_ERROR(initTps(PASS_CONFIG_PARAMETER_SIGNATURE));
 	Sensor::resetRegistry();
+
+	// Reconfiguration should also work without error
+	EXPECT_NO_FATAL_ERROR(reconfigureTps(PASS_CONFIG_PARAMETER_SIGNATURE));
 }
 
 TEST(SensorInit, Pedal) {
