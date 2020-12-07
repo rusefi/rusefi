@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on hellen_cypress_gen_config.bat integration/rusefi_config.txt Sun Dec 06 19:18:51 UTC 2020
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on hellen_cypress_gen_config.bat integration/rusefi_config.txt Sun Dec 06 23:07:46 UTC 2020
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -689,7 +689,7 @@ struct engine_configuration_s {
 	offset 76 bit 12 */
 	bool etb_use_two_wires : 1;
 	/**
-	 * Subaru style where default valve position is somewhere in the middle. First solenoid opens it more while second can close it more than default position.
+	 * Subaru/BMW style where default valve position is somewhere in the middle. First solenoid opens it more while second can close it more than default position.
 	offset 76 bit 13 */
 	bool isDoubleSolenoidIdle : 1;
 	/**
@@ -3778,4 +3778,4 @@ struct persistent_config_s {
 typedef struct persistent_config_s persistent_config_s;
 
 // end
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on hellen_cypress_gen_config.bat integration/rusefi_config.txt Sun Dec 06 19:18:51 UTC 2020
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on hellen_cypress_gen_config.bat integration/rusefi_config.txt Sun Dec 06 23:07:46 UTC 2020

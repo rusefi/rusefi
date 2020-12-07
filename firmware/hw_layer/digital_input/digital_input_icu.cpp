@@ -198,7 +198,7 @@ ICUDriver * getInputCaptureDriver(const char *msg, brain_pin_e hwPin) {
 	return nullptr;
 }
 
-void turnOnCapturePin(const char *msg, brain_pin_e brainPin) {
+static void turnOnCapturePin(const char *msg, brain_pin_e brainPin) {
 	ICUDriver *driver = getInputCaptureDriver(msg, brainPin);
 	if (driver != NULL) {
 		iomode_t mode = (iomode_t) PAL_MODE_ALTERNATE(getAlternateFunctions(driver));
