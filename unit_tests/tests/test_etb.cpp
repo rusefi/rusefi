@@ -6,7 +6,7 @@
  */
 
 #include "engine_test_helper.h"
-#include "electronic_throttle.h"
+#include "electronic_throttle_impl.h"
 #include "dc_motor.h"
 #include "engine_controller.h"
 #include "sensor.h"
@@ -312,6 +312,9 @@ TEST(etb, setpointIdle) {
 
 TEST(etb, setpointNoPedalMap) {
 	EtbController etb;
+
+	// Must have TPS initialized for ETB setup
+	Sensor::setMockValue(SensorType::Tps1, 0.0f, true);
 
 	// Don't pass a pedal map
 	etb.init(ETB_Throttle1, nullptr, nullptr, nullptr);
