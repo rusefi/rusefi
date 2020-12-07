@@ -172,6 +172,15 @@ TEST(etb, initializationNoFunction) {
 	dut.setOutput(0.5f);
 }
 
+TEST(etb, initializationNotRedundantTps) {
+	EtbController dut;
+
+	// Not redundant, should fail upon init
+	Sensor::setMockValue(SensorType::Tps1, 0.0f, false);
+
+	EXPECT_FATAL_ERROR(dut.init(ETB_Throttle1, nullptr, nullptr, nullptr));
+}
+
 TEST(etb, idlePlumbing) {
 	StrictMock<MockEtb> mocks[ETB_COUNT];
 
