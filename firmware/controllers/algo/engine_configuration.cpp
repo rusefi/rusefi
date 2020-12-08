@@ -884,7 +884,7 @@ static void setDefaultEngineConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	engineConfiguration->idleRpmPid.pFactor = 0.05;
 	engineConfiguration->idleRpmPid.iFactor = 0.002;
 
-	engineConfiguration->idleRpmPid.minValue = 0.1;
+	engineConfiguration->idleRpmPid.minValue = 0;
 	engineConfiguration->idleRpmPid.maxValue = 99;
 	engineConfiguration->idlePidDeactivationTpsThreshold = 2;
 
