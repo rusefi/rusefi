@@ -151,7 +151,9 @@ void BoostController::setOutput(expected<float> output) {
 		m_pwm->setSimplePwmDutyCycle(duty);
 	}
 
+#if EFI_ELECTRONIC_THROTTLE_BODY
 	setEtbWastegatePosition(percent PASS_ENGINE_PARAMETER_SUFFIX);
+#endif // EFI_ELECTRONIC_THROTTLE_BODY
 }
 
 void BoostController::PeriodicTask() {
