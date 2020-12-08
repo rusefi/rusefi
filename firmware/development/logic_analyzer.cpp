@@ -120,7 +120,7 @@ static void initWave(const char *name, int index) {
 		reader->hw->setPeriodCallback((VoidInt)(void*) waIcuPeriodCallback, (void*) reader);
 	}
 
-	print("wave%d input on %s\r\n", index, hwPortname(brainPin));
+	scheduleMsg(logger, "wave%d input on %s", index, hwPortname(brainPin));
 }
 
 WaveReader::WaveReader() {
@@ -221,21 +221,24 @@ void initWaveAnalyzer(Logging *sharedLogger) {
 		return;
 	}
 
+	addConsoleAction("waveinfo", showWaveInfo);
+}
+
+void startLogicAnalyzerPins() {
 	initWave(PROTOCOL_WA_CHANNEL_1, 0);
 	initWave(PROTOCOL_WA_CHANNEL_2, 1);
 	initWave(PROTOCOL_WA_CHANNEL_3, 2);
 	initWave(PROTOCOL_WA_CHANNEL_4, 3);
-
-	addConsoleAction("waveinfo", showWaveInfo);
-
 }
 
-void startLogicAnalyzerPins(void) {
+void stopLogicAnalyzerPins() {
+	for (int index = 0; index < LOGIC_ANALYZER_CHANNEL_COUNT; index++) {
+		brain_pin_e brainPin = CONFIG(logicAnalyzerPins)[index];
 
-}
+		if (brainPin != GPIO_UNASSIGNED) {
 
-void stopLogicAnalyzerPins(void) {
-
+		}
+	}
 }
 
 #endif /* EFI_LOGIC_ANALYZER */

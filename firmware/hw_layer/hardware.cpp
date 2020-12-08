@@ -23,6 +23,7 @@
 #include "yaw_rate_sensor.h"
 #include "pin_repository.h"
 #include "max31855.h"
+#include "logic_analyzer.h"
 #include "smart_gpio.h"
 #include "accelerometer.h"
 #include "eficonsole.h"
@@ -343,6 +344,10 @@ void applyNewHardwareSettings(void) {
 	stopVSSPins();
 #endif /* EFI_VEHICLE_SPEED */
 
+#if EFI_LOGIC_ANALYZER
+	stopLogicAnalyzerPins();
+#endif /* EFI_LOGIC_ANALYZER */
+
 #if EFI_AUX_PID
 	stopAuxPins();
 #endif /* EFI_AUX_PID */
@@ -420,6 +425,9 @@ void applyNewHardwareSettings(void) {
 #if EFI_BOOST_CONTROL
 	startBoostPin();
 #endif
+#if EFI_LOGIC_ANALYZER
+	startLogicAnalyzerPins();
+#endif /* EFI_LOGIC_ANALYZER */
 #if EFI_AUX_PID
 	startAuxPins();
 #endif /* EFI_AUX_PID */

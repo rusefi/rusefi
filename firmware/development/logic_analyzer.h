@@ -51,8 +51,8 @@ public:
 };
 
 void initWaveAnalyzer(Logging *sharedLogger);
-void startLogicAnalyzerPins(void);
-void stopLogicAnalyzerPins(void);
+void startLogicAnalyzerPins();
+void stopLogicAnalyzerPins();
 void printWave(Logging *logging);
 void showWaveInfo(void);
 
