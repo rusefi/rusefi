@@ -105,7 +105,7 @@ public:
 	/*
 	 * Mock a value for a particular sensor.
 	 */
-	static void setMockValue(SensorType type, float value);
+	static void setMockValue(SensorType type, float value, bool mockRedundant = false);
 
 	/*
 	 * Mock a value for a particular sensor.
@@ -127,6 +127,7 @@ public:
 	 * For example, CLT, IAT, Throttle Position 2, etc.
 	 */
 	const char* getSensorName() { return getSensorName(m_type); }
+	static const char* getSensorName(SensorType type);
 
 	// Retrieve the current reading from the sensor.
 	//
@@ -154,8 +155,6 @@ protected:
 	// Protected constructor - only subclasses call this
 	explicit Sensor(SensorType type)
 		: m_type(type) {}
-
-	static const char* getSensorName(SensorType type);
 
 private:
 	const SensorType m_type;

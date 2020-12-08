@@ -50,9 +50,10 @@ public:
 		return m_sensor;
 	}
 
-	void setMockValue(float value) {
+	void setMockValue(float value, bool mockRedundant) {
 		m_mockValue = value;
 		m_useMock = true;
+		m_mockRedundant = mockRedundant;
 	}
 
 	void resetMock() {
@@ -131,11 +132,16 @@ public:
 			return sensor->isRedundant();
 		}
 
+		if (m_useMock) {
+			return m_mockRedundant;
+		}
+
 		return false;
 	}
 
 private:
 	bool m_useMock = false;
+	bool m_mockRedundant = false;
 	float m_mockValue;
 	Sensor* m_sensor = nullptr;
 };
@@ -201,11 +207,11 @@ bool Sensor::Register() {
 	return entry ? entry->hasSensor() : false;
 }
 
-/*static*/ void Sensor::setMockValue(SensorType type, float value) {
+/*static*/ void Sensor::setMockValue(SensorType type, float value, bool mockRedundant) {
 	auto entry = getEntryForType(type);
 
 	if (entry) {
-		entry->setMockValue(value);
+		entry->setMockValue(value, mockRedundant);
 	}
 }
 
