@@ -216,4 +216,12 @@ void initTriggerEmulator(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX) 
 	initTriggerEmulatorLogic(sharedLogger);
 }
 
+void startTriggerEmulatorPins() {
+
+}
+
+void stopTriggerEmulatorPins() {
+
+}
+
 #endif /* EFI_EMULATE_POSITION_SENSORS */

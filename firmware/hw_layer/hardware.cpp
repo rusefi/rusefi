@@ -50,6 +50,7 @@
 #include "engine_configuration.h"
 #include "aux_pid.h"
 #include "perf_trace.h"
+#include "trigger_emulator_algo.h"
 #include "boost_control.h"
 #include "software_knock.h"
 #if EFI_MC33816
@@ -354,6 +355,10 @@ void applyNewHardwareSettings(void) {
 	stopLogicAnalyzerPins();
 #endif /* EFI_LOGIC_ANALYZER */
 
+#if EFI_EMULATE_POSITION_SENSORS
+	stopTriggerEmulatorPins();
+#endif /* EFI_EMULATE_POSITION_SENSORS */
+
 #if EFI_AUX_PID
 	stopAuxPins();
 #endif /* EFI_AUX_PID */
@@ -431,6 +436,9 @@ void applyNewHardwareSettings(void) {
 #if EFI_BOOST_CONTROL
 	startBoostPin();
 #endif
+#if EFI_EMULATE_POSITION_SENSORS
+	startTriggerEmulatorPins();
+#endif /* EFI_EMULATE_POSITION_SENSORS */
 #if EFI_LOGIC_ANALYZER
 	startLogicAnalyzerPins();
 #endif /* EFI_LOGIC_ANALYZER */
