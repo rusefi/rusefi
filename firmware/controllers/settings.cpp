@@ -1361,7 +1361,7 @@ void initSettings(void) {
 	addConsoleActionSS("set_injection_pin", setInjectionPin);
 	addConsoleActionSS("set_ignition_pin", setIgnitionPin);
 	addConsoleActionSS(CMD_TRIGGER_PIN, setTriggerInputPin);
-	addConsoleActionSS("set_trigger_simulator_pin", setTriggerSimulatorPin);
+	addConsoleActionSS(CMD_TRIGGER_SIMULATOR_PIN, setTriggerSimulatorPin);
 
 	addConsoleActionSS("set_egt_cs_pin", (VoidCharPtrCharPtr) setEgtCSPin);
 	addConsoleActionI("set_egt_spi", setEgtSpi);
