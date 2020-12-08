@@ -34,6 +34,8 @@ struct ts_channel_s {
 #if TS_UART_DMA_MODE || PRIMARY_UART_DMA_MODE || TS_UART_MODE
 	UARTDriver *uartp = nullptr;
 #endif // TS_UART_DMA_MODE
+
+	bool wasReady = false;
 };
 
 #define CRC_VALUE_SIZE 4

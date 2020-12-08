@@ -462,20 +462,18 @@ static bool isKnownCommand(char command) {
 
 TunerStudioBase tsInstance;
 
-static int wasReady = false;
-
 static void tsProcessOne(ts_channel_s* tsChannel) {
 	validateStack("communication", STACK_USAGE_COMMUNICATION, 128);
 
 	int isReady = sr5IsReady(tsChannel);
 	if (!isReady) {
 		chThdSleepMilliseconds(10);
-		wasReady = false;
+		tsChannel->wasReady = false;
 		return;
 	}
 
-	if (!wasReady) {
-		wasReady = true;
+	if (!tsChannel->wasReady) {
+		tsChannel->wasReady = true;
 //			scheduleSimpleMsg(&logger, "ts channel is now ready ", hTimeNow());
 	}
 
@@ -569,16 +567,21 @@ static void tsProcessOne(ts_channel_s* tsChannel) {
 		print("got unexpected TunerStudio command %x:%c\r\n", command, command);
 }
 
+void runBinaryProtocolLoop(ts_channel_s *tsChannel)
+{
+	// Until the end of time, process incoming messages.
+	while(true) {
+		tsProcessOne(tsChannel);
+	}
+}
+
 static THD_FUNCTION(tsThreadEntryPoint, arg) {
 	(void) arg;
 	chRegSetThreadName("tunerstudio thread");
 
 	startTsPort(&tsChannel);
 
-	// Until the end of time, process incoming messages.
-	while(true) {
-		tsProcessOne(&tsChannel);
-	}
+	runBinaryProtocolLoop(&tsChannel);
 }
 
 /**
