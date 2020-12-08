@@ -26,7 +26,7 @@ class Logging;
 
 class EtbController : public IEtbController {
 public:
-	bool init(etb_function_e function, DcMotor *motor, pid_s *pidParameters, const ValueProvider3D* pedalMap) override;
+	bool init(etb_function_e function, DcMotor *motor, pid_s *pidParameters, const ValueProvider3D* pedalMap, bool initializeThrottles) override;
 	void setIdlePosition(percent_t pos) override;
 	void setWastegatePosition(percent_t pos) override;
 	void reset() override;
