@@ -64,6 +64,7 @@
 
 #include "allsensors.h"
 #include "tunerstudio.h"
+#include "tunerstudio_impl.h"
 
 #include "main_trigger_callback.h"
 #include "flash_main.h"
@@ -459,6 +460,8 @@ static bool isKnownCommand(char command) {
 			|| command == TS_GET_CONFIG_ERROR;
 }
 
+TunerStudioBase tsInstance;
+
 // this function runs indefinitely
 void runBinaryProtocolLoop(ts_channel_s *tsChannel) {
 	int wasReady = false;
@@ -563,7 +566,7 @@ void runBinaryProtocolLoop(ts_channel_s *tsChannel) {
 			continue;
 		}
 
-		int success = tunerStudioHandleCrcCommand(tsChannel, tsChannel->scratchBuffer, incomingPacketSize);
+		int success = tsInstance.handleCrcCommand(tsChannel, tsChannel->scratchBuffer, incomingPacketSize);
 		if (!success)
 			print("got unexpected TunerStudio command %x:%c\r\n", command, command);
 
@@ -724,8 +727,7 @@ bool handlePlainCommand(ts_channel_s *tsChannel, uint8_t command) {
 
 static int transmitted = 0;
 
-
-int tunerStudioHandleCrcCommand(ts_channel_s *tsChannel, char *data, int incomingPacketSize) {
+int TunerStudioBase::handleCrcCommand(ts_channel_s *tsChannel, char *data, int incomingPacketSize) {
 	ScopePerf perf(PE::TunerStudioHandleCrcCommand);
 
 	char command = data[0];
