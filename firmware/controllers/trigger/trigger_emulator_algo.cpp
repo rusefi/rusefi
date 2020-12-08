@@ -196,8 +196,12 @@ void onConfigurationChangeRpmEmulatorCallback(engine_configuration_s *previousCo
 void initTriggerEmulator(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	scheduleMsg(sharedLogger, "Emulating %s", getConfigurationName(engineConfiguration->engineType));
 
-	for (size_t i = 0; i < efi::size(emulatorOutputs); i++)
-	{
+	initTriggerEmulatorLogic(sharedLogger);
+}
+
+void startTriggerEmulatorPins() {
+	hasStimPins = false;
+	for (size_t i = 0; i < efi::size(emulatorOutputs); i++) {
 		triggerSignal.outputPins[i] = &emulatorOutputs[i];
 
 		brain_pin_e pin = CONFIG(triggerSimulatorPins)[i];
@@ -212,16 +216,15 @@ void initTriggerEmulator(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX) 
 					&CONFIG(triggerSimulatorPinModes)[i]);
 #endif
 	}
-
-	initTriggerEmulatorLogic(sharedLogger);
-}
-
-void startTriggerEmulatorPins() {
-
 }
 
 void stopTriggerEmulatorPins() {
-
+	for (size_t i = 0; i < efi::size(emulatorOutputs); i++) {
+		brain_pin_e brainPin = activeConfiguration.triggerSimulatorPins[i];
+		if (brainPin != GPIO_UNASSIGNED) {
+			efiSetPadUnused(brainPin);
+		}
+	}
 }
 
 #endif /* EFI_EMULATE_POSITION_SENSORS */
