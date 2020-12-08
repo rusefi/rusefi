@@ -211,6 +211,10 @@ static void sendErrorCode(ts_channel_s *tsChannel, uint8_t code) {
 	sr5WriteCrcPacket(tsChannel, code, nullptr, 0);
 }
 
+void TunerStudio::sendErrorCode(ts_channel_s* tsChannel, uint8_t code) {
+	::sendErrorCode(tsChannel, code);
+}
+
 static void handlePageSelectCommand(ts_channel_s *tsChannel, ts_response_format_e mode) {
 	tsState.pageCommandCounter++;
 
@@ -460,7 +464,7 @@ static bool isKnownCommand(char command) {
 			|| command == TS_GET_CONFIG_ERROR;
 }
 
-TunerStudioBase tsInstance;
+TunerStudio tsInstance(&tsLogger);
 
 static void tsProcessOne(ts_channel_s* tsChannel) {
 	validateStack("communication", STACK_USAGE_COMMUNICATION, 128);
@@ -617,24 +621,6 @@ void handleQueryCommand(ts_channel_s *tsChannel, ts_response_format_e mode) {
 }
 
 /**
- * @brief 'Output' command sends out a snapshot of current values
- * Gauges refresh
- */
-static void handleOutputChannelsCommand(ts_channel_s *tsChannel, ts_response_format_e mode, uint16_t offset, uint16_t count) {
-	if (offset + count > sizeof(TunerStudioOutputChannels)) {
-		scheduleMsg(&tsLogger, "TS: Version Mismatch? Too much outputs requested %d/%d/%d", offset, count,
-				sizeof(TunerStudioOutputChannels));
-		sendErrorCode(tsChannel, TS_RESPONSE_OUT_OF_RANGE);
-		return;
-	}
-
-	tsState.outputChannelsCommandCounter++;
-	prepareTunerStudioOutputs();
-	// this method is invoked too often to print any debug information
-	sr5SendResponse(tsChannel, mode, ((const uint8_t *) &tsOutputChannels) + offset, count);
-}
-
-/**
  * rusEfi own test command
  */
 static void handleTestCommand(ts_channel_s *tsChannel) {
@@ -659,10 +645,10 @@ static void handleTestCommand(ts_channel_s *tsChannel) {
 
 extern CommandHandler console_line_callback;
 
-static void handleGetVersion(ts_channel_s *tsChannel, ts_response_format_e mode) {
+static void handleGetVersion(ts_channel_s *tsChannel) {
 	static char versionBuffer[32];
 	chsnprintf(versionBuffer, sizeof(versionBuffer), "rusEFI v%d@%s", getRusEfiVersion(), VCS_VERSION);
-	sr5SendResponse(tsChannel, mode, (const uint8_t *) versionBuffer, strlen(versionBuffer) + 1);
+	sr5SendResponse(tsChannel, TS_CRC, (const uint8_t *) versionBuffer, strlen(versionBuffer) + 1);
 }
 
 static void handleGetText(ts_channel_s *tsChannel) {
@@ -743,14 +729,14 @@ int TunerStudioBase::handleCrcCommand(ts_channel_s *tsChannel, char *data, int i
 	switch(command)
 	{
 	case TS_OUTPUT_COMMAND:
-		handleOutputChannelsCommand(tsChannel, TS_CRC, offset, count);
+		cmdOutputChannels(tsChannel, offset, count);
 		break;
 	case TS_HELLO_COMMAND:
 		tunerStudioDebug("got Query command");
 		handleQueryCommand(tsChannel, TS_CRC);
 		break;
 	case TS_GET_FIRMWARE_VERSION:
-		handleGetVersion(tsChannel, TS_CRC);
+		handleGetVersion(tsChannel);
 		break;
 #if EFI_FILE_LOGGING || EFI_SIMULATOR
 	case TS_SD_R_COMMAND:
