@@ -32,7 +32,7 @@ EXTERNC void efiIcuStart(const char *msg, ICUDriver *icup, const ICUConfig *conf
 #else // EFI_GPIO_HARDWARE == false
 
 // Without GPIO hardware, all pins read as false
-EXTERNC bool efiReadPin(brain_pin_e pin) { return false; }
+EXTERNC static bool efiReadPin(brain_pin_e pin) { return false; }
 
 #endif /* EFI_GPIO_HARDWARE */
 
