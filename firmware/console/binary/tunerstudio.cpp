@@ -462,17 +462,9 @@ static bool isKnownCommand(char command) {
 
 TunerStudioBase tsInstance;
 
-// this function runs indefinitely
-void runBinaryProtocolLoop(ts_channel_s *tsChannel) {
-	int wasReady = false;
+static int wasReady = false;
 
-	// Until the end of time, process incoming messages.
-	while(true) {
-		tsProcessOne(tsChannel);
-	}
-}
-
-void tsProcessOne(ts_channel_s* tsChannel) {
+static void tsProcessOne(ts_channel_s* tsChannel) {
 	validateStack("communication", STACK_USAGE_COMMUNICATION, 128);
 
 	int isReady = sr5IsReady(tsChannel);
@@ -583,7 +575,10 @@ static THD_FUNCTION(tsThreadEntryPoint, arg) {
 
 	startTsPort(&tsChannel);
 
-	runBinaryProtocolLoop(&tsChannel);
+	// Until the end of time, process incoming messages.
+	while(true) {
+		tsProcessOne(&tsChannel);
+	}
 }
 
 /**
