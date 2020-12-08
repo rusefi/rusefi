@@ -766,6 +766,7 @@ static void setLogicInputPin(const char *indexStr, const char *pinName) {
 	}
 	scheduleMsg(&logger, "setting logic input pin[%d] to %s please save&restart", index, hwPortname(pin));
 	engineConfiguration->logicAnalyzerPins[index] = pin;
+	incrementGlobalConfigurationVersion(PASS_ENGINE_PARAMETER_SIGNATURE);
 }
 
 static void showPinFunction(const char *pinName) {
@@ -1358,8 +1359,8 @@ void initSettings(void) {
 
 #if EFI_PROD_CODE
 	addConsoleActionS("showpin", showPinFunction);
-	addConsoleActionSS("set_injection_pin", setInjectionPin);
-	addConsoleActionSS("set_ignition_pin", setIgnitionPin);
+	addConsoleActionSS(CMD_INJECTION_PIN, setInjectionPin);
+	addConsoleActionSS(CMD_IGNITION_PIN, setIgnitionPin);
 	addConsoleActionSS(CMD_TRIGGER_PIN, setTriggerInputPin);
 	addConsoleActionSS(CMD_TRIGGER_SIMULATOR_PIN, setTriggerSimulatorPin);
 
