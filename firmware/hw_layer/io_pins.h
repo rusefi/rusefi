@@ -33,6 +33,7 @@ EXTERNC void efiIcuStart(const char *msg, ICUDriver *icup, const ICUConfig *conf
 
 // Without GPIO hardware, all pins read as false
 #define efiReadPin(pin) (false)
+#define efiSetPadUnused(pin) {}
 
 #endif /* EFI_GPIO_HARDWARE */
 
