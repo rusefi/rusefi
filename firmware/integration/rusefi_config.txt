@@ -1455,8 +1455,10 @@ uint8_t[4] unusedsw;;"units", 1, 0, -20, 100, 0
 
 	pin_output_mode_e[TCU_SOLENOID_COUNT iterate] tcu_solenoid_mode;
 
+	int16_t[IGN_RPM_COUNT] knockBaseNoise;;"dB", 1.0, 0, -30.0, 0, 2
+
 ! just a reminder that 'int' and 'float' are 4 bytes each
-	int[369] mainUnusedEnd;;"units", 1, 0, -20, 100, 0
+	int[365] mainUnusedEnd;;"units", 1, 0, -20, 100, 0
 
 ! end of engine_configuration_s
 end_struct
