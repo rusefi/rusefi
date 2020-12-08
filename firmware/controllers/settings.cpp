@@ -1369,8 +1369,8 @@ void initSettings(void) {
 	addConsoleActionSS("set_trigger_simulator_mode", setTriggerSimulatorMode);
 	addConsoleActionS("set_fuel_pump_pin", setFuelPumpPin);
 	addConsoleActionS("set_acrelay_pin", setACRelayPin);
-	addConsoleActionS("set_alternator_pin", setAlternatorPin);
-	addConsoleActionS("set_idle_pin", setIdlePin);
+	addConsoleActionS(CMD_ALTERNATOR_PIN, setAlternatorPin);
+	addConsoleActionS(CMD_IDLE_PIN, setIdlePin);
 	addConsoleActionS("set_main_relay_pin", setMainRelayPin);
 	addConsoleActionS("set_starter_relay_pin", setStarterRelayPin);
 	addConsoleActionS("set_cj125_cs_pin", setCj125CsPin);
@@ -1387,7 +1387,7 @@ void initSettings(void) {
 #if HAL_USE_ADC
 	addConsoleActionSS("set_analog_input_pin", setAnalogInputPin);
 #endif
-	addConsoleActionSS("set_logic_input_pin", setLogicInputPin);
+	addConsoleActionSS(CMD_LOGIC_PIN, setLogicInputPin);
 	addConsoleActionI("set_pot_spi", setPotSpi);
 #endif /* EFI_PROD_CODE */
 }
