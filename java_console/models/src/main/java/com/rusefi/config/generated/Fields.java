@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEfi tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Tue Dec 08 01:32:38 UTC 2020
+// this file was generated automatically by rusEfi tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Tue Dec 08 09:42:42 UTC 2020
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -258,6 +258,7 @@ public class Fields {
 	public static final String CMD_STARTER_BENCH = "starterbench";
 	public static final String CMD_TRIGGER_HW_INPUT = "trigger_hw_input";
 	public static final String CMD_TRIGGER_PIN = "set_trigger_input_pin";
+	public static final String CMD_TRIGGER_SIMULATOR_PIN = "set_trigger_simulator_pin";
 	public static final String CMD_TRIGGERINFO = "triggerinfo";
 	public static final int CMD_TS_BENCH_AC_COMPRESSOR_RELAY = 6;
 	public static final int CMD_TS_BENCH_AC_FAN_RELAY = 5;
@@ -1172,6 +1173,7 @@ public class Fields {
 	public static final int servoOutputPins8_offset = 3147;
 	public static final int showHumanReadableWarning_offset = 976;
 	public static final int showSdCardWarning_offset = 76;
+	public static final int SIGNATURE_HASH = 1900934147;
 	public static final int silentTriggerError_offset = 1464;
 	public static final int slowAdcAlpha_offset = 2088;
 	public static final int sparkDwellRpmBins_offset = 332;
@@ -1451,7 +1453,7 @@ public class Fields {
 	public static final char TS_SD_R_COMMAND = 'r';
 	public static final char TS_SD_W_COMMAND = 'w';
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI 2020.12.08.all.2453949096";
+	public static final String TS_SIGNATURE = "rusEFI 2020.12.08.all.1900934147";
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final int TT_TT_1_16 = 50;
 	public static final int TT_TT_2JZ_1_12 = 29;

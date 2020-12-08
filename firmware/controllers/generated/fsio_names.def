@@ -1,4 +1,4 @@
-// this file was generated automatically by rusEfi tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Tue Dec 08 01:32:38 UTC 2020
+// this file was generated automatically by rusEfi tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Tue Dec 08 09:42:42 UTC 2020
 
 // by class com.rusefi.output.FileFsioSettingsConsumer
 static LENameOrdinalPair lefanOnTemperature(FSIO_SETTING_FANONTEMPERATURE, "cfg_fanOnTemperature");
