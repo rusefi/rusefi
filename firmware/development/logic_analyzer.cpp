@@ -236,7 +236,7 @@ void stopLogicAnalyzerPins() {
 		brain_pin_e brainPin = CONFIG(logicAnalyzerPins)[index];
 
 		if (brainPin != GPIO_UNASSIGNED) {
-
+			stopDigitalCapture("wave input", brainPin);
 		}
 	}
 }
