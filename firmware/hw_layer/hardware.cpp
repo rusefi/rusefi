@@ -304,8 +304,14 @@ void stopSpi(spi_device_e device) {
  */
 
 void applyNewHardwareSettings(void) {
-    // all 'stop' methods need to go before we begin starting pins
-
+    /**
+     * All 'stop' methods need to go before we begin starting pins.
+     *
+     * We take settings from 'activeConfiguration' not 'engineConfiguration' while stopping hardware.
+     * Some hardware is restart unconditionally on change of parameters while for some systems we make extra effort and restart only
+     * relevant settings were changes.
+     *
+     */
 	ButtonDebounce::stopConfigurationList();
 
 #if EFI_SHAFT_POSITION_INPUT

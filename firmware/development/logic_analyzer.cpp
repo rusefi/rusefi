@@ -233,7 +233,7 @@ void startLogicAnalyzerPins() {
 
 void stopLogicAnalyzerPins() {
 	for (int index = 0; index < LOGIC_ANALYZER_CHANNEL_COUNT; index++) {
-		brain_pin_e brainPin = CONFIG(logicAnalyzerPins)[index];
+		brain_pin_e brainPin = activeConfiguration.logicAnalyzerPins[index];
 
 		if (brainPin != GPIO_UNASSIGNED) {
 			stopDigitalCapture("wave input", brainPin);

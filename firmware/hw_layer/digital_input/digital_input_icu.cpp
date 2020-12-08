@@ -219,7 +219,7 @@ void stopDigitalCapture(const char *msg, brain_pin_e brainPin) {
 	if (driver == NULL) {
 		return;
 	}
-	efiSetPadUnused(brainPin);
+
 	int regSize = registeredIcus.size;
 	for (int i = 0; i < regSize; i++) {
 		if (registeredIcus.elements[i].driver == driver) {
