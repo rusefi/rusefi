@@ -6,8 +6,6 @@
  */
 #include "global.h"
 
-#if EFI_BOOST_CONTROL
-
 #if EFI_TUNER_STUDIO
 #include "tunerstudio_outputs.h"
 #endif /* EFI_TUNER_STUDIO */
@@ -253,5 +251,3 @@ void initBoostCtrl(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	boostController.Start();
 #endif
 }
-
-#endif

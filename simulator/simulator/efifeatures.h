@@ -10,7 +10,6 @@
 #include "rusefi_true.h"
 
 #define EFI_ENABLE_ASSERTS TRUE
-#define EFI_LAUNCH_CONTROL FALSE
 #define EFI_ENABLE_MOCK_ADC TRUE
 
 #define ENABLE_PERF_TRACE FALSE
@@ -22,8 +21,6 @@
 #define HW_CHECK_MODE FALSE
 
 #define SC_BUFFER_SIZE 4000
-
-#define EFI_BOOST_CONTROL FALSE
 
 #define EFI_CANBUS_SLAVE FALSE
 

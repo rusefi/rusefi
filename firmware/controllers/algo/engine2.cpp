@@ -177,9 +177,7 @@ void EngineState::periodicFastCallback(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	timingAdvance = getAdvance(rpm, ignitionLoad PASS_ENGINE_PARAMETER_SUFFIX);
 	multispark.count = getMultiSparkCount(rpm PASS_ENGINE_PARAMETER_SUFFIX);
 
-#if EFI_LAUNCH_CONTROL
 	updateLaunchConditions(PASS_ENGINE_PARAMETER_SIGNATURE);
-#endif //EFI_LAUNCH_CONTROL
 
 #endif // EFI_ENGINE_CONTROL
 }

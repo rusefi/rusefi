@@ -115,14 +115,11 @@ public:
 	bool needTdcCallback = true;
 #endif /* EFI_UNIT_TEST */
 
-
-#if EFI_LAUNCH_CONTROL
 	bool launchActivatePinState = false;
 	bool isLaunchCondition = false;
 	bool applyLaunchExtraFuel = false;
 	bool setLaunchBoostDuty = false;
 	bool applyLaunchControlRetard = false;
-#endif /* EFI_LAUNCH_CONTROL */
 
 	/**
 	 * By the way 32-bit value should hold at least 400 hours of events at 6K RPM x 12 events per revolution

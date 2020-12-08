@@ -210,9 +210,8 @@ void incrementGlobalConfigurationVersion(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	onConfigurationChangeAlternatorCallback(&activeConfiguration);
 #endif /* EFI_ALTERNATOR_CONTROL */
 
-#if EFI_BOOST_CONTROL
 	onConfigurationChangeBoostCallback(&activeConfiguration);
-#endif
+
 #if EFI_ELECTRONIC_THROTTLE_BODY
 	onConfigurationChangeElectronicThrottleCallback(&activeConfiguration);
 #endif /* EFI_ELECTRONIC_THROTTLE_BODY */
@@ -708,9 +707,9 @@ static void setDefaultEngineConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	setDefaultEtbParameters(PASS_CONFIG_PARAMETER_SIGNATURE);
 	setDefaultEtbBiasCurve(PASS_CONFIG_PARAMETER_SIGNATURE);
 #endif /* EFI_ELECTRONIC_THROTTLE_BODY */
-#if EFI_BOOST_CONTROL
-    setDefaultBoostParameters(PASS_CONFIG_PARAMETER_SIGNATURE);
-#endif
+
+	setDefaultBoostParameters(PASS_CONFIG_PARAMETER_SIGNATURE);
+
 
     CONFIG(tachPulsePerRev) = 1;
 

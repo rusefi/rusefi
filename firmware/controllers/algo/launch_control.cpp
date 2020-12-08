@@ -7,7 +7,6 @@
 
 #include "engine.h"
 
-#if EFI_LAUNCH_CONTROL
 #include "boost_control.h"
 #include "vehicle_speed.h"
 #include "launch_control.h"
@@ -211,5 +210,3 @@ void initLaunchControl(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX) {
 
 	isInit = true;
 }
-
-#endif /* EFI_LAUNCH_CONTROL */

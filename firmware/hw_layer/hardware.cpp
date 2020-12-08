@@ -378,9 +378,8 @@ void applyNewHardwareSettings(void) {
 	stopHD44780_pins();
 #endif /* #if EFI_HD44780_LCD */
 
-#if EFI_BOOST_CONTROL
 	stopBoostPin();
-#endif
+
 	if (isPinOrModeChanged(clutchUpPin, clutchUpPinMode)) {
 		efiSetPadUnused(activeConfiguration.clutchUpPin);
 	}
@@ -428,9 +427,8 @@ void applyNewHardwareSettings(void) {
 	startVSSPins();
 #endif /* EFI_VEHICLE_SPEED */
 
-#if EFI_BOOST_CONTROL
 	startBoostPin();
-#endif
+
 #if EFI_LOGIC_ANALYZER
 	startLogicAnalyzerPins();
 #endif /* EFI_LOGIC_ANALYZER */

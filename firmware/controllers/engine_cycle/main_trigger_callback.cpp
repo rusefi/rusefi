@@ -52,9 +52,7 @@
 #include "engine.h"
 #include "perf_trace.h"
 #include "sensor.h"
-#if EFI_LAUNCH_CONTROL
 #include "launch_control.h"
-#endif
 
 #include "backup_ram.h"
 
@@ -433,12 +431,12 @@ void mainTriggerCallback(uint32_t trgEventIndex, efitick_t edgeTimestamp DECLARE
 			limitedFuel = true;
 		}
 	}
-#if EFI_LAUNCH_CONTROL
+
 	if (engine->isLaunchCondition && !limitedSpark && !limitedFuel) {
 		/* in case we are not already on a limited conditions, check launch as well */
 		applyLaunchControlLimiting(&limitedSpark, &limitedFuel PASS_ENGINE_PARAMETER_SUFFIX);
 	}
-#endif
+
 	if (trgEventIndex == 0) {
 		if (HAVE_CAM_INPUT()) {
 			engine->triggerCentral.validateCamVvtCounters();
