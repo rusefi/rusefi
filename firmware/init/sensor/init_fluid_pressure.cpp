@@ -48,9 +48,7 @@ static void initFluidPressure(LinearFunc& func, FunctionalSensor& sensor, const 
 
 	AdcSubscription::SubscribeSensor(sensor, channel, bandwidth);
 
-	if (!sensor.Register()) {
-		firmwareError(CUSTOM_INVALID_TPS_SETTING, "Duplicate registration for sensor \"%s\"", sensor.getSensorName());
-	}
+	sensor.Register();
 }
 
 void initOilPressure(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
@@ -64,9 +62,7 @@ void initOilPressure(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 		: SensorType::FuelPressureLow
 	);
 
-	if (!injectorPressure.Register()) {
-		firmwareError(OBD_PCM_Processor_Fault, "Duplicate sensor registration");
-	}
+	injectorPressure.Register();
 }
 
 void reconfigureOilPressure(DECLARE_CONFIG_PARAMETER_SIGNATURE) {

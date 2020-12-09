@@ -36,7 +36,6 @@ extern tunerstudio_counters_s tsState;
  * handle non CRC wrapped command
  */
 bool handlePlainCommand(ts_channel_s *tsChannel, uint8_t command);
-int tunerStudioHandleCrcCommand(ts_channel_s *tsChannel, char *data, int incomingPacketSize);
 
 /**
  * this command is part of protocol initialization
@@ -67,28 +66,9 @@ void runBinaryProtocolLoop(ts_channel_s *tsChannel);
 #endif
 
 typedef pre_packed struct
-	post_packed {
-		short int offset;
-		short int count;
-	} TunerStudioOchRequest;
-
-
-	typedef pre_packed struct
-	post_packed {
-		short int offset;
-		short int count;
-	} TunerStudioWriteChunkRequest;
-
-	typedef pre_packed struct
-		post_packed {
-			short int offset;
-			short int count;
-		} TunerStudioReadRequest;
-
-		typedef pre_packed struct
-			post_packed {
-				short int offset;
-				unsigned char value;
-			} TunerStudioWriteValueRequest;
+post_packed {
+	short int offset;
+	short int count;
+} TunerStudioWriteChunkRequest;
 
 #endif /* EFI_TUNER_STUDIO */

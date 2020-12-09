@@ -1,7 +1,7 @@
 #include "global.h"
 #include "rusefi_enums.h"
 #include "rusefi_hw_enums.h"
-// was generated automatically by rusEfi tool  from rusefi_hw_enums.h // was generated automatically by rusEfi tool  from rusefi_enums.h // by enum2string.jar tool on Fri Dec 04 00:17:48 EST 2020
+// was generated automatically by rusEfi tool  from rusefi_hw_enums.h // was generated automatically by rusEfi tool  from rusefi_enums.h // by enum2string.jar tool on Sun Dec 06 09:01:42 EST 2020
 // see also gen_config_and_enums.bat
 
 
@@ -104,6 +104,8 @@ case EFI_ADC_9:
   return "EFI_ADC_9";
 case EFI_ADC_ERROR:
   return "EFI_ADC_ERROR";
+case EFI_ADC_LAST_CHANNEL:
+  return "EFI_ADC_LAST_CHANNEL";
 case EFI_ADC_NONE:
   return "EFI_ADC_NONE";
   }
@@ -833,8 +835,6 @@ case BMW_M73_PROTEUS:
   return "BMW_M73_PROTEUS";
 case CAMARO_4:
   return "CAMARO_4";
-case CHEVY_C20_1973:
-  return "CHEVY_C20_1973";
 case CITROEN_TU3JP:
   return "CITROEN_TU3JP";
 case DEFAULT_FRANKENSO:
@@ -921,6 +921,8 @@ case MRE_MIATA_NB2_MAF:
   return "MRE_MIATA_NB2_MAF";
 case MRE_MIATA_NB2_MAP:
   return "MRE_MIATA_NB2_MAP";
+case MRE_SUBARU_EJ18:
+  return "MRE_SUBARU_EJ18";
 case NISSAN_PRIMERA:
   return "NISSAN_PRIMERA";
 case PROMETHEUS_DEFAULTS:

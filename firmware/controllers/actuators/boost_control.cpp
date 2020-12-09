@@ -221,6 +221,8 @@ void onConfigurationChangeBoostCallback(engine_configuration_s *previousConfigur
 }
 
 void initBoostCtrl(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX) {
+	// todo: why do we have 'isBoostControlEnabled' setting exactly?
+	// 'initAuxPid' is an example of a subsystem without explicit enable
 	if (!CONFIG(isBoostControlEnabled)) {
 		return;
 	}
