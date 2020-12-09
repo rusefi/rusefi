@@ -64,6 +64,7 @@
 
 #include "allsensors.h"
 #include "tunerstudio.h"
+#include "tunerstudio_impl.h"
 
 #include "main_trigger_callback.h"
 #include "flash_main.h"
@@ -262,7 +263,7 @@ static const void * getStructAddr(int structId) {
 		return static_cast<trigger_state_s*>(&engine->triggerCentral.triggerState);
 #if EFI_ELECTRONIC_THROTTLE_BODY
 	case LDS_ETB_PID_STATE_INDEX:
-		return static_cast<EtbController*>(engine->etbControllers[0])->getPidState();
+		return engine->etbControllers[0]->getPidState();
 #endif /* EFI_ELECTRONIC_THROTTLE_BODY */
 
 #ifndef EFI_IDLE_CONTROL
@@ -459,114 +460,118 @@ static bool isKnownCommand(char command) {
 			|| command == TS_GET_CONFIG_ERROR;
 }
 
-// this function runs indefinitely
-void runBinaryProtocolLoop(ts_channel_s *tsChannel) {
-	int wasReady = false;
+TunerStudioBase tsInstance;
 
-	while (true) {
-		validateStack("communication", STACK_USAGE_COMMUNICATION, 128);
+static void tsProcessOne(ts_channel_s* tsChannel) {
+	validateStack("communication", STACK_USAGE_COMMUNICATION, 128);
 
-		int isReady = sr5IsReady(tsChannel);
-		if (!isReady) {
-			chThdSleepMilliseconds(10);
-			wasReady = false;
-			continue;
-		}
+	int isReady = sr5IsReady(tsChannel);
+	if (!isReady) {
+		chThdSleepMilliseconds(10);
+		tsChannel->wasReady = false;
+		return;
+	}
 
-		if (!wasReady) {
-			wasReady = true;
+	if (!tsChannel->wasReady) {
+		tsChannel->wasReady = true;
 //			scheduleSimpleMsg(&logger, "ts channel is now ready ", hTimeNow());
-		}
+	}
 
-		tsState.totalCounter++;
+	tsState.totalCounter++;
 
-		uint8_t firstByte;
-		int received = sr5ReadData(tsChannel, &firstByte, 1);
+	uint8_t firstByte;
+	int received = sr5ReadData(tsChannel, &firstByte, 1);
 #if EFI_SIMULATOR
-			logMsg("received %d\r\n", received);
+		logMsg("received %d\r\n", received);
 #endif
 
-		if (received != 1) {
+	if (received != 1) {
 //			tunerStudioError("ERROR: no command");
 #if EFI_BLUETOOTH_SETUP
-			// assume there's connection loss and notify the bluetooth init code
-			bluetoothSoftwareDisconnectNotify();
+		// assume there's connection loss and notify the bluetooth init code
+		bluetoothSoftwareDisconnectNotify();
 #endif  /* EFI_BLUETOOTH_SETUP */
-			continue;
-		}
-		onDataArrived();
+		return;
+	}
+	onDataArrived();
 
 //		scheduleMsg(logger, "Got first=%x=[%c]", firstByte, firstByte);
-		if (handlePlainCommand(tsChannel, firstByte))
-			continue;
+	if (handlePlainCommand(tsChannel, firstByte))
+		return;
 
-		uint8_t secondByte;
-		received = sr5ReadData(tsChannel, &secondByte, 1);
-		if (received != 1) {
-			tunerStudioError("TS: ERROR: no second byte");
-			continue;
-		}
+	uint8_t secondByte;
+	received = sr5ReadData(tsChannel, &secondByte, 1);
+	if (received != 1) {
+		tunerStudioError("TS: ERROR: no second byte");
+		return;
+	}
 //		scheduleMsg(logger, "Got secondByte=%x=[%c]", secondByte, secondByte);
 
-		uint16_t incomingPacketSize = firstByte << 8 | secondByte;
+	uint16_t incomingPacketSize = firstByte << 8 | secondByte;
 
-		if (incomingPacketSize == 0 || incomingPacketSize > (sizeof(tsChannel->scratchBuffer) - CRC_WRAPPING_SIZE)) {
-			scheduleMsg(&tsLogger, "TunerStudio: invalid size: %d", incomingPacketSize);
-			tunerStudioError("ERROR: CRC header size");
-			sendErrorCode(tsChannel, TS_RESPONSE_UNDERRUN);
-			continue;
-		}
+	if (incomingPacketSize == 0 || incomingPacketSize > (sizeof(tsChannel->scratchBuffer) - CRC_WRAPPING_SIZE)) {
+		scheduleMsg(&tsLogger, "TunerStudio: invalid size: %d", incomingPacketSize);
+		tunerStudioError("ERROR: CRC header size");
+		sendErrorCode(tsChannel, TS_RESPONSE_UNDERRUN);
+		return;
+	}
 
-		received = sr5ReadData(tsChannel, (uint8_t* )tsChannel->scratchBuffer, 1);
-		if (received != 1) {
-			tunerStudioError("ERROR: did not receive command");
-			sendErrorCode(tsChannel, TS_RESPONSE_UNDERRUN);
-			continue;
-		}
+	received = sr5ReadData(tsChannel, (uint8_t* )tsChannel->scratchBuffer, 1);
+	if (received != 1) {
+		tunerStudioError("ERROR: did not receive command");
+		sendErrorCode(tsChannel, TS_RESPONSE_UNDERRUN);
+		return;
+	}
 
-		char command = tsChannel->scratchBuffer[0];
-		if (!isKnownCommand(command)) {
-			scheduleMsg(&tsLogger, "unexpected command %x", command);
-			sendErrorCode(tsChannel, TS_RESPONSE_UNRECOGNIZED_COMMAND);
-			continue;
-		}
+	char command = tsChannel->scratchBuffer[0];
+	if (!isKnownCommand(command)) {
+		scheduleMsg(&tsLogger, "unexpected command %x", command);
+		sendErrorCode(tsChannel, TS_RESPONSE_UNRECOGNIZED_COMMAND);
+		return;
+	}
 
 #if EFI_SIMULATOR
-			logMsg("command %c\r\n", command);
+		logMsg("command %c\r\n", command);
 #endif
 
-		received = sr5ReadData(tsChannel, (uint8_t * ) (tsChannel->scratchBuffer + 1),
-				incomingPacketSize + CRC_VALUE_SIZE - 1);
-		int expectedSize = incomingPacketSize + CRC_VALUE_SIZE - 1;
-		if (received != expectedSize) {
-			scheduleMsg(&tsLogger, "Got only %d bytes while expecting %d for command %c", received,
-					expectedSize, command);
-			tunerStudioError("ERROR: not enough bytes in stream");
-			sendErrorCode(tsChannel, TS_RESPONSE_UNDERRUN);
-			continue;
-		}
+	received = sr5ReadData(tsChannel, (uint8_t * ) (tsChannel->scratchBuffer + 1),
+			incomingPacketSize + CRC_VALUE_SIZE - 1);
+	int expectedSize = incomingPacketSize + CRC_VALUE_SIZE - 1;
+	if (received != expectedSize) {
+		scheduleMsg(&tsLogger, "Got only %d bytes while expecting %d for command %c", received,
+				expectedSize, command);
+		tunerStudioError("ERROR: not enough bytes in stream");
+		sendErrorCode(tsChannel, TS_RESPONSE_UNDERRUN);
+		return;
+	}
 
-		uint32_t expectedCrc = *(uint32_t*) (tsChannel->scratchBuffer + incomingPacketSize);
+	uint32_t expectedCrc = *(uint32_t*) (tsChannel->scratchBuffer + incomingPacketSize);
 
-		expectedCrc = SWAP_UINT32(expectedCrc);
+	expectedCrc = SWAP_UINT32(expectedCrc);
 
-		uint32_t actualCrc = crc32(tsChannel->scratchBuffer, incomingPacketSize);
-		if (actualCrc != expectedCrc) {
-			scheduleMsg(&tsLogger, "TunerStudio: CRC %x %x %x %x", tsChannel->scratchBuffer[incomingPacketSize + 0],
-					tsChannel->scratchBuffer[incomingPacketSize + 1], tsChannel->scratchBuffer[incomingPacketSize + 2],
-					tsChannel->scratchBuffer[incomingPacketSize + 3]);
+	uint32_t actualCrc = crc32(tsChannel->scratchBuffer, incomingPacketSize);
+	if (actualCrc != expectedCrc) {
+		scheduleMsg(&tsLogger, "TunerStudio: CRC %x %x %x %x", tsChannel->scratchBuffer[incomingPacketSize + 0],
+				tsChannel->scratchBuffer[incomingPacketSize + 1], tsChannel->scratchBuffer[incomingPacketSize + 2],
+				tsChannel->scratchBuffer[incomingPacketSize + 3]);
 
-			scheduleMsg(&tsLogger, "TunerStudio: command %c actual CRC %x/expected %x", tsChannel->scratchBuffer[0],
-					actualCrc, expectedCrc);
-			tunerStudioError("ERROR: CRC issue");
-			sendErrorCode(tsChannel, TS_RESPONSE_CRC_FAILURE);
-			continue;
-		}
+		scheduleMsg(&tsLogger, "TunerStudio: command %c actual CRC %x/expected %x", tsChannel->scratchBuffer[0],
+				actualCrc, expectedCrc);
+		tunerStudioError("ERROR: CRC issue");
+		sendErrorCode(tsChannel, TS_RESPONSE_CRC_FAILURE);
+		return;
+	}
 
-		int success = tunerStudioHandleCrcCommand(tsChannel, tsChannel->scratchBuffer, incomingPacketSize);
-		if (!success)
-			print("got unexpected TunerStudio command %x:%c\r\n", command, command);
+	int success = tsInstance.handleCrcCommand(tsChannel, tsChannel->scratchBuffer, incomingPacketSize);
+	if (!success)
+		print("got unexpected TunerStudio command %x:%c\r\n", command, command);
+}
 
+void runBinaryProtocolLoop(ts_channel_s *tsChannel)
+{
+	// Until the end of time, process incoming messages.
+	while(true) {
+		tsProcessOne(tsChannel);
 	}
 }
 
@@ -724,8 +729,7 @@ bool handlePlainCommand(ts_channel_s *tsChannel, uint8_t command) {
 
 static int transmitted = 0;
 
-
-int tunerStudioHandleCrcCommand(ts_channel_s *tsChannel, char *data, int incomingPacketSize) {
+int TunerStudioBase::handleCrcCommand(ts_channel_s *tsChannel, char *data, int incomingPacketSize) {
 	ScopePerf perf(PE::TunerStudioHandleCrcCommand);
 
 	char command = data[0];

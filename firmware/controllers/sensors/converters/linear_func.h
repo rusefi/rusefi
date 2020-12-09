@@ -12,6 +12,10 @@ public:
 
 	void showInfo(Logging* logger, float testRawValue) const override;
 
+	float getDivideInput() const {
+		return m_divideInput;
+	}
+
 private:
 	// Linear equation parameters for equation of form
 	// y = ax + b

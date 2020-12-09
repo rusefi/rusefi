@@ -49,11 +49,11 @@ TEST(engine, testSymmetricalCrank) {
 
 	mult = 0.1;
 	postFourEvents(&eth, mult);
-	ASSERT_EQ( 1041,  GET_RPM()) << "RPM#11";
+	ASSERT_EQ( 1042,  GET_RPM()) << "RPM#11";
 
 	postFourEvents(&eth, mult);
-	ASSERT_EQ( 1041,  GET_RPM()) << "RPM#11";
+	ASSERT_EQ( 1042,  GET_RPM()) << "RPM#11";
 
 	postFourEvents(&eth, mult);
-	ASSERT_EQ( 1041,  GET_RPM()) << "RPM#11";
+	ASSERT_EQ( 1042,  GET_RPM()) << "RPM#11";
 }

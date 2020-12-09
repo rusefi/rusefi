@@ -194,10 +194,14 @@ void onConfigurationChangeRpmEmulatorCallback(engine_configuration_s *previousCo
 }
 
 void initTriggerEmulator(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX) {
-	print("Emulating %s\r\n", getConfigurationName(engineConfiguration->engineType));
+	scheduleMsg(sharedLogger, "Emulating %s", getConfigurationName(engineConfiguration->engineType));
 
-	for (size_t i = 0; i < efi::size(emulatorOutputs); i++)
-	{
+	initTriggerEmulatorLogic(sharedLogger);
+}
+
+void startTriggerEmulatorPins() {
+	hasStimPins = false;
+	for (size_t i = 0; i < efi::size(emulatorOutputs); i++) {
 		triggerSignal.outputPins[i] = &emulatorOutputs[i];
 
 		brain_pin_e pin = CONFIG(triggerSimulatorPins)[i];
@@ -210,10 +214,19 @@ void initTriggerEmulator(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX) 
 #if EFI_PROD_CODE
 		triggerSignal.outputPins[i]->initPin("Trigger emulator", pin,
 					&CONFIG(triggerSimulatorPinModes)[i]);
-#endif
+#endif // EFI_PROD_CODE
 	}
+}
 
-	initTriggerEmulatorLogic(sharedLogger);
+void stopTriggerEmulatorPins() {
+	for (size_t i = 0; i < efi::size(emulatorOutputs); i++) {
+		brain_pin_e brainPin = activeConfiguration.triggerSimulatorPins[i];
+		if (brainPin != GPIO_UNASSIGNED) {
+#if EFI_PROD_CODE
+			efiSetPadUnused(brainPin);
+#endif // EFI_PROD_CODE
+		}
+	}
 }
 
 #endif /* EFI_EMULATE_POSITION_SENSORS */

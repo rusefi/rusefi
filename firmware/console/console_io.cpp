@@ -63,6 +63,10 @@ extern SERIAL_USB_DRIVER EFI_CONSOLE_USB_DEVICE;
 
 static bool isSerialConsoleStarted = false;
 
+#if (defined(EFI_CONSOLE_SERIAL_DEVICE) && ! EFI_SIMULATOR)
+static event_listener_t consoleEventListener;
+#endif
+
 bool consoleByteArrived = false;
 
 void onDataArrived(void) {
