@@ -1671,7 +1671,9 @@ end_struct
 #define GAUGE_NAME_TARGET_AFR "fuel: target AFR"
 #define GAUGE_NAME_TARGET_LAMBDA "fuel: target lambda"
 #define GAUGE_NAME_AFR "Air/Fuel Ratio"
+#define GAUGE_NAME_AFR2 "Air/Fuel Ratio 2"
 #define GAUGE_NAME_LAMBDA "Lambda"
+#define GAUGE_NAME_LAMBDA2 "Lambda 2"
 #define GAUGE_NAME_IAC "Idle Air Valve"
 
 #define GAUGE_NAME_DWELL_DUTY "dwell: coil duty cycle"
