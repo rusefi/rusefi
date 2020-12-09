@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEfi tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Fri Dec 04 16:38:29 UTC 2020
+// this file was generated automatically by rusEfi tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Wed Dec 09 02:10:15 UTC 2020
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -46,7 +46,7 @@ public class Fields {
 	public static final int air_pressure_sensor_config_s_size = 16;
 	public static final int alignEngineSnifferAtTDC_offset = 744;
 	public static final int alignmentFill_at_2227_offset = 2227;
-	public static final int alignmentFill_at_4523_offset = 4523;
+	public static final int alignmentFill_at_4539_offset = 4539;
 	public static final int alternator_antiwindupFreq_offset = 1764;
 	public static final int alternator_derivativeFilterLoss_offset = 1760;
 	public static final int alternatorControl_dFactor_offset = 1724;
@@ -230,6 +230,8 @@ public class Fields {
 	public static final int clutchDownPinMode_offset = 667;
 	public static final int clutchUpPin_offset = 969;
 	public static final int clutchUpPinMode_offset = 971;
+	public static final String CMD_ALTERNATOR_PIN = "set_alternator_pin";
+	public static final String CMD_BOOST_PIN = "set_boost_pin";
 	public static final String CMD_CALIBRATE_PEDAL_DOWN = "calibrate_pedal_down";
 	public static final String CMD_CALIBRATE_PEDAL_UP = "calibrate_pedal_up";
 	public static final String CMD_DATE = "date";
@@ -241,8 +243,12 @@ public class Fields {
 	public static final String CMD_FUEL_BENCH = "fuelbench";
 	public static final String CMD_FUNCTIONAL_TEST_MODE = "test_mode";
 	public static final String CMD_HPFP_BENCH = "hpfpbench";
+	public static final String CMD_IDLE_PIN = "set_idle_pin";
 	public static final String CMD_IGNITION = "ignition";
+	public static final String CMD_IGNITION_PIN = "set_ignition_pin";
 	public static final String CMD_INJECTION = "injection";
+	public static final String CMD_INJECTION_PIN = "set_injection_pin";
+	public static final String CMD_LOGIC_PIN = "set_logic_input_pin";
 	public static final String CMD_MIL_BENCH = "milbench";
 	public static final String CMD_PINS = "pins";
 	public static final String CMD_PWM = "pwm";
@@ -254,6 +260,7 @@ public class Fields {
 	public static final String CMD_STARTER_BENCH = "starterbench";
 	public static final String CMD_TRIGGER_HW_INPUT = "trigger_hw_input";
 	public static final String CMD_TRIGGER_PIN = "set_trigger_input_pin";
+	public static final String CMD_TRIGGER_SIMULATOR_PIN = "set_trigger_simulator_pin";
 	public static final String CMD_TRIGGERINFO = "triggerinfo";
 	public static final int CMD_TS_BENCH_AC_COMPRESSOR_RELAY = 6;
 	public static final int CMD_TS_BENCH_AC_FAN_RELAY = 5;
@@ -393,6 +400,7 @@ public class Fields {
 	public static final int ET_MRE_MIATA_NB2_MAP = 11;
 	public static final int ET_MRE_NEW_TEST_BOARD = 31;
 	public static final int ET_MRE_OLD_TEST_BOARD = 30;
+	public static final int ET_MRE_SUBARU_EJ18 = 37;
 	public static final int ET_ROVER_V8 = 10;
 	public static final int ET_SACHS = 29;
 	public static final int ET_VW_ABA = 32;
@@ -947,6 +955,7 @@ public class Fields {
 	public static final int knockBankCyl7_offset = 976;
 	public static final int knockBankCyl8_offset = 976;
 	public static final int knockBankCyl9_offset = 976;
+	public static final int knockBaseNoise_offset = 4523;
 	public static final int knockDetectionWindowEnd_offset = 1504;
 	public static final int knockDetectionWindowStart_offset = 1500;
 	public static final int knockNoise_offset = 1820;
@@ -1007,7 +1016,7 @@ public class Fields {
 	public static final int mafSensorType_offset = 948;
 	public static final int mainRelayPin_offset = 706;
 	public static final int mainRelayPinMode_offset = 752;
-	public static final int mainUnusedEnd_offset = 4524;
+	public static final int mainUnusedEnd_offset = 4540;
 	public static final int malfunctionIndicatorPin_offset = 660;
 	public static final int malfunctionIndicatorPinMode_offset = 661;
 	public static final int manIdlePosition_offset = 608;
@@ -1167,7 +1176,7 @@ public class Fields {
 	public static final int servoOutputPins8_offset = 3147;
 	public static final int showHumanReadableWarning_offset = 976;
 	public static final int showSdCardWarning_offset = 76;
-	public static final int SIGNATURE_HASH = 768848914;
+	public static final int SIGNATURE_HASH = 1456336785;
 	public static final int silentTriggerError_offset = 1464;
 	public static final int slowAdcAlpha_offset = 2088;
 	public static final int sparkDwellRpmBins_offset = 332;
@@ -1447,13 +1456,14 @@ public class Fields {
 	public static final char TS_SD_R_COMMAND = 'r';
 	public static final char TS_SD_W_COMMAND = 'w';
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI 2020.12.04.all.768848914";
+	public static final String TS_SIGNATURE = "rusEFI 2020.12.09.all.1456336785";
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final int TT_TT_1_16 = 50;
 	public static final int TT_TT_2JZ_1_12 = 29;
 	public static final int TT_TT_2JZ_3_34 = 25;
 	public static final int TT_TT_36_2_2_2 = 23;
 	public static final int TT_TT_3_1_CAM = 31;
+	public static final int TT_TT_51 = 51;
 	public static final int TT_TT_60_2_VW = 20;
 	public static final int TT_TT_CHRYSLER_NGC_36_2_2 = 30;
 	public static final int TT_TT_DAIHATSU = 6;
@@ -2681,7 +2691,7 @@ public class Fields {
 	public static final Field TCU_SOLENOID_MODE4 = Field.create("TCU_SOLENOID_MODE4", 4520, FieldType.INT8, pin_output_mode_e);
 	public static final Field TCU_SOLENOID_MODE5 = Field.create("TCU_SOLENOID_MODE5", 4521, FieldType.INT8, pin_output_mode_e);
 	public static final Field TCU_SOLENOID_MODE6 = Field.create("TCU_SOLENOID_MODE6", 4522, FieldType.INT8, pin_output_mode_e);
-	public static final Field ALIGNMENTFILL_AT_4523 = Field.create("ALIGNMENTFILL_AT_4523", 4523, FieldType.INT8);
+	public static final Field ALIGNMENTFILL_AT_4539 = Field.create("ALIGNMENTFILL_AT_4539", 4539, FieldType.INT8);
 	public static final Field WARNING_MESSAGE = Field.create("WARNING_MESSAGE", 6000, 120, FieldType.STRING);
 	public static final Field BOOSTTABLEOPENLOOP = Field.create("BOOSTTABLEOPENLOOP", 6248, FieldType.INT);
 	public static final Field BOOSTTABLECLOSEDLOOP = Field.create("BOOSTTABLECLOSEDLOOP", 6328, FieldType.INT);
@@ -3744,7 +3754,7 @@ public class Fields {
 	TCU_SOLENOID_MODE4,
 	TCU_SOLENOID_MODE5,
 	TCU_SOLENOID_MODE6,
-	ALIGNMENTFILL_AT_4523,
+	ALIGNMENTFILL_AT_4539,
 	WARNING_MESSAGE,
 	BOOSTTABLEOPENLOOP,
 	BOOSTTABLECLOSEDLOOP,

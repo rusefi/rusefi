@@ -47,7 +47,7 @@
 #define air_pressure_sensor_type_e_auto_enum "MT_CUSTOM", "MT_DENSO183", "MT_MPX4250", "MT_HONDA3BAR", "MT_DODGE_NEON_2003", "MT_SUBY_DENSO", "MT_GM_3_BAR", "MT_MPX4100", "MT_TOYOTA_89420_02010", "MT_MPX4250A", "MT_BOSCH_2_5", "MT_MAZDA_1_BAR"
 #define alignEngineSnifferAtTDC_offset 744
 #define alignmentFill_at_2227_offset 2227
-#define alignmentFill_at_4523_offset 4523
+#define alignmentFill_at_4539_offset 4539
 #define alternator_antiwindupFreq_offset 1764
 #define alternator_derivativeFilterLoss_offset 1760
 #define alternatorControl_dFactor_offset 1724
@@ -240,6 +240,8 @@
 #define clutchDownPinMode_offset 667
 #define clutchUpPin_offset 969
 #define clutchUpPinMode_offset 971
+#define CMD_ALTERNATOR_PIN "set_alternator_pin"
+#define CMD_BOOST_PIN "set_boost_pin"
 #define CMD_CALIBRATE_PEDAL_DOWN "calibrate_pedal_down"
 #define CMD_CALIBRATE_PEDAL_UP "calibrate_pedal_up"
 #define CMD_DATE "date"
@@ -251,8 +253,12 @@
 #define CMD_FUEL_BENCH "fuelbench"
 #define CMD_FUNCTIONAL_TEST_MODE "test_mode"
 #define CMD_HPFP_BENCH "hpfpbench"
+#define CMD_IDLE_PIN "set_idle_pin"
 #define CMD_IGNITION "ignition"
+#define CMD_IGNITION_PIN "set_ignition_pin"
 #define CMD_INJECTION "injection"
+#define CMD_INJECTION_PIN "set_injection_pin"
+#define CMD_LOGIC_PIN "set_logic_input_pin"
 #define CMD_MIL_BENCH "milbench"
 #define CMD_PINS "pins"
 #define CMD_PWM "pwm"
@@ -264,6 +270,7 @@
 #define CMD_STARTER_BENCH "starterbench"
 #define CMD_TRIGGER_HW_INPUT "trigger_hw_input"
 #define CMD_TRIGGER_PIN "set_trigger_input_pin"
+#define CMD_TRIGGER_SIMULATOR_PIN "set_trigger_simulator_pin"
 #define CMD_TRIGGERINFO "triggerinfo"
 #define CMD_TS_BENCH_AC_COMPRESSOR_RELAY 6
 #define CMD_TS_BENCH_AC_FAN_RELAY 5
@@ -373,7 +380,7 @@
 #define ENGINE_MAKE_VAG "VAG"
 #define ENGINE_NOISE_CURVE_SIZE 8
 #define ENGINE_SNIFFER_UNIT_US 10
-#define engine_type_e_auto_enum "DEFAULT_FRANKENSO", "MIATA_PROTEUS_TCU", "DODGE_NEON_1995", "FORD_ASPIRE_1996", "FORD_FIESTA", "NISSAN_PRIMERA", "HONDA_ACCORD_CD", "FORD_INLINE_6_1995", "GY6_139QMB", "MAZDA_MIATA_NB1", "ROVER_V8", "MRE_MIATA_NB2_MAP", "MRE_MIATA_NA6_VAF", "MRE_MIATA_NB2_ETB", "FORD_ESCORT_GT", "MRE_MIATA_NB2_MAF", "MITSU_4G93", "HONDA_ACCORD_CD_TWO_WIRES", "HONDA_ACCORD_CD_DIP", "MIATA_1990", "MRE_MIATA_94_MAP", "MIATA_1996", "SUBARU_2003_WRX", "MRE_BODY_CONTROL", "BMW_M73_M", "BMW_E34", "TEST_ENGINE", "ISSUE_898", "MAZDA_626", "SACHS", "MRE_BOARD_OLD_TEST", "MRE_BOARD_NEW_TEST", "VW_ABA", "UNUSED_33", "UNUSED_34", "CAMARO_4", "UNUSED_36", "CHEVY_C20_1973", "TOYOTA_JZS147", "LADA_KALINA", "BMW_M73_F", "MIATA_NA6_MAP", "ZIL_130", "HONDA_600", "TOYOTA_2JZ_GTE_VVTi", "TEST_ENGINE_VVT", "DODGE_NEON_2003_CRANK", "MAZDA_MIATA_2003", "HONDA_ACCORD_1_24_SHIFTED", "FRANKENSO_QA_ENGINE", "TEST_CIVIC_4_0_BOTH", "TEST_CIVIC_4_0_RISE", "TEST_ISSUE_366_BOTH", "TEST_ISSUE_366_RISE", "MAZDA_MIATA_2003_NA_RAIL", "MAZDA_MIATA_2003_BOARD_TEST", "MAZDA_MIATA_NA8", "MIATA_NA6_VAF", "ETB_BENCH_ENGINE", "TLE8888_BENCH_ENGINE", "MICRO_RUS_EFI", "PROTEUS", "VW_B6", "BMW_M73_PROTEUS", "DODGE_RAM", "CITROEN_TU3JP", "MRE_MIATA_NA6_MAP", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "MINIMAL_PINS", "PROMETHEUS_DEFAULTS", "SUBARUEJ20G_DEFAULTS", "VAG_18_TURBO", "TEST_33816", "BMW_M73_MRE", "BMW_M73_MRE_SLAVE"
+#define engine_type_e_auto_enum "DEFAULT_FRANKENSO", "MIATA_PROTEUS_TCU", "DODGE_NEON_1995", "FORD_ASPIRE_1996", "FORD_FIESTA", "NISSAN_PRIMERA", "HONDA_ACCORD_CD", "FORD_INLINE_6_1995", "GY6_139QMB", "MAZDA_MIATA_NB1", "ROVER_V8", "MRE_MIATA_NB2_MAP", "MRE_MIATA_NA6_VAF", "MRE_MIATA_NB2_ETB", "FORD_ESCORT_GT", "MRE_MIATA_NB2_MAF", "MITSU_4G93", "HONDA_ACCORD_CD_TWO_WIRES", "HONDA_ACCORD_CD_DIP", "MIATA_1990", "MRE_MIATA_94_MAP", "MIATA_1996", "SUBARU_2003_WRX", "MRE_BODY_CONTROL", "BMW_M73_M", "BMW_E34", "TEST_ENGINE", "ISSUE_898", "MAZDA_626", "SACHS", "MRE_BOARD_OLD_TEST", "MRE_BOARD_NEW_TEST", "VW_ABA", "UNUSED_33", "UNUSED_34", "CAMARO_4", "UNUSED_36", "MRE_SUBARU_EJ18", "TOYOTA_JZS147", "LADA_KALINA", "BMW_M73_F", "MIATA_NA6_MAP", "ZIL_130", "HONDA_600", "TOYOTA_2JZ_GTE_VVTi", "TEST_ENGINE_VVT", "DODGE_NEON_2003_CRANK", "MAZDA_MIATA_2003", "HONDA_ACCORD_1_24_SHIFTED", "FRANKENSO_QA_ENGINE", "TEST_CIVIC_4_0_BOTH", "TEST_CIVIC_4_0_RISE", "TEST_ISSUE_366_BOTH", "TEST_ISSUE_366_RISE", "MAZDA_MIATA_2003_NA_RAIL", "MAZDA_MIATA_2003_BOARD_TEST", "MAZDA_MIATA_NA8", "MIATA_NA6_VAF", "ETB_BENCH_ENGINE", "TLE8888_BENCH_ENGINE", "MICRO_RUS_EFI", "PROTEUS", "VW_B6", "BMW_M73_PROTEUS", "DODGE_RAM", "CITROEN_TU3JP", "MRE_MIATA_NA6_MAP", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "MINIMAL_PINS", "PROMETHEUS_DEFAULTS", "SUBARUEJ20G_DEFAULTS", "VAG_18_TURBO", "TEST_33816", "BMW_M73_MRE", "BMW_M73_MRE_SLAVE"
 #define engineChartSize_offset 1480
 #define engineCode_offset 1128
 #define engineConfiguration_offset 0
@@ -411,6 +418,7 @@
 #define ET_MRE_MIATA_NB2_MAP 11
 #define ET_MRE_NEW_TEST_BOARD 31
 #define ET_MRE_OLD_TEST_BOARD 30
+#define ET_MRE_SUBARU_EJ18 37
 #define ET_ROVER_V8 10
 #define ET_SACHS 29
 #define ET_VW_ABA 32
@@ -973,6 +981,7 @@
 #define knockBankCyl7_offset 976
 #define knockBankCyl8_offset 976
 #define knockBankCyl9_offset 976
+#define knockBaseNoise_offset 4523
 #define knockDetectionWindowEnd_offset 1504
 #define knockDetectionWindowStart_offset 1500
 #define knockNoise_offset 1820
@@ -1038,7 +1047,7 @@
 #define mafSensorType_offset 948
 #define mainRelayPin_offset 706
 #define mainRelayPinMode_offset 752
-#define mainUnusedEnd_offset 4524
+#define mainUnusedEnd_offset 4540
 #define malfunctionIndicatorPin_offset 660
 #define malfunctionIndicatorPinMode_offset 661
 #define manIdlePosition_offset 608
@@ -1212,8 +1221,8 @@
 #define showHumanReadableWarning_offset 976
 #define showSdCardWarning_offset 76
 #define SIGNATURE_BOARD all
-#define SIGNATURE_DATE 2020.12.04
-#define SIGNATURE_HASH 768848914
+#define SIGNATURE_DATE 2020.12.09
+#define SIGNATURE_HASH 1456336785
 #define silentTriggerError_offset 1464
 #define slowAdcAlpha_offset 2088
 #define sparkDwellRpmBins_offset 332
@@ -1543,7 +1552,7 @@
 #define ts_show_spi true
 #define ts_show_trigger_comparator false
 #define ts_show_tunerstudio_port true
-#define TS_SIGNATURE "rusEFI 2020.12.04.all.768848914"
+#define TS_SIGNATURE "rusEFI 2020.12.09.all.1456336785"
 #define TS_SINGLE_WRITE_COMMAND 'W'
 #define TS_SINGLE_WRITE_COMMAND_char W
 #define TS_TEST_COMMAND 't' // 0x74
@@ -1552,6 +1561,7 @@
 #define TT_TT_2JZ_3_34 25
 #define TT_TT_36_2_2_2 23
 #define TT_TT_3_1_CAM 31
+#define TT_TT_51 51
 #define TT_TT_60_2_VW 20
 #define TT_TT_CHRYSLER_NGC_36_2_2 30
 #define TT_TT_DAIHATSU 6

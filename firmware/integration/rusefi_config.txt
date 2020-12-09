@@ -421,6 +421,8 @@ end_struct
 #define TT_TT_TOOTHED_WHEEL_36_2 48
 #define TT_TT_SUBARU_SVX 49
 #define TT_TT_1_16 50
+#define TT_TT_51 51
+
 
 #define ET_DODGE_NEON_1995 2
 #define ET_FORD_ASPIRE 3
@@ -432,6 +434,7 @@ end_struct
 #define ET_SACHS 29
 #define ET_VW_ABA 32
 #define ET_CAMARO 35
+#define ET_MRE_SUBARU_EJ18 37
 #define ET_BMW_M73_F 40
 #define ET_DODGE_NEON_2003_CRANK 46
 
@@ -483,7 +486,7 @@ bit isCJ125Verbose;enable cj125verbose/disable cj125verbose
 bit cj125isUaDivided;+Is your UA CJ125 output wired to MCU via resistor divider? Ua can go over 3.3v but only at lambda >3, i.e very lean AFR above 44.1\nWhen exposed to free air and 17x gain, Ua will be 4.17 volt
 bit cj125isLsu49;
 bit etb_use_two_wires;+TLE7209 uses two-wire mode. TLE9201 and VNH2SP30 do NOT use two wire mode.
-bit isDoubleSolenoidIdle;+Subaru style where default valve position is somewhere in the middle. First solenoid opens it more while second can close it more than default position.
+bit isDoubleSolenoidIdle;+Subaru/BMW style where default valve position is somewhere in the middle. First solenoid opens it more while second can close it more than default position.
 bit showSdCardWarning;
 bit cj125isUrDivided;+Is your UR CJ125 output wired to MCU via resistor divider?\nLooks like 3v range should be enough, divider generally not needed.
 bit useCicPidForIdle;+Switch between Industrial and Cic PID implementation
@@ -1452,8 +1455,10 @@ uint8_t[4] unusedsw;;"units", 1, 0, -20, 100, 0
 
 	pin_output_mode_e[TCU_SOLENOID_COUNT iterate] tcu_solenoid_mode;
 
+	int8_t[IGN_RPM_COUNT] knockBaseNoise;;"dB", 1.0, 0, -30.0, 0, 2
+
 ! just a reminder that 'int' and 'float' are 4 bytes each
-	int[369] mainUnusedEnd;;"units", 1, 0, -20, 100, 0
+	int[365] mainUnusedEnd;;"units", 1, 0, -20, 100, 0
 
 ! end of engine_configuration_s
 end_struct
@@ -1710,6 +1715,13 @@ end_struct
 #define CMD_RPM "rpm"
 #define CMD_VSS_PIN "vss_pin"
 #define CMD_TRIGGER_PIN "set_trigger_input_pin"
+#define CMD_LOGIC_PIN "set_logic_input_pin"
+#define CMD_ALTERNATOR_PIN "set_alternator_pin"
+#define CMD_IDLE_PIN "set_idle_pin"
+#define CMD_BOOST_PIN "set_boost_pin"
+#define CMD_TRIGGER_SIMULATOR_PIN "set_trigger_simulator_pin"
+#define CMD_IGNITION_PIN "set_ignition_pin"
+#define CMD_INJECTION_PIN "set_injection_pin"
 
 #define CMD_RESET_ENGINE_SNIFFER "reset_engine_chart"
 #define CMD_FUNCTIONAL_TEST_MODE "test_mode"

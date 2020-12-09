@@ -44,8 +44,8 @@ public:
 	void resetCounters();
 	void validateCamVvtCounters();
 
-	float getTimeSinceTriggerEvent() const {
-		return m_lastEventTimer.getElapsedSeconds();
+	float getTimeSinceTriggerEvent(efitick_t nowNt) const {
+		return m_lastEventTimer.getElapsedSeconds(nowNt);
 	}
 
 	TriggerNoiseFilter noiseFilter;
