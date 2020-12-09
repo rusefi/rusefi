@@ -542,6 +542,14 @@ enable2ndByteCanID = false
       yBins       = knockNoise
       gauge       = RPMGauge
 
+	curve = swKnockThresholdCurve, "Engine knock threshold RPM based"
+      columnLabel = "RPM", "Threshold dB"
+      xAxis       =  0, 8000, 10
+      yAxis       =  -30,  0, 10
+      xBins       = ignitionRpmBins,  RPMValue
+      yBins       = knockBaseNoise
+      gauge       = RPMGauge
+
 	curve = narrowToWideOxygenCurve, "Narrow to Wideband approximation"
       columnLabel = "Voltage", "AFR"
       xAxis       =  0, 6, 10
@@ -2554,7 +2562,7 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 		field = "Pin mode",				malfunctionIndicatorPinMode	
 		field = "Warning Period",									warningPeriod
 
-	dialog = softwareKnock, "Software Knock"
+	dialog = softwareKnockCfg, "Configuration"
 		field = "Enable",				enableSoftwareKnock
 		field = "Knock filter frequency",	knockBandCustom, {enableSoftwareKnock}
 		field = ""
@@ -2571,6 +2579,10 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 		field = "Cylinder 10",			knockBankCyl10, {enableSoftwareKnock && cylindersCount >= 10}
 		field = "Cylinder 11",			knockBankCyl11, {enableSoftwareKnock && cylindersCount >= 11}
 		field = "Cylinder 12",			knockBankCyl12, {enableSoftwareKnock && cylindersCount >= 12}
+
+	dialog = softwareKnock, "Software Knock", border
+		panel = softwareKnockCfg, West
+		panel = swKnockThresholdCurve, Center
 
 ;			Engine->hip9011 Settings
 	dialog = hipFunction, "HIP9011 Settings (knock decoder)"
