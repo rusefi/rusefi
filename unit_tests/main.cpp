@@ -45,7 +45,7 @@ GTEST_API_ int main(int argc, char **argv) {
 
 	//	resizeMap();
 	printf("Success 20201203\r\n");
-	printAllTriggers();
+	exportAllTriggers();
 	if (focusOnTrigger != TT_UNUSED) {
 		return -1;
 	}
