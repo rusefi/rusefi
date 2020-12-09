@@ -82,7 +82,11 @@ void hwHandleShaftSignal(trigger_event_e signal, efitick_t timestamp);
 void hwHandleVvtCamSignal(trigger_value_e front, efitick_t timestamp DECLARE_ENGINE_PARAMETER_SUFFIX);
 
 void initTriggerCentral(Logging *sharedLogger);
-void printAllTriggers();
+/**
+ * this method is invoked by 'unit tests' project on PC to write triggers.txt representation of all rusEFI triggers
+ * That triggers.txt is later consumed by TriggerImage.java to render trigger images
+ */
+void exportAllTriggers();
 
 int isSignalDecoderError(void);
 void resetMaxValues();
