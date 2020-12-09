@@ -71,7 +71,7 @@ bool shouldUpdateCorrection(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 
 	// Pause (but don't reset) correction if the AFR is off scale.
 	// It's probably a transient and poorly tuned transient correction
-	auto afr = Sensor::get(SensorType::Lambda).value_or(0) * 14.7f;
+	auto afr = Sensor::get(SensorType::Lambda1).value_or(0) * 14.7f;
 	if (!afr || afr < (cfg.minAfr * 0.1f) || afr > (cfg.maxAfr * 0.1f)) {
 		return false;
 	}
