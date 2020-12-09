@@ -156,6 +156,7 @@ struct_no_prefix engine_configuration_s
 
 #define CAN_DEFAULT_BASE 0x200
 
+#define TRIGGERS_FILE_NAME "triggers.txt"
 
 ! 
 ! all the xxx_PACKING_xxx constants are about persisting tables in compact for, for example packing RPM with 50 increment in a byte
