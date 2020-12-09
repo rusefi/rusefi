@@ -6,6 +6,8 @@
 
 #include "status_loop.h"
 
+#if EFI_TUNER_STUDIO
+
 /**
  * @brief 'Output' command sends out a snapshot of current values
  * Gauges refresh
@@ -23,3 +25,5 @@ void TunerStudio::cmdOutputChannels(ts_channel_s *tsChannel, uint16_t offset, ui
 	// this method is invoked too often to print any debug information
 	sr5SendResponse(tsChannel, TS_CRC, ((const uint8_t *) &tsOutputChannels) + offset, count);
 }
+
+#endif // EFI_TUNER_STUDIO
