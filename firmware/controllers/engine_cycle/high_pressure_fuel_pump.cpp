@@ -10,6 +10,7 @@
 
 #include "high_pressure_fuel_pump.h"
 #include "spark_logic.h"
+#include "map.h"
 
 #if EFI_HPFP
 
@@ -58,7 +59,11 @@ static void scheduleNextCycle(HpfpActor *actor) {
 
 void hpfpPlainPinTurnOn(HpfpActor *current) {
 	RegisteredNamedOutputPin *output = &enginePins.hpfpValve;
-	output->setHigh();
+	int highPressureKpa = Sensor::get(SensorType::FuelPressureHigh).Value;
+	// very basic control strategy
+	if (highPressureKpa < BAR2KPA(50)) {
+		output->setHigh();
+	}
 	scheduleNextCycle(current);
 }
 
