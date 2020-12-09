@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEfi tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Wed Dec 09 17:14:29 UTC 2020
+// this file was generated automatically by rusEfi tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Wed Dec 09 19:32:20 UTC 2020
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -600,6 +600,7 @@ public class Fields {
 	public static final String GAUGE_NAME_ACCEL_Y = "Acceleration: Y";
 	public static final String GAUGE_NAME_ACCEL_Z = "Acceleration: Z";
 	public static final String GAUGE_NAME_AFR = "Air/Fuel Ratio";
+	public static final String GAUGE_NAME_AFR2 = "Air/Fuel Ratio 2";
 	public static final String GAUGE_NAME_AIR_FLOW = "MAF air flow";
 	public static final String GAUGE_NAME_AIR_MASS = "air mass";
 	public static final String GAUGE_NAME_BARO_PRESSURE = "Barometric pressure";
@@ -651,6 +652,7 @@ public class Fields {
 	public static final String GAUGE_NAME_KNOCK_COUNTER = "knock: counter";
 	public static final String GAUGE_NAME_KNOCK_LEVEL = "knock: current level";
 	public static final String GAUGE_NAME_LAMBDA = "Lambda";
+	public static final String GAUGE_NAME_LAMBDA2 = "Lambda 2";
 	public static final String GAUGE_NAME_MAF = "MAF";
 	public static final String GAUGE_NAME_MAP = "MAP";
 	public static final String GAUGE_NAME_OIL_PRESSURE = "Oil Pressure";
@@ -1176,7 +1178,7 @@ public class Fields {
 	public static final int servoOutputPins8_offset = 3147;
 	public static final int showHumanReadableWarning_offset = 976;
 	public static final int showSdCardWarning_offset = 76;
-	public static final int SIGNATURE_HASH = 1279451346;
+	public static final int SIGNATURE_HASH = 666376480;
 	public static final int silentTriggerError_offset = 1464;
 	public static final int slowAdcAlpha_offset = 2088;
 	public static final int sparkDwellRpmBins_offset = 332;
@@ -1457,7 +1459,7 @@ public class Fields {
 	public static final char TS_SD_R_COMMAND = 'r';
 	public static final char TS_SD_W_COMMAND = 'w';
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI 2020.12.09.all.1279451346";
+	public static final String TS_SIGNATURE = "rusEFI 2020.12.09.all.666376480";
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final int TT_TT_1_16 = 50;
 	public static final int TT_TT_2JZ_1_12 = 29;

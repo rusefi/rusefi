@@ -619,6 +619,7 @@
 #define GAUGE_NAME_ACCEL_Y "Acceleration: Y"
 #define GAUGE_NAME_ACCEL_Z "Acceleration: Z"
 #define GAUGE_NAME_AFR "Air/Fuel Ratio"
+#define GAUGE_NAME_AFR2 "Air/Fuel Ratio 2"
 #define GAUGE_NAME_AIR_FLOW "MAF air flow"
 #define GAUGE_NAME_AIR_MASS "air mass"
 #define GAUGE_NAME_BARO_PRESSURE "Barometric pressure"
@@ -670,6 +671,7 @@
 #define GAUGE_NAME_KNOCK_COUNTER "knock: counter"
 #define GAUGE_NAME_KNOCK_LEVEL "knock: current level"
 #define GAUGE_NAME_LAMBDA "Lambda"
+#define GAUGE_NAME_LAMBDA2 "Lambda 2"
 #define GAUGE_NAME_MAF "MAF"
 #define GAUGE_NAME_MAP "MAP"
 #define GAUGE_NAME_OIL_PRESSURE "Oil Pressure"
@@ -1222,7 +1224,7 @@
 #define showSdCardWarning_offset 76
 #define SIGNATURE_BOARD all
 #define SIGNATURE_DATE 2020.12.09
-#define SIGNATURE_HASH 1279451346
+#define SIGNATURE_HASH 666376480
 #define silentTriggerError_offset 1464
 #define slowAdcAlpha_offset 2088
 #define sparkDwellRpmBins_offset 332
@@ -1553,7 +1555,7 @@
 #define ts_show_spi true
 #define ts_show_trigger_comparator false
 #define ts_show_tunerstudio_port true
-#define TS_SIGNATURE "rusEFI 2020.12.09.all.1279451346"
+#define TS_SIGNATURE "rusEFI 2020.12.09.all.666376480"
 #define TS_SINGLE_WRITE_COMMAND 'W'
 #define TS_SINGLE_WRITE_COMMAND_char W
 #define TS_TEST_COMMAND 't' // 0x74
