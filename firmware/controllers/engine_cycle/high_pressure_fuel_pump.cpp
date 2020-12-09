@@ -36,7 +36,7 @@ static void plainPinTurnOff(RegisteredNamedOutputPin *output) {
 
 void hpfpPlainPinTurnOn(HpfpActor *current);
 
-static void handle(HpfpActor *actor) {
+static void scheduleNextCycle(HpfpActor *actor) {
 #if EFI_UNIT_TEST
 	Engine *engine = actor->engine;
 	EXPAND_Engine;
@@ -59,7 +59,7 @@ static void handle(HpfpActor *actor) {
 void hpfpPlainPinTurnOn(HpfpActor *current) {
 	RegisteredNamedOutputPin *output = &enginePins.hpfpValve;
 	output->setHigh();
-	handle(current);
+	scheduleNextCycle(current);
 }
 
 void initHPFP(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
@@ -72,7 +72,7 @@ void initHPFP(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 		INJECT_ENGINE_REFERENCE(actor);
 
 		actor->extra = 720 / LOBE_COUNT * i;
-		handle(actor);
+		scheduleNextCycle(actor);
 	}
 }
 
