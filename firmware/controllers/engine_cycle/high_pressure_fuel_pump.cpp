@@ -10,6 +10,7 @@
 
 #include "high_pressure_fuel_pump.h"
 #include "spark_logic.h"
+#include "map.h"
 
 #if EFI_HPFP
 
@@ -36,7 +37,7 @@ static void plainPinTurnOff(RegisteredNamedOutputPin *output) {
 
 void hpfpPlainPinTurnOn(HpfpActor *current);
 
-static void handle(HpfpActor *actor) {
+static void scheduleNextCycle(HpfpActor *actor) {
 #if EFI_UNIT_TEST
 	Engine *engine = actor->engine;
 	EXPAND_Engine;
@@ -58,8 +59,12 @@ static void handle(HpfpActor *actor) {
 
 void hpfpPlainPinTurnOn(HpfpActor *current) {
 	RegisteredNamedOutputPin *output = &enginePins.hpfpValve;
-	output->setHigh();
-	handle(current);
+	int highPressureKpa = Sensor::get(SensorType::FuelPressureHigh).Value;
+	// very basic control strategy
+	if (highPressureKpa < BAR2KPA(50)) {
+		output->setHigh();
+	}
+	scheduleNextCycle(current);
 }
 
 void initHPFP(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
@@ -72,7 +77,7 @@ void initHPFP(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 		INJECT_ENGINE_REFERENCE(actor);
 
 		actor->extra = 720 / LOBE_COUNT * i;
-		handle(actor);
+		scheduleNextCycle(actor);
 	}
 }
 

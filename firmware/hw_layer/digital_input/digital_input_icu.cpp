@@ -206,10 +206,6 @@ static void turnOnCapturePin(const char *msg, brain_pin_e brainPin) {
 	}
 }
 
-void turnOffCapturePin(brain_pin_e brainPin) {
-	efiSetPadUnused(brainPin);
-}
-
 /**
  * turns pin off and returns digital_input_s back into registeredIcus pool
  */
@@ -223,6 +219,7 @@ void stopDigitalCapture(const char *msg, brain_pin_e brainPin) {
 	if (driver == NULL) {
 		return;
 	}
+
 	int regSize = registeredIcus.size;
 	for (int i = 0; i < regSize; i++) {
 		if (registeredIcus.elements[i].driver == driver) {

@@ -47,7 +47,7 @@
 #define air_pressure_sensor_type_e_auto_enum "MT_CUSTOM", "MT_DENSO183", "MT_MPX4250", "MT_HONDA3BAR", "MT_DODGE_NEON_2003", "MT_SUBY_DENSO", "MT_GM_3_BAR", "MT_MPX4100", "MT_TOYOTA_89420_02010", "MT_MPX4250A", "MT_BOSCH_2_5", "MT_MAZDA_1_BAR"
 #define alignEngineSnifferAtTDC_offset 744
 #define alignmentFill_at_2227_offset 2227
-#define alignmentFill_at_4523_offset 4523
+#define alignmentFill_at_4539_offset 4539
 #define alternator_antiwindupFreq_offset 1764
 #define alternator_derivativeFilterLoss_offset 1760
 #define alternatorControl_dFactor_offset 1724
@@ -240,6 +240,8 @@
 #define clutchDownPinMode_offset 667
 #define clutchUpPin_offset 969
 #define clutchUpPinMode_offset 971
+#define CMD_ALTERNATOR_PIN "set_alternator_pin"
+#define CMD_BOOST_PIN "set_boost_pin"
 #define CMD_CALIBRATE_PEDAL_DOWN "calibrate_pedal_down"
 #define CMD_CALIBRATE_PEDAL_UP "calibrate_pedal_up"
 #define CMD_DATE "date"
@@ -251,8 +253,12 @@
 #define CMD_FUEL_BENCH "fuelbench"
 #define CMD_FUNCTIONAL_TEST_MODE "test_mode"
 #define CMD_HPFP_BENCH "hpfpbench"
+#define CMD_IDLE_PIN "set_idle_pin"
 #define CMD_IGNITION "ignition"
+#define CMD_IGNITION_PIN "set_ignition_pin"
 #define CMD_INJECTION "injection"
+#define CMD_INJECTION_PIN "set_injection_pin"
+#define CMD_LOGIC_PIN "set_logic_input_pin"
 #define CMD_MIL_BENCH "milbench"
 #define CMD_PINS "pins"
 #define CMD_PWM "pwm"
@@ -264,6 +270,7 @@
 #define CMD_STARTER_BENCH "starterbench"
 #define CMD_TRIGGER_HW_INPUT "trigger_hw_input"
 #define CMD_TRIGGER_PIN "set_trigger_input_pin"
+#define CMD_TRIGGER_SIMULATOR_PIN "set_trigger_simulator_pin"
 #define CMD_TRIGGERINFO "triggerinfo"
 #define CMD_TS_BENCH_AC_COMPRESSOR_RELAY 6
 #define CMD_TS_BENCH_AC_FAN_RELAY 5
@@ -612,6 +619,7 @@
 #define GAUGE_NAME_ACCEL_Y "Acceleration: Y"
 #define GAUGE_NAME_ACCEL_Z "Acceleration: Z"
 #define GAUGE_NAME_AFR "Air/Fuel Ratio"
+#define GAUGE_NAME_AFR2 "Air/Fuel Ratio 2"
 #define GAUGE_NAME_AIR_FLOW "MAF air flow"
 #define GAUGE_NAME_AIR_MASS "air mass"
 #define GAUGE_NAME_BARO_PRESSURE "Barometric pressure"
@@ -663,6 +671,7 @@
 #define GAUGE_NAME_KNOCK_COUNTER "knock: counter"
 #define GAUGE_NAME_KNOCK_LEVEL "knock: current level"
 #define GAUGE_NAME_LAMBDA "Lambda"
+#define GAUGE_NAME_LAMBDA2 "Lambda 2"
 #define GAUGE_NAME_MAF "MAF"
 #define GAUGE_NAME_MAP "MAP"
 #define GAUGE_NAME_OIL_PRESSURE "Oil Pressure"
@@ -974,6 +983,7 @@
 #define knockBankCyl7_offset 976
 #define knockBankCyl8_offset 976
 #define knockBankCyl9_offset 976
+#define knockBaseNoise_offset 4523
 #define knockDetectionWindowEnd_offset 1504
 #define knockDetectionWindowStart_offset 1500
 #define knockNoise_offset 1820
@@ -1039,7 +1049,7 @@
 #define mafSensorType_offset 948
 #define mainRelayPin_offset 706
 #define mainRelayPinMode_offset 752
-#define mainUnusedEnd_offset 4524
+#define mainUnusedEnd_offset 4540
 #define malfunctionIndicatorPin_offset 660
 #define malfunctionIndicatorPinMode_offset 661
 #define manIdlePosition_offset 608
@@ -1213,8 +1223,8 @@
 #define showHumanReadableWarning_offset 976
 #define showSdCardWarning_offset 76
 #define SIGNATURE_BOARD kin
-#define SIGNATURE_DATE 2020.12.06
-#define SIGNATURE_HASH 324874166
+#define SIGNATURE_DATE 2020.12.09
+#define SIGNATURE_HASH 3210052889
 #define silentTriggerError_offset 1464
 #define slowAdcAlpha_offset 2088
 #define sparkDwellRpmBins_offset 332
@@ -1453,6 +1463,7 @@
 #define triggerInputPins1_offset 700
 #define triggerInputPins2_offset 701
 #define triggerInputPins3_offset 702
+#define TRIGGERS_FILE_NAME "triggers.txt"
 #define triggerSimulatorFrequency_offset 620
 #define triggerSimulatorPinModes1_offset 739
 #define triggerSimulatorPinModes2_offset 740
@@ -1544,7 +1555,7 @@
 #define ts_show_spi true
 #define ts_show_trigger_comparator true
 #define ts_show_tunerstudio_port true
-#define TS_SIGNATURE "rusEFI 2020.12.06.kin.324874166"
+#define TS_SIGNATURE "rusEFI 2020.12.09.kin.3210052889"
 #define TS_SINGLE_WRITE_COMMAND 'W'
 #define TS_SINGLE_WRITE_COMMAND_char W
 #define TS_TEST_COMMAND 't' // 0x74

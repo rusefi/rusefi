@@ -156,6 +156,7 @@ struct_no_prefix engine_configuration_s
 
 #define CAN_DEFAULT_BASE 0x200
 
+#define TRIGGERS_FILE_NAME "triggers.txt"
 
 ! 
 ! all the xxx_PACKING_xxx constants are about persisting tables in compact for, for example packing RPM with 50 increment in a byte
@@ -1455,8 +1456,10 @@ uint8_t[4] unusedsw;;"units", 1, 0, -20, 100, 0
 
 	pin_output_mode_e[TCU_SOLENOID_COUNT iterate] tcu_solenoid_mode;
 
+	int8_t[IGN_RPM_COUNT] knockBaseNoise;;"dB", 1.0, 0, -30.0, 0, 2
+
 ! just a reminder that 'int' and 'float' are 4 bytes each
-	int[369] mainUnusedEnd;;"units", 1, 0, -20, 100, 0
+	int[365] mainUnusedEnd;;"units", 1, 0, -20, 100, 0
 
 ! end of engine_configuration_s
 end_struct
@@ -1671,7 +1674,9 @@ end_struct
 #define GAUGE_NAME_TARGET_AFR "fuel: target AFR"
 #define GAUGE_NAME_TARGET_LAMBDA "fuel: target lambda"
 #define GAUGE_NAME_AFR "Air/Fuel Ratio"
+#define GAUGE_NAME_AFR2 "Air/Fuel Ratio 2"
 #define GAUGE_NAME_LAMBDA "Lambda"
+#define GAUGE_NAME_LAMBDA2 "Lambda 2"
 #define GAUGE_NAME_IAC "Idle Air Valve"
 
 #define GAUGE_NAME_DWELL_DUTY "dwell: coil duty cycle"
@@ -1713,6 +1718,13 @@ end_struct
 #define CMD_RPM "rpm"
 #define CMD_VSS_PIN "vss_pin"
 #define CMD_TRIGGER_PIN "set_trigger_input_pin"
+#define CMD_LOGIC_PIN "set_logic_input_pin"
+#define CMD_ALTERNATOR_PIN "set_alternator_pin"
+#define CMD_IDLE_PIN "set_idle_pin"
+#define CMD_BOOST_PIN "set_boost_pin"
+#define CMD_TRIGGER_SIMULATOR_PIN "set_trigger_simulator_pin"
+#define CMD_IGNITION_PIN "set_ignition_pin"
+#define CMD_INJECTION_PIN "set_injection_pin"
 
 #define CMD_RESET_ENGINE_SNIFFER "reset_engine_chart"
 #define CMD_FUNCTIONAL_TEST_MODE "test_mode"
