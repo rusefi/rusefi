@@ -215,6 +215,6 @@ TEST(SensorInit, Lambda) {
 
 	initLambda(PASS_ENGINE_PARAMETER_SIGNATURE);
 
-	auto s = Sensor::getSensorOfType(SensorType::Lambda);
+	auto s = Sensor::getSensorOfType(SensorType::Lambda1);
 	ASSERT_NE(nullptr, s);
 }

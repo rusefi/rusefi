@@ -52,7 +52,8 @@ enum class SensorType : unsigned char {
 	AuxTemp1,
 	AuxTemp2,
 
-	Lambda,
+	Lambda1,
+	Lambda2,
 
 	WastegatePosition,
 	IdlePosition,
