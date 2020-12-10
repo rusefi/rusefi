@@ -150,13 +150,13 @@ public class TriggerImage {
 
         topPanel.removeAll();
 
-        JPanel firstWheelControl = createWheelPanel(triggerWheelInfo.getFirstWheeTriggerSignals());
+        JPanel firstWheelControl = createWheelPanel(triggerWheelInfo.getFirstWheeTriggerSignals(), true);
 
         topPanel.add(firstWheelControl);
         topPanel.add(StartupFrame.createLogoLabel());
 
         if (!triggerWheelInfo.waves.get(1).list.isEmpty()) {
-            JPanel secondWheelControl = createWheelPanel(triggerWheelInfo.getSecondWheeTriggerSignals());
+            JPanel secondWheelControl = createWheelPanel(triggerWheelInfo.getSecondWheeTriggerSignals(), false);
             topPanel.add(secondWheelControl);
         }
 
@@ -212,7 +212,7 @@ public class TriggerImage {
     }
 
     @NotNull
-    private static JPanel createWheelPanel(List<TriggerSignal> wheel) {
+    private static JPanel createWheelPanel(List<TriggerSignal> wheel, boolean showTdc) {
         JPanel clock = new JPanel() {
             @Override
             public void paint(Graphics g) {
@@ -223,14 +223,24 @@ public class TriggerImage {
                     TriggerSignal current = wheel.get(i);
 
                     drawRadialLine(g, current.angle);
+                    /**
+                     * java arc API is
+                     *      * Angles are interpreted such that 0&nbsp;degrees
+                     *      * is at the 3'clock position.
+                     *      * A positive value indicates a counter-clockwise rotation
+                     *      * while a negative value indicates a clockwise rotation.
+                     *
+                     * we want zero to be at 12'clock position and clockwise rotation
+                     */
 
                     double nextAngle = i == wheel.size() - 1 ? 360 + wheel.get(0).angle : wheel.get(i + 1).angle;
                     int arcDuration = (int) (nextAngle - current.angle);
+                    int arcStart = (int) arcToRusEFI(nextAngle);
                     if (current.state == 1) {
-                        g.drawArc(WHEEL_BORDER, WHEEL_BORDER, WHEEL_DIAMETER, WHEEL_DIAMETER, (int) current.angle, arcDuration);
+                        g.drawArc(WHEEL_BORDER, WHEEL_BORDER, WHEEL_DIAMETER, WHEEL_DIAMETER, arcStart, arcDuration);
                     } else {
                         int corner = WHEEL_BORDER + (WHEEL_DIAMETER - SMALL_DIAMETER) / 2;
-                        g.drawArc(corner, corner, SMALL_DIAMETER, SMALL_DIAMETER, (int) current.angle, arcDuration);
+                        g.drawArc(corner, corner, SMALL_DIAMETER, SMALL_DIAMETER, arcStart, arcDuration);
                     }
                 }
             }
@@ -244,17 +254,19 @@ public class TriggerImage {
         return clock;
     }
 
+    private static double arcToRusEFI(double angle) {
+        return (90 - angle);
+    }
+
     private static void drawRadialLine(Graphics g, double angle) {
         int center = WHEEL_BORDER + WHEEL_DIAMETER / 2;
 
-        // converting to 'drawArc' angle convention
-        angle = 90 + angle;
         double radianAngle = Math.toRadians(angle);
 
         int smallX = (int) (SMALL_DIAMETER / 2 * Math.sin(radianAngle));
-        int smallY = (int) (SMALL_DIAMETER / 2 * Math.cos(radianAngle));
+        int smallY =- (int) (SMALL_DIAMETER / 2 * Math.cos(radianAngle));
         int largeX = (int) (WHEEL_DIAMETER / 2 * Math.sin(radianAngle));
-        int largeY = (int) (WHEEL_DIAMETER / 2 * Math.cos(radianAngle));
+        int largeY = -(int) (WHEEL_DIAMETER / 2 * Math.cos(radianAngle));
 
         g.drawLine(center + smallX, center + smallY, center + largeX, center + largeY);
     }
