@@ -307,8 +307,11 @@ TEST(fsio, testLogicExpressions) {
 TEST(fsio, fuelPump) {
 	// this will init fuel pump fsio logic
 	WITH_ENGINE_TEST_HELPER(TEST_ENGINE);
+
 	// Mock a fuel pump pin
 	CONFIG(fuelPumpPin) = GPIOA_0;
+	// Re-init so it picks up the new config
+	enginePins.fuelPumpRelay.init(PASS_ENGINE_PARAMETER_SIGNATURE);
 
 	// ECU just started, haven't seen trigger yet
 	engine->fsioState.mockTimeSinceBoot = 0.5f;
