@@ -125,7 +125,10 @@ void efiIcuStart(const char *msg, ICUDriver *icup, const ICUConfig *config) {
 #endif /* HAL_USE_ICU */
 
 #else
-extern bool mockPinStates[(1 << sizeof(brain_pin_e))];
+
+// This has been made global so we don't need to worry about efiReadPin having access the object
+//  we store it in, every time we need to use efiReadPin.
+bool mockPinStates[BRAIN_PIN_COUNT];
 
 bool efiReadPin(brain_pin_e pin) {
 	return mockPinStates[static_cast<int>(pin)];
