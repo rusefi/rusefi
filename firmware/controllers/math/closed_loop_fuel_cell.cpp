@@ -49,7 +49,7 @@ float ClosedLoopFuelCellBase::getAdjustment() const {
 }
 
 float ClosedLoopFuelCellImpl::getLambdaError(DECLARE_ENGINE_PARAMETER_SIGNATURE) const {
-	auto lambda = Sensor::get(SensorType::Lambda);
+	auto lambda = Sensor::get(SensorType::Lambda1);
 
 	// Failed sensor -> no error
 	if (!lambda) {

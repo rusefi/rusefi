@@ -1,6 +1,9 @@
 /**
  * @file	trigger_structure.h
  *
+ * rusEFI defines trigger shape programmatically in C code
+ * For integration we have exportAllTriggers export
+ *
  * @date Dec 22, 2013
  * @author Andrey Belomutskiy, (c) 2012-2020
  */

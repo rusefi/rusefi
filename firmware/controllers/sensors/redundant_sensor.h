@@ -15,6 +15,11 @@ public:
 
 	SensorResult get() const override;
 
+	bool isRedundant() const override {
+		// This sensor is redundant when not ignoring the second channel
+		return !m_ignoreSecond;
+	}
+
 	void showInfo(Logging* logger, const char* sensorName) const override;
 
 private:

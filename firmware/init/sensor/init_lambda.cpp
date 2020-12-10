@@ -18,14 +18,15 @@ struct GetAfrWrapper {
 
 static GetAfrWrapper afrWrapper;
 
-static FunctionPointerSensor lambdaSensor(SensorType::Lambda,
+static FunctionPointerSensor lambdaSensor(SensorType::Lambda1,
 []() {
 	return afrWrapper.getLambda();
 });
 
 #if EFI_CAN_SUPPORT
 #include "AemXSeriesLambda.h"
-static AemXSeriesWideband aem(0, SensorType::Lambda);
+static AemXSeriesWideband aem1(0, SensorType::Lambda1);
+static AemXSeriesWideband aem2(1, SensorType::Lambda2);
 #endif
 
 void initLambda(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
@@ -33,13 +34,12 @@ void initLambda(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 
 #if EFI_CAN_SUPPORT
 	if (CONFIG(enableAemXSeries)) {
-		registerCanSensor(aem);
+		registerCanSensor(aem1);
+		registerCanSensor(aem2);
 
 		return;
 	}
 #endif
 
-	if (!lambdaSensor.Register()) {
-		warning(OBD_PCM_Processor_Fault, "Duplicate lambda sensor registration, ignoring");
-	}
+	lambdaSensor.Register();
 }

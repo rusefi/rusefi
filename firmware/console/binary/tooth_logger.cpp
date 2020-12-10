@@ -63,7 +63,7 @@ int getCompositeRecordCount() {
 #if EFI_UNIT_TEST
 #include "logicdata.h"
 int copyCompositeEvents(CompositeEvent *events) {
-	for (int i = 0;i < NextIdx;i++) {
+	for (size_t i = 0; i < NextIdx; i++) {
 		CompositeEvent *event = &events[i];
 		event->timestamp = SWAP_UINT32(buffer[i].timestamp);
 		event->primaryTrigger = buffer[i].priLevel;

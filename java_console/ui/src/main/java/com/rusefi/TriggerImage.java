@@ -28,7 +28,6 @@ import java.util.List;
 public class TriggerImage {
     private static final String TRIGGERTYPE = "TRIGGERTYPE";
     private static final String OUTPUT_FOLDER = "triggers";
-    private static final String INPUT_FILE_NAME = "triggers.txt";
     private static final String TOP_MESSAGE = StartupFrame.LINK_TEXT;
     private static final String DEFAULT_WORK_FOLDER = ".." + File.separator + "unit_tests";
 
@@ -126,7 +125,7 @@ public class TriggerImage {
     }
 
     private static void generateImages(String workingFolder, TriggerPanel trigger, JPanel topPanel, JPanel content) throws IOException {
-        String fileName = workingFolder + File.separator + INPUT_FILE_NAME;
+        String fileName = workingFolder + File.separator + Fields.TRIGGERS_FILE_NAME;
         BufferedReader br = new BufferedReader(new FileReader(fileName));
 
         System.out.println("Reading " + fileName);

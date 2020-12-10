@@ -521,14 +521,13 @@ static void triggerShapeInfo(void) {
 #include <stdlib.h>
 
 extern trigger_type_e focusOnTrigger;
-#define TRIGGERS_FILE_NAME "triggers.txt"
 
 /**
  * This is used to generate trigger info which is later used by TriggerImage java class
  * to generate images for documentation
  */
 extern bool printTriggerDebug;
-void printAllTriggers() {
+void exportAllTriggers() {
 
 	FILE * fp = fopen (TRIGGERS_FILE_NAME, "w+");
 
