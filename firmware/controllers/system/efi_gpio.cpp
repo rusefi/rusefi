@@ -537,11 +537,15 @@ void OutputPin::initPin(const char *msg, brain_pin_e brainPin, const pin_output_
 
 	this->currentLogicValue = 0;
 
+#endif // briefly leave the include guard because we need to set default state in tests
+
 	// The order of the next two calls may look strange, which is a good observation.
 	// We call them in this order so that the pin is set to a known state BEFORE
 	// it's enabled.  Enabling the pin then setting it could result in a (brief)
 	// mystery state being driven on the pin (potentially dangerous).
 	setDefaultPinState(outputMode);
+
+#if EFI_GPIO_HARDWARE && EFI_PROD_CODE
 	efiSetPadMode(msg, brainPin, mode);
 	if (brain_pin_is_onchip(brainPin)) {
 		int actualValue = palReadPad(port, pin);
