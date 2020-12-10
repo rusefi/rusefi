@@ -15,10 +15,6 @@ EXTERN_ENGINE;
 extern LoggingWithStorage sharedLogger;
 extern ButtonDebounce startStopButtonDebounce;
 
-#if ! EFI_PROD_CODE
-extern bool mockPinStates[(1 << sizeof(brain_pin_e))];
-#endif
-
 #if ENABLE_PERF_TRACE
 static uint8_t nextThreadId = 0;
 void threadInitHook(void* vtp) {
