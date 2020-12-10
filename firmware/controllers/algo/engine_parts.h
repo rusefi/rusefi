@@ -93,6 +93,7 @@ public:
 	float mockRpm = 0;
 	float mockCrankingRpm = 0;
 	float mockTimeSinceBoot = 0;
+	float mockTimeSinceTrigger = 0;
 	int mockAcToggle = 0;
 #endif
 

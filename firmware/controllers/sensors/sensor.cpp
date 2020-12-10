@@ -34,7 +34,8 @@ static const char* s_sensorNames[] = {
 	"Aux Temp 1",
 	"Aux Temp 2",
 
-	"Lambda",
+	"Lambda 1",
+	"Lambda 2",
 
 	"Wastegate Position",
 	"Idle Valve Position",
