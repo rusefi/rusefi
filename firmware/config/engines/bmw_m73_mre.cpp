@@ -120,7 +120,7 @@ void setEngineBMW_M73_microRusEfi(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	CONFIG(crankingTimingAngle) = 30;
 
 	// I am too lazy to add MAP sensor
-	engineConfiguration->fuelAlgorithm = LM_ALPHA_N_2;
+	engineConfiguration->fuelAlgorithm = LM_ALPHA_N;
 
 	// set cranking_fuel 15
 	engineConfiguration->cranking.baseFuel = 15;

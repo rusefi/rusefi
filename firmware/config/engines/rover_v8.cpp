@@ -55,7 +55,10 @@ void setRoverv8(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 
 	// set ignition_mode 2
 	engineConfiguration->ignitionMode = IM_WASTED_SPARK;
+	/*
+	 * this configuration is used on HW CI - in HW CI 'inverted' would rightfully fail unless there is pull-up
 	engineConfiguration->ignitionPinMode = OM_INVERTED;
+*/
 
     // set_ignition_channels
     engineConfiguration->ignitionPins[0] = GPIOE_8; // Frankenstein: low side - out #x (?)

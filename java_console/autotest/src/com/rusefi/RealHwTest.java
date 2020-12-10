@@ -2,6 +2,8 @@ package com.rusefi;
 
 import com.devexperts.logging.Logging;
 import com.rusefi.autodetect.PortDetector;
+import com.rusefi.config.generated.Fields;
+import com.rusefi.core.EngineState;
 import com.rusefi.io.LinkManager;
 import org.jetbrains.annotations.NotNull;
 
@@ -12,12 +14,12 @@ import static com.devexperts.logging.Logging.getLogging;
 import static com.rusefi.Timeouts.SECOND;
 
 /**
- * A few jumper wires are used to test some subsystems as realistically as possible:
+ * The following jumper wires are used to test some subsystems as realistically as possible:
  * PD1 <=> PC6
  * PD2 <=> PA5
- *
- *
- *
+ * <p>
+ * <p>
+ * <p>
  * this test connects to real hardware via serial port
  * Andrey Belomutskiy, (c) 2013-2020
  * 2/22/2015
@@ -25,6 +27,7 @@ import static com.rusefi.Timeouts.SECOND;
 public class RealHwTest {
     private static final Logging log = getLogging(RealHwTest.class);
     private static final int STARTUP_SLEEP = 20;
+    private volatile static String firmwareVersion;
 
     public static void main(String[] args) throws InterruptedException {
         log.info("Sleeping " + STARTUP_SLEEP + " seconds to give OS time to connect VCP driver");
@@ -92,9 +95,18 @@ public class RealHwTest {
 
     private static void runRealHardwareTest(String port) {
         LinkManager linkManager = new LinkManager().setCompositeLogicEnabled(false);
+        linkManager.getEngineState().registerStringValueAction(Fields.PROTOCOL_VERSION_TAG, new EngineState.ValueCallback<String>() {
+            @Override
+            public void onUpdate(String firmwareVersion) {
+                RealHwTest.firmwareVersion = firmwareVersion;
+            }
+        });
+
         IoUtil.realHardwareConnect(linkManager, port);
         // first run tests which require real hardware
         new HardwareTests(linkManager.getCommandQueue()).runRealHardwareTests();
+        if (firmwareVersion == null)
+            throw new IllegalStateException("firmwareVersion has not arrived");
 
         // now run common part of the test which should be same on real hardware and simulator
         new AutoTest(linkManager, linkManager.getCommandQueue()).mainTestBody();

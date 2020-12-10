@@ -82,6 +82,7 @@ angle_t TriggerCentral::getVVTPosition() {
 static bool vvtWithRealDecoder(vvt_mode_e vvtMode) {
 	return vvtMode == MIATA_NB2
 			|| vvtMode == VVT_BOSCH_QUICK_START
+			|| vvtMode == VVT_FORD_ST170
 			|| vvtMode == VVT_4_1;
 }
 
@@ -320,7 +321,7 @@ static char shaft_signal_msg_index[15];
 static const bool isUpEvent[6] = { false, true, false, true, false, true };
 static const char *eventId[6] = { PROTOCOL_CRANK1, PROTOCOL_CRANK1, PROTOCOL_CRANK2, PROTOCOL_CRANK2, PROTOCOL_CRANK3, PROTOCOL_CRANK3 };
 
-static ALWAYS_INLINE void reportEventToWaveChart(trigger_event_e ckpSignalType, int index DECLARE_ENGINE_PARAMETER_SUFFIX) {
+static void reportEventToWaveChart(trigger_event_e ckpSignalType, int index DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	if (!ENGINE(isEngineChartEnabled)) { // this is here just as a shortcut so that we avoid engine sniffer as soon as possible
 		return; // engineSnifferRpmThreshold is accounted for inside ENGINE(isEngineChartEnabled)
 	}
@@ -426,6 +427,8 @@ void TriggerCentral::handleShaftSignal(trigger_event_e signal, efitick_t timesta
 
 	engine->onTriggerSignalEvent(timestamp);
 
+	m_lastEventTimer.reset(timestamp);
+
 	int eventIndex = (int) signal;
 	efiAssertVoid(CUSTOM_TRIGGER_EVENT_TYPE, eventIndex >= 0 && eventIndex < HW_EVENT_TYPES, "signal type");
 	hwEventCounters[eventIndex]++;
@@ -517,14 +520,14 @@ static void triggerShapeInfo(void) {
 #if EFI_UNIT_TEST
 #include <stdlib.h>
 
-#define TRIGGERS_FILE_NAME "triggers.txt"
+extern trigger_type_e focusOnTrigger;
 
 /**
  * This is used to generate trigger info which is later used by TriggerImage java class
  * to generate images for documentation
  */
 extern bool printTriggerDebug;
-void printAllTriggers() {
+void exportAllTriggers() {
 
 	FILE * fp = fopen (TRIGGERS_FILE_NAME, "w+");
 
@@ -535,6 +538,10 @@ void printAllTriggers() {
 	//printTriggerDebug = true;
 	for (int triggerId = 1; triggerId < TT_UNUSED; triggerId++) {
 		trigger_type_e tt = (trigger_type_e) triggerId;
+
+		if (focusOnTrigger != TT_UNUSED && tt != focusOnTrigger) {
+				continue;
+		}
 
 		printf("Exporting %s\r\n", getTrigger_type_e(tt));
 
@@ -553,7 +560,7 @@ void printAllTriggers() {
 		engine->initializeTriggerWaveform(NULL PASS_ENGINE_PARAMETER_SUFFIX);
 
 		if (shape->shapeDefinitionError) {
-			printf("Trigger error %d\r\n", triggerId);
+			printf("Trigger shapeDefinitionError %d\r\n", triggerId);
 			exit(-1);
 		}
 
@@ -566,7 +573,11 @@ void printAllTriggers() {
 			int triggerDefinitionCoordinate = (shape->getTriggerWaveformSynchPointIndex() + i) % shape->getSize();
 
 
-			fprintf(fp, "event %d %d %.2f\n", i, shape->triggerSignals[triggerDefinitionCoordinate], triggerFormDetails->eventAngles[i]);
+			fprintf(fp, "event %d %d %d %.2f\n",
+					i,
+					shape->triggerSignalIndeces[triggerDefinitionCoordinate],
+					shape->triggerSignalStates[triggerDefinitionCoordinate],
+					triggerFormDetails->eventAngles[i]);
 		}
 
 	}

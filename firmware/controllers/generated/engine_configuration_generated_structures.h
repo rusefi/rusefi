@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Sun Nov 22 23:31:54 UTC 2020
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Wed Dec 09 19:32:20 UTC 2020
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -689,7 +689,7 @@ struct engine_configuration_s {
 	offset 76 bit 12 */
 	bool etb_use_two_wires : 1;
 	/**
-	 * Subaru style where default valve position is somewhere in the middle. First solenoid opens it more while second can close it more than default position.
+	 * Subaru/BMW style where default valve position is somewhere in the middle. First solenoid opens it more while second can close it more than default position.
 	offset 76 bit 13 */
 	bool isDoubleSolenoidIdle : 1;
 	/**
@@ -1994,7 +1994,15 @@ struct engine_configuration_s {
 	/**
 	 * offset 1204
 	 */
-	int unusedAtOldBoardConfigurationEnd[64];
+	int unusedAtOldBoardConfigurationEnd[63];
+	/**
+	 * offset 1456
+	 */
+	uint16_t vehicleWeight;
+	/**
+	 * offset 1458
+	 */
+	uint16_t unusedHereHereHere;
 	/**
 	 * offset 1460
 	 */
@@ -2012,6 +2020,7 @@ struct engine_configuration_s {
 	bool fuelClosedLoopCorrectionEnabled : 1;
 	/**
 	 * Print details into rusEfi console
+	 * enable verbose_idle
 	offset 1464 bit 2 */
 	bool isVerboseIAC : 1;
 	/**
@@ -2683,76 +2692,76 @@ struct engine_configuration_s {
 	bool unused1130 : 1;
 	/**
 	offset 2116 bit 8 */
-	bool unusedBit_486_8 : 1;
+	bool unusedBit_488_8 : 1;
 	/**
 	offset 2116 bit 9 */
-	bool unusedBit_486_9 : 1;
+	bool unusedBit_488_9 : 1;
 	/**
 	offset 2116 bit 10 */
-	bool unusedBit_486_10 : 1;
+	bool unusedBit_488_10 : 1;
 	/**
 	offset 2116 bit 11 */
-	bool unusedBit_486_11 : 1;
+	bool unusedBit_488_11 : 1;
 	/**
 	offset 2116 bit 12 */
-	bool unusedBit_486_12 : 1;
+	bool unusedBit_488_12 : 1;
 	/**
 	offset 2116 bit 13 */
-	bool unusedBit_486_13 : 1;
+	bool unusedBit_488_13 : 1;
 	/**
 	offset 2116 bit 14 */
-	bool unusedBit_486_14 : 1;
+	bool unusedBit_488_14 : 1;
 	/**
 	offset 2116 bit 15 */
-	bool unusedBit_486_15 : 1;
+	bool unusedBit_488_15 : 1;
 	/**
 	offset 2116 bit 16 */
-	bool unusedBit_486_16 : 1;
+	bool unusedBit_488_16 : 1;
 	/**
 	offset 2116 bit 17 */
-	bool unusedBit_486_17 : 1;
+	bool unusedBit_488_17 : 1;
 	/**
 	offset 2116 bit 18 */
-	bool unusedBit_486_18 : 1;
+	bool unusedBit_488_18 : 1;
 	/**
 	offset 2116 bit 19 */
-	bool unusedBit_486_19 : 1;
+	bool unusedBit_488_19 : 1;
 	/**
 	offset 2116 bit 20 */
-	bool unusedBit_486_20 : 1;
+	bool unusedBit_488_20 : 1;
 	/**
 	offset 2116 bit 21 */
-	bool unusedBit_486_21 : 1;
+	bool unusedBit_488_21 : 1;
 	/**
 	offset 2116 bit 22 */
-	bool unusedBit_486_22 : 1;
+	bool unusedBit_488_22 : 1;
 	/**
 	offset 2116 bit 23 */
-	bool unusedBit_486_23 : 1;
+	bool unusedBit_488_23 : 1;
 	/**
 	offset 2116 bit 24 */
-	bool unusedBit_486_24 : 1;
+	bool unusedBit_488_24 : 1;
 	/**
 	offset 2116 bit 25 */
-	bool unusedBit_486_25 : 1;
+	bool unusedBit_488_25 : 1;
 	/**
 	offset 2116 bit 26 */
-	bool unusedBit_486_26 : 1;
+	bool unusedBit_488_26 : 1;
 	/**
 	offset 2116 bit 27 */
-	bool unusedBit_486_27 : 1;
+	bool unusedBit_488_27 : 1;
 	/**
 	offset 2116 bit 28 */
-	bool unusedBit_486_28 : 1;
+	bool unusedBit_488_28 : 1;
 	/**
 	offset 2116 bit 29 */
-	bool unusedBit_486_29 : 1;
+	bool unusedBit_488_29 : 1;
 	/**
 	offset 2116 bit 30 */
-	bool unusedBit_486_30 : 1;
+	bool unusedBit_488_30 : 1;
 	/**
 	offset 2116 bit 31 */
-	bool unusedBit_486_31 : 1;
+	bool unusedBit_488_31 : 1;
 	/**
 	 * set can_mode X
 	 * offset 2120
@@ -3464,14 +3473,18 @@ struct engine_configuration_s {
 	 */
 	pin_output_mode_e tcu_solenoid_mode[TCU_SOLENOID_COUNT];
 	/**
-	 * need 4 byte alignment
 	 * offset 4523
 	 */
-	uint8_t alignmentFill_at_4523;
+	int8_t knockBaseNoise[IGN_RPM_COUNT];
 	/**
-	 * offset 4524
+	 * need 4 byte alignment
+	 * offset 4539
 	 */
-	int mainUnusedEnd[369];
+	uint8_t alignmentFill_at_4539;
+	/**
+	 * offset 4540
+	 */
+	int mainUnusedEnd[365];
 	/** total size 6000*/
 };
 
@@ -3769,4 +3782,4 @@ struct persistent_config_s {
 typedef struct persistent_config_s persistent_config_s;
 
 // end
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Sun Nov 22 23:31:54 UTC 2020
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Wed Dec 09 19:32:20 UTC 2020

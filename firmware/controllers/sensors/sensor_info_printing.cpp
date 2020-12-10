@@ -36,7 +36,7 @@ void RedundantSensor::showInfo(Logging* logger, const char* sensorName) const {
 	scheduleMsg(logger, "Sensor \"%s\" is redundant combining \"%s\" and \"%s\"", sensorName, getSensorName(m_first), getSensorName(m_second));
 }
 
-void RpmCalculator::showInfo(Logging* logger, const char* sensorName) const {
+void RpmCalculator::showInfo(Logging* logger, const char* /*sensorName*/) const {
 	scheduleMsg(logger, "RPM sensor: stopped: %d spinning up: %d cranking: %d running: %d rpm: %f", 
 		isStopped(),
 		isSpinningUp(),

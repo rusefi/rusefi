@@ -18,6 +18,8 @@
 #include "perf_trace.h"
 #include "closed_loop_fuel.h"
 #include "sensor.h"
+#include "launch_control.h"
+
 
 #if EFI_PROD_CODE
 #include "svnversion.h"
@@ -174,6 +176,11 @@ void EngineState::periodicFastCallback(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	float ignitionLoad = getIgnitionLoad(PASS_ENGINE_PARAMETER_SIGNATURE);
 	timingAdvance = getAdvance(rpm, ignitionLoad PASS_ENGINE_PARAMETER_SUFFIX);
 	multispark.count = getMultiSparkCount(rpm PASS_ENGINE_PARAMETER_SUFFIX);
+
+#if EFI_LAUNCH_CONTROL
+	updateLaunchConditions(PASS_ENGINE_PARAMETER_SIGNATURE);
+#endif //EFI_LAUNCH_CONTROL
+
 #endif // EFI_ENGINE_CONTROL
 }
 
@@ -240,7 +247,8 @@ void StartupFuelPumping::update(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 #endif
 
 void printCurrentState(Logging *logging, int seconds, const char *engineTypeName, const char *firmwareBuildId) {
-	logging->appendPrintf("%s%s%d@%s%s %s %d%s", PROTOCOL_VERSION_TAG, DELIMETER,
+	// VersionChecker in rusEFI console is parsing these version string, please follow the expected format
+	logging->appendPrintf("%s%s%d@%s %s %s %d%s", PROTOCOL_VERSION_TAG, DELIMETER,
 			getRusEfiVersion(), VCS_VERSION,
 			firmwareBuildId,
 			engineTypeName,

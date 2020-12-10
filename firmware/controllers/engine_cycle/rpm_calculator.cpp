@@ -132,8 +132,10 @@ bool RpmCalculator::checkIfSpinning(efitick_t nowNt) const {
 
 void RpmCalculator::assignRpmValue(float floatRpmValue) {
 	previousRpmValue = rpmValue;
-	// we still persist integer RPM! todo: figure out the next steps
-	rpmValue = floatRpmValue;
+
+	// Round to the nearest integer RPM - some other parts of the ECU expect integer, so that's what we hand out.
+	// TODO: RPM should eventually switch to floating point across the ECU
+	rpmValue = efiRound(floatRpmValue, 1);
 
 	if (rpmValue <= 0) {
 		oneDegreeUs = NAN;
@@ -286,10 +288,10 @@ void rpmShaftPositionCallback(trigger_event_e ckpSignalType,
 		// Replace 'normal' RPM with instant RPM for the initial spin-up period
 		engine->triggerCentral.triggerState.movePreSynchTimestamps(PASS_ENGINE_PARAMETER_SIGNATURE);
 		int prevIndex;
-		int instantRpm = engine->triggerCentral.triggerState.calculateInstantRpm(&engine->triggerCentral.triggerFormDetails,
+		float instantRpm = engine->triggerCentral.triggerState.calculateInstantRpm(&engine->triggerCentral.triggerFormDetails,
 				&prevIndex, nowNt PASS_ENGINE_PARAMETER_SUFFIX);
 		// validate instant RPM - we shouldn't skip the cranking state
-		instantRpm = minI(instantRpm, CONFIG(cranking.rpm) - 1);
+		instantRpm = minF(instantRpm, CONFIG(cranking.rpm) - 1);
 		rpmState->assignRpmValue(instantRpm);
 #if 0
 		scheduleMsg(logger, "** RPM: idx=%d sig=%d iRPM=%d", index, ckpSignalType, instantRpm);
@@ -386,7 +388,8 @@ efitick_t scheduleByAngle(scheduling_s *timer, efitick_t edgeTimestamp, angle_t 
 		action_s action DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	float delayUs = ENGINE(rpmCalculator.oneDegreeUs) * angle;
 
-	efitime_t delayNt = US2NT(delayUs);
+    // 'delayNt' is below 10 seconds here so we use 32 bit type for performance reasons
+	int32_t delayNt = USF2NT(delayUs);
 	efitime_t delayedTime = edgeTimestamp + delayNt;
 
 	ENGINE(executor.scheduleByTimestampNt(timer, delayedTime, action));

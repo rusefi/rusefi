@@ -151,13 +151,14 @@ void enableFrankensoCan(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	engineConfiguration->canReadEnabled = false;
 }
 
+// todo: we usually use 'activeConfiguration' for 'stopPin' why this unusual code here?
 // this is related to #1375
 static brain_pin_e currentTxPin = GPIO_UNASSIGNED;
 static brain_pin_e currentRxPin = GPIO_UNASSIGNED;
 
 void stopCanPins(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
-	brain_pin_markUnused(currentTxPin);
-	brain_pin_markUnused(currentRxPin);
+	efiSetPadUnused(currentTxPin);
+	efiSetPadUnused(currentRxPin);
 }
 
 void startCanPins(DECLARE_ENGINE_PARAMETER_SIGNATURE) {

@@ -1,6 +1,6 @@
 /**
  * @file main.cpp
- * @file First step towards unit-testing rusEfi algorithms
+ * @file Unit tests (and some integration tests to be fair) of rusEFI
  *
  * @author Andrey Belomutskiy, (c) 2012-2020
  */
@@ -32,14 +32,23 @@ efitick_t getTimeNowNt(void) {
 LoggingWithStorage sharedLogger("main");
 
 extern bool printTriggerDebug;
+extern bool printTriggerTrace;
 bool verboseMode = false;
 
+trigger_type_e focusOnTrigger = TT_UNUSED;
+
 GTEST_API_ int main(int argc, char **argv) {
-//	printTriggerDebug = true;
+	if (focusOnTrigger != TT_UNUSED) {
+		printTriggerDebug = true;
+		printTriggerTrace = true;
+	}
 
 	//	resizeMap();
-	printf("Success 20200510\r\n");
-	printAllTriggers();
+	printf("Success 20201203\r\n");
+	exportAllTriggers();
+	if (focusOnTrigger != TT_UNUSED) {
+		return -1;
+	}
 
 	testing::InitGoogleTest(&argc, argv);
 	// uncomment if you only want to run selected tests

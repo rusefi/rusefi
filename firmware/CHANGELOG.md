@@ -25,7 +25,18 @@ Release template (copy/paste this for new release):
 
 All notable user-facing or behavior-altering changes will be documented in this file.
 
-## November 2020 Release
+## XXX 202X Release
+
+### Added
+ - DAIHATSU 3/4 cylinder trigger https://rusefi.com/images/triggers/trigger_6.png
+ - Ford ST170 VVT cam trigger https://rusefi.com/images/triggers/trigger_42.png
+
+## December 2020 National Mutt Day
+
+### Fixed
+ -  minor bugfix - engine sniffer missing pin names #1995
+ 
+## November 2020 Release - "Black Friday"
 
 ### Breaking Changes
  -   "AFR target" table is now "Lambda target" table.  It should convert itself correctly, but a backup of that table is recommended when updating firmware/ini.
@@ -34,17 +45,17 @@ All notable user-facing or behavior-altering changes will be documented in this 
 ### Added
  -   High & low pressure fuel sensor channels
  -   Electronic throttle-style wastegate control found on some VW turbos (and VGTs)
- -   Improved TLE8888 driver on microRusEfi 
+ -   Improved TLE8888 driver on microRusEFI 
  -   Improved setting ECU presets/defaults from TunerStudio
 
 ### Fixed
- -   Improved TunerStudio protocol reliability - should see fewer CRC errors now
+ -   Improved TunerStudio protocol reliability - should see fewer CRC errors now #1943
 
 ## October 2020 Release - "Sausage Pizza Day"
 
 ### Added
  -   `iat` as FSIO variable to read intake air temperature
- -   [ALPHA] Software based knock detection on Proteus v0.4+.  Possible on microRusEfi and Frankenso too with hardware modification.
+ -   [ALPHA] Software based knock detection on Proteus v0.4+.  Possible on microRusEFI and Frankenso too with hardware modification.
  -   [ALPHA] Early framing work for automatic transmission control!
 
 ### Fixed

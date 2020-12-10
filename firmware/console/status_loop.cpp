@@ -62,6 +62,7 @@
 #include "cdm_ion_sense.h"
 #include "binary_logging.h"
 #include "buffered_writer.h"
+#include "dynoview.h"
 
 extern bool main_loop_started;
 
@@ -167,7 +168,7 @@ static LoggingWithStorage logger2("main event handler");
  * Time when the firmware version was reported last time, in seconds
  * TODO: implement a request/response instead of just constantly sending this out
  */
-static systime_t timeOfPreviousPrintVersion = (systime_t) -1;
+static systime_t timeOfPreviousPrintVersion = 0;
 
 #if EFI_PROD_CODE
 static void printOutPin(const char *pinName, brain_pin_e hwPin) {
@@ -279,11 +280,6 @@ void updateDevConsoleState(void) {
  */
 
 static void showFuelInfo2(float rpm, float engineLoad) {
-
-	float baseFuelMs = 0; // TODO 
-
-	float magicAir = SpeedDensityBase::getAirmassImpl(1, 100, convertCelsiusToKelvin(20) PASS_ENGINE_PARAMETER_SUFFIX);
-
 	scheduleMsg(&logger, "inj flow %.2fcc/min displacement %.2fL", engineConfiguration->injector.flow,
 			engineConfiguration->specs.displacement);
 
@@ -303,13 +299,9 @@ static void showFuelInfo2(float rpm, float engineLoad) {
 		float cltCorrection = engine->engineState.running.coolantTemperatureCoefficient;
 		floatms_t injectorLag = engine->engineState.running.injectorLag;
 		scheduleMsg(&logger2, "rpm=%.2f engineLoad=%.2f", rpm, engineLoad);
-		scheduleMsg(&logger2, "baseFuel=%.2f", baseFuelMs);
 
 		scheduleMsg(&logger2, "iatCorrection=%.2f cltCorrection=%.2f injectorLag=%.2f", iatCorrection, cltCorrection,
 				injectorLag);
-
-		float value = getRunningFuel(baseFuelMs PASS_ENGINE_PARAMETER_SUFFIX);
-		scheduleMsg(&logger2, "injection pulse width: %.2f", value);
 	}
 #endif
 }
@@ -499,6 +491,8 @@ void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels DECLARE_
 
 	SensorResult tps2 = Sensor::get(SensorType::Tps2);
 	tsOutputChannels->throttle2Position = tps2.Value;
+	// If we don't have a TPS2 at all, don't turn on the failure light
+	tsOutputChannels->isTps2Error = !tps2.Valid && Sensor::hasSensor(SensorType::Tps2);
 
 	SensorResult pedal = Sensor::get(SensorType::AcceleratorPedal);
 	tsOutputChannels->pedalPosition = pedal.Value;
@@ -518,10 +512,13 @@ void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels DECLARE_
 	// offset 16
 	tsOutputChannels->massAirFlowVoltage = hasMafSensor() ? getMafVoltage(PASS_ENGINE_PARAMETER_SIGNATURE) : 0;
 
-	// offset 20
-	float lambdaValue = Sensor::get(SensorType::Lambda).value_or(0);
+	float lambdaValue = Sensor::get(SensorType::Lambda1).value_or(0);
 	tsOutputChannels->lambda = lambdaValue;
 	tsOutputChannels->airFuelRatio = lambdaValue * ENGINE(engineState.stoichiometricRatio);
+
+	float lambda2Value = Sensor::get(SensorType::Lambda2).value_or(0);
+	tsOutputChannels->lambda2 = lambda2Value;
+	tsOutputChannels->airFuelRatio2 = lambda2Value * ENGINE(engineState.stoichiometricRatio);
 
 	// offset 24
 	tsOutputChannels->engineLoad = getEngineLoadT(PASS_ENGINE_PARAMETER_SIGNATURE);
@@ -604,7 +601,7 @@ void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels DECLARE_
 	// Low pressure is directly in kpa
 	tsOutputChannels->lowFuelPressure = Sensor::get(SensorType::FuelPressureLow).Value;
 	// High pressure is in bar, aka 100 kpa
-	tsOutputChannels->highFuelPressure = Sensor::get(SensorType::FuelPressureHigh).Value * 0.01f;
+	tsOutputChannels->highFuelPressure = KPA2BAR(Sensor::get(SensorType::FuelPressureHigh).Value);
 
 	// 288
 	tsOutputChannels->injectionOffset = engine->engineState.injectionOffset;
@@ -619,6 +616,10 @@ void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels DECLARE_
 		// offset 40
 		tsOutputChannels->manifoldAirPressure = mapValue;
 	}
+
+#if EFI_DYNO_VIEW
+	tsOutputChannels->VssAcceleration = getDynoviewAcceleration(PASS_ENGINE_PARAMETER_SIGNATURE);
+#endif
 
 	//tsOutputChannels->knockCount = engine->knockCount;
 	//tsOutputChannels->knockLevel = engine->knockVolts;
@@ -725,6 +726,8 @@ void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels DECLARE_
 	switch (engineConfiguration->debugMode)	{
 	case DBG_START_STOP:
 		tsOutputChannels->debugIntField1 = engine->startStopStateToggleCounter;
+		tsOutputChannels->debugIntField2 = enginePins.starterControl.getLogicValue();
+		tsOutputChannels->debugIntField3 = enginePins.starterRelayDisable.getLogicValue();
 		break;
 	case DBG_STATUS:
 		tsOutputChannels->debugFloatField1 = timeSeconds;

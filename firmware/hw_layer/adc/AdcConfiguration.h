@@ -20,7 +20,7 @@ typedef struct {
 
 class AdcDevice {
 public:
-	explicit AdcDevice(ADCConversionGroup* hwConfig, adcsample_t *buf);
+	explicit AdcDevice(ADCConversionGroup* hwConfig, adcsample_t *buf, size_t buf_len);
 	void enableChannel(adc_channel_e hwChannelIndex);
 	void enableChannelAndPin(const char *msg, adc_channel_e hwChannelIndex);
 	adc_channel_e getAdcHardwareIndexByInternalIndex(int index) const;
@@ -28,17 +28,18 @@ public:
 	bool isHwUsed(adc_channel_e hwChannel) const;
 	int size() const;
 	void init(void);
-	int conversionCount;
-	int errorsCount;
+	uint32_t conversionCount = 0;
+	uint32_t errorsCount = 0;
 	int getAdcValueByIndex(int internalIndex) const;
 	void invalidateSamplesCache();
 
 	adcsample_t *samples;
+	size_t buf_len;
 
 	int getAdcValueByHwChannel(adc_channel_e hwChannel) const;
 
 	adc_state values;
-	int channelCount;
+	size_t channelCount = 0;
 private:
 	ADCConversionGroup* hwConfig;
 	/**

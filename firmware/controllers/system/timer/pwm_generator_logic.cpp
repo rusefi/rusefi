@@ -13,9 +13,12 @@
 #include "pwm_generator_logic.h"
 #include "perf_trace.h"
 
+EXTERN_ENGINE;
+
 #if EFI_PROD_CODE
 #include "mpu_util.h"
-#endif
+#include "engine.h"
+#endif // EFI_PROD_CODE
 
 // 1% duty cycle
 #define ZERO_PWM_THRESHOLD 0.01
@@ -133,8 +136,9 @@ void PwmConfig::setFrequency(float frequency) {
 	}
 	/**
 	 * see #handleCycleStart()
+	 * 'periodNt' is below 10 seconds here so we use 32 bit type for performance reasons
 	 */
-	periodNt = US2NT(frequency2periodUs(frequency));
+	periodNt = USF2NT(frequency2periodUs(frequency));
 }
 
 void PwmConfig::stop() {
@@ -375,6 +379,16 @@ void startSimplePwmHard(SimplePwm *state, const char *msg,
  * This method takes ~350 ticks.
  */
 void applyPinState(int stateIndex, PwmConfig *state) /* pwm_gen_callback */ {
+#if EFI_PROD_CODE
+	if (!engine->isPwmEnabled) {
+		for (int channelIndex = 0; channelIndex < state->multiChannelStateSequence.waveCount; channelIndex++) {
+			OutputPin *output = state->outputPins[channelIndex];
+			output->setValue(0);
+		}
+		return;
+	}
+#endif // EFI_PROD_CODE
+
 	efiAssertVoid(CUSTOM_ERR_6663, stateIndex < PWM_PHASE_MAX_COUNT, "invalid stateIndex");
 	efiAssertVoid(CUSTOM_ERR_6664, state->multiChannelStateSequence.waveCount <= PWM_PHASE_MAX_WAVE_PER_PWM, "invalid waveCount");
 	for (int channelIndex = 0; channelIndex < state->multiChannelStateSequence.waveCount; channelIndex++) {

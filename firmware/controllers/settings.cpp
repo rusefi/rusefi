@@ -145,22 +145,10 @@ const char* getConfigurationName(engine_type_e engineType) {
 		return "Mi4G93";
 	case MIATA_1990:
 		return "MX590";
-	case MIATA_1994_DEVIATOR:
-		return "MX594d";
 	case MIATA_1996:
 		return "MX596";
 	case BMW_E34:
 		return "BMWe34";
-	case VW_ABA:
-		return "VW_ABA";
-	case SACHS:
-		return "SACHS";
-	case CAMARO_4:
-		return "CAMARO_4";
-	case CHEVY_C20_1973:
-		return "CHEVY C20";
-	case DODGE_RAM:
-		return "DODGE_RAM";
 	default:
 		return getEngine_type_e(engineType);
 	}
@@ -570,6 +558,17 @@ static void setIgnitionPin(const char *indexStr, const char *pinName) {
 	incrementGlobalConfigurationVersion(PASS_ENGINE_PARAMETER_SIGNATURE);
 }
 
+// this method is useful for desperate time debugging
+static void readPin(const char *pinName) {
+	brain_pin_e pin = parseBrainPin(pinName);
+	if (pin == GPIO_INVALID) {
+		scheduleMsg(&logger, "invalid pin name [%s]", pinName);
+		return;
+	}
+	int physicalValue = palReadPad(getHwPort("read", pin), getHwPin("read", pin));
+	scheduleMsg(&logger, "pin %s value %d", hwPortname(pin), physicalValue);
+}
+
 static void setIndividualPin(const char *pinName, brain_pin_e *targetPin, const char *name) {
 	brain_pin_e pin = parseBrainPin(pinName);
 	if (pin == GPIO_INVALID) {
@@ -677,7 +676,7 @@ static void setTriggerInputPin(const char *indexStr, const char *pinName) {
 
 static void setTriggerSimulatorMode(const char *indexStr, const char *modeCode) {
 	int index = atoi(indexStr);
-	if (index < 0 || index >= TRIGGER_SIMULATOR_PIN_COUNT || absI(index) == ERROR_CODE) {
+	if (index < 0 || index >= TRIGGER_SIMULATOR_PIN_COUNT) {
 		return;
 	}
 	int mode = atoi(modeCode);
@@ -689,7 +688,7 @@ static void setTriggerSimulatorMode(const char *indexStr, const char *modeCode) 
 
 static void setEgtCSPin(const char *indexStr, const char *pinName) {
 	int index = atoi(indexStr);
-	if (index < 0 || index >= EGT_CHANNEL_COUNT || absI(index) == ERROR_CODE)
+	if (index < 0 || index >= EGT_CHANNEL_COUNT)
 		return;
 	brain_pin_e pin = parseBrainPin(pinName);
 	if (pin == GPIO_INVALID) {
@@ -703,7 +702,7 @@ static void setEgtCSPin(const char *indexStr, const char *pinName) {
 
 static void setTriggerSimulatorPin(const char *indexStr, const char *pinName) {
 	int index = atoi(indexStr);
-	if (index < 0 || index >= TRIGGER_SIMULATOR_PIN_COUNT || absI(index) == ERROR_CODE)
+	if (index < 0 || index >= TRIGGER_SIMULATOR_PIN_COUNT)
 		return;
 	brain_pin_e pin = parseBrainPin(pinName);
 	if (pin == GPIO_INVALID) {
@@ -767,6 +766,7 @@ static void setLogicInputPin(const char *indexStr, const char *pinName) {
 	}
 	scheduleMsg(&logger, "setting logic input pin[%d] to %s please save&restart", index, hwPortname(pin));
 	engineConfiguration->logicAnalyzerPins[index] = pin;
+	incrementGlobalConfigurationVersion(PASS_ENGINE_PARAMETER_SIGNATURE);
 }
 
 static void showPinFunction(const char *pinName) {
@@ -887,6 +887,8 @@ static void enableOrDisable(const char *param, bool isEnabled) {
 		engineConfiguration->canWriteEnabled = isEnabled;
 	} else if (strEqualCaseInsensitive(param, CMD_INJECTION)) {
 		engineConfiguration->isInjectionEnabled = isEnabled;
+	} else if (strEqualCaseInsensitive(param, CMD_PWM)) {
+		engine->isPwmEnabled = isEnabled;
 	} else if (strEqualCaseInsensitive(param, "trigger_details")) {
 		engineConfiguration->verboseTriggerSynchDetails = isEnabled;
 	} else if (strEqualCaseInsensitive(param, "vvt_details")) {
@@ -1357,10 +1359,10 @@ void initSettings(void) {
 
 #if EFI_PROD_CODE
 	addConsoleActionS("showpin", showPinFunction);
-	addConsoleActionSS("set_injection_pin", setInjectionPin);
-	addConsoleActionSS("set_ignition_pin", setIgnitionPin);
+	addConsoleActionSS(CMD_INJECTION_PIN, setInjectionPin);
+	addConsoleActionSS(CMD_IGNITION_PIN, setIgnitionPin);
 	addConsoleActionSS(CMD_TRIGGER_PIN, setTriggerInputPin);
-	addConsoleActionSS("set_trigger_simulator_pin", setTriggerSimulatorPin);
+	addConsoleActionSS(CMD_TRIGGER_SIMULATOR_PIN, setTriggerSimulatorPin);
 
 	addConsoleActionSS("set_egt_cs_pin", (VoidCharPtrCharPtr) setEgtCSPin);
 	addConsoleActionI("set_egt_spi", setEgtSpi);
@@ -1368,14 +1370,15 @@ void initSettings(void) {
 	addConsoleActionSS("set_trigger_simulator_mode", setTriggerSimulatorMode);
 	addConsoleActionS("set_fuel_pump_pin", setFuelPumpPin);
 	addConsoleActionS("set_acrelay_pin", setACRelayPin);
-	addConsoleActionS("set_alternator_pin", setAlternatorPin);
-	addConsoleActionS("set_idle_pin", setIdlePin);
+	addConsoleActionS(CMD_ALTERNATOR_PIN, setAlternatorPin);
+	addConsoleActionS(CMD_IDLE_PIN, setIdlePin);
 	addConsoleActionS("set_main_relay_pin", setMainRelayPin);
 	addConsoleActionS("set_starter_relay_pin", setStarterRelayPin);
 	addConsoleActionS("set_cj125_cs_pin", setCj125CsPin);
 	addConsoleActionS("set_cj125_heater_pin", setCj125HeaterPin);
 	addConsoleActionS("set_trigger_sync_pin", setTriggerSyncPin);
 
+	addConsoleActionS("readpin", readPin);
 	addConsoleActionS("set_can_rx_pin", setCanRxPin);
 	addConsoleActionS("set_can_tx_pin", setCanTxPin);
 
@@ -1385,7 +1388,7 @@ void initSettings(void) {
 #if HAL_USE_ADC
 	addConsoleActionSS("set_analog_input_pin", setAnalogInputPin);
 #endif
-	addConsoleActionSS("set_logic_input_pin", setLogicInputPin);
+	addConsoleActionSS(CMD_LOGIC_PIN, setLogicInputPin);
 	addConsoleActionI("set_pot_spi", setPotSpi);
 #endif /* EFI_PROD_CODE */
 }

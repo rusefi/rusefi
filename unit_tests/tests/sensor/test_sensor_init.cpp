@@ -51,6 +51,52 @@ TEST(SensorInit, Tps) {
 	EXPECT_NEAR(50.0f, Sensor::get(SensorType::Tps1).value_or(-1), EPS2D);
 }
 
+TEST(SensorInit, TpsValuesTooClose) {
+	WITH_ENGINE_TEST_HELPER(TEST_ENGINE);
+
+	// Should fail, 0.49 volts apart
+	CONFIG(tpsMin) = 200;	// 1.00 volt
+	CONFIG(tpsMax) = 298;	// 1.49 volts
+	EXPECT_FATAL_ERROR(initTps(PASS_CONFIG_PARAMETER_SIGNATURE));
+	Sensor::resetRegistry();
+
+	// Should fail, -0.49 volts apart
+	CONFIG(tpsMin) = 298;	// 1.49 volt
+	CONFIG(tpsMax) = 200;	// 1.00 volts
+	EXPECT_FATAL_ERROR(initTps(PASS_CONFIG_PARAMETER_SIGNATURE));
+	Sensor::resetRegistry();
+
+	// Should succeed, 0.51 volts apart
+	CONFIG(tpsMin) = 200;	// 1.00 volt
+	CONFIG(tpsMax) = 302;	// 1.51 volts
+	EXPECT_NO_FATAL_ERROR(initTps(PASS_CONFIG_PARAMETER_SIGNATURE));
+	Sensor::resetRegistry();
+
+	// Should succeed, -0.51 volts apart
+	CONFIG(tpsMin) = 302;	// 1.51 volt
+	CONFIG(tpsMax) = 200;	// 1.00 volts
+	EXPECT_NO_FATAL_ERROR(initTps(PASS_CONFIG_PARAMETER_SIGNATURE));
+	Sensor::resetRegistry();
+
+	// With no pin, it should be ok that they are the same
+	// Should succeed, -0.51 volts apart
+	CONFIG(tps1_1AdcChannel) = EFI_ADC_NONE;
+	CONFIG(tpsMin) = 200;	// 1.00 volt
+	CONFIG(tpsMax) = 200;	// 1.00 volts
+	EXPECT_NO_FATAL_ERROR(initTps(PASS_CONFIG_PARAMETER_SIGNATURE));
+	Sensor::resetRegistry();
+
+	// Test a random bogus pin index, shouldn't fail
+	CONFIG(tps1_1AdcChannel) = static_cast<adc_channel_e>(175);
+	CONFIG(tpsMin) = 200;	// 1.00 volt
+	CONFIG(tpsMax) = 200;	// 1.00 volt
+	EXPECT_NO_FATAL_ERROR(initTps(PASS_CONFIG_PARAMETER_SIGNATURE));
+	Sensor::resetRegistry();
+
+	// Reconfiguration should also work without error
+	EXPECT_NO_FATAL_ERROR(reconfigureTps(PASS_CONFIG_PARAMETER_SIGNATURE));
+}
+
 TEST(SensorInit, Pedal) {
 	WITH_ENGINE_TEST_HELPER(TEST_ENGINE);
 
@@ -169,6 +215,6 @@ TEST(SensorInit, Lambda) {
 
 	initLambda(PASS_ENGINE_PARAMETER_SIGNATURE);
 
-	auto s = Sensor::getSensorOfType(SensorType::Lambda);
+	auto s = Sensor::getSensorOfType(SensorType::Lambda1);
 	ASSERT_NE(nullptr, s);
 }

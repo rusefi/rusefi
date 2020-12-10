@@ -89,9 +89,9 @@ analog_inputs:
   EFI_ADC_6: "Analog Volt 11"
   # PA7
   EFI_ADC_7: "Battery Sense"
-  # CLT = Analog Temp 3 = PB0
+  # CLT, PB0, pin #20
   EFI_ADC_8: "Analog Temp 3"
-  # PB1
+  # PB1, pin #31
   EFI_ADC_9: "Analog Temp 4"
   # MAP = Analog volt 1 = PC0
   EFI_ADC_10: "Analog Volt 1"

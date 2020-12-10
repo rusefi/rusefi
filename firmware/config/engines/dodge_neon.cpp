@@ -108,7 +108,7 @@ void setDodgeNeon1995EngineConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 
 	engineConfiguration->trigger.type = TT_DODGE_NEON_1995;
 
-	engineConfiguration->fuelAlgorithm = LM_ALPHA_N_2;
+	engineConfiguration->fuelAlgorithm = LM_ALPHA_N;
 
 //	engineConfiguration->spi2SckMode = PAL_STM32_OTYPE_OPENDRAIN; // 4
 //	engineConfiguration->spi2MosiMode = PAL_STM32_OTYPE_OPENDRAIN; // 4

@@ -9,7 +9,8 @@ struct AirmassResult {
 	float EngineLoadPercent = 100;
 };
 
-struct AirmassModelBase {
+class AirmassModelBase {
+public:
 	DECLARE_ENGINE_PTR;
 
 	explicit AirmassModelBase(const ValueProvider3D& veTable);

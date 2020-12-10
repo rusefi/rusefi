@@ -15,6 +15,7 @@ TEST(BoostControl, Setpoint) {
 		.WillRepeatedly([](float xRpm, float tps) { return tps * 2; });
 
 	WITH_ENGINE_TEST_HELPER(TEST_ENGINE);
+	engineConfiguration->boostType = CLOSED_LOOP;
 
 	BoostController bc;
 	INJECT_ENGINE_REFERENCE(&bc);
@@ -114,7 +115,7 @@ TEST(BoostControl, SetOutput) {
 	INJECT_ENGINE_REFERENCE(&bc);
 
 	// ETB wastegate position & PWM should both be set
-	EXPECT_CALL(etb, setWastegatePosition(0.25f));
+	EXPECT_CALL(etb, setWastegatePosition(25.0f));
 	EXPECT_CALL(pwm, setSimplePwmDutyCycle(0.25f));
 
 	// Don't crash if not init'd (don't deref null ptr m_pwm)

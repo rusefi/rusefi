@@ -28,6 +28,7 @@
 
 #define SIGNATURE_H QUOTE(SIGNATURE_NAME SHORT_BOARD_NAME SIGNATURE_EXT)
 
+#if !EFI_UNIT_TEST
 #include SIGNATURE_H
 
 #pragma message ("TS_SIGNATURE: " TS_SIGNATURE)
@@ -35,3 +36,4 @@
 const char *getTsSignature() {
 	return TS_SIGNATURE;
 }
+#endif

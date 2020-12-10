@@ -47,8 +47,8 @@ static void setDefaultCustomMaps(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 
 void setHonda600(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	setDefaultFrankensoConfiguration(PASS_CONFIG_PARAMETER_SIGNATURE);
-	engineConfiguration->trigger.type = TT_HONDA_CBR_600_CUSTOM;
-	engineConfiguration->fuelAlgorithm = LM_ALPHA_N_2;
+	engineConfiguration->trigger.type = TT_HONDA_CBR_600;
+	engineConfiguration->fuelAlgorithm = LM_ALPHA_N;
 
 	// upside down wiring
 	engineConfiguration->triggerInputPins[0] = GPIOA_5;
@@ -132,7 +132,7 @@ void setHonda600(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	engineConfiguration->injectionPins[3] = GPIOB_8; // #4
 
 	setDefaultCustomMaps(PASS_CONFIG_PARAMETER_SIGNATURE);
-	setAlgorithm(LM_ALPHA_N_2 PASS_CONFIG_PARAMETER_SUFFIX);
+	setAlgorithm(LM_ALPHA_N PASS_CONFIG_PARAMETER_SUFFIX);
 
 	engineConfiguration->injectionPins[4] = GPIO_UNASSIGNED;
 	engineConfiguration->injectionPins[5] = GPIO_UNASSIGNED;

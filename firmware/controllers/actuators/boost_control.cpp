@@ -67,6 +67,12 @@ expected<float> BoostController::observePlant() const {
 }
 
 expected<float> BoostController::getSetpoint() const {
+	// If we're in open loop only mode, disregard any target computation.
+	// Open loop needs to work even in case of invalid closed loop config
+	if (engineConfiguration->boostType != CLOSED_LOOP) {
+		return 0;
+	}
+
 	float rpm = GET_RPM();
 
 	auto tps = Sensor::get(SensorType::DriverThrottleIntent);
@@ -140,13 +146,14 @@ expected<percent_t> BoostController::getClosedLoop(float target, float manifoldP
 
 void BoostController::setOutput(expected<float> output) {
 	// TODO: hook up safe duty cycle
-	float duty = PERCENT_TO_DUTY(output.value_or(/*CONFIG(boostControlSafeDutyCycle)*/ 0));
-	
+	percent_t percent = output.value_or(/*CONFIG(boostControlSafeDutyCycle)*/ 0);
+	float duty = PERCENT_TO_DUTY(percent);
+
 	if (m_pwm) {
 		m_pwm->setSimplePwmDutyCycle(duty);
 	}
 
-	setEtbWastegatePosition(duty PASS_ENGINE_PARAMETER_SUFFIX);
+	setEtbWastegatePosition(percent PASS_ENGINE_PARAMETER_SUFFIX);
 }
 
 void BoostController::PeriodicTask() {
@@ -205,7 +212,7 @@ void startBoostPin() {
 
 void stopBoostPin() {
 #if !EFI_UNIT_TEST
-	brain_pin_markUnused(activeConfiguration.boostControlPin);
+	efiSetPadUnused(activeConfiguration.boostControlPin);
 #endif /* EFI_UNIT_TEST */
 }
 
@@ -214,6 +221,8 @@ void onConfigurationChangeBoostCallback(engine_configuration_s *previousConfigur
 }
 
 void initBoostCtrl(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX) {
+	// todo: why do we have 'isBoostControlEnabled' setting exactly?
+	// 'initAuxPid' is an example of a subsystem without explicit enable
 	if (!CONFIG(isBoostControlEnabled)) {
 		return;
 	}

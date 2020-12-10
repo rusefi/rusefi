@@ -1,6 +1,9 @@
 /**
  * @file	trigger_structure.h
  *
+ * rusEFI defines trigger shape programmatically in C code
+ * For integration we have exportAllTriggers export
+ *
  * @date Dec 22, 2013
  * @author Andrey Belomutskiy, (c) 2012-2020
  */
@@ -12,6 +15,10 @@
 #include "engine_configuration_generated_structures.h"
 
 #define FOUR_STROKE_ENGINE_CYCLE 720
+
+#define TRIGGER_GAP_DEVIATION 0.25f
+#define TRIGGER_GAP_DEVIATION_LOW (1.0f - TRIGGER_GAP_DEVIATION)
+#define TRIGGER_GAP_DEVIATION_HIGH (1.0f + TRIGGER_GAP_DEVIATION)
 
 #if EFI_ENABLE_ASSERTS
 #define assertAngleRange(angle, msg, code) if (angle > 10000000 || angle < -10000000) { firmwareError(code, "angle range %s %.2f", msg, angle);angle = 0;}
@@ -68,7 +75,8 @@ class TriggerState;
 class TriggerFormDetails;
 class TriggerConfiguration;
 
-#define GAP_TRACKING_LENGTH 4
+// https://github.com/rusefi/rusefi/issues/2010 shows the corner case wheel with huge depth requirement
+#define GAP_TRACKING_LENGTH 18
 
 /**
  * @brief Trigger shape has all the fields needed to describe and decode trigger signal.
@@ -181,7 +189,8 @@ public:
 	/**
 	 * These signals are used for trigger export only
 	 */
-	int triggerSignals[PWM_PHASE_MAX_COUNT];
+	int triggerSignalIndeces[PWM_PHASE_MAX_COUNT];
+	int triggerSignalStates[PWM_PHASE_MAX_COUNT];
 #endif
 
 	MultiChannelStateSequence wave;

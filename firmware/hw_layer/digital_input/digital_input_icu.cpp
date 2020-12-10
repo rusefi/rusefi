@@ -198,16 +198,12 @@ ICUDriver * getInputCaptureDriver(const char *msg, brain_pin_e hwPin) {
 	return nullptr;
 }
 
-void turnOnCapturePin(const char *msg, brain_pin_e brainPin) {
+static void turnOnCapturePin(const char *msg, brain_pin_e brainPin) {
 	ICUDriver *driver = getInputCaptureDriver(msg, brainPin);
 	if (driver != NULL) {
 		iomode_t mode = (iomode_t) PAL_MODE_ALTERNATE(getAlternateFunctions(driver));
 		efiSetPadMode(msg, brainPin, mode);
 	}
-}
-
-void turnOffCapturePin(brain_pin_e brainPin) {
-	efiSetPadUnused(brainPin);
 }
 
 /**
@@ -217,12 +213,13 @@ void stopDigitalCapture(const char *msg, brain_pin_e brainPin) {
 	if (brainPin == GPIO_UNASSIGNED) {
 		return;
 	}
-	brain_pin_markUnused(brainPin);
+	efiSetPadUnused(brainPin);
 
 	ICUDriver *driver = getInputCaptureDriver(msg, brainPin);
 	if (driver == NULL) {
 		return;
 	}
+
 	int regSize = registeredIcus.size;
 	for (int i = 0; i < regSize; i++) {
 		if (registeredIcus.elements[i].driver == driver) {

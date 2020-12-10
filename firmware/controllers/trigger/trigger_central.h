@@ -11,6 +11,7 @@
 #include "listener_array.h"
 #include "trigger_decoder.h"
 #include "trigger_central_generated.h"
+#include "timer.h"
 
 class Engine;
 typedef void (*ShaftPositionListener)(trigger_event_e signal, uint32_t index, efitick_t edgeTimestamp DECLARE_ENGINE_PARAMETER_SUFFIX);
@@ -43,6 +44,10 @@ public:
 	void resetCounters();
 	void validateCamVvtCounters();
 
+	float getTimeSinceTriggerEvent(efitick_t nowNt) const {
+		return m_lastEventTimer.getElapsedSeconds(nowNt);
+	}
+
 	TriggerNoiseFilter noiseFilter;
 
 	trigger_type_e vvtTriggerType;
@@ -67,6 +72,9 @@ public:
 	TriggerWaveform vvtShape;
 
 	TriggerFormDetails triggerFormDetails;
+
+	// Keep track of the last time we got a valid trigger event
+	Timer m_lastEventTimer;
 };
 
 void triggerInfo(void);
@@ -74,7 +82,11 @@ void hwHandleShaftSignal(trigger_event_e signal, efitick_t timestamp);
 void hwHandleVvtCamSignal(trigger_value_e front, efitick_t timestamp DECLARE_ENGINE_PARAMETER_SUFFIX);
 
 void initTriggerCentral(Logging *sharedLogger);
-void printAllTriggers();
+/**
+ * this method is invoked by 'unit tests' project on PC to write triggers.txt representation of all rusEFI triggers
+ * That triggers.txt is later consumed by TriggerImage.java to render trigger images
+ */
+void exportAllTriggers();
 
 int isSignalDecoderError(void);
 void resetMaxValues();

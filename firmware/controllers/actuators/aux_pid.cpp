@@ -125,16 +125,16 @@ static void turnAuxPidOn(int index) {
 			engineConfiguration->auxPidFrequency[index], 0.1);
 }
 
-void startAuxPins(void) {
+void startAuxPins() {
 	for (int i = 0;i <AUX_PID_COUNT;i++) {
 		turnAuxPidOn(i);
 	}
 }
 
-void stopAuxPins(void) {
+void stopAuxPins() {
 #if EFI_PROD_CODE
 	for (int i = 0;i < AUX_PID_COUNT;i++) {
-		brain_pin_markUnused(activeConfiguration.auxPidPins[i]);
+		efiSetPadUnused(activeConfiguration.auxPidPins[i]);
 	}
 #endif /* EFI_PROD_CODE */
 }
