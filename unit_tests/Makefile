@@ -23,7 +23,6 @@ ifeq ($(USE_OPT),)
   USE_OPT = -c -Wall -O0 -ggdb -g3
   USE_OPT += -fprofile-arcs -ftest-coverage
   USE_OPT += -Werror=missing-field-initializers
-  USE_OPT += -Wno-unused-parameter -Wno-unused-function
 endif
 
 
@@ -243,7 +242,7 @@ TOPT = -mthumb -DTHUMB
 CWARN = -Wall -Wextra -Wstrict-prototypes -pedantic -Wmissing-prototypes -Wold-style-definition
 
 # Define C++ warning options here
-CPPWARN = -Wall -Wextra
+CPPWARN = -Wall -Wextra -Wno-unused-parameter -Wno-unused-function -Wno-unused-variable -Wno-format -Wno-unused-parameter -Wno-unused-private-field
 
 #
 # Compiler settings
