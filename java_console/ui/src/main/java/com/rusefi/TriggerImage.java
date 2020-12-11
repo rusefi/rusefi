@@ -158,13 +158,15 @@ public class TriggerImage {
 
         topPanel.removeAll();
 
-        JPanel firstWheelControl = createWheelPanel(triggerWheelInfo.getFirstWheeTriggerSignals(), true);
+        JPanel firstWheelControl = createWheelPanel(triggerWheelInfo.getFirstWheeTriggerSignals(), true,
+                triggerWheelInfo);
 
         topPanel.add(firstWheelControl);
         topPanel.add(StartupFrame.createLogoLabel());
 
         if (!triggerWheelInfo.waves.get(1).list.isEmpty()) {
-            JPanel secondWheelControl = createWheelPanel(triggerWheelInfo.getSecondWheeTriggerSignals(), false);
+            JPanel secondWheelControl = createWheelPanel(triggerWheelInfo.getSecondWheeTriggerSignals(), false,
+                    triggerWheelInfo);
             topPanel.add(secondWheelControl);
         }
 
@@ -220,7 +222,8 @@ public class TriggerImage {
     }
 
     @NotNull
-    private static JPanel createWheelPanel(List<TriggerSignal> wheel, boolean showTdc) {
+    private static JPanel createWheelPanel(List<TriggerSignal> wheel, boolean showTdc,
+                                           TriggerWheelInfo shape) {
         JPanel clock = new JPanel() {
             @Override
             public void paint(Graphics g) {
@@ -228,8 +231,19 @@ public class TriggerImage {
                 g.setColor(Color.black);
 
                 int middle = WHEEL_BORDER + WHEEL_DIAMETER / 2;
-                if (showTdc)
-                    g.fillPolygon(new int[]{middle, middle + 10, middle - 10}, new int[]{20, 10, 10}, 3);
+                if (showTdc) {
+                    double tdcAngle = Math.toRadians(shape.getTdcPosition());
+
+                    int smallX = (int) (WHEEL_DIAMETER / 2 * Math.sin(tdcAngle));
+                    int smallY = -(int) (WHEEL_DIAMETER / 2 * Math.cos(tdcAngle));
+
+                    int tdcMarkRadius = 8;
+                    g.fillOval(middle + smallX - tdcMarkRadius, middle + smallY - tdcMarkRadius,
+                            2 * tdcMarkRadius,
+                            2 * tdcMarkRadius);
+
+                }
+
 
                 for (int i = 0; i < wheel.size(); i++) {
                     TriggerSignal current = wheel.get(i);
@@ -281,7 +295,7 @@ public class TriggerImage {
         double radianAngle = Math.toRadians(angle);
 
         int smallX = (int) (SMALL_DIAMETER / 2 * Math.sin(radianAngle));
-        int smallY =- (int) (SMALL_DIAMETER / 2 * Math.cos(radianAngle));
+        int smallY = -(int) (SMALL_DIAMETER / 2 * Math.cos(radianAngle));
         int largeX = (int) (WHEEL_DIAMETER / 2 * Math.sin(radianAngle));
         int largeY = -(int) (WHEEL_DIAMETER / 2 * Math.cos(radianAngle));
 
