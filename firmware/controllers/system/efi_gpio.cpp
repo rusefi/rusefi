@@ -148,14 +148,6 @@ EnginePins::EnginePins() :
  */
 
 #if EFI_PROD_CODE
-#define setPinValue(outputPin, electricalValue, logicValue)                        \
-  {                                                                                \
-    if ((outputPin)->currentLogicValue != (logicValue)) {                          \
-	  palWritePad((outputPin)->port, (outputPin)->pin, (electricalValue));         \
-	  (outputPin)->currentLogicValue = (logicValue);                               \
-    }                                                                              \
-  }
-
 #define unregisterOutputIfPinChanged(output, pin) {                                \
 	if (isConfigurationChanged(pin)) {                                             \
 		(output).unregisterOutput(activeConfiguration.pin);                        \
@@ -168,15 +160,6 @@ EnginePins::EnginePins() :
 	}                                                                              \
 }
 
-#else /* EFI_PROD_CODE */
-
-#define setPinValue(outputPin, electricalValue, logicValue)                        \
-  {                                                                                \
-    if ((outputPin)->currentLogicValue != (logicValue)) {                          \
-	  (outputPin)->currentLogicValue = (logicValue);                               \
-    }                                                                              \
-	setMockState((outputPin)->brainPin, logicValue);                               \
-  }
 #endif /* EFI_PROD_CODE */
 
 bool EnginePins::stopPins() {
@@ -400,16 +383,13 @@ bool OutputPin::getAndSet(int logicValue) {
 	return oldValue;
 }
 
-void OutputPin::setOnchipValue(int electricalValue, int logicValue) {
+// This function is only used on real hardware
 #if EFI_PROD_CODE
-	if (port != GPIO_NULL) {
-		setPinValue(this, electricalValue, logicValue);
-	} else {
-		// even without physical pin sometimes it's nice to track logic pin value
-		currentLogicValue = logicValue;
-	}
-#endif // EFI_PROD_CODE
+void OutputPin::setOnchipValue(int electricalValue) {
+	palWritePad(port, pin, electricalValue);
+
 }
+#endif // EFI_PROD_CODE
 
 void OutputPin::setValue(int logicValue) {
 #if ENABLE_PERF_TRACE
@@ -425,24 +405,26 @@ void OutputPin::setValue(int logicValue) {
 
 	#if (BOARD_EXT_GPIOCHIPS > 0)
 		if (!this->ext) {
-			setOnchipValue(electricalValue, logicValue);
+			setOnchipValue(electricalValue);
 		} else {
 			/* external pin */
 			gpiochips_writePad(this->brainPin, logicValue);
 			/* TODO: check return value */
-			currentLogicValue = logicValue;
 		}
 	#else
-		setOnchipValue(electricalValue, logicValue);
+		setOnchipValue(electricalValue);
 	#endif
 
 #else /* EFI_PROD_CODE */
-	setPinValue(this, eValue, logicValue);
+	setMockState(brainPin, logicValue);
 #endif /* EFI_PROD_CODE */
+
+	// Lastly store the current logical value of the pin
+	currentLogicValue = logicValue;
 }
 
 bool OutputPin::getLogicValue() const {
-	// Compare against 1 since it could also be INITIAL_PIN_STATE (which means 0, but we haven't initialized the pin yet)
+	// Compare against 1 since it could also be INITIAL_PIN_STATE (which means logical 0, but we haven't initialized the pin yet)
 	return currentLogicValue == 1;
 }
 
@@ -535,8 +517,6 @@ void OutputPin::initPin(const char *msg, brain_pin_e brainPin, const pin_output_
 		}
 	#endif
 
-	this->currentLogicValue = 0;
-
 #endif // briefly leave the include guard because we need to set default state in tests
 
 	// The order of the next two calls may look strange, which is a good observation.
@@ -550,18 +530,21 @@ void OutputPin::initPin(const char *msg, brain_pin_e brainPin, const pin_output_
 	if (brain_pin_is_onchip(brainPin)) {
 		int actualValue = palReadPad(port, pin);
 		// we had enough drama with pin configuration in board.h and else that we shall self-check
+
 		// todo: handle OM_OPENDRAIN and OM_OPENDRAIN_INVERTED as well
 		if (*outputMode == OM_DEFAULT || *outputMode == OM_INVERTED) {
-			if (*outputMode == OM_INVERTED) {
-				actualValue = !actualValue;
-			}
-			if (actualValue) {
-// todo: https://github.com/rusefi/rusefi/issues/2006
-//				firmwareError(OBD_PCM_Processor_Fault, "%s: startup pin state %s value=%d mode=%s", msg, hwPortname(brainPin), actualValue, getPin_output_mode_e(*outputMode));
+			const int logicalValue = 
+				(*outputMode == OM_INVERTED) 
+				? !actualValue 
+				: actualValue;
+
+			// if the pin was set to logical 1, then set an error and disable the pin so that things don't catch fire
+			if (logicalValue) {
+				efiSetPadUnused(brainPin);
+				firmwareError(OBD_PCM_Processor_Fault, "%s: startup pin state %s actual value=%d logical value=%d mode=%s", msg, hwPortname(brainPin), actualValue, logicalValue, getPin_output_mode_e(*outputMode));
 			}
 		}
 	}
-
 #endif /* EFI_GPIO_HARDWARE */
 }
 
