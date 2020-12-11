@@ -260,7 +260,7 @@ public class TriggerImage {
                      */
 
                     double nextAngle = i == wheel.size() - 1 ? 360 + wheel.get(0).angle : wheel.get(i + 1).angle;
-                    int arcDuration = (int) (nextAngle - current.angle);
+                    int arcDuration = (int) (current.angle - nextAngle);
                     int arcStart = (int) arcToRusEFI(nextAngle);
                     if (current.state == 1) {
                         g.drawArc(WHEEL_BORDER, WHEEL_BORDER, WHEEL_DIAMETER, WHEEL_DIAMETER, arcStart, arcDuration);
@@ -286,7 +286,7 @@ public class TriggerImage {
     }
 
     private static double arcToRusEFI(double angle) {
-        return (90 - angle);
+        return angle - 90;
     }
 
     private static void drawRadialLine(Graphics g, double angle) {
@@ -295,9 +295,9 @@ public class TriggerImage {
         double radianAngle = Math.toRadians(angle);
 
         int smallX = (int) (SMALL_DIAMETER / 2 * Math.sin(radianAngle));
-        int smallY = -(int) (SMALL_DIAMETER / 2 * Math.cos(radianAngle));
+        int smallY = (int) (SMALL_DIAMETER / 2 * Math.cos(radianAngle));
         int largeX = (int) (WHEEL_DIAMETER / 2 * Math.sin(radianAngle));
-        int largeY = -(int) (WHEEL_DIAMETER / 2 * Math.cos(radianAngle));
+        int largeY = (int) (WHEEL_DIAMETER / 2 * Math.cos(radianAngle));
 
         g.drawLine(center + smallX, center + smallY, center + largeX, center + largeY);
     }
