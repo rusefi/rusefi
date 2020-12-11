@@ -29,5 +29,10 @@ EXTERNC iomode_t getInputMode(pin_input_mode_e mode);
 #if HAL_USE_ICU
 EXTERNC void efiIcuStart(const char *msg, ICUDriver *icup, const ICUConfig *config);
 #endif /* HAL_USE_ICU */
+
 #endif /* EFI_GPIO_HARDWARE */
 
+#if ! EFI_PROD_CODE
+#define BRAIN_PIN_COUNT (1 << 8 * sizeof(brain_pin_e))
+extern bool mockPinStates[BRAIN_PIN_COUNT];
+#endif

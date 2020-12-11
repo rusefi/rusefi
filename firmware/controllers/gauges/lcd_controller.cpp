@@ -220,8 +220,8 @@ static void showLine(lcd_line_e line, int /*screenY*/) {
 		return;
 #endif
 	case LL_AFR:
-		if (Sensor::hasSensor(SensorType::Lambda)) {
-			lcdPrintf("AFR: %.2f", Sensor::get(SensorType::Lambda).value_or(0));
+		if (Sensor::hasSensor(SensorType::Lambda1)) {
+			lcdPrintf("AFR: %.2f", Sensor::get(SensorType::Lambda1).value_or(0));
 		} else {
 			lcdPrintf("AFR: none");
 		}

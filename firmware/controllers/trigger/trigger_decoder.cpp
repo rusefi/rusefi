@@ -575,7 +575,7 @@ void TriggerState::decodeTriggerEvent(
 				float gap = 1.0 * toothDurations[0] / toothDurations[1];
 				for (int i = 0;i<triggerShape.gapTrackingLength;i++) {
 					float gap = 1.0 * toothDurations[i] / toothDurations[i + 1];
-					print("index=%d: gap=%.2f expected from %.2f to %.2f error=%s\r\n",
+					printf("index=%d: gap=%.2f expected from %.2f to %.2f error=%s\r\n",
 							i,
 							gap,
 							triggerShape.syncronizationRatioFrom[i],

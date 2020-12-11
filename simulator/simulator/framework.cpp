@@ -7,9 +7,14 @@
 
 #include "global.h"
 #include "framework.h"
+#include "efitime.h"
 
 efitick_t getTimeNowNt(void) {
 	return getTimeNowUs() * US_TO_NT_MULTIPLIER;
+}
+
+uint32_t getTimeNowLowerNt(void) {
+	return getTimeNowNt();
 }
 
 efitimeus_t getTimeNowUs(void) {
