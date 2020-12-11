@@ -53,6 +53,10 @@ class TriggerWheelInfo {
         }
     }
 
+    public double getTdcPosition() {
+        return tdcPosition;
+    }
+
     @NotNull
     private List<TriggerSignal> getTriggerSignals(int index) {
         return signals.stream().filter(signal -> signal.waveIndex == index).collect(Collectors.toList());
