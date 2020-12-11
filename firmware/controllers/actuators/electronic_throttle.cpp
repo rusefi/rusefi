@@ -438,10 +438,12 @@ expected<percent_t> EtbController::getClosedLoop(percent_t target, percent_t obs
 }
 
 void EtbController::accumulateErrorAndFault(percent_t setpoint, percent_t observation) {
+#if ! EFI_UNIT_TEST
 	// Ignore faults when battery is low (aka ignition switch is off)
 	if (getVBatt() < 3) {
 		return;
 	}
+#endif // EFI_UNIT_TEST
 
 	// Integrate the absolute value of the error
 	percent_t error = absF(setpoint - observation);
