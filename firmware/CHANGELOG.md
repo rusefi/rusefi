@@ -28,11 +28,12 @@ All notable user-facing or behavior-altering changes will be documented in this 
 ## XXX 202X Release
 
 ### Breaking Changes
- - GM x24 trigger now has build-in 50 degree TDC offset. Please substract '50' from your trigger offset setting. #2054
+ - GM x24 trigger now uses 0 offset (offset is now built in, previously needed 50 degrees offset)
 
 ### Added
  - DAIHATSU 3/4 cylinder trigger https://rusefi.com/images/triggers/trigger_6.png
  - Ford ST170 VVT cam trigger https://rusefi.com/images/triggers/trigger_42.png
+ - Changed scheduling timer driver to improve scheduling accuracy #1983
 
 ## December 2020 National Mutt Day
 
