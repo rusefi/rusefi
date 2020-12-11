@@ -77,7 +77,6 @@
 
 /*
  * Stack debugging
- * See also getMaxUsedStack()
  */
 EXTERNC int getRemainingStack(thread_t *otp);
 int CountFreeStackSpace(const void* wabase);
