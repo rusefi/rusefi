@@ -235,7 +235,7 @@ public class TriggerImage {
                     double tdcAngle = Math.toRadians(shape.getTdcPosition());
 
                     int smallX = (int) (WHEEL_DIAMETER / 2 * Math.sin(tdcAngle));
-                    int smallY = -(int) (WHEEL_DIAMETER / 2 * Math.cos(tdcAngle));
+                    int smallY = (int) (WHEEL_DIAMETER / 2 * Math.cos(tdcAngle));
 
                     int tdcMarkRadius = 8;
                     g.fillOval(middle + smallX - tdcMarkRadius, middle + smallY - tdcMarkRadius,
