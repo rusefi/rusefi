@@ -52,8 +52,8 @@ class AirmassModelBase;
 #define CYCLE_ALTERNATION 2
 
 class IEtbController;
-class IFuelComputer;
-class IInjectorModel;
+struct IFuelComputer;
+struct IInjectorModel;
 
 class PrimaryTriggerConfiguration final : public TriggerConfiguration {
 public:
