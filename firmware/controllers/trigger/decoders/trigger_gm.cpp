@@ -101,6 +101,7 @@ void initGmLS24(TriggerWaveform *s) {
 		angle = gm_tooth_pair(angle, bit, s, CRANK_MODE_MULTIPLIER);
 	}
 
+	s->tdcPosition = 50;
 	s->useOnlyPrimaryForSync = true;
 
 	// This is tooth #20, at 310 degrees ATDC #1
