@@ -61,6 +61,14 @@ public:
 	// Use the throttle to automatically calibrate the relevant throttle position sensor(s).
 	void autoCalibrateTps() override;
 
+	void accumulateErrorAndFault(percent_t setpoint, percent_t observation);
+
+	float getErrorIntegral() const {
+		return m_errorIntegral;
+	}
+
+	void fault() override;
+
 protected:
 	// This is set if an automatic TPS calibration should be run
 	bool m_isAutocal = false;

@@ -79,6 +79,7 @@
 #include "engine.h"
 #include "tps.h"
 #include "sensor.h"
+#include "voltage.h"
 #include "dc_motor.h"
 #include "dc_motors.h"
 #include "pid_auto_tune.h"

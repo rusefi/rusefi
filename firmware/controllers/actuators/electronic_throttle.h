@@ -47,6 +47,7 @@ public:
 	virtual void setWastegatePosition(percent_t pos) = 0;
 	virtual void update() = 0;
 	virtual void autoCalibrateTps() = 0;
+	virtual void fault() = 0;
 
 	virtual const pid_state_s* getPidState() const = 0;
 };
