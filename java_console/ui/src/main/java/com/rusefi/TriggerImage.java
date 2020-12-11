@@ -39,6 +39,8 @@ public class TriggerImage {
      * number of extra frames
      */
     public static int EXTRA_COUNT = 1;
+    private static int sleepAtEnd;
+    private static int onlyOneTrigger = -1;
 
     private static String getTriggerName(TriggerWheelInfo triggerName) {
         switch (triggerName.id) {
@@ -88,11 +90,17 @@ public class TriggerImage {
 
     public static void main(String[] args) throws InvocationTargetException, InterruptedException {
         final String workingFolder;
-        if (args.length != 1) {
+        if (args.length < 1) {
             workingFolder = DEFAULT_WORK_FOLDER;
         } else {
             workingFolder = args[0];
         }
+
+        if (args.length > 1)
+            onlyOneTrigger = Integer.parseInt(args[1]);
+
+        if (args.length > 2)
+            sleepAtEnd = Integer.parseInt(args[2]);
 
         FrameHelper f = new FrameHelper();
 
@@ -121,6 +129,7 @@ public class TriggerImage {
                 }
             }
         });
+        Thread.sleep(1000 * sleepAtEnd);
         System.exit(-1);
     }
 
@@ -144,9 +153,8 @@ public class TriggerImage {
 
     private static void readTrigger(BufferedReader reader, String line, TriggerPanel triggerPanel, JPanel topPanel, JPanel content) throws IOException {
         TriggerWheelInfo triggerWheelInfo = TriggerWheelInfo.readTriggerWheelInfo(line, reader);
-//        if (triggerWheelInfo.id != Fields.TT_TT_SUBARU_7_6)
-//            return;
-
+        if (onlyOneTrigger != -1 && triggerWheelInfo.id != onlyOneTrigger)
+            return;
 
         topPanel.removeAll();
 
@@ -219,6 +227,10 @@ public class TriggerImage {
                 super.paint(g);
                 g.setColor(Color.black);
 
+                int middle = WHEEL_BORDER + WHEEL_DIAMETER / 2;
+                if (showTdc)
+                    g.fillPolygon(new int[]{middle, middle + 10, middle - 10}, new int[]{20, 10, 10}, 3);
+
                 for (int i = 0; i < wheel.size(); i++) {
                     TriggerSignal current = wheel.get(i);
 
@@ -243,6 +255,11 @@ public class TriggerImage {
                         g.drawArc(corner, corner, SMALL_DIAMETER, SMALL_DIAMETER, arcStart, arcDuration);
                     }
                 }
+
+                int dirArrow = 40;
+                g.drawArc(middle - dirArrow, middle - dirArrow, 2 * dirArrow, 2 * dirArrow, 0, 180);
+                g.drawLine(middle + dirArrow + 5, middle - 15, middle + dirArrow, middle);
+
             }
 
             @Override
