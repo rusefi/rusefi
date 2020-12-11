@@ -34,6 +34,7 @@ public class TriggerImage {
     private static final int WHEEL_BORDER = 20;
     private static final int WHEEL_DIAMETER = 500;
     private static final int SMALL_DIAMETER = 420;
+    private static final int _180 = 180;
 
     /**
      * number of extra frames
@@ -232,7 +233,7 @@ public class TriggerImage {
 
                 int middle = WHEEL_BORDER + WHEEL_DIAMETER / 2;
                 if (showTdc) {
-                    double tdcAngle = Math.toRadians(shape.getTdcPosition());
+                    double tdcAngle = Math.toRadians(_180 + shape.getTdcPosition());
 
                     int smallX = (int) (WHEEL_DIAMETER / 2 * Math.sin(tdcAngle));
                     int smallY = (int) (WHEEL_DIAMETER / 2 * Math.cos(tdcAngle));
@@ -286,13 +287,13 @@ public class TriggerImage {
     }
 
     private static double arcToRusEFI(double angle) {
-        return angle - 90;
+        return angle + _180 - 90;
     }
 
     private static void drawRadialLine(Graphics g, double angle) {
         int center = WHEEL_BORDER + WHEEL_DIAMETER / 2;
 
-        double radianAngle = Math.toRadians(angle);
+        double radianAngle = Math.toRadians(_180 + angle);
 
         int smallX = (int) (SMALL_DIAMETER / 2 * Math.sin(radianAngle));
         int smallY = (int) (SMALL_DIAMETER / 2 * Math.cos(radianAngle));
