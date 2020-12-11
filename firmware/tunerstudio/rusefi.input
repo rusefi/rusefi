@@ -1977,7 +1977,7 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 		field = "Min (fully closed, most boost)",		wastegatePositionMin
 		field = "Max (fully open, least boost)",		wastegatePositionMax
 
-	dialog = idlePosConfig, "Wastegate position sensor"
+	dialog = idlePosConfig, "Idle position sensor"
 		field = "Input pin",							idlePositionSensor
 		field = "Min (valve closed, low idle)",			idlePositionMin
 		field = "Max (valve open, high idle)",			idlePositionMax
