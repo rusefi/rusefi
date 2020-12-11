@@ -644,6 +644,9 @@ TEST(etb, faultHandling) {
 TEST(etb, openLoopThrottle) {
 	WITH_ENGINE_TEST_HELPER(TEST_ENGINE);
 
+	// Must have TPS initialized for ETB setup
+	Sensor::setMockValue(SensorType::Tps1, 0.0f, true);
+
 	EtbController etb;
 	INJECT_ENGINE_REFERENCE(&etb);
 	etb.init(ETB_Throttle1, nullptr, nullptr, nullptr, true);
@@ -661,6 +664,9 @@ TEST(etb, openLoopThrottle) {
 
 TEST(etb, openLoopNonThrottle) {
 	WITH_ENGINE_TEST_HELPER(TEST_ENGINE);
+
+	// Must have TPS initialized for ETB setup
+	Sensor::setMockValue(SensorType::Tps1, 0.0f, true);
 
 	EtbController etb;
 	INJECT_ENGINE_REFERENCE(&etb);
