@@ -573,7 +573,7 @@ void doEtbIterationsWithError(EtbController& etb, int iterations) {
 
 TEST(etb, errorIntegratorIgnoreSmallError) {
 	StrictMock<FaultMockedEtb> etb;
-	etb.init(ETB_Throttle1, nullptr, nullptr, nullptr);
+	etb.init(ETB_Throttle1, nullptr, nullptr, nullptr, true);
 
 	// Sit with a 1% error for a very long time
 	for (size_t i = 0; i < ETB_LOOP_FREQUENCY * 100; i++)
@@ -587,7 +587,7 @@ TEST(etb, errorIntegratorIgnoreSmallError) {
 
 TEST(etb, errorIntegratorNoFault) {
 	StrictMock<FaultMockedEtb> etb;
-	etb.init(ETB_Throttle1, nullptr, nullptr, nullptr);
+	etb.init(ETB_Throttle1, nullptr, nullptr, nullptr, true);
 
 	// Accumulate that error for almost 1 "second"
 	doEtbIterationsWithError(etb, ETB_LOOP_FREQUENCY - 1);
@@ -597,7 +597,7 @@ TEST(etb, errorIntegratorNoFault) {
 
 TEST(etb, errorIntegratorFault) {
 	StrictMock<FaultMockedEtb> etb;
-	etb.init(ETB_Throttle1, nullptr, nullptr, nullptr);
+	etb.init(ETB_Throttle1, nullptr, nullptr, nullptr, true);
 
 	// We expect exactly one fault
 	EXPECT_CALL(etb, fault()).WillOnce(Return());
@@ -618,7 +618,7 @@ TEST(etb, faultHandling) {
 
 	EtbController etb;
 	INJECT_ENGINE_REFERENCE(&etb);
-	etb.init(ETB_Throttle1, &motor, nullptr, nullptr);
+	etb.init(ETB_Throttle1, &motor, nullptr, nullptr, true);
 
 	{
 		// The following must happen in exactly this sequence:
