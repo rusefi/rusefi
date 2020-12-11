@@ -23,7 +23,7 @@
 #include <time.h>
 #include "nmea.h"
 
-long hex2int(char *a, int len) {
+static long hex2int(char *a, int len) {
 	int i;
 	long val = 0;
 
@@ -35,7 +35,7 @@ long hex2int(char *a, int len) {
 	return val;
 }
 
-int str2int(char *a, int len) {
+static int str2int(char *a, int len) {
 	 int i = 0,  k = 0;
 	while (i<len) {
 		k = (k<<3)+(k<<1)+(*a)-'0';
@@ -45,7 +45,7 @@ int str2int(char *a, int len) {
 	return k;
 }
 
-float gps_deg_dec(float deg_point) {
+static float gps_deg_dec(float deg_point) {
 	float ddeg;
 	float sec = modff(deg_point, &ddeg) * 60;
 	int deg = (int) (ddeg / 100);
@@ -59,7 +59,7 @@ float gps_deg_dec(float deg_point) {
 }
 
 // Convert lat e lon to decimals (from deg)
-void gps_convert_deg_to_dec(float *latitude, char ns, float *longitude, char we) {
+static void gps_convert_deg_to_dec(float *latitude, char ns, float *longitude, char we) {
 	float lat = (ns == 'N') ? *latitude : -1 * (*latitude);
 	float lon = (we == 'E') ? *longitude : -1 * (*longitude);
 
@@ -68,7 +68,7 @@ void gps_convert_deg_to_dec(float *latitude, char ns, float *longitude, char we)
 }
 
 // in string collect all char till comma and convert to float
-int str_till_comma(char *a, char *dStr) {
+static int str_till_comma(char *a, char *dStr) {
 
 	int i = 0, sLen = strlen(a);
 	if (sLen > GPS_MAX_STRING)
