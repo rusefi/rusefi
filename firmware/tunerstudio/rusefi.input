@@ -2052,6 +2052,7 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 ;
 	dialog = allPinsSensors, "Sensors"
 		field = "Throttle pedal Position Channel", 		throttlePedalPositionAdcChannel
+		field = "Throttle pedal Position #2",			throttlePedalPositionSecondAdcChannel
 		field = "Primary input channel", 				triggerInputPins1
 		field = "Secondary channel", 					triggerInputPins2
 		field = "Cam Sync/VVT input",					camInputs1
