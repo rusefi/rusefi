@@ -1,5 +1,5 @@
 <component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="TS2CRunner" type="Application" factoryName="Application" nameIsGenerated="true">
+  <configuration default="false" name="TS2CRunner" type="Application" factoryName="Application" folderName="TunerStudio to C" nameIsGenerated="true">
     <option name="MAIN_CLASS_NAME" value="com.rusefi.tools.tune.TS2CRunner" />
     <module name="models" />
     <option name="VM_PARAMETERS" value="-Dini_file_path=." />
