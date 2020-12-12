@@ -1,8 +1,7 @@
 <component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="EnduranceTest" type="Application" factoryName="Application" nameIsGenerated="true">
-    <option name="MAIN_CLASS_NAME" value="com.rusefi.EnduranceTest" />
+  <configuration default="false" name="EnduranceTestUtility" type="Application" factoryName="Application" folderName="Misc" nameIsGenerated="true">
+    <option name="MAIN_CLASS_NAME" value="com.rusefi.EnduranceTestUtility" />
     <module name="autotest" />
-    <option name="WORKING_DIRECTORY" value="file://$PROJECT_DIR$" />
     <extension name="coverage">
       <pattern>
         <option name="PATTERN" value="com.rusefi.ui.console.*" />

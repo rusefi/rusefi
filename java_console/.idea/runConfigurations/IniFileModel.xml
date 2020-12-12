@@ -1,8 +1,7 @@
 <component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="IniFileModel" type="Application" factoryName="Application" nameIsGenerated="true">
+  <configuration default="false" name="IniFileModel" type="Application" factoryName="Application" folderName="Misc" nameIsGenerated="true">
     <option name="MAIN_CLASS_NAME" value="com.opensr5.ini.IniFileModel" />
     <module name="ui" />
-    <option name="WORKING_DIRECTORY" value="file://$PROJECT_DIR$" />
     <extension name="coverage">
       <pattern>
         <option name="PATTERN" value="com.opensr5.ini.*" />
