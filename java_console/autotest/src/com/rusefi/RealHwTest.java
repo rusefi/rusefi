@@ -22,11 +22,16 @@ import static com.rusefi.Timeouts.SECOND;
  */
 public class RealHwTest {
     private static final Logging log = getLogging(RealHwTest.class);
-    private static final int STARTUP_SLEEP = 20;
+    public static final String HW_TESTS_START_UP_SLEEP = "hw_tests_start_up_sleep";
+    private static final int STARTUP_SLEEP = Integer.getInteger(HW_TESTS_START_UP_SLEEP, 0);
 
     public static void main(String[] args) throws InterruptedException {
-        log.info("Sleeping " + STARTUP_SLEEP + " seconds to give OS time to connect VCP driver");
-        Thread.sleep(STARTUP_SLEEP * SECOND);
+        if (STARTUP_SLEEP != 0) {
+            log.info("Sleeping " + STARTUP_SLEEP + " seconds to give OS time to connect VCP driver");
+            Thread.sleep(STARTUP_SLEEP * SECOND);
+        } else {
+            log.info(HW_TESTS_START_UP_SLEEP + " VM option not specified, no start-up sleep in java code");
+        }
 
         boolean isSuccess = runHardwareTest(args);
         if (!isSuccess)
