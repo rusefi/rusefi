@@ -1,7 +1,7 @@
 package com.rusefi;
 
 import com.rusefi.config.generated.Fields;
-import com.rusefi.functional_tests.BaseTest;
+import com.rusefi.functional_tests.EcuTestHelper;
 import com.rusefi.io.CommandQueue;
 import com.rusefi.io.LinkManager;
 
@@ -24,13 +24,13 @@ public class EnduranceTestUtility {
             CommandQueue commandQueue = linkManager.getCommandQueue();
 
             for (int i = 0; i < count; i++) {
-                BaseTest.currentEngineType = Fields.ET_FORD_ASPIRE;
-                sendCommand("set " + Fields.CMD_ENGINE_TYPE + " " + 3, BaseTest.COMPLEX_COMMAND_RETRY, Timeouts.SET_ENGINE_TIMEOUT, commandQueue);
+                EcuTestHelper.currentEngineType = Fields.ET_FORD_ASPIRE;
+                sendCommand("set " + Fields.CMD_ENGINE_TYPE + " " + 3, EcuTestHelper.COMPLEX_COMMAND_RETRY, Timeouts.SET_ENGINE_TIMEOUT, commandQueue);
                 sleepSeconds(2);
                 sendCommand(getEnableCommand("self_stimulation"), commandQueue);
 //                IoUtil.changeRpm(1200);
-                BaseTest.currentEngineType = Fields.ET_DEFAULT_FRANKENSO;
-                sendCommand("set " + Fields.CMD_ENGINE_TYPE + " " + 28, BaseTest.COMPLEX_COMMAND_RETRY, Timeouts.SET_ENGINE_TIMEOUT, commandQueue);
+                EcuTestHelper.currentEngineType = Fields.ET_DEFAULT_FRANKENSO;
+                sendCommand("set " + Fields.CMD_ENGINE_TYPE + " " + 28, EcuTestHelper.COMPLEX_COMMAND_RETRY, Timeouts.SET_ENGINE_TIMEOUT, commandQueue);
                 sleepSeconds(2);
                 FileLog.MAIN.logLine("++++++++++++++++++++++++++++++++++++  " + i + "   +++++++++++++++");
             }

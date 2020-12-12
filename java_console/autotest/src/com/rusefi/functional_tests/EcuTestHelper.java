@@ -11,35 +11,35 @@ import static com.devexperts.logging.Logging.getLogging;
 import static com.rusefi.IoUtil.*;
 import static com.rusefi.waves.EngineReport.isCloseEnough;
 
-public class BaseTest {
-    private static final Logging log = getLogging(BaseTest.class);
+public class EcuTestHelper {
+    private static final Logging log = getLogging(EcuTestHelper.class);
 
     public static final int COMPLEX_COMMAND_RETRY = 10000;
     public static int currentEngineType;
-    protected final CommandQueue commandQueue;
+    public final CommandQueue commandQueue;
 
-    public BaseTest(CommandQueue commandQueue) {
+    public EcuTestHelper(CommandQueue commandQueue) {
         this.commandQueue = commandQueue;
     }
 
-    protected static void assertEquals(double expected, double actual) {
-        BaseTest.assertEquals("", expected, actual);
+    public static void assertEquals(double expected, double actual) {
+        EcuTestHelper.assertEquals("", expected, actual);
     }
 
-    protected static void assertEquals(String msg, double expected, double actual) {
-        BaseTest.assertEquals(msg, expected, actual, EngineReport.RATIO);
+    public static void assertEquals(String msg, double expected, double actual) {
+        EcuTestHelper.assertEquals(msg, expected, actual, EngineReport.RATIO);
     }
 
-    protected static void assertEquals(String msg, double expected, double actual, double ratio) {
+    public static void assertEquals(String msg, double expected, double actual, double ratio) {
         if (!isCloseEnough(expected, actual, ratio))
             throw new IllegalStateException(msg + " Expected " + expected + " but got " + actual);
     }
 
-    protected void sendCommand(String command) {
+    public void sendCommand(String command) {
         sendCommand(command, CommandQueue.DEFAULT_TIMEOUT, Timeouts.CMD_TIMEOUT);
     }
 
-    protected void sendCommand(String command, int retryTimeoutMs, int timeoutMs) {
+    public void sendCommand(String command, int retryTimeoutMs, int timeoutMs) {
         TestHelper.INSTANCE.assertNotFatal();
         IoUtil.sendCommand(command, retryTimeoutMs, timeoutMs, commandQueue);
     }
@@ -47,15 +47,15 @@ public class BaseTest {
     /**
      * this seem to adjust engine sniffer behaviour
      */
-    protected void enableFunctionalMode() {
+    public void enableFunctionalMode() {
         sendCommand(getEnableCommand(Fields.CMD_FUNCTIONAL_TEST_MODE));
     }
 
-    protected void changeRpm(final int rpm) {
+    public void changeRpm(final int rpm) {
         IoUtil.changeRpm(commandQueue, rpm);
     }
 
-    protected void setEngineType(int type) {
+    public void setEngineType(int type) {
         log.info("AUTOTEST setEngineType " + type);
         currentEngineType = type;
 //        sendCommand(CMD_PINS);

@@ -33,20 +33,13 @@ public class RealHwTest {
             log.info(HW_TESTS_START_UP_SLEEP + " VM option not specified, no start-up sleep in java code");
         }
 
-        boolean isSuccess = runHardwareTest(args);
+        boolean isSuccess = runHardwareTest();
         if (!isSuccess)
             System.exit(-1);
         log.info("+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++");
         log.info("++++++++++++++++++++++++++++++++++++  Real Hardware Test Passed +++++++++++++++");
         log.info("+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++");
         System.exit(0); // this is a safer method eliminating the issue of non-daemon threads
-    }
-
-    /**
-     * @return true if test is a SUCCESS, false if a FAILURE
-     */
-    public static boolean runHardwareTest(String[] args) {
-        return runHardwareTest();
     }
 
     /**

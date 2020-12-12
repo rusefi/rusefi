@@ -3,7 +3,7 @@ package com.rusefi;
 import com.devexperts.logging.Logging;
 import com.rusefi.config.generated.Fields;
 import com.rusefi.core.EngineState;
-import com.rusefi.functional_tests.BaseTest;
+import com.rusefi.functional_tests.EcuTestHelper;
 import com.rusefi.io.CommandQueue;
 import com.rusefi.waves.EngineChart;
 import com.rusefi.waves.EngineReport;
@@ -145,7 +145,7 @@ public class TestingUtils {
         int timeoutMs = 60 * Timeouts.SECOND;
         long waitStartTime = System.currentTimeMillis();
         IoUtil.wait(engineChartLatch, timeoutMs);
-        log.info("got next chart in " + (System.currentTimeMillis() - waitStartTime) + "ms for engine_type " + BaseTest.currentEngineType);
+        log.info("got next chart in " + (System.currentTimeMillis() - waitStartTime) + "ms for engine_type " + EcuTestHelper.currentEngineType);
         commandQueue.getLinkManager().getEngineState().replaceStringValueAction(EngineReport.ENGINE_CHART, (EngineState.ValueCallback<String>) EngineState.ValueCallback.VOID);
         if (result.get() == null)
             throw new IllegalStateException("Chart timeout: " + timeoutMs);
