@@ -266,8 +266,7 @@ public class StartupFrame {
             }
 
             private void runFunctionalHardwareTest() {
-                String autoDetectedPort = PortDetector.autoDetectPort(null);
-                boolean isSuccess = RealHwTest.runHardwareTest(autoDetectedPort);
+                boolean isSuccess = RealHwTest.runHardwareTest();
                 JOptionPane.showMessageDialog(null, "Function test passed: " + isSuccess + "\nSee log folder for details.");
             }
         };
