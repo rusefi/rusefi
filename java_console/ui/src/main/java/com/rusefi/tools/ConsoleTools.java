@@ -61,6 +61,7 @@ public class ConsoleTools {
         registerTool("get_xml_tune_crc", ConsoleTools::calcXmlImageTuneCrc, "Calculate tune CRC for given XML tune");
 
         registerTool("compile_fsio_line", ConsoleTools::invokeCompileExpressionTool, "Convert a line to RPN form.");
+        registerTool("decompile_fsio_line", ConsoleTools::invokeDecompileExpressionTool, "Convert a line from RPN form.");
         registerTool("compile_fsio_file", ConsoleTools::runCompileTool, "Convert all lines from a file to RPN form.");
 
         registerTool("network_connector", strings -> NetworkConnectorStartup.start(), "Connect your rusEFI ECU to rusEFI Online");
@@ -306,6 +307,17 @@ public class ConsoleTools {
          * re-packaging array which contains input and output file names
          */
         return CompileTool.run(Arrays.asList(args).subList(1, args.length));
+    }
+
+
+    private static void invokeDecompileExpressionTool(String[] args) {
+        if (args.length != 2) {
+            System.err.println("input RPN parameter expected");
+            System.exit(-1);
+        }
+        String rpn = args[1];
+        String humanForm = InfixConverter.getHumanInfixFormOrError(rpn);
+        System.out.println(humanForm);
     }
 
     private static void invokeCompileExpressionTool(String[] args) {

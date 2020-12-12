@@ -4,4 +4,4 @@
 #    (max(90, min(coolant, 110)) - 90) / 20 would be in 0 to 1 range
 #     (max(90, min(coolant, 110)) - 90) / 20 * 0.8 would be in 0 to 0.8 range
 
-java -jar ../java_console_binary/rusefi_console.jar compile "0.15 + (max(90, min(coolant, 110)) - 90) / 20 * 0.8"
+java -jar ../java_console_binary/rusefi_console.jar compile_fsio_line "0.15 + (max(90, min(coolant, 110)) - 90) / 20 * 0.8"
