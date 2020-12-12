@@ -28,7 +28,7 @@ cd java_console
 echo "Running tests"
 which java
 which javac
-ant realtest
+ant real_hardware_functional_test
 
 [ $? -eq 0 ] || { echo "ERROR DETECTED"; exit 1; }
 
