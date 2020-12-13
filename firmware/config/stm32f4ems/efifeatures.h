@@ -202,6 +202,8 @@
 #define EFI_CAN_SUPPORT TRUE
 #endif
 
+#define EFI_WIDEBAND_FIRMWARE_UPDATE TRUE
+
 #ifndef EFI_AUX_SERIAL
 #define EFI_AUX_SERIAL TRUE
 #endif
