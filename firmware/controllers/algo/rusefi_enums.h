@@ -361,6 +361,7 @@ typedef enum {
 
 	TT_1_16 = 50,
 
+	// todo: remove this trigger once we have https://github.com/rusefi/rusefi/issues/2073
 	TT_SUBARU_7_WITHOUT_6 = TT_TT_SUBARU_7_WITHOUT_6,
 
 	TT_52 = TT_TT_52,
