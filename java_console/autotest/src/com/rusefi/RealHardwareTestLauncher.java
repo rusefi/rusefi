@@ -20,8 +20,8 @@ import static com.rusefi.Timeouts.SECOND;
  * Andrey Belomutskiy, (c) 2013-2020
  * 2/22/2015
  */
-public class RealHwTest {
-    private static final Logging log = getLogging(RealHwTest.class);
+public class RealHardwareTestLauncher {
+    private static final Logging log = getLogging(RealHardwareTestLauncher.class);
     public static final String HW_TESTS_START_UP_SLEEP = "hw_tests_start_up_sleep";
     private static final int STARTUP_SLEEP = Integer.getInteger(HW_TESTS_START_UP_SLEEP, 0);
 
@@ -69,6 +69,6 @@ public class RealHwTest {
             throw new IllegalStateException("firmwareVersion has not arrived");
 
         // now run common part of the test which should be same on real hardware and simulator
-        new AutoTest(linkManager, linkManager.getCommandQueue()).mainTestBody();
+        new FunctionalTestsSuite(linkManager, linkManager.getCommandQueue()).mainTestBody();
     }
 }

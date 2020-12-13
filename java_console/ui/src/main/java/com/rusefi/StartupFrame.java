@@ -5,7 +5,6 @@ import com.rusefi.autoupdate.AutoupdateUtil;
 import com.rusefi.io.LinkManager;
 import com.rusefi.io.serial.BaudRateHolder;
 import com.rusefi.maintenance.*;
-import com.rusefi.ts_plugin.AudioPlayback;
 import com.rusefi.ui.util.HorizontalLine;
 import com.rusefi.ui.util.URLLabel;
 import com.rusefi.ui.util.UiUtils;
@@ -266,7 +265,7 @@ public class StartupFrame {
             }
 
             private void runFunctionalHardwareTest() {
-                boolean isSuccess = RealHwTest.runHardwareTest();
+                boolean isSuccess = RealHardwareTestLauncher.runHardwareTest();
                 JOptionPane.showMessageDialog(null, "Function test passed: " + isSuccess + "\nSee log folder for details.");
             }
         };

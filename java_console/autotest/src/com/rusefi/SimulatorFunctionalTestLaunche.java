@@ -2,7 +2,11 @@ package com.rusefi;
 
 import com.rusefi.io.LinkManager;
 
-public class SimulatorFunctionalTest {
+/**
+ * this class runs rusEFI functional tests against rusEFI simulator
+ * As of Dec 2020 this seems very broken?
+ */
+public class SimulatorFunctionalTestLaunche {
     public static void main(String[] args) {
         Thread.setDefaultUncaughtExceptionHandler((t, e) -> {
             e.printStackTrace();
@@ -18,7 +22,7 @@ public class SimulatorFunctionalTest {
         try {
             LinkManager linkManager = new LinkManager();
             IoUtil.connectToSimulator(linkManager, startSimulator);
-            new AutoTest(linkManager, linkManager.getCommandQueue()).mainTestBody();
+            new FunctionalTestsSuite(linkManager, linkManager.getCommandQueue()).mainTestBody();
         } catch (Throwable e) {
             e.printStackTrace();
             failed = true;
