@@ -3,7 +3,7 @@ package com.rusefi;
 import com.rusefi.functional_tests.EcuTestHelper;
 import org.junit.Test;
 
-import static com.rusefi.FunctionalTestsSuite.FAIL;
+import static com.rusefi.functional_tests.EcuTestHelper.FAIL;
 import static com.rusefi.config.generated.Fields.*;
 
 public class HighRevTest {
@@ -16,7 +16,7 @@ public class HighRevTest {
         ecu.sendCommand("set " + CMD_ENGINESNIFFERRPMTHRESHOLD + " 100");
         ecu.changeRpm(900);
         // first let's get to expected RPM
-        FunctionalTestsSuite.assertRpmDoesNotJump(16000, 5, 40, FAIL, ecu.commandQueue);
+        EcuTestHelper.assertRpmDoesNotJump(16000, 5, 40, FAIL, ecu.commandQueue);
     }
 
     @Test
@@ -25,11 +25,11 @@ public class HighRevTest {
         ecu.setEngineType(ET_BMW_M73_F);
         ecu.changeRpm(700);
         // first let's get to expected RPM
-        FunctionalTestsSuite.assertRpmDoesNotJump(16000, 5, 40, FAIL, ecu.commandQueue);
+        EcuTestHelper.assertRpmDoesNotJump(16000, 5, 40, FAIL, ecu.commandQueue);
         testCaseBug1873(ecu);
     }
 
     private void testCaseBug1873(EcuTestHelper ecu) {
-        FunctionalTestsSuite.assertRpmDoesNotJump(60, 5, 110, FAIL, ecu.commandQueue);
+        EcuTestHelper.assertRpmDoesNotJump(60, 5, 110, FAIL, ecu.commandQueue);
     }
 }

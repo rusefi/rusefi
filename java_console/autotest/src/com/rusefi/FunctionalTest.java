@@ -1,22 +1,17 @@
 package com.rusefi;
 
 
-import com.rusefi.config.generated.Fields;
 import com.rusefi.core.Sensor;
 import com.rusefi.core.SensorCentral;
 import com.rusefi.functional_tests.EcuTestHelper;
-import com.rusefi.io.CommandQueue;
-import com.rusefi.io.LinkManager;
 import com.rusefi.waves.EngineChart;
 import com.rusefi.waves.EngineReport;
+import org.junit.Before;
+import org.junit.Test;
 
-import java.util.concurrent.atomic.AtomicReference;
-import java.util.function.Function;
-
-import static com.rusefi.IoUtil.*;
+import static com.rusefi.IoUtil.getEnableCommand;
 import static com.rusefi.TestingUtils.*;
 import static com.rusefi.config.generated.Fields.*;
-import static com.rusefi.waves.EngineReport.isCloseEnough;
 
 /**
  * rusEfi firmware simulator functional test suite
@@ -26,57 +21,16 @@ import static com.rusefi.waves.EngineReport.isCloseEnough;
  * @author Andrey Belomutskiy
  * 3/5/14
  */
-public class FunctionalTestsSuite {
+public class FunctionalTest {
+    private EcuTestHelper ecu;
 
-    private final EcuTestHelper ecu;
-
-    public FunctionalTestsSuite(LinkManager linkManager, CommandQueue commandQueue) {
-        ecu = new EcuTestHelper(linkManager);
+    @Before
+    public void startUp() {
+        ecu = EcuTestHelper.createInstance();
     }
 
-    void mainTestBody() {
-        testCustomEngine();
-        testMazdaMiata2003();
-        test2003DodgeNeon();
-        testFordAspire();
-        test1995DodgeNeon();
-        testMazdaProtege();
-// todo?        sendCommand("reboot"); // this would cause firmware in 5 seconds
-// todo?        sleep(10); // time to reboot
-        testBmwE34();
-        testSachs();
-        testRoverV8();
-        testCamaro();
-        testCitroenBerlingo();
-        testFord6();
-        testFordFiesta();
-    }
-
-    public static final Function<String, Object> FAIL = errorCode -> {
-        if (errorCode != null)
-            throw new IllegalStateException("Failed " + errorCode);
-        return null;
-    };
-
-    public static void assertRpmDoesNotJump(int rpm, int settleTime, int testDuration, Function<String, Object> callback, CommandQueue commandQueue) {
-        IoUtil.changeRpm(commandQueue, rpm);
-        sleepSeconds(settleTime);
-        AtomicReference<String> result = new AtomicReference<>();
-        long start = System.currentTimeMillis();
-        SensorCentral.SensorListener listener = value -> {
-            double actualRpm = SensorCentral.getInstance().getValue(Sensor.RPM);
-            if (!isCloseEnough(rpm, actualRpm)) {
-                long seconds = (System.currentTimeMillis() - start) / 1000;
-                result.set("Got " + actualRpm + " while trying to stay at " + rpm + " after " + seconds + " seconds");
-            }
-        };
-        SensorCentral.getInstance().addListener(Sensor.RPM, listener);
-        sleepSeconds(testDuration);
-        callback.apply(result.get());
-        SensorCentral.getInstance().removeListener(Sensor.RPM, listener);
-    }
-
-    private void testCustomEngine() {
+    @Test
+    public void testCustomEngine() {
         ecu.setEngineType(ET_DEFAULT_FRANKENSO);
         ecu.sendCommand("set_toothed_wheel 4 0");
 //        sendCommand("enable trigger_only_front");
@@ -87,24 +41,28 @@ public class FunctionalTestsSuite {
 //        changeRpm(1500);
     }
 
-    private void testMazdaMiata2003() {
+    @Test
+    public void testMazdaMiata2003() {
         ecu.setEngineType(ET_FRANKENSO_MIATA_NB2);
         ecu.sendCommand("get cranking_dwell"); // just test coverage
 //        sendCommand("get nosuchgettersdfsdfsdfsdf"); // just test coverage
     }
 
-    private void testCamaro() {
+    @Test
+    public void testCamaro() {
         ecu.setEngineType(ET_CAMARO);
     }
 
-    private void testSachs() {
+    @Test
+    public void testSachs() {
         ecu.setEngineType(ET_SACHS);
 //        String msg = "BMW";
         ecu.changeRpm(1200);
         // todo: add more content
     }
 
-    private void testBmwE34() {
+    @Test
+    public void testBmwE34() {
         ecu.setEngineType(ET_BMW_E34);
         ecu.sendCommand("chart 1");
         String msg = "BMW";
@@ -127,18 +85,16 @@ public class FunctionalTestsSuite {
         assertWave(msg, chart, EngineChart.MAP_AVERAGING, 0.139, x, x + 120, x + 240, x + 360, x + 480, x + 600);
     }
 
-    private void testCitroenBerlingo() {
+    @Test
+    public void testCitroenBerlingo() {
         ecu.setEngineType(ET_CITROEN_TU3JP);
 //        String msg = "Citroen";
         ecu.changeRpm(1200);
         // todo: add more content
     }
 
-    private EngineChart nextChart() {
-        return TestingUtils.nextChart(ecu.commandQueue);
-    }
-
-    private void test2003DodgeNeon() {
+    @Test
+    public void test2003DodgeNeon() {
         ecu.setEngineType(ET_DODGE_NEON_2003_CRANK);
         ecu.sendCommand("set wwaeTau 0");
         ecu.sendCommand("set wwaeBeta 0");
@@ -204,7 +160,8 @@ public class FunctionalTestsSuite {
         assertWave(true, msg, chart, EngineChart.SPARK_1, 0.13299999999999998, EngineReport.RATIO, EngineReport.RATIO, x + 180, x + 540);
     }
 
-    private void testMazdaProtege() {
+    @Test
+    public void testMazdaProtege() {
         ecu.setEngineType(ET_FORD_ESCORT_GT);
         EngineChart chart;
         ecu.sendCommand("set mock_vbatt_voltage 1.395");
@@ -231,7 +188,8 @@ public class FunctionalTestsSuite {
         assertWaveFall(msg, chart, EngineChart.INJECTOR_2, 0.21433333333333345, x, x + 360);
     }
 
-    private void test1995DodgeNeon() {
+    @Test
+    public void test1995DodgeNeon() {
         ecu.setEngineType(ET_DODGE_NEON_1995);
         EngineChart chart;
         sendComplexCommand("set_whole_fuel_map 3");
@@ -265,11 +223,13 @@ public class FunctionalTestsSuite {
         assertWaveFall(msg, chart, EngineChart.INJECTOR_4, 0.493, x + 540);
     }
 
-    private void testRoverV8() {
+    @Test
+    public void testRoverV8() {
         ecu.setEngineType(ET_ROVER_V8);
     }
 
-    private void testFordFiesta() {
+    @Test
+    public void testFordFiesta() {
         ecu.setEngineType(ET_FORD_FIESTA);
         EngineChart chart;
         ecu.changeRpm(2000);
@@ -283,7 +243,8 @@ public class FunctionalTestsSuite {
         assertWaveNull(msg, chart, EngineChart.SPARK_4);
     }
 
-    private void testFord6() {
+    @Test
+    public void testFord6() {
         ecu.setEngineType(ET_FORD_INLINE_6);
         EngineChart chart;
         ecu.changeRpm(2000);
@@ -300,7 +261,8 @@ public class FunctionalTestsSuite {
         assertTrue(msg + " trigger2", chart.get(EngineChart.TRIGGER_2) != null);
     }
 
-    private void testFordAspire() {
+    @Test
+    public void testFordAspire() {
         ecu.setEngineType(ET_FORD_ASPIRE);
         ecu.sendCommand("disable cylinder_cleanup");
         ecu.sendCommand("set mock_map_voltage 1");
@@ -435,5 +397,9 @@ public class FunctionalTestsSuite {
 
     private static void assertWaveNull(String msg, EngineChart chart, String key) {
         assertNull(msg + "chart for " + key, chart.get(key));
+    }
+
+    private EngineChart nextChart() {
+        return TestingUtils.nextChart(ecu.commandQueue);
     }
 }

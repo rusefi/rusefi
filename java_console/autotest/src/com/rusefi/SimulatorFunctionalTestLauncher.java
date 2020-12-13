@@ -22,7 +22,8 @@ public class SimulatorFunctionalTestLauncher {
         try {
             LinkManager linkManager = new LinkManager();
             IoUtil.connectToSimulator(linkManager, startSimulator);
-            new FunctionalTestsSuite(linkManager, linkManager.getCommandQueue()).mainTestBody();
+            // todo: new implementation for unit tests?
+//            new FunctionalTest(linkManager, linkManager.getCommandQueue()).mainTestBody();
         } catch (Throwable e) {
             e.printStackTrace();
             failed = true;
