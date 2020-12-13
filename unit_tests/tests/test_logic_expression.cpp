@@ -195,6 +195,11 @@ TEST(fsio, extraOperators) {
 	testExpression("0 22 33 if", 33);
 }
 
+TEST(fsio, invalidFunction) {
+	EXPECT_FATAL_ERROR(testExpression("bogus_function", 0));
+	EXPECT_FATAL_ERROR(testExpression("1 2 + bogus_expression *", 0));
+}
+
 TEST(fsio, testLogicExpressions) {
 	{
 
@@ -248,10 +253,6 @@ TEST(fsio, testLogicExpressions) {
 	e->init(LE_OPERATOR_OR);
 
 	pool.reset();
-	LEElement *element;
-	element = pool.parseExpression("fan no_such_method");
-	ASSERT_TRUE(element == NULL) << "NULL expected";
-
 	}
 
 	/**
