@@ -50,11 +50,12 @@ void setSubaruEJ18_MRE(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 
 	engineConfiguration->specs.firingOrder = FO_1_3_2_4;
 
+#if (BOARD_TLE8888_COUNT > 0)
 	// TLE8888_PIN_23: "33 - GP Out 3"
 	engineConfiguration->malfunctionIndicatorPin = TLE8888_PIN_23;
+#endif /* BOARD_TLE8888_COUNT */
 
-	// this car has high-side main relay WOW
-	engineConfiguration->mainRelayPin = GPIOD_6; // "13 - GP Out 6"
+	// this car has high-side main relay WOW so we have to hard wire it to ingition switch
 
 
 }
