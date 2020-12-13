@@ -63,11 +63,6 @@ public class RealHardwareTestLauncher {
     }
 
     private static void runRealHardwareTest(LinkManager linkManager) {
-        // first run tests which require real hardware
-        new HardwareTests(linkManager.getCommandQueue()).runRealHardwareTests();
-        if (ControllerConnectorState.firmwareVersion == null)
-            throw new IllegalStateException("firmwareVersion has not arrived");
-
         // now run common part of the test which should be same on real hardware and simulator
         new FunctionalTestsSuite(linkManager, linkManager.getCommandQueue()).mainTestBody();
     }
