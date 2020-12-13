@@ -42,13 +42,16 @@ void setSubaru2003Wrx(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 void setSubaruEJ18_MRE(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	engineConfiguration->trigger.type = TT_SUBARU_7_6;
 
-	CONFIG(isDoubleSolenoidIdle) = true;
+
+//	CONFIG(isDoubleSolenoidIdle) = true;
 
 	engineConfiguration->specs.displacement = 1.8;
 	strcpy(CONFIG(engineMake), ENGINE_MAKE_SUBARU);
 	strcpy(CONFIG(engineCode), "EJ18");
 
 	engineConfiguration->specs.firingOrder = FO_1_3_2_4;
+	engineConfiguration->injectionMode = IM_SEQUENTIAL;
+	engineConfiguration->ignitionMode = IM_WASTED_SPARK;
 
 #if (BOARD_TLE8888_COUNT > 0)
 	// TLE8888_PIN_23: "33 - GP Out 3"
