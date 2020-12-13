@@ -4,27 +4,23 @@ import com.rusefi.config.generated.Fields;
 import com.rusefi.core.Sensor;
 import com.rusefi.core.SensorCentral;
 import com.rusefi.functional_tests.EcuTestHelper;
-import com.rusefi.io.CommandQueue;
+import org.junit.Test;
 
 import static com.rusefi.IoUtil.getDisableCommand;
 import static com.rusefi.IoUtil.getEnableCommand;
 import static com.rusefi.binaryprotocol.BinaryProtocol.sleep;
 import static com.rusefi.config.generated.Fields.*;
 
-public class HardwareTests {
+/**
+ * This test relies on jumpers connecting physical pins on Discovery:
+ * PD1<>PC6
+ * PD2<>PA5
+ */
+public class VssHardwareLoopTest {
+    @Test
+    public void test() {
+        EcuTestHelper ecu = new EcuTestHelper(ControllerConnectorState.getLinkManager().getCommandQueue());
 
-    private final EcuTestHelper ecu;
-
-    public HardwareTests(CommandQueue commandQueue) {
-        ecu = new EcuTestHelper(commandQueue);
-    }
-
-    /**
-     * This test relies on jumpers connecting physical pins on Discovery:
-     * PD1<>PC6
-     * PD2<>PA5
-     */
-    public void runRealHardwareTests() {
         ecu.sendCommand(getEnableCommand(Fields.CMD_TRIGGER_HW_INPUT));
         ecu.enableFunctionalMode();
 
@@ -36,13 +32,15 @@ public class HardwareTests {
         // moving second trigger to another pin
         ecu.sendCommand(CMD_TRIGGER_PIN + " 1 PA8");
 
-        ecu.assertEquals("VSS no input", 0, SensorCentral.getInstance().getValue(Sensor.VSS));
+        EcuTestHelper.assertEquals("VSS no input", 0, SensorCentral.getInstance().getValue(Sensor.VSS));
 
         // attaching VSS to trigger simulator since there is a jumper on test discovery
         ecu.sendCommand("set " + CMD_VSS_PIN + " pa5");
 
         sleep(2 * Timeouts.SECOND);
 
-        ecu.assertEquals("VSS with input", 3, SensorCentral.getInstance().getValue(Sensor.VSS));
+        EcuTestHelper.assertEquals("VSS with input", 3, SensorCentral.getInstance().getValue(Sensor.VSS));
+        if (ControllerConnectorState.firmwareVersion == null)
+            throw new IllegalStateException("firmwareVersion has not arrived");
     }
 }

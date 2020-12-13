@@ -1,6 +1,6 @@
 <component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="RealHwTest" type="Application" factoryName="Application" nameIsGenerated="true">
-    <option name="MAIN_CLASS_NAME" value="com.rusefi.RealHwTest" />
+  <configuration default="false" name="RealHardwareTestLauncher" type="Application" factoryName="Application" nameIsGenerated="true">
+    <option name="MAIN_CLASS_NAME" value="com.rusefi.RealHardwareTestLauncher" />
     <module name="autotest" />
     <extension name="coverage">
       <pattern>
