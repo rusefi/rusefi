@@ -53,5 +53,8 @@ void setSubaruEJ18_MRE(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	// TLE8888_PIN_23: "33 - GP Out 3"
 	engineConfiguration->malfunctionIndicatorPin = TLE8888_PIN_23;
 
+	// this car has high-side main relay WOW
+	engineConfiguration->mainRelayPin = GPIOD_6; // "13 - GP Out 6"
+
 
 }
