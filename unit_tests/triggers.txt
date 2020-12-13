@@ -1655,7 +1655,7 @@ event 18 1 0 618.00
 event 19 0 1 660.00
 event 20 0 0 680.00
 event 21 0 1 700.00
-TRIGGERTYPE 36 38 TT_SUBARU_7_6 0.00
+TRIGGERTYPE 36 38 TT_SUBARU_7_6 192.00
 # duty 0.95 0.08
 event 0 0 1 0.00
 event 1 0 0 5.00
@@ -2701,3 +2701,35 @@ event 30 1 1 651.50
 event 31 1 0 674.00
 event 32 1 1 696.50
 event 33 1 0 719.00
+TRIGGERTYPE 51 14 TT_51 192.00
+# duty 0.95 0.00
+event 0 0 1 0.00
+event 1 0 0 5.00
+event 2 0 1 182.00
+event 3 0 0 187.00
+event 4 0 1 207.00
+event 5 0 0 212.00
+event 6 0 1 364.00
+event 7 0 0 369.00
+event 8 0 1 525.00
+event 9 0 0 530.00
+event 10 0 1 548.00
+event 11 0 0 553.00
+event 12 0 1 566.00
+event 13 0 0 571.00
+TRIGGERTYPE 52 14 TT_52 192.00
+# duty 0.95 0.00
+event 0 0 1 0.00
+event 1 0 0 5.00
+event 2 0 1 182.00
+event 3 0 0 187.00
+event 4 0 1 207.00
+event 5 0 0 212.00
+event 6 0 1 364.00
+event 7 0 0 369.00
+event 8 0 1 525.00
+event 9 0 0 530.00
+event 10 0 1 548.00
+event 11 0 0 553.00
+event 12 0 1 566.00
+event 13 0 0 571.00
