@@ -664,6 +664,11 @@ void TriggerWaveform::initializeTriggerWaveform(Logging *logger, operation_mode_
 		initGmLS24(this);
 		break;
 
+	case TT_51:
+	case TT_52:
+		initializeSubaruOnly7(this);
+		break;
+
 	case TT_SUBARU_SVX:
 		initializeSubaru_SVX(this);
 		break;

@@ -46,16 +46,19 @@ void initialize36_2_2_2(TriggerWaveform *s) {
 	s->useOnlyPrimaryForSync = true;
 }
 
-void initializeSubaru7_6(TriggerWaveform *s) {
+static void initializeSubaru7_6(TriggerWaveform *s, bool withCrankWheel) {
 	s->initialize(FOUR_STROKE_CAM_SENSOR);
 
 	float magic = 333;
+
+	s->tdcPosition = 192;
 
 	float width = 5;
 
 	s->addEvent720(25 - width, T_PRIMARY, TV_RISE);
 	s->addEvent720(25, T_PRIMARY, TV_FALL);
 
+	if (withCrankWheel) {
 	s->addEvent720(magic - 180 - 87 - width, T_SECONDARY, TV_RISE);
 	s->addEvent720(magic - 180 - 87, T_SECONDARY, TV_FALL);
 
@@ -75,6 +78,7 @@ void initializeSubaru7_6(TriggerWaveform *s) {
 	s->addEvent720(magic - 55, T_SECONDARY, TV_FALL);
 	s->addEvent720(magic - width, T_SECONDARY, TV_RISE);
 	s->addEvent720(magic, T_SECONDARY, TV_FALL);
+	}
 
 
 	s->addEvent720(343 - width, T_PRIMARY, TV_RISE);
@@ -86,23 +90,26 @@ void initializeSubaru7_6(TriggerWaveform *s) {
 	s->addEvent720(384 - width, T_PRIMARY, TV_RISE);
 	s->addEvent720(384, T_PRIMARY, TV_FALL);
 
+	if (withCrankWheel) {
 	s->addEvent720(magic + 180 - 87 - width, T_SECONDARY, TV_RISE);
 	s->addEvent720(magic + 180 - 87, T_SECONDARY, TV_FALL);
 	s->addEvent720(magic + 180 - 55 - width, T_SECONDARY, TV_RISE);
 	s->addEvent720(magic + 180 - 55, T_SECONDARY, TV_FALL);
 	s->addEvent720(magic + 180 - width, T_SECONDARY, TV_RISE);
 	s->addEvent720(magic + 180, T_SECONDARY, TV_FALL);
-
+	}
 
 	s->addEvent720(538 - width, T_PRIMARY, TV_RISE);
 	s->addEvent720(538, T_PRIMARY, TV_FALL);
 
+	if (withCrankWheel) {
 	s->addEvent720(magic + 360 - 87 - width, T_SECONDARY, TV_RISE);
 	s->addEvent720(magic + 360 - 87, T_SECONDARY, TV_FALL);
 	s->addEvent720(magic + 360 - 55 - width, T_SECONDARY, TV_RISE);
 	s->addEvent720(magic + 360 - 55, T_SECONDARY, TV_FALL);
 	s->addEvent720(magic + 360 - width, T_SECONDARY, TV_RISE);
 	s->addEvent720(magic + 360, T_SECONDARY, TV_FALL);
+	}
 
 	s->addEvent720(720 - width, T_PRIMARY, TV_RISE);
 	s->addEvent720(720, T_PRIMARY, TV_FALL);
@@ -114,6 +121,14 @@ void initializeSubaru7_6(TriggerWaveform *s) {
 
 	s->useOnlyPrimaryForSync = true;
 
+}
+
+void initializeSubaruOnly7(TriggerWaveform *s) {
+	initializeSubaru7_6(s, false);
+}
+
+void initializeSubaru7_6(TriggerWaveform *s) {
+	initializeSubaru7_6(s, true);
 }
 
 void initializeSubaru_SVX(TriggerWaveform *s) {
