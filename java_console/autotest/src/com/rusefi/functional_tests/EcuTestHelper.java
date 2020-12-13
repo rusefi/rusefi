@@ -5,16 +5,26 @@ import com.rusefi.ControllerConnectorState;
 import com.rusefi.IoUtil;
 import com.rusefi.Timeouts;
 import com.rusefi.config.generated.Fields;
+import com.rusefi.core.Sensor;
+import com.rusefi.core.SensorCentral;
 import com.rusefi.io.CommandQueue;
 import com.rusefi.io.LinkManager;
 import com.rusefi.waves.EngineReport;
 import org.jetbrains.annotations.NotNull;
+
+import java.util.concurrent.atomic.AtomicReference;
+import java.util.function.Function;
 
 import static com.devexperts.logging.Logging.getLogging;
 import static com.rusefi.IoUtil.*;
 import static com.rusefi.waves.EngineReport.isCloseEnough;
 
 public class EcuTestHelper {
+    public static final Function<String, Object> FAIL = errorCode -> {
+        if (errorCode != null)
+            throw new IllegalStateException("Failed " + errorCode);
+        return null;
+    };
     private static final Logging log = getLogging(EcuTestHelper.class);
 
     public static final int COMPLEX_COMMAND_RETRY = 10000;
@@ -26,6 +36,24 @@ public class EcuTestHelper {
     public EcuTestHelper(LinkManager linkManager) {
         this.commandQueue = linkManager.getCommandQueue();
         this.linkManager = linkManager;
+    }
+
+    public static void assertRpmDoesNotJump(int rpm, int settleTime, int testDuration, Function<String, Object> callback, CommandQueue commandQueue) {
+        IoUtil.changeRpm(commandQueue, rpm);
+        sleepSeconds(settleTime);
+        AtomicReference<String> result = new AtomicReference<>();
+        long start = System.currentTimeMillis();
+        SensorCentral.SensorListener listener = value -> {
+            double actualRpm = SensorCentral.getInstance().getValue(Sensor.RPM);
+            if (!isCloseEnough(rpm, actualRpm)) {
+                long seconds = (System.currentTimeMillis() - start) / 1000;
+                result.set("Got " + actualRpm + " while trying to stay at " + rpm + " after " + seconds + " seconds");
+            }
+        };
+        SensorCentral.getInstance().addListener(Sensor.RPM, listener);
+        sleepSeconds(testDuration);
+        callback.apply(result.get());
+        SensorCentral.getInstance().removeListener(Sensor.RPM, listener);
     }
 
     @NotNull

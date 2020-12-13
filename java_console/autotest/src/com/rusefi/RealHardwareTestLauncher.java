@@ -10,6 +10,8 @@ import static com.devexperts.logging.Logging.getLogging;
 import static com.rusefi.Timeouts.SECOND;
 
 /**
+ * dead?
+ * 
  * The following jumper wires are used to test some subsystems as realistically as possible:
  * PD1 <=> PC6
  * PD2 <=> PA5
@@ -48,7 +50,7 @@ public class RealHardwareTestLauncher {
     public static boolean runHardwareTest() {
         long start = System.currentTimeMillis();
         try {
-            runRealHardwareTest(ControllerConnectorState.getLinkManager());
+//            runRealHardwareTest(ControllerConnectorState.getLinkManager());
         } catch (Throwable e) {
             StringWriter sw = new StringWriter();
             PrintWriter pw = new PrintWriter(sw);
@@ -60,10 +62,5 @@ public class RealHardwareTestLauncher {
         long time = (System.currentTimeMillis() - start) / 1000;
         log.info("Done in " + time + "secs");
         return true;
-    }
-
-    private static void runRealHardwareTest(LinkManager linkManager) {
-        // now run common part of the test which should be same on real hardware and simulator
-        new FunctionalTestsSuite(linkManager, linkManager.getCommandQueue()).mainTestBody();
     }
 }
