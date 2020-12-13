@@ -1656,6 +1656,8 @@ cmd_set_engine_type_microRusEFI_Miata_94_MAP			= "@@TS_IO_TEST_COMMAND_char@@\x0
 ; MRE_MIATA_NB2_MAF = 15
 cmd_set_engine_type_microRusEFI_Miata_NB2_MAF		= "@@TS_IO_TEST_COMMAND_char@@\x00\x30@@ET_MRE_MIATA_NB2_MAF_16_hex@@"
 
+cmd_set_engine_type_ET_MRE_SUBARU_EJ18				= "@@TS_IO_TEST_COMMAND_char@@\x00\x30@@ET_MRE_SUBARU_EJ18_16_hex@@"
+
 cmd_set_engine_type_microRusEFI_Defaults			= "@@TS_IO_TEST_COMMAND_char@@\x00\x30@@ET_MRE_DEFAULTS_16_hex@@"
 
 ; MIATA_NA6_MAP = 41
@@ -3259,6 +3261,7 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 		commandButton = "microRusEFI Defaults",		   cmd_set_engine_type_microRusEFI_Defaults@@if_show_microRusEFI_presets
 		commandButton = "microRusEFI B6 test",			cmd_set_engine_type_microRusEFI_VW_B6@@if_show_microRusEFI_presets
 		commandButton = "microRusEFI BCM",				cmd_set_engine_type_microRusEFI_MRE_BODY_CONTROL@@if_show_microRusEFI_presets
+		commandButton = "microRusEFI EJ18",     		cmd_set_engine_type_ET_MRE_SUBARU_EJ18@@if_show_microRusEFI_presets
 
 		commandButton = "Proteus M73 v12",     		cmd_set_engine_type_Proteus_M73@@if_show_Proteus_presets
 		commandButton = "Proteus Miata TCU",		cmd_set_engine_type_Proteus_Miata_TCU@@if_show_Proteus_presets
