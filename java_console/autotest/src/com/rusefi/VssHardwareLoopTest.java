@@ -19,11 +19,7 @@ import static com.rusefi.config.generated.Fields.*;
 public class VssHardwareLoopTest {
     @Test
     public void test() {
-        EcuTestHelper ecu = new EcuTestHelper(ControllerConnectorState.getLinkManager().getCommandQueue());
-
-        ecu.sendCommand(getEnableCommand(Fields.CMD_TRIGGER_HW_INPUT));
-        ecu.enableFunctionalMode();
-
+        EcuTestHelper ecu = EcuTestHelper.createInstance(true);
 
         ecu.setEngineType(ET_FRANKENSO_MIATA_NA6);
         ecu.sendCommand(getDisableCommand(Fields.CMD_SELF_STIMULATION));
@@ -43,4 +39,5 @@ public class VssHardwareLoopTest {
         if (ControllerConnectorState.firmwareVersion == null)
             throw new IllegalStateException("firmwareVersion has not arrived");
     }
+
 }

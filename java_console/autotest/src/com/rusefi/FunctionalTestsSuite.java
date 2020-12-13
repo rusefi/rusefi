@@ -1,7 +1,6 @@
 package com.rusefi;
 
 
-import com.rusefi.binaryprotocol.BinaryProtocol;
 import com.rusefi.config.generated.Fields;
 import com.rusefi.core.Sensor;
 import com.rusefi.core.SensorCentral;
@@ -29,24 +28,14 @@ import static com.rusefi.waves.EngineReport.isCloseEnough;
  */
 public class FunctionalTestsSuite {
 
-    private final LinkManager linkManager;
     private final EcuTestHelper ecu;
 
     public FunctionalTestsSuite(LinkManager linkManager, CommandQueue commandQueue) {
-        ecu = new EcuTestHelper(commandQueue);
-        this.linkManager = linkManager;
+        ecu = new EcuTestHelper(linkManager);
     }
 
     void mainTestBody() {
-        BinaryProtocol bp = linkManager.getCurrentStreamState();
-        // let's make sure 'burn' command works since sometimes it does not
-        bp.burn();
-
-        ecu.sendCommand(getDisableCommand(Fields.CMD_TRIGGER_HW_INPUT));
-        ecu.enableFunctionalMode();
         testCustomEngine();
-        testVW_60_2();
-        testV12();
         testMazdaMiata2003();
         test2003DodgeNeon();
         testFordAspire();
@@ -63,32 +52,11 @@ public class FunctionalTestsSuite {
         testFordFiesta();
     }
 
-    private static final Function<String, Object> FAIL = errorCode -> {
+    public static final Function<String, Object> FAIL = errorCode -> {
         if (errorCode != null)
             throw new IllegalStateException("Failed " + errorCode);
         return null;
     };
-
-    private void testVW_60_2() {
-        ecu.setEngineType(ET_VW_ABA);
-        // trying to disable engine sniffer to help https://github.com/rusefi/rusefi/issues/1849
-        ecu.sendCommand("set " + CMD_ENGINESNIFFERRPMTHRESHOLD + " 100");
-        ecu.changeRpm(900);
-        // first let's get to expected RPM
-        assertRpmDoesNotJump(16000, 5, 40, FAIL, ecu.commandQueue);
-    }
-
-    private void testV12() {
-        ecu.setEngineType(ET_BMW_M73_F);
-        ecu.changeRpm(700);
-        // first let's get to expected RPM
-        assertRpmDoesNotJump(16000, 5, 40, FAIL, ecu.commandQueue);
-        testCaseBug1873();
-    }
-
-    private void testCaseBug1873() {
-        assertRpmDoesNotJump(60, 5, 110, FAIL, ecu.commandQueue);
-    }
 
     public static void assertRpmDoesNotJump(int rpm, int settleTime, int testDuration, Function<String, Object> callback, CommandQueue commandQueue) {
         IoUtil.changeRpm(commandQueue, rpm);
