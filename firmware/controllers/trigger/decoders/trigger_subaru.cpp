@@ -68,9 +68,11 @@ static void initializeSubaru7_6(TriggerWaveform *s, bool withCrankWheel) {
 		s->addEvent720(magic - 180 - width, T_SECONDARY, TV_RISE);
 		s->addEvent720(magic - 180, T_SECONDARY, TV_FALL);
 
-		s->addEvent720(182 - width, T_PRIMARY, TV_RISE);
-		s->addEvent720(182, T_PRIMARY, TV_FALL);
+	}
+	s->addEvent720(182 - width, T_PRIMARY, TV_RISE);
+	s->addEvent720(182, T_PRIMARY, TV_FALL);
 
+	if (withCrankWheel) {
 		s->addEvent720(magic - 87 - width, T_SECONDARY, TV_RISE);
 		s->addEvent720(magic - 87, T_SECONDARY, TV_FALL);
 		s->addEvent720(magic - 55 - width, T_SECONDARY, TV_RISE);
