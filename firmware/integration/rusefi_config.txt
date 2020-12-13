@@ -422,7 +422,7 @@ end_struct
 #define TT_TT_TOOTHED_WHEEL_36_2 48
 #define TT_TT_SUBARU_SVX 49
 #define TT_TT_1_16 50
-#define TT_TT_51 51
+#define TT_TT_SUBARU_7_WITHOUT_6 51
 #define TT_TT_52 52
 
 

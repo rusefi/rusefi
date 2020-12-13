@@ -40,7 +40,7 @@ void setSubaru2003Wrx(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
  * set engine_type 37
  */
 void setSubaruEJ18_MRE(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
-	engineConfiguration->trigger.type = TT_SUBARU_7_6;
+	engineConfiguration->trigger.type = TT_SUBARU_7_WITHOUT_6;
 
 
 //	CONFIG(isDoubleSolenoidIdle) = true;
