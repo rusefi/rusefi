@@ -1183,6 +1183,7 @@ void resetConfigurationExt(Logging * logger, configuration_callback_t boardCallb
 	case TEST_ENGINE:
 		setTestEngineConfiguration(PASS_CONFIG_PARAMETER_SIGNATURE);
 		break;
+	case SUBARUEJ20G_DEFAULTS:
 	case MRE_SUBARU_EJ18:
 		setSubaruEJ18_MRE(PASS_CONFIG_PARAMETER_SIGNATURE);
 		break;
@@ -1345,9 +1346,6 @@ void resetConfigurationExt(Logging * logger, configuration_callback_t boardCallb
 		break;
 	case MAZDA_MIATA_2003_BOARD_TEST:
 		setMazdaMiata2003EngineConfigurationBoardTest(PASS_CONFIG_PARAMETER_SIGNATURE);
-		break;
-	case SUBARUEJ20G_DEFAULTS:
-		setSubaruEJ20GDefaults(PASS_CONFIG_PARAMETER_SIGNATURE);
 		break;
 	case TEST_ENGINE_VVT:
 		setTestVVTEngineConfiguration(PASS_CONFIG_PARAMETER_SIGNATURE);

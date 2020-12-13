@@ -35,14 +35,6 @@ void setSubaru2003Wrx(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	engineConfiguration->triggerSimulatorPins[2] = GPIO_UNASSIGNED;
 }
 
-/*
- * Subaru WRX <=1996 Turbo.
- */
-
-void setSubaruEJ20GDefaults(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
-	engineConfiguration->trigger.type = TT_SUBARU_7_6;
-}
-
 /**
  * MRE_SUBARU_EJ18
  * set engine_type 37
@@ -51,5 +43,15 @@ void setSubaruEJ18_MRE(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	engineConfiguration->trigger.type = TT_SUBARU_7_6;
 
 	CONFIG(isDoubleSolenoidIdle) = true;
+
+	engineConfiguration->specs.displacement = 1.8;
+	strcpy(CONFIG(engineMake), ENGINE_MAKE_SUBARU);
+	strcpy(CONFIG(engineCode), "EJ18");
+
+	engineConfiguration->specs.firingOrder = FO_1_3_2_4;
+
+	// TLE8888_PIN_23: "33 - GP Out 3"
+	engineConfiguration->malfunctionIndicatorPin = TLE8888_PIN_23;
+
 
 }
