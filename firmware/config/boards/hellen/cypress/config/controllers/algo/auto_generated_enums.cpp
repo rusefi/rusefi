@@ -1337,8 +1337,8 @@ case TT_36_2_2_2:
   return "TT_36_2_2_2";
 case TT_3_1_CAM:
   return "TT_3_1_CAM";
-case TT_51:
-  return "TT_51";
+case TT_SUBARU_7_WITHOUT_6:
+  return "TT_SUBARU_7_WITHOUT_6";
 case TT_52:
   return "TT_52";
 case TT_60_2_VW:

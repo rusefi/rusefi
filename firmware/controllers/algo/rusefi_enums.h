@@ -361,7 +361,7 @@ typedef enum {
 
 	TT_1_16 = 50,
 
-	TT_51 = TT_TT_51,
+	TT_SUBARU_7_WITHOUT_6 = TT_TT_SUBARU_7_WITHOUT_6,
 
 	TT_52 = TT_TT_52,
 
