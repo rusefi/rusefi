@@ -61,7 +61,7 @@ jobs:
         mv *.logicdata  unit_tests
         git add unit_tests/triggers.txt
         git status
-        OUT=$(git commit -m "Trigger wheel definitions" triggers.txt 2>&1) || echo "commit failed, finding out why"
+        OUT=$(git commit -m "Trigger wheel definitions" unit_tests/triggers.txt 2>&1) || echo "commit failed, finding out why"
         echo "$OUT"
         if echo "$OUT" | grep 'nothing to commit'; then
           echo "::set-env name=NOCOMMIT::true"
