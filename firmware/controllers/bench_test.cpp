@@ -42,6 +42,7 @@
 #include "cj125.h"
 #include "malfunction_central.h"
 #include "tunerstudio_outputs.h"
+#include "can.h"
 
 #if EFI_PROD_CODE
 #include "rusefi.h"
@@ -312,6 +313,9 @@ static void handleCommandX14(uint16_t index) {
 	case 0xF:
 		engine->directSelfStimulation = false;
 		return;
+	case 0x12:
+		updateWidebandFirmware(logger);
+		return;
 	}
 }
 
@@ -385,6 +389,7 @@ void initBenchTest(Logging *sharedLogger) {
 	addConsoleActionS("fuelpumpbench2", fuelPumpBenchExt);
 	addConsoleAction("fanbench", fanBench);
 	addConsoleActionS("fanbench2", fanBenchExt);
+	addConsoleAction("update_wideband", []() { updateWidebandFirmware(logger); });
 
 	addConsoleAction(CMD_STARTER_BENCH, starterRelayBench);
 	addConsoleAction(CMD_MIL_BENCH, milBench);
