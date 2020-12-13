@@ -6,7 +6,7 @@ import com.rusefi.io.LinkManager;
  * this class runs rusEFI functional tests against rusEFI simulator
  * As of Dec 2020 this seems very broken?
  */
-public class SimulatorFunctionalTestLaunche {
+public class SimulatorFunctionalTestLauncher {
     public static void main(String[] args) {
         Thread.setDefaultUncaughtExceptionHandler((t, e) -> {
             e.printStackTrace();
