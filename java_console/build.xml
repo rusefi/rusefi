@@ -1,4 +1,4 @@
-<project default="jar">
+<project default="build">
     <property name="jar_file_folder" value="../java_console_binary"/>
     <property name="jar_file" value="${jar_file_folder}/rusefi_console.jar"/>
     <property name="server_jar_file" value="${jar_file_folder}/rusefi_server.jar"/>
@@ -23,6 +23,8 @@
             <src path="shared_io/src/main/java"/>
         </javac>
     </target>
+
+    <target name="build" depends="jar, test"/>
 
     <target name="autoupdate_jar" depends="autoupdate_compile">
         <tstamp>
@@ -71,7 +73,9 @@
                         <compilerarg line="- -add-exports java.xml/com.sun.org.apache.xml.internal.serialize=ALL-UNNAMED"/>
                         -->
         </javac>
+    </target>
 
+    <target name="test" depends="compile">
         <junit fork="no"
                maxmemory="512m"
                printsummary="yes"
@@ -83,6 +87,7 @@
             <classpath
                     path="build/classes:lib/junit.jar:${lib_list}:lib/commons-logging.jar"/>
             <batchtest todir="build">
+<!--                at the moment we do NOT have any tests matching this pattern - all hardware tests are not inside 'test' folders -->
                 <fileset dir="autotest/src" includes="**/test/**/*Test.java"/>
                 <fileset dir="autoupdate/src" includes="**/test/**/*Test.java"/>
                 <fileset dir="io/src/test/java" includes="**/test/**/*Test.java"/>
@@ -93,7 +98,6 @@
                 <fileset dir="logging/src" includes="**/test/**/*Test.java"/>
             </batchtest>
         </junit>
-
     </target>
 
     <target name="server_jar" depends="jar">
@@ -181,8 +185,23 @@
     </target>
 
     <target name="real_hardware_functional_test" depends="jar">
-        <java classpath="${jar_file}" classname="com.rusefi.RealHwTest" failonerror="true">
+        <java classpath="${jar_file}" classname="com.rusefi.RealHardwareTestLauncher" failonerror="true">
         </java>
+
+        <junit fork="no"
+               maxmemory="512m"
+               printsummary="yes"
+               haltonfailure="yes">
+
+            <jvmarg value="-ea"/>
+            <jvmarg value="-XX:+HeapDumpOnOutOfMemoryError"/>
+            <formatter type="brief"/>
+            <classpath
+                    path="build/classes:lib/junit.jar:${lib_list}:lib/commons-logging.jar"/>
+            <batchtest todir="build">
+                <fileset dir="autotest/src" includes="**/*Test.java"/>
+            </batchtest>
+        </junit>
     </target>
 
     <target name="before_IDEA_Build">

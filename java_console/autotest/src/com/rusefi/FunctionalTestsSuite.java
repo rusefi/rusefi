@@ -27,12 +27,12 @@ import static com.rusefi.waves.EngineReport.isCloseEnough;
  * @author Andrey Belomutskiy
  * 3/5/14
  */
-public class AutoTest {
+public class FunctionalTestsSuite {
 
     private final LinkManager linkManager;
     private final EcuTestHelper ecu;
 
-    public AutoTest(LinkManager linkManager, CommandQueue commandQueue) {
+    public FunctionalTestsSuite(LinkManager linkManager, CommandQueue commandQueue) {
         ecu = new EcuTestHelper(commandQueue);
         this.linkManager = linkManager;
     }

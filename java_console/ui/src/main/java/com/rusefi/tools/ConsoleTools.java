@@ -2,7 +2,6 @@ package com.rusefi.tools;
 
 import com.fathzer.soft.javaluator.DoubleEvaluator;
 import com.opensr5.ConfigurationImage;
-import com.opensr5.Logger;
 import com.opensr5.ini.IniFileModel;
 import com.opensr5.io.ConfigurationImageFile;
 import com.rusefi.*;
@@ -214,7 +213,7 @@ public class ConsoleTools {
     private static void runFunctionalTest(String[] args) throws InterruptedException {
         // passing port argument if it was specified
         String[] toolArgs = args.length == 1 ? new String[0] : new String[]{args[1]};
-        RealHwTest.main(toolArgs);
+        RealHardwareTestLauncher.main(toolArgs);
     }
 
     private static void runHeadless(String[] args) {

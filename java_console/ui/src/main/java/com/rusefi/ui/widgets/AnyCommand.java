@@ -1,7 +1,7 @@
 package com.rusefi.ui.widgets;
 
 import com.fathzer.soft.javaluator.DoubleEvaluator;
-import com.rusefi.AutoTest;
+import com.rusefi.FunctionalTestsSuite;
 import com.rusefi.FileLog;
 import com.rusefi.InfixConverter;
 import com.rusefi.NamedThreadFactory;
@@ -189,7 +189,7 @@ public class AnyCommand {
                         return null;
                     }
                 };
-                AutoTest.assertRpmDoesNotJump(rpm, settleTime, durationTime, callback, linkManager.getCommandQueue());
+                FunctionalTestsSuite.assertRpmDoesNotJump(rpm, settleTime, durationTime, callback, linkManager.getCommandQueue());
             }
         }).start();
     }
