@@ -422,7 +422,9 @@ LEElement *LEElementPool::parseExpression(const char * line) {
 				/**
 				 * Cannot recognize token
 				 */
-				warning(CUSTOM_ERR_PARSING_ERROR, "unrecognized [%s]", parsingBuffer);
+#if ! EFI_UNIT_TEST				
+				firmwareError(CUSTOM_ERR_PARSING_ERROR, "unrecognized FSIO keyword [%s]", parsingBuffer);
+#endif				
 				return nullptr;
 			}
 			n->init(action);
