@@ -5,7 +5,6 @@ import com.rusefi.functional_tests.EcuTestHelper;
 import org.junit.Ignore;
 import org.junit.Test;
 
-@Ignore
 public class MiscTest {
     @Test
     public void burn() {
