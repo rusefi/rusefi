@@ -1,11 +1,14 @@
 package com.rusefi.functional_tests;
 
 import com.devexperts.logging.Logging;
+import com.rusefi.ControllerConnectorState;
 import com.rusefi.IoUtil;
 import com.rusefi.Timeouts;
 import com.rusefi.config.generated.Fields;
 import com.rusefi.io.CommandQueue;
+import com.rusefi.io.LinkManager;
 import com.rusefi.waves.EngineReport;
+import org.jetbrains.annotations.NotNull;
 
 import static com.devexperts.logging.Logging.getLogging;
 import static com.rusefi.IoUtil.*;
@@ -17,9 +20,17 @@ public class EcuTestHelper {
     public static final int COMPLEX_COMMAND_RETRY = 10000;
     public static int currentEngineType;
     public final CommandQueue commandQueue;
+    @NotNull
+    private final LinkManager linkManager;
 
-    public EcuTestHelper(CommandQueue commandQueue) {
-        this.commandQueue = commandQueue;
+    public EcuTestHelper(LinkManager linkManager) {
+        this.commandQueue = linkManager.getCommandQueue();
+        this.linkManager = linkManager;
+    }
+
+    @NotNull
+    public LinkManager getLinkManager() {
+        return linkManager;
     }
 
     public static void assertEquals(double expected, double actual) {
@@ -33,6 +44,23 @@ public class EcuTestHelper {
     public static void assertEquals(String msg, double expected, double actual, double ratio) {
         if (!isCloseEnough(expected, actual, ratio))
             throw new IllegalStateException(msg + " Expected " + expected + " but got " + actual);
+    }
+
+    @NotNull
+    public static EcuTestHelper createInstance() {
+        return createInstance(false);
+    }
+
+    @NotNull
+    public static EcuTestHelper createInstance(boolean allowHardwareTriggerInput) {
+        EcuTestHelper ecu = new EcuTestHelper(ControllerConnectorState.getLinkManager());
+        if (allowHardwareTriggerInput) {
+            ecu.sendCommand(getEnableCommand(Fields.CMD_TRIGGER_HW_INPUT));
+        } else {
+            ecu.sendCommand(getDisableCommand(Fields.CMD_TRIGGER_HW_INPUT));
+        }
+        ecu.enableFunctionalMode();
+        return ecu;
     }
 
     public void sendCommand(String command) {
