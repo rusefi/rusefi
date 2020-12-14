@@ -21,7 +21,7 @@ void handleWidebandBootloaderAck() {
 }
 
 bool waitAck() {
-	return MSG_OK == chEvtWaitAnyTimeout(EVT_BOOTLOADER_ACK, TIME_MS2I(1000));
+	return chEvtWaitAnyTimeout(EVT_BOOTLOADER_ACK, TIME_MS2I(1000)) != 0;
 }
 
 void updateWidebandFirmware(Logging* logging) {
