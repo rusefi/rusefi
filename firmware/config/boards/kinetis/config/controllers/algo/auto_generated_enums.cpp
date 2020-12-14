@@ -1,7 +1,7 @@
 #include "global.h"
 #include "rusefi_enums.h"
 #include "rusefi_hw_enums.h"
-// was generated automatically by rusEfi tool  from rusefi_hw_enums.h // was generated automatically by rusEfi tool  from rusefi_enums.h // by enum2string.jar tool on Sun Dec 13 22:48:03 UTC 2020
+// was generated automatically by rusEfi tool  from rusefi_hw_enums.h // was generated automatically by rusEfi tool  from rusefi_enums.h // by enum2string.jar tool on Mon Dec 14 15:04:34 EET 2020
 // see also gen_config_and_enums.bat
 
 
@@ -475,8 +475,12 @@ case DBG_16:
   return "DBG_16";
 case DBG_34:
   return "DBG_34";
-case DBG_44:
-  return "DBG_44";
+case DBG_46:
+  return "DBG_46";
+case DBG_47:
+  return "DBG_47";
+case DBG_48:
+  return "DBG_48";
 case DBG_ALTERNATOR_PID:
   return "DBG_ALTERNATOR_PID";
 case DBG_ANALOG_INPUTS:
@@ -501,6 +505,8 @@ case DBG_CRANKING_DETAILS:
   return "DBG_CRANKING_DETAILS";
 case DBG_DWELL_METRIC:
   return "DBG_DWELL_METRIC";
+case DBG_DYNO_VIEW:
+  return "DBG_DYNO_VIEW";
 case DBG_ELECTRONIC_THROTTLE_EXTRA:
   return "DBG_ELECTRONIC_THROTTLE_EXTRA";
 case DBG_ELECTRONIC_THROTTLE_PID:
@@ -539,6 +545,8 @@ case DBG_KNOCK:
   return "DBG_KNOCK";
 case DBG_LAUNCH:
   return "DBG_LAUNCH";
+case DBG_LOGIC_ANALYZER:
+  return "DBG_LOGIC_ANALYZER";
 case DBG_MAP:
   return "DBG_MAP";
 case DBG_METRICS:
