@@ -67,12 +67,19 @@ class TriggerWheelInfo {
         return wheel.stream().filter(triggerSignal -> triggerSignal.angle < 360).collect(Collectors.toList());
     }
 
+    @NotNull
+    private static List<TriggerSignal> compressAngle(List<TriggerSignal> wheel) {
+        return wheel.stream().map(triggerSignal -> {
+            double compressAngle = getCompressedAngle(triggerSignal);
+            return new TriggerSignal(triggerSignal.waveIndex, triggerSignal.state, compressAngle);
+        }).collect(Collectors.toList());
+    }
+
     /**
      * this is about converting 720 cycle of crank wheel shape into normal 360 circle range
      */
-    @NotNull
-    private static List<TriggerSignal> compressAngle(List<TriggerSignal> wheel) {
-        return wheel.stream().map(triggerSignal -> new TriggerSignal(triggerSignal.waveIndex, triggerSignal.state, triggerSignal.angle / 2)).collect(Collectors.toList());
+    private static double getCompressedAngle(TriggerSignal triggerSignal) {
+        return triggerSignal.angle / 2;
     }
 
     public List<TriggerSignal> getSecondWheeTriggerSignals() {
@@ -84,6 +91,8 @@ class TriggerWheelInfo {
         }
     }
 
+    // todo: this 'isFirstCrankBased' should be taken from triggers.txt not hard-coded here!
+    // todo: open question if current firmware even has info to provide this info or not?
     private boolean isFirstCrankBased() {
         return id == Fields.TT_TT_GM_LS_24 ||
                 id == Fields.TT_TT_HONDA_K_12_1 ||
@@ -93,6 +102,8 @@ class TriggerWheelInfo {
                 id == Fields.TT_TT_GM_7X;
     }
 
+    // todo: this 'isFirstCrankBased' should be taken from triggers.txt not hard-coded here!
+    // todo: open question if current firmware even has info to provide this info or not?
     private boolean isSecondCamBased() {
         return id == Fields.TT_TT_MAZDA_MIATA_NA ||
                 id == Fields.TT_TT_MAZDA_DOHC_1_4 ||
