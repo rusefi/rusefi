@@ -43,6 +43,7 @@ public class TriggerImage {
     private static int sleepAtEnd;
     private static int onlyOneTrigger = -1;
 
+    // todo: https://github.com/rusefi/rusefi/issues/2077
     private static String getTriggerName(TriggerWheelInfo triggerName) {
         switch (triggerName.id) {
             case Fields.TT_TT_FORD_ASPIRE:

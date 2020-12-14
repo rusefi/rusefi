@@ -93,6 +93,7 @@ class TriggerWheelInfo {
 
     // todo: this 'isFirstCrankBased' should be taken from triggers.txt not hard-coded here!
     // todo: open question if current firmware even has info to provide this info or not?
+    // todo: https://github.com/rusefi/rusefi/issues/2077
     private boolean isFirstCrankBased() {
         return id == Fields.TT_TT_GM_LS_24 ||
                 id == Fields.TT_TT_HONDA_K_12_1 ||
@@ -104,6 +105,7 @@ class TriggerWheelInfo {
 
     // todo: this 'isFirstCrankBased' should be taken from triggers.txt not hard-coded here!
     // todo: open question if current firmware even has info to provide this info or not?
+    // todo: https://github.com/rusefi/rusefi/issues/2077
     private boolean isSecondCamBased() {
         return id == Fields.TT_TT_MAZDA_MIATA_NA ||
                 id == Fields.TT_TT_MAZDA_DOHC_1_4 ||
