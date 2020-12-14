@@ -234,7 +234,7 @@ public class TriggerImage {
 
                 int middle = WHEEL_BORDER + WHEEL_DIAMETER / 2;
                 if (showTdc) {
-                    double tdcAngle = Math.toRadians(_180 + shape.getTdcPosition());
+                    double tdcAngle = Math.toRadians(_180 + shape.getTdcPositionIn360());
 
                     int smallX = (int) (WHEEL_DIAMETER / 2 * Math.sin(tdcAngle));
                     int smallY = (int) (WHEEL_DIAMETER / 2 * Math.cos(tdcAngle));

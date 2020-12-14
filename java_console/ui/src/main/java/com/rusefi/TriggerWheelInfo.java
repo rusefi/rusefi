@@ -53,8 +53,8 @@ class TriggerWheelInfo {
         }
     }
 
-    public double getTdcPosition() {
-        return tdcPosition;
+    public double getTdcPositionIn360() {
+        return isFirstCrankBased() ? tdcPosition : getCompressedAngle(tdcPosition);
     }
 
     @NotNull
@@ -70,7 +70,7 @@ class TriggerWheelInfo {
     @NotNull
     private static List<TriggerSignal> compressAngle(List<TriggerSignal> wheel) {
         return wheel.stream().map(triggerSignal -> {
-            double compressAngle = getCompressedAngle(triggerSignal);
+            double compressAngle = getCompressedAngle(triggerSignal.angle);
             return new TriggerSignal(triggerSignal.waveIndex, triggerSignal.state, compressAngle);
         }).collect(Collectors.toList());
     }
@@ -78,8 +78,8 @@ class TriggerWheelInfo {
     /**
      * this is about converting 720 cycle of crank wheel shape into normal 360 circle range
      */
-    private static double getCompressedAngle(TriggerSignal triggerSignal) {
-        return triggerSignal.angle / 2;
+    private static double getCompressedAngle(double angle) {
+        return angle / 2;
     }
 
     public List<TriggerSignal> getSecondWheeTriggerSignals() {
