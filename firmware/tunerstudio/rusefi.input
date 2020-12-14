@@ -3248,7 +3248,7 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 		panel = testFsio
 		panel = testMisc
 
-	dialog = widebandConfig, "rusEFI Wideband Config", xAxis
+	dialog = widebandConfig, "rusEFI Wideband Config"
 		field = "!Please connect exactly one wideband controller before pressing this button!"
 		commandButton = "Update Firmware", cmd_wideband_firmare_update
 	
