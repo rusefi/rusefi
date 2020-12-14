@@ -766,7 +766,11 @@ typedef enum {
 	DBG_FSIO_EXPRESSION_8_14 = 41,
 	DBG_FSIO_SPECIAL = 42,
 	DBG_INJECTOR_COMPENSATION = 43,
-	DBG_44 = 44,
+	DBG_DYNO_VIEW = 44,
+	DBG_LOGIC_ANALYZER = 45,
+	DBG_46 = 46,
+	DBG_47 = 47,
+	DBG_48 = 48,
 
 	Force_4_bytes_size_debug_mode_e = ENUM_32_BITS,
 } debug_mode_e;
