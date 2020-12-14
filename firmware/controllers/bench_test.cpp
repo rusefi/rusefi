@@ -235,7 +235,9 @@ private:
 		}
 
 		if (widebandUpdatePending) {
+#if EFI_WIDEBAND_FIRMWARE_UPDATE
 			updateWidebandFirmware(logger);
+#endif
 			widebandUpdatePending = false;
 		}
 	}
