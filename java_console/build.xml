@@ -191,6 +191,7 @@
         <junit fork="no"
                maxmemory="512m"
                printsummary="yes"
+               showoutput="true"
                haltonfailure="yes">
 
             <jvmarg value="-ea"/>
