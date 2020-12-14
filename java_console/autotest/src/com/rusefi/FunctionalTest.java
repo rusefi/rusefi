@@ -240,7 +240,6 @@ public class FunctionalTest {
     }
 
     @Test
-    @Ignore
     public void testFordFiesta() {
         ecu.setEngineType(ET_FORD_FIESTA);
         EngineChart chart;
