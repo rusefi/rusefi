@@ -42,7 +42,10 @@
 #include "cj125.h"
 #include "malfunction_central.h"
 #include "tunerstudio_outputs.h"
+
+#if EFI_WIDEBAND_FIRMWARE_UPDATE
 #include "can.h"
+#endif
 
 #if EFI_PROD_CODE
 #include "rusefi.h"
