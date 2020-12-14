@@ -244,8 +244,8 @@ public class TriggerImage {
                             2 * tdcMarkRadius,
                             2 * tdcMarkRadius);
 
+                    g.drawString("TDC", middle + smallX + tdcMarkRadius * 2, middle + smallY);
                 }
-
 
                 for (int i = 0; i < wheel.size(); i++) {
                     TriggerSignal current = wheel.get(i);
