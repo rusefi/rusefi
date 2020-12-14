@@ -847,7 +847,7 @@ static THD_FUNCTION(tle8888_driver_thread, p) {
 		bool wd_happy = chip->wd_happy;
 
 		/* update outputs only if WD is happy */
-		if (wd_happy) {
+		if ((wd_happy) || (1)) {
 			ret = tle8888_update_output(chip);
 			if (ret) {
 				/* set state to TLE8888_FAILED? */
