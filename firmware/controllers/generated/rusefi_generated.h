@@ -695,6 +695,7 @@
 #define GAUGE_NAME_VVT "VVT position"
 #define GAUGE_NAME_WARNING_COUNTER "warning: counter"
 #define GAUGE_NAME_WARNING_LAST "warning: last"
+#define GAUGE_NAME_WG_POSITION "Wastegate position sensor"
 #define globalFuelCorrection_offset 544
 #define globalTriggerAngleOffset_offset 456
 #define gpioPinModes10_offset 773
@@ -1225,7 +1226,7 @@
 #define showSdCardWarning_offset 76
 #define SIGNATURE_BOARD all
 #define SIGNATURE_DATE 2020.12.14
-#define SIGNATURE_HASH 2553016941
+#define SIGNATURE_HASH 1241770402
 #define silentTriggerError_offset 1464
 #define slowAdcAlpha_offset 2088
 #define sparkDwellRpmBins_offset 332
@@ -1556,7 +1557,7 @@
 #define ts_show_spi true
 #define ts_show_trigger_comparator false
 #define ts_show_tunerstudio_port true
-#define TS_SIGNATURE "rusEFI 2020.12.14.all.2553016941"
+#define TS_SIGNATURE "rusEFI 2020.12.14.all.1241770402"
 #define TS_SINGLE_WRITE_COMMAND 'W'
 #define TS_SINGLE_WRITE_COMMAND_char W
 #define TS_TEST_COMMAND 't' // 0x74
