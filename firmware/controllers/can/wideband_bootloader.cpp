@@ -36,8 +36,10 @@ void updateWidebandFirmware(Logging* logging) {
 	scheduleMsg(logging, "***************************************");
 	scheduleMsg(logging, "Wideband Update: Rebooting to bootloader...");
 
-	// The first request will reboot the chip (if necessary), and sending a few means we're sure to get it rebooted and in to the loader
-	for (int i = 0; i < 3; i++) {
+	// The first request will reboot the chip (if necessary), and the second one will enable bootloader mode
+	// If the chip was already in bootloader (aka manual mode), then that's ok - the second request will
+	// just be safely ignored (but acked)
+	for (int i = 0; i < 2; i++) {
 		{
 			// Send bootloader entry command
 			CanTxMessage m(0xEF0'0000, 0, true);
