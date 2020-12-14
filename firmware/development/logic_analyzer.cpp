@@ -241,4 +241,44 @@ void stopLogicAnalyzerPins() {
 	}
 }
 
+void getChannelFreqAndDuty(int index, float *duty, int *freq) {
+
+	float high,period;
+
+//	if ((duty == nullptr) || (freq == nullptr)) {
+//		return;
+//	}
+
+	if (readers[index].hw == nullptr) {
+		*duty = 0.0;
+		*freq = 0;
+	} else {
+		high = getSignalOnTime(index);
+		period = getSignalPeriodMs(index);
+
+		if (period != 0) {
+
+			*duty = (high * 100.0f) /(period * 1000.0f);
+			*freq = (int)(1 / (period / 1000.0f));
+		} else {
+//			*duty = 0.0;
+//			*freq = 0;			
+			*duty = high;
+			*freq = period;
+		}
+	}
+
+}
+
+void reportLogicAnalyzerToTS() {
+#if EFI_TUNER_STUDIO	
+	int tmp;
+	getChannelFreqAndDuty(0,&tsOutputChannels.debugFloatField1, &tsOutputChannels.debugIntField1);
+	getChannelFreqAndDuty(1,&tsOutputChannels.debugFloatField2, &tsOutputChannels.debugIntField2);
+	getChannelFreqAndDuty(2,&tsOutputChannels.debugFloatField3, &tsOutputChannels.debugIntField3);
+	getChannelFreqAndDuty(3,&tsOutputChannels.debugFloatField4, &tmp);
+	tsOutputChannels.debugIntField4 = (int16_t)tmp;
+#endif	
+}
+
 #endif /* EFI_LOGIC_ANALYZER */
