@@ -87,6 +87,7 @@ static void runBench(brain_pin_e brainPin, OutputPin *output, float delayMs, flo
 }
 
 static volatile bool isBenchTestPending = false;
+static bool widebandUpdatePending = false;
 static float onTime;
 static float offTime;
 static float delayMs;
@@ -232,6 +233,11 @@ private:
 			isBenchTestPending = false;
 			runBench(brainPin, pinX, delayMs, onTime, offTime, count);
 		}
+
+		if (widebandUpdatePending) {
+			updateWidebandFirmware(logger);
+			widebandUpdatePending = false;
+		}
 	}
 };
 
@@ -314,7 +320,7 @@ static void handleCommandX14(uint16_t index) {
 		engine->directSelfStimulation = false;
 		return;
 	case 0x12:
-		updateWidebandFirmware(logger);
+		widebandUpdatePending = true;
 		return;
 	}
 }
@@ -389,7 +395,7 @@ void initBenchTest(Logging *sharedLogger) {
 	addConsoleActionS("fuelpumpbench2", fuelPumpBenchExt);
 	addConsoleAction("fanbench", fanBench);
 	addConsoleActionS("fanbench2", fanBenchExt);
-	addConsoleAction("update_wideband", []() { updateWidebandFirmware(logger); });
+	addConsoleAction("update_wideband", []() { widebandUpdatePending = true; });
 
 	addConsoleAction(CMD_STARTER_BENCH, starterRelayBench);
 	addConsoleAction(CMD_MIL_BENCH, milBench);
