@@ -66,15 +66,15 @@ void updateWidebandFirmware(Logging* logging) {
 		return;
 	}
 
-	size_t totalSize = sizeof(build_wideband_noboot_bin);
+	size_t totalSize = sizeof(build_wideband_image_bin);
 
 	scheduleMsg(logging, "Wideband Update: Flash erased! Sending %d bytes...", totalSize);
 
 	// Send flash data 8 bytes at a time
-	for (size_t i = 0; i < sizeof(build_wideband_noboot_bin); i += 8) {
+	for (size_t i = 0; i < totalSize; i += 8) {
 		{
 			CanTxMessage m(0xEF2'0000 + i, 8, true);
-			memcpy(&m[0], build_wideband_noboot_bin + i, 8);
+			memcpy(&m[0], build_wideband_image_bin + i, 8);
 		}
 
 		if (!waitAck()) {
