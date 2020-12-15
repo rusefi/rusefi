@@ -261,7 +261,7 @@ void getChannelFreqAndDuty(int index, float *duty, int *freq) {
 			*duty = (high * 1000.0f) /(period * 10.0f);
 			*freq = (int)(1 / (period / 1000.0f));
 		} else {		
-			*duty = 0;
+			*duty = 0.0;
 			*freq = 0;
 		}
 	}
