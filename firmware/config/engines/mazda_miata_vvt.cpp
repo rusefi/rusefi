@@ -748,3 +748,6 @@ void setMiataNB2_Proteus_TCU(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 
 }
 
+void setMiataNB2_ProteusEngineConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
+
+}
