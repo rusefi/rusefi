@@ -58,6 +58,7 @@
 #include "mazda_miata_nb.h"
 #include "mazda_miata_vvt.h"
 #include "mazda_626.h"
+#include "m111.h"
 
 #include "citroenBerlingoTU3JP.h"
 #include "rover_v8.h"
@@ -1173,6 +1174,12 @@ void resetConfigurationExt(Logging * logger, configuration_callback_t boardCallb
 		break;
 	case MIATA_PROTEUS_TCU:
 		setMiataNB2_Proteus_TCU(PASS_CONFIG_PARAMETER_SIGNATURE);
+		break;
+	case PROTEUS_MIATA_NB2:
+		setMiataNB2_ProteusEngineConfiguration(PASS_CONFIG_PARAMETER_SIGNATURE);
+		break;
+	case MRE_M111:
+		setM111EngineConfiguration(PASS_CONFIG_PARAMETER_SIGNATURE);
 		break;
 	case MRE_BOARD_OLD_TEST:
 		mreBoardOldTest(PASS_CONFIG_PARAMETER_SIGNATURE);
