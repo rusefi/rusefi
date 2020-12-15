@@ -198,6 +198,7 @@ public class FunctionalTest {
     }
 
     @Test
+    @Ignore
     public void test1995DodgeNeon() {
         ecu.setEngineType(ET_DODGE_NEON_1995);
         EngineChart chart;
@@ -233,6 +234,7 @@ public class FunctionalTest {
     }
 
     @Test
+    @Ignore
     public void testRoverV8() {
         ecu.setEngineType(ET_ROVER_V8);
     }
