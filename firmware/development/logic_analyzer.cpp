@@ -245,9 +245,9 @@ void getChannelFreqAndDuty(int index, float *duty, int *freq) {
 
 	float high,period;
 
-//	if ((duty == nullptr) || (freq == nullptr)) {
-//		return;
-//	}
+	if ((duty == nullptr) || (freq == nullptr)) {
+		return;
+	}
 
 	if (readers[index].hw == nullptr) {
 		*duty = 0.0;
@@ -258,13 +258,11 @@ void getChannelFreqAndDuty(int index, float *duty, int *freq) {
 
 		if (period != 0) {
 
-			*duty = (high * 100.0f) /(period * 1000.0f);
+			*duty = (high * 1000.0f) /(period * 10.0f);
 			*freq = (int)(1 / (period / 1000.0f));
-		} else {
-//			*duty = 0.0;
-//			*freq = 0;			
-			*duty = high;
-			*freq = period;
+		} else {		
+			*duty = 0;
+			*freq = 0;
 		}
 	}
 
