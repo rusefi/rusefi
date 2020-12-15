@@ -229,12 +229,10 @@ void Engine::periodicSlowCallback(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 			isHappyTest = true;
 		}
 	}
-/* temp disable MRE issue with tle8888 - GP3 does not work? #2065
 	assertCloseTo("clt", Sensor::get(SensorType::Clt).Value, 49.3);
 	assertCloseTo("iat", Sensor::get(SensorType::Iat).Value, 73.2);
 	assertCloseTo("aut1", Sensor::get(SensorType::AuxTemp1).Value, 13.8);
 	assertCloseTo("aut2", Sensor::get(SensorType::AuxTemp2).Value, 6.2);
-*/
 #endif // HW_CHECK_MODE
 }
 
