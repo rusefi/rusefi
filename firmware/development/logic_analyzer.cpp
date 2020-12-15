@@ -104,12 +104,20 @@ static void waIcuPeriodCallback(WaveReader *reader) {
 static void initWave(const char *name, int index) {
 	brain_pin_e brainPin = CONFIG(logicAnalyzerPins)[index];
 
-	if (brainPin == GPIO_UNASSIGNED)
-		return;
-
 	waveReaderCount++;
 	efiAssertVoid(CUSTOM_ERR_6655, index < MAX_ICU_COUNT, "too many ICUs");
 	WaveReader *reader = &readers[index];
+
+	if (brainPin == GPIO_UNASSIGNED) {
+		/**
+		 *  in case we are running, and we select none for a channel that was running, 
+		 *  this way we ensure that we do not get false report from that channel 
+		 **/
+		reader->hw = nullptr;
+		return;
+	}
+		
+
 	reader->name = name;
 
 	reader->hw = startDigitalCapture("wave input", brainPin);
@@ -256,7 +264,7 @@ void getChannelFreqAndDuty(int index, float *duty, int *freq) {
 		high = getSignalOnTime(index);
 		period = getSignalPeriodMs(index);
 
-		if (period != 0) {
+		if ((period != 0) && (readers[index].hw->started)) {
 
 			*duty = (high * 1000.0f) /(period * 10.0f);
 			*freq = (int)(1 / (period / 1000.0f));
