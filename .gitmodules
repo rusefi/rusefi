@@ -18,3 +18,6 @@
 [submodule "firmware/ext/cmsis-svd"]
 	path = firmware/ext/cmsis-svd
 	url = https://github.com/posborne/cmsis-svd
+[submodule "firmware/controllers/can/wideband_firmware"]
+	path = firmware/controllers/can/wideband_firmware
+	url = https://github.com/mck1117/wideband

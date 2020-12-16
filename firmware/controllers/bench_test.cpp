@@ -43,6 +43,10 @@
 #include "malfunction_central.h"
 #include "tunerstudio_outputs.h"
 
+#if EFI_WIDEBAND_FIRMWARE_UPDATE
+#include "can.h"
+#endif
+
 #if EFI_PROD_CODE
 #include "rusefi.h"
 #include "mpu_util.h"
@@ -86,6 +90,7 @@ static void runBench(brain_pin_e brainPin, OutputPin *output, float delayMs, flo
 }
 
 static volatile bool isBenchTestPending = false;
+static bool widebandUpdatePending = false;
 static float onTime;
 static float offTime;
 static float delayMs;
@@ -231,6 +236,13 @@ private:
 			isBenchTestPending = false;
 			runBench(brainPin, pinX, delayMs, onTime, offTime, count);
 		}
+
+		if (widebandUpdatePending) {
+#if EFI_WIDEBAND_FIRMWARE_UPDATE
+			updateWidebandFirmware(logger);
+#endif
+			widebandUpdatePending = false;
+		}
 	}
 };
 
@@ -312,6 +324,9 @@ static void handleCommandX14(uint16_t index) {
 	case 0xF:
 		engine->directSelfStimulation = false;
 		return;
+	case 0x12:
+		widebandUpdatePending = true;
+		return;
 	}
 }
 
@@ -385,6 +400,7 @@ void initBenchTest(Logging *sharedLogger) {
 	addConsoleActionS("fuelpumpbench2", fuelPumpBenchExt);
 	addConsoleAction("fanbench", fanBench);
 	addConsoleActionS("fanbench2", fanBenchExt);
+	addConsoleAction("update_wideband", []() { widebandUpdatePending = true; });
 
 	addConsoleAction(CMD_STARTER_BENCH, starterRelayBench);
 	addConsoleAction(CMD_MIL_BENCH, milBench);

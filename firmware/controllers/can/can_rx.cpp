@@ -64,6 +64,13 @@ void processCanRxMessage(const CANRxFrame& frame, Logging* logger, efitick_t now
 	{
 		obdOnCanPacketRx(frame);
 	}
+
+#if EFI_WIDEBAND_FIRMWARE_UPDATE
+	// Bootloader acks with address 0x727573 aka ascii "rus"
+	if (frame.EID == 0x727573) {
+		handleWidebandBootloaderAck();
+	}
+#endif
 }
 
 #endif // EFI_CAN_SUPPORT
