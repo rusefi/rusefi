@@ -475,8 +475,6 @@ case DBG_16:
   return "DBG_16";
 case DBG_34:
   return "DBG_34";
-case DBG_46:
-  return "DBG_46";
 case DBG_47:
   return "DBG_47";
 case DBG_48:
