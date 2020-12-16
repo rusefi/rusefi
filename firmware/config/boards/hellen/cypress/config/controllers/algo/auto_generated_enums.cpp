@@ -755,6 +755,8 @@ case DBG_MAP:
   return "DBG_MAP";
 case DBG_METRICS:
   return "DBG_METRICS";
+case DBG_RUSEFI_WIDEBAND:
+  return "DBG_RUSEFI_WIDEBAND";
 case DBG_SD_CARD:
   return "DBG_SD_CARD";
 case DBG_SR5_PROTOCOL:
