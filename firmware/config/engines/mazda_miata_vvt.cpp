@@ -749,7 +749,7 @@ void setMiataNB2_Proteus_TCU(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 }
 
 void setMiataNB2_ProteusEngineConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
-setFrankensoConfiguration(PASS_CONFIG_PARAMETER_SIGNATURE);
+    setProteusConfiguration(PASS_CONFIG_PARAMETER_SIGNATURE);
 
 	setMazdaMiataEngineNB2Defaults(PASS_CONFIG_PARAMETER_SIGNATURE);
 
