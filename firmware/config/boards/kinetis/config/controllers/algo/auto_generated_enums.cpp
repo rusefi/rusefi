@@ -475,8 +475,6 @@ case DBG_16:
   return "DBG_16";
 case DBG_34:
   return "DBG_34";
-case DBG_46:
-  return "DBG_46";
 case DBG_47:
   return "DBG_47";
 case DBG_48:
@@ -551,6 +549,8 @@ case DBG_MAP:
   return "DBG_MAP";
 case DBG_METRICS:
   return "DBG_METRICS";
+case DBG_RUSEFI_WIDEBAND:
+  return "DBG_RUSEFI_WIDEBAND";
 case DBG_SD_CARD:
   return "DBG_SD_CARD";
 case DBG_SR5_PROTOCOL:
