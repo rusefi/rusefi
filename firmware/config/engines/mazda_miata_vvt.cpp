@@ -762,18 +762,10 @@ setFrankensoConfiguration(PASS_CONFIG_PARAMETER_SIGNATURE);
 	engineConfiguration->twoWireBatchInjection = true; // this is needed for #492 testing
 
 	engineConfiguration->alternatorControlPin = GPIOA_8;
-	engineConfiguration->alternatorControlPinMode = OM_OPENDRAIN;
-
-//	engineConfiguration->vehicleSpeedSensorInputPin = GPIOA_8;
 
 	engineConfiguration->auxPidPins[0] = GPIOB_5; // VVT solenoid control
-	//	/**
-	//	 * set_fsio_setting 1 0.55
-	//	 */
+
 	engineConfiguration->fsio_setting[0] = 0.0;
-//	setFsioExt(0, GPIOE_3, "0 fsio_setting", 400 PASS_CONFIG_PARAMETER_SUFFIX);
-
-
 
 	// high-side driver with +12v VP jumper
 	engineConfiguration->tachOutputPin = GPIOA_9; // tachometer
@@ -787,129 +779,28 @@ setFrankensoConfiguration(PASS_CONFIG_PARAMETER_SIGNATURE);
 
 	// set cranking_timing_angle 10
 	engineConfiguration->crankingTimingAngle = 15;
-	// set cranking_fuel 4
-	engineConfiguration->cranking.baseFuel = 27; // this value for return-less NB miata fuel system, higher pressure
-
-/**
- * Saab attempt
- * Saab  coil on #1 PD8 extra blue wire
- * Miata coil on #2 PC9  - orange ECU wire "2&3"
- * Saab  coil on #3 PD9 extra white wire
- * Miata coil on #4 PE14 - white ECU wire "1&4"
- */
 
 	engineConfiguration->ignitionPins[0] = GPIOD_4;
 	engineConfiguration->ignitionPins[1] = GPIO_UNASSIGNED;
 	engineConfiguration->ignitionPins[2] = GPIOC_9;
 	engineConfiguration->ignitionPins[3] = GPIO_UNASSIGNED;
 
-	// set tps_min 90
-	engineConfiguration->tpsMin = 100; // convert 12to10 bit (ADC/4)
-	// set tps_max 540
-	engineConfiguration->tpsMax = 650; // convert 12to10 bit (ADC/4)
-
-
 	engineConfiguration->malfunctionIndicatorPin = GPIOB_6;
 
-
-//	engineConfiguration->malfunctionIndicatorPin = GPIOD_9;
-//	engineConfiguration->malfunctionIndicatorPinMode = OM_INVERTED;
-
-	// todo: blue jumper wire - what is it?!
-	// Frankenso analog #6 pin 3R, W56 (5th lower row pin from the end) top <> W45 bottom jumper, not OEM
-
-
-
-	map.sensor.hwChannel = EFI_ADC_10;
+    engineConfiguration->map.sensor.hwChannel = EFI_ADC_10;
 
 	engineConfiguration->afr.hwChannel = EFI_ADC_11;
 
-	//
-	/**
-	 * Combined RPM, CLT and VBATT warning light
-	 *
-	 * to test
-	 * set_fsio_setting 2 1800
-	 * set_fsio_setting 3 65
-	 * set_fsio_setting 4 15
-	 */
-	engineConfiguration->fsio_setting[1] = 6500; // #2 RPM threshold
-	engineConfiguration->fsio_setting[2] = 105; // #3 CLT threshold
-	engineConfiguration->fsio_setting[3] = 12.0; // #4 voltage threshold
-
-//	setFsio(1, GPIOE_6, COMBINED_WARNING_LIGHT PASS_CONFIG_PARAMETER_SUFFIX);
-
-	// enable auto_idle
-	// enable verbose_idle
 	engineConfiguration->isVerboseIAC = false;
-	// set idle_p 0.05
-	// set idle_i 0
-	// set idle_d 0
-	// set debug_mode 3
-	// set idle_rpm 1700
-	// see setDefaultIdleParameters
 
 	engineConfiguration->adcVcc = 3.3f;
-	engineConfiguration->vbattDividerCoeff = 8.80f;
 
-	// by the way NB2 MAF internal diameter is about 2.5 inches / 63mm
-	// 1K pull-down to read current from this MAF
-	engineConfiguration->mafAdcChannel = EFI_ADC_6; // PA6 W46 <> W46
+	engineConfiguration->mafAdcChannel = EFI_ADC_13; // PA6 W46 <> W46
 
-	engineConfiguration->throttlePedalUpVoltage = 0.65f;
+	engineConfiguration->idleMode = IM_MANUAL;
 
-
-	// TLE7209 two-wire ETB control
-	// PWM
-	CONFIG(etb_use_two_wires) = true;
-
-	engineConfiguration->etbIo[0].controlPin1 = GPIO_UNASSIGNED;
-
-	//
-	engineConfiguration->etbIo[0].directionPin1 = GPIOE_12; // orange
-	//
-	engineConfiguration->etbIo[0].directionPin2 = GPIOC_7; // white/blue
-
-	// set_analog_input_pin tps PC3
-	engineConfiguration->tps1_1AdcChannel = EFI_ADC_13; // PC3 blue
-
-	engineConfiguration->idleMode = IM_AUTO;
-	// set_analog_input_pin pps PA2
-/* a step back - Frankenso does not use ETB
-	engineConfiguration->throttlePedalPositionAdcChannel = EFI_ADC_2;
-*/
-
-	engineConfiguration->idleRpmPid.offset = 0;
-	engineConfiguration->idleRpmPid.pFactor = 0.2;
-	engineConfiguration->idleRpmPid.iFactor = 0.0001;
-	engineConfiguration->idleRpmPid.dFactor = 5;
-	engineConfiguration->idleRpmPid.periodMs = 10;
+	engineConfiguration->throttlePedalPositionAdcChannel = EFI_ADC_12;
 
 	engineConfiguration->isFasterEngineSpinUpEnabled = true;
 
-	//set etb_p 12
-	engineConfiguration->etb.pFactor = 12; // a bit lower p-factor seems to work better on TLE9201? MRE?
-	engineConfiguration->etb.iFactor = 	0;
-	engineConfiguration->etb.dFactor = 0;
-	engineConfiguration->etb.offset = 0;
-	engineConfiguration->etb.minValue = -60;
-	engineConfiguration->etb.maxValue = 50;
-
-	config->crankingFuelCoef[0] = 2.8; // base cranking fuel adjustment coefficient
-	config->crankingFuelBins[0] = -20; // temperature in C
-	config->crankingFuelCoef[1] = 2.2;
-	config->crankingFuelBins[1] = -10;
-	config->crankingFuelCoef[2] = 1.8;
-	config->crankingFuelBins[2] = 5;
-	config->crankingFuelCoef[3] = 1.5;
-	config->crankingFuelBins[3] = 30;
-
-	config->crankingFuelCoef[4] = 1.0;
-	config->crankingFuelBins[4] = 35;
-	config->crankingFuelCoef[5] = 1.0;
-	config->crankingFuelBins[5] = 50;
-	config->crankingFuelCoef[6] = 1.0;
-	config->crankingFuelBins[6] = 65;
-	config->crankingFuelCoef[7] = 1.0;
-	config->crankingFuelBins[7] = 90;
 }
