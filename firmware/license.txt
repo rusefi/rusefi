@@ -3,7 +3,7 @@
 
      rusEFI#1: rusEFI is intended for off-road land and water vehicles.
 
-     rusEFI#2: rusEFI is not compatible with environment regulations.
+     rusEFI#2: rusEFI is not compliant with automotive environmental regulations.
 
      rusEFI#3: rusEFI is not approved for manned aircraft applications.
 
