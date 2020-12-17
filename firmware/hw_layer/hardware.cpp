@@ -10,6 +10,7 @@
 
 
 #if EFI_PROD_CODE
+#include "package.h"
 #include "os_access.h"
 #include "trigger_input.h"
 #include "servo.h"
@@ -51,7 +52,6 @@
 #include "aux_pid.h"
 #include "perf_trace.h"
 #include "trigger_emulator_algo.h"
-#include "boost_control.h"
 #include "software_knock.h"
 #if EFI_MC33816
 #include "mc33816.h"
@@ -383,9 +383,6 @@ void applyNewHardwareSettings(void) {
 	stopHD44780_pins();
 #endif /* #if EFI_HD44780_LCD */
 
-#if EFI_BOOST_CONTROL
-	stopBoostPin();
-#endif
 	if (isPinOrModeChanged(clutchUpPin, clutchUpPinMode)) {
 		efiSetPadUnused(activeConfiguration.clutchUpPin);
 	}
@@ -394,6 +391,7 @@ void applyNewHardwareSettings(void) {
 
 	ButtonDebounce::startConfigurationList();
 
+	PackageManager::restartPins();
 
 
 #if EFI_SHAFT_POSITION_INPUT
@@ -433,9 +431,6 @@ void applyNewHardwareSettings(void) {
 	startVSSPins();
 #endif /* EFI_VEHICLE_SPEED */
 
-#if EFI_BOOST_CONTROL
-	startBoostPin();
-#endif
 #if EFI_EMULATE_POSITION_SENSORS
 	startTriggerEmulatorPins();
 #endif /* EFI_EMULATE_POSITION_SENSORS */

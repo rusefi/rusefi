@@ -6,7 +6,7 @@
  */
 #include "global.h"
 
-#if EFI_BOOST_CONTROL
+#include "package.h"
 
 #if EFI_TUNER_STUDIO
 #include "tunerstudio_outputs.h"
@@ -192,7 +192,17 @@ void setDefaultBoostParameters(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	CONFIG(etbWastegatePid).maxValue = 60;
 }
 
-void startBoostPin() {
+class BoostPackage : public Package {
+public:
+	void initialize(Logging *sharedLogger) override;
+	void onConfigurationChange(engine_configuration_s* previousConfiguration) override;
+	void startPins() override;
+	void stopPins() override;
+};
+
+static BoostPackage package;
+
+void BoostPackage::startPins() {
 #if !EFI_UNIT_TEST
 	// Only init if a pin is set, no need to start PWM without a pin
 	if (CONFIG(boostControlPin) == GPIO_UNASSIGNED){
@@ -210,17 +220,17 @@ void startBoostPin() {
 #endif /* EFI_UNIT_TEST */
 }
 
-void stopBoostPin() {
+void BoostPackage::stopPins() {
 #if !EFI_UNIT_TEST
 	efiSetPadUnused(activeConfiguration.boostControlPin);
 #endif /* EFI_UNIT_TEST */
 }
 
-void onConfigurationChangeBoostCallback(engine_configuration_s *previousConfiguration) {
+void BoostPackage::onConfigurationChange(engine_configuration_s *previousConfiguration) {
 	boostController.onConfigurationChange(&previousConfiguration->boostPid);
 }
 
-void initBoostCtrl(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX) {
+void BoostPackage::initialize(Logging *sharedLogger) {
 	// todo: why do we have 'isBoostControlEnabled' setting exactly?
 	// 'initAuxPid' is an example of a subsystem without explicit enable
 	if (!CONFIG(isBoostControlEnabled)) {
@@ -249,9 +259,7 @@ void initBoostCtrl(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	boostController.init(&boostPwmControl, &boostMapOpen, &boostMapClosed, &engineConfiguration->boostPid);
 
 #if !EFI_UNIT_TEST
-	startBoostPin();
+	startPins();
 	boostController.Start();
 #endif
 }
-
-#endif
