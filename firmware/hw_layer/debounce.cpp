@@ -54,12 +54,12 @@ void ButtonDebounce::startConfigurationList () {
 
 void ButtonDebounce::stopConfiguration () {
     // If the configuration has changed
-#ifndef EFI_ACTIVE_CONFIGURATION_IN_FLASH
+#if ! EFI_ACTIVE_CONFIGURATION_IN_FLASH
     if (*m_pin != active_pin || *m_mode != active_mode) {
 #else
     if (*m_pin != active_pin || *m_mode != active_mode || (isActiveConfigurationVoid && (*m_pin != 0 || *m_mode != 0))) {
 #endif /* EFI_ACTIVE_CONFIGURATION_IN_FLASH */
-#ifndef EFI_UNIT_TEST
+#if ! EFI_UNIT_TEST
     	efiSetPadUnused(active_pin);
         needsInit = true;
 #endif /* EFI_UNIT_TEST */
@@ -67,7 +67,7 @@ void ButtonDebounce::stopConfiguration () {
 }
 
 void ButtonDebounce::startConfiguration () {
-#ifndef EFI_UNIT_TEST
+#if ! EFI_UNIT_TEST
     if (needsInit) {
         efiSetPadMode("Button", *m_pin, getInputMode(*m_mode));
         needsInit = false;
