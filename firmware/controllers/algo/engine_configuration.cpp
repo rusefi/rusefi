@@ -1172,12 +1172,6 @@ void resetConfigurationExt(Logging * logger, configuration_callback_t boardCallb
 		// all basic settings are already set in prepareVoidConfiguration(), no need to set anything here
 		// nothing to do - we do it all in setBoardConfigurationOverrides
 		break;
-	case MIATA_PROTEUS_TCU:
-		setMiataNB2_Proteus_TCU(PASS_CONFIG_PARAMETER_SIGNATURE);
-		break;
-	case PROTEUS_MIATA_NB2:
-		setMiataNB2_ProteusEngineConfiguration(PASS_CONFIG_PARAMETER_SIGNATURE);
-		break;
 	case MRE_M111:
 		setM111EngineConfiguration(PASS_CONFIG_PARAMETER_SIGNATURE);
 		break;
@@ -1205,9 +1199,17 @@ void resetConfigurationExt(Logging * logger, configuration_callback_t boardCallb
 		setIssue898(PASS_CONFIG_PARAMETER_SIGNATURE);
 		break;
 #endif // EFI_UNIT_TEST
+#if HW_PROTEUS
 	case BMW_M73_PROTEUS:
 		setEngineBMW_M73_Proteus(PASS_CONFIG_PARAMETER_SIGNATURE);
 		break;
+	case MIATA_PROTEUS_TCU:
+		setMiataNB2_Proteus_TCU(PASS_CONFIG_PARAMETER_SIGNATURE);
+		break;
+	case PROTEUS_MIATA_NB2:
+		setMiataNB2_ProteusEngineConfiguration(PASS_CONFIG_PARAMETER_SIGNATURE);
+		break;
+#endif // HW_PROTEUS
 #if EFI_INCLUDE_ENGINE_PRESETS
 	case DEFAULT_FRANKENSO:
 		setFrankensoConfiguration(PASS_CONFIG_PARAMETER_SIGNATURE);
