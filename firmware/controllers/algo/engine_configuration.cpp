@@ -153,7 +153,7 @@ engine_configuration_s & activeConfiguration = activeConfigurationLocalStorage;
 extern engine_configuration_s *engineConfiguration;
 
 void rememberCurrentConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
-#ifndef EFI_ACTIVE_CONFIGURATION_IN_FLASH
+#if ! EFI_ACTIVE_CONFIGURATION_IN_FLASH
 	memcpy(&activeConfiguration, engineConfiguration, sizeof(engine_configuration_s));
 #else
 	isActiveConfigurationVoid = false;
