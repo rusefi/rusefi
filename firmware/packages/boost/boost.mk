@@ -1,1 +1,3 @@
 PACKAGECPP += $(PACKAGEDIR)/boost/boost_control.cpp
+
+PACKAGEDEFS += -DEFI_BOOST_CONTROL=1

@@ -177,6 +177,8 @@ PACKAGEDIR = $(PROJECT_DIR)/packages
 
 include $(PACKAGEDIR)/boost/boost.mk
 
+USE_OPT += $(PACKAGEOPT)
+
 include $(PROJECT_DIR)/config/engines/engines.mk
 include $(PROJECT_DIR)/console/console.mk
 include $(PROJECT_DIR)/controllers/controllers.mk
