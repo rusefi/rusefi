@@ -12,15 +12,23 @@
 #include "rusefi_types.h"
 #include "periodic_task.h"
 
+struct IIdleController {
+	virtual int getTargetRpm(float clt) const = 0;
+};
+
 class Logging;
 class Pid;
 
-class IdleController {
+
+class IdleController : public IIdleController {
 public:
 	DECLARE_ENGINE_PTR;
 
 	float getIdlePosition();
 	void update();
+
+	// TARGET DETERMINATION
+	int getTargetRpm(float clt) const override;
 };
 
 void updateIdleControl();
