@@ -74,7 +74,7 @@
 #define DISPLAY_SENSOR(x) {}
 #define DISPLAY_IF(x) x
 
-#ifndef EFI_ACTIVE_CONFIGURATION_IN_FLASH
+#if ! EFI_ACTIVE_CONFIGURATION_IN_FLASH
 // We store a special changeable copy of configuration is RAM, so we can just compare them
 #define isConfigurationChanged(x) (engineConfiguration->x != activeConfiguration.x)
 #else

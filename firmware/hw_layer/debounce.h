@@ -33,10 +33,10 @@ private:
     pin_input_mode_e *m_mode;
     pin_input_mode_e active_mode = PI_DEFAULT;
     bool storedValue = false;
-    bool initialized = false;
+    bool isInstanceRegisteredInGlobalList = false;
+    bool needsPinInitialization = true;
     ButtonDebounce *nextDebounce = nullptr;
     static ButtonDebounce* s_firstDebounce;
-    bool needsInit = false;
 };
 
 void initButtonDebounce(Logging *sharedLogger);
