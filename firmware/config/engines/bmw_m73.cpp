@@ -278,6 +278,7 @@ static void toyota89281_33010_pedal_position_sensor(DECLARE_CONFIG_PARAMETER_SIG
  * white#24: red      : TPS#1
  *
  */
+#if HW_PROTEUS
 void setEngineBMW_M73_Proteus(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	m73engine(PASS_CONFIG_PARAMETER_SIGNATURE);
 
@@ -343,8 +344,5 @@ void setEngineBMW_M73_Proteus(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	CONFIG(tpsMax) = CONFIG(tps2Max) = 846;
 	CONFIG(tps1SecondaryMin) = CONFIG(tps2SecondaryMin) = 897;
 	CONFIG(tps1SecondaryMax) = CONFIG(tps2SecondaryMax) = 161;
-
-
-
-
 }
+#endif // HW_PROTEUS
