@@ -13,7 +13,6 @@
 #include "../stm32f4ems/efifeatures.h"
 
 #pragma once
-#define EFI_BOOST_CONTROL TRUE
 
 // Warning! This is a test config!
 
