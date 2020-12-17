@@ -1172,29 +1172,12 @@ void resetConfigurationExt(Logging * logger, configuration_callback_t boardCallb
 		// all basic settings are already set in prepareVoidConfiguration(), no need to set anything here
 		// nothing to do - we do it all in setBoardConfigurationOverrides
 		break;
-#if EFI_UNIT_TEST
-	case TEST_ISSUE_366_BOTH:
-		setTestEngineIssue366both(PASS_CONFIG_PARAMETER_SIGNATURE);
-		break;
-	case TEST_ISSUE_366_RISE:
-		setTestEngineIssue366rise(PASS_CONFIG_PARAMETER_SIGNATURE);
-		break;
-	case ISSUE_898:
-		setIssue898(PASS_CONFIG_PARAMETER_SIGNATURE);
-		break;
-#endif // EFI_UNIT_TEST
-#if HW_PROTEUS
-	case BMW_M73_PROTEUS:
-		setEngineBMW_M73_Proteus(PASS_CONFIG_PARAMETER_SIGNATURE);
-		break;
 	case MIATA_PROTEUS_TCU:
 		setMiataNB2_Proteus_TCU(PASS_CONFIG_PARAMETER_SIGNATURE);
 		break;
 	case PROTEUS_MIATA_NB2:
 		setMiataNB2_ProteusEngineConfiguration(PASS_CONFIG_PARAMETER_SIGNATURE);
 		break;
-#endif // HW_PROTEUS
-#if HW_MICRO_RUSEFI
 	case MRE_M111:
 		setM111EngineConfiguration(PASS_CONFIG_PARAMETER_SIGNATURE);
 		break;
@@ -1210,6 +1193,20 @@ void resetConfigurationExt(Logging * logger, configuration_callback_t boardCallb
 	case SUBARUEJ20G_DEFAULTS:
 	case MRE_SUBARU_EJ18:
 		setSubaruEJ18_MRE(PASS_CONFIG_PARAMETER_SIGNATURE);
+		break;
+#if EFI_UNIT_TEST
+	case TEST_ISSUE_366_BOTH:
+		setTestEngineIssue366both(PASS_CONFIG_PARAMETER_SIGNATURE);
+		break;
+	case TEST_ISSUE_366_RISE:
+		setTestEngineIssue366rise(PASS_CONFIG_PARAMETER_SIGNATURE);
+		break;
+	case ISSUE_898:
+		setIssue898(PASS_CONFIG_PARAMETER_SIGNATURE);
+		break;
+#endif // EFI_UNIT_TEST
+	case BMW_M73_PROTEUS:
+		setEngineBMW_M73_Proteus(PASS_CONFIG_PARAMETER_SIGNATURE);
 		break;
 	case BMW_M73_MRE:
 	case BMW_M73_MRE_SLAVE:
