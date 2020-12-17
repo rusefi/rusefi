@@ -583,15 +583,6 @@ void setTargetRpmCurve(int rpm DECLARE_CONFIG_PARAMETER_SUFFIX) {
 	setLinearCurve(engineConfiguration->cltIdleRpm, rpm, rpm, 10);
 }
 
-int getTargetRpmForIdleCorrection(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
-	// error is already reported, let's take the value at 0C since that should be a nice high idle
-	float clt = Sensor::get(SensorType::Clt).value_or(0);
-
-	int targetRpm = interpolate2d("cltRpm", clt, CONFIG(cltIdleRpmBins), CONFIG(cltIdleRpm));
-
-	return targetRpm + engine->fsioState.fsioIdleTargetRPMAdjustment;
-}
-
 void setDefaultMultisparkParameters(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	// 1ms spark + 2ms dwell
 	engineConfiguration->multisparkSparkDuration = 1000;
