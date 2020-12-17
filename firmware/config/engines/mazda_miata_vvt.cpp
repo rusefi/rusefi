@@ -751,7 +751,7 @@ void setMiataNB2_Proteus_TCU(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 void setMiataNB2_ProteusEngineConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	setMazdaMiataEngineNB2Defaults(PASS_CONFIG_PARAMETER_SIGNATURE);
 
-	engineConfiguration->triggerInputPins[0] = GPIOC_;
+	engineConfiguration->triggerInputPins[0] = GPIOC_6;
 	engineConfiguration->triggerInputPins[1] = GPIO_UNASSIGNED;
 	engineConfiguration->camInputs[0] = GPIOE_11;
 
