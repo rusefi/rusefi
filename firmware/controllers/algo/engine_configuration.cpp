@@ -1208,6 +1208,18 @@ void resetConfigurationExt(Logging * logger, configuration_callback_t boardCallb
 	case BMW_M73_PROTEUS:
 		setEngineBMW_M73_Proteus(PASS_CONFIG_PARAMETER_SIGNATURE);
 		break;
+	case DEFAULT_FRANKENSO:
+		setFrankensoConfiguration(PASS_CONFIG_PARAMETER_SIGNATURE);
+		break;
+	case FRANKENSO_QA_ENGINE:
+		setFrankensoBoardTestConfiguration(PASS_CONFIG_PARAMETER_SIGNATURE);
+		break;
+	case BMW_M73_F:
+		setEngineBMW_M73_Frankenso(PASS_CONFIG_PARAMETER_SIGNATURE);
+		break;
+	case BMW_M73_M:
+		setEngineBMW_M73_Manhattan(PASS_CONFIG_PARAMETER_SIGNATURE);
+		break;
 	case BMW_M73_MRE:
 	case BMW_M73_MRE_SLAVE:
 		setEngineBMW_M73_microRusEfi(PASS_CONFIG_PARAMETER_SIGNATURE);
@@ -1230,26 +1242,13 @@ void resetConfigurationExt(Logging * logger, configuration_callback_t boardCallb
 	case MRE_MIATA_NB2_ETB:
 		setMiataNB2_MRE_ETB(PASS_CONFIG_PARAMETER_SIGNATURE);
 		break;
-	case MRE_BODY_CONTROL:
-		mreBCM(PASS_CONFIG_PARAMETER_SIGNATURE);
-		break;
-#endif // HW_MICRO_RUSEFI
-#if EFI_INCLUDE_ENGINE_PRESETS
-	case DEFAULT_FRANKENSO:
-		setFrankensoConfiguration(PASS_CONFIG_PARAMETER_SIGNATURE);
-		break;
-	case FRANKENSO_QA_ENGINE:
-		setFrankensoBoardTestConfiguration(PASS_CONFIG_PARAMETER_SIGNATURE);
-		break;
-	case BMW_M73_F:
-		setEngineBMW_M73_Frankenso(PASS_CONFIG_PARAMETER_SIGNATURE);
-		break;
-	case BMW_M73_M:
-		setEngineBMW_M73_Manhattan(PASS_CONFIG_PARAMETER_SIGNATURE);
-		break;
 	case DODGE_NEON_1995:
 		setDodgeNeon1995EngineConfiguration(PASS_CONFIG_PARAMETER_SIGNATURE);
 		break;
+	case MRE_BODY_CONTROL:
+		mreBCM(PASS_CONFIG_PARAMETER_SIGNATURE);
+		break;
+#if EFI_INCLUDE_ENGINE_PRESETS
 	case DODGE_NEON_2003_CRANK:
 		setDodgeNeonNGCEngineConfiguration(PASS_CONFIG_PARAMETER_SIGNATURE);
 		break;
