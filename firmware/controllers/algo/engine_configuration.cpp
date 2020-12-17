@@ -1208,6 +1208,7 @@ void resetConfigurationExt(Logging * logger, configuration_callback_t boardCallb
 	case BMW_M73_PROTEUS:
 		setEngineBMW_M73_Proteus(PASS_CONFIG_PARAMETER_SIGNATURE);
 		break;
+#if EFI_INCLUDE_ENGINE_PRESETS
 	case DEFAULT_FRANKENSO:
 		setFrankensoConfiguration(PASS_CONFIG_PARAMETER_SIGNATURE);
 		break;
@@ -1248,7 +1249,6 @@ void resetConfigurationExt(Logging * logger, configuration_callback_t boardCallb
 	case MRE_BODY_CONTROL:
 		mreBCM(PASS_CONFIG_PARAMETER_SIGNATURE);
 		break;
-#if EFI_INCLUDE_ENGINE_PRESETS
 	case DODGE_NEON_2003_CRANK:
 		setDodgeNeonNGCEngineConfiguration(PASS_CONFIG_PARAMETER_SIGNATURE);
 		break;
