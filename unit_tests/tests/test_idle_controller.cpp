@@ -130,3 +130,17 @@ TEST(idle, timingPid) {
 	ASSERT_FLOAT_EQ(-5.0f, corr) << "getAdvanceCorrections#7";
 
 }
+
+TEST(idle_v2, testTargetRpm) {
+	WITH_ENGINE_TEST_HELPER(TEST_ENGINE);
+	IdleController dut;
+	INJECT_ENGINE_REFERENCE(&dut);
+
+	for (size_t i = 0; i < efi::size(engineConfiguration->cltIdleRpmBins); i++) {
+		CONFIG(cltIdleRpmBins)[i] = i * 10;
+		CONFIG(cltIdleRpm)[i] = i * 100;
+	}
+
+	EXPECT_FLOAT_EQ(100, dut.getTargetRpm(10));
+	EXPECT_FLOAT_EQ(500, dut.getTargetRpm(50));
+}
