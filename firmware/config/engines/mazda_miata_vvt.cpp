@@ -757,50 +757,54 @@ void setMiataNB2_ProteusEngineConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE) 
 	engineConfiguration->triggerInputPins[1] = GPIO_UNASSIGNED;
 	engineConfiguration->camInputs[0] = GPIOE_11;
 
-//	engineConfiguration->is_enabled_spi_1 = true;
-
-	engineConfiguration->twoWireBatchInjection = true; // this is needed for #492 testing
-
-	engineConfiguration->alternatorControlPin = GPIOA_8;
+    engineConfiguration->alternatorControlPin = GPIOA_8;
 
 	engineConfiguration->auxPidPins[0] = GPIOB_5; // VVT solenoid control
-
-	engineConfiguration->fsio_setting[0] = 0.0;
 
 	// high-side driver with +12v VP jumper
 	engineConfiguration->tachOutputPin = GPIOA_9; // tachometer
 	engineConfiguration->tachPulsePerRev = 2;
 
-	// set global_trigger_offset_angle 0
-	engineConfiguration->globalTriggerAngleOffset = 0;
-
-	// enable trigger_details
-	engineConfiguration->verboseTriggerSynchDetails = false;
-
-	// set cranking_timing_angle 10
-	engineConfiguration->crankingTimingAngle = 15;
+    engineConfiguration->ignitionMode = IM_WASTED_SPARK;
 
 	engineConfiguration->ignitionPins[0] = GPIOD_4;
 	engineConfiguration->ignitionPins[1] = GPIO_UNASSIGNED;
 	engineConfiguration->ignitionPins[2] = GPIOC_9;
 	engineConfiguration->ignitionPins[3] = GPIO_UNASSIGNED;
 
-	engineConfiguration->malfunctionIndicatorPin = GPIOB_6;
+    engineConfiguration->crankingInjectionMode = IM_SIMULTANEOUS;
+    engineConfiguration->injectionMode = IM_SEQUENTIAL;
+
+
+    engineConfiguration->injectionPins[0] = GPIOD_7; // BLU
+    engineConfiguration->injectionPins[1] = GPIOG_9; // BLK
+    engineConfiguration->injectionPins[2] = GPIOG_10; // GRN
+    engineConfiguration->injectionPins[3] = GPIOG_11; // WHT
+    engineConfiguration->injectionPinMode = OM_DEFAULT;
+
+
+    engineConfiguration->malfunctionIndicatorPin = GPIOB_6;
 
     engineConfiguration->map.sensor.hwChannel = EFI_ADC_10;
 
 	engineConfiguration->afr.hwChannel = EFI_ADC_11;
 
-	engineConfiguration->isVerboseIAC = false;
-
-	engineConfiguration->adcVcc = 3.3f;
-
 	engineConfiguration->mafAdcChannel = EFI_ADC_13; // PA6 W46 <> W46
 
-	engineConfiguration->idleMode = IM_MANUAL;
-
-	engineConfiguration->throttlePedalPositionAdcChannel = EFI_ADC_12;
+    engineConfiguration->tps1_1AdcChannel = = EFI_ADC_12;
 
 	engineConfiguration->isFasterEngineSpinUpEnabled = true;
+
+    engineConfiguration->clt.adcChannel =  EFI_ADC_14;
+    engineConfiguration->iat.adcChannel = EFI_ADC_8;
+
+    engineConfiguration->fuelPumpPin = GPIOG_13;
+
+    engineConfiguration->idle.solenoidPin = GPIOG_1;
+    engineConfiguration->idle.solenoidFrequency = 300;
+
+
+    engineConfiguration->fanPin = GPIOB_7;
+
 
 }
