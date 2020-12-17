@@ -1,4 +1,2 @@
 1)                    Corners are hitting the plastic          
 2)                    P18 P19 etc silkscreen is hitting useful silkscreen
-3)                    need much more trace width for pins 1,2,3 16,17,18 31,32,33 46,47,48 maybe both sides of PCB?
-4)                    change silkscreen of larger connector 1-94 like on to https://raw.githubusercontent.com/wiki/rusefi/rusefi/oem_docs/Bosch/connector_154.png
