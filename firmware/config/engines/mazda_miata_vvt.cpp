@@ -789,7 +789,7 @@ void setMiataNB2_ProteusEngineConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE) 
 
 	engineConfiguration->mafAdcChannel = EFI_ADC_13; // PA6 W46 <> W46
 
-    engineConfiguration->tps1_1AdcChannel = = EFI_ADC_12;
+    engineConfiguration->tps1_1AdcChannel = EFI_ADC_12;
 
 	engineConfiguration->isFasterEngineSpinUpEnabled = true;
 
