@@ -3,10 +3,10 @@ This directory contains pre-defined configurations for popular engines.
 These configurations are a convenience, not a limit.  Most engine types
 can be manually configured.
 
-In TunerStudio or rusEfi console use the "Popular Vehicles" dialog to
+In TunerStudio or rusEFI console use the "Popular Vehicles" dialog to
 apply one of these presets.
 
-See http://rusefi.com/wiki/index.php?title=Manual:Engine_Type
+See https://github.com/rusefi/rusefi/wiki/Engine-Types
 
 This folder is also used by the continuous integration testing suite.
 
