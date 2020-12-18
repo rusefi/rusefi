@@ -15,10 +15,10 @@ import static com.rusefi.config.generated.Fields.*;
  * This test relies on jumpers connecting physical pins on Discovery:
  * PD1<>PC6
  * PD2<>PA5
- *
  */
 
 public class PwmHardwareTest {
+    private static final int FREQUENCY = 160;
 
     @Test
     public void testIdlePin() {
@@ -40,10 +40,10 @@ public class PwmHardwareTest {
         ecu.sendCommand(CMD_TRIGGER_PIN + " 1 PA8");
 
         /* DBG_LOGIC_ANALYZER */
-        ecu.sendCommand("set debug_mode 45");
+        ecu.sendCommand("set debug_mode " + DBG_DBG_LOGIC_ANALYZER);
 
         /* 160 Hz */
-        ecu.sendCommand("set idle_solenoid_freq 160");
+        ecu.sendCommand("set idle_solenoid_freq " + FREQUENCY);
 
         /* save these for last to ensure logic is started */
         ecu.sendCommand(CMD_LOGIC_PIN + " 0 PA5");
@@ -54,12 +54,6 @@ public class PwmHardwareTest {
         sleep(2 * Timeouts.SECOND);
 
         /* +-1% is still acceptable */
-        EcuTestHelper.assertEquals("Idle PWM freq", 160, SensorCentral.getInstance().getValue(Sensor.debugIntField1),0.01);
-
-
-        if (ControllerConnectorState.firmwareVersion == null)
-            throw new IllegalStateException("firmwareVersion has not arrived");
-
+        EcuTestHelper.assertEquals("Idle PWM freq", FREQUENCY, SensorCentral.getInstance().getValue(Sensor.debugIntField1), 0.01);
     }
-
 }
