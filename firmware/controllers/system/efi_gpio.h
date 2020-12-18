@@ -60,7 +60,7 @@ public:
 	void toggle();
 	bool getLogicValue() const;
 
-	brain_pin_e brainPin;
+	brain_pin_e brainPin = GPIO_UNASSIGNED;
 
 #if EFI_GPIO_HARDWARE
 	ioportid_t port = 0;
