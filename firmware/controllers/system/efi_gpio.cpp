@@ -9,6 +9,7 @@
 #include "global.h"
 #include "engine.h"
 #include "efi_gpio.h"
+#include "os_access.h"
 #include "drivers/gpio/gpio_ext.h"
 #include "perf_trace.h"
 #include "engine_controller.h"
@@ -515,6 +516,9 @@ void OutputPin::initPin(const char *msg, brain_pin_e brainPin, const pin_output_
 	#endif
 
 #endif // briefly leave the include guard because we need to set default state in tests
+
+	// Enter a critical section so that other threads can't change the pin state out from underneath us
+	chibios_rt::CriticalSectionLocker csl;
 
 	this->brainPin = brainPin;
 
