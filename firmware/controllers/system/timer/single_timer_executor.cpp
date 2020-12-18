@@ -123,10 +123,15 @@ void SingleTimerExecutor::executeAllPendingActions() {
 	 * TODO: add a counter & figure out a limit of iterations?
 	 */
 
+	int executeCounter = 0;
 	bool didExecute;
 	do {
 		efitick_t nowNt = getTimeNowNt();
 		didExecute = queue.executeOne(nowNt);
+		if (executeCounter++ == 10000) {
+			firmwareError(CUSTOM_ERR_LOCK_ISSUE, "Looks like firmware is really busy");
+		}
+
 	} while (didExecute);
 
 	if (!isLocked()) {
