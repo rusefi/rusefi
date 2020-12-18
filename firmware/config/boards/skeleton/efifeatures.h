@@ -211,11 +211,6 @@
 
 #define EFI_USB_SERIAL TRUE
 
-/**
- * Should PnP engine configurations be included in the binary?
- */
-#define EFI_INCLUDE_ENGINE_PRESETS TRUE
-
 #ifndef EFI_ENGINE_SNIFFER
 #define EFI_ENGINE_SNIFFER TRUE
 #endif
