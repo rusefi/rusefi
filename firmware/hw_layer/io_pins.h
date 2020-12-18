@@ -35,4 +35,6 @@ EXTERNC void efiIcuStart(const char *msg, ICUDriver *icup, const ICUConfig *conf
 #if ! EFI_PROD_CODE
 #define BRAIN_PIN_COUNT (1 << 8 * sizeof(brain_pin_e))
 extern bool mockPinStates[BRAIN_PIN_COUNT];
+
+void setMockState(brain_pin_e pin, bool state);
 #endif
