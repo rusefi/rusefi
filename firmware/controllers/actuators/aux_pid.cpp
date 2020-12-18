@@ -133,7 +133,7 @@ void startAuxPins() {
 
 void stopAuxPins() {
 	for (int i = 0;i < AUX_PID_COUNT;i++) {
-		instances[index].auxOutputPin.unregister();
+		instances[i].auxOutputPin.unregister();
 	}
 }
 
