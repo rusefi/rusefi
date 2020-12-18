@@ -463,8 +463,16 @@ void OutputPin::initPin(const char *msg, brain_pin_e brainPin) {
 }
 
 void OutputPin::initPin(const char *msg, brain_pin_e brainPin, const pin_output_mode_e *outputMode) {
-	if (brainPin == GPIO_UNASSIGNED)
+	if (brainPin == GPIO_UNASSIGNED) {
 		return;
+	}
+
+	// Check that this OutputPin isn't already assigned to another pin (reinit is allowed to change mode)
+	// To avoid this error, call unregister() first
+	if (this->brainPin != GPIO_UNASSIGNED && this->brainPin != brainPin) {
+		firmwareError(CUSTOM_OBD_PIN_CONFLICT, "outputPin [%s] already assigned to %x %d, cannot reassign without unregister first", this->port, this->pin);
+		return;
+	}
 
 	if (*outputMode > OM_OPENDRAIN_INVERTED) {
 		firmwareError(CUSTOM_INVALID_MODE_SETTING, "%s invalid pin_output_mode_e %d %s",
@@ -486,27 +494,12 @@ void OutputPin::initPin(const char *msg, brain_pin_e brainPin, const pin_output_
 		ioportid_t port = getHwPort(msg, brainPin);
 		int pin = getHwPin(msg, brainPin);
 
-		/**
-		 * This method is used for digital GPIO pins only, for peripheral pins see mySetPadMode
-		 */
+		// Validate port
 		if (port == GPIO_NULL) {
-			// that's for GRIO_NONE
-			this->port = port;
+			firmwareError(OBD_PCM_Processor_Fault, "OutputPin::initPin got invalid port for pin idx %d", static_cast<int>(brainPin));
 			return;
 		}
 
-		/**
-		 * @brief Initialize the hardware output pin while also assigning it a logical name
-		 */
-		if (this->port != NULL && (this->port != port || this->pin != pin)) {
-			/**
-			 * here we check if another physical pin is already assigned to this logical output
-			 */
-		// todo: need to clear '&outputs' in io_pins.c
-			warning(CUSTOM_OBD_PIN_CONFLICT, "outputPin [%s] already assigned to %x%d", msg, this->port, this->pin);
-			engine->withError = true;
-			return;
-		}
 		this->port = port;
 		this->pin = pin;
 	}
