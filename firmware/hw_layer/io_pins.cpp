@@ -133,4 +133,9 @@ bool mockPinStates[BRAIN_PIN_COUNT];
 bool efiReadPin(brain_pin_e pin) {
 	return mockPinStates[static_cast<int>(pin)];
 }
+
+void setMockState(brain_pin_e pin, bool state) {
+	mockPinStates[static_cast<int>(pin)] = state;
+}
+
 #endif /* EFI_PROD_CODE */
