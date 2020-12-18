@@ -132,11 +132,9 @@ void startAuxPins() {
 }
 
 void stopAuxPins() {
-#if EFI_PROD_CODE
 	for (int i = 0;i < AUX_PID_COUNT;i++) {
-		efiSetPadUnused(activeConfiguration.auxPidPins[i]);
+		instances[index].auxOutputPin.unregister();
 	}
-#endif /* EFI_PROD_CODE */
 }
 
 void initAuxPid(Logging *sharedLogger) {
