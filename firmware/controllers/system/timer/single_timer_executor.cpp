@@ -123,7 +123,8 @@ void SingleTimerExecutor::executeAllPendingActions() {
 	 * TODO: add a counter & figure out a limit of iterations?
 	 */
 
-	executeCounter = 0;
+	// starts at -1 because do..while will run a minimum of once
+	executeCounter = -1;
 
 	bool didExecute;
 	do {
