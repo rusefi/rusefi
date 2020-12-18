@@ -473,7 +473,11 @@ void OutputPin::initPin(const char *msg, brain_pin_e brainPin, const pin_output_
 		return;
 
 	if (*outputMode > OM_OPENDRAIN_INVERTED) {
-		firmwareError(CUSTOM_INVALID_MODE_SETTING, "%s invalid pin_output_mode_e", msg);
+		firmwareError(CUSTOM_INVALID_MODE_SETTING, "%s invalid pin_output_mode_e %d %s",
+				msg,
+				*outputMode,
+				hwPortname(brainPin)
+				);
 		return;
 	}
 	iomode_t mode = (*outputMode == OM_DEFAULT || *outputMode == OM_INVERTED) ?
