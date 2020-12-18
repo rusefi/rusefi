@@ -3274,6 +3274,7 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 
 		commandButton = "Proteus M73 v12",     		cmd_set_engine_type_Proteus_M73@@if_show_Proteus_presets
 		commandButton = "Proteus Miata TCU",		cmd_set_engine_type_Proteus_Miata_TCU@@if_show_Proteus_presets
+		commandButton = "Proteus Miata NB2",		cmd_set_engine_type_ET_PROTEUS_MIATA_NB2@@if_show_Proteus_presets
 
 
 		commandButton = "ETB test bench", cmd_set_engine_type_etb_test@@if_show_test_presets
