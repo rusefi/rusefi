@@ -47,10 +47,11 @@ public:
 	 * same as above, with DEFAULT_OUTPUT mode
 	 */
 	void initPin(const char *msg, brain_pin_e brainPin);
+
 	/**
 	 * dissociates pin from this output and un-registers it in pin repository
 	 */
-	void unregisterOutput(brain_pin_e oldPin);
+	virtual void unregister();
 
 	bool isInitialized();
 
@@ -59,6 +60,7 @@ public:
 	void toggle();
 	bool getLogicValue() const;
 
+	brain_pin_e brainPin;
 
 #if EFI_GPIO_HARDWARE
 	ioportid_t port = 0;
@@ -67,11 +69,7 @@ public:
 
 #if (EFI_GPIO_HARDWARE && (BOARD_EXT_GPIOCHIPS > 0))
 	/* used for external pins */
-	brain_pin_e brainPin;
 	bool ext;
-#elif EFI_SIMULATOR || EFI_UNIT_TEST
-	// used for setMockState
-	brain_pin_e brainPin;
 #endif /* EFI_GPIO_HARDWARE */
 
 	int8_t currentLogicValue = INITIAL_PIN_STATE;
@@ -143,7 +141,7 @@ class RegisteredOutputPin : public virtual OutputPin {
 public:
 	RegisteredOutputPin(const char *registrationName, short pinOffset, short pinModeOffset);
 	void init(DECLARE_ENGINE_PARAMETER_SIGNATURE);
-	void unregister();
+	void unregister() override;
 	RegisteredOutputPin *next;
 	const char *registrationName;
 private:

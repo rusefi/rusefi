@@ -90,12 +90,9 @@ void RegisteredOutputPin::init(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 }
 
 void RegisteredOutputPin::unregister() {
-#if EFI_PROD_CODE
-	brain_pin_e        curPin = *(brain_pin_e       *) ((void *) (&((char*)&activeConfiguration)[pinOffset]));
-    if (isPinConfigurationChanged()) {
-    	unregisterOutput(curPin);
-    }
-#endif // EFI_PROD_CODE
+	if (isPinConfigurationChanged()) {
+		OutputPin::unregister();
+	}
 }
 
 #define CONFIG_OFFSET(x) x##_offset
@@ -150,13 +147,13 @@ EnginePins::EnginePins() :
 #if EFI_PROD_CODE
 #define unregisterOutputIfPinChanged(output, pin) {                                \
 	if (isConfigurationChanged(pin)) {                                             \
-		(output).unregisterOutput(activeConfiguration.pin);                        \
+		(output).unregister();                        \
 	}                                                                              \
 }
 
 #define unregisterOutputIfPinOrModeChanged(output, pin, mode) {                    \
 	if (isPinOrModeChanged(pin, mode)) {                                           \
-		(output).unregisterOutput(activeConfiguration.pin);                        \
+		(output).unregister();                        \
 	}                                                                              \
 }
 
@@ -386,8 +383,9 @@ bool OutputPin::getAndSet(int logicValue) {
 // This function is only used on real hardware
 #if EFI_PROD_CODE
 void OutputPin::setOnchipValue(int electricalValue) {
-	palWritePad(port, pin, electricalValue);
-
+	if (brainPin != GPIO_UNASSIGNED) {
+		palWritePad(port, pin, electricalValue);
+	}
 }
 #endif // EFI_PROD_CODE
 
@@ -464,10 +462,6 @@ void OutputPin::initPin(const char *msg, brain_pin_e brainPin) {
 }
 
 void OutputPin::initPin(const char *msg, brain_pin_e brainPin, const pin_output_mode_e *outputMode) {
-#if EFI_UNIT_TEST
-	this->brainPin = brainPin;
-#endif
-
 #if EFI_GPIO_HARDWARE && EFI_PROD_CODE
 	if (brainPin == GPIO_UNASSIGNED)
 		return;
@@ -517,11 +511,12 @@ void OutputPin::initPin(const char *msg, brain_pin_e brainPin, const pin_output_
 	#if (BOARD_EXT_GPIOCHIPS > 0)
 		else {
 			this->ext = true;
-			this->brainPin = brainPin;
 		}
 	#endif
 
 #endif // briefly leave the include guard because we need to set default state in tests
+
+	this->brainPin = brainPin;
 
 	// The order of the next two calls may look strange, which is a good observation.
 	// We call them in this order so that the pin is set to a known state BEFORE
@@ -552,14 +547,23 @@ void OutputPin::initPin(const char *msg, brain_pin_e brainPin, const pin_output_
 #endif /* EFI_GPIO_HARDWARE */
 }
 
-void OutputPin::unregisterOutput(brain_pin_e oldPin) {
-	if (oldPin != GPIO_UNASSIGNED) {
-		scheduleMsg(logger, "unregistering %s", hwPortname(oldPin));
-#if EFI_GPIO_HARDWARE && EFI_PROD_CODE
-		efiSetPadUnused(oldPin);
-		port = nullptr;
-#endif /* EFI_GPIO_HARDWARE */
+void OutputPin::unregister() {
+	// nothing to do if not registered in the first place
+	if (brainPin == GPIO_UNASSIGNED) {
+		return;
 	}
+
+	// Prevent other threads from setting the pin while we're trying to turn it off!
+	brainPin = GPIO_UNASSIGNED;
+
+#if (BOARD_EXT_GPIOCHIPS > 0)
+	ext = false;
+#endif // (BOARD_EXT_GPIOCHIPS > 0)
+
+	scheduleMsg(logger, "unregistering %s", hwPortname(brainPin));
+#if EFI_GPIO_HARDWARE && EFI_PROD_CODE
+	efiSetPadUnused(brainPin);
+#endif /* EFI_GPIO_HARDWARE */
 }
 
 #if EFI_GPIO_HARDWARE
