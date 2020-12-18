@@ -280,16 +280,18 @@ void firmwareError(obd_code_e code, const char *fmt, ...) {
 	}
 
 #else
-	printf("\x1B[31m>>>>>>>>>> firmwareError [%s]\r\n\x1B[0m", fmt);
+
+	char errorBuffer[200];
 
 	va_list ap;
 	va_start(ap, fmt);
-	vprintf(fmt, ap);
+	vsnprintf(errorBuffer, sizeof(errorBuffer), fmt, ap);
 	va_end(ap);
-	printf("\r\n");
+
+	printf("\x1B[31m>>>>>>>>>> firmwareError [%s]\r\n\x1B[0m\r\n", errorBuffer);
 
 #if EFI_SIMULATOR || EFI_UNIT_TEST
-	throw std::logic_error(fmt);
+	throw std::logic_error(errorBuffer);
 #endif /* EFI_SIMULATOR */
 #endif
 }
