@@ -8,3 +8,6 @@ BOARDINC = $(PROJECT_DIR)/config/boards/st_stm32f4
 
 # MCU defines
 DDEFS += -DSTM32F407xx
+
+# We are running on Frankenso hardware!
+DDEFS += -DHW_FRANKENSO=1
