@@ -426,7 +426,11 @@ end_struct
 #define TT_TT_52 52
 
 
+! todo https://github.com/rusefi/rusefi/issues/2102
+#define DBG_DBG_LOGIC_ANALYZER 45
 
+
+! todo https://github.com/rusefi/rusefi/issues/2102
 #define ET_DODGE_NEON_1995 2
 #define ET_FORD_ASPIRE 3
 #define ET_FORD_FIESTA 4
