@@ -69,7 +69,7 @@ public:
 
 #if (EFI_GPIO_HARDWARE && (BOARD_EXT_GPIOCHIPS > 0))
 	/* used for external pins */
-	bool ext;
+	bool ext = false;
 #endif /* EFI_GPIO_HARDWARE */
 
 	int8_t currentLogicValue = INITIAL_PIN_STATE;
@@ -83,7 +83,7 @@ private:
 	void setOnchipValue(int electricalValue);
 
 	// 4 byte pointer is a bit of a memory waste here
-	const pin_output_mode_e *modePtr;
+	const pin_output_mode_e *modePtr = nullptr;
 };
 
 /**
