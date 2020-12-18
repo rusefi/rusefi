@@ -48,6 +48,18 @@ TEST(gpio, multipleInit) {
 	EXPECT_FATAL_ERROR(dut.initPin("testPin", GPIOB_5));
 }
 
+TEST(gpio, deInit) {
+	OutputPin dut;
+
+	// Initial setup should be ok
+	EXPECT_NO_FATAL_ERROR(dut.initPin("testPin", GPIOA_6));
+
+	dut.deInit();
+
+	// Reinit with DIFFERENT pin should work after deinit
+	EXPECT_NO_FATAL_ERROR(dut.initPin("testPin", GPIOB_5));
+}
+
 TEST(gpio, pinSetNotInverted) {
 	OutputPin dut;
 
