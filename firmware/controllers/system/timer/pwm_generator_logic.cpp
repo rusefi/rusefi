@@ -160,13 +160,15 @@ void PwmConfig::handleCycleStart() {
 
 		efiAssertVoid(CUSTOM_ERR_6580, periodNt != 0, "period not initialized");
 		efiAssertVoid(CUSTOM_ERR_6580, iterationLimit > 0, "iterationLimit invalid");
-		if (safe.periodNt != periodNt || safe.iteration == iterationLimit) {
+		if (forceCycleStart || safe.periodNt != periodNt || safe.iteration == iterationLimit) {
 			/**
 			 * period length has changed - we need to reset internal state
 			 */
 			safe.startNt = getTimeNowNt();
 			safe.iteration = 0;
 			safe.periodNt = periodNt;
+
+			forceCycleStart = false;
 #if DEBUG_PWM
 			scheduleMsg(&logger, "state reset start=%d iteration=%d", state->safe.start, state->safe.iteration);
 #endif
@@ -225,10 +227,18 @@ efitick_t PwmConfig::togglePwmState() {
 	scheduleMsg(&logger, "%s: nextSwitchTime %d", state->name, nextSwitchTime);
 #endif /* DEBUG_PWM */
 
+	// If we're very far behind schedule, restart the cycle fresh to avoid scheduling a huge pile of events all at once
+	// This can happen during config write or debugging where CPU is halted for multiple seconds
+	bool isVeryBehindSchedule = nextSwitchTimeNt < getTimeNowNt() - MS2NT(10);
+
 	safe.phaseIndex++;
-	if (safe.phaseIndex == phaseCount || mode != PM_NORMAL) {
+	if (isVeryBehindSchedule || safe.phaseIndex == phaseCount || mode != PM_NORMAL) {
 		safe.phaseIndex = 0; // restart
 		safe.iteration++;
+
+		if (isVeryBehindSchedule) {
+			forceCycleStart = true;
+		}
 	}
 #if EFI_UNIT_TEST
 	printf("PWM: nextSwitchTimeNt=%d phaseIndex=%d iteration=%d\r\n", nextSwitchTimeNt,
