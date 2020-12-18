@@ -471,7 +471,7 @@ void OutputPin::initPin(const char *msg, brain_pin_e brainPin, const pin_output_
 	// Check that this OutputPin isn't already assigned to another pin (reinit is allowed to change mode)
 	// To avoid this error, call unregister() first
 	if (this->brainPin != GPIO_UNASSIGNED && this->brainPin != brainPin) {
-		firmwareError(CUSTOM_OBD_PIN_CONFLICT, "outputPin [%s] already assigned to %x %d, cannot reassign without unregister first", this->port, this->pin);
+		firmwareError(CUSTOM_OBD_PIN_CONFLICT, "outputPin [%s] already assigned, cannot reassign without unregister first", msg);
 		return;
 	}
 
