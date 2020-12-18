@@ -751,26 +751,26 @@ void setMiataNB2_Proteus_TCU(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 }
 
 void setMiataNB2_ProteusEngineConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
-	setMazdaMiataEngineNB2Defaults(PASS_CONFIG_PARAMETER_SIGNATURE);
+    setMazdaMiataEngineNB2Defaults(PASS_CONFIG_PARAMETER_SIGNATURE);
 
-	engineConfiguration->triggerInputPins[0] = GPIOC_6;
-	engineConfiguration->triggerInputPins[1] = GPIO_UNASSIGNED;
-	engineConfiguration->camInputs[0] = GPIOE_11;
+    engineConfiguration->triggerInputPins[0] = GPIOC_6;
+    engineConfiguration->triggerInputPins[1] = GPIO_UNASSIGNED;
+    engineConfiguration->camInputs[0] = GPIOE_11;
 
     engineConfiguration->alternatorControlPin = GPIOA_8;
 
-	engineConfiguration->auxPidPins[0] = GPIOB_5; // VVT solenoid control
+    engineConfiguration->auxPidPins[0] = GPIOB_5; // VVT solenoid control
 
-	// high-side driver with +12v VP jumper
-	engineConfiguration->tachOutputPin = GPIOA_9; // tachometer
-	engineConfiguration->tachPulsePerRev = 2;
+    // high-side driver with +12v VP jumper
+    engineConfiguration->tachOutputPin = GPIOA_9; // tachometer
+    engineConfiguration->tachPulsePerRev = 2;
 
     engineConfiguration->ignitionMode = IM_WASTED_SPARK;
 
-	engineConfiguration->ignitionPins[0] = GPIOD_4;
-	engineConfiguration->ignitionPins[1] = GPIO_UNASSIGNED;
-	engineConfiguration->ignitionPins[2] = GPIOC_9;
-	engineConfiguration->ignitionPins[3] = GPIO_UNASSIGNED;
+    engineConfiguration->ignitionPins[0] = GPIOD_4;
+    engineConfiguration->ignitionPins[1] = GPIO_UNASSIGNED;
+    engineConfiguration->ignitionPins[2] = GPIOC_9;
+    engineConfiguration->ignitionPins[3] = GPIO_UNASSIGNED;
 
     engineConfiguration->crankingInjectionMode = IM_SIMULTANEOUS;
     engineConfiguration->injectionMode = IM_SEQUENTIAL;
@@ -787,13 +787,13 @@ void setMiataNB2_ProteusEngineConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE) 
 
     engineConfiguration->map.sensor.hwChannel = EFI_ADC_10;
 
-	engineConfiguration->afr.hwChannel = EFI_ADC_11;
+    engineConfiguration->afr.hwChannel = EFI_ADC_11;
 
-	engineConfiguration->mafAdcChannel = EFI_ADC_13; // PA6 W46 <> W46
+    engineConfiguration->mafAdcChannel = EFI_ADC_13; // PA6 W46 <> W46
 
     engineConfiguration->tps1_1AdcChannel = EFI_ADC_12;
 
-	engineConfiguration->isFasterEngineSpinUpEnabled = true;
+    engineConfiguration->isFasterEngineSpinUpEnabled = true;
 
     engineConfiguration->clt.adcChannel =  EFI_ADC_14;
     engineConfiguration->iat.adcChannel = EFI_ADC_8;
