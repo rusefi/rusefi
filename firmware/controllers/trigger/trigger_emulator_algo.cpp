@@ -222,7 +222,7 @@ void startTriggerEmulatorPins() {
 
 void stopTriggerEmulatorPins() {
 	for (size_t i = 0; i < efi::size(emulatorOutputs); i++) {
-		triggerSignal.outputPins[i]->unregister();
+		triggerSignal.outputPins[i]->deInit();
 	}
 }
 

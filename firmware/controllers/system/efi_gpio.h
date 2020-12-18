@@ -51,7 +51,7 @@ public:
 	/**
 	 * dissociates pin from this output and un-registers it in pin repository
 	 */
-	virtual void unregister();
+	void deInit();
 
 	bool isInitialized();
 
@@ -60,12 +60,12 @@ public:
 	void toggle();
 	bool getLogicValue() const;
 
-	brain_pin_e brainPin = GPIO_UNASSIGNED;
-
 #if EFI_GPIO_HARDWARE
 	ioportid_t port = 0;
 	uint8_t pin = 0;
 #endif /* EFI_GPIO_HARDWARE */
+
+	brain_pin_e brainPin = GPIO_UNASSIGNED;
 
 #if (EFI_GPIO_HARDWARE && (BOARD_EXT_GPIOCHIPS > 0))
 	/* used for external pins */
@@ -141,7 +141,7 @@ class RegisteredOutputPin : public virtual OutputPin {
 public:
 	RegisteredOutputPin(const char *registrationName, short pinOffset, short pinModeOffset);
 	void init(DECLARE_ENGINE_PARAMETER_SIGNATURE);
-	void unregister() override;
+	void unregister();
 	RegisteredOutputPin *next;
 	const char *registrationName;
 private:

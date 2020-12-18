@@ -92,7 +92,7 @@ void RegisteredOutputPin::init(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 
 void RegisteredOutputPin::unregister() {
 	if (isPinConfigurationChanged()) {
-		OutputPin::unregister();
+		OutputPin::deInit();
 	}
 }
 
@@ -148,13 +148,13 @@ EnginePins::EnginePins() :
 #if EFI_PROD_CODE
 #define unregisterOutputIfPinChanged(output, pin) {                                \
 	if (isConfigurationChanged(pin)) {                                             \
-		(output).unregister();                        \
+		(output).deInit();                        \
 	}                                                                              \
 }
 
 #define unregisterOutputIfPinOrModeChanged(output, pin, mode) {                    \
 	if (isPinOrModeChanged(pin, mode)) {                                           \
-		(output).unregister();                        \
+		(output).deInit();                        \
 	}                                                                              \
 }
 
@@ -468,8 +468,11 @@ void OutputPin::initPin(const char *msg, brain_pin_e brainPin, const pin_output_
 		return;
 	}
 
+	// Enter a critical section so that other threads can't change the pin state out from underneath us
+	chibios_rt::CriticalSectionLocker csl;
+
 	// Check that this OutputPin isn't already assigned to another pin (reinit is allowed to change mode)
-	// To avoid this error, call unregister() first
+	// To avoid this error, call deInit() first
 	if (this->brainPin != GPIO_UNASSIGNED && this->brainPin != brainPin) {
 		firmwareError(CUSTOM_OBD_PIN_CONFLICT, "outputPin [%s] already assigned, cannot reassign without unregister first", msg);
 		return;
@@ -511,9 +514,6 @@ void OutputPin::initPin(const char *msg, brain_pin_e brainPin, const pin_output_
 	#endif
 #endif // briefly leave the include guard because we need to set default state in tests
 
-	// Enter a critical section so that other threads can't change the pin state out from underneath us
-	chibios_rt::CriticalSectionLocker csl;
-
 	this->brainPin = brainPin;
 
 	// The order of the next two calls may look strange, which is a good observation.
@@ -538,14 +538,14 @@ void OutputPin::initPin(const char *msg, brain_pin_e brainPin, const pin_output_
 			// if the pin was set to logical 1, then set an error and disable the pin so that things don't catch fire
 			if (logicalValue) {
 				firmwareError(OBD_PCM_Processor_Fault, "%s: startup pin state %s actual value=%d logical value=%d mode=%s", msg, hwPortname(brainPin), actualValue, logicalValue, getPin_output_mode_e(*outputMode));
-				OutputPin::unregister();
+				OutputPin::deInit();
 			}
 		}
 	}
 #endif /* EFI_GPIO_HARDWARE */
 }
 
-void OutputPin::unregister() {
+void OutputPin::deInit() {
 	// Unregister under lock - we don't want other threads mucking with the pin while we're trying to turn it off
 	chibios_rt::CriticalSectionLocker csl;
 
