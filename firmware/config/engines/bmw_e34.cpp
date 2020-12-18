@@ -97,27 +97,6 @@ void setBmwE34(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 
 	engineConfiguration->malfunctionIndicatorPin = GPIO_UNASSIGNED;
 
-/*
- * this configuration is used on HW CI - in HW CI 'inverted' would rightfully fail unless there is pull-up
-	engineConfiguration->injectionPinMode = OM_INVERTED;
-	*/
-
-	engineConfiguration->injectionPins[0] = GPIOB_8; // #1
-	engineConfiguration->injectionPins[1] = GPIOE_2; // #2
-	engineConfiguration->injectionPins[2] = GPIOE_3; // #3
-	engineConfiguration->injectionPins[3] = GPIOE_4; // #4
-	engineConfiguration->injectionPins[4] = GPIOE_5; // #5
-	engineConfiguration->injectionPins[5] = GPIOE_6; // #6
-
-	/*
-	 * this configuration is used on HW CI - in HW CI 'inverted' would rightfully fail unless there is pull-up
-	engineConfiguration->ignitionPinMode = OM_INVERTED;
-*/
-
-	engineConfiguration->ignitionPins[0] = GPIOB_5; // #1
-	engineConfiguration->ignitionPins[2] = GPIOB_6; // #3
-	engineConfiguration->ignitionPins[4] = GPIOB_7; // #5
-
 	engineConfiguration->canRxPin = GPIO_UNASSIGNED;
 	engineConfiguration->canTxPin = GPIO_UNASSIGNED;
 
@@ -132,18 +111,12 @@ void setBmwE34(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 
 	// idle
 	engineConfiguration->idle.solenoidPin = GPIOC_14;
-	/*
-	 * this configuration is used on HW CI - in HW CI 'inverted' would rightfully fail unless there is pull-up
+
 	engineConfiguration->idle.solenoidPinMode = OM_INVERTED;
-*/
+
 	engineConfiguration->idle.solenoidFrequency = 300;
 	engineConfiguration->manIdlePosition = 50; // set_idle_pwm 50
 
-	// disable sd_card
-	engineConfiguration->sdCardCsPin = GPIO_UNASSIGNED;
-	engineConfiguration->is_enabled_spi_2 = false;
-	engineConfiguration->is_enabled_spi_3 = false;
-	engineConfiguration->max31855spiDevice = SPI_NONE;
 
 	// turbocharger boost control solenoid: TODO output: GPIOE_6
 	// water injection #1 TODO GPIOD_7
@@ -163,15 +136,4 @@ void setBmwE34(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	// thermistors
 	engineConfiguration->clt.config = {-10, 20, 80, 9300, 2500, 335, 2200};
 	engineConfiguration->iat.config = {-10, 20, 80, 9300, 2500, 335, 2200};
-
-//	/**
-//	 * This saves a couple of ticks in trigger emulation methods
-//	 * TODO: add some smart logic to detect unneeded trigger simulation pins?
-//	 * TODO: but probably not worth it
-//	 */
-//	bc->triggerSimulatorPins[1] = GPIO_UNASSIGNED;
-
-	engineConfiguration->triggerSimulatorPins[0] = GPIOD_1;
-	engineConfiguration->triggerSimulatorPins[1] = GPIOD_2;
-	engineConfiguration->triggerSimulatorPins[2] = GPIO_UNASSIGNED;
 }
