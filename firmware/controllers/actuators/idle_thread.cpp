@@ -193,6 +193,14 @@ void setManualIdleValvePosition(int positionPercent) {
 
 #endif /* EFI_UNIT_TEST */
 
+int IdleController::getTargetRpm(float clt) const {
+	// TODO: bump target rpm based on AC and/or fan(s)?
+
+	float fsioBump = engine->fsioState.fsioIdleTargetRPMAdjustment;
+
+	return fsioBump + interpolate2d("cltRpm", clt, CONFIG(cltIdleRpmBins), CONFIG(cltIdleRpm));
+}
+
 static percent_t manualIdleController(float cltCorrection DECLARE_ENGINE_PARAMETER_SUFFIX) {
 
 	percent_t correctedPosition = cltCorrection * CONFIG(manIdlePosition);
@@ -269,7 +277,7 @@ static percent_t automaticIdleController(float tpsPos DECLARE_ENGINE_PARAMETER_S
 	industrialWithOverrideIdlePid.derivativeFilterLoss = engineConfiguration->idle_derivativeFilterLoss;
 
 	// get Target RPM for Auto-PID from a separate table
-	int targetRpm = getTargetRpmForIdleCorrection(PASS_ENGINE_PARAMETER_SIGNATURE);
+	int targetRpm = ENGINE(idleController)->getTargetRpm(Sensor::get(SensorType::Clt).value_or(0));
 
 	efitick_t nowNt = getTimeNowNt();
 	efitimeus_t nowUs = getTimeNowUs();
@@ -579,6 +587,8 @@ void startIdleThread(Logging*sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	logger = sharedLogger;
 	INJECT_ENGINE_REFERENCE(&idleControllerInstance);
 	INJECT_ENGINE_REFERENCE(&industrialWithOverrideIdlePid);
+
+	ENGINE(idleController) = &idleControllerInstance;
 
 	getIdlePid(PASS_ENGINE_PARAMETER_SIGNATURE)->initPidClass(&engineConfiguration->idleRpmPid);
 

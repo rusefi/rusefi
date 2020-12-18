@@ -140,7 +140,7 @@ static fuel_table_t alphaNfuel = {
  *
  * todo: place this field next to 'engineConfiguration'?
  */
-#ifdef EFI_ACTIVE_CONFIGURATION_IN_FLASH
+#if EFI_ACTIVE_CONFIGURATION_IN_FLASH
 #include "flash_int.h"
 engine_configuration_s & activeConfiguration = reinterpret_cast<persistent_config_container_s*>(getFlashAddrFirstCopy())->persistentConfiguration.engineConfiguration;
 // we cannot use this activeConfiguration until we call rememberCurrentConfiguration()
@@ -153,7 +153,7 @@ engine_configuration_s & activeConfiguration = activeConfigurationLocalStorage;
 extern engine_configuration_s *engineConfiguration;
 
 void rememberCurrentConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
-#ifndef EFI_ACTIVE_CONFIGURATION_IN_FLASH
+#if ! EFI_ACTIVE_CONFIGURATION_IN_FLASH
 	memcpy(&activeConfiguration, engineConfiguration, sizeof(engine_configuration_s));
 #else
 	isActiveConfigurationVoid = false;
@@ -581,15 +581,6 @@ static void setCanFrankensoDefaults(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 void setTargetRpmCurve(int rpm DECLARE_CONFIG_PARAMETER_SUFFIX) {
 	setLinearCurve(engineConfiguration->cltIdleRpmBins, CLT_CURVE_RANGE_FROM, 90, 10);
 	setLinearCurve(engineConfiguration->cltIdleRpm, rpm, rpm, 10);
-}
-
-int getTargetRpmForIdleCorrection(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
-	// error is already reported, let's take the value at 0C since that should be a nice high idle
-	float clt = Sensor::get(SensorType::Clt).value_or(0);
-
-	int targetRpm = interpolate2d("cltRpm", clt, CONFIG(cltIdleRpmBins), CONFIG(cltIdleRpm));
-
-	return targetRpm + engine->fsioState.fsioIdleTargetRPMAdjustment;
 }
 
 void setDefaultMultisparkParameters(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
@@ -1172,12 +1163,6 @@ void resetConfigurationExt(Logging * logger, configuration_callback_t boardCallb
 		// all basic settings are already set in prepareVoidConfiguration(), no need to set anything here
 		// nothing to do - we do it all in setBoardConfigurationOverrides
 		break;
-	case MIATA_PROTEUS_TCU:
-		setMiataNB2_Proteus_TCU(PASS_CONFIG_PARAMETER_SIGNATURE);
-		break;
-	case PROTEUS_MIATA_NB2:
-		setMiataNB2_ProteusEngineConfiguration(PASS_CONFIG_PARAMETER_SIGNATURE);
-		break;
 	case MRE_M111:
 		setM111EngineConfiguration(PASS_CONFIG_PARAMETER_SIGNATURE);
 		break;
@@ -1201,13 +1186,21 @@ void resetConfigurationExt(Logging * logger, configuration_callback_t boardCallb
 	case TEST_ISSUE_366_RISE:
 		setTestEngineIssue366rise(PASS_CONFIG_PARAMETER_SIGNATURE);
 		break;
-	case ISSUE_898:
+	case TEST_ISSUE_898:
 		setIssue898(PASS_CONFIG_PARAMETER_SIGNATURE);
 		break;
 #endif // EFI_UNIT_TEST
+#if HW_PROTEUS
 	case BMW_M73_PROTEUS:
 		setEngineBMW_M73_Proteus(PASS_CONFIG_PARAMETER_SIGNATURE);
 		break;
+	case MIATA_PROTEUS_TCU:
+		setMiataNB2_Proteus_TCU(PASS_CONFIG_PARAMETER_SIGNATURE);
+		break;
+	case PROTEUS_MIATA_NB2:
+		setMiataNB2_ProteusEngineConfiguration(PASS_CONFIG_PARAMETER_SIGNATURE);
+		break;
+#endif // HW_PROTEUS
 #if EFI_INCLUDE_ENGINE_PRESETS
 	case DEFAULT_FRANKENSO:
 		setFrankensoConfiguration(PASS_CONFIG_PARAMETER_SIGNATURE);

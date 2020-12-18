@@ -54,6 +54,7 @@ class AirmassModelBase;
 class IEtbController;
 struct IFuelComputer;
 struct IInjectorModel;
+struct IIdleController;
 
 class PrimaryTriggerConfiguration final : public TriggerConfiguration {
 public:
@@ -85,6 +86,7 @@ public:
 	IEtbController *etbControllers[ETB_COUNT] = {nullptr};
 	IFuelComputer *fuelComputer = nullptr;
 	IInjectorModel *injectorModel = nullptr;
+	IIdleController* idleController = nullptr;
 
 	cyclic_buffer<int> triggerErrorDetection;
 

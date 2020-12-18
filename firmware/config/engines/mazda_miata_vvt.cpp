@@ -605,8 +605,8 @@ static void setMiataNB2_MRE_common(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 
 
 	//   # TLE8888 high current low side: VVT1 IN10 / OUT6
-	// GPIOE_9:  "7 - Lowside 1"
-	engineConfiguration->auxPidPins[0] = GPIOE_9; // VVT solenoid control
+	// TLE8888_PIN_6:  "7 - Lowside 1"
+	engineConfiguration->auxPidPins[0] = TLE8888_PIN_6; // VVT solenoid control
 
 	// TLE8888_PIN_23: "33 - GP Out 3"
 	engineConfiguration->malfunctionIndicatorPin = TLE8888_PIN_23;
@@ -622,7 +622,8 @@ static void setMiataNB2_MRE_common(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 
 	// set_analog_input_pin pps PA7
 	// EFI_ADC_7: "31 - AN volt 3" - PA7
-	engineConfiguration->throttlePedalPositionAdcChannel = EFI_ADC_7;
+// disabled for now since only allowed with ETB
+//	engineConfiguration->throttlePedalPositionAdcChannel = EFI_ADC_7;
 
 	// set tps_min 90
 	engineConfiguration->tpsMin = 90;
@@ -697,6 +698,7 @@ void setMiataNB2_MRE_MAF(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 /**
  * https://github.com/rusefi/rusefi/wiki/HOWTO-TCU-A42DE-on-Proteus
  */
+#if HW_PROTEUS
 void setMiataNB2_Proteus_TCU(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	engineConfiguration->tcuEnabled = true;
 
@@ -806,3 +808,4 @@ void setMiataNB2_ProteusEngineConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE) 
 
 
 }
+#endif // HW_PROTEUS

@@ -1,7 +1,7 @@
 #include "global.h"
 #include "rusefi_enums.h"
 #include "rusefi_hw_enums.h"
-// was generated automatically by rusEfi tool  from rusefi_hw_enums.h // was generated automatically by rusEfi tool  from rusefi_enums.h // by enum2string.jar tool on Mon Dec 14 23:31:45 EST 2020
+// was generated automatically by rusEfi tool  from rusefi_hw_enums.h // was generated automatically by rusEfi tool  from rusefi_enums.h // by enum2string.jar tool on Fri Dec 18 08:54:09 EST 2020
 // see also gen_config_and_enums.bat
 
 
@@ -621,8 +621,6 @@ case DBG_16:
   return "DBG_16";
 case DBG_34:
   return "DBG_34";
-case DBG_46:
-  return "DBG_46";
 case DBG_47:
   return "DBG_47";
 case DBG_48:
@@ -697,6 +695,8 @@ case DBG_MAP:
   return "DBG_MAP";
 case DBG_METRICS:
   return "DBG_METRICS";
+case DBG_RUSEFI_WIDEBAND:
+  return "DBG_RUSEFI_WIDEBAND";
 case DBG_SD_CARD:
   return "DBG_SD_CARD";
 case DBG_SR5_PROTOCOL:
@@ -821,8 +821,6 @@ case HONDA_ACCORD_CD_DIP:
   return "HONDA_ACCORD_CD_DIP";
 case HONDA_ACCORD_CD_TWO_WIRES:
   return "HONDA_ACCORD_CD_TWO_WIRES";
-case ISSUE_898:
-  return "ISSUE_898";
 case LADA_KALINA:
   return "LADA_KALINA";
 case MAZDA_626:
@@ -905,6 +903,8 @@ case TEST_ISSUE_366_BOTH:
   return "TEST_ISSUE_366_BOTH";
 case TEST_ISSUE_366_RISE:
   return "TEST_ISSUE_366_RISE";
+case TEST_ISSUE_898:
+  return "TEST_ISSUE_898";
 case TLE8888_BENCH_ENGINE:
   return "TLE8888_BENCH_ENGINE";
 case TOYOTA_2JZ_GTE_VVTi:

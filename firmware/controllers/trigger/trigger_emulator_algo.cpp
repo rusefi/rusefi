@@ -196,6 +196,8 @@ void onConfigurationChangeRpmEmulatorCallback(engine_configuration_s *previousCo
 void initTriggerEmulator(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	scheduleMsg(sharedLogger, "Emulating %s", getConfigurationName(engineConfiguration->engineType));
 
+	startTriggerEmulatorPins();
+
 	initTriggerEmulatorLogic(sharedLogger);
 }
 

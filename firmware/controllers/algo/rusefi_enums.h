@@ -101,7 +101,7 @@ typedef enum {
 	// used by unit test
 	// see https://github.com/rusefi/rusefi/issues/898
 	// see TriggerWaveform::bothFrontsRequired
-	ISSUE_898 = 27,
+	TEST_ISSUE_898 = 27,
 
 	MAZDA_626 = 28,
 
@@ -771,8 +771,10 @@ typedef enum {
 	DBG_FSIO_SPECIAL = 42,
 	DBG_INJECTOR_COMPENSATION = 43,
 	DBG_DYNO_VIEW = 44,
+	// todo: because of getEnumOptionsForTunerStudio 'getEnumOptionsForTunerStudio' would not work here
+	// todo: https://github.com/rusefi/rusefi/issues/2102
 	DBG_LOGIC_ANALYZER = 45,
-	DBG_46 = 46,
+	DBG_RUSEFI_WIDEBAND = 46,
 	DBG_47 = 47,
 	DBG_48 = 48,
 

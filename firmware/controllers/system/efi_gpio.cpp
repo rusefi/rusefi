@@ -105,13 +105,13 @@ void RegisteredOutputPin::unregister() {
 
 
 EnginePins::EnginePins() :
-		mainRelay("Main relay", CONFIG_PIN_OFFSETS(mainRelay)),
-		hpfpValve("hpfpValve", CONFIG_PIN_OFFSETS(hpfpValve)),
-		starterControl("Starter control", CONFIG_PIN_OFFSETS(starterControl)),
-		starterRelayDisable("Starter disable", CONFIG_PIN_OFFSETS(starterRelayDisable)),
-		fanRelay("Fan", CONFIG_PIN_OFFSETS(fan)),
-		acRelay("A/C relay", CONFIG_PIN_OFFSETS(acRelay)),
-		fuelPumpRelay("Fuel pump", CONFIG_PIN_OFFSETS(fuelPump)),
+		mainRelay("Main Relay", CONFIG_PIN_OFFSETS(mainRelay)),
+		hpfpValve("HPFP Valve", CONFIG_PIN_OFFSETS(hpfpValve)),
+		starterControl("Starter Relay", CONFIG_PIN_OFFSETS(starterControl)),
+		starterRelayDisable("Starter Disable Relay", CONFIG_PIN_OFFSETS(starterRelayDisable)),
+		fanRelay("Fan Relay", CONFIG_PIN_OFFSETS(fan)),
+		acRelay("A/C Relay", CONFIG_PIN_OFFSETS(acRelay)),
+		fuelPumpRelay("Fuel pump Relay", CONFIG_PIN_OFFSETS(fuelPump)),
 	    boostPin("Boost", CONFIG_PIN_OFFSETS(boostControl)),
 		idleSolenoidPin("Idle Valve", idle_solenoidPin_offset, idle_solenoidPinMode_offset),
 		secondIdleSolenoidPin("Idle Valve#2", CONFIG_OFFSET(secondSolenoidPin), idle_solenoidPinMode_offset),
@@ -473,7 +473,11 @@ void OutputPin::initPin(const char *msg, brain_pin_e brainPin, const pin_output_
 		return;
 
 	if (*outputMode > OM_OPENDRAIN_INVERTED) {
-		firmwareError(CUSTOM_INVALID_MODE_SETTING, "%s invalid pin_output_mode_e", msg);
+		firmwareError(CUSTOM_INVALID_MODE_SETTING, "%s invalid pin_output_mode_e %d %s",
+				msg,
+				*outputMode,
+				hwPortname(brainPin)
+				);
 		return;
 	}
 	iomode_t mode = (*outputMode == OM_DEFAULT || *outputMode == OM_INVERTED) ?

@@ -110,6 +110,9 @@ private:
 	 * PWM generation is not happening while this value is NAN
 	 */
 	float periodNt;
+
+	// Set if we are very far behind schedule and need to reset back to the beginning of a cycle to find our way
+	bool forceCycleStart = true;
 };
 
 struct hardware_pwm;
