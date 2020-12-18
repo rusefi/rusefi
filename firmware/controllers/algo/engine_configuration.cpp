@@ -1186,7 +1186,7 @@ void resetConfigurationExt(Logging * logger, configuration_callback_t boardCallb
 	case TEST_ISSUE_366_RISE:
 		setTestEngineIssue366rise(PASS_CONFIG_PARAMETER_SIGNATURE);
 		break;
-	case ISSUE_898:
+	case TEST_ISSUE_898:
 		setIssue898(PASS_CONFIG_PARAMETER_SIGNATURE);
 		break;
 #endif // EFI_UNIT_TEST

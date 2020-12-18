@@ -16,7 +16,7 @@ static void boardConfigurationForIssue898(engine_configuration_s *engineConfigur
 }
 
 TEST(issues, issue898) {
-	EngineTestHelper eth(ISSUE_898, &boardConfigurationForIssue898);
+	EngineTestHelper eth(TEST_ISSUE_898, &boardConfigurationForIssue898);
 	EXPAND_EngineTestHelper;
 
 	ASSERT_EQ(TRUE, engine->triggerCentral.triggerShape.shapeDefinitionError) << "MRE_MIATA_NA6 shapeDefinitionError";
