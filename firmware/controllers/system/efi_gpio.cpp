@@ -189,15 +189,13 @@ void EnginePins::unregisterPins() {
 	for (int i = 0;i < FSIO_COMMAND_COUNT;i++) {
 		unregisterOutputIfPinChanged(fsioOutputs[i], fsioOutputPins[i]);
 	}
-
+#endif /* EFI_PROD_CODE */
 
 	RegisteredOutputPin * pin = registeredOutputHead;
 	while (pin != nullptr) {
 		pin->unregister();
 		pin = pin->next;
 	}
-
-#endif /* EFI_PROD_CODE */
 }
 
 void EnginePins::debug() {
