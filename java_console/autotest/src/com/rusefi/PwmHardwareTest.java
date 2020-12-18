@@ -37,7 +37,6 @@ public class PwmHardwareTest {
         ecu.sendCommand(CMD_IGNITION_PIN + " 2 none");
         ecu.sendCommand(CMD_IGNITION_PIN + " 3 none");
 
-        //ecu.sendCommand(CMD_TRIGGER_PIN + " 0 PC7");
         ecu.sendCommand(CMD_TRIGGER_PIN + " 1 PA8");
 
         /* DBG_LOGIC_ANALYZER */
@@ -53,8 +52,10 @@ public class PwmHardwareTest {
         ecu.sendCommand(getEnableCommand(Fields.CMD_SELF_STIMULATION));
 
         sleep(2 * Timeouts.SECOND);
-        
-        EcuTestHelper.assertEquals("Idle PWM freq", 160, SensorCentral.getInstance().getValue(Sensor.debugIntField1));
+
+        /* +-1% is still acceptable */
+        EcuTestHelper.assertEquals("Idle PWM freq", 160, SensorCentral.getInstance().getValue(Sensor.debugIntField1),0.01);
+
 
         if (ControllerConnectorState.firmwareVersion == null)
             throw new IllegalStateException("firmwareVersion has not arrived");
