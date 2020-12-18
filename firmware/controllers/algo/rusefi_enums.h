@@ -101,7 +101,7 @@ typedef enum {
 	// used by unit test
 	// see https://github.com/rusefi/rusefi/issues/898
 	// see TriggerWaveform::bothFrontsRequired
-	ISSUE_898 = 27,
+	TEST_ISSUE_898 = 27,
 
 	MAZDA_626 = 28,
 
