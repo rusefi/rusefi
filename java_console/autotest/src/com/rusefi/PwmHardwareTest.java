@@ -4,6 +4,7 @@ import com.rusefi.config.generated.Fields;
 import com.rusefi.core.Sensor;
 import com.rusefi.core.SensorCentral;
 import com.rusefi.functional_tests.EcuTestHelper;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import static com.rusefi.IoUtil.getDisableCommand;
@@ -21,6 +22,7 @@ public class PwmHardwareTest {
     private static final int FREQUENCY = 160;
 
     @Test
+    @Ignore
     public void testIdlePin() {
         EcuTestHelper ecu = EcuTestHelper.createInstance(true);
 
