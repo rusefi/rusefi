@@ -7,7 +7,6 @@ import com.rusefi.functional_tests.EcuTestHelper;
 import com.rusefi.waves.EngineChart;
 import com.rusefi.waves.EngineReport;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import static com.rusefi.IoUtil.getEnableCommand;
@@ -30,7 +29,6 @@ public class FunctionalTest {
         ecu = EcuTestHelper.createInstance();
     }
 
-    @Ignore
     @Test
     public void testCustomEngine() {
         ecu.setEngineType(ET_DEFAULT_FRANKENSO);
@@ -64,7 +62,6 @@ public class FunctionalTest {
     }
 
     @Test
-    @Ignore
     public void testBmwE34() {
         ecu.setEngineType(ET_BMW_E34);
         ecu.sendCommand("chart 1");
@@ -227,7 +224,6 @@ public class FunctionalTest {
     }
 
     @Test
-    @Ignore
     public void testRoverV8() {
         ecu.setEngineType(ET_ROVER_V8);
     }
