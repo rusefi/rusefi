@@ -36,6 +36,8 @@ public class VssHardwareLoopTest {
         sleep(2 * Timeouts.SECOND);
 
         EcuTestHelper.assertEquals("VSS with input", 3, SensorCentral.getInstance().getValue(Sensor.VSS));
+
+        // not related to VSS test, just need to validate this somewhere
         if (ControllerConnectorState.firmwareVersion == null)
             throw new IllegalStateException("firmwareVersion has not arrived");
     }
