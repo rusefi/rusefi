@@ -771,7 +771,9 @@ typedef enum {
 	DBG_FSIO_SPECIAL = 42,
 	DBG_INJECTOR_COMPENSATION = 43,
 	DBG_DYNO_VIEW = 44,
-	DBG_LOGIC_ANALYZER = DBG_DBG_LOGIC_ANALYZER,
+	// todo: because of getEnumOptionsForTunerStudio 'getEnumOptionsForTunerStudio' would not work here
+	// todo: https://github.com/rusefi/rusefi/issues/2102
+	DBG_LOGIC_ANALYZER = 45,
 	DBG_RUSEFI_WIDEBAND = 46,
 	DBG_47 = 47,
 	DBG_48 = 48,
