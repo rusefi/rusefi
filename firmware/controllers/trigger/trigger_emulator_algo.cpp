@@ -222,12 +222,7 @@ void startTriggerEmulatorPins() {
 
 void stopTriggerEmulatorPins() {
 	for (size_t i = 0; i < efi::size(emulatorOutputs); i++) {
-		brain_pin_e brainPin = activeConfiguration.triggerSimulatorPins[i];
-		if (brainPin != GPIO_UNASSIGNED) {
-#if EFI_PROD_CODE
-			efiSetPadUnused(brainPin);
-#endif // EFI_PROD_CODE
-		}
+		triggerSignal.outputPins[i]->deInit();
 	}
 }
 
