@@ -28,6 +28,14 @@ All notable user-facing or behavior-altering changes will be documented in this 
 ## XXX 202X Release
 
 ### Breaking Changes
+
+### Added
+
+### Fixed
+
+### December 2020 Bake Cookies Day
+
+### Breaking Changes
  - GM x24 trigger now uses 0 offset (offset is now built in, previously needed 50 degrees offset)
 
 ### Added
