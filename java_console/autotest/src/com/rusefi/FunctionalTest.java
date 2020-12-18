@@ -169,7 +169,6 @@ public class FunctionalTest {
     }
 
     @Test
-    @Ignore
     public void testMazdaProtege() {
         ecu.setEngineType(ET_FORD_ESCORT_GT);
         EngineChart chart;
@@ -198,7 +197,6 @@ public class FunctionalTest {
     }
 
     @Test
-    @Ignore
     public void test1995DodgeNeon() {
         ecu.setEngineType(ET_DODGE_NEON_1995);
         EngineChart chart;
