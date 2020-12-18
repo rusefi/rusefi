@@ -60,12 +60,12 @@ public:
 	void toggle();
 	bool getLogicValue() const;
 
-	brain_pin_e brainPin = GPIO_UNASSIGNED;
-
 #if EFI_GPIO_HARDWARE
 	ioportid_t port = 0;
 	uint8_t pin = 0;
 #endif /* EFI_GPIO_HARDWARE */
+
+	brain_pin_e brainPin = GPIO_UNASSIGNED;
 
 #if (EFI_GPIO_HARDWARE && (BOARD_EXT_GPIOCHIPS > 0))
 	/* used for external pins */
