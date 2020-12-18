@@ -463,7 +463,6 @@ void OutputPin::initPin(const char *msg, brain_pin_e brainPin) {
 }
 
 void OutputPin::initPin(const char *msg, brain_pin_e brainPin, const pin_output_mode_e *outputMode) {
-#if EFI_GPIO_HARDWARE && EFI_PROD_CODE
 	if (brainPin == GPIO_UNASSIGNED)
 		return;
 
@@ -475,6 +474,8 @@ void OutputPin::initPin(const char *msg, brain_pin_e brainPin, const pin_output_
 				);
 		return;
 	}
+
+#if EFI_GPIO_HARDWARE && EFI_PROD_CODE
 	iomode_t mode = (*outputMode == OM_DEFAULT || *outputMode == OM_INVERTED) ?
 		PAL_MODE_OUTPUT_PUSHPULL : PAL_MODE_OUTPUT_OPENDRAIN;
 
@@ -514,7 +515,6 @@ void OutputPin::initPin(const char *msg, brain_pin_e brainPin, const pin_output_
 			this->ext = true;
 		}
 	#endif
-
 #endif // briefly leave the include guard because we need to set default state in tests
 
 	// Enter a critical section so that other threads can't change the pin state out from underneath us
