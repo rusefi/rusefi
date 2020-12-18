@@ -468,6 +468,9 @@ void OutputPin::initPin(const char *msg, brain_pin_e brainPin, const pin_output_
 		return;
 	}
 
+	// Enter a critical section so that other threads can't change the pin state out from underneath us
+	chibios_rt::CriticalSectionLocker csl;
+
 	// Check that this OutputPin isn't already assigned to another pin (reinit is allowed to change mode)
 	// To avoid this error, call unregister() first
 	if (this->brainPin != GPIO_UNASSIGNED && this->brainPin != brainPin) {
@@ -510,9 +513,6 @@ void OutputPin::initPin(const char *msg, brain_pin_e brainPin, const pin_output_
 		}
 	#endif
 #endif // briefly leave the include guard because we need to set default state in tests
-
-	// Enter a critical section so that other threads can't change the pin state out from underneath us
-	chibios_rt::CriticalSectionLocker csl;
 
 	this->brainPin = brainPin;
 
