@@ -492,7 +492,7 @@ void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels DECLARE_
 	SensorResult tps2 = Sensor::get(SensorType::Tps2);
 	tsOutputChannels->throttle2Position = tps2.Value;
 	// If we don't have a TPS2 at all, don't turn on the failure light
-	tsOutputChannels->isTps2Error = !tps2.Valid && Sensor::hasSensor(SensorType::Tps2);
+	tsOutputChannels->isTps2Error = !tps2.Valid && Sensor::hasSensor(SensorType::Tps2Primary);
 
 	SensorResult pedal = Sensor::get(SensorType::AcceleratorPedal);
 	tsOutputChannels->pedalPosition = pedal.Value;
