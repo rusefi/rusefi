@@ -543,8 +543,8 @@ void OutputPin::initPin(const char *msg, brain_pin_e brainPin, const pin_output_
 
 			// if the pin was set to logical 1, then set an error and disable the pin so that things don't catch fire
 			if (logicalValue) {
-				efiSetPadUnused(brainPin);
 				firmwareError(OBD_PCM_Processor_Fault, "%s: startup pin state %s actual value=%d logical value=%d mode=%s", msg, hwPortname(brainPin), actualValue, logicalValue, getPin_output_mode_e(*outputMode));
+				OutputPin::unregister();
 			}
 		}
 	}
@@ -552,22 +552,26 @@ void OutputPin::initPin(const char *msg, brain_pin_e brainPin, const pin_output_
 }
 
 void OutputPin::unregister() {
+	// Unregister under lock - we don't want other threads mucking with the pin while we're trying to turn it off
+	chibios_rt::CriticalSectionLocker csl;
+
 	// nothing to do if not registered in the first place
 	if (brainPin == GPIO_UNASSIGNED) {
 		return;
 	}
-
-	// Prevent other threads from setting the pin while we're trying to turn it off!
-	brainPin = GPIO_UNASSIGNED;
 
 #if (BOARD_EXT_GPIOCHIPS > 0)
 	ext = false;
 #endif // (BOARD_EXT_GPIOCHIPS > 0)
 
 	scheduleMsg(logger, "unregistering %s", hwPortname(brainPin));
+
 #if EFI_GPIO_HARDWARE && EFI_PROD_CODE
 	efiSetPadUnused(brainPin);
 #endif /* EFI_GPIO_HARDWARE */
+
+	// Clear the pin so that it won't get set any more
+	brainPin = GPIO_UNASSIGNED;
 }
 
 #if EFI_GPIO_HARDWARE
