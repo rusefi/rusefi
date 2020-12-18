@@ -385,10 +385,8 @@ static msg_t hipThread(void *arg) {
 }
 
 void stopHip9001_pins() {
-#if EFI_PROD_CODE
-	efiSetPadUnused(activeConfiguration.hip9011IntHoldPin);
-	efiSetPadUnused(activeConfiguration.hip9011CsPin);
-#endif /* EFI_PROD_CODE */
+	intHold.deInit();
+	enginePins.hipCs.deInit();
 }
 
 void startHip9001_pins() {

@@ -195,12 +195,6 @@ public:
 	 */
 	efitimems64_t callFromPitStopEndTime = 0;
 
-	/**
-	 * This flag indicated a big enough problem that engine control would be
-	 * prohibited if this flag is set to true.
-	 */
-	bool withError = false;
-
 	RpmCalculator rpmCalculator;
 	persistent_config_s *config = nullptr;
 	/**

@@ -51,6 +51,7 @@ EngineTestHelper::EngineTestHelper(engine_type_e engineType, configuration_callb
 	memset(&activeConfiguration, 0, sizeof(activeConfiguration));
 
 	enginePins.reset();
+	enginePins.unregisterPins();
 
 	persistent_config_s *config = &persistentConfig;
 	Engine *engine = &this->engine;
@@ -99,6 +100,8 @@ EngineTestHelper::~EngineTestHelper() {
 	writeEvents(filePath.str().c_str());
 
 	// Cleanup
+	enginePins.reset();
+	enginePins.unregisterPins();
 	Sensor::resetRegistry();
 	memset(mockPinStates, 0, sizeof(mockPinStates));
 }
