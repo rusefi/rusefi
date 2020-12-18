@@ -51,7 +51,7 @@ public:
 	/**
 	 * dissociates pin from this output and un-registers it in pin repository
 	 */
-	virtual void unregister();
+	void deInit();
 
 	bool isInitialized();
 
@@ -141,7 +141,7 @@ class RegisteredOutputPin : public virtual OutputPin {
 public:
 	RegisteredOutputPin(const char *registrationName, short pinOffset, short pinModeOffset);
 	void init(DECLARE_ENGINE_PARAMETER_SIGNATURE);
-	void unregister() override;
+	void unregister();
 	RegisteredOutputPin *next;
 	const char *registrationName;
 private:
