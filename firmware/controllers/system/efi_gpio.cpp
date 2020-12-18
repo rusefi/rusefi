@@ -382,9 +382,7 @@ bool OutputPin::getAndSet(int logicValue) {
 // This function is only used on real hardware
 #if EFI_PROD_CODE
 void OutputPin::setOnchipValue(int electricalValue) {
-	if (brainPin != GPIO_UNASSIGNED) {
-		palWritePad(port, pin, electricalValue);
-	}
+	palWritePad(port, pin, electricalValue);
 }
 #endif // EFI_PROD_CODE
 
@@ -394,12 +392,21 @@ void OutputPin::setValue(int logicValue) {
 //	ScopePerf perf(PE::OutputPinSetValue);
 #endif // ENABLE_PERF_TRACE
 
-#if EFI_PROD_CODE
+	// Always store the current logical value of the pin (so it can be
+	// used internally even if not connected to a real hardware pin)
+	currentLogicValue = logicValue;
+
+	// Nothing else to do if not configured
+	if (brainPin == GPIO_UNASSIGNED) {
+		return;
+	}
+
 	efiAssertVoid(CUSTOM_ERR_6621, modePtr!=NULL, "pin mode not initialized");
 	pin_output_mode_e mode = *modePtr;
 	efiAssertVoid(CUSTOM_ERR_6622, mode <= OM_OPENDRAIN_INVERTED, "invalid pin_output_mode_e");
 	int electricalValue = getElectricalValue(logicValue, mode);
 
+#if EFI_PROD_CODE
 	#if (BOARD_EXT_GPIOCHIPS > 0)
 		if (!this->ext) {
 			setOnchipValue(electricalValue);
@@ -411,13 +418,9 @@ void OutputPin::setValue(int logicValue) {
 	#else
 		setOnchipValue(electricalValue);
 	#endif
-
 #else /* EFI_PROD_CODE */
-	setMockState(brainPin, logicValue);
+	setMockState(brainPin, electricalValue);
 #endif /* EFI_PROD_CODE */
-
-	// Lastly store the current logical value of the pin
-	currentLogicValue = logicValue;
 }
 
 bool OutputPin::getLogicValue() const {
