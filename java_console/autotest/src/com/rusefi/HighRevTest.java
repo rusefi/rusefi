@@ -17,7 +17,7 @@ public class HighRevTest {
         ecu.sendCommand("set " + CMD_ENGINESNIFFERRPMTHRESHOLD + " 100");
         ecu.changeRpm(900);
         // first let's get to expected RPM
-        EcuTestHelper.assertRpmDoesNotJump(16000, 5, 40, FAIL, ecu.commandQueue);
+        EcuTestHelper.assertRpmDoesNotJump(8000, 5, 40, FAIL, ecu.commandQueue);
     }
 
     @Test
@@ -26,7 +26,7 @@ public class HighRevTest {
         ecu.setEngineType(ET_BMW_M73_F);
         ecu.changeRpm(700);
         // first let's get to expected RPM
-        EcuTestHelper.assertRpmDoesNotJump(16000, 5, 40, FAIL, ecu.commandQueue);
+        EcuTestHelper.assertRpmDoesNotJump(8000, 5, 40, FAIL, ecu.commandQueue);
         testCaseBug1873(ecu);
     }
 
