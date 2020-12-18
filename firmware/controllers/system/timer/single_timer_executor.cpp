@@ -123,7 +123,7 @@ void SingleTimerExecutor::executeAllPendingActions() {
 	 * TODO: add a counter & figure out a limit of iterations?
 	 */
 
-	int executeCounter = 0;
+	executeCounter = 0;
 	bool didExecute;
 	do {
 		efitick_t nowNt = getTimeNowNt();
@@ -133,6 +133,7 @@ void SingleTimerExecutor::executeAllPendingActions() {
 		}
 
 	} while (didExecute);
+	maxExecuteCounter = maxI(maxExecuteCounter, executeCounter);
 
 	if (!isLocked()) {
 		firmwareError(CUSTOM_ERR_LOCK_ISSUE, "Someone has stolen my lock");
@@ -172,6 +173,8 @@ void executorStatistics() {
 		tsOutputChannels.debugIntField1 = ___engine.executor.timerCallbackCounter;
 		tsOutputChannels.debugIntField2 = ___engine.executor.executeAllPendingActionsInvocationCounter;
 		tsOutputChannels.debugIntField3 = ___engine.executor.scheduleCounter;
+		tsOutputChannels.debugIntField4 = ___engine.executor.executeCounter;
+		tsOutputChannels.debugIntField5 = ___engine.executor.maxExecuteCounter;
 #endif /* EFI_TUNER_STUDIO */
 	}
 }
