@@ -17,10 +17,10 @@
 #include "allsensors.h"
 
 void setFrankenstein_01_LCD(engine_configuration_s *engineConfiguration) {
-	engineConfiguration->HD44780_rs = GPIOE_9;
-	engineConfiguration->HD44780_e = GPIOE_11;
-	engineConfiguration->HD44780_db4 = GPIOE_13;
-	engineConfiguration->HD44780_db5 = GPIOE_15;
+	engineConfiguration->HD44780_rs = GPIO_UNASSIGNED; // todo#2108 GPIOE_9;
+	engineConfiguration->HD44780_e = GPIO_UNASSIGNED; // todo#2108 GPIOE_11;
+	engineConfiguration->HD44780_db4 = GPIO_UNASSIGNED; // todo#2108 GPIOE_13;
+	engineConfiguration->HD44780_db5 = GPIO_UNASSIGNED; // todo#2108 GPIOE_15;
 	engineConfiguration->HD44780_db6 = GPIO_UNASSIGNED; // todo#2108 GPIOB_11;
 	engineConfiguration->HD44780_db7 = GPIO_UNASSIGNED; // todo#2108 GPIOB_13;
 }
@@ -63,8 +63,8 @@ void setRoverv8(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
     // set_ignition_channels
     engineConfiguration->ignitionPins[0] = GPIO_UNASSIGNED; // todo#2108 GPIOE_8; // Frankenstein: low side - out #x (?)
     engineConfiguration->ignitionPins[7] = GPIO_UNASSIGNED; // todo#2108 GPIOE_10; // Frankenstein: low side - out #x (?)
-    engineConfiguration->ignitionPins[3] = GPIOE_12; // Frankenstein: low side - out #x (?)
-    engineConfiguration->ignitionPins[2] = GPIOE_14; // Frankenstein: low side - out #x (?)
+    engineConfiguration->ignitionPins[3] = GPIO_UNASSIGNED; // todo#2108 GPIOE_12; // Frankenstein: low side - out #x (?)
+    engineConfiguration->ignitionPins[2] = GPIO_UNASSIGNED; // todo#2108 GPIOE_14; // Frankenstein: low side - out #x (?)
 
 	// Frankenstein: low side - out #1: PC14
 	// Frankenstein: low side - out #2: PC15
@@ -81,12 +81,12 @@ void setRoverv8(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 
 	engineConfiguration->injectionPins[0] = GPIO_UNASSIGNED; // todo#2108 GPIOC_14; // Frankenstein: low side - out #1
 	engineConfiguration->injectionPins[1] = GPIO_UNASSIGNED; // todo#2108 GPIOC_15; // Frankenstein: low side - out #2
-	engineConfiguration->injectionPins[2] = GPIOE_6; // Frankenstein: low side - out #3
+	engineConfiguration->injectionPins[2] = GPIO_UNASSIGNED; // todo#2108 GPIOE_6; // Frankenstein: low side - out #3
 	engineConfiguration->injectionPins[3] = GPIO_UNASSIGNED; // todo#2108 GPIOC_13; // Frankenstein: low side - out #4
-    engineConfiguration->injectionPins[4] = GPIOE_4; // Frankenstein: low side - out #5
-    engineConfiguration->injectionPins[5] = GPIOE_5; // Frankenstein: low side - out #6
-    engineConfiguration->injectionPins[6] = GPIOE_2; // Frankenstein: low side - out #7
-    engineConfiguration->injectionPins[7] = GPIOE_3; // Frankenstein: low side - out #8
+    engineConfiguration->injectionPins[4] = GPIO_UNASSIGNED; // todo#2108 GPIOE_4; // Frankenstein: low side - out #5
+    engineConfiguration->injectionPins[5] = GPIO_UNASSIGNED; // todo#2108 GPIOE_5; // Frankenstein: low side - out #6
+    engineConfiguration->injectionPins[6] = GPIO_UNASSIGNED; // todo#2108 GPIOE_2; // Frankenstein: low side - out #7
+    engineConfiguration->injectionPins[7] = GPIO_UNASSIGNED; // todo#2108 GPIOE_3; // Frankenstein: low side - out #8
 
 // not valid ICU pin	engineConfiguration->vehicleSpeedSensorInputPin = GPIOC_2;
 
@@ -128,8 +128,6 @@ void setRoverv8(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	// set injection_pin_mode 0
 	engineConfiguration->injectionPinMode = OM_DEFAULT;
 
-	engineConfiguration->canTxPin = GPIOB_6;
-	engineConfiguration->canRxPin = GPIOB_12;
 	engineConfiguration->canWriteEnabled = true;
 	engineConfiguration->canReadEnabled = false;
 	engineConfiguration->canNbcType = CAN_BUS_MAZDA_RX8;
