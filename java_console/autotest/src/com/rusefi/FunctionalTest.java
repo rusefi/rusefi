@@ -56,7 +56,6 @@ public class FunctionalTest {
     }
 
     @Test
-    @Ignore
     public void testSachs() {
         ecu.setEngineType(ET_SACHS);
 //        String msg = "BMW";
@@ -230,7 +229,6 @@ public class FunctionalTest {
     }
 
     @Test
-    @Ignore
     public void testRoverV8() {
         ecu.setEngineType(ET_ROVER_V8);
     }
