@@ -88,7 +88,7 @@ public class IncomingDataBuffer {
         }
         onPacketArrived();
         if (log.debugEnabled())
-            log.debug("packet " + Arrays.toString(packet) + ": crc OK");
+            log.trace("packet arrived: " + Arrays.toString(packet) + ": crc OK");
 
         return packet;
     }
