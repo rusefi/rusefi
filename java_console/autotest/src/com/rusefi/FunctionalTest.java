@@ -30,6 +30,7 @@ public class FunctionalTest {
         ecu = EcuTestHelper.createInstance();
     }
 
+    @Ignore
     @Test
     public void testCustomEngine() {
         ecu.setEngineType(ET_DEFAULT_FRANKENSO);
@@ -42,6 +43,7 @@ public class FunctionalTest {
 //        changeRpm(1500);
     }
 
+    @Ignore
     @Test
     public void testMazdaMiata2003() {
         ecu.setEngineType(ET_FRANKENSO_MIATA_NB2);
@@ -49,12 +51,14 @@ public class FunctionalTest {
 //        sendCommand("get nosuchgettersdfsdfsdfsdf"); // just test coverage
     }
 
+    @Ignore
     @Test
     public void testCamaro() {
         ecu.setEngineType(ET_CAMARO);
     }
 
     @Test
+    @Ignore
     public void testSachs() {
         ecu.setEngineType(ET_SACHS);
 //        String msg = "BMW";
@@ -88,6 +92,7 @@ public class FunctionalTest {
     }
 
     @Test
+    @Ignore
     public void testCitroenBerlingo() {
         ecu.setEngineType(ET_CITROEN_TU3JP);
 //        String msg = "Citroen";
@@ -96,6 +101,7 @@ public class FunctionalTest {
     }
 
     @Test
+    @Ignore
     public void test2003DodgeNeon() {
         ecu.setEngineType(ET_DODGE_NEON_2003_CRANK);
         ecu.sendCommand("set wwaeTau 0");
@@ -163,6 +169,7 @@ public class FunctionalTest {
     }
 
     @Test
+    @Ignore
     public void testMazdaProtege() {
         ecu.setEngineType(ET_FORD_ESCORT_GT);
         EngineChart chart;
@@ -191,6 +198,7 @@ public class FunctionalTest {
     }
 
     @Test
+    @Ignore
     public void test1995DodgeNeon() {
         ecu.setEngineType(ET_DODGE_NEON_1995);
         EngineChart chart;
@@ -226,6 +234,7 @@ public class FunctionalTest {
     }
 
     @Test
+    @Ignore
     public void testRoverV8() {
         ecu.setEngineType(ET_ROVER_V8);
     }
