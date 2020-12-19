@@ -43,6 +43,9 @@ All notable user-facing or behavior-altering changes will be documented in this 
  - Ford ST170 VVT cam trigger https://rusefi.com/images/triggers/trigger_42.png
  - Changed scheduling timer driver to improve scheduling accuracy #1983
 
+### Fixed
+ - microRusEFI GP3 & GP4 fixed
+
 ## December 2020 National Mutt Day
 
 ### Fixed
