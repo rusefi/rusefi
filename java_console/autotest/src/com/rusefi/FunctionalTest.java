@@ -30,7 +30,6 @@ public class FunctionalTest {
         ecu = EcuTestHelper.createInstance();
     }
 
-    @Ignore
     @Test
     public void testCustomEngine() {
         ecu.setEngineType(ET_DEFAULT_FRANKENSO);
@@ -43,7 +42,6 @@ public class FunctionalTest {
 //        changeRpm(1500);
     }
 
-    @Ignore
     @Test
     public void testMazdaMiata2003() {
         ecu.setEngineType(ET_FRANKENSO_MIATA_NB2);
@@ -95,9 +93,7 @@ public class FunctionalTest {
     @Ignore
     public void testCitroenBerlingo() {
         ecu.setEngineType(ET_CITROEN_TU3JP);
-//        String msg = "Citroen";
         ecu.changeRpm(1200);
-        // todo: add more content
     }
 
     @Test
