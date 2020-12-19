@@ -34,8 +34,8 @@ void setRoverv8(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	// set trigger_type 9
 	engineConfiguration->trigger.type = TT_TOOTHED_WHEEL_36_1;
 
-	engineConfiguration->is_enabled_spi_2 = false;
-	engineConfiguration->isHip9011Enabled = false;
+	// todo#2108 	engineConfiguration->is_enabled_spi_2 = false;
+	// todo#2108 	engineConfiguration->isHip9011Enabled = false;
 	CONFIG(hip9011IntHoldPin) = GPIO_UNASSIGNED;
 	setFrankenstein_01_LCD(engineConfiguration);
 
