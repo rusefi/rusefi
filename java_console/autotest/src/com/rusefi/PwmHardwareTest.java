@@ -22,7 +22,6 @@ public class PwmHardwareTest {
     private static final int FREQUENCY = 160;
 
     @Test
-    @Ignore
     public void testIdlePin() {
         EcuTestHelper ecu = EcuTestHelper.createInstance(true);
 
