@@ -229,7 +229,6 @@ public class FunctionalTest {
     }
 
     @Test
-    @Ignore
     public void testRoverV8() {
         ecu.setEngineType(ET_ROVER_V8);
     }
