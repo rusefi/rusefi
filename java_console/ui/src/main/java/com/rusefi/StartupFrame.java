@@ -1,6 +1,7 @@
 package com.rusefi;
 
 import com.rusefi.autodetect.PortDetector;
+import com.rusefi.autoupdate.Autoupdate;
 import com.rusefi.autoupdate.AutoupdateUtil;
 import com.rusefi.io.LinkManager;
 import com.rusefi.io.serial.BaudRateHolder;
@@ -24,6 +25,7 @@ import java.util.List;
 import static com.rusefi.ui.storage.PersistentConfiguration.getConfig;
 import static com.rusefi.ui.util.UiUtils.getAllComponents;
 import static com.rusefi.ui.util.UiUtils.setToolTip;
+import static java.awt.image.ImageObserver.ABORT;
 import static javax.swing.JOptionPane.YES_NO_OPTION;
 
 /**
@@ -68,7 +70,9 @@ public class StartupFrame {
 
     public StartupFrame() {
 //        AudioPlayback.start();
-        frame = new JFrame("rusEFI console version " + Launcher.CONSOLE_VERSION);
+        String title = "rusEFI console version " + Launcher.CONSOLE_VERSION;
+        String bundleName = Autoupdate.readBundleFullName();
+        frame = new JFrame(title + " " + (bundleName != null ? bundleName : "Unknown bundle"));
         frame.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
         frame.addWindowListener(new WindowAdapter() {
             @Override
