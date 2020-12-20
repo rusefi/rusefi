@@ -262,6 +262,20 @@ uint32_t triggerMaxDuration = 0;
 void hwHandleShaftSignal(trigger_event_e signal, efitick_t timestamp) {
 	ScopePerf perf(PE::HandleShaftSignal);
 
+#if VR_HW_CHECK_MODE
+	// some boards do not have hardware VR input LEDs which makes such boards harder to validate
+	// from experience we know that assembly mistakes happen and quality control is required
+	extern ioportid_t criticalErrorLedPort;
+	extern ioportmask_t criticalErrorLedPin;
+
+	for (int i = 0 ; i < 100 ; i++) {
+		// turning pin ON and busy-waiting a bit
+		palWritePad(criticalErrorLedPort, criticalErrorLedPin, 1);
+	}
+
+	palWritePad(criticalErrorLedPort, criticalErrorLedPin, 0);
+#endif // VR_HW_CHECK_MODE
+
 #if EFI_TOOTH_LOGGER
 	// Log to the Tunerstudio tooth logger
 	// We want to do this before anything else as we
