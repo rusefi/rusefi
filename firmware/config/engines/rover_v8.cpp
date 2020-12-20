@@ -37,7 +37,7 @@ void setRoverv8(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	// todo#2108 	engineConfiguration->is_enabled_spi_2 = false;
 	// todo#2108 	engineConfiguration->isHip9011Enabled = false;
 	CONFIG(hip9011IntHoldPin) = GPIO_UNASSIGNED;
-	setFrankenstein_01_LCD(engineConfiguration);
+	// todo#2108 setFrankenstein_01_LCD(engineConfiguration);
 
 	engineConfiguration->specs.displacement = 3.528;
 	engineConfiguration->specs.cylindersCount = 8;
@@ -94,20 +94,20 @@ void setRoverv8(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	//no malfunction indicator pin needed, since we use CAN_BUS_MAZDA_RX8
 	//engineConfiguration->fuelPumpPin = GPIOE_0; // Frankenstein: low side - out #9
 	//engineConfiguration->malfunctionIndicatorPin = GPIOE_1; // Frankenstein: low side - out #10
-	engineConfiguration->fuelPumpPin = GPIO_UNASSIGNED; // todo#2108 GPIOB_8; // Frankenstein: low side - out #11
-	engineConfiguration->fuelPumpPinMode = OM_DEFAULT;
-	engineConfiguration->mainRelayPin  = GPIO_UNASSIGNED; // todo#2108 GPIOB_9; // Frankenstein: low side - out #12
+    // todo#2108 engineConfiguration->fuelPumpPin = GPIO_UNASSIGNED; // todo#2108 GPIOB_8; // Frankenstein: low side - out #11
+	// todo#2108 engineConfiguration->fuelPumpPinMode = OM_DEFAULT;
+	// todo#2108 engineConfiguration->mainRelayPin  = GPIO_UNASSIGNED; // todo#2108 GPIOB_9; // Frankenstein: low side - out #12
 
-    engineConfiguration->triggerInputPins[0] = GPIOC_6; // 2G YEL/BLU
-    engineConfiguration->triggerInputPins[1] = GPIOA_5; // 2E White CKP
+	// todo#2108 engineConfiguration->triggerInputPins[0] = GPIOC_6; // 2G YEL/BLU
+    // todo#2108 engineConfiguration->triggerInputPins[1] = GPIOA_5; // 2E White CKP
 
     setCommonNTCSensor(&engineConfiguration->clt, 2700);
     setCommonNTCSensor(&engineConfiguration->iat, 2700);
 
-    engineConfiguration->tps1_1AdcChannel = EFI_ADC_3; //Frankenstein: inp2
-    engineConfiguration->vbattAdcChannel = EFI_ADC_0; //Frankenstein: inp5
-    engineConfiguration->clt.adcChannel = EFI_ADC_11;
-    engineConfiguration->iat.adcChannel = EFI_ADC_13;
+    // todo#2108     engineConfiguration->tps1_1AdcChannel = EFI_ADC_3; //Frankenstein: inp2
+    // todo#2108 engineConfiguration->vbattAdcChannel = EFI_ADC_0; //Frankenstein: inp5
+    // todo#2108 engineConfiguration->clt.adcChannel = EFI_ADC_11;
+    // todo#2108 engineConfiguration->iat.adcChannel = EFI_ADC_13;
 
     /**
      * TPS 0% 0.9v
