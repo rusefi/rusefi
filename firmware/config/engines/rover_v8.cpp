@@ -36,7 +36,7 @@ void setRoverv8(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 
 	// todo#2108 	engineConfiguration->is_enabled_spi_2 = false;
 	// todo#2108 	engineConfiguration->isHip9011Enabled = false;
-	CONFIG(hip9011IntHoldPin) = GPIO_UNASSIGNED;
+	// todo#2108CONFIG(hip9011IntHoldPin) = GPIO_UNASSIGNED;
 	// todo#2108 setFrankenstein_01_LCD(engineConfiguration);
 
 	engineConfiguration->specs.displacement = 3.528;
@@ -117,20 +117,20 @@ void setRoverv8(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
     engineConfiguration->tpsMax = convertVoltageTo10bitADC(4.538);
 
     // Stepper logic:
-    engineConfiguration->idle.stepperDirectionPin = GPIO_UNASSIGNED; // todo#2108 GPIOB_10;
-    engineConfiguration->idle.stepperStepPin = GPIO_UNASSIGNED; // todo#2108 GPIOB_15;
-    engineConfiguration->stepperEnablePin = GPIO_UNASSIGNED; // todo#2108 GPIOB_14;
-    engineConfiguration->idleStepperReactionTime = 10;
-    engineConfiguration->idleStepperTotalSteps = 150;
+    // todo#2108engineConfiguration->idle.stepperDirectionPin = GPIO_UNASSIGNED; // todo#2108 GPIOB_10;
+    // todo#2108engineConfiguration->idle.stepperStepPin = GPIO_UNASSIGNED; // todo#2108 GPIOB_15;
+    // todo#2108engineConfiguration->stepperEnablePin = GPIO_UNASSIGNED; // todo#2108 GPIOB_14;
+    // todo#2108engineConfiguration->idleStepperReactionTime = 10;
+    // todo#2108engineConfiguration->idleStepperTotalSteps = 150;
 
-    engineConfiguration->useStepperIdle = false;
+    // todo#2108engineConfiguration->useStepperIdle = false;
 
 	// set injection_pin_mode 0
 	engineConfiguration->injectionPinMode = OM_DEFAULT;
 
-	engineConfiguration->canWriteEnabled = true;
-	engineConfiguration->canReadEnabled = false;
-	engineConfiguration->canNbcType = CAN_BUS_MAZDA_RX8;
+	// todo#2108engineConfiguration->canWriteEnabled = true;
+	// todo#2108engineConfiguration->canReadEnabled = false;
+	// todo#2108engineConfiguration->canNbcType = CAN_BUS_MAZDA_RX8;
 
 
     setAlgorithm(LM_SPEED_DENSITY PASS_CONFIG_PARAMETER_SUFFIX);
