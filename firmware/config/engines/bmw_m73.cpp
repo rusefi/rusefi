@@ -288,6 +288,7 @@ void setEngineBMW_M73_Proteus(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 
 	strcpy(CONFIG(vehicleName), "Using Proteus");
 
+	// set_trigger_input_pin 0 PE7
 	// GPIOE_7:  "VR 1"
 	engineConfiguration->triggerInputPins[0] = GPIOE_7;
 
