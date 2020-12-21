@@ -122,6 +122,8 @@ static void setupDefaultSensorInputs() {
 	// set_trigger_input_pin 0 PE7
 	// GPIOE_7:  "VR 1"
 	engineConfiguration->triggerInputPins[0] = GPIOE_7;
+	// GPIOE_8:  "VR 2"
+	engineConfiguration->camInputs[0] = GPIOE_8;
 #else
 	// Digital channel 1 as default - others not set
 	engineConfiguration->triggerInputPins[0] = GPIOC_6;

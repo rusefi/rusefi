@@ -94,6 +94,20 @@ void hwHandleVvtCamSignal(trigger_value_e front, efitick_t nowNt DECLARE_ENGINE_
 		tc->vvtEventFallCounter++;
 	}
 
+#if VR_HW_CHECK_MODE
+	// some boards do not have hardware VR input LEDs which makes such boards harder to validate
+	// from experience we know that assembly mistakes happen and quality control is required
+	extern ioportid_t criticalErrorLedPort;
+	extern ioportmask_t criticalErrorLedPin;
+
+	for (int i = 0 ; i < 100 ; i++) {
+		// turning pin ON and busy-waiting a bit
+		palWritePad(criticalErrorLedPort, criticalErrorLedPin, 1);
+	}
+
+	palWritePad(criticalErrorLedPort, criticalErrorLedPin, 0);
+#endif // VR_HW_CHECK_MODE
+
 	if (!CONFIG(displayLogicLevelsInEngineSniffer)) {
 		addEngineSnifferEvent(PROTOCOL_VVT_NAME, front == TV_RISE ? PROTOCOL_ES_UP : PROTOCOL_ES_DOWN);
 
