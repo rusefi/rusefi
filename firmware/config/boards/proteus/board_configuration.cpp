@@ -118,8 +118,15 @@ static void setupEtb() {
 
 static void setupDefaultSensorInputs() {
 	// trigger inputs
+#if VR_HW_CHECK_MODE
+	// set_trigger_input_pin 0 PE7
+	// GPIOE_7:  "VR 1"
+	engineConfiguration->triggerInputPins[0] = GPIOE_7;
+#else
 	// Digital channel 1 as default - others not set
 	engineConfiguration->triggerInputPins[0] = GPIOC_6;
+#endif
+
 	engineConfiguration->triggerInputPins[1] = GPIO_UNASSIGNED;
 	engineConfiguration->triggerInputPins[2] = GPIO_UNASSIGNED;
 	engineConfiguration->camInputs[0] = GPIO_UNASSIGNED;
