@@ -94,7 +94,6 @@ public class FunctionalTest {
     }
 
     @Test
-    @Ignore
     public void test2003DodgeNeon() {
         ecu.setEngineType(ET_DODGE_NEON_2003_CRANK);
         ecu.sendCommand("set wwaeTau 0");
@@ -162,7 +161,6 @@ public class FunctionalTest {
     }
 
     @Test
-    @Ignore
     public void testMazdaProtege() {
         ecu.setEngineType(ET_FORD_ESCORT_GT);
         EngineChart chart;
