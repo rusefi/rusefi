@@ -358,15 +358,7 @@ OutputPin::OutputPin() {
 }
 
 bool OutputPin::isInitialized() {
-#if EFI_GPIO_HARDWARE && EFI_PROD_CODE
-#if (BOARD_EXT_GPIOCHIPS > 0)
-	if (ext)
-		return true;
-#endif /* (BOARD_EXT_GPIOCHIPS > 0) */
-	return port != NULL;
-#else /* EFI_GPIO_HARDWARE */
-	return true;
-#endif /* EFI_GPIO_HARDWARE */
+	return brainPin != GPIO_UNASSIGNED;
 }
 
 void OutputPin::toggle() {
@@ -438,13 +430,6 @@ void OutputPin::setDefaultPinState(const pin_output_mode_e *outputMode) {
 
 void initOutputPins(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 #if EFI_GPIO_HARDWARE
-	/**
-	 * want to make sure it's all zeros so that we can compare in initOutputPinExt() method
-	 */
-// todo: it's too late to clear now? this breaks default status LEDs
-// todo: fix this?
-//	memset(&outputs, 0, sizeof(outputs));
-
 #if HAL_USE_SPI
 	enginePins.sdCsPin.initPin("SD CS", CONFIG(sdCardCsPin));
 #endif /* HAL_USE_SPI */
