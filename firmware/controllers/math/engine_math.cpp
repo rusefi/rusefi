@@ -360,14 +360,11 @@ static int getIgnitionPinForIndex(int cylinderIndex DECLARE_ENGINE_PARAMETER_SUF
 }
 
 void prepareIgnitionPinIndices(ignition_mode_e ignitionMode DECLARE_ENGINE_PARAMETER_SUFFIX) {
-	if (ignitionMode != engine->ignitionModeForPinIndices) {
 #if EFI_ENGINE_CONTROL
-		for (int cylinderIndex = 0; cylinderIndex < CONFIG(specs.cylindersCount); cylinderIndex++) {
-			ENGINE(ignitionPin[cylinderIndex]) = getIgnitionPinForIndex(cylinderIndex PASS_ENGINE_PARAMETER_SUFFIX);
-		}
-#endif /* EFI_ENGINE_CONTROL */
-		engine->ignitionModeForPinIndices = ignitionMode;
+	for (int cylinderIndex = 0; cylinderIndex < CONFIG(specs.cylindersCount); cylinderIndex++) {
+		ENGINE(ignitionPin[cylinderIndex]) = getIgnitionPinForIndex(cylinderIndex PASS_ENGINE_PARAMETER_SUFFIX);
 	}
+#endif /* EFI_ENGINE_CONTROL */
 }
 
 /**
