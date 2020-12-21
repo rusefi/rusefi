@@ -8,6 +8,7 @@
 
 #include "global.h"
 #if !EFI_UNIT_TEST
+#include "os_access.h"
 #include "settings.h"
 #include "eficonsole.h"
 #include "engine_configuration.h"
@@ -241,14 +242,18 @@ static void setTimingMode(int value) {
 }
 
 void setEngineType(int value) {
-	engineConfiguration->engineType = (engine_type_e) value;
-	resetConfigurationExt(&logger, (engine_type_e) value PASS_ENGINE_PARAMETER_SUFFIX);
-	engine->resetEngineSnifferIfInTestMode();
+	{
+		chibios_rt::CriticalSectionLocker csl;
 
-#if EFI_INTERNAL_FLASH
-	writeToFlashNow();
-//	scheduleReset();
-#endif /* EFI_PROD_CODE */
+		engineConfiguration->engineType = (engine_type_e) value;
+		resetConfigurationExt(&logger, (engine_type_e) value PASS_ENGINE_PARAMETER_SUFFIX);
+		engine->resetEngineSnifferIfInTestMode();
+
+	#if EFI_INTERNAL_FLASH
+		writeToFlashNow();
+	//	scheduleReset();
+	#endif /* EFI_PROD_CODE */
+	}
 	incrementGlobalConfigurationVersion(PASS_ENGINE_PARAMETER_SIGNATURE);
 	doPrintConfiguration();
 }
@@ -426,6 +431,7 @@ static void setInjectionMode(int value) {
 static void setIgnitionMode(int value) {
 	engineConfiguration->ignitionMode = (ignition_mode_e) value;
 	incrementGlobalConfigurationVersion(PASS_ENGINE_PARAMETER_SIGNATURE);
+	prepareOutputSignals(PASS_ENGINE_PARAMETER_SIGNATURE);
 	doPrintConfiguration();
 }
 
