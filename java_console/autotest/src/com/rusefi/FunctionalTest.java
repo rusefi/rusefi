@@ -49,7 +49,6 @@ public class FunctionalTest {
 //        sendCommand("get nosuchgettersdfsdfsdfsdf"); // just test coverage
     }
 
-    @Ignore
     @Test
     public void testCamaro() {
         ecu.setEngineType(ET_CAMARO);
@@ -89,7 +88,6 @@ public class FunctionalTest {
     }
 
     @Test
-    @Ignore
     public void testCitroenBerlingo() {
         ecu.setEngineType(ET_CITROEN_TU3JP);
         ecu.changeRpm(1200);
