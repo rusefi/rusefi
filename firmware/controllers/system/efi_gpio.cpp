@@ -358,7 +358,11 @@ OutputPin::OutputPin() {
 }
 
 bool OutputPin::isInitialized() {
+#if EFI_PROD_CODE
 	return brainPin != GPIO_UNASSIGNED;
+#else
+	return true;
+#endif
 }
 
 void OutputPin::toggle() {
