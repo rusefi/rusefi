@@ -134,7 +134,7 @@ public class EcuTestHelper {
         sleepSeconds(3);
         sendCommand(getEnableCommand(Fields.CMD_PWM));
         sendCommand(getEnableCommand(Fields.CMD_SELF_STIMULATION));
-        // we need to skip one chart since it might have been produced with previous engine type
-        TestingUtils.nextChart(commandQueue);
+//        // we need to skip one chart since it might have been produced with previous engine type
+//        TestingUtils.nextChart(commandQueue);
     }
 }
