@@ -435,7 +435,6 @@ end_struct
 #define ET_FORD_ASPIRE 3
 #define ET_FORD_FIESTA 4
 #define ET_FORD_INLINE_6 7
-#define ET_ROVER_V8 10
 #define ET_FORD_ESCORT_GT 14
 #define ET_BMW_E34 25
 #define ET_SACHS 29

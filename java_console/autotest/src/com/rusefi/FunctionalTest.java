@@ -294,11 +294,6 @@ public class FunctionalTest {
     }
 
     @Test
-    public void testRoverV8() {
-        ecu.setEngineType(ET_ROVER_V8);
-    }
-
-    @Test
     public void testFordFiesta() {
         ecu.setEngineType(ET_FORD_FIESTA);
         EngineChart chart;
