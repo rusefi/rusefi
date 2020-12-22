@@ -881,8 +881,6 @@ case PROTEUS:
   return "PROTEUS";
 case PROTEUS_MIATA_NB2:
   return "PROTEUS_MIATA_NB2";
-case ROVER_V8:
-  return "ROVER_V8";
 case SACHS:
   return "SACHS";
 case SUBARUEJ20G_DEFAULTS:
