@@ -61,7 +61,6 @@
 #include "m111.h"
 
 #include "citroenBerlingoTU3JP.h"
-#include "rover_v8.h"
 #include "mitsubishi.h"
 #include "subaru.h"
 #include "test_engine.h"
@@ -1319,9 +1318,6 @@ void resetConfigurationExt(Logging * logger, configuration_callback_t boardCallb
 		break;
 	case CITROEN_TU3JP:
 		setCitroenBerlingoTU3JPConfiguration(PASS_CONFIG_PARAMETER_SIGNATURE);
-		break;
-	case ROVER_V8:
-		setRoverv8(PASS_CONFIG_PARAMETER_SIGNATURE);
 		break;
 	case SUBARU_2003_WRX:
 		setSubaru2003Wrx(PASS_CONFIG_PARAMETER_SIGNATURE);
