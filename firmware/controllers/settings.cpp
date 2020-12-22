@@ -224,7 +224,6 @@ void printConfiguration(const engine_configuration_s *engineConfiguration) {
 }
 
 static void doPrintConfiguration() {
-	return;
 	printConfiguration(engineConfiguration);
 }
 
