@@ -127,8 +127,7 @@ typedef enum {
 
 	BMW_M73_F = ET_BMW_M73_F,
 
-
-	ZIL_130 = 42,
+	PROTEUS_QC_TEST_BOARD = ET_PROTEUS_QC_TEST_BOARD,
 
 	HONDA_600 = 43,
 
@@ -180,7 +179,7 @@ typedef enum {
 
 	MICRO_RUS_EFI = ET_MRE_DEFAULTS,
 
-	PROTEUS = 61,
+	PROTEUS_DEFAULTS = 61,
 
 	VW_B6 = ET_VW_B6,
 
