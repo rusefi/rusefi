@@ -140,8 +140,6 @@ const char* getConfigurationName(engine_type_e engineType) {
 		return "EscrtGT";
 	case CITROEN_TU3JP:
 		return "TU3JP";
-	case ROVER_V8:
-		return "Rvrv8";
 	case MITSU_4G93:
 		return "Mi4G93";
 	case MIATA_1990:
@@ -226,6 +224,7 @@ void printConfiguration(const engine_configuration_s *engineConfiguration) {
 }
 
 static void doPrintConfiguration() {
+	return;
 	printConfiguration(engineConfiguration);
 }
 
