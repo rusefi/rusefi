@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEfi tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Tue Dec 22 12:25:39 UTC 2020
+// this file was generated automatically by rusEfi tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Tue Dec 22 15:06:54 UTC 2020
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -406,7 +406,6 @@ public class Fields {
 	public static final int ET_PROTEUS_BMW_M73 = 63;
 	public static final int ET_PROTEUS_MIATA_NB2 = 67;
 	public static final int ET_PROTEUS_QC_TEST_BOARD = 42;
-	public static final int ET_ROVER_V8 = 10;
 	public static final int ET_SACHS = 29;
 	public static final int ET_VW_ABA = 32;
 	public static final int ET_VW_B6 = 62;
@@ -1464,7 +1463,7 @@ public class Fields {
 	public static final char TS_SD_R_COMMAND = 'r';
 	public static final char TS_SD_W_COMMAND = 'w';
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI 2020.12.22.all.4167447813";
+	public static final String TS_SIGNATURE = "rusEFI 2020.12.22.all.2985310813";
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final int TT_TT_1_16 = 50;
 	public static final int TT_TT_2JZ_1_12 = 29;
