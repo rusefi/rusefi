@@ -118,8 +118,6 @@ const char* getConfigurationName(engine_type_e engineType) {
 		return "Neon95";
 	case FORD_ASPIRE_1996:
 		return "Aspire";
-	case FORD_FIESTA:
-		return "Fiesta";
 	case NISSAN_PRIMERA:
 		return "Primera";
 	case HONDA_ACCORD_CD:

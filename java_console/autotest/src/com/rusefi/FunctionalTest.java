@@ -229,21 +229,6 @@ public class FunctionalTest {
     }
 
     @Test
-    public void testFordFiesta() {
-        ecu.setEngineType(ET_FORD_FIESTA);
-        EngineChart chart;
-        ecu.changeRpm(2000);
-        chart = nextChart();
-
-        String msg = "Fiesta";
-        double x = 312;
-        assertWave("wasted spark #1 with Fiesta", chart, EngineChart.SPARK_1, 0.1333333, x, x + 360);
-        assertWaveNull(chart, EngineChart.SPARK_2);
-        assertWave("wasted spark #3 with Fiesta", chart, EngineChart.SPARK_3, 0.1333333, x + 180, x + 540);
-        assertWaveNull(msg, chart, EngineChart.SPARK_4);
-    }
-
-    @Test
     public void testFord6() {
         ecu.setEngineType(ET_FORD_INLINE_6);
         EngineChart chart;

@@ -45,7 +45,6 @@
 #include "dodge_ram.h"
 
 #include "ford_aspire.h"
-#include "ford_fiesta.h"
 #include "ford_1995_inline_6.h"
 
 #include "nissan_primera.h"
@@ -1250,9 +1249,6 @@ void resetConfigurationExt(Logging * logger, configuration_callback_t boardCallb
 		break;
 	case FORD_ASPIRE_1996:
 		setFordAspireEngineConfiguration(PASS_CONFIG_PARAMETER_SIGNATURE);
-		break;
-	case FORD_FIESTA:
-		setFordFiestaDefaultEngineConfiguration(PASS_ENGINE_PARAMETER_SIGNATURE);
 		break;
 	case NISSAN_PRIMERA:
 		setNissanPrimeraEngineConfiguration(PASS_CONFIG_PARAMETER_SIGNATURE);
