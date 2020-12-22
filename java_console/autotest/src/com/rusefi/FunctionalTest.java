@@ -30,6 +30,76 @@ public class FunctionalTest {
         ecu = EcuTestHelper.createInstance();
     }
 
+	@Test
+	public void testChangingIgnitionMode() {
+		String msg = "change ign mode";
+
+		ecu.setEngineType(ET_FORD_FIESTA);
+		ecu.changeRpm(2000);
+
+		// First is wasted spark
+		ecu.sendCommand("set ignition_mode 2");
+
+		{
+			// Check that we're in wasted spark mode
+			EngineChart chart = nextChart();
+
+			// Wasted spark should fire cylinders 1/3...
+            assertWaveNotNull(chart, EngineChart.SPARK_1);
+            assertWaveNotNull(chart, EngineChart.SPARK_3);
+
+            // ...but not cylinders 2/4
+            assertWaveNull(chart, EngineChart.SPARK_2);
+			assertWaveNull(chart, EngineChart.SPARK_4);
+		}
+
+		// Now switch to sequential mode
+		ecu.sendCommand("set ignition_mode 1");
+
+		{
+			// Check that we're in sequential spark mode
+			EngineChart chart = nextChart();
+
+			// All 4 cylinders should be firing
+			assertWaveNotNull(chart, EngineChart.SPARK_1);
+            assertWaveNotNull(chart, EngineChart.SPARK_2);
+            assertWaveNotNull(chart, EngineChart.SPARK_3);
+			assertWaveNotNull(chart, EngineChart.SPARK_4);
+		}
+
+		// Now switch to "one coil" mode
+        ecu.sendCommand("set ignition_mode 0");
+
+        {
+            // Check that we're in sequential spark mode
+            EngineChart chart = nextChart();
+
+            // Only coil 1 should be active
+            assertWaveNotNull(chart, EngineChart.SPARK_1);
+
+            // And no others
+            assertWaveNull(chart, EngineChart.SPARK_2);
+            assertWaveNull(chart, EngineChart.SPARK_3);
+            assertWaveNull(chart, EngineChart.SPARK_4);
+        }
+
+		// Now switch BACK to wasted mode
+		ecu.sendCommand("set ignition_mode 2");
+
+		{
+			// Check that we're in wasted spark mode
+			EngineChart chart = nextChart();
+
+            // Wasted spark should fire cylinders 1/3...
+            assertWaveNotNull(chart, EngineChart.SPARK_1);
+            assertWaveNotNull(chart, EngineChart.SPARK_3);
+
+            // ...but not cylinders 2/4
+            assertWaveNull(chart, EngineChart.SPARK_2);
+            assertWaveNull(msg, chart, EngineChart.SPARK_4);
+		}
+	}
+
     @Test
     public void testCustomEngine() {
         ecu.setEngineType(ET_DEFAULT_FRANKENSO);
@@ -224,11 +294,6 @@ public class FunctionalTest {
     }
 
     @Test
-    public void testRoverV8() {
-        ecu.setEngineType(ET_ROVER_V8);
-    }
-
-    @Test
     public void testFord6() {
         ecu.setEngineType(ET_FORD_INLINE_6);
         EngineChart chart;
@@ -382,6 +447,10 @@ public class FunctionalTest {
 
     private static void assertWaveNull(String msg, EngineChart chart, String key) {
         assertNull(msg + "chart for " + key, chart.get(key));
+    }
+
+    private static void assertWaveNotNull(EngineChart chart, String key) {
+        assertTrue(chart.get(key) != null);
     }
 
     private EngineChart nextChart() {
