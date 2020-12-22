@@ -125,9 +125,6 @@ public class TestingUtils {
      * @param commandQueue
      */
     private static String getEngineChart(CommandQueue commandQueue) {
-        // let the engine stabilize before we inspect the chart
-        IoUtil.sleepSeconds(1);
-
         final CountDownLatch engineChartLatch = new CountDownLatch(1);
 
         final AtomicReference<String> result = new AtomicReference<>();
