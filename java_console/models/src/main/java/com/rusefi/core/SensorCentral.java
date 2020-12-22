@@ -62,7 +62,7 @@ public class SensorCentral implements ISensorCentral {
     }
 
     @Override
-    public void addListener(Sensor sensor, SensorListener listener) {
+    public ListenerToken addListener(Sensor sensor, SensorListener listener) {
         List<SensorListener> listeners;
         synchronized (allListeners) {
             listeners = allListeners.get(sensor);
@@ -71,6 +71,8 @@ public class SensorCentral implements ISensorCentral {
             allListeners.put(sensor, listeners);
         }
         listeners.add(listener);
+
+        return new SensorCentral.ListenerToken(this, sensor, listener);
     }
 
     @Override
