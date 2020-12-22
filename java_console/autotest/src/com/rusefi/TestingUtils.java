@@ -15,6 +15,8 @@ import java.util.List;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.atomic.AtomicReference;
 
+import static org.junit.Assert.fail;
+
 import static com.devexperts.logging.Logging.getLogging;
 import static com.rusefi.waves.EngineReport.isCloseEnough;
 
@@ -50,13 +52,6 @@ public class TestingUtils {
         while (angle >= 720)
             angle -= 720;
         return angle;
-    }
-
-    private static void fail(String message) {
-        log.info("FAILURE: " + message);
-        IllegalStateException exception = new IllegalStateException(message);
-        FileLog.MAIN.log(exception);
-        throw exception;
     }
 
     static void assertTrue(boolean b) {
@@ -130,6 +125,9 @@ public class TestingUtils {
      * @param commandQueue
      */
     private static String getEngineChart(CommandQueue commandQueue) {
+        // let the engine stabilize before we inspect the chart
+        IoUtil.sleepSeconds(1);
+
         final CountDownLatch engineChartLatch = new CountDownLatch(1);
 
         final AtomicReference<String> result = new AtomicReference<>();
