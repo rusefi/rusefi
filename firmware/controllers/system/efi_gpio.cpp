@@ -438,12 +438,6 @@ void OutputPin::setDefaultPinState(const pin_output_mode_e *outputMode) {
 
 void initOutputPins(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 #if EFI_GPIO_HARDWARE
-	/**
-	 * want to make sure it's all zeros so that we can compare in initOutputPinExt() method
-	 */
-// todo: it's too late to clear now? this breaks default status LEDs
-// todo: fix this?
-//	memset(&outputs, 0, sizeof(outputs));
 
 #if HAL_USE_SPI
 	enginePins.sdCsPin.initPin("SD CS", CONFIG(sdCardCsPin));

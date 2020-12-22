@@ -205,6 +205,7 @@
             <batchtest todir="${hw_tests}">
                 <fileset dir="autotest/src" includes="**/*Test.java"/>
             </batchtest>
+            <formatter type="plain" usefile="false" /> <!-- to screen -->
         </junit>
     </target>
 

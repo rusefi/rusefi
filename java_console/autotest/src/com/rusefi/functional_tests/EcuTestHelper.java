@@ -3,6 +3,7 @@ package com.rusefi.functional_tests;
 import com.devexperts.logging.Logging;
 import com.rusefi.ControllerConnectorState;
 import com.rusefi.IoUtil;
+import com.rusefi.TestingUtils;
 import com.rusefi.Timeouts;
 import com.rusefi.config.generated.Fields;
 import com.rusefi.core.Sensor;
@@ -133,5 +134,7 @@ public class EcuTestHelper {
         sleepSeconds(3);
         sendCommand(getEnableCommand(Fields.CMD_PWM));
         sendCommand(getEnableCommand(Fields.CMD_SELF_STIMULATION));
+//        // we need to skip one chart since it might have been produced with previous engine type
+//        TestingUtils.nextChart(commandQueue);
     }
 }

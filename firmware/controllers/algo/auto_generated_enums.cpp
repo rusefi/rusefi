@@ -1,7 +1,7 @@
 #include "global.h"
 #include "rusefi_enums.h"
 #include "rusefi_hw_enums.h"
-// was generated automatically by rusEfi tool  from rusefi_hw_enums.h // was generated automatically by rusEfi tool  from rusefi_enums.h // by enum2string.jar tool on Fri Dec 18 08:54:09 EST 2020
+// was generated automatically by rusEfi tool  from rusefi_hw_enums.h // was generated automatically by rusEfi tool  from rusefi_enums.h // by enum2string.jar tool on Tue Dec 22 10:13:01 EST 2020
 // see also gen_config_and_enums.bat
 
 
@@ -801,8 +801,6 @@ case FORD_ASPIRE_1996:
   return "FORD_ASPIRE_1996";
 case FORD_ESCORT_GT:
   return "FORD_ESCORT_GT";
-case FORD_FIESTA:
-  return "FORD_FIESTA";
 case FORD_INLINE_6_1995:
   return "FORD_INLINE_6_1995";
 case FRANKENSO_QA_ENGINE:
@@ -877,12 +875,12 @@ case NISSAN_PRIMERA:
   return "NISSAN_PRIMERA";
 case PROMETHEUS_DEFAULTS:
   return "PROMETHEUS_DEFAULTS";
-case PROTEUS:
-  return "PROTEUS";
+case PROTEUS_DEFAULTS:
+  return "PROTEUS_DEFAULTS";
 case PROTEUS_MIATA_NB2:
   return "PROTEUS_MIATA_NB2";
-case ROVER_V8:
-  return "ROVER_V8";
+case PROTEUS_QC_TEST_BOARD:
+  return "PROTEUS_QC_TEST_BOARD";
 case SACHS:
   return "SACHS";
 case SUBARUEJ20G_DEFAULTS:
@@ -923,8 +921,6 @@ case VW_ABA:
   return "VW_ABA";
 case VW_B6:
   return "VW_B6";
-case ZIL_130:
-  return "ZIL_130";
   }
  return NULL;
 }

@@ -45,7 +45,6 @@
 #include "dodge_ram.h"
 
 #include "ford_aspire.h"
-#include "ford_fiesta.h"
 #include "ford_1995_inline_6.h"
 
 #include "nissan_primera.h"
@@ -61,7 +60,6 @@
 #include "m111.h"
 
 #include "citroenBerlingoTU3JP.h"
-#include "rover_v8.h"
 #include "mitsubishi.h"
 #include "subaru.h"
 #include "test_engine.h"
@@ -1156,9 +1154,8 @@ void resetConfigurationExt(Logging * logger, configuration_callback_t boardCallb
 	switch (engineType) {
 	case MICRO_RUS_EFI:
 // todo: is it time to replace MICRO_RUS_EFI, PROTEUS, PROMETHEUS_DEFAULTS with MINIMAL_PINS? maybe rename MINIMAL_PINS to DEFAULT?
-	case PROTEUS:
+	case PROTEUS_DEFAULTS:
 	case PROMETHEUS_DEFAULTS:
-	case ZIL_130:
 	case MINIMAL_PINS:
 		// all basic settings are already set in prepareVoidConfiguration(), no need to set anything here
 		// nothing to do - we do it all in setBoardConfigurationOverrides
@@ -1218,6 +1215,7 @@ void resetConfigurationExt(Logging * logger, configuration_callback_t boardCallb
 		break;
 #endif // HW_MICRO_RUSEFI
 #if HW_PROTEUS
+	case PROTEUS_QC_TEST_BOARD:
 	case BMW_M73_PROTEUS:
 		setEngineBMW_M73_Proteus(PASS_CONFIG_PARAMETER_SIGNATURE);
 		break;
@@ -1252,9 +1250,6 @@ void resetConfigurationExt(Logging * logger, configuration_callback_t boardCallb
 		break;
 	case FORD_ASPIRE_1996:
 		setFordAspireEngineConfiguration(PASS_CONFIG_PARAMETER_SIGNATURE);
-		break;
-	case FORD_FIESTA:
-		setFordFiestaDefaultEngineConfiguration(PASS_ENGINE_PARAMETER_SIGNATURE);
 		break;
 	case NISSAN_PRIMERA:
 		setNissanPrimeraEngineConfiguration(PASS_CONFIG_PARAMETER_SIGNATURE);
@@ -1321,9 +1316,6 @@ void resetConfigurationExt(Logging * logger, configuration_callback_t boardCallb
 		break;
 	case CITROEN_TU3JP:
 		setCitroenBerlingoTU3JPConfiguration(PASS_CONFIG_PARAMETER_SIGNATURE);
-		break;
-	case ROVER_V8:
-		setRoverv8(PASS_CONFIG_PARAMETER_SIGNATURE);
 		break;
 	case SUBARU_2003_WRX:
 		setSubaru2003Wrx(PASS_CONFIG_PARAMETER_SIGNATURE);

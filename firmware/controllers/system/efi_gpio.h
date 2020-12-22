@@ -207,6 +207,8 @@ public:
 	InjectorOutputPin injectors[INJECTION_PIN_COUNT];
 	IgnitionOutputPin coils[IGNITION_PIN_COUNT];
 	NamedOutputPin auxValve[AUX_DIGITAL_VALVE_COUNT];
+	OutputPin tcuSolenoids[TCU_SOLENOID_COUNT];
+
 private:
 	void startInjectionPins();
 	void startIgnitionPins();

@@ -433,9 +433,7 @@ end_struct
 ! todo https://github.com/rusefi/rusefi/issues/2102
 #define ET_DODGE_NEON_1995 2
 #define ET_FORD_ASPIRE 3
-#define ET_FORD_FIESTA 4
 #define ET_FORD_INLINE_6 7
-#define ET_ROVER_V8 10
 #define ET_FORD_ESCORT_GT 14
 #define ET_BMW_E34 25
 #define ET_SACHS 29
@@ -465,6 +463,7 @@ end_struct
 #define ET_PROTEUS_MIATA_NB2 67
 #define ET_MIATA_TCU_PROTEUS 1
 #define ET_CITROEN_TU3JP 65
+#define ET_PROTEUS_QC_TEST_BOARD 42
 
 
 custom engine_type_e 4 bits, S32, @OFFSET@,   [0:6], @@engine_type_e_auto_enum@@

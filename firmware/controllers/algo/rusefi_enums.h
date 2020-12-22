@@ -40,11 +40,7 @@ typedef enum {
 	 * http://rusefi.com/forum/viewtopic.php?t=375
 	 */
 	FORD_ASPIRE_1996 = ET_FORD_ASPIRE,
-	/**
-	 * 36-1 toothed wheel engine
-	 * http://rusefi.com/forum/viewtopic.php?t=282
-	 */
-	FORD_FIESTA = ET_FORD_FIESTA,
+
 	NISSAN_PRIMERA = 5,
 	HONDA_ACCORD_CD = 6,
 	FORD_INLINE_6_1995 = 7,
@@ -54,9 +50,6 @@ typedef enum {
 	 * http://rusefi.com/forum/viewtopic.php?f=3&t=332
 	 */
 	GY6_139QMB = 8,
-
-
-	ROVER_V8 = ET_ROVER_V8,
 
 	MIATA_PROTEUS_TCU = ET_MIATA_TCU_PROTEUS,
 	MAZDA_MIATA_NB1 = 9,
@@ -130,8 +123,7 @@ typedef enum {
 
 	BMW_M73_F = ET_BMW_M73_F,
 
-
-	ZIL_130 = 42,
+	PROTEUS_QC_TEST_BOARD = ET_PROTEUS_QC_TEST_BOARD,
 
 	HONDA_600 = 43,
 
@@ -183,7 +175,7 @@ typedef enum {
 
 	MICRO_RUS_EFI = ET_MRE_DEFAULTS,
 
-	PROTEUS = 61,
+	PROTEUS_DEFAULTS = 61,
 
 	VW_B6 = ET_VW_B6,
 
