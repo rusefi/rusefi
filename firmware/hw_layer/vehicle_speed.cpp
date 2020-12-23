@@ -86,8 +86,9 @@ void stopVSSPins(void) {
 }
 
 void startVSSPins(void) {
-	if (!hasVehicleSpeedSensor())
+	if (!hasVehicleSpeedSensor()) {
 		return;
+	}
 
 #if HAL_VSS_USE_PAL
 	ioline_t pal_line = PAL_LINE(getHwPort("vss", CONFIG(vehicleSpeedSensorInputPin)), getHwPin("vss", CONFIG(vehicleSpeedSensorInputPin)));

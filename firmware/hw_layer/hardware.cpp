@@ -620,15 +620,15 @@ void initHardware(Logging *l) {
 
 #if EFI_VEHICLE_SPEED
 	initVehicleSpeed(sharedLogger);
-#endif
+#endif // EFI_VEHICLE_SPEED
 
 #if EFI_CAN_SUPPORT
 	initCanVssSupport(sharedLogger);
-#endif
+#endif // EFI_CAN_SUPPORT
 
 #if EFI_CDM_INTEGRATION
 	cdmIonInit();
-#endif
+#endif // EFI_CDM_INTEGRATION
 
 #if (HAL_USE_PAL && EFI_JOYSTICK)
 	initJoystick(sharedLogger);
