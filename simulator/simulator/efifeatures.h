@@ -74,11 +74,6 @@
 #define EFI_MAP_AVERAGING TRUE
 #define EFI_ALTERNATOR_CONTROL TRUE
 
-/**
- * Should PnP engine configurations be included in the binary?
- */
-#define EFI_INCLUDE_ENGINE_PRESETS TRUE
-
 #define EFI_ENGINE_AUDI_AAN FALSE
 #define EFI_ENGINE_SNOW_BLOWER FALSE
 
