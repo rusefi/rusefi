@@ -34,7 +34,7 @@ public class FunctionalTest {
 	public void testChangingIgnitionMode() {
 		String msg = "change ign mode";
 
-		ecu.setEngineType(ET_FORD_FIESTA);
+		ecu.setEngineType(ET_FORD_ASPIRE);
 		ecu.changeRpm(2000);
 
 		// First is wasted spark

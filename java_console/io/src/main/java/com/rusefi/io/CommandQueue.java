@@ -20,7 +20,7 @@ import static com.devexperts.logging.Logging.getLogging;
  */
 @SuppressWarnings("FieldCanBeLocal")
 public class CommandQueue {
-    private static final Logging log = getLogging(LinkManager.class);
+    private static final Logging log = getLogging(CommandQueue.class);
     public static final String CONFIRMATION_PREFIX = "confirmation_";
     public static final int DEFAULT_TIMEOUT = 500;
     private static final int COMMAND_CONFIRMATION_TIMEOUT = 1000;
