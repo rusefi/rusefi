@@ -104,11 +104,11 @@ void stopJoystickPins() {
 void startJoystickPins() {
 	// todo: extract 'configurePalInputPin() method?
 	// input capture driver would claim pin ownership so we are not using 'efiSetPadMode' here
-	palSetPadMode("joy center", CONFIG(joystickCenterPin), PAL_MODE_INPUT_PULLUP);
-	palSetPadMode("joy A", CONFIG(joystickAPin), PAL_MODE_INPUT_PULLUP);
-	// not used so far	palSetPadMode("joy B", CONFIG(joystickBPin), PAL_MODE_INPUT_PULLUP);
-	// not used so far	palSetPadMode("joy C", CONFIG(joystickCPin), PAL_MODE_INPUT_PULLUP);
-	palSetPadMode("joy D", CONFIG(joystickDPin), PAL_MODE_INPUT_PULLUP);
+	efiSetPadModeWithoutOwnershipAcquisition("joy center", CONFIG(joystickCenterPin), PAL_MODE_INPUT_PULLUP);
+	efiSetPadModeWithoutOwnershipAcquisition("joy A", CONFIG(joystickAPin), PAL_MODE_INPUT_PULLUP);
+	// not used so far	efiSetPadModeWithoutOwnershipAcquisition("joy B", CONFIG(joystickBPin), PAL_MODE_INPUT_PULLUP);
+	// not used so far	efiSetPadModeWithoutOwnershipAcquisition("joy C", CONFIG(joystickCPin), PAL_MODE_INPUT_PULLUP);
+	efiSetPadModeWithoutOwnershipAcquisition("joy D", CONFIG(joystickDPin), PAL_MODE_INPUT_PULLUP);
 }
 
 void initJoystick(Logging *shared) {
