@@ -438,7 +438,7 @@ public class FunctionalTest {
      * This method waits for longer then usual.
      */
     private void sendComplexCommand(String command) {
-        ecu.sendCommand(command, EcuTestHelper.COMPLEX_COMMAND_RETRY, Timeouts.CMD_TIMEOUT);
+        ecu.sendCommand(command, Timeouts.CMD_TIMEOUT);
     }
 
     private static void assertWaveNull(EngineChart chart, String key) {
