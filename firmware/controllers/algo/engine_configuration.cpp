@@ -1080,8 +1080,8 @@ void setDefaultFrankensoConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 //	engineConfiguration->gps_rx_pin = GPIOB_7;
 //	engineConfiguration->gps_tx_pin = GPIOB_6;
 
-	engineConfiguration->triggerSimulatorPins[0] = GPIOB_14;
-	engineConfiguration->triggerSimulatorPins[1] = GPIOB_15;
+	engineConfiguration->triggerSimulatorPins[0] = GPIOD_1;
+	engineConfiguration->triggerSimulatorPins[1] = GPIOD_2;
 
 	engineConfiguration->triggerInputPins[0] = GPIOC_6;
 	engineConfiguration->triggerInputPins[1] = GPIOA_5;
