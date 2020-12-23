@@ -90,6 +90,7 @@ void startVSSPins(void) {
 		return;
 	}
 
+// todo: refactor https://github.com/rusefi/rusefi/issues/2123
 #if HAL_VSS_USE_PAL
 	ioline_t pal_line = PAL_LINE(getHwPort("vss", CONFIG(vehicleSpeedSensorInputPin)), getHwPin("vss", CONFIG(vehicleSpeedSensorInputPin)));
 	efiExtiEnablePin("VSS", CONFIG(vehicleSpeedSensorInputPin), PAL_EVENT_MODE_BOTH_EDGES, vsExtiCallback, (void *)pal_line);
