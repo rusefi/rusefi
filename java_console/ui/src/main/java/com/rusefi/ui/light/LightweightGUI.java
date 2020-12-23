@@ -45,13 +45,7 @@ public class LightweightGUI {
 
 
         JLabel firmwareVersion = new JLabel();
-        SensorCentral.getInstance().addListener(Sensor.FIRMWARE_VERSION, new SensorCentral.SensorListener() {
-            @Override
-            public void onSensorUpdate(double value) {
-                firmwareVersion.setText(Integer.toString((int) value));
-            }
-        });
-
+        SensorCentral.getInstance().addListener(Sensor.FIRMWARE_VERSION, value -> firmwareVersion.setText(Integer.toString((int) value)));
         leftPanel.add(firmwareVersion);
 
         content.add(topPanel, BorderLayout.NORTH);

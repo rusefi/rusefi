@@ -55,13 +55,14 @@ public class SensorGauge {
 
         gauge.setBackgroundColor(BackgroundColor.LIGHT_GRAY);
 
-        SensorCentral.getInstance().addListener(sensor, new SensorCentral.SensorListener() {
-            public void onSensorUpdate(double value) {
+        SensorCentral.getInstance().addListener(sensor,
+            value -> {
                 if (GaugesPanel.IS_PAUSED)
                     return;
                 gauge.setValue(sensor.translateValue(value));
             }
-        });
+        );
+
         gauge.setValue(sensor.translateValue(SensorCentral.getInstance().getValue(sensor)));
         gauge.setLcdDecimals(2);
 
