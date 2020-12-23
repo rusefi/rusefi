@@ -11,6 +11,7 @@
 #include "digital_input_exti.h"
 #include "efi_gpio.h"
 #include "error_handling.h"
+#include "pin_repository.h"
 
 /**
  * EXTI is a funny thing: you can only use same pin on one port. For example, you can use
