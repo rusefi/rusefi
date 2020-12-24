@@ -31,12 +31,6 @@ public class CommandQueue {
     public static final int SLOW_CONFIRMATION_TIMEOUT = 5000;
     public static final Class<CommandQueue> COMMAND_QUEUE_CLASS = CommandQueue.class;
     private final LinkManager linkManager;
-    /**
-     * One complex use-case is when we send out a bunch of commands and then we need to handle all the configurations
-     * correctly
-     * TODO: TTL for confirmations?
-     */
-    private Set<String> pendingConfirmations = Collections.synchronizedSet(new HashSet<String>());
 
     private final BlockingQueue<IMethodInvocation> pendingCommands = new LinkedBlockingQueue<>();
     private final List<Consumer<String>> commandListeners = new ArrayList<>();
@@ -95,7 +89,7 @@ public class CommandQueue {
         linkManager.send(command, commandRequest.isFireEvent());
 
         // Wait for a reply
-		int timeoutMs = commandRequest.getTimeout();
+        int timeoutMs = commandRequest.getTimeout();
         cl.await(timeoutMs, TimeUnit.MILLISECONDS);
 
         commandListeners.remove(listener);
