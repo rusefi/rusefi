@@ -133,31 +133,6 @@ public class FunctionalTest {
     }
 
     @Test
-    @Ignore("this configuration does scary things to SPI")
-    public void testBmwE34() {
-        ecu.setEngineType(ET_BMW_E34);
-        ecu.sendCommand("chart 1");
-        String msg = "BMW";
-        EngineChart chart;
-        ecu.changeRpm(200);
-        chart = nextChart();
-        double x = 173.988;
-        // something is wrong here - it's a 6 cylinder here, why 4 cylinder cycle?
-        assertWave(msg, chart, EngineChart.SPARK_1, 0.0199666, x, x + 180, x + 360, x + 540);
-
-        ecu.changeRpm(1200);
-        chart = nextChart();
-
-        x = 688.464;
-        // something is wrong here - it's a 6 cylinder here, why 4 cylinder cycle?
-        assertWave(msg, chart, EngineChart.SPARK_1, 0.0597999999, x, x + 180, x + 360, x + 540);
-
-        x = 101;
-        // 6 cylinder
-        assertWave(msg, chart, EngineChart.MAP_AVERAGING, 0.139, x, x + 120, x + 240, x + 360, x + 480, x + 600);
-    }
-
-    @Test
     public void testCitroenBerlingo() {
         ecu.setEngineType(ET_CITROEN_TU3JP);
         ecu.changeRpm(1200);

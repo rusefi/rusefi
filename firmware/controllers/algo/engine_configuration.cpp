@@ -38,7 +38,6 @@
 
 #include "custom_engine.h"
 #include "engine_template.h"
-#include "bmw_e34.h"
 #include "bmw_m73.h"
 
 #include "dodge_neon.h"
@@ -1319,9 +1318,6 @@ void resetConfigurationExt(Logging * logger, configuration_callback_t boardCallb
 		break;
 	case SUBARU_2003_WRX:
 		setSubaru2003Wrx(PASS_CONFIG_PARAMETER_SIGNATURE);
-		break;
-	case BMW_E34:
-		setBmwE34(PASS_CONFIG_PARAMETER_SIGNATURE);
 		break;
 	case DODGE_RAM:
 		setDodgeRam1996(PASS_CONFIG_PARAMETER_SIGNATURE);

@@ -87,8 +87,6 @@ typedef enum {
 	MRE_BODY_CONTROL = ET_MRE_BODY_CONTROL,
 	BMW_M73_M = 24,
 
-	BMW_E34 = ET_BMW_E34,
-
 	TEST_ENGINE = 26,
 
 	// used by unit test
