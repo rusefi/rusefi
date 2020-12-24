@@ -34,7 +34,7 @@ public class FunctionalTest {
 	public void testChangingIgnitionMode() {
 		String msg = "change ign mode";
 
-		ecu.setEngineType(ET_FORD_FIESTA);
+		ecu.setEngineType(ET_FORD_ASPIRE);
 		ecu.changeRpm(2000);
 
 		// First is wasted spark
@@ -284,20 +284,6 @@ public class FunctionalTest {
         ecu.changeRpm(2000);
         chart = nextChart();
         assertWaveNotNull(msg, chart, EngineChart.INJECTOR_4);
-    }
-
-    @Test
-    public void testFordFiesta() {
-        ecu.setEngineType(ET_FORD_FIESTA);
-        EngineChart chart;
-        ecu.changeRpm(2000);
-        chart = nextChart();
-
-        String msg = "Fiesta";
-        assertWaveNotNull("wasted spark #1 with Fiesta", chart, EngineChart.SPARK_1);
-        assertWaveNull(chart, EngineChart.SPARK_2);
-        assertWaveNotNull("wasted spark #3 with Fiesta", chart, EngineChart.SPARK_3);
-        assertWaveNull(msg, chart, EngineChart.SPARK_4);
     }
 
     @Test

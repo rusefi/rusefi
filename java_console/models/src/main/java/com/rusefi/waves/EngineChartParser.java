@@ -18,7 +18,6 @@ public class EngineChartParser {
     public static EngineChart unpackToMap(String value, Logger logger) {
         if (value == null)
             throw new NullPointerException("value");
-        logger.info(": " + value);
 
         String[] array = value.split(DELI);
 

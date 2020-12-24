@@ -2244,6 +2244,10 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 		field = "TLE 8888 spi",                         tle8888spiDevice @@if_ts_show_spi
 		field = "AUX Serial TX", 						auxSerialTxPin
 		field = "AUX Serial RX", 						auxSerialRxPin
+		field = "External Knock",						externalKnockSenseAdc
+		field = "Start/Stop Button",					startStopButtonPin
+		field = "Upshift Pin",							tcuUpshiftButtonPin
+		field = "Downshift Pin",						tcuDownshiftButtonPin
 
 	dialog = allPins3_1_and_2, "All Pins 3/3", xAxis
 		panel = allPins3_1
@@ -2980,8 +2984,6 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 		field = "output #16", 							fsioOutputPins16
 		field = "aux valve #1", 						auxValves1
 		field = "aux valve #2", 						auxValves2
-		field = "Start/Stop Button",					startStopButtonPin
-		field = "External Knock",						externalKnockSenseAdc
 		
 	dialog = fsioFrequency, "Frequency"
 		field = "freq #1", 								fsioFrequency1

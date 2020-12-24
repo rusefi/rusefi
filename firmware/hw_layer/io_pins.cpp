@@ -43,6 +43,27 @@ bool efiReadPin(brain_pin_e pin) {
 	return false;
 }
 
+
+void efiSetPadModeWithoutOwnershipAcquisition(const char *msg, brain_pin_e brainPin, iomode_t mode)
+{
+	/*check if on-chip pin or external */
+	if (brain_pin_is_onchip(brainPin)) {
+		/* on-chip */
+		ioportid_t port = getHwPort(msg, brainPin);
+		ioportmask_t pin = getHwPin(msg, brainPin);
+		/* paranoid */
+		if (port == GPIO_NULL)
+			return;
+
+		palSetPadMode(port, pin, mode);
+	}
+	#if (BOARD_EXT_GPIOCHIPS > 0)
+		else {
+			gpiochips_setPadMode(brainPin, mode);
+		}
+	#endif
+}
+
 /**
  * This method would set an error condition if pin is already used
  */
@@ -56,22 +77,7 @@ void efiSetPadMode(const char *msg, brain_pin_e brainPin, iomode_t mode)
 	bool wasUsed = brain_pin_markUsed(brainPin, msg);
 
 	if (!wasUsed) {
-		/*check if on-chip pin or external */
-		if (brain_pin_is_onchip(brainPin)) {
-			/* on-chip */
-			ioportid_t port = getHwPort(msg, brainPin);
-			ioportmask_t pin = getHwPin(msg, brainPin);
-			/* paranoid */
-			if (port == GPIO_NULL)
-				return;
-
-			palSetPadMode(port, pin, mode);
-		}
-		#if (BOARD_EXT_GPIOCHIPS > 0)
-			else {
-				gpiochips_setPadMode(brainPin, mode);
-			}
-		#endif
+		efiSetPadModeWithoutOwnershipAcquisition(msg, brainPin, mode);
 	}
 }
 
