@@ -174,7 +174,6 @@ public class CommandQueue {
      * @param fireEvent true if we want global even about this comment, i.e. recent commands list to know about this command
      */
     public void write(String command, int timeoutMs, InvocationConfirmationListener listener, boolean fireEvent) {
-		// TODO: what does this line do?
 		if (fireEvent) {
 			this.commandListeners.forEach(c -> c.accept(command));
 		}
