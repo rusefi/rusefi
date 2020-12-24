@@ -144,8 +144,6 @@ const char* getConfigurationName(engine_type_e engineType) {
 		return "MX590";
 	case MIATA_1996:
 		return "MX596";
-	case BMW_E34:
-		return "BMWe34";
 	default:
 		return getEngine_type_e(engineType);
 	}
