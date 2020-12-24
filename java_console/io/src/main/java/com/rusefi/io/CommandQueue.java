@@ -145,7 +145,8 @@ public class CommandQueue {
         // Poke everyone listening for confirmation
         this.commandListeners.forEach(f -> f.accept(confirmation));
 
-        linkManager.messageListener.postMessage(CommandQueue.class, "got valid conf! " + confirmation + ", still pending: " + pendingCommands.size());
+        if (LinkManager.LOG_LEVEL.isDebugEnabled())
+            linkManager.messageListener.postMessage(CommandQueue.class, "got valid conf! " + confirmation + ", still pending: " + pendingCommands.size());
     }
 
     public void write(String command) {
