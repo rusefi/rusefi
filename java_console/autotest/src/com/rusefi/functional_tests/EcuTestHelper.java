@@ -29,7 +29,6 @@ public class EcuTestHelper {
     };
     private static final Logging log = getLogging(EcuTestHelper.class);
 
-    public static final int COMPLEX_COMMAND_RETRY = 10000;
     public static int currentEngineType;
     public final CommandQueue commandQueue;
     @NotNull
@@ -95,12 +94,12 @@ public class EcuTestHelper {
     }
 
     public void sendCommand(String command) {
-        sendCommand(command, CommandQueue.DEFAULT_TIMEOUT, Timeouts.CMD_TIMEOUT);
+        sendCommand(command, Timeouts.CMD_TIMEOUT);
     }
 
-    public void sendCommand(String command, int retryTimeoutMs, int timeoutMs) {
+    public void sendCommand(String command, int timeoutMs) {
         TestHelper.INSTANCE.assertNotFatal();
-        IoUtil.sendCommand(command, retryTimeoutMs, timeoutMs, commandQueue);
+        IoUtil.sendCommand(command, timeoutMs, commandQueue);
     }
 
     /**
@@ -131,7 +130,7 @@ public class EcuTestHelper {
         // changing engine type while engine is running does not work well - we rightfully
         // get invalid configuration critical errors
         sleepSeconds(2);
-        sendCommand("set " + Fields.CMD_ENGINE_TYPE + " " + type, COMPLEX_COMMAND_RETRY, Timeouts.SET_ENGINE_TIMEOUT);
+        sendCommand("set " + Fields.CMD_ENGINE_TYPE + " " + type, Timeouts.SET_ENGINE_TIMEOUT);
         // TODO: document the reason for this sleep?!
         sleepSeconds(1);
         sendCommand(getEnableCommand(Fields.CMD_PWM));

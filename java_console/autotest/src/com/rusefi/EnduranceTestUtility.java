@@ -25,12 +25,12 @@ public class EnduranceTestUtility {
 
             for (int i = 0; i < count; i++) {
                 EcuTestHelper.currentEngineType = Fields.ET_FORD_ASPIRE;
-                sendCommand("set " + Fields.CMD_ENGINE_TYPE + " " + 3, EcuTestHelper.COMPLEX_COMMAND_RETRY, Timeouts.SET_ENGINE_TIMEOUT, commandQueue);
+                sendCommand("set " + Fields.CMD_ENGINE_TYPE + " " + 3, Timeouts.SET_ENGINE_TIMEOUT, commandQueue);
                 sleepSeconds(2);
                 sendCommand(getEnableCommand("self_stimulation"), commandQueue);
 //                IoUtil.changeRpm(1200);
                 EcuTestHelper.currentEngineType = Fields.ET_DEFAULT_FRANKENSO;
-                sendCommand("set " + Fields.CMD_ENGINE_TYPE + " " + 28, EcuTestHelper.COMPLEX_COMMAND_RETRY, Timeouts.SET_ENGINE_TIMEOUT, commandQueue);
+                sendCommand("set " + Fields.CMD_ENGINE_TYPE + " " + 28, Timeouts.SET_ENGINE_TIMEOUT, commandQueue);
                 sleepSeconds(2);
                 FileLog.MAIN.logLine("++++++++++++++++++++++++++++++++++++  " + i + "   +++++++++++++++");
             }
