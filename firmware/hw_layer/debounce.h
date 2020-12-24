@@ -15,7 +15,7 @@
 
 class ButtonDebounce {
 public:
-	ButtonDebounce(const char *name);
+	explicit ButtonDebounce(const char* name);
     void init(efitimems_t threshold, brain_pin_e &pin, pin_input_mode_e &mode);
     void stopConfiguration();
     void startConfiguration();
@@ -25,7 +25,7 @@ public:
     static void startConfigurationList();
     static void debug();
 private:
-    const char *name;
+    const char* const m_name;
     efitick_t m_threshold;
     efitick_t timeLast;
     brain_pin_e *m_pin;
