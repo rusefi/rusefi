@@ -31,7 +31,7 @@ public class IoUtil {
      * @throws IllegalStateException if command was not confirmed
      */
     static void sendCommand(String command, CommandQueue commandQueue) {
-        sendCommand(command, CommandQueue.DEFAULT_TIMEOUT, Timeouts.CMD_TIMEOUT, commandQueue);
+        sendCommand(command, CommandQueue.DEFAULT_TIMEOUT, commandQueue);
     }
 
     public static String getEnableCommand(String settingName) {
@@ -45,18 +45,18 @@ public class IoUtil {
     /**
      * blocking method which would for confirmation from rusEfi
      */
-    public static void sendCommand(String command, int retryTimeoutMs, int timeoutMs, CommandQueue commandQueue) {
+    public static void sendCommand(String command, int timeoutMs, CommandQueue commandQueue) {
         final CountDownLatch responseLatch = new CountDownLatch(1);
         long time = System.currentTimeMillis();
         log.info("Sending command [" + command + "]");
         final long begin = System.currentTimeMillis();
-        commandQueue.write(command, retryTimeoutMs, () -> {
+        commandQueue.write(command, timeoutMs, () -> {
             responseLatch.countDown();
             log.info("Got confirmation in " + (System.currentTimeMillis() - begin) + "ms");
         });
         wait(responseLatch, timeoutMs);
         if (responseLatch.getCount() > 0)
-            log.info("No confirmation in " + retryTimeoutMs);
+            log.info("No confirmation in " + timeoutMs);
         log.info("Command [" + command + "] executed in " + (System.currentTimeMillis() - time));
     }
 
