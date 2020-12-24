@@ -56,6 +56,9 @@ enable2ndByteCanID = false
    crc32CheckCommand   = "@@TS_CRC_CHECK_COMMAND_char@@%2o%2c"
    retrieveConfigError = "e"
 
+   ; TS will try to use legacy temp units in some cases, showing "deg F" on a CLT gauge that's actually deg C
+   useLegacyFTempUnits = false
+
 ;communication settings
    pageActivationDelay = 500 ; Milliseconds delay after burn command. See https://sourceforge.net/p/rusefi/tickets/77/
 ;e.g. put writeblocks off and add an interwrite delay
@@ -79,9 +82,6 @@ enable2ndByteCanID = false
 
 ; CONFIG_DEFINITION_END
 	idleRpmPid_offset = "Constant base value"
-
-	; TS will try to use legacy temp units in some cases, showing "deg F" on a CLT gauge that's actually deg C
-	useLegacyFTempUnits = false
 
 [Tuning]
    spotDepth       =   2 ; 0 = no indicators, 1 = Z only, 2 = XYZ indicators.
