@@ -555,7 +555,7 @@ static void showFsio(const char *msg, LEElement *element) {
 	if (msg != NULL)
 		scheduleMsg(logger, "%s:", msg);
 	while (element != NULL) {
-		scheduleMsg(logger, "action %d: fValue=%.2f iValue=%d", element->action, element->fValue, element->iValue);
+		scheduleMsg(logger, "action %d: fValue=%.2f", element->action, element->fValue);
 		element = element->next;
 	}
 	scheduleMsg(logger, "<end>");
