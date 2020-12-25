@@ -64,6 +64,8 @@ typedef enum {
 
 } le_action_e;
 
+// This type borrows the least significant bit of a float and uses it to indicate
+// whether it's actually a boolean hiding inside that float
 class FsioValue
 {
 public:
