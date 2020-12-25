@@ -18,22 +18,8 @@ TEST(tachometer, testPulsePerRev) {
     engineConfiguration->tachPulseDuractionMs = 0.5f;
     engineConfiguration->tachPulseDurationAsDutyCycle = true;
 
-	engineConfiguration->specs.cylindersCount = 6;
-	engineConfiguration->specs.firingOrder = FO_1_5_3_6_2_4;
-	engineConfiguration->injectionMode = IM_BATCH;
-	engineConfiguration->twoWireBatchInjection = true;
-	engineConfiguration->ignitionMode = IM_WASTED_SPARK;
-	engineConfiguration->useOnlyRisingEdgeForTrigger = true;
-
-	engineConfiguration->tachOutputPin = GPIOC_8;
-
-	setOperationMode(engineConfiguration, FOUR_STROKE_CRANK_SENSOR);
-
-	engineConfiguration->trigger.type = TT_TOOTHED_WHEEL;
-	engineConfiguration->trigger.customTotalToothCount = 30;
-	engineConfiguration->trigger.customSkippedToothCount = 1;
-
     // Set predictable trigger settings
+	engineConfiguration->trigger.type = TT_TOOTHED_WHEEL;
     engineConfiguration->trigger.customTotalToothCount = 8;
     engineConfiguration->trigger.customSkippedToothCount = 0;
     engineConfiguration->useOnlyRisingEdgeForTrigger = false;
@@ -43,14 +29,13 @@ TEST(tachometer, testPulsePerRev) {
     // get the engine running - 6 revolutions
     eth.fireTriggerEvents(48);
 
-    // ensure engine speed and position
+    // ensure engine speed
 	ASSERT_EQ(1500,  GET_RPM()) << "RPM";
-	ASSERT_EQ(15,  engine->triggerCentral.triggerState.getCurrentIndex()) << "index #1";
     ASSERT_EQ(engine->triggerCentral.triggerState.shaft_is_synchronized, true);
-/* TODO Restore testPulsePerRev #2130
-    ASSERT_EQ(100,getTachFreq());
-    ASSERT_EQ(0.5,getTachDuty());
-std::cerr << "Tach Freq: " << getTachFreq() << "\n" << std::endl;
-std::cerr << "Tach Duty: " << getTachDuty() << "\n" << std::endl;
- */
+
+	// Poke the fast callback to make sure tach gets updated
+	engine->periodicFastCallback(PASS_ENGINE_PARAMETER_SIGNATURE);
+
+    ASSERT_EQ(100, getTachFreq());
+    ASSERT_EQ(0.5, getTachDuty());
 }
