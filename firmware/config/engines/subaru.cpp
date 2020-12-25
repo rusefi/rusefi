@@ -35,10 +35,30 @@ void setSubaru2003Wrx(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	engineConfiguration->triggerSimulatorPins[2] = GPIO_UNASSIGNED;
 }
 
-/*
- * Subaru WRX <=1996 Turbo.
+/**
+ * MRE_SUBARU_EJ18
+ * set engine_type 37
  */
+void setSubaruEJ18_MRE(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
+	engineConfiguration->trigger.type = TT_SUBARU_7_WITHOUT_6;
 
-void setSubaruEJ20GDefaults(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
-	engineConfiguration->trigger.type = TT_SUBARU_7_6;
+
+//	CONFIG(isDoubleSolenoidIdle) = true;
+
+	engineConfiguration->specs.displacement = 1.8;
+	strcpy(CONFIG(engineMake), ENGINE_MAKE_SUBARU);
+	strcpy(CONFIG(engineCode), "EJ18");
+
+	engineConfiguration->specs.firingOrder = FO_1_3_2_4;
+	engineConfiguration->injectionMode = IM_SEQUENTIAL;
+	engineConfiguration->ignitionMode = IM_WASTED_SPARK;
+
+#if (BOARD_TLE8888_COUNT > 0)
+	// TLE8888_PIN_23: "33 - GP Out 3"
+	engineConfiguration->malfunctionIndicatorPin = TLE8888_PIN_23;
+#endif /* BOARD_TLE8888_COUNT */
+
+	// this car has high-side main relay WOW so we have to hard wire it to ingition switch
+
+
 }

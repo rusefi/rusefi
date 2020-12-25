@@ -54,11 +54,6 @@
 
 #define EFI_CLI_SUPPORT FALSE
 
-/**
- * Should PnP engine configurations be included in the binary?
- */
-#define EFI_INCLUDE_ENGINE_PRESETS TRUE
-
 #define EFI_SIGNAL_EXECUTOR_ONE_TIMER FALSE
 #define EFI_SIGNAL_EXECUTOR_SLEEP FALSE
 
@@ -71,3 +66,5 @@
 #define EFI_JOYSTICK FALSE
 
 #define EFI_MAP_AVERAGING TRUE
+
+#define EFI_FUEL_PUMP TRUE

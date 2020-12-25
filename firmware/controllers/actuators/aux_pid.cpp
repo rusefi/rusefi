@@ -125,18 +125,16 @@ static void turnAuxPidOn(int index) {
 			engineConfiguration->auxPidFrequency[index], 0.1);
 }
 
-void startAuxPins(void) {
+void startAuxPins() {
 	for (int i = 0;i <AUX_PID_COUNT;i++) {
 		turnAuxPidOn(i);
 	}
 }
 
-void stopAuxPins(void) {
-#if EFI_PROD_CODE
+void stopAuxPins() {
 	for (int i = 0;i < AUX_PID_COUNT;i++) {
-		efiSetPadUnused(activeConfiguration.auxPidPins[i]);
+		instances[i].auxOutputPin.deInit();
 	}
-#endif /* EFI_PROD_CODE */
 }
 
 void initAuxPid(Logging *sharedLogger) {

@@ -1,24 +1,18 @@
 package com.rusefi;
 
 
-import com.rusefi.binaryprotocol.BinaryProtocol;
-import com.rusefi.config.generated.Fields;
 import com.rusefi.core.Sensor;
 import com.rusefi.core.SensorCentral;
-import com.rusefi.functional_tests.BaseTest;
-import com.rusefi.io.CommandQueue;
-import com.rusefi.io.LinkManager;
+import com.rusefi.functional_tests.EcuTestHelper;
 import com.rusefi.waves.EngineChart;
 import com.rusefi.waves.EngineReport;
+import org.junit.Before;
+import org.junit.Ignore;
+import org.junit.Test;
 
-import java.util.concurrent.atomic.AtomicReference;
-import java.util.function.Function;
-
-import static com.rusefi.IoUtil.*;
+import static com.rusefi.IoUtil.getEnableCommand;
 import static com.rusefi.TestingUtils.*;
-import static com.rusefi.binaryprotocol.BinaryProtocol.sleep;
 import static com.rusefi.config.generated.Fields.*;
-import static com.rusefi.waves.EngineReport.isCloseEnough;
 
 /**
  * rusEfi firmware simulator functional test suite
@@ -28,89 +22,81 @@ import static com.rusefi.waves.EngineReport.isCloseEnough;
  * @author Andrey Belomutskiy
  * 3/5/14
  */
-public class AutoTest extends BaseTest {
+public class FunctionalTest extends RusefiTestBase {
+    @Test
+	public void testChangingIgnitionMode() {
+		String msg = "change ign mode";
 
-    private final LinkManager linkManager;
+		ecu.setEngineType(ET_FORD_ASPIRE);
+		ecu.changeRpm(2000);
 
-    public AutoTest(LinkManager linkManager, CommandQueue commandQueue) {
-        super(commandQueue);
-        this.linkManager = linkManager;
-    }
+		// First is wasted spark
+		ecu.sendCommand("set ignition_mode 2");
 
-    void mainTestBody() {
-        BinaryProtocol bp = linkManager.getCurrentStreamState();
-        // let's make sure 'burn' command works since sometimes it does not
-        bp.burn();
+		{
+			// Check that we're in wasted spark mode
+			EngineChart chart = nextChart();
 
-        sendCommand(getDisableCommand(Fields.CMD_TRIGGER_HW_INPUT));
-        enableFunctionalMode();
-        testCustomEngine();
-        testVW_60_2();
-        testV12();
-        testMazdaMiata2003();
-        test2003DodgeNeon();
-        testFordAspire();
-        test1995DodgeNeon();
-        testMazdaProtege();
-// todo?        sendCommand("reboot"); // this would cause firmware in 5 seconds
-// todo?        sleep(10); // time to reboot
-        testBmwE34();
-        testSachs();
-        testRoverV8();
-        testCamaro();
-        testCitroenBerlingo();
-        testFord6();
-        testFordFiesta();
-    }
+			// Wasted spark should fire cylinders 1/3...
+            assertWaveNotNull(chart, EngineChart.SPARK_1);
+            assertWaveNotNull(chart, EngineChart.SPARK_3);
 
-    private static final Function<String, Object> FAIL = errorCode -> {
-        if (errorCode != null)
-            throw new IllegalStateException("Failed " + errorCode);
-        return null;
-    };
+            // ...but not cylinders 2/4
+            assertWaveNull(chart, EngineChart.SPARK_2);
+			assertWaveNull(chart, EngineChart.SPARK_4);
+		}
 
-    private void testVW_60_2() {
-        setEngineType(ET_VW_ABA);
-        // trying to disable engine sniffer to help https://github.com/rusefi/rusefi/issues/1849
-        sendCommand("set " + CMD_ENGINESNIFFERRPMTHRESHOLD + " 100");
-        changeRpm(900);
-        // first let's get to expected RPM
-        assertRpmDoesNotJump(16000, 5, 40, FAIL, commandQueue);
-    }
+		// Now switch to sequential mode
+		ecu.sendCommand("set ignition_mode 1");
 
-    private void testV12() {
-        setEngineType(ET_BMW_M73_F);
-        changeRpm(700);
-        // first let's get to expected RPM
-        assertRpmDoesNotJump(16000, 5, 40, FAIL, commandQueue);
-        testCaseBug1873();
-    }
+		{
+			// Check that we're in sequential spark mode
+			EngineChart chart = nextChart();
 
-    private void testCaseBug1873() {
-        assertRpmDoesNotJump(60, 5, 110, FAIL, commandQueue);
-    }
+			// All 4 cylinders should be firing
+            assertWaveNotNull(chart, EngineChart.SPARK_1);
+            assertWaveNotNull(chart, EngineChart.SPARK_2);
+            assertWaveNotNull(chart, EngineChart.SPARK_3);
+			assertWaveNotNull(chart, EngineChart.SPARK_4);
+		}
 
-    public static void assertRpmDoesNotJump(int rpm, int settleTime, int testDuration, Function<String, Object> callback, CommandQueue commandQueue) {
-        IoUtil.changeRpm(commandQueue, rpm);
-        sleepSeconds(settleTime);
-        AtomicReference<String> result = new AtomicReference<>();
-        long start = System.currentTimeMillis();
-        SensorCentral.SensorListener listener = value -> {
-            double actualRpm = SensorCentral.getInstance().getValue(Sensor.RPM);
-            if (!isCloseEnough(rpm, actualRpm)) {
-                long seconds = (System.currentTimeMillis() - start) / 1000;
-                result.set("Got " + actualRpm + " while trying to stay at " + rpm + " after " + seconds + " seconds");
-            }
-        };
-        SensorCentral.getInstance().addListener(Sensor.RPM, listener);
-        sleepSeconds(testDuration);
-        callback.apply(result.get());
-        SensorCentral.getInstance().removeListener(Sensor.RPM, listener);
-    }
+		// Now switch to "one coil" mode
+        ecu.sendCommand("set ignition_mode 0");
 
-    private void testCustomEngine() {
-        setEngineType(ET_DEFAULT_FRANKENSO);
-        sendCommand("set_toothed_wheel 4 0");
+        {
+            // Check that we're in sequential spark mode
+            EngineChart chart = nextChart();
+
+            // Only coil 1 should be active
+            assertWaveNotNull(chart, EngineChart.SPARK_1);
+
+            // And no others
+            assertWaveNull(chart, EngineChart.SPARK_2);
+            assertWaveNull(chart, EngineChart.SPARK_3);
+            assertWaveNull(chart, EngineChart.SPARK_4);
+        }
+
+		// Now switch BACK to wasted mode
+		ecu.sendCommand("set ignition_mode 2");
+
+		{
+			// Check that we're in wasted spark mode
+			EngineChart chart = nextChart();
+
+            // Wasted spark should fire cylinders 1/3...
+            assertWaveNotNull(chart, EngineChart.SPARK_1);
+            assertWaveNotNull(chart, EngineChart.SPARK_3);
+
+            // ...but not cylinders 2/4
+            assertWaveNull(chart, EngineChart.SPARK_2);
+            assertWaveNull(msg, chart, EngineChart.SPARK_4);
+		}
+	}
+
+    @Test
+    public void testCustomEngine() {
+        ecu.setEngineType(ET_DEFAULT_FRANKENSO);
+        ecu.sendCommand("set_toothed_wheel 4 0");
 //        sendCommand("enable trigger_only_front");
 //        changeRpm(100);
 //        changeRpm(1500);
@@ -119,70 +105,46 @@ public class AutoTest extends BaseTest {
 //        changeRpm(1500);
     }
 
-    private void testMazdaMiata2003() {
-        setEngineType(ET_FRANKENSO_MIATA_NB2);
-        sendCommand("get cranking_dwell"); // just test coverage
+    @Test
+    public void testMazdaMiata2003() {
+        ecu.setEngineType(ET_FRANKENSO_MIATA_NB2);
+        ecu.sendCommand("get cranking_dwell"); // just test coverage
 //        sendCommand("get nosuchgettersdfsdfsdfsdf"); // just test coverage
     }
 
-    private void testCamaro() {
-        setEngineType(ET_CAMARO);
+    @Test
+    public void testCamaro() {
+        ecu.setEngineType(ET_CAMARO);
     }
 
-    private void testSachs() {
-        setEngineType(ET_SACHS);
+    @Test
+    public void testSachs() {
+        ecu.setEngineType(ET_SACHS);
 //        String msg = "BMW";
-        changeRpm(1200);
+        ecu.changeRpm(1200);
         // todo: add more content
     }
 
-    private void testBmwE34() {
-        setEngineType(ET_BMW_E34);
-        sendCommand("chart 1");
-        String msg = "BMW";
-        EngineChart chart;
-        changeRpm(200);
-        chart = nextChart();
-        double x = 173.988;
-        // something is wrong here - it's a 6 cylinder here, why 4 cylinder cycle?
-        assertWave(msg, chart, EngineChart.SPARK_1, 0.0199666, x, x + 180, x + 360, x + 540);
-
-        changeRpm(1200);
-        chart = nextChart();
-
-        x = 688.464;
-        // something is wrong here - it's a 6 cylinder here, why 4 cylinder cycle?
-        assertWave(msg, chart, EngineChart.SPARK_1, 0.0597999999, x, x + 180, x + 360, x + 540);
-
-        x = 101;
-        // 6 cylinder
-        assertWave(msg, chart, EngineChart.MAP_AVERAGING, 0.139, x, x + 120, x + 240, x + 360, x + 480, x + 600);
+    @Test
+    public void testCitroenBerlingo() {
+        ecu.setEngineType(ET_CITROEN_TU3JP);
+        ecu.changeRpm(1200);
     }
 
-    private void testCitroenBerlingo() {
-        setEngineType(ET_CITROEN_TU3JP);
-//        String msg = "Citroen";
-        changeRpm(1200);
-        // todo: add more content
-    }
-
-    private EngineChart nextChart() {
-        return TestingUtils.nextChart(commandQueue);
-    }
-
-    private void test2003DodgeNeon() {
-        setEngineType(ET_DODGE_NEON_2003_CRANK);
-        sendCommand("set wwaeTau 0");
-        sendCommand("set wwaeBeta 0");
-        sendCommand("set mock_map_voltage 1");
-        sendCommand("set mock_vbatt_voltage 1.20");
-        sendCommand("disable cylinder_cleanup");
+    @Test
+    public void test2003DodgeNeon() {
+        ecu.setEngineType(ET_DODGE_NEON_2003_CRANK);
+        ecu.sendCommand("set wwaeTau 0");
+        ecu.sendCommand("set wwaeBeta 0");
+        ecu.sendCommand("set mock_map_voltage 1");
+        ecu.sendCommand("set mock_vbatt_voltage 1.20");
+        ecu.sendCommand("disable cylinder_cleanup");
         EngineChart chart;
         String msg = "2003 Neon cranking ";
-        changeRpm(200);
-        changeRpm(250); // another approach to artificial delay
-        changeRpm(200);
-        assertEquals("VBatt", 12, SensorCentral.getInstance().getValue(Sensor.VBATT));
+        ecu.changeRpm(200);
+        ecu.changeRpm(250); // another approach to artificial delay
+        ecu.changeRpm(200);
+        EcuTestHelper.assertEquals("VBatt", 12, SensorCentral.getInstance().getValue(Sensor.VBATT));
 
         chart = nextChart();
         double x = 100;
@@ -201,9 +163,9 @@ public class AutoTest extends BaseTest {
         assertWave(true, msg, chart, EngineChart.INJECTOR_4, 0.01056666666666691, 0.02, widthRatio, x, x + 180, x + 360, x + 540);
 
         msg = "2003 Neon running";
-        changeRpm(2000);
-        changeRpm(2700);
-        changeRpm(2000);
+        ecu.changeRpm(2000);
+        ecu.changeRpm(2700);
+        ecu.changeRpm(2000);
         chart = nextChart();
         x = 104.0;
         assertWave(true, msg, chart, EngineChart.SPARK_1, 0.13299999999999998, EngineReport.RATIO, EngineReport.RATIO, x + 180, x + 540);
@@ -218,34 +180,35 @@ public class AutoTest extends BaseTest {
         assertWave(true, msg, chart, EngineChart.INJECTOR_3, 0.29233, 0.15, EngineReport.RATIO, x + 540);
         assertWave(true, msg, chart, EngineChart.INJECTOR_4, 0.29233, 0.15, 0.2, x);
 
-        sendCommand(getEnableCommand("trigger_only_front"));
+        ecu.sendCommand(getEnableCommand("trigger_only_front"));
         chart = nextChart();
         assertWave(true, msg, chart, EngineChart.INJECTOR_1, 0.29233, 0.1, 0.2, x + 360);
         assertWave(true, msg, chart, EngineChart.INJECTOR_2, 0.29233, EngineReport.RATIO, 0.2, x + 180);
         assertWave(true, msg, chart, EngineChart.INJECTOR_3, 0.29233, 0.1, 0.2, x + 540);
         assertWave(true, msg, chart, EngineChart.INJECTOR_4, 0.29233, 0.1, 0.2, x);
 
-        sendCommand("set_whole_timing_map 520");
+        ecu.sendCommand("set_whole_timing_map 520");
         chart = nextChart();
         x = 328;
         assertWave(true, msg, chart, EngineChart.SPARK_1, 0.13299999999999998, EngineReport.RATIO, EngineReport.RATIO, x + 180, x + 540);
 
-        sendCommand("set_whole_timing_map 0");
+        ecu.sendCommand("set_whole_timing_map 0");
         chart = nextChart();
         x = 128;
         assertWave(true, msg, chart, EngineChart.SPARK_1, 0.13299999999999998, EngineReport.RATIO, EngineReport.RATIO, x + 180, x + 540);
     }
 
-    private void testMazdaProtege() {
-        setEngineType(ET_FORD_ESCORT_GT);
+    @Test
+    public void testMazdaProtege() {
+        ecu.setEngineType(ET_FORD_ESCORT_GT);
         EngineChart chart;
-        sendCommand("set mock_vbatt_voltage 1.395");
-        changeRpm(200);
-        changeRpm(260);
-        changeRpm(200);
+        ecu.sendCommand("set mock_vbatt_voltage 1.395");
+        ecu.changeRpm(200);
+        ecu.changeRpm(260);
+        ecu.changeRpm(200);
         String msg = "ProtegeLX cranking";
         chart = nextChart();
-        assertEquals("", 12, SensorCentral.getInstance().getValue(Sensor.VBATT), 0.1);
+        EcuTestHelper.assertEquals("", 12, SensorCentral.getInstance().getValue(Sensor.VBATT), 0.1);
         double x = 107;
         assertWave(msg, chart, EngineChart.SPARK_3, 0.194433, x);
         assertWave(msg, chart, EngineChart.SPARK_1, 0.194433, x + 540);
@@ -254,7 +217,7 @@ public class AutoTest extends BaseTest {
         assertWaveFall(msg, chart, EngineChart.INJECTOR_2, 0.008566666666, x, x + 180, x + 360, x + 540);
 
         msg = "ProtegeLX running";
-        changeRpm(2000);
+        ecu.changeRpm(2000);
         chart = nextChart();
         x = 112;
         assertWave(msg, chart, EngineChart.SPARK_1, 0.13333333333333333, x, x + 180, x + 360, x + 540);
@@ -263,15 +226,16 @@ public class AutoTest extends BaseTest {
         assertWaveFall(msg, chart, EngineChart.INJECTOR_2, 0.21433333333333345, x, x + 360);
     }
 
-    private void test1995DodgeNeon() {
-        setEngineType(ET_DODGE_NEON_1995);
+    @Test
+    public void test1995DodgeNeon() {
+        ecu.setEngineType(ET_DODGE_NEON_1995);
         EngineChart chart;
         sendComplexCommand("set_whole_fuel_map 3");
         sendComplexCommand("set_individual_coils_ignition");
         /**
          * note that command order matters - RPM change resets wave chart
          */
-        changeRpm(2000);
+        ecu.changeRpm(2000);
         chart = nextChart();
 
         String msg = "1995 Neon";
@@ -288,37 +252,20 @@ public class AutoTest extends BaseTest {
         assertWave(msg, chart, EngineChart.SPARK_3, 0.13333, x + 360);
 
         // switching to Speed Density
-        sendCommand("set mock_map_voltage 1");
+        ecu.sendCommand("set mock_map_voltage 1");
         sendComplexCommand("set algorithm 3");
-        changeRpm(2600);
-        changeRpm(2000);
+        ecu.changeRpm(2600);
+        ecu.changeRpm(2000);
         chart = nextChart();
         x = -70;
         assertWaveFall(msg, chart, EngineChart.INJECTOR_4, 0.493, x + 540);
     }
 
-    private void testRoverV8() {
-        setEngineType(ET_ROVER_V8);
-    }
-
-    private void testFordFiesta() {
-        setEngineType(ET_FORD_FIESTA);
+    @Test
+    public void testFord6() {
+        ecu.setEngineType(ET_FORD_INLINE_6);
         EngineChart chart;
-        changeRpm(2000);
-        chart = nextChart();
-
-        String msg = "Fiesta";
-        double x = 312;
-        assertWave("wasted spark #1 with Fiesta", chart, EngineChart.SPARK_1, 0.1333333, x, x + 360);
-        assertWaveNull(chart, EngineChart.SPARK_2);
-        assertWave("wasted spark #3 with Fiesta", chart, EngineChart.SPARK_3, 0.1333333, x + 180, x + 540);
-        assertWaveNull(msg, chart, EngineChart.SPARK_4);
-    }
-
-    private void testFord6() {
-        setEngineType(ET_FORD_INLINE_6);
-        EngineChart chart;
-        changeRpm(2000);
+        ecu.changeRpm(2000);
         chart = nextChart();
 
         String msg = "ford 6";
@@ -332,61 +279,62 @@ public class AutoTest extends BaseTest {
         assertTrue(msg + " trigger2", chart.get(EngineChart.TRIGGER_2) != null);
     }
 
-    private void testFordAspire() {
-        setEngineType(ET_FORD_ASPIRE);
-        sendCommand("disable cylinder_cleanup");
-        sendCommand("set mock_map_voltage 1");
-        sendCommand("set mock_vbatt_voltage 2.2");
+    @Test
+    public void testFordAspire() {
+        ecu.setEngineType(ET_FORD_ASPIRE);
+        ecu.sendCommand("disable cylinder_cleanup");
+        ecu.sendCommand("set mock_map_voltage 1");
+        ecu.sendCommand("set mock_vbatt_voltage 2.2");
         String msg;
         EngineChart chart;
         // todo: interesting changeRpm(100);
         sendComplexCommand("set cranking_rpm 500");
-        changeRpm(200);
+        ecu.changeRpm(200);
 
         double x;
         chart = nextChart();
-        assertEquals(12, SensorCentral.getInstance().getValue(Sensor.VBATT));
+        EcuTestHelper.assertEquals(12, SensorCentral.getInstance().getValue(Sensor.VBATT));
         x = 55;
         assertWave("aspire default cranking ", chart, EngineChart.SPARK_1, 0.1944, x, x + 180, x + 360, x + 540);
 
 
-        changeRpm(600);
+        ecu.changeRpm(600);
         chart = nextChart();
         x = 78;
         assertWave(true, "aspire default running ", chart, EngineChart.SPARK_1, 0.04, 0.1, 0.1, x, x + 180, x + 360, x + 540);
 
-        changeRpm(200);
+        ecu.changeRpm(200);
 
-        sendCommand("set cranking_charge_angle 65");
-        sendCommand("set cranking_timing_angle -31");
+        ecu.sendCommand("set cranking_charge_angle 65");
+        ecu.sendCommand("set cranking_timing_angle -31");
 
         chart = nextChart();
         x = 55;
         assertWave("aspire cranking", chart, EngineChart.SPARK_1, 0.18, x, x + 180, x + 360, x + 540);
 
-        sendCommand("set cranking_timing_angle -40");
+        ecu.sendCommand("set cranking_timing_angle -40");
         chart = nextChart();
         x = 64;
         assertWave("aspire", chart, EngineChart.SPARK_1, 0.18, x, x + 180, x + 360, x + 540);
-        sendCommand("set cranking_timing_angle 149");
+        ecu.sendCommand("set cranking_timing_angle 149");
 
-        sendCommand("set cranking_charge_angle 40");
+        ecu.sendCommand("set cranking_charge_angle 40");
         chart = nextChart();
         x = 80;
         assertWave("aspire", chart, EngineChart.SPARK_1, 40.0 / 360, x, x + 180, x + 360, x + 540);
-        sendCommand("set cranking_charge_angle 65");
+        ecu.sendCommand("set cranking_charge_angle 65");
 
-        changeRpm(600);
+        ecu.changeRpm(600);
         sendComplexCommand("set cranking_rpm 700");
         chart = nextChart();
         x = 55;
         assertWave("cranking@600", chart, EngineChart.SPARK_1, 0.18, x, x + 180, x + 360, x + 540);
 
-        changeRpm(2000);
-        sendCommand("set_whole_fuel_map 1.57");
+        ecu.changeRpm(2000);
+        ecu.sendCommand("set_whole_fuel_map 1.57");
 
-        changeRpm(2600);
-        changeRpm(2000);
+        ecu.changeRpm(2600);
+        ecu.changeRpm(2000);
         chart = nextChart();
 
         msg = "aspire running";
@@ -399,12 +347,12 @@ public class AutoTest extends BaseTest {
         x = 7;
         assertWave(chart, EngineChart.SPARK_1, 0.133, x, x + 180, x + 360, x + 540);
 
-        sendCommand("set_fuel_map 2200 4 15.66");
-        sendCommand("set_fuel_map 2000 4 15.66");
-        sendCommand("set_fuel_map 2200 4.2 15.66");
-        sendCommand("set_fuel_map 2000 4.2 15.66");
+        ecu.sendCommand("set_fuel_map 2200 4 15.66");
+        ecu.sendCommand("set_fuel_map 2000 4 15.66");
+        ecu.sendCommand("set_fuel_map 2200 4.2 15.66");
+        ecu.sendCommand("set_fuel_map 2000 4.2 15.66");
         // mock 2 means 4 on the gauge because of the divider. should we simplify this?
-        sendCommand("set " + MOCK_MAF_COMMAND + " 2");
+        ecu.sendCommand("set " + MOCK_MAF_COMMAND + " 2");
         sendComplexCommand("set global_trigger_offset_angle 175");
         chart = nextChart();
 
@@ -429,18 +377,18 @@ public class AutoTest extends BaseTest {
         assertWave("Switching Aspire into INDIVIDUAL_COILS mode", chart, EngineChart.SPARK_2, 0.133, x + 540);
         assertWave(chart, EngineChart.SPARK_3, 0.133, x + 180);
 
-        sendCommand("set_whole_timing_map 520");
+        ecu.sendCommand("set_whole_timing_map 520");
         chart = nextChart();
         x = 58.92;
         assertWave(chart, EngineChart.SPARK_2, 0.133, x);
 
         // switching to Speed Density
-        sendCommand("set mock_maf_voltage 2");
+        ecu.sendCommand("set mock_maf_voltage 2");
         sendComplexCommand("set algorithm 3");
-        changeRpm(2400);
-        changeRpm(2000);
+        ecu.changeRpm(2400);
+        ecu.changeRpm(2000);
         chart = nextChart();
-        assertEquals("MAP", 69.12, SensorCentral.getInstance().getValue(Sensor.MAP));
+        EcuTestHelper.assertEquals("MAP", 69.12, SensorCentral.getInstance().getValue(Sensor.MAP));
         //assertEquals(1, SensorCentral.getInstance().getValue(Sensor.));
         x = 8.88;
         assertWave(false, msg + " fuel SD #1", chart, EngineChart.INJECTOR_1, 0.577, 0.1, 0.1, x + 180);
@@ -449,7 +397,7 @@ public class AutoTest extends BaseTest {
         assertWave(false, msg + " fuel SD #4", chart, EngineChart.INJECTOR_4, 0.577, 0.1, 0.1, x + 540);
 
         // above hard limit
-        changeRpm(10000);
+        ecu.changeRpm(10000);
         chart = nextChart();
         assertWaveNull("hard limit check", chart, EngineChart.INJECTOR_1);
     }
@@ -458,7 +406,7 @@ public class AutoTest extends BaseTest {
      * This method waits for longer then usual.
      */
     private void sendComplexCommand(String command) {
-        sendCommand(command, COMPLEX_COMMAND_RETRY, Timeouts.CMD_TIMEOUT);
+        ecu.sendCommand(command, Timeouts.CMD_TIMEOUT);
     }
 
     private static void assertWaveNull(EngineChart chart, String key) {
@@ -467,5 +415,13 @@ public class AutoTest extends BaseTest {
 
     private static void assertWaveNull(String msg, EngineChart chart, String key) {
         assertNull(msg + "chart for " + key, chart.get(key));
+    }
+
+    private static void assertWaveNotNull(EngineChart chart, String key) {
+        assertTrue(chart.get(key) != null);
+    }
+
+    private EngineChart nextChart() {
+        return TestingUtils.nextChart(ecu.commandQueue);
     }
 }

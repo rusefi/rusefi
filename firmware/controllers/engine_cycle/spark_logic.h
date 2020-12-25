@@ -20,7 +20,7 @@ void initializeIgnitionActions(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 
 int isIgnitionTimingError(void);
 
-#define TRIGGER_EVENT_UNDEFINED -1
+#define TRIGGER_EVENT_UNDEFINED INT32_MAX
 bool scheduleOrQueue(AngleBasedEvent *event,
 		uint32_t trgEventIndex,
 		efitick_t edgeTimestamp,

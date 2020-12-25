@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Fri Dec 04 16:38:29 UTC 2020
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Thu Dec 24 12:32:41 UTC 2020
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -689,7 +689,7 @@ struct engine_configuration_s {
 	offset 76 bit 12 */
 	bool etb_use_two_wires : 1;
 	/**
-	 * Subaru style where default valve position is somewhere in the middle. First solenoid opens it more while second can close it more than default position.
+	 * Subaru/BMW style where default valve position is somewhere in the middle. First solenoid opens it more while second can close it more than default position.
 	offset 76 bit 13 */
 	bool isDoubleSolenoidIdle : 1;
 	/**
@@ -3473,14 +3473,18 @@ struct engine_configuration_s {
 	 */
 	pin_output_mode_e tcu_solenoid_mode[TCU_SOLENOID_COUNT];
 	/**
-	 * need 4 byte alignment
 	 * offset 4523
 	 */
-	uint8_t alignmentFill_at_4523;
+	int8_t knockBaseNoise[IGN_RPM_COUNT];
 	/**
-	 * offset 4524
+	 * need 4 byte alignment
+	 * offset 4539
 	 */
-	int mainUnusedEnd[369];
+	uint8_t alignmentFill_at_4539;
+	/**
+	 * offset 4540
+	 */
+	int mainUnusedEnd[365];
 	/** total size 6000*/
 };
 
@@ -3778,4 +3782,4 @@ struct persistent_config_s {
 typedef struct persistent_config_s persistent_config_s;
 
 // end
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Fri Dec 04 16:38:29 UTC 2020
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Thu Dec 24 12:32:41 UTC 2020

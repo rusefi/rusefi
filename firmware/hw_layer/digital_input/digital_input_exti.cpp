@@ -11,6 +11,7 @@
 #include "digital_input_exti.h"
 #include "efi_gpio.h"
 #include "error_handling.h"
+#include "pin_repository.h"
 
 /**
  * EXTI is a funny thing: you can only use same pin on one port. For example, you can use
@@ -33,6 +34,12 @@ void efiExtiEnablePin(const char *msg, brain_pin_e brainPin, uint32_t mode, palc
 	ioportid_t port = getHwPort(msg, brainPin);
 	if (port == NULL)
 		return;
+
+	bool wasUsed = brain_pin_markUsed(brainPin, msg);
+	if (wasUsed) {
+		// error condition we shall bail
+		return;
+	}
 
 	int index = getHwPin(msg, brainPin);
 
@@ -60,6 +67,7 @@ void efiExtiDisablePin(brain_pin_e brainPin)
 	ioportid_t port = getHwPort("exti", brainPin);
 	if (port == NULL)
 		return;
+	brain_pin_markUnused(brainPin);
 
 	int index = getHwPin("exti", brainPin);
 

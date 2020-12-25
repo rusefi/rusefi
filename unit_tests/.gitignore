@@ -2,5 +2,4 @@
 build/
 gcov_working_area
 triggers
-triggers.txt
 *.logicdata

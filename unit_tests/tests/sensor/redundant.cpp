@@ -71,6 +71,8 @@ TEST_F(SensorRedundant, SetTwoSensors)
 		auto result = dut.get();
 		EXPECT_TRUE(result.Valid);
 		EXPECT_FLOAT_EQ(result.Value, 25.0f);
+
+		EXPECT_TRUE(dut.isRedundant());
 	}
 }
 
@@ -176,6 +178,8 @@ TEST_F(SensorRedundantIgnoreSecond, OnlyFirst)
 		auto result = dut.get();
 		EXPECT_TRUE(result.Valid);
 		EXPECT_FLOAT_EQ(result.Value, 44.0f);
+
+		EXPECT_FALSE(dut.isRedundant());
 	}
 }
 

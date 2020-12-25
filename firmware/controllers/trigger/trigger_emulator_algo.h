@@ -14,6 +14,8 @@ class PwmConfig;
 class MultiChannelStateSequence;
 
 void initTriggerEmulator(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX);
+void startTriggerEmulatorPins();
+void stopTriggerEmulatorPins();
 void setTriggerEmulatorRPM(int value DECLARE_ENGINE_PARAMETER_SUFFIX);
 void onConfigurationChangeRpmEmulatorCallback(engine_configuration_s *previousConfiguration);
 

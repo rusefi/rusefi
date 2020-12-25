@@ -94,6 +94,20 @@ void hwHandleVvtCamSignal(trigger_value_e front, efitick_t nowNt DECLARE_ENGINE_
 		tc->vvtEventFallCounter++;
 	}
 
+#if VR_HW_CHECK_MODE
+	// some boards do not have hardware VR input LEDs which makes such boards harder to validate
+	// from experience we know that assembly mistakes happen and quality control is required
+	extern ioportid_t criticalErrorLedPort;
+	extern ioportmask_t criticalErrorLedPin;
+
+	for (int i = 0 ; i < 100 ; i++) {
+		// turning pin ON and busy-waiting a bit
+		palWritePad(criticalErrorLedPort, criticalErrorLedPin, 1);
+	}
+
+	palWritePad(criticalErrorLedPort, criticalErrorLedPin, 0);
+#endif // VR_HW_CHECK_MODE
+
 	if (!CONFIG(displayLogicLevelsInEngineSniffer)) {
 		addEngineSnifferEvent(PROTOCOL_VVT_NAME, front == TV_RISE ? PROTOCOL_ES_UP : PROTOCOL_ES_DOWN);
 
@@ -261,6 +275,20 @@ uint32_t triggerMaxDuration = 0;
 
 void hwHandleShaftSignal(trigger_event_e signal, efitick_t timestamp) {
 	ScopePerf perf(PE::HandleShaftSignal);
+
+#if VR_HW_CHECK_MODE
+	// some boards do not have hardware VR input LEDs which makes such boards harder to validate
+	// from experience we know that assembly mistakes happen and quality control is required
+	extern ioportid_t criticalErrorLedPort;
+	extern ioportmask_t criticalErrorLedPin;
+
+	for (int i = 0 ; i < 100 ; i++) {
+		// turning pin ON and busy-waiting a bit
+		palWritePad(criticalErrorLedPort, criticalErrorLedPin, 1);
+	}
+
+	palWritePad(criticalErrorLedPort, criticalErrorLedPin, 0);
+#endif // VR_HW_CHECK_MODE
 
 #if EFI_TOOTH_LOGGER
 	// Log to the Tunerstudio tooth logger
@@ -521,14 +549,13 @@ static void triggerShapeInfo(void) {
 #include <stdlib.h>
 
 extern trigger_type_e focusOnTrigger;
-#define TRIGGERS_FILE_NAME "triggers.txt"
 
 /**
  * This is used to generate trigger info which is later used by TriggerImage java class
  * to generate images for documentation
  */
 extern bool printTriggerDebug;
-void printAllTriggers() {
+void exportAllTriggers() {
 
 	FILE * fp = fopen (TRIGGERS_FILE_NAME, "w+");
 
@@ -569,7 +596,7 @@ void printAllTriggers() {
 
 		fprintf(fp, "# duty %.2f %.2f\n", shape->expectedDutyCycle[0], shape->expectedDutyCycle[1]);
 
-		for (int i = 0; i < shape->getLength(); i++) {
+		for (size_t i = 0; i < shape->getLength(); i++) {
 
 			int triggerDefinitionCoordinate = (shape->getTriggerWaveformSynchPointIndex() + i) % shape->getSize();
 

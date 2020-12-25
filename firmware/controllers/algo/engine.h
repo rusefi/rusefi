@@ -52,8 +52,9 @@ class AirmassModelBase;
 #define CYCLE_ALTERNATION 2
 
 class IEtbController;
-class IFuelComputer;
-class IInjectorModel;
+struct IFuelComputer;
+struct IInjectorModel;
+struct IIdleController;
 
 class PrimaryTriggerConfiguration final : public TriggerConfiguration {
 public:
@@ -85,6 +86,7 @@ public:
 	IEtbController *etbControllers[ETB_COUNT] = {nullptr};
 	IFuelComputer *fuelComputer = nullptr;
 	IInjectorModel *injectorModel = nullptr;
+	IIdleController* idleController = nullptr;
 
 	cyclic_buffer<int> triggerErrorDetection;
 
@@ -192,12 +194,6 @@ public:
 	 * todo: looks like there is a bug here? 64 bit storage an 32 bit time logic? anyway this feature is mostly a dream at this point
 	 */
 	efitimems64_t callFromPitStopEndTime = 0;
-
-	/**
-	 * This flag indicated a big enough problem that engine control would be
-	 * prohibited if this flag is set to true.
-	 */
-	bool withError = false;
 
 	RpmCalculator rpmCalculator;
 	persistent_config_s *config = nullptr;
@@ -316,9 +312,6 @@ public:
 	 * todo: update documentation
 	 */
 	int ignitionPin[IGNITION_PIN_COUNT];
-
-	// Store current ignition mode for prepareIgnitionPinIndices()
-	ignition_mode_e ignitionModeForPinIndices = Force_4_bytes_size_ignition_mode;
 
 	/**
 	 * this is invoked each time we register a trigger tooth signal

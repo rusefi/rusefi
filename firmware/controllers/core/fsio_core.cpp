@@ -74,7 +74,6 @@ void LEElement::clear() {
 	action = LE_UNDEFINED;
 	next = nullptr;
 	fValue = NAN;
-	iValue = 0;
 }
 
 void LEElement::init(le_action_e action) {
@@ -140,7 +139,7 @@ void LECalculator::push(le_action_e action, float value) {
 	}
 }
 
-static FsioValue doBinaryBoolean(le_action_e action, float lhs, float rhs) {
+static FsioResult doBinaryBoolean(le_action_e action, float lhs, float rhs) {
 	bool v1 = float2bool(lhs);
 	bool v2 = float2bool(rhs);
 	
@@ -154,7 +153,7 @@ static FsioValue doBinaryBoolean(le_action_e action, float lhs, float rhs) {
 	}
 }
 
-static FsioValue doBinaryNumeric(le_action_e action, float v1, float v2) {
+static FsioResult doBinaryNumeric(le_action_e action, float v1, float v2) {
 	// Process based on the action type
 	switch (action) {
 		case LE_OPERATOR_ADDITION:
@@ -185,7 +184,7 @@ static FsioValue doBinaryNumeric(le_action_e action, float v1, float v2) {
 /**
  * @return true in case of error, false otherwise
  */
-FsioValue LECalculator::processElement(LEElement *element DECLARE_ENGINE_PARAMETER_SUFFIX) {
+FsioResult LECalculator::processElement(LEElement *element DECLARE_ENGINE_PARAMETER_SUFFIX) {
 #if EFI_PROD_CODE
 	efiAssert(CUSTOM_ERR_ASSERT, getCurrentRemainingStack() > 64, "FSIO logic", unexpected);
 #endif
@@ -303,7 +302,7 @@ float LECalculator::getValue(float selfValue DECLARE_ENGINE_PARAMETER_SUFFIX) {
 		if (element->action == LE_METHOD_SELF) {
 			push(element->action, selfValue);
 		} else {
-			FsioValue result = processElement(element PASS_ENGINE_PARAMETER_SUFFIX);
+			FsioResult result = processElement(element PASS_ENGINE_PARAMETER_SUFFIX);
 
 			if (!result) {
 				// error already reported
@@ -422,7 +421,8 @@ LEElement *LEElementPool::parseExpression(const char * line) {
 				/**
 				 * Cannot recognize token
 				 */
-				warning(CUSTOM_ERR_PARSING_ERROR, "unrecognized [%s]", parsingBuffer);
+				firmwareError(CUSTOM_ERR_PARSING_ERROR, "unrecognized FSIO keyword [%s]", parsingBuffer);
+
 				return nullptr;
 			}
 			n->init(action);

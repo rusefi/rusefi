@@ -25,6 +25,16 @@ void setVwPassatB6(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	engineConfiguration->vvtMode = VVT_BOSCH_QUICK_START;
 	engineConfiguration->map.sensor.type = MT_BOSCH_2_5;
 
+	/*
+	todo:
+	1214 cc/min
+"High"
+"Sensed Rail Pressure"
+10000 kPa
+
+
+	*/
+
 	strcpy(CONFIG(engineMake), ENGINE_MAKE_VAG);
 	strcpy(CONFIG(engineCode), "BPY");
 

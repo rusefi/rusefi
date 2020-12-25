@@ -441,7 +441,7 @@ void setMiataNA6_MAP_MRE(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 
 	engineConfiguration->map.sensor.hwChannel = EFI_ADC_13; // "20 - AN volt 5"
 
-	engineConfiguration->mafAdcChannel = EFI_ADC_10;// "27 - AN volt 1"
+	engineConfiguration->mafAdcChannel = EFI_ADC_9; // "40 - AN volt 9"
 
 #if (BOARD_TLE8888_COUNT > 0)
 	// GPIOG_1: "Clutch Switch"

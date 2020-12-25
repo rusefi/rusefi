@@ -56,7 +56,7 @@ typedef enum {
 	LE_METHOD_FSIO_DIGITAL_INPUT = 123,
 	LE_METHOD_FSIO_SETTING = 124,
 	LE_METHOD_PPS = 125,
-	LE_METHOD_TIME_SINCE_TRIGGER_EVENT = 126,
+	LE_METHOD_TIME_SINCE_TRIGGER_EVENT = 127,
 
 #include "fsio_enums_generated.def"
 
@@ -64,7 +64,7 @@ typedef enum {
 
 } le_action_e;
 
-using FsioValue = expected<float>;
+using FsioResult = expected<float>;
 
 class LEElement {
 public:
@@ -77,7 +77,6 @@ public:
 
 	le_action_e action;
 	float fValue;
-	int iValue;
 
 	LEElement *next;
 };
@@ -116,7 +115,7 @@ public:
 	int currentCalculationLogPosition;
 private:
 	void push(le_action_e action, float value);
-	FsioValue processElement(LEElement *element DECLARE_ENGINE_PARAMETER_SUFFIX);
+	FsioResult processElement(LEElement *element DECLARE_ENGINE_PARAMETER_SUFFIX);
 	float pop(le_action_e action);
 	LEElement *first;
 	calc_stack_t stack;

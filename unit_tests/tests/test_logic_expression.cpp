@@ -15,7 +15,7 @@
 
 #define TEST_POOL_SIZE 256
 
-FsioValue getEngineValue(le_action_e action DECLARE_ENGINE_PARAMETER_SUFFIX) {
+FsioResult getEngineValue(le_action_e action DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	switch(action) {
 	case LE_METHOD_FAN:
 		return engine->fsioState.mockFan;
@@ -27,6 +27,10 @@ FsioValue getEngineValue(le_action_e action DECLARE_ENGINE_PARAMETER_SUFFIX) {
 		return engine->fsioState.mockCrankingRpm;
 	case LE_METHOD_TIME_SINCE_BOOT:
 		return engine->fsioState.mockTimeSinceBoot;
+	case LE_METHOD_STARTUP_FUEL_PUMP_DURATION:
+		return 2.0f;
+	case LE_METHOD_TIME_SINCE_TRIGGER_EVENT:
+		return engine->fsioState.mockTimeSinceTrigger;
 	case LE_METHOD_VBATT:
 		return 12;
 	case LE_METHOD_AC_TOGGLE:
@@ -191,6 +195,11 @@ TEST(fsio, extraOperators) {
 	testExpression("0 22 33 if", 33);
 }
 
+TEST(fsio, invalidFunction) {
+	EXPECT_FATAL_ERROR(testExpression("bogus_function", 0));
+	EXPECT_FATAL_ERROR(testExpression("1 2 + bogus_expression *", 0));
+}
+
 TEST(fsio, testLogicExpressions) {
 	{
 
@@ -244,10 +253,6 @@ TEST(fsio, testLogicExpressions) {
 	e->init(LE_OPERATOR_OR);
 
 	pool.reset();
-	LEElement *element;
-	element = pool.parseExpression("fan no_such_method");
-	ASSERT_TRUE(element == NULL) << "NULL expected";
-
 	}
 
 	/**
@@ -298,4 +303,42 @@ TEST(fsio, testLogicExpressions) {
 		testExpression2(0, STARTER_RELAY_LOGIC, 0, engine);
 		testExpression2(0, "rpm cranking_rpm > ", 1, engine);
 	}
+}
+
+TEST(fsio, fuelPump) {
+	// this will init fuel pump fsio logic
+	WITH_ENGINE_TEST_HELPER(TEST_ENGINE);
+
+	// Mock a fuel pump pin
+	CONFIG(fuelPumpPin) = GPIOA_0;
+	// Re-init so it picks up the new config
+	enginePins.fuelPumpRelay.init(PASS_ENGINE_PARAMETER_SIGNATURE);
+
+	// ECU just started, haven't seen trigger yet
+	engine->fsioState.mockTimeSinceBoot = 0.5f;
+	engine->fsioState.mockTimeSinceTrigger = 100;
+	runFsio(PASS_ENGINE_PARAMETER_SIGNATURE);
+	// Pump should be on!
+	EXPECT_TRUE(efiReadPin(GPIOA_0));
+
+	// Long time since ecu start, haven't seen trigger yet
+	engine->fsioState.mockTimeSinceBoot = 60;
+	engine->fsioState.mockTimeSinceTrigger = 100;
+	runFsio(PASS_ENGINE_PARAMETER_SIGNATURE);
+	// Pump should be off!
+	EXPECT_FALSE(efiReadPin(GPIOA_0));
+
+	// Long time since ecu start, just saw a trigger!
+	engine->fsioState.mockTimeSinceBoot = 60;
+	engine->fsioState.mockTimeSinceTrigger = 0.1f;
+	runFsio(PASS_ENGINE_PARAMETER_SIGNATURE);
+	// Pump should be on!
+	EXPECT_TRUE(efiReadPin(GPIOA_0));
+
+	// ECU just started, and we just saw a trigger!
+	engine->fsioState.mockTimeSinceBoot = 0.5f;
+	engine->fsioState.mockTimeSinceTrigger = 0.1f;
+	runFsio(PASS_ENGINE_PARAMETER_SIGNATURE);
+	// Pump should be on!
+	EXPECT_TRUE(efiReadPin(GPIOA_0));
 }

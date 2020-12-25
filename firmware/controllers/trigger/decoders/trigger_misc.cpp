@@ -11,9 +11,6 @@
 void configureFiatIAQ_P8(TriggerWaveform * s) {
 	s->initialize(FOUR_STROKE_CAM_SENSOR);
 
-	s->isSynchronizationNeeded = true;
-
-
 	int width = 60;
 	s->tdcPosition = width;
 
@@ -50,8 +47,6 @@ void configureFordST170(TriggerWaveform * s) {
 
 void configureDaihatsu4(TriggerWaveform * s) {
 	s->initialize(FOUR_STROKE_CAM_SENSOR);
-
-	s->isSynchronizationNeeded = true;
 
 	int width = 10;
 

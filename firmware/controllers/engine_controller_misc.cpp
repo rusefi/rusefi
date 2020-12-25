@@ -15,10 +15,6 @@ EXTERN_ENGINE;
 extern LoggingWithStorage sharedLogger;
 extern ButtonDebounce startStopButtonDebounce;
 
-#if ! EFI_PROD_CODE
-extern bool mockPinStates[(1 << sizeof(brain_pin_e))];
-#endif
-
 #if ENABLE_PERF_TRACE
 static uint8_t nextThreadId = 0;
 void threadInitHook(void* vtp) {
@@ -74,16 +70,6 @@ void setMockMapVoltage(float voltage DECLARE_ENGINE_PARAMETER_SUFFIX) {
 void setMockVBattVoltage(float voltage DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	setMockVoltage(engineConfiguration->vbattAdcChannel, voltage PASS_ENGINE_PARAMETER_SUFFIX);
 }
-
-void setMockState(brain_pin_e pin, bool state) {
-#if EFI_UNIT_TEST
-	mockPinStates[static_cast<int>(pin)] = state;
-#else
-	UNUSED(pin);
-	UNUSED(state);
-#endif
-}
-
 #endif /* EFI_ENABLE_MOCK_ADC */
 
 #if EFI_PROD_CODE

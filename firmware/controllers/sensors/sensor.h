@@ -55,7 +55,7 @@
 using SensorResult = expected<float>;
 
 // Fwd declare - nobody outside of Sensor.cpp needs to see inside this type
-struct SensorRegistryEntry;
+class SensorRegistryEntry;
 class Logging;
 
 class Sensor {
@@ -70,6 +70,9 @@ public:
 
 	// Print information about all sensors
 	static void showAllSensorInfo(Logging* logger);
+
+	// Print information about a particular sensor
+	static void showInfo(Logging* logger, SensorType type);
 
 	// Remove all sensors from the sensor registry - tread carefully if you use this outside of a unit test
 	static void resetRegistry();
@@ -90,6 +93,11 @@ public:
 	static float getRaw(SensorType type);
 
 	/*
+	 * Get whether a sensor is redundant (a composite of multiple other sensors that can check consistency between them)
+	 */
+	static bool isRedundant(SensorType type);
+
+	/*
 	 * Query whether there is a sensor of a particular type currently registered.
 	 */
 	static bool hasSensor(SensorType type);
@@ -97,7 +105,7 @@ public:
 	/*
 	 * Mock a value for a particular sensor.
 	 */
-	static void setMockValue(SensorType type, float value);
+	static void setMockValue(SensorType type, float value, bool mockRedundant = false);
 
 	/*
 	 * Mock a value for a particular sensor.
@@ -119,6 +127,7 @@ public:
 	 * For example, CLT, IAT, Throttle Position 2, etc.
 	 */
 	const char* getSensorName() { return getSensorName(m_type); }
+	static const char* getSensorName(SensorType type);
 
 	// Retrieve the current reading from the sensor.
 	//
@@ -127,15 +136,6 @@ public:
 	// this should be field lookup and simple math.
 	virtual SensorResult get() const = 0;
 
-protected:
-	// Protected constructor - only subclasses call this
-	explicit Sensor(SensorType type)
-		: m_type(type) {}
-
-	static const char* getSensorName(SensorType type);
-
-private:
-
 	/*
 	 * Get an unconverted value from the sensor, if available.
 	 */
@@ -143,6 +143,20 @@ private:
 		return 0;
 	}
 
+	/*
+	 * Get whether this sensor is redundant (backed by multiple other sensors)
+	 */
+	virtual bool isRedundant() const {
+		// By default sensors are not redundant
+		return false;
+	}
+
+protected:
+	// Protected constructor - only subclasses call this
+	explicit Sensor(SensorType type)
+		: m_type(type) {}
+
+private:
 	const SensorType m_type;
 
 	// Get this sensor's index in the list

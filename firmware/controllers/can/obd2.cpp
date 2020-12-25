@@ -157,7 +157,7 @@ static void handleGetDataRequest(const CANRxFrame& rx) {
 		obdSendValue(_1_MODE, pid, 1, Sensor::get(SensorType::Tps1).value_or(0) * ODB_TPS_BYTE_PERCENT);	// (A*100/255)
 		break;
 	case PID_FUEL_AIR_RATIO_1: {
-		float lambda = Sensor::get(SensorType::Lambda).value_or(0);
+		float lambda = Sensor::get(SensorType::Lambda1).value_or(0);
 		// phi = 1 / lambda
 		float phi = clampF(0, 1 / lambda, 1.99f);
 

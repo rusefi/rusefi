@@ -128,7 +128,7 @@ angle_t getAdvanceCorrections(int rpm DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	// PID Ignition Advance angle correction
 	float pidTimingCorrection = 0.0f;
 	if (CONFIG(useIdleTimingPidControl)) {
-		int targetRpm = getTargetRpmForIdleCorrection(PASS_ENGINE_PARAMETER_SIGNATURE);
+		int targetRpm = ENGINE(idleController)->getTargetRpm(Sensor::get(SensorType::Clt).value_or(0));
 		int rpmDelta = absI(rpm - targetRpm);
 
 		auto [valid, tps] = Sensor::get(SensorType::Tps1);

@@ -16,11 +16,7 @@ public class IntGaugeLabel extends JLabel {
     public IntGaugeLabel(final String shortName, Sensor sensor) {
         if (sensor.getType() != FieldType.INT)
             throw new IllegalArgumentException(sensor.name());
-        SensorCentral.getInstance().addListener(sensor, new SensorCentral.SensorListener() {
-            @Override
-            public void onSensorUpdate(double value) {
-                IntGaugeLabel.this.setText(shortName + ": " + (int)value);
-            }
-        });
+
+        SensorCentral.getInstance().addListener(sensor, value -> setText(shortName + ": " + (int)value));
     }
 }

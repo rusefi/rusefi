@@ -11,6 +11,7 @@
  *
  * May 2020 two vehicles have driver 500 miles each
  * Sep 2019 two-wire TLE9201 official driving around the block! https://www.youtube.com/watch?v=1vCeICQnbzI
+ *           by the way 9201 does not like getting above 8khz - it starts to get warm
  * May 2019 two-wire TLE7209 now behaves same as three-wire VNH2SP30 "eBay red board" on BOSCH 0280750009
  * Apr 2019 two-wire TLE7209 support added
  * Mar 2019 best results so far achieved with three-wire H-bridges like VNH2SP30 on BOSCH 0280750009
@@ -75,7 +76,8 @@
 
 #if EFI_ELECTRONIC_THROTTLE_BODY
 
-#include "electronic_throttle.h"
+#include "electronic_throttle_impl.h"
+#include "engine.h"
 #include "tps.h"
 #include "sensor.h"
 #include "dc_motor.h"
@@ -160,7 +162,7 @@ static percent_t currentEtbDuty;
 // this macro clamps both positive and negative percentages from about -100% to 100%
 #define ETB_PERCENT_TO_DUTY(x) (clampF(-ETB_DUTY_LIMIT, 0.01f * (x), ETB_DUTY_LIMIT))
 
-bool EtbController::init(etb_function_e function, DcMotor *motor, pid_s *pidParameters, const ValueProvider3D* pedalMap) {
+bool EtbController::init(etb_function_e function, DcMotor *motor, pid_s *pidParameters, const ValueProvider3D* pedalMap, bool initializeThrottles) {
 	if (function == ETB_None) {
 		// if not configured, don't init.
 		return false;
@@ -168,6 +170,25 @@ bool EtbController::init(etb_function_e function, DcMotor *motor, pid_s *pidPara
 
 	m_function = function;
 	m_positionSensor = functionToPositionSensor(function);
+
+	// If we are a throttle, require redundant TPS sensor
+	if (function == ETB_Throttle1 || function == ETB_Throttle2) {
+		// We don't need to init throttles, so nothing to do here.
+		if (!initializeThrottles) {
+			return false;
+		}
+
+		if (!Sensor::isRedundant(m_positionSensor)) {
+			firmwareError(
+				OBD_Throttle_Position_Sensor_Circuit_Malfunction,
+				"Use of electronic throttle requires %s to be redundant.",
+				Sensor::getSensorName(m_positionSensor)
+			);
+
+			return false;
+		}
+	}
+
 	m_motor = motor;
 	m_pid.initPidClass(pidParameters);
 	m_pedalMap = pedalMap;
@@ -845,7 +866,7 @@ void doInitElectronicThrottle(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 
 	pedal2tpsMap.init(config->pedalToTpsTable, config->pedalToTpsPedalBins, config->pedalToTpsRpmBins);
 
-	bool mustHaveEtbConfigured = Sensor::hasSensor(SensorType::AcceleratorPedalPrimary);
+	bool shouldInitThrottles = Sensor::hasSensor(SensorType::AcceleratorPedalPrimary);
 	bool anyEtbConfigured = false;
 
 	for (int i = 0 ; i < ETB_COUNT; i++) {
@@ -862,14 +883,14 @@ void doInitElectronicThrottle(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 			auto func = CONFIG(etbFunctions[i]);
 			auto pid = getEtbPidForFunction(func PASS_ENGINE_PARAMETER_SUFFIX);
 
-			anyEtbConfigured |= controller->init(func, motor, pid, &pedal2tpsMap);
+			anyEtbConfigured |= controller->init(func, motor, pid, &pedal2tpsMap, shouldInitThrottles);
 			INJECT_ENGINE_REFERENCE(engine->etbControllers[i]);
 		}
 	}
 
 	if (!anyEtbConfigured) {
 		// It's not valid to have a PPS without any ETBs - check that at least one ETB was enabled along with the pedal
-		if (mustHaveEtbConfigured) {
+		if (shouldInitThrottles) {
 			firmwareError(OBD_PCM_Processor_Fault, "A pedal position sensor was configured, but no electronic throttles are configured.");
 		}
 

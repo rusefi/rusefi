@@ -156,6 +156,7 @@ struct_no_prefix engine_configuration_s
 
 #define CAN_DEFAULT_BASE 0x200
 
+#define TRIGGERS_FILE_NAME "triggers.txt"
 
 ! 
 ! all the xxx_PACKING_xxx constants are about persisting tables in compact for, for example packing RPM with 50 increment in a byte
@@ -208,7 +209,7 @@ custom ve_table_t 4*@@FUEL_RPM_COUNT@@x@@FUEL_LOAD_COUNT@@ array,   F32,   @OFFS
 custom lambda_table_t @@FUEL_RPM_COUNT@@x@@FUEL_LOAD_COUNT@@ array,   U08,   @OFFSET@, [@@FUEL_RPM_COUNT@@x@@FUEL_LOAD_COUNT@@],"deg",	   {1/@@PACK_MULT_LAMBDA_CFG@@},     0,        0.6,  1.5,     2
 custom afr_table_t @@FUEL_RPM_COUNT@@x@@FUEL_LOAD_COUNT@@ array,   U08,   @OFFSET@, [@@FUEL_RPM_COUNT@@x@@FUEL_LOAD_COUNT@@],"deg",	   {1/@@PACK_MULT_AFR_CFG@@},     0,        0,  25.0,     1
 
-custom tcubinary_table_t @@TCU_GEAR_COUNT@@x@@TCU_SOLENOID_COUNT@@ array,   U08,   @OFFSET@, [@@TCU_GEAR_COUNT@@x@@TCU_SOLENOID_COUNT@@],"onoff", 1,     0,        0,  1,  0
+custom tcubinary_table_t @@TCU_SOLENOID_COUNT@@x@@TCU_GEAR_COUNT@@ array,   U08,   @OFFSET@, [@@TCU_SOLENOID_COUNT@@x@@TCU_GEAR_COUNT@@],"onoff", 1,     0,        0,  1,  0
 
 custom fsio_table_8x8_u8t	@@FSIO_TABLE_8@@x@@FSIO_TABLE_8@@ array,   U08,   @OFFSET@, [@@FSIO_TABLE_8@@x@@FSIO_TABLE_8@@],"value",      1,     0,      0.0,   255.0,   0
 custom fsio_table_8x8_f32t	4*@@FSIO_TABLE_8@@x@@FSIO_TABLE_8@@ array,   F32,   @OFFSET@, [@@FSIO_TABLE_8@@x@@FSIO_TABLE_8@@],"value",      1,     0,      0.0,   30000.0,   2
@@ -271,7 +272,7 @@ float baseFuel;+Base mass of the per-cylinder fuel injected during cranking.  Th
 int16_t rpm;+This sets the RPM limit below which the ECU will use cranking fuel and ignition logic, typically this is around 350-450rpm. \nset cranking_rpm X;"RPM",      1,     0,    0, 3000,      0
 end_struct
 
-#define debug_mode_e_enum "Alternator PID", "TPS acceleration enrichment", "GPPWM", "Idle Control", "Engine Load accl enrich", "Trigger Counters", "FSIO_ADC", "AUX_PID_1", "VVT input", "Cranking", "Timing", "Closed-loop fuel corr PID", "VSS", "SD card", "sr5", "Knock", "mode16", "Electronic Throttle", "Executor", "Bench Test / TS commands", "Aux Valves", "Analog inputs #1", "INSTANT_RPM", "FSIO_EXPRESSION_1_7", "Status", "CJ125", "CAN", "MAP", "Metrics", "ETB#2", "Ion Sense", "TLE8888", "Analog inputs #2", "Dwell Metric", "INVALID", "ETB Logic", "Boost Control", "Start/Stop", "Launch", "ETB Autotune", "FSIO_COMPOSITE_LOG", "FSIO_EXPRESSION_8_14", "FSIO_SPECIAL", "Injector Compensation", "Mode44"
+#define debug_mode_e_enum "Alternator PID", "TPS acceleration enrichment", "GPPWM", "Idle Control", "Engine Load accl enrich", "Trigger Counters", "FSIO_ADC", "AUX_PID_1", "VVT input", "Cranking", "Timing", "Closed-loop fuel corr PID", "VSS", "SD card", "sr5", "Knock", "mode16", "Electronic Throttle", "Executor", "Bench Test / TS commands", "Aux Valves", "Analog inputs #1", "INSTANT_RPM", "FSIO_EXPRESSION_1_7", "Status", "CJ125", "CAN", "MAP", "Metrics", "ETB#2", "Ion Sense", "TLE8888", "Analog inputs #2", "Dwell Metric", "INVALID", "ETB Logic", "Boost Control", "Start/Stop", "Launch", "ETB Autotune", "FSIO_COMPOSITE_LOG", "FSIO_EXPRESSION_8_14", "FSIO_SPECIAL", "Injector Compensation", "Dyno_View", "Logic_Analyzer", "rusEFI Wideband", "Mode47", "Mode48"
 custom debug_mode_e 4 bits,    U32,   @OFFSET@, [0:5], @@debug_mode_e_enum@@
 
 #define vvt_mode_e_enum "Inactive", "Single Tooth Second Half", "2GZ", "Miata NB2", "Single Tooth First Half", "Bosch Quick Start", "4/1", "mode7"
@@ -421,17 +422,23 @@ end_struct
 #define TT_TT_TOOTHED_WHEEL_36_2 48
 #define TT_TT_SUBARU_SVX 49
 #define TT_TT_1_16 50
+#define TT_TT_SUBARU_7_WITHOUT_6 51
+#define TT_TT_52 52
 
+
+! todo https://github.com/rusefi/rusefi/issues/2102
+#define DBG_DBG_LOGIC_ANALYZER 45
+
+
+! todo https://github.com/rusefi/rusefi/issues/2102
 #define ET_DODGE_NEON_1995 2
 #define ET_FORD_ASPIRE 3
-#define ET_FORD_FIESTA 4
 #define ET_FORD_INLINE_6 7
-#define ET_ROVER_V8 10
 #define ET_FORD_ESCORT_GT 14
-#define ET_BMW_E34 25
 #define ET_SACHS 29
 #define ET_VW_ABA 32
 #define ET_CAMARO 35
+#define ET_MRE_SUBARU_EJ18 37
 #define ET_BMW_M73_F 40
 #define ET_DODGE_NEON_2003_CRANK 46
 
@@ -444,15 +451,18 @@ end_struct
 #define ET_MRE_NEW_TEST_BOARD 31
 #define ET_MRE_DEFAULTS 60
 #define ET_MRE_MIATA_NA6_MAP 66
+#define ET_MRE_M111 68
 #define ET_VW_B6 62
 
 #define ET_DEFAULT_FRANKENSO 0
 #define ET_FRANKENSO_MIATA_NA6 41
 #define ET_FRANKENSO_MIATA_NB2 47
 #define ET_FRANKENSO_MIATA_NA6_VAF 57
-#define ET_BMW_M73_PROTEUS 63
+#define ET_PROTEUS_BMW_M73 63
+#define ET_PROTEUS_MIATA_NB2 67
 #define ET_MIATA_TCU_PROTEUS 1
 #define ET_CITROEN_TU3JP 65
+#define ET_PROTEUS_QC_TEST_BOARD 42
 
 
 custom engine_type_e 4 bits, S32, @OFFSET@,   [0:6], @@engine_type_e_auto_enum@@
@@ -483,7 +493,7 @@ bit isCJ125Verbose;enable cj125verbose/disable cj125verbose
 bit cj125isUaDivided;+Is your UA CJ125 output wired to MCU via resistor divider? Ua can go over 3.3v but only at lambda >3, i.e very lean AFR above 44.1\nWhen exposed to free air and 17x gain, Ua will be 4.17 volt
 bit cj125isLsu49;
 bit etb_use_two_wires;+TLE7209 uses two-wire mode. TLE9201 and VNH2SP30 do NOT use two wire mode.
-bit isDoubleSolenoidIdle;+Subaru style where default valve position is somewhere in the middle. First solenoid opens it more while second can close it more than default position.
+bit isDoubleSolenoidIdle;+Subaru/BMW style where default valve position is somewhere in the middle. First solenoid opens it more while second can close it more than default position.
 bit showSdCardWarning;
 bit cj125isUrDivided;+Is your UR CJ125 output wired to MCU via resistor divider?\nLooks like 3v range should be enough, divider generally not needed.
 bit useCicPidForIdle;+Switch between Industrial and Cic PID implementation
@@ -620,7 +630,7 @@ struct trigger_config_s @brief Trigger wheel(s) configuration
 
 custom bool32_t 4 bits,    U32,   @OFFSET@, [0:0], "false", "true"
 
-#define trigger_type_e_enum "custom toothed wheel", "Ford Aspire", "Dodge Neon 1995", "Miata NA", "Miata NB", "GM_7X", "Cooper R50", "Mazda SOHC 4", "60/2", "36/1", "Honda 4+24+1", "Mitsubishi", "Honda 4+24", "Honda 1+4+24", "Dodge Neon 2003", "Mazda DOHC 1+4", "1+1", "INVALID", "Single Tooth", "Dodge Ram 1+16", "60/2 VW", "Honda 1+24", "Dodge Stratus",  "36_2_2_2", "Nissan Primera", "dev 2JZ 3/34 simulator", "Rover K", "GM LS 24", "Honda CBR 600", "2JZ_1_12", "Honda CBR 600 custom", "3/1 skipped" , "Dodge Neon 2003 crank", "Miata VVT", "trg34", "trg35", "Subaru 7+6", "Jeep 18-2-2-2", "WIP", "Dodge Neon 1995 crank only", "Jeep XJ 4 cyl", "FiatIAQ_P8", "Mazda Z5", "trg43", "Renix 44-2-2", "Renix 66-2-2-2", "Honda K 12+1", "trg47", "36/2", "Subaru SVX", "1+16", "trg51", "trg52", "INVALID"
+#define trigger_type_e_enum "custom toothed wheel", "Ford Aspire", "Dodge Neon 1995", "Miata NA", "Miata NB", "GM_7X", "Cooper R50", "Mazda SOHC 4", "60/2", "36/1", "Honda 4+24+1", "Mitsubishi", "Honda 4+24", "Honda 1+4+24", "Dodge Neon 2003", "Mazda DOHC 1+4", "1+1", "INVALID", "Single Tooth", "Dodge Ram 1+16", "60/2 VW", "Honda 1+24", "Dodge Stratus",  "36_2_2_2", "Nissan Primera", "dev 2JZ 3/34 simulator", "Rover K", "GM LS 24", "Honda CBR 600", "2JZ_1_12", "Honda CBR 600 custom", "3/1 skipped" , "Dodge Neon 2003 crank", "Miata VVT", "trg34", "trg35", "Subaru 7+6", "Jeep 18-2-2-2", "WIP", "Dodge Neon 1995 crank only", "Jeep XJ 4 cyl", "FiatIAQ_P8", "Mazda Z5", "trg43", "Renix 44-2-2", "Renix 66-2-2-2", "Honda K 12+1", "trg47", "36/2", "Subaru SVX", "1+16", "Subaru 7 without 6", "trg52", "INVALID"
 
 custom trigger_type_e 4 bits,    U32,   @OFFSET@, [0:5], @@trigger_type_e_enum@@
 	trigger_type_e type;set trigger_type X
@@ -1452,8 +1462,10 @@ uint8_t[4] unusedsw;;"units", 1, 0, -20, 100, 0
 
 	pin_output_mode_e[TCU_SOLENOID_COUNT iterate] tcu_solenoid_mode;
 
+	int8_t[IGN_RPM_COUNT] knockBaseNoise;;"dB", 1.0, 0, -30.0, 0, 2
+
 ! just a reminder that 'int' and 'float' are 4 bytes each
-	int[369] mainUnusedEnd;;"units", 1, 0, -20, 100, 0
+	int[365] mainUnusedEnd;;"units", 1, 0, -20, 100, 0
 
 ! end of engine_configuration_s
 end_struct
@@ -1605,6 +1617,7 @@ end_struct
 #define GAUGE_NAME_ENGINE_LOAD "Engine Load"
 #define GAUGE_NAME_CPU_TEMP "CPU Temperature"
 #define GAUGE_NAME_ETB_TARGET "ETB position target"
+#define GAUGE_NAME_WG_POSITION "Wastegate position sensor"
 #define GAUGE_NAME_ETB_ERROR "ETB position error"
 #define GAUGE_NAME_ETB_DUTY "ETB Duty"
 
@@ -1668,7 +1681,9 @@ end_struct
 #define GAUGE_NAME_TARGET_AFR "fuel: target AFR"
 #define GAUGE_NAME_TARGET_LAMBDA "fuel: target lambda"
 #define GAUGE_NAME_AFR "Air/Fuel Ratio"
+#define GAUGE_NAME_AFR2 "Air/Fuel Ratio 2"
 #define GAUGE_NAME_LAMBDA "Lambda"
+#define GAUGE_NAME_LAMBDA2 "Lambda 2"
 #define GAUGE_NAME_IAC "Idle Air Valve"
 
 #define GAUGE_NAME_DWELL_DUTY "dwell: coil duty cycle"
@@ -1692,6 +1707,7 @@ end_struct
 #define ENGINE_MAKE_MAZDA "Mazda"
 #define ENGINE_MAKE_LADA "Lada"
 #define ENGINE_MAKE_GM "GM"
+#define ENGINE_MAKE_SUBARU "Subaru"
 #define ENGINE_MAKE_BMW "BMW"
 #define ENGINE_MAKE_TOYOTA "Toyota"
 #define ENGINE_MAKE_MERCEDES "Mercedes"
@@ -1710,6 +1726,13 @@ end_struct
 #define CMD_RPM "rpm"
 #define CMD_VSS_PIN "vss_pin"
 #define CMD_TRIGGER_PIN "set_trigger_input_pin"
+#define CMD_LOGIC_PIN "set_logic_input_pin"
+#define CMD_ALTERNATOR_PIN "set_alternator_pin"
+#define CMD_IDLE_PIN "set_idle_pin"
+#define CMD_BOOST_PIN "set_boost_pin"
+#define CMD_TRIGGER_SIMULATOR_PIN "set_trigger_simulator_pin"
+#define CMD_IGNITION_PIN "set_ignition_pin"
+#define CMD_INJECTION_PIN "set_injection_pin"
 
 #define CMD_RESET_ENGINE_SNIFFER "reset_engine_chart"
 #define CMD_FUNCTIONAL_TEST_MODE "test_mode"

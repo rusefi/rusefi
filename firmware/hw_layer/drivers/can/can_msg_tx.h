@@ -28,7 +28,7 @@ public:
 	/**
 	 * Create a new CAN message, with the specified extended ID.
 	 */
-	explicit CanTxMessage(uint32_t eid, uint8_t dlc = 8);
+	explicit CanTxMessage(uint32_t eid, uint8_t dlc = 8, bool isExtended = false);
 
 	/**
 	 * Destruction of an instance of CanTxMessage will transmit the message over the wire.

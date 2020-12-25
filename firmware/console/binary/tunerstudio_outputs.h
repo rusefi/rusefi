@@ -78,6 +78,7 @@ typedef struct {
 	unsigned int isPedalError : 1; // bit 26
 	unsigned int isKnockChipOk : 1; // bit 27
 	unsigned int launchTriggered : 1; // bit 28
+	unsigned int isTps2Error : 1; // bit 29
 
 	// RPM, vss
 	scaled_channel<uint16_t> rpm;   // 4
@@ -260,8 +261,12 @@ typedef struct {
 	scaled_afr airFuelRatio; // 282
 
 	scaled_ms VssAcceleration; //284
+
+	scaled_lambda lambda2; // 286
+	scaled_afr airFuelRatio2; // 288
+
 	//288
-	uint8_t unusedAtTheEnd[54]; // we have some unused bytes to allow compatible TS changes
+	uint8_t unusedAtTheEnd[48]; // we have some unused bytes to allow compatible TS changes
 
 	// Temporary - will remove soon
 	TsDebugChannels* getDebugChannels() {

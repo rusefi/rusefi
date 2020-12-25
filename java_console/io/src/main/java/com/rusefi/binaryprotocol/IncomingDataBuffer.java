@@ -64,8 +64,8 @@ public class IncomingDataBuffer {
             return null;
 
         int packetSize = swap16(getShort());
-        if (log.debugEnabled())
-            log.debug(loggingPrefix + "Got packet size " + packetSize);
+        // if (log.debugEnabled())
+        //     log.debug(loggingPrefix + "Got packet size " + packetSize);
         if (packetSize < 0)
             return null;
         if (!allowLongResponse && packetSize > Math.max(Fields.BLOCKING_FACTOR, Fields.TS_OUTPUT_SIZE) + 10)
@@ -87,8 +87,8 @@ public class IncomingDataBuffer {
             return null;
         }
         onPacketArrived();
-        if (log.debugEnabled())
-            log.debug("packet " + Arrays.toString(packet) + ": crc OK");
+        // if (log.debugEnabled())
+        //     log.trace("packet arrived: " + Arrays.toString(packet) + ": crc OK");
 
         return packet;
     }
@@ -98,7 +98,7 @@ public class IncomingDataBuffer {
     }
 
     public void addData(byte[] freshData) {
-        log.info("IncomingDataBuffer: " + freshData.length + " byte(s) arrived");
+        //log.info("IncomingDataBuffer: " + freshData.length + " byte(s) arrived");
         synchronized (cbb) {
             if (cbb.size() - cbb.length() < freshData.length) {
                 log.error("IncomingDataBuffer: buffer overflow not expected");
@@ -122,7 +122,7 @@ public class IncomingDataBuffer {
      * @return true in case of timeout, false if we have received count of bytes
      */
     public boolean waitForBytes(int timeoutMs, String loggingMessage, long startTimestamp, int count) {
-        log.info(loggingMessage + ": waiting for " + count + " byte(s)");
+        //log.info(loggingMessage + ": waiting for " + count + " byte(s)");
         synchronized (cbb) {
             while (cbb.length() < count) {
                 int timeout = (int) (startTimestamp + timeoutMs - System.currentTimeMillis());

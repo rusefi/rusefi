@@ -40,11 +40,7 @@ typedef enum {
 	 * http://rusefi.com/forum/viewtopic.php?t=375
 	 */
 	FORD_ASPIRE_1996 = ET_FORD_ASPIRE,
-	/**
-	 * 36-1 toothed wheel engine
-	 * http://rusefi.com/forum/viewtopic.php?t=282
-	 */
-	FORD_FIESTA = ET_FORD_FIESTA,
+
 	NISSAN_PRIMERA = 5,
 	HONDA_ACCORD_CD = 6,
 	FORD_INLINE_6_1995 = 7,
@@ -54,9 +50,6 @@ typedef enum {
 	 * http://rusefi.com/forum/viewtopic.php?f=3&t=332
 	 */
 	GY6_139QMB = 8,
-
-
-	ROVER_V8 = ET_ROVER_V8,
 
 	MIATA_PROTEUS_TCU = ET_MIATA_TCU_PROTEUS,
 	MAZDA_MIATA_NB1 = 9,
@@ -94,14 +87,12 @@ typedef enum {
 	MRE_BODY_CONTROL = ET_MRE_BODY_CONTROL,
 	BMW_M73_M = 24,
 
-	BMW_E34 = ET_BMW_E34,
-
 	TEST_ENGINE = 26,
 
 	// used by unit test
 	// see https://github.com/rusefi/rusefi/issues/898
 	// see TriggerWaveform::bothFrontsRequired
-	ISSUE_898 = 27,
+	TEST_ISSUE_898 = 27,
 
 	MAZDA_626 = 28,
 
@@ -122,7 +113,7 @@ typedef enum {
 
 	UNUSED_36 = 36,
 
-	CHEVY_C20_1973 = 37,
+	MRE_SUBARU_EJ18 = ET_MRE_SUBARU_EJ18,
 
 	TOYOTA_JZS147 = 38, // 2JZ-GTE NON VVTi
 
@@ -130,8 +121,7 @@ typedef enum {
 
 	BMW_M73_F = ET_BMW_M73_F,
 
-
-	ZIL_130 = 42,
+	PROTEUS_QC_TEST_BOARD = ET_PROTEUS_QC_TEST_BOARD,
 
 	HONDA_600 = 43,
 
@@ -183,14 +173,18 @@ typedef enum {
 
 	MICRO_RUS_EFI = ET_MRE_DEFAULTS,
 
-	PROTEUS = 61,
+	PROTEUS_DEFAULTS = 61,
 
 	VW_B6 = ET_VW_B6,
 
-	BMW_M73_PROTEUS = ET_BMW_M73_PROTEUS,
+	BMW_M73_PROTEUS = ET_PROTEUS_BMW_M73,
 
 	DODGE_RAM = 64,
 	CITROEN_TU3JP = ET_CITROEN_TU3JP,
+
+	MRE_M111 = ET_MRE_M111,
+
+	PROTEUS_MIATA_NB2 = ET_PROTEUS_MIATA_NB2,
 
 
 	/**
@@ -361,13 +355,18 @@ typedef enum {
 
 	TT_1_16 = 50,
 
+	// todo: remove this trigger once we have https://github.com/rusefi/rusefi/issues/2073
+	TT_SUBARU_7_WITHOUT_6 = TT_TT_SUBARU_7_WITHOUT_6,
+
+	TT_52 = TT_TT_52,
+
 	// do not forget to edit "#define trigger_type_e_enum" line in integration/rusefi_config.txt file to propogate new value to rusefi.ini TS project
 	// do not forget to invoke "gen_config.bat" once you make changes to integration/rusefi_config.txt
 	// todo: one day a hero would integrate some of these things into Makefile in order to reduce manual magic
 	//
 	// Another point: once you add a new trigger, run get_trigger_images.bat which would run rusefi_test.exe from unit_tests
 	//
-	TT_UNUSED = 51, // this is used if we want to iterate over all trigger types
+	TT_UNUSED = 53, // this is used if we want to iterate over all trigger types
 
 	Force_4_bytes_size_trigger_type = ENUM_32_BITS,
 } trigger_type_e;
@@ -761,7 +760,13 @@ typedef enum {
 	DBG_FSIO_EXPRESSION_8_14 = 41,
 	DBG_FSIO_SPECIAL = 42,
 	DBG_INJECTOR_COMPENSATION = 43,
-	DBG_44 = 44,
+	DBG_DYNO_VIEW = 44,
+	// todo: because of getEnumOptionsForTunerStudio 'getEnumOptionsForTunerStudio' would not work here
+	// todo: https://github.com/rusefi/rusefi/issues/2102
+	DBG_LOGIC_ANALYZER = 45,
+	DBG_RUSEFI_WIDEBAND = 46,
+	DBG_47 = 47,
+	DBG_48 = 48,
 
 	Force_4_bytes_size_debug_mode_e = ENUM_32_BITS,
 } debug_mode_e;

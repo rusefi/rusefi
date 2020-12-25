@@ -114,7 +114,7 @@ static LEElement * mainRelayLogic;
 static Logging *logger;
 #if EFI_PROD_CODE || EFI_SIMULATOR
 
-FsioValue getEngineValue(le_action_e action DECLARE_ENGINE_PARAMETER_SUFFIX) {
+FsioResult getEngineValue(le_action_e action DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	efiAssert(CUSTOM_ERR_ASSERT, engine!=NULL, "getLEValue", unexpected);
 	switch (action) {
 	case LE_METHOD_FAN:
@@ -141,7 +141,7 @@ FsioValue getEngineValue(le_action_e action DECLARE_ENGINE_PARAMETER_SUFFIX) {
 		return engine->triggerCentral.getVVTPosition();
 #endif
 	case LE_METHOD_TIME_SINCE_TRIGGER_EVENT:
-		return engine->triggerCentral.getTimeSinceTriggerEvent();
+		return engine->triggerCentral.getTimeSinceTriggerEvent(getTimeNowNt());
 	case LE_METHOD_TIME_SINCE_BOOT:
 #if EFI_MAIN_RELAY_CONTROL
 		// in main relay control mode, we return the number of seconds since the ignition is turned on
@@ -555,7 +555,7 @@ static void showFsio(const char *msg, LEElement *element) {
 	if (msg != NULL)
 		scheduleMsg(logger, "%s:", msg);
 	while (element != NULL) {
-		scheduleMsg(logger, "action %d: fValue=%.2f iValue=%d", element->action, element->fValue, element->iValue);
+		scheduleMsg(logger, "action %d: fValue=%.2f", element->action, element->fValue);
 		element = element->next;
 	}
 	scheduleMsg(logger, "<end>");

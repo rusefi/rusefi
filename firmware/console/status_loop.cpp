@@ -491,6 +491,8 @@ void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels DECLARE_
 
 	SensorResult tps2 = Sensor::get(SensorType::Tps2);
 	tsOutputChannels->throttle2Position = tps2.Value;
+	// If we don't have a TPS2 at all, don't turn on the failure light
+	tsOutputChannels->isTps2Error = !tps2.Valid && Sensor::hasSensor(SensorType::Tps2Primary);
 
 	SensorResult pedal = Sensor::get(SensorType::AcceleratorPedal);
 	tsOutputChannels->pedalPosition = pedal.Value;
@@ -510,10 +512,13 @@ void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels DECLARE_
 	// offset 16
 	tsOutputChannels->massAirFlowVoltage = hasMafSensor() ? getMafVoltage(PASS_ENGINE_PARAMETER_SIGNATURE) : 0;
 
-	// offset 20
-	float lambdaValue = Sensor::get(SensorType::Lambda).value_or(0);
+	float lambdaValue = Sensor::get(SensorType::Lambda1).value_or(0);
 	tsOutputChannels->lambda = lambdaValue;
 	tsOutputChannels->airFuelRatio = lambdaValue * ENGINE(engineState.stoichiometricRatio);
+
+	float lambda2Value = Sensor::get(SensorType::Lambda2).value_or(0);
+	tsOutputChannels->lambda2 = lambda2Value;
+	tsOutputChannels->airFuelRatio2 = lambda2Value * ENGINE(engineState.stoichiometricRatio);
 
 	// offset 24
 	tsOutputChannels->engineLoad = getEngineLoadT(PASS_ENGINE_PARAMETER_SIGNATURE);
@@ -596,7 +601,7 @@ void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels DECLARE_
 	// Low pressure is directly in kpa
 	tsOutputChannels->lowFuelPressure = Sensor::get(SensorType::FuelPressureLow).Value;
 	// High pressure is in bar, aka 100 kpa
-	tsOutputChannels->highFuelPressure = Sensor::get(SensorType::FuelPressureHigh).Value * 0.01f;
+	tsOutputChannels->highFuelPressure = KPA2BAR(Sensor::get(SensorType::FuelPressureHigh).Value);
 
 	// 288
 	tsOutputChannels->injectionOffset = engine->engineState.injectionOffset;
@@ -860,6 +865,11 @@ void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels DECLARE_
 #if (BOARD_TLE8888_COUNT > 0)
 		tle8888PostState(tsOutputChannels->getDebugChannels());
 #endif /* BOARD_TLE8888_COUNT */
+		break;
+	case DBG_LOGIC_ANALYZER: 
+#if EFI_LOGIC_ANALYZER	
+		reportLogicAnalyzerToTS();
+#endif /* EFI_LOGIC_ANALYZER */		
 		break;
 	default:
 		;

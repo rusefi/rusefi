@@ -10,6 +10,7 @@ jobs:
     - uses: actions/checkout@v1
       with:
         submodules: recursive
+        fetch-depth: 0
 
     - name: Discover cores
       run: lscpu | egrep 'Model name|Socket|Thread|NUMA|CPU\(s\)'
@@ -42,3 +43,38 @@ jobs:
     - name: Generate Code Coverage
       working-directory: ./unit_tests/
       run: ./ci_gcov.sh ${{ secrets.RUSEFI_DOXYGEN_FTP_USER }} ${{ secrets.RUSEFI_DOXYGEN_FTP_PASS }} ${{ secrets.RUSEFI_FTP_SERVER }}
+
+    # Commit changes and catch the error that occurs if nothing has been changed (without catching other errors)
+    - name: Commit changes
+      if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/master' }}
+      env:
+        ACTIONS_ALLOW_UNSECURE_COMMANDS: 'true'
+      #
+      # we have minor drama - looks like unit_tests are invoked from root folder while a more natural is to invoke those
+      # from 'unit_tests' folder
+      # as a work-around to leverage unit_tests/.gitignore we move those files into expected folder for now
+      #
+      run: |
+        git config --local user.email "action@github.com"
+        git config --local user.name "GitHub build-unit-tests Action"
+        mv triggers.txt unit_tests
+        mv *.logicdata  unit_tests
+        git add unit_tests/triggers.txt
+        git status
+        OUT=$(git commit -m "Trigger wheel definitions" unit_tests/triggers.txt 2>&1) || echo "commit failed, finding out why"
+        echo "$OUT"
+        if echo "$OUT" | grep 'nothing to commit'; then
+          echo "::set-env name=NOCOMMIT::true"
+          exit 0
+        elif echo "$OUT" | grep 'changed'; then
+          exit 0
+        else
+          exit 1
+        fi
+
+    - name: Push configs
+      if: ${{github.event_name == 'push' && github.ref == 'refs/heads/master' && env.NOCOMMIT != 'true'}}
+      uses: ad-m/github-push-action@master
+      with:
+        github_token: ${{ github.token }}
+        branch: master

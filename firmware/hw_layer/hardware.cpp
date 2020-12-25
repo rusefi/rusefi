@@ -23,6 +23,7 @@
 #include "yaw_rate_sensor.h"
 #include "pin_repository.h"
 #include "max31855.h"
+#include "logic_analyzer.h"
 #include "smart_gpio.h"
 #include "accelerometer.h"
 #include "eficonsole.h"
@@ -49,6 +50,7 @@
 #include "engine_configuration.h"
 #include "aux_pid.h"
 #include "perf_trace.h"
+#include "trigger_emulator_algo.h"
 #include "boost_control.h"
 #include "software_knock.h"
 #if EFI_MC33816
@@ -303,8 +305,14 @@ void stopSpi(spi_device_e device) {
  */
 
 void applyNewHardwareSettings(void) {
-    // all 'stop' methods need to go before we begin starting pins
-
+    /**
+     * All 'stop' methods need to go before we begin starting pins.
+     *
+     * We take settings from 'activeConfiguration' not 'engineConfiguration' while stopping hardware.
+     * Some hardware is restart unconditionally on change of parameters while for some systems we make extra effort and restart only
+     * relevant settings were changes.
+     *
+     */
 	ButtonDebounce::stopConfigurationList();
 
 #if EFI_SHAFT_POSITION_INPUT
@@ -342,6 +350,14 @@ void applyNewHardwareSettings(void) {
 #if EFI_VEHICLE_SPEED
 	stopVSSPins();
 #endif /* EFI_VEHICLE_SPEED */
+
+#if EFI_LOGIC_ANALYZER
+	stopLogicAnalyzerPins();
+#endif /* EFI_LOGIC_ANALYZER */
+
+#if EFI_EMULATE_POSITION_SENSORS
+	stopTriggerEmulatorPins();
+#endif /* EFI_EMULATE_POSITION_SENSORS */
 
 #if EFI_AUX_PID
 	stopAuxPins();
@@ -420,6 +436,12 @@ void applyNewHardwareSettings(void) {
 #if EFI_BOOST_CONTROL
 	startBoostPin();
 #endif
+#if EFI_EMULATE_POSITION_SENSORS
+	startTriggerEmulatorPins();
+#endif /* EFI_EMULATE_POSITION_SENSORS */
+#if EFI_LOGIC_ANALYZER
+	startLogicAnalyzerPins();
+#endif /* EFI_LOGIC_ANALYZER */
 #if EFI_AUX_PID
 	startAuxPins();
 #endif /* EFI_AUX_PID */
@@ -598,15 +620,15 @@ void initHardware(Logging *l) {
 
 #if EFI_VEHICLE_SPEED
 	initVehicleSpeed(sharedLogger);
-#endif
+#endif // EFI_VEHICLE_SPEED
 
 #if EFI_CAN_SUPPORT
 	initCanVssSupport(sharedLogger);
-#endif
+#endif // EFI_CAN_SUPPORT
 
 #if EFI_CDM_INTEGRATION
 	cdmIonInit();
-#endif
+#endif // EFI_CDM_INTEGRATION
 
 #if (HAL_USE_PAL && EFI_JOYSTICK)
 	initJoystick(sharedLogger);
