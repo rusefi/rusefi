@@ -152,9 +152,6 @@ public class ConfigField {
 
         ConfigField field = new ConfigField(state, name, comment, arraySizeAsText, type, arraySize,
                 tsInfo, isIterate, isFsioVisible, null, -1, null, null);
-        SystemOut.println("type " + type);
-        SystemOut.println("name " + name);
-        SystemOut.println("comment " + comment);
 
         return field;
     }
