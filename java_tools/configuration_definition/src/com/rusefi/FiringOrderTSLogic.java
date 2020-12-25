@@ -39,7 +39,6 @@ public class FiringOrderTSLogic {
         while ((line = br.readLine()) != null) {
             int index = line.indexOf(FIRING_ORDER_PREFIX);
             if (index == -1) {
-                System.out.println("Skipping [" + line);
                 continue;
             }
             line = line.substring(index + FIRING_ORDER_PREFIX.length());
@@ -50,13 +49,10 @@ public class FiringOrderTSLogic {
     public static void parseLine(String line, State state) {
         line = line.replaceAll("[\\s]*\\,.*", "");
         line = line.replaceAll("[\\s\\,]", "");
-        System.out.println("Processing " + line);
 
         String s[] = line.split("\\=");
         String order[] = s[0].split("_");
         int ordinal = Integer.parseInt(s[1]);
-
-        System.out.println("order " + Arrays.toString(order) + ": " + ordinal);
 
         state.maxOrdinal = Math.max(ordinal, state.maxOrdinal);
         state.ordinal2order.put(ordinal, order);

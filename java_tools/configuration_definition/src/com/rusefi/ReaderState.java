@@ -134,7 +134,6 @@ public class ReaderState {
         if (stack.isEmpty())
             throw new IllegalStateException("Unexpected end_struct");
         ConfigStructure structure = stack.pop();
-        SystemOut.println("Ending structure " + structure.getName());
         structure.addAlignmentFill(this);
 
         structures.put(structure.getName(), structure);
@@ -221,7 +220,6 @@ public class ReaderState {
         }
         ConfigStructure structure = new ConfigStructure(name, comment, withPrefix, withConstructor);
         state.stack.push(structure);
-        SystemOut.println("Starting structure " + structure.getName());
     }
 
     private static void processField(ReaderState state, String line) {
@@ -243,7 +241,6 @@ public class ReaderState {
 
         Integer getPrimitiveSize = TypesHelper.getPrimitiveSize(cf.getType());
         if (getPrimitiveSize != null && getPrimitiveSize % 4 == 0) {
-            SystemOut.println("Need to align before " + cf.getName());
             structure.addAlignmentFill(state);
         } else {
             // adding a structure instance - had to be aligned

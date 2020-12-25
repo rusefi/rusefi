@@ -99,7 +99,6 @@ public class VariableRegistry  {
     @Nullable
     private String doRegister(String var, String value) {
         if (data.containsKey(var)) {
-            SystemOut.println("Not redefining " + var);
             return null;
         }
         value = applyVariables(value);
@@ -110,7 +109,6 @@ public class VariableRegistry  {
             value = String.valueOf(first * second);
         }
 
-        SystemOut.println("Registering " + var + " as " + value);
         data.put(var, value);
 
         if (!value.contains("\n")) {
@@ -142,13 +140,11 @@ public class VariableRegistry  {
 
         try {
             int intValue = Integer.parseInt(value);
-            SystemOut.println("key [" + var + "] value: " + intValue);
             intValues.put(var, intValue);
             if (!var.endsWith(_HEX_SUFFIX)) {
                 javaDefinitions.put(var, "\tpublic static final int " + var + " = " + intValue + ";" + EOL);
             }
         } catch (NumberFormatException e) {
-            SystemOut.println("Not an integer: " + value);
 
             if (!var.trim().endsWith(ConfigField.ENUM_SUFFIX)) {
                 if (isQuoted(value, '"')) {
