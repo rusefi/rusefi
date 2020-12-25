@@ -465,7 +465,7 @@ bool FsioValue::isFloat() const {
 	return typeBit == 0;
 }
 
-float FsioValue::floatValue() const {
+float FsioValue::asFloat() const {
 	return u.f32;
 }
 
@@ -475,7 +475,7 @@ bool FsioValue::isBool() const {
 	return typeBit == 1;
 }
 
-bool FsioValue::boolValue() const {
+bool FsioValue::asBool() const {
 	uint32_t boolBit = u.u32 & 0x2;
 
 	return boolBit != 0;

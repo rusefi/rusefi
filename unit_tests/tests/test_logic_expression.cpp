@@ -349,7 +349,7 @@ TEST(fsio, fsioValueFloat) {
 	EXPECT_TRUE(floatVal.isFloat());
 	EXPECT_FALSE(floatVal.isBool());
 
-	EXPECT_FLOAT_EQ(floatVal.floatValue(), 3.5f);
+	EXPECT_FLOAT_EQ(floatVal.asFloat(), 3.5f);
 }
 
 TEST(fsio, fsioValueFloatZero) {
@@ -358,7 +358,7 @@ TEST(fsio, fsioValueFloatZero) {
 	EXPECT_TRUE(floatVal.isFloat());
 	EXPECT_FALSE(floatVal.isBool());
 
-	EXPECT_FLOAT_EQ(floatVal.floatValue(), 0);
+	EXPECT_FLOAT_EQ(floatVal.asFloat(), 0);
 }
 
 TEST(fsio, fsioValueBoolTrue) {
@@ -367,7 +367,7 @@ TEST(fsio, fsioValueBoolTrue) {
 	EXPECT_TRUE(boolVal.isBool());
 	EXPECT_FALSE(boolVal.isFloat());
 
-	EXPECT_TRUE(boolVal.boolValue());
+	EXPECT_TRUE(boolVal.asBool());
 }
 
 TEST(fsio, fsioValueBoolFalse) {
@@ -376,5 +376,5 @@ TEST(fsio, fsioValueBoolFalse) {
 	EXPECT_TRUE(boolVal.isBool());
 	EXPECT_FALSE(boolVal.isFloat());
 
-	EXPECT_FALSE(boolVal.boolValue());
+	EXPECT_FALSE(boolVal.asBool());
 }

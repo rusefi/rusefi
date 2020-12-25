@@ -73,12 +73,15 @@ public:
 	/*implicit*/ FsioValue(bool b);
 
 	bool isFloat() const;
-	float floatValue() const;
+	float asFloat() const;
 
 	bool isBool() const;
-	bool boolValue() const;
+	bool asBool() const;
 
 private:
+	// These must match for this trick to work!
+	static_assert(sizeof(float) == sizeof(uint32_t));
+
 	union
 	{
 		uint32_t u32;
