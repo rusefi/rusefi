@@ -114,7 +114,7 @@ static LEElement * mainRelayLogic;
 static Logging *logger;
 #if EFI_PROD_CODE || EFI_SIMULATOR
 
-FsioValue getEngineValue(le_action_e action DECLARE_ENGINE_PARAMETER_SUFFIX) {
+FsioResult getEngineValue(le_action_e action DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	efiAssert(CUSTOM_ERR_ASSERT, engine!=NULL, "getLEValue", unexpected);
 	switch (action) {
 	case LE_METHOD_FAN:
