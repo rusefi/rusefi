@@ -18,13 +18,17 @@ import static com.rusefi.config.generated.Fields.*;
  * PD2<>PA5
  */
 
-public class PwmHardwareTest {
+public class PwmHardwareTest extends RusefiTestBase {
+    @Override
+    boolean needsHardwareTriggerInput() {
+        // This test uses hardware trigger input!
+        return true;
+    }
+
     private static final int FREQUENCY = 160;
 
     @Test
     public void testIdlePin() {
-        EcuTestHelper ecu = EcuTestHelper.createInstance(true);
-
         ecu.setEngineType(ET_FRANKENSO_MIATA_NA6);
         ecu.sendCommand(getDisableCommand(Fields.CMD_SELF_STIMULATION));
         ecu.changeRpm(1000);
