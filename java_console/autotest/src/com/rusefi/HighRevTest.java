@@ -27,6 +27,5 @@ public class HighRevTest extends RusefiTestBase {
 
         // tests bug 1873
         EcuTestHelper.assertRpmDoesNotJump(60, 5, 110, FAIL, ecu.commandQueue);
-
     }
 }
