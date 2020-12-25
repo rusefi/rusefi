@@ -33,7 +33,7 @@ TEST(tachometer, testPulsePerRev) {
 	ASSERT_EQ(1500,  GET_RPM()) << "RPM";
     ASSERT_EQ(engine->triggerCentral.triggerState.shaft_is_synchronized, true);
 
-	// Poke the fast callback to make sure tach gets updated
+	// Poke the fast callback to update the tach
 	engine->periodicFastCallback(PASS_ENGINE_PARAMETER_SIGNATURE);
 
     ASSERT_EQ(100, getTachFreq());
