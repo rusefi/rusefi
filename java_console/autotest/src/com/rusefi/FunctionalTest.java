@@ -22,15 +22,8 @@ import static com.rusefi.config.generated.Fields.*;
  * @author Andrey Belomutskiy
  * 3/5/14
  */
-public class FunctionalTest {
-    private EcuTestHelper ecu;
-
-    @Before
-    public void startUp() {
-        ecu = EcuTestHelper.createInstance();
-    }
-
-	@Test
+public class FunctionalTest extends RusefiTestBase {
+    @Test
 	public void testChangingIgnitionMode() {
 		String msg = "change ign mode";
 
@@ -61,7 +54,7 @@ public class FunctionalTest {
 			EngineChart chart = nextChart();
 
 			// All 4 cylinders should be firing
-			assertWaveNotNull(chart, EngineChart.SPARK_1);
+            assertWaveNotNull(chart, EngineChart.SPARK_1);
             assertWaveNotNull(chart, EngineChart.SPARK_2);
             assertWaveNotNull(chart, EngineChart.SPARK_3);
 			assertWaveNotNull(chart, EngineChart.SPARK_4);
