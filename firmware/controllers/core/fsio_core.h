@@ -64,6 +64,26 @@ typedef enum {
 
 } le_action_e;
 
+class FsioValue
+{
+public:
+	/*implicit*/ FsioValue(float f);
+	/*implicit*/ FsioValue(bool b);
+
+	bool isFloat() const;
+	float floatValue() const;
+
+	bool isBool() const;
+	bool boolValue() const;
+
+private:
+	union
+	{
+		uint32_t u32;
+		float f32;
+	} u;
+};
+
 using FsioResult = expected<float>;
 
 class LEElement {

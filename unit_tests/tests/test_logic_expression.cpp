@@ -342,3 +342,39 @@ TEST(fsio, fuelPump) {
 	// Pump should be on!
 	EXPECT_TRUE(efiReadPin(GPIOA_0));
 }
+
+TEST(fsio, fsioValueFloat) {
+	FsioValue floatVal(3.5f);
+
+	EXPECT_TRUE(floatVal.isFloat());
+	EXPECT_FALSE(floatVal.isBool());
+
+	EXPECT_FLOAT_EQ(floatVal.floatValue(), 3.5f);
+}
+
+TEST(fsio, fsioValueFloatZero) {
+	FsioValue floatVal(0.0f);
+
+	EXPECT_TRUE(floatVal.isFloat());
+	EXPECT_FALSE(floatVal.isBool());
+
+	EXPECT_FLOAT_EQ(floatVal.floatValue(), 0);
+}
+
+TEST(fsio, fsioValueBoolTrue) {
+	FsioValue boolVal(true);
+
+	EXPECT_TRUE(boolVal.isBool());
+	EXPECT_FALSE(boolVal.isFloat());
+
+	EXPECT_TRUE(boolVal.boolValue());
+}
+
+TEST(fsio, fsioValueBoolFalse) {
+	FsioValue boolVal(false);
+
+	EXPECT_TRUE(boolVal.isBool());
+	EXPECT_FALSE(boolVal.isFloat());
+
+	EXPECT_FALSE(boolVal.boolValue());
+}
