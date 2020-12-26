@@ -65,8 +65,7 @@ static void shaftRisingCallback(bool isPrimary) {
 	}
 	icuRisingCallbackCounter++;
 // todo: support for 3rd trigger input channel
-	if (hasFirmwareErrorFlag)
-		return;
+
 	if (!isPrimary && !TRIGGER_WAVEFORM(needSecondTriggerInput)) {
 		return;
 	}
@@ -86,8 +85,6 @@ static void shaftFallingCallback(bool isPrimary) {
 
 	icuFallingCallbackCounter++;
 
-	if (hasFirmwareErrorFlag)
-		return;
 	if (!isPrimary && !TRIGGER_WAVEFORM(needSecondTriggerInput)) {
 		return;
 	}
