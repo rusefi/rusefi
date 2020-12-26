@@ -517,6 +517,7 @@ void mreBoardOldTest(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 void proteusBoardTest(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	engineConfiguration->specs.cylindersCount = 12;
 	engineConfiguration->specs.firingOrder = FO_1_2_3_4_5_6_7_8_9_10_11_12;
+	engineConfiguration->triggerSimulatorFrequency = 600;
 
 	engineConfiguration->cranking.rpm = 100;
 	engineConfiguration->injectionMode = IM_SEQUENTIAL;
@@ -536,7 +537,7 @@ void proteusBoardTest(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	engineConfiguration->injectionPins[7] = GPIOB_4;//  "Lowside 8"
 	engineConfiguration->injectionPins[8] = GPIOB_7;//  "Lowside 11"
 	engineConfiguration->injectionPins[9] = GPIOB_6;//  "Lowside 10"
-	engineConfiguration->injectionPins[10] = GPIOG_14;// "Lowside 7"
+	engineConfiguration->injectionPins[10] = GPIOB_8;//  "Lowside 12"
 	engineConfiguration->injectionPins[11] = GPIOB_9;//  "Lowside 13"    # pin 10/black35
 
 
@@ -548,21 +549,23 @@ void proteusBoardTest(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	engineConfiguration->ignitionPins[3] = GPIOC_7;//  "Ign 5"
 	engineConfiguration->ignitionPins[4] = GPIOG_8;//  "Ign 6"
 	engineConfiguration->ignitionPins[5] = GPIOG_7;//  "Ign 7"
-	engineConfiguration->ignitionPins[6] = GPIOC_9;//  "Ign 3"
-	engineConfiguration->ignitionPins[7] = GPIOG_6;//  "Ign 8"
+
+	engineConfiguration->ignitionPins[6] = GPIOD_15;// "Highside 3"    # pin 13/black35
+	engineConfiguration->ignitionPins[7] = GPIOC_9;//  "Ign 3"
 	engineConfiguration->ignitionPins[8] = GPIOG_5;//  "Ign 9"
-	engineConfiguration->ignitionPins[9] = GPIOG_4;//  "Ign 10"
+	engineConfiguration->ignitionPins[9] = GPIOA_9;//  "Highside 1"    # pin 2/black35
 	engineConfiguration->ignitionPins[10] = GPIOG_3;//  "Ign 11"
 	engineConfiguration->ignitionPins[11] = GPIOG_2;//  "Ign 12"
 
-	engineConfiguration->fsioOutputPins[0] = GPIOB_8;//  "Lowside 12"
-	engineConfiguration->fsioOutputPins[1] = GPIOE_0;//  "Lowside 14"    # pin 11/black35
-	engineConfiguration->fsioOutputPins[2] = GPIOE_1;//  "Lowside 15"    # pin 12/black35
-	engineConfiguration->fsioOutputPins[3] = GPIOE_2;//  "Lowside 16"    # pin 23/black35
-	engineConfiguration->fsioOutputPins[4] = GPIOA_9;//  "Highside 1"    # pin 2/black35
+	engineConfiguration->fsioOutputPins[0] = GPIOE_2;//  "Lowside 16"    # pin 23/black35
+	engineConfiguration->fsioOutputPins[1] = GPIOG_14;// "Lowside 7"
+	engineConfiguration->fsioOutputPins[2] = GPIOE_0;//  "Lowside 14"    # pin 11/black35
+	engineConfiguration->fsioOutputPins[3] = GPIOE_1;//  "Lowside 15"    # pin 12/black35
+
+	engineConfiguration->fsioOutputPins[4] = GPIOD_14;// "Highside 4"    # pin 14/black35
 	engineConfiguration->fsioOutputPins[5] = GPIOA_8;//  "Highside 2"    # pin 1/black35
-	engineConfiguration->fsioOutputPins[6] = GPIOD_15;// "Highside 3"    # pin 13/black35
-	engineConfiguration->fsioOutputPins[7] = GPIOD_14;// "Highside 4"    # pin 14/black35
+	engineConfiguration->fsioOutputPins[6] = GPIOG_6;//  "Ign 8"
+	engineConfiguration->fsioOutputPins[7] = GPIOG_4;//  "Ign 10"
 
 
 	setProteusHitachiEtbDefaults(PASS_CONFIG_PARAMETER_SIGNATURE);
