@@ -22,6 +22,9 @@ struct IIdleController {
 
 	virtual Phase determinePhase(int rpm, int targetRpm, SensorResult tps) const;
 	virtual int getTargetRpm(float clt) const = 0;
+	virtual float getCrankingOpenLoop(float clt) const = 0;
+	virtual float getRunningOpenLoop(float clt, SensorResult tps) const = 0;
+	virtual float getOpenLoop(Phase phase, float clt, SensorResult tps) const = 0;
 };
 
 class Logging;
@@ -40,6 +43,11 @@ public:
 
 	// PHASE DETERMINATION: what is the driver trying to do right now?
 	Phase determinePhase(int rpm, int targetRpm, SensorResult tps) const override;
+
+	// OPEN LOOP CORRECTIONS
+	float getCrankingOpenLoop(float clt) const override;
+	float getRunningOpenLoop(float clt, SensorResult tps) const override;
+	float getOpenLoop(Phase phase, float clt, SensorResult tps) const override;
 };
 
 void updateIdleControl();
