@@ -18,6 +18,7 @@
 #include "local_version_holder.h"
 #include "buttonshift.h"
 #include "gear_controller.h"
+#include "limp_manager.h"
 
 #if EFI_SIGNAL_EXECUTOR_ONE_TIMER
 // PROD real firmware uses this implementation
@@ -262,7 +263,6 @@ public:
 	efitimeus_t acSwitchLastChangeTime = 0;
 
 	bool isRunningPwmTest = false;
-	bool isRpmHardLimit = false;
 
 	int getRpmHardLimit(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 
@@ -374,6 +374,8 @@ public:
 	void printKnockState(void);
 
 	AirmassModelBase* mockAirmassModel = nullptr;
+
+	LimpManager limpManager;
 
 private:
 	/**
