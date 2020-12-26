@@ -13,6 +13,7 @@ import org.junit.Test;
 import static com.rusefi.IoUtil.getEnableCommand;
 import static com.rusefi.TestingUtils.*;
 import static com.rusefi.config.generated.Fields.*;
+import static org.junit.Assert.assertFalse;
 
 /**
  * rusEfi firmware simulator functional test suite
@@ -93,14 +94,18 @@ public class FunctionalTest extends RusefiTestBase {
 		}
 	}
 
-	@Test
-	public void testRevLimiter() {
+    @Test
+    public void testRevLimiter() {
         String msg = "rev limiter";
 
         ecu.setEngineType(ET_FORD_ASPIRE);
         ecu.changeRpm(2000);
 
-        ecu.sendCommand("set hard_limit 2500");
+        // Alpha-N mode so that we actually inject some fuel (without mocking tons of sensors)
+        ecu.sendCommand("set algorithm 5");
+        // Set tps to 25% - make alpha-n happy
+        ecu.sendCommand("set_sensor_mock 10 25");
+        ecu.sendCommand("set rpm_hard_limit 2500");
 
         {
             // Check that neither ignition nor injection is cut
@@ -117,8 +122,10 @@ public class FunctionalTest extends RusefiTestBase {
             // Check that both ignition and injection are cut
             EngineChart chart = nextChart();
 
-            assertWaveNull(chart, EngineChart.SPARK_1);
-            assertWaveNull(chart, EngineChart.INJECTOR_1);
+            // These channels are allowed to have falling edges - aka closing injectors and firing coils
+            // but not allowed to have rising edges - aka opening injectors and charging coils
+            assertWaveNoRises(chart, EngineChart.SPARK_1);
+            assertWaveNoRises(chart, EngineChart.INJECTOR_1);
         }
 	}
 
@@ -448,6 +455,18 @@ public class FunctionalTest extends RusefiTestBase {
 
     private static void assertWaveNotNull(EngineChart chart, String key) {
         assertTrue(chart.get(key) != null);
+    }
+
+    private static void assertWaveNoRises(EngineChart chart, String key) {
+        StringBuilder events = chart.get(key);
+
+        // if no events of this type at all, return since this passes the test
+        if (events == null) {
+            return;
+        }
+
+        // Assert that there are no up (rise) events in the channel's sequence
+        assertFalse(events.toString().contains("u"));
     }
 
     private EngineChart nextChart() {
