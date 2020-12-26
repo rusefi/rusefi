@@ -37,8 +37,6 @@ static void shaft_callback(void *arg) {
 
 	// todo: support for 3rd trigger input channel
 	// todo: start using real event time from HW event, not just software timer?
-	if (hasFirmwareErrorFlag)
-		return;
 
 	bool isPrimary = pal_line == primary_line;
 	if (!isPrimary && !TRIGGER_WAVEFORM(needSecondTriggerInput)) {

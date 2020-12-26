@@ -71,8 +71,6 @@
 
 EXTERN_ENGINE;
 
-extern bool hasFirmwareErrorFlag;
-
 #if HAL_USE_SPI
 extern bool isSpiInitialized[5];
 
