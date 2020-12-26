@@ -127,6 +127,17 @@ public class FunctionalTest extends RusefiTestBase {
             assertWaveNoRises(chart, EngineChart.SPARK_1);
             assertWaveNoRises(chart, EngineChart.INJECTOR_1);
         }
+
+        // Check that it recovers when we go back under the limit
+        ecu.changeRpm(2000);
+
+        {
+            // Check that neither ignition nor injection is cut
+            EngineChart chart = nextChart();
+
+            assertWaveNotNull(chart, EngineChart.SPARK_1);
+            assertWaveNotNull(chart, EngineChart.INJECTOR_1);
+        }
 	}
 
     @Test
