@@ -18,7 +18,7 @@ void LimpManager::updateState(int rpm) {
 		limitFuel = true;
 	}
 
-	// Limit fuel only on boost pressure
+	// Limit fuel only on boost pressure (limiting spark bends valves)
 	if (CONFIG(boostCutPressure) != 0) {
 		if (getMap(PASS_ENGINE_PARAMETER_SIGNATURE) > CONFIG(boostCutPressure)) {
 			limitFuel = true;
