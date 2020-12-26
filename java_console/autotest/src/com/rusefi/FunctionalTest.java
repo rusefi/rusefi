@@ -95,31 +95,31 @@ public class FunctionalTest extends RusefiTestBase {
 
 	@Test
 	public void testRevLimiter() {
-		String msg = "rev limiter";
+        String msg = "rev limiter";
 
-		ecu.setEngineType(ET_FORD_ASPIRE);
-		ecu.changeRpm(2000);
+        ecu.setEngineType(ET_FORD_ASPIRE);
+        ecu.changeRpm(2000);
 
-		ecu.sendCommand("set hard_limit 2500");
+        ecu.sendCommand("set hard_limit 2500");
 
-		{
-			// Check that neither ignition nor injection is cut
-			EngineChart chart = nextChart();
+        {
+            // Check that neither ignition nor injection is cut
+            EngineChart chart = nextChart();
 
             assertWaveNotNull(chart, EngineChart.SPARK_1);
             assertWaveNotNull(chart, EngineChart.INJECTOR_1);
-		}
+        }
 
-		// Now go above the hard limiter
-		ecu.changeRpm(3000);
+        // Now go above the hard limiter
+        ecu.changeRpm(3000);
 
-		{
-			// Check that neither ignition nor injection is cut
-			EngineChart chart = nextChart();
+        {
+            // Check that both ignition and injection are cut
+            EngineChart chart = nextChart();
 
             assertWaveNull(chart, EngineChart.SPARK_1);
             assertWaveNull(chart, EngineChart.INJECTOR_1);
-		}
+        }
 	}
 
     @Test
