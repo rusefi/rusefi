@@ -20,7 +20,7 @@ struct IIdleController {
 		Running,	// On throttle
 	};
 
-	virtual Phase determinePhase(int rpm, int targetRpm, SensorResult tps) const;
+	virtual Phase determinePhase(int rpm, int targetRpm, SensorResult tps) const = 0;
 	virtual int getTargetRpm(float clt) const = 0;
 	virtual float getCrankingOpenLoop(float clt) const = 0;
 	virtual float getRunningOpenLoop(float clt, SensorResult tps) const = 0;
