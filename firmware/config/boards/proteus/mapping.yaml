@@ -10,19 +10,19 @@ outputs:
   GPIOG_11: "Lowside 4"     # pin 16/black35
 
   GPIOG_12: "Lowside 5"     # pin 5/black35
-  GPIOG_13: "Lowside 6"	    # pin 6/black35
-  GPIOG_14: "Lowside 7"	    # pin 7/black35
-  GPIOB_4:  "Lowside 8"	    # pin 19/black35
+  GPIOG_13: "Lowside 6"     # pin 6/black35
+  GPIOG_14: "Lowside 7"     # pin 7/black35
+  GPIOB_4:  "Lowside 8"     # pin 19/black35
 
   GPIOB_5:  "Lowside 9"     # pin 8/black35
   GPIOB_6:  "Lowside 10"    # pin 20/black35
-  GPIOB_7:  "Lowside 11"   	# pin 9/black35
-  GPIOB_8:  "Lowside 12"   	# pin 21/black35
+  GPIOB_7:  "Lowside 11"    # pin 9/black35
+  GPIOB_8:  "Lowside 12"    # pin 21/black35
 
-  GPIOB_9:  "Lowside 13"   	# pin 10/black35
-  GPIOE_0:  "Lowside 14"   	# pin 11/black35
-  GPIOE_1:  "Lowside 15"   	# pin 12/black35
-  GPIOE_2:  "Lowside 16"   	# pin 23/black35
+  GPIOB_9:  "Lowside 13"    # pin 10/black35
+  GPIOE_0:  "Lowside 14"    # pin 11/black35
+  GPIOE_1:  "Lowside 15"    # pin 12/black35
+  GPIOE_2:  "Lowside 16"    # pin 23/black35
 
   GPIOD_4:  "Ign 1"         # pin 35/black35
   GPIOD_3:  "Ign 2"         # pin 34/black35
