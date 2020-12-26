@@ -201,6 +201,31 @@ int IdleController::getTargetRpm(float clt) const {
 	return fsioBump + interpolate2d("cltRpm", clt, CONFIG(cltIdleRpmBins), CONFIG(cltIdleRpm));
 }
 
+IIdleController::Phase IdleController::determinePhase(int rpm, int targetRpm, SensorResult tps) const {
+	if (!engine->rpmCalculator.isRunning()) {
+		return Phase::Cranking;
+	}
+
+	if (!tps) {
+		// If the TPS has failed, assume the engine is running
+		return Phase::Running;
+	}
+
+	// if throttle pressed, we're out of the idle corner
+	if (tps.Value > CONFIG(idlePidDeactivationTpsThreshold)) {
+		return Phase::Running;
+	}
+
+	// If rpm too high (but throttle not pressed), we're coasting
+	int maximumIdleRpm = targetRpm + CONFIG(idlePidRpmUpperLimit);
+	if (rpm > maximumIdleRpm) {
+		return Phase::Coasting;
+	}
+
+	// No other conditions met, we are idling!
+	return Phase::Idling;
+}
+
 static percent_t manualIdleController(float cltCorrection DECLARE_ENGINE_PARAMETER_SUFFIX) {
 
 	percent_t correctedPosition = cltCorrection * CONFIG(manIdlePosition);
