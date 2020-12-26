@@ -509,6 +509,15 @@ void mreBoardOldTest(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 #endif /* BOARD_TLE8888_COUNT */
 }
 
+#if HW_PROTEUS
+void proteusBoardTest(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
+	engineConfiguration->specs.cylindersCount = 12;
+	engineConfiguration->specs.firingOrder = FO_1_2_3_4_5_6_7_8_9_10_11_12;
+
+	setProteusHitachiEtbDefaults(PASS_CONFIG_PARAMETER_SIGNATURE);
+}
+#endif // HW_PROTEUS
+
 void mreBCM(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	for (int i = 0; i < IGNITION_PIN_COUNT;i++) {
 		engineConfiguration->ignitionPins[i] = GPIO_UNASSIGNED;
