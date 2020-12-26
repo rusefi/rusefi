@@ -38,6 +38,7 @@ void LimpManager::fatalError() {
 	m_allowEtb.clear();
 	m_allowIgnition.clear();
 	m_allowInjection.clear();
+	m_allowTriggerInput.clear();
 
 	setFaultRevLimit(0);
 }
