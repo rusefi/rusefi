@@ -4,18 +4,18 @@
 #
 
 outputs:
-  GPIOD_7:  "Lowside 1"		# pin 3/black35
-  GPIOG_9:  "Lowside 2"		# pin 15/black35
-  GPIOG_10: "Lowside 3"		# pin 4/black35
-  GPIOG_11: "Lowside 4"		# pin 16/black35
+  GPIOD_7:  "Lowside 1"     # pin 3/black35
+  GPIOG_9:  "Lowside 2"     # pin 15/black35
+  GPIOG_10: "Lowside 3"     # pin 4/black35
+  GPIOG_11: "Lowside 4"     # pin 16/black35
 
-  GPIOG_12: "Lowside 5"		# pin 5/black35
-  GPIOG_13: "Lowside 6"		# pin 6/black35
-  GPIOG_14: "Lowside 7"		# pin 7/black35
-  GPIOB_4:  "Lowside 8"		# pin 19/black35
+  GPIOG_12: "Lowside 5"     # pin 5/black35
+  GPIOG_13: "Lowside 6"	    # pin 6/black35
+  GPIOG_14: "Lowside 7"	    # pin 7/black35
+  GPIOB_4:  "Lowside 8"	    # pin 19/black35
 
-  GPIOB_5:  "Lowside 9"    	# pin 8/black35
-  GPIOB_6:  "Lowside 10"   	# pin 20/black35
+  GPIOB_5:  "Lowside 9"     # pin 8/black35
+  GPIOB_6:  "Lowside 10"    # pin 20/black35
   GPIOB_7:  "Lowside 11"   	# pin 9/black35
   GPIOB_8:  "Lowside 12"   	# pin 21/black35
 
@@ -24,23 +24,23 @@ outputs:
   GPIOE_1:  "Lowside 15"   	# pin 12/black35
   GPIOE_2:  "Lowside 16"   	# pin 23/black35
 
-  GPIOD_4:  "Ign 1"			# pin 35/black35
-  GPIOD_3:  "Ign 2"			# pin 34/black35
-  GPIOC_9:  "Ign 3"			# pin 22/black35
-  GPIOC_8:  "Ign 4"			# pin 33/black35
-  GPIOC_7:  "Ign 5"			# pin 32/black35
-  GPIOG_8:  "Ign 6"			# pin 31/black35
-  GPIOG_7:  "Ign 7"			# pin 30/black35
-  GPIOG_6:  "Ign 8"			# pin 29/black35
-  GPIOG_5:  "Ign 9"			# pin 28/black35
-  GPIOG_4:  "Ign 10"		# pin 27/black35
-  GPIOG_3:  "Ign 11"		# pin 26/black35
-  GPIOG_2:  "Ign 12"		# pin 25/black35
+  GPIOD_4:  "Ign 1"         # pin 35/black35
+  GPIOD_3:  "Ign 2"         # pin 34/black35
+  GPIOC_9:  "Ign 3"         # pin 22/black35
+  GPIOC_8:  "Ign 4"         # pin 33/black35
+  GPIOC_7:  "Ign 5"         # pin 32/black35
+  GPIOG_8:  "Ign 6"         # pin 31/black35
+  GPIOG_7:  "Ign 7"         # pin 30/black35
+  GPIOG_6:  "Ign 8"         # pin 29/black35
+  GPIOG_5:  "Ign 9"         # pin 28/black35
+  GPIOG_4:  "Ign 10"        # pin 27/black35
+  GPIOG_3:  "Ign 11"        # pin 26/black35
+  GPIOG_2:  "Ign 12"        # pin 25/black35
 
-  GPIOA_9:  "Highside 1"	# pin 2/black35
-  GPIOA_8:  "Highside 2"	# pin 1/black35
-  GPIOD_15: "Highside 3"	# pin 13/black35
-  GPIOD_14: "Highside 4"	# pin 14/black35
+  GPIOA_9:  "Highside 1"    # pin 2/black35
+  GPIOA_8:  "Highside 2"    # pin 1/black35
+  GPIOD_15: "Highside 3"    # pin 13/black35
+  GPIOD_14: "Highside 4"    # pin 14/black35
 
 event_inputs:
   GPIOC_6:  "Digital 1"
