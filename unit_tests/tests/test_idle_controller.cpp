@@ -144,3 +144,43 @@ TEST(idle_v2, testTargetRpm) {
 	EXPECT_FLOAT_EQ(100, dut.getTargetRpm(10));
 	EXPECT_FLOAT_EQ(500, dut.getTargetRpm(50));
 }
+
+using ICP = IIdleController::Phase;
+
+TEST(idle_v2, testDeterminePhase) {
+	WITH_ENGINE_TEST_HELPER(TEST_ENGINE);
+	IdleController dut;
+	INJECT_ENGINE_REFERENCE(&dut);
+
+	// TPS threshold 5% for easy test
+	CONFIG(idlePidDeactivationTpsThreshold) = 5;
+	// RPM window is 100 RPM above target
+	CONFIG(idlePidRpmUpperLimit) = 100;
+
+	// First test stopped engine
+	engine->rpmCalculator.setRpmValue(0);
+	EXPECT_EQ(ICP::Cranking, dut.determinePhase(0, 1000, unexpected));
+
+	// Now engine is running!
+	// Controller doesn't need this other than for isCranking()
+	engine->rpmCalculator.setRpmValue(1000);
+
+	// Test invalid TPS, but inside the idle window
+	EXPECT_EQ(ICP::Running, dut.determinePhase(1000, 1000, unexpected));
+
+	// Valid TPS should now be inside the zone
+	EXPECT_EQ(ICP::Idling, dut.determinePhase(1000, 1000, 0));
+
+	// Above TPS threshold should be outside the zone
+	EXPECT_EQ(ICP::Running, dut.determinePhase(1000, 1000, 10));
+
+	// Above target, below (target + upperLimit) should be in idle zone
+	EXPECT_EQ(ICP::Idling, dut.determinePhase(1099, 1000, 0));
+
+	// above upper limit and on throttle should be out of idle zone
+	EXPECT_EQ(ICP::Running, dut.determinePhase(1101, 1000, 10));
+
+	// Below TPS but above RPM should be outside the zone
+	EXPECT_EQ(ICP::Coasting, dut.determinePhase(1101, 1000, 0));
+	EXPECT_EQ(ICP::Coasting, dut.determinePhase(5000, 1000, 0));
+}
