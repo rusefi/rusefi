@@ -64,4 +64,5 @@ TESTS_SRC_CPP = \
 	tests/test_binary_log.cpp \
 	tests/test_dynoview.cpp \
 	tests/test_gpio.cpp \
+	tests/test_limp.cpp \
 
