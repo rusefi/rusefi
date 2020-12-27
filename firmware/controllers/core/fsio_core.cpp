@@ -442,4 +442,42 @@ LEElement *LEElementPool::parseExpression(const char * line) {
 	}
 }
 
+FsioValue::FsioValue(float f)
+{
+	u.f32 = f;
+	
+	// The low bit represents whether this is a bool or not, clear it for float
+	u.u32 &= 0xFFFFFFFE;
+}
+
+FsioValue::FsioValue(bool b)
+{
+	u.u32 = (b ? 2 : 0);	// second bit is the actual value of the bool
+
+	// Low bit indicates this is a bool
+	u.u32 |= 0x1;
+}
+
+bool FsioValue::isFloat() const {
+	uint32_t typeBit = u.u32 & 0x1;
+
+	return typeBit == 0;
+}
+
+float FsioValue::asFloat() const {
+	return u.f32;
+}
+
+bool FsioValue::isBool() const {
+	uint32_t typeBit = u.u32 & 0x1;
+
+	return typeBit == 1;
+}
+
+bool FsioValue::asBool() const {
+	uint32_t boolBit = u.u32 & 0x2;
+
+	return boolBit != 0;
+}
+
 #endif /* EFI_FSIO */
