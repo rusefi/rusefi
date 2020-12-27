@@ -423,16 +423,10 @@ void mainTriggerCallback(uint32_t trgEventIndex, efitick_t edgeTimestamp DECLARE
 		// TODO: add 'pin shutdown' invocation somewhere - coils might be still open here!
 		return;
 	}
-	bool limitedSpark = ENGINE(isRpmHardLimit);
-	bool limitedFuel = ENGINE(isRpmHardLimit);
 
-	if (CONFIG(boostCutPressure) != 0) {
-		// todo: move part of this to periodicFast? probably not cool to decode MAP sensor inside trigger callback?
-		if (getMap(PASS_ENGINE_PARAMETER_SIGNATURE) > CONFIG(boostCutPressure)) {
-			limitedSpark = true;
-			limitedFuel = true;
-		}
-	}
+	bool limitedSpark = !ENGINE(limpManager).allowIgnition();
+	bool limitedFuel = !ENGINE(limpManager).allowInjection();
+
 #if EFI_LAUNCH_CONTROL
 	if (engine->isLaunchCondition && !limitedSpark && !limitedFuel) {
 		/* in case we are not already on a limited conditions, check launch as well */
