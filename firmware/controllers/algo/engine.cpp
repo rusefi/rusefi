@@ -246,6 +246,8 @@ extern float vBattForTle8888;
  * See also periodicFastCallback
  */
 void Engine::updateSlowSensors(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+	updateSwitchInputs(PASS_ENGINE_PARAMETER_SIGNATURE);
+
 #if EFI_ENGINE_CONTROL
 	int rpm = GET_RPM();
 	isEngineChartEnabled = CONFIG(isEngineChartEnabled) && rpm < CONFIG(engineSnifferRpmThreshold);
@@ -271,6 +273,33 @@ void Engine::updateSlowSensors(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	initMc33816IfNeeded();
 #endif // EFI_MC33816
 #endif
+}
+
+void Engine::updateSwitchInputs(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+#if EFI_GPIO_HARDWARE
+	// this value is not used yet
+	if (CONFIG(clutchDownPin) != GPIO_UNASSIGNED) {
+		engine->clutchDownState = efiReadPin(CONFIG(clutchDownPin));
+	}
+	if (hasAcToggle(PASS_ENGINE_PARAMETER_SIGNATURE)) {
+		bool result = getAcToggle(PASS_ENGINE_PARAMETER_SIGNATURE);
+		if (engine->acSwitchState != result) {
+			engine->acSwitchState = result;
+			engine->acSwitchLastChangeTime = getTimeNowUs();
+		}
+		engine->acSwitchState = result;
+	}
+	if (CONFIG(clutchUpPin) != GPIO_UNASSIGNED) {
+		engine->clutchUpState = efiReadPin(CONFIG(clutchUpPin));
+	}
+	if (CONFIG(throttlePedalUpPin) != GPIO_UNASSIGNED) {
+		engine->engineState.idle.throttlePedalUpState = efiReadPin(CONFIG(throttlePedalUpPin));
+	}
+
+	if (engineConfiguration->brakePedalPin != GPIO_UNASSIGNED) {
+		engine->brakePedalState = efiReadPin(engineConfiguration->brakePedalPin);
+	}
+#endif // EFI_GPIO_HARDWARE
 }
 
 void Engine::onTriggerSignalEvent(efitick_t nowNt) {
@@ -433,6 +462,7 @@ void Engine::injectEngineReferences() {
 
 	INJECT_ENGINE_REFERENCE(&primaryTriggerConfiguration);
 	INJECT_ENGINE_REFERENCE(&vvtTriggerConfiguration);
+	INJECT_ENGINE_REFERENCE(&limpManager);
 
 	primaryTriggerConfiguration.update();
 	vvtTriggerConfiguration.update();

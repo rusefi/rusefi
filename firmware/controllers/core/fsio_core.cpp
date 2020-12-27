@@ -74,7 +74,6 @@ void LEElement::clear() {
 	action = LE_UNDEFINED;
 	next = nullptr;
 	fValue = NAN;
-	iValue = 0;
 }
 
 void LEElement::init(le_action_e action) {

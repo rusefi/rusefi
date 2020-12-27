@@ -102,7 +102,6 @@ public:
 
 	le_action_e action;
 	float fValue;
-	int iValue;
 
 	LEElement *next;
 };

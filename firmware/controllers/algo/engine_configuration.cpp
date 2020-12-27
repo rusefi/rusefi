@@ -1215,6 +1215,8 @@ void resetConfigurationExt(Logging * logger, configuration_callback_t boardCallb
 #endif // HW_MICRO_RUSEFI
 #if HW_PROTEUS
 	case PROTEUS_QC_TEST_BOARD:
+		proteusBoardTest(PASS_CONFIG_PARAMETER_SIGNATURE);
+		break;
 	case BMW_M73_PROTEUS:
 		setEngineBMW_M73_Proteus(PASS_CONFIG_PARAMETER_SIGNATURE);
 		break;

@@ -27,6 +27,7 @@ void setEtbOffset(int value);
 void setThrottleDutyCycle(percent_t level);
 void onConfigurationChangeElectronicThrottleCallback(engine_configuration_s *previousConfiguration);
 void unregisterEtbPins();
+void setProteusHitachiEtbDefaults(DECLARE_CONFIG_PARAMETER_SIGNATURE);
 
 void etbAutocal(size_t throttleIndex);
 
