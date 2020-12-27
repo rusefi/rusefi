@@ -471,32 +471,6 @@ static percent_t automaticIdleController(float tpsPos, float rpm, int targetRpm 
 			wasResetPid = true;
 		}
 
-
-#if EFI_GPIO_HARDWARE
-		// this value is not used yet
-		if (CONFIG(clutchDownPin) != GPIO_UNASSIGNED) {
-			engine->clutchDownState = efiReadPin(CONFIG(clutchDownPin));
-		}
-		if (hasAcToggle(PASS_ENGINE_PARAMETER_SIGNATURE)) {
-			bool result = getAcToggle(PASS_ENGINE_PARAMETER_SIGNATURE);
-			if (engine->acSwitchState != result) {
-				engine->acSwitchState = result;
-				engine->acSwitchLastChangeTime = getTimeNowUs();
-			}
-			engine->acSwitchState = result;
-		}
-		if (CONFIG(clutchUpPin) != GPIO_UNASSIGNED) {
-			engine->clutchUpState = efiReadPin(CONFIG(clutchUpPin));
-		}
-		if (CONFIG(throttlePedalUpPin) != GPIO_UNASSIGNED) {
-			engine->engineState.idle.throttlePedalUpState = efiReadPin(CONFIG(throttlePedalUpPin));
-		}
-
-		if (engineConfiguration->brakePedalPin != GPIO_UNASSIGNED) {
-			engine->brakePedalState = efiReadPin(engineConfiguration->brakePedalPin);
-		}
-#endif /* EFI_GPIO_HARDWARE */
-
 		finishIdleTestIfNeeded();
 		undoIdleBlipIfNeeded();
 
