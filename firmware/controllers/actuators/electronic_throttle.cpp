@@ -458,11 +458,14 @@ void EtbController::setOutput(expected<percent_t> outputValue) {
 
 	if (!m_motor) return;
 
-	// If output is valid and we aren't paused, output to motor.
-	if (outputValue && !engineConfiguration->pauseEtbControl) {
+	// If ETB is allowed, output is valid, and we aren't paused, output to motor.
+	if (ENGINE(limpManager).allowElectronicThrottle()
+		&& outputValue
+		&& !engineConfiguration->pauseEtbControl) {
 		m_motor->enable();
 		m_motor->set(ETB_PERCENT_TO_DUTY(outputValue.Value));
 	} else {
+		// Otherwise disable the motor.
 		m_motor->disable();
 	}
 }
