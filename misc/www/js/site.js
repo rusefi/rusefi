@@ -15,6 +15,9 @@
     $('#nav-toggle').click(function() {
       $('topnav ul').slideToggle();
     });
+    $('topnav a').click(function() {
+      $('topnav ul').slideToggle();
+    });
     // Hamburger to X toggle
     $('#nav-toggle').on('click', function() {
       this.classList.toggle('active');
