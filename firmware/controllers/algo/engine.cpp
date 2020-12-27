@@ -433,6 +433,7 @@ void Engine::injectEngineReferences() {
 
 	INJECT_ENGINE_REFERENCE(&primaryTriggerConfiguration);
 	INJECT_ENGINE_REFERENCE(&vvtTriggerConfiguration);
+	INJECT_ENGINE_REFERENCE(&limpManager);
 
 	primaryTriggerConfiguration.update();
 	vvtTriggerConfiguration.update();
