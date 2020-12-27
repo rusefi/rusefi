@@ -17,6 +17,7 @@
     });
     $('topnav a').click(function() {
       $('topnav ul').slideToggle();
+      $('#nav-toggle').removeClass('active');
     });
     // Hamburger to X toggle
     $('#nav-toggle').on('click', function() {
