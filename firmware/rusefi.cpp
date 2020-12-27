@@ -190,11 +190,11 @@ void runRusEfi(void) {
 	readConfiguration(&sharedLogger);
 #endif /* EFI_INTERNAL_FLASH */
 
-#if HW_CHECK_MODE
+#if HW_CHECK_ALWAYS_STIMULATE
 	// we need a special binary for final assembly check. We cannot afford to require too much software or too many steps
 	// to be executed at the place of assembly
 	engine->directSelfStimulation = true;
-#endif // HW_CHECK_MODE
+#endif // HW_CHECK_ALWAYS_STIMULATE
 
 
 #if ! EFI_ACTIVE_CONFIGURATION_IN_FLASH
