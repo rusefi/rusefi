@@ -226,6 +226,49 @@ IIdleController::Phase IdleController::determinePhase(int rpm, int targetRpm, Se
 	return Phase::Idling;
 }
 
+float IdleController::getCrankingOpenLoop(float clt) const {
+	return 
+		CONFIG(crankingIACposition)		// Base cranking position (cranking page)
+		 * interpolate2d("cltCrankingT", clt, config->cltCrankingCorrBins, config->cltCrankingCorr);
+}
+
+float IdleController::getRunningOpenLoop(float clt, SensorResult tps) const {
+	float running =
+		CONFIG(manIdlePosition)		// Base idle position (slider)
+		* interpolate2d("cltT", clt, config->cltIdleCorrBins, config->cltIdleCorr);
+
+	// Now we bump it by the AC/fan amount if necessary
+	running += engine->acSwitchState ? CONFIG(acIdleExtraOffset) : 0;
+	// TODO: fan idle bump needs its own config field
+	running += enginePins.fanRelay.getLogicValue() ? CONFIG(acIdleExtraOffset) : 0;
+
+	// Now bump it by the specified amount when the throttle is opened (if configured)
+	// nb: invalid tps will make no change, no explicit check required
+	running += interpolateClamped(
+		0, 0,
+		CONFIG(idlePidDeactivationTpsThreshold), CONFIG(iacByTpsTaper),
+		tps.value_or(0));
+
+	return clampF(0, running, 100);
+}
+
+float IdleController::getOpenLoop(Phase phase, float clt, SensorResult tps) const {
+	float running = getRunningOpenLoop(clt, tps);
+
+	// Cranking value is either its own table, or the running value if not overriden
+	float cranking = CONFIG(overrideCrankingIacSetting) ? getCrankingOpenLoop(clt) : running;
+
+	// if we're cranking, nothing more to do.
+	if (phase == Phase::Cranking) {
+		return cranking;
+	}
+
+	// Interpolate between cranking and running over a short time
+	// This clamps once you fall off the end, so no explicit check for running required
+	auto revsSinceStart = engine->rpmCalculator.getRevolutionCounterSinceStart();
+	return interpolateClamped(0, cranking, CONFIG(afterCrankingIACtaperDuration), running, revsSinceStart);
+}
+
 static percent_t manualIdleController(float cltCorrection DECLARE_ENGINE_PARAMETER_SUFFIX) {
 
 	percent_t correctedPosition = cltCorrection * CONFIG(manIdlePosition);
