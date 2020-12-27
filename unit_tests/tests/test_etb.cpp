@@ -529,6 +529,26 @@ TEST(etb, setOutputPauseControl) {
 	etb.setOutput(25.0f);
 }
 
+TEST(etb, setOutputLimpHome) {
+	WITH_ENGINE_TEST_HELPER(TEST_ENGINE);
+	StrictMock<MockMotor> motor;
+
+	// Must have TPS initialized for ETB setup
+	Sensor::setMockValue(SensorType::Tps1, 0.0f, true);
+
+	EtbController etb;
+	INJECT_ENGINE_REFERENCE(&etb);
+	etb.init(ETB_Throttle1, &motor, nullptr, nullptr, true);
+
+	// Should be disabled when in ETB limp mode
+	EXPECT_CALL(motor, disable());
+
+	// Trip a fatal error
+	ENGINE(limpManager).fatalError();
+
+	etb.setOutput(25.0f);
+}
+
 TEST(etb, closedLoopPid) {
 	pid_s pid = {};
 	pid.pFactor = 5;
