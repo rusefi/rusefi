@@ -201,6 +201,74 @@ int IdleController::getTargetRpm(float clt) const {
 	return fsioBump + interpolate2d("cltRpm", clt, CONFIG(cltIdleRpmBins), CONFIG(cltIdleRpm));
 }
 
+IIdleController::Phase IdleController::determinePhase(int rpm, int targetRpm, SensorResult tps) const {
+	if (!engine->rpmCalculator.isRunning()) {
+		return Phase::Cranking;
+	}
+
+	if (!tps) {
+		// If the TPS has failed, assume the engine is running
+		return Phase::Running;
+	}
+
+	// if throttle pressed, we're out of the idle corner
+	if (tps.Value > CONFIG(idlePidDeactivationTpsThreshold)) {
+		return Phase::Running;
+	}
+
+	// If rpm too high (but throttle not pressed), we're coasting
+	int maximumIdleRpm = targetRpm + CONFIG(idlePidRpmUpperLimit);
+	if (rpm > maximumIdleRpm) {
+		return Phase::Coasting;
+	}
+
+	// No other conditions met, we are idling!
+	return Phase::Idling;
+}
+
+float IdleController::getCrankingOpenLoop(float clt) const {
+	return 
+		CONFIG(crankingIACposition)		// Base cranking position (cranking page)
+		 * interpolate2d("cltCrankingT", clt, config->cltCrankingCorrBins, config->cltCrankingCorr);
+}
+
+float IdleController::getRunningOpenLoop(float clt, SensorResult tps) const {
+	float running =
+		CONFIG(manIdlePosition)		// Base idle position (slider)
+		* interpolate2d("cltT", clt, config->cltIdleCorrBins, config->cltIdleCorr);
+
+	// Now we bump it by the AC/fan amount if necessary
+	running += engine->acSwitchState ? CONFIG(acIdleExtraOffset) : 0;
+	// TODO: fan idle bump needs its own config field
+	running += enginePins.fanRelay.getLogicValue() ? CONFIG(acIdleExtraOffset) : 0;
+
+	// Now bump it by the specified amount when the throttle is opened (if configured)
+	// nb: invalid tps will make no change, no explicit check required
+	running += interpolateClamped(
+		0, 0,
+		CONFIG(idlePidDeactivationTpsThreshold), CONFIG(iacByTpsTaper),
+		tps.value_or(0));
+
+	return clampF(0, running, 100);
+}
+
+float IdleController::getOpenLoop(Phase phase, float clt, SensorResult tps) const {
+	float running = getRunningOpenLoop(clt, tps);
+
+	// Cranking value is either its own table, or the running value if not overriden
+	float cranking = CONFIG(overrideCrankingIacSetting) ? getCrankingOpenLoop(clt) : running;
+
+	// if we're cranking, nothing more to do.
+	if (phase == Phase::Cranking) {
+		return cranking;
+	}
+
+	// Interpolate between cranking and running over a short time
+	// This clamps once you fall off the end, so no explicit check for running required
+	auto revsSinceStart = engine->rpmCalculator.getRevolutionCounterSinceStart();
+	return interpolateClamped(0, cranking, CONFIG(afterCrankingIACtaperDuration), running, revsSinceStart);
+}
+
 static percent_t manualIdleController(float cltCorrection DECLARE_ENGINE_PARAMETER_SUFFIX) {
 
 	percent_t correctedPosition = cltCorrection * CONFIG(manIdlePosition);
@@ -270,25 +338,13 @@ static bool isOutOfAutomaticIdleCondition(float rpm, int targetRpm DECLARE_ENGIN
 /**
  * @return idle valve position percentage for automatic closed loop mode
  */
-static percent_t automaticIdleController(float tpsPos DECLARE_ENGINE_PARAMETER_SUFFIX) {
+static percent_t automaticIdleController(float tpsPos, float rpm, int targetRpm DECLARE_ENGINE_PARAMETER_SUFFIX) {
 
 	// todo: move this to pid_s one day
 	industrialWithOverrideIdlePid.antiwindupFreq = engineConfiguration->idle_antiwindupFreq;
 	industrialWithOverrideIdlePid.derivativeFilterLoss = engineConfiguration->idle_derivativeFilterLoss;
 
-	// get Target RPM for Auto-PID from a separate table
-	int targetRpm = ENGINE(idleController)->getTargetRpm(Sensor::get(SensorType::Clt).value_or(0));
-
-	efitick_t nowNt = getTimeNowNt();
 	efitimeus_t nowUs = getTimeNowUs();
-
-	float rpm;
-	if (CONFIG(useInstantRpmForIdle)) {
-		rpm = engine->triggerCentral.triggerState.calculateInstantRpm(&engine->triggerCentral.triggerFormDetails, NULL, nowNt PASS_ENGINE_PARAMETER_SUFFIX);
-	} else {
-		rpm = GET_RPM();
-	}
-
 
 	if (isOutOfAutomaticIdleCondition(rpm, targetRpm PASS_ENGINE_PARAMETER_SUFFIX)) {
 		// Don't store old I and D terms if PID doesn't work anymore.
@@ -381,7 +437,21 @@ static percent_t automaticIdleController(float tpsPos DECLARE_ENGINE_PARAMETER_S
 		getIdlePid(PASS_ENGINE_PARAMETER_SIGNATURE)->iTermMin = engineConfiguration->idlerpmpid_iTermMin;
 		getIdlePid(PASS_ENGINE_PARAMETER_SIGNATURE)->iTermMax = engineConfiguration->idlerpmpid_iTermMax;
 
-		SensorResult tps = Sensor::get(SensorType::DriverThrottleIntent);
+
+		// On failed sensor, use 0 deg C - should give a safe highish idle
+		float clt = Sensor::get(SensorType::Clt).value_or(0);
+		auto tps = Sensor::get(SensorType::DriverThrottleIntent);
+
+		float rpm;
+		if (CONFIG(useInstantRpmForIdle)) {
+			efitick_t nowNt = getTimeNowNt();
+			rpm = engine->triggerCentral.triggerState.calculateInstantRpm(&engine->triggerCentral.triggerFormDetails, NULL, nowNt PASS_ENGINE_PARAMETER_SUFFIX);
+		} else {
+			rpm = GET_RPM();
+		}
+
+		// Compute the target we're shooting for
+		auto targetRpm = getTargetRpm(clt);
 
 		engine->engineState.isAutomaticIdle = tps.Valid && engineConfiguration->idleMode == IM_AUTO;
 
@@ -430,7 +500,6 @@ static percent_t automaticIdleController(float tpsPos DECLARE_ENGINE_PARAMETER_S
 		finishIdleTestIfNeeded();
 		undoIdleBlipIfNeeded();
 
-		const auto [cltValid, clt] = Sensor::get(SensorType::Clt);
 #if EFI_SHAFT_POSITION_INPUT
 		bool isRunning = engine->rpmCalculator.isRunning();
 #else
@@ -438,10 +507,8 @@ static percent_t automaticIdleController(float tpsPos DECLARE_ENGINE_PARAMETER_S
 #endif /* EFI_SHAFT_POSITION_INPUT */
 		// cltCorrection is used only for cranking or running in manual mode
 		float cltCorrection;
-		if (!cltValid)
-			cltCorrection = 1.0f;
 		// Use separate CLT correction table for cranking
-		else if (engineConfiguration->overrideCrankingIacSetting && !isRunning) {
+		if (engineConfiguration->overrideCrankingIacSetting && !isRunning) {
 			cltCorrection = interpolate2d("cltCrankingT", clt, config->cltCrankingCorrBins, config->cltCrankingCorr);
 		} else {
 			// this value would be ignored if running in AUTO mode
@@ -467,7 +534,7 @@ static percent_t automaticIdleController(float tpsPos DECLARE_ENGINE_PARAMETER_S
 				// let's re-apply CLT correction
 				iacPosition = manualIdleController(cltCorrection PASS_ENGINE_PARAMETER_SUFFIX);
 			} else {
-				iacPosition = automaticIdleController(tps.Value PASS_ENGINE_PARAMETER_SUFFIX);
+				iacPosition = automaticIdleController(tps.Value, rpm, targetRpm PASS_ENGINE_PARAMETER_SUFFIX);
 			}
 			
 			iacPosition = clampPercentValue(iacPosition);

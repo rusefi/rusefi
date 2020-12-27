@@ -151,6 +151,7 @@
       height: 5.5rem;
       background: #fff;
       z-index: 99;
+      position: absolute;
       /* border-top: 1px solid #eee;
       border-bottom: 1px solid #eee; */
      }
@@ -263,7 +264,8 @@
   }
 
   #intro,
-  #shop {
+  #proteus,
+  #links {
     background-color: rgb(250, 250, 250);
   }
 
