@@ -605,6 +605,13 @@ struct EtbImpl final : public EtbController {
 		// Finally disable and reset state
 		motor->disable();
 
+		// Check that the calibrate actually moved the throttle
+		if (absF(primaryMax - primaryMin) < 0.5f) {
+			firmwareError(OBD_Throttle_Position_Sensor_Circuit_Malfunction, "Auto calibrate failed, check your wiring!\r\nClosed voltage: %.1fv Open voltage: %.1fv", primaryMin, primaryMax);
+			m_isAutocal = false;
+			return;
+		}
+
 		// Write out the learned values to TS, waiting briefly after setting each to let TS grab it
 		tsOutputChannels.calibrationMode = functionToCalModePriMax(myFunction);
 		tsOutputChannels.calibrationValue = primaryMax;
