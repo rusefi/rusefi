@@ -123,6 +123,10 @@ float getAfr(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 #endif /* EFI_CJ125 && HAL_USE_SPI */
 	afr_sensor_s * sensor = &CONFIG(afr);
 
+	if (engineConfiguration->afr.hwChannel == EFI_ADC_NONE) {
+		return 0;
+	}
+
 	float volts = getVoltageDivided("ego", sensor->hwChannel PASS_ENGINE_PARAMETER_SUFFIX);
 
 	if (CONFIG(afr_type) == ES_NarrowBand) {
