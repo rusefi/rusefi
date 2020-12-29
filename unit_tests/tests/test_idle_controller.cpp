@@ -71,10 +71,8 @@ TEST(idle_v2, timingPid) {
 
 	engineConfiguration->useIdleTimingPidControl = true;
 
-	pid_s pidCfg;
+	pid_s pidCfg{};
 	pidCfg.pFactor = 0.1;
-	pidCfg.iFactor = 0;
-	pidCfg.dFactor = 0;
 	pidCfg.minValue = -10;
 	pidCfg.maxValue = 10;
 	dut.init(&pidCfg);
