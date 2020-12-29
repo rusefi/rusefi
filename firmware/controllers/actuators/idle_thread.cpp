@@ -462,6 +462,9 @@ static percent_t automaticIdleController(float tpsPos, float rpm, int targetRpm,
 		auto phase = determinePhase(rpm, targetRpm, tps);
 		m_lastPhase = phase;
 
+		// Determine what operation phase we're in - idling or not
+		auto phase = determinePhase(rpm, targetRpm, tps);
+
 		engine->engineState.isAutomaticIdle = tps.Valid && engineConfiguration->idleMode == IM_AUTO;
 
 		if (engineConfiguration->isVerboseIAC && engine->engineState.isAutomaticIdle) {
@@ -570,8 +573,20 @@ void setDefaultIdleParameters(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	engineConfiguration->idleRpmPid.iFactor = 0.05f;
 	engineConfiguration->idleRpmPid.dFactor = 0.0f;
 
-	engineConfiguration->idlerpmpid_iTermMin = -200;
-	engineConfiguration->idlerpmpid_iTermMax =  200;
+	engineConfiguration->idlerpmpid_iTermMin = -20;
+	engineConfiguration->idlerpmpid_iTermMax =  20;
+
+	// Good starting point is 10 degrees per 100 rpm, aka 0.1 deg/rpm
+	CONFIG(idleTimingPid).pFactor = 0.1f;
+	CONFIG(idleTimingPid).iFactor = 0;
+	CONFIG(idleTimingPid).dFactor = 0;
+
+	// Allow +- 10 degrees adjustment
+	CONFIG(idleTimingPid).minValue = -10;
+	CONFIG(idleTimingPid).minValue = 10;
+
+	// Idle region is target + 100 RPM
+	CONFIG(idlePidRpmUpperLimit) = 100;
 }
 
 #if ! EFI_UNIT_TEST

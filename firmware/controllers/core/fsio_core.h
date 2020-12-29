@@ -64,6 +64,31 @@ typedef enum {
 
 } le_action_e;
 
+// This type borrows the least significant bit of a float and uses it to indicate
+// whether it's actually a boolean hiding inside that float
+class FsioValue
+{
+public:
+	/*implicit*/ FsioValue(float f);
+	/*implicit*/ FsioValue(bool b);
+
+	bool isFloat() const;
+	float asFloat() const;
+
+	bool isBool() const;
+	bool asBool() const;
+
+private:
+	// These must match for this trick to work!
+	static_assert(sizeof(float) == sizeof(uint32_t));
+
+	union
+	{
+		uint32_t u32;
+		float f32;
+	} u;
+};
+
 using FsioResult = expected<float>;
 
 class LEElement {
