@@ -462,9 +462,6 @@ static percent_t automaticIdleController(float tpsPos, float rpm, int targetRpm,
 		auto phase = determinePhase(rpm, targetRpm, tps);
 		m_lastPhase = phase;
 
-		// Determine what operation phase we're in - idling or not
-		auto phase = determinePhase(rpm, targetRpm, tps);
-
 		engine->engineState.isAutomaticIdle = tps.Valid && engineConfiguration->idleMode == IM_AUTO;
 
 		if (engineConfiguration->isVerboseIAC && engine->engineState.isAutomaticIdle) {
