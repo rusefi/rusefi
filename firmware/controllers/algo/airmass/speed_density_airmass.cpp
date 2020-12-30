@@ -1,7 +1,6 @@
 #include "global.h"
 #include "engine.h"
 #include "speed_density_airmass.h"
-#include "map.h"
 #include "perf_trace.h"
 
 EXTERN_ENGINE;
@@ -18,15 +17,15 @@ AirmassResult SpeedDensityAirmass::getAirmass(int rpm) {
 		return {};
 	}
 
-	float map = getMap(PASS_ENGINE_PARAMETER_SIGNATURE);
-	if (cisnan(map)) {
+	auto map = Sensor::get(SensorType::Map);
+	if (!map) {
 		warning(CUSTOM_ERR_TCHARGE_NOT_READY2, "map not ready"); // this could happen during HW CI during configuration reset
 		return {};
 	}
 
 	engine->engineState.sd.manifoldAirPressureAccelerationAdjustment = engine->engineLoadAccelEnrichment.getEngineLoadEnrichment(PASS_ENGINE_PARAMETER_SIGNATURE);
 
-	float adjustedMap = engine->engineState.sd.adjustedManifoldAirPressure = map + engine->engineState.sd.manifoldAirPressureAccelerationAdjustment;
+	float adjustedMap = engine->engineState.sd.adjustedManifoldAirPressure = map.Value + engine->engineState.sd.manifoldAirPressureAccelerationAdjustment;
 	efiAssert(CUSTOM_ERR_ASSERT, !cisnan(adjustedMap), "NaN adjustedMap", {});
 
 	float ve = getVe(rpm, adjustedMap);
@@ -43,6 +42,6 @@ AirmassResult SpeedDensityAirmass::getAirmass(int rpm) {
 
 	return {
 		airMass,
-		map,	// AFR/VE table Y axis
+		map.Value,	// AFR/VE table Y axis
 	};
 }
