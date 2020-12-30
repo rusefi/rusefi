@@ -45,7 +45,7 @@ extern WaveChart waveChart;
 #endif /* NO_RPM_EVENTS_TIMEOUT_SECS */
 
 float RpmCalculator::getRpmAcceleration() const {
-	return 1.0 * previousRpmValue / rpmValue;
+	return rpmRate;
 }
 
 bool RpmCalculator::isStopped() const {
@@ -250,7 +250,7 @@ void rpmShaftPositionCallback(trigger_event_e ckpSignalType,
 		bool hadRpmRecently = rpmState->checkIfSpinning(nowNt);
 
 		if (hadRpmRecently) {
-			efitick_t diffNt = nowNt - rpmState->lastRpmEventTimeNt;
+			int32_t diffNt = (int32_t)(nowNt - rpmState->lastRpmEventTimeNt);
 		/**
 		 * Four stroke cycle is two crankshaft revolutions
 		 *
@@ -260,10 +260,14 @@ void rpmShaftPositionCallback(trigger_event_e ckpSignalType,
 		 */
 			if (diffNt == 0) {
 				rpmState->setRpmValue(NOISY_RPM);
+				rpmRate = 0;
 			} else {
 				int mult = (int)getEngineCycle(engine->getOperationMode(PASS_ENGINE_PARAMETER_SIGNATURE)) / 360;
 				float rpm = 60.0 * NT_PER_SECOND * mult / diffNt;
 				rpmState->setRpmValue(rpm > UNREALISTIC_RPM ? NOISY_RPM : rpm);
+
+				auto rpmDelta = rpm - rpmState->previousRpmValue;
+				rpmRate = rpmDelta / (NT2US(diffNt));
 			}
 		}
 		rpmState->onNewEngineCycle();
