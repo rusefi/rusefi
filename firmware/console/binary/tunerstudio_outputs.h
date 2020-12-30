@@ -79,6 +79,7 @@ typedef struct {
 	unsigned int isKnockChipOk : 1; // bit 27
 	unsigned int launchTriggered : 1; // bit 28
 	unsigned int isTps2Error : 1; // bit 29
+	unsigned int isIdleClosedLoop : 1; // bit 30
 
 	// RPM, vss
 	scaled_channel<uint16_t> rpm;   // 4

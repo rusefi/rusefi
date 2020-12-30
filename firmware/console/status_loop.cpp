@@ -611,11 +611,7 @@ void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels DECLARE_
 	tsOutputChannels->currentTargetAfr = ENGINE(engineState.targetAFR);
 	tsOutputChannels->targetLambda = ENGINE(engineState.targetLambda);
 
-	if (hasMapSensor(PASS_ENGINE_PARAMETER_SIGNATURE)) {
-		float mapValue = getMap(PASS_ENGINE_PARAMETER_SIGNATURE);
-		// offset 40
-		tsOutputChannels->manifoldAirPressure = mapValue;
-	}
+	tsOutputChannels->manifoldAirPressure = Sensor::get(SensorType::Map).value_or(0);
 
 #if EFI_DYNO_VIEW
 	tsOutputChannels->VssAcceleration = getDynoviewAcceleration(PASS_ENGINE_PARAMETER_SIGNATURE);
