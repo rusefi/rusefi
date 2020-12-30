@@ -10,6 +10,8 @@ import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 
+import java.util.Arrays;
+
 import static com.rusefi.IoUtil.getEnableCommand;
 import static com.rusefi.TestingUtils.*;
 import static com.rusefi.config.generated.Fields.*;
@@ -25,43 +27,49 @@ import static org.junit.Assert.assertFalse;
  */
 public class FunctionalTest extends RusefiTestBase {
     @Test
-	public void testChangingIgnitionMode() {
-		String msg = "change ign mode";
+    public void testChangingIgnitionMode() {
+        String msg = "change ign mode";
 
-		ecu.setEngineType(ET_FORD_ASPIRE);
-		ecu.changeRpm(2000);
+        ecu.setEngineType(ET_FORD_ASPIRE);
+        ecu.changeRpm(2000);
 
-		// First is wasted spark
-		ecu.sendCommand("set ignition_mode 2");
+        // First is wasted spark
+        ecu.sendCommand("set ignition_mode 2");
 
-		{
-			// Check that we're in wasted spark mode
-			EngineChart chart = nextChart();
+        {
+            // Check that we're in wasted spark mode
+            EngineChart chart = nextChart();
 
-			// Wasted spark should fire cylinders 1/3...
-            assertWaveNotNull(chart, EngineChart.SPARK_1);
-            assertWaveNotNull(chart, EngineChart.SPARK_3);
+            // Wasted spark should fire cylinders 1/3...
+            assertWaveNotNull(chart,
+                    EngineChart.SPARK_1,
+                    EngineChart.SPARK_3
+            );
 
             // ...but not cylinders 2/4
-            assertWaveNull(chart, EngineChart.SPARK_2);
-			assertWaveNull(chart, EngineChart.SPARK_4);
-		}
+            assertWaveNull(chart,
+                    EngineChart.SPARK_2,
+                    EngineChart.SPARK_4
+            );
+        }
 
-		// Now switch to sequential mode
-		ecu.sendCommand("set ignition_mode 1");
+        // Now switch to sequential mode
+        ecu.sendCommand("set ignition_mode 1");
 
-		{
-			// Check that we're in sequential spark mode
-			EngineChart chart = nextChart();
+        {
+            // Check that we're in sequential spark mode
+            EngineChart chart = nextChart();
 
-			// All 4 cylinders should be firing
-            assertWaveNotNull(chart, EngineChart.SPARK_1);
-            assertWaveNotNull(chart, EngineChart.SPARK_2);
-            assertWaveNotNull(chart, EngineChart.SPARK_3);
-			assertWaveNotNull(chart, EngineChart.SPARK_4);
-		}
+            // All 4 cylinders should be firing
+            assertWaveNotNull(chart,
+                    EngineChart.SPARK_1,
+                    EngineChart.SPARK_2,
+                    EngineChart.SPARK_3,
+                    EngineChart.SPARK_4
+            );
+        }
 
-		// Now switch to "one coil" mode
+        // Now switch to "one coil" mode
         ecu.sendCommand("set ignition_mode 0");
 
         {
@@ -72,27 +80,33 @@ public class FunctionalTest extends RusefiTestBase {
             assertWaveNotNull(chart, EngineChart.SPARK_1);
 
             // And no others
-            assertWaveNull(chart, EngineChart.SPARK_2);
-            assertWaveNull(chart, EngineChart.SPARK_3);
-            assertWaveNull(chart, EngineChart.SPARK_4);
+            assertWaveNull(chart,
+                    EngineChart.SPARK_2,
+                    EngineChart.SPARK_3,
+                    EngineChart.SPARK_4
+            );
         }
 
-		// Now switch BACK to wasted mode
-		ecu.sendCommand("set ignition_mode 2");
+        // Now switch BACK to wasted mode
+        ecu.sendCommand("set ignition_mode 2");
 
-		{
-			// Check that we're in wasted spark mode
-			EngineChart chart = nextChart();
+        {
+            // Check that we're in wasted spark mode
+            EngineChart chart = nextChart();
 
             // Wasted spark should fire cylinders 1/3...
-            assertWaveNotNull(chart, EngineChart.SPARK_1);
-            assertWaveNotNull(chart, EngineChart.SPARK_3);
+            assertWaveNotNull(chart,
+                    EngineChart.SPARK_1,
+                    EngineChart.SPARK_3
+            );
 
             // ...but not cylinders 2/4
-            assertWaveNull(chart, EngineChart.SPARK_2);
-            assertWaveNull(msg, chart, EngineChart.SPARK_4);
-		}
-	}
+            assertWaveNull(chart,
+                    EngineChart.SPARK_2,
+                    EngineChart.SPARK_4
+            );
+        }
+    }
 
     @Test
     public void testRevLimiter() {
@@ -111,8 +125,10 @@ public class FunctionalTest extends RusefiTestBase {
             // Check that neither ignition nor injection is cut
             EngineChart chart = nextChart();
 
-            assertWaveNotNull(chart, EngineChart.SPARK_1);
-            assertWaveNotNull(chart, EngineChart.INJECTOR_1);
+            assertWaveNotNull(chart,
+                    EngineChart.SPARK_1,
+                    EngineChart.INJECTOR_1
+            );
         }
 
         // Now go above the hard limiter
@@ -124,8 +140,10 @@ public class FunctionalTest extends RusefiTestBase {
 
             // These channels are allowed to have falling edges - aka closing injectors and firing coils
             // but not allowed to have rising edges - aka opening injectors and charging coils
-            assertWaveNoRises(chart, EngineChart.SPARK_1);
-            assertWaveNoRises(chart, EngineChart.INJECTOR_1);
+            assertWaveNoRises(chart,
+                    EngineChart.SPARK_1,
+                    EngineChart.INJECTOR_1
+            );
         }
 
         // Check that it recovers when we go back under the limit
@@ -135,10 +153,12 @@ public class FunctionalTest extends RusefiTestBase {
             // Check that neither ignition nor injection is cut
             EngineChart chart = nextChart();
 
-            assertWaveNotNull(chart, EngineChart.SPARK_1);
-            assertWaveNotNull(chart, EngineChart.INJECTOR_1);
+            assertWaveNotNull(chart,
+                    EngineChart.SPARK_1,
+                    EngineChart.INJECTOR_1
+            );
         }
-	}
+    }
 
     @Test
     public void testCustomEngine() {
@@ -441,6 +461,10 @@ public class FunctionalTest extends RusefiTestBase {
         assertWaveNull("", chart, key);
     }
 
+    private static void assertWaveNull(EngineChart chart, String... keys) {
+        Arrays.stream(keys).peek(k -> assertWaveNull(chart, k));
+    }
+
     private static void assertWaveNull(String msg, EngineChart chart, String key) {
         assertNull(msg + "chart for " + key, chart.get(key));
     }
@@ -453,6 +477,10 @@ public class FunctionalTest extends RusefiTestBase {
         assertTrue(msg, chart.get(key) != null);
     }
 
+    private static void assertWaveNotNull(EngineChart chart, String... keys) {
+        Arrays.stream(keys).peek(k -> assertWaveNotNull(chart, k));
+    }
+
     private static void assertWaveNoRises(EngineChart chart, String key) {
         StringBuilder events = chart.get(key);
 
@@ -463,6 +491,10 @@ public class FunctionalTest extends RusefiTestBase {
 
         // Assert that there are no up (rise) events in the channel's sequence
         assertFalse(events.toString().contains("u"));
+    }
+
+    private static void assertWaveNoRises(EngineChart chart, String... keys) {
+        Arrays.stream(keys).peek(k -> assertWaveNoRises(chart, k));
     }
 
     private EngineChart nextChart() {
