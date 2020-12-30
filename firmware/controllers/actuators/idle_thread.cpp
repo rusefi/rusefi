@@ -523,7 +523,7 @@ static percent_t automaticIdleController(float tpsPos, float rpm, int targetRpm,
 		}
 
 #if EFI_TUNER_STUDIO
-		tsOutputChannels.isIdleClosedLoop = phase == Phase::Idling && engineConfiguration->idleMode == IM_AUTO
+		tsOutputChannels.isIdleClosedLoop = phase == Phase::Idling && CONFIG(idleMode) == IM_AUTO;
 
 		if (engineConfiguration->debugMode == DBG_IDLE_CONTROL) {
 			if (engineConfiguration->idleMode == IM_AUTO) {
