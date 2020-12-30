@@ -522,22 +522,21 @@ static percent_t automaticIdleController(float tpsPos, float rpm, int targetRpm,
 					engine->rpmCalculator.getRevolutionCounterSinceStart());
 		}
 
+#if EFI_TUNER_STUDIO
+		tsOutputChannels.isIdleClosedLoop = phase == Phase::Idling && engineConfiguration->idleMode == IM_AUTO
 
 		if (engineConfiguration->debugMode == DBG_IDLE_CONTROL) {
 			if (engineConfiguration->idleMode == IM_AUTO) {
-#if EFI_TUNER_STUDIO
 				// see also tsOutputChannels->idlePosition
 				getIdlePid(PASS_ENGINE_PARAMETER_SIGNATURE)->postState(&tsOutputChannels, 1000000);
 				tsOutputChannels.debugIntField4 = engine->engineState.idle.idleState;
-#endif /* EFI_TUNER_STUDIO */
 			} else {
-#if EFI_TUNER_STUDIO
 				tsOutputChannels.debugFloatField1 = iacPosition;
 				extern StepperMotor iacMotor;
 				tsOutputChannels.debugIntField1 = iacMotor.getTargetPosition();
-#endif /* EFI_TUNER_STUDIO */
 			}
 		}
+#endif /* EFI_TUNER_STUDIO */
 
 		engine->engineState.idle.currentIdlePosition = iacPosition;
 
