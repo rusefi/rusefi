@@ -6,7 +6,6 @@
 #include "table_helper.h"
 #include "expected.h"
 #include "sensor.h"
-#include "map.h"
 #include "engine_math.h"
 
 EXTERN_ENGINE;
@@ -16,13 +15,7 @@ expected<float> readGppwmChannel(gppwm_channel_e channel DECLARE_ENGINE_PARAMETE
 	case GPPWM_Tps:
 		return Sensor::get(SensorType::Tps1);
 	case GPPWM_Map: {
-		float map = getMap(PASS_ENGINE_PARAMETER_SIGNATURE);
-
-		if (cisnan(map)) {
-			return unexpected;
-		}
-
-		return map;
+		return Sensor::get(SensorType::Map);
 	}
 	case GPPWM_Clt:
 		return Sensor::get(SensorType::Clt);
