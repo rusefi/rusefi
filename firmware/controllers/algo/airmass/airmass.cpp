@@ -1,6 +1,5 @@
 #include "airmass.h"
 #include "sensor.h"
-#include "map.h"
 
 EXTERN_ENGINE;
 
@@ -9,7 +8,7 @@ AirmassModelBase::AirmassModelBase(const ValueProvider3D& veTable) : m_veTable(&
 float AirmassModelBase::getVeLoadAxis(float passedLoad) const {
 	switch(CONFIG(veOverrideMode)) {
 		case VE_None: return passedLoad;
-		case VE_MAP: return getMap(PASS_ENGINE_PARAMETER_SIGNATURE);
+		case VE_MAP: return Sensor::get(SensorType::Map).value_or(0);
 		case VE_TPS: return Sensor::get(SensorType::Tps1).value_or(0);
 		default: return 0;
 	}

@@ -40,12 +40,12 @@ TEST(BoostControl, ObservePlant) {
 	BoostController bc;
 	INJECT_ENGINE_REFERENCE(&bc);
 
-	engine->mockMapValue = NAN;
+	Sensor::resetMockValue(SensorType::Map);
 	// Check that invalid MAP returns unexpected
 	EXPECT_EQ(bc.observePlant(), unexpected);
 
 	// Test valid MAP value
-	engine->mockMapValue = 150.0f;
+	Sensor::setMockValue(SensorType::Map, 150);
 
 	EXPECT_FLOAT_EQ(bc.observePlant().value_or(0), 150.0f);
 }
