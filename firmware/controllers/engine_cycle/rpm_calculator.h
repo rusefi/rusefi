@@ -115,6 +115,9 @@ public:
 	volatile floatus_t oneDegreeUs = NAN;
 	volatile efitick_t lastRpmEventTimeNt = 0;
 
+	// RPM rate of change, in RPM per second
+	float rpmRate = 0;
+
 protected:
 	// Print sensor info - current RPM state
 	void showInfo(Logging* logger, const char* sensorName) const override;
@@ -126,9 +129,6 @@ private:
 	 */
 	 int rpmValue = 0;
 
-	// RPM rate of change, in RPM per second
-	float rpmRate = 0;
-	
 	/**
 	 * Should be called once we've realized engine is not spinning any more.
 	 */

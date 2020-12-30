@@ -201,6 +201,9 @@ uint32_t RpmCalculator::getRevolutionCounterM(void) const {
 
 void RpmCalculator::setStopped() {
 	revolutionCounterSinceStart = 0;
+
+	rpmRate = 0;
+
 	if (rpmValue != 0) {
 		assignRpmValue(0);
 		// needed by 'useNoiselessTriggerDecoder'
@@ -260,14 +263,14 @@ void rpmShaftPositionCallback(trigger_event_e ckpSignalType,
 		 */
 			if (diffNt == 0) {
 				rpmState->setRpmValue(NOISY_RPM);
-				rpmRate = 0;
+				rpmState->rpmRate = 0;
 			} else {
 				int mult = (int)getEngineCycle(engine->getOperationMode(PASS_ENGINE_PARAMETER_SIGNATURE)) / 360;
 				float rpm = 60.0 * NT_PER_SECOND * mult / diffNt;
 				rpmState->setRpmValue(rpm > UNREALISTIC_RPM ? NOISY_RPM : rpm);
 
 				auto rpmDelta = rpm - rpmState->previousRpmValue;
-				rpmRate = rpmDelta / (NT2US(diffNt));
+				rpmState->rpmRate = rpmDelta / (NT2US(diffNt));
 			}
 		}
 		rpmState->onNewEngineCycle();
