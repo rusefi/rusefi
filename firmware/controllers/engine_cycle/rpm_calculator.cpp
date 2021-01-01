@@ -267,10 +267,12 @@ void rpmShaftPositionCallback(trigger_event_e ckpSignalType,
 			} else {
 				int mult = (int)getEngineCycle(engine->getOperationMode(PASS_ENGINE_PARAMETER_SIGNATURE)) / 360;
 				float rpm = 60.0 * NT_PER_SECOND * mult / diffNt;
-				rpmState->setRpmValue(rpm > UNREALISTIC_RPM ? NOISY_RPM : rpm);
 
 				auto rpmDelta = rpm - rpmState->previousRpmValue;
 				rpmState->rpmRate = rpmDelta / (NT2US(diffNt));
+
+				rpmState->setRpmValue(rpm > UNREALISTIC_RPM ? NOISY_RPM : rpm);
+				
 			}
 		}
 		rpmState->onNewEngineCycle();
