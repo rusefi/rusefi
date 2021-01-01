@@ -256,26 +256,33 @@ html {
   }
 
   .mre {
-    /* height: 50vh; */
+    display: table;
+    background-image: linear-gradient( 180deg, rgba(0, 0, 0, 0.7) 0%, rgba(0, 0, 0, 0.5) 100%),url('../images/site/mre_bg.jpg');
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
   }
 
   .mre-left {
     position: relative;
     width: 50%;
-    float: left;
     height: 100%;
-    background-color: #252a2b;
+    align-items: center;
     z-index: 1;
+    display: table-cell;
+    display: none;
+    vertical-align: middle;
   }
 
   .mre-right {
     position: relative;
     width: 50%;
-    float: left;
     height: 100%;
     background-color: #252a2b;
     z-index: 1;
     color: #ffffff;
+    display: table-cell;
+    vertical-align: middle;
   }
 
   .mre-content {
@@ -283,7 +290,6 @@ html {
     text-align: left;
     vertical-align: middle;
     font-size: 1.3rem;
-    /* font-family: "Abel", sans-serif;; */
   }
 
   .mre-content h2 {
@@ -359,7 +365,7 @@ html {
   }
   
   /* Larger than tablet */
-  @media (min-width: 750px) {
+  @media (min-width: 1024px) {
     .container {
       overflow-y: visible;
     }
@@ -494,6 +500,9 @@ html {
     .popover-link:hover,
     .popover-item:first-child .popover-link:hover:after {
       border-bottom-color: #f15a24; }
+    .mre-left {
+      display: table-cell;
+    }
   }
 
 
