@@ -83,30 +83,31 @@ constexpr uint8_t e90_temp_offset = 49;
 
 
 void canDashboardBMW(uint8_t cycle) {
+
 	//BMW Dashboard
-	{
+	if ((cycle&CAM_50ms)==CAM_50ms) { 
 		CanTxMessage msg(CAN_BMW_E46_SPEED);
 		msg.setShortValue(10 * 8, 1);
 	}
 
-	{
+	if ((cycle&CAM_50ms)==CAM_50ms) {
 		CanTxMessage msg(CAN_BMW_E46_RPM);
 		msg.setShortValue((int) (GET_RPM() * 6.4), 2);
 	}
 
-	{
+	if ((cycle&CAM_50ms)==CAM_50ms) {
 		CanTxMessage msg(CAN_BMW_E46_DME2);
 		msg.setShortValue((int) ((Sensor::get(SensorType::Clt).value_or(0) + 48.373) / 0.75), 1);
 	}
 }
 
 void canMazdaRX8(uint8_t cycle) {
-	{
+	if ((cycle&CAM_50ms)==CAM_50ms) {
 		CanTxMessage msg(CAN_MAZDA_RX_STEERING_WARNING);
 		// todo: something needs to be set here? see http://rusefi.com/wiki/index.php?title=Vehicle:Mazda_Rx8_2004
 	}
 
-	{
+	if ((cycle&CAM_50ms)==CAM_50ms) {
 		CanTxMessage msg(CAN_MAZDA_RX_RPM_SPEED);
 
 		float kph = getVehicleSpeed();
@@ -117,7 +118,7 @@ void canMazdaRX8(uint8_t cycle) {
 		msg.setShortValue(0, 6);
 	}
 
-	{
+	if ((cycle&CAM_50ms)==CAM_50ms) {
 		CanTxMessage msg(CAN_MAZDA_RX_STATUS_1);
 		msg[0] = 0xFE; //Unknown
 		msg[1] = 0xFE; //Unknown
@@ -129,7 +130,7 @@ void canMazdaRX8(uint8_t cycle) {
 		msg[7] = 0x00; // Unused
 	}
 
-	{
+	if ((cycle&CAM_50ms)==CAM_50ms) {
 		CanTxMessage msg(CAN_MAZDA_RX_STATUS_2);
 		auto clt = Sensor::get(SensorType::Clt);
 		msg[0] = (uint8_t)(clt.value_or(0) + 69); //temp gauge //~170 is red, ~165 last bar, 152 centre, 90 first bar, 92 second bar
@@ -153,7 +154,7 @@ void canMazdaRX8(uint8_t cycle) {
 }
 
 void canDashboardFiat(uint8_t cycle) {
-	{
+	if ((cycle&CAM_50ms)==CAM_50ms) {
 		//Fiat Dashboard
 		CanTxMessage msg(CAN_FIAT_MOTOR_INFO);
 		msg.setShortValue((int) (Sensor::get(SensorType::Clt).value_or(0) - 40), 3); //Coolant Temp
@@ -166,32 +167,32 @@ void canDashboardFiat(uint8_t cycle) {
  */
 void canDashboardVAG(uint8_t cycle) {
 
-	{
+	if ((cycle&CAM_50ms)==CAM_50ms) {
 		//VAG Dashboard
 		CanTxMessage msg(CAN_VAG_RPM);
 		msg.setShortValue(GET_RPM() * 4, 2); //RPM
 	}
 
-	float clt = Sensor::get(SensorType::Clt).value_or(0);
-
-	{
+	if ((cycle&CAM_50ms)==CAM_50ms) {
+		float clt = Sensor::get(SensorType::Clt).value_or(0);
 		CanTxMessage msg(CAN_VAG_CLT);
 		msg.setShortValue((int) ((clt + 48.373) / 0.75), 1); //Coolant Temp
 	}
 
-	{
+	if ((cycle&CAM_50ms)==CAM_50ms) {
+		float clt = Sensor::get(SensorType::Clt).value_or(0);
 		CanTxMessage msg(CAN_VAG_CLT_V2);
 		msg.setShortValue((int) ((clt + 48.373) / 0.75), 4); //Coolant Temp
 	}
 
-	{
+	if ((cycle&CAM_50ms)==CAM_50ms) {
 		CanTxMessage msg(CAN_VAG_IMMO);
 		msg.setShortValue(0x80, 1);
 	}
 }
 
 void canDashboardW202(uint8_t cycle) {
-	{
+	if ((cycle&CAM_50ms)==CAM_50ms) {
 		CanTxMessage msg(W202_STAT_1);
 		uint16_t tmp = GET_RPM();
 		msg[0] = 0x08; // Unknown
@@ -204,7 +205,7 @@ void canDashboardW202(uint8_t cycle) {
 		msg[7] = 0x00; // Unknown - oil info
 	}
 
-	{
+	if ((cycle&CAM_50ms)==CAM_50ms) {
 		CanTxMessage msg(W202_STAT_2,7,false); //dlc 7
 		msg[0] = (int)(Sensor::get(SensorType::Clt).value_or(0) + 40); // CLT -40 offset
 		msg[1] = 0x3D; // TBD
@@ -216,7 +217,7 @@ void canDashboardW202(uint8_t cycle) {
 		msg[7] = 0x00; // Unknown
 	}
 
-	{
+	if ((cycle&CAM_50ms)==CAM_50ms) {
 		CanTxMessage msg(W202_ALIVE);
 		msg[0] = 0x0A; // Const
 		msg[1] = 0x18; // Const
@@ -228,7 +229,7 @@ void canDashboardW202(uint8_t cycle) {
 		msg[7] = 0x00; // Const
 	}	
 
-	{
+	if ((cycle&CAM_50ms)==CAM_50ms) {
 		CanTxMessage msg(W202_STAT_3);
 		msg[0] = 0x00; // Const
 		msg[1] = 0x00; // Const
@@ -242,9 +243,6 @@ void canDashboardW202(uint8_t cycle) {
 }
 
 void canDashboardBMWE90(uint8_t cycle) {
-	if (e90msgcounter == UINT16_MAX)
-		e90msgcounter = 0;
-	e90msgcounter++;
 
 	//T15 'turn-on'
 	if((cycle&CAM_50ms)==CAM_50ms) { 
@@ -396,7 +394,7 @@ void canDashboardBMWE90(uint8_t cycle) {
 }
 
 void canDashboardHaltech(uint8_t cycle) {
-
+	UNUSED(cycle);
 }
 
 #endif // EFI_CAN_SUPPORT
