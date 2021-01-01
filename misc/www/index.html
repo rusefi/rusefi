@@ -29,7 +29,8 @@
   <!-- FONT
   –––––––––––––––––––––––––––––––––––––––––––––––––– -->
   <link rel="preconnect" href="https://fonts.gstatic.com">
-  <link href='//fonts.googleapis.com/css?family=Raleway:400,300,600' rel='stylesheet' type='text/css'>
+  <link href='https://fonts.googleapis.com/css?family=Raleway:400,300,600' rel='stylesheet' type='text/css'>
+  <link href="https://fonts.googleapis.com/css2?family=Work+Sans:wght@900&display=swap" rel="stylesheet"> 
 
   <!-- CSS
   –––––––––––––––––––––––––––––––––––––––––––––––––– -->
@@ -294,42 +295,46 @@
     </div>
   </div>
 
-  <!-- Microrusefi -->
-  <!-- <div class="docs-section" id="microrusefi">
-    <div class="container">
-      <h6 class="docs-header">microRusEFI</h6>
-      <img src="images/site/rusefi_mreheader.png" width="100%">
-      <p>microRusEFI is a small & cheap Engine Management System board designed for fully sequential 1, 2, 3 and 4
-        cylinder applications.<br>
-        microRusEFI uses a waterproof connector and its aluminum enclosure could be sealed.<br>
-        microRusEfi supports dual Hall shaft position sensor input or 1xHall + 1xVR shaft position sensor input (A few
-        resistors must be replaced on the PCB to switch from one setup to another)<br>
-        Open-source design available in <a href="https://github.com/rusefi/hw_microRusEfi">this repository</a>, or
-        available as a kit or completely assembled. <br>
-        This is an excellent option for racing series that allow modifications inside the stock ECU case.
-      </p>
-      <b>Features</b>
-      <ul>
-        <li>Primary VR or Hall input (configurable with few resistor changes)</li>
-        <li>Secondary Hall input</li>
-        <li>4 analog thermistor (temperature) inputs</li>
-        <li>10 analog voltage inputs (0-5v)</li>
-        <li>4 high-Z injector outputs</li>
-        <li>2 high-current low side outputs for IAC/VVT/other solenoids</li>
-        <li>Dedicated main relay control output</li>
-        <li>4 low-current low side outputs for relays or warning lights</li>
-        <li>4 5v logic-level ignition outputs</li>
-        <li>2 logic level outputs (5v/12v configurable, requires resistor changes)</li>
-        <li>Electronic throttle body (drive by wire)</li>
-        <li>CAN connectivity on the plug</li>
-        <li>USB connectivity on the plug</li>
-        <li>SPI and TTL available on PCB</li>
-      </ul>
-      <a class="button button-primary" href="https://www.ebay.com/itm/333532119947">Get microRusEFI hardware</a>
-      <a class="button button-primary" href="https://github.com/rusefi/rusefi/wiki/microRusEFI-Manual">microRusEFI
-        Manual</a>
+  <div class="proteus" id="proteus">
+    <div class="proteus-left">
+      <div class="proteus-content">
+        <h6 class="docs-header">Proteus</h6>
+        <!-- <img src="images/site/mre_logo.png" width="50%"> -->
+        <h1><span class="blinking">|</span>PROTEUS</h1>
+        <br><br>
+        <p>A high-featured board compatible with rusEFI firmware. Open-source design available in <a
+            href="https://github.com/mck1117/proteus">this repository</a>.
+        </p>
+        <b>Features</b>
+        <ul>
+          <li>2x VR crank/cam/vehicle speed inputs</li>
+          <li>6x hall cam/crank or digital input</li>
+          <li>Full operation from 6-24v supply</li>
+          <li>Dual 5v sensor supplies, 150mA each, fully protected</li>
+          <li>Dual protected 12v external sensor supply</li>
+          <li>16x 4A low-side drivers</li>
+          <li>12x 5v ignition (or general purpose) outputs</li>
+          <li>Dual H-bridges for electronic throttle (also supports stepper idle valve!)</li>
+          <li>4x 12v 3A high-side outputs</li>
+          <li>12x Analog voltage inputs</li>
+          <li>4x Analog temperature inputs</li>
+          <li>180 MHz ARM Cortex-M7</li>
+          <li>TE Connectivity AMPSEAL connectors</li>
+          <li>Internal data-logging</li>
+        </ul>
+        <a class="button button-black" href="https://www.ebay.com/itm/333811680319">Get Proteus hardware</a>
+        <a class="button button-black" href="https://github.com/rusefi/rusefi/wiki/Proteus-Manual">Proteus Manual</a>
+      </div>
     </div>
-  </div> -->
+    <div class="proteus-right">
+      <div class="proteus-content">
+        <img src="images/site/proteus_case.png" width="100%">
+      </div>
+    </div>
+  </div>
+
+
+<!-- 
 
   <div class="docs-section" id="proteus">
     <div class="container">
@@ -356,7 +361,7 @@
       <a class="button button-primary" href="https://www.ebay.com/itm/333811680319">Get Proteus hardware</a>
       <a class="button button-primary" href="https://github.com/rusefi/rusefi/wiki/Proteus-Manual">Proteus Manual</a>
     </div>
-  </div>
+  </div> -->
 
   <!-- <div class="docs-section" id="miata_pnp">
     <div class="container">

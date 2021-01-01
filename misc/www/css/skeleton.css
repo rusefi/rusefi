@@ -243,6 +243,29 @@ input[type="button"].button-primary:focus {
     color: #252a2b;
     background-color: #ffffff;
     border-color: #ffffff; }
+
+
+  .button.button-black,
+  button.button-black,
+  input[type="submit"].button-black,
+  input[type="reset"].button-black,
+  input[type="button"].button-black {
+    color: #000;
+    /* background-color: #33C3F0; */
+    border-color: #000; }
+  .button.button-black:hover,
+  button.button-black:hover,
+  input[type="submit"].button-black:hover,
+  input[type="reset"].button-black:hover,
+  input[type="button"].button-black:hover,
+  .button.button-black:focus,
+  button.button-black:focus,
+  input[type="submit"].button-black:focus,
+  input[type="reset"].button-black:focus,
+  input[type="button"].button-black:focus {
+    color: #d6d6d6;
+    background-color: #000;
+    border-color: #000; }
   
 
 /* Forms
