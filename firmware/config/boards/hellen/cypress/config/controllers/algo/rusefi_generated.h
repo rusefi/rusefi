@@ -407,6 +407,7 @@
 #define ET_FRANKENSO_MIATA_NA6 41
 #define ET_FRANKENSO_MIATA_NA6_VAF 57
 #define ET_FRANKENSO_MIATA_NB2 47
+#define ET_HELLEN_NB2 68
 #define ET_MIATA_TCU_PROTEUS 1
 #define ET_MRE_BODY_CONTROL 23
 #define ET_MRE_DEFAULTS 60
@@ -1226,8 +1227,8 @@
 #define showHumanReadableWarning_offset 976
 #define showSdCardWarning_offset 76
 #define SIGNATURE_BOARD hellen_cypress
-#define SIGNATURE_DATE 2020.12.31
-#define SIGNATURE_HASH 1926311687
+#define SIGNATURE_DATE 2021.01.01
+#define SIGNATURE_HASH 4113931209
 #define silentTriggerError_offset 1464
 #define slowAdcAlpha_offset 2088
 #define sparkDwellRpmBins_offset 332
@@ -1558,7 +1559,7 @@
 #define ts_show_spi true
 #define ts_show_trigger_comparator false
 #define ts_show_tunerstudio_port true
-#define TS_SIGNATURE "rusEFI 2020.12.31.hellen_cypress.1926311687"
+#define TS_SIGNATURE "rusEFI 2021.01.01.hellen_cypress.4113931209"
 #define TS_SINGLE_WRITE_COMMAND 'W'
 #define TS_SINGLE_WRITE_COMMAND_char W
 #define TS_TEST_COMMAND 't' // 0x74
