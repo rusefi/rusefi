@@ -1,3 +1,7 @@
+html {
+  scroll-behavior: smooth;
+}
+
 .container {
     max-width: 800px; 
     overflow-y: hidden;
@@ -8,7 +12,9 @@
     background-attachment:fixed;
     background-size: cover;
     background-repeat: no-repeat;
-    padding-top: 6rem;
+    /* padding-top: 6rem; */
+    padding-top: 40vh;
+    height: 60vh;
     text-align: center; }
   .value-prop {
     margin-top: 1rem; }
@@ -212,12 +218,84 @@
     list-style: none;
   }
 
+  .arrow {
+    position: absolute;
+    padding-top: 85vh;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%,-50%);
+  }
+  .arrow span {
+      display: block;
+      width: 20px;
+      height: 20px;
+      border-bottom: 2px solid #a5a5a5;
+      border-right: 2px solid #a5a5a5;
+      transform: rotate(45deg);
+      margin: -10px;
+      animation: animate 2s infinite;
+  }
+  .arrow span:nth-child(2) {
+      animation-delay: -0.2s;
+  }
+  .arrow span:nth-child(3) {
+      animation-delay: -0.4s;
+  }
+  @keyframes animate {
+      0%{
+          opacity: 0;
+          transform: rotate(45deg) translate(-20px,-20px);
+      }
+      50%{
+          opacity: 1;
+      }
+      100%{
+          opacity: 0;
+          transform: rotate(45deg) translate(20px,20px);
+      }
+  }
+
+  .mre {
+    /* height: 50vh; */
+  }
+
+  .mre-left {
+    position: relative;
+    width: 50%;
+    float: left;
+    height: 100%;
+    background-color: #252a2b;
+    z-index: 1;
+  }
+
+  .mre-right {
+    position: relative;
+    width: 50%;
+    float: left;
+    height: 100%;
+    background-color: #252a2b;
+    z-index: 1;
+    color: #ffffff;
+  }
+
+  .mre-content {
+    padding: 20%;
+    text-align: left;
+    vertical-align: middle;
+    font-size: 1.3rem;
+    /* font-family: "Abel", sans-serif;; */
+  }
+
+  .mre-content h2 {
+    font-size: 2rem;
+  }
+
   .glossary {
     font-style: italic;
     margin-left: 2rem;
   }
   .footer {
-    background-color: #222;
+    background-color: #252a2b;
     padding-top: 2rem;
     padding-bottom: 1rem;
     text-align: center;
@@ -256,7 +334,9 @@
 
     .header {
       /* margin-top: 18rem;  */
-      padding-top: 18rem;}
+      /* padding-top: 18rem; */
+      /* padding-top: 40vh; */
+    }
     .value-props {
       margin-top: 9rem;
       margin-bottom: 7rem; }
