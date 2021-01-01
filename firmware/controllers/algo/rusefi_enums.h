@@ -186,6 +186,8 @@ typedef enum {
 
 	PROTEUS_MIATA_NB2 = ET_PROTEUS_MIATA_NB2,
 
+	HELLEN_NB2 = ET_HELLEN_NB2,
+
 
 	/**
 	 * this configuration has as few pins configured as possible
