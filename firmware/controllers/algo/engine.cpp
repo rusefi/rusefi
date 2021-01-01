@@ -163,13 +163,13 @@ static void cylinderCleanupControl(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 #endif
 }
 
-#if HW_CHECK_MODE
+#if ANALOG_HW_CHECK_MODE
 static void assertCloseTo(const char * msg, float actual, float expected) {
 	if (actual < 0.75 * expected || actual > 1.25 * expected) {
 		firmwareError(OBD_PCM_Processor_Fault, "%s analog input validation failed %f vs %f", msg, actual, expected);
 	}
 }
-#endif // HW_CHECK_MODE
+#endif // ANALOG_HW_CHECK_MODE
 
 void Engine::periodicSlowCallback(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	ScopePerf perf(PE::EnginePeriodicSlowCallback);
@@ -216,7 +216,7 @@ void Engine::periodicSlowCallback(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 
 	slowCallBackWasInvoked = true;
 
-#if HW_CHECK_MODE
+#if ANALOG_HW_CHECK_MODE
 	efiAssertVoid(OBD_PCM_Processor_Fault, CONFIG(clt).adcChannel != EFI_ADC_NONE, "No CLT setting");
 	efitimesec_t secondsNow = getTimeNowSeconds();
 	if (secondsNow > 2 && secondsNow < 180) {
@@ -233,7 +233,7 @@ void Engine::periodicSlowCallback(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	assertCloseTo("iat", Sensor::get(SensorType::Iat).Value, 73.2);
 	assertCloseTo("aut1", Sensor::get(SensorType::AuxTemp1).Value, 13.8);
 	assertCloseTo("aut2", Sensor::get(SensorType::AuxTemp2).Value, 6.2);
-#endif // HW_CHECK_MODE
+#endif // ANALOG_HW_CHECK_MODE
 }
 
 

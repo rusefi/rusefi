@@ -127,11 +127,11 @@ static void setupDefaultSensorInputs() {
 #else
 	// Digital channel 1 as default - others not set
 	engineConfiguration->triggerInputPins[0] = GPIOC_6;
+	engineConfiguration->camInputs[0] = GPIO_UNASSIGNED;
 #endif
 
 	engineConfiguration->triggerInputPins[1] = GPIO_UNASSIGNED;
 	engineConfiguration->triggerInputPins[2] = GPIO_UNASSIGNED;
-	engineConfiguration->camInputs[0] = GPIO_UNASSIGNED;
 
 	// CLT = Analog Temp 3 = PB0
 	engineConfiguration->clt.adcChannel = EFI_ADC_8;

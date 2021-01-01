@@ -598,7 +598,7 @@ float fsio_visible fanOffTemperature;+Cooling fan turn-off temperature threshold
 
 float vehicleSpeedCoef;+This coefficient translates vehicle speed input frequency (in Hz) into vehicle speed, km/h;"coef",    1,      0,    0.01,  2000.0,        2
 
-custom can_nbc_e 4 bits, U32, @OFFSET@, [0:3], "None", "FIAT", "VAG" , "MAZDA RX8", "BMW", "W202", "BMW E90", "INVALID", "INVALID"
+custom can_nbc_e 4 bits, U32, @OFFSET@, [0:3], "None", "FIAT", "VAG" , "MAZDA RX8", "BMW", "W202", "BMW E90", "Haltech", "INVALID"
 can_nbc_e canNbcType;set can_mode X
 
 int canSleepPeriodMs;CANbus thread period, ms;"ms",    1,      0,       0,  1000.0,        2
@@ -855,7 +855,7 @@ custom uart_device_e 1 bits,U32,   @OFFSET@, [0:1], "Off", "UART1", "UART2", "UA
 	switch_input_pin_e startStopButtonPin;See also starterControlPin
 	
 	int mapMinBufferLength;;"count",        1,     0,  0,    24,  0
-	int16_t idlePidDeactivationTpsThreshold;;"%",        1,     0,  0,    100.0,  0
+	int16_t idlePidDeactivationTpsThreshold;+Below this throttle position, the engine is considered idling.;"%",        1,     0,  0,    100.0,  0
 	int16_t stepperParkingExtraSteps;;"%",        1,     0,  0,    3000.0,  0
 	uint16_t tps1SecondaryMin;;"ADC", 1, 0, 0, 1000, 0
 	uint16_t tps1SecondaryMax;;"ADC", 1, 0, 0, 1000, 0

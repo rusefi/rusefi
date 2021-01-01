@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Thu Dec 24 12:33:01 UTC 2020
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Thu Dec 31 17:41:27 UTC 2020
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -1596,6 +1596,7 @@ struct engine_configuration_s {
 	 */
 	int mapMinBufferLength;
 	/**
+	 * Below this throttle position, the engine is considered idling.
 	 * offset 816
 	 */
 	int16_t idlePidDeactivationTpsThreshold;
@@ -3782,4 +3783,4 @@ struct persistent_config_s {
 typedef struct persistent_config_s persistent_config_s;
 
 // end
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Thu Dec 24 12:33:01 UTC 2020
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Thu Dec 31 17:41:27 UTC 2020

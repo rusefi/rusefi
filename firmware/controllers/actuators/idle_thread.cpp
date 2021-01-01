@@ -305,40 +305,20 @@ static void undoIdleBlipIfNeeded() {
 	}
 }
 
-static bool isOutOfAutomaticIdleCondition(float rpm, int targetRpm DECLARE_ENGINE_PARAMETER_SUFFIX) {
-	// first, check the pedal threshold
-	if (CONFIG(throttlePedalUpPin) != GPIO_UNASSIGNED) {
-		if (!engine->engineState.idle.throttlePedalUpState) {
-			return true;
-		}
-	} else {
-		const auto [valid, pos] = Sensor::get(SensorType::DriverThrottleIntent);
-
-		// Disable auto idle in case of TPS/Pedal failure
-		if (!valid) {
-			return true;
-		}
-
-		if (pos > CONFIG(idlePidDeactivationTpsThreshold))
-			return true;
-	}
-
-	// then, check the RPM threshold (if in coasting mode)
-	if (CONFIG(idlePidRpmUpperLimit) > 0) {
-		int idlePidLowerRpm = targetRpm + CONFIG(idlePidRpmDeadZone);	
-		int upperRpmLimit = idlePidLowerRpm + CONFIG(idlePidRpmUpperLimit);
-		if (rpm > upperRpmLimit) {
-			return true;
-		}
-	}
-
-	return false;
-}
-
 /**
  * @return idle valve position percentage for automatic closed loop mode
  */
-static percent_t automaticIdleController(float tpsPos, float rpm, int targetRpm DECLARE_ENGINE_PARAMETER_SUFFIX) {
+static percent_t automaticIdleController(float tpsPos, float rpm, int targetRpm, IIdleController::Phase phase DECLARE_ENGINE_PARAMETER_SUFFIX) {
+	if (shouldResetPid) {
+		// we reset only if I-term is negative, because the positive I-term is good - it keeps RPM from dropping too low
+		if (getIdlePid(PASS_ENGINE_PARAMETER_SIGNATURE)->getIntegration() <= 0 || mustResetPid) {
+			getIdlePid(PASS_ENGINE_PARAMETER_SIGNATURE)->reset();
+			mustResetPid = false;
+		}
+//			alternatorPidResetCounter++;
+		shouldResetPid = false;
+		wasResetPid = true;
+	}
 
 	// todo: move this to pid_s one day
 	industrialWithOverrideIdlePid.antiwindupFreq = engineConfiguration->idle_antiwindupFreq;
@@ -346,7 +326,7 @@ static percent_t automaticIdleController(float tpsPos, float rpm, int targetRpm 
 
 	efitimeus_t nowUs = getTimeNowUs();
 
-	if (isOutOfAutomaticIdleCondition(rpm, targetRpm PASS_ENGINE_PARAMETER_SUFFIX)) {
+	if (phase != IIdleController::Phase::Idling) {
 		// Don't store old I and D terms if PID doesn't work anymore.
 		// Otherwise they will affect the idle position much later, when the throttle is closed.
 		if (mightResetPid) {
@@ -453,6 +433,9 @@ static percent_t automaticIdleController(float tpsPos, float rpm, int targetRpm 
 		// Compute the target we're shooting for
 		auto targetRpm = getTargetRpm(clt);
 
+		// Determine what operation phase we're in - idling or not
+		auto phase = determinePhase(rpm, targetRpm, tps);
+
 		engine->engineState.isAutomaticIdle = tps.Valid && engineConfiguration->idleMode == IM_AUTO;
 
 		if (engineConfiguration->isVerboseIAC && engine->engineState.isAutomaticIdle) {
@@ -460,29 +443,13 @@ static percent_t automaticIdleController(float tpsPos, float rpm, int targetRpm 
 			getIdlePid(PASS_ENGINE_PARAMETER_SIGNATURE)->showPidStatus(logger, "idle");
 		}
 
-		if (shouldResetPid) {
-			// we reset only if I-term is negative, because the positive I-term is good - it keeps RPM from dropping too low
-			if (getIdlePid(PASS_ENGINE_PARAMETER_SIGNATURE)->getIntegration() <= 0 || mustResetPid) {
-				getIdlePid(PASS_ENGINE_PARAMETER_SIGNATURE)->reset();
-				mustResetPid = false;
-			}
-//			alternatorPidResetCounter++;
-			shouldResetPid = false;
-			wasResetPid = true;
-		}
-
 		finishIdleTestIfNeeded();
 		undoIdleBlipIfNeeded();
 
-#if EFI_SHAFT_POSITION_INPUT
-		bool isRunning = engine->rpmCalculator.isRunning();
-#else
-		bool isRunning = false;
-#endif /* EFI_SHAFT_POSITION_INPUT */
 		// cltCorrection is used only for cranking or running in manual mode
 		float cltCorrection;
 		// Use separate CLT correction table for cranking
-		if (engineConfiguration->overrideCrankingIacSetting && !isRunning) {
+		if (engineConfiguration->overrideCrankingIacSetting && phase == IIdleController::Phase::Cranking) {
 			cltCorrection = interpolate2d("cltCrankingT", clt, config->cltCrankingCorrBins, config->cltCrankingCorr);
 		} else {
 			// this value would be ignored if running in AUTO mode
@@ -496,7 +463,7 @@ static percent_t automaticIdleController(float tpsPos, float rpm, int targetRpm 
 			iacPosition = blipIdlePosition;
 			engine->engineState.idle.baseIdlePosition = iacPosition;
 			engine->engineState.idle.idleState = BLIP;
-		} else if (!isRunning) {
+		} else if (phase == IIdleController::Phase::Cranking) {
 			// during cranking it's always manual mode, PID would make no sense during cranking
 			iacPosition = clampPercentValue(cltCorrection * engineConfiguration->crankingIACposition);
 			// save cranking position & cycles counter for taper transition
@@ -508,7 +475,7 @@ static percent_t automaticIdleController(float tpsPos, float rpm, int targetRpm 
 				// let's re-apply CLT correction
 				iacPosition = manualIdleController(cltCorrection PASS_ENGINE_PARAMETER_SUFFIX);
 			} else {
-				iacPosition = automaticIdleController(tps.Value, rpm, targetRpm PASS_ENGINE_PARAMETER_SUFFIX);
+				iacPosition = automaticIdleController(tps.Value, rpm, targetRpm, phase PASS_ENGINE_PARAMETER_SUFFIX);
 			}
 			
 			iacPosition = clampPercentValue(iacPosition);
@@ -529,22 +496,21 @@ static percent_t automaticIdleController(float tpsPos, float rpm, int targetRpm 
 					engine->rpmCalculator.getRevolutionCounterSinceStart());
 		}
 
+#if EFI_TUNER_STUDIO
+		tsOutputChannels.isIdleClosedLoop = phase == Phase::Idling && CONFIG(idleMode) == IM_AUTO;
 
 		if (engineConfiguration->debugMode == DBG_IDLE_CONTROL) {
 			if (engineConfiguration->idleMode == IM_AUTO) {
-#if EFI_TUNER_STUDIO
 				// see also tsOutputChannels->idlePosition
 				getIdlePid(PASS_ENGINE_PARAMETER_SIGNATURE)->postState(&tsOutputChannels, 1000000);
 				tsOutputChannels.debugIntField4 = engine->engineState.idle.idleState;
-#endif /* EFI_TUNER_STUDIO */
 			} else {
-#if EFI_TUNER_STUDIO
 				tsOutputChannels.debugFloatField1 = iacPosition;
 				extern StepperMotor iacMotor;
 				tsOutputChannels.debugIntField1 = iacMotor.getTargetPosition();
-#endif /* EFI_TUNER_STUDIO */
 			}
 		}
+#endif /* EFI_TUNER_STUDIO */
 
 		engine->engineState.idle.currentIdlePosition = iacPosition;
 
@@ -573,8 +539,20 @@ void setDefaultIdleParameters(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	engineConfiguration->idleRpmPid.iFactor = 0.05f;
 	engineConfiguration->idleRpmPid.dFactor = 0.0f;
 
-	engineConfiguration->idlerpmpid_iTermMin = -200;
-	engineConfiguration->idlerpmpid_iTermMax =  200;
+	engineConfiguration->idlerpmpid_iTermMin = -20;
+	engineConfiguration->idlerpmpid_iTermMax =  20;
+
+	// Good starting point is 10 degrees per 100 rpm, aka 0.1 deg/rpm
+	CONFIG(idleTimingPid).pFactor = 0.1f;
+	CONFIG(idleTimingPid).iFactor = 0;
+	CONFIG(idleTimingPid).dFactor = 0;
+
+	// Allow +- 10 degrees adjustment
+	CONFIG(idleTimingPid).minValue = -10;
+	CONFIG(idleTimingPid).minValue = 10;
+
+	// Idle region is target + 100 RPM
+	CONFIG(idlePidRpmUpperLimit) = 100;
 }
 
 #if ! EFI_UNIT_TEST

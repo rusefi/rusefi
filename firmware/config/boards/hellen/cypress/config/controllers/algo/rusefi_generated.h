@@ -193,7 +193,7 @@
 #define can_baudrate_e_auto_enum "B100KBPS", "B250KBPS", "B500KBPS", "B1MBPS"
 #define can_baudrate_e_enum "100kbps", "250kbps" , "500kbps", "1Mbps"
 #define CAN_DEFAULT_BASE 0x200
-#define can_nbc_e_auto_enum "CAN_BUS_NBC_NONE", "CAN_BUS_NBC_FIAT", "CAN_BUS_NBC_VAG", "CAN_BUS_MAZDA_RX8", "CAN_BUS_NBC_BMW", "CAN_BUS_W202_C180", "CAN_BUS_BMW_E90"
+#define can_nbc_e_auto_enum "CAN_BUS_NBC_NONE", "CAN_BUS_NBC_FIAT", "CAN_BUS_NBC_VAG", "CAN_BUS_MAZDA_RX8", "CAN_BUS_NBC_BMW", "CAN_BUS_W202_C180", "CAN_BUS_BMW_E90", "CAN_BUS_Haltech"
 #define can_vss_nbc_e_auto_enum "BMW_e46", "W202"
 #define canBaudRate_offset 2108
 #define canNbcType_offset 480
@@ -1226,8 +1226,8 @@
 #define showHumanReadableWarning_offset 976
 #define showSdCardWarning_offset 76
 #define SIGNATURE_BOARD hellen_cypress
-#define SIGNATURE_DATE 2020.12.24
-#define SIGNATURE_HASH 140549664
+#define SIGNATURE_DATE 2020.12.31
+#define SIGNATURE_HASH 1926311687
 #define silentTriggerError_offset 1464
 #define slowAdcAlpha_offset 2088
 #define sparkDwellRpmBins_offset 332
@@ -1558,7 +1558,7 @@
 #define ts_show_spi true
 #define ts_show_trigger_comparator false
 #define ts_show_tunerstudio_port true
-#define TS_SIGNATURE "rusEFI 2020.12.24.hellen_cypress.140549664"
+#define TS_SIGNATURE "rusEFI 2020.12.31.hellen_cypress.1926311687"
 #define TS_SINGLE_WRITE_COMMAND 'W'
 #define TS_SINGLE_WRITE_COMMAND_char W
 #define TS_TEST_COMMAND 't' // 0x74
