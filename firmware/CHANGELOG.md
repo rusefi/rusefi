@@ -28,10 +28,14 @@ All notable user-facing or behavior-altering changes will be documented in this 
 ## XXX 202X Release
 
 ### Breaking Changes
+ - Closed loop idle timing behavior changed to no longer fall off control as entering/leaving the idle region. It now sharply engages/disengages upon entering/leaving the idle area.
+ - Idle phase logic uses the same idle detection thresholds as the main idle controller instead of its own thresholds.
 
 ### Added
-
+ - Second wideband O2 processing as channels "Lambda 2" and "Air/Fuel Ratio 2".  Currently only supports CAN sensors, but analog will be supported too soon.
 ### Fixed
+ - Simplify idle control dialog in TunerStudio
+ - CLT gauge no longer erroneously shows "deg F" by default.
 
 ### December 2020 Bake Cookies Day
 
