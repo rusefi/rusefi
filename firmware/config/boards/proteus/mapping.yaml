@@ -43,14 +43,14 @@ outputs:
   GPIOD_14: "Highside 4"    # pin 14/black35
 
 event_inputs:
-  GPIOC_6:  "Digital 1"
-  GPIOE_11: "Digital 2"
-  GPIOE_12: "Digital 3"
-  GPIOE_13: "Digital 4"
-  GPIOE_14: "Digital 5"
-  GPIOE_15: "Digital 6"
-  GPIOE_7:  "VR 1"
-  GPIOE_8:  "VR 2"
+  GPIOC_6:  "Digital 1"     # pin 10/black23
+  GPIOE_11: "Digital 2"     # pin  1/black23
+  GPIOE_12: "Digital 3"     # pin  2/black23
+  GPIOE_13: "Digital 4"     # pin  3/black23
+  GPIOE_14: "Digital 5"     # pin  9/black23
+  GPIOE_15: "Digital 6"     # pin 11/black23
+  GPIOE_7:  "VR 1"          # pin 5+13/black23
+  GPIOE_8:  "VR 2"          # pin 4+12/black23
 
 switch_inputs:
   GPIOC_6:  "Digital 1"
