@@ -454,7 +454,7 @@ end_struct
 #define ET_MRE_M111 68
 #define ET_VW_B6 62
 
-#define ET_HELLEN_NB2 68
+#define ET_HELLEN_NB2 69
 
 #define ET_DEFAULT_FRANKENSO 0
 #define ET_FRANKENSO_MIATA_NA6 41
