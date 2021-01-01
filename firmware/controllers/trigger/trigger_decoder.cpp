@@ -439,7 +439,9 @@ void TriggerState::decodeTriggerEvent(
 
 	currentCycle.eventCount[triggerWheel]++;
 
-	efiAssertVoid(CUSTOM_OBD_93, toothed_previous_time <= nowNt, "toothed_previous_time after nowNt");
+	if (toothed_previous_time > nowNt) {
+		firmwareError(CUSTOM_OBD_93, "toothed_previous_time after nowNt %d %d", toothed_previous_time, nowNt);
+	}
 
 	efitick_t currentDurationLong = getCurrentGapDuration(nowNt);
 
