@@ -28,6 +28,7 @@
 
   <!-- FONT
   –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+  <link rel="preconnect" href="https://fonts.gstatic.com">
   <link href='//fonts.googleapis.com/css?family=Raleway:400,300,600' rel='stylesheet' type='text/css'>
 
   <!-- CSS
@@ -82,7 +83,7 @@
       </ul>
     </topnav>
     <div class="container">
-      <img src="images/site/logo_wht.png" width="70%">
+      <img src="images/site/logo_wht.png" width="50%">
       <h4 class="title">A GPL open source Engine Management System</h4>
       <a class="github-button" href="https://github.com/rusefi" data-size="large"
         aria-label="Follow @rusefi on GitHub">Follow @rusefi</a>
@@ -91,7 +92,14 @@
       <div class="value-props row">
       </div>
     </div>
+    <a class="arrow" href="index.html#intro">
+      <span></span>
+      <span></span>
+      <span></span>
+    </a>
   </div>
+
+
 
   <div class="nav-mobile"><a id="nav-toggle" href="#!"><span></span></a></div>
   <nav class="navbar">
@@ -242,8 +250,52 @@
     </div>
   </div>
 
+  <div class="mre" id="microrusefi">
+    <div class="mre-left">
+      <div class="mre-content">
+        <img src="images/site/mre_ecu.png" width="100%">
+      </div>
+    </div>
+    <div class="mre-right">
+      <div class="mre-content">
+        <h6 class="docs-header">microRusEFI</h6>
+        <img src="images/site/mre_logo.png" width="50%">
+        <br><br>
+        <p>microRusEFI is a small & cheap Engine Management System board designed for fully sequential 1, 2, 3 and 4
+          cylinder applications.<br>
+          microRusEFI uses a waterproof connector and its aluminum enclosure could be sealed.<br>
+          microRusEfi supports dual Hall shaft position sensor input or 1xHall + 1xVR shaft position sensor input (A few
+          resistors must be replaced on the PCB to switch from one setup to another)<br>
+          Open-source design available in <a href="https://github.com/rusefi/hw_microRusEfi">this repository</a>, or
+          available as a kit or completely assembled. <br>
+          This is an excellent option for racing series that allow modifications inside the stock ECU case.
+        </p>
+        <b>Features</b>
+        <ul>
+          <li>Primary VR or Hall input (configurable with few resistor changes)</li>
+          <li>Secondary Hall input</li>
+          <li>4 analog thermistor (temperature) inputs</li>
+          <li>10 analog voltage inputs (0-5v)</li>
+          <li>4 high-Z injector outputs</li>
+          <li>2 high-current low side outputs for IAC/VVT/other solenoids</li>
+          <li>Dedicated main relay control output</li>
+          <li>4 low-current low side outputs for relays or warning lights</li>
+          <li>4 5v logic-level ignition outputs</li>
+          <li>2 logic level outputs (5v/12v configurable, requires resistor changes)</li>
+          <li>Electronic throttle body (drive by wire)</li>
+          <li>CAN connectivity on the plug</li>
+          <li>USB connectivity on the plug</li>
+          <li>SPI and TTL available on PCB</li>
+        </ul>
+        <a class="button button-white" href="https://www.ebay.com/itm/333532119947">Get microRusEFI hardware</a>
+        <a class="button button-white" href="https://github.com/rusefi/rusefi/wiki/microRusEFI-Manual">microRusEFI
+          Manual</a>
+      </div>
+    </div>
+  </div>
+
   <!-- Microrusefi -->
-  <div class="docs-section" id="microrusefi">
+  <!-- <div class="docs-section" id="microrusefi">
     <div class="container">
       <h6 class="docs-header">microRusEFI</h6>
       <img src="images/site/rusefi_mreheader.png" width="100%">
@@ -277,7 +329,7 @@
       <a class="button button-primary" href="https://github.com/rusefi/rusefi/wiki/microRusEFI-Manual">microRusEFI
         Manual</a>
     </div>
-  </div>
+  </div> -->
 
   <div class="docs-section" id="proteus">
     <div class="container">
