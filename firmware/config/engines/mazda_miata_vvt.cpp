@@ -803,7 +803,7 @@ void setMiataNB2_ProteusEngineConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE) 
 
     engineConfiguration->fuelPumpPin = GPIOG_13;
 
-    engineConfiguration->idle.solenoidPin = GPIOG_1;
+    engineConfiguration->idle.solenoidPin = GPIOG_14;  // "Lowside 7"     # pin 7/black35
     engineConfiguration->idle.solenoidFrequency = 300;
 
 
