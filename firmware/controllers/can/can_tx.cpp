@@ -21,13 +21,16 @@ EXTERN_ENGINE;
 
 extern CanSensorBase* cansensors_head;
 
+static uint8_t cylceMask;
+
 CanWrite::CanWrite()
-	: PeriodicController("CAN TX", NORMALPRIO, 50)
+	: PeriodicController("CAN TX", NORMALPRIO, 10)
 {
 }
 
 void CanWrite::PeriodicTask(efitime_t nowNt) {
 	UNUSED(nowNt);
+	static uint16_t cycleCount = 0;
 
 	if (CONFIG(enableVerboseCanTx)) {
 		void sendCanVerbose();
@@ -39,26 +42,51 @@ void CanWrite::PeriodicTask(efitime_t nowNt) {
 	while (current) {
 		current = current->request();
 	}
+	//calculate cycle mask 
+	cylceMask = CAM_10ms;
+	cycleCount++;
+	if (cycleCount % 2) {
+		cycleMask |= CAM_20ms;
+	}
+	if (cycleCount % 5) {
+		cycleMask |= CAM_50ms;
+	}
+	if (cycleCount % 10) {
+		cycleMask |= CAM_100ms;
+	}
+	if (cycleCount % 25) {
+		cycleMask |= CAM_250ms;
+	}
+	if (cycleCount % 50) {
+		cycleMask |= CAM_500ms;
+	}
+	if (cycleCount % 100) {
+		cycleMask |= CAM_1000ms;
+		cycleCount = 0;
+	}
 
 	// Transmit dash data, if enabled
 	switch (CONFIG(canNbcType)) {
 	case CAN_BUS_NBC_BMW:
-		canDashboardBMW();
+		canDashboardBMW(cylceMask);
 		break;
 	case CAN_BUS_NBC_FIAT:
-		canDashboardFiat();
+		canDashboardFiat(cylceMask);
 		break;
 	case CAN_BUS_NBC_VAG:
-		canDashboardVAG();
+		canDashboardVAG(cylceMask);
 		break;
 	case CAN_BUS_MAZDA_RX8:
-		canMazdaRX8();
+		canMazdaRX8(cylceMask);
 		break;
 	case CAN_BUS_W202_C180:
-		canDashboardW202();
+		canDashboardW202(cylceMask);
 		break;
 	case CAN_BUS_BMW_E90:
-		canDashboardBMWE90();
+		canDashboardBMWE90(cylceMask);
+		break;
+	case CAN_BUS_Haltech:
+		canDashboardHaltech(cylceMask);
 		break;
 	default:
 		break;
