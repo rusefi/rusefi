@@ -11,7 +11,6 @@
 #include "engine_ptr.h"
 #include "rusefi_types.h"
 #include "periodic_task.h"
-#include "pid.h"
 
 struct IIdleController {
 	enum class Phase : uint8_t {
@@ -29,12 +28,12 @@ struct IIdleController {
 };
 
 class Logging;
+class Pid;
+
 
 class IdleController : public IIdleController {
 public:
 	DECLARE_ENGINE_PTR;
-
-	void init(pid_s* idlePidConfig);
 
 	float getIdlePosition();
 	void update();
@@ -49,22 +48,10 @@ public:
 	float getCrankingOpenLoop(float clt) const override;
 	float getRunningOpenLoop(float clt, SensorResult tps) const override;
 	float getOpenLoop(Phase phase, float clt, SensorResult tps) const override;
-
-	float getIdleTimingAdjustment(int rpm);
-	float getIdleTimingAdjustment(int rpm, int targetRpm, Phase phase);
-
-private:
-	// These are stored by getIdlePosition() and used by getIdleTimingAdjustment()
-	Phase m_lastPhase = Phase::Cranking;
-	int m_lastTargetRpm = 0;
-
-	Pid m_timingPid;
 };
 
 void updateIdleControl();
 percent_t getIdlePosition();
-
-float getIdleTimingAdjustment(int rpm);
 
 void applyIACposition(percent_t position DECLARE_ENGINE_PARAMETER_SUFFIX);
 void setManualIdleValvePosition(int positionPercent);
