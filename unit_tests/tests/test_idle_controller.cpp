@@ -88,6 +88,16 @@ TEST(idle_v2, timingPid) {
 	// ...but not when disabled
 	engineConfiguration->useIdleTimingPidControl = false;
 	EXPECT_EQ(0, dut.getIdleTimingAdjustment(1050, 1000, ICP::Idling));
+
+	engineConfiguration->useIdleTimingPidControl = true;
+
+	// Now check that the deadzone works
+	engineConfiguration->idleTimingPidDeadZone = 50;
+	EXPECT_FLOAT_EQ(5.1, dut.getIdleTimingAdjustment(949, 1000, ICP::Idling));
+	EXPECT_EQ(0, dut.getIdleTimingAdjustment(951, 1000, ICP::Idling));
+	EXPECT_EQ(0, dut.getIdleTimingAdjustment(1000, 1000, ICP::Idling));
+	EXPECT_EQ(0, dut.getIdleTimingAdjustment(1049, 1000, ICP::Idling));
+	EXPECT_FLOAT_EQ(-5.1, dut.getIdleTimingAdjustment(1051, 1000, ICP::Idling));
 }
 
 TEST(idle_v2, testTargetRpm) {
