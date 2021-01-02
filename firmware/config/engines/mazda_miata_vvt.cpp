@@ -756,13 +756,13 @@ void setMiataNB2_Proteus_TCU(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 void setMiataNB2_ProteusEngineConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
     setMazdaMiataEngineNB2Defaults(PASS_CONFIG_PARAMETER_SIGNATURE);
 
-    engineConfiguration->triggerInputPins[0] = GPIOC_6;
+    engineConfiguration->triggerInputPins[0] = GPIOC_6;                     // pin 10/black23
     engineConfiguration->triggerInputPins[1] = GPIO_UNASSIGNED;
-    engineConfiguration->camInputs[0] = GPIOE_11;
+    engineConfiguration->camInputs[0] = GPIOE_11;                           // pin  1/black23
 
-    engineConfiguration->alternatorControlPin = GPIOA_8;
+    engineConfiguration->alternatorControlPin = GPIOA_8;  // "Highside 2"    # pin 1/black35
 
-    engineConfiguration->auxPidPins[0] = GPIOB_5; // VVT solenoid control
+    engineConfiguration->auxPidPins[0] = GPIOB_5; // VVT solenoid control # pin 8/black35
 
     // high-side driver with +12v VP jumper
     engineConfiguration->tachOutputPin = GPIOA_9; // tachometer
@@ -779,10 +779,10 @@ void setMiataNB2_ProteusEngineConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE) 
     engineConfiguration->injectionMode = IM_SEQUENTIAL;
 
 
-    engineConfiguration->injectionPins[0] = GPIOD_7; // BLU
-    engineConfiguration->injectionPins[1] = GPIOG_9; // BLK
-    engineConfiguration->injectionPins[2] = GPIOG_10; // GRN
-    engineConfiguration->injectionPins[3] = GPIOG_11; // WHT
+    engineConfiguration->injectionPins[0] = GPIOD_7;  // BLU  # pin 3/black35
+    engineConfiguration->injectionPins[1] = GPIOG_9;  // BLK  # pin 15/black35
+    engineConfiguration->injectionPins[2] = GPIOG_10; // GRN  # pin 4/black35
+    engineConfiguration->injectionPins[3] = GPIOG_11; // WHT  # pin 16/black35
     engineConfiguration->injectionPinMode = OM_DEFAULT;
 
 
@@ -803,7 +803,7 @@ void setMiataNB2_ProteusEngineConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE) 
 
     engineConfiguration->fuelPumpPin = GPIOG_13;
 
-    engineConfiguration->idle.solenoidPin = GPIOG_1;
+    engineConfiguration->idle.solenoidPin = GPIOG_14;  // "Lowside 7"     # pin 7/black35
     engineConfiguration->idle.solenoidFrequency = 300;
 
 
