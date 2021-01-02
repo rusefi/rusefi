@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Fri Jan 01 16:20:13 UTC 2021
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Sat Jan 02 21:45:01 UTC 2021
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -3365,17 +3365,14 @@ struct engine_configuration_s {
 	 */
 	float etbIdleThrottleRange;
 	/**
+	 * Select which fuel correction bank this cylinder belongs to. Group cylinders that share the same O2 sensor
 	 * offset 4016
 	 */
-	uint8_t unusedvref[4];
+	uint8_t cylinderBankSelect[INJECTION_PIN_COUNT];
 	/**
-	 * offset 4020
+	 * offset 4028
 	 */
-	uint8_t unusedsw[4];
-	/**
-	 * offset 4024
-	 */
-	int unused_alFIn[3];
+	int unused4028[2];
 	/**
 	 * Trigger comparator center point voltage
 	 * offset 4036
@@ -3783,4 +3780,4 @@ struct persistent_config_s {
 typedef struct persistent_config_s persistent_config_s;
 
 // end
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Fri Jan 01 16:20:13 UTC 2021
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Sat Jan 02 21:45:01 UTC 2021
