@@ -186,6 +186,8 @@ typedef enum {
 
 	PROTEUS_MIATA_NB2 = ET_PROTEUS_MIATA_NB2,
 
+	HELLEN_NB2 = ET_HELLEN_NB2,
+
 
 	/**
 	 * this configuration has as few pins configured as possible
@@ -892,6 +894,7 @@ typedef enum {
 	CAN_BUS_NBC_BMW = 4,
 	CAN_BUS_W202_C180 = 5,
     CAN_BUS_BMW_E90 = 6,
+	CAN_BUS_Haltech = 7,
 	Internal_ForceMyEnumIntSize_can_nbc = ENUM_32_BITS,
 } can_nbc_e;
 
