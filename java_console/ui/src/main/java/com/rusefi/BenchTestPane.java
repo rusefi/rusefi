@@ -128,7 +128,7 @@ public class BenchTestPane {
     }
 
     private Component createSolenoidTest() {
-        final JComboBox<Integer> indexes = createIndexCombo(TCU_SOLENOID_COUNT);
+        final JComboBox<Integer> indexes = createIndexCombo(Fields.TCU_SOLENOID_COUNT);
         CommandControl panel = new CommandControl(uiContext,"TCU Solenoid #", "solenoid.jpg", TEST, indexes) {
             @Override
             protected String getCommand() {
