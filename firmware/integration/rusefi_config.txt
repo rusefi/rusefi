@@ -429,6 +429,8 @@ end_struct
 ! todo https://github.com/rusefi/rusefi/issues/2102
 #define DBG_DBG_LOGIC_ANALYZER 45
 
+! todo https://github.com/rusefi/rusefi/issues/2102
+#define IM_IM_SINGLE_POINT 3
 
 ! todo https://github.com/rusefi/rusefi/issues/2102
 #define ET_DODGE_NEON_1995 2
