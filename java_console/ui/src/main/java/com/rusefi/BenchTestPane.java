@@ -128,8 +128,8 @@ public class BenchTestPane {
     }
 
     private Component createSolenoidTest() {
-        final JComboBox<Integer> tcuSolIndexes = createIndexCombo(6);
-        CommandControl panel = new CommandControl(uiContext,"TCU Solenoid #", "injector.png", TEST, tcuSolIndexes) {
+        final JComboBox<Integer> indexes = createIndexCombo(6);
+        CommandControl panel = new CommandControl(uiContext,"TCU Solenoid #", "injector.png", TEST, indexes) {
             @Override
             protected String getCommand() {
                 return "tcusolbench 1000 " + indexes.getSelectedItem() + " 1000 1000 3";
