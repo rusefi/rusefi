@@ -52,6 +52,7 @@
 #include "engine.h"
 #include "perf_trace.h"
 #include "sensor.h"
+#include "injector_model.h"
 #if EFI_LAUNCH_CONTROL
 #include "launch_control.h"
 #endif
@@ -203,13 +204,11 @@ void InjectionEvent::onTriggerTooth(size_t trgEventIndex, int rpm, efitick_t now
 		return;
 	}
 
-	/**
-	 * todo: this is a bit tricky with batched injection. is it? Does the same
-	 * wetting coefficient works the same way for any injection mode, or is something
-	 * x2 or /2?
-	 */
+	// Perform wall wetting adjustment on fuel mass, not duration, so that
+	// it's correct during fuel pressure transients
+	const float injectionMass = wallFuel.adjust(ENGINE(injectionMass) PASS_ENGINE_PARAMETER_SUFFIX);
+	const floatms_t injectionDuration = ENGINE(injectorModel)->getInjectionDuration(injectionMass);
 
-	const floatms_t injectionDuration = wallFuel.adjust(ENGINE(injectionDuration) PASS_ENGINE_PARAMETER_SUFFIX);
 #if EFI_PRINTF_FUEL_DETAILS
 	if (printFuelDebug) {
 		printf("fuel index=%d injectionDuration=%.2fms adjusted=%.2fms\n",
