@@ -541,7 +541,7 @@ static void showMainInfo(Engine *engine) {
 	int rpm = GET_RPM();
 	float el = getFuelingLoad(PASS_ENGINE_PARAMETER_SIGNATURE);
 	scheduleMsg(logger, "rpm %d engine_load %.2f", rpm, el);
-	scheduleMsg(logger, "fuel %.2fms timing %.2f", getInjectionDuration(rpm PASS_ENGINE_PARAMETER_SUFFIX), engine->engineState.timingAdvance);
+	scheduleMsg(logger, "fuel %.2fms timing %.2f", ENGINE(injectionDuration), engine->engineState.timingAdvance);
 #endif /* EFI_PROD_CODE */
 }
 
