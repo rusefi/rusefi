@@ -423,7 +423,7 @@ void setMiataNA6_MAP_MRE(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	engineConfiguration->idleTimingPid.dFactor = 0.0;
 	engineConfiguration->idleTimingPid.minValue = -13;
 	engineConfiguration->idleTimingPid.maxValue = 13;
-
+	engineConfiguration->idleTimingPidDeadZone = 10;
 
 	// EFI_ADC_3: "22 - AN temp 4"
 	engineConfiguration->acSwitch = GPIOA_6;
