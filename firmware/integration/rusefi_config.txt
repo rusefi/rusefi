@@ -1427,9 +1427,9 @@ tChargeMode_e tChargeMode;
 
 	float etbIdleThrottleRange; ETB idle authority; "%", 1, 0, 0, 15, 0
 
-uint8_t[4] unusedvref;;"units", 1, 0, -20, 100, 0
-uint8_t[4] unusedsw;;"units", 1, 0, -20, 100, 0
-	int[3] unused_alFIn;;"units", 1, 0, -20, 100, 0
+	uint8_t[INJECTION_PIN_COUNT iterate] cylinderBankSelect;+Select which fuel correction bank this cylinder belongs to.  Group cylinders that share the same O2 sensor; "", 1, 1, 1, 2, 0
+
+	int[2] unused4028;;"units", 1, 0, -20, 100, 0
 
 	uint8_t triggerCompCenterVolt;+Trigger comparator center point voltage;"V",        @@VOLTAGE_1_BYTE_PACKING_DIV@@,     0,      0.0,   5.1,   2
 	uint8_t triggerCompHystMin;+Trigger comparator hysteresis voltage (Min);"V",        @@VOLTAGE_1_BYTE_PACKING_DIV@@,     0,      0.0,   5.1,   2
