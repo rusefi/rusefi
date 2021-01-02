@@ -28,6 +28,7 @@ public class BenchTestPane {
         content.add(createFuelPumpTest());
         content.add(createSparkTest());
         content.add(createInjectorTest());
+        content.add(createSolenoidTest());
         content.add(createMILTest());
         content.add(createIdleTest());
         content.add(createStarterTest());
