@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEfi tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Fri Jan 01 16:20:01 UTC 2021
+// this file was generated automatically by rusEfi tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Sat Jan 02 14:16:01 UTC 2021
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -320,6 +320,18 @@ public class Fields {
 	public static final String CRITICAL_PREFIX = "CRITICAL";
 	public static final int cutFuelOnHardLimit_offset = 1464;
 	public static final int cutSparkOnHardLimit_offset = 1464;
+	public static final int cylinderBankSelect10_offset = 4025;
+	public static final int cylinderBankSelect11_offset = 4026;
+	public static final int cylinderBankSelect12_offset = 4027;
+	public static final int cylinderBankSelect1_offset = 4016;
+	public static final int cylinderBankSelect2_offset = 4017;
+	public static final int cylinderBankSelect3_offset = 4018;
+	public static final int cylinderBankSelect4_offset = 4019;
+	public static final int cylinderBankSelect5_offset = 4020;
+	public static final int cylinderBankSelect6_offset = 4021;
+	public static final int cylinderBankSelect7_offset = 4022;
+	public static final int cylinderBankSelect8_offset = 4023;
+	public static final int cylinderBankSelect9_offset = 4024;
 	public static final int cylinderBore_offset = 408;
 	public static final int cylindersCount_offset = 400;
 	public static final int DBG_DBG_LOGIC_ANALYZER = 45;
@@ -1182,6 +1194,7 @@ public class Fields {
 	public static final int servoOutputPins8_offset = 3147;
 	public static final int showHumanReadableWarning_offset = 976;
 	public static final int showSdCardWarning_offset = 76;
+	public static final int SIGNATURE_HASH = 2129325233;
 	public static final int silentTriggerError_offset = 1464;
 	public static final int slowAdcAlpha_offset = 2088;
 	public static final int sparkDwellRpmBins_offset = 332;
@@ -1462,7 +1475,7 @@ public class Fields {
 	public static final char TS_SD_R_COMMAND = 'r';
 	public static final char TS_SD_W_COMMAND = 'w';
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI 2021.01.01.all.2718166867";
+	public static final String TS_SIGNATURE = "rusEFI 2021.01.02.all.2129325233";
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final int TT_TT_1_16 = 50;
 	public static final int TT_TT_2JZ_1_12 = 29;
@@ -1526,6 +1539,7 @@ public class Fields {
 	public static final int unused2508_offset = 2508;
 	public static final int unused2536_offset = 2536;
 	public static final int unused3328_offset = 3328;
+	public static final int unused4028_offset = 4028;
 	public static final int unused541_offset = 541;
 	public static final int unused542_offset = 542;
 	public static final int unused6312_offset = 6312;
@@ -1540,7 +1554,6 @@ public class Fields {
 	public static final int unused_1484_bit_29_offset = 1476;
 	public static final int unused_1484_bit_30_offset = 1476;
 	public static final int unused_1484_bit_31_offset = 1476;
-	public static final int unused_alFIn_offset = 4024;
 	public static final int unusedAtOldBoardConfigurationEnd_offset = 1204;
 	public static final int unusedAuxVoltage1_TODO_332_offset = 2713;
 	public static final int unusedAuxVoltage2_TODO_332_offset = 2714;
@@ -1580,8 +1593,6 @@ public class Fields {
 	public static final int unusedSpiPadding4_offset = 2593;
 	public static final int unusedSpiPadding5_offset = 2715;
 	public static final int unusedSpiPadding8_offset = 4009;
-	public static final int unusedsw_offset = 4020;
-	public static final int unusedvref_offset = 4016;
 	public static final int useAdvanceCorrectionsForCranking_offset = 1476;
 	public static final int useCicPidForIdle_offset = 76;
 	public static final int useConstantDwellDuringCranking_offset = 1464;
@@ -2634,6 +2645,18 @@ public class Fields {
 	public static final Field IDLERPMPID_ITERMMAX = Field.create("IDLERPMPID_ITERMMAX", 4006, FieldType.INT16);
 	public static final Field MC33972SPIDEVICE = Field.create("MC33972SPIDEVICE", 4008, FieldType.INT8);
 	public static final Field ETBIDLETHROTTLERANGE = Field.create("ETBIDLETHROTTLERANGE", 4012, FieldType.FLOAT);
+	public static final Field CYLINDERBANKSELECT1 = Field.create("CYLINDERBANKSELECT1", 4016, FieldType.INT8);
+	public static final Field CYLINDERBANKSELECT2 = Field.create("CYLINDERBANKSELECT2", 4017, FieldType.INT8);
+	public static final Field CYLINDERBANKSELECT3 = Field.create("CYLINDERBANKSELECT3", 4018, FieldType.INT8);
+	public static final Field CYLINDERBANKSELECT4 = Field.create("CYLINDERBANKSELECT4", 4019, FieldType.INT8);
+	public static final Field CYLINDERBANKSELECT5 = Field.create("CYLINDERBANKSELECT5", 4020, FieldType.INT8);
+	public static final Field CYLINDERBANKSELECT6 = Field.create("CYLINDERBANKSELECT6", 4021, FieldType.INT8);
+	public static final Field CYLINDERBANKSELECT7 = Field.create("CYLINDERBANKSELECT7", 4022, FieldType.INT8);
+	public static final Field CYLINDERBANKSELECT8 = Field.create("CYLINDERBANKSELECT8", 4023, FieldType.INT8);
+	public static final Field CYLINDERBANKSELECT9 = Field.create("CYLINDERBANKSELECT9", 4024, FieldType.INT8);
+	public static final Field CYLINDERBANKSELECT10 = Field.create("CYLINDERBANKSELECT10", 4025, FieldType.INT8);
+	public static final Field CYLINDERBANKSELECT11 = Field.create("CYLINDERBANKSELECT11", 4026, FieldType.INT8);
+	public static final Field CYLINDERBANKSELECT12 = Field.create("CYLINDERBANKSELECT12", 4027, FieldType.INT8);
 	public static final Field TRIGGERCOMPCENTERVOLT = Field.create("TRIGGERCOMPCENTERVOLT", 4036, FieldType.INT8);
 	public static final Field TRIGGERCOMPHYSTMIN = Field.create("TRIGGERCOMPHYSTMIN", 4037, FieldType.INT8);
 	public static final Field TRIGGERCOMPHYSTMAX = Field.create("TRIGGERCOMPHYSTMAX", 4038, FieldType.INT8);
@@ -3698,6 +3721,18 @@ public class Fields {
 	IDLERPMPID_ITERMMAX,
 	MC33972SPIDEVICE,
 	ETBIDLETHROTTLERANGE,
+	CYLINDERBANKSELECT1,
+	CYLINDERBANKSELECT2,
+	CYLINDERBANKSELECT3,
+	CYLINDERBANKSELECT4,
+	CYLINDERBANKSELECT5,
+	CYLINDERBANKSELECT6,
+	CYLINDERBANKSELECT7,
+	CYLINDERBANKSELECT8,
+	CYLINDERBANKSELECT9,
+	CYLINDERBANKSELECT10,
+	CYLINDERBANKSELECT11,
+	CYLINDERBANKSELECT12,
 	TRIGGERCOMPCENTERVOLT,
 	TRIGGERCOMPHYSTMIN,
 	TRIGGERCOMPHYSTMAX,

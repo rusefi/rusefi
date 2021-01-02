@@ -330,6 +330,18 @@
 #define CRITICAL_PREFIX "CRITICAL"
 #define cutFuelOnHardLimit_offset 1464
 #define cutSparkOnHardLimit_offset 1464
+#define cylinderBankSelect10_offset 4025
+#define cylinderBankSelect11_offset 4026
+#define cylinderBankSelect12_offset 4027
+#define cylinderBankSelect1_offset 4016
+#define cylinderBankSelect2_offset 4017
+#define cylinderBankSelect3_offset 4018
+#define cylinderBankSelect4_offset 4019
+#define cylinderBankSelect5_offset 4020
+#define cylinderBankSelect6_offset 4021
+#define cylinderBankSelect7_offset 4022
+#define cylinderBankSelect8_offset 4023
+#define cylinderBankSelect9_offset 4024
 #define cylinderBore_offset 408
 #define cylindersCount_offset 400
 #define DBG_DBG_LOGIC_ANALYZER 45
@@ -1227,8 +1239,8 @@
 #define showHumanReadableWarning_offset 976
 #define showSdCardWarning_offset 76
 #define SIGNATURE_BOARD all
-#define SIGNATURE_DATE 2021.01.01
-#define SIGNATURE_HASH 2718166867
+#define SIGNATURE_DATE 2021.01.02
+#define SIGNATURE_HASH 2129325233
 #define silentTriggerError_offset 1464
 #define slowAdcAlpha_offset 2088
 #define sparkDwellRpmBins_offset 332
@@ -1559,7 +1571,7 @@
 #define ts_show_spi true
 #define ts_show_trigger_comparator false
 #define ts_show_tunerstudio_port true
-#define TS_SIGNATURE "rusEFI 2021.01.01.all.2718166867"
+#define TS_SIGNATURE "rusEFI 2021.01.02.all.2129325233"
 #define TS_SINGLE_WRITE_COMMAND 'W'
 #define TS_SINGLE_WRITE_COMMAND_char W
 #define TS_TEST_COMMAND 't' // 0x74
@@ -1626,6 +1638,7 @@
 #define unused2508_offset 2508
 #define unused2536_offset 2536
 #define unused3328_offset 3328
+#define unused4028_offset 4028
 #define unused541_offset 541
 #define unused542_offset 542
 #define unused6312_offset 6312
@@ -1640,7 +1653,6 @@
 #define unused_1484_bit_29_offset 1476
 #define unused_1484_bit_30_offset 1476
 #define unused_1484_bit_31_offset 1476
-#define unused_alFIn_offset 4024
 #define unusedAtOldBoardConfigurationEnd_offset 1204
 #define unusedAuxVoltage1_TODO_332_offset 2713
 #define unusedAuxVoltage2_TODO_332_offset 2714
@@ -1680,8 +1692,6 @@
 #define unusedSpiPadding4_offset 2593
 #define unusedSpiPadding5_offset 2715
 #define unusedSpiPadding8_offset 4009
-#define unusedsw_offset 4020
-#define unusedvref_offset 4016
 #define useAdvanceCorrectionsForCranking_offset 1476
 #define useCicPidForIdle_offset 76
 #define useConstantDwellDuringCranking_offset 1464
