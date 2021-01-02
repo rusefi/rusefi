@@ -1,3 +1,7 @@
+Jan, 2 2021 status
+* We had GDI vehicle start & idle! GDI effort is now suspected since too many projects in the works.
+* TCU first real hardware test was not a success
+
 Nov, 18 2020 status
 * GDI test mule was damaged during GDI tests
 * Matt is working on fueling, wideband and knock detection logic
