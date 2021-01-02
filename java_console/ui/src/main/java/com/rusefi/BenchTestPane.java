@@ -106,7 +106,7 @@ public class BenchTestPane {
     }
 
     private Component createSparkTest() {
-        final JComboBox<Integer> indexes = createIndexCombo();
+        final JComboBox<Integer> indexes = createIndexCombo(12);
         CommandControl panel = new CommandControl(uiContext,"Spark #", "spark.jpg", TEST, indexes) {
             @Override
             protected String getCommand() {
@@ -117,7 +117,7 @@ public class BenchTestPane {
     }
 
     private Component createInjectorTest() {
-        final JComboBox<Integer> indexes = createIndexCombo();
+        final JComboBox<Integer> indexes = createIndexCombo(12);
         CommandControl panel = new CommandControl(uiContext,"Injector #", "injector.png", TEST, indexes) {
             @Override
             protected String getCommand() {
@@ -128,8 +128,8 @@ public class BenchTestPane {
     }
 
     private Component createSolenoidTest() {
-        final JComboBox<Integer> indexes = createIndexCombo();
-        CommandControl panel = new CommandControl(uiContext,"TCU Solenoid #", "injector.png", TEST, indexes) {
+        final JComboBox<Integer> tcuSolIndexes = createIndexCombo(6);
+        CommandControl panel = new CommandControl(uiContext,"TCU Solenoid #", "injector.png", TEST, tcuSolIndexes) {
             @Override
             protected String getCommand() {
                 return "tcusolbench 1000 " + indexes.getSelectedItem() + " 1000 1000 3";
@@ -139,9 +139,9 @@ public class BenchTestPane {
     }
 
     @NotNull
-    private JComboBox<Integer> createIndexCombo() {
+    private JComboBox<Integer> createIndexCombo(Integer count) {
         JComboBox<Integer> indexes = new JComboBox<>();
-        for (int i = 1; i <= 12; i++) {
+        for (int i = 1; i <= count; i++) {
             indexes.addItem(i);
         }
         return indexes;
