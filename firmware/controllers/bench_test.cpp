@@ -429,6 +429,7 @@ void initBenchTest(Logging *sharedLogger) {
 	addConsoleAction(CMD_HPFP_BENCH, hpfpValveBench);
 
 	addConsoleActionSSSSS("fuelbench2", fuelbench2);
+	addConsoleActionSSSSS("tcusolbench", tcusolbench);
 	addConsoleActionSSSSS("fsiobench2", fsioBench2);
 	addConsoleActionSSSSS("sparkbench2", sparkbench2);
 	instance.setPeriod(200 /*ms*/);
