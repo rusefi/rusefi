@@ -32,7 +32,8 @@ jobs:
       if: ${{ matrix.os != 'macos-latest' }}
       run: sudo apt-get install -y gcc-8
 
-    - name: Print GCC version
+    - name: Print Compiler version
+      # NOTE: on mac, this is actually symlink'd to clang, not gcc, but that's ok - we want to build on both
       working-directory: .
       run: gcc -v
 
