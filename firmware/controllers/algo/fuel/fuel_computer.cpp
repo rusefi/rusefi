@@ -45,7 +45,8 @@ float FuelComputer::getTargetLambdaLoadAxis(float defaultLoad) const {
 float getLoadOverride(float defaultLoad, afr_override_e overrideMode DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	switch(overrideMode) {
 		case AFR_None: return defaultLoad;
-		case AFR_MAP: return getMap(PASS_ENGINE_PARAMETER_SIGNATURE);
+		// MAP default to 200kpa - failed MAP goes rich
+		case AFR_MAP: return Sensor::get(SensorType::Map).value_or(200);
 		// TPS/pedal default to 100% - failed TPS goes rich
 		case AFR_Tps: return Sensor::get(SensorType::Tps1).value_or(100);
 		case AFR_AccPedal: return Sensor::get(SensorType::AcceleratorPedal).value_or(100);
