@@ -50,10 +50,10 @@ EXTERN_ENGINE;
 #define CAN_VAG_IMMO 		0x3D0	/* 10ms cycle time */
 
 //w202 DASH
-#define W202_STAT_1			0x308
-#define W202_STAT_2 		0x608
-#define W202_ALIVE			0x210
-#define W202_STAT_3 		0x310
+#define W202_STAT_1			0x308	/* 20ms cycle time  */
+#define W202_STAT_2 		0x608	/* 100ms cycle time */
+#define W202_ALIVE			0x210	/* 200ms cycle time */
+#define W202_STAT_3 		0x310	/* 200ms cycle time */
 
 //BMW E90 DASH
 #define E90_ABS_COUNTER 		0x0C0
@@ -82,7 +82,7 @@ static bool cluster_time_set;
 constexpr uint8_t e90_temp_offset = 49;
 
 
-void canDashboardBMW(uint8_t cycle) {
+void canDashboardBMW(uint16_t cycle) {
 
 	//BMW Dashboard
 	if ((cycle&CAM_50ms)==CAM_50ms) { 
@@ -101,7 +101,7 @@ void canDashboardBMW(uint8_t cycle) {
 	}
 }
 
-void canMazdaRX8(uint8_t cycle) {
+void canMazdaRX8(uint16_t cycle) {
 	if ((cycle&CAM_50ms)==CAM_50ms) {
 		CanTxMessage msg(CAN_MAZDA_RX_STEERING_WARNING);
 		// todo: something needs to be set here? see http://rusefi.com/wiki/index.php?title=Vehicle:Mazda_Rx8_2004
@@ -153,7 +153,7 @@ void canMazdaRX8(uint8_t cycle) {
 	}
 }
 
-void canDashboardFiat(uint8_t cycle) {
+void canDashboardFiat(uint16_t cycle) {
 	if ((cycle&CAM_50ms)==CAM_50ms) {
 		//Fiat Dashboard
 		CanTxMessage msg(CAN_FIAT_MOTOR_INFO);
@@ -165,7 +165,7 @@ void canDashboardFiat(uint8_t cycle) {
 /**
  * All messages used by this VAG dash are 10ms cycle time so we always send them all out.
  */
-void canDashboardVAG(uint8_t cycle) {
+void canDashboardVAG(uint16_t cycle) {
 
 	if ((cycle&CAM_50ms)==CAM_50ms) {
 		//VAG Dashboard
@@ -191,7 +191,7 @@ void canDashboardVAG(uint8_t cycle) {
 	}
 }
 
-void canDashboardW202(uint8_t cycle) {
+void canDashboardW202(uint16_t cycle) {
 	if ((cycle&CAM_50ms)==CAM_50ms) {
 		CanTxMessage msg(W202_STAT_1);
 		uint16_t tmp = GET_RPM();
@@ -242,7 +242,7 @@ void canDashboardW202(uint8_t cycle) {
 	}
 }
 
-void canDashboardBMWE90(uint8_t cycle) {
+void canDashboardBMWE90(uint16_t cycle) {
 
 	//T15 'turn-on'
 	if((cycle&CAM_50ms)==CAM_50ms) { 
@@ -393,8 +393,83 @@ void canDashboardBMWE90(uint8_t cycle) {
 	}
 }
 
-void canDashboardHaltech(uint8_t cycle) {
-	UNUSED(cycle);
+void canDashboardHaltech(uint16_t cycle) {
+	
+	if((cycle&CAM_5ms)==CAM_5ms) { 
+		CanTxMessage msg(0x5, 5);
+		msg[0] = 0x45;
+		msg[1] = 0x41;
+		msg[2] = 0x61;
+		msg[3] = 0x8F;
+		msg[4] = 0xFC;			
+	}
+	if((cycle&CAM_10ms)==CAM_10ms) { 
+		CanTxMessage msg(0x10, 5);
+		msg[0] = 0x45;
+		msg[1] = 0x41;
+		msg[2] = 0x61;
+		msg[3] = 0x8F;
+		msg[4] = 0xFC;			
+	}
+	if((cycle&CAM_20ms)==CAM_20ms) { 
+		CanTxMessage msg(0x20, 5);
+		msg[0] = 0x45;
+		msg[1] = 0x41;
+		msg[2] = 0x61;
+		msg[3] = 0x8F;
+		msg[4] = 0xFC;			
+	}
+	if((cycle&CAM_50ms)==CAM_50ms) { 
+		CanTxMessage msg(0x50, 5);
+		msg[0] = 0x45;
+		msg[1] = 0x41;
+		msg[2] = 0x61;
+		msg[3] = 0x8F;
+		msg[4] = 0xFC;			
+	}
+
+
+	if((cycle&CAM_100ms)==CAM_100ms) { 
+		CanTxMessage msg(0x100, 5);
+		msg[0] = 0x45;
+		msg[1] = 0x41;
+		msg[2] = 0x61;
+		msg[3] = 0x8F;
+		msg[4] = 0xFC;			
+	}
+	if((cycle&CAM_200ms)==CAM_200ms) { 
+		CanTxMessage msg(0x200, 5);
+		msg[0] = 0x45;
+		msg[1] = 0x41;
+		msg[2] = 0x61;
+		msg[3] = 0x8F;
+		msg[4] = 0xFC;			
+	}
+	if((cycle&CAM_250ms)==CAM_250ms) { 
+		CanTxMessage msg(0x250, 5);
+		msg[0] = 0x45;
+		msg[1] = 0x41;
+		msg[2] = 0x61;
+		msg[3] = 0x8F;
+		msg[4] = 0xFC;			
+	}
+	if((cycle&CAM_500ms)==CAM_500ms) { 
+		CanTxMessage msg(0x500, 5);
+		msg[0] = 0x45;
+		msg[1] = 0x41;
+		msg[2] = 0x61;
+		msg[3] = 0x8F;
+		msg[4] = 0xFC;			
+	}
+	if((cycle&CAM_1000ms)==CAM_1000ms) { 
+		CanTxMessage msg(0x700, 5);
+		msg[0] = 0x45;
+		msg[1] = 0x41;
+		msg[2] = 0x61;
+		msg[3] = 0x8F;
+		msg[4] = 0xFC;			
+	}
+
 }
 
 #endif // EFI_CAN_SUPPORT

@@ -228,7 +228,11 @@ void initCan(void) {
 
 	// fire up threads, as necessary
 	if (CONFIG(canWriteEnabled)) {
-		canWrite.setPeriod(CONFIG(canSleepPeriodMs));
+		/**
+		 * We use 5ms cycle time to ensure cyclic messages on time, user should not redefine this.
+		 * Config for periodic TX applyes only for verbose (broadcast).
+		 */
+		canWrite.setPeriod(5);
 		canWrite.Start();
 	}
 

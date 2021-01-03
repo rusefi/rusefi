@@ -23,16 +23,17 @@ extern CanSensorBase* cansensors_head;
 
 
 CanWrite::CanWrite()
-	: PeriodicController("CAN TX", NORMALPRIO, 10)
+	: PeriodicController("CAN TX", NORMALPRIO, 200)
 {
 }
 
 void CanWrite::PeriodicTask(efitime_t nowNt) {
 	UNUSED(nowNt);
 	static uint16_t cycleCount = 0;
-	uint8_t cycleMask;
+	uint16_t cycleMask;
 
 	if (CONFIG(enableVerboseCanTx)) {
+		/* CONFIG(canSleepPeriodMs) */
 		void sendCanVerbose();
 		sendCanVerbose();
 	}
@@ -42,25 +43,29 @@ void CanWrite::PeriodicTask(efitime_t nowNt) {
 	while (current) {
 		current = current->request();
 	}
+
 	//calculate cycle mask 
-	cycleMask = CAM_10ms;
+	cycleMask = CAM_5ms;
 	cycleCount++;
-	if (cycleCount % 2) {
-		cycleMask |= CAM_20ms;
+	if ((cycleCount % 2) == 0) {
+		cycleMask |= CAM_10ms;
 	}
-	if (cycleCount % 5) {
+	if ((cycleCount % 10) == 0) {
 		cycleMask |= CAM_50ms;
 	}
-	if (cycleCount % 10) {
+	if ((cycleCount % 20) == 0) {
 		cycleMask |= CAM_100ms;
 	}
-	if (cycleCount % 25) {
+	if ((cycleCount % 40) == 0) {
+		cycleMask |= CAM_200ms;
+	}
+	if ((cycleCount % 50) == 0) {
 		cycleMask |= CAM_250ms;
 	}
-	if (cycleCount % 50) {
+	if ((cycleCount % 100) == 0) {
 		cycleMask |= CAM_500ms;
 	}
-	if (cycleCount % 100) {
+	if ((cycleCount % 200) == 0) {
 		cycleMask |= CAM_1000ms;
 		cycleCount = 0;
 	}
