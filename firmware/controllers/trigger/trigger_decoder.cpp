@@ -143,6 +143,7 @@ void calculateTriggerSynchPoint(
 
 	efiAssertVoid(CUSTOM_SHAPE_LEN_ZERO, length > 0, "shapeLength=0");
 	if (length >= PWM_PHASE_MAX_COUNT) {
+		// todo: by the time we are here we had already modified a lot of RAM out of bounds!
 		firmwareError(CUSTOM_ERR_TRIGGER_WAVEFORM_TOO_LONG, "Trigger length above maximum: %d", length);
 		shape.setShapeDefinitionError(true);
 		return;
