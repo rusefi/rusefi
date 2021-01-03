@@ -786,6 +786,8 @@ void setMiataNB2_ProteusEngineConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE) 
     engineConfiguration->injectionPinMode = OM_DEFAULT;
 
 
+    CONFIG(enableSoftwareKnock) = true;
+
     engineConfiguration->malfunctionIndicatorPin = GPIOB_6;
 
     engineConfiguration->map.sensor.hwChannel = EFI_ADC_10;
@@ -801,13 +803,15 @@ void setMiataNB2_ProteusEngineConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE) 
     engineConfiguration->clt.adcChannel =  EFI_ADC_14;
     engineConfiguration->iat.adcChannel = EFI_ADC_8;
 
-    engineConfiguration->fuelPumpPin = GPIOG_13;
+    engineConfiguration->fuelPumpPin = GPIOG_13;// "Lowside 6"     # pin 6/black35
 
     engineConfiguration->idle.solenoidPin = GPIOG_14;  // "Lowside 7"     # pin 7/black35
     engineConfiguration->idle.solenoidFrequency = 300;
 
 
     engineConfiguration->fanPin = GPIOB_7;
+
+	CONFIG(mainRelayPin) = GPIOG_12;// "Lowside 5"     # pin 5/black35
 
 
 }
