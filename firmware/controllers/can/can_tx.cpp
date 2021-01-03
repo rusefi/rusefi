@@ -31,11 +31,14 @@ void CanWrite::PeriodicTask(efitime_t nowNt) {
 	UNUSED(nowNt);
 	static uint16_t cycleCount = 0;
 	uint16_t cycleMask;
+	
 
 	if (CONFIG(enableVerboseCanTx)) {
-		/* CONFIG(canSleepPeriodMs) */
-		void sendCanVerbose();
-		sendCanVerbose();
+		uint16_t period = CONFIG(canSleepPeriodMs)/5;
+		if ((cycleCount%period) == 0) {
+			void sendCanVerbose();
+			sendCanVerbose();
+		}
 	}
 
 	CanSensorBase* current = cansensors_head;

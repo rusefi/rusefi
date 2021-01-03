@@ -167,32 +167,32 @@ void canDashboardFiat(uint16_t cycle) {
  */
 void canDashboardVAG(uint16_t cycle) {
 
-	if ((cycle&CAM_50ms)==CAM_50ms) {
+	if ((cycle&CAM_10ms)==CAM_10ms) {
 		//VAG Dashboard
 		CanTxMessage msg(CAN_VAG_RPM);
 		msg.setShortValue(GET_RPM() * 4, 2); //RPM
 	}
 
-	if ((cycle&CAM_50ms)==CAM_50ms) {
+	if ((cycle&CAM_10ms)==CAM_10ms) {
 		float clt = Sensor::get(SensorType::Clt).value_or(0);
 		CanTxMessage msg(CAN_VAG_CLT);
 		msg.setShortValue((int) ((clt + 48.373) / 0.75), 1); //Coolant Temp
 	}
 
-	if ((cycle&CAM_50ms)==CAM_50ms) {
+	if ((cycle&CAM_10ms)==CAM_10ms) {
 		float clt = Sensor::get(SensorType::Clt).value_or(0);
 		CanTxMessage msg(CAN_VAG_CLT_V2);
 		msg.setShortValue((int) ((clt + 48.373) / 0.75), 4); //Coolant Temp
 	}
 
-	if ((cycle&CAM_50ms)==CAM_50ms) {
+	if ((cycle&CAM_10ms)==CAM_10ms) {
 		CanTxMessage msg(CAN_VAG_IMMO);
 		msg.setShortValue(0x80, 1);
 	}
 }
 
 void canDashboardW202(uint16_t cycle) {
-	if ((cycle&CAM_50ms)==CAM_50ms) {
+	if ((cycle&CAM_20ms)==CAM_20ms) {
 		CanTxMessage msg(W202_STAT_1);
 		uint16_t tmp = GET_RPM();
 		msg[0] = 0x08; // Unknown
@@ -205,7 +205,7 @@ void canDashboardW202(uint16_t cycle) {
 		msg[7] = 0x00; // Unknown - oil info
 	}
 
-	if ((cycle&CAM_50ms)==CAM_50ms) {
+	if ((cycle&CAM_100ms)==CAM_100ms) {
 		CanTxMessage msg(W202_STAT_2,7,false); //dlc 7
 		msg[0] = (int)(Sensor::get(SensorType::Clt).value_or(0) + 40); // CLT -40 offset
 		msg[1] = 0x3D; // TBD
@@ -217,7 +217,7 @@ void canDashboardW202(uint16_t cycle) {
 		msg[7] = 0x00; // Unknown
 	}
 
-	if ((cycle&CAM_50ms)==CAM_50ms) {
+	if ((cycle&CAM_200ms)==CAM_200ms) {
 		CanTxMessage msg(W202_ALIVE);
 		msg[0] = 0x0A; // Const
 		msg[1] = 0x18; // Const
@@ -229,7 +229,7 @@ void canDashboardW202(uint16_t cycle) {
 		msg[7] = 0x00; // Const
 	}	
 
-	if ((cycle&CAM_50ms)==CAM_50ms) {
+	if ((cycle&CAM_200ms)==CAM_200ms) {
 		CanTxMessage msg(W202_STAT_3);
 		msg[0] = 0x00; // Const
 		msg[1] = 0x00; // Const
