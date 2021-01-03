@@ -586,7 +586,7 @@ void canDashboardHaltech(uint16_t cycle) {
 
 	/* 0x36F = 20Hz rate */
 	if((cycle&CAM_50ms)==CAM_50ms) { 
-		CanTxMessage msg(0x36E, 4);
+		CanTxMessage msg(0x36F, 4);
 		/* Generic Output 1 Duty Cycle */
 		msg[0] = 0x00;
 		msg[1] = 0x00;
