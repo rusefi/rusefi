@@ -18,7 +18,7 @@
 #include "allsensors.h"
 #include "vehicle_speed.h"
 #include "rtc_helper.h"
-
+#include "fuel_math.h"
 EXTERN_ENGINE;
 
 // CAN Bus ID for broadcast
@@ -395,81 +395,565 @@ void canDashboardBMWE90(uint16_t cycle) {
 
 void canDashboardHaltech(uint16_t cycle) {
 	
-	if((cycle&CAM_5ms)==CAM_5ms) { 
-		CanTxMessage msg(0x5, 5);
-		msg[0] = 0x45;
-		msg[1] = 0x41;
-		msg[2] = 0x61;
-		msg[3] = 0x8F;
-		msg[4] = 0xFC;			
-	}
-	if((cycle&CAM_10ms)==CAM_10ms) { 
-		CanTxMessage msg(0x10, 5);
-		msg[0] = 0x45;
-		msg[1] = 0x41;
-		msg[2] = 0x61;
-		msg[3] = 0x8F;
-		msg[4] = 0xFC;			
-	}
+	uint16_t tmp;
+	/* 0x360 - 50Hz rate */
 	if((cycle&CAM_20ms)==CAM_20ms) { 
-		CanTxMessage msg(0x20, 5);
-		msg[0] = 0x45;
-		msg[1] = 0x41;
-		msg[2] = 0x61;
-		msg[3] = 0x8F;
-		msg[4] = 0xFC;			
+		CanTxMessage msg(0x360, 8);
+		tmp = GET_RPM();
+		/* RPM */
+		msg[0] = (tmp >> 8);
+		msg[1] = (tmp & 0x00ff);
+		/* MAP */
+		tmp = (uint16_t)(Sensor::get(SensorType::Map).value_or(0)); 
+		msg[2] = (tmp >> 8);
+		msg[3] = (tmp & 0x00ff);
+		/* TPS  y = x/10 */
+		tmp = (uint16_t)((float)(Sensor::get(SensorType::Tps1).value_or(0)) * 10);
+		msg[4] = (tmp >> 8);
+		msg[5] = (tmp & 0x00ff);
+		/* Coolant pressure */
+		msg[6] = 0;
+		msg[7] = 0;
 	}
+
+	/* 0x361 - 50Hz rate */
+	if((cycle&CAM_20ms)==CAM_20ms) { 
+		CanTxMessage msg(0x361, 8);
+		/* Fuel pressure */
+		tmp =  (uint16_t)(Sensor::get(SensorType::FuelPressureLow).value_or(0));
+		msg[0] = (tmp >> 8);
+		msg[1] = (tmp&0x00ff);
+		/* Oil pressure */
+		tmp =  (uint16_t)(Sensor::get(SensorType::OilPressure).value_or(0));
+		msg[2] = (tmp >> 8);
+		msg[3] = (tmp & 0x00ff);
+		/* Engine Demand */
+		tmp =  (uint16_t)(Sensor::get(SensorType::Map).value_or(0));
+		msg[4] = (tmp >> 8);
+		msg[5] = (tmp & 0x00ff);
+		/* Wastegate Pressure */
+		msg[6] = 0;
+		msg[7] = 0;			
+	}
+
+	/* 0x362 - 50Hz rate */
+	if((cycle&CAM_20ms)==CAM_20ms) { 
+		CanTxMessage msg(0x362, 6);
+		/* Injection Stage 1 Duty Cycle - y = x/10 */
+		uint16_t rpm = GET_RPM();
+		tmp = (uint16_t)( getInjectorDutyCycle(rpm PASS_ENGINE_PARAMETER_SUFFIX) * 10) ;
+		msg[0] = (tmp >> 8);
+		msg[1] = (tmp & 0x00ff);
+		/* Injcetion Stage 2 Duty Cycle */
+		msg[2] = 0x00;
+		msg[3] = 0x00;
+		/* Ignition Angle (Leading) - y = x/10 */
+		float timing = engine->engineState.timingAdvance;
+		int16_t ignAngle = ((timing > 360 ? timing - 720 : timing) * 10);
+		msg[4] = (ignAngle >> 8);			
+		msg[5] = (ignAngle & 0x00ff);
+	}
+
+	/* 0x363 - 20Hz rate */
 	if((cycle&CAM_50ms)==CAM_50ms) { 
-		CanTxMessage msg(0x50, 5);
-		msg[0] = 0x45;
-		msg[1] = 0x41;
-		msg[2] = 0x61;
-		msg[3] = 0x8F;
-		msg[4] = 0xFC;			
+		CanTxMessage msg(0x363, 4);
+		/* Wheel Slip */
+		msg[0] = 0x00;
+		msg[1] = 0x00;
+		/* Wheel Diff */
+		msg[2] = 0x00;
+		msg[3] = 0x00 ;
 	}
 
+	/* 0x368 - 20Hz rate */
+	if((cycle&CAM_50ms)==CAM_50ms) { 
+		CanTxMessage msg(0x368, 8);
+		/* Wideband Sensor 1 */
+		tmp =  (uint16_t)(Sensor::get(SensorType::Lambda1).value_or(0)) * 1000;
+		msg[0] = (tmp >> 8);
+		msg[1] = (tmp & 0x00ff);
+		/* Wideband Sensor 2 */
+		tmp =  (uint16_t)(Sensor::get(SensorType::Lambda2).value_or(0) * 1000);
+		msg[2] = (tmp >> 8);
+		msg[3] = (tmp & 0x00ff);
+		/* Wideband Sensor 3 */
+		msg[4] = 0x00;
+		msg[5] = 0x00;
+		/* Wideband Sensor 4 */			
+		msg[6] = 0x00;
+		msg[7] = 0x00;
+	}
 
+	/* 0x369 - 20Hz rate */
+	if((cycle&CAM_50ms)==CAM_50ms) { 
+		CanTxMessage msg(0x369, 8);
+		/* Trigger System Error Count */
+		tmp = engine->triggerCentral.triggerState.totalTriggerErrorCounter;
+		msg[0] = (tmp >> 8);
+		msg[1] = (tmp & 0x00ff);
+		/* Trigger Counter ?? */
+		tmp =  engine->triggerCentral.getHwEventCounter((int)SHAFT_PRIMARY_FALLING);
+		msg[2] = (tmp >> 8);
+		msg[3] = (tmp & 0x00ff);
+		/* unused */
+		msg[4] = 0x00;
+		msg[5] = 0x00;
+		/* Trigger Sync Level ?? */
+		msg[6] = 0x00;			
+		msg[7] = 0x00;
+	}
+
+	/* 0x36A - 20Hz rate */
+	/* todo: one day we should split this */
+	if((cycle&CAM_50ms)==CAM_50ms) { 
+		CanTxMessage msg(0x36A, 4);
+		/* Knock Level 1 */
+		tmp = (tsOutputChannels.knockLevel * 100);
+		msg[0] = (tmp >> 8);
+		msg[1] = (tmp & 0x00ff);
+		/* Knock Level 2 */
+		msg[2] = (tmp >> 8);
+		msg[3] = (tmp * 0x00ff);
+	}
+
+	/* 0x36B - 20Hz rate */
+	if((cycle&CAM_50ms)==CAM_50ms) { 
+		CanTxMessage msg(0x36B, 8);
+		/* Break Pressure */
+		msg[0] = 0x00;
+		msg[1] = 0x00;
+		/* NOS pressure Sensor 1 */
+		msg[2] = 0x00;
+		msg[3] = 0x00;
+		/* Turbo Speed Sensor 1 */
+		msg[4] = 0x00;
+		msg[5] = 0x00;
+		/* Lateral G */
+		msg[6] = 0x00;
+		msg[7] = 0x00;
+	}
+
+	/* 0x36C = 20Hz rate */
+	if((cycle&CAM_50ms)==CAM_50ms) { 
+		CanTxMessage msg(0x36C, 8);
+		/* Wheel Speed Front Left */
+		tmp = (getVehicleSpeed() * 10 );
+		msg[0] = (tmp >> 8);
+		msg[1] = (tmp & 0x00ff);
+		/* Wheel Speed Front Right */
+		msg[2] = (tmp >> 8);
+		msg[3] = (tmp & 0x00ff);
+		/* Wheel Speed Read Left */
+		msg[4] = (tmp >> 8);
+		msg[5] = (tmp & 0x00ff);
+		/* Wheel Speed Read Right */
+		msg[6] = (tmp >> 8);
+		msg[7] = (tmp & 0x00ff);
+	}
+
+	/* 0x36D = 20Hz rate */
+	if((cycle&CAM_50ms)==CAM_50ms) { 
+		CanTxMessage msg(0x36D, 8);
+		/* Unused */
+		msg[0] = 0x00;
+		msg[1] = 0x00;
+		msg[2] = 0x00;
+		msg[3] = 0x00;
+		/* Exhaust Cam Angle 1 */
+		msg[4] = 0x00;
+		msg[5] = 0x00;
+		/* Exhaust Cam Angle 2 */
+		msg[6] = 0x00;
+		msg[7] = 0x00;
+	}	
+
+	/* 0x36E = 20Hz rate */
+	if((cycle&CAM_50ms)==CAM_50ms) { 
+		CanTxMessage msg(0x36E, 8);
+		/* Engine Limiting Active 0 = off/1=on*/
+		msg[0] = 0x00;
+		msg[1] = 0x00;
+		/* Launch Control Ignition Retard */
+		msg[2] = 0x00;
+		msg[3] = 0x00;
+		/* Launch Control Fuel Enrich */
+		msg[4] = 0x00;
+		msg[5] = 0x00;
+		/* Longitudinal G */
+		msg[6] = 0x00;
+		msg[7] = 0x00;
+	}
+
+	/* 0x36F = 20Hz rate */
+	if((cycle&CAM_50ms)==CAM_50ms) { 
+		CanTxMessage msg(0x36E, 4);
+		/* Generic Output 1 Duty Cycle */
+		msg[0] = 0x00;
+		msg[1] = 0x00;
+		/* Boost Control Output */
+		msg[2] = 0x00;
+		msg[3] = 0x00;
+	}
+
+	/* 0x370 = 20Hz rate */
+	if((cycle&CAM_50ms)==CAM_50ms) { 
+		CanTxMessage msg(0x370, 8);
+		/* Vehicle Speed */
+		tmp = (getVehicleSpeed() * 10 );
+		msg[0] = (tmp >> 8);
+		msg[1] = (tmp & 0x00ff);
+		/* unused */
+		msg[2] = 0x00;
+		msg[3] = 0x00;
+		/* Intake Cam Angle 1 */
+		msg[4] = 0x00;
+		msg[5] = 0x00;
+		/* Intake Cam Angle 2 */
+		msg[6] = 0x00;
+		msg[7] = 0x00;
+	}
+
+	/* 0x371 = 10Hz rate */
 	if((cycle&CAM_100ms)==CAM_100ms) { 
-		CanTxMessage msg(0x100, 5);
-		msg[0] = 0x45;
-		msg[1] = 0x41;
-		msg[2] = 0x61;
-		msg[3] = 0x8F;
-		msg[4] = 0xFC;			
-	}
-	if((cycle&CAM_200ms)==CAM_200ms) { 
-		CanTxMessage msg(0x200, 5);
-		msg[0] = 0x45;
-		msg[1] = 0x41;
-		msg[2] = 0x61;
-		msg[3] = 0x8F;
-		msg[4] = 0xFC;			
-	}
-	if((cycle&CAM_250ms)==CAM_250ms) { 
-		CanTxMessage msg(0x250, 5);
-		msg[0] = 0x45;
-		msg[1] = 0x41;
-		msg[2] = 0x61;
-		msg[3] = 0x8F;
-		msg[4] = 0xFC;			
-	}
-	if((cycle&CAM_500ms)==CAM_500ms) { 
-		CanTxMessage msg(0x500, 5);
-		msg[0] = 0x45;
-		msg[1] = 0x41;
-		msg[2] = 0x61;
-		msg[3] = 0x8F;
-		msg[4] = 0xFC;			
-	}
-	if((cycle&CAM_1000ms)==CAM_1000ms) { 
-		CanTxMessage msg(0x700, 5);
-		msg[0] = 0x45;
-		msg[1] = 0x41;
-		msg[2] = 0x61;
-		msg[3] = 0x8F;
-		msg[4] = 0xFC;			
+		CanTxMessage msg(0x371, 4);
+		/* Fuel Flow */
+		msg[0] = 0x00;
+		msg[1] = 0x00;
+		/* Fuel Flow Return */
+		msg[2] = 0x00;
+		msg[3] = 0x00;
 	}
 
+	/* 0x372 = 10Hz rate */
+	if((cycle&CAM_100ms)==CAM_100ms) { 
+		CanTxMessage msg(0x372, 8);
+		/* Battery Voltage */
+		tmp = (getVBatt(PASS_ENGINE_PARAMETER_SIGNATURE) * 10);
+		msg[0] = (tmp >> 8);
+		msg[1] = (tmp & 0x00ff);
+		/* unused */
+		msg[2] = 0x00;
+		msg[3] = 0x00;
+		/* Target Boost Level todo */
+		msg[4] = 0x00;
+		msg[5] = 0x00;
+		/* Barometric pressure */
+		tmp = (uint16_t)(getBaroPressure(PASS_ENGINE_PARAMETER_SIGNATURE)*10);
+		msg[6] = (tmp >> 8);
+		msg[7] = (tmp & 0x00ff);
+	}
+	
+	/* 0x373 = 10Hz rate */
+	if((cycle&CAM_100ms)==CAM_100ms) { 
+		CanTxMessage msg(0x373, 8);
+		/* EGT1 */
+		msg[0] = 0x00;
+		msg[1] = 0x00;
+		/* EGT2 */
+		msg[2] = 0x00;
+		msg[3] = 0x00;
+		/* EGT3 */
+		msg[4] = 0x00;
+		msg[5] = 0x00;
+		/* EGT4 */
+		msg[6] = 0x00;
+		msg[7] = 0x00;
+	}
+
+	/* 0x374 = 10Hz rate */
+	if((cycle&CAM_100ms)==CAM_100ms) { 
+		CanTxMessage msg(0x374, 8);
+		/* EGT5 */
+		msg[0] = 0x00;
+		msg[1] = 0x00;
+		/* EGT6 */
+		msg[2] = 0x00;
+		msg[3] = 0x00;
+		/* EGT7 */
+		msg[4] = 0x00;
+		msg[5] = 0x00;
+		/* EGT8 */
+		msg[6] = 0x00;
+		msg[7] = 0x00;
+	}
+
+	/* 0x375 = 10Hz rate */
+	if((cycle&CAM_100ms)==CAM_100ms) { 
+		CanTxMessage msg(0x375, 8);
+		/* EGT9 */
+		msg[0] = 0x00;
+		msg[1] = 0x00;
+		/* EGT10 */
+		msg[2] = 0x00;
+		msg[3] = 0x00;
+		/* EGT11 */
+		msg[4] = 0x00;
+		msg[5] = 0x00;
+		/* EGT12 */
+		msg[6] = 0x00;
+		msg[7] = 0x00;
+	}
+
+	/* 0x376 = 10Hz rate */
+	if((cycle&CAM_100ms)==CAM_100ms) { 
+		CanTxMessage msg(0x376, 8);
+		/* Ambient Air Temperature */
+		msg[0] = 0x00;
+		msg[1] = 0x00;
+		/* Relative Humidity */
+		msg[2] = 0x00;
+		msg[3] = 0x00;
+		/* Specific Humidity */
+		msg[4] = 0x00;
+		msg[5] = 0x00;
+		/* Absolute Humidity */
+		msg[6] = 0x00;
+		msg[7] = 0x00;
+	}
+
+	/* 0x3E0 = 5Hz rate */
+	if((cycle&CAM_200ms)==CAM_200ms) { 
+		CanTxMessage msg(0x3E0, 8);
+		/* Coolant temperature in K y = x/10 */
+		tmp = ((Sensor::get(SensorType::Clt).value_or(0) + 273.15) * 10);
+		msg[0] = (tmp >> 8);
+		msg[1] = (tmp & 0x00ff);
+		/* Air Temperature */
+		msg[2] = 0x00;
+		msg[3] = 0x00;
+		/* Fuel Temperature */
+		msg[4] = 0x00;
+		msg[5] = 0x00;
+		/* Oil Temperature */
+		msg[6] = 0x00;
+		msg[7] = 0x00;
+	}
+
+	/* 0x3E1 = 5Hz rate */
+	if((cycle&CAM_200ms)==CAM_200ms) { 
+		CanTxMessage msg(0x3E1, 6);
+		/* Gearbox Oil Temperature */
+		msg[0] = 0x00;
+		msg[1] = 0x00;
+		/* Diff oil Temperature */
+		msg[2] = 0x00;
+		msg[3] = 0x00;
+		/* Fuel Composition */
+		msg[4] = 0x00;
+		msg[5] = 0x00;
+	}
+
+	/* 0x3E2 = 5Hz rate */
+	if((cycle&CAM_200ms)==CAM_200ms) { 
+		CanTxMessage msg(0x3E2, 2);
+		/* Fuel Level in Liters */
+		msg[0] = 0x00;
+		msg[1] = 0xff;
+	}
+
+	/* 0x3E3 = 5Hz rate */
+	if((cycle&CAM_200ms)==CAM_200ms) { 
+		CanTxMessage msg(0x3E3, 8);
+		/* Fuel Trim Short Term Bank 1*/
+		msg[0] = 0x00;
+		msg[1] = 0x00;
+		/* Fuel Trim Short Term Bank 2*/
+		msg[2] = 0x00;
+		msg[3] = 0x00;
+		/* Fuel Trim Long Term Bank 1*/
+		msg[4] = 0x00;
+		msg[5] = 0x00;
+		/* Fuel Trim Long Term Bank 2*/
+		msg[6] = 0x00;
+		msg[7] = 0x00;
+	}
+
+	/* todo: 0x3E4 = 5Hz rate */
+	if((cycle&CAM_200ms)==CAM_200ms) { 
+		CanTxMessage msg(0x3E4, 8);
+		msg[0] = 0x00; //unused
+		/* Switch status */
+		msg[1] = 0x00;
+		/* Switch status */
+		msg[2] = 0x00;
+		msg[3] = 0x00;
+		msg[4] = 0x00;
+		msg[5] = 0x00;
+		msg[6] = 0x00;
+		msg[7] = 0x00;
+	}
+
+	/* todo: 0x3E5 = 50Hz rate */
+	if((cycle&CAM_20ms)==CAM_20ms) { 
+		CanTxMessage msg(0x3E5, 8);
+		msg[0] = 0x00; 
+		msg[1] = 0x00;
+		msg[2] = 0x00;
+		msg[3] = 0x00;
+		msg[4] = 0x00;
+		msg[5] = 0x00;
+		msg[6] = 0x00;
+		msg[7] = 0x00;
+	}
+
+	/* todo: 0x3E6 = 20Hz rate */
+	if((cycle&CAM_50ms)==CAM_50ms) { 
+		CanTxMessage msg(0x3E6, 8);
+		msg[0] = 0x00; 
+		msg[1] = 0x00;
+		msg[2] = 0x00;
+		msg[3] = 0x00;
+		msg[4] = 0x00;
+		msg[5] = 0x00;
+		msg[6] = 0x00;
+		msg[7] = 0x00;
+	}
+
+	/* todo: 0x3E7 = 20Hz rate */
+	if((cycle&CAM_50ms)==CAM_50ms) { 
+		CanTxMessage msg(0x3E7, 8);
+		msg[0] = 0x00; 
+		msg[1] = 0x00;
+		msg[2] = 0x00;
+		msg[3] = 0x00;
+		msg[4] = 0x00;
+		msg[5] = 0x00;
+		msg[6] = 0x00;
+		msg[7] = 0x00;
+	}
+	
+	/* todo: 0x3E8 = 20Hz rate */
+	if((cycle&CAM_50ms)==CAM_50ms) { 
+		CanTxMessage msg(0x3E8, 8);
+		msg[0] = 0x00; 
+		msg[1] = 0x00;
+		msg[2] = 0x00;
+		msg[3] = 0x00;
+		msg[4] = 0x00;
+		msg[5] = 0x00;
+		msg[6] = 0x00;
+		msg[7] = 0x00;
+	}
+
+	/* todo: 0x3E9 = 20Hz rate */
+	if((cycle&CAM_50ms)==CAM_50ms) { 
+		CanTxMessage msg(0x3E9, 8);
+		msg[0] = 0x00; 
+		msg[1] = 0x00;
+		msg[2] = 0x00;
+		msg[3] = 0x00;
+		msg[4] = 0x00;
+		msg[5] = 0x00;
+		msg[6] = 0x00;
+		msg[7] = 0x00;
+	}
+
+	/* todo: 0x3EA = 50Hz rate */
+	if((cycle&CAM_20ms)==CAM_20ms) { 
+		CanTxMessage msg(0x3EA, 8);
+		msg[0] = 0x00; 
+		msg[1] = 0x00;
+		msg[2] = 0x00;
+		msg[3] = 0x00;
+		msg[4] = 0x00;
+		msg[5] = 0x00;
+		msg[6] = 0x00;
+		msg[7] = 0x00;
+	}
+
+	/* todo: 0x3EB = 50Hz rate */
+	if((cycle&CAM_20ms)==CAM_20ms) { 
+		CanTxMessage msg(0x3EB, 8);
+		msg[0] = 0x00; 
+		msg[1] = 0x00;
+		msg[2] = 0x00;
+		msg[3] = 0x00;
+		msg[4] = 0x00;
+		msg[5] = 0x00;
+		msg[6] = 0x00;
+		msg[7] = 0x00;
+	}
+
+	/* todo: 0x3EC = 50Hz rate */
+	if((cycle&CAM_20ms)==CAM_20ms) { 
+		CanTxMessage msg(0x3EC, 8);
+		msg[0] = 0x00; 
+		msg[1] = 0x00;
+		msg[2] = 0x00;
+		msg[3] = 0x00;
+		msg[4] = 0x00;
+		msg[5] = 0x00;
+		msg[6] = 0x00;
+		msg[7] = 0x00;
+	}
+
+	/* todo: 0x3ED = 50Hz rate */
+	if((cycle&CAM_20ms)==CAM_20ms) { 
+		CanTxMessage msg(0x3ED, 2);
+		msg[0] = 0x00; 
+		msg[1] = 0x00;
+	}
+
+	/* todo: 0x3EE = 20Hz rate */
+	if((cycle&CAM_50ms)==CAM_50ms) { 
+		CanTxMessage msg(0x3EE, 8);
+		msg[0] = 0x00; 
+		msg[1] = 0x00;
+		msg[2] = 0x00;
+		msg[3] = 0x00;
+		msg[4] = 0x00;
+		msg[5] = 0x00;
+		msg[6] = 0x00;
+		msg[7] = 0x00;
+	}
+
+	/* todo: 0x3EF = 20Hz rate */
+	if((cycle&CAM_50ms)==CAM_50ms) { 
+		CanTxMessage msg(0x3EF, 8);
+		msg[0] = 0x00; 
+		msg[1] = 0x00;
+		msg[2] = 0x00;
+		msg[3] = 0x00;
+		msg[4] = 0x00;
+		msg[5] = 0x00;
+		msg[6] = 0x00;
+		msg[7] = 0x00;
+	}
+
+	/* todo: 0x470 = 20Hz rate */
+	if((cycle&CAM_50ms)==CAM_50ms) { 
+		CanTxMessage msg(0x470, 8);
+		msg[0] = 0x00; 
+		msg[1] = 0x00;
+		msg[2] = 0x00;
+		msg[3] = 0x00;
+		msg[4] = 0x00;
+		msg[5] = 0x00;
+		msg[6] = 0x00;
+		msg[7] = 0x00;
+	}
+
+	/* todo: 0x471 = 50Hz rate */
+	if((cycle&CAM_20ms)==CAM_20ms) { 
+		CanTxMessage msg(0x471, 2);
+		msg[0] = 0x00; 
+		msg[1] = 0x00;
+		msg[2] = 0x00;
+		msg[3] = 0x00;
+	}
+
+	/* todo: 0x472 = 20Hz rate */
+	if((cycle&CAM_50ms)==CAM_50ms) { 
+		CanTxMessage msg(0x472, 8);
+		msg[0] = 0x00; 
+		msg[1] = 0x00;
+		msg[2] = 0x00;
+		msg[3] = 0x00;
+		msg[4] = 0x00;
+		msg[5] = 0x00;
+		msg[6] = 0x00;
+		msg[7] = 0x00;
+	}
 }
 
 #endif // EFI_CAN_SUPPORT
