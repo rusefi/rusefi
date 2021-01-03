@@ -4,7 +4,7 @@ on: [push, pull_request]
 
 jobs:
   build-firmware:
-    runs-on: self-hosted
+    runs-on: ubuntu-latest
     
     strategy:
       # Let all builds finish even if one fails early
