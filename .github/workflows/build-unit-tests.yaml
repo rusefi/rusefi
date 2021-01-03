@@ -17,6 +17,7 @@ jobs:
         fetch-depth: 0
 
     - name: Discover cores
+      if: ${{ matrix.os != 'macos-latest' }}
       run: lscpu | egrep 'Model name|Socket|Thread|NUMA|CPU\(s\)'
 
     - name: Generate Configs
