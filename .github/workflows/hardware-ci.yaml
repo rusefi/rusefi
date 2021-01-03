@@ -13,7 +13,7 @@ jobs:
 
     - name: Generate Configs
       working-directory: ./firmware/
-      run: gen_config_default.sh
+      run: bash gen_config_default.sh
 
     - name: Generate Enum Strings
       working-directory: ./firmware/
