@@ -66,7 +66,7 @@ float getEngineLoadT(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	efiAssert(CUSTOM_ERR_ASSERT, engineConfiguration!=NULL, "engineConfiguration 2NULL", NAN);
 	switch (engineConfiguration->fuelAlgorithm) {
 	case LM_SPEED_DENSITY:
-		return getMap(PASS_ENGINE_PARAMETER_SIGNATURE);
+		return Sensor::get(SensorType::Map).value_or(0);
 	case LM_ALPHA_N:
 		return Sensor::get(SensorType::Tps1).value_or(0);
 	case LM_REAL_MAF:

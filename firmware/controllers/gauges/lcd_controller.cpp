@@ -228,7 +228,7 @@ static void showLine(lcd_line_e line, int /*screenY*/) {
 		return;
 	case LL_MAP:
 		if (hasMapSensor(PASS_ENGINE_PARAMETER_SIGNATURE)) {
-			lcdPrintf("MAP %.2f", getMap(PASS_ENGINE_PARAMETER_SIGNATURE));
+			lcdPrintf("MAP %.2f", Sensor::get(SensorType::Map).value_or(0));
 		} else {
 			lcdPrintf("MAP: none");
 		}
