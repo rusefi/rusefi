@@ -4,8 +4,12 @@ on: [push,pull_request]
 
 jobs:
   build:
-    runs-on: ubuntu-20.04
-    
+    runs-on: ${{ matrix.os }}
+
+    strategy:
+      matrix:
+        os: [ubuntu-20.04, macos-11.0]
+
     steps:
     - uses: actions/checkout@v1
       with:
@@ -24,6 +28,7 @@ jobs:
       run: bash gen_live_documentation.sh
 
     - name: Install gcc8
+      if: ${{ matrix.os != 'macos-11.0' }}
       run: sudo apt-get install -y gcc-8
 
     - name: Print GCC version
@@ -38,15 +43,17 @@ jobs:
       run: ./unit_tests/build/rusefi_test
 
     - name: Install Coverage Tools
+      if: ${{ matrix.os != 'macos-11.0' }}
       run: sudo apt-get install ncftp lcov
 
     - name: Generate Code Coverage
+      if: ${{ matrix.os != 'macos-11.0' }}
       working-directory: ./unit_tests/
       run: ./ci_gcov.sh ${{ secrets.RUSEFI_DOXYGEN_FTP_USER }} ${{ secrets.RUSEFI_DOXYGEN_FTP_PASS }} ${{ secrets.RUSEFI_FTP_SERVER }}
 
     # Commit changes and catch the error that occurs if nothing has been changed (without catching other errors)
     - name: Commit fresh triggers.txt
-      if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/master' }}
+      if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/master' && matrix.os != 'macos-11.0' }}
       env:
         ACTIONS_ALLOW_UNSECURE_COMMANDS: 'true'
       #
@@ -73,7 +80,7 @@ jobs:
         fi
 
     - name: Push configs
-      if: ${{github.event_name == 'push' && github.ref == 'refs/heads/master' && env.NOCOMMIT != 'true'}}
+      if: ${{github.event_name == 'push' && github.ref == 'refs/heads/master' && env.NOCOMMIT != 'true' && matrix.os != 'macos-11.0'}}
       uses: ad-m/github-push-action@master
       with:
         github_token: ${{ github.token }}
