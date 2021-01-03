@@ -424,8 +424,7 @@ static percent_t automaticIdleController(float tpsPos, float rpm, int targetRpm,
 
 		float rpm;
 		if (CONFIG(useInstantRpmForIdle)) {
-			efitick_t nowNt = getTimeNowNt();
-			rpm = engine->triggerCentral.triggerState.calculateInstantRpm(&engine->triggerCentral.triggerFormDetails, NULL, nowNt PASS_ENGINE_PARAMETER_SUFFIX);
+			rpm = engine->triggerCentral.triggerState.getInstantRpm();
 		} else {
 			rpm = GET_RPM();
 		}
