@@ -44,6 +44,7 @@ static const int16_t supportedPids0120[] = {
 	PID_ENGINE_LOAD,
 	PID_COOLANT_TEMP,
 	PID_STFT_BANK1,
+	PID_STFT_BANK2,
 	PID_INTAKE_MAP,
 	PID_RPM,
 	PID_SPEED,
@@ -130,6 +131,10 @@ static void handleGetDataRequest(const CANRxFrame& rx) {
 		obdSendValue(_1_MODE, pid, 1, Sensor::get(SensorType::Clt).value_or(0) + ODB_TEMP_EXTRA);
 		break;
 	case PID_STFT_BANK1:
+		obdSendValue(_1_MODE, pid, 1, 128 * ENGINE(engineState.running.pidCorrection));
+		break;
+	case PID_STFT_BANK2:
+		// TODO: use second fueling bank
 		obdSendValue(_1_MODE, pid, 1, 128 * ENGINE(engineState.running.pidCorrection));
 		break;
 	case PID_INTAKE_MAP:
