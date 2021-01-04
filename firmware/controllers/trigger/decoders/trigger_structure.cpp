@@ -663,6 +663,9 @@ void TriggerWaveform::initializeTriggerWaveform(Logging *logger, operation_mode_
 		break;
 
 	case TT_TRI_TACH:
+		configureTriTach(this);
+		break;
+
 	case TT_GM_LS_24:
 		initGmLS24(this);
 		break;

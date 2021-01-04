@@ -45,7 +45,9 @@ void configureTriTach(TriggerWaveform * s) {
 
 
 	addSkippedToothTriggerEvents(T_SECONDARY, s, totalTeethCount, /* skipped */ 0, toothWidth, offset, engineCycle,
-			1.5 * FOUR_STROKE_ENGINE_CYCLE / 135, NO_RIGHT_FILTER);
+			//1.5 * FOUR_STROKE_ENGINE_CYCLE / 135,
+			700,
+			NO_RIGHT_FILTER);
 
 
 }
