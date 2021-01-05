@@ -107,6 +107,8 @@ constexpr size_t size(const T(&)[N]) {
 
 #define assertIsInBounds(length, array, msg) efiAssertVoid(OBD_PCM_Processor_Fault, (length) >= 0 && (length) < efi::size(array), msg)
 
+#define assertIsInBoundsWithResult(length, array, msg, failedResult) efiAssert(OBD_PCM_Processor_Fault, (length) >= 0 && (length) < efi::size(array), msg, failedResult)
+
 /**
  * Copies an array from src to dest.  The lengths of the arrays must match.
  */

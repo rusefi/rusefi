@@ -214,7 +214,7 @@ void TriggerStateWithRunningStatistics::movePreSynchTimestamps(DECLARE_ENGINE_PA
 float TriggerStateWithRunningStatistics::calculateInstantRpm(TriggerFormDetails *triggerFormDetails,
 		int *prevIndexOut, efitick_t nowNt DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	int current_index = currentCycle.current_index; // local copy so that noone changes the value on us
-	assertIsInBounds(current_index, timeOfLastEvent, "calc timeOfLastEvent");
+	assertIsInBoundsWithResult(current_index, timeOfLastEvent, "calc timeOfLastEvent", 0);
 	timeOfLastEvent[current_index] = nowNt;
 	/**
 	 * Here we calculate RPM based on last 90 degrees
@@ -251,7 +251,7 @@ float TriggerStateWithRunningStatistics::calculateInstantRpm(TriggerFormDetails 
 		return prevInstantRpmValue;
 
 	float instantRpm = (60000000.0 / 360 * US_TO_NT_MULTIPLIER) * angleDiff / time;
-	assertIsInBounds(current_index, instantRpmValue, "instantRpmValue");
+	assertIsInBoundsWithResult(current_index, instantRpmValue, "instantRpmValue", 0);
 	instantRpmValue[current_index] = instantRpm;
 
 	// This fixes early RPM instability based on incomplete data
