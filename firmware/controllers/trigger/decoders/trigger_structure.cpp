@@ -228,9 +228,10 @@ void TriggerWaveform::addEvent(angle_t angle, trigger_wheel_e const channelIndex
 	}
 
 #if EFI_UNIT_TEST
+	assertIsInBounds(privateTriggerDefinitionSize, triggerSignalIndeces, "trigger shape overflow");
 	triggerSignalIndeces[privateTriggerDefinitionSize] = channelIndex;
 	triggerSignalStates[privateTriggerDefinitionSize] = stateParam;
-#endif
+#endif // EFI_UNIT_TEST
 
 
 	// todo: the whole 'useOnlyRisingEdgeForTrigger' parameter and logic should not be here
