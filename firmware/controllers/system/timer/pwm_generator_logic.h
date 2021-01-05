@@ -59,7 +59,7 @@ public:
 
 	void weComplexInit(const char *msg,
 			ExecutorInterface *executor,
-			const int phaseCount, float const *swithcTimes, const int waveCount, pin_state_t *const*pinStates,
+			const int phaseCount, float const *switchTimes, const int waveCount, pin_state_t *const*pinStates,
 			pwm_cycle_callback *pwmCycleCallback,
 			pwm_gen_callback *callback);
 
