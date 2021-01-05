@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEfi tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Tue Jan 05 12:58:32 UTC 2021
+// this file was generated automatically by rusEfi tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Tue Jan 05 21:31:17 UTC 2021
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -1276,6 +1276,7 @@ public class Fields {
 	public static final int stft_startupDelay_offset = 1071;
 	public static final int stftIgnoreErrorMagnitude_offset = 976;
 	public static final int stoichRatioPrimary_offset = 4005;
+	public static final int stoichRatioSecondary_offset = 4009;
 	public static final int tachOutputPin_offset = 704;
 	public static final int tachOutputPinMode_offset = 705;
 	public static final int tachPulseDuractionMs_offset = 1704;
@@ -1477,7 +1478,7 @@ public class Fields {
 	public static final char TS_SD_R_COMMAND = 'r';
 	public static final char TS_SD_W_COMMAND = 'w';
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI 2021.01.05.all.3754318141";
+	public static final String TS_SIGNATURE = "rusEFI 2021.01.05.all.3029380473";
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final int TT_TT_1_16 = 50;
 	public static final int TT_TT_2JZ_1_12 = 29;
@@ -1594,7 +1595,7 @@ public class Fields {
 	public static final int unusedOldBiquad_offset = 2332;
 	public static final int unusedSpiPadding4_offset = 2593;
 	public static final int unusedSpiPadding5_offset = 2715;
-	public static final int unusedSpiPadding8_offset = 4009;
+	public static final int unusedSpiPadding8_offset = 4010;
 	public static final int useAdvanceCorrectionsForCranking_offset = 1476;
 	public static final int useCicPidForIdle_offset = 76;
 	public static final int useConstantDwellDuringCranking_offset = 1464;
@@ -2646,6 +2647,7 @@ public class Fields {
 	public static final Field STOICHRATIOPRIMARY = Field.create("STOICHRATIOPRIMARY", 4005, FieldType.INT8);
 	public static final Field IDLERPMPID_ITERMMAX = Field.create("IDLERPMPID_ITERMMAX", 4006, FieldType.INT16);
 	public static final Field MC33972SPIDEVICE = Field.create("MC33972SPIDEVICE", 4008, FieldType.INT8);
+	public static final Field STOICHRATIOSECONDARY = Field.create("STOICHRATIOSECONDARY", 4009, FieldType.INT8);
 	public static final Field ETBIDLETHROTTLERANGE = Field.create("ETBIDLETHROTTLERANGE", 4012, FieldType.FLOAT);
 	public static final Field CYLINDERBANKSELECT1 = Field.create("CYLINDERBANKSELECT1", 4016, FieldType.INT8);
 	public static final Field CYLINDERBANKSELECT2 = Field.create("CYLINDERBANKSELECT2", 4017, FieldType.INT8);
@@ -3722,6 +3724,7 @@ public class Fields {
 	STOICHRATIOPRIMARY,
 	IDLERPMPID_ITERMMAX,
 	MC33972SPIDEVICE,
+	STOICHRATIOSECONDARY,
 	ETBIDLETHROTTLERANGE,
 	CYLINDERBANKSELECT1,
 	CYLINDERBANKSELECT2,

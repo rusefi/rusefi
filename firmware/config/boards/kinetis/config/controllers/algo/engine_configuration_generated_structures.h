@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Tue Jan 05 12:58:47 UTC 2021
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Tue Jan 05 21:31:34 UTC 2021
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -3342,7 +3342,7 @@ struct engine_configuration_s {
 	 */
 	spi_device_e tle6240spiDevice;
 	/**
-	 * Stoichiometric ratio for your primary fuel.
+	 * Stoichiometric ratio for your primary fuel. When Flex Fuel is enabled, this value is used when the Flex Fuel sensor indicates E0.
 	 * offset 4005
 	 */
 	uint8_t stoichRatioPrimary;
@@ -3356,9 +3356,14 @@ struct engine_configuration_s {
 	 */
 	spi_device_e mc33972spiDevice;
 	/**
+	 * Stoichiometric ratio for your secondary fuel. This value is used when the Flex Fuel sensor indicates E100.
 	 * offset 4009
 	 */
-	uint8_t unusedSpiPadding8[3];
+	uint8_t stoichRatioSecondary;
+	/**
+	 * offset 4010
+	 */
+	uint8_t unusedSpiPadding8[2];
 	/**
 	 *  ETB idle authority
 	 * offset 4012
@@ -3780,4 +3785,4 @@ struct persistent_config_s {
 typedef struct persistent_config_s persistent_config_s;
 
 // end
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Tue Jan 05 12:58:47 UTC 2021
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Tue Jan 05 21:31:34 UTC 2021
