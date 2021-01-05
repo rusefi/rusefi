@@ -1807,7 +1807,8 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 		field = "Injector reference pressure", fuelReferencePressure, { isInjectionEnabled && injectorCompensationMode != 0 }
 
 	dialog = fuelParams, "Fuel characteristics", yAxis
-		field = "Stoichiometric ratio",		stoichRatioPrimary, {isInjectionEnabled == 1}
+		field = "Stoichiometric ratio",			stoichRatioPrimary,		{isInjectionEnabled == 1}
+		field = "E100 stoichiometric ratio", 	stoichRatioSecondary,	{isInjectionEnabled == 1 && flexSensorPin != 0 }
 
 	dialog = injectorOutputSettings, "Injector Outputs",	yAxis
 		field = "Use only first half of pins for batch mode"
