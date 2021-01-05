@@ -36,7 +36,7 @@ void AdcSubscription::SubscribeSensor(FunctionalSensor &sensor,
 									  float lowpassCutoff,
 									  float voltsPerAdcVolt /*= 0.0f*/) {
 	// Don't subscribe null channels
-	if (channel == EFI_ADC_NONE) {
+	if (!isAdcChannelValid(channel)) {
 		return;
 	}
 

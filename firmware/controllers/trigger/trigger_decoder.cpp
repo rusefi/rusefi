@@ -142,7 +142,8 @@ void calculateTriggerSynchPoint(
 	engine->engineCycleEventCount = length;
 
 	efiAssertVoid(CUSTOM_SHAPE_LEN_ZERO, length > 0, "shapeLength=0");
-	if (length >= PWM_PHASE_MAX_COUNT) {
+	if (shape.getSize() >= PWM_PHASE_MAX_COUNT) {
+		// todo: by the time we are here we had already modified a lot of RAM out of bounds!
 		firmwareError(CUSTOM_ERR_TRIGGER_WAVEFORM_TOO_LONG, "Trigger length above maximum: %d", length);
 		shape.setShapeDefinitionError(true);
 		return;
@@ -179,6 +180,7 @@ void prepareEventAngles(TriggerWaveform *shape,
 			efiAssertVoid(CUSTOM_TRIGGER_CYCLE, !cisnan(angle), "trgSyncNaN");
 			fixAngle(angle, "trgSync", CUSTOM_TRIGGER_SYNC_ANGLE_RANGE);
 			if (engineConfiguration->useOnlyRisingEdgeForTrigger) {
+			    assertIsInBounds(triggerDefinitionIndex, shape->isRiseEvent, "isRise");
 				if (shape->isRiseEvent[triggerDefinitionIndex]) {
 					riseOnlyIndex += 2;
 					details->eventAngles[riseOnlyIndex] = angle;
@@ -203,13 +205,16 @@ void TriggerStateWithRunningStatistics::movePreSynchTimestamps(DECLARE_ENGINE_PA
 	// here we take timestamps of events which happened prior to synchronization and place them
 	// at appropriate locations
 	for (int i = 0; i < spinningEventIndex;i++) {
-		timeOfLastEvent[getTriggerSize() - i] = spinningEvents[i];
+		int newIndex = getTriggerSize() - i;
+		assertIsInBounds(newIndex, timeOfLastEvent, "move timeOfLastEvent");
+		timeOfLastEvent[newIndex] = spinningEvents[i];
 	}
 }
 
 float TriggerStateWithRunningStatistics::calculateInstantRpm(TriggerFormDetails *triggerFormDetails,
 		int *prevIndexOut, efitick_t nowNt DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	int current_index = currentCycle.current_index; // local copy so that noone changes the value on us
+	assertIsInBoundsWithResult(current_index, timeOfLastEvent, "calc timeOfLastEvent", 0);
 	timeOfLastEvent[current_index] = nowNt;
 	/**
 	 * Here we calculate RPM based on last 90 degrees
@@ -246,6 +251,7 @@ float TriggerStateWithRunningStatistics::calculateInstantRpm(TriggerFormDetails 
 		return prevInstantRpmValue;
 
 	float instantRpm = (60000000.0 / 360 * US_TO_NT_MULTIPLIER) * angleDiff / time;
+	assertIsInBoundsWithResult(current_index, instantRpmValue, "instantRpmValue", 0);
 	instantRpmValue[current_index] = instantRpm;
 
 	// This fixes early RPM instability based on incomplete data

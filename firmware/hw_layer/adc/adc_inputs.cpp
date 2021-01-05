@@ -268,7 +268,7 @@ float getMCUInternalTemperature() {
 }
 
 int getInternalAdcValue(const char *msg, adc_channel_e hwChannel) {
-	if (hwChannel == EFI_ADC_NONE) {
+	if (!isAdcChannelValid(hwChannel)) {
 		warning(CUSTOM_OBD_ANALOG_INPUT_NOT_CONFIGURED, "ADC: %s input is not configured", msg);
 		return -1;
 	}
@@ -410,7 +410,7 @@ static void printFullAdcReport(Logging *logger) {
 
 		adc_channel_e hwIndex = fastAdc.getAdcHardwareIndexByInternalIndex(index);
 
-		if (hwIndex != EFI_ADC_NONE && hwIndex != EFI_ADC_ERROR) {
+		if (isAdcChannelValid(hwIndex)) {
 			ioportid_t port = getAdcChannelPort("print", hwIndex);
 			int pin = getAdcChannelPin(hwIndex);
 
@@ -430,7 +430,7 @@ static void printFullAdcReport(Logging *logger) {
 
 		adc_channel_e hwIndex = slowAdc.getAdcHardwareIndexByInternalIndex(index);
 
-		if (hwIndex != EFI_ADC_NONE && hwIndex != EFI_ADC_ERROR) {
+		if (isAdcChannelValid(hwIndex)) {
 			ioportid_t port = getAdcChannelPort("print", hwIndex);
 			int pin = getAdcChannelPin(hwIndex);
 
@@ -516,7 +516,7 @@ public:
 };
 
 void addChannel(const char *name, adc_channel_e setting, adc_channel_mode_e mode) {
-	if (setting == EFI_ADC_NONE) {
+	if (!isAdcChannelValid(setting)) {
 		return;
 	}
 	if (/*type-limited (int)setting < 0 || */(int)setting>=HW_MAX_ADC_INDEX) {
@@ -532,7 +532,7 @@ void addChannel(const char *name, adc_channel_e setting, adc_channel_mode_e mode
 
 void removeChannel(const char *name, adc_channel_e setting) {
 	(void)name;
-	if (setting == EFI_ADC_NONE) {
+	if (!isAdcChannelValid(setting)) {
 		return;
 	}
 	adcHwChannelEnabled[setting] = ADC_OFF;

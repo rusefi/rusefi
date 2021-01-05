@@ -43,7 +43,10 @@ public class TriggerImage {
     private static int sleepAtEnd;
     private static int onlyOneTrigger = -1;
 
-    // todo: https://github.com/rusefi/rusefi/issues/2077
+    /**
+     * todo: https://github.com/rusefi/rusefi/issues/2077
+     * @see TriggerWheelInfo#isFirstCrankBased
+     */
     private static String getTriggerName(TriggerWheelInfo triggerName) {
         switch (triggerName.id) {
             case Fields.TT_TT_FORD_ASPIRE:
@@ -84,6 +87,8 @@ public class TriggerImage {
                 return "36/1";
             case Fields.TT_TT_TOOTHED_WHEEL_36_2:
                 return "36/2";
+            case Fields.TT_TT_TRI_TACH:
+                return "TriTach";
             case Fields.TT_TT_TOOTHED_WHEEL_60_2:
                 return "60/2";
         }
