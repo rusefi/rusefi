@@ -27,7 +27,8 @@ FlexFuelSensor::FlexFuelSensor()
 void FlexFuelSensor::onEdge(efitick_t nowNt) {
 	float frequency = 1 / m_edgeTimer.getElapsedSecondsAndReset(nowNt);
 
-	// TODO: are these limits reasonable?
+	// Sensor should only report 50-150hz, significantly outside that range indicates a problem
+	// it changes to 200hz+ to indicate methanol "contamination"
 	if (frequency > 45 && frequency < 155) {
 		setValidValue(clampF(0, frequency - 50, 100), nowNt);
 	}
