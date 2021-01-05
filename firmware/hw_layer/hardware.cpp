@@ -250,17 +250,15 @@ static void calcFastAdcIndexes(void) {
 #if HAL_USE_ADC
 	fastMapSampleIndex = fastAdc.internalAdcIndexByHardwareIndex[engineConfiguration->map.sensor.hwChannel];
 	hipSampleIndex =
-			engineConfiguration->hipOutputChannel == EFI_ADC_NONE ?
-					-1 : fastAdc.internalAdcIndexByHardwareIndex[engineConfiguration->hipOutputChannel];
-	if (engineConfiguration->tps1_1AdcChannel != EFI_ADC_NONE) {
-		tpsSampleIndex = fastAdc.internalAdcIndexByHardwareIndex[engineConfiguration->tps1_1AdcChannel];
-	} else {
-		tpsSampleIndex = TPS_IS_SLOW;
-	}
+			isAdcChannelValid(engineConfiguration->hipOutputChannel) ?
+					fastAdc.internalAdcIndexByHardwareIndex[engineConfiguration->hipOutputChannel] : -1;
+	tpsSampleIndex =
+			isAdcChannelValid(engineConfiguration->tps1_1AdcChannel) ?
+					fastAdc.internalAdcIndexByHardwareIndex[engineConfiguration->tps1_1AdcChannel] : TPS_IS_SLOW;
 #if HAL_TRIGGER_USE_ADC
 	adc_channel_e triggerChannel = getAdcChannelForTrigger();
-	triggerSampleIndex = (triggerChannel == EFI_ADC_NONE) ?
-		-1 : fastAdc.internalAdcIndexByHardwareIndex[triggerChannel];
+	triggerSampleIndex = isAdcChannelValid(triggerChannel) ?
+		fastAdc.internalAdcIndexByHardwareIndex[triggerChannel] : -1;
 #endif /* HAL_TRIGGER_USE_ADC */
 
 #endif/* HAL_USE_ADC */

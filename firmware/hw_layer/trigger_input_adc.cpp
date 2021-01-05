@@ -299,7 +299,7 @@ adc_channel_e getAdcChannelForTrigger(void) {
 
 void addAdcChannelForTrigger(void) {
 	adc_channel_e ch = getAdcChannelForTrigger();
-	if (ch != EFI_ADC_NONE) {
+	if (isAdcChannelValid(ch)) {
 		addChannel("TRIG", ch, ADC_FAST);
 	}
 }
