@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEfi tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Tue Jan 05 04:52:02 UTC 2021
+// this file was generated automatically by rusEfi tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Tue Jan 05 12:58:32 UTC 2021
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -469,6 +469,7 @@ public class Fields {
 	public static final int fixedModeTiming_offset = 452;
 	public static final int fixedTiming_offset = 2204;
 	public static final int FLASH_DATA_VERSION = 10003;
+	public static final int flexSensorPin_offset = 3100;
 	public static final int frequencyReportingMapInputPin_offset = 970;
 	public static final int FSIO_ANALOG_INPUT_COUNT = 4;
 	public static final int FSIO_COMMAND_COUNT = 16;
@@ -639,6 +640,7 @@ public class Fields {
 	public static final String GAUGE_NAME_ETB_DUTY = "ETB Duty";
 	public static final String GAUGE_NAME_ETB_ERROR = "ETB position error";
 	public static final String GAUGE_NAME_ETB_TARGET = "ETB position target";
+	public static final String GAUGE_NAME_FLEX = "Flex Ethanol %";
 	public static final String GAUGE_NAME_FUEL_BARO_CORR = "fuel: Barometric pressure correction";
 	public static final String GAUGE_NAME_FUEL_BASE = "fuel: base mass";
 	public static final String GAUGE_NAME_FUEL_CHARGE_TEMP = "fuel: Estimated charge temperature";
@@ -1475,7 +1477,7 @@ public class Fields {
 	public static final char TS_SD_R_COMMAND = 'r';
 	public static final char TS_SD_W_COMMAND = 'w';
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI 2021.01.05.all.2901630796";
+	public static final String TS_SIGNATURE = "rusEFI 2021.01.05.all.3754318141";
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final int TT_TT_1_16 = 50;
 	public static final int TT_TT_2JZ_1_12 = 29;
@@ -1587,7 +1589,6 @@ public class Fields {
 	public static final int unusedBit_488_31_offset = 2116;
 	public static final int unusedBit_488_8_offset = 2116;
 	public static final int unusedBit_488_9_offset = 2116;
-	public static final int unusedFlexFuelSensor_offset = 3100;
 	public static final int unusedHereHereHere_offset = 1458;
 	public static final int unusedHereWeHave_offset = 1464;
 	public static final int unusedOldBiquad_offset = 2332;
@@ -2583,7 +2584,7 @@ public class Fields {
 	public static final Field UNUSEDAUXVOLTAGE1_TODO_332 = Field.create("UNUSEDAUXVOLTAGE1_TODO_332", 2713, FieldType.INT8);
 	public static final Field UNUSEDAUXVOLTAGE2_TODO_332 = Field.create("UNUSEDAUXVOLTAGE2_TODO_332", 2714, FieldType.INT8);
 	public static final Field UNUSEDSPIPADDING5 = Field.create("UNUSEDSPIPADDING5", 2715, FieldType.INT8);
-	public static final Field UNUSEDFLEXFUELSENSOR = Field.create("UNUSEDFLEXFUELSENSOR", 3100, FieldType.INT8);
+	public static final Field FLEXSENSORPIN = Field.create("FLEXSENSORPIN", 3100, FieldType.INT8, brain_input_pin_e);
 	public static final Field TEST557PIN = Field.create("TEST557PIN", 3101, FieldType.INT8, brain_pin_e);
 	public static final Field STEPPERDIRECTIONPINMODE = Field.create("STEPPERDIRECTIONPINMODE", 3102, FieldType.INT8, pin_output_mode_e);
 	public static final Field EXTERNALKNOCKSENSEADC = Field.create("EXTERNALKNOCKSENSEADC", 3103, FieldType.INT8, adc_channel_e);
@@ -3660,7 +3661,7 @@ public class Fields {
 	UNUSEDAUXVOLTAGE1_TODO_332,
 	UNUSEDAUXVOLTAGE2_TODO_332,
 	UNUSEDSPIPADDING5,
-	UNUSEDFLEXFUELSENSOR,
+	FLEXSENSORPIN,
 	TEST557PIN,
 	STEPPERDIRECTIONPINMODE,
 	EXTERNALKNOCKSENSEADC,
