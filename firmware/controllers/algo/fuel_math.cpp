@@ -409,8 +409,11 @@ float getFuelCutOffCorrection(efitick_t nowNt, int rpm DECLARE_ENGINE_PARAMETER_
 			return 1.0f;
 		}
 
-		float map = getMap(PASS_ENGINE_PARAMETER_SIGNATURE);
-	
+		const auto [mapValid, map] = Sensor::get(SensorType::Map);
+		if (!mapValid) {
+			return 1.0f;
+		}
+
 		// gather events
 		bool mapDeactivate = (map >= CONFIG(coastingFuelCutMap));
 		bool tpsDeactivate = (tpsPos >= CONFIG(coastingFuelCutTps));

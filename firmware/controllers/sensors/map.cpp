@@ -172,11 +172,11 @@ float getRawMap(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
  * Also if 'useFixedBaroCorrFromMap' option is enabled, and we have the initial pressure value stored and passed validation.
  */
 bool hasBaroSensor(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
-	return engineConfiguration->baroSensor.hwChannel != EFI_ADC_NONE || !cisnan(storedInitialBaroPressure);
+	return isAdcChannelValid(engineConfiguration->baroSensor.hwChannel) || !cisnan(storedInitialBaroPressure);
 }
 
 bool hasMapSensor(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
-	return engineConfiguration->map.sensor.hwChannel != EFI_ADC_NONE;
+	return isAdcChannelValid(engineConfiguration->map.sensor.hwChannel);
 }
 
 float getBaroPressure(DECLARE_ENGINE_PARAMETER_SIGNATURE) {

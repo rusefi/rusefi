@@ -330,6 +330,18 @@
 #define CRITICAL_PREFIX "CRITICAL"
 #define cutFuelOnHardLimit_offset 1464
 #define cutSparkOnHardLimit_offset 1464
+#define cylinderBankSelect10_offset 4025
+#define cylinderBankSelect11_offset 4026
+#define cylinderBankSelect12_offset 4027
+#define cylinderBankSelect1_offset 4016
+#define cylinderBankSelect2_offset 4017
+#define cylinderBankSelect3_offset 4018
+#define cylinderBankSelect4_offset 4019
+#define cylinderBankSelect5_offset 4020
+#define cylinderBankSelect6_offset 4021
+#define cylinderBankSelect7_offset 4022
+#define cylinderBankSelect8_offset 4023
+#define cylinderBankSelect9_offset 4024
 #define cylinderBore_offset 408
 #define cylindersCount_offset 400
 #define DBG_DBG_LOGIC_ANALYZER 45
@@ -476,6 +488,7 @@
 #define fixedModeTiming_offset 452
 #define fixedTiming_offset 2204
 #define FLASH_DATA_VERSION 10003
+#define flexSensorPin_offset 3100
 #define frequencyReportingMapInputPin_offset 970
 #define FSIO_ANALOG_INPUT_COUNT 4
 #define FSIO_COMMAND_COUNT 16
@@ -646,6 +659,7 @@
 #define GAUGE_NAME_ETB_DUTY "ETB Duty"
 #define GAUGE_NAME_ETB_ERROR "ETB position error"
 #define GAUGE_NAME_ETB_TARGET "ETB position target"
+#define GAUGE_NAME_FLEX "Flex Ethanol %"
 #define GAUGE_NAME_FUEL_BARO_CORR "fuel: Barometric pressure correction"
 #define GAUGE_NAME_FUEL_BASE "fuel: base mass"
 #define GAUGE_NAME_FUEL_CHARGE_TEMP "fuel: Estimated charge temperature"
@@ -901,6 +915,7 @@
 #define ignitionTable_offset 16288
 #define ignMathCalculateAtIndex_offset 1488
 #define ignOverrideMode_offset 2128
+#define IM_IM_SINGLE_POINT 3
 #define INDICATOR_NAME_AC_SWITCH "AC switch"
 #define INDICATOR_NAME_BRAKE_DOWN "brake: down"
 #define INDICATOR_NAME_CLUTCH_DOWN "clutch: down"
@@ -1227,8 +1242,8 @@
 #define showHumanReadableWarning_offset 976
 #define showSdCardWarning_offset 76
 #define SIGNATURE_BOARD kin
-#define SIGNATURE_DATE 2021.01.01
-#define SIGNATURE_HASH 988705642
+#define SIGNATURE_DATE 2021.01.05
+#define SIGNATURE_HASH 1194050820
 #define silentTriggerError_offset 1464
 #define slowAdcAlpha_offset 2088
 #define sparkDwellRpmBins_offset 332
@@ -1425,8 +1440,8 @@
 #define TRIGGER_SIMULATOR_PIN_COUNT 3
 #define trigger_todoRemoveMeOneDay0_offset 528
 #define trigger_todoRemoveMeOneDay1_offset 528
-#define trigger_type_e_auto_enum "TT_TOOTHED_WHEEL", "TT_FORD_ASPIRE", "TT_DODGE_NEON_1995", "TT_MAZDA_MIATA_NA", "TT_MAZDA_MIATA_NB1", "TT_GM_7X", "TT_DAIHATSU", "TT_MAZDA_SOHC_4", "TT_TOOTHED_WHEEL_60_2", "TT_TOOTHED_WHEEL_36_1", "TT_HONDA_4_24_1", "TT_MITSUBISHI", "TT_HONDA_4_24", "TT_HONDA_1_4_24", "TT_DODGE_NEON_2003_CAM", "TT_MAZDA_DOHC_1_4", "TT_ONE_PLUS_ONE", "TT_VVT_JZ", "TT_ONE", "TT_DODGE_RAM", "TT_60_2_VW", "TT_HONDA_1_24", "TT_DODGE_STRATUS", "TT_36_2_2_2", "TT_NISSAN_SR20VE", "TT_2JZ_3_34", "TT_ROVER_K", "TT_GM_LS_24", "TT_HONDA_CBR_600", "TT_2JZ_1_12", "TT_CHRYSLER_NGC_36_2_2", "TT_3_1_CAM", "TT_DODGE_NEON_2003_CRANK", "TT_MIATA_VVT", "TT_HONDA_ACCORD_1_24_SHIFTED", "TT_MAZDA_MIATA_VVT_TEST", "TT_SUBARU_7_6", "TT_JEEP_18_2_2_2", "TT_NISSAN_SR20VE_360", "TT_DODGE_NEON_1995_ONLY_CRANK", "TT_JEEP_4_CYL", "TT_FIAT_IAW_P8", "TT_FORD_ST170", "TT_VVT_MIATA_NB2", "TT_RENIX_44_2_2", "TT_RENIX_66_2_2_2", "TT_HONDA_K_12_1", "TT_VVT_BOSCH_QUICK_START", "TT_TOOTHED_WHEEL_36_2", "TT_SUBARU_SVX", "TT_1_16", "TT_SUBARU_7_WITHOUT_6", "TT_52", "TT_UNUSED"
-#define trigger_type_e_enum "custom toothed wheel", "Ford Aspire", "Dodge Neon 1995", "Miata NA", "Miata NB", "GM_7X", "Cooper R50", "Mazda SOHC 4", "60/2", "36/1", "Honda 4+24+1", "Mitsubishi", "Honda 4+24", "Honda 1+4+24", "Dodge Neon 2003", "Mazda DOHC 1+4", "1+1", "INVALID", "Single Tooth", "Dodge Ram 1+16", "60/2 VW", "Honda 1+24", "Dodge Stratus", "36_2_2_2", "Nissan Primera", "dev 2JZ 3/34 simulator", "Rover K", "GM LS 24", "Honda CBR 600", "2JZ_1_12", "Honda CBR 600 custom", "3/1 skipped" , "Dodge Neon 2003 crank", "Miata VVT", "trg34", "trg35", "Subaru 7+6", "Jeep 18-2-2-2", "WIP", "Dodge Neon 1995 crank only", "Jeep XJ 4 cyl", "FiatIAQ_P8", "Mazda Z5", "trg43", "Renix 44-2-2", "Renix 66-2-2-2", "Honda K 12+1", "trg47", "36/2", "Subaru SVX", "1+16", "Subaru 7 without 6", "trg52", "INVALID"
+#define trigger_type_e_auto_enum "TT_TOOTHED_WHEEL", "TT_FORD_ASPIRE", "TT_DODGE_NEON_1995", "TT_MAZDA_MIATA_NA", "TT_MAZDA_MIATA_NB1", "TT_GM_7X", "TT_DAIHATSU", "TT_MAZDA_SOHC_4", "TT_TOOTHED_WHEEL_60_2", "TT_TOOTHED_WHEEL_36_1", "TT_HONDA_4_24_1", "TT_MITSUBISHI", "TT_HONDA_4_24", "TT_HONDA_1_4_24", "TT_DODGE_NEON_2003_CAM", "TT_MAZDA_DOHC_1_4", "TT_ONE_PLUS_ONE", "TT_VVT_JZ", "TT_ONE", "TT_DODGE_RAM", "TT_60_2_VW", "TT_HONDA_1_24", "TT_DODGE_STRATUS", "TT_36_2_2_2", "TT_NISSAN_SR20VE", "TT_2JZ_3_34", "TT_ROVER_K", "TT_GM_LS_24", "TT_HONDA_CBR_600", "TT_2JZ_1_12", "TT_CHRYSLER_NGC_36_2_2", "TT_3_1_CAM", "TT_DODGE_NEON_2003_CRANK", "TT_MIATA_VVT", "TT_HONDA_ACCORD_1_24_SHIFTED", "TT_MAZDA_MIATA_VVT_TEST", "TT_SUBARU_7_6", "TT_JEEP_18_2_2_2", "TT_NISSAN_SR20VE_360", "TT_DODGE_NEON_1995_ONLY_CRANK", "TT_JEEP_4_CYL", "TT_FIAT_IAW_P8", "TT_FORD_ST170", "TT_VVT_MIATA_NB2", "TT_RENIX_44_2_2", "TT_RENIX_66_2_2_2", "TT_HONDA_K_12_1", "TT_VVT_BOSCH_QUICK_START", "TT_TOOTHED_WHEEL_36_2", "TT_SUBARU_SVX", "TT_1_16", "TT_SUBARU_7_WITHOUT_6", "TT_52", "TT_TRI_TACH", "TT_UNUSED"
+#define trigger_type_e_enum "custom toothed wheel", "Ford Aspire", "Dodge Neon 1995", "Miata NA", "Miata NB", "GM_7X", "Cooper R50", "Mazda SOHC 4", "60/2", "36/1", "Honda 4+24+1", "Mitsubishi", "Honda 4+24", "Honda 1+4+24", "Dodge Neon 2003", "Mazda DOHC 1+4", "1+1", "INVALID", "Single Tooth", "Dodge Ram 1+16", "60/2 VW", "Honda 1+24", "Dodge Stratus", "36_2_2_2", "Nissan Primera", "dev 2JZ 3/34 simulator", "Rover K", "GM LS 24", "Honda CBR 600", "2JZ_1_12", "Honda CBR 600 custom", "3/1 skipped" , "Dodge Neon 2003 crank", "Miata VVT", "trg34", "trg35", "Subaru 7+6", "Jeep 18-2-2-2", "WIP", "Dodge Neon 1995 crank only", "Jeep XJ 4 cyl", "FiatIAQ_P8", "Mazda Z5", "trg43", "Renix 44-2-2", "Renix 66-2-2-2", "Honda K 12+1", "trg47", "36/2", "Subaru SVX", "1+16", "Subaru 7 without 6", "trg52", "TriTach", "trg54", "trg55", "INVALID"
 #define trigger_type_offset 524
 #define trigger_unusedBit_4_10_offset 528
 #define trigger_unusedBit_4_11_offset 528
@@ -1559,7 +1574,7 @@
 #define ts_show_spi true
 #define ts_show_trigger_comparator true
 #define ts_show_tunerstudio_port true
-#define TS_SIGNATURE "rusEFI 2021.01.01.kin.988705642"
+#define TS_SIGNATURE "rusEFI 2021.01.05.kin.1194050820"
 #define TS_SINGLE_WRITE_COMMAND 'W'
 #define TS_SINGLE_WRITE_COMMAND_char W
 #define TS_TEST_COMMAND 't' // 0x74
@@ -1599,6 +1614,7 @@
 #define TT_TT_TOOTHED_WHEEL_36_1 9
 #define TT_TT_TOOTHED_WHEEL_36_2 48
 #define TT_TT_TOOTHED_WHEEL_60_2 8
+#define TT_TT_TRI_TACH 53
 #define TT_TT_VVT_BOSCH_QUICK_START 47
 #define TT_TT_VVT_JZ 17
 #define tunerStudioSerialSpeed_offset 728
@@ -1626,6 +1642,7 @@
 #define unused2508_offset 2508
 #define unused2536_offset 2536
 #define unused3328_offset 3328
+#define unused4028_offset 4028
 #define unused541_offset 541
 #define unused542_offset 542
 #define unused6312_offset 6312
@@ -1640,7 +1657,6 @@
 #define unused_1484_bit_29_offset 1476
 #define unused_1484_bit_30_offset 1476
 #define unused_1484_bit_31_offset 1476
-#define unused_alFIn_offset 4024
 #define unusedAtOldBoardConfigurationEnd_offset 1204
 #define unusedAuxVoltage1_TODO_332_offset 2713
 #define unusedAuxVoltage2_TODO_332_offset 2714
@@ -1673,15 +1689,12 @@
 #define unusedBit_488_31_offset 2116
 #define unusedBit_488_8_offset 2116
 #define unusedBit_488_9_offset 2116
-#define unusedFlexFuelSensor_offset 3100
 #define unusedHereHereHere_offset 1458
 #define unusedHereWeHave_offset 1464
 #define unusedOldBiquad_offset 2332
 #define unusedSpiPadding4_offset 2593
 #define unusedSpiPadding5_offset 2715
 #define unusedSpiPadding8_offset 4009
-#define unusedsw_offset 4020
-#define unusedvref_offset 4016
 #define useAdvanceCorrectionsForCranking_offset 1476
 #define useCicPidForIdle_offset 76
 #define useConstantDwellDuringCranking_offset 1464

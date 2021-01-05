@@ -449,7 +449,7 @@ void mainTriggerCallback(uint32_t trgEventIndex, efitick_t edgeTimestamp DECLARE
 	}
 
 	if (trgEventIndex == (uint32_t)CONFIG(ignMathCalculateAtIndex)) {
-		if (CONFIG(externalKnockSenseAdc) != EFI_ADC_NONE) {
+		if (isAdcChannelValid(CONFIG(externalKnockSenseAdc))) {
 			float externalKnockValue = getVoltageDivided("knock", engineConfiguration->externalKnockSenseAdc PASS_ENGINE_PARAMETER_SUFFIX);
 			engine->knockLogic(externalKnockValue PASS_ENGINE_PARAMETER_SUFFIX);
 		}

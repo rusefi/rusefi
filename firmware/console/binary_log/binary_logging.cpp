@@ -63,6 +63,7 @@ static const LogField fields[] = {
 	{tsOutputChannels.fuelingLoad, GAUGE_NAME_FUEL_LOAD, "%", 1},
 	{tsOutputChannels.ignitionLoad, GAUGE_NAME_IGNITION_LOAD, "%", 1},
 	{tsOutputChannels.massAirFlow, GAUGE_NAME_AIR_FLOW, "kg/h", 1},
+	{tsOutputChannels.flexPercent, GAUGE_NAME_FLEX, "%", 1},
 };
 
 void writeHeader(Writer& outBuffer) {

@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Fri Jan 01 16:20:01 UTC 2021
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Tue Jan 05 12:58:32 UTC 2021
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -3138,10 +3138,10 @@ struct engine_configuration_s {
 	 */
 	float fsioCurve4[FSIO_CURVE_8];
 	/**
-	 * For pinout see https://rusefi.com/forum/viewtopic.php?f=5&t=1324
+	 * Continental/GM flex fuel sensor, 50-150hz type
 	 * offset 3100
 	 */
-	uint8_t unusedFlexFuelSensor;
+	brain_input_pin_e flexSensorPin;
 	/**
 	 * offset 3101
 	 */
@@ -3365,17 +3365,14 @@ struct engine_configuration_s {
 	 */
 	float etbIdleThrottleRange;
 	/**
+	 * Select which fuel correction bank this cylinder belongs to. Group cylinders that share the same O2 sensor
 	 * offset 4016
 	 */
-	uint8_t unusedvref[4];
+	uint8_t cylinderBankSelect[INJECTION_PIN_COUNT];
 	/**
-	 * offset 4020
+	 * offset 4028
 	 */
-	uint8_t unusedsw[4];
-	/**
-	 * offset 4024
-	 */
-	int unused_alFIn[3];
+	int unused4028[2];
 	/**
 	 * Trigger comparator center point voltage
 	 * offset 4036
@@ -3783,4 +3780,4 @@ struct persistent_config_s {
 typedef struct persistent_config_s persistent_config_s;
 
 // end
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Fri Jan 01 16:20:01 UTC 2021
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Tue Jan 05 12:58:32 UTC 2021
