@@ -244,7 +244,7 @@ typedef struct {
 	int8_t knockLevels[12];		// 250
 
 	int8_t tcuDesiredGear; // 262
-	int8_t padding2[1];		// 263
+	scaled_channel<uint8_t, 2> flexPercent;		// 263
 
 	scaled_voltage rawIdlePositionSensor;	// 264
 	scaled_voltage rawWastegatePositionSensor;	// 266
