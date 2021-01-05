@@ -48,6 +48,7 @@ TEST(FuelComputer, FlexFuel) {
 
 	MockVp3d lambdaTable;
 	FuelComputer dut(lambdaTable);
+	INJECT_ENGINE_REFERENCE(&dut);
 
 	// easier values for testing
 	engineConfiguration->stoichRatioPrimary = 150;
@@ -66,7 +67,7 @@ TEST(FuelComputer, FlexFuel) {
 	EXPECT_FLOAT_EQ(12.5f, dut.getStoichiometricRatio());
 
 	// E100 -> secondary afr
-	Sensor::setMockValue(SensorType::FuelEthanolPercent, 0);
+	Sensor::setMockValue(SensorType::FuelEthanolPercent, 100);
 	EXPECT_FLOAT_EQ(10.0f, dut.getStoichiometricRatio());
 
 	// E(-10) -> clamp to primary
