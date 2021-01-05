@@ -30,6 +30,7 @@ All notable user-facing or behavior-altering changes will be documented in this 
 ### Breaking Changes
 
 ### Added
+ - Basic fueling-only flex fuel implementation. Automatic adjustment of stoichiometric ratio based on ethanol content, compatible with the common GM/Continental 50-150hz flex fuel sensor 🎉 🎉 🎉
 
 ### Fixed
 
