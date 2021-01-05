@@ -29,6 +29,8 @@ class AllTriggersFixture : public ::testing::TestWithParam<trigger_type_e> {
 INSTANTIATE_TEST_SUITE_P(
 	Triggers,
 	AllTriggersFixture,
+	// Test all triggers from the first valid trigger thru the last
+	// (Skip index 0, that's custom toothed wheel which is covered by others)
 	::testing::Range((trigger_type_e)1, TT_UNUSED)
 );
 
