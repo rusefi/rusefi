@@ -488,6 +488,7 @@
 #define fixedModeTiming_offset 452
 #define fixedTiming_offset 2204
 #define FLASH_DATA_VERSION 10003
+#define flexSensorPin_offset 3100
 #define frequencyReportingMapInputPin_offset 970
 #define FSIO_ANALOG_INPUT_COUNT 4
 #define FSIO_COMMAND_COUNT 16
@@ -658,6 +659,7 @@
 #define GAUGE_NAME_ETB_DUTY "ETB Duty"
 #define GAUGE_NAME_ETB_ERROR "ETB position error"
 #define GAUGE_NAME_ETB_TARGET "ETB position target"
+#define GAUGE_NAME_FLEX "Flex Ethanol %"
 #define GAUGE_NAME_FUEL_BARO_CORR "fuel: Barometric pressure correction"
 #define GAUGE_NAME_FUEL_BASE "fuel: base mass"
 #define GAUGE_NAME_FUEL_CHARGE_TEMP "fuel: Estimated charge temperature"
@@ -1241,7 +1243,7 @@
 #define showSdCardWarning_offset 76
 #define SIGNATURE_BOARD hellen_cypress
 #define SIGNATURE_DATE 2021.01.05
-#define SIGNATURE_HASH 1694693775
+#define SIGNATURE_HASH 372768766
 #define silentTriggerError_offset 1464
 #define slowAdcAlpha_offset 2088
 #define sparkDwellRpmBins_offset 332
@@ -1572,7 +1574,7 @@
 #define ts_show_spi true
 #define ts_show_trigger_comparator false
 #define ts_show_tunerstudio_port true
-#define TS_SIGNATURE "rusEFI 2021.01.05.hellen_cypress.1694693775"
+#define TS_SIGNATURE "rusEFI 2021.01.05.hellen_cypress.372768766"
 #define TS_SINGLE_WRITE_COMMAND 'W'
 #define TS_SINGLE_WRITE_COMMAND_char W
 #define TS_TEST_COMMAND 't' // 0x74
@@ -1687,7 +1689,6 @@
 #define unusedBit_488_31_offset 2116
 #define unusedBit_488_8_offset 2116
 #define unusedBit_488_9_offset 2116
-#define unusedFlexFuelSensor_offset 3100
 #define unusedHereHereHere_offset 1458
 #define unusedHereWeHave_offset 1464
 #define unusedOldBiquad_offset 2332
