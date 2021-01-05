@@ -2066,6 +2066,7 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 		field = "Brake pedal switch",					brakePedalPin
 		field = "A/C switch",						acSwitch
 		field = "A/C switch mode",					acSwitchMode
+		field = "Flex fuel sensor",					flexSensorPin
 
 	dialog = triggerInputComparator, "Built-in Comparator Settings (Kinetis-only)"
 		field = "Comparator Center Point Voltage", triggerCompCenterVolt
