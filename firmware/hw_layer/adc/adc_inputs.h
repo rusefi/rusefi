@@ -13,6 +13,21 @@
 
 #define SLOW_ADC_RATE 500
 
+static inline bool isAdcChannelValid(adc_channel_e hwChannel) {
+	if (hwChannel <= EFI_ADC_NONE) {
+		return false;
+	} else if (hwChannel >= EFI_ADC_LAST_CHANNEL) {
+		/* this should not happen!
+		 * if we have enum out of range somewhere in settings
+		 * that means something goes terribly wrong
+		 * TODO: should we say something?
+		 */
+		return false;
+	} else {
+		return true;
+	}
+}
+
 #if HAL_USE_ADC
 
 adc_channel_mode_e getAdcMode(adc_channel_e hwChannel);

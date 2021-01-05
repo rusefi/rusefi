@@ -1,4 +1,5 @@
 #include "init.h"
+#include "adc_inputs.h"
 #include "adc_subscription.h"
 #include "engine.h"
 #include "error_handling.h"
@@ -39,7 +40,7 @@ static void initFluidPressure(LinearFunc& func, FunctionalSensor& sensor, const 
 	auto channel = cfg.hwChannel;
 
 	// Only register if we have a sensor
-	if (channel == EFI_ADC_NONE) {
+	if (!isAdcChannelValid(channel)) {
 		return;
 	}
 
