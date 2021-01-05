@@ -603,6 +603,8 @@ void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels DECLARE_
 	// High pressure is in bar, aka 100 kpa
 	tsOutputChannels->highFuelPressure = KPA2BAR(Sensor::get(SensorType::FuelPressureHigh).Value);
 
+	tsOutputChannels->flexPercent = Sensor::get(SensorType::FuelEthanolPercent).Value;
+
 	// 288
 	tsOutputChannels->injectionOffset = engine->engineState.injectionOffset;
 
