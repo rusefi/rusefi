@@ -792,6 +792,7 @@ static void setDefaultEngineConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 
 	setLambdaMap(config->lambdaTable, 1.0f);
 	engineConfiguration->stoichRatioPrimary = 14.7f * PACK_MULT_AFR_CFG;
+	engineConfiguration->stoichRatioSecondary = 9.0f * PACK_MULT_AFR_CFG;
 
 	setDefaultVETable(PASS_ENGINE_PARAMETER_SIGNATURE);
 
