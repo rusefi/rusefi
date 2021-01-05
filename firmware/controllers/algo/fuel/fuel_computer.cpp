@@ -22,25 +22,25 @@ FuelComputer::FuelComputer(const ValueProvider3D& lambdaTable) : m_lambdaTable(&
 
 float FuelComputer::getStoichiometricRatio() const {
 	// TODO: vary this with ethanol content/configured setting/whatever
-	float rawConfigPrimary = (float)CONFIG(stoichRatioPrimary) / PACK_MULT_AFR_CFG;
+	float primary = (float)CONFIG(stoichRatioPrimary) / PACK_MULT_AFR_CFG;
 
 	// Config compatibility: this field may be zero on ECUs with old defaults
-	if (rawConfigPrimary < 5) {
+	if (primary < 5) {
 		// 14.7 = E0 gasoline AFR
-		rawConfigPrimary = 14.7f;
+		primary = 14.7f;
 	}
 
 	// Without an ethanol/flex sensor, return primary configured stoich ratio
 	if (!Sensor::hasSensor(SensorType::FuelEthanolPercent)) {
-		return rawConfigPrimary;
+		return primary;
 	}
 
-	float rawConfigSecondary = (float)CONFIG(stoichRatioSecondary) / PACK_MULT_AFR_CFG;
+	float secondary = (float)CONFIG(stoichRatioSecondary) / PACK_MULT_AFR_CFG;
 
 	// Config compatibility: this field may be zero on ECUs with old defaults
-	if (rawConfigSecondary < 5) {
+	if (secondary < 5) {
 		// 9.0 = E100 ethanol AFR
-		rawConfigSecondary = 9.0f;
+		secondary = 9.0f;
 	}
 
 	auto flex = Sensor::get(SensorType::FuelEthanolPercent);
@@ -48,7 +48,7 @@ float FuelComputer::getStoichiometricRatio() const {
 	// TODO: what do do if flex sensor fails?
 
 	// Linear interpolate between primary and secondary stoich ratios
-	return interpolateClamped(0, rawConfigPrimary, 100, rawConfigSecondary, flex.Value);
+	return interpolateClamped(0, primary, 100, secondary, flex.Value);
 }
 
 float FuelComputer::getTargetLambda(int rpm, float load) const {
