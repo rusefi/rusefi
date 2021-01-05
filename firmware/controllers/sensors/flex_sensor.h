@@ -1,6 +1,7 @@
 #include "stored_value_sensor.h"
 #include "timer.h"
 #include "rusefi_hw_enums.h"
+#include "biquad.h"
 
 class FlexFuelSensor : public StoredValueSensor {
 public:
@@ -14,4 +15,6 @@ public:
 
 private:
 	Timer m_edgeTimer;
+
+	Biquad m_filter;
 };
