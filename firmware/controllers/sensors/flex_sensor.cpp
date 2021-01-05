@@ -29,7 +29,7 @@ void FlexFuelSensor::onEdge(efitick_t nowNt) {
 
 	// TODO: are these limits reasonable?
 	if (frequency > 45 && frequency < 155) {
-		setValidValue(frequency - 50, nowNt);
+		setValidValue(clampF(0, frequency - 50, 100), nowNt);
 	}
 
 	// no explicit invalidation, we can tolerate a somewhat dodgy connection
