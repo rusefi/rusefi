@@ -159,7 +159,7 @@ void initIdleHardware(Logging* sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX) {
 
 		// This greatly improves PID accuracy for steppers with a small number of steps
 		idlePositionSensitivityThreshold = 1.0f / engineConfiguration->idleStepperTotalSteps;
-	} else if (engineConfiguration->useETBforIdleControl || CONFIG(idle).solenoidPin == GPIO_UNASSIGNED) {
+	} else if (engineConfiguration->useETBforIdleControl || !isBrainPinValid(CONFIG(idle).solenoidPin)) {
 		// here we do nothing for ETB idle and for no idle
 	} else {
 		// we are here for single or double solenoid idle
@@ -176,7 +176,7 @@ void initIdleHardware(Logging* sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX) {
 			(pwm_gen_callback*)applyIdleSolenoidPinState);
 
 		if (CONFIG(isDoubleSolenoidIdle)) {
-			if (CONFIG(secondSolenoidPin) == GPIO_UNASSIGNED) {
+			if (!isBrainPinValid(CONFIG(secondSolenoidPin))) {
 				firmwareError(OBD_PCM_Processor_Fault, "Second idle pin should be configured for double solenoid mode.");
 				return;
 			}

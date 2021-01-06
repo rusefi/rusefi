@@ -179,7 +179,7 @@ void initSmartGpio() {
 	startSmartCsPins();
 
 #if (BOARD_TLE6240_COUNT > 0)
-	if (engineConfiguration->tle6240_cs != GPIO_UNASSIGNED) {
+	if (isBrainPinValid(engineConfiguration->tle6240_cs)) {
 		tle6240.spi_config.ssport = getHwPort("tle6240 CS", engineConfiguration->tle6240_cs);
 		tle6240.spi_config.sspad = getHwPin("tle6240 CS", engineConfiguration->tle6240_cs);
 		tle6240.spi_bus = getSpiDevice(engineConfiguration->tle6240spiDevice);
@@ -190,7 +190,7 @@ void initSmartGpio() {
 #endif /* (BOARD_TLE6240_COUNT > 0) */
 
 #if (BOARD_MC33972_COUNT > 0)
-	if (engineConfiguration->mc33972_cs != GPIO_UNASSIGNED) {
+	if (isBrainPinValid(engineConfiguration->mc33972_cs)) {
 		// todo: reuse initSpiCs method?
 		mc33972.spi_config.ssport = getHwPort("mc33972 CS", engineConfiguration->mc33972_cs);
 		mc33972.spi_config.sspad = getHwPin("mc33972 CS", engineConfiguration->mc33972_cs);
@@ -203,7 +203,7 @@ void initSmartGpio() {
 #endif /* (BOARD_MC33972_COUNT > 0) */
 
 #if (BOARD_TLE8888_COUNT > 0)
-	if (engineConfiguration->tle8888_cs != GPIO_UNASSIGNED) {
+	if (isBrainPinValid(engineConfiguration->tle8888_cs)) {
 		// todo: reuse initSpiCs method?
 		tle8888_cfg.spi_config.ssport = getHwPort("tle8888 CS", engineConfiguration->tle8888_cs);
 		tle8888_cfg.spi_config.sspad = getHwPin("tle8888 CS", engineConfiguration->tle8888_cs);
@@ -220,7 +220,7 @@ void initSmartGpio() {
 #endif /* (BOARD_TLE8888_COUNT > 0) */
 
 #if (BOARD_DRV8860_COUNT > 0)
-	if (engineConfiguration->drv8860_cs != GPIO_UNASSIGNED) {
+	if (isBrainPinValid(engineConfiguration->drv8860_cs)) {
 		drv8860.spi_config.ssport = getHwPort("drv8860 CS", engineConfiguration->drv8860_cs);
 		drv8860.spi_config.sspad = getHwPin("drv8860 CS", engineConfiguration->drv8860_cs);
 		drv8860.spi_bus = getSpiDevice(engineConfiguration->drv8860spiDevice);

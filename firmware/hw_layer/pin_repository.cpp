@@ -10,6 +10,20 @@
  */
 
 #include "global.h"
+
+/* Common for firmware and unit tests */
+bool isBrainPinValid(brain_pin_e brainPin)
+{
+	if ((brainPin == GPIO_UNASSIGNED) || (brainPin == GPIO_INVALID))
+		return false;
+
+	if (brainPin > BRAIN_PIN_LAST)
+		/* something terribly wrong */
+		return false;
+
+	return true;
+}
+
 #if EFI_PROD_CODE
 #include "os_access.h"
 #include "pin_repository.h"
