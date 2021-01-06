@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Fri Dec 04 16:38:41 UTC 2020
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Wed Jan 06 03:31:58 UTC 2021
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -689,7 +689,7 @@ struct engine_configuration_s {
 	offset 76 bit 12 */
 	bool etb_use_two_wires : 1;
 	/**
-	 * Subaru style where default valve position is somewhere in the middle. First solenoid opens it more while second can close it more than default position.
+	 * Subaru/BMW style where default valve position is somewhere in the middle. First solenoid opens it more while second can close it more than default position.
 	offset 76 bit 13 */
 	bool isDoubleSolenoidIdle : 1;
 	/**
@@ -1596,6 +1596,7 @@ struct engine_configuration_s {
 	 */
 	int mapMinBufferLength;
 	/**
+	 * Below this throttle position, the engine is considered idling.
 	 * offset 816
 	 */
 	int16_t idlePidDeactivationTpsThreshold;
@@ -3137,10 +3138,10 @@ struct engine_configuration_s {
 	 */
 	float fsioCurve4[FSIO_CURVE_8];
 	/**
-	 * For pinout see https://rusefi.com/forum/viewtopic.php?f=5&t=1324
+	 * Continental/GM flex fuel sensor, 50-150hz type
 	 * offset 3100
 	 */
-	uint8_t unusedFlexFuelSensor;
+	brain_input_pin_e flexSensorPin;
 	/**
 	 * offset 3101
 	 */
@@ -3341,7 +3342,7 @@ struct engine_configuration_s {
 	 */
 	spi_device_e tle6240spiDevice;
 	/**
-	 * Stoichiometric ratio for your primary fuel.
+	 * Stoichiometric ratio for your primary fuel. When Flex Fuel is enabled, this value is used when the Flex Fuel sensor indicates E0.
 	 * offset 4005
 	 */
 	uint8_t stoichRatioPrimary;
@@ -3355,26 +3356,28 @@ struct engine_configuration_s {
 	 */
 	spi_device_e mc33972spiDevice;
 	/**
+	 * Stoichiometric ratio for your secondary fuel. This value is used when the Flex Fuel sensor indicates E100.
 	 * offset 4009
 	 */
-	uint8_t unusedSpiPadding8[3];
+	uint8_t stoichRatioSecondary;
+	/**
+	 * offset 4010
+	 */
+	uint8_t unusedSpiPadding8[2];
 	/**
 	 *  ETB idle authority
 	 * offset 4012
 	 */
 	float etbIdleThrottleRange;
 	/**
+	 * Select which fuel correction bank this cylinder belongs to. Group cylinders that share the same O2 sensor
 	 * offset 4016
 	 */
-	uint8_t unusedvref[4];
+	uint8_t cylinderBankSelect[INJECTION_PIN_COUNT];
 	/**
-	 * offset 4020
+	 * offset 4028
 	 */
-	uint8_t unusedsw[4];
-	/**
-	 * offset 4024
-	 */
-	int unused_alFIn[3];
+	int unused4028[2];
 	/**
 	 * Trigger comparator center point voltage
 	 * offset 4036
@@ -3473,14 +3476,18 @@ struct engine_configuration_s {
 	 */
 	pin_output_mode_e tcu_solenoid_mode[TCU_SOLENOID_COUNT];
 	/**
-	 * need 4 byte alignment
 	 * offset 4523
 	 */
-	uint8_t alignmentFill_at_4523;
+	int8_t knockBaseNoise[IGN_RPM_COUNT];
 	/**
-	 * offset 4524
+	 * need 4 byte alignment
+	 * offset 4539
 	 */
-	int mainUnusedEnd[369];
+	uint8_t alignmentFill_at_4539;
+	/**
+	 * offset 4540
+	 */
+	int mainUnusedEnd[365];
 	/** total size 6000*/
 };
 
@@ -3778,4 +3785,4 @@ struct persistent_config_s {
 typedef struct persistent_config_s persistent_config_s;
 
 // end
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Fri Dec 04 16:38:41 UTC 2020
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Wed Jan 06 03:31:58 UTC 2021

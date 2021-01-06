@@ -171,4 +171,14 @@ void initAlternatorCtrl(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	instance.Start();
 }
 
+// todo: start invoking this method like 'startAuxPins'
+void startAlternatorPin(void) {
+
+}
+
+void stopAlternatorPin(void) {
+	// todo: implementation!
+}
+
+
 #endif /* EFI_ALTERNATOR_CONTROL */

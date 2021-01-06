@@ -20,9 +20,6 @@ extern "C" void toggleLed(int led, int mode);
 #define BOARD_MOD1_PORT GPIOD
 #define BOARD_MOD1_PIN 5
 
-
-extern bool hasFirmwareErrorFlag;
-
 EXTERN_ENGINE
 ;
 static Logging *logger;
@@ -116,8 +113,6 @@ static void onTriggerChanged(efitick_t stamp, bool isPrimary, bool isRising) {
 #if 1
 	// todo: support for 3rd trigger input channel
 	// todo: start using real event time from HW event, not just software timer?
-	if (hasFirmwareErrorFlag)
-		return;
 
 	if (!isPrimary && !TRIGGER_WAVEFORM(needSecondTriggerInput)) {
 		return;
@@ -304,7 +299,7 @@ adc_channel_e getAdcChannelForTrigger(void) {
 
 void addAdcChannelForTrigger(void) {
 	adc_channel_e ch = getAdcChannelForTrigger();
-	if (ch != EFI_ADC_NONE) {
+	if (isAdcChannelValid(ch)) {
 		addChannel("TRIG", ch, ADC_FAST);
 	}
 }

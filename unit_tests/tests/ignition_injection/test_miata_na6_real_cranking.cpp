@@ -69,7 +69,7 @@ TEST(miataNA6, realCranking) {
 	// second synch
 	/* 22 */ EVENT(/* timestamp*/1.45352675, /*index*/1, /*value*/true);
 	ASSERT_EQ( 1,  unitTestWarningCodeState.recentWarnings.getCount()) << "warningCounter#realCranking";
-	ASSERT_EQ( 463,  GET_RPM()) << "RPM at the 22";
+	ASSERT_EQ( 464,  GET_RPM()) << "RPM at the 22";
 	/* 23 */ EVENT(/* timestamp*/1.46291525, /*index*/0, /*value*/false);
 	/* 25 */ EVENT(/* timestamp*/1.49939025, /*index*/1, /*value*/false);
 	/* 27 */ EVENT(/* timestamp*/1.511785, /*index*/0, /*value*/true);

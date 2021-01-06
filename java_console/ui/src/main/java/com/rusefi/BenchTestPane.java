@@ -28,6 +28,7 @@ public class BenchTestPane {
         content.add(createFuelPumpTest());
         content.add(createSparkTest());
         content.add(createInjectorTest());
+        content.add(createSolenoidTest());
         content.add(createMILTest());
         content.add(createIdleTest());
         content.add(createStarterTest());
@@ -105,7 +106,7 @@ public class BenchTestPane {
     }
 
     private Component createSparkTest() {
-        final JComboBox<Integer> indexes = createIndexCombo();
+        final JComboBox<Integer> indexes = createIndexCombo(Fields.IGNITION_PIN_COUNT);
         CommandControl panel = new CommandControl(uiContext,"Spark #", "spark.jpg", TEST, indexes) {
             @Override
             protected String getCommand() {
@@ -116,7 +117,7 @@ public class BenchTestPane {
     }
 
     private Component createInjectorTest() {
-        final JComboBox<Integer> indexes = createIndexCombo();
+        final JComboBox<Integer> indexes = createIndexCombo(Fields.INJECTION_PIN_COUNT);
         CommandControl panel = new CommandControl(uiContext,"Injector #", "injector.png", TEST, indexes) {
             @Override
             protected String getCommand() {
@@ -126,10 +127,21 @@ public class BenchTestPane {
         return panel.getContent();
     }
 
+    private Component createSolenoidTest() {
+        final JComboBox<Integer> indexes = createIndexCombo(Fields.TCU_SOLENOID_COUNT);
+        CommandControl panel = new CommandControl(uiContext,"TCU Solenoid #", "solenoid.jpg", TEST, indexes) {
+            @Override
+            protected String getCommand() {
+                return "tcusolbench 1000 " + indexes.getSelectedItem() + " 1000 1000 3";
+            }
+        };
+        return panel.getContent();
+    }
+
     @NotNull
-    private JComboBox<Integer> createIndexCombo() {
+    private JComboBox<Integer> createIndexCombo(Integer count) {
         JComboBox<Integer> indexes = new JComboBox<>();
-        for (int i = 1; i <= 12; i++) {
+        for (int i = 1; i <= count; i++) {
             indexes.addItem(i);
         }
         return indexes;

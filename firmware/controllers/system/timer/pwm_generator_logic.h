@@ -59,7 +59,7 @@ public:
 
 	void weComplexInit(const char *msg,
 			ExecutorInterface *executor,
-			const int phaseCount, float const *swithcTimes, const int waveCount, pin_state_t *const*pinStates,
+			const int phaseCount, float const *switchTimes, const int waveCount, pin_state_t *const*pinStates,
 			pwm_cycle_callback *pwmCycleCallback,
 			pwm_gen_callback *callback);
 
@@ -110,6 +110,9 @@ private:
 	 * PWM generation is not happening while this value is NAN
 	 */
 	float periodNt;
+
+	// Set if we are very far behind schedule and need to reset back to the beginning of a cycle to find our way
+	bool forceCycleStart = true;
 };
 
 struct hardware_pwm;

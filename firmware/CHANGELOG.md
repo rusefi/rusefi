@@ -27,9 +27,25 @@ All notable user-facing or behavior-altering changes will be documented in this 
 
 ## XXX 202X Release
 
+### Breaking Changes
+
+### Added
+ - Basic fueling-only flex fuel implementation. Automatic adjustment of stoichiometric ratio based on ethanol content, compatible with the common GM/Continental 50-150hz flex fuel sensor 🎉 🎉 🎉
+
+### Fixed
+
+### December 2020 Bake Cookies Day
+
+### Breaking Changes
+ - GM x24 trigger now uses 0 offset (offset is now built in, previously needed 50 degrees offset)
+
 ### Added
  - DAIHATSU 3/4 cylinder trigger https://rusefi.com/images/triggers/trigger_6.png
  - Ford ST170 VVT cam trigger https://rusefi.com/images/triggers/trigger_42.png
+ - Changed scheduling timer driver to improve scheduling accuracy #1983
+
+### Fixed
+ - microRusEFI GP3 & GP4 fixed
 
 ## December 2020 National Mutt Day
 

@@ -31,6 +31,8 @@
 
 #define EFI_PWM_TESTER FALSE
 
+#define EFI_ACTIVE_CONFIGURATION_IN_FLASH FALSE
+
 #define EFI_MC33816 TRUE
 
 #define EFI_HPFP TRUE
@@ -202,6 +204,8 @@
 #define EFI_CAN_SUPPORT TRUE
 #endif
 
+#define EFI_WIDEBAND_FIRMWARE_UPDATE TRUE
+
 #ifndef EFI_AUX_SERIAL
 #define EFI_AUX_SERIAL TRUE
 #endif
@@ -257,13 +261,6 @@
 #endif
 
 #define EFI_CONSOLE_USB_DEVICE SDU1
-
-/**
- * Should PnP engine configurations be included in the binary?
- */
-#ifndef EFI_INCLUDE_ENGINE_PRESETS
-#define EFI_INCLUDE_ENGINE_PRESETS TRUE
-#endif
 
 #ifndef EFI_ENGINE_SNIFFER
 #define EFI_ENGINE_SNIFFER TRUE

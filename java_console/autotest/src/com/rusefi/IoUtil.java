@@ -3,6 +3,7 @@ package com.rusefi;
 import com.devexperts.logging.Logging;
 import com.rusefi.config.generated.Fields;
 import com.rusefi.core.EngineState;
+import com.rusefi.core.ISensorCentral;
 import com.rusefi.core.Sensor;
 import com.rusefi.core.SensorCentral;
 import com.rusefi.io.CommandQueue;
@@ -30,7 +31,7 @@ public class IoUtil {
      * @throws IllegalStateException if command was not confirmed
      */
     static void sendCommand(String command, CommandQueue commandQueue) {
-        sendCommand(command, CommandQueue.DEFAULT_TIMEOUT, Timeouts.CMD_TIMEOUT, commandQueue);
+        sendCommand(command, CommandQueue.DEFAULT_TIMEOUT, commandQueue);
     }
 
     public static String getEnableCommand(String settingName) {
@@ -44,18 +45,18 @@ public class IoUtil {
     /**
      * blocking method which would for confirmation from rusEfi
      */
-    public static void sendCommand(String command, int retryTimeoutMs, int timeoutMs, CommandQueue commandQueue) {
+    public static void sendCommand(String command, int timeoutMs, CommandQueue commandQueue) {
         final CountDownLatch responseLatch = new CountDownLatch(1);
         long time = System.currentTimeMillis();
         log.info("Sending command [" + command + "]");
         final long begin = System.currentTimeMillis();
-        commandQueue.write(command, retryTimeoutMs, () -> {
+        commandQueue.write(command, timeoutMs, () -> {
             responseLatch.countDown();
             log.info("Got confirmation in " + (System.currentTimeMillis() - begin) + "ms");
         });
         wait(responseLatch, timeoutMs);
         if (responseLatch.getCount() > 0)
-            log.info("No confirmation in " + retryTimeoutMs);
+            log.info("No confirmation in " + timeoutMs);
         log.info("Command [" + command + "] executed in " + (System.currentTimeMillis() - time));
     }
 
@@ -73,18 +74,21 @@ public class IoUtil {
         long time = System.currentTimeMillis();
 
         final CountDownLatch rpmLatch = new CountDownLatch(1);
-        SensorCentral.SensorListener listener = value -> {
-            double actualRpm = SensorCentral.getInstance().getValue(Sensor.RPM);
+
+        SensorCentral.ListenerToken listenerToken = SensorCentral.getInstance().addListener(Sensor.RPM, actualRpm -> {
             if (isCloseEnough(rpm, actualRpm))
                 rpmLatch.countDown();
-        };
-        SensorCentral.getInstance().addListener(Sensor.RPM, listener);
+        });
+
+        // Wait for RPM to change
         try {
             rpmLatch.await(40, TimeUnit.SECONDS);
         } catch (InterruptedException e) {
             throw new IllegalStateException(e);
         }
-        SensorCentral.getInstance().removeListener(Sensor.RPM, listener);
+
+        // We don't need to listen to RPM any more
+        listenerToken.remove();
 
         double actualRpm = SensorCentral.getInstance().getValue(Sensor.RPM);
 
@@ -97,11 +101,11 @@ public class IoUtil {
     static void waitForFirstResponse() throws InterruptedException {
         log.info("Let's give it some time to start...");
         final CountDownLatch startup = new CountDownLatch(1);
-        SensorCentral.SensorListener listener = value -> startup.countDown();
         long waitStart = System.currentTimeMillis();
-        SensorCentral.getInstance().addListener(Sensor.RPM, listener);
+
+        ISensorCentral.ListenerToken listener = SensorCentral.getInstance().addListener(Sensor.RPM, value -> startup.countDown());
         startup.await(5, TimeUnit.SECONDS);
-        SensorCentral.getInstance().removeListener(Sensor.RPM, listener);
+        listener.remove();
         FileLog.MAIN.logLine("Got first signal in " + (System.currentTimeMillis() - waitStart));
     }
 

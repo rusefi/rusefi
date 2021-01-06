@@ -45,7 +45,7 @@ extern WaveChart waveChart;
 #endif /* NO_RPM_EVENTS_TIMEOUT_SECS */
 
 float RpmCalculator::getRpmAcceleration() const {
-	return 1.0 * previousRpmValue / rpmValue;
+	return rpmRate;
 }
 
 bool RpmCalculator::isStopped() const {
@@ -132,8 +132,10 @@ bool RpmCalculator::checkIfSpinning(efitick_t nowNt) const {
 
 void RpmCalculator::assignRpmValue(float floatRpmValue) {
 	previousRpmValue = rpmValue;
-	// we still persist integer RPM! todo: figure out the next steps
-	rpmValue = floatRpmValue;
+
+	// Round to the nearest integer RPM - some other parts of the ECU expect integer, so that's what we hand out.
+	// TODO: RPM should eventually switch to floating point across the ECU
+	rpmValue = efiRound(floatRpmValue, 1);
 
 	if (rpmValue <= 0) {
 		oneDegreeUs = NAN;
@@ -199,6 +201,9 @@ uint32_t RpmCalculator::getRevolutionCounterM(void) const {
 
 void RpmCalculator::setStopped() {
 	revolutionCounterSinceStart = 0;
+
+	rpmRate = 0;
+
 	if (rpmValue != 0) {
 		assignRpmValue(0);
 		// needed by 'useNoiselessTriggerDecoder'
@@ -248,7 +253,7 @@ void rpmShaftPositionCallback(trigger_event_e ckpSignalType,
 		bool hadRpmRecently = rpmState->checkIfSpinning(nowNt);
 
 		if (hadRpmRecently) {
-			efitick_t diffNt = nowNt - rpmState->lastRpmEventTimeNt;
+			int32_t diffNt = (int32_t)(nowNt - rpmState->lastRpmEventTimeNt);
 		/**
 		 * Four stroke cycle is two crankshaft revolutions
 		 *
@@ -258,15 +263,20 @@ void rpmShaftPositionCallback(trigger_event_e ckpSignalType,
 		 */
 			if (diffNt == 0) {
 				rpmState->setRpmValue(NOISY_RPM);
+				rpmState->rpmRate = 0;
 			} else {
 				int mult = (int)getEngineCycle(engine->getOperationMode(PASS_ENGINE_PARAMETER_SIGNATURE)) / 360;
 				float rpm = 60.0 * NT_PER_SECOND * mult / diffNt;
+
+				auto rpmDelta = rpm - rpmState->previousRpmValue;
+				rpmState->rpmRate = rpmDelta / (mult * 1e-6 * NT2US(diffNt));
+
 				rpmState->setRpmValue(rpm > UNREALISTIC_RPM ? NOISY_RPM : rpm);
+				
 			}
 		}
 		rpmState->onNewEngineCycle();
 		rpmState->lastRpmEventTimeNt = nowNt;
-		engine->isRpmHardLimit = GET_RPM() > engine->getRpmHardLimit(PASS_ENGINE_PARAMETER_SIGNATURE);
 	}
 
 
@@ -286,10 +296,10 @@ void rpmShaftPositionCallback(trigger_event_e ckpSignalType,
 		// Replace 'normal' RPM with instant RPM for the initial spin-up period
 		engine->triggerCentral.triggerState.movePreSynchTimestamps(PASS_ENGINE_PARAMETER_SIGNATURE);
 		int prevIndex;
-		int instantRpm = engine->triggerCentral.triggerState.calculateInstantRpm(&engine->triggerCentral.triggerFormDetails,
+		float instantRpm = engine->triggerCentral.triggerState.calculateInstantRpm(&engine->triggerCentral.triggerFormDetails,
 				&prevIndex, nowNt PASS_ENGINE_PARAMETER_SUFFIX);
 		// validate instant RPM - we shouldn't skip the cranking state
-		instantRpm = minI(instantRpm, CONFIG(cranking.rpm) - 1);
+		instantRpm = minF(instantRpm, CONFIG(cranking.rpm) - 1);
 		rpmState->assignRpmValue(instantRpm);
 #if 0
 		scheduleMsg(logger, "** RPM: idx=%d sig=%d iRPM=%d", index, ckpSignalType, instantRpm);

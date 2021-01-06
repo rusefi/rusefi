@@ -186,6 +186,14 @@ extern bool printTriggerDebug;
 void TriggerWaveform::calculateExpectedEventCounts(bool useOnlyRisingEdgeForTrigger) {
 	UNUSED(useOnlyRisingEdgeForTrigger);
 
+	if (!useOnlyRisingEdgeForTrigger) {
+		for (int i = 0;i<efi::size(expectedEventCount);i++) {
+			if (expectedEventCount[i] % 2 != 0) {
+				firmwareError(ERROR_TRIGGER_DRAMA, "Trigger: should be even %d %d", i, expectedEventCount[i]);
+			}
+		}
+	}
+
 	bool isSingleToothOnPrimaryChannel = useOnlyRisingEdgeForTrigger ? expectedEventCount[0] == 1 : expectedEventCount[0] == 2;
 	// todo: next step would be to set 'isSynchronizationNeeded' automatically based on the logic we have here
 	if (!shapeWithoutTdc && isSingleToothOnPrimaryChannel != !isSynchronizationNeeded) {
@@ -228,9 +236,10 @@ void TriggerWaveform::addEvent(angle_t angle, trigger_wheel_e const channelIndex
 	}
 
 #if EFI_UNIT_TEST
+	assertIsInBounds(privateTriggerDefinitionSize, triggerSignalIndeces, "trigger shape overflow");
 	triggerSignalIndeces[privateTriggerDefinitionSize] = channelIndex;
 	triggerSignalStates[privateTriggerDefinitionSize] = stateParam;
-#endif
+#endif // EFI_UNIT_TEST
 
 
 	// todo: the whole 'useOnlyRisingEdgeForTrigger' parameter and logic should not be here
@@ -243,7 +252,9 @@ void TriggerWaveform::addEvent(angle_t angle, trigger_wheel_e const channelIndex
 	efiAssertVoid(CUSTOM_ERR_6599, angle > 0 && angle <= 1, "angle should be positive not above 1");
 	if (privateTriggerDefinitionSize > 0) {
 		if (angle <= previousAngle) {
-			warning(CUSTOM_ERR_TRG_ANGLE_ORDER, "invalid angle order: new=%.2f/%f and prev=%.2f/%f, size=%d",
+			warning(CUSTOM_ERR_TRG_ANGLE_ORDER, "invalid angle order %s %s: new=%.2f/%f and prev=%.2f/%f, size=%d",
+					getTrigger_wheel_e(channelIndex),
+					getTrigger_value_e(state),
 					angle, angle * getCycleDuration(),
 					previousAngle, previousAngle * getCycleDuration(),
 					privateTriggerDefinitionSize);
@@ -660,8 +671,17 @@ void TriggerWaveform::initializeTriggerWaveform(Logging *logger, operation_mode_
 		configureFiatIAQ_P8(this);
 		break;
 
+	case TT_TRI_TACH:
+		configureTriTach(this);
+		break;
+
 	case TT_GM_LS_24:
 		initGmLS24(this);
+		break;
+
+	case TT_SUBARU_7_WITHOUT_6:
+	case TT_52:
+		initializeSubaruOnly7(this);
 		break;
 
 	case TT_SUBARU_SVX:

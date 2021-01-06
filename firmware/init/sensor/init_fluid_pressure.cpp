@@ -1,4 +1,5 @@
 #include "init.h"
+#include "adc_inputs.h"
 #include "adc_subscription.h"
 #include "engine.h"
 #include "error_handling.h"
@@ -39,7 +40,7 @@ static void initFluidPressure(LinearFunc& func, FunctionalSensor& sensor, const 
 	auto channel = cfg.hwChannel;
 
 	// Only register if we have a sensor
-	if (channel == EFI_ADC_NONE) {
+	if (!isAdcChannelValid(channel)) {
 		return;
 	}
 
@@ -48,9 +49,7 @@ static void initFluidPressure(LinearFunc& func, FunctionalSensor& sensor, const 
 
 	AdcSubscription::SubscribeSensor(sensor, channel, bandwidth);
 
-	if (!sensor.Register()) {
-		firmwareError(CUSTOM_INVALID_TPS_SETTING, "Duplicate registration for sensor \"%s\"", sensor.getSensorName());
-	}
+	sensor.Register();
 }
 
 void initOilPressure(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
@@ -64,9 +63,7 @@ void initOilPressure(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 		: SensorType::FuelPressureLow
 	);
 
-	if (!injectorPressure.Register()) {
-		firmwareError(OBD_PCM_Processor_Fault, "Duplicate sensor registration");
-	}
+	injectorPressure.Register();
 }
 
 void reconfigureOilPressure(DECLARE_CONFIG_PARAMETER_SIGNATURE) {

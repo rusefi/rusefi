@@ -123,11 +123,22 @@ void SingleTimerExecutor::executeAllPendingActions() {
 	 * TODO: add a counter & figure out a limit of iterations?
 	 */
 
+	// starts at -1 because do..while will run a minimum of once
+	executeCounter = -1;
+
 	bool didExecute;
 	do {
 		efitick_t nowNt = getTimeNowNt();
 		didExecute = queue.executeOne(nowNt);
+
+		// if we're stuck in a loop executing lots of events, panic!
+		if (executeCounter++ == 500) {
+			firmwareError(CUSTOM_ERR_LOCK_ISSUE, "Maximum scheduling run length exceeded - CPU load too high");
+		}
+
 	} while (didExecute);
+
+	maxExecuteCounter = maxI(maxExecuteCounter, executeCounter);
 
 	if (!isLocked()) {
 		firmwareError(CUSTOM_ERR_LOCK_ISSUE, "Someone has stolen my lock");
@@ -163,10 +174,12 @@ void initSingleTimerExecutorHardware(void) {
 
 void executorStatistics() {
 	if (engineConfiguration->debugMode == DBG_EXECUTOR) {
-#if EFI_TUNER_STUDIO && EFI_SIGNAL_EXECUTOR_ONE_TIMER
+#if EFI_TUNER_STUDIO
 		tsOutputChannels.debugIntField1 = ___engine.executor.timerCallbackCounter;
 		tsOutputChannels.debugIntField2 = ___engine.executor.executeAllPendingActionsInvocationCounter;
 		tsOutputChannels.debugIntField3 = ___engine.executor.scheduleCounter;
+		tsOutputChannels.debugIntField4 = ___engine.executor.executeCounter;
+		tsOutputChannels.debugIntField5 = ___engine.executor.maxExecuteCounter;
 #endif /* EFI_TUNER_STUDIO */
 	}
 }

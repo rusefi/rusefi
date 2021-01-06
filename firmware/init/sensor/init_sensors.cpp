@@ -13,10 +13,12 @@ void initNewSensors(Logging* logger DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	initCanSensors();
 #endif
 
+	initMap(PASS_ENGINE_PARAMETER_SIGNATURE);
 	initTps(PASS_CONFIG_PARAMETER_SIGNATURE);
 	initOilPressure(PASS_CONFIG_PARAMETER_SIGNATURE);
 	initThermistors(PASS_CONFIG_PARAMETER_SIGNATURE);
 	initLambda(PASS_ENGINE_PARAMETER_SIGNATURE);
+	initFlexSensor(PASS_CONFIG_PARAMETER_SIGNATURE);
 
 	// Init CLI functionality for sensors (mocking)
 	initSensorCli(logger);
@@ -39,8 +41,6 @@ static void initSensorCli(Logging* logger) {
 	addConsoleAction("show_sensors", []() { Sensor::showAllSensorInfo(s_logger); });
 	addConsoleActionI("show_sensor", 
 		[](int idx) {
-			if (auto s = Sensor::getSensorOfType(static_cast<SensorType>(idx))) {
-				s->showAllSensorInfo(s_logger);
-			}
+			Sensor::showInfo(s_logger, static_cast<SensorType>(idx));
 		});
 }

@@ -1,0 +1,21 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="EnduranceTestUtility" type="Application" factoryName="Application" folderName="Misc" nameIsGenerated="true">
+    <option name="MAIN_CLASS_NAME" value="com.rusefi.EnduranceTestUtility" />
+    <module name="autotest" />
+    <extension name="coverage">
+      <pattern>
+        <option name="PATTERN" value="com.rusefi.ui.console.*" />
+        <option name="ENABLED" value="true" />
+      </pattern>
+    </extension>
+    <RunnerSettings RunnerId="Debug">
+      <option name="DEBUG_PORT" value="" />
+      <option name="TRANSPORT" value="0" />
+      <option name="LOCAL" value="true" />
+    </RunnerSettings>
+    <ConfigurationWrapper RunnerId="Debug" />
+    <method v="2">
+      <option name="Make" enabled="true" />
+    </method>
+  </configuration>
+</component>

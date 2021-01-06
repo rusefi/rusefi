@@ -44,8 +44,8 @@ public:
 	void resetCounters();
 	void validateCamVvtCounters();
 
-	float getTimeSinceTriggerEvent() const {
-		return m_lastEventTimer.getElapsedSeconds();
+	float getTimeSinceTriggerEvent(efitick_t nowNt) const {
+		return m_lastEventTimer.getElapsedSeconds(nowNt);
 	}
 
 	TriggerNoiseFilter noiseFilter;
@@ -82,7 +82,6 @@ void hwHandleShaftSignal(trigger_event_e signal, efitick_t timestamp);
 void hwHandleVvtCamSignal(trigger_value_e front, efitick_t timestamp DECLARE_ENGINE_PARAMETER_SUFFIX);
 
 void initTriggerCentral(Logging *sharedLogger);
-void printAllTriggers();
 
 int isSignalDecoderError(void);
 void resetMaxValues();

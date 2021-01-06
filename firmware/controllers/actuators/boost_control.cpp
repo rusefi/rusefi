@@ -14,7 +14,6 @@
 #include "engine.h"
 #include "boost_control.h"
 #include "sensor.h"
-#include "map.h"
 #include "pin_repository.h"
 #include "pwm_generator_logic.h"
 #include "pid_auto_tune.h"
@@ -57,13 +56,7 @@ int BoostController::getPeriodMs() {
 }
 
 expected<float> BoostController::observePlant() const {
-	float map = getMap(PASS_ENGINE_PARAMETER_SIGNATURE);
-
-	if (cisnan(map)) {
-		return unexpected;
-	}
-
-	return map;
+	return Sensor::get(SensorType::Map);
 }
 
 expected<float> BoostController::getSetpoint() const {
@@ -221,6 +214,8 @@ void onConfigurationChangeBoostCallback(engine_configuration_s *previousConfigur
 }
 
 void initBoostCtrl(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX) {
+	// todo: why do we have 'isBoostControlEnabled' setting exactly?
+	// 'initAuxPid' is an example of a subsystem without explicit enable
 	if (!CONFIG(isBoostControlEnabled)) {
 		return;
 	}

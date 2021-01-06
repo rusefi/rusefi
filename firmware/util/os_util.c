@@ -41,20 +41,3 @@ void chVTSetAny(virtual_timer_t *vtp, systime_t time, vtfunc_t vtfunc, void *par
 }
 
 #endif /* EFI_UNIT_TEST */
-
-/**
- * See also getRemainingStack()
- */
-int getMaxUsedStack(uint8_t *ptr, int size) {
-	/**
-	 * maximum used stack size total stack buffer size minus position of first modified byte
-	 */
-#if ! EFI_UNIT_TEST
-	for (int i = 0; i < size; i++) {
-		if (ptr[i] != CH_DBG_STACK_FILL_VALUE) {
-			return size - i;
-		}
-	}
-#endif /* EFI_UNIT_TEST */
-	return 0;
-}

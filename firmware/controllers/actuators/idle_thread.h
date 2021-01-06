@@ -12,15 +12,42 @@
 #include "rusefi_types.h"
 #include "periodic_task.h"
 
+struct IIdleController {
+	enum class Phase : uint8_t {
+		Cranking,	// Below cranking threshold
+		Idling,		// Below idle RPM, off throttle
+		Coasting,	// Off throttle but above idle RPM
+		Running,	// On throttle
+	};
+
+	virtual Phase determinePhase(int rpm, int targetRpm, SensorResult tps) const = 0;
+	virtual int getTargetRpm(float clt) const = 0;
+	virtual float getCrankingOpenLoop(float clt) const = 0;
+	virtual float getRunningOpenLoop(float clt, SensorResult tps) const = 0;
+	virtual float getOpenLoop(Phase phase, float clt, SensorResult tps) const = 0;
+};
+
 class Logging;
 class Pid;
 
-class IdleController {
+
+class IdleController : public IIdleController {
 public:
 	DECLARE_ENGINE_PTR;
 
 	float getIdlePosition();
 	void update();
+
+	// TARGET DETERMINATION
+	int getTargetRpm(float clt) const override;
+
+	// PHASE DETERMINATION: what is the driver trying to do right now?
+	Phase determinePhase(int rpm, int targetRpm, SensorResult tps) const override;
+
+	// OPEN LOOP CORRECTIONS
+	float getCrankingOpenLoop(float clt) const override;
+	float getRunningOpenLoop(float clt, SensorResult tps) const override;
+	float getOpenLoop(Phase phase, float clt, SensorResult tps) const override;
 };
 
 void updateIdleControl();

@@ -12,6 +12,6 @@ TEST(hardware, reinit) {
 	ButtonDebounce::startConfigurationList();
 
 
-	resetConfigurationExt(nullptr, nullptr, ROVER_V8 PASS_ENGINE_PARAMETER_SUFFIX);
+	resetConfigurationExt(nullptr, nullptr, DODGE_NEON_1995 PASS_ENGINE_PARAMETER_SUFFIX);
 	resetConfigurationExt(nullptr, nullptr, MIATA_NA6_MAP PASS_ENGINE_PARAMETER_SUFFIX);
 }

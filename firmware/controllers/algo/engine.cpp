@@ -163,13 +163,13 @@ static void cylinderCleanupControl(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 #endif
 }
 
-#if HW_CHECK_MODE
+#if ANALOG_HW_CHECK_MODE
 static void assertCloseTo(const char * msg, float actual, float expected) {
 	if (actual < 0.75 * expected || actual > 1.25 * expected) {
 		firmwareError(OBD_PCM_Processor_Fault, "%s analog input validation failed %f vs %f", msg, actual, expected);
 	}
 }
-#endif // HW_CHECK_MODE
+#endif // ANALOG_HW_CHECK_MODE
 
 void Engine::periodicSlowCallback(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	ScopePerf perf(PE::EnginePeriodicSlowCallback);
@@ -216,8 +216,8 @@ void Engine::periodicSlowCallback(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 
 	slowCallBackWasInvoked = true;
 
-#if HW_CHECK_MODE
-	efiAssertVoid(OBD_PCM_Processor_Fault, CONFIG(clt).adcChannel != EFI_ADC_NONE, "No CLT setting");
+#if ANALOG_HW_CHECK_MODE
+	efiAssertVoid(OBD_PCM_Processor_Fault, isAdcChannelValid(CONFIG(clt).adcChannel), "No CLT setting");
 	efitimesec_t secondsNow = getTimeNowSeconds();
 	if (secondsNow > 2 && secondsNow < 180) {
 		assertCloseTo("RPM", Sensor::get(SensorType::Rpm).Value, HW_CHECK_RPM);
@@ -233,7 +233,7 @@ void Engine::periodicSlowCallback(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	assertCloseTo("iat", Sensor::get(SensorType::Iat).Value, 73.2);
 	assertCloseTo("aut1", Sensor::get(SensorType::AuxTemp1).Value, 13.8);
 	assertCloseTo("aut2", Sensor::get(SensorType::AuxTemp2).Value, 6.2);
-#endif // HW_CHECK_MODE
+#endif // ANALOG_HW_CHECK_MODE
 }
 
 
@@ -246,6 +246,8 @@ extern float vBattForTle8888;
  * See also periodicFastCallback
  */
 void Engine::updateSlowSensors(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+	updateSwitchInputs(PASS_ENGINE_PARAMETER_SIGNATURE);
+
 #if EFI_ENGINE_CONTROL
 	int rpm = GET_RPM();
 	isEngineChartEnabled = CONFIG(isEngineChartEnabled) && rpm < CONFIG(engineSnifferRpmThreshold);
@@ -254,7 +256,7 @@ void Engine::updateSlowSensors(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	engineState.updateSlowSensors(PASS_ENGINE_PARAMETER_SIGNATURE);
 
 	// todo: move this logic somewhere to sensors folder?
-	if (CONFIG(fuelLevelSensor) != EFI_ADC_NONE) {
+	if (isAdcChannelValid(CONFIG(fuelLevelSensor))) {
 		float fuelLevelVoltage = getVoltageDivided("fuel", engineConfiguration->fuelLevelSensor PASS_ENGINE_PARAMETER_SUFFIX);
 		sensors.fuelTankLevel = interpolateMsg("fgauge", CONFIG(fuelLevelEmptyTankVoltage), 0,
 				CONFIG(fuelLevelFullTankVoltage), 100,
@@ -271,6 +273,33 @@ void Engine::updateSlowSensors(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	initMc33816IfNeeded();
 #endif // EFI_MC33816
 #endif
+}
+
+void Engine::updateSwitchInputs(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+#if EFI_GPIO_HARDWARE
+	// this value is not used yet
+	if (CONFIG(clutchDownPin) != GPIO_UNASSIGNED) {
+		engine->clutchDownState = efiReadPin(CONFIG(clutchDownPin));
+	}
+	if (hasAcToggle(PASS_ENGINE_PARAMETER_SIGNATURE)) {
+		bool result = getAcToggle(PASS_ENGINE_PARAMETER_SIGNATURE);
+		if (engine->acSwitchState != result) {
+			engine->acSwitchState = result;
+			engine->acSwitchLastChangeTime = getTimeNowUs();
+		}
+		engine->acSwitchState = result;
+	}
+	if (CONFIG(clutchUpPin) != GPIO_UNASSIGNED) {
+		engine->clutchUpState = efiReadPin(CONFIG(clutchUpPin));
+	}
+	if (CONFIG(throttlePedalUpPin) != GPIO_UNASSIGNED) {
+		engine->engineState.idle.throttlePedalUpState = efiReadPin(CONFIG(throttlePedalUpPin));
+	}
+
+	if (engineConfiguration->brakePedalPin != GPIO_UNASSIGNED) {
+		engine->brakePedalState = efiReadPin(engineConfiguration->brakePedalPin);
+	}
+#endif // EFI_GPIO_HARDWARE
 }
 
 void Engine::onTriggerSignalEvent(efitick_t nowNt) {
@@ -433,6 +462,7 @@ void Engine::injectEngineReferences() {
 
 	INJECT_ENGINE_REFERENCE(&primaryTriggerConfiguration);
 	INJECT_ENGINE_REFERENCE(&vvtTriggerConfiguration);
+	INJECT_ENGINE_REFERENCE(&limpManager);
 
 	primaryTriggerConfiguration.update();
 	vvtTriggerConfiguration.update();

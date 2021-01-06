@@ -24,10 +24,6 @@ extern engine_configuration_s & activeConfiguration;
 extern bool printTriggerDebug;
 extern bool printFuelDebug;
 
-// This has been made global so we don't need to worry about efiReadPin having access the object
-//  we store it in, every time we need to use efiReadPin.
-bool mockPinStates[BRAIN_PIN_COUNT];
-
 EngineTestHelperBase::EngineTestHelperBase() { 
 	// todo: make this not a global variable, we need currentTimeProvider interface on engine
 	timeNowUs = 0; 
@@ -46,7 +42,7 @@ EngineTestHelper::EngineTestHelper(engine_type_e engineType, configuration_callb
 	Sensor::setMockValue(SensorType::Clt, 70);
 	Sensor::setMockValue(SensorType::Iat, 30);
 
-	for (const auto [s, v] : sensorValues) {
+	for (const auto& [s, v] : sensorValues) {
 		Sensor::setMockValue(s, v);
 	}
 
@@ -55,6 +51,7 @@ EngineTestHelper::EngineTestHelper(engine_type_e engineType, configuration_callb
 	memset(&activeConfiguration, 0, sizeof(activeConfiguration));
 
 	enginePins.reset();
+	enginePins.unregisterPins();
 
 	persistent_config_s *config = &persistentConfig;
 	Engine *engine = &this->engine;
@@ -103,6 +100,8 @@ EngineTestHelper::~EngineTestHelper() {
 	writeEvents(filePath.str().c_str());
 
 	// Cleanup
+	enginePins.reset();
+	enginePins.unregisterPins();
 	Sensor::resetRegistry();
 	memset(mockPinStates, 0, sizeof(mockPinStates));
 }

@@ -1,0 +1,5 @@
+(sym_lib_table
+  (lib (name logo)(type Legacy)(uri ${KIPRJMOD}/../rusefi_lib/logo.lib)(options "")(descr ""))
+  (lib (name ncv1124)(type Legacy)(uri ${KIPRJMOD}/../rusefi_lib/NCV1124.lib)(options "")(descr ""))
+  (lib (name ncv1124-rescue)(type Legacy)(uri ${KIPRJMOD}/ncv1124-rescue.lib)(options "")(descr ""))
+)

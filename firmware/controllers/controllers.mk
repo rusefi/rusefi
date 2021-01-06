@@ -42,6 +42,7 @@ CONTROLLERS_SRC_CPP = \
 	$(CONTROLLERS_DIR)/can/obd2.cpp \
 	$(CONTROLLERS_DIR)/can/can_verbose.cpp \
 	$(CONTROLLERS_DIR)/can/can_rx.cpp \
+	$(CONTORLLERS_DIR)/can/wideband_bootloader.cpp \
 	$(CONTROLLERS_DIR)/can/can_tx.cpp \
 	$(CONTROLLERS_DIR)/can/can_dash.cpp \
 	$(CONTROLLERS_DIR)/can/can_vss.cpp \
@@ -55,6 +56,7 @@ CONTROLLERS_SRC_CPP = \
 	$(CONTROLLERS_DIR)/gear_controller.cpp \
 	$(CONTROLLERS_DIR)/start_stop.cpp \
 	$(CONTROLLERS_DIR)/simple_tcu.cpp \
+	$(CONTROLLERS_DIR)/limp_manager.cpp \
 
 CONTROLLERS_INC=\
 	$(CONTROLLERS_DIR) \

@@ -28,7 +28,9 @@ cd java_console
 echo "Running tests"
 which java
 which javac
-ant realtest
+echo Sleeping few seconds to give OS time to connect VCP driver
+sleep 20s
+ant real_hardware_functional_test
 
 [ $? -eq 0 ] || { echo "ERROR DETECTED"; exit 1; }
 
