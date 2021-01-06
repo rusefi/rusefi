@@ -373,7 +373,7 @@ void executeTSCommand(uint16_t subsystem, uint16_t index) {
 		doRunSpark(index, "300", "4", "400", "3");
 	} else if (subsystem == CMD_TS_INJECTOR_CATEGORY && !running) {
 		doRunFuel(index, "300", "4", "400", "3");
-	} else if (subsystem == CMD_TS_INJECTOR_CATEGORY && !running) {
+	} else if (subsystem == CMD_TS_SOLENOID_CATEGORY && !running) {
 		doTestSolenoid(index, "300", "1000", "1000", "3");
 	} else if (subsystem == CMD_TS_FSIO_CATEGORY && !running) {
 		doBenchTestFsio(index, "300", "4", "400", "3");
