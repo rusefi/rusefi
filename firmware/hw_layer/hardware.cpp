@@ -339,9 +339,9 @@ void applyNewHardwareSettings(void) {
 	}
 #endif
 
-#if (BOARD_TLE6240_COUNT > 0) || (BOARD_DRV8860_COUNT > 0)
+#if (BOARD_EXT_GPIOCHIPS > 0)
 	stopSmartCsPins();
-#endif /* (BOARD_MC33972_COUNT > 0) */
+#endif /* (BOARD_EXT_GPIOCHIPS > 0) */
 
 #if EFI_VEHICLE_SPEED
 	stopVSSPins();
@@ -390,7 +390,9 @@ void applyNewHardwareSettings(void) {
 
 	ButtonDebounce::startConfigurationList();
 
-
+	/*******************************************
+	 * Start everything back with new settings *
+	 ******************************************/
 
 #if EFI_SHAFT_POSITION_INPUT
 	startTriggerInputPins();
@@ -403,6 +405,21 @@ void applyNewHardwareSettings(void) {
 #if EFI_HD44780_LCD
 	startHD44780_pins();
 #endif /* #if EFI_HD44780_LCD */
+
+#if (BOARD_EXT_GPIOCHIPS > 0)
+	/* TODO: properly restart gpio chips...
+	 * This is only workaround for "CS pin lost" bug
+	 * see: https://github.com/rusefi/rusefi/issues/2107
+	 * We should provide better way to gracefully stop all
+	 * gpio chips: set outputs to safe state, release all
+	 * on-chip resources (gpios, SPIs, etc) and then restart
+	 * with updated settings.
+	 * Following code just re-inits CS pins for all external
+	 * gpio chips, but does not update CS pin definition in
+	 * gpio chips private data/settings. So changing CS pin
+	 * on-fly does not work */
+	startSmartCsPins();
+#endif /* (BOARD_EXT_GPIOCHIPS > 0) */
 
 	enginePins.startPins();
 
