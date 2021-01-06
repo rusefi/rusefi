@@ -22,11 +22,8 @@
 #include "drivers/gpio/drv8860.h"
 
 EXTERN_CONFIG;
-static OutputPin tle8888Cs;
-static OutputPin tle6240Cs;
-static OutputPin mc33972Cs;
-static OutputPin drv8860Cs;
 
+#if (BOARD_TLE6240_COUNT > 0)
 // todo: migrate to TS or board config
 #ifndef TLE6240_RESET_PORT
 #define TLE6240_RESET_PORT GPIOG
@@ -52,9 +49,9 @@ static OutputPin drv8860Cs;
 		[7] = {.port = GPIOC, .pad = 7},
 #endif /* TLE6240_DIRECT_IO */
 
-#if (BOARD_TLE6240_COUNT > 0)
+static OutputPin tle6240Cs;
 struct tle6240_config tle6240 = {
-	.spi_bus = NULL /* TODO software lookup &SPID4 */,
+	.spi_bus = NULL,
 	.spi_config = {
 		.circular = false,
 		.end_cb = NULL,
@@ -80,8 +77,9 @@ struct tle6240_config tle6240 = {
 #endif /* (BOARD_TLE6240_COUNT > 0) */
 
 #if (BOARD_MC33972_COUNT > 0)
+static OutputPin mc33972Cs;
 struct mc33972_config mc33972 = {
-	.spi_bus = NULL /* TODO software lookup &SPID4 */,
+	.spi_bus = NULL,
 	.spi_config = {
 		.circular = false,
 		.end_cb = NULL,
@@ -103,6 +101,7 @@ struct mc33972_config mc33972 = {
 #endif /* (BOARD_MC33972_COUNT > 0) */
 
 #if (BOARD_TLE8888_COUNT > 0)
+static OutputPin tle8888Cs;
 struct tle8888_config tle8888_cfg = {
 	.spi_bus = NULL,
 	.spi_config = {
@@ -154,8 +153,9 @@ struct tle8888_config tle8888_cfg = {
 #endif
 
 #if (BOARD_DRV8860_COUNT > 0)
+static OutputPin drv8860Cs;
 struct drv8860_config drv8860 = {
-	.spi_bus = NULL /* TODO software lookup &SPID4 */,
+	.spi_bus = NULL,
 	.spi_config = {
 		.circular = false,
 		.end_cb = NULL,
@@ -176,9 +176,7 @@ struct drv8860_config drv8860 = {
 #endif /* (BOARD_DRV8860_COUNT > 0) */
 
 void initSmartGpio() {
-#if (BOARD_EXT_GPIOCHIPS > 0)
 	startSmartCsPins();
-#endif /* BOARD_EXT_GPIOCHIPS */
 
 #if (BOARD_TLE6240_COUNT > 0)
 	if (engineConfiguration->tle6240_cs != GPIO_UNASSIGNED) {
@@ -236,16 +234,10 @@ void initSmartGpio() {
 	/* none of official boards has this IC */
 #endif /* (BOARD_MC33810_COUNT > 0) */
 
-	/* in case of disabled asserts... supress 'set but not used' error */
-	(void)ret;
-
-#if (BOARD_EXT_GPIOCHIPS > 0)
 	/* external chip init */
 	gpiochips_init();
-#endif /* (BOARD_EXT_GPIOCHIPS > 0) */
 }
 
-#if (BOARD_EXT_GPIOCHIPS > 0)
 void stopSmartCsPins() {
 #if (BOARD_TLE8888_COUNT > 0)
 	efiSetPadUnused(activeConfiguration.tle8888_cs);
@@ -289,6 +281,5 @@ void startSmartCsPins() {
 	/* none of official boards has this IC */
 #endif /* (BOARD_MC33810_COUNT > 0) */
 }
-#endif /* (BOARD_EXT_GPIOCHIPS > 0) */
 
 #endif /* EFI_PROD_CODE */
