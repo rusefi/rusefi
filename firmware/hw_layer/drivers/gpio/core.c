@@ -126,20 +126,31 @@ const char *gpiochips_getPinName(brain_pin_e pin)
 int gpiochip_register(brain_pin_e base, const char *name, struct gpiochip_ops *ops, size_t size, void *priv)
 {
 	int i;
-	struct gpiochip *chip = NULL;
 
 	/* no ops provided, zero size? */
 	if ((!ops) || (!size))
 		return -1;
 
 	/* outside? */
-	if ((size_t)base + size - 1 > BRAIN_PIN_LAST)
+	if (((size_t)base + size - 1 > BRAIN_PIN_LAST) || (base <= BRAIN_PIN_ONCHIP_LAST))
 		return -1;
 
 	/* no 'writePad' and no 'readPad' implementation? return error code */
 	if ((!ops->writePad) && (!ops->readPad))
 		return -1;
 
+	/* check for overlap with other chips */
+	for (i = 0; i < BOARD_EXT_GPIOCHIPS; i++) {
+		if (chips[i].base != 0) {
+			#define in_range(a, b, c)	(((a) > (b)) && ((a) < (c)))
+			if (in_range(base, chips[i].base, chips[i].base + chips[i].size))
+				return -1;
+			if (in_range(base + size, chips[i].base, chips[i].base + chips[i].size))
+				return -1;
+		}
+	}
+
+	struct gpiochip *chip = NULL;
 	/* find free gpiochip struct */
 	for (i = 0; i < BOARD_EXT_GPIOCHIPS; i++) {
 		if (chips[i].base == 0) {
@@ -151,17 +162,6 @@ int gpiochip_register(brain_pin_e base, const char *name, struct gpiochip_ops *o
 	/* no free chips left */
 	if (!chip) {
 		return -1;
-	}
-
-	/* check for overlap with other chips */
-	for (i = 0; i < BOARD_EXT_GPIOCHIPS; i++) {
-		if (chips[i].base != 0) {
-			#define in_range(a, b, c)	(((a) > (b)) && ((a) < (c)))
-			if (in_range(base, chips[i].base, chips[i].base + chips[i].size))
-				return -1;
-			if (in_range(base + size, chips[i].base, chips[i].base + chips[i].size))
-				return -1;
-		}
 	}
 
 	/* register chip */
