@@ -1,7 +1,8 @@
+#include "global.h"
+#include "adc_inputs.h"
 #include "adc_subscription.h"
 #include "engine.h"
 #include "error_handling.h"
-#include "global.h"
 #include "functional_sensor.h"
 #include "func_chain.h"
 #include "linear_func.h"
@@ -54,7 +55,7 @@ static void configureTempSensor(FunctionalSensor &sensor,
 	auto channel = config.adcChannel;
 
 	// Only register if we have a sensor
-	if (channel == EFI_ADC_NONE) {
+	if (!isAdcChannelValid(channel)) {
 		return;
 	}
 

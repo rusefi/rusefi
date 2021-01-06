@@ -13,7 +13,7 @@ float getMafVoltage(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 }
 
 bool hasMafSensor(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
-	return engineConfiguration->mafAdcChannel != EFI_ADC_NONE;
+	return isAdcChannelValid(engineConfiguration->mafAdcChannel);
 }
 
 /**

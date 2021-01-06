@@ -120,6 +120,16 @@ static void doRunFuel(int humanIndex, const char *delayStr, const char * onTimeS
 	pinbench(delayStr, onTimeStr, offTimeStr, countStr, &enginePins.injectors[humanIndex - 1], b);
 }
 
+static void doTestSolenoid(int humanIndex, const char *delayStr, const char * onTimeStr, const char *offTimeStr,
+		const char *countStr) {
+	if (humanIndex < 1 || humanIndex > TCU_SOLENOID_COUNT) {
+		scheduleMsg(logger, "Invalid index: %d", humanIndex);
+		return;
+	}
+	brain_pin_e b = CONFIG(tcu_solenoid)[humanIndex - 1];
+	pinbench(delayStr, onTimeStr, offTimeStr, countStr, &enginePins.tcuSolenoids[humanIndex - 1], b);
+}
+
 static void doBenchTestFsio(int humanIndex, const char *delayStr, const char * onTimeStr, const char *offTimeStr,
 		const char *countStr) {
 	if (humanIndex < 1 || humanIndex > FSIO_COMMAND_COUNT) {
@@ -138,6 +148,16 @@ static void fuelbench2(const char *delayStr, const char *indexStr, const char * 
 		const char *countStr) {
 	int index = atoi(indexStr);
 	doRunFuel(index, delayStr, onTimeStr, offTimeStr, countStr);
+}
+
+/**
+ * delay 100, solenoid #2, 1000ms ON, 1000ms OFF, repeat 3 times
+ * tcusolbench 100 2 1000 1000 3
+ */
+static void tcusolbench(const char *delayStr, const char *indexStr, const char * onTimeStr, const char *offTimeStr,
+		const char *countStr) {
+	int index = atoi(indexStr);
+	doTestSolenoid(index, delayStr, onTimeStr, offTimeStr, countStr);
 }
 
 /**
@@ -353,6 +373,8 @@ void executeTSCommand(uint16_t subsystem, uint16_t index) {
 		doRunSpark(index, "300", "4", "400", "3");
 	} else if (subsystem == CMD_TS_INJECTOR_CATEGORY && !running) {
 		doRunFuel(index, "300", "4", "400", "3");
+	} else if (subsystem == CMD_TS_SOLENOID_CATEGORY && !running) {
+		doTestSolenoid(index, "300", "1000", "1000", "3");
 	} else if (subsystem == CMD_TS_FSIO_CATEGORY && !running) {
 		doBenchTestFsio(index, "300", "4", "400", "3");
 	} else if (subsystem == 0x14) {
@@ -409,6 +431,7 @@ void initBenchTest(Logging *sharedLogger) {
 	addConsoleAction(CMD_HPFP_BENCH, hpfpValveBench);
 
 	addConsoleActionSSSSS("fuelbench2", fuelbench2);
+	addConsoleActionSSSSS("tcusolbench", tcusolbench);
 	addConsoleActionSSSSS("fsiobench2", fsioBench2);
 	addConsoleActionSSSSS("sparkbench2", sparkbench2);
 	instance.setPeriod(200 /*ms*/);
