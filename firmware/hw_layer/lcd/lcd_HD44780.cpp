@@ -55,6 +55,7 @@ static const int lineStart[] = { 0, 0x40, 0x14, 0x54 };
 static int BUSY_WAIT_DELAY = FALSE;
 static int currentRow = 0;
 static int currentColumn = 0;
+static bool lcd_enabled = false;
 
 static void lcdSleep(int period) {
 	if (BUSY_WAIT_DELAY) {
@@ -111,7 +112,7 @@ static void lcd_HD44780_write(uint8_t data) {
 }
 
 //-----------------------------------------------------------------------------
-void lcd_HD44780_write_command(uint8_t data) {
+static void lcd_HD44780_write_command(uint8_t data) {
 	palClearPad(getHwPort("lcd", CONFIG(HD44780_rs)), getHwPin("lcd", CONFIG(HD44780_rs)));
 
 	lcd_HD44780_write(data);
@@ -119,7 +120,7 @@ void lcd_HD44780_write_command(uint8_t data) {
 }
 
 //-----------------------------------------------------------------------------
-void lcd_HD44780_write_data(uint8_t data) {
+static void lcd_HD44780_write_data(uint8_t data) {
 	palSetPad(getHwPort("lcd", CONFIG(HD44780_rs)), getHwPin("lcd", CONFIG(HD44780_rs)));
 
 	lcd_HD44780_write(data);
@@ -131,6 +132,9 @@ void lcd_HD44780_write_data(uint8_t data) {
 
 //-----------------------------------------------------------------------------
 void lcd_HD44780_set_position(uint8_t row, uint8_t column) {
+	if (!lcd_enabled)
+		return;
+
 	efiAssertVoid(CUSTOM_ERR_6657, row <= engineConfiguration->HD44780height, "invalid row");
 	currentRow = row;
 	currentColumn = column;
@@ -138,14 +142,23 @@ void lcd_HD44780_set_position(uint8_t row, uint8_t column) {
 }
 
 int getCurrentHD44780row(void) {
+	if (!lcd_enabled)
+		return 0;
+
 	return currentRow;
 }
 
 int getCurrentHD44780column(void) {
+	if (!lcd_enabled)
+		return 0;
+
 	return currentColumn;
 }
 
 void lcd_HD44780_print_char(char data) {
+	if (!lcd_enabled)
+		return;
+
 	if (data == '\n') {
 		lcd_HD44780_set_position(++currentRow, 0);
 	} else {
@@ -154,6 +167,9 @@ void lcd_HD44780_print_char(char data) {
 }
 
 void lcd_HD44780_print_string(const char* string) {
+	if (!lcd_enabled)
+		return;
+
 	while (*string != 0x00)
 		lcd_HD44780_print_char(*string++);
 }
@@ -177,8 +193,14 @@ void stopHD44780_pins() {
 	efiSetPadUnused(activeConfiguration.HD44780_db7);
 }
 
-void startHD44780_pins() {
-	if (engineConfiguration->displayMode == DM_HD44780) {
+int startHD44780_pins() {
+	if ((engineConfiguration->displayMode == DM_HD44780) &&
+		(isBrainPinValid(CONFIG(HD44780_rs))) &&
+		(isBrainPinValid(CONFIG(HD44780_e))) &&
+		(isBrainPinValid(CONFIG(HD44780_db4))) &&
+		(isBrainPinValid(CONFIG(HD44780_db5))) &&
+		(isBrainPinValid(CONFIG(HD44780_db6))) &&
+		(isBrainPinValid(CONFIG(HD44780_db7)))) {
 		// initialize hardware lines
 		efiSetPadMode("lcd RS", CONFIG(HD44780_rs), PAL_MODE_OUTPUT_PUSHPULL);
 		efiSetPadMode("lcd E", CONFIG(HD44780_e), PAL_MODE_OUTPUT_PUSHPULL);
@@ -193,13 +215,24 @@ void startHD44780_pins() {
 		palWritePad(getHwPort("lcd", CONFIG(HD44780_db5)), getHwPin("lcd", CONFIG(HD44780_db5)), 0);
 		palWritePad(getHwPort("lcd", CONFIG(HD44780_db6)), getHwPin("lcd", CONFIG(HD44780_db6)), 0);
 		palWritePad(getHwPort("lcd", CONFIG(HD44780_db7)), getHwPin("lcd", CONFIG(HD44780_db7)), 0);
+
+		return 0;
 	}
+
+	/* failed to init LCD pins, avoid writes */
+	lcd_enabled = false;
+
+	return -1;
 }
 
 void lcd_HD44780_init(Logging *sharedLogger) {
 	logger = sharedLogger;
 
 	addConsoleAction("lcdinfo", lcdInfo);
+
+	if (engineConfiguration->displayMode == DM_NONE) {
+		return;
+	}
 
 	if (engineConfiguration->displayMode > DM_HD44780_OVER_PCF8574) {
 		warning(CUSTOM_ERR_DISPLAY_MODE, "Unexpected displayMode %d", engineConfiguration->displayMode);
@@ -209,7 +242,8 @@ void lcd_HD44780_init(Logging *sharedLogger) {
 
 	printMsg(logger, "lcd_HD44780_init %d", engineConfiguration->displayMode);
 
-	startHD44780_pins();
+	if (startHD44780_pins() < 0)
+		return;
 
 	chThdSleepMilliseconds(20); // LCD needs some time to wake up
 	lcd_HD44780_write(LCD_HD44780_RESET); // reset 1x
@@ -237,6 +271,8 @@ void lcd_HD44780_init(Logging *sharedLogger) {
 
 	lcd_HD44780_set_position(0, 0);
 	printMsg(logger, "lcd_HD44780_init() done");
+
+	lcd_enabled = true;
 }
 
 void lcdShowPanicMessage(char *message) {
