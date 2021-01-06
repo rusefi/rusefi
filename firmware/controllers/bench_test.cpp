@@ -451,6 +451,7 @@ void executeTSCommand(uint16_t subsystem, uint16_t index) {
 #if EFI_PROD_CODE
 		rebootNow();
 #endif /* EFI_PROD_CODE */
+		break;
 	}
 }
 
