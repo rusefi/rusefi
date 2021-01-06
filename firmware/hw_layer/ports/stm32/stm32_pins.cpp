@@ -15,6 +15,9 @@
 
 #if EFI_GPIO_HARDWARE
 
+// todo: move this into PinRepository class
+static const char *PIN_USED[BRAIN_PIN_TOTAL_PINS];
+
 #define PORT_SIZE 16
 
 static ioportid_t ports[] = {GPIOA,
@@ -42,10 +45,6 @@ static ioportid_t ports[] = {GPIOA,
 		nullptr,
 #endif /* STM32_HAS_GPIOH */
 };
-
-#define PIN_REPO_SIZE (sizeof(ports) / sizeof(ports[0])) * PORT_SIZE
-// todo: move this into PinRepository class
-static const char *PIN_USED[PIN_REPO_SIZE + BOARD_EXT_PINREPOPINS];
 
 /**
  * @deprecated - use hwPortname() instead
@@ -108,7 +107,7 @@ static int getPortIndex(ioportid_t port) {
 	return -1;
 }
 
-ioportid_t getBrainPort(brain_pin_e brainPin) {
+ioportid_t getBrainPinPort(brain_pin_e brainPin) {
 	return ports[(brainPin - GPIOA_0) / PORT_SIZE];
 }
 
@@ -116,7 +115,7 @@ int getBrainPinIndex(brain_pin_e brainPin) {
 	return (brainPin - GPIOA_0) % PORT_SIZE;
 }
 
-int getBrainIndex(ioportid_t port, ioportmask_t pin) {
+int getPortPinIndex(ioportid_t port, ioportmask_t pin) {
 	int portIndex = getPortIndex(port);
 	return portIndex * PORT_SIZE + pin;
 }
@@ -124,7 +123,7 @@ int getBrainIndex(ioportid_t port, ioportmask_t pin) {
 ioportid_t getHwPort(const char *msg, brain_pin_e brainPin) {
 	if (brainPin == GPIO_UNASSIGNED || brainPin == GPIO_INVALID)
 		return GPIO_NULL;
-	if (brainPin < GPIOA_0 || brainPin > BRAIN_PIN_LAST_ONCHIP) {
+	if (brainPin < GPIOA_0 || brainPin > BRAIN_PIN_ONCHIP_LAST) {
 		firmwareError(CUSTOM_ERR_INVALID_PIN, "%s: Invalid brain_pin_e: %d", msg, brainPin);
 		return GPIO_NULL;
 	}
@@ -172,8 +171,12 @@ brain_pin_e parseBrainPin(const char *str) {
 	return (brain_pin_e)(basePin + pin);
 }
 
-unsigned int getNumBrainPins(void) {
-	return PIN_REPO_SIZE;
+unsigned int getBrainPinOnchipNum(void) {
+	return BRAIN_PIN_ONCHIP_PINS;
+}
+
+unsigned int getBrainPinTotalNum(void) {
+	return BRAIN_PIN_TOTAL_PINS;
 }
 
 void initBrainUsedPins(void) {
@@ -181,6 +184,8 @@ void initBrainUsedPins(void) {
 }
 
 const char* & getBrainUsedPin(unsigned int idx) {
+	/* if (idx >= getBrainPinTotalNum())
+		return NULL; */
 	return PIN_USED[idx];
 }
 
