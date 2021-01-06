@@ -361,53 +361,93 @@ static void fatalErrorForPresetApply() {
 		"   3. Open TunerStudio and reconnect\n\n");
 }
 
-// todo: this is probably a wrong place for this method now
 void executeTSCommand(uint16_t subsystem, uint16_t index) {
 	scheduleMsg(logger, "IO test subsystem=%d index=%d", subsystem, index);
 
 	bool running = !ENGINE(rpmCalculator).isStopped();
 
-    if (subsystem == 0x11) {
-        clearWarnings();
-	} else if (subsystem == CMD_TS_IGNITION_CATEGORY && !running) {
-		doRunSpark(index, "300", "4", "400", "3");
-	} else if (subsystem == CMD_TS_INJECTOR_CATEGORY && !running) {
-		doRunFuel(index, "300", "4", "400", "3");
-	} else if (subsystem == CMD_TS_SOLENOID_CATEGORY && !running) {
-		doTestSolenoid(index, "300", "1000", "1000", "3");
-	} else if (subsystem == CMD_TS_FSIO_CATEGORY && !running) {
-		doBenchTestFsio(index, "300", "4", "400", "3");
-	} else if (subsystem == 0x14) {
+	switch (subsystem) {
+	case 0x11:
+		clearWarnings();
+		break;
+
+	case CMD_TS_IGNITION_CATEGORY:
+		if (!running) {
+			doRunSpark(index, "300", "4", "400", "3");
+		}
+		break;
+
+		case CMD_TS_INJECTOR_CATEGORY;
+		if (subsystem == CMD_TS_INJECTOR_CATEGORY && !running) {
+			doRunFuel(index, "300", "4", "400", "3");
+		}
+		break;
+
+	case CMD_TS_SOLENOID_CATEGORY:
+		if (subsystem == &&!running) {
+			doTestSolenoid(index, "300", "1000", "1000", "3");
+		}
+		break;
+
+	case CMD_TS_FSIO_CATEGORY:
+		if (subsystem == &&!running) {
+			doBenchTestFsio(index, "300", "4", "400", "3");
+		}
+		break;
+
+	case CMD_TS_X14:
 		handleCommandX14(index);
-	} else if (subsystem == 0x15) {
+		break;
+
+	case CMD_TS_X15:
 		fanBench();
-	} else if (subsystem == CMD_TS_BENCH_CATEGORY) {
+		break;
+
+	case CMD_TS_BENCH_CATEGORY:
 		handleBenchCategory(index);
-	} else if (subsystem == 0x17) {
+		break;
+
+	case CMD_TS_X17:
 		// cmd_test_idle_valve
 #if EFI_IDLE_CONTROL
 		startIdleBench();
 #endif /* EFI_IDLE_CONTROL */
-	} else if (subsystem == 0x18) {
+		break;
+
+	case 0x18:
 #if EFI_CJ125 && HAL_USE_SPI
 		cjStartCalibration();
 #endif /* EFI_CJ125 */
-	} else if (subsystem == 0x20 && index == 0x3456) {
-		// call to pit
-		setCallFromPitStop(30000);
-	} else if (subsystem == 0x30) {
+		break;
+
+	case 0x20:
+		if (index == 0x3456) {
+			// call to pit
+			setCallFromPitStop(30000);
+		}
+		break;
+
+	case 0x30:
 		fatalErrorForPresetApply();
 		setEngineType(index);
-	} else if (subsystem == 0x31) {
+		break;
+
+	case CMD_TS_X31:
 		fatalErrorForPresetApply();
 		setEngineType(DEFAULT_ENGINE_TYPE);
-	} else if (subsystem == 0x79) {
+		break;
+
+	case 0x79:
 		scheduleStopEngine();
-	} else if (subsystem == 0xba) {
+		break;
+
+	case 0xba:
 #if EFI_PROD_CODE
 		jump_to_bootloader();
 #endif /* EFI_PROD_CODE */
-	} else if (subsystem == 0xbb) {
+		break;
+
+	case 0xbb:
 #if EFI_PROD_CODE
 		rebootNow();
 #endif /* EFI_PROD_CODE */
