@@ -377,20 +377,20 @@ void executeTSCommand(uint16_t subsystem, uint16_t index) {
 		}
 		break;
 
-		case CMD_TS_INJECTOR_CATEGORY;
-		if (subsystem == CMD_TS_INJECTOR_CATEGORY && !running) {
+		case CMD_TS_INJECTOR_CATEGORY:
+		if (!running) {
 			doRunFuel(index, "300", "4", "400", "3");
 		}
 		break;
 
 	case CMD_TS_SOLENOID_CATEGORY:
-		if (subsystem == &&!running) {
+		if (!running) {
 			doTestSolenoid(index, "300", "1000", "1000", "3");
 		}
 		break;
 
 	case CMD_TS_FSIO_CATEGORY:
-		if (subsystem == &&!running) {
+		if (!running) {
 			doBenchTestFsio(index, "300", "4", "400", "3");
 		}
 		break;
