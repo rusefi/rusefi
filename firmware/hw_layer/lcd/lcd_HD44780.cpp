@@ -209,12 +209,12 @@ int startHD44780_pins() {
 		efiSetPadMode("lcd DB6", CONFIG(HD44780_db6), PAL_MODE_OUTPUT_PUSHPULL);
 		efiSetPadMode("lcd DB7", CONFIG(HD44780_db7), PAL_MODE_OUTPUT_PUSHPULL);
 		// and zero values
-		palWritePad(getHwPort("lcd", CONFIG(HD44780_rs)), getHwPin("lcd", CONFIG(HD44780_rs)), 0);
-		palWritePad(getHwPort("lcd", CONFIG(HD44780_e)), getHwPin("lcd", CONFIG(HD44780_e)), 0);
-		palWritePad(getHwPort("lcd", CONFIG(HD44780_db4)), getHwPin("lcd", CONFIG(HD44780_db4)), 0);
-		palWritePad(getHwPort("lcd", CONFIG(HD44780_db5)), getHwPin("lcd", CONFIG(HD44780_db5)), 0);
-		palWritePad(getHwPort("lcd", CONFIG(HD44780_db6)), getHwPin("lcd", CONFIG(HD44780_db6)), 0);
-		palWritePad(getHwPort("lcd", CONFIG(HD44780_db7)), getHwPin("lcd", CONFIG(HD44780_db7)), 0);
+		writePad("lcd", CONFIG(HD44780_rs), 0);
+		writePad("lcd", CONFIG(HD44780_e), 0);
+		writePad("lcd", CONFIG(HD44780_db4), 0);
+		writePad("lcd", CONFIG(HD44780_db5), 0);
+		writePad("lcd", CONFIG(HD44780_db6), 0);
+		writePad("lcd", CONFIG(HD44780_db7), 0);
 
 		return 0;
 	}
