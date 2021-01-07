@@ -62,76 +62,42 @@ TEST(idle, fsioPidParameters) {
 //	ASSERT_EQ(1, engine->acSwitchState);
 }
 
-// see also util.pid test
-TEST(idle, timingPid) {
+using ICP = IIdleController::Phase;
+
+TEST(idle_v2, timingPid) {
 	WITH_ENGINE_TEST_HELPER(TEST_ENGINE);
+	IdleController dut;
+	INJECT_ENGINE_REFERENCE(&dut);
 
-	// set PID settings
-	pid_s pidS;
-	pidS.pFactor = 0.1;
-	pidS.iFactor = 0;
-	pidS.dFactor = 0;
-	pidS.offset = 0;
-	pidS.minValue = -20;
-	pidS.maxValue = +20;
-	pidS.periodMs = 1;
-
-	// setup TimingPid settings
-	engineConfiguration->idleTimingPidDeadZone = 10;
-	engineConfiguration->idleTimingPidWorkZone = 100;
-	engineConfiguration->idlePidFalloffDeltaRpm = 30;
-
-	// setup target rpm curve
-	const int idleRpmTarget = 700;
-	setArrayValues<float>(engineConfiguration->cltIdleRpm, idleRpmTarget);
-	
-	// setup other settings
-	engineConfiguration->idleTimingPid = pidS;
-	eth.engine.fsioState.fsioTimingAdjustment = 0;
-	eth.engine.fsioState.fsioIdleTargetRPMAdjustment = 0;
-	eth.engine.engineState.cltTimingCorrection = 0;
-
-	// configure TPS
-	engineConfiguration->idlePidDeactivationTpsThreshold = 10;
-	Sensor::setMockValue(SensorType::Tps1, 0);
-
-	// all corrections disabled, should be 0
-	engineConfiguration->useIdleTimingPidControl = false;
-	angle_t corr = getAdvanceCorrections(idleRpmTarget PASS_ENGINE_PARAMETER_SUFFIX);
-	ASSERT_EQ(0, corr) << "getAdvanceCorrections#1";
-	
-	// basic IDLE PID correction test
 	engineConfiguration->useIdleTimingPidControl = true;
-	int baseTestRpm = idleRpmTarget + engineConfiguration->idleTimingPidWorkZone;
-	corr = getAdvanceCorrections(baseTestRpm PASS_ENGINE_PARAMETER_SUFFIX);
-	// (delta_rpm=-100) * (p-factor=0.1) = -10 degrees
-	ASSERT_EQ(-10, corr) << "getAdvanceCorrections#2";
 
-	// check if rpm is too close to the target
-	corr = getAdvanceCorrections((idleRpmTarget + engineConfiguration->idleTimingPidDeadZone) PASS_ENGINE_PARAMETER_SUFFIX);
-	ASSERT_EQ(0, corr) << "getAdvanceCorrections#3";
+	pid_s pidCfg{};
+	pidCfg.pFactor = 0.1;
+	pidCfg.minValue = -10;
+	pidCfg.maxValue = 10;
+	dut.init(&pidCfg);
 
-	// check if rpm is too high (just outside the workzone and even falloff) so we disable the PID correction
-	int tooHighRpm = idleRpmTarget + engineConfiguration->idleTimingPidWorkZone + engineConfiguration->idlePidFalloffDeltaRpm;
-	corr = getAdvanceCorrections(tooHighRpm PASS_ENGINE_PARAMETER_SUFFIX);
-	ASSERT_EQ(0, corr) << "getAdvanceCorrections#4";
+	// Check that out of idle mode it doesn't do anything
+	EXPECT_EQ(0, dut.getIdleTimingAdjustment(1050, 1000, ICP::Cranking));
+	EXPECT_EQ(0, dut.getIdleTimingAdjustment(1050, 1000, ICP::Coasting));
+	EXPECT_EQ(0, dut.getIdleTimingAdjustment(1050, 1000, ICP::Running));
 
-	// check if rpm is within the falloff zone
-	int falloffRpm = idleRpmTarget + engineConfiguration->idleTimingPidWorkZone + (engineConfiguration->idlePidFalloffDeltaRpm / 2);
-	corr = getAdvanceCorrections(falloffRpm PASS_ENGINE_PARAMETER_SUFFIX);
-	// -(100+30/2) * 0.1 / 2 = -5.75
-	ASSERT_FLOAT_EQ(-5.75f, corr) << "getAdvanceCorrections#5";
+	// Check that it works in idle mode
+	EXPECT_FLOAT_EQ(-5, dut.getIdleTimingAdjustment(1050, 1000, ICP::Idling));
 
-	// check if PID correction is disabled in running mode (tps > threshold):
-	Sensor::setMockValue(SensorType::Tps1, engineConfiguration->idlePidDeactivationTpsThreshold + 1);
-	corr = getAdvanceCorrections(idleRpmTarget PASS_ENGINE_PARAMETER_SUFFIX);
-	ASSERT_EQ(0, corr) << "getAdvanceCorrections#6";
+	// ...but not when disabled
+	engineConfiguration->useIdleTimingPidControl = false;
+	EXPECT_EQ(0, dut.getIdleTimingAdjustment(1050, 1000, ICP::Idling));
 
-	// check if PID correction is interpolated for transient idle-running TPS positions
-	Sensor::setMockValue(SensorType::Tps1, engineConfiguration->idlePidDeactivationTpsThreshold / 2);
-	corr = getAdvanceCorrections(baseTestRpm PASS_ENGINE_PARAMETER_SUFFIX);
-	ASSERT_FLOAT_EQ(-5.0f, corr) << "getAdvanceCorrections#7";
+	engineConfiguration->useIdleTimingPidControl = true;
 
+	// Now check that the deadzone works
+	engineConfiguration->idleTimingPidDeadZone = 50;
+	EXPECT_FLOAT_EQ(5.1, dut.getIdleTimingAdjustment(949, 1000, ICP::Idling));
+	EXPECT_EQ(0, dut.getIdleTimingAdjustment(951, 1000, ICP::Idling));
+	EXPECT_EQ(0, dut.getIdleTimingAdjustment(1000, 1000, ICP::Idling));
+	EXPECT_EQ(0, dut.getIdleTimingAdjustment(1049, 1000, ICP::Idling));
+	EXPECT_FLOAT_EQ(-5.1, dut.getIdleTimingAdjustment(1051, 1000, ICP::Idling));
 }
 
 TEST(idle_v2, testTargetRpm) {
@@ -147,8 +113,6 @@ TEST(idle_v2, testTargetRpm) {
 	EXPECT_FLOAT_EQ(100, dut.getTargetRpm(10));
 	EXPECT_FLOAT_EQ(500, dut.getTargetRpm(50));
 }
-
-using ICP = IIdleController::Phase;
 
 TEST(idle_v2, testDeterminePhase) {
 	WITH_ENGINE_TEST_HELPER(TEST_ENGINE);
