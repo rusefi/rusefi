@@ -1747,7 +1747,6 @@ end_struct
 #define CMD_TS_IGNITION_CATEGORY 18
 #define CMD_TS_INJECTOR_CATEGORY 19
 #define CMD_TS_X14 20
-#define CMD_TS_X15 21
 // 0x16
 #define CMD_TS_BENCH_CATEGORY 22
 #define CMD_TS_X17 23
