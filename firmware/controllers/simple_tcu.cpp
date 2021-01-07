@@ -1,5 +1,6 @@
 #include "simple_tcu.h"
 #include "efi_gpio.h"
+#include "tunerstudio_outputs.h"
 #include "engine_configuration.h"
 
 EXTERN_ENGINE;
