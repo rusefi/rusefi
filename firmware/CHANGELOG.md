@@ -38,10 +38,12 @@ All notable user-facing or behavior-altering changes will be documented in this 
 ### Breaking Changes
 
 ### Added
+ - Second wideband O2 processing as channels "Lambda 2" and "Air/Fuel Ratio 2".  Currently only supports CAN sensors, but analog will be supported too soon.
  - Basic fueling-only flex fuel implementation. Automatic adjustment of stoichiometric ratio based on ethanol content, compatible with the common GM/Continental 50-150hz flex fuel sensor 🎉 🎉 🎉
 
 ### Fixed
  - microRusEFI outputs are in trouble on configuration change
+ - CLT gauge no longer erroneously shows "deg F" by default.
 
 ### December 2020 Bake Cookies Day
 
