@@ -290,8 +290,12 @@ static void handleBenchCategory(uint16_t index) {
 	case CMD_TS_BENCH_AC_COMPRESSOR_RELAY:
 		acRelayBench();
 		return;
+	case CMD_TS_BENCH_FAN_RELAY:
+		fanBench();
+		return;
+	default:
+		firmwareError(OBD_PCM_Processor_Fault, "Unexpected bench function %d", index);
 	}
-
 }
 
 static void handleCommandX14(uint16_t index) {
@@ -377,7 +381,7 @@ void executeTSCommand(uint16_t subsystem, uint16_t index) {
 		}
 		break;
 
-		case CMD_TS_INJECTOR_CATEGORY:
+	case CMD_TS_INJECTOR_CATEGORY:
 		if (!running) {
 			doRunFuel(index, "300", "4", "400", "3");
 		}
@@ -398,11 +402,6 @@ void executeTSCommand(uint16_t subsystem, uint16_t index) {
 	case CMD_TS_X14:
 		handleCommandX14(index);
 		break;
-
-	case CMD_TS_X15:
-		fanBench();
-		break;
-
 	case CMD_TS_BENCH_CATEGORY:
 		handleBenchCategory(index);
 		break;
