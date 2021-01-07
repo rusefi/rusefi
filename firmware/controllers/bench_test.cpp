@@ -351,6 +351,8 @@ static void handleCommandX14(uint16_t index) {
 	case 0x12:
 		widebandUpdatePending = true;
 		return;
+	default:
+		firmwareError(OBD_PCM_Processor_Fault, "Unexpected bench x14 %d", index);
 	}
 }
 
@@ -451,6 +453,8 @@ void executeTSCommand(uint16_t subsystem, uint16_t index) {
 		rebootNow();
 #endif /* EFI_PROD_CODE */
 		break;
+	default:
+		firmwareError(OBD_PCM_Processor_Fault, "Unexpected bench subsystem %d %d", subsystem, index);
 	}
 }
 
