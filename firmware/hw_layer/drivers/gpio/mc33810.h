@@ -40,7 +40,7 @@ extern "C"
 {
 #endif /* __cplusplus */
 
-int mc33810_add(unsigned int index, const struct mc33810_config *cfg);
+int mc33810_add(brain_pin_e base, unsigned int index, const struct mc33810_config *cfg);
 
 #ifdef __cplusplus
 }

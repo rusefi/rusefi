@@ -216,8 +216,11 @@ typedef enum __attribute__ ((__packed__)) {
 	TLE8888_PIN_WAKE = 198,
 } brain_pin_e;
 
-/* Plase keep updating this define */
-#define BRAIN_PIN_LAST_ONCHIP	GPIOH_15
+/* Plase keep updating these defines */
+#define BRAIN_PIN_ONCHIP_LAST	GPIOH_15
+#define BRAIN_PIN_ONCHIP_PINS	(BRAIN_PIN_ONCHIP_LAST - GPIOA_0 + 1)
+#define BRAIN_PIN_LAST 			TLE8888_PIN_WAKE
+#define BRAIN_PIN_TOTAL_PINS	(BRAIN_PIN_LAST - GPIOA_0 + 1)
 
 /* diagnostic for brain pins
  * can be combination of few bits
