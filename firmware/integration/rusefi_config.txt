@@ -1409,9 +1409,10 @@ tChargeMode_e tChargeMode;
 	uint8_t[4] unused1059;;"units", 1, 0, -20, 100, 0
 
 	pid_s idleTimingPid;See useIdleTimingPidControl
-	int16_t idleTimingPidWorkZone;+When the current RPM is closer than this value to the target, closed-loop idle timing control is enabled.;"RPM",        1,     0,  0,    1000,  0
+	uint8_t[2] unused3988;;"units", 1, 0, -20, 100, 0
 	int16_t idleTimingPidDeadZone;+If the RPM closer to target than this value, disable timing correction to prevent oscillation;"RPM",        1,     0,  0,    1000,  0
-	int16_t idlePidFalloffDeltaRpm;+Taper out idle timing control over this range as the engine leaves idle conditions;"RPM",        1,     0,  0,    1000,  0
+	uint8_t[2] unused3942;;"units", 1, 0, -20, 100, 0
+
 
 	int16_t tpsAccelFractionPeriod;+A delay in cycles between fuel-enrich. portions;"cycles",        1,     0,  0,    500,  0
 	float tpsAccelFractionDivisor;+A fraction divisor: 1 or less = entire portion at once, or split into diminishing fractions;"coef",        1,     0,  0,    100,  2
@@ -1747,7 +1748,6 @@ end_struct
 #define CMD_TS_IGNITION_CATEGORY 18
 #define CMD_TS_INJECTOR_CATEGORY 19
 #define CMD_TS_X14 20
-#define CMD_TS_X15 21
 // 0x16
 #define CMD_TS_BENCH_CATEGORY 22
 #define CMD_TS_X17 23

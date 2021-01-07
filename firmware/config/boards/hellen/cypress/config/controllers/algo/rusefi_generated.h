@@ -292,7 +292,6 @@
 #define CMD_TS_INJECTOR_CATEGORY 19
 #define CMD_TS_SOLENOID_CATEGORY 41
 #define CMD_TS_X14 20
-#define CMD_TS_X15 21
 #define CMD_TS_X17 23
 #define CMD_TS_X18 24
 #define CMD_TS_X31 49
@@ -855,7 +854,6 @@
 #define idleMode_offset 1472
 #define idlePidActivationTime_offset 2588
 #define idlePidDeactivationTpsThreshold_offset 816
-#define idlePidFalloffDeltaRpm_offset 3992
 #define idlePidRpmDeadZone_offset 1894
 #define idlePidRpmUpperLimit_offset 1484
 #define idlePositionMax_offset 722
@@ -890,7 +888,6 @@
 #define idleTimingPid_periodMs_offset 3982
 #define idleTimingPid_pFactor_offset 3968
 #define idleTimingPidDeadZone_offset 3990
-#define idleTimingPidWorkZone_offset 3988
 #define idleVe_offset 6640
 #define idleVeBins_offset 6608
 #define IGN_LOAD_COUNT 16
@@ -1248,8 +1245,8 @@
 #define showHumanReadableWarning_offset 976
 #define showSdCardWarning_offset 76
 #define SIGNATURE_BOARD hellen_cypress
-#define SIGNATURE_DATE 2021.01.06
-#define SIGNATURE_HASH 222537922
+#define SIGNATURE_DATE 2021.01.07
+#define SIGNATURE_HASH 3472719309
 #define silentTriggerError_offset 1464
 #define slowAdcAlpha_offset 2088
 #define sparkDwellRpmBins_offset 332
@@ -1581,7 +1578,7 @@
 #define ts_show_spi true
 #define ts_show_trigger_comparator false
 #define ts_show_tunerstudio_port true
-#define TS_SIGNATURE "rusEFI 2021.01.06.hellen_cypress.222537922"
+#define TS_SIGNATURE "rusEFI 2021.01.07.hellen_cypress.3472719309"
 #define TS_SINGLE_WRITE_COMMAND 'W'
 #define TS_SINGLE_WRITE_COMMAND_char W
 #define TS_TEST_COMMAND 't' // 0x74
@@ -1649,6 +1646,8 @@
 #define unused2508_offset 2508
 #define unused2536_offset 2536
 #define unused3328_offset 3328
+#define unused3942_offset 3992
+#define unused3988_offset 3988
 #define unused4028_offset 4028
 #define unused541_offset 541
 #define unused542_offset 542

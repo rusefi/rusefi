@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEfi tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Wed Jan 06 18:57:11 UTC 2021
+// this file was generated automatically by rusEfi tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Thu Jan 07 13:24:50 UTC 2021
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -282,7 +282,6 @@ public class Fields {
 	public static final int CMD_TS_INJECTOR_CATEGORY = 19;
 	public static final int CMD_TS_SOLENOID_CATEGORY = 41;
 	public static final int CMD_TS_X14 = 20;
-	public static final int CMD_TS_X15 = 21;
 	public static final int CMD_TS_X17 = 23;
 	public static final int CMD_TS_X18 = 24;
 	public static final int CMD_TS_X31 = 49;
@@ -833,7 +832,6 @@ public class Fields {
 	public static final int idleMode_offset = 1472;
 	public static final int idlePidActivationTime_offset = 2588;
 	public static final int idlePidDeactivationTpsThreshold_offset = 816;
-	public static final int idlePidFalloffDeltaRpm_offset = 3992;
 	public static final int idlePidRpmDeadZone_offset = 1894;
 	public static final int idlePidRpmUpperLimit_offset = 1484;
 	public static final int idlePositionMax_offset = 722;
@@ -868,7 +866,6 @@ public class Fields {
 	public static final int idleTimingPid_periodMs_offset = 3982;
 	public static final int idleTimingPid_pFactor_offset = 3968;
 	public static final int idleTimingPidDeadZone_offset = 3990;
-	public static final int idleTimingPidWorkZone_offset = 3988;
 	public static final int idleVe_offset = 6640;
 	public static final int idleVeBins_offset = 6608;
 	public static final int IGN_LOAD_COUNT = 16;
@@ -1203,6 +1200,7 @@ public class Fields {
 	public static final int servoOutputPins8_offset = 3147;
 	public static final int showHumanReadableWarning_offset = 976;
 	public static final int showSdCardWarning_offset = 76;
+	public static final int SIGNATURE_HASH = 118283022;
 	public static final int silentTriggerError_offset = 1464;
 	public static final int slowAdcAlpha_offset = 2088;
 	public static final int sparkDwellRpmBins_offset = 332;
@@ -1484,7 +1482,7 @@ public class Fields {
 	public static final char TS_SD_R_COMMAND = 'r';
 	public static final char TS_SD_W_COMMAND = 'w';
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI 2021.01.06.all.3300003329";
+	public static final String TS_SIGNATURE = "rusEFI 2021.01.07.all.118283022";
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final int TT_TT_1_16 = 50;
 	public static final int TT_TT_2JZ_1_12 = 29;
@@ -1549,6 +1547,8 @@ public class Fields {
 	public static final int unused2508_offset = 2508;
 	public static final int unused2536_offset = 2536;
 	public static final int unused3328_offset = 3328;
+	public static final int unused3942_offset = 3992;
+	public static final int unused3988_offset = 3988;
 	public static final int unused4028_offset = 4028;
 	public static final int unused541_offset = 541;
 	public static final int unused542_offset = 542;
@@ -2641,9 +2641,7 @@ public class Fields {
 	public static final Field IDLETIMINGPID_PERIODMS = Field.create("IDLETIMINGPID_PERIODMS", 3982, FieldType.INT16);
 	public static final Field IDLETIMINGPID_MINVALUE = Field.create("IDLETIMINGPID_MINVALUE", 3984, FieldType.INT16);
 	public static final Field IDLETIMINGPID_MAXVALUE = Field.create("IDLETIMINGPID_MAXVALUE", 3986, FieldType.INT16);
-	public static final Field IDLETIMINGPIDWORKZONE = Field.create("IDLETIMINGPIDWORKZONE", 3988, FieldType.INT16);
 	public static final Field IDLETIMINGPIDDEADZONE = Field.create("IDLETIMINGPIDDEADZONE", 3990, FieldType.INT16);
-	public static final Field IDLEPIDFALLOFFDELTARPM = Field.create("IDLEPIDFALLOFFDELTARPM", 3992, FieldType.INT16);
 	public static final Field TPSACCELFRACTIONPERIOD = Field.create("TPSACCELFRACTIONPERIOD", 3994, FieldType.INT16);
 	public static final Field TPSACCELFRACTIONDIVISOR = Field.create("TPSACCELFRACTIONDIVISOR", 3996, FieldType.FLOAT);
 	public static final Field TLE8888SPIDEVICE = Field.create("TLE8888SPIDEVICE", 4000, FieldType.INT8);
@@ -3718,9 +3716,7 @@ public class Fields {
 	IDLETIMINGPID_PERIODMS,
 	IDLETIMINGPID_MINVALUE,
 	IDLETIMINGPID_MAXVALUE,
-	IDLETIMINGPIDWORKZONE,
 	IDLETIMINGPIDDEADZONE,
-	IDLEPIDFALLOFFDELTARPM,
 	TPSACCELFRACTIONPERIOD,
 	TPSACCELFRACTIONDIVISOR,
 	TLE8888SPIDEVICE,
