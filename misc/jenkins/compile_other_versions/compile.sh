@@ -30,6 +30,9 @@ echo "Invoking $COMPILE_SCRIPT"
 
 bash $COMPILE_SCRIPT
 
+echo "We are in"
+pwd
+
 [ -e ../../../build/rusefi.hex ] || { echo "Just to confirm - FAILED to compile with $COMPILE_SCRIPT"; exit 1; }
 
 cd ../../../..
