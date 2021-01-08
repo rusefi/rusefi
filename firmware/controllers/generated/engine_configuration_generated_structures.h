@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Sat Jan 02 21:44:47 UTC 2021
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Fri Jan 08 17:51:13 UTC 2021
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -3138,10 +3138,10 @@ struct engine_configuration_s {
 	 */
 	float fsioCurve4[FSIO_CURVE_8];
 	/**
-	 * For pinout see https://rusefi.com/forum/viewtopic.php?f=5&t=1324
+	 * Continental/GM flex fuel sensor, 50-150hz type
 	 * offset 3100
 	 */
-	uint8_t unusedFlexFuelSensor;
+	brain_input_pin_e flexSensorPin;
 	/**
 	 * offset 3101
 	 */
@@ -3300,20 +3300,18 @@ struct engine_configuration_s {
 	 */
 	pid_s idleTimingPid;
 	/**
-	 * When the current RPM is closer than this value to the target, closed-loop idle timing control is enabled.
 	 * offset 3988
 	 */
-	int16_t idleTimingPidWorkZone;
+	uint8_t unused3988[2];
 	/**
 	 * If the RPM closer to target than this value, disable timing correction to prevent oscillation
 	 * offset 3990
 	 */
 	int16_t idleTimingPidDeadZone;
 	/**
-	 * Taper out idle timing control over this range as the engine leaves idle conditions
 	 * offset 3992
 	 */
-	int16_t idlePidFalloffDeltaRpm;
+	uint8_t unused3942[2];
 	/**
 	 * A delay in cycles between fuel-enrich. portions
 	 * offset 3994
@@ -3342,7 +3340,7 @@ struct engine_configuration_s {
 	 */
 	spi_device_e tle6240spiDevice;
 	/**
-	 * Stoichiometric ratio for your primary fuel.
+	 * Stoichiometric ratio for your primary fuel. When Flex Fuel is enabled, this value is used when the Flex Fuel sensor indicates E0.
 	 * offset 4005
 	 */
 	uint8_t stoichRatioPrimary;
@@ -3356,9 +3354,14 @@ struct engine_configuration_s {
 	 */
 	spi_device_e mc33972spiDevice;
 	/**
+	 * Stoichiometric ratio for your secondary fuel. This value is used when the Flex Fuel sensor indicates E100.
 	 * offset 4009
 	 */
-	uint8_t unusedSpiPadding8[3];
+	uint8_t stoichRatioSecondary;
+	/**
+	 * offset 4010
+	 */
+	uint8_t unusedSpiPadding8[2];
 	/**
 	 *  ETB idle authority
 	 * offset 4012
@@ -3780,4 +3783,4 @@ struct persistent_config_s {
 typedef struct persistent_config_s persistent_config_s;
 
 // end
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Sat Jan 02 21:44:47 UTC 2021
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Fri Jan 08 17:51:13 UTC 2021

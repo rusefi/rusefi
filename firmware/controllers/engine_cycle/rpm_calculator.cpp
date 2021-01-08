@@ -45,7 +45,7 @@ extern WaveChart waveChart;
 #endif /* NO_RPM_EVENTS_TIMEOUT_SECS */
 
 float RpmCalculator::getRpmAcceleration() const {
-	return 1.0 * previousRpmValue / rpmValue;
+	return rpmRate;
 }
 
 bool RpmCalculator::isStopped() const {
@@ -201,6 +201,9 @@ uint32_t RpmCalculator::getRevolutionCounterM(void) const {
 
 void RpmCalculator::setStopped() {
 	revolutionCounterSinceStart = 0;
+
+	rpmRate = 0;
+
 	if (rpmValue != 0) {
 		assignRpmValue(0);
 		// needed by 'useNoiselessTriggerDecoder'
@@ -250,7 +253,7 @@ void rpmShaftPositionCallback(trigger_event_e ckpSignalType,
 		bool hadRpmRecently = rpmState->checkIfSpinning(nowNt);
 
 		if (hadRpmRecently) {
-			efitick_t diffNt = nowNt - rpmState->lastRpmEventTimeNt;
+			int32_t diffNt = (int32_t)(nowNt - rpmState->lastRpmEventTimeNt);
 		/**
 		 * Four stroke cycle is two crankshaft revolutions
 		 *
@@ -260,10 +263,16 @@ void rpmShaftPositionCallback(trigger_event_e ckpSignalType,
 		 */
 			if (diffNt == 0) {
 				rpmState->setRpmValue(NOISY_RPM);
+				rpmState->rpmRate = 0;
 			} else {
 				int mult = (int)getEngineCycle(engine->getOperationMode(PASS_ENGINE_PARAMETER_SIGNATURE)) / 360;
 				float rpm = 60.0 * NT_PER_SECOND * mult / diffNt;
+
+				auto rpmDelta = rpm - rpmState->previousRpmValue;
+				rpmState->rpmRate = rpmDelta / (mult * 1e-6 * NT2US(diffNt));
+
 				rpmState->setRpmValue(rpm > UNREALISTIC_RPM ? NOISY_RPM : rpm);
+				
 			}
 		}
 		rpmState->onNewEngineCycle();

@@ -206,10 +206,7 @@ void setBoardConfigurationOverrides(void) {
 	engineConfiguration->crankingInjectionMode = IM_SIMULTANEOUS;
 	engineConfiguration->injectionMode = IM_SIMULTANEOUS;
 
-	// output 13
-	CONFIG(mainRelayPin) = GPIOB_9;
-	// output 15
-	CONFIG(fanPin) = GPIOE_1;
-	// output 16
-	CONFIG(fuelPumpPin) = GPIOE_2;
+	CONFIG(mainRelayPin) = GPIOB_9;//  "Lowside 13"    # pin 10/black35
+	CONFIG(fanPin) = GPIOE_1;//  "Lowside 15"    # pin 12/black35
+	CONFIG(fuelPumpPin) = GPIOE_2;//  "Lowside 16"    # pin 23/black35
 }

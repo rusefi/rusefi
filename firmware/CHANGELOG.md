@@ -25,13 +25,28 @@ Release template (copy/paste this for new release):
 
 All notable user-facing or behavior-altering changes will be documented in this file.
 
-## XXX 202X Release
+## XXX 2021 Release
 
 ### Breaking Changes
+ - Closed loop idle timing behavior changed to no longer fall off control as entering/leaving the idle region. It now sharply engages/disengages upon entering/leaving the idle area.
+ - Idle phase logic uses the same idle detection thresholds as the main idle controller instead of its own thresholds.
 
 ### Added
 
 ### Fixed
+
+### 2021 Orthodox Christmas Day
+
+### Breaking Changes
+
+### Added
+ - Second wideband O2 processing as channels "Lambda 2" and "Air/Fuel Ratio 2".  Currently only supports CAN sensors, but analog will be supported too soon.
+ - Basic fueling-only flex fuel implementation. Automatic adjustment of stoichiometric ratio based on ethanol content, compatible with the common GM/Continental 50-150hz flex fuel sensor 🎉 🎉 🎉
+
+### Fixed
+ - Simplify idle control dialog in TunerStudio
+ - microRusEFI outputs are in trouble on configuration change
+ - CLT gauge no longer erroneously shows "deg F" by default.
 
 ### December 2020 Bake Cookies Day
 

@@ -34,7 +34,7 @@ extern "C"
 {
 #endif /* __cplusplus */
 
-int drv8860_add(unsigned int index, const struct drv8860_config *cfg);
+int drv8860_add(brain_pin_e base, unsigned int index, const struct drv8860_config *cfg);
 
 #ifdef __cplusplus
 }

@@ -27,64 +27,25 @@ static PinRepository pinRepository;
 
 static int brainPin_to_index(brain_pin_e brainPin)
 {
-	int index;
+	unsigned int i;
 
 	if (brainPin < GPIOA_0)
 		return -1;
 
-	index = brainPin - GPIOA_0;
+	i = brainPin - GPIOA_0;
 
-	if ((unsigned)index < getNumBrainPins())
-		return index;
-
-	/* gpiochips magic: skip gates for absent chips */
-#ifdef TLE8888_PIN_1
-	if ((brainPin >= TLE8888_PIN_1) && (BOARD_TLE8888_COUNT == 0))
-		index -= (TLE8888_PIN_28 -TLE8888_PIN_1 + 1);
-#endif
-
-#ifdef MC33972_PIN_1
-	if ((brainPin >= MC33972_PIN_1) && (BOARD_MC33972_COUNT == 0))
-		index -= (MC33972_PIN_22 - MC33972_PIN_1 + 1);
-#endif
-
-#ifdef TLE6240_PIN_1
-	if ((brainPin >= TLE6240_PIN_1) && (BOARD_TLE6240_COUNT == 0))
-		index -= (TLE6240_PIN_16 - TLE6240_PIN_1 + 1);
-#endif
-
-	/* if index outside array boundary */
-	if ((unsigned)index >= getNumBrainPins() + BOARD_EXT_PINREPOPINS)
+	if (i >= getBrainPinTotalNum())
 		return -1;
 
-	return index;
+	return i;
 }
 
 static brain_pin_e index_to_brainPin(unsigned int i)
 {
-	brain_pin_e brainPin = (brain_pin_e)((int)GPIOA_0 + i);
+	if (i < getBrainPinTotalNum())
+		return (brain_pin_e)((int)GPIOA_0 + i);;
 
-	/* on-chip pins */
-	if (i < getNumBrainPins())
-		return brainPin;
-
-	/* gpiochips magic: skip absent chips */
-#ifdef TLE6240_PIN_1
-	if (BOARD_TLE6240_COUNT == 0)
-		brainPin += (TLE6240_PIN_16 - TLE6240_PIN_1 + 1);
-#endif
-
-#ifdef MC33972_PIN_1
-	if (BOARD_MC33972_COUNT == 0)
-		brainPin += (MC33972_PIN_22 - MC33972_PIN_1 + 1);
-#endif
-
-#ifdef TLE8888_PIN_1
-	if (BOARD_TLE8888_COUNT == 0)
-		brainPin += (TLE8888_PIN_28 -TLE8888_PIN_1 + 1);
-#endif
-
-	return brainPin;
+	return GPIO_INVALID;
 }
 
 static MemoryStream portNameStream;
@@ -115,21 +76,21 @@ void tle8888_dump_regs(void)
 #endif
 
 static void reportPins(void) {
-	for (unsigned int i = 0; i < getNumBrainPins(); i++) {
+	for (unsigned int i = 0; i < getBrainPinOnchipNum(); i++) {
 		const char *pin_user = getBrainUsedPin(i);
 
 		/* show used pins */
 		if (pin_user != NULL) {
 			brain_pin_e brainPin = index_to_brainPin(i);
 			int pin = getBrainPinIndex(brainPin);
-			ioportid_t port = getBrainPort(brainPin);
+			ioportid_t port = getBrainPinPort(brainPin);
 
 			scheduleMsg(&logger, "pin %s%d: %s", portname(port), pin, pin_user);
 		}
 	}
 
 	#if (BOARD_EXT_GPIOCHIPS > 0)
-		for (unsigned int i = getNumBrainPins() ; i < getNumBrainPins() + BOARD_EXT_PINREPOPINS /* gpiochips_get_total_pins()*/ ; i++) {
+		for (unsigned int i = getBrainPinOnchipNum() ; i < getBrainPinTotalNum(); i++) {
 			static char pin_error[64];
 			const char *pin_name;
 			const char *pin_user;
@@ -231,7 +192,7 @@ void initPinRepository(void) {
 
 bool brain_pin_is_onchip(brain_pin_e brainPin)
 {
-	if ((brainPin < GPIOA_0) || (brainPin > BRAIN_PIN_LAST_ONCHIP))
+	if ((brainPin < GPIOA_0) || (brainPin > BRAIN_PIN_ONCHIP_LAST))
 		return false;
 
 	return true;
@@ -239,7 +200,7 @@ bool brain_pin_is_onchip(brain_pin_e brainPin)
 
 bool brain_pin_is_ext(brain_pin_e brainPin)
 {
-	if (brainPin > BRAIN_PIN_LAST_ONCHIP)
+	if (brainPin > BRAIN_PIN_ONCHIP_LAST)
 		return true;
 
 	return false;
@@ -299,7 +260,7 @@ void brain_pin_markUnused(brain_pin_e brainPin) {
  */
 
 bool gpio_pin_markUsed(ioportid_t port, ioportmask_t pin, const char *msg) {
-	int index = getBrainIndex(port, pin);
+	int index = getPortPinIndex(port, pin);
 
 	if (getBrainUsedPin(index) != NULL) {
 		/**
@@ -321,7 +282,7 @@ bool gpio_pin_markUsed(ioportid_t port, ioportmask_t pin, const char *msg) {
  */
 
 void gpio_pin_markUnused(ioportid_t port, ioportmask_t pin) {
-	int index = getBrainIndex(port, pin);
+	int index = getPortPinIndex(port, pin);
 
 	if (getBrainUsedPin(index) != NULL)
 		pinRepository.totalPinsUsed--;

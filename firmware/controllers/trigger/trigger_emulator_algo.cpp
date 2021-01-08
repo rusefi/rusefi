@@ -175,9 +175,11 @@ void initTriggerEmulatorLogic(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUF
 			s->wave.channels[0].pinStates,
 			s->wave.channels[1].pinStates,
 			s->wave.channels[2].pinStates };
+	int phaseCount = s->getSize();
+	assertIsInBounds(phaseCount - 1, pwmSwitchTimesBuffer, "pwmSwitchTimesBuffer");
 	triggerSignal.weComplexInit("position sensor",
 			&engine->executor,
-			s->getSize(), s->wave.switchTimes, PWM_PHASE_MAX_WAVE_PER_PWM,
+			phaseCount, s->wave.switchTimes, PWM_PHASE_MAX_WAVE_PER_PWM,
 			pinStates, updateTriggerWaveformIfNeeded, (pwm_gen_callback*)emulatorApplyPinState);
 
 	addConsoleActionI(CMD_RPM, setTriggerEmulatorRPM);
