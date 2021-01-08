@@ -193,6 +193,10 @@ void setManualIdleValvePosition(int positionPercent) {
 
 #endif /* EFI_UNIT_TEST */
 
+void IdleController::init(pid_s* idlePidConfig) {
+	m_timingPid.initPidClass(idlePidConfig);
+}
+
 int IdleController::getTargetRpm(float clt) const {
 	// TODO: bump target rpm based on AC and/or fan(s)?
 
@@ -267,6 +271,32 @@ float IdleController::getOpenLoop(Phase phase, float clt, SensorResult tps) cons
 	// This clamps once you fall off the end, so no explicit check for running required
 	auto revsSinceStart = engine->rpmCalculator.getRevolutionCounterSinceStart();
 	return interpolateClamped(0, cranking, CONFIG(afterCrankingIACtaperDuration), running, revsSinceStart);
+}
+
+float IdleController::getIdleTimingAdjustment(int rpm) {
+	return getIdleTimingAdjustment(rpm, m_lastTargetRpm, m_lastPhase);
+}
+
+float IdleController::getIdleTimingAdjustment(int rpm, int targetRpm, Phase phase) {
+	// if not enabled, do nothing
+	if (!CONFIG(useIdleTimingPidControl)) {
+		return 0;
+	}
+
+	// If not idling, do nothing
+	if (phase != Phase::Idling) {
+		m_timingPid.reset();
+		return 0;
+	}
+
+	// If inside the deadzone, do nothing
+	if (absI(rpm - targetRpm) < CONFIG(idleTimingPidDeadZone)) {
+		m_timingPid.reset();
+		return 0;
+	}
+
+	// We're now in the idle mode, and RPM is inside the Timing-PID regulator work zone!
+	return m_timingPid.getOutput(targetRpm, rpm, FAST_CALLBACK_PERIOD_MS / 1000.0f);
 }
 
 static percent_t manualIdleController(float cltCorrection DECLARE_ENGINE_PARAMETER_SUFFIX) {
@@ -432,9 +462,11 @@ static percent_t automaticIdleController(float tpsPos, float rpm, int targetRpm,
 
 		// Compute the target we're shooting for
 		auto targetRpm = getTargetRpm(clt);
+		m_lastTargetRpm = targetRpm;
 
 		// Determine what operation phase we're in - idling or not
 		auto phase = determinePhase(rpm, targetRpm, tps);
+		m_lastPhase = phase;
 
 		engine->engineState.isAutomaticIdle = tps.Valid && engineConfiguration->idleMode == IM_AUTO;
 
@@ -529,6 +561,10 @@ void updateIdleControl()
 	idleControllerInstance.update();
 }
 
+float getIdleTimingAdjustment(int rpm) {
+	return idleControllerInstance.getIdleTimingAdjustment(rpm);
+}
+
 static void applyPidSettings(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	getIdlePid(PASS_ENGINE_PARAMETER_SIGNATURE)->updateFactors(engineConfiguration->idleRpmPid.pFactor, engineConfiguration->idleRpmPid.iFactor, engineConfiguration->idleRpmPid.dFactor);
 	iacPidMultMap.init(CONFIG(iacPidMultTable), CONFIG(iacPidMultLoadBins), CONFIG(iacPidMultRpmBins));
@@ -605,6 +641,7 @@ void startIdleBench(void) {
 void startIdleThread(Logging*sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	logger = sharedLogger;
 	INJECT_ENGINE_REFERENCE(&idleControllerInstance);
+	idleControllerInstance.init(&CONFIG(idleTimingPid));
 	INJECT_ENGINE_REFERENCE(&industrialWithOverrideIdlePid);
 
 	ENGINE(idleController) = &idleControllerInstance;
