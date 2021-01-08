@@ -22,6 +22,8 @@ cd firmware
 bash clean.sh
 cd ..
 
+root_dir=$(pwd)
+
 cd firmware/config/boards
 pwd
 cd $BOARD_NAME
@@ -32,10 +34,12 @@ bash $COMPILE_SCRIPT
 
 echo "We are in"
 pwd
+cd ${root_dir}
+echo "We are now in"
+pwd
 
-[ -e ../../../build/rusefi.hex ] || { echo "Just to confirm - FAILED to compile with $COMPILE_SCRIPT"; exit 1; }
+[ -e firmware/build/rusefi.hex ] || { echo "Just to confirm - FAILED to compile with $COMPILE_SCRIPT"; exit 1; }
 
-cd ../../../..
 # We are back at root rusEFI folder
 pwd
 
