@@ -74,9 +74,11 @@
 
 #include "bmw_m73.h"
 #include "custom_engine.h"
+#include "hip9011_logic.h"
+
 #if EFI_ELECTRONIC_THROTTLE_BODY
 #include "electronic_throttle.h"
-#endif
+#endif // EFI_ELECTRONIC_THROTTLE_BODY
 
 EXTERN_CONFIG;
 
@@ -106,6 +108,9 @@ void m73engine(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 
 	// set cranking_fuel 15
 	engineConfiguration->cranking.baseFuel = 30;
+
+	engineConfiguration->cylinderBore = 85.0;
+	engineConfiguration->knockBandCustom = BAND(engineConfiguration->cylinderBore);
 }
 
 

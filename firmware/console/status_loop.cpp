@@ -172,7 +172,7 @@ static systime_t timeOfPreviousPrintVersion = 0;
 
 #if EFI_PROD_CODE
 static void printOutPin(const char *pinName, brain_pin_e hwPin) {
-	if (hwPin != GPIO_UNASSIGNED) {
+	if (isBrainPinValid(hwPin)) {
 		logger.appendPrintf("%s%s%s@%s%s", PROTOCOL_OUTPIN, DELIMETER, pinName, hwPortname(hwPin), DELIMETER);
 	}
 }

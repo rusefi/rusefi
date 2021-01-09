@@ -152,7 +152,7 @@ icuchannel_t getInputCaptureChannel(brain_pin_e hwPin) {
 ICUDriver * getInputCaptureDriver(const char *msg, brain_pin_e hwPin) {
 	UNUSED(msg);
 
-	if (hwPin == GPIO_UNASSIGNED || hwPin == GPIO_INVALID) {
+	if (!isBrainPinValid(hwPin)) {
 		return NULL;
 	}
 #if STM32_ICU_USE_TIM1
@@ -210,7 +210,7 @@ static void turnOnCapturePin(const char *msg, brain_pin_e brainPin) {
  * turns pin off and returns digital_input_s back into registeredIcus pool
  */
 void stopDigitalCapture(const char *msg, brain_pin_e brainPin) {
-	if (brainPin == GPIO_UNASSIGNED) {
+	if (!isBrainPinValid(brainPin)) {
 		return;
 	}
 	efiSetPadUnused(brainPin);

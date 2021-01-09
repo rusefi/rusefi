@@ -75,7 +75,7 @@ private:
 static BenchController instance;
 
 void initAccelerometer(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
-	if (engineConfiguration->LIS302DLCsPin == GPIO_UNASSIGNED)
+	if (!isBrainPinValid(engineConfiguration->LIS302DLCsPin))
 		return; // not used
 
 	if (!CONFIG(is_enabled_spi_1))

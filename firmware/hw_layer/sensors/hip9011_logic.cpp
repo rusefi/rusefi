@@ -19,8 +19,6 @@ void HIP9011::setStateAndCommand(unsigned char cmd) {
 	hardware->sendCommand(cmd);
 }
 
-#define BAND(bore) (900 / (PIF * (bore) / 2))
-
 /**
  * @return frequency band we are interested in
  */

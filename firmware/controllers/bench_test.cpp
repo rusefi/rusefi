@@ -290,8 +290,12 @@ static void handleBenchCategory(uint16_t index) {
 	case CMD_TS_BENCH_AC_COMPRESSOR_RELAY:
 		acRelayBench();
 		return;
+	case CMD_TS_BENCH_FAN_RELAY:
+		fanBench();
+		return;
+	default:
+		firmwareError(OBD_PCM_Processor_Fault, "Unexpected bench function %d", index);
 	}
-
 }
 
 static void handleCommandX14(uint16_t index) {
@@ -347,6 +351,8 @@ static void handleCommandX14(uint16_t index) {
 	case 0x12:
 		widebandUpdatePending = true;
 		return;
+	default:
+		firmwareError(OBD_PCM_Processor_Fault, "Unexpected bench x14 %d", index);
 	}
 }
 
@@ -377,7 +383,7 @@ void executeTSCommand(uint16_t subsystem, uint16_t index) {
 		}
 		break;
 
-		case CMD_TS_INJECTOR_CATEGORY:
+	case CMD_TS_INJECTOR_CATEGORY:
 		if (!running) {
 			doRunFuel(index, "300", "4", "400", "3");
 		}
@@ -398,11 +404,6 @@ void executeTSCommand(uint16_t subsystem, uint16_t index) {
 	case CMD_TS_X14:
 		handleCommandX14(index);
 		break;
-
-	case CMD_TS_X15:
-		fanBench();
-		break;
-
 	case CMD_TS_BENCH_CATEGORY:
 		handleBenchCategory(index);
 		break;
@@ -452,6 +453,8 @@ void executeTSCommand(uint16_t subsystem, uint16_t index) {
 		rebootNow();
 #endif /* EFI_PROD_CODE */
 		break;
+	default:
+		firmwareError(OBD_PCM_Processor_Fault, "Unexpected bench subsystem %d %d", subsystem, index);
 	}
 }
 
