@@ -253,11 +253,11 @@ static void doPeriodicSlowCallback(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 #if EFI_INTERNAL_FLASH
 		writeToFlashIfPending();
 #endif /* EFI_INTERNAL_FLASH */
-		resetAccel();
 	}
 
-
-	if (!engine->rpmCalculator.isStopped()) {
+	if (engine->rpmCalculator.isStopped()) {
+		resetAccel();
+	} else {
 		updatePrimeInjectionPulseState(PASS_ENGINE_PARAMETER_SIGNATURE);
 	}
 
