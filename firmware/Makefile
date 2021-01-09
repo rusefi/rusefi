@@ -162,6 +162,8 @@ include $(CHIBIOS)/os/hal/osal/rt/osal.mk
 # RTOS files (optional).
 include $(CHIBIOS)/os/rt/rt.mk
 include $(CHIBIOS)/os/common/ports/ARMCMx/compilers/GCC/mk/port_v7m.mk
+# EX files (optional).
+include $(CHIBIOS)/os/ex/ST/lis302dl.mk
 
 ifeq ($(USE_FATFS),yes)
 include $(CHIBIOS)/os/various/fatfs_bindings/fatfs.mk
@@ -210,7 +212,6 @@ CSRC = $(STARTUPSRC) \
 	$(PLATFORMSRC_CONTRIB) \
 	$(BOARDSRC) \
 	$(BOOTLOADERSRC) \
-	$(CHIBIOS)/os/ex/ST/lis302dl.c \
 	$(CHIBIOS)/os/various/syscalls.c \
 	$(CHIBIOS)/os/hal/lib/streams/memstreams.c \
 	$(CHIBIOS)/os/hal/lib/streams/chprintf.c \
