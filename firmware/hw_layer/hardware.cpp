@@ -161,9 +161,12 @@ static int adcCallbackCounter = 0;
 static volatile int averagedSamples[ADC_MAX_CHANNELS_COUNT];
 static adcsample_t avgBuf[ADC_MAX_CHANNELS_COUNT];
 
-void adc_callback_fast_internal(ADCDriver *adcp, adcsample_t *buffer, size_t n);
+void adc_callback_fast_internal(ADCDriver *adcp);
 
-void adc_callback_fast(ADCDriver *adcp, adcsample_t *buffer, size_t n) {
+void adc_callback_fast(ADCDriver *adcp) {
+	adcsample_t *buffer = adcp->samples;
+	//size_t n = adcp->depth;
+
 	if (adcp->state == ADC_COMPLETE) {
 		fastAdc.invalidateSamplesCache();
 
@@ -186,7 +189,7 @@ void adc_callback_fast(ADCDriver *adcp, adcsample_t *buffer, size_t n) {
 			}
 
 			// call the real callback (see below)
-			adc_callback_fast_internal(adcp, avgBuf, fastAdc.size());
+			adc_callback_fast_internal(adcp);
 
 			// reset the avg buffer & counter
 			for (int i = fastAdc.size() - 1; i >= 0; i--) {
@@ -197,14 +200,18 @@ void adc_callback_fast(ADCDriver *adcp, adcsample_t *buffer, size_t n) {
 	}
 }
 
-#define adc_callback_fast adc_callback_fast_internal
-
 #endif /* EFI_FASTER_UNIFORM_ADC */
 
 /**
  * This method is not in the adc* lower-level file because it is more business logic then hardware.
  */
-void adc_callback_fast(ADCDriver *adcp, adcsample_t *buffer, size_t n) {
+#if EFI_FASTER_UNIFORM_ADC
+void adc_callback_fast_internal(ADCDriver *adcp) {
+#else
+void adc_callback_fast(ADCDriver *adcp) {
+#endif
+	adcsample_t *buffer = adcp->samples;
+	size_t n = adcp->depth;
 	(void) buffer;
 	(void) n;
 
