@@ -24,6 +24,11 @@ jobs:
       working-directory: ./firmware/
       run: bash gen_config_default.sh
 
+    - name: Generate Enums
+      working-directory: ./firmware/
+      run: |
+        bash gen_enum_to_string.sh
+
     - name: Generate Live Documentation
       working-directory: ./firmware/
       run: bash gen_live_documentation.sh
