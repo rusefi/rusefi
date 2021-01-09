@@ -55,7 +55,6 @@ static const int lineStart[] = { 0, 0x40, 0x14, 0x54 };
 static int BUSY_WAIT_DELAY = FALSE;
 static int currentRow = 0;
 static int currentColumn = 0;
-static bool lcd_enabled = false;
 
 static void lcdSleep(int period) {
 	if (BUSY_WAIT_DELAY) {
@@ -79,6 +78,17 @@ static void lcdSleep(int period) {
 // todo: use this method wider!
 static void writePad(const char *msg, brain_pin_e pin, int bit) {
 	palWritePad(getHwPort(msg, pin), getHwPin(msg, pin), bit);
+}
+
+static bool lcd_HD44780_is_enabled(void) {
+	/* check for valid LCD setting */
+	return ((engineConfiguration->displayMode == DM_HD44780) &&
+		(isBrainPinValid(CONFIG(HD44780_rs))) &&
+		(isBrainPinValid(CONFIG(HD44780_e))) &&
+		(isBrainPinValid(CONFIG(HD44780_db4))) &&
+		(isBrainPinValid(CONFIG(HD44780_db5))) &&
+		(isBrainPinValid(CONFIG(HD44780_db6))) &&
+		(isBrainPinValid(CONFIG(HD44780_db7))));
 }
 
 //-----------------------------------------------------------------------------
@@ -132,7 +142,7 @@ static void lcd_HD44780_write_data(uint8_t data) {
 
 //-----------------------------------------------------------------------------
 void lcd_HD44780_set_position(uint8_t row, uint8_t column) {
-	if (!lcd_enabled)
+	if (!lcd_HD44780_is_enabled())
 		return;
 
 	efiAssertVoid(CUSTOM_ERR_6657, row <= engineConfiguration->HD44780height, "invalid row");
@@ -142,21 +152,21 @@ void lcd_HD44780_set_position(uint8_t row, uint8_t column) {
 }
 
 int getCurrentHD44780row(void) {
-	if (!lcd_enabled)
+	if (!lcd_HD44780_is_enabled())
 		return 0;
 
 	return currentRow;
 }
 
 int getCurrentHD44780column(void) {
-	if (!lcd_enabled)
+	if (!lcd_HD44780_is_enabled())
 		return 0;
 
 	return currentColumn;
 }
 
 void lcd_HD44780_print_char(char data) {
-	if (!lcd_enabled)
+	if (!lcd_HD44780_is_enabled())
 		return;
 
 	if (data == '\n') {
@@ -167,7 +177,7 @@ void lcd_HD44780_print_char(char data) {
 }
 
 void lcd_HD44780_print_string(const char* string) {
-	if (!lcd_enabled)
+	if (!lcd_HD44780_is_enabled())
 		return;
 
 	while (*string != 0x00)
@@ -193,14 +203,8 @@ void stopHD44780_pins() {
 	efiSetPadUnused(activeConfiguration.HD44780_db7);
 }
 
-int startHD44780_pins() {
-	if ((engineConfiguration->displayMode == DM_HD44780) &&
-		(isBrainPinValid(CONFIG(HD44780_rs))) &&
-		(isBrainPinValid(CONFIG(HD44780_e))) &&
-		(isBrainPinValid(CONFIG(HD44780_db4))) &&
-		(isBrainPinValid(CONFIG(HD44780_db5))) &&
-		(isBrainPinValid(CONFIG(HD44780_db6))) &&
-		(isBrainPinValid(CONFIG(HD44780_db7)))) {
+void startHD44780_pins() {
+	if (lcd_HD44780_is_enabled()) {
 		// initialize hardware lines
 		efiSetPadMode("lcd RS", CONFIG(HD44780_rs), PAL_MODE_OUTPUT_PUSHPULL);
 		efiSetPadMode("lcd E", CONFIG(HD44780_e), PAL_MODE_OUTPUT_PUSHPULL);
@@ -215,14 +219,7 @@ int startHD44780_pins() {
 		writePad("lcd", CONFIG(HD44780_db5), 0);
 		writePad("lcd", CONFIG(HD44780_db6), 0);
 		writePad("lcd", CONFIG(HD44780_db7), 0);
-
-		return 0;
 	}
-
-	/* failed to init LCD pins, avoid writes */
-	lcd_enabled = false;
-
-	return -1;
 }
 
 void lcd_HD44780_init(Logging *sharedLogger) {
@@ -242,7 +239,7 @@ void lcd_HD44780_init(Logging *sharedLogger) {
 
 	printMsg(logger, "lcd_HD44780_init %d", engineConfiguration->displayMode);
 
-	if (startHD44780_pins() < 0)
+	if (!lcd_HD44780_is_enabled())
 		return;
 
 	chThdSleepMilliseconds(20); // LCD needs some time to wake up
@@ -271,11 +268,14 @@ void lcd_HD44780_init(Logging *sharedLogger) {
 
 	lcd_HD44780_set_position(0, 0);
 	printMsg(logger, "lcd_HD44780_init() done");
-
-	lcd_enabled = true;
 }
 
 void lcdShowPanicMessage(char *message) {
+	/* this is not a good idea to access config data
+	 * when everything goes wrong... */
+	if (!lcd_HD44780_is_enabled())
+		return;
+
 	BUSY_WAIT_DELAY = TRUE;
 	lcd_HD44780_set_position(0, 0);
 	lcd_HD44780_print_string("PANIC\n");
