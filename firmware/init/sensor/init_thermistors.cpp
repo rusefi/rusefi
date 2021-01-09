@@ -57,6 +57,11 @@ void configTherm(FunctionalSensor &sensor,
 					FuncPair &p,
 					ThermistorConf &config,
 					bool isLinear) {
+	// nothing to do if no channel
+	if (!isAdcChannelValid(config.adcChannel)) {
+		return;
+	}
+
 	// Configure the conversion function for this sensor
 	sensor.setFunction(configureTempSensorFunction(config.config, p, isLinear));
 }
