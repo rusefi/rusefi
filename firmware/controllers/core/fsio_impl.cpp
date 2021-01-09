@@ -460,24 +460,24 @@ void runFsio(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	}
 
 #if EFI_FUEL_PUMP
-	if (CONFIG(fuelPumpPin) != GPIO_UNASSIGNED) {
+	if (isBrainPinValid(CONFIG(fuelPumpPin))) {
 		setPinState("pump", &enginePins.fuelPumpRelay, fuelPumpLogic PASS_ENGINE_PARAMETER_SUFFIX);
 	}
 #endif /* EFI_FUEL_PUMP */
 
 #if EFI_MAIN_RELAY_CONTROL
-	if (CONFIG(mainRelayPin) != GPIO_UNASSIGNED)
+	if (isBrainPinValid(CONFIG(mainRelayPin)))
 		// the MAIN_RELAY_LOGIC calls engine->isInShutdownMode()
 		setPinState("main_relay", &enginePins.mainRelay, mainRelayLogic PASS_ENGINE_PARAMETER_SUFFIX);
 #else /* EFI_MAIN_RELAY_CONTROL */
 	/**
 	 * main relay is always on if ECU is on, that's a good enough initial implementation
 	 */
-	if (CONFIG(mainRelayPin) != GPIO_UNASSIGNED)
+	if (isBrainPinValid(CONFIG(mainRelayPin)))
 		enginePins.mainRelay.setValue(true);
 #endif /* EFI_MAIN_RELAY_CONTROL */
 
-	if (CONFIG(starterRelayDisablePin) != GPIO_UNASSIGNED)
+	if (isBrainPinValid(CONFIG(starterRelayDisablePin)))
 		setPinState("starter_relay", &enginePins.starterRelayDisable, starterRelayDisableLogic PASS_ENGINE_PARAMETER_SUFFIX);
 
 	/**
@@ -487,15 +487,15 @@ void runFsio(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	 */
 	enginePins.o2heater.setValue(engine->rpmCalculator.isRunning());
 
-	if (CONFIG(acRelayPin) != GPIO_UNASSIGNED) {
+	if (isBrainPinValid(CONFIG(acRelayPin))) {
 		setPinState("A/C", &enginePins.acRelay, acRelayLogic PASS_ENGINE_PARAMETER_SUFFIX);
 	}
 
-//	if (CONFIG(alternatorControlPin) != GPIO_UNASSIGNED) {
+//	if (isBrainPinValid(CONFIG(alternatorControlPin))) {
 //		setPinState("alternator", &enginePins.alternatorField, alternatorLogic, engine PASS_ENGINE_PARAMETER_SUFFIX);
 //	}
 
-	if (CONFIG(fanPin) != GPIO_UNASSIGNED) {
+	if (isBrainPinValid(CONFIG(fanPin))) {
 		setPinState("fan", &enginePins.fanRelay, radiatorFanLogic PASS_ENGINE_PARAMETER_SUFFIX);
 	}
 
@@ -572,7 +572,7 @@ static void showFsioInfo(void) {
 
 	for (int i = 0; i < AUX_PID_COUNT ; i++) {
 		brain_pin_e pin = engineConfiguration->auxPidPins[i];
-		if (pin != GPIO_UNASSIGNED) {
+		if (isBrainPinValid(pin)) {
 			scheduleMsg(logger, "FSIO aux #%d [%s]", (i + 1),
 					hwPortname(pin));
 
@@ -606,7 +606,7 @@ static void showFsioInfo(void) {
 	}
 	for (int i = 0; i < FSIO_COMMAND_COUNT; i++) {
 		brain_pin_e inputPin = CONFIG(fsioDigitalInputs)[i];
-		if (inputPin != GPIO_UNASSIGNED) {
+		if (isBrainPinValid(inputPin)) {
 			scheduleMsg(logger, "FSIO digital input #%d: %s", i, hwPortname(inputPin));
 		}
 	}
@@ -698,17 +698,17 @@ void initFsioImpl(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	alternatorLogic = sysPool.parseExpression(ALTERNATOR_LOGIC);
 	
 #if EFI_MAIN_RELAY_CONTROL
-	if (CONFIG(mainRelayPin) != GPIO_UNASSIGNED)
+	if (isBrainPinValid(CONFIG(mainRelayPin)))
 		mainRelayLogic = sysPool.parseExpression(MAIN_RELAY_LOGIC);
 #endif /* EFI_MAIN_RELAY_CONTROL */
-	if (CONFIG(starterRelayDisablePin) != GPIO_UNASSIGNED)
+	if (isBrainPinValid(CONFIG(starterRelayDisablePin)))
 		starterRelayDisableLogic = sysPool.parseExpression(STARTER_RELAY_LOGIC);
 
 #if EFI_PROD_CODE
 	for (int i = 0; i < FSIO_COMMAND_COUNT; i++) {
 		brain_pin_e brainPin = CONFIG(fsioOutputPins)[i];
 
-		if (brainPin != GPIO_UNASSIGNED) {
+		if (isBrainPinValid(brainPin)) {
 			int frequency = CONFIG(fsioFrequency)[i];
 			if (frequency == 0) {
 				enginePins.fsioOutputs[i].initPin(getGpioPinName(i), CONFIG(fsioOutputPins)[i]);
@@ -723,7 +723,7 @@ void initFsioImpl(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	for (int i = 0; i < FSIO_COMMAND_COUNT; i++) {
 		brain_pin_e inputPin = CONFIG(fsioDigitalInputs)[i];
 
-		if (inputPin != GPIO_UNASSIGNED) {
+		if (isBrainPinValid(inputPin)) {
 			efiSetPadMode("FSIO input", inputPin, getInputMode(engineConfiguration->fsioInputModes[i]));
 		}
 	}
@@ -765,25 +765,25 @@ void runHardcodedFsio(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 #endif /* EFI_PROD_CODE */
 
 	// see MAIN_RELAY_LOGIC
-	if (CONFIG(mainRelayPin) != GPIO_UNASSIGNED) {
+	if (isBrainPinValid(CONFIG(mainRelayPin))) {
 		enginePins.mainRelay.setValue((getTimeNowSeconds() < 2) || (getVBatt(PASS_ENGINE_PARAMETER_SIGNATURE) > LOW_VBATT) || engine->isInShutdownMode());
 	}
 	// see STARTER_RELAY_LOGIC
-	if (CONFIG(starterRelayDisablePin) != GPIO_UNASSIGNED) {
+	if (isBrainPinValid(CONFIG(starterRelayDisablePin))) {
 		enginePins.starterRelayDisable.setValue(engine->rpmCalculator.getRpm() < engineConfiguration->cranking.rpm);
 	}
 	// see FAN_CONTROL_LOGIC
-	if (CONFIG(fanPin) != GPIO_UNASSIGNED) {
+	if (isBrainPinValid(CONFIG(fanPin))) {
 		auto clt = Sensor::get(SensorType::Clt);
 		enginePins.fanRelay.setValue(!clt.Valid || (enginePins.fanRelay.getLogicValue() && (clt.Value > engineConfiguration->fanOffTemperature)) || 
 			(clt.Value > engineConfiguration->fanOnTemperature) || engine->isCltBroken);
 	}
 	// see AC_RELAY_LOGIC
-	if (CONFIG(acRelayPin) != GPIO_UNASSIGNED) {
+	if (isBrainPinValid(CONFIG(acRelayPin))) {
 		enginePins.acRelay.setValue(getAcToggle(PASS_ENGINE_PARAMETER_SIGNATURE) && engine->rpmCalculator.getRpm() > 850);
 	}
 	// see FUEL_PUMP_LOGIC
-	if (CONFIG(fuelPumpPin) != GPIO_UNASSIGNED) {
+	if (isBrainPinValid(CONFIG(fuelPumpPin))) {
 		enginePins.fuelPumpRelay.setValue((getTimeNowSeconds() < engine->triggerActivitySecond + engineConfiguration->startUpFuelPumpDuration) || (engine->rpmCalculator.getRpm() > 0));
 	}
 	

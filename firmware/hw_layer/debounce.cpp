@@ -87,7 +87,7 @@ bool ButtonDebounce::readPinEvent() {
 }
 
 bool ButtonDebounce::readPinState() {
-    if (*m_pin == GPIO_UNASSIGNED) {
+    if (!isBrainPinValid(*m_pin)) {
         return false;
     }
     efitick_t timeNow = getTimeNowNt();

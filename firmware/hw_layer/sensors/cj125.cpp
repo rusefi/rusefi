@@ -625,7 +625,7 @@ void initCJ125(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX) {
 		return;
 	}
 
-	if (CONFIG(wboHeaterPin) == GPIO_UNASSIGNED) {
+	if (!isBrainPinValid(CONFIG(wboHeaterPin))) {
 		scheduleMsg(logger, "cj125 init error! wboHeaterPin is required.");
 		warning(CUSTOM_CJ125_1, "cj heater");
 		globalInstance.errorCode = CJ125_ERROR_DISABLED;

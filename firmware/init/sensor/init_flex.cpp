@@ -1,4 +1,5 @@
 #include "init.h"
+#include "pin_repository.h"
 #include "engine.h"
 #include "flex_sensor.h"
 
@@ -12,7 +13,7 @@ void initFlexSensor(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	auto pin = CONFIG(flexSensorPin);
 
 	// Nothing to do if no sensor configured
-	if (pin == GPIO_UNASSIGNED) {
+	if (!isBrainPinValid(pin)) {
 		return;
 	}
 

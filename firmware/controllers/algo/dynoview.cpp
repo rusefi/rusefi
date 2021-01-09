@@ -6,6 +6,7 @@
  */
 
 #include "engine.h"
+#include "pin_repository.h"
 
 #if EFI_DYNO_VIEW
 #include "dynoview.h"
@@ -154,7 +155,7 @@ int getDynoviewPower(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
  * Only updates if we have Vss from input pin.
  */
 void updateDynoView(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
-    if ((CONFIG(vehicleSpeedSensorInputPin) != GPIO_UNASSIGNED) &&
+    if (isBrainPinValid(CONFIG(vehicleSpeedSensorInputPin)) &&
         (!CONFIG(enableCanVss))) {
         dynoInstance.update(ICU);
     }
