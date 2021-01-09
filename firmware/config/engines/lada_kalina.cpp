@@ -37,14 +37,6 @@ void setLadaKalina(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	setFrankensoConfiguration(PASS_CONFIG_PARAMETER_SIGNATURE);
 	disableLCD(engineConfiguration);
 
-	engineConfiguration->HD44780_rs = GPIO_UNASSIGNED;
-	engineConfiguration->HD44780_e = GPIO_UNASSIGNED;
-	engineConfiguration->HD44780_db4 = GPIO_UNASSIGNED;
-	engineConfiguration->HD44780_db5 = GPIO_UNASSIGNED;
-	engineConfiguration->HD44780_db6 = GPIO_UNASSIGNED;
-	engineConfiguration->HD44780_db7 = GPIO_UNASSIGNED;
-
-
 	setOperationMode(engineConfiguration, FOUR_STROKE_CRANK_SENSOR);
 	engineConfiguration->trigger.type = TT_TOOTHED_WHEEL_60_2;
 
