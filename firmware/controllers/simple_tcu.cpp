@@ -23,8 +23,8 @@ void SimpleTransmissionController::update(gear_e gear) {
     if (engineConfiguration->debugMode == DBG_TCU) {
         tsOutputChannels.debugIntField1 = config->tcuSolenoidTable[static_cast<int>(gear) + 1][0];
         tsOutputChannels.debugIntField2 = config->tcuSolenoidTable[static_cast<int>(gear) + 1][1];
-        tsOutputChannels.debugIntField2 = config->tcuSolenoidTable[static_cast<int>(gear) + 1][2];
-        tsOutputChannels.debugIntField2 = config->tcuSolenoidTable[static_cast<int>(gear) + 1][3];
-        tsOutputChannels.debugIntField2 = config->tcuSolenoidTable[static_cast<int>(gear) + 1][4];
+        tsOutputChannels.debugIntField3 = config->tcuSolenoidTable[static_cast<int>(gear) + 1][2];
+        tsOutputChannels.debugIntField4 = config->tcuSolenoidTable[static_cast<int>(gear) + 1][3];
+        tsOutputChannels.debugIntField5 = config->tcuSolenoidTable[static_cast<int>(gear) + 1][4];
     }
 }
