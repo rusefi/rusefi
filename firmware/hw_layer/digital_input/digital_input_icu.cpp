@@ -50,6 +50,7 @@ static ICUConfig wave_icucfg = {
 	.overflow_cb	= NULL,
 	.channel		= ICU_CHANNEL_1,
 	.dier			= 0,
+	.arr 			= 0xFFFFFFFFU
 };
 
 static ArrayList<digital_input_s, 8> registeredIcus;
