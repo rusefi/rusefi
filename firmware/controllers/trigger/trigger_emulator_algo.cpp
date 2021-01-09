@@ -16,6 +16,7 @@
 #include "state_sequence.h"
 #include "global.h"
 #include "efi_gpio.h"
+#include "pin_repository.h"
 
 int getPreviousIndex(const int currentIndex, const int size) {
 	return (currentIndex + size - 1) % size;
@@ -211,7 +212,7 @@ void startTriggerEmulatorPins() {
 		brain_pin_e pin = CONFIG(triggerSimulatorPins)[i];
 
 		// Only bother trying to set output pins if they're configured
-		if (pin != GPIO_UNASSIGNED) {
+		if (isBrainPinValid(pin)) {
 			hasStimPins = true;
 		}
 

@@ -12,6 +12,7 @@
 #include "engine.h"
 #include "allsensors.h"
 #include "efi_gpio.h"
+#include "pin_repository.h"
 #include "trigger_central.h"
 #include "fuel_math.h"
 #include "engine_math.h"
@@ -278,7 +279,7 @@ void Engine::updateSlowSensors(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 void Engine::updateSwitchInputs(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 #if EFI_GPIO_HARDWARE
 	// this value is not used yet
-	if (CONFIG(clutchDownPin) != GPIO_UNASSIGNED) {
+	if (isBrainPinValid(CONFIG(clutchDownPin))) {
 		engine->clutchDownState = efiReadPin(CONFIG(clutchDownPin));
 	}
 	if (hasAcToggle(PASS_ENGINE_PARAMETER_SIGNATURE)) {
@@ -289,14 +290,14 @@ void Engine::updateSwitchInputs(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 		}
 		engine->acSwitchState = result;
 	}
-	if (CONFIG(clutchUpPin) != GPIO_UNASSIGNED) {
+	if (isBrainPinValid(CONFIG(clutchUpPin))) {
 		engine->clutchUpState = efiReadPin(CONFIG(clutchUpPin));
 	}
-	if (CONFIG(throttlePedalUpPin) != GPIO_UNASSIGNED) {
+	if (isBrainPinValid(CONFIG(throttlePedalUpPin))) {
 		engine->engineState.idle.throttlePedalUpState = efiReadPin(CONFIG(throttlePedalUpPin));
 	}
 
-	if (engineConfiguration->brakePedalPin != GPIO_UNASSIGNED) {
+	if (isBrainPinValid(engineConfiguration->brakePedalPin)) {
 		engine->brakePedalState = efiReadPin(engineConfiguration->brakePedalPin);
 	}
 #endif // EFI_GPIO_HARDWARE

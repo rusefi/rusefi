@@ -28,7 +28,7 @@ void efiExtiEnablePin(const char *msg, brain_pin_e brainPin, uint32_t mode, palc
 
 	/* paranoid check, in case of GPIO_UNASSIGNED getHwPort will return NULL
 	 * and we will fail on next check */
-	if (brainPin == GPIO_UNASSIGNED)
+	if (!isBrainPinValid(brainPin))
 		return;
 
 	ioportid_t port = getHwPort(msg, brainPin);
@@ -61,7 +61,7 @@ void efiExtiDisablePin(brain_pin_e brainPin)
 {
 	/* paranoid check, in case of GPIO_UNASSIGNED getHwPort will return NULL
 	 * and we will fail on next check */
-	if (brainPin == GPIO_UNASSIGNED)
+	if (!isBrainPinValid(brainPin))
 		return;
 
 	ioportid_t port = getHwPort("exti", brainPin);

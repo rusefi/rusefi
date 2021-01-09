@@ -76,9 +76,7 @@ int getPortPinIndex(ioportid_t port, ioportmask_t pin) {
 }
 
 ioportid_t getHwPort(const char *msg, brain_pin_e brainPin) {
-	if (brainPin == GPIO_UNASSIGNED || brainPin == GPIO_INVALID)
-		return GPIO_NULL;
-	if (brainPin < GPIOA_0 || brainPin > BRAIN_PIN_ONCHIP_LAST) {
+	if (!isBrainPinValid(brainPin)) {
 		firmwareError(CUSTOM_ERR_INVALID_PIN, "%s: Invalid brain_pin_e: %d", msg, brainPin);
 		return GPIO_NULL;
 	}
@@ -90,7 +88,7 @@ ioportid_t getHwPort(const char *msg, brain_pin_e brainPin) {
  */
 ioportmask_t getHwPin(const char *msg, brain_pin_e brainPin)
 {
-	if (brainPin == GPIO_UNASSIGNED || brainPin == GPIO_INVALID)
+	if (!isBrainPinValid(brainPin))
 			return EFI_ERROR_CODE;
 
 	if (brain_pin_is_onchip(brainPin))
