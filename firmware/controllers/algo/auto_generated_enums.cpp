@@ -1,7 +1,7 @@
 #include "global.h"
 #include "rusefi_enums.h"
 #include "rusefi_hw_enums.h"
-// was generated automatically by rusEfi tool  from rusefi_hw_enums.h // was generated automatically by rusEfi tool  from rusefi_enums.h // by enum2string.jar tool on Fri Jan 08 19:13:05 EET 2021
+// was generated automatically by rusEfi tool  from rusefi_hw_enums.h // was generated automatically by rusEfi tool  from rusefi_enums.h // by enum2string.jar tool on Sat Jan 09 19:14:08 UTC 2021
 // see also gen_config_and_enums.bat
 
 
@@ -655,8 +655,6 @@ case DBG_16:
   return "DBG_16";
 case DBG_34:
   return "DBG_34";
-case DBG_47:
-  return "DBG_47";
 case DBG_48:
   return "DBG_48";
 case DBG_ALTERNATOR_PID:
@@ -739,6 +737,8 @@ case DBG_START_STOP:
   return "DBG_START_STOP";
 case DBG_STATUS:
   return "DBG_STATUS";
+case DBG_TCU:
+  return "DBG_TCU";
 case DBG_TLE8888:
   return "DBG_TLE8888";
 case DBG_TPS_ACCEL:
