@@ -72,7 +72,7 @@ static int turnOnTriggerInputPin(const char *msg, int index, bool isTriggerShaft
 	else
 		camTriggerType[index] = TRIGGER_NONE;
 
-	if (brainPin == GPIO_UNASSIGNED)
+	if (!isBrainPinValid(brainPin))
 		return 0;
 
 	/* try ICU first */
