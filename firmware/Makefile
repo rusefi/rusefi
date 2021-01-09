@@ -153,6 +153,8 @@ ifeq ($(CONFDIR),)
   CONFDIR = $(PROJECT_DIR)/config/stm32f4ems
 endif
 
+# Licensing files.
+include $(CHIBIOS)/os/license/license.mk
 # Startup files.
 include $(CPU_STARTUP_DIR)
 # HAL-OSAL files (optional).
@@ -285,8 +287,7 @@ ifeq ($(CONFIGPATH),)
 endif
 
 
-INCDIR = $(CHIBIOS)/os/license \
-        $(PORTINC) \
+INCDIR = $(PORTINC) \
 	$(OSALINC) \
 	$(KERNINC) \
 	$(TESTINC) \
