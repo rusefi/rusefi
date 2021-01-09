@@ -565,6 +565,10 @@ float getIdleTimingAdjustment(int rpm) {
 	return idleControllerInstance.getIdleTimingAdjustment(rpm);
 }
 
+bool isIdling() {
+	return idleControllerInstance.isIdling();
+}
+
 static void applyPidSettings(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	getIdlePid(PASS_ENGINE_PARAMETER_SIGNATURE)->updateFactors(engineConfiguration->idleRpmPid.pFactor, engineConfiguration->idleRpmPid.iFactor, engineConfiguration->idleRpmPid.dFactor);
 	iacPidMultMap.init(CONFIG(iacPidMultTable), CONFIG(iacPidMultLoadBins), CONFIG(iacPidMultRpmBins));
