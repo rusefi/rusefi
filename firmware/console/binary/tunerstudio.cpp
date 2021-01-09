@@ -862,7 +862,7 @@ int TunerStudioBase::handleCrcCommand(ts_channel_s *tsChannel, char *data, int i
 	case TS_PERF_TRACE_GET_BUFFER:
 		{
 			auto trace = perfTraceGetBuffer();
-			sr5SendResponse(tsChannel, TS_CRC, trace.Buffer, trace.Size);
+			sr5SendResponse(tsChannel, TS_CRC, trace.get<uint8_t>(), trace.size());
 		}
 
 		break;
