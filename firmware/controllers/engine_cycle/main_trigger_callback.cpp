@@ -100,7 +100,6 @@ void endSimultaniousInjection(InjectionEvent *event) {
 #endif
 	event->isScheduled = false;
 	endSimultaniousInjectionOnlyTogglePins(engine);
-	engine->injectionEvents.addFuelEventsForCylinder(event->ownIndex PASS_ENGINE_PARAMETER_SUFFIX);
 }
 
 void InjectorOutputPin::open(efitick_t nowNt DECLARE_ENGINE_PARAMETER_SUFFIX) {
@@ -187,7 +186,6 @@ void turnInjectionPinLow(InjectionEvent *event) {
 			output->close(nowNt PASS_ENGINE_PARAMETER_SUFFIX);
 		}
 	}
-	ENGINE(injectionEvents.addFuelEventsForCylinder(event->ownIndex PASS_ENGINE_PARAMETER_SUFFIX));
 }
 
 void InjectionEvent::onTriggerTooth(size_t trgEventIndex, int rpm, efitick_t nowNt) {
@@ -333,15 +331,6 @@ static void handleFuel(const bool limitedFuel, uint32_t trgEventIndex, int rpm, 
 		return;
 	}
 
-	/**
-	 * Injection events are defined by addFuelEvents() according to selected
-	 * fueling strategy
-	 */
-	FuelSchedule *fs = &ENGINE(injectionEvents);
-	if (!fs->isReady) {
-		fs->addFuelEvents(PASS_ENGINE_PARAMETER_SIGNATURE);
-	}
-
 #if FUEL_MATH_EXTREME_LOGGING
 	if (printFuelDebug) {
 		scheduleMsg(logger, "handleFuel ind=%d %d", trgEventIndex, getRevolutionCounter());
@@ -354,7 +343,7 @@ static void handleFuel(const bool limitedFuel, uint32_t trgEventIndex, int rpm, 
 		ENGINE(engineLoadAccelEnrichment.onEngineCycle(PASS_ENGINE_PARAMETER_SIGNATURE));
 	}
 
-	fs->onTriggerTooth(trgEventIndex, rpm, nowNt PASS_ENGINE_PARAMETER_SUFFIX);
+	ENGINE(injectionEvents).onTriggerTooth(trgEventIndex, rpm, nowNt PASS_ENGINE_PARAMETER_SUFFIX);
 }
 
 #if EFI_PROD_CODE
