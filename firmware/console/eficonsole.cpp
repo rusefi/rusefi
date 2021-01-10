@@ -119,12 +119,13 @@ static void sayHello(void) {
 }
 
 void validateStack(const char*msg, obd_code_e code, int desiredStackUnusedSize) {
-
 #if CH_DBG_THREADS_PROFILING && CH_DBG_FILL_THREADS
 	int unusedStack = CountFreeStackSpace(chThdGetSelfX()->wabase);
 	if (unusedStack < desiredStackUnusedSize) {
 		warning(code, "Stack low on %s: %d", msg, unusedStack);
 	}
+#else
+	(void)msg; (void)code; (void)desiredStackUnusedSize;
 #endif
 }
 

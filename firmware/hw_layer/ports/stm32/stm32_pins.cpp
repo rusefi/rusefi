@@ -121,6 +121,8 @@ int getPortPinIndex(ioportid_t port, ioportmask_t pin) {
 }
 
 ioportid_t getHwPort(const char *msg, brain_pin_e brainPin) {
+	(void)msg;
+
 	if (!isBrainPinValid(brainPin)) {
 /*
  *  https://github.com/dron0gus please help

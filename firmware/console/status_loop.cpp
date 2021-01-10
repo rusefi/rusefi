@@ -157,6 +157,8 @@ void writeLogLine(Writer& buffer) {
 	}
 
 	binaryLogCount++;
+#else
+	(void)buffer;
 #endif /* EFI_FILE_LOGGING */
 }
 
