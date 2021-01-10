@@ -52,6 +52,7 @@
 #include "ego.h"
 #include "thermistors.h"
 #include "mazda_miata_base_maps.h"
+#include "hip9011_logic.h"
 
 EXTERN_CONFIG;
 
@@ -285,6 +286,7 @@ static void setMazdaMiataEngineNB2Defaults(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 
 	setOperationMode(engineConfiguration, FOUR_STROKE_SYMMETRICAL_CRANK_SENSOR);
 	engineConfiguration->specs.displacement = 1.839;
+	engineConfiguration->cylinderBore = 83;
 	strcpy(CONFIG(engineMake), ENGINE_MAKE_MAZDA);
 	strcpy(CONFIG(engineCode), "NB2");
 
@@ -787,6 +789,9 @@ void setMiataNB2_ProteusEngineConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE) 
 
 
     CONFIG(enableSoftwareKnock) = true;
+    // second harmonic (aka double) is usually quieter background noise
+    // 13.8
+	engineConfiguration->knockBandCustom = 2 * BAND(engineConfiguration->cylinderBore);
 
     engineConfiguration->malfunctionIndicatorPin = GPIOB_6;
 
