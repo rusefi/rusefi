@@ -123,6 +123,7 @@ include $(CHIBIOS)/os/hal/osal/rt-nil/osal.mk
 include $(CHIBIOS)/os/rt/rt.mk
 include $(CHIBIOS)/os/common/ports/SIMIA32/compilers/GCC/port.mk
 # Other files (optional).
+include $(CHIBIOS)/os/hal/lib/streams/streams.mk
 include $(CHIBIOS)/os/various/cpp_wrappers/chcpp.mk
 
 ifeq ($(OS),Windows_NT)
@@ -144,25 +145,20 @@ include $(PROJECT_DIR)/util/util.mk
 
 # C sources that can be compiled in ARM or THUMB mode depending on the global
 # setting.
-CSRC =  ${PORTSRC} \
-        ${KERNSRC} \
-        ${HALSRC} \
-        ${PLATFORMSRC} \
+CSRC =  $(ALLCSRC) \
         $(SYSTEMSRC) \
         $(CONSOLESRC) \
         $(CONTROLLERS_ALGO_SRC) \
         $(CONTROLLERS_CORE_SRC) \
         $(CONTROLLERS_SENSORS_SRC) \
         $(ENGINES_SRC) \
-        $(BOARDSRC) \
-        $(CHIBIOS)/os/hal/lib/streams/memstreams.c \
-        $(CHIBIOS)/os/hal/lib/streams/chprintf.c \
         $(UTILSRC) \
         main.c
 
 # C++ sources that can be compiled in ARM or THUMB mode depending on the global
 # setting.
-CPPSRC = $(UTILSRC_CPP) \
+CPPSRC = $(ALLCPPSRC) \
+        $(UTILSRC_CPP) \
 	$(CONTROLLERS_ALGO_SRC_CPP) \
 	$(CONTROLLERS_SRC_CPP) \
 	$(PROJECT_DIR)/development/sensor_chart.cpp \
@@ -190,25 +186,19 @@ ASMSRC = $(PORTASM)
 
 INCDIR = . \
           $(ALLINC) \
-          $(PORTINC) \
-          $(KERNINC) \
-          $(OSALINC) \
-          $(HALINC) \
-          $(CHCPPINC) \
-          $(PLATFORMINC) \
-          $(BOARDINC) \
           $(UTIL_INC) \
           $(PROJECT_DIR)/init \
           $(CONSOLE_INC) \
           $(PROJECT_DIR)/config/engines \
           $(PROJECT_DIR)/ext_algo \
-         $(HW_LAYER_DRIVERS_INC) \
-          $(HW_LAYER_INC) $(HW_SENSORS_INC) \
+          $(HW_LAYER_DRIVERS_INC) \
+          $(HW_LAYER_INC) \
+	  $(HW_SENSORS_INC) \
           $(PROJECT_DIR)/hw_layer/algo \
           $(PROJECT_DIR)/hw_layer/drivers/can \
           $(HW_SENSORS_INC) \
- 	$(DEVELOPMENT_DIR) \
-    $(CONTROLLERS_INC) \
+          $(DEVELOPMENT_DIR) \
+          $(CONTROLLERS_INC) \
           ${CHIBIOS}/os/various \
           $(CHIBIOS)/os/hal/lib/streams \
           simulator
