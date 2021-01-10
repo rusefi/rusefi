@@ -83,7 +83,7 @@ typedef struct {
 
 	// RPM, vss
 	scaled_channel<uint16_t> rpm;   // 4
-	scaled_percent rpmAcceleration; // 6
+	int16_t rpmAcceleration; // 6
 	scaled_percent speedToRpmRatio; // 8
 	scaled_channel<uint8_t> vehicleSpeedKph; // 10
 	

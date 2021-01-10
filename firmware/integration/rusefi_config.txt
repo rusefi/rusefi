@@ -153,6 +153,7 @@ struct_no_prefix engine_configuration_s
 #define PEDAL_TO_TPS_SIZE 8
 
 #define STFT_CELL_COUNT 4
+#define STFT_BANK_COUNT 2
 
 #define CAN_DEFAULT_BASE 0x200
 
@@ -1537,7 +1538,10 @@ float[FUEL_LOAD_COUNT] injPhaseLoadBins;;"Load",   1,   0.0,        0,  500.0,  
 float[FUEL_RPM_COUNT] injPhaseRpmBins;;"RPM",	   1,   0.0,        0,  18000.0, 2
 
 tcubinary_table_t tcuSolenoidTable;
-uint8_t[1092] unused15136;;"units", 1, 0, -20, 100, 0
+
+float vssFilterReciprocal;+Good example: number of tooth on wheel, For Can 10 is a good number.;"Hz",   1,   0,   2.0,   20.0,   2
+
+uint8_t[1088] unused15136;;"units", 1, 0, -20, 100, 0
 
 ignition_table_t ignitionTable;
 float[IGN_LOAD_COUNT] ignitionLoadBins;;"Load",   1,   0.0,        0,  500.0,   2
