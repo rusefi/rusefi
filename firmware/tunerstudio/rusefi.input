@@ -209,7 +209,7 @@ enable2ndByteCanID = false
 
 ; RPM, vss
       RPMValue        = scalar,  U16,      4,      "RPM",    1,   0.00000
-      rpmAcceleration = scalar,  S16,      6,     "RPM/s", 1,         0
+      rpmAcceleration = scalar,  S16,      6,     "dRpm",{1/@@PACK_MULT_PERCENT@@},         0
       speedToRpmRatio = scalar,  S16,      8,    "value",{1/@@PACK_MULT_PERCENT@@},         0
       vehicleSpeedKph = scalar,  U08,     10,      "kph",    1,       0.0
 
@@ -939,7 +939,7 @@ gaugeCategory = Sensors - Extra 2
    egt6Gauge         = egt6, "EGT#6", "C", 0, 2000
    egt7Gauge         = egt7, "EGT#7", "C", 0, 2000
    egt8Gauge         = egt8, "EGT#8", "C", 0, 2000
-   rpmAccelerationGa = rpmAcceleration,     "rpm delta",        "RPM/s",        -2000,      2000,       -2000,      2000,       -2000,     2000,   0,   0
+   rpmAccelerationGa = rpmAcceleration,     "rpm delta",        "dRpm",        0,      3,       0,      1,       3,     4,   1,   1
    knockLevelGauge   = knockLevel,"Knock level",           "volts",        0,      7,      10,     10,     100,   100,   1,   2
    fuelTankLevelGauge   = fuelTankLevel,"Fuel level",           "x",        0,      7,      10,     10,     100,   100,   1,   2
    speedToRpmRatioGauge = speedToRpmRatio, "speed2rpm", "",     0,   100,     0,    0,    100,  100,   4,   4
@@ -1206,7 +1206,7 @@ gaugeCategory = DynoView
    entry = knockLevel,	    @@GAUGE_NAME_KNOCK_LEVEL@@, 	   float,  "%.2f"
    entry = vehicleSpeedKph,	@@GAUGE_NAME_VVS@@,	   float,  "%.2f"
    entry = speedToRpmRatio, "s2rpm",	   float,  "%.3f"
-   entry = rpmAcceleration, "dRPM",        int,  "%d"
+   entry = rpmAcceleration, "dRPM",        float,  "%.3f"
    entry = massAirFlowValue,@@GAUGE_NAME_AIR_FLOW@@,    float,  "%.3f"
    entry = chargeAirMass,   @@GAUGE_NAME_AIR_MASS@@,    float,  "%.3f"
    entry = throttlePedalPosition,   @@GAUGE_NAME_THROTTLE_PEDAL@@,       float,  "%.3f"
