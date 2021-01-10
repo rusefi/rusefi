@@ -671,6 +671,9 @@ void Engine::periodicFastCallback(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 
 	engineState.periodicFastCallback(PASS_ENGINE_PARAMETER_SIGNATURE);
 
+	// Update injection timing/trigger tooth
+	injectionEvents.addFuelEvents(PASS_ENGINE_PARAMETER_SIGNATURE);
+
 	tachSignalCallback(PASS_ENGINE_PARAMETER_SIGNATURE);
 }
 

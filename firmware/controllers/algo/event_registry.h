@@ -73,10 +73,8 @@ public:
 	 * injection events, per cylinder
 	 */
 	InjectionEvent elements[MAX_INJECTION_OUTPUT_COUNT];
-	bool isReady;
 
-private:
-	void clear();
+	bool isReady = false;
 };
 
 class AngleBasedEvent {
