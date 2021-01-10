@@ -42,8 +42,15 @@ static void icuPeriordCallBack(ICUDriver *driver);
  * CORE_CLOCK / 33.33333 = TICKS * 65536
  * 168000000 / 33.333333 / 65536 = 76.90
  */
-static ICUConfig wave_icucfg = { ICU_INPUT_ACTIVE_LOW, CORE_CLOCK / 100, icuWidthCallback, icuPeriordCallBack, 0,
-		ICU_CHANNEL_1, 0 };
+static ICUConfig wave_icucfg = {
+	.mode			= ICU_INPUT_ACTIVE_LOW,
+	.frequency 		= CORE_CLOCK / 100,
+	.width_cb		= icuWidthCallback,
+	.period_cb		= icuPeriordCallBack,
+	.overflow_cb	= NULL,
+	.channel		= ICU_CHANNEL_1,
+	.dier			= 0,
+};
 
 static ArrayList<digital_input_s, 8> registeredIcus;
 
