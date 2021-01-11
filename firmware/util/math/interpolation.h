@@ -13,6 +13,8 @@
 #include "obd_error_codes.h"
 #include "error_handling.h"
 
+#include <type_traits>
+
 #ifndef DEBUG_INTERPOLATION
 #define DEBUG_INTERPOLATION FALSE
 #endif
@@ -42,6 +44,9 @@ struct BinResult
  */
 template<class TBin, int TSize>
 BinResult getBin(float value, const TBin (&bins)[TSize]) {
+	// Enforce numeric only (int, float, uintx_t, etc)
+    static_assert(std::is_arithmetic_v<TBin>, "Table bins must be an arithmetic type");
+
 	// Handle off-scale low
 	if (value <= bins[0]) {
 		return { 0, 0.0f };
@@ -81,6 +86,9 @@ static float linterp(float low, float high, float frac)
 
 template <class TBin, class TValue, int TSize>
 float interpolate2d(const char *msg, const float value, const TBin (&bin)[TSize], const TValue (&values)[TSize]) {
+	// Enforce numeric only (int, float, uintx_t, etc)
+	static_assert(std::is_arithmetic_v<TBin>, "Table values must be an arithmetic type");
+
 	auto b = priv::getBin(value, bin);
 
 	// Convert to float as we read it out
@@ -89,6 +97,11 @@ float interpolate2d(const char *msg, const float value, const TBin (&bin)[TSize]
 	float frac = b.Frac;
 
 	return priv::linterp(low, high, frac);
+}
+
+template <class TBin, class TValue, int TSize>
+float interpolate2d(const float value, const TBin (&bin)[TSize], const TValue (&values)[TSize]) {
+	return interpolate2d(value, bin, values);
 }
 
 int needInterpolationLogging(void);
