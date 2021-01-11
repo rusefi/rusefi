@@ -45,7 +45,7 @@ struct BinResult
 template<class TBin, int TSize>
 BinResult getBin(float value, const TBin (&bins)[TSize]) {
 	// Enforce numeric only (int, float, uintx_t, etc)
-    static_assert(std::is_arithmetic_v<TBin>, "Table bins must be an arithmetic type");
+	static_assert(std::is_arithmetic_v<TBin>, "Table bins must be an arithmetic type");
 
 	// Enforce that there are enough bins to make sense (what does one bin even mean?)
 	static_assert(TSize >= 2);
