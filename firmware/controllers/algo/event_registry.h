@@ -76,7 +76,7 @@ public:
 	bool isReady = false;
 
 private:
-	bool addFuelEventsForCylinder(int cylinderIndex DECLARE_ENGINE_PARAMETER_SUFFIX);
+	bool addFuelEventsForCylinder(int cylinderIndex, angle_t injectionDurationAngle, injection_mode_e mode DECLARE_ENGINE_PARAMETER_SUFFIX);
 };
 
 class AngleBasedEvent {

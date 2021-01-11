@@ -8,6 +8,7 @@
 #include "engine.h"
 #include "engine_math.h"
 #include "event_registry.h"
+#include "perf_trace.h"
 
 EXTERN_ENGINE;
 
@@ -29,38 +30,8 @@ void FuelSchedule::resetOverlapping() {
 /**
  * @returns false in case of error, true if success
  */
-bool FuelSchedule::addFuelEventsForCylinder(int i  DECLARE_ENGINE_PARAMETER_SUFFIX) {
+bool FuelSchedule::addFuelEventsForCylinder(int i, angle_t baseAngle, injection_mode_e mode DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	efiAssert(CUSTOM_ERR_ASSERT, engine!=NULL, "engine is NULL", false);
-
-	floatus_t oneDegreeUs = ENGINE(rpmCalculator.oneDegreeUs); // local copy
-	if (cisnan(oneDegreeUs)) {
-		// in order to have fuel schedule we need to have current RPM
-		// wonder if this line slows engine startup?
-		return false;
-	}
-
-	/**
-	 * injection phase is scheduled by injection end, so we need to step the angle back
-	 * for the duration of the injection
-	 *
-	 * todo: since this method is not invoked within trigger event handler and
-	 * engineState.injectionOffset is calculated from the same utility timer should we more that logic here?
-	 */
-	floatms_t fuelMs = ENGINE(injectionDuration);
-	efiAssert(CUSTOM_ERR_ASSERT, !cisnan(fuelMs), "NaN fuelMs", false);
-	angle_t injectionDuration = MS2US(fuelMs) / oneDegreeUs;
-	efiAssert(CUSTOM_ERR_ASSERT, !cisnan(injectionDuration), "NaN injectionDuration", false);
-	assertAngleRange(injectionDuration, "injectionDuration_r", CUSTOM_INJ_DURATION);
-	floatus_t injectionOffset = ENGINE(engineState.injectionOffset);
-	if (cisnan(injectionOffset)) {
-		// injection offset map not ready - we are not ready to schedule fuel events
-		return false;
-	}
-	angle_t baseAngle = injectionOffset - injectionDuration;
-	efiAssert(CUSTOM_ERR_ASSERT, !cisnan(baseAngle), "NaN baseAngle", false);
-	assertAngleRange(baseAngle, "baseAngle_r", CUSTOM_ERR_6554);
-
-	injection_mode_e mode = engine->getCurrentInjectionMode(PASS_ENGINE_PARAMETER_SIGNATURE);
 
 	int injectorIndex;
 	if (mode == IM_SIMULTANEOUS || mode == IM_SINGLE_POINT) {
@@ -137,10 +108,46 @@ bool FuelSchedule::addFuelEventsForCylinder(int i  DECLARE_ENGINE_PARAMETER_SUFF
 }
 
 void FuelSchedule::addFuelEvents(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+	ScopePerf perf(PE::Temporary1);
+
+	floatus_t oneDegreeUs = ENGINE(rpmCalculator.oneDegreeUs); // local copy
+	if (cisnan(oneDegreeUs)) {
+		// in order to have fuel schedule we need to have current RPM
+		// wonder if this line slows engine startup?
+		isReady = false;
+		return;
+	}
+
+	/**
+	 * injection phase is scheduled by injection end, so we need to step the angle back
+	 * for the duration of the injection
+	 *
+	 * todo: since this method is not invoked within trigger event handler and
+	 * engineState.injectionOffset is calculated from the same utility timer should we more that logic here?
+	 */
+	floatms_t fuelMs = ENGINE(injectionDuration);
+	efiAssertVoid(CUSTOM_ERR_ASSERT, !cisnan(fuelMs), "NaN fuelMs");
+	angle_t injectionDurationAngle = MS2US(fuelMs) / oneDegreeUs;
+	efiAssertVoid(CUSTOM_ERR_ASSERT, !cisnan(injectionDurationAngle), "NaN injectionDuration");
+	assertAngleRange(injectionDurationAngle, "injectionDuration_r", CUSTOM_INJ_DURATION);
+
+	floatus_t injectionOffset = ENGINE(engineState.injectionOffset);
+	if (cisnan(injectionOffset)) {
+		// injection offset map not ready - we are not ready to schedule fuel events
+		isReady = false;
+		return;
+	}
+
+	angle_t baseAngle = injectionOffset - injectionDurationAngle;
+	efiAssertVoid(CUSTOM_ERR_ASSERT, !cisnan(baseAngle), "NaN baseAngle");
+	assertAngleRange(baseAngle, "baseAngle_r", CUSTOM_ERR_6554);
+
+	injection_mode_e mode = engine->getCurrentInjectionMode(PASS_ENGINE_PARAMETER_SIGNATURE);
+
 	for (int cylinderIndex = 0; cylinderIndex < CONFIG(specs.cylindersCount); cylinderIndex++) {
 		InjectionEvent *ev = &elements[cylinderIndex];
 		ev->ownIndex = cylinderIndex;  // todo: is this assignment needed here? we now initialize in constructor
-		bool result = addFuelEventsForCylinder(cylinderIndex PASS_ENGINE_PARAMETER_SUFFIX);
+		bool result = addFuelEventsForCylinder(cylinderIndex, baseAngle, mode PASS_ENGINE_PARAMETER_SUFFIX);
 
 		if (!result) {
 			isReady = false;
