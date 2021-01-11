@@ -419,6 +419,7 @@ static void setCrankingInjectionMode(int value) {
 static void setInjectionMode(int value) {
 	engineConfiguration->injectionMode = (injection_mode_e) value;
 	incrementGlobalConfigurationVersion(PASS_ENGINE_PARAMETER_SIGNATURE);
+	prepareOutputSignals(PASS_ENGINE_PARAMETER_SIGNATURE);
 	doPrintConfiguration();
 }
 

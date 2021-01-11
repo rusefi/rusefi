@@ -20,6 +20,10 @@ FuelSchedule::FuelSchedule() {
 	}
 }
 
+void FuelSchedule::invalidate() {
+	isReady = false;
+}
+
 void FuelSchedule::resetOverlapping() {
 	for (size_t i = 0; i < efi::size(enginePins.injectors); i++) {
 		enginePins.injectors[i].reset();
@@ -143,7 +147,7 @@ void FuelSchedule::addFuelEvents(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 		bool result = addFuelEventsForCylinder(cylinderIndex PASS_ENGINE_PARAMETER_SUFFIX);
 
 		if (!result) {
-			isReady = false;
+			invalidate();
 			return;
 		}
 	}
