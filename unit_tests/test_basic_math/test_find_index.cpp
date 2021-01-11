@@ -193,3 +193,78 @@ TEST_F(Test2dTableMassive, t)
 
     EXPECT_LT(maxErr, 0.01);
 }
+
+// Helper for BinResult type
+#define EXPECT_BINRESULT(actual, expectedIdx, expectedFrac) \
+	{ \
+		auto ___temp___ = actual; \
+		EXPECT_EQ(___temp___.Idx, expectedIdx); \
+		EXPECT_NEAR(___temp___.Frac, expectedFrac, expectedFrac / 1e4); \
+	}
+
+// Test with small bins: only two values
+static const float smallBins[] = { 10, 20 };
+
+TEST(TableBinsSmall, OffScaleLeft)
+{
+    EXPECT_BINRESULT(priv::getBin(5, smallBins), 0, 0);
+}
+
+TEST(TableBinsSmall, OffScaleRight)
+{
+    EXPECT_BINRESULT(priv::getBin(25, smallBins), 0, 1);
+}
+
+TEST(TableBinsSmall, EdgeLeft)
+{
+    EXPECT_BINRESULT(priv::getBin(10, smallBins), 0, 0);
+}
+
+TEST(TableBinsSmall, EdgeRight)
+{
+    EXPECT_BINRESULT(priv::getBin(10, smallBins), 0, 0);
+}
+
+TEST(TableBinsSmall, Middle)
+{
+    EXPECT_BINRESULT(priv::getBin(15, smallBins), 0, 0.5f);
+}
+
+// Test with medium bins, 3 items
+static const float bigBins[] = { 10, 20, 30 };
+
+TEST(TableBinsBig, OffScaleLow)
+{
+    EXPECT_BINRESULT(priv::getBin(5, bigBins), 0, 0);
+}
+
+TEST(TableBinsBig, OffScaleHigh)
+{
+    EXPECT_BINRESULT(priv::getBin(35, bigBins), 1, 1.0f);
+}
+
+
+TEST(TableBinsBig, NearMiddleLow)
+{
+    EXPECT_BINRESULT(priv::getBin(19.99f, bigBins), 0, 0.999f);
+}
+
+TEST(TableBinsBig, NearMiddleExact)
+{
+    EXPECT_BINRESULT(priv::getBin(20.0f, bigBins), 1, 0);
+}
+
+TEST(TableBinsBig, NearMiddleHigh)
+{
+    EXPECT_BINRESULT(priv::getBin(20.01f, bigBins), 1, 0.001f);
+}
+
+TEST(TableBinsBig, LeftMiddle)
+{
+    EXPECT_BINRESULT(priv::getBin(15.0f, bigBins), 0, 0.5f);
+}
+
+TEST(TableBinsBig, RightMiddle)
+{
+    EXPECT_BINRESULT(priv::getBin(25.0f, bigBins), 1, 0.5f);
+}
