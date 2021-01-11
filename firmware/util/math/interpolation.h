@@ -47,6 +47,9 @@ BinResult getBin(float value, const TBin (&bins)[TSize]) {
 	// Enforce numeric only (int, float, uintx_t, etc)
     static_assert(std::is_arithmetic_v<TBin>, "Table bins must be an arithmetic type");
 
+	// Enforce that there are enough bins to make sense (what does one bin even mean?)
+	static_assert(TSize >= 2);
+
 	// Handle off-scale low
 	if (value <= bins[0]) {
 		return { 0, 0.0f };
