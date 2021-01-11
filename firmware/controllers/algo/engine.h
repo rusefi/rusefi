@@ -321,6 +321,7 @@ public:
 	EngineState engineState;
 	SensorsState sensors;
 	efitick_t lastTriggerToothEventTimeNt = 0;
+	efitick_t mainRelayBenchStartNt = 0;
 
 
 	/**
@@ -357,6 +358,8 @@ public:
 	   Returns true if some operations are in progress on background.
 	 */
 	bool isInShutdownMode(DECLARE_ENGINE_PARAMETER_SIGNATURE) const;
+
+	bool isInMainRelayBench(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 
 	/**
 	 * The stepper does not work if the main relay is turned off (it requires +12V).

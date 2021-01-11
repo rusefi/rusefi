@@ -1,6 +1,7 @@
 #pragma once
 
-#include "globalaccess.h"
+#include "engine_ptr.h"
+#include "sensor.h"
 
 class ClosedLoopFuelCellBase {
 public:
@@ -28,12 +29,14 @@ struct stft_cell_cfg_s;
 
 class ClosedLoopFuelCellImpl final : public ClosedLoopFuelCellBase {
 public:
-	void configure(const stft_cell_cfg_s* configuration) {
+	void configure(const stft_cell_cfg_s* configuration, SensorType lambdaSensor) {
 		m_config = configuration;
+		m_lambdaSensor = lambdaSensor;
 	}
 
 private:
 	const stft_cell_cfg_s *m_config = nullptr;
+	SensorType m_lambdaSensor = SensorType::Invalid;
 
 protected:
 	float getLambdaError(DECLARE_ENGINE_PARAMETER_SIGNATURE) const override;

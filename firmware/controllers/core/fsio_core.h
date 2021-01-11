@@ -57,6 +57,7 @@ typedef enum {
 	LE_METHOD_FSIO_SETTING = 124,
 	LE_METHOD_PPS = 125,
 	LE_METHOD_TIME_SINCE_TRIGGER_EVENT = 127,
+	LE_METHOD_IN_MR_BENCH = 128,
 
 #include "fsio_enums_generated.def"
 
