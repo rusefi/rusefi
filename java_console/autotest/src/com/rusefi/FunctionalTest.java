@@ -203,7 +203,7 @@ public class FunctionalTest extends RusefiTestBase {
         ecu.setEngineType(ET_DODGE_NEON_2003_CRANK);
         ecu.sendCommand("set wwaeTau 0");
         ecu.sendCommand("set wwaeBeta 0");
-		ecu.sendCommand("set mock_map_voltage 1");
+        ecu.sendCommand("set mock_map_voltage 1");
         ecu.sendCommand("set mock_vbatt_voltage 1.20");
         ecu.sendCommand("disable cylinder_cleanup");
         EngineChart chart;
