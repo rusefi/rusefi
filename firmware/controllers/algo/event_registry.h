@@ -65,7 +65,6 @@ public:
 	 * this method schedules all fuel events for an engine cycle
 	 */
 	void addFuelEvents(DECLARE_ENGINE_PARAMETER_SIGNATURE);
-	bool addFuelEventsForCylinder(int cylinderIndex DECLARE_ENGINE_PARAMETER_SUFFIX);
 
 	void resetOverlapping();
 
@@ -75,6 +74,9 @@ public:
 	InjectionEvent elements[MAX_INJECTION_OUTPUT_COUNT];
 
 	bool isReady = false;
+
+private:
+	bool addFuelEventsForCylinder(int cylinderIndex DECLARE_ENGINE_PARAMETER_SUFFIX);
 };
 
 class AngleBasedEvent {
