@@ -191,30 +191,6 @@ int findIndex(const float array[], int size, float value) {
 	return findIndexMsg("", array, size, value);
 }
 
-namespace priv
-{
-/**
- * @brief	One-dimensional table lookup with linear interpolation
- *
- * @see setLinearCurve()
- */
-float interpolate2d(const char *msg, float value, const float bin[], const float values[], int size) {
-	if (isnan(value)) {
-	    // this unfortunately sometimes happens during functional tests on real hardware
-		warning(CUSTOM_INTERPOLATE_NAN, "NaN in interpolate2d %s", msg);
-		return NAN;
-	}
-	int index = findIndexMsg(msg, bin, size, value);
-
-	if (index == -1)
-		return values[0];
-	if (index == size - 1)
-		return values[size - 1];
-
-	return interpolateMsg(msg, bin[index], values[index], bin[index + 1], values[index + 1], value);
-}
-}
-
 /**
  * Sets specified value for specified key in a correction curve
  * see also setLinearCurve()
