@@ -524,7 +524,7 @@ void Engine::watchdog() {
 	efitick_t nowNt = getTimeNowNt();
 // note that we are ignoring the number of tooth here - we
 // check for duration between tooth as if we only have one tooth per revolution which is not the case
-#define REVOLUTION_TIME_HIGH_THRESHOLD (60 * 1000000LL / RPM_LOW_THRESHOLD)
+#define REVOLUTION_TIME_HIGH_THRESHOLD (60 * US_PER_SECOND_LL / RPM_LOW_THRESHOLD)
 	/**
 	 * todo: better watch dog implementation should be implemented - see
 	 * http://sourceforge.net/p/rusefi/tickets/96/
@@ -575,6 +575,13 @@ void Engine::checkShutdown(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 #endif /* EFI_MAIN_RELAY_CONTROL */
 }
 
+bool Engine::isInMainRelayBench(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+	if (mainRelayBenchStartNt == 0) {
+		return false;
+	}
+	return (getTimeNowNt() - mainRelayBenchStartNt) < NT_PER_SECOND;
+}
+
 bool Engine::isInShutdownMode(DECLARE_ENGINE_PARAMETER_SIGNATURE) const {
 #if EFI_MAIN_RELAY_CONTROL
 	// if we are in "ignition_on" mode and not in shutdown mode
@@ -591,21 +598,21 @@ bool Engine::isInShutdownMode(DECLARE_ENGINE_PARAMETER_SIGNATURE) const {
 		return false;
 	}
 
-	const efitick_t turnOffWaitTimeoutUs = 1LL * 1000000LL;
+	const efitick_t turnOffWaitTimeoutNt = NT_PER_SECOND;
 	// We don't want any transients to step in, so we wait at least 1 second whatever happens.
 	// Also it's good to give the stepper motor some time to start moving to the initial position (or parking)
-	if ((getTimeNowNt() - stopEngineRequestTimeNt) < US2NT(turnOffWaitTimeoutUs))
+	if ((getTimeNowNt() - stopEngineRequestTimeNt) < turnOffWaitTimeoutNt)
 		return true;
 
-	const efitick_t engineSpinningWaitTimeoutUs = 5LL * 1000000LL;
+	const efitick_t engineSpinningWaitTimeoutNt = 5 * NT_PER_SECOND;
 	// The engine is still spinning! Give it some time to stop (but wait no more than 5 secs)
-	if (isSpinning && (getTimeNowNt() - stopEngineRequestTimeNt) < US2NT(engineSpinningWaitTimeoutUs))
+	if (isSpinning && (getTimeNowNt() - stopEngineRequestTimeNt) < engineSpinningWaitTimeoutNt)
 		return true;
 
 	// The idle motor valve is still moving! Give it some time to park (but wait no more than 10 secs)
 	// Usually it can move to the initial 'cranking' position or zero 'parking' position.
-	const efitick_t idleMotorWaitTimeoutUs = 10LL * 1000000LL;
-	if (isIdleMotorBusy(PASS_ENGINE_PARAMETER_SIGNATURE) && (getTimeNowNt() - stopEngineRequestTimeNt) < US2NT(idleMotorWaitTimeoutUs))
+	const efitick_t idleMotorWaitTimeoutNt = 10 * NT_PER_SECOND;
+	if (isIdleMotorBusy(PASS_ENGINE_PARAMETER_SIGNATURE) && (getTimeNowNt() - stopEngineRequestTimeNt) < idleMotorWaitTimeoutNt)
 		return true;
 #endif /* EFI_MAIN_RELAY_CONTROL */
 	return false;

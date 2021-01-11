@@ -198,7 +198,8 @@ void acRelayBench(void) {
 }
 
 void mainRelayBench(void) {
-	pinbench("0", "1000", "100", "1", &enginePins.mainRelay, CONFIG(mainRelayPin));
+	// main relay is usually "ON" via FSIO thus bench testing that one is pretty unusual
+	engine->mainRelayBenchStartNt = getTimeNowNt();
 }
 
 void hpfpValveBench(void) {
