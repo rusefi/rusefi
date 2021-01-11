@@ -793,7 +793,7 @@ void setMiataNB2_ProteusEngineConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE) 
     // 13.8
 	engineConfiguration->knockBandCustom = 2 * BAND(engineConfiguration->cylinderBore);
 
-    engineConfiguration->malfunctionIndicatorPin = GPIOB_6;
+    engineConfiguration->malfunctionIndicatorPin = GPIOB_6; // "Lowside 10"    # pin 20/black35
 
     engineConfiguration->map.sensor.hwChannel = EFI_ADC_10;
 

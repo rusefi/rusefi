@@ -418,8 +418,13 @@ void findTriggerPosition(TriggerWaveform *triggerShape,
 		return;
 	}
 
-	position->triggerEventIndex = triggerEventIndex;
-	position->angleOffsetFromTriggerEvent = angle - triggerEventAngle;
+	{
+		// This must happen under lock so that the tooth and offset don't get partially read and mismatched
+		chibios_rt::CriticalSectionLocker csl;
+
+		position->triggerEventIndex = triggerEventIndex;
+		position->angleOffsetFromTriggerEvent = angle - triggerEventAngle;
+	}
 }
 
 void TriggerWaveform::prepareShape(TriggerFormDetails *details DECLARE_ENGINE_PARAMETER_SUFFIX) {
