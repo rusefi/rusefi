@@ -3285,6 +3285,7 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 
 	dialog = testMisc, "Misc"
 ;		commandButton = "Come To Pit", cmd_call_from_pit
+		commandButton = "Main Relay", cmd_test_main_relay
 		commandButton = "Fuel Pump", cmd_test_fuel_pump
 		commandButton = "Radiator Fan", cmd_test_radiator_fan
 		commandButton = "Check Engine", cmd_test_check_engine_light
