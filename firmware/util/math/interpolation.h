@@ -101,7 +101,7 @@ float interpolate2d(const char *msg, const float value, const TBin (&bin)[TSize]
 
 template <class TBin, class TValue, int TSize>
 float interpolate2d(const float value, const TBin (&bin)[TSize], const TValue (&values)[TSize]) {
-	return interpolate2d(value, bin, values);
+	return interpolate2d("", value, bin, values);
 }
 
 int needInterpolationLogging(void);
