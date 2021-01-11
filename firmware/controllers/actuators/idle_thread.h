@@ -53,6 +53,11 @@ public:
 	float getIdleTimingAdjustment(int rpm);
 	float getIdleTimingAdjustment(int rpm, int targetRpm, Phase phase);
 
+	// Allow querying state from outside
+	bool isIdling() {
+		return m_lastPhase == Phase::Idling;
+	}
+
 private:
 	// These are stored by getIdlePosition() and used by getIdleTimingAdjustment()
 	Phase m_lastPhase = Phase::Cranking;
@@ -65,6 +70,8 @@ void updateIdleControl();
 percent_t getIdlePosition();
 
 float getIdleTimingAdjustment(int rpm);
+
+bool isIdling();
 
 void applyIACposition(percent_t position DECLARE_ENGINE_PARAMETER_SUFFIX);
 void setManualIdleValvePosition(int positionPercent);
