@@ -1,6 +1,6 @@
 // this https://en.wikipedia.org/wiki/Reverse_Polish_notation is generated automatically
 // from controllers/system_fsio.txt
-// on 2021-01-10_23_54_03_624
+// on 2021-01-11_14_17_13_143
 //
 //
 // in this file we define system FSIO expressions
@@ -17,11 +17,6 @@
 
 // Human-readable: (fan and (coolant > cfg_fanOffTemperature)) | (coolant > cfg_fanOnTemperature) | is_clt_broken
 #define FAN_CONTROL_LOGIC "fan coolant cfg_fanofftemperature > and coolant cfg_fanontemperature > | is_clt_broken |"
-//
-// todo: we might have a bug here?
-// todo: 'time_since_boot' means 'getTimeIgnitionSeconds' in case of EFI_MAIN_RELAY_CONTROL like Proteus
-// and it's negative if ignition is off? does Proteus not get fuel pump start-up priming pulse?!
-//
 
 // Human-readable: ((time_since_boot >= 0) & (time_since_boot < startup_fuel_pump_duration)) | (time_since_trigger < 1)
 #define FUEL_PUMP_LOGIC "time_since_boot 0 >= time_since_boot startup_fuel_pump_duration < & time_since_trigger 1 < |"
