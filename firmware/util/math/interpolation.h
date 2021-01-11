@@ -50,6 +50,11 @@ BinResult getBin(float value, const TBin (&bins)[TSize]) {
 	// Enforce that there are enough bins to make sense (what does one bin even mean?)
 	static_assert(TSize >= 2);
 
+	// Handle NaN
+	if (cisnan(value)) {
+		return { 0, 0.0f };
+	}
+
 	// Handle off-scale low
 	if (value <= bins[0]) {
 		return { 0, 0.0f };

@@ -150,6 +150,11 @@ TEST_F(TestTable2dSmall, Middle)
     EXPECT_FLOAT_EQ(interpolate2d(25, bins, values), 150);
 }
 
+TEST_F(TestTable2dSmall, NanInput)
+{
+    EXPECT_FLOAT_EQ(interpolate2d(NAN, bins, values), 100);
+}
+
 class Test2dTableMassive : public ::testing::Test
 {
 	static constexpr int Count = 2500;
@@ -228,6 +233,11 @@ TEST(TableBinsSmall, EdgeRight)
 TEST(TableBinsSmall, Middle)
 {
     EXPECT_BINRESULT(priv::getBin(15, smallBins), 0, 0.5f);
+}
+
+TEST(TableBinsSmall, NanInput)
+{
+	EXPECT_BINRESULT(priv::getBin(NAN, smallBins), 0, 0);
 }
 
 // Test with medium bins, 3 items
