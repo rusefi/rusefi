@@ -465,6 +465,7 @@ void initBenchTest(Logging *sharedLogger) {
 	addConsoleAction("acrelaybench", acRelayBench);
 	addConsoleActionS("fuelpumpbench2", fuelPumpBenchExt);
 	addConsoleAction("fanbench", fanBench);
+	addConsoleAction("mainrelaybench", mainRelayBench);
 	addConsoleActionS("fanbench2", fanBenchExt);
 	addConsoleAction("update_wideband", []() { widebandUpdatePending = true; });
 
