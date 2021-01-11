@@ -13,11 +13,6 @@
 # (self and (coolant > fan_off_setting)) | (coolant > fan_on_setting) | is_clt_broken
 FAN_CONTROL_LOGIC=(fan and (coolant > cfg_fanOffTemperature)) | (coolant > cfg_fanOnTemperature) | is_clt_broken
 
-#
-# todo: we might have a bug here?
-# todo: 'time_since_boot' means 'getTimeIgnitionSeconds' in case of EFI_MAIN_RELAY_CONTROL like Proteus
-# and it's negative if ignition is off? does Proteus not get fuel pump start-up priming pulse?!
-#
 FUEL_PUMP_LOGIC=((time_since_boot >= 0) & (time_since_boot < startup_fuel_pump_duration)) | (time_since_trigger < 1)
 
 ALTERNATOR_LOGIC=vbatt < 14.5
