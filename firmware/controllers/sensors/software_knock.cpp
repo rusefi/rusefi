@@ -118,6 +118,8 @@ const ADCConversionGroup* getConversionGroup(uint8_t cylinderIndex) {
 	if (cylinderUsesChannel2(cylinderIndex)) {
 		return &adcConvGroupCh2;
 	}
+#else
+	(void)cylinderIndex;
 #endif // KNOCK_HAS_CH2
 
 	return &adcConvGroupCh1;
