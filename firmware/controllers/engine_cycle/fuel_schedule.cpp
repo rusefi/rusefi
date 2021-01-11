@@ -14,14 +14,13 @@ EXTERN_ENGINE;
 #if EFI_ENGINE_CONTROL
 
 FuelSchedule::FuelSchedule() {
-	clear();
 	for (int cylinderIndex = 0; cylinderIndex < MAX_INJECTION_OUTPUT_COUNT; cylinderIndex++) {
 		InjectionEvent *ev = &elements[cylinderIndex];
 		ev->ownIndex = cylinderIndex;
 	}
 }
 
-void FuelSchedule::clear() {
+void FuelSchedule::invalidate() {
 	isReady = false;
 }
 
@@ -142,19 +141,26 @@ bool FuelSchedule::addFuelEventsForCylinder(int i  DECLARE_ENGINE_PARAMETER_SUFF
 }
 
 void FuelSchedule::addFuelEvents(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
-	clear();
-
 	for (int cylinderIndex = 0; cylinderIndex < CONFIG(specs.cylindersCount); cylinderIndex++) {
 		InjectionEvent *ev = &elements[cylinderIndex];
 		ev->ownIndex = cylinderIndex;  // todo: is this assignment needed here? we now initialize in constructor
 		bool result = addFuelEventsForCylinder(cylinderIndex PASS_ENGINE_PARAMETER_SUFFIX);
-		if (!result)
+		if (!result) {
+			invalidate();
 			return;
+		}
 	}
+
+	// We made it through all cylinders, mark the schedule as ready so it can be used
 	isReady = true;
 }
 
 void FuelSchedule::onTriggerTooth(size_t toothIndex, int rpm, efitick_t nowNt DECLARE_ENGINE_PARAMETER_SUFFIX) {
+	// Wait for schedule to be built - this happens the first time we get RPM
+	if (!isReady) {
+		return;
+	}
+
 	for (int i = 0; i < CONFIG(specs.cylindersCount); i++) {
 		elements[i].onTriggerTooth(toothIndex, rpm, nowNt);
 	}
