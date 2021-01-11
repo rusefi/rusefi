@@ -203,7 +203,7 @@ public class FunctionalTest extends RusefiTestBase {
         ecu.setEngineType(ET_DODGE_NEON_2003_CRANK);
         ecu.sendCommand("set wwaeTau 0");
         ecu.sendCommand("set wwaeBeta 0");
-        ecu.sendCommand("set mock_map_voltage 1");
+		ecu.sendCommand("set mock_map_voltage 1");
         ecu.sendCommand("set mock_vbatt_voltage 1.20");
         ecu.sendCommand("disable cylinder_cleanup");
         EngineChart chart;
@@ -270,6 +270,12 @@ public class FunctionalTest extends RusefiTestBase {
         ecu.setEngineType(ET_FORD_ESCORT_GT);
         EngineChart chart;
         ecu.sendCommand("set mock_vbatt_voltage 1.395");
+
+        // Alpha-N mode so that we actually inject some fuel (without mocking tons of sensors)
+        ecu.sendCommand("set algorithm 5");
+        // Set tps to 25% - make alpha-n happy
+        ecu.sendCommand("set_sensor_mock 10 25");
+
         ecu.changeRpm(200);
         ecu.changeRpm(260);
         ecu.changeRpm(200);
