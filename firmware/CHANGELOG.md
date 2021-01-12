@@ -32,6 +32,7 @@ All notable user-facing or behavior-altering changes will be documented in this 
  - Idle phase logic uses the same idle detection thresholds as the main idle controller instead of its own thresholds.
 
 ### Added
+ - Main Relay bench test button
 
 ### Fixed
 
