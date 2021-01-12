@@ -479,7 +479,7 @@ void runFsio(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	 * main relay is always on if ECU is on, that's a good enough initial implementation
 	 */
 	if (isBrainPinValid(CONFIG(mainRelayPin)))
-		enginePins.mainRelay.setValue(true);
+		enginePins.mainRelay.setValue(!engine->isInMainRelayBench());
 #endif /* EFI_MAIN_RELAY_CONTROL */
 
 	if (isBrainPinValid(CONFIG(starterRelayDisablePin)))
