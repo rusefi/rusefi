@@ -1,0 +1,137 @@
+#
+# microRusEfi board
+# https://github.com/rusefi/rusefi/wiki/Hardware_microRusEfi_wiring
+#
+
+pins:
+  - pin: 1
+    id: EFI_ADC_11
+
+  - pin: 3
+    id: TLE8888_PIN_5
+    color: white
+
+  - pin: 7
+    id: TLE8888_PIN_6
+    color: black
+
+  - pin: 9
+    id: GPIOD_4
+    color: dark blue
+
+  - pin: 10
+    id: GPIOD_3
+    color: dark blue
+
+  - pin: 11
+    id: GPIOD_2
+    color: dark blue
+
+  - pin: 12
+    id: GPIOD_1
+    color: dark blue
+
+  - pin: 13
+    id: GPIOD_6
+    color: yellow
+
+  - pin: 14
+    id: GPIOD_7
+    color: yellow
+
+  - pin: 18
+    id: [GPIOA_0, EFI_ADC_0]
+    color: red
+
+  - pin: 19
+    id: [GPIOC_2, EFI_ADC_12]
+    color: red
+  
+  - pin: 20
+    id: [GPIOC_3, EFI_ADC_13]
+    color: red left
+
+  - pin: 22
+    id: [GPIOA_3, EFI_ADC_3]
+    color: dark green
+
+  - pin: 23
+    id: [GPIOA_1, EFI_ADC_1]
+    color: dark green
+
+  - pin: 24
+    id: [GPIOA_2, EFI_ADC_2]
+    color: dark green
+
+  - pin: 25
+    id: GPIOA_5
+    color: light blue right
+    
+  - pin: 26
+    id: [GPIOA_6, EFI_ADC_6]
+    color: light blue
+
+  - pin: 27
+    id: [GPIOC_0, EFI_ADC_10]
+    color: light blue
+
+  - pin: 28
+    id: [GPIOA_4, EFI_ADC_4]
+    color: light blue left
+
+  - pin: 30
+    id: [GPIOC_5, EFI_ADC_15]
+    color: pink
+
+  - pin: 31
+    id: [GPIOA_7, EFI_ADC_7]
+    color: pink
+
+  - pin: 32
+    id: GPIOC_4, EFI_ADC_14
+    color: pink
+
+  - pin: 33
+    id: TLE8888_PIN_23
+    color: orange right
+
+  - pin: 34
+    id: TLE8888_PIN_22
+    color: orange
+
+  - pin: 35
+    id: TLE8888_PIN_21
+    color: orange    
+
+  - pin: 36
+    id: [GPIOB_0, EFI_ADC_8]
+    color: orange left    
+
+  - pin: 37
+    id: TLE8888_PIN_1
+    color: grey right
+
+  - pin: 38
+    id: TLE8888_PIN_2
+    color: grey
+
+  - pin: 40
+    id: [GPIOB_1, EFI_ADC_9]
+    color: grey
+
+  - pin: 41
+    id: TLE8888_PIN_3
+    color: brown right
+
+  - pin: 42
+    id: TLE8888_PIN_4
+    color: brown
+
+  - pin: 43
+    id: TLE8888_PIN_24
+    color: brown
+
+  - pin: 45
+    id: GPIOC_6
+    color: light green right
+
