@@ -128,7 +128,7 @@ pins:
 
   # RC filter input for hall
   - pin: 25
-    id: GPIOA_5
+    id: [GPIOA_5, GPIOA_5]
     color: light blue right
     ts_name: 25 - Hall Cam
     type: hall
