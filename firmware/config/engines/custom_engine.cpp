@@ -11,6 +11,7 @@
  * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
+#include "pin_repository.h"
 #include "custom_engine.h"
 #include "allsensors.h"
 #include "engine_math.h"
@@ -51,7 +52,7 @@ static void toggleTestAndScheduleNext(void *) {
  * https://github.com/rusefi/rusefi/issues/557 common rail / direct injection scheduling control test
  */
 void runSchedulingPrecisionTestIfNeeded(void) {
-	if (engineConfiguration->test557pin == GPIO_UNASSIGNED) {
+	if (!isBrainPinValid(engineConfiguration->test557pin)) {
 		return;
 	}
 

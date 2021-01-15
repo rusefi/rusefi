@@ -231,7 +231,7 @@ typedef enum __attribute__ ((__packed__)) {
 	
 } brain_pin_e;
 
-/* Plase keep updating this define */
+/* Plase keep updating this defines */
 #define BRAIN_PIN_ONCHIP_LAST	GPIOK_15
 #define BRAIN_PIN_ONCHIP_PINS	(BRAIN_PIN_ONCHIP_LAST - GPIOA_0 + 1)
 #define BRAIN_PIN_LAST 			DRV8860_PIN_16

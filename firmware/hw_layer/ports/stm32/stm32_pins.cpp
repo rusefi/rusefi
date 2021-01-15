@@ -121,10 +121,13 @@ int getPortPinIndex(ioportid_t port, ioportmask_t pin) {
 }
 
 ioportid_t getHwPort(const char *msg, brain_pin_e brainPin) {
-	if (brainPin == GPIO_UNASSIGNED || brainPin == GPIO_INVALID)
-		return GPIO_NULL;
-	if (brainPin < GPIOA_0 || brainPin > BRAIN_PIN_ONCHIP_LAST) {
+	(void)msg;
+
+	if (!isBrainPinValid(brainPin)) {
+/*
+ *  https://github.com/dron0gus please help
 		firmwareError(CUSTOM_ERR_INVALID_PIN, "%s: Invalid brain_pin_e: %d", msg, brainPin);
+ */
 		return GPIO_NULL;
 	}
 	return ports[(brainPin - GPIOA_0) / PORT_SIZE];
@@ -135,7 +138,7 @@ ioportid_t getHwPort(const char *msg, brain_pin_e brainPin) {
  */
 ioportmask_t getHwPin(const char *msg, brain_pin_e brainPin)
 {
-	if (brainPin == GPIO_UNASSIGNED || brainPin == GPIO_INVALID)
+	if (!isBrainPinValid(brainPin))
 			return EFI_ERROR_CODE;
 
 	if (brain_pin_is_onchip(brainPin))

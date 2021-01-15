@@ -564,6 +564,10 @@ float getIdleTimingAdjustment(int rpm) {
 	return idleControllerInstance.getIdleTimingAdjustment(rpm);
 }
 
+bool isIdling() {
+	return idleControllerInstance.isIdling();
+}
+
 static void applyPidSettings(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	getIdlePid(PASS_ENGINE_PARAMETER_SIGNATURE)->updateFactors(engineConfiguration->idleRpmPid.pFactor, engineConfiguration->idleRpmPid.iFactor, engineConfiguration->idleRpmPid.dFactor);
 	iacPidMultMap.init(CONFIG(iacPidMultTable), CONFIG(iacPidMultLoadBins), CONFIG(iacPidMultRpmBins));
@@ -700,22 +704,22 @@ void startIdleThread(Logging*sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX) {
 #if ! EFI_UNIT_TEST
 	// this is neutral/no gear switch input. on Miata it's wired both to clutch pedal and neutral in gearbox
 	// this switch is not used yet
-	if (CONFIG(clutchDownPin) != GPIO_UNASSIGNED) {
+	if (isBrainPinValid(CONFIG(clutchDownPin))) {
 		efiSetPadMode("clutch down switch", CONFIG(clutchDownPin),
 				getInputMode(CONFIG(clutchDownPinMode)));
 	}
 
-	if (CONFIG(clutchUpPin) != GPIO_UNASSIGNED) {
+	if (isBrainPinValid(CONFIG(clutchUpPin))) {
 		efiSetPadMode("clutch up switch", CONFIG(clutchUpPin),
 				getInputMode(CONFIG(clutchUpPinMode)));
 	}
 
-	if (CONFIG(throttlePedalUpPin) != GPIO_UNASSIGNED) {
+	if (isBrainPinValid(CONFIG(throttlePedalUpPin))) {
 		efiSetPadMode("throttle pedal up switch", CONFIG(throttlePedalUpPin),
 				getInputMode(CONFIG(throttlePedalUpPinMode)));
 	}
 
-	if (engineConfiguration->brakePedalPin != GPIO_UNASSIGNED) {
+	if (isBrainPinValid(engineConfiguration->brakePedalPin)) {
 #if EFI_PROD_CODE
 		efiSetPadMode("brake pedal switch", engineConfiguration->brakePedalPin,
 				getInputMode(engineConfiguration->brakePedalPinMode));

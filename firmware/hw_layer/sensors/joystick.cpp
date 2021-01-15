@@ -87,11 +87,11 @@ static void joystickInfo(void) {
 }
 
 static bool isJoystickEnabled() {
-	return CONFIG(joystickCenterPin) != GPIO_UNASSIGNED ||
-			CONFIG(joystickAPin) != GPIO_UNASSIGNED ||
-			// not used so far			CONFIG(joystickBPin) != GPIO_UNASSIGNED ||
-			// not used so far	CONFIG(joystickCPin) != GPIO_UNASSIGNED ||
-			CONFIG(joystickDPin) != GPIO_UNASSIGNED;
+	return (isBrainPinValid(CONFIG(joystickCenterPin)) &&
+			isBrainPinValid(CONFIG(joystickAPin)) &&
+			// not used so far	isBrainPinValid(CONFIG(joystickBPin)) &&
+			// not used so far	isBrainPinValid(CONFIG(joystickCPin)) &&
+			isBrainPinValid(CONFIG(joystickDPin)));
 }
 
 void stopJoystickPins() {

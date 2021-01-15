@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on hellen_cypress_gen_config.bat integration/rusefi_config.txt Fri Jan 08 17:51:38 UTC 2021
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on hellen_cypress_gen_config.bat integration/rusefi_config.txt Sun Jan 10 15:16:26 UTC 2021
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -3673,9 +3673,14 @@ struct persistent_config_s {
 	 */
 	tcubinary_table_t tcuSolenoidTable;
 	/**
+	 * Good example: number of tooth on wheel, For Can 10 is a good number.
 	 * offset 15196
 	 */
-	uint8_t unused15136[1092];
+	float vssFilterReciprocal;
+	/**
+	 * offset 15200
+	 */
+	uint8_t unused15136[1088];
 	/**
 	 * offset 16288
 	 */
@@ -3783,4 +3788,4 @@ struct persistent_config_s {
 typedef struct persistent_config_s persistent_config_s;
 
 // end
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on hellen_cypress_gen_config.bat integration/rusefi_config.txt Fri Jan 08 17:51:38 UTC 2021
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on hellen_cypress_gen_config.bat integration/rusefi_config.txt Sun Jan 10 15:16:26 UTC 2021

@@ -188,7 +188,7 @@ void setDefaultBoostParameters(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 void startBoostPin() {
 #if !EFI_UNIT_TEST
 	// Only init if a pin is set, no need to start PWM without a pin
-	if (CONFIG(boostControlPin) == GPIO_UNASSIGNED){
+	if (!isBrainPinValid(CONFIG(boostControlPin))) {
 		return;
 	}
 
@@ -227,8 +227,7 @@ void initBoostCtrl(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	}
 
 	// If we have neither a boost PWM pin nor ETB wastegate, nothing more to do
-	if ((CONFIG(boostControlPin) == GPIO_UNASSIGNED)
-		&& !hasAnyEtbWastegate) {
+	if (!isBrainPinValid(CONFIG(boostControlPin)) && !hasAnyEtbWastegate) {
 		return;
 	}
 
