@@ -52,15 +52,15 @@ bool FuelSchedule::addFuelEventsForCylinder(int i  DECLARE_ENGINE_PARAMETER_SUFF
 	 */
 	floatms_t fuelMs = ENGINE(injectionDuration);
 	efiAssert(CUSTOM_ERR_ASSERT, !cisnan(fuelMs), "NaN fuelMs", false);
-	angle_t injectionDuration = MS2US(fuelMs) / oneDegreeUs;
-	efiAssert(CUSTOM_ERR_ASSERT, !cisnan(injectionDuration), "NaN injectionDuration", false);
-	assertAngleRange(injectionDuration, "injectionDuration_r", CUSTOM_INJ_DURATION);
+	angle_t injectionDurationAngle = MS2US(fuelMs) / oneDegreeUs;
+	efiAssert(CUSTOM_ERR_ASSERT, !cisnan(injectionDurationAngle), "NaN injectionDurationAngle", false);
+	assertAngleRange(injectionDurationAngle, "injectionDuration_r", CUSTOM_INJ_DURATION);
 	floatus_t injectionOffset = ENGINE(engineState.injectionOffset);
 	if (cisnan(injectionOffset)) {
 		// injection offset map not ready - we are not ready to schedule fuel events
 		return false;
 	}
-	angle_t baseAngle = injectionOffset - injectionDuration;
+	angle_t baseAngle = injectionOffset - injectionDurationAngle;
 	efiAssert(CUSTOM_ERR_ASSERT, !cisnan(baseAngle), "NaN baseAngle", false);
 	assertAngleRange(baseAngle, "baseAngle_r", CUSTOM_ERR_6554);
 
@@ -81,18 +81,6 @@ bool FuelSchedule::addFuelEventsForCylinder(int i  DECLARE_ENGINE_PARAMETER_SUFF
 		injectorIndex = 0;
 	}
 
-	assertAngleRange(baseAngle, "addFbaseAngle", CUSTOM_ADD_BASE);
-
-	int cylindersCount = CONFIG(specs.cylindersCount);
-	if (cylindersCount < 1) {
-	    // May 2020 this somehow still happens with functional tests, maybe race condition?
-		warning(CUSTOM_OBD_ZERO_CYLINDER_COUNT, "Invalid cylinder count: %d", cylindersCount);
-		return false;
-	}
-
-	float angle = baseAngle
-			+ i * ENGINE(engineCycle) / cylindersCount;
-
 	InjectorOutputPin *secondOutput;
 	if (mode == IM_BATCH && CONFIG(twoWireBatchInjection)) {
 		/**
@@ -111,20 +99,22 @@ bool FuelSchedule::addFuelEventsForCylinder(int i  DECLARE_ENGINE_PARAMETER_SUFF
 	InjectorOutputPin *output = &enginePins.injectors[injectorIndex];
 	bool isSimultanious = mode == IM_SIMULTANEOUS;
 
+	InjectionEvent *ev = &elements[i];
+	INJECT_ENGINE_REFERENCE(ev);
+
+	ev->ownIndex = i;
+	ev->outputs[0] = output;
+	ev->outputs[1] = secondOutput;
+	ev->isSimultanious = isSimultanious;
+
 	if (!isSimultanious && !output->isInitialized()) {
 		// todo: extract method for this index math
 		warning(CUSTOM_OBD_INJECTION_NO_PIN_ASSIGNED, "no_pin_inj #%s", output->name);
 	}
 
-	InjectionEvent *ev = &elements[i];
-	ev->ownIndex = i;
-	INJECT_ENGINE_REFERENCE(ev);
-	fixAngle(angle, "addFuel#1", CUSTOM_ERR_6554);
+	angle_t ignitionPositionWithinEngineCycle = ENGINE(ignitionPositionWithinEngineCycle[i]);
 
-	ev->outputs[0] = output;
-	ev->outputs[1] = secondOutput;
-
-	ev->isSimultanious = isSimultanious;
+	float angle = baseAngle + ignitionPositionWithinEngineCycle;
 
 	if (TRIGGER_WAVEFORM(getSize()) < 1) {
 		warning(CUSTOM_ERR_NOT_INITIALIZED_TRIGGER, "uninitialized TriggerWaveform");

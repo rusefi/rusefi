@@ -397,10 +397,6 @@ void Engine::OnTriggerStateProperState(efitick_t nowNt) {
 	Engine *engine = this;
 	EXPAND_Engine;
 
-#if EFI_SHAFT_POSITION_INPUT
-	triggerCentral.triggerState.runtimeStatistics(&triggerCentral.triggerFormDetails, nowNt PASS_ENGINE_PARAMETER_SUFFIX);
-#endif /* EFI_SHAFT_POSITION_INPUT */
-
 	rpmCalculator.setSpinningUp(nowNt);
 }
 
