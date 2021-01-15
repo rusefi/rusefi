@@ -295,9 +295,14 @@ void rpmShaftPositionCallback(trigger_event_e ckpSignalType,
 		// while transitioning  from 'spinning' to 'running'
 		// Replace 'normal' RPM with instant RPM for the initial spin-up period
 		engine->triggerCentral.triggerState.movePreSynchTimestamps(PASS_ENGINE_PARAMETER_SIGNATURE);
-		int prevIndex;
-		float instantRpm = engine->triggerCentral.triggerState.calculateInstantRpm(&engine->triggerCentral.triggerFormDetails,
-				&prevIndex, nowNt PASS_ENGINE_PARAMETER_SUFFIX);
+	}
+
+	// Always update instant RPM even when not spinning up
+	engine->triggerCentral.triggerState.updateInstantRpm(&engine->triggerCentral.triggerFormDetails, nowNt PASS_ENGINE_PARAMETER_SUFFIX);
+
+	if (rpmState->isSpinningUp()) {
+		float instantRpm = engine->triggerCentral.triggerState.getInstantRpm();
+
 		// validate instant RPM - we shouldn't skip the cranking state
 		instantRpm = minF(instantRpm, CONFIG(cranking.rpm) - 1);
 		rpmState->assignRpmValue(instantRpm);

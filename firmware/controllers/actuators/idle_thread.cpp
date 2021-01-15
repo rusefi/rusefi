@@ -289,6 +289,10 @@ float IdleController::getIdleTimingAdjustment(int rpm, int targetRpm, Phase phas
 		return 0;
 	}
 
+	if (CONFIG(useInstantRpmForIdle)) {
+		rpm = engine->triggerCentral.triggerState.getInstantRpm();
+	}
+
 	// If inside the deadzone, do nothing
 	if (absI(rpm - targetRpm) < CONFIG(idleTimingPidDeadZone)) {
 		m_timingPid.reset();
@@ -454,8 +458,7 @@ static percent_t automaticIdleController(float tpsPos, float rpm, int targetRpm,
 
 		float rpm;
 		if (CONFIG(useInstantRpmForIdle)) {
-			efitick_t nowNt = getTimeNowNt();
-			rpm = engine->triggerCentral.triggerState.calculateInstantRpm(&engine->triggerCentral.triggerFormDetails, NULL, nowNt PASS_ENGINE_PARAMETER_SUFFIX);
+			rpm = engine->triggerCentral.triggerState.getInstantRpm();
 		} else {
 			rpm = GET_RPM();
 		}
