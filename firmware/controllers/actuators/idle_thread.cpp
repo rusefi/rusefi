@@ -289,6 +289,10 @@ float IdleController::getIdleTimingAdjustment(int rpm, int targetRpm, Phase phas
 		return 0;
 	}
 
+	if (CONFIG(useInstantRpmForIdle)) {
+		rpm = engine->triggerCentral.triggerState.getInstantRpm();
+	}
+
 	// If inside the deadzone, do nothing
 	if (absI(rpm - targetRpm) < CONFIG(idleTimingPidDeadZone)) {
 		m_timingPid.reset();
