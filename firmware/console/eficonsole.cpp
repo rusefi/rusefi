@@ -55,6 +55,13 @@ static void sayHello(void) {
 #if defined(STM32F4) || defined(STM32F7)
 	uint32_t *uid = ((uint32_t *)UID_BASE);
 	scheduleMsg(&logger, "UID=%x %x %x", uid[0], uid[1], uid[2]);
+
+#define 	TM_ID_GetFlashSize()    (*(__IO uint16_t *) (FLASHSIZE_BASE))
+#define MCU_REVISION_MASK  0xfff
+
+	int mcuRevision = DBGMCU->IDCODE & MCU_REVISION_MASK;
+
+	scheduleMsg(&logger, "rev=%x size=%d", mcuRevision, TM_ID_GetFlashSize());
 #endif
 
 
