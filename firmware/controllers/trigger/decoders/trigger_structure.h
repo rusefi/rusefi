@@ -13,6 +13,7 @@
 #include "state_sequence.h"
 #include "globalaccess.h"
 #include "engine_configuration_generated_structures.h"
+#include "scaled_channel.h"
 
 #define FOUR_STROKE_ENGINE_CYCLE 720
 
@@ -303,11 +304,13 @@ private:
 class TriggerFormDetails {
 public:
 	TriggerFormDetails();
+
 	/**
 	 * These angles are in event coordinates - with synchronization point located at angle zero.
 	 * These values are pre-calculated for performance reasons.
 	 */
-	angle_t eventAngles[PWM_PHASE_MAX_COUNT];
+	scaled_channel<uint16_t, 64> eventAngles[PWM_PHASE_MAX_COUNT];
+
 	/**
 	 * this cache allows us to find a close-enough (with one degree precision) trigger wheel index by
 	 * given angle with fast constant speed. That's a performance optimization for event scheduling.
