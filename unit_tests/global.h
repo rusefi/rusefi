@@ -64,14 +64,6 @@ void print(const char *fmt, ...);
 
 #define CCM_OPTIONAL
 
-#define EXTERN_ENGINE extern EnginePins enginePins; \
-	 extern engine_configuration_s & activeConfiguration
-
-#define EXTERN_CONFIG
-
-#define DEFINE_CONFIG_PARAM(x, y) , x y
-#define PASS_CONFIG_PARAM(x) , x
-
 /**
  * this macro provides references to engine from EngineTestHelper
  */
