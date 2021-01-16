@@ -231,7 +231,6 @@ CSRC =  $(ALLCSRC) \
 # C++ sources that can be compiled in ARM or THUMB mode depending on the global
 # setting.
 CPPSRC = $(ALLCPPSRC) \
-	$(BOARDSRC_CPP) \
 	$(TRIGGER_SRC_CPP) \
 	$(TRIGGER_DECODERS_SRC_CPP) \
 	$(DEV_SRC_CPP) \
@@ -279,7 +278,6 @@ ASMXSRC = $(ALLXASMSRC) \
 
 INCDIR = $(ALLINC) \
 	$(TESTINC) \
-	$(BOARDINC) \
 	$(BOOTLOADERINC) \
 	$(CHIBIOS)/os/various \
 	$(CHIBIOS)/os/hal/lib/peripherals/sensors \
