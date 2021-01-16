@@ -14,11 +14,15 @@
 
 #ifdef __cplusplus
 class Engine;
+#endif // def __cplusplus
+
+
 struct engine_configuration_s;
 struct persistent_config_s;
 
 #if EFI_UNIT_TEST
 
+#ifdef __cplusplus
 	#define DECLARE_ENGINE_PTR                                 \
 		Engine *engine = nullptr;                              \
 		engine_configuration_s *engineConfiguration = nullptr; \
@@ -44,6 +48,7 @@ struct persistent_config_s;
 
 	#define EXTERN_ENGINE extern EnginePins enginePins; \
 		extern engine_configuration_s & activeConfiguration
+#endif // def __cplusplus
 
 	#define EXTERN_CONFIG
 
@@ -54,6 +59,7 @@ struct persistent_config_s;
 
 	// These are the non-unit-test (AKA real firmware) noop versions
 
+#ifdef __cplusplus
 	#define DECLARE_ENGINE_PTR
 
 	#define INJECT_ENGINE_REFERENCE(x) {}
@@ -72,6 +78,15 @@ struct persistent_config_s;
 	#define PASS_ENGINE_PARAMETER_SIGNATURE
 	// Pass this after some other parameters are passed
 	#define PASS_ENGINE_PARAMETER_SUFFIX
+
+	#define EXTERN_ENGINE \
+			extern Engine ___engine; \
+			extern Engine *engine; \
+			EXTERN_CONFIG \
+			extern EnginePins enginePins \
+
+	#define ENGINE(x) ___engine.x
+#endif // def __cplusplus
 
 	/**
 	 * this macro allows the compiled to figure out the complete static address, that's a performance
@@ -94,18 +109,11 @@ struct persistent_config_s;
 			EXTERN_ENGINE_CONFIGURATION \
 			extern engine_configuration_s & activeConfiguration; \
 
-	#define EXTERN_ENGINE \
-			extern Engine ___engine; \
-			extern Engine *engine; \
-			EXTERN_CONFIG \
-			extern EnginePins enginePins \
-
 	#define EXTERN_ENGINE_CONFIGURATION \
 			extern engine_configuration_s *engineConfiguration; \
 			extern persistent_config_container_s persistentState; \
 			extern persistent_config_s *config;
 
-	#define ENGINE(x) ___engine.x
 
 	#define DEFINE_CONFIG_PARAM(x, y)
 	#define CONFIG_PARAM(x) CONFIG(x)
@@ -118,5 +126,3 @@ struct persistent_config_s;
 		persistent_config_s *config = engine->config; \
 		(void)engineConfiguration; \
 		(void)config;
-
-#endif // def __cplusplus
