@@ -10,8 +10,8 @@
 
 #pragma once
 
+#include "engine_ptr.h"
 #include "state_sequence.h"
-#include "globalaccess.h"
 #include "engine_configuration_generated_structures.h"
 
 #define FOUR_STROKE_ENGINE_CYCLE 720
@@ -74,6 +74,7 @@ class Engine;
 class TriggerState;
 class TriggerFormDetails;
 class TriggerConfiguration;
+class Logging;
 
 // https://github.com/rusefi/rusefi/issues/2010 shows the corner case wheel with huge depth requirement
 #define GAP_TRACKING_LENGTH 18
