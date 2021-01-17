@@ -38,6 +38,9 @@
 #define STM32F769_MCUCONF
 #define STM32F779_MCUCONF
 
+/* for stm32f746_nucleo */
+#define STM32F746_MCUCONF
+
 #include "efifeatures.h"
 
 /**
