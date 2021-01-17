@@ -124,7 +124,7 @@ include $(CHIBIOS)/os/rt/rt.mk
 include $(CHIBIOS)/os/common/ports/SIMIA32/compilers/GCC/port.mk
 # Other files (optional).
 include $(CHIBIOS)/os/hal/lib/streams/streams.mk
-include $(CHIBIOS)/os/various/cpp_wrappers/chcpp.mk
+#include $(CHIBIOS)/os/various/cpp_wrappers/chcpp.mk
 
 ifeq ($(OS),Windows_NT)
   include ${CHIBIOS}/os/hal/ports/simulator/win32/platform.mk
@@ -158,6 +158,7 @@ CSRC =  $(ALLCSRC) \
 # C++ sources that can be compiled in ARM or THUMB mode depending on the global
 # setting.
 CPPSRC = $(ALLCPPSRC) \
+  $(CHIBIOS)/os/various/cpp_wrappers/ch.cpp \
         $(UTILSRC_CPP) \
 	$(CONTROLLERS_ALGO_SRC_CPP) \
 	$(CONTROLLERS_SRC_CPP) \
@@ -186,6 +187,7 @@ ASMSRC = $(PORTASM)
 
 INCDIR = . \
           $(ALLINC) \
+          $(CHIBIOS)/os/various/cpp_wrappers \
           $(UTIL_INC) \
           $(PROJECT_DIR)/init \
           $(CONSOLE_INC) \
