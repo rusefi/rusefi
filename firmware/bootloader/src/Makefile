@@ -132,6 +132,9 @@ include $(PROJECT_DIR)/rusefi.mk
 
 CONFIG = $(PROJECT_DIR)/config
 
+# Include various ChibiOS mk files
+# Licensing files.
+include $(CHIBIOS)/os/license/license.mk
 # Startup files.
 include $(CHIBIOS)/os/common/startup/ARMCMx/compilers/GCC/mk/$(CPU_STARTUP)
 # HAL-OSAL files (optional).
@@ -142,6 +145,8 @@ include $(CHIBIOS)/os/hal/osal/rt-nil/osal.mk
 include $(CHIBIOS)/os/rt/rt.mk
 include $(CHIBIOS)/os/common/ports/ARMCMx/compilers/GCC/mk/port_v7m.mk
 include $(CHIBIOS)/os/various/cpp_wrappers/chcpp.mk
+# EX files (optional).
+include $(CHIBIOS)/os/hal/lib/streams/streams.mk
 
 include $(CONFIG)/boards/$(PROJECT_BOARD)/board.mk
 include $(PROJECT_DIR)/init/init.mk
@@ -158,16 +163,8 @@ endif
 
 # C sources that can be compiled in ARM or THUMB mode depending on the global
 # setting.
-CSRC = $(STARTUPSRC) \
-	$(KERNSRC) \
-	$(PORTSRC) \
-	$(OSALSRC) \
-	$(HALSRC) \
-	$(PLATFORMSRC) \
-	$(BOARDSRC) \
+CSRC =  $(ALLCSRC) \
 	$(CHIBIOS)/os/various/syscalls.c \
-	$(CHIBIOS)/os/hal/lib/streams/memstreams.c \
-	$(CHIBIOS)/os/hal/lib/streams/chprintf.c \
 	$(CONSOLESRC) \
 	$(DEV_SRC) \
 	$(HW_LAYER_EMS) \
@@ -177,9 +174,8 @@ CSRC = $(STARTUPSRC) \
 
 # C++ sources that can be compiled in ARM or THUMB mode depending on the global
 # setting.
-CPPSRC = $(CHCPPSRC) \
+CPPSRC = $(ALLCPPSRC) \
 	$(DEV_SRC_CPP) \
-	$(BOARDSRC_CPP) \
 	$(HW_LAYER_EMS_CPP) \
 	$(HW_SENSORS_SRC) \
 	$(TUNERSTUDIO_SRC_CPP) \
@@ -224,17 +220,8 @@ ifeq ($(CONFIGPATH),)
 endif
 
 
-INCDIR = .. $(CHIBIOS)/os/license \
-	$(PORTINC) \
-	$(OSALINC) \
-	$(KERNINC) \
-	$(TESTINC) \
-	$(STARTUPINC) \
-	$(HALINC) \
-	$(PLATFORMINC) \
-	$(BOARDINC) \
-	$(CHCPPINC) \
-	$(CHIBIOS)/os/hal/lib/streams \
+INCDIR = $(ALLINC) \
+	.. \
 	$(CHIBIOS)/os/various \
 	$(CHIBIOS)/os/ex/ST \
 	$(CHIBIOS)/os/hal/lib/peripherals/sensors \
