@@ -275,7 +275,7 @@ public:
 private:
 	trigger_shape_helper h;
 
-	int findAngleIndex(TriggerFormDetails *details, float angle) const;
+	uint16_t findAngleIndex(TriggerFormDetails *details, float angle) const;
 
 	/**
 	 * Working buffer for 'wave' instance
@@ -313,7 +313,7 @@ public:
 	 * this cache allows us to find a close-enough (with one degree precision) trigger wheel index by
 	 * given angle with fast constant speed. That's a performance optimization for event scheduling.
 	 */
-	int triggerIndexByAngle[720];
+	uint16_t triggerIndexByAngle[720];
 };
 
 void findTriggerPosition(
