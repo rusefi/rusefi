@@ -32,6 +32,7 @@ java \
  -signature tunerstudio/generated/signature_hellen_cypress.txt \
  -signature_destination controllers/generated/signature_hellen_cypress.h \
  -enumInputFile controllers/algo/rusefi_enums.h \
+ -enumInputFile controllers/algo/rusefi_hw_enums.h \
  -board hellen_cypress \
  -prepend config/boards/hellen/cypress/config/tunerstudio/generated/hellen_cypress_prefix.txt
 

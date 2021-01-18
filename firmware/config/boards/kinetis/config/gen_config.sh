@@ -32,6 +32,7 @@ java \
  -signature tunerstudio/generated/signature_kin.txt \
  -signature_destination controllers/generated/signature_kin.h \
  -enumInputFile controllers/algo/rusefi_enums.h \
+ -enumInputFile controllers/algo/rusefi_hw_enums.h \
  -board kinetis \
  -prepend config/boards/kinetis/config/tunerstudio/generated/kinetis_prefix.txt
 
