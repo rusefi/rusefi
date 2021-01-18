@@ -352,7 +352,7 @@ public class ConfigDefinition {
         List<String> listAnalogInputs = new ArrayList<>();
         List<String> listEventInputs = new ArrayList<>();
         List<String> listSwitchInputs = new ArrayList<>();
-        List<Map<String, String>> data = yaml.load(new FileReader(yamlInputFile)).get("pins");
+        List<Map<String, String>> data = (Map<String, String>) yaml.load(new FileReader(yamlInputFile)).get("pins");
         if (data == null) {
             SystemOut.println("Null yaml for " + yamlInputFile);
         } else {
