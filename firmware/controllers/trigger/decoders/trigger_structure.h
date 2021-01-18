@@ -308,6 +308,10 @@ public:
 	/**
 	 * These angles are in event coordinates - with synchronization point located at angle zero.
 	 * These values are pre-calculated for performance reasons.
+	 * 
+	 * This is stored in 1/64th degree units to save space (only 2 bytes vs. 4 byte float)
+	 * 720 (deg) * 64 = ~46000, so no risk of overflowing when storing a full engine cycle.
+	 * Most triggers actually have integer angles for all teeth, so exactly zero information is lost in that case.
 	 */
 	scaled_channel<uint16_t, 64> eventAngles[PWM_PHASE_MAX_COUNT];
 
