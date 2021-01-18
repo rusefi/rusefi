@@ -352,13 +352,13 @@ public class ConfigDefinition {
         List<String> listAnalogInputs = new ArrayList<>();
         List<String> listEventInputs = new ArrayList<>();
         List<String> listSwitchInputs = new ArrayList<>();
-        List<Object> data = yaml.load(new FileReader(yamlInputFile)).get("pins");
+        List<Map<String, String>> data = yaml.load(new FileReader(yamlInputFile)).get("pins");
         if (data == null) {
             SystemOut.println("Null yaml for " + yamlInputFile);
         } else {
             SystemOut.println(data);
             Objects.requireNonNull(data, "data");
-            for (Object pin : data) {
+            for (Map<String, String> pin : data) {
                 if (pin.get("id").getClass().getNamee() == "java.util.ArrayList") {
                     for (int i = 0; i < pin.get("id").size; i++) {
                         assignPinName(pin.get("id")[i], pin.get("ts_name"), pin.get("class")[i], listOutputs, listAnalogInputs, listEventInputs, listSwitchInputs);
