@@ -359,7 +359,7 @@ public class ConfigDefinition {
                 if (pin.get("id").getClass().getName() == "java.util.ArrayList") {
                     for (int i = 0; i < ((ArrayList)pin.get("id")).size(); i++) {
                         assignPinName((String)((ArrayList)pin.get("id")).get(i),
-                                (String)((ArrayList)pin.get("ts_name")),
+                                (String)pin.get("ts_name"),
                                 (String)((ArrayList)pin.get("class")).get(i),
                                 listOutputs, listAnalogInputs, listEventInputs, listSwitchInputs, state);
                     }
