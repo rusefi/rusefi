@@ -47,7 +47,6 @@ private:
 };
 
 void startBoostPin();
-void stopBoostPin();
 void initBoostCtrl(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX);
 void setDefaultBoostParameters(DECLARE_CONFIG_PARAMETER_SIGNATURE);
 void onConfigurationChangeBoostCallback(engine_configuration_s *previousConfiguration);

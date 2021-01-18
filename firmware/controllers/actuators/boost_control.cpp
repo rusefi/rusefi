@@ -203,12 +203,6 @@ void startBoostPin() {
 #endif /* EFI_UNIT_TEST */
 }
 
-void stopBoostPin() {
-#if !EFI_UNIT_TEST
-	efiSetPadUnused(activeConfiguration.boostControlPin);
-#endif /* EFI_UNIT_TEST */
-}
-
 void onConfigurationChangeBoostCallback(engine_configuration_s *previousConfiguration) {
 	boostController.onConfigurationChange(&previousConfiguration->boostPid);
 }
