@@ -4,6 +4,7 @@ import com.rusefi.output.*;
 import com.rusefi.util.IoUtils;
 import com.rusefi.util.LazyFile;
 import com.rusefi.util.SystemOut;
+import com.rusefi.enum_reader.Value;
 import org.yaml.snakeyaml.Yaml;
 
 import java.io.*;
@@ -100,7 +101,7 @@ public class ConfigDefinition {
         String signatureDestination = null;
         String signaturePrependFile = null;
         CHeaderConsumer.withC_Defines = true;
-        String[] yamlFiles;
+        String[] yamlFiles = null;
 
         // used to update other files
         List<String> inputFiles = new ArrayList<>();
@@ -195,12 +196,7 @@ public class ConfigDefinition {
                     String boardName = args[i + 1];
                     String dirPath = "./config/boards/" + boardName;
                     File dirName = new File(dirPath);
-                    FilenameFilter filter = new FilenameFilter() {
-                        @Override
-                        public boolean accept(File f, String name) {
-                            return name.endsWith(".yaml");
-                        }
-                    };
+                    FilenameFilter filter = (f, name) -> name.endsWith(".yaml");
                     yamlFiles = dirName.list(filter);
                     break;
             }
@@ -259,7 +255,7 @@ public class ConfigDefinition {
 
         if (yamlFiles != null) {
            for (String yamlFile : yamlFiles) {
-               processYaml(VariableRegistry.INSTANCE, yamlFile);
+               processYaml(VariableRegistry.INSTANCE, yamlFile, state);
            }
         }
 
@@ -346,25 +342,29 @@ public class ConfigDefinition {
         }
     }
 
-    public static void processYaml(VariableRegistry registry, String yamlInputFile) throws IOException {
+    public static void processYaml(VariableRegistry registry, String yamlInputFile, ReaderState state) throws IOException {
         Yaml yaml = new Yaml();
         List<String> listOutputs = new ArrayList<>();
         List<String> listAnalogInputs = new ArrayList<>();
         List<String> listEventInputs = new ArrayList<>();
         List<String> listSwitchInputs = new ArrayList<>();
-        List<Map<String, String>> data = (List<Map<String, String>>) yaml.load(new FileReader(yamlInputFile)).get("pins");
+        Map<String, Object> yamlData = yaml.load(new FileReader(yamlInputFile));
+        List<Map<String, Object>> data = (List<Map<String, Object>>) yamlData.get("pins");
         if (data == null) {
             SystemOut.println("Null yaml for " + yamlInputFile);
         } else {
             SystemOut.println(data);
             Objects.requireNonNull(data, "data");
-            for (Map<String, String> pin : data) {
-                if (pin.get("id").getClass().getNamee() == "java.util.ArrayList") {
-                    for (int i = 0; i < pin.get("id").size; i++) {
-                        assignPinName(pin.get("id")[i], pin.get("ts_name"), pin.get("class")[i], listOutputs, listAnalogInputs, listEventInputs, listSwitchInputs);
+            for (Map<String, Object> pin : data) {
+                if (pin.get("id").getClass().getName() == "java.util.ArrayList") {
+                    for (int i = 0; i < ((ArrayList)pin.get("id")).size(); i++) {
+                        assignPinName((String)((ArrayList)pin.get("id")).get(i),
+                                (String)((ArrayList)pin.get("ts_name")).get(i),
+                                (String)((ArrayList)pin.get("class")).get(i),
+                                listOutputs, listAnalogInputs, listEventInputs, listSwitchInputs, state);
                     }
                 } else {
-                    assignPinName(pin.get("id"), pin.get("ts_name"), pin.get("class")[i], listOutputs, listAnalogInputs, listEventInputs, listSwitchInputs);
+                    assignPinName((String)pin.get("id"), (String)pin.get("ts_name"), (String)pin.get("class"), listOutputs, listAnalogInputs, listEventInputs, listSwitchInputs, state);
                 }
             }
             registerPins(listOutputs, "output_pin_e_enum", "GPIO_UNASSIGNED", registry);
@@ -391,23 +391,24 @@ public class ConfigDefinition {
         registry.register(outputEnumName, sb.toString());
     }
 
-    private static void assignPinName(String id, String ts_name, String className, List<String> listOutputs, List<String> listAnalogInputs, List<String> listEventInputs, List<String> listSwitchInputs) {
-        List<List<Object>> enumList = state.enumsReader.getEnums();
-        for (List<Object> pinEnum : enumList) {
-            for (Map<String, String> kv : pinEnum) {
-                if (kv[0] == id) {
+    private static void assignPinName(String id, String ts_name, String className, List<String> listOutputs, List<String> listAnalogInputs, List<String> listEventInputs, List<String> listSwitchInputs, ReaderState state) {
+        Map<String, Map<String, Value>> enumList = state.enumsReader.getEnums();
+        for (int i = 0; i < enumList.size(); i++) {
+            Map<String, Value> sectionEnum = enumList.get(i);
+            for (Map.Entry<String, Value> kv : sectionEnum.entrySet()) {
+                if (kv.getKey() == id) {
                     switch (className) {
                     case "outputs":
-                        listOutputs.set(kv[1], ts_name);
+                        listOutputs.set(Integer.parseInt(kv.getValue().getName()), ts_name);
                         break;
                     case "analog_inputs":
-                        listAnalogInputs.set(kv[1], ts_name);
+                        listAnalogInputs.set(Integer.parseInt(kv.getValue().getName()), ts_name);
                         break;
                     case "event_inputs":
-                        listEventInputs.set(kv[1], ts_name);
+                        listEventInputs.set(Integer.parseInt(kv.getValue().getName()), ts_name);
                         break;
                     case "switch_inputs":
-                        listSwitchInputs.set(kv[1], ts_name);
+                        listSwitchInputs.set(Integer.parseInt(kv.getValue().getName()), ts_name);
                         break;
                     }
                 }
