@@ -100,7 +100,7 @@ public class ConfigDefinition {
         String signatureDestination = null;
         String signaturePrependFile = null;
         CHeaderConsumer.withC_Defines = true;
-        List<File> yamlFiles = new ArrayList<>();
+        List<String> yamlFiles = new ArrayList<>();
 
         // used to update other files
         List<String> inputFiles = new ArrayList<>();
@@ -193,7 +193,7 @@ public class ConfigDefinition {
                     break;
                 case KEY_BOARD_NAME:
                     String boardName = args[i + 1];
-                    String dirPath = firmwarePath + "/config/boards/" + boardName;
+                    String dirPath = "./config/boards/" + boardName;
                     File dirName = new File(dirPath);
                     FilenameFilter filter = new FilenameFilter() {
                         @Override
@@ -359,12 +359,12 @@ public class ConfigDefinition {
             SystemOut.println(data);
             Objects.requireNonNull(data, "data");
             for (Object pin : data) {
-                if (pin.id.getClass().getNamee() == "java.util.ArrayList") {
-                    for (int i = 0; i < pin.id.size; i++) {
-                        assignPinName(pin.id[i], pin.ts_name, pin.class[i], listOutputs, listAnalogInputs, listEventInputs, listSwitchInputs);
+                if (pin.get("id").getClass().getNamee() == "java.util.ArrayList") {
+                    for (int i = 0; i < pin.get("id").size; i++) {
+                        assignPinName(pin.get("id")[i], pin.get("ts_name"), pin.get("class")[i], listOutputs, listAnalogInputs, listEventInputs, listSwitchInputs);
                     }
                 } else {
-                    assignPinName(pin.id, pin.ts_name, pin.class[i], listOutputs, listAnalogInputs, listEventInputs, listSwitchInputs);
+                    assignPinName(pin.get("id"), pin.get("ts_name"), pin.get("class")[i], listOutputs, listAnalogInputs, listEventInputs, listSwitchInputs);
                 }
             }
             registerPins(listOutputs, "output_pin_e_enum", "GPIO_UNASSIGNED", registry);
@@ -388,13 +388,13 @@ public class ConfigDefinition {
                 sb.append("\"" + name + "\"");
             }
         }
-        registry.register(outputEnumName, sb);
+        registry.register(outputEnumName, sb.toString());
     }
 
     private static void assignPinName(String id, String ts_name, String className, List<String> listOutputs, List<String> listAnalogInputs, List<String> listEventInputs, List<String> listSwitchInputs) {
-        List<Object> enumList = state.enumsReader.getEnums();
-        for (Object pinEnum : enumList) {
-            for (Object kv : pinEnum) {
+        List<List<Object>> enumList = state.enumsReader.getEnums();
+        for (List<Object> pinEnum : enumList) {
+            for (Array kv : pinEnum) {
                 if (kv[0] == id) {
                     switch (className) {
                     case "outputs":
