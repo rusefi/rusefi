@@ -100,7 +100,7 @@ public class ConfigDefinition {
         String signatureDestination = null;
         String signaturePrependFile = null;
         CHeaderConsumer.withC_Defines = true;
-        List<String> yamlFiles = new ArrayList<>();
+        String[] yamlFiles;
 
         // used to update other files
         List<String> inputFiles = new ArrayList<>();
@@ -258,7 +258,7 @@ public class ConfigDefinition {
             readPrependValues(VariableRegistry.INSTANCE, prependFile);
 
         if (yamlFiles) {
-           for (File yamlFile : yamlFiles) {
+           for (String yamlFile : yamlFiles) {
                processYaml(VariableRegistry.INSTANCE, yamlFile);
            }
         }
@@ -346,7 +346,7 @@ public class ConfigDefinition {
         }
     }
 
-    public static void processYaml(VariableRegistry registry, File yamlInputFile) throws IOException {
+    public static void processYaml(VariableRegistry registry, String yamlInputFile) throws IOException {
         Yaml yaml = new Yaml();
         List<String> listOutputs = new ArrayList<>();
         List<String> listAnalogInputs = new ArrayList<>();
@@ -394,7 +394,7 @@ public class ConfigDefinition {
     private static void assignPinName(String id, String ts_name, String className, List<String> listOutputs, List<String> listAnalogInputs, List<String> listEventInputs, List<String> listSwitchInputs) {
         List<List<Object>> enumList = state.enumsReader.getEnums();
         for (List<Object> pinEnum : enumList) {
-            for (Array kv : pinEnum) {
+            for (Map<String, String> kv : pinEnum) {
                 if (kv[0] == id) {
                     switch (className) {
                     case "outputs":
