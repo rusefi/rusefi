@@ -144,9 +144,9 @@ TEST(misc, testAngleResolver) {
 	TriggerFormDetails *triggerFormDetails = &engine->triggerCentral.triggerFormDetails;
 	engine->initializeTriggerWaveform(NULL PASS_ENGINE_PARAMETER_SUFFIX);
 
-	assertEqualsM("index 2", 52.75, triggerFormDetails->eventAngles[3]); // this angle is relation to synch point
+	assertEqualsM("index 2", 52.76, triggerFormDetails->eventAngles[3]); // this angle is relation to synch point
 	assertEqualsM("time 2", 0.3233, ts->wave.getSwitchTime(2));
-	assertEqualsM("index 5", 412.75, triggerFormDetails->eventAngles[6]);
+	assertEqualsM("index 5", 412.76, triggerFormDetails->eventAngles[6]);
 	assertEqualsM("time 5", 0.5733, ts->wave.getSwitchTime(5));
 
 	ASSERT_EQ(4, ts->getTriggerWaveformSynchPointIndex());
@@ -158,32 +158,32 @@ TEST(misc, testAngleResolver) {
 	printf("*************************************************** testAngleResolver 0\r\n");
 	findTriggerPosition(&ENGINE(triggerCentral.triggerShape), &ENGINE(triggerCentral.triggerFormDetails),&injectionStart, -122, engineConfiguration->globalTriggerAngleOffset);
 	ASSERT_EQ( 2,  injectionStart.triggerEventIndex) << "eventIndex@0";
-	ASSERT_NEAR(0.25, injectionStart.angleOffsetFromTriggerEvent, EPS5D);
+	ASSERT_NEAR(0.24, injectionStart.angleOffsetFromTriggerEvent, EPS5D);
 
 	printf("*************************************************** testAngleResolver 0.1\r\n");
 	findTriggerPosition(&ENGINE(triggerCentral.triggerShape), &ENGINE(triggerCentral.triggerFormDetails),&injectionStart, -80, engineConfiguration->globalTriggerAngleOffset);
 	ASSERT_EQ( 2,  injectionStart.triggerEventIndex) << "eventIndex@0";
-	ASSERT_FLOAT_EQ(42.25, injectionStart.angleOffsetFromTriggerEvent);
+	ASSERT_FLOAT_EQ(42.24, injectionStart.angleOffsetFromTriggerEvent);
 
 	printf("*************************************************** testAngleResolver 0.2\r\n");
 	findTriggerPosition(&ENGINE(triggerCentral.triggerShape), &ENGINE(triggerCentral.triggerFormDetails),&injectionStart, -54, engineConfiguration->globalTriggerAngleOffset);
 	ASSERT_EQ( 2,  injectionStart.triggerEventIndex) << "eventIndex@0";
-	ASSERT_FLOAT_EQ(68.25, injectionStart.angleOffsetFromTriggerEvent);
+	ASSERT_FLOAT_EQ(68.2400, injectionStart.angleOffsetFromTriggerEvent);
 
 	printf("*************************************************** testAngleResolver 0.3\r\n");
 	findTriggerPosition(&ENGINE(triggerCentral.triggerShape), &ENGINE(triggerCentral.triggerFormDetails),&injectionStart, -53, engineConfiguration->globalTriggerAngleOffset);
 	ASSERT_EQ(2, injectionStart.triggerEventIndex);
-	ASSERT_FLOAT_EQ(69.25, injectionStart.angleOffsetFromTriggerEvent);
+	ASSERT_FLOAT_EQ(69.24, injectionStart.angleOffsetFromTriggerEvent);
 
 	printf("*************************************************** testAngleResolver 1\r\n");
 	findTriggerPosition(&ENGINE(triggerCentral.triggerShape), &ENGINE(triggerCentral.triggerFormDetails),&injectionStart, 0, engineConfiguration->globalTriggerAngleOffset);
 	ASSERT_EQ(2, injectionStart.triggerEventIndex);
-	ASSERT_FLOAT_EQ(122.25, injectionStart.angleOffsetFromTriggerEvent);
+	ASSERT_FLOAT_EQ(122.24, injectionStart.angleOffsetFromTriggerEvent);
 
 	printf("*************************************************** testAngleResolver 2\r\n");
 	findTriggerPosition(&ENGINE(triggerCentral.triggerShape), &ENGINE(triggerCentral.triggerFormDetails),&injectionStart, 56, engineConfiguration->globalTriggerAngleOffset);
 	ASSERT_EQ(2, injectionStart.triggerEventIndex);
-	ASSERT_FLOAT_EQ(178.25, injectionStart.angleOffsetFromTriggerEvent);
+	ASSERT_FLOAT_EQ(178.24, injectionStart.angleOffsetFromTriggerEvent);
 
 	TriggerWaveform t;
 	confgiureFordAspireTriggerWaveform(&t);
