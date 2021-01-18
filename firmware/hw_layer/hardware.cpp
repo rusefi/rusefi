@@ -379,9 +379,6 @@ void applyNewHardwareSettings(void) {
 	stopHD44780_pins();
 #endif /* #if EFI_HD44780_LCD */
 
-#if EFI_BOOST_CONTROL
-	stopBoostPin();
-#endif
 	if (isPinOrModeChanged(clutchUpPin, clutchUpPinMode)) {
 		efiSetPadUnused(activeConfiguration.clutchUpPin);
 	}
