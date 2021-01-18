@@ -40,19 +40,10 @@ void BoostController::init(SimplePwm* pwm, const ValueProvider3D* openLoopMap, c
 	m_pid.initPidClass(pidParams);
 }
 
-
-void BoostController::reset() {
-	m_shouldResetPid = true;
-}
-
 void BoostController::onConfigurationChange(pid_s* previousConfiguration) {
 	if (!m_pid.isSame(previousConfiguration)) {
 		m_shouldResetPid = true;
 	}
-}
-
-int BoostController::getPeriodMs() {
-	return GET_PERIOD_LIMITED(&engineConfiguration->boostPid);
 }
 
 expected<float> BoostController::observePlant() const {
@@ -125,7 +116,7 @@ expected<percent_t> BoostController::getClosedLoop(float target, float manifoldP
 		return 0;
 	}
 
-	float closedLoop = m_pid.getOutput(target, manifoldPressure);
+	float closedLoop = m_pid.getOutput(target, manifoldPressure, SLOW_CALLBACK_PERIOD_MS / 1000.0f);
 
 #if EFI_TUNER_STUDIO
 	if (engineConfiguration->debugMode == DBG_BOOST) {
@@ -149,23 +140,29 @@ void BoostController::setOutput(expected<float> output) {
 	setEtbWastegatePosition(percent PASS_ENGINE_PARAMETER_SUFFIX);
 }
 
-void BoostController::PeriodicTask() {
+void BoostController::update() {
 	m_pid.iTermMin = -50;
 	m_pid.iTermMax = 50;
 
-	update();
+	ClosedLoopController::update();
 }
 
-BoostController boostController;
+static BoostController boostController;
+static bool hasInitBoost = false;
+
+void updateBoostControl() {
+	if (hasInitBoost) {
+		boostController.update();
+	}
+}
 
 void setDefaultBoostParameters(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
-	engineConfiguration->boostPwmFrequency = 55;
+	engineConfiguration->boostPwmFrequency = 33;
 	engineConfiguration->boostPid.offset = 0;
 	engineConfiguration->boostPid.pFactor = 0.5;
 	engineConfiguration->boostPid.iFactor = 0.3;
-	engineConfiguration->boostPid.periodMs = 100;
-	engineConfiguration->boostPid.maxValue = 99;
-	engineConfiguration->boostPid.minValue = -99;
+	engineConfiguration->boostPid.maxValue = 20;
+	engineConfiguration->boostPid.minValue = -20;
 	engineConfiguration->boostControlPin = GPIO_UNASSIGNED;
 	engineConfiguration->boostControlPinMode = OM_DEFAULT;
 
@@ -203,12 +200,6 @@ void startBoostPin() {
 #endif /* EFI_UNIT_TEST */
 }
 
-void stopBoostPin() {
-#if !EFI_UNIT_TEST
-	efiSetPadUnused(activeConfiguration.boostControlPin);
-#endif /* EFI_UNIT_TEST */
-}
-
 void onConfigurationChangeBoostCallback(engine_configuration_s *previousConfiguration) {
 	boostController.onConfigurationChange(&previousConfiguration->boostPid);
 }
@@ -242,7 +233,7 @@ void initBoostCtrl(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX) {
 
 #if !EFI_UNIT_TEST
 	startBoostPin();
-	boostController.Start();
+	hasInitBoost = true;
 #endif
 }
 
