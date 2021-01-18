@@ -1308,7 +1308,7 @@ tle8888_mode_e tle8888mode;
 	ThermistorConf auxTempSensor1;todo: finish implementation #332
 	ThermistorConf auxTempSensor2;todo: finish implementation #332
 	uint8_t[6] unused2508;;"units", 1, 0, -20, 100, 0
-	int16_t etbFreq;;"Hz",      1,     0,    0, 30000,      0
+	int16_t etbFreq;;"Hz",      1,     0,    0, @@ETB_HW_MAX_FREQUENCY@@,      0
 	pid_s etbWastegatePid;
 	uint8_t[4] unused2536;;"units", 1, 0, -20, 100, 0
 
