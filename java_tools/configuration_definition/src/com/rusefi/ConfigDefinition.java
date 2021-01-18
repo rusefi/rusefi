@@ -257,7 +257,7 @@ public class ConfigDefinition {
         for (String prependFile : prependFiles)
             readPrependValues(VariableRegistry.INSTANCE, prependFile);
 
-        if (yamlFiles) {
+        if (yamlFiles != null) {
            for (String yamlFile : yamlFiles) {
                processYaml(VariableRegistry.INSTANCE, yamlFile);
            }
