@@ -116,6 +116,7 @@ struct_no_prefix engine_configuration_s
 #define TCU_SOLENOID_COUNT 6
 #define TCU_GEAR_COUNT 10
 
+#define ETB_HW_MAX_FREQUENCY 10000
 #define ETB_COUNT 2
 #define DC_PER_STEPPER 2
 
