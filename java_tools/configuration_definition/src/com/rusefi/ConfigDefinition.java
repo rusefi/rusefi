@@ -191,7 +191,7 @@ public class ConfigDefinition {
                     romRaiderInputFile = inputFilePath + File.separator + ROM_RAIDER_XML_TEMPLATE;
                     inputFiles.add(romRaiderInputFile);
                     break;
-                case KEY_BOARD_NAME;
+                case KEY_BOARD_NAME:
                     String boardName = args[i + 1];
                     String dirPath = firmwarePath + "/config/boards/" + boardName;
                     File dirName = new File(dirPath);
@@ -367,10 +367,10 @@ public class ConfigDefinition {
                     assignPinName(pin.id, pin.ts_name, pin.class[i], listOutputs, listAnalogInputs, listEventInputs, listSwitchInputs);
                 }
             }
-            registerPins(listOutputs, "output_pin_e_enum", "GPIO_UNASSIGNED", registry)
-            registerPins(listAnalogInputs, "adc_channel_e_enum", "EFI_ADC_NONE", registry)
-            registerPins(listEventInputs, "brain_input_pin_e_enum", "GPIO_UNASSIGNED", registry)
-            registerPins(listSwitchInputs, "switch_input_pin_e_enum", "GPIO_UNASSIGNED", registry)
+            registerPins(listOutputs, "output_pin_e_enum", "GPIO_UNASSIGNED", registry);
+            registerPins(listAnalogInputs, "adc_channel_e_enum", "EFI_ADC_NONE", registry);
+            registerPins(listEventInputs, "brain_input_pin_e_enum", "GPIO_UNASSIGNED", registry);
+            registerPins(listSwitchInputs, "switch_input_pin_e_enum", "GPIO_UNASSIGNED", registry);
         }
     }
 
@@ -388,26 +388,26 @@ public class ConfigDefinition {
                 sb.append("\"" + name + "\"");
             }
         }
-        registry.register(outputEnumName, sb)
+        registry.register(outputEnumName, sb);
     }
 
-    private static void assignPinName(String id, String ts_name, String class List<String> listOutputs, List<String> listAnalogInputs, List<String> listEventInputs, List<String> listSwitchInputs) {
+    private static void assignPinName(String id, String ts_name, String className, List<String> listOutputs, List<String> listAnalogInputs, List<String> listEventInputs, List<String> listSwitchInputs) {
         List<Object> enumList = state.enumsReader.getEnums();
-        for (Object enum : enumList) {
-            for (Object kv : enum) {
+        for (Object pinEnum : enumList) {
+            for (Object kv : pinEnum) {
                 if (kv[0] == id) {
-                    switch (class) {
+                    switch (className) {
                     case "outputs":
-                        listOutputs.set(kv[1], ts_name)
+                        listOutputs.set(kv[1], ts_name);
                         break;
                     case "analog_inputs":
-                        listAnalogInputs.set(kv[1], ts_name)
+                        listAnalogInputs.set(kv[1], ts_name);
                         break;
                     case "event_inputs":
-                        listEventInputs.set(kv[1], ts_name)
+                        listEventInputs.set(kv[1], ts_name);
                         break;
                     case "switch_inputs":
-                        listSwitchInputs.set(kv[1], ts_name)
+                        listSwitchInputs.set(kv[1], ts_name);
                         break;
                     }
                 }
