@@ -74,7 +74,7 @@ pins:
   # TC4427 general purpose output (selectable 5v/12v)
   - pin: 14
     id: GPIOD_7
-    class: output
+    class: outputs
     color: yellow
     function: (see JP2 jumper note)
     ts_name: 14 - GP Out 5
