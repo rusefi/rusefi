@@ -344,10 +344,10 @@ public class ConfigDefinition {
 
     public static void processYaml(VariableRegistry registry, File yamlInputFile, ReaderState state) throws IOException {
         Yaml yaml = new Yaml();
-        List<String> listOutputs = new ArrayList<>();
-        List<String> listAnalogInputs = new ArrayList<>();
-        List<String> listEventInputs = new ArrayList<>();
-        List<String> listSwitchInputs = new ArrayList<>();
+        Map<Integer, String> listOutputs = null;
+        Map<Integer, String> listAnalogInputs = null;
+        Map<Integer, String> listEventInputs = null;
+        Map<Integer, String> listSwitchInputs = null;
         Map<String, Object> yamlData = yaml.load(new FileReader(yamlInputFile));
         List<Map<String, Object>> data = (List<Map<String, Object>>) yamlData.get("pins");
         if (data == null) {
@@ -374,40 +374,54 @@ public class ConfigDefinition {
         }
     }
 
-    private static void registerPins(List<String> listPins, String outputEnumName, String nothingName, VariableRegistry registry) {
+    private static int getMaxValue(Collection<String> values) {
+        int result = -1;
+        for (String v : values) {
+            result = Math.max(result, Integer.parseInt(v));
+        }
+        return result;
+    }
+
+    private static void registerPins(Map<Integer, String> listPins, String outputEnumName, String nothingName, VariableRegistry registry) {
         StringBuffer sb = new StringBuffer();
-        for (String name : listPins) {
+        int maxValue = getMaxValue(listPins.values());
+        for (int i = 0; i < maxValue; i++) {
             if (sb.length() > 0)
                 sb.append(",");
 
-            if (name == null) {
+            if (listPins.get(i) == null) {
                 sb.append("\"INVALID\"");
-            } else if (name == nothingName) {
+            } else if (listPins.get(i).equals(nothingName)) {
                 sb.append("\"NONE\"");
             } else {
-                sb.append("\"" + name + "\"");
+                sb.append("\"" + listPins.get(i) + "\"");
             }
         }
         registry.register(outputEnumName, sb.toString());
     }
 
-    private static void assignPinName(String id, String ts_name, String className, List<String> listOutputs, List<String> listAnalogInputs, List<String> listEventInputs, List<String> listSwitchInputs, ReaderState state) {
+    private static void assignPinName(String id, String ts_name, String className,
+                                      Map<Integer, String> listOutputs,
+                                      Map<Integer, String> listAnalogInputs,
+                                      Map<Integer, String> listEventInputs,
+                                      Map<Integer, String> listSwitchInputs,
+                                      ReaderState state) {
         Map<String, Map<String, Value>> enumList = state.enumsReader.getEnums();
         for (Map.Entry<String, Map<String, Value>> sectionEnum : enumList.entrySet()) {
             for (Map.Entry<String, Value> kv : sectionEnum.getValue().entrySet()) {
                 if (kv.getKey().equals(id)) {
                     switch (className) {
                     case "outputs":
-                        listOutputs.set(Integer.parseInt(kv.getValue().getValue()), ts_name);
+                        listOutputs.put(Integer.parseInt(kv.getValue().getValue()), ts_name);
                         break;
                     case "analog_inputs":
-                        listAnalogInputs.set(Integer.parseInt(kv.getValue().getValue()), ts_name);
+                        listAnalogInputs.put(Integer.parseInt(kv.getValue().getValue()), ts_name);
                         break;
                     case "event_inputs":
-                        listEventInputs.set(Integer.parseInt(kv.getValue().getValue()), ts_name);
+                        listEventInputs.put(Integer.parseInt(kv.getValue().getValue()), ts_name);
                         break;
                     case "switch_inputs":
-                        listSwitchInputs.set(Integer.parseInt(kv.getValue().getValue()), ts_name);
+                        listSwitchInputs.put(Integer.parseInt(kv.getValue().getValue()), ts_name);
                         break;
                     }
                 }
