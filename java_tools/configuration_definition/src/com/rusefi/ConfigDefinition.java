@@ -359,13 +359,13 @@ public class ConfigDefinition {
             for (Map<String, Object> pin : data) {
                 if (pin.get("id") instanceof ArrayList) {
                     for (int i = 0; i < ((ArrayList)pin.get("id")).size(); i++) {
-                        assignPinName((String)((ArrayList)pin.get("id")).get(i),
+                        findMatchingEnum((String)((ArrayList)pin.get("id")).get(i),
                                 (String)pin.get("ts_name"),
                                 (String)((ArrayList)pin.get("class")).get(i),
-                                listOutputs, listAnalogInputs, listEventInputs, listSwitchInputs, state);
+                                state, listOutputs, listAnalogInputs, listEventInputs, listSwitchInputs);
                     }
                 } else {
-                    assignPinName((String)pin.get("id"), (String)pin.get("ts_name"), (String)pin.get("class"), listOutputs, listAnalogInputs, listEventInputs, listSwitchInputs, state);
+                    findMatchingEnum((String)pin.get("id"), (String)pin.get("ts_name"), (String)pin.get("class"), state, listOutputs, listAnalogInputs, listEventInputs, listSwitchInputs);
                 }
             }
             registerPins(listOutputs, "output_pin_e_enum", "GPIO_UNASSIGNED", registry);
@@ -393,31 +393,33 @@ public class ConfigDefinition {
         registry.register(outputEnumName, sb.toString());
     }
 
-    private static void assignPinName(String id, String ts_name, String className,
+    private static void findMatchingEnum(String id, String ts_name, String className, ReaderState state,
                                       Map<Integer, String> listOutputs,
                                       Map<Integer, String> listAnalogInputs,
                                       Map<Integer, String> listEventInputs,
-                                      Map<Integer, String> listSwitchInputs,
-                                      ReaderState state) {
-        Map<String, Map<String, Value>> enumList = state.enumsReader.getEnums();
-        for (Map.Entry<String, Map<String, Value>> sectionEnum : enumList.entrySet()) {
-            for (Map.Entry<String, Value> kv : sectionEnum.getValue().entrySet()) {
-                if (kv.getKey().equals(id)) {
-                    switch (className) {
-                    case "outputs":
-                        listOutputs.put(Integer.parseInt(kv.getValue().getValue()), ts_name);
-                        break;
-                    case "analog_inputs":
-                        listAnalogInputs.put(Integer.parseInt(kv.getValue().getValue()), ts_name);
-                        break;
-                    case "event_inputs":
-                        listEventInputs.put(Integer.parseInt(kv.getValue().getValue()), ts_name);
-                        break;
-                    case "switch_inputs":
-                        listSwitchInputs.put(Integer.parseInt(kv.getValue().getValue()), ts_name);
-                        break;
-                    }
-                }
+                                      Map<Integer, String> listSwitchInputs) {
+
+        switch (className) {
+            case "outputs":
+                assignPinName("brain_pin_e", ts_name, id, listOutputs, state);
+                break;
+            case "analog_inputs":
+                assignPinName("adc_channel_e", ts_name, id, listAnalogInputs, state);
+                break;
+            case "event_inputs":
+                assignPinName("brain_pin_e", ts_name, id, listEventInputs, state);
+                break;
+            case "switch_inputs":
+                assignPinName("brain_pin_e", ts_name, id, listSwitchInputs, state);
+                break;
+        }
+    }
+
+    private static void assignPinName(String enumName, String ts_name, String id, Map<Integer, String> list, ReaderState state) {
+        Map<String, Value> enumList = state.enumsReader.getEnums().get(enumName);
+        for(Map.Entry<String, Value> kv : enumList.entrySet()){
+            if(kv.getKey().equals(id)){
+                list.put(kv.getValue().getIntValue(), ts_name);
             }
         }
     }
