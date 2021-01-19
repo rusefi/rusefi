@@ -344,10 +344,10 @@ public class ConfigDefinition {
 
     public static void processYaml(VariableRegistry registry, File yamlInputFile, ReaderState state) throws IOException {
         Yaml yaml = new Yaml();
-        Map<Integer, String> listOutputs = null;
-        Map<Integer, String> listAnalogInputs = null;
-        Map<Integer, String> listEventInputs = null;
-        Map<Integer, String> listSwitchInputs = null;
+        Map<Integer, String> listOutputs = new HashMap<>();
+        Map<Integer, String> listAnalogInputs = new HashMap<>();
+        Map<Integer, String> listEventInputs = new HashMap<>();
+        Map<Integer, String> listSwitchInputs = new HashMap<>();
         Map<String, Object> yamlData = yaml.load(new FileReader(yamlInputFile));
         List<Map<String, Object>> data = (List<Map<String, Object>>) yamlData.get("pins");
         if (data == null) {
@@ -374,17 +374,17 @@ public class ConfigDefinition {
         }
     }
 
-    private static int getMaxValue(Collection<String> values) {
+    private static int getMaxValue(Collection<Integer> values) {
         int result = -1;
-        for (String v : values) {
-            result = Math.max(result, Integer.parseInt(v));
+        for (Integer v : values) {
+            result = Math.max(result, v);
         }
         return result;
     }
 
     private static void registerPins(Map<Integer, String> listPins, String outputEnumName, String nothingName, VariableRegistry registry) {
         StringBuffer sb = new StringBuffer();
-        int maxValue = getMaxValue(listPins.values());
+        int maxValue = getMaxValue(listPins.keySet());
         for (int i = 0; i < maxValue; i++) {
             if (sb.length() > 0)
                 sb.append(",");
