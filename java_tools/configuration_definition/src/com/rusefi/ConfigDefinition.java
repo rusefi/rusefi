@@ -393,9 +393,8 @@ public class ConfigDefinition {
 
     private static void assignPinName(String id, String ts_name, String className, List<String> listOutputs, List<String> listAnalogInputs, List<String> listEventInputs, List<String> listSwitchInputs, ReaderState state) {
         Map<String, Map<String, Value>> enumList = state.enumsReader.getEnums();
-        for (int i = 0; i < enumList.size(); i++) {
-            Map<String, Value> sectionEnum = enumList.get(i);
-            for (Map.Entry<String, Value> kv : sectionEnum.entrySet()) {
+        for (Map.Entry<String, Map<String, Value>> sectionEnum : enumList.entrySet()) {
+            for (Map.Entry<String, Value> kv : sectionEnum.getValue().entrySet()) {
                 if (kv.getKey() == id) {
                     switch (className) {
                     case "outputs":
