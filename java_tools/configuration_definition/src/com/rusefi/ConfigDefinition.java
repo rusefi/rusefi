@@ -383,7 +383,7 @@ public class ConfigDefinition {
     }
 
     private static void registerPins(Map<Integer, String> listPins, String outputEnumName, String nothingName, VariableRegistry registry) {
-        StringBuffer sb = new StringBuffer();
+        StringBuilder sb = new StringBuilder();
         int maxValue = getMaxValue(listPins.keySet());
         for (int i = 0; i < maxValue; i++) {
             if (sb.length() > 0)
