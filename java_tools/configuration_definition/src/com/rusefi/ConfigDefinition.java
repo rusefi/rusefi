@@ -342,6 +342,7 @@ public class ConfigDefinition {
         }
     }
 
+    @SuppressWarnings("unchecked")
     public static void processYaml(VariableRegistry registry, File yamlInputFile, ReaderState state) throws IOException {
         Yaml yaml = new Yaml();
         Map<Integer, String> listOutputs = new HashMap<>();
