@@ -6,6 +6,7 @@
  */
 
 #include "trigger_universal.h"
+#include "error_handling.h"
 
 /**
  * @see getCycleDuration

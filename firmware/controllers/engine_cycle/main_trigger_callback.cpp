@@ -388,7 +388,7 @@ void mainTriggerCallback(uint32_t trgEventIndex, efitick_t edgeTimestamp DECLARE
 #endif // HW_CHECK_MODE
 
 #if EFI_CDM_INTEGRATION
-	if (trgEventIndex == 0 && CONFIG(cdmInputPin) != GPIO_UNASSIGNED) {
+	if (trgEventIndex == 0 && isBrainPinValid(CONFIG(cdmInputPin))) {
 		int cdmKnockValue = getCurrentCdmValue(engine->triggerCentral.triggerState.getTotalRevolutionCounter());
 		engine->knockLogic(cdmKnockValue);
 	}

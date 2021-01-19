@@ -12,16 +12,8 @@
 #include "engine_math.h"
 #include "thermistors.h"
 #include "citroenBerlingoTU3JP.h"
+#include "custom_engine.h"
 #include "settings.h"
-
-void setLCD(engine_configuration_s *engineConfiguration) {
-	engineConfiguration->HD44780_rs = GPIOE_7;
-	engineConfiguration->HD44780_e = GPIOE_9;
-	engineConfiguration->HD44780_db4 = GPIOE_11;
-	engineConfiguration->HD44780_db5 = GPIOE_13;
-	engineConfiguration->HD44780_db6 = GPIOE_15;
-	engineConfiguration->HD44780_db7 = GPIOB_10;
-}
 
 #if IGN_LOAD_COUNT == DEFAULT_IGN_LOAD_COUNT
 static const ignition_table_t default_tps_advance_table = {
@@ -118,7 +110,7 @@ void setCitroenBerlingoTU3JPConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	engineConfiguration->fuelPumpPin = GPIOB_9;
 	engineConfiguration->fuelPumpPinMode = OM_DEFAULT;
 
-	setLCD(engineConfiguration);
+	setFrankenso_01_LCD(engineConfiguration);
 
 
 //	engineConfiguration->o2heaterPin = GPIOC_13;

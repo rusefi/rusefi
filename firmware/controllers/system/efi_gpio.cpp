@@ -397,7 +397,7 @@ void OutputPin::setValue(int logicValue) {
 	currentLogicValue = logicValue;
 
 	// Nothing else to do if not configured
-	if (brainPin == GPIO_UNASSIGNED) {
+	if (!isBrainPinValid(brainPin)) {
 		return;
 	}
 
@@ -458,7 +458,7 @@ void OutputPin::initPin(const char *msg, brain_pin_e brainPin) {
 }
 
 void OutputPin::initPin(const char *msg, brain_pin_e brainPin, const pin_output_mode_e *outputMode) {
-	if (brainPin == GPIO_UNASSIGNED) {
+	if (!isBrainPinValid(brainPin)) {
 		return;
 	}
 
@@ -467,7 +467,7 @@ void OutputPin::initPin(const char *msg, brain_pin_e brainPin, const pin_output_
 
 	// Check that this OutputPin isn't already assigned to another pin (reinit is allowed to change mode)
 	// To avoid this error, call deInit() first
-	if (this->brainPin != GPIO_UNASSIGNED && this->brainPin != brainPin) {
+	if (isBrainPinValid(this->brainPin) && this->brainPin != brainPin) {
 		firmwareError(CUSTOM_OBD_PIN_CONFLICT, "outputPin [%s] already assigned, cannot reassign without unregister first", msg);
 		return;
 	}
@@ -544,7 +544,7 @@ void OutputPin::deInit() {
 	chibios_rt::CriticalSectionLocker csl;
 
 	// nothing to do if not registered in the first place
-	if (brainPin == GPIO_UNASSIGNED) {
+	if (!isBrainPinValid(brainPin)) {
 		return;
 	}
 

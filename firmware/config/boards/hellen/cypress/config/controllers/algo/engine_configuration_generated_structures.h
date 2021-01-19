@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on hellen_cypress_gen_config.bat integration/rusefi_config.txt Tue Jan 05 12:58:50 UTC 2021
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on hellen_cypress_gen_config.bat integration/rusefi_config.txt Tue Jan 19 00:30:03 UTC 2021
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -3300,20 +3300,18 @@ struct engine_configuration_s {
 	 */
 	pid_s idleTimingPid;
 	/**
-	 * When the current RPM is closer than this value to the target, closed-loop idle timing control is enabled.
 	 * offset 3988
 	 */
-	int16_t idleTimingPidWorkZone;
+	uint8_t unused3988[2];
 	/**
 	 * If the RPM closer to target than this value, disable timing correction to prevent oscillation
 	 * offset 3990
 	 */
 	int16_t idleTimingPidDeadZone;
 	/**
-	 * Taper out idle timing control over this range as the engine leaves idle conditions
 	 * offset 3992
 	 */
-	int16_t idlePidFalloffDeltaRpm;
+	uint8_t unused3942[2];
 	/**
 	 * A delay in cycles between fuel-enrich. portions
 	 * offset 3994
@@ -3342,7 +3340,7 @@ struct engine_configuration_s {
 	 */
 	spi_device_e tle6240spiDevice;
 	/**
-	 * Stoichiometric ratio for your primary fuel.
+	 * Stoichiometric ratio for your primary fuel. When Flex Fuel is enabled, this value is used when the Flex Fuel sensor indicates E0.
 	 * offset 4005
 	 */
 	uint8_t stoichRatioPrimary;
@@ -3356,9 +3354,14 @@ struct engine_configuration_s {
 	 */
 	spi_device_e mc33972spiDevice;
 	/**
+	 * Stoichiometric ratio for your secondary fuel. This value is used when the Flex Fuel sensor indicates E100.
 	 * offset 4009
 	 */
-	uint8_t unusedSpiPadding8[3];
+	uint8_t stoichRatioSecondary;
+	/**
+	 * offset 4010
+	 */
+	uint8_t unusedSpiPadding8[2];
 	/**
 	 *  ETB idle authority
 	 * offset 4012
@@ -3670,9 +3673,14 @@ struct persistent_config_s {
 	 */
 	tcubinary_table_t tcuSolenoidTable;
 	/**
+	 * Good example: number of tooth on wheel, For Can 10 is a good number.
 	 * offset 15196
 	 */
-	uint8_t unused15136[1092];
+	float vssFilterReciprocal;
+	/**
+	 * offset 15200
+	 */
+	uint8_t unused15136[1088];
 	/**
 	 * offset 16288
 	 */
@@ -3780,4 +3788,4 @@ struct persistent_config_s {
 typedef struct persistent_config_s persistent_config_s;
 
 // end
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on hellen_cypress_gen_config.bat integration/rusefi_config.txt Tue Jan 05 12:58:50 UTC 2021
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on hellen_cypress_gen_config.bat integration/rusefi_config.txt Tue Jan 19 00:30:03 UTC 2021

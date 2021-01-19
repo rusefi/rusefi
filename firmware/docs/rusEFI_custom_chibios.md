@@ -4,10 +4,13 @@ At the moment rusEFI uses https://github.com/rusefi/ChibiOS/tree/stable_18.2.rus
 
 rusEFI custom version of ChibiOS has the following changes:
 
+# TODO this document has to be reviewed, seems to NOT be up to date with 18 patch
+
 *) minor OS monitoring and maintainability fixes:
    chDbgStackOverflowPanic allows to know which thread has stack overflow
-   maxNesting good to know maximum ISR depth
    ON_LOCK_HOOK is used to measure durations of critical sections
+
+*) MMC timeout waitCounter
 
 *) LSE auto-detection, see rusefi_lse_fix.h see LSE_TIMEOUT
 

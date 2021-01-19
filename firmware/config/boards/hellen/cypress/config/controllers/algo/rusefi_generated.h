@@ -290,6 +290,11 @@
 #define CMD_TS_FSIO_CATEGORY 33
 #define CMD_TS_IGNITION_CATEGORY 18
 #define CMD_TS_INJECTOR_CATEGORY 19
+#define CMD_TS_SOLENOID_CATEGORY 41
+#define CMD_TS_X14 20
+#define CMD_TS_X17 23
+#define CMD_TS_X18 24
+#define CMD_TS_X31 49
 #define CMD_VSS_PIN "vss_pin"
 #define CMD_WRITECONFIG "writeconfig"
 #define coastingFuelCutClt_offset 3154
@@ -347,8 +352,8 @@
 #define DBG_DBG_LOGIC_ANALYZER 45
 #define dc_io_size 4
 #define DC_PER_STEPPER 2
-#define debug_mode_e_auto_enum "DBG_ALTERNATOR_PID", "DBG_TPS_ACCEL", "DBG_GPPWM", "DBG_IDLE_CONTROL", "DBG_EL_ACCEL", "DBG_TRIGGER_COUNTERS", "DBG_FSIO_ADC", "DBG_AUX_PID_1", "DBG_VVT", "DBG_CRANKING_DETAILS", "DBG_IGNITION_TIMING", "DBG_FUEL_PID_CORRECTION", "DBG_VEHICLE_SPEED_SENSOR", "DBG_SD_CARD", "DBG_SR5_PROTOCOL", "DBG_KNOCK", "DBG_16", "DBG_ELECTRONIC_THROTTLE_PID", "DBG_EXECUTOR", "DBG_BENCH_TEST", "DBG_AUX_VALVES", "DBG_ANALOG_INPUTS", "DBG_INSTANT_RPM", "DBG_FSIO_EXPRESSION_1_7", "DBG_STATUS", "DBG_CJ125", "DBG_CAN", "DBG_MAP", "DBG_METRICS", "DBG_ELECTRONIC_THROTTLE_EXTRA", "DBG_ION", "DBG_TLE8888", "DBG_ANALOG_INPUTS2", "DBG_DWELL_METRIC", "DBG_34", "DBG_ETB_LOGIC", "DBG_BOOST", "DBG_START_STOP", "DBG_LAUNCH", "DBG_ETB_AUTOTUNE", "DBG_COMPOSITE_LOG", "DBG_FSIO_EXPRESSION_8_14", "DBG_FSIO_SPECIAL", "DBG_INJECTOR_COMPENSATION", "DBG_DYNO_VIEW", "DBG_LOGIC_ANALYZER", "DBG_RUSEFI_WIDEBAND", "DBG_47", "DBG_48"
-#define debug_mode_e_enum "Alternator PID", "TPS acceleration enrichment", "GPPWM", "Idle Control", "Engine Load accl enrich", "Trigger Counters", "FSIO_ADC", "AUX_PID_1", "VVT input", "Cranking", "Timing", "Closed-loop fuel corr PID", "VSS", "SD card", "sr5", "Knock", "mode16", "Electronic Throttle", "Executor", "Bench Test / TS commands", "Aux Valves", "Analog inputs #1", "INSTANT_RPM", "FSIO_EXPRESSION_1_7", "Status", "CJ125", "CAN", "MAP", "Metrics", "ETB#2", "Ion Sense", "TLE8888", "Analog inputs #2", "Dwell Metric", "INVALID", "ETB Logic", "Boost Control", "Start/Stop", "Launch", "ETB Autotune", "FSIO_COMPOSITE_LOG", "FSIO_EXPRESSION_8_14", "FSIO_SPECIAL", "Injector Compensation", "Dyno_View", "Logic_Analyzer", "rusEFI Wideband", "Mode47", "Mode48"
+#define debug_mode_e_auto_enum "DBG_ALTERNATOR_PID", "DBG_TPS_ACCEL", "DBG_GPPWM", "DBG_IDLE_CONTROL", "DBG_EL_ACCEL", "DBG_TRIGGER_COUNTERS", "DBG_FSIO_ADC", "DBG_AUX_PID_1", "DBG_VVT", "DBG_CRANKING_DETAILS", "DBG_IGNITION_TIMING", "DBG_FUEL_PID_CORRECTION", "DBG_VEHICLE_SPEED_SENSOR", "DBG_SD_CARD", "DBG_SR5_PROTOCOL", "DBG_KNOCK", "DBG_16", "DBG_ELECTRONIC_THROTTLE_PID", "DBG_EXECUTOR", "DBG_BENCH_TEST", "DBG_AUX_VALVES", "DBG_ANALOG_INPUTS", "DBG_INSTANT_RPM", "DBG_FSIO_EXPRESSION_1_7", "DBG_STATUS", "DBG_CJ125", "DBG_CAN", "DBG_MAP", "DBG_METRICS", "DBG_ELECTRONIC_THROTTLE_EXTRA", "DBG_ION", "DBG_TLE8888", "DBG_ANALOG_INPUTS2", "DBG_DWELL_METRIC", "DBG_34", "DBG_ETB_LOGIC", "DBG_BOOST", "DBG_START_STOP", "DBG_LAUNCH", "DBG_ETB_AUTOTUNE", "DBG_COMPOSITE_LOG", "DBG_FSIO_EXPRESSION_8_14", "DBG_FSIO_SPECIAL", "DBG_INJECTOR_COMPENSATION", "DBG_DYNO_VIEW", "DBG_LOGIC_ANALYZER", "DBG_RUSEFI_WIDEBAND", "DBG_TCU", "DBG_48"
+#define debug_mode_e_enum "Alternator PID", "TPS acceleration enrichment", "GPPWM", "Idle Control", "Engine Load accl enrich", "Trigger Counters", "FSIO_ADC", "AUX_PID_1", "VVT input", "Cranking", "Timing", "Closed-loop fuel corr PID", "VSS", "SD card", "sr5", "Knock", "mode16", "Electronic Throttle", "Executor", "Bench Test / TS commands", "Aux Valves", "Analog inputs #1", "INSTANT_RPM", "FSIO_EXPRESSION_1_7", "Status", "CJ125", "CAN", "MAP", "Metrics", "ETB#2", "Ion Sense", "TLE8888", "Analog inputs #2", "Dwell Metric", "INVALID", "ETB Logic", "Boost Control", "Start/Stop", "Launch", "ETB Autotune", "FSIO_COMPOSITE_LOG", "FSIO_EXPRESSION_8_14", "FSIO_SPECIAL", "Injector Compensation", "Dyno_View", "Logic_Analyzer", "rusEFI Wideband", "TCU", "Mode48"
 #define debugMapAveraging_offset 807
 #define debugMode_offset 2092
 #define debugTriggerSync_offset 676
@@ -442,6 +447,7 @@
 #define ETB_COUNT 2
 #define etb_dFactor_offset 1744
 #define etb_function_e_auto_enum "ETB_None", "ETB_Throttle1", "ETB_Throttle2", "ETB_IdleValve", "ETB_Wastegate"
+#define ETB_HW_MAX_FREQUENCY 10000
 #define etb_iFactor_offset 1740
 #define etb_iTermMax_offset 3958
 #define etb_iTermMin_offset 3956
@@ -849,7 +855,6 @@
 #define idleMode_offset 1472
 #define idlePidActivationTime_offset 2588
 #define idlePidDeactivationTpsThreshold_offset 816
-#define idlePidFalloffDeltaRpm_offset 3992
 #define idlePidRpmDeadZone_offset 1894
 #define idlePidRpmUpperLimit_offset 1484
 #define idlePositionMax_offset 722
@@ -884,7 +889,6 @@
 #define idleTimingPid_periodMs_offset 3982
 #define idleTimingPid_pFactor_offset 3968
 #define idleTimingPidDeadZone_offset 3990
-#define idleTimingPidWorkZone_offset 3988
 #define idleVe_offset 6640
 #define idleVeBins_offset 6608
 #define IGN_LOAD_COUNT 16
@@ -1242,8 +1246,8 @@
 #define showHumanReadableWarning_offset 976
 #define showSdCardWarning_offset 76
 #define SIGNATURE_BOARD hellen_cypress
-#define SIGNATURE_DATE 2021.01.05
-#define SIGNATURE_HASH 372768766
+#define SIGNATURE_DATE 2021.01.19
+#define SIGNATURE_HASH 3546513791
 #define silentTriggerError_offset 1464
 #define slowAdcAlpha_offset 2088
 #define sparkDwellRpmBins_offset 332
@@ -1294,6 +1298,7 @@
 #define stepperEnablePinMode_offset 2605
 #define stepperForceParkingEveryRestart_offset 744
 #define stepperParkingExtraSteps_offset 818
+#define STFT_BANK_COUNT 2
 #define stft_cell_cfg_s_size 4
 #define STFT_CELL_COUNT 4
 #define stft_cellCfgs1_maxAdd_offset 1072
@@ -1324,6 +1329,7 @@
 #define stft_startupDelay_offset 1071
 #define stftIgnoreErrorMagnitude_offset 976
 #define stoichRatioPrimary_offset 4005
+#define stoichRatioSecondary_offset 4009
 #define switch_input_pin_e_enum "NONE", "INVALID", "P00 (A_0)", "P01 (A_1)", "P02 (A_2)", "P03 (A_3)", "P04 (A_4)", "P05 (A_5)", "P06 (A_6)", "P07 (A_7)", "P08 (A_8)", "P09 (A_9)", "P0A (A_10)", "P0B (A_11)", "P0C (A_12)", "P0D (A_13)", "P0E (A_14)", "P0F (A_15)", "P10 (B_0)", "P11 (B_1)", "P12 (B_2)", "P13 (B_3)", "P14 (B_4)", "P15 (B_5)", "P16 (B_6)", "P17 (B_7)", "P18 (B_8)", "P19 (B_9)", "P1A (B_10)", "P1B (B_11)", "P1C (B_12)", "P1D (B_13)", "P1E (B_14)", "P1F (B_15)", "P20 (C_0)", "P21 (C_1)", "P22 (C_2)", "P23 (C_3)", "P24 (C_4)", "P25 (C_5)", "P26 (C_6)", "P27 (C_7)", "P28 (C_8)", "P29 (C_9)", "P2A (C_10)", "P2B (C_11)", "P2C (C_12)", "P2D (C_13)", "P2E (C_14)", "P2F (C_15)", "P30 (D_0)", "P31 (D_1)", "P32 (D_2)", "P33 (D_3)", "P34 (D_4)", "P35 (D_5)", "P36 (D_6)", "P37 (D_7)", "P38 (D_8)", "P39 (D_9)", "P3A (D_10)", "P3B (D_11)", "P3C (D_12)", "P3D (D_13)", "P3E (D_14)", "P3F (D_15)", "P40 (E_0)", "P41 (E_1)", "P42 (E_2)", "P43 (E_3)", "P44 (E_4)", "P45 (E_5)", "P46 (E_6)", "P47 (E_7)", "P48 (E_8)", "P49 (E_9)", "P4A (E_10)", "P4B (E_11)", "P4C (E_12)", "P4D (E_13)", "P4E (E_14)", "P4F (E_15)", "P50 (F_0)", "P51 (F_1)", "P52 (F_2)", "P53 (F_3)", "P54 (F_4)", "P55 (F_5)", "P56 (F_6)", "P57 (F_7)", "P58 (F_8)", "P59 (F_9)", "P5A (F_10)", "P5B (F_11)", "P5C (F_12)", "P5D (F_13)", "P5E (F_14)", "P5F (F_15)", "P70 (G_0)", "P71 (G_1)", "P72 (G_2)", "P73 (G_3)", "P74 (G_4)", "P75 (G_5)", "P76 (G_6)", "P77 (G_7)", "P78 (G_8)", "P79 (G_9)", "P7A (G_10)", "P7B (G_11)", "P7C (G_12)", "P7D (G_13)", "P7E (G_14)", "P7F (G_15)", "PA0 (H_0)", "PA1 (H_1)", "PA2 (H_2)", "PA3 (H_3)", "PA4 (H_4)", "PA5 (H_5)", "PA6 (H_6)", "PA7 (H_7)", "PA8 (H_8)", "PA9 (H_9)", "PAA (H_10)", "PAB (H_11)", "PAC (H_12)", "PAD (H_13)", "PAE (H_14)", "PAF (H_15)", "PB0 (I_0)", "PB1 (I_1)", "PB2 (I_2)", "PB3 (I_3)", "PB4 (I_4)", "PB5 (I_5)", "PB6 (I_6)", "PB7 (I_7)", "PB8 (I_8)", "PB9 (I_9)", "PBA (I_10)", "PBB (I_11)", "PBC (I_12)", "PBD (I_13)", "PBE (I_14)", "PBF (I_15)", "PC0 (J_0)", "PC1 (J_1)", "PC2 (J_2)", "PC3 (J_3)", "PC4 (J_4)", "PC5 (J_5)", "PC6 (J_6)", "PC7 (J_7)", "PC8 (J_8)", "PC9 (J_9)", "PCA (J_10)", "PCB (J_11)", "PCC (J_12)", "PCD (J_13)", "PCE (J_14)", "PCF (J_15)", "PF0 (K_0)", "PF1 (K_1)", "PF2 (K_2)", "PF3 (K_3)", "PF4 (K_4)", "PF5 (K_5)", "PF6 (K_6)", "PF7 (K_7)", "PF8 (K_8)", "PF9 (K_9)", "PFA (K_10)", "PFB (K_11)", "PFC (K_12)", "PFD (K_13)", "PFE (K_14)", "PFF (K_15)", "DRV8860_1", "DRV8860_2", "DRV8860_3", "DRV8860_4", "DRV8860_5", "DRV8860_6", "DRV8860_7", "DRV8860_8", "DRV8860_9", "DRV8860_10", "DRV8860_11", "DRV8860_12", "DRV8860_13", "DRV8860_14", "DRV8860_15", "DRV8860_16"
 #define tachOutputPin_offset 704
 #define tachOutputPinMode_offset 705
@@ -1574,7 +1580,7 @@
 #define ts_show_spi true
 #define ts_show_trigger_comparator false
 #define ts_show_tunerstudio_port true
-#define TS_SIGNATURE "rusEFI 2021.01.05.hellen_cypress.372768766"
+#define TS_SIGNATURE "rusEFI 2021.01.19.hellen_cypress.3546513791"
 #define TS_SINGLE_WRITE_COMMAND 'W'
 #define TS_SINGLE_WRITE_COMMAND_char W
 #define TS_TEST_COMMAND 't' // 0x74
@@ -1632,7 +1638,7 @@
 #define unused1476b20_offset 1476
 #define unused1476b3_offset 1476
 #define unused1476b8_offset 1476
-#define unused15136_offset 15196
+#define unused15136_offset 15200
 #define unused1708_offset 1708
 #define unused2260_offset 2260
 #define unused2419_offset 2419
@@ -1642,6 +1648,8 @@
 #define unused2508_offset 2508
 #define unused2536_offset 2536
 #define unused3328_offset 3328
+#define unused3942_offset 3992
+#define unused3988_offset 3988
 #define unused4028_offset 4028
 #define unused541_offset 541
 #define unused542_offset 542
@@ -1694,7 +1702,7 @@
 #define unusedOldBiquad_offset 2332
 #define unusedSpiPadding4_offset 2593
 #define unusedSpiPadding5_offset 2715
-#define unusedSpiPadding8_offset 4009
+#define unusedSpiPadding8_offset 4010
 #define useAdvanceCorrectionsForCranking_offset 1476
 #define useCicPidForIdle_offset 76
 #define useConstantDwellDuringCranking_offset 1464
@@ -1752,6 +1760,7 @@
 #define veTable_offset 17440
 #define VOLTAGE_1_BYTE_PACKING_DIV 0.02
 #define vRefAdcChannel_offset 1470
+#define vssFilterReciprocal_offset 15196
 #define vvt_mode_e_auto_enum "VVT_INACTIVE", "VVT_SECOND_HALF", "VVT_2JZ", "MIATA_NB2", "VVT_FIRST_HALF", "VVT_BOSCH_QUICK_START", "VVT_4_1", "VVT_FORD_ST170"
 #define vvt_mode_e_enum "Inactive", "Single Tooth Second Half", "2GZ", "Miata NB2", "Single Tooth First Half", "Bosch Quick Start", "4/1", "mode7"
 #define vvtCamSensorUseRise_offset 744

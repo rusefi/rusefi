@@ -10,8 +10,8 @@
 
 #pragma once
 
+#include "engine_ptr.h"
 #include "state_sequence.h"
-#include "globalaccess.h"
 #include "engine_configuration_generated_structures.h"
 
 #define FOUR_STROKE_ENGINE_CYCLE 720
@@ -74,6 +74,7 @@ class Engine;
 class TriggerState;
 class TriggerFormDetails;
 class TriggerConfiguration;
+class Logging;
 
 // https://github.com/rusefi/rusefi/issues/2010 shows the corner case wheel with huge depth requirement
 #define GAP_TRACKING_LENGTH 18
@@ -274,7 +275,7 @@ public:
 private:
 	trigger_shape_helper h;
 
-	int findAngleIndex(TriggerFormDetails *details, float angle) const;
+	uint16_t findAngleIndex(TriggerFormDetails *details, float angle) const;
 
 	/**
 	 * Working buffer for 'wave' instance
@@ -312,7 +313,7 @@ public:
 	 * this cache allows us to find a close-enough (with one degree precision) trigger wheel index by
 	 * given angle with fast constant speed. That's a performance optimization for event scheduling.
 	 */
-	int triggerIndexByAngle[720];
+	uint16_t triggerIndexByAngle[720];
 };
 
 void findTriggerPosition(
