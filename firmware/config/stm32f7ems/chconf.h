@@ -29,7 +29,7 @@
 #define CHCONF_H
 
 #define _CHIBIOS_RT_CONF_
-#define _CHIBIOS_RT_CONF_VER_5_1_
+#define _CHIBIOS_RT_CONF_VER_6_1_
 
 /*
  * __process_stack_size__ and __process_stack_size__ defaults are each hard-coded as 0x400 in ChibiOS rules.mk files
@@ -65,16 +65,20 @@
 
 /**
  * @brief   System time counter resolution.
- * @note    Allowed values are 16 or 32 bits.
+ * @note    Allowed values are 16, 32 or 64 bits.
  */
+#if !defined(CH_CFG_ST_RESOLUTION)
 #define CH_CFG_ST_RESOLUTION                32
+#endif
 
 /**
  * @brief   System tick frequency.
  * @details Frequency of the system timer that drives the system ticks. This
  *          setting also defines the system tick time unit.
  */
+#if !defined(CH_CFG_ST_FREQUENCY)
 #define CH_CFG_ST_FREQUENCY                 1000
+#endif
 
 /**
  * @brief   Time intervals data size.
@@ -132,21 +136,6 @@
  */
 #if !defined(CH_CFG_TIME_QUANTUM)
 #define CH_CFG_TIME_QUANTUM                 0
-#endif
-
-/**
- * @brief   Managed RAM size.
- * @details Size of the RAM area to be managed by the OS. If set to zero
- *          then the whole available RAM is used. The core memory is made
- *          available to the heap allocator and/or can be used directly through
- *          the simplified core memory allocator.
- *
- * @note    In order to let the OS manage the whole RAM the linker script must
- *          provide the @p __heap_base__ and @p __heap_end__ symbols.
- * @note    Requires @p CH_CFG_USE_MEMCORE.
- */
-#if !defined(CH_CFG_MEMCORE_SIZE)
-#define CH_CFG_MEMCORE_SIZE                 0
 #endif
 
 /**
@@ -338,6 +327,28 @@
 #endif
 
 /**
+ * @brief   Dynamic Threads APIs.
+ * @details If enabled then the dynamic threads creation APIs are included
+ *          in the kernel.
+ *
+ * @note    The default is @p TRUE.
+ * @note    Requires @p CH_CFG_USE_WAITEXIT.
+ * @note    Requires @p CH_CFG_USE_HEAP and/or @p CH_CFG_USE_MEMPOOLS.
+ */
+#if !defined(CH_CFG_USE_DYNAMIC)
+#define CH_CFG_USE_DYNAMIC                  FALSE
+#endif
+
+/** @} */
+
+/*===========================================================================*/
+/**
+ * @name OSLIB options
+ * @{
+ */
+/*===========================================================================*/
+
+/**
  * @brief   Mailboxes APIs.
  * @details If enabled then the asynchronous messages (mailboxes) APIs are
  *          included in the kernel.
@@ -345,7 +356,9 @@
  * @note    The default is @p TRUE.
  * @note    Requires @p CH_CFG_USE_SEMAPHORES.
  */
+#if !defined(CH_CFG_USE_MAILBOXES)
 #define CH_CFG_USE_MAILBOXES                FALSE
+#endif
 
 /**
  * @brief   I/O Queues APIs.
@@ -364,6 +377,21 @@
  */
 #if !defined(CH_CFG_USE_MEMCORE)
 #define CH_CFG_USE_MEMCORE                  FALSE
+#endif
+
+/**
+ * @brief   Managed RAM size.
+ * @details Size of the RAM area to be managed by the OS. If set to zero
+ *          then the whole available RAM is used. The core memory is made
+ *          available to the heap allocator and/or can be used directly through
+ *          the simplified core memory allocator.
+ *
+ * @note    In order to let the OS manage the whole RAM the linker script must
+ *          provide the @p __heap_base__ and @p __heap_end__ symbols.
+ * @note    Requires @p CH_CFG_USE_MEMCORE.
+ */
+#if !defined(CH_CFG_MEMCORE_SIZE)
+#define CH_CFG_MEMCORE_SIZE                 0
 #endif
 
 /**
@@ -392,20 +420,7 @@
 #endif
 
 /**
- * @brief   Dynamic Threads APIs.
- * @details If enabled then the dynamic threads creation APIs are included
- *          in the kernel.
- *
- * @note    The default is @p TRUE.
- * @note    Requires @p CH_CFG_USE_WAITEXIT.
- * @note    Requires @p CH_CFG_USE_HEAP and/or @p CH_CFG_USE_MEMPOOLS.
- */
-#if !defined(CH_CFG_USE_DYNAMIC)
-#define CH_CFG_USE_DYNAMIC                  FALSE
-#endif
-
-/**
- * @brief  Objects FIFOs APIs.
+ * @brief   Objects FIFOs APIs.
  * @details If enabled then the objects FIFOs APIs are included
  *          in the kernel.
  *
@@ -413,6 +428,50 @@
  */
 #if !defined(CH_CFG_USE_OBJ_FIFOS)
 #define CH_CFG_USE_OBJ_FIFOS                FALSE
+#endif
+
+/**
+ * @brief   Pipes APIs.
+ * @details If enabled then the pipes APIs are included
+ *          in the kernel.
+ *
+ * @note    The default is @p TRUE.
+ */
+#if !defined(CH_CFG_USE_PIPES)
+#define CH_CFG_USE_PIPES                    FALSE
+#endif
+
+/**
+ * @brief   Objects Caches APIs.
+ * @details If enabled then the objects caches APIs are included
+ *          in the kernel.
+ *
+ * @note    The default is @p TRUE.
+ */
+#if !defined(CH_CFG_USE_OBJ_CACHES)
+#define CH_CFG_USE_OBJ_CACHES               FALSE
+#endif
+
+/**
+ * @brief   Delegate threads APIs.
+ * @details If enabled then the delegate threads APIs are included
+ *          in the kernel.
+ *
+ * @note    The default is @p TRUE.
+ */
+#if !defined(CH_CFG_USE_DELEGATES)
+#define CH_CFG_USE_DELEGATES                FALSE
+#endif
+
+/**
+ * @brief   Jobs Queues APIs.
+ * @details If enabled then the jobs queues APIs are included
+ *          in the kernel.
+ *
+ * @note    The default is @p TRUE.
+ */
+#if !defined(CH_CFG_USE_JOBS)
+#define CH_CFG_USE_JOBS                     FALSE
 #endif
 
 /** @} */
@@ -477,6 +536,13 @@
  */
 #if !defined(CH_CFG_FACTORY_OBJ_FIFOS)
 #define CH_CFG_FACTORY_OBJ_FIFOS            FALSE
+#endif
+
+/**
+ * @brief   Enables factory for Pipes.
+ */
+#if !defined(CH_CFG_FACTORY_PIPES) || defined(__DOXYGEN__)
+#define CH_CFG_FACTORY_PIPES                FALSE
 #endif
 
 /** @} */
@@ -629,10 +695,6 @@
 /**
  * @brief   Threads finalization hook.
  * @details User finalization code added to the @p chThdExit() API.
- *
- * @note    It is inserted into lock zone.
- * @note    It is also invoked when the threads simply return in order to
- *          terminate.
  */
 #define CH_CFG_THREAD_EXIT_HOOK(tp) {                                       \
   /* Add threads finalization code here.*/                                  \
@@ -645,6 +707,7 @@
  * @note    This macro can be used to activate a power saving mode.
  */
 #define CH_CFG_IDLE_ENTER_HOOK() {                                          \
+  /* Idle-enter code here.*/                                                \
 }
 
 /**
@@ -654,6 +717,7 @@
  * @note    This macro can be used to deactivate a power saving mode.
  */
 #define CH_CFG_IDLE_LEAVE_HOOK() {                                          \
+  /* Idle-leave code here.*/                                                \
 }
 
 /**
@@ -691,7 +755,6 @@
 #define CH_CFG_TRACE_HOOK(tep) {                                            \
   /* Trace code here.*/                                                     \
 }
-
 
 /** @} */
 

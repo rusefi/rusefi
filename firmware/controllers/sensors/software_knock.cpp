@@ -22,7 +22,7 @@ static volatile size_t sampleCount = 0;
 
 binary_semaphore_t knockSem;
 
-static void completionCallback(ADCDriver* adcp, adcsample_t*, size_t) {
+static void completionCallback(ADCDriver* adcp) {
 	palClearPad(GPIOD, 2);
 
 	if (adcp->state == ADC_COMPLETE) {
