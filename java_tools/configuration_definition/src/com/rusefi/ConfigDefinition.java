@@ -254,9 +254,7 @@ public class ConfigDefinition {
             readPrependValues(VariableRegistry.INSTANCE, prependFile);
 
         if (yamlFiles != null) {
-           for (File yamlFile : yamlFiles) {
-               processYaml(VariableRegistry.INSTANCE, yamlFile, state);
-           }
+           processYaml(VariableRegistry.INSTANCE, yamlFiles, state);
         }
 
         BufferedReader definitionReader = new BufferedReader(new InputStreamReader(new FileInputStream(definitionInputFile), IoUtils.CHARSET.name()));
@@ -343,29 +341,31 @@ public class ConfigDefinition {
     }
 
     @SuppressWarnings("unchecked")
-    public static void processYaml(VariableRegistry registry, File yamlInputFile, ReaderState state) throws IOException {
-        Yaml yaml = new Yaml();
+    public static void processYaml(VariableRegistry registry, File[] yamlFiles, ReaderState state) throws IOException {
         Map<Integer, String> listOutputs = new HashMap<>();
         Map<Integer, String> listAnalogInputs = new HashMap<>();
         Map<Integer, String> listEventInputs = new HashMap<>();
         Map<Integer, String> listSwitchInputs = new HashMap<>();
-        Map<String, Object> yamlData = yaml.load(new FileReader(yamlInputFile));
-        List<Map<String, Object>> data = (List<Map<String, Object>>) yamlData.get("pins");
-        if (data == null) {
-            SystemOut.println("Null yaml for " + yamlInputFile);
-        } else {
-            SystemOut.println(data);
-            Objects.requireNonNull(data, "data");
-            for (Map<String, Object> pin : data) {
-                if (pin.get("id") instanceof ArrayList) {
-                    for (int i = 0; i < ((ArrayList)pin.get("id")).size(); i++) {
-                        findMatchingEnum((String)((ArrayList)pin.get("id")).get(i),
-                                (String)pin.get("ts_name"),
-                                (String)((ArrayList)pin.get("class")).get(i),
-                                state, listOutputs, listAnalogInputs, listEventInputs, listSwitchInputs);
+        for (File yamlFile : yamlFiles) {
+            Yaml yaml = new Yaml();
+            Map<String, Object> yamlData = yaml.load(new FileReader(yamlFile));
+            List<Map<String, Object>> data = (List<Map<String, Object>>) yamlData.get("pins");
+            if (data == null) {
+                SystemOut.println("Null yaml for " + yamlFile);
+            } else {
+                SystemOut.println(data);
+                Objects.requireNonNull(data, "data");
+                for (Map<String, Object> pin : data) {
+                    if (pin.get("id") instanceof ArrayList) {
+                        for (int i = 0; i < ((ArrayList) pin.get("id")).size(); i++) {
+                            findMatchingEnum((String) ((ArrayList) pin.get("id")).get(i),
+                                    (String) pin.get("ts_name"),
+                                    (String) ((ArrayList) pin.get("class")).get(i),
+                                    state, listOutputs, listAnalogInputs, listEventInputs, listSwitchInputs);
+                        }
+                    } else {
+                        findMatchingEnum((String) pin.get("id"), (String) pin.get("ts_name"), (String) pin.get("class"), state, listOutputs, listAnalogInputs, listEventInputs, listSwitchInputs);
                     }
-                } else {
-                    findMatchingEnum((String)pin.get("id"), (String)pin.get("ts_name"), (String)pin.get("class"), state, listOutputs, listAnalogInputs, listEventInputs, listSwitchInputs);
                 }
             }
             registerPins(listOutputs, "output_pin_e_enum", registry);
