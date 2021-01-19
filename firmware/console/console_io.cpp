@@ -172,11 +172,11 @@ UARTConfig uartConfig = {
 	.rxend_cb		= NULL,
 	.rxchar_cb		= NULL,
 	.rxerr_cb		= NULL,
+	.timeout_cb		= NULL,
 	.speed			= 0,
 	.cr1			= 0,
 	.cr2			= 0/*USART_CR2_STOP1_BITS*/ | USART_CR2_LINEN,
 	.cr3			= 0,
-	.timeout_cb		= NULL,
 	.rxhalf_cb		= NULL
 };
 

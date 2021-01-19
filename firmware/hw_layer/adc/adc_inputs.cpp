@@ -173,7 +173,7 @@ static ADCConversionGroup adcgrpcfgSlow = {
 
 AdcDevice slowAdc(&adcgrpcfgSlow, slowAdcSampleBuf, ARRAY_SIZE(slowAdcSampleBuf));
 
-void adc_callback_fast(ADCDriver *adcp, adcsample_t *buffer, size_t n);
+void adc_callback_fast(ADCDriver *adcp);
 
 static ADCConversionGroup adcgrpcfgFast = {
 	.circular			= FALSE,

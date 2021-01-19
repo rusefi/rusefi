@@ -4,7 +4,7 @@
 #
 
 CHIBIOS = ChibiOS
-RULESPATH = $(CHIBIOS)/os/common/startup/ARMCMx/compilers/GCC
+RULESPATH = $(CHIBIOS)/os/common/startup/ARMCMx/compilers/GCC/mk
 RULESFILE = $(RULESPATH)/rules.mk
 
 include rusefi_rules.mk
@@ -161,12 +161,12 @@ include $(CPU_STARTUP_DIR)
 # HAL-OSAL files (optional).
 include $(CHIBIOS_CONTRIB)/os/hal/hal.mk
 include $(CPU_PLATFORM_DIR)
-include $(CHIBIOS)/os/hal/osal/rt/osal.mk
+include $(CHIBIOS)/os/hal/osal/rt-nil/osal.mk
 # RTOS files (optional).
 include $(CHIBIOS)/os/rt/rt.mk
 include $(CHIBIOS)/os/common/ports/ARMCMx/compilers/GCC/mk/port_v7m.mk
 # EX files (optional).
-include $(CHIBIOS)/os/ex/ST/lis302dl.mk
+include $(CHIBIOS)/os/ex/devices/ST/lis302dl.mk
 include $(CHIBIOS)/os/hal/lib/streams/streams.mk
 include $(CHIBIOS)/os/various/cpp_wrappers/chcpp.mk
 
@@ -204,6 +204,11 @@ endif
 ifeq ($(LDSCRIPT),)
   LDSCRIPT= config/stm32f4ems/STM32F407xG.ld
 endif
+
+$(info PROJECT_BOARD: $(PROJECT_BOARD))
+$(info PROJECT_CPU:   $(PROJECT_CPU))
+$(info CONFDIR:       $(CONFDIR))
+$(info LDSCRIPT:      $(LDSCRIPT))
 
 # C sources that can be compiled in ARM or THUMB mode depending on the global
 # setting.

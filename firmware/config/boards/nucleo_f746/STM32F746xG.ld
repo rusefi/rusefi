@@ -25,22 +25,22 @@
  */
 MEMORY
 {
-    flash0  : org = 0x08000000, len = 1M        /* Flash as AXIM (writable) */
-    flash1  : org = 0x00200000, len = 1M        /* Flash as ITCM */
-    flash2  : org = 0x00000000, len = 0
-    flash3  : org = 0x00000000, len = 0
-    flash4  : org = 0x00000000, len = 0
-    flash5  : org = 0x00000000, len = 0
-    flash6  : org = 0x00000000, len = 0
-    flash7  : org = 0x00000000, len = 0
-    ram0    : org = 0x20010000, len = 256k      /* SRAM1 + SRAM2 */
+    flash0 (rx) : org = 0x08000000, len = 1M        /* Flash as AXIM (writable) */
+    flash1 (rx) : org = 0x00200000, len = 1M        /* Flash as ITCM */
+    flash2 (rx) : org = 0x00000000, len = 0
+    flash3 (rx) : org = 0x00000000, len = 0
+    flash4 (rx) : org = 0x00000000, len = 0
+    flash5 (rx) : org = 0x00000000, len = 0
+    flash6 (rx) : org = 0x00000000, len = 0
+    flash7 (rx) : org = 0x00000000, len = 0
+    ram0   (wx) : org = 0x20010000, len = 256k      /* SRAM1 + SRAM2 */
 /* let's hide since it overlaps with ram0    ram1    : org = 0x20010000, len = 240k*/      /* SRAM1 */
 /* let's hide since it overlaps with ram0    ram2    : org = 0x2004C000, len = 16k*/       /* SRAM2 */
-    ram3    : org = 0x20000000, len = 64k       /* DTCM-RAM */
-    ram4    : org = 0x00000000, len = 16k       /* ITCM-RAM */
-    ram5    : org = 0x40024000, len = 4k        /* BCKP SRAM */
-    ram6    : org = 0x00000000, len = 0
-    ram7    : org = 0x00000000, len = 0
+    ram3   (wx) : org = 0x20000000, len = 64k       /* DTCM-RAM */
+    ram4   (wx) : org = 0x00000000, len = 16k       /* ITCM-RAM */
+    ram5   (wx) : org = 0x40024000, len = 4k        /* BCKP SRAM */
+    ram6   (wx) : org = 0x00000000, len = 0
+    ram7   (wx) : org = 0x00000000, len = 0
 }
 
 /* For each data/text section two region are defined, a virtual region
@@ -130,3 +130,6 @@ INCLUDE rules_code.ld
 
 /* Data rules inclusion.*/
 INCLUDE rules_data.ld
+
+/* Memory rules inclusion.*/
+INCLUDE rules_memory.ld
