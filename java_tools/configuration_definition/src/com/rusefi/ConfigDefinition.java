@@ -101,7 +101,7 @@ public class ConfigDefinition {
         String signatureDestination = null;
         String signaturePrependFile = null;
         CHeaderConsumer.withC_Defines = true;
-        String[] yamlFiles = null;
+        File[] yamlFiles = null;
 
         // used to update other files
         List<String> inputFiles = new ArrayList<>();
@@ -194,10 +194,10 @@ public class ConfigDefinition {
                     break;
                 case KEY_BOARD_NAME:
                     String boardName = args[i + 1];
-                    String dirPath = "./config/boards/" + boardName;
+                    String dirPath = "./config/boards/" + boardName + "/connectors";
                     File dirName = new File(dirPath);
                     FilenameFilter filter = (f, name) -> name.endsWith(".yaml");
-                    yamlFiles = dirName.list(filter);
+                    yamlFiles = dirName.listFiles(filter);
                     break;
             }
         }
@@ -254,7 +254,7 @@ public class ConfigDefinition {
             readPrependValues(VariableRegistry.INSTANCE, prependFile);
 
         if (yamlFiles != null) {
-           for (String yamlFile : yamlFiles) {
+           for (File yamlFile : yamlFiles) {
                processYaml(VariableRegistry.INSTANCE, yamlFile, state);
            }
         }
@@ -342,7 +342,7 @@ public class ConfigDefinition {
         }
     }
 
-    public static void processYaml(VariableRegistry registry, String yamlInputFile, ReaderState state) throws IOException {
+    public static void processYaml(VariableRegistry registry, File yamlInputFile, ReaderState state) throws IOException {
         Yaml yaml = new Yaml();
         List<String> listOutputs = new ArrayList<>();
         List<String> listAnalogInputs = new ArrayList<>();
