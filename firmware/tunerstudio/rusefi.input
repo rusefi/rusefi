@@ -1073,6 +1073,10 @@ gaugeCategory = Knock
    knock6Gauge = knock6, "Knock Cyl 6", "dBv", -60, 10, -60, -60, 10, 10, 0, 0
    knock7Gauge = knock7, "Knock Cyl 7", "dBv", -60, 10, -60, -60, 10, 10, 0, 0
    knock8Gauge = knock8, "Knock Cyl 8", "dBv", -60, 10, -60, -60, 10, 10, 0, 0
+   knock9Gauge = knock9, "Knock Cyl 9", "dBv", -60, 10, -60, -60, 10, 10, 0, 0
+   knock10Gauge = knock10, "Knock Cyl 10", "dBv", -60, 10, -60, -60, 10, 10, 0, 0
+   knock11Gauge = knock11, "Knock Cyl 11", "dBv", -60, 10, -60, -60, 10, 10, 0, 0
+   knock12Gauge = knock12, "Knock Cyl 12", "dBv", -60, 10, -60, -60, 10, 10, 0, 0
 
 gaugeCategory = DynoView
 	accelGauge = VssAcceleration, "Vehicle acceleration",    "m/s2",       -10,   10,      -6,     -4,      4,    6,   2,   2
