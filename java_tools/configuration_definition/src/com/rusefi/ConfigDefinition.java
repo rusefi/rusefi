@@ -384,7 +384,7 @@ public class ConfigDefinition {
 
     private static void registerPins(Map<Integer, String> listPins, String outputEnumName, String nothingName, VariableRegistry registry) {
         StringBuilder sb = new StringBuilder();
-        int maxValue = getMaxValue(listPins.keySet());
+        int maxValue = listPins.keySet().stream().max(Integer::compare).get();
         for (int i = 0; i < maxValue; i++) {
             if (sb.length() > 0)
                 sb.append(",");
