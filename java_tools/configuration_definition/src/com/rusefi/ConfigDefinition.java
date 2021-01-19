@@ -356,7 +356,7 @@ public class ConfigDefinition {
             SystemOut.println(data);
             Objects.requireNonNull(data, "data");
             for (Map<String, Object> pin : data) {
-                if (pin.get("id").getClass().getName().equals("java.util.ArrayList")) {
+                if (pin.get("id") instanceof ArrayList) {
                     for (int i = 0; i < ((ArrayList)pin.get("id")).size(); i++) {
                         assignPinName((String)((ArrayList)pin.get("id")).get(i),
                                 (String)pin.get("ts_name"),
