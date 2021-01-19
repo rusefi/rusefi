@@ -20,3 +20,19 @@ pins:
     id: GPIOB_7
     class: outputs
     ts_name: AUX J18 PB7
+
+  - pin: AV6
+    id: GPIOC_4
+    ts_name: AUX AV6 reuse
+
+  - pin: AV8
+    id: GPIOB_0
+    ts_name: AUX AV8 reuse
+
+  - pin: AV9
+    id: GPIOB_1
+    ts_name: AUX AV9 reuse
+
+  - pin: AV10
+    id: GPIOA_4
+    ts_name: AUX AV10 reuse
