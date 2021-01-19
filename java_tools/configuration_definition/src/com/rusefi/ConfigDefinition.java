@@ -368,14 +368,14 @@ public class ConfigDefinition {
                     findMatchingEnum((String)pin.get("id"), (String)pin.get("ts_name"), (String)pin.get("class"), state, listOutputs, listAnalogInputs, listEventInputs, listSwitchInputs);
                 }
             }
-            registerPins(listOutputs, "output_pin_e_enum", "GPIO_UNASSIGNED", registry);
-            registerPins(listAnalogInputs, "adc_channel_e_enum", "EFI_ADC_NONE", registry);
-            registerPins(listEventInputs, "brain_input_pin_e_enum", "GPIO_UNASSIGNED", registry);
-            registerPins(listSwitchInputs, "switch_input_pin_e_enum", "GPIO_UNASSIGNED", registry);
+            registerPins(listOutputs, "output_pin_e_enum", registry);
+            registerPins(listAnalogInputs, "adc_channel_e_enum", registry);
+            registerPins(listEventInputs, "brain_input_pin_e_enum", registry);
+            registerPins(listSwitchInputs, "switch_input_pin_e_enum", registry);
         }
     }
 
-    private static void registerPins(Map<Integer, String> listPins, String outputEnumName, String nothingName, VariableRegistry registry) {
+    private static void registerPins(Map<Integer, String> listPins, String outputEnumName, VariableRegistry registry) {
         StringBuilder sb = new StringBuilder();
         int maxValue = listPins.keySet().stream().max(Integer::compare).get();
         for (int i = 0; i < maxValue; i++) {
@@ -384,8 +384,6 @@ public class ConfigDefinition {
 
             if (listPins.get(i) == null) {
                 sb.append("\"INVALID\"");
-            } else if (listPins.get(i).equals(nothingName)) {
-                sb.append("\"NONE\"");
             } else {
                 sb.append("\"" + listPins.get(i) + "\"");
             }
@@ -401,25 +399,27 @@ public class ConfigDefinition {
 
         switch (className) {
             case "outputs":
-                assignPinName("brain_pin_e", ts_name, id, listOutputs, state);
+                assignPinName("brain_pin_e", ts_name, id, listOutputs, state, "GPIO_UNASSIGNED");
                 break;
             case "analog_inputs":
-                assignPinName("adc_channel_e", ts_name, id, listAnalogInputs, state);
+                assignPinName("adc_channel_e", ts_name, id, listAnalogInputs, state, "EFI_ADC_NONE");
                 break;
             case "event_inputs":
-                assignPinName("brain_pin_e", ts_name, id, listEventInputs, state);
+                assignPinName("brain_pin_e", ts_name, id, listEventInputs, state, "GPIO_UNASSIGNED");
                 break;
             case "switch_inputs":
-                assignPinName("brain_pin_e", ts_name, id, listSwitchInputs, state);
+                assignPinName("brain_pin_e", ts_name, id, listSwitchInputs, state, "GPIO_UNASSIGNED");
                 break;
         }
     }
 
-    private static void assignPinName(String enumName, String ts_name, String id, Map<Integer, String> list, ReaderState state) {
+    private static void assignPinName(String enumName, String ts_name, String id, Map<Integer, String> list, ReaderState state, String nothingName) {
         Map<String, Value> enumList = state.enumsReader.getEnums().get(enumName);
         for(Map.Entry<String, Value> kv : enumList.entrySet()){
             if(kv.getKey().equals(id)){
                 list.put(kv.getValue().getIntValue(), ts_name);
+            } else if (kv.getKey().equals(nothingName)) {
+                list.put(kv.getValue().getIntValue(), "NONE");
             }
         }
     }
