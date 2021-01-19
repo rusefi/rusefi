@@ -368,11 +368,11 @@ public class ConfigDefinition {
                     }
                 }
             }
-            registerPins(listOutputs, "output_pin_e_enum", registry);
-            registerPins(listAnalogInputs, "adc_channel_e_enum", registry);
-            registerPins(listEventInputs, "brain_input_pin_e_enum", registry);
-            registerPins(listSwitchInputs, "switch_input_pin_e_enum", registry);
         }
+        registerPins(listOutputs, "output_pin_e_enum", registry);
+        registerPins(listAnalogInputs, "adc_channel_e_enum", registry);
+        registerPins(listEventInputs, "brain_input_pin_e_enum", registry);
+        registerPins(listSwitchInputs, "switch_input_pin_e_enum", registry);
     }
 
     private static void registerPins(Map<Integer, String> listPins, String outputEnumName, VariableRegistry registry) {
