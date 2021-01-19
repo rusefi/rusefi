@@ -14,7 +14,7 @@
 #define EFI_PIN_ADC9 GPIOB_1
 #endif /* EFI_PIN_ADC9 */
 
-#define _2_MHZ 2_000_000
+#define _2_MHZ 2'000'000
 
 #if EFI_PROD_CODE
 #include "mpu_util.h"
