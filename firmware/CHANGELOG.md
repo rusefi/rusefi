@@ -27,6 +27,8 @@ All notable user-facing or behavior-altering changes will be documented in this 
 
 ## XXX 2021 Release
 
+### 2021 Printing Ink Day
+
 ### Breaking Changes
  - Closed loop idle timing behavior changed to no longer fall off control as entering/leaving the idle region. It now sharply engages/disengages upon entering/leaving the idle area.
  - Idle phase logic uses the same idle detection thresholds as the main idle controller instead of its own thresholds.
