@@ -374,14 +374,6 @@ public class ConfigDefinition {
         }
     }
 
-    private static int getMaxValue(Collection<Integer> values) {
-        int result = -1;
-        for (Integer v : values) {
-            result = Math.max(result, v);
-        }
-        return result;
-    }
-
     private static void registerPins(Map<Integer, String> listPins, String outputEnumName, String nothingName, VariableRegistry registry) {
         StringBuilder sb = new StringBuilder();
         int maxValue = listPins.keySet().stream().max(Integer::compare).get();
