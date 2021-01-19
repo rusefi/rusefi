@@ -395,19 +395,19 @@ public class ConfigDefinition {
         Map<String, Map<String, Value>> enumList = state.enumsReader.getEnums();
         for (Map.Entry<String, Map<String, Value>> sectionEnum : enumList.entrySet()) {
             for (Map.Entry<String, Value> kv : sectionEnum.getValue().entrySet()) {
-                if (kv.getKey() == id) {
+                if (kv.getKey().equals(id)) {
                     switch (className) {
                     case "outputs":
-                        listOutputs.set(Integer.parseInt(kv.getValue().getName()), ts_name);
+                        listOutputs.set(Integer.parseInt(kv.getValue().getValue()), ts_name);
                         break;
                     case "analog_inputs":
-                        listAnalogInputs.set(Integer.parseInt(kv.getValue().getName()), ts_name);
+                        listAnalogInputs.set(Integer.parseInt(kv.getValue().getValue()), ts_name);
                         break;
                     case "event_inputs":
-                        listEventInputs.set(Integer.parseInt(kv.getValue().getName()), ts_name);
+                        listEventInputs.set(Integer.parseInt(kv.getValue().getValue()), ts_name);
                         break;
                     case "switch_inputs":
-                        listSwitchInputs.set(Integer.parseInt(kv.getValue().getName()), ts_name);
+                        listSwitchInputs.set(Integer.parseInt(kv.getValue().getValue()), ts_name);
                         break;
                     }
                 }
