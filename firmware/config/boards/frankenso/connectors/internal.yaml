@@ -1,4 +1,4 @@
 pins:
   - id: EFI_ADC_14
-    clas: analog_inputs
+    class: analog_inputs
     ts_name: Analog VBatt
