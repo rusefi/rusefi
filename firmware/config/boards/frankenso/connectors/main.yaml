@@ -146,6 +146,7 @@ pins:
 
   - pin: 51
     id: EFI_ADC_2
+    class: analog_inputs
     ts_name: Analog 3M
     function: Throttle Position Sensor
 
