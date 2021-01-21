@@ -363,7 +363,7 @@ public class ConfigDefinition {
                                     (String) ((ArrayList) pin.get("class")).get(i),
                                     state, listOutputs, listAnalogInputs, listEventInputs, listSwitchInputs);
                         }
-                    } else {
+                    } else if (pin.get("id") instanceof String ) {
                         findMatchingEnum((String) pin.get("id"), (String) pin.get("ts_name"), (String) pin.get("class"), state, listOutputs, listAnalogInputs, listEventInputs, listSwitchInputs);
                     }
                 }
