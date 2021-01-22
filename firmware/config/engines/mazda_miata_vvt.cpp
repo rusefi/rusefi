@@ -821,3 +821,9 @@ void setMiataNB2_ProteusEngineConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE) 
 
 }
 #endif // HW_PROTEUS
+
+#if HW_HELLEN
+void setMiataNB2_Hellen72(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
+	strcpy(CONFIG(vehicleName), "H72 test");
+}
+#endif // HW_HELLEN
