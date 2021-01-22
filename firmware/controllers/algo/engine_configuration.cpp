@@ -1230,6 +1230,7 @@ void resetConfigurationExt(Logging * logger, configuration_callback_t boardCallb
 #endif // HW_PROTEUS
 #if HW_HELLEN
 	case HELLEN_NB2:
+		setMiataNB2_Hellen72(PASS_CONFIG_PARAMETER_SIGNATURE);
 		break;
 #endif // HW_HELLEN
 #if HW_FRANKENSO
