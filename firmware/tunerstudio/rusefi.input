@@ -377,6 +377,10 @@ enable2ndByteCanID = false
 	knock6 = scalar, S08, 255, "dbv", 1, 0
 	knock7 = scalar, S08, 256, "dbv", 1, 0
 	knock8 = scalar, S08, 257, "dbv", 1, 0
+    knock9 = scalar, S08, 258, "dbv", 1, 0
+    knock10 = scalar,S08, 259, "dbv", 1, 0
+    knock11 = scalar,S08, 260, "dbv", 1, 0
+    knock12 = scalar,S08, 261, "dbv", 1, 0
 
 	flexPercent = scalar, U08, 263, "%", 0.5, 0
 
