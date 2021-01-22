@@ -74,6 +74,18 @@ const char *portname(ioportid_t GPIOx) {
 	if (GPIOx == GPIOH)
 		return "PH";
 #endif /* STM32_HAS_GPIOH */
+#if STM32_HAS_GPIOI
+	if (GPIOx == GPIOI)
+		return "PI";
+#endif /* STM32_HAS_GPIOI */
+#if STM32_HAS_GPIOJ
+	if (GPIOx == GPIOJ)
+		return "PJ";
+#endif /* STM32_HAS_GPIOJ */
+#if STM32_HAS_GPIOK
+	if (GPIOx == GPIOK)
+		return "PK";
+#endif /* STM32_HAS_GPIOK */
 	return "unknown";
 }
 
