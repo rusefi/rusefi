@@ -32,6 +32,8 @@
 #include "sensor.h"
 
 #include "hip9011_lookup.h"
+#include "hip9011_logic.h"
+
 #if EFI_MEMS
 #include "accelerometer.h"
 #endif
@@ -968,6 +970,7 @@ static void setDefaultEngineConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	engineConfiguration->HD44780height = 4;
 
 	engineConfiguration->cylinderBore = 87.5;
+	engineConfiguration->knockBandCustom = BAND(engineConfiguration->cylinderBore);
 
 	setEgoSensor(ES_14Point7_Free PASS_CONFIG_PARAMETER_SUFFIX);
 

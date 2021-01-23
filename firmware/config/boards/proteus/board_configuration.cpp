@@ -202,6 +202,8 @@ void setBoardConfigurationOverrides(void) {
 	engineConfiguration->specs.cylindersCount = 8;
 	engineConfiguration->specs.firingOrder = FO_1_8_7_2_6_5_4_3;
 
+	CONFIG(enableSoftwareKnock) = true;
+
 	engineConfiguration->ignitionMode = IM_INDIVIDUAL_COILS;
 	engineConfiguration->crankingInjectionMode = IM_SIMULTANEOUS;
 	engineConfiguration->injectionMode = IM_SIMULTANEOUS;
