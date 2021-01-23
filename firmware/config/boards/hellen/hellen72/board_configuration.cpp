@@ -141,6 +141,8 @@ void setBoardConfigurationOverrides(void) {
 	setupVbatt();
 	setSdCardConfigurationOverrides();
 
+	CONFIG(enableSoftwareKnock) = true;
+
 	engineConfiguration->canTxPin = GPIOD_1;
 	engineConfiguration->canRxPin = GPIOD_0;
 
