@@ -25,16 +25,17 @@ void setVwPassatB6(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	engineConfiguration->vvtMode = VVT_BOSCH_QUICK_START;
 	engineConfiguration->map.sensor.type = MT_BOSCH_2_5;
 
-	/*
-	todo:
-	1214 cc/min
-"High"
-"Sensed Rail Pressure"
-10000 kPa
-
-
-	*/
-
+	// seting Injectors flow rate equal 1214 cc/min
+	engineConfiguration->injector.flow = 1214;
+	// seting pressure to high
+	engineConfiguration->injectorPressureType = IPT_High;
+	// setting to Sensed Rail Pressure mode
+	engineConfiguration->injectorCompensationMode = ICM_SensedRailPressure;
+	// setting Fuel rail pressure to 10 000 kPa
+	engineConfiguration->fuelRailPressure = 10000;
+	//setting "flat" 0.2 ms injector's lag time
+	setArrayValues(engineConfiguration->injector.battLagCorr, 0.2);
+	
 	strcpy(CONFIG(engineMake), ENGINE_MAKE_VAG);
 	strcpy(CONFIG(engineCode), "BPY");
 
@@ -117,7 +118,7 @@ void setVwPassatB6(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	setTable(coolantControl->table, (uint8_t)value);
 	// for now I just want to stop radiator whine
 	// todo: enable cooling!
-/*
+	/*
     for (int load = 0; load < GPPWM_LOAD_COUNT; load++) {
 		for (int r = 0; r < GPPWM_RPM_COUNT; r++) {
 			engineConfiguration->gppwm[0].table[load][r] = value;
@@ -137,7 +138,7 @@ void setVwPassatB6(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	engineConfiguration->tpsMax = 70; // convert 12to10 bit (ADC/4)
 
 	engineConfiguration->etb.pFactor = 5.12;
-	engineConfiguration->etb.iFactor =	47;
+	engineConfiguration->etb.iFactor = 47;
 	engineConfiguration->etb.dFactor = 0.088;
 	engineConfiguration->etb.offset = 0;
 
