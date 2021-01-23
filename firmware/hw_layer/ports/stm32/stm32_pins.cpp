@@ -44,6 +44,21 @@ static ioportid_t ports[] = {GPIOA,
 #else
 		nullptr,
 #endif /* STM32_HAS_GPIOH */
+#if STM32_HAS_GPIOI
+		GPIOI,
+#else
+		nullptr,
+#endif /* STM32_HAS_GPIOI */
+#if STM32_HAS_GPIOJ
+		GPIOJ,
+#else
+		nullptr,
+#endif /* STM32_HAS_GPIOJ */
+#if STM32_HAS_GPIOK
+		GPIOK,
+#else
+		nullptr,
+#endif /* STM32_HAS_GPIOK */
 };
 
 /**
