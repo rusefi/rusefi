@@ -11,6 +11,7 @@ DDEFS += -DSTM32F407xx
 
 # We are running on Frankenso hardware!
 DDEFS += -DHW_FRANKENSO=1
+DDEFS += -DHAL_VSS_USE_PAL=TRUE
 
 # Shared variables
 ALLCSRC   += $(BOARDSRC)
