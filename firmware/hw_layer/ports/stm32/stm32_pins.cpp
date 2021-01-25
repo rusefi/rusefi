@@ -130,6 +130,18 @@ static int getPortIndex(ioportid_t port) {
 	if (port == GPIOH)
 		return 7;
 #endif /* STM32_HAS_GPIOH */
+#if STM32_HAS_GPIOI
+	if (port == GPIOI)
+		return 8;
+#endif /* STM32_HAS_GPIOI */
+#if STM32_HAS_GPIOJ
+	if (port == GPIOJ)
+		return 9;
+#endif /* STM32_HAS_GPIOJ */
+#if STM32_HAS_GPIOK
+	if (port == GPIOK)
+		return 10;
+#endif /* STM32_HAS_GPIOK */
 	firmwareError(CUSTOM_ERR_UNKNOWN_PORT, "unknown port");
 	return -1;
 }
