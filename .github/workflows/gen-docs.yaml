@@ -16,7 +16,7 @@ jobs:
 
     - name: Install ncftp, kicad, xvfb, and doxygen
       run: |
-        sudo add-apt-repository ppa:js-reynaud/kicad-5.1
+        sudo add-apt-repository ppa:kicad/kicad-5.1-releases
         sudo apt-get update
         sudo apt-get install ncftp kicad doxygen xvfb
 
