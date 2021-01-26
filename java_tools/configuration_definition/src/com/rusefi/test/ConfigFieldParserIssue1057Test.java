@@ -18,7 +18,7 @@ public class ConfigFieldParserIssue1057Test {
         JavaFieldsConsumer javaFieldsConsumer = new TestJavaFieldsConsumer(state);
 
         String inputString = "struct pid_s\nbit activateAuxPid1;\n" +
-                "int fieldName;\n" +
+                "int32_t fieldName;\n" +
                 "end_struct\n";
         BufferedReader reader = new BufferedReader(new StringReader(inputString));
 

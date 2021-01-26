@@ -13,7 +13,7 @@ public class TypesHelper {
     public static final String UINT_16_T = "uint16_t";
     public static final String INT_16_T = "int16_t";
     private static final String FLOAT_T = "float";
-    private static final String INT_32_T = "int";
+    private static final String INT_32_T = "int32_t";
     private static final String UINT_32_T = "uint32_t";
 
     public static int getElementSize(ReaderState state, String type) {
