@@ -1,7 +1,7 @@
 #!/bin/bash
 
 INTERACTIVE_HTML_BOM_NO_DISPLAY="true"
-IBOM_CMD="python3 hardware/InteractiveHtmlBom/InteractiveHtmlBom/generate_interactive_bom.py --no-browser --name-format \"%f_latest\" --dest-dir ../ibom"
+IBOM_CMD="python3 hardware/InteractiveHtmlBom/InteractiveHtmlBom/generate_interactive_bom.py --no-browser --name-format \"%f_latest\" --dest-dir ../ibom --include-nets"
 echo "IBOM_CMD=$IBOM_CMD"
 
 pwd
@@ -9,8 +9,8 @@ pwd
 
 for f in $(ls hardware/*/*.kicad_pcb); do
   if ls $(dirname $f)/$(basename $f .kicad_pcb).net 2>/dev/null; then
-    $IBOM_CMD --include-nets --include-tracks --netlist-file $(ls $(dirname $f)/$(basename $f .kicad_pcb).net) $f
+    $IBOM_CMD --netlist-file $(ls $(dirname $f)/$(basename $f .kicad_pcb).net) $f
   else
-    $IBOM_CMD --include-nets --include-tracks $f
+    $IBOM_CMD $f
   fi
 done
