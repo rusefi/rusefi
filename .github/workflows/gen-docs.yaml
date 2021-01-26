@@ -18,7 +18,7 @@ jobs:
       run: |
         sudo add-apt-repository ppa:kicad/kicad-5.1-releases
         sudo apt-get update
-        sudo apt-get install ncftp kicad doxygen
+        sudo apt-get install ncftp kicad doxygen xvfb
 
     - name: Set FTP variables
       env:
