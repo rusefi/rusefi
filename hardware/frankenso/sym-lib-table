@@ -4,4 +4,5 @@
   (lib (name rusEFI_ITEAD)(type Legacy)(uri ${KIPRJMOD}/../rusefi_lib/itead_hc-0X_bluetooth.lib)(options "")(descr ""))
   (lib (name rusEFI_Older)(type Legacy)(uri ${KIPRJMOD}/../rusefi_lib/KICAD_Older_Version.lib)(options "")(descr ""))
   (lib (name rusEFI_Polo)(type Legacy)(uri ${KIPRJMOD}/../rusefi_lib/Pololu_DRV8880.lib)(options "")(descr ""))
+  (lib (name frankenso-rescue)(type Legacy)(uri ${KIPRJMOD}/frankenso-rescue.lib)(options "")(descr ""))
 )

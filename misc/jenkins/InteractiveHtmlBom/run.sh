@@ -9,8 +9,8 @@ pwd
 
 for f in $(ls hardware/*/*.kicad_pcb); do
   if ls $(dirname $f)/$(basename $f .kicad_pcb).net 2>/dev/null; then
-    $IBOM_CMD --netlist-file $(ls $(dirname $f)/$(basename $f .kicad_pcb).net) $f
+    $IBOM_CMD --include-nets --include-tracks --netlist-file $(ls $(dirname $f)/$(basename $f .kicad_pcb).net) $f
   else
-    $IBOM_CMD $f
+    $IBOM_CMD --include-nets --include-tracks $f
   fi
 done
