@@ -14,11 +14,11 @@ jobs:
         submodules: recursive
         fetch-depth: 0
 
-    - name: Install ncftp, kicad, xvfb, and doxygen
+    - name: Install ncftp, kicad, and doxygen
       run: |
         sudo add-apt-repository ppa:kicad/kicad-5.1-releases
         sudo apt-get update
-        sudo apt-get install ncftp kicad doxygen xvfb
+        sudo apt-get install ncftp kicad doxygen
 
     - name: Set FTP variables
       env:
@@ -32,4 +32,4 @@ jobs:
         fi
 
     - name: Generate documentation
-      run: xvfb-run bash ./misc/jenkins/generate_doxygen/gen_upload_docs.sh
+      run: bash ./misc/jenkins/generate_doxygen/gen_upload_docs.sh
