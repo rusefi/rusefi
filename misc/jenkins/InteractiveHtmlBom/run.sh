@@ -8,7 +8,7 @@ pwd
 [ -e hardware/frankenso/frankenso.kicad_pcb ] || { echo "hardware/frankenso/frankenso.kicad_pcb not found. Was this invoked from wrong folder?"; exit -1; }
 
 for f in $(ls hardware/*/*.kicad_pcb); do
-  if ls $(dirname $f)/$(basename $f .kicad_pcb).net; then
+  if ls $(dirname $f)/$(basename $f .kicad_pcb).net 2>/dev/null; then
     $IBOM_CMD --netlist-file $(ls $(dirname $f)/$(basename $f .kicad_pcb).net) $f
   else
     $IBOM_CMD $f
