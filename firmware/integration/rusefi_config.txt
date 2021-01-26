@@ -210,8 +210,8 @@ struct_no_prefix engine_configuration_s
 #define AFTERSTART_DECAY_CURVE_SIZE 8
 #define AFTERSTART_ENRICH_CURVE_SIZE 8
 
-custom angle_t 4 scalar, F32, @OFFSET@ ()
-custom efitimesec16_t 2 scalar, S16, @OFFSET@ ()
+custom angle_t 4 scalar, F32, @OFFSET@
+custom efitimesec16_t 2 scalar, S16, @OFFSET@
 
 custom fuel_table_t	4*@@FUEL_RPM_COUNT@@x@@FUEL_LOAD_COUNT@@ array,   F32,   @OFFSET@, [@@FUEL_RPM_COUNT@@x@@FUEL_LOAD_COUNT@@],"ms",      1,     0,      0.0,   500.0,   2
 custom ve_table_t 4*@@FUEL_RPM_COUNT@@x@@FUEL_LOAD_COUNT@@ array,   F32,   @OFFSET@, [@@FUEL_RPM_COUNT@@x@@FUEL_LOAD_COUNT@@],"%", 1, 0, 0, 999.0, 2
