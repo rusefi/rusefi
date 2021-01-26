@@ -58,9 +58,9 @@ public class ConfigFieldParserTest {
         // we expect padding before each 4 byte field
         String test = "struct pid_s\n" +
                 "\tint16_t periodMs1;PID dTime;\"ms\",      1,      0,       0, 3000,      0\n" +
-                "\tint periodSec;PID dTime;\"ms\",      1,      0,       0, 3000,      0\n" +
+                "\tint32_t periodSec;PID dTime;\"ms\",      1,      0,       0, 3000,      0\n" +
                 "\tint16_t periodMs2;PID dTime;\"ms\",      1,      0,       0, 3000,      0\n" +
-                "\tint periodSec2;PID dTime;\"ms\",      1,      0,       0, 3000,      0\n" +
+                "\tint32_t periodSec2;PID dTime;\"ms\",      1,      0,       0, 3000,      0\n" +
                 "end_struct\n";
         ReaderState state = new ReaderState();
         BufferedReader reader = new BufferedReader(new StringReader(test));
@@ -186,8 +186,8 @@ public class ConfigFieldParserTest {
     public void testFsioVisible() throws IOException {
         {
             ReaderState state = new ReaderState();
-            ConfigField cf = ConfigField.parse(state, "int fsio_visible field");
-            assertEquals(cf.getType(), "int");
+            ConfigField cf = ConfigField.parse(state, "int32_t fsio_visible field");
+            assertEquals(cf.getType(), "int32_t");
             assertTrue(cf.isFsioVisible());
             assertEquals("Name", cf.getName(), "field");
         }
