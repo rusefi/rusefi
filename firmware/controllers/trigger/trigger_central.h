@@ -54,10 +54,13 @@ public:
 	trigger_type_e vvtTriggerType;
 	angle_t getVVTPosition();
 
+#if EFI_UNIT_TEST
 	// latest VVT event position (could be not synchronization event)
 	angle_t currentVVTEventPosition = 0;
+#endif // EFI_UNIT_TEST
+
 	// synchronization event position
-	angle_t vvtPosition = 0;
+	angle_t vvtPosition[BANKS_COUNT];
 
 	/**
 	 * this is similar to TriggerState#startOfCycleNt but with the crank-only sensor magic

@@ -47,7 +47,9 @@ WaveChart waveChart;
 trigger_central_s::trigger_central_s() : hwEventCounters() {
 }
 
-TriggerCentral::TriggerCentral() : trigger_central_s(), vvtSyncTimeNt() {
+TriggerCentral::TriggerCentral() : trigger_central_s(),
+		vvtPosition(),
+		vvtSyncTimeNt() {
 	triggerState.resetTriggerState();
 	noiseFilter.resetAccumSignalData();
 }
@@ -76,7 +78,7 @@ EXTERN_ENGINE;
 static Logging *logger;
 
 angle_t TriggerCentral::getVVTPosition() {
-	return vvtPosition;
+	return vvtPosition[0];
 }
 
 #define miataNbIndex (0)
@@ -176,7 +178,10 @@ void hwHandleVvtCamSignal(trigger_value_e front, efitick_t nowNt DECLARE_ENGINE_
 	currentPosition -= tdcPosition();
 	// https://github.com/rusefi/rusefi/issues/1713 currentPosition could be negative that's expected
 
+#if EFI_UNIT_TEST
 	tc->currentVVTEventPosition = currentPosition;
+#endif // EFI_UNIT_TEST
+
 	if (engineConfiguration->debugMode == DBG_VVT) {
 #if EFI_TUNER_STUDIO
 		tsOutputChannels.debugFloatField1 = currentPosition;
@@ -214,8 +219,8 @@ void hwHandleVvtCamSignal(trigger_value_e front, efitick_t nowNt DECLARE_ENGINE_
 
     // we do NOT clamp VVT position into the [0, engineCycle) range - we expect vvtOffset to be configured so that
     // it's not necessary
-	tc->vvtPosition = engineConfiguration->vvtOffset - currentPosition;
-	if (tc->vvtPosition < 0 || tc->vvtPosition > ENGINE(engineCycle)) {
+	tc->vvtPosition[bankIndex] = engineConfiguration->vvtOffset - currentPosition;
+	if (tc->vvtPosition[bankIndex] < 0 || tc->vvtPosition[bankIndex] > ENGINE(engineCycle)) {
 		warning(CUSTOM_ERR_VVT_OUT_OF_RANGE, "Please adjust vvtOffset since position %f", tc->vvtPosition);
 	}
 
