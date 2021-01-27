@@ -49,7 +49,7 @@ public class ConfigFieldParserTest {
         CharArrayWriter writer = new CharArrayWriter();
         TestTSProjectConsumer javaFieldsConsumer = new TestTSProjectConsumer(writer, "", state);
         state.readBufferedReader(reader, Arrays.asList(javaFieldsConsumer));
-        assertEquals("\tafr_type\t\t\t\t\t = bits, S32, 0, [0:1], \"BPSX\", \"Innovate\", \"14Point7\", \"INVALID\"\n" +
+        assertEquals("afr_type = bits, S32, 0, [0:1], \"BPSX\", \"Innovate\", \"14Point7\", \"INVALID\"\n" +
                 "; total TS size = 4\n", new String(writer.toCharArray()));
     }
 
@@ -119,9 +119,9 @@ public class ConfigFieldParserTest {
 
         state.readBufferedReader(reader, Collections.singletonList(javaFieldsConsumer));
 
-        assertEquals("\tperiodMs\t\t\t\t\t\t= scalar, S16,\t0,\t\"ms\", 0.1, 0, 0, 3000, 0\n" +
-                "\tperiodMs2\t\t\t\t\t\t= scalar, S16,\t2,\t\"ms\", 1.0, 0, 0, 3000, 0\n" +
-                "\tafrTable\t\t\t\t\t = array, U08, 4, [4x4],\"deg\", 0.1, 0, 0, 25.0, 1\n" +
+        assertEquals("periodMs = scalar, S16, 0, \"ms\", 0.1, 0, 0, 3000, 0\n" +
+                "periodMs2 = scalar, S16, 2, \"ms\", 1.0, 0, 0, 3000, 0\n" +
+                "afrTable = array, U08, 4, [4x4],\"deg\", 0.1, 0, 0, 25.0, 1\n" +
                 "; total TS size = 20\n", new String(writer.toCharArray()));
     }
 
