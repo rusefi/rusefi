@@ -47,7 +47,7 @@ WaveChart waveChart;
 trigger_central_s::trigger_central_s() : hwEventCounters() {
 }
 
-TriggerCentral::TriggerCentral() : trigger_central_s() {
+TriggerCentral::TriggerCentral() : trigger_central_s(), vvtSyncTimeNt() {
 	triggerState.resetTriggerState();
 	noiseFilter.resetAccumSignalData();
 }
@@ -210,7 +210,7 @@ void hwHandleVvtCamSignal(trigger_value_e front, efitick_t nowNt DECLARE_ENGINE_
 		break;
 	}
 
-	tc->vvtSyncTimeNt = nowNt;
+	tc->vvtSyncTimeNt[bankIndex] = nowNt;
 
     // we do NOT clamp VVT position into the [0, engineCycle) range - we expect vvtOffset to be configured so that
     // it's not necessary

@@ -225,10 +225,11 @@ static void doPeriodicSlowCallback(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 
 
 	efitick_t nowNt = getTimeNowNt();
-
-	if (nowNt - engine->triggerCentral.vvtSyncTimeNt >= NT_PER_SECOND) {
-		// loss of VVT sync
-		engine->triggerCentral.vvtSyncTimeNt = 0;
+	for (int bankIndex = 0; bankIndex < BANKS_COUNT; bankIndex++) {
+		if (nowNt - engine->triggerCentral.vvtSyncTimeNt[bankIndex] >= NT_PER_SECOND) {
+			// loss of VVT sync
+			engine->triggerCentral.vvtSyncTimeNt[bankIndex] = 0;
+		}
 	}
 
 	// for performance reasons this assertion related to mainTriggerCallback should better be here

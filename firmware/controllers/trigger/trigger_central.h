@@ -64,7 +64,7 @@ public:
 	 */
 	efitick_t timeAtVirtualZeroNt = 0;
 
-	efitick_t vvtSyncTimeNt = 0;
+	efitick_t vvtSyncTimeNt[BANKS_COUNT];
 
 	TriggerStateWithRunningStatistics triggerState;
 	TriggerWaveform triggerShape;
