@@ -54,7 +54,9 @@ TriggerCentral::TriggerCentral() : trigger_central_s() {
 
 void TriggerCentral::init(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	INJECT_ENGINE_REFERENCE(&triggerState);
-	INJECT_ENGINE_REFERENCE(&vvtState);
+	for (int bankIndex = 0; bankIndex < BANKS_COUNT; bankIndex++) {
+		INJECT_ENGINE_REFERENCE(&vvtState[bankIndex]);
+	}
 }
 
 void TriggerNoiseFilter::resetAccumSignalData() {
@@ -87,6 +89,7 @@ static bool vvtWithRealDecoder(vvt_mode_e vvtMode) {
 }
 
 void hwHandleVvtCamSignal(trigger_value_e front, efitick_t nowNt DECLARE_ENGINE_PARAMETER_SUFFIX) {
+	int bankIndex = 0;
 	TriggerCentral *tc = &engine->triggerCentral;
 	if (front == TV_RISE) {
 		tc->vvtEventRiseCounter++;
@@ -157,7 +160,7 @@ void hwHandleVvtCamSignal(trigger_value_e front, efitick_t nowNt DECLARE_ENGINE_
 		return;
 	}
 
-	ENGINE(triggerCentral).vvtState.decodeTriggerEvent(
+	ENGINE(triggerCentral).vvtState[bankIndex].decodeTriggerEvent(
 			ENGINE(triggerCentral).vvtShape,
 			nullptr,
 			nullptr,
@@ -192,7 +195,7 @@ void hwHandleVvtCamSignal(trigger_value_e front, efitick_t nowNt DECLARE_ENGINE_
 	case MIATA_NB2:
 	case VVT_BOSCH_QUICK_START:
 	 {
-		if (engine->triggerCentral.vvtState.currentCycle.current_index != 0) {
+		if (engine->triggerCentral.vvtState[bankIndex].currentCycle.current_index != 0) {
 			// this is not NB2 sync tooth - exiting
 			return;
 		}
