@@ -69,7 +69,7 @@ public:
 	TriggerStateWithRunningStatistics triggerState;
 	TriggerWaveform triggerShape;
 
-	TriggerState vvtState;
+	TriggerState vvtState[BANKS_COUNT];
 	TriggerWaveform vvtShape;
 
 	TriggerFormDetails triggerFormDetails;
