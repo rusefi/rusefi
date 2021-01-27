@@ -179,7 +179,7 @@ enable2ndByteCanID = false
 ; Bit flags
 	  hasSdCard       = bits,    U32,      0,    [0:0], "true", "false";
 	  isIgnitionEnabledIndicator=bits,U32, 0,    [1:1], "true", "false";
-	  ind_injection_enabled=bits,U32,      0,    [2:2], "true", "false";
+	  isInjectionEnabledIndicator=bits,U32,      0,    [2:2], "true", "false";
 	  isCylinderCleanupEnabled=bits,U32,   0,    [3:3], "true", "false";
 	  isCylinderCleanupActivated=bits,U32, 0,    [4:4], "true", "false";
 	  ind_fuel_pump   = bits,    U32,      0,    [5:5], "true", "false";
@@ -1142,7 +1142,7 @@ gaugeCategory = DynoView
     indicator = { ind_isWarnNow }, "",   "WARNING",   white, black, yellow,   black
     indicator = { ind_check_engine }, "",      "Check Engine",       white,  black,  red, black
     indicator = { isIgnitionEnabledIndicator}, "no ignition",   "ignition",   yellow, black, white,   black
-    indicator = { ind_injection_enabled}, "no injection",   "injection",   yellow, black, white,   black
+    indicator = { isInjectionEnabledIndicator}, "no injection",   "injection",   yellow, black, white,   black
     indicator = { ind_isTriggerError}, "trigger ok",      "trigger err",       white,  black,  red, black
 
    indicator = { sd_status & 1}, "No SD", "SD in",             white, black, green, black
