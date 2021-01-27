@@ -79,6 +79,9 @@ struct_no_prefix engine_configuration_s
 
 #define FSIO_ANALOG_INPUT_COUNT 4
 
+! V engines or flat engines would have pairs of shafts with same trigger shape and target position
+#define BANKS_COUNT 2
+
 #define CAM_INPUTS_COUNT 4
 
 #define SERVO_COUNT 8
