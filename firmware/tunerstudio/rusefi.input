@@ -1751,20 +1751,18 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 		panel = ignitionOutputs
 
 	dialog = baseEngineConfig, "Engine Configuration"
-;		field = "Engine Preset",						engineType
-; this field is useful for rusEFI online catalog
+;		field = "Engine preset",						engineType
+		field = "Number of cylinders",					cylindersCount
+		field = "Displacement",         			displacement
+		field = "Firing order",							firingOrder
+		field = "Vehicle weight",						vehicleWeight
+
+	dialog = engineMetadata, "Engine Metadata"
+		field = "#These metadata are used by rusEFI Online"
 		field = "Engine Make",							engineMake
-; this field is useful for rusEFI online catalog
 		field = "Manufacturer Engine Code",				engineCode
-; this field is useful for rusEFI online catalog
 		field = "Vehicle Name",							vehicleName
-		field = "Number of Cylinders",					cylindersCount
-		field = "Engine Displacement",         			displacement
-		field = "Firing Order",							firingOrder
-		field = "Vehicle Weight",						vehicleWeight
-; this field is useful for rusEFI online catalog
 		field = "Compression Ratio",					compressionRatio
-; this field is useful for rusEFI online catalog
 		field = "Forced Induction?",					isForcedInduction
 
 ;			Engine->Trigger configuration
@@ -2938,8 +2936,6 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 	dialog = debugging, "Debug"
 		field = "!https://rusefi.com/s/debugmode"
 		field = "Debug mode",							debugMode
-		field = "Warning Text",						warning_message
-		field = "showHumanReadableWarning (affects Burn)",	showHumanReadableWarning
 
 	dialog = limits, "Limits"
 		field = "RPM hard limit",         	    		rpmHardLimit
@@ -2958,6 +2954,7 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 	dialog = engineChars, "Base Engine Settings"
 		topicHelp = "baseHelp"
 		panel = baseEngineConfig
+		panel = engineMetadata
 		panel = generalSettings
 		panel = debugging
 
@@ -3433,6 +3430,7 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 		field = "Global fuel correction", 				globalFuelCorrection
 		field = "Ignition Math Logic @",				ignMathCalculateAtIndex
 		field = "MAP Averaging Logic @",				mapAveragingSchedulingAtIndex
+		field = "showHumanReadableWarning (affects Burn)",	showHumanReadableWarning
 
 
        help = helpGeneral, "rusEFI General Help"
