@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Wed Jan 27 02:58:23 UTC 2021
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Thu Jan 28 01:32:39 UTC 2021
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -1022,9 +1022,10 @@ struct engine_configuration_s {
 	 */
 	spi_device_e hip9011SpiDevice;
 	/**
+	 * This value is only used for speed density fueling calculations.
 	 * offset 541
 	 */
-	uint8_t unused541;
+	uint8_t failedMapFallback;
 	/**
 	 * offset 542
 	 */
@@ -2807,7 +2808,7 @@ struct engine_configuration_s {
 	pin_output_mode_e hpfpValvePinMode;
 	/**
 	 * MAP value above which fuel is cut in case of overboost.
-	 * 0 to disable overboost cut.
+	 * Set to 0 to disable overboost cut.
 	 * offset 2132
 	 */
 	float boostCutPressure;
@@ -3788,4 +3789,4 @@ struct persistent_config_s {
 typedef struct persistent_config_s persistent_config_s;
 
 // end
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Wed Jan 27 02:58:23 UTC 2021
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Thu Jan 28 01:32:39 UTC 2021

@@ -487,6 +487,7 @@
 #define etbWastegatePid_pFactor_offset 2516
 #define externalKnockSenseAdc_offset 3103
 #define extraInjectionOffset_offset 432
+#define failedMapFallback_offset 541
 #define fanOffTemperature_offset 472
 #define fanOnTemperature_offset 468
 #define fanPin_offset 663
@@ -1247,8 +1248,8 @@
 #define showHumanReadableWarning_offset 976
 #define showSdCardWarning_offset 76
 #define SIGNATURE_BOARD all
-#define SIGNATURE_DATE 2021.01.27
-#define SIGNATURE_HASH 3473425706
+#define SIGNATURE_DATE 2021.01.28
+#define SIGNATURE_HASH 2596245904
 #define silentTriggerError_offset 1464
 #define slowAdcAlpha_offset 2088
 #define sparkDwellRpmBins_offset 332
@@ -1581,7 +1582,7 @@
 #define ts_show_spi true
 #define ts_show_trigger_comparator false
 #define ts_show_tunerstudio_port true
-#define TS_SIGNATURE "rusEFI 2021.01.27.all.3473425706"
+#define TS_SIGNATURE "rusEFI 2021.01.28.all.2596245904"
 #define TS_SINGLE_WRITE_COMMAND 'W'
 #define TS_SINGLE_WRITE_COMMAND_char W
 #define TS_TEST_COMMAND 't' // 0x74
@@ -1652,7 +1653,6 @@
 #define unused3942_offset 3992
 #define unused3988_offset 3988
 #define unused4028_offset 4028
-#define unused541_offset 541
 #define unused542_offset 542
 #define unused6312_offset 6312
 #define unused744b25_offset 744
