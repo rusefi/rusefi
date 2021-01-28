@@ -848,7 +848,7 @@ static void setDefaultEngineConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	engineConfiguration->cranking.rpm = 550;
 	engineConfiguration->cutFuelOnHardLimit = true;
 	engineConfiguration->cutSparkOnHardLimit = true;
-
+	engineConfiguration->failedMapFallback = 60;
 
 	engineConfiguration->tChargeMinRpmMinTps = 0.25;
 	engineConfiguration->tChargeMinRpmMaxTps = 0.25;
