@@ -859,6 +859,10 @@ enable2ndByteCanID = false
       gridOrient  = 250,   0, 340 ; Space 123 rotation of grid in degrees.
       upDownLabel = "(RICHER)", "(LEANER)"
 
+	table = mapEstimateTableTbl, mapEstimateTableMap, "MAP Estimate", 1
+		xBins = mapEstimateRpmBins, RPMValue
+		yBins = mapEstimateTpsBins, TPSValue
+		zBins = mapEstimateTable
 
    table = injPhaseTableTbl,  injPhaseTableMap,  "Injection Phase",   1
 		topicHelp = "fuelHelp"
@@ -1360,6 +1364,7 @@ menuDialog = main
 		subMenu = veTableDialog,			"VE", 0, {isInjectionEnabled == 1}
 		subMenu = tChargeSettings,			"Charge temperature estimation", 0, {isInjectionEnabled == 1}
 		subMenu = baroCorrTbl,				"Barometric pressure correction", 0, {isInjectionEnabled == 1 && fuelAlgorithm == LM_SPEED_DENSITY}
+		subMenu = mapEstimateTableTbl,		"MAP estimate table", 0, { enableMapEstimationTableFallback }
 		subMenu = std_separator
 
 		# Fuel model
@@ -2944,7 +2949,8 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 		field = "Boost cut pressure",					boostCutPressure
 	
 	dialog = fallbacks, "Fallbacks"
-		field = "Failed MAP sensor fallback",			failedMapFallback
+		field = "Use MAP estimation table as fallback",	enableMapEstimationTableFallback
+		field = "Failed MAP sensor fallback",			failedMapFallback, { !enableMapEstimationTableFallback }
 
 	dialog = limitsAndFallback, "Limits and fallbacks"
 		panel = limits
