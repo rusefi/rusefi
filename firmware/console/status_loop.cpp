@@ -681,8 +681,8 @@ void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels DECLARE_
 	tsOutputChannels->isFuelPumpOn = enginePins.fuelPumpRelay.getLogicValue();
 	tsOutputChannels->isFanOn = enginePins.fanRelay.getLogicValue();
 	tsOutputChannels->isO2HeaterOn = enginePins.o2heater.getLogicValue();
-	tsOutputChannels->isIgnitionEnabledIndicator = engineConfiguration->isIgnitionEnabled && ENGINE(limpManager).allowIgnition();
-	tsOutputChannels->isInjectionEnabledIndicator = engineConfiguration->isInjectionEnabled && ENGINE(limpManager).allowInjection();
+	tsOutputChannels->isIgnitionEnabledIndicator = ENGINE(limpManager).allowIgnition();
+	tsOutputChannels->isInjectionEnabledIndicator = ENGINE(limpManager).allowInjection();
 	tsOutputChannels->isCylinderCleanupEnabled = engineConfiguration->isCylinderCleanupEnabled;
 	tsOutputChannels->isCylinderCleanupActivated = engine->isCylinderCleanupMode;
 
