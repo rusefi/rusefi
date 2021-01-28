@@ -1180,7 +1180,6 @@ gaugeCategory = DynoView
 
     indicator = { knockEverIndicator }, "",   "Knock recently",   white, black, red,   black
     indicator = { knockNowIndicator }, "no knock",   "Knock NOW",   white, black, red,   black
-   
 
 [KeyActions]
 	showPanel = spi,  spiFunction
