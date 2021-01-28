@@ -1334,6 +1334,7 @@ menuDialog = main
 
 	menu = "&Base &Engine"
 		subMenu = engineChars,				"Base engine"
+		subMenu = limitsAndFallback,		"Limits and fallbacks"
 		subMenu = triggerConfiguration,		"Trigger"
 		subMenu = triggerConfiguration_IO, "Advanced Trigger"
 		subMenu = std_separator
@@ -2940,17 +2941,24 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 		field = "Warning Text",						warning_message
 		field = "showHumanReadableWarning (affects Burn)",	showHumanReadableWarning
 
-	
 	dialog = limits, "Limits"
 		field = "RPM hard limit",         	    		rpmHardLimit
+		field = "Cut fuel on RPM limit",				cutFuelOnHardLimit
+		field = "Cut spark on RPM limit",				cutSparkOnHardLimit
 		field = "Boost cut pressure",					boostCutPressure
+	
+	dialog = fallbacks, "Fallbacks"
+		field = "Failed MAP sensor fallback",			failedMapFallback
+
+	dialog = limitsAndFallback, "Limits and fallbacks"
+		panel = limits
+		panel = fallbacks
 	
 ;			Engine->Base Engine Settings
 	dialog = engineChars, "Base Engine Settings"
 		topicHelp = "baseHelp"
 		panel = baseEngineConfig
 		panel = generalSettings
-		panel = limits
 		panel = debugging
 
 	dialog = crankingFuel, "Fuel"
