@@ -10,9 +10,13 @@ void LimpManager::updateState(int rpm) {
 
 	// User-configured hard RPM limit
 	if (rpm > engine->getRpmHardLimit(PASS_ENGINE_PARAMETER_SIGNATURE)) {
-		// TODO: user configurable what gets limited
-		allowFuel.clear();
-		allowSpark.clear();
+		if (CONFIG(cutFuelOnHardLimit)) {
+			allowFuel.clear();
+		}
+
+		if (CONFIG(cutSparkOnHardLimit)) {
+			allowSpark.clear();
+		}
 	}
 
 	// Force fuel limiting on the fault rev limit
