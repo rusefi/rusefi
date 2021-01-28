@@ -342,7 +342,7 @@ pins:
     color: black B2
 
   - pin: 4P
-    id: EFI_ADC_9
+    id: EFI_ADC_0
     class: analog_inputs
     ts_name: 4P - CLT (A13)
     function: CLT sensor
