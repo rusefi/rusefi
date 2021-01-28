@@ -17,15 +17,11 @@ AirmassResult SpeedDensityAirmass::getAirmass(int rpm) {
 		return {};
 	}
 
-	auto map = Sensor::get(SensorType::Map);
-	if (!map) {
-		warning(CUSTOM_ERR_TCHARGE_NOT_READY2, "map not ready"); // this could happen during HW CI during configuration reset
-		return {};
-	}
+	auto map = Sensor::get(SensorType::Map).value_or(CONFIG(failedMapFallback));
 
 	engine->engineState.sd.manifoldAirPressureAccelerationAdjustment = engine->engineLoadAccelEnrichment.getEngineLoadEnrichment(PASS_ENGINE_PARAMETER_SIGNATURE);
 
-	float adjustedMap = engine->engineState.sd.adjustedManifoldAirPressure = map.Value + engine->engineState.sd.manifoldAirPressureAccelerationAdjustment;
+	float adjustedMap = engine->engineState.sd.adjustedManifoldAirPressure = map + engine->engineState.sd.manifoldAirPressureAccelerationAdjustment;
 	efiAssert(CUSTOM_ERR_ASSERT, !cisnan(adjustedMap), "NaN adjustedMap", {});
 
 	float ve = getVe(rpm, adjustedMap);
@@ -42,6 +38,6 @@ AirmassResult SpeedDensityAirmass::getAirmass(int rpm) {
 
 	return {
 		airMass,
-		map.Value,	// AFR/VE table Y axis
+		map,	// AFR/VE table Y axis
 	};
 }
