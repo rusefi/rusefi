@@ -45,6 +45,7 @@ fuel_Map3D_t fuelPhaseMap("fl ph");
 extern fuel_Map3D_t veMap;
 extern lambda_Map3D_t lambdaMap;
 extern baroCorr_Map3D_t baroCorrMap;
+mapEstimate_Map3D_t mapEstimationTable("map est");
 
 #if EFI_ENGINE_CONTROL
 
@@ -160,7 +161,7 @@ floatms_t getRunningFuel(floatms_t baseFuel DECLARE_ENGINE_PARAMETER_SUFFIX) {
 
 /* DISPLAY_ENDIF */
 
-static SpeedDensityAirmass sdAirmass(veMap);
+static SpeedDensityAirmass sdAirmass(veMap, mapEstimationTable);
 static MafAirmass mafAirmass(veMap);
 static AlphaNAirmass alphaNAirmass(veMap);
 
@@ -349,6 +350,8 @@ void initFuelMap(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 
 	ENGINE(fuelComputer) = &fuelComputer;
 	ENGINE(injectorModel) = &injectorModel;
+
+	mapEstimationTable.init(config->mapEstimateTable, config->mapEstimateTpsBins, config->mapEstimateRpmBins);
 
 #if (IGN_LOAD_COUNT == FUEL_LOAD_COUNT) && (IGN_RPM_COUNT == FUEL_RPM_COUNT)
 	fuelPhaseMap.init(config->injectionPhase, config->injPhaseLoadBins, config->injPhaseRpmBins);
