@@ -184,7 +184,7 @@ void runRusEfi(void) {
 
 #if EFI_INTERNAL_FLASH
  #if IGNORE_FLASH_CONFIGURATION
-	resetConfigurationExt(logger, DEFAULT_ENGINE_TYPE PASS_ENGINE_PARAMETER_SUFFIX);
+	resetConfigurationExt(&sharedLogger, DEFAULT_ENGINE_TYPE PASS_ENGINE_PARAMETER_SUFFIX);
  #else
 	/**
 	 * First thing is reading configuration from flash memory.
