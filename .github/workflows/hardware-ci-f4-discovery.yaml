@@ -34,6 +34,10 @@ jobs:
     - name: Test Compiler
       run: arm-none-eabi-gcc -v
 
+    - name: Clean Build
+      working-directory: ./firmware
+      run: make clean
+
     - name: Build Firmware
       working-directory: ./firmware
       run: make -j16
