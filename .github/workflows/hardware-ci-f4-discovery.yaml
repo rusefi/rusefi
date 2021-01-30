@@ -1,7 +1,7 @@
 name: Firmware Hardware CI (F4 Discovery)
 
 on: [push, pull_request]
-
+ 
 jobs:
   build-firmware:
     runs-on: hw-ci-f4-discovery
