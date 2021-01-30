@@ -30,7 +30,9 @@ public class PortDetector {
      */
     @Nullable
     public static String autoDetectSerial(Function<IoStream, Void> callback) {
-        String rusEfiAddress = System.getProperty("rusefi.address");
+        return "ttyACM0";
+		
+		String rusEfiAddress = System.getProperty("rusefi.address");
         if (rusEfiAddress != null)
             return rusEfiAddress;
         String[] serialPorts = getPortNames();
