@@ -82,8 +82,8 @@ AdcDevice::AdcDevice(ADCConversionGroup* hwConfig, adcsample_t *buf, size_t buf_
  * 8000 RPM is 133Hz
  * If we want to sample MAP once per 5 degrees we need 133Hz * (360 / 5) = 9576Hz of fast ADC
  */
-// todo: migrate to continues ADC mode? probably not - we cannot afford the callback in
-// todo: continues mode. todo: look into our options
+// todo: migrate to continuous ADC mode? probably not - we cannot afford the callback in
+// todo: continuous mode. todo: look into our options
 #define GPT_FREQ_FAST 100000   /* PWM clock frequency. I wonder what does this setting mean?  */
 #define GPT_PERIOD_FAST 10  /* PWM period (in PWM ticks).    */
 #endif /* GPT_FREQ_FAST GPT_PERIOD_FAST */
@@ -287,7 +287,7 @@ int getInternalAdcValue(const char *msg, adc_channel_e hwChannel) {
 		return value;
 	}
 	if (adcHwChannelEnabled[hwChannel] != ADC_SLOW) {
-	    // todo: make this not happen during hardware continues integration
+	    // todo: make this not happen during hardware continuous integration
 		warning(CUSTOM_OBD_WRONG_ADC_MODE, "ADC is off [%s] index=%d", msg, hwChannel);
 	}
 
