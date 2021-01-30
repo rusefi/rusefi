@@ -26,23 +26,23 @@
  */
 MEMORY
 {
-    bl      : org = 0x08000000, len = 16k     /* bootloader section */
-    flash0  : org = DEFINED(BOOTLOADER) ? 0x08008000 : 0x08000000, len = DEFINED(BOOTLOADER) ? 1992k : 2048k
-    flash1  : org = 0x00200000, len = 2M        /* Flash as ITCM */ /* TODO: do we need BOOTLOADER logic here? */
-    flash2  : org = 0x00000000, len = 0
-    flash3  : org = 0x00000000, len = 0
-    flash4  : org = 0x00000000, len = 0
-    flash5  : org = 0x00000000, len = 0
-    flash6  : org = 0x00000000, len = 0
-    flash7  : org = 0x00000000, len = 0
-    ram0    : org = 0x20020000, len = 384k      /* SRAM1 + SRAM2 */
-    ram1    : org = 0x20020000, len = 368k      /* SRAM1 */
-    ram2    : org = 0x2007C000, len = 16k       /* SRAM2 */
-    ram3    : org = 0x20000000, len = 128k      /* DTCM-RAM */
-    ram4    : org = 0x00000000, len = 16k       /* ITCM-RAM */
-    ram5    : org = 0x40024000, len = 4k        /* BCKP SRAM */
-    ram6    : org = 0x00000000, len = 0
-    ram7    : org = 0x00000000, len = 0
+    bl          : org = 0x08000000, len = 16k       /* bootloader section */
+    flash0 (rx) : org = DEFINED(BOOTLOADER) ? 0x08008000 : 0x08000000, len = DEFINED(BOOTLOADER) ? 1992k : 2048k
+    flash1 (rx) : org = 0x00200000, len = 2M        /* Flash as ITCM */ /* TODO: do we need BOOTLOADER logic here? */
+    flash2 (rx) : org = 0x00000000, len = 0
+    flash3 (rx) : org = 0x00000000, len = 0
+    flash4 (rx) : org = 0x00000000, len = 0
+    flash5 (rx) : org = 0x00000000, len = 0
+    flash6 (rx) : org = 0x00000000, len = 0
+    flash7 (rx) : org = 0x00000000, len = 0
+    ram0   (wx) : org = 0x20020000, len = 384k      /* SRAM1 + SRAM2 */
+    ram1   (wx) : org = 0x20020000, len = 368k      /* SRAM1 */
+    ram2   (wx) : org = 0x2007C000, len = 16k       /* SRAM2 */
+    ram3   (wx) : org = 0x20000000, len = 128k      /* DTCM-RAM */
+    ram4   (wx) : org = 0x00000000, len = 16k       /* ITCM-RAM */
+    ram5   (wx) : org = 0x40024000, len = 4k        /* BCKP SRAM */
+    ram6   (wx) : org = 0x00000000, len = 0
+    ram7   (wx) : org = 0x00000000, len = 0
 }
 
 /* For each data/text section two region are defined, a virtual region
@@ -132,3 +132,6 @@ INCLUDE rules_code.ld
 
 /* Data rules inclusion.*/
 INCLUDE rules_data.ld
+
+/* Memory rules inclusion.*/
+INCLUDE rules_memory.ld

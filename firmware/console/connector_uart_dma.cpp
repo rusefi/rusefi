@@ -54,9 +54,17 @@ static void tsRxIRQIdleHandler(UARTDriver *uartp) {
 
 /* Note: This structure is modified from the default ChibiOS layout! */
 static UARTConfig tsDmaUartConfig = {
-	.txend1_cb = NULL, .txend2_cb = NULL, .rxend_cb = NULL, .rxchar_cb = NULL, .rxerr_cb = NULL,
-	.speed = 0, .cr1 = 0, .cr2 = 0/*USART_CR2_STOP1_BITS*/ | USART_CR2_LINEN, .cr3 = 0,
-	.timeout_cb = tsRxIRQIdleHandler, .rxhalf_cb = tsRxIRQHalfHandler
+	.txend1_cb		= NULL,
+	.txend2_cb		= NULL,
+	.rxend_cb		= NULL,
+	.rxchar_cb		= NULL,
+	.rxerr_cb		= NULL,
+	.timeout_cb		= tsRxIRQIdleHandler,
+	.speed			= 0,
+	.cr1			= 0,
+	.cr2			= 0/*USART_CR2_STOP1_BITS*/ | USART_CR2_LINEN,
+	.cr3			= 0,
+	.rxhalf_cb		= tsRxIRQHalfHandler
 };
 
 void startUartDmaConnector(UARTDriver *uartp DECLARE_CONFIG_PARAMETER_SUFFIX) {

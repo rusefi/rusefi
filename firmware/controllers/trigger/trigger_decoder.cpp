@@ -211,8 +211,7 @@ void TriggerStateWithRunningStatistics::movePreSynchTimestamps(DECLARE_ENGINE_PA
 	}
 }
 
-float TriggerStateWithRunningStatistics::calculateInstantRpm(TriggerFormDetails *triggerFormDetails,
-		int *prevIndexOut, efitick_t nowNt DECLARE_ENGINE_PARAMETER_SUFFIX) {
+float TriggerStateWithRunningStatistics::calculateInstantRpm(TriggerFormDetails *triggerFormDetails, efitick_t nowNt DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	int current_index = currentCycle.current_index; // local copy so that noone changes the value on us
 	assertIsInBoundsWithResult(current_index, timeOfLastEvent, "calc timeOfLastEvent", 0);
 	timeOfLastEvent[current_index] = nowNt;
@@ -228,10 +227,6 @@ float TriggerStateWithRunningStatistics::calculateInstantRpm(TriggerFormDetails 
 	fixAngle(previousAngle, "prevAngle", CUSTOM_ERR_TRIGGER_ANGLE_RANGE);
 	// todo: prevIndex should be pre-calculated
 	int prevIndex = triggerFormDetails->triggerIndexByAngle[(int)previousAngle];
-
-	if (prevIndexOut) {
-		*prevIndexOut = prevIndex;
-	}
 
 	// now let's get precise angle for that event
 	angle_t prevIndexAngle = triggerFormDetails->eventAngles[prevIndex];
@@ -255,9 +250,13 @@ float TriggerStateWithRunningStatistics::calculateInstantRpm(TriggerFormDetails 
 	instantRpmValue[current_index] = instantRpm;
 
 	// This fixes early RPM instability based on incomplete data
-	if (instantRpm < RPM_LOW_THRESHOLD)
+	if (instantRpm < RPM_LOW_THRESHOLD) {
 		return prevInstantRpmValue;
+	}
+
 	prevInstantRpmValue = instantRpm;
+
+	m_instantRpmRatio = instantRpm / instantRpmValue[prevIndex];
 
 	return instantRpm;
 }
@@ -276,23 +275,20 @@ void TriggerStateWithRunningStatistics::setLastEventTimeForInstantRpm(efitick_t 
 	spinningEvents[spinningEventIndex++] = nowNt;
 }
 
-void TriggerStateWithRunningStatistics::runtimeStatistics(TriggerFormDetails *triggerFormDetails, efitick_t nowNt DECLARE_ENGINE_PARAMETER_SUFFIX) {
-	if (engineConfiguration->debugMode == DBG_INSTANT_RPM) {
-		instantRpm = calculateInstantRpm(triggerFormDetails, NULL, nowNt PASS_ENGINE_PARAMETER_SUFFIX);
-	}
-	if (ENGINE(sensorChartMode) == SC_RPM_ACCEL || ENGINE(sensorChartMode) == SC_DETAILED_RPM) {
-		int prevIndex;
-		instantRpm = calculateInstantRpm(triggerFormDetails, &prevIndex, nowNt PASS_ENGINE_PARAMETER_SUFFIX);
+void TriggerStateWithRunningStatistics::updateInstantRpm(TriggerFormDetails *triggerFormDetails, efitick_t nowNt DECLARE_ENGINE_PARAMETER_SUFFIX) {
+	m_instantRpm = calculateInstantRpm(triggerFormDetails, nowNt PASS_ENGINE_PARAMETER_SUFFIX);
+
 
 #if EFI_SENSOR_CHART
+	if (ENGINE(sensorChartMode) == SC_RPM_ACCEL || ENGINE(sensorChartMode) == SC_DETAILED_RPM) {
 		angle_t currentAngle = triggerFormDetails->eventAngles[currentCycle.current_index];
 		if (CONFIG(sensorChartMode) == SC_DETAILED_RPM) {
-			scAddData(currentAngle, instantRpm);
+			scAddData(currentAngle, m_instantRpm);
 		} else {
-			scAddData(currentAngle, instantRpm / instantRpmValue[prevIndex]);
+			scAddData(currentAngle, m_instantRpmRatio);
 		}
-#endif /* EFI_SENSOR_CHART */
 	}
+#endif /* EFI_SENSOR_CHART */
 }
 
 bool TriggerState::isValidIndex(const TriggerWaveform& triggerShape) const {

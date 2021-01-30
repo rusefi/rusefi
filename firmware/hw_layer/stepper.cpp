@@ -218,7 +218,7 @@ void StepperMotor::initialize(StepperHw *hardware, int totalSteps, Logging *shar
 }
 
 void StepDirectionStepper::initialize(brain_pin_e stepPin, brain_pin_e directionPin, pin_output_mode_e directionPinMode, float reactionTime, brain_pin_e enablePin, pin_output_mode_e enablePinMode) {
-	if (stepPin == GPIO_UNASSIGNED || directionPin == GPIO_UNASSIGNED) {
+	if (!isBrainPinValid(stepPin) || !isBrainPinValid(directionPin)) {
 		return;
 	}
 

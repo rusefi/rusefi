@@ -12,6 +12,7 @@
 
 #include "efifeatures.h"
 #include "obd_error_codes.h"
+#include "rusefi_generated.h"
 // we do not want to start the search for header from current folder so we use brackets here
 // https://stackoverflow.com/questions/21593/what-is-the-difference-between-include-filename-and-include-filename
 #include <rusefi_hw_enums.h>
@@ -770,7 +771,7 @@ typedef enum {
 	// todo: https://github.com/rusefi/rusefi/issues/2102
 	DBG_LOGIC_ANALYZER = 45,
 	DBG_RUSEFI_WIDEBAND = 46,
-	DBG_47 = 47,
+	DBG_TCU = 47,
 	DBG_48 = 48,
 
 	Force_4_bytes_size_debug_mode_e = ENUM_32_BITS,

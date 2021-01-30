@@ -52,4 +52,10 @@ void setMiataNB2_Proteus_TCU(DECLARE_CONFIG_PARAMETER_SIGNATURE);
  */
 void setMiataNB2_ProteusEngineConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE);
 
+/**
+ * set engine_type 69
+ */
+void setMiataNB2_Hellen72(DECLARE_CONFIG_PARAMETER_SIGNATURE);
+
+
 

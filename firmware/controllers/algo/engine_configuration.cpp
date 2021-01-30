@@ -32,6 +32,8 @@
 #include "sensor.h"
 
 #include "hip9011_lookup.h"
+#include "hip9011_logic.h"
+
 #if EFI_MEMS
 #include "accelerometer.h"
 #endif
@@ -846,7 +848,7 @@ static void setDefaultEngineConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	engineConfiguration->cranking.rpm = 550;
 	engineConfiguration->cutFuelOnHardLimit = true;
 	engineConfiguration->cutSparkOnHardLimit = true;
-
+	engineConfiguration->failedMapFallback = 60;
 
 	engineConfiguration->tChargeMinRpmMinTps = 0.25;
 	engineConfiguration->tChargeMinRpmMaxTps = 0.25;
@@ -968,6 +970,7 @@ static void setDefaultEngineConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	engineConfiguration->HD44780height = 4;
 
 	engineConfiguration->cylinderBore = 87.5;
+	engineConfiguration->knockBandCustom = BAND(engineConfiguration->cylinderBore);
 
 	setEgoSensor(ES_14Point7_Free PASS_CONFIG_PARAMETER_SUFFIX);
 
@@ -1230,6 +1233,8 @@ void resetConfigurationExt(Logging * logger, configuration_callback_t boardCallb
 #endif // HW_PROTEUS
 #if HW_HELLEN
 	case HELLEN_NB2:
+		setMiataNB2_Hellen72(PASS_CONFIG_PARAMETER_SIGNATURE);
+		break;
 #endif // HW_HELLEN
 #if HW_FRANKENSO
 	case DEFAULT_FRANKENSO:

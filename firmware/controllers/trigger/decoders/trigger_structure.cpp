@@ -361,10 +361,10 @@ void TriggerWaveform::setTriggerSynchronizationGap3(int gapIndex, float syncRati
 /**
  * this method is only used on initialization
  */
-int TriggerWaveform::findAngleIndex(TriggerFormDetails *details, float target) const {
-	int engineCycleEventCount = getLength();
+uint16_t TriggerWaveform::findAngleIndex(TriggerFormDetails *details, float target) const {
+	size_t engineCycleEventCount = getLength();
 
-	efiAssert(CUSTOM_ERR_ASSERT, engineCycleEventCount > 0, "engineCycleEventCount", 0);
+	efiAssert(CUSTOM_ERR_ASSERT, engineCycleEventCount <= 0xFFFF, "engineCycleEventCount", 0);
 
 	uint32_t left = 0;
 	uint32_t right = engineCycleEventCount - 1;
@@ -418,8 +418,13 @@ void findTriggerPosition(TriggerWaveform *triggerShape,
 		return;
 	}
 
-	position->triggerEventIndex = triggerEventIndex;
-	position->angleOffsetFromTriggerEvent = angle - triggerEventAngle;
+	{
+		// This must happen under lock so that the tooth and offset don't get partially read and mismatched
+		chibios_rt::CriticalSectionLocker csl;
+
+		position->triggerEventIndex = triggerEventIndex;
+		position->angleOffsetFromTriggerEvent = angle - triggerEventAngle;
+	}
 }
 
 void TriggerWaveform::prepareShape(TriggerFormDetails *details DECLARE_ENGINE_PARAMETER_SUFFIX) {
@@ -428,11 +433,13 @@ void TriggerWaveform::prepareShape(TriggerFormDetails *details DECLARE_ENGINE_PA
 
 	int engineCycleInt = (int) getEngineCycle(operationMode);
 	for (int angle = 0; angle < engineCycleInt; angle++) {
-		int triggerShapeIndex = findAngleIndex(details, angle);
+		uint16_t triggerShapeIndex = findAngleIndex(details, angle);
+
 		if (useOnlyRisingEdgeForTriggerTemp) {
-			// we need even index for front_only mode - so if odd indexes are rounded down
-			triggerShapeIndex = triggerShapeIndex & 0xFFFFFFFE;
+			// we need even index for front_only mode - so if odd indexes are rounded down by clearing the low bit
+			triggerShapeIndex &= 0xFFFE;
 		}
+
 		details->triggerIndexByAngle[angle] = triggerShapeIndex;
 	}
 #endif

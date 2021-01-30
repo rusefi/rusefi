@@ -169,7 +169,11 @@ private:
 class TriggerStateWithRunningStatistics : public TriggerState {
 public:
 	TriggerStateWithRunningStatistics();
-	float instantRpm = 0;
+
+	float getInstantRpm() const {
+		return m_instantRpm;
+	}
+
 	/**
 	 * timestamp of each trigger wheel tooth
 	 */
@@ -187,15 +191,22 @@ public:
 	 */
 	float prevInstantRpmValue = 0;
 	void movePreSynchTimestamps(DECLARE_ENGINE_PARAMETER_SIGNATURE);
-	float calculateInstantRpm(TriggerFormDetails *triggerFormDetails, int *prevIndex, efitick_t nowNt DECLARE_ENGINE_PARAMETER_SUFFIX);
+
 #if EFI_ENGINE_CONTROL && EFI_SHAFT_POSITION_INPUT
-	void runtimeStatistics(TriggerFormDetails *triggerFormDetails, efitick_t nowNt DECLARE_ENGINE_PARAMETER_SUFFIX);
+	void updateInstantRpm(TriggerFormDetails *triggerFormDetails, efitick_t nowNt DECLARE_ENGINE_PARAMETER_SUFFIX);
 #endif
 	/**
 	 * Update timeOfLastEvent[] on every trigger event - even without synchronization
 	 * Needed for early spin-up RPM detection.
 	 */
 	void setLastEventTimeForInstantRpm(efitick_t nowNt DECLARE_ENGINE_PARAMETER_SUFFIX);
+
+private:
+	float calculateInstantRpm(TriggerFormDetails *triggerFormDetails, efitick_t nowNt DECLARE_ENGINE_PARAMETER_SUFFIX);
+
+	float m_instantRpm = 0;
+	float m_instantRpmRatio = 0;
+
 };
 
 angle_t getEngineCycle(operation_mode_e operationMode);

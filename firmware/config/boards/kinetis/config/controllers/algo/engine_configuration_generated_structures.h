@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Wed Jan 06 03:31:58 UTC 2021
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Thu Jan 28 01:32:39 UTC 2021
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -1022,9 +1022,10 @@ struct engine_configuration_s {
 	 */
 	spi_device_e hip9011SpiDevice;
 	/**
+	 * This value is only used for speed density fueling calculations.
 	 * offset 541
 	 */
-	uint8_t unused541;
+	uint8_t failedMapFallback;
 	/**
 	 * offset 542
 	 */
@@ -1620,7 +1621,7 @@ struct engine_configuration_s {
 	 * Maximum time to crank starter
 	 * offset 826
 	 */
-	efitimesec16_t startCrankingDuration;
+	uint16_t startCrankingDuration;
 	/**
 	 * This pin is used for debugging - snap a logic analyzer on it and see if it's ever high
 	 * offset 828
@@ -1788,7 +1789,7 @@ struct engine_configuration_s {
 	offset 976 bit 9 */
 	bool showHumanReadableWarning : 1;
 	/**
-	 * If enabled, adjust at a constant rate instead of a rate proportional to the current lambda error. This mode may be easier to tune, and more tolerant of sensor noise. Use of this mode is required if you have a narrowband O2 sensor.;
+	 * If enabled, adjust at a constant rate instead of a rate proportional to the current lambda error. This mode may be easier to tune, and more tolerant of sensor noise. Use of this mode is required if you have a narrowband O2 sensor.
 	offset 976 bit 10 */
 	bool stftIgnoreErrorMagnitude : 1;
 	/**
@@ -2807,7 +2808,7 @@ struct engine_configuration_s {
 	pin_output_mode_e hpfpValvePinMode;
 	/**
 	 * MAP value above which fuel is cut in case of overboost.
-	 * 0 to disable overboost cut.
+	 * Set to 0 to disable overboost cut.
 	 * offset 2132
 	 */
 	float boostCutPressure;
@@ -3300,20 +3301,18 @@ struct engine_configuration_s {
 	 */
 	pid_s idleTimingPid;
 	/**
-	 * When the current RPM is closer than this value to the target, closed-loop idle timing control is enabled.
 	 * offset 3988
 	 */
-	int16_t idleTimingPidWorkZone;
+	uint8_t unused3988[2];
 	/**
 	 * If the RPM closer to target than this value, disable timing correction to prevent oscillation
 	 * offset 3990
 	 */
 	int16_t idleTimingPidDeadZone;
 	/**
-	 * Taper out idle timing control over this range as the engine leaves idle conditions
 	 * offset 3992
 	 */
-	int16_t idlePidFalloffDeltaRpm;
+	uint8_t unused3942[2];
 	/**
 	 * A delay in cycles between fuel-enrich. portions
 	 * offset 3994
@@ -3675,9 +3674,14 @@ struct persistent_config_s {
 	 */
 	tcubinary_table_t tcuSolenoidTable;
 	/**
+	 * Good example: number of tooth on wheel, For Can 10 is a good number.
 	 * offset 15196
 	 */
-	uint8_t unused15136[1092];
+	float vssFilterReciprocal;
+	/**
+	 * offset 15200
+	 */
+	uint8_t unused15136[1088];
 	/**
 	 * offset 16288
 	 */
@@ -3785,4 +3789,4 @@ struct persistent_config_s {
 typedef struct persistent_config_s persistent_config_s;
 
 // end
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Wed Jan 06 03:31:58 UTC 2021
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Thu Jan 28 01:32:39 UTC 2021

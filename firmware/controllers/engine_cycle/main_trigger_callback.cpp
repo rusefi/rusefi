@@ -320,7 +320,7 @@ static void handleFuel(const bool limitedFuel, uint32_t trgEventIndex, int rpm, 
 	efiAssertVoid(CUSTOM_STACK_6627, getCurrentRemainingStack() > 128, "lowstck#3");
 	efiAssertVoid(CUSTOM_ERR_6628, trgEventIndex < engine->engineCycleEventCount, "handleFuel/event index");
 
-	if (!isInjectionEnabled(PASS_ENGINE_PARAMETER_SIGNATURE) || limitedFuel) {
+	if (limitedFuel) {
 		return;
 	}
 	if (ENGINE(isCylinderCleanupMode)) {
@@ -389,7 +389,7 @@ void mainTriggerCallback(uint32_t trgEventIndex, efitick_t edgeTimestamp DECLARE
 #endif // HW_CHECK_MODE
 
 #if EFI_CDM_INTEGRATION
-	if (trgEventIndex == 0 && CONFIG(cdmInputPin) != GPIO_UNASSIGNED) {
+	if (trgEventIndex == 0 && isBrainPinValid(CONFIG(cdmInputPin))) {
 		int cdmKnockValue = getCurrentCdmValue(engine->triggerCentral.triggerState.getTotalRevolutionCounter());
 		engine->knockLogic(cdmKnockValue);
 	}
@@ -554,8 +554,6 @@ void initMainEventListener(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX
 	addConsoleActionP("maininfo", (VoidPtr) showMainInfo, engine);
 
 	printMsg(logger, "initMainLoop: %d", currentTimeMillis());
-	if (!isInjectionEnabled(PASS_ENGINE_PARAMETER_SIGNATURE))
-		printMsg(logger, "!!!!!!!!!!!!!!!!!!! injection disabled");
 #endif
 
 

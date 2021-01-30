@@ -12,6 +12,7 @@
 #include "engine.h"
 #include "allsensors.h"
 #include "efi_gpio.h"
+#include "pin_repository.h"
 #include "trigger_central.h"
 #include "fuel_math.h"
 #include "engine_math.h"
@@ -32,6 +33,7 @@
 #include "gppwm.h"
 #include "tachometer.h"
 #include "dynoview.h"
+#include "boost_control.h"
 #if EFI_MC33816
  #include "mc33816.h"
 #endif // EFI_MC33816
@@ -192,6 +194,10 @@ void Engine::periodicSlowCallback(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 
 	updateIdleControl();
 
+#if EFI_BOOST_CONTROL
+	updateBoostControl();
+#endif // EFI_BOOST_CONTROL
+
 	cylinderCleanupControl(PASS_ENGINE_PARAMETER_SIGNATURE);
 
 	standardAirCharge = getStandardAirCharge(PASS_ENGINE_PARAMETER_SIGNATURE);
@@ -278,7 +284,7 @@ void Engine::updateSlowSensors(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 void Engine::updateSwitchInputs(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 #if EFI_GPIO_HARDWARE
 	// this value is not used yet
-	if (CONFIG(clutchDownPin) != GPIO_UNASSIGNED) {
+	if (isBrainPinValid(CONFIG(clutchDownPin))) {
 		engine->clutchDownState = efiReadPin(CONFIG(clutchDownPin));
 	}
 	if (hasAcToggle(PASS_ENGINE_PARAMETER_SIGNATURE)) {
@@ -289,14 +295,14 @@ void Engine::updateSwitchInputs(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 		}
 		engine->acSwitchState = result;
 	}
-	if (CONFIG(clutchUpPin) != GPIO_UNASSIGNED) {
+	if (isBrainPinValid(CONFIG(clutchUpPin))) {
 		engine->clutchUpState = efiReadPin(CONFIG(clutchUpPin));
 	}
-	if (CONFIG(throttlePedalUpPin) != GPIO_UNASSIGNED) {
+	if (isBrainPinValid(CONFIG(throttlePedalUpPin))) {
 		engine->engineState.idle.throttlePedalUpState = efiReadPin(CONFIG(throttlePedalUpPin));
 	}
 
-	if (engineConfiguration->brakePedalPin != GPIO_UNASSIGNED) {
+	if (isBrainPinValid(engineConfiguration->brakePedalPin)) {
 		engine->brakePedalState = efiReadPin(engineConfiguration->brakePedalPin);
 	}
 #endif // EFI_GPIO_HARDWARE
@@ -395,10 +401,6 @@ void Engine::OnTriggerStateDecodingError() {
 void Engine::OnTriggerStateProperState(efitick_t nowNt) {
 	Engine *engine = this;
 	EXPAND_Engine;
-
-#if EFI_SHAFT_POSITION_INPUT
-	triggerCentral.triggerState.runtimeStatistics(&triggerCentral.triggerFormDetails, nowNt PASS_ENGINE_PARAMETER_SUFFIX);
-#endif /* EFI_SHAFT_POSITION_INPUT */
 
 	rpmCalculator.setSpinningUp(nowNt);
 }
@@ -523,7 +525,7 @@ void Engine::watchdog() {
 	efitick_t nowNt = getTimeNowNt();
 // note that we are ignoring the number of tooth here - we
 // check for duration between tooth as if we only have one tooth per revolution which is not the case
-#define REVOLUTION_TIME_HIGH_THRESHOLD (60 * 1000000LL / RPM_LOW_THRESHOLD)
+#define REVOLUTION_TIME_HIGH_THRESHOLD (60 * US_PER_SECOND_LL / RPM_LOW_THRESHOLD)
 	/**
 	 * todo: better watch dog implementation should be implemented - see
 	 * http://sourceforge.net/p/rusefi/tickets/96/
@@ -574,6 +576,13 @@ void Engine::checkShutdown(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 #endif /* EFI_MAIN_RELAY_CONTROL */
 }
 
+bool Engine::isInMainRelayBench(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+	if (mainRelayBenchStartNt == 0) {
+		return false;
+	}
+	return (getTimeNowNt() - mainRelayBenchStartNt) < NT_PER_SECOND;
+}
+
 bool Engine::isInShutdownMode(DECLARE_ENGINE_PARAMETER_SIGNATURE) const {
 #if EFI_MAIN_RELAY_CONTROL
 	// if we are in "ignition_on" mode and not in shutdown mode
@@ -590,21 +599,21 @@ bool Engine::isInShutdownMode(DECLARE_ENGINE_PARAMETER_SIGNATURE) const {
 		return false;
 	}
 
-	const efitick_t turnOffWaitTimeoutUs = 1LL * 1000000LL;
+	const efitick_t turnOffWaitTimeoutNt = NT_PER_SECOND;
 	// We don't want any transients to step in, so we wait at least 1 second whatever happens.
 	// Also it's good to give the stepper motor some time to start moving to the initial position (or parking)
-	if ((getTimeNowNt() - stopEngineRequestTimeNt) < US2NT(turnOffWaitTimeoutUs))
+	if ((getTimeNowNt() - stopEngineRequestTimeNt) < turnOffWaitTimeoutNt)
 		return true;
 
-	const efitick_t engineSpinningWaitTimeoutUs = 5LL * 1000000LL;
+	const efitick_t engineSpinningWaitTimeoutNt = 5 * NT_PER_SECOND;
 	// The engine is still spinning! Give it some time to stop (but wait no more than 5 secs)
-	if (isSpinning && (getTimeNowNt() - stopEngineRequestTimeNt) < US2NT(engineSpinningWaitTimeoutUs))
+	if (isSpinning && (getTimeNowNt() - stopEngineRequestTimeNt) < engineSpinningWaitTimeoutNt)
 		return true;
 
 	// The idle motor valve is still moving! Give it some time to park (but wait no more than 10 secs)
 	// Usually it can move to the initial 'cranking' position or zero 'parking' position.
-	const efitick_t idleMotorWaitTimeoutUs = 10LL * 1000000LL;
-	if (isIdleMotorBusy(PASS_ENGINE_PARAMETER_SIGNATURE) && (getTimeNowNt() - stopEngineRequestTimeNt) < US2NT(idleMotorWaitTimeoutUs))
+	const efitick_t idleMotorWaitTimeoutNt = 10 * NT_PER_SECOND;
+	if (isIdleMotorBusy(PASS_ENGINE_PARAMETER_SIGNATURE) && (getTimeNowNt() - stopEngineRequestTimeNt) < idleMotorWaitTimeoutNt)
 		return true;
 #endif /* EFI_MAIN_RELAY_CONTROL */
 	return false;

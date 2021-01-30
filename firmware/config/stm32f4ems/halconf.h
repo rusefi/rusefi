@@ -25,17 +25,13 @@
  * @{
  */
 
-#ifndef _HALCONF_H_
-#define _HALCONF_H_
+#ifndef HALCONF_H
+#define HALCONF_H
+
+#define _CHIBIOS_HAL_CONF_
+#define _CHIBIOS_HAL_CONF_VER_7_1_
 
 #include "mcuconf.h"
-
-/* THIS IS HACK: to allow smooth transition to ChibiOS with ELF support we
- * need to disable hal_flash.h until we move to ChibiOS EFL driver.
- * hal_flash.h in ChibiOS has definitions that conflict with current RusEFI
- * flash driver.
- * but it is included unconditionaly from hal.h */
-#define HAL_FLASH_H
 
 /**
  * @brief   Enables the FLASH subsystem.
@@ -411,6 +407,6 @@
 
 #include "halconf_community.h"
 
-#endif /* _HALCONF_H_ */
+#endif /* HALCONF_H */
 
 /** @} */

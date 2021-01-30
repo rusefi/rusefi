@@ -12,11 +12,12 @@
 #include "trigger_decoder.h"
 #include "trigger_central_generated.h"
 #include "timer.h"
+#include "pin_repository.h"
 
 class Engine;
 typedef void (*ShaftPositionListener)(trigger_event_e signal, uint32_t index, efitick_t edgeTimestamp DECLARE_ENGINE_PARAMETER_SUFFIX);
 
-#define HAVE_CAM_INPUT() engineConfiguration->camInputs[0] != GPIO_UNASSIGNED
+#define HAVE_CAM_INPUT() (isBrainPinValid(engineConfiguration->camInputs[0]))
 
 class TriggerNoiseFilter {
 public:
@@ -53,22 +54,25 @@ public:
 	trigger_type_e vvtTriggerType;
 	angle_t getVVTPosition();
 
+#if EFI_UNIT_TEST
 	// latest VVT event position (could be not synchronization event)
 	angle_t currentVVTEventPosition = 0;
+#endif // EFI_UNIT_TEST
+
 	// synchronization event position
-	angle_t vvtPosition = 0;
+	angle_t vvtPosition[BANKS_COUNT];
 
 	/**
 	 * this is similar to TriggerState#startOfCycleNt but with the crank-only sensor magic
 	 */
 	efitick_t timeAtVirtualZeroNt = 0;
 
-	efitick_t vvtSyncTimeNt = 0;
+	efitick_t vvtSyncTimeNt[BANKS_COUNT];
 
 	TriggerStateWithRunningStatistics triggerState;
 	TriggerWaveform triggerShape;
 
-	TriggerState vvtState;
+	TriggerState vvtState[BANKS_COUNT];
 	TriggerWaveform vvtShape;
 
 	TriggerFormDetails triggerFormDetails;
