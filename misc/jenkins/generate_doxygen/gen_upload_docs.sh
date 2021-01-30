@@ -33,6 +33,10 @@ bash misc/pinout-gen/gen.sh firmware/config/boards/proteus/black35.yaml > pinout
 cp firmware/config/boards/proteus/black35.jpg pinouts/proteus/black35.jpg
 bash misc/pinout-gen/gen.sh firmware/config/boards/proteus/white35.yaml > pinouts/proteus/white35.html
 cp firmware/config/boards/proteus/black35.jpg pinouts/proteus/white35.jpg
+mkdir pinouts/hellen
+mkdir pinouts/hellen/hellen72
+bash misc/pinout-gen/gen.sh firmware/config/boards/hellen/hellen72/main.yaml > pinouts/hellen/hellen72/main.html
+cp firmware/config/boards/hellen/hellen72/main.jpg pinouts/hellen/hellen72/main.jpg
 
 if [ -n "$RUSEFI_FTP_SERVER" ]; then
   echo "Uploading Pinouts"
