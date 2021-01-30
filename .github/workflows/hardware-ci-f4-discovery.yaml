@@ -34,6 +34,7 @@ jobs:
     - name: Test Compiler
       run: arm-none-eabi-gcc -v
 
+    # We aren't guaranteed a clean machine every time, so manually clean the output
     - name: Clean Build
       working-directory: ./firmware
       run: make clean
