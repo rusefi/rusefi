@@ -54,6 +54,10 @@ static FastInterpolation subyDenso(0, 0, 5, 200);
 
 static FastInterpolation gm3bar(0.631, 40, 4.914, 304);
 
+static FastInterpolation gm2bar(0, 8.8, 5, 208);
+
+static FastInterpolation gm1bar(0, 10, 5, 105);
+
 static FastInterpolation mpx4250(0, 8, 5, 260);
 
 static FastInterpolation mpx4250A(0.25, 20, 4.875, 250);
@@ -102,6 +106,8 @@ float decodePressure(float voltage, air_pressure_sensor_config_s * mapConfig DEC
 	case MT_DODGE_NEON_2003:
 	case MT_SUBY_DENSO:
 	case MT_GM_3_BAR:
+	case MT_GM_2_BAR:
+	case MT_GM_1_BAR:
 	case MT_TOYOTA_89420_02010:
 	case MT_MPX4100:
 	case MT_BOSCH_2_5:
@@ -205,6 +211,10 @@ static FastInterpolation *getDecoder(air_pressure_sensor_type_e type) {
 		return &subyDenso;
 	case MT_GM_3_BAR:
 		return &gm3bar;
+	case MT_GM_2_BAR:
+		return &gm2bar;
+	case MT_GM_1_BAR:
+		return &gm1bar;
 	case MT_TOYOTA_89420_02010:
 		return &densoToyota;
 	case MT_MAZDA_1_BAR:
