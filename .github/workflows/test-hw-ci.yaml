@@ -1,0 +1,11 @@
+name: Test HW CI machine
+
+on: [push,pull_request]
+
+jobs:
+  build:
+    runs-on: hw-ci-f4-discovery
+
+    steps:
+    - name: Check For Life
+      run: uname -a
