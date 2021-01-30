@@ -11,6 +11,9 @@ jobs:
       with:
         submodules: recursive
 
+    - name: Identify Agent
+      run: uname -a
+
     - name: Generate Configs
       working-directory: ./firmware/
       run: bash gen_config_default.sh
