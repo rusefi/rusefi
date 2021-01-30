@@ -13,6 +13,7 @@
 
 #include "usbconsole.h"
 #include "usbcfg.h"
+#include "mpu_util.h"
 
 static bool isUsbSerialInitialized = false;
 
@@ -20,6 +21,8 @@ static bool isUsbSerialInitialized = false;
  * start USB serial using hard-coded communications pins (see comments inside the code)
  */
 void usb_serial_start(void) {
+	usbPopulateSerialNumber(MCU_SERIAL_NUMBER_LOCATION, MCU_SERIAL_NUMBER_BYTES);
+
 	/*
 	 * Initializes a serial-over-USB CDC driver.
 	 */
