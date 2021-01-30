@@ -54,23 +54,23 @@ TEST(limp, boostCut) {
 	INJECT_ENGINE_REFERENCE(&dut);
 
 	// Below threshold, injection allowed
-	engine->mockMapValue = 80;
+	Sensor::setMockValue(SensorType::Map, 80);
 	dut.updateState(1000);
 	EXPECT_TRUE(dut.allowInjection());
 
 	// Above threshold, injection cut
-	engine->mockMapValue = 120;
+	Sensor::setMockValue(SensorType::Map, 120);
 	dut.updateState(1000);
 	EXPECT_FALSE(dut.allowInjection());
 
 	// Below threshold, should recover
-	engine->mockMapValue = 80;
+	Sensor::setMockValue(SensorType::Map, 80);
 	dut.updateState(1000);
 	EXPECT_TRUE(dut.allowInjection());
 
 	// SPECIAL CASE: threshold of 0 means never boost cut
 	engineConfiguration->boostCutPressure = 0;
-	engine->mockMapValue = 500;
+	Sensor::setMockValue(SensorType::Map, 500);
 	dut.updateState(1000);
 	EXPECT_TRUE(dut.allowInjection());
 }

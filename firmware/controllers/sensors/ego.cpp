@@ -105,7 +105,7 @@ bool hasAfrSensor(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 		return cjHasAfrSensor(PASS_ENGINE_PARAMETER_SIGNATURE);
 	}
 #endif /* EFI_CJ125 && HAL_USE_SPI */
-	return engineConfiguration->afr.hwChannel != EFI_ADC_NONE;
+	return isAdcChannelValid(engineConfiguration->afr.hwChannel);
 }
 
 extern float InnovateLC2AFR;
@@ -123,7 +123,7 @@ float getAfr(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 #endif /* EFI_CJ125 && HAL_USE_SPI */
 	afr_sensor_s * sensor = &CONFIG(afr);
 
-	if (engineConfiguration->afr.hwChannel == EFI_ADC_NONE) {
+	if (!isAdcChannelValid(engineConfiguration->afr.hwChannel)) {
 		return 0;
 	}
 

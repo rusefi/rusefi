@@ -61,7 +61,8 @@ public:
 	}
 
 	int getPeriodMs() override {
-		return engineConfiguration->auxPidPins[index] == GPIO_UNASSIGNED ? NO_PIN_PERIOD : GET_PERIOD_LIMITED(&engineConfiguration->auxPid[index]);
+		return isBrainPinValid(engineConfiguration->auxPidPins[index]) ?
+			GET_PERIOD_LIMITED(&engineConfiguration->auxPid[index]) : NO_PIN_PERIOD;
 	}
 
 	void PeriodicTask() override {
@@ -114,7 +115,7 @@ static void turnAuxPidOn(int index) {
 		return;
 	}
 
-	if (engineConfiguration->auxPidPins[index] == GPIO_UNASSIGNED) {
+	if (!isBrainPinValid(engineConfiguration->auxPidPins[index])) {
 		return;
 	}
 

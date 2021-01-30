@@ -1,7 +1,7 @@
 #include "global.h"
 #include "rusefi_enums.h"
 #include "rusefi_hw_enums.h"
-// was generated automatically by rusEfi tool  from rusefi_hw_enums.h // was generated automatically by rusEfi tool  from rusefi_enums.h // by enum2string.jar tool on Fri Jan 01 06:11:32 UTC 2021
+// was generated automatically by rusEfi tool  from rusefi_hw_enums.h // was generated automatically by rusEfi tool  from rusefi_enums.h // by enum2string.jar tool on Sat Jan 09 19:14:09 UTC 2021
 // see also gen_config_and_enums.bat
 
 
@@ -681,8 +681,6 @@ case DBG_16:
   return "DBG_16";
 case DBG_34:
   return "DBG_34";
-case DBG_47:
-  return "DBG_47";
 case DBG_48:
   return "DBG_48";
 case DBG_ALTERNATOR_PID:
@@ -765,6 +763,8 @@ case DBG_START_STOP:
   return "DBG_START_STOP";
 case DBG_STATUS:
   return "DBG_STATUS";
+case DBG_TCU:
+  return "DBG_TCU";
 case DBG_TLE8888:
   return "DBG_TLE8888";
 case DBG_TPS_ACCEL:
@@ -1437,6 +1437,8 @@ case TT_TOOTHED_WHEEL_36_2:
   return "TT_TOOTHED_WHEEL_36_2";
 case TT_TOOTHED_WHEEL_60_2:
   return "TT_TOOTHED_WHEEL_60_2";
+case TT_TRI_TACH:
+  return "TT_TRI_TACH";
 case TT_UNUSED:
   return "TT_UNUSED";
 case TT_VVT_BOSCH_QUICK_START:

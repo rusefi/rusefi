@@ -1,6 +1,5 @@
 package com.rusefi;
 
-import com.rusefi.board_generator.BoardReader;
 import com.rusefi.enum_reader.Value;
 import com.rusefi.util.LazyFile;
 import com.rusefi.util.SystemOut;
@@ -64,7 +63,7 @@ public class VariableRegistry  {
             if (sb.length() > 0)
                 sb.append(", ");
 
-            String value = valueNameById.getOrDefault(i, BoardReader.INVALID);
+            String value = valueNameById.getOrDefault(i, "INVALID");
             sb.append("\"" + value + "\"");
         }
         return sb.toString();

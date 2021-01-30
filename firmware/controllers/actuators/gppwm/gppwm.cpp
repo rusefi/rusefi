@@ -1,6 +1,7 @@
 
 #include "global.h"
 #include "engine.h"
+#include "pin_repository.h"
 
 #include "gppwm_channel.h"
 #include "pwm_generator_logic.h"
@@ -28,7 +29,7 @@ void initGpPwm(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 		auto& cfg = CONFIG(gppwm)[i];
 
 		// If no pin, don't enable this channel.
-		if (cfg.pin == GPIO_UNASSIGNED) {
+		if (!isBrainPinValid(cfg.pin)) {
 			continue;
 		}
 

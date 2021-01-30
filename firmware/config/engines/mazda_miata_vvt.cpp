@@ -52,6 +52,7 @@
 #include "ego.h"
 #include "thermistors.h"
 #include "mazda_miata_base_maps.h"
+#include "hip9011_logic.h"
 
 EXTERN_CONFIG;
 
@@ -285,6 +286,7 @@ static void setMazdaMiataEngineNB2Defaults(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 
 	setOperationMode(engineConfiguration, FOUR_STROKE_SYMMETRICAL_CRANK_SENSOR);
 	engineConfiguration->specs.displacement = 1.839;
+	engineConfiguration->cylinderBore = 83;
 	strcpy(CONFIG(engineMake), ENGINE_MAKE_MAZDA);
 	strcpy(CONFIG(engineCode), "NB2");
 
@@ -786,7 +788,12 @@ void setMiataNB2_ProteusEngineConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE) 
     engineConfiguration->injectionPinMode = OM_DEFAULT;
 
 
-    engineConfiguration->malfunctionIndicatorPin = GPIOB_6;
+    CONFIG(enableSoftwareKnock) = true;
+    // second harmonic (aka double) is usually quieter background noise
+    // 13.8
+	engineConfiguration->knockBandCustom = 2 * BAND(engineConfiguration->cylinderBore);
+
+    engineConfiguration->malfunctionIndicatorPin = GPIOB_6; // "Lowside 10"    # pin 20/black35
 
     engineConfiguration->map.sensor.hwChannel = EFI_ADC_10;
 
@@ -801,7 +808,7 @@ void setMiataNB2_ProteusEngineConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE) 
     engineConfiguration->clt.adcChannel =  EFI_ADC_14;
     engineConfiguration->iat.adcChannel = EFI_ADC_8;
 
-    engineConfiguration->fuelPumpPin = GPIOG_13;
+    engineConfiguration->fuelPumpPin = GPIOG_13;// "Lowside 6"     # pin 6/black35
 
     engineConfiguration->idle.solenoidPin = GPIOG_14;  // "Lowside 7"     # pin 7/black35
     engineConfiguration->idle.solenoidFrequency = 300;
@@ -809,6 +816,15 @@ void setMiataNB2_ProteusEngineConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE) 
 
     engineConfiguration->fanPin = GPIOB_7;
 
+	CONFIG(mainRelayPin) = GPIOG_12;// "Lowside 5"     # pin 5/black35
+
 
 }
 #endif // HW_PROTEUS
+
+#if HW_HELLEN
+void setMiataNB2_Hellen72(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
+    setMazdaMiataEngineNB2Defaults(PASS_CONFIG_PARAMETER_SIGNATURE);
+	strcpy(CONFIG(vehicleName), "H72 test");
+}
+#endif // HW_HELLEN

@@ -1,7 +1,6 @@
 #include "global.h"
 #include "engine.h"
 #include "speed_density_airmass.h"
-#include "map.h"
 #include "perf_trace.h"
 
 EXTERN_ENGINE;
@@ -18,11 +17,7 @@ AirmassResult SpeedDensityAirmass::getAirmass(int rpm) {
 		return {};
 	}
 
-	float map = getMap(PASS_ENGINE_PARAMETER_SIGNATURE);
-	if (cisnan(map)) {
-		warning(CUSTOM_ERR_TCHARGE_NOT_READY2, "map not ready"); // this could happen during HW CI during configuration reset
-		return {};
-	}
+	auto map = Sensor::get(SensorType::Map).value_or(CONFIG(failedMapFallback));
 
 	engine->engineState.sd.manifoldAirPressureAccelerationAdjustment = engine->engineLoadAccelEnrichment.getEngineLoadEnrichment(PASS_ENGINE_PARAMETER_SIGNATURE);
 

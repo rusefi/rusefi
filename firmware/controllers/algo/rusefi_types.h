@@ -28,7 +28,6 @@ typedef unsigned int time_t;
 
 // time in seconds
 typedef time_t efitimesec_t;
-typedef uint16_t efitimesec16_t;
 
 /**
  * integer time in milliseconds (1/1_000 of a second)

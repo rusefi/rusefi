@@ -54,9 +54,8 @@ public class TSProjectConsumer implements ConfigurationConsumer {
         }
 
         if (configField.isBit()) {
-            tsHeader.write("\t" + addTabsUpTo(nameWithPrefix, LENGTH));
-            tsHeader.write("= bits,    U32,   ");
-            tsHeader.write("\t" + tsPosition + ", [");
+            tsHeader.write(nameWithPrefix + " = bits, U32,");
+            tsHeader.write(" " + tsPosition + ", [");
             tsHeader.write(bitIndex + ":" + bitIndex);
             tsHeader.write("], \"" + configField.getFalseName() + "\", \"" + configField.getTrueName() + "\"");
             tsHeader.write(EOL);
@@ -71,29 +70,25 @@ public class TSProjectConsumer implements ConfigurationConsumer {
                 bits = handleTsInfo(bits, 5);
             }
 
-            tsHeader.write("\t" + addTabsUpTo(nameWithPrefix, LENGTH));
-            int size = configField.getState().tsCustomSize.get(configField.getType());
-//            tsHeader.headerWrite("\t" + size + ",");
-            //          tsHeader.headerWrite("\t" + tsPosition + ",");
             bits = bits.replaceAll("@OFFSET@", "" + tsPosition);
-            tsHeader.write("\t = " + bits);
+            tsHeader.write(nameWithPrefix + " = " + bits);
 
-            tsPosition += size;
+            tsPosition += configField.getState().tsCustomSize.get(configField.getType());
         } else if (configField.getTsInfo() == null) {
             throw new IllegalArgumentException("Need TS info for " + configField.getName() + " at "+ prefix);
         } else if (configField.getArraySize() != 1) {
-            tsHeader.write("\t" + addTabsUpTo(nameWithPrefix, LENGTH) + "\t\t= array, ");
+            tsHeader.write(nameWithPrefix + " = array, ");
             tsHeader.write(TypesHelper.convertToTs(configField.getType()) + ",");
-            tsHeader.write("\t" + tsPosition + ",");
-            tsHeader.write("\t[" + configField.getArraySize() + "],");
-            tsHeader.write("\t" + handleTsInfo(configField.getTsInfo(), 1));
+            tsHeader.write(" " + tsPosition + ",");
+            tsHeader.write(" [" + configField.getArraySize() + "],");
+            tsHeader.write(" " + handleTsInfo(configField.getTsInfo(), 1));
 
             tsPosition += configField.getArraySize() * configField.getElementSize();
         } else {
-            tsHeader.write("\t" + addTabsUpTo(nameWithPrefix, LENGTH) + "\t\t= scalar, ");
+            tsHeader.write(nameWithPrefix + " = scalar, ");
             tsHeader.write(TypesHelper.convertToTs(configField.getType()) + ",");
-            tsHeader.write("\t" + tsPosition + ",");
-            tsHeader.write("\t" + handleTsInfo(configField.getTsInfo(), 1));
+            tsHeader.write(" " + tsPosition + ",");
+            tsHeader.write(" " + handleTsInfo(configField.getTsInfo(), 1));
             tsPosition += configField.getArraySize() * configField.getElementSize();
         }
         tsHeader.write(EOL);
@@ -263,16 +258,5 @@ public class TSProjectConsumer implements ConfigurationConsumer {
             tsWriter.write("; total TS size = " + totalTsSize + EOL);
             VariableRegistry.INSTANCE.register("TOTAL_CONFIG_SIZE", totalTsSize);
         }
-    }
-
-
-    private static String addTabsUpTo(String name, int length) {
-        StringBuilder result = new StringBuilder(name);
-        int currentLength = name.length();
-        while (currentLength < length) {
-            result.append("\t");
-            currentLength += 4;
-        }
-        return result.toString();
     }
 }

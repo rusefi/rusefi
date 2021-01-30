@@ -22,7 +22,7 @@ static volatile size_t sampleCount = 0;
 
 binary_semaphore_t knockSem;
 
-static void completionCallback(ADCDriver* adcp, adcsample_t*, size_t) {
+static void completionCallback(ADCDriver* adcp) {
 	palClearPad(GPIOD, 2);
 
 	if (adcp->state == ADC_COMPLETE) {
@@ -118,6 +118,8 @@ const ADCConversionGroup* getConversionGroup(uint8_t cylinderIndex) {
 	if (cylinderUsesChannel2(cylinderIndex)) {
 		return &adcConvGroupCh2;
 	}
+#else
+	(void)cylinderIndex;
 #endif // KNOCK_HAS_CH2
 
 	return &adcConvGroupCh1;
@@ -188,17 +190,18 @@ void processLastKnockEvent() {
 
 	float sumSq = 0;
 
+	// todo: reduce magic constants. engineConfiguration->adcVcc?
 	constexpr float ratio = 3.3f / 4095.0f;
 
 	size_t localCount = sampleCount;
 
 	// Prepare the steady state at vcc/2 so that there isn't a step
 	// when samples begin
+	// todo: reduce magic constants. engineConfiguration->adcVcc?
 	knockFilter.cookSteadyState(3.3f / 2);
 
 	// Compute the sum of squares
-	for (size_t i = 0; i < localCount; i++)
-	{
+	for (size_t i = 0; i < localCount; i++) {
 		float volts = ratio * sampleBuffer[i];
 
 		float filtered = knockFilter.filter(volts);
@@ -219,7 +222,7 @@ void processLastKnockEvent() {
 }
 
 void KnockThread::ThreadTask() {
-	while(1) {
+	while (1) {
 		chBSemWait(&knockSem);
 
 		ScopePerf perf(PE::SoftwareKnockProcess);

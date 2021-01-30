@@ -102,7 +102,7 @@ static void shaftFallingCallback(bool isPrimary) {
 int icuTriggerTurnOnInputPin(const char *msg, int index, bool isTriggerShaft) {
 	(void)msg;
 	brain_pin_e brainPin = isTriggerShaft ? CONFIG(triggerInputPins)[index] : engineConfiguration->camInputs[index];
-	if (brainPin == GPIO_UNASSIGNED) {
+	if (!isBrainPinValid(brainPin)) {
 		return -1;
 	}
 

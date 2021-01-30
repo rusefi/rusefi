@@ -31,25 +31,9 @@ efitick_t getTimeNowNt(void) {
 
 LoggingWithStorage sharedLogger("main");
 
-extern bool printTriggerDebug;
-extern bool printTriggerTrace;
 bool verboseMode = false;
 
-trigger_type_e focusOnTrigger = TT_UNUSED;
-
 GTEST_API_ int main(int argc, char **argv) {
-	if (focusOnTrigger != TT_UNUSED) {
-		printTriggerDebug = true;
-		printTriggerTrace = true;
-	}
-
-	//	resizeMap();
-	printf("Success 20201203\r\n");
-	exportAllTriggers();
-	if (focusOnTrigger != TT_UNUSED) {
-		return -1;
-	}
-
 	testing::InitGoogleTest(&argc, argv);
 	// uncomment if you only want to run selected tests
 	//::testing::GTEST_FLAG(filter) = "*testFasterEngineSpinningUp*";

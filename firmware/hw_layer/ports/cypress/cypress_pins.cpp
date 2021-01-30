@@ -33,9 +33,8 @@ static brain_pin_e portMap[16] = {
 	GPIOA_0, GPIOB_0, GPIOC_0, GPIOD_0, GPIOE_0, GPIOF_0, GPIO_INVALID, GPIOG_0, GPIO_INVALID, GPIO_INVALID, GPIOH_0, GPIOI_0, GPIOJ_0, GPIO_INVALID, GPIO_INVALID, GPIOK_0
 };
 
-#define PIN_REPO_SIZE (sizeof(ports) / sizeof(ports[0])) * PORT_SIZE
 // todo: move this into PinRepository class
-static const char *PIN_USED[PIN_REPO_SIZE + BOARD_EXT_PINREPOPINS];
+static const char *PIN_USED[BRAIN_PIN_TOTAL_PINS];
 
 #include "pin_repository.h"
 #include "io_pins.h"
@@ -97,7 +96,7 @@ static int getPortIndex(ioportid_t port) {
 	return -1;
 }
 
-ioportid_t getBrainPort(brain_pin_e brainPin) {
+ioportid_t getBrainPinPort(brain_pin_e brainPin) {
 	return ports[(brainPin - GPIOA_0) / PORT_SIZE];
 }
 
@@ -105,15 +104,13 @@ int getBrainPinIndex(brain_pin_e brainPin) {
 	return (brainPin - GPIOA_0) % PORT_SIZE;
 }
 
-int getBrainIndex(ioportid_t port, ioportmask_t pin) {
+int getBrainPinIndex(ioportid_t port, ioportmask_t pin) {
 	int portIndex = getPortIndex(port);
 	return portIndex * PORT_SIZE + pin;
 }
 
 ioportid_t getHwPort(const char *msg, brain_pin_e brainPin) {
-	if (brainPin == GPIO_UNASSIGNED || brainPin == GPIO_INVALID)
-		return GPIO_NULL;
-	if (brainPin < GPIOA_0 || brainPin > BRAIN_PIN_LAST_ONCHIP) {
+	if (!isBrainPinValid(brainPin)) {
 		firmwareError(CUSTOM_ERR_INVALID_PIN, "%s: Invalid brain_pin_e: %d", msg, brainPin);
 		return GPIO_NULL;
 	}
@@ -125,7 +122,7 @@ ioportid_t getHwPort(const char *msg, brain_pin_e brainPin) {
  */
 ioportmask_t getHwPin(const char *msg, brain_pin_e brainPin)
 {
-	if (brainPin == GPIO_UNASSIGNED || brainPin == GPIO_INVALID)
+	if (!isBrainPinValid(brainPin))
 			return EFI_ERROR_CODE;
 
 	if (brain_pin_is_onchip(brainPin))
@@ -165,8 +162,12 @@ brain_pin_e parseBrainPin(const char *str) {
 	return (brain_pin_e)(basePin + pin);
 }
 
-unsigned int getNumBrainPins(void) {
-	return PIN_REPO_SIZE;
+unsigned int getBrainPinOnchipNum(void) {
+	return BRAIN_PIN_ONCHIP_PINS;
+}
+
+unsigned int getBrainPinTotalNum(void) {
+	return BRAIN_PIN_TOTAL_PINS;
 }
 
 void initBrainUsedPins(void) {
@@ -174,6 +175,8 @@ void initBrainUsedPins(void) {
 }
 
 const char* & getBrainUsedPin(unsigned int idx) {
+	/*if (idx >= getBrainPinTotalNum())
+		return NULL;*/
 	return PIN_USED[idx];
 }
 

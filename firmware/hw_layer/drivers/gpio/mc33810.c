@@ -523,7 +523,7 @@ struct gpiochip_ops mc33810_ops = {
  * @details Checks for valid config
  */
 
-int mc33810_add(unsigned int index, const struct mc33810_config *cfg)
+int mc33810_add(unsigned int index, const struct mc33810_config *cfg, brain_pin_e base)
 {
 	int i;
 	int ret;
@@ -560,7 +560,7 @@ int mc33810_add(unsigned int index, const struct mc33810_config *cfg)
 		return -1;
 
 	/* register, return gpio chip base */
-	ret = gpiochip_register(DRIVER_NAME, &mc33810_ops, MC33810_OUTPUTS, chip);
+	ret = gpiochip_register(base, DRIVER_NAME, &mc33810_ops, MC33810_OUTPUTS, chip);
 	if (ret < 0)
 		return ret;
 
@@ -574,9 +574,9 @@ int mc33810_add(unsigned int index, const struct mc33810_config *cfg)
 
 #else /* BOARD_MC33810_COUNT > 0 */
 
-int mc33810_add(unsigned int index, const struct mc33810_config *cfg)
+int mc33810_add(brain_pin_e base, unsigned int index, const struct mc33810_config *cfg)
 {
-	(void)index; (void)cfg;
+	(void)base; (void)index; (void)cfg;
 
 	return -1;
 }

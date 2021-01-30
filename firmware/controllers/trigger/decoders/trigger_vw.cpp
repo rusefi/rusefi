@@ -7,6 +7,7 @@
 
 #include "trigger_vw.h"
 #include "trigger_universal.h"
+#include "error_handling.h"
 
 void setVwConfiguration(TriggerWaveform *s) {
 	efiAssertVoid(CUSTOM_ERR_6660, s != NULL, "TriggerWaveform is NULL");

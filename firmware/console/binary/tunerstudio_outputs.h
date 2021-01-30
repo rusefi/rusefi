@@ -50,8 +50,8 @@ typedef struct {
 	 * water 4 bytes per traffic - I want gauges to work as fast as possible
 	 */
 	unsigned int hasSdCard : 1; // bit 0, 72
-	unsigned int isIgnitionEnabled : 1; // bit 1
-	unsigned int isInjectionEnabled : 1; // bit 2
+	unsigned int isIgnitionEnabledIndicator : 1; // bit 1
+	unsigned int isInjectionEnabledIndicator : 1; // bit 2
 	unsigned int isCylinderCleanupEnabled : 1; // bit 3
 	unsigned int isCylinderCleanupActivated : 1; // bit 4
 	unsigned int isFuelPumpOn : 1; // bit 5
@@ -83,7 +83,7 @@ typedef struct {
 
 	// RPM, vss
 	scaled_channel<uint16_t> rpm;   // 4
-	scaled_percent rpmAcceleration; // 6
+	int16_t rpmAcceleration; // 6
 	scaled_percent speedToRpmRatio; // 8
 	scaled_channel<uint8_t> vehicleSpeedKph; // 10
 	
@@ -244,7 +244,7 @@ typedef struct {
 	int8_t knockLevels[12];		// 250
 
 	int8_t tcuDesiredGear; // 262
-	int8_t padding2[1];		// 263
+	scaled_channel<uint8_t, 2> flexPercent;		// 263
 
 	scaled_voltage rawIdlePositionSensor;	// 264
 	scaled_voltage rawWastegatePositionSensor;	// 266

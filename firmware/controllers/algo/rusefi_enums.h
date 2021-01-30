@@ -12,6 +12,7 @@
 
 #include "efifeatures.h"
 #include "obd_error_codes.h"
+#include "rusefi_generated.h"
 // we do not want to start the search for header from current folder so we use brackets here
 // https://stackoverflow.com/questions/21593/what-is-the-difference-between-include-filename-and-include-filename
 #include <rusefi_hw_enums.h>
@@ -362,13 +363,16 @@ typedef enum {
 
 	TT_52 = TT_TT_52,
 
+	// https://rusefi.com/forum/viewtopic.php?f=5&t=1912
+	TT_TRI_TACH = TT_TT_TRI_TACH,
+
 	// do not forget to edit "#define trigger_type_e_enum" line in integration/rusefi_config.txt file to propogate new value to rusefi.ini TS project
 	// do not forget to invoke "gen_config.bat" once you make changes to integration/rusefi_config.txt
 	// todo: one day a hero would integrate some of these things into Makefile in order to reduce manual magic
 	//
 	// Another point: once you add a new trigger, run get_trigger_images.bat which would run rusefi_test.exe from unit_tests
 	//
-	TT_UNUSED = 53, // this is used if we want to iterate over all trigger types
+	TT_UNUSED = 54, // this is used if we want to iterate over all trigger types
 
 	Force_4_bytes_size_trigger_type = ENUM_32_BITS,
 } trigger_type_e;
@@ -767,7 +771,7 @@ typedef enum {
 	// todo: https://github.com/rusefi/rusefi/issues/2102
 	DBG_LOGIC_ANALYZER = 45,
 	DBG_RUSEFI_WIDEBAND = 46,
-	DBG_47 = 47,
+	DBG_TCU = 47,
 	DBG_48 = 48,
 
 	Force_4_bytes_size_debug_mode_e = ENUM_32_BITS,

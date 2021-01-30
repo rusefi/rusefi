@@ -1,0 +1,42 @@
+pins:
+  - pin: J6
+    id: GPIOE_0
+    class: outputs
+    ts_name: AUX J6 PE0
+
+  - pin: J10
+    id: GPIOE_6
+    class: outputs
+    function: TIM9_CH2
+    ts_name: AUX J10 PE6
+
+  - pin: J11
+    id: GPIOE_5
+    class: outputs
+    function: TIM9_CH1
+    ts_name: AUX J11 PE5
+
+  - pin: J18
+    id: GPIOB_7
+    class: outputs
+    ts_name: AUX J18 PB7
+
+  - pin: AV6
+    id: GPIOC_4
+    class: outputs
+    ts_name: AUX AV6 reuse
+
+  - pin: AV8
+    id: GPIOB_0
+    class: outputs
+    ts_name: AUX AV8 reuse
+
+  - pin: AV9
+    id: GPIOB_1
+    class: outputs
+    ts_name: AUX AV9 reuse
+
+  - pin: AV10
+    id: GPIOA_4
+    class: outputs
+    ts_name: AUX AV10 reuse
