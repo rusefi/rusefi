@@ -23,3 +23,13 @@ if [ -n "$RUSEFI_FTP_SERVER" ]; then
   ncftpput -R -v -u "$RUSEFI_DOXYGEN_FTP_USER" -p "$RUSEFI_DOXYGEN_FTP_PASS" "$RUSEFI_FTP_SERVER" /html html/
 fi
 [ $? -eq 0 ] || { echo "upload FAILED"; exit 1; }
+
+cd ..
+mkdir pinouts
+bash misc/pinout-gen/gen.sh firmware/config/boards/proteus/black23.yaml > pinouts/black23.html
+
+if [ -n "$RUSEFI_FTP_SERVER" ]; then
+  echo "Uploading Pinouts"
+  ncftpput -R -v -u "$RUSEFI_DOXYGEN_FTP_USER" -p "$RUSEFI_DOXYGEN_FTP_PASS" "$RUSEFI_FTP_SERVER" /pinouts pinouts/
+fi
+[ $? -eq 0 ] || { echo "upload FAILED"; exit 1; }
