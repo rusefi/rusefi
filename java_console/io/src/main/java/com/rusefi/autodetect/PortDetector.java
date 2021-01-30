@@ -32,33 +32,6 @@ public class PortDetector {
     public static String autoDetectSerial(Function<IoStream, Void> callback) {
         return "ttyACM0";
 		
-		String rusEfiAddress = System.getProperty("rusefi.address");
-        if (rusEfiAddress != null)
-            return rusEfiAddress;
-        String[] serialPorts = getPortNames();
-        if (serialPorts.length == 0) {
-            log.error("No serial ports detected");
-            return null;
-        }
-        log.info("Trying " + Arrays.toString(serialPorts));
-        List<Thread> serialFinder = new ArrayList<>();
-        CountDownLatch portFound = new CountDownLatch(1);
-        AtomicReference<String> result = new AtomicReference<>();
-        for (String serialPort : serialPorts) {
-            Thread thread = AUTO_DETECT_PORT.newThread(new SerialAutoChecker(serialPort, portFound, result, callback));
-            serialFinder.add(thread);
-            thread.start();
-        }
-        try {
-            portFound.await(5, TimeUnit.SECONDS);
-        } catch (InterruptedException e) {
-            throw new IllegalStateException(e);
-        }
-        log.debug("Found " + result.get() + " now stopping threads");
-        for (Thread thread : serialFinder)
-            thread.interrupt();
-//        FileLog.MAIN.logLine("Returning " + result.get());
-        return result.get();
     }
 
     private static String[] getPortNames() {
