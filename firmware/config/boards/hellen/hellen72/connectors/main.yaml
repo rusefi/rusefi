@@ -427,3 +427,6 @@ pins:
   - pin: 4AH
     function: Evap
 
+info:
+  image:
+    file: main.jpg

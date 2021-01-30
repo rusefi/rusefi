@@ -26,12 +26,13 @@ fi
 
 cd ..
 mkdir pinouts
-bash misc/pinout-gen/gen.sh firmware/config/boards/proteus/black23.yaml > pinouts/black23.html
-cp firmware/config/boards/proteus/black23.jpg pinouts/black23.jpg
-bash misc/pinout-gen/gen.sh firmware/config/boards/proteus/black35.yaml > pinouts/black35.html
-cp firmware/config/boards/proteus/black35.jpg pinouts/black35.jpg
-bash misc/pinout-gen/gen.sh firmware/config/boards/proteus/white35.yaml > pinouts/white35.html
-cp firmware/config/boards/proteus/black35.jpg pinouts/white35.jpg
+mkdir pinouts/proteus
+bash misc/pinout-gen/gen.sh firmware/config/boards/proteus/black23.yaml > pinouts/proteus/black23.html
+cp firmware/config/boards/proteus/black23.jpg pinouts/proteus/black23.jpg
+bash misc/pinout-gen/gen.sh firmware/config/boards/proteus/black35.yaml > pinouts/proteus/black35.html
+cp firmware/config/boards/proteus/black35.jpg pinouts/proteus/black35.jpg
+bash misc/pinout-gen/gen.sh firmware/config/boards/proteus/white35.yaml > pinouts/proteus/white35.html
+cp firmware/config/boards/proteus/black35.jpg pinouts/proteus/white35.jpg
 
 if [ -n "$RUSEFI_FTP_SERVER" ]; then
   echo "Uploading Pinouts"
