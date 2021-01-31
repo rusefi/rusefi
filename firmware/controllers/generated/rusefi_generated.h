@@ -384,6 +384,7 @@
 #define enableInnovateLC2_offset 976
 #define enableLaunchBoost_offset 976
 #define enableLaunchRetard_offset 976
+#define enableMapEstimationTableFallback_offset 76
 #define enableSoftwareKnock_offset 976
 #define enableVerboseCan2Tx_offset 2116
 #define enableVerboseCanTx_offset 744
@@ -977,7 +978,6 @@
 #define isManualSpinningMode_offset 1476
 #define isMapAveragingEnabled_offset 1476
 #define isSdCardEnabled_offset 744
-#define issue_294_27_offset 76
 #define issue_294_28_offset 76
 #define issue_294_29_offset 76
 #define issue_294_30_offset 76
@@ -1098,6 +1098,9 @@
 #define mapAveragingSchedulingAtIndex_offset 1540
 #define mapErrorDetectionTooHigh_offset 1780
 #define mapErrorDetectionTooLow_offset 1776
+#define mapEstimateRpmBins_offset 15744
+#define mapEstimateTable_offset 15200
+#define mapEstimateTpsBins_offset 15712
 #define mapFrequency0Kpa_offset 612
 #define mapFrequency100Kpa_offset 616
 #define mapHighValueVoltage_offset 2212
@@ -1172,6 +1175,7 @@
 #define PACK_MULT_HIGH_PRESSURE 10
 #define PACK_MULT_LAMBDA 10000
 #define PACK_MULT_LAMBDA_CFG 147
+#define PACK_MULT_MAP_ESTIMATE 100
 #define PACK_MULT_MASS_FLOW 10
 #define PACK_MULT_MS 300
 #define PACK_MULT_PERCENT 100
@@ -1248,8 +1252,8 @@
 #define showHumanReadableWarning_offset 976
 #define showSdCardWarning_offset 76
 #define SIGNATURE_BOARD all
-#define SIGNATURE_DATE 2021.01.28
-#define SIGNATURE_HASH 2596245904
+#define SIGNATURE_DATE 2021.01.31
+#define SIGNATURE_HASH 3567219391
 #define silentTriggerError_offset 1464
 #define slowAdcAlpha_offset 2088
 #define sparkDwellRpmBins_offset 332
@@ -1426,6 +1430,7 @@
 #define tps2SecondaryMax_offset 1462
 #define tps2SecondaryMin_offset 1460
 #define TPS_1_BYTE_PACKING_MULT 2
+#define TPS_2_BYTE_PACKING_MULT 100
 #define TPS_TPS_ACCEL_TABLE 8
 #define tpsAccelEnrichmentThreshold_offset 2048
 #define tpsAccelFractionDivisor_offset 3996
@@ -1582,7 +1587,7 @@
 #define ts_show_spi true
 #define ts_show_trigger_comparator false
 #define ts_show_tunerstudio_port true
-#define TS_SIGNATURE "rusEFI 2021.01.28.all.2596245904"
+#define TS_SIGNATURE "rusEFI 2021.01.31.all.3567219391"
 #define TS_SINGLE_WRITE_COMMAND 'W'
 #define TS_SINGLE_WRITE_COMMAND_char W
 #define TS_TEST_COMMAND 't' // 0x74
@@ -1640,7 +1645,7 @@
 #define unused1476b20_offset 1476
 #define unused1476b3_offset 1476
 #define unused1476b8_offset 1476
-#define unused15136_offset 15200
+#define unused15136_offset 15776
 #define unused1708_offset 1708
 #define unused2260_offset 2260
 #define unused2419_offset 2419
