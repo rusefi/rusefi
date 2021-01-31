@@ -268,7 +268,8 @@ void Engine::updateSlowSensors(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 				CONFIG(fuelLevelFullTankVoltage), 100,
 				fuelLevelVoltage);
 	}
-	sensors.vBatt = hasVBatt(PASS_ENGINE_PARAMETER_SIGNATURE) ? getVBatt(PASS_ENGINE_PARAMETER_SIGNATURE) : 12;
+
+	sensors.vBatt = Sensor::get(SensorType::BatteryVoltage).value_or(12);
 
 #if (BOARD_TLE8888_COUNT > 0)
 	// nasty value injection into C driver which would not be able to access Engine class
