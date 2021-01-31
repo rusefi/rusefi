@@ -1,6 +1,7 @@
 #include "init.h"
 #include "adc_inputs.h"
 #include "adc_subscription.h"
+#include "engine.h"
 #include "functional_sensor.h"
 #include "linear_func.h"
 
