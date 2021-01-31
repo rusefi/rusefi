@@ -7,7 +7,7 @@
 # for 'release' options see 'clean_compile_two_versions.bat' file
 
 ifeq ($(DEBUG_LEVEL_OPT),)
-  # this value would be used by default. For 'debug' configuration override with '-O0 -ggdb -g3' or something along these lines
+  # this value would be used by default. For 'debug' configuration override with '-O0 -ggdb -g' or something along these lines
   DEBUG_LEVEL_OPT = -O2
   DDEFS += -DEFI_ENABLE_ASSERTS=FALSE -DCH_DBG_ENABLE_ASSERTS=FALSE -DCH_DBG_ENABLE_STACK_CHECK=FALSE -DCH_DBG_FILL_THREADS=FALSE -DCH_DBG_THREADS_PROFILING=FALSE
 endif
