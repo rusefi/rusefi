@@ -4,7 +4,7 @@
 #include "functional_sensor.h"
 #include "linear_func.h"
 
-EXTERN_ENGINE_CONFIGURATION;
+EXTERN_ENGINE;
 
 static LinearFunc vbattFunc;
 static FunctionalSensor vbattSensor(SensorType::BatteryVoltage, /* timeout = */ MS2NT(100));
