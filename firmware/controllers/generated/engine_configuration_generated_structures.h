@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Thu Jan 28 01:32:24 UTC 2021
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Sun Jan 31 22:20:15 UTC 2021
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -733,8 +733,9 @@ struct engine_configuration_s {
 	offset 76 bit 25 */
 	bool useTLE8888_stepper : 1;
 	/**
+	 * If enabled, the MAP estimate table will be used if the MAP sensor fails to estimate manifold pressure based on RPM and TPS.
 	offset 76 bit 26 */
-	bool issue_294_27 : 1;
+	bool enableMapEstimationTableFallback : 1;
 	/**
 	offset 76 bit 27 */
 	bool issue_294_28 : 1;
@@ -3681,7 +3682,19 @@ struct persistent_config_s {
 	/**
 	 * offset 15200
 	 */
-	uint8_t unused15136[1088];
+	map_estimate_table_t mapEstimateTable;
+	/**
+	 * offset 15712
+	 */
+	uint16_t mapEstimateTpsBins[FUEL_LOAD_COUNT];
+	/**
+	 * offset 15744
+	 */
+	uint16_t mapEstimateRpmBins[FUEL_RPM_COUNT];
+	/**
+	 * offset 15776
+	 */
+	uint8_t unused15136[512];
 	/**
 	 * offset 16288
 	 */
@@ -3789,4 +3802,4 @@ struct persistent_config_s {
 typedef struct persistent_config_s persistent_config_s;
 
 // end
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Thu Jan 28 01:32:24 UTC 2021
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Sun Jan 31 22:20:15 UTC 2021
