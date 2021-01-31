@@ -44,10 +44,7 @@ jobs:
       run: make -j16
 
     - name: OpenOCD wipe & flash STM32
-      run: openocd -f "interface/stlink-v2.cfg" -f "target/stm32f4x.cfg" -c init -c targets -c "reset halt" -c "flash erase_sector 0 0 11" -c "flash write_image "firmware/build/rusefi.bin" 0x08000000" -c "reset run" -c "shutdown"
-
-    - name: Sleep to let ECU boot
-      run: sleep 10
+      run: openocd -f "interface/stlink.cfg" -f "target/stm32f4x.cfg" -c init -c targets -c "reset halt" -c "flash erase_sector 0 0 11" -c "flash write_image "firmware/build/rusefi.bin" 0x08000000" -c "reset run" -c "shutdown"
 
     # This both compiles and runs HW CI tests
     - name: Run Hardware CI
