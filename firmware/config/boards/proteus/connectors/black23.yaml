@@ -114,7 +114,7 @@ pins:
     function: Reserved For Future Use
 
   - pin: 23
-    function: Power supply from main relay. Connect this pin to the output of the car's main relay that also powers injectors, coils, etc. Supplies power to electronic throttle drivers and high side outputs.###
+    function: Power supply from main relay. Connect this pin to the output of the car's main relay that also powers injectors, coils, etc. Supplies power to electronic throttle drivers and high side outputs.
     type: 12v
 
 info:
