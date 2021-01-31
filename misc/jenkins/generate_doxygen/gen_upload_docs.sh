@@ -24,6 +24,7 @@ if [ -n "$RUSEFI_FTP_SERVER" ]; then
 fi
 [ $? -eq 0 ] || { echo "upload FAILED"; exit 1; }
 
+# I should make this automatic, but that would require reading the image file from the yaml, which I don't feel like doing right now
 cd ..
 mkdir pinouts
 mkdir pinouts/proteus
@@ -37,6 +38,9 @@ mkdir pinouts/hellen
 mkdir pinouts/hellen/hellen72
 bash misc/pinout-gen/gen.sh firmware/config/boards/hellen/hellen72/main.yaml > pinouts/hellen/hellen72/main.html
 cp firmware/config/boards/hellen/hellen72/connectors/main.jpg pinouts/hellen/hellen72/main.jpg
+mkdir pinouts/hellen/hellen128
+bash misc/pinout-gen/gen.sh firmware/config/boards/hellen/hellen128/main.yaml > pinouts/hellen/hellen128/main.html
+cp firmware/config/boards/hellen/hellen128/connectors/main.jpg pinouts/hellen/hellen128/main.jpg
 
 if [ -n "$RUSEFI_FTP_SERVER" ]; then
   echo "Uploading Pinouts"
