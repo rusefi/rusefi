@@ -570,7 +570,7 @@ void Engine::checkShutdown(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 		if ((sensors.vBatt > vBattThresholdOn) && !isInShutdownMode(PASS_ENGINE_PARAMETER_SIGNATURE)) {
 			ignitionOnTimeNt = getTimeNowNt();
 			stopEngineRequestTimeNt = 0;
-			scheduleMsg(&engineLogger, "Ingition voltage detected! Cancel the engine shutdown!");
+			scheduleMsg(&engineLogger, "Ignition voltage detected! Cancel the engine shutdown!");
 		}
 	}
 #endif /* EFI_MAIN_RELAY_CONTROL */

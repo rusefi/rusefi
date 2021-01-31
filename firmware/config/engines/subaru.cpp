@@ -58,7 +58,7 @@ void setSubaruEJ18_MRE(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	engineConfiguration->malfunctionIndicatorPin = TLE8888_PIN_23;
 #endif /* BOARD_TLE8888_COUNT */
 
-	// this car has high-side main relay WOW so we have to hard wire it to ingition switch
+	// this car has high-side main relay WOW so we have to hard wire it to ignition switch
 
 
 }
