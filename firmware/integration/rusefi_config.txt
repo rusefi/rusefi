@@ -185,6 +185,7 @@ struct_no_prefix engine_configuration_s
 #define PACK_MULT_VOLTAGE 1000
 #define PACK_MULT_MASS_FLOW 10
 #define TPS_1_BYTE_PACKING_MULT 2
+#define TPS_2_BYTE_PACKING_MULT 100
 #define LOAD_1_BYTE_PACKING_MULT 2
 #define PACK_MULT_AFR_CFG 10
 #define PACK_MULT_LAMBDA_CFG 147
@@ -1548,7 +1549,7 @@ tcubinary_table_t tcuSolenoidTable;
 float vssFilterReciprocal;+Good example: number of tooth on wheel, For Can 10 is a good number.;"Hz",   1,   0,   2.0,   20.0,   2
 
 map_estimate_table_t mapEstimateTable;
-uint16_t[FUEL_LOAD_COUNT] mapEstimateTpsBins;;"% TPS", 0.01, 0.0, 0, 100.0, 1
+uint16_t[FUEL_LOAD_COUNT] mapEstimateTpsBins;;"% TPS", {1/@@TPS_2_BYTE_PACKING_MULT@@}, 0.0, 0, 100.0, 1
 uint16_t[FUEL_RPM_COUNT] mapEstimateRpmBins;;"RPM", 1, 0.0, 0, 18000.0, 0
 
 uint8_t[512] unused15136;;"units", 1, 0, -20, 100, 0
