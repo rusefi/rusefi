@@ -36,6 +36,8 @@ public:
 
 	Accelerometer accelerometer;
 
+	// todo: remove this variable, replace with Sensor::get(SensorType::vbatt).value_or(VBAT_FALLBACK_VALUE)
+	// todo: https://github.com/rusefi/rusefi/issues/2260
 	float vBatt = 0;
 	/**
 	 * that's fuel in tank - just a gauge
