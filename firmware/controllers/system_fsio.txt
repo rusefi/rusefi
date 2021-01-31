@@ -28,6 +28,7 @@ COMBINED_WARNING_LIGHT=(rpm > fsio_setting(2)) | ((coolant > fsio_setting(3)) | 
 # todo: make '5' a setting?
 # todo: always have 'EFI_MAIN_RELAY_CONTROL'?
 # at the moment microRusEFI would not be happy with vbatt > 5 since microRusEFI senses main relay output
+# todo https://github.com/rusefi/rusefi/issues/2258
 #MAIN_RELAY_LOGIC=(time_since_boot >= 0 & time_since_boot < 2) | (vbatt > 5) | in_shutdown
 MAIN_RELAY_LOGIC=(!in_mr_bench) & ((vbatt > 5) | in_shutdown)
 

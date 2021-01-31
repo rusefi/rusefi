@@ -26,7 +26,7 @@ ifeq ($(DEBUG_LEVEL_OPT),)
   DEBUG_LEVEL_OPT = -O2 -ggdb -g
   # Comment the above and uncomment the line below if you want to debug the firmware (it's difficult-to-impossible
   # to debug firmware with optimization enabled).
-  # DEBUG_LEVEL_OPT = -O0 -ggdb -g3
+  # DEBUG_LEVEL_OPT = -O0 -ggdb -g
 endif
 
 

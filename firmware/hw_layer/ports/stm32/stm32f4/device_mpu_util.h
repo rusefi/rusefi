@@ -9,6 +9,8 @@
 
 #include "stm32f4xx_hal_flash_ex.h"
 
+#define MCU_SERIAL_NUMBER_LOCATION (uint8_t*)(0x1FFF7A10)
+
 #define SPI_CR1_8BIT_MODE 0
 #define SPI_CR2_8BIT_MODE 0
 
