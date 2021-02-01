@@ -34,7 +34,7 @@ for c in $CONNECTORS; do
   bash misc/pinout-gen/gen.sh $c > $DIR/$NAME.html
   IMG=$(yq r $c 'info.image.file')
   if [ $IMG ]; then
-    cp $(dirname $DIR)/$IMG $DIR
+    cp $(dirname $c)/$IMG $DIR
   fi
   cp misc/pinout-gen/yaml.min.js $DIR
 done
