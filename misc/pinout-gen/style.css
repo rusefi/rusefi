@@ -94,5 +94,9 @@ table th {
     background-color: #230c00;
     color: white;
   }
+
+  table tr:hover {
+    background-color: #f15a24;
+  }
 }
 
