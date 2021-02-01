@@ -90,7 +90,7 @@ static bool vvtWithRealDecoder(vvt_mode_e vvtMode) {
 			|| vvtMode == VVT_4_1;
 }
 
-void hwHandleVvtCamSignal(trigger_value_e front, efitick_t nowNt DECLARE_ENGINE_PARAMETER_SUFFIX) {
+void hwHandleVvtCamSignal(trigger_value_e front, efitick_t nowNt, int index DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	int bankIndex = 0;
 	TriggerCentral *tc = &engine->triggerCentral;
 	if (front == TV_RISE) {
