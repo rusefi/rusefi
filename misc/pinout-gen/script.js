@@ -40,6 +40,9 @@ window.addEventListener('load', function() {
 
   for (var i = 0; i < connector.pins.length; i++) {
     var pin = connector.pins[i];
+    if (!pin.pin) {
+      continue;
+    }
     var pinfo;
     for (var ii = 0; ii < connector.info.pins.length; ii++) {
       if (connector.info.pins[ii].pin == pin.pin) {
