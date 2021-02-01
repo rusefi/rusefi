@@ -2,7 +2,7 @@
  * @file	trigger_input.cpp
  *
  * @date Nov 11, 2019
- * @author Andrey Belomutskiy, (c) 2012-2020
+ * @author Andrey Belomutskiy, (c) 2012-2021
  */
 
 #include "global.h"
@@ -22,7 +22,6 @@ EXTERN_ENGINE;
 	void icuTriggerTurnOnInputPins(Logging *sharedLogger);
 	int  icuTriggerTurnOnInputPin(const char *msg, int index, bool isTriggerShaft);
 	void icuTriggerTurnOffInputPin(brain_pin_e brainPin);
-	void icuTriggerSetPrimaryChannel(brain_pin_e brainPin);
 #else
 	#define icuTriggerTurnOnInputPins(sharedLogger) ((void)0)
 	int  icuTriggerTurnOnInputPin(const char *msg, int index, bool isTriggerShaft) {
@@ -33,14 +32,12 @@ EXTERN_ENGINE;
 		return -2;
 	}
 	#define icuTriggerTurnOffInputPin(brainPin) ((void)0)
-	#define icuTriggerSetPrimaryChannel(brainPin) ((void)0)
 #endif
 
 #if (HAL_TRIGGER_USE_PAL == TRUE)
 	void extiTriggerTurnOnInputPins(Logging *sharedLogger);
 	int  extiTriggerTurnOnInputPin(const char *msg, int index, bool isTriggerShaft);
 	void extiTriggerTurnOffInputPin(brain_pin_e brainPin);
-	void extiTriggerSetPrimaryChannel(brain_pin_e brainPin);
 #else
 	#define extiTriggerTurnOnInputPins(sharedLogger) ((void)0)
 	int  extiTriggerTurnOnInputPin(const char *msg, int index, bool isTriggerShaft) {
@@ -51,7 +48,6 @@ EXTERN_ENGINE;
 		return -2;
 	}
 	#define extiTriggerTurnOffInputPin(brainPin) ((void)0)
-	#define extiTriggerSetPrimaryChannel(brainPin) ((void)0)
 #endif
 
 enum triggerType {
@@ -163,9 +159,6 @@ void startTriggerInputPins(void) {
 			turnOnTriggerInputPin("Cam", i, false);
 		}
 	}
-
-	icuTriggerSetPrimaryChannel(CONFIG(triggerInputPins)[0]);
-	extiTriggerSetPrimaryChannel(CONFIG(triggerInputPins)[0]);
 }
 
 void turnOnTriggerInputPins(Logging *sharedLogger) {
