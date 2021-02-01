@@ -88,7 +88,6 @@ void hwHandleVvtCamSignal(trigger_value_e front, efitick_t timestamp, int index 
 void initTriggerCentral(Logging *sharedLogger);
 
 int isSignalDecoderError(void);
-void resetMaxValues();
 
 void onConfigurationChangeTriggerCallback(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 bool checkIfTriggerConfigChanged(DECLARE_ENGINE_PARAMETER_SIGNATURE);
