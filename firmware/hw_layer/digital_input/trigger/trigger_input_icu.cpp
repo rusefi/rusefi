@@ -128,10 +128,6 @@ void icuTriggerTurnOffInputPin(brain_pin_e brainPin) {
 	stopDigitalCapture("trigger", brainPin);
 }
 
-void icuTriggerSetPrimaryChannel(brain_pin_e brainPin) {
-	(void)brainPin;
-}
-
 void icuTriggerTurnOnInputPins(Logging *sharedLogger) {
 	logger = sharedLogger;
 }
