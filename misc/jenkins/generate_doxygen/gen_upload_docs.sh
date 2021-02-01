@@ -24,23 +24,20 @@ if [ -n "$RUSEFI_FTP_SERVER" ]; then
 fi
 [ $? -eq 0 ] || { echo "upload FAILED"; exit 1; }
 
-# I should make this automatic, but that would require reading the image file from the yaml, which I don't feel like doing right now
 cd ..
-mkdir pinouts
-mkdir pinouts/proteus
-bash misc/pinout-gen/gen.sh firmware/config/boards/proteus/black23.yaml > pinouts/proteus/black23.html
-cp firmware/config/boards/proteus/connectors/black23.jpg pinouts/proteus/black23.jpg
-bash misc/pinout-gen/gen.sh firmware/config/boards/proteus/black35.yaml > pinouts/proteus/black35.html
-cp firmware/config/boards/proteus/connectors/black35.jpg pinouts/proteus/black35.jpg
-bash misc/pinout-gen/gen.sh firmware/config/boards/proteus/white35.yaml > pinouts/proteus/white35.html
-cp firmware/config/boards/proteus/connectors/black35.jpg pinouts/proteus/white35.jpg
-mkdir pinouts/hellen
-mkdir pinouts/hellen/hellen72
-bash misc/pinout-gen/gen.sh firmware/config/boards/hellen/hellen72/main.yaml > pinouts/hellen/hellen72/main.html
-cp firmware/config/boards/hellen/hellen72/connectors/main.jpg pinouts/hellen/hellen72/main.jpg
-mkdir pinouts/hellen/hellen128
-bash misc/pinout-gen/gen.sh firmware/config/boards/hellen/hellen128/main.yaml > pinouts/hellen/hellen128/main.html
-cp firmware/config/boards/hellen/hellen128/connectors/main.jpg pinouts/hellen/hellen128/main.jpg
+
+CONNECTORS=$(find -path "./firmware/config/boards/*/connectors/*.yaml")
+for c in $CONNECTORS; do
+  DIR="pinouts/"$(echo $c | tr '/' '\n' | tail -n +5 | head -n -2 | tr '\n' '/')
+  NAME=$(basename $c .yaml)
+  mkdir -p $DIR
+  bash misc/pinout-gen/gen.sh $c > $DIR/$NAME.html
+  IMG=$(yq r $c 'info.image.file')
+  if [ $IMG ]; then
+    cp $(dirname $c)/$IMG $DIR
+  fi
+  cp misc/pinout-gen/yaml.min.js $DIR
+done
 
 if [ -n "$RUSEFI_FTP_SERVER" ]; then
   echo "Uploading Pinouts"
