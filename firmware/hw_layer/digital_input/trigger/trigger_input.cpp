@@ -67,31 +67,35 @@ static int turnOnTriggerInputPin(const char *msg, int index, bool isTriggerShaft
 	brain_pin_e brainPin = isTriggerShaft ?
 		CONFIG(triggerInputPins)[index] : engineConfiguration->camInputs[index];
 
-	if (isTriggerShaft)
+	if (isTriggerShaft) {
 		shaftTriggerType[index] = TRIGGER_NONE;
-	else
+	} else {
 		camTriggerType[index] = TRIGGER_NONE;
+	}
 
-	if (!isBrainPinValid(brainPin))
+	if (!isBrainPinValid(brainPin)) {
 		return 0;
+	}
 
 	/* try ICU first */
 #if EFI_ICU_INPUTS
 	if (icuTriggerTurnOnInputPin(msg, index, isTriggerShaft) >= 0) {
-		if (isTriggerShaft)
+		if (isTriggerShaft) {
 			shaftTriggerType[index] = TRIGGER_ICU;
-		else
+		} else {
 			camTriggerType[index] = TRIGGER_ICU;
+		}
 		return 0;
 	}
 #endif
 
 	/* ... then EXTI */
 	if (extiTriggerTurnOnInputPin(msg, index, isTriggerShaft) >= 0) {
-		if (isTriggerShaft)
+		if (isTriggerShaft) {
 			shaftTriggerType[index] = TRIGGER_EXTI;
-		else
+		} else {
 			camTriggerType[index] = TRIGGER_EXTI;
+		}
 		return 0;
 	}
 
@@ -106,20 +110,24 @@ static void turnOffTriggerInputPin(int index, bool isTriggerShaft) {
 
 	if (isTriggerShaft) {
 #if EFI_ICU_INPUTS
-		if (shaftTriggerType[index] == TRIGGER_ICU)
+		if (shaftTriggerType[index] == TRIGGER_ICU) {
 			icuTriggerTurnOffInputPin(brainPin);
+		}
 #endif
-		if (shaftTriggerType[index] == TRIGGER_EXTI)
+		if (shaftTriggerType[index] == TRIGGER_EXTI) {
 			extiTriggerTurnOffInputPin(brainPin);
+		}
 
 		shaftTriggerType[index] = TRIGGER_NONE;
 	} else {
 #if EFI_ICU_INPUTS
-		if (camTriggerType[index] == TRIGGER_ICU)
+		if (camTriggerType[index] == TRIGGER_ICU) {
 			icuTriggerTurnOffInputPin(brainPin);
+		}
 #endif
-		if (camTriggerType[index] == TRIGGER_EXTI)
+		if (camTriggerType[index] == TRIGGER_EXTI) {
 			extiTriggerTurnOffInputPin(brainPin);
+		}
 
 		camTriggerType[index] = TRIGGER_NONE;
 	}
