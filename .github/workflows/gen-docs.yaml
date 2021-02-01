@@ -14,11 +14,13 @@ jobs:
         submodules: recursive
         fetch-depth: 0
 
-    - name: Install ncftp, kicad, and doxygen
+    - name: Install ncftp, kicad, doxygen, and yq
       run: |
+        sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys CC86BB64
+        sudo add-apt-repository ppa:rmescandon/yq
         sudo add-apt-repository ppa:kicad/kicad-5.1-releases
         sudo apt-get update
-        sudo apt-get install ncftp kicad doxygen
+        sudo apt-get install ncftp kicad doxygen yq
 
     - name: Set FTP variables
       env:
