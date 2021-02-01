@@ -83,7 +83,7 @@ struct_no_prefix engine_configuration_s
 #define BANKS_COUNT 2
 #define CAMS_PER_BANK 2
 
-#define CAM_INPUTS_COUNT @@BANKS_COUNT@@ * @@CAMS_PER_BANK@@
+#define CAM_INPUTS_COUNT @@BANKS_COUNT@@*@@CAMS_PER_BANK@@
 
 #define SERVO_COUNT 8
 
