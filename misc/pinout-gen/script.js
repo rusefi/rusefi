@@ -2,7 +2,7 @@ var connectorYaml = `
 ###DATA###
 `;
 
-function addRow(table, info) {
+function addRow(table, pin, pdiv) {
   var template = document.getElementById("table-template");
   var clone = template.content.cloneNode(true);
   var row = clone.querySelector(".data");
@@ -11,11 +11,11 @@ function addRow(table, info) {
   var tdata = clone.querySelector(".type-data");
   var fdata = clone.querySelector(".function-data");
   var cdata = clone.querySelector(".color-data");
-  pdata.textContent = info.pin;
-  idata.textContent = info.id;
-  tdata.textContent = info.type
-  fdata.textContent = info.function;
-  cdata.textContent = info.color
+  pdata.textContent = pin.pin;
+  idata.textContent = pin.id;
+  tdata.textContent = pin.type
+  fdata.textContent = pin.function;
+  cdata.textContent = pin.color
   row.addEventListener('click', function(pin, pdiv) {
     clickPin(pin, pdiv);
   }.bind(null, pin, pdiv));
