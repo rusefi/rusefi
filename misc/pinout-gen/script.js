@@ -5,6 +5,7 @@ var connectorYaml = `
 function addRow(table, info) {
   var template = document.getElementById("table-template");
   var clone = template.content.cloneNode(true);
+  var row = clone.querySelector(".data");
   var pdata = clone.querySelector(".pin-data");
   var idata = clone.querySelector(".id-data");
   var tdata = clone.querySelector(".type-data");
@@ -15,7 +16,35 @@ function addRow(table, info) {
   tdata.textContent = info.type
   fdata.textContent = info.function;
   cdata.textContent = info.color
+  row.addEventListener('click', function(pin, pdiv) {
+    clickPin(pin, pdiv);
+  }.bind(null, pin, pdiv));
   table.appendChild(clone);
+}
+
+function clickPin(pin, pdiv) {
+  var table = document.getElementById("info-table").querySelector("tbody");
+  table.innerHTML = "";
+  if (Array.isArray(pin.id)) {
+    var pinIds = pin.id.filter((value, index) => {
+      return pin.id.indexOf(value) === index;
+    });
+    for (var i = 0; i < pinIds.length; i++) {
+      addRow(table, {pin: pin.pin, id: pinIds[i], function: pin.function}, pdiv);
+    }
+  } else {
+    addRow(table, pin, pdiv);
+  }
+  var pins = document.querySelectorAll(".pin-marker");
+  for (var i = 0; i < pins.length; i++) {
+    if (pins[i].dataset.type == pin.type) {
+      pins[i].classList.add("highlight");
+    } else {
+      pins[i].classList.remove("highlight");
+    }
+    pins[i].classList.remove("selected");
+  }
+  pdiv.classList.add("selected");
 }
 
 function adjustMarkers() {
@@ -56,41 +85,16 @@ window.addEventListener('load', function() {
       pdiv.style.top = ((pinfo.y / imgHeight) * 100) + "%";
       pdiv.style.left = ((pinfo.x / imgWidth) * 100) + "%";
       pdiv.dataset.type = pin.type;
-      pdiv.addEventListener("click", function(pin, div) {
-        var table = document.getElementById("info-table").querySelector("tbody");
-        table.innerHTML = "";
-        if (Array.isArray(pin.id)) {
-          var pinIds = pin.id.filter((value, index) => {
-            return pin.id.indexOf(value) === index;
-          });
-          for (var i = 0; i < pinIds.length; i++) {
-            addRow(table, {pin: pin.pin, id: pinIds[i], function: pin.function});
-          }
-        } else {
-          addRow(table, pin);
-        }
-        var pins = document.querySelectorAll(".pin-marker");
-        for (var i = 0; i < pins.length; i++) {
-          if (pins[i].dataset.type == pin.type) {
-            pins[i].classList.add("highlight");
-          } else {
-            pins[i].classList.remove("highlight");
-          }
-          pins[i].classList.remove("selected");
-        }
-        div.classList.add("selected");
+      pdiv.addEventListener("click", function(pin, pdiv) {
+        clickPin(pin, pdiv);
       }.bind(null, pin, pdiv));
       cdiv.appendChild(pdiv);
+      var fullTable = document.getElementById("pinout-table").querySelector("tbody");
+      addRow(fullTable, connector.pins[i], pdiv);
     }
     adjustMarkers();
   });
   document.getElementById("connector-img").src = connector.info.image.file;
-
-
-  for (var i = 0; i < connector.pins.length; i++) {
-    var table = document.getElementById("pinout-table").querySelector("tbody");
-    addRow(table, connector.pins[i]);
-  }
 });
 
 window.addEventListener('resize', function() {
