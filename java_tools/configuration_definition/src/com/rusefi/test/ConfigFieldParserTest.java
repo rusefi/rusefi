@@ -87,7 +87,7 @@ public class ConfigFieldParserTest {
         String test = "struct pid_s\n" +
                 "#define ERROR_BUFFER_SIZE 120\n" +
                 "#define ERROR_BUFFER_COUNT 120\n" +
-                "#define RESULT @@ERROR_BUFFER_SIZE@@*@@ERROR_BUFFER_COUNT@@\n" +
+                "#define RESULT @@ERROR_BUFFER_SIZE@@ * @@ERROR_BUFFER_COUNT@@\n" +
                 "\tint16_t periodMs;PID dTime;\"ms\",      1,      0,       0, 3000,      0\n" +
                 "end_struct\n" +
                 "";
