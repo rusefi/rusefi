@@ -4,6 +4,7 @@
   border-radius: 50%;
   background-color: white;
   border: 2px blue solid;
+  cursor: pointer;
 }
 
 .pin-marker:hover {
@@ -53,6 +54,10 @@ table {
   table {
     font-size: 3rem;
   }
+}
+
+table tbody tr {
+  cursor: pointer;
 }
 
 table td, table th {
