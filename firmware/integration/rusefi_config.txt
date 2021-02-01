@@ -81,8 +81,9 @@ struct_no_prefix engine_configuration_s
 
 ! V engines or flat engines would have pairs of shafts with same trigger shape and target position
 #define BANKS_COUNT 2
+#define CAMS_PER_BANK 2
 
-#define CAM_INPUTS_COUNT 4
+#define CAM_INPUTS_COUNT BANKS_COUNT * CAMS_PER_BANK
 
 #define SERVO_COUNT 8
 
