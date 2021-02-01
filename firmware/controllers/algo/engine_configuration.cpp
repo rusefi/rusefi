@@ -32,20 +32,20 @@
 #include "sensor.h"
 
 #include "hip9011_lookup.h"
+#include "hip9011_logic.h"
+
 #if EFI_MEMS
 #include "accelerometer.h"
 #endif
 
 #include "custom_engine.h"
 #include "engine_template.h"
-#include "bmw_e34.h"
 #include "bmw_m73.h"
 
 #include "dodge_neon.h"
 #include "dodge_ram.h"
 
 #include "ford_aspire.h"
-#include "ford_fiesta.h"
 #include "ford_1995_inline_6.h"
 
 #include "nissan_primera.h"
@@ -61,7 +61,6 @@
 #include "m111.h"
 
 #include "citroenBerlingoTU3JP.h"
-#include "rover_v8.h"
 #include "mitsubishi.h"
 #include "subaru.h"
 #include "test_engine.h"
@@ -795,6 +794,7 @@ static void setDefaultEngineConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 
 	setLambdaMap(config->lambdaTable, 1.0f);
 	engineConfiguration->stoichRatioPrimary = 14.7f * PACK_MULT_AFR_CFG;
+	engineConfiguration->stoichRatioSecondary = 9.0f * PACK_MULT_AFR_CFG;
 
 	setDefaultVETable(PASS_ENGINE_PARAMETER_SIGNATURE);
 
@@ -848,7 +848,7 @@ static void setDefaultEngineConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	engineConfiguration->cranking.rpm = 550;
 	engineConfiguration->cutFuelOnHardLimit = true;
 	engineConfiguration->cutSparkOnHardLimit = true;
-
+	engineConfiguration->failedMapFallback = 60;
 
 	engineConfiguration->tChargeMinRpmMinTps = 0.25;
 	engineConfiguration->tChargeMinRpmMaxTps = 0.25;
@@ -970,6 +970,7 @@ static void setDefaultEngineConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	engineConfiguration->HD44780height = 4;
 
 	engineConfiguration->cylinderBore = 87.5;
+	engineConfiguration->knockBandCustom = BAND(engineConfiguration->cylinderBore);
 
 	setEgoSensor(ES_14Point7_Free PASS_CONFIG_PARAMETER_SUFFIX);
 
@@ -1156,28 +1157,14 @@ void resetConfigurationExt(Logging * logger, configuration_callback_t boardCallb
 	switch (engineType) {
 	case MICRO_RUS_EFI:
 // todo: is it time to replace MICRO_RUS_EFI, PROTEUS, PROMETHEUS_DEFAULTS with MINIMAL_PINS? maybe rename MINIMAL_PINS to DEFAULT?
-	case PROTEUS:
+	case PROTEUS_DEFAULTS:
 	case PROMETHEUS_DEFAULTS:
-	case ZIL_130:
 	case MINIMAL_PINS:
 		// all basic settings are already set in prepareVoidConfiguration(), no need to set anything here
 		// nothing to do - we do it all in setBoardConfigurationOverrides
 		break;
-	case MRE_M111:
-		setM111EngineConfiguration(PASS_CONFIG_PARAMETER_SIGNATURE);
-		break;
-	case MRE_BOARD_OLD_TEST:
-		mreBoardOldTest(PASS_CONFIG_PARAMETER_SIGNATURE);
-		break;
-	case MRE_BOARD_NEW_TEST:
-		mreBoardNewTest(PASS_CONFIG_PARAMETER_SIGNATURE);
-		break;
 	case TEST_ENGINE:
 		setTestEngineConfiguration(PASS_CONFIG_PARAMETER_SIGNATURE);
-		break;
-	case SUBARUEJ20G_DEFAULTS:
-	case MRE_SUBARU_EJ18:
-		setSubaruEJ18_MRE(PASS_CONFIG_PARAMETER_SIGNATURE);
 		break;
 #if EFI_UNIT_TEST
 	case TEST_ISSUE_366_BOTH:
@@ -1190,29 +1177,19 @@ void resetConfigurationExt(Logging * logger, configuration_callback_t boardCallb
 		setIssue898(PASS_CONFIG_PARAMETER_SIGNATURE);
 		break;
 #endif // EFI_UNIT_TEST
-#if HW_PROTEUS
-	case BMW_M73_PROTEUS:
-		setEngineBMW_M73_Proteus(PASS_CONFIG_PARAMETER_SIGNATURE);
+#if HW_MICRO_RUSEFI
+	case MRE_M111:
+		setM111EngineConfiguration(PASS_CONFIG_PARAMETER_SIGNATURE);
 		break;
-	case MIATA_PROTEUS_TCU:
-		setMiataNB2_Proteus_TCU(PASS_CONFIG_PARAMETER_SIGNATURE);
+	case SUBARUEJ20G_DEFAULTS:
+	case MRE_SUBARU_EJ18:
+		setSubaruEJ18_MRE(PASS_CONFIG_PARAMETER_SIGNATURE);
 		break;
-	case PROTEUS_MIATA_NB2:
-		setMiataNB2_ProteusEngineConfiguration(PASS_CONFIG_PARAMETER_SIGNATURE);
+	case MRE_BOARD_OLD_TEST:
+		mreBoardOldTest(PASS_CONFIG_PARAMETER_SIGNATURE);
 		break;
-#endif // HW_PROTEUS
-#if EFI_INCLUDE_ENGINE_PRESETS
-	case DEFAULT_FRANKENSO:
-		setFrankensoConfiguration(PASS_CONFIG_PARAMETER_SIGNATURE);
-		break;
-	case FRANKENSO_QA_ENGINE:
-		setFrankensoBoardTestConfiguration(PASS_CONFIG_PARAMETER_SIGNATURE);
-		break;
-	case BMW_M73_F:
-		setEngineBMW_M73_Frankenso(PASS_CONFIG_PARAMETER_SIGNATURE);
-		break;
-	case BMW_M73_M:
-		setEngineBMW_M73_Manhattan(PASS_CONFIG_PARAMETER_SIGNATURE);
+	case MRE_BOARD_NEW_TEST:
+		mreBoardNewTest(PASS_CONFIG_PARAMETER_SIGNATURE);
 		break;
 	case BMW_M73_MRE:
 	case BMW_M73_MRE_SLAVE:
@@ -1236,11 +1213,44 @@ void resetConfigurationExt(Logging * logger, configuration_callback_t boardCallb
 	case MRE_MIATA_NB2_ETB:
 		setMiataNB2_MRE_ETB(PASS_CONFIG_PARAMETER_SIGNATURE);
 		break;
-	case DODGE_NEON_1995:
-		setDodgeNeon1995EngineConfiguration(PASS_CONFIG_PARAMETER_SIGNATURE);
-		break;
 	case MRE_BODY_CONTROL:
 		mreBCM(PASS_CONFIG_PARAMETER_SIGNATURE);
+		break;
+#endif // HW_MICRO_RUSEFI
+#if HW_PROTEUS
+	case PROTEUS_QC_TEST_BOARD:
+		proteusBoardTest(PASS_CONFIG_PARAMETER_SIGNATURE);
+		break;
+	case BMW_M73_PROTEUS:
+		setEngineBMW_M73_Proteus(PASS_CONFIG_PARAMETER_SIGNATURE);
+		break;
+	case MIATA_PROTEUS_TCU:
+		setMiataNB2_Proteus_TCU(PASS_CONFIG_PARAMETER_SIGNATURE);
+		break;
+	case PROTEUS_MIATA_NB2:
+		setMiataNB2_ProteusEngineConfiguration(PASS_CONFIG_PARAMETER_SIGNATURE);
+		break;
+#endif // HW_PROTEUS
+#if HW_HELLEN
+	case HELLEN_NB2:
+		setMiataNB2_Hellen72(PASS_CONFIG_PARAMETER_SIGNATURE);
+		break;
+#endif // HW_HELLEN
+#if HW_FRANKENSO
+	case DEFAULT_FRANKENSO:
+		setFrankensoConfiguration(PASS_CONFIG_PARAMETER_SIGNATURE);
+		break;
+	case FRANKENSO_QA_ENGINE:
+		setFrankensoBoardTestConfiguration(PASS_CONFIG_PARAMETER_SIGNATURE);
+		break;
+	case BMW_M73_F:
+		setEngineBMW_M73_Frankenso(PASS_CONFIG_PARAMETER_SIGNATURE);
+		break;
+	case BMW_M73_M:
+		setEngineBMW_M73_Manhattan(PASS_CONFIG_PARAMETER_SIGNATURE);
+		break;
+	case DODGE_NEON_1995:
+		setDodgeNeon1995EngineConfiguration(PASS_CONFIG_PARAMETER_SIGNATURE);
 		break;
 	case DODGE_NEON_2003_CRANK:
 		setDodgeNeonNGCEngineConfiguration(PASS_CONFIG_PARAMETER_SIGNATURE);
@@ -1250,9 +1260,6 @@ void resetConfigurationExt(Logging * logger, configuration_callback_t boardCallb
 		break;
 	case FORD_ASPIRE_1996:
 		setFordAspireEngineConfiguration(PASS_CONFIG_PARAMETER_SIGNATURE);
-		break;
-	case FORD_FIESTA:
-		setFordFiestaDefaultEngineConfiguration(PASS_ENGINE_PARAMETER_SIGNATURE);
 		break;
 	case NISSAN_PRIMERA:
 		setNissanPrimeraEngineConfiguration(PASS_CONFIG_PARAMETER_SIGNATURE);
@@ -1320,14 +1327,8 @@ void resetConfigurationExt(Logging * logger, configuration_callback_t boardCallb
 	case CITROEN_TU3JP:
 		setCitroenBerlingoTU3JPConfiguration(PASS_CONFIG_PARAMETER_SIGNATURE);
 		break;
-	case ROVER_V8:
-		setRoverv8(PASS_CONFIG_PARAMETER_SIGNATURE);
-		break;
 	case SUBARU_2003_WRX:
 		setSubaru2003Wrx(PASS_CONFIG_PARAMETER_SIGNATURE);
-		break;
-	case BMW_E34:
-		setBmwE34(PASS_CONFIG_PARAMETER_SIGNATURE);
 		break;
 	case DODGE_RAM:
 		setDodgeRam1996(PASS_CONFIG_PARAMETER_SIGNATURE);
@@ -1368,7 +1369,7 @@ void resetConfigurationExt(Logging * logger, configuration_callback_t boardCallb
 	case TEST_33816:
 		setTest33816EngineConfiguration(PASS_CONFIG_PARAMETER_SIGNATURE);
 		break;
-#endif // EFI_INCLUDE_ENGINE_PRESETS
+#endif // HW_FRANKENSO
 	default:
 		firmwareError(CUSTOM_UNEXPECTED_ENGINE_TYPE, "Unexpected engine type: %d", engineType);
 	}

@@ -52,6 +52,7 @@
 #include "ego.h"
 #include "thermistors.h"
 #include "mazda_miata_base_maps.h"
+#include "hip9011_logic.h"
 
 EXTERN_CONFIG;
 
@@ -285,6 +286,7 @@ static void setMazdaMiataEngineNB2Defaults(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 
 	setOperationMode(engineConfiguration, FOUR_STROKE_SYMMETRICAL_CRANK_SENSOR);
 	engineConfiguration->specs.displacement = 1.839;
+	engineConfiguration->cylinderBore = 83;
 	strcpy(CONFIG(engineMake), ENGINE_MAKE_MAZDA);
 	strcpy(CONFIG(engineCode), "NB2");
 
@@ -750,16 +752,19 @@ void setMiataNB2_Proteus_TCU(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 
 }
 
+/**
+ * https://github.com/rusefi/rusefi/wiki/HOWTO-Miata-NB2-on-Proteus
+ */
 void setMiataNB2_ProteusEngineConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
     setMazdaMiataEngineNB2Defaults(PASS_CONFIG_PARAMETER_SIGNATURE);
 
-    engineConfiguration->triggerInputPins[0] = GPIOC_6;
+    engineConfiguration->triggerInputPins[0] = GPIOC_6;                     // pin 10/black23
     engineConfiguration->triggerInputPins[1] = GPIO_UNASSIGNED;
-    engineConfiguration->camInputs[0] = GPIOE_11;
+    engineConfiguration->camInputs[0] = GPIOE_11;                           // pin  1/black23
 
-    engineConfiguration->alternatorControlPin = GPIOA_8;
+    engineConfiguration->alternatorControlPin = GPIOA_8;  // "Highside 2"    # pin 1/black35
 
-    engineConfiguration->auxPidPins[0] = GPIOB_5; // VVT solenoid control
+    engineConfiguration->auxPidPins[0] = GPIOB_5; // VVT solenoid control # pin 8/black35
 
     // high-side driver with +12v VP jumper
     engineConfiguration->tachOutputPin = GPIOA_9; // tachometer
@@ -767,23 +772,28 @@ void setMiataNB2_ProteusEngineConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE) 
 
     engineConfiguration->ignitionMode = IM_WASTED_SPARK;
 
-    engineConfiguration->ignitionPins[0] = GPIOD_4;
+    engineConfiguration->ignitionPins[0] = GPIOD_4; // "Ign 1"         # pin 35/black35
     engineConfiguration->ignitionPins[1] = GPIO_UNASSIGNED;
-    engineConfiguration->ignitionPins[2] = GPIOC_9;
+    engineConfiguration->ignitionPins[2] = GPIOC_9; // "Ign 3"         # pin 22/black35
     engineConfiguration->ignitionPins[3] = GPIO_UNASSIGNED;
 
     engineConfiguration->crankingInjectionMode = IM_SIMULTANEOUS;
     engineConfiguration->injectionMode = IM_SEQUENTIAL;
 
 
-    engineConfiguration->injectionPins[0] = GPIOD_7; // BLU
-    engineConfiguration->injectionPins[1] = GPIOG_9; // BLK
-    engineConfiguration->injectionPins[2] = GPIOG_10; // GRN
-    engineConfiguration->injectionPins[3] = GPIOG_11; // WHT
+    engineConfiguration->injectionPins[0] = GPIOD_7;  // BLU  # pin 3/black35
+    engineConfiguration->injectionPins[1] = GPIOG_9;  // BLK  # pin 15/black35
+    engineConfiguration->injectionPins[2] = GPIOG_10; // GRN  # pin 4/black35
+    engineConfiguration->injectionPins[3] = GPIOG_11; // WHT  # pin 16/black35
     engineConfiguration->injectionPinMode = OM_DEFAULT;
 
 
-    engineConfiguration->malfunctionIndicatorPin = GPIOB_6;
+    CONFIG(enableSoftwareKnock) = true;
+    // second harmonic (aka double) is usually quieter background noise
+    // 13.8
+	engineConfiguration->knockBandCustom = 2 * BAND(engineConfiguration->cylinderBore);
+
+    engineConfiguration->malfunctionIndicatorPin = GPIOB_6; // "Lowside 10"    # pin 20/black35
 
     engineConfiguration->map.sensor.hwChannel = EFI_ADC_10;
 
@@ -798,14 +808,23 @@ void setMiataNB2_ProteusEngineConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE) 
     engineConfiguration->clt.adcChannel =  EFI_ADC_14;
     engineConfiguration->iat.adcChannel = EFI_ADC_8;
 
-    engineConfiguration->fuelPumpPin = GPIOG_13;
+    engineConfiguration->fuelPumpPin = GPIOG_13;// "Lowside 6"     # pin 6/black35
 
-    engineConfiguration->idle.solenoidPin = GPIOG_1;
+    engineConfiguration->idle.solenoidPin = GPIOG_14;  // "Lowside 7"     # pin 7/black35
     engineConfiguration->idle.solenoidFrequency = 300;
 
 
     engineConfiguration->fanPin = GPIOB_7;
 
+	CONFIG(mainRelayPin) = GPIOG_12;// "Lowside 5"     # pin 5/black35
+
 
 }
 #endif // HW_PROTEUS
+
+#if HW_HELLEN
+void setMiataNB2_Hellen72(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
+    setMazdaMiataEngineNB2Defaults(PASS_CONFIG_PARAMETER_SIGNATURE);
+	strcpy(CONFIG(vehicleName), "H72 test");
+}
+#endif // HW_HELLEN

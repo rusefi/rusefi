@@ -1,7 +1,7 @@
 #include "global.h"
 #include "rusefi_enums.h"
 #include "rusefi_hw_enums.h"
-// was generated automatically by rusEfi tool  from rusefi_hw_enums.h // was generated automatically by rusEfi tool  from rusefi_enums.h // by enum2string.jar tool on Fri Dec 18 08:54:09 EST 2020
+// was generated automatically by rusEfi tool  from rusefi_hw_enums.h // was generated automatically by rusEfi tool  from rusefi_enums.h // by enum2string.jar tool on Sat Jan 09 19:14:08 UTC 2021
 // see also gen_config_and_enums.bat
 
 
@@ -439,6 +439,38 @@ case GPIOH_8:
   return "GPIOH_8";
 case GPIOH_9:
   return "GPIOH_9";
+case GPIOI_0:
+  return "GPIOI_0";
+case GPIOI_1:
+  return "GPIOI_1";
+case GPIOI_10:
+  return "GPIOI_10";
+case GPIOI_11:
+  return "GPIOI_11";
+case GPIOI_12:
+  return "GPIOI_12";
+case GPIOI_13:
+  return "GPIOI_13";
+case GPIOI_14:
+  return "GPIOI_14";
+case GPIOI_15:
+  return "GPIOI_15";
+case GPIOI_2:
+  return "GPIOI_2";
+case GPIOI_3:
+  return "GPIOI_3";
+case GPIOI_4:
+  return "GPIOI_4";
+case GPIOI_5:
+  return "GPIOI_5";
+case GPIOI_6:
+  return "GPIOI_6";
+case GPIOI_7:
+  return "GPIOI_7";
+case GPIOI_8:
+  return "GPIOI_8";
+case GPIOI_9:
+  return "GPIOI_9";
 case GPIO_INVALID:
   return "GPIO_INVALID";
 case GPIO_UNASSIGNED:
@@ -563,6 +595,8 @@ const char *getCan_nbc_e(can_nbc_e value){
 switch(value) {
 case CAN_BUS_BMW_E90:
   return "CAN_BUS_BMW_E90";
+case CAN_BUS_Haltech:
+  return "CAN_BUS_Haltech";
 case CAN_BUS_MAZDA_RX8:
   return "CAN_BUS_MAZDA_RX8";
 case CAN_BUS_NBC_BMW:
@@ -621,8 +655,6 @@ case DBG_16:
   return "DBG_16";
 case DBG_34:
   return "DBG_34";
-case DBG_47:
-  return "DBG_47";
 case DBG_48:
   return "DBG_48";
 case DBG_ALTERNATOR_PID:
@@ -705,6 +737,8 @@ case DBG_START_STOP:
   return "DBG_START_STOP";
 case DBG_STATUS:
   return "DBG_STATUS";
+case DBG_TCU:
+  return "DBG_TCU";
 case DBG_TLE8888:
   return "DBG_TLE8888";
 case DBG_TPS_ACCEL:
@@ -771,8 +805,6 @@ case LM_SPEED_DENSITY:
 }
 const char *getEngine_type_e(engine_type_e value){
 switch(value) {
-case BMW_E34:
-  return "BMW_E34";
 case BMW_M73_F:
   return "BMW_M73_F";
 case BMW_M73_M:
@@ -801,8 +833,6 @@ case FORD_ASPIRE_1996:
   return "FORD_ASPIRE_1996";
 case FORD_ESCORT_GT:
   return "FORD_ESCORT_GT";
-case FORD_FIESTA:
-  return "FORD_FIESTA";
 case FORD_INLINE_6_1995:
   return "FORD_INLINE_6_1995";
 case FRANKENSO_QA_ENGINE:
@@ -811,6 +841,8 @@ case Force_4_bytes_size_engine_type:
   return "Force_4_bytes_size_engine_type";
 case GY6_139QMB:
   return "GY6_139QMB";
+case HELLEN_NB2:
+  return "HELLEN_NB2";
 case HONDA_600:
   return "HONDA_600";
 case HONDA_ACCORD_1_24_SHIFTED:
@@ -877,12 +909,12 @@ case NISSAN_PRIMERA:
   return "NISSAN_PRIMERA";
 case PROMETHEUS_DEFAULTS:
   return "PROMETHEUS_DEFAULTS";
-case PROTEUS:
-  return "PROTEUS";
+case PROTEUS_DEFAULTS:
+  return "PROTEUS_DEFAULTS";
 case PROTEUS_MIATA_NB2:
   return "PROTEUS_MIATA_NB2";
-case ROVER_V8:
-  return "ROVER_V8";
+case PROTEUS_QC_TEST_BOARD:
+  return "PROTEUS_QC_TEST_BOARD";
 case SACHS:
   return "SACHS";
 case SUBARUEJ20G_DEFAULTS:
@@ -923,8 +955,6 @@ case VW_ABA:
   return "VW_ABA";
 case VW_B6:
   return "VW_B6";
-case ZIL_130:
-  return "ZIL_130";
   }
  return NULL;
 }
@@ -1381,6 +1411,8 @@ case TT_TOOTHED_WHEEL_36_2:
   return "TT_TOOTHED_WHEEL_36_2";
 case TT_TOOTHED_WHEEL_60_2:
   return "TT_TOOTHED_WHEEL_60_2";
+case TT_TRI_TACH:
+  return "TT_TRI_TACH";
 case TT_UNUSED:
   return "TT_UNUSED";
 case TT_VVT_BOSCH_QUICK_START:

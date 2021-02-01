@@ -13,8 +13,9 @@
 ButtonDebounce* ButtonDebounce::s_firstDebounce = nullptr;
 static Logging *logger;
 
-ButtonDebounce::ButtonDebounce(const char *name) {
-	this->name = name;
+ButtonDebounce::ButtonDebounce(const char *name)
+	: m_name(name)
+{
 }
 
 /**
@@ -69,7 +70,7 @@ void ButtonDebounce::stopConfiguration () {
 void ButtonDebounce::startConfiguration () {
 #if EFI_PROD_CODE
     if (needsPinInitialization) {
-        efiSetPadMode("Button", *m_pin, getInputMode(*m_mode));
+        efiSetPadMode(m_name, *m_pin, getInputMode(*m_mode));
         needsPinInitialization = false;
     }
 #endif
@@ -86,7 +87,7 @@ bool ButtonDebounce::readPinEvent() {
 }
 
 bool ButtonDebounce::readPinState() {
-    if (*m_pin == GPIO_UNASSIGNED) {
+    if (!isBrainPinValid(*m_pin)) {
         return false;
     }
     efitick_t timeNow = getTimeNowNt();
@@ -117,7 +118,7 @@ void ButtonDebounce::debug() {
     ButtonDebounce *listItem = s_firstDebounce;
     while (listItem != nullptr) {
 #if EFI_PROD_CODE || EFI_UNIT_TEST
-        scheduleMsg(logger, "%s timeLast %d", listItem->name, listItem->timeLast);
+        scheduleMsg(logger, "%s timeLast %d", listItem->m_name, listItem->timeLast);
         scheduleMsg(logger, "physical state %d value %d", efiReadPin(listItem->active_pin), listItem->storedValue);
 #endif
 

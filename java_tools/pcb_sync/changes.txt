@@ -1,6 +1,0 @@
-
-# move_module P353 -50 0
-
-add adc_amp_divider.kicad_pcb 
-
-remove P_VOID1

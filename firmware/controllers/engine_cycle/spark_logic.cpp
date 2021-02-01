@@ -35,11 +35,6 @@ static Logging *logger;
 
 static const char *prevSparkName = nullptr;
 
-int isInjectionEnabled(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
-	// todo: is this worth a method? should this be inlined?
-	return CONFIG(isInjectionEnabled);
-}
-
 int isIgnitionTimingError(void) {
 	return ignitionErrorDetection.sum(6) > 4;
 }
@@ -67,7 +62,9 @@ static void fireSparkBySettingPinLow(IgnitionEvent *event, IgnitionOutputPin *ou
 		warning(CUSTOM_OUT_OF_ORDER_COIL, "out-of-order coil off %s", output->getName());
 		output->outOfOrder = true;
 	}
-
+#if HW_CHECK_SPARK_FSIO
+	enginePins.fsioOutputs[event->cylinderIndex].setValue(0);
+#endif // HW_CHECK_SPARK_FSIO
 	output->setLow();
 }
 
@@ -241,6 +238,9 @@ static void startDwellByTurningSparkPinHigh(IgnitionEvent *event, IgnitionOutput
 		}
 	}
 
+#if HW_CHECK_SPARK_FSIO
+	enginePins.fsioOutputs[event->cylinderIndex].setValue(1);
+#endif // HW_CHECK_SPARK_FSIO
 	output->setHigh();
 }
 

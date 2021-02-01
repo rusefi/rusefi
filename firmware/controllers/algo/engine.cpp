@@ -12,6 +12,7 @@
 #include "engine.h"
 #include "allsensors.h"
 #include "efi_gpio.h"
+#include "pin_repository.h"
 #include "trigger_central.h"
 #include "fuel_math.h"
 #include "engine_math.h"
@@ -32,6 +33,7 @@
 #include "gppwm.h"
 #include "tachometer.h"
 #include "dynoview.h"
+#include "boost_control.h"
 #if EFI_MC33816
  #include "mc33816.h"
 #endif // EFI_MC33816
@@ -163,13 +165,13 @@ static void cylinderCleanupControl(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 #endif
 }
 
-#if HW_CHECK_MODE
+#if ANALOG_HW_CHECK_MODE
 static void assertCloseTo(const char * msg, float actual, float expected) {
 	if (actual < 0.75 * expected || actual > 1.25 * expected) {
 		firmwareError(OBD_PCM_Processor_Fault, "%s analog input validation failed %f vs %f", msg, actual, expected);
 	}
 }
-#endif // HW_CHECK_MODE
+#endif // ANALOG_HW_CHECK_MODE
 
 void Engine::periodicSlowCallback(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	ScopePerf perf(PE::EnginePeriodicSlowCallback);
@@ -191,6 +193,10 @@ void Engine::periodicSlowCallback(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	updateGppwm();
 
 	updateIdleControl();
+
+#if EFI_BOOST_CONTROL
+	updateBoostControl();
+#endif // EFI_BOOST_CONTROL
 
 	cylinderCleanupControl(PASS_ENGINE_PARAMETER_SIGNATURE);
 
@@ -216,8 +222,8 @@ void Engine::periodicSlowCallback(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 
 	slowCallBackWasInvoked = true;
 
-#if HW_CHECK_MODE
-	efiAssertVoid(OBD_PCM_Processor_Fault, CONFIG(clt).adcChannel != EFI_ADC_NONE, "No CLT setting");
+#if ANALOG_HW_CHECK_MODE
+	efiAssertVoid(OBD_PCM_Processor_Fault, isAdcChannelValid(CONFIG(clt).adcChannel), "No CLT setting");
 	efitimesec_t secondsNow = getTimeNowSeconds();
 	if (secondsNow > 2 && secondsNow < 180) {
 		assertCloseTo("RPM", Sensor::get(SensorType::Rpm).Value, HW_CHECK_RPM);
@@ -233,7 +239,7 @@ void Engine::periodicSlowCallback(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	assertCloseTo("iat", Sensor::get(SensorType::Iat).Value, 73.2);
 	assertCloseTo("aut1", Sensor::get(SensorType::AuxTemp1).Value, 13.8);
 	assertCloseTo("aut2", Sensor::get(SensorType::AuxTemp2).Value, 6.2);
-#endif // HW_CHECK_MODE
+#endif // ANALOG_HW_CHECK_MODE
 }
 
 
@@ -246,6 +252,8 @@ extern float vBattForTle8888;
  * See also periodicFastCallback
  */
 void Engine::updateSlowSensors(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+	updateSwitchInputs(PASS_ENGINE_PARAMETER_SIGNATURE);
+
 #if EFI_ENGINE_CONTROL
 	int rpm = GET_RPM();
 	isEngineChartEnabled = CONFIG(isEngineChartEnabled) && rpm < CONFIG(engineSnifferRpmThreshold);
@@ -254,7 +262,7 @@ void Engine::updateSlowSensors(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	engineState.updateSlowSensors(PASS_ENGINE_PARAMETER_SIGNATURE);
 
 	// todo: move this logic somewhere to sensors folder?
-	if (CONFIG(fuelLevelSensor) != EFI_ADC_NONE) {
+	if (isAdcChannelValid(CONFIG(fuelLevelSensor))) {
 		float fuelLevelVoltage = getVoltageDivided("fuel", engineConfiguration->fuelLevelSensor PASS_ENGINE_PARAMETER_SUFFIX);
 		sensors.fuelTankLevel = interpolateMsg("fgauge", CONFIG(fuelLevelEmptyTankVoltage), 0,
 				CONFIG(fuelLevelFullTankVoltage), 100,
@@ -271,6 +279,33 @@ void Engine::updateSlowSensors(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	initMc33816IfNeeded();
 #endif // EFI_MC33816
 #endif
+}
+
+void Engine::updateSwitchInputs(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+#if EFI_GPIO_HARDWARE
+	// this value is not used yet
+	if (isBrainPinValid(CONFIG(clutchDownPin))) {
+		engine->clutchDownState = efiReadPin(CONFIG(clutchDownPin));
+	}
+	if (hasAcToggle(PASS_ENGINE_PARAMETER_SIGNATURE)) {
+		bool result = getAcToggle(PASS_ENGINE_PARAMETER_SIGNATURE);
+		if (engine->acSwitchState != result) {
+			engine->acSwitchState = result;
+			engine->acSwitchLastChangeTime = getTimeNowUs();
+		}
+		engine->acSwitchState = result;
+	}
+	if (isBrainPinValid(CONFIG(clutchUpPin))) {
+		engine->clutchUpState = efiReadPin(CONFIG(clutchUpPin));
+	}
+	if (isBrainPinValid(CONFIG(throttlePedalUpPin))) {
+		engine->engineState.idle.throttlePedalUpState = efiReadPin(CONFIG(throttlePedalUpPin));
+	}
+
+	if (isBrainPinValid(engineConfiguration->brakePedalPin)) {
+		engine->brakePedalState = efiReadPin(engineConfiguration->brakePedalPin);
+	}
+#endif // EFI_GPIO_HARDWARE
 }
 
 void Engine::onTriggerSignalEvent(efitick_t nowNt) {
@@ -367,10 +402,6 @@ void Engine::OnTriggerStateProperState(efitick_t nowNt) {
 	Engine *engine = this;
 	EXPAND_Engine;
 
-#if EFI_SHAFT_POSITION_INPUT
-	triggerCentral.triggerState.runtimeStatistics(&triggerCentral.triggerFormDetails, nowNt PASS_ENGINE_PARAMETER_SUFFIX);
-#endif /* EFI_SHAFT_POSITION_INPUT */
-
 	rpmCalculator.setSpinningUp(nowNt);
 }
 
@@ -433,6 +464,7 @@ void Engine::injectEngineReferences() {
 
 	INJECT_ENGINE_REFERENCE(&primaryTriggerConfiguration);
 	INJECT_ENGINE_REFERENCE(&vvtTriggerConfiguration);
+	INJECT_ENGINE_REFERENCE(&limpManager);
 
 	primaryTriggerConfiguration.update();
 	vvtTriggerConfiguration.update();
@@ -493,7 +525,7 @@ void Engine::watchdog() {
 	efitick_t nowNt = getTimeNowNt();
 // note that we are ignoring the number of tooth here - we
 // check for duration between tooth as if we only have one tooth per revolution which is not the case
-#define REVOLUTION_TIME_HIGH_THRESHOLD (60 * 1000000LL / RPM_LOW_THRESHOLD)
+#define REVOLUTION_TIME_HIGH_THRESHOLD (60 * US_PER_SECOND_LL / RPM_LOW_THRESHOLD)
 	/**
 	 * todo: better watch dog implementation should be implemented - see
 	 * http://sourceforge.net/p/rusefi/tickets/96/
@@ -538,10 +570,17 @@ void Engine::checkShutdown(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 		if ((sensors.vBatt > vBattThresholdOn) && !isInShutdownMode(PASS_ENGINE_PARAMETER_SIGNATURE)) {
 			ignitionOnTimeNt = getTimeNowNt();
 			stopEngineRequestTimeNt = 0;
-			scheduleMsg(&engineLogger, "Ingition voltage detected! Cancel the engine shutdown!");
+			scheduleMsg(&engineLogger, "Ignition voltage detected! Cancel the engine shutdown!");
 		}
 	}
 #endif /* EFI_MAIN_RELAY_CONTROL */
+}
+
+bool Engine::isInMainRelayBench(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+	if (mainRelayBenchStartNt == 0) {
+		return false;
+	}
+	return (getTimeNowNt() - mainRelayBenchStartNt) < NT_PER_SECOND;
 }
 
 bool Engine::isInShutdownMode(DECLARE_ENGINE_PARAMETER_SIGNATURE) const {
@@ -560,21 +599,21 @@ bool Engine::isInShutdownMode(DECLARE_ENGINE_PARAMETER_SIGNATURE) const {
 		return false;
 	}
 
-	const efitick_t turnOffWaitTimeoutUs = 1LL * 1000000LL;
+	const efitick_t turnOffWaitTimeoutNt = NT_PER_SECOND;
 	// We don't want any transients to step in, so we wait at least 1 second whatever happens.
 	// Also it's good to give the stepper motor some time to start moving to the initial position (or parking)
-	if ((getTimeNowNt() - stopEngineRequestTimeNt) < US2NT(turnOffWaitTimeoutUs))
+	if ((getTimeNowNt() - stopEngineRequestTimeNt) < turnOffWaitTimeoutNt)
 		return true;
 
-	const efitick_t engineSpinningWaitTimeoutUs = 5LL * 1000000LL;
+	const efitick_t engineSpinningWaitTimeoutNt = 5 * NT_PER_SECOND;
 	// The engine is still spinning! Give it some time to stop (but wait no more than 5 secs)
-	if (isSpinning && (getTimeNowNt() - stopEngineRequestTimeNt) < US2NT(engineSpinningWaitTimeoutUs))
+	if (isSpinning && (getTimeNowNt() - stopEngineRequestTimeNt) < engineSpinningWaitTimeoutNt)
 		return true;
 
 	// The idle motor valve is still moving! Give it some time to park (but wait no more than 10 secs)
 	// Usually it can move to the initial 'cranking' position or zero 'parking' position.
-	const efitick_t idleMotorWaitTimeoutUs = 10LL * 1000000LL;
-	if (isIdleMotorBusy(PASS_ENGINE_PARAMETER_SIGNATURE) && (getTimeNowNt() - stopEngineRequestTimeNt) < US2NT(idleMotorWaitTimeoutUs))
+	const efitick_t idleMotorWaitTimeoutNt = 10 * NT_PER_SECOND;
+	if (isIdleMotorBusy(PASS_ENGINE_PARAMETER_SIGNATURE) && (getTimeNowNt() - stopEngineRequestTimeNt) < idleMotorWaitTimeoutNt)
 		return true;
 #endif /* EFI_MAIN_RELAY_CONTROL */
 	return false;

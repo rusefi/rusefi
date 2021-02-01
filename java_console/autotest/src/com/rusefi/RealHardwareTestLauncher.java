@@ -1,5 +1,8 @@
 package com.rusefi;
 
+import org.junit.runner.JUnitCore;
+import org.junit.runner.Result;
+
 /**
  * dead?
  * 
@@ -16,6 +19,27 @@ package com.rusefi;
 public class RealHardwareTestLauncher {
 
     public static void main(String[] args) throws InterruptedException {
+        JUnitCore junit = new JUnitCore();
+        Result result = junit.run(
+            FunctionalTest.class,
+            PwmHardwareTest.class,
+            VssHardwareLoopTest.class,
+            HighRevTest.class
+        );
+
+        // Print a summary of tests run
+        System.out.println("Ran " + result.getRunCount() + " tests total.");
+        System.out.println("Ignored " + result.getIgnoreCount() + " tests.");
+        System.out.println("Failed " + result.getFailureCount() + " tests.");
+
+        result.getFailures().forEach(f -> {
+            System.out.println(f.toString());
+
+            System.out.println("Test failed: " + f.getTestHeader() + " because " + f.getMessage());
+            System.out.println("Exception:");
+
+            f.getException().printStackTrace();
+        });
     }
 
     /**

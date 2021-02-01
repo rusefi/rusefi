@@ -157,6 +157,8 @@ void writeLogLine(Writer& buffer) {
 	}
 
 	binaryLogCount++;
+#else
+	(void)buffer;
 #endif /* EFI_FILE_LOGGING */
 }
 
@@ -172,7 +174,7 @@ static systime_t timeOfPreviousPrintVersion = 0;
 
 #if EFI_PROD_CODE
 static void printOutPin(const char *pinName, brain_pin_e hwPin) {
-	if (hwPin != GPIO_UNASSIGNED) {
+	if (isBrainPinValid(hwPin)) {
 		logger.appendPrintf("%s%s%s@%s%s", PROTOCOL_OUTPIN, DELIMETER, pinName, hwPortname(hwPin), DELIMETER);
 	}
 }
@@ -603,6 +605,8 @@ void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels DECLARE_
 	// High pressure is in bar, aka 100 kpa
 	tsOutputChannels->highFuelPressure = KPA2BAR(Sensor::get(SensorType::FuelPressureHigh).Value);
 
+	tsOutputChannels->flexPercent = Sensor::get(SensorType::FuelEthanolPercent).Value;
+
 	// 288
 	tsOutputChannels->injectionOffset = engine->engineState.injectionOffset;
 
@@ -611,11 +615,7 @@ void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels DECLARE_
 	tsOutputChannels->currentTargetAfr = ENGINE(engineState.targetAFR);
 	tsOutputChannels->targetLambda = ENGINE(engineState.targetLambda);
 
-	if (hasMapSensor(PASS_ENGINE_PARAMETER_SIGNATURE)) {
-		float mapValue = getMap(PASS_ENGINE_PARAMETER_SIGNATURE);
-		// offset 40
-		tsOutputChannels->manifoldAirPressure = mapValue;
-	}
+	tsOutputChannels->manifoldAirPressure = Sensor::get(SensorType::Map).value_or(0);
 
 #if EFI_DYNO_VIEW
 	tsOutputChannels->VssAcceleration = getDynoviewAcceleration(PASS_ENGINE_PARAMETER_SIGNATURE);
@@ -642,7 +642,7 @@ void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels DECLARE_
 	tsOutputChannels->tpsAccelFuel = engine->engineState.tpsAccelEnrich;
 	// engine load acceleration
 	if (hasMapSensor(PASS_ENGINE_PARAMETER_SIGNATURE)) {
-		tsOutputChannels->engineLoadAccelExtra = engine->engineLoadAccelEnrichment.getEngineLoadEnrichment(PASS_ENGINE_PARAMETER_SIGNATURE) * 100 / getMap(PASS_ENGINE_PARAMETER_SIGNATURE);
+		tsOutputChannels->engineLoadAccelExtra = engine->engineLoadAccelEnrichment.getEngineLoadEnrichment(PASS_ENGINE_PARAMETER_SIGNATURE) * 100 / Sensor::get(SensorType::Map).value_or(0);
 	}
 	tsOutputChannels->engineLoadDelta = engine->engineLoadAccelEnrichment.getMaxDelta();
 
@@ -681,8 +681,8 @@ void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels DECLARE_
 	tsOutputChannels->isFuelPumpOn = enginePins.fuelPumpRelay.getLogicValue();
 	tsOutputChannels->isFanOn = enginePins.fanRelay.getLogicValue();
 	tsOutputChannels->isO2HeaterOn = enginePins.o2heater.getLogicValue();
-	tsOutputChannels->isIgnitionEnabled = engineConfiguration->isIgnitionEnabled;
-	tsOutputChannels->isInjectionEnabled = engineConfiguration->isInjectionEnabled;
+	tsOutputChannels->isIgnitionEnabledIndicator = ENGINE(limpManager).allowIgnition();
+	tsOutputChannels->isInjectionEnabledIndicator = ENGINE(limpManager).allowInjection();
 	tsOutputChannels->isCylinderCleanupEnabled = engineConfiguration->isCylinderCleanupEnabled;
 	tsOutputChannels->isCylinderCleanupActivated = engine->isCylinderCleanupMode;
 
@@ -774,7 +774,7 @@ void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels DECLARE_
 		break;
 	case DBG_FSIO_ADC:
 		// todo: implement a proper loop
-		if (engineConfiguration->fsioAdc[0] != EFI_ADC_NONE) {
+		if (isAdcChannelValid(engineConfiguration->fsioAdc[0])) {
 			tsOutputChannels->debugFloatField1 = getVoltage("fsio", engineConfiguration->fsioAdc[0] PASS_ENGINE_PARAMETER_SUFFIX);
 		}
 		break;
@@ -831,13 +831,13 @@ void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels DECLARE_
 		break;
 #endif /* EFI_CAN_SUPPORT */
 	case DBG_ANALOG_INPUTS:
-		tsOutputChannels->debugFloatField1 = (engineConfiguration->vbattAdcChannel != EFI_ADC_NONE) ? getVoltageDivided("vbatt", engineConfiguration->vbattAdcChannel PASS_ENGINE_PARAMETER_SUFFIX) : 0.0f;
+		tsOutputChannels->debugFloatField1 = isAdcChannelValid(engineConfiguration->vbattAdcChannel) ? getVoltageDivided("vbatt", engineConfiguration->vbattAdcChannel PASS_ENGINE_PARAMETER_SUFFIX) : 0.0f;
 		tsOutputChannels->debugFloatField2 = Sensor::getRaw(SensorType::Tps1);
-		tsOutputChannels->debugFloatField3 = (engineConfiguration->mafAdcChannel != EFI_ADC_NONE) ? getVoltageDivided("maf", engineConfiguration->mafAdcChannel PASS_ENGINE_PARAMETER_SUFFIX) : 0.0f;
-		tsOutputChannels->debugFloatField4 = (engineConfiguration->map.sensor.hwChannel != EFI_ADC_NONE) ? getVoltageDivided("map", engineConfiguration->map.sensor.hwChannel PASS_ENGINE_PARAMETER_SUFFIX) : 0.0f;
-		tsOutputChannels->debugFloatField5 = (engineConfiguration->clt.adcChannel != EFI_ADC_NONE) ? getVoltageDivided("clt", engineConfiguration->clt.adcChannel PASS_ENGINE_PARAMETER_SUFFIX) : 0.0f;
-		tsOutputChannels->debugFloatField6 = (engineConfiguration->iat.adcChannel != EFI_ADC_NONE) ? getVoltageDivided("iat", engineConfiguration->iat.adcChannel PASS_ENGINE_PARAMETER_SUFFIX) : 0.0f;
-		tsOutputChannels->debugFloatField7 = (engineConfiguration->afr.hwChannel != EFI_ADC_NONE) ? getVoltageDivided("ego", engineConfiguration->afr.hwChannel PASS_ENGINE_PARAMETER_SUFFIX) : 0.0f;
+		tsOutputChannels->debugFloatField3 = isAdcChannelValid(engineConfiguration->mafAdcChannel) ? getVoltageDivided("maf", engineConfiguration->mafAdcChannel PASS_ENGINE_PARAMETER_SUFFIX) : 0.0f;
+		tsOutputChannels->debugFloatField4 = isAdcChannelValid(engineConfiguration->map.sensor.hwChannel) ? getVoltageDivided("map", engineConfiguration->map.sensor.hwChannel PASS_ENGINE_PARAMETER_SUFFIX) : 0.0f;
+		tsOutputChannels->debugFloatField5 = isAdcChannelValid(engineConfiguration->clt.adcChannel) ? getVoltageDivided("clt", engineConfiguration->clt.adcChannel PASS_ENGINE_PARAMETER_SUFFIX) : 0.0f;
+		tsOutputChannels->debugFloatField6 = isAdcChannelValid(engineConfiguration->iat.adcChannel) ? getVoltageDivided("iat", engineConfiguration->iat.adcChannel PASS_ENGINE_PARAMETER_SUFFIX) : 0.0f;
+		tsOutputChannels->debugFloatField7 = isAdcChannelValid(engineConfiguration->afr.hwChannel) ? getVoltageDivided("ego", engineConfiguration->afr.hwChannel PASS_ENGINE_PARAMETER_SUFFIX) : 0.0f;
 		break;
 	case DBG_ANALOG_INPUTS2:
 		// TPS 1 pri/sec split
@@ -851,7 +851,7 @@ void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels DECLARE_
 		break;
 	case DBG_INSTANT_RPM:
 		{
-			float instantRpm = engine->triggerCentral.triggerState.instantRpm;
+			float instantRpm = engine->triggerCentral.triggerState.getInstantRpm();
 			tsOutputChannels->debugFloatField1 = instantRpm;
 			tsOutputChannels->debugFloatField2 = instantRpm / GET_RPM();
 		}

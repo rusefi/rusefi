@@ -6,6 +6,7 @@ import com.rusefi.IoUtil;
 import com.rusefi.TestingUtils;
 import com.rusefi.Timeouts;
 import com.rusefi.config.generated.Fields;
+import com.rusefi.core.ISensorCentral;
 import com.rusefi.core.Sensor;
 import com.rusefi.core.SensorCentral;
 import com.rusefi.io.CommandQueue;
@@ -28,7 +29,6 @@ public class EcuTestHelper {
     };
     private static final Logging log = getLogging(EcuTestHelper.class);
 
-    public static final int COMPLEX_COMMAND_RETRY = 10000;
     public static int currentEngineType;
     public final CommandQueue commandQueue;
     @NotNull
@@ -44,17 +44,18 @@ public class EcuTestHelper {
         sleepSeconds(settleTime);
         AtomicReference<String> result = new AtomicReference<>();
         long start = System.currentTimeMillis();
-        SensorCentral.SensorListener listener = value -> {
-            double actualRpm = SensorCentral.getInstance().getValue(Sensor.RPM);
+
+        ISensorCentral.ListenerToken listener = SensorCentral.getInstance().addListener(Sensor.RPM, actualRpm -> {
             if (!isCloseEnough(rpm, actualRpm)) {
                 long seconds = (System.currentTimeMillis() - start) / 1000;
                 result.set("Got " + actualRpm + " while trying to stay at " + rpm + " after " + seconds + " seconds");
             }
-        };
-        SensorCentral.getInstance().addListener(Sensor.RPM, listener);
+        });
+
         sleepSeconds(testDuration);
         callback.apply(result.get());
-        SensorCentral.getInstance().removeListener(Sensor.RPM, listener);
+
+        listener.remove();
     }
 
     @NotNull
@@ -93,12 +94,12 @@ public class EcuTestHelper {
     }
 
     public void sendCommand(String command) {
-        sendCommand(command, CommandQueue.DEFAULT_TIMEOUT, Timeouts.CMD_TIMEOUT);
+        sendCommand(command, Timeouts.CMD_TIMEOUT);
     }
 
-    public void sendCommand(String command, int retryTimeoutMs, int timeoutMs) {
+    public void sendCommand(String command, int timeoutMs) {
         TestHelper.INSTANCE.assertNotFatal();
-        IoUtil.sendCommand(command, retryTimeoutMs, timeoutMs, commandQueue);
+        IoUtil.sendCommand(command, timeoutMs, commandQueue);
     }
 
     /**
@@ -129,9 +130,9 @@ public class EcuTestHelper {
         // changing engine type while engine is running does not work well - we rightfully
         // get invalid configuration critical errors
         sleepSeconds(2);
-        sendCommand("set " + Fields.CMD_ENGINE_TYPE + " " + type, COMPLEX_COMMAND_RETRY, Timeouts.SET_ENGINE_TIMEOUT);
+        sendCommand("set " + Fields.CMD_ENGINE_TYPE + " " + type, Timeouts.SET_ENGINE_TIMEOUT);
         // TODO: document the reason for this sleep?!
-        sleepSeconds(3);
+        sleepSeconds(1);
         sendCommand(getEnableCommand(Fields.CMD_PWM));
         sendCommand(getEnableCommand(Fields.CMD_SELF_STIMULATION));
 //        // we need to skip one chart since it might have been produced with previous engine type

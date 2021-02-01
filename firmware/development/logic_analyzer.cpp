@@ -108,7 +108,7 @@ static void initWave(const char *name, int index) {
 	efiAssertVoid(CUSTOM_ERR_6655, index < MAX_ICU_COUNT, "too many ICUs");
 	WaveReader *reader = &readers[index];
 
-	if (brainPin == GPIO_UNASSIGNED) {
+	if (!isBrainPinValid(brainPin)) {
 		/**
 		 *  in case we are running, and we select none for a channel that was running, 
 		 *  this way we ensure that we do not get false report from that channel 
@@ -243,7 +243,7 @@ void stopLogicAnalyzerPins() {
 	for (int index = 0; index < LOGIC_ANALYZER_CHANNEL_COUNT; index++) {
 		brain_pin_e brainPin = activeConfiguration.logicAnalyzerPins[index];
 
-		if (brainPin != GPIO_UNASSIGNED) {
+		if (isBrainPinValid(brainPin)) {
 			stopDigitalCapture("wave input", brainPin);
 		}
 	}

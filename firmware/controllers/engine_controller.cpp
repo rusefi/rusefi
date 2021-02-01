@@ -225,10 +225,11 @@ static void doPeriodicSlowCallback(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 
 
 	efitick_t nowNt = getTimeNowNt();
-
-	if (nowNt - engine->triggerCentral.vvtSyncTimeNt >= NT_PER_SECOND) {
-		// loss of VVT sync
-		engine->triggerCentral.vvtSyncTimeNt = 0;
+	for (int bankIndex = 0; bankIndex < BANKS_COUNT; bankIndex++) {
+		if (nowNt - engine->triggerCentral.vvtSyncTimeNt[bankIndex] >= NT_PER_SECOND) {
+			// loss of VVT sync
+			engine->triggerCentral.vvtSyncTimeNt[bankIndex] = 0;
+		}
 	}
 
 	// for performance reasons this assertion related to mainTriggerCallback should better be here
@@ -253,11 +254,11 @@ static void doPeriodicSlowCallback(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 #if EFI_INTERNAL_FLASH
 		writeToFlashIfPending();
 #endif /* EFI_INTERNAL_FLASH */
-		resetAccel();
 	}
 
-
-	if (!engine->rpmCalculator.isStopped()) {
+	if (engine->rpmCalculator.isStopped()) {
+		resetAccel();
+	} else {
 		updatePrimeInjectionPulseState(PASS_ENGINE_PARAMETER_SIGNATURE);
 	}
 
@@ -280,7 +281,7 @@ void initPeriodicEvents(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 
 char * getPinNameByAdcChannel(const char *msg, adc_channel_e hwChannel, char *buffer) {
 #if HAL_USE_ADC
-	if (hwChannel == EFI_ADC_NONE) {
+	if (!isAdcChannelValid(hwChannel)) {
 		strcpy(buffer, "NONE");
 	} else {
 		strcpy(buffer, portname(getAdcChannelPort(msg, hwChannel)));
@@ -301,7 +302,7 @@ extern AdcDevice fastAdc;
 static void printAnalogChannelInfoExt(const char *name, adc_channel_e hwChannel, float adcVoltage,
 		float dividerCoeff) {
 #if HAL_USE_ADC
-	if (hwChannel == EFI_ADC_NONE) {
+	if (!isAdcChannelValid(hwChannel)) {
 		scheduleMsg(&logger, "ADC is not assigned for %s", name);
 		return;
 	}
@@ -687,7 +688,7 @@ void initEngineContoller(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX) 
 
 	initEgoAveraging(PASS_ENGINE_PARAMETER_SIGNATURE);
 
-	if (engineConfiguration->externalKnockSenseAdc != EFI_ADC_NONE) {
+	if (isAdcChannelValid(engineConfiguration->externalKnockSenseAdc)) {
 		addConsoleAction("knockinfo", getKnockInfo);
 	}
 
@@ -710,7 +711,7 @@ void initEngineContoller(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX) 
  * UNUSED_SIZE constants.
  */
 #ifndef RAM_UNUSED_SIZE
-#define RAM_UNUSED_SIZE 3300
+#define RAM_UNUSED_SIZE 3200
 #endif
 #ifndef CCM_UNUSED_SIZE
 #define CCM_UNUSED_SIZE 2800

@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on hellen_cypress_gen_config.bat integration/rusefi_config.txt Fri Dec 18 17:41:38 UTC 2020
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on hellen_cypress_gen_config.bat integration/rusefi_config.txt Sun Jan 31 22:20:35 UTC 2021
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -733,8 +733,9 @@ struct engine_configuration_s {
 	offset 76 bit 25 */
 	bool useTLE8888_stepper : 1;
 	/**
+	 * If enabled, the MAP estimate table will be used if the MAP sensor fails to estimate manifold pressure based on RPM and TPS.
 	offset 76 bit 26 */
-	bool issue_294_27 : 1;
+	bool enableMapEstimationTableFallback : 1;
 	/**
 	offset 76 bit 27 */
 	bool issue_294_28 : 1;
@@ -1022,9 +1023,10 @@ struct engine_configuration_s {
 	 */
 	spi_device_e hip9011SpiDevice;
 	/**
+	 * This value is only used for speed density fueling calculations.
 	 * offset 541
 	 */
-	uint8_t unused541;
+	uint8_t failedMapFallback;
 	/**
 	 * offset 542
 	 */
@@ -1596,6 +1598,7 @@ struct engine_configuration_s {
 	 */
 	int mapMinBufferLength;
 	/**
+	 * Below this throttle position, the engine is considered idling.
 	 * offset 816
 	 */
 	int16_t idlePidDeactivationTpsThreshold;
@@ -1619,7 +1622,7 @@ struct engine_configuration_s {
 	 * Maximum time to crank starter
 	 * offset 826
 	 */
-	efitimesec16_t startCrankingDuration;
+	uint16_t startCrankingDuration;
 	/**
 	 * This pin is used for debugging - snap a logic analyzer on it and see if it's ever high
 	 * offset 828
@@ -1787,7 +1790,7 @@ struct engine_configuration_s {
 	offset 976 bit 9 */
 	bool showHumanReadableWarning : 1;
 	/**
-	 * If enabled, adjust at a constant rate instead of a rate proportional to the current lambda error. This mode may be easier to tune, and more tolerant of sensor noise. Use of this mode is required if you have a narrowband O2 sensor.;
+	 * If enabled, adjust at a constant rate instead of a rate proportional to the current lambda error. This mode may be easier to tune, and more tolerant of sensor noise. Use of this mode is required if you have a narrowband O2 sensor.
 	offset 976 bit 10 */
 	bool stftIgnoreErrorMagnitude : 1;
 	/**
@@ -2806,7 +2809,7 @@ struct engine_configuration_s {
 	pin_output_mode_e hpfpValvePinMode;
 	/**
 	 * MAP value above which fuel is cut in case of overboost.
-	 * 0 to disable overboost cut.
+	 * Set to 0 to disable overboost cut.
 	 * offset 2132
 	 */
 	float boostCutPressure;
@@ -3137,10 +3140,10 @@ struct engine_configuration_s {
 	 */
 	float fsioCurve4[FSIO_CURVE_8];
 	/**
-	 * For pinout see https://rusefi.com/forum/viewtopic.php?f=5&t=1324
+	 * Continental/GM flex fuel sensor, 50-150hz type
 	 * offset 3100
 	 */
-	uint8_t unusedFlexFuelSensor;
+	brain_input_pin_e flexSensorPin;
 	/**
 	 * offset 3101
 	 */
@@ -3299,20 +3302,18 @@ struct engine_configuration_s {
 	 */
 	pid_s idleTimingPid;
 	/**
-	 * When the current RPM is closer than this value to the target, closed-loop idle timing control is enabled.
 	 * offset 3988
 	 */
-	int16_t idleTimingPidWorkZone;
+	uint8_t unused3988[2];
 	/**
 	 * If the RPM closer to target than this value, disable timing correction to prevent oscillation
 	 * offset 3990
 	 */
 	int16_t idleTimingPidDeadZone;
 	/**
-	 * Taper out idle timing control over this range as the engine leaves idle conditions
 	 * offset 3992
 	 */
-	int16_t idlePidFalloffDeltaRpm;
+	uint8_t unused3942[2];
 	/**
 	 * A delay in cycles between fuel-enrich. portions
 	 * offset 3994
@@ -3341,7 +3342,7 @@ struct engine_configuration_s {
 	 */
 	spi_device_e tle6240spiDevice;
 	/**
-	 * Stoichiometric ratio for your primary fuel.
+	 * Stoichiometric ratio for your primary fuel. When Flex Fuel is enabled, this value is used when the Flex Fuel sensor indicates E0.
 	 * offset 4005
 	 */
 	uint8_t stoichRatioPrimary;
@@ -3355,26 +3356,28 @@ struct engine_configuration_s {
 	 */
 	spi_device_e mc33972spiDevice;
 	/**
+	 * Stoichiometric ratio for your secondary fuel. This value is used when the Flex Fuel sensor indicates E100.
 	 * offset 4009
 	 */
-	uint8_t unusedSpiPadding8[3];
+	uint8_t stoichRatioSecondary;
+	/**
+	 * offset 4010
+	 */
+	uint8_t unusedSpiPadding8[2];
 	/**
 	 *  ETB idle authority
 	 * offset 4012
 	 */
 	float etbIdleThrottleRange;
 	/**
+	 * Select which fuel correction bank this cylinder belongs to. Group cylinders that share the same O2 sensor
 	 * offset 4016
 	 */
-	uint8_t unusedvref[4];
+	uint8_t cylinderBankSelect[INJECTION_PIN_COUNT];
 	/**
-	 * offset 4020
+	 * offset 4028
 	 */
-	uint8_t unusedsw[4];
-	/**
-	 * offset 4024
-	 */
-	int unused_alFIn[3];
+	int unused4028[2];
 	/**
 	 * Trigger comparator center point voltage
 	 * offset 4036
@@ -3672,9 +3675,26 @@ struct persistent_config_s {
 	 */
 	tcubinary_table_t tcuSolenoidTable;
 	/**
+	 * Good example: number of tooth on wheel, For Can 10 is a good number.
 	 * offset 15196
 	 */
-	uint8_t unused15136[1092];
+	float vssFilterReciprocal;
+	/**
+	 * offset 15200
+	 */
+	map_estimate_table_t mapEstimateTable;
+	/**
+	 * offset 15712
+	 */
+	uint16_t mapEstimateTpsBins[FUEL_LOAD_COUNT];
+	/**
+	 * offset 15744
+	 */
+	uint16_t mapEstimateRpmBins[FUEL_RPM_COUNT];
+	/**
+	 * offset 15776
+	 */
+	uint8_t unused15136[512];
 	/**
 	 * offset 16288
 	 */
@@ -3782,4 +3802,4 @@ struct persistent_config_s {
 typedef struct persistent_config_s persistent_config_s;
 
 // end
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on hellen_cypress_gen_config.bat integration/rusefi_config.txt Fri Dec 18 17:41:38 UTC 2020
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on hellen_cypress_gen_config.bat integration/rusefi_config.txt Sun Jan 31 22:20:35 UTC 2021

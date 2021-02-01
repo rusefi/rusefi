@@ -183,7 +183,7 @@ input[type="button"] {
   text-decoration: none;
   white-space: nowrap;
   background-color: transparent;
-  border-radius: 4px;
+  border-radius: 1px;
   border: 1px solid #bbb;
   cursor: pointer;
   box-sizing: border-box; }
@@ -222,6 +222,50 @@ input[type="button"].button-primary:focus {
   background-color: #1EAEDB;
   border-color: #1EAEDB; }
 
+  .button.button-white,
+  button.button-white,
+  input[type="submit"].button-white,
+  input[type="reset"].button-white,
+  input[type="button"].button-white {
+    color: #FFF;
+    /* background-color: #33C3F0; */
+    border-color: #ffffff; }
+  .button.button-white:hover,
+  button.button-white:hover,
+  input[type="submit"].button-white:hover,
+  input[type="reset"].button-white:hover,
+  input[type="button"].button-white:hover,
+  .button.button-white:focus,
+  button.button-white:focus,
+  input[type="submit"].button-white:focus,
+  input[type="reset"].button-white:focus,
+  input[type="button"].button-white:focus {
+    color: #252a2b;
+    background-color: #ffffff;
+    border-color: #ffffff; }
+
+  .button.button-black,
+  button.button-black,
+  input[type="submit"].button-black,
+  input[type="reset"].button-black,
+  input[type="button"].button-black {
+    color: #000;
+    /* background-color: #33C3F0; */
+    border-color: #000; }
+  .button.button-black:hover,
+  button.button-black:hover,
+  input[type="submit"].button-black:hover,
+  input[type="reset"].button-black:hover,
+  input[type="button"].button-black:hover,
+  .button.button-black:focus,
+  button.button-black:focus,
+  input[type="submit"].button-black:focus,
+  input[type="reset"].button-black:focus,
+  input[type="button"].button-black:focus {
+    color: #d6d6d6;
+    background-color: #000;
+    border-color: #000; }
+  
 
 /* Forms
 –––––––––––––––––––––––––––––––––––––––––––––––––– */
@@ -329,7 +373,7 @@ td {
   border-bottom: 1px solid #E1E1E1; }
 th:first-child,
 td:first-child {
-  padding-left: 0; }
+  padding-left: 15px; }
 th:last-child,
 td:last-child {
   padding-right: 0; }

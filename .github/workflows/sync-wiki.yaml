@@ -11,6 +11,8 @@
 # If we could set this up to trigger on a push to rusefi.wiki, that
 # would be optimal, but unfortunately that does not seem to be possible.
 #
+# the opposite sync is https://github.com/rusefi/rusefi_documentation/blob/master/.github/workflows/sync-wiki.yaml
+#
 
 name: Sync Wiki
 

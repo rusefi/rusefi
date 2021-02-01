@@ -14,6 +14,8 @@
 #define EFI_PIN_ADC9 GPIOB_1
 #endif /* EFI_PIN_ADC9 */
 
+#define _2_MHZ 2'000'000
+
 #if EFI_PROD_CODE
 #include "mpu_util.h"
 #include "backup_ram.h"
@@ -154,7 +156,7 @@ public:
 	}
 
 	// 2MHz, 16-bit timer gets us a usable frequency range of 31hz to 10khz
-	static constexpr uint32_t c_timerFrequency = 2000000;
+	static constexpr uint32_t c_timerFrequency = _2_MHZ;
 
 	void start(const char* msg, const stm32_pwm_config& config, float frequency, float duty) {
 		m_driver = config.Driver;
@@ -170,8 +172,10 @@ public:
 
 		// If we have too few usable bits, we run out of resolution, so don't allow that either.
 		// 200 counts = 0.5% resolution
-		if (m_period < 200) {
-			firmwareError(CUSTOM_OBD_HIGH_FREQUENCY, "PWM Frequency too high % hz on pin \"%s\"", frequency, msg);
+		if (m_period < _2_MHZ / ETB_HW_MAX_FREQUENCY) {
+			firmwareError(CUSTOM_OBD_HIGH_FREQUENCY, "PWM Frequency too high %d limit %d hz on pin \"%s\"", frequency,
+					ETB_HW_MAX_FREQUENCY,
+					msg);
 			return;
 		}
 

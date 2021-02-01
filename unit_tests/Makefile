@@ -20,7 +20,7 @@ include $(PROJECT_DIR)/rusefi_rules.mk
 ifeq ($(USE_OPT),)
 # -O2 is needed for mingw, without it there is a linking issue to isnanf?!?!
   #USE_OPT = $(RFLAGS) -O2 -fgnu89-inline -ggdb -fomit-frame-pointer -falign-functions=16 -std=gnu99 -Werror-implicit-function-declaration -Werror -Wno-error=pointer-sign -Wno-error=unused-function -Wno-error=unused-variable -Wno-error=sign-compare -Wno-error=unused-parameter -Wno-error=missing-field-initializers
-  USE_OPT = -c -Wall -O0 -ggdb -g3
+  USE_OPT = -c -Wall -O0 -ggdb -g
   USE_OPT += -fprofile-arcs -ftest-coverage
   USE_OPT += -Werror=missing-field-initializers
 endif
@@ -34,7 +34,7 @@ endif
 USE_OPT += -DEFI_UNIT_TEST=1 -DEFI_PROD_CODE=0 -DEFI_SIMULATOR=0
 
 # Pretend we are all different hardware so that all canned engine configs are included
-USE_OPT += -DHW_MICRO_RUSEFI=1 -DHW_PROTEUS=1
+USE_OPT += -DHW_MICRO_RUSEFI=1 -DHW_PROTEUS=1 -DHW_FRANKENSO=1
 
 ifeq ($(CCACHE_DIR),)
  $(info No CCACHE_DIR)

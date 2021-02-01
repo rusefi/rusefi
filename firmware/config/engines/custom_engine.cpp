@@ -11,6 +11,7 @@
  * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
+#include "pin_repository.h"
 #include "custom_engine.h"
 #include "allsensors.h"
 #include "engine_math.h"
@@ -51,7 +52,7 @@ static void toggleTestAndScheduleNext(void *) {
  * https://github.com/rusefi/rusefi/issues/557 common rail / direct injection scheduling control test
  */
 void runSchedulingPrecisionTestIfNeeded(void) {
-	if (engineConfiguration->test557pin == GPIO_UNASSIGNED) {
+	if (!isBrainPinValid(engineConfiguration->test557pin)) {
 		return;
 	}
 
@@ -508,6 +509,69 @@ void mreBoardOldTest(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	engineConfiguration->injectionPins[2 - 1] = TLE8888_PIN_5;
 #endif /* BOARD_TLE8888_COUNT */
 }
+
+#if HW_PROTEUS
+/**
+ * PROTEUS_QC_TEST_BOARD
+ * set engine_type 42
+ */
+void proteusBoardTest(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
+	engineConfiguration->specs.cylindersCount = 12;
+	engineConfiguration->specs.firingOrder = FO_1_2_3_4_5_6_7_8_9_10_11_12;
+	engineConfiguration->triggerSimulatorFrequency = 600;
+
+	engineConfiguration->cranking.rpm = 100;
+	engineConfiguration->injectionMode = IM_SEQUENTIAL;
+	engineConfiguration->crankingInjectionMode = IM_SEQUENTIAL;
+
+	engineConfiguration->mainRelayPin = GPIO_UNASSIGNED;
+	CONFIG(fanPin) = GPIO_UNASSIGNED;
+	CONFIG(fuelPumpPin) = GPIO_UNASSIGNED;
+
+	engineConfiguration->injectionPins[0] = GPIOD_7; //  "Lowside 1"
+	engineConfiguration->injectionPins[1] = GPIOG_9;//  "Lowside 2"
+	engineConfiguration->injectionPins[2] = GPIOG_10;// "Lowside 3"
+	engineConfiguration->injectionPins[3] = GPIOG_11;// "Lowside 4"
+	engineConfiguration->injectionPins[4] = GPIOG_12;// "Lowside 5"
+	engineConfiguration->injectionPins[5] = GPIOG_13;// "Lowside 6"
+	engineConfiguration->injectionPins[6] = GPIOB_5;//  "Lowside 9"
+	engineConfiguration->injectionPins[7] = GPIOB_4;//  "Lowside 8"
+	engineConfiguration->injectionPins[8] = GPIOB_7;//  "Lowside 11"
+	engineConfiguration->injectionPins[9] = GPIOB_6;//  "Lowside 10"
+	engineConfiguration->injectionPins[10] = GPIOB_8;//  "Lowside 12"
+	engineConfiguration->injectionPins[11] = GPIOB_9;//  "Lowside 13"    # pin 10/black35
+
+
+
+
+	engineConfiguration->ignitionPins[0] = GPIOD_4;//  "Ign 1"
+	engineConfiguration->ignitionPins[1] = GPIOD_3;//  "Ign 2"
+	engineConfiguration->ignitionPins[2] = GPIOC_8;//  "Ign 4"
+	engineConfiguration->ignitionPins[3] = GPIOC_7;//  "Ign 5"
+	engineConfiguration->ignitionPins[4] = GPIOG_8;//  "Ign 6"
+	engineConfiguration->ignitionPins[5] = GPIOG_7;//  "Ign 7"
+
+	engineConfiguration->ignitionPins[6] = GPIOD_15;// "Highside 3"    # pin 13/black35
+	engineConfiguration->ignitionPins[7] = GPIOC_9;//  "Ign 3"
+	engineConfiguration->ignitionPins[8] = GPIOG_5;//  "Ign 9"
+	engineConfiguration->ignitionPins[9] = GPIOG_6;//  "Ign 8"
+	engineConfiguration->ignitionPins[10] = GPIOA_9;//  "Highside 1"    # pin 2/black35
+	engineConfiguration->ignitionPins[11] = GPIOG_2;//  "Ign 12"
+
+	engineConfiguration->fsioOutputPins[0] = GPIOE_2;//  "Lowside 16"    # pin 23/black35
+	engineConfiguration->fsioOutputPins[1] = GPIOG_14;// "Lowside 7"
+	engineConfiguration->fsioOutputPins[2] = GPIOE_0;//  "Lowside 14"    # pin 11/black35
+	engineConfiguration->fsioOutputPins[3] = GPIOE_1;//  "Lowside 15"    # pin 12/black35
+
+	engineConfiguration->fsioOutputPins[4] = GPIOG_3;//  "Ign 11"
+	engineConfiguration->fsioOutputPins[5] = GPIOA_8;//  "Highside 2"    # pin 1/black35
+	engineConfiguration->fsioOutputPins[6] = GPIOD_14;// "Highside 4"    # pin 14/black35
+	engineConfiguration->fsioOutputPins[7] = GPIOG_4;//  "Ign 10"
+
+
+	setProteusHitachiEtbDefaults(PASS_CONFIG_PARAMETER_SIGNATURE);
+}
+#endif // HW_PROTEUS
 
 void mreBCM(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	for (int i = 0; i < IGNITION_PIN_COUNT;i++) {

@@ -118,8 +118,6 @@ const char* getConfigurationName(engine_type_e engineType) {
 		return "Neon95";
 	case FORD_ASPIRE_1996:
 		return "Aspire";
-	case FORD_FIESTA:
-		return "Fiesta";
 	case NISSAN_PRIMERA:
 		return "Primera";
 	case HONDA_ACCORD_CD:
@@ -140,16 +138,12 @@ const char* getConfigurationName(engine_type_e engineType) {
 		return "EscrtGT";
 	case CITROEN_TU3JP:
 		return "TU3JP";
-	case ROVER_V8:
-		return "Rvrv8";
 	case MITSU_4G93:
 		return "Mi4G93";
 	case MIATA_1990:
 		return "MX590";
 	case MIATA_1996:
 		return "MX596";
-	case BMW_E34:
-		return "BMWe34";
 	default:
 		return getEngine_type_e(engineType);
 	}

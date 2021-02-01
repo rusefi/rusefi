@@ -1,0 +1,2654 @@
+609338616798694
+Connector_Phoenix_MC
+PhoenixContact_MCV_1,5_2-G-3.5_1x02_P3.50mm_Vertical
+Generic Phoenix Contact connector footprint for: MCV_1,5/2-G-3.5; number of pins: 02; pin pitch: 3.50mm; Vertical || order number: 1843606 8A 160V
+phoenix_contact connector MCV_01x02_G_3.5mm
+0
+2
+2
+Connector_Phoenix_MC
+PhoenixContact_MCV_1,5_2-G-3.81_1x02_P3.81mm_Vertical
+Generic Phoenix Contact connector footprint for: MCV_1,5/2-G-3.81; number of pins: 02; pin pitch: 3.81mm; Vertical || order number: 1803426 8A 160V
+phoenix_contact connector MCV_01x02_G_3.81mm
+0
+2
+2
+Connector_Phoenix_MC
+PhoenixContact_MCV_1,5_2-GF-3.5_1x02_P3.50mm_Vertical_ThreadedFlange
+Generic Phoenix Contact connector footprint for: MCV_1,5/2-GF-3.5; number of pins: 02; pin pitch: 3.50mm; Vertical; threaded flange || order number: 1843224 8A 160V
+phoenix_contact connector MCV_01x02_GF_3.5mm
+0
+2
+2
+Connector_Phoenix_MC
+PhoenixContact_MCV_1,5_2-GF-3.5_1x02_P3.50mm_Vertical_ThreadedFlange_MountHole
+Generic Phoenix Contact connector footprint for: MCV_1,5/2-GF-3.5; number of pins: 02; pin pitch: 3.50mm; Vertical; threaded flange; footprint includes mount hole for mounting screw: ISO 1481-ST 2.2x4.5 C or ISO 7049-ST 2.2x4.5 C (http://www.fasteners.eu/standards/ISO/7049/) || order number: 1843224 8A 160V
+phoenix_contact connector MCV_01x02_GF_3.5mm_MH
+0
+2
+2
+Connector_Phoenix_MC
+PhoenixContact_MCV_1,5_2-GF-3.81_1x02_P3.81mm_Vertical_ThreadedFlange
+Generic Phoenix Contact connector footprint for: MCV_1,5/2-GF-3.81; number of pins: 02; pin pitch: 3.81mm; Vertical; threaded flange || order number: 1830596 8A 160V
+phoenix_contact connector MCV_01x02_GF_3.81mm
+0
+2
+2
+Connector_Phoenix_MC
+PhoenixContact_MCV_1,5_2-GF-3.81_1x02_P3.81mm_Vertical_ThreadedFlange_MountHole
+Generic Phoenix Contact connector footprint for: MCV_1,5/2-GF-3.81; number of pins: 02; pin pitch: 3.81mm; Vertical; threaded flange; footprint includes mount hole for mounting screw: ISO 1481-ST 2.2x4.5 C or ISO 7049-ST 2.2x4.5 C (http://www.fasteners.eu/standards/ISO/7049/) || order number: 1830596 8A 160V
+phoenix_contact connector MCV_01x02_GF_3.81mm_MH
+0
+2
+2
+Connector_Phoenix_MC
+PhoenixContact_MCV_1,5_3-G-3.5_1x03_P3.50mm_Vertical
+Generic Phoenix Contact connector footprint for: MCV_1,5/3-G-3.5; number of pins: 03; pin pitch: 3.50mm; Vertical || order number: 1843619 8A 160V
+phoenix_contact connector MCV_01x03_G_3.5mm
+0
+3
+3
+Connector_Phoenix_MC
+PhoenixContact_MCV_1,5_3-G-3.81_1x03_P3.81mm_Vertical
+Generic Phoenix Contact connector footprint for: MCV_1,5/3-G-3.81; number of pins: 03; pin pitch: 3.81mm; Vertical || order number: 1803439 8A 160V
+phoenix_contact connector MCV_01x03_G_3.81mm
+0
+3
+3
+Connector_Phoenix_MC
+PhoenixContact_MCV_1,5_3-GF-3.5_1x03_P3.50mm_Vertical_ThreadedFlange
+Generic Phoenix Contact connector footprint for: MCV_1,5/3-GF-3.5; number of pins: 03; pin pitch: 3.50mm; Vertical; threaded flange || order number: 1843237 8A 160V
+phoenix_contact connector MCV_01x03_GF_3.5mm
+0
+3
+3
+Connector_Phoenix_MC
+PhoenixContact_MCV_1,5_3-GF-3.5_1x03_P3.50mm_Vertical_ThreadedFlange_MountHole
+Generic Phoenix Contact connector footprint for: MCV_1,5/3-GF-3.5; number of pins: 03; pin pitch: 3.50mm; Vertical; threaded flange; footprint includes mount hole for mounting screw: ISO 1481-ST 2.2x4.5 C or ISO 7049-ST 2.2x4.5 C (http://www.fasteners.eu/standards/ISO/7049/) || order number: 1843237 8A 160V
+phoenix_contact connector MCV_01x03_GF_3.5mm_MH
+0
+3
+3
+Connector_Phoenix_MC
+PhoenixContact_MCV_1,5_3-GF-3.81_1x03_P3.81mm_Vertical_ThreadedFlange
+Generic Phoenix Contact connector footprint for: MCV_1,5/3-GF-3.81; number of pins: 03; pin pitch: 3.81mm; Vertical; threaded flange || order number: 1830606 8A 160V
+phoenix_contact connector MCV_01x03_GF_3.81mm
+0
+3
+3
+Connector_Phoenix_MC
+PhoenixContact_MCV_1,5_3-GF-3.81_1x03_P3.81mm_Vertical_ThreadedFlange_MountHole
+Generic Phoenix Contact connector footprint for: MCV_1,5/3-GF-3.81; number of pins: 03; pin pitch: 3.81mm; Vertical; threaded flange; footprint includes mount hole for mounting screw: ISO 1481-ST 2.2x4.5 C or ISO 7049-ST 2.2x4.5 C (http://www.fasteners.eu/standards/ISO/7049/) || order number: 1830606 8A 160V
+phoenix_contact connector MCV_01x03_GF_3.81mm_MH
+0
+3
+3
+Connector_Phoenix_MC
+PhoenixContact_MCV_1,5_4-G-3.5_1x04_P3.50mm_Vertical
+Generic Phoenix Contact connector footprint for: MCV_1,5/4-G-3.5; number of pins: 04; pin pitch: 3.50mm; Vertical || order number: 1843622 8A 160V
+phoenix_contact connector MCV_01x04_G_3.5mm
+0
+4
+4
+Connector_Phoenix_MC
+PhoenixContact_MCV_1,5_4-G-3.81_1x04_P3.81mm_Vertical
+Generic Phoenix Contact connector footprint for: MCV_1,5/4-G-3.81; number of pins: 04; pin pitch: 3.81mm; Vertical || order number: 1803442 8A 160V
+phoenix_contact connector MCV_01x04_G_3.81mm
+0
+4
+4
+Connector_Phoenix_MC
+PhoenixContact_MCV_1,5_4-GF-3.5_1x04_P3.50mm_Vertical_ThreadedFlange
+Generic Phoenix Contact connector footprint for: MCV_1,5/4-GF-3.5; number of pins: 04; pin pitch: 3.50mm; Vertical; threaded flange || order number: 1843240 8A 160V
+phoenix_contact connector MCV_01x04_GF_3.5mm
+0
+4
+4
+Connector_Phoenix_MC
+PhoenixContact_MCV_1,5_4-GF-3.5_1x04_P3.50mm_Vertical_ThreadedFlange_MountHole
+Generic Phoenix Contact connector footprint for: MCV_1,5/4-GF-3.5; number of pins: 04; pin pitch: 3.50mm; Vertical; threaded flange; footprint includes mount hole for mounting screw: ISO 1481-ST 2.2x4.5 C or ISO 7049-ST 2.2x4.5 C (http://www.fasteners.eu/standards/ISO/7049/) || order number: 1843240 8A 160V
+phoenix_contact connector MCV_01x04_GF_3.5mm_MH
+0
+4
+4
+Connector_Phoenix_MC
+PhoenixContact_MCV_1,5_4-GF-3.81_1x04_P3.81mm_Vertical_ThreadedFlange
+Generic Phoenix Contact connector footprint for: MCV_1,5/4-GF-3.81; number of pins: 04; pin pitch: 3.81mm; Vertical; threaded flange || order number: 1830619 8A 160V
+phoenix_contact connector MCV_01x04_GF_3.81mm
+0
+4
+4
+Connector_Phoenix_MC
+PhoenixContact_MCV_1,5_4-GF-3.81_1x04_P3.81mm_Vertical_ThreadedFlange_MountHole
+Generic Phoenix Contact connector footprint for: MCV_1,5/4-GF-3.81; number of pins: 04; pin pitch: 3.81mm; Vertical; threaded flange; footprint includes mount hole for mounting screw: ISO 1481-ST 2.2x4.5 C or ISO 7049-ST 2.2x4.5 C (http://www.fasteners.eu/standards/ISO/7049/) || order number: 1830619 8A 160V
+phoenix_contact connector MCV_01x04_GF_3.81mm_MH
+0
+4
+4
+Connector_Phoenix_MC
+PhoenixContact_MCV_1,5_5-G-3.5_1x05_P3.50mm_Vertical
+Generic Phoenix Contact connector footprint for: MCV_1,5/5-G-3.5; number of pins: 05; pin pitch: 3.50mm; Vertical || order number: 1843635 8A 160V
+phoenix_contact connector MCV_01x05_G_3.5mm
+0
+5
+5
+Connector_Phoenix_MC
+PhoenixContact_MCV_1,5_5-G-3.81_1x05_P3.81mm_Vertical
+Generic Phoenix Contact connector footprint for: MCV_1,5/5-G-3.81; number of pins: 05; pin pitch: 3.81mm; Vertical || order number: 1803455 8A 160V
+phoenix_contact connector MCV_01x05_G_3.81mm
+0
+5
+5
+Connector_Phoenix_MC
+PhoenixContact_MCV_1,5_5-GF-3.5_1x05_P3.50mm_Vertical_ThreadedFlange
+Generic Phoenix Contact connector footprint for: MCV_1,5/5-GF-3.5; number of pins: 05; pin pitch: 3.50mm; Vertical; threaded flange || order number: 1843253 8A 160V
+phoenix_contact connector MCV_01x05_GF_3.5mm
+0
+5
+5
+Connector_Phoenix_MC
+PhoenixContact_MCV_1,5_5-GF-3.5_1x05_P3.50mm_Vertical_ThreadedFlange_MountHole
+Generic Phoenix Contact connector footprint for: MCV_1,5/5-GF-3.5; number of pins: 05; pin pitch: 3.50mm; Vertical; threaded flange; footprint includes mount hole for mounting screw: ISO 1481-ST 2.2x4.5 C or ISO 7049-ST 2.2x4.5 C (http://www.fasteners.eu/standards/ISO/7049/) || order number: 1843253 8A 160V
+phoenix_contact connector MCV_01x05_GF_3.5mm_MH
+0
+5
+5
+Connector_Phoenix_MC
+PhoenixContact_MCV_1,5_5-GF-3.81_1x05_P3.81mm_Vertical_ThreadedFlange
+Generic Phoenix Contact connector footprint for: MCV_1,5/5-GF-3.81; number of pins: 05; pin pitch: 3.81mm; Vertical; threaded flange || order number: 1830622 8A 160V
+phoenix_contact connector MCV_01x05_GF_3.81mm
+0
+5
+5
+Connector_Phoenix_MC
+PhoenixContact_MCV_1,5_5-GF-3.81_1x05_P3.81mm_Vertical_ThreadedFlange_MountHole
+Generic Phoenix Contact connector footprint for: MCV_1,5/5-GF-3.81; number of pins: 05; pin pitch: 3.81mm; Vertical; threaded flange; footprint includes mount hole for mounting screw: ISO 1481-ST 2.2x4.5 C or ISO 7049-ST 2.2x4.5 C (http://www.fasteners.eu/standards/ISO/7049/) || order number: 1830622 8A 160V
+phoenix_contact connector MCV_01x05_GF_3.81mm_MH
+0
+5
+5
+Connector_Phoenix_MC
+PhoenixContact_MCV_1,5_6-G-3.5_1x06_P3.50mm_Vertical
+Generic Phoenix Contact connector footprint for: MCV_1,5/6-G-3.5; number of pins: 06; pin pitch: 3.50mm; Vertical || order number: 1843648 8A 160V
+phoenix_contact connector MCV_01x06_G_3.5mm
+0
+6
+6
+Connector_Phoenix_MC
+PhoenixContact_MCV_1,5_6-G-3.81_1x06_P3.81mm_Vertical
+Generic Phoenix Contact connector footprint for: MCV_1,5/6-G-3.81; number of pins: 06; pin pitch: 3.81mm; Vertical || order number: 1803468 8A 160V
+phoenix_contact connector MCV_01x06_G_3.81mm
+0
+6
+6
+Connector_Phoenix_MC
+PhoenixContact_MCV_1,5_6-GF-3.5_1x06_P3.50mm_Vertical_ThreadedFlange
+Generic Phoenix Contact connector footprint for: MCV_1,5/6-GF-3.5; number of pins: 06; pin pitch: 3.50mm; Vertical; threaded flange || order number: 1843266 8A 160V
+phoenix_contact connector MCV_01x06_GF_3.5mm
+0
+6
+6
+Connector_Phoenix_MC
+PhoenixContact_MCV_1,5_6-GF-3.5_1x06_P3.50mm_Vertical_ThreadedFlange_MountHole
+Generic Phoenix Contact connector footprint for: MCV_1,5/6-GF-3.5; number of pins: 06; pin pitch: 3.50mm; Vertical; threaded flange; footprint includes mount hole for mounting screw: ISO 1481-ST 2.2x4.5 C or ISO 7049-ST 2.2x4.5 C (http://www.fasteners.eu/standards/ISO/7049/) || order number: 1843266 8A 160V
+phoenix_contact connector MCV_01x06_GF_3.5mm_MH
+0
+6
+6
+Connector_Phoenix_MC
+PhoenixContact_MCV_1,5_6-GF-3.81_1x06_P3.81mm_Vertical_ThreadedFlange
+Generic Phoenix Contact connector footprint for: MCV_1,5/6-GF-3.81; number of pins: 06; pin pitch: 3.81mm; Vertical; threaded flange || order number: 1830635 8A 160V
+phoenix_contact connector MCV_01x06_GF_3.81mm
+0
+6
+6
+Connector_Phoenix_MC
+PhoenixContact_MCV_1,5_6-GF-3.81_1x06_P3.81mm_Vertical_ThreadedFlange_MountHole
+Generic Phoenix Contact connector footprint for: MCV_1,5/6-GF-3.81; number of pins: 06; pin pitch: 3.81mm; Vertical; threaded flange; footprint includes mount hole for mounting screw: ISO 1481-ST 2.2x4.5 C or ISO 7049-ST 2.2x4.5 C (http://www.fasteners.eu/standards/ISO/7049/) || order number: 1830635 8A 160V
+phoenix_contact connector MCV_01x06_GF_3.81mm_MH
+0
+6
+6
+Connector_Phoenix_MC
+PhoenixContact_MCV_1,5_7-G-3.5_1x07_P3.50mm_Vertical
+Generic Phoenix Contact connector footprint for: MCV_1,5/7-G-3.5; number of pins: 07; pin pitch: 3.50mm; Vertical || order number: 1843651 8A 160V
+phoenix_contact connector MCV_01x07_G_3.5mm
+0
+7
+7
+Connector_Phoenix_MC
+PhoenixContact_MCV_1,5_7-G-3.81_1x07_P3.81mm_Vertical
+Generic Phoenix Contact connector footprint for: MCV_1,5/7-G-3.81; number of pins: 07; pin pitch: 3.81mm; Vertical || order number: 1803471 8A 160V
+phoenix_contact connector MCV_01x07_G_3.81mm
+0
+7
+7
+Connector_Phoenix_MC
+PhoenixContact_MCV_1,5_7-GF-3.5_1x07_P3.50mm_Vertical_ThreadedFlange
+Generic Phoenix Contact connector footprint for: MCV_1,5/7-GF-3.5; number of pins: 07; pin pitch: 3.50mm; Vertical; threaded flange || order number: 1843279 8A 160V
+phoenix_contact connector MCV_01x07_GF_3.5mm
+0
+7
+7
+Connector_Phoenix_MC
+PhoenixContact_MCV_1,5_7-GF-3.5_1x07_P3.50mm_Vertical_ThreadedFlange_MountHole
+Generic Phoenix Contact connector footprint for: MCV_1,5/7-GF-3.5; number of pins: 07; pin pitch: 3.50mm; Vertical; threaded flange; footprint includes mount hole for mounting screw: ISO 1481-ST 2.2x4.5 C or ISO 7049-ST 2.2x4.5 C (http://www.fasteners.eu/standards/ISO/7049/) || order number: 1843279 8A 160V
+phoenix_contact connector MCV_01x07_GF_3.5mm_MH
+0
+7
+7
+Connector_Phoenix_MC
+PhoenixContact_MCV_1,5_7-GF-3.81_1x07_P3.81mm_Vertical_ThreadedFlange
+Generic Phoenix Contact connector footprint for: MCV_1,5/7-GF-3.81; number of pins: 07; pin pitch: 3.81mm; Vertical; threaded flange || order number: 1830648 8A 160V
+phoenix_contact connector MCV_01x07_GF_3.81mm
+0
+7
+7
+Connector_Phoenix_MC
+PhoenixContact_MCV_1,5_7-GF-3.81_1x07_P3.81mm_Vertical_ThreadedFlange_MountHole
+Generic Phoenix Contact connector footprint for: MCV_1,5/7-GF-3.81; number of pins: 07; pin pitch: 3.81mm; Vertical; threaded flange; footprint includes mount hole for mounting screw: ISO 1481-ST 2.2x4.5 C or ISO 7049-ST 2.2x4.5 C (http://www.fasteners.eu/standards/ISO/7049/) || order number: 1830648 8A 160V
+phoenix_contact connector MCV_01x07_GF_3.81mm_MH
+0
+7
+7
+Connector_Phoenix_MC
+PhoenixContact_MCV_1,5_8-G-3.5_1x08_P3.50mm_Vertical
+Generic Phoenix Contact connector footprint for: MCV_1,5/8-G-3.5; number of pins: 08; pin pitch: 3.50mm; Vertical || order number: 1843664 8A 160V
+phoenix_contact connector MCV_01x08_G_3.5mm
+0
+8
+8
+Connector_Phoenix_MC
+PhoenixContact_MCV_1,5_8-G-3.81_1x08_P3.81mm_Vertical
+Generic Phoenix Contact connector footprint for: MCV_1,5/8-G-3.81; number of pins: 08; pin pitch: 3.81mm; Vertical || order number: 1803484 8A 160V
+phoenix_contact connector MCV_01x08_G_3.81mm
+0
+8
+8
+Connector_Phoenix_MC
+PhoenixContact_MCV_1,5_8-GF-3.5_1x08_P3.50mm_Vertical_ThreadedFlange
+Generic Phoenix Contact connector footprint for: MCV_1,5/8-GF-3.5; number of pins: 08; pin pitch: 3.50mm; Vertical; threaded flange || order number: 1843282 8A 160V
+phoenix_contact connector MCV_01x08_GF_3.5mm
+0
+8
+8
+Connector_Phoenix_MC
+PhoenixContact_MCV_1,5_8-GF-3.5_1x08_P3.50mm_Vertical_ThreadedFlange_MountHole
+Generic Phoenix Contact connector footprint for: MCV_1,5/8-GF-3.5; number of pins: 08; pin pitch: 3.50mm; Vertical; threaded flange; footprint includes mount hole for mounting screw: ISO 1481-ST 2.2x4.5 C or ISO 7049-ST 2.2x4.5 C (http://www.fasteners.eu/standards/ISO/7049/) || order number: 1843282 8A 160V
+phoenix_contact connector MCV_01x08_GF_3.5mm_MH
+0
+8
+8
+Connector_Phoenix_MC
+PhoenixContact_MCV_1,5_8-GF-3.81_1x08_P3.81mm_Vertical_ThreadedFlange
+Generic Phoenix Contact connector footprint for: MCV_1,5/8-GF-3.81; number of pins: 08; pin pitch: 3.81mm; Vertical; threaded flange || order number: 1830651 8A 160V
+phoenix_contact connector MCV_01x08_GF_3.81mm
+0
+8
+8
+Connector_Phoenix_MC
+PhoenixContact_MCV_1,5_8-GF-3.81_1x08_P3.81mm_Vertical_ThreadedFlange_MountHole
+Generic Phoenix Contact connector footprint for: MCV_1,5/8-GF-3.81; number of pins: 08; pin pitch: 3.81mm; Vertical; threaded flange; footprint includes mount hole for mounting screw: ISO 1481-ST 2.2x4.5 C or ISO 7049-ST 2.2x4.5 C (http://www.fasteners.eu/standards/ISO/7049/) || order number: 1830651 8A 160V
+phoenix_contact connector MCV_01x08_GF_3.81mm_MH
+0
+8
+8
+Connector_Phoenix_MC
+PhoenixContact_MCV_1,5_9-G-3.5_1x09_P3.50mm_Vertical
+Generic Phoenix Contact connector footprint for: MCV_1,5/9-G-3.5; number of pins: 09; pin pitch: 3.50mm; Vertical || order number: 1843677 8A 160V
+phoenix_contact connector MCV_01x09_G_3.5mm
+0
+9
+9
+Connector_Phoenix_MC
+PhoenixContact_MCV_1,5_9-G-3.81_1x09_P3.81mm_Vertical
+Generic Phoenix Contact connector footprint for: MCV_1,5/9-G-3.81; number of pins: 09; pin pitch: 3.81mm; Vertical || order number: 1803497 8A 160V
+phoenix_contact connector MCV_01x09_G_3.81mm
+0
+9
+9
+Connector_Phoenix_MC
+PhoenixContact_MCV_1,5_9-GF-3.5_1x09_P3.50mm_Vertical_ThreadedFlange
+Generic Phoenix Contact connector footprint for: MCV_1,5/9-GF-3.5; number of pins: 09; pin pitch: 3.50mm; Vertical; threaded flange || order number: 1843295 8A 160V
+phoenix_contact connector MCV_01x09_GF_3.5mm
+0
+9
+9
+Connector_Phoenix_MC
+PhoenixContact_MCV_1,5_9-GF-3.5_1x09_P3.50mm_Vertical_ThreadedFlange_MountHole
+Generic Phoenix Contact connector footprint for: MCV_1,5/9-GF-3.5; number of pins: 09; pin pitch: 3.50mm; Vertical; threaded flange; footprint includes mount hole for mounting screw: ISO 1481-ST 2.2x4.5 C or ISO 7049-ST 2.2x4.5 C (http://www.fasteners.eu/standards/ISO/7049/) || order number: 1843295 8A 160V
+phoenix_contact connector MCV_01x09_GF_3.5mm_MH
+0
+9
+9
+Connector_Phoenix_MC
+PhoenixContact_MCV_1,5_9-GF-3.81_1x09_P3.81mm_Vertical_ThreadedFlange
+Generic Phoenix Contact connector footprint for: MCV_1,5/9-GF-3.81; number of pins: 09; pin pitch: 3.81mm; Vertical; threaded flange || order number: 1830664 8A 160V
+phoenix_contact connector MCV_01x09_GF_3.81mm
+0
+9
+9
+Connector_Phoenix_MC
+PhoenixContact_MCV_1,5_9-GF-3.81_1x09_P3.81mm_Vertical_ThreadedFlange_MountHole
+Generic Phoenix Contact connector footprint for: MCV_1,5/9-GF-3.81; number of pins: 09; pin pitch: 3.81mm; Vertical; threaded flange; footprint includes mount hole for mounting screw: ISO 1481-ST 2.2x4.5 C or ISO 7049-ST 2.2x4.5 C (http://www.fasteners.eu/standards/ISO/7049/) || order number: 1830664 8A 160V
+phoenix_contact connector MCV_01x09_GF_3.81mm_MH
+0
+9
+9
+Connector_Phoenix_MC
+PhoenixContact_MCV_1,5_10-G-3.5_1x10_P3.50mm_Vertical
+Generic Phoenix Contact connector footprint for: MCV_1,5/10-G-3.5; number of pins: 10; pin pitch: 3.50mm; Vertical || order number: 1843680 8A 160V
+phoenix_contact connector MCV_01x10_G_3.5mm
+0
+10
+10
+Connector_Phoenix_MC
+PhoenixContact_MCV_1,5_10-G-3.81_1x10_P3.81mm_Vertical
+Generic Phoenix Contact connector footprint for: MCV_1,5/10-G-3.81; number of pins: 10; pin pitch: 3.81mm; Vertical || order number: 1803507 8A 160V
+phoenix_contact connector MCV_01x10_G_3.81mm
+0
+10
+10
+Connector_Phoenix_MC
+PhoenixContact_MCV_1,5_10-GF-3.5_1x10_P3.50mm_Vertical_ThreadedFlange
+Generic Phoenix Contact connector footprint for: MCV_1,5/10-GF-3.5; number of pins: 10; pin pitch: 3.50mm; Vertical; threaded flange || order number: 1843305 8A 160V
+phoenix_contact connector MCV_01x10_GF_3.5mm
+0
+10
+10
+Connector_Phoenix_MC
+PhoenixContact_MCV_1,5_10-GF-3.5_1x10_P3.50mm_Vertical_ThreadedFlange_MountHole
+Generic Phoenix Contact connector footprint for: MCV_1,5/10-GF-3.5; number of pins: 10; pin pitch: 3.50mm; Vertical; threaded flange; footprint includes mount hole for mounting screw: ISO 1481-ST 2.2x4.5 C or ISO 7049-ST 2.2x4.5 C (http://www.fasteners.eu/standards/ISO/7049/) || order number: 1843305 8A 160V
+phoenix_contact connector MCV_01x10_GF_3.5mm_MH
+0
+10
+10
+Connector_Phoenix_MC
+PhoenixContact_MCV_1,5_10-GF-3.81_1x10_P3.81mm_Vertical_ThreadedFlange
+Generic Phoenix Contact connector footprint for: MCV_1,5/10-GF-3.81; number of pins: 10; pin pitch: 3.81mm; Vertical; threaded flange || order number: 1830677 8A 160V
+phoenix_contact connector MCV_01x10_GF_3.81mm
+0
+10
+10
+Connector_Phoenix_MC
+PhoenixContact_MCV_1,5_10-GF-3.81_1x10_P3.81mm_Vertical_ThreadedFlange_MountHole
+Generic Phoenix Contact connector footprint for: MCV_1,5/10-GF-3.81; number of pins: 10; pin pitch: 3.81mm; Vertical; threaded flange; footprint includes mount hole for mounting screw: ISO 1481-ST 2.2x4.5 C or ISO 7049-ST 2.2x4.5 C (http://www.fasteners.eu/standards/ISO/7049/) || order number: 1830677 8A 160V
+phoenix_contact connector MCV_01x10_GF_3.81mm_MH
+0
+10
+10
+Connector_Phoenix_MC
+PhoenixContact_MCV_1,5_11-G-3.5_1x11_P3.50mm_Vertical
+Generic Phoenix Contact connector footprint for: MCV_1,5/11-G-3.5; number of pins: 11; pin pitch: 3.50mm; Vertical || order number: 1843693 8A 160V
+phoenix_contact connector MCV_01x11_G_3.5mm
+0
+11
+11
+Connector_Phoenix_MC
+PhoenixContact_MCV_1,5_11-G-3.81_1x11_P3.81mm_Vertical
+Generic Phoenix Contact connector footprint for: MCV_1,5/11-G-3.81; number of pins: 11; pin pitch: 3.81mm; Vertical || order number: 1803510 8A 160V
+phoenix_contact connector MCV_01x11_G_3.81mm
+0
+11
+11
+Connector_Phoenix_MC
+PhoenixContact_MCV_1,5_11-GF-3.5_1x11_P3.50mm_Vertical_ThreadedFlange
+Generic Phoenix Contact connector footprint for: MCV_1,5/11-GF-3.5; number of pins: 11; pin pitch: 3.50mm; Vertical; threaded flange || order number: 1843318 8A 160V
+phoenix_contact connector MCV_01x11_GF_3.5mm
+0
+11
+11
+Connector_Phoenix_MC
+PhoenixContact_MCV_1,5_11-GF-3.5_1x11_P3.50mm_Vertical_ThreadedFlange_MountHole
+Generic Phoenix Contact connector footprint for: MCV_1,5/11-GF-3.5; number of pins: 11; pin pitch: 3.50mm; Vertical; threaded flange; footprint includes mount hole for mounting screw: ISO 1481-ST 2.2x4.5 C or ISO 7049-ST 2.2x4.5 C (http://www.fasteners.eu/standards/ISO/7049/) || order number: 1843318 8A 160V
+phoenix_contact connector MCV_01x11_GF_3.5mm_MH
+0
+11
+11
+Connector_Phoenix_MC
+PhoenixContact_MCV_1,5_11-GF-3.81_1x11_P3.81mm_Vertical_ThreadedFlange
+Generic Phoenix Contact connector footprint for: MCV_1,5/11-GF-3.81; number of pins: 11; pin pitch: 3.81mm; Vertical; threaded flange || order number: 1830680 8A 160V
+phoenix_contact connector MCV_01x11_GF_3.81mm
+0
+11
+11
+Connector_Phoenix_MC
+PhoenixContact_MCV_1,5_11-GF-3.81_1x11_P3.81mm_Vertical_ThreadedFlange_MountHole
+Generic Phoenix Contact connector footprint for: MCV_1,5/11-GF-3.81; number of pins: 11; pin pitch: 3.81mm; Vertical; threaded flange; footprint includes mount hole for mounting screw: ISO 1481-ST 2.2x4.5 C or ISO 7049-ST 2.2x4.5 C (http://www.fasteners.eu/standards/ISO/7049/) || order number: 1830680 8A 160V
+phoenix_contact connector MCV_01x11_GF_3.81mm_MH
+0
+11
+11
+Connector_Phoenix_MC
+PhoenixContact_MCV_1,5_12-G-3.5_1x12_P3.50mm_Vertical
+Generic Phoenix Contact connector footprint for: MCV_1,5/12-G-3.5; number of pins: 12; pin pitch: 3.50mm; Vertical || order number: 1843703 8A 160V
+phoenix_contact connector MCV_01x12_G_3.5mm
+0
+12
+12
+Connector_Phoenix_MC
+PhoenixContact_MCV_1,5_12-G-3.81_1x12_P3.81mm_Vertical
+Generic Phoenix Contact connector footprint for: MCV_1,5/12-G-3.81; number of pins: 12; pin pitch: 3.81mm; Vertical || order number: 1803523 8A 160V
+phoenix_contact connector MCV_01x12_G_3.81mm
+0
+12
+12
+Connector_Phoenix_MC
+PhoenixContact_MCV_1,5_12-GF-3.5_1x12_P3.50mm_Vertical_ThreadedFlange
+Generic Phoenix Contact connector footprint for: MCV_1,5/12-GF-3.5; number of pins: 12; pin pitch: 3.50mm; Vertical; threaded flange || order number: 1843321 8A 160V
+phoenix_contact connector MCV_01x12_GF_3.5mm
+0
+12
+12
+Connector_Phoenix_MC
+PhoenixContact_MCV_1,5_12-GF-3.5_1x12_P3.50mm_Vertical_ThreadedFlange_MountHole
+Generic Phoenix Contact connector footprint for: MCV_1,5/12-GF-3.5; number of pins: 12; pin pitch: 3.50mm; Vertical; threaded flange; footprint includes mount hole for mounting screw: ISO 1481-ST 2.2x4.5 C or ISO 7049-ST 2.2x4.5 C (http://www.fasteners.eu/standards/ISO/7049/) || order number: 1843321 8A 160V
+phoenix_contact connector MCV_01x12_GF_3.5mm_MH
+0
+12
+12
+Connector_Phoenix_MC
+PhoenixContact_MCV_1,5_12-GF-3.81_1x12_P3.81mm_Vertical_ThreadedFlange
+Generic Phoenix Contact connector footprint for: MCV_1,5/12-GF-3.81; number of pins: 12; pin pitch: 3.81mm; Vertical; threaded flange || order number: 1830693 8A 160V
+phoenix_contact connector MCV_01x12_GF_3.81mm
+0
+12
+12
+Connector_Phoenix_MC
+PhoenixContact_MCV_1,5_12-GF-3.81_1x12_P3.81mm_Vertical_ThreadedFlange_MountHole
+Generic Phoenix Contact connector footprint for: MCV_1,5/12-GF-3.81; number of pins: 12; pin pitch: 3.81mm; Vertical; threaded flange; footprint includes mount hole for mounting screw: ISO 1481-ST 2.2x4.5 C or ISO 7049-ST 2.2x4.5 C (http://www.fasteners.eu/standards/ISO/7049/) || order number: 1830693 8A 160V
+phoenix_contact connector MCV_01x12_GF_3.81mm_MH
+0
+12
+12
+Connector_Phoenix_MC
+PhoenixContact_MCV_1,5_13-G-3.5_1x13_P3.50mm_Vertical
+Generic Phoenix Contact connector footprint for: MCV_1,5/13-G-3.5; number of pins: 13; pin pitch: 3.50mm; Vertical || order number: 1843716 8A 160V
+phoenix_contact connector MCV_01x13_G_3.5mm
+0
+13
+13
+Connector_Phoenix_MC
+PhoenixContact_MCV_1,5_13-G-3.81_1x13_P3.81mm_Vertical
+Generic Phoenix Contact connector footprint for: MCV_1,5/13-G-3.81; number of pins: 13; pin pitch: 3.81mm; Vertical || order number: 1803536 8A 160V
+phoenix_contact connector MCV_01x13_G_3.81mm
+0
+13
+13
+Connector_Phoenix_MC
+PhoenixContact_MCV_1,5_13-GF-3.5_1x13_P3.50mm_Vertical_ThreadedFlange
+Generic Phoenix Contact connector footprint for: MCV_1,5/13-GF-3.5; number of pins: 13; pin pitch: 3.50mm; Vertical; threaded flange || order number: 1843334 8A 160V
+phoenix_contact connector MCV_01x13_GF_3.5mm
+0
+13
+13
+Connector_Phoenix_MC
+PhoenixContact_MCV_1,5_13-GF-3.5_1x13_P3.50mm_Vertical_ThreadedFlange_MountHole
+Generic Phoenix Contact connector footprint for: MCV_1,5/13-GF-3.5; number of pins: 13; pin pitch: 3.50mm; Vertical; threaded flange; footprint includes mount hole for mounting screw: ISO 1481-ST 2.2x4.5 C or ISO 7049-ST 2.2x4.5 C (http://www.fasteners.eu/standards/ISO/7049/) || order number: 1843334 8A 160V
+phoenix_contact connector MCV_01x13_GF_3.5mm_MH
+0
+13
+13
+Connector_Phoenix_MC
+PhoenixContact_MCV_1,5_13-GF-3.81_1x13_P3.81mm_Vertical_ThreadedFlange
+Generic Phoenix Contact connector footprint for: MCV_1,5/13-GF-3.81; number of pins: 13; pin pitch: 3.81mm; Vertical; threaded flange || order number: 1830703 8A 160V
+phoenix_contact connector MCV_01x13_GF_3.81mm
+0
+13
+13
+Connector_Phoenix_MC
+PhoenixContact_MCV_1,5_13-GF-3.81_1x13_P3.81mm_Vertical_ThreadedFlange_MountHole
+Generic Phoenix Contact connector footprint for: MCV_1,5/13-GF-3.81; number of pins: 13; pin pitch: 3.81mm; Vertical; threaded flange; footprint includes mount hole for mounting screw: ISO 1481-ST 2.2x4.5 C or ISO 7049-ST 2.2x4.5 C (http://www.fasteners.eu/standards/ISO/7049/) || order number: 1830703 8A 160V
+phoenix_contact connector MCV_01x13_GF_3.81mm_MH
+0
+13
+13
+Connector_Phoenix_MC
+PhoenixContact_MCV_1,5_14-G-3.5_1x14_P3.50mm_Vertical
+Generic Phoenix Contact connector footprint for: MCV_1,5/14-G-3.5; number of pins: 14; pin pitch: 3.50mm; Vertical || order number: 1843729 8A 160V
+phoenix_contact connector MCV_01x14_G_3.5mm
+0
+14
+14
+Connector_Phoenix_MC
+PhoenixContact_MCV_1,5_14-G-3.81_1x14_P3.81mm_Vertical
+Generic Phoenix Contact connector footprint for: MCV_1,5/14-G-3.81; number of pins: 14; pin pitch: 3.81mm; Vertical || order number: 1803549 8A 160V
+phoenix_contact connector MCV_01x14_G_3.81mm
+0
+14
+14
+Connector_Phoenix_MC
+PhoenixContact_MCV_1,5_14-GF-3.5_1x14_P3.50mm_Vertical_ThreadedFlange
+Generic Phoenix Contact connector footprint for: MCV_1,5/14-GF-3.5; number of pins: 14; pin pitch: 3.50mm; Vertical; threaded flange || order number: 1843347 8A 160V
+phoenix_contact connector MCV_01x14_GF_3.5mm
+0
+14
+14
+Connector_Phoenix_MC
+PhoenixContact_MCV_1,5_14-GF-3.5_1x14_P3.50mm_Vertical_ThreadedFlange_MountHole
+Generic Phoenix Contact connector footprint for: MCV_1,5/14-GF-3.5; number of pins: 14; pin pitch: 3.50mm; Vertical; threaded flange; footprint includes mount hole for mounting screw: ISO 1481-ST 2.2x4.5 C or ISO 7049-ST 2.2x4.5 C (http://www.fasteners.eu/standards/ISO/7049/) || order number: 1843347 8A 160V
+phoenix_contact connector MCV_01x14_GF_3.5mm_MH
+0
+14
+14
+Connector_Phoenix_MC
+PhoenixContact_MCV_1,5_14-GF-3.81_1x14_P3.81mm_Vertical_ThreadedFlange
+Generic Phoenix Contact connector footprint for: MCV_1,5/14-GF-3.81; number of pins: 14; pin pitch: 3.81mm; Vertical; threaded flange || order number: 1830716 8A 160V
+phoenix_contact connector MCV_01x14_GF_3.81mm
+0
+14
+14
+Connector_Phoenix_MC
+PhoenixContact_MCV_1,5_14-GF-3.81_1x14_P3.81mm_Vertical_ThreadedFlange_MountHole
+Generic Phoenix Contact connector footprint for: MCV_1,5/14-GF-3.81; number of pins: 14; pin pitch: 3.81mm; Vertical; threaded flange; footprint includes mount hole for mounting screw: ISO 1481-ST 2.2x4.5 C or ISO 7049-ST 2.2x4.5 C (http://www.fasteners.eu/standards/ISO/7049/) || order number: 1830716 8A 160V
+phoenix_contact connector MCV_01x14_GF_3.81mm_MH
+0
+14
+14
+Connector_Phoenix_MC
+PhoenixContact_MCV_1,5_15-G-3.5_1x15_P3.50mm_Vertical
+Generic Phoenix Contact connector footprint for: MCV_1,5/15-G-3.5; number of pins: 15; pin pitch: 3.50mm; Vertical || order number: 1843732 8A 160V
+phoenix_contact connector MCV_01x15_G_3.5mm
+0
+15
+15
+Connector_Phoenix_MC
+PhoenixContact_MCV_1,5_15-G-3.81_1x15_P3.81mm_Vertical
+Generic Phoenix Contact connector footprint for: MCV_1,5/15-G-3.81; number of pins: 15; pin pitch: 3.81mm; Vertical || order number: 1803552 8A 160V
+phoenix_contact connector MCV_01x15_G_3.81mm
+0
+15
+15
+Connector_Phoenix_MC
+PhoenixContact_MCV_1,5_15-GF-3.5_1x15_P3.50mm_Vertical_ThreadedFlange
+Generic Phoenix Contact connector footprint for: MCV_1,5/15-GF-3.5; number of pins: 15; pin pitch: 3.50mm; Vertical; threaded flange || order number: 1843350 8A 160V
+phoenix_contact connector MCV_01x15_GF_3.5mm
+0
+15
+15
+Connector_Phoenix_MC
+PhoenixContact_MCV_1,5_15-GF-3.5_1x15_P3.50mm_Vertical_ThreadedFlange_MountHole
+Generic Phoenix Contact connector footprint for: MCV_1,5/15-GF-3.5; number of pins: 15; pin pitch: 3.50mm; Vertical; threaded flange; footprint includes mount hole for mounting screw: ISO 1481-ST 2.2x4.5 C or ISO 7049-ST 2.2x4.5 C (http://www.fasteners.eu/standards/ISO/7049/) || order number: 1843350 8A 160V
+phoenix_contact connector MCV_01x15_GF_3.5mm_MH
+0
+15
+15
+Connector_Phoenix_MC
+PhoenixContact_MCV_1,5_15-GF-3.81_1x15_P3.81mm_Vertical_ThreadedFlange
+Generic Phoenix Contact connector footprint for: MCV_1,5/15-GF-3.81; number of pins: 15; pin pitch: 3.81mm; Vertical; threaded flange || order number: 1830729 8A 160V
+phoenix_contact connector MCV_01x15_GF_3.81mm
+0
+15
+15
+Connector_Phoenix_MC
+PhoenixContact_MCV_1,5_15-GF-3.81_1x15_P3.81mm_Vertical_ThreadedFlange_MountHole
+Generic Phoenix Contact connector footprint for: MCV_1,5/15-GF-3.81; number of pins: 15; pin pitch: 3.81mm; Vertical; threaded flange; footprint includes mount hole for mounting screw: ISO 1481-ST 2.2x4.5 C or ISO 7049-ST 2.2x4.5 C (http://www.fasteners.eu/standards/ISO/7049/) || order number: 1830729 8A 160V
+phoenix_contact connector MCV_01x15_GF_3.81mm_MH
+0
+15
+15
+Connector_Phoenix_MC
+PhoenixContact_MCV_1,5_16-G-3.5_1x16_P3.50mm_Vertical
+Generic Phoenix Contact connector footprint for: MCV_1,5/16-G-3.5; number of pins: 16; pin pitch: 3.50mm; Vertical || order number: 1843745 8A 160V
+phoenix_contact connector MCV_01x16_G_3.5mm
+0
+16
+16
+Connector_Phoenix_MC
+PhoenixContact_MCV_1,5_16-G-3.81_1x16_P3.81mm_Vertical
+Generic Phoenix Contact connector footprint for: MCV_1,5/16-G-3.81; number of pins: 16; pin pitch: 3.81mm; Vertical || order number: 1803565 8A 160V
+phoenix_contact connector MCV_01x16_G_3.81mm
+0
+16
+16
+Connector_Phoenix_MC
+PhoenixContact_MCV_1,5_16-GF-3.5_1x16_P3.50mm_Vertical_ThreadedFlange
+Generic Phoenix Contact connector footprint for: MCV_1,5/16-GF-3.5; number of pins: 16; pin pitch: 3.50mm; Vertical; threaded flange || order number: 1843363 8A 160V
+phoenix_contact connector MCV_01x16_GF_3.5mm
+0
+16
+16
+Connector_Phoenix_MC
+PhoenixContact_MCV_1,5_16-GF-3.5_1x16_P3.50mm_Vertical_ThreadedFlange_MountHole
+Generic Phoenix Contact connector footprint for: MCV_1,5/16-GF-3.5; number of pins: 16; pin pitch: 3.50mm; Vertical; threaded flange; footprint includes mount hole for mounting screw: ISO 1481-ST 2.2x4.5 C or ISO 7049-ST 2.2x4.5 C (http://www.fasteners.eu/standards/ISO/7049/) || order number: 1843363 8A 160V
+phoenix_contact connector MCV_01x16_GF_3.5mm_MH
+0
+16
+16
+Connector_Phoenix_MC
+PhoenixContact_MCV_1,5_16-GF-3.81_1x16_P3.81mm_Vertical_ThreadedFlange
+Generic Phoenix Contact connector footprint for: MCV_1,5/16-GF-3.81; number of pins: 16; pin pitch: 3.81mm; Vertical; threaded flange || order number: 1830732 8A 160V
+phoenix_contact connector MCV_01x16_GF_3.81mm
+0
+16
+16
+Connector_Phoenix_MC
+PhoenixContact_MCV_1,5_16-GF-3.81_1x16_P3.81mm_Vertical_ThreadedFlange_MountHole
+Generic Phoenix Contact connector footprint for: MCV_1,5/16-GF-3.81; number of pins: 16; pin pitch: 3.81mm; Vertical; threaded flange; footprint includes mount hole for mounting screw: ISO 1481-ST 2.2x4.5 C or ISO 7049-ST 2.2x4.5 C (http://www.fasteners.eu/standards/ISO/7049/) || order number: 1830732 8A 160V
+phoenix_contact connector MCV_01x16_GF_3.81mm_MH
+0
+16
+16
+Connector_Phoenix_MC
+PhoenixContact_MC_1,5_2-G-3.5_1x02_P3.50mm_Horizontal
+Generic Phoenix Contact connector footprint for: MC_1,5/2-G-3.5; number of pins: 02; pin pitch: 3.50mm; Angled || order number: 1844210 8A 160V
+phoenix_contact connector MC_01x02_G_3.5mm
+0
+2
+2
+Connector_Phoenix_MC
+PhoenixContact_MC_1,5_2-G-3.81_1x02_P3.81mm_Horizontal
+Generic Phoenix Contact connector footprint for: MC_1,5/2-G-3.81; number of pins: 02; pin pitch: 3.81mm; Angled || order number: 1803277 8A 160V
+phoenix_contact connector MC_01x02_G_3.81mm
+0
+2
+2
+Connector_Phoenix_MC
+PhoenixContact_MC_1,5_2-GF-3.5_1x02_P3.50mm_Horizontal_ThreadedFlange
+Generic Phoenix Contact connector footprint for: MC_1,5/2-GF-3.5; number of pins: 02; pin pitch: 3.50mm; Angled; threaded flange || order number: 1843790 8A 160V
+phoenix_contact connector MC_01x02_GF_3.5mm
+0
+2
+2
+Connector_Phoenix_MC
+PhoenixContact_MC_1,5_2-GF-3.5_1x02_P3.50mm_Horizontal_ThreadedFlange_MountHole
+Generic Phoenix Contact connector footprint for: MC_1,5/2-GF-3.5; number of pins: 02; pin pitch: 3.50mm; Angled; threaded flange; footprint includes mount hole for mounting screw: ISO 1481-ST 2.2x4.5 C or ISO 7049-ST 2.2x4.5 C (http://www.fasteners.eu/standards/ISO/7049/) || order number: 1843790 8A 160V
+phoenix_contact connector MC_01x02_GF_3.5mm_MH
+0
+2
+2
+Connector_Phoenix_MC
+PhoenixContact_MC_1,5_2-GF-3.81_1x02_P3.81mm_Horizontal_ThreadedFlange
+Generic Phoenix Contact connector footprint for: MC_1,5/2-GF-3.81; number of pins: 02; pin pitch: 3.81mm; Angled; threaded flange || order number: 1827868 8A 160V
+phoenix_contact connector MC_01x02_GF_3.81mm
+0
+2
+2
+Connector_Phoenix_MC
+PhoenixContact_MC_1,5_2-GF-3.81_1x02_P3.81mm_Horizontal_ThreadedFlange_MountHole
+Generic Phoenix Contact connector footprint for: MC_1,5/2-GF-3.81; number of pins: 02; pin pitch: 3.81mm; Angled; threaded flange; footprint includes mount hole for mounting screw: ISO 1481-ST 2.2x4.5 C or ISO 7049-ST 2.2x4.5 C (http://www.fasteners.eu/standards/ISO/7049/) || order number: 1827868 8A 160V
+phoenix_contact connector MC_01x02_GF_3.81mm_MH
+0
+2
+2
+Connector_Phoenix_MC
+PhoenixContact_MC_1,5_3-G-3.5_1x03_P3.50mm_Horizontal
+Generic Phoenix Contact connector footprint for: MC_1,5/3-G-3.5; number of pins: 03; pin pitch: 3.50mm; Angled || order number: 1844223 8A 160V
+phoenix_contact connector MC_01x03_G_3.5mm
+0
+3
+3
+Connector_Phoenix_MC
+PhoenixContact_MC_1,5_3-G-3.81_1x03_P3.81mm_Horizontal
+Generic Phoenix Contact connector footprint for: MC_1,5/3-G-3.81; number of pins: 03; pin pitch: 3.81mm; Angled || order number: 1803280 8A 160V
+phoenix_contact connector MC_01x03_G_3.81mm
+0
+3
+3
+Connector_Phoenix_MC
+PhoenixContact_MC_1,5_3-GF-3.5_1x03_P3.50mm_Horizontal_ThreadedFlange
+Generic Phoenix Contact connector footprint for: MC_1,5/3-GF-3.5; number of pins: 03; pin pitch: 3.50mm; Angled; threaded flange || order number: 1843800 8A 160V
+phoenix_contact connector MC_01x03_GF_3.5mm
+0
+3
+3
+Connector_Phoenix_MC
+PhoenixContact_MC_1,5_3-GF-3.5_1x03_P3.50mm_Horizontal_ThreadedFlange_MountHole
+Generic Phoenix Contact connector footprint for: MC_1,5/3-GF-3.5; number of pins: 03; pin pitch: 3.50mm; Angled; threaded flange; footprint includes mount hole for mounting screw: ISO 1481-ST 2.2x4.5 C or ISO 7049-ST 2.2x4.5 C (http://www.fasteners.eu/standards/ISO/7049/) || order number: 1843800 8A 160V
+phoenix_contact connector MC_01x03_GF_3.5mm_MH
+0
+3
+3
+Connector_Phoenix_MC
+PhoenixContact_MC_1,5_3-GF-3.81_1x03_P3.81mm_Horizontal_ThreadedFlange
+Generic Phoenix Contact connector footprint for: MC_1,5/3-GF-3.81; number of pins: 03; pin pitch: 3.81mm; Angled; threaded flange || order number: 1827871 8A 160V
+phoenix_contact connector MC_01x03_GF_3.81mm
+0
+3
+3
+Connector_Phoenix_MC
+PhoenixContact_MC_1,5_3-GF-3.81_1x03_P3.81mm_Horizontal_ThreadedFlange_MountHole
+Generic Phoenix Contact connector footprint for: MC_1,5/3-GF-3.81; number of pins: 03; pin pitch: 3.81mm; Angled; threaded flange; footprint includes mount hole for mounting screw: ISO 1481-ST 2.2x4.5 C or ISO 7049-ST 2.2x4.5 C (http://www.fasteners.eu/standards/ISO/7049/) || order number: 1827871 8A 160V
+phoenix_contact connector MC_01x03_GF_3.81mm_MH
+0
+3
+3
+Connector_Phoenix_MC
+PhoenixContact_MC_1,5_4-G-3.5_1x04_P3.50mm_Horizontal
+Generic Phoenix Contact connector footprint for: MC_1,5/4-G-3.5; number of pins: 04; pin pitch: 3.50mm; Angled || order number: 1844236 8A 160V
+phoenix_contact connector MC_01x04_G_3.5mm
+0
+4
+4
+Connector_Phoenix_MC
+PhoenixContact_MC_1,5_4-G-3.81_1x04_P3.81mm_Horizontal
+Generic Phoenix Contact connector footprint for: MC_1,5/4-G-3.81; number of pins: 04; pin pitch: 3.81mm; Angled || order number: 1803293 8A 160V
+phoenix_contact connector MC_01x04_G_3.81mm
+0
+4
+4
+Connector_Phoenix_MC
+PhoenixContact_MC_1,5_4-GF-3.5_1x04_P3.50mm_Horizontal_ThreadedFlange
+Generic Phoenix Contact connector footprint for: MC_1,5/4-GF-3.5; number of pins: 04; pin pitch: 3.50mm; Angled; threaded flange || order number: 1843813 8A 160V
+phoenix_contact connector MC_01x04_GF_3.5mm
+0
+4
+4
+Connector_Phoenix_MC
+PhoenixContact_MC_1,5_4-GF-3.5_1x04_P3.50mm_Horizontal_ThreadedFlange_MountHole
+Generic Phoenix Contact connector footprint for: MC_1,5/4-GF-3.5; number of pins: 04; pin pitch: 3.50mm; Angled; threaded flange; footprint includes mount hole for mounting screw: ISO 1481-ST 2.2x4.5 C or ISO 7049-ST 2.2x4.5 C (http://www.fasteners.eu/standards/ISO/7049/) || order number: 1843813 8A 160V
+phoenix_contact connector MC_01x04_GF_3.5mm_MH
+0
+4
+4
+Connector_Phoenix_MC
+PhoenixContact_MC_1,5_4-GF-3.81_1x04_P3.81mm_Horizontal_ThreadedFlange
+Generic Phoenix Contact connector footprint for: MC_1,5/4-GF-3.81; number of pins: 04; pin pitch: 3.81mm; Angled; threaded flange || order number: 1827884 8A 160V
+phoenix_contact connector MC_01x04_GF_3.81mm
+0
+4
+4
+Connector_Phoenix_MC
+PhoenixContact_MC_1,5_4-GF-3.81_1x04_P3.81mm_Horizontal_ThreadedFlange_MountHole
+Generic Phoenix Contact connector footprint for: MC_1,5/4-GF-3.81; number of pins: 04; pin pitch: 3.81mm; Angled; threaded flange; footprint includes mount hole for mounting screw: ISO 1481-ST 2.2x4.5 C or ISO 7049-ST 2.2x4.5 C (http://www.fasteners.eu/standards/ISO/7049/) || order number: 1827884 8A 160V
+phoenix_contact connector MC_01x04_GF_3.81mm_MH
+0
+4
+4
+Connector_Phoenix_MC
+PhoenixContact_MC_1,5_5-G-3.5_1x05_P3.50mm_Horizontal
+Generic Phoenix Contact connector footprint for: MC_1,5/5-G-3.5; number of pins: 05; pin pitch: 3.50mm; Angled || order number: 1844249 8A 160V
+phoenix_contact connector MC_01x05_G_3.5mm
+0
+5
+5
+Connector_Phoenix_MC
+PhoenixContact_MC_1,5_5-G-3.81_1x05_P3.81mm_Horizontal
+Generic Phoenix Contact connector footprint for: MC_1,5/5-G-3.81; number of pins: 05; pin pitch: 3.81mm; Angled || order number: 1803303 8A 160V
+phoenix_contact connector MC_01x05_G_3.81mm
+0
+5
+5
+Connector_Phoenix_MC
+PhoenixContact_MC_1,5_5-GF-3.5_1x05_P3.50mm_Horizontal_ThreadedFlange
+Generic Phoenix Contact connector footprint for: MC_1,5/5-GF-3.5; number of pins: 05; pin pitch: 3.50mm; Angled; threaded flange || order number: 1843826 8A 160V
+phoenix_contact connector MC_01x05_GF_3.5mm
+0
+5
+5
+Connector_Phoenix_MC
+PhoenixContact_MC_1,5_5-GF-3.5_1x05_P3.50mm_Horizontal_ThreadedFlange_MountHole
+Generic Phoenix Contact connector footprint for: MC_1,5/5-GF-3.5; number of pins: 05; pin pitch: 3.50mm; Angled; threaded flange; footprint includes mount hole for mounting screw: ISO 1481-ST 2.2x4.5 C or ISO 7049-ST 2.2x4.5 C (http://www.fasteners.eu/standards/ISO/7049/) || order number: 1843826 8A 160V
+phoenix_contact connector MC_01x05_GF_3.5mm_MH
+0
+5
+5
+Connector_Phoenix_MC
+PhoenixContact_MC_1,5_5-GF-3.81_1x05_P3.81mm_Horizontal_ThreadedFlange
+Generic Phoenix Contact connector footprint for: MC_1,5/5-GF-3.81; number of pins: 05; pin pitch: 3.81mm; Angled; threaded flange || order number: 1827897 8A 160V
+phoenix_contact connector MC_01x05_GF_3.81mm
+0
+5
+5
+Connector_Phoenix_MC
+PhoenixContact_MC_1,5_5-GF-3.81_1x05_P3.81mm_Horizontal_ThreadedFlange_MountHole
+Generic Phoenix Contact connector footprint for: MC_1,5/5-GF-3.81; number of pins: 05; pin pitch: 3.81mm; Angled; threaded flange; footprint includes mount hole for mounting screw: ISO 1481-ST 2.2x4.5 C or ISO 7049-ST 2.2x4.5 C (http://www.fasteners.eu/standards/ISO/7049/) || order number: 1827897 8A 160V
+phoenix_contact connector MC_01x05_GF_3.81mm_MH
+0
+5
+5
+Connector_Phoenix_MC
+PhoenixContact_MC_1,5_6-G-3.5_1x06_P3.50mm_Horizontal
+Generic Phoenix Contact connector footprint for: MC_1,5/6-G-3.5; number of pins: 06; pin pitch: 3.50mm; Angled || order number: 1844252 8A 160V
+phoenix_contact connector MC_01x06_G_3.5mm
+0
+6
+6
+Connector_Phoenix_MC
+PhoenixContact_MC_1,5_6-G-3.81_1x06_P3.81mm_Horizontal
+Generic Phoenix Contact connector footprint for: MC_1,5/6-G-3.81; number of pins: 06; pin pitch: 3.81mm; Angled || order number: 1803316 8A 160V
+phoenix_contact connector MC_01x06_G_3.81mm
+0
+6
+6
+Connector_Phoenix_MC
+PhoenixContact_MC_1,5_6-GF-3.5_1x06_P3.50mm_Horizontal_ThreadedFlange
+Generic Phoenix Contact connector footprint for: MC_1,5/6-GF-3.5; number of pins: 06; pin pitch: 3.50mm; Angled; threaded flange || order number: 1843839 8A 160V
+phoenix_contact connector MC_01x06_GF_3.5mm
+0
+6
+6
+Connector_Phoenix_MC
+PhoenixContact_MC_1,5_6-GF-3.5_1x06_P3.50mm_Horizontal_ThreadedFlange_MountHole
+Generic Phoenix Contact connector footprint for: MC_1,5/6-GF-3.5; number of pins: 06; pin pitch: 3.50mm; Angled; threaded flange; footprint includes mount hole for mounting screw: ISO 1481-ST 2.2x4.5 C or ISO 7049-ST 2.2x4.5 C (http://www.fasteners.eu/standards/ISO/7049/) || order number: 1843839 8A 160V
+phoenix_contact connector MC_01x06_GF_3.5mm_MH
+0
+6
+6
+Connector_Phoenix_MC
+PhoenixContact_MC_1,5_6-GF-3.81_1x06_P3.81mm_Horizontal_ThreadedFlange
+Generic Phoenix Contact connector footprint for: MC_1,5/6-GF-3.81; number of pins: 06; pin pitch: 3.81mm; Angled; threaded flange || order number: 1827907 8A 160V
+phoenix_contact connector MC_01x06_GF_3.81mm
+0
+6
+6
+Connector_Phoenix_MC
+PhoenixContact_MC_1,5_6-GF-3.81_1x06_P3.81mm_Horizontal_ThreadedFlange_MountHole
+Generic Phoenix Contact connector footprint for: MC_1,5/6-GF-3.81; number of pins: 06; pin pitch: 3.81mm; Angled; threaded flange; footprint includes mount hole for mounting screw: ISO 1481-ST 2.2x4.5 C or ISO 7049-ST 2.2x4.5 C (http://www.fasteners.eu/standards/ISO/7049/) || order number: 1827907 8A 160V
+phoenix_contact connector MC_01x06_GF_3.81mm_MH
+0
+6
+6
+Connector_Phoenix_MC
+PhoenixContact_MC_1,5_7-G-3.5_1x07_P3.50mm_Horizontal
+Generic Phoenix Contact connector footprint for: MC_1,5/7-G-3.5; number of pins: 07; pin pitch: 3.50mm; Angled || order number: 1844265 8A 160V
+phoenix_contact connector MC_01x07_G_3.5mm
+0
+7
+7
+Connector_Phoenix_MC
+PhoenixContact_MC_1,5_7-G-3.81_1x07_P3.81mm_Horizontal
+Generic Phoenix Contact connector footprint for: MC_1,5/7-G-3.81; number of pins: 07; pin pitch: 3.81mm; Angled || order number: 1803329 8A 160V
+phoenix_contact connector MC_01x07_G_3.81mm
+0
+7
+7
+Connector_Phoenix_MC
+PhoenixContact_MC_1,5_7-GF-3.5_1x07_P3.50mm_Horizontal_ThreadedFlange
+Generic Phoenix Contact connector footprint for: MC_1,5/7-GF-3.5; number of pins: 07; pin pitch: 3.50mm; Angled; threaded flange || order number: 1843842 8A 160V
+phoenix_contact connector MC_01x07_GF_3.5mm
+0
+7
+7
+Connector_Phoenix_MC
+PhoenixContact_MC_1,5_7-GF-3.5_1x07_P3.50mm_Horizontal_ThreadedFlange_MountHole
+Generic Phoenix Contact connector footprint for: MC_1,5/7-GF-3.5; number of pins: 07; pin pitch: 3.50mm; Angled; threaded flange; footprint includes mount hole for mounting screw: ISO 1481-ST 2.2x4.5 C or ISO 7049-ST 2.2x4.5 C (http://www.fasteners.eu/standards/ISO/7049/) || order number: 1843842 8A 160V
+phoenix_contact connector MC_01x07_GF_3.5mm_MH
+0
+7
+7
+Connector_Phoenix_MC
+PhoenixContact_MC_1,5_7-GF-3.81_1x07_P3.81mm_Horizontal_ThreadedFlange
+Generic Phoenix Contact connector footprint for: MC_1,5/7-GF-3.81; number of pins: 07; pin pitch: 3.81mm; Angled; threaded flange || order number: 1827910 8A 160V
+phoenix_contact connector MC_01x07_GF_3.81mm
+0
+7
+7
+Connector_Phoenix_MC
+PhoenixContact_MC_1,5_7-GF-3.81_1x07_P3.81mm_Horizontal_ThreadedFlange_MountHole
+Generic Phoenix Contact connector footprint for: MC_1,5/7-GF-3.81; number of pins: 07; pin pitch: 3.81mm; Angled; threaded flange; footprint includes mount hole for mounting screw: ISO 1481-ST 2.2x4.5 C or ISO 7049-ST 2.2x4.5 C (http://www.fasteners.eu/standards/ISO/7049/) || order number: 1827910 8A 160V
+phoenix_contact connector MC_01x07_GF_3.81mm_MH
+0
+7
+7
+Connector_Phoenix_MC
+PhoenixContact_MC_1,5_8-G-3.5_1x08_P3.50mm_Horizontal
+Generic Phoenix Contact connector footprint for: MC_1,5/8-G-3.5; number of pins: 08; pin pitch: 3.50mm; Angled || order number: 1844278 8A 160V
+phoenix_contact connector MC_01x08_G_3.5mm
+0
+8
+8
+Connector_Phoenix_MC
+PhoenixContact_MC_1,5_8-G-3.81_1x08_P3.81mm_Horizontal
+Generic Phoenix Contact connector footprint for: MC_1,5/8-G-3.81; number of pins: 08; pin pitch: 3.81mm; Angled || order number: 1803332 8A 160V
+phoenix_contact connector MC_01x08_G_3.81mm
+0
+8
+8
+Connector_Phoenix_MC
+PhoenixContact_MC_1,5_8-GF-3.5_1x08_P3.50mm_Horizontal_ThreadedFlange
+Generic Phoenix Contact connector footprint for: MC_1,5/8-GF-3.5; number of pins: 08; pin pitch: 3.50mm; Angled; threaded flange || order number: 1843855 8A 160V
+phoenix_contact connector MC_01x08_GF_3.5mm
+0
+8
+8
+Connector_Phoenix_MC
+PhoenixContact_MC_1,5_8-GF-3.5_1x08_P3.50mm_Horizontal_ThreadedFlange_MountHole
+Generic Phoenix Contact connector footprint for: MC_1,5/8-GF-3.5; number of pins: 08; pin pitch: 3.50mm; Angled; threaded flange; footprint includes mount hole for mounting screw: ISO 1481-ST 2.2x4.5 C or ISO 7049-ST 2.2x4.5 C (http://www.fasteners.eu/standards/ISO/7049/) || order number: 1843855 8A 160V
+phoenix_contact connector MC_01x08_GF_3.5mm_MH
+0
+8
+8
+Connector_Phoenix_MC
+PhoenixContact_MC_1,5_8-GF-3.81_1x08_P3.81mm_Horizontal_ThreadedFlange
+Generic Phoenix Contact connector footprint for: MC_1,5/8-GF-3.81; number of pins: 08; pin pitch: 3.81mm; Angled; threaded flange || order number: 1827923 8A 160V
+phoenix_contact connector MC_01x08_GF_3.81mm
+0
+8
+8
+Connector_Phoenix_MC
+PhoenixContact_MC_1,5_8-GF-3.81_1x08_P3.81mm_Horizontal_ThreadedFlange_MountHole
+Generic Phoenix Contact connector footprint for: MC_1,5/8-GF-3.81; number of pins: 08; pin pitch: 3.81mm; Angled; threaded flange; footprint includes mount hole for mounting screw: ISO 1481-ST 2.2x4.5 C or ISO 7049-ST 2.2x4.5 C (http://www.fasteners.eu/standards/ISO/7049/) || order number: 1827923 8A 160V
+phoenix_contact connector MC_01x08_GF_3.81mm_MH
+0
+8
+8
+Connector_Phoenix_MC
+PhoenixContact_MC_1,5_9-G-3.5_1x09_P3.50mm_Horizontal
+Generic Phoenix Contact connector footprint for: MC_1,5/9-G-3.5; number of pins: 09; pin pitch: 3.50mm; Angled || order number: 1844281 8A 160V
+phoenix_contact connector MC_01x09_G_3.5mm
+0
+9
+9
+Connector_Phoenix_MC
+PhoenixContact_MC_1,5_9-G-3.81_1x09_P3.81mm_Horizontal
+Generic Phoenix Contact connector footprint for: MC_1,5/9-G-3.81; number of pins: 09; pin pitch: 3.81mm; Angled || order number: 1803345 8A 160V
+phoenix_contact connector MC_01x09_G_3.81mm
+0
+9
+9
+Connector_Phoenix_MC
+PhoenixContact_MC_1,5_9-GF-3.5_1x09_P3.50mm_Horizontal_ThreadedFlange
+Generic Phoenix Contact connector footprint for: MC_1,5/9-GF-3.5; number of pins: 09; pin pitch: 3.50mm; Angled; threaded flange || order number: 1843868 8A 160V
+phoenix_contact connector MC_01x09_GF_3.5mm
+0
+9
+9
+Connector_Phoenix_MC
+PhoenixContact_MC_1,5_9-GF-3.5_1x09_P3.50mm_Horizontal_ThreadedFlange_MountHole
+Generic Phoenix Contact connector footprint for: MC_1,5/9-GF-3.5; number of pins: 09; pin pitch: 3.50mm; Angled; threaded flange; footprint includes mount hole for mounting screw: ISO 1481-ST 2.2x4.5 C or ISO 7049-ST 2.2x4.5 C (http://www.fasteners.eu/standards/ISO/7049/) || order number: 1843868 8A 160V
+phoenix_contact connector MC_01x09_GF_3.5mm_MH
+0
+9
+9
+Connector_Phoenix_MC
+PhoenixContact_MC_1,5_9-GF-3.81_1x09_P3.81mm_Horizontal_ThreadedFlange
+Generic Phoenix Contact connector footprint for: MC_1,5/9-GF-3.81; number of pins: 09; pin pitch: 3.81mm; Angled; threaded flange || order number: 1827936 8A 160V
+phoenix_contact connector MC_01x09_GF_3.81mm
+0
+9
+9
+Connector_Phoenix_MC
+PhoenixContact_MC_1,5_9-GF-3.81_1x09_P3.81mm_Horizontal_ThreadedFlange_MountHole
+Generic Phoenix Contact connector footprint for: MC_1,5/9-GF-3.81; number of pins: 09; pin pitch: 3.81mm; Angled; threaded flange; footprint includes mount hole for mounting screw: ISO 1481-ST 2.2x4.5 C or ISO 7049-ST 2.2x4.5 C (http://www.fasteners.eu/standards/ISO/7049/) || order number: 1827936 8A 160V
+phoenix_contact connector MC_01x09_GF_3.81mm_MH
+0
+9
+9
+Connector_Phoenix_MC
+PhoenixContact_MC_1,5_10-G-3.5_1x10_P3.50mm_Horizontal
+Generic Phoenix Contact connector footprint for: MC_1,5/10-G-3.5; number of pins: 10; pin pitch: 3.50mm; Angled || order number: 1844294 8A 160V
+phoenix_contact connector MC_01x10_G_3.5mm
+0
+10
+10
+Connector_Phoenix_MC
+PhoenixContact_MC_1,5_10-G-3.81_1x10_P3.81mm_Horizontal
+Generic Phoenix Contact connector footprint for: MC_1,5/10-G-3.81; number of pins: 10; pin pitch: 3.81mm; Angled || order number: 1803358 8A 160V
+phoenix_contact connector MC_01x10_G_3.81mm
+0
+10
+10
+Connector_Phoenix_MC
+PhoenixContact_MC_1,5_10-GF-3.5_1x10_P3.50mm_Horizontal_ThreadedFlange
+Generic Phoenix Contact connector footprint for: MC_1,5/10-GF-3.5; number of pins: 10; pin pitch: 3.50mm; Angled; threaded flange || order number: 1843871 8A 160V
+phoenix_contact connector MC_01x10_GF_3.5mm
+0
+10
+10
+Connector_Phoenix_MC
+PhoenixContact_MC_1,5_10-GF-3.5_1x10_P3.50mm_Horizontal_ThreadedFlange_MountHole
+Generic Phoenix Contact connector footprint for: MC_1,5/10-GF-3.5; number of pins: 10; pin pitch: 3.50mm; Angled; threaded flange; footprint includes mount hole for mounting screw: ISO 1481-ST 2.2x4.5 C or ISO 7049-ST 2.2x4.5 C (http://www.fasteners.eu/standards/ISO/7049/) || order number: 1843871 8A 160V
+phoenix_contact connector MC_01x10_GF_3.5mm_MH
+0
+10
+10
+Connector_Phoenix_MC
+PhoenixContact_MC_1,5_10-GF-3.81_1x10_P3.81mm_Horizontal_ThreadedFlange
+Generic Phoenix Contact connector footprint for: MC_1,5/10-GF-3.81; number of pins: 10; pin pitch: 3.81mm; Angled; threaded flange || order number: 1827949 8A 160V
+phoenix_contact connector MC_01x10_GF_3.81mm
+0
+10
+10
+Connector_Phoenix_MC
+PhoenixContact_MC_1,5_10-GF-3.81_1x10_P3.81mm_Horizontal_ThreadedFlange_MountHole
+Generic Phoenix Contact connector footprint for: MC_1,5/10-GF-3.81; number of pins: 10; pin pitch: 3.81mm; Angled; threaded flange; footprint includes mount hole for mounting screw: ISO 1481-ST 2.2x4.5 C or ISO 7049-ST 2.2x4.5 C (http://www.fasteners.eu/standards/ISO/7049/) || order number: 1827949 8A 160V
+phoenix_contact connector MC_01x10_GF_3.81mm_MH
+0
+10
+10
+Connector_Phoenix_MC
+PhoenixContact_MC_1,5_11-G-3.5_1x11_P3.50mm_Horizontal
+Generic Phoenix Contact connector footprint for: MC_1,5/11-G-3.5; number of pins: 11; pin pitch: 3.50mm; Angled || order number: 1844304 8A 160V
+phoenix_contact connector MC_01x11_G_3.5mm
+0
+11
+11
+Connector_Phoenix_MC
+PhoenixContact_MC_1,5_11-G-3.81_1x11_P3.81mm_Horizontal
+Generic Phoenix Contact connector footprint for: MC_1,5/11-G-3.81; number of pins: 11; pin pitch: 3.81mm; Angled || order number: 1803361 8A 160V
+phoenix_contact connector MC_01x11_G_3.81mm
+0
+11
+11
+Connector_Phoenix_MC
+PhoenixContact_MC_1,5_11-GF-3.5_1x11_P3.50mm_Horizontal_ThreadedFlange
+Generic Phoenix Contact connector footprint for: MC_1,5/11-GF-3.5; number of pins: 11; pin pitch: 3.50mm; Angled; threaded flange || order number: 1843884 8A 160V
+phoenix_contact connector MC_01x11_GF_3.5mm
+0
+11
+11
+Connector_Phoenix_MC
+PhoenixContact_MC_1,5_11-GF-3.5_1x11_P3.50mm_Horizontal_ThreadedFlange_MountHole
+Generic Phoenix Contact connector footprint for: MC_1,5/11-GF-3.5; number of pins: 11; pin pitch: 3.50mm; Angled; threaded flange; footprint includes mount hole for mounting screw: ISO 1481-ST 2.2x4.5 C or ISO 7049-ST 2.2x4.5 C (http://www.fasteners.eu/standards/ISO/7049/) || order number: 1843884 8A 160V
+phoenix_contact connector MC_01x11_GF_3.5mm_MH
+0
+11
+11
+Connector_Phoenix_MC
+PhoenixContact_MC_1,5_11-GF-3.81_1x11_P3.81mm_Horizontal_ThreadedFlange
+Generic Phoenix Contact connector footprint for: MC_1,5/11-GF-3.81; number of pins: 11; pin pitch: 3.81mm; Angled; threaded flange || order number: 1827952 8A 160V
+phoenix_contact connector MC_01x11_GF_3.81mm
+0
+11
+11
+Connector_Phoenix_MC
+PhoenixContact_MC_1,5_11-GF-3.81_1x11_P3.81mm_Horizontal_ThreadedFlange_MountHole
+Generic Phoenix Contact connector footprint for: MC_1,5/11-GF-3.81; number of pins: 11; pin pitch: 3.81mm; Angled; threaded flange; footprint includes mount hole for mounting screw: ISO 1481-ST 2.2x4.5 C or ISO 7049-ST 2.2x4.5 C (http://www.fasteners.eu/standards/ISO/7049/) || order number: 1827952 8A 160V
+phoenix_contact connector MC_01x11_GF_3.81mm_MH
+0
+11
+11
+Connector_Phoenix_MC
+PhoenixContact_MC_1,5_12-G-3.5_1x12_P3.50mm_Horizontal
+Generic Phoenix Contact connector footprint for: MC_1,5/12-G-3.5; number of pins: 12; pin pitch: 3.50mm; Angled || order number: 1844317 8A 160V
+phoenix_contact connector MC_01x12_G_3.5mm
+0
+12
+12
+Connector_Phoenix_MC
+PhoenixContact_MC_1,5_12-G-3.81_1x12_P3.81mm_Horizontal
+Generic Phoenix Contact connector footprint for: MC_1,5/12-G-3.81; number of pins: 12; pin pitch: 3.81mm; Angled || order number: 1803374 8A 160V
+phoenix_contact connector MC_01x12_G_3.81mm
+0
+12
+12
+Connector_Phoenix_MC
+PhoenixContact_MC_1,5_12-GF-3.5_1x12_P3.50mm_Horizontal_ThreadedFlange
+Generic Phoenix Contact connector footprint for: MC_1,5/12-GF-3.5; number of pins: 12; pin pitch: 3.50mm; Angled; threaded flange || order number: 1843897 8A 160V
+phoenix_contact connector MC_01x12_GF_3.5mm
+0
+12
+12
+Connector_Phoenix_MC
+PhoenixContact_MC_1,5_12-GF-3.5_1x12_P3.50mm_Horizontal_ThreadedFlange_MountHole
+Generic Phoenix Contact connector footprint for: MC_1,5/12-GF-3.5; number of pins: 12; pin pitch: 3.50mm; Angled; threaded flange; footprint includes mount hole for mounting screw: ISO 1481-ST 2.2x4.5 C or ISO 7049-ST 2.2x4.5 C (http://www.fasteners.eu/standards/ISO/7049/) || order number: 1843897 8A 160V
+phoenix_contact connector MC_01x12_GF_3.5mm_MH
+0
+12
+12
+Connector_Phoenix_MC
+PhoenixContact_MC_1,5_12-GF-3.81_1x12_P3.81mm_Horizontal_ThreadedFlange
+Generic Phoenix Contact connector footprint for: MC_1,5/12-GF-3.81; number of pins: 12; pin pitch: 3.81mm; Angled; threaded flange || order number: 1827965 8A 160V
+phoenix_contact connector MC_01x12_GF_3.81mm
+0
+12
+12
+Connector_Phoenix_MC
+PhoenixContact_MC_1,5_12-GF-3.81_1x12_P3.81mm_Horizontal_ThreadedFlange_MountHole
+Generic Phoenix Contact connector footprint for: MC_1,5/12-GF-3.81; number of pins: 12; pin pitch: 3.81mm; Angled; threaded flange; footprint includes mount hole for mounting screw: ISO 1481-ST 2.2x4.5 C or ISO 7049-ST 2.2x4.5 C (http://www.fasteners.eu/standards/ISO/7049/) || order number: 1827965 8A 160V
+phoenix_contact connector MC_01x12_GF_3.81mm_MH
+0
+12
+12
+Connector_Phoenix_MC
+PhoenixContact_MC_1,5_13-G-3.5_1x13_P3.50mm_Horizontal
+Generic Phoenix Contact connector footprint for: MC_1,5/13-G-3.5; number of pins: 13; pin pitch: 3.50mm; Angled || order number: 1844320 8A 160V
+phoenix_contact connector MC_01x13_G_3.5mm
+0
+13
+13
+Connector_Phoenix_MC
+PhoenixContact_MC_1,5_13-G-3.81_1x13_P3.81mm_Horizontal
+Generic Phoenix Contact connector footprint for: MC_1,5/13-G-3.81; number of pins: 13; pin pitch: 3.81mm; Angled || order number: 1803387 8A 160V
+phoenix_contact connector MC_01x13_G_3.81mm
+0
+13
+13
+Connector_Phoenix_MC
+PhoenixContact_MC_1,5_13-GF-3.5_1x13_P3.50mm_Horizontal_ThreadedFlange
+Generic Phoenix Contact connector footprint for: MC_1,5/13-GF-3.5; number of pins: 13; pin pitch: 3.50mm; Angled; threaded flange || order number: 1843907 8A 160V
+phoenix_contact connector MC_01x13_GF_3.5mm
+0
+13
+13
+Connector_Phoenix_MC
+PhoenixContact_MC_1,5_13-GF-3.5_1x13_P3.50mm_Horizontal_ThreadedFlange_MountHole
+Generic Phoenix Contact connector footprint for: MC_1,5/13-GF-3.5; number of pins: 13; pin pitch: 3.50mm; Angled; threaded flange; footprint includes mount hole for mounting screw: ISO 1481-ST 2.2x4.5 C or ISO 7049-ST 2.2x4.5 C (http://www.fasteners.eu/standards/ISO/7049/) || order number: 1843907 8A 160V
+phoenix_contact connector MC_01x13_GF_3.5mm_MH
+0
+13
+13
+Connector_Phoenix_MC
+PhoenixContact_MC_1,5_13-GF-3.81_1x13_P3.81mm_Horizontal_ThreadedFlange
+Generic Phoenix Contact connector footprint for: MC_1,5/13-GF-3.81; number of pins: 13; pin pitch: 3.81mm; Angled; threaded flange || order number: 1827978 8A 160V
+phoenix_contact connector MC_01x13_GF_3.81mm
+0
+13
+13
+Connector_Phoenix_MC
+PhoenixContact_MC_1,5_13-GF-3.81_1x13_P3.81mm_Horizontal_ThreadedFlange_MountHole
+Generic Phoenix Contact connector footprint for: MC_1,5/13-GF-3.81; number of pins: 13; pin pitch: 3.81mm; Angled; threaded flange; footprint includes mount hole for mounting screw: ISO 1481-ST 2.2x4.5 C or ISO 7049-ST 2.2x4.5 C (http://www.fasteners.eu/standards/ISO/7049/) || order number: 1827978 8A 160V
+phoenix_contact connector MC_01x13_GF_3.81mm_MH
+0
+13
+13
+Connector_Phoenix_MC
+PhoenixContact_MC_1,5_14-G-3.5_1x14_P3.50mm_Horizontal
+Generic Phoenix Contact connector footprint for: MC_1,5/14-G-3.5; number of pins: 14; pin pitch: 3.50mm; Angled || order number: 1844333 8A 160V
+phoenix_contact connector MC_01x14_G_3.5mm
+0
+14
+14
+Connector_Phoenix_MC
+PhoenixContact_MC_1,5_14-G-3.81_1x14_P3.81mm_Horizontal
+Generic Phoenix Contact connector footprint for: MC_1,5/14-G-3.81; number of pins: 14; pin pitch: 3.81mm; Angled || order number: 1803390 8A 160V
+phoenix_contact connector MC_01x14_G_3.81mm
+0
+14
+14
+Connector_Phoenix_MC
+PhoenixContact_MC_1,5_14-GF-3.5_1x14_P3.50mm_Horizontal_ThreadedFlange
+Generic Phoenix Contact connector footprint for: MC_1,5/14-GF-3.5; number of pins: 14; pin pitch: 3.50mm; Angled; threaded flange || order number: 1843910 8A 160V
+phoenix_contact connector MC_01x14_GF_3.5mm
+0
+14
+14
+Connector_Phoenix_MC
+PhoenixContact_MC_1,5_14-GF-3.5_1x14_P3.50mm_Horizontal_ThreadedFlange_MountHole
+Generic Phoenix Contact connector footprint for: MC_1,5/14-GF-3.5; number of pins: 14; pin pitch: 3.50mm; Angled; threaded flange; footprint includes mount hole for mounting screw: ISO 1481-ST 2.2x4.5 C or ISO 7049-ST 2.2x4.5 C (http://www.fasteners.eu/standards/ISO/7049/) || order number: 1843910 8A 160V
+phoenix_contact connector MC_01x14_GF_3.5mm_MH
+0
+14
+14
+Connector_Phoenix_MC
+PhoenixContact_MC_1,5_14-GF-3.81_1x14_P3.81mm_Horizontal_ThreadedFlange
+Generic Phoenix Contact connector footprint for: MC_1,5/14-GF-3.81; number of pins: 14; pin pitch: 3.81mm; Angled; threaded flange || order number: 1827981 8A 160V
+phoenix_contact connector MC_01x14_GF_3.81mm
+0
+14
+14
+Connector_Phoenix_MC
+PhoenixContact_MC_1,5_14-GF-3.81_1x14_P3.81mm_Horizontal_ThreadedFlange_MountHole
+Generic Phoenix Contact connector footprint for: MC_1,5/14-GF-3.81; number of pins: 14; pin pitch: 3.81mm; Angled; threaded flange; footprint includes mount hole for mounting screw: ISO 1481-ST 2.2x4.5 C or ISO 7049-ST 2.2x4.5 C (http://www.fasteners.eu/standards/ISO/7049/) || order number: 1827981 8A 160V
+phoenix_contact connector MC_01x14_GF_3.81mm_MH
+0
+14
+14
+Connector_Phoenix_MC
+PhoenixContact_MC_1,5_15-G-3.5_1x15_P3.50mm_Horizontal
+Generic Phoenix Contact connector footprint for: MC_1,5/15-G-3.5; number of pins: 15; pin pitch: 3.50mm; Angled || order number: 1844346 8A 160V
+phoenix_contact connector MC_01x15_G_3.5mm
+0
+15
+15
+Connector_Phoenix_MC
+PhoenixContact_MC_1,5_15-G-3.81_1x15_P3.81mm_Horizontal
+Generic Phoenix Contact connector footprint for: MC_1,5/15-G-3.81; number of pins: 15; pin pitch: 3.81mm; Angled || order number: 1803400 8A 160V
+phoenix_contact connector MC_01x15_G_3.81mm
+0
+15
+15
+Connector_Phoenix_MC
+PhoenixContact_MC_1,5_15-GF-3.5_1x15_P3.50mm_Horizontal_ThreadedFlange
+Generic Phoenix Contact connector footprint for: MC_1,5/15-GF-3.5; number of pins: 15; pin pitch: 3.50mm; Angled; threaded flange || order number: 1843923 8A 160V
+phoenix_contact connector MC_01x15_GF_3.5mm
+0
+15
+15
+Connector_Phoenix_MC
+PhoenixContact_MC_1,5_15-GF-3.5_1x15_P3.50mm_Horizontal_ThreadedFlange_MountHole
+Generic Phoenix Contact connector footprint for: MC_1,5/15-GF-3.5; number of pins: 15; pin pitch: 3.50mm; Angled; threaded flange; footprint includes mount hole for mounting screw: ISO 1481-ST 2.2x4.5 C or ISO 7049-ST 2.2x4.5 C (http://www.fasteners.eu/standards/ISO/7049/) || order number: 1843923 8A 160V
+phoenix_contact connector MC_01x15_GF_3.5mm_MH
+0
+15
+15
+Connector_Phoenix_MC
+PhoenixContact_MC_1,5_15-GF-3.81_1x15_P3.81mm_Horizontal_ThreadedFlange
+Generic Phoenix Contact connector footprint for: MC_1,5/15-GF-3.81; number of pins: 15; pin pitch: 3.81mm; Angled; threaded flange || order number: 1827994 8A 160V
+phoenix_contact connector MC_01x15_GF_3.81mm
+0
+15
+15
+Connector_Phoenix_MC
+PhoenixContact_MC_1,5_15-GF-3.81_1x15_P3.81mm_Horizontal_ThreadedFlange_MountHole
+Generic Phoenix Contact connector footprint for: MC_1,5/15-GF-3.81; number of pins: 15; pin pitch: 3.81mm; Angled; threaded flange; footprint includes mount hole for mounting screw: ISO 1481-ST 2.2x4.5 C or ISO 7049-ST 2.2x4.5 C (http://www.fasteners.eu/standards/ISO/7049/) || order number: 1827994 8A 160V
+phoenix_contact connector MC_01x15_GF_3.81mm_MH
+0
+15
+15
+Connector_Phoenix_MC
+PhoenixContact_MC_1,5_16-G-3.5_1x16_P3.50mm_Horizontal
+Generic Phoenix Contact connector footprint for: MC_1,5/16-G-3.5; number of pins: 16; pin pitch: 3.50mm; Angled || order number: 1844359 8A 160V
+phoenix_contact connector MC_01x16_G_3.5mm
+0
+16
+16
+Connector_Phoenix_MC
+PhoenixContact_MC_1,5_16-G-3.81_1x16_P3.81mm_Horizontal
+Generic Phoenix Contact connector footprint for: MC_1,5/16-G-3.81; number of pins: 16; pin pitch: 3.81mm; Angled || order number: 1803413 8A 160V
+phoenix_contact connector MC_01x16_G_3.81mm
+0
+16
+16
+Connector_Phoenix_MC
+PhoenixContact_MC_1,5_16-GF-3.5_1x16_P3.50mm_Horizontal_ThreadedFlange
+Generic Phoenix Contact connector footprint for: MC_1,5/16-GF-3.5; number of pins: 16; pin pitch: 3.50mm; Angled; threaded flange || order number: 1843936 8A 160V
+phoenix_contact connector MC_01x16_GF_3.5mm
+0
+16
+16
+Connector_Phoenix_MC
+PhoenixContact_MC_1,5_16-GF-3.5_1x16_P3.50mm_Horizontal_ThreadedFlange_MountHole
+Generic Phoenix Contact connector footprint for: MC_1,5/16-GF-3.5; number of pins: 16; pin pitch: 3.50mm; Angled; threaded flange; footprint includes mount hole for mounting screw: ISO 1481-ST 2.2x4.5 C or ISO 7049-ST 2.2x4.5 C (http://www.fasteners.eu/standards/ISO/7049/) || order number: 1843936 8A 160V
+phoenix_contact connector MC_01x16_GF_3.5mm_MH
+0
+16
+16
+Connector_Phoenix_MC
+PhoenixContact_MC_1,5_16-GF-3.81_1x16_P3.81mm_Horizontal_ThreadedFlange
+Generic Phoenix Contact connector footprint for: MC_1,5/16-GF-3.81; number of pins: 16; pin pitch: 3.81mm; Angled; threaded flange || order number: 1828003 8A 160V
+phoenix_contact connector MC_01x16_GF_3.81mm
+0
+16
+16
+Connector_Phoenix_MC
+PhoenixContact_MC_1,5_16-GF-3.81_1x16_P3.81mm_Horizontal_ThreadedFlange_MountHole
+Generic Phoenix Contact connector footprint for: MC_1,5/16-GF-3.81; number of pins: 16; pin pitch: 3.81mm; Angled; threaded flange; footprint includes mount hole for mounting screw: ISO 1481-ST 2.2x4.5 C or ISO 7049-ST 2.2x4.5 C (http://www.fasteners.eu/standards/ISO/7049/) || order number: 1828003 8A 160V
+phoenix_contact connector MC_01x16_GF_3.81mm_MH
+0
+16
+16
+Symbol
+CE-Logo_8.5x6mm_SilkScreen
+CE marking
+Logo CE certification
+0
+0
+0
+Symbol
+CE-Logo_11.2x8mm_SilkScreen
+CE marking
+Logo CE certification
+0
+0
+0
+Symbol
+CE-Logo_16.8x12mm_SilkScreen
+CE marking
+Logo CE certification
+0
+0
+0
+Symbol
+CE-Logo_28x20mm_SilkScreen
+CE marking
+Logo CE certification
+0
+0
+0
+Symbol
+CE-Logo_42x30mm_SilkScreen
+CE marking
+Logo CE certification
+0
+0
+0
+Symbol
+CE-Logo_56.1x40mm_SilkScreen
+CE marking
+Logo CE certification
+0
+0
+0
+Symbol
+ESD-Logo_6.6x6mm_SilkScreen
+Electrostatic discharge Logo
+Logo ESD
+0
+0
+0
+Symbol
+ESD-Logo_8.9x8mm_SilkScreen
+Electrostatic discharge Logo
+Logo ESD
+0
+0
+0
+Symbol
+ESD-Logo_13.2x12mm_SilkScreen
+Electrostatic discharge Logo
+Logo ESD
+0
+0
+0
+Symbol
+ESD-Logo_22x20mm_SilkScreen
+Electrostatic discharge Logo
+Logo ESD
+0
+0
+0
+Symbol
+ESD-Logo_33x30mm_SilkScreen
+Electrostatic discharge Logo
+Logo ESD
+0
+0
+0
+Symbol
+ESD-Logo_44.1x40mm_SilkScreen
+Electrostatic discharge Logo
+Logo ESD
+0
+0
+0
+Symbol
+FCC-Logo_7.3x6mm_SilkScreen
+FCC marking
+Logo FCC certification
+0
+0
+0
+Symbol
+FCC-Logo_9.6x8mm_SilkScreen
+FCC marking
+Logo FCC certification
+0
+0
+0
+Symbol
+FCC-Logo_14.6x12mm_SilkScreen
+FCC marking
+Logo FCC certification
+0
+0
+0
+Symbol
+FCC-Logo_24.2x20mm_SilkScreen
+FCC marking
+Logo FCC certification
+0
+0
+0
+Symbol
+FCC-Logo_36.3x30mm_SilkScreen
+FCC marking
+Logo FCC certification
+0
+0
+0
+Symbol
+FCC-Logo_48.3x40mm_SilkScreen
+FCC marking
+Logo FCC certification
+0
+0
+0
+Symbol
+KiCad-Logo2_5mm_Copper
+KiCad Logo
+Logo KiCad
+0
+0
+0
+Symbol
+KiCad-Logo2_5mm_SilkScreen
+KiCad Logo
+Logo KiCad
+0
+0
+0
+Symbol
+KiCad-Logo2_6mm_Copper
+KiCad Logo
+Logo KiCad
+0
+0
+0
+Symbol
+KiCad-Logo2_6mm_SilkScreen
+KiCad Logo
+Logo KiCad
+0
+0
+0
+Symbol
+KiCad-Logo2_8mm_Copper
+KiCad Logo
+Logo KiCad
+0
+0
+0
+Symbol
+KiCad-Logo2_8mm_SilkScreen
+KiCad Logo
+Logo KiCad
+0
+0
+0
+Symbol
+KiCad-Logo2_12mm_Copper
+KiCad Logo
+Logo KiCad
+0
+0
+0
+Symbol
+KiCad-Logo2_12mm_SilkScreen
+KiCad Logo
+Logo KiCad
+0
+0
+0
+Symbol
+KiCad-Logo2_20mm_Copper
+KiCad Logo
+Logo KiCad
+0
+0
+0
+Symbol
+KiCad-Logo2_20mm_SilkScreen
+KiCad Logo
+Logo KiCad
+0
+0
+0
+Symbol
+KiCad-Logo2_30mm_Copper
+KiCad Logo
+Logo KiCad
+0
+0
+0
+Symbol
+KiCad-Logo2_30mm_SilkScreen
+KiCad Logo
+Logo KiCad
+0
+0
+0
+Symbol
+KiCad-Logo2_40mm_Copper
+KiCad Logo
+Logo KiCad
+0
+0
+0
+Symbol
+KiCad-Logo2_40mm_SilkScreen
+KiCad Logo
+Logo KiCad
+0
+0
+0
+Symbol
+KiCad-Logo_5mm_Copper
+KiCad Logo
+Logo KiCad
+0
+0
+0
+Symbol
+KiCad-Logo_5mm_SilkScreen
+KiCad Logo
+Logo KiCad
+0
+0
+0
+Symbol
+KiCad-Logo_6mm_Copper
+KiCad Logo
+Logo KiCad
+0
+0
+0
+Symbol
+KiCad-Logo_6mm_SilkScreen
+KiCad Logo
+Logo KiCad
+0
+0
+0
+Symbol
+KiCad-Logo_8mm_Copper
+KiCad Logo
+Logo KiCad
+0
+0
+0
+Symbol
+KiCad-Logo_8mm_SilkScreen
+KiCad Logo
+Logo KiCad
+0
+0
+0
+Symbol
+KiCad-Logo_12mm_Copper
+KiCad Logo
+Logo KiCad
+0
+0
+0
+Symbol
+KiCad-Logo_12mm_SilkScreen
+KiCad Logo
+Logo KiCad
+0
+0
+0
+Symbol
+KiCad-Logo_20mm_Copper
+KiCad Logo
+Logo KiCad
+0
+0
+0
+Symbol
+KiCad-Logo_20mm_SilkScreen
+KiCad Logo
+Logo KiCad
+0
+0
+0
+Symbol
+KiCad-Logo_30mm_Copper
+KiCad Logo
+Logo KiCad
+0
+0
+0
+Symbol
+KiCad-Logo_30mm_SilkScreen
+KiCad Logo
+Logo KiCad
+0
+0
+0
+Symbol
+KiCad-Logo_40mm_Copper
+KiCad Logo
+Logo KiCad
+0
+0
+0
+Symbol
+KiCad-Logo_40mm_SilkScreen
+KiCad Logo
+Logo KiCad
+0
+0
+0
+Symbol
+OSHW-Logo2_7.3x6mm_Copper
+Open Source Hardware Symbol
+Logo Symbol OSHW
+0
+0
+0
+Symbol
+OSHW-Logo2_7.3x6mm_SilkScreen
+Open Source Hardware Symbol
+Logo Symbol OSHW
+0
+0
+0
+Symbol
+OSHW-Logo2_9.8x8mm_Copper
+Open Source Hardware Symbol
+Logo Symbol OSHW
+0
+0
+0
+Symbol
+OSHW-Logo2_9.8x8mm_SilkScreen
+Open Source Hardware Symbol
+Logo Symbol OSHW
+0
+0
+0
+Symbol
+OSHW-Logo2_14.6x12mm_Copper
+Open Source Hardware Symbol
+Logo Symbol OSHW
+0
+0
+0
+Symbol
+OSHW-Logo2_14.6x12mm_SilkScreen
+Open Source Hardware Symbol
+Logo Symbol OSHW
+0
+0
+0
+Symbol
+OSHW-Logo2_24.3x20mm_Copper
+Open Source Hardware Symbol
+Logo Symbol OSHW
+0
+0
+0
+Symbol
+OSHW-Logo2_24.3x20mm_SilkScreen
+Open Source Hardware Symbol
+Logo Symbol OSHW
+0
+0
+0
+Symbol
+OSHW-Logo2_36.5x30mm_Copper
+Open Source Hardware Symbol
+Logo Symbol OSHW
+0
+0
+0
+Symbol
+OSHW-Logo2_36.5x30mm_SilkScreen
+Open Source Hardware Symbol
+Logo Symbol OSHW
+0
+0
+0
+Symbol
+OSHW-Logo2_48.7x40mm_Copper
+Open Source Hardware Symbol
+Logo Symbol OSHW
+0
+0
+0
+Symbol
+OSHW-Logo2_48.7x40mm_SilkScreen
+Open Source Hardware Symbol
+Logo Symbol OSHW
+0
+0
+0
+Symbol
+OSHW-Logo_5.7x6mm_Copper
+Open Source Hardware Logo
+Logo OSHW
+0
+0
+0
+Symbol
+OSHW-Logo_5.7x6mm_SilkScreen
+Open Source Hardware Logo
+Logo OSHW
+0
+0
+0
+Symbol
+OSHW-Logo_7.5x8mm_Copper
+Open Source Hardware Logo
+Logo OSHW
+0
+0
+0
+Symbol
+OSHW-Logo_7.5x8mm_SilkScreen
+Open Source Hardware Logo
+Logo OSHW
+0
+0
+0
+Symbol
+OSHW-Logo_11.4x12mm_Copper
+Open Source Hardware Logo
+Logo OSHW
+0
+0
+0
+Symbol
+OSHW-Logo_11.4x12mm_SilkScreen
+Open Source Hardware Logo
+Logo OSHW
+0
+0
+0
+Symbol
+OSHW-Logo_19x20mm_Copper
+Open Source Hardware Logo
+Logo OSHW
+0
+0
+0
+Symbol
+OSHW-Logo_19x20mm_SilkScreen
+Open Source Hardware Logo
+Logo OSHW
+0
+0
+0
+Symbol
+OSHW-Logo_28.5x30mm_Copper
+Open Source Hardware Logo
+Logo OSHW
+0
+0
+0
+Symbol
+OSHW-Logo_28.5x30mm_SilkScreen
+Open Source Hardware Logo
+Logo OSHW
+0
+0
+0
+Symbol
+OSHW-Logo_38.1x40mm_Copper
+Open Source Hardware Logo
+Logo OSHW
+0
+0
+0
+Symbol
+OSHW-Logo_38.1x40mm_SilkScreen
+Open Source Hardware Logo
+Logo OSHW
+0
+0
+0
+Symbol
+OSHW-Symbol_6.7x6mm_Copper
+Open Source Hardware Symbol
+Logo Symbol OSHW
+0
+0
+0
+Symbol
+OSHW-Symbol_6.7x6mm_SilkScreen
+Open Source Hardware Symbol
+Logo Symbol OSHW
+0
+0
+0
+Symbol
+OSHW-Symbol_8.9x8mm_Copper
+Open Source Hardware Symbol
+Logo Symbol OSHW
+0
+0
+0
+Symbol
+OSHW-Symbol_8.9x8mm_SilkScreen
+Open Source Hardware Symbol
+Logo Symbol OSHW
+0
+0
+0
+Symbol
+OSHW-Symbol_13.4x12mm_Copper
+Open Source Hardware Symbol
+Logo Symbol OSHW
+0
+0
+0
+Symbol
+OSHW-Symbol_13.4x12mm_SilkScreen
+Open Source Hardware Symbol
+Logo Symbol OSHW
+0
+0
+0
+Symbol
+OSHW-Symbol_22.3x20mm_Copper
+Open Source Hardware Symbol
+Logo Symbol OSHW
+0
+0
+0
+Symbol
+OSHW-Symbol_22.3x20mm_SilkScreen
+Open Source Hardware Symbol
+Logo Symbol OSHW
+0
+0
+0
+Symbol
+OSHW-Symbol_33.5x30mm_Copper
+Open Source Hardware Symbol
+Logo Symbol OSHW
+0
+0
+0
+Symbol
+OSHW-Symbol_33.5x30mm_SilkScreen
+Open Source Hardware Symbol
+Logo Symbol OSHW
+0
+0
+0
+Symbol
+OSHW-Symbol_44.5x40mm_Copper
+Open Source Hardware Symbol
+Logo Symbol OSHW
+0
+0
+0
+Symbol
+OSHW-Symbol_44.5x40mm_SilkScreen
+Open Source Hardware Symbol
+Logo Symbol OSHW
+0
+0
+0
+Symbol
+Polarity_Center_Negative_6mm_SilkScreen
+Polarity Logo, Center Negative
+Logo Polarity Center Negative
+0
+0
+0
+Symbol
+Polarity_Center_Negative_8mm_SilkScreen
+Polarity Logo, Center Negative
+Logo Polarity Center Negative
+0
+0
+0
+Symbol
+Polarity_Center_Negative_12mm_SilkScreen
+Polarity Logo, Center Negative
+Logo Polarity Center Negative
+0
+0
+0
+Symbol
+Polarity_Center_Negative_20mm_SilkScreen
+Polarity Logo, Center Negative
+Logo Polarity Center Negative
+0
+0
+0
+Symbol
+Polarity_Center_Negative_30mm_SilkScreen
+Polarity Logo, Center Negative
+Logo Polarity Center Negative
+0
+0
+0
+Symbol
+Polarity_Center_Negative_40mm_SilkScreen
+Polarity Logo, Center Negative
+Logo Polarity Center Negative
+0
+0
+0
+Symbol
+Polarity_Center_Positive_6mm_SilkScreen
+Polarity Logo, Center Positive
+Logo Polarity Center Positive
+0
+0
+0
+Symbol
+Polarity_Center_Positive_8mm_SilkScreen
+Polarity Logo, Center Positive
+Logo Polarity Center Positive
+0
+0
+0
+Symbol
+Polarity_Center_Positive_12mm_SilkScreen
+Polarity Logo, Center Positive
+Logo Polarity Center Positive
+0
+0
+0
+Symbol
+Polarity_Center_Positive_20mm_SilkScreen
+Polarity Logo, Center Positive
+Logo Polarity Center Positive
+0
+0
+0
+Symbol
+Polarity_Center_Positive_30mm_SilkScreen
+Polarity Logo, Center Positive
+Logo Polarity Center Positive
+0
+0
+0
+Symbol
+Polarity_Center_Positive_40mm_SilkScreen
+Polarity Logo, Center Positive
+Logo Polarity Center Positive
+0
+0
+0
+Symbol
+RoHS-Logo_6mm_SilkScreen
+Restriction of Hazardous Substances Directive Logo
+Logo RoHS
+0
+0
+0
+Symbol
+RoHS-Logo_8mm_SilkScreen
+Restriction of Hazardous Substances Directive Logo
+Logo RoHS
+0
+0
+0
+Symbol
+RoHS-Logo_12mm_SilkScreen
+Restriction of Hazardous Substances Directive Logo
+Logo RoHS
+0
+0
+0
+Symbol
+RoHS-Logo_20mm_SilkScreen
+Restriction of Hazardous Substances Directive Logo
+Logo RoHS
+0
+0
+0
+Symbol
+RoHS-Logo_30mm_SilkScreen
+Restriction of Hazardous Substances Directive Logo
+Logo RoHS
+0
+0
+0
+Symbol
+RoHS-Logo_40mm_SilkScreen
+Restriction of Hazardous Substances Directive Logo
+Logo RoHS
+0
+0
+0
+Symbol
+Symbol_Attention_CopperTop_Big
+Symbol, Attention, Copper Top, Big,
+Symbol, Attention, Copper Top, Big,
+0
+0
+0
+Symbol
+Symbol_Attention_CopperTop_Small
+Symbol, Attention, Copper Top, Small,
+Symbol, Attention, Copper Top, Small,
+0
+0
+0
+Symbol
+Symbol_Barrel_Polarity
+Barrel connector polarity indicator
+barrel polarity
+0
+0
+0
+Symbol
+Symbol_CC-Attribution_CopperTop_Big
+Symbol, CC-Attribution, Copper Top, Big,
+Symbol, CC-Attribution, Copper Top, Big,
+0
+0
+0
+Symbol
+Symbol_CC-Attribution_CopperTop_Small
+Symbol, CC-Share Alike, Copper Top, Small,
+Symbol, CC-Share Alike, Copper Top, Small,
+0
+0
+0
+Symbol
+Symbol_CC-Noncommercial_CopperTop_Big
+Symbol, CC-Noncommercial, Copper Top, Big,
+Symbol, CC-Noncommercial, Copper Top, Big,
+0
+0
+0
+Symbol
+Symbol_CC-Noncommercial_CopperTop_Small
+Symbol, CC-Noncommercial Alike, Copper Top, Small,
+Symbol, CC-Noncommercial Alike, Copper Top, Small,
+0
+0
+0
+Symbol
+Symbol_CC-PublicDomain_CopperTop_Big
+Symbol, CC-PublicDomain, Copper Top, Big,
+Symbol, CC-PublicDomain, Copper Top, Big,
+0
+0
+0
+Symbol
+Symbol_CC-PublicDomain_CopperTop_Small
+Symbol, CC-Public Domain, Copper Top, Small,
+Symbol, CC-Public Domain, Copper Top, Small,
+0
+0
+0
+Symbol
+Symbol_CC-PublicDomain_SilkScreenTop_Big
+Symbol, CC-PublicDomain, SilkScreen Top, Big,
+Symbol, CC-PublicDomain, SilkScreen Top, Big,
+0
+0
+0
+Symbol
+Symbol_CC-ShareAlike_CopperTop_Big
+Symbol, CC-Share Alike, Copper Top, Big,
+Symbol, CC-Share Alike, Copper Top, Big,
+0
+0
+0
+Symbol
+Symbol_CC-ShareAlike_CopperTop_Small
+Symbol, CC-Share Alike, Copper Top, Small,
+Symbol, CC-Share Alike, Copper Top, Small,
+0
+0
+0
+Symbol
+Symbol_CreativeCommonsPublicDomain_CopperTop_Small
+Symbol, Creative Commons Public Domain, CopperTop, Small,
+Symbol, Creative Commons Public Domain, CopperTop, Small,
+0
+0
+0
+Symbol
+Symbol_CreativeCommonsPublicDomain_SilkScreenTop_Small
+Symbol, Creative Commons Public Domain, SilkScreenTop, Small,
+Symbol, Creative Commons Public Domain, SilkScreen Top, Small,
+0
+0
+0
+Symbol
+Symbol_CreativeCommons_CopperTop_Type1_Big
+Symbol, Creative Commons, CopperTop, Type 1, Big,
+Symbol, Creative Commons, CopperTop, Type 1, Big,
+0
+0
+0
+Symbol
+Symbol_CreativeCommons_CopperTop_Type2_Big
+Symbol, Creative Commons, CopperTop, Type 2, Big,
+Symbol, Creative Commons, CopperTop, Type 2, Big,
+0
+0
+0
+Symbol
+Symbol_CreativeCommons_CopperTop_Type2_Small
+Symbol, Creative Commons, CopperTop, Type 2, Small,
+Symbol, Creative Commons, CopperTop, Type 2, Small,
+0
+0
+0
+Symbol
+Symbol_CreativeCommons_SilkScreenTop_Type2_Big
+Symbol, Creative Commons, SilkScreen Top, Type 2, Big,
+Symbol, Creative Commons, SilkScreen Top, Type 2, Big,
+0
+0
+0
+Symbol
+Symbol_Danger_CopperTop_Big
+Symbol, Danger, CopperTop, Big,
+Symbol, Danger, CopperTop, Big,
+0
+0
+0
+Symbol
+Symbol_Danger_CopperTop_Small
+Symbol, Danger, Copper Top, Small,
+Symbol, Danger, Copper Top, Small,
+0
+0
+0
+Symbol
+Symbol_ESD-Logo-Text_CopperTop
+
+
+0
+0
+0
+Symbol
+Symbol_ESD-Logo_CopperTop
+ESD-Logo, similar JEDEC-14, without text, ohne Text, Copper Top,
+ESD-Logo, similar JEDEC-14, without text, ohne Text, Copper Top,
+0
+0
+0
+Symbol
+Symbol_GNU-GPL_CopperTop_Big
+Symbol, GNU-GPL, Copper Top, Big,
+Symbol, GNU-GPL, Copper Top, Big,
+0
+0
+0
+Symbol
+Symbol_GNU-GPL_CopperTop_Small
+Symbol, GNU-GPL, Copper Top, Small,
+Symbol, GNU-GPL, Copper Top, Small,
+0
+0
+0
+Symbol
+Symbol_GNU-Logo_CopperTop
+GNU-Logo, GNU-Head, GNU-Kopf, Copper Top,
+GNU-Logo, GNU-Head, GNU-Kopf, Copper Top,
+0
+0
+0
+Symbol
+Symbol_GNU-Logo_SilkscreenTop
+GNU-Logo, GNU-Head, GNU-Kopf, Silkscreen,
+GNU-Logo, GNU-Head, GNU-Kopf, Silkscreen,
+0
+0
+0
+Symbol
+Symbol_HighVoltage_Type1_CopperTop_Big
+Symbol, HighVoltage, Type1, Copper Top, Big,
+Symbol, HighVoltage, Type1, Copper Top, Big,
+0
+0
+0
+Symbol
+Symbol_HighVoltage_Type2_CopperTop_Big
+Symbol, HighVoltage, Type2, Copper Top, Big,
+Symbol, HighVoltage, Type2, Copper Top, Big,
+0
+0
+0
+Symbol
+Symbol_HighVoltage_Type2_CopperTop_VerySmall
+Symbol, High Voltage, Type 2, Copper Top, Very Small,
+Symbol, High Voltage, Type 2, Copper Top, Very Small,
+0
+0
+0
+Symbol
+Symbol_Highvoltage_Type1_CopperTop_Small
+Symbol, Highvoltage, Type 1, Copper Top, Small,
+Symbol, Highvoltage, Type 1, Copper Top, Small,
+0
+0
+0
+Symbol
+Symbol_Highvoltage_Type2_CopperTop_Small
+Symbol, Highvoltage, Type 2, Copper Top, Small,
+Symbol, Highvoltage, Type 2, Copper Top, Small,
+0
+0
+0
+Symbol
+WEEE-Logo_4.2x6mm_SilkScreen
+Waste Electrical and Electronic Equipment Directive
+Logo WEEE
+0
+0
+0
+Symbol
+WEEE-Logo_5.6x8mm_SilkScreen
+Waste Electrical and Electronic Equipment Directive
+Logo WEEE
+0
+0
+0
+Symbol
+WEEE-Logo_8.4x12mm_SilkScreen
+Waste Electrical and Electronic Equipment Directive
+Logo WEEE
+0
+0
+0
+Symbol
+WEEE-Logo_14x20mm_SilkScreen
+Waste Electrical and Electronic Equipment Directive
+Logo WEEE
+0
+0
+0
+Symbol
+WEEE-Logo_21x30mm_SilkScreen
+Waste Electrical and Electronic Equipment Directive
+Logo WEEE
+0
+0
+0
+Symbol
+WEEE-Logo_28.1x40mm_SilkScreen
+Waste Electrical and Electronic Equipment Directive
+Logo WEEE
+0
+0
+0
+rusefi_lib
+8-1393476-0
+
+
+0
+82
+82
+rusefi_lib
+55pin_china_bosch_motronic
+
+
+0
+55
+55
+rusefi_lib
+172319-1_connector
+172319-1_connector
+
+0
+52
+52
+rusefi_lib
+174917
+
+
+0
+51
+48
+rusefi_lib
+176122-6_2nd
+
+
+0
+68
+64
+rusefi_lib
+284617-1
+
+
+0
+159
+154
+rusefi_lib
+368255-2
+
+
+0
+126
+121
+rusefi_lib
+825213-1
+
+
+0
+37
+37
+rusefi_lib
+963356-1
+963356-1
+
+0
+68
+68
+rusefi_lib
+966595-1
+966595-1
+
+0
+68
+68
+rusefi_lib
+1123038-2
+
+
+0
+74
+72
+rusefi_lib
+744710610-Inductor
+744710610
+744710610
+0
+2
+2
+rusefi_lib
+AMPSEAL_35_COMBINED
+
+776163 776180 1-776163 1-776180 776230 776231 1-776230 1-776231
+0
+35
+35
+rusefi_lib
+AMPSEAL_35_RIGHT_ANGLE
+
+776163 776180 1-776163 1-776180
+0
+35
+35
+rusefi_lib
+AMPSEAL_35_STRAIGHT
+
+776230 776231 1-776230 1-776231
+0
+35
+35
+rusefi_lib
+BATT_CR2032_MPD
+
+
+0
+2
+2
+rusefi_lib
+BATT_CR2032_MPD_CR2032-BS-6-1
+
+
+0
+2
+2
+rusefi_lib
+BOSCH-88pin
+
+
+0
+88
+88
+rusefi_lib
+Blank
+blank
+blank
+0
+0
+0
+rusefi_lib
+C_0805
+Capacitor SMD 0805, reflow soldering, AVX (see smccp.pdf)
+capacitor 0805
+0
+2
+2
+rusefi_lib
+DISPLAY_4x20_BL
+Connecteur 16 pins
+CONN DEV
+0
+23
+16
+rusefi_lib
+DPAK2
+MOS boitier DPACK G-D-S
+CMD DPACK
+0
+3
+3
+rusefi_lib
+D_0805
+Diode SMD in 0805 package
+smd diode
+0
+2
+2
+rusefi_lib
+HC-18U
+Quartz boitier HC-49 Vertical
+QUARTZ DEV
+0
+2
+2
+rusefi_lib
+HSOP-20-1EP_11.0x15.9mm_P1.27mm_SlugDown_ThermalVias
+HSOP 11.0x15.9mm Pitch 1.27mm Slug Down Thermal Vias (PowerSO-20) [JEDEC MO-166] (http://www.st.com/resource/en/datasheet/tda7266d.pdf, www.st.com/resource/en/application_note/cd00003801.pdf)
+HSOP 11.0 x 15.9mm Pitch 1.27mm
+0
+45
+21
+rusefi_lib
+HTQFP-64-1EP_10x10mm_Pitch0.5mm_ThermalPad_for_MC33816
+64-Lead Plastic Thin Quad Flatpack (PT) - 10x10x1 mm Body, 2.00 mm Footprint [HTQFP] thermal pad
+HTQFP-64 Pitch 0.5_for_MC33816_Slug
+0
+102
+65
+rusefi_lib
+IHLP6767GZER100M01
+IHLP6767GZER100M01
+IHLP6767GZER100M01
+0
+2
+2
+rusefi_lib
+ITEAD_HC-05
+Itead HC-05/HC-06 serial Bluetooth module
+
+0
+34
+34
+rusefi_lib
+JLC_PCB_TAG
+
+
+0
+0
+0
+rusefi_lib
+KeyStone_3557
+
+
+0
+2
+1
+rusefi_lib
+LED-0805_A
+LED 0805 smd
+LED 0805 SMD
+0
+2
+2
+rusefi_lib
+LOGO
+
+
+0
+0
+0
+rusefi_lib
+LOGO_F
+
+
+0
+0
+0
+rusefi_lib
+LQFP-80_12x12mm_Pitch0.5mmThermal
+LQFP80: plastic low profile quad flat package; 80 leads; body 12 x 12 x 1.4 mm (see NXP sot315-1_po.pdf and sot315-1_fr.pdf)
+QFP 0.5
+0
+131
+81
+rusefi_lib
+MICRO-SDCARD-CONNECTOR-3300060P1
+MICRO-SDCARD-CONNECTOR-3300060P1
+MICRO SD MEMORY CARD MMC
+0
+15
+13
+rusefi_lib
+MINI-USB_RCTP_V-T_B
+OPL
+USB MINI 5 SMD-1
+0
+8
+6
+rusefi_lib
+MINI-USB_RCTP_V-T_B_and_HW-MU-5F-23
+OPL
+USB MINI 5 SMD-1
+0
+10
+6
+rusefi_lib
+MPX-4_MAP
+
+
+0
+8
+6
+rusefi_lib
+MRE_QR_code
+
+
+0
+0
+0
+rusefi_lib
+MX7-C-35PL-C11
+
+
+0
+37
+35
+rusefi_lib
+Molex_48
+Through hole straight socket strip, 2x10, 2.54mm pitch, double cols (from Kicad 4.0.7), script generated
+Through hole socket strip THT 2x10 2.54mm double row
+0
+52
+48
+rusefi_lib
+Molex_48_MRE
+Through hole straight socket strip, 2x10, 2.54mm pitch, double cols (from Kicad 4.0.7), script generated
+Through hole socket strip THT 2x10 2.54mm double row
+0
+110
+106
+rusefi_lib
+Molex_48_MRE_with-extras
+Through hole straight socket strip, 2x10, 2.54mm pitch, double cols (from Kicad 4.0.7), script generated
+Through hole socket strip THT 2x10 2.54mm double row
+0
+91
+87
+rusefi_lib
+Off_Road_Disclaimer
+
+
+0
+0
+0
+rusefi_lib
+PG-DSO-36-72
+
+
+0
+57
+37
+rusefi_lib
+PIN_ARRAY_25x2_A
+2 x 25 pins connector
+CONN 25
+0
+50
+50
+rusefi_lib
+Pololu_md09c
+
+
+0
+16
+16
+rusefi_lib
+Pololu_md32a
+
+
+0
+18
+18
+rusefi_lib
+Proteus_PNP_footprint
+
+
+0
+116
+114
+rusefi_lib
+R_0805
+Resistor SMD 0805, reflow soldering, Vishay (see dcrcw.pdf)
+resistor 0805
+0
+2
+2
+rusefi_lib
+SD_PCB_Module_Generic
+SD_PCB_Module_Generic
+SD_PCB_Module_Generic
+0
+6
+6
+rusefi_lib
+SM0805-diode
+
+
+0
+2
+2
+rusefi_lib
+SM0805_jumper
+
+
+0
+6
+2
+rusefi_lib
+SO8E_ST
+
+S08E
+0
+8
+3
+rusefi_lib
+ST_Morpho_Connector_144_STLink
+ST Morpho Connector 144 With STLink
+ST Morpho Connector 144 STLink
+0
+148
+148
+rusefi_lib
+TE_776266-1
+
+
+0
+14
+14
+rusefi_lib
+TL-1105
+
+button
+0
+4
+2
+rusefi_lib
+TSOP-6
+
+TSOP-6
+0
+6
+6
+rusefi_lib
+eeciv
+
+
+0
+60
+60
+rusefi_lib
+eecv
+
+
+0
+107
+104
+rusefi_lib
+joystick_SKRHAAE010
+
+
+0
+10
+7
+rusefi_lib
+tcpl_PCC-SMP
+
+
+0
+4
+3

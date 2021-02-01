@@ -171,6 +171,10 @@
 #define BOARD_DRV8860_COUNT         0
 #endif
 
+#ifndef BOARD_MC33810_COUNT
+#define BOARD_MC33810_COUNT		0
+#endif
+
 #define EFI_ANALOG_SENSORS TRUE
 
 #ifndef EFI_MAX_31855
@@ -262,13 +266,6 @@
 
 #define EFI_CONSOLE_USB_DEVICE SDU1
 
-/**
- * Should PnP engine configurations be included in the binary?
- */
-#ifndef EFI_INCLUDE_ENGINE_PRESETS
-#define EFI_INCLUDE_ENGINE_PRESETS TRUE
-#endif
-
 #ifndef EFI_ENGINE_SNIFFER
 #define EFI_ENGINE_SNIFFER TRUE
 #endif
@@ -307,7 +304,7 @@
 
 // todo: most of this should become configurable
 
-// todo: switch to continues ADC conversion for fast ADC?
+// todo: switch to continuous ADC conversion for fast ADC?
 #define EFI_INTERNAL_FAST_ADC_GPT	&GPTD6
 
 #define EFI_SPI1_AF 5

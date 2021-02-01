@@ -211,11 +211,6 @@
 
 #define EFI_USB_SERIAL TRUE
 
-/**
- * Should PnP engine configurations be included in the binary?
- */
-#define EFI_INCLUDE_ENGINE_PRESETS TRUE
-
 #ifndef EFI_ENGINE_SNIFFER
 #define EFI_ENGINE_SNIFFER TRUE
 #endif
@@ -251,7 +246,7 @@
 
 // todo: most of this should become configurable
 
-// todo: switch to continues ADC conversion for fast ADC?
+// todo: switch to continuous ADC conversion for fast ADC?
 #define EFI_INTERNAL_FAST_ADC_GPT	&GPTD6
 
 #define EFI_SPI1_AF 5

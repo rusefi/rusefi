@@ -21,6 +21,7 @@
 
 #if EFI_GPIO_HARDWARE
 EXTERNC void efiSetPadMode(const char *msg, brain_pin_e pin, iomode_t mode);
+EXTERNC void efiSetPadModeWithoutOwnershipAcquisition(const char *msg, brain_pin_e brainPin, iomode_t mode);
 EXTERNC void efiSetPadUnused(brain_pin_e brainPin);
 
 EXTERNC bool efiReadPin(brain_pin_e pin);

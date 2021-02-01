@@ -57,6 +57,7 @@ typedef enum {
 	LE_METHOD_FSIO_SETTING = 124,
 	LE_METHOD_PPS = 125,
 	LE_METHOD_TIME_SINCE_TRIGGER_EVENT = 127,
+	LE_METHOD_IN_MR_BENCH = 128,
 
 #include "fsio_enums_generated.def"
 
@@ -64,7 +65,32 @@ typedef enum {
 
 } le_action_e;
 
-using FsioValue = expected<float>;
+// This type borrows the least significant bit of a float and uses it to indicate
+// whether it's actually a boolean hiding inside that float
+class FsioValue
+{
+public:
+	/*implicit*/ FsioValue(float f);
+	/*implicit*/ FsioValue(bool b);
+
+	bool isFloat() const;
+	float asFloat() const;
+
+	bool isBool() const;
+	bool asBool() const;
+
+private:
+	// These must match for this trick to work!
+	static_assert(sizeof(float) == sizeof(uint32_t));
+
+	union
+	{
+		uint32_t u32;
+		float f32;
+	} u;
+};
+
+using FsioResult = expected<float>;
 
 class LEElement {
 public:
@@ -77,7 +103,6 @@ public:
 
 	le_action_e action;
 	float fValue;
-	int iValue;
 
 	LEElement *next;
 };
@@ -116,7 +141,7 @@ public:
 	int currentCalculationLogPosition;
 private:
 	void push(le_action_e action, float value);
-	FsioValue processElement(LEElement *element DECLARE_ENGINE_PARAMETER_SUFFIX);
+	FsioResult processElement(LEElement *element DECLARE_ENGINE_PARAMETER_SUFFIX);
 	float pop(le_action_e action);
 	LEElement *first;
 	calc_stack_t stack;

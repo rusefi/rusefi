@@ -199,11 +199,6 @@
 #define EFI_USB_SERIAL FALSE
 #endif
 
-/**
- * Should PnP engine configurations be included in the binary?
- */
-#define EFI_INCLUDE_ENGINE_PRESETS FALSE
-
 #ifndef EFI_ENGINE_SNIFFER
 #define EFI_ENGINE_SNIFFER FALSE
 #endif
@@ -334,6 +329,7 @@
 #define BOARD_MC33972_COUNT 0
 #define BOARD_TLE8888_COUNT 0
 #define BOARD_DRV8860_COUNT 0
+#define BOARD_MC33810_COUNT 0
 
 #define TLE6240_SS_PORT GPIOB
 #define TLE6240_SS_PAD  0U

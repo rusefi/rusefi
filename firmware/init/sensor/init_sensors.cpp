@@ -13,10 +13,12 @@ void initNewSensors(Logging* logger DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	initCanSensors();
 #endif
 
+	initMap(PASS_ENGINE_PARAMETER_SIGNATURE);
 	initTps(PASS_CONFIG_PARAMETER_SIGNATURE);
 	initOilPressure(PASS_CONFIG_PARAMETER_SIGNATURE);
 	initThermistors(PASS_CONFIG_PARAMETER_SIGNATURE);
 	initLambda(PASS_ENGINE_PARAMETER_SIGNATURE);
+	initFlexSensor(PASS_CONFIG_PARAMETER_SIGNATURE);
 
 	// Init CLI functionality for sensors (mocking)
 	initSensorCli(logger);

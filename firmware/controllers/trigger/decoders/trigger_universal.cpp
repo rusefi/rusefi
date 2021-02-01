@@ -6,6 +6,7 @@
  */
 
 #include "trigger_universal.h"
+#include "error_handling.h"
 
 /**
  * @see getCycleDuration
@@ -28,6 +29,7 @@ void addSkippedToothTriggerEvents(trigger_wheel_e wheel, TriggerWaveform *s, int
 
 	float angleDown = engineCycle / totalTeethCount * (totalTeethCount - skippedCount - 1 + (1 - toothWidth));
 	s->addEventClamped(offset + angleDown, wheel, TV_RISE, filterLeft, filterRight);
+	// custom handling of last event in order to avoid rounding error
 	s->addEventClamped(offset + engineCycle, wheel, TV_FALL, filterLeft, filterRight);
 }
 

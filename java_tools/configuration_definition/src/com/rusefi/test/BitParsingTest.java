@@ -18,7 +18,7 @@ public class BitParsingTest {
 
         String inputString = "struct pid_s\n" +
                 ReaderState.BIT + " fieldName\n" +
-                ReaderState.BIT + " fieldName2,si,nada;comment\n" +
+                ReaderState.BIT + " fieldName2,\"si\",\"nada\";comment\n" +
                 "end_struct\n";
         BufferedReader reader = new BufferedReader(new StringReader(inputString));
 
