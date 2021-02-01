@@ -20,6 +20,7 @@
 #include "tunerstudio.h"
 #endif
 
+#include "runtime_state.h"
 
 #include "engine_controller.h"
 
@@ -92,9 +93,7 @@ void writeToFlashNow(void) {
 	}
 	assertEngineReference();
 
-#if EFI_SHAFT_POSITION_INPUT
 	resetMaxValues();
-#endif
 }
 
 static bool isValidCrc(persistent_config_container_s *state) {
