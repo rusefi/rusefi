@@ -33,7 +33,7 @@ for c in $CONNECTORS; do
   mkdir -p $DIR
   bash misc/pinout-gen/gen.sh $c > $DIR/$NAME.html
   IMG=$(yq r $c 'info.image.file')
-  cp $(dirname $DIR)$IMG
+  cp $(dirname $DIR)$IMG $DIR
 done
 
 if [ -n "$RUSEFI_FTP_SERVER" ]; then
