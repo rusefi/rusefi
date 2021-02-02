@@ -8,10 +8,6 @@ import com.rusefi.core.Sensor;
 import com.rusefi.core.SensorCentral;
 import com.rusefi.functional_tests.EcuTestHelper;
 import com.rusefi.waves.EngineChart;
-import com.rusefi.waves.EngineReport;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import java.util.Arrays;
