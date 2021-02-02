@@ -7,6 +7,22 @@
 
 #include "trigger_gm.h"
 
+/**
+ * https://github.com/rusefi/rusefi/issues/2264
+ * GM/Daewoo Distributor on the F8CV
+ */
+void configureGm60_2_2_2(TriggerWaveform *s) {
+	s->initialize(FOUR_STROKE_CAM_SENSOR);
+	s->isSynchronizationNeeded = false;
+
+	int offset = 3;
+	float m = CRANK_MODE_MULTIPLIER;
+
+	s->addEventAngle(m * (360 - 10), T_PRIMARY, TV_RISE);
+	s->addEventAngle(m * (360), T_PRIMARY, TV_FALL);
+
+}
+
 void configureGmTriggerWaveform(TriggerWaveform *s) {
 	s->initialize(FOUR_STROKE_CRANK_SENSOR);
 
