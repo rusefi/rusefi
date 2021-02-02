@@ -41,7 +41,7 @@ jobs:
 
     - name: Build Firmware
       working-directory: ./firmware
-      run: make -j16
+      run: make -j16 EXTRA_PARAMS="-DHARDWARE_CI"
 
     - name: OpenOCD wipe & flash STM32
       working-directory: ./firmware
