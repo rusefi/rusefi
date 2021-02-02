@@ -39,7 +39,7 @@ import static javax.swing.JOptionPane.YES_NO_OPTION;
  */
 public class StartupFrame {
     private static final String LOGO = "/com/rusefi/logo.gif";
-    public static final String LINK_TEXT = "rusEFI (c) 2012-2020";
+    public static final String LINK_TEXT = "rusEFI (c) 2012-2021";
     private static final String URI = "http://rusefi.com/?java_console";
     // private static final int RUSEFI_ORANGE = 0xff7d03;
 

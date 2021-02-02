@@ -7,6 +7,14 @@
 
 #include "trigger_gm.h"
 
+static float addTooth(float offset, TriggerWaveform *s) {
+	s->addEventAngle(offset, T_SECONDARY, TV_RISE);
+	offset += CRANK_MODE_MULTIPLIER * 3;
+	s->addEventAngle(offset, T_SECONDARY, TV_FALL);
+	offset += CRANK_MODE_MULTIPLIER * 3;
+	return offset;
+}
+
 /**
  * https://github.com/rusefi/rusefi/issues/2264
  * GM/Daewoo Distributor on the F8CV
@@ -15,10 +23,36 @@ void configureGm60_2_2_2(TriggerWaveform *s) {
 	s->initialize(FOUR_STROKE_CAM_SENSOR);
 	s->isSynchronizationNeeded = false;
 
-	int offset = 3;
 	float m = CRANK_MODE_MULTIPLIER;
+	int offset = 1 * m;
 
-	s->addEventAngle(m * (360 - 10), T_PRIMARY, TV_RISE);
+	for (int i=0;i<12;i++) {
+		offset = addTooth(offset, s);
+	}
+
+	offset += m * 2 * 6;
+
+	for (int i=0;i<18;i++) {
+		offset = addTooth(offset, s);
+	}
+
+	offset += m * 2 * 6;
+
+	for (int i=0;i<18;i++) {
+		offset = addTooth(offset, s);
+	}
+
+	offset += m * 2 * 6;
+
+	for (int i=0;i<5;i++) {
+		offset = addTooth(offset, s);
+	}
+
+
+	s->addEventAngle(m * (360 - 6), T_PRIMARY, TV_RISE);
+
+	offset = addTooth(offset, s);
+
 	s->addEventAngle(m * (360), T_PRIMARY, TV_FALL);
 
 }

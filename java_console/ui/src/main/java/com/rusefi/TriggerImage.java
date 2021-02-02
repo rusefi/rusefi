@@ -91,6 +91,8 @@ public class TriggerImage {
                 return "TriTach";
             case Fields.TT_TT_TOOTHED_WHEEL_60_2:
                 return "60/2";
+            case Fields.TT_TT_GM_60_2_2_2:
+                return "GM 60/2/2/2";
         }
         return triggerName.triggerName;
     }
