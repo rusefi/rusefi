@@ -1,7 +1,7 @@
 #include "global.h"
 #include "rusefi_enums.h"
 #include "rusefi_hw_enums.h"
-// was generated automatically by rusEfi tool  from rusefi_hw_enums.h // was generated automatically by rusEfi tool  from rusefi_enums.h // by enum2string.jar tool on Mon Feb 01 22:55:06 EST 2021
+// was generated automatically by rusEfi tool  from rusefi_hw_enums.h // was generated automatically by rusEfi tool  from rusefi_enums.h // by enum2string.jar tool on Tue Feb 02 14:16:47 UTC 2021
 // see also gen_config_and_enums.bat
 
 
@@ -121,6 +121,10 @@ case MT_DENSO183:
   return "MT_DENSO183";
 case MT_DODGE_NEON_2003:
   return "MT_DODGE_NEON_2003";
+case MT_GM_1_BAR:
+  return "MT_GM_1_BAR";
+case MT_GM_2_BAR:
+  return "MT_GM_2_BAR";
 case MT_GM_3_BAR:
   return "MT_GM_3_BAR";
 case MT_HONDA3BAR:
