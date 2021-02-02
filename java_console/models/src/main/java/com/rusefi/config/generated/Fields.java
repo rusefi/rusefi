@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEfi tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Thu Jan 28 01:32:24 UTC 2021
+// this file was generated automatically by rusEfi tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Tue Feb 02 04:21:19 UTC 2021
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -178,6 +178,7 @@ public class Fields {
 	public static final int camInputs2_offset = 557;
 	public static final int camInputs3_offset = 558;
 	public static final int camInputs4_offset = 559;
+	public static final int CAMS_PER_BANK = 2;
 	public static final int can2BaudRate_offset = 2110;
 	public static final int can2NbcType_offset = 2120;
 	public static final int can2ReadEnabled_offset = 2116;
@@ -369,6 +370,7 @@ public class Fields {
 	public static final int enableInnovateLC2_offset = 976;
 	public static final int enableLaunchBoost_offset = 976;
 	public static final int enableLaunchRetard_offset = 976;
+	public static final int enableMapEstimationTableFallback_offset = 76;
 	public static final int enableSoftwareKnock_offset = 976;
 	public static final int enableVerboseCan2Tx_offset = 2116;
 	public static final int enableVerboseCanTx_offset = 744;
@@ -951,7 +953,6 @@ public class Fields {
 	public static final int isManualSpinningMode_offset = 1476;
 	public static final int isMapAveragingEnabled_offset = 1476;
 	public static final int isSdCardEnabled_offset = 744;
-	public static final int issue_294_27_offset = 76;
 	public static final int issue_294_28_offset = 76;
 	public static final int issue_294_29_offset = 76;
 	public static final int issue_294_30_offset = 76;
@@ -1067,6 +1068,9 @@ public class Fields {
 	public static final int mapAveragingSchedulingAtIndex_offset = 1540;
 	public static final int mapErrorDetectionTooHigh_offset = 1780;
 	public static final int mapErrorDetectionTooLow_offset = 1776;
+	public static final int mapEstimateRpmBins_offset = 15744;
+	public static final int mapEstimateTable_offset = 15200;
+	public static final int mapEstimateTpsBins_offset = 15712;
 	public static final int mapFrequency0Kpa_offset = 612;
 	public static final int mapFrequency100Kpa_offset = 616;
 	public static final int mapHighValueVoltage_offset = 2212;
@@ -1139,6 +1143,7 @@ public class Fields {
 	public static final int PACK_MULT_HIGH_PRESSURE = 10;
 	public static final int PACK_MULT_LAMBDA = 10000;
 	public static final int PACK_MULT_LAMBDA_CFG = 147;
+	public static final int PACK_MULT_MAP_ESTIMATE = 100;
 	public static final int PACK_MULT_MASS_FLOW = 10;
 	public static final int PACK_MULT_MS = 300;
 	public static final int PACK_MULT_PERCENT = 100;
@@ -1203,6 +1208,7 @@ public class Fields {
 	public static final int servoOutputPins8_offset = 3147;
 	public static final int showHumanReadableWarning_offset = 976;
 	public static final int showSdCardWarning_offset = 76;
+	public static final int SIGNATURE_HASH = 1978516617;
 	public static final int silentTriggerError_offset = 1464;
 	public static final int slowAdcAlpha_offset = 2088;
 	public static final int sparkDwellRpmBins_offset = 332;
@@ -1373,6 +1379,7 @@ public class Fields {
 	public static final int tps2SecondaryMax_offset = 1462;
 	public static final int tps2SecondaryMin_offset = 1460;
 	public static final int TPS_1_BYTE_PACKING_MULT = 2;
+	public static final int TPS_2_BYTE_PACKING_MULT = 100;
 	public static final int TPS_TPS_ACCEL_TABLE = 8;
 	public static final int tpsAccelEnrichmentThreshold_offset = 2048;
 	public static final int tpsAccelFractionDivisor_offset = 3996;
@@ -1485,7 +1492,7 @@ public class Fields {
 	public static final char TS_SD_R_COMMAND = 'r';
 	public static final char TS_SD_W_COMMAND = 'w';
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI 2021.01.28.all.2596245904";
+	public static final String TS_SIGNATURE = "rusEFI 2021.02.02.all.1978516617";
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final int TT_TT_1_16 = 50;
 	public static final int TT_TT_2JZ_1_12 = 29;
@@ -1498,6 +1505,7 @@ public class Fields {
 	public static final int TT_TT_DAIHATSU = 6;
 	public static final int TT_TT_FORD_ASPIRE = 1;
 	public static final int TT_TT_FORD_ST170 = 42;
+	public static final int TT_TT_GM_60_2_2_2 = 54;
 	public static final int TT_TT_GM_7X = 5;
 	public static final int TT_TT_GM_LS_24 = 27;
 	public static final int TT_TT_HONDA_1_24 = 21;
@@ -1540,7 +1548,7 @@ public class Fields {
 	public static final int unused1476b20_offset = 1476;
 	public static final int unused1476b3_offset = 1476;
 	public static final int unused1476b8_offset = 1476;
-	public static final int unused15136_offset = 15200;
+	public static final int unused15136_offset = 15776;
 	public static final int unused1708_offset = 1708;
 	public static final int unused2260_offset = 2260;
 	public static final int unused2419_offset = 2419;
@@ -1700,7 +1708,7 @@ public class Fields {
 	public static final Field USERUNNINGMATHFORCRANKING = Field.create("USERUNNINGMATHFORCRANKING", 76, FieldType.BIT, 23);
 	public static final Field DISPLAYLOGICLEVELSINENGINESNIFFER = Field.create("DISPLAYLOGICLEVELSINENGINESNIFFER", 76, FieldType.BIT, 24);
 	public static final Field USETLE8888_STEPPER = Field.create("USETLE8888_STEPPER", 76, FieldType.BIT, 25);
-	public static final Field ISSUE_294_27 = Field.create("ISSUE_294_27", 76, FieldType.BIT, 26);
+	public static final Field ENABLEMAPESTIMATIONTABLEFALLBACK = Field.create("ENABLEMAPESTIMATIONTABLEFALLBACK", 76, FieldType.BIT, 26);
 	public static final Field ISSUE_294_28 = Field.create("ISSUE_294_28", 76, FieldType.BIT, 27);
 	public static final Field ISSUE_294_29 = Field.create("ISSUE_294_29", 76, FieldType.BIT, 28);
 	public static final Field ISSUE_294_30 = Field.create("ISSUE_294_30", 76, FieldType.BIT, 29);
@@ -1776,7 +1784,7 @@ public class Fields {
 	public static final Field TPS2_1ADCCHANNEL = Field.create("TPS2_1ADCCHANNEL", 515, FieldType.INT8, adc_channel_e);
 	public static final Field IDLE_DERIVATIVEFILTERLOSS = Field.create("IDLE_DERIVATIVEFILTERLOSS", 516, FieldType.FLOAT);
 	public static final Field SENSORCHARTFREQUENCY = Field.create("SENSORCHARTFREQUENCY", 520, FieldType.INT);
-	public static final String[] trigger_type_e = {"custom toothed wheel", "Ford Aspire", "Dodge Neon 1995", "Miata NA", "Miata NB", "GM_7X", "Cooper R50", "Mazda SOHC 4", "60/2", "36/1", "Honda 4+24+1", "Mitsubishi", "Honda 4+24", "Honda 1+4+24", "Dodge Neon 2003", "Mazda DOHC 1+4", "1+1", "INVALID", "Single Tooth", "Dodge Ram 1+16", "60/2 VW", "Honda 1+24", "Dodge Stratus", "36_2_2_2", "Nissan Primera", "dev 2JZ 3/34 simulator", "Rover K", "GM LS 24", "Honda CBR 600", "2JZ_1_12", "Honda CBR 600 custom", "3/1 skipped" , "Dodge Neon 2003 crank", "Miata VVT", "trg34", "trg35", "Subaru 7+6", "Jeep 18-2-2-2", "WIP", "Dodge Neon 1995 crank only", "Jeep XJ 4 cyl", "FiatIAQ_P8", "Mazda Z5", "trg43", "Renix 44-2-2", "Renix 66-2-2-2", "Honda K 12+1", "trg47", "36/2", "Subaru SVX", "1+16", "Subaru 7 without 6", "trg52", "TriTach", "trg54", "trg55", "INVALID"};
+	public static final String[] trigger_type_e = {"custom toothed wheel", "Ford Aspire", "Dodge Neon 1995", "Miata NA", "Miata NB", "GM_7X", "Cooper R50", "Mazda SOHC 4", "60/2", "36/1", "Honda 4+24+1", "Mitsubishi", "Honda 4+24", "Honda 1+4+24", "Dodge Neon 2003", "Mazda DOHC 1+4", "1+1", "INVALID", "Single Tooth", "Dodge Ram 1+16", "60/2 VW", "Honda 1+24", "Dodge Stratus", "36_2_2_2", "Nissan Primera", "dev 2JZ 3/34 simulator", "Rover K", "GM LS 24", "Honda CBR 600", "2JZ_1_12", "Honda CBR 600 custom", "3/1 skipped" , "Dodge Neon 2003 crank", "Miata VVT", "trg34", "trg35", "Subaru 7+6", "Jeep 18-2-2-2", "WIP", "Dodge Neon 1995 crank only", "Jeep XJ 4 cyl", "FiatIAQ_P8", "Mazda Z5", "trg43", "Renix 44-2-2", "Renix 66-2-2-2", "Honda K 12+1", "trg47", "36/2", "Subaru SVX", "1+16", "Subaru 7 without 6", "trg52", "TriTach", "GM 60/2/2?2", "trg55", "trg56", "trg57", "INVALID"};
 	public static final Field TRIGGER_TYPE = Field.create("TRIGGER_TYPE", 524, FieldType.INT, trigger_type_e);
 	public static final Field TRIGGER_TODOREMOVEMEONEDAY0 = Field.create("TRIGGER_TODOREMOVEMEONEDAY0", 528, FieldType.BIT, 0);
 	public static final Field TRIGGER_TODOREMOVEMEONEDAY1 = Field.create("TRIGGER_TODOREMOVEMEONEDAY1", 528, FieldType.BIT, 1);
@@ -2759,6 +2767,7 @@ public class Fields {
 	public static final Field INJECTIONPHASE = Field.create("INJECTIONPHASE", 13984, FieldType.INT);
 	public static final Field TCUSOLENOIDTABLE = Field.create("TCUSOLENOIDTABLE", 15136, FieldType.INT);
 	public static final Field VSSFILTERRECIPROCAL = Field.create("VSSFILTERRECIPROCAL", 15196, FieldType.FLOAT);
+	public static final Field MAPESTIMATETABLE = Field.create("MAPESTIMATETABLE", 15200, FieldType.INT);
 	public static final Field IGNITIONTABLE = Field.create("IGNITIONTABLE", 16288, FieldType.INT);
 	public static final Field VETABLE = Field.create("VETABLE", 17440, FieldType.INT);
 	public static final Field LAMBDATABLE = Field.create("LAMBDATABLE", 18592, FieldType.INT);
@@ -2797,7 +2806,7 @@ public class Fields {
 	USERUNNINGMATHFORCRANKING,
 	DISPLAYLOGICLEVELSINENGINESNIFFER,
 	USETLE8888_STEPPER,
-	ISSUE_294_27,
+	ENABLEMAPESTIMATIONTABLEFALLBACK,
 	ISSUE_294_28,
 	ISSUE_294_29,
 	ISSUE_294_30,
@@ -3834,6 +3843,7 @@ public class Fields {
 	INJECTIONPHASE,
 	TCUSOLENOIDTABLE,
 	VSSFILTERRECIPROCAL,
+	MAPESTIMATETABLE,
 	IGNITIONTABLE,
 	VETABLE,
 	LAMBDATABLE,

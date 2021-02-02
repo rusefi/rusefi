@@ -90,7 +90,7 @@ static bool vvtWithRealDecoder(vvt_mode_e vvtMode) {
 			|| vvtMode == VVT_4_1;
 }
 
-void hwHandleVvtCamSignal(trigger_value_e front, efitick_t nowNt DECLARE_ENGINE_PARAMETER_SUFFIX) {
+void hwHandleVvtCamSignal(trigger_value_e front, efitick_t nowNt, int index DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	int bankIndex = 0;
 	TriggerCentral *tc = &engine->triggerCentral;
 	if (front == TV_RISE) {
@@ -348,8 +348,7 @@ void hwHandleShaftSignal(trigger_event_e signal, efitick_t timestamp) {
 
 	triggerReentraint--;
 	triggerDuration = getTimeNowLowerNt() - triggerHandlerEntryTime;
-	if (triggerDuration > triggerMaxDuration)
-		triggerMaxDuration = triggerDuration;
+	triggerMaxDuration = maxI(triggerMaxDuration, triggerDuration);
 }
 #endif /* EFI_PROD_CODE */
 
@@ -562,37 +561,6 @@ static void triggerShapeInfo(void) {
 extern PwmConfig triggerSignal;
 #endif /* #if EFI_PROD_CODE */
 
-extern uint32_t hipLastExecutionCount;
-
-extern uint32_t maxLockedDuration;
-extern uint32_t maxEventCallbackDuration;
-
-extern int perSecondIrqDuration;
-extern int perSecondIrqCounter;
-
-#if EFI_PROD_CODE
-extern uint32_t maxPrecisionCallbackDuration;
-#endif /* EFI_PROD_CODE  */
-
-extern uint32_t maxSchedulingPrecisionLoss;
-extern uint32_t *cyccnt;
-
-void resetMaxValues() {
-#if EFI_PROD_CODE || EFI_SIMULATOR
-	maxEventCallbackDuration = triggerMaxDuration = 0;
-#endif /* EFI_PROD_CODE || EFI_SIMULATOR */
-
-	maxSchedulingPrecisionLoss = 0;
-
-#if EFI_CLOCK_LOCKS
-	maxLockedDuration = 0;
-#endif /* EFI_CLOCK_LOCKS */
-
-#if EFI_PROD_CODE
-	maxPrecisionCallbackDuration = 0;
-#endif /* EFI_PROD_CODE  */
-}
-
 #if HAL_USE_ICU == TRUE
 extern int icuRisingCallbackCounter;
 extern int icuFallingCallbackCounter;
@@ -681,25 +649,8 @@ void triggerInfo(void) {
 	scheduleMsg(logger, "primary logic input: %s", hwPortname(CONFIG(logicAnalyzerPins)[0]));
 	scheduleMsg(logger, "secondary logic input: %s", hwPortname(CONFIG(logicAnalyzerPins)[1]));
 
-	scheduleMsg(logger, "maxSchedulingPrecisionLoss=%d", maxSchedulingPrecisionLoss);
-
-#if EFI_CLOCK_LOCKS
-	scheduleMsg(logger, "maxLockedDuration=%d / maxTriggerReentraint=%d", maxLockedDuration, maxTriggerReentraint);
-
-	scheduleMsg(logger, "perSecondIrqDuration=%d ticks / perSecondIrqCounter=%d", perSecondIrqDuration, perSecondIrqCounter);
-	scheduleMsg(logger, "IRQ CPU utilization %f%%", perSecondIrqDuration / (float)CORE_CLOCK * 100);
-
-#endif /* EFI_CLOCK_LOCKS */
-
-	scheduleMsg(logger, "maxEventCallbackDuration=%d", maxEventCallbackDuration);
-
-#if EFI_HIP_9011
-	scheduleMsg(logger, "hipLastExecutionCount=%d", hipLastExecutionCount);
-#endif /* EFI_HIP_9011 */
 
 	scheduleMsg(logger, "totalTriggerHandlerMaxTime=%d", triggerMaxDuration);
-	scheduleMsg(logger, "maxPrecisionCallbackDuration=%d", maxPrecisionCallbackDuration);
-	resetMaxValues();
 
 #endif /* EFI_PROD_CODE */
 }

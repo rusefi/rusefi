@@ -27,31 +27,34 @@ EXTERN_ENGINE;
 
 static Logging *logger;
 
-static void vvtRisingCallback(void *) {
+static void vvtRisingCallback(void *arg) {
 	efitick_t now = getTimeNowNt();
 	if (!engine->hwTriggerInputEnabled) {
 		return;
 	}
+	int index = (int)arg;
+
 #if EFI_TOOTH_LOGGER
 	if (!CONFIG(displayLogicLevelsInEngineSniffer)) {
 		// real physical fronts go into engine sniffer
 		LogTriggerTooth(SHAFT_SECONDARY_RISING, now);
 	}
 #endif /* EFI_TOOTH_LOGGER */
-	hwHandleVvtCamSignal(engineConfiguration->invertCamVVTSignal ? TV_FALL : TV_RISE, now);
+	hwHandleVvtCamSignal(engineConfiguration->invertCamVVTSignal ? TV_FALL : TV_RISE, now, index);
 }
 
-static void vvtFallingCallback(void *) {
+static void vvtFallingCallback(void * arg) {
 	efitick_t now = getTimeNowNt();
 	if (!engine->hwTriggerInputEnabled) {
 		return;
 	}
+	int index = (int)arg;
 #if EFI_TOOTH_LOGGER
 	if (!CONFIG(displayLogicLevelsInEngineSniffer)) {
 		LogTriggerTooth(SHAFT_SECONDARY_FALLING, now);
 	}
 #endif /* EFI_TOOTH_LOGGER */
-	hwHandleVvtCamSignal(engineConfiguration->invertCamVVTSignal ? TV_RISE : TV_FALL, now);
+	hwHandleVvtCamSignal(engineConfiguration->invertCamVVTSignal ? TV_RISE : TV_FALL, now, index);
 }
 
 /**
@@ -117,8 +120,9 @@ int icuTriggerTurnOnInputPin(const char *msg, int index, bool isTriggerShaft) {
 		input->setWidthCallback((VoidInt)(void*)shaftRisingCallback, arg);
 		input->setPeriodCallback((VoidInt)(void*)shaftFallingCallback, arg);
 	} else {
-		input->setWidthCallback((VoidInt)(void*)vvtRisingCallback, NULL);
-		input->setPeriodCallback((VoidInt)(void*)vvtFallingCallback, NULL);
+		void * arg = (void *)index;
+		input->setWidthCallback((VoidInt)(void*)vvtRisingCallback, arg);
+		input->setPeriodCallback((VoidInt)(void*)vvtFallingCallback, arg);
 	}
 
 	return 0;
@@ -126,10 +130,6 @@ int icuTriggerTurnOnInputPin(const char *msg, int index, bool isTriggerShaft) {
 
 void icuTriggerTurnOffInputPin(brain_pin_e brainPin) {
 	stopDigitalCapture("trigger", brainPin);
-}
-
-void icuTriggerSetPrimaryChannel(brain_pin_e brainPin) {
-	(void)brainPin;
 }
 
 void icuTriggerTurnOnInputPins(Logging *sharedLogger) {

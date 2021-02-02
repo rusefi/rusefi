@@ -1,7 +1,7 @@
 #include "global.h"
 #include "rusefi_enums.h"
 #include "rusefi_hw_enums.h"
-// was generated automatically by rusEfi tool  from rusefi_hw_enums.h // was generated automatically by rusEfi tool  from rusefi_enums.h // by enum2string.jar tool on Sat Jan 09 19:14:08 UTC 2021
+// was generated automatically by rusEfi tool  from rusefi_hw_enums.h // was generated automatically by rusEfi tool  from rusefi_enums.h // by enum2string.jar tool on Mon Feb 01 22:55:06 EST 2021
 // see also gen_config_and_enums.bat
 
 
@@ -1347,6 +1347,8 @@ case TT_FORD_ASPIRE:
   return "TT_FORD_ASPIRE";
 case TT_FORD_ST170:
   return "TT_FORD_ST170";
+case TT_GM_60_2_2_2:
+  return "TT_GM_60_2_2_2";
 case TT_GM_7X:
   return "TT_GM_7X";
 case TT_GM_LS_24:

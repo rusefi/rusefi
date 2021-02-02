@@ -9,5 +9,6 @@
 
 #include "trigger_structure.h"
 
+void configureGm60_2_2_2(TriggerWaveform *s);
 void configureGmTriggerWaveform(TriggerWaveform *s);
 void initGmLS24(TriggerWaveform *s);

@@ -83,12 +83,11 @@ public:
 
 void triggerInfo(void);
 void hwHandleShaftSignal(trigger_event_e signal, efitick_t timestamp);
-void hwHandleVvtCamSignal(trigger_value_e front, efitick_t timestamp DECLARE_ENGINE_PARAMETER_SUFFIX);
+void hwHandleVvtCamSignal(trigger_value_e front, efitick_t timestamp, int index DECLARE_ENGINE_PARAMETER_SUFFIX);
 
 void initTriggerCentral(Logging *sharedLogger);
 
 int isSignalDecoderError(void);
-void resetMaxValues();
 
 void onConfigurationChangeTriggerCallback(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 bool checkIfTriggerConfigChanged(DECLARE_ENGINE_PARAMETER_SIGNATURE);

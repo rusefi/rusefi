@@ -107,7 +107,7 @@ TEST(sensors, testCamInput) {
 
 	for (int i = 0; i < 600;i++) {
 		eth.moveTimeForwardUs(MS2US(10));
-		hwHandleVvtCamSignal(TV_FALL, getTimeNowNt() PASS_ENGINE_PARAMETER_SUFFIX);
+		hwHandleVvtCamSignal(TV_FALL, getTimeNowNt(), 0 PASS_ENGINE_PARAMETER_SUFFIX);
 		eth.moveTimeForwardUs(MS2US(40));
 		eth.firePrimaryTriggerRise();
 	}
@@ -143,21 +143,21 @@ TEST(sensors, testNB2CamInput) {
 	eth.moveTimeForwardUs(MS2US(3)); // shifting VVT phase a few angles
 
 	// this would be ignored since we only consume the other kind of fronts here
-	hwHandleVvtCamSignal(TV_FALL, getTimeNowNt() PASS_ENGINE_PARAMETER_SUFFIX);
+	hwHandleVvtCamSignal(TV_FALL, getTimeNowNt(), 0 PASS_ENGINE_PARAMETER_SUFFIX);
 	eth.moveTimeForwardUs(MS2US(20));
 	// this would be be first VVT signal - gap duration would be calculated against 'DEEP_IN_THE_PAST_SECONDS' initial value
-	hwHandleVvtCamSignal(TV_RISE, getTimeNowNt() PASS_ENGINE_PARAMETER_SUFFIX);
+	hwHandleVvtCamSignal(TV_RISE, getTimeNowNt(), 0 PASS_ENGINE_PARAMETER_SUFFIX);
 
 	eth.moveTimeForwardUs(MS2US(20));
 	// this second important front would give us first real VVT gap duration
-	hwHandleVvtCamSignal(TV_RISE, getTimeNowNt() PASS_ENGINE_PARAMETER_SUFFIX);
+	hwHandleVvtCamSignal(TV_RISE, getTimeNowNt(), 0 PASS_ENGINE_PARAMETER_SUFFIX);
 
 	ASSERT_FLOAT_EQ(0, engine->triggerCentral.getVVTPosition());
 	ASSERT_EQ(totalRevolutionCountBeforeVvtSync, engine->triggerCentral.triggerState.getTotalRevolutionCounter());
 
 	eth.moveTimeForwardUs(MS2US(130));
 	// this third important front would give us first comparison between two real gaps
-	hwHandleVvtCamSignal(TV_RISE, getTimeNowNt() PASS_ENGINE_PARAMETER_SUFFIX);
+	hwHandleVvtCamSignal(TV_RISE, getTimeNowNt(), 0 PASS_ENGINE_PARAMETER_SUFFIX);
 
 	ASSERT_NEAR(-67.6 - 720 - 720, engine->triggerCentral.getVVTPosition(), EPS3D);
 	// actually position based on VVT!
