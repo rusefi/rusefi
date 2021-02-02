@@ -9,6 +9,7 @@
 
 /**
  * This trigger is also used by Nissan and Mazda
+ * https://rusefi.com/forum/viewtopic.php?f=2&t=1932
  */
 void initialize36_2_2_2(TriggerWaveform *s) {
 	s->initialize(FOUR_STROKE_CAM_SENSOR);
