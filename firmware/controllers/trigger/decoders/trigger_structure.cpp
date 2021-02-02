@@ -540,6 +540,7 @@ void TriggerWaveform::initializeTriggerWaveform(Logging *logger, operation_mode_
 		configureFordAspireTriggerWaveform(this);
 		break;
 
+	case TT_GM_60_2_2_2:
 	case TT_GM_7X:
 		configureGmTriggerWaveform(this);
 		break;
