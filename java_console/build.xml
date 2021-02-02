@@ -187,7 +187,7 @@
 
     </target>
 
-    <target name="real_hardware_functional_test" depends="jar">
+    <target name="hardware_ci_f4_discovery" depends="jar">
         <mkdir dir="${hw_tests}"/>
         <junit fork="no"
                maxmemory="512m"
