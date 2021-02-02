@@ -217,20 +217,20 @@ public:
 
 	bool useOnlyRisingEdgeForTriggerTemp;
 
-	/* 0..1 angle range */
+	/* (0..1] angle range */
 	void addEvent(angle_t angle, trigger_wheel_e const channelIndex, trigger_value_e const state);
-	/* 0..720 angle range
+	/* (0..720] angle range
 	 * Deprecated!
 	 */
 	void addEvent720(angle_t angle, trigger_wheel_e const channelIndex, trigger_value_e const state);
 
 	/**
 	 * This version of 'addEvent...' family considers the angle duration of operationMode in this trigger
-	 * For example, 0..180 for FOUR_STROKE_SYMMETRICAL_CRANK_SENSOR
+	 * For example, (0..180] for FOUR_STROKE_SYMMETRICAL_CRANK_SENSOR
 	 */
 	void addEventAngle(angle_t angle, trigger_wheel_e const channelIndex, trigger_value_e const state);
 
-	/* 0..720 angle range
+	/* (0..720] angle range
 	 * Deprecated?
 	 */
 	void addEventClamped(angle_t angle, trigger_wheel_e const channelIndex, trigger_value_e const stateParam, float filterLeft, float filterRight);
