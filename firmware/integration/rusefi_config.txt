@@ -108,6 +108,7 @@ struct_no_prefix engine_configuration_s
 #define NARROW_BAND_WIDE_BAND_CONVERSION_SIZE 8
 
 #define CLT_CURVE_SIZE 16
+#define CLT_LIMITER_CURVE_SIZE 4
 #define CRANKING_CLT_IDLE_CURVE_SIZE 8
 #define CLT_CRANKING_CURVE_SIZE 8
 #define IDLE_ADVANCE_CURVE_SIZE 8
@@ -1397,7 +1398,12 @@ float[CLT_CURVE_SIZE] iacCoasting;    CLT-based idle position for coasting (used
 	linear_sensor_s highPressureFuel;
 	linear_sensor_s lowPressureFuel;
 
-uint8_t[536] unused3328;;"units", 1, 0, -20, 100, 0
+! issue 455: RPM hard limit depending on CLT
+float[CLT_LIMITER_CURVE_SIZE] cltRevLimitRpmBins;CLT-based target RPM for hard limit depending on CLT LFAstyle;"C",        1,     0,   -100.0,    250.0,  2
+float[CLT_LIMITER_CURVE_SIZE] cltRevLimitRpm;See idleRpmPid;"",      1,     0,      0.0,    8000.0,   0
+
+! was [536] - 2*CLT_LIMITER_CURVE_SIZE*size_of(float) = 504
+uint8_t[504] unused3328;;"units", 1, 0, -20, 100, 0
 
 float tChargeAirCoefMin;;"Min tCharge Coeff.",        1,     0,  0.0,    1.0,  4
 float tChargeAirCoefMax;;"Max tCharge Coeff.",        1,     0,  0.0,    1.0,  4
