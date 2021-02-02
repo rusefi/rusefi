@@ -1256,8 +1256,8 @@
 #define showHumanReadableWarning_offset 976
 #define showSdCardWarning_offset 76
 #define SIGNATURE_BOARD kin
-#define SIGNATURE_DATE 2021.02.01
-#define SIGNATURE_HASH 3916620085
+#define SIGNATURE_DATE 2021.02.02
+#define SIGNATURE_HASH 1726200694
 #define silentTriggerError_offset 1464
 #define slowAdcAlpha_offset 2088
 #define sparkDwellRpmBins_offset 332
@@ -1591,7 +1591,7 @@
 #define ts_show_spi true
 #define ts_show_trigger_comparator false
 #define ts_show_tunerstudio_port true
-#define TS_SIGNATURE "rusEFI 2021.02.01.kin.3916620085"
+#define TS_SIGNATURE "rusEFI 2021.02.02.kin.1726200694"
 #define TS_SINGLE_WRITE_COMMAND 'W'
 #define TS_SINGLE_WRITE_COMMAND_char W
 #define TS_TEST_COMMAND 't' // 0x74
@@ -1606,6 +1606,7 @@
 #define TT_TT_DAIHATSU 6
 #define TT_TT_FORD_ASPIRE 1
 #define TT_TT_FORD_ST170 42
+#define TT_TT_GM_60_2_2_2 54
 #define TT_TT_GM_7X 5
 #define TT_TT_GM_LS_24 27
 #define TT_TT_HONDA_1_24 21
