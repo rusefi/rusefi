@@ -12,6 +12,10 @@ DDEFS += -DSTM32F407xx
 # We are running on Frankenso hardware!
 DDEFS += -DHW_FRANKENSO=1
 
+# Frankenso hardware has default self stim pins set
+DDEFS += -DEFI_SIMULATOR_OUTPUT_1=GPIOD_1
+DDEFS += -DEFI_SIMULATOR_OUTPUT_2=GPIOD_2
+
 # Shared variables
 ALLCSRC   += $(BOARDSRC)
 ALLCPPSRC += $(BOARDCPPSRC)
