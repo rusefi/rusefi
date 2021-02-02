@@ -6,7 +6,7 @@ import org.junit.Before;
 public class RusefiTestBase {
     protected EcuTestHelper ecu;
 
-    boolean needsHardwareTriggerInput() {
+    protected boolean needsHardwareTriggerInput() {
         // Most tests do not, but some may need it
         return false;
     }
