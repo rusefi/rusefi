@@ -13,6 +13,7 @@ void initNewSensors(Logging* logger DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	initCanSensors();
 #endif
 
+	initVbatt(PASS_CONFIG_PARAMETER_SIGNATURE);
 	initMap(PASS_ENGINE_PARAMETER_SIGNATURE);
 	initTps(PASS_CONFIG_PARAMETER_SIGNATURE);
 	initOilPressure(PASS_CONFIG_PARAMETER_SIGNATURE);
@@ -25,6 +26,7 @@ void initNewSensors(Logging* logger DECLARE_ENGINE_PARAMETER_SUFFIX) {
 }
 
 void reconfigureSensors(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+	reconfigureVbatt(PASS_CONFIG_PARAMETER_SIGNATURE);
 	reconfigureTps(PASS_CONFIG_PARAMETER_SIGNATURE);
 	reconfigureOilPressure(PASS_CONFIG_PARAMETER_SIGNATURE);
 	reconfigureThermistors(PASS_CONFIG_PARAMETER_SIGNATURE);
