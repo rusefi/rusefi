@@ -441,7 +441,12 @@ static percent_t automaticIdleController(float tpsPos, float rpm, int targetRpm,
 }
 
 	float IdleController::getIdlePosition() {
-		efiAssert(OBD_PCM_Processor_Fault, engineConfiguration != NULL, "engineConfiguration pointer", 0);
+		// Simplify hardware CI: we borrow the idle valve controller as a PWM source for various stimulation tasks
+		// The logic in this function is solidly unit tested, so it's not necessary to re-test the particulars on real hardware.
+		#ifdef HARDWARE_CI
+			return CONFIG(manIdlePosition);
+		#endif
+
 	/*
 	 * Here we have idle logic thread - actual stepper movement is implemented in a separate
 	 * working thread,
