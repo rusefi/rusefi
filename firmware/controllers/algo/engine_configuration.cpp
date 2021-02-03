@@ -1230,6 +1230,11 @@ void resetConfigurationExt(Logging * logger, configuration_callback_t boardCallb
 	case PROTEUS_MIATA_NB2:
 		setMiataNB2_ProteusEngineConfiguration(PASS_CONFIG_PARAMETER_SIGNATURE);
 		break;
+#ifdef HARDWARE_CI
+	case PROTEUS_ANALOG_PWM_TEST:
+		setProteusAnalogPwmTest(PASS_CONFIG_PARAMETER_SIGNATURE);
+		break;
+#endif // HARDWARE_CI
 #endif // HW_PROTEUS
 #if HW_HELLEN
 	case HELLEN_NB2:
