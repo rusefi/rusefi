@@ -26,7 +26,6 @@ TEST(testCJ125, testInitialState) {
 	ASSERT_EQ(cj.heaterDuty, 0);
 
 	WITH_ENGINE_TEST_HELPER(FORD_ASPIRE_1996);
-	ASSERT_EQ(engine->sensors.vBatt, 0);
 
 	cj.StartHeaterControl((pwm_gen_callback*)&applyHeaterPinState PASS_ENGINE_PARAMETER_SUFFIX);
 	ASSERT_EQ(cj.heaterDuty, CJ125_HEATER_IDLE_RATE);

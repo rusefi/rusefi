@@ -87,6 +87,10 @@ static void applyIdleSolenoidPinState(int stateIndex, PwmConfig *state) /* pwm_g
 	efiAssertVoid(CUSTOM_ERR_6646, state->multiChannelStateSequence.waveCount == 1, "invalid idle waveCount");
 	OutputPin *output = state->outputPins[0];
 	int value = state->multiChannelStateSequence.getChannelState(/*channelIndex*/0, stateIndex);
+	/**
+	 * - we want stopped engine to be silent to facilitate bench testing of low volume stuff like coil spark
+	 * - we want stopped engine to draw as little amps as possible
+	 */
 	if (!value /* always allow turning solenoid off */ ||
 			(GET_RPM() != 0 || timeToStopIdleTest != 0) /* do not run solenoid unless engine is spinning or bench testing in progress */
 			) {
@@ -112,15 +116,6 @@ bool isIdleMotorBusy(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 		return false;
 	}
 	return iacMotor.isBusy();
-}
-
-void stopIdleHardware(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
-#if EFI_PROD_CODE
-	efiSetPadUnused(activeConfiguration.stepperEnablePin);
-	efiSetPadUnused(activeConfiguration.idle.stepperStepPin);
-	efiSetPadUnused(activeConfiguration.idle.solenoidPin);
-	efiSetPadUnused(activeConfiguration.secondSolenoidPin);
-#endif /* EFI_PROD_CODE */
 }
 
 void initIdleHardware(Logging* sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX) {
