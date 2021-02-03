@@ -114,15 +114,6 @@ bool isIdleMotorBusy(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	return iacMotor.isBusy();
 }
 
-void stopIdleHardware(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
-#if EFI_PROD_CODE
-	efiSetPadUnused(activeConfiguration.stepperEnablePin);
-	efiSetPadUnused(activeConfiguration.idle.stepperStepPin);
-	efiSetPadUnused(activeConfiguration.idle.solenoidPin);
-	efiSetPadUnused(activeConfiguration.secondSolenoidPin);
-#endif /* EFI_PROD_CODE */
-}
-
 void initIdleHardware(Logging* sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	logger = sharedLogger;
 

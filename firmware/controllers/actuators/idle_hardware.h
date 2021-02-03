@@ -13,6 +13,5 @@
 
 class Logging;
 void initIdleHardware(Logging* sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX);
-void stopIdleHardware(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 bool isIdleHardwareRestartNeeded();
 bool isIdleMotorBusy(DECLARE_ENGINE_PARAMETER_SIGNATURE);
