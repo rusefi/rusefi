@@ -1,6 +1,6 @@
 package com.rusefi;
 
-import com.rusefi.common.CommonFunctionalTest;
+import com.rusefi.f4discovery.CommonFunctionalTest;
 import com.rusefi.f4discovery.HighRevTest;
 import com.rusefi.f4discovery.PwmHardwareTest;
 import com.rusefi.f4discovery.VssHardwareLoopTest;
