@@ -315,7 +315,7 @@ static percent_t manualIdleController(float cltCorrection DECLARE_ENGINE_PARAMET
  */
 static percent_t blipIdlePosition;
 static efitimeus_t timeToStopBlip = 0;
-efitimeus_t timeToStopIdleTest = 0;
+static efitimeus_t timeToStopIdleTest = 0;
 
 /**
  * I use this questionable feature to tune acceleration enrichment
