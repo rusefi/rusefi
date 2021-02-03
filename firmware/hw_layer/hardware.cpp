@@ -341,9 +341,6 @@ void applyNewHardwareSettings(void) {
 
 #if EFI_IDLE_CONTROL
 	bool isIdleRestartNeeded = isIdleHardwareRestartNeeded();
-	if (isIdleRestartNeeded) {
-		stopIdleHardware();
-	}
 #endif
 
 #if (BOARD_EXT_GPIOCHIPS > 0)
