@@ -13,7 +13,7 @@ public class ProteusAnalogTest extends RusefiTestBase {
         double vbatt = SensorCentral.getInstance().getValue(Sensor.VBATT);
 
         // allow some tolerance for the supply voltage...
-        assertTrue(vbatt > 11.5);
+        assertTrue(vbatt > 11);
         assertTrue(vbatt < 13);
     }
 }
