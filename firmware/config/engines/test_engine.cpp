@@ -99,3 +99,21 @@ void setTestEngineIssue366rise(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	engineConfiguration->useOnlyRisingEdgeForTrigger = true;
 }
 #endif /* EFI_UNIT_TEST */
+
+void setProteusAnalogPwmTest(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
+	// lowest cpu trigger possible
+	engineConfiguration->trigger.type = TT_ONE;
+
+	// Disable trigger stim
+	engineConfiguration->triggerSimulatorPins[0] = GPIO_UNASSIGNED;
+	engineConfiguration->triggerSimulatorPins[1] = GPIO_UNASSIGNED;
+	engineConfiguration->triggerSimulatorPins[2] = GPIO_UNASSIGNED;
+
+	// The idle control pin is connected to the default TPS input, analog volt 2
+	engineConfiguration->idle.solenoidPin = GPIOG_4;
+	engineConfiguration->idle.solenoidFrequency = 5000;
+
+	// Test range is 20% to 80%
+	engineConfiguration->tpsMin = 200;
+	engineConfiguration->tpsMax = 800;
+}

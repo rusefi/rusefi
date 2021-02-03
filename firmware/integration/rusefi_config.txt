@@ -479,6 +479,7 @@ end_struct
 #define ET_MIATA_TCU_PROTEUS 1
 #define ET_CITROEN_TU3JP 65
 #define ET_PROTEUS_QC_TEST_BOARD 42
+#define ET_PROTEUS_ANALOG_PWM_TEST 106
 
 
 custom engine_type_e 4 bits, S32, @OFFSET@,   [0:6], @@engine_type_e_auto_enum@@
