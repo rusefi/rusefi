@@ -1,13 +1,13 @@
-package com.rusefi;
+package com.rusefi.common;
 
 
+import com.rusefi.RusefiTestBase;
+import com.rusefi.TestingUtils;
+import com.rusefi.Timeouts;
 import com.rusefi.core.Sensor;
 import com.rusefi.core.SensorCentral;
 import com.rusefi.functional_tests.EcuTestHelper;
 import com.rusefi.waves.EngineChart;
-import com.rusefi.waves.EngineReport;
-import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import java.util.Arrays;
@@ -16,6 +16,7 @@ import static com.rusefi.IoUtil.getEnableCommand;
 import static com.rusefi.TestingUtils.*;
 import static com.rusefi.config.generated.Fields.*;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 /**
  * rusEfi firmware simulator functional test suite
@@ -25,11 +26,9 @@ import static org.junit.Assert.assertFalse;
  * @author Andrey Belomutskiy
  * 3/5/14
  */
-public class FunctionalTest extends RusefiTestBase {
+public class CommonFunctionalTest extends RusefiTestBase {
     @Test
     public void testChangingIgnitionMode() {
-        String msg = "change ign mode";
-
         ecu.setEngineType(ET_FORD_ASPIRE);
         ecu.changeRpm(2000);
 
@@ -341,7 +340,7 @@ public class FunctionalTest extends RusefiTestBase {
         assertWaveNull(msg, chart, EngineChart.TRIGGER_2);
         sendComplexCommand("set " + "trigger_type" + " 1"); // TT_FORD_ASPIRE
         chart = nextChart();
-        assertTrue(msg + " trigger2", chart.get(EngineChart.TRIGGER_2) != null);
+        assertTrue(chart.get(EngineChart.TRIGGER_2) != null);
     }
 
     @Test
