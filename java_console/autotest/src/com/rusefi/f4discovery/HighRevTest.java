@@ -1,5 +1,6 @@
-package com.rusefi;
+package com.rusefi.f4discovery;
 
+import com.rusefi.RusefiTestBase;
 import com.rusefi.functional_tests.EcuTestHelper;
 import org.junit.Ignore;
 import org.junit.Test;

@@ -110,6 +110,7 @@ class TriggerWheelInfo {
     private boolean isSecondCamBased() {
         return id == Fields.TT_TT_MAZDA_MIATA_NA ||
                 id == Fields.TT_TT_MAZDA_DOHC_1_4 ||
+                id == Fields.TT_TT_GM_60_2_2_2 ||
                 id == Fields.TT_TT_FORD_ASPIRE;
     }
 }

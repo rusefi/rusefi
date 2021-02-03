@@ -1,5 +1,6 @@
-package com.rusefi;
+package com.rusefi.common;
 
+import com.rusefi.RusefiTestBase;
 import com.rusefi.binaryprotocol.BinaryProtocol;
 import com.rusefi.functional_tests.EcuTestHelper;
 import org.junit.Ignore;

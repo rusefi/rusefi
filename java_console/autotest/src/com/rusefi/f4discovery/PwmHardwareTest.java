@@ -1,5 +1,7 @@
-package com.rusefi;
+package com.rusefi.f4discovery;
 
+import com.rusefi.RusefiTestBase;
+import com.rusefi.Timeouts;
 import com.rusefi.config.generated.Fields;
 import com.rusefi.core.Sensor;
 import com.rusefi.core.SensorCentral;
@@ -20,7 +22,7 @@ import static com.rusefi.config.generated.Fields.*;
 
 public class PwmHardwareTest extends RusefiTestBase {
     @Override
-    boolean needsHardwareTriggerInput() {
+    protected boolean needsHardwareTriggerInput() {
         // This test uses hardware trigger input!
         return true;
     }
