@@ -100,6 +100,7 @@ void setTestEngineIssue366rise(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 }
 #endif /* EFI_UNIT_TEST */
 
+#ifdef HARDWARE_CI
 void setProteusAnalogPwmTest(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	// lowest cpu trigger possible
 	engineConfiguration->trigger.type = TT_ONE;
@@ -117,3 +118,4 @@ void setProteusAnalogPwmTest(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	engineConfiguration->tpsMin = 200;
 	engineConfiguration->tpsMax = 800;
 }
+#endif
