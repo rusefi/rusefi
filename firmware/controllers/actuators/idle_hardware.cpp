@@ -40,6 +40,8 @@ static percent_t idlePositionSensitivityThreshold = 0.0f;
 static SimplePwm idleSolenoidOpen("idle open");
 static SimplePwm idleSolenoidClose("idle close");
 
+extern efitimeus_t timeToStopIdleTest;
+
 void applyIACposition(percent_t position DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	bool prettyClose = absF(position - engine->engineState.idle.currentIdlePosition) < idlePositionSensitivityThreshold;
 	// The threshold is dependent on IAC type (see initIdleHardware())
@@ -63,6 +65,13 @@ void applyIACposition(percent_t position DECLARE_ENGINE_PARAMETER_SUFFIX) {
 		iacMotor.setTargetPosition(duty * engineConfiguration->idleStepperTotalSteps);
 #endif /* EFI_UNIT_TEST */
 	} else {
+		// if not spinning or running a bench test, turn off the idle valve(s) to be quieter and save power
+		if (engine->triggerCentral.getTimeSinceTriggerEvent(getTimeNowNt()) > 1.0f && timeToStopIdleTest == 0) {
+			idleSolenoidOpen.setSimplePwmDutyCycle(0);
+			idleSolenoidClose.setSimplePwmDutyCycle(0);
+			return;
+		}
+
 		if (!CONFIG(isDoubleSolenoidIdle)) {
 			idleSolenoidOpen.setSimplePwmDutyCycle(duty);
 		} else {
@@ -80,23 +89,6 @@ void applyIACposition(percent_t position DECLARE_ENGINE_PARAMETER_SUFFIX) {
 }
 
 #if !EFI_UNIT_TEST
-extern efitimeus_t timeToStopIdleTest;
-
-static void applyIdleSolenoidPinState(int stateIndex, PwmConfig *state) /* pwm_gen_callback */ {
-	efiAssertVoid(CUSTOM_ERR_6645, stateIndex < PWM_PHASE_MAX_COUNT, "invalid stateIndex");
-	efiAssertVoid(CUSTOM_ERR_6646, state->multiChannelStateSequence.waveCount == 1, "invalid idle waveCount");
-	OutputPin *output = state->outputPins[0];
-	int value = state->multiChannelStateSequence.getChannelState(/*channelIndex*/0, stateIndex);
-	/**
-	 * - we want stopped engine to be silent to facilitate bench testing of low volume stuff like coil spark
-	 * - we want stopped engine to draw as little amps as possible
-	 */
-	if (!value /* always allow turning solenoid off */ ||
-			(GET_RPM() != 0 || timeToStopIdleTest != 0) /* do not run solenoid unless engine is spinning or bench testing in progress */
-			) {
-		output->setValue(value);
-	}
-}
 
 bool isIdleHardwareRestartNeeded() {
 	return  isConfigurationChanged(stepperEnablePin) ||
@@ -104,7 +96,6 @@ bool isIdleHardwareRestartNeeded() {
 			isConfigurationChanged(idle.stepperStepPin) ||
 			isConfigurationChanged(idle.solenoidFrequency) ||
 			isConfigurationChanged(useStepperIdle) ||
-//			isConfigurationChanged() ||
 			isConfigurationChanged(useETBforIdleControl) ||
 			isConfigurationChanged(idle.solenoidPin) ||
 			isConfigurationChanged(secondSolenoidPin);
@@ -163,12 +154,10 @@ void initIdleHardware(Logging* sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX) {
 		 * Start PWM for idleValvePin
 		 */
 		// todo: even for double-solenoid mode we can probably use same single SimplePWM
-		// todo: open question why do we pass 'OutputPin' into 'startSimplePwmExt' if we have custom applyIdleSolenoidPinState listener anyway?
 		startSimplePwm(&idleSolenoidOpen, "Idle Valve Open",
 			&engine->executor,
 			&enginePins.idleSolenoidPin,
-			CONFIG(idle).solenoidFrequency, PERCENT_TO_DUTY(CONFIG(manIdlePosition)),
-			(pwm_gen_callback*)applyIdleSolenoidPinState);
+			CONFIG(idle).solenoidFrequency, PERCENT_TO_DUTY(CONFIG(manIdlePosition)));
 
 		if (CONFIG(isDoubleSolenoidIdle)) {
 			if (!isBrainPinValid(CONFIG(secondSolenoidPin))) {
@@ -179,8 +168,7 @@ void initIdleHardware(Logging* sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX) {
 			startSimplePwm(&idleSolenoidClose, "Idle Valve Close",
 				&engine->executor,
 				&enginePins.secondIdleSolenoidPin,
-				CONFIG(idle).solenoidFrequency, PERCENT_TO_DUTY(CONFIG(manIdlePosition)),
-				(pwm_gen_callback*)applyIdleSolenoidPinState);
+				CONFIG(idle).solenoidFrequency, PERCENT_TO_DUTY(CONFIG(manIdlePosition)));
 		}
 
 		idlePositionSensitivityThreshold = 0.0f;
