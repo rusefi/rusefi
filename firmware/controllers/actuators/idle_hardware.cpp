@@ -40,6 +40,8 @@ static percent_t idlePositionSensitivityThreshold = 0.0f;
 static SimplePwm idleSolenoidOpen("idle open");
 static SimplePwm idleSolenoidClose("idle close");
 
+extern efitimeus_t timeToStopIdleTest;
+
 void applyIACposition(percent_t position DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	bool prettyClose = absF(position - engine->engineState.idle.currentIdlePosition) < idlePositionSensitivityThreshold;
 	// The threshold is dependent on IAC type (see initIdleHardware())
@@ -63,6 +65,13 @@ void applyIACposition(percent_t position DECLARE_ENGINE_PARAMETER_SUFFIX) {
 		iacMotor.setTargetPosition(duty * engineConfiguration->idleStepperTotalSteps);
 #endif /* EFI_UNIT_TEST */
 	} else {
+		// if not spinning or running a bench test, turn off the idle valve(s) to be quieter and save power
+		if (engine->triggerCentral.getTimeSinceTriggerEvent(getTimeNowNt()) > 1.0f && timeToStopIdleTest == 0) {
+			idleSolenoidOpen.setSimplePwmDutyCycle(0);
+			idleSolenoidClose.setSimplePwmDutyCycle(0);
+			return;
+		}
+
 		if (!CONFIG(isDoubleSolenoidIdle)) {
 			idleSolenoidOpen.setSimplePwmDutyCycle(duty);
 		} else {
@@ -98,15 +107,6 @@ bool isIdleMotorBusy(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 		return false;
 	}
 	return iacMotor.isBusy();
-}
-
-void stopIdleHardware(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
-#if EFI_PROD_CODE
-	efiSetPadUnused(activeConfiguration.stepperEnablePin);
-	efiSetPadUnused(activeConfiguration.idle.stepperStepPin);
-	efiSetPadUnused(activeConfiguration.idle.solenoidPin);
-	efiSetPadUnused(activeConfiguration.secondSolenoidPin);
-#endif /* EFI_PROD_CODE */
 }
 
 void initIdleHardware(Logging* sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX) {

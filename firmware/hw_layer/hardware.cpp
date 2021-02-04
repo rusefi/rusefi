@@ -339,13 +339,6 @@ void applyNewHardwareSettings(void) {
 	stopHip9001_pins();
 #endif /* EFI_HIP_9011 */
 
-#if EFI_IDLE_CONTROL
-	bool isIdleRestartNeeded = isIdleHardwareRestartNeeded();
-	if (isIdleRestartNeeded) {
-		stopIdleHardware();
-	}
-#endif
-
 #if (BOARD_EXT_GPIOCHIPS > 0)
 	stopSmartCsPins();
 #endif /* (BOARD_EXT_GPIOCHIPS > 0) */
@@ -441,7 +434,7 @@ void applyNewHardwareSettings(void) {
 
 
 #if EFI_IDLE_CONTROL
-	if (isIdleRestartNeeded) {
+	if (isIdleHardwareRestartNeeded()) {
 		 initIdleHardware(sharedLogger);
 	}
 #endif

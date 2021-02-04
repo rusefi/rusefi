@@ -1,4 +1,4 @@
-package com.rusefi.common;
+package com.rusefi.f4discovery;
 
 
 import com.rusefi.RusefiTestBase;
