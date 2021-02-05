@@ -365,6 +365,7 @@
 #define digitalPotentiometerChipSelect3_offset 670
 #define digitalPotentiometerChipSelect4_offset 671
 #define digitalPotentiometerSpiDevice_offset 677
+#define disableEtbWhenEngineStopped_offset 744
 #define displacement_offset 396
 #define display_mode_e_auto_enum "DM_NONE", "DM_HD44780", "DM_HD44780_OVER_PCF8574"
 #define displayLogicLevelsInEngineSniffer_offset 76
@@ -1254,7 +1255,7 @@
 #define showSdCardWarning_offset 76
 #define SIGNATURE_BOARD all
 #define SIGNATURE_DATE 2021.02.05
-#define SIGNATURE_HASH 77695238
+#define SIGNATURE_HASH 2191466603
 #define silentTriggerError_offset 1464
 #define slowAdcAlpha_offset 2088
 #define sparkDwellRpmBins_offset 332
@@ -1588,7 +1589,7 @@
 #define ts_show_spi true
 #define ts_show_trigger_comparator false
 #define ts_show_tunerstudio_port true
-#define TS_SIGNATURE "rusEFI 2021.02.05.all.77695238"
+#define TS_SIGNATURE "rusEFI 2021.02.05.all.2191466603"
 #define TS_SINGLE_WRITE_COMMAND 'W'
 #define TS_SINGLE_WRITE_COMMAND_char W
 #define TS_TEST_COMMAND 't' // 0x74
@@ -1662,7 +1663,6 @@
 #define unused4028_offset 4028
 #define unused542_offset 542
 #define unused6312_offset 6312
-#define unused744b25_offset 744
 #define unused744b4_offset 744
 #define unused976b11_offset 976
 #define unused_1484_bit_24_offset 1476
