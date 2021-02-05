@@ -3254,6 +3254,7 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 	dialog = etbDialogLeft
 		field = "https://rusefi.com/s/etb"
 		field = "Detailed status in console",			isVerboseETB
+		field = "Disable ETB if engine is stopped",		disableEtbWhenEngineStopped
 		field = "Disable ETB Motor",					pauseEtbControl
 		field = "H-Bridge #1 function",					etbFunctions1
 		field = "H-Bridge #2 function",					etbFunctions2

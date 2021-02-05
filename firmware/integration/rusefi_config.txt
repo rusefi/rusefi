@@ -831,7 +831,7 @@ bit is_enabled_spi_2
 	bit useIacTableForCoasting;+This setting allows the ECU to open the IAC during overrun conditions to help reduce engine breaking, this can be helpful for large engines in light weight cars. Used in Auto-PID Idle mode.
 	bit useNoiselessTriggerDecoder
 	bit useIdleTimingPidControl
-	bit unused744b25
+	bit disableEtbWhenEngineStopped;+Allows disabling the ETB when the engine is stopped. You may not like the power draw or PWM noise from the motor, so this lets you turn it off until it's necessary.
 	bit is_enabled_spi_4
 	bit pauseEtbControl;+Disable the electronic throttle motor and DC idle motor for testing.\nThis mode is for testing ETB/DC idle position sensors, etc without actually driving the throttle.
 	bit alignEngineSnifferAtTDC
