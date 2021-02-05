@@ -982,7 +982,6 @@
 #define isManualSpinningMode_offset 1476
 #define isMapAveragingEnabled_offset 1476
 #define isSdCardEnabled_offset 744
-#define issue_294_28_offset 76
 #define issue_294_29_offset 76
 #define issue_294_30_offset 76
 #define issue_294_31_offset 76
@@ -1257,8 +1256,8 @@
 #define showHumanReadableWarning_offset 976
 #define showSdCardWarning_offset 76
 #define SIGNATURE_BOARD kin
-#define SIGNATURE_DATE 2021.02.03
-#define SIGNATURE_HASH 1956404947
+#define SIGNATURE_DATE 2021.02.05
+#define SIGNATURE_HASH 1188909782
 #define silentTriggerError_offset 1464
 #define slowAdcAlpha_offset 2088
 #define sparkDwellRpmBins_offset 332
@@ -1592,7 +1591,7 @@
 #define ts_show_spi true
 #define ts_show_trigger_comparator false
 #define ts_show_tunerstudio_port true
-#define TS_SIGNATURE "rusEFI 2021.02.03.kin.1956404947"
+#define TS_SIGNATURE "rusEFI 2021.02.05.kin.1188909782"
 #define TS_SINGLE_WRITE_COMMAND 'W'
 #define TS_SINGLE_WRITE_COMMAND_char W
 #define TS_TEST_COMMAND 't' // 0x74
@@ -1732,6 +1731,7 @@
 #define useFSIO6ForRevLimiter_offset 1464
 #define useFSIO8ForServo1_offset 1464
 #define useFSIO9ForServo2_offset 1464
+#define useFSIOTableForCanSniffingFiltering_offset 76
 #define useHbridges_offset 976
 #define useIacPidMultTable_offset 1476
 #define useIacTableForCoasting_offset 744
