@@ -524,7 +524,7 @@ bit useRunningMathForCranking,"Fuel Map","Fixed";
 bit displayLogicLevelsInEngineSniffer;
 bit useTLE8888_stepper;
 bit enableMapEstimationTableFallback;+If enabled, the MAP estimate table will be used if the MAP sensor fails to estimate manifold pressure based on RPM and TPS.
-bit issue_294_28;
+bit useFSIOTableForCanSniffingFiltering;
 bit issue_294_29;
 bit issue_294_30;
 bit issue_294_31,"si_example","nada_example";
