@@ -7,7 +7,7 @@ bash misc/jenkins/InteractiveHtmlBom/run.sh
 
 if [ -n "$RUSEFI_FTP_SERVER" ]; then
   echo "Uploading IBOMs"
-  tar -cvzf - hardware/ibom |\
+  tar -cvzf - -C hardware ibom |\
     sshpass -p $RUSEFI_DOXYGEN_FTP_PASS ssh -o StrictHostKeyChecking=no $RUSEFI_DOXYGEN_FTP_USER@$RUSEFI_FTP_SERVER \
       "(tar -xzvf - -C ~)"
 fi
