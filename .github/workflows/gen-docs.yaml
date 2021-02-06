@@ -1,8 +1,10 @@
 name: Generate documentation
 
 on:
-  schedule:
-    - cron: '0 0 * * *'
+  push:
+    branches: master
+#  schedule:
+#    - cron: '0 0 * * *'
 
 jobs:
   generate:
@@ -14,13 +16,13 @@ jobs:
         submodules: recursive
         fetch-depth: 0
 
-    - name: Install ncftp, kicad, doxygen, graphviz, and yq
+    - name: Install prerequisite software
       run: |
         sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys CC86BB64
         sudo add-apt-repository ppa:rmescandon/yq
         sudo add-apt-repository ppa:kicad/kicad-5.1-releases
         sudo apt-get update
-        sudo apt-get install ncftp kicad doxygen graphviz yq
+        sudo apt-get install ncftp kicad doxygen graphviz yq sshpass
 
     - name: Set FTP variables
       env:
