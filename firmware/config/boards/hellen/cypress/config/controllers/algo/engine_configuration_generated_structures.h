@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on hellen_cypress_gen_config.bat integration/rusefi_config.txt Wed Feb 03 19:36:27 UTC 2021
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on hellen_cypress_gen_config.bat integration/rusefi_config.txt Fri Feb 05 23:21:35 UTC 2021
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -738,7 +738,7 @@ struct engine_configuration_s {
 	bool enableMapEstimationTableFallback : 1;
 	/**
 	offset 76 bit 27 */
-	bool issue_294_28 : 1;
+	bool useFSIOTableForCanSniffingFiltering : 1;
 	/**
 	offset 76 bit 28 */
 	bool issue_294_29 : 1;
@@ -1483,8 +1483,9 @@ struct engine_configuration_s {
 	offset 744 bit 24 */
 	bool useIdleTimingPidControl : 1;
 	/**
+	 * Allows disabling the ETB when the engine is stopped. You may not like the power draw or PWM noise from the motor, so this lets you turn it off until it's necessary.
 	offset 744 bit 25 */
-	bool unused744b25 : 1;
+	bool disableEtbWhenEngineStopped : 1;
 	/**
 	offset 744 bit 26 */
 	bool is_enabled_spi_4 : 1;
@@ -3802,4 +3803,4 @@ struct persistent_config_s {
 typedef struct persistent_config_s persistent_config_s;
 
 // end
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on hellen_cypress_gen_config.bat integration/rusefi_config.txt Wed Feb 03 19:36:27 UTC 2021
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on hellen_cypress_gen_config.bat integration/rusefi_config.txt Fri Feb 05 23:21:35 UTC 2021
