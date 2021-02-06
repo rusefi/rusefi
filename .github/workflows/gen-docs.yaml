@@ -1,8 +1,10 @@
 name: Generate documentation
 
 on:
-  schedule:
-    - cron: '0 0 * * *'
+  push:
+    branches: master
+#  schedule:
+#    - cron: '0 0 * * *'
 
 jobs:
   generate:
