@@ -1,7 +1,7 @@
 #include "global.h"
 #include "rusefi_enums.h"
 #include "rusefi_hw_enums.h"
-// was generated automatically by rusEfi tool  from rusefi_hw_enums.h // was generated automatically by rusEfi tool  from rusefi_enums.h // by enum2string.jar tool on Wed Feb 03 19:36:02 UTC 2021
+// was generated automatically by rusEfi tool  from rusefi_hw_enums.h // was generated automatically by rusEfi tool  from rusefi_enums.h // by enum2string.jar tool on Sat Feb 06 18:51:30 UTC 2021
 // see also gen_config_and_enums.bat
 
 
@@ -745,6 +745,8 @@ case PROTEUS_QC_TEST_BOARD:
   return "PROTEUS_QC_TEST_BOARD";
 case SACHS:
   return "SACHS";
+case SUBARUEG33_DEFAULTS:
+  return "SUBARUEG33_DEFAULTS";
 case SUBARUEJ20G_DEFAULTS:
   return "SUBARUEJ20G_DEFAULTS";
 case SUBARU_2003_WRX:
