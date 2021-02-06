@@ -761,16 +761,6 @@ void chDbgPanic3(const char *msg, const char * file, int line);
 #endif
 
 
-#define chDbgAssert(c, remark) do {                                         \
-  if (CH_DBG_ENABLE_ASSERTS != FALSE) {                                     \
-    if (!(c)) {                                                             \
-  /*lint -restore*/                                                         \
-	  firmwareError(OBD_PCM_Processor_Fault, "chDbg %s", remark);           \
-      chSysHalt(remark);                                                    \
-    }                                                                       \
-  }                                                                         \
-} while (false)
-
 #endif  /* CHCONF_H */
 
 /** @} */

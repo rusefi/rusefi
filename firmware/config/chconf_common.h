@@ -122,4 +122,14 @@ extern "C" {
 #define hasOsPanicError() (FALSE)
 #endif
 
+#define chDbgAssert(c, remark) do {                                         \
+  if (CH_DBG_ENABLE_ASSERTS != FALSE) {                                     \
+    if (!(c)) {                                                             \
+  /*lint -restore*/                                                         \
+	  firmwareError(OBD_PCM_Processor_Fault, "chDbg %s", remark);           \
+      chSysHalt(remark);                                                    \
+    }                                                                       \
+  }                                                                         \
+} while (false)
+
 #endif /* CONFIG_CHCONF_COMMON_H_ */

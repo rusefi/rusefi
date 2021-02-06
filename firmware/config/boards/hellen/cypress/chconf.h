@@ -748,16 +748,6 @@ extern "C"
 void chDbgPanic3(const char *msg, const char * file, int line);
 #endif
 
-
-#define chDbgAssert(c, remark) do {                                              \
-  if (CH_DBG_ENABLE_ASSERTS != FALSE) {                                     \
-    if (!(c)) {                                                             \
-  /*lint -restore*/                                                         \
-      chSysHalt(remark);                                                    \
-    }                                                                       \
-  }                                                                         \
-} while (false)
-
 #undef ENABLE_PERF_TRACE
 #define ENABLE_PERF_TRACE FALSE
 #define TRACE_BUFFER_LENGTH 1
