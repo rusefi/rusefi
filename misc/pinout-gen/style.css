@@ -6,6 +6,8 @@
   border: 2px blue solid;
   cursor: pointer;
   color: black;
+  text-align: center;
+  line-height: 200%;
 }
 
 .pin-marker:hover {
