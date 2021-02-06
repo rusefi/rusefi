@@ -127,7 +127,7 @@
 #define ADC_VCC						2.5f
 
 #undef EFI_MAIN_RELAY_CONTROL
-#define EFI_MAIN_RELAY_CONTROL		TRUE
+#define EFI_MAIN_RELAY_CONTROL		FALSE
 
 #undef EFI_MEMS
 #define EFI_MEMS 					FALSE
