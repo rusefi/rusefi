@@ -149,11 +149,12 @@ static void reportPins(void) {
 }
 
 void printSpiConfig(Logging *logging, const char *msg, spi_device_e device) {
+#if HAL_USE_SPI
 	scheduleMsg(logging, "%s %s mosi=%s", msg, getSpi_device_e(device), hwPortname(getMosiPin(device)));
 	scheduleMsg(logging, "%s %s miso=%s", msg, getSpi_device_e(device), hwPortname(getMisoPin(device)));
 	scheduleMsg(logging, "%s %s sck=%s",  msg, getSpi_device_e(device), hwPortname(getSckPin(device)));
+#endif // HAL_USE_SPI
 }
-
 
 const char *hwPortname(brain_pin_e brainPin) {
 	if (brainPin == GPIO_INVALID) {
