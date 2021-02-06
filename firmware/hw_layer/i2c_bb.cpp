@@ -1,3 +1,11 @@
+/**
+ * @file        i2c_bb.cpp
+ * @brief       Bit-banged I2C driver
+ *
+ * @date February 6, 2020
+ * @author Matthew Kennedy, (c) 2020
+ */
+
 #include "i2c_bb.h"
 
 #if EFI_PROD_CODE
