@@ -112,4 +112,14 @@ extern "C" {
   irqExitHook();                                                            \
 }
 
+/**
+ * declared as a macro so that this code does not use stack
+ * so that it would not crash the error handler in case of stack issues
+ */
+#if CH_DBG_SYSTEM_STATE_CHECK
+#define hasOsPanicError() (ch.dbg.panic_msg != NULL)
+#else
+#define hasOsPanicError() (FALSE)
+#endif
+
 #endif /* CONFIG_CHCONF_COMMON_H_ */
