@@ -740,14 +740,6 @@
 /* Port-specific settings (override port settings defaulted in chcore.h).    */
 /*===========================================================================*/
 
-#ifndef __ASSEMBLER__
-
-#ifdef __cplusplus
-extern "C"
-#endif
-void chDbgPanic3(const char *msg, const char * file, int line);
-#endif
-
 #undef ENABLE_PERF_TRACE
 #define ENABLE_PERF_TRACE FALSE
 #define TRACE_BUFFER_LENGTH 1
