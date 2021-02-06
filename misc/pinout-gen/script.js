@@ -57,7 +57,7 @@ function adjustMarkers() {
     pins[i].style.width = height + "px";
     pins[i].style.marginTop = "-" + (height * 0.5) + "px";
     pins[i].style.marginLeft = "-" + (height * 0.5) + "px";
-    pins[i].style.font-size = (height * 0.5) + "px";
+    pins[i].style.fontSize = (height * 0.5) + "px";
   }
 }
 
