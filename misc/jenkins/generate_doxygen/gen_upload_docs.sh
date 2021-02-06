@@ -8,7 +8,7 @@ bash misc/jenkins/InteractiveHtmlBom/run.sh
 if [ -n "$RUSEFI_FTP_SERVER" ]; then
   echo "Uploading IBOMs"
   tar -cvzf - hardware/ibom |\
-    sshpass -p $RUSEFI_DOXYGEN_FTP_PASS ssh -o StrictHostKeyChecking=no $RUSEFI_DOXYGEN_FTP_USER@$RUSEFI_FTP_SERVER -p $RUSEFI_DOXYGEN_FTP_PASS \
+    sshpass -p $RUSEFI_DOXYGEN_FTP_PASS ssh -o StrictHostKeyChecking=no $RUSEFI_DOXYGEN_FTP_USER@$RUSEFI_FTP_SERVER \
       "(tar -xzvf - -C ~)"
 fi
 
@@ -23,7 +23,7 @@ cd ../doxygen
 if [ -n "$RUSEFI_FTP_SERVER" ]; then
   echo "Uploading Doxygen"
   tar -cvzf - html |\
-    sshpass -p $RUSEFI_DOXYGEN_FTP_PASS ssh -o StrictHostKeyChecking=no $RUSEFI_DOXYGEN_FTP_USER@$RUSEFI_FTP_SERVER -p $RUSEFI_DOXYGEN_FTP_PASS \
+    sshpass -p $RUSEFI_DOXYGEN_FTP_PASS ssh -o StrictHostKeyChecking=no $RUSEFI_DOXYGEN_FTP_USER@$RUSEFI_FTP_SERVER \
       "(tar -xzvf - -C ~)"
 fi
 [ $? -eq 0 ] || { echo "upload FAILED"; exit 1; }
@@ -53,7 +53,7 @@ done
 if [ -n "$RUSEFI_FTP_SERVER" ]; then
   echo "Uploading Pinouts"
   tar -cvzf - pinouts |\
-    sshpass -p $RUSEFI_DOXYGEN_FTP_PASS ssh -o StrictHostKeyChecking=no $RUSEFI_DOXYGEN_FTP_USER@$RUSEFI_FTP_SERVER -p $RUSEFI_DOXYGEN_FTP_PASS \
+    sshpass -p $RUSEFI_DOXYGEN_FTP_PASS ssh -o StrictHostKeyChecking=no $RUSEFI_DOXYGEN_FTP_USER@$RUSEFI_FTP_SERVER \
       "(tar -xzvf - -C ~)"
 fi
 [ $? -eq 0 ] || { echo "upload FAILED"; exit 1; }
