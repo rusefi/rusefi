@@ -100,8 +100,7 @@ bool BitbangI2c::readBit() {
 
 bool BitbangI2c::writeByte(uint8_t data) {
 	// write out 8 data bits
-	for (size_t i = 0; i < 8; i++)
-	{
+	for (size_t i = 0; i < 8; i++) {
 		// Send the MSB
 		sendBit((data & 0x80) != 0);
 
@@ -114,15 +113,16 @@ bool BitbangI2c::writeByte(uint8_t data) {
 	// Read the ack bit
 	bool ackBit = readBit();
 
-	// ACK = 0 -> acknowledged, so return true
+	// 0 -> ack
+	// 1 -> nack
 	return !ackBit;
 }
 
 uint8_t BitbangI2c::readByte(bool ack) {
 	uint8_t result = 0;
 
-	for (size_t i = 0; i < 8; i++)
-	{
+	// Read in 8 data bits
+	for (size_t i = 0; i < 8; i++) {
 		result = result << 1;
 
 		result |= readBit() ? 1 : 0;
@@ -149,8 +149,7 @@ void BitbangI2c::write(uint8_t addr, const uint8_t* writeData, size_t writeSize)
 	writeByte(addr << 1 | 0);
 
 	// Write outbound bytes
-	for (size_t i = 0; i < writeSize; i++)
-	{
+	for (size_t i = 0; i < writeSize; i++) {
 		writeByte(writeData[i]);
 	}
 
@@ -164,8 +163,7 @@ void BitbangI2c::writeRead(uint8_t addr, const uint8_t* writeData, size_t writeS
 	writeByte(addr << 1 | 0);
 
 	// Write outbound bytes
-	for (size_t i = 0; i < writeSize; i++)
-	{
+	for (size_t i = 0; i < writeSize; i++) {
 		writeByte(writeData[i]);
 	}
 	
