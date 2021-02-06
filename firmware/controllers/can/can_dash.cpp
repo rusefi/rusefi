@@ -64,6 +64,10 @@ EXTERN_ENGINE;
 #define E90_EBRAKE 0x34F
 #define E90_TIME 0x39E
 
+// Nissan z33 350Z and else
+// 0x23d = 573
+#define NISSAN_RPM_CLT 0x23d
+
 static uint8_t rpmcounter;
 static uint16_t e90msgcounter;
 static uint8_t seatbeltcnt;
