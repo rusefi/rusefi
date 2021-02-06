@@ -26,6 +26,12 @@ else ifeq ($(PROJECT_CPU),ARCH_STM32F4)
 CPU_STARTUP = startup_stm32f4xx.mk
 CPU_PLATFORM = STM32F4xx/platform.mk
 CPU_HWLAYER = ports/stm32/stm32f4
+else ifeq ($(PROJECT_CPU),ARCH_STM32H7)
+CPU_STARTUP = startup_stm32h7xx.mk
+CPU_PLATFORM = STM32H7xx/platform.mk
+CPU_HWLAYER = ports/stm32/stm32h7
+else ifeq ($(PROJECT_CPU),kinetis)
+else ifeq ($(PROJECT_CPU),cypress)
 else
 $(error Unexpected PROJECT_CPU)
 endif
