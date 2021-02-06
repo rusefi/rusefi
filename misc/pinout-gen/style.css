@@ -13,6 +13,8 @@
 .pin-marker:hover {
   background-color: #f15a24;
   color: white;
+  transform: scale(2);
+  z-index: 2;
 }
 
 .pin-marker.highlight {
