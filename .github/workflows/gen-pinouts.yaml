@@ -35,4 +35,4 @@ jobs:
         fi
 
     - name: Generate documentation
-      run: bash ./misc/jenkins/generate_doxygen/gen_upload_pinouts.sh
+      run: bash ./misc/jenkins/generate_pinouts/gen_upload_pinouts.sh

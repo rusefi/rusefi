@@ -36,4 +36,4 @@ jobs:
         fi
 
     - name: Generate documentation
-      run: bash ./misc/jenkins/generate_doxygen/gen_upload_ibom.sh
+      run: bash ./misc/jenkins/generate_ibom/gen_upload_ibom.sh
