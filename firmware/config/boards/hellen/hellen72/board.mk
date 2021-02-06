@@ -16,7 +16,7 @@ else
   MCU_DEFS  = -DSTM32H743xx
   BOARDSRC  = $(CHIBIOS)/os/hal/boards/ST_NUCLEO144_H743ZI/board.c
   CONFDIR   = config/stm32h7ems
-  BOARDINC += $(CHIBIOS)/os/hal/boards/ST_NUCLEO144_H743ZI # For board.h
+  BOARDINC += $(PROJECT_DIR)/config/boards/nucleo_h743 # For board.h
   BOARDINC += $(PROJECT_DIR)/config/stm32h7ems	# efifeatures/halconf/chconf.h
   LDSCRIPT  = $(CHIBIOS)/os/common/startup/ARMCMx/compilers/GCC/ld/STM32H743xI.ld
 endif
