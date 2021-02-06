@@ -1,8 +1,10 @@
 name: Generate documentation
 
 on:
-  schedule:
-    - cron: '0 0 * * *'
+  push:
+    branches: master
+#  schedule:
+#    - cron: '0 0 * * *'
 
 jobs:
   generate:
@@ -20,7 +22,7 @@ jobs:
         sudo add-apt-repository ppa:rmescandon/yq
         sudo add-apt-repository ppa:kicad/kicad-5.1-releases
         sudo apt-get update
-        sudo apt-get install doxygen graphviz sshpass
+        sudo apt-get install yq sshpass
 
     - name: Set FTP variables
       env:
@@ -33,4 +35,4 @@ jobs:
         fi
 
     - name: Generate documentation
-      run: bash ./misc/jenkins/generate_doxygen/gen_upload_docs.sh
+      run: bash ./misc/jenkins/generate_doxygen/gen_upload_pinouts.sh

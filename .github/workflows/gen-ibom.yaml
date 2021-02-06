@@ -1,8 +1,10 @@
 name: Generate documentation
 
 on:
-  schedule:
-    - cron: '0 0 * * *'
+  push:
+    branches: master
+#  schedule:
+#    - cron: '0 0 * * *'
 
 jobs:
   generate:
@@ -20,11 +22,12 @@ jobs:
         sudo add-apt-repository ppa:rmescandon/yq
         sudo add-apt-repository ppa:kicad/kicad-5.1-releases
         sudo apt-get update
-        sudo apt-get install doxygen graphviz sshpass
+        sudo apt-get install kicad sshpass
 
     - name: Set FTP variables
       env:
         ACTIONS_ALLOW_UNSECURE_COMMANDS: 'true'
+        INTERACTIVE_HTML_BOM_NO_DISPLAY: 'true'
       run: |
         if [ "${{github.ref}}" = "refs/heads/master" ]; then
           echo "::set-env name=RUSEFI_FTP_SERVER::${{secrets.RUSEFI_FTP_SERVER}}";
@@ -33,4 +36,4 @@ jobs:
         fi
 
     - name: Generate documentation
-      run: bash ./misc/jenkins/generate_doxygen/gen_upload_docs.sh
+      run: bash ./misc/jenkins/generate_doxygen/gen_upload_ibom.sh
