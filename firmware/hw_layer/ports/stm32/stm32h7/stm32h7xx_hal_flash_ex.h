@@ -338,6 +338,8 @@ typedef struct
 #define OB_BOR_LEVEL1        FLASH_OPTSR_BOR_LEV_0      /*!< Reset level threshold is set to 2.1V */
 #define OB_BOR_LEVEL2        FLASH_OPTSR_BOR_LEV_1      /*!< Reset level threshold is set to 2.4V */
 #define OB_BOR_LEVEL3        (FLASH_OPTSR_BOR_LEV_1 | FLASH_OPTSR_BOR_LEV_0) /*!< Reset level threshold is set to 2.7V  */
+
+#define OB_BOR_OFF OB_BOR_LEVEL0
 /**
   * @}
   */
