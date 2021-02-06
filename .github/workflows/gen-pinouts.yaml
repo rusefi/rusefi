@@ -1,4 +1,4 @@
-name: Generate documentation
+name: Generate Interactive Pinouts
 
 on:
   push:
