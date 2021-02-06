@@ -1375,6 +1375,11 @@ void resetConfigurationExt(Logging * logger, configuration_callback_t boardCallb
 		setTest33816EngineConfiguration(PASS_CONFIG_PARAMETER_SIGNATURE);
 		break;
 #endif // HW_FRANKENSO
+#ifdef HW_SUBARU_EG33
+	case SUBARUEG33_DEFAULTS:
+		setSubaruEG33Defaults(PASS_CONFIG_PARAMETER_SIGNATURE);
+		break;
+#endif //HW_SUBARU_EG33
 	default:
 		firmwareError(CUSTOM_UNEXPECTED_ENGINE_TYPE, "Unexpected engine type: %d", engineType);
 	}
