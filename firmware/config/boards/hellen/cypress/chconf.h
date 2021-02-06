@@ -44,20 +44,6 @@
  *
  */
 
-#define PORT_IDLE_THREAD_STACK_SIZE     32
-
-// See global_shared.h notes about stack requirements
-// see also http://www.chibios.org/dokuwiki/doku.php?id=chibios:kb:stacks
-#define PORT_INT_REQUIRED_STACK 	128
-
-#define CHPRINTF_USE_FLOAT          	TRUE
-
-#if !defined(EFI_CLOCK_LOCKS) || defined(__DOXYGEN__)
-// looks like this value could not be defined in efifeatures.h - please define either externally or just change the value here
- #define EFI_CLOCK_LOCKS FALSE
-#endif /* EFI_CLOCK_LOCKS */
-
-
 #include "chconf_common.h"
 
 /*===========================================================================*/
@@ -754,34 +740,7 @@
 /* Port-specific settings (override port settings defaulted in chcore.h).    */
 /*===========================================================================*/
 
-#ifndef __ASSEMBLER__
-
-#ifdef __cplusplus
-extern "C"
-#endif
-void chDbgPanic3(const char *msg, const char * file, int line);
-#endif
-
-/**
- * declared as a macro so that this code does not use stack
- * so that it would not crash the error handler in case of stack issues
- */
-#if CH_DBG_SYSTEM_STATE_CHECK
-#define hasOsPanicError() (ch.dbg.panic_msg != NULL)
-#else
-#define hasOsPanicError() (FALSE)
-#endif
-
-
-#define chDbgAssert(c, remark) do {                                              \
-  if (CH_DBG_ENABLE_ASSERTS != FALSE) {                                     \
-    if (!(c)) {                                                             \
-  /*lint -restore*/                                                         \
-      chSysHalt(remark);                                                    \
-    }                                                                       \
-  }                                                                         \
-} while (false)
-
+#undef ENABLE_PERF_TRACE
 #define ENABLE_PERF_TRACE FALSE
 #define TRACE_BUFFER_LENGTH 1
 

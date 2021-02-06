@@ -70,7 +70,9 @@
 /*
  * MCU type as defined in the ST header.
  */
+#ifndef STM32H743xx
 #define STM32H743xx
+#endif
 
 /*
  * IO pins assignments.

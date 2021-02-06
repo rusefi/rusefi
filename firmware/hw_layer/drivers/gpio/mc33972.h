@@ -18,8 +18,10 @@
 #define MC33972_POLL_INTERVAL_MS	100
 
 struct mc33972_config {
+#if HAL_USE_SPI
 	SPIDriver		*spi_bus;
 	SPIConfig	spi_config;
+#endif
 };
 
 #ifdef __cplusplus

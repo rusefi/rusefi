@@ -8,6 +8,19 @@
 #ifndef CONFIG_CHCONF_COMMON_H_
 #define CONFIG_CHCONF_COMMON_H_
 
+#define PORT_IDLE_THREAD_STACK_SIZE     32
+
+// See global_shared.h notes about stack requirements
+// see also http://www.chibios.org/dokuwiki/doku.php?id=chibios:kb:stacks
+#define PORT_INT_REQUIRED_STACK 	128
+
+#define CHPRINTF_USE_FLOAT          	TRUE
+
+#if !defined(ENABLE_PERF_TRACE) || defined(__DOXYGEN__)
+// looks like this value could not be defined in efifeatures.h - please define either externally or just change the value here
+ #define ENABLE_PERF_TRACE TRUE
+#endif /* ENABLE_PERF_TRACE */
+
 #if !defined(_FROM_ASM_)
 #include "obd_error_codes.h"
 #endif /* _FROM_ASM_ */
@@ -98,5 +111,32 @@ extern "C" {
   /* IRQ epilogue code here.*/                                              \
   irqExitHook();                                                            \
 }
+
+/**
+ * declared as a macro so that this code does not use stack
+ * so that it would not crash the error handler in case of stack issues
+ */
+#if CH_DBG_SYSTEM_STATE_CHECK
+#define hasOsPanicError() (ch.dbg.panic_msg != NULL)
+#else
+#define hasOsPanicError() (FALSE)
+#endif
+
+#define chDbgAssert(c, remark) do {                                         \
+  if (CH_DBG_ENABLE_ASSERTS != FALSE) {                                     \
+    if (!(c)) {                                                             \
+  /*lint -restore*/                                                         \
+	  firmwareError(OBD_PCM_Processor_Fault, "chDbg %s", remark);           \
+      chSysHalt(remark);                                                    \
+    }                                                                       \
+  }                                                                         \
+} while (false)
+
+#ifndef __ASSEMBLER__
+ #ifdef __cplusplus
+  extern "C"
+ #endif // __cplusplus
+ void chDbgPanic3(const char *msg, const char * file, int line);
+#endif // __ASSEMBLER__
 
 #endif /* CONFIG_CHCONF_COMMON_H_ */

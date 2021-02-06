@@ -35,11 +35,12 @@ public:
 	 */
 	~CanTxMessage();
 
+#if EFI_CAN_SUPPORT
 	/**
 	 * Configures the device for all messages to transmit from.
 	 */
 	static void setDevice(CANDriver* device);
-
+#endif // EFI_CAN_SUPPORT
 	/**
 	 * @brief Read & write the raw underlying 8-byte buffer.
 	 */
@@ -56,10 +57,14 @@ public:
 	void setBit(size_t byteIdx, size_t bitIdx);
 
 protected:
+#if EFI_CAN_SUPPORT
 	CANTxFrame m_frame;
+#endif // EFI_CAN_SUPPORT
 
 private:
+#if EFI_CAN_SUPPORT
 	static CANDriver* s_device;
+#endif // EFI_CAN_SUPPORT
 };
 
 /**
@@ -68,11 +73,14 @@ private:
 template <typename TData>
 class CanTxTyped final : public CanTxMessage
 {
+#if EFI_CAN_SUPPORT
 	static_assert(sizeof(TData) == sizeof(CANTxFrame::data8));
+#endif // EFI_CAN_SUPPORT
 
 public:
 	explicit CanTxTyped(uint32_t eid) : CanTxMessage(eid) { }
 
+#if EFI_CAN_SUPPORT
 	/**
 	 * Access members of the templated type.  
 	 * 
@@ -87,6 +95,7 @@ public:
 	TData& get() {
 		return *reinterpret_cast<TData*>(&m_frame.data8);
 	}
+#endif // EFI_CAN_SUPPORT
 };
 
 template <typename TData>
