@@ -483,4 +483,6 @@
 #define STM32_WSPI_QUADSPI1_MDMA_PRIORITY   1
 #define STM32_WSPI_MDMA_ERROR_HOOK(qspip)   osalSysHalt("MDMA failure")
 
+#define STM32_SYSCLK STM32_SYS_CK
+
 #endif /* MCUCONF_H */
