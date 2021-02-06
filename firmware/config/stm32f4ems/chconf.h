@@ -41,18 +41,6 @@
  *
  */
 
-#define PORT_IDLE_THREAD_STACK_SIZE     32
-
-// See global_shared.h notes about stack requirements
-// see also http://www.chibios.org/dokuwiki/doku.php?id=chibios:kb:stacks
-#define PORT_INT_REQUIRED_STACK 	128
-
-#define CHPRINTF_USE_FLOAT          	TRUE
-
-#if !defined(ENABLE_PERF_TRACE) || defined(__DOXYGEN__)
-// looks like this value could not be defined in efifeatures.h - please define either externally or just change the value here
- #define ENABLE_PERF_TRACE TRUE
-#endif /* ENABLE_PERF_TRACE */
 
 #include "chconf_common.h"
 
