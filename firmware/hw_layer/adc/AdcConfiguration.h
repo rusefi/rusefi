@@ -24,7 +24,7 @@ public:
 	void enableChannel(adc_channel_e hwChannelIndex);
 	void enableChannelAndPin(const char *msg, adc_channel_e hwChannelIndex);
 	adc_channel_e getAdcHardwareIndexByInternalIndex(int index) const;
-	int internalAdcIndexByHardwareIndex[ADC_MAX_CHANNELS_COUNT + 4];
+	int internalAdcIndexByHardwareIndex[EFI_ADC_LAST_CHANNEL];
 	bool isHwUsed(adc_channel_e hwChannel) const;
 	int size() const;
 	void init(void);
