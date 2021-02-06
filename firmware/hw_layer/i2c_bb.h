@@ -1,3 +1,11 @@
+/**
+ * @file        i2c_bb.h
+ * @brief       Bit-banged I2C driver
+ *
+ * @date February 6, 2020
+ * @author Matthew Kennedy, (c) 2020
+ */
+
 #pragma once
 
 #if EFI_PROD_CODE
@@ -9,6 +17,7 @@
 
 class BitbangI2c {
 public:
+	// Initialize the I2C driver
 	void init(brain_pin_e scl, brain_pin_e sda);
 
 	// Write a sequence of bytes to the specified device
@@ -31,12 +40,17 @@ private:
 	void scl_low();
 	void scl_high();
 
+	// Send an I2C start condition
 	void start();
+	// Send an I2C stop condition
 	void stop();
 
+	// Send a single bit
 	void sendBit(bool val);
+	// Read a single bit
 	bool readBit();
 
+	// Wait for 1/4 of a bit time
 	void waitQuarterBit();
 
 	ioportid_t m_sclPort = 0;
