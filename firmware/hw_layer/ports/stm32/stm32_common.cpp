@@ -10,6 +10,14 @@
 #include "efi_gpio.h"
 #include "expected.h"
 
+#ifdef STM32F4XX
+#include "stm32f4xx_hal_flash.h"
+#elif defined(STM32F7XX)
+#include "stm32f7xx_hal_flash.h"
+#else
+#include "stm32h7xx_hal_flash.h"
+#endif
+
 #ifndef EFI_PIN_ADC9
 #define EFI_PIN_ADC9 GPIOB_1
 #endif /* EFI_PIN_ADC9 */
