@@ -37,6 +37,7 @@ void BitbangI2c::init(brain_pin_e scl, brain_pin_e sda) {
 }
 
 void BitbangI2c::start() {
+	// Start with both lines high (bus idle)
 	sda_high();
 	waitQuarterBit();
 	scl_high();
@@ -124,9 +125,7 @@ uint8_t BitbangI2c::readByte(bool ack) {
 	{
 		result = result << 1;
 
-		bool bit = readBit();
-
-		result |= bit ? 1 : 0;
+		result |= readBit() ? 1 : 0;
 	}
 
 	// 0 -> ack
