@@ -7,7 +7,9 @@ bash misc/jenkins/InteractiveHtmlBom/run.sh
 
 if [ -n "$RUSEFI_FTP_SERVER" ]; then
   echo "Uploading IBOMs"
-  ncftpput -R -m -u "$RUSEFI_DOXYGEN_FTP_USER" -p "$RUSEFI_DOXYGEN_FTP_PASS" "$RUSEFI_FTP_SERVER" /ibom hardware/ibom/*
+  tar -cvzf - hardware/ibom |\
+    sshpass -p $RUSEFI_DOXYGEN_FTP_PASS ssh -o StrictHostKeyChecking=no $RUSEFI_DOXYGEN_FTP_USER@$RUSEFI_FTP_SERVER -p $RUSEFI_DOXYGEN_FTP_PASS \
+      "(tar -xzvf - -C ~)"
 fi
 
 pwd
@@ -20,7 +22,9 @@ doxygen || { echo "doxygen run FAILED"; exit 1; }
 cd ../doxygen
 if [ -n "$RUSEFI_FTP_SERVER" ]; then
   echo "Uploading Doxygen"
-  ncftpput -R -m -u "$RUSEFI_DOXYGEN_FTP_USER" -p "$RUSEFI_DOXYGEN_FTP_PASS" "$RUSEFI_FTP_SERVER" /html html/*
+  tar -cvzf - html |\
+    sshpass -p $RUSEFI_DOXYGEN_FTP_PASS ssh -o StrictHostKeyChecking=no $RUSEFI_DOXYGEN_FTP_USER@$RUSEFI_FTP_SERVER -p $RUSEFI_DOXYGEN_FTP_PASS \
+      "(tar -xzvf - -C ~)"
 fi
 [ $? -eq 0 ] || { echo "upload FAILED"; exit 1; }
 
@@ -48,6 +52,8 @@ done
 
 if [ -n "$RUSEFI_FTP_SERVER" ]; then
   echo "Uploading Pinouts"
-  ncftpput -R -m -u "$RUSEFI_DOXYGEN_FTP_USER" -p "$RUSEFI_DOXYGEN_FTP_PASS" "$RUSEFI_FTP_SERVER" /pinouts pinouts/*
+  tar -cvzf - pinouts |\
+    sshpass -p $RUSEFI_DOXYGEN_FTP_PASS ssh -o StrictHostKeyChecking=no $RUSEFI_DOXYGEN_FTP_USER@$RUSEFI_FTP_SERVER -p $RUSEFI_DOXYGEN_FTP_PASS \
+      "(tar -xzvf - -C ~)"
 fi
 [ $? -eq 0 ] || { echo "upload FAILED"; exit 1; }
