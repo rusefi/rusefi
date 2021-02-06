@@ -1,4 +1,4 @@
-name: Generate documentation
+name: Generate Interactive Pinouts
 
 on:
   push:
@@ -17,8 +17,10 @@ jobs:
 
     - name: Install prerequisite software
       run: |
+        sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys CC86BB64
+        sudo add-apt-repository ppa:rmescandon/yq
         sudo apt-get update
-        sudo apt-get install doxygen graphviz ncftp
+        sudo apt-get install yq ncftp
 
     - name: Set FTP variables
       env:
@@ -31,4 +33,4 @@ jobs:
         fi
 
     - name: Generate documentation
-      run: bash ./misc/jenkins/generate_doxygen/gen_upload_docs.sh
+      run: bash ./misc/jenkins/generate_pinouts/gen_upload_pinouts.sh

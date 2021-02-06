@@ -1,4 +1,4 @@
-name: Generate documentation
+name: Generate Interactive BOMs
 
 on:
   push:
@@ -17,8 +17,9 @@ jobs:
 
     - name: Install prerequisite software
       run: |
+        sudo add-apt-repository ppa:kicad/kicad-5.1-releases
         sudo apt-get update
-        sudo apt-get install doxygen graphviz ncftp
+        sudo apt-get install kicad ncftp
 
     - name: Set FTP variables
       env:
@@ -31,4 +32,6 @@ jobs:
         fi
 
     - name: Generate documentation
-      run: bash ./misc/jenkins/generate_doxygen/gen_upload_docs.sh
+      env:
+        INTERACTIVE_HTML_BOM_NO_DISPLAY: 'true'
+      run: bash ./misc/jenkins/generate_ibom/gen_upload_ibom.sh
