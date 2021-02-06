@@ -75,12 +75,6 @@ EXTERNC int getRemainingStack(thread_t *otp) {
 
 #endif /* GNU / IAR */
 
-void baseMCUInit(void) {
-	// looks like this holds a random value on start? Let's set a nice clean zero
-	DWT->CYCCNT = 0;
-
-	BOR_Set(BOR_Level_1); // one step above default value
-}
 
 void _unhandled_exception(void) {
 /*lint -restore*/
@@ -344,42 +338,6 @@ void initSpiCs(SPIConfig *spiConfig, brain_pin_e csPin) {
 }
 
 #endif /* HAL_USE_SPI */
-
-BOR_Level_t BOR_Get(void) {
-	FLASH_OBProgramInitTypeDef FLASH_Handle;
-
-	/* Read option bytes */
-	HAL_FLASHEx_OBGetConfig(&FLASH_Handle);
-
-	/* Return BOR value */
-	return (BOR_Level_t) FLASH_Handle.BORLevel;
-}
-
-BOR_Result_t BOR_Set(BOR_Level_t BORValue) {
-	if (BOR_Get() == BORValue) {
-		return BOR_Result_Ok;
-	}
-
-
-	FLASH_OBProgramInitTypeDef FLASH_Handle;
-
-	FLASH_Handle.BORLevel = (uint32_t)BORValue;
-	FLASH_Handle.OptionType = OPTIONBYTE_BOR;
-
-	HAL_FLASH_OB_Unlock();
-
-	HAL_FLASHEx_OBProgram(&FLASH_Handle);
-
-	HAL_StatusTypeDef status = HAL_FLASH_OB_Launch();
-
-	HAL_FLASH_OB_Lock();
-
-	if (status != HAL_OK) {
-		return BOR_Result_Error;
-	}
-
-	return BOR_Result_Ok;
-}
 
 #if EFI_CAN_SUPPORT
 
