@@ -768,6 +768,7 @@ void chDbgPanic3(const char *msg, const char * file, int line);
   }                                                                         \
 } while (false)
 
+#undef ENABLE_PERF_TRACE
 #define ENABLE_PERF_TRACE FALSE
 #define TRACE_BUFFER_LENGTH 1
 
