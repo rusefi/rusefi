@@ -752,15 +752,6 @@
 
 #define CORTEX_VTOR_INIT                    0x00200000U
 
-#ifndef __ASSEMBLER__
-
-#ifdef __cplusplus
-extern "C"
-#endif
-void chDbgPanic3(const char *msg, const char * file, int line);
-#endif
-
-
 #endif  /* CHCONF_H */
 
 /** @} */

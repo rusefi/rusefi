@@ -132,4 +132,11 @@ extern "C" {
   }                                                                         \
 } while (false)
 
+#ifndef __ASSEMBLER__
+ #ifdef __cplusplus
+  extern "C"
+ #endif // __cplusplus
+ void chDbgPanic3(const char *msg, const char * file, int line);
+#endif // __ASSEMBLER__
+
 #endif /* CONFIG_CHCONF_COMMON_H_ */
