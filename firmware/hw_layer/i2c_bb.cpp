@@ -1,5 +1,7 @@
 #include "i2c_bb.h"
 
+#if EFI_PROD_CODE
+
 #include "io_pins.h"
 #include "efi_gpio.h"
 
@@ -199,3 +201,5 @@ void BitbangI2c::writeRegister(uint8_t addr, uint8_t reg, uint8_t val) {
 
 	write(addr, buf, 2);
 }
+
+#endif // EFI_PROD_CODE

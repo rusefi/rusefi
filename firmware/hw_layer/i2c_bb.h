@@ -1,5 +1,7 @@
 #pragma once
 
+#if EFI_PROD_CODE
+
 #include "hal.h"
 #include "rusefi_hw_enums.h"
 #include <cstdint>
@@ -42,3 +44,5 @@ private:
 	ioportid_t m_sdaPort = 0;
 	ioportmask_t m_sdaPin = 0;
 };
+
+#endif // EFI_PROD_CODE
