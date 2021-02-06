@@ -49,6 +49,11 @@ public:
 		return m_lastEventTimer.getElapsedSeconds(nowNt);
 	}
 
+	bool engineMovedRecently() const {
+		// Trigger event some time in the past second = engine moving
+		return getTimeSinceTriggerEvent(getTimeNowNt()) < 1.0f;
+	}
+
 	TriggerNoiseFilter noiseFilter;
 
 	trigger_type_e vvtTriggerType;

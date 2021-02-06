@@ -66,7 +66,7 @@ void applyIACposition(percent_t position DECLARE_ENGINE_PARAMETER_SUFFIX) {
 #endif /* EFI_UNIT_TEST */
 	} else {
 		// if not spinning or running a bench test, turn off the idle valve(s) to be quieter and save power
-		if (engine->triggerCentral.getTimeSinceTriggerEvent(getTimeNowNt()) > 1.0f && timeToStopIdleTest == 0) {
+		if (!engine->triggerCentral.engineMovedRecently() && timeToStopIdleTest == 0) {
 			idleSolenoidOpen.setSimplePwmDutyCycle(0);
 			idleSolenoidClose.setSimplePwmDutyCycle(0);
 			return;
