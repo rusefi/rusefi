@@ -22,8 +22,6 @@ done
 
 if [ -n "$RUSEFI_FTP_SERVER" ]; then
   echo "Uploading Pinouts"
-  tar -cvzf - pinouts |\
-    sshpass -p $RUSEFI_DOXYGEN_FTP_PASS ssh -o StrictHostKeyChecking=no $RUSEFI_DOXYGEN_FTP_USER@$RUSEFI_FTP_SERVER \
-      "(tar -xzvf - -C ~)"
+  ncftpput -R -m -u "$RUSEFI_DOXYGEN_FTP_USER" -p "$RUSEFI_DOXYGEN_FTP_PASS" "$RUSEFI_FTP_SERVER" /pinouts pinouts/*
 fi
 [ $? -eq 0 ] || { echo "upload FAILED"; exit 1; }

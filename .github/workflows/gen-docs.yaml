@@ -18,11 +18,8 @@ jobs:
 
     - name: Install prerequisite software
       run: |
-        sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys CC86BB64
-        sudo add-apt-repository ppa:rmescandon/yq
-        sudo add-apt-repository ppa:kicad/kicad-5.1-releases
         sudo apt-get update
-        sudo apt-get install doxygen graphviz sshpass
+        sudo apt-get install doxygen graphviz ncftp
 
     - name: Set FTP variables
       env:

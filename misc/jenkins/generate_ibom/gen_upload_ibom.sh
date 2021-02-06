@@ -7,8 +7,6 @@ bash misc/jenkins/InteractiveHtmlBom/run.sh
 
 if [ -n "$RUSEFI_FTP_SERVER" ]; then
   echo "Uploading IBOMs"
-  tar -cvzf - -C hardware ibom |\
-    sshpass -p $RUSEFI_DOXYGEN_FTP_PASS ssh -o StrictHostKeyChecking=no $RUSEFI_DOXYGEN_FTP_USER@$RUSEFI_FTP_SERVER \
-      "(tar -xzvf - -C ~)"
+  ncftpput -R -m -u "$RUSEFI_DOXYGEN_FTP_USER" -p "$RUSEFI_DOXYGEN_FTP_PASS" "$RUSEFI_FTP_SERVER" /ibom hardware/ibom/*
 fi
 [ $? -eq 0 ] || { echo "upload FAILED"; exit 1; }
