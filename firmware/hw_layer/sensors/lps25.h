@@ -1,3 +1,11 @@
+/**
+ * @file        lps25.h
+ * @brief       Driver for the ST LPS25HB pressure sensor
+ *
+ * @date February 6, 2020
+ * @author Matthew Kennedy, (c) 2020
+ */
+
 #pragma once
 
 #include "i2c_bb.h"

@@ -1,3 +1,11 @@
+/**
+ * @file        lps25.cpp
+ * @brief       Driver for the ST LPS25HB pressure sensor
+ *
+ * @date February 6, 2020
+ * @author Matthew Kennedy, (c) 2020
+ */
+
 #include "lps25.h"
 
 static constexpr uint8_t addr = 0x5C;
