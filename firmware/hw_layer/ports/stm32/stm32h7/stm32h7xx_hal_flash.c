@@ -97,6 +97,8 @@
   * @{
   */
 
+#define HAL_FLASH_MODULE_ENABLED
+
 #ifdef HAL_FLASH_MODULE_ENABLED
 
 /* Private typedef -----------------------------------------------------------*/

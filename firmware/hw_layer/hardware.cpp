@@ -71,13 +71,12 @@
 
 EXTERN_ENGINE;
 
-#if HAL_USE_SPI
-extern bool isSpiInitialized[5];
-
 /**
  * #311 we want to test RTC before engine start so that we do not test it while engine is running
  */
 bool rtcWorks = true;
+#if HAL_USE_SPI
+extern bool isSpiInitialized[5];
 
 /**
  * Only one consumer can use SPI bus at a given time
