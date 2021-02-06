@@ -363,6 +363,9 @@ pins:
     color: white B2
 
   - pin: 4S
+    id: EFI_ADC_5
+    class: analog_inputs
+    ts_name: 4S - Alternator voltage (A5)
     function: +12V engine fuse 15A, ECU power source, run/start
     color: red B2
 
