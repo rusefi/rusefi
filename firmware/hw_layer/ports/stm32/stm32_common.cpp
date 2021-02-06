@@ -14,7 +14,7 @@
 #include "stm32f4xx_hal_flash.h"
 #elif defined(STM32F7XX)
 #include "stm32f7xx_hal_flash.h"
-#else
+#elif defined(STM32H7XX)
 #include "stm32h7xx_hal_flash.h"
 #endif
 
@@ -339,6 +339,8 @@ bool isValidSerialRxPin(brain_pin_e pin) {
 
 #endif /*EFI_AUX_SERIAL*/
 
+#if EFI_PROD_CODE
+
 BOR_Level_t BOR_Get(void) {
 	FLASH_OBProgramInitTypeDef FLASH_Handle;
 
@@ -381,3 +383,4 @@ void baseMCUInit(void) {
 
 	BOR_Set(BOR_Level_1); // one step above default value
 }
+#endif // EFI_PROD_CODE
