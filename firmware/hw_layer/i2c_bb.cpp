@@ -37,11 +37,12 @@ void BitbangI2c::init(brain_pin_e scl, brain_pin_e sda) {
 }
 
 void BitbangI2c::start() {
-	// SDA goes low while SCL is high
 	sda_high();
 	waitQuarterBit();
 	scl_high();
 	waitQuarterBit();
+
+	// SDA goes low while SCL is high
 	sda_low();
 	waitQuarterBit();
 	scl_low();
@@ -49,23 +50,19 @@ void BitbangI2c::start() {
 }
 
 void BitbangI2c::stop() {
-	// Clock goes high while data is low
 	scl_low();
 	waitQuarterBit();
 	sda_low();
 	waitQuarterBit();
 	scl_high();
 	waitQuarterBit();
+	// SDA goes high while SCL is high
 	sda_high();
-
-	for (size_t i = 0; i < count; i++) {
-		waitQuarterBit();
-	}
 }
 
 void BitbangI2c::sendBit(bool val) {
 	waitQuarterBit();
-	
+
 	// Write the bit (write while SCL is low)
 	if (val) {
 		sda_high();
@@ -73,6 +70,7 @@ void BitbangI2c::sendBit(bool val) {
 		sda_low();
 	}
 
+	// Data setup time (~100ns min)
 	waitQuarterBit();
 
 	// Strobe the clock
