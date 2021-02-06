@@ -191,6 +191,7 @@ typedef enum {
 
 	HELLEN_NB2 = ET_HELLEN_NB2,
 
+	SUBARUEG33_DEFAULTS = 70,
 
 	/**
 	 * this configuration has as few pins configured as possible
