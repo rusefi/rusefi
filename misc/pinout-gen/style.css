@@ -5,10 +5,14 @@
   background-color: white;
   border: 2px blue solid;
   cursor: pointer;
+  color: black;
+  text-align: center;
+  line-height: 200%;
 }
 
 .pin-marker:hover {
   background-color: #f15a24;
+  color: white;
 }
 
 .pin-marker.highlight {

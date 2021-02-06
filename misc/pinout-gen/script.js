@@ -57,6 +57,7 @@ function adjustMarkers() {
     pins[i].style.width = height + "px";
     pins[i].style.marginTop = "-" + (height * 0.5) + "px";
     pins[i].style.marginLeft = "-" + (height * 0.5) + "px";
+    pins[i].style.fontSize = (height * 0.5) + "px";
   }
 }
 
@@ -82,6 +83,7 @@ window.addEventListener('load', function() {
       var img = document.getElementById("connector-img");
       var imgHeight = img.naturalHeight;
       var imgWidth = img.naturalWidth;
+      pdiv.textContent = pinfo.pin;
       pdiv.style.top = ((pinfo.y / imgHeight) * 100) + "%";
       pdiv.style.left = ((pinfo.x / imgWidth) * 100) + "%";
       pdiv.dataset.type = pin.type;
