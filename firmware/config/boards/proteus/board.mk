@@ -6,13 +6,11 @@ BOARDINC = $(PROJECT_DIR)/config/boards/proteus
 
 # Target processor details
 ifeq ($(PROJECT_CPU),ARCH_STM32F4)
-  MCU_DEFS  = -DSTM32F407xx
   BOARDSRC  = $(CHIBIOS)/os/hal/boards/ST_STM32F4_DISCOVERY/board.c
   BOARDINC += $(PROJECT_DIR)/config/stm32f4ems	# For board.h
   BOARDINC += $(BOARDS_DIR)/st_stm32f4
   LDSCRIPT  = $(BOARDS_DIR)/prometheus/STM32F405xG.ld
 else
-  MCU_DEFS  = -DSTM32F767xx
   BOARDSRC  = $(CHIBIOS)/os/hal/boards/ST_NUCLEO144_F767ZI/board.c
   BOARDINC += $(BOARDS_DIR)/nucleo_f767		# For board.h
   BOARDINC += $(PROJECT_DIR)/config/stm32f7ems	# efifeatures/halconf/chconf.h
@@ -22,7 +20,7 @@ else
 endif
 
 # Override DEFAULT_ENGINE_TYPE
-DDEFS += $(MCU_DEFS) -DEFI_USE_OSC=TRUE
+DDEFS += -DEFI_USE_OSC=TRUE
 DDEFS += -DLED_CRITICAL_ERROR_BRAIN_PIN=GPIOE_3
 DDEFS += -DFIRMWARE_ID=\"proteus\" -DDEFAULT_ENGINE_TYPE=PROTEUS_DEFAULTS
 DDEFS += -DEFI_ICU_INPUTS=FALSE -DHAL_TRIGGER_USE_PAL=TRUE
