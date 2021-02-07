@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEfi tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Fri Feb 05 23:21:13 UTC 2021
+// this file was generated automatically by rusEfi tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Sun Feb 07 00:51:22 UTC 2021
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -1492,7 +1492,7 @@ public class Fields {
 	public static final char TS_SD_R_COMMAND = 'r';
 	public static final char TS_SD_W_COMMAND = 'w';
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI 2021.02.05.all.2191466603";
+	public static final String TS_SIGNATURE = "rusEFI 2021.02.07.all.3533135151";
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final int TT_TT_1_16 = 50;
 	public static final int TT_TT_2JZ_1_12 = 29;
@@ -1524,6 +1524,7 @@ public class Fields {
 	public static final int TT_TT_RENIX_44_2_2 = 44;
 	public static final int TT_TT_RENIX_66_2_2_2 = 45;
 	public static final int TT_TT_ROVER_K = 26;
+	public static final int TT_TT_SKODA_FAVORIT = 55;
 	public static final int TT_TT_SUBARU_7_6 = 36;
 	public static final int TT_TT_SUBARU_7_WITHOUT_6 = 51;
 	public static final int TT_TT_SUBARU_SVX = 49;
