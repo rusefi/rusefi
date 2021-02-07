@@ -202,11 +202,6 @@ ifeq ($(USE_BOOTLOADER),yes)
 include $(PROJECT_DIR)/bootloader/bootloader.mk
 endif
 
-# Define linker script file here
-ifeq ($(LDSCRIPT),)
-  LDSCRIPT= config/stm32f4ems/STM32F407xG.ld
-endif
-
 $(info PROJECT_BOARD: $(PROJECT_BOARD))
 $(info PROJECT_CPU:   $(PROJECT_CPU))
 $(info CONFDIR:       $(CONFDIR))
