@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Sun Feb 07 01:55:53 UTC 2021
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Sun Feb 07 13:47:31 UTC 2021
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -2006,7 +2006,11 @@ struct engine_configuration_s {
 	/**
 	 * offset 1458
 	 */
-	uint16_t unusedHereHereHere;
+	brain_pin_e lps25BaroSensorScl;
+	/**
+	 * offset 1459
+	 */
+	brain_pin_e lps25BaroSensorSda;
 	/**
 	 * offset 1460
 	 */
@@ -2696,76 +2700,76 @@ struct engine_configuration_s {
 	bool unused1130 : 1;
 	/**
 	offset 2116 bit 8 */
-	bool unusedBit_488_8 : 1;
+	bool unusedBit_489_8 : 1;
 	/**
 	offset 2116 bit 9 */
-	bool unusedBit_488_9 : 1;
+	bool unusedBit_489_9 : 1;
 	/**
 	offset 2116 bit 10 */
-	bool unusedBit_488_10 : 1;
+	bool unusedBit_489_10 : 1;
 	/**
 	offset 2116 bit 11 */
-	bool unusedBit_488_11 : 1;
+	bool unusedBit_489_11 : 1;
 	/**
 	offset 2116 bit 12 */
-	bool unusedBit_488_12 : 1;
+	bool unusedBit_489_12 : 1;
 	/**
 	offset 2116 bit 13 */
-	bool unusedBit_488_13 : 1;
+	bool unusedBit_489_13 : 1;
 	/**
 	offset 2116 bit 14 */
-	bool unusedBit_488_14 : 1;
+	bool unusedBit_489_14 : 1;
 	/**
 	offset 2116 bit 15 */
-	bool unusedBit_488_15 : 1;
+	bool unusedBit_489_15 : 1;
 	/**
 	offset 2116 bit 16 */
-	bool unusedBit_488_16 : 1;
+	bool unusedBit_489_16 : 1;
 	/**
 	offset 2116 bit 17 */
-	bool unusedBit_488_17 : 1;
+	bool unusedBit_489_17 : 1;
 	/**
 	offset 2116 bit 18 */
-	bool unusedBit_488_18 : 1;
+	bool unusedBit_489_18 : 1;
 	/**
 	offset 2116 bit 19 */
-	bool unusedBit_488_19 : 1;
+	bool unusedBit_489_19 : 1;
 	/**
 	offset 2116 bit 20 */
-	bool unusedBit_488_20 : 1;
+	bool unusedBit_489_20 : 1;
 	/**
 	offset 2116 bit 21 */
-	bool unusedBit_488_21 : 1;
+	bool unusedBit_489_21 : 1;
 	/**
 	offset 2116 bit 22 */
-	bool unusedBit_488_22 : 1;
+	bool unusedBit_489_22 : 1;
 	/**
 	offset 2116 bit 23 */
-	bool unusedBit_488_23 : 1;
+	bool unusedBit_489_23 : 1;
 	/**
 	offset 2116 bit 24 */
-	bool unusedBit_488_24 : 1;
+	bool unusedBit_489_24 : 1;
 	/**
 	offset 2116 bit 25 */
-	bool unusedBit_488_25 : 1;
+	bool unusedBit_489_25 : 1;
 	/**
 	offset 2116 bit 26 */
-	bool unusedBit_488_26 : 1;
+	bool unusedBit_489_26 : 1;
 	/**
 	offset 2116 bit 27 */
-	bool unusedBit_488_27 : 1;
+	bool unusedBit_489_27 : 1;
 	/**
 	offset 2116 bit 28 */
-	bool unusedBit_488_28 : 1;
+	bool unusedBit_489_28 : 1;
 	/**
 	offset 2116 bit 29 */
-	bool unusedBit_488_29 : 1;
+	bool unusedBit_489_29 : 1;
 	/**
 	offset 2116 bit 30 */
-	bool unusedBit_488_30 : 1;
+	bool unusedBit_489_30 : 1;
 	/**
 	offset 2116 bit 31 */
-	bool unusedBit_488_31 : 1;
+	bool unusedBit_489_31 : 1;
 	/**
 	 * set can_mode X
 	 * offset 2120
@@ -3803,4 +3807,4 @@ struct persistent_config_s {
 typedef struct persistent_config_s persistent_config_s;
 
 // end
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Sun Feb 07 01:55:53 UTC 2021
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Sun Feb 07 13:47:31 UTC 2021
