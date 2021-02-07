@@ -268,7 +268,7 @@ static void printMAPInfo(void) {
 	}
 
 	if (Sensor::hasSensor(SensorType::BarometricPressure)) {
-		scheduleMsg(logger, "baro type=%d value=%.2f", engineConfiguration->baroSensor.type, Sensor::get(SensorType::SensorType::BarometricPressure).value_or(-1));
+		scheduleMsg(logger, "baro type=%d value=%.2f", engineConfiguration->baroSensor.type, Sensor::get(SensorType::BarometricPressure).value_or(-1));
 		if (engineConfiguration->baroSensor.type == MT_CUSTOM) {
 			scheduleMsg(logger, "min=%.2f@%.2f max=%.2f@%.2f",
 					engineConfiguration->baroSensor.lowValue,
