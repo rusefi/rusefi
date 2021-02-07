@@ -1,5 +1,4 @@
 # List of all the board related files.
-BOARDSRC = $(CHIBIOS)/os/hal/boards/ST_NUCLEO144_F767ZI/board.c
 BOARDCPPSRC =  $(PROJECT_DIR)/config/boards/proteus/board_configuration.cpp \
 				$(PROJECT_DIR)/config/boards/proteus/adc_hack.cpp
 BOARDINC = $(PROJECT_DIR)/config/boards/proteus
