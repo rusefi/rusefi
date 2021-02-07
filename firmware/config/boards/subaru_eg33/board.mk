@@ -1,7 +1,6 @@
 BOARD_DIR = $(PROJECT_DIR)/config/boards/$(PROJECT_BOARD)
 
 # List of all the board related files.
-BOARDSRC = $(BOARD_DIR)/board.c
 BOARDCPPSRC = $(BOARD_DIR)/board_configuration.cpp
 
 # Required include directories
@@ -30,6 +29,5 @@ DDEFS += -DHW_SUBARU_EG33=1
 DDEFS += -DDEFAULT_ENGINE_TYPE=SUBARUEG33_DEFAULTS -DSTM32F765xx $(LED_CRITICAL_ERROR_BRAIN_PIN)
 
 # Shared variables
-ALLCSRC   += $(BOARDSRC)
 ALLCPPSRC += $(BOARDCPPSRC)
 ALLINC    += $(BOARDINC)
