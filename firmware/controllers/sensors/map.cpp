@@ -12,6 +12,7 @@
 #include "interpolation.h"
 #include "map.h"
 #include "engine_controller.h"
+#include "sensor.h"
 
 #if EFI_PROD_CODE
 #include "digital_input_icu.h"
@@ -173,14 +174,6 @@ float getRawMap(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	return getMapByVoltage(voltage PASS_ENGINE_PARAMETER_SUFFIX);
 }
 
-/**
- * Returns true if a real Baro sensor is present.
- * Also if 'useFixedBaroCorrFromMap' option is enabled, and we have the initial pressure value stored and passed validation.
- */
-bool hasBaroSensor(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
-	return isAdcChannelValid(engineConfiguration->baroSensor.hwChannel) || !cisnan(storedInitialBaroPressure);
-}
-
 bool hasMapSensor(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	return isAdcChannelValid(engineConfiguration->map.sensor.hwChannel);
 }
@@ -274,8 +267,8 @@ static void printMAPInfo(void) {
 		}
 	}
 
-	if (hasBaroSensor(PASS_ENGINE_PARAMETER_SIGNATURE)) {
-		scheduleMsg(logger, "baro type=%d value=%.2f", engineConfiguration->baroSensor.type, getBaroPressure(PASS_ENGINE_PARAMETER_SIGNATURE));
+	if (Sensor::hasSensor(SensorType::BarometricPressure)) {
+		scheduleMsg(logger, "baro type=%d value=%.2f", engineConfiguration->baroSensor.type, Sensor::get(SensorType::BarometricPressure).value_or(-1));
 		if (engineConfiguration->baroSensor.type == MT_CUSTOM) {
 			scheduleMsg(logger, "min=%.2f@%.2f max=%.2f@%.2f",
 					engineConfiguration->baroSensor.lowValue,
