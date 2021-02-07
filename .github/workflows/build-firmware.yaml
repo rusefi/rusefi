@@ -12,7 +12,7 @@ jobs:
       matrix:
         # What boards should we build for? In the 'include' section below,
         # set up what each of these boards needs to build.
-        build-target: [hellen72, cypress, frankenso_na6, kinetis, mre_f4, mre_f4_recovery, mre_f4_hardware_QC_special_build, mre_f7, prometheus_405, prometheus_469, proteus_f4, proteus_f4_hardware_QC_special_build, proteus_f7, stm32f746_nucleo, stm32f767_nucleo]
+        build-target: [hellen72, cypress, frankenso_na6, kinetis, mre_f4, mre_f4_recovery, mre_f4_hardware_QC_special_build, mre_f7, prometheus_405, prometheus_469, proteus_f4, proteus_f4_hardware_QC_special_build, proteus_f7, stm32f767_nucleo]
         
         include:
           # Board configurations
@@ -69,12 +69,6 @@ jobs:
           - build-target: proteus_f7
             folder: proteus
             ini-file: rusefi_proteus_f7.ini
-
-          - build-target: stm32f746_nucleo
-            folder: nucleo_f746
-            ini-file: no
-            console-settings: firmware/config/boards/nucleo_f767/rusefi_console_properties.xml
-            skip-config: yes
 
           - build-target: stm32f767_nucleo
             folder: nucleo_f767
