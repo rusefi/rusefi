@@ -436,6 +436,7 @@ end_struct
 #define TT_TT_52 52
 #define TT_TT_TRI_TACH 53
 #define TT_TT_GM_60_2_2_2 54
+#define TT_TT_SKODA_FAVORIT 55
 
 
 ! todo https://github.com/rusefi/rusefi/issues/2102
