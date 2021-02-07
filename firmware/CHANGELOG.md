@@ -28,8 +28,8 @@ All notable user-facing or behavior-altering changes will be documented in this 
 ## XXX 2021 Release
 
 ### Added
- - GM 60/2/2/2 trigger
- - TriTach trigger
+ - GM 60/2/2/2 trigger https://github.com/rusefi/rusefi/wiki/All-Supported-Triggers#gm
+ - TriTach trigger https://github.com/rusefi/rusefi/wiki/All-Supported-Triggers#tritach
 
 ### 2021 Printing Ink Day
 
