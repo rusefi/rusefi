@@ -1,7 +1,7 @@
 #include "global.h"
 #include "rusefi_enums.h"
 #include "rusefi_hw_enums.h"
-// was generated automatically by rusEfi tool  from rusefi_hw_enums.h // was generated automatically by rusEfi tool  from rusefi_enums.h // by enum2string.jar tool on Sat Feb 06 18:51:30 UTC 2021
+// was generated automatically by rusEfi tool  from rusefi_hw_enums.h // was generated automatically by rusEfi tool  from rusefi_enums.h // by enum2string.jar tool on Sat Feb 06 20:00:29 EST 2021
 // see also gen_config_and_enums.bat
 
 
@@ -1229,6 +1229,8 @@ case TT_RENIX_66_2_2_2:
   return "TT_RENIX_66_2_2_2";
 case TT_ROVER_K:
   return "TT_ROVER_K";
+case TT_SKODA_FAVORIT:
+  return "TT_SKODA_FAVORIT";
 case TT_SUBARU_7_6:
   return "TT_SUBARU_7_6";
 case TT_SUBARU_7_WITHOUT_6:
