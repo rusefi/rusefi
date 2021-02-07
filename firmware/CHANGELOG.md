@@ -27,6 +27,10 @@ All notable user-facing or behavior-altering changes will be documented in this 
 
 ## XXX 2021 Release
 
+### Added
+ - GM 60/2/2/2 trigger
+ - TriTach trigger
+
 ### 2021 Printing Ink Day
 
 ### Breaking Changes
