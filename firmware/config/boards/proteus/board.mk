@@ -13,7 +13,6 @@ else
   BOARDSRC  = $(CHIBIOS)/os/hal/boards/ST_NUCLEO144_F767ZI/board.c
   BOARDINC += $(BOARDS_DIR)/nucleo_f767		# For board.h
   BOARDINC += $(PROJECT_DIR)/config/stm32f7ems	# efifeatures/halconf/chconf.h
-  LDSCRIPT  = $(BOARDS_DIR)/nucleo_f767/STM32F76xxI.ld
   CONFDIR   = config/stm32f4ems
   PROTEUS_LEGACY = TRUE
 endif

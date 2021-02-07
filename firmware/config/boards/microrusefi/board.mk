@@ -16,7 +16,6 @@ else
   BOARDINC  = $(BOARDS_DIR)/nucleo_f767		# For board.h
   BOARDINC += $(PROJECT_DIR)/config/stm32f7ems	# efifeatures/halconf/chconf.h
   BOARDINC += $(BOARDS_DIR)/microrusefi # For knock_config.h
-  LDSCRIPT  = $(BOARDS_DIR)/nucleo_f767/STM32F76xxI.ld
 endif
 
 # Set this if you want a default engine type other than normal MRE
