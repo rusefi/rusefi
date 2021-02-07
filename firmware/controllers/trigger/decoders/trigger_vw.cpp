@@ -23,6 +23,8 @@ void setSkodaFavorit(TriggerWaveform *s) {
 	s->addEvent720(m * 226, T_PRIMARY, TV_RISE);
 	s->addEvent720(m * 360, T_PRIMARY, TV_FALL);
 
+	s->tdcPosition = 180 - 46;
+	s->setTriggerSynchronizationGap(3.91);
 }
 
 void setVwConfiguration(TriggerWaveform *s) {

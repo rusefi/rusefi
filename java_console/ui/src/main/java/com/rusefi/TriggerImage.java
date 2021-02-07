@@ -67,6 +67,8 @@ public class TriggerImage {
                 return "Subaru 7/6";
             case Fields.TT_TT_GM_LS_24:
                 return "GM 24x";
+            case Fields.TT_TT_SKODA_FAVORIT:
+                return "Skoda Favorit";
             case Fields.TT_TT_GM_7X:
                 return "GM 7x";
             case Fields.TT_TT_CHRYSLER_NGC_36_2_2:
