@@ -1,4 +1,4 @@
-name: Firmware Hardware CI (F4 Discovery)
+name: Firmware Hardware CI (Proteus)
 
 on: [push, pull_request]
 
