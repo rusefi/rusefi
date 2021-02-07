@@ -2446,6 +2446,8 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 		field = baroSensor_lowValue,					baroSensor_lowValue, {baroSensor_hwChannel != @@ADC_CHANNEL_NONE@@}
 		field = baroSensor_highValue,					baroSensor_highValue, {baroSensor_hwChannel != @@ADC_CHANNEL_NONE@@}
 		field = baroSensor_type,						baroSensor_type, {baroSensor_hwChannel != @@ADC_CHANNEL_NONE@@}
+		field = "LPS25 Baro SCL",						lps25BaroSensorScl
+		field = "LPS25 Baro SDA",						lps25BaroSensorSda
 
 	dialog = mapCurves, "MAP sampling", yAxis
 		field = "isMapAveragingEnabled",				isMapAveragingEnabled
