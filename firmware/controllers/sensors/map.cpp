@@ -12,6 +12,7 @@
 #include "interpolation.h"
 #include "map.h"
 #include "engine_controller.h"
+#include "sensor.h"
 
 #if EFI_PROD_CODE
 #include "digital_input_icu.h"
