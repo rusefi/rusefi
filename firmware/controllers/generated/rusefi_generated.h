@@ -1067,6 +1067,8 @@
 #define lowPressureFuel_v2_offset 3320
 #define lowPressureFuel_value1_offset 3316
 #define lowPressureFuel_value2_offset 3324
+#define lps25BaroSensorScl_offset 1458
+#define lps25BaroSensorSda_offset 1459
 #define MAF_DECODING_COUNT 256
 #define maf_sensor_type_e_auto_enum "CUSTOM", "Bosch0280218037", "Bosch0280218004", "DensoTODO"
 #define maf_sensor_type_e_enum "v0", "v1", "v2", "v3"
@@ -1255,7 +1257,7 @@
 #define showSdCardWarning_offset 76
 #define SIGNATURE_BOARD all
 #define SIGNATURE_DATE 2021.02.07
-#define SIGNATURE_HASH 80595884
+#define SIGNATURE_HASH 564085005
 #define silentTriggerError_offset 1464
 #define slowAdcAlpha_offset 2088
 #define sparkDwellRpmBins_offset 332
@@ -1589,7 +1591,7 @@
 #define ts_show_spi true
 #define ts_show_trigger_comparator false
 #define ts_show_tunerstudio_port true
-#define TS_SIGNATURE "rusEFI 2021.02.07.all.80595884"
+#define TS_SIGNATURE "rusEFI 2021.02.07.all.564085005"
 #define TS_SINGLE_WRITE_COMMAND 'W'
 #define TS_SINGLE_WRITE_COMMAND_char W
 #define TS_TEST_COMMAND 't' // 0x74
@@ -1682,31 +1684,30 @@
 #define unusedBit_288_30_offset 976
 #define unusedBit_288_31_offset 976
 #define unusedBit_34_31_offset 76
-#define unusedBit_488_10_offset 2116
-#define unusedBit_488_11_offset 2116
-#define unusedBit_488_12_offset 2116
-#define unusedBit_488_13_offset 2116
-#define unusedBit_488_14_offset 2116
-#define unusedBit_488_15_offset 2116
-#define unusedBit_488_16_offset 2116
-#define unusedBit_488_17_offset 2116
-#define unusedBit_488_18_offset 2116
-#define unusedBit_488_19_offset 2116
-#define unusedBit_488_20_offset 2116
-#define unusedBit_488_21_offset 2116
-#define unusedBit_488_22_offset 2116
-#define unusedBit_488_23_offset 2116
-#define unusedBit_488_24_offset 2116
-#define unusedBit_488_25_offset 2116
-#define unusedBit_488_26_offset 2116
-#define unusedBit_488_27_offset 2116
-#define unusedBit_488_28_offset 2116
-#define unusedBit_488_29_offset 2116
-#define unusedBit_488_30_offset 2116
-#define unusedBit_488_31_offset 2116
-#define unusedBit_488_8_offset 2116
-#define unusedBit_488_9_offset 2116
-#define unusedHereHereHere_offset 1458
+#define unusedBit_489_10_offset 2116
+#define unusedBit_489_11_offset 2116
+#define unusedBit_489_12_offset 2116
+#define unusedBit_489_13_offset 2116
+#define unusedBit_489_14_offset 2116
+#define unusedBit_489_15_offset 2116
+#define unusedBit_489_16_offset 2116
+#define unusedBit_489_17_offset 2116
+#define unusedBit_489_18_offset 2116
+#define unusedBit_489_19_offset 2116
+#define unusedBit_489_20_offset 2116
+#define unusedBit_489_21_offset 2116
+#define unusedBit_489_22_offset 2116
+#define unusedBit_489_23_offset 2116
+#define unusedBit_489_24_offset 2116
+#define unusedBit_489_25_offset 2116
+#define unusedBit_489_26_offset 2116
+#define unusedBit_489_27_offset 2116
+#define unusedBit_489_28_offset 2116
+#define unusedBit_489_29_offset 2116
+#define unusedBit_489_30_offset 2116
+#define unusedBit_489_31_offset 2116
+#define unusedBit_489_8_offset 2116
+#define unusedBit_489_9_offset 2116
 #define unusedHereWeHave_offset 1464
 #define unusedOldBiquad_offset 2332
 #define unusedSpiPadding4_offset 2593
