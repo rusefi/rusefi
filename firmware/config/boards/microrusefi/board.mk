@@ -10,7 +10,6 @@ ifeq ($(PROJECT_CPU),ARCH_STM32F4)
   BOARDINC += $(PROJECT_DIR)/config/stm32f4ems	# For board.h
   BOARDINC += $(BOARDS_DIR)/st_stm32f4
   BOARDINC += $(BOARDS_DIR)/microrusefi # For knock_config.h
-  LDSCRIPT  = $(BOARDS_DIR)/prometheus/STM32F405xG.ld
 else
   BOARDSRC  = $(CHIBIOS)/os/hal/boards/ST_NUCLEO144_F767ZI/board.c
   CONFDIR   = config/stm32f7ems

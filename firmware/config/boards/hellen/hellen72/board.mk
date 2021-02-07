@@ -9,7 +9,6 @@ ifeq ($(PROJECT_CPU),ARCH_STM32F4)
   BOARDSRC  = $(CHIBIOS)/os/hal/boards/ST_STM32F4_DISCOVERY/board.c
   BOARDINC += $(PROJECT_DIR)/config/stm32f4ems	# For board.h
   BOARDINC += $(BOARDS_DIR)/st_stm32f4
-  LDSCRIPT  = $(BOARDS_DIR)/prometheus/STM32F405xG.ld
 else
   # todo: add support for STM32H7
   BOARDSRC  = $(CHIBIOS)/os/hal/boards/ST_NUCLEO144_H743ZI/board.c
