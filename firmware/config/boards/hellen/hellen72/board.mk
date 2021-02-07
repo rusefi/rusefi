@@ -15,7 +15,6 @@ else
   CONFDIR   = config/stm32h7ems
   BOARDINC += $(PROJECT_DIR)/config/boards/nucleo_h743 # For board.h
   BOARDINC += $(PROJECT_DIR)/config/stm32h7ems	# efifeatures/halconf/chconf.h
-  LDSCRIPT  = $(CHIBIOS)/os/common/startup/ARMCMx/compilers/GCC/ld/STM32H743xI.ld
 endif
 
 # Set this if you want a default engine type other than normal Hellen72
