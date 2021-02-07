@@ -62,6 +62,8 @@ enum class SensorType : unsigned char {
 
 	BatteryVoltage,
 
+	BarometricPressure,
+
 	// Leave me at the end!
 	PlaceholderLast
 };
