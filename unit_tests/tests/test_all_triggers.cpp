@@ -1,7 +1,13 @@
+/**
+ * @file test_all_triggers.cpp
+ */
 #include "engine.h"
 
 #include <gtest/gtest.h>
 
+// uncomment to test only newest trigger
+//#define TEST_FROM_TRIGGER_ID ((int)TT_UNUSED - 1)
+#define TEST_FROM_TRIGGER_ID 1
 
 struct TriggerExportHelper
 {
@@ -31,7 +37,7 @@ INSTANTIATE_TEST_SUITE_P(
 	AllTriggersFixture,
 	// Test all triggers from the first valid trigger thru the last
 	// (Skip index 0, that's custom toothed wheel which is covered by others)
-	::testing::Range((trigger_type_e)1, TT_UNUSED)
+	::testing::Range((trigger_type_e)TEST_FROM_TRIGGER_ID, TT_UNUSED)
 );
 
 extern bool printTriggerDebug;

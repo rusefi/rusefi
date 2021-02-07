@@ -541,6 +541,9 @@ void TriggerWaveform::initializeTriggerWaveform(Logging *logger, operation_mode_
 		break;
 
 	case TT_SKODA_FAVORIT:
+		setSkodaFavorit(this);
+		break;
+
 	case TT_GM_60_2_2_2:
 		configureGm60_2_2_2(this);
 		break;
