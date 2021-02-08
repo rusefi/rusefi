@@ -7,7 +7,6 @@ BOARDCPPSRC = $(BOARDS_DIR)/microrusefi/board_configuration.cpp
 ifeq ($(PROJECT_CPU),ARCH_STM32F4)
   BOARDINC  = $(BOARDS_DIR)/microrusefi
   BOARDINC += $(PROJECT_DIR)/config/stm32f4ems	# For board.h
-  BOARDINC += $(BOARDS_DIR)/st_stm32f4
   BOARDINC += $(BOARDS_DIR)/microrusefi # For knock_config.h
 else
   CONFDIR   = config/stm32f7ems

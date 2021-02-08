@@ -6,7 +6,6 @@ BOARDINC = $(PROJECT_DIR)/config/boards/proteus
 # Target processor details
 ifeq ($(PROJECT_CPU),ARCH_STM32F4)
   BOARDINC += $(PROJECT_DIR)/config/stm32f4ems	# For board.h
-  BOARDINC += $(BOARDS_DIR)/st_stm32f4
 else
   BOARDINC += $(BOARDS_DIR)/nucleo_f767		# For board.h
   BOARDINC += $(PROJECT_DIR)/config/stm32f7ems	# efifeatures/halconf/chconf.h
