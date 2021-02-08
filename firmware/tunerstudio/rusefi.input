@@ -1790,9 +1790,11 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 
 	dialog = triggerConfiguration_IO,	"Advanced Trigger"
 	    field = "!https://rusefi.com/s/vvt"
-	    field = "CAM/VVT mode shaft #1",				vvtMode, {trigger_type != 80}
-	    field = "VVT mode shaft #2",				    secondVvtMode, {trigger_type != 80}
-	    field = "VVT use rise front",					vvtCamSensorUseRise, {trigger_type != 80}
+; todo: code generator to hard-code all triggers not requiring VVT?
+; todo: https://github.com/rusefi/rusefi/issues/2077
+	    field = "CAM/VVT mode shaft #1",				vvtMode, {trigger_type != TT_TT_MAZDA_MIATA_NA}
+	    field = "VVT mode shaft #2",				    secondVvtMode, {trigger_type != TT_TT_MAZDA_MIATA_NA}
+	    field = "VVT use rise front",					vvtCamSensorUseRise, {trigger_type != TT_TT_MAZDA_MIATA_NA}
 	    field = "VVT position display offset",			vvtOffset
 	    field = "print verbose VVT sync details to console",verboseVVTDecoding
 	    field = "Do not print messages in case of sync error",  silentTriggerError
