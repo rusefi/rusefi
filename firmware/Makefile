@@ -149,9 +149,6 @@ include $(PROJECT_DIR)/config/boards/$(PROJECT_BOARD)/board.mk
 ifeq ($(USE_SMART_BUILD),)
   USE_SMART_BUILD = yes
 endif
-ifeq ($(CONFDIR),)
-  CONFDIR = $(PROJECT_DIR)/config/stm32f4ems
-endif
 
 # Include various ChibiOS mk files
 # Licensing files.

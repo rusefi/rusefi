@@ -6,7 +6,6 @@ BOARDINC = $(BOARDS_DIR)/hellen/hellen72
 
 # Target processor details
 ifeq ($(PROJECT_CPU),ARCH_STM32F4)
-  BOARDINC += $(PROJECT_DIR)/config/stm32f4ems	# For board.h
 else
   # todo: add support for STM32H7
   CONFDIR   = config/stm32h7ems
