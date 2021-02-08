@@ -84,7 +84,7 @@ angle_t TriggerCentral::getVVTPosition() {
 #define miataNbIndex (0)
 
 static bool vvtWithRealDecoder(vvt_mode_e vvtMode) {
-	return vvtMode == MIATA_NB2
+	return vvtMode == VVT_MIATA_NB2
 			|| vvtMode == VVT_BOSCH_QUICK_START
 			|| vvtMode == VVT_FORD_ST170
 			|| vvtMode == VVT_4_1;
@@ -197,7 +197,7 @@ void hwHandleVvtCamSignal(trigger_value_e front, efitick_t nowNt, int index DECL
 			return;
 		}
 		break;
-	case MIATA_NB2:
+	case VVT_MIATA_NB2:
 	case VVT_BOSCH_QUICK_START:
 	 {
 		if (engine->triggerCentral.vvtState[bankIndex].currentCycle.current_index != 0) {
@@ -258,7 +258,7 @@ void hwHandleVvtCamSignal(trigger_value_e front, efitick_t nowNt, int index DECL
 		}
 	}
 		break;
-	case MIATA_NB2:
+	case VVT_MIATA_NB2:
 		/**
 		 * NB2 is a symmetrical crank, there are four phases total
 		 */

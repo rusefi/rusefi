@@ -439,7 +439,7 @@ typedef enum  __attribute__ ((__packed__)) {
 	 * Mazda NB2 has three cam tooth. We synchronize based on gap ratio.
 	 * @see TT_VVT_MIATA_NB2
 	 */
-	MIATA_NB2 = 3,
+	VVT_MIATA_NB2 = 3,
 
 	/**
 	 * Single-tooth cam sensor mode where TDC and cam signal happen in the same 360 degree of 720 degree engine cycle
