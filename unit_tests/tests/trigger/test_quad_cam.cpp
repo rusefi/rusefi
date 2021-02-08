@@ -13,7 +13,7 @@ TEST(trigger, testQuadCam) {
 	setOperationMode(engineConfiguration, FOUR_STROKE_CRANK_SENSOR);
 	engineConfiguration->useOnlyRisingEdgeForTrigger = true;
 	engineConfiguration->vvtMode = VVT_2JZ;
-	engineConfiguration->secondVvtMode = MIATA_NB2;
+	engineConfiguration->secondVvtMode = VVT_MIATA_NB2;
 
 	eth.setTriggerType(TT_ONE PASS_ENGINE_PARAMETER_SUFFIX);
 	engineConfiguration->camInputs[0] = GPIOA_10; // we just need to indicate that we have CAM
