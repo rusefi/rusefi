@@ -10,7 +10,6 @@ ifeq ($(PROJECT_CPU),ARCH_STM32F4)
   BOARDINC += $(BOARDS_DIR)/microrusefi # For knock_config.h
 else
   CONFDIR   = config/stm32f7ems
-  BOARDINC  = $(BOARDS_DIR)/nucleo_f767		# For board.h
   BOARDINC += $(PROJECT_DIR)/config/stm32f7ems	# efifeatures/halconf/chconf.h
   BOARDINC += $(BOARDS_DIR)/microrusefi # For knock_config.h
 endif
