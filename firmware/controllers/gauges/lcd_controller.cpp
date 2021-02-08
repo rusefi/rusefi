@@ -212,7 +212,7 @@ static void showLine(lcd_line_e line, int /*screenY*/) {
 
 #if	EFI_ANALOG_SENSORS
 	case LL_BARO:
-		if (hasBaroSensor()) {
+		if (Sensor::hasSensor(SensorType::BarometricPressure)) {
 			lcdPrintf("Baro: %.2f", getBaroPressure());
 		} else {
 			lcdPrintf("Baro: none");
