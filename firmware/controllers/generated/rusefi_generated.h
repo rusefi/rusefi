@@ -1235,6 +1235,7 @@
 #define sdCardPeriodMs_offset 804
 #define sdCardSpiDevice_offset 2592
 #define secondSolenoidPin_offset 810
+#define secondVvtMode_offset 2329
 #define sensor_chart_e_auto_enum "SC_OFF", "SC_TRIGGER", "SC_MAP", "SC_RPM_ACCEL", "SC_DETAILED_RPM", "SC_AUX_FAST1"
 #define sensor_chart_e_enum "none", "trigger", "MAP", "RPM ACCEL", "DETAILED RPM", "Fast Aux1", "INVALID", "INVALID"
 #define sensorChartFrequency_offset 520
@@ -1256,8 +1257,8 @@
 #define showHumanReadableWarning_offset 976
 #define showSdCardWarning_offset 76
 #define SIGNATURE_BOARD all
-#define SIGNATURE_DATE 2021.02.07
-#define SIGNATURE_HASH 564085005
+#define SIGNATURE_DATE 2021.02.08
+#define SIGNATURE_HASH 2999078037
 #define silentTriggerError_offset 1464
 #define slowAdcAlpha_offset 2088
 #define sparkDwellRpmBins_offset 332
@@ -1591,7 +1592,7 @@
 #define ts_show_spi true
 #define ts_show_trigger_comparator false
 #define ts_show_tunerstudio_port true
-#define TS_SIGNATURE "rusEFI 2021.02.07.all.564085005"
+#define TS_SIGNATURE "rusEFI 2021.02.08.all.2999078037"
 #define TS_SINGLE_WRITE_COMMAND 'W'
 #define TS_SINGLE_WRITE_COMMAND_char W
 #define TS_TEST_COMMAND 't' // 0x74
@@ -1709,7 +1710,7 @@
 #define unusedBit_489_8_offset 2116
 #define unusedBit_489_9_offset 2116
 #define unusedHereWeHave_offset 1464
-#define unusedOldBiquad_offset 2332
+#define unusedOldBiquad_offset 2330
 #define unusedSpiPadding4_offset 2593
 #define unusedSpiPadding5_offset 2715
 #define unusedSpiPadding8_offset 4010

@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Sun Feb 07 13:47:51 UTC 2021
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Mon Feb 08 19:12:55 UTC 2021
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -2920,9 +2920,14 @@ struct engine_configuration_s {
 	 */
 	vvt_mode_e vvtMode;
 	/**
-	 * offset 2332
+	 * set second_vvt_mode X
+	 * offset 2329
 	 */
-	uint8_t unusedOldBiquad[20];
+	vvt_mode_e secondVvtMode;
+	/**
+	 * offset 2330
+	 */
+	uint8_t unusedOldBiquad[22];
 	/**
 	 * CLT-based timing correction
 	 * offset 2352
@@ -3807,4 +3812,4 @@ struct persistent_config_s {
 typedef struct persistent_config_s persistent_config_s;
 
 // end
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Sun Feb 07 13:47:51 UTC 2021
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Mon Feb 08 19:12:55 UTC 2021
