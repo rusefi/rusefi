@@ -286,7 +286,7 @@ end_struct
 custom debug_mode_e 4 bits,    U32,   @OFFSET@, [0:5], @@debug_mode_e_enum@@
 
 #define vvt_mode_e_enum "Inactive", "Single Tooth Second Half", "2GZ", "Miata NB2", "Single Tooth First Half", "Bosch Quick Start", "4/1", "mode7"
-custom vvt_mode_e 4 bits,    U32,   @OFFSET@, [0:2], @@vvt_mode_e_enum@@
+custom vvt_mode_e 1 bits,    U08,   @OFFSET@, [0:2], @@vvt_mode_e_enum@@
 
 ! At the moment TIM1, TIM2, TIM3 and TIM9 are configured as ICU
 ! todo: as of ChibiOS3, only channels 1 & 2 are allowed to capture input, that's a ChibiOS driver limitation
@@ -1299,7 +1299,8 @@ float[MAP_ACCEL_TAPER] mapAccelTaperMult;;"mult",      1,     0,   0.0,    300, 
 	float[NARROW_BAND_WIDE_BAND_CONVERSION_SIZE] narrowToWideOxygenBins;Narrow Band WBO Approximation;"V",        1,     0,   -10.0,    10.0,  3
 	float[NARROW_BAND_WIDE_BAND_CONVERSION_SIZE] narrowToWideOxygen;;"ratio",      1,     0,      -40.0,    40.0,   2
 	vvt_mode_e vvtMode;set vvt_mode X
-	uint8_t[20] unusedOldBiquad;;"units", 1, 0, -20, 100, 0
+	vvt_mode_e secondVvtMode;set second_vvt_mode X
+	uint8_t[22] unusedOldBiquad;;"units", 1, 0, -20, 100, 0
 	float[CLT_TIMING_CURVE_SIZE] cltTimingBins;CLT-based timing correction;"C",        1,     0,   -100.0,    250.0,  1
 	float[CLT_TIMING_CURVE_SIZE] cltTimingExtra;;"degree",      1,     0,      -400.0,    400.0,   0
 custom tle8888_mode_e 1 bits, U08, @OFFSET@, [0:1], "Auto", "SemiAuto", "Manual", "Hall"
