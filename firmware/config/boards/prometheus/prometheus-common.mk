@@ -1,5 +1,5 @@
 # List of all the board related files.
-BOARDSRC = $(CHIBIOS)/os/hal/boards/ST_STM32F469I_DISCOVERY/board.c \
+BOARDSRC = $(CHIBIOS)/os/hal/boards/ST_STM32F4_DISCOVERY/board.c \
     $(PROJECT_DIR)/config/boards/prometheus/board_extra.c
 
 BOARDCPPSRC = $(PROJECT_DIR)/config/boards/Prometheus/board_configuration.cpp
@@ -22,12 +22,10 @@ ifeq ($(DEBUG_LEVEL_OPT),)
 endif
 
 ifeq ($(PROMETHEUS_BOARD),405)
-	LDSCRIPT = $(PROJECT_DIR)/config/boards/prometheus/STM32F405xG.ld
-	DDEFS += -DDEFAULT_ENGINE_TYPE=PROMETHEUS_DEFAULTS -DSTM32F405xx -DFIRMWARE_ID=\"prometeus405\"
+	DDEFS += -DDEFAULT_ENGINE_TYPE=PROMETHEUS_DEFAULTS -DFIRMWARE_ID=\"prometeus405\"
 else
 	# Override DEFAULT_ENGINE_TYPE
-	LDSCRIPT = $(PROJECT_DIR)/config/boards/prometheus/STM32F469xI.ld
-	DDEFS += -DDEFAULT_ENGINE_TYPE=PROMETHEUS_DEFAULTS -DSTM32F469xx -DFIRMWARE_ID=\"prometeus469\"
+	DDEFS += -DDEFAULT_ENGINE_TYPE=PROMETHEUS_DEFAULTS -DFIRMWARE_ID=\"prometeus469\"
 endif
 
 # Shared variables

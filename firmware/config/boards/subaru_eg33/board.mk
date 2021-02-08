@@ -14,8 +14,6 @@ ifeq ($(USE_BOOTLOADER),yes)
   BOOTLOADERINC = $(PROJECT_DIR)/bootloader/subaru_eg33
 endif
 
-LDSCRIPT = $(BOARD_DIR)/STM32F76xxI.ld
-
 #FIX THIS
 CONFIGPATH = $(PROJECT_DIR)/config/stm32f7ems
 

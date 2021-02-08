@@ -6,8 +6,6 @@ BOARDCPPSRC = $(PROJECT_DIR)/config/boards/nucleo_f767/board_configuration.cpp
 BOARDINC = $(PROJECT_DIR)/config/boards/nucleo_f767 $(PROJECT_DIR)/config/stm32f7ems
 CONFDIR = config/stm32f7ems
 
-LDSCRIPT = $(PROJECT_DIR)/config/boards/nucleo_f767/STM32F76xxI.ld
-
 # Override DEFAULT_ENGINE_TYPE
 DDEFS += -DDEFAULT_ENGINE_TYPE=MINIMAL_PINS -DSTM32F767xx
 

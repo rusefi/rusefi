@@ -8,7 +8,6 @@ export DEFAULT_ENGINE_TYPE="-DDEFAULT_ENGINE_TYPE=SUBARUEG33_DEFAULTS"
 #export DEBUG_LEVEL_OPT="-O0"
 #export USE_BOOTLOADER=yes
 
-#export LDSCRIPT="config/boards/NUCLEO_F767/STM32F76xxI.ld"
 #bash config/boards/common_make.sh
 
 #CROSS_COMPILE=../../toolchain/gcc-arm-none-eabi-8-2018-q4-major/bin/arm-none-eabi- make $*
