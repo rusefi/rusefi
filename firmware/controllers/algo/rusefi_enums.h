@@ -456,8 +456,6 @@ typedef enum {
 	VVT_4_1 = 6,
 
 	VVT_FORD_ST170 = 7,
-
-	Force_4_bytes_size_vvt_mode = ENUM_32_BITS,
 } vvt_mode_e;
 
 /**
