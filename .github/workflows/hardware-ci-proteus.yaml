@@ -41,7 +41,7 @@ jobs:
 
     - name: Build Firmware
       working-directory: ./firmware
-      run: make -j4 EXTRA_PARAMS="-DHARDWARE_CI" PROJECT_BOARD=proteus
+      run: make -j5 EXTRA_PARAMS="-DHARDWARE_CI" PROJECT_BOARD=proteus
 
     - name: OpenOCD wipe & flash STM32
       working-directory: ./firmware
