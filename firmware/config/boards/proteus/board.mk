@@ -5,11 +5,9 @@ BOARDINC = $(PROJECT_DIR)/config/boards/proteus
 
 # Target processor details
 ifeq ($(PROJECT_CPU),ARCH_STM32F4)
-  BOARDSRC  = $(CHIBIOS)/os/hal/boards/ST_STM32F4_DISCOVERY/board.c
   BOARDINC += $(PROJECT_DIR)/config/stm32f4ems	# For board.h
   BOARDINC += $(BOARDS_DIR)/st_stm32f4
 else
-  BOARDSRC  = $(CHIBIOS)/os/hal/boards/ST_NUCLEO144_F767ZI/board.c
   BOARDINC += $(BOARDS_DIR)/nucleo_f767		# For board.h
   BOARDINC += $(PROJECT_DIR)/config/stm32f7ems	# efifeatures/halconf/chconf.h
   CONFDIR   = config/stm32f4ems
@@ -37,6 +35,5 @@ ifeq ($(PROTEUS_LEGACY),TRUE)
 endif
 
 # Shared variables
-ALLCSRC   += $(BOARDSRC)
 ALLCPPSRC += $(BOARDCPPSRC)
 ALLINC    += $(BOARDINC)

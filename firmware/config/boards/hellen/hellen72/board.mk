@@ -6,12 +6,10 @@ BOARDINC = $(BOARDS_DIR)/hellen/hellen72
 
 # Target processor details
 ifeq ($(PROJECT_CPU),ARCH_STM32F4)
-  BOARDSRC  = $(CHIBIOS)/os/hal/boards/ST_STM32F4_DISCOVERY/board.c
   BOARDINC += $(PROJECT_DIR)/config/stm32f4ems	# For board.h
   BOARDINC += $(BOARDS_DIR)/st_stm32f4
 else
   # todo: add support for STM32H7
-  BOARDSRC  = $(CHIBIOS)/os/hal/boards/ST_NUCLEO144_H743ZI/board.c
   CONFDIR   = config/stm32h7ems
   BOARDINC += $(PROJECT_DIR)/config/boards/nucleo_h743 # For board.h
   BOARDINC += $(PROJECT_DIR)/config/stm32h7ems	# efifeatures/halconf/chconf.h
@@ -41,6 +39,5 @@ DDEFS += -DEFI_LOGIC_ANALYZER=FALSE
 DDEFS += -DHW_HELLEN=1
 
 # Shared variables
-ALLCSRC   += $(BOARDSRC)
 ALLCPPSRC += $(BOARDCPPSRC)
 ALLINC    += $(BOARDINC)

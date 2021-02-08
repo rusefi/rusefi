@@ -17,6 +17,8 @@ CHIBIOS = ../firmware/ChibiOS
 RULESPATH = $(CHIBIOS)/os/common/startup/SIMIA32/compilers/GCC
 RULESFILE = $(RULESPATH)/rules.mk
 
+PROJECT_CPU=simulator
+
 include ../firmware/rusefi.mk
 RULESFILE = ../firmware/rusefi_rules.mk
 
