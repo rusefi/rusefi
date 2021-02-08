@@ -425,6 +425,7 @@ end_struct
 #define TT_TT_JEEP_18_2_2_2 37
 #define TT_TT_JEEP_4_CYL 40
 #define TT_TT_FORD_ST170 42
+#define TT_TT_VVT_MIATA_NB2 43
 #define TT_TT_RENIX_44_2_2 44
 #define TT_TT_RENIX_66_2_2_2 45
 #define TT_TT_HONDA_K_12_1 46
