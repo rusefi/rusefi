@@ -56,8 +56,6 @@
 #include "gpio/tle8888.h"
 #endif
 
-
-
 EXTERN_ENGINE;
 
 static Logging * logger;
