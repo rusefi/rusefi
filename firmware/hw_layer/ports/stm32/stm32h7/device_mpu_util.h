@@ -9,5 +9,6 @@
 
 #include "stm32h7xx_hal_flash_ex.h"
 
+#define MCU_SERIAL_NUMBER_LOCATION (uint8_t*)(0x1FF1E800)
 
 // todo SPI! #2284

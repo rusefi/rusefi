@@ -36,6 +36,10 @@
 #define BOARD_ST_NUCLEO144_H743ZI
 #define BOARD_NAME                  "STMicroelectronics STM32 Nucleo144-H743ZI"
 
+#define EFI_USB_AF 10U
+#define EFI_USB_SERIAL_DM GPIOA_11
+#define EFI_USB_SERIAL_DP GPIOA_12
+
 /*
  * input-floating is the default pin mode. input-output boards should provision appropriate pull-ups/pull-downs.
  */
