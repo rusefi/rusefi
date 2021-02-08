@@ -87,6 +87,10 @@
 
 /* Includes ------------------------------------------------------------------*/
 //#include "stm32h7xx_hal.h"
+#include "stm32h7xx_hal_flash_ex.h"
+#include "stm32h7xx_hal_flash.h"
+
+#define assert_param(expr) ((void)0)
 
 /** @addtogroup STM32H7xx_HAL_Driver
   * @{
@@ -729,7 +733,7 @@ void HAL_FLASH_IRQHandler(void)
 __weak void HAL_FLASH_EndOfOperationCallback(uint32_t ReturnValue)
 {
   /* Prevent unused argument(s) compilation warning */
-  UNUSED(ReturnValue);
+  (void)ReturnValue;
 
   /* NOTE : This function Should not be modified, when the callback is needed,
             the HAL_FLASH_EndOfOperationCallback could be implemented in the user file
@@ -747,7 +751,7 @@ __weak void HAL_FLASH_EndOfOperationCallback(uint32_t ReturnValue)
 __weak void HAL_FLASH_OperationErrorCallback(uint32_t ReturnValue)
 {
   /* Prevent unused argument(s) compilation warning */
-  UNUSED(ReturnValue);
+  (void)ReturnValue;
 
   /* NOTE : This function Should not be modified, when the callback is needed,
             the HAL_FLASH_OperationErrorCallback could be implemented in the user file
@@ -988,13 +992,15 @@ uint32_t HAL_FLASH_GetError(void)
   */
 HAL_StatusTypeDef FLASH_WaitForLastOperation(uint32_t Timeout, uint32_t Bank)
 {
+  (void)Timeout;
+
   /* Wait for the FLASH operation to complete by polling on QW flag to be reset.
      Even if the FLASH operation fails, the QW flag will be reset and an error
      flag will be set */
 
   uint32_t bsyflag = FLASH_FLAG_QW_BANK1;
   uint32_t errorflag = FLASH->SR1 & FLASH_FLAG_ALL_ERRORS_BANK1;
-  uint32_t tickstart = HAL_GetTick();
+  //uint32_t tickstart = HAL_GetTick();
 
   assert_param(IS_FLASH_BANK_EXCLUSIVE(Bank));
 
@@ -1013,10 +1019,11 @@ HAL_StatusTypeDef FLASH_WaitForLastOperation(uint32_t Timeout, uint32_t Bank)
   {
     if(Timeout != HAL_MAX_DELAY)
     {
-      if(((HAL_GetTick() - tickstart) > Timeout) || (Timeout == 0U))
-      {
-        return HAL_TIMEOUT;
-      }
+      // todo: implement rusEfi own timeout
+      //   if(((HAL_GetTick() - tickstart) > Timeout) || (Timeout == 0U))
+      //   {
+      //     return HAL_TIMEOUT;
+      //   }
     }
   }
 
@@ -1062,19 +1069,21 @@ HAL_StatusTypeDef FLASH_WaitForLastOperation(uint32_t Timeout, uint32_t Bank)
   */
 HAL_StatusTypeDef FLASH_OB_WaitForLastOperation(uint32_t Timeout)
 {
+  (void)Timeout;
   /* Get timeout */
-  uint32_t tickstart = HAL_GetTick();
+  //uint32_t tickstart = HAL_GetTick();
 
   /* Wait for the FLASH Option Bytes change operation to complete by polling on OPT_BUSY flag to be reset */
   while(READ_BIT(FLASH->OPTSR_CUR, FLASH_OPTSR_OPT_BUSY) != 0U)
   {
-    if(Timeout != HAL_MAX_DELAY)
+    // TODO: rusefi own timeout
+    /*if(Timeout != HAL_MAX_DELAY)
     {
       if(((HAL_GetTick() - tickstart) > Timeout) || (Timeout == 0U))
       {
         return HAL_TIMEOUT;
       }
-    }
+    }*/
   }
 
   /* Check option byte change error */
@@ -1102,7 +1111,8 @@ HAL_StatusTypeDef FLASH_OB_WaitForLastOperation(uint32_t Timeout)
 HAL_StatusTypeDef FLASH_CRC_WaitForLastOperation(uint32_t Timeout, uint32_t Bank)
 {
   uint32_t bsyflag;
-  uint32_t tickstart = HAL_GetTick();
+  (void)Timeout;
+  //uint32_t tickstart = HAL_GetTick();
 
   assert_param(IS_FLASH_BANK_EXCLUSIVE(Bank));
 
@@ -1119,13 +1129,14 @@ HAL_StatusTypeDef FLASH_CRC_WaitForLastOperation(uint32_t Timeout, uint32_t Bank
   /* Wait for the FLASH CRC computation to complete by polling on CRC_BUSY flag to be reset */
   while(__HAL_FLASH_GET_FLAG(bsyflag))
   {
-    if(Timeout != HAL_MAX_DELAY)
-    {
-      if(((HAL_GetTick() - tickstart) > Timeout) || (Timeout == 0U))
-      {
-        return HAL_TIMEOUT;
-      }
-    }
+    // TODO: rusefi own timeout
+    // if(Timeout != HAL_MAX_DELAY)
+    // {
+    //   if(((HAL_GetTick() - tickstart) > Timeout) || (Timeout == 0U))
+    //   {
+    //     return HAL_TIMEOUT;
+    //   }
+    // }
   }
 
   /* Check FLASH CRC read error flag  */

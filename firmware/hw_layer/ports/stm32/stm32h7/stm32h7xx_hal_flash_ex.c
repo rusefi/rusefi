@@ -75,6 +75,10 @@
 
 /* Includes ------------------------------------------------------------------*/
 //#include "stm32h7xx_hal.h"
+#include "stm32h7xx_hal_flash_ex.h"
+#include "stm32h7xx_hal_flash.h"
+
+#define assert_param(expr) ((void)0)
 
 /** @addtogroup STM32H7xx_HAL_Driver
   * @{
