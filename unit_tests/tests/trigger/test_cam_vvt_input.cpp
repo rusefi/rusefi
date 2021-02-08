@@ -8,7 +8,7 @@
 #include "engine_test_helper.h"
 extern WarningCodeState unitTestWarningCodeState;
 
-TEST(sensors, testNoStartUpWarningsNoSyncronizationTrigger) {
+TEST(trigger, testNoStartUpWarningsNoSyncronizationTrigger) {
 	WITH_ENGINE_TEST_HELPER(TEST_ENGINE);
 	// one tooth does not need synchronization it just counts tooth
 	eth.setTriggerType(TT_ONE PASS_ENGINE_PARAMETER_SUFFIX);
@@ -19,7 +19,7 @@ TEST(sensors, testNoStartUpWarningsNoSyncronizationTrigger) {
 	ASSERT_EQ( 0,  unitTestWarningCodeState.recentWarnings.getCount()) << "warningCounter#testNoStartUpWarningsNoSyncronizationTrigger";
 }
 
-TEST(sensors, testNoStartUpWarnings) {
+TEST(trigger, testNoStartUpWarnings) {
 	WITH_ENGINE_TEST_HELPER(TEST_ENGINE);
 	// for this test we need a trigger with isSynchronizationNeeded=true
 	engineConfiguration->trigger.customTotalToothCount = 3;
@@ -54,7 +54,7 @@ TEST(sensors, testNoStartUpWarnings) {
 	ASSERT_EQ(CUSTOM_SYNC_COUNT_MISMATCH, unitTestWarningCodeState.recentWarnings.get(1));
 }
 
-TEST(sensors, testNoisyInput) {
+TEST(trigger, testNoisyInput) {
 	WITH_ENGINE_TEST_HELPER(TEST_ENGINE);
 
 	ASSERT_EQ( 0,  GET_RPM()) << "testNoisyInput RPM";
@@ -75,7 +75,7 @@ TEST(sensors, testNoisyInput) {
 	ASSERT_EQ(OBD_Crankshaft_Position_Sensor_A_Circuit_Malfunction, unitTestWarningCodeState.recentWarnings.get(1)) << "@0";
 }
 
-TEST(sensors, testCamInput) {
+TEST(trigger, testCamInput) {
 	// setting some weird engine
 	WITH_ENGINE_TEST_HELPER(FORD_ESCORT_GT);
 

@@ -5,6 +5,7 @@ TESTS_SRC_CPP = \
 	tests/trigger/test_trigger_multi_sync.cpp \
 	tests/trigger/test_cam_vvt_input.cpp \
 	tests/trigger/test_2jz_vvt.cpp \
+	tests/trigger/test_quad_cam.cpp \
 	tests/trigger/test_injection_scheduling.cpp \
 	tests/ignition_injection/injection_mode_transition.cpp \
 	tests/ignition_injection/test_startOfCrankingPrimingPulse.cpp \
