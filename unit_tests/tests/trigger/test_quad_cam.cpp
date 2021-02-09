@@ -12,10 +12,8 @@ TEST(trigger, testQuadCam) {
 	// changing to 'ONE TOOTH' trigger on CRANK with CAM/VVT
 //	setOperationMode(engineConfiguration, FOUR_STROKE_CRANK_SENSOR);
 	engineConfiguration->useOnlyRisingEdgeForTrigger = true;
-//	engineConfiguration->vvtMode = VVT_2JZ;
-//	engineConfiguration->secondVvtMode = VVT_MIATA_NB2;
-
-	engineConfiguration->vvtMode[0] = VVT_MIATA_NB2;
+	engineConfiguration->vvtMode[0] = VVT_2JZ;
+	engineConfiguration->vvtMode[1] = VVT_MIATA_NB2;
 
 	engineConfiguration->camInputs[0] = GPIOA_10; // we just need to indicate that we have CAM
 
@@ -43,24 +41,26 @@ TEST(trigger, testQuadCam) {
 
 	float d = 4;
 
+	int secondCam = 1;
+
 	// this would be ignored since we only consume the other kind of fronts here
-	hwHandleVvtCamSignal(TV_FALL, getTimeNowNt(), 0 PASS_ENGINE_PARAMETER_SUFFIX);
+	hwHandleVvtCamSignal(TV_FALL, getTimeNowNt(), secondCam PASS_ENGINE_PARAMETER_SUFFIX);
 	eth.moveTimeForwardUs(MS2US(20 / d));
 	// this would be be first VVT signal - gap duration would be calculated against 'DEEP_IN_THE_PAST_SECONDS' initial value
-	hwHandleVvtCamSignal(TV_RISE, getTimeNowNt(), 0 PASS_ENGINE_PARAMETER_SUFFIX);
+	hwHandleVvtCamSignal(TV_RISE, getTimeNowNt(), secondCam PASS_ENGINE_PARAMETER_SUFFIX);
 
 	eth.moveTimeForwardUs(MS2US(20 / d));
 	// this second important front would give us first real VVT gap duration
-	hwHandleVvtCamSignal(TV_RISE, getTimeNowNt(), 0 PASS_ENGINE_PARAMETER_SUFFIX);
+	hwHandleVvtCamSignal(TV_RISE, getTimeNowNt(), secondCam PASS_ENGINE_PARAMETER_SUFFIX);
 
 	ASSERT_FLOAT_EQ(0, engine->triggerCentral.getVVTPosition());
 	ASSERT_EQ(totalRevolutionCountBeforeVvtSync, engine->triggerCentral.triggerState.getTotalRevolutionCounter());
 
 	eth.moveTimeForwardUs(MS2US(130 / d));
 	// this third important front would give us first comparison between two real gaps
-	hwHandleVvtCamSignal(TV_RISE, getTimeNowNt(), 0 PASS_ENGINE_PARAMETER_SUFFIX);
+	hwHandleVvtCamSignal(TV_RISE, getTimeNowNt(), secondCam PASS_ENGINE_PARAMETER_SUFFIX);
 
-	ASSERT_NEAR(-67.6 - 720 - 720 + 160.2, engine->triggerCentral.getVVTPosition(), EPS3D);
+	ASSERT_NEAR(-67.6 - 720 - 720 + 160.2, engine->triggerCentral.vvtPosition[0][secondCam], EPS3D);
 	// actually position based on VVT!
 	ASSERT_EQ(totalRevolutionCountBeforeVvtSync, engine->triggerCentral.triggerState.getTotalRevolutionCounter());
 
