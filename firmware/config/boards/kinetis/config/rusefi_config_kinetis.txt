@@ -16,3 +16,5 @@
 
 #define CAMS_PER_BANK 1
 #define BANKS_COUNT 1
+#define CAMS_PER_BANK_padding 1
+#define CAM_INPUTS_COUNT_padding 3
