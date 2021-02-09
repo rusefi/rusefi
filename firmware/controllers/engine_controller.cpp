@@ -714,10 +714,10 @@ void initEngineContoller(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX) 
  * UNUSED_SIZE constants.
  */
 #ifndef RAM_UNUSED_SIZE
-#define RAM_UNUSED_SIZE 2350
+#define RAM_UNUSED_SIZE 3150
 #endif
 #ifndef CCM_UNUSED_SIZE
-#define CCM_UNUSED_SIZE 2800
+#define CCM_UNUSED_SIZE 2000
 #endif
 static char UNUSED_RAM_SIZE[RAM_UNUSED_SIZE];
 static char UNUSED_CCM_SIZE[CCM_UNUSED_SIZE] CCM_OPTIONAL;
