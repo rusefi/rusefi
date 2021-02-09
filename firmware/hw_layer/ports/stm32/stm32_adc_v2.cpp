@@ -1,3 +1,11 @@
+/**
+ * @file        stm32_adc_v2.cpp
+ * @brief       Port implementation for the STM32 "v2" ADC found on the STM32F4 and STM32F7
+ *
+ * @date February 9, 2021
+ * @author Matthew Kennedy, (c) 2021
+ */
+
 #include "engine_ptr.h"
 #include "persistent_configuration.h"
 
