@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEfi tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Tue Feb 09 05:26:12 UTC 2021
+// this file was generated automatically by rusEfi tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Tue Feb 09 19:00:20 UTC 2021
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -1497,7 +1497,7 @@ public class Fields {
 	public static final char TS_SD_R_COMMAND = 'r';
 	public static final char TS_SD_W_COMMAND = 'w';
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI 2021.02.09.all.2589496725";
+	public static final String TS_SIGNATURE = "rusEFI 2021.02.09.all.2882601961";
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final int TT_TT_1_16 = 50;
 	public static final int TT_TT_2JZ_1_12 = 29;
@@ -1555,7 +1555,7 @@ public class Fields {
 	public static final int unused1476b20_offset = 1476;
 	public static final int unused1476b3_offset = 1476;
 	public static final int unused1476b8_offset = 1476;
-	public static final int unused15136_offset = 15776;
+	public static final int unused15136_offset = 16032;
 	public static final int unused1708_offset = 1708;
 	public static final int unused2260_offset = 2260;
 	public static final int unused2419_offset = 2419;
@@ -1678,6 +1678,12 @@ public class Fields {
 	public static final int vvtMode2_offset = 2329;
 	public static final int vvtModePadding_offset = 2330;
 	public static final int vvtOffset_offset = 2052;
+	public static final int vvtTable1_offset = 15776;
+	public static final int vvtTable1LoadBins_offset = 15840;
+	public static final int vvtTable1RpmBins_offset = 15872;
+	public static final int vvtTable2_offset = 15904;
+	public static final int vvtTable2LoadBins_offset = 15968;
+	public static final int vvtTable2RpmBins_offset = 16000;
 	public static final int warning_message_offset = 6000;
 	public static final int warningLedPin_offset = 2041;
 	public static final int warningPeriod_offset = 1498;
@@ -2778,6 +2784,8 @@ public class Fields {
 	public static final Field TCUSOLENOIDTABLE = Field.create("TCUSOLENOIDTABLE", 15136, FieldType.INT);
 	public static final Field VSSFILTERRECIPROCAL = Field.create("VSSFILTERRECIPROCAL", 15196, FieldType.FLOAT);
 	public static final Field MAPESTIMATETABLE = Field.create("MAPESTIMATETABLE", 15200, FieldType.INT);
+	public static final Field VVTTABLE1 = Field.create("VVTTABLE1", 15776, FieldType.INT);
+	public static final Field VVTTABLE2 = Field.create("VVTTABLE2", 15904, FieldType.INT);
 	public static final Field IGNITIONTABLE = Field.create("IGNITIONTABLE", 16288, FieldType.INT);
 	public static final Field VETABLE = Field.create("VETABLE", 17440, FieldType.INT);
 	public static final Field LAMBDATABLE = Field.create("LAMBDATABLE", 18592, FieldType.INT);
@@ -3856,6 +3864,8 @@ public class Fields {
 	TCUSOLENOIDTABLE,
 	VSSFILTERRECIPROCAL,
 	MAPESTIMATETABLE,
+	VVTTABLE1,
+	VVTTABLE2,
 	IGNITIONTABLE,
 	VETABLE,
 	LAMBDATABLE,

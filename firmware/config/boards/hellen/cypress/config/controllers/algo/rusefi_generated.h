@@ -1263,7 +1263,7 @@
 #define showSdCardWarning_offset 76
 #define SIGNATURE_BOARD hellen_cypress
 #define SIGNATURE_DATE 2021.02.09
-#define SIGNATURE_HASH 3626257989
+#define SIGNATURE_HASH 3920484409
 #define silentTriggerError_offset 1464
 #define slowAdcAlpha_offset 2088
 #define sparkDwellRpmBins_offset 332
@@ -1597,7 +1597,7 @@
 #define ts_show_spi true
 #define ts_show_trigger_comparator false
 #define ts_show_tunerstudio_port true
-#define TS_SIGNATURE "rusEFI 2021.02.09.hellen_cypress.3626257989"
+#define TS_SIGNATURE "rusEFI 2021.02.09.hellen_cypress.3920484409"
 #define TS_SINGLE_WRITE_COMMAND 'W'
 #define TS_SINGLE_WRITE_COMMAND_char W
 #define TS_TEST_COMMAND 't' // 0x74
@@ -1658,7 +1658,7 @@
 #define unused1476b20_offset 1476
 #define unused1476b3_offset 1476
 #define unused1476b8_offset 1476
-#define unused15136_offset 15776
+#define unused15136_offset 16032
 #define unused1708_offset 1708
 #define unused2260_offset 2260
 #define unused2419_offset 2419
@@ -1786,6 +1786,12 @@
 #define vvtMode2_offset 2329
 #define vvtModePadding_offset 2330
 #define vvtOffset_offset 2052
+#define vvtTable1_offset 15776
+#define vvtTable1LoadBins_offset 15840
+#define vvtTable1RpmBins_offset 15872
+#define vvtTable2_offset 15904
+#define vvtTable2LoadBins_offset 15968
+#define vvtTable2RpmBins_offset 16000
 #define warning_message_offset 6000
 #define warningLedPin_offset 2041
 #define warningPeriod_offset 1498

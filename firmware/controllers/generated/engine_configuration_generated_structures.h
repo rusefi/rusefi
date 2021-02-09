@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Tue Feb 09 05:26:12 UTC 2021
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Tue Feb 09 19:00:20 UTC 2021
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -3707,7 +3707,33 @@ struct persistent_config_s {
 	/**
 	 * offset 15776
 	 */
-	uint8_t unused15136[512];
+	fsio_table_8x8_u8t vvtTable1;
+	/**
+	 * offset 15840
+	 */
+	float vvtTable1LoadBins[FSIO_TABLE_8];
+	/**
+	 * RPM is float and not integer in order to use unified methods for interpolation
+	 * offset 15872
+	 */
+	float vvtTable1RpmBins[FSIO_TABLE_8];
+	/**
+	 * offset 15904
+	 */
+	fsio_table_8x8_u8t vvtTable2;
+	/**
+	 * offset 15968
+	 */
+	float vvtTable2LoadBins[FSIO_TABLE_8];
+	/**
+	 * RPM is float and not integer in order to use unified methods for interpolation
+	 * offset 16000
+	 */
+	float vvtTable2RpmBins[FSIO_TABLE_8];
+	/**
+	 * offset 16032
+	 */
+	uint8_t unused15136[256];
 	/**
 	 * offset 16288
 	 */
@@ -3815,4 +3841,4 @@ struct persistent_config_s {
 typedef struct persistent_config_s persistent_config_s;
 
 // end
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Tue Feb 09 05:26:12 UTC 2021
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Tue Feb 09 19:00:20 UTC 2021
