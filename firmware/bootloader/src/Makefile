@@ -206,17 +206,11 @@ TCPPSRC =
 # List ASM source files here
 ASMXSRC = $(STARTUPASM) $(PORTASM) $(OSALASM)
 
-ifeq ($(CONFIGPATH),)
-  CONFIGPATH=$(PROJECT_DIR)/config/stm32f4ems
-endif
-
-
 INCDIR = $(ALLINC) \
 	.. \
 	$(CHIBIOS)/os/various \
 	$(CHIBIOS)/os/ex/ST \
 	$(CHIBIOS)/os/hal/lib/peripherals/sensors \
-	$(CONFIGPATH) \
 	$(CONFIG)/engines \
 	$(CONFIG) \
 	$(PROJECT_DIR)/ext \

@@ -6,8 +6,6 @@ BOARDCPPSRC = $(BOARDS_DIR)/skeleton/board_configuration.cpp
 # Target processor details
 ifeq ($(PROJECT_CPU),ARCH_STM32F4)
   BOARDINC  = $(BOARDS_DIR)/skeleton
-else
-  BOARDINC += $(PROJECT_DIR)/config/stm32f7ems	# efifeatures/halconf/chconf.h
 endif
 
 # Set this if you want a default engine type
