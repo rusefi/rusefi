@@ -57,7 +57,9 @@ TriggerCentral::TriggerCentral() : trigger_central_s(),
 void TriggerCentral::init(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	INJECT_ENGINE_REFERENCE(&triggerState);
 	for (int bankIndex = 0; bankIndex < BANKS_COUNT; bankIndex++) {
-		INJECT_ENGINE_REFERENCE(&vvtState[bankIndex]);
+		for (int camIndex = 0; camIndex < CAMS_PER_BANK; camIndex++) {
+			INJECT_ENGINE_REFERENCE(&vvtState[bankIndex][camIndex]);
+		}
 	}
 }
 
@@ -78,7 +80,7 @@ EXTERN_ENGINE;
 static Logging *logger;
 
 angle_t TriggerCentral::getVVTPosition() {
-	return vvtPosition[0];
+	return vvtPosition[0][0];
 }
 
 #define miataNbIndex (0)
@@ -92,6 +94,7 @@ static bool vvtWithRealDecoder(vvt_mode_e vvtMode) {
 
 void hwHandleVvtCamSignal(trigger_value_e front, efitick_t nowNt, int index DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	int bankIndex = 0;
+	int camIndex = 0;
 	TriggerCentral *tc = &engine->triggerCentral;
 	if (front == TV_RISE) {
 		tc->vvtEventRiseCounter++;
@@ -162,7 +165,7 @@ void hwHandleVvtCamSignal(trigger_value_e front, efitick_t nowNt, int index DECL
 		return;
 	}
 
-	ENGINE(triggerCentral).vvtState[bankIndex].decodeTriggerEvent(
+	ENGINE(triggerCentral).vvtState[bankIndex][camIndex].decodeTriggerEvent(
 			ENGINE(triggerCentral).vvtShape,
 			nullptr,
 			nullptr,
@@ -179,7 +182,7 @@ void hwHandleVvtCamSignal(trigger_value_e front, efitick_t nowNt, int index DECL
 	// https://github.com/rusefi/rusefi/issues/1713 currentPosition could be negative that's expected
 
 #if EFI_UNIT_TEST
-	tc->currentVVTEventPosition = currentPosition;
+	tc->currentVVTEventPosition[bankIndex][camIndex] = currentPosition;
 #endif // EFI_UNIT_TEST
 
 	if (engineConfiguration->debugMode == DBG_VVT) {
@@ -200,7 +203,7 @@ void hwHandleVvtCamSignal(trigger_value_e front, efitick_t nowNt, int index DECL
 	case VVT_MIATA_NB2:
 	case VVT_BOSCH_QUICK_START:
 	 {
-		if (engine->triggerCentral.vvtState[bankIndex].currentCycle.current_index != 0) {
+		if (engine->triggerCentral.vvtState[bankIndex][camIndex].currentCycle.current_index != 0) {
 			// this is not NB2 sync tooth - exiting
 			return;
 		}
@@ -215,12 +218,12 @@ void hwHandleVvtCamSignal(trigger_value_e front, efitick_t nowNt, int index DECL
 		break;
 	}
 
-	tc->vvtSyncTimeNt[bankIndex] = nowNt;
+	tc->vvtSyncTimeNt[bankIndex][camIndex] = nowNt;
 
     // we do NOT clamp VVT position into the [0, engineCycle) range - we expect vvtOffset to be configured so that
     // it's not necessary
-	tc->vvtPosition[bankIndex] = engineConfiguration->vvtOffset - currentPosition;
-	if (tc->vvtPosition[bankIndex] < 0 || tc->vvtPosition[bankIndex] > ENGINE(engineCycle)) {
+	tc->vvtPosition[bankIndex][camIndex] = engineConfiguration->vvtOffset - currentPosition;
+	if (tc->vvtPosition[bankIndex][camIndex] < 0 || tc->vvtPosition[bankIndex][camIndex] > ENGINE(engineCycle)) {
 		warning(CUSTOM_ERR_VVT_OUT_OF_RANGE, "Please adjust vvtOffset since position %f", tc->vvtPosition);
 	}
 
