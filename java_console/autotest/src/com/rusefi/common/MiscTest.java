@@ -13,4 +13,15 @@ public class MiscTest extends RusefiTestBase {
         // let's make sure 'burn' command works since sometimes it does not
         bp.burn();
     }
+
+    @Test
+    public void testMcuTemperature() {
+        double mcuTemp = SensorCentral.getInstance().getValue(Sensor.INT_TEMP);
+
+        System.out.println("MCU temperature is " + mcuTemp + " deg C");
+
+        // You are probably indoors and not on fire
+        assertTrue(mcuTemp > 10);
+        assertTrue(mcuTemp < 50);
+    }
 }
