@@ -10,6 +10,8 @@
 void baseMCUInit(void);
 void jump_to_bootloader();
 
+float getMcuTemperature();
+
 // CAN bus
 #if HAL_USE_CAN
 bool isValidCanTxPin(brain_pin_e pin);
