@@ -249,22 +249,10 @@ static void fast_adc_callback(GPTDriver*) {
 }
 #endif /* HAL_USE_GPT */
 
+static float mcuTemperature;
+
 float getMCUInternalTemperature() {
-#if defined(ADC_CHANNEL_SENSOR)
-	float TemperatureValue = adcToVolts(slowAdc.getAdcValueByHwChannel(EFI_ADC_TEMP_SENSOR));
-	TemperatureValue -= 0.760f; // Subtract the reference voltage at 25 deg C
-	TemperatureValue /= 0.0025f; // Divide by slope 2.5mV
-
-	TemperatureValue += 25.0; // Add the 25 deg C
-
-	if (TemperatureValue > 150.0f || TemperatureValue < -50.0f) {
-		firmwareError(OBD_PCM_Processor_Fault, "Invalid CPU temperature measured %f", TemperatureValue);
-	}
-
-	return TemperatureValue;
-#else
-	return 0;
-#endif /* ADC_CHANNEL_SENSOR */
+	return mcuTemperature;
 }
 
 int getInternalAdcValue(const char *msg, adc_channel_e hwChannel) {
@@ -360,11 +348,6 @@ void AdcDevice::enableChannel(adc_channel_e hwChannel) {
 	int logicChannel = channelCount++;
 
 	size_t channelAdcIndex = hwChannel - 1;
-#if defined(STM32F7XX)
-	/* the temperature sensor is internally connected to ADC1_IN18 */
-	if (hwChannel == EFI_ADC_TEMP_SENSOR)
-		channelAdcIndex = 18;
-#endif
 
 	internalAdcIndexByHardwareIndex[hwChannel] = logicChannel;
 	hardwareIndexByIndernalAdcIndex[logicChannel] = hwChannel;
@@ -492,6 +475,9 @@ public:
 			void proteusAdcHack();
 			proteusAdcHack();
 #endif
+
+			// Ask the port to sample the MCU temperature
+			mcuTemperature = getMcuTemperature();
 		}
 
 		{
@@ -633,11 +619,6 @@ void initAdcInputs() {
 		nvicDisableVector(STM32_ADC_NUMBER);
 	}
 #endif
-
-#if defined(ADC_CHANNEL_SENSOR)
-	// Internal temperature sensor, Available on ADC1 only
-	slowAdc.enableChannel(EFI_ADC_TEMP_SENSOR);
-#endif /* ADC_CHANNEL_SENSOR */
 
 	slowAdc.init();
 
