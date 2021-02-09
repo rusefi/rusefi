@@ -38,7 +38,8 @@ static const ADCConversionGroup tempSensorConvGroup = {
 #endif
 };
 
-static __ALIGNED(32) adcsample_t samples[8];
+// 4x oversample is plenty
+static __ALIGNED(32) adcsample_t samples[4];
 
 float getMcuTemperature() {
 	// Temperature sensor is only physically wired to ADC1
