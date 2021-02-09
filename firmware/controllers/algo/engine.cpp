@@ -103,10 +103,13 @@ trigger_type_e getVvtTriggerType(vvt_mode_e vvtMode) {
 	}
 }
 
-static void initVvtShape(Logging *logger, vvt_mode_e vvtMode, TriggerWaveform *shape, TriggerState &initState DECLARE_ENGINE_PARAMETER_SUFFIX) {
+static void initVvtShape(Logging *logger, int index, TriggerState &initState DECLARE_ENGINE_PARAMETER_SUFFIX) {
+	vvt_mode_e vvtMode = engineConfiguration->vvtMode[index];
+	TriggerWaveform *shape = &ENGINE(triggerCentral).vvtShape[index];
+
 	if (vvtMode != VVT_INACTIVE) {
 		trigger_config_s config;
-		ENGINE(triggerCentral).vvtTriggerType = config.type = getVvtTriggerType(vvtMode);
+		ENGINE(triggerCentral).vvtTriggerType[index] = config.type = getVvtTriggerType(vvtMode);
 
 		shape->initializeTriggerWaveform(logger,
 				engineConfiguration->ambiguousOperationMode,
@@ -147,8 +150,8 @@ void Engine::initializeTriggerWaveform(Logging *logger DECLARE_ENGINE_PARAMETER_
 	}
 
 
-	initVvtShape(logger, engineConfiguration->vvtMode[0], &ENGINE(triggerCentral).vvtShape[0], initState PASS_ENGINE_PARAMETER_SUFFIX);
-	initVvtShape(logger, engineConfiguration->vvtMode[1], &ENGINE(triggerCentral).vvtShape[1], initState PASS_ENGINE_PARAMETER_SUFFIX);
+	initVvtShape(logger, 0, initState PASS_ENGINE_PARAMETER_SUFFIX);
+	initVvtShape(logger, 1, initState PASS_ENGINE_PARAMETER_SUFFIX);
 
 
 	if (!TRIGGER_WAVEFORM(shapeDefinitionError)) {

@@ -56,7 +56,7 @@ public:
 
 	TriggerNoiseFilter noiseFilter;
 
-	trigger_type_e vvtTriggerType;
+	trigger_type_e vvtTriggerType[CAMS_PER_BANK];
 	angle_t getVVTPosition();
 
 #if EFI_UNIT_TEST
