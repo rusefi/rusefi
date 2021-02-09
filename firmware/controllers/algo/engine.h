@@ -71,7 +71,7 @@ class VvtTriggerConfiguration final : public TriggerConfiguration {
 public:
 	VvtTriggerConfiguration() : TriggerConfiguration("TRG ") {}
 	// todo: is it possible to make 'index' constructor argument?
-	int index;
+	int index = 0;
 
 protected:
 	bool isUseOnlyRisingEdgeForTrigger() const override;
