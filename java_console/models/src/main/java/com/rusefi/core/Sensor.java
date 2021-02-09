@@ -30,7 +30,7 @@ public enum Sensor {
     VSS(GAUGE_NAME_VVS, SensorCategory.OPERATIONS, FieldType.UINT8, 8, 1, 0, 150, "kph"),
 
     // Temperatures
-    INT_TEMP(GAUGE_NAME_CPU_TEMP, SensorCategory.OPERATIONS, FieldType.INT8, 10, 1, 0, 5, "C"),
+    INT_TEMP(GAUGE_NAME_CPU_TEMP, SensorCategory.OPERATIONS, FieldType.INT8, 11, 1, 0, 5, "C"),
     CLT(GAUGE_NAME_CLT, SensorCategory.SENSOR_INPUTS, FieldType.INT16, 12, 1.0 / PACK_MULT_TEMPERATURE, -40, 150, "deg C"),
     IAT(GAUGE_NAME_IAT, SensorCategory.SENSOR_INPUTS, FieldType.INT16, 14, 1.0 / PACK_MULT_TEMPERATURE, -40, 150, "deg C"),
     AuxT1("AuxT1", SensorCategory.SENSOR_INPUTS, FieldType.INT16, 16, 1.0 / PACK_MULT_TEMPERATURE, -40, 150, "deg C"),
