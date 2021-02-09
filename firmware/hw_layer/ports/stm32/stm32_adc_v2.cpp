@@ -1,4 +1,3 @@
-
 #include "engine_ptr.h"
 #include "persistent_configuration.h"
 
@@ -12,29 +11,23 @@ static const ADCConversionGroup tempSensorConvGroup = {
 	.num_channels		= 0,
 	.end_cb				= nullptr,
 	.error_cb			= nullptr,
-	/* HW dependent part.*/
+	/* HW dependent part below */
 	.cr1				= 0,
 	.cr2				= ADC_CR2_SWSTART,
 	// sample times for channels 10...18
 	.smpr1 =
 		ADC_SMPR1_SMP_VBAT(ADC_SAMPLE_144)    |	/* input18 - temperature and vbat input on some STM32F7xx */
 		ADC_SMPR1_SMP_SENSOR(ADC_SAMPLE_144),	/* input16 - temperature sensor input on STM32F4xx */
-	// In this field must be specified the sample times for channels 0...9
 	.smpr2 = 0,
-	.htr				= 0,
-	.ltr				= 0,
-	.sqr1				= 0, // Conversion group sequence 13...16 + sequence length
-	.sqr2				= 0, // Conversion group sequence 7...12
+	.htr = 0, .ltr = 0,
+	.sqr1 = ADC_SQR1_NUM_CH(1),
+	.sqr2 = 0,
 #if defined(STM32F4XX)
 	.sqr3 = ADC_SQR3_SQ1_N(16),
 #endif
 #if defined(STM32F7XX)
 	.sqr3 = ADC_SQR3_SQ1_N(18),
 #endif
-#if ADC_MAX_CHANNELS_COUNT > 16
-	.sqr4				= 0, // Conversion group sequence 19...24
-	.sqr5				= 0  // Conversion group sequence 25...30
-#endif /* ADC_MAX_CHANNELS_COUNT */
 };
 
 static __ALIGNED(32) adcsample_t samples[8];
