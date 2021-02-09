@@ -213,6 +213,7 @@ INCDIR = $(ALLINC) \
 	$(CHIBIOS)/os/hal/lib/peripherals/sensors \
 	$(CONFIG)/engines \
 	$(CONFIG) \
+	$(CONFDIR) \
 	$(PROJECT_DIR)/ext \
 	$(PROJECT_DIR)/ext_algo \
 	$(UTIL_INC) \
