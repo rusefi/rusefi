@@ -64,4 +64,29 @@ TEST(trigger, testQuadCam) {
 	// actually position based on VVT!
 	ASSERT_EQ(totalRevolutionCountBeforeVvtSync, engine->triggerCentral.triggerState.getTotalRevolutionCounter());
 
+
+	int secondCamSecondBank = 3;
+	int secondBank = 1;
+
+	// this would be ignored since we only consume the other kind of fronts here
+	hwHandleVvtCamSignal(TV_FALL, getTimeNowNt(), secondCamSecondBank PASS_ENGINE_PARAMETER_SUFFIX);
+	eth.moveTimeForwardUs(MS2US(20 / d));
+	// this would be be first VVT signal - gap duration would be calculated against 'DEEP_IN_THE_PAST_SECONDS' initial value
+	hwHandleVvtCamSignal(TV_RISE, getTimeNowNt(), secondCamSecondBank PASS_ENGINE_PARAMETER_SUFFIX);
+
+	eth.moveTimeForwardUs(MS2US(20 / d));
+	// this second important front would give us first real VVT gap duration
+	hwHandleVvtCamSignal(TV_RISE, getTimeNowNt(), secondCamSecondBank PASS_ENGINE_PARAMETER_SUFFIX);
+
+	ASSERT_FLOAT_EQ(0, engine->triggerCentral.getVVTPosition());
+	ASSERT_EQ(totalRevolutionCountBeforeVvtSync, engine->triggerCentral.triggerState.getTotalRevolutionCounter());
+
+	eth.moveTimeForwardUs(MS2US(130 / d));
+	// this third important front would give us first comparison between two real gaps
+	hwHandleVvtCamSignal(TV_RISE, getTimeNowNt(), secondCamSecondBank PASS_ENGINE_PARAMETER_SUFFIX);
+
+	ASSERT_NEAR(-2571.4, engine->triggerCentral.vvtPosition[secondBank][secondCam], EPS3D);
+	// actually position based on VVT!
+	ASSERT_EQ(totalRevolutionCountBeforeVvtSync, engine->triggerCentral.triggerState.getTotalRevolutionCounter());
+
 }
