@@ -37,7 +37,7 @@ jobs:
     # We aren't guaranteed a clean machine every time, so manually clean the output
     - name: Clean Build
       working-directory: ./firmware
-      run: make clean
+      run: rm -rf build .dep
 
     - name: Build Firmware
       working-directory: ./firmware
