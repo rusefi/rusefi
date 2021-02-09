@@ -70,6 +70,8 @@ protected:
 class VvtTriggerConfiguration final : public TriggerConfiguration {
 public:
 	VvtTriggerConfiguration() : TriggerConfiguration("TRG ") {}
+	// todo: is it possible to make 'index' constructor argument?
+	int index;
 
 protected:
 	bool isUseOnlyRisingEdgeForTrigger() const override;
@@ -94,7 +96,7 @@ public:
 	GearControllerBase *gearController;
 
 	PrimaryTriggerConfiguration primaryTriggerConfiguration;
-	VvtTriggerConfiguration vvtTriggerConfiguration;
+	VvtTriggerConfiguration vvtTriggerConfiguration[CAMS_PER_BANK];
 	efitick_t startStopStateLastPushTime = 0;
 
 #if EFI_SHAFT_POSITION_INPUT
