@@ -16,7 +16,7 @@ EXTERN_CONFIG;
  */
 static const ADCConversionGroup tempSensorConvGroup = {
 	.circular			= FALSE,
-	.num_channels		= 0,
+	.num_channels		= 1,
 	.end_cb				= nullptr,
 	.error_cb			= nullptr,
 	/* HW dependent part below */
@@ -28,7 +28,7 @@ static const ADCConversionGroup tempSensorConvGroup = {
 		ADC_SMPR1_SMP_SENSOR(ADC_SAMPLE_144),	/* input16 - temperature sensor input on STM32F4xx */
 	.smpr2 = 0,
 	.htr = 0, .ltr = 0,
-	.sqr1 = ADC_SQR1_NUM_CH(1),
+	.sqr1 = 0,
 	.sqr2 = 0,
 #if defined(STM32F4XX)
 	.sqr3 = ADC_SQR3_SQ1_N(16),
