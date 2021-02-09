@@ -34,6 +34,6 @@ java \
  -enumInputFile controllers/algo/rusefi_enums.h \
  -enumInputFile controllers/algo/rusefi_hw_enums.h \
  -board kinetis \
- -prepend config/boards/kinetis/config/tunerstudio/generated/kinetis_prefix.txt
+ -prepend config/boards/kinetis/config/rusefi_config_kinetis.txt
 
 [ $? -eq 0 ] || { echo "ERROR generating TunerStudio config for kinetis"; exit 1; }
