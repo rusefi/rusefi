@@ -15,7 +15,7 @@ TEST(trigger, testQuadCam) {
 //	engineConfiguration->vvtMode = VVT_2JZ;
 //	engineConfiguration->secondVvtMode = VVT_MIATA_NB2;
 
-	engineConfiguration->vvtMode = VVT_MIATA_NB2;
+	engineConfiguration->vvtMode[0] = VVT_MIATA_NB2;
 
 	engineConfiguration->camInputs[0] = GPIOA_10; // we just need to indicate that we have CAM
 

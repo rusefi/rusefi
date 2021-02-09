@@ -371,7 +371,7 @@ uint32_t *cyccnt = (uint32_t*) &DWT->CYCCNT;
 void mainTriggerCallback(uint32_t trgEventIndex, efitick_t edgeTimestamp DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	ScopePerf perf(PE::MainTriggerCallback);
 
-	if (CONFIG(vvtMode) == VVT_MIATA_NB2 && ENGINE(triggerCentral.vvtSyncTimeNt) == 0) {
+	if (CONFIG(vvtMode[0]) == VVT_MIATA_NB2 && ENGINE(triggerCentral.vvtSyncTimeNt) == 0) {
 		// this is a bit spaghetti code for sure
 		// do not spark & do not fuel until we have VVT sync. NB2 is a special case
 		// due to symmetrical crank wheel and we need to make sure no spark happens out of sync

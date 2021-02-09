@@ -75,7 +75,7 @@ void setTestVVTEngineConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	// set global_trigger_offset_angle 0
 	engineConfiguration->globalTriggerAngleOffset = 0;
 
-	engineConfiguration->vvtMode = VVT_SECOND_HALF;
+	engineConfiguration->vvtMode[0] = VVT_SECOND_HALF;
 	engineConfiguration->debugMode = DBG_VVT;
 }
 
