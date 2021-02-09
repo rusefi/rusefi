@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Tue Feb 09 04:23:23 UTC 2021
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Tue Feb 09 04:49:35 UTC 2021
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -155,7 +155,7 @@ struct spi_pins {
 	 * need 4 byte alignment
 	 * offset 3
 	 */
-	uint8_t alignmentFill_at_3;
+	uint8_t alignmentFill_at_3[1];
 	/** total size 4*/
 };
 
@@ -1056,7 +1056,7 @@ struct engine_configuration_s {
 	 * TODO #660
 	 * offset 556
 	 */
-	brain_input_pin_e camInputs;
+	brain_input_pin_e camInputs[CAM_INPUTS_COUNT];
 	/**
 	 * offset 557
 	 */
@@ -2876,7 +2876,7 @@ struct engine_configuration_s {
 	 * need 4 byte alignment
 	 * offset 2227
 	 */
-	uint8_t alignmentFill_at_2227;
+	uint8_t alignmentFill_at_2227[1];
 	/**
 	 * This is the IAC position during cranking, some engines start better if given more air during cranking to improve cylinder filling.
 	 * offset 2228
@@ -2923,7 +2923,7 @@ struct engine_configuration_s {
 	 * set vvt_mode X
 	 * offset 2328
 	 */
-	vvt_mode_e vvtMode;
+	vvt_mode_e vvtMode[CAMS_PER_BANK];
 	/**
 	 * offset 2329
 	 */
@@ -2932,7 +2932,7 @@ struct engine_configuration_s {
 	 * need 4 byte alignment
 	 * offset 2351
 	 */
-	uint8_t alignmentFill_at_2351;
+	uint8_t alignmentFill_at_2351[1];
 	/**
 	 * CLT-based timing correction
 	 * offset 2352
@@ -3113,15 +3113,15 @@ struct engine_configuration_s {
 	/**
 	 * offset 2713
 	 */
-	uint8_t unusedAuxVoltage1_TODO_332;
+	uint8_t unusedAuxVoltage1_TODO_332[1];
 	/**
 	 * offset 2714
 	 */
-	uint8_t unusedAuxVoltage2_TODO_332;
+	uint8_t unusedAuxVoltage2_TODO_332[1];
 	/**
 	 * offset 2715
 	 */
-	uint8_t unusedSpiPadding5;
+	uint8_t unusedSpiPadding5[1];
 	/**
 	 * offset 2716
 	 */
@@ -3498,7 +3498,7 @@ struct engine_configuration_s {
 	 * need 4 byte alignment
 	 * offset 4539
 	 */
-	uint8_t alignmentFill_at_4539;
+	uint8_t alignmentFill_at_4539[1];
 	/**
 	 * offset 4540
 	 */
@@ -3817,4 +3817,4 @@ struct persistent_config_s {
 typedef struct persistent_config_s persistent_config_s;
 
 // end
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Tue Feb 09 04:23:23 UTC 2021
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Tue Feb 09 04:49:35 UTC 2021
