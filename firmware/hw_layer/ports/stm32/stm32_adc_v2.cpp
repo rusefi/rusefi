@@ -40,6 +40,7 @@ static const ADCConversionGroup tempSensorConvGroup = {
 static __ALIGNED(32) adcsample_t samples[8];
 
 float getMcuTemperature() {
+	// Temperature sensor is only physically wired to ADC1
 	adcConvert(&ADCD1, &tempSensorConvGroup, samples, efi::size(samples));
 
 #if CORTEX_MODEL == 7
