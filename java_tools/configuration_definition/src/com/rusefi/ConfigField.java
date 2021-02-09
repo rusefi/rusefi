@@ -81,6 +81,10 @@ public class ConfigField {
         this.isIterate = isIterate;
     }
 
+    public boolean isArray() {
+        return arraySizeVariableName != null || arraySize != 1;
+    }
+
     public String getTrueName() {
         return trueName;
     }
