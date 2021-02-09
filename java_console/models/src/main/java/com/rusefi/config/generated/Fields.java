@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEfi tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Mon Feb 08 21:41:01 UTC 2021
+// this file was generated automatically by rusEfi tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Mon Feb 08 21:38:22 EST 2021
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -1197,7 +1197,6 @@ public class Fields {
 	public static final int sdCardPeriodMs_offset = 804;
 	public static final int sdCardSpiDevice_offset = 2592;
 	public static final int secondSolenoidPin_offset = 810;
-	public static final int secondVvtMode_offset = 2329;
 	public static final int sensorChartFrequency_offset = 520;
 	public static final int sensorChartMode_offset = 944;
 	public static final int sensorSnifferRpmThreshold_offset = 412;
@@ -1495,7 +1494,7 @@ public class Fields {
 	public static final char TS_SD_R_COMMAND = 'r';
 	public static final char TS_SD_W_COMMAND = 'w';
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI 2021.02.08.all.3414537129";
+	public static final String TS_SIGNATURE = "rusEFI 2021.02.08.all.2483621418";
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final int TT_TT_1_16 = 50;
 	public static final int TT_TT_2JZ_1_12 = 29;
@@ -1672,7 +1671,8 @@ public class Fields {
 	public static final int vRefAdcChannel_offset = 1470;
 	public static final int vssFilterReciprocal_offset = 15196;
 	public static final int vvtCamSensorUseRise_offset = 744;
-	public static final int vvtMode_offset = 2328;
+	public static final int vvtMode1_offset = 2328;
+	public static final int vvtMode2_offset = 2329;
 	public static final int vvtOffset_offset = 2052;
 	public static final int warning_message_offset = 6000;
 	public static final int warningLedPin_offset = 2041;
@@ -2504,8 +2504,8 @@ public class Fields {
 	public static final Field ALTERNATORPWMFREQUENCY = Field.create("ALTERNATORPWMFREQUENCY", 2256, FieldType.INT);
 	public static final Field UNUSED2260 = Field.create("UNUSED2260", 2260, FieldType.INT);
 	public static final String[] vvt_mode_e = {"Inactive", "Single Tooth Second Half", "2GZ", "Miata NB2", "Single Tooth First Half", "Bosch Quick Start", "4/1", "mode7"};
-	public static final Field VVTMODE = Field.create("VVTMODE", 2328, FieldType.INT8, vvt_mode_e);
-	public static final Field SECONDVVTMODE = Field.create("SECONDVVTMODE", 2329, FieldType.INT8, vvt_mode_e);
+	public static final Field VVTMODE1 = Field.create("VVTMODE1", 2328, FieldType.INT8, vvt_mode_e);
+	public static final Field VVTMODE2 = Field.create("VVTMODE2", 2329, FieldType.INT8, vvt_mode_e);
 	public static final Field TLE8888MODE = Field.create("TLE8888MODE", 2416, FieldType.INT8);
 	public static final Field LIS302DLCSPINMODE = Field.create("LIS302DLCSPINMODE", 2417, FieldType.INT8, pin_output_mode_e);
 	public static final Field INJECTORCOMPENSATIONMODE = Field.create("INJECTORCOMPENSATIONMODE", 2418, FieldType.INT8);
@@ -3585,8 +3585,8 @@ public class Fields {
 	AUXPIDFREQUENCY4,
 	ALTERNATORPWMFREQUENCY,
 	UNUSED2260,
-	VVTMODE,
-	SECONDVVTMODE,
+	VVTMODE1,
+	VVTMODE2,
 	TLE8888MODE,
 	LIS302DLCSPINMODE,
 	INJECTORCOMPENSATIONMODE,
