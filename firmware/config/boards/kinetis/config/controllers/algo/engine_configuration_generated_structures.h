@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Tue Feb 09 04:49:35 UTC 2021
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Tue Feb 09 05:26:34 UTC 2021
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -1060,6 +1060,10 @@ struct engine_configuration_s {
 	/**
 	 * offset 557
 	 */
+	uint8_t camInputsPadding[CAM_INPUTS_COUNT_padding];
+	/**
+	 * offset 560
+	 */
 	afr_sensor_s afr;
 	/**
 	 * Electronic throttle pedal position first channel
@@ -1067,36 +1071,31 @@ struct engine_configuration_s {
 	 * See also tps1_1AdcChannel
 	 * set_analog_input_pin pps X
 	 * See throttlePedalUpVoltage and throttlePedalWOTVoltage
-	 * offset 577
+	 * offset 580
 	 */
 	adc_channel_e throttlePedalPositionAdcChannel;
 	/**
-	 * offset 578
+	 * offset 581
 	 */
 	brain_pin_e tle6240_cs;
 	/**
-	 * offset 579
+	 * offset 582
 	 */
 	pin_output_mode_e tle6240_csPinMode;
 	/**
 	 * Throttle Pedal not pressed switch - used on some older vehicles like early Mazda Miata
-	 * offset 580
+	 * offset 583
 	 */
 	switch_input_pin_e throttlePedalUpPin;
 	/**
 	 * @see hasBaroSensor
-	 * offset 581
+	 * offset 584
 	 */
 	air_pressure_sensor_config_s baroSensor;
 	/**
-	 * offset 597
+	 * offset 600
 	 */
 	idle_hardware_s idle;
-	/**
-	 * need 4 byte alignment
-	 * offset 605
-	 */
-	uint8_t alignmentFill_at_605[3];
 	/**
 	 * value between 0 and 100 used in Manual mode
 	 * offset 608
@@ -2927,12 +2926,11 @@ struct engine_configuration_s {
 	/**
 	 * offset 2329
 	 */
-	uint8_t unusedOldBiquad[22];
+	uint8_t vvtModePadding[CAMS_PER_BANK_padding];
 	/**
-	 * need 4 byte alignment
-	 * offset 2351
+	 * offset 2330
 	 */
-	uint8_t alignmentFill_at_2351[1];
+	uint8_t unusedOldBiquad[22];
 	/**
 	 * CLT-based timing correction
 	 * offset 2352
@@ -3817,4 +3815,4 @@ struct persistent_config_s {
 typedef struct persistent_config_s persistent_config_s;
 
 // end
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Tue Feb 09 04:49:35 UTC 2021
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Tue Feb 09 05:26:34 UTC 2021

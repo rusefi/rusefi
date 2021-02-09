@@ -24,17 +24,17 @@
 #define adc_channel_mode_e_auto_enum "ADC_OFF", "ADC_SLOW", "ADC_FAST"
 #define ADC_CHANNEL_NONE 0
 #define adcVcc_offset 548
-#define afr_alignmentFill_afr_offset 558
-#define afr_hwChannel_offset 557
-#define afr_offset 557
+#define afr_alignmentFill_afr_offset 561
+#define afr_hwChannel_offset 560
+#define afr_offset 560
 #define afr_override_e_auto_enum "AFR_None", "AFR_MAP", "AFR_Tps", "AFR_AccPedal", "AFR_CylFilling"
 #define afr_override_e_enum "None", "MAP", "TPS", "Acc Pedal", "Cyl Filling %"
 #define afr_sensor_s_size 20
 #define afr_type_offset 692
-#define afr_v1_offset 561
-#define afr_v2_offset 569
-#define afr_value1_offset 565
-#define afr_value2_offset 573
+#define afr_v1_offset 564
+#define afr_v2_offset 572
+#define afr_value1_offset 568
+#define afr_value2_offset 576
 #define afrOverrideMode_offset 2111
 #define afterCrankingIACtaperDuration_offset 2036
 #define AFTERSTART_DECAY_CURVE_SIZE 8
@@ -48,9 +48,7 @@
 #define air_pressure_sensor_type_e_auto_enum "MT_CUSTOM", "MT_DENSO183", "MT_MPX4250", "MT_HONDA3BAR", "MT_DODGE_NEON_2003", "MT_SUBY_DENSO", "MT_GM_3_BAR", "MT_MPX4100", "MT_TOYOTA_89420_02010", "MT_MPX4250A", "MT_BOSCH_2_5", "MT_MAZDA_1_BAR", "MT_GM_2_BAR", "MT_GM_1_BAR"
 #define alignEngineSnifferAtTDC_offset 744
 #define alignmentFill_at_2227_offset 2227
-#define alignmentFill_at_2351_offset 2351
 #define alignmentFill_at_4539_offset 4539
-#define alignmentFill_at_605_offset 605
 #define alternator_antiwindupFreq_offset 1764
 #define alternator_derivativeFilterLoss_offset 1760
 #define alternatorControl_dFactor_offset 1724
@@ -148,12 +146,12 @@
 #define baroCorrPressureBins_offset 1544
 #define baroCorrRpmBins_offset 1560
 #define baroCorrTable_offset 1576
-#define baroSensor_alignmentFill_offset 594
-#define baroSensor_highValue_offset 585
-#define baroSensor_hwChannel_offset 593
-#define baroSensor_lowValue_offset 581
-#define baroSensor_offset 581
-#define baroSensor_type_offset 589
+#define baroSensor_alignmentFill_offset 597
+#define baroSensor_highValue_offset 588
+#define baroSensor_hwChannel_offset 596
+#define baroSensor_lowValue_offset 584
+#define baroSensor_offset 584
+#define baroSensor_type_offset 592
 #define binarySerialRxPin_offset 1815
 #define binarySerialTxPin_offset 1814
 #define BLOCKING_FACTOR 256
@@ -184,8 +182,11 @@
 #define brakePedalPinMode_offset 2611
 #define byFirmwareVersion_offset 500
 #define CAM_INPUTS_COUNT 1
+#define CAM_INPUTS_COUNT_padding 3
 #define camInputs1_offset 556
+#define camInputsPadding_offset 557
 #define CAMS_PER_BANK 1
+#define CAMS_PER_BANK_padding 1
 #define can2BaudRate_offset 2110
 #define can2NbcType_offset 2120
 #define can2ReadEnabled_offset 2116
@@ -849,12 +850,12 @@
 #define idle_derivativeFilterLoss_offset 516
 #define idle_hardware_s_size 8
 #define idle_mode_e_auto_enum "IM_AUTO", "IM_MANUAL"
-#define idle_offset 597
-#define idle_solenoidFrequency_offset 597
-#define idle_solenoidPin_offset 601
-#define idle_solenoidPinMode_offset 604
-#define idle_stepperDirectionPin_offset 602
-#define idle_stepperStepPin_offset 603
+#define idle_offset 600
+#define idle_solenoidFrequency_offset 600
+#define idle_solenoidPin_offset 604
+#define idle_solenoidPinMode_offset 607
+#define idle_stepperDirectionPin_offset 605
+#define idle_stepperStepPin_offset 606
 #define IDLE_VE_CURVE_SIZE 8
 #define idleAdvance_offset 6576
 #define idleAdvanceBins_offset 6544
@@ -1259,7 +1260,7 @@
 #define showSdCardWarning_offset 76
 #define SIGNATURE_BOARD kin
 #define SIGNATURE_DATE 2021.02.09
-#define SIGNATURE_HASH 1980107229
+#define SIGNATURE_HASH 662799033
 #define silentTriggerError_offset 1464
 #define slowAdcAlpha_offset 2088
 #define sparkDwellRpmBins_offset 332
@@ -1386,11 +1387,11 @@
 #define test557pin_offset 3101
 #define thermistor_conf_s_size 28
 #define ThermistorConf_size 32
-#define throttlePedalPositionAdcChannel_offset 577
+#define throttlePedalPositionAdcChannel_offset 580
 #define throttlePedalPositionSecondAdcChannel_offset 683
 #define throttlePedalSecondaryUpVoltage_offset 2100
 #define throttlePedalSecondaryWOTVoltage_offset 2104
-#define throttlePedalUpPin_offset 580
+#define throttlePedalUpPin_offset 583
 #define throttlePedalUpPinMode_offset 710
 #define throttlePedalUpVoltage_offset 1884
 #define throttlePedalWOTVoltage_offset 1888
@@ -1410,8 +1411,8 @@
 #define timingAdditive_offset 10072
 #define timingMode_offset 448
 #define timingMultiplier_offset 9872
-#define tle6240_cs_offset 578
-#define tle6240_csPinMode_offset 579
+#define tle6240_cs_offset 581
+#define tle6240_csPinMode_offset 582
 #define tle6240spiDevice_offset 4004
 #define tle8888_cs_offset 3105
 #define tle8888_csPinMode_offset 3106
@@ -1593,7 +1594,7 @@
 #define ts_show_spi true
 #define ts_show_trigger_comparator true
 #define ts_show_tunerstudio_port true
-#define TS_SIGNATURE "rusEFI 2021.02.09.kin.1980107229"
+#define TS_SIGNATURE "rusEFI 2021.02.09.kin.662799033"
 #define TS_SINGLE_WRITE_COMMAND 'W'
 #define TS_SINGLE_WRITE_COMMAND_char W
 #define TS_TEST_COMMAND 't' // 0x74
@@ -1712,7 +1713,7 @@
 #define unusedBit_490_8_offset 2116
 #define unusedBit_490_9_offset 2116
 #define unusedHereWeHave_offset 1464
-#define unusedOldBiquad_offset 2329
+#define unusedOldBiquad_offset 2330
 #define unusedSpiPadding4_offset 2593
 #define unusedSpiPadding5_offset 2715
 #define unusedSpiPadding8_offset 4010
@@ -1779,6 +1780,7 @@
 #define vvt_mode_e_enum "Inactive", "Single Tooth Second Half", "2GZ", "Miata NB2", "Single Tooth First Half", "Bosch Quick Start", "4/1", "mode7"
 #define vvtCamSensorUseRise_offset 744
 #define vvtMode1_offset 2328
+#define vvtModePadding_offset 2329
 #define vvtOffset_offset 2052
 #define warning_message_offset 6000
 #define warningLedPin_offset 2041
