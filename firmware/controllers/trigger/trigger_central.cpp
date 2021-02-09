@@ -169,7 +169,7 @@ void hwHandleVvtCamSignal(trigger_value_e front, efitick_t nowNt, int index DECL
 			ENGINE(triggerCentral).vvtShape[camIndex],
 			nullptr,
 			nullptr,
-			engine->vvtTriggerConfiguration,
+			engine->vvtTriggerConfiguration[camIndex],
 			front == TV_RISE ? SHAFT_PRIMARY_RISING : SHAFT_PRIMARY_FALLING, nowNt);
 
 
