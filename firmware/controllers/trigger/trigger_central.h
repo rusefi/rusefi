@@ -78,7 +78,7 @@ public:
 	TriggerWaveform triggerShape;
 
 	TriggerState vvtState[BANKS_COUNT][CAMS_PER_BANK];
-	TriggerWaveform vvtShape;
+	TriggerWaveform vvtShape[CAMS_PER_BANK];
 
 	TriggerFormDetails triggerFormDetails;
 

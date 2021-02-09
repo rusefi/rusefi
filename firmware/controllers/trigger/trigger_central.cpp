@@ -93,8 +93,8 @@ static bool vvtWithRealDecoder(vvt_mode_e vvtMode) {
 }
 
 void hwHandleVvtCamSignal(trigger_value_e front, efitick_t nowNt, int index DECLARE_ENGINE_PARAMETER_SUFFIX) {
-	int bankIndex = 0;
-	int camIndex = 0;
+	int bankIndex = index / CAMS_PER_BANK;
+	int camIndex = index % CAMS_PER_BANK;
 	TriggerCentral *tc = &engine->triggerCentral;
 	if (front == TV_RISE) {
 		tc->vvtEventRiseCounter++;
@@ -166,7 +166,7 @@ void hwHandleVvtCamSignal(trigger_value_e front, efitick_t nowNt, int index DECL
 	}
 
 	ENGINE(triggerCentral).vvtState[bankIndex][camIndex].decodeTriggerEvent(
-			ENGINE(triggerCentral).vvtShape,
+			ENGINE(triggerCentral).vvtShape[camIndex],
 			nullptr,
 			nullptr,
 			engine->vvtTriggerConfiguration,
