@@ -61,23 +61,23 @@ public:
 
 #if EFI_UNIT_TEST
 	// latest VVT event position (could be not synchronization event)
-	angle_t currentVVTEventPosition = 0;
+	angle_t currentVVTEventPosition[BANKS_COUNT][CAMS_PER_BANK];
 #endif // EFI_UNIT_TEST
 
 	// synchronization event position
-	angle_t vvtPosition[BANKS_COUNT];
+	angle_t vvtPosition[BANKS_COUNT][CAMS_PER_BANK];
 
 	/**
 	 * this is similar to TriggerState#startOfCycleNt but with the crank-only sensor magic
 	 */
 	efitick_t timeAtVirtualZeroNt = 0;
 
-	efitick_t vvtSyncTimeNt[BANKS_COUNT];
+	efitick_t vvtSyncTimeNt[BANKS_COUNT][CAMS_PER_BANK];
 
 	TriggerStateWithRunningStatistics triggerState;
 	TriggerWaveform triggerShape;
 
-	TriggerState vvtState[BANKS_COUNT];
+	TriggerState vvtState[BANKS_COUNT][CAMS_PER_BANK];
 	TriggerWaveform vvtShape;
 
 	TriggerFormDetails triggerFormDetails;
