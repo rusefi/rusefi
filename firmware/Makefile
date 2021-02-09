@@ -90,7 +90,7 @@ endif
 # modules not used in the current configuration.
 # without USE_SMART_BUILD all ChibiOS (including all drivers) are builded. And all drivers includes get included.
 ifeq ($(USE_SMART_BUILD),)
-  USE_SMART_BUILD = yes
+  USE_SMART_BUILD = no
 endif
 
 ifeq ($(USE_BOOTLOADER),)
