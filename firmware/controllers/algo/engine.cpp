@@ -103,6 +103,22 @@ trigger_type_e getVvtTriggerType(vvt_mode_e vvtMode) {
 	}
 }
 
+static void initVvtShape(Logging *logger, vvt_mode_e vvtMode, TriggerWaveform *shape, TriggerState &initState DECLARE_ENGINE_PARAMETER_SUFFIX) {
+	if (vvtMode != VVT_INACTIVE) {
+		trigger_config_s config;
+		ENGINE(triggerCentral).vvtTriggerType = config.type = getVvtTriggerType(vvtMode);
+
+		shape->initializeTriggerWaveform(logger,
+				engineConfiguration->ambiguousOperationMode,
+				engine->engineConfigurationPtr->vvtCamSensorUseRise, &config);
+
+		shape->initializeSyncPoint(initState,
+				engine->vvtTriggerConfiguration,
+				config);
+	}
+
+}
+
 void Engine::initializeTriggerWaveform(Logging *logger DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	static TriggerState initState;
 	INJECT_ENGINE_REFERENCE(&initState);
@@ -131,18 +147,9 @@ void Engine::initializeTriggerWaveform(Logging *logger DECLARE_ENGINE_PARAMETER_
 	}
 
 
-	if (engineConfiguration->vvtMode != VVT_INACTIVE) {
-		trigger_config_s config;
-		ENGINE(triggerCentral).vvtTriggerType = config.type = getVvtTriggerType(engineConfiguration->vvtMode);
+	initVvtShape(logger, engineConfiguration->vvtMode, &ENGINE(triggerCentral).vvtShape[0], initState PASS_ENGINE_PARAMETER_SUFFIX);
+	initVvtShape(logger, engineConfiguration->secondVvtMode, &ENGINE(triggerCentral).vvtShape[1], initState PASS_ENGINE_PARAMETER_SUFFIX);
 
-		ENGINE(triggerCentral).vvtShape.initializeTriggerWaveform(logger,
-				engineConfiguration->ambiguousOperationMode,
-				engine->engineConfigurationPtr->vvtCamSensorUseRise, &config);
-
-		ENGINE(triggerCentral).vvtShape.initializeSyncPoint(initState,
-				engine->vvtTriggerConfiguration,
-				config);
-	}
 
 	if (!TRIGGER_WAVEFORM(shapeDefinitionError)) {
 		prepareOutputSignals(PASS_ENGINE_PARAMETER_SIGNATURE);
