@@ -4,6 +4,7 @@ import com.rusefi.ConfigField;
 import com.rusefi.ReaderState;
 import com.rusefi.TypesHelper;
 import com.rusefi.VariableRegistry;
+import com.rusefi.output.CHeaderConsumer;
 import com.rusefi.output.FsioSettingsConsumer;
 import com.rusefi.output.JavaFieldsConsumer;
 import com.rusefi.output.TSProjectConsumer;
@@ -291,6 +292,30 @@ public class ConfigFieldParserTest {
                     "\tcase FSIO_SETTING_ETB2_MINVALUE:\n" +
                     "\t\treturn \"cfg_etb2_minValue\";\n", fsioSettingsConsumer.getStrings());
         }
+    }
+
+    @Test
+    public void testArrayOfOne() throws IOException {
+        String test = "struct pid_s\n" +
+                "#define ERROR_BUFFER_SIZE 1\n" +
+                "int[ERROR_BUFFER_SIZE iterate] field\n" +
+                "end_struct\n" +
+                "";
+        VariableRegistry.INSTANCE.clear();
+        BufferedReader reader = new BufferedReader(new StringReader(test));
+        CHeaderConsumer consumer = new CHeaderConsumer("d");
+        new ReaderState().readBufferedReader(reader, Collections.singletonList(consumer));
+        assertEquals("// start of pid_s\n" +
+                "struct pid_s {\n" +
+                "\t/**\n" +
+                "\t * offset 0\n" +
+                "\t */\n" +
+                "\tint field[ERROR_BUFFER_SIZE];\n" +
+                "\t/** total size 4*/\n" +
+                "};\n" +
+                "\n" +
+                "typedef struct pid_s pid_s;\n" +
+                "\n", consumer.getContent().toString());
     }
 
     @Test
