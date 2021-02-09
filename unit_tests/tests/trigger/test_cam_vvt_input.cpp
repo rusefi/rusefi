@@ -121,8 +121,9 @@ TEST(sensors, testNB2CamInput) {
 	WITH_ENGINE_TEST_HELPER(MAZDA_MIATA_2003);
 
 	// this crank trigger would be easier to test, crank shape is less important for this test
-	engineConfiguration->useOnlyRisingEdgeForTrigger = true;
 	eth.setTriggerType(TT_ONE PASS_ENGINE_PARAMETER_SUFFIX);
+
+	engineConfiguration->useOnlyRisingEdgeForTrigger = true;
 
 	ASSERT_EQ( 0,  GET_RPM()) << "testNB2CamInput RPM";
 	for (int i = 0; i < 7;i++) {
