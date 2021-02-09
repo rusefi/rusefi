@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Tue Feb 09 02:52:27 UTC 2021
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Tue Feb 09 04:23:23 UTC 2021
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -1056,9 +1056,9 @@ struct engine_configuration_s {
 	 * TODO #660
 	 * offset 556
 	 */
-	brain_input_pin_e camInputs[CAM_INPUTS_COUNT];
+	brain_input_pin_e camInputs;
 	/**
-	 * offset 560
+	 * offset 557
 	 */
 	afr_sensor_s afr;
 	/**
@@ -1067,31 +1067,36 @@ struct engine_configuration_s {
 	 * See also tps1_1AdcChannel
 	 * set_analog_input_pin pps X
 	 * See throttlePedalUpVoltage and throttlePedalWOTVoltage
-	 * offset 580
+	 * offset 577
 	 */
 	adc_channel_e throttlePedalPositionAdcChannel;
 	/**
-	 * offset 581
+	 * offset 578
 	 */
 	brain_pin_e tle6240_cs;
 	/**
-	 * offset 582
+	 * offset 579
 	 */
 	pin_output_mode_e tle6240_csPinMode;
 	/**
 	 * Throttle Pedal not pressed switch - used on some older vehicles like early Mazda Miata
-	 * offset 583
+	 * offset 580
 	 */
 	switch_input_pin_e throttlePedalUpPin;
 	/**
 	 * @see hasBaroSensor
-	 * offset 584
+	 * offset 581
 	 */
 	air_pressure_sensor_config_s baroSensor;
 	/**
-	 * offset 600
+	 * offset 597
 	 */
 	idle_hardware_s idle;
+	/**
+	 * need 4 byte alignment
+	 * offset 605
+	 */
+	uint8_t alignmentFill_at_605[3];
 	/**
 	 * value between 0 and 100 used in Manual mode
 	 * offset 608
@@ -1857,10 +1862,10 @@ struct engine_configuration_s {
 	bool unusedBit_251_29 : 1;
 	/**
 	offset 976 bit 30 */
-	bool unusedBit_288_30 : 1;
+	bool unusedBit_289_30 : 1;
 	/**
 	offset 976 bit 31 */
-	bool unusedBit_288_31 : 1;
+	bool unusedBit_289_31 : 1;
 	/**
 	 * offset 980
 	 */
@@ -2700,76 +2705,76 @@ struct engine_configuration_s {
 	bool unused1130 : 1;
 	/**
 	offset 2116 bit 8 */
-	bool unusedBit_489_8 : 1;
+	bool unusedBit_490_8 : 1;
 	/**
 	offset 2116 bit 9 */
-	bool unusedBit_489_9 : 1;
+	bool unusedBit_490_9 : 1;
 	/**
 	offset 2116 bit 10 */
-	bool unusedBit_489_10 : 1;
+	bool unusedBit_490_10 : 1;
 	/**
 	offset 2116 bit 11 */
-	bool unusedBit_489_11 : 1;
+	bool unusedBit_490_11 : 1;
 	/**
 	offset 2116 bit 12 */
-	bool unusedBit_489_12 : 1;
+	bool unusedBit_490_12 : 1;
 	/**
 	offset 2116 bit 13 */
-	bool unusedBit_489_13 : 1;
+	bool unusedBit_490_13 : 1;
 	/**
 	offset 2116 bit 14 */
-	bool unusedBit_489_14 : 1;
+	bool unusedBit_490_14 : 1;
 	/**
 	offset 2116 bit 15 */
-	bool unusedBit_489_15 : 1;
+	bool unusedBit_490_15 : 1;
 	/**
 	offset 2116 bit 16 */
-	bool unusedBit_489_16 : 1;
+	bool unusedBit_490_16 : 1;
 	/**
 	offset 2116 bit 17 */
-	bool unusedBit_489_17 : 1;
+	bool unusedBit_490_17 : 1;
 	/**
 	offset 2116 bit 18 */
-	bool unusedBit_489_18 : 1;
+	bool unusedBit_490_18 : 1;
 	/**
 	offset 2116 bit 19 */
-	bool unusedBit_489_19 : 1;
+	bool unusedBit_490_19 : 1;
 	/**
 	offset 2116 bit 20 */
-	bool unusedBit_489_20 : 1;
+	bool unusedBit_490_20 : 1;
 	/**
 	offset 2116 bit 21 */
-	bool unusedBit_489_21 : 1;
+	bool unusedBit_490_21 : 1;
 	/**
 	offset 2116 bit 22 */
-	bool unusedBit_489_22 : 1;
+	bool unusedBit_490_22 : 1;
 	/**
 	offset 2116 bit 23 */
-	bool unusedBit_489_23 : 1;
+	bool unusedBit_490_23 : 1;
 	/**
 	offset 2116 bit 24 */
-	bool unusedBit_489_24 : 1;
+	bool unusedBit_490_24 : 1;
 	/**
 	offset 2116 bit 25 */
-	bool unusedBit_489_25 : 1;
+	bool unusedBit_490_25 : 1;
 	/**
 	offset 2116 bit 26 */
-	bool unusedBit_489_26 : 1;
+	bool unusedBit_490_26 : 1;
 	/**
 	offset 2116 bit 27 */
-	bool unusedBit_489_27 : 1;
+	bool unusedBit_490_27 : 1;
 	/**
 	offset 2116 bit 28 */
-	bool unusedBit_489_28 : 1;
+	bool unusedBit_490_28 : 1;
 	/**
 	offset 2116 bit 29 */
-	bool unusedBit_489_29 : 1;
+	bool unusedBit_490_29 : 1;
 	/**
 	offset 2116 bit 30 */
-	bool unusedBit_489_30 : 1;
+	bool unusedBit_490_30 : 1;
 	/**
 	offset 2116 bit 31 */
-	bool unusedBit_489_31 : 1;
+	bool unusedBit_490_31 : 1;
 	/**
 	 * set can_mode X
 	 * offset 2120
@@ -2918,11 +2923,16 @@ struct engine_configuration_s {
 	 * set vvt_mode X
 	 * offset 2328
 	 */
-	vvt_mode_e vvtMode[CAMS_PER_BANK];
+	vvt_mode_e vvtMode;
 	/**
-	 * offset 2330
+	 * offset 2329
 	 */
 	uint8_t unusedOldBiquad[22];
+	/**
+	 * need 4 byte alignment
+	 * offset 2351
+	 */
+	uint8_t alignmentFill_at_2351;
 	/**
 	 * CLT-based timing correction
 	 * offset 2352
@@ -3807,4 +3817,4 @@ struct persistent_config_s {
 typedef struct persistent_config_s persistent_config_s;
 
 // end
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Tue Feb 09 02:52:27 UTC 2021
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Tue Feb 09 04:23:23 UTC 2021
