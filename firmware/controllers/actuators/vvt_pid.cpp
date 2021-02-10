@@ -1,5 +1,5 @@
 /*
- * @file aux_pid.cpp
+ * @file vvt_pid.cpp
  *
  * This class is a copy-paste of alternator_controller.cpp TODO: do something about it? extract more common logic?
  *
@@ -7,9 +7,9 @@
  * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
-#include "aux_pid.h"
 #include "local_version_holder.h"
 #include "allsensors.h"
+#include "vvt_pid.h"
 
 #if EFI_AUX_PID
 #include "pwm_generator_logic.h"
@@ -27,7 +27,9 @@
 
 EXTERN_ENGINE;
 
-extern fsio8_Map3D_f32t fsioTable1;
+static fsio8_Map3D_u8t vvtTable1("vvt#1");
+static fsio8_Map3D_u8t vvtTable2("vvt#2");
+
 
 // todo: this is to some extent a copy-paste of alternator_controller. maybe same loop
 // for all PIDs?
@@ -57,7 +59,8 @@ public:
 	void init(int index) {
 		this->index = index;
 		auxPid.initPidClass(&persistentState.persistentConfiguration.engineConfiguration.auxPid[index]);
-		table = getFSIOTable(index);
+		int camIndex = index % CAMS_PER_BANK;
+		table = camIndex == 0 ? &vvtTable1 : &vvtTable2;
 	}
 
 	int getPeriodMs() override {
@@ -139,6 +142,13 @@ void stopAuxPins() {
 }
 
 void initAuxPid(Logging *sharedLogger) {
+
+	vvtTable1.init(config->vvtTable1, config->vvtTable1LoadBins,
+			config->vvtTable1RpmBins);
+	vvtTable2.init(config->vvtTable2, config->vvtTable2LoadBins,
+			config->vvtTable2RpmBins);
+
+
 	logger = sharedLogger;
 
 	for (int i = 0;i < AUX_PID_COUNT;i++) {

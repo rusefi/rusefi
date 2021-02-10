@@ -48,7 +48,7 @@
 #include "trigger_central.h"
 #include "svnversion.h"
 #include "engine_configuration.h"
-#include "aux_pid.h"
+#include "vvt_pid.h"
 #include "perf_trace.h"
 #include "trigger_emulator_algo.h"
 #include "boost_control.h"
