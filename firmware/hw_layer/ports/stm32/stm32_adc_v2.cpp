@@ -40,10 +40,13 @@ static const ADCConversionGroup tempSensorConvGroup = {
 
 float getMcuTemperature() {
 	// 4x oversample is plenty
-	__ALIGNED(32) adcsample_t samples[4];
+	constexpr int oversample = 4;
+
+	// Buffer is a full 32 bytes to occupy a full cache line
+	__ALIGNED(32) adcsample_t samples[16];
 
 	// Temperature sensor is only physically wired to ADC1
-	adcConvert(&ADCD1, &tempSensorConvGroup, samples, efi::size(samples));
+	adcConvert(&ADCD1, &tempSensorConvGroup, samples, oversample);
 
 #if CORTEX_MODEL == 7
 	// The STM32F7xx/STM32H7xx has a data cache
@@ -55,11 +58,11 @@ float getMcuTemperature() {
 #endif /* CORTEX_MODEL == 7 */
 
 	uint32_t sum = 0;
-	for (size_t i = 0; i < efi::size(samples); i++) {
+	for (size_t i = 0; i < oversample; i++) {
 		sum += samples[i];
 	}
 
-	float volts = (float)sum / (4096 * efi::size(samples));
+	float volts = (float)sum / (4096 * oversample);
 	volts *= CONFIG(adcVcc);
 
 	volts -= 0.760f; // Subtract the reference voltage at 25 deg C
