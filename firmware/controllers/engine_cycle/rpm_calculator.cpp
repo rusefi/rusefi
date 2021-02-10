@@ -271,7 +271,7 @@ void rpmShaftPositionCallback(trigger_event_e ckpSignalType,
 				float rpm = 60 * mult / periodSeconds;
 
 				auto rpmDelta = rpm - rpmState->previousRpmValue;
-				rpmState->rpmRate = rpmDelta / (mult * 1e-6 * NT2US(diffNt));
+				rpmState->rpmRate = rpmDelta / (mult * periodSeconds);
 
 				rpmState->setRpmValue(rpm > UNREALISTIC_RPM ? NOISY_RPM : rpm);
 				
