@@ -68,13 +68,6 @@ static void fireSparkBySettingPinLow(IgnitionEvent *event, IgnitionOutputPin *ou
 	output->setLow();
 }
 
-// todo: make this a class method?
-#define assertPinAssigned(output) { \
-		if (!output->isInitialized()) { \
-			warning(CUSTOM_OBD_COIL_PIN_NOT_ASSIGNED, "no_pin_cl #%s", (output)->getName()); \
-		} \
-}
-
 static void prepareCylinderIgnitionSchedule(angle_t dwellAngleDuration, floatms_t sparkDwell, IgnitionEvent *event DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	// todo: clean up this implementation? does not look too nice as is.
 
@@ -99,12 +92,9 @@ static void prepareCylinderIgnitionSchedule(angle_t dwellAngleDuration, floatms_
 		int secondIndex = index + CONFIG(specs.cylindersCount) / 2;
 		int secondCoilIndex = ID2INDEX(getCylinderId(secondIndex PASS_ENGINE_PARAMETER_SUFFIX));
 		secondOutput = &enginePins.coils[secondCoilIndex];
-		assertPinAssigned(secondOutput);
 	} else {
 		secondOutput = nullptr;
 	}
-
-	assertPinAssigned(output);
 
 	event->outputs[0] = output;
 	event->outputs[1] = secondOutput;

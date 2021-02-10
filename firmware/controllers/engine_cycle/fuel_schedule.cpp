@@ -107,11 +107,6 @@ bool FuelSchedule::addFuelEventsForCylinder(int i  DECLARE_ENGINE_PARAMETER_SUFF
 	ev->outputs[1] = secondOutput;
 	ev->isSimultanious = isSimultanious;
 
-	if (!isSimultanious && !output->isInitialized()) {
-		// todo: extract method for this index math
-		warning(CUSTOM_OBD_INJECTION_NO_PIN_ASSIGNED, "no_pin_inj #%s", output->name);
-	}
-
 	angle_t ignitionPositionWithinEngineCycle = ENGINE(ignitionPositionWithinEngineCycle[i]);
 
 	float angle = baseAngle + ignitionPositionWithinEngineCycle;
