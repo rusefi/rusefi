@@ -20,9 +20,6 @@ extern "C" void toggleLed(int led, int mode);
 #define BOARD_MOD1_PORT GPIOD
 #define BOARD_MOD1_PIN 5
 
-
-extern bool hasFirmwareErrorFlag;
-
 EXTERN_ENGINE
 ;
 static Logging *logger;
@@ -116,8 +113,6 @@ static void onTriggerChanged(efitick_t stamp, bool isPrimary, bool isRising) {
 #if 1
 	// todo: support for 3rd trigger input channel
 	// todo: start using real event time from HW event, not just software timer?
-	if (hasFirmwareErrorFlag)
-		return;
 
 	if (!isPrimary && !TRIGGER_WAVEFORM(needSecondTriggerInput)) {
 		return;
@@ -234,7 +229,7 @@ static int turnOnTriggerInputPin(const char *msg, int index, bool isTriggerShaft
 	brain_pin_e brainPin = isTriggerShaft ?
 		CONFIG(triggerInputPins)[index] : engineConfiguration->camInputs[index];
 
-	if (brainPin == GPIO_UNASSIGNED)
+	if (!isBrainPinValid(brainPin))
 		return 0;
 #if 0
 	centeredDacValue = getDacValue(CONFIG(triggerCompCenterVolt) PASS_ENGINE_PARAMETER_SUFFIX);	// usually 2.5V resistor divider
@@ -297,14 +292,14 @@ void stopTriggerInputPins(void) {
 adc_channel_e getAdcChannelForTrigger(void) {
 	// todo: add other trigger or cam channels?
 	brain_pin_e brainPin = CONFIG(triggerInputPins)[0];
-	if (brainPin == GPIO_UNASSIGNED)
+	if (!isBrainPinValid(brainPin))
 		return EFI_ADC_NONE;
 	return getAdcChannel(brainPin);
 }
 
 void addAdcChannelForTrigger(void) {
 	adc_channel_e ch = getAdcChannelForTrigger();
-	if (ch != EFI_ADC_NONE) {
+	if (isAdcChannelValid(ch)) {
 		addChannel("TRIG", ch, ADC_FAST);
 	}
 }

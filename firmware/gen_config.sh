@@ -9,7 +9,7 @@ rm -f gen_config_board.log
 bash gen_config_default.sh
 [ $? -eq 0 ] || { echo "ERROR generating default"; exit 1; }
 
-for BOARD in "microrusefi mre_f7" "microrusefi mre_f4" "frankenso frankenso_na6" "prometheus prometheus_469" "prometheus prometheus_405" "proteus proteus_f7" "proteus proteus_f4"; do
+for BOARD in "hellen/hellen72 hellen72" "microrusefi mre_f7" "microrusefi mre_f4" "frankenso frankenso_na6" "prometheus prometheus_469" "prometheus prometheus_405" "proteus proteus_f7" "proteus proteus_f4" "subaru_eg33 subaru_eg33_f7"; do
  BOARD_NAME="${BOARD% *}"
  BOARD_SHORT_NAME="${BOARD#* }"
  bash gen_config_board.sh $BOARD_NAME $BOARD_SHORT_NAME

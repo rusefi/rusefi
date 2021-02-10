@@ -15,7 +15,8 @@ STARTUPINC = $(CYPRESS_CONTRIB)/os/common/startup/ARMCMx/devices/S6E2CxAH \
              $(CHIBIOS)/os/common/ext/CMSIS/include \
              $(CHIBIOS)/os/common/ext/ARM/CMSIS/Core/Include
 
-STARTUPLD  = $(CYPRESS_CONTRIB)/os/common/startup/ARMCMx/compilers/GCC/ld
+STARTUPLD_CYPRESS  = $(CYPRESS_CONTRIB)/os/common/startup/ARMCMx/compilers/GCC/ld
+STARTUPLD = $(CHIBIOS)/os/common/startup/ARMCMx/compilers/GCC/ld
 
 # Shared variables
 ALLXASMSRC += $(STARTUPASM)

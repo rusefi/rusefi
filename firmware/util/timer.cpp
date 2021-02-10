@@ -37,6 +37,13 @@ float Timer::getElapsedSeconds() const {
 float Timer::getElapsedSeconds(efitick_t nowNt) const {
 	auto delta = nowNt - m_lastReset;
 
+	// Yes, things can happen slightly in the future if we get a lucky interrupt between
+	// the timestamp and this subtraction, that updates m_lastReset to what's now "the future",
+	// resulting in a negative delta.
+	if (delta < 0) {
+		return 0;
+	}
+
 	if (delta > UINT32_MAX - 1) {
 		delta = UINT32_MAX - 1;
 	}

@@ -1,12 +1,282 @@
-diff --git a/os/hal/include/hal_uart.h b/os/hal/include/hal_uart.h
-index a07464993..3a6abb6b9 100644
---- a/os/hal/include/hal_uart.h
-+++ b/os/hal/include/hal_uart.h
-@@ -298,6 +298,26 @@ typedef enum {
-   _uart_wakeup_rx_complete_isr(uartp);                                      \
+diff -uwr Chibios.18_original/.git/FETCH_HEAD Chibios.18_rusefi/.git/FETCH_HEAD
+--- Chibios.18_original/.git/FETCH_HEAD	2021-01-09 18:01:03.021336000 -0500
++++ Chibios.18_rusefi/.git/FETCH_HEAD	2021-01-09 18:01:03.331269900 -0500
+@@ -1,4 +1,4 @@
+-0f0799eaacdceb3ef295eb0ab865f4f309dba14d		branch 'stable_18.2.x' of https://github.com/rusefi/ChibiOS
++1a2c5967dc813bdbf1cc7eabfea8377340c8a29e		branch 'stable_18.2.rusefi' of https://github.com/rusefi/ChibiOS
+ bbb700257e3e932f60e12e8a2c7dc2120cea3e26	not-for-merge	branch 'master' of https://github.com/rusefi/ChibiOS
+ a4b2c113e74e026dfc7cc02060b32ab3f047ae8d	not-for-merge	branch 'revert-10-master' of https://github.com/rusefi/ChibiOS
+ e61ff3aa1c1fd0f1057e08ae4551abbc01595550	not-for-merge	branch 'stable_1.0.x' of https://github.com/rusefi/ChibiOS
+@@ -7,7 +7,7 @@
+ c8198eb36c2174484141f0119f720bcf0468a0b9	not-for-merge	branch 'stable_16.1.x' of https://github.com/rusefi/ChibiOS
+ 2a2aa99e112861110c1ba6230be258ba3b4e278f	not-for-merge	branch 'stable_17.6.rusefi' of https://github.com/rusefi/ChibiOS
+ 78b70816a88c805db5ca61a190e79b5fed6d25dc	not-for-merge	branch 'stable_17.6.x' of https://github.com/rusefi/ChibiOS
+-1a2c5967dc813bdbf1cc7eabfea8377340c8a29e	not-for-merge	branch 'stable_18.2.rusefi' of https://github.com/rusefi/ChibiOS
++0f0799eaacdceb3ef295eb0ab865f4f309dba14d	not-for-merge	branch 'stable_18.2.x' of https://github.com/rusefi/ChibiOS
+ 71a12f97d5c6ec2d926c67c9bc100f3b2fa3950d	not-for-merge	branch 'stable_19.1.rusefi' of https://github.com/rusefi/ChibiOS
+ e324eb668a8399c5e5342d3111d175f42f14b50b	not-for-merge	branch 'stable_2.0.x' of https://github.com/rusefi/ChibiOS
+ c807840cdcec4e09b3fd0d2268370d9a317f0b90	not-for-merge	branch 'stable_2.2.x' of https://github.com/rusefi/ChibiOS
+diff -uwr Chibios.18_original/.git/HEAD Chibios.18_rusefi/.git/HEAD
+--- Chibios.18_original/.git/HEAD	2021-01-09 17:57:14.360825500 -0500
++++ Chibios.18_rusefi/.git/HEAD	2021-01-09 17:57:38.605678200 -0500
+@@ -1 +1 @@
+-ref: refs/heads/stable_18.2.x
++ref: refs/heads/stable_18.2.rusefi
+diff -uwr Chibios.18_original/.git/ORIG_HEAD Chibios.18_rusefi/.git/ORIG_HEAD
+--- Chibios.18_original/.git/ORIG_HEAD	2021-01-09 18:01:03.057344100 -0500
++++ Chibios.18_rusefi/.git/ORIG_HEAD	2021-01-09 18:01:03.367092300 -0500
+@@ -1 +1 @@
+-0f0799eaacdceb3ef295eb0ab865f4f309dba14d
++1a2c5967dc813bdbf1cc7eabfea8377340c8a29e
+diff -uwr Chibios.18_original/.git/config Chibios.18_rusefi/.git/config
+--- Chibios.18_original/.git/config	2021-01-09 17:57:14.365039900 -0500
++++ Chibios.18_rusefi/.git/config	2021-01-09 17:57:38.609676000 -0500
+@@ -8,6 +8,6 @@
+ [remote "origin"]
+ 	url = https://github.com/rusefi/ChibiOS
+ 	fetch = +refs/heads/*:refs/remotes/origin/*
+-[branch "stable_18.2.x"]
++[branch "stable_18.2.rusefi"]
+ 	remote = origin
+-	merge = refs/heads/stable_18.2.x
++	merge = refs/heads/stable_18.2.rusefi
+Binary files Chibios.18_original/.git/index and Chibios.18_rusefi/.git/index differ
+diff -uwr Chibios.18_original/.git/logs/HEAD Chibios.18_rusefi/.git/logs/HEAD
+--- Chibios.18_original/.git/logs/HEAD	2021-01-09 17:57:14.363031800 -0500
++++ Chibios.18_rusefi/.git/logs/HEAD	2021-01-09 17:57:38.607676900 -0500
+@@ -1 +1 @@
+-0000000000000000000000000000000000000000 0f0799eaacdceb3ef295eb0ab865f4f309dba14d rusefillc <sdfsdfqsf2334234234> 1610233034 -0500	clone: from https://github.com/rusefi/ChibiOS
++0000000000000000000000000000000000000000 1a2c5967dc813bdbf1cc7eabfea8377340c8a29e rusefillc <sdfsdfqsf2334234234> 1610233058 -0500	clone: from https://github.com/rusefi/ChibiOS
+Only in Chibios.18_rusefi/.git/logs/refs/heads: stable_18.2.rusefi
+Only in Chibios.18_original/.git/logs/refs/heads: stable_18.2.x
+diff -uwr Chibios.18_original/.git/logs/refs/remotes/origin/HEAD Chibios.18_rusefi/.git/logs/refs/remotes/origin/HEAD
+--- Chibios.18_original/.git/logs/refs/remotes/origin/HEAD	2021-01-09 17:57:14.359816600 -0500
++++ Chibios.18_rusefi/.git/logs/refs/remotes/origin/HEAD	2021-01-09 17:57:38.604667300 -0500
+@@ -1 +1 @@
+-0000000000000000000000000000000000000000 bbb700257e3e932f60e12e8a2c7dc2120cea3e26 rusefillc <sdfsdfqsf2334234234> 1610233034 -0500	clone: from https://github.com/rusefi/ChibiOS
++0000000000000000000000000000000000000000 bbb700257e3e932f60e12e8a2c7dc2120cea3e26 rusefillc <sdfsdfqsf2334234234> 1610233058 -0500	clone: from https://github.com/rusefi/ChibiOS
+Only in Chibios.18_original/.git/objects/pack: pack-668cff25d611c7199e7543d5cdd7c5662f4aa17b.idx
+Only in Chibios.18_original/.git/objects/pack: pack-668cff25d611c7199e7543d5cdd7c5662f4aa17b.pack
+Only in Chibios.18_rusefi/.git/objects/pack: pack-bbcef4de2c0001c4f9864417bebcfd4e562d8838.idx
+Only in Chibios.18_rusefi/.git/objects/pack: pack-bbcef4de2c0001c4f9864417bebcfd4e562d8838.pack
+Only in Chibios.18_rusefi/.git/refs/heads: stable_18.2.rusefi
+Only in Chibios.18_original/.git/refs/heads: stable_18.2.x
+diff -uwr Chibios.18_original/os/common/ext/ST/STM32F4xx/stm32f407xx.h Chibios.18_rusefi/os/common/ext/ST/STM32F4xx/stm32f407xx.h
+--- Chibios.18_original/os/common/ext/ST/STM32F4xx/stm32f407xx.h	2021-01-09 17:57:15.012972500 -0500
++++ Chibios.18_rusefi/os/common/ext/ST/STM32F4xx/stm32f407xx.h	2021-01-09 17:57:39.210485500 -0500
+@@ -6727,9 +6727,9 @@
+ #define FLASH_SR_EOP_Pos               (0U)                                    
+ #define FLASH_SR_EOP_Msk               (0x1U << FLASH_SR_EOP_Pos)              /*!< 0x00000001 */
+ #define FLASH_SR_EOP                   FLASH_SR_EOP_Msk                        
+-#define FLASH_SR_SOP_Pos               (1U)                                    
+-#define FLASH_SR_SOP_Msk               (0x1U << FLASH_SR_SOP_Pos)              /*!< 0x00000002 */
+-#define FLASH_SR_SOP                   FLASH_SR_SOP_Msk                        
++#define FLASH_SR_OPERR_Pos             (1U)                                    
++#define FLASH_SR_OPERR_Msk             (0x1U << FLASH_SR_OPERR_Pos)            /*!< 0x00000002 */
++#define FLASH_SR_OPERR                 FLASH_SR_OPERR_Msk                      
+ #define FLASH_SR_WRPERR_Pos            (4U)                                    
+ #define FLASH_SR_WRPERR_Msk            (0x1U << FLASH_SR_WRPERR_Pos)           /*!< 0x00000010 */
+ #define FLASH_SR_WRPERR                FLASH_SR_WRPERR_Msk                     
+diff -uwr Chibios.18_original/os/ex/Micron/m25q.c Chibios.18_rusefi/os/ex/Micron/m25q.c
+--- Chibios.18_original/os/ex/Micron/m25q.c	2021-01-09 17:57:15.411973700 -0500
++++ Chibios.18_rusefi/os/ex/Micron/m25q.c	2021-01-09 17:57:39.719581600 -0500
+@@ -290,6 +290,8 @@
+ static flash_error_t m25q_poll_status(M25QDriver *devp) {
+   uint8_t sts;
+ 
++  /* Micron */
++  if (devp->device_id[0] == 0x20) {
+   do {
+ #if M25Q_NICE_WAITING == TRUE
+     osalThreadSleepMilliseconds(1);
+@@ -307,6 +309,19 @@
+     /* Program operation failed.*/
+     return FLASH_ERROR_PROGRAM;
+   }
++  }
++
++  /* Windbond */
++  if (devp->device_id[0] == 0xef) {
++    do {
++#if M25Q_NICE_WAITING == TRUE
++      osalThreadSleepMilliseconds(1);
++#endif
++      /* Read status command.*/
++      jesd216_cmd_receive(devp->config->busp, M25Q_CMD_READ_STATUS_REGISTER,
++                          1, &sts);
++    } while ((sts & W25Q_FLAGS_BUSY) != 0U);
++  }
+ 
+   return FLASH_NO_ERROR;
+ }
+@@ -561,6 +576,8 @@
+     /* Bus acquired.*/
+     jesd216_bus_acquire(devp->config->busp, devp->config->buscfg);
+ 
++    /* Micron */
++    if (devp->device_id[0] == 0x20) {
+     /* Read status command.*/
+     jesd216_cmd_receive(devp->config->busp, M25Q_CMD_READ_FLAG_STATUS_REGISTER,
+                         1, &sts);
+@@ -594,6 +611,32 @@
+       /* Erase operation failed.*/
+       return FLASH_ERROR_ERASE;
+     }
++    }
++    /* Windbond */
++    if (devp->device_id[0] == 0xef) {
++      /* Read status command.*/
++      jesd216_cmd_receive(devp->config->busp, M25Q_CMD_READ_STATUS_REGISTER,
++                          1, &sts);
++
++      /* If the busy bit is 1 then
++         report that the operation is still in progress.*/
++      if ((sts & W25Q_FLAGS_BUSY) != 0U) {
++
++        /* Bus released.*/
++        jesd216_bus_release(devp->config->busp);
++
++        /* Recommended time before polling again, this is a simplified
++           implementation.*/
++        if (msec != NULL) {
++          *msec = 1U;
++        }
++
++        return FLASH_BUSY_ERASING;
++      }
++
++      /* The device is ready to accept commands.*/
++      devp->state = FLASH_READY;
++    }
+ 
+     /* Bus released.*/
+     jesd216_bus_release(devp->config->busp);
+diff -uwr Chibios.18_original/os/ex/Micron/m25q.h Chibios.18_rusefi/os/ex/Micron/m25q.h
+--- Chibios.18_original/os/ex/Micron/m25q.h	2021-01-09 17:57:15.411973700 -0500
++++ Chibios.18_rusefi/os/ex/Micron/m25q.h	2021-01-09 17:57:39.719581600 -0500
+@@ -111,6 +111,8 @@
+                                                  M25Q_FLAGS_PROGRAM_ERROR | \
+                                                  M25Q_FLAGS_VPP_ERROR |     \
+                                                  M25Q_FLAGS_PROTECTION_ERROR)
++
++#define W25Q_FLAGS_BUSY                             0x01U
+ /** @} */
+ 
+ /*===========================================================================*/
+@@ -163,14 +165,14 @@
+  * @brief   Supported JEDEC manufacturer identifiers.
+  */
+ #if !defined(M25Q_SUPPORTED_MANUFACTURE_IDS) || defined(__DOXYGEN__)
+-#define M25Q_SUPPORTED_MANUFACTURE_IDS      {0x20}
++#define M25Q_SUPPORTED_MANUFACTURE_IDS      {0x20, 0xef}
+ #endif
+ 
+ /**
+  * @brief   Supported memory type identifiers.
+  */
+ #if !defined(M25Q_SUPPORTED_MEMORY_TYPE_IDS) || defined(__DOXYGEN__)
+-#define M25Q_SUPPORTED_MEMORY_TYPE_IDS      {0xBA, 0xBB}
++#define M25Q_SUPPORTED_MEMORY_TYPE_IDS      {0xBA, 0xBB, 0x40}
+ #endif
+ 
+ /**
+diff -uwr Chibios.18_original/os/ex/Micron/m25q.mk Chibios.18_rusefi/os/ex/Micron/m25q.mk
+--- Chibios.18_original/os/ex/Micron/m25q.mk	2021-01-09 17:57:15.412973300 -0500
++++ Chibios.18_rusefi/os/ex/Micron/m25q.mk	2021-01-09 17:57:39.720581700 -0500
+@@ -1,6 +1,5 @@
+ # List of all the m25Q device files.
+-M25QSRC := $(CHIBIOS)/os/hal/lib/peripherals/flash/hal_flash.c \
+-           $(CHIBIOS)/os/hal/lib/peripherals/flash/hal_jesd216_flash.c \
++M25QSRC := $(CHIBIOS)/os/hal/lib/peripherals/flash/hal_jesd216_flash.c \
+            $(CHIBIOS)/os/ex/Micron/m25q.c
+ 
+ # Required include directories
+diff -uwr Chibios.18_original/os/ex/ST/lis302dl.c Chibios.18_rusefi/os/ex/ST/lis302dl.c
+--- Chibios.18_original/os/ex/ST/lis302dl.c	2021-01-09 17:57:15.415973700 -0500
++++ Chibios.18_rusefi/os/ex/ST/lis302dl.c	2021-01-09 17:57:39.723581800 -0500
+@@ -397,7 +397,7 @@
+       devp->accbias[i] *= scale;
+     }
+   }
+-  return msg;
++  return MSG_OK;
  }
  
-+/**
+ static const struct LIS302DLVMT vmt_device = {
+diff -uwr Chibios.18_original/os/hal/hal.mk Chibios.18_rusefi/os/hal/hal.mk
+--- Chibios.18_original/os/hal/hal.mk	2021-01-09 17:57:15.628973400 -0500
++++ Chibios.18_rusefi/os/hal/hal.mk	2021-01-09 17:57:39.919581600 -0500
+@@ -26,9 +26,15 @@
+ ifneq ($(findstring HAL_USE_DAC TRUE,$(HALCONF)),)
+ HALSRC += $(CHIBIOS)/os/hal/src/hal_dac.c
+ endif
++ifneq ($(findstring HAL_USE_EFL TRUE,$(HALCONF)),)
++HALSRC += $(CHIBIOS)/os/hal/src/hal_efl.c
++endif
+ ifneq ($(findstring HAL_USE_EXT TRUE,$(HALCONF)),)
+ HALSRC += $(CHIBIOS)/os/hal/src/hal_ext.c
+ endif
++ifneq ($(findstring HAL_USE_FLASH TRUE,$(HALCONF)),)
++HALSRC += $(CHIBIOS)/os/hal/src/hal_flash.c
++endif
+ ifneq ($(findstring HAL_USE_GPT TRUE,$(HALCONF)),)
+ HALSRC += $(CHIBIOS)/os/hal/src/hal_gpt.c
+ endif
+@@ -84,11 +90,13 @@
+ HALSRC = $(CHIBIOS)/os/hal/src/hal.c \
+          $(CHIBIOS)/os/hal/src/hal_buffers.c \
+          $(CHIBIOS)/os/hal/src/hal_queues.c \
++         $(CHIBIOS)/os/hal/src/hal_flash.c \
+          $(CHIBIOS)/os/hal/src/hal_mmcsd.c \
+          $(CHIBIOS)/os/hal/src/hal_adc.c \
+          $(CHIBIOS)/os/hal/src/hal_can.c \
+          $(CHIBIOS)/os/hal/src/hal_crypto.c \
+          $(CHIBIOS)/os/hal/src/hal_dac.c \
++         $(CHIBIOS)/os/hal/src/hal_efl.c \
+          $(CHIBIOS)/os/hal/src/hal_ext.c \
+          $(CHIBIOS)/os/hal/src/hal_gpt.c \
+          $(CHIBIOS)/os/hal/src/hal_i2c.c \
+diff -uwr Chibios.18_original/os/hal/include/hal.h Chibios.18_rusefi/os/hal/include/hal.h
+--- Chibios.18_original/os/hal/include/hal.h	2021-01-09 17:57:15.628973400 -0500
++++ Chibios.18_rusefi/os/hal/include/hal.h	2021-01-09 17:57:39.919581600 -0500
+@@ -50,6 +50,10 @@
+ #define HAL_USE_DAC                         FALSE
+ #endif
+ 
++#if !defined(HAL_USE_EFL)
++#define HAL_USE_EFL                         FALSE
++#endif
++
+ #if !defined(HAL_USE_EXT)
+ #define HAL_USE_ETX                         FALSE
+ #endif
+@@ -120,6 +124,8 @@
+ #include "hal_files.h"
+ #include "hal_ioblock.h"
+ #include "hal_mmcsd.h"
++#include "hal_persistent.h"
++#include "hal_flash.h"
+ 
+ /* Shared headers.*/
+ #include "hal_buffers.h"
+@@ -131,6 +137,7 @@
+ #include "hal_can.h"
+ #include "hal_crypto.h"
+ #include "hal_dac.h"
++#include "hal_efl.h"
+ #include "hal_ext.h"
+ #include "hal_gpt.h"
+ #include "hal_i2c.h"
+Only in Chibios.18_rusefi/os/hal/include: hal_efl.h
+Only in Chibios.18_rusefi/os/hal/include: hal_flash.h
+Only in Chibios.18_rusefi/os/hal/include: hal_persistent.h
+diff -uwr Chibios.18_original/os/hal/include/hal_uart.h Chibios.18_rusefi/os/hal/include/hal_uart.h
+--- Chibios.18_original/os/hal/include/hal_uart.h	2021-01-09 17:57:15.639973800 -0500
++++ Chibios.18_rusefi/os/hal/include/hal_uart.h	2021-01-09 17:57:39.931581500 -0500
+@@ -299,6 +299,26 @@
+ }
+ 
+ /**
 + * @brief   Common ISR code for RX half-transfer data.
 + * @details This code handles the portable part of the ISR code:
 + *          - Callback invocation.
@@ -26,14 +296,16 @@ index a07464993..3a6abb6b9 100644
 +    (uartp)->config->rxhalf_cb(uartp, full);                                \
 +}
 +
- /**
++/**
   * @brief   Common ISR code for RX error.
   * @details This code handles the portable part of the ISR code:
-diff --git a/os/hal/ports/STM32/LLD/USARTv1/hal_uart_lld.c b/os/hal/ports/STM32/LLD/USARTv1/hal_uart_lld.c
-index f4370d28d..e2caea0e1 100644
---- a/os/hal/ports/STM32/LLD/USARTv1/hal_uart_lld.c
-+++ b/os/hal/ports/STM32/LLD/USARTv1/hal_uart_lld.c
-@@ -236,6 +236,11 @@ static void usart_start(UARTDriver *uartp) {
+  *          - Callback invocation.
+Only in Chibios.18_original/os/hal/lib/peripherals/flash: hal_flash.c
+Only in Chibios.18_original/os/hal/lib/peripherals/flash: hal_flash.h
+diff -uwr Chibios.18_original/os/hal/ports/STM32/LLD/USARTv1/hal_uart_lld.c Chibios.18_rusefi/os/hal/ports/STM32/LLD/USARTv1/hal_uart_lld.c
+--- Chibios.18_original/os/hal/ports/STM32/LLD/USARTv1/hal_uart_lld.c	2021-01-09 17:57:15.777973800 -0500
++++ Chibios.18_rusefi/os/hal/ports/STM32/LLD/USARTv1/hal_uart_lld.c	2021-01-09 17:57:40.183225100 -0500
+@@ -236,6 +236,11 @@
    /* Mustn't ever set TCIE here - if done, it causes an immediate
       interrupt.*/
    cr1 = USART_CR1_UE | USART_CR1_PEIE | USART_CR1_TE | USART_CR1_RE;
@@ -45,7 +317,7 @@ index f4370d28d..e2caea0e1 100644
    u->CR1 = uartp->config->cr1 | cr1;
  
    /* Starting the receiver idle loop.*/
-@@ -264,6 +269,15 @@ static void uart_lld_serve_rx_end_irq(UARTDriver *uartp, uint32_t flags) {
+@@ -264,6 +269,15 @@
         received character and then the driver stays in the same state.*/
      _uart_rx_idle_code(uartp);
    }
@@ -61,7 +333,7 @@ index f4370d28d..e2caea0e1 100644
    else {
      /* Receiver in active state, a callback is generated, if enabled, after
         a completed transfer.*/
-@@ -322,6 +336,11 @@ static void serve_usart_irq(UARTDriver *uartp) {
+@@ -322,6 +336,11 @@
      /* End of transmission, a callback is generated.*/
      _uart_tx2_isr_code(uartp);
    }
@@ -73,7 +345,7 @@ index f4370d28d..e2caea0e1 100644
  }
  
  /*===========================================================================*/
-@@ -793,8 +812,14 @@ void uart_lld_start_receive(UARTDriver *uartp, size_t n, void *rxbuf) {
+@@ -793,8 +812,14 @@
    /* RX DMA channel preparation.*/
    dmaStreamSetMemory0(uartp->dmarx, rxbuf);
    dmaStreamSetTransactionSize(uartp->dmarx, n);
@@ -90,15 +362,13 @@ index f4370d28d..e2caea0e1 100644
  
    /* Starting transfer.*/
    dmaStreamEnable(uartp->dmarx);
-diff --git a/os/hal/ports/STM32/LLD/USARTv1/hal_uart_lld.h b/os/hal/ports/STM32/LLD/USARTv1/hal_uart_lld.h
-index fcf73e7fb..a0b1c1a96 100644
---- a/os/hal/ports/STM32/LLD/USARTv1/hal_uart_lld.h
-+++ b/os/hal/ports/STM32/LLD/USARTv1/hal_uart_lld.h
-@@ -462,6 +462,14 @@ typedef void (*uartccb_t)(UARTDriver *uartp, uint16_t c);
-  */
+diff -uwr Chibios.18_original/os/hal/ports/STM32/LLD/USARTv1/hal_uart_lld.h Chibios.18_rusefi/os/hal/ports/STM32/LLD/USARTv1/hal_uart_lld.h
+--- Chibios.18_original/os/hal/ports/STM32/LLD/USARTv1/hal_uart_lld.h	2021-01-09 17:57:15.777973800 -0500
++++ Chibios.18_rusefi/os/hal/ports/STM32/LLD/USARTv1/hal_uart_lld.h	2021-01-09 17:57:40.183225100 -0500
+@@ -463,6 +463,14 @@
  typedef void (*uartecb_t)(UARTDriver *uartp, uartflags_t e);
  
-+/**
+ /**
 + * @brief   Receive Half-transfer UART notification callback type.
 + *
 + * @param[in] uartp     pointer to the @p UARTDriver object
@@ -106,10 +376,11 @@ index fcf73e7fb..a0b1c1a96 100644
 + */
 +typedef void (*uarthcb_t)(UARTDriver *uartp, uartflags_t full);
 +
- /**
++/**
   * @brief   Driver configuration structure.
   * @note    It could be empty on some architectures.
-@@ -504,6 +512,16 @@ typedef struct {
+  */
+@@ -504,6 +512,16 @@
     * @brief Initialization value for the CR3 register.
     */
    uint16_t                  cr3;
@@ -126,10 +397,225 @@ index fcf73e7fb..a0b1c1a96 100644
  } UARTConfig;
  
  /**
-diff --git a/os/rt/include/chdebug.h b/os/rt/include/chdebug.h
-index 43163bed1..f7f86e19c 100644
---- a/os/rt/include/chdebug.h
-+++ b/os/rt/include/chdebug.h
+Only in Chibios.18_rusefi/os/hal/ports/STM32/STM32F4xx: hal_efl_lld.c
+Only in Chibios.18_rusefi/os/hal/ports/STM32/STM32F4xx: hal_efl_lld.h
+diff -uwr Chibios.18_original/os/hal/ports/STM32/STM32F4xx/hal_lld.h Chibios.18_rusefi/os/hal/ports/STM32/STM32F4xx/hal_lld.h
+--- Chibios.18_original/os/hal/ports/STM32/STM32F4xx/hal_lld.h	2021-01-09 17:57:15.801973400 -0500
++++ Chibios.18_rusefi/os/hal/ports/STM32/STM32F4xx/hal_lld.h	2021-01-09 17:57:40.208224900 -0500
+@@ -991,6 +991,7 @@
+ #define STM32_6WS_THRESHOLD         0
+ #define STM32_7WS_THRESHOLD         0
+ #define STM32_8WS_THRESHOLD         0
++#define STM32_FLASH_PSIZE           2
+ #elif (STM32_VDD >= 240) && (STM32_VDD < 270)
+ #define STM32_0WS_THRESHOLD         24000000
+ #define STM32_1WS_THRESHOLD         48000000
+@@ -1001,6 +1002,7 @@
+ #define STM32_6WS_THRESHOLD         168000000
+ #define STM32_7WS_THRESHOLD         180000000
+ #define STM32_8WS_THRESHOLD         0
++#define STM32_FLASH_PSIZE           1
+ #elif (STM32_VDD >= 210) && (STM32_VDD < 240)
+ #define STM32_0WS_THRESHOLD         22000000
+ #define STM32_1WS_THRESHOLD         44000000
+@@ -1011,6 +1013,7 @@
+ #define STM32_6WS_THRESHOLD         154000000
+ #define STM32_7WS_THRESHOLD         176000000
+ #define STM32_8WS_THRESHOLD         180000000
++#define STM32_FLASH_PSIZE           1
+ #elif (STM32_VDD >= 180) && (STM32_VDD < 210)
+ #define STM32_0WS_THRESHOLD         20000000
+ #define STM32_1WS_THRESHOLD         40000000
+@@ -1021,6 +1024,7 @@
+ #define STM32_6WS_THRESHOLD         140000000
+ #define STM32_7WS_THRESHOLD         168000000
+ #define STM32_8WS_THRESHOLD         0
++#define STM32_FLASH_PSIZE           0
+ #else
+ #error "invalid VDD voltage specified"
+ #endif
+@@ -1036,6 +1040,7 @@
+ #define STM32_6WS_THRESHOLD         0
+ #define STM32_7WS_THRESHOLD         0
+ #define STM32_8WS_THRESHOLD         0
++#define STM32_FLASH_PSIZE           2
+ #elif (STM32_VDD >= 240) && (STM32_VDD < 270)
+ #define STM32_0WS_THRESHOLD         24000000
+ #define STM32_1WS_THRESHOLD         48000000
+@@ -1046,6 +1051,7 @@
+ #define STM32_6WS_THRESHOLD         0
+ #define STM32_7WS_THRESHOLD         0
+ #define STM32_8WS_THRESHOLD         0
++#define STM32_FLASH_PSIZE           1
+ #elif (STM32_VDD >= 210) && (STM32_VDD < 240)
+ #define STM32_0WS_THRESHOLD         18000000
+ #define STM32_1WS_THRESHOLD         36000000
+@@ -1056,6 +1062,7 @@
+ #define STM32_6WS_THRESHOLD         0
+ #define STM32_7WS_THRESHOLD         0
+ #define STM32_8WS_THRESHOLD         0
++#define STM32_FLASH_PSIZE           1
+ #elif (STM32_VDD >= 180) && (STM32_VDD < 210)
+ #define STM32_0WS_THRESHOLD         16000000
+ #define STM32_1WS_THRESHOLD         32000000
+@@ -1066,6 +1073,7 @@
+ #define STM32_6WS_THRESHOLD         0
+ #define STM32_7WS_THRESHOLD         0
+ #define STM32_8WS_THRESHOLD         0
++#define STM32_FLASH_PSIZE           0
+ #else
+ #error "invalid VDD voltage specified"
+ #endif
+@@ -1081,6 +1089,7 @@
+ #define STM32_6WS_THRESHOLD         0
+ #define STM32_7WS_THRESHOLD         0
+ #define STM32_8WS_THRESHOLD         0
++#define STM32_FLASH_PSIZE           2
+ #elif (STM32_VDD >= 240) && (STM32_VDD < 270)
+ #define STM32_0WS_THRESHOLD         24000000
+ #define STM32_1WS_THRESHOLD         48000000
+@@ -1091,6 +1100,7 @@
+ #define STM32_6WS_THRESHOLD         0
+ #define STM32_7WS_THRESHOLD         0
+ #define STM32_8WS_THRESHOLD         0
++#define STM32_FLASH_PSIZE           1
+ #elif (STM32_VDD >= 210) && (STM32_VDD < 240)
+ #define STM32_0WS_THRESHOLD         18000000
+ #define STM32_1WS_THRESHOLD         36000000
+@@ -1101,6 +1111,7 @@
+ #define STM32_6WS_THRESHOLD         0
+ #define STM32_7WS_THRESHOLD         0
+ #define STM32_8WS_THRESHOLD         0
++#define STM32_FLASH_PSIZE           1
+ #elif (STM32_VDD >= 171) && (STM32_VDD < 210)
+ #define STM32_0WS_THRESHOLD         16000000
+ #define STM32_1WS_THRESHOLD         32000000
+@@ -1111,6 +1122,7 @@
+ #define STM32_6WS_THRESHOLD         100000000
+ #define STM32_7WS_THRESHOLD         0
+ #define STM32_8WS_THRESHOLD         0
++#define STM32_FLASH_PSIZE           0
+ #else
+ #error "invalid VDD voltage specified"
+ #endif
+@@ -1125,6 +1137,7 @@
+ #define STM32_5WS_THRESHOLD         0
+ #define STM32_6WS_THRESHOLD         0
+ #define STM32_7WS_THRESHOLD         0
++#define STM32_FLASH_PSIZE           2
+ #elif (STM32_VDD >= 240) && (STM32_VDD < 270)
+ #define STM32_0WS_THRESHOLD         24000000
+ #define STM32_1WS_THRESHOLD         48000000
+@@ -1134,6 +1147,7 @@
+ #define STM32_5WS_THRESHOLD         0
+ #define STM32_6WS_THRESHOLD         0
+ #define STM32_7WS_THRESHOLD         0
++#define STM32_FLASH_PSIZE           1
+ #elif (STM32_VDD >= 210) && (STM32_VDD < 240)
+ #define STM32_0WS_THRESHOLD         18000000
+ #define STM32_1WS_THRESHOLD         36000000
+@@ -1143,6 +1157,7 @@
+ #define STM32_5WS_THRESHOLD         108000000
+ #define STM32_6WS_THRESHOLD         120000000
+ #define STM32_7WS_THRESHOLD         0
++#define STM32_FLASH_PSIZE           1
+ #elif (STM32_VDD >= 180) && (STM32_VDD < 210)
+ #define STM32_0WS_THRESHOLD         16000000
+ #define STM32_1WS_THRESHOLD         32000000
+@@ -1152,6 +1167,7 @@
+ #define STM32_5WS_THRESHOLD         96000000
+ #define STM32_6WS_THRESHOLD         112000000
+ #define STM32_7WS_THRESHOLD         120000000
++#define STM32_FLASH_PSIZE           0
+ #else
+ #error "invalid VDD voltage specified"
+ #endif
+diff -uwr Chibios.18_original/os/hal/ports/STM32/STM32F4xx/platform.mk Chibios.18_rusefi/os/hal/ports/STM32/STM32F4xx/platform.mk
+--- Chibios.18_original/os/hal/ports/STM32/STM32F4xx/platform.mk	2021-01-09 17:57:15.801973400 -0500
++++ Chibios.18_rusefi/os/hal/ports/STM32/STM32F4xx/platform.mk	2021-01-09 17:57:40.208224900 -0500
+@@ -1,7 +1,8 @@
+ # Required platform files.
+ PLATFORMSRC := $(CHIBIOS)/os/hal/ports/common/ARMCMx/nvic.c \
+                $(CHIBIOS)/os/hal/ports/STM32/STM32F4xx/stm32_isr.c \
+-               $(CHIBIOS)/os/hal/ports/STM32/STM32F4xx/hal_lld.c
++               $(CHIBIOS)/os/hal/ports/STM32/STM32F4xx/hal_lld.c  \
++               $(CHIBIOS)/os/hal/ports/STM32/STM32F4xx/hal_efl_lld.c
+ 
+ # Required include directories.
+ PLATFORMINC := $(CHIBIOS)/os/hal/ports/common/ARMCMx \
+diff -uwr Chibios.18_original/os/hal/src/hal.c Chibios.18_rusefi/os/hal/src/hal.c
+--- Chibios.18_original/os/hal/src/hal.c	2021-01-09 17:57:15.828973300 -0500
++++ Chibios.18_rusefi/os/hal/src/hal.c	2021-01-09 17:57:40.236225100 -0500
+@@ -80,6 +80,9 @@
+ #if (HAL_USE_DAC == TRUE) || defined(__DOXYGEN__)
+   dacInit();
+ #endif
++#if (HAL_USE_EFL == TRUE) || defined(__DOXYGEN__)
++  eflInit();
++#endif
+ #if (HAL_USE_EXT == TRUE) || defined(__DOXYGEN__)
+   extInit();
+ #endif
+Only in Chibios.18_rusefi/os/hal/src: hal_efl.c
+Only in Chibios.18_rusefi/os/hal/src: hal_flash.c
+diff -uwr Chibios.18_original/os/hal/src/hal_mmc_spi.c Chibios.18_rusefi/os/hal/src/hal_mmc_spi.c
+--- Chibios.18_original/os/hal/src/hal_mmc_spi.c	2021-01-09 17:57:15.833973400 -0500
++++ Chibios.18_rusefi/os/hal/src/hal_mmc_spi.c	2021-01-09 17:57:40.242225300 -0500
+@@ -31,6 +31,8 @@
+ 
+ #if (HAL_USE_MMC_SPI == TRUE) || defined(__DOXYGEN__)
+ 
++#define MMC_WAIT_RETRY 3000
++
+ /*===========================================================================*/
+ /* Driver local definitions.                                                 */
+ /*===========================================================================*/
+@@ -172,6 +174,10 @@
+       return;
+     }
+   }
++#if MMC_NICE_WAITING == TRUE
++  int waitCounter = 0;
++#endif
++
+   /* Looks like it is a long wait.*/
+   while (true) {
+     spiReceive(mmcp->config->spip, 1, buf);
+@@ -181,6 +187,10 @@
+ #if MMC_NICE_WAITING == TRUE
+     /* Trying to be nice with the other threads.*/
+     osalThreadSleepMilliseconds(1);
++    if (++waitCounter == MMC_WAIT_RETRY) {
++    	// it's time to give up, this MMC card is not working property
++    	break;
++    }
+ #endif
+   }
+ }
+@@ -356,6 +366,9 @@
+   uint8_t buf[1];
+ 
+   spiSelect(mmcp->config->spip);
++#if MMC_NICE_WAITING == TRUE
++  int waitCounter = 0;
++#endif
+   while (true) {
+     spiReceive(mmcp->config->spip, 1, buf);
+     if (buf[0] == 0xFFU) {
+@@ -364,6 +377,10 @@
+ #if MMC_NICE_WAITING == TRUE
+     /* Trying to be nice with the other threads.*/
+     osalThreadSleepMilliseconds(1);
++    if (++waitCounter == MMC_WAIT_RETRY) {
++    	// it's time to give up, this MMC card is not working property
++    	break;
++    }
+ #endif
+   }
+   spiUnselect(mmcp->config->spip);
+diff -uwr Chibios.18_original/os/rt/include/chdebug.h Chibios.18_rusefi/os/rt/include/chdebug.h
+--- Chibios.18_original/os/rt/include/chdebug.h	2021-01-09 17:57:15.865973200 -0500
++++ Chibios.18_rusefi/os/rt/include/chdebug.h	2021-01-09 17:57:40.274224800 -0500
 @@ -60,9 +60,10 @@
  /* Module macros.                                                            */
  /*===========================================================================*/

@@ -12,6 +12,7 @@
 
 #include "efifeatures.h"
 #include "obd_error_codes.h"
+#include "rusefi_generated.h"
 // we do not want to start the search for header from current folder so we use brackets here
 // https://stackoverflow.com/questions/21593/what-is-the-difference-between-include-filename-and-include-filename
 #include <rusefi_hw_enums.h>
@@ -40,11 +41,7 @@ typedef enum {
 	 * http://rusefi.com/forum/viewtopic.php?t=375
 	 */
 	FORD_ASPIRE_1996 = ET_FORD_ASPIRE,
-	/**
-	 * 36-1 toothed wheel engine
-	 * http://rusefi.com/forum/viewtopic.php?t=282
-	 */
-	FORD_FIESTA = ET_FORD_FIESTA,
+
 	NISSAN_PRIMERA = 5,
 	HONDA_ACCORD_CD = 6,
 	FORD_INLINE_6_1995 = 7,
@@ -54,9 +51,6 @@ typedef enum {
 	 * http://rusefi.com/forum/viewtopic.php?f=3&t=332
 	 */
 	GY6_139QMB = 8,
-
-
-	ROVER_V8 = ET_ROVER_V8,
 
 	MIATA_PROTEUS_TCU = ET_MIATA_TCU_PROTEUS,
 	MAZDA_MIATA_NB1 = 9,
@@ -94,14 +88,12 @@ typedef enum {
 	MRE_BODY_CONTROL = ET_MRE_BODY_CONTROL,
 	BMW_M73_M = 24,
 
-	BMW_E34 = ET_BMW_E34,
-
 	TEST_ENGINE = 26,
 
 	// used by unit test
 	// see https://github.com/rusefi/rusefi/issues/898
 	// see TriggerWaveform::bothFrontsRequired
-	ISSUE_898 = 27,
+	TEST_ISSUE_898 = 27,
 
 	MAZDA_626 = 28,
 
@@ -130,8 +122,7 @@ typedef enum {
 
 	BMW_M73_F = ET_BMW_M73_F,
 
-
-	ZIL_130 = 42,
+	PROTEUS_QC_TEST_BOARD = ET_PROTEUS_QC_TEST_BOARD,
 
 	HONDA_600 = 43,
 
@@ -183,15 +174,24 @@ typedef enum {
 
 	MICRO_RUS_EFI = ET_MRE_DEFAULTS,
 
-	PROTEUS = 61,
+	PROTEUS_DEFAULTS = 61,
+
+	PROTEUS_ANALOG_PWM_TEST = ET_PROTEUS_ANALOG_PWM_TEST,
 
 	VW_B6 = ET_VW_B6,
 
-	BMW_M73_PROTEUS = ET_BMW_M73_PROTEUS,
+	BMW_M73_PROTEUS = ET_PROTEUS_BMW_M73,
 
 	DODGE_RAM = 64,
 	CITROEN_TU3JP = ET_CITROEN_TU3JP,
 
+	MRE_M111 = ET_MRE_M111,
+
+	PROTEUS_MIATA_NB2 = ET_PROTEUS_MIATA_NB2,
+
+	HELLEN_NB2 = ET_HELLEN_NB2,
+
+	SUBARUEG33_DEFAULTS = 70,
 
 	/**
 	 * this configuration has as few pins configured as possible
@@ -258,7 +258,7 @@ typedef enum {
 	 * see also TT_ONE a bit below
 	 */
 	TT_ONE_PLUS_ONE = 16,
-	// "1+60/2"
+	// VVT for 2JZ
 	TT_VVT_JZ = TT_TT_VVT_JZ,
 	// just one channel with just one tooth
 	TT_ONE = TT_TT_ONE,
@@ -342,7 +342,7 @@ typedef enum {
 	/**
 	 * cam sensor of Mazda Miata NB2 - the VVT signal shape
 	 */
-	TT_VVT_MIATA_NB2 = 43,
+	TT_VVT_MIATA_NB2 = TT_TT_VVT_MIATA_NB2,
 
 	TT_RENIX_44_2_2 = TT_TT_RENIX_44_2_2,
 
@@ -361,13 +361,29 @@ typedef enum {
 
 	TT_1_16 = 50,
 
+	// todo: remove this trigger once we have https://github.com/rusefi/rusefi/issues/2073
+	TT_SUBARU_7_WITHOUT_6 = TT_TT_SUBARU_7_WITHOUT_6,
+
+	TT_52 = TT_TT_52,
+
+	// https://rusefi.com/forum/viewtopic.php?f=5&t=1912
+	TT_TRI_TACH = TT_TT_TRI_TACH,
+
+	TT_GM_60_2_2_2 = TT_TT_GM_60_2_2_2,
+
+	/**
+	 * https://rusefi.com/forum/viewtopic.php?f=5&t=1937
+	 * HALL sensor, and can be used on all Skoda's engines (from 1000MB to 130, Favorit, Felicia)
+	 */
+	TT_SKODA_FAVORIT = TT_TT_SKODA_FAVORIT,
+
 	// do not forget to edit "#define trigger_type_e_enum" line in integration/rusefi_config.txt file to propogate new value to rusefi.ini TS project
 	// do not forget to invoke "gen_config.bat" once you make changes to integration/rusefi_config.txt
 	// todo: one day a hero would integrate some of these things into Makefile in order to reduce manual magic
 	//
 	// Another point: once you add a new trigger, run get_trigger_images.bat which would run rusefi_test.exe from unit_tests
 	//
-	TT_UNUSED = 51, // this is used if we want to iterate over all trigger types
+	TT_UNUSED = 56, // this is used if we want to iterate over all trigger types
 
 	Force_4_bytes_size_trigger_type = ENUM_32_BITS,
 } trigger_type_e;
@@ -405,7 +421,7 @@ typedef enum {
 	SHAFT_3RD_RISING = 5,
 } trigger_event_e;
 
-typedef enum {
+typedef enum  __attribute__ ((__packed__)) {
 	/**
 	 * This mode is useful for troubleshooting and research - events are logged but no effects on phase synchronization
 	 */
@@ -423,7 +439,7 @@ typedef enum {
 	 * Mazda NB2 has three cam tooth. We synchronize based on gap ratio.
 	 * @see TT_VVT_MIATA_NB2
 	 */
-	MIATA_NB2 = 3,
+	VVT_MIATA_NB2 = 3,
 
 	/**
 	 * Single-tooth cam sensor mode where TDC and cam signal happen in the same 360 degree of 720 degree engine cycle
@@ -440,8 +456,6 @@ typedef enum {
 	VVT_4_1 = 6,
 
 	VVT_FORD_ST170 = 7,
-
-	Force_4_bytes_size_vvt_mode = ENUM_32_BITS,
 } vvt_mode_e;
 
 /**
@@ -476,7 +490,7 @@ typedef enum {
 
 } display_mode_e;
 
-typedef enum  __attribute__ ((__packed__)){
+typedef enum  __attribute__ ((__packed__)) {
 	TL_AUTO = 0,
 	TL_SEMI_AUTO = 1,
 	TL_MANUAL = 2,
@@ -615,7 +629,7 @@ typedef enum {
 	/**
 	 * only one injector located in throttle body
 	 */
-	IM_SINGLE_POINT = 3,
+	IM_SINGLE_POINT = IM_IM_SINGLE_POINT,
 
 
 	Force_4_bytes_size_injection_mode = ENUM_32_BITS,
@@ -761,7 +775,13 @@ typedef enum {
 	DBG_FSIO_EXPRESSION_8_14 = 41,
 	DBG_FSIO_SPECIAL = 42,
 	DBG_INJECTOR_COMPENSATION = 43,
-	DBG_44 = 44,
+	DBG_DYNO_VIEW = 44,
+	// todo: because of getEnumOptionsForTunerStudio 'getEnumOptionsForTunerStudio' would not work here
+	// todo: https://github.com/rusefi/rusefi/issues/2102
+	DBG_LOGIC_ANALYZER = 45,
+	DBG_RUSEFI_WIDEBAND = 46,
+	DBG_TCU = 47,
+	DBG_48 = 48,
 
 	Force_4_bytes_size_debug_mode_e = ENUM_32_BITS,
 } debug_mode_e;
@@ -818,6 +838,10 @@ typedef enum {
 	MT_BOSCH_2_5 = 10,
 
 	MT_MAZDA_1_BAR = 11,
+
+	MT_GM_2_BAR = 12,
+
+	MT_GM_1_BAR = 13,
 
 	Force_4_bytes_size_cranking_map_type = ENUM_32_BITS,
 } air_pressure_sensor_type_e;
@@ -887,6 +911,7 @@ typedef enum {
 	CAN_BUS_NBC_BMW = 4,
 	CAN_BUS_W202_C180 = 5,
     CAN_BUS_BMW_E90 = 6,
+	CAN_BUS_Haltech = 7,
 	Internal_ForceMyEnumIntSize_can_nbc = ENUM_32_BITS,
 } can_nbc_e;
 

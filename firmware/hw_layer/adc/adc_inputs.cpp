@@ -82,8 +82,8 @@ AdcDevice::AdcDevice(ADCConversionGroup* hwConfig, adcsample_t *buf, size_t buf_
  * 8000 RPM is 133Hz
  * If we want to sample MAP once per 5 degrees we need 133Hz * (360 / 5) = 9576Hz of fast ADC
  */
-// todo: migrate to continues ADC mode? probably not - we cannot afford the callback in
-// todo: continues mode. todo: look into our options
+// todo: migrate to continuous ADC mode? probably not - we cannot afford the callback in
+// todo: continuous mode. todo: look into our options
 #define GPT_FREQ_FAST 100000   /* PWM clock frequency. I wonder what does this setting mean?  */
 #define GPT_PERIOD_FAST 10  /* PWM period (in PWM ticks).    */
 #endif /* GPT_FREQ_FAST GPT_PERIOD_FAST */
@@ -173,7 +173,7 @@ static ADCConversionGroup adcgrpcfgSlow = {
 
 AdcDevice slowAdc(&adcgrpcfgSlow, slowAdcSampleBuf, ARRAY_SIZE(slowAdcSampleBuf));
 
-void adc_callback_fast(ADCDriver *adcp, adcsample_t *buffer, size_t n);
+void adc_callback_fast(ADCDriver *adcp);
 
 static ADCConversionGroup adcgrpcfgFast = {
 	.circular			= FALSE,
@@ -268,7 +268,7 @@ float getMCUInternalTemperature() {
 }
 
 int getInternalAdcValue(const char *msg, adc_channel_e hwChannel) {
-	if (hwChannel == EFI_ADC_NONE) {
+	if (!isAdcChannelValid(hwChannel)) {
 		warning(CUSTOM_OBD_ANALOG_INPUT_NOT_CONFIGURED, "ADC: %s input is not configured", msg);
 		return -1;
 	}
@@ -287,7 +287,7 @@ int getInternalAdcValue(const char *msg, adc_channel_e hwChannel) {
 		return value;
 	}
 	if (adcHwChannelEnabled[hwChannel] != ADC_SLOW) {
-	    // todo: make this not happen during hardware continues integration
+	    // todo: make this not happen during hardware continuous integration
 		warning(CUSTOM_OBD_WRONG_ADC_MODE, "ADC is off [%s] index=%d", msg, hwChannel);
 	}
 
@@ -410,7 +410,7 @@ static void printFullAdcReport(Logging *logger) {
 
 		adc_channel_e hwIndex = fastAdc.getAdcHardwareIndexByInternalIndex(index);
 
-		if (hwIndex != EFI_ADC_NONE && hwIndex != EFI_ADC_ERROR) {
+		if (isAdcChannelValid(hwIndex)) {
 			ioportid_t port = getAdcChannelPort("print", hwIndex);
 			int pin = getAdcChannelPin(hwIndex);
 
@@ -430,7 +430,7 @@ static void printFullAdcReport(Logging *logger) {
 
 		adc_channel_e hwIndex = slowAdc.getAdcHardwareIndexByInternalIndex(index);
 
-		if (hwIndex != EFI_ADC_NONE && hwIndex != EFI_ADC_ERROR) {
+		if (isAdcChannelValid(hwIndex)) {
 			ioportid_t port = getAdcChannelPort("print", hwIndex);
 			int pin = getAdcChannelPin(hwIndex);
 
@@ -516,7 +516,7 @@ public:
 };
 
 void addChannel(const char *name, adc_channel_e setting, adc_channel_mode_e mode) {
-	if (setting == EFI_ADC_NONE) {
+	if (!isAdcChannelValid(setting)) {
 		return;
 	}
 	if (/*type-limited (int)setting < 0 || */(int)setting>=HW_MAX_ADC_INDEX) {
@@ -532,7 +532,7 @@ void addChannel(const char *name, adc_channel_e setting, adc_channel_mode_e mode
 
 void removeChannel(const char *name, adc_channel_e setting) {
 	(void)name;
-	if (setting == EFI_ADC_NONE) {
+	if (!isAdcChannelValid(setting)) {
 		return;
 	}
 	adcHwChannelEnabled[setting] = ADC_OFF;

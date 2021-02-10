@@ -1,3 +1,14 @@
+  rusEFI software is distributed under the terms of GNU version 3 license with the following additional
+     terms:
+
+     rusEFI#1: rusEFI is intended for off-road land and water vehicles.
+
+     rusEFI#2: rusEFI is not compliant with automotive environmental regulations.
+
+     rusEFI#3: rusEFI is not approved for manned aircraft applications.
+
+
+
                     GNU GENERAL PUBLIC LICENSE
                        Version 3, 29 June 2007
 

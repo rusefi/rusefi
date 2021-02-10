@@ -32,20 +32,20 @@
 #include "sensor.h"
 
 #include "hip9011_lookup.h"
+#include "hip9011_logic.h"
+
 #if EFI_MEMS
 #include "accelerometer.h"
 #endif
 
 #include "custom_engine.h"
 #include "engine_template.h"
-#include "bmw_e34.h"
 #include "bmw_m73.h"
 
 #include "dodge_neon.h"
 #include "dodge_ram.h"
 
 #include "ford_aspire.h"
-#include "ford_fiesta.h"
 #include "ford_1995_inline_6.h"
 
 #include "nissan_primera.h"
@@ -58,9 +58,9 @@
 #include "mazda_miata_nb.h"
 #include "mazda_miata_vvt.h"
 #include "mazda_626.h"
+#include "m111.h"
 
 #include "citroenBerlingoTU3JP.h"
-#include "rover_v8.h"
 #include "mitsubishi.h"
 #include "subaru.h"
 #include "test_engine.h"
@@ -139,7 +139,7 @@ static fuel_table_t alphaNfuel = {
  *
  * todo: place this field next to 'engineConfiguration'?
  */
-#ifdef EFI_ACTIVE_CONFIGURATION_IN_FLASH
+#if EFI_ACTIVE_CONFIGURATION_IN_FLASH
 #include "flash_int.h"
 engine_configuration_s & activeConfiguration = reinterpret_cast<persistent_config_container_s*>(getFlashAddrFirstCopy())->persistentConfiguration.engineConfiguration;
 // we cannot use this activeConfiguration until we call rememberCurrentConfiguration()
@@ -152,7 +152,7 @@ engine_configuration_s & activeConfiguration = activeConfigurationLocalStorage;
 extern engine_configuration_s *engineConfiguration;
 
 void rememberCurrentConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
-#ifndef EFI_ACTIVE_CONFIGURATION_IN_FLASH
+#if ! EFI_ACTIVE_CONFIGURATION_IN_FLASH
 	memcpy(&activeConfiguration, engineConfiguration, sizeof(engine_configuration_s));
 #else
 	isActiveConfigurationVoid = false;
@@ -582,15 +582,6 @@ void setTargetRpmCurve(int rpm DECLARE_CONFIG_PARAMETER_SUFFIX) {
 	setLinearCurve(engineConfiguration->cltIdleRpm, rpm, rpm, 10);
 }
 
-int getTargetRpmForIdleCorrection(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
-	// error is already reported, let's take the value at 0C since that should be a nice high idle
-	float clt = Sensor::get(SensorType::Clt).value_or(0);
-
-	int targetRpm = interpolate2d("cltRpm", clt, CONFIG(cltIdleRpmBins), CONFIG(cltIdleRpm));
-
-	return targetRpm + engine->fsioState.fsioIdleTargetRPMAdjustment;
-}
-
 void setDefaultMultisparkParameters(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	// 1ms spark + 2ms dwell
 	engineConfiguration->multisparkSparkDuration = 1000;
@@ -803,6 +794,7 @@ static void setDefaultEngineConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 
 	setLambdaMap(config->lambdaTable, 1.0f);
 	engineConfiguration->stoichRatioPrimary = 14.7f * PACK_MULT_AFR_CFG;
+	engineConfiguration->stoichRatioSecondary = 9.0f * PACK_MULT_AFR_CFG;
 
 	setDefaultVETable(PASS_ENGINE_PARAMETER_SIGNATURE);
 
@@ -856,7 +848,7 @@ static void setDefaultEngineConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	engineConfiguration->cranking.rpm = 550;
 	engineConfiguration->cutFuelOnHardLimit = true;
 	engineConfiguration->cutSparkOnHardLimit = true;
-
+	engineConfiguration->failedMapFallback = 60;
 
 	engineConfiguration->tChargeMinRpmMinTps = 0.25;
 	engineConfiguration->tChargeMinRpmMaxTps = 0.25;
@@ -978,6 +970,7 @@ static void setDefaultEngineConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	engineConfiguration->HD44780height = 4;
 
 	engineConfiguration->cylinderBore = 87.5;
+	engineConfiguration->knockBandCustom = BAND(engineConfiguration->cylinderBore);
 
 	setEgoSensor(ES_14Point7_Free PASS_CONFIG_PARAMETER_SUFFIX);
 
@@ -1164,27 +1157,14 @@ void resetConfigurationExt(Logging * logger, configuration_callback_t boardCallb
 	switch (engineType) {
 	case MICRO_RUS_EFI:
 // todo: is it time to replace MICRO_RUS_EFI, PROTEUS, PROMETHEUS_DEFAULTS with MINIMAL_PINS? maybe rename MINIMAL_PINS to DEFAULT?
-	case PROTEUS:
+	case PROTEUS_DEFAULTS:
 	case PROMETHEUS_DEFAULTS:
-	case ZIL_130:
 	case MINIMAL_PINS:
 		// all basic settings are already set in prepareVoidConfiguration(), no need to set anything here
 		// nothing to do - we do it all in setBoardConfigurationOverrides
 		break;
-	case MIATA_PROTEUS_TCU:
-		setMiataNB2_Proteus_TCU(PASS_CONFIG_PARAMETER_SIGNATURE);
-		break;
-	case MRE_BOARD_OLD_TEST:
-		mreBoardOldTest(PASS_CONFIG_PARAMETER_SIGNATURE);
-		break;
-	case MRE_BOARD_NEW_TEST:
-		mreBoardNewTest(PASS_CONFIG_PARAMETER_SIGNATURE);
-		break;
 	case TEST_ENGINE:
 		setTestEngineConfiguration(PASS_CONFIG_PARAMETER_SIGNATURE);
-		break;
-	case MRE_SUBARU_EJ18:
-		setSubaruEJ18_MRE(PASS_CONFIG_PARAMETER_SIGNATURE);
 		break;
 #if EFI_UNIT_TEST
 	case TEST_ISSUE_366_BOTH:
@@ -1193,25 +1173,24 @@ void resetConfigurationExt(Logging * logger, configuration_callback_t boardCallb
 	case TEST_ISSUE_366_RISE:
 		setTestEngineIssue366rise(PASS_CONFIG_PARAMETER_SIGNATURE);
 		break;
-	case ISSUE_898:
+	case UNUSED_36:
+	case TEST_ISSUE_898:
 		setIssue898(PASS_CONFIG_PARAMETER_SIGNATURE);
 		break;
 #endif // EFI_UNIT_TEST
-	case BMW_M73_PROTEUS:
-		setEngineBMW_M73_Proteus(PASS_CONFIG_PARAMETER_SIGNATURE);
+#if HW_MICRO_RUSEFI
+	case MRE_M111:
+		setM111EngineConfiguration(PASS_CONFIG_PARAMETER_SIGNATURE);
 		break;
-#if EFI_INCLUDE_ENGINE_PRESETS
-	case DEFAULT_FRANKENSO:
-		setFrankensoConfiguration(PASS_CONFIG_PARAMETER_SIGNATURE);
+	case SUBARUEJ20G_DEFAULTS:
+	case MRE_SUBARU_EJ18:
+		setSubaruEJ18_MRE(PASS_CONFIG_PARAMETER_SIGNATURE);
 		break;
-	case FRANKENSO_QA_ENGINE:
-		setFrankensoBoardTestConfiguration(PASS_CONFIG_PARAMETER_SIGNATURE);
+	case MRE_BOARD_OLD_TEST:
+		mreBoardOldTest(PASS_CONFIG_PARAMETER_SIGNATURE);
 		break;
-	case BMW_M73_F:
-		setEngineBMW_M73_Frankenso(PASS_CONFIG_PARAMETER_SIGNATURE);
-		break;
-	case BMW_M73_M:
-		setEngineBMW_M73_Manhattan(PASS_CONFIG_PARAMETER_SIGNATURE);
+	case MRE_BOARD_NEW_TEST:
+		mreBoardNewTest(PASS_CONFIG_PARAMETER_SIGNATURE);
 		break;
 	case BMW_M73_MRE:
 	case BMW_M73_MRE_SLAVE:
@@ -1235,11 +1214,49 @@ void resetConfigurationExt(Logging * logger, configuration_callback_t boardCallb
 	case MRE_MIATA_NB2_ETB:
 		setMiataNB2_MRE_ETB(PASS_CONFIG_PARAMETER_SIGNATURE);
 		break;
-	case DODGE_NEON_1995:
-		setDodgeNeon1995EngineConfiguration(PASS_CONFIG_PARAMETER_SIGNATURE);
-		break;
 	case MRE_BODY_CONTROL:
 		mreBCM(PASS_CONFIG_PARAMETER_SIGNATURE);
+		break;
+#endif // HW_MICRO_RUSEFI
+#if HW_PROTEUS
+	case PROTEUS_QC_TEST_BOARD:
+		proteusBoardTest(PASS_CONFIG_PARAMETER_SIGNATURE);
+		break;
+	case BMW_M73_PROTEUS:
+		setEngineBMW_M73_Proteus(PASS_CONFIG_PARAMETER_SIGNATURE);
+		break;
+	case MIATA_PROTEUS_TCU:
+		setMiataNB2_Proteus_TCU(PASS_CONFIG_PARAMETER_SIGNATURE);
+		break;
+	case PROTEUS_MIATA_NB2:
+		setMiataNB2_ProteusEngineConfiguration(PASS_CONFIG_PARAMETER_SIGNATURE);
+		break;
+#ifdef HARDWARE_CI
+	case PROTEUS_ANALOG_PWM_TEST:
+		setProteusAnalogPwmTest(PASS_CONFIG_PARAMETER_SIGNATURE);
+		break;
+#endif // HARDWARE_CI
+#endif // HW_PROTEUS
+#if HW_HELLEN
+	case HELLEN_NB2:
+		setMiataNB2_Hellen72(PASS_CONFIG_PARAMETER_SIGNATURE);
+		break;
+#endif // HW_HELLEN
+#if HW_FRANKENSO
+	case DEFAULT_FRANKENSO:
+		setFrankensoConfiguration(PASS_CONFIG_PARAMETER_SIGNATURE);
+		break;
+	case FRANKENSO_QA_ENGINE:
+		setFrankensoBoardTestConfiguration(PASS_CONFIG_PARAMETER_SIGNATURE);
+		break;
+	case BMW_M73_F:
+		setEngineBMW_M73_Frankenso(PASS_CONFIG_PARAMETER_SIGNATURE);
+		break;
+	case BMW_M73_M:
+		setEngineBMW_M73_Manhattan(PASS_CONFIG_PARAMETER_SIGNATURE);
+		break;
+	case DODGE_NEON_1995:
+		setDodgeNeon1995EngineConfiguration(PASS_CONFIG_PARAMETER_SIGNATURE);
 		break;
 	case DODGE_NEON_2003_CRANK:
 		setDodgeNeonNGCEngineConfiguration(PASS_CONFIG_PARAMETER_SIGNATURE);
@@ -1249,9 +1266,6 @@ void resetConfigurationExt(Logging * logger, configuration_callback_t boardCallb
 		break;
 	case FORD_ASPIRE_1996:
 		setFordAspireEngineConfiguration(PASS_CONFIG_PARAMETER_SIGNATURE);
-		break;
-	case FORD_FIESTA:
-		setFordFiestaDefaultEngineConfiguration(PASS_ENGINE_PARAMETER_SIGNATURE);
 		break;
 	case NISSAN_PRIMERA:
 		setNissanPrimeraEngineConfiguration(PASS_CONFIG_PARAMETER_SIGNATURE);
@@ -1319,14 +1333,8 @@ void resetConfigurationExt(Logging * logger, configuration_callback_t boardCallb
 	case CITROEN_TU3JP:
 		setCitroenBerlingoTU3JPConfiguration(PASS_CONFIG_PARAMETER_SIGNATURE);
 		break;
-	case ROVER_V8:
-		setRoverv8(PASS_CONFIG_PARAMETER_SIGNATURE);
-		break;
 	case SUBARU_2003_WRX:
 		setSubaru2003Wrx(PASS_CONFIG_PARAMETER_SIGNATURE);
-		break;
-	case BMW_E34:
-		setBmwE34(PASS_CONFIG_PARAMETER_SIGNATURE);
 		break;
 	case DODGE_RAM:
 		setDodgeRam1996(PASS_CONFIG_PARAMETER_SIGNATURE);
@@ -1345,9 +1353,6 @@ void resetConfigurationExt(Logging * logger, configuration_callback_t boardCallb
 		break;
 	case MAZDA_MIATA_2003_BOARD_TEST:
 		setMazdaMiata2003EngineConfigurationBoardTest(PASS_CONFIG_PARAMETER_SIGNATURE);
-		break;
-	case SUBARUEJ20G_DEFAULTS:
-		setSubaruEJ20GDefaults(PASS_CONFIG_PARAMETER_SIGNATURE);
 		break;
 	case TEST_ENGINE_VVT:
 		setTestVVTEngineConfiguration(PASS_CONFIG_PARAMETER_SIGNATURE);
@@ -1370,7 +1375,12 @@ void resetConfigurationExt(Logging * logger, configuration_callback_t boardCallb
 	case TEST_33816:
 		setTest33816EngineConfiguration(PASS_CONFIG_PARAMETER_SIGNATURE);
 		break;
-#endif // EFI_INCLUDE_ENGINE_PRESETS
+#endif // HW_FRANKENSO
+#ifdef HW_SUBARU_EG33
+	case SUBARUEG33_DEFAULTS:
+		setSubaruEG33Defaults(PASS_CONFIG_PARAMETER_SIGNATURE);
+		break;
+#endif //HW_SUBARU_EG33
 	default:
 		firmwareError(CUSTOM_UNEXPECTED_ENGINE_TYPE, "Unexpected engine type: %d", engineType);
 	}

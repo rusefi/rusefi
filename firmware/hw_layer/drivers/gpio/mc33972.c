@@ -332,7 +332,7 @@ struct gpiochip_ops mc33972_ops = {
  * @details Checks for valid config
  */
 
-int mc33972_add(unsigned int index, const struct mc33972_config *cfg)
+int mc33972_add(brain_pin_e base, unsigned int index, const struct mc33972_config *cfg)
 {
 	struct mc33972_priv *chip;
 
@@ -357,14 +357,14 @@ int mc33972_add(unsigned int index, const struct mc33972_config *cfg)
 	chip->drv_state = MC33972_WAIT_INIT;
 
 	/* register, return gpio chip base */
-	return gpiochip_register(DRIVER_NAME, &mc33972_ops, MC33972_INPUTS, chip);
+	return gpiochip_register(base, DRIVER_NAME, &mc33972_ops, MC33972_INPUTS, chip);
 }
 
 #else /* BOARD_MC33972_COUNT > 0 */
 
-int mc33972_add(unsigned int index, const struct mc33972_config *cfg)
+int mc33972_add(brain_pin_e base, unsigned int index, const struct mc33972_config *cfg)
 {
-	(void)index; (void)cfg;
+	(void)base; (void)index; (void)cfg;
 
 	return -1;
 }

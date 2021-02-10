@@ -423,16 +423,10 @@ void setMiataNA6_MAP_MRE(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	engineConfiguration->idleTimingPid.dFactor = 0.0;
 	engineConfiguration->idleTimingPid.minValue = -13;
 	engineConfiguration->idleTimingPid.maxValue = 13;
-	engineConfiguration->idleTimingPidWorkZone = 150;
-	engineConfiguration->idlePidFalloffDeltaRpm = 50;
 	engineConfiguration->idleTimingPidDeadZone = 10;
 
-
 	// EFI_ADC_3: "22 - AN temp 4"
-	engineConfiguration->acSwitch = GPIOA_6;
-
-	engineConfiguration->warningLedPin = GPIOD_13;
-	engineConfiguration->triggerErrorPin = GPIOE_1;
+	engineConfiguration->acSwitch = GPIOA_3;
 
 	// todo: ask Stefan to clarify this
 	engineConfiguration->tps1_1AdcChannel = EFI_ADC_6; // "26 - AN volt 2"
@@ -441,7 +435,7 @@ void setMiataNA6_MAP_MRE(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 
 	engineConfiguration->map.sensor.hwChannel = EFI_ADC_13; // "20 - AN volt 5"
 
-	engineConfiguration->mafAdcChannel = EFI_ADC_10;// "27 - AN volt 1"
+	engineConfiguration->mafAdcChannel = EFI_ADC_9; // "40 - AN volt 9"
 
 #if (BOARD_TLE8888_COUNT > 0)
 	// GPIOG_1: "Clutch Switch"

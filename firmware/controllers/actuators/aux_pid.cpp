@@ -61,7 +61,8 @@ public:
 	}
 
 	int getPeriodMs() override {
-		return engineConfiguration->auxPidPins[index] == GPIO_UNASSIGNED ? NO_PIN_PERIOD : GET_PERIOD_LIMITED(&engineConfiguration->auxPid[index]);
+		return isBrainPinValid(engineConfiguration->auxPidPins[index]) ?
+			GET_PERIOD_LIMITED(&engineConfiguration->auxPid[index]) : NO_PIN_PERIOD;
 	}
 
 	void PeriodicTask() override {
@@ -114,7 +115,7 @@ static void turnAuxPidOn(int index) {
 		return;
 	}
 
-	if (engineConfiguration->auxPidPins[index] == GPIO_UNASSIGNED) {
+	if (!isBrainPinValid(engineConfiguration->auxPidPins[index])) {
 		return;
 	}
 
@@ -132,11 +133,9 @@ void startAuxPins() {
 }
 
 void stopAuxPins() {
-#if EFI_PROD_CODE
 	for (int i = 0;i < AUX_PID_COUNT;i++) {
-		efiSetPadUnused(activeConfiguration.auxPidPins[i]);
+		instances[i].auxOutputPin.deInit();
 	}
-#endif /* EFI_PROD_CODE */
 }
 
 void initAuxPid(Logging *sharedLogger) {

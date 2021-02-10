@@ -1,0 +1,3 @@
+(sym_lib_table
+  (lib (name eecv)(type Legacy)(uri /home/david/Downloads/rusefi/hardware/rusefi_lib/eecv.lib)(options "")(descr ""))
+)

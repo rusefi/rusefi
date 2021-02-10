@@ -174,8 +174,8 @@ void initCan(void) {
 	addConsoleAction("caninfo", canInfo);
 
 	isCanEnabled = 
-		(CONFIG_OVERRIDE(canTxPin) != GPIO_UNASSIGNED) && // both pins are set...
-		(CONFIG_OVERRIDE(canRxPin) != GPIO_UNASSIGNED) &&
+		(isBrainPinValid(CONFIG_OVERRIDE(canTxPin))) && // both pins are set...
+		(isBrainPinValid(CONFIG_OVERRIDE(canRxPin))) &&
 		(CONFIG(canWriteEnabled) || CONFIG(canReadEnabled)) ; // ...and either read or write is enabled
 
 	// nothing to do if we aren't enabled...

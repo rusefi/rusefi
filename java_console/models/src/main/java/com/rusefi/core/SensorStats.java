@@ -48,36 +48,30 @@ public class SensorStats {
     public static void startStandardDeviation(Sensor source, final Sensor destination) {
         final CyclicBuffer cb = new CyclicBuffer(30);
 
-        SensorCentral.getInstance().addListener(source, new SensorCentral.SensorListener() {
-                    @Override
-                    public void onSensorUpdate(double value) {
-                        cb.add(value);
-                        if (cb.getSize() == cb.getMaxSize()) {
-                            double stdDev = DataBuffer.getStandardDeviation(cb.getValues());
-                            SensorCentral.getInstance().setValue(stdDev, destination);
-                        }
+        SensorCentral.getInstance().addListener(source,
+                value -> {
+                    cb.add(value);
+                    if (cb.getSize() == cb.getMaxSize()) {
+                        double stdDev = DataBuffer.getStandardDeviation(cb.getValues());
+                        SensorCentral.getInstance().setValue(stdDev, destination);
                     }
                 }
         );
     }
 
     public static void startDelta(Sensor input1, final Sensor input2, final Sensor destination) {
-        SensorCentral.getInstance().addListener(input1, new SensorCentral.SensorListener() {
-            @Override
-            public void onSensorUpdate(double value) {
-                double valueMs = 1.0 * (value - SensorCentral.getInstance().getValue(input2)) / EngineReport.ENGINE_SNIFFER_TICKS_PER_MS;
+        SensorCentral.getInstance().addListener(input1,
+            value -> {
+                double valueMs = (value - SensorCentral.getInstance().getValue(input2)) / EngineReport.ENGINE_SNIFFER_TICKS_PER_MS;
                 SensorCentral.getInstance().setValue(valueMs, destination);
-            }
-        });
+            });
     }
 
     public static void startConversion(final Sensor source, final Sensor destination, final SensorConversion conversion) {
-        SensorCentral.getInstance().addListener(source, new SensorCentral.SensorListener() {
-            @Override
-            public void onSensorUpdate(double value) {
+        SensorCentral.getInstance().addListener(source,
+            value -> {
                 double converted = conversion.convertValue(value);
                 SensorCentral.getInstance().setValue(converted, destination);
-            }
-        });
+            });
     }
 }

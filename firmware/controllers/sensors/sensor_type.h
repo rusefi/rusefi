@@ -58,6 +58,12 @@ enum class SensorType : unsigned char {
 	WastegatePosition,
 	IdlePosition,
 
+	FuelEthanolPercent,
+
+	BatteryVoltage,
+
+	BarometricPressure,
+
 	// Leave me at the end!
 	PlaceholderLast
 };

@@ -12,11 +12,12 @@
 #include "trigger_decoder.h"
 #include "trigger_central_generated.h"
 #include "timer.h"
+#include "pin_repository.h"
 
 class Engine;
 typedef void (*ShaftPositionListener)(trigger_event_e signal, uint32_t index, efitick_t edgeTimestamp DECLARE_ENGINE_PARAMETER_SUFFIX);
 
-#define HAVE_CAM_INPUT() engineConfiguration->camInputs[0] != GPIO_UNASSIGNED
+#define HAVE_CAM_INPUT() (isBrainPinValid(engineConfiguration->camInputs[0]))
 
 class TriggerNoiseFilter {
 public:
@@ -48,28 +49,36 @@ public:
 		return m_lastEventTimer.getElapsedSeconds(nowNt);
 	}
 
+	bool engineMovedRecently() const {
+		// Trigger event some time in the past second = engine moving
+		return getTimeSinceTriggerEvent(getTimeNowNt()) < 1.0f;
+	}
+
 	TriggerNoiseFilter noiseFilter;
 
-	trigger_type_e vvtTriggerType;
+	trigger_type_e vvtTriggerType[CAMS_PER_BANK];
 	angle_t getVVTPosition();
 
+#if EFI_UNIT_TEST
 	// latest VVT event position (could be not synchronization event)
-	angle_t currentVVTEventPosition = 0;
+	angle_t currentVVTEventPosition[BANKS_COUNT][CAMS_PER_BANK];
+#endif // EFI_UNIT_TEST
+
 	// synchronization event position
-	angle_t vvtPosition = 0;
+	angle_t vvtPosition[BANKS_COUNT][CAMS_PER_BANK];
 
 	/**
 	 * this is similar to TriggerState#startOfCycleNt but with the crank-only sensor magic
 	 */
 	efitick_t timeAtVirtualZeroNt = 0;
 
-	efitick_t vvtSyncTimeNt = 0;
+	efitick_t vvtSyncTimeNt[BANKS_COUNT][CAMS_PER_BANK];
 
 	TriggerStateWithRunningStatistics triggerState;
 	TriggerWaveform triggerShape;
 
-	TriggerState vvtState;
-	TriggerWaveform vvtShape;
+	TriggerState vvtState[BANKS_COUNT][CAMS_PER_BANK];
+	TriggerWaveform vvtShape[CAMS_PER_BANK];
 
 	TriggerFormDetails triggerFormDetails;
 
@@ -79,17 +88,11 @@ public:
 
 void triggerInfo(void);
 void hwHandleShaftSignal(trigger_event_e signal, efitick_t timestamp);
-void hwHandleVvtCamSignal(trigger_value_e front, efitick_t timestamp DECLARE_ENGINE_PARAMETER_SUFFIX);
+void hwHandleVvtCamSignal(trigger_value_e front, efitick_t timestamp, int index DECLARE_ENGINE_PARAMETER_SUFFIX);
 
 void initTriggerCentral(Logging *sharedLogger);
-/**
- * this method is invoked by 'unit tests' project on PC to write triggers.txt representation of all rusEFI triggers
- * That triggers.txt is later consumed by TriggerImage.java to render trigger images
- */
-void exportAllTriggers();
 
 int isSignalDecoderError(void);
-void resetMaxValues();
 
 void onConfigurationChangeTriggerCallback(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 bool checkIfTriggerConfigChanged(DECLARE_ENGINE_PARAMETER_SIGNATURE);

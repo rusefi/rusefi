@@ -19,13 +19,17 @@ void reconfigureSensors(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 
 // Internal init functions for individual systems
 // Sensor init/config
+void initVbatt(DECLARE_CONFIG_PARAMETER_SIGNATURE);
+void initMap(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 void initTps(DECLARE_CONFIG_PARAMETER_SIGNATURE);
 void initOilPressure(DECLARE_CONFIG_PARAMETER_SIGNATURE);
 void initThermistors(DECLARE_CONFIG_PARAMETER_SIGNATURE);
 void initCanSensors();
 void initLambda(DECLARE_ENGINE_PARAMETER_SIGNATURE);
+void initFlexSensor(DECLARE_CONFIG_PARAMETER_SIGNATURE);
 
 // Sensor reconfiguration
+void reconfigureVbatt(DECLARE_CONFIG_PARAMETER_SIGNATURE);
 void reconfigureTps(DECLARE_CONFIG_PARAMETER_SIGNATURE);
 void reconfigureThermistors(DECLARE_CONFIG_PARAMETER_SIGNATURE);
 void reconfigureOilPressure(DECLARE_CONFIG_PARAMETER_SIGNATURE);

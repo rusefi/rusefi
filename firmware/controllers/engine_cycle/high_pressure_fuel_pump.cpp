@@ -8,6 +8,7 @@
  * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
+#include "pin_repository.h"
 #include "high_pressure_fuel_pump.h"
 #include "spark_logic.h"
 #include "map.h"
@@ -68,7 +69,7 @@ void hpfpPlainPinTurnOn(HpfpActor *current) {
 }
 
 void initHPFP(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
-	if (engineConfiguration->hpfpValvePin == GPIO_UNASSIGNED) {
+	if (!isBrainPinValid(engineConfiguration->hpfpValvePin)) {
 		return;
 	}
 

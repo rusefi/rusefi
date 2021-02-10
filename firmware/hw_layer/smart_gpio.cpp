@@ -22,11 +22,8 @@
 #include "drivers/gpio/drv8860.h"
 
 EXTERN_CONFIG;
-static OutputPin tle8888Cs;
-static OutputPin tle6240Cs;
-static OutputPin mc33972Cs;
-static OutputPin drv8860Cs;
 
+#if (BOARD_TLE6240_COUNT > 0)
 // todo: migrate to TS or board config
 #ifndef TLE6240_RESET_PORT
 #define TLE6240_RESET_PORT GPIOG
@@ -52,9 +49,9 @@ static OutputPin drv8860Cs;
 		[7] = {.port = GPIOC, .pad = 7},
 #endif /* TLE6240_DIRECT_IO */
 
-#if (BOARD_TLE6240_COUNT > 0)
+static OutputPin tle6240Cs;
 struct tle6240_config tle6240 = {
-	.spi_bus = NULL /* TODO software lookup &SPID4 */,
+	.spi_bus = NULL,
 	.spi_config = {
 		.circular = false,
 		.end_cb = NULL,
@@ -80,8 +77,9 @@ struct tle6240_config tle6240 = {
 #endif /* (BOARD_TLE6240_COUNT > 0) */
 
 #if (BOARD_MC33972_COUNT > 0)
+static OutputPin mc33972Cs;
 struct mc33972_config mc33972 = {
-	.spi_bus = NULL /* TODO software lookup &SPID4 */,
+	.spi_bus = NULL,
 	.spi_config = {
 		.circular = false,
 		.end_cb = NULL,
@@ -103,6 +101,7 @@ struct mc33972_config mc33972 = {
 #endif /* (BOARD_MC33972_COUNT > 0) */
 
 #if (BOARD_TLE8888_COUNT > 0)
+static OutputPin tle8888Cs;
 struct tle8888_config tle8888_cfg = {
 	.spi_bus = NULL,
 	.spi_config = {
@@ -154,8 +153,9 @@ struct tle8888_config tle8888_cfg = {
 #endif
 
 #if (BOARD_DRV8860_COUNT > 0)
+static OutputPin drv8860Cs;
 struct drv8860_config drv8860 = {
-	.spi_bus = NULL /* TODO software lookup &SPID4 */,
+	.spi_bus = NULL,
 	.spi_config = {
 		.circular = false,
 		.end_cb = NULL,
@@ -176,45 +176,34 @@ struct drv8860_config drv8860 = {
 #endif /* (BOARD_DRV8860_COUNT > 0) */
 
 void initSmartGpio() {
-#if (BOARD_EXT_GPIOCHIPS > 0)
 	startSmartCsPins();
-#endif /* BOARD_EXT_GPIOCHIPS */
-	int ret = -1;
 
 #if (BOARD_TLE6240_COUNT > 0)
-	if (engineConfiguration->tle6240_cs != GPIO_UNASSIGNED) {
+	if (isBrainPinValid(engineConfiguration->tle6240_cs)) {
 		tle6240.spi_config.ssport = getHwPort("tle6240 CS", engineConfiguration->tle6240_cs);
 		tle6240.spi_config.sspad = getHwPin("tle6240 CS", engineConfiguration->tle6240_cs);
 		tle6240.spi_bus = getSpiDevice(engineConfiguration->tle6240spiDevice);
-		ret = tle6240_add(0, &tle6240);
-	} else {
-		ret = -1;
+		int ret = tle6240_add(TLE6240_PIN_1, 0, &tle6240);
+
+		efiAssertVoid(OBD_PCM_Processor_Fault, ret == TLE6240_PIN_1, "tle6240");
 	}
-	if (ret < 0)
-		/* whenever chip is disabled or error returned - occupy its gpio range */
-		gpiochip_use_gpio_base(TLE6240_OUTPUTS);
 #endif /* (BOARD_TLE6240_COUNT > 0) */
 
 #if (BOARD_MC33972_COUNT > 0)
-	if (engineConfiguration->mc33972_cs != GPIO_UNASSIGNED) {
+	if (isBrainPinValid(engineConfiguration->mc33972_cs)) {
 		// todo: reuse initSpiCs method?
 		mc33972.spi_config.ssport = getHwPort("mc33972 CS", engineConfiguration->mc33972_cs);
 		mc33972.spi_config.sspad = getHwPin("mc33972 CS", engineConfiguration->mc33972_cs);
 		mc33972.spi_bus = getSpiDevice(engineConfiguration->mc33972spiDevice);
 		// todo: propogate 'basePinOffset' parameter
-		ret = mc33972_add(0, &mc33972);
-	} else {
-		ret = -1;
+		int ret = mc33972_add(MC33972_PIN_1, 0, &mc33972);
+
+		efiAssertVoid(OBD_PCM_Processor_Fault, ret == MC33972_PIN_1, "mc33972");
 	}
-	if (ret < 0)
-		/* whenever chip is disabled or error returned - occupy its gpio range */
-		gpiochip_use_gpio_base(MC33972_INPUTS);
 #endif /* (BOARD_MC33972_COUNT > 0) */
 
 #if (BOARD_TLE8888_COUNT > 0)
-	if (engineConfiguration->tle8888_cs != GPIO_UNASSIGNED) {
-		// SPI pins are enabled in initSpiModules()
-
+	if (isBrainPinValid(engineConfiguration->tle8888_cs)) {
 		// todo: reuse initSpiCs method?
 		tle8888_cfg.spi_config.ssport = getHwPort("tle8888 CS", engineConfiguration->tle8888_cs);
 		tle8888_cfg.spi_config.sspad = getHwPin("tle8888 CS", engineConfiguration->tle8888_cs);
@@ -224,40 +213,31 @@ void initSmartGpio() {
 		tle8888_cfg.stepper = engineConfiguration->useTLE8888_stepper;
 
 		/* spi_bus == null checked in _add function */
-		ret = tle8888_add(0, &tle8888_cfg);
+		int ret = tle8888_add(TLE8888_PIN_1, 0, &tle8888_cfg);
 
 		efiAssertVoid(OBD_PCM_Processor_Fault, ret == TLE8888_PIN_1, "tle8888");
-	} else {
-		ret = -1;
 	}
-	if (ret < 0)
-		/* whenever chip is disabled or error returned - occupy its gpio range */
-		gpiochip_use_gpio_base(TLE8888_SIGNALS);
 #endif /* (BOARD_TLE8888_COUNT > 0) */
 
 #if (BOARD_DRV8860_COUNT > 0)
-	if (engineConfiguration->drv8860_cs != GPIO_UNASSIGNED) {
+	if (isBrainPinValid(engineConfiguration->drv8860_cs)) {
 		drv8860.spi_config.ssport = getHwPort("drv8860 CS", engineConfiguration->drv8860_cs);
 		drv8860.spi_config.sspad = getHwPin("drv8860 CS", engineConfiguration->drv8860_cs);
 		drv8860.spi_bus = getSpiDevice(engineConfiguration->drv8860spiDevice);
-		ret = drv8860_add(0, &drv8860);
+		int ret = drv8860_add(DRV8860_PIN_1, 0, &drv8860);
 
 		efiAssertVoid(OBD_PCM_Processor_Fault, ret == DRV8860_PIN_1, "drv8860");
-	} else {
-		ret = -1;
 	}
-	if (ret < 0)
-		/* whenever chip is disabled or error returned - occupy its gpio range */
-		gpiochip_use_gpio_base(DRV8860_OUTPUTS);
 #endif /* (BOARD_DRV8860_COUNT > 0) */
 
-#if (BOARD_EXT_GPIOCHIPS > 0)
+#if (BOARD_MC33810_COUNT > 0)
+	/* none of official boards has this IC */
+#endif /* (BOARD_MC33810_COUNT > 0) */
+
 	/* external chip init */
 	gpiochips_init();
-#endif /* (BOARD_EXT_GPIOCHIPS > 0) */
 }
 
-#if (BOARD_EXT_GPIOCHIPS > 0)
 void stopSmartCsPins() {
 #if (BOARD_TLE8888_COUNT > 0)
 	efiSetPadUnused(activeConfiguration.tle8888_cs);
@@ -271,6 +251,9 @@ void stopSmartCsPins() {
 #if (BOARD_DRV8860_COUNT > 0)
 	efiSetPadUnused(activeConfiguration.drv8860_cs);
 #endif /* BOARD_DRV8860_COUNT */
+#if (BOARD_MC33810_COUNT > 0)
+	/* none of official boards has this IC */
+#endif /* (BOARD_MC33810_COUNT > 0) */
 }
 
 void startSmartCsPins() {
@@ -294,7 +277,9 @@ void startSmartCsPins() {
 				&engineConfiguration->drv8860_csPinMode);
 	drv8860Cs.setValue(true);
 #endif /* BOARD_DRV8860_COUNT */
+#if (BOARD_MC33810_COUNT > 0)
+	/* none of official boards has this IC */
+#endif /* (BOARD_MC33810_COUNT > 0) */
 }
-#endif /* (BOARD_EXT_GPIOCHIPS > 0) */
 
 #endif /* EFI_PROD_CODE */

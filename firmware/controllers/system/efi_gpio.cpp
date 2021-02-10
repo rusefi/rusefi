@@ -9,6 +9,7 @@
 #include "global.h"
 #include "engine.h"
 #include "efi_gpio.h"
+#include "os_access.h"
 #include "drivers/gpio/gpio_ext.h"
 #include "perf_trace.h"
 #include "engine_controller.h"
@@ -33,7 +34,7 @@ extern WaveChart waveChart;
 EnginePins enginePins;
 static Logging* logger;
 
-static pin_output_mode_e DEFAULT_OUTPUT = OM_DEFAULT;
+pin_output_mode_e DEFAULT_OUTPUT = OM_DEFAULT;
 pin_output_mode_e INVERTED_OUTPUT = OM_INVERTED;
 
 static const char *sparkNames[] = { "Coil 1", "Coil 2", "Coil 3", "Coil 4", "Coil 5", "Coil 6", "Coil 7", "Coil 8",
@@ -90,12 +91,9 @@ void RegisteredOutputPin::init(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 }
 
 void RegisteredOutputPin::unregister() {
-#if EFI_PROD_CODE
-	brain_pin_e        curPin = *(brain_pin_e       *) ((void *) (&((char*)&activeConfiguration)[pinOffset]));
-    if (isPinConfigurationChanged()) {
-    	unregisterOutput(curPin);
-    }
-#endif // EFI_PROD_CODE
+	if (isPinConfigurationChanged()) {
+		OutputPin::deInit();
+	}
 }
 
 #define CONFIG_OFFSET(x) x##_offset
@@ -105,13 +103,13 @@ void RegisteredOutputPin::unregister() {
 
 
 EnginePins::EnginePins() :
-		mainRelay("Main relay", CONFIG_PIN_OFFSETS(mainRelay)),
-		hpfpValve("hpfpValve", CONFIG_PIN_OFFSETS(hpfpValve)),
-		starterControl("Starter control", CONFIG_PIN_OFFSETS(starterControl)),
-		starterRelayDisable("Starter disable", CONFIG_PIN_OFFSETS(starterRelayDisable)),
-		fanRelay("Fan", CONFIG_PIN_OFFSETS(fan)),
-		acRelay("A/C relay", CONFIG_PIN_OFFSETS(acRelay)),
-		fuelPumpRelay("Fuel pump", CONFIG_PIN_OFFSETS(fuelPump)),
+		mainRelay("Main Relay", CONFIG_PIN_OFFSETS(mainRelay)),
+		hpfpValve("HPFP Valve", CONFIG_PIN_OFFSETS(hpfpValve)),
+		starterControl("Starter Relay", CONFIG_PIN_OFFSETS(starterControl)),
+		starterRelayDisable("Starter Disable Relay", CONFIG_PIN_OFFSETS(starterRelayDisable)),
+		fanRelay("Fan Relay", CONFIG_PIN_OFFSETS(fan)),
+		acRelay("A/C Relay", CONFIG_PIN_OFFSETS(acRelay)),
+		fuelPumpRelay("Fuel pump Relay", CONFIG_PIN_OFFSETS(fuelPump)),
 	    boostPin("Boost", CONFIG_PIN_OFFSETS(boostControl)),
 		idleSolenoidPin("Idle Valve", idle_solenoidPin_offset, idle_solenoidPinMode_offset),
 		secondIdleSolenoidPin("Idle Valve#2", CONFIG_OFFSET(secondSolenoidPin), idle_solenoidPinMode_offset),
@@ -148,35 +146,18 @@ EnginePins::EnginePins() :
  */
 
 #if EFI_PROD_CODE
-#define setPinValue(outputPin, electricalValue, logicValue)                        \
-  {                                                                                \
-    if ((outputPin)->currentLogicValue != (logicValue)) {                          \
-	  palWritePad((outputPin)->port, (outputPin)->pin, (electricalValue));         \
-	  (outputPin)->currentLogicValue = (logicValue);                               \
-    }                                                                              \
-  }
-
 #define unregisterOutputIfPinChanged(output, pin) {                                \
 	if (isConfigurationChanged(pin)) {                                             \
-		(output).unregisterOutput(activeConfiguration.pin);                        \
+		(output).deInit();                        \
 	}                                                                              \
 }
 
 #define unregisterOutputIfPinOrModeChanged(output, pin, mode) {                    \
 	if (isPinOrModeChanged(pin, mode)) {                                           \
-		(output).unregisterOutput(activeConfiguration.pin);                        \
+		(output).deInit();                        \
 	}                                                                              \
 }
 
-#else /* EFI_PROD_CODE */
-
-#define setPinValue(outputPin, electricalValue, logicValue)                        \
-  {                                                                                \
-    if ((outputPin)->currentLogicValue != (logicValue)) {                          \
-	  (outputPin)->currentLogicValue = (logicValue);                               \
-    }                                                                              \
-	setMockState((outputPin)->brainPin, logicValue);                               \
-  }
 #endif /* EFI_PROD_CODE */
 
 bool EnginePins::stopPins() {
@@ -208,15 +189,13 @@ void EnginePins::unregisterPins() {
 	for (int i = 0;i < FSIO_COMMAND_COUNT;i++) {
 		unregisterOutputIfPinChanged(fsioOutputs[i], fsioOutputPins[i]);
 	}
-
+#endif /* EFI_PROD_CODE */
 
 	RegisteredOutputPin * pin = registeredOutputHead;
 	while (pin != nullptr) {
 		pin->unregister();
 		pin = pin->next;
 	}
-
-#endif /* EFI_PROD_CODE */
 }
 
 void EnginePins::debug() {
@@ -400,16 +379,12 @@ bool OutputPin::getAndSet(int logicValue) {
 	return oldValue;
 }
 
-void OutputPin::setOnchipValue(int electricalValue, int logicValue) {
+// This function is only used on real hardware
 #if EFI_PROD_CODE
-	if (port != GPIO_NULL) {
-		setPinValue(this, electricalValue, logicValue);
-	} else {
-		// even without physical pin sometimes it's nice to track logic pin value
-		currentLogicValue = logicValue;
-	}
-#endif // EFI_PROD_CODE
+void OutputPin::setOnchipValue(int electricalValue) {
+	palWritePad(port, pin, electricalValue);
 }
+#endif // EFI_PROD_CODE
 
 void OutputPin::setValue(int logicValue) {
 #if ENABLE_PERF_TRACE
@@ -417,32 +392,39 @@ void OutputPin::setValue(int logicValue) {
 //	ScopePerf perf(PE::OutputPinSetValue);
 #endif // ENABLE_PERF_TRACE
 
-#if EFI_PROD_CODE
+	// Always store the current logical value of the pin (so it can be
+	// used internally even if not connected to a real hardware pin)
+	currentLogicValue = logicValue;
+
+	// Nothing else to do if not configured
+	if (!isBrainPinValid(brainPin)) {
+		return;
+	}
+
 	efiAssertVoid(CUSTOM_ERR_6621, modePtr!=NULL, "pin mode not initialized");
 	pin_output_mode_e mode = *modePtr;
 	efiAssertVoid(CUSTOM_ERR_6622, mode <= OM_OPENDRAIN_INVERTED, "invalid pin_output_mode_e");
 	int electricalValue = getElectricalValue(logicValue, mode);
 
+#if EFI_PROD_CODE
 	#if (BOARD_EXT_GPIOCHIPS > 0)
 		if (!this->ext) {
-			setOnchipValue(electricalValue, logicValue);
+			setOnchipValue(electricalValue);
 		} else {
 			/* external pin */
 			gpiochips_writePad(this->brainPin, logicValue);
 			/* TODO: check return value */
-			currentLogicValue = logicValue;
 		}
 	#else
-		setOnchipValue(electricalValue, logicValue);
+		setOnchipValue(electricalValue);
 	#endif
-
 #else /* EFI_PROD_CODE */
-	setPinValue(this, eValue, logicValue);
+	setMockState(brainPin, electricalValue);
 #endif /* EFI_PROD_CODE */
 }
 
 bool OutputPin::getLogicValue() const {
-	// Compare against 1 since it could also be INITIAL_PIN_STATE (which means 0, but we haven't initialized the pin yet)
+	// Compare against 1 since it could also be INITIAL_PIN_STATE (which means logical 0, but we haven't initialized the pin yet)
 	return currentLogicValue == 1;
 }
 
@@ -456,12 +438,6 @@ void OutputPin::setDefaultPinState(const pin_output_mode_e *outputMode) {
 
 void initOutputPins(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 #if EFI_GPIO_HARDWARE
-	/**
-	 * want to make sure it's all zeros so that we can compare in initOutputPinExt() method
-	 */
-// todo: it's too late to clear now? this breaks default status LEDs
-// todo: fix this?
-//	memset(&outputs, 0, sizeof(outputs));
 
 #if HAL_USE_SPI
 	enginePins.sdCsPin.initPin("SD CS", CONFIG(sdCardCsPin));
@@ -482,18 +458,30 @@ void OutputPin::initPin(const char *msg, brain_pin_e brainPin) {
 }
 
 void OutputPin::initPin(const char *msg, brain_pin_e brainPin, const pin_output_mode_e *outputMode) {
-#if EFI_UNIT_TEST
-	this->brainPin = brainPin;
-#endif
-
-#if EFI_GPIO_HARDWARE && EFI_PROD_CODE
-	if (brainPin == GPIO_UNASSIGNED)
-		return;
-
-	if (*outputMode > OM_OPENDRAIN_INVERTED) {
-		firmwareError(CUSTOM_INVALID_MODE_SETTING, "%s invalid pin_output_mode_e", msg);
+	if (!isBrainPinValid(brainPin)) {
 		return;
 	}
+
+	// Enter a critical section so that other threads can't change the pin state out from underneath us
+	chibios_rt::CriticalSectionLocker csl;
+
+	// Check that this OutputPin isn't already assigned to another pin (reinit is allowed to change mode)
+	// To avoid this error, call deInit() first
+	if (isBrainPinValid(this->brainPin) && this->brainPin != brainPin) {
+		firmwareError(CUSTOM_OBD_PIN_CONFLICT, "outputPin [%s] already assigned, cannot reassign without unregister first", msg);
+		return;
+	}
+
+	if (*outputMode > OM_OPENDRAIN_INVERTED) {
+		firmwareError(CUSTOM_INVALID_MODE_SETTING, "%s invalid pin_output_mode_e %d %s",
+				msg,
+				*outputMode,
+				hwPortname(brainPin)
+				);
+		return;
+	}
+
+#if EFI_GPIO_HARDWARE && EFI_PROD_CODE
 	iomode_t mode = (*outputMode == OM_DEFAULT || *outputMode == OM_INVERTED) ?
 		PAL_MODE_OUTPUT_PUSHPULL : PAL_MODE_OUTPUT_OPENDRAIN;
 
@@ -504,40 +492,23 @@ void OutputPin::initPin(const char *msg, brain_pin_e brainPin, const pin_output_
 		ioportid_t port = getHwPort(msg, brainPin);
 		int pin = getHwPin(msg, brainPin);
 
-		/**
-		 * This method is used for digital GPIO pins only, for peripheral pins see mySetPadMode
-		 */
+		// Validate port
 		if (port == GPIO_NULL) {
-			// that's for GRIO_NONE
-			this->port = port;
+			firmwareError(OBD_PCM_Processor_Fault, "OutputPin::initPin got invalid port for pin idx %d", static_cast<int>(brainPin));
 			return;
 		}
 
-		/**
-		 * @brief Initialize the hardware output pin while also assigning it a logical name
-		 */
-		if (this->port != NULL && (this->port != port || this->pin != pin)) {
-			/**
-			 * here we check if another physical pin is already assigned to this logical output
-			 */
-		// todo: need to clear '&outputs' in io_pins.c
-			warning(CUSTOM_OBD_PIN_CONFLICT, "outputPin [%s] already assigned to %x%d", msg, this->port, this->pin);
-			engine->withError = true;
-			return;
-		}
 		this->port = port;
 		this->pin = pin;
 	}
 	#if (BOARD_EXT_GPIOCHIPS > 0)
 		else {
 			this->ext = true;
-			this->brainPin = brainPin;
 		}
 	#endif
-
-	this->currentLogicValue = 0;
-
 #endif // briefly leave the include guard because we need to set default state in tests
+
+	this->brainPin = brainPin;
 
 	// The order of the next two calls may look strange, which is a good observation.
 	// We call them in this order so that the pin is set to a known state BEFORE
@@ -550,29 +521,45 @@ void OutputPin::initPin(const char *msg, brain_pin_e brainPin, const pin_output_
 	if (brain_pin_is_onchip(brainPin)) {
 		int actualValue = palReadPad(port, pin);
 		// we had enough drama with pin configuration in board.h and else that we shall self-check
+
 		// todo: handle OM_OPENDRAIN and OM_OPENDRAIN_INVERTED as well
 		if (*outputMode == OM_DEFAULT || *outputMode == OM_INVERTED) {
-			if (*outputMode == OM_INVERTED) {
-				actualValue = !actualValue;
-			}
-			if (actualValue) {
-// todo: https://github.com/rusefi/rusefi/issues/2006
-//				firmwareError(OBD_PCM_Processor_Fault, "%s: startup pin state %s value=%d mode=%s", msg, hwPortname(brainPin), actualValue, getPin_output_mode_e(*outputMode));
+			const int logicalValue = 
+				(*outputMode == OM_INVERTED) 
+				? !actualValue 
+				: actualValue;
+
+			// if the pin was set to logical 1, then set an error and disable the pin so that things don't catch fire
+			if (logicalValue) {
+				firmwareError(OBD_PCM_Processor_Fault, "%s: startup pin state %s actual value=%d logical value=%d mode=%s", msg, hwPortname(brainPin), actualValue, logicalValue, getPin_output_mode_e(*outputMode));
+				OutputPin::deInit();
 			}
 		}
 	}
-
 #endif /* EFI_GPIO_HARDWARE */
 }
 
-void OutputPin::unregisterOutput(brain_pin_e oldPin) {
-	if (oldPin != GPIO_UNASSIGNED) {
-		scheduleMsg(logger, "unregistering %s", hwPortname(oldPin));
-#if EFI_GPIO_HARDWARE && EFI_PROD_CODE
-		efiSetPadUnused(oldPin);
-		port = nullptr;
-#endif /* EFI_GPIO_HARDWARE */
+void OutputPin::deInit() {
+	// Unregister under lock - we don't want other threads mucking with the pin while we're trying to turn it off
+	chibios_rt::CriticalSectionLocker csl;
+
+	// nothing to do if not registered in the first place
+	if (!isBrainPinValid(brainPin)) {
+		return;
 	}
+
+#if (BOARD_EXT_GPIOCHIPS > 0)
+	ext = false;
+#endif // (BOARD_EXT_GPIOCHIPS > 0)
+
+	scheduleMsg(logger, "unregistering %s", hwPortname(brainPin));
+
+#if EFI_GPIO_HARDWARE && EFI_PROD_CODE
+	efiSetPadUnused(brainPin);
+#endif /* EFI_GPIO_HARDWARE */
+
+	// Clear the pin so that it won't get set any more
+	brainPin = GPIO_UNASSIGNED;
 }
 
 #if EFI_GPIO_HARDWARE

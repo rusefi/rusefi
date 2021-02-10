@@ -27,7 +27,6 @@ public enum LiveDocsRegistry {
     public void refresh(BinaryProtocol binaryProtocol) {
         for (LiveDocHolder holder : liveDocs) {
             boolean visible = holder.isVisible();
-            System.out.println(holder + ": is_visible=" + visible);
             if (visible) {
                 for (LiveDataContext context : holder.getActions().getActions().keySet()) {
                     refresh(binaryProtocol, holder, context);

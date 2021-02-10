@@ -485,10 +485,6 @@ TEST(misc, testTriggerDecoder) {
 
 	testTriggerDecoder2("dodge ram", DODGE_RAM, 16, 0.5000, 0.06);
 
-	//testTriggerDecoder2("bmw", BMW_E34, 0, 0.9750, 0.5167);
-	testTriggerDecoder2("bmw", BMW_E34, 0, 0.4667, 0.0);
-
-
 	testTriggerDecoder2("Miata NB", MAZDA_MIATA_NB1, 12, 0.0833, 0.0444);
 
 	printf("====================================================================================== testTriggerDecoder part 3\r\n");
@@ -503,7 +499,6 @@ TEST(misc, testTriggerDecoder) {
 	testTriggerDecoder2("testSubary", SUBARU_2003_WRX, 0, 0.4000, 0.0);
 
 	testTriggerDecoder2("testFordEscortGt", FORD_ESCORT_GT, 0, 0.8096, 0.3844);
-	testTriggerDecoder2("testRoverV8", ROVER_V8, 0, 0.4861, 0);
 
 	testTriggerDecoder2("NISSAN_PRIMERA", NISSAN_PRIMERA, 2, 0.9611, 0.0);
 

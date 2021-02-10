@@ -21,8 +21,10 @@
 #define DRV8860_POLL_INTERVAL_MS	500
 
 struct drv8860_config {
+#if HAL_USE_SPI
 	SPIDriver		*spi_bus;
 	SPIConfig	spi_config;
+#endif
 	struct {
 		ioportid_t		port;
 		uint_fast8_t	pad;
@@ -34,7 +36,7 @@ extern "C"
 {
 #endif /* __cplusplus */
 
-int drv8860_add(unsigned int index, const struct drv8860_config *cfg);
+int drv8860_add(brain_pin_e base, unsigned int index, const struct drv8860_config *cfg);
 
 #ifdef __cplusplus
 }

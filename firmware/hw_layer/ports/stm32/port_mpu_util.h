@@ -10,11 +10,16 @@
 
 #include "device_mpu_util.h"
 
-// 168 ticks in microsecond in case of 168MHz 407
-#define US_TO_NT_MULTIPLIER (CORE_CLOCK / 1000000)
+#define MCU_SERIAL_NUMBER_BYTES 12
 
-// Scheduler queue GPT device - use TIM5
-#define GPTDEVICE GPTD5
+// 12mhz was chosen because it's the GCD of (168, 180, 216), the three speeds of STM32 currently supported
+// https://www.wolframalpha.com/input/?i=common+factors+of+168+180+216
+#define US_TO_NT_MULTIPLIER (12)
+
+// Scheduler queue timer - use TIM5
+#define SCHEDULER_PWM_DEVICE PWMD5
+#define SCHEDULER_TIMER_DEVICE TIM5
+#define SCHEDULER_TIMER_FREQ (US_TO_NT_MULTIPLIER * 1'000'000)
 
 typedef enum {
 	BOR_Level_None = OB_BOR_OFF, // 0x0C=12  Supply voltage ranges from 1.62 to 2.10 V

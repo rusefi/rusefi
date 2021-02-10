@@ -118,11 +118,20 @@ static void setupEtb() {
 
 static void setupDefaultSensorInputs() {
 	// trigger inputs
+#if VR_HW_CHECK_MODE
+	// set_trigger_input_pin 0 PE7
+	// GPIOE_7:  "VR 1"
+	engineConfiguration->triggerInputPins[0] = GPIOE_7;
+	// GPIOE_8:  "VR 2"
+	engineConfiguration->camInputs[0] = GPIOE_8;
+#else
 	// Digital channel 1 as default - others not set
 	engineConfiguration->triggerInputPins[0] = GPIOC_6;
+	engineConfiguration->camInputs[0] = GPIO_UNASSIGNED;
+#endif
+
 	engineConfiguration->triggerInputPins[1] = GPIO_UNASSIGNED;
 	engineConfiguration->triggerInputPins[2] = GPIO_UNASSIGNED;
-	engineConfiguration->camInputs[0] = GPIO_UNASSIGNED;
 
 	// CLT = Analog Temp 3 = PB0
 	engineConfiguration->clt.adcChannel = EFI_ADC_8;
@@ -193,14 +202,19 @@ void setBoardConfigurationOverrides(void) {
 	engineConfiguration->specs.cylindersCount = 8;
 	engineConfiguration->specs.firingOrder = FO_1_8_7_2_6_5_4_3;
 
+	CONFIG(enableSoftwareKnock) = true;
+
 	engineConfiguration->ignitionMode = IM_INDIVIDUAL_COILS;
 	engineConfiguration->crankingInjectionMode = IM_SIMULTANEOUS;
 	engineConfiguration->injectionMode = IM_SIMULTANEOUS;
 
-	// output 13
-	CONFIG(mainRelayPin) = GPIOB_9;
-	// output 15
-	CONFIG(fanPin) = GPIOE_1;
-	// output 16
-	CONFIG(fuelPumpPin) = GPIOE_2;
+	CONFIG(mainRelayPin) = GPIOB_9;//  "Lowside 13"    # pin 10/black35
+	CONFIG(fanPin) = GPIOE_1;//  "Lowside 15"    # pin 12/black35
+	CONFIG(fuelPumpPin) = GPIOE_2;//  "Lowside 16"    # pin 23/black35
+
+	// If we're running as hardware CI, borrow a few extra pins for that
+#ifdef HARDWARE_CI
+	engineConfiguration->triggerSimulatorPins[0] = GPIOG_3;
+	engineConfiguration->triggerSimulatorPins[1] = GPIOG_2;
+#endif
 }

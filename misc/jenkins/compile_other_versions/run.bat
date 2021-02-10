@@ -73,11 +73,6 @@ IF %ERRORLEVEL% NEQ 0 echo ERROR invoking compile_and_upload.bat
 IF %ERRORLEVEL% NEQ 0 EXIT /B 1
 pwd
 
-call misc\jenkins\compile_other_versions\compile_and_upload.bat nucleo_f746 stm32f746_nucleo no %f7_console_setting%
-IF %ERRORLEVEL% NEQ 0 echo ERROR invoking compile_and_upload.bat
-IF %ERRORLEVEL% NEQ 0 EXIT /B 1
-pwd
-
 
 call misc\jenkins\compile_other_versions\compile_and_upload.bat nucleo_f767 stm32f767_nucleo no %f7_console_setting%
 IF %ERRORLEVEL% NEQ 0 echo ERROR invoking compile_and_upload.bat

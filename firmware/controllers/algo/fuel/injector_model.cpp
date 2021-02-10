@@ -43,10 +43,15 @@ float InjectorModel::getInjectorFlowRatio() const {
 		return 1.0f;
 	}
 
-	float map = getMap(PASS_ENGINE_PARAMETER_SIGNATURE);
+	auto map = Sensor::get(SensorType::Map);
+
+	// Map has failed, assume nominal pressure
+	if (!map) {
+		return 1.0f;
+	}
 
 	// TODO: what to do when pressureDelta is less than 0?
-	float pressureDelta = absRailPressure.Value - map;
+	float pressureDelta = absRailPressure.Value - map.Value;
 	float pressureRatio = pressureDelta / referencePressure;
 	float flowRatio = sqrtf(pressureRatio);
 

@@ -123,12 +123,7 @@ public class LiveDocPanel {
                     }
                 });
                 result.addControl(label);
-                SensorCentral.getInstance().addListener(sensor, new SensorCentral.SensorListener() {
-                    @Override
-                    public void onSensorUpdate(double value) {
-                        label.setText(niceToString(value, LIVE_DATA_PRECISION));
-                    }
-                });
+                SensorCentral.getInstance().addListener(sensor, value -> label.setText(niceToString(value, LIVE_DATA_PRECISION)));
             } else if (r instanceof IfRequest) {
                 IfRequest request = (IfRequest) r;
 

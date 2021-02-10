@@ -87,14 +87,15 @@ static void joystickInfo(void) {
 }
 
 static bool isJoystickEnabled() {
-	return CONFIG(joystickCenterPin) != GPIO_UNASSIGNED ||
-			CONFIG(joystickAPin) != GPIO_UNASSIGNED ||
-			// not used so far			CONFIG(joystickBPin) != GPIO_UNASSIGNED ||
-			// not used so far	CONFIG(joystickCPin) != GPIO_UNASSIGNED ||
-			CONFIG(joystickDPin) != GPIO_UNASSIGNED;
+	return (isBrainPinValid(CONFIG(joystickCenterPin)) &&
+			isBrainPinValid(CONFIG(joystickAPin)) &&
+			// not used so far	isBrainPinValid(CONFIG(joystickBPin)) &&
+			// not used so far	isBrainPinValid(CONFIG(joystickCPin)) &&
+			isBrainPinValid(CONFIG(joystickDPin)));
 }
 
 void stopJoystickPins() {
+	// todo: should be 'efiExtiDisablePin' or smth?
 	efiSetPadUnused(activeConfiguration.joystickCenterPin);
 	efiSetPadUnused(activeConfiguration.joystickAPin);
 	efiSetPadUnused(activeConfiguration.joystickDPin);
@@ -102,11 +103,12 @@ void stopJoystickPins() {
 
 void startJoystickPins() {
 	// todo: extract 'configurePalInputPin() method?
-	efiSetPadMode("joy center", CONFIG(joystickCenterPin), PAL_MODE_INPUT_PULLUP);
-	efiSetPadMode("joy A", CONFIG(joystickAPin), PAL_MODE_INPUT_PULLUP);
-	// not used so far	efiSetPadMode("joy B", CONFIG(joystickBPin), PAL_MODE_INPUT_PULLUP);
-	// not used so far	efiSetPadMode("joy C", CONFIG(joystickCPin), PAL_MODE_INPUT_PULLUP);
-	efiSetPadMode("joy D", CONFIG(joystickDPin), PAL_MODE_INPUT_PULLUP);
+	// input capture driver would claim pin ownership so we are not using 'efiSetPadMode' here
+	efiSetPadModeWithoutOwnershipAcquisition("joy center", CONFIG(joystickCenterPin), PAL_MODE_INPUT_PULLUP);
+	efiSetPadModeWithoutOwnershipAcquisition("joy A", CONFIG(joystickAPin), PAL_MODE_INPUT_PULLUP);
+	// not used so far	efiSetPadModeWithoutOwnershipAcquisition("joy B", CONFIG(joystickBPin), PAL_MODE_INPUT_PULLUP);
+	// not used so far	efiSetPadModeWithoutOwnershipAcquisition("joy C", CONFIG(joystickCPin), PAL_MODE_INPUT_PULLUP);
+	efiSetPadModeWithoutOwnershipAcquisition("joy D", CONFIG(joystickDPin), PAL_MODE_INPUT_PULLUP);
 }
 
 void initJoystick(Logging *shared) {

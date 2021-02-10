@@ -97,7 +97,7 @@ struct Sensors1 {
 };
 
 static void populateFrame(Sensors1& msg) {
-    msg.map = getMap();
+    msg.map = Sensor::get(SensorType::Map).value_or(0);
 
     msg.clt = Sensor::get(SensorType::Clt).value_or(0) + PACK_ADD_TEMPERATURE;
     msg.iat = Sensor::get(SensorType::Iat).value_or(0) + PACK_ADD_TEMPERATURE;

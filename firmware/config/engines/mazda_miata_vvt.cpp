@@ -52,6 +52,7 @@
 #include "ego.h"
 #include "thermistors.h"
 #include "mazda_miata_base_maps.h"
+#include "hip9011_logic.h"
 
 EXTERN_CONFIG;
 
@@ -285,6 +286,7 @@ static void setMazdaMiataEngineNB2Defaults(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 
 	setOperationMode(engineConfiguration, FOUR_STROKE_SYMMETRICAL_CRANK_SENSOR);
 	engineConfiguration->specs.displacement = 1.839;
+	engineConfiguration->cylinderBore = 83;
 	strcpy(CONFIG(engineMake), ENGINE_MAKE_MAZDA);
 	strcpy(CONFIG(engineCode), "NB2");
 
@@ -333,7 +335,7 @@ static void setMazdaMiataEngineNB2Defaults(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 
 	engineConfiguration->vvtCamSensorUseRise = true;
 	// set vvt_mode 3
-	engineConfiguration->vvtMode = MIATA_NB2;
+	engineConfiguration->vvtMode[0] = VVT_MIATA_NB2;
 	engineConfiguration->vvtOffset = 98; // 2003 red car value
 
 	MEMCPY(config->veRpmBins, mazda_miata_nb2_RpmBins);
@@ -605,8 +607,8 @@ static void setMiataNB2_MRE_common(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 
 
 	//   # TLE8888 high current low side: VVT1 IN10 / OUT6
-	// GPIOE_9:  "7 - Lowside 1"
-	engineConfiguration->auxPidPins[0] = GPIOE_9; // VVT solenoid control
+	// TLE8888_PIN_6:  "7 - Lowside 1"
+	engineConfiguration->auxPidPins[0] = TLE8888_PIN_6; // VVT solenoid control
 
 	// TLE8888_PIN_23: "33 - GP Out 3"
 	engineConfiguration->malfunctionIndicatorPin = TLE8888_PIN_23;
@@ -622,7 +624,8 @@ static void setMiataNB2_MRE_common(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 
 	// set_analog_input_pin pps PA7
 	// EFI_ADC_7: "31 - AN volt 3" - PA7
-	engineConfiguration->throttlePedalPositionAdcChannel = EFI_ADC_7;
+// disabled for now since only allowed with ETB
+//	engineConfiguration->throttlePedalPositionAdcChannel = EFI_ADC_7;
 
 	// set tps_min 90
 	engineConfiguration->tpsMin = 90;
@@ -697,6 +700,7 @@ void setMiataNB2_MRE_MAF(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 /**
  * https://github.com/rusefi/rusefi/wiki/HOWTO-TCU-A42DE-on-Proteus
  */
+#if HW_PROTEUS
 void setMiataNB2_Proteus_TCU(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	engineConfiguration->tcuEnabled = true;
 
@@ -748,3 +752,79 @@ void setMiataNB2_Proteus_TCU(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 
 }
 
+/**
+ * https://github.com/rusefi/rusefi/wiki/HOWTO-Miata-NB2-on-Proteus
+ */
+void setMiataNB2_ProteusEngineConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
+    setMazdaMiataEngineNB2Defaults(PASS_CONFIG_PARAMETER_SIGNATURE);
+
+    engineConfiguration->triggerInputPins[0] = GPIOC_6;                     // pin 10/black23
+    engineConfiguration->triggerInputPins[1] = GPIO_UNASSIGNED;
+    engineConfiguration->camInputs[0] = GPIOE_11;                           // pin  1/black23
+
+    engineConfiguration->alternatorControlPin = GPIOA_8;  // "Highside 2"    # pin 1/black35
+
+    engineConfiguration->auxPidPins[0] = GPIOB_5; // VVT solenoid control # pin 8/black35
+
+    // high-side driver with +12v VP jumper
+    engineConfiguration->tachOutputPin = GPIOA_9; // tachometer
+    engineConfiguration->tachPulsePerRev = 2;
+
+    engineConfiguration->ignitionMode = IM_WASTED_SPARK;
+
+    engineConfiguration->ignitionPins[0] = GPIOD_4; // "Ign 1"         # pin 35/black35
+    engineConfiguration->ignitionPins[1] = GPIO_UNASSIGNED;
+    engineConfiguration->ignitionPins[2] = GPIOC_9; // "Ign 3"         # pin 22/black35
+    engineConfiguration->ignitionPins[3] = GPIO_UNASSIGNED;
+
+    engineConfiguration->crankingInjectionMode = IM_SIMULTANEOUS;
+    engineConfiguration->injectionMode = IM_SEQUENTIAL;
+
+
+    engineConfiguration->injectionPins[0] = GPIOD_7;  // BLU  # pin 3/black35
+    engineConfiguration->injectionPins[1] = GPIOG_9;  // BLK  # pin 15/black35
+    engineConfiguration->injectionPins[2] = GPIOG_10; // GRN  # pin 4/black35
+    engineConfiguration->injectionPins[3] = GPIOG_11; // WHT  # pin 16/black35
+    engineConfiguration->injectionPinMode = OM_DEFAULT;
+
+
+    CONFIG(enableSoftwareKnock) = true;
+    // second harmonic (aka double) is usually quieter background noise
+    // 13.8
+	engineConfiguration->knockBandCustom = 2 * BAND(engineConfiguration->cylinderBore);
+
+    engineConfiguration->malfunctionIndicatorPin = GPIOB_6; // "Lowside 10"    # pin 20/black35
+
+    engineConfiguration->map.sensor.hwChannel = EFI_ADC_10;
+
+    engineConfiguration->afr.hwChannel = EFI_ADC_11;
+
+    engineConfiguration->mafAdcChannel = EFI_ADC_13; // PA6 W46 <> W46
+
+    engineConfiguration->tps1_1AdcChannel = EFI_ADC_12;
+
+    engineConfiguration->isFasterEngineSpinUpEnabled = true;
+
+    engineConfiguration->clt.adcChannel =  EFI_ADC_14;
+    engineConfiguration->iat.adcChannel = EFI_ADC_8;
+
+    engineConfiguration->fuelPumpPin = GPIOG_13;// "Lowside 6"     # pin 6/black35
+
+    engineConfiguration->idle.solenoidPin = GPIOG_14;  // "Lowside 7"     # pin 7/black35
+    engineConfiguration->idle.solenoidFrequency = 300;
+
+
+    engineConfiguration->fanPin = GPIOB_7;
+
+	CONFIG(mainRelayPin) = GPIOG_12;// "Lowside 5"     # pin 5/black35
+
+
+}
+#endif // HW_PROTEUS
+
+#if HW_HELLEN
+void setMiataNB2_Hellen72(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
+    setMazdaMiataEngineNB2Defaults(PASS_CONFIG_PARAMETER_SIGNATURE);
+	strcpy(CONFIG(vehicleName), "H72 test");
+}
+#endif // HW_HELLEN

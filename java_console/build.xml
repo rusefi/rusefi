@@ -1,11 +1,13 @@
-<project default="jar">
+<project default="build">
     <property name="jar_file_folder" value="../java_console_binary"/>
+    <property name="hw_tests" value="build_hw"/>
     <property name="jar_file" value="${jar_file_folder}/rusefi_console.jar"/>
     <property name="server_jar_file" value="${jar_file_folder}/rusefi_server.jar"/>
     <property name="lib_list" value="lib/mockito-all-1.10.19.jar:../java_tools/configuration_definition/lib/snakeyaml.jar:lib/log4j-api-2.13.3.jar:lib/log4j-core-2.13.3.jar:lib/jsr305-2.0.1.jar:lib/dfu/dfu_java.jar:lib/dfu/IntelHexParser.jar:lib/json-simple-1.1.1.jar:lib/server/javax.json.jar:lib/server/cactoos.jar:lib/server/takes.jar:lib/json-simple-1.1.1.jar:lib/jaxb-api.jar:lib/httpclient.jar:lib/httpmime.jar:lib/httpcore.jar:lib/jSerialComm.jar:lib/jcip-annotations-1.0.jar:lib/jlatexmath-1.0.6.jar:lib/swing-layout-1.0.jar:lib/jep.jar:lib/log4j.jar:lib/junit.jar:lib/SteelSeries-3.9.30.jar:lib/annotations.jar:lib/miglayout-4.0.jar:lib/surfaceplotter-2.0.1.jar"/>
 
     <target name="clean">
         <delete dir="build"/>
+        <delete dir="${hw_tests}"/>
     </target>
 
     <target name="clean_out_folder">
@@ -23,6 +25,8 @@
             <src path="shared_io/src/main/java"/>
         </javac>
     </target>
+
+    <target name="build" depends="jar, test"/>
 
     <target name="autoupdate_jar" depends="autoupdate_compile">
         <tstamp>
@@ -71,7 +75,9 @@
                         <compilerarg line="- -add-exports java.xml/com.sun.org.apache.xml.internal.serialize=ALL-UNNAMED"/>
                         -->
         </javac>
+    </target>
 
+    <target name="test" depends="compile">
         <junit fork="no"
                maxmemory="512m"
                printsummary="yes"
@@ -83,6 +89,7 @@
             <classpath
                     path="build/classes:lib/junit.jar:${lib_list}:lib/commons-logging.jar"/>
             <batchtest todir="build">
+<!--                at the moment we do NOT have any tests matching this pattern - all hardware tests are not inside 'test' folders -->
                 <fileset dir="autotest/src" includes="**/test/**/*Test.java"/>
                 <fileset dir="autoupdate/src" includes="**/test/**/*Test.java"/>
                 <fileset dir="io/src/test/java" includes="**/test/**/*Test.java"/>
@@ -93,7 +100,6 @@
                 <fileset dir="logging/src" includes="**/test/**/*Test.java"/>
             </batchtest>
         </junit>
-
     </target>
 
     <target name="server_jar" depends="jar">
@@ -167,6 +173,7 @@
             <zipfileset src="lib/batik/batik-util.jar" includes="**/*.class"/>
             <zipfileset src="lib/jlatexmath-1.0.6.jar" includes="**/*.class **/*.xml **/*.ttf"/>
             <zipfileset src="lib/json-simple-1.1.1.jar" includes="**/*.class"/>
+            <zipfileset src="lib/junit.jar" includes="**/*.class"/>
         </jar>
     </target>
 
@@ -180,10 +187,46 @@
 
     </target>
 
-    <!--todo: rename this task to something more specific like RunRealHardwareTestSuite & sync Jenkins instances-->
-    <target name="realtest" depends="jar">
-        <java classpath="${jar_file}" classname="com.rusefi.RealHwTest" failonerror="true">
-        </java>
+    <target name="hardware_ci_f4_discovery" depends="jar">
+        <mkdir dir="${hw_tests}"/>
+        <junit fork="no"
+               maxmemory="512m"
+               printsummary="yes"
+               showoutput="true"
+               haltonfailure="yes">
+
+            <jvmarg value="-ea"/>
+            <jvmarg value="-XX:+HeapDumpOnOutOfMemoryError"/>
+            <formatter type="brief"/>
+            <classpath
+                    path="build/classes:lib/junit.jar:${lib_list}:lib/commons-logging.jar"/>
+            <batchtest todir="${hw_tests}">
+                <fileset dir="autotest/src" includes="**/common/*.java"/>
+                <fileset dir="autotest/src" includes="**/f4discovery/*.java"/>
+            </batchtest>
+            <formatter type="plain" usefile="false" /> <!-- to screen -->
+        </junit>
+    </target>
+
+    <target name="hardware_ci_proteus" depends="jar">
+        <mkdir dir="${hw_tests}"/>
+        <junit fork="no"
+               maxmemory="512m"
+               printsummary="yes"
+               showoutput="true"
+               haltonfailure="yes">
+
+            <jvmarg value="-ea"/>
+            <jvmarg value="-XX:+HeapDumpOnOutOfMemoryError"/>
+            <formatter type="brief"/>
+            <classpath
+                    path="build/classes:lib/junit.jar:${lib_list}:lib/commons-logging.jar"/>
+            <batchtest todir="${hw_tests}">
+                <fileset dir="autotest/src" includes="**/common/*.java"/>
+                <fileset dir="autotest/src" includes="**/proteus/*.java"/>
+            </batchtest>
+            <formatter type="plain" usefile="false" /> <!-- to screen -->
+        </junit>
     </target>
 
     <target name="before_IDEA_Build">

@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on hellen_cypress_gen_config.bat integration/rusefi_config.txt Wed Dec 09 19:32:36 UTC 2020
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on hellen_cypress_gen_config.bat integration/rusefi_config.txt Tue Feb 09 19:00:47 UTC 2021
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -155,7 +155,7 @@ struct spi_pins {
 	 * need 4 byte alignment
 	 * offset 3
 	 */
-	uint8_t alignmentFill_at_3;
+	uint8_t alignmentFill_at_3[1];
 	/** total size 4*/
 };
 
@@ -733,11 +733,12 @@ struct engine_configuration_s {
 	offset 76 bit 25 */
 	bool useTLE8888_stepper : 1;
 	/**
+	 * If enabled, the MAP estimate table will be used if the MAP sensor fails to estimate manifold pressure based on RPM and TPS.
 	offset 76 bit 26 */
-	bool issue_294_27 : 1;
+	bool enableMapEstimationTableFallback : 1;
 	/**
 	offset 76 bit 27 */
-	bool issue_294_28 : 1;
+	bool useFSIOTableForCanSniffingFiltering : 1;
 	/**
 	offset 76 bit 28 */
 	bool issue_294_29 : 1;
@@ -1022,9 +1023,10 @@ struct engine_configuration_s {
 	 */
 	spi_device_e hip9011SpiDevice;
 	/**
+	 * This value is only used for speed density fueling calculations.
 	 * offset 541
 	 */
-	uint8_t unused541;
+	uint8_t failedMapFallback;
 	/**
 	 * offset 542
 	 */
@@ -1055,6 +1057,10 @@ struct engine_configuration_s {
 	 * offset 556
 	 */
 	brain_input_pin_e camInputs[CAM_INPUTS_COUNT];
+	/**
+	 * offset 560
+	 */
+	uint8_t camInputsPadding[CAM_INPUTS_COUNT_padding];
 	/**
 	 * offset 560
 	 */
@@ -1481,8 +1487,9 @@ struct engine_configuration_s {
 	offset 744 bit 24 */
 	bool useIdleTimingPidControl : 1;
 	/**
+	 * Allows disabling the ETB when the engine is stopped. You may not like the power draw or PWM noise from the motor, so this lets you turn it off until it's necessary.
 	offset 744 bit 25 */
-	bool unused744b25 : 1;
+	bool disableEtbWhenEngineStopped : 1;
 	/**
 	offset 744 bit 26 */
 	bool is_enabled_spi_4 : 1;
@@ -1596,6 +1603,7 @@ struct engine_configuration_s {
 	 */
 	int mapMinBufferLength;
 	/**
+	 * Below this throttle position, the engine is considered idling.
 	 * offset 816
 	 */
 	int16_t idlePidDeactivationTpsThreshold;
@@ -1619,7 +1627,7 @@ struct engine_configuration_s {
 	 * Maximum time to crank starter
 	 * offset 826
 	 */
-	efitimesec16_t startCrankingDuration;
+	uint16_t startCrankingDuration;
 	/**
 	 * This pin is used for debugging - snap a logic analyzer on it and see if it's ever high
 	 * offset 828
@@ -1787,7 +1795,7 @@ struct engine_configuration_s {
 	offset 976 bit 9 */
 	bool showHumanReadableWarning : 1;
 	/**
-	 * If enabled, adjust at a constant rate instead of a rate proportional to the current lambda error. This mode may be easier to tune, and more tolerant of sensor noise. Use of this mode is required if you have a narrowband O2 sensor.;
+	 * If enabled, adjust at a constant rate instead of a rate proportional to the current lambda error. This mode may be easier to tune, and more tolerant of sensor noise. Use of this mode is required if you have a narrowband O2 sensor.
 	offset 976 bit 10 */
 	bool stftIgnoreErrorMagnitude : 1;
 	/**
@@ -1853,10 +1861,10 @@ struct engine_configuration_s {
 	bool unusedBit_251_29 : 1;
 	/**
 	offset 976 bit 30 */
-	bool unusedBit_288_30 : 1;
+	bool unusedBit_289_30 : 1;
 	/**
 	offset 976 bit 31 */
-	bool unusedBit_288_31 : 1;
+	bool unusedBit_289_31 : 1;
 	/**
 	 * offset 980
 	 */
@@ -2002,7 +2010,11 @@ struct engine_configuration_s {
 	/**
 	 * offset 1458
 	 */
-	uint16_t unusedHereHereHere;
+	brain_pin_e lps25BaroSensorScl;
+	/**
+	 * offset 1459
+	 */
+	brain_pin_e lps25BaroSensorSda;
 	/**
 	 * offset 1460
 	 */
@@ -2692,76 +2704,76 @@ struct engine_configuration_s {
 	bool unused1130 : 1;
 	/**
 	offset 2116 bit 8 */
-	bool unusedBit_488_8 : 1;
+	bool unusedBit_490_8 : 1;
 	/**
 	offset 2116 bit 9 */
-	bool unusedBit_488_9 : 1;
+	bool unusedBit_490_9 : 1;
 	/**
 	offset 2116 bit 10 */
-	bool unusedBit_488_10 : 1;
+	bool unusedBit_490_10 : 1;
 	/**
 	offset 2116 bit 11 */
-	bool unusedBit_488_11 : 1;
+	bool unusedBit_490_11 : 1;
 	/**
 	offset 2116 bit 12 */
-	bool unusedBit_488_12 : 1;
+	bool unusedBit_490_12 : 1;
 	/**
 	offset 2116 bit 13 */
-	bool unusedBit_488_13 : 1;
+	bool unusedBit_490_13 : 1;
 	/**
 	offset 2116 bit 14 */
-	bool unusedBit_488_14 : 1;
+	bool unusedBit_490_14 : 1;
 	/**
 	offset 2116 bit 15 */
-	bool unusedBit_488_15 : 1;
+	bool unusedBit_490_15 : 1;
 	/**
 	offset 2116 bit 16 */
-	bool unusedBit_488_16 : 1;
+	bool unusedBit_490_16 : 1;
 	/**
 	offset 2116 bit 17 */
-	bool unusedBit_488_17 : 1;
+	bool unusedBit_490_17 : 1;
 	/**
 	offset 2116 bit 18 */
-	bool unusedBit_488_18 : 1;
+	bool unusedBit_490_18 : 1;
 	/**
 	offset 2116 bit 19 */
-	bool unusedBit_488_19 : 1;
+	bool unusedBit_490_19 : 1;
 	/**
 	offset 2116 bit 20 */
-	bool unusedBit_488_20 : 1;
+	bool unusedBit_490_20 : 1;
 	/**
 	offset 2116 bit 21 */
-	bool unusedBit_488_21 : 1;
+	bool unusedBit_490_21 : 1;
 	/**
 	offset 2116 bit 22 */
-	bool unusedBit_488_22 : 1;
+	bool unusedBit_490_22 : 1;
 	/**
 	offset 2116 bit 23 */
-	bool unusedBit_488_23 : 1;
+	bool unusedBit_490_23 : 1;
 	/**
 	offset 2116 bit 24 */
-	bool unusedBit_488_24 : 1;
+	bool unusedBit_490_24 : 1;
 	/**
 	offset 2116 bit 25 */
-	bool unusedBit_488_25 : 1;
+	bool unusedBit_490_25 : 1;
 	/**
 	offset 2116 bit 26 */
-	bool unusedBit_488_26 : 1;
+	bool unusedBit_490_26 : 1;
 	/**
 	offset 2116 bit 27 */
-	bool unusedBit_488_27 : 1;
+	bool unusedBit_490_27 : 1;
 	/**
 	offset 2116 bit 28 */
-	bool unusedBit_488_28 : 1;
+	bool unusedBit_490_28 : 1;
 	/**
 	offset 2116 bit 29 */
-	bool unusedBit_488_29 : 1;
+	bool unusedBit_490_29 : 1;
 	/**
 	offset 2116 bit 30 */
-	bool unusedBit_488_30 : 1;
+	bool unusedBit_490_30 : 1;
 	/**
 	offset 2116 bit 31 */
-	bool unusedBit_488_31 : 1;
+	bool unusedBit_490_31 : 1;
 	/**
 	 * set can_mode X
 	 * offset 2120
@@ -2806,7 +2818,7 @@ struct engine_configuration_s {
 	pin_output_mode_e hpfpValvePinMode;
 	/**
 	 * MAP value above which fuel is cut in case of overboost.
-	 * 0 to disable overboost cut.
+	 * Set to 0 to disable overboost cut.
 	 * offset 2132
 	 */
 	float boostCutPressure;
@@ -2863,7 +2875,7 @@ struct engine_configuration_s {
 	 * need 4 byte alignment
 	 * offset 2227
 	 */
-	uint8_t alignmentFill_at_2227;
+	uint8_t alignmentFill_at_2227[1];
 	/**
 	 * This is the IAC position during cranking, some engines start better if given more air during cranking to improve cylinder filling.
 	 * offset 2228
@@ -2910,11 +2922,15 @@ struct engine_configuration_s {
 	 * set vvt_mode X
 	 * offset 2328
 	 */
-	vvt_mode_e vvtMode;
+	vvt_mode_e vvtMode[CAMS_PER_BANK];
 	/**
-	 * offset 2332
+	 * offset 2330
 	 */
-	uint8_t unusedOldBiquad[20];
+	uint8_t vvtModePadding[CAMS_PER_BANK_padding];
+	/**
+	 * offset 2330
+	 */
+	uint8_t unusedOldBiquad[22];
 	/**
 	 * CLT-based timing correction
 	 * offset 2352
@@ -3095,15 +3111,15 @@ struct engine_configuration_s {
 	/**
 	 * offset 2713
 	 */
-	uint8_t unusedAuxVoltage1_TODO_332;
+	uint8_t unusedAuxVoltage1_TODO_332[1];
 	/**
 	 * offset 2714
 	 */
-	uint8_t unusedAuxVoltage2_TODO_332;
+	uint8_t unusedAuxVoltage2_TODO_332[1];
 	/**
 	 * offset 2715
 	 */
-	uint8_t unusedSpiPadding5;
+	uint8_t unusedSpiPadding5[1];
 	/**
 	 * offset 2716
 	 */
@@ -3137,10 +3153,10 @@ struct engine_configuration_s {
 	 */
 	float fsioCurve4[FSIO_CURVE_8];
 	/**
-	 * For pinout see https://rusefi.com/forum/viewtopic.php?f=5&t=1324
+	 * Continental/GM flex fuel sensor, 50-150hz type
 	 * offset 3100
 	 */
-	uint8_t unusedFlexFuelSensor;
+	brain_input_pin_e flexSensorPin;
 	/**
 	 * offset 3101
 	 */
@@ -3299,20 +3315,18 @@ struct engine_configuration_s {
 	 */
 	pid_s idleTimingPid;
 	/**
-	 * When the current RPM is closer than this value to the target, closed-loop idle timing control is enabled.
 	 * offset 3988
 	 */
-	int16_t idleTimingPidWorkZone;
+	uint8_t unused3988[2];
 	/**
 	 * If the RPM closer to target than this value, disable timing correction to prevent oscillation
 	 * offset 3990
 	 */
 	int16_t idleTimingPidDeadZone;
 	/**
-	 * Taper out idle timing control over this range as the engine leaves idle conditions
 	 * offset 3992
 	 */
-	int16_t idlePidFalloffDeltaRpm;
+	uint8_t unused3942[2];
 	/**
 	 * A delay in cycles between fuel-enrich. portions
 	 * offset 3994
@@ -3341,7 +3355,7 @@ struct engine_configuration_s {
 	 */
 	spi_device_e tle6240spiDevice;
 	/**
-	 * Stoichiometric ratio for your primary fuel.
+	 * Stoichiometric ratio for your primary fuel. When Flex Fuel is enabled, this value is used when the Flex Fuel sensor indicates E0.
 	 * offset 4005
 	 */
 	uint8_t stoichRatioPrimary;
@@ -3355,26 +3369,28 @@ struct engine_configuration_s {
 	 */
 	spi_device_e mc33972spiDevice;
 	/**
+	 * Stoichiometric ratio for your secondary fuel. This value is used when the Flex Fuel sensor indicates E100.
 	 * offset 4009
 	 */
-	uint8_t unusedSpiPadding8[3];
+	uint8_t stoichRatioSecondary;
+	/**
+	 * offset 4010
+	 */
+	uint8_t unusedSpiPadding8[2];
 	/**
 	 *  ETB idle authority
 	 * offset 4012
 	 */
 	float etbIdleThrottleRange;
 	/**
+	 * Select which fuel correction bank this cylinder belongs to. Group cylinders that share the same O2 sensor
 	 * offset 4016
 	 */
-	uint8_t unusedvref[4];
+	uint8_t cylinderBankSelect[INJECTION_PIN_COUNT];
 	/**
-	 * offset 4020
+	 * offset 4028
 	 */
-	uint8_t unusedsw[4];
-	/**
-	 * offset 4024
-	 */
-	int unused_alFIn[3];
+	int unused4028[2];
 	/**
 	 * Trigger comparator center point voltage
 	 * offset 4036
@@ -3480,7 +3496,7 @@ struct engine_configuration_s {
 	 * need 4 byte alignment
 	 * offset 4539
 	 */
-	uint8_t alignmentFill_at_4539;
+	uint8_t alignmentFill_at_4539[1];
 	/**
 	 * offset 4540
 	 */
@@ -3672,9 +3688,52 @@ struct persistent_config_s {
 	 */
 	tcubinary_table_t tcuSolenoidTable;
 	/**
+	 * Good example: number of tooth on wheel, For Can 10 is a good number.
 	 * offset 15196
 	 */
-	uint8_t unused15136[1092];
+	float vssFilterReciprocal;
+	/**
+	 * offset 15200
+	 */
+	map_estimate_table_t mapEstimateTable;
+	/**
+	 * offset 15712
+	 */
+	uint16_t mapEstimateTpsBins[FUEL_LOAD_COUNT];
+	/**
+	 * offset 15744
+	 */
+	uint16_t mapEstimateRpmBins[FUEL_RPM_COUNT];
+	/**
+	 * offset 15776
+	 */
+	fsio_table_8x8_u8t vvtTable1;
+	/**
+	 * offset 15840
+	 */
+	float vvtTable1LoadBins[FSIO_TABLE_8];
+	/**
+	 * RPM is float and not integer in order to use unified methods for interpolation
+	 * offset 15872
+	 */
+	float vvtTable1RpmBins[FSIO_TABLE_8];
+	/**
+	 * offset 15904
+	 */
+	fsio_table_8x8_u8t vvtTable2;
+	/**
+	 * offset 15968
+	 */
+	float vvtTable2LoadBins[FSIO_TABLE_8];
+	/**
+	 * RPM is float and not integer in order to use unified methods for interpolation
+	 * offset 16000
+	 */
+	float vvtTable2RpmBins[FSIO_TABLE_8];
+	/**
+	 * offset 16032
+	 */
+	uint8_t unused15136[256];
 	/**
 	 * offset 16288
 	 */
@@ -3782,4 +3841,4 @@ struct persistent_config_s {
 typedef struct persistent_config_s persistent_config_s;
 
 // end
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on hellen_cypress_gen_config.bat integration/rusefi_config.txt Wed Dec 09 19:32:36 UTC 2020
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on hellen_cypress_gen_config.bat integration/rusefi_config.txt Tue Feb 09 19:00:47 UTC 2021

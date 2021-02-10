@@ -320,7 +320,7 @@ static void handleFuel(const bool limitedFuel, uint32_t trgEventIndex, int rpm, 
 	efiAssertVoid(CUSTOM_STACK_6627, getCurrentRemainingStack() > 128, "lowstck#3");
 	efiAssertVoid(CUSTOM_ERR_6628, trgEventIndex < engine->engineCycleEventCount, "handleFuel/event index");
 
-	if (!isInjectionEnabled(PASS_ENGINE_PARAMETER_SIGNATURE) || limitedFuel) {
+	if (limitedFuel) {
 		return;
 	}
 	if (ENGINE(isCylinderCleanupMode)) {
@@ -371,7 +371,7 @@ uint32_t *cyccnt = (uint32_t*) &DWT->CYCCNT;
 void mainTriggerCallback(uint32_t trgEventIndex, efitick_t edgeTimestamp DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	ScopePerf perf(PE::MainTriggerCallback);
 
-	if (CONFIG(vvtMode) == MIATA_NB2 && ENGINE(triggerCentral.vvtSyncTimeNt) == 0) {
+	if (CONFIG(vvtMode[0]) == VVT_MIATA_NB2 && ENGINE(triggerCentral.vvtSyncTimeNt) == 0) {
 		// this is a bit spaghetti code for sure
 		// do not spark & do not fuel until we have VVT sync. NB2 is a special case
 		// due to symmetrical crank wheel and we need to make sure no spark happens out of sync
@@ -389,7 +389,7 @@ void mainTriggerCallback(uint32_t trgEventIndex, efitick_t edgeTimestamp DECLARE
 #endif // HW_CHECK_MODE
 
 #if EFI_CDM_INTEGRATION
-	if (trgEventIndex == 0 && CONFIG(cdmInputPin) != GPIO_UNASSIGNED) {
+	if (trgEventIndex == 0 && isBrainPinValid(CONFIG(cdmInputPin))) {
 		int cdmKnockValue = getCurrentCdmValue(engine->triggerCentral.triggerState.getTotalRevolutionCounter());
 		engine->knockLogic(cdmKnockValue);
 	}
@@ -423,16 +423,10 @@ void mainTriggerCallback(uint32_t trgEventIndex, efitick_t edgeTimestamp DECLARE
 		// TODO: add 'pin shutdown' invocation somewhere - coils might be still open here!
 		return;
 	}
-	bool limitedSpark = ENGINE(isRpmHardLimit);
-	bool limitedFuel = ENGINE(isRpmHardLimit);
 
-	if (CONFIG(boostCutPressure) != 0) {
-		// todo: move part of this to periodicFast? probably not cool to decode MAP sensor inside trigger callback?
-		if (getMap(PASS_ENGINE_PARAMETER_SIGNATURE) > CONFIG(boostCutPressure)) {
-			limitedSpark = true;
-			limitedFuel = true;
-		}
-	}
+	bool limitedSpark = !ENGINE(limpManager).allowIgnition();
+	bool limitedFuel = !ENGINE(limpManager).allowInjection();
+
 #if EFI_LAUNCH_CONTROL
 	if (engine->isLaunchCondition && !limitedSpark && !limitedFuel) {
 		/* in case we are not already on a limited conditions, check launch as well */
@@ -456,7 +450,7 @@ void mainTriggerCallback(uint32_t trgEventIndex, efitick_t edgeTimestamp DECLARE
 	}
 
 	if (trgEventIndex == (uint32_t)CONFIG(ignMathCalculateAtIndex)) {
-		if (CONFIG(externalKnockSenseAdc) != EFI_ADC_NONE) {
+		if (isAdcChannelValid(CONFIG(externalKnockSenseAdc))) {
 			float externalKnockValue = getVoltageDivided("knock", engineConfiguration->externalKnockSenseAdc PASS_ENGINE_PARAMETER_SUFFIX);
 			engine->knockLogic(externalKnockValue PASS_ENGINE_PARAMETER_SUFFIX);
 		}
@@ -560,8 +554,6 @@ void initMainEventListener(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX
 	addConsoleActionP("maininfo", (VoidPtr) showMainInfo, engine);
 
 	printMsg(logger, "initMainLoop: %d", currentTimeMillis());
-	if (!isInjectionEnabled(PASS_ENGINE_PARAMETER_SIGNATURE))
-		printMsg(logger, "!!!!!!!!!!!!!!!!!!! injection disabled");
 #endif
 
 

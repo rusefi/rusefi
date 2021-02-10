@@ -57,6 +57,19 @@
             "servertype": "openocd",
             "configFiles": ["interface/stlink.cfg", "target/stm32f4x.cfg"],
             "runToMain": true
+		},
+		{
+            "name": "Debug F7x6",
+            "type": "cortex-debug",
+            "request": "launch",
+            "cwd": "${workspaceFolder}",
+            "executable": "${workspaceRoot}/firmware/build/rusefi.elf",
+            "device": "STM32F767V",
+            "v1": false,
+            "svdFile": "${workspaceRoot}/firmware/ext/cmsis-svd/data/STMicro/STM32F7x6.svd",
+            "servertype": "openocd",
+            "configFiles": ["board/stm32f7discovery.cfg"],
+            "runToMain": true
         }
 	]
 }

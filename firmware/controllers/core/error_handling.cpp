@@ -72,6 +72,7 @@ extern uint8_t criticalErrorLedState;
 /**
  * low-level function is used here to reduce stack usage
  */
+
 #define ON_CRITICAL_ERROR() \
 		palWritePad(criticalErrorLedPort, criticalErrorLedPin, criticalErrorLedState); \
 		turnAllPinsOff(); \
@@ -244,6 +245,7 @@ void firmwareError(obd_code_e code, const char *fmt, ...) {
 #if EFI_PROD_CODE
 	if (hasFirmwareErrorFlag)
 		return;
+	engine->limpManager.fatalError();
 	engine->engineState.warnings.addWarningCode(code);
 #ifdef EFI_PRINT_ERRORS_AS_WARNINGS
 	va_list ap;
@@ -280,16 +282,18 @@ void firmwareError(obd_code_e code, const char *fmt, ...) {
 	}
 
 #else
-	printf("\x1B[31m>>>>>>>>>> firmwareError [%s]\r\n\x1B[0m", fmt);
+
+	char errorBuffer[200];
 
 	va_list ap;
 	va_start(ap, fmt);
-	vprintf(fmt, ap);
+	vsnprintf(errorBuffer, sizeof(errorBuffer), fmt, ap);
 	va_end(ap);
-	printf("\r\n");
+
+	printf("\x1B[31m>>>>>>>>>> firmwareError [%s]\r\n\x1B[0m\r\n", errorBuffer);
 
 #if EFI_SIMULATOR || EFI_UNIT_TEST
-	throw std::logic_error(fmt);
+	throw std::logic_error(errorBuffer);
 #endif /* EFI_SIMULATOR */
 #endif
 }

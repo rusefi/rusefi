@@ -1,0 +1,113 @@
+.pin-marker {
+  position: absolute;
+  z-index: 1;
+  border-radius: 50%;
+  background-color: white;
+  border: 2px blue solid;
+  cursor: pointer;
+  color: black;
+  text-align: center;
+  line-height: 200%;
+}
+
+.pin-marker:hover {
+  background-color: #f15a24;
+  color: white;
+  transform: scale(2);
+  z-index: 2;
+}
+
+.pin-marker.highlight {
+  border: 2px #f15a24 solid;
+}
+
+.pin-marker.selected {
+  background-color: #fc935a;
+}
+
+#connector-container {
+  width: 100%;
+  height: 50%;
+  overflow-x: scroll;
+  position: relative;
+}
+
+#connector-div {
+  height: 100%;
+  position: relative;
+  z-index: 0;
+}
+
+#connector-img {
+  height: 100%;
+  z-index: 0;
+}
+
+table {
+  font-family: Arial, Helvetica, sans-serif;
+  border-collapse: collapse;
+  width: clamp(100%, 100%, 1000px);
+  text-align: left;
+}
+
+@media (min-width: 1000px) {
+  table {
+    font-size: 1rem;
+  }
+}
+
+@media (max-width: 1000px) {
+  table {
+    font-size: 3rem;
+  }
+}
+
+table tbody tr {
+  cursor: pointer;
+}
+
+table td, table th {
+  border: 1px solid black;
+  padding: 8px;
+}
+
+table tr:nth-child(even){
+  background-color: #fc935a;
+}
+
+table tr:hover {
+  background-color: #f15a24;
+}
+
+table th {
+  padding-top: 12px;
+  padding-bottom: 12px;
+  text-align: left;
+  background-color: #f15a24;
+  color: black;
+}
+
+@media (prefers-color-scheme: dark) {
+  html {
+    background-color: black;
+    color: white;
+  }
+
+  table td, table th {
+    border: 1px solid #ddd;
+  }
+
+  table th {
+    color: white
+  }
+
+  table tr:nth-child(even){
+    background-color: #230c00;
+    color: white;
+  }
+
+  table tr:hover {
+    background-color: #f15a24;
+  }
+}
+

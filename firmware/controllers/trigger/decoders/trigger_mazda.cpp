@@ -19,6 +19,7 @@
  */
 
 #include "trigger_mazda.h"
+#include "error_handling.h"
 
 void initializeMazdaMiataNaShape(TriggerWaveform *s) {
 	s->initialize(FOUR_STROKE_CAM_SENSOR);

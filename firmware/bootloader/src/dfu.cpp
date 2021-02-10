@@ -18,7 +18,10 @@ static uint8_t bootloaderVirtualPageBuffer[BOOTLOADER_SIZE];
 
 // needed by DFU protocol (DFU_DEVICE_ID_CMD)
 static uint32_t getMcuRevision() {
-	return DBGMCU->IDCODE & MCU_REVISION_MASK;	// =0x413 for F407, =0x434 for F469.
+	// =0x413 for F407
+	// =0x419 for F42xxx and F43xxx
+	// =0x434 for F469
+	return DBGMCU->IDCODE & MCU_REVISION_MASK;
 }
 
 static bool getByte(uint8_t *b) {

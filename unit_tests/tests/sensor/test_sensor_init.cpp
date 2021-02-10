@@ -218,3 +218,15 @@ TEST(SensorInit, Lambda) {
 	auto s = Sensor::getSensorOfType(SensorType::Lambda1);
 	ASSERT_NE(nullptr, s);
 }
+
+TEST(SensorInit, Map) {
+	WITH_ENGINE_TEST_HELPER(TEST_ENGINE);
+
+	initMap(PASS_ENGINE_PARAMETER_SIGNATURE);
+
+	auto s = Sensor::getSensorOfType(SensorType::Map);
+	ASSERT_NE(nullptr, s);
+
+	engine->mockMapValue = 55;
+	EXPECT_FLOAT_EQ(55.0f, Sensor::get(SensorType::Map).value_or(0));
+}

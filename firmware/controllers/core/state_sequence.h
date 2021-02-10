@@ -7,7 +7,7 @@
 
 #pragma once
 
-#include "global.h"
+#include "rusefi_enums.h"
 
 /**
  * This layer has two primary usages:

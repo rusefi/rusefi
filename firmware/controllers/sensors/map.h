@@ -6,7 +6,10 @@
 
 #pragma once
 
-#include "engine_configuration.h"
+#include "engine_ptr.h"
+
+class Logging;
+struct air_pressure_sensor_config_s;
 
 void initMapDecoder(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX);
 
@@ -15,7 +18,6 @@ void initMapDecoder(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX);
  */
 float getRawMap(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 float getBaroPressure(DECLARE_ENGINE_PARAMETER_SIGNATURE);
-bool hasBaroSensor(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 bool hasMapSensor(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 
 /**

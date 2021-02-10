@@ -15,7 +15,7 @@
 
 #define TEST_POOL_SIZE 256
 
-FsioValue getEngineValue(le_action_e action DECLARE_ENGINE_PARAMETER_SUFFIX) {
+FsioResult getEngineValue(le_action_e action DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	switch(action) {
 	case LE_METHOD_FAN:
 		return engine->fsioState.mockFan;
@@ -195,6 +195,11 @@ TEST(fsio, extraOperators) {
 	testExpression("0 22 33 if", 33);
 }
 
+TEST(fsio, invalidFunction) {
+	EXPECT_FATAL_ERROR(testExpression("bogus_function", 0));
+	EXPECT_FATAL_ERROR(testExpression("1 2 + bogus_expression *", 0));
+}
+
 TEST(fsio, testLogicExpressions) {
 	{
 
@@ -248,10 +253,6 @@ TEST(fsio, testLogicExpressions) {
 	e->init(LE_OPERATOR_OR);
 
 	pool.reset();
-	LEElement *element;
-	element = pool.parseExpression("fan no_such_method");
-	ASSERT_TRUE(element == NULL) << "NULL expected";
-
 	}
 
 	/**
@@ -340,4 +341,40 @@ TEST(fsio, fuelPump) {
 	runFsio(PASS_ENGINE_PARAMETER_SIGNATURE);
 	// Pump should be on!
 	EXPECT_TRUE(efiReadPin(GPIOA_0));
+}
+
+TEST(fsio, fsioValueFloat) {
+	FsioValue floatVal(3.5f);
+
+	EXPECT_TRUE(floatVal.isFloat());
+	EXPECT_FALSE(floatVal.isBool());
+
+	EXPECT_FLOAT_EQ(floatVal.asFloat(), 3.5f);
+}
+
+TEST(fsio, fsioValueFloatZero) {
+	FsioValue floatVal(0.0f);
+
+	EXPECT_TRUE(floatVal.isFloat());
+	EXPECT_FALSE(floatVal.isBool());
+
+	EXPECT_FLOAT_EQ(floatVal.asFloat(), 0);
+}
+
+TEST(fsio, fsioValueBoolTrue) {
+	FsioValue boolVal(true);
+
+	EXPECT_TRUE(boolVal.isBool());
+	EXPECT_FALSE(boolVal.isFloat());
+
+	EXPECT_TRUE(boolVal.asBool());
+}
+
+TEST(fsio, fsioValueBoolFalse) {
+	FsioValue boolVal(false);
+
+	EXPECT_TRUE(boolVal.isBool());
+	EXPECT_FALSE(boolVal.isFloat());
+
+	EXPECT_FALSE(boolVal.asBool());
 }

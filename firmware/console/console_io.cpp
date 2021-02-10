@@ -156,15 +156,28 @@ static bool getConsoleLine(BaseSequentialStream *chp, char *line, unsigned size)
 CommandHandler console_line_callback;
 
 #if (defined(EFI_CONSOLE_SERIAL_DEVICE) && ! EFI_SIMULATOR )
-SerialConfig serialConfig = { 0, 0, USART_CR2_STOP1_BITS | USART_CR2_LINEN, 0 };
+SerialConfig serialConfig = {
+	.speed	= 0,
+	.cr1	= 0,
+	.cr2	= USART_CR2_STOP1_BITS | USART_CR2_LINEN,
+	.cr3	= 0
+};
 #endif
 
 #if (defined(EFI_CONSOLE_UART_DEVICE) && ! EFI_SIMULATOR )
 /* Note: This structure is modified from the default ChibiOS layout! */
 UARTConfig uartConfig = {
-	.txend1_cb = NULL, .txend2_cb = NULL, .rxend_cb = NULL, .rxchar_cb = NULL, .rxerr_cb = NULL, 
-	.speed = 0, .cr1 = 0, .cr2 = 0/*USART_CR2_STOP1_BITS*/ | USART_CR2_LINEN, .cr3 = 0,
-	.timeout_cb = NULL, .rxhalf_cb = NULL
+	.txend1_cb		= NULL,
+	.txend2_cb		= NULL,
+	.rxend_cb		= NULL,
+	.rxchar_cb		= NULL,
+	.rxerr_cb		= NULL,
+	.timeout_cb		= NULL,
+	.speed			= 0,
+	.cr1			= 0,
+	.cr2			= 0/*USART_CR2_STOP1_BITS*/ | USART_CR2_LINEN,
+	.cr3			= 0,
+	.rxhalf_cb		= NULL
 };
 
 // To use UART driver instead of Serial, we need to imitate "BaseChannel" streaming functionality

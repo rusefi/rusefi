@@ -1,8 +1,7 @@
 <component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="FiringOrderTSLogic" type="Application" factoryName="Application" nameIsGenerated="true">
+  <configuration default="false" name="FiringOrderTSLogic" type="Application" factoryName="Application" folderName="Misc" nameIsGenerated="true">
     <option name="MAIN_CLASS_NAME" value="com.rusefi.FiringOrderTSLogic" />
     <module name="configuration_definition" />
-    <option name="WORKING_DIRECTORY" value="file://$PROJECT_DIR$" />
     <extension name="coverage">
       <pattern>
         <option name="PATTERN" value="com.rusefi.ui.console.*" />

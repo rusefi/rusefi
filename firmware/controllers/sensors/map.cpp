@@ -12,6 +12,7 @@
 #include "interpolation.h"
 #include "map.h"
 #include "engine_controller.h"
+#include "sensor.h"
 
 #if EFI_PROD_CODE
 #include "digital_input_icu.h"
@@ -53,6 +54,10 @@ static FastInterpolation honda3bar(0.5, 91.422, 3.0, 0);
 static FastInterpolation subyDenso(0, 0, 5, 200);
 
 static FastInterpolation gm3bar(0.631, 40, 4.914, 304);
+
+static FastInterpolation gm2bar(0, 8.8, 5, 208);
+
+static FastInterpolation gm1bar(0, 10, 5, 105);
 
 static FastInterpolation mpx4250(0, 8, 5, 260);
 
@@ -102,6 +107,8 @@ float decodePressure(float voltage, air_pressure_sensor_config_s * mapConfig DEC
 	case MT_DODGE_NEON_2003:
 	case MT_SUBY_DENSO:
 	case MT_GM_3_BAR:
+	case MT_GM_2_BAR:
+	case MT_GM_1_BAR:
 	case MT_TOYOTA_89420_02010:
 	case MT_MPX4100:
 	case MT_BOSCH_2_5:
@@ -167,16 +174,8 @@ float getRawMap(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	return getMapByVoltage(voltage PASS_ENGINE_PARAMETER_SUFFIX);
 }
 
-/**
- * Returns true if a real Baro sensor is present.
- * Also if 'useFixedBaroCorrFromMap' option is enabled, and we have the initial pressure value stored and passed validation.
- */
-bool hasBaroSensor(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
-	return engineConfiguration->baroSensor.hwChannel != EFI_ADC_NONE || !cisnan(storedInitialBaroPressure);
-}
-
 bool hasMapSensor(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
-	return engineConfiguration->map.sensor.hwChannel != EFI_ADC_NONE;
+	return isAdcChannelValid(engineConfiguration->map.sensor.hwChannel);
 }
 
 float getBaroPressure(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
@@ -205,6 +204,10 @@ static FastInterpolation *getDecoder(air_pressure_sensor_type_e type) {
 		return &subyDenso;
 	case MT_GM_3_BAR:
 		return &gm3bar;
+	case MT_GM_2_BAR:
+		return &gm2bar;
+	case MT_GM_1_BAR:
+		return &gm1bar;
 	case MT_TOYOTA_89420_02010:
 		return &densoToyota;
 	case MT_MAZDA_1_BAR:
@@ -264,8 +267,8 @@ static void printMAPInfo(void) {
 		}
 	}
 
-	if (hasBaroSensor(PASS_ENGINE_PARAMETER_SIGNATURE)) {
-		scheduleMsg(logger, "baro type=%d value=%.2f", engineConfiguration->baroSensor.type, getBaroPressure(PASS_ENGINE_PARAMETER_SIGNATURE));
+	if (Sensor::hasSensor(SensorType::BarometricPressure)) {
+		scheduleMsg(logger, "baro type=%d value=%.2f", engineConfiguration->baroSensor.type, Sensor::get(SensorType::BarometricPressure).value_or(-1));
 		if (engineConfiguration->baroSensor.type == MT_CUSTOM) {
 			scheduleMsg(logger, "min=%.2f@%.2f max=%.2f@%.2f",
 					engineConfiguration->baroSensor.lowValue,

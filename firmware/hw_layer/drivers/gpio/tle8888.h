@@ -39,8 +39,10 @@
 
 /* note that spi transfer should be LSB first */
 struct tle8888_config {
+#if HAL_USE_SPI
 	SPIDriver		*spi_bus;
 	SPIConfig	spi_config;
+#endif
 	/* bidirectional, check DS */
 	struct {
 		ioportid_t		port;
@@ -78,7 +80,7 @@ extern "C"
 /**
  * @return return gpio chip base
  */
-int tle8888_add(unsigned int index, const struct tle8888_config *cfg);
+int tle8888_add(brain_pin_e base, unsigned int index, const struct tle8888_config *cfg);
 
 /* debug */
 void tle8888_read_reg(uint16_t reg, uint16_t *val);

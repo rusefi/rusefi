@@ -194,21 +194,6 @@ typedef enum {
 } adcerror_t;
 
 /**
- * @brief   Type of a structure representing an ADC driver.
- */
-typedef struct ADCDriver ADCDriver;
-
-/**
- * @brief   ADC notification callback type.
- *
- * @param[in] adcp      pointer to the @p ADCDriver object triggering the
- *                      callback
- * @param[in] buffer    pointer to the most recent samples data
- * @param[in] n         number of buffer rows available starting from @p buffer
- */
-typedef void (*adccallback_t)(ADCDriver *adcp, adcsample_t *buffer, size_t n);
-
-/**
  * @brief   ADC error callback type.
  *
  * @param[in] adcp      pointer to the @p ADCDriver object triggering the
@@ -217,193 +202,86 @@ typedef void (*adccallback_t)(ADCDriver *adcp, adcsample_t *buffer, size_t n);
  */
 typedef void (*adcerrorcallback_t)(ADCDriver *adcp, adcerror_t err);
 
-/**
- * @brief   Conversion group configuration structure.
- * @details This implementation-dependent structure describes a conversion
- *          operation.
- */
-typedef struct {
-  /**
-   * @brief   Enables the circular buffer mode for the group.
-   */
-  bool                      circular;
-  /**
-   * @brief   Number of the analog channels belonging to the conversion group.
-   */
-  adc_channels_num_t        num_channels;
-  /**
-   * @brief   Callback function associated to the group or @p NULL.
-   */
-  adccallback_t             end_cb;
-  /**
-   * @brief   Error callback or @p NULL.
-   */
-  adcerrorcallback_t        error_cb;
-  /* End of the mandatory fields.*/
-
-  /* [andreika]: these are STM32-compatible fields, we'll convert them into Cypress ones */
-  /**
-   * @brief   ADC CR1 register initialization data.
-   * @note    All the required bits must be defined into this field except
-   *          @p ADC_CR1_SCAN that is enforced inside the driver.
-   */
-  uint32_t                  cr1;
-  /**
-   * @brief   ADC CR2 register initialization data.
-   * @note    All the required bits must be defined into this field except
-   *          @p ADC_CR2_DMA, @p ADC_CR2_CONT and @p ADC_CR2_ADON that are
-   *          enforced inside the driver.
-   */
-  uint32_t                  cr2;
-  /**
-   * @brief   ADC SMPR1 register initialization data.
-   * @details In this field must be specified the sample times for channels
-   *          10...18.
-   */
-  uint32_t                  smpr1;
-  /**
-   * @brief   ADC SMPR2 register initialization data.
-   * @details In this field must be specified the sample times for channels
-   *          0...9.
-   */
-  uint32_t                  smpr2;
-  /**
-   * @brief   ADC watchdog high threshold register.
-   * @details This field defines the high threshold of the analog watchdog.
-   */
-  uint16_t                  htr;
-  /**
-   * @brief   ADC watchdog low threshold register.
-   * @details This field defines the low threshold of the analog watchdog.
-   */
-  uint16_t                  ltr;
-  /**
-   * @brief   ADC SQR1 register initialization data.
-   * @details Conversion group sequence 13...16 + sequence length.
-   */
-  uint32_t                  sqr1;
-  /**
-   * @brief   ADC SQR2 register initialization data.
-   * @details Conversion group sequence 7...12.
-   */
-  uint32_t                  sqr2;
-  /**
-   * @brief   ADC SQR3 register initialization data.
-   * @details Conversion group sequence 1...6.
-   */
-  uint32_t                  sqr3;
-
-  /* [andreika]: these are NOT STM32-compatible fields! But STM32 has only 16 ADC channels, and we need almost 32! */
-  /**
-   * @brief   ADC SQR4 register initialization data.
-   * @details Conversion group sequence 18...23.
-   */
-  uint32_t                  sqr4;
-  /**
-   * @brief   ADC SQR5 register initialization data.
-   * @details Conversion group sequence 24...29.
-   */
-  uint32_t                  sqr5;
-} ADCConversionGroup;
 
 /**
- * @brief   Driver configuration structure.
- * @note    It could be empty on some architectures.
+ * @brief   Low level fields of the ADC configuration structure.
  */
-typedef struct {
-  /* Perform first time calibration */
-  bool                      calibrate;
-} ADCConfig;
+#define adc_lld_configuration_group_fields                                  \
+  /* [dron_gus]: is there any reason to keep comatibility with stm32 drivers? */ \
+  /* [andreika]: these are STM32-compatible fields, we'll convert them into Cypress ones */ \
+  /* ADC CR1 register initialization data.                                  \
+     NOTE: All the required bits must be defined into this field except     \
+           @p ADC_CR1_SCAN that is enforced inside the driver.*/            \
+  uint32_t                  cr1;                                            \
+  /* ADC CR2 register initialization data.                                  \
+     NOTE: All the required bits must be defined into this field except     \
+           @p ADC_CR2_DMA, @p ADC_CR2_CONT and @p ADC_CR2_ADON that are     \
+           enforced inside the driver.*/                                    \
+  uint32_t                  cr2;                                            \
+  /* ADC SMPR1 register initialization data.                                \
+     NOTE: In this field must be specified the sample times for channels    \
+           10...18.*/                                                       \
+  uint32_t                  smpr1;                                          \
+  /* ADC SMPR2 register initialization data.                                \
+     NOTE: In this field must be specified the sample times for channels    \
+           0...9.*/                                                         \
+  uint32_t                  smpr2;                                          \
+  /* ADC watchdog high threshold register.                                  \
+     NOTE: This field defines the high threshold of the analog watchdog.*/  \
+  uint16_t                  htr;                                            \
+  /* ADC watchdog low threshold register.                                   \
+     NOTE: This field defines the low threshold of the analog watchdog.*/   \
+  uint16_t                  ltr;                                            \
+  /* ADC SQR1 register initialization data.                                 \
+     NOTE: Conversion group sequence 13...16 + sequence length.*/           \
+  uint32_t                  sqr1;                                           \
+  /* ADC SQR2 register initialization data. */                              \
+  uint32_t                  sqr2;                                           \
+  /* ADC SQR3 register initialization data. */                              \
+  uint32_t                  sqr3;                                           \
+  /* ADC SQR4 register initialization data. */                              \
+  uint32_t                  sqr4;                                           \
+  /* ADC SQR5 register initialization data. */                              \
+  uint32_t                  sqr5
 
 /**
- * @brief   Structure representing an ADC driver.
+ * @brief   Low level fields of the ADC configuration structure.
  */
-struct ADCDriver {
-  /**
-   * @brief Driver state.
-   */
-  adcstate_t                state;
-  /**
-   * @brief Current configuration data.
-   */
-  const ADCConfig           *config;
-  /**
-   * @brief Current samples buffer pointer or @p NULL.
-   */
-  adcsample_t               *samples;
-  /**
-   * @brief Current samples buffer depth or @p 0.
-   */
-  size_t                    depth;
-  /**
-   * @brief Current conversion group pointer or @p NULL.
-   */
-  const ADCConversionGroup  *grpp;
-#if ADC_USE_WAIT || defined(__DOXYGEN__)
-  /**
-   * @brief Waiting thread.
-   */
-  thread_reference_t        thread;
-#endif
-#if ADC_USE_MUTUAL_EXCLUSION || defined(__DOXYGEN__)
-  /**
-   * @brief Mutex protecting the peripheral.
-   */
-  mutex_t                   mutex;
-#endif /* ADC_USE_MUTUAL_EXCLUSION */
-#if defined(ADC_DRIVER_EXT_FIELDS)
-  ADC_DRIVER_EXT_FIELDS
-#endif
-  /* End of the mandatory fields.*/
-	/**
-	 * @brief Pointer to the PDL driver structure.
-	*/
-	stc_adcn_t              *adc;
+#define adc_lld_config_fields                                               \
+  /* Perform first time calibration */                                      \
+  bool                      calibrate;                                      \
+  /* Dummy configuration, it is not needed.*/                               \
+  uint32_t                  dummy
 
-	/**
-	 * @brief Pointer to the PDL driver config structures.
-	*/
-    stc_adc_config_t         stcAdcConfig;
-    stc_adc_scan_t           stcScanCfg;
-    
-	/**
-	 * @brief Pointer to IRQ callback structures.
-	*/
-    stc_adc_irq_en_t         stcIrqEn;
-    stc_adc_irq_cb_t         stcIrqCb;
-    
-	/**
-     * @brief Number of samples expected.
-	*/
-	size_t                   number_of_samples;
-	/**
-     * @brief Current position in the buffer.
-	*/
-	volatile size_t          current_index;
-
-	/**
-	 * @brief   Channel group index used to select software or hardware conversion triggering.
-	*/
-	uint32_t                 channelGroup;
-	/**
-	 * @brief   Bitmask of channels for ADC conversion.
-	*/
-	int8_t                   channelHwIndices[ADC_NUM_CHANNELS];
-	/**
-	 * @brief   Reciprocal to channelHwIndices.
-	*/
-	int8_t                   channelLogicIndices[ADC_NUM_CHANNELS];
-
-	bool                     wasInit;
-	
-	/* We don't want to init ADC driver every time, so we check if settings are changed */
-	int8_t                   oldChannelHwIndices[ADC_NUM_CHANNELS];
-	adc_channels_num_t       oldNumChannels;
-	size_t                   oldDepth;
-
-	/* The size of ADC FIFO buffer */
-	int                      fifoSize;
-};
+/**
+ * @brief   Low level fields of the ADC driver structure.
+ */
+#define adc_lld_driver_fields                                                \
+	/* Pointer to the PDL driver structure. */                                 \
+	stc_adcn_t              *adc;                                              \
+	/* Pointer to the PDL driver config structures. */                         \
+  stc_adc_config_t         stcAdcConfig;                                     \
+  stc_adc_scan_t           stcScanCfg;                                       \
+	/* Pointer to IRQ callback structures. */                                  \
+  stc_adc_irq_en_t         stcIrqEn;                                         \
+  stc_adc_irq_cb_t         stcIrqCb;                                         \
+	/* Number of samples expected. */                                          \
+	size_t                   number_of_samples;                                \
+	/* Current position in the buffer. */                                      \
+	volatile size_t          current_index;                                    \
+	/* Channel group index used to select software or hardware conversion triggering. */ \
+	uint32_t                 channelGroup;                                     \
+	/* Bitmask of channels for ADC conversion. */                              \
+	int8_t                   channelHwIndices[ADC_NUM_CHANNELS];               \
+	/* Reciprocal to channelHwIndices. */                                      \
+	int8_t                   channelLogicIndices[ADC_NUM_CHANNELS];            \
+	bool                     wasInit;                                          \
+	/* We don't want to init ADC driver every time, so we check if settings are changed */ \
+	int8_t                   oldChannelHwIndices[ADC_NUM_CHANNELS];            \
+	adc_channels_num_t       oldNumChannels;                                   \
+	size_t                   oldDepth;                                         \
+	/* The size of ADC FIFO buffer */                                          \
+	int                      fifoSize
 
 /*===========================================================================*/
 /* Driver macros.                                                            */

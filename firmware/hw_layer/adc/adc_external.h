@@ -12,6 +12,5 @@
 #include "mcp3208.h"
 
 #define getAdcValue(channel) getMcp3208adc(channel)
-#define adcToVoltsDivided(adc) (5.0f / 4095 * adc)
-#define getVoltageDivided(msg, channel) (channel == EFI_ADC_NONE ? 66.66 : adcToVoltsDivided(getAdcValue(msg, channel)))
-
+#define adcToVoltsDivided(adc) (5.0f / 4095 * (adc))
+#define getVoltageDivided(msg, channel) (isAdcChannelValid(channel) ? adcToVoltsDivided(getAdcValue(msg, channel)) : 66.66)

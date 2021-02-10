@@ -42,9 +42,17 @@ extern SERIAL_USB_DRIVER TS_USB_DEVICE;
 #elif TS_UART_MODE
 /* Note: This structure is modified from the default ChibiOS layout! */
 static UARTConfig tsUartConfig = { 
-	.txend1_cb = NULL, .txend2_cb = NULL, .rxend_cb = NULL, .rxchar_cb = NULL, .rxerr_cb = NULL, 
-	.speed = 0, .cr1 = 0, .cr2 = 0/*USART_CR2_STOP1_BITS*/ | USART_CR2_LINEN, .cr3 = 0,
-	.timeout_cb = NULL, .rxhalf_cb = NULL
+	.txend1_cb 		= NULL,
+	.txend2_cb 		= NULL,
+	.rxend_cb 		= NULL,
+	.rxchar_cb		= NULL,
+	.rxerr_cb		= NULL,
+	.timeout_cb		= NULL,
+	.speed 			= 0,
+	.cr1 			= 0,
+	.cr2 			= 0/*USART_CR2_STOP1_BITS*/ | USART_CR2_LINEN,
+	.cr3 			= 0,
+	.rxhalf_cb		= NULL
 };
 #elif defined(TS_SERIAL_DEVICE)
 static SerialConfig tsSerialConfig = { .speed = 0, .cr1 = 0, .cr2 = USART_CR2_STOP1_BITS | USART_CR2_LINEN, .cr3 = 0 };

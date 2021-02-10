@@ -1,5 +1,5 @@
 /*
- * @file HIP9011_logic.h
+ * @file hip9011_logic.h
  *
  *  Created on: Jan 3, 2019
  * @author Andrey Belomutskiy, (c) 2012-2020
@@ -10,6 +10,8 @@
 #include "efifeatures.h"
 #include "rusefi_enums.h"
 #include "hip9011_lookup.h"
+
+#define BAND(bore) (900 / (PIF * (bore) / 2))
 
 /**
  * this interface defines hardware communication layer for HIP9011 chip

@@ -18,6 +18,7 @@
 #include "local_version_holder.h"
 #include "buttonshift.h"
 #include "gear_controller.h"
+#include "limp_manager.h"
 
 #if EFI_SIGNAL_EXECUTOR_ONE_TIMER
 // PROD real firmware uses this implementation
@@ -52,8 +53,9 @@ class AirmassModelBase;
 #define CYCLE_ALTERNATION 2
 
 class IEtbController;
-class IFuelComputer;
-class IInjectorModel;
+struct IFuelComputer;
+struct IInjectorModel;
+struct IIdleController;
 
 class PrimaryTriggerConfiguration final : public TriggerConfiguration {
 public:
@@ -68,6 +70,8 @@ protected:
 class VvtTriggerConfiguration final : public TriggerConfiguration {
 public:
 	VvtTriggerConfiguration() : TriggerConfiguration("TRG ") {}
+	// todo: is it possible to make 'index' constructor argument?
+	int index = 0;
 
 protected:
 	bool isUseOnlyRisingEdgeForTrigger() const override;
@@ -85,13 +89,14 @@ public:
 	IEtbController *etbControllers[ETB_COUNT] = {nullptr};
 	IFuelComputer *fuelComputer = nullptr;
 	IInjectorModel *injectorModel = nullptr;
+	IIdleController* idleController = nullptr;
 
 	cyclic_buffer<int> triggerErrorDetection;
 
 	GearControllerBase *gearController;
 
 	PrimaryTriggerConfiguration primaryTriggerConfiguration;
-	VvtTriggerConfiguration vvtTriggerConfiguration;
+	VvtTriggerConfiguration vvtTriggerConfiguration[CAMS_PER_BANK];
 	efitick_t startStopStateLastPushTime = 0;
 
 #if EFI_SHAFT_POSITION_INPUT
@@ -193,12 +198,6 @@ public:
 	 */
 	efitimems64_t callFromPitStopEndTime = 0;
 
-	/**
-	 * This flag indicated a big enough problem that engine control would be
-	 * prohibited if this flag is set to true.
-	 */
-	bool withError = false;
-
 	RpmCalculator rpmCalculator;
 	persistent_config_s *config = nullptr;
 	/**
@@ -255,6 +254,7 @@ public:
 	void periodicFastCallback(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 	void periodicSlowCallback(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 	void updateSlowSensors(DECLARE_ENGINE_PARAMETER_SIGNATURE);
+	void updateSwitchInputs(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 	void initializeTriggerWaveform(Logging *logger DECLARE_ENGINE_PARAMETER_SUFFIX);
 
 	bool clutchUpState = false;
@@ -266,7 +266,6 @@ public:
 	efitimeus_t acSwitchLastChangeTime = 0;
 
 	bool isRunningPwmTest = false;
-	bool isRpmHardLimit = false;
 
 	int getRpmHardLimit(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 
@@ -317,9 +316,6 @@ public:
 	 */
 	int ignitionPin[IGNITION_PIN_COUNT];
 
-	// Store current ignition mode for prepareIgnitionPinIndices()
-	ignition_mode_e ignitionModeForPinIndices = Force_4_bytes_size_ignition_mode;
-
 	/**
 	 * this is invoked each time we register a trigger tooth signal
 	 */
@@ -327,6 +323,7 @@ public:
 	EngineState engineState;
 	SensorsState sensors;
 	efitick_t lastTriggerToothEventTimeNt = 0;
+	efitick_t mainRelayBenchStartNt = 0;
 
 
 	/**
@@ -364,6 +361,8 @@ public:
 	 */
 	bool isInShutdownMode(DECLARE_ENGINE_PARAMETER_SIGNATURE) const;
 
+	bool isInMainRelayBench(DECLARE_ENGINE_PARAMETER_SIGNATURE);
+
 	/**
 	 * The stepper does not work if the main relay is turned off (it requires +12V).
 	 * Needed by the stepper motor code to detect if it works.
@@ -381,6 +380,8 @@ public:
 	void printKnockState(void);
 
 	AirmassModelBase* mockAirmassModel = nullptr;
+
+	LimpManager limpManager;
 
 private:
 	/**

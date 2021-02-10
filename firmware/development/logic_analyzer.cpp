@@ -104,12 +104,20 @@ static void waIcuPeriodCallback(WaveReader *reader) {
 static void initWave(const char *name, int index) {
 	brain_pin_e brainPin = CONFIG(logicAnalyzerPins)[index];
 
-	if (brainPin == GPIO_UNASSIGNED)
-		return;
-
 	waveReaderCount++;
 	efiAssertVoid(CUSTOM_ERR_6655, index < MAX_ICU_COUNT, "too many ICUs");
 	WaveReader *reader = &readers[index];
+
+	if (!isBrainPinValid(brainPin)) {
+		/**
+		 *  in case we are running, and we select none for a channel that was running, 
+		 *  this way we ensure that we do not get false report from that channel 
+		 **/
+		reader->hw = nullptr;
+		return;
+	}
+		
+
 	reader->name = name;
 
 	reader->hw = startDigitalCapture("wave input", brainPin);
@@ -235,10 +243,48 @@ void stopLogicAnalyzerPins() {
 	for (int index = 0; index < LOGIC_ANALYZER_CHANNEL_COUNT; index++) {
 		brain_pin_e brainPin = activeConfiguration.logicAnalyzerPins[index];
 
-		if (brainPin != GPIO_UNASSIGNED) {
+		if (isBrainPinValid(brainPin)) {
 			stopDigitalCapture("wave input", brainPin);
 		}
 	}
+}
+
+void getChannelFreqAndDuty(int index, float *duty, int *freq) {
+
+	float high,period;
+
+	if ((duty == nullptr) || (freq == nullptr)) {
+		return;
+	}
+
+	if (readers[index].hw == nullptr) {
+		*duty = 0.0;
+		*freq = 0;
+	} else {
+		high = getSignalOnTime(index);
+		period = getSignalPeriodMs(index);
+
+		if ((period != 0) && (readers[index].hw->started)) {
+
+			*duty = (high * 1000.0f) /(period * 10.0f);
+			*freq = (int)(1 / (period / 1000.0f));
+		} else {		
+			*duty = 0.0;
+			*freq = 0;
+		}
+	}
+
+}
+
+void reportLogicAnalyzerToTS() {
+#if EFI_TUNER_STUDIO	
+	int tmp;
+	getChannelFreqAndDuty(0,&tsOutputChannels.debugFloatField1, &tsOutputChannels.debugIntField1);
+	getChannelFreqAndDuty(1,&tsOutputChannels.debugFloatField2, &tsOutputChannels.debugIntField2);
+	getChannelFreqAndDuty(2,&tsOutputChannels.debugFloatField3, &tsOutputChannels.debugIntField3);
+	getChannelFreqAndDuty(3,&tsOutputChannels.debugFloatField4, &tmp);
+	tsOutputChannels.debugIntField4 = (int16_t)tmp;
+#endif	
 }
 
 #endif /* EFI_LOGIC_ANALYZER */

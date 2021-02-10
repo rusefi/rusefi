@@ -66,7 +66,7 @@ float getEngineLoadT(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	efiAssert(CUSTOM_ERR_ASSERT, engineConfiguration!=NULL, "engineConfiguration 2NULL", NAN);
 	switch (engineConfiguration->fuelAlgorithm) {
 	case LM_SPEED_DENSITY:
-		return getMap(PASS_ENGINE_PARAMETER_SIGNATURE);
+		return Sensor::get(SensorType::Map).value_or(0);
 	case LM_ALPHA_N:
 		return Sensor::get(SensorType::Tps1).value_or(0);
 	case LM_REAL_MAF:
@@ -360,14 +360,12 @@ static int getIgnitionPinForIndex(int cylinderIndex DECLARE_ENGINE_PARAMETER_SUF
 }
 
 void prepareIgnitionPinIndices(ignition_mode_e ignitionMode DECLARE_ENGINE_PARAMETER_SUFFIX) {
-	if (ignitionMode != engine->ignitionModeForPinIndices) {
+	(void)ignitionMode;
 #if EFI_ENGINE_CONTROL
-		for (int cylinderIndex = 0; cylinderIndex < CONFIG(specs.cylindersCount); cylinderIndex++) {
-			ENGINE(ignitionPin[cylinderIndex]) = getIgnitionPinForIndex(cylinderIndex PASS_ENGINE_PARAMETER_SUFFIX);
-		}
-#endif /* EFI_ENGINE_CONTROL */
-		engine->ignitionModeForPinIndices = ignitionMode;
+	for (int cylinderIndex = 0; cylinderIndex < CONFIG(specs.cylindersCount); cylinderIndex++) {
+		ENGINE(ignitionPin[cylinderIndex]) = getIgnitionPinForIndex(cylinderIndex PASS_ENGINE_PARAMETER_SUFFIX);
 	}
+#endif /* EFI_ENGINE_CONTROL */
 }
 
 /**
@@ -415,6 +413,9 @@ void prepareOutputSignals(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	prepareIgnitionPinIndices(CONFIG(ignitionMode) PASS_ENGINE_PARAMETER_SUFFIX);
 
 	TRIGGER_WAVEFORM(prepareShape(&ENGINE(triggerCentral.triggerFormDetails) PASS_ENGINE_PARAMETER_SUFFIX));
+
+	// Fuel schedule may now be completely wrong, force a reset
+	ENGINE(injectionEvents).invalidate();
 }
 
 void setTimingRpmBin(float from, float to DECLARE_CONFIG_PARAMETER_SUFFIX) {

@@ -1,7 +1,8 @@
+#include "global.h"
+#include "adc_inputs.h"
 #include "adc_subscription.h"
 #include "engine.h"
 #include "error_handling.h"
-#include "global.h"
 #include "functional_sensor.h"
 #include "redundant_sensor.h"
 #include "proxy_sensor.h"
@@ -41,7 +42,7 @@ FunctionalSensor idlePosSens(SensorType::IdlePosition, MS2NT(10));
 
 static bool configureTps(LinearFunc& func, adc_channel_e channel, float closed, float open, float min, float max, const char* msg) {
 	// Only configure if we have a channel
-	if (channel == EFI_ADC_NONE || channel >= EFI_ADC_LAST_CHANNEL) {
+	if (!isAdcChannelValid(channel)) {
 		return false;
 	}
 
@@ -106,7 +107,7 @@ void initTps(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	}
 
 	// Route the pedal or TPS to driverIntent as appropriate
-	if (CONFIG(throttlePedalPositionAdcChannel) != EFI_ADC_NONE) {
+	if (isAdcChannelValid(CONFIG(throttlePedalPositionAdcChannel))) {
 		driverIntent.setProxiedSensor(SensorType::AcceleratorPedal);
 	} else {
 		driverIntent.setProxiedSensor(SensorType::Tps1);

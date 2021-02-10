@@ -8,6 +8,7 @@
 
 #include "global.h"
 #if !EFI_UNIT_TEST
+#include "os_access.h"
 #include "settings.h"
 #include "eficonsole.h"
 #include "engine_configuration.h"
@@ -117,8 +118,6 @@ const char* getConfigurationName(engine_type_e engineType) {
 		return "Neon95";
 	case FORD_ASPIRE_1996:
 		return "Aspire";
-	case FORD_FIESTA:
-		return "Fiesta";
 	case NISSAN_PRIMERA:
 		return "Primera";
 	case HONDA_ACCORD_CD:
@@ -139,16 +138,12 @@ const char* getConfigurationName(engine_type_e engineType) {
 		return "EscrtGT";
 	case CITROEN_TU3JP:
 		return "TU3JP";
-	case ROVER_V8:
-		return "Rvrv8";
 	case MITSU_4G93:
 		return "Mi4G93";
 	case MIATA_1990:
 		return "MX590";
 	case MIATA_1996:
 		return "MX596";
-	case BMW_E34:
-		return "BMWe34";
 	default:
 		return getEngine_type_e(engineType);
 	}
@@ -241,14 +236,18 @@ static void setTimingMode(int value) {
 }
 
 void setEngineType(int value) {
-	engineConfiguration->engineType = (engine_type_e) value;
-	resetConfigurationExt(&logger, (engine_type_e) value PASS_ENGINE_PARAMETER_SUFFIX);
-	engine->resetEngineSnifferIfInTestMode();
+	{
+		chibios_rt::CriticalSectionLocker csl;
 
-#if EFI_INTERNAL_FLASH
-	writeToFlashNow();
-//	scheduleReset();
-#endif /* EFI_PROD_CODE */
+		engineConfiguration->engineType = (engine_type_e) value;
+		resetConfigurationExt(&logger, (engine_type_e) value PASS_ENGINE_PARAMETER_SUFFIX);
+		engine->resetEngineSnifferIfInTestMode();
+
+	#if EFI_INTERNAL_FLASH
+		writeToFlashNow();
+	//	scheduleReset();
+	#endif /* EFI_PROD_CODE */
+	}
 	incrementGlobalConfigurationVersion(PASS_ENGINE_PARAMETER_SIGNATURE);
 	doPrintConfiguration();
 }
@@ -426,6 +425,7 @@ static void setInjectionMode(int value) {
 static void setIgnitionMode(int value) {
 	engineConfiguration->ignitionMode = (ignition_mode_e) value;
 	incrementGlobalConfigurationVersion(PASS_ENGINE_PARAMETER_SIGNATURE);
+	prepareOutputSignals(PASS_ENGINE_PARAMETER_SIGNATURE);
 	doPrintConfiguration();
 }
 
@@ -1282,7 +1282,7 @@ static void setValue(const char *paramStr, const char *valueStr) {
 	} else if (strEqualCaseInsensitive(paramStr, "vvt_offset")) {
 		engineConfiguration->vvtOffset = valueF;
 	} else if (strEqualCaseInsensitive(paramStr, "vvt_mode")) {
-		engineConfiguration->vvtMode = (vvt_mode_e)valueI;
+		engineConfiguration->vvtMode[0] = (vvt_mode_e)valueI;
 	} else if (strEqualCaseInsensitive(paramStr, "operation_mode")) {
 		engineConfiguration->ambiguousOperationMode = (operation_mode_e)valueI;
 	} else if (strEqualCaseInsensitive(paramStr, "vvtCamSensorUseRise")) {

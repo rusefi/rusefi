@@ -12,9 +12,14 @@ jobs:
       matrix:
         # What boards should we build for? In the 'include' section below,
         # set up what each of these boards needs to build.
-        build-target: [cypress, frankenso_na6, kinetis, mre_f4, mre_f4_hardware_QC_special_build, mre_f7, prometheus_405, prometheus_469, proteus_f4, proteus_f7, stm32f746_nucleo, stm32f767_nucleo]
+        build-target: [hellen72, cypress, frankenso_na6, kinetis, mre_f4, mre_f4_recovery, mre_f4_hardware_QC_special_build, mre_f7, prometheus_405, prometheus_469, proteus_f4, proteus_f4_hardware_QC_special_build, proteus_f7, stm32f767_nucleo, stm32h743_nucleo]
         
         include:
+          # Board configurations
+          - build-target: hellen72
+            folder: hellen/hellen72
+            ini-file: rusefi_hellen72.ini
+
           # Board configurations
           - build-target: cypress
             folder: hellen
@@ -29,6 +34,10 @@ jobs:
             ini-file: rusefi_kinetis.ini
 
           - build-target: mre_f4
+            folder: microrusefi
+            ini-file: rusefi_mre_f4.ini
+
+          - build-target: mre_f4_recovery
             folder: microrusefi
             ini-file: rusefi_mre_f4.ini
 
@@ -53,20 +62,23 @@ jobs:
             folder: proteus
             ini-file: rusefi_proteus_f4.ini
 
+          - build-target: proteus_f4_hardware_QC_special_build
+            folder: proteus
+            ini-file: rusefi_proteus_f4.ini
+
           - build-target: proteus_f7
             folder: proteus
             ini-file: rusefi_proteus_f7.ini
-
-          - build-target: stm32f746_nucleo
-            folder: nucleo_f746
-            ini-file: no
-            console-settings: firmware/config/boards/nucleo_f767/rusefi_console_properties.xml
-            skip-config: yes
 
           - build-target: stm32f767_nucleo
             folder: nucleo_f767
             ini-file: no
             console-settings: firmware/config/boards/nucleo_f767/rusefi_console_properties.xml
+            skip-config: yes
+
+          - build-target: stm32h743_nucleo
+            folder: nucleo_h743
+            ini-file: no
             skip-config: yes
 
     steps:
@@ -197,6 +209,10 @@ jobs:
     - uses: actions/checkout@v1
       with:
         submodules: recursive
+
+    - name: Generate Enum Strings
+      working-directory: ./firmware/
+      run: bash gen_enum_to_string.sh
 
     - name: Generate Configs
       working-directory: ./firmware/

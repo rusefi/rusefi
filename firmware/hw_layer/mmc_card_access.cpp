@@ -359,7 +359,8 @@ void handleTsW(ts_channel_s *tsChannel, char *input) {
 					if (isLogFile(fileName)) {
 						int dotIndex = indexOf(fileName, DOT);
 						if (0 == strncmp(input + 6, &fileName[dotIndex - 4], 4)) {
-							FRESULT err = f_open(&uploading, fileName, FA_READ);// This file has the index for next log file name
+							/* FRESULT err = */
+							f_open(&uploading, fileName, FA_READ);// This file has the index for next log file name
 							break;
 						}
 					}

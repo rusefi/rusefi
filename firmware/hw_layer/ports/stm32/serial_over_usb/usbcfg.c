@@ -64,7 +64,7 @@ static const uint8_t vcom_configuration_descriptor_data[67] = {
                          0x01,          /* bConfigurationValue.             */
                          0,             /* iConfiguration.                  */
                          0xC0,          /* bmAttributes (self powered).     */
-                         50),           /* bMaxPower (100mA).               */
+                         100),           /* bMaxPower (200mA).               */
   /* Interface Descriptor.*/
   USB_DESC_INTERFACE    (0x00,          /* bInterfaceNumber.                */
                          0x00,          /* bAlternateSetting.               */
@@ -154,11 +154,10 @@ static const uint8_t vcom_string0[] = {
  * Vendor string.
  */
 static const uint8_t vcom_string1[] = {
-  USB_DESC_BYTE(38),                    /* bLength.                         */
+  USB_DESC_BYTE(24),                    /* bLength.                         */
   USB_DESC_BYTE(USB_DESCRIPTOR_STRING), /* bDescriptorType.                 */
-  'S', 0, 'T', 0, 'M', 0, 'i', 0, 'c', 0, 'r', 0, 'o', 0, 'e', 0,
-  'l', 0, 'e', 0, 'c', 0, 't', 0, 'r', 0, 'o', 0, 'n', 0, 'i', 0,
-  'c', 0, 's', 0
+  'r', 0, 'u', 0, 's', 0, 'E', 0, 'F', 0, 'I', 0, ' ', 0, 'L', 0,
+  'L', 0, 'C', 0
 };
 
 /*
@@ -167,7 +166,7 @@ static const uint8_t vcom_string1[] = {
 static const uint8_t vcom_string2[] = {
   USB_DESC_BYTE(58),                    /* bLength.                         */
   USB_DESC_BYTE(USB_DESCRIPTOR_STRING), /* bDescriptorType.                 */
-  'R', 0, 'u', 0, 's', 0, 'E', 0, 'F', 0, 'I', 0, ' ', 0, 'E', 0,
+  'r', 0, 'u', 0, 's', 0, 'E', 0, 'F', 0, 'I', 0, ' ', 0, 'E', 0,
   'n', 0, 'g', 0, 'i', 0, 'n', 0, 'e', 0, ' ', 0, 'M', 0, 'a', 0,
   'n', 0, 'a', 0, 'g', 0, 'e', 0, 'm', 0, 'e', 0, 'n', 0, 't', 0,
   ' ', 0, 'E', 0, 'C', 0, 'U', 0
@@ -176,12 +175,12 @@ static const uint8_t vcom_string2[] = {
 /*
  * Serial Number string.
  */
-static const uint8_t vcom_string3[] = {
-  USB_DESC_BYTE(8),                     /* bLength.                         */
+static uint8_t vcom_string3[] = {
+  USB_DESC_BYTE(52),                     /* bLength.                         */
   USB_DESC_BYTE(USB_DESCRIPTOR_STRING), /* bDescriptorType.                 */
-  '0' + CH_KERNEL_MAJOR, 0,
-  '0' + CH_KERNEL_MINOR, 0,
-  '0' + CH_KERNEL_PATCH, 0
+  '0', 0, '1', 0, '2', 0, '3', 0, '4', 0, '5', 0, '6', 0, '7', 0,
+  '8', 0, '9', 0, 'A', 0, 'B', 0, 'C', 0, 'D', 0, 'E', 0, 'F', 0,
+  '0', 0, '1', 0, '2', 0, '3', 0, '4', 0, '5', 0, '6', 0, '7', 0,
 };
 
 /*
@@ -193,6 +192,34 @@ static const USBDescriptor vcom_strings[] = {
   {sizeof vcom_string2, vcom_string2},
   {sizeof vcom_string3, vcom_string3}
 };
+
+static char nib2char(uint8_t nibble) {
+	if (nibble > 0x9) {
+		return nibble - 0xA + 'A';
+	} else {
+		return nibble + '0';
+	}
+}
+
+void usbPopulateSerialNumber(const uint8_t* serialNumber, size_t bytes) {
+	if (bytes > 12) {
+		bytes = 12;
+	}
+
+	// Skip the first two bytes (metadata)
+	uint8_t* dst = &vcom_string3[2];
+
+	for (size_t i = 0; i < bytes; i++) {
+		uint8_t byte = serialNumber[i];
+
+		uint8_t lowNibble = byte & 0xF;
+		uint8_t highNibble = byte >> 4;
+
+		// Descriptor strings are UCS16, so write every other byte
+		dst[4 * i] = nib2char(highNibble);
+		dst[4 * i + 2] = nib2char(lowNibble);
+	}
+}
 
 /*
  * Handles the GET_DESCRIPTOR callback. All required descriptors must be

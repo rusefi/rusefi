@@ -4,6 +4,7 @@ import com.rusefi.ConfigField;
 import com.rusefi.ReaderState;
 import com.rusefi.TypesHelper;
 import com.rusefi.VariableRegistry;
+import com.rusefi.output.CHeaderConsumer;
 import com.rusefi.output.FsioSettingsConsumer;
 import com.rusefi.output.JavaFieldsConsumer;
 import com.rusefi.output.TSProjectConsumer;
@@ -49,7 +50,7 @@ public class ConfigFieldParserTest {
         CharArrayWriter writer = new CharArrayWriter();
         TestTSProjectConsumer javaFieldsConsumer = new TestTSProjectConsumer(writer, "", state);
         state.readBufferedReader(reader, Arrays.asList(javaFieldsConsumer));
-        assertEquals("\tafr_type\t\t\t\t\t = bits, S32, 0, [0:1], \"BPSX\", \"Innovate\", \"14Point7\", \"INVALID\"\n" +
+        assertEquals("afr_type = bits, S32, 0, [0:1], \"BPSX\", \"Innovate\", \"14Point7\", \"INVALID\"\n" +
                 "; total TS size = 4\n", new String(writer.toCharArray()));
     }
 
@@ -87,7 +88,7 @@ public class ConfigFieldParserTest {
         String test = "struct pid_s\n" +
                 "#define ERROR_BUFFER_SIZE 120\n" +
                 "#define ERROR_BUFFER_COUNT 120\n" +
-                "#define RESULT @@ERROR_BUFFER_SIZE@@*@@ERROR_BUFFER_COUNT@@\n" +
+                "#define RESULT @@ERROR_BUFFER_SIZE@@ * @@ERROR_BUFFER_COUNT@@\n" +
                 "\tint16_t periodMs;PID dTime;\"ms\",      1,      0,       0, 3000,      0\n" +
                 "end_struct\n" +
                 "";
@@ -119,9 +120,9 @@ public class ConfigFieldParserTest {
 
         state.readBufferedReader(reader, Collections.singletonList(javaFieldsConsumer));
 
-        assertEquals("\tperiodMs\t\t\t\t\t\t= scalar, S16,\t0,\t\"ms\", 0.1, 0, 0, 3000, 0\n" +
-                "\tperiodMs2\t\t\t\t\t\t= scalar, S16,\t2,\t\"ms\", 1.0, 0, 0, 3000, 0\n" +
-                "\tafrTable\t\t\t\t\t = array, U08, 4, [4x4],\"deg\", 0.1, 0, 0, 25.0, 1\n" +
+        assertEquals("periodMs = scalar, S16, 0, \"ms\", 0.1, 0, 0, 3000, 0\n" +
+                "periodMs2 = scalar, S16, 2, \"ms\", 1.0, 0, 0, 3000, 0\n" +
+                "afrTable = array, U08, 4, [4x4],\"deg\", 0.1, 0, 0, 25.0, 1\n" +
                 "; total TS size = 20\n", new String(writer.toCharArray()));
     }
 
@@ -291,6 +292,30 @@ public class ConfigFieldParserTest {
                     "\tcase FSIO_SETTING_ETB2_MINVALUE:\n" +
                     "\t\treturn \"cfg_etb2_minValue\";\n", fsioSettingsConsumer.getStrings());
         }
+    }
+
+    @Test
+    public void testArrayOfOne() throws IOException {
+        String test = "struct pid_s\n" +
+                "#define ERROR_BUFFER_SIZE 1\n" +
+                "int[ERROR_BUFFER_SIZE iterate] field\n" +
+                "end_struct\n" +
+                "";
+        VariableRegistry.INSTANCE.clear();
+        BufferedReader reader = new BufferedReader(new StringReader(test));
+        CHeaderConsumer consumer = new CHeaderConsumer("d");
+        new ReaderState().readBufferedReader(reader, Collections.singletonList(consumer));
+        assertEquals("// start of pid_s\n" +
+                "struct pid_s {\n" +
+                "\t/**\n" +
+                "\t * offset 0\n" +
+                "\t */\n" +
+                "\tint field[ERROR_BUFFER_SIZE];\n" +
+                "\t/** total size 4*/\n" +
+                "};\n" +
+                "\n" +
+                "typedef struct pid_s pid_s;\n" +
+                "\n", consumer.getContent().toString());
     }
 
     @Test

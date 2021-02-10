@@ -37,10 +37,6 @@ static ign_Map3D_t advanceMap("advance");
 // This coeff in ctor parameter is sufficient for int16<->float conversion!
 static ign_Map3D_t iatAdvanceCorrectionMap("iat corr");
 
-// Init PID later (make it compatible with unit-tests)
-static Pid idleTimingPid;
-static bool shouldResetTimingPid = false;
-
 static int minCrankingRpm = 0;
 
 #if IGN_LOAD_COUNT == DEFAULT_IGN_LOAD_COUNT
@@ -86,7 +82,7 @@ static angle_t getRunningAdvance(int rpm, float engineLoad DECLARE_ENGINE_PARAME
 	float advanceAngle = advanceMap.getValue((float) rpm, engineLoad);
 
 	// get advance from the separate table for Idle
-	if (CONFIG(useSeparateAdvanceForIdle)) {
+	if (CONFIG(useSeparateAdvanceForIdle) && isIdling()) {
 		float idleAdvance = interpolate2d("idleAdvance", rpm, config->idleAdvanceBins, config->idleAdvance);
 
 		auto [valid, tps] = Sensor::get(SensorType::DriverThrottleIntent);
@@ -96,7 +92,6 @@ static angle_t getRunningAdvance(int rpm, float engineLoad DECLARE_ENGINE_PARAME
 		}
 	}
 
-	
 #if EFI_LAUNCH_CONTROL
 	if (engine->isLaunchCondition && CONFIG(enableLaunchRetard)) {
         if (CONFIG(launchSmoothRetard)) {
@@ -122,41 +117,10 @@ angle_t getAdvanceCorrections(int rpm DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	if (!iatValid) {
 		iatCorrection = 0;
 	} else {
-		iatCorrection = iatAdvanceCorrectionMap.getValue((float) rpm, iat);
+		iatCorrection = iatAdvanceCorrectionMap.getValue(rpm, iat);
 	}
 
-	// PID Ignition Advance angle correction
-	float pidTimingCorrection = 0.0f;
-	if (CONFIG(useIdleTimingPidControl)) {
-		int targetRpm = getTargetRpmForIdleCorrection(PASS_ENGINE_PARAMETER_SIGNATURE);
-		int rpmDelta = absI(rpm - targetRpm);
-
-		auto [valid, tps] = Sensor::get(SensorType::Tps1);
-
-		// If TPS is invalid, or we aren't in the region, so reset state and don't apply PID
-		if (!valid || tps >= CONFIG(idlePidDeactivationTpsThreshold)) {
-			// we are not in the idle mode anymore, so the 'reset' flag will help us when we return to the idle.
-			shouldResetTimingPid = true;
-		} 
-		else if (rpmDelta > CONFIG(idleTimingPidDeadZone) && rpmDelta < CONFIG(idleTimingPidWorkZone) + CONFIG(idlePidFalloffDeltaRpm)) {
-			// We're now in the idle mode, and RPM is inside the Timing-PID regulator work zone!
-			// So if we need to reset the PID, let's do it now
-			if (shouldResetTimingPid) {
-				idleTimingPid.reset();
-				shouldResetTimingPid = false;
-			}
-			// get PID value (this is not an actual Advance Angle, but just a additive correction!)
-			percent_t timingRawCorr = idleTimingPid.getOutput(targetRpm, rpm, FAST_CALLBACK_PERIOD_MS / 1000.0f);
-			// tps idle-running falloff
-			pidTimingCorrection = interpolateClamped(0.0f, timingRawCorr, CONFIG(idlePidDeactivationTpsThreshold), 0.0f, tps);
-			// rpm falloff
-			pidTimingCorrection = interpolateClamped(0.0f, pidTimingCorrection, CONFIG(idlePidFalloffDeltaRpm), 0.0f, rpmDelta - CONFIG(idleTimingPidWorkZone));
-		} else {
-			shouldResetTimingPid = true;
-		}
-	} else {
-		shouldResetTimingPid = true;
-	}
+	float pidTimingCorrection = getIdleTimingAdjustment(rpm);
 
 	if (engineConfiguration->debugMode == DBG_IGNITION_TIMING) {
 #if EFI_TUNER_STUDIO
@@ -291,8 +255,6 @@ void initTimingMap(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 			config->ignitionRpmBins);
 	iatAdvanceCorrectionMap.init(config->ignitionIatCorrTable, config->ignitionIatCorrLoadBins,
 			config->ignitionIatCorrRpmBins);
-	// init timing PID
-	idleTimingPid = Pid(&CONFIG(idleTimingPid));
 }
 
 /**
