@@ -40,6 +40,7 @@ TEST(gpio, multipleInit) {
 
 	// Initial setup should be ok
 	EXPECT_NO_FATAL_ERROR(dut.initPin("testPin", GPIOA_6));
+	EXPECT_TRUE(dut.isInitialized());
 
 	// Reinit with the same pin should be ok
 	EXPECT_NO_FATAL_ERROR(dut.initPin("testPin", GPIOA_6));
@@ -53,11 +54,16 @@ TEST(gpio, deInit) {
 
 	// Initial setup should be ok
 	EXPECT_NO_FATAL_ERROR(dut.initPin("testPin", GPIOA_6));
+	EXPECT_TRUE(dut.isInitialized());
 
 	dut.deInit();
 
+	// Pin should now be de-initialized
+	EXPECT_FALSE(dut.isInitialized());
+
 	// Reinit with DIFFERENT pin should work after deinit
 	EXPECT_NO_FATAL_ERROR(dut.initPin("testPin", GPIOB_5));
+	EXPECT_TRUE(dut.isInitialized());
 }
 
 TEST(gpio, pinSetNotInverted) {
