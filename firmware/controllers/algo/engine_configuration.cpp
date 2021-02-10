@@ -812,6 +812,10 @@ static void setDefaultEngineConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	setLinearCurve(config->tpsTpsAccelFromRpmBins, 0, 100, 10);
 	setLinearCurve(config->tpsTpsAccelToRpmBins, 0, 100, 10);
 
+	setLinearCurve(config->vvtTable1LoadBins, 20, 120, 10);
+	setRpmTableBin(config->vvtTable1RpmBins, FSIO_TABLE_8);
+	setLinearCurve(config->vvtTable2LoadBins, 20, 120, 10);
+	setRpmTableBin(config->vvtTable2RpmBins, FSIO_TABLE_8);
 	setLinearCurve(config->fsioTable1LoadBins, 20, 120, 10);
 	setRpmTableBin(config->fsioTable1RpmBins, FSIO_TABLE_8);
 	setLinearCurve(config->fsioTable2LoadBins, 20, 120, 10);
