@@ -5,6 +5,7 @@ TESTS_SRC_CPP = \
 	tests/trigger/test_trigger_multi_sync.cpp \
 	tests/trigger/test_cam_vvt_input.cpp \
 	tests/trigger/test_2jz_vvt.cpp \
+	tests/trigger/test_quad_cam.cpp \
 	tests/trigger/test_injection_scheduling.cpp \
 	tests/ignition_injection/injection_mode_transition.cpp \
 	tests/ignition_injection/test_startOfCrankingPrimingPulse.cpp \
@@ -14,6 +15,7 @@ TESTS_SRC_CPP = \
 	tests/ignition_injection/test_fuelCut.cpp \
 	tests/ignition_injection/test_fuel_computer.cpp \
 	tests/ignition_injection/test_injector_model.cpp \
+	tests/sensor/test_cj125.cpp \
 	tests/util/test_buffered_writer.cpp \
 	tests/test_util.cpp \
 	tests/test_start_stop.cpp \
@@ -22,7 +24,6 @@ TESTS_SRC_CPP = \
 	tests/test_aux_valves.cpp \
 	tests/test_on_demand_parameters.cpp \
 	tests/test_hip9011.cpp \
-	tests/test_cj125.cpp \
 	tests/test_engine_math.cpp \
 	tests/test_fasterEngineSpinningUp.cpp \
 	tests/test_dwell_corner_case_issue_796.cpp \
@@ -31,7 +32,7 @@ TESTS_SRC_CPP = \
 	tests/test_etb.cpp \
 	tests/test_launch.cpp \
 	tests/test_fuel_map.cpp \
-	tests/test_fuel_wall_wetting.cpp \
+	tests/ignition_injection/test_fuel_wall_wetting.cpp \
 	tests/test_one_cylinder_logic.cpp \
 	tests/test_tunerstudio.cpp \
 	tests/test_pwm_generator.cpp \
@@ -56,7 +57,7 @@ TESTS_SRC_CPP = \
 	tests/sensor/func_chain.cpp \
 	tests/sensor/redundant.cpp \
 	tests/sensor/test_sensor_init.cpp \
-	tests/test_closed_loop_controller.cpp \
+	tests/util/test_closed_loop_controller.cpp \
 	tests/test_stft.cpp \
 	tests/test_boost.cpp \
 	tests/test_gppwm.cpp \
@@ -65,5 +66,5 @@ TESTS_SRC_CPP = \
 	tests/test_dynoview.cpp \
 	tests/test_gpio.cpp \
 	tests/test_limp.cpp \
-	tests/test_all_triggers.cpp \
+	tests/trigger/test_all_triggers.cpp \
 

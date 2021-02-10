@@ -72,6 +72,7 @@ extern uint8_t criticalErrorLedState;
 /**
  * low-level function is used here to reduce stack usage
  */
+
 #define ON_CRITICAL_ERROR() \
 		palWritePad(criticalErrorLedPort, criticalErrorLedPin, criticalErrorLedState); \
 		turnAllPinsOff(); \

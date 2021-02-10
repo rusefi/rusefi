@@ -19,7 +19,10 @@
 class Logging;
 class CanSensorBase;
 
+#if EFI_CAN_SUPPORT
 void processCanRxMessage(const CANRxFrame& msg, Logging* logger, efitick_t nowNt);
+#endif // EFI_CAN_SUPPORT
+
 void registerCanSensor(CanSensorBase& sensor);
 
 // Indicate that an ack response was received from the wideband bootloader

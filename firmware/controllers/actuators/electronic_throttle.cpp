@@ -495,6 +495,15 @@ void EtbController::update() {
 		return;
 	}
 
+	if (CONFIG(disableEtbWhenEngineStopped)) {
+		if (engine->triggerCentral.getTimeSinceTriggerEvent(getTimeNowNt()) > 1) {
+			// If engine is stopped and so configured, skip the ETB update entirely
+			// This is quieter and pulls less power than leaving it on all the time
+			m_motor->disable();
+			return;
+		}
+	}
+
 #if EFI_TUNER_STUDIO
 	if (engineConfiguration->debugMode == DBG_ETB_LOGIC) {
 		tsOutputChannels.debugFloatField1 = engine->engineState.targetFromTable;

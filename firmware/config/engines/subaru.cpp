@@ -62,3 +62,60 @@ void setSubaruEJ18_MRE(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 
 
 }
+
+/*
+ * Subaru SVX (Alcyone SVX)
+ */
+
+void setSubaruEG33Defaults(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+	setOperationMode(engineConfiguration, FOUR_STROKE_CAM_SENSOR);
+
+	engineConfiguration->trigger.type = TT_SUBARU_SVX;
+	engineConfiguration->useOnlyRisingEdgeForTrigger = true;
+
+	engineConfiguration->specs.cylindersCount = 6;
+	engineConfiguration->specs.firingOrder = FO_1_6_3_2_5_4;
+
+	engineConfiguration->ignitionMode = IM_INDIVIDUAL_COILS;
+	engineConfiguration->crankingInjectionMode = IM_SIMULTANEOUS;
+	engineConfiguration->injectionMode = IM_SEQUENTIAL;
+
+	/* TODO: */
+	engineConfiguration->globalTriggerAngleOffset = 114;	// the end of 19th tooth?
+
+	/* TODO: */
+	//engineConfiguration->fuelAlgorithm = LM_REAL_MAF;
+	engineConfiguration->fuelAlgorithm = LM_ALPHA_N;
+
+	engineConfiguration->specs.displacement = 3.30;
+	engineConfiguration->injector.flow = 250;
+
+	engineConfiguration->cranking.baseFuel = 5;		// ???
+	engineConfiguration->crankingChargeAngle = 70;
+	engineConfiguration->cranking.rpm = 400;
+
+	engineConfiguration->rpmHardLimit = 6500;
+
+	engineConfiguration->idleStepperReactionTime = 10;
+	engineConfiguration->stepperDirectionPinMode = OM_INVERTED;
+	engineConfiguration->useLinearCltSensor = true;
+
+	engineConfiguration->canReadEnabled = true;
+	engineConfiguration->canWriteEnabled = false;
+
+	/* TODO: */
+	//engineConfiguration->tpsMin = convertVoltageTo10bitADC(0.250);
+	//engineConfiguration->tpsMax = convertVoltageTo10bitADC(4.538);
+	//engineConfiguration->tpsMax = convertVoltageTo10bitADC(5.000);
+	engineConfiguration->tpsErrorDetectionTooLow = -10; // -10% open
+	engineConfiguration->tpsErrorDetectionTooHigh = 110; // 110% open
+
+	engineConfiguration->mapMinBufferLength = 4;
+
+	/* idle configuration */
+	engineConfiguration->manIdlePosition = 30;
+	engineConfiguration->idle.solenoidFrequency = 250;
+
+	/* Check this */
+	engineConfiguration->tachPulsePerRev = 2;
+}

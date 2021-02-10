@@ -166,7 +166,9 @@ include $(CHIBIOS)/os/hal/osal/rt-nil/osal.mk
 include $(CHIBIOS)/os/rt/rt.mk
 include $(CHIBIOS)/os/common/ports/ARMCMx/compilers/GCC/mk/port_v7m.mk
 # EX files (optional).
+ifneq ($(USE_LIS302),no)
 include $(CHIBIOS)/os/ex/devices/ST/lis302dl.mk
+endif
 include $(CHIBIOS)/os/hal/lib/streams/streams.mk
 include $(CHIBIOS)/os/various/cpp_wrappers/chcpp.mk
 
@@ -198,11 +200,6 @@ endif
 
 ifeq ($(USE_BOOTLOADER),yes)
 include $(PROJECT_DIR)/bootloader/bootloader.mk
-endif
-
-# Define linker script file here
-ifeq ($(LDSCRIPT),)
-  LDSCRIPT= config/stm32f4ems/STM32F407xG.ld
 endif
 
 $(info PROJECT_BOARD: $(PROJECT_BOARD))

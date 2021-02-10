@@ -102,6 +102,16 @@ extern int icuFallingCallbackCounter;
 extern WaveChart waveChart;
 #endif /* EFI_ENGINE_SNIFFER */
 
+extern pin_output_mode_e DEFAULT_OUTPUT;
+extern pin_output_mode_e INVERTED_OUTPUT;
+
+#ifndef LED_WARNING_BRAIN_PIN_MODE
+#define LED_WARNING_BRAIN_PIN_MODE	DEFAULT_OUTPUT
+#endif
+#ifndef LED_RUNING_BRAIN_PIN_MODE
+#define LED_RUNING_BRAIN_PIN_MODE	DEFAULT_OUTPUT
+#endif
+
 int warningEnabled = true;
 
 extern int maxTriggerReentraint;
@@ -321,8 +331,8 @@ static void initStatusLeds(void) {
 	enginePins.communicationLedPin.initPin("led: comm status", engineConfiguration->communicationLedPin);
 	// checkEnginePin is already initialized by the time we get here
 
-	enginePins.warningLedPin.initPin("led: warning status", engineConfiguration->warningLedPin);
-	enginePins.runningLedPin.initPin("led: running status", engineConfiguration->runningLedPin);
+	enginePins.warningLedPin.initPin("led: warning status", engineConfiguration->warningLedPin, &LED_WARNING_BRAIN_PIN_MODE);
+	enginePins.runningLedPin.initPin("led: running status", engineConfiguration->runningLedPin, &LED_RUNING_BRAIN_PIN_MODE);
 }
 
 #if EFI_PROD_CODE
@@ -535,9 +545,8 @@ void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels DECLARE_
 	tsOutputChannels->vBatt = getVBatt(PASS_ENGINE_PARAMETER_SIGNATURE);
 
 	// offset 36
-#if EFI_ANALOG_SENSORS
-	tsOutputChannels->baroPressure = hasBaroSensor() ? getBaroPressure() : 0;
-#endif /* EFI_ANALOG_SENSORS */
+	tsOutputChannels->baroPressure = Sensor::get(SensorType::BarometricPressure).value_or(0);
+
 	// 48
 	tsOutputChannels->fuelBase = engine->engineState.baseFuel * 1000;	// Convert grams to mg
 	// 64

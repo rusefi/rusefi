@@ -27,6 +27,12 @@ All notable user-facing or behavior-altering changes will be documented in this 
 
 ## XXX 2021 Release
 
+### Added
+ - GM 60/2/2/2 trigger https://github.com/rusefi/rusefi/wiki/All-Supported-Triggers#gm
+ - TriTach trigger https://github.com/rusefi/rusefi/wiki/All-Supported-Triggers#tritach
+ - Skoda Favorit trigger https://github.com/rusefi/rusefi/wiki/All-Supported-Triggers#skoda-favorit
+ - Add fallback logic handling failed MAP sensor.  In case of failed MAP, ses either a fixed MAP value, or a table that estimates MAP based on TPS and RPM.
+
 ### 2021 Printing Ink Day
 
 ### Breaking Changes

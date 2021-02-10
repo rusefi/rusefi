@@ -16,6 +16,5 @@
 #include "engine_configuration.h"
 
 float getVBatt(DECLARE_ENGINE_PARAMETER_SIGNATURE);
-bool hasVBatt(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 
 #endif /* __cplusplus */

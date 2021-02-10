@@ -1173,6 +1173,7 @@ void resetConfigurationExt(Logging * logger, configuration_callback_t boardCallb
 	case TEST_ISSUE_366_RISE:
 		setTestEngineIssue366rise(PASS_CONFIG_PARAMETER_SIGNATURE);
 		break;
+	case UNUSED_36:
 	case TEST_ISSUE_898:
 		setIssue898(PASS_CONFIG_PARAMETER_SIGNATURE);
 		break;
@@ -1230,6 +1231,11 @@ void resetConfigurationExt(Logging * logger, configuration_callback_t boardCallb
 	case PROTEUS_MIATA_NB2:
 		setMiataNB2_ProteusEngineConfiguration(PASS_CONFIG_PARAMETER_SIGNATURE);
 		break;
+#ifdef HARDWARE_CI
+	case PROTEUS_ANALOG_PWM_TEST:
+		setProteusAnalogPwmTest(PASS_CONFIG_PARAMETER_SIGNATURE);
+		break;
+#endif // HARDWARE_CI
 #endif // HW_PROTEUS
 #if HW_HELLEN
 	case HELLEN_NB2:
@@ -1370,6 +1376,11 @@ void resetConfigurationExt(Logging * logger, configuration_callback_t boardCallb
 		setTest33816EngineConfiguration(PASS_CONFIG_PARAMETER_SIGNATURE);
 		break;
 #endif // HW_FRANKENSO
+#ifdef HW_SUBARU_EG33
+	case SUBARUEG33_DEFAULTS:
+		setSubaruEG33Defaults(PASS_CONFIG_PARAMETER_SIGNATURE);
+		break;
+#endif //HW_SUBARU_EG33
 	default:
 		firmwareError(CUSTOM_UNEXPECTED_ENGINE_TYPE, "Unexpected engine type: %d", engineType);
 	}

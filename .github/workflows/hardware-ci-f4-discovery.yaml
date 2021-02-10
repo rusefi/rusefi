@@ -41,7 +41,7 @@ jobs:
 
     - name: Build Firmware
       working-directory: ./firmware
-      run: make -j16
+      run: make -j16 EXTRA_PARAMS="-DHARDWARE_CI"
 
     - name: OpenOCD wipe & flash STM32
       working-directory: ./firmware
@@ -50,4 +50,4 @@ jobs:
     # This both compiles and runs HW CI tests
     - name: Run Hardware CI
       working-directory: ./java_console
-      run: ant real_hardware_functional_test
+      run: ant hardware_ci_f4_discovery

@@ -258,7 +258,7 @@ pins:
     type: inj
 
   - pin: E4
-    function: 230: 1.5A low side VVT solenoid / 430 injector output 4
+    function: "230: 1.5A low side VVT solenoid / 430 injector output 4"
     type: inj
 
   - pin: E5

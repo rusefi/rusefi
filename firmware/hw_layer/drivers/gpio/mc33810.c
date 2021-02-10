@@ -303,7 +303,7 @@ static int mc33810_chip_init(struct mc33810_priv *chip)
 		ret = -1;
 		goto err_gpios;
 	}
-	if (rx & (1 << 14)) {
+	if (rx & BIT(14)) {
 		//print(DRIVER_NAME " spi COR status\n");
 		ret = -3;
 		goto err_gpios;
@@ -345,15 +345,18 @@ static int mc33810_wake_driver(struct mc33810_priv *chip)
 {
 	(void)chip;
 
-	if (isIsrContext()) {
-		// this is for normal runtime
-		syssts_s sts = chSysGetStatusAndLockX();
-		chSemSignalI(&mc33810_wake);
-		chSysRestoreStatusX(sts);
-	} else {
-		// this is for start-up to not hang up
-		chSemSignal(&mc33810_wake);
+	/* Entering a reentrant critical zone.*/
+	syssts_t sts = chSysGetStatusAndLockX();
+	chSemSignalI(&mc33810_wake);
+	if (!port_is_isr_context()) {
+		/**
+		 * chSemSignalI above requires rescheduling
+		 * interrupt handlers have implicit rescheduling
+		 */
+		chSchRescheduleS();
 	}
+	/* Leaving the critical zone.*/
+	chSysRestoreStatusX(sts);
 
 	return 0;
 }
@@ -417,12 +420,12 @@ int mc33810_writePad(void *data, unsigned int pin, int value)
 
 	/* TODO: lock */
 	if (value)
-		chip->o_state |=  (1 << pin);
+		chip->o_state |=  BIT(pin);
 	else
-		chip->o_state &= ~(1 << pin);
+		chip->o_state &= ~BIT(pin);
 	/* TODO: unlock */
 	/* direct driven? */
-	if (chip->o_direct_mask & (1 << pin)) {
+	if (chip->o_direct_mask & BIT(pin)) {
 		/* TODO: ensure that output driver enabled */
 		if (value)
 			palSetPort(chip->cfg->direct_io[pin].port,
@@ -523,7 +526,7 @@ struct gpiochip_ops mc33810_ops = {
  * @details Checks for valid config
  */
 
-int mc33810_add(unsigned int index, const struct mc33810_config *cfg, brain_pin_e base)
+int mc33810_add(brain_pin_e base, unsigned int index, const struct mc33810_config *cfg)
 {
 	int i;
 	int ret;
@@ -551,7 +554,7 @@ int mc33810_add(unsigned int index, const struct mc33810_config *cfg, brain_pin_
 	chip->drv_state = MC33810_WAIT_INIT;
 	for (i = 0; i < MC33810_DIRECT_OUTPUTS; i++) {
 		if (cfg->direct_io[i].port != 0)
-			chip->o_direct_mask |= (1 << i);
+			chip->o_direct_mask |= BIT(i);
 	}
 
 	/* GPGD mode is not supported yet, ignition mode does not support spi on/off commands

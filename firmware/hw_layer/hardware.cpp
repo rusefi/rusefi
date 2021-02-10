@@ -71,13 +71,12 @@
 
 EXTERN_ENGINE;
 
-#if HAL_USE_SPI
-extern bool isSpiInitialized[5];
-
 /**
  * #311 we want to test RTC before engine start so that we do not test it while engine is running
  */
 bool rtcWorks = true;
+#if HAL_USE_SPI
+extern bool isSpiInitialized[5];
 
 /**
  * Only one consumer can use SPI bus at a given time
@@ -339,13 +338,6 @@ void applyNewHardwareSettings(void) {
 	stopHip9001_pins();
 #endif /* EFI_HIP_9011 */
 
-#if EFI_IDLE_CONTROL
-	bool isIdleRestartNeeded = isIdleHardwareRestartNeeded();
-	if (isIdleRestartNeeded) {
-		stopIdleHardware();
-	}
-#endif
-
 #if (BOARD_EXT_GPIOCHIPS > 0)
 	stopSmartCsPins();
 #endif /* (BOARD_EXT_GPIOCHIPS > 0) */
@@ -441,7 +433,7 @@ void applyNewHardwareSettings(void) {
 
 
 #if EFI_IDLE_CONTROL
-	if (isIdleRestartNeeded) {
+	if (isIdleHardwareRestartNeeded()) {
 		 initIdleHardware(sharedLogger);
 	}
 #endif

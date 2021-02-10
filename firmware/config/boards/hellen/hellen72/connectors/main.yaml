@@ -188,8 +188,8 @@ pins:
     function: NC
 
   - pin: 3L
-    id: GPIOI_6
-    class: outputs
+    id: [GPIOI_6, EFI_ADC_1]
+    class: [outputs, analog_inputs]
     ts_name: 3L - IGN_7 / AFR
     type: ign
 
@@ -274,13 +274,13 @@ pins:
     color: black W4
 
   - pin: 4B
-    id: [GPIOA_1, EFI_ADC_2]
+    id: [GPIOF_9, EFI_ADC_2]
     class: [switch_inputs, analog_inputs]
-    ts_name: 4B - Brake/RES1 (A15)
+    ts_name: 4B - Brake/RES1 (A7)
     function: Brake Switch
 
   - pin: 4C
-    id: [GPIOA_3, EFI_ADC_3]
+    id: [GPIOF_10, EFI_ADC_3]
     class: [switch_inputs, analog_inputs]
     ts_name: 4C - Steering/RES2 (A16)
     function: Power Steering Switch
@@ -292,26 +292,26 @@ pins:
     function: DTM switching (Diagnostic Terminal?)
 
   - pin: 4F
-    id: EFI_ADC_8
-    class: analog_inputs
+    id: [GPIOB_0, EFI_ADC_8]
+    class: [switch_inputs, analog_inputs]
     ts_name: 4F - AC_PRES/AUX1 (A23)
     function: AC Pressure In
 
   - pin: 4H
-    id: [GPIOA_2, EFI_ADC_14]
+    id: [GPIOC_4, EFI_ADC_14]
     class: [switch_inputs, analog_inputs]
     ts_name: 4H - Neutral/AUX2 (A21)
     function: Neutral Switch
 
   - pin: 4I
-    id: [GPIOA_0, EFI_ADC_15]
+    id: [GPIOC_5, EFI_ADC_15]
     class: [switch_inputs, analog_inputs]
     ts_name: 4I - Clutch/AUX3 (A22)
     function: Clutch Switch
 
   - pin: 4J
-    id: EFI_ADC_7
-    class: analog_inputs
+    id: [GPIOA_7, EFI_ADC_7]
+    class: [switch_inputs, analog_inputs]
     ts_name: 4J - VTCS/AUX4 (A20)
     function: VTCS ca. switch
 
@@ -326,11 +326,14 @@ pins:
     color: red W3, sliced for MAP
 
   - pin: 4M
+    id: EFI_ADC_5
+    class: analog_inputs
+    ts_name: 4M - KNOCK (A6)
     function: Knock sens. in
     color: white R5
 
   - pin: 4N
-    id: EFI_ADC_1
+    id: EFI_ADC_13
     class: analog_inputs
     ts_name: 4N - IAT (A14)
     function: IAT sensor
@@ -342,9 +345,9 @@ pins:
     color: black B2
 
   - pin: 4P
-    id: EFI_ADC_0
+    id: EFI_ADC_12
     class: analog_inputs
-    ts_name: 4P - CLT (A13)
+    ts_name: 4P - CLT (A11)
     function: CLT sensor
     color: blue B2
 
@@ -360,10 +363,16 @@ pins:
     color: white B2
 
   - pin: 4S
+    id: EFI_ADC_5
+    class: analog_inputs
+    ts_name: 4S - Alternator voltage (A5)
     function: +12V engine fuse 15A, ECU power source, run/start
     color: red B2
 
   - pin: 4T
+    id: EFI_ADC_5
+    class: analog_inputs
+    ts_name: 4T - Alternator voltage (A5)
     function: Alternator output voltage
 
   - pin: 4U
@@ -378,13 +387,13 @@ pins:
     id: EFI_ADC_4
     class: analog_inputs
     ts_name: 4V - TPS (A17)
-    function: TPS sensor output
+    function: TPS sensor input
     color: green B2
 
   - pin: 4W
-    id: EFI_ADC_12
+    id: EFI_ADC_0
     class: analog_inputs
-    ts_name: 4W - O2S (A11)
+    ts_name: 4W - O2S (A13)
     function: Front O2 Sensor Signal
 
   - pin: 4X
@@ -398,16 +407,16 @@ pins:
     function: ECU - TCM, Communication for A/T
 
   - pin: 4AA
-    id: EFI_ADC_13
+    id: EFI_ADC_9
     class: analog_inputs
     ts_name: 4AA - O2S2 (A12)
     function: Rear O2 Sensor Signal
 
   - pin: 4AB
-    id: EFI_ADC_5
+    id: EFI_ADC_3
     class: analog_inputs
     ts_name: 4AB - FTP/PPS (A18)
-    function: Fuel Tank Pressure Sensor
+    function: Fuel Tank Pressure Sensor, PPS
 
   - pin: 4AC
     function: ECU - TCM, Communication for A/T

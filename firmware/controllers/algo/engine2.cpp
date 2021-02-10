@@ -283,7 +283,7 @@ bool VvtTriggerConfiguration::isUseOnlyRisingEdgeForTrigger() const {
 }
 
 trigger_type_e VvtTriggerConfiguration::getType() const {
-	return engine->triggerCentral.vvtTriggerType;
+	return engine->triggerCentral.vvtTriggerType[index];
 }
 
 bool VvtTriggerConfiguration::isVerboseTriggerSynchDetails() const {

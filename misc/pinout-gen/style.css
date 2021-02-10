@@ -4,10 +4,17 @@
   border-radius: 50%;
   background-color: white;
   border: 2px blue solid;
+  cursor: pointer;
+  color: black;
+  text-align: center;
+  line-height: 200%;
 }
 
 .pin-marker:hover {
   background-color: #f15a24;
+  color: white;
+  transform: scale(2);
+  z-index: 2;
 }
 
 .pin-marker.highlight {
@@ -55,6 +62,10 @@ table {
   }
 }
 
+table tbody tr {
+  cursor: pointer;
+}
+
 table td, table th {
   border: 1px solid black;
   padding: 8px;
@@ -93,6 +104,10 @@ table th {
   table tr:nth-child(even){
     background-color: #230c00;
     color: white;
+  }
+
+  table tr:hover {
+    background-color: #f15a24;
   }
 }
 
