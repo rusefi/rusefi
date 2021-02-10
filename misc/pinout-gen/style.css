@@ -25,20 +25,20 @@
   background-color: #fc935a;
 }
 
-#connector-container {
+.connector-container {
   width: 100%;
   height: 50%;
   overflow-x: scroll;
   position: relative;
 }
 
-#connector-div {
+.connector-div {
   height: 100%;
   position: relative;
   z-index: 0;
 }
 
-#connector-img {
+.connector-img {
   height: 100%;
   z-index: 0;
 }
