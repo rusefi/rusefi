@@ -9,6 +9,8 @@
 #include "engine_ptr.h"
 #include "persistent_configuration.h"
 
+#if HAL_USE_ADC
+
 EXTERN_CONFIG;
 
 void portInitAdc() {
@@ -107,3 +109,5 @@ float getMcuTemperature() {
 
 	return degrees;
 }
+
+#endif // HAL_USE_ADC
