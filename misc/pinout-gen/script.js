@@ -49,7 +49,7 @@ function clickPin(table, pin, pdiv) {
 function adjustMarkers(cdiv) {
   var cdiv = document.querySelectorAll(".connector-div");
   for (var c = 0; c < cdiv.length; c++) {
-    cdiv[c].style.width = cdiv[c].querySelector(".connector-img").clientWidth;
+    cdiv[c].style.width = cdiv[c].querySelector(".connector-img").clientWidth + "px";
     var pins = cdiv[c].querySelectorAll(".pin-marker");
     for (var i = 0; i < pins.length; i++) {
       var height = cdiv[c].clientHeight * 0.05;
@@ -71,6 +71,8 @@ window.addEventListener('load', function() {
     var sdiv = document.body.lastChild.previousSibling;
     var img = sdiv.querySelector(".connector-img");
     img.addEventListener('load', function(connector, sdiv, img) {
+      var ccont = sdiv.querySelector(".connector-container");
+      ccont.style.height = (document.documentElement.clientHeight / 2) + 'px';
       var cdiv = sdiv.querySelector(".connector-div");
       var ptemplate = document.getElementById("pin-template");
       var imgHeight = img.naturalHeight;
