@@ -82,7 +82,7 @@ TEST(trigger, testCamInput) {
 	// changing to 'ONE TOOTH' trigger on CRANK with CAM/VVT
 	setOperationMode(engineConfiguration, FOUR_STROKE_CRANK_SENSOR);
 	engineConfiguration->useOnlyRisingEdgeForTrigger = true;
-	engineConfiguration->vvtMode = VVT_FIRST_HALF;
+	engineConfiguration->vvtMode[0] = VVT_FIRST_HALF;
 	engineConfiguration->vvtOffset = 720;
 	eth.setTriggerType(TT_ONE PASS_ENGINE_PARAMETER_SUFFIX);
 	engineConfiguration->camInputs[0] = GPIOA_10; // we just need to indicate that we have CAM
@@ -121,8 +121,9 @@ TEST(sensors, testNB2CamInput) {
 	WITH_ENGINE_TEST_HELPER(MAZDA_MIATA_2003);
 
 	// this crank trigger would be easier to test, crank shape is less important for this test
-	engineConfiguration->useOnlyRisingEdgeForTrigger = true;
 	eth.setTriggerType(TT_ONE PASS_ENGINE_PARAMETER_SUFFIX);
+
+	engineConfiguration->useOnlyRisingEdgeForTrigger = true;
 
 	ASSERT_EQ( 0,  GET_RPM()) << "testNB2CamInput RPM";
 	for (int i = 0; i < 7;i++) {

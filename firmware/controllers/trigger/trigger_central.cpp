@@ -93,8 +93,8 @@ static bool vvtWithRealDecoder(vvt_mode_e vvtMode) {
 }
 
 void hwHandleVvtCamSignal(trigger_value_e front, efitick_t nowNt, int index DECLARE_ENGINE_PARAMETER_SUFFIX) {
-	int bankIndex = 0;
-	int camIndex = 0;
+	int bankIndex = index / CAMS_PER_BANK;
+	int camIndex = index % CAMS_PER_BANK;
 	TriggerCentral *tc = &engine->triggerCentral;
 	if (front == TV_RISE) {
 		tc->vvtEventRiseCounter++;
@@ -129,7 +129,7 @@ void hwHandleVvtCamSignal(trigger_value_e front, efitick_t nowNt, int index DECL
 	}
 
 
-	if (!vvtWithRealDecoder(engineConfiguration->vvtMode) && (CONFIG(vvtCamSensorUseRise) ^ (front != TV_FALL))) {
+	if (!vvtWithRealDecoder(engineConfiguration->vvtMode[camIndex]) && (CONFIG(vvtCamSensorUseRise) ^ (front != TV_FALL))) {
 		// todo: there should be a way to always use real trigger code for this logic?
 		return;
 	}
@@ -166,10 +166,10 @@ void hwHandleVvtCamSignal(trigger_value_e front, efitick_t nowNt, int index DECL
 	}
 
 	ENGINE(triggerCentral).vvtState[bankIndex][camIndex].decodeTriggerEvent(
-			ENGINE(triggerCentral).vvtShape,
+			ENGINE(triggerCentral).vvtShape[camIndex],
 			nullptr,
 			nullptr,
-			engine->vvtTriggerConfiguration,
+			engine->vvtTriggerConfiguration[camIndex],
 			front == TV_RISE ? SHAFT_PRIMARY_RISING : SHAFT_PRIMARY_FALLING, nowNt);
 
 
@@ -191,7 +191,7 @@ void hwHandleVvtCamSignal(trigger_value_e front, efitick_t nowNt, int index DECL
 #endif /* EFI_TUNER_STUDIO */
 	}
 
-	switch(engineConfiguration->vvtMode) {
+	switch(engineConfiguration->vvtMode[camIndex]) {
 	case VVT_2JZ:
 		// we do not know if we are in sync or out of sync, so we have to be looking for both possibilities
 		if ((currentPosition < engineConfiguration->fsio_setting[14]       || currentPosition > engineConfiguration->fsio_setting[15]) &&
@@ -227,7 +227,7 @@ void hwHandleVvtCamSignal(trigger_value_e front, efitick_t nowNt, int index DECL
 		warning(CUSTOM_ERR_VVT_OUT_OF_RANGE, "Please adjust vvtOffset since position %f", tc->vvtPosition);
 	}
 
-	switch (engineConfiguration->vvtMode) {
+	switch (engineConfiguration->vvtMode[camIndex]) {
 	case VVT_FIRST_HALF:
 	{
 
@@ -625,7 +625,7 @@ void triggerInfo(void) {
 #if EFI_PROD_CODE
 	if (HAVE_CAM_INPUT()) {
 		scheduleMsg(logger, "VVT input: %s mode %s", hwPortname(engineConfiguration->camInputs[0]),
-				getVvt_mode_e(engineConfiguration->vvtMode));
+				getVvt_mode_e(engineConfiguration->vvtMode[0]));
 		scheduleMsg(logger, "VVT event counters: %d/%d", engine->triggerCentral.vvtEventRiseCounter, engine->triggerCentral.vvtEventFallCounter);
 
 	}

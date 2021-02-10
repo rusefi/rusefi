@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on hellen_cypress_gen_config.bat integration/rusefi_config.txt Mon Feb 08 21:41:29 UTC 2021
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on hellen_cypress_gen_config.bat integration/rusefi_config.txt Tue Feb 09 19:00:47 UTC 2021
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -155,7 +155,7 @@ struct spi_pins {
 	 * need 4 byte alignment
 	 * offset 3
 	 */
-	uint8_t alignmentFill_at_3;
+	uint8_t alignmentFill_at_3[1];
 	/** total size 4*/
 };
 
@@ -1060,6 +1060,10 @@ struct engine_configuration_s {
 	/**
 	 * offset 560
 	 */
+	uint8_t camInputsPadding[CAM_INPUTS_COUNT_padding];
+	/**
+	 * offset 560
+	 */
 	afr_sensor_s afr;
 	/**
 	 * Electronic throttle pedal position first channel
@@ -1857,10 +1861,10 @@ struct engine_configuration_s {
 	bool unusedBit_251_29 : 1;
 	/**
 	offset 976 bit 30 */
-	bool unusedBit_288_30 : 1;
+	bool unusedBit_289_30 : 1;
 	/**
 	offset 976 bit 31 */
-	bool unusedBit_288_31 : 1;
+	bool unusedBit_289_31 : 1;
 	/**
 	 * offset 980
 	 */
@@ -2700,76 +2704,76 @@ struct engine_configuration_s {
 	bool unused1130 : 1;
 	/**
 	offset 2116 bit 8 */
-	bool unusedBit_489_8 : 1;
+	bool unusedBit_490_8 : 1;
 	/**
 	offset 2116 bit 9 */
-	bool unusedBit_489_9 : 1;
+	bool unusedBit_490_9 : 1;
 	/**
 	offset 2116 bit 10 */
-	bool unusedBit_489_10 : 1;
+	bool unusedBit_490_10 : 1;
 	/**
 	offset 2116 bit 11 */
-	bool unusedBit_489_11 : 1;
+	bool unusedBit_490_11 : 1;
 	/**
 	offset 2116 bit 12 */
-	bool unusedBit_489_12 : 1;
+	bool unusedBit_490_12 : 1;
 	/**
 	offset 2116 bit 13 */
-	bool unusedBit_489_13 : 1;
+	bool unusedBit_490_13 : 1;
 	/**
 	offset 2116 bit 14 */
-	bool unusedBit_489_14 : 1;
+	bool unusedBit_490_14 : 1;
 	/**
 	offset 2116 bit 15 */
-	bool unusedBit_489_15 : 1;
+	bool unusedBit_490_15 : 1;
 	/**
 	offset 2116 bit 16 */
-	bool unusedBit_489_16 : 1;
+	bool unusedBit_490_16 : 1;
 	/**
 	offset 2116 bit 17 */
-	bool unusedBit_489_17 : 1;
+	bool unusedBit_490_17 : 1;
 	/**
 	offset 2116 bit 18 */
-	bool unusedBit_489_18 : 1;
+	bool unusedBit_490_18 : 1;
 	/**
 	offset 2116 bit 19 */
-	bool unusedBit_489_19 : 1;
+	bool unusedBit_490_19 : 1;
 	/**
 	offset 2116 bit 20 */
-	bool unusedBit_489_20 : 1;
+	bool unusedBit_490_20 : 1;
 	/**
 	offset 2116 bit 21 */
-	bool unusedBit_489_21 : 1;
+	bool unusedBit_490_21 : 1;
 	/**
 	offset 2116 bit 22 */
-	bool unusedBit_489_22 : 1;
+	bool unusedBit_490_22 : 1;
 	/**
 	offset 2116 bit 23 */
-	bool unusedBit_489_23 : 1;
+	bool unusedBit_490_23 : 1;
 	/**
 	offset 2116 bit 24 */
-	bool unusedBit_489_24 : 1;
+	bool unusedBit_490_24 : 1;
 	/**
 	offset 2116 bit 25 */
-	bool unusedBit_489_25 : 1;
+	bool unusedBit_490_25 : 1;
 	/**
 	offset 2116 bit 26 */
-	bool unusedBit_489_26 : 1;
+	bool unusedBit_490_26 : 1;
 	/**
 	offset 2116 bit 27 */
-	bool unusedBit_489_27 : 1;
+	bool unusedBit_490_27 : 1;
 	/**
 	offset 2116 bit 28 */
-	bool unusedBit_489_28 : 1;
+	bool unusedBit_490_28 : 1;
 	/**
 	offset 2116 bit 29 */
-	bool unusedBit_489_29 : 1;
+	bool unusedBit_490_29 : 1;
 	/**
 	offset 2116 bit 30 */
-	bool unusedBit_489_30 : 1;
+	bool unusedBit_490_30 : 1;
 	/**
 	offset 2116 bit 31 */
-	bool unusedBit_489_31 : 1;
+	bool unusedBit_490_31 : 1;
 	/**
 	 * set can_mode X
 	 * offset 2120
@@ -2871,7 +2875,7 @@ struct engine_configuration_s {
 	 * need 4 byte alignment
 	 * offset 2227
 	 */
-	uint8_t alignmentFill_at_2227;
+	uint8_t alignmentFill_at_2227[1];
 	/**
 	 * This is the IAC position during cranking, some engines start better if given more air during cranking to improve cylinder filling.
 	 * offset 2228
@@ -2918,12 +2922,11 @@ struct engine_configuration_s {
 	 * set vvt_mode X
 	 * offset 2328
 	 */
-	vvt_mode_e vvtMode;
+	vvt_mode_e vvtMode[CAMS_PER_BANK];
 	/**
-	 * set second_vvt_mode X
-	 * offset 2329
+	 * offset 2330
 	 */
-	vvt_mode_e secondVvtMode;
+	uint8_t vvtModePadding[CAMS_PER_BANK_padding];
 	/**
 	 * offset 2330
 	 */
@@ -3108,15 +3111,15 @@ struct engine_configuration_s {
 	/**
 	 * offset 2713
 	 */
-	uint8_t unusedAuxVoltage1_TODO_332;
+	uint8_t unusedAuxVoltage1_TODO_332[1];
 	/**
 	 * offset 2714
 	 */
-	uint8_t unusedAuxVoltage2_TODO_332;
+	uint8_t unusedAuxVoltage2_TODO_332[1];
 	/**
 	 * offset 2715
 	 */
-	uint8_t unusedSpiPadding5;
+	uint8_t unusedSpiPadding5[1];
 	/**
 	 * offset 2716
 	 */
@@ -3493,7 +3496,7 @@ struct engine_configuration_s {
 	 * need 4 byte alignment
 	 * offset 4539
 	 */
-	uint8_t alignmentFill_at_4539;
+	uint8_t alignmentFill_at_4539[1];
 	/**
 	 * offset 4540
 	 */
@@ -3704,7 +3707,33 @@ struct persistent_config_s {
 	/**
 	 * offset 15776
 	 */
-	uint8_t unused15136[512];
+	fsio_table_8x8_u8t vvtTable1;
+	/**
+	 * offset 15840
+	 */
+	float vvtTable1LoadBins[FSIO_TABLE_8];
+	/**
+	 * RPM is float and not integer in order to use unified methods for interpolation
+	 * offset 15872
+	 */
+	float vvtTable1RpmBins[FSIO_TABLE_8];
+	/**
+	 * offset 15904
+	 */
+	fsio_table_8x8_u8t vvtTable2;
+	/**
+	 * offset 15968
+	 */
+	float vvtTable2LoadBins[FSIO_TABLE_8];
+	/**
+	 * RPM is float and not integer in order to use unified methods for interpolation
+	 * offset 16000
+	 */
+	float vvtTable2RpmBins[FSIO_TABLE_8];
+	/**
+	 * offset 16032
+	 */
+	uint8_t unused15136[256];
 	/**
 	 * offset 16288
 	 */
@@ -3812,4 +3841,4 @@ struct persistent_config_s {
 typedef struct persistent_config_s persistent_config_s;
 
 // end
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on hellen_cypress_gen_config.bat integration/rusefi_config.txt Mon Feb 08 21:41:29 UTC 2021
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on hellen_cypress_gen_config.bat integration/rusefi_config.txt Tue Feb 09 19:00:47 UTC 2021

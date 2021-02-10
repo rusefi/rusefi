@@ -36,7 +36,7 @@ public class CHeaderConsumer implements ConfigurationConsumer {
 
         String cEntry = ConfigDefinition.getComment(configField.getCommentContent(), currentOffset);
 
-        if (configField.getArraySize() == 1) {
+        if (!configField.isArray()) {
             // not an array
             cEntry += "\t" + configField.getType() + " " + configField.getName();
             if (ConfigDefinition.needZeroInit && TypesHelper.isPrimitive(configField.getType())) {
@@ -93,5 +93,9 @@ public class CHeaderConsumer implements ConfigurationConsumer {
         cHeader.write("// end" + EOL);
         cHeader.write("// this section " + ConfigDefinition.MESSAGE + EOL);
         cHeader.close();
+    }
+
+    public StringBuilder getContent() {
+        return content;
     }
 }

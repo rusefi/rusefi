@@ -110,7 +110,7 @@ void setToyota_2jz_vics(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	engineConfiguration->triggerInputPins[1] = GPIO_UNASSIGNED; // cam sensor will he handled by custom vtti code
 
 	engineConfiguration->camInputs[0] = GPIOC_6;
-	engineConfiguration->vvtMode = VVT_2JZ;
+	engineConfiguration->vvtMode[0] = VVT_2JZ;
 
 	// set global_trigger_offset_angle 155
 	engineConfiguration->globalTriggerAngleOffset = 155; // todo
