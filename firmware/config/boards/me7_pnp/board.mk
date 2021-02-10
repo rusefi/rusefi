@@ -5,4 +5,6 @@ BOARDCPPSRC = $(PROJECT_DIR)/config/boards/me7_pnp/board_configuration.cpp
 DDEFS += -DDEFAULT_ENGINE_TYPE=VAG_18_TURBO -DSTM32F767xx
 
 # Shared variables
+ALLCSRC   += $(BOARDSRC)
 ALLCPPSRC += $(BOARDCPPSRC)
+ALLINC    += $(BOARDINC)

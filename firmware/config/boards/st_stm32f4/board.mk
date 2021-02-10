@@ -9,3 +9,5 @@ DDEFS += -DHW_FRANKENSO=1
 
 # Shared variables
 ALLCSRC   += $(BOARDSRC)
+ALLCPPSRC += $(BOARDCPPSRC)
+ALLINC    += $(BOARDINC)
