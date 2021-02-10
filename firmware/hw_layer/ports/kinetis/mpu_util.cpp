@@ -262,4 +262,9 @@ uintptr_t getFlashAddrSecondCopy() {
 	return nullptr;
 }
 
+float getMcuTemperature() {
+	// TODO: implement me!
+	return 0;
+}
+
 #endif /* EFI_PROD_CODE */
