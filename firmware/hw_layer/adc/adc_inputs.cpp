@@ -249,22 +249,10 @@ static void fast_adc_callback(GPTDriver*) {
 }
 #endif /* HAL_USE_GPT */
 
+static float mcuTemperature;
+
 float getMCUInternalTemperature() {
-#if defined(ADC_CHANNEL_SENSOR)
-	float TemperatureValue = adcToVolts(slowAdc.getAdcValueByHwChannel(EFI_ADC_TEMP_SENSOR));
-	TemperatureValue -= 0.760f; // Subtract the reference voltage at 25 deg C
-	TemperatureValue /= 0.0025f; // Divide by slope 2.5mV
-
-	TemperatureValue += 25.0; // Add the 25 deg C
-
-	if (TemperatureValue > 150.0f || TemperatureValue < -50.0f) {
-		firmwareError(OBD_PCM_Processor_Fault, "Invalid CPU temperature measured %f", TemperatureValue);
-	}
-
-	return TemperatureValue;
-#else
-	return 0;
-#endif /* ADC_CHANNEL_SENSOR */
+	return mcuTemperature;
 }
 
 int getInternalAdcValue(const char *msg, adc_channel_e hwChannel) {
@@ -360,11 +348,6 @@ void AdcDevice::enableChannel(adc_channel_e hwChannel) {
 	int logicChannel = channelCount++;
 
 	size_t channelAdcIndex = hwChannel - 1;
-#if defined(STM32F7XX)
-	/* the temperature sensor is internally connected to ADC1_IN18 */
-	if (hwChannel == EFI_ADC_TEMP_SENSOR)
-		channelAdcIndex = 18;
-#endif
 
 	internalAdcIndexByHardwareIndex[hwChannel] = logicChannel;
 	hardwareIndexByIndernalAdcIndex[logicChannel] = hwChannel;
@@ -492,6 +475,9 @@ public:
 			void proteusAdcHack();
 			proteusAdcHack();
 #endif
+
+			// Ask the port to sample the MCU temperature
+			mcuTemperature = getMcuTemperature();
 		}
 
 		{
@@ -608,36 +594,7 @@ void initAdcInputs() {
 	addConsoleActionI("adcdebug", &setAdcDebugReporting);
 
 #if EFI_INTERNAL_ADC
-	/*
-	 * Initializes the ADC driver.
-	 */
-	adcStart(&ADC_SLOW_DEVICE, NULL);
-	adcStart(&ADC_FAST_DEVICE, NULL);
-	adcSTM32EnableTSVREFE(); // Internal temperature sensor
-#if defined(STM32F7XX)
-	/* the temperature sensor is internally
-	 * connected to the same input channel as VBAT. Only one conversion,
-	 * temperature sensor or VBAT, must be selected at a time. */
-	adcSTM32DisableVBATE();
-#endif
-
-	/* Enable this code only when you absolutly sure
-	 * that there is no possible errors from ADC */
-#if 0
-	/* All ADC use DMA and DMA calls end_cb from its IRQ
-	 * If none of ADC users need error callback - we can disable
-	 * shared ADC IRQ and save some CPU ticks */
-	if ((adcgrpcfgSlow.error_cb == NULL) &&
-		(adcgrpcfgFast.error_cb == NULL)
-		/* TODO: Add ADC3? */) {
-		nvicDisableVector(STM32_ADC_NUMBER);
-	}
-#endif
-
-#if defined(ADC_CHANNEL_SENSOR)
-	// Internal temperature sensor, Available on ADC1 only
-	slowAdc.enableChannel(EFI_ADC_TEMP_SENSOR);
-#endif /* ADC_CHANNEL_SENSOR */
+	portInitAdc();
 
 	slowAdc.init();
 
