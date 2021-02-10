@@ -594,31 +594,7 @@ void initAdcInputs() {
 	addConsoleActionI("adcdebug", &setAdcDebugReporting);
 
 #if EFI_INTERNAL_ADC
-	/*
-	 * Initializes the ADC driver.
-	 */
-	adcStart(&ADC_SLOW_DEVICE, NULL);
-	adcStart(&ADC_FAST_DEVICE, NULL);
-	adcSTM32EnableTSVREFE(); // Internal temperature sensor
-#if defined(STM32F7XX)
-	/* the temperature sensor is internally
-	 * connected to the same input channel as VBAT. Only one conversion,
-	 * temperature sensor or VBAT, must be selected at a time. */
-	adcSTM32DisableVBATE();
-#endif
-
-	/* Enable this code only when you absolutly sure
-	 * that there is no possible errors from ADC */
-#if 0
-	/* All ADC use DMA and DMA calls end_cb from its IRQ
-	 * If none of ADC users need error callback - we can disable
-	 * shared ADC IRQ and save some CPU ticks */
-	if ((adcgrpcfgSlow.error_cb == NULL) &&
-		(adcgrpcfgFast.error_cb == NULL)
-		/* TODO: Add ADC3? */) {
-		nvicDisableVector(STM32_ADC_NUMBER);
-	}
-#endif
+	portInitAdc();
 
 	slowAdc.init();
 

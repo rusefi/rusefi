@@ -10,7 +10,10 @@
 void baseMCUInit(void);
 void jump_to_bootloader();
 
+// ADC
+void portInitAdc();
 float getMcuTemperature();
+
 
 // CAN bus
 #if HAL_USE_CAN
