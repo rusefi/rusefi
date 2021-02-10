@@ -10,6 +10,8 @@
 
 #include "device_mpu_util.h"
 
+#define MCU_SERIAL_NUMBER_BYTES 12
+
 // 12mhz was chosen because it's the GCD of (168, 180, 216), the three speeds of STM32 currently supported
 // https://www.wolframalpha.com/input/?i=common+factors+of+168+180+216
 #define US_TO_NT_MULTIPLIER (12)

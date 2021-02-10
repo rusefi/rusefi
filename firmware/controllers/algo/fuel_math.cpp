@@ -45,6 +45,7 @@ fuel_Map3D_t fuelPhaseMap("fl ph");
 extern fuel_Map3D_t veMap;
 extern lambda_Map3D_t lambdaMap;
 extern baroCorr_Map3D_t baroCorrMap;
+mapEstimate_Map3D_t mapEstimationTable("map est");
 
 #if EFI_ENGINE_CONTROL
 
@@ -160,7 +161,7 @@ floatms_t getRunningFuel(floatms_t baseFuel DECLARE_ENGINE_PARAMETER_SUFFIX) {
 
 /* DISPLAY_ENDIF */
 
-static SpeedDensityAirmass sdAirmass(veMap);
+static SpeedDensityAirmass sdAirmass(veMap, mapEstimationTable);
 static MafAirmass mafAirmass(veMap);
 static AlphaNAirmass alphaNAirmass(veMap);
 
@@ -353,6 +354,8 @@ void initFuelMap(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	ENGINE(fuelComputer) = &fuelComputer;
 	ENGINE(injectorModel) = &injectorModel;
 
+	mapEstimationTable.init(config->mapEstimateTable, config->mapEstimateTpsBins, config->mapEstimateRpmBins);
+
 #if (IGN_LOAD_COUNT == FUEL_LOAD_COUNT) && (IGN_RPM_COUNT == FUEL_RPM_COUNT)
 	fuelPhaseMap.init(config->injectionPhase, config->injPhaseLoadBins, config->injPhaseRpmBins);
 #endif /* (IGN_LOAD_COUNT == FUEL_LOAD_COUNT) && (IGN_RPM_COUNT == FUEL_RPM_COUNT) */
@@ -440,12 +443,16 @@ float getFuelCutOffCorrection(efitick_t nowNt, int rpm DECLARE_ENGINE_PARAMETER_
 }
 
 float getBaroCorrection(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
-	if (hasBaroSensor(PASS_ENGINE_PARAMETER_SIGNATURE)) {
-		float correction = baroCorrMap.getValue(GET_RPM(), getBaroPressure(PASS_ENGINE_PARAMETER_SIGNATURE));
+	if (Sensor::hasSensor(SensorType::BarometricPressure)) {
+		// Default to 1atm if failed
+		float pressure = Sensor::get(SensorType::BarometricPressure).value_or(101.325f);
+
+		float correction = baroCorrMap.getValue(GET_RPM(), pressure);
 		if (cisnan(correction) || correction < 0.01) {
 			warning(OBD_Barometric_Press_Circ_Range_Perf, "Invalid baro correction %f", correction);
 			return 1;
 		}
+
 		return correction;
 	} else {
 		return 1;

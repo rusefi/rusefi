@@ -7,6 +7,9 @@
 // Only allows clearing the value, but never resetting it.
 class Clearable {
 public:
+	Clearable() : m_value(true) {}
+	Clearable(bool value) : m_value(value) {}
+
 	void clear() {
 		m_value = false;
 	}
@@ -49,6 +52,6 @@ private:
 	Clearable m_allowIgnition;
 	Clearable m_allowTriggerInput;
 
-	bool m_transientLimitInjection = false;
-	bool m_transientLimitIgnition = false;
+	bool m_transientAllowInjection = true;
+	bool m_transientAllowIgnition = true;
 };

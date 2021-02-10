@@ -335,7 +335,7 @@ static void setMazdaMiataEngineNB2Defaults(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 
 	engineConfiguration->vvtCamSensorUseRise = true;
 	// set vvt_mode 3
-	engineConfiguration->vvtMode = MIATA_NB2;
+	engineConfiguration->vvtMode[0] = VVT_MIATA_NB2;
 	engineConfiguration->vvtOffset = 98; // 2003 red car value
 
 	MEMCPY(config->veRpmBins, mazda_miata_nb2_RpmBins);
@@ -821,3 +821,10 @@ void setMiataNB2_ProteusEngineConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE) 
 
 }
 #endif // HW_PROTEUS
+
+#if HW_HELLEN
+void setMiataNB2_Hellen72(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
+    setMazdaMiataEngineNB2Defaults(PASS_CONFIG_PARAMETER_SIGNATURE);
+	strcpy(CONFIG(vehicleName), "H72 test");
+}
+#endif // HW_HELLEN

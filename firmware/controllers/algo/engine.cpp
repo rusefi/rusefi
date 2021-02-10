@@ -86,7 +86,7 @@ trigger_type_e getVvtTriggerType(vvt_mode_e vvtMode) {
 	switch (vvtMode) {
 	case VVT_2JZ:
 		return TT_VVT_JZ;
-	case MIATA_NB2:
+	case VVT_MIATA_NB2:
 		return TT_VVT_MIATA_NB2;
 	case VVT_BOSCH_QUICK_START:
 		return TT_VVT_BOSCH_QUICK_START;
@@ -103,13 +103,34 @@ trigger_type_e getVvtTriggerType(vvt_mode_e vvtMode) {
 	}
 }
 
+static void initVvtShape(Logging *logger, int index, TriggerState &initState DECLARE_ENGINE_PARAMETER_SUFFIX) {
+	vvt_mode_e vvtMode = engineConfiguration->vvtMode[index];
+	TriggerWaveform *shape = &ENGINE(triggerCentral).vvtShape[index];
+
+	if (vvtMode != VVT_INACTIVE) {
+		trigger_config_s config;
+		ENGINE(triggerCentral).vvtTriggerType[index] = config.type = getVvtTriggerType(vvtMode);
+
+		shape->initializeTriggerWaveform(logger,
+				engineConfiguration->ambiguousOperationMode,
+				engine->engineConfigurationPtr->vvtCamSensorUseRise, &config);
+
+		shape->initializeSyncPoint(initState,
+				engine->vvtTriggerConfiguration[index],
+				config);
+	}
+
+}
+
 void Engine::initializeTriggerWaveform(Logging *logger DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	static TriggerState initState;
 	INJECT_ENGINE_REFERENCE(&initState);
 
 	// Re-read config in case it's changed
 	primaryTriggerConfiguration.update();
-	vvtTriggerConfiguration.update();
+	for (int camIndex = 0;camIndex < CAMS_PER_BANK;camIndex++) {
+		vvtTriggerConfiguration[camIndex].update();
+	}
 
 #if EFI_ENGINE_CONTROL && EFI_SHAFT_POSITION_INPUT
 	// we have a confusing threading model so some synchronization would not hurt
@@ -131,18 +152,9 @@ void Engine::initializeTriggerWaveform(Logging *logger DECLARE_ENGINE_PARAMETER_
 	}
 
 
-	if (engineConfiguration->vvtMode != VVT_INACTIVE) {
-		trigger_config_s config;
-		ENGINE(triggerCentral).vvtTriggerType = config.type = getVvtTriggerType(engineConfiguration->vvtMode);
+	initVvtShape(logger, 0, initState PASS_ENGINE_PARAMETER_SUFFIX);
+	initVvtShape(logger, 1, initState PASS_ENGINE_PARAMETER_SUFFIX);
 
-		ENGINE(triggerCentral).vvtShape.initializeTriggerWaveform(logger,
-				engineConfiguration->ambiguousOperationMode,
-				engine->engineConfigurationPtr->vvtCamSensorUseRise, &config);
-
-		ENGINE(triggerCentral).vvtShape.initializeSyncPoint(initState,
-				engine->vvtTriggerConfiguration,
-				config);
-	}
 
 	if (!TRIGGER_WAVEFORM(shapeDefinitionError)) {
 		prepareOutputSignals(PASS_ENGINE_PARAMETER_SIGNATURE);
@@ -178,7 +190,9 @@ void Engine::periodicSlowCallback(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 
 	// Re-read config in case it's changed
 	primaryTriggerConfiguration.update();
-	vvtTriggerConfiguration.update();
+	for (int camIndex = 0;camIndex < CAMS_PER_BANK;camIndex++) {
+		vvtTriggerConfiguration[camIndex].update();
+	}
 
 	watchdog();
 	updateSlowSensors(PASS_ENGINE_PARAMETER_SIGNATURE);
@@ -268,7 +282,8 @@ void Engine::updateSlowSensors(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 				CONFIG(fuelLevelFullTankVoltage), 100,
 				fuelLevelVoltage);
 	}
-	sensors.vBatt = hasVBatt(PASS_ENGINE_PARAMETER_SIGNATURE) ? getVBatt(PASS_ENGINE_PARAMETER_SIGNATURE) : 12;
+
+	sensors.vBatt = Sensor::get(SensorType::BatteryVoltage).value_or(12);
 
 #if (BOARD_TLE8888_COUNT > 0)
 	// nasty value injection into C driver which would not be able to access Engine class
@@ -341,6 +356,10 @@ void Engine::reset() {
 	 */
 	engineCycle = getEngineCycle(FOUR_STROKE_CRANK_SENSOR);
 	memset(&ignitionPin, 0, sizeof(ignitionPin));
+	for (int camIndex = 0;camIndex < CAMS_PER_BANK;camIndex++) {
+		// todo: is it possible to make it constructor argument?
+		vvtTriggerConfiguration[camIndex].index = camIndex;
+	}
 }
 
 
@@ -463,11 +482,15 @@ void Engine::injectEngineReferences() {
 	EXPAND_Engine;
 
 	INJECT_ENGINE_REFERENCE(&primaryTriggerConfiguration);
-	INJECT_ENGINE_REFERENCE(&vvtTriggerConfiguration);
+	for (int camIndex = 0;camIndex < CAMS_PER_BANK;camIndex++) {
+		INJECT_ENGINE_REFERENCE(&vvtTriggerConfiguration[camIndex]);
+	}
 	INJECT_ENGINE_REFERENCE(&limpManager);
 
 	primaryTriggerConfiguration.update();
-	vvtTriggerConfiguration.update();
+	for (int camIndex = 0;camIndex < CAMS_PER_BANK;camIndex++) {
+		vvtTriggerConfiguration[camIndex].update();
+	}
 	triggerCentral.init(PASS_ENGINE_PARAMETER_SIGNATURE);
 }
 
@@ -570,7 +593,7 @@ void Engine::checkShutdown(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 		if ((sensors.vBatt > vBattThresholdOn) && !isInShutdownMode(PASS_ENGINE_PARAMETER_SIGNATURE)) {
 			ignitionOnTimeNt = getTimeNowNt();
 			stopEngineRequestTimeNt = 0;
-			scheduleMsg(&engineLogger, "Ingition voltage detected! Cancel the engine shutdown!");
+			scheduleMsg(&engineLogger, "Ignition voltage detected! Cancel the engine shutdown!");
 		}
 	}
 #endif /* EFI_MAIN_RELAY_CONTROL */

@@ -17,15 +17,11 @@ AirmassResult SpeedDensityAirmass::getAirmass(int rpm) {
 		return {};
 	}
 
-	auto map = Sensor::get(SensorType::Map);
-	if (!map) {
-		warning(CUSTOM_ERR_TCHARGE_NOT_READY2, "map not ready"); // this could happen during HW CI during configuration reset
-		return {};
-	}
+	auto map = getMap(rpm);
 
 	engine->engineState.sd.manifoldAirPressureAccelerationAdjustment = engine->engineLoadAccelEnrichment.getEngineLoadEnrichment(PASS_ENGINE_PARAMETER_SIGNATURE);
 
-	float adjustedMap = engine->engineState.sd.adjustedManifoldAirPressure = map.Value + engine->engineState.sd.manifoldAirPressureAccelerationAdjustment;
+	float adjustedMap = engine->engineState.sd.adjustedManifoldAirPressure = map + engine->engineState.sd.manifoldAirPressureAccelerationAdjustment;
 	efiAssert(CUSTOM_ERR_ASSERT, !cisnan(adjustedMap), "NaN adjustedMap", {});
 
 	float ve = getVe(rpm, adjustedMap);
@@ -42,6 +38,24 @@ AirmassResult SpeedDensityAirmass::getAirmass(int rpm) {
 
 	return {
 		airMass,
-		map.Value,	// AFR/VE table Y axis
+		map,	// AFR/VE table Y axis
 	};
+}
+
+float SpeedDensityAirmass::getMap(int rpm) const {
+	float fallbackMap;
+	if (CONFIG(enableMapEstimationTableFallback)) {
+		// if the map estimation table is enabled, estimate map based on the TPS and RPM
+		fallbackMap = m_mapEstimationTable->getValue(rpm, TPS_2_BYTE_PACKING_MULT * Sensor::get(SensorType::Tps1).value_or(0));
+	} else {
+		fallbackMap = CONFIG(failedMapFallback);
+	}
+
+#if EFI_TUNER_STUDIO
+	if (CONFIG(debugMode) == DBG_MAP) {
+		tsOutputChannels.debugFloatField4 = fallbackMap;
+	}
+#endif // EFI_TUNER_STUDIO
+
+	return Sensor::get(SensorType::Map).value_or(fallbackMap);
 }

@@ -79,7 +79,13 @@ struct_no_prefix engine_configuration_s
 
 #define FSIO_ANALOG_INPUT_COUNT 4
 
-#define CAM_INPUTS_COUNT 4
+! V engines or flat engines would have pairs of shafts with same trigger shape and target position
+#define BANKS_COUNT 2
+#define CAMS_PER_BANK 2
+#define CAMS_PER_BANK_padding 0
+
+#define CAM_INPUTS_COUNT @@BANKS_COUNT@@ * @@CAMS_PER_BANK@@
+#define CAM_INPUTS_COUNT_padding 0
 
 #define SERVO_COUNT 8
 
@@ -89,11 +95,11 @@ struct_no_prefix engine_configuration_s
 
 #define TOOTH_PACKET_COUNT 1000
 #define TOOTH_PACKET_SIZE 2
-#define TOOTH_DATA_LENGTH @@TOOTH_PACKET_SIZE@@*@@TOOTH_PACKET_COUNT@@
+#define TOOTH_DATA_LENGTH @@TOOTH_PACKET_SIZE@@ * @@TOOTH_PACKET_COUNT@@
 
 #define COMPOSITE_PACKET_COUNT 500
 #define COMPOSITE_PACKET_SIZE 5
-#define COMPOSITE_DATA_LENGTH @@COMPOSITE_PACKET_SIZE@@*@@COMPOSITE_PACKET_COUNT@@
+#define COMPOSITE_DATA_LENGTH @@COMPOSITE_PACKET_SIZE@@ * @@COMPOSITE_PACKET_COUNT@@
 #define COMPOSITE_DATA_LENGTH_HALF 1250
 
 #define MAP_ANGLE_SIZE 8
@@ -182,6 +188,7 @@ struct_no_prefix engine_configuration_s
 #define PACK_MULT_VOLTAGE 1000
 #define PACK_MULT_MASS_FLOW 10
 #define TPS_1_BYTE_PACKING_MULT 2
+#define TPS_2_BYTE_PACKING_MULT 100
 #define LOAD_1_BYTE_PACKING_MULT 2
 #define PACK_MULT_AFR_CFG 10
 #define PACK_MULT_LAMBDA_CFG 147
@@ -207,7 +214,9 @@ struct_no_prefix engine_configuration_s
 #define AFTERSTART_DECAY_CURVE_SIZE 8
 #define AFTERSTART_ENRICH_CURVE_SIZE 8
 
-custom fuel_table_t	4*@@FUEL_RPM_COUNT@@x@@FUEL_LOAD_COUNT@@ array,   F32,   @OFFSET@, [@@FUEL_RPM_COUNT@@x@@FUEL_LOAD_COUNT@@],"ms",      1,     0,      0.0,   500.0,   2
+#define PACK_MULT_MAP_ESTIMATE 100
+
+custom map_estimate_table_t	2*@@FUEL_RPM_COUNT@@x@@FUEL_LOAD_COUNT@@ array,   U16,   @OFFSET@, [@@FUEL_RPM_COUNT@@x@@FUEL_LOAD_COUNT@@],"kPa",      {1/@@PACK_MULT_MAP_ESTIMATE@@},     0,      0.0,   100.0,   2
 custom ve_table_t 4*@@FUEL_RPM_COUNT@@x@@FUEL_LOAD_COUNT@@ array,   F32,   @OFFSET@, [@@FUEL_RPM_COUNT@@x@@FUEL_LOAD_COUNT@@],"%", 1, 0, 0, 999.0, 2
 custom lambda_table_t @@FUEL_RPM_COUNT@@x@@FUEL_LOAD_COUNT@@ array,   U08,   @OFFSET@, [@@FUEL_RPM_COUNT@@x@@FUEL_LOAD_COUNT@@],"deg",	   {1/@@PACK_MULT_LAMBDA_CFG@@},     0,        0.6,  1.5,     2
 custom afr_table_t @@FUEL_RPM_COUNT@@x@@FUEL_LOAD_COUNT@@ array,   U08,   @OFFSET@, [@@FUEL_RPM_COUNT@@x@@FUEL_LOAD_COUNT@@],"deg",	   {1/@@PACK_MULT_AFR_CFG@@},     0,        0,  25.0,     1
@@ -279,7 +288,7 @@ end_struct
 custom debug_mode_e 4 bits,    U32,   @OFFSET@, [0:5], @@debug_mode_e_enum@@
 
 #define vvt_mode_e_enum "Inactive", "Single Tooth Second Half", "2GZ", "Miata NB2", "Single Tooth First Half", "Bosch Quick Start", "4/1", "mode7"
-custom vvt_mode_e 4 bits,    U32,   @OFFSET@, [0:2], @@vvt_mode_e_enum@@
+custom vvt_mode_e 1 bits,    U08,   @OFFSET@, [0:2], @@vvt_mode_e_enum@@
 
 ! At the moment TIM1, TIM2, TIM3 and TIM9 are configured as ICU
 ! todo: as of ChibiOS3, only channels 1 & 2 are allowed to capture input, that's a ChibiOS driver limitation
@@ -339,13 +348,13 @@ struct gppwm_channel
 	gppwm_table_t table;
 end_struct
 
-custom air_pressure_sensor_type_e 4 bits, U32, @OFFSET@, [0:3]  "Custom", "DENSO183", "MPX4250", "HONDA3BAR", "NEON_2003", "22012AA090", "3 Bar", "MPX4100", "Toyota 89420-02010", "MPX4250A", "Bosch 2.5", "Mazda1Bar", "type12", "type13", "INVALID", "INVALID"
+custom air_pressure_sensor_type_e 4 bits, U32, @OFFSET@, [0:3],  "Custom", "DENSO183", "MPX4250", "HONDA3BAR", "NEON_2003", "22012AA090", "3 Bar", "MPX4100", "Toyota 89420-02010", "MPX4250A", "Bosch 2.5", "Mazda1Bar", "GM 2 Bar", "GM 1 Bar", "INVALID", "INVALID"
 
 !
 ! lower 16 values are used on stm32 rusEfi, values above 16 are related to Kinetis work in progress
 ! 
 #define adc_channel_e_enum "Disabled", "PA0", "PA1", "PA2", "PA3", "PA4", "PA5", "PA6", "PA7", "PB0", "PB1", "PC0", "PC1", "PC2", "PC3", "PC4", "PC5"
-custom adc_channel_e 1 bits, U08, @OFFSET@, [0:5]  @@adc_channel_e_enum@@
+custom adc_channel_e 1 bits, U08, @OFFSET@, [0:5],  @@adc_channel_e_enum@@
 
 struct air_pressure_sensor_config_s
 float lowValue;kPa value at low volts;"kpa",      1,     0,    -400, 800,     2
@@ -418,6 +427,7 @@ end_struct
 #define TT_TT_JEEP_18_2_2_2 37
 #define TT_TT_JEEP_4_CYL 40
 #define TT_TT_FORD_ST170 42
+#define TT_TT_VVT_MIATA_NB2 43
 #define TT_TT_RENIX_44_2_2 44
 #define TT_TT_RENIX_66_2_2_2 45
 #define TT_TT_HONDA_K_12_1 46
@@ -428,6 +438,8 @@ end_struct
 #define TT_TT_SUBARU_7_WITHOUT_6 51
 #define TT_TT_52 52
 #define TT_TT_TRI_TACH 53
+#define TT_TT_GM_60_2_2_2 54
+#define TT_TT_SKODA_FAVORIT 55
 
 
 ! todo https://github.com/rusefi/rusefi/issues/2102
@@ -471,6 +483,7 @@ end_struct
 #define ET_MIATA_TCU_PROTEUS 1
 #define ET_CITROEN_TU3JP 65
 #define ET_PROTEUS_QC_TEST_BOARD 42
+#define ET_PROTEUS_ANALOG_PWM_TEST 106
 
 
 custom engine_type_e 4 bits, S32, @OFFSET@,   [0:6], @@engine_type_e_auto_enum@@
@@ -511,14 +524,14 @@ bit absoluteFuelPressure;+If your fuel regulator does not have vacuum line
 bit launchControlEnabled;
 bit rollingLaunchEnabled;
 bit antiLagEnabled;
-bit useRunningMathForCranking,Fuel Map,Fixed;
+bit useRunningMathForCranking,"Fuel Map","Fixed";
 bit displayLogicLevelsInEngineSniffer;
 bit useTLE8888_stepper;
-bit issue_294_27;
-bit issue_294_28;
+bit enableMapEstimationTableFallback;+If enabled, the MAP estimate table will be used if the MAP sensor fails to estimate manifold pressure based on RPM and TPS.
+bit useFSIOTableForCanSniffingFiltering;
 bit issue_294_29;
 bit issue_294_30;
-bit issue_294_31,si_example,nada_example;
+bit issue_294_31,"si_example","nada_example";
 
 
 !todo: extract these two fields into a structure
@@ -588,7 +601,7 @@ ignition_mode_e ignitionMode;+"Single Coil" is for use on distributed ignition s
 
 angle_t ignitionOffset;+this value could be used to offset the whole ignition timing table by a constant;"RPM",    1,      0,       0,  3000.0,      0
 
-custom timing_mode_e 4 bits, U32, @OFFSET@ [0:0], "dynamic", "fixed"
+custom timing_mode_e 4 bits, U32, @OFFSET@, [0:0], "dynamic", "fixed"
 timing_mode_e timingMode;+Dynamic uses the timing map to decide the ignition timing, Static timing fixes the timing to the value set below (only use for checking static timing with a timing light).
 
 angle_t fixedModeTiming;+This value is the ignition timing used when in 'fixed timing' mode, i.e. constant timing\nThis mode is useful when adjusting distributor location.;"RPM",    1,      0,       0,  3000.0,      0
@@ -631,14 +644,14 @@ adc_channel_e fuelLevelSensor;+This is the processor pin that your fuel level se
 
 
 	float idle_derivativeFilterLoss;+0.1 is a good default value;    "x",    1,      0.0,       -1000000,  1000000,        4
-	int sensorChartFrequency;;"index",      1,      0,       0, 300,      0 ; size 4
+	int sensorChartFrequency;;"index",      1,      0,       0, 300,      0
 
 struct trigger_config_s @brief Trigger wheel(s) configuration
 
 
 custom bool32_t 4 bits,    U32,   @OFFSET@, [0:0], "false", "true"
 
-#define trigger_type_e_enum "custom toothed wheel", "Ford Aspire", "Dodge Neon 1995", "Miata NA", "Miata NB", "GM_7X", "Cooper R50", "Mazda SOHC 4", "60/2", "36/1", "Honda 4+24+1", "Mitsubishi", "Honda 4+24", "Honda 1+4+24", "Dodge Neon 2003", "Mazda DOHC 1+4", "1+1", "INVALID", "Single Tooth", "Dodge Ram 1+16", "60/2 VW", "Honda 1+24", "Dodge Stratus",  "36_2_2_2", "Nissan Primera", "dev 2JZ 3/34 simulator", "Rover K", "GM LS 24", "Honda CBR 600", "2JZ_1_12", "Honda CBR 600 custom", "3/1 skipped" , "Dodge Neon 2003 crank", "Miata VVT", "trg34", "trg35", "Subaru 7+6", "Jeep 18-2-2-2", "WIP", "Dodge Neon 1995 crank only", "Jeep XJ 4 cyl", "FiatIAQ_P8", "Mazda Z5", "trg43", "Renix 44-2-2", "Renix 66-2-2-2", "Honda K 12+1", "trg47", "36/2", "Subaru SVX", "1+16", "Subaru 7 without 6", "trg52", "TriTach", "trg54", "trg55", "INVALID"
+#define trigger_type_e_enum "custom toothed wheel", "Ford Aspire", "Dodge Neon 1995", "Miata NA", "Miata NB", "GM_7X", "Cooper R50", "Mazda SOHC 4", "60/2", "36/1", "Honda 4+24+1", "Mitsubishi", "Honda 4+24", "Honda 1+4+24", "Dodge Neon 2003", "Mazda DOHC 1+4", "1+1", "INVALID", "Single Tooth", "Dodge Ram 1+16", "60/2 VW", "Honda 1+24", "Dodge Stratus",  "36_2_2_2", "Nissan Primera", "dev 2JZ 3/34 simulator", "Rover K", "GM LS 24", "Honda CBR 600", "2JZ_1_12", "Honda CBR 600 custom", "3/1 skipped" , "Dodge Neon 2003 crank", "Miata VVT", "trg34", "trg35", "Subaru 7+6", "Jeep 18-2-2-2", "WIP", "Dodge Neon 1995 crank only", "Jeep XJ 4 cyl", "FiatIAQ_P8", "Mazda Z5", "trg43", "Renix 44-2-2", "Renix 66-2-2-2", "Honda K 12+1", "trg47", "36/2", "Subaru SVX", "1+16", "Subaru 7 without 6", "trg52", "TriTach", "GM 60/2/2?2", "Skoda Favorit", "trg56", "trg57", "INVALID"
 
 custom trigger_type_e 4 bits,    U32,   @OFFSET@, [0:5], @@trigger_type_e_enum@@
 	trigger_type_e type;set trigger_type X
@@ -653,9 +666,9 @@ end_struct
 
 trigger_config_s trigger;
 
-custom spi_device_e 1 bits,U32,   @OFFSET@, [0:2], "Off", "SPI1", "SPI2", "SPI3", "SPI4", "INVALID", "INVALID", "INVALID" 
+custom spi_device_e 1 bits, U08,   @OFFSET@, [0:2], "Off", "SPI1", "SPI2", "SPI3", "SPI4", "INVALID", "INVALID", "INVALID" 
 	spi_device_e hip9011SpiDevice;
-	uint8_t unused541;;"unit",      1,     0,    0, 100,     0
+	uint8_t failedMapFallback;+This value is only used for speed density fueling calculations.;"kPa",      1,     0,    0, 100,     0
 	uint8_t unused542;;"unit",      1,     0,    0, 100,     0
 	adc_channel_e mafAdcChannel;See hasMafSensor
 
@@ -664,6 +677,7 @@ float globalFuelCorrection;set global_fuel_correction X;"coef",    1,      0.0, 
 	float adcVcc;;         "volts",    1,    0.0,       0,    6.0,        3
 	float maxKnockSubDeg;maximum total number of degrees to subtract from ignition advance\nwhen knocking;"Deg",      1,      0,       0, 100,      0
 	brain_input_pin_e[CAM_INPUTS_COUNT iterate] camInputs;+Camshaft input could be used either just for engine phase detection if your trigger shape does not include cam sensor as 'primary' channel, or it could be used for Variable Valve timing on one of the camshafts.\nTODO #660
+	uint8_t[CAM_INPUTS_COUNT_padding] camInputsPadding;;
 	
 struct afr_sensor_s
 	adc_channel_e hwChannel;
@@ -822,7 +836,7 @@ bit is_enabled_spi_2
 	bit useIacTableForCoasting;+This setting allows the ECU to open the IAC during overrun conditions to help reduce engine breaking, this can be helpful for large engines in light weight cars. Used in Auto-PID Idle mode.
 	bit useNoiselessTriggerDecoder
 	bit useIdleTimingPidControl
-	bit unused744b25
+	bit disableEtbWhenEngineStopped;+Allows disabling the ETB when the engine is stopped. You may not like the power draw or PWM noise from the motor, so this lets you turn it off until it's necessary.
 	bit is_enabled_spi_4
 	bit pauseEtbControl;+Disable the electronic throttle motor and DC idle motor for testing.\nThis mode is for testing ETB/DC idle position sensors, etc without actually driving the throttle.
 	bit alignEngineSnifferAtTDC
@@ -853,7 +867,7 @@ output_pin_e acFanPin;+Optional Radiator Fan used with A/C
 
 
 
-custom uart_device_e 1 bits,U32,   @OFFSET@, [0:1], "Off", "UART1", "UART2", "UART3" 
+custom uart_device_e 1 bits,U08,   @OFFSET@, [0:1], "Off", "UART1", "UART2", "UART3" 
 	int16_t sdCardPeriodMs;+SD card logging period, in milliseconds;"ms",        1,     0,  0,    30000,  0
 	adc_channel_e idlePositionSensor;
 	brain_pin_e debugMapAveraging;
@@ -868,7 +882,7 @@ custom uart_device_e 1 bits,U32,   @OFFSET@, [0:1], "Off", "UART1", "UART2", "UA
 	uint16_t tps1SecondaryMin;;"ADC", 1, 0, 0, 1000, 0
 	uint16_t tps1SecondaryMax;;"ADC", 1, 0, 0, 1000, 0
 	int16_t antiLagRpmTreshold;;"rpm", 1, 0, 0, 20000, 0
-	efitimesec16_t startCrankingDuration;Maximum time to crank starter;"Seconds",      1,      0,       0, 30,      0
+	uint16_t startCrankingDuration;Maximum time to crank starter;"Seconds",      1,      0,       0, 30,      0
 
 	brain_pin_e triggerErrorPin;+This pin is used for debugging - snap a logic analyzer on it and see if it's ever high
 	pin_output_mode_e triggerErrorPinMode;
@@ -943,24 +957,24 @@ custom maf_sensor_type_e 4 bits, S32, @OFFSET@, [0:1], @@maf_sensor_type_e_enum@
 	bit enableCanVss
 	bit enableInnovateLC2
 	bit showHumanReadableWarning
-	bit stftIgnoreErrorMagnitude;+If enabled, adjust at a constant rate instead of a rate proportional to the current lambda error.  This mode may be easier to tune, and more tolerant of sensor noise.  Use of this mode is required if you have a narrowband O2 sensor.;
+	bit stftIgnoreErrorMagnitude;+If enabled, adjust at a constant rate instead of a rate proportional to the current lambda error.  This mode may be easier to tune, and more tolerant of sensor noise.  Use of this mode is required if you have a narrowband O2 sensor.
 	bit unused976b11;
 	bit enableSoftwareKnock
 	bit verboseVVTDecoding;enable vvt_details
 	bit invertCamVVTSignal;get invertCamVVTSignal
 	bit consumeObdSensors;+This property is useful if using rusEFI as TCM or BCM only\nenable consumeObdSensors
-	bit knockBankCyl1,Channel 2,Channel 1;
-	bit knockBankCyl2,Channel 2,Channel 1;
-	bit knockBankCyl3,Channel 2,Channel 1;
-	bit knockBankCyl4,Channel 2,Channel 1;
-	bit knockBankCyl5,Channel 2,Channel 1;
-	bit knockBankCyl6,Channel 2,Channel 1;
-	bit knockBankCyl7,Channel 2,Channel 1;
-	bit knockBankCyl8,Channel 2,Channel 1;
-	bit knockBankCyl9,Channel 2,Channel 1;
-	bit knockBankCyl10,Channel 2,Channel 1;
-	bit knockBankCyl11,Channel 2,Channel 1;
-	bit knockBankCyl12,Channel 2,Channel 1;
+	bit knockBankCyl1,"Channel 2","Channel 1";
+	bit knockBankCyl2,"Channel 2","Channel 1";
+	bit knockBankCyl3,"Channel 2","Channel 1";
+	bit knockBankCyl4,"Channel 2","Channel 1";
+	bit knockBankCyl5,"Channel 2","Channel 1";
+	bit knockBankCyl6,"Channel 2","Channel 1";
+	bit knockBankCyl7,"Channel 2","Channel 1";
+	bit knockBankCyl8,"Channel 2","Channel 1";
+	bit knockBankCyl9,"Channel 2","Channel 1";
+	bit knockBankCyl10,"Channel 2","Channel 1";
+	bit knockBankCyl11,"Channel 2","Channel 1";
+	bit knockBankCyl12,"Channel 2","Channel 1";
 	bit tcuEnabled
 	bit unusedBit_251_29
 	
@@ -1015,7 +1029,8 @@ custom maf_sensor_type_e 4 bits, S32, @OFFSET@, [0:1], @@maf_sensor_type_e_enum@
 
 	int[63] unusedAtOldBoardConfigurationEnd;;"units", 1, 0, -20, 100, 0
 	uint16_t vehicleWeight;;"kg", 1, 0, 0, 10000, 0
-	uint16_t unusedHereHereHere;;"ADC", 1, 0, 0, 1000, 0
+	brain_pin_e lps25BaroSensorScl
+	brain_pin_e lps25BaroSensorSda
 
 	uint16_t tps2SecondaryMin;;"ADC", 1, 0, 0, 1000, 0
 	uint16_t tps2SecondaryMax;;"ADC", 1, 0, 0, 1000, 0
@@ -1104,7 +1119,7 @@ bit unused_1484_bit_31
 
 	int ignMathCalculateAtIndex;+At what trigger index should some ignition-related math be executed? This is a performance trick to reduce load on synchronization trigger callback.;"index",      1,      0,       0, 7000,      0
 
-// todo: start using these parameters!
+! todo: start using these parameters!
 	int16_t acCutoffLowRpm;;"RPM",      1,      0,       1, 15000,      0
 	int16_t acCutoffHighRpm;;"RPM",      1,      0,       1, 15000,      0
 	int16_t acIdleRpmBump;;"RPM",      1,      0,       1, 15000,      0
@@ -1227,7 +1242,7 @@ int16_t tps2Max;Full throttle#2. tpsMax value as 10 bit ADC value. Not Voltage!\
 	can_baudrate_e canBaudRate; set can_baudrate
 
 	#define ve_override_e_enum "None", "MAP", "TPS"
-	custom ve_override_e 1 bits, U08, @OFFSET@, [0:1]  @@ve_override_e_enum@@
+	custom ve_override_e 1 bits, U08, @OFFSET@, [0:1],  @@ve_override_e_enum@@
 	ve_override_e veOverrideMode;+Override the Y axis (load) value used for the VE table.\nAdvanced users only: If you aren't sure you need this, you probably don't need this.
 
 	can_baudrate_e can2BaudRate;
@@ -1258,7 +1273,7 @@ int16_t tps2Max;Full throttle#2. tpsMax value as 10 bit ADC value. Not Voltage!\
 	output_pin_e hpfpValvePin;
 	pin_output_mode_e hpfpValvePinMode;
 
-	float boostCutPressure;+MAP value above which fuel is cut in case of overboost.\n0 to disable overboost cut.;"kPa (absolute)",        1,     0,    0, 500,     0
+	float boostCutPressure;+MAP value above which fuel is cut in case of overboost.\nSet to 0 to disable overboost cut.;"kPa (absolute)",        1,     0,    0, 500,     0
 
 float[MAP_ACCEL_TAPER] mapAccelTaperBins;;"counter",      1,     0,   0.0,    300,   0
 float[MAP_ACCEL_TAPER] mapAccelTaperMult;;"mult",      1,     0,   0.0,    300,   2
@@ -1287,8 +1302,9 @@ float[MAP_ACCEL_TAPER] mapAccelTaperMult;;"mult",      1,     0,   0.0,    300, 
 
 	float[NARROW_BAND_WIDE_BAND_CONVERSION_SIZE] narrowToWideOxygenBins;Narrow Band WBO Approximation;"V",        1,     0,   -10.0,    10.0,  3
 	float[NARROW_BAND_WIDE_BAND_CONVERSION_SIZE] narrowToWideOxygen;;"ratio",      1,     0,      -40.0,    40.0,   2
-	vvt_mode_e vvtMode;set vvt_mode X
-	uint8_t[20] unusedOldBiquad;;"units", 1, 0, -20, 100, 0
+	vvt_mode_e[CAMS_PER_BANK iterate] vvtMode;set vvt_mode X
+	uint8_t[CAMS_PER_BANK_padding] vvtModePadding;;
+	uint8_t[22] unusedOldBiquad;;"units", 1, 0, -20, 100, 0
 	float[CLT_TIMING_CURVE_SIZE] cltTimingBins;CLT-based timing correction;"C",        1,     0,   -100.0,    250.0,  1
 	float[CLT_TIMING_CURVE_SIZE] cltTimingExtra;;"degree",      1,     0,      -400.0,    400.0,   0
 custom tle8888_mode_e 1 bits, U08, @OFFSET@, [0:1], "Auto", "SemiAuto", "Manual", "Hall"
@@ -1474,7 +1490,6 @@ tChargeMode_e tChargeMode;
 
 	int8_t[IGN_RPM_COUNT] knockBaseNoise;;"dB", 1.0, 0, -30.0, 0, 2
 
-! just a reminder that 'int' and 'float' are 4 bytes each
 	int[365] mainUnusedEnd;;"units", 1, 0, -20, 100, 0
 
 ! end of engine_configuration_s
@@ -1543,7 +1558,20 @@ tcubinary_table_t tcuSolenoidTable;
 
 float vssFilterReciprocal;+Good example: number of tooth on wheel, For Can 10 is a good number.;"Hz",   1,   0,   2.0,   20.0,   2
 
-uint8_t[1088] unused15136;;"units", 1, 0, -20, 100, 0
+map_estimate_table_t mapEstimateTable;
+uint16_t[FUEL_LOAD_COUNT] mapEstimateTpsBins;;"% TPS", {1/@@TPS_2_BYTE_PACKING_MULT@@}, 0.0, 0, 100.0, 1
+uint16_t[FUEL_RPM_COUNT] mapEstimateRpmBins;;"RPM", 1, 0.0, 0, 18000.0, 0
+
+fsio_table_8x8_u8t vvtTable1;
+float[FSIO_TABLE_8] vvtTable1LoadBins;;"L",       1,      0,      0.0,  255,   0
+float[FSIO_TABLE_8] vvtTable1RpmBins;RPM is float and not integer in order to use unified methods for interpolation;"RPM",    1,      0,      0.0,  25500.0,   2
+
+fsio_table_8x8_u8t vvtTable2;
+float[FSIO_TABLE_8] vvtTable2LoadBins;;"L",       1,      0,      0.0,  255,   0
+float[FSIO_TABLE_8] vvtTable2RpmBins;RPM is float and not integer in order to use unified methods for interpolation;"RPM",    1,      0,      0.0,  25500.0,   2
+
+
+uint8_t[256] unused15136;;"units", 1, 0, -20, 100, 0
 
 ignition_table_t ignitionTable;
 float[IGN_LOAD_COUNT] ignitionLoadBins;;"Load",   1,   0.0,        0,  500.0,   2
@@ -1553,18 +1581,9 @@ ve_table_t veTable;
 float[FUEL_LOAD_COUNT] veLoadBins;;"kPa",	1,   0.0,        0,  400.0,   2
 float[FUEL_RPM_COUNT] veRpmBins;;"RPM",	   1,   0.0,        0,  18000.0, 2
 
-#if LAMBDA
 lambda_table_t lambdaTable;
-#else
-afr_table_t lambdaTable;
-#endif
-
 float[FUEL_LOAD_COUNT] lambdaLoadBins;;"",	1,   0.0,        0,  500.0,   2
 float[FUEL_RPM_COUNT] lambdaRpmBins;;"RPM",	   1,   0.0,        0,  18000.0, 2
-
-! ve_table_t ve2Table;
-! float[FUEL_LOAD_COUNT] ve2LoadBins;;"kPa",	1,   0.0,        0,  500.0,   2
-! float[FUEL_RPM_COUNT] ve2RpmBins;;"RPM",	   1,   0.0,        0,  18000.0, 2
 
 tps_tps_table_t tpsTpsAccelTable;
 float[TPS_TPS_ACCEL_TABLE] tpsTpsAccelFromRpmBins;;"from",	   1,      0,      0.0,  30000.0,   2
@@ -1754,7 +1773,7 @@ end_struct
 #define CMD_TS_IGNITION_CATEGORY 18
 #define CMD_TS_INJECTOR_CATEGORY 19
 #define CMD_TS_X14 20
-// 0x16
+! 0x16
 #define CMD_TS_BENCH_CATEGORY 22
 #define CMD_TS_X17 23
 #define CMD_TS_X18 24
@@ -1833,58 +1852,58 @@ end_struct
 
 
 #define TS_PROTOCOL "001"
-// These commands are used by TunerStudio and the rusEfi console
-// 0x4F ochGetCommand
+! These commands are used by TunerStudio and the rusEfi console
+! 0x4F ochGetCommand
 #define TS_OUTPUT_COMMAND 'O'
-// 0x53 queryCommand
+! 0x53 queryCommand
 #define TS_HELLO_COMMAND 'S'
-// 0x6B
+! 0x6B
 #define TS_CRC_CHECK_COMMAND 'k'
-// 0x52
+! 0x52
 #define TS_READ_COMMAND 'R'
-// 0x47
+! 0x47
 #define TS_GET_TEXT 'G'
-// 0x45
+! 0x45
 #define TS_EXECUTE 'E'
 #define TS_ONLINE_PROTOCOL 'z'
-// 0x39
+! 0x39
 #define TS_GET_STRUCT '9'
 #define TS_GET_COMPOSITE_BUFFER_DONE_DIFFERENTLY '8'
 
 #define TS_COMPOSITE_ENABLE 1
 #define TS_COMPOSITE_DISABLE 2
 
-// Performance tracing
+! Performance tracing
 #define TS_PERF_TRACE_BEGIN '_'
 #define TS_PERF_TRACE_GET_BUFFER 'b'
 
-// 0x50
+! 0x50
 #define TS_PAGE_COMMAND 'P'
-// 0x46
+! 0x46
 #define TS_COMMAND_F 'F'
-// versionInfo
+! versionInfo
 #define TS_GET_FIRMWARE_VERSION 'V'
-// returns getFirmwareError(), works together with ind_hasFatalError
+! returns getFirmwareError(), works together with ind_hasFatalError
 #define TS_GET_CONFIG_ERROR 'e'
 
 
-// 0x57 pageValueWrite
+! 0x57 pageValueWrite
 #define TS_SINGLE_WRITE_COMMAND 'W' 
-// 0x43 pageChunkWrite
+! 0x43 pageChunkWrite
 #define TS_CHUNK_WRITE_COMMAND 'C' 
-// 0x42 burnCommand
+! 0x42 burnCommand
 #define TS_BURN_COMMAND 'B' 
-// 0x77
+! 0x77
 #define TS_IO_TEST_COMMAND 'Z'
 
 #define TS_RESPONSE_OK 0
 #define TS_RESPONSE_BURN_OK 4
 #define TS_RESPONSE_COMMAND_OK 7
 
-// Engine Sniffer time stamp unit, in microseconds
+! Engine Sniffer time stamp unit, in microseconds
 #define ENGINE_SNIFFER_UNIT_US 10
 
-// These commands are used exclusively by the rusEfi console
+! These commands are used exclusively by the rusEfi console
 #define TS_TEST_COMMAND 't' // 0x74
 
 #define TS_SD_R_COMMAND 'r'
@@ -1898,7 +1917,7 @@ end_struct
 #define TS_SD_PROTOCOL_REMOVE_FILE 6
 #define TS_SD_PROTOCOL_FETCH_COMPRESSED 8
 
-// High speed logger commands
+! High speed logger commands
 #define TS_SET_LOGGER_SWITCH   'l'
 #define TS_GET_LOGGER_GET_BUFFER 'L'
 

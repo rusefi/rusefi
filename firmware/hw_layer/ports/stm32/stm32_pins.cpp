@@ -44,6 +44,21 @@ static ioportid_t ports[] = {GPIOA,
 #else
 		nullptr,
 #endif /* STM32_HAS_GPIOH */
+#if STM32_HAS_GPIOI
+		GPIOI,
+#else
+		nullptr,
+#endif /* STM32_HAS_GPIOI */
+#if STM32_HAS_GPIOJ
+		GPIOJ,
+#else
+		nullptr,
+#endif /* STM32_HAS_GPIOJ */
+#if STM32_HAS_GPIOK
+		GPIOK,
+#else
+		nullptr,
+#endif /* STM32_HAS_GPIOK */
 };
 
 /**
@@ -74,6 +89,18 @@ const char *portname(ioportid_t GPIOx) {
 	if (GPIOx == GPIOH)
 		return "PH";
 #endif /* STM32_HAS_GPIOH */
+#if STM32_HAS_GPIOI
+	if (GPIOx == GPIOI)
+		return "PI";
+#endif /* STM32_HAS_GPIOI */
+#if STM32_HAS_GPIOJ
+	if (GPIOx == GPIOJ)
+		return "PJ";
+#endif /* STM32_HAS_GPIOJ */
+#if STM32_HAS_GPIOK
+	if (GPIOx == GPIOK)
+		return "PK";
+#endif /* STM32_HAS_GPIOK */
 	return "unknown";
 }
 
@@ -103,6 +130,18 @@ static int getPortIndex(ioportid_t port) {
 	if (port == GPIOH)
 		return 7;
 #endif /* STM32_HAS_GPIOH */
+#if STM32_HAS_GPIOI
+	if (port == GPIOI)
+		return 8;
+#endif /* STM32_HAS_GPIOI */
+#if STM32_HAS_GPIOJ
+	if (port == GPIOJ)
+		return 9;
+#endif /* STM32_HAS_GPIOJ */
+#if STM32_HAS_GPIOK
+	if (port == GPIOK)
+		return 10;
+#endif /* STM32_HAS_GPIOK */
 	firmwareError(CUSTOM_ERR_UNKNOWN_PORT, "unknown port");
 	return -1;
 }

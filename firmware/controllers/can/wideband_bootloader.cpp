@@ -1,6 +1,6 @@
 #include "global.h"
 
-#if EFI_WIDEBAND_FIRMWARE_UPDATE
+#if EFI_WIDEBAND_FIRMWARE_UPDATE && HAL_USE_CAN
 
 #include "ch.h"
 #include "can_msg_tx.h"
@@ -95,4 +95,4 @@ void updateWidebandFirmware(Logging* logging) {
 	waitingBootloaderThread = nullptr;
 }
 
-#endif // EFI_WIDEBAND_FIRMWARE_UPDATE
+#endif // EFI_WIDEBAND_FIRMWARE_UPDATE && HAL_USE_CAN

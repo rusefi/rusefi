@@ -83,9 +83,9 @@ static void comp_cam_callback(COMPDriver *comp) {
 	efitick_t stamp = getTimeNowNt();
 
 	if (isRising) {
-		hwHandleVvtCamSignal(TV_RISE, stamp);
+		hwHandleVvtCamSignal(TV_RISE, stamp, index);
 	} else {
-		hwHandleVvtCamSignal(TV_FALL, stamp);
+		hwHandleVvtCamSignal(TV_FALL, stamp, index);
 	}
 }
 #endif

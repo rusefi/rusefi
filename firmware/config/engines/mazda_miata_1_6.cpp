@@ -426,10 +426,7 @@ void setMiataNA6_MAP_MRE(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	engineConfiguration->idleTimingPidDeadZone = 10;
 
 	// EFI_ADC_3: "22 - AN temp 4"
-	engineConfiguration->acSwitch = GPIOA_6;
-
-	engineConfiguration->warningLedPin = GPIOD_13;
-	engineConfiguration->triggerErrorPin = GPIOE_1;
+	engineConfiguration->acSwitch = GPIOA_3;
 
 	// todo: ask Stefan to clarify this
 	engineConfiguration->tps1_1AdcChannel = EFI_ADC_6; // "26 - AN volt 2"

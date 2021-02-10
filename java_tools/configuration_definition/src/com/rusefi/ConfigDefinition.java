@@ -4,6 +4,8 @@ import com.rusefi.output.*;
 import com.rusefi.util.IoUtils;
 import com.rusefi.util.LazyFile;
 import com.rusefi.util.SystemOut;
+import com.rusefi.enum_reader.Value;
+import org.yaml.snakeyaml.Yaml;
 
 import java.io.*;
 import java.math.BigInteger;
@@ -48,6 +50,7 @@ public class ConfigDefinition {
     public static final String KEY_CACHE_ZIP_FILE = "-cache_zip_file";
     private static final String KEY_SKIP = "-skip";
     private static final String KEY_ZERO_INIT = "-initialize_to_zero";
+    private static final String KEY_BOARD_NAME = "-board";
     public static boolean needZeroInit = true;
     public static String definitionInputFile = null;
 
@@ -98,6 +101,7 @@ public class ConfigDefinition {
         String signatureDestination = null;
         String signaturePrependFile = null;
         CHeaderConsumer.withC_Defines = true;
+        File[] yamlFiles = null;
 
         // used to update other files
         List<String> inputFiles = new ArrayList<>();
@@ -188,6 +192,13 @@ public class ConfigDefinition {
                     romRaiderInputFile = inputFilePath + File.separator + ROM_RAIDER_XML_TEMPLATE;
                     inputFiles.add(romRaiderInputFile);
                     break;
+                case KEY_BOARD_NAME:
+                    String boardName = args[i + 1];
+                    String dirPath = "./config/boards/" + boardName + "/connectors";
+                    File dirName = new File(dirPath);
+                    FilenameFilter filter = (f, name) -> name.endsWith(".yaml");
+                    yamlFiles = dirName.listFiles(filter);
+                    break;
             }
         }
 
@@ -241,6 +252,10 @@ public class ConfigDefinition {
 
         for (String prependFile : prependFiles)
             readPrependValues(VariableRegistry.INSTANCE, prependFile);
+
+        if (yamlFiles != null) {
+           processYamls(VariableRegistry.INSTANCE, yamlFiles, state);
+        }
 
         BufferedReader definitionReader = new BufferedReader(new InputStreamReader(new FileInputStream(definitionInputFile), IoUtils.CHARSET.name()));
 
@@ -321,6 +336,101 @@ public class ConfigDefinition {
                 continue;
             if (startsWithToken(line, ReaderState.DEFINE)) {
                 processDefine(registry, line.substring(ReaderState.DEFINE.length()).trim());
+            }
+        }
+    }
+
+    public static void processYamls(VariableRegistry registry, File[] yamlFiles, ReaderState state) throws IOException {
+        Map<Integer, String> listOutputs = new HashMap<>();
+        Map<Integer, String> listAnalogInputs = new HashMap<>();
+        Map<Integer, String> listEventInputs = new HashMap<>();
+        Map<Integer, String> listSwitchInputs = new HashMap<>();
+        for (File yamlFile : yamlFiles) {
+            processYamlFile(yamlFile, state, listOutputs, listAnalogInputs, listEventInputs, listSwitchInputs);
+        }
+        registerPins(listOutputs, "output_pin_e_enum", registry);
+        registerPins(listAnalogInputs, "adc_channel_e_enum", registry);
+        registerPins(listEventInputs, "brain_input_pin_e_enum", registry);
+        registerPins(listSwitchInputs, "switch_input_pin_e_enum", registry);
+    }
+
+    @SuppressWarnings("unchecked")
+    private static void processYamlFile(File yamlFile, ReaderState state,
+                                        Map<Integer, String> listOutputs,
+                                        Map<Integer, String> listAnalogInputs,
+                                        Map<Integer, String> listEventInputs,
+                                        Map<Integer, String> listSwitchInputs) throws IOException {
+        Yaml yaml = new Yaml();
+        Map<String, Object> yamlData = yaml.load(new FileReader(yamlFile));
+        List<Map<String, Object>> data = (List<Map<String, Object>>) yamlData.get("pins");
+        if (data == null) {
+            SystemOut.println("Null yaml for " + yamlFile);
+            return;
+        }
+        SystemOut.println(data);
+        Objects.requireNonNull(data, "data");
+        for (Map<String, Object> pin : data) {
+            if (pin.get("id") instanceof ArrayList) {
+                for (int i = 0; i < ((ArrayList) pin.get("id")).size(); i++) {
+                    findMatchingEnum((String) ((ArrayList) pin.get("id")).get(i),
+                            (String) pin.get("ts_name"),
+                            (String) ((ArrayList) pin.get("class")).get(i),
+                            state, listOutputs, listAnalogInputs, listEventInputs, listSwitchInputs);
+                }
+            } else if (pin.get("id") instanceof String ) {
+                findMatchingEnum((String) pin.get("id"), (String) pin.get("ts_name"), (String) pin.get("class"), state, listOutputs, listAnalogInputs, listEventInputs, listSwitchInputs);
+            }
+        }
+    }
+
+    private static void registerPins(Map<Integer, String> listPins, String outputEnumName, VariableRegistry registry) {
+        if (listPins == null || listPins.isEmpty()) {
+            return;
+        }
+        StringBuilder sb = new StringBuilder();
+        int maxValue = listPins.keySet().stream().max(Integer::compare).get();
+        for (int i = 0; i <= maxValue; i++) {
+            if (sb.length() > 0)
+                sb.append(",");
+
+            if (listPins.get(i) == null) {
+                sb.append("\"INVALID\"");
+            } else {
+                sb.append("\"" + listPins.get(i) + "\"");
+            }
+        }
+        registry.register(outputEnumName, sb.toString());
+    }
+
+    private static void findMatchingEnum(String id, String ts_name, String className, ReaderState state,
+                                      Map<Integer, String> listOutputs,
+                                      Map<Integer, String> listAnalogInputs,
+                                      Map<Integer, String> listEventInputs,
+                                      Map<Integer, String> listSwitchInputs) {
+
+        switch (className) {
+            case "outputs":
+                assignPinName("brain_pin_e", ts_name, id, listOutputs, state, "GPIO_UNASSIGNED");
+                break;
+            case "analog_inputs":
+                assignPinName("adc_channel_e", ts_name, id, listAnalogInputs, state, "EFI_ADC_NONE");
+                break;
+            case "event_inputs":
+                assignPinName("brain_pin_e", ts_name, id, listEventInputs, state, "GPIO_UNASSIGNED");
+                break;
+            case "switch_inputs":
+                assignPinName("brain_pin_e", ts_name, id, listSwitchInputs, state, "GPIO_UNASSIGNED");
+                break;
+        }
+    }
+
+    private static void assignPinName(String enumName, String ts_name, String id, Map<Integer, String> list, ReaderState state, String nothingName) {
+        Map<String, Value> enumList = state.enumsReader.getEnums().get(enumName);
+        for(Map.Entry<String, Value> kv : enumList.entrySet()){
+            if(kv.getKey().equals(id)){
+                list.put(kv.getValue().getIntValue(), ts_name);
+            } else if (kv.getKey().equals(nothingName)) {
+                list.put(kv.getValue().getIntValue(), "NONE");
             }
         }
     }

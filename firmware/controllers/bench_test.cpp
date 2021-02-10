@@ -56,8 +56,6 @@
 #include "gpio/tle8888.h"
 #endif
 
-
-
 EXTERN_ENGINE;
 
 static Logging * logger;
@@ -259,7 +257,7 @@ private:
 		}
 
 		if (widebandUpdatePending) {
-#if EFI_WIDEBAND_FIRMWARE_UPDATE
+#if EFI_WIDEBAND_FIRMWARE_UPDATE && HAL_USE_CAN
 			updateWidebandFirmware(logger);
 #endif
 			widebandUpdatePending = false;

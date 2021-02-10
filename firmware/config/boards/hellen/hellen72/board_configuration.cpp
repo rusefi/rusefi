@@ -103,12 +103,12 @@ static void setupDefaultSensorInputs() {
 	engineConfiguration->mafAdcChannel = EFI_ADC_10;
 	engineConfiguration->map.sensor.hwChannel = EFI_ADC_11;
 
-	engineConfiguration->afr.hwChannel = EFI_ADC_12;
+	engineConfiguration->afr.hwChannel = EFI_ADC_1;
 
-	engineConfiguration->clt.adcChannel = EFI_ADC_0;
+	engineConfiguration->clt.adcChannel = EFI_ADC_12;
 	engineConfiguration->clt.config.bias_resistor = 4700;
 
-	engineConfiguration->iat.adcChannel = EFI_ADC_1;
+	engineConfiguration->iat.adcChannel = EFI_ADC_13;
 	engineConfiguration->iat.config.bias_resistor = 4700;
 
 	engineConfiguration->auxTempSensor1.adcChannel = EFI_ADC_NONE;
@@ -140,6 +140,8 @@ void setBoardConfigurationOverrides(void) {
 	setLedPins();
 	setupVbatt();
 	setSdCardConfigurationOverrides();
+
+	CONFIG(enableSoftwareKnock) = true;
 
 	engineConfiguration->canTxPin = GPIOD_1;
 	engineConfiguration->canRxPin = GPIOD_0;

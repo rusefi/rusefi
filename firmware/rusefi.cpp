@@ -183,11 +183,15 @@ void runRusEfi(void) {
 	initPinRepository();
 
 #if EFI_INTERNAL_FLASH
+ #if IGNORE_FLASH_CONFIGURATION
+	resetConfigurationExt(&sharedLogger, DEFAULT_ENGINE_TYPE PASS_ENGINE_PARAMETER_SUFFIX);
+ #else
 	/**
 	 * First thing is reading configuration from flash memory.
 	 * In order to have complete flexibility configuration has to go before anything else.
 	 */
 	readConfiguration(&sharedLogger);
+ #endif // IGNORE_FLASH_CONFIGURATION
 #endif /* EFI_INTERNAL_FLASH */
 
 #if HW_CHECK_ALWAYS_STIMULATE

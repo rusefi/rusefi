@@ -50,8 +50,8 @@ typedef struct {
 	 * water 4 bytes per traffic - I want gauges to work as fast as possible
 	 */
 	unsigned int hasSdCard : 1; // bit 0, 72
-	unsigned int isIgnitionEnabled : 1; // bit 1
-	unsigned int isInjectionEnabled : 1; // bit 2
+	unsigned int isIgnitionEnabledIndicator : 1; // bit 1
+	unsigned int isInjectionEnabledIndicator : 1; // bit 2
 	unsigned int isCylinderCleanupEnabled : 1; // bit 3
 	unsigned int isCylinderCleanupActivated : 1; // bit 4
 	unsigned int isFuelPumpOn : 1; // bit 5
@@ -267,7 +267,10 @@ typedef struct {
 	scaled_afr airFuelRatio2; // 288
 
 	//288
-	uint8_t unusedAtTheEnd[48]; // we have some unused bytes to allow compatible TS changes
+	scaled_angle secondVvtPositionBank1; // 290
+	scaled_angle vvtPositionBank2; // 292
+	scaled_angle secondVvtPositionBank2; // 294
+	uint8_t unusedAtTheEnd[42]; // we have some unused bytes to allow compatible TS changes
 
 	// Temporary - will remove soon
 	TsDebugChannels* getDebugChannels() {

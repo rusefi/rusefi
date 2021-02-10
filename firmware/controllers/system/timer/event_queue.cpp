@@ -23,8 +23,6 @@ extern int timeNowUs;
 extern bool verboseMode;
 #endif /* EFI_UNIT_TEST */
 
-uint32_t maxSchedulingPrecisionLoss = 0;
-
 
 /**
  * @return true if inserted into the head of the list

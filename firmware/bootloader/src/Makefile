@@ -7,7 +7,7 @@
 # for 'release' options see 'clean_compile_two_versions.bat' file
 
 ifeq ($(DEBUG_LEVEL_OPT),)
-  # this value would be used by default. For 'debug' configuration override with '-O0 -ggdb -g3' or something along these lines
+  # this value would be used by default. For 'debug' configuration override with '-O0 -ggdb -g' or something along these lines
   DEBUG_LEVEL_OPT = -O2
   DDEFS += -DEFI_ENABLE_ASSERTS=FALSE -DCH_DBG_ENABLE_ASSERTS=FALSE -DCH_DBG_ENABLE_STACK_CHECK=FALSE -DCH_DBG_FILL_THREADS=FALSE -DCH_DBG_THREADS_PROFILING=FALSE
 endif
@@ -155,11 +155,6 @@ include $(PROJECT_DIR)/util/util.mk
 include $(PROJECT_DIR)/controllers/controllers.mk
 include $(PROJECT_DIR)/hw_layer/$(CPU_HWLAYER)/hw_ports.mk
 include $(PROJECT_DIR)/hw_layer/drivers/drivers.mk
-
-# Define linker script file here
-ifeq ($(LDSCRIPT),)
-  LDSCRIPT= $(CONFIG)/stm32f4ems/STM32F407xG.ld
-endif
 
 # C sources that can be compiled in ARM or THUMB mode depending on the global
 # setting.
