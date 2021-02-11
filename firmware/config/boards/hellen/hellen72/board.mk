@@ -4,16 +4,6 @@
 BOARDCPPSRC = $(BOARDS_DIR)/hellen/hellen72/board_configuration.cpp
 BOARDINC = $(BOARDS_DIR)/hellen/hellen72
 
-# Target processor details
-ifeq ($(PROJECT_CPU),ARCH_STM32F4)
-  BOARDINC += $(PROJECT_DIR)/config/stm32f4ems	# For board.h
-else
-  # todo: add support for STM32H7
-  CONFDIR   = config/stm32h7ems
-  BOARDINC += $(PROJECT_DIR)/config/boards/nucleo_h743 # For board.h
-  BOARDINC += $(PROJECT_DIR)/config/stm32h7ems	# efifeatures/halconf/chconf.h
-endif
-
 # Set this if you want a default engine type other than normal Hellen72
 ifeq ($(DEFAULT_ENGINE_TYPE),)
   DEFAULT_ENGINE_TYPE = -DDEFAULT_ENGINE_TYPE=HELLEN_NB2

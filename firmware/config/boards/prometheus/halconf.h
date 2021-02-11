@@ -9,7 +9,7 @@
  
 #include "efifeatures.h"
 #include "mcuconf.h"
-#include "../../stm32f4ems/halconf.h"
+#include "../../../hw_layer/ports/stm32/stm32f4/cfg/halconf.h"
 
 #ifndef _HALCONF_PROMETHEUS_H_
 #define _HALCONF_PROMETHEUS_H_
