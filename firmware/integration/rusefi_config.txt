@@ -149,7 +149,6 @@ struct_no_prefix engine_configuration_s
 #define TRIGGER_INPUT_PIN_COUNT 3
 #define LOGIC_ANALYZER_CHANNEL_COUNT 4
 #define FSIO_COMMAND_COUNT 16
-#define AUX_PID_COUNT 4
 
 #define VEHICLE_INFO_SIZE 32
 
@@ -502,14 +501,14 @@ end_struct
 injector_s injector
 
 bit isForcedInduction;
-bit activateAuxPid1;
+bit unused_294_1;
 bit isVerboseAuxPid1;
-bit activateAuxPid2;
-bit isVerboseAuxPid2;
-bit activateAuxPid3;
-bit isVerboseAuxPid3;
-bit activateAuxPid4;
-bit isVerboseAuxPid4;
+bit unused_294_3;
+bit unused_294_4;
+bit unused_294_5;
+bit unused_294_6;
+bit unused_294_7;
+bit unused_294_8;
 bit isCJ125Verbose;enable cj125verbose/disable cj125verbose
 bit cj125isUaDivided;+Is your UA CJ125 output wired to MCU via resistor divider? Ua can go over 3.3v but only at lambda >3, i.e very lean AFR above 44.1\nWhen exposed to free air and 17x gain, Ua will be 4.17 volt
 bit cj125isLsu49;
@@ -1284,7 +1283,7 @@ float[MAP_ACCEL_TAPER] mapAccelTaperMult;;"mult",      1,     0,   0.0,    300, 
 	float mapHighValueVoltage;MAP voltage for low point;"v",      1,     0,   0.0,    10,   2 
 	float egoValueShift;EGO value correction;"value",      1,     0,   -10.0,    10,   2 
 
-	output_pin_e[AUX_PID_COUNT iterate] auxPidPins;
+	output_pin_e[CAM_INPUTS_COUNT iterate] auxPidPins;
 
 	spi_device_e cj125SpiDevice;
 	pin_output_mode_e cj125CsPinMode;
@@ -1296,7 +1295,8 @@ float[MAP_ACCEL_TAPER] mapAccelTaperMult;;"mult",      1,     0,   0.0,    300, 
 	float tChargeMaxRpmMinTps;;"mult",        1,     0,  0,    3,  4
 	float tChargeMaxRpmMaxTps;;"mult",        1,     0,  0,    3,  4   
 
-	fsio_pwm_freq_t[AUX_PID_COUNT iterate] auxPidFrequency;
+	fsio_pwm_freq_t[CAMS_PER_BANK iterate] auxPidFrequency;
+	uint8_t unused1301;;"units", 1, 0, -20, 100, 0
 	int alternatorPwmFrequency;;"Hz",        1,     0,  0,    3000.0,  0
 	int unused2260;;"units", 1, 0, -20, 100, 0
 
@@ -1360,7 +1360,8 @@ tle8888_mode_e tle8888mode;
 	pin_input_mode_e brakePedalPinMode;
 
 
-	pid_s[AUX_PID_COUNT iterate] auxPid;
+	pid_s[CAMS_PER_BANK iterate] auxPid;
+	uint8_t[40] unused1366;;"units", 1, 0, -20, 100, 0
 
 	linear_sensor_s oilPressure;
 

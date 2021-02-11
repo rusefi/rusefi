@@ -276,8 +276,6 @@ void setMazdaNB2VVTSettings(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	engineConfiguration->auxPid[0].offset = 33;
 	engineConfiguration->auxPid[0].minValue = 24;
 	engineConfiguration->auxPid[0].maxValue = 44;
-
-	engineConfiguration->activateAuxPid1 = true; // todo: remove this field?
 }
 
 static void setMazdaMiataEngineNB2Defaults(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
