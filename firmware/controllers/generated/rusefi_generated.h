@@ -15,10 +15,6 @@
 #define acRelayPinMode_offset 831
 #define acSwitch_offset 1469
 #define acSwitchMode_offset 4516
-#define activateAuxPid1_offset 76
-#define activateAuxPid2_offset 76
-#define activateAuxPid3_offset 76
-#define activateAuxPid4_offset 76
 #define adc_channel_e_enum "Disabled", "PA0", "PA1", "PA2", "PA3", "PA4", "PA5", "PA6", "PA7", "PB0", "PB1", "PC0", "PC1", "PC2", "PC3", "PC4", "PC5"
 #define adc_channel_mode_e_auto_enum "ADC_OFF", "ADC_SLOW", "ADC_FAST"
 #define ADC_CHANNEL_NONE 0
@@ -971,9 +967,6 @@
 #define issue_294_31_offset 76
 #define isVerboseAlternator_offset 744
 #define isVerboseAuxPid1_offset 76
-#define isVerboseAuxPid2_offset 76
-#define isVerboseAuxPid3_offset 76
-#define isVerboseAuxPid4_offset 76
 #define isVerboseETB_offset 1464
 #define isVerboseIAC_offset 1464
 #define isWaveAnalyzerEnabled_offset 1476
@@ -1242,7 +1235,7 @@
 #define showSdCardWarning_offset 76
 #define SIGNATURE_BOARD all
 #define SIGNATURE_DATE 2021.02.11
-#define SIGNATURE_HASH 259117823
+#define SIGNATURE_HASH 844639373
 #define silentTriggerError_offset 1464
 #define slowAdcAlpha_offset 2088
 #define sparkDwellRpmBins_offset 332
@@ -1576,7 +1569,7 @@
 #define ts_show_spi true
 #define ts_show_trigger_comparator false
 #define ts_show_tunerstudio_port true
-#define TS_SIGNATURE "rusEFI 2021.02.11.all.259117823"
+#define TS_SIGNATURE "rusEFI 2021.02.11.all.844639373"
 #define TS_SINGLE_WRITE_COMMAND 'W'
 #define TS_SINGLE_WRITE_COMMAND_char W
 #define TS_TEST_COMMAND 't' // 0x74
@@ -1664,6 +1657,13 @@
 #define unused_1484_bit_29_offset 1476
 #define unused_1484_bit_30_offset 1476
 #define unused_1484_bit_31_offset 1476
+#define unused_294_1_offset 76
+#define unused_294_3_offset 76
+#define unused_294_4_offset 76
+#define unused_294_5_offset 76
+#define unused_294_6_offset 76
+#define unused_294_7_offset 76
+#define unused_294_8_offset 76
 #define unusedAtOldBoardConfigurationEnd_offset 1204
 #define unusedAuxVoltage1_TODO_332_offset 2713
 #define unusedAuxVoltage2_TODO_332_offset 2714

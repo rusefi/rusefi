@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Thu Feb 11 01:22:28 UTC 2021
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Thu Feb 11 02:48:56 UTC 2021
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -650,28 +650,28 @@ struct engine_configuration_s {
 	bool isForcedInduction : 1;
 	/**
 	offset 76 bit 1 */
-	bool activateAuxPid1 : 1;
+	bool unused_294_1 : 1;
 	/**
 	offset 76 bit 2 */
 	bool isVerboseAuxPid1 : 1;
 	/**
 	offset 76 bit 3 */
-	bool activateAuxPid2 : 1;
+	bool unused_294_3 : 1;
 	/**
 	offset 76 bit 4 */
-	bool isVerboseAuxPid2 : 1;
+	bool unused_294_4 : 1;
 	/**
 	offset 76 bit 5 */
-	bool activateAuxPid3 : 1;
+	bool unused_294_5 : 1;
 	/**
 	offset 76 bit 6 */
-	bool isVerboseAuxPid3 : 1;
+	bool unused_294_6 : 1;
 	/**
 	offset 76 bit 7 */
-	bool activateAuxPid4 : 1;
+	bool unused_294_7 : 1;
 	/**
 	offset 76 bit 8 */
-	bool isVerboseAuxPid4 : 1;
+	bool unused_294_8 : 1;
 	/**
 	 * enable cj125verbose/disable cj125verbose
 	offset 76 bit 9 */
@@ -3854,4 +3854,4 @@ struct persistent_config_s {
 typedef struct persistent_config_s persistent_config_s;
 
 // end
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Thu Feb 11 01:22:28 UTC 2021
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Thu Feb 11 02:48:56 UTC 2021

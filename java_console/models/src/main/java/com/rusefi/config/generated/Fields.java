@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEfi tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Thu Feb 11 01:22:28 UTC 2021
+// this file was generated automatically by rusEfi tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Thu Feb 11 02:48:56 UTC 2021
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -19,10 +19,6 @@ public class Fields {
 	public static final int acRelayPinMode_offset = 831;
 	public static final int acSwitch_offset = 1469;
 	public static final int acSwitchMode_offset = 4516;
-	public static final int activateAuxPid1_offset = 76;
-	public static final int activateAuxPid2_offset = 76;
-	public static final int activateAuxPid3_offset = 76;
-	public static final int activateAuxPid4_offset = 76;
 	public static final int ADC_CHANNEL_NONE = 0;
 	public static final int adcVcc_offset = 548;
 	public static final int afr_alignmentFill_afr_offset = 561;
@@ -945,9 +941,6 @@ public class Fields {
 	public static final int issue_294_31_offset = 76;
 	public static final int isVerboseAlternator_offset = 744;
 	public static final int isVerboseAuxPid1_offset = 76;
-	public static final int isVerboseAuxPid2_offset = 76;
-	public static final int isVerboseAuxPid3_offset = 76;
-	public static final int isVerboseAuxPid4_offset = 76;
 	public static final int isVerboseETB_offset = 1464;
 	public static final int isVerboseIAC_offset = 1464;
 	public static final int isWaveAnalyzerEnabled_offset = 1476;
@@ -1196,7 +1189,7 @@ public class Fields {
 	public static final int servoOutputPins8_offset = 3147;
 	public static final int showHumanReadableWarning_offset = 976;
 	public static final int showSdCardWarning_offset = 76;
-	public static final int SIGNATURE_HASH = 259117823;
+	public static final int SIGNATURE_HASH = 844639373;
 	public static final int silentTriggerError_offset = 1464;
 	public static final int slowAdcAlpha_offset = 2088;
 	public static final int sparkDwellRpmBins_offset = 332;
@@ -1480,7 +1473,7 @@ public class Fields {
 	public static final char TS_SD_R_COMMAND = 'r';
 	public static final char TS_SD_W_COMMAND = 'w';
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI 2021.02.11.all.259117823";
+	public static final String TS_SIGNATURE = "rusEFI 2021.02.11.all.844639373";
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final int TT_TT_1_16 = 50;
 	public static final int TT_TT_2JZ_1_12 = 29;
@@ -1565,6 +1558,13 @@ public class Fields {
 	public static final int unused_1484_bit_29_offset = 1476;
 	public static final int unused_1484_bit_30_offset = 1476;
 	public static final int unused_1484_bit_31_offset = 1476;
+	public static final int unused_294_1_offset = 76;
+	public static final int unused_294_3_offset = 76;
+	public static final int unused_294_4_offset = 76;
+	public static final int unused_294_5_offset = 76;
+	public static final int unused_294_6_offset = 76;
+	public static final int unused_294_7_offset = 76;
+	public static final int unused_294_8_offset = 76;
 	public static final int unusedAtOldBoardConfigurationEnd_offset = 1204;
 	public static final int unusedAuxVoltage1_TODO_332_offset = 2713;
 	public static final int unusedAuxVoltage2_TODO_332_offset = 2714;
@@ -1682,14 +1682,14 @@ public class Fields {
 	public static final Field ENGINESNIFFERRPMTHRESHOLD = Field.create("ENGINESNIFFERRPMTHRESHOLD", 4, FieldType.INT);
 	public static final Field INJECTOR_FLOW = Field.create("INJECTOR_FLOW", 8, FieldType.FLOAT);
 	public static final Field ISFORCEDINDUCTION = Field.create("ISFORCEDINDUCTION", 76, FieldType.BIT, 0);
-	public static final Field ACTIVATEAUXPID1 = Field.create("ACTIVATEAUXPID1", 76, FieldType.BIT, 1);
+	public static final Field UNUSED_294_1 = Field.create("UNUSED_294_1", 76, FieldType.BIT, 1);
 	public static final Field ISVERBOSEAUXPID1 = Field.create("ISVERBOSEAUXPID1", 76, FieldType.BIT, 2);
-	public static final Field ACTIVATEAUXPID2 = Field.create("ACTIVATEAUXPID2", 76, FieldType.BIT, 3);
-	public static final Field ISVERBOSEAUXPID2 = Field.create("ISVERBOSEAUXPID2", 76, FieldType.BIT, 4);
-	public static final Field ACTIVATEAUXPID3 = Field.create("ACTIVATEAUXPID3", 76, FieldType.BIT, 5);
-	public static final Field ISVERBOSEAUXPID3 = Field.create("ISVERBOSEAUXPID3", 76, FieldType.BIT, 6);
-	public static final Field ACTIVATEAUXPID4 = Field.create("ACTIVATEAUXPID4", 76, FieldType.BIT, 7);
-	public static final Field ISVERBOSEAUXPID4 = Field.create("ISVERBOSEAUXPID4", 76, FieldType.BIT, 8);
+	public static final Field UNUSED_294_3 = Field.create("UNUSED_294_3", 76, FieldType.BIT, 3);
+	public static final Field UNUSED_294_4 = Field.create("UNUSED_294_4", 76, FieldType.BIT, 4);
+	public static final Field UNUSED_294_5 = Field.create("UNUSED_294_5", 76, FieldType.BIT, 5);
+	public static final Field UNUSED_294_6 = Field.create("UNUSED_294_6", 76, FieldType.BIT, 6);
+	public static final Field UNUSED_294_7 = Field.create("UNUSED_294_7", 76, FieldType.BIT, 7);
+	public static final Field UNUSED_294_8 = Field.create("UNUSED_294_8", 76, FieldType.BIT, 8);
 	public static final Field ISCJ125VERBOSE = Field.create("ISCJ125VERBOSE", 76, FieldType.BIT, 9);
 	public static final Field CJ125ISUADIVIDED = Field.create("CJ125ISUADIVIDED", 76, FieldType.BIT, 10);
 	public static final Field CJ125ISLSU49 = Field.create("CJ125ISLSU49", 76, FieldType.BIT, 11);
@@ -2769,14 +2769,14 @@ public class Fields {
 	ENGINESNIFFERRPMTHRESHOLD,
 	INJECTOR_FLOW,
 	ISFORCEDINDUCTION,
-	ACTIVATEAUXPID1,
+	UNUSED_294_1,
 	ISVERBOSEAUXPID1,
-	ACTIVATEAUXPID2,
-	ISVERBOSEAUXPID2,
-	ACTIVATEAUXPID3,
-	ISVERBOSEAUXPID3,
-	ACTIVATEAUXPID4,
-	ISVERBOSEAUXPID4,
+	UNUSED_294_3,
+	UNUSED_294_4,
+	UNUSED_294_5,
+	UNUSED_294_6,
+	UNUSED_294_7,
+	UNUSED_294_8,
 	ISCJ125VERBOSE,
 	CJ125ISUADIVIDED,
 	CJ125ISLSU49,
