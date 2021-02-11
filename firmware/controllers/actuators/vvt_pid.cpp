@@ -111,7 +111,7 @@ private:
 	ValueProvider3D *table = nullptr;
 };
 
-static AuxPidController instances[AUX_PID_COUNT];
+static AuxPidController instances[CAM_INPUTS_COUNT];
 
 static void turnAuxPidOn(int index) {
 	if (!isEnabled(index)) {
@@ -130,13 +130,13 @@ static void turnAuxPidOn(int index) {
 }
 
 void startAuxPins() {
-	for (int i = 0;i <AUX_PID_COUNT;i++) {
+	for (int i = 0;i <CAM_INPUTS_COUNT;i++) {
 		turnAuxPidOn(i);
 	}
 }
 
 void stopAuxPins() {
-	for (int i = 0;i < AUX_PID_COUNT;i++) {
+	for (int i = 0;i < CAM_INPUTS_COUNT;i++) {
 		instances[i].auxOutputPin.deInit();
 	}
 }
@@ -151,12 +151,12 @@ void initAuxPid(Logging *sharedLogger) {
 
 	logger = sharedLogger;
 
-	for (int i = 0;i < AUX_PID_COUNT;i++) {
+	for (int i = 0;i < CAM_INPUTS_COUNT;i++) {
 		instances[i].init(i);
 	}
 
 	startAuxPins();
-	for (int i = 0;i < AUX_PID_COUNT;i++) {
+	for (int i = 0;i < CAM_INPUTS_COUNT;i++) {
 		instances[i].Start();
 	}
 }
