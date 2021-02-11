@@ -274,78 +274,79 @@ static const USBDescriptor *get_descriptor(USBDriver *usbp,
   return NULL;
 }
 
-/**
- * @brief   IN EP1 state.
- */
-static USBInEndpointState ep1instate;
+#if HAL_USE_USB_MSD
+	/**
+	 * @brief   IN MSD state
+	 */
+	static USBInEndpointState msdInstate;
+
+	/**
+	 * @brief   OUT MSD state
+	 */
+	static USBOutEndpointState msdOutstate;
+
+	/**
+	 * @brief   MSD initialization structure (both IN and OUT).
+	 */
+	static const USBEndpointConfig msdEpConfig = {
+	USB_EP_MODE_TYPE_BULK,
+	NULL,
+	NULL,
+	NULL,
+	USB_MSD_EP_SIZE,
+	USB_MSD_EP_SIZE,
+	&msdInstate,
+	&msdOutstate,
+	4,
+	NULL
+	};
+#endif //HAL_USE_MSD
 
 /**
- * @brief   OUT EP1 state.
+ * @brief   IN CDC data state.
  */
-static USBOutEndpointState ep1outstate;
+
+static USBInEndpointState cdcDataInstate;
 
 /**
- * @brief   EP1 initialization structure (both IN and OUT).
+ * @brief   OUT CDC data state.
  */
-static const USBEndpointConfig ep1config = {
-  USB_EP_MODE_TYPE_BULK,
-  NULL,
-  NULL,
-  NULL,
-  USB_MSD_EP_SIZE,
-  USB_MSD_EP_SIZE,
-  &ep1instate,
-  &ep1outstate,
-  4,
-  NULL
-};
 
+static USBOutEndpointState cdcDataOutstate;
 
 /**
- * @brief   IN EP2 state.
+ * @brief   CDC data initialization structure (both IN and OUT).
  */
 
-static USBInEndpointState ep2instate;
-
-/**
- * @brief   OUT EP2 state.
- */
-
-static USBOutEndpointState ep2outstate;
-
-/**
- * @brief   EP2 initialization structure (both IN and OUT).
- */
-
-static const USBEndpointConfig ep2config = {
+static const USBEndpointConfig cdcDataEpConfig = {
   USB_EP_MODE_TYPE_BULK,
   NULL,
   sduDataTransmitted,
   sduDataReceived,
   0x0040,
   0x0040,
-  &ep2instate,
-  &ep2outstate,
+  &cdcDataInstate,
+  &cdcDataOutstate,
   4,
   NULL
 };
 
 /**
- * @brief   IN EP3 state.
+ * @brief   IN CDC interrupt state.
  */
-static USBInEndpointState ep3instate;
+static USBInEndpointState cdcInterruptInstate;
 
 /**
- * @brief   EP3 initialization structure (IN only).
+ * @brief   CDC interrupt initialization structure (IN only).
  */
-static const USBEndpointConfig ep3config = {
+static const USBEndpointConfig cdcInterruptEpConfig = {
   USB_EP_MODE_TYPE_INTR,
   NULL,
   sduInterruptTransmitted,
   NULL,
   0x0010,
   0x0000,
-  &ep3instate,
+  &cdcInterruptInstate,
   NULL,
   1,
   NULL
@@ -364,9 +365,12 @@ static void usb_event(USBDriver *usbp, usbevent_t event) {
     /* Enables the endpoints specified into the configuration.
        Note, this callback is invoked from an ISR so I-Class functions
        must be used.*/
-    usbInitEndpointI(usbp, USB_MSD_DATA_EP, &ep1config);
-    usbInitEndpointI(usbp, USBD1_DATA_REQUEST_EP, &ep2config);
-    usbInitEndpointI(usbp, USBD1_INTERRUPT_REQUEST_EP, &ep3config);
+#if HAL_USE_USB_MSD
+    usbInitEndpointI(usbp, USB_MSD_DATA_EP, &msdEpConfig);
+#endif
+
+    usbInitEndpointI(usbp, USBD1_DATA_REQUEST_EP, &cdcDataEpConfig);
+    usbInitEndpointI(usbp, USBD1_INTERRUPT_REQUEST_EP, &cdcInterruptEpConfig);
 
     /* Resetting the state of the CDC subsystem.*/
     sduConfigureHookI(&SDU1);
