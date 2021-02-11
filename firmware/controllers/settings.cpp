@@ -863,12 +863,6 @@ static void enableOrDisable(const char *param, bool isEnabled) {
 		engineConfiguration->isVerboseIAC = isEnabled;
 	} else if (strEqualCaseInsensitive(param, "auxdebug1")) {
 		engineConfiguration->isVerboseAuxPid1 = isEnabled;
-	} else if (strEqualCaseInsensitive(param, "auxdebug2")) {
-		engineConfiguration->isVerboseAuxPid2 = isEnabled;
-	} else if (strEqualCaseInsensitive(param, "auxdebug3")) {
-		engineConfiguration->isVerboseAuxPid3 = isEnabled;
-	} else if (strEqualCaseInsensitive(param, "auxdebug4")) {
-		engineConfiguration->isVerboseAuxPid4 = isEnabled;
 	} else if (strEqualCaseInsensitive(param, "altdebug")) {
 		engineConfiguration->isVerboseAlternator = isEnabled;
 	} else if (strEqualCaseInsensitive(param, "tpic_advanced_mode")) {
