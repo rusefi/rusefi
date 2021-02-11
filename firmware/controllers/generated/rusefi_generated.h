@@ -47,6 +47,7 @@
 #define air_pressure_sensor_type_e_auto_enum "MT_CUSTOM", "MT_DENSO183", "MT_MPX4250", "MT_HONDA3BAR", "MT_DODGE_NEON_2003", "MT_SUBY_DENSO", "MT_GM_3_BAR", "MT_MPX4100", "MT_TOYOTA_89420_02010", "MT_MPX4250A", "MT_BOSCH_2_5", "MT_MAZDA_1_BAR", "MT_GM_2_BAR", "MT_GM_1_BAR"
 #define alignEngineSnifferAtTDC_offset 744
 #define alignmentFill_at_2227_offset 2227
+#define alignmentFill_at_2253_offset 2253
 #define alignmentFill_at_4539_offset 4539
 #define alternator_antiwindupFreq_offset 1764
 #define alternator_derivativeFilterLoss_offset 1760
@@ -71,7 +72,6 @@
 #define antiLagEnabled_offset 76
 #define antiLagRpmTreshold_offset 824
 #define AUX_DIGITAL_VALVE_COUNT 2
-#define AUX_PID_COUNT 4
 #define auxFastSensor1_adcChannel_offset 680
 #define auxPid1_dFactor_offset 2620
 #define auxPid1_iFactor_offset 2616
@@ -89,26 +89,8 @@
 #define auxPid2_offset_offset 2644
 #define auxPid2_periodMs_offset 2646
 #define auxPid2_pFactor_offset 2632
-#define auxPid3_dFactor_offset 2660
-#define auxPid3_iFactor_offset 2656
-#define auxPid3_maxValue_offset 2670
-#define auxPid3_minValue_offset 2668
-#define auxPid3_offset 2652
-#define auxPid3_offset_offset 2664
-#define auxPid3_periodMs_offset 2666
-#define auxPid3_pFactor_offset 2652
-#define auxPid4_dFactor_offset 2680
-#define auxPid4_iFactor_offset 2676
-#define auxPid4_maxValue_offset 2690
-#define auxPid4_minValue_offset 2688
-#define auxPid4_offset 2672
-#define auxPid4_offset_offset 2684
-#define auxPid4_periodMs_offset 2686
-#define auxPid4_pFactor_offset 2672
 #define auxPidFrequency1_offset 2248
 #define auxPidFrequency2_offset 2250
-#define auxPidFrequency3_offset 2252
-#define auxPidFrequency4_offset 2254
 #define auxPidPins1_offset 2220
 #define auxPidPins2_offset 2221
 #define auxPidPins3_offset 2222
@@ -1259,8 +1241,8 @@
 #define showHumanReadableWarning_offset 976
 #define showSdCardWarning_offset 76
 #define SIGNATURE_BOARD all
-#define SIGNATURE_DATE 2021.02.09
-#define SIGNATURE_HASH 2882601961
+#define SIGNATURE_DATE 2021.02.11
+#define SIGNATURE_HASH 259117823
 #define silentTriggerError_offset 1464
 #define slowAdcAlpha_offset 2088
 #define sparkDwellRpmBins_offset 332
@@ -1594,7 +1576,7 @@
 #define ts_show_spi true
 #define ts_show_trigger_comparator false
 #define ts_show_tunerstudio_port true
-#define TS_SIGNATURE "rusEFI 2021.02.09.all.2882601961"
+#define TS_SIGNATURE "rusEFI 2021.02.11.all.259117823"
 #define TS_SINGLE_WRITE_COMMAND 'W'
 #define TS_SINGLE_WRITE_COMMAND_char W
 #define TS_TEST_COMMAND 't' // 0x74
@@ -1651,6 +1633,8 @@
 #define unused1128_offset 2116
 #define unused1129_offset 2116
 #define unused1130_offset 2116
+#define unused1301_offset 2252
+#define unused1366_offset 2652
 #define unused1476b19_offset 1476
 #define unused1476b20_offset 1476
 #define unused1476b3_offset 1476
