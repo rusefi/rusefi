@@ -27,7 +27,6 @@ SerialUSBDriver SDU1;
 /*
  * Endpoints to be used for USBD1.
  */
-#define USB_MSD_DATA_EP                 1
 #define USBD1_DATA_REQUEST_EP           2
 #define USBD1_DATA_AVAILABLE_EP         2
 #define USBD1_INTERRUPT_REQUEST_EP      3
@@ -296,7 +295,7 @@ static const USBEndpointConfig ep1config = {
   USB_MSD_EP_SIZE,
   &ep1instate,
   &ep1outstate,
-  1,
+  4,
   NULL
 };
 
@@ -326,7 +325,7 @@ static const USBEndpointConfig ep2config = {
   0x0040,
   &ep2instate,
   &ep2outstate,
-  2,
+  4,
   NULL
 };
 
