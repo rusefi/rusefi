@@ -325,22 +325,11 @@ static Logging *logger;
 void startConsole(Logging *sharedLogger, CommandHandler console_line_callback_p) {
 	logger = sharedLogger;
 	console_line_callback = console_line_callback_p;
-#if 0
-#if (defined(EFI_CONSOLE_USB_DEVICE) && ! EFI_SIMULATOR)
-	/**
-	 * This method contains a long delay, that's the reason why this is not done on the main thread
-	 * TODO: actually now with some refactoring this IS on the main thread :(
-	 */
-	usb_serial_start();
-	isSerialConsoleStarted = true;
-#endif /* EFI_CONSOLE_USB_DEVICE */
-#endif
 
 #if (defined(EFI_CONSOLE_SERIAL_DEVICE) || defined(EFI_CONSOLE_UART_DEVICE)) && ! EFI_SIMULATOR
-		efiSetPadMode("console RX", EFI_CONSOLE_RX_BRAIN_PIN, PAL_MODE_ALTERNATE(EFI_CONSOLE_AF));
-		efiSetPadMode("console TX", EFI_CONSOLE_TX_BRAIN_PIN, PAL_MODE_ALTERNATE(EFI_CONSOLE_AF));
+	efiSetPadMode("console RX", EFI_CONSOLE_RX_BRAIN_PIN, PAL_MODE_ALTERNATE(EFI_CONSOLE_AF));
+	efiSetPadMode("console TX", EFI_CONSOLE_TX_BRAIN_PIN, PAL_MODE_ALTERNATE(EFI_CONSOLE_AF));
 #endif
-
 
 #if PRIMARY_UART_DMA_MODE && ! EFI_SIMULATOR
 		primaryChannel.uartp = EFI_CONSOLE_UART_DEVICE;
@@ -365,6 +354,4 @@ void startConsole(Logging *sharedLogger, CommandHandler console_line_callback_p)
 #if !defined(EFI_CONSOLE_NO_THREAD)
 	chThdCreateStatic(consoleThreadStack, sizeof(consoleThreadStack), NORMALPRIO, (tfunc_t)consoleThreadEntryPoint, NULL);
 #endif /* EFI_CONSOLE_NO_THREAD */
-
 }
-
