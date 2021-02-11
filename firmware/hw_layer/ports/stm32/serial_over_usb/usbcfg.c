@@ -26,18 +26,18 @@ SerialUSBDriver SDU1;
 /*
  * Endpoints to be used for USBD1.
  */
-#define USBD1_DATA_REQUEST_EP           1
-#define USBD1_DATA_AVAILABLE_EP         1
-#define USBD1_INTERRUPT_REQUEST_EP      2
+#define USBD1_DATA_REQUEST_EP           2
+#define USBD1_DATA_AVAILABLE_EP         2
+#define USBD1_INTERRUPT_REQUEST_EP      3
 
 /*
  * USB Device Descriptor.
  */
 static const uint8_t vcom_device_descriptor_data[18] = {
   USB_DESC_DEVICE       (0x0110,        /* bcdUSB (1.1).                    */
-                         0x02,          /* bDeviceClass (CDC).              */
-                         0x00,          /* bDeviceSubClass.                 */
-                         0x00,          /* bDeviceProtocol.                 */
+                         0xEF,          /* bDeviceClass (misc).             */
+                         0x02,          /* bDeviceSubClass.                 */
+                         0x01,          /* bDeviceProtocol.                 */
                          0x40,          /* bMaxPacketSize.                  */
                          0x0483,        /* idVendor (ST).                   */
                          0x5740,        /* idProduct.                       */
@@ -57,14 +57,21 @@ static const USBDescriptor vcom_device_descriptor = {
 };
 
 /* Configuration Descriptor tree for a CDC.*/
-static const uint8_t vcom_configuration_descriptor_data[67] = {
+static const uint8_t vcom_configuration_descriptor_data[75] = {
   /* Configuration Descriptor.*/
-  USB_DESC_CONFIGURATION(67,            /* wTotalLength.                    */
+  USB_DESC_CONFIGURATION(75,            /* wTotalLength.                    */
                          0x02,          /* bNumInterfaces.                  */
                          0x01,          /* bConfigurationValue.             */
                          0,             /* iConfiguration.                  */
                          0xC0,          /* bmAttributes (self powered).     */
                          100),           /* bMaxPower (200mA).               */
+  /* IAD Descriptor - describes that Interfaces 0 and 1 belong to CDC */
+  USB_DESC_INTERFACE_ASSOCIATION(0x00, /* bFirstInterface.                  */
+                                 0x02, /* bInterfaceCount.                  */
+                                 0x02, /* bFunctionClass (CDC).             */
+                                 0x02, /* bFunctionSubClass.  (2)           */
+                                 0x01, /* bFunctionProtocol (1)             */
+                                 0),   /* iInterface.                       */
   /* Interface Descriptor.*/
   USB_DESC_INTERFACE    (0x00,          /* bInterfaceNumber.                */
                          0x00,          /* bAlternateSetting.               */
@@ -105,7 +112,7 @@ static const uint8_t vcom_configuration_descriptor_data[67] = {
                                            Class Interface).                */
   USB_DESC_BYTE         (0x01),         /* bSlaveInterface0 (Data Class
                                            Interface).                      */
-  /* Endpoint 2 Descriptor.*/
+  /* Endpoint 3 Descriptor.*/
   USB_DESC_ENDPOINT     (USBD1_INTERRUPT_REQUEST_EP|0x80,
                          0x03,          /* bmAttributes (Interrupt).        */
                          0x0008,        /* wMaxPacketSize.                  */
@@ -121,12 +128,12 @@ static const uint8_t vcom_configuration_descriptor_data[67] = {
                          0x00,          /* bInterfaceProtocol (CDC section
                                            4.7).                            */
                          0x00),         /* iInterface.                      */
-  /* Endpoint 3 Descriptor.*/
+  /* Endpoint 2 Descriptor.*/
   USB_DESC_ENDPOINT     (USBD1_DATA_AVAILABLE_EP,       /* bEndpointAddress.*/
                          0x02,          /* bmAttributes (Bulk).             */
                          0x0040,        /* wMaxPacketSize.                  */
                          0x00),         /* bInterval.                       */
-  /* Endpoint 1 Descriptor.*/
+  /* Endpoint 2 Descriptor.*/
   USB_DESC_ENDPOINT     (USBD1_DATA_REQUEST_EP|0x80,    /* bEndpointAddress.*/
                          0x02,          /* bmAttributes (Bulk).             */
                          0x0040,        /* wMaxPacketSize.                  */
@@ -266,7 +273,7 @@ static const USBEndpointConfig ep1config = {
   0x0040,
   &ep1instate,
   &ep1outstate,
-  2,
+  4,
   NULL
 };
 
