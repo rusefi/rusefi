@@ -36,20 +36,6 @@ static fsio8_Map3D_u8t vvtTable2("vvt#2");
 
 static Logging *logger;
 
-static bool isEnabled(int index) {
-	// todo: implement bit arrays for configuration
-	switch(index) {
-	case 0:
-		return engineConfiguration->activateAuxPid1;
-	case 1:
-		return engineConfiguration->activateAuxPid2;
-	case 2:
-		return engineConfiguration->activateAuxPid3;
-	default:
-		return engineConfiguration->activateAuxPid4;
-	}
-}
-
 class AuxPidController : public PeriodicTimerController {
 public:
 
@@ -114,10 +100,6 @@ private:
 static AuxPidController instances[CAM_INPUTS_COUNT];
 
 static void turnAuxPidOn(int index) {
-	if (!isEnabled(index)) {
-		return;
-	}
-
 	if (!isBrainPinValid(engineConfiguration->auxPidPins[index])) {
 		return;
 	}
@@ -126,7 +108,8 @@ static void turnAuxPidOn(int index) {
 			&engine->executor,
 			engineConfiguration->auxPidPins[index],
 			&instances[index].auxOutputPin,
-			engineConfiguration->auxPidFrequency[index], 0.1);
+			// todo: do we need two separate frequencies?
+			engineConfiguration->auxPidFrequency[0], 0.1);
 }
 
 void startAuxPins() {
