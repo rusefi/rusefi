@@ -423,51 +423,48 @@ static uint8_t zbuf = 0;
 
 // We need a custom hook to handle both MSD and CDC at the same time
 static bool hybridRequestHook(USBDriver *usbp) {
-  // handle MSD setup request -- we could change the interface here
-  #define USB_MSD_INTERFACE 0
+	// handle MSD setup request -- we could change the interface here
+	#define USB_MSD_INTERFACE 0
 
-  if (((usbp->setup[0] & USB_RTYPE_TYPE_MASK) == USB_RTYPE_TYPE_CLASS) &&
-      ((usbp->setup[0] & USB_RTYPE_RECIPIENT_MASK) == 
-       USB_RTYPE_RECIPIENT_INTERFACE)) {
+	if (((usbp->setup[0] & USB_RTYPE_TYPE_MASK) == USB_RTYPE_TYPE_CLASS) &&
+		((usbp->setup[0] & USB_RTYPE_RECIPIENT_MASK) == 
+		USB_RTYPE_RECIPIENT_INTERFACE)) {
+		if (MSD_SETUP_INDEX(usbp->setup) == USB_MSD_INTERFACE) {
+			switch(usbp->setup[1]) {
+			case MSD_REQ_RESET:
+				/* check that it is a HOST2DEV request */
+				if (((usbp->setup[0] & USB_RTYPE_DIR_MASK) != USB_RTYPE_DIR_HOST2DEV) ||
+					(MSD_SETUP_LENGTH(usbp->setup) != 0) ||
+					(MSD_SETUP_VALUE(usbp->setup) != 0)) {
+					return false;
+				}
+				chSysLockFromISR();
+				usbStallReceiveI(usbp, 1);
+				usbStallTransmitI(usbp, 1);
+				chSysUnlockFromISR();
 
-    if (MSD_SETUP_INDEX(usbp->setup) == USB_MSD_INTERFACE) {
-
-      switch(usbp->setup[1]) {
-      case MSD_REQ_RESET:
-	/* check that it is a HOST2DEV request */
-	if (((usbp->setup[0] & USB_RTYPE_DIR_MASK) != USB_RTYPE_DIR_HOST2DEV) ||
-	    (MSD_SETUP_LENGTH(usbp->setup) != 0) ||
-	    (MSD_SETUP_VALUE(usbp->setup) != 0)) {
-	  return false;
+				/* response to this request using EP0 */
+				usbSetupTransfer(usbp, 0, 0, NULL);
+				return true;
+			case MSD_GET_MAX_LUN:
+				/* check that it is a DEV2HOST request */
+				if (((usbp->setup[0] & USB_RTYPE_DIR_MASK) != USB_RTYPE_DIR_DEV2HOST) ||
+					(MSD_SETUP_LENGTH(usbp->setup) != 1) ||
+					(MSD_SETUP_VALUE(usbp->setup) != 0)) {
+					return false;
+				}
+				// send 0 packet to indicate that we don't do LUN
+				zbuf = 0;
+				usbSetupTransfer(usbp, &zbuf, 1, NULL);
+				return true;
+			default:
+				return false;
+			}
+		}
 	}
-	chSysLockFromISR();
-	usbStallReceiveI(usbp, 1);
-	usbStallTransmitI(usbp, 1);
-	chSysUnlockFromISR();
 
-	/* response to this request using EP0 */
-     
-	usbSetupTransfer(usbp, 0, 0, NULL);
-	return true;
-
-      case MSD_GET_MAX_LUN:
-	/* check that it is a DEV2HOST request */
-	if (((usbp->setup[0] & USB_RTYPE_DIR_MASK) != USB_RTYPE_DIR_DEV2HOST) ||
-	    (MSD_SETUP_LENGTH(usbp->setup) != 1) ||
-	    (MSD_SETUP_VALUE(usbp->setup) != 0)) {
-	  return false;
-	}
-	// send 0 packet to indicate that we don't do LUN
-	zbuf = 0;
-	usbSetupTransfer(usbp, &zbuf, 1, NULL);
-	return true;
-      default:
-	return false;
-      }
-    }
-  }
-
-  return sduRequestsHook(usbp);
+	// if not MSD, it must be serial
+	return sduRequestsHook(usbp);
 }
 
 /*
