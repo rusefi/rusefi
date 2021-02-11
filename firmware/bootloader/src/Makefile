@@ -12,10 +12,6 @@ ifeq ($(DEBUG_LEVEL_OPT),)
   DDEFS += -DEFI_ENABLE_ASSERTS=FALSE -DCH_DBG_ENABLE_ASSERTS=FALSE -DCH_DBG_ENABLE_STACK_CHECK=FALSE -DCH_DBG_FILL_THREADS=FALSE -DCH_DBG_THREADS_PROFILING=FALSE
 endif
 
-ifeq ($(CONFDIR),)
-  CONFDIR = $(PROJECT_DIR)/config/stm32f4ems
-endif
-
 # disable some modules to shrink bootloader binary
 DDEFS += -DHAL_USE_ADC=FALSE -DHAL_USE_CAN=FALSE -DHAL_USE_EXT=FALSE -DHAL_USE_GPT=FALSE -DHAL_USE_ICU=FALSE -DHAL_USE_PWM=FALSE -DHAL_USE_RTC=FALSE
 #disable ChibiOS flsah driver and prevent header from include
@@ -81,7 +77,7 @@ endif
 # If enabled, this option makes the build process faster by not compiling
 # modules not used in the current configuration.
 ifeq ($(USE_SMART_BUILD),)
-  USE_SMART_BUILD = yes
+  USE_SMART_BUILD = no
 endif
 
 #
@@ -210,19 +206,14 @@ TCPPSRC =
 # List ASM source files here
 ASMXSRC = $(STARTUPASM) $(PORTASM) $(OSALASM)
 
-ifeq ($(CONFIGPATH),)
-  CONFIGPATH=$(PROJECT_DIR)/config/stm32f4ems
-endif
-
-
 INCDIR = $(ALLINC) \
 	.. \
 	$(CHIBIOS)/os/various \
 	$(CHIBIOS)/os/ex/ST \
 	$(CHIBIOS)/os/hal/lib/peripherals/sensors \
-	$(CONFIGPATH) \
 	$(CONFIG)/engines \
 	$(CONFIG) \
+	$(CONFDIR) \
 	$(PROJECT_DIR)/ext \
 	$(PROJECT_DIR)/ext_algo \
 	$(UTIL_INC) \
