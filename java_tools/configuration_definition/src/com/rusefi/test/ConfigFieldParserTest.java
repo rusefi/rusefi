@@ -4,10 +4,7 @@ import com.rusefi.ConfigField;
 import com.rusefi.ReaderState;
 import com.rusefi.TypesHelper;
 import com.rusefi.VariableRegistry;
-import com.rusefi.output.CHeaderConsumer;
-import com.rusefi.output.FsioSettingsConsumer;
-import com.rusefi.output.JavaFieldsConsumer;
-import com.rusefi.output.TSProjectConsumer;
+import com.rusefi.output.*;
 import org.junit.Test;
 
 import java.io.BufferedReader;
@@ -303,7 +300,11 @@ public class ConfigFieldParserTest {
                 "";
         VariableRegistry.INSTANCE.clear();
         BufferedReader reader = new BufferedReader(new StringReader(test));
-        CHeaderConsumer consumer = new CHeaderConsumer("d");
+        BaseCHeaderConsumer consumer = new BaseCHeaderConsumer() {
+            @Override
+            public void endFile() {
+            }
+        };
         new ReaderState().readBufferedReader(reader, Collections.singletonList(consumer));
         assertEquals("// start of pid_s\n" +
                 "struct pid_s {\n" +
