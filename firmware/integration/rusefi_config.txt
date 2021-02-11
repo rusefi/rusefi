@@ -501,14 +501,14 @@ end_struct
 injector_s injector
 
 bit isForcedInduction;
-bit activateAuxPid1;
+bit unused_294_1;
 bit isVerboseAuxPid1;
-bit activateAuxPid2;
-bit isVerboseAuxPid2;
-bit activateAuxPid3;
-bit isVerboseAuxPid3;
-bit activateAuxPid4;
-bit isVerboseAuxPid4;
+bit unused_294_3;
+bit unused_294_4;
+bit unused_294_5;
+bit unused_294_6;
+bit unused_294_7;
+bit unused_294_8;
 bit isCJ125Verbose;enable cj125verbose/disable cj125verbose
 bit cj125isUaDivided;+Is your UA CJ125 output wired to MCU via resistor divider? Ua can go over 3.3v but only at lambda >3, i.e very lean AFR above 44.1\nWhen exposed to free air and 17x gain, Ua will be 4.17 volt
 bit cj125isLsu49;
