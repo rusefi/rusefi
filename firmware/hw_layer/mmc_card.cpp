@@ -84,19 +84,26 @@ static THD_WORKING_AREA(mmcThreadStack,3 * UTILITY_THREAD_STACK_SIZE);		// MMC m
  */
 MMCDriver MMCD1;
 
+// SD cards are good up to 25MHz in "slow" mode, and 50MHz in "fast" mode
+// 168mhz F4:
+// Slow mode is 10.5 or 5.25 MHz, depending on which SPI device
+// Fast mode is 42 or 21 MHz
+// 216mhz F7:
+// Slow mode is 13.5 or 6.75 MHz
+// Fast mode is 54 or 27 MHz (technically out of spec, needs testing!)
 static SPIConfig hs_spicfg = {
 		.circular = false,
 		.end_cb = NULL,
 		.ssport = NULL,
 		.sspad = 0,
-		.cr1 = SPI_BaudRatePrescaler_8,
+		.cr1 = SPI_BaudRatePrescaler_2,
 		.cr2 = 0};
 static SPIConfig ls_spicfg = {
 		.circular = false,
 		.end_cb = NULL,
 		.ssport = NULL,
 		.sspad = 0,
-		.cr1 = SPI_BaudRatePrescaler_256,
+		.cr1 = SPI_BaudRatePrescaler_8,
 		.cr2 = 0};
 
 /* MMC/SD over SPI driver configuration.*/
