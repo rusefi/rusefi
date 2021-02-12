@@ -27,12 +27,29 @@ SerialUSBDriver SDU1;
 /*
  * Endpoints to be used for USBD1.
  */
-#define USB_MSD_DATA_EP                 1
 #define USBD1_DATA_REQUEST_EP           2
 #define USBD1_DATA_AVAILABLE_EP         2
 #define USBD1_INTERRUPT_REQUEST_EP      3
 
+#if HAL_USE_USB_MSD
+// Descriptor that includes MSD is larger and has an extra interface
+#define DESCRIPTOR_SIZE 98
+#define NUM_INTERFACES 3
 #define USB_MSD_EP_SIZE 64
+
+#define MSD_IF 0
+#define CDC_INT_IF 1
+#define CDC_DATA_IF 2
+
+#else
+// Alternate descriptor is smaller, no MSD
+#define DESCRIPTOR_SIZE 75
+#define NUM_INTERFACES 2
+
+// only two interfaces
+#define CDC_INT_IF 0
+#define CDC_DATA_IF 1
+#endif
 
 /*
  * USB Device Descriptor.
@@ -61,15 +78,16 @@ static const USBDescriptor vcom_device_descriptor = {
 };
 
 /* Configuration Descriptor tree for a CDC.*/
-static const uint8_t vcom_configuration_descriptor_data[98] = {
+static const uint8_t vcom_configuration_descriptor_data[DESCRIPTOR_SIZE] = {
   /* Configuration Descriptor.*/
-  USB_DESC_CONFIGURATION(98,            /* wTotalLength.                    */
-                         0x03,          /* bNumInterfaces.                  */
+  USB_DESC_CONFIGURATION(DESCRIPTOR_SIZE,/* wTotalLength.                    */
+                         NUM_INTERFACES,/* bNumInterfaces.                  */
                          0x01,          /* bConfigurationValue.             */
                          0,             /* iConfiguration.                  */
                          0xC0,          /* bmAttributes (self powered).     */
                          100),           /* bMaxPower (200mA).              */
-  USB_DESC_INTERFACE    (0x00,          /* bInterfaceNumber.                */
+#if HAL_USE_USB_MSD
+  USB_DESC_INTERFACE    (MSD_IF,        /* bInterfaceNumber.                */
                          0x00,          /* bAlternateSetting.               */
                          0x02,          /* bNumEndpoints.                   */
                          0x08,          /* bInterfaceClass (mass storage)   */
@@ -86,17 +104,18 @@ static const uint8_t vcom_configuration_descriptor_data[98] = {
   USB_DESC_ENDPOINT     (USB_MSD_DATA_EP,
                          0x02,          /* bmAttributes (Bulk).             */
                          64,            /* wMaxPacketSize.                  */
-                         0x00),          /* bInterval. 1ms                   */
+                         0x00),         /* bInterval. 1ms                   */
+#endif // HAL_USE_USB_MSD
   // CDC
   /* IAD Descriptor - describes that EP2+3 belong to CDC */
-  USB_DESC_INTERFACE_ASSOCIATION(0x01, /* bFirstInterface.                  */
+  USB_DESC_INTERFACE_ASSOCIATION(CDC_INT_IF, /* bFirstInterface.                  */
                                  0x02, /* bInterfaceCount.                  */
                                  0x02, /* bFunctionClass (CDC).             */
                                  0x02, /* bFunctionSubClass.  (2)           */
                                  0x01, /* bFunctionProtocol (1)             */
                                  2),   /* iInterface.                       */
   /* Interface Descriptor.*/
-  USB_DESC_INTERFACE    (0x01,          /* bInterfaceNumber.                */
+  USB_DESC_INTERFACE    (CDC_INT_IF,    /* bInterfaceNumber.                */
                          0x00,          /* bAlternateSetting.               */
                          0x01,          /* bNumEndpoints.                   */
                          0x02,          /* bInterfaceClass (Communications
@@ -119,7 +138,7 @@ static const uint8_t vcom_configuration_descriptor_data[98] = {
   USB_DESC_BYTE         (0x01),         /* bDescriptorSubtype (Call Management
                                            Functional Descriptor).          */
   USB_DESC_BYTE         (0x00),         /* bmCapabilities (D0+D1).          */
-  USB_DESC_BYTE         (0x02),         /* bDataInterface.                */
+  USB_DESC_BYTE         (CDC_DATA_IF),  /* bDataInterface.                */
   /* ACM Functional Descriptor.*/
   USB_DESC_BYTE         (4),            /* bFunctionLength.                 */
   USB_DESC_BYTE         (0x24),         /* bDescriptorType (CS_INTERFACE).  */
@@ -131,9 +150,9 @@ static const uint8_t vcom_configuration_descriptor_data[98] = {
   USB_DESC_BYTE         (0x24),         /* bDescriptorType (CS_INTERFACE).  */
   USB_DESC_BYTE         (0x06),         /* bDescriptorSubtype (Union
                                            Functional Descriptor).          */
-  USB_DESC_BYTE         (0x01),         /* bMasterInterface (Communication
+  USB_DESC_BYTE         (CDC_INT_IF),   /* bMasterInterface (Communication
                                            Class Interface).                */
-  USB_DESC_BYTE         (0x02),         /* bSlaveInterface0 (Data Class
+  USB_DESC_BYTE         (CDC_DATA_IF),  /* bSlaveInterface0 (Data Class
                                            Interface).                      */
   /* Endpoint 3 Descriptor.*/
   USB_DESC_ENDPOINT     (USBD1_INTERRUPT_REQUEST_EP|0x80,
@@ -141,7 +160,7 @@ static const uint8_t vcom_configuration_descriptor_data[98] = {
                          0x0008,        /* wMaxPacketSize.                  */
                          0xFF),         /* bInterval.                       */
   /* Interface Descriptor.*/
-  USB_DESC_INTERFACE    (0x02,          /* bInterfaceNumber.                */
+  USB_DESC_INTERFACE    (CDC_DATA_IF,   /* bInterfaceNumber.                */
                          0x00,          /* bAlternateSetting.               */
                          0x02,          /* bNumEndpoints.                   */
                          0x0A,          /* bInterfaceClass (Data Class
