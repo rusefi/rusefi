@@ -467,9 +467,6 @@ static bool hybridRequestHook(USBDriver *usbp) {
 					/* Return the maximum supported LUN. */
 					usbSetupTransfer(usbp, 0, 1, NULL);
 					return true;
-					/* OR */
-					/* Return false to stall to indicate that we don't support LUN */
-					// return false;
 				default:
 					return false;
 			}
