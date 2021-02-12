@@ -17,7 +17,6 @@
 
 #include "global.h"
 #include "os_access.h"
-#include "hal_usb_msd.h"
 
 #if HAL_USE_SERIAL_USB
 
@@ -32,23 +31,22 @@ SerialUSBDriver SDU1;
 #define USBD1_INTERRUPT_REQUEST_EP      3
 
 #if HAL_USE_USB_MSD
-// Descriptor that includes MSD is larger and has an extra interface
-#define DESCRIPTOR_SIZE 98
-#define NUM_INTERFACES 3
-#define USB_MSD_EP_SIZE 64
+	// Descriptor that includes MSD is larger and has an extra interface
+	#define DESCRIPTOR_SIZE 98
+	#define NUM_INTERFACES 3
+	#define USB_MSD_EP_SIZE 64
 
-#define MSD_IF 0
-#define CDC_INT_IF 1
-#define CDC_DATA_IF 2
-
+	#define MSD_IF 0
+	#define CDC_INT_IF 1
+	#define CDC_DATA_IF 2
 #else
-// Alternate descriptor is smaller, no MSD
-#define DESCRIPTOR_SIZE 75
-#define NUM_INTERFACES 2
+	// Alternate descriptor is smaller, no MSD
+	#define DESCRIPTOR_SIZE 75
+	#define NUM_INTERFACES 2
 
-// only two interfaces
-#define CDC_INT_IF 0
-#define CDC_DATA_IF 1
+	// only two interfaces
+	#define CDC_INT_IF 0
+	#define CDC_DATA_IF 1
 #endif
 
 /*
