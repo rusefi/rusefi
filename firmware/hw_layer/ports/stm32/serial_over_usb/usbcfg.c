@@ -319,22 +319,11 @@ static const USBDescriptor *get_descriptor(USBDriver *usbp,
 	};
 #endif //HAL_USE_MSD
 
-/**
- * @brief   IN CDC data state.
- */
-
+// IN CDC data state.
 static USBInEndpointState cdcDataInstate;
-
-/**
- * @brief   OUT CDC data state.
- */
-
+// OUT CDC data state.
 static USBOutEndpointState cdcDataOutstate;
-
-/**
- * @brief   CDC data initialization structure (both IN and OUT).
- */
-
+// CDC data initialization structure (both IN and OUT).
 static const USBEndpointConfig cdcDataEpConfig = {
   USB_EP_MODE_TYPE_BULK,
   NULL,
@@ -348,14 +337,9 @@ static const USBEndpointConfig cdcDataEpConfig = {
   NULL
 };
 
-/**
- * @brief   IN CDC interrupt state.
- */
+// IN CDC interrupt state.
 static USBInEndpointState cdcInterruptInstate;
-
-/**
- * @brief   CDC interrupt initialization structure (IN only).
- */
+// CDC interrupt initialization structure (IN only).
 static const USBEndpointConfig cdcInterruptEpConfig = {
   USB_EP_MODE_TYPE_INTR,
   NULL,
