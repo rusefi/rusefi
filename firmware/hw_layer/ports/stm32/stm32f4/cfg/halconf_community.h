@@ -21,7 +21,7 @@
  * @brief   Enables the community overlay.
  */
 #if !defined(HAL_USE_COMMUNITY) || defined(__DOXYGEN__)
-#define HAL_USE_COMMUNITY           TRUE
+#define HAL_USE_COMMUNITY           FALSE
 #endif
 
 /**
@@ -148,7 +148,7 @@
  * @note    Disabling this option saves both code and data space.
  */
 #if !defined(CRC_USE_MUTUAL_EXCLUSION) || defined(__DOXYGEN__)
-#define CRC_USE_MUTUAL_EXCLUSION    FALSE
+#define CRC_USE_MUTUAL_EXCLUSION    TRUE
 #endif
 
 
