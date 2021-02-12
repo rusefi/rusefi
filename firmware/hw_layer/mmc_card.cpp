@@ -89,14 +89,14 @@ static SPIConfig hs_spicfg = {
 		.end_cb = NULL,
 		.ssport = NULL,
 		.sspad = 0,
-		.cr1 = SPI_BaudRatePrescaler_8,
+		.cr1 = SPI_BaudRatePrescaler_2,
 		.cr2 = 0};
 static SPIConfig ls_spicfg = {
 		.circular = false,
 		.end_cb = NULL,
 		.ssport = NULL,
 		.sspad = 0,
-		.cr1 = SPI_BaudRatePrescaler_256,
+		.cr1 = SPI_BaudRatePrescaler_8,
 		.cr2 = 0};
 
 /* MMC/SD over SPI driver configuration.*/
