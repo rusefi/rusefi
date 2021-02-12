@@ -251,48 +251,35 @@ static const USBDescriptor *get_descriptor(USBDriver *usbp,
   return NULL;
 }
 
-/**
- * @brief   IN EP1 state.
- */
-static USBInEndpointState ep1instate;
-
-/**
- * @brief   OUT EP1 state.
- */
-static USBOutEndpointState ep1outstate;
-
-/**
- * @brief   EP1 initialization structure (both IN and OUT).
- */
-static const USBEndpointConfig ep1config = {
+// IN CDC data state.
+static USBInEndpointState cdcDataInstate;
+// OUT CDC data state.
+static USBOutEndpointState cdcDataOutstate;
+// CDC data initialization structure (both IN and OUT).
+static const USBEndpointConfig cdcDataEpConfig = {
   USB_EP_MODE_TYPE_BULK,
   NULL,
   sduDataTransmitted,
   sduDataReceived,
   0x0040,
   0x0040,
-  &ep1instate,
-  &ep1outstate,
+  &cdcDataInstate,
+  &cdcDataOutstate,
   4,
   NULL
 };
 
-/**
- * @brief   IN EP2 state.
- */
-static USBInEndpointState ep2instate;
-
-/**
- * @brief   EP2 initialization structure (IN only).
- */
-static const USBEndpointConfig ep2config = {
+// IN CDC interrupt state.
+static USBInEndpointState cdcInterruptInstate;
+// CDC interrupt initialization structure (IN only).
+static const USBEndpointConfig cdcInterruptEpConfig = {
   USB_EP_MODE_TYPE_INTR,
   NULL,
   sduInterruptTransmitted,
   NULL,
   0x0010,
   0x0000,
-  &ep2instate,
+  &cdcInterruptInstate,
   NULL,
   1,
   NULL
@@ -311,8 +298,8 @@ static void usb_event(USBDriver *usbp, usbevent_t event) {
     /* Enables the endpoints specified into the configuration.
        Note, this callback is invoked from an ISR so I-Class functions
        must be used.*/
-    usbInitEndpointI(usbp, USBD1_DATA_REQUEST_EP, &ep1config);
-    usbInitEndpointI(usbp, USBD1_INTERRUPT_REQUEST_EP, &ep2config);
+    usbInitEndpointI(usbp, USBD1_DATA_REQUEST_EP, &cdcDataEpConfig);
+    usbInitEndpointI(usbp, USBD1_INTERRUPT_REQUEST_EP, &cdcInterruptEpConfig);
 
     /* Resetting the state of the CDC subsystem.*/
     sduConfigureHookI(&SDU1);
