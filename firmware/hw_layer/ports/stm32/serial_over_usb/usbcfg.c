@@ -447,6 +447,7 @@ static uint8_t zbuf = 0;
 
 // We need a custom hook to handle both MSD and CDC at the same time
 static bool hybridRequestHook(USBDriver *usbp) {
+#if HAL_USE_USB_MSD
 	// handle MSD setup request -- we could change the interface here
 	#define USB_MSD_INTERFACE 0
 
@@ -486,6 +487,7 @@ static bool hybridRequestHook(USBDriver *usbp) {
 			}
 		}
 	}
+#endif // HAL_USE_USB_MSD
 
 	// if not MSD, it must be serial
 	return sduRequestsHook(usbp);
