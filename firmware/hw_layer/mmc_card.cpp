@@ -393,7 +393,7 @@ static bool initializeMmc() {
 
 // Initialize and mount the SD card.
 // Returns true if the filesystem was successfully mounted for writing.
-bool mountMmc() {
+static bool mountMmc() {
 	bool didInitCard = initializeMmc();
 
 #if HAL_USE_USB_MSD
