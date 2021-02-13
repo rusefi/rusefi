@@ -24,8 +24,8 @@
 #include "hardware.h"
 #include "engine_configuration.h"
 #include "status_loop.h"
-#include "usb_msd_cfg.h"
 #include "buffered_writer.h"
+#include "null_device.h"
 
 #include "rtc_helper.h"
 
@@ -337,8 +337,21 @@ static void mmcUnMount(void) {
 }
 
 #if HAL_USE_USB_MSD
-#define RAMDISK_BLOCK_SIZE    512U
-static uint8_t blkbuf[RAMDISK_BLOCK_SIZE];
+static uint8_t blkbuf[MMCSD_BLOCK_SIZE];
+
+static const scsi_inquiry_response_t scsi_inquiry_response = {
+    0x00,           /* direct access block device     */
+    0x80,           /* removable                      */
+    0x04,           /* SPC-2                          */
+    0x02,           /* response data format           */
+    0x20,           /* response has 0x20 + 4 bytes    */
+    0x00,
+    0x00,
+    0x00,
+    "rusEFI",
+    "SD Card",
+    {'v',CH_KERNEL_MAJOR+'0','.',CH_KERNEL_MINOR+'0'}
+};
 #endif /* HAL_USE_USB_MSD */
 
 /*
@@ -358,38 +371,30 @@ static void MMCmount(void) {
 		mmcStart(&MMCD1, &mmccfg);					// Configures and activates the MMC peripheral.
 	}
 
+	#if HAL_USE_USB_MSD
+		msdObjectInit(&USBMSD1);
+	#endif
+
 	// Performs the initialization procedure on the inserted card.
-	LOCK_SD_SPI;
+		LOCK_SD_SPI;
 	sdStatus = SD_STATE_CONNECTING;
 	if (mmcConnect(&MMCD1) != HAL_SUCCESS) {
+		
+		#if HAL_USE_USB_MSD
+			// mount a null device to USB
+			msdMountNullDevice(&USBMSD1, &USBD2, blkbuf, &scsi_inquiry_response);
+		#endif
+
 		sdStatus = SD_STATE_NOT_CONNECTED;
 		warning(CUSTOM_OBD_MMC_ERROR, "Can't connect or mount MMC/SD");
 		UNLOCK_SD_SPI;
 		return;
 	}
 
-#if HAL_USE_USB_MSD
-	msdObjectInit(&USBMSD1);
-
-	BaseBlockDevice *bbdp = (BaseBlockDevice*)&MMCD1;
-	msdStart(&USBMSD1, usb_driver, bbdp, blkbuf, NULL);
-
-	//const usb_msd_driver_state_t msd_driver_state = msdInit(ms_usb_driver, bbdp, &UMSD1, USB_MS_DATA_EP, USB_MSD_INTERFACE_NUMBER);
-	//UMSD1.chp = NULL;
-
-	/*Disconnect the USB Bus*/
-	usbDisconnectBus(usb_driver);
-	chThdSleepMilliseconds(200);
-
-	///*Start the useful functions*/
-	//msdStart(&UMSD1);
-	usbStart(usb_driver, &msdusbcfg);
-
-	/*Connect the USB Bus*/
-	usbConnectBus(usb_driver);
-#endif
-
-
+	#if HAL_USE_USB_MSD
+		BaseBlockDevice *bbdp = (BaseBlockDevice*)&MMCD1;
+		msdStart(&USBMSD1, usb_driver, bbdp, blkbuf, &scsi_inquiry_response, NULL);
+	#endif
 
 	UNLOCK_SD_SPI;
 #if HAL_USE_USB_MSD
