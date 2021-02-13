@@ -24,7 +24,6 @@
 #include "hardware.h"
 #include "engine_configuration.h"
 #include "status_loop.h"
-#include "usb_msd_cfg.h"
 #include "buffered_writer.h"
 #include "null_device.h"
 
