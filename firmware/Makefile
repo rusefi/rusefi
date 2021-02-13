@@ -273,6 +273,7 @@ INCDIR = $(ALLINC) \
 	$(TESTINC) \
 	$(BOOTLOADERINC) \
 	$(CHIBIOS)/os/various \
+	$(CHIBIOS_CONTRIB)/os/various \
 	$(CHIBIOS)/os/hal/lib/peripherals/sensors \
 	$(CONFDIR) \
 	config/engines \
