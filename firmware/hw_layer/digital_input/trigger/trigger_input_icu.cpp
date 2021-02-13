@@ -29,9 +29,10 @@ static Logging *logger;
 
 static void vvtRisingCallback(void *arg) {
 	efitick_t now = getTimeNowNt();
-	if (!engine->hwTriggerInputEnabled) {
-		return;
-	}
+	TRIGGER_BAIL_IF_DISABLED
+#if HW_CHECK_MODE
+	TRIGGER_BAIL_IF_SELF_STIM
+#endif
 	int index = (int)arg;
 
 #if EFI_TOOTH_LOGGER
@@ -45,9 +46,10 @@ static void vvtRisingCallback(void *arg) {
 
 static void vvtFallingCallback(void * arg) {
 	efitick_t now = getTimeNowNt();
-	if (!engine->hwTriggerInputEnabled) {
-		return;
-	}
+	TRIGGER_BAIL_IF_DISABLED
+#if HW_CHECK_MODE
+	TRIGGER_BAIL_IF_SELF_STIM
+#endif
 	int index = (int)arg;
 #if EFI_TOOTH_LOGGER
 	if (!CONFIG(displayLogicLevelsInEngineSniffer)) {
@@ -63,9 +65,10 @@ static void vvtFallingCallback(void * arg) {
 static void shaftRisingCallback(bool isPrimary) {
 	efitick_t stamp = getTimeNowNt();
 
-	if (!engine->hwTriggerInputEnabled) {
-		return;
-	}
+	TRIGGER_BAIL_IF_DISABLED
+#if HW_CHECK_MODE
+	TRIGGER_BAIL_IF_SELF_STIM
+#endif
 	icuRisingCallbackCounter++;
 // todo: support for 3rd trigger input channel
 
@@ -82,9 +85,10 @@ static void shaftRisingCallback(bool isPrimary) {
 static void shaftFallingCallback(bool isPrimary) {
 	efitick_t stamp = getTimeNowNt();
 
-	if (!engine->hwTriggerInputEnabled) {
-		return;
-	}
+	TRIGGER_BAIL_IF_DISABLED
+#if HW_CHECK_MODE
+	TRIGGER_BAIL_IF_SELF_STIM
+#endif
 
 	icuFallingCallbackCounter++;
 
