@@ -2921,7 +2921,8 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 	dialog = auxSerial, "AUX Serial"
 		field = "RX pin",								auxSerialRxPin @@if_ts_show_auxserial_pins
 		field = "TX pin",								auxSerialTxPin @@if_ts_show_auxserial_pins
-		field = "Serial Baud Rate",						auxSerialSpeed @@if_ts_show_auxserial_pins
+		; we want to show baud rate even if pins are hard-coded like on microRusEFI
+		field = "Serial Baud Rate",						auxSerialSpeed
 	
 	dialog = sdCard, "SD Card Logger"
 		field = "Enable SD Card",						isSdCardEnabled
