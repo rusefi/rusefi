@@ -9,6 +9,47 @@
  */
 
 #include "global.h"
+#include "engine.h"
+
+EXTERN_ENGINE;
+
+typedef float fsio_table_8x8_f32t_linear[FSIO_TABLE_8 * FSIO_TABLE_8];
+
+bool acceptCanRx(int sid DECLARE_ENGINE_PARAMETER_SUFFIX) {
+	if (!CONFIG(useFSIOTableForCanSniffingFiltering)) {
+		// accept anything if filtering is not enabled
+		return true;
+	}
+	// the whole table reuse and 2D table cast to 1D array is a major hack, but it's OK for prototyping
+
+
+	fsio_table_8x8_f32t_linear * array = (fsio_table_8x8_f32t_linear *)(void*)&config->fsioTable1;
+
+	int arraySize = efi::size(*array);
+
+	int showOnlyCount = (int)array[arraySize - 1];
+	if (showOnlyCount > 0) {
+		for (int i = 0;i<showOnlyCount;i++) {
+			if (sid == (int)array[arraySize - 2 - i]) {
+				return true;
+			}
+		}
+		// if white list is not empty and element not on the white list we do not check ignore list
+		return false;
+	}
+
+
+	int ignoreListCount = (int)array[0];
+	for (int i = 0;i<ignoreListCount;i++) {
+		if (sid == (int)array[1 + i]) {
+			// element is in ignore list
+			return false;
+		}
+	}
+
+	return true;
+}
+
 #if EFI_CAN_SUPPORT
 
 #include "can.h"
@@ -17,12 +58,15 @@
 #include "can_sensor.h"
 #include "can_vss.h"
 
-EXTERN_ENGINE;
-
 /**
  * this build-in CAN sniffer is very basic but that's our CAN sniffer
  */
 static void printPacket(const CANRxFrame& rx, Logging* logger) {
+	bool accept = acceptCanRx(rx.SID);
+	if (!accept) {
+		return;
+	}
+
 	// only print info if we're in can debug mode
 
 	// internet people use both hex and decimal to discuss packed IDs, for usability it's better to print both right here
