@@ -416,45 +416,12 @@ static void sof_handler(USBDriver *usbp) {
   osalSysUnlockFromISR();
 }
 
-#define MSD_SETUP_WORD(setup, index) (uint16_t)(((uint16_t)setup[index+1] << 8)\
-                                                | (setup[index] & 0x00FF))
-#define MSD_SETUP_INDEX(setup)  MSD_SETUP_WORD(setup, 4)
-
-#define MSD_REQ_RESET                   0xFF
-#define MSD_REQ_GET_MAX_LUN             0xFE
-
-static uint8_t zbuf = 0;
-
 // We need a custom hook to handle both MSD and CDC at the same time
 static bool hybridRequestHook(USBDriver *usbp) {
 #if HAL_USE_USB_MSD
-	// handle MSD setup request -- we could change the interface here
-	#define USB_MSD_INTERFACE 0
-
-	if (usbp->setup[0] == (USB_RTYPE_TYPE_CLASS | USB_RTYPE_RECIPIENT_INTERFACE | USB_RTYPE_DIR_HOST2DEV)) {
-		if (MSD_SETUP_INDEX(usbp->setup) == USB_MSD_INTERFACE) {
-			switch(usbp->setup[1]) {
-				case MSD_REQ_RESET:
-					/* Bulk-Only Mass Storage Reset (class-specific request)
-					This request is used to reset the mass storage device and its associated interface.
-					This class-specific request shall ready the device for the next CBW from the host. */
-					/* Do any special reset code here. */
-					/* The device shall NAK the status stage of the device request until
-					* the Bulk-Only Mass Storage Reset is complete.
-					* NAK EP1 in and out */
-					// usbp->otg->ie[1].DIEPCTL = DIEPCTL_SNAK;
-					// usbp->otg->oe[1].DOEPCTL = DOEPCTL_SNAK;
-					/* response to this request using EP0 */
-					usbSetupTransfer(usbp, 0, 0, NULL);
-					return true;
-				case MSD_REQ_GET_MAX_LUN:
-					/* Return the maximum supported LUN. */
-					usbSetupTransfer(usbp, 0, 1, NULL);
-					return true;
-				default:
-					return false;
-			}
-		}
+	// Try the MSD driver first
+	if (msd_request_hook(usbp)) {
+		return true;
 	}
 #endif // HAL_USE_USB_MSD
 
