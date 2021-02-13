@@ -295,8 +295,7 @@ INCDIR = $(ALLINC) \
 	$(DEVELOPMENT_DIR) \
 	development/hw_layer \
 	development/test \
-	$(CONTROLLERS_INC) \
-	$(CHIBIOS_CONTRIB)/os/various \
+	$(CONTROLLERS_INC)
 
 #
 # Project, sources and paths
