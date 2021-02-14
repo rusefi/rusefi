@@ -199,15 +199,20 @@ static void incLogFileName(void) {
 static void prepareLogFileName(void) {
 	strcpy(logName, RUSEFI_LOG_PREFIX);
 	char *ptr;
-/* TS SD protocol supports only short 8 symbol file names :(
 
+#if HAL_USE_USB_MSD
 	bool result = dateToStringShort(&logName[PREFIX_LEN]);
+#else 
+	// TS SD protocol supports only short 8 symbol file names :(
+	bool result = false;
+#endif
+
 	if (result) {
 		ptr = &logName[PREFIX_LEN + SHORT_TIME_LEN];
 	} else {
- */
 		ptr = itoa10(&logName[PREFIX_LEN], logFileIndex);
-//	}
+	}
+
 	strcat(ptr, DOT_MLG);
 }
 
