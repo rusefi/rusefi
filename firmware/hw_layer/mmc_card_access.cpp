@@ -54,7 +54,8 @@ bool isLogFile(const char *fileName) {
 }
 #endif // EFI_FILE_LOGGING || EFI_SIMULATOR || EFI_UNIT_TEST
 
-#if EFI_FILE_LOGGING || EFI_SIMULATOR
+// Enable when logging is enabled, but not USB mass storage
+#if (EFI_FILE_LOGGING && !HAL_USE_USB_MSD) || EFI_SIMULATOR
 #include "mmc_card.h"
 
 #if EFI_SIMULATOR
@@ -378,4 +379,4 @@ void handleTsW(ts_channel_s *tsChannel, char *input) {
 	}
 }
 
-#endif // EFI_FILE_LOGGING
+#endif // (EFI_FILE_LOGGING && !HAL_USE_USB_MSD)
