@@ -675,7 +675,12 @@ void initSpiModule(SPIDriver *driver, brain_pin_e sck, brain_pin_e miso,
 	efiSetPadMode("SPI clock", sck,	PAL_MODE_ALTERNATE(getSpiAf(driver)) | sckMode | PAL_STM32_OSPEED_HIGHEST);
 
 	efiSetPadMode("SPI master out", mosi, PAL_MODE_ALTERNATE(getSpiAf(driver)) | mosiMode | PAL_STM32_OSPEED_HIGHEST);
-	efiSetPadMode("SPI master in ", miso, PAL_MODE_ALTERNATE(getSpiAf(driver)) | misoMode | PAL_STM32_OSPEED_HIGHEST);
+
+	// Activate the internal pullup on MISO: SD cards indicate "busy" by holding MOSI low,
+	// so in case there is no SD card installed, the line could float low and indicate that
+	// the (non existent) card is busy.  We pull the line high to indicate "not busy" in case
+	// of a missing card.
+	efiSetPadMode("SPI master in ", miso, PAL_MODE_ALTERNATE(getSpiAf(driver)) | misoMode | PAL_STM32_OSPEED_HIGHEST | PAL_STM32_PUPDR_PULLUP);
 }
 
 void initSpiCs(SPIConfig *spiConfig, brain_pin_e csPin) {
