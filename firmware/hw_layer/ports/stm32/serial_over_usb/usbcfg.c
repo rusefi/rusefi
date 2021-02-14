@@ -17,6 +17,7 @@
 
 #include "global.h"
 #include "os_access.h"
+#include "mmc_card.h"
 
 #if HAL_USE_SERIAL_USB
 
@@ -375,6 +376,11 @@ static void usb_event(USBDriver *usbp, usbevent_t event) {
 
     /* Resetting the state of the CDC subsystem.*/
     sduConfigureHookI(&SDU1);
+
+    #if HAL_USE_USB_MSD
+        // Tell the MMC thread to wake up and mount the card as a USB device
+        onUsbConnectedNotifyMmcI();
+    #endif
 
     chSysUnlockFromISR();
     return;

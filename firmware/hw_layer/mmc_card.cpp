@@ -352,6 +352,13 @@ static const scsi_inquiry_response_t scsi_inquiry_response = {
     "SD Card",
     {'v',CH_KERNEL_MAJOR+'0','.',CH_KERNEL_MINOR+'0'}
 };
+
+static binary_semaphore_t usbConnectedSemaphore;
+
+void onUsbConnectedNotifyMmcI() {
+	chBSemSignalI(&usbConnectedSemaphore);
+}
+
 #endif /* HAL_USE_USB_MSD */
 
 /*
@@ -397,18 +404,25 @@ static bool mountMmc() {
 	auto cardBlockDevice = initializeMmcBlockDevice();
 
 #if HAL_USE_USB_MSD
+	// Wait for the USB stack to wake up, or a 5 second timeout, whichever occurs first
+	msg_t usbResult = chBSemWaitTimeout(&usbConnectedSemaphore, TIME_MS2I(5000));
+
+	bool hasUsb = usbResult == MSG_OK;
+
 	msdObjectInit(&USBMSD1);
-	
-	if (cardBlockDevice) {
+
+	// If we have a device AND USB is connected, mount the card to USB, otherwise
+	// mount the null device and try to mount the filesystem ourselves
+	if (cardBlockDevice && hasUsb) {
 		// Mount the real card to USB
 		msdStart(&USBMSD1, usb_driver, cardBlockDevice, blkbuf, &scsi_inquiry_response, NULL);
+
+		// At this point we're done: don't try to write files ourselves
+		return false;
 	} else {
 		// Mount a  "no media" device to USB
 		msdMountNullDevice(&USBMSD1, usb_driver, blkbuf, &scsi_inquiry_response);
 	}
-
-	// TODO: local mount and log if USB not connected
-	return false;
 #endif
 
 	// if no card, don't try to mount FS
@@ -416,7 +430,7 @@ static bool mountMmc() {
 		return false;
 	}
 
-	// if Ok - mount FS now
+	// We were able to connect the SD card, mount the filesystem
 	memset(&MMC_FS, 0, sizeof(FATFS));
 	if (f_mount(&MMC_FS, "/", 1) == FR_OK) {
 		sdStatus = SD_STATE_MOUNTED;
@@ -473,7 +487,12 @@ static SdLogBufferWriter logBuffer MAIN_RAM;
 
 static THD_FUNCTION(MMCmonThread, arg) {
 	(void)arg;
-	chRegSetThreadName("MMC_Monitor");
+	chRegSetThreadName("MMC Card Logger");
+
+	if (!mountMmc()) {
+		// no card present (or mounted via USB), don't do internal logging
+		return;
+	}
 
 	while (true) {
 		// if the SPI device got un-picked somehow, cancel SD card
@@ -509,10 +528,9 @@ bool isSdCardAlive(void) {
 void initMmcCard(void) {
 	logName[0] = 0;
 
-	if (!mountMmc()) {
-		// no card present, don't start thread
-		return;
-	}
+#if HAL_USE_USB_MSD
+	chBSemObjectInit(&usbConnectedSemaphore, true);
+#endif
 
 	chThdCreateStatic(mmcThreadStack, sizeof(mmcThreadStack), LOWPRIO, (tfunc_t)(void*) MMCmonThread, NULL);
 
