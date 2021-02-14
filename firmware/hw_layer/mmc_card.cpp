@@ -356,17 +356,17 @@ static const scsi_inquiry_response_t scsi_inquiry_response = {
 
 /*
  * Attempts to initialize the MMC card.
- * Returns true if a card was detected and successfully initialized, otherwise false.
+ * Returns a BaseBlockDevice* corresponding to the SD card if successful, otherwise nullptr.
  */
-static bool initializeMmc() {
+static BaseBlockDevice* initializeMmcBlockDevice() {
 	if (!CONFIG(isSdCardEnabled)) {
-		return false;
+		return nullptr;
 	}
 
 	// Configures and activates the MMC peripheral.
 	mmcSpiDevice = CONFIG(sdCardSpiDevice);
 
-	efiAssert(OBD_PCM_Processor_Fault, mmcSpiDevice != SPI_NONE, "SD card enabled, but no SPI device configured!", false);
+	efiAssert(OBD_PCM_Processor_Fault, mmcSpiDevice != SPI_NONE, "SD card enabled, but no SPI device configured!", nullptr);
 
 	// todo: reuse initSpiCs method?
 	hs_spicfg.ssport = ls_spicfg.ssport = getHwPort("mmc", CONFIG(sdCardCsPin));
@@ -384,24 +384,24 @@ static bool initializeMmc() {
 		sdStatus = SD_STATE_NOT_CONNECTED;
 		warning(CUSTOM_OBD_MMC_ERROR, "Can't connect or mount MMC/SD");
 		UNLOCK_SD_SPI;
-		return false;
+		return nullptr;
 	}
 
 	UNLOCK_SD_SPI;
-	return true;
+	return (BaseBlockDevice*)&MMCD1;
 }
 
 // Initialize and mount the SD card.
 // Returns true if the filesystem was successfully mounted for writing.
 static bool mountMmc() {
-	bool didInitCard = initializeMmc();
+	auto cardBlockDevice = initializeMmcBlockDevice();
 
 #if HAL_USE_USB_MSD
 	msdObjectInit(&USBMSD1);
 	
-	if (didInitCard) {
+	if (cardBlockDevice) {
 		// Mount the real card to USB
-		msdStart(&USBMSD1, usb_driver, (BaseBlockDevice*)&MMCD1, blkbuf, &scsi_inquiry_response, NULL);
+		msdStart(&USBMSD1, usb_driver, cardBlockDevice, blkbuf, &scsi_inquiry_response, NULL);
 	} else {
 		// Mount a  "no media" device to USB
 		msdMountNullDevice(&USBMSD1, usb_driver, blkbuf, &scsi_inquiry_response);
@@ -412,7 +412,7 @@ static bool mountMmc() {
 #endif
 
 	// if no card, don't try to mount FS
-	if (!didInitCard) {
+	if (!cardBlockDevice) {
 		return false;
 	}
 
