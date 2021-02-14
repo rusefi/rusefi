@@ -9,6 +9,7 @@
 
 #pragma once
 
+#ifdef __cplusplus
 #include "tunerstudio_io.h"
 
 #define DOT_MLG ".mlg"
@@ -25,3 +26,7 @@ void handleTsW(ts_channel_s *tsChannel, char *input);
 extern spi_device_e mmcSpiDevice;
 #define LOCK_SD_SPI lockSpi(mmcSpiDevice)
 #define UNLOCK_SD_SPI unlockSpi(mmcSpiDevice)
+
+extern "C"
+#endif
+void onUsbConnectedNotifyMmcI(void);
