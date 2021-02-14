@@ -738,14 +738,14 @@ int TunerStudioBase::handleCrcCommand(ts_channel_s *tsChannel, char *data, int i
 	case TS_GET_FIRMWARE_VERSION:
 		handleGetVersion(tsChannel);
 		break;
-#if EFI_FILE_LOGGING || EFI_SIMULATOR
+#if (EFI_FILE_LOGGING && !HAL_USE_USB_MSD) || EFI_SIMULATOR
 	case TS_SD_R_COMMAND:
 		handleTsR(tsChannel, data);
 		break;
 	case TS_SD_W_COMMAND:
 		handleTsW(tsChannel, data);
 		break;
-#endif //EFI_FILE_LOGGING
+#endif // (EFI_FILE_LOGGING && !HAL_USE_USB_MSD)
 	case TS_GET_TEXT:
 		handleGetText(tsChannel);
 		break;
