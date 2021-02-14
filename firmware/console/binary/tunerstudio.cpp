@@ -739,6 +739,7 @@ int TunerStudioBase::handleCrcCommand(ts_channel_s *tsChannel, char *data, int i
 		handleGetVersion(tsChannel);
 		break;
 #if (EFI_FILE_LOGGING && !HAL_USE_USB_MSD) || EFI_SIMULATOR
+	// This is only enabled on ECUs without USB mass storage
 	case TS_SD_R_COMMAND:
 		handleTsR(tsChannel, data);
 		break;
@@ -879,6 +880,7 @@ int TunerStudioBase::handleCrcCommand(ts_channel_s *tsChannel, char *data, int i
 		break;
 	}
 	default:
+		sendErrorCode(tsChannel, TS_RESPONSE_UNRECOGNIZED_COMMAND);
 		tunerStudioError("ERROR: ignoring unexpected command");
 		return false;
 	}
