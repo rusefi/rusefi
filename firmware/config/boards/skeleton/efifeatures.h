@@ -45,9 +45,6 @@
 
 // Internal MCU features
 
-// Use STM32 Core Coupled Memory as general purpose RAM.
-#define EFI_USE_CCM TRUE
-
 // Support USB Mass Storage Devices
 // Typically off as it requires USB OTG and power output.
 #define HAL_USE_USB_MSD FALSE
