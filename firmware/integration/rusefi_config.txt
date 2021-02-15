@@ -805,7 +805,7 @@ pin_input_mode_e throttlePedalUpPinMode;
 
 	brain_pin_e[TRIGGER_SIMULATOR_PIN_COUNT iterate] triggerSimulatorPins;Each rusEfi piece can provide synthetic trigger signal for external ECU. Sometimes these wires are routed back into trigger inputs of the same rusEfi board.\nSee also directSelfStimulation which is different.
 	pin_output_mode_e[TRIGGER_SIMULATOR_PIN_COUNT iterate] triggerSimulatorPinModes;
-	output_pin_e o2heaterPin;Narrow band o2 heater, not used for CJ125. See wboHeaterPin
+	output_pin_e o2heaterPin;+Narrow band o2 heater, not used for CJ125. 'ON' if engine is running, 'OFF' if stopped or cranking. See wboHeaterPin
 	pin_output_mode_e o2heaterPinModeTodO;
 
 
