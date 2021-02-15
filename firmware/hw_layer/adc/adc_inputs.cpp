@@ -37,15 +37,8 @@
 #include "maf.h"
 #include "perf_trace.h"
 
-// on F7 this must be aligned on a 32-byte boundary, and be a multiple of 32 bytes long.
-// When we invalidate the cache line(s) for ADC samples, we don't want to nuke any
-// adjacent data.
-// F4 does not care
-static __ALIGNED(32) adcsample_t slowAdcSampleBuf[ADC_BUF_DEPTH_SLOW * ADC_MAX_CHANNELS_COUNT];
-static __ALIGNED(32) adcsample_t fastAdcSampleBuf[ADC_BUF_DEPTH_FAST * ADC_MAX_CHANNELS_COUNT];
-
-static_assert(sizeof(slowAdcSampleBuf) % 32 == 0, "Slow ADC sample buffer size must be a multiple of 32 bytes");
-static_assert(sizeof(fastAdcSampleBuf) % 32 == 0, "Fast ADC sample buffer size must be a multiple of 32 bytes");
+static NO_CACHE adcsample_t slowAdcSampleBuf[ADC_BUF_DEPTH_SLOW * ADC_MAX_CHANNELS_COUNT];
+static NO_CACHE adcsample_t fastAdcSampleBuf[ADC_BUF_DEPTH_FAST * ADC_MAX_CHANNELS_COUNT];
 
 static adc_channel_mode_e adcHwChannelEnabled[HW_MAX_ADC_INDEX];
 
@@ -313,17 +306,6 @@ int AdcDevice::getAdcValueByIndex(int internalIndex) const {
 	return values.adc_data[internalIndex];
 }
 
-void AdcDevice::invalidateSamplesCache() {
-#if defined(STM32F7XX)
-	// The STM32F7xx has a data cache
-	// DMA operations DO NOT invalidate cache lines, since the ARM m7 doesn't have 
-	// anything like a CCI that maintains coherency across multiple bus masters.
-	// As a result, we have to manually invalidate the D-cache any time we (the CPU)
-	// would like to read something that somebody else wrote (ADC via DMA, in this case)
-	SCB_InvalidateDCache_by_Addr(reinterpret_cast<uint32_t*>(samples), sizeof(*samples) * buf_len);
-#endif /* STM32F7XX */
-}
-
 void AdcDevice::init(void) {
 	hwConfig->num_channels = size();
 	/* driver does this internally */
@@ -482,8 +464,6 @@ public:
 
 		{
 			ScopePerf perf(PE::AdcProcessSlow);
-
-			slowAdc.invalidateSamplesCache();
 
 			/* Calculates the average values from the ADC samples.*/
 			for (int i = 0; i < slowAdc.size(); i++) {

@@ -77,7 +77,8 @@ spi_device_e mmcSpiDevice = SPI_NONE;
 extern const USBConfig msdusbcfg;
 #endif /* HAL_USE_USB_MSD */
 
-static THD_WORKING_AREA(mmcThreadStack,3 * UTILITY_THREAD_STACK_SIZE);		// MMC monitor thread
+// TODO: this is NO_CACHE because of https://github.com/rusefi/rusefi/issues/2356
+static NO_CACHE THD_WORKING_AREA(mmcThreadStack,3 * UTILITY_THREAD_STACK_SIZE);		// MMC monitor thread
 
 /**
  * MMC driver instance.
@@ -342,7 +343,7 @@ static void mmcUnMount(void) {
 }
 
 #if HAL_USE_USB_MSD
-static uint8_t blkbuf[MMCSD_BLOCK_SIZE];
+static NO_CACHE uint8_t blkbuf[MMCSD_BLOCK_SIZE];
 
 static const scsi_inquiry_response_t scsi_inquiry_response = {
     0x00,           /* direct access block device     */
@@ -488,7 +489,7 @@ struct SdLogBufferWriter final : public BufferedWriter<512> {
 	}
 };
 
-static SdLogBufferWriter logBuffer MAIN_RAM;
+static NO_CACHE SdLogBufferWriter logBuffer;
 
 static THD_FUNCTION(MMCmonThread, arg) {
 	(void)arg;

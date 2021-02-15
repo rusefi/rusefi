@@ -14,9 +14,6 @@
 
 #pragma once
 
-#undef EFI_USE_CCM
-#define EFI_USE_CCM TRUE
-
 #undef EFI_POTENTIOMETER
 #define EFI_POTENTIOMETER FALSE
 
