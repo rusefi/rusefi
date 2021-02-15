@@ -69,17 +69,20 @@ typedef unsigned int time_t;
  *
  * Please note that DMA does not work with CCM memory
  */
-#if defined(STM32F7XX)
+#if defined(STM32F4XX)
+// CCM memory is 64k
+#define CCM_OPTIONAL __attribute__((section(".ram4")))
+#define NO_CACHE	// F4 has no cache, do nothing
+#elif defined(STM32F7XX)
+// DTCM memory is 128k
 #define CCM_OPTIONAL __attribute__((section(".ram3")))
 // SRAM2 is 16k and set to disable dcache
 #define NO_CACHE __attribute__((section(".ram2")))
 #elif defined(STM32H7XX)
+// DTCM memory is 128k
 #define CCM_OPTIONAL __attribute__((section(".ram5")))
 // SRAM3 is 32k and set to disable dcache
 #define NO_CACHE __attribute__((section(".ram3")))
-#elif defined(STM32F4XX)
-#define CCM_OPTIONAL __attribute__((section(".ram4")))
-#define NO_CACHE	// F4 has no cache, do nothing
 #else /* this MCU doesn't need these */
 #define CCM_OPTIONAL
 #define NO_CACHE
