@@ -25,7 +25,7 @@ pins:
 
 info:
   image:
-    file: J2.jpg
+    file: J4.jpg
   pins:
     - pin: 3
       x: 132
