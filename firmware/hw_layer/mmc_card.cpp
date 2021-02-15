@@ -342,7 +342,7 @@ static void mmcUnMount(void) {
 }
 
 #if HAL_USE_USB_MSD
-static uint8_t blkbuf[MMCSD_BLOCK_SIZE];
+static NO_CACHE uint8_t blkbuf[MMCSD_BLOCK_SIZE];
 
 static const scsi_inquiry_response_t scsi_inquiry_response = {
     0x00,           /* direct access block device     */
@@ -488,7 +488,7 @@ struct SdLogBufferWriter final : public BufferedWriter<512> {
 	}
 };
 
-static SdLogBufferWriter logBuffer MAIN_RAM;
+static NO_CACHE SdLogBufferWriter logBuffer;
 
 static THD_FUNCTION(MMCmonThread, arg) {
 	(void)arg;

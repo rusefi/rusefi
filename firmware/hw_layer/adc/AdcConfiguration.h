@@ -31,7 +31,6 @@ public:
 	uint32_t conversionCount = 0;
 	uint32_t errorsCount = 0;
 	int getAdcValueByIndex(int internalIndex) const;
-	void invalidateSamplesCache();
 
 	adcsample_t *samples;
 	size_t buf_len;
