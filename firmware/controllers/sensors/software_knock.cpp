@@ -12,7 +12,7 @@ EXTERN_ENGINE;
 
 #include "knock_config.h"
 
-adcsample_t sampleBuffer[2000];
+NO_CACHE adcsample_t sampleBuffer[2000];
 int8_t currentCylinderIndex = 0;
 Biquad knockFilter;
 

@@ -167,8 +167,6 @@ void adc_callback_fast(ADCDriver *adcp) {
 	//size_t n = adcp->depth;
 
 	if (adcp->state == ADC_COMPLETE) {
-		fastAdc.invalidateSamplesCache();
-
 #if HAL_TRIGGER_USE_ADC
 		// we need to call this ASAP, because trigger processing is time-critical
 		if (triggerSampleIndex >= 0)
@@ -222,8 +220,6 @@ void adc_callback_fast(ADCDriver *adcp) {
 	 * */
 	if (adcp->state == ADC_COMPLETE) {
 		ScopePerf perf(PE::AdcCallbackFastComplete);
-
-		fastAdc.invalidateSamplesCache();
 
 		/**
 		 * this callback is executed 10 000 times a second, it needs to be as fast as possible
