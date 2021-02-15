@@ -156,6 +156,10 @@ pins:
     ts_name: 28 - AN volt 10
     type: av
 
+  - id: AV10
+    class: outputs
+    ts_name: AUX AV10 reuse
+
   - pin: 30
     id: [GPIOC_5, EFI_ADC_15]
     class: [switch_inputs, analog_inputs]
@@ -178,6 +182,11 @@ pins:
     function: External wideband O2 sensor
     ts_name: 32 - AN volt 6
     type: av
+
+  - id: AV6
+    class: outputs
+    ts_name: AUX AV6 reuse
+
 
   # TLE8888 half bridges (pushpull, lowside, or high-low) TLE8888_OUT23
   - pin: 33
@@ -213,6 +222,10 @@ pins:
     ts_name: 36 - AN volt 8
     type: av
 
+  - id: AV8
+    class: outputs
+    ts_name: AUX AV8 reuse
+
   - pin: 37
     id: TLE8888_PIN_1
     class: outputs
@@ -235,6 +248,10 @@ pins:
     color: grey
     ts_name: 40 - AN volt 9
     type: av
+
+  - id: AV9
+    class: outputs
+    ts_name: AUX AV9 reuse
 
   - pin: 41
     id: TLE8888_PIN_3
@@ -268,3 +285,152 @@ pins:
     function: Crank VR+/hall
     ts_name: 45 - VR/Hall Crank
     type: vr hall
+
+info:
+  image:
+    file: main.jpg
+  pins:
+    - pin: 1
+      x: 1508
+      y: 445
+    - pin: 2
+      x: 1508
+      y: 616
+    - pin: 3
+      x: 1508
+      y: 787
+    - pin: 4
+      x: 1508
+      y: 958
+    - pin: 5
+      x: 1363
+      y: 445
+    - pin: 6
+      x: 1363
+      y: 616
+    - pin: 7
+      x: 1363
+      y: 787
+    - pin: 8
+      x: 1363
+      y: 958
+    - pin: 9
+      x: 1217
+      y: 445
+    - pin: 10
+      x: 1217
+      y: 616
+    - pin: 11
+      x: 1217
+      y: 787
+    - pin: 12
+      x: 1217
+      y: 958
+    - pin: 13
+      x: 1114
+      y: 445
+    - pin: 14
+      x: 1114
+      y: 616
+    - pin: 15
+      x: 1114
+      y: 787
+    - pin: 16
+      x: 1114
+      y: 958
+    - pin: 17
+      x: 1011
+      y: 445
+    - pin: 18
+      x: 1011
+      y: 616
+    - pin: 19
+      x: 1011
+      y: 787
+    - pin: 20
+      x: 1011
+      y: 958
+    - pin: 21
+      x: 908
+      y: 445
+    - pin: 22
+      x: 908
+      y: 616
+    - pin: 23
+      x: 908
+      y: 787
+    - pin: 24
+      x: 908
+      y: 958
+    - pin: 25
+      x: 805
+      y: 445
+    - pin: 26
+      x: 805
+      y: 616
+    - pin: 27
+      x: 905
+      y: 787
+    - pin: 28
+      x: 905
+      y: 958
+    - pin: 29
+      x: 702
+      y: 445
+    - pin: 30
+      x: 702
+      y: 616
+    - pin: 31
+      x: 702
+      y: 787
+    - pin: 32
+      x: 702
+      y: 958
+    - pin: 33
+      x: 599
+      y: 445
+    - pin: 34
+      x: 599
+      y: 616
+    - pin: 35
+      x: 599
+      y: 787
+    - pin: 36
+      x: 599
+      y: 958
+    - pin: 37
+      x: 496
+      y: 445
+    - pin: 38
+      x: 496
+      y: 616
+    - pin: 39
+      x: 496
+      y: 787
+    - pin: 40
+      x: 496
+      y: 958
+    - pin: 41
+      x: 393
+      y: 445
+    - pin: 42
+      x: 393
+      y: 616
+    - pin: 43
+      x: 393
+      y: 787
+    - pin: 44
+      x: 393
+      y: 958
+    - pin: 45
+      x: 290
+      y: 445
+    - pin: 46
+      x: 290
+      y: 616
+    - pin: 47
+      x: 290
+      y: 787
+    - pin: 48
+      x: 290
+      y: 958

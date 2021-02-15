@@ -22,3 +22,20 @@ pins:
     class: outputs
     function: SPI3_NSS (Chip Select)
     ts_name: AUX J2 PA15
+
+info:
+  image:
+    file: J2.jpg
+  pins:
+    - pin: 3
+      x: 132
+      y: 257
+    - pin: 6
+      x: 211
+      y: 180
+    - pin: 7
+      x: 286
+      y: 255
+    - pin: 10
+      x: 366
+      y: 254
