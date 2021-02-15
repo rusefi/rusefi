@@ -37,7 +37,10 @@ jobs:
         git show --name-only  best-wiki-git/master
         git config --local user.email "action@github.com"
         git config --local user.name "GitHub Action"
-        git merge best-wiki-git/master
+        git merge --no-ff --no-commit best-wiki-git/master
+        git reset HEAD .github/workflows/sync-wiki.yaml
+        git checkout -- .github/workflows/sync-wiki.yaml
+        git commit -m "merge rusEFI wiki"
 
     - name: Push changes to rusefi_documentation technical wiki
       uses: ad-m/github-push-action@master
