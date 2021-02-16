@@ -130,7 +130,7 @@ float getAfr(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	float volts = getVoltageDivided("ego", sensor->hwChannel PASS_ENGINE_PARAMETER_SUFFIX);
 
 	if (CONFIG(afr_type) == ES_NarrowBand) {
-		float afr = interpolate2d("narrow", volts, engineConfiguration->narrowToWideOxygenBins, engineConfiguration->narrowToWideOxygen);
+		float afr = interpolate2d(volts, engineConfiguration->narrowToWideOxygenBins, engineConfiguration->narrowToWideOxygen);
 #ifdef EFI_NARROW_EGO_AVERAGING
 		if (useAveraging)
 			afr = updateEgoAverage(afr);

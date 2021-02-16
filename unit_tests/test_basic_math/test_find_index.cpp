@@ -75,19 +75,19 @@ TEST(misc, testInterpolate2d) {
 	int result;
 
 	printf("Left size\r\n");
-	result = interpolate2d("t", 0, bins4, values4);
+	result = interpolate2d(0, bins4, values4);
 	ASSERT_EQ(1, result);
 
 	printf("Right size\r\n");
-	result = interpolate2d("t", 10, bins4, values4);
+	result = interpolate2d(10, bins4, values4);
 	ASSERT_EQ(400, result);
 
 	printf("Middle1\r\n");
-	result = interpolate2d("t", 3, bins4, values4);
+	result = interpolate2d(3, bins4, values4);
 	ASSERT_EQ(30, result);
 
 	printf("Middle1\r\n");
-	result = interpolate2d("t", 3.5, bins4, values4);
+	result = interpolate2d(3.5, bins4, values4);
 	ASSERT_EQ(215, result);
 }
 

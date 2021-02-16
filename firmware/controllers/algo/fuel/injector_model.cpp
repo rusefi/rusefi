@@ -78,7 +78,6 @@ float InjectorModel::getInjectorMassFlowRate() const {
 
 float InjectorModel::getDeadtime() const {
 	return interpolate2d(
-		"lag",
 		ENGINE(sensors.vBatt),
 		engineConfiguration->injector.battLagCorrBins,
 		engineConfiguration->injector.battLagCorr
