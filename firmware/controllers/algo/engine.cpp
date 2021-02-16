@@ -369,8 +369,8 @@ void Engine::preCalculate(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	tsOutputChannels.engineMakeCodeNameCrc16 = crc32(engineConfiguration->engineMake, 3 * VEHICLE_INFO_SIZE);
 
 	// we need and can empty warning message for CRC purposes
-	memset(engine->config->warning_message, 0, sizeof(error_message_t));
-	tsOutputChannels.tuneCrc16 = crc32(engine->config, sizeof(persistent_config_s));
+	memset(config->warning_message, 0, sizeof(error_message_t));
+	tsOutputChannels.tuneCrc16 = crc32(config, sizeof(persistent_config_s));
 #endif /* EFI_TUNER_STUDIO */
 }
 
