@@ -122,7 +122,7 @@ struct persistent_config_s;
 #endif // EFI_UNIT_TEST
 
 #define EXPAND_Engine \
-	    engine_configuration_s *engineConfiguration = engine->engineConfigurationPtr; \
+	    engine_configuration_s *engineConfiguration = engine->engineConfiguration; \
 		persistent_config_s *config = engine->config; \
 		(void)engineConfiguration; \
 		(void)config;
