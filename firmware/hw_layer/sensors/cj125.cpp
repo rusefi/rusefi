@@ -578,9 +578,9 @@ float cjGetAfr(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	float pumpCurrent = (globalInstance.vUa - globalInstance.vUaCal) * globalInstance.amplCoeff * (CJ125_PUMP_CURRENT_FACTOR / CJ125_PUMP_SHUNT_RESISTOR);
 	
 	if (engineConfiguration->cj125isLsu49) {
-		globalInstance.lambda = interpolate2d("cj125Lsu", pumpCurrent, pumpCurrentLsu49, lambdaLsu49);
+		globalInstance.lambda = interpolate2d(pumpCurrent, pumpCurrentLsu49, lambdaLsu49);
 	} else {
-		globalInstance.lambda = interpolate2d("cj125Lsu", pumpCurrent, pumpCurrentLsu42, lambdaLsu42);
+		globalInstance.lambda = interpolate2d(pumpCurrent, pumpCurrentLsu42, lambdaLsu42);
 	}
 
 	// todo: make configurable stoich ratio
