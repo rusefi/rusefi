@@ -71,7 +71,7 @@ DISPLAY(DISPLAY_IF(isCrankingState)) float getCrankingFuel3(
 	 * Cranking fuel changes over time
 	 */
 	DISPLAY_TEXT(Duration_coef);
-	engine->engineState.DISPLAY_PREFIX(cranking).DISPLAY_FIELD(durationCoefficient) = interpolate2d("crank", revolutionCounterSinceStart, config->crankingCycleBins,
+	engine->engineState.DISPLAY_PREFIX(cranking).DISPLAY_FIELD(durationCoefficient) = interpolate2d(revolutionCounterSinceStart, config->crankingCycleBins,
 			config->crankingCycleCoef);
 	DISPLAY_TEXT(eol);
 
@@ -89,7 +89,7 @@ DISPLAY(DISPLAY_IF(isCrankingState)) float getCrankingFuel3(
 	auto tps = Sensor::get(SensorType::DriverThrottleIntent);
 
 	DISPLAY_TEXT(TPS_coef);
-	engine->engineState.DISPLAY_PREFIX(cranking).DISPLAY_FIELD(tpsCoefficient) = tps.Valid ? 1 : interpolate2d("crankTps", tps.Value, engineConfiguration->crankingTpsBins,
+	engine->engineState.DISPLAY_PREFIX(cranking).DISPLAY_FIELD(tpsCoefficient) = tps.Valid ? 1 : interpolate2d(tps.Value, engineConfiguration->crankingTpsBins,
 			engineConfiguration->crankingTpsCoef);
 
 
