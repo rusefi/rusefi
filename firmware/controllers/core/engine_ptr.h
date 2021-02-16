@@ -55,6 +55,11 @@ struct persistent_config_s;
 	#define DEFINE_CONFIG_PARAM(x, y) , x y
 	#define PASS_CONFIG_PARAM(x) , x
 
+	#define EXPAND_Engine \
+			engine_configuration_s *engineConfiguration = engine->engineConfiguration; \
+			persistent_config_s *config = engine->config; \
+			(void)engineConfiguration; \
+			(void)config;
 #else // EFI_UNIT_TEST
 
 	// These are the non-unit-test (AKA real firmware) noop versions
@@ -119,10 +124,5 @@ struct persistent_config_s;
 	#define CONFIG_PARAM(x) CONFIG(x)
 	#define PASS_CONFIG_PARAM(x)
 
+	#define EXPAND_Engine
 #endif // EFI_UNIT_TEST
-
-#define EXPAND_Engine \
-	    engine_configuration_s *engineConfiguration = engine->engineConfiguration; \
-		persistent_config_s *config = engine->config; \
-		(void)engineConfiguration; \
-		(void)config;
