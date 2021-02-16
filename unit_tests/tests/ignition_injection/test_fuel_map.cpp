@@ -23,8 +23,8 @@ TEST(misc, testFuelMap) {
 	WITH_ENGINE_TEST_HELPER(FORD_ASPIRE_1996);
 
 	for (int i = 0; i < VBAT_INJECTOR_CURVE_SIZE; i++) {
-		eth.engine.engineConfigurationPtr->injector.battLagCorrBins[i] = i;
-		eth.engine.engineConfigurationPtr->injector.battLagCorr[i] = 0.5 + 2 * i;
+		CONFIG(injector.battLagCorrBins[i]) = i;
+		CONFIG(injector.battLagCorr[i]) = 0.5 + 2 * i;
 	}
 
 	eth.engine.updateSlowSensors(PASS_ENGINE_PARAMETER_SIGNATURE);

@@ -113,7 +113,7 @@ static void initVvtShape(Logging *logger, int index, TriggerState &initState DEC
 
 		shape->initializeTriggerWaveform(logger,
 				engineConfiguration->ambiguousOperationMode,
-				engine->engineConfigurationPtr->vvtCamSensorUseRise, &config);
+				CONFIG(vvtCamSensorUseRise), &config);
 
 		shape->initializeSyncPoint(initState,
 				engine->vvtTriggerConfiguration[index],
@@ -332,11 +332,6 @@ Engine::Engine() {
 	reset();
 }
 
-Engine::Engine(persistent_config_s *config) {
-	setConfig(config);
-	reset();
-}
-
 /**
  * @see scheduleStopEngine()
  * @return true if there is a reason to stop engine
@@ -368,29 +363,19 @@ void Engine::reset() {
  * so that we can prepare some helper structures
  */
 void Engine::preCalculate(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
-// todo: start using this 'adcToVoltageInputDividerCoefficient' micro-optimization or... throw it away?
-#if HAL_USE_ADC
-	adcToVoltageInputDividerCoefficient = adcToVolts(1) * engineConfiguration->analogInputDividerCoefficient;
-#else
-	adcToVoltageInputDividerCoefficient = engineConfigurationPtr->analogInputDividerCoefficient;
-#endif
-
 #if EFI_TUNER_STUDIO
 	// we take 2 bytes of crc32, no idea if it's right to call it crc16 or not
 	// we have a hack here - we rely on the fact that engineMake is the first of three relevant fields
 	tsOutputChannels.engineMakeCodeNameCrc16 = crc32(engineConfiguration->engineMake, 3 * VEHICLE_INFO_SIZE);
 
 	// we need and can empty warning message for CRC purposes
-	memset(engine->config->warning_message, 0, sizeof(error_message_t));
-	tsOutputChannels.tuneCrc16 = crc32(engine->config, sizeof(persistent_config_s));
+	memset(config->warning_message, 0, sizeof(error_message_t));
+	tsOutputChannels.tuneCrc16 = crc32(config, sizeof(persistent_config_s));
 #endif /* EFI_TUNER_STUDIO */
 }
 
 #if EFI_SHAFT_POSITION_INPUT
 void Engine::OnTriggerStateDecodingError() {
-	Engine *engine = this;
-	EXPAND_Engine;
-
 	warning(CUSTOM_SYNC_COUNT_MISMATCH, "trigger not happy current %d/%d/%d expected %d/%d/%d",
 			triggerCentral.triggerState.currentCycle.eventCount[0],
 			triggerCentral.triggerState.currentCycle.eventCount[1],
@@ -418,23 +403,15 @@ void Engine::OnTriggerStateDecodingError() {
 }
 
 void Engine::OnTriggerStateProperState(efitick_t nowNt) {
-	Engine *engine = this;
-	EXPAND_Engine;
-
 	rpmCalculator.setSpinningUp(nowNt);
 }
 
 void Engine::OnTriggerSynchronizationLost() {
-	Engine *engine = this;
-	EXPAND_Engine;
-
 	// Needed for early instant-RPM detection
-	engine->rpmCalculator.setStopSpinning();
+	rpmCalculator.setStopSpinning();
 }
 
 void Engine::OnTriggerInvalidIndex(int currentIndex) {
-	Engine *engine = this;
-	EXPAND_Engine;
 	// let's not show a warning if we are just starting to spin
 	if (GET_RPM() != 0) {
 		warning(CUSTOM_SYNC_ERROR, "sync error: index #%d above total size %d", currentIndex, triggerCentral.triggerShape.getSize());
@@ -446,9 +423,6 @@ void Engine::OnTriggerSyncronization(bool wasSynchronized) {
 	// We only care about trigger shape once we have synchronized trigger. Anything could happen
 	// during first revolution and it's fine
 	if (wasSynchronized) {
-		Engine *engine = this;
-		EXPAND_Engine;
-
 		/**
 	 	 * We can check if things are fine by comparing the number of events in a cycle with the expected number of event.
 	 	 */
@@ -478,9 +452,6 @@ void Engine::OnTriggerSyncronization(bool wasSynchronized) {
 #endif
 
 void Engine::injectEngineReferences() {
-	Engine *engine = this;
-	EXPAND_Engine;
-
 	INJECT_ENGINE_REFERENCE(&primaryTriggerConfiguration);
 	for (int camIndex = 0;camIndex < CAMS_PER_BANK;camIndex++) {
 		INJECT_ENGINE_REFERENCE(&vvtTriggerConfiguration[camIndex]);
@@ -494,9 +465,8 @@ void Engine::injectEngineReferences() {
 	triggerCentral.init(PASS_ENGINE_PARAMETER_SIGNATURE);
 }
 
-void Engine::setConfig(persistent_config_s *config) {
-	this->config = config;
-	engineConfigurationPtr = &config->engineConfiguration;
+void Engine::setConfig(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+	INJECT_ENGINE_REFERENCE(this);
 	memset(config, 0, sizeof(persistent_config_s));
 
 	injectEngineReferences();
