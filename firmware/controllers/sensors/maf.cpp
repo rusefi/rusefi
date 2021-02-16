@@ -22,7 +22,7 @@ bool hasMafSensor(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 float getRealMaf(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	float volts = getMafVoltage(PASS_ENGINE_PARAMETER_SIGNATURE);
 
-	return interpolate2d("maf", volts, config->mafDecodingBins, config->mafDecoding);
+	return interpolate2d(volts, config->mafDecodingBins, config->mafDecoding);
 }
 
 static void fillTheRest(persistent_config_s *e, int i) {

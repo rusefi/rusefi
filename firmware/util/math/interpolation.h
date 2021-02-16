@@ -93,7 +93,7 @@ static float linterp(float low, float high, float frac)
 } // namespace priv
 
 template <class TBin, class TValue, int TSize>
-float interpolate2d(const char *msg, const float value, const TBin (&bin)[TSize], const TValue (&values)[TSize]) {
+float interpolate2d(const float value, const TBin (&bin)[TSize], const TValue (&values)[TSize]) {
 	// Enforce numeric only (int, float, uintx_t, etc)
 	static_assert(std::is_arithmetic_v<TBin>, "Table values must be an arithmetic type");
 
@@ -105,11 +105,6 @@ float interpolate2d(const char *msg, const float value, const TBin (&bin)[TSize]
 	float frac = b.Frac;
 
 	return priv::linterp(low, high, frac);
-}
-
-template <class TBin, class TValue, int TSize>
-float interpolate2d(const float value, const TBin (&bin)[TSize], const TValue (&values)[TSize]) {
-	return interpolate2d("", value, bin, values);
 }
 
 int needInterpolationLogging(void);
