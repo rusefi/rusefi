@@ -781,7 +781,7 @@ void runHardcodedFsio(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	if (isBrainPinValid(CONFIG(fanPin))) {
 		auto clt = Sensor::get(SensorType::Clt);
 		enginePins.fanRelay.setValue(!clt.Valid || (enginePins.fanRelay.getLogicValue() && (clt.Value > engineConfiguration->fanOffTemperature)) || 
-			(clt.Value > engineConfiguration->fanOnTemperature) || engine->isCltBroken);
+			(clt.Value > engineConfiguration->fanOnTemperature) || !clt.Valid);
 	}
 	// see AC_RELAY_LOGIC
 	if (isBrainPinValid(CONFIG(acRelayPin))) {
