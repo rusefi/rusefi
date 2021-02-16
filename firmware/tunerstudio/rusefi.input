@@ -2002,7 +2002,7 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 		field = "Highest temperature",					auxTempSensor2_tempC_3, {auxTempSensor2_adcChannel != @@ADC_CHANNEL_NONE@@}
 		field = "Resistance @ HT",						auxTempSensor2_resistance_3, {auxTempSensor2_adcChannel != @@ADC_CHANNEL_NONE@@}
 	
-	dialog = tpsNum1, "Throttle #1"
+	dialog = tpsNum1, "Throttle Body #1"
 		field = "Primary sensor",				tps1_1AdcChannel
 		field = "Primary min",					tpsMin, {tps1_1AdcChannel != @@ADC_CHANNEL_NONE@@}
 		field = "Primary max",					tpsMax, {tps1_1AdcChannel != @@ADC_CHANNEL_NONE@@}
@@ -2011,7 +2011,7 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 		field = "Secondary max",				tps1SecondaryMax, {tps1_2AdcChannel != @@ADC_CHANNEL_NONE@@}
 		commandButton = "Auto Calibrate ETB 1", cmb_etb_auto_calibrate, {tps1_2AdcChannel != @@ADC_CHANNEL_NONE@@ && throttlePedalPositionAdcChannel != @@ADC_CHANNEL_NONE@@}
 
-	dialog = tpsNum2, "Throttle #2"
+	dialog = tpsNum2, "Throttle Body #2"
 		field = "Primary sensor",				tps2_1AdcChannel
 		field = "Primary min",					tps2Min, {tps2_1AdcChannel != @@ADC_CHANNEL_NONE@@}
 		field = "Primary max",					tps2Max, {tps2_1AdcChannel != @@ADC_CHANNEL_NONE@@}
@@ -2782,7 +2782,6 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 		panel = stftPartitionSettingsOverrun, {fuelClosedLoopCorrectionEnabled == 1}
 
 	dialog = vvtPidDialog0, "VVT PID0"
-		field = "Enabled",								activateAuxPid1
 		field = "First Shaft Bank#1",					auxPidPins1
         field = "Second Shaft Bank#1",                  auxPidPins2
         field = "First Shaft Bank#2",                   auxPidPins3
@@ -3296,8 +3295,8 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 
 	dialog = etbAutotune, "PID Autotune"
 		field = "First step: calibrate TPS and hit 'Burn'"
-		commandButton = "Auto Calibrate TPS 1", cmb_etb_auto_calibrate
-		commandButton = "Auto Calibrate TPS 2", cmb_etb_auto_calibrate_2
+		commandButton = "Auto Calibrate ETB 1", cmb_etb_auto_calibrate
+		commandButton = "Auto Calibrate ETB 2", cmb_etb_auto_calibrate_2
 		field = "Second step"
 		commandButton = "Start ETB PID Autotune", cmd_etb_autotune
 		commandButton = "Stop ETB PID Autotune", cmd_etb_autotune_stop
