@@ -307,7 +307,9 @@ INCDIR = $(ALLINC) \
 # Compiler settings
 #
 
-MCU  = cortex-m4
+ifeq ($(MCU),)
+	MCU = cortex-m4
+endif
 
 ifeq ($(CROSS_COMPILE),)
   TRGT = arm-none-eabi-
