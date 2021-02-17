@@ -111,6 +111,9 @@ extern pin_output_mode_e INVERTED_OUTPUT;
 #ifndef LED_RUNING_BRAIN_PIN_MODE
 #define LED_RUNING_BRAIN_PIN_MODE	DEFAULT_OUTPUT
 #endif
+#ifndef LED_COMMUNICATION_BRAIN_PIN_MODE
+#define LED_COMMUNICATION_BRAIN_PIN_MODE	DEFAULT_OUTPUT
+#endif
 
 int warningEnabled = true;
 
@@ -328,7 +331,7 @@ static OutputPin *leds[] = { &enginePins.warningLedPin, &enginePins.runningLedPi
 		&enginePins.errorLedPin, &enginePins.communicationLedPin, &enginePins.checkEnginePin };
 
 static void initStatusLeds(void) {
-	enginePins.communicationLedPin.initPin("led: comm status", engineConfiguration->communicationLedPin);
+	enginePins.communicationLedPin.initPin("led: comm status", engineConfiguration->communicationLedPin, &LED_COMMUNICATION_BRAIN_PIN_MODE);
 	// checkEnginePin is already initialized by the time we get here
 
 	enginePins.warningLedPin.initPin("led: warning status", engineConfiguration->warningLedPin, &LED_WARNING_BRAIN_PIN_MODE);
