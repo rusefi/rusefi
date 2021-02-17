@@ -42,6 +42,7 @@ static LENameOrdinalPair leAnd2(LE_OPERATOR_AND, "&");
 static LENameOrdinalPair leOr(LE_OPERATOR_OR, "or");
 static LENameOrdinalPair leOr2(LE_OPERATOR_OR, "|");
 static LENameOrdinalPair leNot(LE_OPERATOR_NOT, "not");
+static LENameOrdinalPair leNot2(LE_OPERATOR_NOT, "!");
 
 static LENameOrdinalPair leAdd(LE_OPERATOR_ADDITION, "+");
 static LENameOrdinalPair leSub(LE_OPERATOR_SUBTRACTION, "-");
