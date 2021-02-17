@@ -448,7 +448,7 @@ void applyNewHardwareSettings(void) {
 	startLogicAnalyzerPins();
 #endif /* EFI_LOGIC_ANALYZER */
 #if EFI_AUX_PID
-	startAuxPins();
+	startVvtControlPins();
 #endif /* EFI_AUX_PID */
 
 	adcConfigListener(engine);
