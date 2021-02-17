@@ -1409,11 +1409,9 @@ float[CLT_CURVE_SIZE] iacCoasting;    CLT-based idle position for coasting (used
 	linear_sensor_s highPressureFuel;
 	linear_sensor_s lowPressureFuel;
 
-! issue 455: RPM hard limit depending on CLT
-int8_t[CLT_LIMITER_CURVE_SIZE] cltRevLimitRpmBins;CLT-based target RPM for hard limit depending on CLT LFAstyle;"C",        1,     0,   -70,    120,  0
+int8_t[CLT_LIMITER_CURVE_SIZE] cltRevLimitRpmBins;CLT-based target RPM for hard limit depending on CLT like on Lexus LFA;"C",        1,     0,   -70,    120,  0
 uint16_t[CLT_LIMITER_CURVE_SIZE] cltRevLimitRpm;See idleRpmPid;"",      1,     0,      0,    8000,   0
 
-! was [536] - CLT_LIMITER_CURVE_SIZE*size_of(int8_t) [4*1] - CLT_LIMITER_CURVE_SIZE*size_of(uint16_t) [4*2] = 536 - 4 - 8 = 524
 uint8_t[524] unused3328;;"units", 1, 0, -20, 100, 0
 
 float tChargeAirCoefMin;;"Min tCharge Coeff.",        1,     0,  0.0,    1.0,  4
