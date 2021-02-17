@@ -344,7 +344,6 @@ static int tle8888_spi_rw(struct tle8888_priv *chip, uint16_t tx, uint16_t *rx_p
 	spiSelect(spi);
 	/* Atomic transfer operations. */
 	rx = spiPolledExchange(spi, tx);
-	//spiExchange(spi, 2, &tx, &rxb); 8 bit version just in case?
 	/* Slave Select de-assertion. */
 	spiUnselect(spi);
 	/* Ownership release. */
@@ -393,7 +392,7 @@ static int tle8888_spi_rw_array(struct tle8888_priv *chip, const uint16_t *tx, u
 		spiSelect(spi);
 		/* data transfer */
 		rxdata = spiPolledExchange(spi, tx[i]);
-		//spiExchange(spi, 2, &tx, &rxb); 8 bit version just in case?
+
 		if (rx)
 			rx[i] = rxdata;
 		/* Slave Select de-assertion. */
