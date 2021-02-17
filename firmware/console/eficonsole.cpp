@@ -46,7 +46,7 @@ static void sayNothing(void) {
 }
 
 static void sayHello(void) {
-	scheduleMsg(&logger, PROTOCOL_HELLO_PREFIX " rusEFI LLC (c) 2012-2020. All rights reserved.");
+	scheduleMsg(&logger, PROTOCOL_HELLO_PREFIX " rusEFI LLC (c) 2012-2021. All rights reserved.");
 	scheduleMsg(&logger, PROTOCOL_HELLO_PREFIX " rusEFI v%d@%s", getRusEfiVersion(), VCS_VERSION);
 	scheduleMsg(&logger, PROTOCOL_HELLO_PREFIX " Chibios Kernel:       %s", CH_KERNEL_VERSION);
 	scheduleMsg(&logger, PROTOCOL_HELLO_PREFIX " Compiled:     " __DATE__ " - " __TIME__ "");
