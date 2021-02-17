@@ -351,7 +351,7 @@ void applyNewHardwareSettings(void) {
 #endif /* EFI_EMULATE_POSITION_SENSORS */
 
 #if EFI_AUX_PID
-	stopAuxPins();
+	stopVvtControlPins();
 #endif /* EFI_AUX_PID */
 
 	if (isConfigurationChanged(is_enabled_spi_1)) {

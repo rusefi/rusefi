@@ -177,6 +177,7 @@ bool EnginePins::stopPins() {
 void EnginePins::unregisterPins() {
 	stopInjectionPins();
     stopIgnitionPins();
+    stopAuxValves();
 
 #if EFI_ELECTRONIC_THROTTLE_BODY
 	unregisterEtbPins();
@@ -247,11 +248,26 @@ void EnginePins::stopInjectionPins(void) {
 #endif /* EFI_PROD_CODE */
 }
 
+void EnginePins::stopAuxValves(void) {
+#if EFI_PROD_CODE
+	for (int i = 0; i < AUX_DIGITAL_VALVE_COUNT; i++) {
+		NamedOutputPin *output = &enginePins.auxValve[i];
+		// todo: do we need auxValveMode and reuse code?
+		if (isConfigurationChanged(auxValves[i])) {
+			(output)->deInit();
+		}
+	}
+#endif /* EFI_PROD_CODE */
+}
+
 void EnginePins::startAuxValves(void) {
 #if EFI_PROD_CODE
 	for (int i = 0; i < AUX_DIGITAL_VALVE_COUNT; i++) {
 		NamedOutputPin *output = &enginePins.auxValve[i];
-		output->initPin(output->name, engineConfiguration->auxValves[i]);
+		// todo: do we need auxValveMode and reuse code?
+		if (isConfigurationChanged(auxValves[i])) {
+			output->initPin(output->name, engineConfiguration->auxValves[i]);
+		}
 	}
 #endif /* EFI_PROD_CODE */
 }
