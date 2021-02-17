@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEfi tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Mon Feb 15 03:37:24 UTC 2021
+// this file was generated automatically by rusEfi tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Wed Feb 17 22:45:29 UTC 2021
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -192,6 +192,7 @@ public class Fields {
 	public static final int clt_config_offset = 252;
 	public static final int CLT_CRANKING_CURVE_SIZE = 8;
 	public static final int CLT_CURVE_SIZE = 16;
+	public static final int CLT_LIMITER_CURVE_SIZE = 4;
 	public static final int clt_offset = 252;
 	public static final int clt_resistance_1_offset = 264;
 	public static final int clt_resistance_2_offset = 268;
@@ -208,6 +209,8 @@ public class Fields {
 	public static final int cltIdleCorrBins_offset = 10656;
 	public static final int cltIdleRpm_offset = 1960;
 	public static final int cltIdleRpmBins_offset = 1896;
+	public static final int cltRevLimitRpm_offset = 3332;
+	public static final int cltRevLimitRpmBins_offset = 3328;
 	public static final int cltTimingBins_offset = 2352;
 	public static final int cltTimingExtra_offset = 2384;
 	public static final int clutchDownPin_offset = 664;
@@ -1190,6 +1193,7 @@ public class Fields {
 	public static final int servoOutputPins8_offset = 3147;
 	public static final int showHumanReadableWarning_offset = 976;
 	public static final int showSdCardWarning_offset = 76;
+	public static final int SIGNATURE_HASH = 1375432900;
 	public static final int silentTriggerError_offset = 1464;
 	public static final int slowAdcAlpha_offset = 2088;
 	public static final int sparkDwellRpmBins_offset = 332;
@@ -1473,7 +1477,7 @@ public class Fields {
 	public static final char TS_SD_R_COMMAND = 'r';
 	public static final char TS_SD_W_COMMAND = 'w';
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI 2021.02.15.all.3168733074";
+	public static final String TS_SIGNATURE = "rusEFI 2021.02.17.all.1375432900";
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final int TT_TT_1_16 = 50;
 	public static final int TT_TT_2JZ_1_12 = 29;
@@ -1542,7 +1546,7 @@ public class Fields {
 	public static final int unused244_3_offset = 2428;
 	public static final int unused2508_offset = 2508;
 	public static final int unused2536_offset = 2536;
-	public static final int unused3328_offset = 3328;
+	public static final int unused3328_offset = 3340;
 	public static final int unused3942_offset = 3992;
 	public static final int unused3988_offset = 3988;
 	public static final int unused4028_offset = 4028;

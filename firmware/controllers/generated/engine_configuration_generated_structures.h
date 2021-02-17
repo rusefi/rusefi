@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Mon Feb 15 03:37:24 UTC 2021
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Wed Feb 17 22:45:29 UTC 2021
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -3262,9 +3262,19 @@ struct engine_configuration_s {
 	 */
 	linear_sensor_s lowPressureFuel;
 	/**
+	 * CLT-based target RPM for hard limit depending on CLT like on Lexus LFA
 	 * offset 3328
 	 */
-	uint8_t unused3328[536];
+	int8_t cltRevLimitRpmBins[CLT_LIMITER_CURVE_SIZE];
+	/**
+	 * See idleRpmPid
+	 * offset 3332
+	 */
+	uint16_t cltRevLimitRpm[CLT_LIMITER_CURVE_SIZE];
+	/**
+	 * offset 3340
+	 */
+	uint8_t unused3328[524];
 	/**
 	 * offset 3864
 	 */
@@ -3854,4 +3864,4 @@ struct persistent_config_s {
 typedef struct persistent_config_s persistent_config_s;
 
 // end
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Mon Feb 15 03:37:24 UTC 2021
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Wed Feb 17 22:45:29 UTC 2021

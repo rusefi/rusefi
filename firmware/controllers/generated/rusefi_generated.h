@@ -202,6 +202,7 @@
 #define clt_config_offset 252
 #define CLT_CRANKING_CURVE_SIZE 8
 #define CLT_CURVE_SIZE 16
+#define CLT_LIMITER_CURVE_SIZE 4
 #define clt_offset 252
 #define clt_resistance_1_offset 264
 #define clt_resistance_2_offset 268
@@ -218,6 +219,8 @@
 #define cltIdleCorrBins_offset 10656
 #define cltIdleRpm_offset 1960
 #define cltIdleRpmBins_offset 1896
+#define cltRevLimitRpm_offset 3332
+#define cltRevLimitRpmBins_offset 3328
 #define cltTimingBins_offset 2352
 #define cltTimingExtra_offset 2384
 #define clutchDownPin_offset 664
@@ -1235,8 +1238,8 @@
 #define showHumanReadableWarning_offset 976
 #define showSdCardWarning_offset 76
 #define SIGNATURE_BOARD all
-#define SIGNATURE_DATE 2021.02.15
-#define SIGNATURE_HASH 3168733074
+#define SIGNATURE_DATE 2021.02.17
+#define SIGNATURE_HASH 1375432900
 #define silentTriggerError_offset 1464
 #define slowAdcAlpha_offset 2088
 #define sparkDwellRpmBins_offset 332
@@ -1570,7 +1573,7 @@
 #define ts_show_spi true
 #define ts_show_trigger_comparator false
 #define ts_show_tunerstudio_port true
-#define TS_SIGNATURE "rusEFI 2021.02.15.all.3168733074"
+#define TS_SIGNATURE "rusEFI 2021.02.17.all.1375432900"
 #define TS_SINGLE_WRITE_COMMAND 'W'
 #define TS_SINGLE_WRITE_COMMAND_char W
 #define TS_TEST_COMMAND 't' // 0x74
@@ -1642,7 +1645,7 @@
 #define unused244_3_offset 2428
 #define unused2508_offset 2508
 #define unused2536_offset 2536
-#define unused3328_offset 3328
+#define unused3328_offset 3340
 #define unused3942_offset 3992
 #define unused3988_offset 3988
 #define unused4028_offset 4028
