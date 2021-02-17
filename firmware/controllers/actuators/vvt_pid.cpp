@@ -112,13 +112,13 @@ static void turnAuxPidOn(int index) {
 			engineConfiguration->auxPidFrequency[0], 0.1);
 }
 
-void startAuxPins() {
+void startVvtControlPins() {
 	for (int i = 0;i <CAM_INPUTS_COUNT;i++) {
 		turnAuxPidOn(i);
 	}
 }
 
-void stopAuxPins() {
+void stopVvtControlPins() {
 	for (int i = 0;i < CAM_INPUTS_COUNT;i++) {
 		instances[i].auxOutputPin.deInit();
 	}
@@ -138,7 +138,7 @@ void initAuxPid(Logging *sharedLogger) {
 		instances[i].init(i);
 	}
 
-	startAuxPins();
+	startVvtControlPins();
 	for (int i = 0;i < CAM_INPUTS_COUNT;i++) {
 		instances[i].Start();
 	}
