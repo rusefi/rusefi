@@ -32,6 +32,7 @@ typedef uint16_t adcsample_t;
 #define spiStop(x) {}
 #define spiSelect(x) {}
 #define spiSelectI(x) {}
+#define spiPolledExchange(x, y) {}
 #define spiSend(x, y, z) {}
 #define spiReceive(x, y, z) {}
 #define spiExchange(x,y,w,z) {}
