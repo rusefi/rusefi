@@ -17,31 +17,6 @@
 #ifndef _MCUCONF_H_
 #define _MCUCONF_H_
 
-/**
- * This is about SingleTimerExecutor - rusEfi 1MHz precise scheduling timer
- * this is not about ChibiOS virtual timer which rusEfi uses for
- * periodicFastCallback and periodicSlowCallback
- * See STM32_ST_IRQ_PRIORITY
- *
- * http://www.chibios.org/dokuwiki/doku.php?id=chibios:kb:priority
- */
-#define PRECISE_SCHEDULING_TIMER_PRIORITY 4
-/**
- * Input Capture Unit is how we capture shaft position sensors output
- */
-#define ICU_PRIORITY 3
-
-/**
- * UART DMA-mode byte capture (low latency)
- */
-#define UART_DMA_IRQ_PRIORITY (PRECISE_SCHEDULING_TIMER_PRIORITY + 2)
-
-/*
- * SysTick driver system settings.
- */
-#define STM32_ST_IRQ_PRIORITY               8
-#define STM32_ST_USE_TIMER                  2
-
 /*
  * STM32F4xx drivers configuration.
  * The following settings override the default settings present in
