@@ -80,9 +80,10 @@ static void setupVbatt() {
 	// 4.7k high side/4.7k low side = 2.0 ratio divider
 	engineConfiguration->analogInputDividerCoefficient = 2.0f;
 
-	// set vbatt_divider 4.0
-	// 10k high side/3.333k low side
-	engineConfiguration->vbattDividerCoeff = (10.0f + 10.0f / 3.0f) / (10.0f / 3.0f);	// = 4
+	// set vbatt_divider 5.835
+	// 33k / 6.8k
+	engineConfiguration->vbattDividerCoeff = (33 + 6.8) / 6.8; // 5.835
+
 	// pin input +12 from Main Relay
 	engineConfiguration->vbattAdcChannel = EFI_ADC_NONE; // EFI_ADC_5 on ADC3
 
