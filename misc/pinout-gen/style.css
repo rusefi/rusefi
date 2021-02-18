@@ -10,81 +10,81 @@
   line-height: 200%;
 }
 
-[data-type="12v"],
-[data-type="12V"] {
+[data-type*="12v"],
+[data-type*="12V"] {
   border-color: yellow;
 }
 
-[data-type="5v"],
-[data-type="5V"] {
+[data-type*="5v"],
+[data-type*="5V"] {
   border-color: red;
 }
 
-[data-type="at"] {
+[data-type*="at"] {
   border-color: green;
 }
 
-[data-type="av"] {
+[data-type*="av"] {
   border-color: brown;
 }
 
-[data-type="can"] {
+[data-type*="can"] {
   border-color: blue;
 }
 
-[data-type="din"] {
+[data-type*="din"] {
   border-color: lime;
 }
 
-[data-type="etb"] {
+[data-type*="etb"] {
   border-color: darkcyan;
 }
 
-[data-type="gnd"] {
+[data-type*="gnd"] {
   border-color: darkgreen;
 }
 
-[data-type="gp_high"] {
+[data-type*="gp_high"] {
   border-color: aqua;
 }
 
-[data-type="gp_low"] {
+[data-type*="gp_low"] {
   border-color: aquamarine;
 }
 
-[data-type="gp_pp"] {
+[data-type*="gp_pp"] {
   border-color: cyan;
 }
 
-[data-type="hall"] {
+[data-type*="hall"] {
   border-color: darkolivegreen;
 }
 
-[data-type="hl"] {
+[data-type*="hl"] {
   border-color: gold;
 }
 
-[data-type="hs"] {
+[data-type*="hs"] {
   border-color: indigo;
 }
 
-[data-type="ign"] {
-  border-color: majenta;
+[data-type*="ign"] {
+  border-color: magenta;
 }
 
-[data-type="inj"] {
+[data-type*="inj"] {
   border-color: maroon;
 }
 
-[data-type="ls"] {
+[data-type*="ls"] {
   border-color: lightgreen;
 }
 
-[data-type="sgnd"] {
+[data-type*="sgnd"] {
   border-color: olive;
 }
 
-[data-type="vr"] {
+[data-type*="vr"] {
   border-color: sienna;
 }
 
