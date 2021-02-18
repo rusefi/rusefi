@@ -68,8 +68,7 @@ TEST(fsio, testParsing) {
 	LEElement thepool[TEST_POOL_SIZE];
 	LEElementPool pool(thepool, TEST_POOL_SIZE);
 
-	LEElement *element;
-	element = pool.parseExpression("1 3 AND not");
+	LEElement *element = pool.parseExpression("1 3 AND not");
 	ASSERT_TRUE(element != NULL);
 
 	ASSERT_EQ(element[0].action, LE_NUMERIC_VALUE);
@@ -86,6 +85,24 @@ TEST(fsio, testParsing) {
 	ASSERT_EQ(element[4].action, LE_METHOD_RETURN);
 
 	ASSERT_EQ(pool.getSize(), 5);
+}
+
+TEST(fsio, parsingMultiple) {
+	LEElement poolArr[TEST_POOL_SIZE];
+	LEElementPool pool(poolArr, TEST_POOL_SIZE);
+
+	LEElement* p1 = pool.parseExpression("2");
+	ASSERT_EQ(p1[0].action, LE_NUMERIC_VALUE);
+	ASSERT_EQ(p1[0].fValue, 2);
+	ASSERT_EQ(p1[1].action, LE_METHOD_RETURN);
+
+	LEElement* p2 = pool.parseExpression("4");
+	ASSERT_EQ(p2[0].action, LE_NUMERIC_VALUE);
+	ASSERT_EQ(p2[0].fValue, 4);
+	ASSERT_EQ(p2[1].action, LE_METHOD_RETURN);
+
+	// Check that they got allocated sequentially without overlap
+	ASSERT_EQ(p2 - p1, 2);
 }
 
 static void testExpression2(float selfValue, const char *line, float expected, Engine *engine) {
