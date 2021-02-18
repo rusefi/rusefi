@@ -13,10 +13,6 @@
 #ifndef _HALCONF_SUBARUEG33_H_
 #define _HALCONF_SUBARUEG33_H_
 
-#undef HAL_USE_PAL
-#define HAL_USE_PAL				TRUE
-#undef PAL_USE_CALLBACKS
-#define PAL_USE_CALLBACKS		TRUE
 #undef HAL_TRIGGER_USE_PAL
 #define HAL_TRIGGER_USE_PAL		TRUE
 
@@ -34,8 +30,5 @@
 //#else
 //#define HAL_USE_UART			FALSE
 //#endif
-
-#undef HAL_USE_USB_MSD
-#define HAL_USE_USB_MSD			FALSE
 
 #endif /* _HALCONF_SUBARUEG33_H_ */

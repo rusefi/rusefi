@@ -31,9 +31,6 @@ DDEFS += -DEFI_ICU_INPUTS=FALSE -DHAL_TRIGGER_USE_PAL=TRUE -DHAL_VSS_USE_PAL=TRU
 # todo: is it broken?
 DDEFS += -DEFI_LOGIC_ANALYZER=FALSE
 
-# USB mass storage support
-DDEFS += -DHAL_USE_COMMUNITY=TRUE -DHAL_USE_USB_MSD=TRUE
-
 # We are running on Hellen-One hardware!
 DDEFS += -DHW_HELLEN=1
 
