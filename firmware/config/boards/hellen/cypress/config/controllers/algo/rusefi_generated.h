@@ -428,6 +428,7 @@
 #define ET_MRE_NEW_TEST_BOARD 31
 #define ET_MRE_OLD_TEST_BOARD 30
 #define ET_MRE_SUBARU_EJ18 37
+#define ET_NISSAN_PRIMERA 5
 #define ET_PROTEUS_ANALOG_PWM_TEST 106
 #define ET_PROTEUS_BMW_M73 63
 #define ET_PROTEUS_MIATA_NB2 67
@@ -1242,7 +1243,7 @@
 #define showSdCardWarning_offset 76
 #define SIGNATURE_BOARD hellen_cypress
 #define SIGNATURE_DATE 2021.02.18
-#define SIGNATURE_HASH 327658260
+#define SIGNATURE_HASH 929793293
 #define silentTriggerError_offset 1464
 #define slowAdcAlpha_offset 2088
 #define sparkDwellRpmBins_offset 332
@@ -1576,7 +1577,7 @@
 #define ts_show_spi true
 #define ts_show_trigger_comparator false
 #define ts_show_tunerstudio_port true
-#define TS_SIGNATURE "rusEFI 2021.02.18.hellen_cypress.327658260"
+#define TS_SIGNATURE "rusEFI 2021.02.18.hellen_cypress.929793293"
 #define TS_SINGLE_WRITE_COMMAND 'W'
 #define TS_SINGLE_WRITE_COMMAND_char W
 #define TS_TEST_COMMAND 't' // 0x74
