@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEfi tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Tue Feb 09 19:00:20 UTC 2021
+// this file was generated automatically by rusEfi tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Thu Feb 18 01:26:57 UTC 2021
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -19,10 +19,6 @@ public class Fields {
 	public static final int acRelayPinMode_offset = 831;
 	public static final int acSwitch_offset = 1469;
 	public static final int acSwitchMode_offset = 4516;
-	public static final int activateAuxPid1_offset = 76;
-	public static final int activateAuxPid2_offset = 76;
-	public static final int activateAuxPid3_offset = 76;
-	public static final int activateAuxPid4_offset = 76;
 	public static final int ADC_CHANNEL_NONE = 0;
 	public static final int adcVcc_offset = 548;
 	public static final int afr_alignmentFill_afr_offset = 561;
@@ -46,6 +42,7 @@ public class Fields {
 	public static final int air_pressure_sensor_config_s_size = 16;
 	public static final int alignEngineSnifferAtTDC_offset = 744;
 	public static final int alignmentFill_at_2227_offset = 2227;
+	public static final int alignmentFill_at_2253_offset = 2253;
 	public static final int alignmentFill_at_4539_offset = 4539;
 	public static final int alternator_antiwindupFreq_offset = 1764;
 	public static final int alternator_derivativeFilterLoss_offset = 1760;
@@ -68,7 +65,6 @@ public class Fields {
 	public static final int antiLagEnabled_offset = 76;
 	public static final int antiLagRpmTreshold_offset = 824;
 	public static final int AUX_DIGITAL_VALVE_COUNT = 2;
-	public static final int AUX_PID_COUNT = 4;
 	public static final int auxFastSensor1_adcChannel_offset = 680;
 	public static final int auxPid1_dFactor_offset = 2620;
 	public static final int auxPid1_iFactor_offset = 2616;
@@ -86,26 +82,8 @@ public class Fields {
 	public static final int auxPid2_offset_offset = 2644;
 	public static final int auxPid2_periodMs_offset = 2646;
 	public static final int auxPid2_pFactor_offset = 2632;
-	public static final int auxPid3_dFactor_offset = 2660;
-	public static final int auxPid3_iFactor_offset = 2656;
-	public static final int auxPid3_maxValue_offset = 2670;
-	public static final int auxPid3_minValue_offset = 2668;
-	public static final int auxPid3_offset = 2652;
-	public static final int auxPid3_offset_offset = 2664;
-	public static final int auxPid3_periodMs_offset = 2666;
-	public static final int auxPid3_pFactor_offset = 2652;
-	public static final int auxPid4_dFactor_offset = 2680;
-	public static final int auxPid4_iFactor_offset = 2676;
-	public static final int auxPid4_maxValue_offset = 2690;
-	public static final int auxPid4_minValue_offset = 2688;
-	public static final int auxPid4_offset = 2672;
-	public static final int auxPid4_offset_offset = 2684;
-	public static final int auxPid4_periodMs_offset = 2686;
-	public static final int auxPid4_pFactor_offset = 2672;
 	public static final int auxPidFrequency1_offset = 2248;
 	public static final int auxPidFrequency2_offset = 2250;
-	public static final int auxPidFrequency3_offset = 2252;
-	public static final int auxPidFrequency4_offset = 2254;
 	public static final int auxPidPins1_offset = 2220;
 	public static final int auxPidPins2_offset = 2221;
 	public static final int auxPidPins3_offset = 2222;
@@ -190,6 +168,7 @@ public class Fields {
 	public static final int can2TxPin_offset = 2124;
 	public static final int can2WriteEnabled_offset = 2116;
 	public static final int CAN_DEFAULT_BASE = 0x200;
+	public static final String CAN_RX_PREFIX = "CAN_rx";
 	public static final int canBaudRate_offset = 2108;
 	public static final int canNbcType_offset = 480;
 	public static final int canReadEnabled_offset = 1464;
@@ -213,6 +192,7 @@ public class Fields {
 	public static final int clt_config_offset = 252;
 	public static final int CLT_CRANKING_CURVE_SIZE = 8;
 	public static final int CLT_CURVE_SIZE = 16;
+	public static final int CLT_LIMITER_CURVE_SIZE = 4;
 	public static final int clt_offset = 252;
 	public static final int clt_resistance_1_offset = 264;
 	public static final int clt_resistance_2_offset = 268;
@@ -229,6 +209,8 @@ public class Fields {
 	public static final int cltIdleCorrBins_offset = 10656;
 	public static final int cltIdleRpm_offset = 1960;
 	public static final int cltIdleRpmBins_offset = 1896;
+	public static final int cltRevLimitRpm_offset = 3332;
+	public static final int cltRevLimitRpmBins_offset = 3328;
 	public static final int cltTimingBins_offset = 2352;
 	public static final int cltTimingExtra_offset = 2384;
 	public static final int clutchDownPin_offset = 664;
@@ -963,9 +945,6 @@ public class Fields {
 	public static final int issue_294_31_offset = 76;
 	public static final int isVerboseAlternator_offset = 744;
 	public static final int isVerboseAuxPid1_offset = 76;
-	public static final int isVerboseAuxPid2_offset = 76;
-	public static final int isVerboseAuxPid3_offset = 76;
-	public static final int isVerboseAuxPid4_offset = 76;
 	public static final int isVerboseETB_offset = 1464;
 	public static final int isVerboseIAC_offset = 1464;
 	public static final int isWaveAnalyzerEnabled_offset = 1476;
@@ -1214,6 +1193,7 @@ public class Fields {
 	public static final int servoOutputPins8_offset = 3147;
 	public static final int showHumanReadableWarning_offset = 976;
 	public static final int showSdCardWarning_offset = 76;
+	public static final int SIGNATURE_HASH = 1375432900;
 	public static final int silentTriggerError_offset = 1464;
 	public static final int slowAdcAlpha_offset = 2088;
 	public static final int sparkDwellRpmBins_offset = 332;
@@ -1497,7 +1477,7 @@ public class Fields {
 	public static final char TS_SD_R_COMMAND = 'r';
 	public static final char TS_SD_W_COMMAND = 'w';
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI 2021.02.09.all.2882601961";
+	public static final String TS_SIGNATURE = "rusEFI 2021.02.18.all.1375432900";
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final int TT_TT_1_16 = 50;
 	public static final int TT_TT_2JZ_1_12 = 29;
@@ -1551,6 +1531,8 @@ public class Fields {
 	public static final int unused1128_offset = 2116;
 	public static final int unused1129_offset = 2116;
 	public static final int unused1130_offset = 2116;
+	public static final int unused1301_offset = 2252;
+	public static final int unused1366_offset = 2652;
 	public static final int unused1476b19_offset = 1476;
 	public static final int unused1476b20_offset = 1476;
 	public static final int unused1476b3_offset = 1476;
@@ -1564,7 +1546,7 @@ public class Fields {
 	public static final int unused244_3_offset = 2428;
 	public static final int unused2508_offset = 2508;
 	public static final int unused2536_offset = 2536;
-	public static final int unused3328_offset = 3328;
+	public static final int unused3328_offset = 3340;
 	public static final int unused3942_offset = 3992;
 	public static final int unused3988_offset = 3988;
 	public static final int unused4028_offset = 4028;
@@ -1580,6 +1562,13 @@ public class Fields {
 	public static final int unused_1484_bit_29_offset = 1476;
 	public static final int unused_1484_bit_30_offset = 1476;
 	public static final int unused_1484_bit_31_offset = 1476;
+	public static final int unused_294_1_offset = 76;
+	public static final int unused_294_3_offset = 76;
+	public static final int unused_294_4_offset = 76;
+	public static final int unused_294_5_offset = 76;
+	public static final int unused_294_6_offset = 76;
+	public static final int unused_294_7_offset = 76;
+	public static final int unused_294_8_offset = 76;
 	public static final int unusedAtOldBoardConfigurationEnd_offset = 1204;
 	public static final int unusedAuxVoltage1_TODO_332_offset = 2713;
 	public static final int unusedAuxVoltage2_TODO_332_offset = 2714;
@@ -1697,14 +1686,14 @@ public class Fields {
 	public static final Field ENGINESNIFFERRPMTHRESHOLD = Field.create("ENGINESNIFFERRPMTHRESHOLD", 4, FieldType.INT);
 	public static final Field INJECTOR_FLOW = Field.create("INJECTOR_FLOW", 8, FieldType.FLOAT);
 	public static final Field ISFORCEDINDUCTION = Field.create("ISFORCEDINDUCTION", 76, FieldType.BIT, 0);
-	public static final Field ACTIVATEAUXPID1 = Field.create("ACTIVATEAUXPID1", 76, FieldType.BIT, 1);
+	public static final Field UNUSED_294_1 = Field.create("UNUSED_294_1", 76, FieldType.BIT, 1);
 	public static final Field ISVERBOSEAUXPID1 = Field.create("ISVERBOSEAUXPID1", 76, FieldType.BIT, 2);
-	public static final Field ACTIVATEAUXPID2 = Field.create("ACTIVATEAUXPID2", 76, FieldType.BIT, 3);
-	public static final Field ISVERBOSEAUXPID2 = Field.create("ISVERBOSEAUXPID2", 76, FieldType.BIT, 4);
-	public static final Field ACTIVATEAUXPID3 = Field.create("ACTIVATEAUXPID3", 76, FieldType.BIT, 5);
-	public static final Field ISVERBOSEAUXPID3 = Field.create("ISVERBOSEAUXPID3", 76, FieldType.BIT, 6);
-	public static final Field ACTIVATEAUXPID4 = Field.create("ACTIVATEAUXPID4", 76, FieldType.BIT, 7);
-	public static final Field ISVERBOSEAUXPID4 = Field.create("ISVERBOSEAUXPID4", 76, FieldType.BIT, 8);
+	public static final Field UNUSED_294_3 = Field.create("UNUSED_294_3", 76, FieldType.BIT, 3);
+	public static final Field UNUSED_294_4 = Field.create("UNUSED_294_4", 76, FieldType.BIT, 4);
+	public static final Field UNUSED_294_5 = Field.create("UNUSED_294_5", 76, FieldType.BIT, 5);
+	public static final Field UNUSED_294_6 = Field.create("UNUSED_294_6", 76, FieldType.BIT, 6);
+	public static final Field UNUSED_294_7 = Field.create("UNUSED_294_7", 76, FieldType.BIT, 7);
+	public static final Field UNUSED_294_8 = Field.create("UNUSED_294_8", 76, FieldType.BIT, 8);
 	public static final Field ISCJ125VERBOSE = Field.create("ISCJ125VERBOSE", 76, FieldType.BIT, 9);
 	public static final Field CJ125ISUADIVIDED = Field.create("CJ125ISUADIVIDED", 76, FieldType.BIT, 10);
 	public static final Field CJ125ISLSU49 = Field.create("CJ125ISLSU49", 76, FieldType.BIT, 11);
@@ -2509,8 +2498,7 @@ public class Fields {
 	public static final Field TCHARGEMAXRPMMAXTPS = Field.create("TCHARGEMAXRPMMAXTPS", 2244, FieldType.FLOAT);
 	public static final Field AUXPIDFREQUENCY1 = Field.create("AUXPIDFREQUENCY1", 2248, FieldType.INT16);
 	public static final Field AUXPIDFREQUENCY2 = Field.create("AUXPIDFREQUENCY2", 2250, FieldType.INT16);
-	public static final Field AUXPIDFREQUENCY3 = Field.create("AUXPIDFREQUENCY3", 2252, FieldType.INT16);
-	public static final Field AUXPIDFREQUENCY4 = Field.create("AUXPIDFREQUENCY4", 2254, FieldType.INT16);
+	public static final Field UNUSED1301 = Field.create("UNUSED1301", 2252, FieldType.INT8);
 	public static final Field ALTERNATORPWMFREQUENCY = Field.create("ALTERNATORPWMFREQUENCY", 2256, FieldType.INT);
 	public static final Field UNUSED2260 = Field.create("UNUSED2260", 2260, FieldType.INT);
 	public static final String[] vvt_mode_e = {"Inactive", "Single Tooth Second Half", "2GZ", "Miata NB2", "Single Tooth First Half", "Bosch Quick Start", "4/1", "mode7"};
@@ -2595,20 +2583,6 @@ public class Fields {
 	public static final Field AUXPID2_PERIODMS = Field.create("AUXPID2_PERIODMS", 2646, FieldType.INT16);
 	public static final Field AUXPID2_MINVALUE = Field.create("AUXPID2_MINVALUE", 2648, FieldType.INT16);
 	public static final Field AUXPID2_MAXVALUE = Field.create("AUXPID2_MAXVALUE", 2650, FieldType.INT16);
-	public static final Field AUXPID3_PFACTOR = Field.create("AUXPID3_PFACTOR", 2652, FieldType.FLOAT);
-	public static final Field AUXPID3_IFACTOR = Field.create("AUXPID3_IFACTOR", 2656, FieldType.FLOAT);
-	public static final Field AUXPID3_DFACTOR = Field.create("AUXPID3_DFACTOR", 2660, FieldType.FLOAT);
-	public static final Field AUXPID3_OFFSET = Field.create("AUXPID3_OFFSET", 2664, FieldType.INT16);
-	public static final Field AUXPID3_PERIODMS = Field.create("AUXPID3_PERIODMS", 2666, FieldType.INT16);
-	public static final Field AUXPID3_MINVALUE = Field.create("AUXPID3_MINVALUE", 2668, FieldType.INT16);
-	public static final Field AUXPID3_MAXVALUE = Field.create("AUXPID3_MAXVALUE", 2670, FieldType.INT16);
-	public static final Field AUXPID4_PFACTOR = Field.create("AUXPID4_PFACTOR", 2672, FieldType.FLOAT);
-	public static final Field AUXPID4_IFACTOR = Field.create("AUXPID4_IFACTOR", 2676, FieldType.FLOAT);
-	public static final Field AUXPID4_DFACTOR = Field.create("AUXPID4_DFACTOR", 2680, FieldType.FLOAT);
-	public static final Field AUXPID4_OFFSET = Field.create("AUXPID4_OFFSET", 2684, FieldType.INT16);
-	public static final Field AUXPID4_PERIODMS = Field.create("AUXPID4_PERIODMS", 2686, FieldType.INT16);
-	public static final Field AUXPID4_MINVALUE = Field.create("AUXPID4_MINVALUE", 2688, FieldType.INT16);
-	public static final Field AUXPID4_MAXVALUE = Field.create("AUXPID4_MAXVALUE", 2690, FieldType.INT16);
 	public static final Field OILPRESSURE_HWCHANNEL = Field.create("OILPRESSURE_HWCHANNEL", 2692, FieldType.INT8, adc_channel_e);
 	public static final Field OILPRESSURE_V1 = Field.create("OILPRESSURE_V1", 2696, FieldType.FLOAT);
 	public static final Field OILPRESSURE_VALUE1 = Field.create("OILPRESSURE_VALUE1", 2700, FieldType.FLOAT);
@@ -2799,14 +2773,14 @@ public class Fields {
 	ENGINESNIFFERRPMTHRESHOLD,
 	INJECTOR_FLOW,
 	ISFORCEDINDUCTION,
-	ACTIVATEAUXPID1,
+	UNUSED_294_1,
 	ISVERBOSEAUXPID1,
-	ACTIVATEAUXPID2,
-	ISVERBOSEAUXPID2,
-	ACTIVATEAUXPID3,
-	ISVERBOSEAUXPID3,
-	ACTIVATEAUXPID4,
-	ISVERBOSEAUXPID4,
+	UNUSED_294_3,
+	UNUSED_294_4,
+	UNUSED_294_5,
+	UNUSED_294_6,
+	UNUSED_294_7,
+	UNUSED_294_8,
 	ISCJ125VERBOSE,
 	CJ125ISUADIVIDED,
 	CJ125ISLSU49,
@@ -3593,8 +3567,7 @@ public class Fields {
 	TCHARGEMAXRPMMAXTPS,
 	AUXPIDFREQUENCY1,
 	AUXPIDFREQUENCY2,
-	AUXPIDFREQUENCY3,
-	AUXPIDFREQUENCY4,
+	UNUSED1301,
 	ALTERNATORPWMFREQUENCY,
 	UNUSED2260,
 	VVTMODE1,
@@ -3677,20 +3650,6 @@ public class Fields {
 	AUXPID2_PERIODMS,
 	AUXPID2_MINVALUE,
 	AUXPID2_MAXVALUE,
-	AUXPID3_PFACTOR,
-	AUXPID3_IFACTOR,
-	AUXPID3_DFACTOR,
-	AUXPID3_OFFSET,
-	AUXPID3_PERIODMS,
-	AUXPID3_MINVALUE,
-	AUXPID3_MAXVALUE,
-	AUXPID4_PFACTOR,
-	AUXPID4_IFACTOR,
-	AUXPID4_DFACTOR,
-	AUXPID4_OFFSET,
-	AUXPID4_PERIODMS,
-	AUXPID4_MINVALUE,
-	AUXPID4_MAXVALUE,
 	OILPRESSURE_HWCHANNEL,
 	OILPRESSURE_V1,
 	OILPRESSURE_VALUE1,

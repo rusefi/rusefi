@@ -17,6 +17,7 @@
 
 #include "global.h"
 #include "os_access.h"
+#include "mmc_card.h"
 
 #if HAL_USE_SERIAL_USB
 
@@ -26,18 +27,37 @@ SerialUSBDriver SDU1;
 /*
  * Endpoints to be used for USBD1.
  */
-#define USBD1_DATA_REQUEST_EP           1
-#define USBD1_DATA_AVAILABLE_EP         1
-#define USBD1_INTERRUPT_REQUEST_EP      2
+#define USBD1_DATA_REQUEST_EP           2
+#define USBD1_DATA_AVAILABLE_EP         2
+#define USBD1_INTERRUPT_REQUEST_EP      3
+
+#if HAL_USE_USB_MSD
+	// Descriptor that includes MSD is larger and has an extra interface
+	#define DESCRIPTOR_SIZE 98
+	#define NUM_INTERFACES 3
+	#define USB_MSD_EP_SIZE 64
+
+	#define MSD_IF 0
+	#define CDC_INT_IF 1
+	#define CDC_DATA_IF 2
+#else
+	// Alternate descriptor is smaller, no MSD
+	#define DESCRIPTOR_SIZE 75
+	#define NUM_INTERFACES 2
+
+	// only two interfaces
+	#define CDC_INT_IF 0
+	#define CDC_DATA_IF 1
+#endif
 
 /*
  * USB Device Descriptor.
  */
 static const uint8_t vcom_device_descriptor_data[18] = {
   USB_DESC_DEVICE       (0x0110,        /* bcdUSB (1.1).                    */
-                         0x02,          /* bDeviceClass (CDC).              */
-                         0x00,          /* bDeviceSubClass.                 */
-                         0x00,          /* bDeviceProtocol.                 */
+                         0xEF,          /* bDeviceClass ( misc ).           */
+                         0x02,          /* bDeviceSubClass.                 */
+                         0x01,          /* bDeviceProtocol.                 */
                          0x40,          /* bMaxPacketSize.                  */
                          0x0483,        /* idVendor (ST).                   */
                          0x5740,        /* idProduct.                       */
@@ -57,16 +77,44 @@ static const USBDescriptor vcom_device_descriptor = {
 };
 
 /* Configuration Descriptor tree for a CDC.*/
-static const uint8_t vcom_configuration_descriptor_data[67] = {
+static const uint8_t vcom_configuration_descriptor_data[DESCRIPTOR_SIZE] = {
   /* Configuration Descriptor.*/
-  USB_DESC_CONFIGURATION(67,            /* wTotalLength.                    */
-                         0x02,          /* bNumInterfaces.                  */
+  USB_DESC_CONFIGURATION(DESCRIPTOR_SIZE,/* wTotalLength.                    */
+                         NUM_INTERFACES,/* bNumInterfaces.                  */
                          0x01,          /* bConfigurationValue.             */
                          0,             /* iConfiguration.                  */
                          0xC0,          /* bmAttributes (self powered).     */
-                         100),           /* bMaxPower (200mA).               */
+                         100),           /* bMaxPower (200mA).              */
+#if HAL_USE_USB_MSD
+  USB_DESC_INTERFACE    (MSD_IF,        /* bInterfaceNumber.                */
+                         0x00,          /* bAlternateSetting.               */
+                         0x02,          /* bNumEndpoints.                   */
+                         0x08,          /* bInterfaceClass (mass storage)   */
+                         0x06,          /* bInterfaceSubClass (SCSI
+                                              transparent storage class).   */
+                         0x50,          /* bInterfaceProtocol (Bulk Only).  */
+                         0),            /* iInterface.                      */
+  /* Mass Storage Data In Endpoint Descriptor.*/
+  USB_DESC_ENDPOINT     (USB_MSD_DATA_EP | 0x80,
+                         0x02,          /* bmAttributes (Bulk).             */
+                         64,            /* wMaxPacketSize.                  */
+                         0x00),         /* bInterval. 1ms                   */
+  /* Mass Storage Data Out Endpoint Descriptor.*/
+  USB_DESC_ENDPOINT     (USB_MSD_DATA_EP,
+                         0x02,          /* bmAttributes (Bulk).             */
+                         64,            /* wMaxPacketSize.                  */
+                         0x00),         /* bInterval. 1ms                   */
+#endif // HAL_USE_USB_MSD
+  // CDC
+  /* IAD Descriptor - describes that EP2+3 belong to CDC */
+  USB_DESC_INTERFACE_ASSOCIATION(CDC_INT_IF, /* bFirstInterface.                  */
+                                 0x02, /* bInterfaceCount.                  */
+                                 0x02, /* bFunctionClass (CDC).             */
+                                 0x02, /* bFunctionSubClass.  (2)           */
+                                 0x01, /* bFunctionProtocol (1)             */
+                                 2),   /* iInterface.                       */
   /* Interface Descriptor.*/
-  USB_DESC_INTERFACE    (0x00,          /* bInterfaceNumber.                */
+  USB_DESC_INTERFACE    (CDC_INT_IF,    /* bInterfaceNumber.                */
                          0x00,          /* bAlternateSetting.               */
                          0x01,          /* bNumEndpoints.                   */
                          0x02,          /* bInterfaceClass (Communications
@@ -89,7 +137,7 @@ static const uint8_t vcom_configuration_descriptor_data[67] = {
   USB_DESC_BYTE         (0x01),         /* bDescriptorSubtype (Call Management
                                            Functional Descriptor).          */
   USB_DESC_BYTE         (0x00),         /* bmCapabilities (D0+D1).          */
-  USB_DESC_BYTE         (0x01),         /* bDataInterface.                  */
+  USB_DESC_BYTE         (CDC_DATA_IF),  /* bDataInterface.                */
   /* ACM Functional Descriptor.*/
   USB_DESC_BYTE         (4),            /* bFunctionLength.                 */
   USB_DESC_BYTE         (0x24),         /* bDescriptorType (CS_INTERFACE).  */
@@ -101,17 +149,17 @@ static const uint8_t vcom_configuration_descriptor_data[67] = {
   USB_DESC_BYTE         (0x24),         /* bDescriptorType (CS_INTERFACE).  */
   USB_DESC_BYTE         (0x06),         /* bDescriptorSubtype (Union
                                            Functional Descriptor).          */
-  USB_DESC_BYTE         (0x00),         /* bMasterInterface (Communication
+  USB_DESC_BYTE         (CDC_INT_IF),   /* bMasterInterface (Communication
                                            Class Interface).                */
-  USB_DESC_BYTE         (0x01),         /* bSlaveInterface0 (Data Class
+  USB_DESC_BYTE         (CDC_DATA_IF),  /* bSlaveInterface0 (Data Class
                                            Interface).                      */
-  /* Endpoint 2 Descriptor.*/
+  /* Endpoint 3 Descriptor.*/
   USB_DESC_ENDPOINT     (USBD1_INTERRUPT_REQUEST_EP|0x80,
                          0x03,          /* bmAttributes (Interrupt).        */
                          0x0008,        /* wMaxPacketSize.                  */
                          0xFF),         /* bInterval.                       */
   /* Interface Descriptor.*/
-  USB_DESC_INTERFACE    (0x01,          /* bInterfaceNumber.                */
+  USB_DESC_INTERFACE    (CDC_DATA_IF,   /* bInterfaceNumber.                */
                          0x00,          /* bAlternateSetting.               */
                          0x02,          /* bNumEndpoints.                   */
                          0x0A,          /* bInterfaceClass (Data Class
@@ -121,12 +169,12 @@ static const uint8_t vcom_configuration_descriptor_data[67] = {
                          0x00,          /* bInterfaceProtocol (CDC section
                                            4.7).                            */
                          0x00),         /* iInterface.                      */
-  /* Endpoint 3 Descriptor.*/
+  /* Endpoint 2 Descriptor.*/
   USB_DESC_ENDPOINT     (USBD1_DATA_AVAILABLE_EP,       /* bEndpointAddress.*/
                          0x02,          /* bmAttributes (Bulk).             */
                          0x0040,        /* wMaxPacketSize.                  */
                          0x00),         /* bInterval.                       */
-  /* Endpoint 1 Descriptor.*/
+  /* Endpoint 2 Descriptor.*/
   USB_DESC_ENDPOINT     (USBD1_DATA_REQUEST_EP|0x80,    /* bEndpointAddress.*/
                          0x02,          /* bmAttributes (Bulk).             */
                          0x0040,        /* wMaxPacketSize.                  */
@@ -154,7 +202,7 @@ static const uint8_t vcom_string0[] = {
  * Vendor string.
  */
 static const uint8_t vcom_string1[] = {
-  USB_DESC_BYTE(24),                    /* bLength.                         */
+  USB_DESC_BYTE(22),                    /* bLength.                         */
   USB_DESC_BYTE(USB_DESCRIPTOR_STRING), /* bDescriptorType.                 */
   'r', 0, 'u', 0, 's', 0, 'E', 0, 'F', 0, 'I', 0, ' ', 0, 'L', 0,
   'L', 0, 'C', 0
@@ -176,7 +224,7 @@ static const uint8_t vcom_string2[] = {
  * Serial Number string.
  */
 static uint8_t vcom_string3[] = {
-  USB_DESC_BYTE(52),                     /* bLength.                         */
+  USB_DESC_BYTE(50),                     /* bLength.                         */
   USB_DESC_BYTE(USB_DESCRIPTOR_STRING), /* bDescriptorType.                 */
   '0', 0, '1', 0, '2', 0, '3', 0, '4', 0, '5', 0, '6', 0, '7', 0,
   '8', 0, '9', 0, 'A', 0, 'B', 0, 'C', 0, 'D', 0, 'E', 0, 'F', 0,
@@ -244,48 +292,63 @@ static const USBDescriptor *get_descriptor(USBDriver *usbp,
   return NULL;
 }
 
-/**
- * @brief   IN EP1 state.
- */
-static USBInEndpointState ep1instate;
+#if HAL_USE_USB_MSD
+	/**
+	 * @brief   IN MSD state
+	 */
+	static USBInEndpointState msdInstate;
 
-/**
- * @brief   OUT EP1 state.
- */
-static USBOutEndpointState ep1outstate;
+	/**
+	 * @brief   OUT MSD state
+	 */
+	static USBOutEndpointState msdOutstate;
 
-/**
- * @brief   EP1 initialization structure (both IN and OUT).
- */
-static const USBEndpointConfig ep1config = {
+	/**
+	 * @brief   MSD initialization structure (both IN and OUT).
+	 */
+	static const USBEndpointConfig msdEpConfig = {
+	USB_EP_MODE_TYPE_BULK,
+	NULL,
+	NULL,
+	NULL,
+	USB_MSD_EP_SIZE,
+	USB_MSD_EP_SIZE,
+	&msdInstate,
+	&msdOutstate,
+	4,
+	NULL
+	};
+#endif //HAL_USE_MSD
+
+// IN CDC data state.
+static USBInEndpointState cdcDataInstate;
+// OUT CDC data state.
+static USBOutEndpointState cdcDataOutstate;
+// CDC data initialization structure (both IN and OUT).
+static const USBEndpointConfig cdcDataEpConfig = {
   USB_EP_MODE_TYPE_BULK,
   NULL,
   sduDataTransmitted,
   sduDataReceived,
   0x0040,
   0x0040,
-  &ep1instate,
-  &ep1outstate,
-  2,
+  &cdcDataInstate,
+  &cdcDataOutstate,
+  4,
   NULL
 };
 
-/**
- * @brief   IN EP2 state.
- */
-static USBInEndpointState ep2instate;
-
-/**
- * @brief   EP2 initialization structure (IN only).
- */
-static const USBEndpointConfig ep2config = {
+// IN CDC interrupt state.
+static USBInEndpointState cdcInterruptInstate;
+// CDC interrupt initialization structure (IN only).
+static const USBEndpointConfig cdcInterruptEpConfig = {
   USB_EP_MODE_TYPE_INTR,
   NULL,
   sduInterruptTransmitted,
   NULL,
   0x0010,
   0x0000,
-  &ep2instate,
+  &cdcInterruptInstate,
   NULL,
   1,
   NULL
@@ -304,11 +367,20 @@ static void usb_event(USBDriver *usbp, usbevent_t event) {
     /* Enables the endpoints specified into the configuration.
        Note, this callback is invoked from an ISR so I-Class functions
        must be used.*/
-    usbInitEndpointI(usbp, USBD1_DATA_REQUEST_EP, &ep1config);
-    usbInitEndpointI(usbp, USBD1_INTERRUPT_REQUEST_EP, &ep2config);
+#if HAL_USE_USB_MSD
+    usbInitEndpointI(usbp, USB_MSD_DATA_EP, &msdEpConfig);
+#endif
+
+    usbInitEndpointI(usbp, USBD1_DATA_REQUEST_EP, &cdcDataEpConfig);
+    usbInitEndpointI(usbp, USBD1_INTERRUPT_REQUEST_EP, &cdcInterruptEpConfig);
 
     /* Resetting the state of the CDC subsystem.*/
     sduConfigureHookI(&SDU1);
+
+    #if HAL_USE_USB_MSD
+        // Tell the MMC thread to wake up and mount the card as a USB device
+        onUsbConnectedNotifyMmcI();
+    #endif
 
     chSysUnlockFromISR();
     return;
@@ -350,13 +422,26 @@ static void sof_handler(USBDriver *usbp) {
   osalSysUnlockFromISR();
 }
 
+// We need a custom hook to handle both MSD and CDC at the same time
+static bool hybridRequestHook(USBDriver *usbp) {
+#if HAL_USE_USB_MSD
+	// Try the MSD driver first
+	if (msd_request_hook(usbp)) {
+		return true;
+	}
+#endif // HAL_USE_USB_MSD
+
+	// if not MSD, it must be serial
+	return sduRequestsHook(usbp);
+}
+
 /*
  * USB driver configuration.
  */
 const USBConfig usbcfg = {
   usb_event,
   get_descriptor,
-  sduRequestsHook,
+  hybridRequestHook,
   sof_handler
 };
 

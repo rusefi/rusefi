@@ -25,8 +25,6 @@
 #define EFI_ENABLE_CRITICAL_ENGINE_STOP FALSE
 #define EFI_ENABLE_ENGINE_WARNING TRUE
 
-#define EFI_USE_CCM FALSE
-
 /**
  * if you have a 60-2 trigger, or if you just want better performance, you
  * probably want EFI_ENABLE_ASSERTS to be FALSE. Also you would probably want to FALSE
@@ -149,8 +147,6 @@
 #endif
 
 #define EFI_NARROW_EGO_AVERAGING FALSE
-
-#define EFI_DENSO_ADC FALSE
 
 #ifndef EFI_CAN_SUPPORT
 #define EFI_CAN_SUPPORT FALSE

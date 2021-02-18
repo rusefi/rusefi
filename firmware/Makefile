@@ -88,8 +88,9 @@ endif
 
 # If enabled, this option makes the build process faster by not compiling
 # modules not used in the current configuration.
+# without USE_SMART_BUILD all ChibiOS (including all drivers) are builded. And all drivers includes get included.
 ifeq ($(USE_SMART_BUILD),)
-  USE_SMART_BUILD = yes
+  USE_SMART_BUILD = no
 endif
 
 ifeq ($(USE_BOOTLOADER),)
@@ -142,16 +143,6 @@ MAKEFLAGS += ${NUMJOBS}
 BOARDS_DIR = $(PROJECT_DIR)/config/boards
 
 include $(PROJECT_DIR)/config/boards/$(PROJECT_BOARD)/board.mk
-
-# If enabled, this option makes the build process faster by not compiling
-# modules not used in the current configuration.
-# without USE_SMART_BUILD all ChibiOS (including all drivers) are builded. And all drivers includes get included.
-ifeq ($(USE_SMART_BUILD),)
-  USE_SMART_BUILD = yes
-endif
-ifeq ($(CONFDIR),)
-  CONFDIR = $(PROJECT_DIR)/config/stm32f4ems
-endif
 
 # Include various ChibiOS mk files
 # Licensing files.
@@ -304,7 +295,9 @@ INCDIR = $(ALLINC) \
 	$(DEVELOPMENT_DIR) \
 	development/hw_layer \
 	development/test \
-	$(CONTROLLERS_INC)
+	$(CONTROLLERS_INC) \
+	$(CHIBIOS_CONTRIB)/os/various
+	# contrib/os/various must go at the end because it also contains pid.h which conflicts with our pid.h
 
 #
 # Project, sources and paths
@@ -314,7 +307,9 @@ INCDIR = $(ALLINC) \
 # Compiler settings
 #
 
-MCU  = cortex-m4
+ifeq ($(MCU),)
+	MCU = cortex-m4
+endif
 
 ifeq ($(CROSS_COMPILE),)
   TRGT = arm-none-eabi-

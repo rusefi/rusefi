@@ -1,5 +1,5 @@
 /*
- * @file aux_pid.cpp
+ * @file vvt_pid.cpp
  *
  * This class is a copy-paste of alternator_controller.cpp TODO: do something about it? extract more common logic?
  *
@@ -7,9 +7,9 @@
  * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
-#include "aux_pid.h"
 #include "local_version_holder.h"
 #include "allsensors.h"
+#include "vvt_pid.h"
 
 #if EFI_AUX_PID
 #include "pwm_generator_logic.h"
@@ -27,26 +27,14 @@
 
 EXTERN_ENGINE;
 
-extern fsio8_Map3D_f32t fsioTable1;
+static fsio8_Map3D_u8t vvtTable1("vvt#1");
+static fsio8_Map3D_u8t vvtTable2("vvt#2");
+
 
 // todo: this is to some extent a copy-paste of alternator_controller. maybe same loop
 // for all PIDs?
 
 static Logging *logger;
-
-static bool isEnabled(int index) {
-	// todo: implement bit arrays for configuration
-	switch(index) {
-	case 0:
-		return engineConfiguration->activateAuxPid1;
-	case 1:
-		return engineConfiguration->activateAuxPid2;
-	case 2:
-		return engineConfiguration->activateAuxPid3;
-	default:
-		return engineConfiguration->activateAuxPid4;
-	}
-}
 
 class AuxPidController : public PeriodicTimerController {
 public:
@@ -57,7 +45,8 @@ public:
 	void init(int index) {
 		this->index = index;
 		auxPid.initPidClass(&persistentState.persistentConfiguration.engineConfiguration.auxPid[index]);
-		table = getFSIOTable(index);
+		int camIndex = index % CAMS_PER_BANK;
+		table = camIndex == 0 ? &vvtTable1 : &vvtTable2;
 	}
 
 	int getPeriodMs() override {
@@ -108,13 +97,9 @@ private:
 	ValueProvider3D *table = nullptr;
 };
 
-static AuxPidController instances[AUX_PID_COUNT];
+static AuxPidController instances[CAM_INPUTS_COUNT];
 
 static void turnAuxPidOn(int index) {
-	if (!isEnabled(index)) {
-		return;
-	}
-
 	if (!isBrainPinValid(engineConfiguration->auxPidPins[index])) {
 		return;
 	}
@@ -123,30 +108,38 @@ static void turnAuxPidOn(int index) {
 			&engine->executor,
 			engineConfiguration->auxPidPins[index],
 			&instances[index].auxOutputPin,
-			engineConfiguration->auxPidFrequency[index], 0.1);
+			// todo: do we need two separate frequencies?
+			engineConfiguration->auxPidFrequency[0], 0.1);
 }
 
-void startAuxPins() {
-	for (int i = 0;i <AUX_PID_COUNT;i++) {
+void startVvtControlPins() {
+	for (int i = 0;i <CAM_INPUTS_COUNT;i++) {
 		turnAuxPidOn(i);
 	}
 }
 
-void stopAuxPins() {
-	for (int i = 0;i < AUX_PID_COUNT;i++) {
+void stopVvtControlPins() {
+	for (int i = 0;i < CAM_INPUTS_COUNT;i++) {
 		instances[i].auxOutputPin.deInit();
 	}
 }
 
 void initAuxPid(Logging *sharedLogger) {
+
+	vvtTable1.init(config->vvtTable1, config->vvtTable1LoadBins,
+			config->vvtTable1RpmBins);
+	vvtTable2.init(config->vvtTable2, config->vvtTable2LoadBins,
+			config->vvtTable2RpmBins);
+
+
 	logger = sharedLogger;
 
-	for (int i = 0;i < AUX_PID_COUNT;i++) {
+	for (int i = 0;i < CAM_INPUTS_COUNT;i++) {
 		instances[i].init(i);
 	}
 
-	startAuxPins();
-	for (int i = 0;i < AUX_PID_COUNT;i++) {
+	startVvtControlPins();
+	for (int i = 0;i < CAM_INPUTS_COUNT;i++) {
 		instances[i].Start();
 	}
 }

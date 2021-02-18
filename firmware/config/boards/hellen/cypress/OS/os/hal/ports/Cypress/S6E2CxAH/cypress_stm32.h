@@ -99,6 +99,4 @@
 #define STM32_HAS_GPIOJ             TRUE
 #define STM32_HAS_GPIOK             TRUE
 
-#define adcSTM32EnableTSVREFE()
-
 #endif /* CYPRESS_STM32_H_ */

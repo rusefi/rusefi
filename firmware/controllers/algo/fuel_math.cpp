@@ -71,7 +71,7 @@ DISPLAY(DISPLAY_IF(isCrankingState)) float getCrankingFuel3(
 	 * Cranking fuel changes over time
 	 */
 	DISPLAY_TEXT(Duration_coef);
-	engine->engineState.DISPLAY_PREFIX(cranking).DISPLAY_FIELD(durationCoefficient) = interpolate2d("crank", revolutionCounterSinceStart, config->crankingCycleBins,
+	engine->engineState.DISPLAY_PREFIX(cranking).DISPLAY_FIELD(durationCoefficient) = interpolate2d(revolutionCounterSinceStart, config->crankingCycleBins,
 			config->crankingCycleCoef);
 	DISPLAY_TEXT(eol);
 
@@ -82,21 +82,21 @@ DISPLAY(DISPLAY_IF(isCrankingState)) float getCrankingFuel3(
 	auto clt = Sensor::get(SensorType::Clt);
 	DISPLAY_TEXT(Coolant_coef);
 	engine->engineState.DISPLAY_PREFIX(cranking).DISPLAY_FIELD(coolantTemperatureCoefficient) =
-		interpolate2d("crank", clt.value_or(20), config->crankingFuelBins, config->crankingFuelCoef);
+		interpolate2d(clt.value_or(20), config->crankingFuelBins, config->crankingFuelCoef);
 	DISPLAY_SENSOR(CLT);
 	DISPLAY_TEXT(eol);
 
 	auto tps = Sensor::get(SensorType::DriverThrottleIntent);
 
 	DISPLAY_TEXT(TPS_coef);
-	engine->engineState.DISPLAY_PREFIX(cranking).DISPLAY_FIELD(tpsCoefficient) = tps.Valid ? 1 : interpolate2d("crankTps", tps.Value, engineConfiguration->crankingTpsBins,
+	engine->engineState.DISPLAY_PREFIX(cranking).DISPLAY_FIELD(tpsCoefficient) = tps.Valid ? 1 : interpolate2d(tps.Value, engineConfiguration->crankingTpsBins,
 			engineConfiguration->crankingTpsCoef);
 
 
 	/*
 	engine->engineState.DISPLAY_PREFIX(cranking).DISPLAY_FIELD(tpsCoefficient) =
 		tps.Valid 
-		? interpolate2d("crankTps", tps.Value, engineConfiguration->crankingTpsBins, engineConfiguration->crankingTpsCoef)
+		? interpolate2d(tps.Value, engineConfiguration->crankingTpsBins, engineConfiguration->crankingTpsCoef)
 		: 1; // in case of failed TPS, don't correct.*/
 	DISPLAY_SENSOR(TPS);
 	DISPLAY_TEXT(eol);
@@ -367,7 +367,7 @@ float getCltFuelCorrection(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	if (!valid)
 		return 1; // this error should be already reported somewhere else, let's just handle it
 
-	return interpolate2d("cltf", clt, config->cltFuelCorrBins, config->cltFuelCorr);
+	return interpolate2d(clt, config->cltFuelCorrBins, config->cltFuelCorr);
 }
 
 angle_t getCltTimingCorrection(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
@@ -376,7 +376,7 @@ angle_t getCltTimingCorrection(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	if (!valid)
 		return 0; // this error should be already reported somewhere else, let's just handle it
 
-	return interpolate2d("timc", clt, engineConfiguration->cltTimingBins, engineConfiguration->cltTimingExtra);
+	return interpolate2d(clt, engineConfiguration->cltTimingBins, engineConfiguration->cltTimingExtra);
 }
 
 float getIatFuelCorrection(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
@@ -385,7 +385,7 @@ float getIatFuelCorrection(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	if (!valid)
 		return 1; // this error should be already reported somewhere else, let's just handle it
 
-	return interpolate2d("iatc", iat, config->iatFuelCorrBins, config->iatFuelCorr);
+	return interpolate2d(iat, config->iatFuelCorrBins, config->iatFuelCorr);
 }
 
 /**

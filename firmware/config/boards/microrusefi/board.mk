@@ -9,8 +9,6 @@ ifeq ($(PROJECT_CPU),ARCH_STM32F4)
   BOARDINC += $(PROJECT_DIR)/config/stm32f4ems	# For board.h
   BOARDINC += $(BOARDS_DIR)/microrusefi # For knock_config.h
 else
-  CONFDIR   = config/stm32f7ems
-  BOARDINC += $(PROJECT_DIR)/config/stm32f7ems	# efifeatures/halconf/chconf.h
   BOARDINC += $(BOARDS_DIR)/microrusefi # For knock_config.h
 endif
 
@@ -31,6 +29,9 @@ EFI_CONSOLE_TTL_PINS = -DEFI_CONSOLE_TX_BRAIN_PIN=GPIOB_10 -DEFI_CONSOLE_RX_BRAI
 
 # Add them all together
 DDEFS += -DEFI_USE_OSC=TRUE -DFIRMWARE_ID=\"microRusEFI\" $(DEFAULT_ENGINE_TYPE) $(LED_CRITICAL_ERROR_BRAIN_PIN) $(EFI_CONSOLE_TTL_PINS) -DEFI_SOFTWARE_KNOCK=TRUE -DSTM32_ADC_USE_ADC3=TRUE 
+
+# USB mass storage support
+DDEFS += -DHAL_USE_COMMUNITY=TRUE -DHAL_USE_USB_MSD=TRUE
 
 # We are running on microRusEFI hardware!
 DDEFS += -DHW_MICRO_RUSEFI=1

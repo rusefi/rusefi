@@ -8,8 +8,12 @@ for c in $CONNECTORS; do
   NAME=$(basename $c .yaml)
   echo "NAME "$NAME
   mkdir -p $DIR
-  bash misc/pinout-gen/gen.sh $c > $DIR/$NAME.html
-  file $DIR/$NAME.html
+  if [ -f $DIR/index.html ]; then
+    bash misc/pinout-gen/append.sh $c $DIR/index.html
+  else
+    bash misc/pinout-gen/gen.sh $c $DIR/index.html
+  fi
+  file $DIR/index.html
   IMG=$(yq r $c 'info.image.file')
   echo "IMG "$IMG
   if [ $IMG ]; then
@@ -22,6 +26,6 @@ done
 
 if [ -n "$RUSEFI_FTP_SERVER" ]; then
   echo "Uploading Pinouts"
-  ncftpput -R -m -u "$RUSEFI_DOXYGEN_FTP_USER" -p "$RUSEFI_DOXYGEN_FTP_PASS" "$RUSEFI_FTP_SERVER" /pinouts pinouts/*
+  ncftpput -R -z -m -V -u "$RUSEFI_DOXYGEN_FTP_USER" -p "$RUSEFI_DOXYGEN_FTP_PASS" "$RUSEFI_FTP_SERVER" / pinouts
 fi
 [ $? -eq 0 ] || { echo "upload FAILED"; exit 1; }

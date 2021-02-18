@@ -78,7 +78,7 @@ void startSimultaniousInjection(Engine *engine) {
 	EXPAND_Engine;
 #endif // EFI_UNIT_TEST
 	efitick_t nowNt = getTimeNowNt();
-	for (int i = 0; i < engine->engineConfigurationPtr->specs.cylindersCount; i++) {
+	for (int i = 0; i < CONFIG(specs.cylindersCount); i++) {
 		enginePins.injectors[i].open(nowNt PASS_ENGINE_PARAMETER_SUFFIX);
 	}
 }
@@ -88,7 +88,7 @@ static void endSimultaniousInjectionOnlyTogglePins(Engine *engine) {
 	EXPAND_Engine;
 #endif
 	efitick_t nowNt = getTimeNowNt();
-	for (int i = 0; i < engine->engineConfigurationPtr->specs.cylindersCount; i++) {
+	for (int i = 0; i < CONFIG(specs.cylindersCount); i++) {
 		enginePins.injectors[i].close(nowNt PASS_ENGINE_PARAMETER_SUFFIX);
 	}
 }

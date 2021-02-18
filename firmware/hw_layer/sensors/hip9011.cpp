@@ -305,7 +305,7 @@ void hipAdcCallback(adcsample_t adcValue) {
 	if (instance.state == WAITING_FOR_ADC_TO_SKIP) {
 		instance.state = WAITING_FOR_RESULT_ADC;
 	} else if (instance.state == WAITING_FOR_RESULT_ADC) {
-		engine->knockVolts = adcValue * engine->adcToVoltageInputDividerCoefficient;
+		engine->knockVolts = adcValue * adcToVolts(1) * CONFIG(analogInputDividerCoefficient);
 		hipValueMax = maxF(engine->knockVolts, hipValueMax);
 		engine->knockLogic(engine->knockVolts);
 

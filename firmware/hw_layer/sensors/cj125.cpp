@@ -38,9 +38,6 @@ EXTERN_ENGINE;
 
 static Logging *logger;
 
-static uint8_t tx_buff[2] NO_CACHE;
-static uint8_t rx_buff[1] NO_CACHE;
-
 static CJ125 globalInstance;
 
 #if ! EFI_UNIT_TEST
@@ -97,30 +94,28 @@ static constexpr float lambdaLsu49[] = {
 static uint8_t cjReadRegister(uint8_t regAddr) {
 #if ! EFI_UNIT_TEST
 	spiSelect(driver);
-	tx_buff[0] = regAddr;
-	spiSend(driver, 1, tx_buff);
-	spiReceive(driver, 1, rx_buff);
+	spiPolledExchange(driver, regAddr);
+	uint8_t result = spiPolledExchange(driver, 0xFF);
 	spiUnselect(driver);
 
 #ifdef CJ125_DEBUG_SPI
-	scheduleMsg(logger, "cjReadRegister: addr=%d answer=%d", regAddr, rx_buff[0]);
+	scheduleMsg(logger, "cjReadRegister: addr=%d answer=%d", regAddr, result);
 #endif /* CJ125_DEBUG_SPI */
-	return rx_buff[0];
+	return result;
 #else /* EFI_UNIT_TEST */
 	return 0;
 #endif /* EFI_UNIT_TEST */
 }
 
 static void cjWriteRegister(uint8_t regAddr, uint8_t regValue) {
-	tx_buff[0] = regAddr;
-	tx_buff[1] = regValue;
 #ifdef CJ125_DEBUG_SPI
 	scheduleMsg(logger, "cjWriteRegister: addr=%d value=%d", regAddr, regValue);
 #endif /* CJ125_DEBUG_SPI */
 	// todo: extract 'sendSync' method?
 #if HAL_USE_SPI
 	spiSelect(driver);
-	spiSend(driver, 2, tx_buff);
+	spiPolledExchange(driver, regAddr);
+	spiPolledExchange(driver, regValue);
 	spiUnselect(driver);
 #endif /* HAL_USE_SPI */
 }
@@ -578,9 +573,9 @@ float cjGetAfr(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	float pumpCurrent = (globalInstance.vUa - globalInstance.vUaCal) * globalInstance.amplCoeff * (CJ125_PUMP_CURRENT_FACTOR / CJ125_PUMP_SHUNT_RESISTOR);
 	
 	if (engineConfiguration->cj125isLsu49) {
-		globalInstance.lambda = interpolate2d("cj125Lsu", pumpCurrent, pumpCurrentLsu49, lambdaLsu49);
+		globalInstance.lambda = interpolate2d(pumpCurrent, pumpCurrentLsu49, lambdaLsu49);
 	} else {
-		globalInstance.lambda = interpolate2d("cj125Lsu", pumpCurrent, pumpCurrentLsu42, lambdaLsu42);
+		globalInstance.lambda = interpolate2d(pumpCurrent, pumpCurrentLsu42, lambdaLsu42);
 	}
 
 	// todo: make configurable stoich ratio

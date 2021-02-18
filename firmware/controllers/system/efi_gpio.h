@@ -216,6 +216,7 @@ private:
 
 	void stopInjectionPins();
 	void stopIgnitionPins();
+	void stopAuxValves();
 };
 
 #endif /* __cplusplus */

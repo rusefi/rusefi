@@ -15,10 +15,6 @@
 #define acRelayPinMode_offset 831
 #define acSwitch_offset 1469
 #define acSwitchMode_offset 4516
-#define activateAuxPid1_offset 76
-#define activateAuxPid2_offset 76
-#define activateAuxPid3_offset 76
-#define activateAuxPid4_offset 76
 #define adc_channel_e_enum "Disabled", "PA0", "PA1", "PA2", "PA3", "PA4", "PA5", "PA6", "PA7", "PB0", "PB1", "PC0", "PC1", "PC2", "PC3", "PC4", "PC5"
 #define adc_channel_mode_e_auto_enum "ADC_OFF", "ADC_SLOW", "ADC_FAST"
 #define ADC_CHANNEL_NONE 0
@@ -47,6 +43,7 @@
 #define air_pressure_sensor_type_e_auto_enum "MT_CUSTOM", "MT_DENSO183", "MT_MPX4250", "MT_HONDA3BAR", "MT_DODGE_NEON_2003", "MT_SUBY_DENSO", "MT_GM_3_BAR", "MT_MPX4100", "MT_TOYOTA_89420_02010", "MT_MPX4250A", "MT_BOSCH_2_5", "MT_MAZDA_1_BAR", "MT_GM_2_BAR", "MT_GM_1_BAR"
 #define alignEngineSnifferAtTDC_offset 744
 #define alignmentFill_at_2227_offset 2227
+#define alignmentFill_at_2253_offset 2253
 #define alignmentFill_at_4539_offset 4539
 #define alternator_antiwindupFreq_offset 1764
 #define alternator_derivativeFilterLoss_offset 1760
@@ -71,7 +68,6 @@
 #define antiLagEnabled_offset 76
 #define antiLagRpmTreshold_offset 824
 #define AUX_DIGITAL_VALVE_COUNT 2
-#define AUX_PID_COUNT 4
 #define auxFastSensor1_adcChannel_offset 680
 #define auxPid1_dFactor_offset 2620
 #define auxPid1_iFactor_offset 2616
@@ -89,26 +85,8 @@
 #define auxPid2_offset_offset 2644
 #define auxPid2_periodMs_offset 2646
 #define auxPid2_pFactor_offset 2632
-#define auxPid3_dFactor_offset 2660
-#define auxPid3_iFactor_offset 2656
-#define auxPid3_maxValue_offset 2670
-#define auxPid3_minValue_offset 2668
-#define auxPid3_offset 2652
-#define auxPid3_offset_offset 2664
-#define auxPid3_periodMs_offset 2666
-#define auxPid3_pFactor_offset 2652
-#define auxPid4_dFactor_offset 2680
-#define auxPid4_iFactor_offset 2676
-#define auxPid4_maxValue_offset 2690
-#define auxPid4_minValue_offset 2688
-#define auxPid4_offset 2672
-#define auxPid4_offset_offset 2684
-#define auxPid4_periodMs_offset 2686
-#define auxPid4_pFactor_offset 2672
 #define auxPidFrequency1_offset 2248
 #define auxPidFrequency2_offset 2250
-#define auxPidFrequency3_offset 2252
-#define auxPidFrequency4_offset 2254
 #define auxPidPins1_offset 2220
 #define auxPidPins2_offset 2221
 #define auxPidPins3_offset 2222
@@ -199,6 +177,7 @@
 #define can_baudrate_e_enum "100kbps", "250kbps" , "500kbps", "1Mbps"
 #define CAN_DEFAULT_BASE 0x200
 #define can_nbc_e_auto_enum "CAN_BUS_NBC_NONE", "CAN_BUS_NBC_FIAT", "CAN_BUS_NBC_VAG", "CAN_BUS_MAZDA_RX8", "CAN_BUS_NBC_BMW", "CAN_BUS_W202_C180", "CAN_BUS_BMW_E90", "CAN_BUS_Haltech"
+#define CAN_RX_PREFIX "CAN_rx"
 #define can_vss_nbc_e_auto_enum "BMW_e46", "W202"
 #define canBaudRate_offset 2108
 #define canNbcType_offset 480
@@ -223,6 +202,7 @@
 #define clt_config_offset 252
 #define CLT_CRANKING_CURVE_SIZE 8
 #define CLT_CURVE_SIZE 16
+#define CLT_LIMITER_CURVE_SIZE 4
 #define clt_offset 252
 #define clt_resistance_1_offset 264
 #define clt_resistance_2_offset 268
@@ -239,6 +219,8 @@
 #define cltIdleCorrBins_offset 10656
 #define cltIdleRpm_offset 1960
 #define cltIdleRpmBins_offset 1896
+#define cltRevLimitRpm_offset 3332
+#define cltRevLimitRpmBins_offset 3328
 #define cltTimingBins_offset 2352
 #define cltTimingExtra_offset 2384
 #define clutchDownPin_offset 664
@@ -989,9 +971,6 @@
 #define issue_294_31_offset 76
 #define isVerboseAlternator_offset 744
 #define isVerboseAuxPid1_offset 76
-#define isVerboseAuxPid2_offset 76
-#define isVerboseAuxPid3_offset 76
-#define isVerboseAuxPid4_offset 76
 #define isVerboseETB_offset 1464
 #define isVerboseIAC_offset 1464
 #define isWaveAnalyzerEnabled_offset 1476
@@ -1259,8 +1238,8 @@
 #define showHumanReadableWarning_offset 976
 #define showSdCardWarning_offset 76
 #define SIGNATURE_BOARD all
-#define SIGNATURE_DATE 2021.02.09
-#define SIGNATURE_HASH 2882601961
+#define SIGNATURE_DATE 2021.02.18
+#define SIGNATURE_HASH 1375432900
 #define silentTriggerError_offset 1464
 #define slowAdcAlpha_offset 2088
 #define sparkDwellRpmBins_offset 332
@@ -1594,7 +1573,7 @@
 #define ts_show_spi true
 #define ts_show_trigger_comparator false
 #define ts_show_tunerstudio_port true
-#define TS_SIGNATURE "rusEFI 2021.02.09.all.2882601961"
+#define TS_SIGNATURE "rusEFI 2021.02.18.all.1375432900"
 #define TS_SINGLE_WRITE_COMMAND 'W'
 #define TS_SINGLE_WRITE_COMMAND_char W
 #define TS_TEST_COMMAND 't' // 0x74
@@ -1651,6 +1630,8 @@
 #define unused1128_offset 2116
 #define unused1129_offset 2116
 #define unused1130_offset 2116
+#define unused1301_offset 2252
+#define unused1366_offset 2652
 #define unused1476b19_offset 1476
 #define unused1476b20_offset 1476
 #define unused1476b3_offset 1476
@@ -1664,7 +1645,7 @@
 #define unused244_3_offset 2428
 #define unused2508_offset 2508
 #define unused2536_offset 2536
-#define unused3328_offset 3328
+#define unused3328_offset 3340
 #define unused3942_offset 3992
 #define unused3988_offset 3988
 #define unused4028_offset 4028
@@ -1680,6 +1661,13 @@
 #define unused_1484_bit_29_offset 1476
 #define unused_1484_bit_30_offset 1476
 #define unused_1484_bit_31_offset 1476
+#define unused_294_1_offset 76
+#define unused_294_3_offset 76
+#define unused_294_4_offset 76
+#define unused_294_5_offset 76
+#define unused_294_6_offset 76
+#define unused_294_7_offset 76
+#define unused_294_8_offset 76
 #define unusedAtOldBoardConfigurationEnd_offset 1204
 #define unusedAuxVoltage1_TODO_332_offset 2713
 #define unusedAuxVoltage2_TODO_332_offset 2714

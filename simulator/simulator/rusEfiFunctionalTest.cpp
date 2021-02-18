@@ -103,7 +103,7 @@ void rusEfiFunctionalTest(void) {
 	initTriggerDecoderLogger(&sharedLogger);
 #endif /* EFI_SHAFT_POSITION_INPUT */
 
-	engine->setConfig(config);
+	engine->setConfig();
 
 	initializeConsole(&sharedLogger);
 

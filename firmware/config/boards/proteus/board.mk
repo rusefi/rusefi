@@ -5,10 +5,7 @@ BOARDINC = $(PROJECT_DIR)/config/boards/proteus
 
 # Target processor details
 ifeq ($(PROJECT_CPU),ARCH_STM32F4)
-  BOARDINC += $(PROJECT_DIR)/config/stm32f4ems	# For board.h
 else
-  BOARDINC += $(PROJECT_DIR)/config/stm32f7ems	# efifeatures/halconf/chconf.h
-  CONFDIR   = config/stm32f4ems
   PROTEUS_LEGACY = TRUE
 endif
 
@@ -23,6 +20,9 @@ DDEFS += -DHAL_VSS_USE_PAL=TRUE
 DDEFS += -DSTM32_ADC_USE_ADC3=TRUE
 DDEFS += -DEFI_SOFTWARE_KNOCK=TRUE
 DDEFS += -DEFI_CONSOLE_TX_BRAIN_PIN=GPIO_UNASSIGNED -DEFI_CONSOLE_RX_BRAIN_PIN=GPIO_UNASSIGNED
+
+# USB mass storage support
+DDEFS += -DHAL_USE_COMMUNITY=TRUE -DHAL_USE_USB_MSD=TRUE
 
 # We are running on Proteus hardware!
 DDEFS += -DHW_PROTEUS=1

@@ -47,10 +47,10 @@
 #include "alternator_controller.h"
 #include "fuel_math.h"
 #include "settings.h"
-#include "aux_pid.h"
 #include "spark_logic.h"
 #include "aux_valves.h"
 #include "accelerometer.h"
+#include "actuators/vvt_pid.h"
 #include "perf_trace.h"
 #include "boost_control.h"
 #include "launch_control.h"
@@ -714,7 +714,7 @@ void initEngineContoller(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX) 
  * UNUSED_SIZE constants.
  */
 #ifndef RAM_UNUSED_SIZE
-#define RAM_UNUSED_SIZE 3150
+#define RAM_UNUSED_SIZE 3050
 #endif
 #ifndef CCM_UNUSED_SIZE
 #define CCM_UNUSED_SIZE 2000

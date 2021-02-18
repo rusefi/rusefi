@@ -54,10 +54,10 @@ TEST_P(AllTriggersFixture, TestTrigger) {
 	printf("Exporting %s\r\n", getTrigger_type_e(tt));
 
 	persistent_config_s pc;
-	Engine e(&pc);
-	Engine *engine = &e;
-	persistent_config_s *config = &pc;
-	engine_configuration_s *engineConfiguration = &pc.engineConfiguration;
+	Engine e;
+	Engine* engine = &e;
+	engine->setConfig(engine, &pc.engineConfiguration, &pc);
+	EXPAND_Engine;
 
 	engineConfiguration->trigger.type = tt;
 	engineConfiguration->ambiguousOperationMode = FOUR_STROKE_CAM_SENSOR;

@@ -37,14 +37,12 @@
 
 #define EFI_HPFP TRUE
 
+#ifndef HAL_USE_USB_MSD
 #define HAL_USE_USB_MSD FALSE
+#endif
 
 #define EFI_ENABLE_CRITICAL_ENGINE_STOP TRUE
 #define EFI_ENABLE_ENGINE_WARNING TRUE
-
-#if !defined(EFI_ENABLE_ASSERTS)
- #define EFI_USE_CCM TRUE
-#endif
 
 #ifndef SC_BUFFER_SIZE
 #define SC_BUFFER_SIZE 4000
@@ -201,8 +199,6 @@
 #endif
 
 #define EFI_NARROW_EGO_AVERAGING TRUE
-
-#define EFI_DENSO_ADC FALSE
 
 #ifndef EFI_CAN_SUPPORT
 #define EFI_CAN_SUPPORT TRUE

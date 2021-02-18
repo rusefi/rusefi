@@ -214,8 +214,8 @@ static void setFsioDigitalInputPin(const char *indexStr, const char *pinName) {
 
 static void setFsioPidOutputPin(const char *indexStr, const char *pinName) {
 	int index = atoi(indexStr) - 1;
-	if (index < 0 || index >= AUX_PID_COUNT) {
-		scheduleMsg(logger, "invalid AUX index: %d", index);
+	if (index < 0 || index >= CAM_INPUTS_COUNT) {
+		scheduleMsg(logger, "invalid VVT index: %d", index);
 		return;
 	}
 	brain_pin_e pin = parseBrainPin(pinName);
@@ -225,7 +225,7 @@ static void setFsioPidOutputPin(const char *indexStr, const char *pinName) {
 		return;
 	}
 	engineConfiguration->auxPidPins[index] = pin;
-	scheduleMsg(logger, "FSIO aux pin #%d [%s]", (index + 1), hwPortname(pin));
+	scheduleMsg(logger, "VVT pid pin #%d [%s]", (index + 1), hwPortname(pin));
 }
 
 static void showFsioInfo(void);
@@ -575,10 +575,10 @@ static void showFsioInfo(void) {
 	showFsio("fan", radiatorFanLogic);
 	showFsio("alt", alternatorLogic);
 
-	for (int i = 0; i < AUX_PID_COUNT ; i++) {
+	for (int i = 0; i < CAM_INPUTS_COUNT ; i++) {
 		brain_pin_e pin = engineConfiguration->auxPidPins[i];
 		if (isBrainPinValid(pin)) {
-			scheduleMsg(logger, "FSIO aux #%d [%s]", (i + 1),
+			scheduleMsg(logger, "VVT pid #%d [%s]", (i + 1),
 					hwPortname(pin));
 
 		}
@@ -781,7 +781,7 @@ void runHardcodedFsio(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	if (isBrainPinValid(CONFIG(fanPin))) {
 		auto clt = Sensor::get(SensorType::Clt);
 		enginePins.fanRelay.setValue(!clt.Valid || (enginePins.fanRelay.getLogicValue() && (clt.Value > engineConfiguration->fanOffTemperature)) || 
-			(clt.Value > engineConfiguration->fanOnTemperature) || engine->isCltBroken);
+			(clt.Value > engineConfiguration->fanOnTemperature) || !clt.Valid);
 	}
 	// see AC_RELAY_LOGIC
 	if (isBrainPinValid(CONFIG(acRelayPin))) {
