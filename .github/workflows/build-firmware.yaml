@@ -105,6 +105,9 @@ jobs:
           cd config/boards/hellen/cypress/config
           bash gen_config.sh
           [ $? -eq 0 ] || { echo "ERROR generating board hellen_cypress hellen_cypress"; exit 1; }
+        elif [ "${{ matrix.build-target }}" = "subaru_eg33_f7" ]; then
+          bash config/boards/subaru_eg33/config/gen_config.sh
+          [ $? -eq 0 ] || { echo "ERROR generating board subaru_eg33 subaru_eg33_f7"; exit 1; }
         else
           bash gen_config_board.sh ${{matrix.folder}} ${{matrix.build-target}}
         fi
