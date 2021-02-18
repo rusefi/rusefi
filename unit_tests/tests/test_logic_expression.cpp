@@ -44,7 +44,7 @@ FsioResult getEngineValue(le_action_e action DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	}
 }
 
-TEST(fsio, testParsing) {
+TEST(fsio, testTokenizer) {
 	char buffer[64];
 
 	ASSERT_TRUE(strEqualCaseInsensitive("hello", "HELlo"));
@@ -64,7 +64,9 @@ TEST(fsio, testParsing) {
 
 	ASSERT_TRUE(isNumeric("123"));
 	ASSERT_FALSE(isNumeric("a123"));
+}
 
+TEST(fsio, testParsing) {
 	LEElement thepool[TEST_POOL_SIZE];
 	LEElementPool pool(thepool, TEST_POOL_SIZE);
 
