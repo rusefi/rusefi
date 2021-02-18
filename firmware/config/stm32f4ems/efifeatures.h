@@ -357,7 +357,9 @@
  *  STM32_UART_USE_USARTx
  * in mcuconf.h
  */
+#ifndef TS_UART_DMA_MODE
 #define TS_UART_DMA_MODE FALSE
+#endif
 
 #ifndef PRIMARY_UART_DMA_MODE
 #define PRIMARY_UART_DMA_MODE TRUE
