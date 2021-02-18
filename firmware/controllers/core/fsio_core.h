@@ -58,6 +58,7 @@ typedef enum {
 	LE_METHOD_PPS = 125,
 	LE_METHOD_TIME_SINCE_TRIGGER_EVENT = 127,
 	LE_METHOD_IN_MR_BENCH = 128,
+	LE_METHOD_RETURN = 130,
 
 #include "fsio_enums_generated.def"
 
@@ -103,20 +104,19 @@ public:
 
 	le_action_e action;
 	float fValue;
-
-	LEElement *next;
 };
 
 class LEElementPool {
 public:
 	LEElementPool(LEElement *pool, int size);
-	LEElement *pool;
-	LEElement *next();
+
 	void reset();
 	LEElement * parseExpression(const char * line);
 	int getSize() const;
 private:
-	int index;
+	LEElement* m_pool;
+	LEElement* m_nextFree;
+
 	int size;
 };
 
@@ -132,18 +132,25 @@ public:
 	LECalculator();
 	float getValue(float selfValue DECLARE_ENGINE_PARAMETER_SUFFIX);
 	float getValue2(float selfValue, LEElement *fistElementInList DECLARE_ENGINE_PARAMETER_SUFFIX);
-	void add(LEElement *element);
+
 	bool isEmpty() const;
 	void reset();
 	void reset(LEElement *element);
+
+	// Log history of calculation actions for debugging
 	le_action_e calcLogAction[MAX_CALC_LOG];
 	float calcLogValue[MAX_CALC_LOG];
 	int currentCalculationLogPosition;
+
 private:
+	void setProgram(LEElement* program);
+
 	void push(le_action_e action, float value);
-	FsioResult processElement(LEElement *element DECLARE_ENGINE_PARAMETER_SUFFIX);
+	FsioResult processElement(const LEElement* element DECLARE_ENGINE_PARAMETER_SUFFIX);
 	float pop(le_action_e action);
-	LEElement *first;
+
+	LEElement* m_program = nullptr;
+
 	calc_stack_t stack;
 };
 
