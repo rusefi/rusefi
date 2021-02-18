@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on config/boards/subaru_eg33/config/gen_config.sh integration/rusefi_config.txt Sat Feb 06 13:53:35 MSK 2021
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on config/boards/subaru_eg33/config/gen_config.sh integration/rusefi_config.txt Thu Feb 18 23:19:50 UTC 2021
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -155,7 +155,7 @@ struct spi_pins {
 	 * need 4 byte alignment
 	 * offset 3
 	 */
-	uint8_t alignmentFill_at_3;
+	uint8_t alignmentFill_at_3[1];
 	/** total size 4*/
 };
 
@@ -650,28 +650,28 @@ struct engine_configuration_s {
 	bool isForcedInduction : 1;
 	/**
 	offset 76 bit 1 */
-	bool activateAuxPid1 : 1;
+	bool unused_294_1 : 1;
 	/**
 	offset 76 bit 2 */
 	bool isVerboseAuxPid1 : 1;
 	/**
 	offset 76 bit 3 */
-	bool activateAuxPid2 : 1;
+	bool unused_294_3 : 1;
 	/**
 	offset 76 bit 4 */
-	bool isVerboseAuxPid2 : 1;
+	bool unused_294_4 : 1;
 	/**
 	offset 76 bit 5 */
-	bool activateAuxPid3 : 1;
+	bool unused_294_5 : 1;
 	/**
 	offset 76 bit 6 */
-	bool isVerboseAuxPid3 : 1;
+	bool unused_294_6 : 1;
 	/**
 	offset 76 bit 7 */
-	bool activateAuxPid4 : 1;
+	bool unused_294_7 : 1;
 	/**
 	offset 76 bit 8 */
-	bool isVerboseAuxPid4 : 1;
+	bool unused_294_8 : 1;
 	/**
 	 * enable cj125verbose/disable cj125verbose
 	offset 76 bit 9 */
@@ -1060,6 +1060,10 @@ struct engine_configuration_s {
 	/**
 	 * offset 560
 	 */
+	uint8_t camInputsPadding[CAM_INPUTS_COUNT_padding];
+	/**
+	 * offset 560
+	 */
 	afr_sensor_s afr;
 	/**
 	 * Electronic throttle pedal position first channel
@@ -1386,7 +1390,7 @@ struct engine_configuration_s {
 	 */
 	pin_output_mode_e triggerSimulatorPinModes[TRIGGER_SIMULATOR_PIN_COUNT];
 	/**
-	 * Narrow band o2 heater, not used for CJ125. See wboHeaterPin
+	 * Narrow band o2 heater, not used for CJ125. 'ON' if engine is running, 'OFF' if stopped or cranking. See wboHeaterPin
 	 * offset 742
 	 */
 	output_pin_e o2heaterPin;
@@ -1857,10 +1861,10 @@ struct engine_configuration_s {
 	bool unusedBit_251_29 : 1;
 	/**
 	offset 976 bit 30 */
-	bool unusedBit_288_30 : 1;
+	bool unusedBit_289_30 : 1;
 	/**
 	offset 976 bit 31 */
-	bool unusedBit_288_31 : 1;
+	bool unusedBit_289_31 : 1;
 	/**
 	 * offset 980
 	 */
@@ -2006,7 +2010,11 @@ struct engine_configuration_s {
 	/**
 	 * offset 1458
 	 */
-	uint16_t unusedHereHereHere;
+	brain_pin_e lps25BaroSensorScl;
+	/**
+	 * offset 1459
+	 */
+	brain_pin_e lps25BaroSensorSda;
 	/**
 	 * offset 1460
 	 */
@@ -2696,76 +2704,76 @@ struct engine_configuration_s {
 	bool unused1130 : 1;
 	/**
 	offset 2116 bit 8 */
-	bool unusedBit_488_8 : 1;
+	bool unusedBit_490_8 : 1;
 	/**
 	offset 2116 bit 9 */
-	bool unusedBit_488_9 : 1;
+	bool unusedBit_490_9 : 1;
 	/**
 	offset 2116 bit 10 */
-	bool unusedBit_488_10 : 1;
+	bool unusedBit_490_10 : 1;
 	/**
 	offset 2116 bit 11 */
-	bool unusedBit_488_11 : 1;
+	bool unusedBit_490_11 : 1;
 	/**
 	offset 2116 bit 12 */
-	bool unusedBit_488_12 : 1;
+	bool unusedBit_490_12 : 1;
 	/**
 	offset 2116 bit 13 */
-	bool unusedBit_488_13 : 1;
+	bool unusedBit_490_13 : 1;
 	/**
 	offset 2116 bit 14 */
-	bool unusedBit_488_14 : 1;
+	bool unusedBit_490_14 : 1;
 	/**
 	offset 2116 bit 15 */
-	bool unusedBit_488_15 : 1;
+	bool unusedBit_490_15 : 1;
 	/**
 	offset 2116 bit 16 */
-	bool unusedBit_488_16 : 1;
+	bool unusedBit_490_16 : 1;
 	/**
 	offset 2116 bit 17 */
-	bool unusedBit_488_17 : 1;
+	bool unusedBit_490_17 : 1;
 	/**
 	offset 2116 bit 18 */
-	bool unusedBit_488_18 : 1;
+	bool unusedBit_490_18 : 1;
 	/**
 	offset 2116 bit 19 */
-	bool unusedBit_488_19 : 1;
+	bool unusedBit_490_19 : 1;
 	/**
 	offset 2116 bit 20 */
-	bool unusedBit_488_20 : 1;
+	bool unusedBit_490_20 : 1;
 	/**
 	offset 2116 bit 21 */
-	bool unusedBit_488_21 : 1;
+	bool unusedBit_490_21 : 1;
 	/**
 	offset 2116 bit 22 */
-	bool unusedBit_488_22 : 1;
+	bool unusedBit_490_22 : 1;
 	/**
 	offset 2116 bit 23 */
-	bool unusedBit_488_23 : 1;
+	bool unusedBit_490_23 : 1;
 	/**
 	offset 2116 bit 24 */
-	bool unusedBit_488_24 : 1;
+	bool unusedBit_490_24 : 1;
 	/**
 	offset 2116 bit 25 */
-	bool unusedBit_488_25 : 1;
+	bool unusedBit_490_25 : 1;
 	/**
 	offset 2116 bit 26 */
-	bool unusedBit_488_26 : 1;
+	bool unusedBit_490_26 : 1;
 	/**
 	offset 2116 bit 27 */
-	bool unusedBit_488_27 : 1;
+	bool unusedBit_490_27 : 1;
 	/**
 	offset 2116 bit 28 */
-	bool unusedBit_488_28 : 1;
+	bool unusedBit_490_28 : 1;
 	/**
 	offset 2116 bit 29 */
-	bool unusedBit_488_29 : 1;
+	bool unusedBit_490_29 : 1;
 	/**
 	offset 2116 bit 30 */
-	bool unusedBit_488_30 : 1;
+	bool unusedBit_490_30 : 1;
 	/**
 	offset 2116 bit 31 */
-	bool unusedBit_488_31 : 1;
+	bool unusedBit_490_31 : 1;
 	/**
 	 * set can_mode X
 	 * offset 2120
@@ -2850,7 +2858,7 @@ struct engine_configuration_s {
 	/**
 	 * offset 2220
 	 */
-	output_pin_e auxPidPins[AUX_PID_COUNT];
+	output_pin_e auxPidPins[CAM_INPUTS_COUNT];
 	/**
 	 * offset 2224
 	 */
@@ -2867,7 +2875,7 @@ struct engine_configuration_s {
 	 * need 4 byte alignment
 	 * offset 2227
 	 */
-	uint8_t alignmentFill_at_2227;
+	uint8_t alignmentFill_at_2227[1];
 	/**
 	 * This is the IAC position during cranking, some engines start better if given more air during cranking to improve cylinder filling.
 	 * offset 2228
@@ -2892,7 +2900,16 @@ struct engine_configuration_s {
 	/**
 	 * offset 2248
 	 */
-	fsio_pwm_freq_t auxPidFrequency[AUX_PID_COUNT];
+	fsio_pwm_freq_t auxPidFrequency[CAMS_PER_BANK];
+	/**
+	 * offset 2252
+	 */
+	uint8_t unused1301;
+	/**
+	 * need 4 byte alignment
+	 * offset 2253
+	 */
+	uint8_t alignmentFill_at_2253[3];
 	/**
 	 * offset 2256
 	 */
@@ -2914,11 +2931,15 @@ struct engine_configuration_s {
 	 * set vvt_mode X
 	 * offset 2328
 	 */
-	vvt_mode_e vvtMode;
+	vvt_mode_e vvtMode[CAMS_PER_BANK];
 	/**
-	 * offset 2332
+	 * offset 2330
 	 */
-	uint8_t unusedOldBiquad[20];
+	uint8_t vvtModePadding[CAMS_PER_BANK_padding];
+	/**
+	 * offset 2330
+	 */
+	uint8_t unusedOldBiquad[22];
 	/**
 	 * CLT-based timing correction
 	 * offset 2352
@@ -3087,7 +3108,11 @@ struct engine_configuration_s {
 	/**
 	 * offset 2612
 	 */
-	pid_s auxPid[AUX_PID_COUNT];
+	pid_s auxPid[CAMS_PER_BANK];
+	/**
+	 * offset 2652
+	 */
+	uint8_t unused1366[40];
 	/**
 	 * offset 2692
 	 */
@@ -3099,15 +3124,15 @@ struct engine_configuration_s {
 	/**
 	 * offset 2713
 	 */
-	uint8_t unusedAuxVoltage1_TODO_332;
+	uint8_t unusedAuxVoltage1_TODO_332[1];
 	/**
 	 * offset 2714
 	 */
-	uint8_t unusedAuxVoltage2_TODO_332;
+	uint8_t unusedAuxVoltage2_TODO_332[1];
 	/**
 	 * offset 2715
 	 */
-	uint8_t unusedSpiPadding5;
+	uint8_t unusedSpiPadding5[1];
 	/**
 	 * offset 2716
 	 */
@@ -3237,9 +3262,19 @@ struct engine_configuration_s {
 	 */
 	linear_sensor_s lowPressureFuel;
 	/**
+	 * CLT-based target RPM for hard limit depending on CLT like on Lexus LFA
 	 * offset 3328
 	 */
-	uint8_t unused3328[536];
+	int8_t cltRevLimitRpmBins[CLT_LIMITER_CURVE_SIZE];
+	/**
+	 * See idleRpmPid
+	 * offset 3332
+	 */
+	uint16_t cltRevLimitRpm[CLT_LIMITER_CURVE_SIZE];
+	/**
+	 * offset 3340
+	 */
+	uint8_t unused3328[524];
 	/**
 	 * offset 3864
 	 */
@@ -3484,7 +3519,7 @@ struct engine_configuration_s {
 	 * need 4 byte alignment
 	 * offset 4539
 	 */
-	uint8_t alignmentFill_at_4539;
+	uint8_t alignmentFill_at_4539[1];
 	/**
 	 * offset 4540
 	 */
@@ -3695,7 +3730,33 @@ struct persistent_config_s {
 	/**
 	 * offset 15776
 	 */
-	uint8_t unused15136[512];
+	fsio_table_8x8_u8t vvtTable1;
+	/**
+	 * offset 15840
+	 */
+	float vvtTable1LoadBins[FSIO_TABLE_8];
+	/**
+	 * RPM is float and not integer in order to use unified methods for interpolation
+	 * offset 15872
+	 */
+	float vvtTable1RpmBins[FSIO_TABLE_8];
+	/**
+	 * offset 15904
+	 */
+	fsio_table_8x8_u8t vvtTable2;
+	/**
+	 * offset 15968
+	 */
+	float vvtTable2LoadBins[FSIO_TABLE_8];
+	/**
+	 * RPM is float and not integer in order to use unified methods for interpolation
+	 * offset 16000
+	 */
+	float vvtTable2RpmBins[FSIO_TABLE_8];
+	/**
+	 * offset 16032
+	 */
+	uint8_t unused15136[256];
 	/**
 	 * offset 16288
 	 */
@@ -3803,4 +3864,4 @@ struct persistent_config_s {
 typedef struct persistent_config_s persistent_config_s;
 
 // end
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on config/boards/subaru_eg33/config/gen_config.sh integration/rusefi_config.txt Sat Feb 06 13:53:35 MSK 2021
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on config/boards/subaru_eg33/config/gen_config.sh integration/rusefi_config.txt Thu Feb 18 23:19:50 UTC 2021
