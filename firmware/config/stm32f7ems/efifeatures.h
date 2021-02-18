@@ -48,7 +48,6 @@
 //#define TS_UART_DEVICE (&UARTD3)
 
 #undef TS_SERIAL_DEVICE
-#define TS_SERIAL_DEVICE (&SD3)
 
 #define AUX_SERIAL_DEVICE (&SD6)
 
