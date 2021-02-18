@@ -559,9 +559,9 @@ static void showFsio(const char *msg, LEElement *element) {
 #if EFI_PROD_CODE || EFI_SIMULATOR
 	if (msg != NULL)
 		scheduleMsg(logger, "%s:", msg);
-	while (element != NULL) {
+	while (element->action != LE_METHOD_RETURN) {
 		scheduleMsg(logger, "action %d: fValue=%.2f", element->action, element->fValue);
-		element = element->next;
+		element++;
 	}
 	scheduleMsg(logger, "<end>");
 #endif
