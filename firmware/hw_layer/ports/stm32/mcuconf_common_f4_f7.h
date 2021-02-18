@@ -256,7 +256,9 @@
  */
 #define STM32_UART_USE_USART1               FALSE
 #define STM32_UART_USE_USART2               FALSE
+#ifndef STM32_UART_USE_USART3
 #define STM32_UART_USE_USART3               TRUE
+#endif
 #define STM32_UART_USE_UART4                FALSE
 #define STM32_UART_USE_UART5                FALSE
 #define STM32_UART_USE_USART6               FALSE
