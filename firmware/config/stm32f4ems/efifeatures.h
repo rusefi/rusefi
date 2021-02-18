@@ -347,8 +347,6 @@
 //#define EFI_CONSOLE_SERIAL_DEVICE (&SD3)
 #endif
 
-#define EFI_CONSOLE_UART_DEVICE (&UARTD3)
-
 /**
  * Use 'HAL_USE_UART' DMA-mode driver instead of 'HAL_USE_SERIAL'
  *
@@ -363,6 +361,10 @@
 
 #ifndef PRIMARY_UART_DMA_MODE
 #define PRIMARY_UART_DMA_MODE TRUE
+#endif
+
+#if (PRIMARY_UART_DMA_MODE || TS_UART_DMA_MODE || TS_UART_MODE)
+#define EFI_CONSOLE_UART_DEVICE (&UARTD3)
 #endif
 
 //#define TS_UART_DEVICE (&UARTD3)
