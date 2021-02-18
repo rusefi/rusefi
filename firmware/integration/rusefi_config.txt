@@ -451,6 +451,7 @@ end_struct
 ! todo https://github.com/rusefi/rusefi/issues/2102
 #define ET_DODGE_NEON_1995 2
 #define ET_FORD_ASPIRE 3
+#define ET_NISSAN_PRIMERA 5
 #define ET_FORD_INLINE_6 7
 #define ET_FORD_ESCORT_GT 14
 #define ET_SACHS 29
