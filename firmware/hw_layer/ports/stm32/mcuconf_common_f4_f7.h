@@ -8,6 +8,8 @@
 
 #pragma once
 
+#include "efifeatures.h"
+
 /**
  * This is about SingleTimerExecutor - rusEfi 12MHz precise scheduling timer
  * this is not about ChibiOS virtual timer which rusEfi uses for
