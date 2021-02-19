@@ -29,7 +29,7 @@ function clickPin(table, pin, pdiv) {
       return pin.id.indexOf(value) === index;
     });
     for (var i = 0; i < pinIds.length; i++) {
-      addRow(table, {pin: pin.pin, id: pinIds[i], function: pin.function, type: pin.type[i]}, pdiv);
+      addRow(table, {pin: pin.pin, id: pinIds[i], function: pin.function, type: pin.type}, pdiv);
     }
   } else {
     addRow(table, pin, pdiv);
