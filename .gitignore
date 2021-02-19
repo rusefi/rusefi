@@ -2,6 +2,7 @@
 .dep*
 build/
 build_kinetis/
+pinouts
 out/
 logs/
 blbuild/
