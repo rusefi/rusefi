@@ -239,11 +239,11 @@ size_t ts_channel_s::read(uint8_t* buffer, size_t size) {
 }
 #endif // EFI_PROD_CODE || EFI_SIMULATOR
 
-void sr5WriteCrcPacketSmall(ts_channel_s* tsChannel, uint8_t responseCode, const uint8_t* buf, size_t size) {
-	auto scratchBuffer = tsChannel->scratchBuffer;
+void ts_channel_s::writeCrcPacketSmall(uint8_t responseCode, const uint8_t* buf, size_t size) {
+	auto scratchBuffer = this->scratchBuffer;
 
 	// don't transmit too large a buffer
-	efiAssertVoid(OBD_PCM_Processor_Fault, size <= BLOCKING_FACTOR + 7, "sr5WriteCrcPacket tried to transmit too large a packet")
+	efiAssertVoid(OBD_PCM_Processor_Fault, size <= BLOCKING_FACTOR + 7, "writeCrcPacketSmall tried to transmit too large a packet")
 
 	// If transmitting data, copy it in to place in the scratch buffer
 	// We want to prevent the data changing itself (higher priority threads could write
@@ -265,10 +265,10 @@ void sr5WriteCrcPacketSmall(ts_channel_s* tsChannel, uint8_t responseCode, const
 	*reinterpret_cast<uint32_t*>(&scratchBuffer[size + 3]) = SWAP_UINT32(crc);
 
 	// Write to the underlying stream
-	tsChannel->write(reinterpret_cast<uint8_t*>(scratchBuffer), size + 7);
+	write(reinterpret_cast<uint8_t*>(scratchBuffer), size + 7);
 }
 
-void sr5WriteCrcPacketLarge(ts_channel_s* tsChannel, uint8_t responseCode, const uint8_t* buf, size_t size) {
+void ts_channel_s::writeCrcPacketLarge(uint8_t responseCode, const uint8_t* buf, size_t size) {
 	uint8_t headerBuffer[3];
 	uint8_t crcBuffer[4];
 
@@ -282,21 +282,21 @@ void sr5WriteCrcPacketLarge(ts_channel_s* tsChannel, uint8_t responseCode, const
 	*(uint32_t*)crcBuffer = SWAP_UINT32(crc);
 
 	// Write header
-	tsChannel->write(headerBuffer, sizeof(headerBuffer));
+	write(headerBuffer, sizeof(headerBuffer));
 
 	// If data, write that
 	if (size) {
-		tsChannel->write(buf, size);
+		write(buf, size);
 	}
 
 	// Lastly the CRC footer
-	tsChannel->write(crcBuffer, sizeof(crcBuffer));
+	write(crcBuffer, sizeof(crcBuffer));
 }
 
 /**
  * Adds size to the beginning of a packet and a crc32 at the end. Then send the packet.
  */
-void sr5WriteCrcPacket(ts_channel_s *tsChannel, uint8_t responseCode, const uint8_t* buf, size_t size) {
+void ts_channel_s::writeCrcPacket(uint8_t responseCode, const uint8_t* buf, size_t size) {
 	// don't transmit a null buffer...
 	if (!buf) {
 		size = 0;
@@ -306,31 +306,31 @@ void sr5WriteCrcPacket(ts_channel_s *tsChannel, uint8_t responseCode, const uint
 	// a special case for short packets: we can sent them in 1 frame, without CRC & size,
 	// because the CAN protocol is already protected by its own checksum.
 	if ((size + 1) <= 7) {
-		tsChannel->write(&responseCode, 1);      // header without size
+		write(&responseCode, 1);      // header without size
 		if (size > 0) {
-			tsChannel->write(buf, size);      // body
+			write(buf, size);      // body
 		}
-		sr5FlushData(tsChannel);
+		flush();
 		return;
 	}
 #endif /* TS_CAN_DEVICE */
 	if (size <= BLOCKING_FACTOR + 7) {
 		// small packets use small packet optimization
-		sr5WriteCrcPacketSmall(tsChannel, responseCode, buf, size);
+		writeCrcPacketSmall(responseCode, buf, size);
 	} else {
-		sr5WriteCrcPacketLarge(tsChannel, responseCode, buf, size);
+		writeCrcPacketLarge(responseCode, buf, size);
 	}
 
-	sr5FlushData(tsChannel);
+	flush();
 }
 
-void sr5SendResponse(ts_channel_s *tsChannel, ts_response_format_e mode, const uint8_t * buffer, int size) {
+void ts_channel_s::sendResponse(ts_response_format_e mode, const uint8_t * buffer, int size) {
 	if (mode == TS_CRC) {
-		sr5WriteCrcPacket(tsChannel, TS_RESPONSE_OK, buffer, size);
+		writeCrcPacket(TS_RESPONSE_OK, buffer, size);
 	} else {
 		if (size > 0) {
-			tsChannel->write(buffer, size);
-			sr5FlushData(tsChannel);
+			write(buffer, size);
+			flush();
 		}
 	}
 }
@@ -345,12 +345,8 @@ bool sr5IsReady(ts_channel_s *tsChannel) {
 	return true;
 }
 
-void sr5FlushData(ts_channel_s *tsChannel) {
+void ts_channel_s::flush() {
 #if defined(TS_CAN_DEVICE)
-	UNUSED(tsChannel);
 	canFlushTxStream(&TS_CAN_DEVICE);
-#else
-	UNUSED(tsChannel);
 #endif /* TS_CAN_DEVICE */
 }
-

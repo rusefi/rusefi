@@ -2,7 +2,7 @@
 
 #include <cstdint>
 
-class ts_channel_s;
+struct ts_channel_s;
 
 class TunerStudioBase {
 public:

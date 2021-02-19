@@ -204,11 +204,11 @@ static constexpr size_t getTunerStudioPageSize() {
 }
 
 void sendOkResponse(ts_channel_s *tsChannel, ts_response_format_e mode) {
-	sr5SendResponse(tsChannel, mode, NULL, 0);
+	tsChannel->sendResponse(mode, NULL, 0);
 }
 
 static void sendErrorCode(ts_channel_s *tsChannel, uint8_t code) {
-	sr5WriteCrcPacket(tsChannel, code, nullptr, 0);
+	tsChannel->writeCrcPacket(code, nullptr, 0);
 }
 
 void TunerStudio::sendErrorCode(ts_channel_s* tsChannel, uint8_t code) {
@@ -293,7 +293,7 @@ static void handleGetStructContent(ts_channel_s *tsChannel, int structId, int si
 		// todo: add warning code - unexpected structId
 		return;
 	}
-	sr5SendResponse(tsChannel, TS_CRC, (const uint8_t *)addr, size);
+	tsChannel->sendResponse(TS_CRC, (const uint8_t *)addr, size);
 }
 
 // Validate whether the specified offset and count would cause an overrun in the tune.
@@ -349,7 +349,7 @@ static void handleCrc32Check(ts_channel_s *tsChannel, ts_response_format_e mode,
 	const char* start = getWorkingPageAddr() + offset;
 
 	uint32_t crc = SWAP_UINT32(crc32(start, count));
-	sr5SendResponse(tsChannel, mode, (const uint8_t *) &crc, 4);
+	tsChannel->sendResponse(mode, (const uint8_t *) &crc, 4);
 }
 
 /**
@@ -403,7 +403,7 @@ static void handlePageReadCommand(ts_channel_s *tsChannel, ts_response_format_e 
 	}
 
 	const uint8_t *addr = (const uint8_t *) (getWorkingPageAddr() + offset);
-	sr5SendResponse(tsChannel, mode, addr, count);
+	tsChannel->sendResponse(mode, addr, count);
 #if EFI_TUNER_STUDIO_VERBOSE
 //	scheduleMsg(&tsLogger, "Sending %d done", count);
 #endif
@@ -419,7 +419,7 @@ void requestBurn(void) {
 
 static void sendResponseCode(ts_response_format_e mode, ts_channel_s *tsChannel, const uint8_t responseCode) {
 	if (mode == TS_CRC) {
-		sr5WriteCrcPacket(tsChannel, responseCode, nullptr, 0);
+		tsChannel->writeCrcPacket(responseCode, nullptr, 0);
 	}
 }
 
@@ -617,7 +617,7 @@ void handleQueryCommand(ts_channel_s *tsChannel, ts_response_format_e mode) {
 	printTsStats();
 #endif
 	const char *signature = getTsSignature();
-	sr5SendResponse(tsChannel, mode, (const uint8_t *)signature, strlen(signature) + 1);
+	tsChannel->sendResponse(mode, (const uint8_t *)signature, strlen(signature) + 1);
 }
 
 /**
@@ -648,7 +648,7 @@ extern CommandHandler console_line_callback;
 static void handleGetVersion(ts_channel_s *tsChannel) {
 	static char versionBuffer[32];
 	chsnprintf(versionBuffer, sizeof(versionBuffer), "rusEFI v%d@%s", getRusEfiVersion(), VCS_VERSION);
-	sr5SendResponse(tsChannel, TS_CRC, (const uint8_t *) versionBuffer, strlen(versionBuffer) + 1);
+	tsChannel->sendResponse(TS_CRC, (const uint8_t *) versionBuffer, strlen(versionBuffer) + 1);
 }
 
 static void handleGetText(ts_channel_s *tsChannel) {
@@ -662,7 +662,7 @@ static void handleGetText(ts_channel_s *tsChannel) {
 			logMsg("get test sending [%d]\r\n", outputSize);
 #endif
 
-	sr5WriteCrcPacket(tsChannel, TS_RESPONSE_COMMAND_OK, reinterpret_cast<uint8_t*>(output), outputSize);
+	tsChannel->writeCrcPacket(TS_RESPONSE_COMMAND_OK, reinterpret_cast<uint8_t*>(output), outputSize);
 #if EFI_SIMULATOR
 			logMsg("sent [%d]\r\n", outputSize);
 #endif
@@ -676,7 +676,7 @@ static void handleExecuteCommand(ts_channel_s *tsChannel, char *data, int incomi
 #endif
 	(console_line_callback)(trimmed);
 
-	sr5WriteCrcPacket(tsChannel, TS_RESPONSE_COMMAND_OK, nullptr, 0);
+	tsChannel->writeCrcPacket(TS_RESPONSE_COMMAND_OK, nullptr, 0);
 }
 
 /**
@@ -835,14 +835,14 @@ int TunerStudioBase::handleCrcCommand(ts_channel_s *tsChannel, char *data, int i
 
 			if (currentEnd > transmitted) {
 				// more normal case - tail after head
-				sr5SendResponse(tsChannel, TS_CRC, start, COMPOSITE_PACKET_SIZE * (currentEnd - transmitted));
+				tsChannel->sendResponse(TS_CRC, start, COMPOSITE_PACKET_SIZE * (currentEnd - transmitted));
 				transmitted = currentEnd;
 			} else if (currentEnd == transmitted) {
-				sr5SendResponse(tsChannel, TS_CRC, start, 0);
+				tsChannel->sendResponse(TS_CRC, start, 0);
 			} else {
 				// we are here if tail of buffer has reached the end of buffer and re-started from the start of buffer
 				// sending end of the buffer, next transmission would take care of the rest
-				sr5SendResponse(tsChannel, TS_CRC, start, COMPOSITE_PACKET_SIZE * (COMPOSITE_PACKET_COUNT - transmitted));
+				tsChannel->sendResponse(TS_CRC, start, COMPOSITE_PACKET_SIZE * (COMPOSITE_PACKET_COUNT - transmitted));
 				transmitted = 0;
 			}
 		}
@@ -850,7 +850,7 @@ int TunerStudioBase::handleCrcCommand(ts_channel_s *tsChannel, char *data, int i
 	case TS_GET_LOGGER_GET_BUFFER:
 		{
 			auto toothBuffer = GetToothLoggerBuffer();
-			sr5SendResponse(tsChannel, TS_CRC, toothBuffer.Buffer, toothBuffer.Length);
+			tsChannel->sendResponse(TS_CRC, toothBuffer.Buffer, toothBuffer.Length);
 		}
 
 		break;
@@ -863,7 +863,7 @@ int TunerStudioBase::handleCrcCommand(ts_channel_s *tsChannel, char *data, int i
 	case TS_PERF_TRACE_GET_BUFFER:
 		{
 			auto trace = perfTraceGetBuffer();
-			sr5SendResponse(tsChannel, TS_CRC, trace.Buffer, trace.Size);
+			tsChannel->sendResponse(TS_CRC, trace.Buffer, trace.Size);
 		}
 
 		break;
@@ -876,7 +876,7 @@ int TunerStudioBase::handleCrcCommand(ts_channel_s *tsChannel, char *data, int i
 			strcpy(configError, "FACTORY_MODE_PLEASE_CONTACT_SUPPORT");
 		}
 #endif // HW_CHECK_MODE
-		sr5SendResponse(tsChannel, TS_CRC, reinterpret_cast<const uint8_t*>(configError), strlen(configError));
+		tsChannel->sendResponse(TS_CRC, reinterpret_cast<const uint8_t*>(configError), strlen(configError));
 		break;
 	}
 	default:
