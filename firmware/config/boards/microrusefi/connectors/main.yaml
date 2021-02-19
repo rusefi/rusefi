@@ -33,7 +33,7 @@ pins:
 
   - pin: 5
     function: 12V supply from Key (turn on/off power)
-    type 12V
+    type: 12V
     color: black
 
   - pin: 6
