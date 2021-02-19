@@ -338,9 +338,9 @@ void TsChannelBase::sendResponse(ts_response_format_e mode, const uint8_t * buff
 	}
 }
 
-bool sr5IsReady(ts_channel_s *tsChannel) {
+bool ts_channel_s::isReady() {
 #if EFI_USB_SERIAL
-	if (isUsbSerial(tsChannel->channel)) {
+	if (isUsbSerial(this->channel)) {
 		// TS uses USB when console uses serial
 		return is_usb_serial_ready();
 	}

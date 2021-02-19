@@ -12,7 +12,7 @@
  * @brief 'Output' command sends out a snapshot of current values
  * Gauges refresh
  */
-void TunerStudio::cmdOutputChannels(ts_channel_s *tsChannel, uint16_t offset, uint16_t count) {
+void TunerStudio::cmdOutputChannels(TsChannelBase* tsChannel, uint16_t offset, uint16_t count) {
 	if (offset + count > sizeof(TunerStudioOutputChannels)) {
 		scheduleMsg(tsLogger, "TS: Version Mismatch? Too much outputs requested %d/%d/%d", offset, count,
 				sizeof(TunerStudioOutputChannels));

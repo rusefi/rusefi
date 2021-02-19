@@ -28,6 +28,7 @@ public:
 	virtual void write(const uint8_t* buffer, size_t size) = 0;
 	virtual size_t readTimeout(uint8_t* buffer, size_t size, int timeout) = 0;
 	virtual void flush() = 0;
+	virtual bool isReady() = 0;
 
 	// Base functions that use the above virtual implementation
 	size_t read(uint8_t* buffer, size_t size);
@@ -51,6 +52,7 @@ struct ts_channel_s : public TsChannelBase {
 	void write(const uint8_t* buffer, size_t size) override;
 	size_t readTimeout(uint8_t* buffer, size_t size, int timeout) override;
 	void flush() override;
+	bool isReady() override;
 
 #if !EFI_UNIT_TEST
 	BaseChannel * channel = nullptr;
@@ -74,6 +76,4 @@ bool stopTsPort(ts_channel_s *tsChannel);
 // that's 1 second
 #define SR5_READ_TIMEOUT TIME_MS2I(1000)
 
-void sendOkResponse(ts_channel_s *tsChannel, ts_response_format_e mode);
-bool sr5IsReady(ts_channel_s *tsChannel);
-void sr5FlushData(ts_channel_s *tsChannel);
+void sendOkResponse(TsChannelBase *tsChannel, ts_response_format_e mode);

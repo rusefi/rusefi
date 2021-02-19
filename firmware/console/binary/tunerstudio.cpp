@@ -203,19 +203,19 @@ static constexpr size_t getTunerStudioPageSize() {
 	return TOTAL_CONFIG_SIZE;
 }
 
-void sendOkResponse(ts_channel_s *tsChannel, ts_response_format_e mode) {
+void sendOkResponse(TsChannelBase *tsChannel, ts_response_format_e mode) {
 	tsChannel->sendResponse(mode, NULL, 0);
 }
 
-static void sendErrorCode(ts_channel_s *tsChannel, uint8_t code) {
+static void sendErrorCode(TsChannelBase *tsChannel, uint8_t code) {
 	tsChannel->writeCrcPacket(code, nullptr, 0);
 }
 
-void TunerStudio::sendErrorCode(ts_channel_s* tsChannel, uint8_t code) {
+void TunerStudio::sendErrorCode(TsChannelBase* tsChannel, uint8_t code) {
 	::sendErrorCode(tsChannel, code);
 }
 
-static void handlePageSelectCommand(ts_channel_s *tsChannel, ts_response_format_e mode) {
+static void handlePageSelectCommand(TsChannelBase *tsChannel, ts_response_format_e mode) {
 	tsState.pageCommandCounter++;
 
 	sendOkResponse(tsChannel, mode);
@@ -285,7 +285,7 @@ static const void * getStructAddr(int structId) {
  * This is somewhat similar to read page and somewhat similar to read outputs
  * We can later consider combining this functionality
  */
-static void handleGetStructContent(ts_channel_s *tsChannel, int structId, int size) {
+static void handleGetStructContent(TsChannelBase* tsChannel, int structId, int size) {
 	tsState.readPageCommandsCounter++;
 
 	const void *addr = getStructAddr(structId);
@@ -298,7 +298,7 @@ static void handleGetStructContent(ts_channel_s *tsChannel, int structId, int si
 
 // Validate whether the specified offset and count would cause an overrun in the tune.
 // Returns true if an overrun would occur.
-static bool validateOffsetCount(size_t offset, size_t count, ts_channel_s *tsChannel) {
+static bool validateOffsetCount(size_t offset, size_t count, TsChannelBase* tsChannel) {
 	if (offset + count > getTunerStudioPageSize()) {
 		scheduleMsg(&tsLogger, "TS: Project mismatch? Too much configuration requested %d/%d", offset, count);
 		tunerStudioError("ERROR: out of range");
@@ -318,7 +318,7 @@ bool rebootForPresetPending = false;
  * This command is needed to make the whole transfer a bit faster
  * @note See also handleWriteValueCommand
  */
-static void handleWriteChunkCommand(ts_channel_s *tsChannel, ts_response_format_e mode, uint16_t offset, uint16_t count,
+static void handleWriteChunkCommand(TsChannelBase* tsChannel, ts_response_format_e mode, uint16_t offset, uint16_t count,
 		void *content) {
 	tsState.writeChunkCommandCounter++;
 
@@ -338,7 +338,7 @@ static void handleWriteChunkCommand(ts_channel_s *tsChannel, ts_response_format_
 	sendOkResponse(tsChannel, mode);
 }
 
-static void handleCrc32Check(ts_channel_s *tsChannel, ts_response_format_e mode, uint16_t offset, uint16_t count) {
+static void handleCrc32Check(TsChannelBase *tsChannel, ts_response_format_e mode, uint16_t offset, uint16_t count) {
 	tsState.crc32CheckCommandCounter++;
 
 	// Ensure we are reading from in bounds
@@ -356,7 +356,7 @@ static void handleCrc32Check(ts_channel_s *tsChannel, ts_response_format_e mode,
  * 'Write' command receives a single value at a given offset
  * @note Writing values one by one is pretty slow
  */
-static void handleWriteValueCommand(ts_channel_s *tsChannel, ts_response_format_e mode, uint16_t offset, uint8_t value) {
+static void handleWriteValueCommand(TsChannelBase* tsChannel, ts_response_format_e mode, uint16_t offset, uint8_t value) {
 	UNUSED(tsChannel);
 	UNUSED(mode);
 
@@ -386,7 +386,7 @@ static void handleWriteValueCommand(ts_channel_s *tsChannel, ts_response_format_
 	}
 }
 
-static void handlePageReadCommand(ts_channel_s *tsChannel, ts_response_format_e mode, uint16_t offset, uint16_t count) {
+static void handlePageReadCommand(TsChannelBase* tsChannel, ts_response_format_e mode, uint16_t offset, uint16_t count) {
 	tsState.readPageCommandsCounter++;
 
 	if (rebootForPresetPending) {
@@ -417,7 +417,7 @@ void requestBurn(void) {
 #endif
 }
 
-static void sendResponseCode(ts_response_format_e mode, ts_channel_s *tsChannel, const uint8_t responseCode) {
+static void sendResponseCode(ts_response_format_e mode, TsChannelBase *tsChannel, const uint8_t responseCode) {
 	if (mode == TS_CRC) {
 		tsChannel->writeCrcPacket(responseCode, nullptr, 0);
 	}
@@ -426,7 +426,7 @@ static void sendResponseCode(ts_response_format_e mode, ts_channel_s *tsChannel,
 /**
  * 'Burn' command is a command to commit the changes
  */
-static void handleBurnCommand(ts_channel_s *tsChannel, ts_response_format_e mode) {
+static void handleBurnCommand(TsChannelBase* tsChannel, ts_response_format_e mode) {
 	efitimems_t nowMs = currentTimeMillis();
 	tsState.burnCommandCounter++;
 
@@ -466,11 +466,10 @@ static bool isKnownCommand(char command) {
 
 TunerStudio tsInstance(&tsLogger);
 
-static void tsProcessOne(ts_channel_s* tsChannel) {
+static void tsProcessOne(TsChannelBase* tsChannel) {
 	validateStack("communication", STACK_USAGE_COMMUNICATION, 128);
 
-	int isReady = sr5IsReady(tsChannel);
-	if (!isReady) {
+	if (!tsChannel->isReady()) {
 		chThdSleepMilliseconds(10);
 		tsChannel->wasReady = false;
 		return;
@@ -571,8 +570,7 @@ static void tsProcessOne(ts_channel_s* tsChannel) {
 		print("got unexpected TunerStudio command %x:%c\r\n", command, command);
 }
 
-void runBinaryProtocolLoop(ts_channel_s *tsChannel)
-{
+void runBinaryProtocolLoop(TsChannelBase* tsChannel) {
 	// Until the end of time, process incoming messages.
 	while(true) {
 		tsProcessOne(tsChannel);
@@ -610,7 +608,7 @@ void tunerStudioError(const char *msg) {
  * Query with CRC takes place while re-establishing connection
  * Query without CRC takes place on TunerStudio startup
  */
-void handleQueryCommand(ts_channel_s *tsChannel, ts_response_format_e mode) {
+void handleQueryCommand(TsChannelBase* tsChannel, ts_response_format_e mode) {
 	tsState.queryCommandCounter++;
 #if EFI_TUNER_STUDIO_VERBOSE
 	scheduleMsg(&tsLogger, "got S/H (queryCommand) mode=%d", mode);
@@ -623,7 +621,7 @@ void handleQueryCommand(ts_channel_s *tsChannel, ts_response_format_e mode) {
 /**
  * rusEfi own test command
  */
-static void handleTestCommand(ts_channel_s *tsChannel) {
+static void handleTestCommand(TsChannelBase* tsChannel) {
 	tsState.testCommandCounter++;
 	static char testOutputBuffer[24];
 	/**
@@ -645,13 +643,13 @@ static void handleTestCommand(ts_channel_s *tsChannel) {
 
 extern CommandHandler console_line_callback;
 
-static void handleGetVersion(ts_channel_s *tsChannel) {
+static void handleGetVersion(TsChannelBase* tsChannel) {
 	static char versionBuffer[32];
 	chsnprintf(versionBuffer, sizeof(versionBuffer), "rusEFI v%d@%s", getRusEfiVersion(), VCS_VERSION);
 	tsChannel->sendResponse(TS_CRC, (const uint8_t *) versionBuffer, strlen(versionBuffer) + 1);
 }
 
-static void handleGetText(ts_channel_s *tsChannel) {
+static void handleGetText(TsChannelBase* tsChannel) {
 	tsState.textCommandCounter++;
 
 	printOverallStatus(getTimeNowSeconds());
@@ -668,7 +666,7 @@ static void handleGetText(ts_channel_s *tsChannel) {
 #endif
 }
 
-static void handleExecuteCommand(ts_channel_s *tsChannel, char *data, int incomingPacketSize) {
+static void handleExecuteCommand(TsChannelBase* tsChannel, char *data, int incomingPacketSize) {
 	data[incomingPacketSize] = 0;
 	char *trimmed = efiTrim(data);
 #if EFI_SIMULATOR
@@ -682,7 +680,7 @@ static void handleExecuteCommand(ts_channel_s *tsChannel, char *data, int incomi
 /**
  * @return true if legacy command was processed, false otherwise
  */
-bool handlePlainCommand(ts_channel_s *tsChannel, uint8_t command) {
+bool handlePlainCommand(TsChannelBase* tsChannel, uint8_t command) {
 	// Bail fast if guaranteed not to be a plain command
 	if (command == 0)
 	{
@@ -715,7 +713,7 @@ bool handlePlainCommand(ts_channel_s *tsChannel, uint8_t command) {
 
 static int transmitted = 0;
 
-int TunerStudioBase::handleCrcCommand(ts_channel_s *tsChannel, char *data, int incomingPacketSize) {
+int TunerStudioBase::handleCrcCommand(TsChannelBase* tsChannel, char *data, int incomingPacketSize) {
 	ScopePerf perf(PE::TunerStudioHandleCrcCommand);
 
 	char command = data[0];
