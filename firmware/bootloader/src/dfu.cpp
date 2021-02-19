@@ -314,6 +314,6 @@ bool dfuStartLoop(void) {
     return wasCommand;
 }		
 
-ts_channel_s *getTsChannel() {
+TsChannelBase* getTsChannel() {
 	return &blTsChannel;
 }
