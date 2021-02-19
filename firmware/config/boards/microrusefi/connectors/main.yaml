@@ -52,7 +52,7 @@ pins:
 
   - pin: 8
     function: ETB-
-    type: ETB-
+    type: etb
     color: black
 
   # TC4427 ignition outputs (5v)
