@@ -484,7 +484,7 @@ static void tsProcessOne(ts_channel_s* tsChannel) {
 	tsState.totalCounter++;
 
 	uint8_t firstByte;
-	int received = sr5ReadData(tsChannel, &firstByte, 1);
+	int received = tsChannel->read(&firstByte, 1);
 #if EFI_SIMULATOR
 		logMsg("received %d\r\n", received);
 #endif
@@ -504,7 +504,7 @@ static void tsProcessOne(ts_channel_s* tsChannel) {
 		return;
 
 	uint8_t secondByte;
-	received = sr5ReadData(tsChannel, &secondByte, 1);
+	received = tsChannel->read(&secondByte, 1);
 	if (received != 1) {
 		tunerStudioError("TS: ERROR: no second byte");
 		return;
@@ -520,7 +520,7 @@ static void tsProcessOne(ts_channel_s* tsChannel) {
 		return;
 	}
 
-	received = sr5ReadData(tsChannel, (uint8_t* )tsChannel->scratchBuffer, 1);
+	received = tsChannel->read((uint8_t* )tsChannel->scratchBuffer, 1);
 	if (received != 1) {
 		tunerStudioError("ERROR: did not receive command");
 		sendErrorCode(tsChannel, TS_RESPONSE_UNDERRUN);
@@ -538,7 +538,7 @@ static void tsProcessOne(ts_channel_s* tsChannel) {
 		logMsg("command %c\r\n", command);
 #endif
 
-	received = sr5ReadData(tsChannel, (uint8_t * ) (tsChannel->scratchBuffer + 1),
+	received = tsChannel->read((uint8_t*)(tsChannel->scratchBuffer + 1),
 			incomingPacketSize + CRC_VALUE_SIZE - 1);
 	int expectedSize = incomingPacketSize + CRC_VALUE_SIZE - 1;
 	if (received != expectedSize) {
@@ -631,16 +631,16 @@ static void handleTestCommand(ts_channel_s *tsChannel) {
 	 * extension of the protocol to simplify troubleshooting
 	 */
 	tunerStudioDebug("got T (Test)");
-	sr5WriteData(tsChannel, (const uint8_t *) VCS_VERSION, sizeof(VCS_VERSION));
+	tsChannel->write((const uint8_t*)VCS_VERSION, sizeof(VCS_VERSION));
 
 	chsnprintf(testOutputBuffer, sizeof(testOutputBuffer), " %d %d", engine->engineState.warnings.lastErrorCode, tsState.testCommandCounter);
-	sr5WriteData(tsChannel, (const uint8_t *) testOutputBuffer, strlen(testOutputBuffer));
+	tsChannel->write((const uint8_t*)testOutputBuffer, strlen(testOutputBuffer));
 
 	chsnprintf(testOutputBuffer, sizeof(testOutputBuffer), " uptime=%ds", getTimeNowSeconds());
-	sr5WriteData(tsChannel, (const uint8_t *) testOutputBuffer, strlen(testOutputBuffer));
+	tsChannel->write((const uint8_t*)testOutputBuffer, strlen(testOutputBuffer));
 
 	chsnprintf(testOutputBuffer, sizeof(testOutputBuffer), " %s\r\n", PROTOCOL_TEST_RESPONSE_TAG);
-	sr5WriteData(tsChannel, (const uint8_t *) testOutputBuffer, strlen(testOutputBuffer));
+	tsChannel->write((const uint8_t*)testOutputBuffer, strlen(testOutputBuffer));
 }
 
 extern CommandHandler console_line_callback;
@@ -705,7 +705,7 @@ bool handlePlainCommand(ts_channel_s *tsChannel, uint8_t command) {
 		 */
 
 		tunerStudioDebug("not ignoring F");
-		sr5WriteData(tsChannel, (const uint8_t *) TS_PROTOCOL, strlen(TS_PROTOCOL));
+		tsChannel->write((const uint8_t *)TS_PROTOCOL, strlen(TS_PROTOCOL));
 		return true;
 	} else {
 		// This wasn't a valid command
