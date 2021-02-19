@@ -197,7 +197,7 @@ void initializeConsole(Logging *sharedLogger) {
 	startConsole(sharedLogger, &handleConsoleLine);
 
 	sayHello();
-	addConsoleAction("test", [](){});
+	addConsoleAction("test", [](){ /* do nothing */});
 	addConsoleAction("hello", sayHello);
 #if EFI_HAS_RESET
 	addConsoleAction("reset", scheduleReset);
