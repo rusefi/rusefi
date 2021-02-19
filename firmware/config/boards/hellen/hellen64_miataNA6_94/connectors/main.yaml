@@ -1,11 +1,18 @@
 pins:
-  - pin: 1
-    id: EFI_ADC_11
-    class: analog_inputs
-    color: white right
-    function: 12V Supply from main relay output, see also pin #29
-    ts_name: Battery Sense
+  - pin: 1A
+    function: 12V all times
     type: 12V
+  - pin: 1B
+    function: ECU power in start & run
+    type: 12V
+  - pin: 3A
+    function: Power GND
+    type: pgnd
+    color: white
+  - pin: 3B
+    function: Power GND
+    type: pgnd
+    color: white
 
 
 
@@ -13,6 +20,27 @@ info:
   image:
     file: main.jpg
   pins:
-    - pin: 1
-      x: 1508
-      y: 445
+    - pin: 1A
+      x: 3984
+      y: 312
+    - pin: 1B
+      x: 3984
+      y: 512
+    - pin: 1C
+      x: 3860
+      y: 312
+    - pin: 1D
+      x: 3860
+      y: 512
+    - pin: 3A
+      x: 1604
+      y: 312
+    - pin: 3B
+      x: 1604
+      y: 512
+    - pin: 3C
+      x: 1488
+      y: 312
+    - pin: 3D
+      x: 1488
+      y: 512
