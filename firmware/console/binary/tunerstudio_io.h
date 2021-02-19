@@ -22,33 +22,43 @@ typedef enum {
 	TS_CRC = 1
 } ts_response_format_e;
 
-struct ts_channel_s {
-	void write(const uint8_t* buffer, size_t size);
-	size_t readTimeout(uint8_t* buffer, size_t size, int timeout);
+class TsChannelBase {
+public:
+	// Virtual functions - implement these for your underlying transport
+	virtual void write(const uint8_t* buffer, size_t size) = 0;
+	virtual size_t readTimeout(uint8_t* buffer, size_t size, int timeout) = 0;
+	virtual void flush() = 0;
+
+	// Base functions that use the above virtual implementation
 	size_t read(uint8_t* buffer, size_t size);
-	void flush();
 
 	void writeCrcPacket(uint8_t responseCode, const uint8_t* buf, size_t size);
-
 	void sendResponse(ts_response_format_e mode, const uint8_t * buffer, int size);
 
-#if ! EFI_UNIT_TEST
-	BaseChannel * channel = nullptr;
-#endif
 	/**
 	 * See 'blockingFactor' in rusefi.ini
 	 */
 	char scratchBuffer[BLOCKING_FACTOR + 30];
-
-#if TS_UART_DMA_MODE || PRIMARY_UART_DMA_MODE || TS_UART_MODE
-	UARTDriver *uartp = nullptr;
-#endif // TS_UART_DMA_MODE
 
 	bool wasReady = false;
 
 private:
 	void writeCrcPacketSmall(uint8_t responseCode, const uint8_t* buf, size_t size);
 	void writeCrcPacketLarge(uint8_t responseCode, const uint8_t* buf, size_t size);
+};
+
+struct ts_channel_s : public TsChannelBase {
+	void write(const uint8_t* buffer, size_t size) override;
+	size_t readTimeout(uint8_t* buffer, size_t size, int timeout) override;
+	void flush() override;
+
+#if !EFI_UNIT_TEST
+	BaseChannel * channel = nullptr;
+#endif
+
+#if TS_UART_DMA_MODE || PRIMARY_UART_DMA_MODE || TS_UART_MODE
+	UARTDriver *uartp = nullptr;
+#endif // TS_UART_DMA_MODE
 };
 
 #define CRC_VALUE_SIZE 4
