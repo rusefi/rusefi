@@ -160,45 +160,42 @@ bool stopTsPort(ts_channel_s *tsChannel) {
 int sr5TestWriteDataIndex = 0;
 uint8_t st5TestBuffer[16000];
 
-void sr5WriteData(ts_channel_s *tsChannel, const uint8_t * buffer, int size) {
+void ts_channel_s::write(const uint8_t* buffer, size_t size) {
 	memcpy(&st5TestBuffer[sr5TestWriteDataIndex], buffer, size);
 	sr5TestWriteDataIndex += size;
 }
 #endif // EFI_UNIT_TEST
 
 #if EFI_PROD_CODE || EFI_SIMULATOR
-void sr5WriteData(ts_channel_s *tsChannel, const uint8_t * buffer, int size) {
+void ts_channel_s::write(const uint8_t* buffer, size_t size) {
         efiAssertVoid(CUSTOM_ERR_6570, getCurrentRemainingStack() > 64, "tunerStudioWriteData");
 #if EFI_SIMULATOR
 			logMsg("chSequentialStreamWrite [%d]\r\n", size);
 #endif
 
 #if (PRIMARY_UART_DMA_MODE || TS_UART_DMA_MODE || TS_UART_MODE) && EFI_PROD_CODE
-	if (tsChannel->uartp != nullptr) {
-	    int transferred = size;
-	    uartSendTimeout(tsChannel->uartp, (size_t *)&transferred, buffer, BINARY_IO_TIMEOUT);
-        return;
+	if (uartp) {
+		uartSendTimeout(uartp, &size, buffer, BINARY_IO_TIMEOUT);
+		return;
 	}
 #elif defined(TS_CAN_DEVICE)
-	UNUSED(tsChannel);
-	int transferred = size;
-	canAddToTxStreamTimeout(&TS_CAN_DEVICE, (size_t *)&transferred, buffer, BINARY_IO_TIMEOUT);
+	canAddToTxStreamTimeout(&TS_CAN_DEVICE, &size, buffer, BINARY_IO_TIMEOUT);
 #endif
-	if (tsChannel->channel == nullptr)
+	if (!channel) {
 		return;
+	}
 
 //	int transferred = chnWriteTimeout(tsChannel->channel, buffer, size, BINARY_IO_TIMEOUT);
 	// temporary attempt to work around #553
 	// instead of one huge packet let's try sending a few smaller packets
-	int transferred = 0;
-	int stillToTransfer = size;
+	size_t transferred = 0;
+	size_t stillToTransfer = size;
 	while (stillToTransfer > 0) {
 		int thisTransferSize = minI(stillToTransfer, 768);
-		transferred += chnWriteTimeout(tsChannel->channel, buffer, thisTransferSize, BINARY_IO_TIMEOUT);
+		transferred += chnWriteTimeout(channel, buffer, thisTransferSize, BINARY_IO_TIMEOUT);
 		buffer += thisTransferSize;
 		stillToTransfer -= thisTransferSize;
 	}
-
 
 #if EFI_SIMULATOR
 			logMsg("transferred [%d]\r\n", transferred);
@@ -211,36 +208,34 @@ void sr5WriteData(ts_channel_s *tsChannel, const uint8_t * buffer, int size) {
 	}
 }
 
-int sr5ReadDataTimeout(ts_channel_s *tsChannel, uint8_t * buffer, int size, int timeout) {
+size_t ts_channel_s::readTimeout(uint8_t* buffer, size_t size, int timeout) {
 #if TS_UART_DMA_MODE || PRIMARY_UART_DMA_MODE
-	if (tsChannel->uartp!= NULL) {
+	if (uartp) {
 		extern uart_dma_s tsUartDma;
-		return (int)iqReadTimeout(&tsUartDma.fifoRxQueue, (uint8_t * )buffer, (size_t)size, timeout);
+		return iqReadTimeout(&tsUartDma.fifoRxQueue, buffer, size, timeout);
 	}
 #endif
 
 #if TS_UART_DMA_MODE
 #elif TS_UART_MODE
 	UNUSED(tsChannel);
-	size_t received = (size_t)size;
-	uartReceiveTimeout(TS_UART_DEVICE, &received, buffer, timeout);
-	return (int)received;
+	uartReceiveTimeout(TS_UART_DEVICE, &size, buffer, timeout);
+	return size;
 #elif defined(TS_CAN_DEVICE)
 	UNUSED(tsChannel);
-	size_t received = (size_t)size;
-	canStreamReceiveTimeout(&TS_CAN_DEVICE, &received, buffer, timeout);
-	return (int)received;
+	canStreamReceiveTimeout(&TS_CAN_DEVICE, &size, buffer, timeout);
+	return size;
 #else /* TS_UART_DMA_MODE */
-	if (tsChannel->channel == nullptr)
+	if (channel == nullptr)
 		return 0;
-	return chnReadTimeout(tsChannel->channel, (uint8_t * )buffer, size, timeout);
+	return chnReadTimeout(channel, buffer, size, timeout);
 #endif /* TS_UART_DMA_MODE */
 	firmwareError(CUSTOM_ERR_6126, "Unexpected channel situation");
 	return 0;
 }
 
-int sr5ReadData(ts_channel_s *tsChannel, uint8_t * buffer, int size) {
-	return sr5ReadDataTimeout(tsChannel, buffer, size, SR5_READ_TIMEOUT);
+size_t ts_channel_s::read(uint8_t* buffer, size_t size) {
+	return readTimeout(buffer, size, SR5_READ_TIMEOUT);
 }
 #endif // EFI_PROD_CODE || EFI_SIMULATOR
 
@@ -270,7 +265,7 @@ void sr5WriteCrcPacketSmall(ts_channel_s* tsChannel, uint8_t responseCode, const
 	*reinterpret_cast<uint32_t*>(&scratchBuffer[size + 3]) = SWAP_UINT32(crc);
 
 	// Write to the underlying stream
-	sr5WriteData(tsChannel, reinterpret_cast<uint8_t*>(scratchBuffer), size + 7);
+	tsChannel->write(reinterpret_cast<uint8_t*>(scratchBuffer), size + 7);
 }
 
 void sr5WriteCrcPacketLarge(ts_channel_s* tsChannel, uint8_t responseCode, const uint8_t* buf, size_t size) {
@@ -287,15 +282,15 @@ void sr5WriteCrcPacketLarge(ts_channel_s* tsChannel, uint8_t responseCode, const
 	*(uint32_t*)crcBuffer = SWAP_UINT32(crc);
 
 	// Write header
-	sr5WriteData(tsChannel, headerBuffer, sizeof(headerBuffer));
+	tsChannel->write(headerBuffer, sizeof(headerBuffer));
 
 	// If data, write that
 	if (size) {
-		sr5WriteData(tsChannel, buf, size);
+		tsChannel->write(buf, size);
 	}
 
 	// Lastly the CRC footer
-	sr5WriteData(tsChannel, crcBuffer, sizeof(crcBuffer));
+	tsChannel->write(crcBuffer, sizeof(crcBuffer));
 }
 
 /**
@@ -311,9 +306,9 @@ void sr5WriteCrcPacket(ts_channel_s *tsChannel, uint8_t responseCode, const uint
 	// a special case for short packets: we can sent them in 1 frame, without CRC & size,
 	// because the CAN protocol is already protected by its own checksum.
 	if ((size + 1) <= 7) {
-		sr5WriteData(tsChannel, &responseCode, 1);      // header without size
+		tsChannel->write(&responseCode, 1);      // header without size
 		if (size > 0) {
-			sr5WriteData(tsChannel, (const uint8_t*)buf, size);      // body
+			tsChannel->write(buf, size);      // body
 		}
 		sr5FlushData(tsChannel);
 		return;
@@ -334,7 +329,7 @@ void sr5SendResponse(ts_channel_s *tsChannel, ts_response_format_e mode, const u
 		sr5WriteCrcPacket(tsChannel, TS_RESPONSE_OK, buffer, size);
 	} else {
 		if (size > 0) {
-			sr5WriteData(tsChannel, buffer, size);
+			tsChannel->write(buffer, size);
 			sr5FlushData(tsChannel);
 		}
 	}
