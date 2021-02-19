@@ -218,11 +218,9 @@ size_t ts_channel_s::readTimeout(uint8_t* buffer, size_t size, int timeout) {
 
 #if TS_UART_DMA_MODE
 #elif TS_UART_MODE
-	UNUSED(tsChannel);
 	uartReceiveTimeout(TS_UART_DEVICE, &size, buffer, timeout);
 	return size;
 #elif defined(TS_CAN_DEVICE)
-	UNUSED(tsChannel);
 	canStreamReceiveTimeout(&TS_CAN_DEVICE, &size, buffer, timeout);
 	return size;
 #else /* TS_UART_DMA_MODE */
