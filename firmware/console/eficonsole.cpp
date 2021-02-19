@@ -37,14 +37,6 @@ static void myerror(void) {
 	firmwareError(CUSTOM_ERR_TEST_ERROR, "firmwareError: %d", getRusEfiVersion());
 }
 
-static void sayNothing(void) {
-	/**
-	 * @see EngineState#TS_PROTOCOL_TAG
-	 * this empty response is part of protocol check
-	 * todo: make this logic smarter?
-	 */
-}
-
 static void sayHello(void) {
 	scheduleMsg(&logger, PROTOCOL_HELLO_PREFIX " rusEFI LLC (c) 2012-2021. All rights reserved.");
 	scheduleMsg(&logger, PROTOCOL_HELLO_PREFIX " rusEFI v%d@%s", getRusEfiVersion(), VCS_VERSION);
@@ -205,7 +197,7 @@ void initializeConsole(Logging *sharedLogger) {
 	startConsole(sharedLogger, &handleConsoleLine);
 
 	sayHello();
-	addConsoleAction("test", sayNothing);
+	addConsoleAction("test", [](){});
 	addConsoleAction("hello", sayHello);
 #if EFI_HAS_RESET
 	addConsoleAction("reset", scheduleReset);
