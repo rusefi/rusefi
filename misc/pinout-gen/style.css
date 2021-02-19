@@ -92,6 +92,10 @@
   border-color: olive;
 }
 
+[data-type*="usb"] {
+  border-color: lightseagreen;
+}
+
 [data-type*="vr"] {
   border-color: sienna;
 }
