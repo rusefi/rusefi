@@ -80,6 +80,14 @@
   border-color: lightgreen;
 }
 
+[data-type*="mr"] {
+  border-color: firebrick;
+}
+
+[data-type*="pgnd"] {
+  border-color: coral;
+}
+
 [data-type*="sgnd"] {
   border-color: olive;
 }
