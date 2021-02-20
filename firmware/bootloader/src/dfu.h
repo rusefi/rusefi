@@ -48,5 +48,5 @@ bool dfuStartLoop(void);
   */
 void dfuJumpToApp(uint32_t addr);
 
-ts_channel_s* getTsChannel();
+ts_channel_s *getTsChannel();
 
