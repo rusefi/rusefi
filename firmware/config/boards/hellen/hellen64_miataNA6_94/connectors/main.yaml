@@ -6,6 +6,19 @@ pins:
     function: ECU power in start & run
     type: 12V
 
+  - pin: 1D
+    function: CAN bus high
+    type: can
+
+  - pin: 1F
+    function: CAN bus low
+    type: can
+
+  - pin: 1E
+    class: outputs
+    function: Check Engine Light
+    type: ls
+
   - pin: 1G
     class: outputs
     ts_name: 1G - IGN_1
@@ -15,13 +28,43 @@ pins:
     ts_name: 1H - IGN_2
     type: ign
 
+  - pin: 1I
+    function: USB GND
+    type: gnd
+
   - pin: 1J
     class: outputs
     function: A/C Relay
     type: ls
 
+  - pin: 1L
+    class: outputs
+    function: Radiator Fan Relay
+    type: ls
+
   - pin: 1N
     function: Sensor +5V
+
+  - pin: 1Q
+    class: switch_inputs
+    function: A/C switch input
+    type: din
+
+  - pin: 1R
+    class: outputs
+    function: A/C Fan Relay
+    type: ls
+
+  - pin: 1S
+    function: USB D-
+
+  - pin: 1T
+    function: USB D+
+
+  - pin: 1V
+    class: switch_inputs
+    function: Clutch switch input
+    type: din
 
   - pin: 3A
     function: Power GND
@@ -55,10 +98,25 @@ pins:
     ts_name: 3G - CAM
     function: Camshaft Sensor
 
+  - pin: 3O
+    class: analog_inputs
+    ts_name: 3O - MAF
+    function: VAF/MAF sensor
+
   - pin: 3P
     class: analog_inputs
     ts_name: 3P - IAT
     function: IAT sensor
+
+  - pin: 3T
+    class: outputs
+    function: Fuel Pump Relay
+    type: ls
+
+  - pin: 3N
+    class: analog_inputs
+    ts_name: 3N - AFR
+    function: External Wideband signal
 
   - pin: 3Q
     class: analog_inputs
@@ -80,8 +138,8 @@ pins:
 
   - pin: 3W
     class: outputs
-    ts_name: 3W - IDLE (PWM5)
-    function: IAC (negative) idle, with diode
+    ts_name: 3W - IDLE
+    function: IAC idle
     type: ls
 
   - pin: 3Y
@@ -114,6 +172,13 @@ info:
       x: 3860
       y: 512
 
+    - pin: 1E
+      x: 3735
+      y: 352
+    - pin: 1F
+      x: 3735
+      y: 544
+
     - pin: 1G
       x: 3624
       y: 352
@@ -121,12 +186,34 @@ info:
       x: 3624
       y: 544
 
+    - pin: 1I
+      x: 3508
+      y: 352
     - pin: 1J
       x: 3508
       y: 544
+
+    - pin: 1M
+      x: 3284
+      y: 352
     - pin: 1N
       x: 3284
       y: 544
+
+    - pin: 1R
+      x: 3062
+      y: 544
+
+    - pin: 1S
+      x: 2952
+      y: 352
+    - pin: 1T
+      x: 2952
+      y: 544
+
+    - pin: 1V
+      x: 2838
+      y: 512
 
     - pin: 3A
       x: 1604
@@ -153,10 +240,17 @@ info:
       x: 1256
       y: 360
 
-    - pin: 2O
+    - pin: 3I
+      x: 1140
+      y: 360
+    - pin: 3J
+      x: 1140
+      y: 552
+
+    - pin: 3O
       x: 807
       y: 360
-    - pin: 2P
+    - pin: 3P
       x: 807
       y: 552
 
