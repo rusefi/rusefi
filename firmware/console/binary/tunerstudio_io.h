@@ -67,4 +67,3 @@ bool stopTsPort(ts_channel_s *tsChannel);
 void sendOkResponse(ts_channel_s *tsChannel, ts_response_format_e mode);
 bool sr5IsReady(ts_channel_s *tsChannel);
 void sr5FlushData(ts_channel_s *tsChannel);
-
