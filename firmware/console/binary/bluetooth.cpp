@@ -36,7 +36,7 @@ static const int baudRates[] = { 0, 1200, 2400, 4800, 9600, 19200, 38400, 57600,
 static const int baudRateIndexList[] = { 4 /*9600*/, 6 /*38400*/, 8 /*115200*/, 7, 5, 3, 2, 1, -1 };
 static const int btModuleTimeout = TIME_MS2I(1000);
 
-static TsChannelBase* tsChannel;
+static ts_channel_s* tsChannel;
 
 
 static THD_WORKING_AREA(btThreadStack, UTILITY_THREAD_STACK_SIZE);
@@ -191,7 +191,7 @@ static THD_FUNCTION(btThreadEntryPoint, arg) {
 	chThdExit(MSG_OK);
 }
 
-void bluetoothStart(TsChannelBase *btChan, bluetooth_module_e moduleType, const char *baudRate, const char *name, const char *pinCode) {
+void bluetoothStart(ts_channel_s *btChan, bluetooth_module_e moduleType, const char *baudRate, const char *name, const char *pinCode) {
 	static const char *usage = "Usage: bluetooth_hc06 <baud> <name> <pincode>";
 
 	tsChannel = btChan;
