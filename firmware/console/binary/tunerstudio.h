@@ -35,12 +35,12 @@ extern tunerstudio_counters_s tsState;
 /**
  * handle non CRC wrapped command
  */
-bool handlePlainCommand(ts_channel_s *tsChannel, uint8_t command);
+bool handlePlainCommand(TsChannelBase* tsChannel, uint8_t command);
 
 /**
  * this command is part of protocol initialization
  */
-void handleQueryCommand(ts_channel_s *tsChannel, ts_response_format_e mode);
+void handleQueryCommand(TsChannelBase* tsChannel, ts_response_format_e mode);
 
 char *getWorkingPageAddr();
 
@@ -53,7 +53,7 @@ void requestBurn(void);
 
 void startTunerStudioConnectivity(void);
 void syncTunerStudioCopy(void);
-void runBinaryProtocolLoop(ts_channel_s *tsChannel);
+void runBinaryProtocolLoop(TsChannelBase* tsChannel);
 
 #if defined __GNUC__
 // GCC

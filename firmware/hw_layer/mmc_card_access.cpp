@@ -93,7 +93,7 @@ static void setFileEntry(uint8_t *buffer, int index, const char *fileName,
 	*(uint32_t*) (&buffer[offset + 28]) = fileSize;
 }
 
-void handleTsR(ts_channel_s *tsChannel, char *input) {
+void handleTsR(TsChannelBase* tsChannel, char *input) {
 #if EFI_SIMULATOR
 	printf("TS_SD r %d\n", input[1]);
 #endif // EFI_SIMULATOR
@@ -239,7 +239,7 @@ void handleTsR(ts_channel_s *tsChannel, char *input) {
 	}
 }
 
-void handleTsW(ts_channel_s *tsChannel, char *input) {
+void handleTsW(TsChannelBase* tsChannel, char *input) {
 	const uint16_t *data16 = reinterpret_cast<uint16_t*>(input);
 
 #if EFI_SIMULATOR

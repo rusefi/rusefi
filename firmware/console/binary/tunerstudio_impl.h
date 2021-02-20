@@ -2,14 +2,14 @@
 
 #include <cstdint>
 
-struct ts_channel_s;
+struct TsChannelBase;
 
 class TunerStudioBase {
 public:
-	int handleCrcCommand(ts_channel_s *tsChannel, char *data, int incomingPacketSize);
+	int handleCrcCommand(TsChannelBase* tsChannel, char *data, int incomingPacketSize);
 
 protected:
-	virtual void cmdOutputChannels(ts_channel_s *tsChannel, uint16_t offset, uint16_t count) = 0;
+	virtual void cmdOutputChannels(TsChannelBase* tsChannel, uint16_t offset, uint16_t count) = 0;
 };
 
 class TunerStudio : public TunerStudioBase {
@@ -19,10 +19,10 @@ public:
 	{
 	}
 
-	void cmdOutputChannels(ts_channel_s *tsChannel, uint16_t offset, uint16_t count) override;
+	void cmdOutputChannels(TsChannelBase* tsChannel, uint16_t offset, uint16_t count) override;
 
 private:
-	void sendErrorCode(ts_channel_s* tsChannel, uint8_t code);
+	void sendErrorCode(TsChannelBase* tsChannel, uint8_t code);
 
 	Logging* tsLogger;
 };
