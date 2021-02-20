@@ -160,6 +160,11 @@ bool stopTsPort(ts_channel_s *tsChannel) {
 int sr5TestWriteDataIndex = 0;
 uint8_t st5TestBuffer[16000];
 
+size_t ts_channel_s::readTimeout(uint8_t* buffer, size_t size, int timeout) {
+	// unit test, nothing to do here
+	return size;
+}
+
 void ts_channel_s::write(const uint8_t* buffer, size_t size) {
 	memcpy(&st5TestBuffer[sr5TestWriteDataIndex], buffer, size);
 	sr5TestWriteDataIndex += size;
@@ -232,12 +237,12 @@ size_t ts_channel_s::readTimeout(uint8_t* buffer, size_t size, int timeout) {
 	return 0;
 }
 
-size_t ts_channel_s::read(uint8_t* buffer, size_t size) {
+size_t TsChannelBase::read(uint8_t* buffer, size_t size) {
 	return readTimeout(buffer, size, SR5_READ_TIMEOUT);
 }
 #endif // EFI_PROD_CODE || EFI_SIMULATOR
 
-void ts_channel_s::writeCrcPacketSmall(uint8_t responseCode, const uint8_t* buf, size_t size) {
+void TsChannelBase::writeCrcPacketSmall(uint8_t responseCode, const uint8_t* buf, size_t size) {
 	auto scratchBuffer = this->scratchBuffer;
 
 	// don't transmit too large a buffer
@@ -266,7 +271,7 @@ void ts_channel_s::writeCrcPacketSmall(uint8_t responseCode, const uint8_t* buf,
 	write(reinterpret_cast<uint8_t*>(scratchBuffer), size + 7);
 }
 
-void ts_channel_s::writeCrcPacketLarge(uint8_t responseCode, const uint8_t* buf, size_t size) {
+void TsChannelBase::writeCrcPacketLarge(uint8_t responseCode, const uint8_t* buf, size_t size) {
 	uint8_t headerBuffer[3];
 	uint8_t crcBuffer[4];
 
@@ -294,7 +299,7 @@ void ts_channel_s::writeCrcPacketLarge(uint8_t responseCode, const uint8_t* buf,
 /**
  * Adds size to the beginning of a packet and a crc32 at the end. Then send the packet.
  */
-void ts_channel_s::writeCrcPacket(uint8_t responseCode, const uint8_t* buf, size_t size) {
+void TsChannelBase::writeCrcPacket(uint8_t responseCode, const uint8_t* buf, size_t size) {
 	// don't transmit a null buffer...
 	if (!buf) {
 		size = 0;
@@ -322,7 +327,7 @@ void ts_channel_s::writeCrcPacket(uint8_t responseCode, const uint8_t* buf, size
 	flush();
 }
 
-void ts_channel_s::sendResponse(ts_response_format_e mode, const uint8_t * buffer, int size) {
+void TsChannelBase::sendResponse(ts_response_format_e mode, const uint8_t * buffer, int size) {
 	if (mode == TS_CRC) {
 		writeCrcPacket(TS_RESPONSE_OK, buffer, size);
 	} else {
@@ -333,9 +338,9 @@ void ts_channel_s::sendResponse(ts_response_format_e mode, const uint8_t * buffe
 	}
 }
 
-bool sr5IsReady(ts_channel_s *tsChannel) {
+bool ts_channel_s::isReady() {
 #if EFI_USB_SERIAL
-	if (isUsbSerial(tsChannel->channel)) {
+	if (isUsbSerial(this->channel)) {
 		// TS uses USB when console uses serial
 		return is_usb_serial_ready();
 	}
