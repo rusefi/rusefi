@@ -5,6 +5,24 @@ pins:
   - pin: 1B
     function: ECU power in start & run
     type: 12V
+
+  - pin: 1G
+    class: outputs
+    ts_name: 1G - IGN_1
+    type: ign
+  - pin: 1H
+    class: outputs
+    ts_name: 1H - IGN_2
+    type: ign
+
+  - pin: 1J
+    class: outputs
+    function: A/C Relay
+    type: ls
+
+  - pin: 1N
+    function: Sensor +5V
+
   - pin: 3A
     function: Power GND
     type: pgnd
@@ -14,7 +32,69 @@ pins:
     type: pgnd
     color: white
 
+  - pin: 3C
+    function: Sensor GND
+    type: gnd
+    color: white
+  - pin: 3D
+    function: Sensor GND
+    type: gnd
+    color: white
 
+  - pin: 3E
+    class: [event_inputs]
+    ts_name: 3E - CRANK
+    function: Crankshaft Sensor
+  - pin: 3F
+    function: MAF GND
+    type: gnd
+    color: white
+
+  - pin: 3G
+    class: [event_inputs]
+    ts_name: 3G - CAM
+    function: Camshaft Sensor
+
+  - pin: 3P
+    class: analog_inputs
+    ts_name: 3P - IAT
+    function: IAT sensor
+
+  - pin: 3Q
+    class: analog_inputs
+    ts_name: 3Q - CLT
+    function: CLT sensor
+
+
+  - pin: 3U
+    class: outputs
+    ts_name: 3U - INJ_1
+    function: Injector #1
+    type: inj
+
+  - pin: 3V
+    class: outputs
+    ts_name: 3V - INJ_2
+    function: Injector #2
+    type: inj
+
+  - pin: 3W
+    class: outputs
+    ts_name: 3W - IDLE (PWM5)
+    function: IAC (negative) idle, with diode
+    type: ls
+
+  - pin: 3Y
+    class: outputs
+    ts_name: 3Y - INJ_4
+    function: Injector #3
+    type: inj
+
+  - pin: 3Z
+    class: outputs
+    ts_name: 3Z - INJ_4
+    function: Injector #4
+    type: inj
 
 info:
   image:
@@ -26,21 +106,79 @@ info:
     - pin: 1B
       x: 3984
       y: 512
+
     - pin: 1C
       x: 3860
       y: 312
     - pin: 1D
       x: 3860
       y: 512
+
+    - pin: 1G
+      x: 3624
+      y: 352
+    - pin: 1H
+      x: 3624
+      y: 544
+
+    - pin: 1J
+      x: 3508
+      y: 544
+    - pin: 1N
+      x: 3284
+      y: 544
+
     - pin: 3A
       x: 1604
       y: 312
     - pin: 3B
       x: 1604
       y: 512
+
     - pin: 3C
       x: 1488
       y: 312
     - pin: 3D
       x: 1488
+      y: 512
+
+    - pin: 3E
+      x: 1368
+      y: 360
+    - pin: 3F
+      x: 1368
+      y: 552
+
+    - pin: 3G
+      x: 1256
+      y: 360
+
+    - pin: 2O
+      x: 807
+      y: 360
+    - pin: 2P
+      x: 807
+      y: 552
+
+    - pin: 3Q
+      x: 690
+      y: 360
+
+
+    - pin: 3U
+      x: 460
+      y: 312
+    - pin: 3V
+      x: 460
+      y: 512
+
+    - pin: 3W
+      x: 330
+      y: 312
+
+    - pin: 3Y
+      x: 200
+      y: 312
+    - pin: 3Z
+      x: 200
       y: 512
