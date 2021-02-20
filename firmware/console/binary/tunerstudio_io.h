@@ -26,6 +26,11 @@ struct ts_channel_s {
 	void write(const uint8_t* buffer, size_t size);
 	size_t readTimeout(uint8_t* buffer, size_t size, int timeout);
 	size_t read(uint8_t* buffer, size_t size);
+	void flush();
+
+	void writeCrcPacket(uint8_t responseCode, const uint8_t* buf, size_t size);
+
+	void sendResponse(ts_response_format_e mode, const uint8_t * buffer, int size);
 
 #if ! EFI_UNIT_TEST
 	BaseChannel * channel = nullptr;
@@ -40,6 +45,10 @@ struct ts_channel_s {
 #endif // TS_UART_DMA_MODE
 
 	bool wasReady = false;
+
+private:
+	void writeCrcPacketSmall(uint8_t responseCode, const uint8_t* buf, size_t size);
+	void writeCrcPacketLarge(uint8_t responseCode, const uint8_t* buf, size_t size);
 };
 
 #define CRC_VALUE_SIZE 4
@@ -55,11 +64,6 @@ bool stopTsPort(ts_channel_s *tsChannel);
 // that's 1 second
 #define SR5_READ_TIMEOUT TIME_MS2I(1000)
 
-void sr5WriteCrcPacketSmall(ts_channel_s* tsChannel, uint8_t responseCode, const uint8_t* buf, size_t size);
-void sr5WriteCrcPacketLarge(ts_channel_s* tsChannel, uint8_t responseCode, const uint8_t* buf, size_t size);
-void sr5WriteCrcPacket(ts_channel_s *tsChannel, uint8_t responseCode, const uint8_t* buf, size_t size);
-void sr5SendResponse(ts_channel_s *tsChannel, ts_response_format_e mode, const uint8_t * buffer, int size);
 void sendOkResponse(ts_channel_s *tsChannel, ts_response_format_e mode);
 bool sr5IsReady(ts_channel_s *tsChannel);
 void sr5FlushData(ts_channel_s *tsChannel);
-
