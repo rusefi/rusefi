@@ -10,5 +10,5 @@ https://github.com/rusefi/rusefi/wiki#features
      d. Improve Variable Camshaft control to allow more engines with this feature to run on rusEFI<br>
      e. Continue to improve documentation for development process, firmware, tuning and use<br>
 4)  As of February 2021, 65 cars are listed as running on  https://github.com/rusefi/rusefi/wiki/List-of-engines-running-rusEFI
-5)  As of February 2021, hundreds of RusEFI units have been sold in addition to any ECUs produced from our designs independently.   There is no true count of how many rusEFI derived devices are in the wild anymore.
+5)  As of February 2021, hundreds of rusEFI units have been sold in addition to any ECUs produced from our designs independently.   There is no true count of how many rusEFI derived devices are in the wild anymore.
 6) As of February 2021  is is NOT the goal of rusEFI to market to a wide retail audience. The lack of documentation and the steep learning curve would cause a less than ideal user experience.  Developers continue to be the intended audience for the immediate future.
