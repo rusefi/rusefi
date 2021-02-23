@@ -130,12 +130,8 @@ typedef FLStack<float, MAX_STACK_DEPTH> calc_stack_t;
 class LECalculator {
 public:
 	LECalculator();
-	float getValue(float selfValue DECLARE_ENGINE_PARAMETER_SUFFIX);
-	float getValue2(float selfValue, LEElement *fistElementInList DECLARE_ENGINE_PARAMETER_SUFFIX);
-
-	bool isEmpty() const;
+	float evaluate(float selfValue, const LEElement* element DECLARE_ENGINE_PARAMETER_SUFFIX);
 	void reset();
-	void reset(LEElement *element);
 
 	// Log history of calculation actions for debugging
 	le_action_e calcLogAction[MAX_CALC_LOG];
@@ -143,13 +139,9 @@ public:
 	int currentCalculationLogPosition;
 
 private:
-	void setProgram(LEElement* program);
-
 	void push(le_action_e action, float value);
 	FsioResult processElement(const LEElement* element DECLARE_ENGINE_PARAMETER_SUFFIX);
 	float pop(le_action_e action);
-
-	LEElement* m_program = nullptr;
 
 	calc_stack_t stack;
 };

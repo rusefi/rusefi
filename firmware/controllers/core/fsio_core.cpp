@@ -95,19 +95,9 @@ LECalculator::LECalculator() {
 }
 
 void LECalculator::reset() {
-	m_program = nullptr;
 	stack.reset();
 	currentCalculationLogPosition = 0;
 	memset(calcLogAction, 0, sizeof(calcLogAction));
-}
-
-void LECalculator::reset(LEElement *element) {
-	reset();
-	setProgram(element);
-}
-
-void LECalculator::setProgram(LEElement* program) {
-	m_program = program;
 }
 
 bool float2bool(float v) {
@@ -269,24 +259,13 @@ FsioResult LECalculator::processElement(const LEElement *element DECLARE_ENGINE_
 	}
 }
 
-float LECalculator::getValue2(float selfValue, LEElement *fistElementInList DECLARE_ENGINE_PARAMETER_SUFFIX) {
-	reset(fistElementInList);
-	return getValue(selfValue PASS_ENGINE_PARAMETER_SUFFIX);
-}
-
-bool LECalculator::isEmpty() const {
-	return !m_program;
-}
-
-float LECalculator::getValue(float selfValue DECLARE_ENGINE_PARAMETER_SUFFIX) {
-	if (isEmpty()) {
+float LECalculator::evaluate(float selfValue, const LEElement* element DECLARE_ENGINE_PARAMETER_SUFFIX) {
+	if (!element) {
 		warning(CUSTOM_NO_FSIO, "no FSIO code");
 		return NAN;
 	}
 
-	const LEElement* element = m_program;
-
-	stack.reset();
+	reset();
 
 	int counter = 0;
 
