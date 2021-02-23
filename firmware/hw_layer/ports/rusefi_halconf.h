@@ -27,10 +27,17 @@
 /*===========================================================================*/
 
 // Enable flags
-#define HAL_USE_ADC                 TRUE
-#define HAL_USE_GPT                 TRUE
-#define HAL_USE_PAL                 TRUE
-
+#ifdef EFI_BOOTLOADER
+	// Disable stuff we don't need in the bootloader
+	#define HAL_USE_ADC                 FALSE
+	#define HAL_USE_GPT                 FALSE
+	#define HAL_USE_PAL                 FALSE
+#else
+	// We are not the bootloader, enable stuff!
+	#define HAL_USE_ADC                 TRUE
+	#define HAL_USE_GPT                 TRUE
+	#define HAL_USE_PAL                 TRUE
+#endif
 
 // Options for individual drivers
 
