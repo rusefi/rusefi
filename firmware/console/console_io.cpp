@@ -73,86 +73,6 @@ void onDataArrived(void) {
 	consoleByteArrived = true;
 }
 
-
-/**
- * @brief   Reads a whole line from the input channel.
- *
- * @param[in] chp       pointer to a @p BaseChannel object
- * @param[in] line      pointer to the line buffer
- * @param[in] size      buffer maximum length
- * @return              The operation status.
- * @retval TRUE         the channel was reset or CTRL-D pressed.
- * @retval FALSE        operation successful.
- */
-/* let's keep this dead code for a bit
-static bool getConsoleLine(BaseSequentialStream *chp, char *line, unsigned size) {
-	char *p = line;
-
-	while (true) {
-		if (!isCommandLineConsoleReady()) {
-			// we better do not read from serial before it is ready
-			chThdSleepMilliseconds(10);
-			continue;
-		}
-
-		short c = (short) streamGet(chp);
-		onDataArrived();
-
-#if defined(EFI_CONSOLE_SERIAL_DEVICE)
-
-			uint32_t flags;
-			chSysLock()
-			;
-
-			flags = chEvtGetAndClearFlagsI(&consoleEventListener);
-			chSysUnlock()
-			;
-			if (flags & SD_OVERRUN_ERROR) {
-//				firmwareError(OBD_PCM_Processor_Fault, "serial overrun");
-			}
-
-#endif
-
-#if EFI_UART_ECHO_TEST_MODE
-		// That's test code - let's test connectivity
-		consolePutChar((uint8_t) c);
-		continue;
-#endif
-
-		if (c < 0 || c == 4) {
-			return true;
-		}
-		if (c == 8) {
-			if (p != line) {
-				// backspace
-				consolePutChar((uint8_t) c);
-				consolePutChar(0x20);
-				consolePutChar((uint8_t) c);
-				p--;
-			}
-			continue;
-		}
-		if (c == '\r') {
-			consolePutChar('\r');
-			consolePutChar('\n');
-			*p = 0;
-			return false;
-		}
-		if (c == '\n') {
-			consolePutChar('\n');
-			*p = 0;
-			return false;
-		}
-		if (c < 0x20) {
-			continue;
-		}
-		if (p < line + size - 1) {
-			consolePutChar((uint8_t) c);
-			*p++ = (char) c;
-		}
-	}
-}
-*/
 CommandHandler console_line_callback;
 
 #if (defined(EFI_CONSOLE_SERIAL_DEVICE) && ! EFI_SIMULATOR )
@@ -303,13 +223,6 @@ static THD_FUNCTION(consoleThreadEntryPoint, arg) {
 }
 
 #endif /* EFI_CONSOLE_NO_THREAD */
-
-void consolePutChar(int x) {
-	BaseChannel * channel = getConsoleChannel();
-	if (channel != nullptr) {
-		chnWriteTimeout(channel, (const uint8_t *)&x, 1, CONSOLE_WRITE_TIMEOUT);
-	}
-}
 
 void consoleOutputBuffer(const uint8_t *buf, int size) {
 #if !EFI_UART_ECHO_TEST_MODE

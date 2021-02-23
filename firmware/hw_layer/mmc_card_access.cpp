@@ -93,7 +93,7 @@ static void setFileEntry(uint8_t *buffer, int index, const char *fileName,
 	*(uint32_t*) (&buffer[offset + 28]) = fileSize;
 }
 
-void handleTsR(ts_channel_s *tsChannel, char *input) {
+void handleTsR(TsChannelBase* tsChannel, char *input) {
 #if EFI_SIMULATOR
 	printf("TS_SD r %d\n", input[1]);
 #endif // EFI_SIMULATOR
@@ -103,7 +103,7 @@ void handleTsR(ts_channel_s *tsChannel, char *input) {
 	if (input[0] == 0 && input[1] == TS_SD_PROTOCOL_RTC) {
 		scheduleMsg(&sharedLogger, "TS_SD: RTC read command");
 		memset(buffer, 0, 9);
-		sr5SendResponse(tsChannel, TS_CRC, buffer, 9);
+		tsChannel->sendResponse(TS_CRC, buffer, 9);
 
 	} else if (input[0] == 0 && input[1] == TS_SD_PROTOCOL_FETCH_INFO) {
 		uint16_t length = SWAP_UINT16(data16[2]);
@@ -125,7 +125,7 @@ void handleTsR(ts_channel_s *tsChannel, char *input) {
 			buffer[8] = 0;
 			buffer[9] = 1; // number of files
 
-			sr5SendResponse(tsChannel, TS_CRC, buffer, 16);
+			tsChannel->sendResponse(TS_CRC, buffer, 16);
 		} else if (length == DIR_RESPONSE_BUFFER_SIZE) {
 			// SD read directory command
 			memset(buffer, 0, DIR_RESPONSE_BUFFER_SIZE);
@@ -208,7 +208,7 @@ void handleTsR(ts_channel_s *tsChannel, char *input) {
 
 #endif // EFI_FILE_LOGGING
 
-			sr5SendResponse(tsChannel, TS_CRC, buffer,
+			tsChannel->sendResponse(TS_CRC, buffer,
 					DIR_RESPONSE_BUFFER_SIZE);
 		}
 	} else if (input[0] == 0 && input[1] == TS_SD_PROTOCOL_FETCH_DATA) {
@@ -233,13 +233,13 @@ void handleTsR(ts_channel_s *tsChannel, char *input) {
 		UNLOCK_SD_SPI;
 #endif // EFI_FILE_LOGGING
 
-		sr5SendResponse(tsChannel, TS_CRC, buffer, 2 + got);
+		tsChannel->sendResponse(TS_CRC, buffer, 2 + got);
 	} else {
 		scheduleMsg(&sharedLogger, "TS_SD: unexpected r");
 	}
 }
 
-void handleTsW(ts_channel_s *tsChannel, char *input) {
+void handleTsW(TsChannelBase* tsChannel, char *input) {
 	const uint16_t *data16 = reinterpret_cast<uint16_t*>(input);
 
 #if EFI_SIMULATOR

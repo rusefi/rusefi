@@ -1,6 +1,12 @@
 #!/bin/bash
 
-CONNECTORS=$(find -path "./firmware/config/boards/*/connectors/*.yaml")
+if [ -z $1 ] ; then
+ echo "Specific yaml parameter not specified, searching for */connectors/*.yaml"
+ CONNECTORS=$(find -path "./firmware/config/boards/*/connectors/*.yaml")
+else
+ CONNECTORS=$1
+ echo "Processing $CONNECTORS"
+fi
 for c in $CONNECTORS; do
   echo "processing "$c
   DIR="pinouts/"$(echo $c | tr '/' '\n' | tail -n +5 | head -n -2 | tr '\n' '/')

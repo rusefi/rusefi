@@ -7,28 +7,12 @@
  * @author Andrey Gusakov, 2021
  */
 
-#include "mcuconf.h"
-#include "../../stm32f7ems/halconf.h"
-
 #ifndef _HALCONF_SUBARUEG33_H_
 #define _HALCONF_SUBARUEG33_H_
 
-#undef HAL_TRIGGER_USE_PAL
-#define HAL_TRIGGER_USE_PAL		TRUE
+/* this file is exist just to include mcuconf.h from THIS directory */
+#include "mcuconf.h"
 
-#undef HAL_USE_I2C
-#define HAL_USE_I2C				FALSE
-
-#undef HAL_USE_SERIAL
-#define HAL_USE_SERIAL			TRUE
-
-//#if TS_UART_DMA_MODE
-#undef HAL_USE_UART
-#define HAL_USE_UART			FALSE
-#undef UART_USE_WAIT
-#define UART_USE_WAIT			FALSE
-//#else
-//#define HAL_USE_UART			FALSE
-//#endif
+#include "../../../hw_layer/ports/stm32/stm32f7/cfg/halconf.h"
 
 #endif /* _HALCONF_SUBARUEG33_H_ */
