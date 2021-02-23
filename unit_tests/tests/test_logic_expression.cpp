@@ -117,7 +117,7 @@ static void testExpression2(float selfValue, const char *line, float expected, E
 
 	EXPAND_Engine;
 
-	ASSERT_NEAR(expected, c.getValue2(selfValue, element PASS_ENGINE_PARAMETER_SUFFIX), EPS4D) << line;
+	ASSERT_NEAR(expected, c.evaluate(selfValue, element PASS_ENGINE_PARAMETER_SUFFIX), EPS4D) << line;
 }
 
 static void testExpression2(float selfValue, const char *line, float expected, const std::unordered_map<SensorType, float>& sensorVals = {}) {
@@ -144,20 +144,20 @@ TEST(fsio, testHysteresisSelf) {
 	double selfValue = 0;
 
 	engine->fsioState.mockRpm = 0;
-	selfValue = c.getValue2(selfValue, element PASS_ENGINE_PARAMETER_SUFFIX);
+	selfValue = c.evaluate(selfValue, element PASS_ENGINE_PARAMETER_SUFFIX);
 	ASSERT_EQ(0, selfValue);
 
 	engine->fsioState.mockRpm = 430;
-	selfValue = c.getValue2(selfValue, element PASS_ENGINE_PARAMETER_SUFFIX);
+	selfValue = c.evaluate(selfValue, element PASS_ENGINE_PARAMETER_SUFFIX);
 	// OFF since not ON yet
 	ASSERT_EQ(0, selfValue);
 
 	engine->fsioState.mockRpm = 460;
-	selfValue = c.getValue2(selfValue, element PASS_ENGINE_PARAMETER_SUFFIX);
+	selfValue = c.evaluate(selfValue, element PASS_ENGINE_PARAMETER_SUFFIX);
 	ASSERT_EQ(1, selfValue);
 
 	engine->fsioState.mockRpm = 430;
-	selfValue = c.getValue2(selfValue, element PASS_ENGINE_PARAMETER_SUFFIX);
+	selfValue = c.evaluate(selfValue, element PASS_ENGINE_PARAMETER_SUFFIX);
 	// OFF since was ON yet
 	ASSERT_EQ(1, selfValue);
 }
@@ -241,7 +241,7 @@ TEST(fsio, testLogicExpressions) {
 		LEElement * element = pool.parseExpression("fan NOT coolant 90 > AND fan coolant 85 > AND OR");
 		ASSERT_TRUE(element != NULL) << "Not NULL expected";
 		LECalculator c;
-		ASSERT_EQ( 1,  c.getValue2(0, element PASS_ENGINE_PARAMETER_SUFFIX)) << "that expression";
+		ASSERT_EQ( 1,  c.evaluate(0, element PASS_ENGINE_PARAMETER_SUFFIX)) << "that expression";
 
 		ASSERT_EQ(12, c.currentCalculationLogPosition);
 		ASSERT_EQ(102, c.calcLogAction[0]);
