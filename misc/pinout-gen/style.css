@@ -187,7 +187,7 @@ table th {
   }
 
   table th {
-    color: white
+    color: white;
   }
 
   table tr:nth-child(even){
@@ -200,7 +200,7 @@ table th {
   }
 }
 
-@media (print) {
+@media print {
   .container {
     height: 99vh;
     display: flex;
