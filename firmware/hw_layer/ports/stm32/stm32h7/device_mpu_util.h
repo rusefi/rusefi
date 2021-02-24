@@ -11,4 +11,7 @@
 
 #define MCU_SERIAL_NUMBER_LOCATION (uint8_t*)(0x1FF1E800)
 
+// TODO: the MCU temp sensor is on ADC3, which makes it nearly useless :(
+#define getMCUInternalTemperature() (0)
+
 // todo SPI! #2284
