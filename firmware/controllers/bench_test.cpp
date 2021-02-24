@@ -257,7 +257,7 @@ private:
 		}
 
 		if (widebandUpdatePending) {
-#if EFI_WIDEBAND_FIRMWARE_UPDATE && HAL_USE_CAN
+#if EFI_WIDEBAND_FIRMWARE_UPDATE && EFI_CAN_SUPPORT
 			updateWidebandFirmware(logger);
 #endif
 			widebandUpdatePending = false;
