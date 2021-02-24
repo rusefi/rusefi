@@ -11,9 +11,6 @@
 #undef EFI_MC33816
 #define EFI_MC33816 FALSE
 
-#undef EFI_CAN_SUPPORT
-#define EFI_CAN_SUPPORT FALSE
-
 #undef EFI_CJ125
 #define EFI_CJ125 FALSE
 
