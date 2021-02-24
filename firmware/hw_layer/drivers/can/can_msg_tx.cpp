@@ -27,10 +27,17 @@ extern int canWriteNotOk;
 }
 
 CanTxMessage::CanTxMessage(uint32_t eid, uint8_t dlc, bool isExtended) {
+#ifndef STM32H7XX
 	m_frame.IDE = isExtended ? CAN_IDE_EXT : CAN_IDE_STD;
-	m_frame.EID = eid;
 	m_frame.RTR = CAN_RTR_DATA;
+#else /* if STM32H7XX */
+	m_frame.XTD = isExtended;
+	m_frame.RTR = 0;
+#endif
+
+	m_frame.EID = eid;
 	m_frame.DLC = dlc;
+
 	memset(m_frame.data8, 0, sizeof(m_frame.data8));
 }
 
