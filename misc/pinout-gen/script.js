@@ -71,8 +71,6 @@ window.addEventListener('load', function() {
     var sdiv = document.body.lastChild.previousSibling;
     var img = sdiv.querySelector(".connector-img");
     img.addEventListener('load', function(connector, sdiv, img) {
-      var ccont = sdiv.querySelector(".connector-container");
-      ccont.style.height = (document.documentElement.clientHeight / 2) + 'px';
       var cdiv = sdiv.querySelector(".connector-div");
       var ptemplate = document.getElementById("pin-template");
       var imgHeight = img.naturalHeight;

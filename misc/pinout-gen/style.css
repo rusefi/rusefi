@@ -118,6 +118,7 @@
   width: 100%;
   overflow-x: scroll;
   position: relative;
+  height: max(3in, 50vh);
 }
 
 .connector-div {
@@ -200,10 +201,18 @@ table th {
 }
 
 @media (print) {
-  .info-table, .id-data, .id-header, .type-data, .type-header, .color-data, .color-header, br, thead {
+  .container {
+    height: 99vh;
+    display: flex;
+    flex-direction: column;
+  }
+  .info-table, .id-data, .id-header, .type-data, .type-header, .color-data, .color-header, thead {
     display: none;
   }
-  .connector-div, .connector-img, .connector-container {
+  .connector-container {
+    flex: 1 1 auto;
+  }
+  .connector-div, .connector-img {
     width: 100% !important;
     height: auto !important;
   }
