@@ -81,7 +81,7 @@ static THD_WORKING_AREA(mmcThreadStack, 3 * UTILITY_THREAD_STACK_SIZE);		// MMC 
 /**
  * MMC driver instance.
  */
-NO_CACHE MMCDriver MMCD1;
+MMCDriver MMCD1;
 
 /* MMC/SD over SPI driver configuration.*/
 static MMCConfig mmccfg = { NULL, &mmc_ls_spicfg, &mmc_hs_spicfg };
