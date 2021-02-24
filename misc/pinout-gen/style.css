@@ -212,7 +212,7 @@ table th {
     display: none;
   }
   .connector-container {
-    flex: 1 1 auto;
+    flex: 0 1 auto;
   }
   .connector-div, .connector-img {
     height: min(4in, 100%);
