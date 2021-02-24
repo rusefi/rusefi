@@ -717,7 +717,7 @@
  * @brief   Sleep at idle.
  * @details This option enables call to __WFI() from idle thread to save power.
  */
-#define CORTEX_ENABLE_WFI_IDLE TRUE
+#define CORTEX_ENABLE_WFI_IDLE FALSE
 
 #endif  /* CHCONF_H */
 
