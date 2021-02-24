@@ -78,7 +78,7 @@ class CanTxTyped final : public CanTxMessage
 #endif // EFI_CAN_SUPPORT
 
 public:
-	explicit CanTxTyped(uint32_t eid) : CanTxMessage(eid) { }
+	explicit CanTxTyped(uint32_t eid) : CanTxMessage(eid, sizeof(TData)) { }
 
 #if EFI_CAN_SUPPORT
 	/**
