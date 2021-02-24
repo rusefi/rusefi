@@ -233,15 +233,18 @@ table th {
   td {
     font-size: 10px;
   }
+  td:not(.pin-data) {
+    border: none !important;
+  }
+  td.pin-data {
+    border-width: 3px;
+  }
   html, tr {
     background-color: white !important;
     color: black !important;
   }
   table {
     width: auto;
-  }
-  td {
-    border: none !important;
   }
   .pin-marker {
     height: 20px !important;
