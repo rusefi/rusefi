@@ -199,3 +199,42 @@ table th {
   }
 }
 
+@media (print) {
+  .info-table, .id-data, .id-header, .type-data, .type-header, .color-data, .color-header, br, thead {
+    display: none;
+  }
+  .connector-div, .connector-img, .connector-container {
+    width: 100% !important;
+    height: auto !important;
+  }
+  h2 {
+    font-size: 14px;
+  }
+  th {
+    font-size: 12px;
+  }
+  td {
+    font-size: 10px;
+  }
+  html, tr {
+    background-color: white !important;
+    color: black !important;
+  }
+  table {
+    width: auto;
+  }
+  td {
+    border: none !important;
+  }
+  .pin-marker {
+    height: 5vw !important;
+    width: 5vw !important;
+    font-size: 3vw !important;
+  }
+  .table-wrapper { 
+    column-count: 4;
+  }
+  table, tbody, tr {
+    display: block;
+  }
+}
