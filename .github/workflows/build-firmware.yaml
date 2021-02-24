@@ -183,28 +183,28 @@ jobs:
       uses: actions/upload-artifact@v2
       with:
         name: rusefi_${{matrix.build-target}}.bin
-        path: ./firmware/deliver/rusefi_${{matrix.build-target}}.bin
+        path: ./firmware/deliver/rusefi*.bin
 
     - name: Upload build hex
       if: ${{ github.event_name != 'push' || github.ref != 'refs/heads/master' }}
       uses: actions/upload-artifact@v2
       with:
         name: rusefi_${{matrix.build-target}}.hex
-        path: ./firmware/deliver/rusefi_${{matrix.build-target}}.hex
+        path: ./firmware/deliver/rusefi*.hex
 
     - name: Upload build dfu
       if: ${{ github.event_name != 'push' || github.ref != 'refs/heads/master' }}
       uses: actions/upload-artifact@v2
       with:
         name: rusefi_${{matrix.build-target}}.dfu
-        path: ./firmware/deliver/rusefi_${{matrix.build-target}}.dfu
+        path: ./firmware/deliver/rusefi*.dfu
 
     - name: Upload bundle
       if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/master' }}
       uses: actions/upload-artifact@v2
       with:
         name: rusefi_bundle_${{matrix.build-target}}.zip
-        path: ./artifacts/rusefi_bundle_${{matrix.build-target}}.zip
+        path: ./artifacts/rusefi_bundle*.zip
 
     - name: Upload autoupdate bundle
       if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/master' }}
