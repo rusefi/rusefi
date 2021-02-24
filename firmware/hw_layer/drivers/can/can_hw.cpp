@@ -96,6 +96,30 @@ static const CANConfig canConfig1000 = {
 CAN_MCR_ABOM | CAN_MCR_AWUM | CAN_MCR_TXFP,
 CAN_BTR_1k0 };
 #else /* STM32H7 */
+// static const CANConfig canConfig100 = {
+// 	CAN_BTR_100,
+// 	FDCAN_CCCR_TEST, // CCCR
+// 	FDCAN_TEST_LBCK, // TEST
+// };
+
+// static const CANConfig canConfig250 = {
+// 	CAN_BTR_250,
+// 	FDCAN_CCCR_TEST, // CCCR
+// 	FDCAN_TEST_LBCK, // TEST
+// };
+
+// static const CANConfig canConfig500 = {
+// 	CAN_BTR_500,
+// 	FDCAN_CCCR_TEST, // CCCR
+// 	FDCAN_TEST_LBCK, // TEST
+// };
+
+// static const CANConfig canConfig1000 = {
+// 	CAN_BTR_1k0,
+// 	FDCAN_CCCR_TEST, // CCCR
+// 	FDCAN_TEST_LBCK, // TEST
+// };
+
 static const CANConfig canConfig100 = {
 	CAN_BTR_100,
 	0, // CCCR
@@ -216,6 +240,9 @@ void startCanPins(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 void initCan(void) {
 	addConsoleAction("caninfo", canInfo);
 
+	CONFIG(canWriteEnabled) = true;
+	CONFIG(enableVerboseCanTx) = true;
+
 	isCanEnabled = 
 		(isBrainPinValid(CONFIG_OVERRIDE(canTxPin))) && // both pins are set...
 		(isBrainPinValid(CONFIG_OVERRIDE(canRxPin))) &&
@@ -254,6 +281,8 @@ void initCan(void) {
 		break;
 	}
 
+	startCanPins();
+
 	// Initialize hardware
 #if STM32_CAN_USE_CAN2
 	// CAN1 is required for CAN2
@@ -278,8 +307,6 @@ void initCan(void) {
 	if (CONFIG(canReadEnabled)) {
 		canRead.Start();
 	}
-
-	startCanPins();
 }
 
 #endif /* EFI_CAN_SUPPORT */
