@@ -35,7 +35,7 @@ static LoggingWithStorage logger("CAN driver");
 
 // Values below calculated with http://www.bittiming.can-wiki.info/
 // Pick ST micro bxCAN
-// Clock rate of 42mhz for f4, 54mhz for f7
+// Clock rate of 42mhz for f4, 54mhz for f7, 80mhz for h7
 #ifdef STM32F4XX
 // These have an 85.7% sample point
 #define CAN_BTR_100 (CAN_BTR_SJW(0) | CAN_BTR_BRP(29) | CAN_BTR_TS1(10) | CAN_BTR_TS2(1))
@@ -48,6 +48,24 @@ static LoggingWithStorage logger("CAN driver");
 #define CAN_BTR_250 (CAN_BTR_SJW(0) | CAN_BTR_BRP(11) | CAN_BTR_TS1(14) | CAN_BTR_TS2(1))
 #define CAN_BTR_500 (CAN_BTR_SJW(0) | CAN_BTR_BRP(5)  | CAN_BTR_TS1(14) | CAN_BTR_TS2(1))
 #define CAN_BTR_1k0 (CAN_BTR_SJW(0) | CAN_BTR_BRP(2)  | CAN_BTR_TS1(14) | CAN_BTR_TS2(1))
+#elif defined(STM32H7XX)
+
+// TODO: why doesn't H7 have these defined?
+#undef FDCAN_DBTP_DBRP
+#undef FDCAN_DBTP_DTSEG1
+#undef FDCAN_DBTP_DTSEG2
+#undef FDCAN_DBTP_DSJW
+
+#define FDCAN_DBTP_DBRP(n)                ((n) << 16) /**< @brief BRP field macro.*/
+#define FDCAN_DBTP_DTSEG1(n)              ((n) << 8)  /**< @brief TS1 field macro.*/
+#define FDCAN_DBTP_DTSEG2(n)              ((n) << 4)  /**< @brief TS2 field macro.*/
+#define FDCAN_DBTP_DSJW(n)                ((n) << 0)  /**< @brief SJW field macro.*/
+
+// These have an 87.5% sample point
+#define CAN_BTR_100 (FDCAN_DBTP_DSJW(0) | FDCAN_DBTP_DBRP(49) | FDCAN_DBTP_DTSEG1(12) | FDCAN_DBTP_DTSEG2(1))
+#define CAN_BTR_250 (FDCAN_DBTP_DSJW(0) | FDCAN_DBTP_DBRP(19) | FDCAN_DBTP_DTSEG1(12) | FDCAN_DBTP_DTSEG2(1))
+#define CAN_BTR_500 (FDCAN_DBTP_DSJW(0) | FDCAN_DBTP_DBRP(9)  | FDCAN_DBTP_DTSEG1(12) | FDCAN_DBTP_DTSEG2(1))
+#define CAN_BTR_1k0 (FDCAN_DBTP_DSJW(0) | FDCAN_DBTP_DBRP(4)  | FDCAN_DBTP_DTSEG1(12) | FDCAN_DBTP_DTSEG2(1))
 #else
 #error Please define CAN BTR settings for your MCU!
 #endif
@@ -61,7 +79,7 @@ static LoggingWithStorage logger("CAN driver");
  * 29 bit would be CAN_TI0R_EXID (?) but we do not mention it here
  * CAN_TI0R_STID "Standard Identifier or Extended Identifier"? not mentioned as well
  */
-
+#ifndef STM32H7XX
 static const CANConfig canConfig100 = {
 CAN_MCR_ABOM | CAN_MCR_AWUM | CAN_MCR_TXFP,
 CAN_BTR_100 };
@@ -77,6 +95,31 @@ CAN_BTR_500 };
 static const CANConfig canConfig1000 = {
 CAN_MCR_ABOM | CAN_MCR_AWUM | CAN_MCR_TXFP,
 CAN_BTR_1k0 };
+#else /* STM32H7 */
+static const CANConfig canConfig100 = {
+	CAN_BTR_100,
+	0, // CCCR
+	0, // TEST
+};
+
+static const CANConfig canConfig250 = {
+	AN_BTR_250,
+	0, // CCCR
+	0, // TEST
+};
+
+static const CANConfig canConfig500 = {
+	AN_BTR_500,
+	0, // CCCR
+	0, // TEST
+};
+
+static const CANConfig canConfig1000 = {
+	AN_BTR_1k0,
+	0, // CCCR
+	0, // TEST
+};
+#endif
 
 static const CANConfig *canConfig = &canConfig500;
 
