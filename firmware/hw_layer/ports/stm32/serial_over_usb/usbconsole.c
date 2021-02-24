@@ -23,6 +23,9 @@ static bool isUsbSerialInitialized = false;
 void usb_serial_start(void) {
 	usbPopulateSerialNumber(MCU_SERIAL_NUMBER_LOCATION, MCU_SERIAL_NUMBER_BYTES);
 
+	efiSetPadMode("USB DM", EFI_USB_SERIAL_DM, PAL_MODE_ALTERNATE(EFI_USB_AF));
+	efiSetPadMode("USB DP", EFI_USB_SERIAL_DP, PAL_MODE_ALTERNATE(EFI_USB_AF));
+
 	/*
 	 * Initializes a serial-over-USB CDC driver.
 	 */
@@ -43,8 +46,6 @@ void usb_serial_start(void) {
 	usbConnectBus(serusbcfg.usbp);
 	
 #if HAL_USE_SERIAL
-	efiSetPadMode("USB DM", EFI_USB_SERIAL_DM, PAL_MODE_ALTERNATE(EFI_USB_AF));
-	efiSetPadMode("USB DP", EFI_USB_SERIAL_DP, PAL_MODE_ALTERNATE(EFI_USB_AF));
 	/*
 	 * Activates the serial driver using the driver default configuration.
 	 */
