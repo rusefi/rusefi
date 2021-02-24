@@ -49,7 +49,6 @@ function clickPin(table, pin, pdiv) {
 function adjustMarkers(cdiv) {
   var cdiv = document.querySelectorAll(".connector-div");
   for (var c = 0; c < cdiv.length; c++) {
-    cdiv[c].style.width = cdiv[c].querySelector(".connector-img").clientWidth + "px";
     var pins = cdiv[c].querySelectorAll(".pin-marker");
     for (var i = 0; i < pins.length; i++) {
       var height = cdiv[c].clientHeight * 0.05;

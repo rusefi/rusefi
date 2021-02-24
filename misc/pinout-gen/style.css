@@ -125,6 +125,8 @@
   height: 100%;
   position: relative;
   z-index: 0;
+  display: inline-block;
+  text-align: center;
 }
 
 .connector-img {
@@ -213,8 +215,14 @@ table th {
     flex: 1 1 auto;
   }
   .connector-div, .connector-img {
-    width: 100% !important;
-    height: auto !important;
+    height: min(4in, 100%);
+  }
+  .connector-div {
+    text-align: center;
+    display: inline-block;
+  }
+  .connector-img {
+    width: auto !important;
   }
   h2 {
     font-size: 14px;
@@ -236,9 +244,9 @@ table th {
     border: none !important;
   }
   .pin-marker {
-    height: 5vw !important;
-    width: 5vw !important;
-    font-size: 3vw !important;
+    height: 20px !important;
+    width: 20px !important;
+    font-size: 14px !important;
   }
   .table-wrapper { 
     column-count: 4;
