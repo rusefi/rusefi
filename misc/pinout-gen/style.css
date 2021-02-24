@@ -157,8 +157,14 @@ table tbody tr {
   cursor: pointer;
 }
 
+@media screen {
+  td.pin-data {
+    border-color: black;
+  }
+}
+
 table td, table th {
-  border: 1px solid black;
+    border: 1px solid black;
   padding: 8px;
 }
 
@@ -182,6 +188,10 @@ table th {
   html {
     background-color: black;
     color: white;
+  }
+
+  td.pin-data {
+    border: 1px solid #ddd;
   }
 
   table td, table th {
