@@ -38,6 +38,10 @@
 #undef HAL_USE_USB
 #define HAL_USE_USB FALSE
 
+// Cypress has its own USB CDC driver, disable ChibiOS's driver
+#undef HAL_USE_SERIAL_USB
+#define HAL_USE_SERIAL_USB FALSE
+
 // Warning! This is used for Hellen-cypress board!
 #define HAL_USE_PAL_POWER_PINS       TRUE
 
