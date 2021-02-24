@@ -71,24 +71,13 @@ static const ADCConversionGroup tempSensorConvGroup = {
 #endif
 };
 
+// 4x oversample is plenty
+static constexpr int oversample = 4;
+static adcsample_t samples[oversample];
+
 float getMcuTemperature() {
-	// 4x oversample is plenty
-	constexpr int oversample = 4;
-
-	// Buffer is a full 32 bytes to occupy a full cache line
-	__ALIGNED(32) adcsample_t samples[16];
-
 	// Temperature sensor is only physically wired to ADC1
 	adcConvert(&ADCD1, &tempSensorConvGroup, samples, oversample);
-
-#if CORTEX_MODEL == 7
-	// The STM32F7xx/STM32H7xx has a data cache
-	// DMA operations DO NOT invalidate cache lines, since the ARM m7 doesn't have 
-	// anything like a CCI that maintains coherency across multiple bus masters.
-	// As a result, we have to manually invalidate the D-cache any time we (the CPU)
-	// would like to read something that somebody else wrote (ADC via DMA, in this case)
-	SCB_InvalidateDCache_by_Addr(reinterpret_cast<uint32_t*>(samples), sizeof(samples));
-#endif /* CORTEX_MODEL == 7 */
 
 	uint32_t sum = 0;
 	for (size_t i = 0; i < oversample; i++) {

@@ -9,6 +9,7 @@
 #include "engine_ptr.h"
 #include "efi_gpio.h"
 #include "expected.h"
+#include "hardware.h"
 
 #ifdef STM32F4XX
 #include "stm32f4xx_hal_flash.h"
@@ -691,6 +692,58 @@ void initSpiCs(SPIConfig *spiConfig, brain_pin_e csPin) {
 	spiConfig->sspad = pin;
 	efiSetPadMode("chip select", csPin, PAL_STM32_MODE_OUTPUT);
 }
+
+#ifdef STM32H7XX
+// H7 SPI clock is set to 80MHz
+// fast mode is 80mhz/2 = 40MHz
+SPIConfig mmc_hs_spicfg = {
+		.circular = false,
+		.end_cb = NULL,
+		.ssport = NULL,
+		.sspad = 0,
+		.cfg1 = 7 // 8 bits per byte
+			| 0 /* MBR = 0, divider = 2 */,
+		.cfg2 = 0
+};
+
+// Slow mode is 80mhz/4 = 20MHz
+SPIConfig mmc_ls_spicfg = {
+		.circular = false,
+		.end_cb = NULL,
+		.ssport = NULL,
+		.sspad = 0,
+		.cfg1 = 7 // 8 bits per byte
+			| SPI_CFG1_MBR_0 /* MBR = 001, divider = 4 */,
+		.cfg2 = 0
+};
+
+#else /* not STM32H7XX */
+
+// SD cards are good up to 25MHz in "slow" mode, and 50MHz in "fast" mode
+// 168mhz F4:
+// Slow mode is 10.5 or 5.25 MHz, depending on which SPI device
+// Fast mode is 42 or 21 MHz
+// 216mhz F7:
+// Slow mode is 13.5 or 6.75 MHz
+// Fast mode is 54 or 27 MHz (technically out of spec, needs testing!)
+SPIConfig mmc_hs_spicfg = {
+		.circular = false,
+		.end_cb = NULL,
+		.ssport = NULL,
+		.sspad = 0,
+		.cr1 = SPI_BaudRatePrescaler_2,
+		.cr2 = 0
+};
+
+SPIConfig mmc_ls_spicfg = {
+		.circular = false,
+		.end_cb = NULL,
+		.ssport = NULL,
+		.sspad = 0,
+		.cr1 = SPI_BaudRatePrescaler_8,
+		.cr2 = 0
+};
+#endif
 
 #endif /* HAL_USE_SPI */
 

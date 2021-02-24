@@ -74,41 +74,17 @@ spi_device_e mmcSpiDevice = SPI_NONE;
 #else
   USBDriver *usb_driver = &USBD1;
 #endif
-extern const USBConfig msdusbcfg;
 #endif /* HAL_USE_USB_MSD */
 
-// TODO: this is NO_CACHE because of https://github.com/rusefi/rusefi/issues/2356
-static NO_CACHE THD_WORKING_AREA(mmcThreadStack,3 * UTILITY_THREAD_STACK_SIZE);		// MMC monitor thread
+static THD_WORKING_AREA(mmcThreadStack, 3 * UTILITY_THREAD_STACK_SIZE);		// MMC monitor thread
 
 /**
  * MMC driver instance.
  */
 MMCDriver MMCD1;
 
-// SD cards are good up to 25MHz in "slow" mode, and 50MHz in "fast" mode
-// 168mhz F4:
-// Slow mode is 10.5 or 5.25 MHz, depending on which SPI device
-// Fast mode is 42 or 21 MHz
-// 216mhz F7:
-// Slow mode is 13.5 or 6.75 MHz
-// Fast mode is 54 or 27 MHz (technically out of spec, needs testing!)
-static SPIConfig hs_spicfg = {
-		.circular = false,
-		.end_cb = NULL,
-		.ssport = NULL,
-		.sspad = 0,
-		.cr1 = SPI_BaudRatePrescaler_2,
-		.cr2 = 0};
-static SPIConfig ls_spicfg = {
-		.circular = false,
-		.end_cb = NULL,
-		.ssport = NULL,
-		.sspad = 0,
-		.cr1 = SPI_BaudRatePrescaler_8,
-		.cr2 = 0};
-
 /* MMC/SD over SPI driver configuration.*/
-static MMCConfig mmccfg = { NULL, &ls_spicfg, &hs_spicfg };
+static MMCConfig mmccfg = { NULL, &mmc_ls_spicfg, &mmc_hs_spicfg };
 
 /**
  * fatfs MMC/SPI
@@ -382,8 +358,8 @@ static BaseBlockDevice* initializeMmcBlockDevice() {
 	efiAssert(OBD_PCM_Processor_Fault, mmcSpiDevice != SPI_NONE, "SD card enabled, but no SPI device configured!", nullptr);
 
 	// todo: reuse initSpiCs method?
-	hs_spicfg.ssport = ls_spicfg.ssport = getHwPort("mmc", CONFIG(sdCardCsPin));
-	hs_spicfg.sspad = ls_spicfg.sspad = getHwPin("mmc", CONFIG(sdCardCsPin));
+	mmc_hs_spicfg.ssport = mmc_ls_spicfg.ssport = getHwPort("mmc", CONFIG(sdCardCsPin));
+	mmc_hs_spicfg.sspad = mmc_ls_spicfg.sspad = getHwPin("mmc", CONFIG(sdCardCsPin));
 	mmccfg.spip = getSpiDevice(mmcSpiDevice);
 
 	// We think we have everything for the card, let's try to mount it!
