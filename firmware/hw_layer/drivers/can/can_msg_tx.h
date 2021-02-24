@@ -74,7 +74,7 @@ template <typename TData>
 class CanTxTyped final : public CanTxMessage
 {
 #if EFI_CAN_SUPPORT
-	static_assert(sizeof(TData) == sizeof(CANTxFrame::data8));
+	static_assert(sizeof(TData) <= sizeof(CANTxFrame::data8));
 #endif // EFI_CAN_SUPPORT
 
 public:
