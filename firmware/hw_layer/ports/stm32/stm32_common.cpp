@@ -9,6 +9,7 @@
 #include "engine_ptr.h"
 #include "efi_gpio.h"
 #include "expected.h"
+#include "hardware.h"
 
 #ifdef STM32F4XX
 #include "stm32f4xx_hal_flash.h"
