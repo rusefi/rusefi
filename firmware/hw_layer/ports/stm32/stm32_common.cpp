@@ -721,11 +721,11 @@ bool isValidCanRxPin(brain_pin_e pin) {
 }
 
 CANDriver * detectCanDevice(brain_pin_e pinRx, brain_pin_e pinTx) {
-#if STM32_CAN_USE_CAN1
+#if STM32_CAN_USE_CAN1 || STM32_CAN_USE_FDCAN1
    if (isValidCan1RxPin(pinRx) && isValidCan1TxPin(pinTx))
       return &CAND1;
 #endif
-#if STM32_CAN_USE_CAN2
+#if STM32_CAN_USE_CAN2 || STM32_CAN_USE_FDCAN2
    if (isValidCan2RxPin(pinRx) && isValidCan2TxPin(pinTx))
       return &CAND2;
 #endif
