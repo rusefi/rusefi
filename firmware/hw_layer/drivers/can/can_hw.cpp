@@ -103,19 +103,19 @@ static const CANConfig canConfig100 = {
 };
 
 static const CANConfig canConfig250 = {
-	AN_BTR_250,
+	CAN_BTR_250,
 	0, // CCCR
 	0, // TEST
 };
 
 static const CANConfig canConfig500 = {
-	AN_BTR_500,
+	CAN_BTR_500,
 	0, // CCCR
 	0, // TEST
 };
 
 static const CANConfig canConfig1000 = {
-	AN_BTR_1k0,
+	CAN_BTR_1k0,
 	0, // CCCR
 	0, // TEST
 };
