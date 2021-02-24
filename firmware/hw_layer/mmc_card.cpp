@@ -74,16 +74,14 @@ spi_device_e mmcSpiDevice = SPI_NONE;
 #else
   USBDriver *usb_driver = &USBD1;
 #endif
-extern const USBConfig msdusbcfg;
 #endif /* HAL_USE_USB_MSD */
 
-// TODO: this is NO_CACHE because of https://github.com/rusefi/rusefi/issues/2356
-static NO_CACHE THD_WORKING_AREA(mmcThreadStack,3 * UTILITY_THREAD_STACK_SIZE);		// MMC monitor thread
+static THD_WORKING_AREA(mmcThreadStack, 3 * UTILITY_THREAD_STACK_SIZE);		// MMC monitor thread
 
 /**
  * MMC driver instance.
  */
-MMCDriver MMCD1;
+NO_CACHE MMCDriver MMCD1;
 
 /* MMC/SD over SPI driver configuration.*/
 static MMCConfig mmccfg = { NULL, &mmc_ls_spicfg, &mmc_hs_spicfg };
