@@ -78,6 +78,7 @@ spi_device_e mmcSpiDevice = SPI_NONE;
 
 static THD_WORKING_AREA(mmcThreadStack, 3 * UTILITY_THREAD_STACK_SIZE);		// MMC monitor thread
 
+#if HAL_USE_MMC_SPI
 /**
  * MMC driver instance.
  */
@@ -85,6 +86,7 @@ MMCDriver MMCD1;
 
 /* MMC/SD over SPI driver configuration.*/
 static MMCConfig mmccfg = { NULL, &mmc_ls_spicfg, &mmc_hs_spicfg };
+#endif /* HAL_USE_MMC_SPI */
 
 /**
  * fatfs MMC/SPI
@@ -310,8 +312,15 @@ static void mmcUnMount(void) {
 	}
 	f_close(&FDLogFile);						// close file
 	f_sync(&FDLogFile);							// sync ALL
+
+#if HAL_USE_MMC_SPI
 	mmcDisconnect(&MMCD1);						// Brings the driver in a state safe for card removal.
 	mmcStop(&MMCD1);							// Disables the MMC peripheral.
+#endif
+#ifdef EFI_SDC_DEVICE
+	sdcDisconnect(&EFI_SDC_DEVICE);
+	sdcStop(&EFI_SDC_DEVICE);
+#endif
 	f_mount(NULL, 0, 0);						// FATFS: Unregister work area prior to discard it
 	memset(&FDLogFile, 0, sizeof(FIL));			// clear FDLogFile
 	setSdCardReady(false);						// status = false
@@ -343,6 +352,7 @@ void onUsbConnectedNotifyMmcI() {
 
 #endif /* HAL_USE_USB_MSD */
 
+#if HAL_USE_MMC_SPI
 /*
  * Attempts to initialize the MMC card.
  * Returns a BaseBlockDevice* corresponding to the SD card if successful, otherwise nullptr.
@@ -377,8 +387,32 @@ static BaseBlockDevice* initializeMmcBlockDevice() {
 	}
 
 	UNLOCK_SD_SPI;
-	return (BaseBlockDevice*)&MMCD1;
+	return reinterpret_cast<BaseBlockDevice*>(&MMCD1);
 }
+#endif /* HAL_USE_MMC_SPI */
+
+// Some ECUs are wired for SDIO/SDMMC instead of SPI
+#ifdef EFI_SDC_DEVICE
+static const SDCConfig sdcConfig = {
+	SDC_MODE_4BIT
+};
+
+static BaseBlockDevice* initializeMmcBlockDevice() {
+	if (!CONFIG(isSdCardEnabled)) {
+		return nullptr;
+	}
+
+	sdcStart(&EFI_SDC_DEVICE, &sdcConfig);
+	sdStatus = SD_STATE_CONNECTING;
+	if (sdcConnect(&EFI_SDC_DEVICE) != HAL_SUCCESS) {
+		sdStatus = SD_STATE_NOT_CONNECTED;
+		warning(CUSTOM_OBD_MMC_ERROR, "Can't connect or mount MMC/SD");
+		return nullptr;
+	}
+
+	return reinterpret_cast<BaseBlockDevice*>(&EFI_SDC_DEVICE);
+}
+#endif /* EFI_SDC_DEVICE */
 
 // Initialize and mount the SD card.
 // Returns true if the filesystem was successfully mounted for writing.
