@@ -78,7 +78,7 @@ spi_device_e mmcSpiDevice = SPI_NONE;
 
 static THD_WORKING_AREA(mmcThreadStack, 3 * UTILITY_THREAD_STACK_SIZE);		// MMC monitor thread
 
-#ifdef HAL_USE_MMC_SPI
+#if HAL_USE_MMC_SPI
 /**
  * MMC driver instance.
  */
