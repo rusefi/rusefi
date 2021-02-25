@@ -338,7 +338,7 @@ static void printFullAdcReport(Logging *logger) {
 	for (int index = 0; index < ADC_MAX_CHANNELS_COUNT; index++) {
 		appendMsgPrefix(logger);
 
-		adc_channel_e hwIndex = slowAdc.getAdcHardwareIndexByInternalIndex(index);
+		adc_channel_e hwIndex = index + EFI_ADC_0;
 
 		if (isAdcChannelValid(hwIndex)) {
 			ioportid_t port = getAdcChannelPort("print", hwIndex);
