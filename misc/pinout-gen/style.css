@@ -214,6 +214,7 @@ table th {
 
 @media print {
   .container {
+    height: 99vh;
     display: flex;
     flex-direction: column;
   }
@@ -223,9 +224,6 @@ table th {
   .connector-container {
     flex: 0 1 auto;
     height: unset;
-  }
-  .connector-div, .connector-img {
-    max-height: min(4in, 100%);
   }
   .connector-div {
     max-width: 100%;
