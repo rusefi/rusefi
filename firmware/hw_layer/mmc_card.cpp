@@ -404,7 +404,7 @@ static BaseBlockDevice* initializeMmcBlockDevice() {
 
 	sdcStart(&EFI_SDC_DEVICE, &sdcConfig);
 	sdStatus = SD_STATE_CONNECTING;
-	if (sdcConnect(&EFI_SDC_DEVICE)) != HAL_SUCCESS) {
+	if (sdcConnect(&EFI_SDC_DEVICE) != HAL_SUCCESS) {
 		sdStatus = SD_STATE_NOT_CONNECTED;
 		warning(CUSTOM_OBD_MMC_ERROR, "Can't connect or mount MMC/SD");
 		return nullptr;
