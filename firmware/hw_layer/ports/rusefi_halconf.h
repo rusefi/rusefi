@@ -16,6 +16,7 @@
 // If EFI_FILE_LOGGING and SDC, enable SDIO/SDMMC driver
 #if defined(EFI_SDC_DEVICE) && EFI_FILE_LOGGING
 	#define HAL_USE_SDC TRUE
+	#define FATFS_HAL_DEVICE EFI_SDC_DEVICE
 #else
 	#define HAL_USE_SDC FALSE
 #endif
