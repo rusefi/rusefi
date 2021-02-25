@@ -79,14 +79,6 @@ spi_device_e mmcSpiDevice = SPI_NONE;
 static THD_WORKING_AREA(mmcThreadStack, 3 * UTILITY_THREAD_STACK_SIZE);		// MMC monitor thread
 
 /**
- * MMC driver instance.
- */
-MMCDriver MMCD1;
-
-/* MMC/SD over SPI driver configuration.*/
-static MMCConfig mmccfg = { NULL, &mmc_ls_spicfg, &mmc_hs_spicfg };
-
-/**
  * fatfs MMC/SPI
  */
 static FATFS MMC_FS;
@@ -344,6 +336,15 @@ void onUsbConnectedNotifyMmcI() {
 #endif /* HAL_USE_USB_MSD */
 
 #if HAL_USE_MMC_SPI
+
+/**
+ * MMC driver instance.
+ */
+MMCDriver MMCD1;
+
+/* MMC/SD over SPI driver configuration.*/
+static MMCConfig mmccfg = { NULL, &mmc_ls_spicfg, &mmc_hs_spicfg };
+
 /*
  * Attempts to initialize the MMC card.
  * Returns a BaseBlockDevice* corresponding to the SD card if successful, otherwise nullptr.
@@ -393,7 +394,7 @@ static BaseBlockDevice* initializeMmcBlockDevice() {
 		return nullptr;
 	}
 
-	sdcStart(&EFI_SDC_DEVICE, sdcConfig);
+	sdcStart(&EFI_SDC_DEVICE, &sdcConfig);
 	sdStatus = SD_STATE_CONNECTING;
 	if (sdcConnect(&EFI_SDC_DEVICE)) != HAL_SUCCESS) {
 		sdStatus = SD_STATE_NOT_CONNECTED;
