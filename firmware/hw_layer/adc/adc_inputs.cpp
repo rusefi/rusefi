@@ -335,7 +335,7 @@ static void printFullAdcReport(Logging *logger) {
 		}
 	}
 
-	for (int index = 0; index < 16; index++) {
+	for (int index = 0; index < ADC_MAX_CHANNELS_COUNT; index++) {
 		appendMsgPrefix(logger);
 
 		adc_channel_e hwIndex = slowAdc.getAdcHardwareIndexByInternalIndex(index);
