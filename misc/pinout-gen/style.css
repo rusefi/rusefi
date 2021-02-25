@@ -224,6 +224,7 @@ table th {
   .connector-container {
     flex: 0 1 auto;
     height: unset;
+    min-height: 2in;
   }
   .connector-div {
     max-width: 100%;
