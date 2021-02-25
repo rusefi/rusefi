@@ -232,6 +232,7 @@ table th {
   }
   .connector-img {
     max-width: 100% !important;
+    max-height: 3in;
   }
   h2 {
     font-size: 14px;
