@@ -309,7 +309,12 @@ adc_channel_e AdcDevice::getAdcHardwareIndexByInternalIndex(int index) const {
 	return hardwareIndexByIndernalAdcIndex[index];
 }
 
+static uint32_t slowAdcConversionCount = 0;
+static uint32_t slowAdcErrorsCount = 0;
+
 static void printFullAdcReport(Logging *logger) {
+	scheduleMsg(logger, "fast %d slow %d", fastAdc.conversionCount, slowAdcConversionCount);
+
 	for (int index = 0; index < fastAdc.size(); index++) {
 		appendMsgPrefix(logger);
 
@@ -321,6 +326,26 @@ static void printFullAdcReport(Logging *logger) {
 
 			int adcValue = getAvgAdcValue(hwIndex, fastAdc.samples, ADC_BUF_DEPTH_FAST, fastAdc.size());
 			logger->appendPrintf(" F ch%d %s%d", index, portname(port), pin);
+			logger->appendPrintf(" ADC%d 12bit=%d", hwIndex, adcValue);
+			float volts = adcToVolts(adcValue);
+			logger->appendPrintf(" v=%.2f", volts);
+
+			appendMsgPostfix(logger);
+			scheduleLogging(logger);
+		}
+	}
+
+	for (int index = 0; index < 16; index++) {
+		appendMsgPrefix(logger);
+
+		adc_channel_e hwIndex = slowAdc.getAdcHardwareIndexByInternalIndex(index);
+
+		if (isAdcChannelValid(hwIndex)) {
+			ioportid_t port = getAdcChannelPort("print", hwIndex);
+			int pin = getAdcChannelPin(hwIndex);
+
+			int adcValue = slowAdcSamples[index];
+			logger->appendPrintf(" S ch%d %s%d", index, portname(port), pin);
 			logger->appendPrintf(" ADC%d 12bit=%d", hwIndex, adcValue);
 			float volts = adcToVolts(adcValue);
 			logger->appendPrintf(" v=%.2f", volts);
@@ -355,9 +380,9 @@ public:
 		{
 			ScopePerf perf(PE::AdcConversionSlow);
 
-			//slowAdc.conversionCount++;
+			slowAdcConversionCount++;
 			if (!readSlowAnalogInputs(slowAdcSamples)) {
-				//slowAdc.errorsCount++;
+				slowAdcErrorsCount++;
 				return;
 			}
 
