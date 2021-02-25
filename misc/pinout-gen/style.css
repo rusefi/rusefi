@@ -125,12 +125,12 @@
   height: 100%;
   position: relative;
   z-index: 0;
-  display: inline-block;
-  text-align: center;
+  width: max-content;
 }
 
 .connector-img {
   height: 100%;
+  width: 100%;
   z-index: 0;
 }
 
@@ -214,7 +214,6 @@ table th {
 
 @media print {
   .container {
-    height: 99vh;
     display: flex;
     flex-direction: column;
   }
@@ -223,16 +222,17 @@ table th {
   }
   .connector-container {
     flex: 0 1 auto;
+    height: unset;
   }
   .connector-div, .connector-img {
-    height: min(4in, 100%);
+    max-height: min(4in, 100%);
   }
   .connector-div {
-    text-align: center;
-    display: inline-block;
+    max-width: 100%;
+    height: unset;
   }
   .connector-img {
-    width: auto !important;
+    max-width: 100% !important;
   }
   h2 {
     font-size: 14px;
@@ -257,9 +257,10 @@ table th {
     width: auto;
   }
   .pin-marker {
-    height: 20px !important;
-    width: 20px !important;
-    font-size: 14px !important;
+    height: 7px !important;
+    width: 7px !important;
+    font-size: 4.5px !important;
+    border-width: 1px;
   }
   .table-wrapper { 
     column-count: 4;
