@@ -78,6 +78,16 @@ spi_device_e mmcSpiDevice = SPI_NONE;
 
 static THD_WORKING_AREA(mmcThreadStack, 3 * UTILITY_THREAD_STACK_SIZE);		// MMC monitor thread
 
+#ifdef HAL_USE_MMC_SPI
+/**
+ * MMC driver instance.
+ */
+MMCDriver MMCD1;
+
+/* MMC/SD over SPI driver configuration.*/
+static MMCConfig mmccfg = { NULL, &mmc_ls_spicfg, &mmc_hs_spicfg };
+#endif /* HAL_USE_MMC_SPI */
+
 /**
  * fatfs MMC/SPI
  */
@@ -302,8 +312,15 @@ static void mmcUnMount(void) {
 	}
 	f_close(&FDLogFile);						// close file
 	f_sync(&FDLogFile);							// sync ALL
+
+#if HAL_USE_MMC_SPI
 	mmcDisconnect(&MMCD1);						// Brings the driver in a state safe for card removal.
 	mmcStop(&MMCD1);							// Disables the MMC peripheral.
+#endif
+#ifdef EFI_SDC_DEVICE
+	sdcDisconnect(&EFI_SDC_DEVICE);
+	sdcStop(&EFI_SDC_DEVICE);
+#endif
 	f_mount(NULL, 0, 0);						// FATFS: Unregister work area prior to discard it
 	memset(&FDLogFile, 0, sizeof(FIL));			// clear FDLogFile
 	setSdCardReady(false);						// status = false
@@ -336,15 +353,6 @@ void onUsbConnectedNotifyMmcI() {
 #endif /* HAL_USE_USB_MSD */
 
 #if HAL_USE_MMC_SPI
-
-/**
- * MMC driver instance.
- */
-MMCDriver MMCD1;
-
-/* MMC/SD over SPI driver configuration.*/
-static MMCConfig mmccfg = { NULL, &mmc_ls_spicfg, &mmc_hs_spicfg };
-
 /*
  * Attempts to initialize the MMC card.
  * Returns a BaseBlockDevice* corresponding to the SD card if successful, otherwise nullptr.
