@@ -11,10 +11,12 @@ void baseMCUInit(void);
 void jump_to_bootloader();
 
 // ADC
+#if HAL_USE_ADC
 void portInitAdc();
 float getMcuTemperature();
 // Convert all slow ADC inputs.  Returns true if the conversion succeeded, false if a failure occured.
 bool readSlowAnalogInputs(adcsample_t* convertedSamples);
+#endif
 
 // CAN bus
 #if HAL_USE_CAN
