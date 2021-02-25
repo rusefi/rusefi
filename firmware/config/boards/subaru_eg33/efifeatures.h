@@ -84,8 +84,7 @@
 #undef EFI_FUEL_PUMP
 #define EFI_FUEL_PUMP				TRUE
 
-#undef MMC_CARD_SPI
-#define MMC_CARD_SPI				SPID1
+#define EFI_SDC_DEVICE				SDCD2
 
 #define ADC_CHANNEL_VREF			ADC_CHANNEL_IN14
 
