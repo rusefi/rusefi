@@ -13,8 +13,10 @@
 #define HAL_USE_USB EFI_USB_SERIAL
 #define HAL_USE_SERIAL_USB EFI_USB_SERIAL
 
-// If EFI_FILE_LOGGING, enable MMC SPI driver
-#define HAL_USE_MMC_SPI EFI_FILE_LOGGING
+// If EFI_FILE_LOGGING and no SDC, enable MMC SPI driver
+#define HAL_USE_MMC_SPI (!defined(EFI_SDC_DEVICE) && EFI_FILE_LOGGING)
+// if EFI_FILE_LOGGING and SDC, enable that
+#define HAL_USE_SDC (defined(EFI_SDC_DEVICE) && EFI_FILE_LOGGING)
 
 // If USB and File logging, enable USB Mass Storage & community
 #define HAL_USE_USB_MSD (EFI_FILE_LOGGING && EFI_USB_SERIAL)
