@@ -86,7 +86,7 @@ AdcDevice::AdcDevice(ADCConversionGroup* hwConfig, adcsample_t *buf, size_t buf_
 #define ADC_FAST_DEVICE ADCD2
 #endif /* ADC_FAST_DEVICE */
 
-static volatile int slowAdcCounter = 0;
+static uint32_t slowAdcCounter = 0;
 static LoggingWithStorage logger("ADC");
 
 // todo: move this flag to Engine god object
@@ -362,6 +362,11 @@ static void setAdcDebugReporting(int value) {
 }
 
 void waitForSlowAdc(int lastAdcCounter) {
+	// we use slowAdcCounter instead of slowAdc.conversionCount because we need ADC_COMPLETE state
+	// todo: use sync.objects?
+	while (slowAdcCounter <= lastAdcCounter) {
+		chThdSleepMilliseconds(1);
+	}
 }
 
 int getSlowAdcCounter() {
@@ -397,6 +402,8 @@ public:
 
 		{
 			ScopePerf perf(PE::AdcProcessSlow);
+
+			slowAdcCounter++;
 
 			AdcSubscription::UpdateSubscribers(nowNt);
 		}
