@@ -58,4 +58,16 @@ public class ProteusAnalogTest extends RusefiTestBase {
         // 100% duty -> failed TPS (voltage too high)
         setIdlePositionAndAssertTps(98, 0);
     }
+
+    void assertSensorValue(Sensor sensor, double expected) {
+        double actual = SensorCentral.getInstance().getValue(sensor);
+        assertEquals(expected, actual, 0.5);
+    }
+
+    @Test
+    public void testUnconnectedInputs() {
+        // CLT/IAT inputs should float at ~5 volts
+        assertSensorValue(Sensor.rawClt, 5.0);
+        assertSensorValue(Sensor.rawIat, 5.0);
+    }
 }
