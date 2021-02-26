@@ -166,6 +166,7 @@ static ADCConversionGroup adcgrpcfgSlow = {
 
 AdcDevice slowAdc(&adcgrpcfgSlow, slowAdcSampleBuf, ARRAY_SIZE(slowAdcSampleBuf));
 
+#if EFI_USE_FAST_ADC
 void adc_callback_fast(ADCDriver *adcp);
 
 static ADCConversionGroup adcgrpcfgFast = {
@@ -212,7 +213,6 @@ static ADCConversionGroup adcgrpcfgFast = {
 #endif /* ADC_MAX_CHANNELS_COUNT */
 };
 
-#if EFI_USE_FAST_ADC
 AdcDevice fastAdc(&adcgrpcfgFast, fastAdcSampleBuf, ARRAY_SIZE(fastAdcSampleBuf));
 
 static void fast_adc_callback(GPTDriver*) {
