@@ -247,6 +247,10 @@ table th {
   }
   td.pin-data {
     border-width: 3px;
+    border-radius: 10px;
+    width: 10px;
+    margin: 0px;
+    padding: 0px;
   }
   html, tr {
     background-color: white !important;
@@ -254,6 +258,7 @@ table th {
   }
   table {
     width: auto;
+    border-collapse: separate;
   }
   .pin-marker {
     height: 7px !important;
