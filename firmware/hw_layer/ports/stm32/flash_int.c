@@ -16,27 +16,27 @@
 #include <string.h>
 
 #ifdef STM32H7XX
-#define FLASH_CR FLASH->CR2
-#define FLASH_SR FLASH->SR2
-#define FLASH_KEYR FLASH->KEYR2
+	// Use bank 2 on H7
+	#define FLASH_CR FLASH->CR2
+	#define FLASH_SR FLASH->SR2
+	#define FLASH_KEYR FLASH->KEYR2
 
-// I have no idea why ST changed the register name from STRT -> START
-#define FLASH_CR_STRT FLASH_CR_START
+	// I have no idea why ST changed the register name from STRT -> START
+	#define FLASH_CR_STRT FLASH_CR_START
 
-#undef FLASH_BASE
-// This is the start of the second bank, since H7 sector numbers are bank relative
-#define FLASH_BASE 0x08100000
+	#undef FLASH_BASE
+	// This is the start of the second bank, since H7 sector numbers are bank relative
+	#define FLASH_BASE 0x08100000
 
-// QW bit supercedes the older BSY bit
-#define intFlashWaitWhileBusy() { while (FLASH_SR & FLASH_SR_QW) {} }
-
+	// QW bit supercedes the older BSY bit
+	#define intFlashWaitWhileBusy() { while (FLASH_SR & FLASH_SR_QW) {} }
 #else
-#define FLASH_CR FLASH->CR
-#define FLASH_SR FLASH->SR
-#define FLASH_KEYR FLASH->KEYR
+	#define FLASH_CR FLASH->CR
+	#define FLASH_SR FLASH->SR
+	#define FLASH_KEYR FLASH->KEYR
 
-// Wait for the flash operation to finish
-#define intFlashWaitWhileBusy() { while (FLASH->SR & FLASH_SR_BSY) {} }
+	// Wait for the flash operation to finish
+	#define intFlashWaitWhileBusy() { while (FLASH->SR & FLASH_SR_BSY) {} }
 #endif
 
 flashaddr_t intFlashSectorBegin(flashsector_t sector) {
