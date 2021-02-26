@@ -13,15 +13,19 @@
 void portInitAdc() {
 	// Init slow ADC
 	adcStart(&ADCD1, NULL);
+
+	// Connect the analog switches between {PA0_C, PA1_C, PC2_C, PC3_C} and their non-C counterparts
+	// This lets us use normal (non-direct) analog on those channels
+	SYSCFG->PMCR &= ~(SYSCFG_PMCR_PA0SO | SYSCFG_PMCR_PA1SO | SYSCFG_PMCR_PC2SO | SYSCFG_PMCR_PC3SO);
 }
 
 float getMcuTemperature() {
-	// Ugh, internal temp sensor is wired to ADC3, which makes it nearly useless.
+	// Ugh, internal temp sensor is wired to ADC3, which makes it nearly useless on the H7.
 	return 0;
 }
 
 // TODO: use a define instead of magic number
-#define ADC_SAMPLING_SLOW (5)
+#define ADC_SAMPLING_SLOW (7)
 
 // Sample the 16 channels that line up with the STM32F4/F7
 constexpr size_t slowChannelCount = 16;
@@ -36,7 +40,7 @@ static constexpr ADCConversionGroup convGroupSlow = {
 	.cfgr				= 0,
 	.cfgr2				= 0, // no oversampling (yet)
 	.ccr				= 0,
-	.pcsel				= 0,
+	.pcsel				= 0xFFFFFFFF, // enable analog switches on all channels
 	// Thresholds aren't used
 	.ltr1 = 0, .htr1 = 0, .ltr2 = 0, .htr2 = 0, .ltr3 = 0, .htr3 = 0,
 	.smpr = {
@@ -65,8 +69,8 @@ static constexpr ADCConversionGroup convGroupSlow = {
 	.sqr = {
 		// The seemingly insane values here exist to put the values
 		// in the buffer in the same order as the ADCv2 (F4/F7) ADC
-		ADC_SQR1_SQ1_N(16) |	// PA0
-		ADC_SQR1_SQ2_N(17) |	// PA1
+		ADC_SQR1_SQ1_N(16) |	// PA0 (aka PA0_C)
+		ADC_SQR1_SQ2_N(17) |	// PA1 (aka PA1_C)
 		ADC_SQR1_SQ3_N(14) |	// PA2
 		ADC_SQR1_SQ4_N(15),		// PA3
 		ADC_SQR2_SQ5_N(18) |	// PA4
@@ -77,12 +81,8 @@ static constexpr ADCConversionGroup convGroupSlow = {
 		ADC_SQR3_SQ10_N(5) |	// PB1
 		ADC_SQR3_SQ11_N(10) |	// PC0
 		ADC_SQR3_SQ12_N(11) |	// PC1
-		//  NOTE: PC2/3 are not wired on any package other than TFBGA240
-		// We sample them anyway, but these aren't going to give valid data.
-		// Sampling them anyway means that PC4/5 are in the correct spot in the
-		// buffer for compatibility with F4/F7
-		ADC_SQR3_SQ13_N(12) |	// PC2
-		ADC_SQR3_SQ14_N(13),	// PC3
+		ADC_SQR3_SQ13_N(12) |	// PC2 (aka PC2_C)
+		ADC_SQR3_SQ14_N(13),	// PC3 (aka PC3_C)
 		ADC_SQR4_SQ15_N(4) |	// PC4
 		ADC_SQR4_SQ16_N(8)		// PC5
 	},
@@ -94,7 +94,7 @@ bool readSlowAnalogInputs(adcsample_t* convertedSamples) {
 	msg_t result = adcConvert(&ADCD1, &convGroupSlow, slowSampleBuffer, 1);
 
 	// If something went wrong - try again later
-	if (result == MSG_RESET || result == MSG_TIMEOUT) {
+	if (result != MSG_OK) {
 		return false;
 	}
 
