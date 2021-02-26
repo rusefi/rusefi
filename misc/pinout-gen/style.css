@@ -130,7 +130,7 @@
 
 .connector-img {
   height: 100%;
-  width: 100%;
+  width: auto;
   z-index: 0;
 }
 
