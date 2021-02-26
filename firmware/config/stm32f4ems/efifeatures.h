@@ -193,6 +193,10 @@
 #define EFI_INTERNAL_ADC TRUE
 #endif
 
+#ifndef EFI_USE_FAST_ADC
+#define EFI_USE_FAST_ADC TRUE
+#endif
+
 #define EFI_NARROW_EGO_AVERAGING TRUE
 
 #ifndef EFI_CAN_SUPPORT

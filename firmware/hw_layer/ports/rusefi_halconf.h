@@ -46,7 +46,7 @@
 #else
 	// We are not the bootloader, enable stuff!
 	#define HAL_USE_ADC                 TRUE
-	#define HAL_USE_GPT                 TRUE
+	#define HAL_USE_GPT                 EFI_USE_FAST_ADC
 #endif
 
 #define HAL_USE_PAL                 TRUE
