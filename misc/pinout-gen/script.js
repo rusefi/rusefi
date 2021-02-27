@@ -54,8 +54,9 @@ function adjustMarkers(cdiv) {
     for (var i = 0; i < pins.length; i++) {
       var height = cdiv[c].clientHeight * 0.05;
       var mult = cdiv[c].querySelector("img").naturalHeight / cdiv[c].clientHeight;
-      if ((pins[i].dataset.closest / mult) < height) {
-        height = (pins[c].dataset.closest / mult) / 2;
+      var newheight = (pins[i].dataset.closest / mult)
+      if (newheight < height) {
+        height = newheight - (parseInt(window.getComputedStyle(pins[i]).getPropertyValue('border-top-width')) * 2);
       }
       pins[i].style.height = height + "px";
       pins[i].style.width = height + "px";
@@ -93,7 +94,7 @@ window.addEventListener('load', function() {
             break;
           }
         }
-        var closest;
+        var closest = 1000000;
         for (var ii = 0; ii < connector.info.pins.length; ii++) {
           var tinfo = connector.info.pins[ii];
           var distance = Math.pow((tinfo.x - pinfo.x), 2) + Math.pow((tinfo.y - pinfo.y), 2);
