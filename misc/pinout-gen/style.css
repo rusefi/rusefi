@@ -261,9 +261,6 @@ table th {
     border-collapse: separate;
   }
   .pin-marker {
-    height: 7px !important;
-    width: 7px !important;
-    font-size: 4.5px !important;
     border-width: 1px;
   }
   .table-wrapper { 

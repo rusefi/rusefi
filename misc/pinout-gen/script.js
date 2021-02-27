@@ -53,6 +53,10 @@ function adjustMarkers(cdiv) {
     var pins = cdiv[c].querySelectorAll(".pin-marker");
     for (var i = 0; i < pins.length; i++) {
       var height = cdiv[c].clientHeight * 0.05;
+      var mult = cdiv[c].querySelector("img").naturalHeight / cdiv[c].clientHeight;
+      if ((pins[i].dataset.closest / mult) < height) {
+        height = (pins[c].dataset.closest / mult) / 2;
+      }
       pins[i].style.height = height + "px";
       pins[i].style.width = height + "px";
       pins[i].style.marginTop = "-" + (height * 0.5) + "px";
@@ -89,12 +93,21 @@ window.addEventListener('load', function() {
             break;
           }
         }
+        var closest;
+        for (var ii = 0; ii < connector.info.pins.length; ii++) {
+          var tinfo = connector.info.pins[ii];
+          var distance = Math.pow((tinfo.x - pinfo.x), 2) + Math.pow((tinfo.y - pinfo.y), 2);
+          if (tinfo.pin != pin.pin && (!closest || distance < closest)) {
+            closest = distance;
+          }
+        }
         var pclone = ptemplate.content.cloneNode(true);
         var pdiv = pclone.querySelector("div");
         pdiv.textContent = pinfo.pin;
         pdiv.style.top = ((pinfo.y / imgHeight) * 100) + "%";
         pdiv.style.left = ((pinfo.x / imgWidth) * 100) + "%";
         pdiv.dataset.type = pin.type;
+        pdiv.dataset.closest = Math.sqrt(closest);
         pdiv.addEventListener("click", function(table, pin, pdiv) {
           clickPin(table, pin, pdiv);
         }.bind(null, table, pin, pdiv));
