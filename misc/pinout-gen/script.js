@@ -86,7 +86,7 @@ window.addEventListener('load', function() {
         if (!pin.pin) {
           continue;
         }
-        var pinfo;
+        var pinfo = {};
         for (var ii = 0; ii < connector.info.pins.length; ii++) {
           if (connector.info.pins[ii].pin == pin.pin) {
             pinfo = connector.info.pins[ii];
