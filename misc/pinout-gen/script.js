@@ -52,7 +52,7 @@ function adjustMarkers(cdiv) {
   for (var c = 0; c < cdiv.length; c++) {
     var pins = cdiv[c].querySelectorAll(".pin-marker");
     for (var i = 0; i < pins.length; i++) {
-      var height = cdiv[c].clientHeight * 0.05;
+      var height = cdiv[c].clientHeight * 0.08;
       var mult = cdiv[c].querySelector("img").naturalHeight / cdiv[c].clientHeight;
       var newheight = (pins[i].dataset.closest / mult)
       if (newheight < height) {
