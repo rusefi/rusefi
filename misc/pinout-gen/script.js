@@ -94,6 +94,7 @@ window.addEventListener('load', function() {
             break;
           }
         }
+        if (!pinfo.x) continue;
         var closest = 1000000;
         for (var ii = 0; ii < connector.info.pins.length; ii++) {
           var tinfo = connector.info.pins[ii];
