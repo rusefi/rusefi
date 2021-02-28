@@ -439,7 +439,6 @@ void addChannel(const char *name, adc_channel_e setting, adc_channel_mode_e mode
 #if EFI_USE_FAST_ADC
 	if (mode == ADC_FAST) {
 		fastAdc.enableChannelAndPin(name, setting);
-		dev = &fastAdc;
 		return;
 	}
 #endif
