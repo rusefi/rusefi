@@ -27,12 +27,3 @@ void setSerialConfigurationOverrides(void) {
  */
 void setSdCardConfigurationOverrides(void) {
 }
-
-// TODO: fix analog inputs so we don't need these stubs
-float getVoltage(const char*, adc_channel_e) {
-	return 0;
-}
-
-float getVoltageDivided(const char*, adc_channel_e) {
-	return 0;
-}
