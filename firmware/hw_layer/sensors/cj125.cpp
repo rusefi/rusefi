@@ -18,6 +18,7 @@
 #include "cj125.h"
 #include "pwm_generator_logic.h"
 #include "rpm_calculator.h"
+#include "thread_priority.h"
 
 EXTERN_ENGINE;
 
@@ -647,7 +648,7 @@ void initCJ125(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	addConsoleAction("cj125_restart", cjRestart);
 	addConsoleAction("cj125_calibrate", cjStartCalibration);
 
-	chThdCreateStatic(cj125ThreadStack, sizeof(cj125ThreadStack), LOWPRIO, (tfunc_t)(void*) cjThread, NULL);
+	chThdCreateStatic(cj125ThreadStack, sizeof(cj125ThreadStack), PRIO_CJ125, (tfunc_t)(void*) cjThread, NULL);
 #endif /* ! EFI_UNIT_TEST */
 }
 

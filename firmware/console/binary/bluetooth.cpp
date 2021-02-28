@@ -18,6 +18,7 @@
 #include "tunerstudio_io.h"
 #include "bluetooth.h"
 #include "engine_configuration.h"
+#include "thread_priority.h"
 
 #if EFI_BLUETOOTH_SETUP
 
@@ -289,7 +290,7 @@ void bluetoothStart(ts_channel_s *btChan, bluetooth_module_e moduleType, const c
    	commands[numCommands++] = cmdPin;
    	
    	// create a thread to execute these commands later
-   	btThread = chThdCreateStatic(btThreadStack, sizeof(btThreadStack), NORMALPRIO, (tfunc_t)btThreadEntryPoint, NULL);
+   	btThread = chThdCreateStatic(btThreadStack, sizeof(btThreadStack), PRIO_CONSOLE, (tfunc_t)btThreadEntryPoint, NULL);
    	
 	btProcessIsStarted = true;
 }
