@@ -3,7 +3,7 @@
   z-index: 1;
   border-radius: 50%;
   background-color: white;
-  border: 3px black solid;
+  border: 0.21vw black solid;
   cursor: pointer;
   color: black;
   text-align: center;
@@ -259,9 +259,6 @@ table th {
   table {
     width: auto;
     border-collapse: separate;
-  }
-  .pin-marker {
-    border-width: 1px;
   }
   .table-wrapper { 
     column-count: 4;

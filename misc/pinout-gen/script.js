@@ -47,26 +47,6 @@ function clickPin(table, pin, pdiv) {
   pdiv.classList.add("selected");
 }
 
-function adjustMarkers(cdiv) {
-  var cdiv = document.querySelectorAll(".connector-div");
-  for (var c = 0; c < cdiv.length; c++) {
-    var pins = cdiv[c].querySelectorAll(".pin-marker");
-    for (var i = 0; i < pins.length; i++) {
-      var height = cdiv[c].clientHeight * 0.08;
-      var mult = cdiv[c].querySelector("img").naturalHeight / cdiv[c].clientHeight;
-      var newheight = (pins[i].dataset.closest / mult)
-      if (newheight < height) {
-        height = newheight - (parseInt(window.getComputedStyle(pins[i]).getPropertyValue('border-top-width')) * 2);
-      }
-      pins[i].style.height = height + "px";
-      pins[i].style.width = height + "px";
-      pins[i].style.marginTop = "-" + (height * 0.5) + "px";
-      pins[i].style.marginLeft = "-" + (height * 0.5) + "px";
-      pins[i].style.fontSize = (height * 0.5) + "px";
-    }
-  }
-}
-
 window.addEventListener('load', function() {
   for (var c = 0; c < connectorYaml.length; c++) {
     var connector = YAML.parse(connectorYaml[c]);
@@ -109,19 +89,29 @@ window.addEventListener('load', function() {
         pdiv.style.top = ((pinfo.y / imgHeight) * 100) + "%";
         pdiv.style.left = ((pinfo.x / imgWidth) * 100) + "%";
         pdiv.dataset.type = pin.type;
-        pdiv.dataset.closest = Math.sqrt(closest);
         pdiv.addEventListener("click", function(table, pin, pdiv) {
           clickPin(table, pin, pdiv);
         }.bind(null, table, pin, pdiv));
+        closest = Math.sqrt(closest);
+        var divheight = cdiv.clientHeight;
+        var divwidth = cdiv.clientWidth;
+        var mult = cdiv.querySelector("img").naturalHeight / divheight;
+        var newheight = (closest / mult)
+        var pxheight = divheight * 0.08;
+        if (newheight < pxheight) {
+          pxheight = newheight - 6;
+        }
+        var height = (pxheight / divheight) * 100;
+        var width = (pxheight / divwidth) * 100;
+        pdiv.style.height = height + "%";
+        pdiv.style.width = width + "%";
+        pdiv.style.marginTop = "-" + (width / 2) + "%";
+        pdiv.style.marginLeft = "-" + (width / 2) + "%";
+        pdiv.style.fontSize = (height / 7.5) + "vw";
         cdiv.appendChild(pdiv);
         addRow(fullTable, connector.pins[i], pdiv);
       }
-      adjustMarkers();
     }.bind(null, connector, sdiv, img));
     img.src = connector.info.image.file;
   }
-});
-
-window.addEventListener('resize', function() {
-  adjustMarkers();
 });
