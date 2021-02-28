@@ -55,6 +55,7 @@ float getVoltage(const char *msg, adc_channel_e hwChannel DECLARE_ENGINE_PARAMET
 	return adcToVolts(getAdcValue(msg, hwChannel));
 }
 
+#if EFI_USE_FAST_ADC
 AdcDevice::AdcDevice(ADCConversionGroup* hwConfig, adcsample_t *buf, size_t buf_len) {
 	this->hwConfig = hwConfig;
 	this->samples = buf;
@@ -81,6 +82,8 @@ AdcDevice::AdcDevice(ADCConversionGroup* hwConfig, adcsample_t *buf, size_t buf_
 #define GPT_FREQ_FAST 100000   /* PWM clock frequency. I wonder what does this setting mean?  */
 #define GPT_PERIOD_FAST 10  /* PWM period (in PWM ticks).    */
 #endif /* GPT_FREQ_FAST GPT_PERIOD_FAST */
+
+#endif // EFI_USE_FAST_ADC
 
 // is there a reason to have this configurable at runtime?
 #ifndef ADC_FAST_DEVICE
@@ -240,6 +243,8 @@ adc_channel_mode_e getAdcMode(adc_channel_e hwChannel) {
 	return ADC_OFF;
 }
 
+#if EFI_USE_FAST_ADC
+
 int AdcDevice::size() const {
 	return channelCount;
 }
@@ -304,15 +309,18 @@ void AdcDevice::enableChannelAndPin(const char *msg, adc_channel_e hwChannel) {
 	efiSetPadMode(msg, pin, PAL_MODE_INPUT_ANALOG);
 }
 
+adc_channel_e AdcDevice::getAdcHardwareIndexByInternalIndex(int index) const {
+	return hardwareIndexByIndernalAdcIndex[index];
+}
+
+#endif // EFI_USE_FAST_ADC
+
 static void printAdcValue(int channel) {
 	int value = getAdcValue("print", (adc_channel_e)channel);
 	float volts = adcToVoltsDivided(value);
 	scheduleMsg(&logger, "adc voltage : %.2f", volts);
 }
 
-adc_channel_e AdcDevice::getAdcHardwareIndexByInternalIndex(int index) const {
-	return hardwareIndexByIndernalAdcIndex[index];
-}
 
 static uint32_t slowAdcConversionCount = 0;
 static uint32_t slowAdcErrorsCount = 0;
