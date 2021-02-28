@@ -500,15 +500,15 @@ void addChannel(const char *name, adc_channel_e setting, adc_channel_mode_e mode
 
 	adcHwChannelEnabled[setting] = mode;
 
-	AdcDevice& dev = slowAdc;
+	AdcDevice* dev = &slowAdc;
 
 #if EFI_USE_FAST_ADC
 	if (mode == ADC_FAST) {
-		dev = fastAdc;
+		dev = &fastAdc;
 	}
 #endif
 
-	dev.enableChannelAndPin(name, setting);
+	dev->enableChannelAndPin(name, setting);
 }
 
 void removeChannel(const char *name, adc_channel_e setting) {
