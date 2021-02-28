@@ -55,11 +55,6 @@
 
 static NamedOutputPin intHold(PROTOCOL_HIP_NAME);
 
-extern uint32_t lastExecutionCount;
-
-uint32_t hipLastExecutionCount;
-
-
 class Hip9011Hardware : public Hip9011HardwareInterface {
 	void sendSyncCommand(unsigned char command) override;
 	void sendCommand(unsigned char command) override;
@@ -260,9 +255,6 @@ void intHoldCallback(trigger_event_e ckpEventType, uint32_t index, efitick_t edg
 	// todo: schedule this based on closest trigger event, same as ignition works
 	scheduleByAngle(&startTimer[structIndex], edgeTimestamp, engineConfiguration->knockDetectionWindowStart,
 			&startIntegration);
-#if EFI_PROD_CODE
-	hipLastExecutionCount = lastExecutionCount;
-#endif /* EFI_PROD_CODE */
 	scheduleByAngle(&endTimer[structIndex], edgeTimestamp, engineConfiguration->knockDetectionWindowEnd,
 			&endIntegration);
 }
