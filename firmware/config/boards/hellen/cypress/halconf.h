@@ -35,10 +35,6 @@
 
 #include "rusefi_halconf.h"
 
-// TODO: implement per-port ADC functions
-#undef HAL_USE_ADC
-#define HAL_USE_ADC FALSE
-
 // Cypress has its own USB CDC driver, disable ChibiOS's driver
 #undef HAL_USE_USB
 #define HAL_USE_USB FALSE
