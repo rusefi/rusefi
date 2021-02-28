@@ -43,6 +43,7 @@
 #include "hip9011.h"
 #include "adc_inputs.h"
 #include "perf_trace.h"
+#include "thread_priority.h"
 
 #include "engine_controller.h"
 
@@ -431,7 +432,7 @@ void initHip9011(Logging *sharedLogger) {
 	addConsoleActionI("set_hip_prescalerandsdo", setPrescalerAndSDO);
     addConsoleActionF("set_knock_threshold", setKnockThresh);
     addConsoleActionI("set_max_knock_sub_deg", setMaxKnockSubDeg);
-	chThdCreateStatic(hipThreadStack, sizeof(hipThreadStack), NORMALPRIO, (tfunc_t)(void*) hipThread, NULL);
+	chThdCreateStatic(hipThreadStack, sizeof(hipThreadStack), PRIO_HIP9011, (tfunc_t)(void*) hipThread, NULL);
 }
 
 #endif /* EFI_HIP_9011 */

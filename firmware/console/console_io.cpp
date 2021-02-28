@@ -39,6 +39,7 @@
 #include "os_util.h"
 #include "tunerstudio.h"
 #include "connector_uart_dma.h"
+#include "thread_priority.h"
 
 #if EFI_SIMULATOR
 #include "rusEfiFunctionalTest.h"
@@ -265,6 +266,6 @@ void startConsole(Logging *sharedLogger, CommandHandler console_line_callback_p)
 #endif /* EFI_CONSOLE_SERIAL_DEVICE || EFI_CONSOLE_UART_DEVICE */
 
 #if !defined(EFI_CONSOLE_NO_THREAD)
-	chThdCreateStatic(consoleThreadStack, sizeof(consoleThreadStack), NORMALPRIO, (tfunc_t)consoleThreadEntryPoint, NULL);
+	chThdCreateStatic(consoleThreadStack, sizeof(consoleThreadStack), PRIO_CONSOLE, (tfunc_t)consoleThreadEntryPoint, NULL);
 #endif /* EFI_CONSOLE_NO_THREAD */
 }
