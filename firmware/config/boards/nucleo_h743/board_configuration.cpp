@@ -28,13 +28,6 @@ void setSerialConfigurationOverrides(void) {
 void setSdCardConfigurationOverrides(void) {
 }
 
-/**
- * @brief   Board-specific ADC channel configuration code overrides.
- * @todo    Add your board-specific code, if any.
- */
-void setAdcChannelOverrides(void) {
-}
-
 // TODO: fix analog inputs so we don't need these stubs
 float getVoltage(const char*, adc_channel_e) {
 	return 0;
