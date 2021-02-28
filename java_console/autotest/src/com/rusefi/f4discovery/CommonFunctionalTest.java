@@ -172,6 +172,12 @@ public class CommonFunctionalTest extends RusefiTestBase {
     }
 
     @Test
+    public void testAuxValveNissan() {
+        ecu.setEngineType(ET_NISSAN_PRIMERA);
+        ecu.changeRpm(1200);
+    }
+
+    @Test
     public void testMazdaMiata2003() {
         ecu.setEngineType(ET_FRANKENSO_MIATA_NB2);
         ecu.sendCommand("get cranking_dwell"); // just test coverage

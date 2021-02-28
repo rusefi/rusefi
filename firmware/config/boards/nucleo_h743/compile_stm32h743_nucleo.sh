@@ -7,8 +7,6 @@ echo "Entering $SCRIPT_NAME"
 
 export PROJECT_BOARD=nucleo_h743
 export PROJECT_CPU=ARCH_STM32H7
-export USE_LIS302=no
-export USE_FATFS=no
 export EXTRA_PARAMS="-DDUMMY \
  -DEFI_INJECTOR_PIN3=GPIO_UNASSIGNED \
  -DFIRMWARE_ID=\\\"nucleoH743\\\" \

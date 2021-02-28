@@ -6,18 +6,14 @@
  * @date Feb 06, 2021
  * @author Andrey Gusakov, 2021
  */
-
-#include "../../stm32f7ems/mcuconf.h"
-
 #ifndef _MCUCONF_SUBARUEG33_H_
 #define _MCUCONF_SUBARUEG33_H_
+
+#include "../../../hw_layer/ports/stm32/stm32f7/cfg/mcuconf.h"
 
 /* clocks adjust for 25 MHz ocs */
 #undef STM32_PLLM_VALUE
 #define STM32_PLLM_VALUE				25
-
-//#undef CORTEX_ENABLE_WFI_IDLE
-#define CORTEX_ENABLE_WFI_IDLE			FALSE
 
 //#undef STM32_LSE_ENABLED
 //#define STM32_LSE_ENABLED FALSE

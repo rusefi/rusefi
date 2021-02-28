@@ -2,12 +2,6 @@
 
 #pragma once
 
-#undef EFI_INTERNAL_FLASH
-#define EFI_INTERNAL_FLASH FALSE
-
-#undef EFI_FILE_LOGGING
-#define EFI_FILE_LOGGING FALSE
-
 #undef EFI_MC33816
 #define EFI_MC33816 FALSE
 

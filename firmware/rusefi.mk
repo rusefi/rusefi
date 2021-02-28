@@ -31,7 +31,13 @@ else ifeq ($(PROJECT_CPU),ARCH_STM32H7)
 	CPU_PLATFORM = STM32H7xx/platform.mk
 	CPU_HWLAYER = ports/stm32/stm32h7
 else ifeq ($(PROJECT_CPU),kinetis)
+	CPU_STARTUP_DIR = $(KINETIS_CONTRIB)/os/common/startup/ARMCMx/compilers/GCC/mk/startup_ke1xf.mk
+	CPU_PLATFORM_DIR = $(KINETIS_CONTRIB)/os/hal/ports/KINETIS/KE1xF/platform.mk
+	CPU_HWLAYER = ports/kinetis
 else ifeq ($(PROJECT_CPU),cypress)
+	CPU_STARTUP_DIR = $(CYPRESS_CONTRIB)/os/common/startup/ARMCMx/compilers/GCC/mk/startup_S6E2CxAH.mk
+	CPU_PLATFORM_DIR = $(CYPRESS_CONTRIB)/os/hal/ports/Cypress/S6E2CxAH/platform.mk
+	CPU_HWLAYER = ports/cypress
 else ifeq ($(PROJECT_CPU),simulator)
 else
 $(error Unexpected PROJECT_CPU)

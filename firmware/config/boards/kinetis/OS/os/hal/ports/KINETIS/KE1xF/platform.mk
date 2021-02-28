@@ -22,17 +22,6 @@ PLATFORMINC_CONTRIB := ${CHIBIOS}/os/hal/ports/common/ARMCMx \
                        ${KINETIS_CONTRIB}/os/hal/ports/KINETIS/LLD \
                        ${KINETIS_CONTRIB}/os/hal/ports/KINETIS/KE1xF \
                        ${KINETIS_CONTRIB}/os/hal/ports/KINETIS/KE1xF/fsl
-                       
-ifeq ($(USE_SMART_BUILD),yes)
-
-# Configuration files directory
-ifeq ($(CONFDIR),)
-  CONFDIR = .
-endif
-
-HALCONF := $(strip $(shell cat $(CONFDIR)/halconf.h $(CONFDIR)/halconf_community.h | egrep -e "\#define"))
-
-endif
 
 include ${KINETIS_CONTRIB}/os/hal/ports/KINETIS/LLD/DMAv2/driver.mk
 include ${KINETIS_CONTRIB}/os/hal/ports/KINETIS/LLD/GPIOv2/driver.mk

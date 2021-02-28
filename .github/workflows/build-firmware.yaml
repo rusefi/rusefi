@@ -12,7 +12,7 @@ jobs:
       matrix:
         # What boards should we build for? In the 'include' section below,
         # set up what each of these boards needs to build.
-        build-target: [hellen72, cypress, frankenso_na6, kinetis, mre_f4, mre_f4_recovery, mre_f4_hardware_QC_special_build, mre_f7, prometheus_405, prometheus_469, proteus_f4, proteus_f4_hardware_QC_special_build, proteus_f7, stm32f767_nucleo, stm32h743_nucleo]
+        build-target: [hellen72, cypress, frankenso_na6, kinetis, mre_f4, mre_f4_recovery, mre_f4_hardware_QC_special_build, mre_f7, prometheus_405, prometheus_469, proteus_f4, proteus_f4_hardware_QC_special_build, proteus_f7, stm32f767_nucleo, stm32h743_nucleo, subaru_eg33_f7]
         
         include:
           # Board configurations
@@ -81,6 +81,10 @@ jobs:
             ini-file: no
             skip-config: yes
 
+          - build-target: subaru_eg33_f7
+            folder: subaru_eg33
+            ini-file: rusefi_subaru_eg33_f7.ini
+
     steps:
     - uses: actions/checkout@v1
       with:
@@ -101,6 +105,9 @@ jobs:
           cd config/boards/hellen/cypress/config
           bash gen_config.sh
           [ $? -eq 0 ] || { echo "ERROR generating board hellen_cypress hellen_cypress"; exit 1; }
+        elif [ "${{ matrix.build-target }}" = "subaru_eg33_f7" ]; then
+          bash config/boards/subaru_eg33/config/gen_config.sh
+          [ $? -eq 0 ] || { echo "ERROR generating board subaru_eg33 subaru_eg33_f7"; exit 1; }
         else
           bash gen_config_board.sh ${{matrix.folder}} ${{matrix.build-target}}
         fi
@@ -176,28 +183,28 @@ jobs:
       uses: actions/upload-artifact@v2
       with:
         name: rusefi_${{matrix.build-target}}.bin
-        path: ./firmware/deliver/rusefi_${{matrix.build-target}}.bin
+        path: ./firmware/deliver/rusefi*.bin
 
     - name: Upload build hex
       if: ${{ github.event_name != 'push' || github.ref != 'refs/heads/master' }}
       uses: actions/upload-artifact@v2
       with:
         name: rusefi_${{matrix.build-target}}.hex
-        path: ./firmware/deliver/rusefi_${{matrix.build-target}}.hex
+        path: ./firmware/deliver/rusefi*.hex
 
     - name: Upload build dfu
       if: ${{ github.event_name != 'push' || github.ref != 'refs/heads/master' }}
       uses: actions/upload-artifact@v2
       with:
         name: rusefi_${{matrix.build-target}}.dfu
-        path: ./firmware/deliver/rusefi_${{matrix.build-target}}.dfu
+        path: ./firmware/deliver/rusefi*.dfu
 
     - name: Upload bundle
       if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/master' }}
       uses: actions/upload-artifact@v2
       with:
         name: rusefi_bundle_${{matrix.build-target}}.zip
-        path: ./artifacts/rusefi_bundle_${{matrix.build-target}}.zip
+        path: ./artifacts/rusefi_bundle*.zip
 
     - name: Upload autoupdate bundle
       if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/master' }}

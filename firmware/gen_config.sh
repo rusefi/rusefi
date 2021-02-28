@@ -27,4 +27,7 @@ bash gen_config.sh
 [ $? -eq 0 ] || { echo "ERROR generating board hellen_cypress hellen_cypress"; exit 1; }
 cd ../../../../..
 
+bash config/boards/subaru_eg33/config/gen_config.sh
+[ $? -eq 0 ] || { echo "ERROR generating board subaru_eg33 subaru_eg33_f7"; exit 1; }
+
 exit 0

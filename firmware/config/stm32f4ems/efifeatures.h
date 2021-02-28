@@ -37,10 +37,6 @@
 
 #define EFI_HPFP TRUE
 
-#ifndef HAL_USE_USB_MSD
-#define HAL_USE_USB_MSD FALSE
-#endif
-
 #define EFI_ENABLE_CRITICAL_ENGINE_STOP TRUE
 #define EFI_ENABLE_ENGINE_WARNING TRUE
 
@@ -150,8 +146,7 @@
  * MCP42010 digital potentiometer support. This could be useful if you are stimulating some
  * stock ECU
  */
-//#define EFI_POTENTIOMETER FALSE
-#define EFI_POTENTIOMETER TRUE
+#define EFI_POTENTIOMETER FALSE
 
 #ifndef BOARD_TLE6240_COUNT
 #define BOARD_TLE6240_COUNT         1
@@ -347,8 +342,6 @@
 //#define EFI_CONSOLE_SERIAL_DEVICE (&SD3)
 #endif
 
-#define EFI_CONSOLE_UART_DEVICE (&UARTD3)
-
 /**
  * Use 'HAL_USE_UART' DMA-mode driver instead of 'HAL_USE_SERIAL'
  *
@@ -357,10 +350,16 @@
  *  STM32_UART_USE_USARTx
  * in mcuconf.h
  */
+#ifndef TS_UART_DMA_MODE
 #define TS_UART_DMA_MODE FALSE
+#endif
 
 #ifndef PRIMARY_UART_DMA_MODE
 #define PRIMARY_UART_DMA_MODE TRUE
+#endif
+
+#if (PRIMARY_UART_DMA_MODE || TS_UART_DMA_MODE || TS_UART_MODE)
+#define EFI_CONSOLE_UART_DEVICE (&UARTD3)
 #endif
 
 //#define TS_UART_DEVICE (&UARTD3)

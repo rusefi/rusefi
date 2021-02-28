@@ -1,0 +1,12 @@
+pins:
+  - pin: 1A
+    function: 12V all times
+    type: 12V
+
+info:
+  image:
+    file: main.jpg
+  pins:
+    - pin: 1A
+      x: 39
+      y: 31
