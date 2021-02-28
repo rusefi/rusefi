@@ -25,6 +25,7 @@
 #include "gpio/tle6240.h"
 #include "pin_repository.h"
 #include "os_util.h"
+#include "thread_priority.h"
 
 #if (BOARD_TLE6240_COUNT > 0)
 
@@ -450,7 +451,7 @@ static int tle6240_init(void * data)
 
 	if (!drv_task_ready) {
 		chThdCreateStatic(tle6240_thread_1_wa, sizeof(tle6240_thread_1_wa),
-						  NORMALPRIO + 1, tle6240_driver_thread, NULL);
+						  PRIO_GPIOCHIP, tle6240_driver_thread, NULL);
 		drv_task_ready = true;
 	}
 
