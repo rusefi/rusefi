@@ -185,7 +185,7 @@ void setHip9011FrankensoPinout(void) {
 	//	CONFIG(hip9011CsPin) = GPIOD_0; // rev 0.1
 
 	CONFIG(isHip9011Enabled) = true;
-	engineConfiguration->hip9011PrescalerAndSDO = _8MHZ_PRESCALER; // 8MHz chip
+	engineConfiguration->hip9011PrescalerAndSDO = HIP_8MHZ_PRESCALER; // 8MHz chip
 	CONFIG(is_enabled_spi_2) = true;
 	// todo: convert this to rusEfi, hardware-independent enum
 #if EFI_PROD_CODE
@@ -307,29 +307,14 @@ void hipAdcCallback(adcsample_t adcValue) {
 }
 
 static void hipStartupCode(void) {
-//	D[4:1] = 0000 : 4 MHz
-//	D[4:1] = 0001 : 5 MHz
-//	D[4:1] = 0010 : 6 MHz
-//	D[4:1] = 0011 ; 8 MHz
-//	D[4:1] = 0100 ; 10 MHz
-//	D[4:1] = 0101 ; 12 MHz
-//	D[4:1] = 0110 : 16 MHz
-//	D[4:1] = 0111 : 20 MHz
-//	D[4:1] = 1000 : 24 MHz
-
-
-// 0 for 4MHz
-// 6 for 8 MHz
 	instance.currentPrescaler = engineConfiguration->hip9011PrescalerAndSDO;
-	instance.hardware->sendSyncCommand(SET_PRESCALER_CMD + instance.currentPrescaler);
-
+	instance.hardware->sendSyncCommand(SET_PRESCALER_CMD(instance.currentPrescaler));
 
 	// '0' for channel #1
-	instance.hardware->sendSyncCommand(SET_CHANNEL_CMD + 0);
+	instance.hardware->sendSyncCommand(SET_CHANNEL_CMD(0));
 
 	// band index depends on cylinder bore
-	instance.hardware->sendSyncCommand(SET_BAND_PASS_CMD + instance.currentBandIndex);
-
+	instance.hardware->sendSyncCommand(SET_BAND_PASS_CMD(instance.currentBandIndex));
 
 	if (instance.correctResponsesCount == 0) {
 		warning(CUSTOM_OBD_KNOCK_PROCESSOR, "TPIC/HIP does not respond");
@@ -337,7 +322,7 @@ static void hipStartupCode(void) {
 
 	if (CONFIG(useTpicAdvancedMode)) {
 		// enable advanced mode for digital integrator output
-		instance.hardware->sendSyncCommand(SET_ADVANCED_MODE);
+		instance.hardware->sendSyncCommand(SET_ADVANCED_MODE_CMD);
 	}
 
 	/**
