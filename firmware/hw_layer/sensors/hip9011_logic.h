@@ -99,20 +99,35 @@ float getHIP9011Band(DEFINE_HIP_PARAMS);
 int getBandIndex(DEFINE_HIP_PARAMS);
 int getHip9011GainIndex(DEFINE_HIP_PARAMS);
 
-// 0b01000000
-#define SET_PRESCALER_CMD 0x40
+// 0b010x.xxxx
+#define SET_PRESCALER_CMD(v) 	(0x40 | ((v) & 0x1f))
+// 0b1110.000x
+#define SET_CHANNEL_CMD(v) 		(0xE0 | ((v) & 0x01))
+// 0b00xx.xxxx
+#define SET_BAND_PASS_CMD(v)	(0x00 | ((v) & 0x3f))
+// 0b10xx.xxxx
+#define SET_GAIN_CMD(v)			(0x80 | ((v) & 0x3f))
+// 0b110x.xxxx
+#define SET_INTEGRATOR_CMD(v)	(0xC0 | ((v) & 0x1f))
+// 0b0111.0001
+#define SET_ADVANCED_MODE_CMD	(0x71)
 
-// 0b11100000
-#define SET_CHANNEL_CMD 0xE0
-
-// 0b11000000
-#define SET_INTEGRATOR_CMD 0xC0
-
-// 0b00000000
-#define SET_BAND_PASS_CMD 0x0
-
-// 0b10000000
-#define SET_GAIN_CMD 0x80
-
-#define _8MHZ_PRESCALER 6
+//	D[4:1] = 0000 : 4 MHz
+#define HIP_4MHZ_PRESCALER		(0x0 << 1)
+//	D[4:1] = 0001 : 5 MHz
+#define HIP_5MHZ_PRESCALER		(0x1 << 1)
+//	D[4:1] = 0010 : 6 MHz
+#define HIP_6MHZ_PRESCALER		(0x2 << 1)
+//	D[4:1] = 0011 ; 8 MHz
+#define HIP_8MHZ_PRESCALER		(0x3 << 1)
+//	D[4:1] = 0100 ; 10 MHz
+#define HIP_10MHZ_PRESCALER		(0x4 << 1)
+//	D[4:1] = 0101 ; 12 MHz
+#define HIP_12MHZ_PRESCALER		(0x5 << 1)
+//	D[4:1] = 0110 : 16 MHz
+#define HIP_16MHZ_PRESCALER		(0x6 << 1)
+//	D[4:1] = 0111 : 20 MHz
+#define HIP_20MHZ_PRESCALER		(0x7 << 1)
+//	D[4:1] = 1000 : 24 MHz
+#define HIP_24MHZ_PRESCALER		(0x8 << 1)
 

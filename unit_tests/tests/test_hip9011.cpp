@@ -61,23 +61,23 @@ TEST(hip9011, configurationCommands) {
 	HIP9011 instance(&mock);
 
 // want to invoke method with same parameters a few times
-#define PARAMETERS 600, /* knockBandCustom*/0, /*cylinderBore*/76, /*hip9011Gain*/1, _8MHZ_PRESCALER, 0.0, 50.0
+#define PARAMETERS 600, /* knockBandCustom*/0, /*cylinderBore*/76, /*hip9011Gain*/1, HIP_8MHZ_PRESCALER, 0.0, 50.0
 
 	 // Not making assumptions on the message send ...
 	EXPECT_CALL(mock, sendSyncCommand(_)).Times(0);
-	EXPECT_CALL(mock, sendCommand(SET_GAIN_CMD + 0xE)).Times(1);
+	EXPECT_CALL(mock, sendCommand(SET_GAIN_CMD(0xE))).Times(1);
 	instance.handleValue(PARAMETERS);
 
 	EXPECT_CALL(mock, sendSyncCommand(_)).Times(0);
-	EXPECT_CALL(mock, sendCommand(SET_INTEGRATOR_CMD + 0x1C)).Times(1);
+	EXPECT_CALL(mock, sendCommand(SET_INTEGRATOR_CMD(0x1C))).Times(1);
 	instance.handleValue(PARAMETERS);
 
 	EXPECT_CALL(mock, sendSyncCommand(_)).Times(0);
-	EXPECT_CALL(mock, sendCommand(SET_BAND_PASS_CMD + 0x2A)).Times(1);
+	EXPECT_CALL(mock, sendCommand(SET_BAND_PASS_CMD(0x2A))).Times(1);
 	instance.handleValue(PARAMETERS);
 
 	EXPECT_CALL(mock, sendSyncCommand(_)).Times(0);
-	EXPECT_CALL(mock, sendCommand(SET_PRESCALER_CMD + 6)).Times(1);
+	EXPECT_CALL(mock, sendCommand(SET_PRESCALER_CMD(6))).Times(1);
 	instance.handleValue(PARAMETERS);
 
 	// initialization is over, no commands should be sent
