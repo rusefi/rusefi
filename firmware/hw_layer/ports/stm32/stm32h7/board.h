@@ -77,6 +77,12 @@
 #endif /* EFI_USE_OSC */
 
 /*
+ * Board voltages.
+ * Required for performance limits calculation.
+ */
+#define STM32_VDD                   330U
+
+/*
  * MCU type as defined in the ST header.
  */
 #ifndef STM32H743xx
