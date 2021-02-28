@@ -2,6 +2,9 @@
 
 #pragma once
 
+#undef EFI_USE_FAST_ADC
+#define EFI_USE_FAST_ADC FALSE
+
 #undef EFI_MC33816
 #define EFI_MC33816 FALSE
 
