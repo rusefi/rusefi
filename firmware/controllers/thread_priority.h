@@ -1,3 +1,11 @@
+/**
+ * @file        thread_priority.h
+ * @brief       This file sets the thread priority for the threads running on rusEFI
+ *
+ * @date February 27, 2021
+ * @author Matthew Kennedy, (c) 2021
+ */
+
 #pragma once
 
 // ADC and ETB get highest priority - not much else actually runs the engine
