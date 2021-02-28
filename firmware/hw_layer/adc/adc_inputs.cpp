@@ -607,12 +607,12 @@ void printFullAdcReportIfNeeded(Logging *logger) {
 
 #else /* not HAL_USE_ADC */
 
-float getVoltageDivided(const char*, adc_channel_e DECLARE_ENGINE_PARAMETER_SUFFIX) {
+__attribute__((weak)) float getVoltageDivided(const char*, adc_channel_e DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	return 0;
 }
 
 // voltage in MCU universe, from zero to VDD
-float getVoltage(const char*, adc_channel_e DECLARE_ENGINE_PARAMETER_SUFFIX) {
+__attribute__((weak)) float getVoltage(const char*, adc_channel_e DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	return 0;
 }
 
