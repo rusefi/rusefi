@@ -17,6 +17,7 @@
 #include "gpio/drv8860.h"
 #include "pin_repository.h"
 #include "os_util.h"
+#include "thread_priority.h"
 
 #if (BOARD_DRV8860_COUNT > 0)
 
@@ -225,7 +226,7 @@ int drv8860_init(void * data) {
 
 	if (!drv_task_ready) {
 		chThdCreateStatic(drv8860_thread_1_wa, sizeof(drv8860_thread_1_wa),
-						  NORMALPRIO + 1, drv8860_driver_thread, NULL);
+						  PRIO_GPIOCHIP, drv8860_driver_thread, NULL);
 		drv_task_ready = true;
 	}
 

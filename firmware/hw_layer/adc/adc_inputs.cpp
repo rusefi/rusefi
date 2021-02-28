@@ -36,6 +36,7 @@
 #include "engine_controller.h"
 #include "maf.h"
 #include "perf_trace.h"
+#include "thread_priority.h"
 
 static NO_CACHE adcsample_t slowAdcSampleBuf[ADC_BUF_DEPTH_SLOW * ADC_MAX_CHANNELS_COUNT];
 static NO_CACHE adcsample_t fastAdcSampleBuf[ADC_BUF_DEPTH_FAST * ADC_MAX_CHANNELS_COUNT];
@@ -436,7 +437,7 @@ int getSlowAdcCounter() {
 class SlowAdcController : public PeriodicController<256> {
 public:
 	SlowAdcController() 
-		: PeriodicController("ADC", NORMALPRIO + 5, SLOW_ADC_RATE)
+		: PeriodicController("ADC", PRIO_ADC, SLOW_ADC_RATE)
 	{
 	}
 
