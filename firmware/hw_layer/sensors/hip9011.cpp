@@ -43,6 +43,7 @@
 #include "hip9011.h"
 #include "adc_inputs.h"
 #include "perf_trace.h"
+#include "thread_priority.h"
 
 #include "engine_controller.h"
 
@@ -54,11 +55,6 @@
 #if EFI_HIP_9011
 
 static NamedOutputPin intHold(PROTOCOL_HIP_NAME);
-
-extern uint32_t lastExecutionCount;
-
-uint32_t hipLastExecutionCount;
-
 
 class Hip9011Hardware : public Hip9011HardwareInterface {
 	void sendSyncCommand(unsigned char command) override;
@@ -190,7 +186,7 @@ void setHip9011FrankensoPinout(void) {
 	//	CONFIG(hip9011CsPin) = GPIOD_0; // rev 0.1
 
 	CONFIG(isHip9011Enabled) = true;
-	engineConfiguration->hip9011PrescalerAndSDO = _8MHZ_PRESCALER; // 8MHz chip
+	engineConfiguration->hip9011PrescalerAndSDO = HIP_8MHZ_PRESCALER; // 8MHz chip
 	CONFIG(is_enabled_spi_2) = true;
 	// todo: convert this to rusEfi, hardware-independent enum
 #if EFI_PROD_CODE
@@ -260,9 +256,6 @@ void intHoldCallback(trigger_event_e ckpEventType, uint32_t index, efitick_t edg
 	// todo: schedule this based on closest trigger event, same as ignition works
 	scheduleByAngle(&startTimer[structIndex], edgeTimestamp, engineConfiguration->knockDetectionWindowStart,
 			&startIntegration);
-#if EFI_PROD_CODE
-	hipLastExecutionCount = lastExecutionCount;
-#endif /* EFI_PROD_CODE */
 	scheduleByAngle(&endTimer[structIndex], edgeTimestamp, engineConfiguration->knockDetectionWindowEnd,
 			&endIntegration);
 }
@@ -315,29 +308,14 @@ void hipAdcCallback(adcsample_t adcValue) {
 }
 
 static void hipStartupCode(void) {
-//	D[4:1] = 0000 : 4 MHz
-//	D[4:1] = 0001 : 5 MHz
-//	D[4:1] = 0010 : 6 MHz
-//	D[4:1] = 0011 ; 8 MHz
-//	D[4:1] = 0100 ; 10 MHz
-//	D[4:1] = 0101 ; 12 MHz
-//	D[4:1] = 0110 : 16 MHz
-//	D[4:1] = 0111 : 20 MHz
-//	D[4:1] = 1000 : 24 MHz
-
-
-// 0 for 4MHz
-// 6 for 8 MHz
 	instance.currentPrescaler = engineConfiguration->hip9011PrescalerAndSDO;
-	instance.hardware->sendSyncCommand(SET_PRESCALER_CMD + instance.currentPrescaler);
-
+	instance.hardware->sendSyncCommand(SET_PRESCALER_CMD(instance.currentPrescaler));
 
 	// '0' for channel #1
-	instance.hardware->sendSyncCommand(SET_CHANNEL_CMD + 0);
+	instance.hardware->sendSyncCommand(SET_CHANNEL_CMD(0));
 
 	// band index depends on cylinder bore
-	instance.hardware->sendSyncCommand(SET_BAND_PASS_CMD + instance.currentBandIndex);
-
+	instance.hardware->sendSyncCommand(SET_BAND_PASS_CMD(instance.currentBandIndex));
 
 	if (instance.correctResponsesCount == 0) {
 		warning(CUSTOM_OBD_KNOCK_PROCESSOR, "TPIC/HIP does not respond");
@@ -345,7 +323,7 @@ static void hipStartupCode(void) {
 
 	if (CONFIG(useTpicAdvancedMode)) {
 		// enable advanced mode for digital integrator output
-		instance.hardware->sendSyncCommand(SET_ADVANCED_MODE);
+		instance.hardware->sendSyncCommand(SET_ADVANCED_MODE_CMD);
 	}
 
 	/**
@@ -431,7 +409,7 @@ void initHip9011(Logging *sharedLogger) {
 	addConsoleActionI("set_hip_prescalerandsdo", setPrescalerAndSDO);
     addConsoleActionF("set_knock_threshold", setKnockThresh);
     addConsoleActionI("set_max_knock_sub_deg", setMaxKnockSubDeg);
-	chThdCreateStatic(hipThreadStack, sizeof(hipThreadStack), NORMALPRIO, (tfunc_t)(void*) hipThread, NULL);
+	chThdCreateStatic(hipThreadStack, sizeof(hipThreadStack), PRIO_HIP9011, (tfunc_t)(void*) hipThread, NULL);
 }
 
 #endif /* EFI_HIP_9011 */

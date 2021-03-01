@@ -17,6 +17,7 @@
 #if EFI_SERVO || EFI_SIMULATOR
 #include "servo.h"
 #include "pin_repository.h"
+#include "thread_priority.h"
 
 EXTERN_ENGINE;
 
@@ -63,7 +64,7 @@ void initServo(void) {
 		pins[i].initPin("servo", p);
 	}
 
-	chThdCreateStatic(servoThreadStack, sizeof(servoThreadStack), NORMALPRIO, (tfunc_t)(void*) seThread, NULL);
+	chThdCreateStatic(servoThreadStack, sizeof(servoThreadStack), PRIO_SERVO, (tfunc_t)(void*) seThread, NULL);
 }
 #endif /* EFI_SERVO */
 

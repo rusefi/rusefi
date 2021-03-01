@@ -1,11 +1,11 @@
 # List of all the board related files.
 BOARDCPPSRC =  $(PROJECT_DIR)/config/boards/proteus/board_configuration.cpp \
 				$(PROJECT_DIR)/config/boards/proteus/adc_hack.cpp
+
 BOARDINC = $(PROJECT_DIR)/config/boards/proteus
 
 # Target processor details
-ifeq ($(PROJECT_CPU),ARCH_STM32F4)
-else
+ifeq ($(PROJECT_CPU),ARCH_STM32F7)
   PROTEUS_LEGACY = TRUE
 endif
 
@@ -17,8 +17,13 @@ DDEFS += -DEFI_ICU_INPUTS=FALSE -DHAL_TRIGGER_USE_PAL=TRUE
 DDEFS += -DEFI_LOGIC_ANALYZER=FALSE
 # todo: refactor HAL_VSS_USE_PAL
 DDEFS += -DHAL_VSS_USE_PAL=TRUE
-DDEFS += -DSTM32_ADC_USE_ADC3=TRUE
-DDEFS += -DEFI_SOFTWARE_KNOCK=TRUE
+
+# This stuff doesn't work on H7 yet
+ifneq ($(PROJECT_CPU),ARCH_STM32H7)
+	DDEFS += -DSTM32_ADC_USE_ADC3=TRUE
+	DDEFS += -DEFI_SOFTWARE_KNOCK=TRUE
+endif
+
 DDEFS += -DEFI_CONSOLE_TX_BRAIN_PIN=GPIO_UNASSIGNED -DEFI_CONSOLE_RX_BRAIN_PIN=GPIO_UNASSIGNED
 
 # We are running on Proteus hardware!

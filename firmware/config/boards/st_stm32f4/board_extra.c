@@ -31,10 +31,3 @@ void setSerialConfigurationOverrides(void) {
  */
 void setSdCardConfigurationOverrides(void) {
 }
-
-/**
- * @brief   Board-specific ADC channel configuration code overrides.
- * @todo    Add your board-specific code, if any.
- */
-void setAdcChannelOverrides(void) {
-}

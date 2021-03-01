@@ -164,12 +164,10 @@ void handleTsR(TsChannelBase* tsChannel, char *input) {
 #endif // EFI_SIMULATOR
 
 #if EFI_FILE_LOGGING
-			LOCK_SD_SPI;
 			DIR dir;
 			FRESULT res = f_opendir(&dir, ROOT_DIR);
 			if (res != FR_OK) {
 				scheduleMsg(&sharedLogger, "Error opening directory");
-				UNLOCK_SD_SPI;
 			} else {
 				int index = 0;
 				while (true) {
@@ -203,7 +201,6 @@ void handleTsR(TsChannelBase* tsChannel, char *input) {
 					}
 
 				}
-				UNLOCK_SD_SPI;
 			}
 
 #endif // EFI_FILE_LOGGING
@@ -227,10 +224,8 @@ void handleTsR(TsChannelBase* tsChannel, char *input) {
 #endif // EFI_SIMULATOR
 
 #if EFI_FILE_LOGGING
-		LOCK_SD_SPI;
 		got = 0;
 		f_read(&uploading, (void*) &buffer[2], TRANSFER_SIZE, (UINT*) &got);
-		UNLOCK_SD_SPI;
 #endif // EFI_FILE_LOGGING
 
 		tsChannel->sendResponse(TS_CRC, buffer, 2 + got);
@@ -281,7 +276,6 @@ void handleTsW(TsChannelBase* tsChannel, char *input) {
 #endif // EFI_SIMULATOR
 
 #if EFI_FILE_LOGGING
-			LOCK_SD_SPI;
 			DIR dir;
 			FRESULT res = f_opendir(&dir, ROOT_DIR);
 			if (res != FR_OK) {
@@ -304,7 +298,6 @@ void handleTsW(TsChannelBase* tsChannel, char *input) {
 					}
 				}
 			}
-			UNLOCK_SD_SPI;
 #endif // EFI_FILE_LOGGING
 
 			sendOkResponse(tsChannel, TS_CRC);
@@ -340,14 +333,11 @@ void handleTsW(TsChannelBase* tsChannel, char *input) {
 #endif // EFI_SIMULATOR
 
 #if EFI_FILE_LOGGING
-			LOCK_SD_SPI;
-
 			DIR dir;
 			FRESULT res = f_opendir(&dir, ROOT_DIR);
 
 			if (res != FR_OK) {
 				scheduleMsg(&sharedLogger, "Error opening directory");
-				UNLOCK_SD_SPI;
 			} else {
 				memset(&uploading, 0, sizeof(FIL));			// clear the memory
 				while (true) {
@@ -366,7 +356,6 @@ void handleTsW(TsChannelBase* tsChannel, char *input) {
 						}
 					}
 				}
-				UNLOCK_SD_SPI;
 			}
 
 #endif // EFI_FILE_LOGGING

@@ -16,6 +16,7 @@
 #include "engine_controller.h"
 #include "adc_inputs.h"
 #include "sensor.h"
+#include "thread_priority.h"
 
 EXTERN_ENGINE;
 
@@ -149,7 +150,7 @@ void StepperMotor::ThreadTask() {
 	}
 }
 
-StepperMotor::StepperMotor() : ThreadController("stepper", NORMALPRIO) {}
+StepperMotor::StepperMotor() : ThreadController("stepper", PRIO_STEPPER) {}
 
 int StepperMotor::getTargetPosition() const {
 	return m_targetPosition;
