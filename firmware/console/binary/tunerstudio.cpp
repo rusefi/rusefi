@@ -87,6 +87,7 @@
 #include "status_loop.h"
 #include "mmc_card.h"
 #include "perf_trace.h"
+#include "thread_priority.h"
 
 #include "signature.h"
 
@@ -907,7 +908,7 @@ void startTunerStudioConnectivity(void) {
 	addConsoleAction("bluetooth_cancel", bluetoothCancel);
 #endif /* EFI_BLUETOOTH_SETUP */
 
-	chThdCreateStatic(tunerstudioThreadStack, sizeof(tunerstudioThreadStack), NORMALPRIO, (tfunc_t)tsThreadEntryPoint, NULL);
+	chThdCreateStatic(tunerstudioThreadStack, sizeof(tunerstudioThreadStack), PRIO_CONSOLE, (tfunc_t)tsThreadEntryPoint, NULL);
 }
 
 #endif

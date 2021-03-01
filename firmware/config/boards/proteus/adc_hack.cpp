@@ -14,6 +14,8 @@
 
 #include "efilib.h"
 
+#if USE_ADC3_VBATT_HACK
+
 static ADCConversionGroup adcConvGroup = { FALSE, 1, nullptr, nullptr,
 	0,
 	ADC_CR2_SWSTART,
@@ -51,3 +53,5 @@ void proteusAdcHack()
 
 	vbattSampleProteus = sum / efi::size(samples);
 }
+
+#endif /* USE_ADC3_VBATT_HACK */

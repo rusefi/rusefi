@@ -15,6 +15,7 @@
 #include "gpio/mc33810.h"
 #include "pin_repository.h"
 #include "os_util.h"
+#include "thread_priority.h"
 
 #if (BOARD_MC33810_COUNT > 0)
 
@@ -498,7 +499,7 @@ int mc33810_init(void * data)
 
 	if (!drv_task_ready) {
 		chThdCreateStatic(mc33810_thread_1_wa, sizeof(mc33810_thread_1_wa),
-						  NORMALPRIO + 1, mc33810_driver_thread, NULL);
+						  PRIO_GPIOCHIP, mc33810_driver_thread, NULL);
 		drv_task_ready = true;
 	}
 
