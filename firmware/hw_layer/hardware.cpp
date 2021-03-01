@@ -48,7 +48,7 @@
 #include "trigger_central.h"
 #include "svnversion.h"
 #include "engine_configuration.h"
-#include "aux_pid.h"
+#include "vvt_pid.h"
 #include "perf_trace.h"
 #include "trigger_emulator_algo.h"
 #include "boost_control.h"
@@ -71,13 +71,12 @@
 
 EXTERN_ENGINE;
 
-#if HAL_USE_SPI
-extern bool isSpiInitialized[5];
-
 /**
  * #311 we want to test RTC before engine start so that we do not test it while engine is running
  */
 bool rtcWorks = true;
+#if HAL_USE_SPI
+extern bool isSpiInitialized[5];
 
 /**
  * Only one consumer can use SPI bus at a given time
@@ -168,8 +167,6 @@ void adc_callback_fast(ADCDriver *adcp) {
 	//size_t n = adcp->depth;
 
 	if (adcp->state == ADC_COMPLETE) {
-		fastAdc.invalidateSamplesCache();
-
 #if HAL_TRIGGER_USE_ADC
 		// we need to call this ASAP, because trigger processing is time-critical
 		if (triggerSampleIndex >= 0)
@@ -223,8 +220,6 @@ void adc_callback_fast(ADCDriver *adcp) {
 	 * */
 	if (adcp->state == ADC_COMPLETE) {
 		ScopePerf perf(PE::AdcCallbackFastComplete);
-
-		fastAdc.invalidateSamplesCache();
 
 		/**
 		 * this callback is executed 10 000 times a second, it needs to be as fast as possible
@@ -339,13 +334,6 @@ void applyNewHardwareSettings(void) {
 	stopHip9001_pins();
 #endif /* EFI_HIP_9011 */
 
-#if EFI_IDLE_CONTROL
-	bool isIdleRestartNeeded = isIdleHardwareRestartNeeded();
-	if (isIdleRestartNeeded) {
-		stopIdleHardware();
-	}
-#endif
-
 #if (BOARD_EXT_GPIOCHIPS > 0)
 	stopSmartCsPins();
 #endif /* (BOARD_EXT_GPIOCHIPS > 0) */
@@ -363,7 +351,7 @@ void applyNewHardwareSettings(void) {
 #endif /* EFI_EMULATE_POSITION_SENSORS */
 
 #if EFI_AUX_PID
-	stopAuxPins();
+	stopVvtControlPins();
 #endif /* EFI_AUX_PID */
 
 	if (isConfigurationChanged(is_enabled_spi_1)) {
@@ -441,7 +429,7 @@ void applyNewHardwareSettings(void) {
 
 
 #if EFI_IDLE_CONTROL
-	if (isIdleRestartNeeded) {
+	if (isIdleHardwareRestartNeeded()) {
 		 initIdleHardware(sharedLogger);
 	}
 #endif
@@ -460,7 +448,7 @@ void applyNewHardwareSettings(void) {
 	startLogicAnalyzerPins();
 #endif /* EFI_LOGIC_ANALYZER */
 #if EFI_AUX_PID
-	startAuxPins();
+	startVvtControlPins();
 #endif /* EFI_AUX_PID */
 
 	adcConfigListener(engine);
@@ -479,7 +467,6 @@ void showBor(void) {
 void initHardware(Logging *l) {
 	efiAssertVoid(CUSTOM_IH_STACK, getCurrentRemainingStack() > EXPECTED_REMAINING_STACK, "init h");
 	sharedLogger = l;
-	engine_configuration_s *engineConfiguration = engine->engineConfigurationPtr;
 	efiAssertVoid(CUSTOM_EC_NULL, engineConfiguration!=NULL, "engineConfiguration");
 	
 

@@ -166,7 +166,6 @@ void vag_18_Turbo(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 
 	// VVT Settings
 
-	engineConfiguration->activateAuxPid1 = true;
 	engineConfiguration->auxPidFrequency[0] = 300;
 	engineConfiguration->fsio_setting[0] = 0.0;
 	engineConfiguration->auxPid[0].pFactor = 2;

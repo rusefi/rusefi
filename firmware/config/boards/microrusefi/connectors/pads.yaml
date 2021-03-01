@@ -21,22 +21,19 @@ pins:
     class: outputs
     ts_name: AUX J18 PB7
 
-  - pin: AV6
-    id: GPIOC_4
-    class: outputs
-    ts_name: AUX AV6 reuse
-
-  - pin: AV8
-    id: GPIOB_0
-    class: outputs
-    ts_name: AUX AV8 reuse
-
-  - pin: AV9
-    id: GPIOB_1
-    class: outputs
-    ts_name: AUX AV9 reuse
-
-  - pin: AV10
-    id: GPIOA_4
-    class: outputs
-    ts_name: AUX AV10 reuse
+info:
+  image:
+    file: pads.jpg
+  pins:
+    - pin: J6
+      x: 42
+      y: 121
+    - pin: J10
+      x: 184
+      y: 389
+    - pin: J11
+      x: 184
+      y: 334
+    - pin: J18
+      x: 161
+      y: 31

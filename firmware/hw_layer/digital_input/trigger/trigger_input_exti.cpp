@@ -7,7 +7,7 @@
  * see digital_input_icu.cp
  *
  * @date Dec 30, 2012
- * @author Andrey Belomutskiy, (c) 2012-2020
+ * @author Andrey Belomutskiy, (c) 2012-2021
  */
 
 #include "global.h"
@@ -24,21 +24,26 @@
 static Logging *logger;
 
 EXTERN_ENGINE;
-static ioline_t primary_line;
+
+static ioline_t shaftLines[TRIGGER_SUPPORTED_CHANNELS];
+static ioline_t camLines[CAM_INPUTS_COUNT];
 
 static void shaft_callback(void *arg) {
 	// do the time sensitive things as early as possible!
 	efitick_t stamp = getTimeNowNt();
-	if (!engine->hwTriggerInputEnabled) {
-		return;
-	}
-	ioline_t pal_line = (ioline_t)arg;
+	TRIGGER_BAIL_IF_DISABLED
+#if HW_CHECK_MODE
+	TRIGGER_BAIL_IF_SELF_STIM
+#endif
+
+	int index = (int)arg;
+	ioline_t pal_line = shaftLines[index];
 	bool rise = (palReadLine(pal_line) == PAL_HIGH);
 
 	// todo: support for 3rd trigger input channel
 	// todo: start using real event time from HW event, not just software timer?
 
-	bool isPrimary = pal_line == primary_line;
+	bool isPrimary = index == 0;
 	if (!isPrimary && !TRIGGER_WAVEFORM(needSecondTriggerInput)) {
 		return;
 	}
@@ -60,18 +65,20 @@ static void shaft_callback(void *arg) {
 
 static void cam_callback(void *arg) {
 	efitick_t stamp = getTimeNowNt();
-	if (!engine->hwTriggerInputEnabled) {
-		return;
-	}
+	TRIGGER_BAIL_IF_DISABLED
+#if HW_CHECK_MODE
+	TRIGGER_BAIL_IF_SELF_STIM
+#endif
 
-	ioline_t pal_line = (ioline_t)arg;
+	int index = (int)arg;
+	ioline_t pal_line = camLines[index];
 
 	bool rise = (palReadLine(pal_line) == PAL_HIGH);
 
 	if (rise ^ engineConfiguration->invertCamVVTSignal) {
-		hwHandleVvtCamSignal(TV_RISE, stamp);
+		hwHandleVvtCamSignal(TV_RISE, stamp, index);
 	} else {
-		hwHandleVvtCamSignal(TV_FALL, stamp);
+		hwHandleVvtCamSignal(TV_FALL, stamp, index);
 	}
 }
 
@@ -88,17 +95,18 @@ int extiTriggerTurnOnInputPin(const char *msg, int index, bool isTriggerShaft) {
 	 * * do not set to both edges if we need only one
 	 * * simplify callback in case of one edge */
 	ioline_t pal_line = PAL_LINE(getHwPort("trg", brainPin), getHwPin("trg", brainPin));
-	efiExtiEnablePin(msg, brainPin, PAL_EVENT_MODE_BOTH_EDGES, isTriggerShaft ? shaft_callback : cam_callback, (void *)pal_line);
+	if (isTriggerShaft) {
+		shaftLines[index] = pal_line;
+	} else {
+		camLines[index] = pal_line;
+	}
+	efiExtiEnablePin(msg, brainPin, PAL_EVENT_MODE_BOTH_EDGES, isTriggerShaft ? shaft_callback : cam_callback, (void *)index);
 
 	return 0;
 }
 
 void extiTriggerTurnOffInputPin(brain_pin_e brainPin) {
 	efiExtiDisablePin(brainPin);
-}
-
-void extiTriggerSetPrimaryChannel(brain_pin_e brainPin) {
-	primary_line = PAL_LINE(getHwPort("trg", brainPin), getHwPin("trg", brainPin));
 }
 
 void extiTriggerTurnOnInputPins(Logging *sharedLogger) {

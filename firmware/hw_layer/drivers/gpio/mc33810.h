@@ -22,8 +22,10 @@
 #define MC33810_POLL_INTERVAL_MS	100
 
 struct mc33810_config {
+#if HAL_USE_SPI
 	SPIDriver	*spi_bus;
 	SPIConfig	spi_config;
+#endif
 	/* First 4 is injector drivers, then 4 ignition pre-drivers */
 	struct {
 		ioportid_t		port;

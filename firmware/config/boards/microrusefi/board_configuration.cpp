@@ -248,9 +248,6 @@ void setBoardConfigurationOverrides(void) {
 	engineConfiguration->injectionMode = IM_SIMULTANEOUS;//IM_BATCH;// IM_SEQUENTIAL;
 }
 
-void setAdcChannelOverrides(void) {
-}
-
 /**
  * @brief   Board-specific SD card configuration code overrides. Needed by bootloader code.
  * @todo    Add your board-specific code, if any.

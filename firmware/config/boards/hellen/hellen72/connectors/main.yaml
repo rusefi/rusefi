@@ -188,8 +188,8 @@ pins:
     function: NC
 
   - pin: 3L
-    id: GPIOI_6
-    class: outputs
+    id: [GPIOI_6, EFI_ADC_1]
+    class: [outputs, analog_inputs]
     ts_name: 3L - IGN_7 / AFR
     type: ign
 
@@ -274,13 +274,13 @@ pins:
     color: black W4
 
   - pin: 4B
-    id: [GPIOA_1, EFI_ADC_2]
+    id: [GPIOF_9, EFI_ADC_2]
     class: [switch_inputs, analog_inputs]
-    ts_name: 4B - Brake/RES1 (A15)
+    ts_name: 4B - Brake/RES1 (A7)
     function: Brake Switch
 
   - pin: 4C
-    id: [GPIOA_3, EFI_ADC_3]
+    id: [GPIOF_10, EFI_ADC_3]
     class: [switch_inputs, analog_inputs]
     ts_name: 4C - Steering/RES2 (A16)
     function: Power Steering Switch
@@ -292,26 +292,26 @@ pins:
     function: DTM switching (Diagnostic Terminal?)
 
   - pin: 4F
-    id: EFI_ADC_8
-    class: analog_inputs
+    id: [GPIOB_0, EFI_ADC_8]
+    class: [switch_inputs, analog_inputs]
     ts_name: 4F - AC_PRES/AUX1 (A23)
     function: AC Pressure In
 
   - pin: 4H
-    id: [GPIOA_2, EFI_ADC_14]
+    id: [GPIOC_4, EFI_ADC_14]
     class: [switch_inputs, analog_inputs]
     ts_name: 4H - Neutral/AUX2 (A21)
     function: Neutral Switch
 
   - pin: 4I
-    id: [GPIOA_0, EFI_ADC_15]
+    id: [GPIOC_5, EFI_ADC_15]
     class: [switch_inputs, analog_inputs]
     ts_name: 4I - Clutch/AUX3 (A22)
     function: Clutch Switch
 
   - pin: 4J
-    id: EFI_ADC_7
-    class: analog_inputs
+    id: [GPIOA_7, EFI_ADC_7]
+    class: [switch_inputs, analog_inputs]
     ts_name: 4J - VTCS/AUX4 (A20)
     function: VTCS ca. switch
 
@@ -326,11 +326,14 @@ pins:
     color: red W3, sliced for MAP
 
   - pin: 4M
+    id: EFI_ADC_5
+    class: analog_inputs
+    ts_name: 4M - KNOCK (A6)
     function: Knock sens. in
     color: white R5
 
   - pin: 4N
-    id: EFI_ADC_1
+    id: EFI_ADC_13
     class: analog_inputs
     ts_name: 4N - IAT (A14)
     function: IAT sensor
@@ -342,9 +345,9 @@ pins:
     color: black B2
 
   - pin: 4P
-    id: EFI_ADC_0
+    id: EFI_ADC_12
     class: analog_inputs
-    ts_name: 4P - CLT (A13)
+    ts_name: 4P - CLT (A11)
     function: CLT sensor
     color: blue B2
 
@@ -360,10 +363,16 @@ pins:
     color: white B2
 
   - pin: 4S
+    id: EFI_ADC_5
+    class: analog_inputs
+    ts_name: 4S - Alternator voltage (A5)
     function: +12V engine fuse 15A, ECU power source, run/start
     color: red B2
 
   - pin: 4T
+    id: EFI_ADC_5
+    class: analog_inputs
+    ts_name: 4T - Alternator voltage (A5)
     function: Alternator output voltage
 
   - pin: 4U
@@ -378,13 +387,13 @@ pins:
     id: EFI_ADC_4
     class: analog_inputs
     ts_name: 4V - TPS (A17)
-    function: TPS sensor output
+    function: TPS sensor input
     color: green B2
 
   - pin: 4W
-    id: EFI_ADC_12
+    id: EFI_ADC_0
     class: analog_inputs
-    ts_name: 4W - O2S (A11)
+    ts_name: 4W - O2S (A13)
     function: Front O2 Sensor Signal
 
   - pin: 4X
@@ -398,16 +407,16 @@ pins:
     function: ECU - TCM, Communication for A/T
 
   - pin: 4AA
-    id: EFI_ADC_13
+    id: EFI_ADC_9
     class: analog_inputs
     ts_name: 4AA - O2S2 (A12)
     function: Rear O2 Sensor Signal
 
   - pin: 4AB
-    id: EFI_ADC_5
+    id: EFI_ADC_3
     class: analog_inputs
     ts_name: 4AB - FTP/PPS (A18)
-    function: Fuel Tank Pressure Sensor
+    function: Fuel Tank Pressure Sensor, PPS
 
   - pin: 4AC
     function: ECU - TCM, Communication for A/T
@@ -427,3 +436,223 @@ pins:
   - pin: 4AH
     function: Evap
 
+info:
+  image:
+    file: main.jpg
+  pins:
+    - pin: 2A
+      x: 2259
+      y: 220
+    - pin: 2D
+      x: 2187
+      y: 220
+    - pin: 2G
+      x: 2115
+      y: 220
+    - pin: 2J
+      x: 2043
+      y: 220
+    - pin: 2M
+      x: 1971
+      y: 220
+    - pin: 2P
+      x: 1899
+      y: 220
+    - pin: 3A
+      x: 1722
+      y: 220
+    - pin: 3D
+      x: 1643
+      y: 220
+    - pin: 3J
+      x: 1490
+      y: 220
+    - pin: 3M
+      x: 1398
+      y: 220
+    - pin: 3P
+      x: 1309
+      y: 220
+    - pin: 3U
+      x: 1212
+      y: 220
+    - pin: 3X
+      x: 1131
+      y: 220
+    - pin: 4A
+      x: 965
+      y: 220
+    - pin: 4D
+      x: 876
+      y: 220
+    - pin: 4L
+      x: 710
+      y: 220
+    - pin: 4O
+      x: 618
+      y: 220
+    - pin: 4R
+      x: 531
+      y: 220
+    - pin: 4U
+      x: 434
+      y: 220
+    - pin: 4Z
+      x: 352
+      y: 220
+    - pin: 4AC
+      x: 257
+      y: 220
+    - pin: 4AF
+      x: 166
+      y: 220
+    - pin: 2B
+      x: 2261
+      y: 350
+    - pin: 2E
+      x: 2193
+      y: 350
+    - pin: 2H
+      x: 2116
+      y: 350
+    - pin: 2K
+      x: 2044
+      y: 350
+    - pin: 2N
+      x: 1968
+      y: 350
+    - pin: 2Q
+      x: 1905
+      y: 350
+    - pin: 3B
+      x: 1726
+      y: 350
+    - pin: 3E
+      x: 1644
+      y: 350
+    - pin: 3H
+      x: 1572
+      y: 350
+    - pin: 3K
+      x: 1498
+      y: 350
+    - pin: 3N
+      x: 1423
+      y: 350
+    - pin: 3Q
+      x: 1356
+      y: 350
+    - pin: 3S
+      x: 1281
+      y: 350
+    - pin: 3V
+      x: 1206
+      y: 350
+    - pin: 3Y
+      x: 1132
+      y: 350
+    - pin: 4B
+      x: 976
+      y: 350
+    - pin: 4E
+      x: 904
+      y: 350
+    - pin: 4H
+      x: 829
+      y: 350
+    - pin: 4J
+      x: 758
+      y: 350
+    - pin: 4M
+      x: 685
+      y: 350
+    - pin: 4P
+      x: 616
+      y: 350
+    - pin: 4S
+      x: 536
+      y: 350
+    - pin: 4V
+      x: 463
+      y: 350
+    - pin: 4X
+      x: 398
+      y: 350
+    - pin: 4AA
+      x: 321
+      y: 350
+    - pin: 4AD
+      x: 254
+      y: 350
+    - pin: 4AG
+      x: 174
+      y: 350
+    - pin: 2C
+      x: 2263
+      y: 486
+    - pin: 2F
+      x: 2189
+      y: 486
+    - pin: 2I
+      x: 2114
+      y: 486
+    - pin: 2O
+      x: 1973
+      y: 486
+    - pin: 2R
+      x: 1895
+      y: 486
+    - pin: 3C
+      x: 1726
+      y: 486
+    - pin: 3F
+      x: 1640
+      y: 486
+    - pin: 3I
+      x: 1568
+      y: 486
+    - pin: 3L
+      x: 1494
+      y: 486
+    - pin: 3O
+      x: 1421
+      y: 486
+    - pin: 3T
+      x: 1277
+      y: 486
+    - pin: 3W
+      x: 1203
+      y: 486
+    - pin: 3Z
+      x: 1129
+      y: 486
+    - pin: 4C
+      x: 974
+      y: 486
+    - pin: 4F
+      x: 900
+      y: 486
+    - pin: 4I
+      x: 828
+      y: 486
+    - pin: 4K
+      x: 760
+      y: 486
+    - pin: 4N
+      x: 682
+      y: 486
+    - pin: 4T
+      x: 535
+      y: 486
+    - pin: 4W
+      x: 467
+      y: 486
+    - pin: 4AB
+      x: 314
+      y: 486
+    - pin: 4AE
+      x: 247
+      y: 486
+    - pin: 4AH
+      x: 169
+      y: 486

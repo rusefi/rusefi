@@ -83,6 +83,7 @@
 #include "dc_motor.h"
 #include "dc_motors.h"
 #include "pid_auto_tune.h"
+#include "thread_priority.h"
 
 #if defined(HAS_OS_ACCESS)
 #error "Unexpected OS ACCESS HERE"
@@ -312,7 +313,7 @@ expected<percent_t> EtbController::getOpenLoop(percent_t target) const {
 	// Don't apply open loop for wastegate/idle valve, only real ETB
 	if (m_function != ETB_Wastegate
 		&& m_function != ETB_IdleValve) {
-		ff = interpolate2d("etbb", target, engineConfiguration->etbBiasBins, engineConfiguration->etbBiasValues);
+		ff = interpolate2d(target, engineConfiguration->etbBiasBins, engineConfiguration->etbBiasValues);
 	}
 
 	engine->engineState.etbFeedForward = ff;
@@ -495,6 +496,15 @@ void EtbController::update() {
 		return;
 	}
 
+	if (CONFIG(disableEtbWhenEngineStopped)) {
+		if (engine->triggerCentral.getTimeSinceTriggerEvent(getTimeNowNt()) > 1) {
+			// If engine is stopped and so configured, skip the ETB update entirely
+			// This is quieter and pulls less power than leaving it on all the time
+			m_motor->disable();
+			return;
+		}
+	}
+
 #if EFI_TUNER_STUDIO
 	if (engineConfiguration->debugMode == DBG_ETB_LOGIC) {
 		tsOutputChannels.debugFloatField1 = engine->engineState.targetFromTable;
@@ -642,7 +652,7 @@ struct EtbImpl final : public EtbController {
 static EtbImpl etbControllers[ETB_COUNT];
 
 struct EtbThread final : public PeriodicController<512> {
-	EtbThread() : PeriodicController("ETB", NORMALPRIO + 3, ETB_LOOP_FREQUENCY) {}
+	EtbThread() : PeriodicController("ETB", PRIO_ETB, ETB_LOOP_FREQUENCY) {}
 
 	void PeriodicTask(efitick_t) override {
 		// Simply update all controllers

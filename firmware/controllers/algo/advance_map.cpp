@@ -83,7 +83,7 @@ static angle_t getRunningAdvance(int rpm, float engineLoad DECLARE_ENGINE_PARAME
 
 	// get advance from the separate table for Idle
 	if (CONFIG(useSeparateAdvanceForIdle) && isIdling()) {
-		float idleAdvance = interpolate2d("idleAdvance", rpm, config->idleAdvanceBins, config->idleAdvance);
+		float idleAdvance = interpolate2d(rpm, config->idleAdvanceBins, config->idleAdvance);
 
 		auto [valid, tps] = Sensor::get(SensorType::DriverThrottleIntent);
 		if (valid) {
@@ -146,7 +146,7 @@ angle_t getAdvanceCorrections(int rpm DECLARE_ENGINE_PARAMETER_SUFFIX) {
 static angle_t getCrankingAdvance(int rpm, float engineLoad DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	// get advance from the separate table for Cranking
 	if (CONFIG(useSeparateAdvanceForCranking)) {
-		return interpolate2d("crankingAdvance", rpm, CONFIG(crankingAdvanceBins), CONFIG(crankingAdvance));
+		return interpolate2d(rpm, CONFIG(crankingAdvanceBins), CONFIG(crankingAdvance));
 	}
 
 	// Interpolate the cranking timing angle to the earlier running angle for faster engine start

@@ -171,7 +171,7 @@ void initAlternatorCtrl(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	instance.Start();
 }
 
-// todo: start invoking this method like 'startAuxPins'
+// todo: start invoking this method like 'startVvtControlPins'
 void startAlternatorPin(void) {
 
 }

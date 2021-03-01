@@ -8,7 +8,7 @@
 #include "engine_test_helper.h"
 extern WarningCodeState unitTestWarningCodeState;
 
-TEST(sensors, testNoStartUpWarningsNoSyncronizationTrigger) {
+TEST(trigger, testNoStartUpWarningsNoSyncronizationTrigger) {
 	WITH_ENGINE_TEST_HELPER(TEST_ENGINE);
 	// one tooth does not need synchronization it just counts tooth
 	eth.setTriggerType(TT_ONE PASS_ENGINE_PARAMETER_SUFFIX);
@@ -19,7 +19,7 @@ TEST(sensors, testNoStartUpWarningsNoSyncronizationTrigger) {
 	ASSERT_EQ( 0,  unitTestWarningCodeState.recentWarnings.getCount()) << "warningCounter#testNoStartUpWarningsNoSyncronizationTrigger";
 }
 
-TEST(sensors, testNoStartUpWarnings) {
+TEST(trigger, testNoStartUpWarnings) {
 	WITH_ENGINE_TEST_HELPER(TEST_ENGINE);
 	// for this test we need a trigger with isSynchronizationNeeded=true
 	engineConfiguration->trigger.customTotalToothCount = 3;
@@ -54,7 +54,7 @@ TEST(sensors, testNoStartUpWarnings) {
 	ASSERT_EQ(CUSTOM_SYNC_COUNT_MISMATCH, unitTestWarningCodeState.recentWarnings.get(1));
 }
 
-TEST(sensors, testNoisyInput) {
+TEST(trigger, testNoisyInput) {
 	WITH_ENGINE_TEST_HELPER(TEST_ENGINE);
 
 	ASSERT_EQ( 0,  GET_RPM()) << "testNoisyInput RPM";
@@ -75,14 +75,14 @@ TEST(sensors, testNoisyInput) {
 	ASSERT_EQ(OBD_Crankshaft_Position_Sensor_A_Circuit_Malfunction, unitTestWarningCodeState.recentWarnings.get(1)) << "@0";
 }
 
-TEST(sensors, testCamInput) {
+TEST(trigger, testCamInput) {
 	// setting some weird engine
 	WITH_ENGINE_TEST_HELPER(FORD_ESCORT_GT);
 
 	// changing to 'ONE TOOTH' trigger on CRANK with CAM/VVT
 	setOperationMode(engineConfiguration, FOUR_STROKE_CRANK_SENSOR);
 	engineConfiguration->useOnlyRisingEdgeForTrigger = true;
-	engineConfiguration->vvtMode = VVT_FIRST_HALF;
+	engineConfiguration->vvtMode[0] = VVT_FIRST_HALF;
 	engineConfiguration->vvtOffset = 720;
 	eth.setTriggerType(TT_ONE PASS_ENGINE_PARAMETER_SUFFIX);
 	engineConfiguration->camInputs[0] = GPIOA_10; // we just need to indicate that we have CAM
@@ -107,7 +107,7 @@ TEST(sensors, testCamInput) {
 
 	for (int i = 0; i < 600;i++) {
 		eth.moveTimeForwardUs(MS2US(10));
-		hwHandleVvtCamSignal(TV_FALL, getTimeNowNt() PASS_ENGINE_PARAMETER_SUFFIX);
+		hwHandleVvtCamSignal(TV_FALL, getTimeNowNt(), 0 PASS_ENGINE_PARAMETER_SUFFIX);
 		eth.moveTimeForwardUs(MS2US(40));
 		eth.firePrimaryTriggerRise();
 	}
@@ -121,8 +121,9 @@ TEST(sensors, testNB2CamInput) {
 	WITH_ENGINE_TEST_HELPER(MAZDA_MIATA_2003);
 
 	// this crank trigger would be easier to test, crank shape is less important for this test
-	engineConfiguration->useOnlyRisingEdgeForTrigger = true;
 	eth.setTriggerType(TT_ONE PASS_ENGINE_PARAMETER_SUFFIX);
+
+	engineConfiguration->useOnlyRisingEdgeForTrigger = true;
 
 	ASSERT_EQ( 0,  GET_RPM()) << "testNB2CamInput RPM";
 	for (int i = 0; i < 7;i++) {
@@ -143,21 +144,21 @@ TEST(sensors, testNB2CamInput) {
 	eth.moveTimeForwardUs(MS2US(3)); // shifting VVT phase a few angles
 
 	// this would be ignored since we only consume the other kind of fronts here
-	hwHandleVvtCamSignal(TV_FALL, getTimeNowNt() PASS_ENGINE_PARAMETER_SUFFIX);
+	hwHandleVvtCamSignal(TV_FALL, getTimeNowNt(), 0 PASS_ENGINE_PARAMETER_SUFFIX);
 	eth.moveTimeForwardUs(MS2US(20));
 	// this would be be first VVT signal - gap duration would be calculated against 'DEEP_IN_THE_PAST_SECONDS' initial value
-	hwHandleVvtCamSignal(TV_RISE, getTimeNowNt() PASS_ENGINE_PARAMETER_SUFFIX);
+	hwHandleVvtCamSignal(TV_RISE, getTimeNowNt(), 0 PASS_ENGINE_PARAMETER_SUFFIX);
 
 	eth.moveTimeForwardUs(MS2US(20));
 	// this second important front would give us first real VVT gap duration
-	hwHandleVvtCamSignal(TV_RISE, getTimeNowNt() PASS_ENGINE_PARAMETER_SUFFIX);
+	hwHandleVvtCamSignal(TV_RISE, getTimeNowNt(), 0 PASS_ENGINE_PARAMETER_SUFFIX);
 
 	ASSERT_FLOAT_EQ(0, engine->triggerCentral.getVVTPosition());
 	ASSERT_EQ(totalRevolutionCountBeforeVvtSync, engine->triggerCentral.triggerState.getTotalRevolutionCounter());
 
 	eth.moveTimeForwardUs(MS2US(130));
 	// this third important front would give us first comparison between two real gaps
-	hwHandleVvtCamSignal(TV_RISE, getTimeNowNt() PASS_ENGINE_PARAMETER_SUFFIX);
+	hwHandleVvtCamSignal(TV_RISE, getTimeNowNt(), 0 PASS_ENGINE_PARAMETER_SUFFIX);
 
 	ASSERT_NEAR(-67.6 - 720 - 720, engine->triggerCentral.getVVTPosition(), EPS3D);
 	// actually position based on VVT!

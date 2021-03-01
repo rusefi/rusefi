@@ -214,8 +214,8 @@ static void setFsioDigitalInputPin(const char *indexStr, const char *pinName) {
 
 static void setFsioPidOutputPin(const char *indexStr, const char *pinName) {
 	int index = atoi(indexStr) - 1;
-	if (index < 0 || index >= AUX_PID_COUNT) {
-		scheduleMsg(logger, "invalid AUX index: %d", index);
+	if (index < 0 || index >= CAM_INPUTS_COUNT) {
+		scheduleMsg(logger, "invalid VVT index: %d", index);
 		return;
 	}
 	brain_pin_e pin = parseBrainPin(pinName);
@@ -225,7 +225,7 @@ static void setFsioPidOutputPin(const char *indexStr, const char *pinName) {
 		return;
 	}
 	engineConfiguration->auxPidPins[index] = pin;
-	scheduleMsg(logger, "FSIO aux pin #%d [%s]", (index + 1), hwPortname(pin));
+	scheduleMsg(logger, "VVT pid pin #%d [%s]", (index + 1), hwPortname(pin));
 }
 
 static void showFsioInfo(void);
@@ -337,7 +337,7 @@ float getFsioOutputValue(int index DECLARE_ENGINE_PARAMETER_SUFFIX) {
 		warning(CUSTOM_NO_FSIO, "no FSIO for #%d %s", index + 1, hwPortname(CONFIG(fsioOutputPins)[index]));
 		return NAN;
 	} else {
-		return calc.getValue2(engine->fsioState.fsioLastValue[index], state.fsioLogics[index] PASS_ENGINE_PARAMETER_SUFFIX);
+		return calc.evaluate(engine->fsioState.fsioLastValue[index], state.fsioLogics[index] PASS_ENGINE_PARAMETER_SUFFIX);
 	}
 }
 
@@ -404,7 +404,7 @@ static void setPinState(const char * msg, OutputPin *pin, LEElement *element DEC
 	if (!element) {
 		warning(CUSTOM_FSIO_INVALID_EXPRESSION, "invalid expression for %s", msg);
 	} else {
-		int value = (int)calc.getValue2(pin->getLogicValue(), element PASS_ENGINE_PARAMETER_SUFFIX);
+		int value = (int)calc.evaluate(pin->getLogicValue(), element PASS_ENGINE_PARAMETER_SUFFIX);
 		if (pin->isInitialized() && value != pin->getLogicValue()) {
 
 			for (int i = 0;i < calc.currentCalculationLogPosition;i++) {
@@ -446,7 +446,7 @@ static bool updateValueOrWarning(int humanIndex, const char *msg, float *value D
 		return false;
 	} else {
 		float beforeValue = *value;
-		*value = calc.getValue2(beforeValue, element PASS_ENGINE_PARAMETER_SUFFIX);
+		*value = calc.evaluate(beforeValue, element PASS_ENGINE_PARAMETER_SUFFIX);
 		// floating '==' comparison without EPS seems fine here
 		return (beforeValue != *value);
 	}
@@ -559,9 +559,9 @@ static void showFsio(const char *msg, LEElement *element) {
 #if EFI_PROD_CODE || EFI_SIMULATOR
 	if (msg != NULL)
 		scheduleMsg(logger, "%s:", msg);
-	while (element != NULL) {
+	while (element->action != LE_METHOD_RETURN) {
 		scheduleMsg(logger, "action %d: fValue=%.2f", element->action, element->fValue);
-		element = element->next;
+		element++;
 	}
 	scheduleMsg(logger, "<end>");
 #endif
@@ -575,10 +575,10 @@ static void showFsioInfo(void) {
 	showFsio("fan", radiatorFanLogic);
 	showFsio("alt", alternatorLogic);
 
-	for (int i = 0; i < AUX_PID_COUNT ; i++) {
+	for (int i = 0; i < CAM_INPUTS_COUNT ; i++) {
 		brain_pin_e pin = engineConfiguration->auxPidPins[i];
 		if (isBrainPinValid(pin)) {
-			scheduleMsg(logger, "FSIO aux #%d [%s]", (i + 1),
+			scheduleMsg(logger, "VVT pid #%d [%s]", (i + 1),
 					hwPortname(pin));
 
 		}
@@ -666,7 +666,7 @@ static void rpnEval(char *line) {
 	if (e == NULL) {
 		scheduleMsg(logger, "parsing failed");
 	} else {
-		float result = evalCalc.getValue2(0, e PASS_ENGINE_PARAMETER_SUFFIX);
+		float result = evalCalc.evaluate(0, e PASS_ENGINE_PARAMETER_SUFFIX);
 		scheduleMsg(logger, "Evaluate result: %.2f", result);
 	}
 #endif
@@ -781,7 +781,7 @@ void runHardcodedFsio(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	if (isBrainPinValid(CONFIG(fanPin))) {
 		auto clt = Sensor::get(SensorType::Clt);
 		enginePins.fanRelay.setValue(!clt.Valid || (enginePins.fanRelay.getLogicValue() && (clt.Value > engineConfiguration->fanOffTemperature)) || 
-			(clt.Value > engineConfiguration->fanOnTemperature) || engine->isCltBroken);
+			(clt.Value > engineConfiguration->fanOnTemperature) || !clt.Valid);
 	}
 	// see AC_RELAY_LOGIC
 	if (isBrainPinValid(CONFIG(acRelayPin))) {

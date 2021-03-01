@@ -1,8 +1,7 @@
 # List of all the board related files.
-BOARDSRC = $(CHIBIOS)/os/hal/boards/ST_NUCLEO144_H743ZI/board.c
 
-# Required include directories
-BOARDINC = $(CHIBIOS)/os/hal/boards/ST_NUCLEO144_H743ZI
+# Shared variables
+ALLCPPSRC += $(PROJECT_DIR)/config/boards/nucleo_h743/board_configuration.cpp
 
 # Shared variables
 ALLCSRC   += $(BOARDSRC)

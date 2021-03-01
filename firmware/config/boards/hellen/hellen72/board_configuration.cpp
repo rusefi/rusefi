@@ -80,9 +80,10 @@ static void setupVbatt() {
 	// 4.7k high side/4.7k low side = 2.0 ratio divider
 	engineConfiguration->analogInputDividerCoefficient = 2.0f;
 
-	// set vbatt_divider 4.0
-	// 10k high side/3.333k low side
-	engineConfiguration->vbattDividerCoeff = (10.0f + 10.0f / 3.0f) / (10.0f / 3.0f);	// = 4
+	// set vbatt_divider 5.835
+	// 33k / 6.8k
+	engineConfiguration->vbattDividerCoeff = (33 + 6.8) / 6.8; // 5.835
+
 	// pin input +12 from Main Relay
 	engineConfiguration->vbattAdcChannel = EFI_ADC_NONE; // EFI_ADC_5 on ADC3
 
@@ -103,12 +104,12 @@ static void setupDefaultSensorInputs() {
 	engineConfiguration->mafAdcChannel = EFI_ADC_10;
 	engineConfiguration->map.sensor.hwChannel = EFI_ADC_11;
 
-	engineConfiguration->afr.hwChannel = EFI_ADC_12;
+	engineConfiguration->afr.hwChannel = EFI_ADC_1;
 
-	engineConfiguration->clt.adcChannel = EFI_ADC_0;
+	engineConfiguration->clt.adcChannel = EFI_ADC_12;
 	engineConfiguration->clt.config.bias_resistor = 4700;
 
-	engineConfiguration->iat.adcChannel = EFI_ADC_1;
+	engineConfiguration->iat.adcChannel = EFI_ADC_13;
 	engineConfiguration->iat.config.bias_resistor = 4700;
 
 	engineConfiguration->auxTempSensor1.adcChannel = EFI_ADC_NONE;
@@ -149,6 +150,7 @@ void setBoardConfigurationOverrides(void) {
 	engineConfiguration->fuelPumpPin = GPIOG_2;	// OUT_IO9
 	engineConfiguration->idle.solenoidPin = GPIOD_14;	// OUT_PWM5
 	engineConfiguration->fanPin = GPIOD_12;	// OUT_PWM8
+	engineConfiguration->mainRelayPin = GPIOI_2;	// OUT_LOW3
 
 	// "required" hardware is done - set some reasonable defaults
 	setupDefaultSensorInputs();
@@ -167,9 +169,6 @@ void setBoardConfigurationOverrides(void) {
 	engineConfiguration->injectionMode = IM_SIMULTANEOUS;//IM_BATCH;// IM_SEQUENTIAL;
 }
 
-void setAdcChannelOverrides(void) {
-}
-
 /**
  * @brief   Board-specific SD card configuration code overrides. Needed by bootloader code.
  * @todo    Add your board-specific code, if any.
@@ -181,5 +180,5 @@ void setSdCardConfigurationOverrides(void) {
 	engineConfiguration->spi2sckPin = GPIOB_13;
 	engineConfiguration->sdCardCsPin = GPIOB_12;
 	CONFIG(is_enabled_spi_2) = true;
-//	engineConfiguration->isSdCardEnabled = true;
+	engineConfiguration->isSdCardEnabled = true;
 }

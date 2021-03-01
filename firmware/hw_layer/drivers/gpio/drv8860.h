@@ -21,8 +21,10 @@
 #define DRV8860_POLL_INTERVAL_MS	500
 
 struct drv8860_config {
+#if HAL_USE_SPI
 	SPIDriver		*spi_bus;
 	SPIConfig	spi_config;
+#endif
 	struct {
 		ioportid_t		port;
 		uint_fast8_t	pad;

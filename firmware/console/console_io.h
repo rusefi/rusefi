@@ -21,7 +21,6 @@ typedef void (*CommandHandler)(char *);
 #include "datalogging.h"
 
 
-void consolePutChar(int x);
 void consoleOutputBuffer(const uint8_t *buf, int size);
 void startConsole(Logging *sharedLogger, CommandHandler console_line_callback_p);
 void onDataArrived(void);

@@ -47,10 +47,10 @@
 #include "alternator_controller.h"
 #include "fuel_math.h"
 #include "settings.h"
-#include "aux_pid.h"
 #include "spark_logic.h"
 #include "aux_valves.h"
 #include "accelerometer.h"
+#include "actuators/vvt_pid.h"
 #include "perf_trace.h"
 #include "boost_control.h"
 #include "launch_control.h"
@@ -226,9 +226,12 @@ static void doPeriodicSlowCallback(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 
 	efitick_t nowNt = getTimeNowNt();
 	for (int bankIndex = 0; bankIndex < BANKS_COUNT; bankIndex++) {
-		if (nowNt - engine->triggerCentral.vvtSyncTimeNt[bankIndex] >= NT_PER_SECOND) {
-			// loss of VVT sync
-			engine->triggerCentral.vvtSyncTimeNt[bankIndex] = 0;
+		for (int camIndex = 0; camIndex < CAMS_PER_BANK; camIndex++) {
+			if (nowNt - engine->triggerCentral.vvtSyncTimeNt[bankIndex][camIndex] >= NT_PER_SECOND) {
+				// loss of VVT sync
+				engine->triggerCentral.vvtSyncTimeNt[bankIndex][camIndex] = 0;
+
+			}
 		}
 	}
 
@@ -711,10 +714,10 @@ void initEngineContoller(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX) 
  * UNUSED_SIZE constants.
  */
 #ifndef RAM_UNUSED_SIZE
-#define RAM_UNUSED_SIZE 3300
+#define RAM_UNUSED_SIZE 3050
 #endif
 #ifndef CCM_UNUSED_SIZE
-#define CCM_UNUSED_SIZE 2800
+#define CCM_UNUSED_SIZE 2000
 #endif
 static char UNUSED_RAM_SIZE[RAM_UNUSED_SIZE];
 static char UNUSED_CCM_SIZE[CCM_UNUSED_SIZE] CCM_OPTIONAL;

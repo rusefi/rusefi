@@ -70,6 +70,8 @@ protected:
 class VvtTriggerConfiguration final : public TriggerConfiguration {
 public:
 	VvtTriggerConfiguration() : TriggerConfiguration("TRG ") {}
+	// todo: is it possible to make 'index' constructor argument?
+	int index = 0;
 
 protected:
 	bool isUseOnlyRisingEdgeForTrigger() const override;
@@ -79,7 +81,8 @@ protected:
 
 class Engine final : public TriggerStateListener {
 public:
-	explicit Engine(persistent_config_s *config);
+	DECLARE_ENGINE_PTR;
+
 	Engine();
 	bool isPwmEnabled = true;
 	int triggerActivitySecond = 0;
@@ -94,7 +97,7 @@ public:
 	GearControllerBase *gearController;
 
 	PrimaryTriggerConfiguration primaryTriggerConfiguration;
-	VvtTriggerConfiguration vvtTriggerConfiguration;
+	VvtTriggerConfiguration vvtTriggerConfiguration[CAMS_PER_BANK];
 	efitick_t startStopStateLastPushTime = 0;
 
 #if EFI_SHAFT_POSITION_INPUT
@@ -105,7 +108,7 @@ public:
 	void OnTriggerSynchronizationLost() override;
 #endif
 
-	void setConfig(persistent_config_s *config);
+	void setConfig(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 	injection_mode_e getCurrentInjectionMode(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 
 	LocalVersionHolder versionForConfigurationListeners;
@@ -187,7 +190,6 @@ public:
 	 */
 	bool isAlternatorControlEnabled = false;
 
-	bool isCltBroken = false;
 	bool slowCallBackWasInvoked = false;
 
 	/**
@@ -197,12 +199,6 @@ public:
 	efitimems64_t callFromPitStopEndTime = 0;
 
 	RpmCalculator rpmCalculator;
-	persistent_config_s *config = nullptr;
-	/**
-	 * we use funny unique name to make sure that compiler is not confused between global variable and class member
-	 * todo: this variable is probably a sign of some problem, should we even have it?
-	 */
-	engine_configuration_s *engineConfigurationPtr = nullptr;
 
 	/**
 	 * this is about 'stopengine' command
@@ -322,13 +318,6 @@ public:
 	SensorsState sensors;
 	efitick_t lastTriggerToothEventTimeNt = 0;
 	efitick_t mainRelayBenchStartNt = 0;
-
-
-	/**
-	 * This coefficient translates ADC value directly into voltage adjusted according to
-	 * voltage divider configuration with just one multiplication. This is a future (?) performance optimization.
-	 */
-	float adcToVoltageInputDividerCoefficient = NAN;
 
 	/**
 	 * This field is true if we are in 'cylinder cleanup' state right now

@@ -163,7 +163,7 @@ void EngineState::periodicFastCallback(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 
 	cltTimingCorrection = getCltTimingCorrection(PASS_ENGINE_PARAMETER_SIGNATURE);
 
-	engineNoiseHipLevel = interpolate2d("knock", rpm, engineConfiguration->knockNoiseRpmBins,
+	engineNoiseHipLevel = interpolate2d(rpm, engineConfiguration->knockNoiseRpmBins,
 					engineConfiguration->knockNoise);
 
 	baroCorrection = getBaroCorrection(PASS_ENGINE_PARAMETER_SIGNATURE);
@@ -283,7 +283,7 @@ bool VvtTriggerConfiguration::isUseOnlyRisingEdgeForTrigger() const {
 }
 
 trigger_type_e VvtTriggerConfiguration::getType() const {
-	return engine->triggerCentral.vvtTriggerType;
+	return engine->triggerCentral.vvtTriggerType[index];
 }
 
 bool VvtTriggerConfiguration::isVerboseTriggerSynchDetails() const {

@@ -18,6 +18,7 @@
 #include "tunerstudio_io.h"
 #include "bluetooth.h"
 #include "engine_configuration.h"
+#include "thread_priority.h"
 
 #if EFI_BLUETOOTH_SETUP
 
@@ -124,18 +125,18 @@ static void runCommands() {
 			break;
 
 		// send current command
-		sr5WriteData(tsChannel, (uint8_t *)commands[cmdIdx], strlen(commands[cmdIdx]));
+		tsChannel->write((uint8_t*)commands[cmdIdx], strlen(commands[cmdIdx]));
 		
 		// waiting for an answer
 		bool wasAnswer = false;
-		if (sr5ReadDataTimeout(tsChannel, buffer, 2, btModuleTimeout) == 2) {
+		if (tsChannel->readTimeout(buffer, 2, btModuleTimeout) == 2) {
 			wasAnswer = (buffer[0] == 'O' && buffer[1] == 'K') || 
 				(buffer[0] == '+' && (buffer[1] >= 'A' && buffer[1] <= 'Z'));
 		}
 
 		// wait 1 second and skip all remaining response bytes from the bluetooth module
 		while (true) {
-			if (sr5ReadDataTimeout(tsChannel, buffer, 1, btModuleTimeout) < 1)
+			if (tsChannel->readTimeout(buffer, 1, btModuleTimeout) < 1)
 				break;
 		}
 		
@@ -289,7 +290,7 @@ void bluetoothStart(ts_channel_s *btChan, bluetooth_module_e moduleType, const c
    	commands[numCommands++] = cmdPin;
    	
    	// create a thread to execute these commands later
-   	btThread = chThdCreateStatic(btThreadStack, sizeof(btThreadStack), NORMALPRIO, (tfunc_t)btThreadEntryPoint, NULL);
+   	btThread = chThdCreateStatic(btThreadStack, sizeof(btThreadStack), PRIO_CONSOLE, (tfunc_t)btThreadEntryPoint, NULL);
    	
 	btProcessIsStarted = true;
 }

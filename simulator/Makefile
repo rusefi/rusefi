@@ -17,6 +17,8 @@ CHIBIOS = ../firmware/ChibiOS
 RULESPATH = $(CHIBIOS)/os/common/startup/SIMIA32/compilers/GCC
 RULESFILE = $(RULESPATH)/rules.mk
 
+PROJECT_CPU=simulator
+
 include ../firmware/rusefi.mk
 RULESFILE = ../firmware/rusefi_rules.mk
 
@@ -27,8 +29,8 @@ CONFDIR = .
 # Compiler options here.
 ifeq ($(USE_OPT),)
 # this config if debugging is needed, but the binary is about 50M
-#  USE_OPT = -Wall     -ggdb     -Werror-implicit-function-declaration -Werror -Wno-error=pointer-sign -Wno-error=unused-function -Wno-error=unused-variable -Wno-error=sign-compare -Wno-error=unused-parameter -Wno-error=missing-field-initializers -Wno-error=write-strings -Wno-error=strict-aliasing
-#  USE_OPT = -Wall -O0 -ggdb -g3 -Wno-error=implicit-fallthrough -Werror-implicit-function-declaration -Werror -Wno-error=pointer-sign -Wno-error=unused-function -Wno-error=unused-variable -Wno-error=sign-compare -Wno-error=unused-parameter -Wno-error=missing-field-initializers -Wno-error=write-strings
+#  USE_OPT = -Wall     -ggdb    -Werror-implicit-function-declaration -Werror -Wno-error=pointer-sign -Wno-error=unused-function -Wno-error=unused-variable -Wno-error=sign-compare -Wno-error=unused-parameter -Wno-error=missing-field-initializers -Wno-error=write-strings -Wno-error=strict-aliasing
+#  USE_OPT = -Wall -O0 -ggdb -g -Wno-error=implicit-fallthrough -Werror-implicit-function-declaration -Werror -Wno-error=pointer-sign -Wno-error=unused-function -Wno-error=unused-variable -Wno-error=sign-compare -Wno-error=unused-parameter -Wno-error=missing-field-initializers -Wno-error=write-strings
 # this config producec a smaller binary file
 # 7.3 compiler would want -Wno-error=implicit-fallthrough while 6.4 does not know about it
 # see https://github.com/rusefi/rusefi/issues/517
@@ -83,7 +85,7 @@ endif
 # If enabled, this option makes the build process faster by not compiling
 # modules not used in the current configuration.
 ifeq ($(USE_SMART_BUILD),)
-  USE_SMART_BUILD = yes
+  USE_SMART_BUILD = no
 endif
 
 #

@@ -262,4 +262,17 @@ uintptr_t getFlashAddrSecondCopy() {
 	return nullptr;
 }
 
+void portInitAdc() {
+	// Init slow ADC
+	adcStart(&ADCD1, NULL);
+
+	// Init fast ADC (MAP sensor)
+	adcStart(&ADCD2, NULL);
+}
+
+float getMcuTemperature() {
+	// TODO: implement me!
+	return 0;
+}
+
 #endif /* EFI_PROD_CODE */

@@ -45,6 +45,7 @@ fuel_Map3D_t fuelPhaseMap("fl ph");
 extern fuel_Map3D_t veMap;
 extern lambda_Map3D_t lambdaMap;
 extern baroCorr_Map3D_t baroCorrMap;
+mapEstimate_Map3D_t mapEstimationTable("map est");
 
 #if EFI_ENGINE_CONTROL
 
@@ -70,7 +71,7 @@ DISPLAY(DISPLAY_IF(isCrankingState)) float getCrankingFuel3(
 	 * Cranking fuel changes over time
 	 */
 	DISPLAY_TEXT(Duration_coef);
-	engine->engineState.DISPLAY_PREFIX(cranking).DISPLAY_FIELD(durationCoefficient) = interpolate2d("crank", revolutionCounterSinceStart, config->crankingCycleBins,
+	engine->engineState.DISPLAY_PREFIX(cranking).DISPLAY_FIELD(durationCoefficient) = interpolate2d(revolutionCounterSinceStart, config->crankingCycleBins,
 			config->crankingCycleCoef);
 	DISPLAY_TEXT(eol);
 
@@ -81,21 +82,21 @@ DISPLAY(DISPLAY_IF(isCrankingState)) float getCrankingFuel3(
 	auto clt = Sensor::get(SensorType::Clt);
 	DISPLAY_TEXT(Coolant_coef);
 	engine->engineState.DISPLAY_PREFIX(cranking).DISPLAY_FIELD(coolantTemperatureCoefficient) =
-		interpolate2d("crank", clt.value_or(20), config->crankingFuelBins, config->crankingFuelCoef);
+		interpolate2d(clt.value_or(20), config->crankingFuelBins, config->crankingFuelCoef);
 	DISPLAY_SENSOR(CLT);
 	DISPLAY_TEXT(eol);
 
 	auto tps = Sensor::get(SensorType::DriverThrottleIntent);
 
 	DISPLAY_TEXT(TPS_coef);
-	engine->engineState.DISPLAY_PREFIX(cranking).DISPLAY_FIELD(tpsCoefficient) = tps.Valid ? 1 : interpolate2d("crankTps", tps.Value, engineConfiguration->crankingTpsBins,
+	engine->engineState.DISPLAY_PREFIX(cranking).DISPLAY_FIELD(tpsCoefficient) = tps.Valid ? 1 : interpolate2d(tps.Value, engineConfiguration->crankingTpsBins,
 			engineConfiguration->crankingTpsCoef);
 
 
 	/*
 	engine->engineState.DISPLAY_PREFIX(cranking).DISPLAY_FIELD(tpsCoefficient) =
 		tps.Valid 
-		? interpolate2d("crankTps", tps.Value, engineConfiguration->crankingTpsBins, engineConfiguration->crankingTpsCoef)
+		? interpolate2d(tps.Value, engineConfiguration->crankingTpsBins, engineConfiguration->crankingTpsCoef)
 		: 1; // in case of failed TPS, don't correct.*/
 	DISPLAY_SENSOR(TPS);
 	DISPLAY_TEXT(eol);
@@ -160,7 +161,7 @@ floatms_t getRunningFuel(floatms_t baseFuel DECLARE_ENGINE_PARAMETER_SUFFIX) {
 
 /* DISPLAY_ENDIF */
 
-static SpeedDensityAirmass sdAirmass(veMap);
+static SpeedDensityAirmass sdAirmass(veMap, mapEstimationTable);
 static MafAirmass mafAirmass(veMap);
 static AlphaNAirmass alphaNAirmass(veMap);
 
@@ -350,6 +351,8 @@ void initFuelMap(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	ENGINE(fuelComputer) = &fuelComputer;
 	ENGINE(injectorModel) = &injectorModel;
 
+	mapEstimationTable.init(config->mapEstimateTable, config->mapEstimateTpsBins, config->mapEstimateRpmBins);
+
 #if (IGN_LOAD_COUNT == FUEL_LOAD_COUNT) && (IGN_RPM_COUNT == FUEL_RPM_COUNT)
 	fuelPhaseMap.init(config->injectionPhase, config->injPhaseLoadBins, config->injPhaseRpmBins);
 #endif /* (IGN_LOAD_COUNT == FUEL_LOAD_COUNT) && (IGN_RPM_COUNT == FUEL_RPM_COUNT) */
@@ -364,7 +367,7 @@ float getCltFuelCorrection(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	if (!valid)
 		return 1; // this error should be already reported somewhere else, let's just handle it
 
-	return interpolate2d("cltf", clt, config->cltFuelCorrBins, config->cltFuelCorr);
+	return interpolate2d(clt, config->cltFuelCorrBins, config->cltFuelCorr);
 }
 
 angle_t getCltTimingCorrection(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
@@ -373,7 +376,7 @@ angle_t getCltTimingCorrection(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	if (!valid)
 		return 0; // this error should be already reported somewhere else, let's just handle it
 
-	return interpolate2d("timc", clt, engineConfiguration->cltTimingBins, engineConfiguration->cltTimingExtra);
+	return interpolate2d(clt, engineConfiguration->cltTimingBins, engineConfiguration->cltTimingExtra);
 }
 
 float getIatFuelCorrection(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
@@ -382,7 +385,7 @@ float getIatFuelCorrection(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	if (!valid)
 		return 1; // this error should be already reported somewhere else, let's just handle it
 
-	return interpolate2d("iatc", iat, config->iatFuelCorrBins, config->iatFuelCorr);
+	return interpolate2d(iat, config->iatFuelCorrBins, config->iatFuelCorr);
 }
 
 /**
@@ -437,12 +440,16 @@ float getFuelCutOffCorrection(efitick_t nowNt, int rpm DECLARE_ENGINE_PARAMETER_
 }
 
 float getBaroCorrection(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
-	if (hasBaroSensor(PASS_ENGINE_PARAMETER_SIGNATURE)) {
-		float correction = baroCorrMap.getValue(GET_RPM(), getBaroPressure(PASS_ENGINE_PARAMETER_SIGNATURE));
+	if (Sensor::hasSensor(SensorType::BarometricPressure)) {
+		// Default to 1atm if failed
+		float pressure = Sensor::get(SensorType::BarometricPressure).value_or(101.325f);
+
+		float correction = baroCorrMap.getValue(GET_RPM(), pressure);
 		if (cisnan(correction) || correction < 0.01) {
 			warning(OBD_Barometric_Press_Circ_Range_Perf, "Invalid baro correction %f", correction);
 			return 1;
 		}
+
 		return correction;
 	} else {
 		return 1;

@@ -113,7 +113,7 @@ public class ReaderState {
 
         int multPosition = customSize.indexOf(MULT_TOKEN);
         if (multPosition != -1) {
-            String firstPart = customSize.substring(0, multPosition);
+            String firstPart = customSize.substring(0, multPosition).trim();
             int first;
             try {
                 first = Integer.parseInt(firstPart);

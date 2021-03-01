@@ -54,7 +54,8 @@ bool isLogFile(const char *fileName) {
 }
 #endif // EFI_FILE_LOGGING || EFI_SIMULATOR || EFI_UNIT_TEST
 
-#if EFI_FILE_LOGGING || EFI_SIMULATOR
+// Enable when logging is enabled, but not USB mass storage
+#if (EFI_FILE_LOGGING && !HAL_USE_USB_MSD) || EFI_SIMULATOR
 #include "mmc_card.h"
 
 #if EFI_SIMULATOR
@@ -92,7 +93,7 @@ static void setFileEntry(uint8_t *buffer, int index, const char *fileName,
 	*(uint32_t*) (&buffer[offset + 28]) = fileSize;
 }
 
-void handleTsR(ts_channel_s *tsChannel, char *input) {
+void handleTsR(TsChannelBase* tsChannel, char *input) {
 #if EFI_SIMULATOR
 	printf("TS_SD r %d\n", input[1]);
 #endif // EFI_SIMULATOR
@@ -102,7 +103,7 @@ void handleTsR(ts_channel_s *tsChannel, char *input) {
 	if (input[0] == 0 && input[1] == TS_SD_PROTOCOL_RTC) {
 		scheduleMsg(&sharedLogger, "TS_SD: RTC read command");
 		memset(buffer, 0, 9);
-		sr5SendResponse(tsChannel, TS_CRC, buffer, 9);
+		tsChannel->sendResponse(TS_CRC, buffer, 9);
 
 	} else if (input[0] == 0 && input[1] == TS_SD_PROTOCOL_FETCH_INFO) {
 		uint16_t length = SWAP_UINT16(data16[2]);
@@ -124,7 +125,7 @@ void handleTsR(ts_channel_s *tsChannel, char *input) {
 			buffer[8] = 0;
 			buffer[9] = 1; // number of files
 
-			sr5SendResponse(tsChannel, TS_CRC, buffer, 16);
+			tsChannel->sendResponse(TS_CRC, buffer, 16);
 		} else if (length == DIR_RESPONSE_BUFFER_SIZE) {
 			// SD read directory command
 			memset(buffer, 0, DIR_RESPONSE_BUFFER_SIZE);
@@ -163,12 +164,10 @@ void handleTsR(ts_channel_s *tsChannel, char *input) {
 #endif // EFI_SIMULATOR
 
 #if EFI_FILE_LOGGING
-			LOCK_SD_SPI;
 			DIR dir;
 			FRESULT res = f_opendir(&dir, ROOT_DIR);
 			if (res != FR_OK) {
 				scheduleMsg(&sharedLogger, "Error opening directory");
-				UNLOCK_SD_SPI;
 			} else {
 				int index = 0;
 				while (true) {
@@ -202,12 +201,11 @@ void handleTsR(ts_channel_s *tsChannel, char *input) {
 					}
 
 				}
-				UNLOCK_SD_SPI;
 			}
 
 #endif // EFI_FILE_LOGGING
 
-			sr5SendResponse(tsChannel, TS_CRC, buffer,
+			tsChannel->sendResponse(TS_CRC, buffer,
 					DIR_RESPONSE_BUFFER_SIZE);
 		}
 	} else if (input[0] == 0 && input[1] == TS_SD_PROTOCOL_FETCH_DATA) {
@@ -226,19 +224,17 @@ void handleTsR(ts_channel_s *tsChannel, char *input) {
 #endif // EFI_SIMULATOR
 
 #if EFI_FILE_LOGGING
-		LOCK_SD_SPI;
 		got = 0;
 		f_read(&uploading, (void*) &buffer[2], TRANSFER_SIZE, (UINT*) &got);
-		UNLOCK_SD_SPI;
 #endif // EFI_FILE_LOGGING
 
-		sr5SendResponse(tsChannel, TS_CRC, buffer, 2 + got);
+		tsChannel->sendResponse(TS_CRC, buffer, 2 + got);
 	} else {
 		scheduleMsg(&sharedLogger, "TS_SD: unexpected r");
 	}
 }
 
-void handleTsW(ts_channel_s *tsChannel, char *input) {
+void handleTsW(TsChannelBase* tsChannel, char *input) {
 	const uint16_t *data16 = reinterpret_cast<uint16_t*>(input);
 
 #if EFI_SIMULATOR
@@ -280,7 +276,6 @@ void handleTsW(ts_channel_s *tsChannel, char *input) {
 #endif // EFI_SIMULATOR
 
 #if EFI_FILE_LOGGING
-			LOCK_SD_SPI;
 			DIR dir;
 			FRESULT res = f_opendir(&dir, ROOT_DIR);
 			if (res != FR_OK) {
@@ -303,7 +298,6 @@ void handleTsW(ts_channel_s *tsChannel, char *input) {
 					}
 				}
 			}
-			UNLOCK_SD_SPI;
 #endif // EFI_FILE_LOGGING
 
 			sendOkResponse(tsChannel, TS_CRC);
@@ -339,14 +333,11 @@ void handleTsW(ts_channel_s *tsChannel, char *input) {
 #endif // EFI_SIMULATOR
 
 #if EFI_FILE_LOGGING
-			LOCK_SD_SPI;
-
 			DIR dir;
 			FRESULT res = f_opendir(&dir, ROOT_DIR);
 
 			if (res != FR_OK) {
 				scheduleMsg(&sharedLogger, "Error opening directory");
-				UNLOCK_SD_SPI;
 			} else {
 				memset(&uploading, 0, sizeof(FIL));			// clear the memory
 				while (true) {
@@ -365,7 +356,6 @@ void handleTsW(ts_channel_s *tsChannel, char *input) {
 						}
 					}
 				}
-				UNLOCK_SD_SPI;
 			}
 
 #endif // EFI_FILE_LOGGING
@@ -378,4 +368,4 @@ void handleTsW(ts_channel_s *tsChannel, char *input) {
 	}
 }
 
-#endif // EFI_FILE_LOGGING
+#endif // (EFI_FILE_LOGGING && !HAL_USE_USB_MSD)

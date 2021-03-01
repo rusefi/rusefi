@@ -71,7 +71,6 @@ void removeChannel(const char *name, adc_channel_e setting);
 
 #define getAdcValue(msg, hwChannel) getInternalAdcValue(msg, hwChannel)
 
-// todo: migrate to adcToVoltageInputDividerCoefficient
 #define adcToVoltsDivided(adc) (adcToVolts(adc) * engineConfiguration->analogInputDividerCoefficient)
 
 #else

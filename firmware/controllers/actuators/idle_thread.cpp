@@ -202,7 +202,7 @@ int IdleController::getTargetRpm(float clt) const {
 
 	float fsioBump = engine->fsioState.fsioIdleTargetRPMAdjustment;
 
-	return fsioBump + interpolate2d("cltRpm", clt, CONFIG(cltIdleRpmBins), CONFIG(cltIdleRpm));
+	return fsioBump + interpolate2d(clt, CONFIG(cltIdleRpmBins), CONFIG(cltIdleRpm));
 }
 
 IIdleController::Phase IdleController::determinePhase(int rpm, int targetRpm, SensorResult tps) const {
@@ -233,13 +233,13 @@ IIdleController::Phase IdleController::determinePhase(int rpm, int targetRpm, Se
 float IdleController::getCrankingOpenLoop(float clt) const {
 	return 
 		CONFIG(crankingIACposition)		// Base cranking position (cranking page)
-		 * interpolate2d("cltCrankingT", clt, config->cltCrankingCorrBins, config->cltCrankingCorr);
+		 * interpolate2d(clt, config->cltCrankingCorrBins, config->cltCrankingCorr);
 }
 
 float IdleController::getRunningOpenLoop(float clt, SensorResult tps) const {
 	float running =
 		CONFIG(manIdlePosition)		// Base idle position (slider)
-		* interpolate2d("cltT", clt, config->cltIdleCorrBins, config->cltIdleCorr);
+		* interpolate2d(clt, config->cltIdleCorrBins, config->cltIdleCorr);
 
 	// Now we bump it by the AC/fan amount if necessary
 	running += engine->acSwitchState ? CONFIG(acIdleExtraOffset) : 0;
@@ -429,7 +429,7 @@ static percent_t automaticIdleController(float tpsPos, float rpm, int targetRpm,
 		engine->engineState.idle.idleState = PID_UPPER;
 		const auto [cltValid, clt] = Sensor::get(SensorType::Clt);
 		if (CONFIG(useIacTableForCoasting) && cltValid) {
-			percent_t iacPosForCoasting = interpolate2d("iacCoasting", clt, CONFIG(iacCoastingBins), CONFIG(iacCoasting));
+			percent_t iacPosForCoasting = interpolate2d(clt, CONFIG(iacCoastingBins), CONFIG(iacCoasting));
 			newValue = interpolateClamped(idlePidLowerRpm, newValue, idlePidLowerRpm + CONFIG(idlePidRpmUpperLimit), iacPosForCoasting, rpm);
 		} else {
 			// Well, just leave it as is, without PID regulation...
@@ -441,7 +441,12 @@ static percent_t automaticIdleController(float tpsPos, float rpm, int targetRpm,
 }
 
 	float IdleController::getIdlePosition() {
-		efiAssert(OBD_PCM_Processor_Fault, engineConfiguration != NULL, "engineConfiguration pointer", 0);
+		// Simplify hardware CI: we borrow the idle valve controller as a PWM source for various stimulation tasks
+		// The logic in this function is solidly unit tested, so it's not necessary to re-test the particulars on real hardware.
+		#ifdef HARDWARE_CI
+			return CONFIG(manIdlePosition);
+		#endif
+
 	/*
 	 * Here we have idle logic thread - actual stepper movement is implemented in a separate
 	 * working thread,
@@ -485,11 +490,11 @@ static percent_t automaticIdleController(float tpsPos, float rpm, int targetRpm,
 		float cltCorrection;
 		// Use separate CLT correction table for cranking
 		if (engineConfiguration->overrideCrankingIacSetting && phase == IIdleController::Phase::Cranking) {
-			cltCorrection = interpolate2d("cltCrankingT", clt, config->cltCrankingCorrBins, config->cltCrankingCorr);
+			cltCorrection = interpolate2d(clt, config->cltCrankingCorrBins, config->cltCrankingCorr);
 		} else {
 			// this value would be ignored if running in AUTO mode
 			// but we need it while cranking in AUTO mode
-			cltCorrection = interpolate2d("cltT", clt, config->cltIdleCorrBins, config->cltIdleCorr);
+			cltCorrection = interpolate2d(clt, config->cltIdleCorrBins, config->cltIdleCorr);
 		}
 
 		percent_t iacPosition;
