@@ -1,6 +1,6 @@
 package com.rusefi.f4discovery;
 
-import com.rusefi.ControllerConnectorState;
+import com.rusefi.autotest.ControllerConnectorState;
 import com.rusefi.RusefiTestBase;
 import com.rusefi.Timeouts;
 import com.rusefi.config.generated.Fields;
@@ -10,7 +10,6 @@ import com.rusefi.functional_tests.EcuTestHelper;
 import org.junit.Test;
 
 import static com.rusefi.IoUtil.getDisableCommand;
-import static com.rusefi.IoUtil.getEnableCommand;
 import static com.rusefi.binaryprotocol.BinaryProtocol.sleep;
 import static com.rusefi.config.generated.Fields.*;
 

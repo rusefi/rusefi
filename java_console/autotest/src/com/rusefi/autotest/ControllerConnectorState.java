@@ -1,5 +1,8 @@
-package com.rusefi;
+package com.rusefi.autotest;
 
+import com.rusefi.FileLog;
+import com.rusefi.IoUtil;
+import com.rusefi.TestingUtils;
 import com.rusefi.autodetect.PortDetector;
 import com.rusefi.config.generated.Fields;
 import com.rusefi.core.EngineState;
@@ -33,8 +36,11 @@ public class ControllerConnectorState {
         TestingUtils.isRealHardware = true;
         FileLog.MAIN.start();
         String port = System.getProperty("ecu.port");
-        if (port == null)
-            port = PortDetector.autoDetectPort(null);
+        if (port == null) {
+            port = PortDetector.autoDetectSerial(null);
+            if (port == null)
+                throw new IllegalStateException("ECU serial not detected");
+        }
 
         IoUtil.realHardwareConnect(linkManager, port);
         ControllerConnectorState.linkManager = linkManager;
