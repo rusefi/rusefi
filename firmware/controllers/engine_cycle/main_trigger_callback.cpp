@@ -52,6 +52,7 @@
 #include "engine.h"
 #include "perf_trace.h"
 #include "sensor.h"
+#include "injector_model.h"
 #if EFI_LAUNCH_CONTROL
 #include "launch_control.h"
 #endif
@@ -203,13 +204,11 @@ void InjectionEvent::onTriggerTooth(size_t trgEventIndex, int rpm, efitick_t now
 		return;
 	}
 
-	/**
-	 * todo: this is a bit tricky with batched injection. is it? Does the same
-	 * wetting coefficient works the same way for any injection mode, or is something
-	 * x2 or /2?
-	 */
+	// Perform wall wetting adjustment on fuel mass, not duration, so that
+	// it's correct during fuel pressure (injector flow) or battery voltage (deadtime) transients
+	const float injectionMass = wallFuel.adjust(ENGINE(injectionMass) PASS_ENGINE_PARAMETER_SUFFIX);
+	const floatms_t injectionDuration = ENGINE(injectorModel)->getInjectionDuration(injectionMass);
 
-	const floatms_t injectionDuration = wallFuel.adjust(ENGINE(injectionDuration) PASS_ENGINE_PARAMETER_SUFFIX);
 #if EFI_PRINTF_FUEL_DETAILS
 	if (printFuelDebug) {
 		printf("fuel index=%d injectionDuration=%.2fms adjusted=%.2fms\n",
@@ -320,6 +319,12 @@ static void handleFuel(const bool limitedFuel, uint32_t trgEventIndex, int rpm, 
 	efiAssertVoid(CUSTOM_STACK_6627, getCurrentRemainingStack() > 128, "lowstck#3");
 	efiAssertVoid(CUSTOM_ERR_6628, trgEventIndex < engine->engineCycleEventCount, "handleFuel/event index");
 
+	ENGINE(tpsAccelEnrichment.onNewValue(Sensor::get(SensorType::Tps1).value_or(0) PASS_ENGINE_PARAMETER_SUFFIX));
+	if (trgEventIndex == 0) {
+		ENGINE(tpsAccelEnrichment.onEngineCycleTps(PASS_ENGINE_PARAMETER_SIGNATURE));
+		ENGINE(engineLoadAccelEnrichment.onEngineCycle(PASS_ENGINE_PARAMETER_SIGNATURE));
+	}
+
 	if (limitedFuel) {
 		return;
 	}
@@ -347,12 +352,6 @@ static void handleFuel(const bool limitedFuel, uint32_t trgEventIndex, int rpm, 
 		scheduleMsg(logger, "handleFuel ind=%d %d", trgEventIndex, getRevolutionCounter());
 	}
 #endif /* FUEL_MATH_EXTREME_LOGGING */
-
-	ENGINE(tpsAccelEnrichment.onNewValue(Sensor::get(SensorType::Tps1).value_or(0) PASS_ENGINE_PARAMETER_SUFFIX));
-	if (trgEventIndex == 0) {
-		ENGINE(tpsAccelEnrichment.onEngineCycleTps(PASS_ENGINE_PARAMETER_SIGNATURE));
-		ENGINE(engineLoadAccelEnrichment.onEngineCycle(PASS_ENGINE_PARAMETER_SIGNATURE));
-	}
 
 	fs->onTriggerTooth(trgEventIndex, rpm, nowNt PASS_ENGINE_PARAMETER_SUFFIX);
 }
@@ -542,7 +541,7 @@ static void showMainInfo(Engine *engine) {
 	int rpm = GET_RPM();
 	float el = getFuelingLoad(PASS_ENGINE_PARAMETER_SIGNATURE);
 	scheduleMsg(logger, "rpm %d engine_load %.2f", rpm, el);
-	scheduleMsg(logger, "fuel %.2fms timing %.2f", getInjectionDuration(rpm PASS_ENGINE_PARAMETER_SUFFIX), engine->engineState.timingAdvance);
+	scheduleMsg(logger, "fuel %.2fms timing %.2f", ENGINE(injectionDuration), engine->engineState.timingAdvance);
 #endif /* EFI_PROD_CODE */
 }
 
