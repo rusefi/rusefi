@@ -205,7 +205,7 @@ void InjectionEvent::onTriggerTooth(size_t trgEventIndex, int rpm, efitick_t now
 	}
 
 	// Perform wall wetting adjustment on fuel mass, not duration, so that
-	// it's correct during fuel pressure transients
+	// it's correct during fuel pressure (injector flow) or battery voltage (deadtime) transients
 	const float injectionMass = wallFuel.adjust(ENGINE(injectionMass) PASS_ENGINE_PARAMETER_SUFFIX);
 	const floatms_t injectionDuration = ENGINE(injectorModel)->getInjectionDuration(injectionMass);
 
