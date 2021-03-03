@@ -17,6 +17,8 @@ zip -j rusefi.ini.zip $1
 
 # Put the zip inside the filesystem
 mcopy -i ramdisk.image rusefi.ini.zip ::
+# Put a readme text file in there too
+mcopy -i ramdisk.image README.txt ::
 
 # write out as a C array, with "static const" tacked on the front
 xxd -i ramdisk.image \
