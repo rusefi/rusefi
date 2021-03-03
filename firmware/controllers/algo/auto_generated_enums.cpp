@@ -76,8 +76,6 @@ case EFI_ADC_LAST_CHANNEL:
   return "EFI_ADC_LAST_CHANNEL";
 case EFI_ADC_NONE:
   return "EFI_ADC_NONE";
-case EFI_ADC_TEMP_SENSOR:
-  return "EFI_ADC_TEMP_SENSOR";
   }
  return NULL;
 }

@@ -33,6 +33,10 @@
 /* do not use serial device for console */
 #undef TS_SERIAL_DEVICE
 
+/* Knock detection */
+#undef EFI_HIP_9011
+#define EFI_HIP_9011				TRUE
+
 #undef BOARD_TLE6240_COUNT
 #define BOARD_TLE6240_COUNT			1
 
@@ -84,8 +88,7 @@
 #undef EFI_FUEL_PUMP
 #define EFI_FUEL_PUMP				TRUE
 
-#undef MMC_CARD_SPI
-#define MMC_CARD_SPI				SPID1
+#define EFI_SDC_DEVICE				SDCD2
 
 #define ADC_CHANNEL_VREF			ADC_CHANNEL_IN14
 

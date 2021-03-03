@@ -45,14 +45,6 @@
 
 // Internal MCU features
 
-// Use STM32 Core Coupled Memory as general purpose RAM.
-#define EFI_USE_CCM TRUE
-
-// Support USB Mass Storage Devices
-// Typically off as it requires USB OTG and power output.
-#define HAL_USE_USB_MSD FALSE
-
-
 // Hardware feature and chip support
 // Some require a non-zero count to include support, others are TRUE/FALSE
 // Other inconsistencies, such as naming, abound.
@@ -113,10 +105,6 @@
 #define HAL_TRIGGER_USE_PAL FALSE
 #endif /* HAL_TRIGGER_USE_PAL */
 
-#ifndef HAL_TRIGGER_USE_PAL
-#define HAL_TRIGGER_USE_PAL FALSE
-#endif /* HAL_TRIGGER_USE_PAL */
-
 #ifndef HAL_TRIGGER_USE_ADC
 #define HAL_TRIGGER_USE_ADC FALSE
 #endif /* HAL_TRIGGER_USE_ADC */
@@ -169,8 +157,6 @@
 
 
 #define EFI_NARROW_EGO_AVERAGING TRUE
-
-#define EFI_DENSO_ADC FALSE
 
 #ifndef EFI_IDLE_CONTROL
 #define EFI_IDLE_CONTROL TRUE

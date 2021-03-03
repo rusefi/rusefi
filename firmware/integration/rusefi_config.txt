@@ -110,6 +110,7 @@ struct_no_prefix engine_configuration_s
 #define NARROW_BAND_WIDE_BAND_CONVERSION_SIZE 8
 
 #define CLT_CURVE_SIZE 16
+#define CLT_LIMITER_CURVE_SIZE 4
 #define CRANKING_CLT_IDLE_CURVE_SIZE 8
 #define CLT_CRANKING_CURVE_SIZE 8
 #define IDLE_ADVANCE_CURVE_SIZE 8
@@ -149,7 +150,6 @@ struct_no_prefix engine_configuration_s
 #define TRIGGER_INPUT_PIN_COUNT 3
 #define LOGIC_ANALYZER_CHANNEL_COUNT 4
 #define FSIO_COMMAND_COUNT 16
-#define AUX_PID_COUNT 4
 
 #define VEHICLE_INFO_SIZE 32
 
@@ -451,6 +451,7 @@ end_struct
 ! todo https://github.com/rusefi/rusefi/issues/2102
 #define ET_DODGE_NEON_1995 2
 #define ET_FORD_ASPIRE 3
+#define ET_NISSAN_PRIMERA 5
 #define ET_FORD_INLINE_6 7
 #define ET_FORD_ESCORT_GT 14
 #define ET_SACHS 29
@@ -502,14 +503,14 @@ end_struct
 injector_s injector
 
 bit isForcedInduction;
-bit activateAuxPid1;
+bit unused_294_1;
 bit isVerboseAuxPid1;
-bit activateAuxPid2;
-bit isVerboseAuxPid2;
-bit activateAuxPid3;
-bit isVerboseAuxPid3;
-bit activateAuxPid4;
-bit isVerboseAuxPid4;
+bit unused_294_3;
+bit unused_294_4;
+bit unused_294_5;
+bit unused_294_6;
+bit unused_294_7;
+bit unused_294_8;
 bit isCJ125Verbose;enable cj125verbose/disable cj125verbose
 bit cj125isUaDivided;+Is your UA CJ125 output wired to MCU via resistor divider? Ua can go over 3.3v but only at lambda >3, i.e very lean AFR above 44.1\nWhen exposed to free air and 17x gain, Ua will be 4.17 volt
 bit cj125isLsu49;
@@ -651,7 +652,7 @@ struct trigger_config_s @brief Trigger wheel(s) configuration
 
 custom bool32_t 4 bits,    U32,   @OFFSET@, [0:0], "false", "true"
 
-#define trigger_type_e_enum "custom toothed wheel", "Ford Aspire", "Dodge Neon 1995", "Miata NA", "Miata NB", "GM_7X", "Cooper R50", "Mazda SOHC 4", "60/2", "36/1", "Honda 4+24+1", "Mitsubishi", "Honda 4+24", "Honda 1+4+24", "Dodge Neon 2003", "Mazda DOHC 1+4", "1+1", "INVALID", "Single Tooth", "Dodge Ram 1+16", "60/2 VW", "Honda 1+24", "Dodge Stratus",  "36_2_2_2", "Nissan Primera", "dev 2JZ 3/34 simulator", "Rover K", "GM LS 24", "Honda CBR 600", "2JZ_1_12", "Honda CBR 600 custom", "3/1 skipped" , "Dodge Neon 2003 crank", "Miata VVT", "trg34", "trg35", "Subaru 7+6", "Jeep 18-2-2-2", "WIP", "Dodge Neon 1995 crank only", "Jeep XJ 4 cyl", "FiatIAQ_P8", "Mazda Z5", "trg43", "Renix 44-2-2", "Renix 66-2-2-2", "Honda K 12+1", "trg47", "36/2", "Subaru SVX", "1+16", "Subaru 7 without 6", "trg52", "TriTach", "GM 60/2/2?2", "Skoda Favorit", "trg56", "trg57", "INVALID"
+#define trigger_type_e_enum "custom toothed wheel", "Ford Aspire", "Dodge Neon 1995", "Miata NA", "Miata NB", "GM_7X", "Cooper R50", "Mazda SOHC 4", "60/2", "36/1", "Honda 4+24+1", "Mitsubishi", "Honda 4+24", "Honda 1+4+24", "Dodge Neon 2003", "Mazda DOHC 1+4", "1+1", "INVALID", "Single Tooth", "Dodge Ram 1+16", "60/2 VW", "Honda 1+24", "Dodge Stratus",  "36_2_2_2", "Nissan Primera", "dev 2JZ 3/34 simulator", "Rover K", "GM LS 24", "Honda CBR 600", "2JZ_1_12", "Honda CBR 600 custom", "3/1 skipped" , "Dodge Neon 2003 crank", "Miata VVT", "trg34", "trg35", "Subaru 7+6", "Jeep 18-2-2-2", "WIP", "Dodge Neon 1995 crank only", "Jeep XJ 4 cyl", "FiatIAQ_P8", "Mazda Z5", "trg43", "Renix 44-2-2", "Renix 66-2-2-2", "Honda K 12+1", "trg47", "36/2", "Subaru SVX", "1+16", "Subaru 7 without 6", "trg52", "TriTach", "GM 60/2/2/2", "Skoda Favorit", "trg56", "trg57", "INVALID"
 
 custom trigger_type_e 4 bits,    U32,   @OFFSET@, [0:5], @@trigger_type_e_enum@@
 	trigger_type_e type;set trigger_type X
@@ -806,7 +807,7 @@ pin_input_mode_e throttlePedalUpPinMode;
 
 	brain_pin_e[TRIGGER_SIMULATOR_PIN_COUNT iterate] triggerSimulatorPins;Each rusEfi piece can provide synthetic trigger signal for external ECU. Sometimes these wires are routed back into trigger inputs of the same rusEfi board.\nSee also directSelfStimulation which is different.
 	pin_output_mode_e[TRIGGER_SIMULATOR_PIN_COUNT iterate] triggerSimulatorPinModes;
-	output_pin_e o2heaterPin;Narrow band o2 heater, not used for CJ125. See wboHeaterPin
+	output_pin_e o2heaterPin;+Narrow band o2 heater, not used for CJ125. 'ON' if engine is running, 'OFF' if stopped or cranking. See wboHeaterPin
 	pin_output_mode_e o2heaterPinModeTodO;
 
 
@@ -929,6 +930,8 @@ custom maf_sensor_type_e 4 bits, S32, @OFFSET@, [0:1], @@maf_sensor_type_e_enum@
 
 
 	maf_sensor_type_e mafSensorType;
+
+#define CAN_RX_PREFIX "CAN_rx"
 
 #define CRITICAL_PREFIX "CRITICAL"
 ! same length used for critical and soft error messages
@@ -1284,7 +1287,7 @@ float[MAP_ACCEL_TAPER] mapAccelTaperMult;;"mult",      1,     0,   0.0,    300, 
 	float mapHighValueVoltage;MAP voltage for low point;"v",      1,     0,   0.0,    10,   2 
 	float egoValueShift;EGO value correction;"value",      1,     0,   -10.0,    10,   2 
 
-	output_pin_e[AUX_PID_COUNT iterate] auxPidPins;
+	output_pin_e[CAM_INPUTS_COUNT iterate] auxPidPins;
 
 	spi_device_e cj125SpiDevice;
 	pin_output_mode_e cj125CsPinMode;
@@ -1296,7 +1299,8 @@ float[MAP_ACCEL_TAPER] mapAccelTaperMult;;"mult",      1,     0,   0.0,    300, 
 	float tChargeMaxRpmMinTps;;"mult",        1,     0,  0,    3,  4
 	float tChargeMaxRpmMaxTps;;"mult",        1,     0,  0,    3,  4   
 
-	fsio_pwm_freq_t[AUX_PID_COUNT iterate] auxPidFrequency;
+	fsio_pwm_freq_t[CAMS_PER_BANK iterate] auxPidFrequency;
+	uint8_t unused1301;;"units", 1, 0, -20, 100, 0
 	int alternatorPwmFrequency;;"Hz",        1,     0,  0,    3000.0,  0
 	int unused2260;;"units", 1, 0, -20, 100, 0
 
@@ -1360,7 +1364,8 @@ tle8888_mode_e tle8888mode;
 	pin_input_mode_e brakePedalPinMode;
 
 
-	pid_s[AUX_PID_COUNT iterate] auxPid;
+	pid_s[CAMS_PER_BANK iterate] auxPid;
+	uint8_t[40] unused1366;;"units", 1, 0, -20, 100, 0
 
 	linear_sensor_s oilPressure;
 
@@ -1405,7 +1410,10 @@ float[CLT_CURVE_SIZE] iacCoasting;    CLT-based idle position for coasting (used
 	linear_sensor_s highPressureFuel;
 	linear_sensor_s lowPressureFuel;
 
-uint8_t[536] unused3328;;"units", 1, 0, -20, 100, 0
+int8_t[CLT_LIMITER_CURVE_SIZE] cltRevLimitRpmBins;CLT-based target RPM for hard limit depending on CLT like on Lexus LFA;"C",        1,     0,   -70,    120,  0
+uint16_t[CLT_LIMITER_CURVE_SIZE] cltRevLimitRpm;See idleRpmPid;"",      1,     0,      0,    8000,   0
+
+uint8_t[524] unused3328;;"units", 1, 0, -20, 100, 0
 
 float tChargeAirCoefMin;;"Min tCharge Coeff.",        1,     0,  0.0,    1.0,  4
 float tChargeAirCoefMax;;"Max tCharge Coeff.",        1,     0,  0.0,    1.0,  4

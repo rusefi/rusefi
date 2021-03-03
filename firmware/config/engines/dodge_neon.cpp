@@ -381,7 +381,6 @@ void setDodgeNeonNGCEngineConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 //	engineConfiguration->clutchUpPin = GPIOA_14; // note SWCLK - conflict with SWD
 	engineConfiguration->clutchUpPinMode = PI_PULLUP;
 
-	engineConfiguration->activateAuxPid1 = true;
 	engineConfiguration->auxPidPins[0] = GPIOD_5; // playing with AUX PID for alternator
 	engineConfiguration->auxPidFrequency[0] = 300;
 

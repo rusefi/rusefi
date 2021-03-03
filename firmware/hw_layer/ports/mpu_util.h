@@ -10,6 +10,11 @@
 void baseMCUInit(void);
 void jump_to_bootloader();
 
+// ADC
+void portInitAdc();
+float getMcuTemperature();
+
+
 // CAN bus
 #if HAL_USE_CAN
 bool isValidCanTxPin(brain_pin_e pin);
@@ -31,6 +36,14 @@ void initSpiModule(SPIDriver *driver, brain_pin_e sck, brain_pin_e miso,
 void initSpiCs(SPIConfig *spiConfig, brain_pin_e csPin);
 void turnOnSpi(spi_device_e device);
 #endif // HAL_USE_SPI
+
+// MMC Card
+#if HAL_USE_MMC_SPI
+// HS = max 50MHz SPI
+extern SPIConfig mmc_hs_spicfg;
+// LS = max 25MHz SPI
+extern SPIConfig mmc_ls_spicfg;
+#endif
 
 // Hardware PWM
 struct hardware_pwm {

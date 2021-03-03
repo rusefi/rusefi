@@ -72,7 +72,7 @@ jobs:
         git status
         OUT=$(git commit -m "Trigger wheel definitions" unit_tests/triggers.txt 2>&1) || echo "commit failed, finding out why"
         echo "$OUT"
-        if echo "$OUT" | grep 'nothing to commit'; then
+        if echo "$OUT" | grep -E 'nothing to commit|no changes added'; then
           echo "::set-env name=NOCOMMIT::true"
           exit 0
         elif echo "$OUT" | grep 'changed'; then

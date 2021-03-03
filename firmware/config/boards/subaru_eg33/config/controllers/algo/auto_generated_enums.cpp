@@ -1,7 +1,7 @@
 #include "global.h"
 #include "rusefi_enums.h"
 #include "rusefi_hw_enums.h"
-// was generated automatically by rusEfi tool  from rusefi_hw_enums.h // was generated automatically by rusEfi tool  from rusefi_enums.h // by enum2string.jar tool on Sat Feb 06 13:39:37 MSK 2021
+// was generated automatically by rusEfi tool  from rusefi_hw_enums.h // was generated automatically by rusEfi tool  from rusefi_enums.h // by enum2string.jar tool on Thu Feb 18 23:19:19 UTC 2021
 // see also gen_config_and_enums.bat
 
 
@@ -92,8 +92,6 @@ case EFI_ADC_LAST_CHANNEL:
   return "EFI_ADC_LAST_CHANNEL";
 case EFI_ADC_NONE:
   return "EFI_ADC_NONE";
-case EFI_ADC_TEMP_SENSOR:
-  return "EFI_ADC_TEMP_SENSOR";
   }
  return NULL;
 }
@@ -1431,6 +1429,8 @@ case TT_RENIX_66_2_2_2:
   return "TT_RENIX_66_2_2_2";
 case TT_ROVER_K:
   return "TT_ROVER_K";
+case TT_SKODA_FAVORIT:
+  return "TT_SKODA_FAVORIT";
 case TT_SUBARU_7_6:
   return "TT_SUBARU_7_6";
 case TT_SUBARU_7_WITHOUT_6:
@@ -1508,10 +1508,6 @@ case VE_TPS:
 }
 const char *getVvt_mode_e(vvt_mode_e value){
 switch(value) {
-case Force_4_bytes_size_vvt_mode:
-  return "Force_4_bytes_size_vvt_mode";
-case MIATA_NB2:
-  return "MIATA_NB2";
 case VVT_2JZ:
   return "VVT_2JZ";
 case VVT_4_1:
@@ -1524,6 +1520,8 @@ case VVT_FORD_ST170:
   return "VVT_FORD_ST170";
 case VVT_INACTIVE:
   return "VVT_INACTIVE";
+case VVT_MIATA_NB2:
+  return "VVT_MIATA_NB2";
 case VVT_SECOND_HALF:
   return "VVT_SECOND_HALF";
   }

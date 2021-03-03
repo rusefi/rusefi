@@ -8,7 +8,7 @@
  */
 
 #include "efifeatures.h"
-#include "../../stm32f4ems/mcuconf.h"
+#include "../../../hw_layer/ports/stm32/stm32f4/cfg/mcuconf.h"
 
 #ifndef _MCUCONF_PROMETHEUS_H_
 #define _MCUCONF_PROMETHEUS_H_

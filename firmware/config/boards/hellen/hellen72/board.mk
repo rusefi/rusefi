@@ -4,16 +4,6 @@
 BOARDCPPSRC = $(BOARDS_DIR)/hellen/hellen72/board_configuration.cpp
 BOARDINC = $(BOARDS_DIR)/hellen/hellen72
 
-# Target processor details
-ifeq ($(PROJECT_CPU),ARCH_STM32F4)
-  BOARDINC += $(PROJECT_DIR)/config/stm32f4ems	# For board.h
-else
-  # todo: add support for STM32H7
-  CONFDIR   = config/stm32h7ems
-  BOARDINC += $(PROJECT_DIR)/config/boards/nucleo_h743 # For board.h
-  BOARDINC += $(PROJECT_DIR)/config/stm32h7ems	# efifeatures/halconf/chconf.h
-endif
-
 # Set this if you want a default engine type other than normal Hellen72
 ifeq ($(DEFAULT_ENGINE_TYPE),)
   DEFAULT_ENGINE_TYPE = -DDEFAULT_ENGINE_TYPE=HELLEN_NB2
@@ -26,6 +16,16 @@ endif
 ifeq ($(LED_COMMUNICATION_BRAIN_PIN),)
   LED_COMMUNICATION_BRAIN_PIN = -DEFI_COMMUNICATION_PIN=GPIOH_10
 endif
+
+DDEFS += -DEFI_MAIN_RELAY_CONTROL=TRUE
+
+DDEFS += -DLED_ERROR_BRAIN_PIN_MODE=INVERTED_OUTPUT
+DDEFS += -DLED_RUNING_BRAIN_PIN_MODE=INVERTED_OUTPUT
+DDEFS += -DLED_WARNING_BRAIN_PIN_MODE=INVERTED_OUTPUT
+DDEFS += -DLED_COMMUNICATION_BRAIN_PIN_MODE=INVERTED_OUTPUT
+
+DDEFS += -DSTM32_UART_USE_USART3=FALSE
+DDEFS += -DPRIMARY_UART_DMA_MODE=FALSE
 
 # Add them all together
 DDEFS += -DEFI_USE_OSC=TRUE -DFIRMWARE_ID=\"hellen72\" $(DEFAULT_ENGINE_TYPE) $(LED_CRITICAL_ERROR_BRAIN_PIN) $(LED_COMMUNICATION_BRAIN_PIN)

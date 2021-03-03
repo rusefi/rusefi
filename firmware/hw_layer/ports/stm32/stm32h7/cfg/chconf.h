@@ -31,14 +31,14 @@
 #define _CHIBIOS_RT_CONF_
 #define _CHIBIOS_RT_CONF_VER_6_1_
 
+#include "chconf_common.h"
+
 /*===========================================================================*/
 /**
  * @name System timers settings
  * @{
  */
 /*===========================================================================*/
-
-#include "chconf_common.h"
 
 /**
  * @brief   System time counter resolution.
@@ -54,7 +54,7 @@
  *          setting also defines the system tick time unit.
  */
 #if !defined(CH_CFG_ST_FREQUENCY)
-#define CH_CFG_ST_FREQUENCY                 10000
+#define CH_CFG_ST_FREQUENCY                 1000
 #endif
 
 /**
@@ -308,7 +308,7 @@
  * @note    Requires @p CH_CFG_USE_HEAP and/or @p CH_CFG_USE_MEMPOOLS.
  */
 #if !defined(CH_CFG_USE_DYNAMIC)
-#define CH_CFG_USE_DYNAMIC                  TRUE
+#define CH_CFG_USE_DYNAMIC                  FALSE
 #endif
 
 /** @} */
@@ -329,7 +329,7 @@
  * @note    Requires @p CH_CFG_USE_SEMAPHORES.
  */
 #if !defined(CH_CFG_USE_MAILBOXES)
-#define CH_CFG_USE_MAILBOXES                TRUE
+#define CH_CFG_USE_MAILBOXES                FALSE
 #endif
 
 /**
@@ -340,7 +340,7 @@
  * @note    The default is @p TRUE.
  */
 #if !defined(CH_CFG_USE_MEMCORE)
-#define CH_CFG_USE_MEMCORE                  TRUE
+#define CH_CFG_USE_MEMCORE                  FALSE
 #endif
 
 /**
@@ -369,7 +369,7 @@
  * @note    Mutexes are recommended.
  */
 #if !defined(CH_CFG_USE_HEAP)
-#define CH_CFG_USE_HEAP                     TRUE
+#define CH_CFG_USE_HEAP                     FALSE
 #endif
 
 /**
@@ -380,7 +380,7 @@
  * @note    The default is @p TRUE.
  */
 #if !defined(CH_CFG_USE_MEMPOOLS)
-#define CH_CFG_USE_MEMPOOLS                 TRUE
+#define CH_CFG_USE_MEMPOOLS                 FALSE
 #endif
 
 /**
@@ -391,7 +391,7 @@
  * @note    The default is @p TRUE.
  */
 #if !defined(CH_CFG_USE_OBJ_FIFOS)
-#define CH_CFG_USE_OBJ_FIFOS                TRUE
+#define CH_CFG_USE_OBJ_FIFOS                FALSE
 #endif
 
 /**
@@ -402,7 +402,7 @@
  * @note    The default is @p TRUE.
  */
 #if !defined(CH_CFG_USE_PIPES)
-#define CH_CFG_USE_PIPES                    TRUE
+#define CH_CFG_USE_PIPES                    FALSE
 #endif
 
 /**
@@ -413,7 +413,7 @@
  * @note    The default is @p TRUE.
  */
 #if !defined(CH_CFG_USE_OBJ_CACHES)
-#define CH_CFG_USE_OBJ_CACHES               TRUE
+#define CH_CFG_USE_OBJ_CACHES               FALSE
 #endif
 
 /**
@@ -424,7 +424,7 @@
  * @note    The default is @p TRUE.
  */
 #if !defined(CH_CFG_USE_DELEGATES)
-#define CH_CFG_USE_DELEGATES                TRUE
+#define CH_CFG_USE_DELEGATES                FALSE
 #endif
 
 /**
@@ -435,7 +435,7 @@
  * @note    The default is @p TRUE.
  */
 #if !defined(CH_CFG_USE_JOBS)
-#define CH_CFG_USE_JOBS                     TRUE
+#define CH_CFG_USE_JOBS                     FALSE
 #endif
 
 /** @} */
@@ -455,7 +455,7 @@
  * @note    The default is @p FALSE.
  */
 #if !defined(CH_CFG_USE_FACTORY)
-#define CH_CFG_USE_FACTORY                  TRUE
+#define CH_CFG_USE_FACTORY                  FALSE
 #endif
 
 /**
@@ -471,42 +471,42 @@
  * @brief   Enables the registry of generic objects.
  */
 #if !defined(CH_CFG_FACTORY_OBJECTS_REGISTRY)
-#define CH_CFG_FACTORY_OBJECTS_REGISTRY     TRUE
+#define CH_CFG_FACTORY_OBJECTS_REGISTRY     FALSE
 #endif
 
 /**
  * @brief   Enables factory for generic buffers.
  */
 #if !defined(CH_CFG_FACTORY_GENERIC_BUFFERS)
-#define CH_CFG_FACTORY_GENERIC_BUFFERS      TRUE
+#define CH_CFG_FACTORY_GENERIC_BUFFERS      FALSE
 #endif
 
 /**
  * @brief   Enables factory for semaphores.
  */
 #if !defined(CH_CFG_FACTORY_SEMAPHORES)
-#define CH_CFG_FACTORY_SEMAPHORES           TRUE
+#define CH_CFG_FACTORY_SEMAPHORES           FALSE
 #endif
 
 /**
  * @brief   Enables factory for mailboxes.
  */
 #if !defined(CH_CFG_FACTORY_MAILBOXES)
-#define CH_CFG_FACTORY_MAILBOXES            TRUE
+#define CH_CFG_FACTORY_MAILBOXES            FALSE
 #endif
 
 /**
  * @brief   Enables factory for objects FIFOs.
  */
 #if !defined(CH_CFG_FACTORY_OBJ_FIFOS)
-#define CH_CFG_FACTORY_OBJ_FIFOS            TRUE
+#define CH_CFG_FACTORY_OBJ_FIFOS            FALSE
 #endif
 
 /**
  * @brief   Enables factory for Pipes.
  */
 #if !defined(CH_CFG_FACTORY_PIPES) || defined(__DOXYGEN__)
-#define CH_CFG_FACTORY_PIPES                TRUE
+#define CH_CFG_FACTORY_PIPES                FALSE
 #endif
 
 /** @} */
@@ -568,7 +568,7 @@
  * @note    The default is @p CH_DBG_TRACE_MASK_DISABLED.
  */
 #if !defined(CH_DBG_TRACE_MASK)
-#define CH_DBG_TRACE_MASK                   CH_DBG_TRACE_MASK_NONE
+#define CH_DBG_TRACE_MASK                   CH_DBG_TRACE_MASK_DISABLED
 #endif
 
 /**
@@ -591,7 +591,7 @@
  *          @p panic_msg variable set to @p NULL.
  */
 #if !defined(CH_DBG_ENABLE_STACK_CHECK)
-#define CH_DBG_ENABLE_STACK_CHECK           FALSE
+#define CH_DBG_ENABLE_STACK_CHECK           TRUE
 #endif
 
 /**
@@ -602,8 +602,9 @@
  *
  * @note    The default is @p FALSE.
  */
+// see also CH_DBG_STACK_FILL_VALUE
 #if !defined(CH_DBG_FILL_THREADS)
-#define CH_DBG_FILL_THREADS                 FALSE
+#define CH_DBG_FILL_THREADS                 TRUE
 #endif
 
 /**
@@ -616,7 +617,7 @@
  *          tickless mode.
  */
 #if !defined(CH_DBG_THREADS_PROFILING)
-#define CH_DBG_THREADS_PROFILING            FALSE
+#define CH_DBG_THREADS_PROFILING            TRUE
 #endif
 
 /** @} */
@@ -696,6 +697,7 @@
  */
 #define CH_CFG_SYSTEM_HALT_HOOK(reason) {                                   \
   /* System halt code here.*/                                               \
+  chDbgPanic3(reason, __FILE__, __LINE__); \
 }
 
 /**
@@ -712,6 +714,12 @@
 /*===========================================================================*/
 /* Port-specific settings (override port settings defaulted in chcore.h).    */
 /*===========================================================================*/
+
+/**
+ * @brief   Sleep at idle.
+ * @details This option enables call to __WFI() from idle thread to save power.
+ */
+#define CORTEX_ENABLE_WFI_IDLE FALSE
 
 #endif  /* CHCONF_H */
 

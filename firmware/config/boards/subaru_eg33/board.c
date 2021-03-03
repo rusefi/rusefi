@@ -180,13 +180,6 @@ bool mmc_lld_is_write_protected(MMCDriver *mmcp)
 }
 #endif
 
-/**
- * @brief   Board-specific ADC channel configuration code overrides.
- * @todo    Add your board-specific code, if any.
- */
-void setAdcChannelOverrides(void) {
-}
-
 #define STATUS_LED_PIN	8
 #define STATUS_LED_PORT	GPIOG
 

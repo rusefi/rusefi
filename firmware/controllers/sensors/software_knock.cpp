@@ -5,6 +5,7 @@
 #include "perf_trace.h"
 #include "thread_controller.h"
 #include "software_knock.h"
+#include "thread_priority.h"
 
 #if EFI_SOFTWARE_KNOCK
 
@@ -12,7 +13,7 @@ EXTERN_ENGINE;
 
 #include "knock_config.h"
 
-adcsample_t sampleBuffer[2000];
+NO_CACHE adcsample_t sampleBuffer[2000];
 int8_t currentCylinderIndex = 0;
 Biquad knockFilter;
 
@@ -162,7 +163,7 @@ void startKnockSampling(uint8_t cylinderIndex) {
 
 class KnockThread : public ThreadController<256> {
 public:
-	KnockThread() : ThreadController("knock", NORMALPRIO - 10) {}
+	KnockThread() : ThreadController("knock", PRIO_KNOCK_PROCESS) {}
 	void ThreadTask() override;
 };
 

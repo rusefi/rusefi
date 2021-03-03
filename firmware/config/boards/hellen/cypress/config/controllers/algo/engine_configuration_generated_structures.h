@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on hellen_cypress_gen_config.bat integration/rusefi_config.txt Tue Feb 09 19:00:47 UTC 2021
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on hellen_cypress_gen_config.bat integration/rusefi_config.txt Wed Mar 03 03:15:52 UTC 2021
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -650,28 +650,28 @@ struct engine_configuration_s {
 	bool isForcedInduction : 1;
 	/**
 	offset 76 bit 1 */
-	bool activateAuxPid1 : 1;
+	bool unused_294_1 : 1;
 	/**
 	offset 76 bit 2 */
 	bool isVerboseAuxPid1 : 1;
 	/**
 	offset 76 bit 3 */
-	bool activateAuxPid2 : 1;
+	bool unused_294_3 : 1;
 	/**
 	offset 76 bit 4 */
-	bool isVerboseAuxPid2 : 1;
+	bool unused_294_4 : 1;
 	/**
 	offset 76 bit 5 */
-	bool activateAuxPid3 : 1;
+	bool unused_294_5 : 1;
 	/**
 	offset 76 bit 6 */
-	bool isVerboseAuxPid3 : 1;
+	bool unused_294_6 : 1;
 	/**
 	offset 76 bit 7 */
-	bool activateAuxPid4 : 1;
+	bool unused_294_7 : 1;
 	/**
 	offset 76 bit 8 */
-	bool isVerboseAuxPid4 : 1;
+	bool unused_294_8 : 1;
 	/**
 	 * enable cj125verbose/disable cj125verbose
 	offset 76 bit 9 */
@@ -1390,7 +1390,7 @@ struct engine_configuration_s {
 	 */
 	pin_output_mode_e triggerSimulatorPinModes[TRIGGER_SIMULATOR_PIN_COUNT];
 	/**
-	 * Narrow band o2 heater, not used for CJ125. See wboHeaterPin
+	 * Narrow band o2 heater, not used for CJ125. 'ON' if engine is running, 'OFF' if stopped or cranking. See wboHeaterPin
 	 * offset 742
 	 */
 	output_pin_e o2heaterPin;
@@ -2858,7 +2858,7 @@ struct engine_configuration_s {
 	/**
 	 * offset 2220
 	 */
-	output_pin_e auxPidPins[AUX_PID_COUNT];
+	output_pin_e auxPidPins[CAM_INPUTS_COUNT];
 	/**
 	 * offset 2224
 	 */
@@ -2900,7 +2900,16 @@ struct engine_configuration_s {
 	/**
 	 * offset 2248
 	 */
-	fsio_pwm_freq_t auxPidFrequency[AUX_PID_COUNT];
+	fsio_pwm_freq_t auxPidFrequency[CAMS_PER_BANK];
+	/**
+	 * offset 2252
+	 */
+	uint8_t unused1301;
+	/**
+	 * need 4 byte alignment
+	 * offset 2253
+	 */
+	uint8_t alignmentFill_at_2253[3];
 	/**
 	 * offset 2256
 	 */
@@ -3099,7 +3108,11 @@ struct engine_configuration_s {
 	/**
 	 * offset 2612
 	 */
-	pid_s auxPid[AUX_PID_COUNT];
+	pid_s auxPid[CAMS_PER_BANK];
+	/**
+	 * offset 2652
+	 */
+	uint8_t unused1366[40];
 	/**
 	 * offset 2692
 	 */
@@ -3249,9 +3262,19 @@ struct engine_configuration_s {
 	 */
 	linear_sensor_s lowPressureFuel;
 	/**
+	 * CLT-based target RPM for hard limit depending on CLT like on Lexus LFA
 	 * offset 3328
 	 */
-	uint8_t unused3328[536];
+	int8_t cltRevLimitRpmBins[CLT_LIMITER_CURVE_SIZE];
+	/**
+	 * See idleRpmPid
+	 * offset 3332
+	 */
+	uint16_t cltRevLimitRpm[CLT_LIMITER_CURVE_SIZE];
+	/**
+	 * offset 3340
+	 */
+	uint8_t unused3328[524];
 	/**
 	 * offset 3864
 	 */
@@ -3841,4 +3864,4 @@ struct persistent_config_s {
 typedef struct persistent_config_s persistent_config_s;
 
 // end
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on hellen_cypress_gen_config.bat integration/rusefi_config.txt Tue Feb 09 19:00:47 UTC 2021
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on hellen_cypress_gen_config.bat integration/rusefi_config.txt Wed Mar 03 03:15:52 UTC 2021

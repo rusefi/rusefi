@@ -84,26 +84,18 @@ static void mcRestart();
 
 // Receive 16bits
 unsigned short recv_16bit_spi() {
-	unsigned short ret;
-	//spiSelect(driver);
-	spiReceive(driver, 1, &ret);
-	//spiUnselect(driver);
-	return ret;
+	return spiPolledExchange(driver, 0xFFFF);
 }
 
 // This could be used to detect if check byte is wrong.. or use a FLAG after init
 unsigned short txrx_16bit_spi(const unsigned short param) {
-	unsigned short ret;
-	//spiSelect(driver);
-	spiExchange(driver, 1, &param, &ret);
-	//spiUnselect(driver);
-	return ret;
+	return spiPolledExchange(driver, param);
 }
 
 // Send 16bits
 static void spi_writew(unsigned short param) {
 	//spiSelect(driver);
-	spiSend(driver, 1, &param);
+	spiPolledExchange(driver, param);
 	//spiUnselect(driver);
 }
 

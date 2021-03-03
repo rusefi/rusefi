@@ -81,7 +81,8 @@ protected:
 
 class Engine final : public TriggerStateListener {
 public:
-	explicit Engine(persistent_config_s *config);
+	DECLARE_ENGINE_PTR;
+
 	Engine();
 	bool isPwmEnabled = true;
 	int triggerActivitySecond = 0;
@@ -107,7 +108,7 @@ public:
 	void OnTriggerSynchronizationLost() override;
 #endif
 
-	void setConfig(persistent_config_s *config);
+	void setConfig(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 	injection_mode_e getCurrentInjectionMode(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 
 	LocalVersionHolder versionForConfigurationListeners;
@@ -189,7 +190,6 @@ public:
 	 */
 	bool isAlternatorControlEnabled = false;
 
-	bool isCltBroken = false;
 	bool slowCallBackWasInvoked = false;
 
 	/**
@@ -199,12 +199,6 @@ public:
 	efitimems64_t callFromPitStopEndTime = 0;
 
 	RpmCalculator rpmCalculator;
-	persistent_config_s *config = nullptr;
-	/**
-	 * we use funny unique name to make sure that compiler is not confused between global variable and class member
-	 * todo: this variable is probably a sign of some problem, should we even have it?
-	 */
-	engine_configuration_s *engineConfigurationPtr = nullptr;
 
 	/**
 	 * this is about 'stopengine' command
@@ -327,13 +321,6 @@ public:
 	SensorsState sensors;
 	efitick_t lastTriggerToothEventTimeNt = 0;
 	efitick_t mainRelayBenchStartNt = 0;
-
-
-	/**
-	 * This coefficient translates ADC value directly into voltage adjusted according to
-	 * voltage divider configuration with just one multiplication. This is a future (?) performance optimization.
-	 */
-	float adcToVoltageInputDividerCoefficient = NAN;
 
 	/**
 	 * This field is true if we are in 'cylinder cleanup' state right now

@@ -459,14 +459,11 @@ TEST(misc, testTriggerDecoder) {
 
 	{
 	persistent_config_s c;
-	Engine e(&c);
+	Engine e;
+	e.setConfig(&e, &c.engineConfiguration, &c);
+	Engine* engine = &e;
+	EXPAND_Engine;
 	TriggerWaveform * s = &e.triggerCentral.triggerShape;
-
-
-	persistent_config_s *config = &c;
-	Engine *engine = &e;
-
-	engine_configuration_s *engineConfiguration = &c.engineConfiguration;
 
 	initializeSkippedToothTriggerWaveformExt(s, 2, 0, FOUR_STROKE_CAM_SENSOR);
 	assertEqualsM("shape size", s->getSize(), 4);

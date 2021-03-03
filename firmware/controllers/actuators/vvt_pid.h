@@ -10,6 +10,6 @@
 #include "global.h"
 
 void initAuxPid(Logging *sharedLogger);
-void startAuxPins();
-void stopAuxPins();
+void startVvtControlPins();
+void stopVvtControlPins();
 
