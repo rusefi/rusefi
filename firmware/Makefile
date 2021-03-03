@@ -202,6 +202,7 @@ $(info LDSCRIPT:      $(LDSCRIPT))
 # setting.
 CSRC =  $(ALLCSRC) \
 	$(CHIBIOS)/os/various/syscalls.c \
+	$(CHIBIOS_CONTRIB)/os/various/ramdisk.c \
 	$(TRIGGER_SRC) \
 	$(TRIGGER_DECODERS_SRC) \
 	$(DEV_SRC) \
