@@ -1,5 +1,8 @@
 #!/bin/bash
 
+# fail on error
+set -e
+
 rm -f rusefi.zip ramdisk_image.h
 
 # copy 100KB of zeroes

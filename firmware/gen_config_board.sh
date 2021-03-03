@@ -2,7 +2,7 @@
 
 # file gen_config_board.sh
 
-#set -x
+set -e
 
 echo "This script reads rusefi_config.txt and produces firmware persistent configuration headers"
 echo "the storage section of rusefiXXX.ini is updated as well"
@@ -39,7 +39,5 @@ java -DSystemOut.name=gen_config_board \
 [ $? -eq 0 ] || { echo "ERROR generating TunerStudio config for ${BOARDNAME}"; exit 1; }
 
 ./hw_layer/mass_storage/create_ini_image.sh ./tunerstudio/generated/rusefi_${SHORT_BOARDNAME}.ini ./hw_layer/mass_storage/ramdisk_image.h
-
-[ $? -eq 0 ] || { echo "ERROR generating embedded ini image ${BOARDNAME}"; exit 2; }
 
 exit 0
