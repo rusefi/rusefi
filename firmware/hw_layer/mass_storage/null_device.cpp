@@ -10,6 +10,11 @@
 
 #include "hal.h"
 
+#if EFI_EMBED_INI_MSD
+#include "ramdisk.h"
+#include "ramdisk_image.h"
+#endif
+
 #include <cstring>
 
 struct NullDevice {
@@ -68,8 +73,31 @@ static const struct BaseBlockDeviceVMT ndVmt = {
 // This device is always ready and has no state
 static NullDevice nd = { &ndVmt, BLK_READY };
 
+#if EFI_EMBED_INI_MSD
+static RamDisk ramdisk;
+#endif
+
 #if HAL_USE_USB_MSD
 void msdMountNullDevice(USBMassStorageDriver* msdp, USBDriver *usbp, uint8_t* blkbuf, const scsi_inquiry_response_t* inquiry) {
+	// TODO: implement multi-LUN so we can mount the ini image and SD card at the same time
+
+#if EFI_EMBED_INI_MSD
+	ramdiskObjectInit(&ramdisk);
+
+	constexpr size_t ramdiskSize = sizeof(ramdisk_image);
+	constexpr size_t blockSize = 512;
+	constexpr size_t blockCount = ramdiskSize / blockSize;
+
+	// Ramdisk should be a round number of blocks
+	static_assert(ramdiskSize % blockSize == 0);
+
+	ramdiskStart(&ramdisk, const_cast<uint8_t*>(ramdisk_image), blockSize, blockCount, /*readonly =*/ true);
+
+	msdStart(msdp, usbp, (BaseBlockDevice*)&ramdisk, blkbuf, inquiry, nullptr);
+
+#else
+	// No embedded ini file, just mount the null device instead
 	msdStart(msdp, usbp, (BaseBlockDevice*)&nd, blkbuf, inquiry, nullptr);
+#endif
 }
 #endif
