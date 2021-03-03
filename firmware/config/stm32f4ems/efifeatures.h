@@ -253,6 +253,10 @@
 #define EFI_FILE_LOGGING TRUE
 #endif
 
+#ifndef EFI_EMBED_INI_MSD
+#define EFI_EMBED_INI_MSD TRUE
+#endif
+
 #ifndef EFI_USB_SERIAL
 #define EFI_USB_SERIAL TRUE
 #endif
