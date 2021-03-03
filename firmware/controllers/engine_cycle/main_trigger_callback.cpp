@@ -206,12 +206,9 @@ void InjectionEvent::onTriggerTooth(size_t trgEventIndex, int rpm, efitick_t now
 
 	// Perform wall wetting adjustment on fuel mass, not duration, so that
 	// it's correct during fuel pressure transients
+	const float injectionMass = wallFuel.adjust(ENGINE(injectionMass) PASS_ENGINE_PARAMETER_SUFFIX);
+	const floatms_t injectionDuration = ENGINE(injectorModel)->getInjectionDuration(injectionMass);
 
-	// TODO: determine why this breaks hardware CI cranking
-	//const float injectionMass = wallFuel.adjust(ENGINE(injectionMass) PASS_ENGINE_PARAMETER_SUFFIX);
-	//const floatms_t injectionDuration = ENGINE(injectorModel)->getInjectionDuration(injectionMass);
-
-	const floatms_t injectionDuration = wallFuel.adjust(ENGINE(injectionDuration) PASS_ENGINE_PARAMETER_SUFFIX);
 #if EFI_PRINTF_FUEL_DETAILS
 	if (printFuelDebug) {
 		printf("fuel index=%d injectionDuration=%.2fms adjusted=%.2fms\n",
@@ -322,6 +319,12 @@ static void handleFuel(const bool limitedFuel, uint32_t trgEventIndex, int rpm, 
 	efiAssertVoid(CUSTOM_STACK_6627, getCurrentRemainingStack() > 128, "lowstck#3");
 	efiAssertVoid(CUSTOM_ERR_6628, trgEventIndex < engine->engineCycleEventCount, "handleFuel/event index");
 
+	ENGINE(tpsAccelEnrichment.onNewValue(Sensor::get(SensorType::Tps1).value_or(0) PASS_ENGINE_PARAMETER_SUFFIX));
+	if (trgEventIndex == 0) {
+		ENGINE(tpsAccelEnrichment.onEngineCycleTps(PASS_ENGINE_PARAMETER_SIGNATURE));
+		ENGINE(engineLoadAccelEnrichment.onEngineCycle(PASS_ENGINE_PARAMETER_SIGNATURE));
+	}
+
 	if (limitedFuel) {
 		return;
 	}
@@ -349,12 +352,6 @@ static void handleFuel(const bool limitedFuel, uint32_t trgEventIndex, int rpm, 
 		scheduleMsg(logger, "handleFuel ind=%d %d", trgEventIndex, getRevolutionCounter());
 	}
 #endif /* FUEL_MATH_EXTREME_LOGGING */
-
-	ENGINE(tpsAccelEnrichment.onNewValue(Sensor::get(SensorType::Tps1).value_or(0) PASS_ENGINE_PARAMETER_SUFFIX));
-	if (trgEventIndex == 0) {
-		ENGINE(tpsAccelEnrichment.onEngineCycleTps(PASS_ENGINE_PARAMETER_SIGNATURE));
-		ENGINE(engineLoadAccelEnrichment.onEngineCycle(PASS_ENGINE_PARAMETER_SIGNATURE));
-	}
 
 	fs->onTriggerTooth(trgEventIndex, rpm, nowNt PASS_ENGINE_PARAMETER_SUFFIX);
 }
