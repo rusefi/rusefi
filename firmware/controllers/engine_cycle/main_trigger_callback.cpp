@@ -212,7 +212,6 @@ void InjectionEvent::onTriggerTooth(size_t trgEventIndex, int rpm, efitick_t now
 	//const floatms_t injectionDuration = ENGINE(injectorModel)->getInjectionDuration(injectionMass);
 
 	const floatms_t injectionDuration = wallFuel.adjust(ENGINE(injectionDuration) PASS_ENGINE_PARAMETER_SUFFIX);
-
 #if EFI_PRINTF_FUEL_DETAILS
 	if (printFuelDebug) {
 		printf("fuel index=%d injectionDuration=%.2fms adjusted=%.2fms\n",
