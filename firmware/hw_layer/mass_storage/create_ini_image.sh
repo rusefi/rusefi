@@ -12,6 +12,7 @@ fatlabel ramdisk.image RUSEFI
 # -j option dumps all files in the root of the zip (instead of inside directories)
 zip -j rusefi.ini.zip $1
 
+# Put the zip inside the filesystem
 mcopy -i ramdisk.image rusefi.ini.zip ::
 
 # write out as a C array, with "static const" tacked on the front
