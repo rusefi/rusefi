@@ -70,11 +70,11 @@ static const struct BaseBlockDeviceVMT ndVmt = {
 	nd_get_info
 };
 
-// This device is always ready and has no state
-static NullDevice nd = { &ndVmt, BLK_READY };
-
 #if EFI_EMBED_INI_MSD
 static RamDisk ramdisk;
+#else
+// This device is always ready and has no state
+static NullDevice nd = { &ndVmt, BLK_READY };
 #endif
 
 #if HAL_USE_USB_MSD
