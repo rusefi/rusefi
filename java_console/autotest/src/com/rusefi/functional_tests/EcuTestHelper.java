@@ -1,9 +1,8 @@
 package com.rusefi.functional_tests;
 
 import com.devexperts.logging.Logging;
-import com.rusefi.ControllerConnectorState;
+import com.rusefi.autotest.ControllerConnectorState;
 import com.rusefi.IoUtil;
-import com.rusefi.TestingUtils;
 import com.rusefi.Timeouts;
 import com.rusefi.config.generated.Fields;
 import com.rusefi.core.ISensorCentral;

@@ -1,5 +1,6 @@
 package com.rusefi;
 
+import com.rusefi.autotest.ControllerConnectorState;
 import com.rusefi.config.generated.Fields;
 import com.rusefi.functional_tests.EcuTestHelper;
 import com.rusefi.io.CommandQueue;

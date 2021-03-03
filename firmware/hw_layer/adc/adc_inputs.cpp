@@ -456,6 +456,9 @@ void removeChannel(const char *name, adc_channel_e setting) {
 	adcHwChannelEnabled[setting] = ADC_OFF;
 }
 
+// Weak link a stub so that every board doesn't have to implement this function
+__attribute__((weak)) void setAdcChannelOverrides() { }
+
 static void configureInputs(void) {
 	memset(adcHwChannelEnabled, 0, sizeof(adcHwChannelEnabled));
 
@@ -550,4 +553,15 @@ void printFullAdcReportIfNeeded(Logging *logger) {
 	printFullAdcReport(logger);
 }
 
-#endif /* HAL_USE_ADC */
+#else /* not HAL_USE_ADC */
+
+__attribute__((weak)) float getVoltageDivided(const char*, adc_channel_e DECLARE_ENGINE_PARAMETER_SUFFIX) {
+	return 0;
+}
+
+// voltage in MCU universe, from zero to VDD
+__attribute__((weak)) float getVoltage(const char*, adc_channel_e DECLARE_ENGINE_PARAMETER_SUFFIX) {
+	return 0;
+}
+
+#endif
