@@ -13,6 +13,13 @@
 #if EFI_EMBED_INI_MSD
 #include "ramdisk.h"
 #include "ramdisk_image.h"
+
+// If the ramdisk image told us not to use it, don't use it.
+#ifdef RAMDISK_INVALID
+#undef EFI_EMBED_INI_MSD
+#define EFI_EMBED_INI_MSD FALSE
+#endif
+
 #endif
 
 #include <cstring>
