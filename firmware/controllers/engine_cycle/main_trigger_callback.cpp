@@ -206,8 +206,12 @@ void InjectionEvent::onTriggerTooth(size_t trgEventIndex, int rpm, efitick_t now
 
 	// Perform wall wetting adjustment on fuel mass, not duration, so that
 	// it's correct during fuel pressure transients
-	const float injectionMass = wallFuel.adjust(ENGINE(injectionMass) PASS_ENGINE_PARAMETER_SUFFIX);
-	const floatms_t injectionDuration = ENGINE(injectorModel)->getInjectionDuration(injectionMass);
+
+	// TODO: determine why this breaks hardware CI cranking
+	//const float injectionMass = wallFuel.adjust(ENGINE(injectionMass) PASS_ENGINE_PARAMETER_SUFFIX);
+	//const floatms_t injectionDuration = ENGINE(injectorModel)->getInjectionDuration(injectionMass);
+
+	const floatms_t injectionDuration = wallFuel.adjust(ENGINE(injectionDuration) PASS_ENGINE_PARAMETER_SUFFIX);
 
 #if EFI_PRINTF_FUEL_DETAILS
 	if (printFuelDebug) {
