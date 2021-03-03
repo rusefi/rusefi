@@ -24,6 +24,7 @@
 #include "string.h"
 #include "mpu_util.h"
 #include "engine.h"
+#include "thread_priority.h"
 
 EXTERN_ENGINE;
 
@@ -150,7 +151,7 @@ static const CANConfig *canConfig = &canConfig500;
 class CanRead final : public ThreadController<UTILITY_THREAD_STACK_SIZE> {
 public:
 	CanRead()
-		: ThreadController("CAN RX", NORMALPRIO)
+		: ThreadController("CAN RX", PRIO_CAN_RX)
 	{
 	}
 

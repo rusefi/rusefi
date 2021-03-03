@@ -23,10 +23,6 @@ void readLogFileContent(char *buffer, short fileId, short offset, short length);
 void handleTsR(TsChannelBase* tsChannel, char *input);
 void handleTsW(TsChannelBase* tsChannel, char *input);
 
-extern spi_device_e mmcSpiDevice;
-#define LOCK_SD_SPI lockSpi(mmcSpiDevice)
-#define UNLOCK_SD_SPI unlockSpi(mmcSpiDevice)
-
 extern "C"
 #endif
 void onUsbConnectedNotifyMmcI(void);

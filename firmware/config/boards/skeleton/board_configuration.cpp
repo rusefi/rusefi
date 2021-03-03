@@ -226,9 +226,6 @@ void setBoardConfigurationOverrides(void) {
 	engineConfiguration->injectionMode = IM_SIMULTANEOUS;
 }
 
-void setAdcChannelOverrides(void) {
-}
-
 /*
  * Local variables:
  *  c-basic-indent: 4

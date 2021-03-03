@@ -33,6 +33,8 @@
 
 #include "mcuconf.h"
 
+#include "rusefi_halconf.h"
+
 /**
  * @brief   Enables the FLASH subsystem.
  */
@@ -40,34 +42,8 @@
 #define HAL_USE_FLASH               FALSE
 #endif
 
-/**
- * @brief   Enables the PAL subsystem.
- */
-#if !defined(HAL_USE_PAL) || defined(__DOXYGEN__)
-#define HAL_USE_PAL                 TRUE
-#endif
-
 #if !defined(PAL_USE_WAIT) || defined(__DOXYGEN__)
 #define PAL_USE_WAIT                FALSE
-#endif
-
-// rusEfi uses callback for PAL input capture
-#if !defined(PAL_USE_CALLBACKS) || defined(__DOXYGEN__)
-#define PAL_USE_CALLBACKS                TRUE
-#endif
-
-/**
- * @brief   Enables the ADC subsystem.
- */
-#if !defined(HAL_USE_ADC) || defined(__DOXYGEN__)
-#define HAL_USE_ADC                 TRUE
-#endif
-
-/**
- * @brief   Enables the CAN subsystem.
- */
-#if !defined(HAL_USE_CAN) || defined(__DOXYGEN__)
-#define HAL_USE_CAN                 TRUE
 #endif
 
 /**
@@ -85,13 +61,6 @@
 #endif
 
 /**
- * @brief   Enables the GPT subsystem.
- */
-#if !defined(HAL_USE_GPT) || defined(__DOXYGEN__)
-#define HAL_USE_GPT                 TRUE
-#endif
-
-/**
  * @brief   Enables the I2C subsystem.
  */
 #if !defined(HAL_USE_I2C) || defined(__DOXYGEN__)
@@ -99,31 +68,10 @@
 #endif
 
 /**
- * @brief   Enables the I2S subsystem.
- */
-#if !defined(HAL_USE_I2S) || defined(__DOXYGEN__)
-#define HAL_USE_I2S                 FALSE
-#endif
-
-/**
  * @brief   Enables the ICU subsystem.
  */
 #if !defined(HAL_USE_ICU) || defined(__DOXYGEN__)
 #define HAL_USE_ICU                 TRUE
-#endif
-
-/**
- * @brief   Enables the MAC subsystem.
- */
-#if !defined(HAL_USE_MAC) || defined(__DOXYGEN__)
-#define HAL_USE_MAC                 FALSE
-#endif
-
-/**
- * @brief   Enables the MMC_SPI subsystem.
- */
-#if !defined(HAL_USE_MMC_SPI) || defined(__DOXYGEN__)
-#define HAL_USE_MMC_SPI             TRUE
 #endif
 
 /**
@@ -155,13 +103,6 @@
 #endif
 
 /**
- * @brief   Enables the SERIAL over USB subsystem.
- */
-#if !defined(HAL_USE_SERIAL_USB) || defined(__DOXYGEN__)
-#define HAL_USE_SERIAL_USB          TRUE
-#endif
-
-/**
  * @brief   Enables the SPI subsystem.
  */
 #if !defined(HAL_USE_SPI) || defined(__DOXYGEN__)
@@ -181,93 +122,10 @@
 #endif
 
 /**
- * @brief   Enables the USB subsystem.
- */
-#if !defined(HAL_USE_USB) || defined(__DOXYGEN__)
-#define HAL_USE_USB                 TRUE
-#endif
-
-/**
  * @brief   Enables the WDG subsystem.
  */
 #if !defined(HAL_USE_WDG) || defined(__DOXYGEN__)
 #define HAL_USE_WDG                 FALSE
-#endif
-
-/*===========================================================================*/
-/* ADC driver related settings.                                              */
-/*===========================================================================*/
-
-/**
- * @brief   Enables synchronous APIs.
- * @note    Disabling this option saves both code and data space.
- */
-#if !defined(ADC_USE_WAIT) || defined(__DOXYGEN__)
-#define ADC_USE_WAIT                TRUE
-#endif
-
-/**
- * @brief   Enables the @p adcAcquireBus() and @p adcReleaseBus() APIs.
- * @note    Disabling this option saves both code and data space.
- */
-#if !defined(ADC_USE_MUTUAL_EXCLUSION) || defined(__DOXYGEN__)
-#define ADC_USE_MUTUAL_EXCLUSION    FALSE
-#endif
-
-/*===========================================================================*/
-/* CAN driver related settings.                                              */
-/*===========================================================================*/
-
-/**
- * @brief   Sleep mode related APIs inclusion switch.
- */
-#if !defined(CAN_USE_SLEEP_MODE) || defined(__DOXYGEN__)
-#define CAN_USE_SLEEP_MODE          FALSE
-#endif
-
-/*===========================================================================*/
-/* I2C driver related settings.                                              */
-/*===========================================================================*/
-
-/**
- * @brief   Enables the mutual exclusion APIs on the I2C bus.
- */
-#if !defined(I2C_USE_MUTUAL_EXCLUSION) || defined(__DOXYGEN__)
-#define I2C_USE_MUTUAL_EXCLUSION    TRUE
-#endif
-
-/*===========================================================================*/
-/* MAC driver related settings.                                              */
-/*===========================================================================*/
-
-/**
- * @brief   Enables an event sources for incoming packets.
- */
-#if !defined(MAC_USE_ZERO_COPY) || defined(__DOXYGEN__)
-#define MAC_USE_ZERO_COPY           FALSE
-#endif
-
-/**
- * @brief   Enables an event sources for incoming packets.
- */
-#if !defined(MAC_USE_EVENTS) || defined(__DOXYGEN__)
-#define MAC_USE_EVENTS              TRUE
-#endif
-
-/*===========================================================================*/
-/* MMC_SPI driver related settings.                                          */
-/*===========================================================================*/
-
-/**
- * @brief   Delays insertions.
- * @details If enabled this options inserts delays into the MMC waiting
- *          routines releasing some extra CPU time for the threads with
- *          lower priority, this may slow down the driver a bit however.
- *          This option is recommended also if the SPI driver does not
- *          use a DMA channel and heavily loads the CPU.
- */
-#if !defined(MMC_NICE_WAITING) || defined(__DOXYGEN__)
-#define MMC_NICE_WAITING            TRUE
 #endif
 
 /*===========================================================================*/
@@ -326,49 +184,6 @@
 #endif
 
 /*===========================================================================*/
-/* SERIAL_USB driver related setting.                                        */
-/*===========================================================================*/
-
-/**
- * @brief   Serial over USB buffers size.
- * @details Configuration parameter, the buffer size must be a multiple of
- *          the USB data endpoint maximum packet size.
- * @note    The default is 256 bytes for both the transmission and receive
- *          buffers.
- */
-#if !defined(SERIAL_USB_BUFFERS_SIZE) || defined(__DOXYGEN__)
-#define SERIAL_USB_BUFFERS_SIZE     320
-#endif
-
-/**
- * @brief   Serial over USB number of buffers.
- * @note    The default is 2 buffers.
- */
-#if !defined(SERIAL_USB_BUFFERS_NUMBER) || defined(__DOXYGEN__)
-#define SERIAL_USB_BUFFERS_NUMBER   2
-#endif
-
-/*===========================================================================*/
-/* SPI driver related settings.                                              */
-/*===========================================================================*/
-
-/**
- * @brief   Enables synchronous APIs.
- * @note    Disabling this option saves both code and data space.
- */
-#if !defined(SPI_USE_WAIT) || defined(__DOXYGEN__)
-#define SPI_USE_WAIT                TRUE
-#endif
-
-/**
- * @brief   Enables the @p spiAcquireBus() and @p spiReleaseBus() APIs.
- * @note    Disabling this option saves both code and data space.
- */
-#if !defined(SPI_USE_MUTUAL_EXCLUSION) || defined(__DOXYGEN__)
-#define SPI_USE_MUTUAL_EXCLUSION    TRUE
-#endif
-
-/*===========================================================================*/
 /* UART driver related settings.                                             */
 /*===========================================================================*/
 
@@ -392,20 +207,6 @@
 #if !defined(UART_USE_MUTUAL_EXCLUSION) || defined(__DOXYGEN__)
 #define UART_USE_MUTUAL_EXCLUSION   FALSE
 #endif
-
-/*===========================================================================*/
-/* USB driver related settings.                                              */
-/*===========================================================================*/
-
-/**
- * @brief   Enables synchronous APIs.
- * @note    Disabling this option saves both code and data space.
- */
-#if !defined(USB_USE_WAIT) || defined(__DOXYGEN__)
-#define USB_USE_WAIT                TRUE
-#endif
-
-#include "halconf_community.h"
 
 #endif /* HALCONF_H */
 

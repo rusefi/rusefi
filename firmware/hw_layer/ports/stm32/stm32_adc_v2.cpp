@@ -17,8 +17,10 @@ void portInitAdc() {
 	// Init slow ADC
 	adcStart(&ADCD1, NULL);
 
+#if EFI_USE_FAST_ADC
 	// Init fast ADC (MAP sensor)
 	adcStart(&ADCD2, NULL);
+#endif
 
 	// Enable internal temperature reference
 	adcSTM32EnableTSVREFE(); // Internal temperature sensor

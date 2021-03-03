@@ -41,6 +41,7 @@
 #include "pin_repository.h"
 #include "os_util.h"
 #include "voltage.h"
+#include "thread_priority.h"
 
 EXTERN_ENGINE_CONFIGURATION;
 
@@ -1199,7 +1200,7 @@ static int tle8888_init(void * data)
 
 	/* start thread */
 	chip->thread = chThdCreateStatic(chip->thread_wa, sizeof(chip->thread_wa),
-									 NORMALPRIO + 1, tle8888_driver_thread, chip);
+									 PRIO_GPIOCHIP, tle8888_driver_thread, chip);
 
 	return 0;
 }
