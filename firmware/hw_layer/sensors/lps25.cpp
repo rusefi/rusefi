@@ -51,6 +51,10 @@ bool Lps25::init(brain_pin_e scl, brain_pin_e sda) {
 }
 
 expected<float> Lps25::readPressureKpa() {
+	if (!m_hasInit) {
+		return unexpected;
+	}
+
 	// First read the status reg to check if there are data available
 	uint8_t sr = m_i2c.readRegister(addr, REG_Status);
 
