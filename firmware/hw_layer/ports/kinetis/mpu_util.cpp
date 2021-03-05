@@ -275,4 +275,9 @@ float getMcuTemperature() {
 	return 0;
 }
 
+bool readSlowAnalogInputs(adcsample_t* convertedSamples) {
+	// TODO: implement me!
+	return true;
+}
+
 #endif /* EFI_PROD_CODE */
