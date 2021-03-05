@@ -217,5 +217,3 @@ void BitbangI2c::writeRegister(uint8_t addr, uint8_t reg, uint8_t val) {
 
 	write(addr, buf, 2);
 }
-
-#endif // EFI_PROD_CODE
