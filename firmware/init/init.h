@@ -27,6 +27,7 @@ void initThermistors(DECLARE_CONFIG_PARAMETER_SIGNATURE);
 void initCanSensors();
 void initLambda(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 void initFlexSensor(DECLARE_CONFIG_PARAMETER_SIGNATURE);
+void initBaro();
 
 // Sensor reconfiguration
 void reconfigureVbatt(DECLARE_CONFIG_PARAMETER_SIGNATURE);

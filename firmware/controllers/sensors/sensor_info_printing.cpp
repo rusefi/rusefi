@@ -3,6 +3,7 @@
 #include "functional_sensor.h"
 #include "redundant_sensor.h"
 #include "rpm_calculator.h"
+#include "Lps25Sensor.h"
 #include "linear_func.h"
 #include "resistance_func.h"
 #include "thermistor_func.h"
@@ -44,6 +45,10 @@ void RpmCalculator::showInfo(Logging* logger, const char* /*sensorName*/) const 
 		isRunning(),
 		get().value_or(0)
 	);
+}
+
+void Lps25Sensor::showInfo(Logging* logger, const char* sensorName) const {
+	// TODO
 }
 
 void LinearFunc::showInfo(Logging* logger, float testRawValue) const {
