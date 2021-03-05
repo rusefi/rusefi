@@ -9,8 +9,9 @@
 #pragma once
 
 #if EFI_PROD_CODE
-
 #include "hal.h"
+#endif
+
 #include "rusefi_hw_enums.h"
 #include <cstdint>
 #include <cstddef>
@@ -53,10 +54,10 @@ private:
 	// Wait for 1/4 of a bit time
 	void waitQuarterBit();
 
+#if EFI_PROD_CODE
 	ioportid_t m_sclPort = 0;
 	ioportmask_t m_sclPin = 0;
 	ioportid_t m_sdaPort = 0;
 	ioportmask_t m_sdaPin = 0;
+#endif
 };
-
-#endif // EFI_PROD_CODE
