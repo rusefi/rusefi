@@ -13,6 +13,11 @@
 
 EXTERN_CONFIG;
 
+/* Depth of the conversion buffer, channels are sampled X times each.*/
+#ifndef ADC_BUF_DEPTH_SLOW
+#define ADC_BUF_DEPTH_SLOW      8
+#endif /* ADC_BUF_DEPTH_SLOW */
+
 void portInitAdc() {
 	// Init slow ADC
 	adcStart(&ADCD1, NULL);
@@ -99,6 +104,76 @@ float getMcuTemperature() {
 	}
 
 	return degrees;
+}
+
+// See https://github.com/rusefi/rusefi/issues/976 for discussion on these values
+#define ADC_SAMPLING_SLOW ADC_SAMPLE_56
+#define ADC_SAMPLING_FAST ADC_SAMPLE_28
+
+// Slow ADC has 16 channels we can sample
+constexpr size_t slowChannelCount = 16;
+
+// Conversion group for slow channels
+// This simply samples every channel in sequence
+static constexpr ADCConversionGroup convGroupSlow = {
+	.circular			= FALSE,
+	.num_channels		= slowChannelCount,
+	.end_cb				= nullptr,
+	.error_cb			= nullptr,
+	/* HW dependent part.*/
+	.cr1				= 0,
+	.cr2				= ADC_CR2_SWSTART,
+	// Configure all channels to ADC_SAMPLING_SLOW sample time
+	.smpr1 =
+		ADC_SMPR1_SMP_AN10(ADC_SAMPLING_SLOW) |
+		ADC_SMPR1_SMP_AN11(ADC_SAMPLING_SLOW) |
+		ADC_SMPR1_SMP_AN12(ADC_SAMPLING_SLOW) |
+		ADC_SMPR1_SMP_AN13(ADC_SAMPLING_SLOW) |
+		ADC_SMPR1_SMP_AN14(ADC_SAMPLING_SLOW) |
+		ADC_SMPR1_SMP_AN15(ADC_SAMPLING_SLOW),
+	.smpr2 =
+		ADC_SMPR2_SMP_AN0(ADC_SAMPLING_SLOW) |
+		ADC_SMPR2_SMP_AN1(ADC_SAMPLING_SLOW) |
+		ADC_SMPR2_SMP_AN2(ADC_SAMPLING_SLOW) |
+		ADC_SMPR2_SMP_AN3(ADC_SAMPLING_SLOW) |
+		ADC_SMPR2_SMP_AN4(ADC_SAMPLING_SLOW) |
+		ADC_SMPR2_SMP_AN5(ADC_SAMPLING_SLOW) |
+		ADC_SMPR2_SMP_AN6(ADC_SAMPLING_SLOW) |
+		ADC_SMPR2_SMP_AN7(ADC_SAMPLING_SLOW) |
+		ADC_SMPR2_SMP_AN8(ADC_SAMPLING_SLOW) |
+		ADC_SMPR2_SMP_AN9(ADC_SAMPLING_SLOW),
+	.htr	= 0,
+	.ltr	= 0,
+	// Simply sequence every channel in order
+	.sqr1	= ADC_SQR1_SQ13_N(12) | ADC_SQR1_SQ14_N(13) | ADC_SQR1_SQ15_N(14) | ADC_SQR1_SQ16_N(15) | ADC_SQR1_NUM_CH(16), // Conversion group sequence 13...16 + sequence length
+	.sqr2	= ADC_SQR2_SQ7_N(6)   | ADC_SQR2_SQ8_N(7)   | ADC_SQR2_SQ9_N(8)   | ADC_SQR2_SQ10_N(8)  | ADC_SQR2_SQ11_N(10) | ADC_SQR2_SQ12_N(11), // Conversion group sequence 7...12
+	.sqr3	= ADC_SQR3_SQ1_N(0)   | ADC_SQR3_SQ2_N(1)   | ADC_SQR3_SQ3_N(2)   |  ADC_SQR3_SQ4_N(3)  |   ADC_SQR3_SQ5_N(4) |   ADC_SQR3_SQ6_N(5), // Conversion group sequence 1...6
+};
+
+static NO_CACHE adcsample_t slowSampleBuffer[ADC_BUF_DEPTH_SLOW * slowChannelCount];
+
+bool readSlowAnalogInputs(adcsample_t* convertedSamples) {
+	msg_t result = adcConvert(&ADCD1, &convGroupSlow, slowSampleBuffer, ADC_BUF_DEPTH_SLOW);
+
+	// If something went wrong - try again later
+	if (result == MSG_RESET || result == MSG_TIMEOUT) {
+		return false;
+	}
+
+	// Average samples to get some noise filtering and oversampling
+	for (int i = 0; i < slowChannelCount; i++) {
+		uint32_t sum = 0;
+		size_t index = i;
+		for (size_t j = 0; j < ADC_BUF_DEPTH_SLOW; j++) {
+			sum += slowSampleBuffer[index];
+			index += slowChannelCount;
+		}
+
+		adcsample_t value = static_cast<adcsample_t>(sum / ADC_BUF_DEPTH_SLOW);
+		convertedSamples[i] = value;
+	}
+
+	return true;
 }
 
 #endif // HAL_USE_ADC
