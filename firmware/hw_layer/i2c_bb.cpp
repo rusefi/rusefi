@@ -36,12 +36,12 @@ void BitbangI2c::scl_low() {
 }
 
 void BitbangI2c::init(brain_pin_e scl, brain_pin_e sda) {
+#if EFI_PROD_CODE
 	if (m_sdaPort) return;
 
 	efiSetPadMode("i2c", scl, PAL_MODE_OUTPUT_OPENDRAIN); //PAL_STM32_OTYPE_OPENDRAIN
 	efiSetPadMode("i2c", sda, PAL_MODE_OUTPUT_OPENDRAIN);
 
-#if EFI_PROD_CODE
 	m_sclPort = getHwPort("i2c", scl);
 	m_sclPin = getHwPin("i2c", scl);
 
@@ -107,8 +107,12 @@ bool BitbangI2c::readBit() {
 	waitQuarterBit();
 	waitQuarterBit();
 
+#if EFI_PROD_CODE
 	// Read just before we set the clock low (ie, as late as possible)
 	bool val = palReadPad(m_sdaPort, m_sdaPin);
+#else
+	bool val = false;
+#endif
 
 	scl_low();
 	waitQuarterBit();
