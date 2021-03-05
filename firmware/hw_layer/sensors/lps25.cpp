@@ -6,8 +6,6 @@
  * @author Matthew Kennedy, (c) 2020
  */
 
-#if EFI_PROD_CODE
-
 #include "lps25.h"
 
 static constexpr uint8_t addr = 0x5C;
@@ -103,5 +101,3 @@ expected<float> Lps25::readPressureKpa() {
 
 	return kilopascal;
 }
-
-#endif // EFI_PROD_CODE
