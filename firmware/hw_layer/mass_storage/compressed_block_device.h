@@ -1,3 +1,11 @@
+/**
+ * @file	compressed_block_device.h
+ * @brief	This file implements a ChibiOS block device backed by a compressed (gzip) store.
+ *
+ * @date	Mar 4, 2021
+ * @author	Matthew Kennedy, (c) 2021
+ */
+
 #pragma once
 
 #include "hal.h"

@@ -1,3 +1,23 @@
+/**
+ * @file	compressed_block_device.cpp
+ * @brief	This file implements a ChibiOS block device backed by a compressed (gzip) store.
+ *
+ * @date	Mar 4, 2021
+ * @author	Matthew Kennedy, (c) 2021
+ *
+ * This works by decompressing one block (512 bytes) at a time.
+ *
+ * For sequential reads, the performance is great - the gzip decompress can only go forwards in the file.
+ * If a block later in the file (but with a gap) is requested, we decompress (and discard) the blocks in the gap,
+ * returning the block requested.
+ *
+ * If a block is requested from before the previous block, we discard decompression state,
+ * reinitialize, and decompress up to that block.
+ *
+ * NOTE: This means performance is terrible for "true" random access!  Things go best when you have a few
+ * big files in the filesystem with no fragmentation, so they can be read out in large sequential chunks.
+ *
+ */
 
 #include "compressed_block_device.h"
 
@@ -33,12 +53,9 @@ static bool disconnect(void* instance) {
 
 static bool read(void* instance, uint32_t startblk, uint8_t* buffer, uint32_t n) {
 	CompressedBlockDevice* cbd = reinterpret_cast<CompressedBlockDevice*>(instance);
-	if (startblk == cbd->lastBlock) {
-		return HAL_SUCCESS;
-	}
 
 	// If we just initialized, or trying to seek backwards, (re)initialize the decompressor
-	if (cbd->lastBlock == -1 || startblk < cbd->lastBlock) {
+	if (cbd->lastBlock == -1 || startblk <= cbd->lastBlock) {
 		uzlib_uncompress_init(&cbd->d, cbd->dictionary, sizeof(cbd->dictionary));
 
 		cbd->d.source = cbd->source;
@@ -53,6 +70,7 @@ static bool read(void* instance, uint32_t startblk, uint8_t* buffer, uint32_t n)
 	// How many blocks do we need to decompress to get to the one requested?
 	size_t blocks_ahead = startblk - cbd->lastBlock;
 
+	// Decompress blocks until we get to the block we need
 	for (size_t i = 0; i < blocks_ahead; i++) {
 		cbd->d.dest = cbd->d.dest_start = buffer;
 		cbd->d.dest_limit = buffer + BLOCK_SIZE;
@@ -127,4 +145,5 @@ void compressedBlockDeviceStart(CompressedBlockDevice* cbd, const uint8_t* sourc
 	cbd->source = source;
 	cbd->sourceSize = sourceSize;
 	cbd->state = BLK_READY;
+	cbd->lastBlock = -1;
 }
