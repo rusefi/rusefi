@@ -8,25 +8,31 @@
 
 #include "i2c_bb.h"
 
-#if EFI_PROD_CODE
-
 #include "io_pins.h"
 #include "efi_gpio.h"
 
 void BitbangI2c::sda_high() {
+#if EFI_PROD_CODE
 	palSetPad(m_sdaPort, m_sdaPin);
+#endif
 }
 
 void BitbangI2c::sda_low() {
+#if EFI_PROD_CODE
 	palClearPad(m_sdaPort, m_sdaPin);
+#endif
 }
 
 void BitbangI2c::scl_high() {
+#if EFI_PROD_CODE
 	palSetPad(m_sclPort, m_sclPin);
+#endif
 }
 
 void BitbangI2c::scl_low() {
+#if EFI_PROD_CODE
 	palClearPad(m_sclPort, m_sclPin);
+#endif
 }
 
 void BitbangI2c::init(brain_pin_e scl, brain_pin_e sda) {
@@ -35,11 +41,13 @@ void BitbangI2c::init(brain_pin_e scl, brain_pin_e sda) {
 	efiSetPadMode("i2c", scl, PAL_MODE_OUTPUT_OPENDRAIN); //PAL_STM32_OTYPE_OPENDRAIN
 	efiSetPadMode("i2c", sda, PAL_MODE_OUTPUT_OPENDRAIN);
 
+#if EFI_PROD_CODE
 	m_sclPort = getHwPort("i2c", scl);
 	m_sclPin = getHwPin("i2c", scl);
 
 	m_sdaPort = getHwPort("i2c", sda);
 	m_sdaPin = getHwPin("i2c", sda);
+#endif
 
 	// Both lines idle high
 	scl_high();
