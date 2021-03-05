@@ -3,6 +3,6 @@
 //
 
 #define SIGNATURE_BOARD frankenso_na6
-#define SIGNATURE_DATE 2021.03.03
+#define SIGNATURE_DATE 2021.03.05
 #define SIGNATURE_HASH 4226303790
-#define TS_SIGNATURE "rusEFI 2021.03.03.frankenso_na6.4226303790"
+#define TS_SIGNATURE "rusEFI 2021.03.05.frankenso_na6.4226303790"

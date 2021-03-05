@@ -2,6 +2,9 @@
 
 #pragma once
 
+#undef EFI_MAP_AVERAGING
+#define EFI_MAP_AVERAGING FALSE
+
 #undef EFI_USE_FAST_ADC
 #define EFI_USE_FAST_ADC FALSE
 
