@@ -63,3 +63,5 @@
 // todo: start using consoleSerialRxPin? Not sure
 #undef EFI_CONSOLE_RX_BRAIN_PIN
 #define EFI_CONSOLE_RX_BRAIN_PIN GPIOD_9
+
+#define EFI_USE_COMPRESSED_INI_MSD
