@@ -6,8 +6,6 @@
  * @author Matthew Kennedy, (c) 2020
  */
 
-#if EFI_PROD_CODE
-
 #include "lps25.h"
 
 static constexpr uint8_t addr = 0x5C;
@@ -51,6 +49,10 @@ bool Lps25::init(brain_pin_e scl, brain_pin_e sda) {
 }
 
 expected<float> Lps25::readPressureKpa() {
+	if (!m_hasInit) {
+		return unexpected;
+	}
+
 	// First read the status reg to check if there are data available
 	uint8_t sr = m_i2c.readRegister(addr, REG_Status);
 
@@ -99,5 +101,3 @@ expected<float> Lps25::readPressureKpa() {
 
 	return kilopascal;
 }
-
-#endif // EFI_PROD_CODE

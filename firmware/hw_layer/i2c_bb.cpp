@@ -8,28 +8,35 @@
 
 #include "i2c_bb.h"
 
-#if EFI_PROD_CODE
-
 #include "io_pins.h"
 #include "efi_gpio.h"
 
 void BitbangI2c::sda_high() {
+#if EFI_PROD_CODE
 	palSetPad(m_sdaPort, m_sdaPin);
+#endif
 }
 
 void BitbangI2c::sda_low() {
+#if EFI_PROD_CODE
 	palClearPad(m_sdaPort, m_sdaPin);
+#endif
 }
 
 void BitbangI2c::scl_high() {
+#if EFI_PROD_CODE
 	palSetPad(m_sclPort, m_sclPin);
+#endif
 }
 
 void BitbangI2c::scl_low() {
+#if EFI_PROD_CODE
 	palClearPad(m_sclPort, m_sclPin);
+#endif
 }
 
 void BitbangI2c::init(brain_pin_e scl, brain_pin_e sda) {
+#if EFI_PROD_CODE
 	if (m_sdaPort) return;
 
 	efiSetPadMode("i2c", scl, PAL_MODE_OUTPUT_OPENDRAIN); //PAL_STM32_OTYPE_OPENDRAIN
@@ -40,6 +47,7 @@ void BitbangI2c::init(brain_pin_e scl, brain_pin_e sda) {
 
 	m_sdaPort = getHwPort("i2c", sda);
 	m_sdaPin = getHwPin("i2c", sda);
+#endif
 
 	// Both lines idle high
 	scl_high();
@@ -99,8 +107,12 @@ bool BitbangI2c::readBit() {
 	waitQuarterBit();
 	waitQuarterBit();
 
+#if EFI_PROD_CODE
 	// Read just before we set the clock low (ie, as late as possible)
 	bool val = palReadPad(m_sdaPort, m_sdaPin);
+#else
+	bool val = false;
+#endif
 
 	scl_low();
 	waitQuarterBit();
@@ -209,5 +221,3 @@ void BitbangI2c::writeRegister(uint8_t addr, uint8_t reg, uint8_t val) {
 
 	write(addr, buf, 2);
 }
-
-#endif // EFI_PROD_CODE
