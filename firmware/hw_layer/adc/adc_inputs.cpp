@@ -240,7 +240,7 @@ adc_channel_mode_e getAdcMode(adc_channel_e hwChannel) {
 	}
 #endif // EFI_USE_FAST_ADC
 
-	return ADC_OFF;
+	return ADC_SLOW;
 }
 
 #if EFI_USE_FAST_ADC
@@ -320,7 +320,6 @@ static void printAdcValue(int channel) {
 	float volts = adcToVoltsDivided(value);
 	scheduleMsg(&logger, "adc voltage : %.2f", volts);
 }
-
 
 static uint32_t slowAdcConversionCount = 0;
 static uint32_t slowAdcErrorsCount = 0;
