@@ -12,7 +12,13 @@
 
 #if EFI_EMBED_INI_MSD
 #include "ramdisk.h"
+#include "compressed_block_device.h"
+
+#ifdef EFI_USE_COMPRESSED_INI_MSD
+#include "ramdisk_image_compressed.h"
+#else
 #include "ramdisk_image.h"
+#endif
 
 // If the ramdisk image told us not to use it, don't use it.
 #ifdef RAMDISK_INVALID
@@ -78,7 +84,11 @@ static const struct BaseBlockDeviceVMT ndVmt = {
 };
 
 #if EFI_EMBED_INI_MSD
+#ifdef EFI_USE_COMPRESSED_INI_MSD
+static CompressedBlockDevice cbd;
+#else
 static RamDisk ramdisk;
+#endif
 #else
 // This device is always ready and has no state
 static NullDevice nd = { &ndVmt, BLK_READY };
@@ -89,6 +99,12 @@ void msdMountNullDevice(USBMassStorageDriver* msdp, USBDriver *usbp, uint8_t* bl
 	// TODO: implement multi-LUN so we can mount the ini image and SD card at the same time
 
 #if EFI_EMBED_INI_MSD
+#ifdef EFI_USE_COMPRESSED_INI_MSD
+	uzlib_init();
+	compressedBlockDeviceObjectInit(&cbd);
+	compressedBlockDeviceStart(&cbd, ramdisk_image_gz, sizeof(ramdisk_image_gz));
+	msdStart(msdp, usbp, (BaseBlockDevice*)&cbd, blkbuf, inquiry, nullptr);
+#else // not EFI_USE_COMPRESSED_INI_MSD
 	ramdiskObjectInit(&ramdisk);
 
 	constexpr size_t ramdiskSize = sizeof(ramdisk_image);
@@ -101,8 +117,8 @@ void msdMountNullDevice(USBMassStorageDriver* msdp, USBDriver *usbp, uint8_t* bl
 	ramdiskStart(&ramdisk, const_cast<uint8_t*>(ramdisk_image), blockSize, blockCount, /*readonly =*/ true);
 
 	msdStart(msdp, usbp, (BaseBlockDevice*)&ramdisk, blkbuf, inquiry, nullptr);
-
-#else
+#endif // EFI_USE_COMPRESSED_INI_MSD
+#else // not EFI_EMBED_INI_MSD
 	// No embedded ini file, just mount the null device instead
 	msdStart(msdp, usbp, (BaseBlockDevice*)&nd, blkbuf, inquiry, nullptr);
 #endif
