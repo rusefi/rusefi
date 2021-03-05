@@ -20,5 +20,7 @@ void initBaro() {
 }
 
 void baroUpdate() {
+#if EFI_PROD_CODE
 	sensor.update();
+#endif
 }
