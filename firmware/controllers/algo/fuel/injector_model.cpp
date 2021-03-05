@@ -100,3 +100,8 @@ float InjectorModelBase::getInjectionDuration(float fuelMassGram) const {
 		return baseDuration + m_deadtime;
 	}
 }
+
+float InjectorModelBase::getFuelMassForDuration(floatms_t duration) const {
+	// Convert from ms -> grams
+	return duration * m_massFlowRate * 0.001f;
+}

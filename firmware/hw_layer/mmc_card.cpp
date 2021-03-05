@@ -26,6 +26,7 @@
 #include "status_loop.h"
 #include "buffered_writer.h"
 #include "null_device.h"
+#include "thread_priority.h"
 
 #include "rtc_helper.h"
 
@@ -537,7 +538,7 @@ void initMmcCard(void) {
 	chBSemObjectInit(&usbConnectedSemaphore, true);
 #endif
 
-	chThdCreateStatic(mmcThreadStack, sizeof(mmcThreadStack), LOWPRIO, (tfunc_t)(void*) MMCmonThread, NULL);
+	chThdCreateStatic(mmcThreadStack, sizeof(mmcThreadStack), PRIO_MMC, (tfunc_t)(void*) MMCmonThread, NULL);
 
 	addConsoleAction("sdinfo", sdStatistics);
 	addConsoleActionS("ls", listDirectory);

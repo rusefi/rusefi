@@ -112,7 +112,7 @@ public class SensorSnifferPane {
 
         lowerPanel.add(new EnumConfigField(uiContext, Fields.SENSORCHARTMODE, "Mode").getContent());
         lowerPanel.add(new ConfigField(uiContext, Fields.SENSORCHARTFREQUENCY, "Every XXX engine cycles").getContent());
-        lowerPanel.add(new ConfigField(uiContext, Fields.SENSORSNIFFERRPMTHRESHOLD, "RPM threashold").getContent());
+        lowerPanel.add(new ConfigField(uiContext, Fields.SENSORSNIFFERRPMTHRESHOLD, "RPM threshold").getContent());
     }
 
     private void setPaused(JButton pauseButton, boolean isPaused) {

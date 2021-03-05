@@ -36,6 +36,7 @@
 #include "engine_controller.h"
 #include "maf.h"
 #include "perf_trace.h"
+#include "thread_priority.h"
 
 static adcsample_t slowAdcSamples[ADC_MAX_CHANNELS_COUNT];
 static NO_CACHE adcsample_t fastAdcSampleBuf[ADC_BUF_DEPTH_FAST * ADC_MAX_CHANNELS_COUNT];
@@ -54,6 +55,7 @@ float getVoltage(const char *msg, adc_channel_e hwChannel DECLARE_ENGINE_PARAMET
 	return adcToVolts(getAdcValue(msg, hwChannel));
 }
 
+#if EFI_USE_FAST_ADC
 AdcDevice::AdcDevice(ADCConversionGroup* hwConfig, adcsample_t *buf, size_t buf_len) {
 	this->hwConfig = hwConfig;
 	this->samples = buf;
@@ -80,6 +82,8 @@ AdcDevice::AdcDevice(ADCConversionGroup* hwConfig, adcsample_t *buf, size_t buf_
 #define GPT_FREQ_FAST 100000   /* PWM clock frequency. I wonder what does this setting mean?  */
 #define GPT_PERIOD_FAST 10  /* PWM period (in PWM ticks).    */
 #endif /* GPT_FREQ_FAST GPT_PERIOD_FAST */
+
+#endif // EFI_USE_FAST_ADC
 
 // is there a reason to have this configurable at runtime?
 #ifndef ADC_FAST_DEVICE
@@ -110,6 +114,7 @@ static adcsample_t getAvgAdcValue(int index, adcsample_t *samples, int bufDepth,
 #define ADC_SAMPLING_SLOW ADC_SAMPLE_56
 #define ADC_SAMPLING_FAST ADC_SAMPLE_28
 
+#if EFI_USE_FAST_ADC
 void adc_callback_fast(ADCDriver *adcp);
 
 static ADCConversionGroup adcgrpcfgFast = {
@@ -158,7 +163,6 @@ static ADCConversionGroup adcgrpcfgFast = {
 
 AdcDevice fastAdc(&adcgrpcfgFast, fastAdcSampleBuf, ARRAY_SIZE(fastAdcSampleBuf));
 
-#if HAL_USE_GPT
 static void fast_adc_callback(GPTDriver*) {
 #if EFI_INTERNAL_ADC
 	/*
@@ -184,7 +188,7 @@ static void fast_adc_callback(GPTDriver*) {
 	fastAdc.conversionCount++;
 #endif /* EFI_INTERNAL_ADC */
 }
-#endif /* HAL_USE_GPT */
+#endif // EFI_USE_FAST_ADC
 
 static float mcuTemperature;
 
@@ -203,7 +207,7 @@ int getInternalAdcValue(const char *msg, adc_channel_e hwChannel) {
 
 #endif /* EFI_ENABLE_MOCK_ADC */
 
-
+#if EFI_USE_FAST_ADC
 	if (adcHwChannelEnabled[hwChannel] == ADC_FAST) {
 		int internalIndex = fastAdc.internalAdcIndexByHardwareIndex[hwChannel];
 // todo if ADC_BUF_DEPTH_FAST EQ 1
@@ -211,6 +215,8 @@ int getInternalAdcValue(const char *msg, adc_channel_e hwChannel) {
 		int value = getAvgAdcValue(internalIndex, fastAdc.samples, ADC_BUF_DEPTH_FAST, fastAdc.size());
 		return value;
 	}
+#endif // EFI_USE_FAST_ADC
+
 	if (adcHwChannelEnabled[hwChannel] != ADC_SLOW) {
 		// todo: make this not happen during hardware continuous integration
 		warning(CUSTOM_OBD_WRONG_ADC_MODE, "ADC is off [%s] index=%d", msg, hwChannel);
@@ -219,21 +225,25 @@ int getInternalAdcValue(const char *msg, adc_channel_e hwChannel) {
 	return slowAdcSamples[hwChannel - 1];
 }
 
-#if HAL_USE_GPT
+#if EFI_USE_FAST_ADC
 static GPTConfig fast_adc_config = {
 	GPT_FREQ_FAST,
 	fast_adc_callback,
 	0, 0
 };
-#endif /* HAL_USE_GPT */
+#endif /* EFI_USE_FAST_ADC */
 
 adc_channel_mode_e getAdcMode(adc_channel_e hwChannel) {
+#if EFI_USE_FAST_ADC
 	if (fastAdc.isHwUsed(hwChannel)) {
 		return ADC_FAST;
 	}
+#endif // EFI_USE_FAST_ADC
 
 	return ADC_SLOW;
 }
+
+#if EFI_USE_FAST_ADC
 
 int AdcDevice::size() const {
 	return channelCount;
@@ -299,20 +309,27 @@ void AdcDevice::enableChannelAndPin(const char *msg, adc_channel_e hwChannel) {
 	efiSetPadMode(msg, pin, PAL_MODE_INPUT_ANALOG);
 }
 
+adc_channel_e AdcDevice::getAdcHardwareIndexByInternalIndex(int index) const {
+	return hardwareIndexByIndernalAdcIndex[index];
+}
+
+#endif // EFI_USE_FAST_ADC
+
 static void printAdcValue(int channel) {
 	int value = getAdcValue("print", (adc_channel_e)channel);
 	float volts = adcToVoltsDivided(value);
 	scheduleMsg(&logger, "adc voltage : %.2f", volts);
 }
 
-adc_channel_e AdcDevice::getAdcHardwareIndexByInternalIndex(int index) const {
-	return hardwareIndexByIndernalAdcIndex[index];
-}
+
+static uint32_t slowAdcConversionCount = 0;
+static uint32_t slowAdcErrorsCount = 0;
 
 static uint32_t slowAdcConversionCount = 0;
 static uint32_t slowAdcErrorsCount = 0;
 
 static void printFullAdcReport(Logging *logger) {
+#if EFI_USE_FAST_ADC
 	scheduleMsg(logger, "fast %d slow %d", fastAdc.conversionCount, slowAdcConversionCount);
 
 	for (int index = 0; index < fastAdc.size(); index++) {
@@ -334,6 +351,7 @@ static void printFullAdcReport(Logging *logger) {
 			scheduleLogging(logger);
 		}
 	}
+#endif // EFI_USE_FAST_ADC
 
 	for (int index = 0; index < ADC_MAX_CHANNELS_COUNT; index++) {
 		appendMsgPrefix(logger);
@@ -377,7 +395,7 @@ int getSlowAdcCounter() {
 class SlowAdcController : public PeriodicController<256> {
 public:
 	SlowAdcController() 
-		: PeriodicController("ADC", NORMALPRIO + 5, SLOW_ADC_RATE)
+		: PeriodicController("ADC", PRIO_ADC, SLOW_ADC_RATE)
 	{
 	}
 
@@ -421,12 +439,16 @@ void addChannel(const char *name, adc_channel_e setting, adc_channel_mode_e mode
 
 	adcHwChannelEnabled[setting] = mode;
 
-	if (mode == ADC_SLOW) {
-		brain_pin_e pin = getAdcChannelBrainPin(name, setting);
-		efiSetPadMode(name, pin, PAL_MODE_INPUT_ANALOG);
-	} else {
+#if EFI_USE_FAST_ADC
+	if (mode == ADC_FAST) {
 		fastAdc.enableChannelAndPin(name, setting);
+		return;
 	}
+#endif
+
+	// Slow ADC always samples all channels, simply set the input mode
+	brain_pin_e pin = getAdcChannelBrainPin(name, setting);
+	efiSetPadMode(name, pin, PAL_MODE_INPUT_ANALOG);
 }
 
 void removeChannel(const char *name, adc_channel_e setting) {
@@ -436,6 +458,9 @@ void removeChannel(const char *name, adc_channel_e setting) {
 	}
 	adcHwChannelEnabled[setting] = ADC_OFF;
 }
+
+// Weak link a stub so that every board doesn't have to implement this function
+__attribute__((weak)) void setAdcChannelOverrides() { }
 
 static void configureInputs(void) {
 	memset(adcHwChannelEnabled, 0, sizeof(adcHwChannelEnabled));
@@ -512,14 +537,12 @@ void initAdcInputs() {
 	// Start the slow ADC thread
 	slowAdcController.Start();
 
+#if EFI_USE_FAST_ADC
 	fastAdc.init();
-	/*
-		* Initializes the PWM driver.
-		*/
-#if HAL_USE_GPT
+
 	gptStart(EFI_INTERNAL_FAST_ADC_GPT, &fast_adc_config);
 	gptStartContinuous(EFI_INTERNAL_FAST_ADC_GPT, GPT_PERIOD_FAST);
-#endif /* HAL_USE_GPT */
+#endif // EFI_USE_FAST_ADC
 
 	addConsoleActionI("adc", (VoidInt) printAdcValue);
 #else
@@ -533,4 +556,15 @@ void printFullAdcReportIfNeeded(Logging *logger) {
 	printFullAdcReport(logger);
 }
 
-#endif /* HAL_USE_ADC */
+#else /* not HAL_USE_ADC */
+
+__attribute__((weak)) float getVoltageDivided(const char*, adc_channel_e DECLARE_ENGINE_PARAMETER_SUFFIX) {
+	return 0;
+}
+
+// voltage in MCU universe, from zero to VDD
+__attribute__((weak)) float getVoltage(const char*, adc_channel_e DECLARE_ENGINE_PARAMETER_SUFFIX) {
+	return 0;
+}
+
+#endif

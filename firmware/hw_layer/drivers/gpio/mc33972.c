@@ -18,6 +18,7 @@
 #include "gpio/gpio_ext.h"
 #include "gpio/mc33972.h"
 #include "pin_repository.h"
+#include "thread_priority.h"
 
 #if (BOARD_MC33972_COUNT > 0)
 
@@ -304,7 +305,7 @@ static int mc33972_init(void * data)
 
 	if (!drv_task_ready) {
 		chThdCreateStatic(mc33972_thread_1_wa, sizeof(mc33972_thread_1_wa),
-						  NORMALPRIO + 1, mc33972_driver_thread, NULL);
+						  PRIO_GPIOCHIP, mc33972_driver_thread, NULL);
 		drv_task_ready = true;
 	}
 

@@ -77,7 +77,3 @@ void setBoardConfigurationOverrides(void) {
 
 void setSdCardConfigurationOverrides(void) {
 }
-
-void setAdcChannelOverrides(void) {
-}
-

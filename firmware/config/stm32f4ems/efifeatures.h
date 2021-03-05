@@ -193,6 +193,8 @@
 #define EFI_INTERNAL_ADC TRUE
 #endif
 
+#define EFI_USE_FAST_ADC TRUE
+
 #define EFI_NARROW_EGO_AVERAGING TRUE
 
 #ifndef EFI_CAN_SUPPORT
@@ -249,6 +251,10 @@
  */
 #ifndef EFI_FILE_LOGGING
 #define EFI_FILE_LOGGING TRUE
+#endif
+
+#ifndef EFI_EMBED_INI_MSD
+#define EFI_EMBED_INI_MSD TRUE
 #endif
 
 #ifndef EFI_USB_SERIAL

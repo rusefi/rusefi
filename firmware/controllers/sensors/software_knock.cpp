@@ -5,6 +5,7 @@
 #include "perf_trace.h"
 #include "thread_controller.h"
 #include "software_knock.h"
+#include "thread_priority.h"
 
 #if EFI_SOFTWARE_KNOCK
 
@@ -162,7 +163,7 @@ void startKnockSampling(uint8_t cylinderIndex) {
 
 class KnockThread : public ThreadController<256> {
 public:
-	KnockThread() : ThreadController("knock", NORMALPRIO - 10) {}
+	KnockThread() : ThreadController("knock", PRIO_KNOCK_PROCESS) {}
 	void ThreadTask() override;
 };
 

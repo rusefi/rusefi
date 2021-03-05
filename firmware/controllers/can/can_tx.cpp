@@ -16,13 +16,14 @@
 #include "can_dash.h"
 #include "obd2.h"
 #include "can_sensor.h"
+#include "thread_priority.h"
 
 EXTERN_ENGINE;
 
 extern CanSensorBase* cansensors_head;
 
 CanWrite::CanWrite()
-	: PeriodicController("CAN TX", NORMALPRIO, 50)
+	: PeriodicController("CAN TX", PRIO_CAN_TX, 50)
 {
 }
 
