@@ -321,10 +321,6 @@ static void printAdcValue(int channel) {
 	scheduleMsg(&logger, "adc voltage : %.2f", volts);
 }
 
-
-static uint32_t slowAdcConversionCount = 0;
-static uint32_t slowAdcErrorsCount = 0;
-
 static uint32_t slowAdcConversionCount = 0;
 static uint32_t slowAdcErrorsCount = 0;
 
