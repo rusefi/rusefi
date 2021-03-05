@@ -14,8 +14,9 @@ void initBaro() {
 	}
 
 #if HW_PROTEUS
-	device.init(GPIOB_10, GPIOB_11);
-	sensor.Register();
+	if (device.init(GPIOB_10, GPIOB_11)) {
+		sensor.Register();
+	}
 #endif
 }
 
