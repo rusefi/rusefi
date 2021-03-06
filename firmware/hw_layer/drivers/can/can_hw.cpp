@@ -222,9 +222,6 @@ void startCanPins(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 void initCan(void) {
 	addConsoleAction("caninfo", canInfo);
 
-	CONFIG(canWriteEnabled) = true;
-	CONFIG(enableVerboseCanTx) = true;
-
 	isCanEnabled = 
 		(isBrainPinValid(CONFIG_OVERRIDE(canTxPin))) && // both pins are set...
 		(isBrainPinValid(CONFIG_OVERRIDE(canRxPin))) &&
