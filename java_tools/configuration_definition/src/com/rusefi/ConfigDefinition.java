@@ -593,16 +593,15 @@ public class ConfigDefinition {
 
     private static long getCrc32(String fileName) throws IOException {
         File file = new File(fileName);
-        byte[] f1 = Files.readAllBytes(file.toPath());
+        byte[] fileContent = Files.readAllBytes(file.toPath());
+        for (int i = 0; i < fileContent.length; i++) {
+            byte aByte = fileContent[i];
+            if (aByte == '\r')
+                throw new IllegalStateException("CR \\r 0x0D byte not allowed in cacheable content " + fileName + " at index=" + i);
+        }
         CRC32 c = new CRC32();
-        c.update(f1, 0, f1.length);
+        c.update(fileContent, 0, fileContent.length);
         return c.getValue();
-    }
-
-    private static void deleteFile(String fileName) throws IOException {
-        File file = new File(fileName);
-        // todo: validate?
-        file.delete();
     }
 
     private static byte[] unzipFileContents(String zipFileName, String fileName) throws IOException {
