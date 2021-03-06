@@ -46,7 +46,6 @@ Important note - we now use submodules:
 # Building the Code
 See https://rusefi.com/forum/viewtopic.php?f=5&t=9
 
-
 # Release Notes
 
 | Release date  | Revision  | Details |
