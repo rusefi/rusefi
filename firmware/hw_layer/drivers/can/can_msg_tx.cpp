@@ -30,12 +30,18 @@ CanTxMessage::CanTxMessage(uint32_t eid, uint8_t dlc, bool isExtended) {
 #ifndef STM32H7XX
 	m_frame.IDE = isExtended ? CAN_IDE_EXT : CAN_IDE_STD;
 	m_frame.RTR = CAN_RTR_DATA;
+	m_frame.EID = eid;
 #else /* if STM32H7XX */
-	m_frame.XTD = isExtended;
-	m_frame.RTR = 0;
+	m_frame.common.XTD = isExtended;
+	m_frame.common.RTR = 0;
+
+	if (isExtended) {
+		m_frame.ext.EID = eid;
+	} else {
+		m_frame.std.SID = eid;
+	}
 #endif
 
-	m_frame.EID = eid;
 	m_frame.DLC = dlc;
 
 	memset(m_frame.data8, 0, sizeof(m_frame.data8));
