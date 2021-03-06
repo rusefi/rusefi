@@ -20,6 +20,7 @@ void initNewSensors(Logging* logger DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	initThermistors(PASS_CONFIG_PARAMETER_SIGNATURE);
 	initLambda(PASS_ENGINE_PARAMETER_SIGNATURE);
 	initFlexSensor(PASS_CONFIG_PARAMETER_SIGNATURE);
+	initBaro();
 
 	// Init CLI functionality for sensors (mocking)
 	initSensorCli(logger);

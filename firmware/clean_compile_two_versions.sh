@@ -10,7 +10,7 @@ mkdir deliver
 #echo "TIMESTAMP $(date "+%D %T.%2N")"
 
 #EXTRA_PARAMS="-DDUMMY -DFIRMWARE_ID=\\\"default_no_assert\\\" -DEFI_ENABLE_ASSERTS=FALSE -DCH_DBG_ENABLE_ASSERTS=FALSE -DCH_DBG_ENABLE_STACK_CHECK=FALSE -DCH_DBG_FILL_THREADS=FALSE -DCH_DBG_THREADS_PROFILING=FALSE"
-#make -j4 DEBUG_LEVEL_OPT='-O2'
+#make -j$(nproc) DEBUG_LEVEL_OPT='-O2'
 #EXTRA_PARAMS=""
 
 # mv build/rusefi.elf deliver/rusefi_no_asserts.elf
@@ -25,7 +25,7 @@ mkdir deliver
 bash clean.sh
 echo "TIMESTAMP $(date "+%D %T.%2N")"
 EXTRA_PARAMS="-DDUMMY -DFIRMWARE_ID=\\\"default\\\""
-make -j4
+make -j$(nproc)
 EXTRA_PARAMS=""
 
 mv build/rusefi.elf deliver/rusefi.elf
