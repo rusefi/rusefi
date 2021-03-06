@@ -50,23 +50,20 @@ static LoggingWithStorage logger("CAN driver");
 #define CAN_BTR_500 (CAN_BTR_SJW(0) | CAN_BTR_BRP(5)  | CAN_BTR_TS1(14) | CAN_BTR_TS2(1))
 #define CAN_BTR_1k0 (CAN_BTR_SJW(0) | CAN_BTR_BRP(2)  | CAN_BTR_TS1(14) | CAN_BTR_TS2(1))
 #elif defined(STM32H7XX)
-
-// TODO: why doesn't H7 have these defined?
-#undef FDCAN_DBTP_DBRP
-#undef FDCAN_DBTP_DTSEG1
-#undef FDCAN_DBTP_DTSEG2
-#undef FDCAN_DBTP_DSJW
-
-#define FDCAN_DBTP_DBRP(n)                ((n) << 16) /**< @brief BRP field macro.*/
-#define FDCAN_DBTP_DTSEG1(n)              ((n) << 8)  /**< @brief TS1 field macro.*/
-#define FDCAN_DBTP_DTSEG2(n)              ((n) << 4)  /**< @brief TS2 field macro.*/
-#define FDCAN_DBTP_DSJW(n)                ((n) << 0)  /**< @brief SJW field macro.*/
-
 // These have an 87.5% sample point
-#define CAN_BTR_100 (FDCAN_DBTP_DSJW(0) | FDCAN_DBTP_DBRP(49) | FDCAN_DBTP_DTSEG1(12) | FDCAN_DBTP_DTSEG2(1))
-#define CAN_BTR_250 (FDCAN_DBTP_DSJW(0) | FDCAN_DBTP_DBRP(19) | FDCAN_DBTP_DTSEG1(12) | FDCAN_DBTP_DTSEG2(1))
-#define CAN_BTR_500 (FDCAN_DBTP_DSJW(0) | FDCAN_DBTP_DBRP(9)  | FDCAN_DBTP_DTSEG1(12) | FDCAN_DBTP_DTSEG2(1))
-#define CAN_BTR_1k0 (FDCAN_DBTP_DSJW(0) | FDCAN_DBTP_DBRP(4)  | FDCAN_DBTP_DTSEG1(12) | FDCAN_DBTP_DTSEG2(1))
+// FDCAN driver has different bit timing registers (yes, different format)
+// for the arbitration and data phases
+#define CAN_NBTP_100 0x00310C01
+#define CAN_DBTP_100 0x00310C13
+
+#define CAN_NBTP_250 0x00130C01
+#define CAN_DBTP_250 0x00130C13
+
+#define CAN_NBTP_500 0x00090C01
+#define CAN_DBTP_500 0x00090C13
+
+#define CAN_NBTP_1k0 0x00040C01
+#define CAN_DBTP_1k0 0x00040C13
 #else
 #error Please define CAN BTR settings for your MCU!
 #endif
@@ -97,52 +94,36 @@ static const CANConfig canConfig1000 = {
 CAN_MCR_ABOM | CAN_MCR_AWUM | CAN_MCR_TXFP,
 CAN_BTR_1k0 };
 #else /* STM32H7 */
-// static const CANConfig canConfig100 = {
-// 	CAN_BTR_100,
-// 	FDCAN_CCCR_TEST, // CCCR
-// 	FDCAN_TEST_LBCK, // TEST
-// };
-
-// static const CANConfig canConfig250 = {
-// 	CAN_BTR_250,
-// 	FDCAN_CCCR_TEST, // CCCR
-// 	FDCAN_TEST_LBCK, // TEST
-// };
-
-// static const CANConfig canConfig500 = {
-// 	CAN_BTR_500,
-// 	FDCAN_CCCR_TEST, // CCCR
-// 	FDCAN_TEST_LBCK, // TEST
-// };
-
-// static const CANConfig canConfig1000 = {
-// 	CAN_BTR_1k0,
-// 	FDCAN_CCCR_TEST, // CCCR
-// 	FDCAN_TEST_LBCK, // TEST
-// };
-
 static const CANConfig canConfig100 = {
-	CAN_BTR_100,
+	CAN_NBTP_100,
+	CAN_DBTP_100,
 	0, // CCCR
 	0, // TEST
+	0,
 };
 
 static const CANConfig canConfig250 = {
-	CAN_BTR_250,
+	CAN_NBTP_250,
+	CAN_DBTP_250,
 	0, // CCCR
 	0, // TEST
+	0,
 };
 
 static const CANConfig canConfig500 = {
-	CAN_BTR_500,
+	CAN_NBTP_500,
+	CAN_DBTP_500,
 	0, // CCCR
 	0, // TEST
+	0,
 };
 
 static const CANConfig canConfig1000 = {
-	CAN_BTR_1k0,
+	CAN_NBTP_1k0,
+	CAN_DBTP_1k0,
 	0, // CCCR
 	0, // TEST
+	0,
 };
 #endif
 
