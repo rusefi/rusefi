@@ -35,10 +35,6 @@
 
 #include "rusefi_halconf.h"
 
-// TODO: implement ADC on H7
-#undef HAL_USE_ADC
-#define HAL_USE_ADC                         FALSE
-
 /**
  * @brief   Enables the cryptographic subsystem.
  */

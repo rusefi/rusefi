@@ -15,7 +15,7 @@ jobs:
         fetch-depth: 0
 
     - name: Install Tools
-      run: sudo apt-get install ncftp sshpass
+      run: sudo apt-get install ncftp sshpass mtools
 
     - name: Generate Enum Strings
       working-directory: ./firmware/

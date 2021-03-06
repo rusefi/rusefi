@@ -19,6 +19,7 @@
 #include "closed_loop_fuel.h"
 #include "sensor.h"
 #include "launch_control.h"
+#include "injector_model.h"
 
 
 #if EFI_PROD_CODE
@@ -170,7 +171,11 @@ void EngineState::periodicFastCallback(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 
 	auto tps = Sensor::get(SensorType::Tps1);
 	updateTChargeK(rpm, tps.value_or(0) PASS_ENGINE_PARAMETER_SUFFIX);
-	ENGINE(injectionDuration) = getInjectionDuration(rpm PASS_ENGINE_PARAMETER_SUFFIX);
+
+	float injectionMass = getInjectionMass(rpm PASS_ENGINE_PARAMETER_SUFFIX);
+	ENGINE(injectionMass) = injectionMass;
+	// Store the pre-wall wetting injection duration for scheduling purposes only, not the actual injection duration
+	ENGINE(injectionDuration) = ENGINE(injectorModel)->getInjectionDuration(injectionMass);
 
 	float fuelLoad = getFuelingLoad(PASS_ENGINE_PARAMETER_SIGNATURE);
 	injectionOffset = getInjectionOffset(rpm, fuelLoad PASS_ENGINE_PARAMETER_SUFFIX);

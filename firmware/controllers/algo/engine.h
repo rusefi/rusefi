@@ -237,6 +237,9 @@ public:
 	 */
 	floatms_t injectionDuration = 0;
 
+	// Per-injection fuel mass, including TPS accel enrich
+	float injectionMass = 0;
+
 	/**
 	 * This one with wall wetting accounted for, used for logging.
 	 */
