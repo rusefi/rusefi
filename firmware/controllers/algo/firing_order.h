@@ -44,6 +44,8 @@ typedef enum {
 	FO_1_5_4_2_6_3_7_8 = 12,
 	FO_1_2_7_8_4_5_6_3 = 19,
 	FO_1_3_7_2_6_5_4_8 = 20, // Ford 5.0 HO and 351W
+	FO_1_2_3_4_5_6_7_8 = 25, // linearly incrementing, for V8 testing
+	FO_1_5_4_8_6_3_7_2 = 26, // Audi 4.2 40v V8
 
 	// 9 cylinder - for instance radial :)
 	// PS: Matt says that 9cyl is actually 1-3-5-7-9-2-4-6-8 or 1-8-6-4-2-9-7-5-3 for reverse rotation
@@ -63,7 +65,7 @@ typedef enum {
 	// unfortunately not supported by default firmware because INJECTION_PIN_COUNT=IGNITION_PIN_COUNT=12 by default
 	FO_1_14_9_4_7_12_15_6_13_8_3_16_11_2_5_10 = 22, // WR16
 
-	// max used = 24
+	// max used = 26
 
 	Force_4b_firing_order = ENUM_32_BITS,
 } firing_order_e;
