@@ -611,19 +611,14 @@ public class ConfigDefinition {
         while ((zipEntry = zis.getNextEntry()) != null) {
             Path zippedName = Paths.get(zipEntry.getName()).normalize();
             Path searchName = Paths.get(fileName).normalize();
-            if (zippedName.equals(searchName) && zipEntry.getSize() >= 0) {
-                int offset = 0;
-                byte[] tmpData = new byte[(int) zipEntry.getSize()];
-                int bytesLeft = tmpData.length, bytesRead;
-                while (bytesLeft > 0 && (bytesRead = zis.read(tmpData, offset, bytesLeft)) >= 0) {
-                    offset += bytesRead;
-                    bytesLeft -= bytesRead;
+            if (zippedName.equals(searchName)) {
+                ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                byte[] buffer = new byte[4096];
+                int read;
+                while ((read = zis.read(buffer)) != -1) {
+                    baos.write(buffer, 0, read);
                 }
-                if (bytesLeft == 0) {
-                    data = tmpData;
-                } else {
-                    System.out.println("Unzip: error extracting file " + fileName);
-                }
+                data = baos.toByteArray();
                 break;
             }
         }
