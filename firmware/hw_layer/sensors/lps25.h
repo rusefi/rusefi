@@ -8,8 +8,6 @@
 
 #pragma once
 
-#if EFI_PROD_CODE
-
 #include "i2c_bb.h"
 
 #include "expected.h"
@@ -25,5 +23,3 @@ private:
 	BitbangI2c m_i2c;
 	bool m_hasInit = false;
 };
-
-#endif // EFI_PROD_CODE
