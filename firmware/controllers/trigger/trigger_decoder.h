@@ -11,6 +11,7 @@
 #include "trigger_structure.h"
 #include "engine_configuration.h"
 #include "trigger_state_generated.h"
+#include "timer.h"
 
 class TriggerState;
 
