@@ -175,7 +175,7 @@ void hwHandleVvtCamSignal(trigger_value_e front, efitick_t nowNt, int index DECL
 
 	tc->vvtCamCounter++;
 
-	float offsetUs = tc->virtualZeroTimer.hasElapsedUs(nowNt);
+	float offsetUs = tc->virtualZeroTimer.getElapsedUs(nowNt);
 	angle_t currentPosition = offsetUs / oneDegreeUs;
 	// convert engine cycle angle into trigger cycle angle
 	currentPosition -= tdcPosition();
