@@ -109,7 +109,8 @@ public:
 	 */
 	bool shaft_is_synchronized;
 	efitick_t mostRecentSyncTime;
-	volatile efitick_t previousShaftEventTimeNt;
+
+	Timer previousEventTimer;
 
 	void setTriggerErrorState();
 

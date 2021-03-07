@@ -68,7 +68,6 @@ void TriggerState::resetTriggerState() {
 	totalTriggerErrorCounter = 0;
 	orderingErrorCounter = 0;
 	// we need this initial to have not_running at first invocation
-	previousShaftEventTimeNt = (efitimems_t) -10 * NT_PER_SECOND;
 	lastDecodingErrorTime = US2NT(-10000000LL);
 	someSortOfTriggerError = false;
 
@@ -413,7 +412,7 @@ void TriggerState::decodeTriggerEvent(
 		const efitick_t nowNt) {
 	ScopePerf perf(PE::DecodeTriggerEvent);
 	
-	if (nowNt - previousShaftEventTimeNt > NT_PER_SECOND) {
+	if (previousEventTimer.getElapsedSecondsAndReset(nowNt) > 1) {
 		/**
 		 * We are here if there is a time gap between now and previous shaft event - that means the engine is not running.
 		 * That means we have lost synchronization since the engine is not running :)
@@ -423,7 +422,6 @@ void TriggerState::decodeTriggerEvent(
 			triggerStateListener->OnTriggerSynchronizationLost();
 		}
 	}
-	previousShaftEventTimeNt = nowNt;
 
 	bool useOnlyRisingEdgeForTrigger = triggerConfiguration.UseOnlyRisingEdgeForTrigger;
 
