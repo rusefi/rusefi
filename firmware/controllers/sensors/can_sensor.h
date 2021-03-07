@@ -32,7 +32,7 @@ public:
 	void showInfo(Logging* logger, const char* sensorName) const override;
 
 	CanSensorBase* processFrame(const CANRxFrame& frame, efitick_t nowNt) {
-		if (frame.EID == m_eid) {
+		if (CAN_EID(frame) == m_eid) {
 			decodeFrame(frame, nowNt);
 		}
 

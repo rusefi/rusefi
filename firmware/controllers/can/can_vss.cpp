@@ -82,7 +82,7 @@ void processCanRxVss(const CANRxFrame& frame, efitick_t nowNt) {
     }
 
     //filter it we need to process the can message or not
-    if ( frame.SID != filterCanID ) {
+    if (CAN_SID(frame) != filterCanID ) {
         return;
     }
 
