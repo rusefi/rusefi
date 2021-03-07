@@ -67,8 +67,6 @@ void TriggerState::resetTriggerState() {
 	totalRevolutionCounter = 0;
 	totalTriggerErrorCounter = 0;
 	orderingErrorCounter = 0;
-	// we need this initial to have not_running at first invocation
-	previousShaftEventTimeNt = (efitimems_t) -10 * NT_PER_SECOND;
 	lastDecodingErrorTime = US2NT(-10000000LL);
 	someSortOfTriggerError = false;
 
@@ -298,9 +296,6 @@ bool TriggerState::isValidIndex(const TriggerWaveform& triggerShape) const {
 static trigger_wheel_e eventIndex[6] = { T_PRIMARY, T_PRIMARY, T_SECONDARY, T_SECONDARY, T_CHANNEL_3, T_CHANNEL_3 };
 static trigger_value_e eventType[6] = { TV_FALL, TV_RISE, TV_FALL, TV_RISE, TV_FALL, TV_RISE };
 
-#define getCurrentGapDuration(nowNt) \
-	(isFirstEvent ? 0 : (nowNt) - toothed_previous_time)
-
 #if EFI_UNIT_TEST
 #define PRINT_INC_INDEX 		if (printTriggerTrace) {\
 		printf("nextTriggerEvent index=%d\r\n", currentCycle.current_index); \
@@ -413,7 +408,7 @@ void TriggerState::decodeTriggerEvent(
 		const efitick_t nowNt) {
 	ScopePerf perf(PE::DecodeTriggerEvent);
 	
-	if (nowNt - previousShaftEventTimeNt > NT_PER_SECOND) {
+	if (previousEventTimer.getElapsedSecondsAndReset(nowNt) > 1) {
 		/**
 		 * We are here if there is a time gap between now and previous shaft event - that means the engine is not running.
 		 * That means we have lost synchronization since the engine is not running :)
@@ -423,7 +418,6 @@ void TriggerState::decodeTriggerEvent(
 			triggerStateListener->OnTriggerSynchronizationLost();
 		}
 	}
-	previousShaftEventTimeNt = nowNt;
 
 	bool useOnlyRisingEdgeForTrigger = triggerConfiguration.UseOnlyRisingEdgeForTrigger;
 
@@ -445,7 +439,7 @@ void TriggerState::decodeTriggerEvent(
 		firmwareError(CUSTOM_OBD_93, "toothed_previous_time after nowNt %d %d", toothed_previous_time, nowNt);
 	}
 
-	efitick_t currentDurationLong = getCurrentGapDuration(nowNt);
+	efitick_t currentDurationLong = isFirstEvent ? 0 : nowNt - toothed_previous_time;
 
 	/**
 	 * For performance reasons, we want to work with 32 bit values. If there has been more then
