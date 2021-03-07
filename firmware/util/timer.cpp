@@ -64,11 +64,3 @@ float Timer::getElapsedSecondsAndReset(efitick_t nowNt) {
 
 	return result;
 }
-
-float Timer::getElapsedSecondsAndReset(efitick_t nowNt) {
-	float result = getElapsedSeconds(nowNt);
-
-	reset(nowNt);
-
-	return result;
-}
