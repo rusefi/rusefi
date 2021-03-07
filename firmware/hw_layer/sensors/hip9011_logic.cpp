@@ -19,8 +19,6 @@ void HIP9011::setStateAndCommand(unsigned char cmd) {
 	hardware->sendCommand(cmd);
 }
 
-#define BAND(bore) (900 / (PIF * (bore) / 2))
-
 /**
  * @return frequency band we are interested in
  */
@@ -87,20 +85,19 @@ void HIP9011::handleValue(int rpm DEFINE_PARAM_SUFFIX(DEFINE_HIP_PARAMS)) {
 	int gainIndex = getHip9011GainIndex(FORWARD_HIP_PARAMS);
 	int bandIndex = getBandIndex(FORWARD_HIP_PARAMS);
 
-
 	if (currentGainIndex != gainIndex) {
 		currentGainIndex = gainIndex;
-		setStateAndCommand(SET_GAIN_CMD + gainIndex);
+		setStateAndCommand(SET_GAIN_CMD(gainIndex));
 
 	} else if (currentIntergratorIndex != integratorIndex) {
 		currentIntergratorIndex = integratorIndex;
-		setStateAndCommand(SET_INTEGRATOR_CMD + integratorIndex);
+		setStateAndCommand(SET_INTEGRATOR_CMD(integratorIndex));
 	} else if (currentBandIndex != bandIndex) {
 		currentBandIndex = bandIndex;
-		setStateAndCommand(SET_BAND_PASS_CMD + bandIndex);
+		setStateAndCommand(SET_BAND_PASS_CMD(bandIndex));
 	} else if (currentPrescaler != prescalerIndex) {
 		currentPrescaler = prescalerIndex;
-		setStateAndCommand(SET_PRESCALER_CMD + prescalerIndex);
+		setStateAndCommand(SET_PRESCALER_CMD(prescalerIndex));
 
 	} else {
 		state = READY_TO_INTEGRATE;

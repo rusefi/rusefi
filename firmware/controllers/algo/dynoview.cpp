@@ -6,6 +6,7 @@
  */
 
 #include "engine.h"
+#include "pin_repository.h"
 
 #if EFI_DYNO_VIEW
 #include "dynoview.h"
@@ -55,7 +56,7 @@ void DynoView::update(vssSrc src) {
         //updating here would display acceleration = 0 at constant speed
         updateAcceleration(deltaTime, deltaSpeed);
 #if EFI_TUNER_STUDIO
-	    if (CONFIG(debugMode) == DBG_44) {
+	    if (CONFIG(debugMode) == DBG_LOGIC_ANALYZER) {
 		    tsOutputChannels.debugIntField1 = deltaTime;
 		    tsOutputChannels.debugFloatField1 = vss;
 		    tsOutputChannels.debugFloatField2 = speed;
@@ -154,7 +155,7 @@ int getDynoviewPower(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
  * Only updates if we have Vss from input pin.
  */
 void updateDynoView(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
-    if ((CONFIG(vehicleSpeedSensorInputPin) != GPIO_UNASSIGNED) &&
+    if (isBrainPinValid(CONFIG(vehicleSpeedSensorInputPin)) &&
         (!CONFIG(enableCanVss))) {
         dynoInstance.update(ICU);
     }

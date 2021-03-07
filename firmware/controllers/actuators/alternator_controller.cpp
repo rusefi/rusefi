@@ -158,7 +158,7 @@ void onConfigurationChangeAlternatorCallback(engine_configuration_s *previousCon
 void initAlternatorCtrl(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	logger = sharedLogger;
 	addConsoleAction("altinfo", showAltInfo);
-	if (CONFIG(alternatorControlPin) == GPIO_UNASSIGNED)
+	if (!isBrainPinValid(CONFIG(alternatorControlPin)))
 		return;
 
 	if (!CONFIG(onOffAlternatorLogic)) {
@@ -170,5 +170,15 @@ void initAlternatorCtrl(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	}
 	instance.Start();
 }
+
+// todo: start invoking this method like 'startVvtControlPins'
+void startAlternatorPin(void) {
+
+}
+
+void stopAlternatorPin(void) {
+	// todo: implementation!
+}
+
 
 #endif /* EFI_ALTERNATOR_CONTROL */

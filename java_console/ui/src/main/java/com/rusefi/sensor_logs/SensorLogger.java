@@ -96,15 +96,13 @@ public class SensorLogger {
             return;
         }
         isInitialized = true;
-        SensorCentral.getInstance().addListener(Sensor.TIME_SECONDS, new SensorCentral.SensorListener() {
-            @Override
-            public void onSensorUpdate(double value) {
+        SensorCentral.getInstance().addListener(Sensor.TIME_SECONDS,
+            value -> {
                 if (ConnectionStatusLogic.INSTANCE.getValue() != ConnectionStatusValue.CONNECTED)
                     return;
                 for (SensorLog sensorLog : sensorLogs)
                     sensorLog.writeSensorLogLine();
-            }
-        });
+            });
     }
 
     public double getSecondsSinceFileStart() {

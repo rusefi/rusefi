@@ -49,7 +49,6 @@ void Biquad::configureLowpass(float samplingFrequency, float cutoffFrequency, fl
 	float K = getK(samplingFrequency, cutoffFrequency);
 	float norm = getNorm(K, Q);
 
-	norm = 1 / (1 + K / Q + K * K);
 	a0 = K * K * norm;
 	a1 = 2 * a0;
 	a2 = a0;

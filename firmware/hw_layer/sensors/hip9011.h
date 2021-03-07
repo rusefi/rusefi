@@ -8,9 +8,6 @@
 
 #pragma once
 
-// 0b01110001
-#define SET_ADVANCED_MODE 0x71
-
 #define HIP_THREAD_PERIOD 100
 
 void initHip9011(Logging *sharedLogger);

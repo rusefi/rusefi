@@ -37,16 +37,8 @@ static void myerror(void) {
 	firmwareError(CUSTOM_ERR_TEST_ERROR, "firmwareError: %d", getRusEfiVersion());
 }
 
-static void sayNothing(void) {
-	/**
-	 * @see EngineState#TS_PROTOCOL_TAG
-	 * this empty response is part of protocol check
-	 * todo: make this logic smarter?
-	 */
-}
-
 static void sayHello(void) {
-	scheduleMsg(&logger, PROTOCOL_HELLO_PREFIX " rusEFI LLC (c) 2012-2020. All rights reserved.");
+	scheduleMsg(&logger, PROTOCOL_HELLO_PREFIX " rusEFI LLC (c) 2012-2021. All rights reserved.");
 	scheduleMsg(&logger, PROTOCOL_HELLO_PREFIX " rusEFI v%d@%s", getRusEfiVersion(), VCS_VERSION);
 	scheduleMsg(&logger, PROTOCOL_HELLO_PREFIX " Chibios Kernel:       %s", CH_KERNEL_VERSION);
 	scheduleMsg(&logger, PROTOCOL_HELLO_PREFIX " Compiled:     " __DATE__ " - " __TIME__ "");
@@ -55,6 +47,13 @@ static void sayHello(void) {
 #if defined(STM32F4) || defined(STM32F7)
 	uint32_t *uid = ((uint32_t *)UID_BASE);
 	scheduleMsg(&logger, "UID=%x %x %x", uid[0], uid[1], uid[2]);
+
+#define 	TM_ID_GetFlashSize()    (*(__IO uint16_t *) (FLASHSIZE_BASE))
+#define MCU_REVISION_MASK  0xfff
+
+	int mcuRevision = DBGMCU->IDCODE & MCU_REVISION_MASK;
+
+	scheduleMsg(&logger, "rev=%x size=%d", mcuRevision, TM_ID_GetFlashSize());
 #endif
 
 
@@ -119,12 +118,13 @@ static void sayHello(void) {
 }
 
 void validateStack(const char*msg, obd_code_e code, int desiredStackUnusedSize) {
-
 #if CH_DBG_THREADS_PROFILING && CH_DBG_FILL_THREADS
 	int unusedStack = CountFreeStackSpace(chThdGetSelfX()->wabase);
 	if (unusedStack < desiredStackUnusedSize) {
 		warning(code, "Stack low on %s: %d", msg, unusedStack);
 	}
+#else
+	(void)msg; (void)code; (void)desiredStackUnusedSize;
 #endif
 }
 
@@ -197,7 +197,7 @@ void initializeConsole(Logging *sharedLogger) {
 	startConsole(sharedLogger, &handleConsoleLine);
 
 	sayHello();
-	addConsoleAction("test", sayNothing);
+	addConsoleAction("test", [](){ /* do nothing */});
 	addConsoleAction("hello", sayHello);
 #if EFI_HAS_RESET
 	addConsoleAction("reset", scheduleReset);

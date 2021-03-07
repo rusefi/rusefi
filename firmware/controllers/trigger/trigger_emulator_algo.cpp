@@ -16,6 +16,7 @@
 #include "state_sequence.h"
 #include "global.h"
 #include "efi_gpio.h"
+#include "pin_repository.h"
 
 int getPreviousIndex(const int currentIndex, const int size) {
 	return (currentIndex + size - 1) % size;
@@ -175,9 +176,11 @@ void initTriggerEmulatorLogic(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUF
 			s->wave.channels[0].pinStates,
 			s->wave.channels[1].pinStates,
 			s->wave.channels[2].pinStates };
+	int phaseCount = s->getSize();
+	assertIsInBounds(phaseCount - 1, pwmSwitchTimesBuffer, "pwmSwitchTimesBuffer");
 	triggerSignal.weComplexInit("position sensor",
 			&engine->executor,
-			s->getSize(), s->wave.switchTimes, PWM_PHASE_MAX_WAVE_PER_PWM,
+			phaseCount, s->wave.switchTimes, PWM_PHASE_MAX_WAVE_PER_PWM,
 			pinStates, updateTriggerWaveformIfNeeded, (pwm_gen_callback*)emulatorApplyPinState);
 
 	addConsoleActionI(CMD_RPM, setTriggerEmulatorRPM);
@@ -194,26 +197,36 @@ void onConfigurationChangeRpmEmulatorCallback(engine_configuration_s *previousCo
 }
 
 void initTriggerEmulator(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX) {
-	print("Emulating %s\r\n", getConfigurationName(engineConfiguration->engineType));
+	scheduleMsg(sharedLogger, "Emulating %s", getConfigurationName(engineConfiguration->engineType));
 
-	for (size_t i = 0; i < efi::size(emulatorOutputs); i++)
-	{
+	startTriggerEmulatorPins();
+
+	initTriggerEmulatorLogic(sharedLogger);
+}
+
+void startTriggerEmulatorPins() {
+	hasStimPins = false;
+	for (size_t i = 0; i < efi::size(emulatorOutputs); i++) {
 		triggerSignal.outputPins[i] = &emulatorOutputs[i];
 
 		brain_pin_e pin = CONFIG(triggerSimulatorPins)[i];
 
 		// Only bother trying to set output pins if they're configured
-		if (pin != GPIO_UNASSIGNED) {
+		if (isBrainPinValid(pin)) {
 			hasStimPins = true;
 		}
 
 #if EFI_PROD_CODE
 		triggerSignal.outputPins[i]->initPin("Trigger emulator", pin,
 					&CONFIG(triggerSimulatorPinModes)[i]);
-#endif
+#endif // EFI_PROD_CODE
 	}
+}
 
-	initTriggerEmulatorLogic(sharedLogger);
+void stopTriggerEmulatorPins() {
+	for (size_t i = 0; i < efi::size(emulatorOutputs); i++) {
+		triggerSignal.outputPins[i]->deInit();
+	}
 }
 
 #endif /* EFI_EMULATE_POSITION_SENSORS */

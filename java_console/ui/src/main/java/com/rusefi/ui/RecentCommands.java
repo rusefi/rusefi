@@ -94,13 +94,11 @@ public class RecentCommands {
 
     public RecentCommands(UIContext uiContext) {
         this.uiContext = uiContext;
-        uiContext.getCommandQueue().addListener(new CommandQueue.CommandQueueListener() {
-            @Override
-            public void onCommand(String command) {
+        uiContext.getCommandQueue().addListener(command -> {
                 if (!reentrant.get())
                     add(command);
             }
-        });
+        );
 
         String value = getConfig().getRoot().getProperty(KEY, null);
 

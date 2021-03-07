@@ -1,3 +1,12 @@
+Feb 9, 2021 status
+* AndreiKA is focusing on Hellen-One
+* AndreyB is focusing on quad VVT
+* Matt is working on wideband and VR without ASIC
+
+Jan, 2 2021 status
+* We had GDI vehicle start & idle! GDI effort is now suspected since too many projects in the works.
+* TCU first real hardware test was not a success
+
 Nov, 18 2020 status
 * GDI test mule was damaged during GDI tests
 * Matt is working on fueling, wideband and knock detection logic

@@ -18,6 +18,6 @@ public enum TestHelper {
     }
 
     public void assertNotFatal() {
-        assertNull("Fatal not expected", criticalError);
+        assertNull("Fatal not expected: " + criticalError, criticalError);
     }
 }

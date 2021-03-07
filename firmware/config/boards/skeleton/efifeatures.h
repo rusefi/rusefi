@@ -45,14 +45,6 @@
 
 // Internal MCU features
 
-// Use STM32 Core Coupled Memory as general purpose RAM.
-#define EFI_USE_CCM TRUE
-
-// Support USB Mass Storage Devices
-// Typically off as it requires USB OTG and power output.
-#define HAL_USE_USB_MSD FALSE
-
-
 // Hardware feature and chip support
 // Some require a non-zero count to include support, others are TRUE/FALSE
 // Other inconsistencies, such as naming, abound.
@@ -87,6 +79,7 @@
 #define BOARD_TLE6240_COUNT	0
 #define BOARD_MC33972_COUNT	0
 #define BOARD_TLE8888_COUNT 	0
+#define BOARD_MC33810_COUNT	0
 
 /**
  * if you have a 60-2 trigger, or if you just want better performance, you
@@ -107,10 +100,6 @@
 
 
 #define EFI_ICU_INPUTS TRUE
-
-#ifndef HAL_TRIGGER_USE_PAL
-#define HAL_TRIGGER_USE_PAL FALSE
-#endif /* HAL_TRIGGER_USE_PAL */
 
 #ifndef HAL_TRIGGER_USE_PAL
 #define HAL_TRIGGER_USE_PAL FALSE
@@ -169,8 +158,6 @@
 
 #define EFI_NARROW_EGO_AVERAGING TRUE
 
-#define EFI_DENSO_ADC FALSE
-
 #ifndef EFI_IDLE_CONTROL
 #define EFI_IDLE_CONTROL TRUE
 #endif
@@ -211,11 +198,6 @@
 
 #define EFI_USB_SERIAL TRUE
 
-/**
- * Should PnP engine configurations be included in the binary?
- */
-#define EFI_INCLUDE_ENGINE_PRESETS TRUE
-
 #ifndef EFI_ENGINE_SNIFFER
 #define EFI_ENGINE_SNIFFER TRUE
 #endif
@@ -251,7 +233,7 @@
 
 // todo: most of this should become configurable
 
-// todo: switch to continues ADC conversion for fast ADC?
+// todo: switch to continuous ADC conversion for fast ADC?
 #define EFI_INTERNAL_FAST_ADC_GPT	&GPTD6
 
 #define EFI_SPI1_AF 5

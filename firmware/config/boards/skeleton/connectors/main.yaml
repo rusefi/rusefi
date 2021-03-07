@@ -1,0 +1,270 @@
+#
+# microRusEfi board
+# https://github.com/rusefi/rusefi/wiki/Hardware_microRusEfi_wiring
+#
+
+pins:
+  - pin: 1
+    id: EFI_ADC_11
+    class: analog_inputs
+    color: white right
+    function: 12V Supply from main relay output, see also pin #29
+    ts_name: Battery Sense
+    type: 12V
+
+  # default Idle Air Control TLE8888 high current low side: VVT2 TLE8888_OUT5
+  - pin: 3
+    id: TLE8888_PIN_5
+    class: outputs
+    color: white
+    function: Idle solenoid
+    ts_name: 3 - Lowside 2
+    type: ls
+
+  # default VVT TLE8888 high current low side: VVT1 TLE8888_OUT6
+  - pin: 7
+    id: TLE8888_PIN_6
+    class: outputs
+    color: black
+    function: VVT
+    ts_name: 7 - Lowside 1
+    type: ls
+
+  # TC4427 ignition outputs (5v)
+  - pin: 9
+    id: GPIOD_4
+    class: outputs
+    color: dark blue
+    function: Ignition 1
+    ts_name: 9 - Ignition 1
+    type: ign
+
+  - pin: 10
+    id: GPIOD_3
+    class: outputs
+    color: dark blue
+    function: Ignition 2
+    ts_name: 10 - Ignition 2
+    type: ign
+
+  - pin: 11
+    id: GPIOD_2
+    class: outputs
+    color: dark blue
+    function: Ignition 3
+    ts_name: 11 - Ignition 3
+    type: ign
+
+  - pin: 12
+    id: GPIOD_1
+    class: outputs
+    color: dark blue
+    function: Ignition 4
+    ts_name: 12 - Ignition 4
+    type: ign
+
+  - pin: 13
+    id: GPIOD_6
+    class: outputs
+    color: yellow
+    function: Alternator (see JP2 jumper note)
+    ts_name: 13 - GP Out 6
+    type: gp_high
+
+  # TC4427 general purpose output (selectable 5v/12v)
+  - pin: 14
+    id: GPIOD_7
+    class: outputs
+    color: yellow
+    function: (see JP2 jumper note)
+    ts_name: 14 - GP Out 5
+    type: gp_high
+
+  - pin: 18
+    id: [GPIOA_0, EFI_ADC_0]
+    class: [switch_inputs, analog_inputs]
+    color: red
+    function: CLT sensor
+    ts_name: 18 - AN temp 1
+    type: at
+
+  - pin: 19
+    id: [GPIOC_2, EFI_ADC_12]
+    class: [switch_inputs, analog_inputs]
+    color: red
+    function: Starting from version 0.5.0 this pin can be used as 5V input for USB connection through main connector (No need to open case to access micro-USB connector)
+    ts_name: 19 - AN volt 4
+    type: av
+  
+  - pin: 20
+    id: [GPIOC_3, EFI_ADC_13]
+    class: [switch_inputs, analog_inputs]
+    color: red left
+    function: Throttle position sensor (TPS)
+    ts_name: 20 - AN volt 5
+    type: av
+
+  - pin: 22
+    id: [GPIOA_3, EFI_ADC_3]
+    class: [switch_inputs, analog_inputs]
+    color: dark green
+    ts_name: 22 - AN temp 4
+    type: at
+
+  - pin: 23
+    id: [GPIOA_1, EFI_ADC_1]
+    class: [switch_inputs, analog_inputs]
+    color: dark green
+    function: IAT sensor
+    ts_name: 23 - AN temp 2
+    type: at
+
+  - pin: 24
+    id: [GPIOA_2, EFI_ADC_2]
+    class: [switch_inputs, analog_inputs]
+    color: dark green
+    ts_name: 24 - AN temp 3
+    type: at
+
+  # RC filter input for hall
+  - pin: 25
+    id: [GPIOA_5, GPIOA_5]
+    class: [event_inputs, switch_inputs]
+    color: light blue right
+    ts_name: 25 - Hall Cam
+    type: hall
+    
+  - pin: 26
+    id: [GPIOA_6, EFI_ADC_6]
+    class: [switch_inputs, analog_inputs]
+    color: light blue
+    ts_name: 26 - AN volt 2
+    type: av
+
+  - pin: 27
+    id: [GPIOC_0, EFI_ADC_10]
+    class: [switch_inputs, analog_inputs]
+    color: light blue
+    function: MAP sensor
+    ts_name: 27 - AN volt 1
+    type: av
+
+  - pin: 28
+    id: [GPIOA_4, EFI_ADC_4]
+    class: [switch_inputs, analog_inputs]
+    color: light blue left
+    ts_name: 28 - AN volt 10
+    type: av
+
+  - pin: 30
+    id: [GPIOC_5, EFI_ADC_15]
+    class: [switch_inputs, analog_inputs]
+    color: pink
+    ts_name: 30 - AN volt 7
+    type: av
+
+  - pin: 31
+    id: [GPIOA_7, EFI_ADC_7]
+    class: [switch_inputs, analog_inputs]
+    color: pink
+    function: Throttle Pedal Position Sensor (PPS)
+    ts_name: 31 - AN volt 3
+    type: av
+
+  - pin: 32
+    id: [GPIOC_4, EFI_ADC_14]
+    class: [switch_inputs, analog_inputs]
+    color: pink
+    function: External wideband O2 sensor
+    ts_name: 32 - AN volt 6
+    type: av
+
+  # TLE8888 half bridges (pushpull, lowside, or high-low) TLE8888_OUT23
+  - pin: 33
+    id: TLE8888_PIN_23
+    class: outputs
+    color: orange right
+    function: (IDLE stepper coil 2+)
+    ts_name: 33 - GP Out 3
+    type: [gp_low, gp_pp]
+
+  # TLE8888 half bridges (pushpull, lowside, or high-low) TLE8888_OUT22#89
+  - pin: 34
+    id: TLE8888_PIN_22
+    class: outputs
+    color: orange
+    function: Fan relay (IDLE stepper coil 1-)
+    ts_name: 34 - GP Out 2
+    type: [gp_low, gp_pp]
+
+  # TLE8888 half bridges (pushpull, lowside, or high-low) TLE8888_OUT21#91
+  - pin: 35
+    id: TLE8888_PIN_21
+    class: outputs   
+    color: orange 
+    function: Fuel pump relay (IDLE stepper coil 1+)
+    ts_name: 35 - GP Out 1
+    type: [gp_low, gp_pp]
+
+  - pin: 36
+    id: [GPIOB_0, EFI_ADC_8]
+    class: [switch_inputs, analog_inputs]
+    color: orange left    
+    ts_name: 36 - AN volt 8
+    type: av
+
+  - pin: 37
+    id: TLE8888_PIN_1
+    class: outputs
+    color: grey right
+    function: Injector 1
+    ts_name: 37 - Injector 1
+    type: inj
+
+  - pin: 38
+    id: TLE8888_PIN_2
+    class: outputs
+    color: grey
+    function: Injector 2
+    ts_name: 38 - Injector 2
+    type: inj
+
+  - pin: 40
+    id: [GPIOB_1, EFI_ADC_9]
+    class: [switch_inputs, analog_inputs]
+    color: grey
+    ts_name: 40 - AN volt 9
+    type: av
+
+  - pin: 41
+    id: TLE8888_PIN_3
+    class: outputs
+    color: brown right
+    function: Injector 3
+    ts_name: 41 - Injector 3
+    type: inj
+
+  - pin: 42
+    id: TLE8888_PIN_4
+    class: outputs
+    color: brown
+    function: Injector 4
+    ts_name: 42 - Injector 4
+    type: inj
+
+  # TLE8888 half bridges (pushpull, lowside, or high-low) TLE8888_OUT24
+  - pin: 43
+    id: TLE8888_PIN_24
+    class: outputs
+    color: brown
+    function: (IDLE stepper coil 2+)
+    ts_name: 43 - GP Out 4
+    type: [gp_low, gp_pp]
+
+  - pin: 45
+    id: GPIOC_6
+    class: event_inputs
+    color: light green right
+    function: Crank VR+/hall
+    ts_name: 45 - VR/Hall Crank
+    type: vr hall

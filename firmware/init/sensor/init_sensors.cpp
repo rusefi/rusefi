@@ -13,16 +13,21 @@ void initNewSensors(Logging* logger DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	initCanSensors();
 #endif
 
+	initVbatt(PASS_CONFIG_PARAMETER_SIGNATURE);
+	initMap(PASS_ENGINE_PARAMETER_SIGNATURE);
 	initTps(PASS_CONFIG_PARAMETER_SIGNATURE);
 	initOilPressure(PASS_CONFIG_PARAMETER_SIGNATURE);
 	initThermistors(PASS_CONFIG_PARAMETER_SIGNATURE);
 	initLambda(PASS_ENGINE_PARAMETER_SIGNATURE);
+	initFlexSensor(PASS_CONFIG_PARAMETER_SIGNATURE);
+	initBaro();
 
 	// Init CLI functionality for sensors (mocking)
 	initSensorCli(logger);
 }
 
 void reconfigureSensors(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+	reconfigureVbatt(PASS_CONFIG_PARAMETER_SIGNATURE);
 	reconfigureTps(PASS_CONFIG_PARAMETER_SIGNATURE);
 	reconfigureOilPressure(PASS_CONFIG_PARAMETER_SIGNATURE);
 	reconfigureThermistors(PASS_CONFIG_PARAMETER_SIGNATURE);

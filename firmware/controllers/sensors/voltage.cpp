@@ -14,10 +14,6 @@
 
 EXTERN_ENGINE;
 
-bool hasVBatt(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
-	return engineConfiguration->vbattAdcChannel != EFI_ADC_NONE;
-}
-
 float getVBatt(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 #ifdef USE_ADC3_VBATT_HACK
 	extern adcsample_t vbattSampleProteus;

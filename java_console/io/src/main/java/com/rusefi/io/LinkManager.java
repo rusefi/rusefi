@@ -58,7 +58,7 @@ public class LinkManager implements Closeable {
         engineState = new EngineState(new EngineState.EngineStateListenerImpl() {
             @Override
             public void beforeLine(String fullLine) {
-                log.info(fullLine);
+                //log.info(fullLine);
                 HeartBeatListeners.onDataArrived();
             }
         });

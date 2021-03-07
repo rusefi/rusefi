@@ -8,6 +8,7 @@
  */
 
 #include "engine.h"
+#include "pin_repository.h"
 #include "allsensors.h"
 
 EXTERN_ENGINE;
@@ -24,5 +25,5 @@ bool getAcToggle(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 }
 
 bool hasAcToggle(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
-	return (CONFIG(acSwitch) != GPIO_UNASSIGNED);
+	return (isBrainPinValid(CONFIG(acSwitch)));
 }

@@ -403,6 +403,19 @@ void can_lld_receive(CANDriver *canp,
   // todo:
 }
 
+/**
+ * @brief   Tries to abort an ongoing transmission.
+ *
+ * @param[in] canp      pointer to the @p CANDriver object
+ * @param[in] mailbox   mailbox number
+ *
+ * @notapi
+ */
+void can_lld_abort(CANDriver *canp,
+                   canmbx_t mailbox) {
+  /* tries, but fails.... someone, please implement this. */
+}
+
 #if CAN_USE_SLEEP_MODE || defined(__DOXYGEN__)
 /**
  * @brief   Enters the sleep mode.

@@ -212,8 +212,6 @@ typedef enum __attribute__ ((__packed__)) {
 	GPIOK_14 = 176,
 	GPIOK_15 = 177,
 
-	// DRV8860 pins go right after on chips
-	//#define DRV8860_PIN(n)		((brain_pin_e)((int)BRAIN_PIN_LAST_ONCHIP + 1 + (n)))
 	DRV8860_PIN_1 = 178,
 	DRV8860_PIN_2 = 179,
 	DRV8860_PIN_3 = 180,
@@ -233,8 +231,11 @@ typedef enum __attribute__ ((__packed__)) {
 	
 } brain_pin_e;
 
-/* Plase keep updating this define */
-#define BRAIN_PIN_LAST_ONCHIP	GPIOK_15
+/* Plase keep updating this defines */
+#define BRAIN_PIN_ONCHIP_LAST	GPIOK_15
+#define BRAIN_PIN_ONCHIP_PINS	(BRAIN_PIN_ONCHIP_LAST - GPIOA_0 + 1)
+#define BRAIN_PIN_LAST 			DRV8860_PIN_16
+#define BRAIN_PIN_TOTAL_PINS	(BRAIN_PIN_LAST - GPIOA_0 + 1)
 
 /* diagnostic for brain pins
  * can be combination of few bits
@@ -285,10 +286,7 @@ typedef enum __attribute__ ((__packed__)) {
 	EFI_ADC_29 = 30,
 	EFI_ADC_30 = 31,
 	EFI_ADC_31 = 32,
+	EFI_ADC_LAST_CHANNEL = 33,	// Please keep this in sync with the last valid channel index!
 
-	// todo: bad choice of value since now we have ADC_CHANNEL_SENSOR and could end up with 17 and 18 also
-	EFI_ADC_ERROR = 33,
+	EFI_ADC_ERROR = 50,
 } adc_channel_e;
-
-/* Plase keep updating this define */
-#define EFI_ADC_LAST	EFI_ADC_31

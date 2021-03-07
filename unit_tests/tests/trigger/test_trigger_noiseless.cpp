@@ -27,7 +27,7 @@ static void fireEvent(EngineTestHelper *eth, bool isRise) {
 	// but for noise filtering, both edges should be processed, so we fire falling events too
 	if (isRise)
 		eth->firePrimaryTriggerRise();
-	else if (eth->engine.engineConfigurationPtr->useNoiselessTriggerDecoder)
+	else if (eth->engine.engineConfiguration->useNoiselessTriggerDecoder)
 		eth->firePrimaryTriggerFall();
 }
 

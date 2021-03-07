@@ -1,5 +1,6 @@
 #include "engine_test_helper.h"
 #include "main_trigger_callback.h"
+#include "injector_model.h"
 
 #include <gmock/gmock.h>
 #include "mocks.h"
@@ -23,7 +24,9 @@ TEST(injectionScheduling, NormalDutyCycle) {
 	event.outputs[0] = &pin;
 
 	// Injection duration of 20ms
-	engine->injectionDuration = 20.0f;
+	MockInjectorModel2 im;
+	EXPECT_CALL(im, getInjectionDuration(_)).WillOnce(Return(20.0f));
+	engine->injectorModel = &im;
 
 	{
 		InSequence is;

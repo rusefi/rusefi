@@ -459,14 +459,11 @@ TEST(misc, testTriggerDecoder) {
 
 	{
 	persistent_config_s c;
-	Engine e(&c);
+	Engine e;
+	e.setConfig(&e, &c.engineConfiguration, &c);
+	Engine* engine = &e;
+	EXPAND_Engine;
 	TriggerWaveform * s = &e.triggerCentral.triggerShape;
-
-
-	persistent_config_s *config = &c;
-	Engine *engine = &e;
-
-	engine_configuration_s *engineConfiguration = &c.engineConfiguration;
 
 	initializeSkippedToothTriggerWaveformExt(s, 2, 0, FOUR_STROKE_CAM_SENSOR);
 	assertEqualsM("shape size", s->getSize(), 4);
@@ -485,10 +482,6 @@ TEST(misc, testTriggerDecoder) {
 
 	testTriggerDecoder2("dodge ram", DODGE_RAM, 16, 0.5000, 0.06);
 
-	//testTriggerDecoder2("bmw", BMW_E34, 0, 0.9750, 0.5167);
-	testTriggerDecoder2("bmw", BMW_E34, 0, 0.4667, 0.0);
-
-
 	testTriggerDecoder2("Miata NB", MAZDA_MIATA_NB1, 12, 0.0833, 0.0444);
 
 	printf("====================================================================================== testTriggerDecoder part 3\r\n");
@@ -503,7 +496,6 @@ TEST(misc, testTriggerDecoder) {
 	testTriggerDecoder2("testSubary", SUBARU_2003_WRX, 0, 0.4000, 0.0);
 
 	testTriggerDecoder2("testFordEscortGt", FORD_ESCORT_GT, 0, 0.8096, 0.3844);
-	testTriggerDecoder2("testRoverV8", ROVER_V8, 0, 0.4861, 0);
 
 	testTriggerDecoder2("NISSAN_PRIMERA", NISSAN_PRIMERA, 2, 0.9611, 0.0);
 
@@ -712,7 +704,13 @@ void doTestFuelSchedulerBug299smallAndMedium(int startUpDelayMs) {
 	assertInjectors("#0_inj", 0, 0);
 
 	engine->periodicFastCallback(PASS_ENGINE_PARAMETER_SIGNATURE);
+
 	engine->injectionDuration = 12.5f;
+	// Injection duration of 12.5ms
+	MockInjectorModel2 im;
+	EXPECT_CALL(im, getInjectionDuration(_)).WillRepeatedly(Return(12.5f));
+	engine->injectorModel = &im;
+
 	assertEqualsM("duty for maf=3", 62.5, getInjectorDutyCycle(GET_RPM() PASS_ENGINE_PARAMETER_SUFFIX));
 
 	ASSERT_EQ( 4,  engine->executor.size()) << "qs#1";
@@ -868,6 +866,11 @@ void doTestFuelSchedulerBug299smallAndMedium(int startUpDelayMs) {
 	assertInjectionEvent("#3#", &t->elements[3], 1, 0, 45 + 90);
 
 	engine->injectionDuration = 17.5;
+	// Injection duration of 17.5ms
+	MockInjectorModel2 im2;
+	EXPECT_CALL(im2, getInjectionDuration(_)).WillRepeatedly(Return(17.5f));
+	engine->injectorModel = &im2;
+
 	// duty cycle above 75% is a special use-case because 'special' fuel event overlappes the next normal event in batch mode
 	assertEqualsM("duty for maf=3", 87.5, getInjectorDutyCycle(GET_RPM() PASS_ENGINE_PARAMETER_SUFFIX));
 
@@ -995,7 +998,13 @@ TEST(big, testFuelSchedulerBug299smallAndLarge) {
 	ASSERT_EQ( 4,  engine->executor.size()) << "Lqs#0";
 
 	engine->periodicFastCallback(PASS_ENGINE_PARAMETER_SIGNATURE);
+
 	engine->injectionDuration = 17.5f;
+	// Injection duration of 17.5ms
+	MockInjectorModel2 im;
+	EXPECT_CALL(im, getInjectionDuration(_)).WillRepeatedly(Return(17.5f));
+	engine->injectorModel = &im;
+
 	assertEqualsM("Lduty for maf=3", 87.5, getInjectorDutyCycle(GET_RPM() PASS_ENGINE_PARAMETER_SUFFIX));
 
 
@@ -1056,7 +1065,13 @@ TEST(big, testFuelSchedulerBug299smallAndLarge) {
 	ASSERT_EQ( 0,  engine->executor.size()) << "Lqs#04";
 
 	engine->periodicFastCallback(PASS_ENGINE_PARAMETER_SIGNATURE);
+
+	// Injection duration of 2ms
 	engine->injectionDuration = 2.0f;
+	MockInjectorModel2 im2;
+	EXPECT_CALL(im2, getInjectionDuration(_)).WillRepeatedly(Return(2.0f));
+	engine->injectorModel = &im2;
+
 	ASSERT_EQ( 10,  getInjectorDutyCycle(GET_RPM() PASS_ENGINE_PARAMETER_SUFFIX)) << "Lduty for maf=3";
 
 

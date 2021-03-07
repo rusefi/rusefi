@@ -1,9 +1,8 @@
 <component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="TS2C ignitionTable" type="Application" factoryName="Application">
+  <configuration default="false" name="TS2C ignitionTable" type="Application" factoryName="Application" folderName="TunerStudio to C">
     <option name="MAIN_CLASS_NAME" value="com.rusefi.tools.tune.TS2C" />
     <module name="models" />
     <option name="PROGRAM_PARAMETERS" value="currenttune.msq ignitionLoadBins ignitionRpmBins ignitionTable" />
-    <option name="WORKING_DIRECTORY" value="file://$PROJECT_DIR$" />
     <extension name="coverage">
       <pattern>
         <option name="PATTERN" value="com.rusefi.ui.console.*" />

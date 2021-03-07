@@ -19,8 +19,16 @@
 class Logging;
 class CanSensorBase;
 
+#if EFI_CAN_SUPPORT
 void processCanRxMessage(const CANRxFrame& msg, Logging* logger, efitick_t nowNt);
+#endif // EFI_CAN_SUPPORT
+
 void registerCanSensor(CanSensorBase& sensor);
+
+// Indicate that an ack response was received from the wideband bootloader
+void handleWidebandBootloaderAck();
+// Update the firmware on any connected wideband controller
+void updateWidebandFirmware(Logging*);
 
 class CanWrite final : public PeriodicController<512> {
 public:

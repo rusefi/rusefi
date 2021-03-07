@@ -85,6 +85,16 @@ TEST(SensorInit, TpsValuesTooClose) {
 	CONFIG(tpsMax) = 200;	// 1.00 volts
 	EXPECT_NO_FATAL_ERROR(initTps(PASS_CONFIG_PARAMETER_SIGNATURE));
 	Sensor::resetRegistry();
+
+	// Test a random bogus pin index, shouldn't fail
+	CONFIG(tps1_1AdcChannel) = static_cast<adc_channel_e>(175);
+	CONFIG(tpsMin) = 200;	// 1.00 volt
+	CONFIG(tpsMax) = 200;	// 1.00 volt
+	EXPECT_NO_FATAL_ERROR(initTps(PASS_CONFIG_PARAMETER_SIGNATURE));
+	Sensor::resetRegistry();
+
+	// Reconfiguration should also work without error
+	EXPECT_NO_FATAL_ERROR(reconfigureTps(PASS_CONFIG_PARAMETER_SIGNATURE));
 }
 
 TEST(SensorInit, Pedal) {
@@ -205,6 +215,18 @@ TEST(SensorInit, Lambda) {
 
 	initLambda(PASS_ENGINE_PARAMETER_SIGNATURE);
 
-	auto s = Sensor::getSensorOfType(SensorType::Lambda);
+	auto s = Sensor::getSensorOfType(SensorType::Lambda1);
 	ASSERT_NE(nullptr, s);
+}
+
+TEST(SensorInit, Map) {
+	WITH_ENGINE_TEST_HELPER(TEST_ENGINE);
+
+	initMap(PASS_ENGINE_PARAMETER_SIGNATURE);
+
+	auto s = Sensor::getSensorOfType(SensorType::Map);
+	ASSERT_NE(nullptr, s);
+
+	engine->mockMapValue = 55;
+	EXPECT_FLOAT_EQ(55.0f, Sensor::get(SensorType::Map).value_or(0));
 }

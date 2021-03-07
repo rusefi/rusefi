@@ -13,8 +13,9 @@
 ButtonDebounce* ButtonDebounce::s_firstDebounce = nullptr;
 static Logging *logger;
 
-ButtonDebounce::ButtonDebounce(const char *name) {
-	this->name = name;
+ButtonDebounce::ButtonDebounce(const char *name)
+	: m_name(name)
+{
 }
 
 /**
@@ -22,7 +23,7 @@ We need to have a separate init function because we do not have the pin or mode 
 */
 void ButtonDebounce::init (efitimems_t threshold, brain_pin_e &pin, pin_input_mode_e &mode) {
    // we need to keep track of whether we have already been initialized due to the way unit tests run.
-    if (!initialized) {
+    if (!isInstanceRegisteredInGlobalList) {
 	// Link us to the list that is used to track ButtonDebounce instances, so that when the configuration changes,
 	//  they can be looped through and updated.
         nextDebounce = s_firstDebounce;
@@ -33,7 +34,7 @@ void ButtonDebounce::init (efitimems_t threshold, brain_pin_e &pin, pin_input_mo
     m_pin = &pin;
     m_mode = &mode;
     startConfiguration();
-    initialized = true;
+    isInstanceRegisteredInGlobalList = true;
 }
 
 void ButtonDebounce::stopConfigurationList () {
@@ -54,23 +55,23 @@ void ButtonDebounce::startConfigurationList () {
 
 void ButtonDebounce::stopConfiguration () {
     // If the configuration has changed
-#ifndef EFI_ACTIVE_CONFIGURATION_IN_FLASH
+#if ! EFI_ACTIVE_CONFIGURATION_IN_FLASH
     if (*m_pin != active_pin || *m_mode != active_mode) {
 #else
     if (*m_pin != active_pin || *m_mode != active_mode || (isActiveConfigurationVoid && (*m_pin != 0 || *m_mode != 0))) {
 #endif /* EFI_ACTIVE_CONFIGURATION_IN_FLASH */
-#ifndef EFI_UNIT_TEST
+#if EFI_PROD_CODE
     	efiSetPadUnused(active_pin);
-        needsInit = true;
 #endif /* EFI_UNIT_TEST */
+    	needsPinInitialization = true;
     }
 }
 
 void ButtonDebounce::startConfiguration () {
-#ifndef EFI_UNIT_TEST
-    if (needsInit) {
-        efiSetPadMode("Button", *m_pin, getInputMode(*m_mode));
-        needsInit = false;
+#if EFI_PROD_CODE
+    if (needsPinInitialization) {
+        efiSetPadMode(m_name, *m_pin, getInputMode(*m_mode));
+        needsPinInitialization = false;
     }
 #endif
     active_pin = *m_pin;
@@ -86,7 +87,7 @@ bool ButtonDebounce::readPinEvent() {
 }
 
 bool ButtonDebounce::readPinState() {
-    if (*m_pin == GPIO_UNASSIGNED) {
+    if (!isBrainPinValid(*m_pin)) {
         return false;
     }
     efitick_t timeNow = getTimeNowNt();
@@ -117,7 +118,7 @@ void ButtonDebounce::debug() {
     ButtonDebounce *listItem = s_firstDebounce;
     while (listItem != nullptr) {
 #if EFI_PROD_CODE || EFI_UNIT_TEST
-        scheduleMsg(logger, "%s timeLast %d", listItem->name, listItem->timeLast);
+        scheduleMsg(logger, "%s timeLast %d", listItem->m_name, listItem->timeLast);
         scheduleMsg(logger, "physical state %d value %d", efiReadPin(listItem->active_pin), listItem->storedValue);
 #endif
 

@@ -26,8 +26,8 @@ enum class SensorType : unsigned char {
 
 	OilPressure,
 
-	FuelPressureLow,
-	FuelPressureHigh,
+	FuelPressureLow, // in kPa
+	FuelPressureHigh, // in kPa
 	FuelPressureInjector,
 
 	// This is the "resolved" position, potentially composited out of the following two
@@ -52,10 +52,17 @@ enum class SensorType : unsigned char {
 	AuxTemp1,
 	AuxTemp2,
 
-	Lambda,
+	Lambda1,
+	Lambda2,
 
 	WastegatePosition,
 	IdlePosition,
+
+	FuelEthanolPercent,
+
+	BatteryVoltage,
+
+	BarometricPressure,
 
 	// Leave me at the end!
 	PlaceholderLast

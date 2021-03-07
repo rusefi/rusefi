@@ -9,7 +9,8 @@ import java.util.regex.Pattern;
  * This file would override file content only of content has changed, disregarding the magic tag line.
  */
 public class LazyFile implements Output {
-    public static final String LAZY_FILE_TAG = "was generated automatically by rusEfi tool ";
+    public static final String LAZY_FILE_TAG = "was generated automatically by rusEFI tool ";
+    public static final String LAZY_FILE_TAG_LOWER = LAZY_FILE_TAG.toLowerCase();
     private static final String PROPERTY_NAME = "rusefi.generator.lazyfile.enabled";
     private static boolean ENABLED = Boolean.getBoolean(PROPERTY_NAME);
     private static boolean isLazyCheckEnabled = true;
@@ -32,7 +33,7 @@ public class LazyFile implements Output {
         content.append(line);
         String lines[] = line.split("\\r?\\n");
         for (String subLine : lines) {
-            if (!subLine.contains(LAZY_FILE_TAG)) {
+            if (!subLine.toLowerCase().contains(LAZY_FILE_TAG_LOWER)) {
                 contentWithoutTag.append(subLine);
             }
         }
@@ -85,7 +86,7 @@ public class LazyFile implements Output {
         String line;
         StringBuffer sb = new StringBuffer();
         while ((line = in.findWithinHorizon(pat, 0)) != null) {
-            if (!line.contains(LAZY_FILE_TAG))
+            if (!line.toLowerCase().contains(LAZY_FILE_TAG_LOWER))
                 sb.append(line);
         }
         return sb.toString();

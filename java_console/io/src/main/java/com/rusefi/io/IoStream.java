@@ -69,7 +69,7 @@ public interface IoStream extends WriteStream, Closeable, StreamStatistics {
             packet = IoHelper.makeCrc32Packet(plainPacket);
         }
         // todo: verbose mode printHexBinary(plainPacket))
-        log.debug(getLoggingPrefix() + "Sending packet " + BinaryProtocol.findCommand(plainPacket[0]) + " length=" + plainPacket.length);
+        //log.debug(getLoggingPrefix() + "Sending packet " + BinaryProtocol.findCommand(plainPacket[0]) + " length=" + plainPacket.length);
         write(packet);
         flush();
     }

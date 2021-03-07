@@ -1,7 +1,8 @@
+#include "global.h"
+#include "adc_inputs.h"
 #include "adc_subscription.h"
 #include "engine.h"
 #include "error_handling.h"
-#include "global.h"
 #include "functional_sensor.h"
 #include "redundant_sensor.h"
 #include "proxy_sensor.h"
@@ -39,7 +40,12 @@ LinearFunc idlePosFunc(PACK_MULT_VOLTAGE);
 FunctionalSensor wastegateSens(SensorType::WastegatePosition, MS2NT(10));
 FunctionalSensor idlePosSens(SensorType::IdlePosition, MS2NT(10));
 
-static bool configureTps(LinearFunc& func, float closed, float open, float min, float max, const char* msg) {
+static bool configureTps(LinearFunc& func, adc_channel_e channel, float closed, float open, float min, float max, const char* msg) {
+	// Only configure if we have a channel
+	if (!isAdcChannelValid(channel)) {
+		return false;
+	}
+
 	float scaledClosed = closed / func.getDivideInput();
 	float scaledOpen = open / func.getDivideInput();
 
@@ -47,7 +53,9 @@ static bool configureTps(LinearFunc& func, float closed, float open, float min, 
 
 	// If the voltage for closed vs. open is very near, something is wrong with your calibration
 	if (split < 0.5f) {
-		firmwareError(OBD_Throttle_Position_Sensor_Circuit_Malfunction, "Sensor \"%s\" problem: open/closed calibration values are too close together.  Please check your wiring!", msg);
+		firmwareError(OBD_Throttle_Position_Sensor_Circuit_Malfunction, "Sensor \"%s\" problem: open %f/closed %f calibration values are too close together.  Please check your wiring!", msg,
+				open,
+				closed);
 		return false;
 	}
 
@@ -61,13 +69,8 @@ static bool configureTps(LinearFunc& func, float closed, float open, float min, 
 }
 
 static bool initTpsFunc(LinearFunc& func, FunctionalSensor& sensor, adc_channel_e channel, float closed, float open, float min, float max) {
-	// Only register if we have a sensor
-	if (channel == EFI_ADC_NONE) {
-		return false;
-	}
-
-	// If the configuration was invalid, don't continues to configure the sensor
-	if (!configureTps(func, closed, open, min, max, sensor.getSensorName())) {
+	// If the configuration was invalid, don't continue to configure the sensor
+	if (!configureTps(func, channel, closed, open, min, max, sensor.getSensorName())) {
 		return false;
 	}
 
@@ -75,12 +78,7 @@ static bool initTpsFunc(LinearFunc& func, FunctionalSensor& sensor, adc_channel_
 
 	AdcSubscription::SubscribeSensor(sensor, channel, 200);
 
-	if (!sensor.Register()) {
-		firmwareError(CUSTOM_INVALID_TPS_SETTING, "Duplicate registration for sensor \"%s\"", sensor.getSensorName());
-		return false;
-	}
-
-	return true;
+	return sensor.Register();
 }
 
 static void initTpsFuncAndRedund(RedundantSensor& redund, LinearFunc& func, FunctionalSensor& sensor, adc_channel_e channel, float closed, float open, float min, float max) {
@@ -88,9 +86,7 @@ static void initTpsFuncAndRedund(RedundantSensor& redund, LinearFunc& func, Func
 
 	redund.configure(5.0f, !hasSecond);
 
-	if (!redund.Register()) {
-		firmwareError(CUSTOM_INVALID_TPS_SETTING, "Duplicate registration for sensor \"%s\"", redund.getSensorName());
-	}
+	redund.Register();
 }
 
 void initTps(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
@@ -111,29 +107,27 @@ void initTps(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	}
 
 	// Route the pedal or TPS to driverIntent as appropriate
-	if (CONFIG(throttlePedalPositionAdcChannel) != EFI_ADC_NONE) {
+	if (isAdcChannelValid(CONFIG(throttlePedalPositionAdcChannel))) {
 		driverIntent.setProxiedSensor(SensorType::AcceleratorPedal);
 	} else {
 		driverIntent.setProxiedSensor(SensorType::Tps1);
 	}
 
-	if (!driverIntent.Register()) {
-		firmwareError(CUSTOM_INVALID_TPS_SETTING, "Duplicate registration for driver acc intent sensor");
-	}
+	driverIntent.Register();
 }
 
 void reconfigureTps(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	float min = CONFIG(tpsErrorDetectionTooLow);
 	float max = CONFIG(tpsErrorDetectionTooHigh);
 
-	configureTps(tpsFunc1p, CONFIG(tpsMin), CONFIG(tpsMax), min, max, tpsSens1p.getSensorName());
-	configureTps(tpsFunc1s, CONFIG(tps1SecondaryMin), CONFIG(tps1SecondaryMax), min, max, tpsSens1s.getSensorName());
-	configureTps(tpsFunc2p, CONFIG(tps2Min), CONFIG(tps2Max), min, max, tpsSens2p.getSensorName());
-	configureTps(tpsFunc2s, CONFIG(tps2SecondaryMin), CONFIG(tps2SecondaryMax), min, max, tpsSens2s.getSensorName());
+	configureTps(tpsFunc1p, CONFIG(tps1_1AdcChannel), CONFIG(tpsMin), CONFIG(tpsMax), min, max, tpsSens1p.getSensorName());
+	configureTps(tpsFunc1s, CONFIG(tps1_2AdcChannel), CONFIG(tps1SecondaryMin), CONFIG(tps1SecondaryMax), min, max, tpsSens1s.getSensorName());
+	configureTps(tpsFunc2p, CONFIG(tps2_1AdcChannel), CONFIG(tps2Min), CONFIG(tps2Max), min, max, tpsSens2p.getSensorName());
+	configureTps(tpsFunc2s, CONFIG(tps2_2AdcChannel), CONFIG(tps2SecondaryMin), CONFIG(tps2SecondaryMax), min, max, tpsSens2s.getSensorName());
 
-	configureTps(pedalFuncPrimary, CONFIG(throttlePedalUpVoltage), CONFIG(throttlePedalWOTVoltage), min, max, pedalSensorPrimary.getSensorName());
-	configureTps(pedalFuncSecondary, CONFIG(throttlePedalSecondaryUpVoltage), CONFIG(throttlePedalSecondaryWOTVoltage), min, max, pedalSensorSecondary.getSensorName());
+	configureTps(pedalFuncPrimary, CONFIG(throttlePedalPositionAdcChannel), CONFIG(throttlePedalUpVoltage), CONFIG(throttlePedalWOTVoltage), min, max, pedalSensorPrimary.getSensorName());
+	configureTps(pedalFuncSecondary, CONFIG(throttlePedalPositionSecondAdcChannel), CONFIG(throttlePedalSecondaryUpVoltage), CONFIG(throttlePedalSecondaryWOTVoltage), min, max, pedalSensorSecondary.getSensorName());
 
-	configureTps(wastegateFunc, CONFIG(wastegatePositionMin), CONFIG(wastegatePositionMax), min, max, wastegateSens.getSensorName());
-	configureTps(idlePosFunc, CONFIG(idlePositionMin), CONFIG(idlePositionMax), min, max, idlePosSens.getSensorName());
+	configureTps(wastegateFunc, CONFIG(wastegatePositionSensor), CONFIG(wastegatePositionMin), CONFIG(wastegatePositionMax), min, max, wastegateSens.getSensorName());
+	configureTps(idlePosFunc, CONFIG(idlePositionSensor), CONFIG(idlePositionMin), CONFIG(idlePositionMax), min, max, idlePosSens.getSensorName());
 }

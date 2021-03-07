@@ -31,6 +31,8 @@ TEST(fuelCut, coasting) {
 	// basic engine setup
 	setupSimpleTestEngineWithMafAndTT_ONE_trigger(&eth);
 
+	Sensor::setMockValue(SensorType::Map, 0);
+
 	// mock CLT - just above threshold ('hot engine')
 	float hotClt = engineConfiguration->coastingFuelCutClt + 1;
 	Sensor::setMockValue(SensorType::Clt, hotClt);

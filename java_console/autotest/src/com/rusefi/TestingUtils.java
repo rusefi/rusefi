@@ -3,7 +3,7 @@ package com.rusefi;
 import com.devexperts.logging.Logging;
 import com.rusefi.config.generated.Fields;
 import com.rusefi.core.EngineState;
-import com.rusefi.functional_tests.BaseTest;
+import com.rusefi.functional_tests.EcuTestHelper;
 import com.rusefi.io.CommandQueue;
 import com.rusefi.waves.EngineChart;
 import com.rusefi.waves.EngineReport;
@@ -15,6 +15,8 @@ import java.util.List;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.atomic.AtomicReference;
 
+import static org.junit.Assert.fail;
+
 import static com.devexperts.logging.Logging.getLogging;
 import static com.rusefi.waves.EngineReport.isCloseEnough;
 
@@ -25,7 +27,7 @@ import static com.rusefi.waves.EngineReport.isCloseEnough;
 public class TestingUtils {
     private static final Logging log = getLogging(TestingUtils.class);
 
-    static boolean isRealHardware;
+    public static boolean isRealHardware;
 
     static void assertTrue(String msg, boolean b) {
         if (!b)
@@ -50,13 +52,6 @@ public class TestingUtils {
         while (angle >= 720)
             angle -= 720;
         return angle;
-    }
-
-    private static void fail(String message) {
-        log.info("FAILURE: " + message);
-        IllegalStateException exception = new IllegalStateException(message);
-        FileLog.MAIN.log(exception);
-        throw exception;
     }
 
     static void assertTrue(boolean b) {
@@ -109,7 +104,7 @@ public class TestingUtils {
         assertTrue(msg, value == null);
     }
 
-    static EngineChart nextChart(CommandQueue commandQueue) {
+    public static EngineChart nextChart(CommandQueue commandQueue) {
         long start = System.currentTimeMillis();
         EngineChart chart = EngineChartParser.unpackToMap(getNextWaveChart(commandQueue), FileLog.LOGGER);
         FileLog.MAIN.logLine("AUTOTEST nextChart() in " + (System.currentTimeMillis() - start));
@@ -145,7 +140,7 @@ public class TestingUtils {
         int timeoutMs = 60 * Timeouts.SECOND;
         long waitStartTime = System.currentTimeMillis();
         IoUtil.wait(engineChartLatch, timeoutMs);
-        log.info("got next chart in " + (System.currentTimeMillis() - waitStartTime) + "ms for engine_type " + BaseTest.currentEngineType);
+        log.info("got next chart in " + (System.currentTimeMillis() - waitStartTime) + "ms for engine_type " + EcuTestHelper.currentEngineType);
         commandQueue.getLinkManager().getEngineState().replaceStringValueAction(EngineReport.ENGINE_CHART, (EngineState.ValueCallback<String>) EngineState.ValueCallback.VOID);
         if (result.get() == null)
             throw new IllegalStateException("Chart timeout: " + timeoutMs);

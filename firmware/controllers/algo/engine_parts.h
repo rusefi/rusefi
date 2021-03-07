@@ -36,6 +36,8 @@ public:
 
 	Accelerometer accelerometer;
 
+	// todo: remove this variable, replace with Sensor::get(SensorType::vbatt).value_or(VBAT_FALLBACK_VALUE)
+	// todo: https://github.com/rusefi/rusefi/issues/2260
 	float vBatt = 0;
 	/**
 	 * that's fuel in tank - just a gauge
@@ -93,6 +95,7 @@ public:
 	float mockRpm = 0;
 	float mockCrankingRpm = 0;
 	float mockTimeSinceBoot = 0;
+	float mockTimeSinceTrigger = 0;
 	int mockAcToggle = 0;
 #endif
 

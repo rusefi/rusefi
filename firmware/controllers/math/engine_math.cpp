@@ -66,7 +66,7 @@ float getEngineLoadT(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	efiAssert(CUSTOM_ERR_ASSERT, engineConfiguration!=NULL, "engineConfiguration 2NULL", NAN);
 	switch (engineConfiguration->fuelAlgorithm) {
 	case LM_SPEED_DENSITY:
-		return getMap(PASS_ENGINE_PARAMETER_SIGNATURE);
+		return Sensor::get(SensorType::Map).value_or(0);
 	case LM_ALPHA_N:
 		return Sensor::get(SensorType::Tps1).value_or(0);
 	case LM_REAL_MAF:
@@ -117,7 +117,7 @@ floatms_t getSparkDwell(int rpm DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	} else {
 		efiAssert(CUSTOM_ERR_ASSERT, !cisnan(rpm), "invalid rpm", NAN);
 
-		dwellMs = interpolate2d("dwell", rpm, engineConfiguration->sparkDwellRpmBins, engineConfiguration->sparkDwellValues);
+		dwellMs = interpolate2d(rpm, engineConfiguration->sparkDwellRpmBins, engineConfiguration->sparkDwellValues);
 	}
 
 	if (cisnan(dwellMs) || dwellMs <= 0) {
@@ -158,6 +158,8 @@ static const int order_1_8_7_2_6_5_4_3[] = { 1, 8, 7, 2, 6, 5, 4, 3 };
 static const int order_1_5_4_2_6_3_7_8[] = { 1, 5, 4, 2, 6, 3, 7, 8 };
 static const int order_1_2_7_8_4_5_6_3[] = { 1, 2, 7, 8, 4, 5, 6, 3 };
 static const int order_1_3_7_2_6_5_4_8[] = { 1, 3, 7, 2, 6, 5, 4, 8 };
+static const int order_1_2_3_4_5_6_7_8[] = { 1, 2, 3, 4, 5, 6, 7, 8 };
+static const int order_1_5_4_8_6_3_7_2[] = { 1, 5, 4, 8, 6, 3, 7, 2 };
 
 // 9 cylinder
 static const int order_1_2_3_4_5_6_7_8_9[] = { 1, 2, 3, 4, 5, 6, 7, 8, 9 };
@@ -209,6 +211,8 @@ static int getFiringOrderLength(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	case FO_1_5_4_2_6_3_7_8:
 	case FO_1_2_7_8_4_5_6_3:
 	case FO_1_3_7_2_6_5_4_8:
+	case FO_1_2_3_4_5_6_7_8:
+	case FO_1_5_4_8_6_3_7_2:
 		return 8;
 
 // 9 cylinder radial
@@ -305,7 +309,12 @@ int getCylinderId(int index DECLARE_ENGINE_PARAMETER_SUFFIX) {
 		return order_1_2_7_8_4_5_6_3[index];
 	case FO_1_3_7_2_6_5_4_8:
 		return order_1_3_7_2_6_5_4_8[index];
+	case FO_1_2_3_4_5_6_7_8:
+		return order_1_2_3_4_5_6_7_8[index];
+	case FO_1_5_4_8_6_3_7_2:
+		return order_1_5_4_8_6_3_7_2[index];
 
+// 9 cylinder
 	case FO_1_2_3_4_5_6_7_8_9:
 		return order_1_2_3_4_5_6_7_8_9[index];
 
@@ -360,14 +369,12 @@ static int getIgnitionPinForIndex(int cylinderIndex DECLARE_ENGINE_PARAMETER_SUF
 }
 
 void prepareIgnitionPinIndices(ignition_mode_e ignitionMode DECLARE_ENGINE_PARAMETER_SUFFIX) {
-	if (ignitionMode != engine->ignitionModeForPinIndices) {
+	(void)ignitionMode;
 #if EFI_ENGINE_CONTROL
-		for (int cylinderIndex = 0; cylinderIndex < CONFIG(specs.cylindersCount); cylinderIndex++) {
-			ENGINE(ignitionPin[cylinderIndex]) = getIgnitionPinForIndex(cylinderIndex PASS_ENGINE_PARAMETER_SUFFIX);
-		}
-#endif /* EFI_ENGINE_CONTROL */
-		engine->ignitionModeForPinIndices = ignitionMode;
+	for (int cylinderIndex = 0; cylinderIndex < CONFIG(specs.cylindersCount); cylinderIndex++) {
+		ENGINE(ignitionPin[cylinderIndex]) = getIgnitionPinForIndex(cylinderIndex PASS_ENGINE_PARAMETER_SUFFIX);
 	}
+#endif /* EFI_ENGINE_CONTROL */
 }
 
 /**
@@ -415,6 +422,9 @@ void prepareOutputSignals(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	prepareIgnitionPinIndices(CONFIG(ignitionMode) PASS_ENGINE_PARAMETER_SUFFIX);
 
 	TRIGGER_WAVEFORM(prepareShape(&ENGINE(triggerCentral.triggerFormDetails) PASS_ENGINE_PARAMETER_SUFFIX));
+
+	// Fuel schedule may now be completely wrong, force a reset
+	ENGINE(injectionEvents).invalidate();
 }
 
 void setTimingRpmBin(float from, float to DECLARE_CONFIG_PARAMETER_SUFFIX) {

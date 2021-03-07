@@ -186,6 +186,14 @@ extern bool printTriggerDebug;
 void TriggerWaveform::calculateExpectedEventCounts(bool useOnlyRisingEdgeForTrigger) {
 	UNUSED(useOnlyRisingEdgeForTrigger);
 
+	if (!useOnlyRisingEdgeForTrigger) {
+		for (int i = 0;i<efi::size(expectedEventCount);i++) {
+			if (expectedEventCount[i] % 2 != 0) {
+				firmwareError(ERROR_TRIGGER_DRAMA, "Trigger: should be even %d %d", i, expectedEventCount[i]);
+			}
+		}
+	}
+
 	bool isSingleToothOnPrimaryChannel = useOnlyRisingEdgeForTrigger ? expectedEventCount[0] == 1 : expectedEventCount[0] == 2;
 	// todo: next step would be to set 'isSynchronizationNeeded' automatically based on the logic we have here
 	if (!shapeWithoutTdc && isSingleToothOnPrimaryChannel != !isSynchronizationNeeded) {
@@ -228,9 +236,10 @@ void TriggerWaveform::addEvent(angle_t angle, trigger_wheel_e const channelIndex
 	}
 
 #if EFI_UNIT_TEST
+	assertIsInBounds(privateTriggerDefinitionSize, triggerSignalIndeces, "trigger shape overflow");
 	triggerSignalIndeces[privateTriggerDefinitionSize] = channelIndex;
 	triggerSignalStates[privateTriggerDefinitionSize] = stateParam;
-#endif
+#endif // EFI_UNIT_TEST
 
 
 	// todo: the whole 'useOnlyRisingEdgeForTrigger' parameter and logic should not be here
@@ -243,7 +252,9 @@ void TriggerWaveform::addEvent(angle_t angle, trigger_wheel_e const channelIndex
 	efiAssertVoid(CUSTOM_ERR_6599, angle > 0 && angle <= 1, "angle should be positive not above 1");
 	if (privateTriggerDefinitionSize > 0) {
 		if (angle <= previousAngle) {
-			warning(CUSTOM_ERR_TRG_ANGLE_ORDER, "invalid angle order: new=%.2f/%f and prev=%.2f/%f, size=%d",
+			warning(CUSTOM_ERR_TRG_ANGLE_ORDER, "invalid angle order %s %s: new=%.2f/%f and prev=%.2f/%f, size=%d",
+					getTrigger_wheel_e(channelIndex),
+					getTrigger_value_e(state),
 					angle, angle * getCycleDuration(),
 					previousAngle, previousAngle * getCycleDuration(),
 					privateTriggerDefinitionSize);
@@ -350,10 +361,10 @@ void TriggerWaveform::setTriggerSynchronizationGap3(int gapIndex, float syncRati
 /**
  * this method is only used on initialization
  */
-int TriggerWaveform::findAngleIndex(TriggerFormDetails *details, float target) const {
-	int engineCycleEventCount = getLength();
+uint16_t TriggerWaveform::findAngleIndex(TriggerFormDetails *details, float target) const {
+	size_t engineCycleEventCount = getLength();
 
-	efiAssert(CUSTOM_ERR_ASSERT, engineCycleEventCount > 0, "engineCycleEventCount", 0);
+	efiAssert(CUSTOM_ERR_ASSERT, engineCycleEventCount <= 0xFFFF, "engineCycleEventCount", 0);
 
 	uint32_t left = 0;
 	uint32_t right = engineCycleEventCount - 1;
@@ -407,8 +418,13 @@ void findTriggerPosition(TriggerWaveform *triggerShape,
 		return;
 	}
 
-	position->triggerEventIndex = triggerEventIndex;
-	position->angleOffsetFromTriggerEvent = angle - triggerEventAngle;
+	{
+		// This must happen under lock so that the tooth and offset don't get partially read and mismatched
+		chibios_rt::CriticalSectionLocker csl;
+
+		position->triggerEventIndex = triggerEventIndex;
+		position->angleOffsetFromTriggerEvent = angle - triggerEventAngle;
+	}
 }
 
 void TriggerWaveform::prepareShape(TriggerFormDetails *details DECLARE_ENGINE_PARAMETER_SUFFIX) {
@@ -417,11 +433,13 @@ void TriggerWaveform::prepareShape(TriggerFormDetails *details DECLARE_ENGINE_PA
 
 	int engineCycleInt = (int) getEngineCycle(operationMode);
 	for (int angle = 0; angle < engineCycleInt; angle++) {
-		int triggerShapeIndex = findAngleIndex(details, angle);
+		uint16_t triggerShapeIndex = findAngleIndex(details, angle);
+
 		if (useOnlyRisingEdgeForTriggerTemp) {
-			// we need even index for front_only mode - so if odd indexes are rounded down
-			triggerShapeIndex = triggerShapeIndex & 0xFFFFFFFE;
+			// we need even index for front_only mode - so if odd indexes are rounded down by clearing the low bit
+			triggerShapeIndex &= 0xFFFE;
 		}
+
 		details->triggerIndexByAngle[angle] = triggerShapeIndex;
 	}
 #endif
@@ -520,6 +538,14 @@ void TriggerWaveform::initializeTriggerWaveform(Logging *logger, operation_mode_
 
 	case TT_FORD_ASPIRE:
 		configureFordAspireTriggerWaveform(this);
+		break;
+
+	case TT_SKODA_FAVORIT:
+		setSkodaFavorit(this);
+		break;
+
+	case TT_GM_60_2_2_2:
+		configureGm60_2_2_2(this);
 		break;
 
 	case TT_GM_7X:
@@ -660,8 +686,17 @@ void TriggerWaveform::initializeTriggerWaveform(Logging *logger, operation_mode_
 		configureFiatIAQ_P8(this);
 		break;
 
+	case TT_TRI_TACH:
+		configureTriTach(this);
+		break;
+
 	case TT_GM_LS_24:
 		initGmLS24(this);
+		break;
+
+	case TT_SUBARU_7_WITHOUT_6:
+	case TT_52:
+		initializeSubaruOnly7(this);
 		break;
 
 	case TT_SUBARU_SVX:

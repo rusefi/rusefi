@@ -42,6 +42,7 @@ static LENameOrdinalPair leAnd2(LE_OPERATOR_AND, "&");
 static LENameOrdinalPair leOr(LE_OPERATOR_OR, "or");
 static LENameOrdinalPair leOr2(LE_OPERATOR_OR, "|");
 static LENameOrdinalPair leNot(LE_OPERATOR_NOT, "not");
+static LENameOrdinalPair leNot2(LE_OPERATOR_NOT, "!");
 
 static LENameOrdinalPair leAdd(LE_OPERATOR_ADDITION, "+");
 static LENameOrdinalPair leSub(LE_OPERATOR_SUBTRACTION, "-");
@@ -72,9 +73,7 @@ LEElement::LEElement() {
 
 void LEElement::clear() {
 	action = LE_UNDEFINED;
-	next = nullptr;
 	fValue = NAN;
-	iValue = 0;
 }
 
 void LEElement::init(le_action_e action) {
@@ -96,27 +95,9 @@ LECalculator::LECalculator() {
 }
 
 void LECalculator::reset() {
-	first = nullptr;
 	stack.reset();
 	currentCalculationLogPosition = 0;
 	memset(calcLogAction, 0, sizeof(calcLogAction));
-}
-
-void LECalculator::reset(LEElement *element) {
-	reset();
-	add(element);
-}
-
-void LECalculator::add(LEElement *element) {
-	if (first == nullptr) {
-		first = element;
-	} else {
-		LEElement *last = first;
-		while (last->next != NULL) {
-			last = last->next;
-		}
-		last->next = element;
-	}
 }
 
 bool float2bool(float v) {
@@ -140,7 +121,7 @@ void LECalculator::push(le_action_e action, float value) {
 	}
 }
 
-static FsioValue doBinaryBoolean(le_action_e action, float lhs, float rhs) {
+static FsioResult doBinaryBoolean(le_action_e action, float lhs, float rhs) {
 	bool v1 = float2bool(lhs);
 	bool v2 = float2bool(rhs);
 	
@@ -154,7 +135,7 @@ static FsioValue doBinaryBoolean(le_action_e action, float lhs, float rhs) {
 	}
 }
 
-static FsioValue doBinaryNumeric(le_action_e action, float v1, float v2) {
+static FsioResult doBinaryNumeric(le_action_e action, float v1, float v2) {
 	// Process based on the action type
 	switch (action) {
 		case LE_OPERATOR_ADDITION:
@@ -185,7 +166,7 @@ static FsioValue doBinaryNumeric(le_action_e action, float v1, float v2) {
 /**
  * @return true in case of error, false otherwise
  */
-FsioValue LECalculator::processElement(LEElement *element DECLARE_ENGINE_PARAMETER_SUFFIX) {
+FsioResult LECalculator::processElement(const LEElement *element DECLARE_ENGINE_PARAMETER_SUFFIX) {
 #if EFI_PROD_CODE
 	efiAssert(CUSTOM_ERR_ASSERT, getCurrentRemainingStack() > 64, "FSIO logic", unexpected);
 #endif
@@ -278,32 +259,24 @@ FsioValue LECalculator::processElement(LEElement *element DECLARE_ENGINE_PARAMET
 	}
 }
 
-float LECalculator::getValue2(float selfValue, LEElement *fistElementInList DECLARE_ENGINE_PARAMETER_SUFFIX) {
-	reset(fistElementInList);
-	return getValue(selfValue PASS_ENGINE_PARAMETER_SUFFIX);
-}
-
-bool LECalculator::isEmpty() const {
-	return first == NULL;
-}
-
-float LECalculator::getValue(float selfValue DECLARE_ENGINE_PARAMETER_SUFFIX) {
-	if (isEmpty()) {
+float LECalculator::evaluate(float selfValue, const LEElement* element DECLARE_ENGINE_PARAMETER_SUFFIX) {
+	if (!element) {
 		warning(CUSTOM_NO_FSIO, "no FSIO code");
 		return NAN;
 	}
-	LEElement *element = first;
 
-	stack.reset();
+	reset();
 
 	int counter = 0;
-	while (element != NULL) {
+
+	// while not a return statement, execute instructions
+	while (element->action != LE_METHOD_RETURN) {
 		efiAssert(CUSTOM_ERR_ASSERT, counter < 200, "FSIOcount", NAN); // just in case
 
 		if (element->action == LE_METHOD_SELF) {
 			push(element->action, selfValue);
 		} else {
-			FsioValue result = processElement(element PASS_ENGINE_PARAMETER_SUFFIX);
+			FsioResult result = processElement(element PASS_ENGINE_PARAMETER_SUFFIX);
 
 			if (!result) {
 				// error already reported
@@ -312,39 +285,33 @@ float LECalculator::getValue(float selfValue DECLARE_ENGINE_PARAMETER_SUFFIX) {
 
 			push(element->action, result.Value);
 		}
-		element = element->next;
+
+		// Step forward to the next instruction in sequence
+		element++;
 		counter++;
 	}
+
+	// The stack should have exactly one element on it
 	if (stack.size() != 1) {
-		warning(CUSTOM_FSIO_STACK_SIZE, "unexpected FSIO stack size: %d", stack.size());
+		warning(CUSTOM_FSIO_STACK_SIZE, "unexpected FSIO stack size at return: %d", stack.size());
 		return NAN;
 	}
 	return stack.pop();
 }
 
 LEElementPool::LEElementPool(LEElement *pool, int size) {
-	this->pool = pool;
+	this->m_pool = pool;
 	this->size = size;
 	reset();
 }
 
 void LEElementPool::reset() {
-	index = 0;
+	// Next free element is the first one
+	m_nextFree = m_pool;
 }
 
 int LEElementPool::getSize() const {
-	return index;
-}
-
-LEElement *LEElementPool::next() {
-	if (index >= size) {
-		// todo: this should not be a fatal error, just an error
-		firmwareError(CUSTOM_ERR_FSIO_POOL, "LE_ELEMENT_POOL_SIZE overflow");
-		return NULL;
-	}
-	LEElement *result = &pool[index++];
-	result->clear();
-	return result;
+	return m_nextFree - m_pool;
 }
 
 bool isNumeric(const char* line) {
@@ -393,9 +360,9 @@ le_action_e parseAction(const char * line) {
 
 static char parsingBuffer[64];
 
-LEElement *LEElementPool::parseExpression(const char * line) {
-	LEElement *first = nullptr;
-	LEElement *last = nullptr;
+LEElement* LEElementPool::parseExpression(const char * line) {
+	LEElement* expressionHead = m_nextFree;
+	LEElement* n = expressionHead;
 
 	while (true) {
 		line = getNextToken(line, parsingBuffer, sizeof(parsingBuffer));
@@ -404,12 +371,13 @@ LEElement *LEElementPool::parseExpression(const char * line) {
 			/**
 			 * No more tokens in this line, parsing complete!
 			 */
-			return first;
-		}
 
-		LEElement *n = next();
-		if (!n) {
-			return nullptr;
+			// Push a return statement on the end
+			n->init(LE_METHOD_RETURN);
+
+			// The next available element is the one after the return
+			m_nextFree = n + 1;
+			return expressionHead;
 		}
 
 		if (isNumeric(parsingBuffer)) {
@@ -422,24 +390,53 @@ LEElement *LEElementPool::parseExpression(const char * line) {
 				/**
 				 * Cannot recognize token
 				 */
-				warning(CUSTOM_ERR_PARSING_ERROR, "unrecognized [%s]", parsingBuffer);
+				firmwareError(CUSTOM_ERR_PARSING_ERROR, "unrecognized FSIO keyword [%s]", parsingBuffer);
+
 				return nullptr;
 			}
 			n->init(action);
 		}
 
-		// If this is the first time through, set the first element.
-		if (!first) {
-			first = n;
-		}
-
-		// If not the first, link the list
-		if (last) {
-			last->next = n;
-		}
-
-		last = n;
+		n++;
 	}
+}
+
+FsioValue::FsioValue(float f)
+{
+	u.f32 = f;
+	
+	// The low bit represents whether this is a bool or not, clear it for float
+	u.u32 &= 0xFFFFFFFE;
+}
+
+FsioValue::FsioValue(bool b)
+{
+	u.u32 = (b ? 2 : 0);	// second bit is the actual value of the bool
+
+	// Low bit indicates this is a bool
+	u.u32 |= 0x1;
+}
+
+bool FsioValue::isFloat() const {
+	uint32_t typeBit = u.u32 & 0x1;
+
+	return typeBit == 0;
+}
+
+float FsioValue::asFloat() const {
+	return u.f32;
+}
+
+bool FsioValue::isBool() const {
+	uint32_t typeBit = u.u32 & 0x1;
+
+	return typeBit == 1;
+}
+
+bool FsioValue::asBool() const {
+	uint32_t boolBit = u.u32 & 0x2;
+
+	return boolBit != 0;
 }
 
 #endif /* EFI_FSIO */

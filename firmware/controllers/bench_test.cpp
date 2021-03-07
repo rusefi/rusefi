@@ -43,6 +43,10 @@
 #include "malfunction_central.h"
 #include "tunerstudio_outputs.h"
 
+#if EFI_WIDEBAND_FIRMWARE_UPDATE
+#include "can.h"
+#endif
+
 #if EFI_PROD_CODE
 #include "rusefi.h"
 #include "mpu_util.h"
@@ -51,8 +55,6 @@
 #if (BOARD_TLE8888_COUNT > 0)
 #include "gpio/tle8888.h"
 #endif
-
-
 
 EXTERN_ENGINE;
 
@@ -86,6 +88,7 @@ static void runBench(brain_pin_e brainPin, OutputPin *output, float delayMs, flo
 }
 
 static volatile bool isBenchTestPending = false;
+static bool widebandUpdatePending = false;
 static float onTime;
 static float offTime;
 static float delayMs;
@@ -115,6 +118,16 @@ static void doRunFuel(int humanIndex, const char *delayStr, const char * onTimeS
 	pinbench(delayStr, onTimeStr, offTimeStr, countStr, &enginePins.injectors[humanIndex - 1], b);
 }
 
+static void doTestSolenoid(int humanIndex, const char *delayStr, const char * onTimeStr, const char *offTimeStr,
+		const char *countStr) {
+	if (humanIndex < 1 || humanIndex > TCU_SOLENOID_COUNT) {
+		scheduleMsg(logger, "Invalid index: %d", humanIndex);
+		return;
+	}
+	brain_pin_e b = CONFIG(tcu_solenoid)[humanIndex - 1];
+	pinbench(delayStr, onTimeStr, offTimeStr, countStr, &enginePins.tcuSolenoids[humanIndex - 1], b);
+}
+
 static void doBenchTestFsio(int humanIndex, const char *delayStr, const char * onTimeStr, const char *offTimeStr,
 		const char *countStr) {
 	if (humanIndex < 1 || humanIndex > FSIO_COMMAND_COUNT) {
@@ -133,6 +146,16 @@ static void fuelbench2(const char *delayStr, const char *indexStr, const char * 
 		const char *countStr) {
 	int index = atoi(indexStr);
 	doRunFuel(index, delayStr, onTimeStr, offTimeStr, countStr);
+}
+
+/**
+ * delay 100, solenoid #2, 1000ms ON, 1000ms OFF, repeat 3 times
+ * tcusolbench 100 2 1000 1000 3
+ */
+static void tcusolbench(const char *delayStr, const char *indexStr, const char * onTimeStr, const char *offTimeStr,
+		const char *countStr) {
+	int index = atoi(indexStr);
+	doTestSolenoid(index, delayStr, onTimeStr, offTimeStr, countStr);
 }
 
 /**
@@ -173,7 +196,8 @@ void acRelayBench(void) {
 }
 
 void mainRelayBench(void) {
-	pinbench("0", "1000", "100", "1", &enginePins.mainRelay, CONFIG(mainRelayPin));
+	// main relay is usually "ON" via FSIO thus bench testing that one is pretty unusual
+	engine->mainRelayBenchStartNt = getTimeNowNt();
 }
 
 void hpfpValveBench(void) {
@@ -231,6 +255,13 @@ private:
 			isBenchTestPending = false;
 			runBench(brainPin, pinX, delayMs, onTime, offTime, count);
 		}
+
+		if (widebandUpdatePending) {
+#if EFI_WIDEBAND_FIRMWARE_UPDATE && HAL_USE_CAN
+			updateWidebandFirmware(logger);
+#endif
+			widebandUpdatePending = false;
+		}
 	}
 };
 
@@ -258,8 +289,12 @@ static void handleBenchCategory(uint16_t index) {
 	case CMD_TS_BENCH_AC_COMPRESSOR_RELAY:
 		acRelayBench();
 		return;
+	case CMD_TS_BENCH_FAN_RELAY:
+		fanBench();
+		return;
+	default:
+		firmwareError(OBD_PCM_Processor_Fault, "Unexpected bench function %d", index);
 	}
-
 }
 
 static void handleCommandX14(uint16_t index) {
@@ -312,6 +347,11 @@ static void handleCommandX14(uint16_t index) {
 	case 0xF:
 		engine->directSelfStimulation = false;
 		return;
+	case 0x12:
+		widebandUpdatePending = true;
+		return;
+	default:
+		firmwareError(OBD_PCM_Processor_Fault, "Unexpected bench x14 %d", index);
 	}
 }
 
@@ -326,54 +366,94 @@ static void fatalErrorForPresetApply() {
 		"   3. Open TunerStudio and reconnect\n\n");
 }
 
-// todo: this is probably a wrong place for this method now
 void executeTSCommand(uint16_t subsystem, uint16_t index) {
 	scheduleMsg(logger, "IO test subsystem=%d index=%d", subsystem, index);
 
 	bool running = !ENGINE(rpmCalculator).isStopped();
 
-    if (subsystem == 0x11) {
-        clearWarnings();
-	} else if (subsystem == CMD_TS_IGNITION_CATEGORY && !running) {
-		doRunSpark(index, "300", "4", "400", "3");
-	} else if (subsystem == CMD_TS_INJECTOR_CATEGORY && !running) {
-		doRunFuel(index, "300", "4", "400", "3");
-	} else if (subsystem == CMD_TS_FSIO_CATEGORY && !running) {
-		doBenchTestFsio(index, "300", "4", "400", "3");
-	} else if (subsystem == 0x14) {
+	switch (subsystem) {
+	case 0x11:
+		clearWarnings();
+		break;
+
+	case CMD_TS_IGNITION_CATEGORY:
+		if (!running) {
+			doRunSpark(index, "300", "4", "400", "3");
+		}
+		break;
+
+	case CMD_TS_INJECTOR_CATEGORY:
+		if (!running) {
+			doRunFuel(index, "300", "4", "400", "3");
+		}
+		break;
+
+	case CMD_TS_SOLENOID_CATEGORY:
+		if (!running) {
+			doTestSolenoid(index, "300", "1000", "1000", "3");
+		}
+		break;
+
+	case CMD_TS_FSIO_CATEGORY:
+		if (!running) {
+			doBenchTestFsio(index, "300", "4", "400", "3");
+		}
+		break;
+
+	case CMD_TS_X14:
 		handleCommandX14(index);
-	} else if (subsystem == 0x15) {
-		fanBench();
-	} else if (subsystem == CMD_TS_BENCH_CATEGORY) {
+		break;
+	case CMD_TS_BENCH_CATEGORY:
 		handleBenchCategory(index);
-	} else if (subsystem == 0x17) {
+		break;
+
+	case CMD_TS_X17:
 		// cmd_test_idle_valve
 #if EFI_IDLE_CONTROL
 		startIdleBench();
 #endif /* EFI_IDLE_CONTROL */
-	} else if (subsystem == 0x18) {
+		break;
+
+	case 0x18:
 #if EFI_CJ125 && HAL_USE_SPI
 		cjStartCalibration();
 #endif /* EFI_CJ125 */
-	} else if (subsystem == 0x20 && index == 0x3456) {
-		// call to pit
-		setCallFromPitStop(30000);
-	} else if (subsystem == 0x30) {
+		break;
+
+	case 0x20:
+		if (index == 0x3456) {
+			// call to pit
+			setCallFromPitStop(30000);
+		}
+		break;
+
+	case 0x30:
 		fatalErrorForPresetApply();
 		setEngineType(index);
-	} else if (subsystem == 0x31) {
+		break;
+
+	case CMD_TS_X31:
 		fatalErrorForPresetApply();
 		setEngineType(DEFAULT_ENGINE_TYPE);
-	} else if (subsystem == 0x79) {
+		break;
+
+	case 0x79:
 		scheduleStopEngine();
-	} else if (subsystem == 0xba) {
+		break;
+
+	case 0xba:
 #if EFI_PROD_CODE
 		jump_to_bootloader();
 #endif /* EFI_PROD_CODE */
-	} else if (subsystem == 0xbb) {
+		break;
+
+	case 0xbb:
 #if EFI_PROD_CODE
 		rebootNow();
 #endif /* EFI_PROD_CODE */
+		break;
+	default:
+		firmwareError(OBD_PCM_Processor_Fault, "Unexpected bench subsystem %d %d", subsystem, index);
 	}
 }
 
@@ -384,7 +464,9 @@ void initBenchTest(Logging *sharedLogger) {
 	addConsoleAction("acrelaybench", acRelayBench);
 	addConsoleActionS("fuelpumpbench2", fuelPumpBenchExt);
 	addConsoleAction("fanbench", fanBench);
+	addConsoleAction("mainrelaybench", mainRelayBench);
 	addConsoleActionS("fanbench2", fanBenchExt);
+	addConsoleAction("update_wideband", []() { widebandUpdatePending = true; });
 
 	addConsoleAction(CMD_STARTER_BENCH, starterRelayBench);
 	addConsoleAction(CMD_MIL_BENCH, milBench);
@@ -393,6 +475,7 @@ void initBenchTest(Logging *sharedLogger) {
 	addConsoleAction(CMD_HPFP_BENCH, hpfpValveBench);
 
 	addConsoleActionSSSSS("fuelbench2", fuelbench2);
+	addConsoleActionSSSSS("tcusolbench", tcusolbench);
 	addConsoleActionSSSSS("fsiobench2", fsioBench2);
 	addConsoleActionSSSSS("sparkbench2", sparkbench2);
 	instance.setPeriod(200 /*ms*/);

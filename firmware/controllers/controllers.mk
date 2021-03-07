@@ -18,7 +18,7 @@ CONTROLLERS_SRC_CPP = \
 	$(CONTROLLERS_DIR)/actuators/idle_hardware.cpp \
 	$(CONTROLLERS_DIR)/actuators/idle_thread.cpp \
 	$(CONTROLLERS_DIR)/actuators/pwm_tester.cpp \
-	$(CONTROLLERS_DIR)/actuators/algo/aux_pid.cpp \
+	$(CONTROLLERS_DIR)/actuators/algo/vvt_pid.cpp \
 	$(CONTROLLERS_DIR)/actuators/gppwm/gppwm_channel.cpp \
 	$(CONTROLLERS_DIR)/actuators/gppwm/gppwm.cpp \
 	$(CONTROLLERS_DIR)/gauges/tachometer.cpp \
@@ -42,6 +42,7 @@ CONTROLLERS_SRC_CPP = \
 	$(CONTROLLERS_DIR)/can/obd2.cpp \
 	$(CONTROLLERS_DIR)/can/can_verbose.cpp \
 	$(CONTROLLERS_DIR)/can/can_rx.cpp \
+	$(CONTORLLERS_DIR)/can/wideband_bootloader.cpp \
 	$(CONTROLLERS_DIR)/can/can_tx.cpp \
 	$(CONTROLLERS_DIR)/can/can_dash.cpp \
 	$(CONTROLLERS_DIR)/can/can_vss.cpp \
@@ -55,6 +56,7 @@ CONTROLLERS_SRC_CPP = \
 	$(CONTROLLERS_DIR)/gear_controller.cpp \
 	$(CONTROLLERS_DIR)/start_stop.cpp \
 	$(CONTROLLERS_DIR)/simple_tcu.cpp \
+	$(CONTROLLERS_DIR)/limp_manager.cpp \
 
 CONTROLLERS_INC=\
 	$(CONTROLLERS_DIR) \

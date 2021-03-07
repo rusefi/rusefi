@@ -18,6 +18,7 @@
 #include "cj125.h"
 #include "pwm_generator_logic.h"
 #include "rpm_calculator.h"
+#include "thread_priority.h"
 
 EXTERN_ENGINE;
 
@@ -37,9 +38,6 @@ EXTERN_ENGINE;
 #include "pin_repository.h"
 
 static Logging *logger;
-
-static uint8_t tx_buff[2] NO_CACHE;
-static uint8_t rx_buff[1] NO_CACHE;
 
 static CJ125 globalInstance;
 
@@ -97,37 +95,35 @@ static constexpr float lambdaLsu49[] = {
 static uint8_t cjReadRegister(uint8_t regAddr) {
 #if ! EFI_UNIT_TEST
 	spiSelect(driver);
-	tx_buff[0] = regAddr;
-	spiSend(driver, 1, tx_buff);
-	spiReceive(driver, 1, rx_buff);
+	spiPolledExchange(driver, regAddr);
+	uint8_t result = spiPolledExchange(driver, 0xFF);
 	spiUnselect(driver);
 
 #ifdef CJ125_DEBUG_SPI
-	scheduleMsg(logger, "cjReadRegister: addr=%d answer=%d", regAddr, rx_buff[0]);
+	scheduleMsg(logger, "cjReadRegister: addr=%d answer=%d", regAddr, result);
 #endif /* CJ125_DEBUG_SPI */
-	return rx_buff[0];
+	return result;
 #else /* EFI_UNIT_TEST */
 	return 0;
 #endif /* EFI_UNIT_TEST */
 }
 
 static void cjWriteRegister(uint8_t regAddr, uint8_t regValue) {
-	tx_buff[0] = regAddr;
-	tx_buff[1] = regValue;
 #ifdef CJ125_DEBUG_SPI
 	scheduleMsg(logger, "cjWriteRegister: addr=%d value=%d", regAddr, regValue);
 #endif /* CJ125_DEBUG_SPI */
 	// todo: extract 'sendSync' method?
 #if HAL_USE_SPI
 	spiSelect(driver);
-	spiSend(driver, 2, tx_buff);
+	spiPolledExchange(driver, regAddr);
+	spiPolledExchange(driver, regValue);
 	spiUnselect(driver);
 #endif /* HAL_USE_SPI */
 }
 
 static float getUr() {
 #if ! EFI_UNIT_TEST
-	if (CONFIG(cj125ur) != EFI_ADC_NONE) {
+	if (isAdcChannelValid(CONFIG(cj125ur))) {
 #if EFI_PROD_CODE
 	if (!engineConfiguration->cj125isUrDivided) {
 		// in case of directly connected Ur signal from CJ125 to the ADC pin of MCU
@@ -146,7 +142,7 @@ static float getUr() {
 
 static float getUa() {
 #if ! EFI_UNIT_TEST
-	if (CONFIG(cj125ua) != EFI_ADC_NONE) {
+	if (isAdcChannelValid(CONFIG(cj125ua))) {
 #if EFI_PROD_CODE
 		if (engineConfiguration->cj125isUaDivided) {
 			return getVoltageDivided("cj125ua", CONFIG(cj125ua) PASS_ENGINE_PARAMETER_SUFFIX);
@@ -578,9 +574,9 @@ float cjGetAfr(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	float pumpCurrent = (globalInstance.vUa - globalInstance.vUaCal) * globalInstance.amplCoeff * (CJ125_PUMP_CURRENT_FACTOR / CJ125_PUMP_SHUNT_RESISTOR);
 	
 	if (engineConfiguration->cj125isLsu49) {
-		globalInstance.lambda = interpolate2d("cj125Lsu", pumpCurrent, pumpCurrentLsu49, lambdaLsu49);
+		globalInstance.lambda = interpolate2d(pumpCurrent, pumpCurrentLsu49, lambdaLsu49);
 	} else {
-		globalInstance.lambda = interpolate2d("cj125Lsu", pumpCurrent, pumpCurrentLsu42, lambdaLsu42);
+		globalInstance.lambda = interpolate2d(pumpCurrent, pumpCurrentLsu42, lambdaLsu42);
 	}
 
 	// todo: make configurable stoich ratio
@@ -618,14 +614,14 @@ void initCJ125(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX) {
 		return;
 	}
 
-	if (CONFIG(cj125ur) == EFI_ADC_NONE || CONFIG(cj125ua) == EFI_ADC_NONE) {
+	if (!isAdcChannelValid(CONFIG(cj125ur)) || !isAdcChannelValid(CONFIG(cj125ua))) {
 		scheduleMsg(logger, "cj125 init error! cj125ur and cj125ua are required.");
 		warning(CUSTOM_CJ125_0, "cj ur ua");
 		globalInstance.errorCode = CJ125_ERROR_DISABLED;
 		return;
 	}
 
-	if (CONFIG(wboHeaterPin) == GPIO_UNASSIGNED) {
+	if (!isBrainPinValid(CONFIG(wboHeaterPin))) {
 		scheduleMsg(logger, "cj125 init error! wboHeaterPin is required.");
 		warning(CUSTOM_CJ125_1, "cj heater");
 		globalInstance.errorCode = CJ125_ERROR_DISABLED;
@@ -652,7 +648,7 @@ void initCJ125(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	addConsoleAction("cj125_restart", cjRestart);
 	addConsoleAction("cj125_calibrate", cjStartCalibration);
 
-	chThdCreateStatic(cj125ThreadStack, sizeof(cj125ThreadStack), LOWPRIO, (tfunc_t)(void*) cjThread, NULL);
+	chThdCreateStatic(cj125ThreadStack, sizeof(cj125ThreadStack), PRIO_CJ125, (tfunc_t)(void*) cjThread, NULL);
 #endif /* ! EFI_UNIT_TEST */
 }
 

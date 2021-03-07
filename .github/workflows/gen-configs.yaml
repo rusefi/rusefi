@@ -15,7 +15,7 @@ jobs:
         fetch-depth: 0
 
     - name: Install Tools
-      run: sudo apt-get install ncftp sshpass
+      run: sudo apt-get install ncftp sshpass mtools
 
     - name: Generate Enum Strings
       working-directory: ./firmware/
@@ -35,7 +35,7 @@ jobs:
       run: bash gen_live_documentation.sh
 
     # Commit changes and catch the error that occurs if nothing has been changed (without catching other errors)
-    - name: Commit changes
+    - name: Commit fresh generated headers and TS project
       env:
         ACTIONS_ALLOW_UNSECURE_COMMANDS: 'true'
       run: |

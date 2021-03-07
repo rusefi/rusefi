@@ -13,6 +13,7 @@
  * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
+#include "pin_repository.h"
 #include "engine_math.h"
 #include "aux_valves.h"
 #include "allsensors.h"
@@ -69,7 +70,7 @@ void auxPlainPinTurnOn(AuxActor *current) {
 
 void initAuxValves(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	UNUSED(sharedLogger);
-	if (engineConfiguration->auxValves[0] == GPIO_UNASSIGNED) {
+	if (!isBrainPinValid(engineConfiguration->auxValves[0])) {
 		return;
 	}
 
@@ -95,7 +96,7 @@ void initAuxValves(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX) {
 }
 
 void recalculateAuxValveTiming(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
-	if (engineConfiguration->auxValves[0] == GPIO_UNASSIGNED) {
+	if (!isBrainPinValid(engineConfiguration->auxValves[0])) {
 		return;
 	}
 
@@ -105,11 +106,11 @@ void recalculateAuxValveTiming(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 		return;
 	}
 
-	engine->engineState.auxValveStart = interpolate2d("aux", tps,
+	engine->engineState.auxValveStart = interpolate2d(tps,
 			engineConfiguration->fsioCurve1Bins,
 			engineConfiguration->fsioCurve1);
 
-	engine->engineState.auxValveEnd = interpolate2d("aux", tps,
+	engine->engineState.auxValveEnd = interpolate2d(tps,
 			engineConfiguration->fsioCurve2Bins,
 			engineConfiguration->fsioCurve2);
 

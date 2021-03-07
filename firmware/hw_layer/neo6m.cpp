@@ -101,8 +101,8 @@ static THD_FUNCTION(GpsThreadEntryPoint, arg) {
 }
 
 static bool isGpsEnabled() {
-	return CONFIG(gps_rx_pin) != GPIO_UNASSIGNED ||
-			CONFIG(gps_tx_pin) != GPIO_UNASSIGNED;
+	return (isBrainPinValid(CONFIG(gps_rx_pin)) &&
+			isBrainPinValid(CONFIG(gps_tx_pin)));
 }
 
 void initGps(void) {

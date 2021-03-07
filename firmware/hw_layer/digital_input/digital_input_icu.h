@@ -13,9 +13,6 @@
 
 digital_input_s* startDigitalCapture(const char *msg, brain_pin_e brainPin);
 
-void turnOnCapturePin(const char *msg, brain_pin_e brainPin);
-void turnOffCapturePin(brain_pin_e brainPin);
-
 void stopDigitalCapture(const char *msg, brain_pin_e brainPin);
 
 //Nullable

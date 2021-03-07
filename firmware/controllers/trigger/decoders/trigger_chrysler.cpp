@@ -324,8 +324,6 @@ gap=1.43/0.71
 
 void configureDodgeStratusTriggerWaveform(TriggerWaveform *s) {
 	s->initialize(FOUR_STROKE_CAM_SENSOR);
-	s->isSynchronizationNeeded = true;
-
 	s->tdcPosition = 150;
 
 	float w = 7;
@@ -581,7 +579,6 @@ void configureChryslerNGC_36_2_2(TriggerWaveform *s) {
 	float wide = 30 * 2;
 	float narrow = 10 * 2;
 
-	s->isSynchronizationNeeded = true;
 	s->setTriggerSynchronizationGap(3.5);
 	for (int i = 1; i < 15; i++) {
 		s->setTriggerSynchronizationGap3(/*gapIndex*/i, TRIGGER_GAP_DEVIATION_LOW, TRIGGER_GAP_DEVIATION_HIGH);

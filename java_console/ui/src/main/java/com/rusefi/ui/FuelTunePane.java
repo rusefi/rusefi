@@ -285,9 +285,7 @@ public class FuelTunePane {
 
     public void showContent() {
         final ISensorCentral sc = SensorCentral.getInstance();
-        sc.addListener(Sensor.RPM, new SensorCentral.SensorListener() {
-            @Override
-            public void onSensorUpdate(double value) {
+        sc.addListener(Sensor.RPM, value -> {
                 if (!collect.isSelected())
                     return;
                 int rpm = (int) value;
@@ -303,7 +301,7 @@ public class FuelTunePane {
                     incomingDataPoints.add(newPoint);
                 }
             }
-        });
+        );
 
         loadArray(veLoadBins, veLoadOffset);
         loadArray(veRpmBins, veRpmOffset);

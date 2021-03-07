@@ -15,7 +15,7 @@
 
 #define TEST_POOL_SIZE 256
 
-FsioValue getEngineValue(le_action_e action DECLARE_ENGINE_PARAMETER_SUFFIX) {
+FsioResult getEngineValue(le_action_e action DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	switch(action) {
 	case LE_METHOD_FAN:
 		return engine->fsioState.mockFan;
@@ -27,6 +27,10 @@ FsioValue getEngineValue(le_action_e action DECLARE_ENGINE_PARAMETER_SUFFIX) {
 		return engine->fsioState.mockCrankingRpm;
 	case LE_METHOD_TIME_SINCE_BOOT:
 		return engine->fsioState.mockTimeSinceBoot;
+	case LE_METHOD_STARTUP_FUEL_PUMP_DURATION:
+		return 2.0f;
+	case LE_METHOD_TIME_SINCE_TRIGGER_EVENT:
+		return engine->fsioState.mockTimeSinceTrigger;
 	case LE_METHOD_VBATT:
 		return 12;
 	case LE_METHOD_AC_TOGGLE:
@@ -40,7 +44,7 @@ FsioValue getEngineValue(le_action_e action DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	}
 }
 
-TEST(fsio, testParsing) {
+TEST(fsio, testTokenizer) {
 	char buffer[64];
 
 	ASSERT_TRUE(strEqualCaseInsensitive("hello", "HELlo"));
@@ -60,29 +64,47 @@ TEST(fsio, testParsing) {
 
 	ASSERT_TRUE(isNumeric("123"));
 	ASSERT_FALSE(isNumeric("a123"));
+}
 
+TEST(fsio, testParsing) {
 	LEElement thepool[TEST_POOL_SIZE];
 	LEElementPool pool(thepool, TEST_POOL_SIZE);
 
-	LEElement *element;
-	element = pool.parseExpression("1 3 AND not");
+	LEElement *element = pool.parseExpression("1 3 AND not");
 	ASSERT_TRUE(element != NULL);
 
-	ASSERT_EQ(element->action, LE_NUMERIC_VALUE);
-	ASSERT_EQ(element->fValue, 1.0);
+	ASSERT_EQ(element[0].action, LE_NUMERIC_VALUE);
+	ASSERT_EQ(element[0].fValue, 1.0);
 
-	element = element->next;
-	ASSERT_EQ(element->action, LE_NUMERIC_VALUE);
-	ASSERT_EQ(element->fValue, 3.0);
+	ASSERT_EQ(element[1].action, LE_NUMERIC_VALUE);
+	ASSERT_EQ(element[1].fValue, 3.0);
 
-	element = element->next;
-	ASSERT_EQ(element->action, LE_OPERATOR_AND);
+	ASSERT_EQ(element[2].action, LE_OPERATOR_AND);
 
-	element = element->next;
-	ASSERT_EQ(element->action, LE_OPERATOR_NOT);
+	ASSERT_EQ(element[3].action, LE_OPERATOR_NOT);
 
-	element = element->next;
-	ASSERT_TRUE(element == NULL);
+	// last should be a return instruction
+	ASSERT_EQ(element[4].action, LE_METHOD_RETURN);
+
+	ASSERT_EQ(pool.getSize(), 5);
+}
+
+TEST(fsio, parsingMultiple) {
+	LEElement poolArr[TEST_POOL_SIZE];
+	LEElementPool pool(poolArr, TEST_POOL_SIZE);
+
+	LEElement* p1 = pool.parseExpression("2");
+	ASSERT_EQ(p1[0].action, LE_NUMERIC_VALUE);
+	ASSERT_EQ(p1[0].fValue, 2);
+	ASSERT_EQ(p1[1].action, LE_METHOD_RETURN);
+
+	LEElement* p2 = pool.parseExpression("4");
+	ASSERT_EQ(p2[0].action, LE_NUMERIC_VALUE);
+	ASSERT_EQ(p2[0].fValue, 4);
+	ASSERT_EQ(p2[1].action, LE_METHOD_RETURN);
+
+	// Check that they got allocated sequentially without overlap
+	ASSERT_EQ(p2 - p1, 2);
 }
 
 static void testExpression2(float selfValue, const char *line, float expected, Engine *engine) {
@@ -95,7 +117,7 @@ static void testExpression2(float selfValue, const char *line, float expected, E
 
 	EXPAND_Engine;
 
-	ASSERT_NEAR(expected, c.getValue2(selfValue, element PASS_ENGINE_PARAMETER_SUFFIX), EPS4D) << line;
+	ASSERT_NEAR(expected, c.evaluate(selfValue, element PASS_ENGINE_PARAMETER_SUFFIX), EPS4D) << line;
 }
 
 static void testExpression2(float selfValue, const char *line, float expected, const std::unordered_map<SensorType, float>& sensorVals = {}) {
@@ -122,20 +144,20 @@ TEST(fsio, testHysteresisSelf) {
 	double selfValue = 0;
 
 	engine->fsioState.mockRpm = 0;
-	selfValue = c.getValue2(selfValue, element PASS_ENGINE_PARAMETER_SUFFIX);
+	selfValue = c.evaluate(selfValue, element PASS_ENGINE_PARAMETER_SUFFIX);
 	ASSERT_EQ(0, selfValue);
 
 	engine->fsioState.mockRpm = 430;
-	selfValue = c.getValue2(selfValue, element PASS_ENGINE_PARAMETER_SUFFIX);
+	selfValue = c.evaluate(selfValue, element PASS_ENGINE_PARAMETER_SUFFIX);
 	// OFF since not ON yet
 	ASSERT_EQ(0, selfValue);
 
 	engine->fsioState.mockRpm = 460;
-	selfValue = c.getValue2(selfValue, element PASS_ENGINE_PARAMETER_SUFFIX);
+	selfValue = c.evaluate(selfValue, element PASS_ENGINE_PARAMETER_SUFFIX);
 	ASSERT_EQ(1, selfValue);
 
 	engine->fsioState.mockRpm = 430;
-	selfValue = c.getValue2(selfValue, element PASS_ENGINE_PARAMETER_SUFFIX);
+	selfValue = c.evaluate(selfValue, element PASS_ENGINE_PARAMETER_SUFFIX);
 	// OFF since was ON yet
 	ASSERT_EQ(1, selfValue);
 }
@@ -191,65 +213,12 @@ TEST(fsio, extraOperators) {
 	testExpression("0 22 33 if", 33);
 }
 
+TEST(fsio, invalidFunction) {
+	EXPECT_FATAL_ERROR(testExpression("bogus_function", 0));
+	EXPECT_FATAL_ERROR(testExpression("1 2 + bogus_expression *", 0));
+}
+
 TEST(fsio, testLogicExpressions) {
-	{
-
-	WITH_ENGINE_TEST_HELPER(FORD_INLINE_6_1995);
-
-	LECalculator c;
-
-	LEElement value1;
-	value1.init(LE_NUMERIC_VALUE, 123.0f);
-	c.add(&value1);
-
-	assertEqualsM("123", 123.0, c.getValue(0 PASS_ENGINE_PARAMETER_SUFFIX));
-
-	LEElement value2;
-	value2.init(LE_NUMERIC_VALUE, 321.0f);
-	c.add(&value2);
-
-	LEElement value3;
-	value3.init(LE_OPERATOR_AND);
-	c.add(&value3);
-	assertEqualsM("123 and 321", 1.0, c.getValue(0 PASS_ENGINE_PARAMETER_SUFFIX));
-
-	/**
-	 * fuel_pump = (time_since_boot < 4 seconds) OR (rpm > 0)
-	 * fuel_pump = time_since_boot 4 less rpm 0 > OR
-	 */
-
-	c.reset();
-
-	LEElement thepool[TEST_POOL_SIZE];
-	LEElementPool pool(thepool, TEST_POOL_SIZE);
-	LEElement *e = pool.next();
-	e->init(LE_METHOD_TIME_SINCE_BOOT);
-
-	e = pool.next();
-	e->init(LE_NUMERIC_VALUE, 4.0f);
-
-	e = pool.next();
-	e->init(LE_OPERATOR_LESS);
-
-	e = pool.next();
-	e->init(LE_METHOD_RPM);
-
-	e = pool.next();
-	e->init(LE_NUMERIC_VALUE, 0.0f);
-
-	e = pool.next();
-	e->init(LE_OPERATOR_MORE);
-
-	e = pool.next();
-	e->init(LE_OPERATOR_OR);
-
-	pool.reset();
-	LEElement *element;
-	element = pool.parseExpression("fan no_such_method");
-	ASSERT_TRUE(element == NULL) << "NULL expected";
-
-	}
-
 	/**
 	 * fan = (not fan && coolant > 90) OR (fan && coolant > 85)
 	 * fan = fan NOT coolant 90 AND more fan coolant 85 more AND OR
@@ -272,7 +241,7 @@ TEST(fsio, testLogicExpressions) {
 		LEElement * element = pool.parseExpression("fan NOT coolant 90 > AND fan coolant 85 > AND OR");
 		ASSERT_TRUE(element != NULL) << "Not NULL expected";
 		LECalculator c;
-		ASSERT_EQ( 1,  c.getValue2(0, element PASS_ENGINE_PARAMETER_SUFFIX)) << "that expression";
+		ASSERT_EQ( 1,  c.evaluate(0, element PASS_ENGINE_PARAMETER_SUFFIX)) << "that expression";
 
 		ASSERT_EQ(12, c.currentCalculationLogPosition);
 		ASSERT_EQ(102, c.calcLogAction[0]);
@@ -298,4 +267,78 @@ TEST(fsio, testLogicExpressions) {
 		testExpression2(0, STARTER_RELAY_LOGIC, 0, engine);
 		testExpression2(0, "rpm cranking_rpm > ", 1, engine);
 	}
+}
+
+TEST(fsio, fuelPump) {
+	// this will init fuel pump fsio logic
+	WITH_ENGINE_TEST_HELPER(TEST_ENGINE);
+
+	// Mock a fuel pump pin
+	CONFIG(fuelPumpPin) = GPIOA_0;
+	// Re-init so it picks up the new config
+	enginePins.fuelPumpRelay.init(PASS_ENGINE_PARAMETER_SIGNATURE);
+
+	// ECU just started, haven't seen trigger yet
+	engine->fsioState.mockTimeSinceBoot = 0.5f;
+	engine->fsioState.mockTimeSinceTrigger = 100;
+	runFsio(PASS_ENGINE_PARAMETER_SIGNATURE);
+	// Pump should be on!
+	EXPECT_TRUE(efiReadPin(GPIOA_0));
+
+	// Long time since ecu start, haven't seen trigger yet
+	engine->fsioState.mockTimeSinceBoot = 60;
+	engine->fsioState.mockTimeSinceTrigger = 100;
+	runFsio(PASS_ENGINE_PARAMETER_SIGNATURE);
+	// Pump should be off!
+	EXPECT_FALSE(efiReadPin(GPIOA_0));
+
+	// Long time since ecu start, just saw a trigger!
+	engine->fsioState.mockTimeSinceBoot = 60;
+	engine->fsioState.mockTimeSinceTrigger = 0.1f;
+	runFsio(PASS_ENGINE_PARAMETER_SIGNATURE);
+	// Pump should be on!
+	EXPECT_TRUE(efiReadPin(GPIOA_0));
+
+	// ECU just started, and we just saw a trigger!
+	engine->fsioState.mockTimeSinceBoot = 0.5f;
+	engine->fsioState.mockTimeSinceTrigger = 0.1f;
+	runFsio(PASS_ENGINE_PARAMETER_SIGNATURE);
+	// Pump should be on!
+	EXPECT_TRUE(efiReadPin(GPIOA_0));
+}
+
+TEST(fsio, fsioValueFloat) {
+	FsioValue floatVal(3.5f);
+
+	EXPECT_TRUE(floatVal.isFloat());
+	EXPECT_FALSE(floatVal.isBool());
+
+	EXPECT_FLOAT_EQ(floatVal.asFloat(), 3.5f);
+}
+
+TEST(fsio, fsioValueFloatZero) {
+	FsioValue floatVal(0.0f);
+
+	EXPECT_TRUE(floatVal.isFloat());
+	EXPECT_FALSE(floatVal.isBool());
+
+	EXPECT_FLOAT_EQ(floatVal.asFloat(), 0);
+}
+
+TEST(fsio, fsioValueBoolTrue) {
+	FsioValue boolVal(true);
+
+	EXPECT_TRUE(boolVal.isBool());
+	EXPECT_FALSE(boolVal.isFloat());
+
+	EXPECT_TRUE(boolVal.asBool());
+}
+
+TEST(fsio, fsioValueBoolFalse) {
+	FsioValue boolVal(false);
+
+	EXPECT_TRUE(boolVal.isBool());
+	EXPECT_FALSE(boolVal.isFloat());
+
+	EXPECT_FALSE(boolVal.asBool());
 }

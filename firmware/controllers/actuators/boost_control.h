@@ -13,16 +13,12 @@
 
 class SimplePwm;
 
-class BoostController : public ClosedLoopController<float, percent_t>, public PeriodicTimerController {
+class BoostController : public ClosedLoopController<float, percent_t> {
 public:
 	DECLARE_ENGINE_PTR;
 
 	void init(SimplePwm* pmw, const ValueProvider3D* openLoopMap, const ValueProvider3D* closedLoopTargetMap, pid_s* pidParams);
-
-	// PeriodicTimerController implementation
-	int getPeriodMs() override;
-	void PeriodicTask() override;
-	void reset();
+	void update();
 
 	// Called when the configuration may have changed.  Controller will
 	// reset if necessary.
@@ -47,7 +43,8 @@ private:
 };
 
 void startBoostPin();
-void stopBoostPin();
 void initBoostCtrl(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX);
 void setDefaultBoostParameters(DECLARE_CONFIG_PARAMETER_SIGNATURE);
 void onConfigurationChangeBoostCallback(engine_configuration_s *previousConfiguration);
+
+void updateBoostControl();

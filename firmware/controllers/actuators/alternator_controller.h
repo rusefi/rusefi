@@ -12,6 +12,8 @@
 
 #include "engine.h"
 void initAlternatorCtrl(Logging *sharedLogger);
+void startAlternatorPin(void);
+void stopAlternatorPin(void);
 void setAltPFactor(float p);
 void setAltIFactor(float p);
 void setAltDFactor(float p);

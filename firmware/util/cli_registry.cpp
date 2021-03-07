@@ -510,7 +510,6 @@ char *validateSecureLine(char *line) {
 	return line;
 }
 
-static char confirmation[200];
 static char handleBuffer[200];
 
 static bool handleConsoleLineInternal(const char *commandLine, int lineLength) {
@@ -551,12 +550,6 @@ static bool handleConsoleLineInternal(const char *commandLine, int lineLength) {
 	return false;
 }
 
-#if EFI_PROD_CODE || EFI_SIMULATOR
-static void sendOutConfirmation(const char *command, int length) {
-	scheduleMsg(logging, "%s%d", command, length);
-}
-#endif
-
 /**
  * @brief This function takes care of one command line once we have it
  */
@@ -573,23 +566,14 @@ void handleConsoleLine(char *line) {
 		return;
 	}
 
-	strcpy(confirmation, "confirmation_");
-	strcat(confirmation, line);
-	strcat(confirmation, ":");
-
-#if EFI_PROD_CODE || EFI_SIMULATOR
-	sendOutConfirmation(confirmation, lineLength);
-#endif
-
-#if EFI_SIMULATOR
-	printf("handleConsoleLine [%s]\r\n", line);
-#endif /* EFI_SIMULATOR */
-
-
 	bool isKnownComman = handleConsoleLineInternal(line, lineLength);
 
 	if (!isKnownComman) {
-		scheduleMsg(logging, "unknown [%s]", line);
-		helpCommand();
+		scheduleMsg(logging, "unknown command [%s]", line);
+		return;
 	}
+
+#if EFI_PROD_CODE || EFI_SIMULATOR
+	scheduleMsg(logging, "confirmation_%s:%d", line, lineLength);
+#endif
 }

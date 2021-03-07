@@ -45,7 +45,7 @@ extern WaveChart waveChart;
 #endif /* NO_RPM_EVENTS_TIMEOUT_SECS */
 
 float RpmCalculator::getRpmAcceleration() const {
-	return 1.0 * previousRpmValue / rpmValue;
+	return rpmRate;
 }
 
 bool RpmCalculator::isStopped() const {
@@ -202,6 +202,9 @@ uint32_t RpmCalculator::getRevolutionCounterM(void) const {
 
 void RpmCalculator::setStopped() {
 	revolutionCounterSinceStart = 0;
+
+	rpmRate = 0;
+
 	if (rpmValue != 0) {
 		assignRpmValue(0);
 		// needed by 'useNoiselessTriggerDecoder'
@@ -262,15 +265,19 @@ void rpmShaftPositionCallback(trigger_event_e ckpSignalType,
 		 */
 			if (periodSeconds == 0) {
 				rpmState->setRpmValue(NOISY_RPM);
+				rpmState->rpmRate = 0;
 			} else {
 				int mult = (int)getEngineCycle(engine->getOperationMode(PASS_ENGINE_PARAMETER_SIGNATURE)) / 360;
 				float rpm = 60 * mult / periodSeconds;
+
+				auto rpmDelta = rpm - rpmState->previousRpmValue;
+				rpmState->rpmRate = rpmDelta / (mult * periodSeconds);
+
 				rpmState->setRpmValue(rpm > UNREALISTIC_RPM ? NOISY_RPM : rpm);
 			}
 		}
 
 		rpmState->onNewEngineCycle();
-		engine->isRpmHardLimit = GET_RPM() > engine->getRpmHardLimit(PASS_ENGINE_PARAMETER_SIGNATURE);
 	}
 
 
@@ -289,9 +296,14 @@ void rpmShaftPositionCallback(trigger_event_e ckpSignalType,
 		// while transitioning  from 'spinning' to 'running'
 		// Replace 'normal' RPM with instant RPM for the initial spin-up period
 		engine->triggerCentral.triggerState.movePreSynchTimestamps(PASS_ENGINE_PARAMETER_SIGNATURE);
-		int prevIndex;
-		float instantRpm = engine->triggerCentral.triggerState.calculateInstantRpm(&engine->triggerCentral.triggerFormDetails,
-				&prevIndex, nowNt PASS_ENGINE_PARAMETER_SUFFIX);
+	}
+
+	// Always update instant RPM even when not spinning up
+	engine->triggerCentral.triggerState.updateInstantRpm(&engine->triggerCentral.triggerFormDetails, nowNt PASS_ENGINE_PARAMETER_SUFFIX);
+
+	if (rpmState->isSpinningUp()) {
+		float instantRpm = engine->triggerCentral.triggerState.getInstantRpm();
+
 		// validate instant RPM - we shouldn't skip the cranking state
 		instantRpm = minF(instantRpm, CONFIG(cranking.rpm) - 1);
 		rpmState->assignRpmValue(instantRpm);

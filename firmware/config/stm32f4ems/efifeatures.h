@@ -31,18 +31,14 @@
 
 #define EFI_PWM_TESTER FALSE
 
+#define EFI_ACTIVE_CONFIGURATION_IN_FLASH FALSE
+
 #define EFI_MC33816 TRUE
 
 #define EFI_HPFP TRUE
 
-#define HAL_USE_USB_MSD FALSE
-
 #define EFI_ENABLE_CRITICAL_ENGINE_STOP TRUE
 #define EFI_ENABLE_ENGINE_WARNING TRUE
-
-#if !defined(EFI_ENABLE_ASSERTS)
- #define EFI_USE_CCM TRUE
-#endif
 
 #ifndef SC_BUFFER_SIZE
 #define SC_BUFFER_SIZE 4000
@@ -150,8 +146,7 @@
  * MCP42010 digital potentiometer support. This could be useful if you are stimulating some
  * stock ECU
  */
-//#define EFI_POTENTIOMETER FALSE
-#define EFI_POTENTIOMETER TRUE
+#define EFI_POTENTIOMETER FALSE
 
 #ifndef BOARD_TLE6240_COUNT
 #define BOARD_TLE6240_COUNT         1
@@ -167,6 +162,10 @@
 
 #ifndef BOARD_DRV8860_COUNT
 #define BOARD_DRV8860_COUNT         0
+#endif
+
+#ifndef BOARD_MC33810_COUNT
+#define BOARD_MC33810_COUNT		0
 #endif
 
 #define EFI_ANALOG_SENSORS TRUE
@@ -194,13 +193,15 @@
 #define EFI_INTERNAL_ADC TRUE
 #endif
 
-#define EFI_NARROW_EGO_AVERAGING TRUE
+#define EFI_USE_FAST_ADC TRUE
 
-#define EFI_DENSO_ADC FALSE
+#define EFI_NARROW_EGO_AVERAGING TRUE
 
 #ifndef EFI_CAN_SUPPORT
 #define EFI_CAN_SUPPORT TRUE
 #endif
+
+#define EFI_WIDEBAND_FIRMWARE_UPDATE TRUE
 
 #ifndef EFI_AUX_SERIAL
 #define EFI_AUX_SERIAL TRUE
@@ -252,18 +253,15 @@
 #define EFI_FILE_LOGGING TRUE
 #endif
 
+#ifndef EFI_EMBED_INI_MSD
+#define EFI_EMBED_INI_MSD TRUE
+#endif
+
 #ifndef EFI_USB_SERIAL
 #define EFI_USB_SERIAL TRUE
 #endif
 
 #define EFI_CONSOLE_USB_DEVICE SDU1
-
-/**
- * Should PnP engine configurations be included in the binary?
- */
-#ifndef EFI_INCLUDE_ENGINE_PRESETS
-#define EFI_INCLUDE_ENGINE_PRESETS TRUE
-#endif
 
 #ifndef EFI_ENGINE_SNIFFER
 #define EFI_ENGINE_SNIFFER TRUE
@@ -303,7 +301,7 @@
 
 // todo: most of this should become configurable
 
-// todo: switch to continues ADC conversion for fast ADC?
+// todo: switch to continuous ADC conversion for fast ADC?
 #define EFI_INTERNAL_FAST_ADC_GPT	&GPTD6
 
 #define EFI_SPI1_AF 5
@@ -350,8 +348,6 @@
 //#define EFI_CONSOLE_SERIAL_DEVICE (&SD3)
 #endif
 
-#define EFI_CONSOLE_UART_DEVICE (&UARTD3)
-
 /**
  * Use 'HAL_USE_UART' DMA-mode driver instead of 'HAL_USE_SERIAL'
  *
@@ -360,10 +356,16 @@
  *  STM32_UART_USE_USARTx
  * in mcuconf.h
  */
+#ifndef TS_UART_DMA_MODE
 #define TS_UART_DMA_MODE FALSE
+#endif
 
 #ifndef PRIMARY_UART_DMA_MODE
 #define PRIMARY_UART_DMA_MODE TRUE
+#endif
+
+#if (PRIMARY_UART_DMA_MODE || TS_UART_DMA_MODE || TS_UART_MODE)
+#define EFI_CONSOLE_UART_DEVICE (&UARTD3)
 #endif
 
 //#define TS_UART_DEVICE (&UARTD3)

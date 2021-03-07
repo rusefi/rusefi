@@ -14,11 +14,15 @@
 
 #ifdef __cplusplus
 class Engine;
+#endif // def __cplusplus
+
+
 struct engine_configuration_s;
 struct persistent_config_s;
 
 #if EFI_UNIT_TEST
 
+#ifdef __cplusplus
 	#define DECLARE_ENGINE_PTR                                 \
 		Engine *engine = nullptr;                              \
 		engine_configuration_s *engineConfiguration = nullptr; \
@@ -42,10 +46,25 @@ struct persistent_config_s;
 	#define PASS_ENGINE_PARAMETER_SIGNATURE engine, PASS_CONFIG_PARAMETER_SIGNATURE
 	#define PASS_ENGINE_PARAMETER_SUFFIX , PASS_ENGINE_PARAMETER_SIGNATURE
 
+	#define EXTERN_ENGINE extern EnginePins enginePins; \
+		extern engine_configuration_s & activeConfiguration
+#endif // def __cplusplus
+
+	#define EXTERN_CONFIG
+
+	#define DEFINE_CONFIG_PARAM(x, y) , x y
+	#define PASS_CONFIG_PARAM(x) , x
+
+	#define EXPAND_Engine \
+			engine_configuration_s *engineConfiguration = engine->engineConfiguration; \
+			persistent_config_s *config = engine->config; \
+			(void)engineConfiguration; \
+			(void)config;
 #else // EFI_UNIT_TEST
 
 	// These are the non-unit-test (AKA real firmware) noop versions
 
+#ifdef __cplusplus
 	#define DECLARE_ENGINE_PTR
 
 	#define INJECT_ENGINE_REFERENCE(x) {}
@@ -65,12 +84,45 @@ struct persistent_config_s;
 	// Pass this after some other parameters are passed
 	#define PASS_ENGINE_PARAMETER_SUFFIX
 
-#endif // EFI_UNIT_TEST
+	#define EXTERN_ENGINE \
+			extern Engine ___engine; \
+			extern Engine *engine; \
+			EXTERN_CONFIG \
+			extern EnginePins enginePins \
 
-#define EXPAND_Engine \
-	    engine_configuration_s *engineConfiguration = engine->engineConfigurationPtr; \
-		persistent_config_s *config = engine->config; \
-		(void)engineConfiguration; \
-		(void)config;
-
+	#define ENGINE(x) ___engine.x
 #endif // def __cplusplus
+
+	/**
+	 * this macro allows the compiled to figure out the complete static address, that's a performance
+	 * optimization which is hopefully useful at least for anything trigger-related
+	 *
+	 * this is related to the fact that for unit tests we prefer to explicitly pass references in method signature thus code covered by
+	 * unit tests would need to use by-reference access. These macro allow us to have faster by-address access in real firmware and by-reference
+	 * access in unit tests
+	 */
+	#define CONFIG(x) persistentState.persistentConfiguration.engineConfiguration.x
+
+	/**
+	 * & is reference in C++ (not C)
+	 * Ref is a pointer that:
+	 *   you access with dot instead of arrow
+	 *   Cannot be null
+	 * This is about EFI_ACTIVE_CONFIGURATION_IN_FLASH
+	 */
+	#define EXTERN_CONFIG \
+			EXTERN_ENGINE_CONFIGURATION \
+			extern engine_configuration_s & activeConfiguration; \
+
+	#define EXTERN_ENGINE_CONFIGURATION \
+			extern engine_configuration_s *engineConfiguration; \
+			extern persistent_config_container_s persistentState; \
+			extern persistent_config_s *config;
+
+
+	#define DEFINE_CONFIG_PARAM(x, y)
+	#define CONFIG_PARAM(x) CONFIG(x)
+	#define PASS_CONFIG_PARAM(x)
+
+	#define EXPAND_Engine
+#endif // EFI_UNIT_TEST

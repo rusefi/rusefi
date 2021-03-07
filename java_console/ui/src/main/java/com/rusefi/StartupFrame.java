@@ -1,11 +1,11 @@
 package com.rusefi;
 
 import com.rusefi.autodetect.PortDetector;
+import com.rusefi.autoupdate.Autoupdate;
 import com.rusefi.autoupdate.AutoupdateUtil;
 import com.rusefi.io.LinkManager;
 import com.rusefi.io.serial.BaudRateHolder;
 import com.rusefi.maintenance.*;
-import com.rusefi.ts_plugin.AudioPlayback;
 import com.rusefi.ui.util.HorizontalLine;
 import com.rusefi.ui.util.URLLabel;
 import com.rusefi.ui.util.UiUtils;
@@ -25,6 +25,7 @@ import java.util.List;
 import static com.rusefi.ui.storage.PersistentConfiguration.getConfig;
 import static com.rusefi.ui.util.UiUtils.getAllComponents;
 import static com.rusefi.ui.util.UiUtils.setToolTip;
+import static java.awt.image.ImageObserver.ABORT;
 import static javax.swing.JOptionPane.YES_NO_OPTION;
 
 /**
@@ -38,7 +39,7 @@ import static javax.swing.JOptionPane.YES_NO_OPTION;
  */
 public class StartupFrame {
     private static final String LOGO = "/com/rusefi/logo.gif";
-    public static final String LINK_TEXT = "rusEFI (c) 2012-2020";
+    public static final String LINK_TEXT = "rusEFI (c) 2012-2021";
     private static final String URI = "http://rusefi.com/?java_console";
     // private static final int RUSEFI_ORANGE = 0xff7d03;
 
@@ -69,7 +70,9 @@ public class StartupFrame {
 
     public StartupFrame() {
 //        AudioPlayback.start();
-        frame = new JFrame("rusEFI console version " + Launcher.CONSOLE_VERSION);
+        String title = "rusEFI console version " + Launcher.CONSOLE_VERSION;
+        String bundleName = Autoupdate.readBundleFullName();
+        frame = new JFrame(title + " " + (bundleName != null ? bundleName : "Unknown bundle"));
         frame.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
         frame.addWindowListener(new WindowAdapter() {
             @Override
@@ -266,8 +269,7 @@ public class StartupFrame {
             }
 
             private void runFunctionalHardwareTest() {
-                String autoDetectedPort = PortDetector.autoDetectPort(null);
-                boolean isSuccess = RealHwTest.runHardwareTest(autoDetectedPort);
+                boolean isSuccess = RealHardwareTestLauncher.runHardwareTest();
                 JOptionPane.showMessageDialog(null, "Function test passed: " + isSuccess + "\nSee log folder for details.");
             }
         };

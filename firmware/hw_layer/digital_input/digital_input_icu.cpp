@@ -42,8 +42,16 @@ static void icuPeriordCallBack(ICUDriver *driver);
  * CORE_CLOCK / 33.33333 = TICKS * 65536
  * 168000000 / 33.333333 / 65536 = 76.90
  */
-static ICUConfig wave_icucfg = { ICU_INPUT_ACTIVE_LOW, CORE_CLOCK / 100, icuWidthCallback, icuPeriordCallBack, 0,
-		ICU_CHANNEL_1, 0 };
+static ICUConfig wave_icucfg = {
+	.mode			= ICU_INPUT_ACTIVE_LOW,
+	.frequency 		= CORE_CLOCK / 100,
+	.width_cb		= icuWidthCallback,
+	.period_cb		= icuPeriordCallBack,
+	.overflow_cb	= NULL,
+	.channel		= ICU_CHANNEL_1,
+	.dier			= 0,
+	.arr 			= 0xFFFFFFFFU
+};
 
 static ArrayList<digital_input_s, 8> registeredIcus;
 
@@ -152,7 +160,7 @@ icuchannel_t getInputCaptureChannel(brain_pin_e hwPin) {
 ICUDriver * getInputCaptureDriver(const char *msg, brain_pin_e hwPin) {
 	UNUSED(msg);
 
-	if (hwPin == GPIO_UNASSIGNED || hwPin == GPIO_INVALID) {
+	if (!isBrainPinValid(hwPin)) {
 		return NULL;
 	}
 #if STM32_ICU_USE_TIM1
@@ -198,7 +206,7 @@ ICUDriver * getInputCaptureDriver(const char *msg, brain_pin_e hwPin) {
 	return nullptr;
 }
 
-void turnOnCapturePin(const char *msg, brain_pin_e brainPin) {
+static void turnOnCapturePin(const char *msg, brain_pin_e brainPin) {
 	ICUDriver *driver = getInputCaptureDriver(msg, brainPin);
 	if (driver != NULL) {
 		iomode_t mode = (iomode_t) PAL_MODE_ALTERNATE(getAlternateFunctions(driver));
@@ -206,15 +214,11 @@ void turnOnCapturePin(const char *msg, brain_pin_e brainPin) {
 	}
 }
 
-void turnOffCapturePin(brain_pin_e brainPin) {
-	efiSetPadUnused(brainPin);
-}
-
 /**
  * turns pin off and returns digital_input_s back into registeredIcus pool
  */
 void stopDigitalCapture(const char *msg, brain_pin_e brainPin) {
-	if (brainPin == GPIO_UNASSIGNED) {
+	if (!isBrainPinValid(brainPin)) {
 		return;
 	}
 	efiSetPadUnused(brainPin);
@@ -223,6 +227,7 @@ void stopDigitalCapture(const char *msg, brain_pin_e brainPin) {
 	if (driver == NULL) {
 		return;
 	}
+
 	int regSize = registeredIcus.size;
 	for (int i = 0; i < regSize; i++) {
 		if (registeredIcus.elements[i].driver == driver) {

@@ -24,10 +24,6 @@ extern engine_configuration_s & activeConfiguration;
 extern bool printTriggerDebug;
 extern bool printFuelDebug;
 
-// This has been made global so we don't need to worry about efiReadPin having access the object
-//  we store it in, every time we need to use efiReadPin.
-bool mockPinStates[BRAIN_PIN_COUNT];
-
 EngineTestHelperBase::EngineTestHelperBase() { 
 	// todo: make this not a global variable, we need currentTimeProvider interface on engine
 	timeNowUs = 0; 
@@ -46,7 +42,7 @@ EngineTestHelper::EngineTestHelper(engine_type_e engineType, configuration_callb
 	Sensor::setMockValue(SensorType::Clt, 70);
 	Sensor::setMockValue(SensorType::Iat, 30);
 
-	for (const auto [s, v] : sensorValues) {
+	for (const auto& [s, v] : sensorValues) {
 		Sensor::setMockValue(s, v);
 	}
 
@@ -55,11 +51,11 @@ EngineTestHelper::EngineTestHelper(engine_type_e engineType, configuration_callb
 	memset(&activeConfiguration, 0, sizeof(activeConfiguration));
 
 	enginePins.reset();
+	enginePins.unregisterPins();
 
-	persistent_config_s *config = &persistentConfig;
 	Engine *engine = &this->engine;
-	engine->setConfig(config);
-	engine_configuration_s *engineConfiguration = engine->engineConfigurationPtr;
+	engine->setConfig(engine, &persistentConfig.engineConfiguration, &persistentConfig);
+	EXPAND_Engine;
 
 	setCurveValue(config->cltFuelCorrBins, config->cltFuelCorr, CLT_CURVE_SIZE, -40, 1.5);
 	setCurveValue(config->cltFuelCorrBins, config->cltFuelCorr, CLT_CURVE_SIZE, -30, 1.5);
@@ -103,6 +99,8 @@ EngineTestHelper::~EngineTestHelper() {
 	writeEvents(filePath.str().c_str());
 
 	// Cleanup
+	enginePins.reset();
+	enginePins.unregisterPins();
 	Sensor::resetRegistry();
 	memset(mockPinStates, 0, sizeof(mockPinStates));
 }
@@ -151,7 +149,7 @@ void EngineTestHelper::firePrimaryTriggerRise() {
 	Engine *engine = &this->engine;
 	EXPAND_Engine;
 	LogTriggerTooth(SHAFT_PRIMARY_RISING, nowNt PASS_ENGINE_PARAMETER_SUFFIX);
-	engine->triggerCentral.handleShaftSignal(SHAFT_PRIMARY_RISING, nowNt, engine, engine->engineConfigurationPtr, &persistentConfig);
+	engine->triggerCentral.handleShaftSignal(SHAFT_PRIMARY_RISING, nowNt PASS_ENGINE_PARAMETER_SUFFIX);
 }
 
 void EngineTestHelper::firePrimaryTriggerFall() {
@@ -159,7 +157,7 @@ void EngineTestHelper::firePrimaryTriggerFall() {
 	Engine *engine = &this->engine;
 	EXPAND_Engine;
 	LogTriggerTooth(SHAFT_PRIMARY_FALLING, nowNt PASS_ENGINE_PARAMETER_SUFFIX);
-	engine->triggerCentral.handleShaftSignal(SHAFT_PRIMARY_FALLING, nowNt, engine, engine->engineConfigurationPtr, &persistentConfig);
+	engine->triggerCentral.handleShaftSignal(SHAFT_PRIMARY_FALLING, nowNt PASS_ENGINE_PARAMETER_SUFFIX);
 }
 
 void EngineTestHelper::fireTriggerEventsWithDuration(float durationMs) {

@@ -14,7 +14,7 @@
  *
  * @section sec_intro Intro
  *
- * rusEfi is implemented based on the idea that with modern 100+ MHz microprocessors the relatively
+ * rusEFI is implemented based on the idea that with modern 100+ MHz microprocessors the relatively
  * undemanding task of internal combustion engine control could be implemented in a high-level, processor-independent
  * (to some extent) manner. Thus the key concepts of rusEfi: dependency on high-level hardware abstraction layer, software-based PWM etc.
  *
@@ -93,6 +93,8 @@
  * <br>See flash_main.cpp
  *
  *
+ * todo: merge https://github.com/rusefi/rusefi/wiki/Dev-Tips into here
+ *
  * @section sec_fuel_injection Fuel Injection
  *
  *
@@ -159,7 +161,7 @@ static void scheduleReboot(void) {
 void runRusEfi(void) {
 	efiAssertVoid(CUSTOM_RM_STACK_1, getCurrentRemainingStack() > 512, "init s");
 	assertEngineReference();
-	engine->setConfig(config);
+	engine->setConfig();
 	addConsoleAction(CMD_REBOOT, scheduleReboot);
 	addConsoleAction(CMD_REBOOT_DFU, jump_to_bootloader);
 
@@ -183,21 +185,25 @@ void runRusEfi(void) {
 	initPinRepository();
 
 #if EFI_INTERNAL_FLASH
+ #if IGNORE_FLASH_CONFIGURATION
+	resetConfigurationExt(&sharedLogger, DEFAULT_ENGINE_TYPE PASS_ENGINE_PARAMETER_SUFFIX);
+ #else
 	/**
 	 * First thing is reading configuration from flash memory.
 	 * In order to have complete flexibility configuration has to go before anything else.
 	 */
 	readConfiguration(&sharedLogger);
+ #endif // IGNORE_FLASH_CONFIGURATION
 #endif /* EFI_INTERNAL_FLASH */
 
-#if HW_CHECK_MODE
+#if HW_CHECK_ALWAYS_STIMULATE
 	// we need a special binary for final assembly check. We cannot afford to require too much software or too many steps
 	// to be executed at the place of assembly
 	engine->directSelfStimulation = true;
-#endif // HW_CHECK_MODE
+#endif // HW_CHECK_ALWAYS_STIMULATE
 
 
-#ifndef EFI_ACTIVE_CONFIGURATION_IN_FLASH
+#if ! EFI_ACTIVE_CONFIGURATION_IN_FLASH
 	// TODO: need to fix this place!!! should be a version of PASS_ENGINE_PARAMETER_SIGNATURE somehow
 	prepareVoidConfiguration(&activeConfiguration);
 #endif /* EFI_ACTIVE_CONFIGURATION_IN_FLASH */

@@ -7,8 +7,6 @@
 
 #pragma once
 
-#define BRAIN_PIN_COUNT (1 << sizeof(brain_pin_e))
-
 #include "engine.h"
 #include "trigger_central.h"
 #include "rpm_calculator.h"

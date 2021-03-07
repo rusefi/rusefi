@@ -47,10 +47,11 @@ public:
 	 * same as above, with DEFAULT_OUTPUT mode
 	 */
 	void initPin(const char *msg, brain_pin_e brainPin);
+
 	/**
 	 * dissociates pin from this output and un-registers it in pin repository
 	 */
-	void unregisterOutput(brain_pin_e oldPin);
+	void deInit();
 
 	bool isInitialized();
 
@@ -59,19 +60,16 @@ public:
 	void toggle();
 	bool getLogicValue() const;
 
-
 #if EFI_GPIO_HARDWARE
 	ioportid_t port = 0;
 	uint8_t pin = 0;
 #endif /* EFI_GPIO_HARDWARE */
 
+	brain_pin_e brainPin = GPIO_UNASSIGNED;
+
 #if (EFI_GPIO_HARDWARE && (BOARD_EXT_GPIOCHIPS > 0))
 	/* used for external pins */
-	brain_pin_e brainPin;
-	bool ext;
-#elif EFI_SIMULATOR || EFI_UNIT_TEST
-	// used for setMockState
-	brain_pin_e brainPin;
+	bool ext = false;
 #endif /* EFI_GPIO_HARDWARE */
 
 	int8_t currentLogicValue = INITIAL_PIN_STATE;
@@ -82,10 +80,10 @@ public:
 private:
 	// todo: inline this method?
 	void setDefaultPinState(const pin_output_mode_e *defaultState);
-	void setOnchipValue(int electricalValue, int logicValue);
+	void setOnchipValue(int electricalValue);
 
 	// 4 byte pointer is a bit of a memory waste here
-	const pin_output_mode_e *modePtr;
+	const pin_output_mode_e *modePtr = nullptr;
 };
 
 /**
@@ -209,6 +207,8 @@ public:
 	InjectorOutputPin injectors[INJECTION_PIN_COUNT];
 	IgnitionOutputPin coils[IGNITION_PIN_COUNT];
 	NamedOutputPin auxValve[AUX_DIGITAL_VALVE_COUNT];
+	OutputPin tcuSolenoids[TCU_SOLENOID_COUNT];
+
 private:
 	void startInjectionPins();
 	void startIgnitionPins();
@@ -216,6 +216,7 @@ private:
 
 	void stopInjectionPins();
 	void stopIgnitionPins();
+	void stopAuxValves();
 };
 
 #endif /* __cplusplus */

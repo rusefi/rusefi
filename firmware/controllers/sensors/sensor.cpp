@@ -34,10 +34,17 @@ static const char* s_sensorNames[] = {
 	"Aux Temp 1",
 	"Aux Temp 2",
 
-	"Lambda",
+	"Lambda 1",
+	"Lambda 2",
 
 	"Wastegate Position",
 	"Idle Valve Position",
+
+	"Flex Fuel",
+
+	"Battery Voltage",
+
+	"Barometric Pressure",
 };
 
 // This struct represents one sensor in the registry.
@@ -50,9 +57,10 @@ public:
 		return m_sensor;
 	}
 
-	void setMockValue(float value) {
+	void setMockValue(float value, bool mockRedundant) {
 		m_mockValue = value;
 		m_useMock = true;
+		m_mockRedundant = mockRedundant;
 	}
 
 	void resetMock() {
@@ -69,9 +77,7 @@ public:
 		// If there's somebody already here - a consumer tried to double-register a sensor
 		if (m_sensor) {
 			// This sensor has already been registered. Don't re-register it.
-	#if ! EFI_UNIT_TEST
-			firmwareError(CUSTOM_OBD_26, "Duplicate registration for %s sensor", sensor->getSensorName());
-	#endif
+			firmwareError(CUSTOM_OBD_26, "Duplicate registration for sensor \"%s\"", sensor->getSensorName());
 			return false;
 		} else {
 			// Put the sensor in the registry
@@ -118,16 +124,31 @@ public:
 	float getRaw() const {
 		const auto sensor = m_sensor;
 
-		if (m_sensor) {
-			return m_sensor->getRaw();
+		if (sensor) {
+			return sensor->getRaw();
 		}
 
 		// We've exhausted all valid ways to return something - sensor not found.
 		return 0;
 	}
 
+	bool isRedundant() const {
+		const auto sensor = m_sensor;
+
+		if (sensor) {
+			return sensor->isRedundant();
+		}
+
+		if (m_useMock) {
+			return m_mockRedundant;
+		}
+
+		return false;
+	}
+
 private:
 	bool m_useMock = false;
+	bool m_mockRedundant = false;
 	float m_mockValue;
 	Sensor* m_sensor = nullptr;
 };
@@ -181,17 +202,23 @@ bool Sensor::Register() {
 	return entry ? entry->getRaw() : 0;
 }
 
+/*static*/ bool Sensor::isRedundant(SensorType type) {
+	const auto entry = getEntryForType(type);
+
+	return entry ? entry->isRedundant() : false;
+}
+
 /*static*/ bool Sensor::hasSensor(SensorType type) {
 	const auto entry = getEntryForType(type);
 
 	return entry ? entry->hasSensor() : false;
 }
 
-/*static*/ void Sensor::setMockValue(SensorType type, float value) {
+/*static*/ void Sensor::setMockValue(SensorType type, float value, bool mockRedundant) {
 	auto entry = getEntryForType(type);
 
 	if (entry) {
-		entry->setMockValue(value);
+		entry->setMockValue(value, mockRedundant);
 	}
 }
 

@@ -51,8 +51,11 @@ public:
 };
 
 void initWaveAnalyzer(Logging *sharedLogger);
+void startLogicAnalyzerPins();
+void stopLogicAnalyzerPins();
 void printWave(Logging *logging);
 void showWaveInfo(void);
+void reportLogicAnalyzerToTS(void); 
 
 void waTriggerEventListener(trigger_event_e ckpSignalType, uint32_t index, efitick_t edgeTimestamp DECLARE_ENGINE_PARAMETER_SUFFIX);
 

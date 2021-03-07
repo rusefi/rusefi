@@ -140,8 +140,11 @@ typedef enum __attribute__ ((__packed__)) {
 
 } brain_pin_e;
 
-/* Plase keep updating this define */
-#define BRAIN_PIN_LAST_ONCHIP	GPIOE_17
+/* Plase keep updating these defines */
+#define BRAIN_PIN_ONCHIP_LAST	GPIOE_17
+#define BRAIN_PIN_ONCHIP_PINS	(BRAIN_PIN_ONCHIP_LAST - GPIOA_0 + 1)
+#define BRAIN_PIN_LAST 			TLE6240_PIN_16
+#define BRAIN_PIN_TOTAL_PINS	(BRAIN_PIN_LAST - GPIOA_0 + 1)
 
 /* diagnostic for brain pins
  * can be combination of few bits
@@ -176,10 +179,7 @@ typedef enum __attribute__ ((__packed__)) {
 	EFI_ADC_13 = 14,
 	EFI_ADC_14 = 15,
 	EFI_ADC_15 = 16,
+	EFI_ADC_LAST_CHANNEL = 17,	// Please keep this in sync with the last valid channel index!
 
-	// todo: bad choice of value since now we have ADC_CHANNEL_SENSOR and could end up with 17 and 18 also
-	EFI_ADC_ERROR = 17,
+	EFI_ADC_ERROR = 50,
 } adc_channel_e;
-
-/* Plase keep updating this define */
-#define EFI_ADC_LAST	EFI_ADC_15

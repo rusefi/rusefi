@@ -229,7 +229,7 @@ void refreshMapAveragingPreCalc(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	int rpm = GET_RPM();
 	if (isValidRpm(rpm)) {
 		MAP_sensor_config_s * c = &engineConfiguration->map;
-		angle_t start = interpolate2d("mapa", rpm, c->samplingAngleBins, c->samplingAngle);
+		angle_t start = interpolate2d(rpm, c->samplingAngleBins, c->samplingAngle);
 		efiAssertVoid(CUSTOM_ERR_MAP_START_ASSERT, !cisnan(start), "start");
 
 		angle_t offsetAngle = ENGINE(triggerCentral.triggerFormDetails).eventAngles[CONFIG(mapAveragingSchedulingAtIndex)];
@@ -245,7 +245,7 @@ void refreshMapAveragingPreCalc(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 			fixAngle(cylinderStart, "cylinderStart", CUSTOM_ERR_6562);
 			engine->engineState.mapAveragingStart[i] = cylinderStart;
 		}
-		engine->engineState.mapAveragingDuration = interpolate2d("samp", rpm, c->samplingWindowBins, c->samplingWindow);
+		engine->engineState.mapAveragingDuration = interpolate2d(rpm, c->samplingWindowBins, c->samplingWindow);
 	} else {
 		for (int i = 0; i < engineConfiguration->specs.cylindersCount; i++) {
 			engine->engineState.mapAveragingStart[i] = NAN;

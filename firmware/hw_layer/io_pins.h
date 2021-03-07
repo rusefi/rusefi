@@ -21,6 +21,7 @@
 
 #if EFI_GPIO_HARDWARE
 EXTERNC void efiSetPadMode(const char *msg, brain_pin_e pin, iomode_t mode);
+EXTERNC void efiSetPadModeWithoutOwnershipAcquisition(const char *msg, brain_pin_e brainPin, iomode_t mode);
 EXTERNC void efiSetPadUnused(brain_pin_e brainPin);
 
 EXTERNC bool efiReadPin(brain_pin_e pin);
@@ -29,5 +30,12 @@ EXTERNC iomode_t getInputMode(pin_input_mode_e mode);
 #if HAL_USE_ICU
 EXTERNC void efiIcuStart(const char *msg, ICUDriver *icup, const ICUConfig *config);
 #endif /* HAL_USE_ICU */
+
 #endif /* EFI_GPIO_HARDWARE */
 
+#if ! EFI_PROD_CODE
+#define BRAIN_PIN_COUNT (1 << 8 * sizeof(brain_pin_e))
+extern bool mockPinStates[BRAIN_PIN_COUNT];
+
+void setMockState(brain_pin_e pin, bool state);
+#endif

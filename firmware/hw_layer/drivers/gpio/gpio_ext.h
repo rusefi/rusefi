@@ -38,13 +38,12 @@ int gpiochips_getPinOffset(brain_pin_e pin);
 const char *gpiochips_getChipName(brain_pin_e pin);
 const char *gpiochips_getPinName(brain_pin_e pin);
 
-/* register GPIO chip */
-int gpiochip_register(const char *name, struct gpiochip_ops *ops, size_t size, void *priv);
-
-void gpiochip_use_gpio_base(int size);
+/* register/unregister GPIO chip */
+int gpiochip_register(brain_pin_e base, const char *name, struct gpiochip_ops *ops, size_t size, void *priv);
+int gpiochip_unregister(brain_pin_e base);
 
 /* Set individual names for pins */
-int gpiochips_setPinNames(brain_pin_e pin, const char **names);
+int gpiochips_setPinNames(brain_pin_e base, const char **names);
 
 /* gpio extenders subsystem init */
 int gpiochips_init(void);

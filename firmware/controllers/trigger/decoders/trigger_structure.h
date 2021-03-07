@@ -1,14 +1,17 @@
 /**
  * @file	trigger_structure.h
  *
+ * rusEFI defines trigger shape programmatically in C code
+ * For integration we have exportAllTriggers export
+ *
  * @date Dec 22, 2013
  * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
 #pragma once
 
+#include "engine_ptr.h"
 #include "state_sequence.h"
-#include "globalaccess.h"
 #include "engine_configuration_generated_structures.h"
 
 #define FOUR_STROKE_ENGINE_CYCLE 720
@@ -71,6 +74,7 @@ class Engine;
 class TriggerState;
 class TriggerFormDetails;
 class TriggerConfiguration;
+class Logging;
 
 // https://github.com/rusefi/rusefi/issues/2010 shows the corner case wheel with huge depth requirement
 #define GAP_TRACKING_LENGTH 18
@@ -213,20 +217,20 @@ public:
 
 	bool useOnlyRisingEdgeForTriggerTemp;
 
-	/* 0..1 angle range */
+	/* (0..1] angle range */
 	void addEvent(angle_t angle, trigger_wheel_e const channelIndex, trigger_value_e const state);
-	/* 0..720 angle range
+	/* (0..720] angle range
 	 * Deprecated!
 	 */
 	void addEvent720(angle_t angle, trigger_wheel_e const channelIndex, trigger_value_e const state);
 
 	/**
 	 * This version of 'addEvent...' family considers the angle duration of operationMode in this trigger
-	 * For example, 0..180 for FOUR_STROKE_SYMMETRICAL_CRANK_SENSOR
+	 * For example, (0..180] for FOUR_STROKE_SYMMETRICAL_CRANK_SENSOR
 	 */
 	void addEventAngle(angle_t angle, trigger_wheel_e const channelIndex, trigger_value_e const state);
 
-	/* 0..720 angle range
+	/* (0..720] angle range
 	 * Deprecated?
 	 */
 	void addEventClamped(angle_t angle, trigger_wheel_e const channelIndex, trigger_value_e const stateParam, float filterLeft, float filterRight);
@@ -271,7 +275,7 @@ public:
 private:
 	trigger_shape_helper h;
 
-	int findAngleIndex(TriggerFormDetails *details, float angle) const;
+	uint16_t findAngleIndex(TriggerFormDetails *details, float angle) const;
 
 	/**
 	 * Working buffer for 'wave' instance
@@ -309,7 +313,7 @@ public:
 	 * this cache allows us to find a close-enough (with one degree precision) trigger wheel index by
 	 * given angle with fast constant speed. That's a performance optimization for event scheduling.
 	 */
-	int triggerIndexByAngle[720];
+	uint16_t triggerIndexByAngle[720];
 };
 
 void findTriggerPosition(

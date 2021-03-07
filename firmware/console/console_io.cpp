@@ -39,6 +39,7 @@
 #include "os_util.h"
 #include "tunerstudio.h"
 #include "connector_uart_dma.h"
+#include "thread_priority.h"
 
 #if EFI_SIMULATOR
 #include "rusEfiFunctionalTest.h"
@@ -73,98 +74,31 @@ void onDataArrived(void) {
 	consoleByteArrived = true;
 }
 
-
-/**
- * @brief   Reads a whole line from the input channel.
- *
- * @param[in] chp       pointer to a @p BaseChannel object
- * @param[in] line      pointer to the line buffer
- * @param[in] size      buffer maximum length
- * @return              The operation status.
- * @retval TRUE         the channel was reset or CTRL-D pressed.
- * @retval FALSE        operation successful.
- */
-/* let's keep this dead code for a bit
-static bool getConsoleLine(BaseSequentialStream *chp, char *line, unsigned size) {
-	char *p = line;
-
-	while (true) {
-		if (!isCommandLineConsoleReady()) {
-			// we better do not read from serial before it is ready
-			chThdSleepMilliseconds(10);
-			continue;
-		}
-
-		short c = (short) streamGet(chp);
-		onDataArrived();
-
-#if defined(EFI_CONSOLE_SERIAL_DEVICE)
-
-			uint32_t flags;
-			chSysLock()
-			;
-
-			flags = chEvtGetAndClearFlagsI(&consoleEventListener);
-			chSysUnlock()
-			;
-			if (flags & SD_OVERRUN_ERROR) {
-//				firmwareError(OBD_PCM_Processor_Fault, "serial overrun");
-			}
-
-#endif
-
-#if EFI_UART_ECHO_TEST_MODE
-		// That's test code - let's test connectivity
-		consolePutChar((uint8_t) c);
-		continue;
-#endif
-
-		if (c < 0 || c == 4) {
-			return true;
-		}
-		if (c == 8) {
-			if (p != line) {
-				// backspace
-				consolePutChar((uint8_t) c);
-				consolePutChar(0x20);
-				consolePutChar((uint8_t) c);
-				p--;
-			}
-			continue;
-		}
-		if (c == '\r') {
-			consolePutChar('\r');
-			consolePutChar('\n');
-			*p = 0;
-			return false;
-		}
-		if (c == '\n') {
-			consolePutChar('\n');
-			*p = 0;
-			return false;
-		}
-		if (c < 0x20) {
-			continue;
-		}
-		if (p < line + size - 1) {
-			consolePutChar((uint8_t) c);
-			*p++ = (char) c;
-		}
-	}
-}
-*/
 CommandHandler console_line_callback;
 
 #if (defined(EFI_CONSOLE_SERIAL_DEVICE) && ! EFI_SIMULATOR )
-SerialConfig serialConfig = { 0, 0, USART_CR2_STOP1_BITS | USART_CR2_LINEN, 0 };
+SerialConfig serialConfig = {
+	.speed	= 0,
+	.cr1	= 0,
+	.cr2	= USART_CR2_STOP1_BITS | USART_CR2_LINEN,
+	.cr3	= 0
+};
 #endif
 
 #if (defined(EFI_CONSOLE_UART_DEVICE) && ! EFI_SIMULATOR )
 /* Note: This structure is modified from the default ChibiOS layout! */
 UARTConfig uartConfig = {
-	.txend1_cb = NULL, .txend2_cb = NULL, .rxend_cb = NULL, .rxchar_cb = NULL, .rxerr_cb = NULL, 
-	.speed = 0, .cr1 = 0, .cr2 = 0/*USART_CR2_STOP1_BITS*/ | USART_CR2_LINEN, .cr3 = 0,
-	.timeout_cb = NULL, .rxhalf_cb = NULL
+	.txend1_cb		= NULL,
+	.txend2_cb		= NULL,
+	.rxend_cb		= NULL,
+	.rxchar_cb		= NULL,
+	.rxerr_cb		= NULL,
+	.timeout_cb		= NULL,
+	.speed			= 0,
+	.cr1			= 0,
+	.cr2			= 0/*USART_CR2_STOP1_BITS*/ | USART_CR2_LINEN,
+	.cr3			= 0,
+	.rxhalf_cb		= NULL
 };
 
 // To use UART driver instead of Serial, we need to imitate "BaseChannel" streaming functionality
@@ -291,13 +225,6 @@ static THD_FUNCTION(consoleThreadEntryPoint, arg) {
 
 #endif /* EFI_CONSOLE_NO_THREAD */
 
-void consolePutChar(int x) {
-	BaseChannel * channel = getConsoleChannel();
-	if (channel != nullptr) {
-		chnWriteTimeout(channel, (const uint8_t *)&x, 1, CONSOLE_WRITE_TIMEOUT);
-	}
-}
-
 void consoleOutputBuffer(const uint8_t *buf, int size) {
 #if !EFI_UART_ECHO_TEST_MODE
 	BaseChannel * channel = getConsoleChannel();
@@ -312,22 +239,11 @@ static Logging *logger;
 void startConsole(Logging *sharedLogger, CommandHandler console_line_callback_p) {
 	logger = sharedLogger;
 	console_line_callback = console_line_callback_p;
-#if 0
-#if (defined(EFI_CONSOLE_USB_DEVICE) && ! EFI_SIMULATOR)
-	/**
-	 * This method contains a long delay, that's the reason why this is not done on the main thread
-	 * TODO: actually now with some refactoring this IS on the main thread :(
-	 */
-	usb_serial_start();
-	isSerialConsoleStarted = true;
-#endif /* EFI_CONSOLE_USB_DEVICE */
-#endif
 
 #if (defined(EFI_CONSOLE_SERIAL_DEVICE) || defined(EFI_CONSOLE_UART_DEVICE)) && ! EFI_SIMULATOR
-		efiSetPadMode("console RX", EFI_CONSOLE_RX_BRAIN_PIN, PAL_MODE_ALTERNATE(EFI_CONSOLE_AF));
-		efiSetPadMode("console TX", EFI_CONSOLE_TX_BRAIN_PIN, PAL_MODE_ALTERNATE(EFI_CONSOLE_AF));
+	efiSetPadMode("console RX", EFI_CONSOLE_RX_BRAIN_PIN, PAL_MODE_ALTERNATE(EFI_CONSOLE_AF));
+	efiSetPadMode("console TX", EFI_CONSOLE_TX_BRAIN_PIN, PAL_MODE_ALTERNATE(EFI_CONSOLE_AF));
 #endif
-
 
 #if PRIMARY_UART_DMA_MODE && ! EFI_SIMULATOR
 		primaryChannel.uartp = EFI_CONSOLE_UART_DEVICE;
@@ -350,8 +266,6 @@ void startConsole(Logging *sharedLogger, CommandHandler console_line_callback_p)
 #endif /* EFI_CONSOLE_SERIAL_DEVICE || EFI_CONSOLE_UART_DEVICE */
 
 #if !defined(EFI_CONSOLE_NO_THREAD)
-	chThdCreateStatic(consoleThreadStack, sizeof(consoleThreadStack), NORMALPRIO, (tfunc_t)consoleThreadEntryPoint, NULL);
+	chThdCreateStatic(consoleThreadStack, sizeof(consoleThreadStack), PRIO_CONSOLE, (tfunc_t)consoleThreadEntryPoint, NULL);
 #endif /* EFI_CONSOLE_NO_THREAD */
-
 }
-

@@ -78,6 +78,3 @@ void setBoardConfigurationOverrides(void) {
 	engineConfiguration->is_enabled_spi_2 = false;
 	engineConfiguration->is_enabled_spi_3 = false;
 }
-
-void setAdcChannelOverrides(void) {
-}

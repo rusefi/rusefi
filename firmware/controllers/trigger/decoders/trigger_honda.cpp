@@ -169,8 +169,6 @@ void configureHonda_1_4_24(TriggerWaveform *s, bool withOneEventSignal, bool wit
 void configureHondaCbr600(TriggerWaveform *s) {
 	s->initialize(FOUR_STROKE_CAM_SENSOR);
 	s->useOnlyPrimaryForSync = true;
-	s->isSynchronizationNeeded = true;
-
 	s->setTriggerSynchronizationGap(6);
 
 

@@ -1,7 +1,6 @@
 #include "global.h"
 #include "engine.h"
 #include "speed_density_airmass.h"
-#include "map.h"
 #include "perf_trace.h"
 
 EXTERN_ENGINE;
@@ -18,11 +17,7 @@ AirmassResult SpeedDensityAirmass::getAirmass(int rpm) {
 		return {};
 	}
 
-	float map = getMap(PASS_ENGINE_PARAMETER_SIGNATURE);
-	if (cisnan(map)) {
-		warning(CUSTOM_ERR_TCHARGE_NOT_READY2, "map not ready"); // this could happen during HW CI during configuration reset
-		return {};
-	}
+	auto map = getMap(rpm);
 
 	engine->engineState.sd.manifoldAirPressureAccelerationAdjustment = engine->engineLoadAccelEnrichment.getEngineLoadEnrichment(PASS_ENGINE_PARAMETER_SIGNATURE);
 
@@ -45,4 +40,22 @@ AirmassResult SpeedDensityAirmass::getAirmass(int rpm) {
 		airMass,
 		map,	// AFR/VE table Y axis
 	};
+}
+
+float SpeedDensityAirmass::getMap(int rpm) const {
+	float fallbackMap;
+	if (CONFIG(enableMapEstimationTableFallback)) {
+		// if the map estimation table is enabled, estimate map based on the TPS and RPM
+		fallbackMap = m_mapEstimationTable->getValue(rpm, TPS_2_BYTE_PACKING_MULT * Sensor::get(SensorType::Tps1).value_or(0));
+	} else {
+		fallbackMap = CONFIG(failedMapFallback);
+	}
+
+#if EFI_TUNER_STUDIO
+	if (CONFIG(debugMode) == DBG_MAP) {
+		tsOutputChannels.debugFloatField4 = fallbackMap;
+	}
+#endif // EFI_TUNER_STUDIO
+
+	return Sensor::get(SensorType::Map).value_or(fallbackMap);
 }

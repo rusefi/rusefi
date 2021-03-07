@@ -35,13 +35,12 @@ extern tunerstudio_counters_s tsState;
 /**
  * handle non CRC wrapped command
  */
-bool handlePlainCommand(ts_channel_s *tsChannel, uint8_t command);
-int tunerStudioHandleCrcCommand(ts_channel_s *tsChannel, char *data, int incomingPacketSize);
+bool handlePlainCommand(TsChannelBase* tsChannel, uint8_t command);
 
 /**
  * this command is part of protocol initialization
  */
-void handleQueryCommand(ts_channel_s *tsChannel, ts_response_format_e mode);
+void handleQueryCommand(TsChannelBase* tsChannel, ts_response_format_e mode);
 
 char *getWorkingPageAddr();
 
@@ -54,7 +53,7 @@ void requestBurn(void);
 
 void startTunerStudioConnectivity(void);
 void syncTunerStudioCopy(void);
-void runBinaryProtocolLoop(ts_channel_s *tsChannel);
+void runBinaryProtocolLoop(TsChannelBase* tsChannel);
 
 #if defined __GNUC__
 // GCC
@@ -67,28 +66,9 @@ void runBinaryProtocolLoop(ts_channel_s *tsChannel);
 #endif
 
 typedef pre_packed struct
-	post_packed {
-		short int offset;
-		short int count;
-	} TunerStudioOchRequest;
-
-
-	typedef pre_packed struct
-	post_packed {
-		short int offset;
-		short int count;
-	} TunerStudioWriteChunkRequest;
-
-	typedef pre_packed struct
-		post_packed {
-			short int offset;
-			short int count;
-		} TunerStudioReadRequest;
-
-		typedef pre_packed struct
-			post_packed {
-				short int offset;
-				unsigned char value;
-			} TunerStudioWriteValueRequest;
+post_packed {
+	short int offset;
+	short int count;
+} TunerStudioWriteChunkRequest;
 
 #endif /* EFI_TUNER_STUDIO */

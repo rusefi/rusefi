@@ -44,6 +44,7 @@ static const int16_t supportedPids0120[] = {
 	PID_ENGINE_LOAD,
 	PID_COOLANT_TEMP,
 	PID_STFT_BANK1,
+	PID_STFT_BANK2,
 	PID_INTAKE_MAP,
 	PID_RPM,
 	PID_SPEED,
@@ -132,8 +133,12 @@ static void handleGetDataRequest(const CANRxFrame& rx) {
 	case PID_STFT_BANK1:
 		obdSendValue(_1_MODE, pid, 1, 128 * ENGINE(engineState.running.pidCorrection));
 		break;
+	case PID_STFT_BANK2:
+		// TODO: use second fueling bank
+		obdSendValue(_1_MODE, pid, 1, 128 * ENGINE(engineState.running.pidCorrection));
+		break;
 	case PID_INTAKE_MAP:
-		obdSendValue(_1_MODE, pid, 1, getMap(PASS_ENGINE_PARAMETER_SIGNATURE));
+		obdSendValue(_1_MODE, pid, 1, Sensor::get(SensorType::Map).value_or(0));
 		break;
 	case PID_RPM:
 		obdSendValue(_1_MODE, pid, 2, GET_RPM() * ODB_RPM_MULT);	//	rotation/min.	(A*256+B)/4
@@ -157,7 +162,7 @@ static void handleGetDataRequest(const CANRxFrame& rx) {
 		obdSendValue(_1_MODE, pid, 1, Sensor::get(SensorType::Tps1).value_or(0) * ODB_TPS_BYTE_PERCENT);	// (A*100/255)
 		break;
 	case PID_FUEL_AIR_RATIO_1: {
-		float lambda = Sensor::get(SensorType::Lambda).value_or(0);
+		float lambda = Sensor::get(SensorType::Lambda1).value_or(0);
 		// phi = 1 / lambda
 		float phi = clampF(0, 1 / lambda, 1.99f);
 

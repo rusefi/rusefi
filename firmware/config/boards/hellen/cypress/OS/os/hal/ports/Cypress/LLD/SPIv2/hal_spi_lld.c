@@ -57,6 +57,7 @@ SPIDriver SPID2;
 /* Driver local functions.                                                   */
 /*===========================================================================*/
 static en_cs_pin_sel_t spi_detectPCS(bool isMaster, ioportid_t ssport, uint16_t sspad, int *alt) {
+	(void)isMaster;
 	*alt = PAL_MODE_ALTERNATIVE_SPI;
 	// todo: check if PCS corresponds to SPI number
 	if (ssport == GPIOG && sspad == 11)	// P7B
@@ -91,6 +92,7 @@ static int32_t spi_detectBaudRate(SPIDriver *spip) {
 /*===========================================================================*/
 
 static void spi_lld_master_tx_callback(SPIDriver *spip) {
+	(void)spip;
 //!!!!!!!!!!!!!
 #if 0
     if (spip->csioSendCnt >= spip->csioTxBufSize) {
@@ -106,6 +108,7 @@ static void spi_lld_master_tx_callback(SPIDriver *spip) {
 }
 
 static void spi_lld_master_rx_callback(SPIDriver *spip) {
+	(void)spip;
 //!!!!!!!!!!!!!
 #if 0
     if (spip->csioRxBuf != NULL) {
@@ -311,6 +314,8 @@ void spi_lld_unselect(SPIDriver *spip) {
  * @notapi
  */
 void spi_lld_ignore(SPIDriver *spip, size_t n) {
+	(void)spip;
+	(void)n;
 	// todo: implement
 /*
   spip->count = n;
@@ -407,6 +412,7 @@ void spi_lld_receive(SPIDriver *spip, size_t n, void *rxbuf) {
  * @notapi
  */
 void spi_lld_abort(SPIDriver *spip) {
+	(void)spip;
 	// todo: implement
 #if 0
   //SPI_DisableDMA(base, kLPSPI_TxDmaEnable | kLPSPI_RxDmaEnable);

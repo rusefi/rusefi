@@ -19,6 +19,7 @@
 #include "closed_loop_fuel.h"
 #include "sensor.h"
 #include "launch_control.h"
+#include "injector_model.h"
 
 
 #if EFI_PROD_CODE
@@ -139,7 +140,9 @@ void EngineState::periodicFastCallback(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	// todo: move this into slow callback, no reason for CLT corr to be here
 	running.coolantTemperatureCoefficient = getCltFuelCorrection(PASS_ENGINE_PARAMETER_SIGNATURE);
 
-	running.pidCorrection = fuelClosedLoopCorrection(PASS_ENGINE_PARAMETER_SIGNATURE);
+	// TODO: consume correction from the second bank
+	auto clResult = fuelClosedLoopCorrection(PASS_ENGINE_PARAMETER_SIGNATURE);
+	running.pidCorrection = clResult.banks[0];
 
 	// update fuel consumption states
 	fuelConsumption.update(nowNt PASS_ENGINE_PARAMETER_SUFFIX);
@@ -161,14 +164,18 @@ void EngineState::periodicFastCallback(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 
 	cltTimingCorrection = getCltTimingCorrection(PASS_ENGINE_PARAMETER_SIGNATURE);
 
-	engineNoiseHipLevel = interpolate2d("knock", rpm, engineConfiguration->knockNoiseRpmBins,
+	engineNoiseHipLevel = interpolate2d(rpm, engineConfiguration->knockNoiseRpmBins,
 					engineConfiguration->knockNoise);
 
 	baroCorrection = getBaroCorrection(PASS_ENGINE_PARAMETER_SIGNATURE);
 
 	auto tps = Sensor::get(SensorType::Tps1);
 	updateTChargeK(rpm, tps.value_or(0) PASS_ENGINE_PARAMETER_SUFFIX);
-	ENGINE(injectionDuration) = getInjectionDuration(rpm PASS_ENGINE_PARAMETER_SUFFIX);
+
+	float injectionMass = getInjectionMass(rpm PASS_ENGINE_PARAMETER_SUFFIX);
+	ENGINE(injectionMass) = injectionMass;
+	// Store the pre-wall wetting injection duration for scheduling purposes only, not the actual injection duration
+	ENGINE(injectionDuration) = ENGINE(injectorModel)->getInjectionDuration(injectionMass);
 
 	float fuelLoad = getFuelingLoad(PASS_ENGINE_PARAMETER_SIGNATURE);
 	injectionOffset = getInjectionOffset(rpm, fuelLoad PASS_ENGINE_PARAMETER_SUFFIX);
@@ -180,6 +187,8 @@ void EngineState::periodicFastCallback(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 #if EFI_LAUNCH_CONTROL
 	updateLaunchConditions(PASS_ENGINE_PARAMETER_SIGNATURE);
 #endif //EFI_LAUNCH_CONTROL
+
+	engine->limpManager.updateState(rpm);
 
 #endif // EFI_ENGINE_CONTROL
 }
@@ -279,7 +288,7 @@ bool VvtTriggerConfiguration::isUseOnlyRisingEdgeForTrigger() const {
 }
 
 trigger_type_e VvtTriggerConfiguration::getType() const {
-	return engine->triggerCentral.vvtTriggerType;
+	return engine->triggerCentral.vvtTriggerType[index];
 }
 
 bool VvtTriggerConfiguration::isVerboseTriggerSynchDetails() const {

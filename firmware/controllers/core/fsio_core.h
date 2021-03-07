@@ -56,7 +56,9 @@ typedef enum {
 	LE_METHOD_FSIO_DIGITAL_INPUT = 123,
 	LE_METHOD_FSIO_SETTING = 124,
 	LE_METHOD_PPS = 125,
-	LE_METHOD_TIME_SINCE_TRIGGER_EVENT = 126,
+	LE_METHOD_TIME_SINCE_TRIGGER_EVENT = 127,
+	LE_METHOD_IN_MR_BENCH = 128,
+	LE_METHOD_RETURN = 130,
 
 #include "fsio_enums_generated.def"
 
@@ -64,7 +66,32 @@ typedef enum {
 
 } le_action_e;
 
-using FsioValue = expected<float>;
+// This type borrows the least significant bit of a float and uses it to indicate
+// whether it's actually a boolean hiding inside that float
+class FsioValue
+{
+public:
+	/*implicit*/ FsioValue(float f);
+	/*implicit*/ FsioValue(bool b);
+
+	bool isFloat() const;
+	float asFloat() const;
+
+	bool isBool() const;
+	bool asBool() const;
+
+private:
+	// These must match for this trick to work!
+	static_assert(sizeof(float) == sizeof(uint32_t));
+
+	union
+	{
+		uint32_t u32;
+		float f32;
+	} u;
+};
+
+using FsioResult = expected<float>;
 
 class LEElement {
 public:
@@ -77,21 +104,19 @@ public:
 
 	le_action_e action;
 	float fValue;
-	int iValue;
-
-	LEElement *next;
 };
 
 class LEElementPool {
 public:
 	LEElementPool(LEElement *pool, int size);
-	LEElement *pool;
-	LEElement *next();
+
 	void reset();
 	LEElement * parseExpression(const char * line);
 	int getSize() const;
 private:
-	int index;
+	LEElement* m_pool;
+	LEElement* m_nextFree;
+
 	int size;
 };
 
@@ -105,20 +130,19 @@ typedef FLStack<float, MAX_STACK_DEPTH> calc_stack_t;
 class LECalculator {
 public:
 	LECalculator();
-	float getValue(float selfValue DECLARE_ENGINE_PARAMETER_SUFFIX);
-	float getValue2(float selfValue, LEElement *fistElementInList DECLARE_ENGINE_PARAMETER_SUFFIX);
-	void add(LEElement *element);
-	bool isEmpty() const;
+	float evaluate(float selfValue, const LEElement* element DECLARE_ENGINE_PARAMETER_SUFFIX);
 	void reset();
-	void reset(LEElement *element);
+
+	// Log history of calculation actions for debugging
 	le_action_e calcLogAction[MAX_CALC_LOG];
 	float calcLogValue[MAX_CALC_LOG];
 	int currentCalculationLogPosition;
+
 private:
 	void push(le_action_e action, float value);
-	FsioValue processElement(LEElement *element DECLARE_ENGINE_PARAMETER_SUFFIX);
+	FsioResult processElement(const LEElement* element DECLARE_ENGINE_PARAMETER_SUFFIX);
 	float pop(le_action_e action);
-	LEElement *first;
+
 	calc_stack_t stack;
 };
 

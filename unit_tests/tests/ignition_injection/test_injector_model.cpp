@@ -109,7 +109,7 @@ TEST_P(FlowRateFixture, PressureRatio) {
 	engineConfiguration->fuelReferencePressure = 400.0f;
 
 	// MAP sensor always reads 35 kpa
-	engine->mockMapValue = fakeMap;
+	Sensor::setMockValue(SensorType::Map, fakeMap);
 
 	// Should return the expected ratio
 	EXPECT_FLOAT_EQ(expectedFlowRatio, dut.getInjectorFlowRatio());

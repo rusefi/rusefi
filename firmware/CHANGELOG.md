@@ -25,11 +25,51 @@ Release template (copy/paste this for new release):
 
 All notable user-facing or behavior-altering changes will be documented in this file.
 
-## XXX 202X Release
+## XXX 2021 Release
+
+### Added
+ - USB Mass Storage: The connected SD card will be mounted over USB if rusEFI connected to a PC via USB.
+ - GM 60/2/2/2 trigger https://github.com/rusefi/rusefi/wiki/All-Supported-Triggers#gm
+ - TriTach trigger https://github.com/rusefi/rusefi/wiki/All-Supported-Triggers#tritach
+ - Skoda Favorit trigger https://github.com/rusefi/rusefi/wiki/All-Supported-Triggers#skoda-favorit
+ - Add fallback logic handling failed MAP sensor.  In case of failed MAP, ses either a fixed MAP value, or a table that estimates MAP based on TPS and RPM.
+
+### 2021 Printing Ink Day
+
+### Breaking Changes
+ - Closed loop idle timing behavior changed to no longer fall off control as entering/leaving the idle region. It now sharply engages/disengages upon entering/leaving the idle area.
+ - Idle phase logic uses the same idle detection thresholds as the main idle controller instead of its own thresholds.
+
+### Added
+ - Main Relay bench test button
+
+### Fixed
+
+### 2021 Orthodox Christmas Day
+
+### Breaking Changes
+
+### Added
+ - Second wideband O2 processing as channels "Lambda 2" and "Air/Fuel Ratio 2".  Currently only supports CAN sensors, but analog will be supported too soon.
+ - Basic fueling-only flex fuel implementation. Automatic adjustment of stoichiometric ratio based on ethanol content, compatible with the common GM/Continental 50-150hz flex fuel sensor 🎉 🎉 🎉
+
+### Fixed
+ - Simplify idle control dialog in TunerStudio
+ - microRusEFI outputs are in trouble on configuration change
+ - CLT gauge no longer erroneously shows "deg F" by default.
+
+### December 2020 Bake Cookies Day
+
+### Breaking Changes
+ - GM x24 trigger now uses 0 offset (offset is now built in, previously needed 50 degrees offset)
 
 ### Added
  - DAIHATSU 3/4 cylinder trigger https://rusefi.com/images/triggers/trigger_6.png
  - Ford ST170 VVT cam trigger https://rusefi.com/images/triggers/trigger_42.png
+ - Changed scheduling timer driver to improve scheduling accuracy #1983
+
+### Fixed
+ - microRusEFI GP3 & GP4 fixed
 
 ## December 2020 National Mutt Day
 

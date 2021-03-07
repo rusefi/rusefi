@@ -28,19 +28,25 @@ import java.util.List;
 public class TriggerImage {
     private static final String TRIGGERTYPE = "TRIGGERTYPE";
     private static final String OUTPUT_FOLDER = "triggers";
-    private static final String INPUT_FILE_NAME = "triggers.txt";
     private static final String TOP_MESSAGE = StartupFrame.LINK_TEXT;
     private static final String DEFAULT_WORK_FOLDER = ".." + File.separator + "unit_tests";
 
     private static final int WHEEL_BORDER = 20;
     private static final int WHEEL_DIAMETER = 500;
     private static final int SMALL_DIAMETER = 420;
+    private static final int _180 = 180;
 
     /**
      * number of extra frames
      */
     public static int EXTRA_COUNT = 1;
+    private static int sleepAtEnd;
+    private static int onlyOneTrigger = -1;
 
+    /**
+     * todo: https://github.com/rusefi/rusefi/issues/2077
+     * @see TriggerWheelInfo#isFirstCrankBased
+     */
     private static String getTriggerName(TriggerWheelInfo triggerName) {
         switch (triggerName.id) {
             case Fields.TT_TT_FORD_ASPIRE:
@@ -61,6 +67,8 @@ public class TriggerImage {
                 return "Subaru 7/6";
             case Fields.TT_TT_GM_LS_24:
                 return "GM 24x";
+            case Fields.TT_TT_SKODA_FAVORIT:
+                return "Skoda Favorit";
             case Fields.TT_TT_GM_7X:
                 return "GM 7x";
             case Fields.TT_TT_CHRYSLER_NGC_36_2_2:
@@ -81,19 +89,29 @@ public class TriggerImage {
                 return "36/1";
             case Fields.TT_TT_TOOTHED_WHEEL_36_2:
                 return "36/2";
+            case Fields.TT_TT_TRI_TACH:
+                return "TriTach";
             case Fields.TT_TT_TOOTHED_WHEEL_60_2:
                 return "60/2";
+            case Fields.TT_TT_GM_60_2_2_2:
+                return "GM 60/2/2/2";
         }
         return triggerName.triggerName;
     }
 
     public static void main(String[] args) throws InvocationTargetException, InterruptedException {
         final String workingFolder;
-        if (args.length != 1) {
+        if (args.length < 1) {
             workingFolder = DEFAULT_WORK_FOLDER;
         } else {
             workingFolder = args[0];
         }
+
+        if (args.length > 1)
+            onlyOneTrigger = Integer.parseInt(args[1]);
+
+        if (args.length > 2)
+            sleepAtEnd = Integer.parseInt(args[2]);
 
         FrameHelper f = new FrameHelper();
 
@@ -122,11 +140,12 @@ public class TriggerImage {
                 }
             }
         });
+        Thread.sleep(1000 * sleepAtEnd);
         System.exit(-1);
     }
 
     private static void generateImages(String workingFolder, TriggerPanel trigger, JPanel topPanel, JPanel content) throws IOException {
-        String fileName = workingFolder + File.separator + INPUT_FILE_NAME;
+        String fileName = workingFolder + File.separator + Fields.TRIGGERS_FILE_NAME;
         BufferedReader br = new BufferedReader(new FileReader(fileName));
 
         System.out.println("Reading " + fileName);
@@ -145,19 +164,20 @@ public class TriggerImage {
 
     private static void readTrigger(BufferedReader reader, String line, TriggerPanel triggerPanel, JPanel topPanel, JPanel content) throws IOException {
         TriggerWheelInfo triggerWheelInfo = TriggerWheelInfo.readTriggerWheelInfo(line, reader);
-//        if (triggerWheelInfo.id != Fields.TT_TT_SUBARU_7_6)
-//            return;
-
+        if (onlyOneTrigger != -1 && triggerWheelInfo.id != onlyOneTrigger)
+            return;
 
         topPanel.removeAll();
 
-        JPanel firstWheelControl = createWheelPanel(triggerWheelInfo.getFirstWheeTriggerSignals());
+        JPanel firstWheelControl = createWheelPanel(triggerWheelInfo.getFirstWheeTriggerSignals(), true,
+                triggerWheelInfo);
 
         topPanel.add(firstWheelControl);
         topPanel.add(StartupFrame.createLogoLabel());
 
         if (!triggerWheelInfo.waves.get(1).list.isEmpty()) {
-            JPanel secondWheelControl = createWheelPanel(triggerWheelInfo.getSecondWheeTriggerSignals());
+            JPanel secondWheelControl = createWheelPanel(triggerWheelInfo.getSecondWheeTriggerSignals(), false,
+                    triggerWheelInfo);
             topPanel.add(secondWheelControl);
         }
 
@@ -213,27 +233,58 @@ public class TriggerImage {
     }
 
     @NotNull
-    private static JPanel createWheelPanel(List<TriggerSignal> wheel) {
+    private static JPanel createWheelPanel(List<TriggerSignal> wheel, boolean showTdc,
+                                           TriggerWheelInfo shape) {
         JPanel clock = new JPanel() {
             @Override
             public void paint(Graphics g) {
                 super.paint(g);
                 g.setColor(Color.black);
 
+                int middle = WHEEL_BORDER + WHEEL_DIAMETER / 2;
+                if (showTdc) {
+                    double tdcAngle = Math.toRadians(_180 + shape.getTdcPositionIn360());
+
+                    int smallX = (int) (WHEEL_DIAMETER / 2 * Math.sin(tdcAngle));
+                    int smallY = (int) (WHEEL_DIAMETER / 2 * Math.cos(tdcAngle));
+
+                    int tdcMarkRadius = 8;
+                    g.fillOval(middle + smallX - tdcMarkRadius, middle + smallY - tdcMarkRadius,
+                            2 * tdcMarkRadius,
+                            2 * tdcMarkRadius);
+
+                    g.drawString("TDC", middle + smallX + tdcMarkRadius * 2, middle + smallY);
+                }
+
                 for (int i = 0; i < wheel.size(); i++) {
                     TriggerSignal current = wheel.get(i);
 
                     drawRadialLine(g, current.angle);
+                    /**
+                     * java arc API is
+                     *      * Angles are interpreted such that 0&nbsp;degrees
+                     *      * is at the 3'clock position.
+                     *      * A positive value indicates a counter-clockwise rotation
+                     *      * while a negative value indicates a clockwise rotation.
+                     *
+                     * we want zero to be at 12'clock position and clockwise rotation
+                     */
 
                     double nextAngle = i == wheel.size() - 1 ? 360 + wheel.get(0).angle : wheel.get(i + 1).angle;
-                    int arcDuration = (int) (nextAngle - current.angle);
+                    int arcDuration = (int) (current.angle - nextAngle);
+                    int arcStart = (int) arcToRusEFI(nextAngle);
                     if (current.state == 1) {
-                        g.drawArc(WHEEL_BORDER, WHEEL_BORDER, WHEEL_DIAMETER, WHEEL_DIAMETER, (int) current.angle, arcDuration);
+                        g.drawArc(WHEEL_BORDER, WHEEL_BORDER, WHEEL_DIAMETER, WHEEL_DIAMETER, arcStart, arcDuration);
                     } else {
                         int corner = WHEEL_BORDER + (WHEEL_DIAMETER - SMALL_DIAMETER) / 2;
-                        g.drawArc(corner, corner, SMALL_DIAMETER, SMALL_DIAMETER, (int) current.angle, arcDuration);
+                        g.drawArc(corner, corner, SMALL_DIAMETER, SMALL_DIAMETER, arcStart, arcDuration);
                     }
                 }
+
+                int dirArrow = 40;
+                g.drawArc(middle - dirArrow, middle - dirArrow, 2 * dirArrow, 2 * dirArrow, 0, 180);
+                g.drawLine(middle + dirArrow + 5, middle - 15, middle + dirArrow, middle);
+
             }
 
             @Override
@@ -245,12 +296,14 @@ public class TriggerImage {
         return clock;
     }
 
+    private static double arcToRusEFI(double angle) {
+        return angle + _180 - 90;
+    }
+
     private static void drawRadialLine(Graphics g, double angle) {
         int center = WHEEL_BORDER + WHEEL_DIAMETER / 2;
 
-        // converting to 'drawArc' angle convention
-        angle = 90 + angle;
-        double radianAngle = Math.toRadians(angle);
+        double radianAngle = Math.toRadians(_180 + angle);
 
         int smallX = (int) (SMALL_DIAMETER / 2 * Math.sin(radianAngle));
         int smallY = (int) (SMALL_DIAMETER / 2 * Math.cos(radianAngle));

@@ -168,7 +168,6 @@ public class BinaryProtocol {
                 needCompositeLogger = linkManager.getCompositeLogicEnabled();
                 lastLowRpmTime = System.currentTimeMillis();
             } else if (System.currentTimeMillis() - lastLowRpmTime > HIGH_RPM_DELAY * Timeouts.SECOND) {
-                log.info("Time to turn off composite logging");
                 needCompositeLogger = false;
             }
         };

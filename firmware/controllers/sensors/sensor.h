@@ -55,7 +55,7 @@
 using SensorResult = expected<float>;
 
 // Fwd declare - nobody outside of Sensor.cpp needs to see inside this type
-struct SensorRegistryEntry;
+class SensorRegistryEntry;
 class Logging;
 
 class Sensor {
@@ -93,6 +93,11 @@ public:
 	static float getRaw(SensorType type);
 
 	/*
+	 * Get whether a sensor is redundant (a composite of multiple other sensors that can check consistency between them)
+	 */
+	static bool isRedundant(SensorType type);
+
+	/*
 	 * Query whether there is a sensor of a particular type currently registered.
 	 */
 	static bool hasSensor(SensorType type);
@@ -100,7 +105,7 @@ public:
 	/*
 	 * Mock a value for a particular sensor.
 	 */
-	static void setMockValue(SensorType type, float value);
+	static void setMockValue(SensorType type, float value, bool mockRedundant = false);
 
 	/*
 	 * Mock a value for a particular sensor.
@@ -122,6 +127,7 @@ public:
 	 * For example, CLT, IAT, Throttle Position 2, etc.
 	 */
 	const char* getSensorName() { return getSensorName(m_type); }
+	static const char* getSensorName(SensorType type);
 
 	// Retrieve the current reading from the sensor.
 	//
@@ -137,12 +143,18 @@ public:
 		return 0;
 	}
 
+	/*
+	 * Get whether this sensor is redundant (backed by multiple other sensors)
+	 */
+	virtual bool isRedundant() const {
+		// By default sensors are not redundant
+		return false;
+	}
+
 protected:
 	// Protected constructor - only subclasses call this
 	explicit Sensor(SensorType type)
 		: m_type(type) {}
-
-	static const char* getSensorName(SensorType type);
 
 private:
 	const SensorType m_type;

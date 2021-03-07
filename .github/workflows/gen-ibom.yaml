@@ -1,0 +1,36 @@
+name: Generate Interactive BOMs
+
+on:
+  schedule:
+    - cron: '0 0 * * *'
+
+jobs:
+  generate:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+      with:
+        submodules: recursive
+        fetch-depth: 0
+
+    - name: Install prerequisite software
+      run: |
+        sudo add-apt-repository ppa:kicad/kicad-5.1-releases
+        sudo apt-get update
+        sudo apt-get install kicad ncftp
+
+    - name: Set FTP variables
+      env:
+        ACTIONS_ALLOW_UNSECURE_COMMANDS: 'true'
+      run: |
+        if [ "${{github.ref}}" = "refs/heads/master" ]; then
+          echo "::set-env name=RUSEFI_FTP_SERVER::${{secrets.RUSEFI_FTP_SERVER}}";
+          echo "::set-env name=RUSEFI_DOXYGEN_FTP_USER::${{secrets.RUSEFI_DOXYGEN_FTP_USER}}";
+          echo "::set-env name=RUSEFI_DOXYGEN_FTP_PASS::${{secrets.RUSEFI_DOXYGEN_FTP_PASS}}";
+        fi
+
+    - name: Generate documentation
+      env:
+        INTERACTIVE_HTML_BOM_NO_DISPLAY: 'true'
+      run: bash ./misc/jenkins/generate_ibom/gen_upload_ibom.sh

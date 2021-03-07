@@ -24,6 +24,7 @@
 #include "string.h"
 #include "mpu_util.h"
 #include "engine.h"
+#include "thread_priority.h"
 
 EXTERN_ENGINE;
 
@@ -83,7 +84,7 @@ static const CANConfig *canConfig = &canConfig500;
 class CanRead final : public ThreadController<UTILITY_THREAD_STACK_SIZE> {
 public:
 	CanRead()
-		: ThreadController("CAN RX", NORMALPRIO)
+		: ThreadController("CAN RX", PRIO_CAN_RX)
 	{
 	}
 
@@ -151,6 +152,7 @@ void enableFrankensoCan(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	engineConfiguration->canReadEnabled = false;
 }
 
+// todo: we usually use 'activeConfiguration' for 'stopPin' why this unusual code here?
 // this is related to #1375
 static brain_pin_e currentTxPin = GPIO_UNASSIGNED;
 static brain_pin_e currentRxPin = GPIO_UNASSIGNED;
@@ -173,8 +175,8 @@ void initCan(void) {
 	addConsoleAction("caninfo", canInfo);
 
 	isCanEnabled = 
-		(CONFIG_OVERRIDE(canTxPin) != GPIO_UNASSIGNED) && // both pins are set...
-		(CONFIG_OVERRIDE(canRxPin) != GPIO_UNASSIGNED) &&
+		(isBrainPinValid(CONFIG_OVERRIDE(canTxPin))) && // both pins are set...
+		(isBrainPinValid(CONFIG_OVERRIDE(canRxPin))) &&
 		(CONFIG(canWriteEnabled) || CONFIG(canReadEnabled)) ; // ...and either read or write is enabled
 
 	// nothing to do if we aren't enabled...
