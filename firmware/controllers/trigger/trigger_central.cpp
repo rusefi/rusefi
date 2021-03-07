@@ -175,8 +175,8 @@ void hwHandleVvtCamSignal(trigger_value_e front, efitick_t nowNt, int index DECL
 
 	tc->vvtCamCounter++;
 
-	efitick_t offsetNt = nowNt - tc->timeAtVirtualZeroNt;
-	angle_t currentPosition = NT2US(offsetNt) / oneDegreeUs;
+	float offsetUs = tc->virtualZeroTimer.getElapsedUs(nowNt);
+	angle_t currentPosition = offsetUs / oneDegreeUs;
 	// convert engine cycle angle into trigger cycle angle
 	currentPosition -= tdcPosition();
 	// https://github.com/rusefi/rusefi/issues/1713 currentPosition could be negative that's expected
@@ -503,7 +503,7 @@ void TriggerCentral::handleShaftSignal(trigger_event_e signal, efitick_t timesta
 		triggerIndexForListeners = triggerState.getCurrentIndex() + (crankInternalIndex * getTriggerSize());
 	}
 	if (triggerIndexForListeners == 0) {
-		timeAtVirtualZeroNt = timestamp;
+		virtualZeroTimer.reset(timestamp);
 	}
 	reportEventToWaveChart(signal, triggerIndexForListeners PASS_ENGINE_PARAMETER_SUFFIX);
 
