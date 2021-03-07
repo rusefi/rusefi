@@ -296,9 +296,6 @@ bool TriggerState::isValidIndex(const TriggerWaveform& triggerShape) const {
 static trigger_wheel_e eventIndex[6] = { T_PRIMARY, T_PRIMARY, T_SECONDARY, T_SECONDARY, T_CHANNEL_3, T_CHANNEL_3 };
 static trigger_value_e eventType[6] = { TV_FALL, TV_RISE, TV_FALL, TV_RISE, TV_FALL, TV_RISE };
 
-#define getCurrentGapDuration(nowNt) \
-	(isFirstEvent ? 0 : (nowNt) - toothed_previous_time)
-
 #if EFI_UNIT_TEST
 #define PRINT_INC_INDEX 		if (printTriggerTrace) {\
 		printf("nextTriggerEvent index=%d\r\n", currentCycle.current_index); \
@@ -442,7 +439,7 @@ void TriggerState::decodeTriggerEvent(
 		firmwareError(CUSTOM_OBD_93, "toothed_previous_time after nowNt %d %d", toothed_previous_time, nowNt);
 	}
 
-	efitick_t currentDurationLong = getCurrentGapDuration(nowNt);
+	efitick_t currentDurationLong = isFirstEvent ? 0 : nowNt - toothed_previous_time;
 
 	/**
 	 * For performance reasons, we want to work with 32 bit values. If there has been more then
