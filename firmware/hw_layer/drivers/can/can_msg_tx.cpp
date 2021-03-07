@@ -28,10 +28,12 @@ extern int canWriteNotOk;
 
 CanTxMessage::CanTxMessage(uint32_t eid, uint8_t dlc, bool isExtended) {
 #ifndef STM32H7XX
+	// ST bxCAN device
 	m_frame.IDE = isExtended ? CAN_IDE_EXT : CAN_IDE_STD;
 	m_frame.RTR = CAN_RTR_DATA;
 	m_frame.EID = eid;
 #else /* if STM32H7XX */
+	// Bosch M_CAN FDCAN device
 	m_frame.common.XTD = isExtended;
 	m_frame.common.RTR = 0;
 
