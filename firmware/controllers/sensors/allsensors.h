@@ -19,6 +19,8 @@
 #include "thermistors.h"
 #include "adc_inputs.h"
 
+#define LOW_VBATT 7
+
 void initSensors(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX);
 
 bool hasAcToggle(DECLARE_ENGINE_PARAMETER_SIGNATURE);
