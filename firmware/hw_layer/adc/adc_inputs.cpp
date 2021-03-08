@@ -39,7 +39,9 @@
 #include "thread_priority.h"
 
 /* Depth of the conversion buffer, channels are sampled X times each.*/
+#ifndef ADC_BUF_DEPTH_FAST
 #define ADC_BUF_DEPTH_FAST      4
+#endif
 
 static NO_CACHE adcsample_t slowAdcSamples[ADC_MAX_CHANNELS_COUNT];
 static NO_CACHE adcsample_t fastAdcSampleBuf[ADC_BUF_DEPTH_FAST * ADC_MAX_CHANNELS_COUNT];
