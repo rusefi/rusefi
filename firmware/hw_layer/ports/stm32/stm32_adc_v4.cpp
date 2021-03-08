@@ -38,7 +38,7 @@ static constexpr ADCConversionGroup convGroupSlow = {
 	.error_cb			= nullptr,
 	.cfgr				= 0,
 	.cfgr2				= 	8 << ADC_CFGR2_OVSR_Pos |	// Oversample by 8x
-							7 << ADC_CFGR2_OVSS_Pos |	// shift the result right 7 bits to make a 12 bit result compatible with v2 ADC
+							3 << ADC_CFGR2_OVSS_Pos |	// shift the result right 3 bits to make a 16 bit result
 							ADC_CFGR2_ROVSE,			// Enable oversampling
 	.ccr				= 0,
 	.pcsel				= 0xFFFFFFFF, // enable analog switches on all channels
@@ -90,6 +90,7 @@ static constexpr ADCConversionGroup convGroupSlow = {
 };
 
 bool readSlowAnalogInputs(adcsample_t* convertedSamples) {
+	// Oversampling and right-shift happen in hardware, so we can sample directly to the output buffer
 	msg_t result = adcConvert(&ADCD1, &convGroupSlow, convertedSamples, 1);
 
 	// Return true if OK
