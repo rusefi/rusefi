@@ -24,8 +24,11 @@ float getMcuTemperature() {
 	return 0;
 }
 
-// TODO: use a define instead of magic number
-#define ADC_SAMPLING_SLOW (7)
+// ADC Clock is 25MHz
+// 32.5 sampling + 8.5 conversion = 41 cycles per sample total
+// 16 channels * 16x oversample = 256 samples per batch
+// (41 * 256) / 25MHz -> 419 microseconds to sample all channels
+#define ADC_SAMPLING_SLOW ADC_SMPR_SMP_32P5
 
 // Sample the 16 channels that line up with the STM32F4/F7
 constexpr size_t slowChannelCount = 16;
@@ -38,7 +41,9 @@ static constexpr ADCConversionGroup convGroupSlow = {
 	.end_cb				= nullptr,
 	.error_cb			= nullptr,
 	.cfgr				= 0,
-	.cfgr2				= 0, // no oversampling (yet)
+	.cfgr2				= 	16 << ADC_CFGR2_OVSR_Pos |	// Oversample by 16x
+							4 << ADC_CFGR2_OVSS_Pos |	// shift the result right 4 bits to make a 16 bit result
+							ADC_CFGR2_ROVSE,			// Enable oversampling
 	.ccr				= 0,
 	.pcsel				= 0xFFFFFFFF, // enable analog switches on all channels
 	// Thresholds aren't used
@@ -88,21 +93,10 @@ static constexpr ADCConversionGroup convGroupSlow = {
 	},
 };
 
-static NO_CACHE adcsample_t slowSampleBuffer[slowChannelCount];
-
 bool readSlowAnalogInputs(adcsample_t* convertedSamples) {
-	msg_t result = adcConvert(&ADCD1, &convGroupSlow, slowSampleBuffer, 1);
+	// Oversampling and right-shift happen in hardware, so we can sample directly to the output buffer
+	msg_t result = adcConvert(&ADCD1, &convGroupSlow, convertedSamples, 1);
 
-	// If something went wrong - try again later
-	if (result != MSG_OK) {
-		return false;
-	}
-
-	// V4 ADC can oversample in hardware, so no need to oversample in software
-	for (int i = 0; i < slowChannelCount; i++) {
-		// Convert from 16b result to 12b result
-		convertedSamples[i] = slowSampleBuffer[i] >> 4;
-	}
-
-	return true;
+	// Return true if OK
+	return result == MSG_OK;
 }
