@@ -554,11 +554,6 @@ void commonInitEngineController(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_S
 	initSensorChart();
 #endif /* EFI_SENSOR_CHART */
 
-
-#if EFI_TUNER_STUDIO
-	startTunerStudioConnectivity();
-#endif /* EFI_TUNER_STUDIO */
-
 #if EFI_PROD_CODE || EFI_SIMULATOR
 	initSettings();
 
