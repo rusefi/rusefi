@@ -91,7 +91,7 @@ class AlternatorController : public PeriodicTimerController {
 			}
 
 			float h = 0.1;
-			bool newState = (vBatt < targetVoltage - h) || (currentPlainOnOffState && vBatt < targetVoltage);
+			bool newState = (vBatt.Value < targetVoltage - h) || (currentPlainOnOffState && vBatt.Value < targetVoltage);
 			enginePins.alternatorPin.setValue(newState);
 			currentPlainOnOffState = newState;
 			if (engineConfiguration->debugMode == DBG_ALTERNATOR_PID) {
@@ -108,9 +108,9 @@ class AlternatorController : public PeriodicTimerController {
 			alternatorPid.reset();
 			alternatorControl.setSimplePwmDutyCycle(0);
 		} else {
-			currentAltDuty = alternatorPid.getOutput(targetVoltage, vBatt);
+			currentAltDuty = alternatorPid.getOutput(targetVoltage, vBatt.Value);
 			if (CONFIG(isVerboseAlternator)) {
-				scheduleMsg(logger, "alt duty: %.2f/vbatt=%.2f/p=%.2f/i=%.2f/d=%.2f int=%.2f", currentAltDuty, vBatt,
+				scheduleMsg(logger, "alt duty: %.2f/vbatt=%.2f/p=%.2f/i=%.2f/d=%.2f int=%.2f", currentAltDuty, vBatt.Value,
 						alternatorPid.getP(), alternatorPid.getI(), alternatorPid.getD(), alternatorPid.getIntegration());
 			}
 

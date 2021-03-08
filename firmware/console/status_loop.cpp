@@ -544,7 +544,7 @@ void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels DECLARE_
 	tsOutputChannels->afrTableYAxis = ENGINE(engineState.currentAfrLoad);
 
 	// offset 28
-	tsOutputChannels->vBatt = Sensor::get(SensorType::BatteryVoltage);
+	tsOutputChannels->vBatt = Sensor::get(SensorType::BatteryVoltage).value_or(0);
 
 	// offset 36
 	tsOutputChannels->baroPressure = Sensor::get(SensorType::BarometricPressure).value_or(0);
