@@ -41,7 +41,7 @@
 /* Depth of the conversion buffer, channels are sampled X times each.*/
 #define ADC_BUF_DEPTH_FAST      4
 
-static adcsample_t slowAdcSamples[ADC_MAX_CHANNELS_COUNT];
+static NO_CACHE adcsample_t slowAdcSamples[ADC_MAX_CHANNELS_COUNT];
 static NO_CACHE adcsample_t fastAdcSampleBuf[ADC_BUF_DEPTH_FAST * ADC_MAX_CHANNELS_COUNT];
 
 static adc_channel_mode_e adcHwChannelEnabled[HW_MAX_ADC_INDEX];
