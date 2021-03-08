@@ -98,6 +98,8 @@ static pedal2tps_t pedal2tpsMap("Pedal2Tps");
 
 EXTERN_ENGINE;
 
+constexpr float etbPeriodSeconds = 1.0f / ETB_LOOP_FREQUENCY;
+
 static bool startupPositionError = false;
 
 #define STARTUP_NEUTRAL_POSITION_ERROR_THRESHOLD 5
@@ -204,6 +206,8 @@ bool EtbController::init(etb_function_e function, DcMotor *motor, pid_s *pidPara
 	m_motor = motor;
 	m_pid.initPidClass(pidParameters);
 	m_pedalMap = pedalMap;
+
+	m_errorAccumulator.init(3.0f, etbPeriodSeconds);
 
 	reset();
 
@@ -444,8 +448,23 @@ expected<percent_t> EtbController::getClosedLoop(percent_t target, percent_t obs
 		&& m_function == ETB_Throttle1) {
 		return getClosedLoopAutotune(observation);
 	} else {
+		// Check that we're not over the error limit
+		float errorIntegral = m_errorAccumulator.accumulate(target - observation);
+
+#if EFI_TUNER_STUDIO
+		if (m_function == ETB_Throttle1 && CONFIG(debugMode) == DBG_ETB_LOGIC) {
+			tsOutputChannels.debugFloatField3 = errorIntegral;
+		}
+#endif // EFI_TUNER_STUDIO
+
+		// Allow up to 10 percent-seconds of error
+		if (errorIntegral > 10.0f) {
+			// TODO: figure out how to handle uncalibrated ETB 
+			//ENGINE(limpManager).etbProblem();
+		}
+
 		// Normal case - use PID to compute closed loop part
-		return m_pid.getOutput(target, observation, 1.0f / ETB_LOOP_FREQUENCY);
+		return m_pid.getOutput(target, observation, etbPeriodSeconds);
 	}
 }
 
