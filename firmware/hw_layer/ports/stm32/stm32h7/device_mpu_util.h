@@ -12,3 +12,5 @@
 #define MCU_SERIAL_NUMBER_LOCATION (uint8_t*)(0x1FF1E800)
 
 // todo SPI! #2284
+
+#define ADC_MAX_VALUE 65535

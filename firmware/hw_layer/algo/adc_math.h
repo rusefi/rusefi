@@ -11,7 +11,6 @@
 #pragma once
 
 #include "engine_configuration.h"
-#define ADC_MAX_VALUE 4095
 
 #define adcToVolts(adc) ((engineConfiguration->adcVcc) / ADC_MAX_VALUE * (adc))
 
