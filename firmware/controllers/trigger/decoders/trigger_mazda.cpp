@@ -30,8 +30,6 @@ void initializeMazdaMiataNaShape(TriggerWaveform *s) {
 
 	s->tdcPosition = 294;
 
-	s->isSynchronizationNeeded = true;
-
 	/**
 	 * http://rusefi.com/forum/viewtopic.php?f=3&t=729&p=12983#p12983
 	 */
