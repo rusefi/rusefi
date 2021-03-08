@@ -17,7 +17,6 @@
 #include "engine.h"
 #include "rpm_calculator.h"
 #include "alternator_controller.h"
-#include "voltage.h"
 #include "pid.h"
 #include "local_version_holder.h"
 #include "periodic_task.h"
