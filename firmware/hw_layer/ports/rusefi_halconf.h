@@ -1,6 +1,7 @@
 #pragma once
 
 #include "efifeatures.h"
+#include "thread_priority.h"
 
 /*===========================================================================*/
 /* Conditional EFI feature settings                                          */
@@ -70,6 +71,12 @@
 // USB Serial
 #define SERIAL_USB_BUFFERS_SIZE     320
 #define SERIAL_USB_BUFFERS_NUMBER   2
+
+// USB Mass Storage
+#ifdef EFI_USE_COMPRESSED_INI_MSD
+// if enabled, we do gzip decompression on the MSD thread - it requires more stack space
+#define USB_MSD_THREAD_WA_SIZE 512
+#endif
 
 // SPI
 #define SPI_USE_WAIT                TRUE
