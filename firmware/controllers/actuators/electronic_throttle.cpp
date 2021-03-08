@@ -207,6 +207,7 @@ bool EtbController::init(etb_function_e function, DcMotor *motor, pid_s *pidPara
 	m_pid.initPidClass(pidParameters);
 	m_pedalMap = pedalMap;
 
+	// Ignore 3% position error before complaining
 	m_errorAccumulator.init(3.0f, etbPeriodSeconds);
 
 	reset();
