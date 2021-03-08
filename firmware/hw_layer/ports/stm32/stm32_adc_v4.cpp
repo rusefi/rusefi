@@ -24,6 +24,10 @@ float getMcuTemperature() {
 	return 0;
 }
 
+// ADC Clock is 25MHz
+// 32.5 sampling + 8.5 conversion = 41 cycles per sample total
+// 16 channels * 16x oversample = 256 samples per batch
+// (41 * 256) / 25MHz -> 419 microseconds to sample all channels
 #define ADC_SAMPLING_SLOW ADC_SMPR_SMP_32P5
 
 // Sample the 16 channels that line up with the STM32F4/F7
@@ -37,8 +41,8 @@ static constexpr ADCConversionGroup convGroupSlow = {
 	.end_cb				= nullptr,
 	.error_cb			= nullptr,
 	.cfgr				= 0,
-	.cfgr2				= 	8 << ADC_CFGR2_OVSR_Pos |	// Oversample by 8x
-							3 << ADC_CFGR2_OVSS_Pos |	// shift the result right 3 bits to make a 16 bit result
+	.cfgr2				= 	16 << ADC_CFGR2_OVSR_Pos |	// Oversample by 16x
+							4 << ADC_CFGR2_OVSS_Pos |	// shift the result right 4 bits to make a 16 bit result
 							ADC_CFGR2_ROVSE,			// Enable oversampling
 	.ccr				= 0,
 	.pcsel				= 0xFFFFFFFF, // enable analog switches on all channels
