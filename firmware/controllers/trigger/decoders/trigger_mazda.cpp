@@ -150,8 +150,6 @@ void configureMazdaProtegeSOHC(TriggerWaveform *s) {
 
 void configureMazdaProtegeLx(TriggerWaveform *s) {
 	s->initialize(FOUR_STROKE_CAM_SENSOR);
-	s->useOnlyPrimaryForSync = true;
-
 	/**
 	 * based on https://svn.code.sf.net/p/rusefi/code/trunk/misc/logs/1993_escort_gt/MAIN_rfi_report_2015-02-01%2017_39.csv
 	 */

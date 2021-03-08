@@ -94,7 +94,6 @@ void configureHondaAccordCDDip(TriggerWaveform *s) {
 	s->addEvent720(720.0f, T_SECONDARY, TV_RISE);
 
 	s->isSynchronizationNeeded = false;
-	s->useOnlyPrimaryForSync = true;
 }
 
 /**
@@ -233,8 +232,6 @@ void configureHondaAccordShifted(TriggerWaveform *s) {
 	}
 
 
-
-	s->useOnlyPrimaryForSync = true;
 	s->isSynchronizationNeeded = false;
 }
 
@@ -254,7 +251,6 @@ void configureOnePlus16(TriggerWaveform *s) {
 	}
 
 	s->isSynchronizationNeeded = false;
-	s->useOnlyPrimaryForSync = true;
 }
 
 // TT_HONDA_K_12_1

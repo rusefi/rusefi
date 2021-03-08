@@ -22,7 +22,6 @@ void initDodgeRam(TriggerWaveform *s) {
 	addSkippedToothTriggerEvents(T_SECONDARY, s, 8, 0, 0.06, 360 - 25, 360, 0, 720);
 
 	s->addEvent720(720, T_PRIMARY, TV_FALL);
-	s->useOnlyPrimaryForSync = true;
 }
 
 void configureNeon2003TriggerWaveformCrank(TriggerWaveform *s DECLARE_ENGINE_PARAMETER_SUFFIX) {
