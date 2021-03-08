@@ -18,7 +18,6 @@ void initializeRoverK(TriggerWaveform *s) {
 
 	s->setTriggerSynchronizationGap(2.0);
 	s->setThirdTriggerSynchronizationGap(2);
-	s->isSynchronizationNeeded = true;
 
 	float base = 0;
 
