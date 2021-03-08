@@ -81,10 +81,15 @@ class AlternatorController : public PeriodicTimerController {
 			return;
 		}
 
-		float vBatt = getVBatt(PASS_ENGINE_PARAMETER_SIGNATURE);
+		auto vBatt = Sensor::get(SensorType::BatteryVoltage);
 		float targetVoltage = engineConfiguration->targetVBatt;
 
 		if (CONFIG(onOffAlternatorLogic)) {
+			if (!vBatt) {
+				// Somehow battery voltage isn't valid, disable alternator control
+				enginePins.alternatorPin.setValue(false);
+			}
+
 			float h = 0.1;
 			bool newState = (vBatt < targetVoltage - h) || (currentPlainOnOffState && vBatt < targetVoltage);
 			enginePins.alternatorPin.setValue(newState);
@@ -98,15 +103,19 @@ class AlternatorController : public PeriodicTimerController {
 			return;
 		}
 
+		if (!vBatt) {
+			// Somehow battery voltage isn't valid, disable alternator control
+			alternatorPid.reset();
+			alternatorControl.setSimplePwmDutyCycle(0);
+		} else {
+			currentAltDuty = alternatorPid.getOutput(targetVoltage, vBatt);
+			if (CONFIG(isVerboseAlternator)) {
+				scheduleMsg(logger, "alt duty: %.2f/vbatt=%.2f/p=%.2f/i=%.2f/d=%.2f int=%.2f", currentAltDuty, vBatt,
+						alternatorPid.getP(), alternatorPid.getI(), alternatorPid.getD(), alternatorPid.getIntegration());
+			}
 
-		currentAltDuty = alternatorPid.getOutput(targetVoltage, vBatt);
-		if (CONFIG(isVerboseAlternator)) {
-			scheduleMsg(logger, "alt duty: %.2f/vbatt=%.2f/p=%.2f/i=%.2f/d=%.2f int=%.2f", currentAltDuty, vBatt,
-					alternatorPid.getP(), alternatorPid.getI(), alternatorPid.getD(), alternatorPid.getIntegration());
+			alternatorControl.setSimplePwmDutyCycle(PERCENT_TO_DUTY(currentAltDuty));
 		}
-
-
-		alternatorControl.setSimplePwmDutyCycle(PERCENT_TO_DUTY(currentAltDuty));
 	}
 };
 
@@ -118,7 +127,7 @@ void showAltInfo(void) {
 			engineConfiguration->alternatorControl.periodMs);
 	scheduleMsg(logger, "p=%.2f/i=%.2f/d=%.2f offset=%.2f", engineConfiguration->alternatorControl.pFactor,
 			0, 0, engineConfiguration->alternatorControl.offset); // todo: i & d
-	scheduleMsg(logger, "vbatt=%.2f/duty=%.2f/target=%.2f", getVBatt(PASS_ENGINE_PARAMETER_SIGNATURE), currentAltDuty,
+	scheduleMsg(logger, "vbatt=%.2f/duty=%.2f/target=%.2f", Sensor::get(SensorType::BatteryVoltage).value_or(0), currentAltDuty,
 			engineConfiguration->targetVBatt);
 }
 
