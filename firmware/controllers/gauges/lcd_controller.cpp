@@ -203,7 +203,7 @@ static void showLine(lcd_line_e line, int /*screenY*/) {
 		lcdPrintf("ING LAG %.2f", engine->engineState.running.injectorLag);
 		return;
 	case LL_VBATT:
-		lcdPrintf("Battery %.2fv", getVBatt(PASS_ENGINE_PARAMETER_SIGNATURE));
+		lcdPrintf("Battery %.2fv", Sensor::get(SensorType::BatteryVoltage).value_or(0));
 		return;
 	case LL_KNOCK:
 		getPinNameByAdcChannel("hip", engineConfiguration->hipOutputChannel, buffer);
