@@ -26,6 +26,7 @@
 #include "hardware.h"
 #include "mc33816_data.h"
 #include "mpu_util.h"
+#include "allsensors.h"
 
 EXTERN_ENGINE;
 
