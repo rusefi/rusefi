@@ -154,7 +154,7 @@ bool readSlowAnalogInputs(adcsample_t* convertedSamples) {
 	msg_t result = adcConvert(&ADCD1, &convGroupSlow, slowSampleBuffer, SLOW_ADC_OVERSAMPLE);
 
 	// If something went wrong - try again later
-	if (result == MSG_RESET || result == MSG_TIMEOUT) {
+	if (result != MSG_OK) {
 		return false;
 	}
 
