@@ -10,7 +10,8 @@
 
 #pragma once
 
-#include "engine_configuration.h"
+#include "port_mpu_util.h"
+#include "rusefi_hw_enums.h"
 
 #define adcToVolts(adc) ((engineConfiguration->adcVcc) / ADC_MAX_VALUE * (adc))
 
