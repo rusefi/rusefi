@@ -38,6 +38,9 @@
 #include "perf_trace.h"
 #include "thread_priority.h"
 
+/* Depth of the conversion buffer, channels are sampled X times each.*/
+#define ADC_BUF_DEPTH_FAST      4
+
 static adcsample_t slowAdcSamples[ADC_MAX_CHANNELS_COUNT];
 static NO_CACHE adcsample_t fastAdcSampleBuf[ADC_BUF_DEPTH_FAST * ADC_MAX_CHANNELS_COUNT];
 
@@ -517,10 +520,6 @@ static SlowAdcController slowAdcController;
 
 void initAdcInputs() {
 	scheduleMsg(&logger, "initAdcInputs()");
-	if (ADC_BUF_DEPTH_FAST > MAX_ADC_GRP_BUF_DEPTH)
-		firmwareError(CUSTOM_ERR_ADC_DEPTH_FAST, "ADC_BUF_DEPTH_FAST too high");
-	if (ADC_BUF_DEPTH_SLOW > MAX_ADC_GRP_BUF_DEPTH)
-		firmwareError(CUSTOM_ERR_ADC_DEPTH_SLOW, "ADC_BUF_DEPTH_SLOW too high");
 
 	configureInputs();
 

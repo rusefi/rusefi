@@ -14,9 +14,7 @@
 EXTERN_CONFIG;
 
 /* Depth of the conversion buffer, channels are sampled X times each.*/
-#ifndef ADC_BUF_DEPTH_SLOW
-#define ADC_BUF_DEPTH_SLOW      8
-#endif /* ADC_BUF_DEPTH_SLOW */
+#define SLOW_ADC_OVERSAMPLE      8
 
 void portInitAdc() {
 	// Init slow ADC
@@ -150,10 +148,10 @@ static constexpr ADCConversionGroup convGroupSlow = {
 	.sqr3	= ADC_SQR3_SQ1_N(0)   | ADC_SQR3_SQ2_N(1)   | ADC_SQR3_SQ3_N(2)   |  ADC_SQR3_SQ4_N(3)  |   ADC_SQR3_SQ5_N(4) |   ADC_SQR3_SQ6_N(5), // Conversion group sequence 1...6
 };
 
-static NO_CACHE adcsample_t slowSampleBuffer[ADC_BUF_DEPTH_SLOW * slowChannelCount];
+static NO_CACHE adcsample_t slowSampleBuffer[SLOW_ADC_OVERSAMPLE * slowChannelCount];
 
 bool readSlowAnalogInputs(adcsample_t* convertedSamples) {
-	msg_t result = adcConvert(&ADCD1, &convGroupSlow, slowSampleBuffer, ADC_BUF_DEPTH_SLOW);
+	msg_t result = adcConvert(&ADCD1, &convGroupSlow, slowSampleBuffer, SLOW_ADC_OVERSAMPLE);
 
 	// If something went wrong - try again later
 	if (result == MSG_RESET || result == MSG_TIMEOUT) {
@@ -164,12 +162,12 @@ bool readSlowAnalogInputs(adcsample_t* convertedSamples) {
 	for (int i = 0; i < slowChannelCount; i++) {
 		uint32_t sum = 0;
 		size_t index = i;
-		for (size_t j = 0; j < ADC_BUF_DEPTH_SLOW; j++) {
+		for (size_t j = 0; j < SLOW_ADC_OVERSAMPLE; j++) {
 			sum += slowSampleBuffer[index];
 			index += slowChannelCount;
 		}
 
-		adcsample_t value = static_cast<adcsample_t>(sum / ADC_BUF_DEPTH_SLOW);
+		adcsample_t value = static_cast<adcsample_t>(sum / SLOW_ADC_OVERSAMPLE);
 		convertedSamples[i] = value;
 	}
 
