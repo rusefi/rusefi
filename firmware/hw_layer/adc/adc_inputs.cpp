@@ -222,11 +222,6 @@ int getInternalAdcValue(const char *msg, adc_channel_e hwChannel) {
 	}
 #endif // EFI_USE_FAST_ADC
 
-	if (adcHwChannelEnabled[hwChannel] != ADC_SLOW) {
-		// todo: make this not happen during hardware continuous integration
-		warning(CUSTOM_OBD_WRONG_ADC_MODE, "ADC is off [%s] index=%d", msg, hwChannel);
-	}
-
 	return slowAdcSamples[hwChannel - 1];
 }
 
