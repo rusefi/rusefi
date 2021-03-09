@@ -39,7 +39,6 @@
 #include "mcp3208.h"
 #include "hip9011.h"
 #include "histogram.h"
-#include "mmc_card.h"
 #include "neo6m.h"
 #include "lcd_HD44780.h"
 #include "settings.h"
@@ -249,7 +248,7 @@ void adc_callback_fast(ADCDriver *adcp) {
 #endif /* HAL_USE_ADC */
 
 static void calcFastAdcIndexes(void) {
-#if HAL_USE_ADC
+#if HAL_USE_ADC && EFI_USE_FAST_ADC
 	fastMapSampleIndex = fastAdc.internalAdcIndexByHardwareIndex[engineConfiguration->map.sensor.hwChannel];
 	hipSampleIndex =
 			isAdcChannelValid(engineConfiguration->hipOutputChannel) ?
@@ -593,10 +592,6 @@ void initHardware(Logging *l) {
 #if EFI_HIP_9011
 	initHip9011(sharedLogger);
 #endif /* EFI_HIP_9011 */
-
-#if EFI_FILE_LOGGING
-	initMmcCard();
-#endif /* EFI_FILE_LOGGING */
 
 #if EFI_MEMS
 	initAccelerometer(PASS_ENGINE_PARAMETER_SIGNATURE);

@@ -40,7 +40,6 @@
 #include "gpio/gpio_ext.h"
 #include "pin_repository.h"
 #include "os_util.h"
-#include "voltage.h"
 #include "thread_priority.h"
 
 EXTERN_ENGINE_CONFIGURATION;

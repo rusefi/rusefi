@@ -30,8 +30,6 @@ void initializeMazdaMiataNaShape(TriggerWaveform *s) {
 
 	s->tdcPosition = 294;
 
-	s->isSynchronizationNeeded = true;
-
 	/**
 	 * http://rusefi.com/forum/viewtopic.php?f=3&t=729&p=12983#p12983
 	 */
@@ -152,8 +150,6 @@ void configureMazdaProtegeSOHC(TriggerWaveform *s) {
 
 void configureMazdaProtegeLx(TriggerWaveform *s) {
 	s->initialize(FOUR_STROKE_CAM_SENSOR);
-	s->useOnlyPrimaryForSync = true;
-
 	/**
 	 * based on https://svn.code.sf.net/p/rusefi/code/trunk/misc/logs/1993_escort_gt/MAIN_rfi_report_2015-02-01%2017_39.csv
 	 */

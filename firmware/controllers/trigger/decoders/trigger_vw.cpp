@@ -30,9 +30,6 @@ void setSkodaFavorit(TriggerWaveform *s) {
 void setVwConfiguration(TriggerWaveform *s) {
 	s->initialize(FOUR_STROKE_CRANK_SENSOR);
 
-	s->isSynchronizationNeeded = true;
-
-
 	int totalTeethCount = 60;
 	int skippedCount = 2;
 

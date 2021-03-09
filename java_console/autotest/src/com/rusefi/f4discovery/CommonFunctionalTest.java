@@ -209,7 +209,7 @@ public class CommonFunctionalTest extends RusefiTestBase {
         ecu.sendCommand("set wwaeTau 0");
         ecu.sendCommand("set wwaeBeta 0");
         ecu.sendCommand("set mock_map_voltage 1");
-        ecu.sendCommand("set mock_vbatt_voltage 1.20");
+        ecu.sendCommand("set_sensor_mock 27 12");
         ecu.sendCommand("disable cylinder_cleanup");
         EngineChart chart;
         String msg = "2003 Neon cranking ";
@@ -274,7 +274,7 @@ public class CommonFunctionalTest extends RusefiTestBase {
     public void testMazdaProtege() {
         ecu.setEngineType(ET_FORD_ESCORT_GT);
         EngineChart chart;
-        ecu.sendCommand("set mock_vbatt_voltage 1.395");
+        ecu.sendCommand("set_sensor_mock 27 12");
 
         // Alpha-N mode so that we actually inject some fuel (without mocking tons of sensors)
         ecu.sendCommand("set algorithm 5");
@@ -354,7 +354,7 @@ public class CommonFunctionalTest extends RusefiTestBase {
         ecu.setEngineType(ET_FORD_ASPIRE);
         ecu.sendCommand("disable cylinder_cleanup");
         ecu.sendCommand("set mock_map_voltage 1");
-        ecu.sendCommand("set mock_vbatt_voltage 2.2");
+        ecu.sendCommand("set_sensor_mock 27 12");
         String msg;
         EngineChart chart;
         // todo: interesting changeRpm(100);

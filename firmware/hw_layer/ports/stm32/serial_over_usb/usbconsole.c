@@ -40,7 +40,7 @@ void usb_serial_start(void) {
 // See also https://github.com/rusefi/rusefi/issues/705
 #ifndef EFI_SKIP_USB_DISCONNECT
 	usbDisconnectBus(serusbcfg.usbp);
-	chThdSleepMilliseconds(1500);
+	chThdSleepMilliseconds(250);
 #endif/* EFI_SKIP_USB_DISCONNECT */
 	usbStart(serusbcfg.usbp, &usbcfg);
 	usbConnectBus(serusbcfg.usbp);

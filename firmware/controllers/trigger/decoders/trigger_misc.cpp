@@ -51,7 +51,6 @@ void configureTriTach(TriggerWaveform * s) {
 
 void configureFordST170(TriggerWaveform * s) {
 	s->initialize(FOUR_STROKE_CAM_SENSOR);
-	s->isSynchronizationNeeded = true;
 	int width = 10;
 
 	int total = s->getCycleDuration() / 8;

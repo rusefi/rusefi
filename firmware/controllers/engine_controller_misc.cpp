@@ -66,10 +66,6 @@ void setMockAfrVoltage(float voltage DECLARE_ENGINE_PARAMETER_SUFFIX) {
 void setMockMapVoltage(float voltage DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	setMockVoltage(engineConfiguration->map.sensor.hwChannel, voltage PASS_ENGINE_PARAMETER_SUFFIX);
 }
-
-void setMockVBattVoltage(float voltage DECLARE_ENGINE_PARAMETER_SUFFIX) {
-	setMockVoltage(engineConfiguration->vbattAdcChannel, voltage PASS_ENGINE_PARAMETER_SUFFIX);
-}
 #endif /* EFI_ENABLE_MOCK_ADC */
 
 #if EFI_PROD_CODE

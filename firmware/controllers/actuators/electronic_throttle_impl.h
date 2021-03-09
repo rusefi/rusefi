@@ -12,6 +12,7 @@
 
 #include "sensor.h"
 #include "pid.h"
+#include "error_accumulator.h"
 
 /**
  * Hard code ETB update speed.
@@ -74,6 +75,7 @@ private:
 	DcMotor *m_motor = nullptr;
 	Pid m_pid;
 	bool m_shouldResetPid = false;
+	ErrorAccumulator m_errorAccumulator;
 
 	// Pedal -> target map
 	const ValueProvider3D* m_pedalMap = nullptr;

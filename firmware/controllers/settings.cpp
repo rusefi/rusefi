@@ -1104,7 +1104,6 @@ const command_f_s commandsF[] = {
 		{MOCK_MAF_COMMAND, setMockMafVoltage},
 		{MOCK_AFR_COMMAND, setMockAfrVoltage},
 		{MOCK_MAP_COMMAND, setMockMapVoltage},
-		{"mock_vbatt_voltage", setMockVBattVoltage},
 		{MOCK_CLT_COMMAND, setMockCltVoltage},
 #endif // EFI_ENABLE_MOCK_ADC
 		{"ignition_offset", setIgnitionOffset},
