@@ -77,7 +77,7 @@ LogBuffer* readBuffer = &buffers[1];
  *
  * @return pointer to the buffer which should be print to console
  */
-const char * swapOutputBuffers(size_t* actualOutputBufferSize) {
+const char* swapOutputBuffers(size_t* actualOutputBufferSize) {
 	{
 		chibios_rt::MutexLocker lock(logBufferMutex);
 
@@ -153,6 +153,12 @@ void startLoggingProcessor() {
 }
 
 #endif // EFI_PROD_CODE
+
+#if EFI_SIMULATOR
+const char* swapOutputBuffers(size_t* actualOutputBufferSize) {
+	return nullptr;
+}
+#endif
 
 #if EFI_UNIT_TEST || EFI_SIMULATOR
 extern bool verboseMode;
