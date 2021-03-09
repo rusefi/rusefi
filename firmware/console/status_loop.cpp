@@ -258,7 +258,6 @@ void updateDevConsoleState(void) {
 	if (hasFirmwareError()) {
 		scheduleMsg(&logger, "%s error: %s", CRITICAL_PREFIX, getFirmwareError());
 		warningEnabled = false;
-		scheduleLogging(&logger);
 		return;
 	}
 #endif /* EFI_PROD_CODE */

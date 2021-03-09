@@ -8,5 +8,5 @@
 
 class Logging;
 
-char * swapOutputBuffers(int *actualOutputBufferSize);
+const char* swapOutputBuffers(int *actualOutputBufferSize);
 void scheduleMsg(Logging *logging, const char *fmt, ...);
