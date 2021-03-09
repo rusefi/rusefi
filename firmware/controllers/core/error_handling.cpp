@@ -130,7 +130,7 @@ static void printWarning(const char *fmt, va_list ap) {
 #endif /* EFI_TUNER_STUDIO */
 	}
 
-	scheduleMsg(logging, "WARNING: %s", warningBuffer);
+	scheduleMsg(&logger, "WARNING: %s", warningBuffer);
 }
 
 #else
