@@ -656,12 +656,12 @@ static void handleGetText(TsChannelBase* tsChannel) {
 	printOverallStatus(getTimeNowSeconds());
 
 	int outputSize;
-	char *output = swapOutputBuffers(&outputSize);
+	const char* output = swapOutputBuffers(&outputSize);
 #if EFI_SIMULATOR
 			logMsg("get test sending [%d]\r\n", outputSize);
 #endif
 
-	tsChannel->writeCrcPacket(TS_RESPONSE_COMMAND_OK, reinterpret_cast<uint8_t*>(output), outputSize);
+	tsChannel->writeCrcPacket(TS_RESPONSE_COMMAND_OK, reinterpret_cast<const uint8_t*>(output), outputSize);
 #if EFI_SIMULATOR
 			logMsg("sent [%d]\r\n", outputSize);
 #endif
