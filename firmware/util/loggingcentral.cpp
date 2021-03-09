@@ -16,6 +16,8 @@
 #include "thread_controller.h"
 #include "thread_priority.h"
 
+#if EFI_PROD_CODE
+
 struct LogLineBuffer {
 	char buffer[128];
 };
@@ -75,7 +77,7 @@ LogBuffer* readBuffer = &buffers[1];
  *
  * @return pointer to the buffer which should be print to console
  */
-const char * swapOutputBuffers(int *actualOutputBufferSize) {
+const char * swapOutputBuffers(size_t* actualOutputBufferSize) {
 	{
 		chibios_rt::MutexLocker lock(logBufferMutex);
 
@@ -149,6 +151,8 @@ void startLoggingProcessor() {
 	// Start processing used buffers
 	lbf.Start();
 }
+
+#endif // EFI_PROD_CODE
 
 namespace priv
 {

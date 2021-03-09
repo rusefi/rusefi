@@ -655,7 +655,7 @@ static void handleGetText(TsChannelBase* tsChannel) {
 
 	printOverallStatus(getTimeNowSeconds());
 
-	int outputSize;
+	size_t outputSize;
 	const char* output = swapOutputBuffers(&outputSize);
 #if EFI_SIMULATOR
 			logMsg("get test sending [%d]\r\n", outputSize);

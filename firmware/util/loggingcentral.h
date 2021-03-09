@@ -10,7 +10,7 @@ class Logging;
 
 void startLoggingProcessor();
 
-const char* swapOutputBuffers(int *actualOutputBufferSize);
+const char* swapOutputBuffers(size_t *actualOutputBufferSize);
 
 namespace priv
 {
