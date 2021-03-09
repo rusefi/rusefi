@@ -105,7 +105,7 @@ const char * swapOutputBuffers(size_t* actualOutputBufferSize) {
 }
 
 // These buffers store lines queued to be written to the writeBuffer
-constexpr size_t lineBufferCount = 32;
+constexpr size_t lineBufferCount = 24;
 static LogLineBuffer lineBuffers[lineBufferCount];
 
 // freeBuffers contains a queue of buffers that are not in use
