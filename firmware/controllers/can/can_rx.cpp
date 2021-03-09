@@ -64,7 +64,7 @@ bool acceptCanRx(int sid DECLARE_ENGINE_PARAMETER_SUFFIX) {
  * this build-in CAN sniffer is very basic but that's our CAN sniffer
  */
 static void printPacket(const CANRxFrame &rx, Logging *logger) {
-	bool accept = acceptCanRx(rx.SID);
+	bool accept = acceptCanRx(CAN_SID(rx));
 	if (!accept) {
 		return;
 	}
@@ -72,8 +72,8 @@ static void printPacket(const CANRxFrame &rx, Logging *logger) {
 	// only print info if we're in can debug mode
 
 	// internet people use both hex and decimal to discuss packed IDs, for usability it's better to print both right here
-	scheduleMsg(logger, "CAN_rx %x %d %x, %x %x %x %x %x %x %x %x", rx.SID,
-			rx.SID, rx.DLC, rx.data8[0], rx.data8[1], rx.data8[2], rx.data8[3],
+	scheduleMsg(logger, "CAN_rx %x %d %x, %x %x %x %x %x %x %x %x", CAN_SID(rx),
+			CAN_SID(rx), rx.DLC, rx.data8[0], rx.data8[1], rx.data8[2], rx.data8[3],
 			rx.data8[4], rx.data8[5], rx.data8[6], rx.data8[7]);
 
 }
@@ -108,7 +108,7 @@ void processCanRxMessage(const CANRxFrame &frame, Logging *logger,
 	processCanRxVss(frame, nowNt);
 
 #if EFI_CANBUS_SLAVE
-	if (frame.EID == CONFIG(verboseCanBaseAddress) + CAN_SENSOR_1_OFFSET) {
+	if (CAN_EID(frame) == CONFIG(verboseCanBaseAddress) + CAN_SENSOR_1_OFFSET) {
 		int16_t mapScaled = *reinterpret_cast<const int16_t*>(&frame.data8[0]);
 		canMap = mapScaled / (1.0 * PACK_MULT_PRESSURE);
 	} else
@@ -119,7 +119,7 @@ void processCanRxMessage(const CANRxFrame &frame, Logging *logger,
 
 #if EFI_WIDEBAND_FIRMWARE_UPDATE
 	// Bootloader acks with address 0x727573 aka ascii "rus"
-	if (frame.EID == 0x727573) {
+	if (CAN_EID(frame) == 0x727573) {
 		handleWidebandBootloaderAck();
 	}
 #endif

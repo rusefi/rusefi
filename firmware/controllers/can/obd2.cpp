@@ -27,6 +27,7 @@
 #include "os_access.h"
 #include "engine.h"
 #include "obd2.h"
+#include "can.h"
 #include "can_msg_tx.h"
 #include "vehicle_speed.h"
 #include "map.h"
@@ -195,7 +196,7 @@ static void handleDtcRequest(int numCodes, int *dtcCode) {
 
 #if HAL_USE_CAN
 void obdOnCanPacketRx(const CANRxFrame& rx) {
-	if (rx.SID != OBD_TEST_REQUEST) {
+	if (CAN_SID(rx) != OBD_TEST_REQUEST) {
 		return;
 	}
 
