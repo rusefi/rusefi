@@ -45,8 +45,6 @@ static LoggingWithStorage logger("error handling");
 
 EXTERN_ENGINE;
 
-#define WARNING_PREFIX "WARNING: "
-
 extern int warningEnabled;
 extern bool main_loop_started;
 
@@ -120,11 +118,6 @@ static void printToStream(MemoryStream *stream, const char *fmt, va_list ap) {
 }
 
 static void printWarning(const char *fmt, va_list ap) {
-	logger.reset(); // todo: is 'reset' really needed here?
-	appendMsgPrefix(&logger);
-
-	logger.append(WARNING_PREFIX);
-
 	printToStream(&errorState.warningStream, fmt, ap);
 
 	if (CONFIG(showHumanReadableWarning)) {
@@ -137,9 +130,7 @@ static void printWarning(const char *fmt, va_list ap) {
 #endif /* EFI_TUNER_STUDIO */
 	}
 
-	logger.append(warningBuffer);
-	logger.append(DELIMETER);
-	scheduleLogging(&logger);
+	scheduleMsg(logging, "WARNING: %s", warningBuffer);
 }
 
 #else
