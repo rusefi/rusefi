@@ -104,9 +104,6 @@ const char * swapOutputBuffers(int *actualOutputBufferSize) {
 	// 	return nullptr;
 	// }
 #endif /* EFI_ENABLE_ASSERTS */
-
-	scheduleMsg(nullptr, "swap");
-
 	return backBuffer->get();
 }
 
