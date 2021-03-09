@@ -16,7 +16,7 @@
 #include "thread_controller.h"
 #include "thread_priority.h"
 
-#if EFI_PROD_CODE
+#if EFI_PROD_CODE && EFI_TEXT_LOGGING
 
 struct LogLineBuffer {
 	char buffer[128];
@@ -175,7 +175,8 @@ void efiPrintfInternal(const char *format, ...) {
 		va_end(ap);
 		printf("\r\n");
 	}
-#else
+#endif
+#if EFI_PROD_CODE && EFI_TEXT_LOGGING
 	for (unsigned int i = 0; i < strlen(format); i++) {
 		// todo: open question which layer would not handle CR/LF properly?
 		efiAssertVoid(OBD_PCM_Processor_Fault, format[i] != '\n', "No CRLF please");
@@ -211,7 +212,7 @@ void efiPrintfInternal(const char *format, ...) {
 
 		filledBuffers.postI(lineBuffer);
 	}
-#endif /* EFI_UNIT_TEST */
+#endif
 }
 } // namespace priv
 
@@ -222,7 +223,7 @@ void efiPrintfInternal(const char *format, ...) {
  * This is a legacy function, most normal logging should use scheduleMsg
  */
 void scheduleLogging(Logging *logging) {
-#if EFI_PROD_CODE
+#if EFI_PROD_CODE && EFI_TEXT_LOGGING
 	// Lock the buffer mutex - inhibit buffer swaps while writing
 	chibios_rt::MutexLocker lock(logBufferMutex);
 
