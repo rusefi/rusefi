@@ -77,7 +77,7 @@ static LoggingWithStorage logger("CAN driver");
  * 29 bit would be CAN_TI0R_EXID (?) but we do not mention it here
  * CAN_TI0R_STID "Standard Identifier or Extended Identifier"? not mentioned as well
  */
-#ifndef STM32H7XX
+#if defined(STM32F4XX) || defined(STM32F7XX)
 static const CANConfig canConfig100 = {
 CAN_MCR_ABOM | CAN_MCR_AWUM | CAN_MCR_TXFP,
 CAN_BTR_100 };
@@ -93,7 +93,7 @@ CAN_BTR_500 };
 static const CANConfig canConfig1000 = {
 CAN_MCR_ABOM | CAN_MCR_AWUM | CAN_MCR_TXFP,
 CAN_BTR_1k0 };
-#else /* STM32H7 */
+#elif defined(STM32H7XX)
 static const CANConfig canConfig100 = {
 	CAN_NBTP_100,
 	CAN_DBTP_100,
