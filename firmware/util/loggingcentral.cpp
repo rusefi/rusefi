@@ -213,8 +213,10 @@ void efiPrintfInternal(const char *format, ...) {
  * This is a legacy function, most normal logging should use scheduleMsg
  */
 void scheduleLogging(Logging *logging) {
+#if EFI_PROD_CODE
 	// Lock the buffer mutex - inhibit buffer swaps while writing
 	chibios_rt::MutexLocker lock(logBufferMutex);
 
 	writeBuffer->writeLogger(logging);
+#endif
 }
