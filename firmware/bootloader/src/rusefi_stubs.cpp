@@ -17,7 +17,7 @@ void print(const char */*format*/, ...) {
 
 namespace priv
 {
-void efiPrintfInternal(Logging */*logging*/, const char */*fmt*/, ...) {
+void efiPrintfInternal(const char* /*fmt*/, ...) {
 }
 }
 
