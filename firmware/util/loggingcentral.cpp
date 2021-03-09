@@ -16,51 +16,53 @@
 #include "thread_controller.h"
 #include "thread_priority.h"
 
-#if EFI_PROD_CODE && EFI_TEXT_LOGGING
-
 struct LogLineBuffer {
 	char buffer[128];
 };
 
-class LogBuffer {
-public:
-	static constexpr size_t bufferSize = DL_OUTPUT_BUFFER;
+template <size_t TBufferSize>
+void LogBuffer<TBufferSize>::writeLine(LogLineBuffer* line) {
+	writeInternal(line->buffer);
+}
 
-	void writeLine(LogLineBuffer* line) {
-		writeInternal(line->buffer);
-	}
+template <size_t TBufferSize>
+void LogBuffer<TBufferSize>:: writeLogger(Logging* logging) {
+	writeInternal(logging->buffer);
+}
 
-	void writeLogger(Logging* logging) {
-		writeInternal(logging->buffer);
-	}
+template <size_t TBufferSize>
+size_t LogBuffer<TBufferSize>::length() {
+	return m_writePtr - m_buffer;
+}
 
-	size_t length() {
-		return m_writePtr - buffer;
-	}
+template <size_t TBufferSize>
+void LogBuffer<TBufferSize>::reset() {
+	m_writePtr = m_buffer;
+	memset(m_buffer, 0, TBufferSize);
+}
 
-	void reset() {
-		m_writePtr = buffer;
-		memset(buffer, 0, bufferSize);
-	}
+template <size_t TBufferSize>
+const char* LogBuffer<TBufferSize>::get() {
+	return m_buffer;
+}
 
-	const char* get() {
-		return buffer;
-	}
+template <size_t TBufferSize>
+void LogBuffer<TBufferSize>::writeInternal(const char* buffer) {
+	size_t len = efiStrlen(buffer);
+	size_t available = TBufferSize - length();
 
-private:
-	void writeInternal(const char* buffer) {
-		size_t len = efiStrlen(buffer);
-		size_t available = bufferSize - length();
+	// If we can't fit the whole thing, write as much as we can
+	len = minI(available, len);
+	memcpy(m_writePtr, m_buffer, len);
+	m_writePtr += len;
+}
 
-		// If we can't fit the whole thing, write as much as we can
-		len = minI(available, len);
-		memcpy(m_writePtr, buffer, len);
-		m_writePtr += len;
-	}
+template class LogBuffer<DL_OUTPUT_BUFFER>;
 
-	char buffer[bufferSize];
-	char* m_writePtr = buffer;
-};
+// for unit tests
+template class LogBuffer<20>;
+
+#if EFI_PROD_CODE && EFI_TEXT_LOGGING
 
 // This mutex protects the LogBuffer instances below
 chibios_rt::Mutex logBufferMutex;
@@ -68,9 +70,9 @@ chibios_rt::Mutex logBufferMutex;
 // Two buffers:
 //  - we copy line buffers to writeBuffer in LoggingBufferFlusher
 //  - and read from readBuffer via TunerStudio protocol commands
-LogBuffer buffers[2];
-LogBuffer* writeBuffer = &buffers[0];
-LogBuffer* readBuffer = &buffers[1];
+LogBuffer<DL_OUTPUT_BUFFER> buffers[2];
+LogBuffer<DL_OUTPUT_BUFFER>* writeBuffer = &buffers[0];
+LogBuffer<DL_OUTPUT_BUFFER>* readBuffer = &buffers[1];
 
 /**
  * Actual communication layer invokes this method when it's ready to send some data out

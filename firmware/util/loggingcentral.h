@@ -26,3 +26,22 @@ namespace priv
  * This is the legacy function to copy the contents of a local Logging object in to the output buffer
  */
 void scheduleLogging(Logging *logging);
+
+struct LogLineBuffer;
+
+template <size_t TBufferSize>
+class LogBuffer {
+public:
+	void writeLine(LogLineBuffer* line);
+	void writeLogger(Logging* logging);
+
+	size_t length();
+	void reset();
+	const char* get();
+
+private:
+	void writeInternal(const char* buffer);
+
+	char m_buffer[TBufferSize];
+	char* m_writePtr = m_buffer;
+};
