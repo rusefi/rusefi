@@ -13,7 +13,6 @@
 #include "os_access.h"
 #include "efilib.h"
 #include "loggingcentral.h"
-#include "perf_trace.h"
 
 #if EFI_UNIT_TEST || EFI_SIMULATOR
 extern bool verboseMode;
@@ -123,8 +122,6 @@ public:
 			LogLineBuffer* line;
 			msg_t msg = filledBuffers.fetch(&line, TIME_INFINITE);
 
-			ScopePerf perf(PE::Temporary2);
-
 			if (msg == MSG_RESET) {
 				// todo?
 			} else {
@@ -164,8 +161,6 @@ namespace priv
  */
 
 void scheduleMsgInternal(const char *format, ...) {
-	ScopePerf perf(PE::Temporary1);
-
 #if EFI_UNIT_TEST || EFI_SIMULATOR
 	if (verboseMode) {
 		va_list ap;
