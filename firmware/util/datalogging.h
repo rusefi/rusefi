@@ -87,12 +87,6 @@ extern "C"
 
 void printMsg(Logging *logging, const char *fmt, ...);
 
-/**
- * this method copies the line into the intermediate buffer for later output by
- * the main thread
- */
-void scheduleLogging(Logging *logging);
-
 #ifdef __cplusplus
 }
 #endif /* __cplusplus */

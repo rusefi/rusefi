@@ -12,127 +12,154 @@
 #include "global.h"
 #include "os_access.h"
 #include "efilib.h"
+#include "loggingcentral.h"
+#include "perf_trace.h"
 
 #if EFI_UNIT_TEST || EFI_SIMULATOR
 extern bool verboseMode;
 #endif /* EFI_UNIT_TEST */
 
-typedef char log_buf_t[DL_OUTPUT_BUFFER];
+#include "thread_controller.h"
+#include "thread_priority.h"
 
-/**
- * we need to leave a byte for zero terminator, also two bytes for the \r\n in
- * printWithLength, also couple of bytes just in case
- */
-#define MAX_DL_CAPACITY (DL_OUTPUT_BUFFER - 5)
-
-/**
- * This is the buffer into which all the data providers write
- */
-static char *accumulationBuffer;
-
-static log_buf_t pendingBuffers0;
-static log_buf_t pendingBuffers1;
-
-/**
- * We copy all the pending data into this buffer once we are ready to push it out
- */
-static char * outputBuffer;
-
-
-class LoggingCentral {
-public:
-	/**
-	 * Class constructors are a great way to have simple initialization sequence
-	 */
-	LoggingCentral() {
-		pendingBuffers0[0] = 0;
-		pendingBuffers1[0] = 0;
-		accumulationBuffer = pendingBuffers0;
-		outputBuffer = pendingBuffers1;
-		accumulatedSize = 0;
-	}
-
-	/**
-	 * amount of data accumulated so far
-	 */
-	uint32_t accumulatedSize;
+struct LogLineBuffer {
+	char buffer[128];
 };
 
-static LoggingCentral loggingCentral;
+class LogBuffer {
+public:
+	static constexpr size_t bufferSize = DL_OUTPUT_BUFFER;
 
-
-/**
- * This method appends the content of specified thread-local logger into the global buffer
- * of logging content.
- */
-static void scheduleLoggingInternal(Logging *logging) {
-#if EFI_TEXT_LOGGING
-#ifdef EFI_PRINT_MESSAGES_TO_TERMINAL
-	print(logging->buffer);
-	print("\r\n");
-#endif /* EFI_PRINT_MESSAGES_TO_TERMINAL */
-	// this could be done without locking
-	int newLength = efiStrlen(logging->buffer);
-
-	chibios_rt::CriticalSectionLocker csl;
-	if (loggingCentral.accumulatedSize + newLength >= MAX_DL_CAPACITY) {
-		/**
-		 * if no one is consuming the data we have to drop it
-		 * this happens in case of serial-over-USB, todo: find a better solution?
-		 */
-		return;
+	void writeLine(LogLineBuffer* line) {
+		writeInternal(line->buffer);
 	}
-	// memcpy is faster then strcpy because it is not looking for line terminator
-	memcpy(accumulationBuffer + loggingCentral.accumulatedSize, logging->buffer, newLength + 1);
-	loggingCentral.accumulatedSize += newLength;
-#endif /* EFI_TEXT_LOGGING */
-}
 
-void scheduleLogging(Logging* logging) {
-	scheduleLoggingInternal(logging);
-	logging->reset();
-}
+	void writeLogger(Logging* logging) {
+		writeInternal(logging->buffer);
+	}
+
+	size_t length() {
+		return m_writePtr - buffer;
+	}
+
+	void reset() {
+		m_writePtr = buffer;
+		memset(buffer, 0, bufferSize);
+	}
+
+	const char* get() {
+		return buffer;
+	}
+
+private:
+	void writeInternal(const char* buffer) {
+		size_t len = efiStrlen(buffer);
+		size_t available = bufferSize - length();
+
+		// If we can't fit the whole thing, write as much as we can
+		len = minI(available, len);
+		memcpy(m_writePtr, buffer, len);
+		m_writePtr += len;
+	}
+
+	char buffer[bufferSize];
+	char* m_writePtr = buffer;
+};
+
+
+chibios_rt::Mutex logBufferMutex;
+
+LogBuffer buffers[2];
+LogBuffer* currentBuffer = &buffers[0];
+LogBuffer* backBuffer = &buffers[1];
 
 /**
  * Actual communication layer invokes this method when it's ready to send some data out
  *
- * this method should always be invoked from the same thread!
  * @return pointer to the buffer which should be print to console
  */
-char * swapOutputBuffers(int *actualOutputBufferSize) {
-#if EFI_ENABLE_ASSERTS
-	int expectedOutputSize;
-#endif /* EFI_ENABLE_ASSERTS */
-	{ // start of critical section
-		chibios_rt::CriticalSectionLocker csl;
-		/**
-		 * we cannot output under syslock, we simply rotate which buffer is which
-		 */
-		char *temp = outputBuffer;
+const char * swapOutputBuffers(int *actualOutputBufferSize) {
+	{
+		chibios_rt::MutexLocker lock(logBufferMutex);
 
-#if EFI_ENABLE_ASSERTS
-		expectedOutputSize = loggingCentral.accumulatedSize;
-#endif /* EFI_ENABLE_ASSERTS */
-		outputBuffer = accumulationBuffer;
+		// Swap buffers under lock
+		auto temp = currentBuffer;
+		currentBuffer = backBuffer;
+		backBuffer = temp;
 
-		accumulationBuffer = temp;
-		loggingCentral.accumulatedSize = 0;
-		accumulationBuffer[0] = 0;
-	} // end of critical section
-
-	*actualOutputBufferSize = efiStrlen(outputBuffer);
-#if EFI_ENABLE_ASSERTS
-	if (*actualOutputBufferSize != expectedOutputSize) {
-		int sizeToShow = minI(10, *actualOutputBufferSize);
-		int offsetToShow = *actualOutputBufferSize - sizeToShow;
-		firmwareError(ERROR_LOGGING_SIZE_CALC, "lsize mismatch %d/%d [%s]", *actualOutputBufferSize, expectedOutputSize,
-				&outputBuffer[offsetToShow]);
-		return NULL;
+		// Reset the front buffer - it's now empty
+		currentBuffer->reset();
 	}
+
+	*actualOutputBufferSize = efiStrlen(backBuffer->get());
+#if EFI_ENABLE_ASSERTS
+
+	// size_t expectedOutputSize = backBuffer->length();
+
+	// if (*actualOutputBufferSize != expectedOutputSize) {
+	// 	int sizeToShow = minI(10, *actualOutputBufferSize);
+	// 	int offsetToShow = *actualOutputBufferSize - sizeToShow;
+	// 	firmwareError(ERROR_LOGGING_SIZE_CALC, "lsize mismatch %d/%d [%s]", *actualOutputBufferSize, expectedOutputSize,
+	// 			&outputBuffer[offsetToShow]);
+	// 	return nullptr;
+	// }
 #endif /* EFI_ENABLE_ASSERTS */
-	return outputBuffer;
+
+	scheduleMsg(nullptr, "swap");
+
+	return backBuffer->get();
 }
 
+constexpr size_t lineBufferCount = 32;
+
+static LogLineBuffer lineBuffers[lineBufferCount];
+
+// freeBuffers contains a queue of buffers that are not in use
+chibios_rt::Mailbox<LogLineBuffer*, lineBufferCount> freeBuffers;
+// filledBuffers contains a queue of buffers currently waiting to be written to the output buffer
+chibios_rt::Mailbox<LogLineBuffer*, lineBufferCount> filledBuffers;
+
+class LoggingBufferFlusher : public ThreadController<256> {
+public:
+	LoggingBufferFlusher() : ThreadController("lbf", PRIO_TEXT_LOG) { }
+
+	void ThreadTask() override {
+		while (true) {
+			// Fetch a queued message
+			LogLineBuffer* line;
+			msg_t msg = filledBuffers.fetch(&line, TIME_INFINITE);
+
+			ScopePerf perf(PE::Temporary2);
+
+			if (msg == MSG_RESET) {
+				// todo?
+			} else {
+				// Lock the buffer mutex - inhibit buffer swaps while writing
+				chibios_rt::MutexLocker lock(logBufferMutex);
+
+				// Write the line out to the output buffer
+				currentBuffer->writeLine(line);
+
+				// Return this line buffer to the free list
+				freeBuffers.post(line, TIME_INFINITE);
+			}
+		}
+	}
+};
+
+static LoggingBufferFlusher lbf;
+
+void startLoggingProcessor() {
+	// Push all buffers in to the free queue
+	for (size_t i = 0; i < lineBufferCount; i++) {
+		freeBuffers.post(&lineBuffers[i], TIME_INFINITE);
+	}
+
+	lbf.Start();
+}
+
+namespace priv
+{
 /**
  * rusEfi business logic invokes this method in order to eventually print stuff to rusEfi console
  *
@@ -141,7 +168,10 @@ char * swapOutputBuffers(int *actualOutputBufferSize) {
  *
  * this is really 'global lock + printf + scheduleLogging + unlock' a bit more clear
  */
-void scheduleMsg(Logging *logging, const char *format, ...) {
+
+void scheduleMsgInternal(const char *format, ...) {
+	ScopePerf perf(PE::Temporary1);
+
 #if EFI_UNIT_TEST || EFI_SIMULATOR
 	if (verboseMode) {
 		va_list ap;
@@ -151,28 +181,60 @@ void scheduleMsg(Logging *logging, const char *format, ...) {
 		printf("\r\n");
 	}
 #else
-	for (unsigned int i = 0;i<strlen(format);i++) {
+	for (unsigned int i = 0; i < strlen(format); i++) {
 		// todo: open question which layer would not handle CR/LF properly?
 		efiAssertVoid(OBD_PCM_Processor_Fault, format[i] != '\n', "No CRLF please");
 	}
 #if EFI_TEXT_LOGGING
-	if (logging == NULL) {
-		warning(CUSTOM_ERR_LOGGING_NULL, "logging NULL");
+
+	LogLineBuffer* lineBuffer;
+	msg_t msg;
+
+	{
+		chibios_rt::CriticalSectionLocker csl;
+		msg = freeBuffers.fetchI(&lineBuffer);
+	}
+
+	// No free buffers available, so we can't log
+	if (msg != MSG_OK) {
 		return;
 	}
 
-	chibios_rt::CriticalSectionLocker csl;
-	logging->reset(); // todo: is 'reset' really needed here?
-	appendMsgPrefix(logging);
-
 	va_list ap;
 	va_start(ap, format);
-	logging->vappendPrintf(format, ap);
+	// Write the formatted string to the output buffer
+	chvsnprintf(lineBuffer->buffer, sizeof(lineBuffer->buffer), format, ap);
 	va_end(ap);
 
-	appendMsgPostfix(logging);
-	scheduleLogging(logging);
+	{
+		chibios_rt::CriticalSectionLocker csl;
+		// Push the buffer in to the written list
+
+		if ((void*)lineBuffer == (void*)&filledBuffers) {
+			__asm volatile("BKPT #0\n");
+		}
+
+		filledBuffers.postI(lineBuffer);
+	}
+
+	// TODO: how do we detect if we need to call chSchRescheduleS()?
+	if (!((ch.dbg.isr_cnt != (cnt_t)0) || (ch.dbg.lock_cnt <= (cnt_t)0))) {
+		//chSchRescheduleS();
+	}
 #endif /* EFI_TEXT_LOGGING */
 #endif /* EFI_UNIT_TEST */
 }
+} // namespace priv
 
+/**
+ * This method appends the content of specified thread-local logger into the global buffer
+ * of logging content.
+ * 
+ * This is a legacy function, most normal logging should use scheduleMsg
+ */
+void scheduleLogging(Logging *logging) {
+	// Lock the buffer mutex - inhibit buffer swaps while writing
+	chibios_rt::MutexLocker lock(logBufferMutex);
+
+	currentBuffer->writeLogger(logging);
+}

@@ -164,6 +164,9 @@ void runRusEfi(void) {
 	efiAssertVoid(CUSTOM_RM_STACK_1, getCurrentRemainingStack() > 512, "init s");
 	assertEngineReference();
 	engine->setConfig();
+
+	startLoggingProcessor();
+
 	addConsoleAction(CMD_REBOOT, scheduleReboot);
 	addConsoleAction(CMD_REBOOT_DFU, jump_to_bootloader);
 
