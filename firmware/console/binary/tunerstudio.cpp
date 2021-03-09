@@ -650,6 +650,7 @@ static void handleGetVersion(TsChannelBase* tsChannel) {
 	tsChannel->sendResponse(TS_CRC, (const uint8_t *) versionBuffer, strlen(versionBuffer) + 1);
 }
 
+#if EFI_TEXT_LOGGING
 static void handleGetText(TsChannelBase* tsChannel) {
 	tsState.textCommandCounter++;
 
@@ -666,6 +667,7 @@ static void handleGetText(TsChannelBase* tsChannel) {
 			logMsg("sent [%d]\r\n", outputSize);
 #endif
 }
+#endif
 
 static void handleExecuteCommand(TsChannelBase* tsChannel, char *data, int incomingPacketSize) {
 	data[incomingPacketSize] = 0;
@@ -746,9 +748,11 @@ int TunerStudioBase::handleCrcCommand(TsChannelBase* tsChannel, char *data, int 
 		handleTsW(tsChannel, data);
 		break;
 #endif // (EFI_FILE_LOGGING && !HAL_USE_USB_MSD)
+#if EFI_TEXT_LOGGING
 	case TS_GET_TEXT:
 		handleGetText(tsChannel);
 		break;
+#endif // EFI_TEXT_LOGGING
 	case TS_EXECUTE:
 		handleExecuteCommand(tsChannel, data, incomingPacketSize - 1);
 		break;

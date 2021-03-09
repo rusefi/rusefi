@@ -165,7 +165,9 @@ void runRusEfi(void) {
 	assertEngineReference();
 	engine->setConfig();
 
+#if EFI_TEXT_LOGGING
 	startLoggingProcessor();
+#endif
 
 	addConsoleAction(CMD_REBOOT, scheduleReboot);
 	addConsoleAction(CMD_REBOOT_DFU, jump_to_bootloader);
