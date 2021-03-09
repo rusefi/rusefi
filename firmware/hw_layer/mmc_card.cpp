@@ -375,7 +375,6 @@ static BaseBlockDevice* initializeMmcBlockDevice() {
 	sdStatus = SD_STATE_CONNECTING;
 	if (mmcConnect(&MMCD1) != HAL_SUCCESS) {
 		sdStatus = SD_STATE_NOT_CONNECTED;
-		warning(CUSTOM_OBD_MMC_ERROR, "Can't connect or mount MMC/SD");
 		UNLOCK_SD_SPI;
 		return nullptr;
 	}
@@ -399,7 +398,6 @@ static BaseBlockDevice* initializeMmcBlockDevice() {
 	sdStatus = SD_STATE_CONNECTING;
 	if (sdcConnect(&EFI_SDC_DEVICE) != HAL_SUCCESS) {
 		sdStatus = SD_STATE_NOT_CONNECTED;
-		warning(CUSTOM_OBD_MMC_ERROR, "Can't connect or mount MMC/SD");
 		return nullptr;
 	}
 
