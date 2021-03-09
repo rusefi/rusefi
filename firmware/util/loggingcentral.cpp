@@ -65,12 +65,15 @@ private:
 	char* m_writePtr = buffer;
 };
 
-
+// This mutex protects the LogBuffer instances below
 chibios_rt::Mutex logBufferMutex;
 
+// Two buffers:
+//  - we copy line buffers to writeBuffer in LoggingBufferFlusher
+//  - and read from readBuffer via TunerStudio protocol commands
 LogBuffer buffers[2];
-LogBuffer* currentBuffer = &buffers[0];
-LogBuffer* backBuffer = &buffers[1];
+LogBuffer* writeBuffer = &buffers[0];
+LogBuffer* readBuffer = &buffers[1];
 
 /**
  * Actual communication layer invokes this method when it's ready to send some data out
@@ -82,29 +85,30 @@ const char * swapOutputBuffers(int *actualOutputBufferSize) {
 		chibios_rt::MutexLocker lock(logBufferMutex);
 
 		// Swap buffers under lock
-		auto temp = currentBuffer;
-		currentBuffer = backBuffer;
-		backBuffer = temp;
+		auto temp = writeBuffer;
+		writeBuffer = readBuffer;
+		readBuffer = temp;
 
 		// Reset the front buffer - it's now empty
-		currentBuffer->reset();
+		writeBuffer->reset();
 	}
 
-	*actualOutputBufferSize = backBuffer->length();
+	*actualOutputBufferSize = readBuffer->length();
 #if EFI_ENABLE_ASSERTS
-	size_t expectedOutputSize = efiStrlen(backBuffer->get());
+	size_t expectedOutputSize = efiStrlen(readBuffer->get());
 
+	// Check that the actual length of the buffer matches the expected length of how much we thought we wrote
 	if (*actualOutputBufferSize != expectedOutputSize) {
 		firmwareError(ERROR_LOGGING_SIZE_CALC, "lsize mismatch %d vs strlen %d", *actualOutputBufferSize, expectedOutputSize);
 
 		return nullptr;
 	}
 #endif /* EFI_ENABLE_ASSERTS */
-	return backBuffer->get();
+	return readBuffer->get();
 }
 
+// These buffers store lines queued to be written to the writeBuffer
 constexpr size_t lineBufferCount = 32;
-
 static LogLineBuffer lineBuffers[lineBufferCount];
 
 // freeBuffers contains a queue of buffers that are not in use
@@ -124,12 +128,13 @@ public:
 
 			if (msg == MSG_RESET) {
 				// todo?
+				// what happens if MSG_RESET?
 			} else {
 				// Lock the buffer mutex - inhibit buffer swaps while writing
 				chibios_rt::MutexLocker lock(logBufferMutex);
 
 				// Write the line out to the output buffer
-				currentBuffer->writeLine(line);
+				writeBuffer->writeLine(line);
 
 				// Return this line buffer to the free list
 				freeBuffers.post(line, TIME_INFINITE);
@@ -146,21 +151,13 @@ void startLoggingProcessor() {
 		freeBuffers.post(&lineBuffers[i], TIME_INFINITE);
 	}
 
+	// Start processing used buffers
 	lbf.Start();
 }
 
 namespace priv
 {
-/**
- * rusEfi business logic invokes this method in order to eventually print stuff to rusEfi console
- *
- * this whole method is executed under syslock so that we can have multiple threads use the same shared buffer
- * in order to reduce memory usage
- *
- * this is really 'global lock + printf + scheduleLogging + unlock' a bit more clear
- */
-
-void scheduleMsgInternal(const char *format, ...) {
+void efiPrintfInternal(const char *format, ...) {
 #if EFI_UNIT_TEST || EFI_SIMULATOR
 	if (verboseMode) {
 		va_list ap;
@@ -174,12 +171,12 @@ void scheduleMsgInternal(const char *format, ...) {
 		// todo: open question which layer would not handle CR/LF properly?
 		efiAssertVoid(OBD_PCM_Processor_Fault, format[i] != '\n', "No CRLF please");
 	}
-#if EFI_TEXT_LOGGING
 
 	LogLineBuffer* lineBuffer;
 	msg_t msg;
 
 	{
+		// Acquire a buffer we can write to
 		chibios_rt::CriticalSectionLocker csl;
 		msg = freeBuffers.fetchI(&lineBuffer);
 	}
@@ -189,15 +186,15 @@ void scheduleMsgInternal(const char *format, ...) {
 		return;
 	}
 
+	// Write the formatted string to the output buffer
 	va_list ap;
 	va_start(ap, format);
-	// Write the formatted string to the output buffer
 	chvsnprintf(lineBuffer->buffer, sizeof(lineBuffer->buffer), format, ap);
 	va_end(ap);
 
 	{
+		// Push the buffer in to the written list so it can be written back
 		chibios_rt::CriticalSectionLocker csl;
-		// Push the buffer in to the written list
 
 		if ((void*)lineBuffer == (void*)&filledBuffers) {
 			__asm volatile("BKPT #0\n");
@@ -205,12 +202,6 @@ void scheduleMsgInternal(const char *format, ...) {
 
 		filledBuffers.postI(lineBuffer);
 	}
-
-	// TODO: how do we detect if we need to call chSchRescheduleS()?
-	if (!((ch.dbg.isr_cnt != (cnt_t)0) || (ch.dbg.lock_cnt <= (cnt_t)0))) {
-		//chSchRescheduleS();
-	}
-#endif /* EFI_TEXT_LOGGING */
 #endif /* EFI_UNIT_TEST */
 }
 } // namespace priv
@@ -225,5 +216,5 @@ void scheduleLogging(Logging *logging) {
 	// Lock the buffer mutex - inhibit buffer swaps while writing
 	chibios_rt::MutexLocker lock(logBufferMutex);
 
-	currentBuffer->writeLogger(logging);
+	writeBuffer->writeLogger(logging);
 }
