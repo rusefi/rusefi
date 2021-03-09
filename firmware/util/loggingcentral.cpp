@@ -13,11 +13,6 @@
 #include "os_access.h"
 #include "efilib.h"
 #include "loggingcentral.h"
-
-#if EFI_UNIT_TEST || EFI_SIMULATOR
-extern bool verboseMode;
-#endif /* EFI_UNIT_TEST */
-
 #include "thread_controller.h"
 #include "thread_priority.h"
 
@@ -159,6 +154,7 @@ namespace priv
 {
 void efiPrintfInternal(const char *format, ...) {
 #if EFI_UNIT_TEST || EFI_SIMULATOR
+	extern bool verboseMode;
 	if (verboseMode) {
 		va_list ap;
 		va_start(ap, format);
