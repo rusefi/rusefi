@@ -57,8 +57,6 @@ void LogBuffer<TBufferSize>::writeInternal(const char* buffer) {
 	m_writePtr += len;
 }
 
-template class LogBuffer<DL_OUTPUT_BUFFER>;
-
 // for unit tests
 template class LogBuffer<20>;
 
@@ -70,9 +68,10 @@ chibios_rt::Mutex logBufferMutex;
 // Two buffers:
 //  - we copy line buffers to writeBuffer in LoggingBufferFlusher
 //  - and read from readBuffer via TunerStudio protocol commands
-LogBuffer<DL_OUTPUT_BUFFER> buffers[2];
-LogBuffer<DL_OUTPUT_BUFFER>* writeBuffer = &buffers[0];
-LogBuffer<DL_OUTPUT_BUFFER>* readBuffer = &buffers[1];
+using LB = LogBuffer<DL_OUTPUT_BUFFER>;
+LB buffers[2];
+LB* writeBuffer = &buffers[0];
+LB* readBuffer = &buffers[1];
 
 /**
  * Actual communication layer invokes this method when it's ready to send some data out
