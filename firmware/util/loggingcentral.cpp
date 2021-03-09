@@ -91,18 +91,15 @@ const char * swapOutputBuffers(int *actualOutputBufferSize) {
 		currentBuffer->reset();
 	}
 
-	*actualOutputBufferSize = efiStrlen(backBuffer->get());
+	*actualOutputBufferSize = backBuffer->length();
 #if EFI_ENABLE_ASSERTS
+	size_t expectedOutputSize = efiStrlen(backBuffer->get());
 
-	// size_t expectedOutputSize = backBuffer->length();
+	if (*actualOutputBufferSize != expectedOutputSize) {
+		firmwareError(ERROR_LOGGING_SIZE_CALC, "lsize mismatch %d vs strlen %d", *actualOutputBufferSize, expectedOutputSize);
 
-	// if (*actualOutputBufferSize != expectedOutputSize) {
-	// 	int sizeToShow = minI(10, *actualOutputBufferSize);
-	// 	int offsetToShow = *actualOutputBufferSize - sizeToShow;
-	// 	firmwareError(ERROR_LOGGING_SIZE_CALC, "lsize mismatch %d/%d [%s]", *actualOutputBufferSize, expectedOutputSize,
-	// 			&outputBuffer[offsetToShow]);
-	// 	return nullptr;
-	// }
+		return nullptr;
+	}
 #endif /* EFI_ENABLE_ASSERTS */
 	return backBuffer->get();
 }
