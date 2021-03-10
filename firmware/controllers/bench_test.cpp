@@ -78,9 +78,9 @@ void benchOff(OutputPin* output) {
 
 static void runBench(brain_pin_e brainPin, OutputPin *output, float delayMs, float onTimeMs, float offTimeMs,
 		int count) {
-	int delayUs = MS2US(maxF(1, delayMs));
-	int onTimeUs = MS2US(maxF(1, onTimeMs));
-	int offTimeUs = MS2US(maxF(1, offTimeMs));
+	int delayUs = MS2US(maxF(0.1, delayMs));
+	int onTimeUs = MS2US(maxF(0.1, onTimeMs));
+	int offTimeUs = MS2US(maxF(0.1, offTimeMs));
 
 	scheduleMsg(logger, "Running bench: ON_TIME=%.2f us OFF_TIME=%.2f us Counter=%d", onTimeUs, offTimeUs, count);
 	scheduleMsg(logger, "output on %s", hwPortname(brainPin));
@@ -88,6 +88,7 @@ static void runBench(brain_pin_e brainPin, OutputPin *output, float delayMs, flo
 	chThdSleepMicroseconds(delayUs);
 
 	isRunningBench = true;
+
 	for (int i = 0; i < count; i++) {
 		efitick_t nowNt = getTimeNowNt();
 		// start in a short time so the scheduler can precisely schedule the start event
@@ -101,6 +102,7 @@ static void runBench(brain_pin_e brainPin, OutputPin *output, float delayMs, flo
 		// Wait one full cycle time for the event + delay to happen
 		chThdSleepMicroseconds(onTimeUs + offTimeUs);
 	}
+
 	scheduleMsg(logger, "Done!");
 	isRunningBench = false;
 }
