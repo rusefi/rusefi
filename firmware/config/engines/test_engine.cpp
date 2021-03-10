@@ -112,7 +112,9 @@ void setProteusAnalogPwmTest(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 
 	// The idle control pin is connected to the default TPS input, analog volt 2
 	engineConfiguration->idle.solenoidPin = GPIOG_4;
-	engineConfiguration->idle.solenoidFrequency = 5000;
+
+	// 5893hz is coprime with the analog sample rate, 500hz, so hopefully we get less aliasing
+	engineConfiguration->idle.solenoidFrequency = 5893;
 
 	// Test range is 20% to 80%
 	engineConfiguration->tpsMin = 200;

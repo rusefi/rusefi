@@ -199,6 +199,9 @@ void TriggerWaveform::calculateExpectedEventCounts(bool useOnlyRisingEdgeForTrig
 	if (!shapeWithoutTdc && isSingleToothOnPrimaryChannel != !isSynchronizationNeeded) {
 		firmwareError(ERROR_TRIGGER_DRAMA, "trigger sync constraint violation");
 	}
+	if (isSingleToothOnPrimaryChannel) {
+		useOnlyPrimaryForSync = true;
+	}
 
 // todo: move the following logic from below here
 	//	if (!useOnlyRisingEdgeForTrigger || stateParam == TV_RISE) {

@@ -11,6 +11,7 @@
 #include "trigger_structure.h"
 #include "engine_configuration.h"
 #include "trigger_state_generated.h"
+#include "timer.h"
 
 class TriggerState;
 
@@ -109,7 +110,8 @@ public:
 	 */
 	bool shaft_is_synchronized;
 	efitick_t mostRecentSyncTime;
-	volatile efitick_t previousShaftEventTimeNt;
+
+	Timer previousEventTimer;
 
 	void setTriggerErrorState();
 

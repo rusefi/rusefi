@@ -24,7 +24,6 @@ void slowStartStopButtonCallback(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 void setMockVoltage(int hwChannel, float voltage DECLARE_ENGINE_PARAMETER_SUFFIX);
 #endif
 
-void setMockVBattVoltage(float voltage DECLARE_ENGINE_PARAMETER_SUFFIX);
 void setMockMapVoltage(float voltage DECLARE_ENGINE_PARAMETER_SUFFIX);
 void setMockAfrVoltage(float voltage DECLARE_ENGINE_PARAMETER_SUFFIX);
 void setMockMafVoltage(float voltage DECLARE_ENGINE_PARAMETER_SUFFIX);

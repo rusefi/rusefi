@@ -38,7 +38,12 @@
 #include "perf_trace.h"
 #include "thread_priority.h"
 
-static adcsample_t slowAdcSamples[ADC_MAX_CHANNELS_COUNT];
+/* Depth of the conversion buffer, channels are sampled X times each.*/
+#ifndef ADC_BUF_DEPTH_FAST
+#define ADC_BUF_DEPTH_FAST      4
+#endif
+
+static NO_CACHE adcsample_t slowAdcSamples[ADC_MAX_CHANNELS_COUNT];
 static NO_CACHE adcsample_t fastAdcSampleBuf[ADC_BUF_DEPTH_FAST * ADC_MAX_CHANNELS_COUNT];
 
 static adc_channel_mode_e adcHwChannelEnabled[HW_MAX_ADC_INDEX];
@@ -216,11 +221,6 @@ int getInternalAdcValue(const char *msg, adc_channel_e hwChannel) {
 		return value;
 	}
 #endif // EFI_USE_FAST_ADC
-
-	if (adcHwChannelEnabled[hwChannel] != ADC_SLOW) {
-		// todo: make this not happen during hardware continuous integration
-		warning(CUSTOM_OBD_WRONG_ADC_MODE, "ADC is off [%s] index=%d", msg, hwChannel);
-	}
 
 	return slowAdcSamples[hwChannel - 1];
 }
@@ -517,10 +517,6 @@ static SlowAdcController slowAdcController;
 
 void initAdcInputs() {
 	scheduleMsg(&logger, "initAdcInputs()");
-	if (ADC_BUF_DEPTH_FAST > MAX_ADC_GRP_BUF_DEPTH)
-		firmwareError(CUSTOM_ERR_ADC_DEPTH_FAST, "ADC_BUF_DEPTH_FAST too high");
-	if (ADC_BUF_DEPTH_SLOW > MAX_ADC_GRP_BUF_DEPTH)
-		firmwareError(CUSTOM_ERR_ADC_DEPTH_SLOW, "ADC_BUF_DEPTH_SLOW too high");
 
 	configureInputs();
 

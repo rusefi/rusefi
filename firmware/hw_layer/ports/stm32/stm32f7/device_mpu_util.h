@@ -20,3 +20,5 @@
 /* 3 x 8-bit transfer */
 #define SPI_CR1_24BIT_MODE 0
 #define SPI_CR2_24BIT_MODE SPI_CR2_DS_2 | SPI_CR2_DS_1 | SPI_CR2_DS_0
+
+#define ADC_MAX_VALUE 4095

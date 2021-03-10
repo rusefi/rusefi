@@ -319,7 +319,6 @@ public:
 	void onTriggerSignalEvent(efitick_t nowNt);
 	EngineState engineState;
 	SensorsState sensors;
-	efitick_t lastTriggerToothEventTimeNt = 0;
 	efitick_t mainRelayBenchStartNt = 0;
 
 	/**

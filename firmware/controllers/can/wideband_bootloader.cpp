@@ -1,6 +1,6 @@
 #include "global.h"
 
-#if EFI_WIDEBAND_FIRMWARE_UPDATE && HAL_USE_CAN
+#if EFI_WIDEBAND_FIRMWARE_UPDATE && EFI_CAN_SUPPORT
 
 #include "ch.h"
 #include "can_msg_tx.h"

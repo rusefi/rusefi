@@ -258,7 +258,6 @@ void updateDevConsoleState(void) {
 	if (hasFirmwareError()) {
 		scheduleMsg(&logger, "%s error: %s", CRITICAL_PREFIX, getFirmwareError());
 		warningEnabled = false;
-		scheduleLogging(&logger);
 		return;
 	}
 #endif /* EFI_PROD_CODE */
@@ -368,7 +367,7 @@ class CommunicationBlinkingTask : public PeriodicTimerController {
 	void PeriodicTask() override {
 		counter++;
 
-		bool lowVBatt = getVBatt(PASS_ENGINE_PARAMETER_SIGNATURE) < LOW_VBATT;
+		bool lowVBatt = Sensor::get(SensorType::BatteryVoltage).value_or(0) < LOW_VBATT;
 
 		if (counter == 1) {
 			// first invocation of BlinkingTask
@@ -543,9 +542,8 @@ void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels DECLARE_
 	tsOutputChannels->veTableYAxis = ENGINE(engineState.currentVeLoad);
 	tsOutputChannels->afrTableYAxis = ENGINE(engineState.currentAfrLoad);
 
-	// KLUDGE? we always show VBatt because Proteus board has VBatt input sensor hardcoded
 	// offset 28
-	tsOutputChannels->vBatt = getVBatt(PASS_ENGINE_PARAMETER_SIGNATURE);
+	tsOutputChannels->vBatt = Sensor::get(SensorType::BatteryVoltage).value_or(0);
 
 	// offset 36
 	tsOutputChannels->baroPressure = Sensor::get(SensorType::BarometricPressure).value_or(0);
