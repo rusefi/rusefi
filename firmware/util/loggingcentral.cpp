@@ -27,7 +27,7 @@ void LogBuffer<TBufferSize>:: writeLogger(Logging* logging) {
 }
 
 template <size_t TBufferSize>
-size_t LogBuffer<TBufferSize>::length() {
+size_t LogBuffer<TBufferSize>::length() const {
 	return m_writePtr - m_buffer;
 }
 
@@ -38,7 +38,7 @@ void LogBuffer<TBufferSize>::reset() {
 }
 
 template <size_t TBufferSize>
-const char* LogBuffer<TBufferSize>::get() {
+const char* LogBuffer<TBufferSize>::get() const {
 	return m_buffer;
 }
 

@@ -6,6 +6,8 @@
  */
 #pragma once
 
+#include <cstddef>
+
 class Logging;
 
 void startLoggingProcessor();
@@ -38,9 +40,9 @@ public:
 	void writeLine(LogLineBuffer* line);
 	void writeLogger(Logging* logging);
 
-	size_t length();
+	size_t length() const;
 	void reset();
-	const char* get();
+	const char* get() const;
 
 private:
 	void writeInternal(const char* buffer);
