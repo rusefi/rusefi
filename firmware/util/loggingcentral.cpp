@@ -54,11 +54,11 @@ void LogBuffer<TBufferSize>::writeInternal(const char* buffer) {
 	m_writePtr += len;
 
 	// Ensure the output buffer is always null terminated (in case we did a partial write)
-	m_buffer[TBufferSize - 1] = '\0';
+	*m_writePtr = '\0';
 }
 
 // for unit tests
-template class LogBuffer<20>;
+template class LogBuffer<10>;
 
 #if EFI_PROD_CODE && EFI_TEXT_LOGGING
 

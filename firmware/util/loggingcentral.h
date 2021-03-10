@@ -44,7 +44,9 @@ public:
 	void reset();
 	const char* get() const;
 
+#if !EFI_UNIT_TEST
 private:
+#endif
 	void writeInternal(const char* buffer);
 
 	char m_buffer[TBufferSize];
