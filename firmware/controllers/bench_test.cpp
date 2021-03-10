@@ -65,6 +65,17 @@ bool isRunningBenchTest(void) {
 	return isRunningBench;
 }
 
+static scheduling_s benchSchedStart;
+static scheduling_s benchSchedEnd;
+
+void benchOn(OutputPin* output) {
+	output->setValue(true);
+}
+
+void benchOff(OutputPin* output) {
+	output->setValue(false);
+}
+
 static void runBench(brain_pin_e brainPin, OutputPin *output, float delayMs, float onTimeMs, float offTimeMs,
 		int count) {
 	int delayUs = MS2US(maxF(1, delayMs));
@@ -78,10 +89,17 @@ static void runBench(brain_pin_e brainPin, OutputPin *output, float delayMs, flo
 
 	isRunningBench = true;
 	for (int i = 0; i < count; i++) {
-		output->setValue(true);
-		chThdSleepMicroseconds(onTimeUs);
-		output->setValue(false);
-		chThdSleepMicroseconds(offTimeUs);
+		efitick_t nowNt = getTimeNowNt();
+		// start in a short time so the scheduler can precisely schedule the start event
+		efitick_t startTime = nowNt + US2NT(50);
+		efitick_t endTime = startTime + US2NT(onTimeUs);
+
+		// Schedule both events
+		engine->executor.scheduleByTimestampNt(&benchSchedStart, startTime, {benchOn, output});
+		engine->executor.scheduleByTimestampNt(&benchSchedEnd, endTime, {benchOff, output});
+
+		// Wait one full cycle time for the event + delay to happen
+		chThdSleepMicroseconds(onTimeUs + offTimeUs);
 	}
 	scheduleMsg(logger, "Done!");
 	isRunningBench = false;
