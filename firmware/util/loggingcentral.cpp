@@ -16,10 +16,6 @@
 #include "thread_controller.h"
 #include "thread_priority.h"
 
-struct LogLineBuffer {
-	char buffer[128];
-};
-
 template <size_t TBufferSize>
 void LogBuffer<TBufferSize>::writeLine(LogLineBuffer* line) {
 	writeInternal(line->buffer);
@@ -49,11 +45,12 @@ const char* LogBuffer<TBufferSize>::get() {
 template <size_t TBufferSize>
 void LogBuffer<TBufferSize>::writeInternal(const char* buffer) {
 	size_t len = efiStrlen(buffer);
-	size_t available = TBufferSize - length();
+	// leave one byte extra at the end to guarantee room for a null terminator
+	size_t available = TBufferSize - length() - 1;
 
 	// If we can't fit the whole thing, write as much as we can
 	len = minI(available, len);
-	memcpy(m_writePtr, m_buffer, len);
+	memcpy(m_writePtr, buffer, len);
 	m_writePtr += len;
 
 	// Ensure the output buffer is always null terminated (in case we did a partial write)
