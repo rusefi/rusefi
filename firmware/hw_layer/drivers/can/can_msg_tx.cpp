@@ -11,6 +11,7 @@
 #include "global.h"
 
 #if EFI_CAN_SUPPORT
+#include "can.h"
 #include "can_msg_tx.h"
 #include "engine_configuration.h"
 
@@ -27,10 +28,24 @@ extern int canWriteNotOk;
 }
 
 CanTxMessage::CanTxMessage(uint32_t eid, uint8_t dlc, bool isExtended) {
+#ifndef STM32H7XX
+	// ST bxCAN device
 	m_frame.IDE = isExtended ? CAN_IDE_EXT : CAN_IDE_STD;
-	m_frame.EID = eid;
 	m_frame.RTR = CAN_RTR_DATA;
+#else /* if STM32H7XX */
+	// Bosch M_CAN FDCAN device
+	m_frame.common.XTD = isExtended;
+	m_frame.common.RTR = 0;
+#endif
+
+	if (isExtended) {
+		CAN_EID(m_frame) = eid;
+	} else {
+		CAN_SID(m_frame) = eid;
+	}
+
 	m_frame.DLC = dlc;
+
 	memset(m_frame.data8, 0, sizeof(m_frame.data8));
 }
 
@@ -43,7 +58,7 @@ CanTxMessage::~CanTxMessage() {
 	}
 
 	if (CONFIG(debugMode) == DBG_CAN) {
-		scheduleMsg(&sharedLogger, "Sending CAN message: SID %x/%x %x %x %x %x %x %x %x %x", m_frame.SID, m_frame.DLC,
+		scheduleMsg(&sharedLogger, "Sending CAN message: SID %x/%x %x %x %x %x %x %x %x %x", CAN_SID(m_frame), m_frame.DLC,
 				m_frame.data8[0], m_frame.data8[1],
 				m_frame.data8[2], m_frame.data8[3],
 				m_frame.data8[4], m_frame.data8[5],
