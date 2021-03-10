@@ -55,6 +55,9 @@ void LogBuffer<TBufferSize>::writeInternal(const char* buffer) {
 	len = minI(available, len);
 	memcpy(m_writePtr, m_buffer, len);
 	m_writePtr += len;
+
+	// Ensure the output buffer is always null terminated (in case we did a partial write)
+	m_buffer[TBufferSize - 1] = '\0';
 }
 
 // for unit tests
