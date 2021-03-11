@@ -904,7 +904,6 @@ static void enableOrDisable(const char *param, bool isEnabled) {
 		} else {
 			disableTriggerStimulator();
 		}
-	}
 #endif
 	} else if (strEqualCaseInsensitive(param, "engine_control")) {
 		engineConfiguration->isEngineControlEnabled = isEnabled;
