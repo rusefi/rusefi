@@ -345,7 +345,7 @@ static void handleCommandX14(uint16_t index) {
 #endif /* EFI_INTERNAL_FLASH */
 		return;
 	case 0xD:
-		engine->directSelfStimulation = true;
+		enableTriggerStimulator();
 		return;
 #if EFI_ELECTRONIC_THROTTLE_BODY
 	case 0xE:
@@ -365,7 +365,7 @@ static void handleCommandX14(uint16_t index) {
 		return;
 #endif
 	case 0xF:
-		engine->directSelfStimulation = false;
+		disableTriggerStimulator();
 		return;
 	case 0x12:
 		widebandUpdatePending = true;

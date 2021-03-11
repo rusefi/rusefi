@@ -86,7 +86,6 @@ PwmConfig triggerSignal(pwmSwitchTimesBuffer, sr);
 #define DO_NOT_STOP 999999999
 
 static int stopEmulationAtIndex = DO_NOT_STOP;
-static bool isEmulating = true;
 
 static Logging *logger;
 static int atTriggerVersion = 0;
@@ -135,13 +134,6 @@ static TriggerEmulatorHelper helper;
 static bool hasStimPins = false;
 
 static void emulatorApplyPinState(int stateIndex, PwmConfig *state) /* pwm_gen_callback */ {
-	if (stopEmulationAtIndex == stateIndex) {
-		isEmulating = false;
-	}
-	if (!isEmulating) {
-		return;
-	}
-
 	if (engine->directSelfStimulation) {
 		/**
 		 * this callback would invoke the input signal handlers directly
@@ -155,20 +147,16 @@ static void emulatorApplyPinState(int stateIndex, PwmConfig *state) /* pwm_gen_c
 		applyPinState(stateIndex, state);
 	}
 #endif /* EFI_PROD_CODE */
-
 }
 
-static void setEmulatorAtIndex(int index) {
-	stopEmulationAtIndex = index;
-}
+static bool hasInitTriggerEmulator = false;
+void enableTriggerStimulator() {
+	engine->directSelfStimulation = true;
 
-static void resumeStimulator() {
-	isEmulating = true;
-	stopEmulationAtIndex = DO_NOT_STOP;
-}
-
-void initTriggerEmulatorLogic(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX) {
-	logger = sharedLogger;
+	// No need to start more than once
+	if (hasInitTriggerEmulator) {
+		return;
+	}
 
 	TriggerWaveform *s = &engine->triggerCentral.triggerShape;
 	setTriggerEmulatorRPM(engineConfiguration->triggerSimulatorFrequency PASS_ENGINE_PARAMETER_SUFFIX);
@@ -183,9 +171,18 @@ void initTriggerEmulatorLogic(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUF
 			phaseCount, s->wave.switchTimes, PWM_PHASE_MAX_WAVE_PER_PWM,
 			pinStates, updateTriggerWaveformIfNeeded, (pwm_gen_callback*)emulatorApplyPinState);
 
+	hasInitTriggerEmulator = true;
+}
+
+void disableTriggerSimulator() {
+	engine->directSelfStimulation = false;
+	triggerSignal.stop();
+}
+
+void initTriggerEmulatorLogic(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX) {
+	logger = sharedLogger;
+
 	addConsoleActionI(CMD_RPM, setTriggerEmulatorRPM);
-	addConsoleActionI("stop_stimulator_at_index", setEmulatorAtIndex);
-	addConsoleAction("resume_stimulator", resumeStimulator);
 }
 
 void onConfigurationChangeRpmEmulatorCallback(engine_configuration_s *previousConfiguration) {
