@@ -42,6 +42,7 @@
 #include "cj125.h"
 #include "malfunction_central.h"
 #include "tunerstudio_outputs.h"
+#include "trigger_emulator_algo.h"
 
 #if EFI_WIDEBAND_FIRMWARE_UPDATE
 #include "can.h"
@@ -81,6 +82,11 @@ static void runBench(brain_pin_e brainPin, OutputPin *output, float delayMs, flo
 	int delayUs = MS2US(maxF(0.1, delayMs));
 	int onTimeUs = MS2US(maxF(0.1, onTimeMs));
 	int offTimeUs = MS2US(maxF(0.1, offTimeMs));
+
+	if (onTimeUs > TOO_FAR_INTO_FUTURE_US) {
+		firmwareError(CUSTOM_ERR_6703, "onTime above limit %dus", TOO_FAR_INTO_FUTURE_US);
+		return;
+	}
 
 	scheduleMsg(logger, "Running bench: ON_TIME=%.2f us OFF_TIME=%.2f us Counter=%d", onTimeUs, offTimeUs, count);
 	scheduleMsg(logger, "output on %s", hwPortname(brainPin));
@@ -344,9 +350,17 @@ static void handleCommandX14(uint16_t index) {
 		writeToFlashNow();
 #endif /* EFI_INTERNAL_FLASH */
 		return;
+#if EFI_EMULATE_POSITION_SENSORS
 	case 0xD:
-		engine->directSelfStimulation = true;
+		enableTriggerStimulator();
 		return;
+	case 0xF:
+		disableTriggerStimulator();
+		return;
+	case 0x13:
+		enableExternalTriggerStimulator();
+		return;
+#endif // EFI_EMULATE_POSITION_SENSORS
 #if EFI_ELECTRONIC_THROTTLE_BODY
 	case 0xE:
 		etbAutocal(0);
@@ -364,9 +378,6 @@ static void handleCommandX14(uint16_t index) {
 #endif // EFI_TUNER_STUDIO
 		return;
 #endif
-	case 0xF:
-		engine->directSelfStimulation = false;
-		return;
 	case 0x12:
 		widebandUpdatePending = true;
 		return;
