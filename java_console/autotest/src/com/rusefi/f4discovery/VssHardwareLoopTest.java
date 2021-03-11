@@ -28,7 +28,7 @@ public class VssHardwareLoopTest extends RusefiTestBase {
     @Test
     public void test() {
         ecu.setEngineType(ET_FRANKENSO_MIATA_NA6);
-        ecu.sendCommand(getDisableCommand(Fields.CMD_SELF_STIMULATION));
+        ecu.sendCommand(getEnableCommand(Fields.CMD_EXTERNAL_STIMULATION));
         ecu.changeRpm(1400);
 
         // moving second trigger to another pin
@@ -38,7 +38,6 @@ public class VssHardwareLoopTest extends RusefiTestBase {
 
         // attaching VSS to trigger simulator since there is a jumper on test discovery
         ecu.sendCommand("set " + CMD_VSS_PIN + " pa5");
-        ecu.sendCommand(getDisableCommand(Fields.CMD_EXTERNAL_STIMULATION));
 
         sleep(2 * Timeouts.SECOND);
 
