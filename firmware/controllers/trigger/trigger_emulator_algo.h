@@ -19,6 +19,10 @@ void stopTriggerEmulatorPins();
 void setTriggerEmulatorRPM(int value DECLARE_ENGINE_PARAMETER_SUFFIX);
 void onConfigurationChangeRpmEmulatorCallback(engine_configuration_s *previousConfiguration);
 
+// Start & stop trigger emulation
+void enableTriggerStimulator();
+void enableExternalTriggerStimulator();
+void disableTriggerStimulator();
 
 class TriggerEmulatorHelper {
 public:

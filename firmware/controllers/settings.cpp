@@ -891,8 +891,20 @@ static void enableOrDisable(const char *param, bool isEnabled) {
 		engineConfiguration->invertCamVVTSignal = isEnabled;
 	} else if (strEqualCaseInsensitive(param, CMD_IGNITION)) {
 		engineConfiguration->isIgnitionEnabled = isEnabled;
+#if EFI_EMULATE_POSITION_SENSORS
 	} else if (strEqualCaseInsensitive(param, CMD_SELF_STIMULATION)) {
-		engine->directSelfStimulation = isEnabled;
+		if (isEnabled) {
+			enableTriggerStimulator();
+		} else {
+			disableTriggerStimulator();
+		}
+	} else if (strEqualCaseInsensitive(param, CMD_EXTERNAL_STIMULATION)) {
+		if (isEnabled) {
+			enableExternalTriggerStimulator();
+		} else {
+			disableTriggerStimulator();
+		}
+#endif
 	} else if (strEqualCaseInsensitive(param, "engine_control")) {
 		engineConfiguration->isEngineControlEnabled = isEnabled;
 	} else if (strEqualCaseInsensitive(param, "map_avg")) {
