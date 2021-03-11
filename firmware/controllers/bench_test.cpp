@@ -352,6 +352,9 @@ static void handleCommandX14(uint16_t index) {
 	case 0xF:
 		disableTriggerStimulator();
 		return;
+	case 0x13:
+		enableExternalTriggerStimulator();
+		return;
 #endif // EFI_EMULATE_POSITION_SENSORS
 #if EFI_ELECTRONIC_THROTTLE_BODY
 	case 0xE:

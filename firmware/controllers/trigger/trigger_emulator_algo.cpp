@@ -150,9 +150,8 @@ static void emulatorApplyPinState(int stateIndex, PwmConfig *state) /* pwm_gen_c
 }
 
 static bool hasInitTriggerEmulator = false;
-void enableTriggerStimulator() {
-	engine->directSelfStimulation = true;
 
+static void initTriggerPwm() {
 	// No need to start more than once
 	if (hasInitTriggerEmulator) {
 		return;
@@ -172,6 +171,16 @@ void enableTriggerStimulator() {
 			pinStates, updateTriggerWaveformIfNeeded, (pwm_gen_callback*)emulatorApplyPinState);
 
 	hasInitTriggerEmulator = true;
+}
+
+void enableTriggerStimulator() {
+	initTriggerPwm();
+	engine->directSelfStimulation = true;
+}
+
+void enableExternalTriggerSimulator() {
+	initTriggerPwm();
+	engine->directSelfStimulation = false;
 }
 
 void disableTriggerStimulator() {

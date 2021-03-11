@@ -21,6 +21,7 @@ void onConfigurationChangeRpmEmulatorCallback(engine_configuration_s *previousCo
 
 // Start & stop trigger emulation
 void enableTriggerStimulator();
+void enableExternalTriggerStimulator();
 void disableTriggerStimulator();
 
 class TriggerEmulatorHelper {
