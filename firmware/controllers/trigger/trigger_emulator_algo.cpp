@@ -186,6 +186,7 @@ void enableExternalTriggerStimulator() {
 void disableTriggerStimulator() {
 	engine->directSelfStimulation = false;
 	triggerSignal.stop();
+	hasInitTriggerEmulator = false;
 }
 
 void initTriggerEmulatorLogic(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX) {
