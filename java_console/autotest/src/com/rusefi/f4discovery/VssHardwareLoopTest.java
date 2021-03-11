@@ -38,6 +38,7 @@ public class VssHardwareLoopTest extends RusefiTestBase {
 
         // attaching VSS to trigger simulator since there is a jumper on test discovery
         ecu.sendCommand("set " + CMD_VSS_PIN + " pa5");
+        ecu.sendCommand(getDisableCommand(Fields.CMD_EXTERNAL_STIMULATION));
 
         sleep(2 * Timeouts.SECOND);
 
