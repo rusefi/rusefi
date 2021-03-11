@@ -42,6 +42,7 @@
 #include "cj125.h"
 #include "malfunction_central.h"
 #include "tunerstudio_outputs.h"
+#include "trigger_emulator_algo.h"
 
 #if EFI_WIDEBAND_FIRMWARE_UPDATE
 #include "can.h"

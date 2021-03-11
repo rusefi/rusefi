@@ -893,9 +893,9 @@ static void enableOrDisable(const char *param, bool isEnabled) {
 		engineConfiguration->isIgnitionEnabled = isEnabled;
 	} else if (strEqualCaseInsensitive(param, CMD_SELF_STIMULATION)) {
 		if (isEnabled) {
-			enableTriggerSimulator();
+			enableTriggerStimulator();
 		} else {
-			disableTriggerSimulator()
+			disableTriggerStimulator();
 		}
 	} else if (strEqualCaseInsensitive(param, "engine_control")) {
 		engineConfiguration->isEngineControlEnabled = isEnabled;

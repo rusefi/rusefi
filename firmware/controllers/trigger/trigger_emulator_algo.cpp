@@ -174,7 +174,7 @@ void enableTriggerStimulator() {
 	hasInitTriggerEmulator = true;
 }
 
-void disableTriggerSimulator() {
+void disableTriggerStimulator() {
 	engine->directSelfStimulation = false;
 	triggerSignal.stop();
 }
