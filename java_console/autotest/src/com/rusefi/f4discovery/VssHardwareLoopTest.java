@@ -9,7 +9,7 @@ import com.rusefi.core.SensorCentral;
 import com.rusefi.functional_tests.EcuTestHelper;
 import org.junit.Test;
 
-import static com.rusefi.IoUtil.getDisableCommand;
+import static com.rusefi.IoUtil.getEnableCommand;
 import static com.rusefi.binaryprotocol.BinaryProtocol.sleep;
 import static com.rusefi.config.generated.Fields.*;
 
