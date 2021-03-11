@@ -178,7 +178,7 @@ void enableTriggerStimulator() {
 	engine->directSelfStimulation = true;
 }
 
-void enableExternalTriggerSimulator() {
+void enableExternalTriggerStimulator() {
 	initTriggerPwm();
 	engine->directSelfStimulation = false;
 }
