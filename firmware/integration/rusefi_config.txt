@@ -1953,6 +1953,7 @@ end_struct
 #define ts_show_auxserial_pins true
 #define ts_show_can2 true
 #define ts_show_software_knock false
+#define ts_show_hardware_simulator true
 
 #define show_test_presets true
 #define show_Frankenso_presets true
