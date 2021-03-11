@@ -33,6 +33,14 @@ All notable user-facing or behavior-altering changes will be documented in this 
  - TriTach trigger https://github.com/rusefi/rusefi/wiki/All-Supported-Triggers#tritach
  - Skoda Favorit trigger https://github.com/rusefi/rusefi/wiki/All-Supported-Triggers#skoda-favorit
  - Add fallback logic handling failed MAP sensor.  In case of failed MAP, ses either a fixed MAP value, or a table that estimates MAP based on TPS and RPM.
+ - H7 is mostly working
+
+### Fixed
+ - bench test should be more precise #2440
+ - F7 don't cache mcu temp samples at all #2392
+
+### Breaking Changes
+ - VVT target is now taken from VVT not FSIO table #2243
 
 ### 2021 Printing Ink Day
 
