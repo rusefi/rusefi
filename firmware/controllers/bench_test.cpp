@@ -345,9 +345,14 @@ static void handleCommandX14(uint16_t index) {
 		writeToFlashNow();
 #endif /* EFI_INTERNAL_FLASH */
 		return;
+#if EFI_EMULATE_POSITION_SENSORS
 	case 0xD:
 		enableTriggerStimulator();
 		return;
+	case 0xF:
+		disableTriggerStimulator();
+		return;
+#endif // EFI_EMULATE_POSITION_SENSORS
 #if EFI_ELECTRONIC_THROTTLE_BODY
 	case 0xE:
 		etbAutocal(0);
@@ -365,9 +370,6 @@ static void handleCommandX14(uint16_t index) {
 #endif // EFI_TUNER_STUDIO
 		return;
 #endif
-	case 0xF:
-		disableTriggerStimulator();
-		return;
 	case 0x12:
 		widebandUpdatePending = true;
 		return;
