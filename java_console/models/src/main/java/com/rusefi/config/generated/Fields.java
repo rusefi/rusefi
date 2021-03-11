@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Sat Mar 06 02:08:20 UTC 2021
+// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Wed Mar 10 22:58:01 PST 2021
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -227,6 +227,7 @@ public class Fields {
 	public static final String CMD_ENGINE_TYPE = "engine_type";
 	public static final String CMD_ENGINESNIFFERRPMTHRESHOLD = "engineSnifferRpmThreshold";
 	public static final String CMD_ETB_DUTY = "set_etb_duty";
+	public static final String CMD_EXTERNAL_STIMULATION = "ext_stimulation";
 	public static final String CMD_FUEL_BENCH = "fuelbench";
 	public static final String CMD_FUNCTIONAL_TEST_MODE = "test_mode";
 	public static final String CMD_HPFP_BENCH = "hpfpbench";
