@@ -292,7 +292,7 @@ void Engine::updateSlowSensors(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 
 #if (BOARD_TLE8888_COUNT > 0)
 	// nasty value injection into C driver which would not be able to access Engine class
-	vBattForTle8888 = sensors.vBatt;
+	vBattForTle8888 = Sensor::get(SensorType::BatteryVoltage).value_or(VBAT_FALLBACK_VALUE);
 #endif /* BOARD_TLE8888_COUNT */
 
 #if EFI_MC33816
@@ -556,7 +556,7 @@ void Engine::checkShutdown(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 		// if the ignition key is turned on again,
 		// we cancel the shutdown mode, but only if all shutdown procedures are complete
 		const float vBattThresholdOn = 8.0f;
-		if ((sensors.vBatt > vBattThresholdOn) && !isInShutdownMode(PASS_ENGINE_PARAMETER_SIGNATURE)) {
+		if ((Sensor::get(SensorType::BatteryVoltage).value_or(VBAT_FALLBACK_VALUE) > vBattThresholdOn) && !isInShutdownMode(PASS_ENGINE_PARAMETER_SIGNATURE)) {
 			ignitionOnTimeNt = getTimeNowNt();
 			stopEngineRequestTimeNt = 0;
 			scheduleMsg(&engineLogger, "Ignition voltage detected! Cancel the engine shutdown!");
@@ -578,7 +578,7 @@ bool Engine::isInShutdownMode(DECLARE_ENGINE_PARAMETER_SIGNATURE) const {
 	if (stopEngineRequestTimeNt == 0 && ignitionOnTimeNt > 0) {
 		const float vBattThresholdOff = 5.0f;
 		// start the shutdown process if the ignition voltage dropped low
-		if (sensors.vBatt <= vBattThresholdOff) {
+		if (Sensor::get(SensorType::BatteryVoltage).value_or(VBAT_FALLBACK_VALUE) <= vBattThresholdOff) {
 			scheduleStopEngine();
 		}
 	}

@@ -474,7 +474,7 @@ static void mcRestart() {
 
 	driven.setValue(0); // ensure driven is off
 
-	if (engine->sensors.vBatt < LOW_VBATT) {
+	if (Sensor::get(SensorType::BatteryVoltage).value_or(VBAT_FALLBACK_VALUE) < LOW_VBATT) {
 		scheduleMsg(logger, "GDI not Restarting until we see VBatt");
 		return;
 	}
@@ -570,7 +570,7 @@ void initMc33816IfNeeded() {
 	if (!haveMc33816) {
 		return;
 	}
-	if (engine->sensors.vBatt < LOW_VBATT) {
+	if (Sensor::get(SensorType::BatteryVoltage).value_or(VBAT_FALLBACK_VALUE) < LOW_VBATT) {
 		isInitializaed = false;
 	} else {
 		if (!isInitializaed) {
