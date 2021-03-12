@@ -78,7 +78,7 @@ float InjectorModel::getInjectorMassFlowRate() const {
 
 float InjectorModel::getDeadtime() const {
 	return interpolate2d(
-		ENGINE(sensors.vBatt),
+		Sensor::get(SensorType::BatteryVoltage).value_or(VBAT_FALLBACK_VALUE),
 		engineConfiguration->injector.battLagCorrBins,
 		engineConfiguration->injector.battLagCorr
 	);

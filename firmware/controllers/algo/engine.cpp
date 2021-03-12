@@ -288,8 +288,6 @@ void Engine::updateSlowSensors(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 				fuelLevelVoltage);
 	}
 
-	sensors.vBatt = Sensor::get(SensorType::BatteryVoltage).value_or(VBAT_FALLBACK_VALUE);
-
 #if (BOARD_TLE8888_COUNT > 0)
 	// nasty value injection into C driver which would not be able to access Engine class
 	vBattForTle8888 = Sensor::get(SensorType::BatteryVoltage).value_or(VBAT_FALLBACK_VALUE);
