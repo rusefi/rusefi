@@ -29,6 +29,7 @@ private:
 	}
 
 	bool hasSensor() const override {
+		// query if the underlying sensor exists
 		return Sensor::hasSensor(m_proxiedSensor);
 	}
 

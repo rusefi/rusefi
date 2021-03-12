@@ -95,6 +95,11 @@ public:
 		// Get the sensor out of the entry
 		const Sensor *s = m_sensor;
 		if (s) {
+			// If this sensor says it doesn't exist, return unexpected
+			if (!s->hasSensor()) {
+				return unexpected;
+			}
+
 			// If we found the sensor, ask it for a result.
 			return s->get();
 		}
