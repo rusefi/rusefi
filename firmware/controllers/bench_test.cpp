@@ -89,7 +89,7 @@ static void runBench(brain_pin_e brainPin, OutputPin *output, float delayMs, flo
 		return;
 	}
 
-	scheduleMsg(logger, "Running bench: ON_TIME=%.2f us OFF_TIME=%.2f us Counter=%d", onTimeUs, offTimeUs, count);
+	scheduleMsg(logger, "Running bench: ON_TIME=%d us OFF_TIME=%d us Counter=%d", onTimeUs, offTimeUs, count);
 	scheduleMsg(logger, "output on %s", hwPortname(brainPin));
 
 	chThdSleepMicroseconds(delayUs);
