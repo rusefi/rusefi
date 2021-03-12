@@ -36,7 +36,7 @@ public:
 
 	Accelerometer accelerometer;
 
-	// todo: remove this variable, replace with Sensor::get(SensorType::vbatt).value_or(VBAT_FALLBACK_VALUE)
+	// todo: remove this variable, replace with Sensor::get(SensorType::BatteryVoltage).value_or(VBAT_FALLBACK_VALUE)
 	// todo: https://github.com/rusefi/rusefi/issues/2260
 	float vBatt = 0;
 	/**

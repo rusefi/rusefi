@@ -8,6 +8,8 @@
 
 #pragma once
 
+#define VBAT_FALLBACK_VALUE 12
+
 /**
  **************************************
  * SEE sensor.h ON HOW TO ADD NEW SENSOR TYPES
