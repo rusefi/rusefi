@@ -28,5 +28,9 @@ private:
 		return Sensor::get(m_proxiedSensor);
 	}
 
+	bool hasSensor() const override {
+		return Sensor::hasSensor(m_proxiedSensor);
+	}
+
 	SensorType m_proxiedSensor = SensorType::Invalid;
 };

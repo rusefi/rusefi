@@ -118,7 +118,7 @@ public:
 	}
 
 	bool hasSensor() const {
-		return m_useMock || m_sensor;
+		return m_useMock || (m_sensor && m_sensor->hasSensor());
 	}
 
 	float getRaw() const {

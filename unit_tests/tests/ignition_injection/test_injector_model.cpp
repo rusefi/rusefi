@@ -1,6 +1,7 @@
 #include "engine_test_helper.h"
 #include "injector_model.h"
 #include "mocks.h"
+#include "mock/mock_sensor.h"
 
 #include "gtest/gtest.h"
 
@@ -169,7 +170,27 @@ TEST(InjectorModel, FailedPressureSensor) {
 	engineConfiguration->injectorCompensationMode = ICM_SensedRailPressure;
 
 	// Sensor is broken!
-	Sensor::resetMockValue(SensorType::FuelPressureInjector);
+	// We have to register a broken sensor because the fuel pressure comp system
+	// has different logic for missing sensor
+	MockSensor ms(SensorType::FuelPressureInjector);
+	ms.invalidate();
+	ms.Register();
 
 	EXPECT_EQ(1.0f, dut.getInjectorFlowRatio());
+}
+
+TEST(InjectorModel, MissingPressureSensor) {
+	InjectorModel dut;
+
+	WITH_ENGINE_TEST_HELPER(TEST_ENGINE);
+	INJECT_ENGINE_REFERENCE(&dut);
+
+	// Reference pressure is 350kpa
+	engineConfiguration->injectorCompensationMode = ICM_SensedRailPressure;
+
+	// Sensor is missing!
+	Sensor::resetMockValue(SensorType::FuelPressureInjector);
+
+	// Missing sensor should trigger a fatal as it's a misconfiguration
+	EXPECT_FATAL_ERROR(dut.getInjectorFlowRatio());
 }
