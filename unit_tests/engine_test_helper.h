@@ -53,8 +53,8 @@ public:
 	 */
 	void smartFireRise(float delayMs);
 	void smartFireFall(float delayMs);
-	void smartMoveTimeForwardUs(int deltaTimeUs);
-	void smartMoveTimeForwardSeconds(int deltaTimeSeconds);
+	void moveTimeForwardAndInvokeEventsUs(int deltaTimeUs);
+	void moveTimeForwardAndInvokeEventsSec(int deltaTimeSeconds);
 	void smartFireTriggerEvents2(int count, float delayMs);
 
 	/**
@@ -82,6 +82,7 @@ public:
 
 	int executeActions();
 	void moveTimeForwardMs(float deltaTimeMs);
+	void moveTimeForwardSec(float deltaTimeSec);
 	efitimeus_t getTimeNowUs(void);
 
 	Engine engine;

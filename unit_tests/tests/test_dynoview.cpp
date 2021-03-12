@@ -33,7 +33,7 @@ TEST(DynoView, VSS_T1) {
     setMockVehicleSpeed(18.0);
     dut.update(ICU);
 
-    eth.smartMoveTimeForwardSeconds(20);
+    eth.moveTimeForwardAndInvokeEventsSec(20);
     setMockVehicleSpeed(126.0);
     dut.update(ICU);
 

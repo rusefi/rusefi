@@ -2,6 +2,10 @@
 
 #include "efitime.h"
 
+/**
+ * Helper class with "has X amount of time elapsed since most recent reset" methods
+ * Brand new instances have most recent reset time far in the past, i.e. "hasElapse" is true for any reasonable range
+ */
 class Timer {
 public:
 	void reset();
