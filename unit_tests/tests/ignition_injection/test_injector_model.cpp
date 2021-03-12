@@ -116,6 +116,26 @@ TEST_P(FlowRateFixture, PressureRatio) {
 	EXPECT_FLOAT_EQ(expectedFlowRatio, dut.getInjectorFlowRatio());
 }
 
+TEST(InjectorModel, NegativePressureDelta) {
+	StrictMock<TesterGetRailPressure> dut;
+
+	WITH_ENGINE_TEST_HELPER(TEST_ENGINE);
+	INJECT_ENGINE_REFERENCE(&dut);
+
+	// Use injector compensation
+	engineConfiguration->injectorCompensationMode = ICM_SensedRailPressure;
+
+	// Reference pressure is 400kPa 
+	engineConfiguration->fuelReferencePressure = 400.0f;
+
+	EXPECT_CALL(dut, getAbsoluteRailPressure()).WillOnce(Return(50));
+	// MAP sensor reads more pressure than fuel rail
+	Sensor::setMockValue(SensorType::Map, 100);
+
+	// Flow ratio defaults to 1.0 in this case
+	EXPECT_FLOAT_EQ(1.0f, dut.getInjectorFlowRatio());
+}
+
 TEST(InjectorModel, VariableInjectorFlowModeNone) {
 	StrictMock<TesterGetRailPressure> dut;
 
