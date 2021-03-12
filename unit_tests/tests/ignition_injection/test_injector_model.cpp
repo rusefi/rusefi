@@ -49,10 +49,10 @@ TEST(InjectorModel, Deadtime) {
 	InjectorModel dut;
 	INJECT_ENGINE_REFERENCE(&dut);
 
-	engine->sensors.vBatt = 3;
+	Sensor::setMockValue(SensorType::BatteryVoltage, 3);
 	EXPECT_EQ(dut.getDeadtime(), 6);
 
-	engine->sensors.vBatt = 7;
+	Sensor::setMockValue(SensorType::BatteryVoltage, 7);
 	EXPECT_EQ(dut.getDeadtime(), 14);
 }
 
