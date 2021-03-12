@@ -138,7 +138,7 @@ void canMazdaRX8(void) {
 		msg[4] = 0x01; //Oil Pressure (not really a gauge)
 		msg[5] = 0x00; //check engine light
 		msg[6] = 0x00; //Coolant, oil and battery
-		if ((GET_RPM()>0) && (engine->sensors.vBatt<13)) {
+		if ((GET_RPM()>0) && (Sensor::get(SensorType::BatteryVoltage).value_or(VBAT_FALLBACK_VALUE)<13)) {
 			msg.setBit(6, 6); // battery light
 		}
 		if (!clt.Valid || clt.Value > 105) {
