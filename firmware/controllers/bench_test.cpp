@@ -43,10 +43,11 @@
 #include "malfunction_central.h"
 #include "tunerstudio_outputs.h"
 #include "trigger_emulator_algo.h"
+#include "microsecond_timer.h"
 
 #if EFI_WIDEBAND_FIRMWARE_UPDATE
 #include "can.h"
-#endif
+#endif // EFI_WIDEBAND_FIRMWARE_UPDATE
 
 #if EFI_PROD_CODE
 #include "rusefi.h"
@@ -55,7 +56,7 @@
 
 #if (BOARD_TLE8888_COUNT > 0)
 #include "gpio/tle8888.h"
-#endif
+#endif // BOARD_TLE8888_COUNT
 
 EXTERN_ENGINE;
 
