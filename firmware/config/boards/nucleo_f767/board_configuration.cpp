@@ -53,14 +53,6 @@ void setBoardConfigurationOverrides(void) {
 	engineConfiguration->throttlePedalPositionAdcChannel = EFI_ADC_NONE;
 
 	// not used
-	engineConfiguration->externalKnockSenseAdc = EFI_ADC_NONE;
-	engineConfiguration->displayMode = DM_NONE;
-	engineConfiguration->HD44780_rs = GPIO_UNASSIGNED;
-	engineConfiguration->HD44780_e = GPIO_UNASSIGNED;
-	engineConfiguration->HD44780_db4 = GPIO_UNASSIGNED;
-	engineConfiguration->HD44780_db5 = GPIO_UNASSIGNED;
-	engineConfiguration->HD44780_db6 = GPIO_UNASSIGNED;
-	engineConfiguration->HD44780_db7 = GPIO_UNASSIGNED;
 	for (int i = 0; i < DIGIPOT_COUNT ; i++) {
 		engineConfiguration->digitalPotentiometerChipSelect[i] = GPIO_UNASSIGNED;
 	}
@@ -69,9 +61,6 @@ void setBoardConfigurationOverrides(void) {
 	engineConfiguration->triggerSimulatorPinModes[1] = OM_DEFAULT;
 	engineConfiguration->triggerSimulatorPinModes[2] = OM_DEFAULT;
 	engineConfiguration->vehicleSpeedSensorInputPin = GPIO_UNASSIGNED;
-
-	engineConfiguration->digitalPotentiometerSpiDevice = SPI_NONE;
-	engineConfiguration->max31855spiDevice = SPI_NONE;
 
 	/////////////////////////////////////////////////////////
 	engineConfiguration->is_enabled_spi_1 = false;
