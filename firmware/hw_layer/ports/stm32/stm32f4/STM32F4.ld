@@ -15,10 +15,16 @@
 */
 
 /*
- * STM32F405xG memory setup.
+ * STM32F4 memory setup.
  * Note: Use of ram1 and ram2 is mutually exclusive with use of ram0.
- * 'bl' is related to rusefi bootloader
+ * bl section is where we link the rusefi bootloader
  */
+
+/* On devices with 256K RAM, use additional memory SRAM3. */
+/* STM32F40x do not have SRAM3 */
+/* STM32F42x and F46x have SRAM3 */
+RAM3_SIZE = DEFINED(STM32F4_HAS_SRAM3) ? 64k : 0;
+
 MEMORY
 {
     bl      : org = 0x08000000, len = 16k     /* bootloader section */
@@ -30,10 +36,10 @@ MEMORY
     flash5  : org = 0x00000000, len = 0
     flash6  : org = 0x00000000, len = 0
     flash7  : org = 0x00000000, len = 0
-    ram0    : org = 0x20000000, len = 128k      /* SRAM1 + SRAM2 */
+    ram0    : org = 0x20000000, len = 128k + RAM3_SIZE /* SRAM1 + SRAM2 + SRAM3 (optionally) */
     ram1    : org = 0x20000000, len = 112k      /* SRAM1 */
     ram2    : org = 0x2001C000, len = 16k       /* SRAM2 */
-    ram3    : org = 0x00000000, len = 0
+    ram3    : org = 0x20020000, len = RAM3_SIZE /* SRAM3 note: this will be 0 size on F40x devices */
     ram4    : org = 0x10000000, len = 64k       /* CCM SRAM */
     ram5    : org = 0x40024000, len = 4k        /* BCKP SRAM */
     ram6    : org = 0x00000000, len = 0
