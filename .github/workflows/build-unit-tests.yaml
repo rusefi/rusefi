@@ -66,6 +66,7 @@ jobs:
       run: |
         git config --local user.email "action@github.com"
         git config --local user.name "GitHub build-unit-tests Action"
+        git pull
         mv triggers.txt unit_tests
         mv *.logicdata  unit_tests
         git add unit_tests/triggers.txt
