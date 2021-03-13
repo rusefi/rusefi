@@ -9,7 +9,6 @@
 #include "allsensors.h"
 #include "vvt.h"
 
-#if EFI_AUX_PID
 #include "tunerstudio_outputs.h"
 #include "fsio_impl.h"
 #include "engine_math.h"
@@ -28,11 +27,10 @@ static fsio8_Map3D_u8t vvtTable2("vvt#2");
 
 static Logging *logger;
 
-void VvtController::init(int index) {
+void VvtController::init(int index, const ValueProvider3D* targetMap) {
 	this->index = index;
-	m_pid.initPidClass(&persistentState.persistentConfiguration.engineConfiguration.auxPid[index]);
-	int camIndex = index % CAMS_PER_BANK;
-	m_targetMap = camIndex == 0 ? &vvtTable1 : &vvtTable2;
+	m_pid.initPidClass(&CONFIG(auxPid[index]));
+	m_targetMap = targetMap;
 }
 
 int VvtController::getPeriodMs() {
@@ -97,6 +95,8 @@ void VvtController::setOutput(expected<percent_t> outputValue) {
 	}
 }
 
+#if EFI_AUX_PID
+
 static VvtController instances[CAM_INPUTS_COUNT];
 
 static void turnAuxPidOn(int index) {
@@ -135,7 +135,12 @@ void initAuxPid(Logging *sharedLogger) {
 	logger = sharedLogger;
 
 	for (int i = 0;i < CAM_INPUTS_COUNT;i++) {
-		instances[i].init(i);
+		INJECT_ENGINE_REFERENCE(&instances[i]);
+
+		// TODO: this is wrong for cams 3/4
+		int indexInBank = i % CAMS_PER_BANK;
+		auto targetMap = indexInBank == 0 ? &vvtTable1 : &vvtTable2;
+		instances[i].init(i, targetMap);
 	}
 
 	startVvtControlPins();

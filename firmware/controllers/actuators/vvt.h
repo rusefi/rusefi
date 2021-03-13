@@ -7,10 +7,14 @@
 
 #pragma once
 
-#include "global.h"
+#include "engine_ptr.h"
 #include "periodic_task.h"
 #include "closed_loop_controller.h"
 #include "pwm_generator_logic.h"
+#include "pid.h"
+
+class Logging;
+class ValueProvider3D;
 
 void initAuxPid(Logging *sharedLogger);
 void startVvtControlPins();
@@ -18,7 +22,9 @@ void stopVvtControlPins();
 
 class VvtController : public PeriodicTimerController, public ClosedLoopController<angle_t, percent_t> {
 public:
-	void init(int index);
+	DECLARE_ENGINE_PTR;
+
+	void init(int index, const ValueProvider3D* targetMap);
 
 	// PeriodicTimerController implementation
 	int getPeriodMs() override;
@@ -34,7 +40,7 @@ public:
 
 private:
 	Pid m_pid;
-	ValueProvider3D* m_targetMap = nullptr;
+	const ValueProvider3D* m_targetMap = nullptr;
 	int index = 0;
 
 public:
