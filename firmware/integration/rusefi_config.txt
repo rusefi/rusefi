@@ -48,7 +48,7 @@
 !
 
 !
-! this is here so that rusEfi console can access it, too
+! this is here so that rusEFI console can access it, too
 !
 #define TS_OUTPUT_SIZE 340
 
