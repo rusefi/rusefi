@@ -8,6 +8,9 @@
 #pragma once
 
 #include "global.h"
+#include "periodic_task.h"
+#include "closed_loop_controller.h"
+#include "pwm_generator_logic.h"
 
 void initAuxPid(Logging *sharedLogger);
 void startVvtControlPins();
@@ -32,9 +35,10 @@ public:
 private:
 	Pid m_pid;
 	ValueProvider3D* m_targetMap = nullptr;
+	int index = 0;
 
 public:
-	// todo: encapsulate or these
+	// todo: encapsulate or inject these
 	SimplePwm m_pwm;
 	OutputPin m_pin;
 };

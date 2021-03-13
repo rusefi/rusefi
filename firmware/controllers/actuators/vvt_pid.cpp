@@ -12,12 +12,10 @@
 #include "vvt_pid.h"
 
 #if EFI_AUX_PID
-#include "pwm_generator_logic.h"
 #include "tunerstudio_outputs.h"
 #include "fsio_impl.h"
 #include "engine_math.h"
 #include "pin_repository.h"
-#include "periodic_task.h"
 
 #define NO_PIN_PERIOD 500
 
@@ -36,17 +34,17 @@ void VvtController::init(int index) {
 	this->index = index;
 	m_pid.initPidClass(&persistentState.persistentConfiguration.engineConfiguration.auxPid[index]);
 	int camIndex = index % CAMS_PER_BANK;
-	table = camIndex == 0 ? &vvtTable1 : &vvtTable2;
+	m_targetMap = camIndex == 0 ? &vvtTable1 : &vvtTable2;
 }
 
-int VvtController::getPeriodMs() override {
+int VvtController::getPeriodMs() {
 	return isBrainPinValid(engineConfiguration->auxPidPins[index]) ?
 		GET_PERIOD_LIMITED(&engineConfiguration->auxPid[index]) : NO_PIN_PERIOD;
 }
 
-void VvtController::PeriodicTask() override {
+void VvtController::PeriodicTask() {
 	if (engine->auxParametersVersion.isOld(engine->getGlobalConfigurationVersion())) {
-		auxPid.reset();
+		m_pid.reset();
 	}
 
 	update();
@@ -72,7 +70,7 @@ expected<percent_t> VvtController::getClosedLoop(angle_t setpoint, angle_t obser
 
 	if (engineConfiguration->isVerboseAuxPid1) {
 		scheduleMsg(logger, "aux duty: %.2f/value=%.2f/p=%.2f/i=%.2f/d=%.2f int=%.2f", retVal, observation,
-				auxPid.getP(), auxPid.getI(), auxPid.getD(), auxPid.getIntegration());
+				m_pid.getP(), m_pid.getI(), m_pid.getD(), m_pid.getIntegration());
 	}
 
 #if EFI_TUNER_STUDIO
@@ -91,10 +89,10 @@ void VvtController::setOutput(expected<percent_t> outputValue) {
 	// todo: make this configurable?
 	bool enabledAtCurrentRpm = rpm > engineConfiguration->cranking.rpm;
 
-	if (enabledAtCurrentRpm) {
-		m_pid->setSimplePwmDutyCycle(PERCENT_TO_DUTY(pwm));
+	if (outputValue && enabledAtCurrentRpm) {
+		m_pwm.setSimplePwmDutyCycle(PERCENT_TO_DUTY(outputValue.Value));
 	} else {
-		m_pid->setSimplePwmDutyCycle(0);
+		m_pwm.setSimplePwmDutyCycle(0);
 
 		// we need to avoid accumulating iTerm while engine is not running
 		m_pid.reset();
