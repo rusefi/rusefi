@@ -239,6 +239,7 @@
 #define CMD_ENGINE_TYPE "engine_type"
 #define CMD_ENGINESNIFFERRPMTHRESHOLD "engineSnifferRpmThreshold"
 #define CMD_ETB_DUTY "set_etb_duty"
+#define CMD_EXTERNAL_STIMULATION "ext_stimulation"
 #define CMD_FUEL_BENCH "fuelbench"
 #define CMD_FUNCTIONAL_TEST_MODE "test_mode"
 #define CMD_HPFP_BENCH "hpfpbench"
@@ -1242,8 +1243,8 @@
 #define showHumanReadableWarning_offset 976
 #define showSdCardWarning_offset 76
 #define SIGNATURE_BOARD subaru_eg33_f7
-#define SIGNATURE_DATE 2021.03.06
-#define SIGNATURE_HASH 3072324797
+#define SIGNATURE_DATE 2021.03.13
+#define SIGNATURE_HASH 3678251206
 #define silentTriggerError_offset 1464
 #define slowAdcAlpha_offset 2088
 #define sparkDwellRpmBins_offset 332
@@ -1567,6 +1568,7 @@
 #define ts_show_etb_pins true
 #define ts_show_full_pinout true
 #define ts_show_gps false
+#define ts_show_hardware_simulator true
 #define ts_show_hip9011 true
 #define ts_show_joystick false
 #define ts_show_lcd false
@@ -1577,7 +1579,7 @@
 #define ts_show_spi true
 #define ts_show_trigger_comparator false
 #define ts_show_tunerstudio_port false
-#define TS_SIGNATURE "rusEFI 2021.03.06.subaru_eg33_f7.3072324797"
+#define TS_SIGNATURE "rusEFI 2021.03.13.subaru_eg33_f7.3678251206"
 #define TS_SINGLE_WRITE_COMMAND 'W'
 #define TS_SINGLE_WRITE_COMMAND_char W
 #define TS_TEST_COMMAND 't' // 0x74
