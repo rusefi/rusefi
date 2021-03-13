@@ -136,6 +136,11 @@ public:
 	// this should be field lookup and simple math.
 	virtual SensorResult get() const = 0;
 
+	// Retrieve whether the sensor is present.  Some sensors may be registered but not present, ie if inintialization failed.
+	virtual bool hasSensor() const {
+		return true;
+	}
+
 	/*
 	 * Get an unconverted value from the sensor, if available.
 	 */
