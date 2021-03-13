@@ -30,84 +30,88 @@ EXTERN_ENGINE;
 static fsio8_Map3D_u8t vvtTable1("vvt#1");
 static fsio8_Map3D_u8t vvtTable2("vvt#2");
 
-
-// todo: this is to some extent a copy-paste of alternator_controller. maybe same loop
-// for all PIDs?
-
 static Logging *logger;
 
-class AuxPidController : public PeriodicTimerController {
-public:
+void VvtController::init(int index) {
+	this->index = index;
+	m_pid.initPidClass(&persistentState.persistentConfiguration.engineConfiguration.auxPid[index]);
+	int camIndex = index % CAMS_PER_BANK;
+	table = camIndex == 0 ? &vvtTable1 : &vvtTable2;
+}
 
-	SimplePwm auxPidPwm;
-	OutputPin auxOutputPin;
+int VvtController::getPeriodMs() override {
+	return isBrainPinValid(engineConfiguration->auxPidPins[index]) ?
+		GET_PERIOD_LIMITED(&engineConfiguration->auxPid[index]) : NO_PIN_PERIOD;
+}
 
-	void init(int index) {
-		this->index = index;
-		auxPid.initPidClass(&persistentState.persistentConfiguration.engineConfiguration.auxPid[index]);
-		int camIndex = index % CAMS_PER_BANK;
-		table = camIndex == 0 ? &vvtTable1 : &vvtTable2;
+void VvtController::PeriodicTask() override {
+	if (engine->auxParametersVersion.isOld(engine->getGlobalConfigurationVersion())) {
+		auxPid.reset();
 	}
 
-	int getPeriodMs() override {
-		return isBrainPinValid(engineConfiguration->auxPidPins[index]) ?
-			GET_PERIOD_LIMITED(&engineConfiguration->auxPid[index]) : NO_PIN_PERIOD;
+	update();
+}
+
+expected<angle_t> VvtController::observePlant() const {
+	return engine->triggerCentral.getVVTPosition();
+}
+
+expected<angle_t> VvtController::getSetpoint() const {
+	int rpm = GET_RPM();
+	float load = getFuelingLoad(PASS_ENGINE_PARAMETER_SIGNATURE);
+	return m_targetMap->getValue(rpm, load);
+}
+
+expected<percent_t> VvtController::getOpenLoop(angle_t target) const {
+	// TODO: could we do VVT open loop?
+	return 0;
+}
+
+expected<percent_t> VvtController::getClosedLoop(angle_t setpoint, angle_t observation) {
+	float retVal = m_pid.getOutput(setpoint, observation);
+
+	if (engineConfiguration->isVerboseAuxPid1) {
+		scheduleMsg(logger, "aux duty: %.2f/value=%.2f/p=%.2f/i=%.2f/d=%.2f int=%.2f", retVal, observation,
+				auxPid.getP(), auxPid.getI(), auxPid.getD(), auxPid.getIntegration());
 	}
 
-	void PeriodicTask() override {
-			if (engine->auxParametersVersion.isOld(engine->getGlobalConfigurationVersion())) {
-				auxPid.reset();
-
-			}
-
-			float rpm = GET_RPM();
-
-			// todo: make this configurable?
-			bool enabledAtCurrentRpm = rpm > engineConfiguration->cranking.rpm;
-
-			if (!enabledAtCurrentRpm) {
-				// we need to avoid accumulating iTerm while engine is not running
-				auxPid.reset();
-				return;
-			}
-
-
-			float value = engine->triggerCentral.getVVTPosition();
-			float targetValue = table->getValue(rpm, getFuelingLoad(PASS_ENGINE_PARAMETER_SIGNATURE));
-
-			percent_t pwm = auxPid.getOutput(targetValue, value);
-			if (engineConfiguration->isVerboseAuxPid1) {
-				scheduleMsg(logger, "aux duty: %.2f/value=%.2f/p=%.2f/i=%.2f/d=%.2f int=%.2f", pwm, value,
-						auxPid.getP(), auxPid.getI(), auxPid.getD(), auxPid.getIntegration());
-			}
-
-
-			if (engineConfiguration->debugMode == DBG_AUX_PID_1) {
 #if EFI_TUNER_STUDIO
-				auxPid.postState(&tsOutputChannels);
-				tsOutputChannels.debugIntField3 = (int)(10 * targetValue);
+	if (engineConfiguration->debugMode == DBG_AUX_PID_1) {
+		m_pid.postState(&tsOutputChannels);
+		tsOutputChannels.debugIntField3 = (int)(10 * setpoint);
+	}
 #endif /* EFI_TUNER_STUDIO */
-			}
 
-			auxPidPwm.setSimplePwmDutyCycle(PERCENT_TO_DUTY(pwm));
-		}
-private:
-	Pid auxPid;
-	int index = 0;
-	ValueProvider3D *table = nullptr;
-};
+	return retVal;
+}
 
-static AuxPidController instances[CAM_INPUTS_COUNT];
+void VvtController::setOutput(expected<percent_t> outputValue) {
+	float rpm = GET_RPM();
+
+	// todo: make this configurable?
+	bool enabledAtCurrentRpm = rpm > engineConfiguration->cranking.rpm;
+
+	if (enabledAtCurrentRpm) {
+		m_pid->setSimplePwmDutyCycle(PERCENT_TO_DUTY(pwm));
+	} else {
+		m_pid->setSimplePwmDutyCycle(0);
+
+		// we need to avoid accumulating iTerm while engine is not running
+		m_pid.reset();
+	}
+}
+
+static VvtController instances[CAM_INPUTS_COUNT];
 
 static void turnAuxPidOn(int index) {
 	if (!isBrainPinValid(engineConfiguration->auxPidPins[index])) {
 		return;
 	}
 
-	startSimplePwmExt(&instances[index].auxPidPwm, "Aux PID",
+	startSimplePwmExt(&instances[index].m_pwm, "Aux PID",
 			&engine->executor,
 			engineConfiguration->auxPidPins[index],
-			&instances[index].auxOutputPin,
+			&instances[index].m_pin,
 			// todo: do we need two separate frequencies?
 			engineConfiguration->auxPidFrequency[0], 0.1);
 }
@@ -120,7 +124,7 @@ void startVvtControlPins() {
 
 void stopVvtControlPins() {
 	for (int i = 0;i < CAM_INPUTS_COUNT;i++) {
-		instances[i].auxOutputPin.deInit();
+		instances[i].m_pin.deInit();
 	}
 }
 
@@ -139,6 +143,7 @@ void initAuxPid(Logging *sharedLogger) {
 	}
 
 	startVvtControlPins();
+
 	for (int i = 0;i < CAM_INPUTS_COUNT;i++) {
 		instances[i].Start();
 	}
