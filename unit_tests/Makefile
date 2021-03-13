@@ -189,6 +189,7 @@ INCDIR = . \
 	googletest/googletest \
 	googletest/googletest/include \
 	$(PROJECT_DIR)/../unit_tests/tests \
+	$(PROJECT_DIR)/../unit_tests/tests/sensor \
 	$(PROJECT_DIR)/../unit_tests/test_basic_math
 	
 

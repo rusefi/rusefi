@@ -92,11 +92,13 @@ TEST_F(SensorBasic, HasSensor) {
 
 	// Now we should!
 	ASSERT_TRUE(Sensor::hasSensor(SensorType::Clt));
+
+	// Check that we can have the sensor report that it's missing
+	dut.setHasSensor(false);
+	ASSERT_FALSE(Sensor::hasSensor(SensorType::Clt));
 }
 
 TEST_F(SensorBasic, HasSensorMock) {
-	MockSensor dut(SensorType::Clt);
-
 	// Check that we don't have the sensor
 	ASSERT_FALSE(Sensor::hasSensor(SensorType::Clt));
 
