@@ -38,6 +38,11 @@ java -DSystemOut.name=gen_config_board \
 
 [ $? -eq 0 ] || { echo "ERROR generating TunerStudio config for ${BOARDNAME}"; exit 1; }
 
+# todo: make things consistent by
+# 0) having generated content not in the same folder with the tool generating content?
+# 1) using unique file name for each configuration?
+# 2) leverage consistent caching mechanism so that image is generted only in case of fresh .ini. Laziest approach would be to return exit code from java process above
+#
 ./hw_layer/mass_storage/create_ini_image.sh ./tunerstudio/generated/rusefi_${SHORT_BOARDNAME}.ini ./hw_layer/mass_storage/ramdisk_image.h
 ./hw_layer/mass_storage/create_ini_image_compressed.sh ./tunerstudio/generated/rusefi_${SHORT_BOARDNAME}.ini ./hw_layer/mass_storage/ramdisk_image_compressed.h
 

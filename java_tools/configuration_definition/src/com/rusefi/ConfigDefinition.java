@@ -530,31 +530,35 @@ public class ConfigDefinition {
         }
     }
 
-    private static boolean checkIfOutputFilesAreOutdated(List<String> inputFiles, String cachePath, String cacheZipFile) {
+    private static boolean checkIfOutputFilesAreOutdated(List<String> inputFileNames, String cachePath, String cacheZipFile) {
         if (cachePath == null)
             return true;
         // find if any input file was changed from the cached version
-        for (String iFile : inputFiles) {
-            File newFile = new File(iFile);
+        for (String inputFileName : inputFileNames) {
+            File inputFile = new File(inputFileName);
             try {
-                byte[] f1 = Files.readAllBytes(newFile.toPath());
+                byte[] inputFileContent = Files.readAllBytes(inputFile.toPath());
                 byte[] f2;
                 if (cacheZipFile != null) {
-                    f2 = unzipFileContents(cacheZipFile, cachePath + File.separator + iFile);
+                    f2 = unzipFileContents(cacheZipFile, cachePath + File.separator + inputFileName);
                 } else {
-                    String cachedFileName = getCachedInputFileName(newFile.getName(), cachePath);
+                    String cachedFileName = getCachedInputFileName(cachePath, inputFile.getName());
+                    SystemOut.println("* cache ZIP file not specified, reading " + cachedFileName + " vs " + inputFileName);
+                    /**
+                     * todo: do we have a bug in this branch? how often do we simply read same 'inputFile'?
+                     */
                     File cachedFile = new File(cachedFileName);
                     f2 = Files.readAllBytes(cachedFile.toPath());
                 }
-                boolean isEqual = Arrays.equals(f1, f2);
+                boolean isEqual = Arrays.equals(inputFileContent, f2);
                 if (!isEqual) {
-                    SystemOut.println("* the file " + iFile + " is changed!");
+                    SystemOut.println("* the file " + inputFileName + " is changed!");
                     return true;
                 } else {
-                    SystemOut.println("* the file " + iFile + " is NOT changed!");
+                    SystemOut.println("* the file " + inputFileName + " is NOT changed!");
                 }
-            } catch (java.io.IOException e) {
-                SystemOut.println("* cannot validate the file " + iFile + ", so assuming it's changed.");
+            } catch (IOException e) {
+                SystemOut.println("* cannot validate the file " + inputFileName + ", so assuming it's changed.");
                 return true;
             }
         }
@@ -573,11 +577,11 @@ public class ConfigDefinition {
         } else {
             for (String iFile : inputFiles) {
                 File newFile = new File(iFile);
-                File cachedFile = new File(getCachedInputFileName(newFile.getName(), cachePath));
+                File cachedFile = new File(getCachedInputFileName(cachePath, newFile.getName()));
                 cachedFile.mkdirs();
                 try {
                     Files.copy(newFile.toPath(), cachedFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
-                } catch (java.io.IOException e) {
+                } catch (IOException e) {
                     SystemOut.println("* cannot store the cached file for " + iFile);
                     throw e;
                 }
@@ -587,7 +591,7 @@ public class ConfigDefinition {
         return true;
     }
 
-    private static String getCachedInputFileName(String inputFile, String cachePath) {
+    private static String getCachedInputFileName(String cachePath, String inputFile) {
         return cachePath + File.separator + inputFile;
     }
 
