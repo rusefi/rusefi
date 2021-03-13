@@ -1,7 +1,5 @@
 /*
- * @file vvt_pid.cpp
- *
- * This class is a copy-paste of alternator_controller.cpp TODO: do something about it? extract more common logic?
+ * @file vvt.cpp
  *
  * @date Jun 26, 2016
  * @author Andrey Belomutskiy, (c) 2012-2020
@@ -9,7 +7,7 @@
 
 #include "local_version_holder.h"
 #include "allsensors.h"
-#include "vvt_pid.h"
+#include "vvt.h"
 
 #if EFI_AUX_PID
 #include "tunerstudio_outputs.h"
