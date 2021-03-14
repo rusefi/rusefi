@@ -26,7 +26,6 @@ void Ads1015::readChannels(float (&result)[4]) {
 	for (size_t i = 0; i < 4; i++) {
 		result[i] = readChannel(i);
 	}
-	
 }
 
 float Ads1015::readChannel(uint8_t ch) {
@@ -34,13 +33,12 @@ float Ads1015::readChannel(uint8_t ch) {
 	writeReg(ADS1015_CONFIG, 0xC1E0 | ch << 12);
 
 	// Wait for conversion to complete
-	// Bit is cleared while conversion is ongoing
+	// Bit is cleared while conversion is ongoing, set when done
 	while ((readReg(ADS1015_CONFIG) & 0x8000) == 0) ;
 
 	// Read the result
-	// Result is 12 bits left aligned
 	int16_t result = readReg(ADS1015_CONV);
-	// Right align the result
+	// Result is 12 bits left aligned, so right align the result
 	result = result >> 4;
 
 	// 2048 counts = positive 6.144 volts
