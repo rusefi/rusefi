@@ -1,7 +1,7 @@
 #include "global.h"
 #include "rusefi_enums.h"
 #include "rusefi_hw_enums.h"
-// was generated automatically by rusEfi tool  from rusefi_hw_enums.h // was generated automatically by rusEfi tool  from rusefi_enums.h // by enum2string.jar tool on Mon Feb 08 18:09:24 EST 2021
+// was generated automatically by rusEfi tool  from rusefi_hw_enums.h // was generated automatically by rusEfi tool  from rusefi_enums.h // by enum2string.jar tool on Sun Mar 14 21:29:15 UTC 2021
 // see also gen_config_and_enums.bat
 
 
@@ -425,6 +425,8 @@ case CAN_BUS_Haltech:
   return "CAN_BUS_Haltech";
 case CAN_BUS_MAZDA_RX8:
   return "CAN_BUS_MAZDA_RX8";
+case CAN_BUS_MQB:
+  return "CAN_BUS_MQB";
 case CAN_BUS_NBC_BMW:
   return "CAN_BUS_NBC_BMW";
 case CAN_BUS_NBC_FIAT:
