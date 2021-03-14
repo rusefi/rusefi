@@ -236,6 +236,23 @@ void canDashboardW202(void) {
 	}
 }
 
+/**
+ * https://docs.google.com/spreadsheets/d/1XMfeGlhgl0lBL54lNtPdmmFd8gLr2T_YTriokb30kJg
+ */
+void canDashboardVagMqb() {
+
+	{ // 'turn-on'
+		CanTxMessage msg(0x3C0, 4);
+		// ignition ON
+		msg[2] = 3;
+	}
+	{ //RPM
+		CanTxMessage msg(0x107, 8);
+		msg[3] = ((int)(GET_RPM() / 3.5)) & 0xFF;
+		msg[4] = ((int)(GET_RPM() / 3.5)) >> 8;
+	}
+}
+
 void canDashboardBMWE90()
 {
 	if (e90msgcounter == UINT16_MAX)
