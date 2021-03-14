@@ -435,6 +435,11 @@ void executeTSCommand(uint16_t subsystem, uint16_t index) {
 	case CMD_TS_X14:
 		handleCommandX14(index);
 		break;
+#ifdef EFI_WIDEBAND_FIRMWARE_UPDATE
+	case 0x15:
+		setWidebandOffset(logger, index);
+		break;
+#endif // EFI_WIDEBAND_FIRMWARE_UPDATE
 	case CMD_TS_BENCH_CATEGORY:
 		handleBenchCategory(index);
 		break;
@@ -498,7 +503,11 @@ void initBenchTest(Logging *sharedLogger) {
 	addConsoleAction("fanbench", fanBench);
 	addConsoleAction("mainrelaybench", mainRelayBench);
 	addConsoleActionS("fanbench2", fanBenchExt);
+
+#if EFI_WIDEBAND_FIRMWARE_UPDATE
 	addConsoleAction("update_wideband", []() { widebandUpdatePending = true; });
+	addConsoleActionI("set_wideband_index", [](int index) { setWidebandOffset(logger, index); });
+#endif // EFI_WIDEBAND_FIRMWARE_UPDATE
 
 	addConsoleAction(CMD_STARTER_BENCH, starterRelayBench);
 	addConsoleAction(CMD_MIL_BENCH, milBench);
