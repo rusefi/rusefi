@@ -95,4 +95,26 @@ void updateWidebandFirmware(Logging* logging) {
 	waitingBootloaderThread = nullptr;
 }
 
+void setWidebandOffset(Logging* logging, uint8_t index) {
+	// Clear any pending acks for this thread
+	chEvtGetAndClearEvents(EVT_BOOTLOADER_ACK);
+
+	// Send messages to the current thread when acks come in
+	waitingBootloaderThread = chThdGetSelfX();
+
+	scheduleMsg(logging, "***************************************");
+	scheduleMsg(logging, "          WIDEBAND INDEX SET");
+	scheduleMsg(logging, "***************************************");
+	scheduleMsg(logging, "Setting all connected widebands to index %d...", index);
+
+	{
+		CanTxMessage m(0xEF4'0000, 1, true);
+		m[0] = index;
+	}
+
+	waitAck();
+
+	waitingBootloaderThread = nullptr;
+}
+
 #endif // EFI_WIDEBAND_FIRMWARE_UPDATE && HAL_USE_CAN

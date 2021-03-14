@@ -499,6 +499,7 @@ void initBenchTest(Logging *sharedLogger) {
 	addConsoleAction("mainrelaybench", mainRelayBench);
 	addConsoleActionS("fanbench2", fanBenchExt);
 	addConsoleAction("update_wideband", []() { widebandUpdatePending = true; });
+	addConsoleActionI("set_wideband_index", [](int index) { setWidebandOffset(logger, index); });
 
 	addConsoleAction(CMD_STARTER_BENCH, starterRelayBench);
 	addConsoleAction(CMD_MIL_BENCH, milBench);
