@@ -85,7 +85,6 @@ jobs:
           exit 1
         fi
 
-
     - name: Push configs
       if: ${{github.event_name == 'push' && github.ref == 'refs/heads/master' && env.NOCOMMIT != 'true' && matrix.os != 'macos-latest'}}
       uses: ad-m/github-push-action@master
