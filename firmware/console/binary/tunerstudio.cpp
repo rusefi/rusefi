@@ -868,7 +868,7 @@ int TunerStudioBase::handleCrcCommand(TsChannelBase* tsChannel, char *data, int 
 		break;
 #endif /* ENABLE_PERF_TRACE */
 	case TS_GET_CONFIG_ERROR: {
-		char * configError = getFirmwareError();
+		const char* configError = getFirmwareError();
 #if HW_CHECK_MODE
 		// analog input errors are returned as firmware error in QC mode
 		if (!hasFirmwareError()) {
