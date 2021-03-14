@@ -23,6 +23,8 @@ public:
 
 	// Write a sequence of bytes to the specified device
 	void write(uint8_t addr, const uint8_t* data, size_t size);
+	// Read a sequence of bytes from the device
+	void read(uint8_t addr, uint8_t* data, size_t size);
 	// Write some bytes then read some bytes back after a repeated start bit
 	void writeRead(uint8_t addr, const uint8_t* writeData, size_t writeSize, uint8_t* readData, size_t readSize);
 
