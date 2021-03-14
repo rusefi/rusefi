@@ -68,6 +68,7 @@ jobs:
         git config --local user.name "GitHub build-unit-tests Action"
         git status
         git remote -v
+        echo See https://github.com/rusefi/rusefi/issues/2446
         git pull
         mv triggers.txt unit_tests
         mv *.logicdata  unit_tests
