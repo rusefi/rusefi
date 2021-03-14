@@ -1663,6 +1663,9 @@ cmb_etb_auto_calibrate_2     = "@@TS_IO_TEST_COMMAND_char@@\x00\x14\x00\x11"
 cmd_wideband_firmare_update  = "@@TS_IO_TEST_COMMAND_char@@\x00\x14\x00\x12"
 cmd_enable_ext_stim          = "@@TS_IO_TEST_COMMAND_char@@\x00\x14\x00\x13"
 
+cmd_set_wideband_idx_0       = "@@TS_IO_TEST_COMMAND_char@@\x00\x15\x00\x00"
+cmd_set_wideband_idx_1       = "@@TS_IO_TEST_COMMAND_char@@\x00\x15\x00\x01"
+
 cmd_cj125_calibrate          = "@@TS_IO_TEST_COMMAND_char@@\x00\x18\x00\x00"
 cmd_call_from_pit            = "@@TS_IO_TEST_COMMAND_char@@\x00\x20\x34\x56"
 cmd_stop_engine              = "@@TS_IO_TEST_COMMAND_char@@\x00\x79\x00\x00"
@@ -3357,9 +3360,13 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 		panel = testMisc
 
 	dialog = widebandConfig, "rusEFI Wideband Config"
-		field = "!Please connect exactly one wideband controller before pressing this button!"
+		field = "!Please connect exactly one wideband controller before pressing these buttons!"
 		commandButton = "Update Firmware", cmd_wideband_firmare_update
-	
+		field = "!These buttons will set ALL connected controllers to the specified index."
+		field = "!Disconnect all controllers you don't want to set!"
+		commandButton = "Set Index 0",     cmd_set_wideband_idx_0
+		commandButton = "Set Index 1",     cmd_set_wideband_idx_1
+
 	dialog = engineTypeDialog, "Popular vehicles"
 		field = "!These buttons send a command to rusEFI controller to apply preset values"
 		field = "!Once you send the command, please reconnect to rusEFI controller in order to read fresh values"

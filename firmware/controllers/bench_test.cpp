@@ -435,6 +435,9 @@ void executeTSCommand(uint16_t subsystem, uint16_t index) {
 	case CMD_TS_X14:
 		handleCommandX14(index);
 		break;
+	case 0x15:
+		setWidebandOffset(logger, index);
+		break;
 	case CMD_TS_BENCH_CATEGORY:
 		handleBenchCategory(index);
 		break;
