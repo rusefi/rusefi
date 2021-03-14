@@ -1,4 +1,5 @@
 #include "ads1015.h"
+#include "efilib.h"
 
 constexpr uint8_t addr = 0x48;
 
@@ -37,7 +38,10 @@ float Ads1015::readChannel(uint8_t ch) {
 	while ((readReg(ADS1015_CONFIG) & 0x8000) == 0) ;
 
 	// Read the result
+	// Result is 12 bits left aligned
 	int16_t result = readReg(ADS1015_CONV);
+	// Right align the result
+	result = result >> 4;
 
 	// 2048 counts = positive 6.144 volts
 	constexpr float ratio = 6.144f / 2048;
@@ -58,5 +62,5 @@ uint16_t Ads1015::readReg(uint8_t reg) {
 	uint16_t res;
 	m_i2c.write(addr, &reg, 1);
 	m_i2c.read(addr, reinterpret_cast<uint8_t*>(&res), 2);
-	return res;
+	return SWAP_UINT16(res);
 }
