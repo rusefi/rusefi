@@ -61,6 +61,9 @@ void CanWrite::PeriodicTask(efitime_t nowNt) {
 	case CAN_BUS_BMW_E90:
 		canDashboardBMWE90();
 		break;
+	case CAN_BUS_MQB:
+		canDashboardVagMqb();
+		break;
 	default:
 		break;
 	}

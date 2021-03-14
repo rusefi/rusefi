@@ -161,7 +161,7 @@ FsioResult getEngineValue(le_action_e action DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	case LE_METHOD_IN_MR_BENCH:
 		return engine->isInMainRelayBench();
 	case LE_METHOD_VBATT:
-		return getVBatt(PASS_ENGINE_PARAMETER_SIGNATURE);
+		return Sensor::get(SensorType::BatteryVoltage).value_or(0);
 	case LE_METHOD_TPS:
 		return Sensor::get(SensorType::DriverThrottleIntent).value_or(0);
 	// cfg_xxx references are code generated
@@ -771,7 +771,7 @@ void runHardcodedFsio(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 
 	// see MAIN_RELAY_LOGIC
 	if (isBrainPinValid(CONFIG(mainRelayPin))) {
-		enginePins.mainRelay.setValue((getTimeNowSeconds() < 2) || (getVBatt(PASS_ENGINE_PARAMETER_SIGNATURE) > LOW_VBATT) || engine->isInShutdownMode());
+		enginePins.mainRelay.setValue((getTimeNowSeconds() < 2) || (Sensor::get(SensorType::BatteryVoltage).value_or(0) > LOW_VBATT) || engine->isInShutdownMode());
 	}
 	// see STARTER_RELAY_LOGIC
 	if (isBrainPinValid(CONFIG(starterRelayDisablePin))) {

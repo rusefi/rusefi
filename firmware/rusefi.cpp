@@ -124,6 +124,9 @@
 #include "custom_engine.h"
 #include "engine_math.h"
 #include "mpu_util.h"
+#include "tunerstudio.h"
+#include "mmc_card.h"
+#include "trigger_emulator_algo.h"
 
 #if EFI_HD44780_LCD
 #include "lcd_HD44780.h"
@@ -199,7 +202,7 @@ void runRusEfi(void) {
 #if HW_CHECK_ALWAYS_STIMULATE
 	// we need a special binary for final assembly check. We cannot afford to require too much software or too many steps
 	// to be executed at the place of assembly
-	engine->directSelfStimulation = true;
+	enableTriggerStimulator();
 #endif // HW_CHECK_ALWAYS_STIMULATE
 
 
@@ -213,10 +216,18 @@ void runRusEfi(void) {
 	 */
 	initializeConsole(&sharedLogger);
 
+#if EFI_TUNER_STUDIO
+	startTunerStudioConnectivity();
+#endif /* EFI_TUNER_STUDIO */
+
 	/**
 	 * Initialize hardware drivers
 	 */
 	initHardware(&sharedLogger);
+
+#if EFI_FILE_LOGGING
+	initMmcCard();
+#endif /* EFI_FILE_LOGGING */
 
 	initStatusLoop();
 	/**

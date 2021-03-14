@@ -263,6 +263,11 @@
 
 #define EFI_CONSOLE_USB_DEVICE SDU1
 
+// F42x has more memory, so we can use compressed USB MSD image (requires 32k of memory)
+#ifdef EFI_IS_F42x
+#define EFI_USE_COMPRESSED_INI_MSD
+#endif
+
 #ifndef EFI_ENGINE_SNIFFER
 #define EFI_ENGINE_SNIFFER TRUE
 #endif

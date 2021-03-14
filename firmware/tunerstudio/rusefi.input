@@ -1661,6 +1661,10 @@ cmd_disable_self_stim        = "@@TS_IO_TEST_COMMAND_char@@\x00\x14\x00\x0F"
 cmd_etb_autotune_stop        = "@@TS_IO_TEST_COMMAND_char@@\x00\x14\x00\x10"
 cmb_etb_auto_calibrate_2     = "@@TS_IO_TEST_COMMAND_char@@\x00\x14\x00\x11"
 cmd_wideband_firmare_update  = "@@TS_IO_TEST_COMMAND_char@@\x00\x14\x00\x12"
+cmd_enable_ext_stim          = "@@TS_IO_TEST_COMMAND_char@@\x00\x14\x00\x13"
+
+cmd_set_wideband_idx_0       = "@@TS_IO_TEST_COMMAND_char@@\x00\x15\x00\x00"
+cmd_set_wideband_idx_1       = "@@TS_IO_TEST_COMMAND_char@@\x00\x15\x00\x01"
 
 cmd_cj125_calibrate          = "@@TS_IO_TEST_COMMAND_char@@\x00\x18\x00\x00"
 cmd_call_from_pit            = "@@TS_IO_TEST_COMMAND_char@@\x00\x20\x34\x56"
@@ -3356,9 +3360,13 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 		panel = testMisc
 
 	dialog = widebandConfig, "rusEFI Wideband Config"
-		field = "!Please connect exactly one wideband controller before pressing this button!"
+		field = "!Please connect exactly one wideband controller before pressing these buttons!"
 		commandButton = "Update Firmware", cmd_wideband_firmare_update
-	
+		field = "!These buttons will set ALL connected controllers to the specified index."
+		field = "!Disconnect all controllers you don't want to set!"
+		commandButton = "Set Index 0",     cmd_set_wideband_idx_0
+		commandButton = "Set Index 1",     cmd_set_wideband_idx_1
+
 	dialog = engineTypeDialog, "Popular vehicles"
 		field = "!These buttons send a command to rusEFI controller to apply preset values"
 		field = "!Once you send the command, please reconnect to rusEFI controller in order to read fresh values"
@@ -3389,21 +3397,22 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 ;			Board->ECU stimulator
 	dialog = ecuStimulator, "ECU stimulator"
 		field = "Trigger Simulator",   					triggerSimulatorFrequency
-		commandButton = "Enable Internal Trigger Simulation", cmd_enable_self_stim
-		commandButton = "Disable Internal Trigger Simulation", cmd_disable_self_stim
-		field = ""
-		field = "digipot spi", 							digitalPotentiometerSpiDevice
-		field = "digipot CS #0", 						digitalPotentiometerChipSelect1
-		field = "digipot CS #1", 						digitalPotentiometerChipSelect2
-		field = "digipot CS #2", 						digitalPotentiometerChipSelect3
-		field = "digipot CS #3", 						digitalPotentiometerChipSelect4
-		field = ""
-		field = "trigger stimulator pin #1", 			triggerSimulatorPins1
-		field = "trigger stimulator pin mode #1", 		triggerSimulatorPinModes1
-		field = "trigger stimulator pin #2", 			triggerSimulatorPins2
-		field = "trigger stimulator pin mode #2", 		triggerSimulatorPinModes2
-		field = "trigger stimulator pin #3", 			triggerSimulatorPins3
-		field = "trigger stimulator pin mode #3", 		triggerSimulatorPinModes3
+		commandButton = "Enable internal trigger simulation", cmd_enable_self_stim
+		commandButton = "Enable external trigger simulation", cmd_enable_ext_stim @@if_ts_show_hardware_simulator
+		commandButton = "Disable trigger simulation", cmd_disable_self_stim
+;		field = ""
+;		field = "digipot spi", 							digitalPotentiometerSpiDevice
+;		field = "digipot CS #0", 						digitalPotentiometerChipSelect1
+;		field = "digipot CS #1", 						digitalPotentiometerChipSelect2
+;		field = "digipot CS #2", 						digitalPotentiometerChipSelect3
+;		field = "digipot CS #3", 						digitalPotentiometerChipSelect4
+		field = ""@@if_ts_show_hardware_simulator
+		field = "trigger stimulator pin #1", 			triggerSimulatorPins1@@if_ts_show_hardware_simulator
+		field = "trigger stimulator pin mode #1", 		triggerSimulatorPinModes1@@if_ts_show_hardware_simulator
+		field = "trigger stimulator pin #2", 			triggerSimulatorPins2@@if_ts_show_hardware_simulator
+		field = "trigger stimulator pin mode #2", 		triggerSimulatorPinModes2@@if_ts_show_hardware_simulator
+		field = "trigger stimulator pin #3", 			triggerSimulatorPins3@@if_ts_show_hardware_simulator
+		field = "trigger stimulator pin mode #3", 		triggerSimulatorPinModes3@@if_ts_show_hardware_simulator
 		field = ""
 	    field = "Logic input channel 1", 				logicAnalyzerPins1
 	    field = "Logic input channel 2", 				logicAnalyzerPins2

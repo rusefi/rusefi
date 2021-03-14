@@ -166,9 +166,6 @@ void setBoardConfigurationOverrides(void) {
 	engineConfiguration->digitalPotentiometerChipSelect[3] = GPIO_UNASSIGNED;
 	engineConfiguration->vehicleSpeedSensorInputPin = GPIO_UNASSIGNED;
 
-	engineConfiguration->digitalPotentiometerSpiDevice = SPI_NONE;
-	engineConfiguration->max31855spiDevice = SPI_NONE;
-
 	/////////////////////////////////////////////////////////
 
 	engineConfiguration->is_enabled_spi_1 = true;
@@ -229,10 +226,6 @@ void setBoardConfigurationOverrides(void) {
 	engineConfiguration->triggerSimulatorPinModes[1] = OM_DEFAULT;
 	engineConfiguration->triggerSimulatorPinModes[2] = OM_DEFAULT;
 
-	engineConfiguration->logicAnalyzerPins[0] = GPIO_UNASSIGNED;
-	engineConfiguration->logicAnalyzerPins[1] = GPIO_UNASSIGNED;
-	engineConfiguration->logicAnalyzerPins[2] = GPIO_UNASSIGNED;
-	engineConfiguration->logicAnalyzerPins[3] = GPIO_UNASSIGNED;
 	//!!!!!!!!!!!!!!!!!!!
 	//engineConfiguration->silentTriggerError = true;
 

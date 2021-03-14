@@ -29,9 +29,20 @@ void registerCanSensor(CanSensorBase& sensor);
 void handleWidebandBootloaderAck();
 // Update the firmware on any connected wideband controller
 void updateWidebandFirmware(Logging*);
+// Set the CAN index offset of any attached wideband controller
+void setWidebandOffset(Logging* logging, uint8_t index);
 
 class CanWrite final : public PeriodicController<512> {
 public:
 	CanWrite();
 	void PeriodicTask(efitime_t nowNt) override;
 };
+
+// We need these helpers because the frame layout is different on STM32H7
+#ifdef STM32H7XX
+#define CAN_SID(f) ((f).std.SID)
+#define CAN_EID(f) ((f).ext.EID)
+#else
+#define CAN_SID(f) ((f).SID)
+#define CAN_EID(f) ((f).EID)
+#endif

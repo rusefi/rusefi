@@ -9,7 +9,7 @@ import com.rusefi.core.SensorCentral;
 import com.rusefi.functional_tests.EcuTestHelper;
 import org.junit.Test;
 
-import static com.rusefi.IoUtil.getDisableCommand;
+import static com.rusefi.IoUtil.getEnableCommand;
 import static com.rusefi.binaryprotocol.BinaryProtocol.sleep;
 import static com.rusefi.config.generated.Fields.*;
 
@@ -28,7 +28,7 @@ public class VssHardwareLoopTest extends RusefiTestBase {
     @Test
     public void test() {
         ecu.setEngineType(ET_FRANKENSO_MIATA_NA6);
-        ecu.sendCommand(getDisableCommand(Fields.CMD_SELF_STIMULATION));
+        ecu.sendCommand(getEnableCommand(Fields.CMD_EXTERNAL_STIMULATION));
         ecu.changeRpm(1400);
 
         // moving second trigger to another pin

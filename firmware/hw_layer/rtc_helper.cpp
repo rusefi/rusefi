@@ -144,11 +144,8 @@ void printDateTime(void) {
 		scheduleMsg(&logger, "%D - unix time", unix_time);
 		date_get_tm(&timp);
 
-		appendMsgPrefix(&logger);
-		logger.appendPrintf( "Current RTC localtime is: %04u-%02u-%02u %02u:%02u:%02u w=%d", timp.tm_year + 1900, timp.tm_mon + 1, timp.tm_mday, timp.tm_hour,
+		scheduleMsg(nullptr, "Current RTC localtime is: %04u-%02u-%02u %02u:%02u:%02u w=%d", timp.tm_year + 1900, timp.tm_mon + 1, timp.tm_mday, timp.tm_hour,
 				timp.tm_min, timp.tm_sec, rtcWorks);
-		appendMsgPostfix(&logger);
-		scheduleLogging(&logger);
 	}
 }
 

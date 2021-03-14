@@ -20,7 +20,7 @@ CJ125::CJ125() : wboHeaterControl("wbo"),
 void CJ125::SetHeater(float value DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	// limit duty cycle for sensor safety
 	// todo: would be much nicer to have continuous function (vBatt)
-	float maxDuty = (engine->sensors.vBatt > CJ125_HEATER_LIMITING_VOLTAGE) ? CJ125_HEATER_LIMITING_RATE : 1.0f;
+	float maxDuty = (Sensor::get(SensorType::BatteryVoltage).value_or(VBAT_FALLBACK_VALUE) > CJ125_HEATER_LIMITING_VOLTAGE) ? CJ125_HEATER_LIMITING_RATE : 1.0f;
 	heaterDuty = (value < CJ125_HEATER_MIN_DUTY) ? 0.0f : minF(maxF(value, 0.0f), maxDuty);
 #ifdef CJ125_DEBUG
 	scheduleMsg(logger, "cjSetHeater: %.2f", heaterDuty);
