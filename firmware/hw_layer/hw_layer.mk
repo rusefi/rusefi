@@ -31,6 +31,7 @@ HW_LAYER_EMS_CPP = $(HW_LAYER_EGT_CPP) \
 	$(PROJECT_DIR)/hw_layer/lcd/lcd_HD44780.cpp \
 	$(PROJECT_DIR)/hw_layer/adc/adc_inputs.cpp \
 	$(PROJECT_DIR)/hw_layer/adc/adc_subscription.cpp \
+	$(PROJECT_DIR)/hw_layer/adc/ads1015.cpp \
 	$(PROJECT_DIR)/hw_layer/sensors/hip9011.cpp \
 	$(PROJECT_DIR)/hw_layer/sensors/hip9011_logic.cpp \
 	$(PROJECT_DIR)/hw_layer/mc33816.cpp \
