@@ -201,7 +201,7 @@ void firmwareError(obd_code_e code, const char *fmt, ...) {
 #ifdef EFI_PRINT_ERRORS_AS_WARNINGS
 	va_list ap;
 	va_start(ap, fmt);
-	printWarning(fmt, ap);
+	chvsnprintf(warningBuffer, sizeof(warningBuffer), fmt, ap);
 	va_end(ap);
 #endif
 	ON_CRITICAL_ERROR()
