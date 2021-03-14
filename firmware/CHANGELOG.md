@@ -26,6 +26,8 @@ Release template (copy/paste this for new release):
 All notable user-facing or behavior-altering changes will be documented in this file.
 
 ## XXX 2021 Release
+### Fixed
+ - fix error/warning buffer overflow #2456
 
 ## Life in the Cracks 2021 Release
 
