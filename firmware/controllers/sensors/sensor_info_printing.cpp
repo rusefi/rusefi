@@ -48,7 +48,7 @@ void RpmCalculator::showInfo(Logging* logger, const char* /*sensorName*/) const 
 }
 
 void Lps25Sensor::showInfo(Logging* logger, const char* sensorName) const {
-	// TODO
+	scheduleMsg(logger, "%s: LPS25 baro %.2f kPa", sensorName, get().Value);
 }
 
 void LinearFunc::showInfo(Logging* logger, float testRawValue) const {
