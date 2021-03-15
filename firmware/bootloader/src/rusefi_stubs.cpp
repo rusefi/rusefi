@@ -9,19 +9,19 @@
  * The whole idea of bootloader is to make it as small as possible. And reasonably independent.
 */
 
-void chDbgPanic3(const char */*msg*/, const char * /*file*/, int /*line*/) {
+void chDbgPanic3(const char* /*msg*/, const char* /*file*/, int /*line*/) {
 }
 
-void print(const char */*format*/, ...) {
+void print(const char* /*format*/, ...) {
 }
 
-void scheduleMsg(Logging */*logging*/, const char */*fmt*/, ...) {
+void scheduleMsg(Logging* /*logging*/, const char */*fmt*/, ...) {
 }
 
 void firmwareError(obd_code_e /*code*/, const char */*fmt*/, ...) {
 }
 
-Logging::Logging(char const */*name*/, char */*buffer*/, int /*bufferSize*/) {
+Logging::Logging(char const* /*name*/, char* /*buffer*/, int /*bufferSize*/) {
 }
 
 LoggingWithStorage::LoggingWithStorage(const char *name) : Logging(name, DEFAULT_BUFFER, sizeof(DEFAULT_BUFFER))   {
