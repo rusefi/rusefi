@@ -99,7 +99,7 @@ void scheduleLogging(Logging* logging) {
  * this method should always be invoked from the same thread!
  * @return pointer to the buffer which should be print to console
  */
-const char* swapOutputBuffers(int *actualOutputBufferSize) {
+const char* swapOutputBuffers(size_t* actualOutputBufferSize) {
 #if EFI_ENABLE_ASSERTS
 	int expectedOutputSize;
 #endif /* EFI_ENABLE_ASSERTS */
