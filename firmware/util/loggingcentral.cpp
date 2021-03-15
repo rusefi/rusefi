@@ -203,6 +203,9 @@ void efiPrintfInternal(const char *format, ...) {
 	chvsnprintf(lineBuffer->buffer, sizeof(lineBuffer->buffer), format, ap);
 	va_end(ap);
 
+	// Ensure that the string is comma-terminated in case it overflowed
+	lineBuffer->buffer[sizeof(lineBuffer->buffer) - 1] = ',';
+
 	{
 		// Push the buffer in to the written list so it can be written back
 		chibios_rt::CriticalSectionLocker csl;
