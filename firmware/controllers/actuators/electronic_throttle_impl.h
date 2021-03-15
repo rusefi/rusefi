@@ -83,6 +83,9 @@ private:
 	float m_idlePosition = 0;
 	float m_wastegatePosition = 0;
 
+	// This is set if automatic PID cal shoudl be run
+	bool m_isAutotune = false;
+
 	// Autotune helpers
 	bool m_lastIsPositive = false;
 	efitick_t m_cycleStartTime = 0;
