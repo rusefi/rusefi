@@ -188,8 +188,11 @@ void BitbangI2c::writeRead(uint8_t addr, const uint8_t* writeData, size_t writeS
 	for (size_t i = 0; i < writeSize; i++) {
 		writeByte(writeData[i]);
 	}
-	
-	// Send a repeated start bit to indicate transition to read
+
+	read(addr, readData, readSize);
+}
+
+void BitbangI2c::read(uint8_t addr, uint8_t* readData, size_t readSize) {
 	start();
 
 	// Address + read

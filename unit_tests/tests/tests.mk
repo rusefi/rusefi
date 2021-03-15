@@ -18,6 +18,7 @@ TESTS_SRC_CPP = \
 	tests/sensor/test_cj125.cpp \
 	tests/util/test_buffered_writer.cpp \
 	tests/util/test_error_accumulator.cpp \
+	tests/util/test_timer.cpp \
 	tests/test_util.cpp \
 	tests/test_start_stop.cpp \
 	tests/test_hardware_reinit.cpp \
@@ -31,6 +32,7 @@ TESTS_SRC_CPP = \
 	tests/test_idle_controller.cpp \
 	tests/test_issue_898.cpp \
 	tests/test_etb.cpp \
+	tests/test_vvt.cpp \
 	tests/test_launch.cpp \
 	tests/test_fuel_map.cpp \
 	tests/ignition_injection/test_fuel_wall_wetting.cpp \

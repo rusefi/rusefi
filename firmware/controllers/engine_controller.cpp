@@ -50,7 +50,7 @@
 #include "spark_logic.h"
 #include "aux_valves.h"
 #include "accelerometer.h"
-#include "actuators/vvt_pid.h"
+#include "vvt.h"
 #include "perf_trace.h"
 #include "boost_control.h"
 #include "launch_control.h"

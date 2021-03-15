@@ -41,7 +41,7 @@ static constexpr ADCConversionGroup convGroupSlow = {
 	.end_cb				= nullptr,
 	.error_cb			= nullptr,
 	.cfgr				= 0,
-	.cfgr2				= 	16 << ADC_CFGR2_OVSR_Pos |	// Oversample by 16x
+	.cfgr2				= 	15 << ADC_CFGR2_OVSR_Pos |	// Oversample by 16x (register contains N-1)
 							4 << ADC_CFGR2_OVSS_Pos |	// shift the result right 4 bits to make a 16 bit result
 							ADC_CFGR2_ROVSE,			// Enable oversampling
 	.ccr				= 0,

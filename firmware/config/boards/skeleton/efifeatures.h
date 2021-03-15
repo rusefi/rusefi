@@ -329,7 +329,6 @@
 
 // Enable file logging (like SD card) logic
 #define EFI_FILE_LOGGING FALSE
-#define EFI_PRINT_ERRORS_AS_WARNINGS TRUE
 
 #define EFI_USB_SERIAL TRUE
 

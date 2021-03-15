@@ -26,6 +26,13 @@ Release template (copy/paste this for new release):
 All notable user-facing or behavior-altering changes will be documented in this file.
 
 ## XXX 2021 Release
+### Added
+ - VAG MQB tachometer CAN integration
+    
+### Fixed
+ - fix error/warning buffer overflow #2456
+
+## Life in the Cracks 2021 Release
 
 ### Added
  - USB Mass Storage: The connected SD card will be mounted over USB if rusEFI connected to a PC via USB.
@@ -33,6 +40,14 @@ All notable user-facing or behavior-altering changes will be documented in this 
  - TriTach trigger https://github.com/rusefi/rusefi/wiki/All-Supported-Triggers#tritach
  - Skoda Favorit trigger https://github.com/rusefi/rusefi/wiki/All-Supported-Triggers#skoda-favorit
  - Add fallback logic handling failed MAP sensor.  In case of failed MAP, ses either a fixed MAP value, or a table that estimates MAP based on TPS and RPM.
+ - STM32H7 is mostly working
+
+### Fixed
+ - Improved fuel/ignition bench testing precision - now accurate to ~1 microsecond #2440
+ - Fix internal MCU temperature sensing on STM32F7-based ECUs #2392
+
+### Breaking Changes
+ - VVT target is now taken from VVT not FSIO table #2243
 
 ### 2021 Printing Ink Day
 

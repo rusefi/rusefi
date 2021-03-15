@@ -29,6 +29,8 @@ void registerCanSensor(CanSensorBase& sensor);
 void handleWidebandBootloaderAck();
 // Update the firmware on any connected wideband controller
 void updateWidebandFirmware(Logging*);
+// Set the CAN index offset of any attached wideband controller
+void setWidebandOffset(Logging* logging, uint8_t index);
 
 class CanWrite final : public PeriodicController<512> {
 public:

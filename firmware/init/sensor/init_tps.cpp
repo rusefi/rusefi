@@ -53,7 +53,7 @@ static bool configureTps(LinearFunc& func, adc_channel_e channel, float closed, 
 
 	// If the voltage for closed vs. open is very near, something is wrong with your calibration
 	if (split < 0.5f) {
-		firmwareError(OBD_Throttle_Position_Sensor_Circuit_Malfunction, "Sensor \"%s\" problem: open %f/closed %f calibration values are too close together.  Please check your wiring!", msg,
+		firmwareError(OBD_Throttle_Position_Sensor_Circuit_Malfunction, "\"%s\" problem: open %.2f/closed %.2f cal values are too close together. Check your wiring!", msg,
 				open,
 				closed);
 		return false;

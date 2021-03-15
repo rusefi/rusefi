@@ -32,7 +32,6 @@ public class PwmHardwareTest extends RusefiTestBase {
     @Test
     public void testIdlePin() {
         ecu.setEngineType(ET_FRANKENSO_MIATA_NA6);
-        ecu.sendCommand(getDisableCommand(Fields.CMD_SELF_STIMULATION));
         ecu.changeRpm(1000);
 
         ecu.sendCommand(CMD_TRIGGER_SIMULATOR_PIN + " 0 none");
