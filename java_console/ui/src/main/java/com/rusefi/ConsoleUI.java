@@ -110,10 +110,10 @@ public class ConsoleUI {
 
         tabbedPaneAdd("Engine Sniffer", engineSnifferPanel.getPanel(), engineSnifferPanel.getTabSelectedListener());
 
-        // if (!linkManager.isLogViewer()) {
-        //     SensorSnifferPane sensorSniffer = new SensorSnifferPane(uiContext, getConfig().getRoot().getChild("sensor_sniffer"));
-        //     tabbedPaneAdd("Sensor Sniffer", sensorSniffer.getPanel(), sensorSniffer.getTabSelectedListener());
-        // }
+        if (!linkManager.isLogViewer()) {
+            SensorSnifferPane sensorSniffer = new SensorSnifferPane(uiContext, getConfig().getRoot().getChild("sensor_sniffer"));
+            tabbedPaneAdd("Sensor Sniffer", sensorSniffer.getPanel(), sensorSniffer.getTabSelectedListener());
+        }
 
 //        tabbedPane.addTab("LE controls", new FlexibleControls().getPanel());
 
