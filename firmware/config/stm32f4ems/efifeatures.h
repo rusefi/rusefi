@@ -273,7 +273,7 @@
 #endif
 
 #define EFI_HISTOGRAMS FALSE
-#define EFI_SENSOR_CHART TRUE
+#define EFI_SENSOR_CHART FALSE
 
 #if defined __GNUC__
 #define EFI_PERF_METRICS FALSE
