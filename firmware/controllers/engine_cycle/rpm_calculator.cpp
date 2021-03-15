@@ -322,6 +322,7 @@ static char rpmBuffer[_MAX_FILLER];
  * digital sniffer.
  */
 static void onTdcCallback(Engine *engine) {
+	UNUSED(engine);
 #if EFI_UNIT_TEST
 	if (!engine->needTdcCallback) {
 		return;
