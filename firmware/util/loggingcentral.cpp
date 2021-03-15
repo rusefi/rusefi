@@ -226,8 +226,13 @@ void efiPrintfInternal(const char *format, ...) {
 void scheduleLogging(Logging *logging) {
 #if EFI_PROD_CODE && EFI_TEXT_LOGGING
 	// Lock the buffer mutex - inhibit buffer swaps while writing
-	chibios_rt::MutexLocker lock(logBufferMutex);
+	{
+		chibios_rt::MutexLocker lock(logBufferMutex);
 
-	writeBuffer->writeLogger(logging);
+		writeBuffer->writeLogger(logging);
+	}
+
+	// Reset the logging now that it's been written out
+	logging->reset();
 #endif
 }
