@@ -58,6 +58,7 @@ expected<angle_t> VvtController::getSetpoint() const {
 
 expected<percent_t> VvtController::getOpenLoop(angle_t target) const {
 	// TODO: could we do VVT open loop?
+	UNUSED(target);
 	return 0;
 }
 

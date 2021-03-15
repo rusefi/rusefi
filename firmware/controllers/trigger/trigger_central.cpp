@@ -468,7 +468,7 @@ void TriggerCentral::handleShaftSignal(trigger_event_e signal, efitick_t timesta
 		}
 	}
 
-	engine->onTriggerSignalEvent(timestamp);
+	engine->onTriggerSignalEvent();
 
 	m_lastEventTimer.reset(timestamp);
 

@@ -51,11 +51,11 @@ static bool disconnect(void* instance) {
   return HAL_SUCCESS;
 }
 
-static bool read(void* instance, uint32_t startblk, uint8_t* buffer, uint32_t n) {
+static bool read(void* instance, uint32_t startblk, uint8_t* buffer, uint32_t /*n*/) {
 	CompressedBlockDevice* cbd = reinterpret_cast<CompressedBlockDevice*>(instance);
 
 	// If we just initialized, or trying to seek backwards, (re)initialize the decompressor
-	if (cbd->lastBlock == -1 || startblk <= cbd->lastBlock) {
+	if (cbd->lastBlock == -1 || (int32_t)startblk <= cbd->lastBlock) {
 		uzlib_uncompress_init(&cbd->d, cbd->dictionary, sizeof(cbd->dictionary));
 
 		cbd->d.source = cbd->source;
