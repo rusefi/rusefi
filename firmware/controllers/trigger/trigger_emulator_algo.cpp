@@ -83,10 +83,6 @@ static float pwmSwitchTimesBuffer[PWM_PHASE_MAX_COUNT];
 
 PwmConfig triggerSignal(pwmSwitchTimesBuffer, sr);
 
-#define DO_NOT_STOP 999999999
-
-static int stopEmulationAtIndex = DO_NOT_STOP;
-
 static Logging *logger;
 static int atTriggerVersion = 0;
 

@@ -159,7 +159,7 @@ bool readSlowAnalogInputs(adcsample_t* convertedSamples) {
 	}
 
 	// Average samples to get some noise filtering and oversampling
-	for (int i = 0; i < slowChannelCount; i++) {
+	for (size_t i = 0; i < slowChannelCount; i++) {
 		uint32_t sum = 0;
 		size_t index = i;
 		for (size_t j = 0; j < SLOW_ADC_OVERSAMPLE; j++) {

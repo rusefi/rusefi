@@ -326,7 +326,7 @@ void Engine::updateSwitchInputs(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 #endif // EFI_GPIO_HARDWARE
 }
 
-void Engine::onTriggerSignalEvent(efitick_t nowNt) {
+void Engine::onTriggerSignalEvent() {
 	isSpinning = true;
 }
 
