@@ -49,6 +49,10 @@ private:
 	void writeCrcPacketLarge(uint8_t responseCode, const uint8_t* buf, size_t size);
 };
 
+#if EFI_UNIT_TEST
+struct BaseChannel;
+#endif
+
 struct ts_channel_s : public TsChannelBase {
 	void write(const uint8_t* buffer, size_t size) override;
 	size_t readTimeout(uint8_t* buffer, size_t size, int timeout) override;
@@ -56,9 +60,7 @@ struct ts_channel_s : public TsChannelBase {
 	bool isReady() override;
 	bool isConfigured() const override;
 
-#if !EFI_UNIT_TEST
 	BaseChannel * channel = nullptr;
-#endif
 
 #if TS_UART_DMA_MODE || PRIMARY_UART_DMA_MODE || TS_UART_MODE
 	UARTDriver *uartp = nullptr;

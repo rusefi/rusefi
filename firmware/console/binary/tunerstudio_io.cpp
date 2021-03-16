@@ -336,6 +336,7 @@ void ts_channel_s::flush() {
 #endif /* TS_CAN_DEVICE */
 }
 
+#if EFI_PROD_CODE || EFI_SIMULATOR
 void BaseChannelTsChannel::write(const uint8_t* buffer, size_t size) {
 	chnWriteTimeout(m_channel, buffer, size, BINARY_IO_TIMEOUT);
 }
@@ -357,3 +358,4 @@ if (isUsbSerial(m_channel)) {
 #endif /* EFI_USB_SERIAL */
 	return true;
 }
+#endif // EFI_PROD_CODE || EFI_SIMULATOR
