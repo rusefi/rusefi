@@ -211,6 +211,14 @@ void runRusEfi(void) {
 	prepareVoidConfiguration(&activeConfiguration);
 #endif /* EFI_ACTIVE_CONFIGURATION_IN_FLASH */
 
+#if EFI_FILE_LOGGING
+	initMmcCard();
+#endif /* EFI_FILE_LOGGING */
+
+#ifdef EFI_USB_SERIAL
+	startUsbConsole();
+#endif
+
 	/**
 	 * Next we should initialize serial port console, it's important to know what's going on
 	 */
@@ -224,10 +232,6 @@ void runRusEfi(void) {
 	 * Initialize hardware drivers
 	 */
 	initHardware(&sharedLogger);
-
-#if EFI_FILE_LOGGING
-	initMmcCard();
-#endif /* EFI_FILE_LOGGING */
 
 	initStatusLoop();
 	/**
