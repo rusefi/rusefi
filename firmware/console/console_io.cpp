@@ -47,17 +47,9 @@
 
 EXTERN_ENGINE;
 
-#if HAL_USE_SERIAL_USB
-#include "usbcfg.h"
-#include "usbconsole.h"
-#define EFI_CONSOLE_USB_DEVICE SDU1
-#define SERIAL_USB_DRIVER SerialUSBDriver
-
 #ifdef EFI_CONSOLE_USB_DEVICE
-extern SERIAL_USB_DRIVER EFI_CONSOLE_USB_DEVICE;
+extern SerialUSBDriver EFI_CONSOLE_USB_DEVICE;
 #endif /* EFI_CONSOLE_USB_DEVICE */
-
-#endif /* HAL_USE_SERIAL_USB */
 
 // 10 seconds
 #define CONSOLE_WRITE_TIMEOUT 10000
@@ -195,11 +187,7 @@ BaseChannel * getConsoleChannel(void) {
 	return (BaseChannel *) &uartChannel;
 #endif /* EFI_CONSOLE_UART_DEVICE */
 
-#if HAL_USE_SERIAL_USB
-	return (BaseChannel *) &EFI_CONSOLE_USB_DEVICE;
-#else
 	return nullptr;
-#endif /* HAL_USE_SERIAL_USB */
 }
 
 bool isCommandLineConsoleReady(void) {
