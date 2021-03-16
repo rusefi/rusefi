@@ -366,6 +366,11 @@ static BaseBlockDevice* initializeMmcBlockDevice() {
 	mmc_hs_spicfg.sspad = mmc_ls_spicfg.sspad = getHwPin("mmc", CONFIG(sdCardCsPin));
 	mmccfg.spip = getSpiDevice(mmcSpiDevice);
 
+	// Invalid SPI device, abort.
+	if (!mmccfg.spip) {
+		return nullptr;
+	}
+
 	// We think we have everything for the card, let's try to mount it!
 	mmcObjectInit(&MMCD1);
 	mmcStart(&MMCD1, &mmccfg);
