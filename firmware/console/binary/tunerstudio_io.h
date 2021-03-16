@@ -63,6 +63,19 @@ struct ts_channel_s : public TsChannelBase {
 #endif // TS_UART_DMA_MODE
 };
 
+class BaseChannelTsChannel : public TsChannelBase {
+public:
+	BaseChannelTsChannel(BaseChannel* channel) : m_channel(channel) { }
+
+	void write(const uint8_t* buffer, size_t size) override;
+	size_t readTimeout(uint8_t* buffer, size_t size, int timeout) override;
+	void flush() override;
+	bool isReady() override;
+
+private:
+	BaseChannel* const m_channel;
+};
+
 #define CRC_VALUE_SIZE 4
 // todo: double-check this
 #define CRC_WRAPPING_SIZE (CRC_VALUE_SIZE + 3)

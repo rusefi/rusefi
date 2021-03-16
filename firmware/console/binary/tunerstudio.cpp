@@ -578,6 +578,17 @@ void runBinaryProtocolLoop(TsChannelBase* tsChannel) {
 	}
 }
 
+void TunerstudioThread::ThreadTask() {
+	auto channel = setupChannel();
+
+	// No channel configured for this thread, cancel.
+	if (!channel) {
+		return;
+	}
+
+	runBinaryProtocolLoop(channel);
+}
+
 static THD_FUNCTION(tsThreadEntryPoint, arg) {
 	(void) arg;
 	chRegSetThreadName("tunerstudio thread");

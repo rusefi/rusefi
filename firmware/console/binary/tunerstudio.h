@@ -11,6 +11,7 @@
 
 #if EFI_TUNER_STUDIO
 #include "tunerstudio_outputs.h"
+#include "thread_controller.h"
 
 typedef struct {
 	int queryCommandCounter;
@@ -70,5 +71,17 @@ post_packed {
 	short int offset;
 	short int count;
 } TunerStudioWriteChunkRequest;
+
+class TunerstudioThread : public ThreadController<CONNECTIVITY_THREAD_STACK> {
+public:
+	TunerstudioThread(const char* name)
+		: ThreadController(name, PRIO_CONSOLE)
+	{
+	}
+
+	virtual TsChannelBase* setupChannel() = 0;
+
+	void ThreadTask() override;
+};
 
 #endif /* EFI_TUNER_STUDIO */

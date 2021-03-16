@@ -353,3 +353,25 @@ void ts_channel_s::flush() {
 	canFlushTxStream(&TS_CAN_DEVICE);
 #endif /* TS_CAN_DEVICE */
 }
+
+void BaseChannelTsChannel::write(const uint8_t* buffer, size_t size) {
+	chnWriteTimeout(m_channel, buffer, size, BINARY_IO_TIMEOUT);
+}
+
+size_t BaseChannelTsChannel::readTimeout(uint8_t* buffer, size_t size, int timeout) {
+	return chnReadTimeout(m_channel, buffer, size, timeout);
+}
+
+void BaseChannelTsChannel::flush() {
+	// nop for this channel, writes automatically flush
+}
+
+bool BaseChannelTsChannel::isReady() {
+#if EFI_USB_SERIAL
+if (isUsbSerial(m_channel)) {
+		// TS uses USB when console uses serial
+		return is_usb_serial_ready();
+	}
+#endif /* EFI_USB_SERIAL */
+	return true;
+}
