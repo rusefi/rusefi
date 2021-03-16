@@ -47,10 +47,6 @@
 
 EXTERN_ENGINE;
 
-#ifdef EFI_USB_SERIAL
-extern SerialUSBDriver EFI_CONSOLE_USB_DEVICE;
-#endif /* EFI_USB_SERIAL */
-
 // 10 seconds
 #define CONSOLE_WRITE_TIMEOUT 10000
 
@@ -163,6 +159,10 @@ static const BaseChannel uartChannel = { .vmt = &uartChannelVmt };
 ts_channel_s primaryChannel;
 
 #if EFI_PROD_CODE || EFI_EGT
+
+#if HAL_USE_SERIAL_USB
+extern SerialUSBDriver EFI_CONSOLE_USB_DEVICE;
+#endif /* HAL_USE_SERIAL_USB */
 
 bool isUsbSerial(BaseChannel * channel) {
 #if HAL_USE_SERIAL_USB

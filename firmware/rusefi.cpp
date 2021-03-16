@@ -215,7 +215,7 @@ void runRusEfi(void) {
 	initMmcCard();
 #endif /* EFI_FILE_LOGGING */
 
-#ifdef EFI_USB_SERIAL
+#if EFI_USB_SERIAL
 	startUsbConsole();
 #endif
 
