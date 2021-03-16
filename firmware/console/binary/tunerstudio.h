@@ -79,6 +79,7 @@ public:
 	{
 	}
 
+	// Initialize and return the channel to use for this thread.
 	virtual TsChannelBase* setupChannel() = 0;
 
 	void ThreadTask() override;
