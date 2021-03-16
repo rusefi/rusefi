@@ -313,7 +313,11 @@ void TsChannelBase::sendResponse(ts_response_format_e mode, const uint8_t * buff
 }
 
 bool ts_channel_s::isConfigured() const {
-	return this->channel || this->uartp;
+	return
+#if TS_UART_DMA_MODE || PRIMARY_UART_DMA_MODE || TS_UART_MODE
+		this->uartp ||
+#endif
+		this->channel;
 }
 
 bool ts_channel_s::isReady() {
