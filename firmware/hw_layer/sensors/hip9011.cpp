@@ -55,6 +55,7 @@
 #if EFI_HIP_9011
 
 static NamedOutputPin intHold(PROTOCOL_HIP_NAME);
+static NamedOutputPin Cs(PROTOCOL_HIP_NAME);
 
 class Hip9011Hardware : public Hip9011HardwareInterface {
 	void sendSyncCommand(unsigned char command) override;
@@ -345,11 +346,11 @@ static msg_t hipThread(void *arg) {
 	chRegSetThreadName("hip9011 init");
 
 	// some time to let the hardware start
-	enginePins.hipCs.setValue(true);
+	Cs.setValue(true);
 	chThdSleepMilliseconds(100);
-	enginePins.hipCs.setValue(false);
+	Cs.setValue(false);
 	chThdSleepMilliseconds(100);
-	enginePins.hipCs.setValue(true);
+	Cs.setValue(true);
 
 	while (true) {
 		chThdSleepMilliseconds(100);
@@ -364,12 +365,15 @@ static msg_t hipThread(void *arg) {
 
 void stopHip9001_pins() {
 	intHold.deInit();
-	enginePins.hipCs.deInit();
+	Cs.deInit();
+#if EFI_PROD_CODE
+	hipSpiCfg.ssport = NULL;
+#endif
 }
 
 void startHip9001_pins() {
 	intHold.initPin("hip int/hold", CONFIG(hip9011IntHoldPin), &CONFIG(hip9011IntHoldPinMode));
-	enginePins.hipCs.initPin("hip CS", CONFIG(hip9011CsPin), &CONFIG(hip9011CsPinMode));
+	Cs.initPin("hip CS", CONFIG(hip9011CsPin), &CONFIG(hip9011CsPinMode));
 }
 
 void initHip9011(Logging *sharedLogger) {

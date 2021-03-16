@@ -116,8 +116,7 @@ EnginePins::EnginePins() :
 		alternatorPin("Alternator control", CONFIG_PIN_OFFSETS(alternatorControl)),
 		checkEnginePin("checkEnginePin", CONFIG_PIN_OFFSETS(malfunctionIndicator)),
 		tachOut("tachOut", CONFIG_PIN_OFFSETS(tachOutput)),
-		triggerDecoderErrorPin("led: trigger debug", CONFIG_PIN_OFFSETS(triggerError)),
-		hipCs("hipCs", CONFIG_PIN_OFFSETS(hip9011Cs))
+		triggerDecoderErrorPin("led: trigger debug", CONFIG_PIN_OFFSETS(triggerError))
 {
 	tachOut.name = PROTOCOL_TACH_NAME;
 	hpfpValve.name = PROTOCOL_HPFP_NAME;
