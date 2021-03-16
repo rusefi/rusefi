@@ -47,9 +47,9 @@
 
 EXTERN_ENGINE;
 
-#ifdef HAL_USE_SERIAL_USB
+#ifdef EFI_USB_SERIAL
 extern SerialUSBDriver EFI_CONSOLE_USB_DEVICE;
-#endif /* HAL_USE_SERIAL_USB */
+#endif /* EFI_USB_SERIAL */
 
 // 10 seconds
 #define CONSOLE_WRITE_TIMEOUT 10000
