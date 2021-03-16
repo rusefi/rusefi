@@ -572,6 +572,11 @@ static void tsProcessOne(TsChannelBase* tsChannel) {
 }
 
 void runBinaryProtocolLoop(TsChannelBase* tsChannel) {
+	// No channel configured for this thread, cancel.
+	if (!tsChannel || !tsChannel->isConfigured()) {
+		return;
+	}
+
 	// Until the end of time, process incoming messages.
 	while(true) {
 		tsProcessOne(tsChannel);
@@ -580,11 +585,6 @@ void runBinaryProtocolLoop(TsChannelBase* tsChannel) {
 
 void TunerstudioThread::ThreadTask() {
 	auto channel = setupChannel();
-
-	// No channel configured for this thread, cancel.
-	if (!channel) {
-		return;
-	}
 
 	runBinaryProtocolLoop(channel);
 }

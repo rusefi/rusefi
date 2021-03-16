@@ -22,17 +22,6 @@ extern LoggingWithStorage tsLogger;
 #if EFI_PROD_CODE
 #include "pin_repository.h"
 
-#if HAL_USE_SERIAL_USB
-// Assert that the USB tx/rx buffers are large enough to fit one full packet
-static_assert(SERIAL_USB_BUFFERS_SIZE >= BLOCKING_FACTOR + 10);
-#define SERIAL_USB_DRIVER SerialUSBDriver
-#define TS_USB_DEVICE EFI_CONSOLE_USB_DEVICE // SDU1
-#endif /* HAL_USE_SERIAL_USB */
-
-#ifdef TS_USB_DEVICE
-extern SERIAL_USB_DRIVER TS_USB_DEVICE;
-#endif /* TS_USB_DEVICE */
-
 #ifdef TS_CAN_DEVICE
 #include "serial_can.h"
 #endif /* TS_CAN_DEVICE */
@@ -63,23 +52,8 @@ static CANConfig tsCanConfig = { CAN_MCR_ABOM | CAN_MCR_AWUM | CAN_MCR_TXFP, CAN
 
 
 void startTsPort(ts_channel_s *tsChannel) {
-
 	#if EFI_PROD_CODE
 	tsChannel->channel = (BaseChannel *) NULL;
-		#if defined(TS_USB_DEVICE)
-#if defined(TS_UART_DEVICE)
-#error 	"cannot have TS_UART_DEVICE and TS_USB_DEVICE"
-#endif
-			print("TunerStudio over USB serial");
-			/**
-			 * This method contains a long delay, that's the reason why this is not done on the main thread
-			 * TODO: actually now with some refactoring this IS on the main thread :(
-			 */
-			usb_serial_start();
-			// if console uses UART then TS uses USB
-			tsChannel->channel = (BaseChannel *) &TS_USB_DEVICE;
-			return;
-		#endif /* TS_USB_DEVICE */
 		#if defined(TS_UART_DEVICE) || defined(TS_SERIAL_DEVICE)
 			if (CONFIG(useSerialPort)) {
 
@@ -336,6 +310,10 @@ void TsChannelBase::sendResponse(ts_response_format_e mode, const uint8_t * buff
 			flush();
 		}
 	}
+}
+
+bool ts_channel_s::isConfigured() const {
+	return this->channel || this->uartp;
 }
 
 bool ts_channel_s::isReady() {

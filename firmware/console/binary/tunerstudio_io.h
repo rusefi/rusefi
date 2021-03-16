@@ -29,6 +29,7 @@ public:
 	virtual size_t readTimeout(uint8_t* buffer, size_t size, int timeout) = 0;
 	virtual void flush() = 0;
 	virtual bool isReady() = 0;
+	virtual bool isConfigured() const = 0;
 
 	// Base functions that use the above virtual implementation
 	size_t read(uint8_t* buffer, size_t size);
@@ -53,6 +54,7 @@ struct ts_channel_s : public TsChannelBase {
 	size_t readTimeout(uint8_t* buffer, size_t size, int timeout) override;
 	void flush() override;
 	bool isReady() override;
+	bool isConfigured() const override;
 
 #if !EFI_UNIT_TEST
 	BaseChannel * channel = nullptr;
@@ -71,6 +73,7 @@ public:
 	size_t readTimeout(uint8_t* buffer, size_t size, int timeout) override;
 	void flush() override;
 	bool isReady() override;
+	bool isConfigured() const override { return true; }
 
 private:
 	BaseChannel* const m_channel;
