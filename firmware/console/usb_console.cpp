@@ -2,6 +2,8 @@
 #include "thread_controller.h"
 #include "tunerstudio.h"
 
+#ifdef EFI_USB_SERIAL
+
 // Assert that the USB tx/rx buffers are large enough to fit one full packet
 static_assert(SERIAL_USB_BUFFERS_SIZE >= BLOCKING_FACTOR + 10);
 
@@ -24,3 +26,5 @@ static UsbThread usbConsole;
 void startUsbConsole() {
 	usbConsole.Start();
 }
+
+#endif // EFI_USB_SERIAL
