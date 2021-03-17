@@ -161,6 +161,16 @@ static void scheduleReboot(void) {
 	chVTSetI(&resetTimer, TIME_MS2I(3000), (vtfunc_t) rebootNow, NULL);
 }
 
+// Returns false if there's an obvious problem with the loaded configuration
+static bool validateConfig() {
+	if (CONFIG(specs.cylindersCount) > minI(INJECTION_PIN_COUNT, IGNITION_PIN_COUNT)) {
+		firmwareError(OBD_PCM_Processor_Fault, "Invalid cylinder count: %d", CONFIG(specs.cylindersCount));
+		return false;
+	}
+
+	return true;
+}
+
 void runRusEfi(void) {
 	efiAssertVoid(CUSTOM_RM_STACK_1, getCurrentRemainingStack() > 512, "init s");
 	assertEngineReference();
@@ -232,24 +242,27 @@ void runRusEfi(void) {
 	enableTriggerStimulator();
 #endif // HW_CHECK_ALWAYS_STIMULATE
 
-	initStatusLoop();
-	/**
-	 * Now let's initialize actual engine control logic
-	 * todo: should we initialize some? most? controllers before hardware?
-	 */
-	initEngineContoller(&sharedLogger PASS_ENGINE_PARAMETER_SIGNATURE);
-	rememberCurrentConfiguration();
+	// Config could be completely bogus - don't start anything else!
+	if (validateConfig()) {
+		initStatusLoop();
+		/**
+		 * Now let's initialize actual engine control logic
+		 * todo: should we initialize some? most? controllers before hardware?
+		 */
+		initEngineContoller(&sharedLogger PASS_ENGINE_PARAMETER_SIGNATURE);
+		rememberCurrentConfiguration();
 
-#if EFI_PERF_METRICS
-	initTimePerfActions(&sharedLogger);
-#endif
-        
-#if EFI_ENGINE_EMULATOR
-	initEngineEmulator(&sharedLogger PASS_ENGINE_PARAMETER_SIGNATURE);
-#endif
-	startStatusThreads();
+	#if EFI_PERF_METRICS
+		initTimePerfActions(&sharedLogger);
+	#endif
+			
+	#if EFI_ENGINE_EMULATOR
+		initEngineEmulator(&sharedLogger PASS_ENGINE_PARAMETER_SIGNATURE);
+	#endif
+		startStatusThreads();
 
-	runSchedulingPrecisionTestIfNeeded();
+		runSchedulingPrecisionTestIfNeeded();
+	}
 
 	print("Running main loop\r\n");
 	main_loop_started = true;
