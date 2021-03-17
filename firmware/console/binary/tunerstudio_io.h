@@ -30,6 +30,7 @@ public:
 
 	// These functions are optional to implement, not all channels need them
 	virtual void flush() { }
+	virtual bool isConfigured() { return true; }
 	virtual bool isReady() { return true; }
 	virtual void stop() { }
 
@@ -79,7 +80,6 @@ public:
 	size_t readTimeout(uint8_t* buffer, size_t size, int timeout) override;
 	void flush() override;
 	bool isReady() override;
-	bool isConfigured() const override { return true; }
 
 private:
 	BaseChannel* const m_channel;
