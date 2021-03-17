@@ -120,8 +120,11 @@ static efitimems_t previousWriteReportMs = 0;
 
 static ts_channel_s tsChannel;
 
+// TODO: simplify what happens when we have multiple serial ports
+#if !EFI_USB_SERIAL
 // this thread wants a bit extra stack
 static THD_WORKING_AREA(tunerstudioThreadStack, CONNECTIVITY_THREAD_STACK);
+#endif
 
 static void resetTs(void) {
 	memset(&tsState, 0, sizeof(tsState));
@@ -589,6 +592,7 @@ void TunerstudioThread::ThreadTask() {
 	runBinaryProtocolLoop(channel);
 }
 
+#if !EFI_USB_SERIAL
 static THD_FUNCTION(tsThreadEntryPoint, arg) {
 	(void) arg;
 	chRegSetThreadName("tunerstudio thread");
@@ -597,6 +601,7 @@ static THD_FUNCTION(tsThreadEntryPoint, arg) {
 
 	runBinaryProtocolLoop(&tsChannel);
 }
+#endif
 
 /**
  * Copy real configuration into the communications layer working copy
@@ -923,7 +928,10 @@ void startTunerStudioConnectivity(void) {
 	addConsoleAction("bluetooth_cancel", bluetoothCancel);
 #endif /* EFI_BLUETOOTH_SETUP */
 
+// TODO: simplify what happens when we have multiple serial ports
+#if !EFI_USB_SERIAL
 	chThdCreateStatic(tunerstudioThreadStack, sizeof(tunerstudioThreadStack), PRIO_CONSOLE, (tfunc_t)tsThreadEntryPoint, NULL);
+#endif
 }
 
 #endif
