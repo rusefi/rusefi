@@ -30,8 +30,8 @@ public:
 
 	// These functions are optional to implement, not all channels need them
 	virtual void flush() { }
-	virtual bool isConfigured() { return true; }
-	virtual bool isReady() { return true; }
+	virtual bool isConfigured() const { return true; }
+	virtual bool isReady() const { return true; }
 	virtual void stop() { }
 
 	// Base functions that use the above virtual implementation
@@ -62,7 +62,7 @@ struct BaseChannel;
 struct ts_channel_s : public TsChannelBase {
 	void write(const uint8_t* buffer, size_t size) override;
 	size_t readTimeout(uint8_t* buffer, size_t size, int timeout) override;
-	bool isReady() override;
+	bool isReady() const override;
 	bool isConfigured() const override;
 
 	BaseChannel * channel = nullptr;
@@ -79,7 +79,7 @@ public:
 	void write(const uint8_t* buffer, size_t size) override;
 	size_t readTimeout(uint8_t* buffer, size_t size, int timeout) override;
 	void flush() override;
-	bool isReady() override;
+	bool isReady() const override;
 
 private:
 	BaseChannel* const m_channel;

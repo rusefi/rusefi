@@ -278,7 +278,7 @@ bool ts_channel_s::isConfigured() const {
 		this->channel;
 }
 
-bool ts_channel_s::isReady() {
+bool ts_channel_s::isReady() const {
 #if EFI_USB_SERIAL
 	if (isUsbSerial(this->channel)) {
 		// TS uses USB when console uses serial
@@ -301,7 +301,7 @@ void BaseChannelTsChannel::flush() {
 	// nop for this channel, writes automatically flush
 }
 
-bool BaseChannelTsChannel::isReady() {
+bool BaseChannelTsChannel::isReady() const {
 #if EFI_USB_SERIAL
 if (isUsbSerial(m_channel)) {
 		// TS uses USB when console uses serial
