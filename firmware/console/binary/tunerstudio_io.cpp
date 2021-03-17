@@ -127,11 +127,6 @@ void ts_channel_s::write(const uint8_t* buffer, size_t size) {
 			logMsg("chSequentialStreamWrite [%d]\r\n", size);
 #endif
 
-#if (PRIMARY_UART_DMA_MODE || TS_UART_DMA_MODE || TS_UART_MODE) && EFI_PROD_CODE
-	if (uartp) {
-		uartSendTimeout(uartp, &size, buffer, BINARY_IO_TIMEOUT);
-		return;
-	}
 #endif
 	if (!channel) {
 		return;
@@ -161,13 +156,6 @@ void ts_channel_s::write(const uint8_t* buffer, size_t size) {
 }
 
 size_t ts_channel_s::readTimeout(uint8_t* buffer, size_t size, int timeout) {
-#if TS_UART_DMA_MODE || PRIMARY_UART_DMA_MODE
-	if (uartp) {
-		extern uart_dma_s tsUartDma;
-		return iqReadTimeout(&tsUartDma.fifoRxQueue, buffer, size, timeout);
-	}
-#endif
-
 #if TS_UART_DMA_MODE
 #elif TS_UART_MODE
 	uartReceiveTimeout(TS_UART_DEVICE, &size, buffer, timeout);
