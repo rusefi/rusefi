@@ -160,17 +160,6 @@ ts_channel_s primaryChannel;
 
 #if EFI_PROD_CODE || EFI_EGT
 
-#if HAL_USE_SERIAL_USB
-extern SerialUSBDriver EFI_CONSOLE_USB_DEVICE;
-#endif /* HAL_USE_SERIAL_USB */
-
-bool isUsbSerial(BaseChannel * channel) {
-#if HAL_USE_SERIAL_USB
-	return channel == (BaseChannel *) &EFI_CONSOLE_USB_DEVICE;
-#else
-	return false;
-#endif /* EFI_CONSOLE_USB_DEVICE */
-}
 BaseChannel * getConsoleChannel(void) {
 #if PRIMARY_UART_DMA_MODE
 	if (primaryChannel.uartp != nullptr) {

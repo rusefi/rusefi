@@ -11,7 +11,20 @@
 static_assert(SERIAL_USB_BUFFERS_SIZE >= BLOCKING_FACTOR + 10);
 
 extern SerialUSBDriver EFI_CONSOLE_USB_DEVICE;
-static BaseChannelTsChannel usbChannel((BaseChannel*)&EFI_CONSOLE_USB_DEVICE);
+
+class UsbChannel : public BaseChannelTsChannel {
+public:
+	UsbChannel(SerialUSBDriver& driver)
+		: BaseChannelTsChannel(reinterpret_cast<BaseChannel&>(driver))
+	{
+	}
+
+	bool isReady() const override {
+		return is_usb_serial_ready();
+	}
+};
+
+static UsbChannel usbChannel(EFI_CONSOLE_USB_DEVICE);
 
 struct UsbThread : public TunerstudioThread {
 	UsbThread() : TunerstudioThread("USB Console") { }

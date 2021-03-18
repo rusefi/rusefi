@@ -62,7 +62,6 @@ struct BaseChannel;
 struct ts_channel_s : public TsChannelBase {
 	void write(const uint8_t* buffer, size_t size) override;
 	size_t readTimeout(uint8_t* buffer, size_t size, int timeout) override;
-	bool isReady() const override;
 	bool isConfigured() const override;
 
 	BaseChannel * channel = nullptr;
@@ -74,15 +73,19 @@ struct ts_channel_s : public TsChannelBase {
 
 class BaseChannelTsChannel : public TsChannelBase {
 public:
-	BaseChannelTsChannel(BaseChannel* channel) : m_channel(channel) { }
+	BaseChannelTsChannel(BaseChannel& channel) : m_channel(&channel) { }
 
 	void write(const uint8_t* buffer, size_t size) override;
 	size_t readTimeout(uint8_t* buffer, size_t size, int timeout) override;
-	void flush() override;
-	bool isReady() const override;
 
 private:
 	BaseChannel* const m_channel;
+};
+
+class SerialTsChannel : public BaseChannelTsChannel {
+public:
+	// Open the serial port with the specified baud rate
+	virtual void start(uint32_t baud) = 0;
 };
 
 #define CRC_VALUE_SIZE 4
