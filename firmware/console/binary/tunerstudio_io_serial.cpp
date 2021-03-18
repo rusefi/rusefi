@@ -7,10 +7,12 @@
 #if HAL_USE_SERIAL
 void SerialTsChannel::start(uint32_t baud) {
 	SerialConfig cfg = {
-		.speed = baud,
-		.cr1 = 0,
-		.cr2 = USART_CR2_STOP1_BITS | USART_CR2_LINEN,
-		.cr3 = 0
+		#if EFI_PROD_CODE
+			.speed = baud,
+			.cr1 = 0,
+			.cr2 = USART_CR2_STOP1_BITS | USART_CR2_LINEN,
+			.cr3 = 0
+		#endif // EFI_PROD_CODE
 	};
 
 	sdStart(m_driver, &cfg);
