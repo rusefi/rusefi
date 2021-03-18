@@ -214,6 +214,14 @@ void runRusEfi(void) {
 	prepareVoidConfiguration(&activeConfiguration);
 #endif /* EFI_ACTIVE_CONFIGURATION_IN_FLASH */
 
+#if EFI_FILE_LOGGING
+	initMmcCard();
+#endif /* EFI_FILE_LOGGING */
+
+#if EFI_USB_SERIAL
+	startUsbConsole();
+#endif
+
 	/**
 	 * Next we should initialize serial port console, it's important to know what's going on
 	 */
@@ -233,10 +241,6 @@ void runRusEfi(void) {
 	// to be executed at the place of assembly
 	enableTriggerStimulator();
 #endif // HW_CHECK_ALWAYS_STIMULATE
-
-#if EFI_FILE_LOGGING
-	initMmcCard();
-#endif /* EFI_FILE_LOGGING */
 
 	// Config could be completely bogus - don't start anything else!
 	if (validateConfig()) {
