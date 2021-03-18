@@ -71,22 +71,46 @@ struct ts_channel_s : public TsChannelBase {
 #endif // TS_UART_DMA_MODE
 };
 
-class BaseChannelTsChannel : public TsChannelBase {
+// This class represents a channel for a physical async serial poart
+class SerialTsChannelBase : public TsChannelBase {
 public:
-	BaseChannelTsChannel(BaseChannel& channel) : m_channel(&channel) { }
+	// Open the serial port with the specified baud rate
+	virtual void start(uint32_t baud) = 0;
+};
+
+#if HAL_USE_SERIAL
+// This class implements a ChibiOS Serial Driver
+class SerialTsChannel : public SerialTsChannelBase {
+public:
+	SerialTsChannel(SerialDriver& driver) : m_driver(&driver) { }
+
+	void start(uint32_t baud) override;
+	void stop() override;
 
 	void write(const uint8_t* buffer, size_t size) override;
 	size_t readTimeout(uint8_t* buffer, size_t size, int timeout) override;
 
 private:
-	BaseChannel* const m_channel;
+	SerialDriver* const m_driver;
 };
+#endif // HAL_USE_SERIAL
 
-class SerialTsChannel : public BaseChannelTsChannel {
-public:
-	// Open the serial port with the specified baud rate
-	virtual void start(uint32_t baud) = 0;
+#if HAL_USE_UART
+// This class implements a ChibiOS UART Driver
+class UartTsChannel : public SerialTsChannelBase {
+	UartTsChannel(UARTDriver& driver) : m_driver(&driver) { }
+
+	void start(uint32_t baud) override;
+	void stop() override;
+
+	void write(const uint8_t* buffer, size_t size) override;
+	size_t readTimeout(uint8_t* buffer, size_t size, int timeout) override;
+
+private:
+	UARTDriver* const m_driver;
+	UARTConfig m_config;
 };
+#endif // HAL_USE_UART
 
 #define CRC_VALUE_SIZE 4
 // todo: double-check this
