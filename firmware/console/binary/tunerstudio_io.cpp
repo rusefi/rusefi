@@ -22,17 +22,6 @@ extern LoggingWithStorage tsLogger;
 #if EFI_PROD_CODE
 #include "pin_repository.h"
 
-#if HAL_USE_SERIAL_USB
-// Assert that the USB tx/rx buffers are large enough to fit one full packet
-static_assert(SERIAL_USB_BUFFERS_SIZE >= BLOCKING_FACTOR + 10);
-#define SERIAL_USB_DRIVER SerialUSBDriver
-#define TS_USB_DEVICE EFI_CONSOLE_USB_DEVICE // SDU1
-#endif /* HAL_USE_SERIAL_USB */
-
-#ifdef TS_USB_DEVICE
-extern SERIAL_USB_DRIVER TS_USB_DEVICE;
-#endif /* TS_USB_DEVICE */
-
 #if TS_UART_DMA_MODE
 #elif TS_UART_MODE
 /* Note: This structure is modified from the default ChibiOS layout! */
@@ -56,23 +45,8 @@ static SerialConfig tsSerialConfig = { .speed = 0, .cr1 = 0, .cr2 = USART_CR2_ST
 
 
 void startTsPort(ts_channel_s *tsChannel) {
-
 	#if EFI_PROD_CODE
 	tsChannel->channel = (BaseChannel *) NULL;
-		#if defined(TS_USB_DEVICE)
-#if defined(TS_UART_DEVICE)
-#error 	"cannot have TS_UART_DEVICE and TS_USB_DEVICE"
-#endif
-			print("TunerStudio over USB serial");
-			/**
-			 * This method contains a long delay, that's the reason why this is not done on the main thread
-			 * TODO: actually now with some refactoring this IS on the main thread :(
-			 */
-			usb_serial_start();
-			// if console uses UART then TS uses USB
-			tsChannel->channel = (BaseChannel *) &TS_USB_DEVICE;
-			return;
-		#endif /* TS_USB_DEVICE */
 		#if defined(TS_UART_DEVICE) || defined(TS_SERIAL_DEVICE)
 			if (CONFIG(useSerialPort)) {
 
@@ -296,7 +270,15 @@ void TsChannelBase::sendResponse(ts_response_format_e mode, const uint8_t * buff
 	}
 }
 
-bool ts_channel_s::isReady() {
+bool ts_channel_s::isConfigured() const {
+	return
+#if TS_UART_DMA_MODE || PRIMARY_UART_DMA_MODE || TS_UART_MODE
+		this->uartp ||
+#endif
+		this->channel;
+}
+
+bool ts_channel_s::isReady() const {
 #if EFI_USB_SERIAL
 	if (isUsbSerial(this->channel)) {
 		// TS uses USB when console uses serial
@@ -305,3 +287,27 @@ bool ts_channel_s::isReady() {
 #endif /* EFI_USB_SERIAL */
 	return true;
 }
+
+#if EFI_PROD_CODE || EFI_SIMULATOR
+void BaseChannelTsChannel::write(const uint8_t* buffer, size_t size) {
+	chnWriteTimeout(m_channel, buffer, size, BINARY_IO_TIMEOUT);
+}
+
+size_t BaseChannelTsChannel::readTimeout(uint8_t* buffer, size_t size, int timeout) {
+	return chnReadTimeout(m_channel, buffer, size, timeout);
+}
+
+void BaseChannelTsChannel::flush() {
+	// nop for this channel, writes automatically flush
+}
+
+bool BaseChannelTsChannel::isReady() const {
+#if EFI_USB_SERIAL
+if (isUsbSerial(m_channel)) {
+		// TS uses USB when console uses serial
+		return is_usb_serial_ready();
+	}
+#endif /* EFI_USB_SERIAL */
+	return true;
+}
+#endif // EFI_PROD_CODE || EFI_SIMULATOR
