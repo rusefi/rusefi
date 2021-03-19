@@ -79,7 +79,7 @@ void MockAdcState::setMockVoltage(int hwChannel, float voltage DECLARE_ENGINE_PA
 void FuelConsumptionState::consumeFuel(float grams, efitick_t nowNt) {
 	m_consumedGrams += grams;
 
-	float elapsedSecond = m_timer.getElapsedSeconds(nowNt);
+	float elapsedSecond = m_timer.getElapsedSecondsAndReset(nowNt);
 
 	// If it's been a long time since last injection, ignore this pulse
 	if (elapsedSecond > 0.2f) {
