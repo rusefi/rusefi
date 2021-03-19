@@ -18,7 +18,7 @@ DDEFS += -DHAL_USE_EXT=FALSE -DHAL_USE_ICU=FALSE -DHAL_USE_PWM=FALSE -DHAL_USE_R
 #disable ChibiOS flsah driver and prevent header from include
 DDEFS += -DHAL_USE_FLASH=FALSE
 
-DDEFS += -DPRIMARY_UART_DMA_MODE=FALSE
+DDEFS += -DEFI_USE_UART_DMA=FALSE
 
 # disable USB (The bootloader has currently UART support only)
 DDEFS += -DEFI_USB_SERIAL=FALSE
