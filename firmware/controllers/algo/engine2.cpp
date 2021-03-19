@@ -89,6 +89,14 @@ void FuelConsumptionState::consumeFuel(float grams, efitick_t nowNt) {
 	}
 }
 
+float FuelConsumptionState::getConsumedGrams() const {
+	return m_consumedGrams;
+}
+
+float FuelConsumptionState::getConsumptionGramPerSecond() const {
+	return m_rate;
+}
+
 EngineState::EngineState() {
 	timeSinceLastTChargeK = getTimeNowNt();
 }
