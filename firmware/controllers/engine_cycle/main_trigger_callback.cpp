@@ -207,7 +207,7 @@ void InjectionEvent::onTriggerTooth(size_t trgEventIndex, int rpm, efitick_t now
 	// Perform wall wetting adjustment on fuel mass, not duration, so that
 	// it's correct during fuel pressure (injector flow) or battery voltage (deadtime) transients
 	const float injectionMassGrams = wallFuel.adjust(ENGINE(injectionMass) PASS_ENGINE_PARAMETER_SUFFIX);
-	ENGINE(engineState.fuelConsumption).consumeFuel(injectionMassGrams);
+	ENGINE(engineState.fuelConsumption).consumeFuel(injectionMassGrams, nowNt);
 	const floatms_t injectionDuration = ENGINE(injectorModel)->getInjectionDuration(injectionMassGrams);
 
 #if EFI_PRINTF_FUEL_DETAILS
@@ -230,9 +230,6 @@ void InjectionEvent::onTriggerTooth(size_t trgEventIndex, int rpm, efitick_t now
 		warning(CUSTOM_TOO_LONG_CRANKING_FUEL_INJECTION, "Too long cranking fuel injection %.2fms", injectionDuration);
 	}
 
-	// Store 'pure' injection duration (w/o injector lag) for fuel rate calc.
-	engine->engineState.fuelConsumption.addData(injectionDuration - ENGINE(engineState.running.injectorLag));
-	
 	ENGINE(actualLastInjection) = injectionDuration;
 	if (cisnan(injectionDuration)) {
 		warning(CUSTOM_OBD_NAN_INJECTION, "NaN injection pulse");
