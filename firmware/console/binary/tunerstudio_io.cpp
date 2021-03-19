@@ -277,37 +277,3 @@ bool ts_channel_s::isConfigured() const {
 #endif
 		this->channel;
 }
-
-bool ts_channel_s::isReady() const {
-#if EFI_USB_SERIAL
-	if (isUsbSerial(this->channel)) {
-		// TS uses USB when console uses serial
-		return is_usb_serial_ready();
-	}
-#endif /* EFI_USB_SERIAL */
-	return true;
-}
-
-#if EFI_PROD_CODE || EFI_SIMULATOR
-void BaseChannelTsChannel::write(const uint8_t* buffer, size_t size) {
-	chnWriteTimeout(m_channel, buffer, size, BINARY_IO_TIMEOUT);
-}
-
-size_t BaseChannelTsChannel::readTimeout(uint8_t* buffer, size_t size, int timeout) {
-	return chnReadTimeout(m_channel, buffer, size, timeout);
-}
-
-void BaseChannelTsChannel::flush() {
-	// nop for this channel, writes automatically flush
-}
-
-bool BaseChannelTsChannel::isReady() const {
-#if EFI_USB_SERIAL
-if (isUsbSerial(m_channel)) {
-		// TS uses USB when console uses serial
-		return is_usb_serial_ready();
-	}
-#endif /* EFI_USB_SERIAL */
-	return true;
-}
-#endif // EFI_PROD_CODE || EFI_SIMULATOR
