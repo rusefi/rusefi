@@ -31,6 +31,3 @@ floatms_t getInjectionMass(int rpm DECLARE_ENGINE_PARAMETER_SUFFIX);
 percent_t getInjectorDutyCycle(int rpm DECLARE_ENGINE_PARAMETER_SUFFIX);
 
 float getStandardAirCharge(DECLARE_ENGINE_PARAMETER_SIGNATURE);
-
-// convert injection duration (Ms/Nt) to fuel rate (L/h)
-float getFuelRate(floatms_t totalInjDuration, efitick_t timePeriod DECLARE_ENGINE_PARAMETER_SUFFIX);

@@ -28,8 +28,6 @@ void onDataArrived(void);
 #if EFI_PROD_CODE || EFI_SIMULATOR || EFI_EGT
 bool isCommandLineConsoleReady(void);
 
-bool isUsbSerial(BaseChannel * channel);
-
 BaseChannel * getConsoleChannel(void);
 
 #else

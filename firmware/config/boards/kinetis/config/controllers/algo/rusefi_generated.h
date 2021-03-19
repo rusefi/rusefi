@@ -604,13 +604,14 @@
 #define fsioTable4_offset 19844
 #define fsioTable4LoadBins_offset 19908
 #define fsioTable4RpmBins_offset 19940
+#define FUEL_LEVEL_TABLE_COUNT 8
 #define FUEL_LOAD_COUNT 16
 #define FUEL_RPM_COUNT 16
 #define fuelAlgorithm_offset 420
 #define fuelClosedLoopCorrectionEnabled_offset 1464
-#define fuelLevelEmptyTankVoltage_offset 684
-#define fuelLevelFullTankVoltage_offset 688
+#define fuelLevelBins_offset 1204
 #define fuelLevelSensor_offset 514
+#define fuelLevelValues_offset 684
 #define fuelPumpPin_offset 658
 #define fuelPumpPinMode_offset 659
 #define fuelRailPressure_offset 1756
@@ -649,8 +650,10 @@
 #define GAUGE_NAME_FUEL_BASE "fuel: base mass"
 #define GAUGE_NAME_FUEL_CHARGE_TEMP "fuel: Estimated charge temperature"
 #define GAUGE_NAME_FUEL_CLT_CORR "fuel: CLT correction"
+#define GAUGE_NAME_FUEL_CONSUMPTION "fuel: Total consumed"
 #define GAUGE_NAME_FUEL_CRANKING "fuel: cranking"
 #define GAUGE_NAME_FUEL_EL_EXTRA "fuel: engine load acceleration extra fuel"
+#define GAUGE_NAME_FUEL_FLOW "fuel: Flow rate"
 #define GAUGE_NAME_FUEL_IAT_CORR "fuel: IAT correction"
 #define GAUGE_NAME_FUEL_INJ_DUTY "fuel: injector duty cycle"
 #define GAUGE_NAME_FUEL_LAST_INJECTION "fuel: Last injection"
@@ -1145,6 +1148,7 @@
 #define PACK_MULT_AFR 1000
 #define PACK_MULT_AFR_CFG 10
 #define PACK_MULT_ANGLE 50
+#define PACK_MULT_FUEL_FLOW 200
 #define PACK_MULT_FUEL_MASS 100
 #define PACK_MULT_HIGH_PRESSURE 10
 #define PACK_MULT_LAMBDA 10000
@@ -1227,8 +1231,8 @@
 #define showHumanReadableWarning_offset 976
 #define showSdCardWarning_offset 76
 #define SIGNATURE_BOARD kin
-#define SIGNATURE_DATE 2021.03.14
-#define SIGNATURE_HASH 1052577569
+#define SIGNATURE_DATE 2021.03.19
+#define SIGNATURE_HASH 204659405
 #define silentTriggerError_offset 1464
 #define slowAdcAlpha_offset 2088
 #define sparkDwellRpmBins_offset 332
@@ -1563,7 +1567,7 @@
 #define ts_show_spi true
 #define ts_show_trigger_comparator true
 #define ts_show_tunerstudio_port true
-#define TS_SIGNATURE "rusEFI 2021.03.14.kin.1052577569"
+#define TS_SIGNATURE "rusEFI 2021.03.19.kin.204659405"
 #define TS_SINGLE_WRITE_COMMAND 'W'
 #define TS_SINGLE_WRITE_COMMAND_char W
 #define TS_TEST_COMMAND 't' // 0x74
@@ -1658,13 +1662,13 @@
 #define unused_294_6_offset 76
 #define unused_294_7_offset 76
 #define unused_294_8_offset 76
-#define unusedAtOldBoardConfigurationEnd_offset 1204
+#define unusedAtOldBoardConfigurationEnd_offset 1220
 #define unusedAuxVoltage1_TODO_332_offset 2685
 #define unusedAuxVoltage2_TODO_332_offset 2686
 #define unusedBit4_1476_offset 1476
 #define unusedBit_251_29_offset 976
-#define unusedBit_289_30_offset 976
-#define unusedBit_289_31_offset 976
+#define unusedBit_288_30_offset 976
+#define unusedBit_288_31_offset 976
 #define unusedBit_34_31_offset 76
 #define unusedBit_490_10_offset 2116
 #define unusedBit_490_11_offset 2116

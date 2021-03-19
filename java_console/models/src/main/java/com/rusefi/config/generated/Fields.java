@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Sun Mar 14 21:29:17 UTC 2021
+// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Fri Mar 19 21:20:07 UTC 2021
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -599,13 +599,14 @@ public class Fields {
 	public static final int fsioTable4_offset = 19872;
 	public static final int fsioTable4LoadBins_offset = 19936;
 	public static final int fsioTable4RpmBins_offset = 19968;
+	public static final int FUEL_LEVEL_TABLE_COUNT = 8;
 	public static final int FUEL_LOAD_COUNT = 16;
 	public static final int FUEL_RPM_COUNT = 16;
 	public static final int fuelAlgorithm_offset = 420;
 	public static final int fuelClosedLoopCorrectionEnabled_offset = 1464;
-	public static final int fuelLevelEmptyTankVoltage_offset = 684;
-	public static final int fuelLevelFullTankVoltage_offset = 688;
+	public static final int fuelLevelBins_offset = 1204;
 	public static final int fuelLevelSensor_offset = 514;
+	public static final int fuelLevelValues_offset = 684;
 	public static final int fuelPumpPin_offset = 658;
 	public static final int fuelPumpPinMode_offset = 659;
 	public static final int fuelRailPressure_offset = 1756;
@@ -644,8 +645,10 @@ public class Fields {
 	public static final String GAUGE_NAME_FUEL_BASE = "fuel: base mass";
 	public static final String GAUGE_NAME_FUEL_CHARGE_TEMP = "fuel: Estimated charge temperature";
 	public static final String GAUGE_NAME_FUEL_CLT_CORR = "fuel: CLT correction";
+	public static final String GAUGE_NAME_FUEL_CONSUMPTION = "fuel: Total consumed";
 	public static final String GAUGE_NAME_FUEL_CRANKING = "fuel: cranking";
 	public static final String GAUGE_NAME_FUEL_EL_EXTRA = "fuel: engine load acceleration extra fuel";
+	public static final String GAUGE_NAME_FUEL_FLOW = "fuel: Flow rate";
 	public static final String GAUGE_NAME_FUEL_IAT_CORR = "fuel: IAT correction";
 	public static final String GAUGE_NAME_FUEL_INJ_DUTY = "fuel: injector duty cycle";
 	public static final String GAUGE_NAME_FUEL_LAST_INJECTION = "fuel: Last injection";
@@ -1126,6 +1129,7 @@ public class Fields {
 	public static final int PACK_MULT_AFR = 1000;
 	public static final int PACK_MULT_AFR_CFG = 10;
 	public static final int PACK_MULT_ANGLE = 50;
+	public static final int PACK_MULT_FUEL_FLOW = 200;
 	public static final int PACK_MULT_FUEL_MASS = 100;
 	public static final int PACK_MULT_HIGH_PRESSURE = 10;
 	public static final int PACK_MULT_LAMBDA = 10000;
@@ -1478,7 +1482,7 @@ public class Fields {
 	public static final char TS_SD_R_COMMAND = 'r';
 	public static final char TS_SD_W_COMMAND = 'w';
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI 2021.03.14.all.2204375053";
+	public static final String TS_SIGNATURE = "rusEFI 2021.03.19.all.2985020897";
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final int TT_TT_1_16 = 50;
 	public static final int TT_TT_2JZ_1_12 = 29;
@@ -1570,13 +1574,13 @@ public class Fields {
 	public static final int unused_294_6_offset = 76;
 	public static final int unused_294_7_offset = 76;
 	public static final int unused_294_8_offset = 76;
-	public static final int unusedAtOldBoardConfigurationEnd_offset = 1204;
+	public static final int unusedAtOldBoardConfigurationEnd_offset = 1220;
 	public static final int unusedAuxVoltage1_TODO_332_offset = 2713;
 	public static final int unusedAuxVoltage2_TODO_332_offset = 2714;
 	public static final int unusedBit4_1476_offset = 1476;
 	public static final int unusedBit_251_29_offset = 976;
-	public static final int unusedBit_289_30_offset = 976;
-	public static final int unusedBit_289_31_offset = 976;
+	public static final int unusedBit_288_30_offset = 976;
+	public static final int unusedBit_288_31_offset = 976;
 	public static final int unusedBit_34_31_offset = 76;
 	public static final int unusedBit_490_10_offset = 2116;
 	public static final int unusedBit_490_11_offset = 2116;
@@ -1923,8 +1927,6 @@ public class Fields {
 	public static final Field TPS1_2ADCCHANNEL = Field.create("TPS1_2ADCCHANNEL", 681, FieldType.INT8, adc_channel_e);
 	public static final Field TPS2_2ADCCHANNEL = Field.create("TPS2_2ADCCHANNEL", 682, FieldType.INT8, adc_channel_e);
 	public static final Field THROTTLEPEDALPOSITIONSECONDADCCHANNEL = Field.create("THROTTLEPEDALPOSITIONSECONDADCCHANNEL", 683, FieldType.INT8, adc_channel_e);
-	public static final Field FUELLEVELEMPTYTANKVOLTAGE = Field.create("FUELLEVELEMPTYTANKVOLTAGE", 684, FieldType.FLOAT);
-	public static final Field FUELLEVELFULLTANKVOLTAGE = Field.create("FUELLEVELFULLTANKVOLTAGE", 688, FieldType.FLOAT);
 	public static final String[] ego_sensor_e = {"BPSX", "Innovate", "14Point7", "Narrow", "PLX", "Custom", "INVALID", "INVALID"};
 	public static final Field AFR_TYPE = Field.create("AFR_TYPE", 692, FieldType.INT, ego_sensor_e);
 	public static final Field IDLE_ANTIWINDUPFREQ = Field.create("IDLE_ANTIWINDUPFREQ", 696, FieldType.FLOAT);
@@ -2165,8 +2167,8 @@ public class Fields {
 	public static final Field KNOCKBANKCYL12 = Field.create("KNOCKBANKCYL12", 976, FieldType.BIT, 27);
 	public static final Field TCUENABLED = Field.create("TCUENABLED", 976, FieldType.BIT, 28);
 	public static final Field UNUSEDBIT_251_29 = Field.create("UNUSEDBIT_251_29", 976, FieldType.BIT, 29);
-	public static final Field UNUSEDBIT_289_30 = Field.create("UNUSEDBIT_289_30", 976, FieldType.BIT, 30);
-	public static final Field UNUSEDBIT_289_31 = Field.create("UNUSEDBIT_289_31", 976, FieldType.BIT, 31);
+	public static final Field UNUSEDBIT_288_30 = Field.create("UNUSEDBIT_288_30", 976, FieldType.BIT, 30);
+	public static final Field UNUSEDBIT_288_31 = Field.create("UNUSEDBIT_288_31", 976, FieldType.BIT, 31);
 	public static final Field ETBIO1_DIRECTIONPIN1 = Field.create("ETBIO1_DIRECTIONPIN1", 980, FieldType.INT8, brain_pin_e);
 	public static final Field ETBIO1_DIRECTIONPIN2 = Field.create("ETBIO1_DIRECTIONPIN2", 981, FieldType.INT8, brain_pin_e);
 	public static final Field ETBIO1_CONTROLPIN1 = Field.create("ETBIO1_CONTROLPIN1", 982, FieldType.INT8, brain_pin_e);
@@ -3001,8 +3003,6 @@ public class Fields {
 	TPS1_2ADCCHANNEL,
 	TPS2_2ADCCHANNEL,
 	THROTTLEPEDALPOSITIONSECONDADCCHANNEL,
-	FUELLEVELEMPTYTANKVOLTAGE,
-	FUELLEVELFULLTANKVOLTAGE,
 	AFR_TYPE,
 	IDLE_ANTIWINDUPFREQ,
 	TRIGGERINPUTPINS1,
@@ -3240,8 +3240,8 @@ public class Fields {
 	KNOCKBANKCYL12,
 	TCUENABLED,
 	UNUSEDBIT_251_29,
-	UNUSEDBIT_289_30,
-	UNUSEDBIT_289_31,
+	UNUSEDBIT_288_30,
+	UNUSEDBIT_288_31,
 	ETBIO1_DIRECTIONPIN1,
 	ETBIO1_DIRECTIONPIN2,
 	ETBIO1_CONTROLPIN1,

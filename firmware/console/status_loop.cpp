@@ -574,7 +574,7 @@ void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels DECLARE_
 	tsOutputChannels->injectorDutyCycle = getInjectorDutyCycle(rpm PASS_ENGINE_PARAMETER_SUFFIX);
 #endif
 	// 148
-	tsOutputChannels->fuelTankLevel = engine->sensors.fuelTankLevel;
+	tsOutputChannels->fuelTankLevel = Sensor::get(SensorType::FuelLevel).value_or(0);
 	// 160
 	const auto& wallFuel = ENGINE(injectionEvents.elements[0].wallFuel);
 	tsOutputChannels->wallFuelAmount = wallFuel.getWallFuel();
@@ -705,7 +705,8 @@ void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels DECLARE_
 #endif /* EFI_VEHICLE_SPEED */
 #endif /* EFI_PROD_CODE */
 
-	tsOutputChannels->fuelConsumptionPerHour = engine->engineState.fuelConsumption.perSecondConsumption;
+	tsOutputChannels->fuelFlowRate = engine->engineState.fuelConsumption.getConsumptionGramPerSecond();
+	tsOutputChannels->totalFuelConsumption = engine->engineState.fuelConsumption.getConsumedGrams();
 
 	tsOutputChannels->warningCounter = engine->engineState.warnings.warningCounter;
 	tsOutputChannels->lastErrorCode = engine->engineState.warnings.lastErrorCode;

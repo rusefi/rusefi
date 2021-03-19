@@ -22,6 +22,10 @@ void initNewSensors(Logging* logger DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	initFlexSensor(PASS_CONFIG_PARAMETER_SIGNATURE);
 	initBaro();
 
+	#if !EFI_UNIT_TEST
+		initFuelLevel(PASS_CONFIG_PARAMETER_SIGNATURE);
+	#endif
+
 	// Init CLI functionality for sensors (mocking)
 	initSensorCli(logger);
 }

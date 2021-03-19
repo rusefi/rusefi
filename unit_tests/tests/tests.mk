@@ -60,6 +60,7 @@ TESTS_SRC_CPP = \
 	tests/sensor/func_chain.cpp \
 	tests/sensor/redundant.cpp \
 	tests/sensor/test_sensor_init.cpp \
+	tests/sensor/table_func.cpp \
 	tests/util/test_closed_loop_controller.cpp \
 	tests/test_stft.cpp \
 	tests/test_boost.cpp \
