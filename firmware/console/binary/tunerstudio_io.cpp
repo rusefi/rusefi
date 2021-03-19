@@ -127,7 +127,6 @@ void ts_channel_s::write(const uint8_t* buffer, size_t size) {
 			logMsg("chSequentialStreamWrite [%d]\r\n", size);
 #endif
 
-#endif
 	if (!channel) {
 		return;
 	}

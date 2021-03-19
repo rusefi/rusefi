@@ -98,6 +98,7 @@ private:
 #if HAL_USE_UART
 // This class implements a ChibiOS UART Driver
 class UartTsChannel : public SerialTsChannelBase {
+public:
 	UartTsChannel(UARTDriver& driver) : m_driver(&driver) { }
 
 	void start(uint32_t baud) override;
@@ -106,7 +107,7 @@ class UartTsChannel : public SerialTsChannelBase {
 	void write(const uint8_t* buffer, size_t size) override;
 	size_t readTimeout(uint8_t* buffer, size_t size, int timeout) override;
 
-private:
+protected:
 	UARTDriver* const m_driver;
 	UARTConfig m_config;
 };
