@@ -1030,7 +1030,7 @@ custom maf_sensor_type_e 4 bits, S32, @OFFSET@, [0:1], @@maf_sensor_type_e_enum@
 	pin_output_mode_e drv8860_csPinMode;
 	brain_pin_e       drv8860_miso;
 
-	uint16_t[FUEL_LEVEL_TABLE_COUNT] fuelLevelBins;;"volt", {1/@@PACK_MULT_VOLTAGE@@}, 0, 0, 5, 2
+	uint16_t[FUEL_LEVEL_TABLE_COUNT] fuelLevelBins;;"volt", {1/@@PACK_MULT_VOLTAGE@@}, 0, 0, 5, 3
 
 	int[59] unusedAtOldBoardConfigurationEnd;;"units", 1, 0, -20, 100, 0
 	uint16_t vehicleWeight;;"kg", 1, 0, 0, 10000, 0
