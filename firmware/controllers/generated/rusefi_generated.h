@@ -618,13 +618,14 @@
 #define fsioTable4_offset 19872
 #define fsioTable4LoadBins_offset 19936
 #define fsioTable4RpmBins_offset 19968
+#define FUEL_LEVEL_TABLE_COUNT 8
 #define FUEL_LOAD_COUNT 16
 #define FUEL_RPM_COUNT 16
 #define fuelAlgorithm_offset 420
 #define fuelClosedLoopCorrectionEnabled_offset 1464
-#define fuelLevelEmptyTankVoltage_offset 684
-#define fuelLevelFullTankVoltage_offset 688
+#define fuelLevelBins_offset 1204
 #define fuelLevelSensor_offset 514
+#define fuelLevelValues_offset 684
 #define fuelPumpPin_offset 658
 #define fuelPumpPinMode_offset 659
 #define fuelRailPressure_offset 1756
@@ -1240,8 +1241,8 @@
 #define showHumanReadableWarning_offset 976
 #define showSdCardWarning_offset 76
 #define SIGNATURE_BOARD all
-#define SIGNATURE_DATE 2021.03.14
-#define SIGNATURE_HASH 2204375053
+#define SIGNATURE_DATE 2021.03.19
+#define SIGNATURE_HASH 2729715025
 #define silentTriggerError_offset 1464
 #define slowAdcAlpha_offset 2088
 #define sparkDwellRpmBins_offset 332
@@ -1576,7 +1577,7 @@
 #define ts_show_spi true
 #define ts_show_trigger_comparator false
 #define ts_show_tunerstudio_port true
-#define TS_SIGNATURE "rusEFI 2021.03.14.all.2204375053"
+#define TS_SIGNATURE "rusEFI 2021.03.19.all.2729715025"
 #define TS_SINGLE_WRITE_COMMAND 'W'
 #define TS_SINGLE_WRITE_COMMAND_char W
 #define TS_TEST_COMMAND 't' // 0x74
@@ -1671,13 +1672,13 @@
 #define unused_294_6_offset 76
 #define unused_294_7_offset 76
 #define unused_294_8_offset 76
-#define unusedAtOldBoardConfigurationEnd_offset 1204
+#define unusedAtOldBoardConfigurationEnd_offset 1220
 #define unusedAuxVoltage1_TODO_332_offset 2713
 #define unusedAuxVoltage2_TODO_332_offset 2714
 #define unusedBit4_1476_offset 1476
 #define unusedBit_251_29_offset 976
-#define unusedBit_289_30_offset 976
-#define unusedBit_289_31_offset 976
+#define unusedBit_288_30_offset 976
+#define unusedBit_288_31_offset 976
 #define unusedBit_34_31_offset 76
 #define unusedBit_490_10_offset 2116
 #define unusedBit_490_11_offset 2116

@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on config/boards/subaru_eg33/config/gen_config.sh integration/rusefi_config.txt Sun Mar 14 21:29:46 UTC 2021
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on config/boards/subaru_eg33/config/gen_config.sh integration/rusefi_config.txt Fri Mar 19 12:40:48 UTC 2021
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -1272,11 +1272,7 @@ struct engine_configuration_s {
 	/**
 	 * offset 684
 	 */
-	float fuelLevelEmptyTankVoltage;
-	/**
-	 * offset 688
-	 */
-	float fuelLevelFullTankVoltage;
+	uint8_t fuelLevelValues[FUEL_LEVEL_TABLE_COUNT];
 	/**
 	 * AFR, WBO, EGO - whatever you like to call it
 	 * offset 692
@@ -1861,10 +1857,10 @@ struct engine_configuration_s {
 	bool unusedBit_251_29 : 1;
 	/**
 	offset 976 bit 30 */
-	bool unusedBit_289_30 : 1;
+	bool unusedBit_288_30 : 1;
 	/**
 	offset 976 bit 31 */
-	bool unusedBit_289_31 : 1;
+	bool unusedBit_288_31 : 1;
 	/**
 	 * offset 980
 	 */
@@ -2002,7 +1998,11 @@ struct engine_configuration_s {
 	/**
 	 * offset 1204
 	 */
-	int unusedAtOldBoardConfigurationEnd[63];
+	uint16_t fuelLevelBins[FUEL_LEVEL_TABLE_COUNT];
+	/**
+	 * offset 1220
+	 */
+	int unusedAtOldBoardConfigurationEnd[59];
 	/**
 	 * offset 1456
 	 */
@@ -3864,4 +3864,4 @@ struct persistent_config_s {
 typedef struct persistent_config_s persistent_config_s;
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on config/boards/subaru_eg33/config/gen_config.sh integration/rusefi_config.txt Sun Mar 14 21:29:46 UTC 2021
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on config/boards/subaru_eg33/config/gen_config.sh integration/rusefi_config.txt Fri Mar 19 12:40:48 UTC 2021
