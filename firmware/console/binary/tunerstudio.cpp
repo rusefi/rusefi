@@ -118,8 +118,6 @@ persistent_config_s configWorkingCopy;
 
 static efitimems_t previousWriteReportMs = 0;
 
-static ts_channel_s tsChannel;
-
 // TODO: simplify what happens when we have multiple serial ports
 #if !EFI_USB_SERIAL
 // this thread wants a bit extra stack
@@ -159,33 +157,19 @@ static void setTsSpeed(int value) {
 
 #if EFI_BLUETOOTH_SETUP
 
-#if defined(CONSOLE_USB_DEVICE)
- /**
-  * we run BT on "primary" channel which is TTL if we have USB console
-  */
- extern ts_channel_s primaryChannel;
- #define BT_CHANNEL primaryChannel
-#else
- /**
-  * if we run two TTL channels we run BT on 2nd TTL channel
-  */
- #define BT_CHANNEL tsChannel
-#endif
-
-
 // Bluetooth HC-05 module initialization start (it waits for disconnect and then communicates to the module)
 static void bluetoothHC05(const char *baudRate, const char *name, const char *pinCode) {
-	bluetoothStart(&BT_CHANNEL, BLUETOOTH_HC_05, baudRate, name, pinCode);
+	bluetoothStart(getBluetoothChannel(), BLUETOOTH_HC_05, baudRate, name, pinCode);
 }
 
 // Bluetooth HC-06 module initialization start (it waits for disconnect and then communicates to the module)
 static void bluetoothHC06(const char *baudRate, const char *name, const char *pinCode) {
-	bluetoothStart(&BT_CHANNEL, BLUETOOTH_HC_06, baudRate, name, pinCode);
+	bluetoothStart(getBluetoothChannel(), BLUETOOTH_HC_06, baudRate, name, pinCode);
 }
 
 // Bluetooth SPP-C module initialization start (it waits for disconnect and then communicates to the module)
 static void bluetoothSPP(const char *baudRate, const char *name, const char *pinCode) {
-	bluetoothStart(&BT_CHANNEL, BLUETOOTH_SPP, baudRate, name, pinCode);
+	bluetoothStart(getBluetoothChannel(), BLUETOOTH_SPP, baudRate, name, pinCode);
 }
 #endif  /* EFI_BLUETOOTH_SETUP */
 

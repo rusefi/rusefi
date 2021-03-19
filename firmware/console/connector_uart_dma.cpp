@@ -7,11 +7,7 @@
 
 #include "connector_uart_dma.h"
 
-#if TS_UART_DMA_MODE || PRIMARY_UART_DMA_MODE
-
-#if TS_UART_DMA_MODE && PRIMARY_UART_DMA_MODE
- #error "Only single-DMA implemented right now"
-#endif
+#if HAL_USE_UART && EFI_USE_UART_DMA
 
 /* Common function for all DMA-UART IRQ handlers. */
 void UartDmaTsChannel::copyDataFromDMA() {
@@ -82,4 +78,4 @@ size_t UartDmaTsChannel::readTimeout(uint8_t* buffer, size_t size, int timeout) 
 	return iqReadTimeout(&fifoRxQueue, buffer, size, timeout);
 }
 
-#endif // TS_UART_DMA_MODE || PRIMARY_UART_DMA_MODE
+#endif // HAL_USE_UART && EFI_USE_UART_DMA

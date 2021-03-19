@@ -7,6 +7,7 @@
 
 #include "engine.h"
 #include "os_access.h"
+#include "tunerstudio.h"
 #include "tunerstudio_io.h"
 #include "console_io.h"
 #include "connector_uart_dma.h"
@@ -17,161 +18,91 @@
 
 EXTERN_ENGINE;
 
-extern LoggingWithStorage tsLogger;
-
 #if EFI_PROD_CODE
 #include "pin_repository.h"
 
-#if TS_UART_DMA_MODE
-#elif TS_UART_MODE
-/* Note: This structure is modified from the default ChibiOS layout! */
-static UARTConfig tsUartConfig = { 
-	.txend1_cb 		= NULL,
-	.txend2_cb 		= NULL,
-	.rxend_cb 		= NULL,
-	.rxchar_cb		= NULL,
-	.rxerr_cb		= NULL,
-	.timeout_cb		= NULL,
-	.speed 			= 0,
-	.cr1 			= 0,
-	.cr2 			= 0/*USART_CR2_STOP1_BITS*/ | USART_CR2_LINEN,
-	.cr3 			= 0,
-	.rxhalf_cb		= NULL
+#if defined(TS_PRIMARY_UART) || defined(TS_PRIMARY_SERIAL)
+#ifdef TS_PRIMARY_UART
+	#if EFI_USE_UART_DMA
+		UartDmaTsChannel primaryChannel(TS_PRIMARY_UART);
+	#else
+		UartTsChannel primaryChannel(TS_PRIMARY_UART);
+	#endif
+#elif defined(TS_PRIMARY_SERIAL)
+SerialTsChannel primaryChannel(TS_PRIMARY_SERIAL);
+#endif
+
+struct PrimaryChannelThread : public TunerstudioThread {
+	PrimaryChannelThread() : TunerstudioThread("Primary TS Channel") { }
+
+	TsChannelBase* setupChannel() {
+		efiSetPadMode("Primary Channel RX", EFI_CONSOLE_RX_BRAIN_PIN, PAL_MODE_ALTERNATE(EFI_CONSOLE_AF));
+		efiSetPadMode("Primary Channel TX", EFI_CONSOLE_TX_BRAIN_PIN, PAL_MODE_ALTERNATE(EFI_CONSOLE_AF));
+
+		primaryChannel.start(CONFIG(uartConsoleSerialSpeed));
+
+		return &primaryChannel;
+	}
 };
-#elif defined(TS_SERIAL_DEVICE)
-static SerialConfig tsSerialConfig = { .speed = 0, .cr1 = 0, .cr2 = USART_CR2_STOP1_BITS | USART_CR2_LINEN, .cr3 = 0 };
-#endif /* TS_UART_DMA_MODE */
-#endif /* EFI_PROD_CODE */
 
+static PrimaryChannelThread primaryChannelThread;
+#endif // defined(TS_PRIMARY_UART) || defined(TS_PRIMARY_SERIAL)
 
-void startTsPort(ts_channel_s *tsChannel) {
-	#if EFI_PROD_CODE
-	tsChannel->channel = (BaseChannel *) NULL;
-		#if defined(TS_UART_DEVICE) || defined(TS_SERIAL_DEVICE)
-			if (CONFIG(useSerialPort)) {
+#if defined(TS_SECONDARY_UART) || defined(TS_SECONDARY_SERIAL)
 
-				print("TunerStudio over USART");
-				/**
-				 * We have hard-coded USB serial console so that it would be clear how to connect to each specific board,
-				 * but for UART serial we allow users to change settings.
-				 */
-				efiSetPadMode("tunerstudio rx", engineConfiguration->binarySerialRxPin, PAL_MODE_ALTERNATE(TS_SERIAL_AF));
-				efiSetPadMode("tunerstudio tx", engineConfiguration->binarySerialTxPin, PAL_MODE_ALTERNATE(TS_SERIAL_AF));
-
-				#if TS_UART_DMA_MODE
-					tsChannel->uartp = TS_UART_DEVICE;
-					startUartDmaConnector(tsChannel->uartp PASS_CONFIG_PARAMETER_SUFFIX);
-				#elif TS_UART_MODE
-					print("Using UART mode");
-					// start DMA driver
-					tsUartConfig.speed = CONFIG(tunerStudioSerialSpeed);
-					uartStart(TS_UART_DEVICE, &tsUartConfig);
-				#elif defined(TS_SERIAL_DEVICE)
-					print("Using Serial mode");
-					tsSerialConfig.speed = CONFIG(tunerStudioSerialSpeed);
-
-					sdStart(TS_SERIAL_DEVICE, &tsSerialConfig);
-
-					tsChannel->channel = (BaseChannel *) TS_SERIAL_DEVICE;
-				#endif
-			}
-		#endif /* TS_UART_DMA_MODE || TS_UART_MODE */
-	#elif EFI_SIMULATOR /* EFI_PROD_CODE */
-		tsChannel->channel = (BaseChannel *) TS_SIMULATOR_PORT;
-	#endif /* EFI_PROD_CODE */
-}
-
-bool stopTsPort(ts_channel_s *tsChannel) {
-	#if EFI_PROD_CODE
-		#if EFI_USB_SERIAL
-			// don't stop USB!
-			//usb_serial_stop();
-			return false;
-		#endif
-		if (CONFIG(useSerialPort)) {
-			// todo: disable Rx/Tx pads?
-			#if (TS_UART_DMA_MODE || TS_UART_MODE)
-				uartStop(TS_UART_DEVICE);
-			#endif /* TS_UART_DMA_MODE || TS_UART_MODE */
-			#ifdef TS_SERIAL_DEVICE
-				sdStop(TS_SERIAL_DEVICE);
-			#endif /* TS_SERIAL_DEVICE */
-		}
-		tsChannel->channel = (BaseChannel *) NULL;
-		return true;
-	#else  /* EFI_PROD_CODE */
-		// don't stop simulator!
-		return false;
-	#endif /* EFI_PROD_CODE */
-}
-
-#if EFI_UNIT_TEST
-int sr5TestWriteDataIndex = 0;
-uint8_t st5TestBuffer[16000];
-
-size_t ts_channel_s::readTimeout(uint8_t* buffer, size_t size, int timeout) {
-	// unit test, nothing to do here
-	return size;
-}
-
-void ts_channel_s::write(const uint8_t* buffer, size_t size) {
-	memcpy(&st5TestBuffer[sr5TestWriteDataIndex], buffer, size);
-	sr5TestWriteDataIndex += size;
-}
-#endif // EFI_UNIT_TEST
-
-#if EFI_PROD_CODE || EFI_SIMULATOR
-void ts_channel_s::write(const uint8_t* buffer, size_t size) {
-        efiAssertVoid(CUSTOM_ERR_6570, getCurrentRemainingStack() > 64, "tunerStudioWriteData");
-#if EFI_SIMULATOR
-			logMsg("chSequentialStreamWrite [%d]\r\n", size);
+#ifdef TS_SECONDARY_UART
+	#if EFI_USE_UART_DMA
+		UartDmaTsChannel secondaryChannel(TS_SECONDARY_UART);
+	#else
+		UartTsChannel secondaryChannel(TS_SECONDARY_UART);
+	#endif
+#elif defined(TS_SECONDARY_SERIAL)
+SerialTsChannel secondaryChannel(TS_SECONDARY_SERIAL);
 #endif
 
-	if (!channel) {
-		return;
-	}
+struct SecondaryChannelThread : public TunerstudioThread {
+	SecondaryChannelThread() : TunerstudioThread("Secondary TS Channel") { }
 
-//	int transferred = chnWriteTimeout(tsChannel->channel, buffer, size, BINARY_IO_TIMEOUT);
-	// temporary attempt to work around #553
-	// instead of one huge packet let's try sending a few smaller packets
-	size_t transferred = 0;
-	size_t stillToTransfer = size;
-	while (stillToTransfer > 0) {
-		int thisTransferSize = minI(stillToTransfer, 768);
-		transferred += chnWriteTimeout(channel, buffer, thisTransferSize, BINARY_IO_TIMEOUT);
-		buffer += thisTransferSize;
-		stillToTransfer -= thisTransferSize;
-	}
+	TsChannelBase* setupChannel() {
+		efiSetPadMode("Secondary Channel RX", engineConfiguration->binarySerialRxPin, PAL_MODE_ALTERNATE(TS_SERIAL_AF));
+		efiSetPadMode("Secondary Channel TX", engineConfiguration->binarySerialTxPin, PAL_MODE_ALTERNATE(TS_SERIAL_AF));
 
-#if EFI_SIMULATOR
-			logMsg("transferred [%d]\r\n", transferred);
+		secondaryChannel.start(CONFIG(uartConsoleSerialSpeed));
+
+		return &secondaryChannel;
+	}
+};
+
+static SecondaryChannelThread secondaryChannelThread;
+#endif // defined(TS_SECONDARY_UART) || defined(TS_SECONDARY_SERIAL)
+
+void startChannels() {
+#if defined(TS_PRIMARY_UART) || defined(TS_PRIMARY_SERIAL)
+	primaryChannelThread.Start();
 #endif
-	if (transferred != size) {
-#if EFI_SIMULATOR
-			logMsg("!!! NOT ACCEPTED %d out of %d !!!", transferred, size);
-#endif /* EFI_SIMULATOR */
-		scheduleMsg(&tsLogger, "!!! NOT ACCEPTED %d out of %d !!!", transferred, size);
-	}
+
+#if defined(TS_SECONDARY_UART) || defined(TS_SECONDARY_SERIAL)
+	secondaryChannelThread.Start();
+#endif
 }
 
-size_t ts_channel_s::readTimeout(uint8_t* buffer, size_t size, int timeout) {
-#if TS_UART_DMA_MODE
-#elif TS_UART_MODE
-	uartReceiveTimeout(TS_UART_DEVICE, &size, buffer, timeout);
-	return size;
-#else /* TS_UART_DMA_MODE */
-	if (channel == nullptr)
-		return 0;
-	return chnReadTimeout(channel, buffer, size, timeout);
-#endif /* TS_UART_DMA_MODE */
-	firmwareError(CUSTOM_ERR_6126, "Unexpected channel situation");
-	return 0;
+SerialTsChannelBase* getBluetoothChannel() {
+#if defined(TS_SECONDARY_UART) || defined(TS_SECONDARY_SERIAL)
+	return &secondaryChannel;
+#elif defined(TS_PRIMARY_UART) || defined(TS_PRIMARY_SERIAL)
+	// Use primary channel for BT if no secondary exists
+	return &primaryChannel;
+#endif
+
+	// no HW serial channels on this board, fail
+	return nullptr;
 }
+
+#endif // EFI_PROD_CODE
 
 size_t TsChannelBase::read(uint8_t* buffer, size_t size) {
 	return readTimeout(buffer, size, SR5_READ_TIMEOUT);
 }
-#endif // EFI_PROD_CODE || EFI_SIMULATOR
 
 void TsChannelBase::writeCrcPacketSmall(uint8_t responseCode, const uint8_t* buf, size_t size) {
 	auto scratchBuffer = this->scratchBuffer;
@@ -255,12 +186,4 @@ void TsChannelBase::sendResponse(ts_response_format_e mode, const uint8_t * buff
 			flush();
 		}
 	}
-}
-
-bool ts_channel_s::isConfigured() const {
-	return
-#if TS_UART_DMA_MODE || PRIMARY_UART_DMA_MODE || TS_UART_MODE
-		this->uartp ||
-#endif
-		this->channel;
 }

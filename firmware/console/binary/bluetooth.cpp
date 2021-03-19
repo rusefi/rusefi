@@ -37,7 +37,7 @@ static const int baudRates[] = { 0, 1200, 2400, 4800, 9600, 19200, 38400, 57600,
 static const int baudRateIndexList[] = { 4 /*9600*/, 6 /*38400*/, 8 /*115200*/, 7, 5, 3, 2, 1, -1 };
 static const int btModuleTimeout = TIME_MS2I(1000);
 
-static ts_channel_s *tsChannel;
+static SerialTsChannelBase *tsChannel;
 
 
 static THD_WORKING_AREA(btThreadStack, UTILITY_THREAD_STACK_SIZE);
@@ -80,42 +80,15 @@ static void runCommands() {
 		
 		// if the baud rate is changed, reinit the UART
 		if (baudIdx != prevBaudIdx || restoreAndExit) {
-#if EFI_USB_SERIAL
-			// if we have USB we assume BT operates on primary TTL
-			// todo: we need to clean a lot in this area :(
-#ifdef EFI_CONSOLE_SERIAL_DEVICE
-			extern SerialConfig serialConfig;
-			sdStop(EFI_CONSOLE_SERIAL_DEVICE);
-#endif /*  EFI_CONSOLE_SERIAL_DEVICE */
-#ifdef EFI_CONSOLE_UART_DEVICE
-			extern UARTConfig uartConfig;
-			uartStop(EFI_CONSOLE_UART_DEVICE);
-#endif /* EFI_CONSOLE_UART_DEVICE */
+			tsChannel->stop();
 
-#else
-			// deinit UART
-			if (!stopTsPort(tsChannel)) {
-				scheduleMsg(&btLogger, "Failed! Cannot restart serial port connection!");
-				return;
-			}
-#endif /* EFI_USB_SERIAL */
 			chThdSleepMilliseconds(10);	// safety
+
 			// change the port speed
 			CONFIG(tunerStudioSerialSpeed) = restoreAndExit ? savedSerialSpeed : baudRates[baudIdx];
 
-#if EFI_USB_SERIAL
-#ifdef EFI_CONSOLE_SERIAL_DEVICE
-			serialConfig.speed = CONFIG(tunerStudioSerialSpeed);
-			sdStart(EFI_CONSOLE_SERIAL_DEVICE, &serialConfig);
-#endif /*  EFI_CONSOLE_SERIAL_DEVICE */
-#ifdef EFI_CONSOLE_UART_DEVICE
-			uartConfig.speed = CONFIG(tunerStudioSerialSpeed);
-			uartStart(EFI_CONSOLE_UART_DEVICE, &uartConfig);
-#endif /* EFI_CONSOLE_UART_DEVICE */
-#else
-			// init UART
-			startTsPort(tsChannel);
-#endif /* EFI_USB_SERIAL */
+			tsChannel->start(CONFIG(tunerStudioSerialSpeed));
+
 			chThdSleepMilliseconds(10);	// safety
 			prevBaudIdx = baudIdx;
 		}
@@ -192,7 +165,7 @@ static THD_FUNCTION(btThreadEntryPoint, arg) {
 	chThdExit(MSG_OK);
 }
 
-void bluetoothStart(ts_channel_s *btChan, bluetooth_module_e moduleType, const char *baudRate, const char *name, const char *pinCode) {
+void bluetoothStart(SerialTsChannelBase *btChan, bluetooth_module_e moduleType, const char *baudRate, const char *name, const char *pinCode) {
 	static const char *usage = "Usage: bluetooth_hc06 <baud> <name> <pincode>";
 
 	tsChannel = btChan;
