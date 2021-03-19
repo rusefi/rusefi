@@ -4,7 +4,7 @@
 
 #pragma once
 
-#include "globalaccess.h"
+#include "engine_ptr.h"
 
 class Logging;
 
@@ -27,6 +27,7 @@ void initThermistors(DECLARE_CONFIG_PARAMETER_SIGNATURE);
 void initCanSensors();
 void initLambda(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 void initFlexSensor(DECLARE_CONFIG_PARAMETER_SIGNATURE);
+void initFuelLevel(DECLARE_CONFIG_PARAMETER_SIGNATURE);
 void initBaro();
 
 // Sensor reconfiguration
