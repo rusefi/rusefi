@@ -666,8 +666,10 @@
 #define GAUGE_NAME_FUEL_BASE "fuel: base mass"
 #define GAUGE_NAME_FUEL_CHARGE_TEMP "fuel: Estimated charge temperature"
 #define GAUGE_NAME_FUEL_CLT_CORR "fuel: CLT correction"
+#define GAUGE_NAME_FUEL_CONSUMPTION "fuel: Total consumed"
 #define GAUGE_NAME_FUEL_CRANKING "fuel: cranking"
 #define GAUGE_NAME_FUEL_EL_EXTRA "fuel: engine load acceleration extra fuel"
+#define GAUGE_NAME_FUEL_FLOW "fuel: Flow rate"
 #define GAUGE_NAME_FUEL_IAT_CORR "fuel: IAT correction"
 #define GAUGE_NAME_FUEL_INJ_DUTY "fuel: injector duty cycle"
 #define GAUGE_NAME_FUEL_LAST_INJECTION "fuel: Last injection"
@@ -1162,6 +1164,7 @@
 #define PACK_MULT_AFR 1000
 #define PACK_MULT_AFR_CFG 10
 #define PACK_MULT_ANGLE 50
+#define PACK_MULT_FUEL_FLOW 200
 #define PACK_MULT_FUEL_MASS 100
 #define PACK_MULT_HIGH_PRESSURE 10
 #define PACK_MULT_LAMBDA 10000
@@ -1245,7 +1248,7 @@
 #define showSdCardWarning_offset 76
 #define SIGNATURE_BOARD subaru_eg33_f7
 #define SIGNATURE_DATE 2021.03.19
-#define SIGNATURE_HASH 1617384295
+#define SIGNATURE_HASH 1933097943
 #define silentTriggerError_offset 1464
 #define slowAdcAlpha_offset 2088
 #define sparkDwellRpmBins_offset 332
@@ -1580,7 +1583,7 @@
 #define ts_show_spi true
 #define ts_show_trigger_comparator false
 #define ts_show_tunerstudio_port false
-#define TS_SIGNATURE "rusEFI 2021.03.19.subaru_eg33_f7.1617384295"
+#define TS_SIGNATURE "rusEFI 2021.03.19.subaru_eg33_f7.1933097943"
 #define TS_SINGLE_WRITE_COMMAND 'W'
 #define TS_SINGLE_WRITE_COMMAND_char W
 #define TS_TEST_COMMAND 't' // 0x74
