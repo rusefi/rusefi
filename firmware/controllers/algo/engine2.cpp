@@ -76,34 +76,17 @@ void MockAdcState::setMockVoltage(int hwChannel, float voltage DECLARE_ENGINE_PA
 }
 #endif /* EFI_ENABLE_MOCK_ADC */
 
-FuelConsumptionState::FuelConsumptionState() {
-	accumulatedSecondPrevNt = accumulatedMinutePrevNt = getTimeNowNt();
-}
+void FuelConsumptionState::consumeFuel(float grams, efitick_t nowNt) {
+	m_consumedGrams += grams;
 
-void FuelConsumptionState::addData(float durationMs) {
-	if (durationMs > 0.0f) {
-		perSecondAccumulator += durationMs;
-		perMinuteAccumulator += durationMs;
+	float elapsedSecond = m_timer.getElapsedSeconds(nowNt);
+
+	// If it's been a long time since last injection, ignore this pulse
+	if (elapsedSecond > 0.2f) {
+		m_rate = 0;
+	} else {
+		m_rate = grams / elapsedSecond;
 	}
-}
-
-void FuelConsumptionState::update(efitick_t nowNt DECLARE_ENGINE_PARAMETER_SUFFIX) {
-	efitick_t deltaNt = nowNt - accumulatedSecondPrevNt;
-	if (deltaNt >= NT_PER_SECOND) {
-		perSecondConsumption = getFuelRate(perSecondAccumulator, deltaNt PASS_ENGINE_PARAMETER_SUFFIX);
-		perSecondAccumulator = 0;
-		accumulatedSecondPrevNt = nowNt;
-	}
-
-	deltaNt = nowNt - accumulatedMinutePrevNt;
-	if (deltaNt >= NT_PER_SECOND * 60) {
-		perMinuteConsumption = getFuelRate(perMinuteAccumulator, deltaNt PASS_ENGINE_PARAMETER_SUFFIX);
-		perMinuteAccumulator = 0;
-		accumulatedMinutePrevNt = nowNt;
-	}
-}
-
-TransmissionState::TransmissionState() {
 }
 
 EngineState::EngineState() {
@@ -143,9 +126,6 @@ void EngineState::periodicFastCallback(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	// TODO: consume correction from the second bank
 	auto clResult = fuelClosedLoopCorrection(PASS_ENGINE_PARAMETER_SIGNATURE);
 	running.pidCorrection = clResult.banks[0];
-
-	// update fuel consumption states
-	fuelConsumption.update(nowNt PASS_ENGINE_PARAMETER_SUFFIX);
 
 	// Fuel cut-off isn't just 0 or 1, it can be tapered
 	fuelCutoffCorrection = getFuelCutOffCorrection(nowNt, rpm PASS_ENGINE_PARAMETER_SUFFIX);

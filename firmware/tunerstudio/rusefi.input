@@ -283,8 +283,9 @@ enable2ndByteCanID = false
       etb1Error       = scalar,  S16,     96,      "%",{1/@@PACK_MULT_PERCENT@@},         0
 
 ; Fuel system
-      fuelTankLevel   = scalar,  S16,     98,      "%",{1/@@PACK_MULT_PERCENT@@},         0
-      fuelConsumptionPerHour=scalar,F32, 100,    "kPa",      1,      0.0
+      fuelTankLevel   = scalar,  U16,     98,      "%",{1/@@PACK_MULT_PERCENT@@},         0
+      totalFuelConsumption=scalar,U16,   100,  "grams",                        1,         0
+      fuelFlowRate    = scalar,  U16,    102, "gram/s",{1/@@PACK_MULT_FUEL_FLOW@@},         0
 
 ; Y axis values for selectable tables
       veTableYAxis    = scalar, U16,     104,      "%",     0.01, 0
@@ -1064,6 +1065,8 @@ gaugeCategory = Fueling
    baseFuelGauge     = baseFuel,       @@GAUGE_NAME_FUEL_BASE@@,      "mg",        0,   100, 0, 0, 100, 100,   2, 0
    fuelPidCorrectionGauge = fuelPidCorrection,       @@GAUGE_NAME_FUEL_PID_CORR@@,      "%",        -10,   10,     -8, -5, 5, 8,   3, 1
    fuelingLoadGauge = fuelingLoad, @@GAUGE_NAME_FUEL_LOAD@@, "%", 0, 300, 0, 0, 300, 300, 1, 1
+   totalFuelConsumptionGauge = totalFuelConsumption, @@GAUGE_NAME_FUEL_CONSUMPTION@@, "g", 0, 10000, 0, 0, 10000, 10000, 2, 2
+   fuelFlowRateGauge = fuelFlowRate, @@GAUGE_NAME_FUEL_FLOW@@, "g/s", 0, 
 
 gaugeCategory = Throttle Body (incl. ETB)
    pedalPositionGauge = throttlePedalPosition, @@GAUGE_NAME_THROTTLE_PEDAL@@,        "%",    0,    120,      0,     0,     100,   100,   1,   1

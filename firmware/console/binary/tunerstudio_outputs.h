@@ -158,7 +158,8 @@ typedef struct {
 
 	// Fuel system
 	scaled_percent fuelTankLevel; // 98
-	float fuelConsumptionPerHour; // 100
+	uint16_t totalFuelConsumption; // 100
+	scaled_channel<uint16_t, PACK_MULT_FUEL_FLOW> fuelFlowRate; // 102
 
 	// Y axis values for selectable tables
 	scaled_channel<uint16_t, 100> veTableYAxis;  // 104
