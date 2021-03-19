@@ -14,17 +14,12 @@
 #undef EFI_CJ125
 #define EFI_CJ125 FALSE
 
-// todo: our "DMA-half" ChibiOS patch not implemented for USARTv2/STM32H7
-#undef TS_UART_DMA_MODE
-#define TS_UART_DMA_MODE FALSE
+// todo: our "DMA-half" ChibiOS patch not implemented for USARTv2/STM32F7/STM32H7
+#undef EFI_USE_UART_DMA
+#define EFI_USE_UART_DMA FALSE
 
-#undef PRIMARY_UART_DMA_MODE
-#define PRIMARY_UART_DMA_MODE FALSE
-
-#undef TS_UART_DEVICE
-//#define TS_UART_DEVICE (&UARTD3)
-
-#undef EFI_CONSOLE_UART_DEVICE
+#undef TS_PRIMARY_UART
+#define TS_PRIMARY_SERIAL SD3
 
 #undef BOARD_TLE6240_COUNT
 #undef BOARD_MC33972_COUNT

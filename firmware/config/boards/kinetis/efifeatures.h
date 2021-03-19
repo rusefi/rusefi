@@ -44,10 +44,6 @@
 
 //#define EFI_UART_ECHO_TEST_MODE FALSE
 
-//#define EFI_USE_UART_FOR_CONSOLE FALSE
-
-#define EFI_CONSOLE_NO_THREAD TRUE
-
 /**
  * Build-in logic analyzer support. Logic analyzer viewer is one of the java console panes.
  */
@@ -272,15 +268,10 @@
  *  STM32_UART_USE_USARTx
  * in mcuconf.h
  */
-#define TS_UART_DMA_MODE FALSE
-#define TS_UART_MODE TRUE
-#define PRIMARY_UART_DMA_MODE FALSE
+#define EFI_USE_UART_DMA FALSE
 
-#define TS_UART_DEVICE (&UARTD2)
-#undef TS_SERIAL_DEVICE
-
-#undef EFI_CONSOLE_SERIAL_DEVICE
-#define EFI_CONSOLE_UART_DEVICE (&UARTD1)
+#define TS_PRIMARY_UART UARTD2
+#undef TS_SECONDARY_UART
 
 #define EFI_CONSOLE_TX_BRAIN_PIN GPIOA_10
 #define EFI_CONSOLE_RX_BRAIN_PIN GPIOA_11
@@ -371,7 +362,7 @@
 	if (__debugEnabled) { \
 		extern char __debugBuffer[80]; \
 		chsnprintf(__debugBuffer, sizeof(__debugBuffer), fmt, ##__VA_ARGS__); \
-		uart_lld_blocking_send(EFI_CONSOLE_UART_DEVICE, strlen(__debugBuffer), (void *)__debugBuffer); \
+		uart_lld_blocking_send(TS_PRIMARY_UART, strlen(__debugBuffer), (void *)__debugBuffer); \
 	} \
 }
 
