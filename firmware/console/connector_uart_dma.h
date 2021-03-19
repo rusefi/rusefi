@@ -9,6 +9,8 @@
 #include "global.h"
 #include "tunerstudio_io.h"
 
+#if HAL_USE_UART && EFI_USE_UART_DMA
+
 // See uart_dma_s
 #define TS_FIFO_BUFFER_SIZE (BLOCKING_FACTOR + 30)
 // This must be a power of 2!
@@ -36,3 +38,5 @@ private:
 	// input FIFO Rx queue
 	input_queue_t fifoRxQueue;
 };
+
+#endif // HAL_USE_UART && EFI_USE_UART_DMA
