@@ -1717,6 +1717,8 @@ end_struct
 #define GAUGE_NAME_FUEL_WALL_AMOUNT "fuel: wall amount"
 #define GAUGE_NAME_FUEL_WALL_CORRECTION "fuel: wall corr ms"
 #define GAUGE_NAME_FUEL_LOAD "fuel: load"
+#define GAUGE_NAME_FUEL_CONSUMPTION "fuel: Total consumed"
+#define GAUGE_NAME_FUEL_FLOW "fuel: Flow rate"
 
 #define GAUGE_NAME_FUEL_INJ_DUTY "fuel: injector duty cycle"
 #define GAUGE_NAME_TCHARGE "fuel: SD tCharge"
