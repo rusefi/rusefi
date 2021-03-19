@@ -40,7 +40,6 @@ public:
 
 class FuelConsumptionState {
 public:
-	FuelConsumptionState();
 	void consumeFuel(float grams, efitick_t nowNt);
 
 	float getConsumedGrams() const;
