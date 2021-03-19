@@ -66,6 +66,8 @@ enum class SensorType : unsigned char {
 
 	BarometricPressure,
 
+	FuelLevel,
+
 	// Leave me at the end!
 	PlaceholderLast
 };

@@ -107,7 +107,7 @@ static void populateFrame(Sensors1& msg) {
     msg.aux2 = 0 + PACK_ADD_TEMPERATURE;
 
     msg.mcuTemp = getMCUInternalTemperature();
-    msg.fuelLevel = engine->sensors.fuelTankLevel;
+    msg.fuelLevel = Sensor::get(SensorType::FuelLevel).value_or(0);
 }
 
 struct Sensors2 {

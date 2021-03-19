@@ -1015,9 +1015,6 @@ static void setDefaultEngineConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	engineConfiguration->knockDetectionWindowStart = 35;
 	engineConfiguration->knockDetectionWindowEnd = 135;
 
-	engineConfiguration->fuelLevelEmptyTankVoltage = 0;
-	engineConfiguration->fuelLevelFullTankVoltage = 5;
-
 	/**
 	 * this is RPM. 10000 rpm is only 166Hz, 800 rpm is 13Hz
 	 */

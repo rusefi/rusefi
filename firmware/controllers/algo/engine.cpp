@@ -280,14 +280,6 @@ void Engine::updateSlowSensors(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 
 	engineState.updateSlowSensors(PASS_ENGINE_PARAMETER_SIGNATURE);
 
-	// todo: move this logic somewhere to sensors folder?
-	if (isAdcChannelValid(CONFIG(fuelLevelSensor))) {
-		float fuelLevelVoltage = getVoltageDivided("fuel", engineConfiguration->fuelLevelSensor PASS_ENGINE_PARAMETER_SUFFIX);
-		sensors.fuelTankLevel = interpolateMsg("fgauge", CONFIG(fuelLevelEmptyTankVoltage), 0,
-				CONFIG(fuelLevelFullTankVoltage), 100,
-				fuelLevelVoltage);
-	}
-
 #if (BOARD_TLE8888_COUNT > 0)
 	// nasty value injection into C driver which would not be able to access Engine class
 	vBattForTle8888 = Sensor::get(SensorType::BatteryVoltage).value_or(VBAT_FALLBACK_VALUE);
