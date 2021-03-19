@@ -477,14 +477,4 @@ float getStandardAirCharge(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 }
 
 #endif
-
-float getFuelRate(floatms_t totalInjDuration, efitick_t timePeriod DECLARE_ENGINE_PARAMETER_SUFFIX) {
-	if (timePeriod <= 0.0f)
-		return 0.0f;
-	float timePeriodMs = (float)NT2US(timePeriod) / 1000.0f;
-	float fuelRate = totalInjDuration / timePeriodMs;
-	const float cc_min_to_L_h = 60.0f / 1000.0f;
-	return fuelRate * CONFIG(injector.flow) * cc_min_to_L_h;
-}
-
 #endif
