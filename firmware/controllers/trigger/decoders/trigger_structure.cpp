@@ -187,7 +187,7 @@ void TriggerWaveform::calculateExpectedEventCounts(bool useOnlyRisingEdgeForTrig
 	UNUSED(useOnlyRisingEdgeForTrigger);
 
 	if (!useOnlyRisingEdgeForTrigger) {
-		for (int i = 0;i<efi::size(expectedEventCount);i++) {
+		for (size_t i = 0; i < efi::size(expectedEventCount); i++) {
 			if (expectedEventCount[i] % 2 != 0) {
 				firmwareError(ERROR_TRIGGER_DRAMA, "Trigger: should be even %d %d", i, expectedEventCount[i]);
 			}
