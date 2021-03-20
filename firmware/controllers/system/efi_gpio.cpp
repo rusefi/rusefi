@@ -273,7 +273,7 @@ void EnginePins::startAuxValves(void) {
 
 void EnginePins::startIgnitionPins(void) {
 #if EFI_PROD_CODE
-	for (int i = 0; i < engineConfiguration->specs.cylindersCount; i++) {
+	for (size_t i = 0; i < engineConfiguration->specs.cylindersCount; i++) {
 		NamedOutputPin *output = &enginePins.coils[i];
 		if (isPinOrModeChanged(ignitionPins[i], ignitionPinMode)) {
 			output->initPin(output->name, CONFIG(ignitionPins)[i], &CONFIG(ignitionPinMode));
@@ -285,7 +285,7 @@ void EnginePins::startIgnitionPins(void) {
 void EnginePins::startInjectionPins(void) {
 #if EFI_PROD_CODE
 	// todo: should we move this code closer to the injection logic?
-	for (int i = 0; i < engineConfiguration->specs.cylindersCount; i++) {
+	for (size_t i = 0; i < engineConfiguration->specs.cylindersCount; i++) {
 		NamedOutputPin *output = &enginePins.injectors[i];
 		if (isPinOrModeChanged(injectionPins[i], injectionPinMode)) {
 			output->initPin(output->name, CONFIG(injectionPins)[i],
