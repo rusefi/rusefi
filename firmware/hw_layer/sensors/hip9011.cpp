@@ -167,16 +167,14 @@ static void showHipInfo(void) {
 		instance.invalidHip9011ResponsesCount,
 		instance.invalidHip9011ResponsesCount > 0 ? "NOT GOOD" : "ok");
 
-	scheduleMsg(logger, "CS@%s updateCount=%d",
-		hwPortname(CONFIG(hip9011CsPin)),
-		instance.settingUpdateCount);
-
 #if EFI_PROD_CODE
 	scheduleMsg(logger, "hip %.2fv/last=%.2f/max=%.2f adv=%d",
 		engine->knockVolts,
 		getVoltage("hipinfo", engineConfiguration->hipOutputChannel),
 		hipValueMax,
 		CONFIG(useTpicAdvancedMode));
+	scheduleMsg(logger, "hip9011 CS@%s",
+		hwPortname(CONFIG(hip9011CsPin)));
 	printSpiConfig(logger, "hip9011", CONFIG(hip9011SpiDevice));
 #endif /* EFI_PROD_CODE */
 
