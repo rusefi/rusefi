@@ -14,9 +14,8 @@ HIP9011::HIP9011(Hip9011HardwareInterface *hardware) : rpmLookup() {
 	this->hardware = hardware;
 }
 
-void HIP9011::setStateAndCommand(unsigned char cmd) {
-	this->state = IS_SENDING_SPI_COMMAND;
-	hardware->sendCommand(cmd);
+int HIP9011::sendCommand(uint8_t cmd) {
+	return hardware->sendSyncCommand(cmd);
 }
 
 /**
@@ -77,7 +76,9 @@ void HIP9011::setAngleWindowWidth(DEFINE_HIP_PARAMS) {
 	prepareHip9011RpmLookup(angleWindowWidth);
 }
 
-void HIP9011::handleValue(int rpm DEFINE_PARAM_SUFFIX(DEFINE_HIP_PARAMS)) {
+void HIP9011::handleSettings(int rpm DEFINE_PARAM_SUFFIX(DEFINE_HIP_PARAMS)) {
+	int ret;
+
 	setAngleWindowWidth(FORWARD_HIP_PARAMS);
 
 	int prescalerIndex = GET_CONFIG_VALUE(hip9011PrescalerAndSDO);
@@ -86,21 +87,23 @@ void HIP9011::handleValue(int rpm DEFINE_PARAM_SUFFIX(DEFINE_HIP_PARAMS)) {
 	int bandIndex = getBandIndex(FORWARD_HIP_PARAMS);
 
 	if (currentGainIndex != gainIndex) {
-		currentGainIndex = gainIndex;
-		setStateAndCommand(SET_GAIN_CMD(gainIndex));
-
-	} else if (currentIntergratorIndex != integratorIndex) {
-		currentIntergratorIndex = integratorIndex;
-		setStateAndCommand(SET_INTEGRATOR_CMD(integratorIndex));
-	} else if (currentBandIndex != bandIndex) {
-		currentBandIndex = bandIndex;
-		setStateAndCommand(SET_BAND_PASS_CMD(bandIndex));
-	} else if (currentPrescaler != prescalerIndex) {
-		currentPrescaler = prescalerIndex;
-		setStateAndCommand(SET_PRESCALER_CMD(prescalerIndex));
-
-	} else {
-		state = READY_TO_INTEGRATE;
+		ret = sendCommand(SET_GAIN_CMD(gainIndex));
+		if (ret == 0)
+			currentGainIndex = gainIndex;
 	}
-
+	if (currentIntergratorIndex != integratorIndex) {
+		ret = sendCommand(SET_INTEGRATOR_CMD(integratorIndex));
+		if (ret == 0)
+			currentIntergratorIndex = integratorIndex;
+	}
+	if (currentBandIndex != bandIndex) {
+		ret = sendCommand(SET_BAND_PASS_CMD(bandIndex));
+		if (ret == 0)
+			currentBandIndex = bandIndex;
+	}
+	if (currentPrescaler != prescalerIndex) {
+		ret = sendCommand(SET_PRESCALER_CMD(prescalerIndex));
+		if (ret == 0)
+			currentPrescaler = prescalerIndex;
+	}
 }

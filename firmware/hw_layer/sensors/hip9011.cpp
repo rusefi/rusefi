@@ -50,6 +50,7 @@
 #if EFI_PROD_CODE
 #include "pin_repository.h"
 #include "mpu_util.h"
+#include "os_util.h"
 #endif
 
 #if EFI_HIP_9011
@@ -59,8 +60,13 @@ static NamedOutputPin Cs(PROTOCOL_HIP_NAME);
 
 class Hip9011Hardware : public Hip9011HardwareInterface {
 	int sendSyncCommand(uint8_t command) override;
-	void sendCommand(uint8_t command) override;
 };
+
+/* TODO: include following stuff in object */
+/* wake semaphore */
+static semaphore_t wake;
+
+static SPIDriver *spi;
 
 static Hip9011Hardware hardware;
 
@@ -107,8 +113,6 @@ static int checkResponse(void) {
 	}
 }
 
-static SPIDriver *spi;
-
 int Hip9011Hardware::sendSyncCommand(uint8_t command) {
 	int ret;
 
@@ -120,7 +124,8 @@ int Hip9011Hardware::sendSyncCommand(uint8_t command) {
 	spiSelect(spi);
 	/* Transfer */
 	tx_buff[0] = command;
-	spiExchange(spi, 1, tx_buff, rx_buff);
+	//spiExchange(spi, 1, tx_buff, rx_buff);
+	rx_buff[0] = spiPolledExchange(spi, tx_buff[0]);
 	/* Slave Select de-assertion. */
 	spiUnselect(spi);
 	/* Ownership release. */
@@ -133,33 +138,25 @@ int Hip9011Hardware::sendSyncCommand(uint8_t command) {
 	return ret;
 }
 
-void Hip9011Hardware::sendCommand(uint8_t command) {
-	/* Acquire ownership of the bus. */
-	spiAcquireBus(spi);
-	/* Setup transfer parameters. */
-	spiStart(spi, &hipSpiCfg);
-	/* Slave Select assertion. */
-	spiSelect(spi);
-	/* Transfer */
-	tx_buff[0] = command;
-	spiStartExchangeI(spi, 1, tx_buff, rx_buff);
-}
-
-/**
- * this is the end of the non-synchronous exchange
- */
-static void endOfSpiExchange(SPIDriver *spip) {
-	/* Slave Select de-assertion. */
-	spiUnselect(spip);
-	/* Ownership release. */
-	spiReleaseBus(spip);
-	/* check response */
-	checkResponse();
-	/* State */
-	instance.state = READY_TO_INTEGRATE;
-}
-
 EXTERN_ENGINE;
+
+static int hip_wake_driver(void)
+{
+    /* Entering a reentrant critical zone.*/
+    syssts_t sts = chSysGetStatusAndLockX();
+	chSemSignalI(&wake);
+	if (!port_is_isr_context()) {
+		/**
+		 * chSemSignalI above requires rescheduling
+		 * interrupt handlers have implicit rescheduling
+		 */
+		chSchRescheduleS();
+	}
+    /* Leaving the critical zone.*/
+    chSysRestoreStatusX(sts);
+
+	return 0;
+}
 
 static void showHipInfo(void) {
 	if (!CONFIG(isHip9011Enabled)) {
@@ -332,48 +329,49 @@ void hipAdcCallback(adcsample_t adcValue) {
 		hipValueMax = maxF(knockVolts, hipValueMax);
 		engine->knockLogic(knockVolts);
 
-		instance.handleValue(GET_RPM() DEFINE_PARAM_SUFFIX(PASS_HIP_PARAMS));
-
 		/* TunerStudio */
 		tsOutputChannels.knockLevels[instance.cylinderNumber] = knockVolts;
 		tsOutputChannels.knockLevel = knockVolts;
+		instance.state = NOT_READY;
+		hip_wake_driver();
 	}
 }
 
-static void hipStartupCode(void) {
-	instance.currentPrescaler = engineConfiguration->hip9011PrescalerAndSDO;
-	instance.hardware->sendSyncCommand(SET_PRESCALER_CMD(instance.currentPrescaler));
+static int hip_init(void) {
+	int ret;
+
+	ret = instance.hardware->sendSyncCommand(SET_PRESCALER_CMD(instance.currentPrescaler));
+	if (ret)
+		return ret;
 
 	// '0' for channel #1
-	instance.hardware->sendSyncCommand(SET_CHANNEL_CMD(0));
+	ret = instance.hardware->sendSyncCommand(SET_CHANNEL_CMD(0));
+	if (ret)
+		return ret;
 
 	// band index depends on cylinder bore
-	instance.hardware->sendSyncCommand(SET_BAND_PASS_CMD(instance.currentBandIndex));
-
-	if (instance.correctResponsesCount == 0) {
-		warning(CUSTOM_OBD_KNOCK_PROCESSOR, "TPIC/HIP does not respond");
-	}
+	ret = instance.hardware->sendSyncCommand(SET_BAND_PASS_CMD(instance.currentBandIndex));
+	if (ret)
+		return ret;
 
 	if (CONFIG(useTpicAdvancedMode)) {
 		// enable advanced mode for digital integrator output
-		instance.hardware->sendSyncCommand(SET_ADVANCED_MODE_CMD);
+		ret = instance.hardware->sendSyncCommand(SET_ADVANCED_MODE_CMD);
+		if (ret)
+			return ret;
 	}
 
-	/**
-	 * Let's restart SPI to switch it from synchronous mode into
-	 * asynchronous mode
-	 */
-#if EFI_PROD_CODE
-	hipSpiCfg.end_cb = endOfSpiExchange;
-#endif
 	instance.state = READY_TO_INTEGRATE;
+
+	return 0;
 }
 
 static THD_WORKING_AREA(hipThreadStack, UTILITY_THREAD_STACK_SIZE);
 
 static msg_t hipThread(void *arg) {
+	int ret;
 	UNUSED(arg);
-	chRegSetThreadName("hip9011 init");
+	chRegSetThreadName("hip9011 worker");
 
 	/* Acquire ownership of the bus. */
 	spiAcquireBus(spi);
@@ -386,14 +384,32 @@ static msg_t hipThread(void *arg) {
 	/* Ownership release. */
 	spiReleaseBus(spi);
 
-	while (true) {
-		chThdSleepMilliseconds(100);
+	/* init semaphore */
+	chSemObjectInit(&wake, 10);
 
-		if (instance.needToInit) {
-			hipStartupCode();
-			instance.needToInit = false;
+	chThdSleepMilliseconds(100);
+
+	do {
+		/* retry until success */
+		ret = hip_init();
+		if (ret) {
+			warning(CUSTOM_OBD_KNOCK_PROCESSOR, "TPIC/HIP does not respond: %d", ret);
+			chThdSleepMilliseconds(10 * 1000);
+		}
+	} while (ret);
+
+	while (1) {
+		msg_t msg = chSemWaitTimeout(&wake, TIME_INFINITE);
+		if (msg == MSG_TIMEOUT) {
+			/* ??? */
+		} else {
+			/* new settings */
+			instance.handleSettings(GET_RPM() DEFINE_PARAM_SUFFIX(PASS_HIP_PARAMS));
+			/* State */
+			instance.state = READY_TO_INTEGRATE;
 		}
 	}
+
 	return -1;
 }
 
@@ -416,8 +432,8 @@ void initHip9011(Logging *sharedLogger) {
 	if (!CONFIG(isHip9011Enabled))
 		return;
 
-
 	instance.setAngleWindowWidth();
+	instance.currentPrescaler = engineConfiguration->hip9011PrescalerAndSDO;
 
 #if EFI_PROD_CODE
 	spi = getSpiDevice(engineConfiguration->hip9011SpiDevice);
