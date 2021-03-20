@@ -18,7 +18,7 @@
  */
 class Hip9011HardwareInterface {
 public:
-	virtual void sendSyncCommand(unsigned char command) = 0;
+	virtual int sendSyncCommand(unsigned char command) = 0;
 	virtual void sendCommand(unsigned char command) = 0;
 };
 

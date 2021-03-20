@@ -38,8 +38,11 @@ typedef uint16_t adcsample_t;
 #define spiExchange(x,y,w,z) {}
 #define spiExchangeI(x,y,w,z) {}
 #define spiStartExchangeI(x,y,w,z) {}
+#define spiStartExchange(x,y,w,z) {}
 #define spiUnselect(x) {}
 #define spiUnselectI(x) {}
+#define spiAcquireBus(x) {}
+#define spiReleaseBus(x) {}
 // end of mock SPI
 
 #ifdef __cplusplus

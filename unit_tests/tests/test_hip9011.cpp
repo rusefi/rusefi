@@ -50,7 +50,7 @@ class MockHip9011Hardware : public Hip9011HardwareInterface
 public:
 	MockHip9011Hardware() {  }
 
-    MOCK_METHOD1(sendSyncCommand, void(unsigned char));
+    MOCK_METHOD1(sendSyncCommand, int(unsigned char));
     MOCK_METHOD1(sendCommand, void(unsigned char));
 };
 

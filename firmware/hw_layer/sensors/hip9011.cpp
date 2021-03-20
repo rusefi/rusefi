@@ -58,8 +58,8 @@ static NamedOutputPin intHold(PROTOCOL_HIP_NAME);
 static NamedOutputPin Cs(PROTOCOL_HIP_NAME);
 
 class Hip9011Hardware : public Hip9011HardwareInterface {
-	void sendSyncCommand(unsigned char command) override;
-	void sendCommand(unsigned char command) override;
+	int sendSyncCommand(uint8_t command) override;
+	void sendCommand(uint8_t command) override;
 };
 
 static Hip9011Hardware hardware;
@@ -68,8 +68,8 @@ static float hipValueMax = 0;
 
 HIP9011 instance(&hardware);
 
-static unsigned char tx_buff[1];
-static unsigned char rx_buff[1];
+static uint8_t tx_buff[1];
+static uint8_t rx_buff[1];
 
 static scheduling_s startTimer;
 static scheduling_s endTimer;
@@ -97,35 +97,66 @@ static SPIConfig hipSpiCfg = {
 };
 #endif /* EFI_PROD_CODE */
 
-static void checkResponse(void) {
+static int checkResponse(void) {
 	if (tx_buff[0] == rx_buff[0]) {
 		instance.correctResponsesCount++;
+		return 0;
 	} else {
 		instance.invalidHip9011ResponsesCount++;
+		return -1;
 	}
 }
 
-// this macro is only used on startup
-#define SPI_SYNCHRONOUS(value) \
-	spiSelect(driver); \
-	tx_buff[0] = value; \
-	spiExchange(driver, 1, tx_buff, rx_buff); \
-	spiUnselect(driver); \
-	checkResponse();
+static SPIDriver *spi;
 
+int Hip9011Hardware::sendSyncCommand(uint8_t command) {
+	int ret;
 
-static SPIDriver *driver;
-
-void Hip9011Hardware::sendSyncCommand(unsigned char command) {
-	SPI_SYNCHRONOUS(command);
+	/* Acquire ownership of the bus. */
+	spiAcquireBus(spi);
+	/* Setup transfer parameters. */
+	spiStart(spi, &hipSpiCfg);
+	/* Slave Select assertion. */
+	spiSelect(spi);
+	/* Transfer */
+	tx_buff[0] = command;
+	spiExchange(spi, 1, tx_buff, rx_buff);
+	/* Slave Select de-assertion. */
+	spiUnselect(spi);
+	/* Ownership release. */
+	spiReleaseBus(spi);
+	/* check response */
+	ret = checkResponse();
+	/* ??? */
 	chThdSleepMilliseconds(10);
+
+	return ret;
 }
 
-void Hip9011Hardware::sendCommand(unsigned char command) {
+void Hip9011Hardware::sendCommand(uint8_t command) {
+	/* Acquire ownership of the bus. */
+	spiAcquireBus(spi);
+	/* Setup transfer parameters. */
+	spiStart(spi, &hipSpiCfg);
+	/* Slave Select assertion. */
+	spiSelect(spi);
+	/* Transfer */
 	tx_buff[0] = command;
+	spiStartExchangeI(spi, 1, tx_buff, rx_buff);
+}
 
-	spiSelectI(driver);
-	spiStartExchangeI(driver, 1, tx_buff, rx_buff);
+/**
+ * this is the end of the non-synchronous exchange
+ */
+static void endOfSpiExchange(SPIDriver *spip) {
+	/* Slave Select de-assertion. */
+	spiUnselect(spip);
+	/* Ownership release. */
+	spiReleaseBus(spip);
+	/* check response */
+	checkResponse();
+	/* State */
+	instance.state = READY_TO_INTEGRATE;
 }
 
 EXTERN_ENGINE;
@@ -293,16 +324,6 @@ void setHipGain(float value) {
 	showHipInfo();
 }
 
-/**
- * this is the end of the non-synchronous exchange
- */
-static void endOfSpiExchange(SPIDriver *spip) {
-	(void)spip;
-	spiUnselectI(driver);
-	instance.state = READY_TO_INTEGRATE;
-	checkResponse();
-}
-
 void hipAdcCallback(adcsample_t adcValue) {
 	if (instance.state == WAITING_FOR_ADC_TO_SKIP) {
 		instance.state = WAITING_FOR_RESULT_ADC;
@@ -342,11 +363,9 @@ static void hipStartupCode(void) {
 	 * Let's restart SPI to switch it from synchronous mode into
 	 * asynchronous mode
 	 */
-	spiStop(driver);
 #if EFI_PROD_CODE
 	hipSpiCfg.end_cb = endOfSpiExchange;
 #endif
-	spiStart(driver, &hipSpiCfg);
 	instance.state = READY_TO_INTEGRATE;
 }
 
@@ -356,12 +375,16 @@ static msg_t hipThread(void *arg) {
 	UNUSED(arg);
 	chRegSetThreadName("hip9011 init");
 
+	/* Acquire ownership of the bus. */
+	spiAcquireBus(spi);
 	// some time to let the hardware start
 	Cs.setValue(true);
 	chThdSleepMilliseconds(100);
 	Cs.setValue(false);
 	chThdSleepMilliseconds(100);
 	Cs.setValue(true);
+	/* Ownership release. */
+	spiReleaseBus(spi);
 
 	while (true) {
 		chThdSleepMilliseconds(100);
@@ -397,8 +420,8 @@ void initHip9011(Logging *sharedLogger) {
 	instance.setAngleWindowWidth();
 
 #if EFI_PROD_CODE
-	driver = getSpiDevice(engineConfiguration->hip9011SpiDevice);
-	if (driver == NULL) {
+	spi = getSpiDevice(engineConfiguration->hip9011SpiDevice);
+	if (spi == NULL) {
 		// error already reported
 		return;
 	}
@@ -410,7 +433,6 @@ void initHip9011(Logging *sharedLogger) {
 	startHip9001_pins();
 
 	scheduleMsg(logger, "Starting HIP9011/TPIC8101 driver");
-	spiStart(driver, &hipSpiCfg);
 
 	instance.currentBandIndex = getBandIndex();
 
