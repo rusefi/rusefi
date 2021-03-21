@@ -131,7 +131,7 @@ void setSdCardConfigurationOverrides(void) {
  * @brief   Board-specific configuration code overrides.
  * @todo    Add your board-specific code, if any.
  */
-void setBoardConfigurationOverrides(void) {
+void setBoardDefaultConfiguration(void) {
 	// give a chance to trigger SWD programmer... Wait for 2 secs (=2000 ms).
 	// TODO: remove it when the bootloader is ready
 	chThdSleepMilliseconds(2000);

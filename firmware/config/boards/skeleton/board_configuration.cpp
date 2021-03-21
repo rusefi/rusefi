@@ -20,7 +20,7 @@
  *
  * These initialization functions are called from
  * firmware/controllers/algo/engine_configuration.cpp
- *  void setBoardConfigurationOverrides(void);
+ *  void setBoardDefaultConfiguration(void);
  *  void setPinConfigurationOverrides(void);
  *  void setSerialConfigurationOverrides(void);
  *
@@ -134,7 +134,7 @@ void setSerialConfigurationOverrides(void) {
  *
  * @todo    Add any board-specific code
  */
-void setBoardConfigurationOverrides(void) {
+void setBoardDefaultConfiguration(void) {
 
 	// Set indicator LED pins.
 	// This is often redundant with efifeatures.h or the run-time config
