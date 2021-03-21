@@ -120,7 +120,6 @@
 #include "eficonsole.h"
 #include "status_loop.h"
 #include "pin_repository.h"
-#include "flash_main.h"
 #include "custom_engine.h"
 #include "engine_math.h"
 #include "mpu_util.h"
@@ -232,7 +231,6 @@ void runRusEfi(void) {
 		 * todo: should we initialize some? most? controllers before hardware?
 		 */
 		initEngineContoller(&sharedLogger PASS_ENGINE_PARAMETER_SIGNATURE);
-		rememberCurrentConfiguration();
 
 	#if EFI_PERF_METRICS
 		initTimePerfActions(&sharedLogger);

@@ -30,6 +30,7 @@
 #include "speed_density.h"
 #include "advance_map.h"
 #include "sensor.h"
+#include "flash_main.h"
 
 #include "hip9011_lookup.h"
 #include "hip9011_logic.h"
@@ -151,7 +152,7 @@ engine_configuration_s & activeConfiguration = activeConfigurationLocalStorage;
 
 extern engine_configuration_s *engineConfiguration;
 
-void rememberCurrentConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+static void rememberCurrentConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 #if ! EFI_ACTIVE_CONFIGURATION_IN_FLASH
 	memcpy(&activeConfiguration, engineConfiguration, sizeof(engine_configuration_s));
 #else
@@ -164,8 +165,6 @@ extern LoggingWithStorage sharedLogger;
 static void wipeString(char *string, int size) {
 	// we have to reset bytes after \0 symbol in order to calculate correct tune CRC from MSQ file
 	for (int i = strlen(string) + 1; i < size; i++) {
-		// todo: open question if it's worth replacing for loop with a memset. would a memset be much faster?
-		// do we care about performance here?
 		string[i] = 0;
 	}
 }
@@ -1146,10 +1145,15 @@ void loadConfiguration(Logging* logger) {
 	palSetPadMode(CONFIG_RESET_SWITCH_PORT, CONFIG_RESET_SWITCH_PIN, PAL_MODE_INPUT_PULLUP);
 #endif /* CONFIG_RESET_SWITCH_PORT */
 
+#if !EFI_ACTIVE_CONFIGURATION_IN_FLASH
+	// TODO: need to fix this place!!! should be a version of PASS_ENGINE_PARAMETER_SIGNATURE somehow
+	prepareVoidConfiguration(&activeConfiguration);
+#endif /* EFI_ACTIVE_CONFIGURATION_IN_FLASH */
+
 #if EFI_INTERNAL_FLASH
 	if (SHOULD_IGNORE_FLASH() || IGNORE_FLASH_CONFIGURATION) {
 		engineConfiguration->engineType = DEFAULT_ENGINE_TYPE;
-		resetConfigurationExt(sharedLogger, engineConfiguration->engineType PASS_ENGINE_PARAMETER_SUFFIX);
+		resetConfigurationExt(logger, engineConfiguration->engineType PASS_ENGINE_PARAMETER_SUFFIX);
 		writeToFlashNow();
 	} else {
 		// this call reads configuration from flash memory or sets default configuration
@@ -1159,8 +1163,10 @@ void loadConfiguration(Logging* logger) {
 #else
 	// This board doesn't load configuration, initialize the default
 	engineConfiguration->engineType = DEFAULT_ENGINE_TYPE;
-	resetConfigurationExt(sharedLogger, engineConfiguration->engineType PASS_ENGINE_PARAMETER_SUFFIX);
+	resetConfigurationExt(logger, engineConfiguration->engineType PASS_ENGINE_PARAMETER_SUFFIX);
 #endif /* EFI_INTERNAL_FLASH */
+
+	rememberCurrentConfiguration(PASS_ENGINE_PARAMETER_SIGNATURE);
 }
 
 void resetConfigurationExt(Logging * logger, configuration_callback_t boardCallback, engine_type_e engineType DECLARE_ENGINE_PARAMETER_SUFFIX) {

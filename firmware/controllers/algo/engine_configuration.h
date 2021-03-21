@@ -45,7 +45,6 @@ void setDefaultSdCardParameters(DECLARE_CONFIG_PARAMETER_SIGNATURE);
 
 void onBurnRequest(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 void wipeStrings(DECLARE_ENGINE_PARAMETER_SIGNATURE);
-void rememberCurrentConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 void incrementGlobalConfigurationVersion(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 
 void commonFrankensoAnalogInputs(engine_configuration_s *engineConfiguration);
