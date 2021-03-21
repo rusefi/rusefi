@@ -169,7 +169,7 @@ static void wipeString(char *string, int size) {
 	}
 }
 
-void wipeStrings(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+static void wipeStrings(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	wipeString(engineConfiguration->engineMake, sizeof(vehicle_info_t));
 	wipeString(engineConfiguration->engineCode, sizeof(vehicle_info_t));
 	wipeString(engineConfiguration->vehicleName, sizeof(vehicle_info_t));

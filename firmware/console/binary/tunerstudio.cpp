@@ -256,7 +256,6 @@ static void onlineApplyWorkingCopyBytes(uint32_t offset, int count) {
 	// open question what's the best strategy to balance coding efforts, performance matters and tune crc functionality
 	// open question what is the runtime cost of wiping 2K of bytes on each IO communication, could be that 2K of byte memset
 	// is negligable comparing with the IO costs?
-	//		wipeStrings(PASS_ENGINE_PARAMETER_SIGNATURE);
 }
 
 static const void * getStructAddr(int structId) {
