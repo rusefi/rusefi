@@ -32,7 +32,7 @@
 #include "serial_hw.h"
 
 #include "mpu_util.h"
-//#include "usb_msd.h"
+#include "mmc_card.h"
 
 #include "AdcConfiguration.h"
 #include "idle_hardware.h"
@@ -453,26 +453,16 @@ void applyNewHardwareSettings(void) {
 	adcConfigListener(engine);
 }
 
-void setBor(int borValue) {
-	scheduleMsg(sharedLogger, "setting BOR to %d", borValue);
-	BOR_Set((BOR_Level_t)borValue);
-	showBor();
-}
-
-void showBor(void) {
-	scheduleMsg(sharedLogger, "BOR=%d", (int)BOR_Get());
-}
-
-void initHardware(Logging *l) {
+// This function initializes hardware that can do so before configuration is loaded
+void initHardwareNoConfig(Logging *l) {
 	efiAssertVoid(CUSTOM_IH_STACK, getCurrentRemainingStack() > EXPECTED_REMAINING_STACK, "init h");
 	sharedLogger = l;
 	efiAssertVoid(CUSTOM_EC_NULL, engineConfiguration!=NULL, "engineConfiguration");
 	
 
 	printMsg(sharedLogger, "initHardware()");
-	// todo: enable protection. it's disabled because it takes
-	// 10 extra seconds to re-flash the chip
-	//flashProtect();
+
+	initPinRepository();
 
 #if EFI_HISTOGRAMS
 	/**
@@ -486,12 +476,27 @@ void initHardware(Logging *l) {
 	 */
 	initPrimaryPins(sharedLogger);
 
-	if (hasFirmwareError()) {
-		return;
-	}
+	// it's important to initialize this pretty early in the game before any scheduling usages
+	initSingleTimerExecutorHardware();
+
+	initRtc();
 
 #if EFI_INTERNAL_FLASH
+	initFlash(sharedLogger);
+#endif
 
+#if EFI_SHAFT_POSITION_INPUT
+	// todo: figure out better startup logic
+	initTriggerCentral(sharedLogger);
+#endif /* EFI_SHAFT_POSITION_INPUT */
+
+#if EFI_FILE_LOGGING
+	initEarlyMmcCard();
+#endif // EFI_FILE_LOGGING
+}
+
+void initHardware() {
+#if EFI_INTERNAL_FLASH
 #ifdef CONFIG_RESET_SWITCH_PORT
 // this pin is not configurable at runtime so that we have a reliable way to reset configuration
 #define SHOULD_IGNORE_FLASH() (palReadPad(CONFIG_RESET_SWITCH_PORT, CONFIG_RESET_SWITCH_PIN) == 0)
@@ -503,7 +508,6 @@ void initHardware(Logging *l) {
 	palSetPadMode(CONFIG_RESET_SWITCH_PORT, CONFIG_RESET_SWITCH_PIN, PAL_MODE_INPUT_PULLUP);
 #endif /* CONFIG_RESET_SWITCH_PORT */
 
-	initFlash(sharedLogger);
 	/**
 	 * this call reads configuration from flash memory or sets default configuration
 	 * if flash state does not look right.
@@ -521,9 +525,6 @@ void initHardware(Logging *l) {
 	engineConfiguration->engineType = DEFAULT_ENGINE_TYPE;
 	resetConfigurationExt(sharedLogger, engineConfiguration->engineType PASS_ENGINE_PARAMETER_SUFFIX);
 #endif /* EFI_INTERNAL_FLASH */
-
-	// it's important to initialize this pretty early in the game before any scheduling usages
-	initSingleTimerExecutorHardware();
 
 #if EFI_HD44780_LCD
 	lcd_HD44780_init(sharedLogger);
@@ -548,8 +549,6 @@ void initHardware(Logging *l) {
 #if EFI_SOFTWARE_KNOCK
 	initSoftwareKnock();
 #endif /* EFI_SOFTWARE_KNOCK */
-
-	initRtc();
 
 #if HAL_USE_SPI
 	initSpiModules(engineConfiguration);
@@ -582,11 +581,6 @@ void initHardware(Logging *l) {
 //	init_adc_mcp3208(&adcState, &SPID2);
 //	requestAdcValue(&adcState, 0);
 
-#if EFI_SHAFT_POSITION_INPUT
-	// todo: figure out better startup logic
-	initTriggerCentral(sharedLogger);
-#endif /* EFI_SHAFT_POSITION_INPUT */
-
 	turnOnHardware(sharedLogger);
 
 #if EFI_HIP_9011
@@ -596,14 +590,10 @@ void initHardware(Logging *l) {
 #if EFI_MEMS
 	initAccelerometer(PASS_ENGINE_PARAMETER_SIGNATURE);
 #endif
-//	initFixedLeds();
-
 
 #if EFI_BOSCH_YAW
 	initBoschYawRateSensor();
 #endif /* EFI_BOSCH_YAW */
-
-	//	initBooleanInputs();
 
 #if EFI_UART_GPS
 	initGps();
