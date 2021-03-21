@@ -1128,6 +1128,41 @@ void setDefaultFrankensoConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	engineConfiguration->is_enabled_spi_3 = true;
 }
 
+#ifdef CONFIG_RESET_SWITCH_PORT
+// this pin is not configurable at runtime so that we have a reliable way to reset configuration
+#define SHOULD_IGNORE_FLASH() (palReadPad(CONFIG_RESET_SWITCH_PORT, CONFIG_RESET_SWITCH_PIN) == 0)
+#else
+#define SHOULD_IGNORE_FLASH() (false)
+#endif // CONFIG_RESET_SWITCH_PORT
+
+// by default, do not ignore config from flash! use it!
+#ifndef IGNORE_FLASH_CONFIGURATION
+#define IGNORE_FLASH_CONFIGURATION false
+#endif
+
+void loadConfiguration(Logging* logger) {
+#ifdef CONFIG_RESET_SWITCH_PORT
+	// initialize the reset pin if necessary
+	palSetPadMode(CONFIG_RESET_SWITCH_PORT, CONFIG_RESET_SWITCH_PIN, PAL_MODE_INPUT_PULLUP);
+#endif /* CONFIG_RESET_SWITCH_PORT */
+
+#if EFI_INTERNAL_FLASH
+	if (SHOULD_IGNORE_FLASH() || IGNORE_FLASH_CONFIGURATION) {
+		engineConfiguration->engineType = DEFAULT_ENGINE_TYPE;
+		resetConfigurationExt(sharedLogger, engineConfiguration->engineType PASS_ENGINE_PARAMETER_SUFFIX);
+		writeToFlashNow();
+	} else {
+		// this call reads configuration from flash memory or sets default configuration
+		// if flash state does not look right.
+		readFromFlash();
+	}
+#else
+	// This board doesn't load configuration, initialize the default
+	engineConfiguration->engineType = DEFAULT_ENGINE_TYPE;
+	resetConfigurationExt(sharedLogger, engineConfiguration->engineType PASS_ENGINE_PARAMETER_SUFFIX);
+#endif /* EFI_INTERNAL_FLASH */
+}
+
 void resetConfigurationExt(Logging * logger, configuration_callback_t boardCallback, engine_type_e engineType DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	enginePins.reset(); // that's mostly important for functional tests
 	/**

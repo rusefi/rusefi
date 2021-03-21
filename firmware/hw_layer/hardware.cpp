@@ -496,36 +496,6 @@ void initHardwareNoConfig(Logging *l) {
 }
 
 void initHardware() {
-#if EFI_INTERNAL_FLASH
-#ifdef CONFIG_RESET_SWITCH_PORT
-// this pin is not configurable at runtime so that we have a reliable way to reset configuration
-#define SHOULD_IGNORE_FLASH() (palReadPad(CONFIG_RESET_SWITCH_PORT, CONFIG_RESET_SWITCH_PIN) == 0)
-#else
-#define SHOULD_IGNORE_FLASH() (false)
-#endif // CONFIG_RESET_SWITCH_PORT
-
-#ifdef CONFIG_RESET_SWITCH_PORT
-	palSetPadMode(CONFIG_RESET_SWITCH_PORT, CONFIG_RESET_SWITCH_PIN, PAL_MODE_INPUT_PULLUP);
-#endif /* CONFIG_RESET_SWITCH_PORT */
-
-	/**
-	 * this call reads configuration from flash memory or sets default configuration
-	 * if flash state does not look right.
-	 *
-	 * interesting fact that we have another read from flash before we get here
-	 */
-	if (SHOULD_IGNORE_FLASH()) {
-		engineConfiguration->engineType = DEFAULT_ENGINE_TYPE;
-		resetConfigurationExt(sharedLogger, engineConfiguration->engineType PASS_ENGINE_PARAMETER_SUFFIX);
-		writeToFlashNow();
-	} else {
-		readFromFlash();
-	}
-#else
-	engineConfiguration->engineType = DEFAULT_ENGINE_TYPE;
-	resetConfigurationExt(sharedLogger, engineConfiguration->engineType PASS_ENGINE_PARAMETER_SUFFIX);
-#endif /* EFI_INTERNAL_FLASH */
-
 #if EFI_HD44780_LCD
 	lcd_HD44780_init(sharedLogger);
 	if (hasFirmwareError())

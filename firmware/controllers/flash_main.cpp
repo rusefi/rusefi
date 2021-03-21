@@ -106,7 +106,13 @@ static void doResetConfiguration(void) {
 	resetConfigurationExt(logger, engineConfiguration->engineType PASS_ENGINE_PARAMETER_SUFFIX);
 }
 
-persisted_configuration_state_e flashState;
+typedef enum {
+	PC_OK = 0,
+	CRC_FAILED = 1,
+	INCOMPATIBLE_VERSION = 2,
+	RESET_REQUESTED = 3,
+	PC_ERROR = 4
+} persisted_configuration_state_e;
 
 static persisted_configuration_state_e doReadConfiguration(flashaddr_t address, Logging * logger) {
 	printMsg(logger, "readFromFlash %x", address);
@@ -125,7 +131,7 @@ static persisted_configuration_state_e doReadConfiguration(flashaddr_t address, 
  * this method could and should be executed before we have any
  * connectivity so no console output here
  */
-persisted_configuration_state_e readConfiguration(Logging * logger) {
+static persisted_configuration_state_e readConfiguration(Logging* logger) {
 	efiAssert(CUSTOM_ERR_ASSERT, getCurrentRemainingStack() > EXPECTED_REMAINING_STACK, "read f", PC_ERROR);
 	persisted_configuration_state_e result = doReadConfiguration(getFlashAddrFirstCopy(), logger);
 	if (result != PC_OK) {
@@ -152,15 +158,15 @@ persisted_configuration_state_e readConfiguration(Logging * logger) {
 	return result;
 }
 
-void readFromFlash(void) {
+void readFromFlash() {
 	persisted_configuration_state_e result = readConfiguration(logger);
 
 	if (result == CRC_FAILED) {
 		printMsg(logger, "Need to reset flash to default due to CRC");
 	} else if (result == INCOMPATIBLE_VERSION) {
-		printMsg(logger, "Resetting but saving engine type [%d]", engineConfiguration->engineType);
+		printMsg(logger, "Resetting due to version mismatch but preserving engine type [%d]", engineConfiguration->engineType);
 	} else {
-		printMsg(logger, "Got valid configuration from flash!");
+		printMsg(logger, "Read valid configuration from flash!");
 	}
 }
 

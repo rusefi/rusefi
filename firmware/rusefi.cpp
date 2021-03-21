@@ -194,22 +194,7 @@ void runRusEfi(void) {
 
 	initHardwareNoConfig(&sharedLogger);
 
-#if EFI_INTERNAL_FLASH
- #if IGNORE_FLASH_CONFIGURATION
-	resetConfigurationExt(&sharedLogger, DEFAULT_ENGINE_TYPE PASS_ENGINE_PARAMETER_SUFFIX);
- #else
-	/**
-	 * First thing is reading configuration from flash memory.
-	 * In order to have complete flexibility configuration has to go before anything else.
-	 */
-	readConfiguration(&sharedLogger);
- #endif // IGNORE_FLASH_CONFIGURATION
-#endif /* EFI_INTERNAL_FLASH */
-
-#if ! EFI_ACTIVE_CONFIGURATION_IN_FLASH
-	// TODO: need to fix this place!!! should be a version of PASS_ENGINE_PARAMETER_SIGNATURE somehow
-	prepareVoidConfiguration(&activeConfiguration);
-#endif /* EFI_ACTIVE_CONFIGURATION_IN_FLASH */
+	loadConfiguration(&sharedLogger);
 
 #if EFI_FILE_LOGGING
 	initMmcCard();
