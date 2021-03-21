@@ -1139,7 +1139,7 @@ void setDefaultFrankensoConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 #define IGNORE_FLASH_CONFIGURATION false
 #endif
 
-void loadConfiguration(Logging* logger) {
+void loadConfiguration(Logging* logger DECLARE_ENGINE_PARAMETER_SUFFIX) {
 #ifdef CONFIG_RESET_SWITCH_PORT
 	// initialize the reset pin if necessary
 	palSetPadMode(CONFIG_RESET_SWITCH_PORT, CONFIG_RESET_SWITCH_PIN, PAL_MODE_INPUT_PULLUP);

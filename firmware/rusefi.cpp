@@ -193,7 +193,7 @@ void runRusEfi(void) {
 
 	initHardwareNoConfig(&sharedLogger);
 
-	loadConfiguration(&sharedLogger);
+	loadConfiguration(&sharedLogger PASS_ENGINE_PARAMETER_SUFFIX);
 
 #if EFI_FILE_LOGGING
 	initMmcCard();
