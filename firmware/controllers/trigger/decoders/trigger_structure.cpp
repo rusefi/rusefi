@@ -603,6 +603,10 @@ void TriggerWaveform::initializeTriggerWaveform(Logging *logger, operation_mode_
 		configureQuickStartSenderWheel(this);
 		break;
 
+	case TT_VVT_BARRA_3_PLUS_1:
+		configureBarra3plus1cam(this);
+		break;
+
 	case TT_HONDA_K_12_1:
 		configureHondaK_12_1(this);
 		break;
