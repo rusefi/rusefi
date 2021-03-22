@@ -40,7 +40,7 @@ void setPinConfigurationOverrides(void) {
 	engineConfiguration->fanPin = GPIO_UNASSIGNED;
 
 }
-void setBoardConfigurationOverrides(void) {
+void setBoardDefaultConfiguration(void) {
 
 	// NOT USED
 	engineConfiguration->externalKnockSenseAdc = EFI_ADC_NONE;
