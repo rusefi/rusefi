@@ -202,9 +202,10 @@ void hwHandleVvtCamSignal(trigger_value_e front, efitick_t nowNt, int index DECL
 		break;
 	case VVT_MIATA_NB2:
 	case VVT_BOSCH_QUICK_START:
+	case VVT_BARRA_3_PLUS_1:
 	 {
 		if (engine->triggerCentral.vvtState[bankIndex][camIndex].currentCycle.current_index != 0) {
-			// this is not NB2 sync tooth - exiting
+			// this is not sync tooth - exiting
 			return;
 		}
 		if (engineConfiguration->debugMode == DBG_VVT) {
