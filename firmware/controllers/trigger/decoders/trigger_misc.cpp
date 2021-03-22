@@ -129,5 +129,7 @@ void configureBarra3plus1cam(TriggerWaveform *s) {
 	}
 
 	// sync tooth is the zero tooth, the first short gap after two long gaps
-	s->setTriggerSynchronizationGap3(0, 1.8f, 2.2f);
+	s->setTriggerSynchronizationGap3(0, 1.6f, 2.4f);
+	// previous gap should be 1.0
+	s->setTriggerSynchronizationGap3(1, 0.8f, 1.2f);
 }
