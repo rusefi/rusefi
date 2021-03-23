@@ -680,7 +680,7 @@ float globalFuelCorrection;set global_fuel_correction X;"coef",    1,      0.0, 
 
 	float adcVcc;;         "volts",    1,    0.0,       0,    6.0,        3
 	float maxKnockSubDeg;maximum total number of degrees to subtract from ignition advance\nwhen knocking;"Deg",      1,      0,       0, 100,      0
-	brain_input_pin_e[CAM_INPUTS_COUNT iterate] camInputs;+Camshaft input could be used either just for engine phase detection if your trigger shape does not include cam sensor as 'primary' channel, or it could be used for Variable Valve timing on one of the camshafts.\nTODO #660
+	brain_input_pin_e[CAM_INPUTS_COUNT iterate] camInputs;+Camshaft input could be used either just for engine phase detection if your trigger shape does not include cam sensor as 'primary' channel, or it could be used for Variable Valve timing on one of the camshafts.
 	uint8_t[CAM_INPUTS_COUNT_padding] camInputsPadding;;
 	
 struct afr_sensor_s
