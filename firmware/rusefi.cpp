@@ -192,10 +192,7 @@ void runRusEfi(void) {
 	 */
 	initDataStructures(PASS_ENGINE_PARAMETER_SIGNATURE);
 
-	/**
-	 * First data structure keeps track of which hardware I/O pins are used by whom
-	 */
-	initPinRepository();
+	initHardwareNoConfig(&sharedLogger);
 
 #if EFI_INTERNAL_FLASH
  #if IGNORE_FLASH_CONFIGURATION
@@ -234,7 +231,7 @@ void runRusEfi(void) {
 	/**
 	 * Initialize hardware drivers
 	 */
-	initHardware(&sharedLogger);
+	initHardware();
 
 #if HW_CHECK_ALWAYS_STIMULATE
 	// we need a special binary for final assembly check. We cannot afford to require too much software or too many steps
