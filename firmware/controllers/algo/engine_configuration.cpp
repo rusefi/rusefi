@@ -30,6 +30,7 @@
 #include "speed_density.h"
 #include "advance_map.h"
 #include "sensor.h"
+#include "flash_main.h"
 
 #include "hip9011_lookup.h"
 #include "hip9011_logic.h"
@@ -151,7 +152,7 @@ engine_configuration_s & activeConfiguration = activeConfigurationLocalStorage;
 
 extern engine_configuration_s *engineConfiguration;
 
-void rememberCurrentConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+static void rememberCurrentConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 #if ! EFI_ACTIVE_CONFIGURATION_IN_FLASH
 	memcpy(&activeConfiguration, engineConfiguration, sizeof(engine_configuration_s));
 #else
@@ -164,13 +165,11 @@ extern LoggingWithStorage sharedLogger;
 static void wipeString(char *string, int size) {
 	// we have to reset bytes after \0 symbol in order to calculate correct tune CRC from MSQ file
 	for (int i = strlen(string) + 1; i < size; i++) {
-		// todo: open question if it's worth replacing for loop with a memset. would a memset be much faster?
-		// do we care about performance here?
 		string[i] = 0;
 	}
 }
 
-void wipeStrings(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+static void wipeStrings(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	wipeString(engineConfiguration->engineMake, sizeof(vehicle_info_t));
 	wipeString(engineConfiguration->engineCode, sizeof(vehicle_info_t));
 	wipeString(engineConfiguration->vehicleName, sizeof(vehicle_info_t));
@@ -1126,6 +1125,43 @@ void setDefaultFrankensoConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	engineConfiguration->is_enabled_spi_1 = false;
 	engineConfiguration->is_enabled_spi_2 = false;
 	engineConfiguration->is_enabled_spi_3 = true;
+}
+
+#ifdef CONFIG_RESET_SWITCH_PORT
+// this pin is not configurable at runtime so that we have a reliable way to reset configuration
+#define SHOULD_IGNORE_FLASH() (palReadPad(CONFIG_RESET_SWITCH_PORT, CONFIG_RESET_SWITCH_PIN) == 0)
+#else
+#define SHOULD_IGNORE_FLASH() (false)
+#endif // CONFIG_RESET_SWITCH_PORT
+
+// by default, do not ignore config from flash! use it!
+#ifndef IGNORE_FLASH_CONFIGURATION
+#define IGNORE_FLASH_CONFIGURATION false
+#endif
+
+void loadConfiguration(Logging* logger DECLARE_ENGINE_PARAMETER_SUFFIX) {
+#ifdef CONFIG_RESET_SWITCH_PORT
+	// initialize the reset pin if necessary
+	palSetPadMode(CONFIG_RESET_SWITCH_PORT, CONFIG_RESET_SWITCH_PIN, PAL_MODE_INPUT_PULLUP);
+#endif /* CONFIG_RESET_SWITCH_PORT */
+
+#if EFI_INTERNAL_FLASH
+	if (SHOULD_IGNORE_FLASH() || IGNORE_FLASH_CONFIGURATION) {
+		engineConfiguration->engineType = DEFAULT_ENGINE_TYPE;
+		resetConfigurationExt(logger, engineConfiguration->engineType PASS_ENGINE_PARAMETER_SUFFIX);
+		writeToFlashNow();
+	} else {
+		// this call reads configuration from flash memory or sets default configuration
+		// if flash state does not look right.
+		readFromFlash();
+	}
+#else // not EFI_INTERNAL_FLASH
+	// This board doesn't load configuration, initialize the default
+	engineConfiguration->engineType = DEFAULT_ENGINE_TYPE;
+	resetConfigurationExt(logger, engineConfiguration->engineType PASS_ENGINE_PARAMETER_SUFFIX);
+#endif /* EFI_INTERNAL_FLASH */
+
+	rememberCurrentConfiguration(PASS_ENGINE_PARAMETER_SIGNATURE);
 }
 
 void resetConfigurationExt(Logging * logger, configuration_callback_t boardCallback, engine_type_e engineType DECLARE_ENGINE_PARAMETER_SUFFIX) {
