@@ -52,9 +52,6 @@ void applyNewHardwareSettings(void);
 void initHardware(Logging *logging);
 #endif /* EFI_PROD_CODE */
 
-void showBor(void);
-void setBor(int borValue);
-
 class ButtonDebounce;
 
 #endif /* __cplusplus */

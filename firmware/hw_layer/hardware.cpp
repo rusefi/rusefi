@@ -453,16 +453,6 @@ void applyNewHardwareSettings(void) {
 	adcConfigListener(engine);
 }
 
-void setBor(int borValue) {
-	scheduleMsg(sharedLogger, "setting BOR to %d", borValue);
-	BOR_Set((BOR_Level_t)borValue);
-	showBor();
-}
-
-void showBor(void) {
-	scheduleMsg(sharedLogger, "BOR=%d", (int)BOR_Get());
-}
-
 void initHardware(Logging *l) {
 	efiAssertVoid(CUSTOM_IH_STACK, getCurrentRemainingStack() > EXPECTED_REMAINING_STACK, "init h");
 	sharedLogger = l;
