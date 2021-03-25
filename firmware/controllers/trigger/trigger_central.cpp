@@ -79,8 +79,8 @@ EXTERN_ENGINE;
 
 static Logging *logger;
 
-angle_t TriggerCentral::getVVTPosition() {
-	return vvtPosition[0][0];
+angle_t TriggerCentral::getVVTPosition(uint8_t bankIndex, uint8_t camIndex) {
+	return vvtPosition[bankIndex][camIndex];
 }
 
 #define miataNbIndex (0)
@@ -89,7 +89,8 @@ static bool vvtWithRealDecoder(vvt_mode_e vvtMode) {
 	return vvtMode == VVT_MIATA_NB2
 			|| vvtMode == VVT_BOSCH_QUICK_START
 			|| vvtMode == VVT_FORD_ST170
-			|| vvtMode == VVT_4_1;
+			|| vvtMode == VVT_4_1
+			|| vvtMode == VVT_BARRA_3_PLUS_1;
 }
 
 void hwHandleVvtCamSignal(trigger_value_e front, efitick_t nowNt, int index DECLARE_ENGINE_PARAMETER_SUFFIX) {

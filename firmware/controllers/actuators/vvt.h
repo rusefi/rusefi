@@ -24,7 +24,7 @@ class VvtController : public PeriodicTimerController, public ClosedLoopControlle
 public:
 	DECLARE_ENGINE_PTR;
 
-	void init(int index, const ValueProvider3D* targetMap);
+	void init(int index, int bankIndex, int camIndex, const ValueProvider3D* targetMap);
 
 	// PeriodicTimerController implementation
 	int getPeriodMs() override;
@@ -42,6 +42,12 @@ private:
 	Pid m_pid;
 	const ValueProvider3D* m_targetMap = nullptr;
 	int index = 0;
+
+	// Bank index, 0 or 1
+	uint8_t m_bank = 0;
+
+	// Cam index, 0 = intake, 1 = exhaust
+	uint8_t m_cam = 0;
 
 public:
 	// todo: encapsulate or inject these
