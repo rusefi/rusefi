@@ -73,13 +73,13 @@ extern engine_configuration_s *engineConfiguration;
 
 static void printOutputs(const engine_configuration_s *engineConfiguration) {
 	scheduleMsg(&logger, "injectionPins: mode %s", getPin_output_mode_e(engineConfiguration->injectionPinMode));
-	for (int i = 0; i < engineConfiguration->specs.cylindersCount; i++) {
+	for (size_t i = 0; i < engineConfiguration->specs.cylindersCount; i++) {
 		brain_pin_e brainPin = engineConfiguration->injectionPins[i];
 		scheduleMsg(&logger, "injection #%d @ %s", (1 + i), hwPortname(brainPin));
 	}
 
 	scheduleMsg(&logger, "ignitionPins: mode %s", getPin_output_mode_e(engineConfiguration->ignitionPinMode));
-	for (int i = 0; i < engineConfiguration->specs.cylindersCount; i++) {
+	for (size_t i = 0; i < engineConfiguration->specs.cylindersCount; i++) {
 		brain_pin_e brainPin = engineConfiguration->ignitionPins[i];
 		scheduleMsg(&logger, "ignition #%d @ %s", (1 + i), hwPortname(brainPin));
 	}

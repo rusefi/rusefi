@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Fri Mar 19 21:20:25 UTC 2021
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Wed Mar 24 00:28:40 UTC 2021
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -1053,7 +1053,6 @@ struct engine_configuration_s {
 	float maxKnockSubDeg;
 	/**
 	 * Camshaft input could be used either just for engine phase detection if your trigger shape does not include cam sensor as 'primary' channel, or it could be used for Variable Valve timing on one of the camshafts.
-	 * TODO #660
 	 * offset 556
 	 */
 	brain_input_pin_e camInputs[CAM_INPUTS_COUNT];
@@ -3859,4 +3858,4 @@ struct persistent_config_s {
 typedef struct persistent_config_s persistent_config_s;
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Fri Mar 19 21:20:25 UTC 2021
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Wed Mar 24 00:28:40 UTC 2021

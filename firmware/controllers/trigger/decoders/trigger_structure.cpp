@@ -187,7 +187,7 @@ void TriggerWaveform::calculateExpectedEventCounts(bool useOnlyRisingEdgeForTrig
 	UNUSED(useOnlyRisingEdgeForTrigger);
 
 	if (!useOnlyRisingEdgeForTrigger) {
-		for (int i = 0;i<efi::size(expectedEventCount);i++) {
+		for (size_t i = 0; i < efi::size(expectedEventCount); i++) {
 			if (expectedEventCount[i] % 2 != 0) {
 				firmwareError(ERROR_TRIGGER_DRAMA, "Trigger: should be even %d %d", i, expectedEventCount[i]);
 			}
@@ -601,6 +601,10 @@ void TriggerWaveform::initializeTriggerWaveform(Logging *logger, operation_mode_
 
 	case TT_VVT_BOSCH_QUICK_START:
 		configureQuickStartSenderWheel(this);
+		break;
+
+	case TT_VVT_BARRA_3_PLUS_1:
+		configureBarra3plus1cam(this);
 		break;
 
 	case TT_HONDA_K_12_1:

@@ -19,7 +19,7 @@ TEST(Vvt, setpoint) {
 
 	VvtController dut;
 	INJECT_ENGINE_REFERENCE(&dut);
-	dut.init(0, &targetMap);
+	dut.init(0, 0, 0, &targetMap);
 
 	// Test dut
 	EXPECT_EQ(20, dut.getSetpoint().value_or(0));
@@ -32,7 +32,7 @@ TEST(Vvt, observePlant) {
 
 	VvtController dut;
 	INJECT_ENGINE_REFERENCE(&dut);
-	dut.init(0, nullptr);
+	dut.init(0, 0, 0, nullptr);
 
 	EXPECT_EQ(23, dut.observePlant().value_or(0));
 }

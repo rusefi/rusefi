@@ -1185,7 +1185,7 @@ void resetConfigurationExt(Logging * logger, configuration_callback_t boardCallb
 
 #if EFI_PROD_CODE
 	// call overrided board-specific configuration setup, if needed (for custom boards only)
-	setBoardConfigurationOverrides();
+	setBoardDefaultConfiguration();
 #endif
 
 	engineConfiguration->engineType = engineType;
@@ -1200,7 +1200,7 @@ void resetConfigurationExt(Logging * logger, configuration_callback_t boardCallb
 	case PROMETHEUS_DEFAULTS:
 	case MINIMAL_PINS:
 		// all basic settings are already set in prepareVoidConfiguration(), no need to set anything here
-		// nothing to do - we do it all in setBoardConfigurationOverrides
+		// nothing to do - we do it all in setBoardDefaultConfiguration
 		break;
 	case TEST_ENGINE:
 		setTestEngineConfiguration(PASS_CONFIG_PARAMETER_SIGNATURE);

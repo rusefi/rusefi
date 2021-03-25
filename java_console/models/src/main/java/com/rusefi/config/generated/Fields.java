@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Fri Mar 19 21:20:07 UTC 2021
+// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Wed Mar 24 00:28:16 UTC 2021
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -1199,6 +1199,7 @@ public class Fields {
 	public static final int servoOutputPins8_offset = 3147;
 	public static final int showHumanReadableWarning_offset = 976;
 	public static final int showSdCardWarning_offset = 76;
+	public static final int SIGNATURE_HASH = 1763811448;
 	public static final int silentTriggerError_offset = 1464;
 	public static final int slowAdcAlpha_offset = 2088;
 	public static final int sparkDwellRpmBins_offset = 332;
@@ -1482,7 +1483,7 @@ public class Fields {
 	public static final char TS_SD_R_COMMAND = 'r';
 	public static final char TS_SD_W_COMMAND = 'w';
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI 2021.03.19.all.2985020897";
+	public static final String TS_SIGNATURE = "rusEFI 2021.03.24.all.1763811448";
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final int TT_TT_1_16 = 50;
 	public static final int TT_TT_2JZ_1_12 = 29;
@@ -1523,6 +1524,7 @@ public class Fields {
 	public static final int TT_TT_TOOTHED_WHEEL_36_2 = 48;
 	public static final int TT_TT_TOOTHED_WHEEL_60_2 = 8;
 	public static final int TT_TT_TRI_TACH = 53;
+	public static final int TT_TT_VVT_BARRA_3_PLUS_1 = 56;
 	public static final int TT_TT_VVT_BOSCH_QUICK_START = 47;
 	public static final int TT_TT_VVT_JZ = 17;
 	public static final int TT_TT_VVT_MIATA_NB2 = 43;
@@ -1792,7 +1794,7 @@ public class Fields {
 	public static final Field TPS2_1ADCCHANNEL = Field.create("TPS2_1ADCCHANNEL", 515, FieldType.INT8, adc_channel_e);
 	public static final Field IDLE_DERIVATIVEFILTERLOSS = Field.create("IDLE_DERIVATIVEFILTERLOSS", 516, FieldType.FLOAT);
 	public static final Field SENSORCHARTFREQUENCY = Field.create("SENSORCHARTFREQUENCY", 520, FieldType.INT);
-	public static final String[] trigger_type_e = {"custom toothed wheel", "Ford Aspire", "Dodge Neon 1995", "Miata NA", "Miata NB", "GM_7X", "Cooper R50", "Mazda SOHC 4", "60/2", "36/1", "Honda 4+24+1", "Mitsubishi", "Honda 4+24", "Honda 1+4+24", "Dodge Neon 2003", "Mazda DOHC 1+4", "1+1", "INVALID", "Single Tooth", "Dodge Ram 1+16", "60/2 VW", "Honda 1+24", "Dodge Stratus", "36_2_2_2", "Nissan Primera", "dev 2JZ 3/34 simulator", "Rover K", "GM LS 24", "Honda CBR 600", "2JZ_1_12", "Honda CBR 600 custom", "3/1 skipped" , "Dodge Neon 2003 crank", "Miata VVT", "trg34", "trg35", "Subaru 7+6", "Jeep 18-2-2-2", "WIP", "Dodge Neon 1995 crank only", "Jeep XJ 4 cyl", "FiatIAQ_P8", "Mazda Z5", "trg43", "Renix 44-2-2", "Renix 66-2-2-2", "Honda K 12+1", "trg47", "36/2", "Subaru SVX", "1+16", "Subaru 7 without 6", "trg52", "TriTach", "GM 60/2/2/2", "Skoda Favorit", "trg56", "trg57", "INVALID"};
+	public static final String[] trigger_type_e = {"custom toothed wheel", "Ford Aspire", "Dodge Neon 1995", "Miata NA", "Miata NB", "GM_7X", "Cooper R50", "Mazda SOHC 4", "60/2", "36/1", "Honda 4+24+1", "Mitsubishi", "Honda 4+24", "Honda 1+4+24", "Dodge Neon 2003", "Mazda DOHC 1+4", "1+1", "INVALID", "Single Tooth", "Dodge Ram 1+16", "60/2 VW", "Honda 1+24", "Dodge Stratus", "36_2_2_2", "Nissan Primera", "dev 2JZ 3/34 simulator", "Rover K", "GM LS 24", "Honda CBR 600", "2JZ_1_12", "Honda CBR 600 custom", "3/1 skipped" , "Dodge Neon 2003 crank", "Miata VVT", "trg34", "trg35", "Subaru 7+6", "Jeep 18-2-2-2", "WIP", "Dodge Neon 1995 crank only", "Jeep XJ 4 cyl", "FiatIAQ_P8", "Mazda Z5", "trg43", "Renix 44-2-2", "Renix 66-2-2-2", "Honda K 12+1", "trg47", "36/2", "Subaru SVX", "1+16", "Subaru 7 without 6", "trg52", "TriTach", "GM 60/2/2/2", "Skoda Favorit", "Barra 3+1 Cam", "trg57", "INVALID"};
 	public static final Field TRIGGER_TYPE = Field.create("TRIGGER_TYPE", 524, FieldType.INT, trigger_type_e);
 	public static final Field TRIGGER_TODOREMOVEMEONEDAY0 = Field.create("TRIGGER_TODOREMOVEMEONEDAY0", 528, FieldType.BIT, 0);
 	public static final Field TRIGGER_TODOREMOVEMEONEDAY1 = Field.create("TRIGGER_TODOREMOVEMEONEDAY1", 528, FieldType.BIT, 1);
@@ -2504,7 +2506,7 @@ public class Fields {
 	public static final Field UNUSED1301 = Field.create("UNUSED1301", 2252, FieldType.INT8);
 	public static final Field ALTERNATORPWMFREQUENCY = Field.create("ALTERNATORPWMFREQUENCY", 2256, FieldType.INT);
 	public static final Field UNUSED2260 = Field.create("UNUSED2260", 2260, FieldType.INT);
-	public static final String[] vvt_mode_e = {"Inactive", "Single Tooth Second Half", "2GZ", "Miata NB2", "Single Tooth First Half", "Bosch Quick Start", "4/1", "mode7"};
+	public static final String[] vvt_mode_e = {"Inactive", "Single Tooth Second Half", "2GZ", "Miata NB2", "Single Tooth First Half", "Bosch Quick Start", "4/1", "ST 170", "Ford Barra 3+1"};
 	public static final Field VVTMODE1 = Field.create("VVTMODE1", 2328, FieldType.INT8, vvt_mode_e);
 	public static final Field VVTMODE2 = Field.create("VVTMODE2", 2329, FieldType.INT8, vvt_mode_e);
 	public static final Field TLE8888MODE = Field.create("TLE8888MODE", 2416, FieldType.INT8);
