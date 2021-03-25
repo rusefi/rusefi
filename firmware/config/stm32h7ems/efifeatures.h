@@ -40,3 +40,6 @@
 #define BOARD_EXT_GPIOCHIPS			(BOARD_TLE6240_COUNT + BOARD_MC33972_COUNT + BOARD_TLE8888_COUNT + BOARD_DRV8860_COUNT + BOARD_MC33810_COUNT)
 
 #define EFI_USE_COMPRESSED_INI_MSD
+
+// H7 has dual bank, so flash on its own (low priority) thread so as to not block any other operations
+#define EFI_FLASH_WRITE_THREAD TRUE
