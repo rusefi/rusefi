@@ -44,9 +44,29 @@ crc_t flashStateCrc(persistent_config_container_s *state) {
 	return calc_crc((const crc_t*) &state->persistentConfiguration, sizeof(persistent_config_s));
 }
 
+#if EFI_FLASH_WRITE_THREAD
+chibios_rt::BinarySemaphore flashWriteSemaphore(/*taken =*/ true);
+
+static THD_WORKING_AREA(flashWriteStack, UTILITY_THREAD_STACK_SIZE);
+static void flashWriteThread(void*) {
+	while (true) {
+		// Wait for a request to come in
+		flashWriteSemaphore.wait();
+
+		// Do the actual flash write operation
+		writeToFlashNow();
+	}
+}
+#endif // EFI_FLASH_WRITE_THREAD
+
 void setNeedToWriteConfiguration(void) {
 	scheduleMsg(logger, "Scheduling configuration write");
 	needToWriteConfiguration = true;
+
+#if EFI_FLASH_WRITE_THREAD
+	// Signal the flash writer thread to wake up and write at its leisure
+	flashWriteSemaphore.signal();
+#endif // EFI_FLASH_WRITE_THREAD
 }
 
 bool getNeedToWriteConfiguration(void) {
@@ -54,13 +74,15 @@ bool getNeedToWriteConfiguration(void) {
 }
 
 void writeToFlashIfPending() {
+// with a flash write thread, the schedule happens directly from
+// setNeedToWriteConfiguration, so there's nothing to do here
+#if !EFI_FLASH_WRITE_THREAD
 	if (!getNeedToWriteConfiguration()) {
 		return;
 	}
-	// todo: technically we need a lock here, realistically we should be fine.
-	needToWriteConfiguration = false;
-	scheduleMsg(logger, "Writing pending configuration");
+
 	writeToFlashNow();
+#endif
 }
 
 // Erase and write a copy of the configuration at the specified address
@@ -72,7 +94,7 @@ int eraseAndFlashCopy(flashaddr_t storageAddress, const TStorage& data)
 }
 
 void writeToFlashNow(void) {
-	scheduleMsg(logger, " !!!!!!!!!!!!!!!!!!!! BE SURE NOT WRITE WITH IGNITION ON !!!!!!!!!!!!!!!!!!!!");
+	scheduleMsg(logger, "Writing pending configuration...");
 
 	// Set up the container
 	persistentState.size = sizeof(persistentState);
@@ -94,6 +116,9 @@ void writeToFlashNow(void) {
 	assertEngineReference();
 
 	resetMaxValues();
+
+	// Write complete, clear the flag
+	needToWriteConfiguration = false;
 }
 
 static bool isValidCrc(persistent_config_container_s *state) {
@@ -201,6 +226,10 @@ void initFlash(Logging *sharedLogger) {
 #endif
 	addConsoleAction("resetconfig", doResetConfiguration);
 	addConsoleAction("rewriteconfig", rewriteConfig);
+
+#if EFI_FLASH_WRITE_THREAD
+	chThdCreateStatic(flashWriteStack, sizeof(flashWriteStack), PRIO_FLASH_WRITE, flashWriteThread, nullptr);
+#endif
 }
 
 #endif /* EFI_INTERNAL_FLASH */
