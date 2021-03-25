@@ -1001,6 +1001,7 @@ const plain_get_integer_s getI_plain[] = {
 //		{"idle_solenoid_freq", setIdleSolenoidFrequency},
 //		{"tps_accel_len", setTpsAccelLen},
 //		{"engine_load_accel_len", setEngineLoadAccelLen},
+//		{"bor", setBor},
 //		{"can_mode", setCanType},
 //		{"idle_rpm", setTargetIdleRpm},
 };
@@ -1052,6 +1053,10 @@ static void getValue(const char *paramStr) {
 
 	if (strEqualCaseInsensitive(paramStr, "isCJ125Enabled")) {
 		scheduleMsg(&logger, "isCJ125Enabled=%d", engineConfiguration->isCJ125Enabled);
+#if EFI_PROD_CODE
+	} else if (strEqualCaseInsensitive(paramStr, "bor")) {
+		showBor();
+#endif /* EFI_PROD_CODE */
 	} else if (strEqualCaseInsensitive(paramStr, "tps_min")) {
 		scheduleMsg(&logger, "tps_min=%d", engineConfiguration->tpsMin);
 	} else if (strEqualCaseInsensitive(paramStr, "trigger_only_front")) {
@@ -1196,6 +1201,7 @@ const command_i_s commandsI[] = {{"ignition_mode", setIgnitionMode},
 		{"engine_load_accel_len", setEngineLoadAccelLen},
 #endif // EFI_ENGINE_CONTROL
 #if EFI_PROD_CODE
+		{"bor", setBor},
 #if EFI_CAN_SUPPORT
 		{"can_mode", setCanType},
 		{"can_vss", setCanVss},
