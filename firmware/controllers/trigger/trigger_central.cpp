@@ -79,8 +79,8 @@ EXTERN_ENGINE;
 
 static Logging *logger;
 
-angle_t TriggerCentral::getVVTPosition() {
-	return vvtPosition[0][0];
+angle_t TriggerCentral::getVVTPosition(uint8_t bankIndex, uint8_t camIndex) {
+	return vvtPosition[bankIndex][camIndex];
 }
 
 #define miataNbIndex (0)
