@@ -534,19 +534,22 @@ bool isSdCardAlive(void) {
 	return fs_ready;
 }
 
-void initMmcCard(void) {
+// Pre-config load init
+void initEarlyMmcCard() {
 	logName[0] = 0;
 
 #if HAL_USE_USB_MSD
 	chBSemObjectInit(&usbConnectedSemaphore, true);
 #endif
 
-	chThdCreateStatic(mmcThreadStack, sizeof(mmcThreadStack), PRIO_MMC, (tfunc_t)(void*) MMCmonThread, NULL);
-
 	addConsoleAction("sdinfo", sdStatistics);
 	addConsoleActionS("ls", listDirectory);
 	addConsoleActionS("del", removeFile);
 	addConsoleAction("incfilename", incLogFileName);
+}
+
+void initMmcCard() {
+	chThdCreateStatic(mmcThreadStack, sizeof(mmcThreadStack), PRIO_MMC, (tfunc_t)(void*) MMCmonThread, NULL);
 }
 
 #endif /* EFI_FILE_LOGGING */
