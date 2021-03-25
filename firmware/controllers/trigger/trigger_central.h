@@ -57,7 +57,7 @@ public:
 	TriggerNoiseFilter noiseFilter;
 
 	trigger_type_e vvtTriggerType[CAMS_PER_BANK];
-	angle_t getVVTPosition();
+	angle_t getVVTPosition(uint8_t bankIndex, uint8_t camIndex);
 
 #if EFI_UNIT_TEST
 	// latest VVT event position (could be not synchronization event)

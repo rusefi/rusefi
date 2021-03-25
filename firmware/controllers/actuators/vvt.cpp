@@ -27,9 +27,14 @@ static fsio8_Map3D_u8t vvtTable2("vvt#2");
 
 static Logging *logger;
 
-void VvtController::init(int index, const ValueProvider3D* targetMap) {
+void VvtController::init(int index, int bankIndex, int camIndex, const ValueProvider3D* targetMap) {
 	this->index = index;
-	m_pid.initPidClass(&CONFIG(auxPid[index]));
+	m_bank = bankIndex;
+	m_cam = camIndex;
+
+	// Use the same settings for the Nth cam in every bank (ie, all exhaust cams use the same PID)
+	m_pid.initPidClass(&CONFIG(auxPid[camIndex]));
+
 	m_targetMap = targetMap;
 }
 
@@ -47,7 +52,7 @@ void VvtController::PeriodicTask() {
 }
 
 expected<angle_t> VvtController::observePlant() const {
-	return engine->triggerCentral.getVVTPosition();
+	return engine->triggerCentral.getVVTPosition(m_bank, m_cam);
 }
 
 expected<angle_t> VvtController::getSetpoint() const {
@@ -138,10 +143,10 @@ void initAuxPid(Logging *sharedLogger) {
 	for (int i = 0;i < CAM_INPUTS_COUNT;i++) {
 		INJECT_ENGINE_REFERENCE(&instances[i]);
 
-		// TODO: this is wrong for cams 3/4
-		int indexInBank = i % CAMS_PER_BANK;
-		auto targetMap = indexInBank == 0 ? &vvtTable1 : &vvtTable2;
-		instances[i].init(i, targetMap);
+		int camIndex = i % CAMS_PER_BANK;
+		int bankIndex = i / CAMS_PER_BANK;
+		auto targetMap = camIndex == 0 ? &vvtTable1 : &vvtTable2;
+		instances[i].init(i, bankIndex, camIndex, targetMap);
 	}
 
 	startVvtControlPins();

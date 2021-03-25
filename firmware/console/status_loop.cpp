@@ -595,7 +595,7 @@ void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels DECLARE_
 
 #if EFI_SHAFT_POSITION_INPUT
 	// 248
-	tsOutputChannels->vvtPosition = engine->triggerCentral.getVVTPosition();
+	tsOutputChannels->vvtPosition = engine->triggerCentral.getVVTPosition(0, 0);
 #endif
 
 	// 252
