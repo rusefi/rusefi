@@ -61,12 +61,11 @@ static void flashWriteThread(void*) {
 
 void setNeedToWriteConfiguration(void) {
 	scheduleMsg(logger, "Scheduling configuration write");
+	needToWriteConfiguration = true;
 
 #if EFI_FLASH_WRITE_THREAD
 	// Signal the flash writer thread to wake up and write at its leisure
 	flashWriteSemaphore.signal();
-#else // not EFI_FLASH_WRITE_THREAD
-	needToWriteConfiguration = true;
 #endif // EFI_FLASH_WRITE_THREAD
 }
 
@@ -75,13 +74,13 @@ bool getNeedToWriteConfiguration(void) {
 }
 
 void writeToFlashIfPending() {
-// with a flash write thread, the schedule happens directly from setNeedToWriteConfiguration
-#if ! EFI_FLASH_WRITE_THREAD
+// with a flash write thread, the schedule happens directly from
+// setNeedToWriteConfiguration, so there's nothing to do here
+#if !EFI_FLASH_WRITE_THREAD
 	if (!getNeedToWriteConfiguration()) {
 		return;
 	}
 
-	scheduleMsg(logger, "Writing pending configuration");
 	writeToFlashNow();
 #endif
 }
@@ -95,7 +94,7 @@ int eraseAndFlashCopy(flashaddr_t storageAddress, const TStorage& data)
 }
 
 void writeToFlashNow(void) {
-	scheduleMsg(logger, " !!!!!!!!!!!!!!!!!!!! BE SURE NOT WRITE WITH IGNITION ON !!!!!!!!!!!!!!!!!!!!");
+	scheduleMsg(logger, "Writing pending configuration...");
 
 	// Set up the container
 	persistentState.size = sizeof(persistentState);
