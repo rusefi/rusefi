@@ -222,7 +222,7 @@ void initFlash(Logging *sharedLogger) {
 	addConsoleAction("rewriteconfig", rewriteConfig);
 
 #if EFI_FLASH_WRITE_THREAD
-	chThdCreateStatic(flashWriteStack, sizeof(flashWriteStack), flashWriteThread, PRIO_FLASH_WRITE, nullptr);
+	chThdCreateStatic(flashWriteStack, sizeof(flashWriteStack), PRIO_FLASH_WRITE, flashWriteThread, nullptr);
 #endif
 }
 
