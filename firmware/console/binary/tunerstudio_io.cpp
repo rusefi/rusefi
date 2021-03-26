@@ -76,7 +76,7 @@ struct SecondaryChannelThread : public TunerstudioThread {
 static SecondaryChannelThread secondaryChannelThread;
 #endif // defined(TS_SECONDARY_UART) || defined(TS_SECONDARY_SERIAL)
 
-void startChannels() {
+void startSerialChannels() {
 #if defined(TS_PRIMARY_UART) || defined(TS_PRIMARY_SERIAL)
 	primaryChannelThread.Start();
 #endif

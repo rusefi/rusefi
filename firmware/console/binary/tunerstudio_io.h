@@ -107,6 +107,7 @@ protected:
 // that's 1 second
 #define SR5_READ_TIMEOUT TIME_MS2I(1000)
 
+void startSerialChannels();
 SerialTsChannelBase* getBluetoothChannel();
 
 void sendOkResponse(TsChannelBase *tsChannel, ts_response_format_e mode);
