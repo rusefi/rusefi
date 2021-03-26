@@ -191,13 +191,11 @@ void runRusEfi(void) {
 	 */
 	initDataStructures(PASS_ENGINE_PARAMETER_SIGNATURE);
 
+	// Perform hardware initialization that doesn't need configuration
 	initHardwareNoConfig(&sharedLogger);
 
+	// Read configuration from flash memory
 	loadConfiguration(&sharedLogger PASS_ENGINE_PARAMETER_SUFFIX);
-
-#if EFI_FILE_LOGGING
-	initMmcCard();
-#endif /* EFI_FILE_LOGGING */
 
 #if EFI_USB_SERIAL
 	startUsbConsole();
@@ -216,6 +214,10 @@ void runRusEfi(void) {
 	 * Initialize hardware drivers
 	 */
 	initHardware();
+
+#if EFI_FILE_LOGGING
+	initMmcCard();
+#endif /* EFI_FILE_LOGGING */
 
 #if HW_CHECK_ALWAYS_STIMULATE
 	// we need a special binary for final assembly check. We cannot afford to require too much software or too many steps
