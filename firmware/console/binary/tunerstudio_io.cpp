@@ -15,9 +15,11 @@
 
 EXTERN_ENGINE;
 
+#if EFI_PROD_CODE
 size_t TsChannelBase::read(uint8_t* buffer, size_t size) {
 	return readTimeout(buffer, size, SR5_READ_TIMEOUT);
 }
+#endif
 
 void TsChannelBase::writeCrcPacketSmall(uint8_t responseCode, const uint8_t* buf, size_t size) {
 	auto scratchBuffer = this->scratchBuffer;
