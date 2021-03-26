@@ -158,7 +158,7 @@ void setDateTime(const char *strDate) {
 			return;
 		}
 	}
-	scheduleMsg(&logger, "date_set Date parameter %s is wrong\r\n", strDate);
+	scheduleMsg(&logger, "date_set Date parameter %s is wrong", strDate);
 }
 #endif /* EFI_RTC */
 

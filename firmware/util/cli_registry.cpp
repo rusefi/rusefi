@@ -183,7 +183,7 @@ void helpCommand(void) {
  * @brief This is just a test function
  */
 static void echo(int value) {
-	scheduleMsg(logging, "got value: %d\r\n", value);
+	scheduleMsg(logging, "got value: %d", value);
 }
 
 char *unquote(char *line) {
@@ -371,7 +371,7 @@ void handleActionWithParameter(TokenCallback *current, char *parameter) {
 	if (current->parameterType == FLOAT_PARAMETER) {
 		float value = atoff(parameter);
 		if (cisnan(value)) {
-			scheduleMsg(logging, "invalid float [%s]\r\n", parameter);
+			scheduleMsg(logging, "invalid float [%s]", parameter);
 			return;
 		}
 		VoidFloat callbackF = (VoidFloat) current->callback;
@@ -388,7 +388,7 @@ void handleActionWithParameter(TokenCallback *current, char *parameter) {
 		REPLACE_SPACES_WITH_ZERO;
 		float value1 = atoff(parameter);
 		if (cisnan(value1)) {
-			scheduleMsg(logging, "invalid float [%s]\r\n", parameter);
+			scheduleMsg(logging, "invalid float [%s]", parameter);
 			return;
 		}
 
@@ -396,7 +396,7 @@ void handleActionWithParameter(TokenCallback *current, char *parameter) {
 		float value2 = atoff(parameter);
 
 		if (cisnan(value2)) {
-			scheduleMsg(logging, "invalid float [%s]\r\n", parameter);
+			scheduleMsg(logging, "invalid float [%s]", parameter);
 			return;
 		}
 	if (current->parameterType == FLOAT_FLOAT_PARAMETER) {
@@ -425,7 +425,7 @@ void handleActionWithParameter(TokenCallback *current, char *parameter) {
 		float value2 = atoff(parameter);
 
 		if (cisnan(value2)) {
-			scheduleMsg(logging, "invalid float [%s]\r\n", parameter);
+			scheduleMsg(logging, "invalid float [%s]", parameter);
 			return;
 		}
 		
@@ -437,7 +437,7 @@ void handleActionWithParameter(TokenCallback *current, char *parameter) {
 
 	int value = atoi(parameter);
 	if (absI(value) == ERROR_CODE) {
-		scheduleMsg(logging, "invalid integer [%s]\r\n", parameter);
+		scheduleMsg(logging, "invalid integer [%s]", parameter);
 		return;
 	}
 
@@ -493,7 +493,7 @@ char *validateSecureLine(char *line) {
 		char *divider = line;
 		while (*divider != '!') {
 			if (*divider == '\0') {
-				scheduleMsg(logging, "Divider not found [%s]\r\n", line);
+				scheduleMsg(logging, "Divider not found [%s]", line);
 				return NULL;
 			}
 			divider++;
@@ -503,7 +503,7 @@ char *validateSecureLine(char *line) {
 		line = divider;
 		int actualLength = strlen(line);
 		if (expectedLength != actualLength) {
-			scheduleMsg(logging, "Error detected: expected %d but got %d in [%s]\r\n", expectedLength, actualLength, line);
+			scheduleMsg(logging, "Error detected: expected %d but got %d in [%s]", expectedLength, actualLength, line);
 			return NULL;
 		}
 	}
@@ -562,7 +562,7 @@ void handleConsoleLine(char *line) {
 	if (lineLength > 100) {
 		// todo: better max size logic
 		// todo: better reaction to excessive line
-		scheduleMsg(logging, "Long line?\r\n");
+		scheduleMsg(logging, "Long line?");
 		return;
 	}
 
