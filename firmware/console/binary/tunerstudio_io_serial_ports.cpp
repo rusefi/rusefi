@@ -5,14 +5,14 @@
  */
 
 #include "engine.h"
-#include "tunerstudio.h"
-#include "tunerstudio_io.h"
-#include "connector_uart_dma.h"
 
 EXTERN_ENGINE;
 
 #if EFI_PROD_CODE
-//#include "pin_repository.h"
+#include "tunerstudio.h"
+#include "tunerstudio_io.h"
+#include "connector_uart_dma.h"
+
 
 #if defined(TS_PRIMARY_UART) || defined(TS_PRIMARY_SERIAL)
 #ifdef TS_PRIMARY_UART
