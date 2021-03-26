@@ -75,8 +75,6 @@ void chDbgPanic3(const char *msg, const char * file, int line) {
 #endif /* EFI_HD44780_LCD */
 
 	if (!main_loop_started) {
-		print("%s %s %s:%d\r\n", CRITICAL_PREFIX, msg, file, line);
-//		chThdSleepSeconds(1);
 		chSysHalt("Main loop did not start");
 	}
 }

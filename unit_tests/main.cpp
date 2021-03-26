@@ -45,12 +45,5 @@ GTEST_API_ int main(int argc, char **argv) {
 	return result == 0 ? 0 : -1;
 }
 
-void print(const char *format, ...) {
-	va_list ap;
-	va_start(ap, format);
-	vprintf(format, ap);
-	va_end(ap);
-}
-
 void initLogging(LoggingWithStorage *logging, const char *name) {
 }

@@ -11,7 +11,6 @@
 #include "pid.h"
 
 TEST(util, pid) {
-	print("******************************************* testPidController\r\n");
 	pid_s pidS;
 	pidS.pFactor = 50;
 	pidS.iFactor = 0.5;

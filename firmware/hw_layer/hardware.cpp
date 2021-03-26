@@ -470,7 +470,7 @@ void initHardwareNoConfig(Logging *l) {
 	efiAssertVoid(CUSTOM_EC_NULL, engineConfiguration!=NULL, "engineConfiguration");
 	
 
-	printMsg(sharedLogger, "initHardware()");
+	scheduleMsg(sharedLogger, "initHardware()");
 
 	initPinRepository();
 
@@ -605,7 +605,7 @@ void initHardware() {
 
 	calcFastAdcIndexes();
 
-	printMsg(sharedLogger, "initHardware() OK!");
+	scheduleMsg(sharedLogger, "initHardware() OK!");
 }
 
 #endif /* EFI_PROD_CODE */

@@ -117,7 +117,7 @@ static msg_t _put(void *ip, uint8_t b) {
 	}
 
 	_putt(ip, b, CONSOLE_WRITE_TIMEOUT);
-	
+
 	// Relock if we were locked before
 	if (wasLocked) {
 		if (isIsrContext()) {
@@ -201,15 +201,6 @@ static THD_FUNCTION(consoleThreadEntryPoint, arg) {
 }
 
 #endif /* EFI_CONSOLE_NO_THREAD */
-
-void consoleOutputBuffer(const uint8_t *buf, int size) {
-#if !EFI_UART_ECHO_TEST_MODE
-	BaseChannel * channel = getConsoleChannel();
-	if (channel != nullptr) {
-		chnWriteTimeout(channel, buf, size, CONSOLE_WRITE_TIMEOUT);
-	}
-#endif /* EFI_UART_ECHO_TEST_MODE */
-}
 
 static Logging *logger;
 

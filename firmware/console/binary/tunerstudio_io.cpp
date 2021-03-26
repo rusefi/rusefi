@@ -50,7 +50,7 @@ void startTsPort(ts_channel_s *tsChannel) {
 		#if defined(TS_UART_DEVICE) || defined(TS_SERIAL_DEVICE)
 			if (CONFIG(useSerialPort)) {
 
-				print("TunerStudio over USART");
+				scheduleMsg(&tsLogger, "TunerStudio over USART");
 				/**
 				 * We have hard-coded USB serial console so that it would be clear how to connect to each specific board,
 				 * but for UART serial we allow users to change settings.
@@ -59,15 +59,16 @@ void startTsPort(ts_channel_s *tsChannel) {
 				efiSetPadMode("tunerstudio tx", engineConfiguration->binarySerialTxPin, PAL_MODE_ALTERNATE(TS_SERIAL_AF));
 
 				#if TS_UART_DMA_MODE
+					scheduleMsg(&tsLogger, "Using UART-DMA mode");
 					tsChannel->uartp = TS_UART_DEVICE;
 					startUartDmaConnector(tsChannel->uartp PASS_CONFIG_PARAMETER_SUFFIX);
 				#elif TS_UART_MODE
-					print("Using UART mode");
+					scheduleMsg(&tsLogger, "Using UART mode");
 					// start DMA driver
 					tsUartConfig.speed = CONFIG(tunerStudioSerialSpeed);
 					uartStart(TS_UART_DEVICE, &tsUartConfig);
 				#elif defined(TS_SERIAL_DEVICE)
-					print("Using Serial mode");
+					scheduleMsg(&tsLogger, "Using Serial mode");
 					tsSerialConfig.speed = CONFIG(tunerStudioSerialSpeed);
 
 					sdStart(TS_SERIAL_DEVICE, &tsSerialConfig);

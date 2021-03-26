@@ -49,7 +49,7 @@ static void printGpsInfo(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	scheduleMsg(&logging, "GPS RX %s", hwPortname(CONFIG(gps_rx_pin)));
 	scheduleMsg(&logging, "GPS TX %s", hwPortname(CONFIG(gps_tx_pin)));
 
-	scheduleMsg(&logging, "m=%d,e=%d: vehicle speed = %.2f\r\n", gpsMesagesCount, uartErrors, getCurrentSpeed());
+	scheduleMsg(&logging, "m=%d,e=%d: vehicle speed = %.2f", gpsMesagesCount, uartErrors, getCurrentSpeed());
 
 	float sec = currentTimeMillis() / 1000.0;
 	scheduleMsg(&logging, "communication speed: %.2f", gpsMesagesCount / sec);
