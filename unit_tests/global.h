@@ -43,8 +43,6 @@ typedef uint32_t systime_t;
 
 void chDbgAssert(int c, char *msg, void *arg);
 
-void print(const char *fmt, ...);
-
 #define TICKS_IN_MS 100
 
 #define chDbgCheck(x, y) chDbgAssert(x, y, NULL)

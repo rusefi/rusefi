@@ -569,8 +569,10 @@ static void tsProcessOne(TsChannelBase* tsChannel) {
 	}
 
 	int success = tsInstance.handleCrcCommand(tsChannel, tsChannel->scratchBuffer, incomingPacketSize);
-	if (!success)
-		print("got unexpected TunerStudio command %x:%c\r\n", command, command);
+
+	if (!success) {
+		scheduleMsg(&tsLogger, "got unexpected TunerStudio command %x:%c\r\n", command, command);
+	}
 }
 
 void runBinaryProtocolLoop(TsChannelBase* tsChannel) {
