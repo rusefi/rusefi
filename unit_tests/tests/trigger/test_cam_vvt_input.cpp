@@ -114,7 +114,7 @@ TEST(trigger, testCamInput) {
 
 	// asserting that error code has cleared
 	ASSERT_EQ(0,  unitTestWarningCodeState.recentWarnings.getCount()) << "warningCounter#testCamInput #3";
-	ASSERT_NEAR(720 - 181, engine->triggerCentral.getVVTPosition(), EPS3D);
+	ASSERT_NEAR(720 - 181, engine->triggerCentral.getVVTPosition(0, 0), EPS3D);
 }
 
 TEST(sensors, testNB2CamInput) {
@@ -153,14 +153,14 @@ TEST(sensors, testNB2CamInput) {
 	// this second important front would give us first real VVT gap duration
 	hwHandleVvtCamSignal(TV_RISE, getTimeNowNt(), 0 PASS_ENGINE_PARAMETER_SUFFIX);
 
-	ASSERT_FLOAT_EQ(0, engine->triggerCentral.getVVTPosition());
+	ASSERT_FLOAT_EQ(0, engine->triggerCentral.getVVTPosition(0, 0));
 	ASSERT_EQ(totalRevolutionCountBeforeVvtSync, engine->triggerCentral.triggerState.getTotalRevolutionCounter());
 
 	eth.moveTimeForwardUs(MS2US(130));
 	// this third important front would give us first comparison between two real gaps
 	hwHandleVvtCamSignal(TV_RISE, getTimeNowNt(), 0 PASS_ENGINE_PARAMETER_SUFFIX);
 
-	ASSERT_NEAR(-67.6 - 720 - 720, engine->triggerCentral.getVVTPosition(), EPS3D);
+	ASSERT_NEAR(-67.6 - 720 - 720, engine->triggerCentral.getVVTPosition(0, 0), EPS3D);
 	// actually position based on VVT!
 	ASSERT_EQ(totalRevolutionCountBeforeVvtSync + 2, engine->triggerCentral.triggerState.getTotalRevolutionCounter());
 }

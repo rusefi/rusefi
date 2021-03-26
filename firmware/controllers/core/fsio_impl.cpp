@@ -138,8 +138,9 @@ FsioResult getEngineValue(le_action_e action DECLARE_ENGINE_PARAMETER_SUFFIX) {
 		return Sensor::get(SensorType::Map).value_or(0);
 #if EFI_SHAFT_POSITION_INPUT
 	case LE_METHOD_INTAKE_VVT:
+		return engine->triggerCentral.getVVTPosition(0, 0);
 	case LE_METHOD_EXHAUST_VVT:
-		return engine->triggerCentral.getVVTPosition();
+		return engine->triggerCentral.getVVTPosition(0, 1);
 #endif
 	case LE_METHOD_TIME_SINCE_TRIGGER_EVENT:
 		return engine->triggerCentral.getTimeSinceTriggerEvent(getTimeNowNt());

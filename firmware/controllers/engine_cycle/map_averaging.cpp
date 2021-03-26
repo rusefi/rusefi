@@ -235,7 +235,7 @@ void refreshMapAveragingPreCalc(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 		angle_t offsetAngle = ENGINE(triggerCentral.triggerFormDetails).eventAngles[CONFIG(mapAveragingSchedulingAtIndex)];
 		efiAssertVoid(CUSTOM_ERR_MAP_AVG_OFFSET, !cisnan(offsetAngle), "offsetAngle");
 
-		for (int i = 0; i < engineConfiguration->specs.cylindersCount; i++) {
+		for (size_t i = 0; i < engineConfiguration->specs.cylindersCount; i++) {
 			angle_t cylinderOffset = getEngineCycle(engine->getOperationMode(PASS_ENGINE_PARAMETER_SIGNATURE)) * i / engineConfiguration->specs.cylindersCount;
 			efiAssertVoid(CUSTOM_ERR_MAP_CYL_OFFSET, !cisnan(cylinderOffset), "cylinderOffset");
 			// part of this formula related to specific cylinder offset is never changing - we can
@@ -247,7 +247,7 @@ void refreshMapAveragingPreCalc(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 		}
 		engine->engineState.mapAveragingDuration = interpolate2d(rpm, c->samplingWindowBins, c->samplingWindow);
 	} else {
-		for (int i = 0; i < engineConfiguration->specs.cylindersCount; i++) {
+		for (size_t i = 0; i < engineConfiguration->specs.cylindersCount; i++) {
 			engine->engineState.mapAveragingStart[i] = NAN;
 		}
 		engine->engineState.mapAveragingDuration = NAN;

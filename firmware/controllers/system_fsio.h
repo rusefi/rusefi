@@ -1,6 +1,6 @@
 // this https://en.wikipedia.org/wiki/Reverse_Polish_notation is generated automatically
 // from controllers/system_fsio.txt
-// on 2021-01-11_14_17_13_143
+// on 2021-03-20_12_45_43_719
 //
 //
 // in this file we define system FSIO expressions
@@ -33,11 +33,16 @@
 
 // Human-readable: (rpm > fsio_setting(2)) | ((coolant > fsio_setting(3)) | (vbatt < fsio_setting(4)))
 #define COMBINED_WARNING_LIGHT "rpm 2 fsio_setting > coolant 3 fsio_setting > vbatt 4 fsio_setting < | |"
-//needed by EFI_MAIN_RELAY_CONTROL
+//needed by EFI_MAIN_RELAY_CONTROL which is currently FALSE for most of the boards
+// todo: make '5' a setting?
+// todo: always have 'EFI_MAIN_RELAY_CONTROL'?
+// at the moment microRusEFI would not be happy with vbatt > 5 since microRusEFI senses main relay output
+// todo https://github.com/rusefi/rusefi/issues/2258
 //MAIN_RELAY_LOGIC=(time_since_boot >= 0 & time_since_boot < 2) | (vbatt > 5) | in_shutdown
+//MAIN_RELAY_LOGIC=(!in_mr_bench) & ((vbatt > 5) | in_shutdown)
 
-// Human-readable: (!in_mr_bench) & ((vbatt > 5) | in_shutdown)
-#define MAIN_RELAY_LOGIC "in_mr_bench ! vbatt 5 > in_shutdown | &"
+// Human-readable: (!in_mr_bench) & (vbatt > 5)
+#define MAIN_RELAY_LOGIC "in_mr_bench ! vbatt 5 > &"
 // could be used for simple variable intake geometry setups or warning light or starter block
 
 // Human-readable: rpm > fsio_setting(1)

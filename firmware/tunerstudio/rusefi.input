@@ -1823,27 +1823,31 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 	    field = "!https://rusefi.com/s/vvt"
 ; todo: code generator to hard-code all triggers not requiring VVT?
 ; todo: https://github.com/rusefi/rusefi/issues/2077
-	    field = "CAM/VVT mode shaft #1",				vvtMode1, {trigger_type != @@TT_TT_MAZDA_MIATA_NA@@}
-	    field = "VVT mode shaft #2",				    vvtMode2, {trigger_type != @@TT_TT_MAZDA_MIATA_NA@@}
-	    field = "VVT use rise front",					vvtCamSensorUseRise, {trigger_type != @@TT_TT_MAZDA_MIATA_NA@@}
-	    field = "VVT position display offset",			vvtOffset
+	    field = "Cam mode (intake cams)",				vvtMode1, {trigger_type != @@TT_TT_MAZDA_MIATA_NA@@}
+	    field = "Cam mode (exhaust cams)",				    vvtMode2, {trigger_type != @@TT_TT_MAZDA_MIATA_NA@@}
+	    field = "VVT use only rising edge",					vvtCamSensorUseRise, {trigger_type != @@TT_TT_MAZDA_MIATA_NA@@}
+	    field = "#Set offset so VVT indicates 0 degrees in default position"
+		field = "VVT offset bank 1 intake",				vvtOffset
+		;field = "VVT offset bank 1 exhaust",			vvtOffset2
+		;field = "VVT offset bank 2 intake",			vvtOffset3
+		;field = "VVT offset bank 2 exhaust",			vvtOffset4
 	    field = "print verbose VVT sync details to console",verboseVVTDecoding
 	    field = "Do not print messages in case of sync error",  silentTriggerError
 	    field = "Enable noise filtering",				useNoiselessTriggerDecoder, {trigger_type == @@TT_TT_TOOTHED_WHEEL_60_2@@ || trigger_type == @@TT_TT_TOOTHED_WHEEL_36_1@@}
 
 	dialog = triggerInputs,					"Trigger Inputs"
-		field = "!ECU reboot needed to apply these settings"
 		field = "#Cam is primary if you have cam sensor as part of trigger shape"
 		field = "Primary channel", 						triggerInputPins1
 		field = "Invert Primary",						invertPrimaryTriggerSignal
 		field = "Secondary channel", 					triggerInputPins2,            { trigger_type != @@TT_TT_TOOTHED_WHEEL@@ && trigger_type != @@TT_TT_TOOTHED_WHEEL_60_2@@ && trigger_type != @@TT_TT_TOOTHED_WHEEL_36_1@@ && trigger_type != @@TT_TT_ONE@@ && trigger_type != @@TT_TT_60_2_VW@@ && trigger_type != @@TT_TT_TOOTHED_WHEEL_36_2@@}
 		field = "Invert Secondary",				    	invertSecondaryTriggerSignal, { trigger_type != @@TT_TT_TOOTHED_WHEEL@@ && trigger_type != @@TT_TT_TOOTHED_WHEEL_60_2@@ && trigger_type != @@TT_TT_TOOTHED_WHEEL_36_1@@ && trigger_type != @@TT_TT_ONE@@ && trigger_type != @@TT_TT_60_2_VW@@ && trigger_type != @@TT_TT_TOOTHED_WHEEL_36_2@@}
-		field = "#VVT or Cam for 60/2 goes here"
-		field = "Cam Sync/VVT shaft #1 bank #1",	    camInputs1
-        field = "VVT shaft #2 bank #1",        camInputs2
-        field = "VVT shaft #1 bank #2",        camInputs3
-        field = "VVT shaft #2 bank #2",        camInputs4
-		field = "Invert Cam/VVT",                       invertCamVVTSignal
+		field = "#VVT or Cam for 60/2 goes below"
+		field = "#If your engine has no exhaust cam sensor, use intake cam inputs"
+		field = "Cam sensor bank 1 intake",	        camInputs1
+        field = "Cam sensor bank 1 exhaust",        camInputs2
+        field = "Cam sensor bank 2 intake",         camInputs3
+        field = "Cam sensor bank 2 exhaust",        camInputs4
+		field = "Invert cam inputs",                invertCamVVTSignal
 		panel = triggerInputComparator @@if_ts_show_trigger_comparator
 
 

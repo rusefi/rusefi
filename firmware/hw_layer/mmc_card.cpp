@@ -16,6 +16,7 @@
 
 #if EFI_FILE_LOGGING
 
+#include "ch.hpp"
 #include <stdio.h>
 #include <string.h>
 #include "mmc_card.h"
@@ -338,10 +339,10 @@ static const scsi_inquiry_response_t scsi_inquiry_response = {
     {'v',CH_KERNEL_MAJOR+'0','.',CH_KERNEL_MINOR+'0'}
 };
 
-static binary_semaphore_t usbConnectedSemaphore;
+static chibios_rt::BinarySemaphore usbConnectedSemaphore(/* taken =*/ true);
 
 void onUsbConnectedNotifyMmcI() {
-	chBSemSignalI(&usbConnectedSemaphore);
+	usbConnectedSemaphore.signalI();
 }
 
 #endif /* HAL_USE_USB_MSD */
@@ -417,7 +418,7 @@ static bool mountMmc() {
 
 #if HAL_USE_USB_MSD
 	// Wait for the USB stack to wake up, or a 5 second timeout, whichever occurs first
-	msg_t usbResult = chBSemWaitTimeout(&usbConnectedSemaphore, TIME_MS2I(5000));
+	msg_t usbResult = usbConnectedSemaphore.wait(TIME_MS2I(5000));
 
 	bool hasUsb = usbResult == MSG_OK;
 
@@ -534,19 +535,18 @@ bool isSdCardAlive(void) {
 	return fs_ready;
 }
 
-void initMmcCard(void) {
+// Pre-config load init
+void initEarlyMmcCard() {
 	logName[0] = 0;
-
-#if HAL_USE_USB_MSD
-	chBSemObjectInit(&usbConnectedSemaphore, true);
-#endif
-
-	chThdCreateStatic(mmcThreadStack, sizeof(mmcThreadStack), PRIO_MMC, (tfunc_t)(void*) MMCmonThread, NULL);
 
 	addConsoleAction("sdinfo", sdStatistics);
 	addConsoleActionS("ls", listDirectory);
 	addConsoleActionS("del", removeFile);
 	addConsoleAction("incfilename", incLogFileName);
+}
+
+void initMmcCard() {
+	chThdCreateStatic(mmcThreadStack, sizeof(mmcThreadStack), PRIO_MMC, (tfunc_t)(void*) MMCmonThread, NULL);
 }
 
 #endif /* EFI_FILE_LOGGING */

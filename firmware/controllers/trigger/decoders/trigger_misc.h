@@ -13,4 +13,6 @@ void configureFiatIAQ_P8(TriggerWaveform * s);
 void configureDaihatsu4(TriggerWaveform * s);
 void configureFordST170(TriggerWaveform * s);
 void configureTriTach(TriggerWaveform * s);
+// TT_VVT_BARRA_3_PLUS_1
+void configureBarra3plus1cam(TriggerWaveform *s);
 

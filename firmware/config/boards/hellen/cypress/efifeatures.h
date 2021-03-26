@@ -385,8 +385,6 @@
 #define EFI_PRINT_ERRORS_AS_WARNINGS TRUE
 //#define EFI_PRINT_MESSAGES_TO_TERMINAL TRUE
 
-//#define EFI_ACTIVE_CONFIGURATION_IN_FLASH (FLASH_ADDR + offsetof(persistent_config_container_s, persistentConfiguration.engineConfiguration))
-
 //#define PWM_PHASE_MAX_COUNT 122
 
 //!!!!!!!!!!!!!!!!!!!!!!

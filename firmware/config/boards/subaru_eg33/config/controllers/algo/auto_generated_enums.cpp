@@ -1,7 +1,7 @@
 #include "global.h"
 #include "rusefi_enums.h"
 #include "rusefi_hw_enums.h"
-// was generated automatically by rusEfi tool  from rusefi_hw_enums.h // was generated automatically by rusEfi tool  from rusefi_enums.h // by enum2string.jar tool on Sun Mar 14 21:29:16 UTC 2021
+// was generated automatically by rusEfi tool  from rusefi_hw_enums.h // was generated automatically by rusEfi tool  from rusefi_enums.h // by enum2string.jar tool on Mon Mar 22 11:53:46 UTC 2021
 // see also gen_config_and_enums.bat
 
 
@@ -1451,6 +1451,8 @@ case TT_TRI_TACH:
   return "TT_TRI_TACH";
 case TT_UNUSED:
   return "TT_UNUSED";
+case TT_VVT_BARRA_3_PLUS_1:
+  return "TT_VVT_BARRA_3_PLUS_1";
 case TT_VVT_BOSCH_QUICK_START:
   return "TT_VVT_BOSCH_QUICK_START";
 case TT_VVT_JZ:
@@ -1514,6 +1516,8 @@ case VVT_2JZ:
   return "VVT_2JZ";
 case VVT_4_1:
   return "VVT_4_1";
+case VVT_BARRA_3_PLUS_1:
+  return "VVT_BARRA_3_PLUS_1";
 case VVT_BOSCH_QUICK_START:
   return "VVT_BOSCH_QUICK_START";
 case VVT_FIRST_HALF:

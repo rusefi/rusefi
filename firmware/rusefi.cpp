@@ -120,7 +120,6 @@
 #include "eficonsole.h"
 #include "status_loop.h"
 #include "pin_repository.h"
-#include "flash_main.h"
 #include "custom_engine.h"
 #include "engine_math.h"
 #include "mpu_util.h"
@@ -192,31 +191,11 @@ void runRusEfi(void) {
 	 */
 	initDataStructures(PASS_ENGINE_PARAMETER_SIGNATURE);
 
-	/**
-	 * First data structure keeps track of which hardware I/O pins are used by whom
-	 */
-	initPinRepository();
+	// Perform hardware initialization that doesn't need configuration
+	initHardwareNoConfig(&sharedLogger);
 
-#if EFI_INTERNAL_FLASH
- #if IGNORE_FLASH_CONFIGURATION
-	resetConfigurationExt(&sharedLogger, DEFAULT_ENGINE_TYPE PASS_ENGINE_PARAMETER_SUFFIX);
- #else
-	/**
-	 * First thing is reading configuration from flash memory.
-	 * In order to have complete flexibility configuration has to go before anything else.
-	 */
-	readConfiguration(&sharedLogger);
- #endif // IGNORE_FLASH_CONFIGURATION
-#endif /* EFI_INTERNAL_FLASH */
-
-#if ! EFI_ACTIVE_CONFIGURATION_IN_FLASH
-	// TODO: need to fix this place!!! should be a version of PASS_ENGINE_PARAMETER_SIGNATURE somehow
-	prepareVoidConfiguration(&activeConfiguration);
-#endif /* EFI_ACTIVE_CONFIGURATION_IN_FLASH */
-
-#if EFI_FILE_LOGGING
-	initMmcCard();
-#endif /* EFI_FILE_LOGGING */
+	// Read configuration from flash memory
+	loadConfiguration(&sharedLogger PASS_ENGINE_PARAMETER_SUFFIX);
 
 #if EFI_USB_SERIAL
 	startUsbConsole();
@@ -234,7 +213,11 @@ void runRusEfi(void) {
 	/**
 	 * Initialize hardware drivers
 	 */
-	initHardware(&sharedLogger);
+	initHardware();
+
+#if EFI_FILE_LOGGING
+	initMmcCard();
+#endif /* EFI_FILE_LOGGING */
 
 #if HW_CHECK_ALWAYS_STIMULATE
 	// we need a special binary for final assembly check. We cannot afford to require too much software or too many steps
@@ -250,7 +233,6 @@ void runRusEfi(void) {
 		 * todo: should we initialize some? most? controllers before hardware?
 		 */
 		initEngineContoller(&sharedLogger PASS_ENGINE_PARAMETER_SIGNATURE);
-		rememberCurrentConfiguration();
 
 	#if EFI_PERF_METRICS
 		initTimePerfActions(&sharedLogger);

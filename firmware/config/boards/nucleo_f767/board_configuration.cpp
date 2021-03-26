@@ -37,10 +37,10 @@ void setSdCardConfigurationOverrides(void) {
 }
 
 /**
- * @brief   Board-specific configuration code overrides.
+ * @brief   Board-specific configuration defaults.
  * @todo    Add your board-specific code, if any.
  */
-void setBoardConfigurationOverrides(void) {
+void setBoardDefaultConfiguration(void) {
 	setSerialConfigurationOverrides();
 
 	engineConfiguration->runningLedPin = GPIOB_0; //green LED
