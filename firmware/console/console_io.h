@@ -24,11 +24,3 @@ typedef void (*CommandHandler)(char *);
 void consoleOutputBuffer(const uint8_t *buf, int size);
 void startConsole(Logging *sharedLogger, CommandHandler console_line_callback_p);
 void onDataArrived(void);
-
-#if EFI_PROD_CODE || EFI_SIMULATOR || EFI_EGT
-bool isCommandLineConsoleReady(void);
-
-#else
-#define isCommandLineConsoleReady() true
-#endif
-

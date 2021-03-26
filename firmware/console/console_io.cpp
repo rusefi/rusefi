@@ -50,8 +50,6 @@ EXTERN_ENGINE;
 // 10 seconds
 #define CONSOLE_WRITE_TIMEOUT 10000
 
-static bool isSerialConsoleStarted = false;
-
 #if (defined(TS_PRIMARY_SERIAL) && ! EFI_SIMULATOR)
 static event_listener_t consoleEventListener;
 #endif
@@ -63,10 +61,6 @@ void onDataArrived(void) {
 }
 
 CommandHandler console_line_callback;
-
-bool isCommandLineConsoleReady(void) {
-	return isSerialConsoleStarted;
-}
 
 static Logging *logger;
 
