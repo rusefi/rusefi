@@ -40,7 +40,7 @@ static void assertNextEvent(const char *msg, int expectedPinState, TestExecutor 
 }
 
 static void test100dutyCycle() {
-	print("*************************************** test100dutyCycle\r\n");
+	printf("*************************************** test100dutyCycle\r\n");
 
 	expectedTimeOfNextEvent = timeNowUs = 0;
 	TestExecutor executor;
@@ -67,7 +67,7 @@ static void test100dutyCycle() {
 }
 
 static void testSwitchToNanPeriod() {
-	print("*************************************** testSwitchToNanPeriod\r\n");
+	printf("*************************************** testSwitchToNanPeriod\r\n");
 
 	expectedTimeOfNextEvent = timeNowUs = 0;
 	TestExecutor executor;
@@ -104,8 +104,6 @@ static void testSwitchToNanPeriod() {
 TEST(misc, testPwmGenerator) {
 	test100dutyCycle();
 	testSwitchToNanPeriod();
-
-	print("*************************************** testPwmGenerator\r\n");
 
 	expectedTimeOfNextEvent = timeNowUs = 0;
 	TestExecutor executor;

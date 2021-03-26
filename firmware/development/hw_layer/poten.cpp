@@ -124,8 +124,6 @@ void initPotentiometers(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX) {
 
 	setPotResistance(&potConfig[0], 0, 3000);
 	setPotResistance(&potConfig[0], 1, 7000);
-#else
-	print("digiPot logic disabled\r\n");
 #endif
 }
 

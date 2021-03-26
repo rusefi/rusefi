@@ -46,8 +46,6 @@ TEST(util, crc) {
 	ASSERT_EQ(4, efiRound(4.4, 1));
 	ASSERT_FLOAT_EQ(1.2, efiRound(1.2345, 0.1));
 
-	print("*************************************** testCrc\r\n");
-
 	const char * A = "A";
 
 	ASSERT_EQ( 168,  calc_crc((const crc_t *) A, 1)) << "crc8";
@@ -75,8 +73,6 @@ TEST(util, cyclicBufferContains) {
 TEST(util, cyclicBuffer) {
 	cyclic_buffer<int> sb;
 
-	print("*************************************** testCyclicBuffer\r\n");
-
 	{
 		sb.add(10);
 
@@ -102,8 +98,6 @@ TEST(util, cyclicBuffer) {
 }
 
 TEST(util, histogram) {
-	print("******************************************* testHistogram\r\n");
-
 	initHistogramsModule();
 
 	ASSERT_EQ(80, histogramGetIndex(239));
@@ -145,7 +139,6 @@ TEST(util, histogram) {
 }
 
 static void testMalfunctionCentralRemoveNonExistent() {
-	print("******************************************* testMalfunctionCentralRemoveNonExistent\r\n");
 	clearWarnings();
 
 	// this should not crash
@@ -154,7 +147,6 @@ static void testMalfunctionCentralRemoveNonExistent() {
 
 static void testMalfunctionCentralSameElementAgain() {
 	clearWarnings();
-	print("******************************************* testMalfunctionCentralSameElementAgain\r\n");
 	error_codes_set_s localCopy;
 
 	addError(OBD_Engine_Coolant_Temperature_Circuit_Malfunction);
@@ -165,7 +157,6 @@ static void testMalfunctionCentralSameElementAgain() {
 
 static void testMalfunctionCentralRemoveFirstElement() {
 	clearWarnings();
-	print("******************************************* testMalfunctionCentralRemoveFirstElement\r\n");
 	error_codes_set_s localCopy;
 
 	obd_code_e firstElement = OBD_Engine_Coolant_Temperature_Circuit_Malfunction;
@@ -189,7 +180,6 @@ TEST(misc, testMalfunctionCentral) {
 	testMalfunctionCentralSameElementAgain();
 	testMalfunctionCentralRemoveFirstElement();
 
-	print("******************************************* testMalfunctionCentral\r\n");
 	clearWarnings();
 
 	error_codes_set_s localCopy;
@@ -256,8 +246,6 @@ static loc_t GPSdata;
 static char nmeaMessage[1000];
 
 TEST(misc, testGpsParser) {
-	print("******************************************* testGpsParser\r\n");
-
 	strcpy(nmeaMessage, "");
 	gps_location(&GPSdata, nmeaMessage);
 
@@ -310,7 +298,6 @@ TEST(misc, testGpsParser) {
 static char buffer[300];
 
 TEST(misc, testConsoleLogic) {
-	print("******************************************* testConsoleLogic\r\n");
 	resetConsoleActions();
 
 	helpCommand();
@@ -338,32 +325,32 @@ TEST(misc, testConsoleLogic) {
 	strcpy(buffer, "sdasdafasd asd");
 	handleConsoleLine(buffer);
 
-	print("\r\naddConsoleActionI\r\n");
+	printf("\r\naddConsoleActionI\r\n");
 	addConsoleActionI("echoi", testEchoI);
 	strcpy(buffer, "echoi 239");
 	handleConsoleLine(buffer);
 	ASSERT_EQ(239, lastInteger);
 
-	print("\r\naddConsoleActionI 240 with two spaces\r\n");
+	printf("\r\naddConsoleActionI 240 with two spaces\r\n");
 	strcpy(buffer, "echoi  240");
 	handleConsoleLine(buffer);
 	ASSERT_EQ(240, lastInteger);
 
 
-	print("\r\naddConsoleActionII\r\n");
+	printf("\r\naddConsoleActionII\r\n");
 	addConsoleActionII("echoii", testEchoII);
 	strcpy(buffer, "echoii 22 239");
 	handleConsoleLine(buffer);
 	ASSERT_EQ(22, lastInteger);
 	ASSERT_EQ(239, lastInteger2);
 
-	print("\r\naddConsoleActionII three spaces\r\n");
+	printf("\r\naddConsoleActionII three spaces\r\n");
 	strcpy(buffer, "echoii   21   220");
 	handleConsoleLine(buffer);
 	ASSERT_EQ(21, lastInteger);
 	ASSERT_EQ(220, lastInteger2);
 
-	print("\r\addConsoleActionSSS\r\n");
+	printf("\r\addConsoleActionSSS\r\n");
 	addConsoleActionSSS("echosss", testEchoSSS);
 	strcpy(buffer, "echosss 111 222 333");
 	handleConsoleLine(buffer);
@@ -378,8 +365,6 @@ TEST(misc, testConsoleLogic) {
 }
 
 TEST(misc, testFLStack) {
-	print("******************************************* testFLStack\r\n");
-
 	FLStack<int, 4> stack;
 	ASSERT_EQ(0, stack.size());
 
@@ -410,7 +395,6 @@ TEST(misc, testFLStack) {
 static char buff[32];
 
 TEST(misc, testMisc) {
-	print("******************************************* testMisc\r\n");
 	strcpy(buff, "  ab  ");
 	// we need a mutable array here
 	ASSERT_TRUE(strEqual("ab", efiTrim(buff)));
@@ -434,8 +418,6 @@ TEST(misc, testMisc) {
 }
 
 TEST(misc, testMenuTree) {
-	print("******************************************* testMenuTree\r\n");
-
 	MenuItem ROOT(NULL, NULL);
 
 	MenuTree tree(&ROOT);

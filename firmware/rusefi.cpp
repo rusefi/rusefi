@@ -246,7 +246,7 @@ void runRusEfi(void) {
 		runSchedulingPrecisionTestIfNeeded();
 	}
 
-	print("Running main loop\r\n");
+	scheduleMsg(&sharedLogger, "Running main loop");
 	main_loop_started = true;
 	/**
 	 * This loop is the closes we have to 'main loop' - but here we only publish the status. The main logic of engine

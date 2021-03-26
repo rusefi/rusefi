@@ -68,7 +68,6 @@ static UARTConfig tsDmaUartConfig = {
 };
 
 void startUartDmaConnector(UARTDriver *uartp DECLARE_CONFIG_PARAMETER_SUFFIX) {
-	print("Using UART-DMA mode");
 	// init FIFO queue
 	iqObjectInit(&tsUartDma.fifoRxQueue, tsUartDma.buffer, sizeof(tsUartDma.buffer), NULL, NULL);
 
