@@ -140,7 +140,7 @@ typedef enum {
 } persisted_configuration_state_e;
 
 static persisted_configuration_state_e doReadConfiguration(flashaddr_t address, Logging * logger) {
-	printMsg(logger, "readFromFlash %x", address);
+	scheduleMsg(logger, "readFromFlash %x", address);
 	intFlashRead(address, (char *) &persistentState, sizeof(persistentState));
 
 	if (!isValidCrc(&persistentState)) {
@@ -160,7 +160,7 @@ static persisted_configuration_state_e readConfiguration(Logging* logger) {
 	efiAssert(CUSTOM_ERR_ASSERT, getCurrentRemainingStack() > EXPECTED_REMAINING_STACK, "read f", PC_ERROR);
 	persisted_configuration_state_e result = doReadConfiguration(getFlashAddrFirstCopy(), logger);
 	if (result != PC_OK) {
-		printMsg(logger, "Reading second configuration copy");
+		scheduleMsg(logger, "Reading second configuration copy");
 		result = doReadConfiguration(getFlashAddrSecondCopy(), logger);
 	}
 
@@ -187,11 +187,11 @@ void readFromFlash() {
 	persisted_configuration_state_e result = readConfiguration(logger);
 
 	if (result == CRC_FAILED) {
-		printMsg(logger, "Need to reset flash to default due to CRC");
+		scheduleMsg(logger, "Need to reset flash to default due to CRC");
 	} else if (result == INCOMPATIBLE_VERSION) {
-		printMsg(logger, "Resetting due to version mismatch but preserving engine type [%d]", engineConfiguration->engineType);
+		scheduleMsg(logger, "Resetting due to version mismatch but preserving engine type [%d]", engineConfiguration->engineType);
 	} else {
-		printMsg(logger, "Read valid configuration from flash!");
+		scheduleMsg(logger, "Read valid configuration from flash!");
 	}
 }
 

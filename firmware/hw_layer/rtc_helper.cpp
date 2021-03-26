@@ -165,6 +165,6 @@ void setDateTime(const char *strDate) {
 void initRtc(void) {
 #if EFI_RTC
 	GetTimeUnixSec(); // this would test RTC, see 'rtcWorks' variable, see #311
-	printMsg(&logger, "initRtc()");
+	scheduleMsg(&logger, "initRtc()");
 #endif /* EFI_RTC */
 }
