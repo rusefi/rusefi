@@ -160,7 +160,7 @@ ts_channel_s primaryChannel;
 
 #if EFI_PROD_CODE || EFI_EGT
 
-static BaseChannel * getConsoleChannel(void) {
+BaseChannel * getConsoleChannel(void) {
 #if PRIMARY_UART_DMA_MODE
 	if (primaryChannel.uartp != nullptr) {
 		// primary channel is in DMA mode - we do not have a stream implementation for this.
