@@ -64,20 +64,8 @@ void onDataArrived(void) {
 
 CommandHandler console_line_callback;
 
-#if EFI_PROD_CODE || EFI_EGT
-
 bool isCommandLineConsoleReady(void) {
 	return isSerialConsoleStarted;
-}
-#endif /* EFI_PROD_CODE || EFI_EGT */
-
-void consoleOutputBuffer(const uint8_t *buf, int size) {
-#if !EFI_UART_ECHO_TEST_MODE
-	BaseChannel * channel = getConsoleChannel();
-	if (channel != nullptr) {
-		chnWriteTimeout(channel, buf, size, CONSOLE_WRITE_TIMEOUT);
-	}
-#endif /* EFI_UART_ECHO_TEST_MODE */
 }
 
 static Logging *logger;

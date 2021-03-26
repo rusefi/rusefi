@@ -346,7 +346,7 @@ static void handleWriteValueCommand(TsChannelBase* tsChannel, ts_response_format
 	tunerStudioDebug("got W (Write)"); // we can get a lot of these
 
 #if EFI_TUNER_STUDIO_VERBOSE
-//	scheduleMsg(logger, "Page number %d\r\n", pageId); // we can get a lot of these
+//	scheduleMsg(logger, "Page number %d", pageId); // we can get a lot of these
 #endif
 
 	if (validateOffsetCount(offset, 1, tsChannel)) {
@@ -547,8 +547,10 @@ static void tsProcessOne(TsChannelBase* tsChannel) {
 	}
 
 	int success = tsInstance.handleCrcCommand(tsChannel, tsChannel->scratchBuffer, incomingPacketSize);
-	if (!success)
-		print("got unexpected TunerStudio command %x:%c\r\n", command, command);
+
+	if (!success) {
+		scheduleMsg(&tsLogger, "got unexpected TunerStudio command %x:%c", command, command);
+	}
 }
 
 void TunerstudioThread::ThreadTask() {
