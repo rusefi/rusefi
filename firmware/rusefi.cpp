@@ -194,12 +194,12 @@ void runRusEfi(void) {
 	// Perform hardware initialization that doesn't need configuration
 	initHardwareNoConfig(&sharedLogger);
 
+	// Read configuration from flash memory
+	loadConfiguration(&sharedLogger PASS_ENGINE_PARAMETER_SUFFIX);
+
 #if EFI_USB_SERIAL
 	startUsbConsole();
 #endif
-
-	// Read configuration from flash memory
-	loadConfiguration(&sharedLogger PASS_ENGINE_PARAMETER_SUFFIX);
 
 	/**
 	 * Next we should initialize serial port console, it's important to know what's going on
