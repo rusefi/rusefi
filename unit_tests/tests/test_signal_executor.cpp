@@ -87,8 +87,6 @@ TEST(misc, testSignalExecutor3) {
 }
 
 TEST(misc, testSignalExecutor) {
-	print("*************************************** testSignalExecutor\r\n");
-
 	EventQueue eq;
 	ASSERT_EQ(eq.getNextEventTime(0), unexpected);
 	scheduling_s s1;
