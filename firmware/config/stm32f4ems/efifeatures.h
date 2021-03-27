@@ -347,7 +347,11 @@
  *  PE5
  */
 
+// allow override of EFI_USE_UART_DMA from cmdline passed defs
+#ifndef EFI_USE_UART_DMA
 #define EFI_USE_UART_DMA TRUE
+#endif
+
 #define TS_PRIMARY_UART UARTD3
 #undef TS_SECONDARY_UART
 
