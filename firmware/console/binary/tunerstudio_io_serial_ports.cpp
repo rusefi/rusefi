@@ -13,8 +13,17 @@
 
 EXTERN_ENGINE;
 
-#define HAS_PRIMARY (!defined(TS_NO_PRIMARY) && (defined(TS_PRIMARY_UART) || defined(TS_PRIMARY_SERIAL)))
-#define HAS_SECONDARY (!defined(TS_NO_SECONDARY) && (defined(TS_SECONDARY_UART) || defined(TS_SECONDARY_SERIAL)))
+#if (!defined(TS_NO_PRIMARY) && (defined(TS_PRIMARY_UART) || defined(TS_PRIMARY_SERIAL)))
+	#define HAS_PRIMARY true
+#else
+	#define HAS_PRIMARY false
+#endif
+
+#if (!defined(TS_NO_SECONDARY) && (defined(TS_SECONDARY_UART) || defined(TS_SECONDARY_SERIAL)))
+	#define HAS_SECONDARY true
+#else
+	#define HAS_SECONDARY false
+#endif
 
 #if HAS_PRIMARY
 	#ifdef TS_PRIMARY_UART
@@ -24,7 +33,7 @@ EXTERN_ENGINE;
 			UartTsChannel primaryChannel(TS_PRIMARY_UART);
 		#endif
 	#elif defined(TS_PRIMARY_SERIAL)
-	SerialTsChannel primaryChannel(TS_PRIMARY_SERIAL);
+		SerialTsChannel primaryChannel(TS_PRIMARY_SERIAL);
 	#endif
 
 	struct PrimaryChannelThread : public TunerstudioThread {
@@ -41,7 +50,7 @@ EXTERN_ENGINE;
 	};
 
 	static PrimaryChannelThread primaryChannelThread;
-#endif // defined(TS_PRIMARY_UART) || defined(TS_PRIMARY_SERIAL)
+#endif // HAS_PRIMARY
 
 #if HAS_SECONDARY
 	#ifdef TS_SECONDARY_UART
@@ -51,7 +60,7 @@ EXTERN_ENGINE;
 			UartTsChannel secondaryChannel(TS_SECONDARY_UART);
 		#endif
 	#elif defined(TS_SECONDARY_SERIAL)
-	SerialTsChannel secondaryChannel(TS_SECONDARY_SERIAL);
+		SerialTsChannel secondaryChannel(TS_SECONDARY_SERIAL);
 	#endif
 
 	struct SecondaryChannelThread : public TunerstudioThread {
@@ -68,7 +77,7 @@ EXTERN_ENGINE;
 	};
 
 	static SecondaryChannelThread secondaryChannelThread;
-#endif // defined(TS_SECONDARY_UART) || defined(TS_SECONDARY_SERIAL)
+#endif // HAS_SECONDARY
 
 void startSerialChannels() {
 #if HAS_PRIMARY
@@ -84,7 +93,7 @@ SerialTsChannelBase* getBluetoothChannel() {
 #if HAS_SECONDARY
 	// Prefer secondary channel for bluetooth
 	return &secondaryChannel;
-#if HAS_PRIMARY
+#elif HAS_PRIMARY
 	// Use primary channel for BT if no secondary exists
 	return &primaryChannel;
 #endif
