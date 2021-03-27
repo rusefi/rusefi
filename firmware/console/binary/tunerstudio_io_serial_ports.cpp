@@ -13,7 +13,10 @@
 
 EXTERN_ENGINE;
 
-#if defined(TS_PRIMARY_UART) || defined(TS_PRIMARY_SERIAL)
+#define HAS_PRIMARY (!defined(TS_NO_PRIMARY) && (defined(TS_PRIMARY_UART) || defined(TS_PRIMARY_SERIAL)))
+#define HAS_SECONDARY (!defined(TS_NO_SECONDARY) && (defined(TS_SECONDARY_UART) || defined(TS_SECONDARY_SERIAL)))
+
+#if HAS_PRIMARY
 	#ifdef TS_PRIMARY_UART
 		#if EFI_USE_UART_DMA
 			UartDmaTsChannel primaryChannel(TS_PRIMARY_UART);
@@ -40,7 +43,7 @@ EXTERN_ENGINE;
 	static PrimaryChannelThread primaryChannelThread;
 #endif // defined(TS_PRIMARY_UART) || defined(TS_PRIMARY_SERIAL)
 
-#if defined(TS_SECONDARY_UART) || defined(TS_SECONDARY_SERIAL)
+#if HAS_SECONDARY
 	#ifdef TS_SECONDARY_UART
 		#if EFI_USE_UART_DMA
 			UartDmaTsChannel secondaryChannel(TS_SECONDARY_UART);
@@ -68,19 +71,20 @@ EXTERN_ENGINE;
 #endif // defined(TS_SECONDARY_UART) || defined(TS_SECONDARY_SERIAL)
 
 void startSerialChannels() {
-#if defined(TS_PRIMARY_UART) || defined(TS_PRIMARY_SERIAL)
+#if HAS_PRIMARY
 	primaryChannelThread.Start();
 #endif
 
-#if defined(TS_SECONDARY_UART) || defined(TS_SECONDARY_SERIAL)
+#if HAS_SECONDARY
 	secondaryChannelThread.Start();
 #endif
 }
 
 SerialTsChannelBase* getBluetoothChannel() {
-#if defined(TS_SECONDARY_UART) || defined(TS_SECONDARY_SERIAL)
+#if HAS_SECONDARY
+	// Prefer secondary channel for bluetooth
 	return &secondaryChannel;
-#elif defined(TS_PRIMARY_UART) || defined(TS_PRIMARY_SERIAL)
+#if HAS_PRIMARY
 	// Use primary channel for BT if no secondary exists
 	return &primaryChannel;
 #endif
