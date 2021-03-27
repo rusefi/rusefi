@@ -23,4 +23,4 @@ void setPrescalerAndSDO(int value);
 void setKnockThresh(float value);
 void setMaxKnockSubDeg(int value);
 
-void intHoldCallback(trigger_event_e ckpEventType, uint32_t index, efitick_t edgeTimestamp DECLARE_ENGINE_PARAMETER_SUFFIX);
+void hip9011_startKnockSampling(uint8_t cylinderNumber, efitick_t nowNt);
