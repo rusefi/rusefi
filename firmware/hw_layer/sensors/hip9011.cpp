@@ -71,8 +71,8 @@ HIP9011 instance(&hardware);
 static unsigned char tx_buff[1];
 static unsigned char rx_buff[1];
 
-static scheduling_s startTimer[2];
-static scheduling_s endTimer[2];
+static scheduling_s startTimer;
+static scheduling_s endTimer;
 
 static Logging *logger;
 
@@ -184,6 +184,9 @@ static void showHipInfo(void) {
 		engineConfiguration->knockDetectionWindowStart,
 		engineConfiguration->knockDetectionWindowEnd);
 
+	scheduleMsg(logger, "Status: overruns %d",
+		instance.overrun);
+
 	hipValueMax = 0;
 	engine->printKnockState();
 }
@@ -247,25 +250,24 @@ static void endIntegration(void *) {
 }
 
 /**
- * Shaft Position callback used to start or finish HIP integration
+ * Ignition callback used to start HIP integration and schedule finish
  */
-void intHoldCallback(trigger_event_e ckpEventType, uint32_t index, efitick_t edgeTimestamp DECLARE_ENGINE_PARAMETER_SUFFIX) {
-	(void)ckpEventType;
-	// this callback is invoked on interrupt thread
-	if (index != 0)
+void hip9011_startKnockSampling(uint8_t cylinderNumber, efitick_t nowNt) {
+	if (!CONFIG(isHip9011Enabled))
 		return;
 
-	ScopePerf perf(PE::Hip9011IntHoldCallback);
-
-	int rpm = GET_RPM();
-	if (!isValidRpm(rpm))
+	/* overrun? */
+	if (instance.state != READY_TO_INTEGRATE) {
+		instance.overrun++;
 		return;
+	}
 
-	int structIndex = getRevolutionCounter() % 2;
-	// todo: schedule this based on closest trigger event, same as ignition works
-	scheduleByAngle(&startTimer[structIndex], edgeTimestamp, engineConfiguration->knockDetectionWindowStart,
-			&startIntegration);
-	scheduleByAngle(&endTimer[structIndex], edgeTimestamp, engineConfiguration->knockDetectionWindowEnd,
+	instance.cylinderNumber = cylinderNumber;
+	startIntegration(NULL);
+
+	/* TODO: reference to knockDetectionWindowStart */
+	scheduleByAngle(&endTimer, nowNt,
+			engineConfiguration->knockDetectionWindowEnd - engineConfiguration->knockDetectionWindowStart,
 			&endIntegration);
 }
 
@@ -307,12 +309,15 @@ void hipAdcCallback(adcsample_t adcValue) {
 	if (instance.state == WAITING_FOR_ADC_TO_SKIP) {
 		instance.state = WAITING_FOR_RESULT_ADC;
 	} else if (instance.state == WAITING_FOR_RESULT_ADC) {
-		engine->knockVolts = adcValue * adcToVolts(1) * CONFIG(analogInputDividerCoefficient);
-		hipValueMax = maxF(engine->knockVolts, hipValueMax);
-		engine->knockLogic(engine->knockVolts);
+		float knockVolts = adcValue * adcToVolts(1) * CONFIG(analogInputDividerCoefficient);
+		hipValueMax = maxF(knockVolts, hipValueMax);
+		engine->knockLogic(knockVolts);
 
 		instance.handleValue(GET_RPM() DEFINE_PARAM_SUFFIX(PASS_HIP_PARAMS));
 
+		/* TunerStudio */
+		tsOutputChannels.knockLevels[instance.cylinderNumber] = knockVolts;
+		tsOutputChannels.knockLevel = knockVolts;
 	}
 }
 

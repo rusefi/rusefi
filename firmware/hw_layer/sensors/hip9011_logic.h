@@ -91,6 +91,10 @@ public:
 	 * hipOutput should be set to used FAST adc device
 	 */
 	hip_state_e state;
+	uint8_t cylinderNumber;
+
+	/* error counters */
+	int overrun = 0;
 
 	float rpmLookup[INT_LOOKUP_SIZE];
 };
