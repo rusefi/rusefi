@@ -533,12 +533,6 @@ void TriggerCentral::handleShaftSignal(trigger_event_e signal, efitick_t timesta
 #endif /* EFI_MAP_AVERAGING */
 #endif /* EFI_UNIT_TEST */
 
-#if EFI_HIP_9011
-		if (CONFIG(isHip9011Enabled)) {
-			intHoldCallback(signal, triggerIndexForListeners, timestamp PASS_ENGINE_PARAMETER_SUFFIX);
-		}
-#endif
-
 #if EFI_LOGIC_ANALYZER
 		waTriggerEventListener(signal, triggerIndexForListeners, timestamp PASS_ENGINE_PARAMETER_SUFFIX);
 #endif
