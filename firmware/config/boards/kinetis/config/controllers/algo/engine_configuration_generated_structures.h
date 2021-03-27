@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Wed Mar 24 00:28:40 UTC 2021
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Sat Mar 27 23:02:22 UTC 2021
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -899,7 +899,8 @@ struct engine_configuration_s {
 	 */
 	ignition_mode_e ignitionMode;
 	/**
-	 * this value could be used to offset the whole ignition timing table by a constant
+	 * This value could be used to offset the whole ignition timing table by a constant
+	 * See also timing_offset_cylinder
 	 * offset 444
 	 */
 	angle_t ignitionOffset;
@@ -3858,4 +3859,4 @@ struct persistent_config_s {
 typedef struct persistent_config_s persistent_config_s;
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Wed Mar 24 00:28:40 UTC 2021
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Sat Mar 27 23:02:22 UTC 2021
