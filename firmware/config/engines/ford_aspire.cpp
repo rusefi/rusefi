@@ -76,7 +76,6 @@ void setFordAspireEngineConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 
 	engineConfiguration->specs.firingOrder = FO_1_3_4_2;
 	engineConfiguration->globalTriggerAngleOffset = 175;
-	engineConfiguration->ignitionOffset = 87;
 	engineConfiguration->extraInjectionOffset = 54 + 360;
 
 	setDefaultAspireMaps(PASS_CONFIG_PARAMETER_SIGNATURE);
