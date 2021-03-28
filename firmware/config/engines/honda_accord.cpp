@@ -82,12 +82,6 @@ static void setHondaAccordConfigurationCommon(DECLARE_CONFIG_PARAMETER_SIGNATURE
 	engineConfiguration->cranking.rpm = 500;
 
 
-	// set ignition_offset 350
-//	engineConfiguration->ignitionOffset = 350;
-	 // set injection_offset 510
-//	engineConfiguration->extraInjectionOffset = 510;
-
-
 	/**
 	 * ADC inputs:
 	 *
