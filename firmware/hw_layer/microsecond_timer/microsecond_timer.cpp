@@ -166,7 +166,7 @@ static void validateHardwareTimer() {
 	// to save RAM let's use 'watchDogBuddy' here once before we enable watchdog
 	engine->executor.scheduleForLater(&watchDogBuddy, MS2US(TEST_CALLBACK_DELAY), timerValidationCallback);
 
-	chThdSleepMilliseconds(TEST_CALLBACK_DELAY + 5);
+	chThdSleepMilliseconds(TEST_CALLBACK_DELAY + 2);
 	if (!testSchedulingHappened) {
 		firmwareError(CUSTOM_ERR_TIMER_TEST_CALLBACK_NOT_HAPPENED, "hwTimer not alive");
 	}
