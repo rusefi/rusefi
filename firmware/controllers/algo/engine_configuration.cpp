@@ -1509,4 +1509,5 @@ void setFrankenso0_1_joystick(engine_configuration_s *engineConfiguration) {
 	engineConfiguration->joystickDPin = GPIOD_11;
 }
 
+// This symbol is weak so that a board_configuration.cpp file can override it
 __attribute__((weak)) void setBoardConfigOverrides(void) { }
