@@ -32,7 +32,7 @@ void setVwPassatB6(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	// setting to Sensed Rail Pressure mode
 	engineConfiguration->injectorCompensationMode = ICM_SensedRailPressure;
 	// setting Fuel rail pressure to 10 000 kPa
-	engineConfiguration->fuelRailPressure = 10000;
+	engineConfiguration->fuelReferencePressure = 10000;
 	//setting "flat" 0.2 ms injector's lag time
 	setArrayValues(engineConfiguration->injector.battLagCorr, 0.2);
 	
