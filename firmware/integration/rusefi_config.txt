@@ -524,7 +524,7 @@ bit cj125isUrDivided;+Is your UR CJ125 output wired to MCU via resistor divider?
 bit useCicPidForIdle;+Switch between Industrial and Cic PID implementation
 bit useTLE8888_cranking_hack;
 bit useInstantRpmForIdle;
-bit absoluteFuelPressure;+If your fuel regulator does not have vacuum line
+bit unused76b19;
 bit launchControlEnabled;
 bit rollingLaunchEnabled;
 bit antiLagEnabled;
@@ -1167,7 +1167,7 @@ custom pin_mode_e 1 bits,    U08,   @OFFSET@, [0:6], @@pin_mode_e_enum@@
 	float wwaeTau;+Length of time the deposited wall fuel takes to dissipate after the start of acceleration. ;"Seconds",        1,     0,    0.0,    3.0,  2
 	pid_s alternatorControl;
 	pid_s etb;
-	float fuelRailPressure;;     "kPa",    1,      0.0,       0,  1000.0,        2
+	float unused1756;;"",1,0,0,1,0
 	float alternator_derivativeFilterLoss;;    "x",    1,      0.0,       -1000000,  1000000,        4
 	float alternator_antiwindupFreq;;    "x",    1,      0.0,       -1000000,  1000000,        4
 int16_t tps2Min;Closed throttle#2. todo: extract these two fields into a structure\nSee also tps2_1AdcChannel\nset tps2_min X;"ADC",      1,     0,    0, 1023,      0

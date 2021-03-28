@@ -1372,7 +1372,7 @@ menuDialog = main
 		# Digital outputs
 		subMenu = mainRelayDialog,			"Main relay"
 		subMenu = starterRelay,				"Starter Disable relay"
-		subMenu = fuelPump,					"Fuel pump & rail"
+		subMenu = fuelPump,					"Fuel pump"
 		subMenu = fanSetting,				"Fan"
 		subMenu = tachSettings,				"Tachometer"
 		subMenu = malfunction,				"Check engine light"
@@ -1475,7 +1475,7 @@ menuDialog = main
 		subMenu = pedalToTpsTbl,			"ETB pedal target" @@if_ts_show_etb
 
 		subMenu = std_separator
-		subMenu = vvtPidDialog,				"VVT outputs & PID"
+		subMenu = vvtPidDialog,				"VVT outputs and PID"
         subMenu = vvtTable1Tbl,             "VVT intake target"
         subMenu = vvtTable2Tbl,             "VVT exhaust target"
 
@@ -2645,19 +2645,10 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 		field = "A/C Relay",						acRelayPin
 		field = "A/C Relay Mode",					acRelayPinMode
 
-	dialog = fuelPumpConfig, "Fuel Pump"
+	dialog = fuelPump, "Fuel Pump"
 		field = "Pin",						fuelPumpPin
 		field = "Pin mode",         	        fuelPumpPinMode
 		field = "Prime duration",				startUpFuelPumpDuration
-
-	dialog = fuelRailConfig, "Fuel Rail"
-		field = "Absolute Fuel Pressure",			absoluteFuelPressure
-		field = "Fuel Rail pressure",			fuelRailPressure, {absoluteFuelPressure == 1}
-
-	dialog = fuelPump, ""
-		panel = fuelPumpConfig
-		panel = fuelRailConfig
-
 
 ;			Controller->Actuator Outputs
 	dialog = mainRelayDialog, "Main relay output"
