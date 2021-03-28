@@ -25,6 +25,7 @@ extern "C" {
 #endif
   void boardInit(void);
   void setBoardDefaultConfiguration(void);
+  void setBoardConfigOverrides(void);
   void setPinConfigurationOverrides(void);
   void setSerialConfigurationOverrides(void);
   void setSdCardConfigurationOverrides(void);

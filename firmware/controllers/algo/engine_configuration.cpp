@@ -1160,6 +1160,9 @@ void loadConfiguration(Logging* logger DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	resetConfigurationExt(logger, engineConfiguration->engineType PASS_ENGINE_PARAMETER_SUFFIX);
 #endif /* EFI_INTERNAL_FLASH */
 
+	// Force any board configuration options that humans shouldn't be able to change
+	setBoardConfigOverrides();
+
 	rememberCurrentConfiguration(PASS_ENGINE_PARAMETER_SIGNATURE);
 }
 
@@ -1180,6 +1183,7 @@ void resetConfigurationExt(Logging * logger, configuration_callback_t boardCallb
 #if EFI_PROD_CODE
 	// call overrided board-specific configuration setup, if needed (for custom boards only)
 	setBoardDefaultConfiguration();
+	setBoardConfigOverrides();
 #endif
 
 	engineConfiguration->engineType = engineType;
@@ -1505,8 +1509,4 @@ void setFrankenso0_1_joystick(engine_configuration_s *engineConfiguration) {
 	engineConfiguration->joystickDPin = GPIOD_11;
 }
 
-static const ConfigOverrides defaultConfigOverrides{};
-// This symbol is weak so that a board_configuration.cpp file can override it
-__attribute__((weak)) const ConfigOverrides& getConfigOverrides() {
-	return defaultConfigOverrides;
-}
+__attribute__((weak)) void setBoardConfigOverrides(void) { }
