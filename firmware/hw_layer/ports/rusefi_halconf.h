@@ -75,7 +75,7 @@
 // USB Mass Storage
 #ifdef EFI_USE_COMPRESSED_INI_MSD
 // if enabled, we do gzip decompression on the MSD thread - it requires more stack space
-#define USB_MSD_THREAD_WA_SIZE 512
+#define USB_MSD_THREAD_WA_SIZE 2048
 #endif
 
 // SPI

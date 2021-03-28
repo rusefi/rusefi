@@ -283,8 +283,9 @@ enable2ndByteCanID = false
       etb1Error       = scalar,  S16,     96,      "%",{1/@@PACK_MULT_PERCENT@@},         0
 
 ; Fuel system
-      fuelTankLevel   = scalar,  S16,     98, "amount",{1/@@PACK_MULT_PERCENT@@},         0
-      fuelConsumptionPerHour=scalar,F32, 100,    "kPa",      1,      0.0
+      fuelTankLevel   = scalar,  U16,     98,      "%",{1/@@PACK_MULT_PERCENT@@},         0
+      totalFuelConsumption=scalar,U16,   100,  "grams",                        1,         0
+      fuelFlowRate    = scalar,  U16,    102, "gram/s",{1/@@PACK_MULT_FUEL_FLOW@@},         0
 
 ; Y axis values for selectable tables
       veTableYAxis    = scalar, U16,     104,      "%",     0.01, 0
@@ -763,6 +764,14 @@ enable2ndByteCanID = false
       yBins       = crankingAdvance
       gauge       = RPMGauge
 
+	curve = fuelLevelCurve, "Fuel Level"
+      columnLabel = "Voltage", "%"
+      xAxis       = 0, 5, 6
+      yAxis       = 0, 100, 11
+      xBins       = fuelLevelBins
+      yBins       = fuelLevelValues
+      gauge       = fuelTankLevelGauge
+
     curve = wueAfrTargetOffsetCurve, "AFR Target Temperature Adjustment"
       columnLabel = "Coolant", "AFR Offset"
       xAxis       = -40, 200, 9
@@ -960,7 +969,7 @@ gaugeCategory = Sensors - Extra 2
    egt8Gauge         = egt8, "EGT#8", "C", 0, 2000
    rpmAccelerationGa = rpmAcceleration,     "rpm delta",        "RPM/s",        -2000,      2000,       -2000,      2000,       -2000,     2000,   0,   0
    knockLevelGauge   = knockLevel,"Knock level",           "volts",        0,      7,      10,     10,     100,   100,   1,   2
-   fuelTankLevelGauge   = fuelTankLevel,"Fuel level",           "x",        0,      7,      10,     10,     100,   100,   1,   2
+   fuelTankLevelGauge   = fuelTankLevel,"Fuel level",           "%",        0,      100,      10,     20,     100,   100,   1,   1
    speedToRpmRatioGauge = speedToRpmRatio, "speed2rpm", "",     0,   100,     0,    0,    100,  100,   4,   4
    wastegatePosGauge = wastegatePositionSensor, @@GAUGE_NAME_WG_POSITION@@,  "%",        0,    100,       0,      0,     100,   100,   1,   1
    idlePosSensGauge  = idlePositionSensor,      "Idle position sensor",       "%",        0,    100,       0,      0,     100,   100,   1,   1
@@ -1056,6 +1065,8 @@ gaugeCategory = Fueling
    baseFuelGauge     = baseFuel,       @@GAUGE_NAME_FUEL_BASE@@,      "mg",        0,   100, 0, 0, 100, 100,   2, 0
    fuelPidCorrectionGauge = fuelPidCorrection,       @@GAUGE_NAME_FUEL_PID_CORR@@,      "%",        -10,   10,     -8, -5, 5, 8,   3, 1
    fuelingLoadGauge = fuelingLoad, @@GAUGE_NAME_FUEL_LOAD@@, "%", 0, 300, 0, 0, 300, 300, 1, 1
+   totalFuelConsumptionGauge = totalFuelConsumption, @@GAUGE_NAME_FUEL_CONSUMPTION@@, "g", 0, 10000, 0, 0, 10000, 10000, 0, 0
+   fuelFlowRateGauge = fuelFlowRate, @@GAUGE_NAME_FUEL_FLOW@@, "g/s", 0, 50, 0, 0, 50, 50, 2, 0
 
 gaugeCategory = Throttle Body (incl. ETB)
    pedalPositionGauge = throttlePedalPosition, @@GAUGE_NAME_THROTTLE_PEDAL@@,        "%",    0,    120,      0,     0,     100,   100,   1,   1
@@ -1250,6 +1261,8 @@ gaugeCategory = DynoView
    entry = coilDutyCycle,	@@GAUGE_NAME_DWELL_DUTY@@,	float,"%.3f"
    entry = currentTargetAfr,@@GAUGE_NAME_TARGET_AFR@@,	float,"%.3f"
    entry = targetLambda, @@GAUGE_NAME_TARGET_LAMBDA@@,	float,"%.4f"
+   entry = totalFuelConsumption, @@GAUGE_NAME_FUEL_CONSUMPTION@@, int, "%d"
+   entry = fuelFlowRate, @@GAUGE_NAME_FUEL_FLOW@@, float, "%.2f"
 
    entry = accelerationX,	@@GAUGE_NAME_ACCEL_X@@,	float,"%.2f", { LIS302DLCsPin != 0 }
    entry = accelerationY,	@@GAUGE_NAME_ACCEL_Y@@,	float,"%.2f", { LIS302DLCsPin != 0 }
@@ -1516,6 +1529,7 @@ menuDialog = main
 		subMenu = speedSensor,				"Vehicle speed sensor"
 		subMenu = oilPressureSensor,		"Oil pressure"
 		subMenu = fuelPressureSensor,		"Fuel pressure"
+		subMenu = fuelLevelDialog,			"Fuel level sensor"
 		subMenu = egtInputs,				"EGT" @@if_ts_show_egt
 		subMenu = wastegateIdlePos,			"Wastegate and idle position sensors"
 
@@ -1809,27 +1823,31 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 	    field = "!https://rusefi.com/s/vvt"
 ; todo: code generator to hard-code all triggers not requiring VVT?
 ; todo: https://github.com/rusefi/rusefi/issues/2077
-	    field = "CAM/VVT mode shaft #1",				vvtMode1, {trigger_type != @@TT_TT_MAZDA_MIATA_NA@@}
-	    field = "VVT mode shaft #2",				    vvtMode2, {trigger_type != @@TT_TT_MAZDA_MIATA_NA@@}
-	    field = "VVT use rise front",					vvtCamSensorUseRise, {trigger_type != @@TT_TT_MAZDA_MIATA_NA@@}
-	    field = "VVT position display offset",			vvtOffset
+	    field = "Cam mode (intake cams)",				vvtMode1, {trigger_type != @@TT_TT_MAZDA_MIATA_NA@@}
+	    field = "Cam mode (exhaust cams)",				    vvtMode2, {trigger_type != @@TT_TT_MAZDA_MIATA_NA@@}
+	    field = "VVT use only rising edge",					vvtCamSensorUseRise, {trigger_type != @@TT_TT_MAZDA_MIATA_NA@@}
+	    field = "#Set offset so VVT indicates 0 degrees in default position"
+		field = "VVT offset bank 1 intake",				vvtOffset
+		;field = "VVT offset bank 1 exhaust",			vvtOffset2
+		;field = "VVT offset bank 2 intake",			vvtOffset3
+		;field = "VVT offset bank 2 exhaust",			vvtOffset4
 	    field = "print verbose VVT sync details to console",verboseVVTDecoding
 	    field = "Do not print messages in case of sync error",  silentTriggerError
 	    field = "Enable noise filtering",				useNoiselessTriggerDecoder, {trigger_type == @@TT_TT_TOOTHED_WHEEL_60_2@@ || trigger_type == @@TT_TT_TOOTHED_WHEEL_36_1@@}
 
 	dialog = triggerInputs,					"Trigger Inputs"
-		field = "!ECU reboot needed to apply these settings"
 		field = "#Cam is primary if you have cam sensor as part of trigger shape"
 		field = "Primary channel", 						triggerInputPins1
 		field = "Invert Primary",						invertPrimaryTriggerSignal
 		field = "Secondary channel", 					triggerInputPins2,            { trigger_type != @@TT_TT_TOOTHED_WHEEL@@ && trigger_type != @@TT_TT_TOOTHED_WHEEL_60_2@@ && trigger_type != @@TT_TT_TOOTHED_WHEEL_36_1@@ && trigger_type != @@TT_TT_ONE@@ && trigger_type != @@TT_TT_60_2_VW@@ && trigger_type != @@TT_TT_TOOTHED_WHEEL_36_2@@}
 		field = "Invert Secondary",				    	invertSecondaryTriggerSignal, { trigger_type != @@TT_TT_TOOTHED_WHEEL@@ && trigger_type != @@TT_TT_TOOTHED_WHEEL_60_2@@ && trigger_type != @@TT_TT_TOOTHED_WHEEL_36_1@@ && trigger_type != @@TT_TT_ONE@@ && trigger_type != @@TT_TT_60_2_VW@@ && trigger_type != @@TT_TT_TOOTHED_WHEEL_36_2@@}
-		field = "#VVT or Cam for 60/2 goes here"
-		field = "Cam Sync/VVT shaft #1 bank #1",	    camInputs1
-        field = "VVT shaft #2 bank #1",        camInputs2
-        field = "VVT shaft #1 bank #2",        camInputs3
-        field = "VVT shaft #2 bank #2",        camInputs4
-		field = "Invert Cam/VVT",                       invertCamVVTSignal
+		field = "#VVT or Cam for 60/2 goes below"
+		field = "#If your engine has no exhaust cam sensor, use intake cam inputs"
+		field = "Cam sensor bank 1 intake",	        camInputs1
+        field = "Cam sensor bank 1 exhaust",        camInputs2
+        field = "Cam sensor bank 2 intake",         camInputs3
+        field = "Cam sensor bank 2 exhaust",        camInputs4
+		field = "Invert cam inputs",                invertCamVVTSignal
 		panel = triggerInputComparator @@if_ts_show_trigger_comparator
 
 
@@ -2100,7 +2118,6 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 
 ;			Sensor Inputs
 	dialog = otherSensorInputs,					"Other Sensor Inputs"
-		field = "Fuel level", 						fuelLevelSensor
 		field = "Clutch down switch",					clutchDownPin
 		field = "Clutch down inverted",					clutchDownPinMode
 		field = "Clutch up switch",						clutchUpPin
@@ -2110,6 +2127,10 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 		field = "A/C switch",						acSwitch
 		field = "A/C switch mode",					acSwitchMode
 		field = "Flex fuel sensor",					flexSensorPin
+
+	dialog = fuelLevelDialog,				"Fuel Level Sensor"
+		field = "Input channel", 						fuelLevelSensor
+		panel = fuelLevelCurve
 
 	dialog = triggerInputComparator, "Built-in Comparator Settings (Kinetis-only)"
 		field = "Comparator Center Point Voltage", triggerCompCenterVolt

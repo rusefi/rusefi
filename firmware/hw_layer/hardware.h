@@ -49,7 +49,13 @@ brain_pin_e getSckPin(spi_device_e device);
 #include "debounce.h"
 
 void applyNewHardwareSettings(void);
-void initHardware(Logging *logging);
+
+// Initialize hardware that doesn't require configuration to be loaded
+void initHardwareNoConfig(Logging *l);
+
+// Initialize hardware with configuration loaded
+void initHardware();
+
 #endif /* EFI_PROD_CODE */
 
 void showBor(void);

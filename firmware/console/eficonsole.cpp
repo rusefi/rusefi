@@ -170,27 +170,6 @@ static void cmd_threads(void) {
 #endif
 }
 
-/**
- * This methods prints the message to whatever is configured as our primary console
- */
-void print(const char *format, ...) {
-#if !EFI_UART_ECHO_TEST_MODE
-	if (!isCommandLineConsoleReady()) {
-		return;
-	}
-	BaseSequentialStream * channel = (BaseSequentialStream*) getConsoleChannel();
-	if (channel == nullptr) {
-		return;
-	}
-	va_list ap;
-	va_start(ap, format);
-	chvprintf(channel, format, ap);
-	va_end(ap);
-#else
-	UNUSED(format);
-#endif /* EFI_UART_ECHO_TEST_MODE */
-}
-
 void initializeConsole(Logging *sharedLogger) {
 	initConsoleLogic(sharedLogger);
 

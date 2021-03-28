@@ -22,22 +22,6 @@ extern LoggingWithStorage tsLogger;
 #if EFI_PROD_CODE
 #include "pin_repository.h"
 
-#if HAL_USE_SERIAL_USB
-// Assert that the USB tx/rx buffers are large enough to fit one full packet
-static_assert(SERIAL_USB_BUFFERS_SIZE >= BLOCKING_FACTOR + 10);
-#define SERIAL_USB_DRIVER SerialUSBDriver
-#define TS_USB_DEVICE EFI_CONSOLE_USB_DEVICE // SDU1
-#endif /* HAL_USE_SERIAL_USB */
-
-#ifdef TS_USB_DEVICE
-extern SERIAL_USB_DRIVER TS_USB_DEVICE;
-#endif /* TS_USB_DEVICE */
-
-#ifdef TS_CAN_DEVICE
-#include "serial_can.h"
-#endif /* TS_CAN_DEVICE */
-
-
 #if TS_UART_DMA_MODE
 #elif TS_UART_MODE
 /* Note: This structure is modified from the default ChibiOS layout! */
@@ -56,34 +40,17 @@ static UARTConfig tsUartConfig = {
 };
 #elif defined(TS_SERIAL_DEVICE)
 static SerialConfig tsSerialConfig = { .speed = 0, .cr1 = 0, .cr2 = USART_CR2_STOP1_BITS | USART_CR2_LINEN, .cr3 = 0 };
-#elif defined(TS_CAN_DEVICE)
-static CANConfig tsCanConfig = { CAN_MCR_ABOM | CAN_MCR_AWUM | CAN_MCR_TXFP, CAN_BTR_500 };
 #endif /* TS_UART_DMA_MODE */
 #endif /* EFI_PROD_CODE */
 
 
 void startTsPort(ts_channel_s *tsChannel) {
-
 	#if EFI_PROD_CODE
 	tsChannel->channel = (BaseChannel *) NULL;
-		#if defined(TS_USB_DEVICE)
-#if defined(TS_UART_DEVICE)
-#error 	"cannot have TS_UART_DEVICE and TS_USB_DEVICE"
-#endif
-			print("TunerStudio over USB serial");
-			/**
-			 * This method contains a long delay, that's the reason why this is not done on the main thread
-			 * TODO: actually now with some refactoring this IS on the main thread :(
-			 */
-			usb_serial_start();
-			// if console uses UART then TS uses USB
-			tsChannel->channel = (BaseChannel *) &TS_USB_DEVICE;
-			return;
-		#endif /* TS_USB_DEVICE */
 		#if defined(TS_UART_DEVICE) || defined(TS_SERIAL_DEVICE)
 			if (CONFIG(useSerialPort)) {
 
-				print("TunerStudio over USART");
+				scheduleMsg(&tsLogger, "TunerStudio over USART");
 				/**
 				 * We have hard-coded USB serial console so that it would be clear how to connect to each specific board,
 				 * but for UART serial we allow users to change settings.
@@ -92,15 +59,16 @@ void startTsPort(ts_channel_s *tsChannel) {
 				efiSetPadMode("tunerstudio tx", engineConfiguration->binarySerialTxPin, PAL_MODE_ALTERNATE(TS_SERIAL_AF));
 
 				#if TS_UART_DMA_MODE
+					scheduleMsg(&tsLogger, "Using UART-DMA mode");
 					tsChannel->uartp = TS_UART_DEVICE;
 					startUartDmaConnector(tsChannel->uartp PASS_CONFIG_PARAMETER_SUFFIX);
 				#elif TS_UART_MODE
-					print("Using UART mode");
+					scheduleMsg(&tsLogger, "Using UART mode");
 					// start DMA driver
 					tsUartConfig.speed = CONFIG(tunerStudioSerialSpeed);
 					uartStart(TS_UART_DEVICE, &tsUartConfig);
 				#elif defined(TS_SERIAL_DEVICE)
-					print("Using Serial mode");
+					scheduleMsg(&tsLogger, "Using Serial mode");
 					tsSerialConfig.speed = CONFIG(tunerStudioSerialSpeed);
 
 					sdStart(TS_SERIAL_DEVICE, &tsSerialConfig);
@@ -109,19 +77,6 @@ void startTsPort(ts_channel_s *tsChannel) {
 				#endif
 			}
 		#endif /* TS_UART_DMA_MODE || TS_UART_MODE */
-		#if defined(TS_CAN_DEVICE)
-			/*if (CONFIG(useCanForTs))*/ {
-				print("TunerStudio over CAN");
-
-				efiSetPadMode("ts can rx", GPIOG_13/*CONFIG(canRxPin)*/, PAL_MODE_ALTERNATE(TS_CAN_AF)); // CAN2_RX2_0
-				efiSetPadMode("ts can tx", GPIOG_14/*CONFIG(canTxPin)*/, PAL_MODE_ALTERNATE(TS_CAN_AF)); // CAN2_TX2_0
-
-				canStart(&TS_CAN_DEVICE, &tsCanConfig);
-				canInit(&TS_CAN_DEVICE);
-
-				//tsChannel->channel = (BaseChannel *) &TS_CAN_DEVICE;
-			}
-		#endif /* TS_CAN_DEVICE */
 	#elif EFI_SIMULATOR /* EFI_PROD_CODE */
 		tsChannel->channel = (BaseChannel *) TS_SIMULATOR_PORT;
 	#endif /* EFI_PROD_CODE */
@@ -143,11 +98,6 @@ bool stopTsPort(ts_channel_s *tsChannel) {
 				sdStop(TS_SERIAL_DEVICE);
 			#endif /* TS_SERIAL_DEVICE */
 		}
-		#if defined(TS_CAN_DEVICE)
-		/*if (CONFIG(useCanForTs))*/ {
-			canStop(&TS_CAN_DEVICE);
-		}
-		#endif /* TS_CAN_DEVICE */
 		tsChannel->channel = (BaseChannel *) NULL;
 		return true;
 	#else  /* EFI_PROD_CODE */
@@ -183,8 +133,6 @@ void ts_channel_s::write(const uint8_t* buffer, size_t size) {
 		uartSendTimeout(uartp, &size, buffer, BINARY_IO_TIMEOUT);
 		return;
 	}
-#elif defined(TS_CAN_DEVICE)
-	canAddToTxStreamTimeout(&TS_CAN_DEVICE, &size, buffer, BINARY_IO_TIMEOUT);
 #endif
 	if (!channel) {
 		return;
@@ -224,9 +172,6 @@ size_t ts_channel_s::readTimeout(uint8_t* buffer, size_t size, int timeout) {
 #if TS_UART_DMA_MODE
 #elif TS_UART_MODE
 	uartReceiveTimeout(TS_UART_DEVICE, &size, buffer, timeout);
-	return size;
-#elif defined(TS_CAN_DEVICE)
-	canStreamReceiveTimeout(&TS_CAN_DEVICE, &size, buffer, timeout);
 	return size;
 #else /* TS_UART_DMA_MODE */
 	if (channel == nullptr)
@@ -305,18 +250,6 @@ void TsChannelBase::writeCrcPacket(uint8_t responseCode, const uint8_t* buf, siz
 		size = 0;
 	}
 
-#if defined(TS_CAN_DEVICE) && defined(TS_CAN_DEVICE_SHORT_PACKETS_IN_ONE_FRAME)
-	// a special case for short packets: we can sent them in 1 frame, without CRC & size,
-	// because the CAN protocol is already protected by its own checksum.
-	if ((size + 1) <= 7) {
-		write(&responseCode, 1);      // header without size
-		if (size > 0) {
-			write(buf, size);      // body
-		}
-		flush();
-		return;
-	}
-#endif /* TS_CAN_DEVICE */
 	if (size <= BLOCKING_FACTOR + 7) {
 		// small packets use small packet optimization
 		writeCrcPacketSmall(responseCode, buf, size);
@@ -338,18 +271,10 @@ void TsChannelBase::sendResponse(ts_response_format_e mode, const uint8_t * buff
 	}
 }
 
-bool ts_channel_s::isReady() {
-#if EFI_USB_SERIAL
-	if (isUsbSerial(this->channel)) {
-		// TS uses USB when console uses serial
-		return is_usb_serial_ready();
-	}
-#endif /* EFI_USB_SERIAL */
-	return true;
-}
-
-void ts_channel_s::flush() {
-#if defined(TS_CAN_DEVICE)
-	canFlushTxStream(&TS_CAN_DEVICE);
-#endif /* TS_CAN_DEVICE */
+bool ts_channel_s::isConfigured() const {
+	return
+#if TS_UART_DMA_MODE || PRIMARY_UART_DMA_MODE || TS_UART_MODE
+		this->uartp ||
+#endif
+		this->channel;
 }

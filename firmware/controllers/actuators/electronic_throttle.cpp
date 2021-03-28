@@ -269,6 +269,11 @@ expected<percent_t> EtbController::getSetpointWastegate() const {
 }
 
 expected<percent_t> EtbController::getSetpointEtb() const {
+	// Autotune runs with 50% target position
+	if (m_isAutotune) {
+		return 50.0f;
+	}
+
 	// A few extra preconditions if throttle control is invalid
 	if (startupPositionError) {
 		return unexpected;
@@ -326,9 +331,10 @@ expected<percent_t> EtbController::getOpenLoop(percent_t target) const {
 	return ff;
 }
 
-expected<percent_t> EtbController::getClosedLoopAutotune(percent_t actualThrottlePosition) {
-	// Estimate gain at 60% position - this should be well away from the spring and in the linear region
-	bool isPositive = actualThrottlePosition > 60.0f;
+expected<percent_t> EtbController::getClosedLoopAutotune(percent_t target, percent_t actualThrottlePosition) {
+	// Estimate gain at current position - this should be well away from the spring and in the linear region
+	// GetSetpoint sets this to 50%
+	bool isPositive = actualThrottlePosition > target;
 
 	float autotuneAmplitude = 20;
 
@@ -444,10 +450,8 @@ expected<percent_t> EtbController::getClosedLoop(percent_t target, percent_t obs
 	}
 
 	// Only allow autotune with stopped engine, and on the first throttle
-	if (GET_RPM() == 0
-		&& engine->etbAutoTune
-		&& m_function == ETB_Throttle1) {
-		return getClosedLoopAutotune(observation);
+	if (m_isAutotune) {
+		return getClosedLoopAutotune(target, observation);
 	} else {
 		// Check that we're not over the error limit
 		float errorIntegral = m_errorAccumulator.accumulate(target - observation);
@@ -538,6 +542,11 @@ void EtbController::update() {
 	if (engineConfiguration->isVerboseETB) {
 		m_pid.showPidStatus(&logger, "ETB");
 	}
+
+	// Update local state about autotune
+	m_isAutotune = GET_RPM() == 0
+		&& engine->etbAutoTune
+		&& m_function == ETB_Throttle1;
 
 	ClosedLoopController::update();
 

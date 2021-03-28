@@ -375,7 +375,7 @@ static void setAdcDebugReporting(int value) {
 	scheduleMsg(&logger, "adcDebug=%d", adcDebugReporting);
 }
 
-void waitForSlowAdc(int lastAdcCounter) {
+void waitForSlowAdc(uint32_t lastAdcCounter) {
 	// we use slowAdcCounter instead of slowAdc.conversionCount because we need ADC_COMPLETE state
 	// todo: use sync.objects?
 	while (slowAdcCounter <= lastAdcCounter) {

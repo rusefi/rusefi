@@ -107,7 +107,7 @@ static void populateFrame(Sensors1& msg) {
     msg.aux2 = 0 + PACK_ADD_TEMPERATURE;
 
     msg.mcuTemp = getMCUInternalTemperature();
-    msg.fuelLevel = engine->sensors.fuelTankLevel;
+    msg.fuelLevel = Sensor::get(SensorType::FuelLevel).value_or(0);
 }
 
 struct Sensors2 {
@@ -120,7 +120,7 @@ struct Sensors2 {
 static void populateFrame(Sensors2& msg) {
     msg.afr = Sensor::get(SensorType::Lambda1).value_or(0) * 14.7f;
     msg.oilPressure = Sensor::get(SensorType::OilPressure).value_or(-1);
-    msg.vvtPos = engine->triggerCentral.getVVTPosition();
+    msg.vvtPos = engine->triggerCentral.getVVTPosition(0, 0);
     msg.vbatt = Sensor::get(SensorType::BatteryVoltage).value_or(0);
 }
 

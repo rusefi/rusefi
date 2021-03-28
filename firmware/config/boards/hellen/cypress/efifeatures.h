@@ -290,9 +290,6 @@
 #undef TS_UART_DEVICE
 #undef TS_SERIAL_DEVICE
 
-#define TS_USB_DEVICE SDU1
-//#undef TS_USB_DEVICE
-
 // todo: add CAN support
 //#define TS_CAN_DEVICE CAND1
 #define TS_CAN_AF PAL_MODE_ALTERNATIVE_CAN
@@ -303,8 +300,8 @@
 
 #define EFI_USB_SERIAL TRUE
 #define EFI_CONSOLE_USB_DEVICE SDU1
-
-#define SERIAL_USB_DRIVER BaseChannel
+// Cypress uses a fake USB device that's just a plain channel
+#define SerialUSBDriver BaseChannel
 
 #define EFI_CONSOLE_TX_PORT GPIOA
 #define EFI_CONSOLE_TX_PIN 10
@@ -394,15 +391,13 @@
 #define EFI_PRINT_ERRORS_AS_WARNINGS TRUE
 //#define EFI_PRINT_MESSAGES_TO_TERMINAL TRUE
 
-//#define EFI_ACTIVE_CONFIGURATION_IN_FLASH (FLASH_ADDR + offsetof(persistent_config_container_s, persistentConfiguration.engineConfiguration))
-
 //#define PWM_PHASE_MAX_COUNT 122
 
 //!!!!!!!!!!!!!!!!!!!!!!
 #define debugLog(fmt,...) { \
 	extern int __debugEnabled; \
 	if (__debugEnabled) { \
-		extern SERIAL_USB_DRIVER EFI_CONSOLE_USB_DEVICE; \
+		extern SerialUSBDriver EFI_CONSOLE_USB_DEVICE; \
 		extern char __debugBuffer[200]; \
 		chsnprintf(__debugBuffer, sizeof(__debugBuffer), fmt, ##__VA_ARGS__); \
 		chnWriteTimeout(&EFI_CONSOLE_USB_DEVICE, (const uint8_t *)__debugBuffer, strlen(__debugBuffer), TIME_MS2I(1000)); \

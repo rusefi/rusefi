@@ -52,7 +52,7 @@ public:
 
 	expected<percent_t> getOpenLoop(percent_t target) const override;
 	expected<percent_t> getClosedLoop(percent_t setpoint, percent_t observation) override;
-	expected<percent_t> getClosedLoopAutotune(percent_t actualThrottlePosition);
+	expected<percent_t> getClosedLoopAutotune(percent_t setpoint, percent_t actualThrottlePosition);
 
 	void setOutput(expected<percent_t> outputValue) override;
 
@@ -82,6 +82,9 @@ private:
 
 	float m_idlePosition = 0;
 	float m_wastegatePosition = 0;
+
+	// This is set if automatic PID cal shoudl be run
+	bool m_isAutotune = false;
 
 	// Autotune helpers
 	bool m_lastIsPositive = false;

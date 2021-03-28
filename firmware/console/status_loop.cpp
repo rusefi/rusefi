@@ -219,7 +219,8 @@ void printOverallStatus(efitimesec_t nowSeconds) {
 	printOutPin(PROTOCOL_WA_CHANNEL_2, CONFIG(logicAnalyzerPins)[1]);
 #endif /* EFI_LOGIC_ANALYZER */
 
-	for (int i = 0; i < engineConfiguration->specs.cylindersCount; i++) {
+	int cylCount = minI(minI(CONFIG(specs.cylindersCount), INJECTION_PIN_COUNT), IGNITION_PIN_COUNT);
+	for (int i = 0; i < cylCount; i++) {
 		printOutPin(enginePins.coils[i].getShortName(), CONFIG(ignitionPins)[i]);
 
 		printOutPin(enginePins.injectors[i].getShortName(), CONFIG(injectionPins)[i]);
@@ -573,7 +574,7 @@ void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels DECLARE_
 	tsOutputChannels->injectorDutyCycle = getInjectorDutyCycle(rpm PASS_ENGINE_PARAMETER_SUFFIX);
 #endif
 	// 148
-	tsOutputChannels->fuelTankLevel = engine->sensors.fuelTankLevel;
+	tsOutputChannels->fuelTankLevel = Sensor::get(SensorType::FuelLevel).value_or(0);
 	// 160
 	const auto& wallFuel = ENGINE(injectionEvents.elements[0].wallFuel);
 	tsOutputChannels->wallFuelAmount = wallFuel.getWallFuel();
@@ -594,7 +595,7 @@ void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels DECLARE_
 
 #if EFI_SHAFT_POSITION_INPUT
 	// 248
-	tsOutputChannels->vvtPosition = engine->triggerCentral.getVVTPosition();
+	tsOutputChannels->vvtPosition = engine->triggerCentral.getVVTPosition(0, 0);
 #endif
 
 	// 252
@@ -704,7 +705,8 @@ void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels DECLARE_
 #endif /* EFI_VEHICLE_SPEED */
 #endif /* EFI_PROD_CODE */
 
-	tsOutputChannels->fuelConsumptionPerHour = engine->engineState.fuelConsumption.perSecondConsumption;
+	tsOutputChannels->fuelFlowRate = engine->engineState.fuelConsumption.getConsumptionGramPerSecond();
+	tsOutputChannels->totalFuelConsumption = engine->engineState.fuelConsumption.getConsumedGrams();
 
 	tsOutputChannels->warningCounter = engine->engineState.warnings.warningCounter;
 	tsOutputChannels->lastErrorCode = engine->engineState.warnings.lastErrorCode;

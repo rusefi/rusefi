@@ -120,8 +120,11 @@ static efitimems_t previousWriteReportMs = 0;
 
 static ts_channel_s tsChannel;
 
+// TODO: simplify what happens when we have multiple serial ports
+#if !EFI_USB_SERIAL
 // this thread wants a bit extra stack
 static THD_WORKING_AREA(tunerstudioThreadStack, CONNECTIVITY_THREAD_STACK);
+#endif
 
 static void resetTs(void) {
 	memset(&tsState, 0, sizeof(tsState));
@@ -253,7 +256,6 @@ static void onlineApplyWorkingCopyBytes(uint32_t offset, int count) {
 	// open question what's the best strategy to balance coding efforts, performance matters and tune crc functionality
 	// open question what is the runtime cost of wiping 2K of bytes on each IO communication, could be that 2K of byte memset
 	// is negligable comparing with the IO costs?
-	//		wipeStrings(PASS_ENGINE_PARAMETER_SIGNATURE);
 }
 
 static const void * getStructAddr(int structId) {
@@ -366,7 +368,7 @@ static void handleWriteValueCommand(TsChannelBase* tsChannel, ts_response_format
 	tunerStudioDebug("got W (Write)"); // we can get a lot of these
 
 #if EFI_TUNER_STUDIO_VERBOSE
-//	scheduleMsg(logger, "Page number %d\r\n", pageId); // we can get a lot of these
+//	scheduleMsg(logger, "Page number %d", pageId); // we can get a lot of these
 #endif
 
 	if (validateOffsetCount(offset, 1, tsChannel)) {
@@ -567,17 +569,31 @@ static void tsProcessOne(TsChannelBase* tsChannel) {
 	}
 
 	int success = tsInstance.handleCrcCommand(tsChannel, tsChannel->scratchBuffer, incomingPacketSize);
-	if (!success)
-		print("got unexpected TunerStudio command %x:%c\r\n", command, command);
+
+	if (!success) {
+		scheduleMsg(&tsLogger, "got unexpected TunerStudio command %x:%c", command, command);
+	}
 }
 
 void runBinaryProtocolLoop(TsChannelBase* tsChannel) {
+	// No channel configured for this thread, cancel.
+	if (!tsChannel || !tsChannel->isConfigured()) {
+		return;
+	}
+
 	// Until the end of time, process incoming messages.
 	while(true) {
 		tsProcessOne(tsChannel);
 	}
 }
 
+void TunerstudioThread::ThreadTask() {
+	auto channel = setupChannel();
+
+	runBinaryProtocolLoop(channel);
+}
+
+#if !EFI_USB_SERIAL
 static THD_FUNCTION(tsThreadEntryPoint, arg) {
 	(void) arg;
 	chRegSetThreadName("tunerstudio thread");
@@ -586,6 +602,7 @@ static THD_FUNCTION(tsThreadEntryPoint, arg) {
 
 	runBinaryProtocolLoop(&tsChannel);
 }
+#endif
 
 /**
  * Copy real configuration into the communications layer working copy
@@ -667,7 +684,7 @@ static void handleGetText(TsChannelBase* tsChannel) {
 			logMsg("sent [%d]\r\n", outputSize);
 #endif
 }
-#endif
+#endif // EFI_TEXT_LOGGING
 
 static void handleExecuteCommand(TsChannelBase* tsChannel, char *data, int incomingPacketSize) {
 	data[incomingPacketSize] = 0;
@@ -912,7 +929,10 @@ void startTunerStudioConnectivity(void) {
 	addConsoleAction("bluetooth_cancel", bluetoothCancel);
 #endif /* EFI_BLUETOOTH_SETUP */
 
+// TODO: simplify what happens when we have multiple serial ports
+#if !EFI_USB_SERIAL
 	chThdCreateStatic(tunerstudioThreadStack, sizeof(tunerstudioThreadStack), PRIO_CONSOLE, (tfunc_t)tsThreadEntryPoint, NULL);
+#endif
 }
 
 #endif

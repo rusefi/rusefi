@@ -8,8 +8,9 @@
 
 #pragma once
 
-#include <stdarg.h>
-#include <stdint.h>
+#include <cstdarg>
+#include <cstdint>
+#include <cstddef>
 
 #define DELIMETER	","
 
@@ -78,15 +79,3 @@ void initLoggingExt(Logging *logging, const char *name, char *buffer, int buffer
 
 void appendMsgPrefix(Logging *logging);
 void appendMsgPostfix(Logging *logging);
-
-
-#ifdef __cplusplus
-extern "C"
-{
-#endif /* __cplusplus */
-
-void printMsg(Logging *logging, const char *fmt, ...);
-
-#ifdef __cplusplus
-}
-#endif /* __cplusplus */

@@ -47,18 +47,6 @@
 
 EXTERN_ENGINE;
 
-#if HAL_USE_SERIAL_USB
-#include "usbcfg.h"
-#include "usbconsole.h"
-#define EFI_CONSOLE_USB_DEVICE SDU1
-#define SERIAL_USB_DRIVER SerialUSBDriver
-
-#ifdef EFI_CONSOLE_USB_DEVICE
-extern SERIAL_USB_DRIVER EFI_CONSOLE_USB_DEVICE;
-#endif /* EFI_CONSOLE_USB_DEVICE */
-
-#endif /* HAL_USE_SERIAL_USB */
-
 // 10 seconds
 #define CONSOLE_WRITE_TIMEOUT 10000
 
@@ -129,7 +117,7 @@ static msg_t _put(void *ip, uint8_t b) {
 	}
 
 	_putt(ip, b, CONSOLE_WRITE_TIMEOUT);
-	
+
 	// Relock if we were locked before
 	if (wasLocked) {
 		if (isIsrContext()) {
@@ -172,13 +160,6 @@ ts_channel_s primaryChannel;
 
 #if EFI_PROD_CODE || EFI_EGT
 
-bool isUsbSerial(BaseChannel * channel) {
-#if HAL_USE_SERIAL_USB
-	return channel == (BaseChannel *) &EFI_CONSOLE_USB_DEVICE;
-#else
-	return false;
-#endif /* EFI_CONSOLE_USB_DEVICE */
-}
 BaseChannel * getConsoleChannel(void) {
 #if PRIMARY_UART_DMA_MODE
 	if (primaryChannel.uartp != nullptr) {
@@ -195,11 +176,7 @@ BaseChannel * getConsoleChannel(void) {
 	return (BaseChannel *) &uartChannel;
 #endif /* EFI_CONSOLE_UART_DEVICE */
 
-#if HAL_USE_SERIAL_USB
-	return (BaseChannel *) &EFI_CONSOLE_USB_DEVICE;
-#else
 	return nullptr;
-#endif /* HAL_USE_SERIAL_USB */
 }
 
 bool isCommandLineConsoleReady(void) {
@@ -224,15 +201,6 @@ static THD_FUNCTION(consoleThreadEntryPoint, arg) {
 }
 
 #endif /* EFI_CONSOLE_NO_THREAD */
-
-void consoleOutputBuffer(const uint8_t *buf, int size) {
-#if !EFI_UART_ECHO_TEST_MODE
-	BaseChannel * channel = getConsoleChannel();
-	if (channel != nullptr) {
-		chnWriteTimeout(channel, buf, size, CONSOLE_WRITE_TIMEOUT);
-	}
-#endif /* EFI_UART_ECHO_TEST_MODE */
-}
 
 static Logging *logger;
 

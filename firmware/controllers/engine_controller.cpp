@@ -211,7 +211,7 @@ static void resetAccel(void) {
 	engine->engineLoadAccelEnrichment.resetAE();
 	engine->tpsAccelEnrichment.resetAE();
 
-	for (unsigned int i = 0; i < efi::size(engine->injectionEvents.elements); i++)
+	for (size_t i = 0; i < efi::size(engine->injectionEvents.elements); i++)
 	{
 		engine->injectionEvents.elements[i].wallFuel.resetWF();
 	}

@@ -27,12 +27,19 @@ public:
 	// Virtual functions - implement these for your underlying transport
 	virtual void write(const uint8_t* buffer, size_t size) = 0;
 	virtual size_t readTimeout(uint8_t* buffer, size_t size, int timeout) = 0;
-	virtual void flush() = 0;
-	virtual bool isReady() = 0;
+
+	// These functions are optional to implement, not all channels need them
+	virtual void flush() { }
+	virtual bool isConfigured() const { return true; }
+	virtual bool isReady() const { return true; }
+	virtual void stop() { }
 
 	// Base functions that use the above virtual implementation
 	size_t read(uint8_t* buffer, size_t size);
 
+#ifdef TS_CAN_DEVICE
+	virtual	// CAN device needs this function to be virtual for small-packet optimization
+#endif
 	void writeCrcPacket(uint8_t responseCode, const uint8_t* buf, size_t size);
 	void sendResponse(ts_response_format_e mode, const uint8_t * buffer, int size);
 
@@ -48,20 +55,62 @@ private:
 	void writeCrcPacketLarge(uint8_t responseCode, const uint8_t* buf, size_t size);
 };
 
+#if EFI_UNIT_TEST
+struct BaseChannel;
+#endif
+
 struct ts_channel_s : public TsChannelBase {
 	void write(const uint8_t* buffer, size_t size) override;
 	size_t readTimeout(uint8_t* buffer, size_t size, int timeout) override;
-	void flush() override;
-	bool isReady() override;
+	bool isConfigured() const override;
 
-#if !EFI_UNIT_TEST
 	BaseChannel * channel = nullptr;
-#endif
 
 #if TS_UART_DMA_MODE || PRIMARY_UART_DMA_MODE || TS_UART_MODE
 	UARTDriver *uartp = nullptr;
 #endif // TS_UART_DMA_MODE
 };
+
+// This class represents a channel for a physical async serial poart
+class SerialTsChannelBase : public TsChannelBase {
+public:
+	// Open the serial port with the specified baud rate
+	virtual void start(uint32_t baud) = 0;
+};
+
+#if HAL_USE_SERIAL
+// This class implements a ChibiOS Serial Driver
+class SerialTsChannel : public SerialTsChannelBase {
+public:
+	SerialTsChannel(SerialDriver& driver) : m_driver(&driver) { }
+
+	void start(uint32_t baud) override;
+	void stop() override;
+
+	void write(const uint8_t* buffer, size_t size) override;
+	size_t readTimeout(uint8_t* buffer, size_t size, int timeout) override;
+
+private:
+	SerialDriver* const m_driver;
+};
+#endif // HAL_USE_SERIAL
+
+#if HAL_USE_UART
+// This class implements a ChibiOS UART Driver
+class UartTsChannel : public SerialTsChannelBase {
+	UartTsChannel(UARTDriver& driver) : m_driver(&driver) { }
+
+	void start(uint32_t baud) override;
+	void stop() override;
+
+	void write(const uint8_t* buffer, size_t size) override;
+	size_t readTimeout(uint8_t* buffer, size_t size, int timeout) override;
+
+private:
+	UARTDriver* const m_driver;
+	UARTConfig m_config;
+};
+#endif // HAL_USE_UART
 
 #define CRC_VALUE_SIZE 4
 // todo: double-check this

@@ -98,6 +98,8 @@ trigger_type_e getVvtTriggerType(vvt_mode_e vvtMode) {
 		return TT_ONE;
 	case VVT_FORD_ST170:
 		return TT_FORD_ST170;
+	case VVT_BARRA_3_PLUS_1:
+		return TT_VVT_BARRA_3_PLUS_1;
 	default:
 		return TT_ONE;
 	}
@@ -280,14 +282,6 @@ void Engine::updateSlowSensors(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 
 	engineState.updateSlowSensors(PASS_ENGINE_PARAMETER_SIGNATURE);
 
-	// todo: move this logic somewhere to sensors folder?
-	if (isAdcChannelValid(CONFIG(fuelLevelSensor))) {
-		float fuelLevelVoltage = getVoltageDivided("fuel", engineConfiguration->fuelLevelSensor PASS_ENGINE_PARAMETER_SUFFIX);
-		sensors.fuelTankLevel = interpolateMsg("fgauge", CONFIG(fuelLevelEmptyTankVoltage), 0,
-				CONFIG(fuelLevelFullTankVoltage), 100,
-				fuelLevelVoltage);
-	}
-
 #if (BOARD_TLE8888_COUNT > 0)
 	// nasty value injection into C driver which would not be able to access Engine class
 	vBattForTle8888 = Sensor::get(SensorType::BatteryVoltage).value_or(VBAT_FALLBACK_VALUE);
@@ -326,7 +320,7 @@ void Engine::updateSwitchInputs(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 #endif // EFI_GPIO_HARDWARE
 }
 
-void Engine::onTriggerSignalEvent(efitick_t nowNt) {
+void Engine::onTriggerSignalEvent() {
 	isSpinning = true;
 }
 

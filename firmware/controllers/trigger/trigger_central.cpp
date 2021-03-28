@@ -79,8 +79,8 @@ EXTERN_ENGINE;
 
 static Logging *logger;
 
-angle_t TriggerCentral::getVVTPosition() {
-	return vvtPosition[0][0];
+angle_t TriggerCentral::getVVTPosition(uint8_t bankIndex, uint8_t camIndex) {
+	return vvtPosition[bankIndex][camIndex];
 }
 
 #define miataNbIndex (0)
@@ -89,7 +89,8 @@ static bool vvtWithRealDecoder(vvt_mode_e vvtMode) {
 	return vvtMode == VVT_MIATA_NB2
 			|| vvtMode == VVT_BOSCH_QUICK_START
 			|| vvtMode == VVT_FORD_ST170
-			|| vvtMode == VVT_4_1;
+			|| vvtMode == VVT_4_1
+			|| vvtMode == VVT_BARRA_3_PLUS_1;
 }
 
 void hwHandleVvtCamSignal(trigger_value_e front, efitick_t nowNt, int index DECLARE_ENGINE_PARAMETER_SUFFIX) {
@@ -202,9 +203,10 @@ void hwHandleVvtCamSignal(trigger_value_e front, efitick_t nowNt, int index DECL
 		break;
 	case VVT_MIATA_NB2:
 	case VVT_BOSCH_QUICK_START:
+	case VVT_BARRA_3_PLUS_1:
 	 {
 		if (engine->triggerCentral.vvtState[bankIndex][camIndex].currentCycle.current_index != 0) {
-			// this is not NB2 sync tooth - exiting
+			// this is not sync tooth - exiting
 			return;
 		}
 		if (engineConfiguration->debugMode == DBG_VVT) {
@@ -468,7 +470,7 @@ void TriggerCentral::handleShaftSignal(trigger_event_e signal, efitick_t timesta
 		}
 	}
 
-	engine->onTriggerSignalEvent(timestamp);
+	engine->onTriggerSignalEvent();
 
 	m_lastEventTimer.reset(timestamp);
 
@@ -530,12 +532,6 @@ void TriggerCentral::handleShaftSignal(trigger_event_e signal, efitick_t timesta
 		mapAveragingTriggerCallback(triggerIndexForListeners, timestamp PASS_ENGINE_PARAMETER_SUFFIX);
 #endif /* EFI_MAP_AVERAGING */
 #endif /* EFI_UNIT_TEST */
-
-#if EFI_HIP_9011
-		if (CONFIG(isHip9011Enabled)) {
-			intHoldCallback(signal, triggerIndexForListeners, timestamp PASS_ENGINE_PARAMETER_SUFFIX);
-		}
-#endif
 
 #if EFI_LOGIC_ANALYZER
 		waTriggerEventListener(signal, triggerIndexForListeners, timestamp PASS_ENGINE_PARAMETER_SUFFIX);

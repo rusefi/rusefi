@@ -44,13 +44,6 @@ void usb_serial_start(void) {
 #endif/* EFI_SKIP_USB_DISCONNECT */
 	usbStart(serusbcfg.usbp, &usbcfg);
 	usbConnectBus(serusbcfg.usbp);
-	
-#if HAL_USE_SERIAL
-	/*
-	 * Activates the serial driver using the driver default configuration.
-	 */
-	sdStart(&USB_SERIAL_DRIVER, NULL);
-#endif /* HAL_USE_SERIAL */
 
 	isUsbSerialInitialized = true;
 }
