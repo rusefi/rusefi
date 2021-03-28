@@ -1382,7 +1382,7 @@ menuDialog = main
 		# basic
 		subMenu = injectorConfig,			"Injection configuration"
 		subMenu = injectionSettings,		"Injection hardware", 0, {isInjectionEnabled == 1}
-		subMenu = cylinderBankSelect,		"Cylinder Bank Selection"
+		subMenu = cylinderBankSelect,		"Cylinder bank selection"
 		subMenu = std_separator
 
 		# Air mass model
@@ -1973,8 +1973,8 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 		field = "Extra cyl #12",                       timing_offset_cylinder12, {cylindersCount > 11}
 
 	dialog = multisparkDwellParams, "Delay & Dwell"
-		field = "Spark Duration",						multisparkSparkDuration, {multisparkEnable}
-		field = "Dwell",								multisparkDwell, {multisparkEnable}
+		field = "Spark duration",						multisparkSparkDuration, {multisparkEnable}
+		field = "Subsequent spark dwell",				multisparkDwell, {multisparkEnable}
 
 	dialog = multisparkMain, "Configuration"
 		field = "Maximum engine speed",					multisparkMaxRpm, {multisparkEnable}

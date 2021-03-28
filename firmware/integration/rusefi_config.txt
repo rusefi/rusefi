@@ -949,9 +949,9 @@ custom maf_sensor_type_e 4 bits, S32, @OFFSET@, [0:1], @@maf_sensor_type_e_enum@
 	switch_input_pin_e clutchUpPin;Some vehicles have a switch to indicate that clutch pedal is all the way up
 	brain_input_pin_e frequencyReportingMapInputPin;
 	pin_input_mode_e clutchUpPinMode;
-	uint16_t multisparkMaxRpm;;"rpm", 1, 0, 0, 3000, 0
-	uint8_t multisparkMaxSparkingAngle;;"deg", 1, 0, 0, 60, 0
-	uint8_t multisparkMaxExtraSparkCount;;"count", 1, 0, 0, 5, 0
+	uint16_t multisparkMaxRpm;+Disable multispark above this engine speed.;"rpm", 1, 0, 0, 3000, 0
+	uint8_t multisparkMaxSparkingAngle;+This parameter sets the latest that the last multispark can occur after the main ignition event.  For example, if the ignition timing is 30 degrees BTDC, and this parameter is set to 45, no multispark will ever be fired after 15 degrees ATDC.;"deg", 1, 0, 0, 60, 0
+	uint8_t multisparkMaxExtraSparkCount;+Configures the maximum number of extra sparks to fire (does not include main spark);"count", 1, 0, 1, 5, 0
 	bit todoClutchUpPinInverted
 	bit todoClutchDownPinInverted
 	bit useHbridges;+If enabled we use two H-bridges to drive stepper idle air valve
@@ -1180,8 +1180,8 @@ int16_t tps2Max;Full throttle#2. tpsMax value as 10 bit ADC value. Not Voltage!\
 ! todo: mapErrorDetectionIdleTooLow? 30kPa is usually lowest on idle	
 	float mapErrorDetectionTooLow;kPa value which is too low to be true;"kPa",        1,     0,    -100.0,    100.0,  2
 	float mapErrorDetectionTooHigh;kPa value which is too high to be true;"kPa",        1,     0,    -100.0,    800.0,  2
-	uint16_t multisparkSparkDuration;; "ms", 0.001, 0, 0, 3, 2
-	uint16_t multisparkDwell;; "ms", 0.001, 0, 0, 3, 2
+	uint16_t multisparkSparkDuration;+How long to wait for the spark to fire before recharging the coil for another spark.; "ms", 0.001, 0, 0, 3, 2
+	uint16_t multisparkDwell;+This sets the dwell time for subsequent sparks. The main spark's dwell is set by the dwell table.; "ms", 0.001, 0, 0, 3, 2
 	pid_s idleRpmPid;See cltIdleRpmBins
 	float wwaeBeta;+0 = No fuel settling on port walls 1 = All the fuel settling on port walls setting this to 0 disables the wall wetting enrichment. ;"Fraction",        1,     0,    0.0,    1.0,  2
 	
