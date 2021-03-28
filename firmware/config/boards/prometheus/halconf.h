@@ -17,11 +17,4 @@
 #undef HAL_USE_SERIAL
 #define HAL_USE_SERIAL FALSE
 
-#undef HAL_USE_UART
-#if (TS_UART_DMA_MODE || TS_UART_MODE)
-#define HAL_USE_UART TRUE
-#else
-#define HAL_USE_UART FALSE
-#endif
-
 #endif /* _HALCONF_PROMETHEUS_H_ */

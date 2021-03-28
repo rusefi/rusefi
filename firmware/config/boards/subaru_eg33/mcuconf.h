@@ -24,12 +24,8 @@
 /* serials and uarts */ 
 #undef STM32_SERIAL_USE_USART1
 #undef STM32_UART_USE_USART1
-//#if TS_UART_DMA_MODE
-//#define STM32_SERIAL_USE_UART1		FALSE
-//#else
 #define STM32_SERIAL_USE_USART1			TRUE
 #define STM32_UART_USE_USART1			FALSE
-//#endif
 
 #undef STM32_SERIAL_USE_USART2
 #undef STM32_UART_USE_USART2

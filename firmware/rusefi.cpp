@@ -210,6 +210,9 @@ void runRusEfi(void) {
 	startTunerStudioConnectivity();
 #endif /* EFI_TUNER_STUDIO */
 
+	// Start hardware serial ports (including bluetooth, if present)
+	startSerialChannels();
+
 	/**
 	 * Initialize hardware drivers
 	 */

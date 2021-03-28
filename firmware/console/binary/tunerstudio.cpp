@@ -118,14 +118,6 @@ persistent_config_s configWorkingCopy;
 
 static efitimems_t previousWriteReportMs = 0;
 
-static ts_channel_s tsChannel;
-
-// TODO: simplify what happens when we have multiple serial ports
-#if !EFI_USB_SERIAL
-// this thread wants a bit extra stack
-static THD_WORKING_AREA(tunerstudioThreadStack, CONNECTIVITY_THREAD_STACK);
-#endif
-
 static void resetTs(void) {
 	memset(&tsState, 0, sizeof(tsState));
 }
@@ -159,33 +151,19 @@ static void setTsSpeed(int value) {
 
 #if EFI_BLUETOOTH_SETUP
 
-#if defined(CONSOLE_USB_DEVICE)
- /**
-  * we run BT on "primary" channel which is TTL if we have USB console
-  */
- extern ts_channel_s primaryChannel;
- #define BT_CHANNEL primaryChannel
-#else
- /**
-  * if we run two TTL channels we run BT on 2nd TTL channel
-  */
- #define BT_CHANNEL tsChannel
-#endif
-
-
 // Bluetooth HC-05 module initialization start (it waits for disconnect and then communicates to the module)
 static void bluetoothHC05(const char *baudRate, const char *name, const char *pinCode) {
-	bluetoothStart(&BT_CHANNEL, BLUETOOTH_HC_05, baudRate, name, pinCode);
+	bluetoothStart(getBluetoothChannel(), BLUETOOTH_HC_05, baudRate, name, pinCode);
 }
 
 // Bluetooth HC-06 module initialization start (it waits for disconnect and then communicates to the module)
 static void bluetoothHC06(const char *baudRate, const char *name, const char *pinCode) {
-	bluetoothStart(&BT_CHANNEL, BLUETOOTH_HC_06, baudRate, name, pinCode);
+	bluetoothStart(getBluetoothChannel(), BLUETOOTH_HC_06, baudRate, name, pinCode);
 }
 
 // Bluetooth SPP-C module initialization start (it waits for disconnect and then communicates to the module)
 static void bluetoothSPP(const char *baudRate, const char *name, const char *pinCode) {
-	bluetoothStart(&BT_CHANNEL, BLUETOOTH_SPP, baudRate, name, pinCode);
+	bluetoothStart(getBluetoothChannel(), BLUETOOTH_SPP, baudRate, name, pinCode);
 }
 #endif  /* EFI_BLUETOOTH_SETUP */
 
@@ -575,34 +553,19 @@ static void tsProcessOne(TsChannelBase* tsChannel) {
 	}
 }
 
-void runBinaryProtocolLoop(TsChannelBase* tsChannel) {
+void TunerstudioThread::ThreadTask() {
+	auto channel = setupChannel();
+
 	// No channel configured for this thread, cancel.
-	if (!tsChannel || !tsChannel->isConfigured()) {
+	if (!channel || !channel->isConfigured()) {
 		return;
 	}
 
 	// Until the end of time, process incoming messages.
 	while(true) {
-		tsProcessOne(tsChannel);
+		tsProcessOne(channel);
 	}
 }
-
-void TunerstudioThread::ThreadTask() {
-	auto channel = setupChannel();
-
-	runBinaryProtocolLoop(channel);
-}
-
-#if !EFI_USB_SERIAL
-static THD_FUNCTION(tsThreadEntryPoint, arg) {
-	(void) arg;
-	chRegSetThreadName("tunerstudio thread");
-
-	startTsPort(&tsChannel);
-
-	runBinaryProtocolLoop(&tsChannel);
-}
-#endif
 
 /**
  * Copy real configuration into the communications layer working copy
@@ -928,11 +891,6 @@ void startTunerStudioConnectivity(void) {
 	addConsoleActionSSS("bluetooth_spp", bluetoothSPP);
 	addConsoleAction("bluetooth_cancel", bluetoothCancel);
 #endif /* EFI_BLUETOOTH_SETUP */
-
-// TODO: simplify what happens when we have multiple serial ports
-#if !EFI_USB_SERIAL
-	chThdCreateStatic(tunerstudioThreadStack, sizeof(tunerstudioThreadStack), PRIO_CONSOLE, (tfunc_t)tsThreadEntryPoint, NULL);
-#endif
 }
 
 #endif
