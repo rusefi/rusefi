@@ -24,7 +24,7 @@ EXTERN_ENGINE;
 // Just in case we have a mechanism to validate that hardware timer is clocked right and all the
 // conversions between wall clock and hardware frequencies are done right
 // delay in milliseconds
-#define TEST_CALLBACK_DELAY 30
+#define TEST_CALLBACK_DELAY 10
 // if hardware timer is 20% off we throw a critical error and call it a day
 // maybe this threshold should be 5%? 10%?
 #define TIMER_PRECISION_THRESHOLD 0.2
@@ -166,7 +166,7 @@ static void validateHardwareTimer() {
 	// to save RAM let's use 'watchDogBuddy' here once before we enable watchdog
 	engine->executor.scheduleForLater(&watchDogBuddy, MS2US(TEST_CALLBACK_DELAY), timerValidationCallback);
 
-	chThdSleepMilliseconds(2 * TEST_CALLBACK_DELAY);
+	chThdSleepMilliseconds(TEST_CALLBACK_DELAY + 5);
 	if (!testSchedulingHappened) {
 		firmwareError(CUSTOM_ERR_TIMER_TEST_CALLBACK_NOT_HAPPENED, "hwTimer not alive");
 	}
