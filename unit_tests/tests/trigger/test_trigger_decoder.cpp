@@ -152,6 +152,7 @@ TEST(misc, test1995FordInline6TriggerDecoder) {
 	ASSERT_EQ( 0,  getTriggerZeroEventIndex(FORD_INLINE_6_1995)) << "triggerIndex ";
 
 	WITH_ENGINE_TEST_HELPER(FORD_INLINE_6_1995);
+	setWholeTimingTable(-13);
 
 	Sensor::setMockValue(SensorType::Iat, 49.579071f);
 
@@ -314,6 +315,8 @@ TEST(misc, testRpmCalculator) {
 
 	efiAssertVoid(CUSTOM_ERR_6670, engineConfiguration!=NULL, "null config in engine");
 
+	setWholeTimingTable(-13);
+
 	engineConfiguration->trigger.customTotalToothCount = 8;
 	engineConfiguration->globalFuelCorrection = 3;
 	eth.applyTriggerWaveform();
@@ -346,6 +349,8 @@ TEST(misc, testRpmCalculator) {
 	ASSERT_EQ( 485000,  start) << "start value";
 
 	eth.engine.periodicFastCallback(PASS_ENGINE_PARAMETER_SIGNATURE);
+
+	ASSERT_NEAR(engine->engineState.timingAdvance, 707, 0.1f);
 
 	assertEqualsM("fuel #1", 4.5450, engine->injectionDuration);
 	InjectionEvent *ie0 = &engine->injectionEvents.elements[0];

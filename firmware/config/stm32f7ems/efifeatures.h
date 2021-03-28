@@ -32,29 +32,16 @@
 #undef EFI_LCD
 #define EFI_LCD FALSE
 
-// todo: start using consoleUartDevice? Not sure
-#undef EFI_CONSOLE_SERIAL_DEVICE
+// todo: our "DMA-half" ChibiOS patch not implemented for USARTv2/STM32F7/STM32H7
+#undef EFI_USE_UART_DMA
+#define EFI_USE_UART_DMA FALSE
 
-#undef EFI_CONSOLE_UART_DEVICE
-
-// todo: our "DMA-half" ChibiOS patch not implemented for USARTv2/STM32F7
-#undef TS_UART_DMA_MODE
-#define TS_UART_DMA_MODE FALSE
-
-#undef PRIMARY_UART_DMA_MODE
-#define PRIMARY_UART_DMA_MODE FALSE
-
-#undef TS_UART_DEVICE
-//#define TS_UART_DEVICE (&UARTD3)
-
-#undef TS_SERIAL_DEVICE
+#undef TS_PRIMARY_UART
+#undef TS_SECONDARY_UART
+#undef TS_PRIMARY_SERIAL
+#undef TS_SECONDARY_SERIAL
 
 #define AUX_SERIAL_DEVICE (&SD6)
-
-// todo: add DMA-mode for Console?
-#if (TS_UART_DMA_MODE || TS_UART_MODE)
-#undef EFI_CONSOLE_SERIAL_DEVICE
-#endif
 
 // todo: start using consoleSerialTxPin? Not sure
 #undef EFI_CONSOLE_TX_BRAIN_PIN

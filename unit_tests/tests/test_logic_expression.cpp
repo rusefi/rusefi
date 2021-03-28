@@ -111,7 +111,7 @@ static void testExpression2(float selfValue, const char *line, float expected, E
 	LEElement thepool[TEST_POOL_SIZE];
 	LEElementPool pool(thepool, TEST_POOL_SIZE);
 	LEElement * element = pool.parseExpression(line);
-	print("Parsing [%s]\n", line);
+	printf("Parsing [%s]\n", line);
 	ASSERT_TRUE(element != NULL) << "Not NULL expected";
 	LECalculator c;
 

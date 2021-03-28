@@ -190,13 +190,13 @@ void setSerialConfigurationOverrides(void) {
 
 
 /**
- * @brief   Board-specific configuration code overrides.
+ * @brief   Board-specific configuration defaults.
  *
  * See also setDefaultEngineConfiguration
  *
  * @todo    Add your board-specific code, if any.
  */
-void setBoardConfigurationOverrides(void) {
+void setBoardDefaultConfiguration(void) {
 	setInjectorPins();
 	setIgnitionPins();
 	setLedPins();

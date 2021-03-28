@@ -12,9 +12,6 @@
 void chDbgPanic3(const char* /*msg*/, const char* /*file*/, int /*line*/) {
 }
 
-void print(const char* /*format*/, ...) {
-}
-
 void scheduleMsg(Logging* /*logging*/, const char* /*fmt*/, ...) {
 }
 

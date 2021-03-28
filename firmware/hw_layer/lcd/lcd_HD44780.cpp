@@ -237,7 +237,7 @@ void lcd_HD44780_init(Logging *sharedLogger) {
 		return;
 	}
 
-	printMsg(logger, "lcd_HD44780_init %d", engineConfiguration->displayMode);
+	scheduleMsg(logger, "lcd_HD44780_init %d", engineConfiguration->displayMode);
 
 	if (!lcd_HD44780_is_enabled())
 		return;
@@ -267,7 +267,7 @@ void lcd_HD44780_init(Logging *sharedLogger) {
 	lcd_HD44780_write_command(LCD_HD44780_DISPLAY_ON);
 
 	lcd_HD44780_set_position(0, 0);
-	printMsg(logger, "lcd_HD44780_init() done");
+	scheduleMsg(logger, "lcd_HD44780_init() done");
 }
 
 void lcdShowPanicMessage(char *message) {

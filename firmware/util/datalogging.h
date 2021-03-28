@@ -8,8 +8,9 @@
 
 #pragma once
 
-#include <stdarg.h>
-#include <stdint.h>
+#include <cstdarg>
+#include <cstdint>
+#include <cstddef>
 
 #define DELIMETER	","
 
@@ -84,9 +85,6 @@ void appendMsgPostfix(Logging *logging);
 extern "C"
 {
 #endif /* __cplusplus */
-
-void printMsg(Logging *logging, const char *fmt, ...);
-
 /**
  * this method copies the line into the intermediate buffer for later output by
  * the main thread

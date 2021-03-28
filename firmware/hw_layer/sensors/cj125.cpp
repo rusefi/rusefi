@@ -63,7 +63,7 @@ static SPIConfig cj125spicfg = {
 
 #endif /* HAL_USE_SPI */
 
-static volatile int lastSlowAdcCounter = 0;
+static uint32_t lastSlowAdcCounter = 0;
 
 // LSU conversion tables. See cj125_sensor_type_e
 // For LSU4.2, See http://www.bosch-motorsport.com/media/catalog_resources/Lambda_Sensor_LSU_42_Datasheet_51_en_2779111435pdf.pdf

@@ -120,7 +120,6 @@
 #include "eficonsole.h"
 #include "status_loop.h"
 #include "pin_repository.h"
-#include "flash_main.h"
 #include "custom_engine.h"
 #include "engine_math.h"
 #include "mpu_util.h"
@@ -161,6 +160,16 @@ static void scheduleReboot(void) {
 	chVTSetI(&resetTimer, TIME_MS2I(3000), (vtfunc_t) rebootNow, NULL);
 }
 
+// Returns false if there's an obvious problem with the loaded configuration
+static bool validateConfig() {
+	if (CONFIG(specs.cylindersCount) > minI(INJECTION_PIN_COUNT, IGNITION_PIN_COUNT)) {
+		firmwareError(OBD_PCM_Processor_Fault, "Invalid cylinder count: %d", CONFIG(specs.cylindersCount));
+		return false;
+	}
+
+	return true;
+}
+
 void runRusEfi(void) {
 	efiAssertVoid(CUSTOM_RM_STACK_1, getCurrentRemainingStack() > 512, "init s");
 	assertEngineReference();
@@ -182,34 +191,15 @@ void runRusEfi(void) {
 	 */
 	initDataStructures(PASS_ENGINE_PARAMETER_SIGNATURE);
 
-	/**
-	 * First data structure keeps track of which hardware I/O pins are used by whom
-	 */
-	initPinRepository();
+	// Perform hardware initialization that doesn't need configuration
+	initHardwareNoConfig(&sharedLogger);
 
-#if EFI_INTERNAL_FLASH
- #if IGNORE_FLASH_CONFIGURATION
-	resetConfigurationExt(&sharedLogger, DEFAULT_ENGINE_TYPE PASS_ENGINE_PARAMETER_SUFFIX);
- #else
-	/**
-	 * First thing is reading configuration from flash memory.
-	 * In order to have complete flexibility configuration has to go before anything else.
-	 */
-	readConfiguration(&sharedLogger);
- #endif // IGNORE_FLASH_CONFIGURATION
-#endif /* EFI_INTERNAL_FLASH */
+	// Read configuration from flash memory
+	loadConfiguration(&sharedLogger PASS_ENGINE_PARAMETER_SUFFIX);
 
-#if HW_CHECK_ALWAYS_STIMULATE
-	// we need a special binary for final assembly check. We cannot afford to require too much software or too many steps
-	// to be executed at the place of assembly
-	enableTriggerStimulator();
-#endif // HW_CHECK_ALWAYS_STIMULATE
-
-
-#if ! EFI_ACTIVE_CONFIGURATION_IN_FLASH
-	// TODO: need to fix this place!!! should be a version of PASS_ENGINE_PARAMETER_SIGNATURE somehow
-	prepareVoidConfiguration(&activeConfiguration);
-#endif /* EFI_ACTIVE_CONFIGURATION_IN_FLASH */
+#if EFI_USB_SERIAL
+	startUsbConsole();
+#endif
 
 	/**
 	 * Next we should initialize serial port console, it's important to know what's going on
@@ -220,35 +210,46 @@ void runRusEfi(void) {
 	startTunerStudioConnectivity();
 #endif /* EFI_TUNER_STUDIO */
 
+	// Start hardware serial ports (including bluetooth, if present)
+	startSerialChannels();
+
 	/**
 	 * Initialize hardware drivers
 	 */
-	initHardware(&sharedLogger);
+	initHardware();
 
 #if EFI_FILE_LOGGING
 	initMmcCard();
 #endif /* EFI_FILE_LOGGING */
 
-	initStatusLoop();
-	/**
-	 * Now let's initialize actual engine control logic
-	 * todo: should we initialize some? most? controllers before hardware?
-	 */
-	initEngineContoller(&sharedLogger PASS_ENGINE_PARAMETER_SIGNATURE);
-	rememberCurrentConfiguration();
+#if HW_CHECK_ALWAYS_STIMULATE
+	// we need a special binary for final assembly check. We cannot afford to require too much software or too many steps
+	// to be executed at the place of assembly
+	enableTriggerStimulator();
+#endif // HW_CHECK_ALWAYS_STIMULATE
 
-#if EFI_PERF_METRICS
-	initTimePerfActions(&sharedLogger);
-#endif
-        
-#if EFI_ENGINE_EMULATOR
-	initEngineEmulator(&sharedLogger PASS_ENGINE_PARAMETER_SIGNATURE);
-#endif
-	startStatusThreads();
+	// Config could be completely bogus - don't start anything else!
+	if (validateConfig()) {
+		initStatusLoop();
+		/**
+		 * Now let's initialize actual engine control logic
+		 * todo: should we initialize some? most? controllers before hardware?
+		 */
+		initEngineContoller(&sharedLogger PASS_ENGINE_PARAMETER_SIGNATURE);
 
-	runSchedulingPrecisionTestIfNeeded();
+	#if EFI_PERF_METRICS
+		initTimePerfActions(&sharedLogger);
+	#endif
+			
+	#if EFI_ENGINE_EMULATOR
+		initEngineEmulator(&sharedLogger PASS_ENGINE_PARAMETER_SIGNATURE);
+	#endif
+		startStatusThreads();
 
-	print("Running main loop\r\n");
+		runSchedulingPrecisionTestIfNeeded();
+	}
+
+	scheduleMsg(&sharedLogger, "Running main loop");
 	main_loop_started = true;
 	/**
 	 * This loop is the closes we have to 'main loop' - but here we only publish the status. The main logic of engine

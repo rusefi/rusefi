@@ -26,6 +26,9 @@ Release template (copy/paste this for new release):
 All notable user-facing or behavior-altering changes will be documented in this file.
 
 ## XXX 2021 Release
+
+## Potato Chip Day 2021 Release
+
 ### Added
  - VAG MQB tachometer CAN integration
     

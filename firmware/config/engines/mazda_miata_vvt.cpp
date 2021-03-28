@@ -317,8 +317,8 @@ static void setMazdaMiataEngineNB2Defaults(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	 * Wall wetting AE could be an argument for honest injectorFlow(MAP)
 	 */
 	engineConfiguration->injector.flow = 265;
-	engineConfiguration->fuelRailPressure = 400; // 400 kPa, 58 psi
-	engineConfiguration->absoluteFuelPressure = true;
+	engineConfiguration->fuelReferencePressure = 400; // 400 kPa, 58 psi
+	engineConfiguration->injectorCompensationMode = ICM_FixedRailPressure;
 
 	engineConfiguration->crankingIACposition = 90;
 

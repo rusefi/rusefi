@@ -29,10 +29,14 @@
 
 // Less important things
 #define PRIO_MMC (NORMALPRIO - 1)
-// USB mass storage
-#define MSD_THD_PRIO LOWPRIO
 
 // These can get starved without too much adverse effect
 #define PRIO_AUX_SERIAL NORMALPRIO
 #define PRIO_KNOCK_PROCESS (NORMALPRIO - 10)
 #define PRIO_HIP9011 (NORMALPRIO - 10)
+
+// These are intentionally low priority so they can't get in the way of anything else
+#define PRIO_FLASH_WRITE LOWPRIO
+
+// USB mass storage
+#define MSD_THD_PRIO LOWPRIO

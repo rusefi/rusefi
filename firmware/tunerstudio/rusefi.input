@@ -283,8 +283,9 @@ enable2ndByteCanID = false
       etb1Error       = scalar,  S16,     96,      "%",{1/@@PACK_MULT_PERCENT@@},         0
 
 ; Fuel system
-      fuelTankLevel   = scalar,  S16,     98, "amount",{1/@@PACK_MULT_PERCENT@@},         0
-      fuelConsumptionPerHour=scalar,F32, 100,    "kPa",      1,      0.0
+      fuelTankLevel   = scalar,  U16,     98,      "%",{1/@@PACK_MULT_PERCENT@@},         0
+      totalFuelConsumption=scalar,U16,   100,  "grams",                        1,         0
+      fuelFlowRate    = scalar,  U16,    102, "gram/s",{1/@@PACK_MULT_FUEL_FLOW@@},         0
 
 ; Y axis values for selectable tables
       veTableYAxis    = scalar, U16,     104,      "%",     0.01, 0
@@ -763,6 +764,14 @@ enable2ndByteCanID = false
       yBins       = crankingAdvance
       gauge       = RPMGauge
 
+	curve = fuelLevelCurve, "Fuel Level"
+      columnLabel = "Voltage", "%"
+      xAxis       = 0, 5, 6
+      yAxis       = 0, 100, 11
+      xBins       = fuelLevelBins
+      yBins       = fuelLevelValues
+      gauge       = fuelTankLevelGauge
+
     curve = wueAfrTargetOffsetCurve, "AFR Target Temperature Adjustment"
       columnLabel = "Coolant", "AFR Offset"
       xAxis       = -40, 200, 9
@@ -960,7 +969,7 @@ gaugeCategory = Sensors - Extra 2
    egt8Gauge         = egt8, "EGT#8", "C", 0, 2000
    rpmAccelerationGa = rpmAcceleration,     "rpm delta",        "RPM/s",        -2000,      2000,       -2000,      2000,       -2000,     2000,   0,   0
    knockLevelGauge   = knockLevel,"Knock level",           "volts",        0,      7,      10,     10,     100,   100,   1,   2
-   fuelTankLevelGauge   = fuelTankLevel,"Fuel level",           "x",        0,      7,      10,     10,     100,   100,   1,   2
+   fuelTankLevelGauge   = fuelTankLevel,"Fuel level",           "%",        0,      100,      10,     20,     100,   100,   1,   1
    speedToRpmRatioGauge = speedToRpmRatio, "speed2rpm", "",     0,   100,     0,    0,    100,  100,   4,   4
    wastegatePosGauge = wastegatePositionSensor, @@GAUGE_NAME_WG_POSITION@@,  "%",        0,    100,       0,      0,     100,   100,   1,   1
    idlePosSensGauge  = idlePositionSensor,      "Idle position sensor",       "%",        0,    100,       0,      0,     100,   100,   1,   1
@@ -1056,6 +1065,8 @@ gaugeCategory = Fueling
    baseFuelGauge     = baseFuel,       @@GAUGE_NAME_FUEL_BASE@@,      "mg",        0,   100, 0, 0, 100, 100,   2, 0
    fuelPidCorrectionGauge = fuelPidCorrection,       @@GAUGE_NAME_FUEL_PID_CORR@@,      "%",        -10,   10,     -8, -5, 5, 8,   3, 1
    fuelingLoadGauge = fuelingLoad, @@GAUGE_NAME_FUEL_LOAD@@, "%", 0, 300, 0, 0, 300, 300, 1, 1
+   totalFuelConsumptionGauge = totalFuelConsumption, @@GAUGE_NAME_FUEL_CONSUMPTION@@, "g", 0, 10000, 0, 0, 10000, 10000, 0, 0
+   fuelFlowRateGauge = fuelFlowRate, @@GAUGE_NAME_FUEL_FLOW@@, "g/s", 0, 50, 0, 0, 50, 50, 2, 0
 
 gaugeCategory = Throttle Body (incl. ETB)
    pedalPositionGauge = throttlePedalPosition, @@GAUGE_NAME_THROTTLE_PEDAL@@,        "%",    0,    120,      0,     0,     100,   100,   1,   1
@@ -1250,6 +1261,8 @@ gaugeCategory = DynoView
    entry = coilDutyCycle,	@@GAUGE_NAME_DWELL_DUTY@@,	float,"%.3f"
    entry = currentTargetAfr,@@GAUGE_NAME_TARGET_AFR@@,	float,"%.3f"
    entry = targetLambda, @@GAUGE_NAME_TARGET_LAMBDA@@,	float,"%.4f"
+   entry = totalFuelConsumption, @@GAUGE_NAME_FUEL_CONSUMPTION@@, int, "%d"
+   entry = fuelFlowRate, @@GAUGE_NAME_FUEL_FLOW@@, float, "%.2f"
 
    entry = accelerationX,	@@GAUGE_NAME_ACCEL_X@@,	float,"%.2f", { LIS302DLCsPin != 0 }
    entry = accelerationY,	@@GAUGE_NAME_ACCEL_Y@@,	float,"%.2f", { LIS302DLCsPin != 0 }
@@ -1359,7 +1372,7 @@ menuDialog = main
 		# Digital outputs
 		subMenu = mainRelayDialog,			"Main relay"
 		subMenu = starterRelay,				"Starter Disable relay"
-		subMenu = fuelPump,					"Fuel pump & rail"
+		subMenu = fuelPump,					"Fuel pump"
 		subMenu = fanSetting,				"Fan"
 		subMenu = tachSettings,				"Tachometer"
 		subMenu = malfunction,				"Check engine light"
@@ -1369,6 +1382,7 @@ menuDialog = main
 		# basic
 		subMenu = injectorConfig,			"Injection configuration"
 		subMenu = injectionSettings,		"Injection hardware", 0, {isInjectionEnabled == 1}
+		subMenu = cylinderBankSelect,		"Cylinder bank selection"
 		subMenu = std_separator
 
 		# Air mass model
@@ -1406,8 +1420,7 @@ menuDialog = main
 
 		subMenu = dwellSettings,			"Dwell", 0, {isIgnitionEnabled == 1}
 		subMenu = ignitionCylExtra,			"Ignition cylinder trim", 0, {isIgnitionEnabled == 1}
-		; todo: once proven, uncomment and remove from the "broken" menu
-		; subMenu = multisparkSettings,		"Multispark", 0, {isIgnitionEnabled == 1}
+		subMenu = multisparkSettings,		"Multispark", 0, {isIgnitionEnabled == 1}
 		subMenu = std_separator
 
 		subMenu = ignitionTableTbl,			"Ignition advance", 0, {isIgnitionEnabled}
@@ -1456,18 +1469,26 @@ menuDialog = main
 		subMenu = gppwm3, "General Purpose PWM 3"
 		subMenu = gppwm4, "General Purpose PWM 4"
 
+		subMenu = std_separator				@@if_ts_show_etb
+		subMenu = etbDialog,				"Electronic throttle body" @@if_ts_show_etb
+		subMenu = etbTpsBiasCurve,			"ETB bias curve (feed forward)" @@if_ts_show_etb
+		subMenu = pedalToTpsTbl,			"ETB pedal target" @@if_ts_show_etb
+
+		subMenu = std_separator
+		subMenu = vvtPidDialog,				"VVT outputs and PID"
+        subMenu = vvtTable1Tbl,             "VVT intake target"
+        subMenu = vvtTable2Tbl,             "VVT exhaust target"
+
 		subMenu = std_separator
 		subMenu = fsioInputsDialog,        	"FSIO inputs"
-		subMenu = vvtPidDialog,				"VVT PID"
-        subMenu = vvtTable1Tbl,             "VVT Table #1"
-        subMenu = vvtTable2Tbl,             "VVT Table #2"
-        subMenu = std_separator
 		subMenu = fsioOutputsDialog,        "FSIO outputs"
+		subMenu = fsioFormulas,				"FSIO Formulas"
+
+		subMenu = std_separator
 		subMenu = fsioTable1Tbl,			"FSIO Table #1"
 		subMenu = fsioTable2Tbl,			"FSIO Table #2"
 		subMenu = fsioTable3Tbl,			"FSIO Table #3"
 		subMenu = fsioTable4Tbl,			"FSIO Table #4"
-		subMenu = fsioFormulas,				"FSIO Formulas"
 		subMenu = fsioCurve1,			    "FSIO Curve #1"
 		subMenu = fsioCurve2,			    "FSIO Curve #2"
 		subMenu = fsioCurve3,			    "FSIO Curve #3"
@@ -1508,6 +1529,7 @@ menuDialog = main
 
 		# O2 sensor(s)
 		subMenu = egoSettings,				"EGO sensor"
+		subMenu = widebandConfig,			"rusEFI Wideband Controller", 0, { canReadEnabled && canWriteEnabled }
 		subMenu = narrowToWideOxygenCurve,	"Narrow to Wideband approximation"
 		subMenu = cj125Function,			"CJ125 settings (wbo decoder)" @@if_ts_show_cj125
 		subMenu = std_separator
@@ -1516,6 +1538,7 @@ menuDialog = main
 		subMenu = speedSensor,				"Vehicle speed sensor"
 		subMenu = oilPressureSensor,		"Oil pressure"
 		subMenu = fuelPressureSensor,		"Fuel pressure"
+		subMenu = fuelLevelDialog,			"Fuel level sensor"
 		subMenu = egtInputs,				"EGT" @@if_ts_show_egt
 		subMenu = wastegateIdlePos,			"Wastegate and idle position sensors"
 
@@ -1545,21 +1568,14 @@ menuDialog = main
 
 		# EXPERIMENTAL FEATURES
 		subMenu = parkingLot,				"Experimental/Broken"
-		subMenu = multisparkSettings,		"Multispark", 0, {isIgnitionEnabled == 1}
 		subMenu = mc33Dialog,			"GDI Dreams"
-		subMenu = widebandConfig,			"rusEFI Wideband Controller", 0, { canReadEnabled && canWriteEnabled }
-		subMenu = cylinderBankSelect,		"Cylinder Bank Selection"
 		subMenu = std_separator
 		
 		subMenu = hipFunction,				"HIP9011 settings (knock sensor) (alpha version)" @@if_ts_show_hip9011
 		subMenu = softwareKnock,			"Software Knock" @@if_ts_show_software_knock
 		subMenu = std_separator
 
-		subMenu = etbDialog,				"Electronic throttle body (beta version)" @@if_ts_show_etb
-		subMenu = etbTpsBiasCurve,			"Electronic throttle body bias curve" @@if_ts_show_etb
-		subMenu = pedalToTpsTbl,			"Electronic Pedal Map" @@if_ts_show_etb
-		subMenu = std_separator
-        subMenu = smLaunchControl,			"Launch Control"
+		subMenu = smLaunchControl,			"Launch Control"
 		subMenu = std_separator
 #		subMenu = smRollingLaunch,			"Rolling Launch"
 #		subMenu = std_separator
@@ -1809,27 +1825,31 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 	    field = "!https://rusefi.com/s/vvt"
 ; todo: code generator to hard-code all triggers not requiring VVT?
 ; todo: https://github.com/rusefi/rusefi/issues/2077
-	    field = "CAM/VVT mode shaft #1",				vvtMode1, {trigger_type != @@TT_TT_MAZDA_MIATA_NA@@}
-	    field = "VVT mode shaft #2",				    vvtMode2, {trigger_type != @@TT_TT_MAZDA_MIATA_NA@@}
-	    field = "VVT use rise front",					vvtCamSensorUseRise, {trigger_type != @@TT_TT_MAZDA_MIATA_NA@@}
-	    field = "VVT position display offset",			vvtOffset
+	    field = "Cam mode (intake cams)",				vvtMode1, {trigger_type != @@TT_TT_MAZDA_MIATA_NA@@}
+	    field = "Cam mode (exhaust cams)",				    vvtMode2, {trigger_type != @@TT_TT_MAZDA_MIATA_NA@@}
+	    field = "VVT use only rising edge",					vvtCamSensorUseRise, {trigger_type != @@TT_TT_MAZDA_MIATA_NA@@}
+	    field = "#Set offset so VVT indicates 0 degrees in default position"
+		field = "VVT offset bank 1 intake",				vvtOffset
+		;field = "VVT offset bank 1 exhaust",			vvtOffset2
+		;field = "VVT offset bank 2 intake",			vvtOffset3
+		;field = "VVT offset bank 2 exhaust",			vvtOffset4
 	    field = "print verbose VVT sync details to console",verboseVVTDecoding
 	    field = "Do not print messages in case of sync error",  silentTriggerError
 	    field = "Enable noise filtering",				useNoiselessTriggerDecoder, {trigger_type == @@TT_TT_TOOTHED_WHEEL_60_2@@ || trigger_type == @@TT_TT_TOOTHED_WHEEL_36_1@@}
 
 	dialog = triggerInputs,					"Trigger Inputs"
-		field = "!ECU reboot needed to apply these settings"
 		field = "#Cam is primary if you have cam sensor as part of trigger shape"
 		field = "Primary channel", 						triggerInputPins1
 		field = "Invert Primary",						invertPrimaryTriggerSignal
 		field = "Secondary channel", 					triggerInputPins2,            { trigger_type != @@TT_TT_TOOTHED_WHEEL@@ && trigger_type != @@TT_TT_TOOTHED_WHEEL_60_2@@ && trigger_type != @@TT_TT_TOOTHED_WHEEL_36_1@@ && trigger_type != @@TT_TT_ONE@@ && trigger_type != @@TT_TT_60_2_VW@@ && trigger_type != @@TT_TT_TOOTHED_WHEEL_36_2@@}
 		field = "Invert Secondary",				    	invertSecondaryTriggerSignal, { trigger_type != @@TT_TT_TOOTHED_WHEEL@@ && trigger_type != @@TT_TT_TOOTHED_WHEEL_60_2@@ && trigger_type != @@TT_TT_TOOTHED_WHEEL_36_1@@ && trigger_type != @@TT_TT_ONE@@ && trigger_type != @@TT_TT_60_2_VW@@ && trigger_type != @@TT_TT_TOOTHED_WHEEL_36_2@@}
-		field = "#VVT or Cam for 60/2 goes here"
-		field = "Cam Sync/VVT shaft #1 bank #1",	    camInputs1
-        field = "VVT shaft #2 bank #1",        camInputs2
-        field = "VVT shaft #1 bank #2",        camInputs3
-        field = "VVT shaft #2 bank #2",        camInputs4
-		field = "Invert Cam/VVT",                       invertCamVVTSignal
+		field = "#VVT or Cam for 60/2 goes below"
+		field = "#If your engine has no exhaust cam sensor, use intake cam inputs"
+		field = "Cam sensor bank 1 intake",	        camInputs1
+        field = "Cam sensor bank 1 exhaust",        camInputs2
+        field = "Cam sensor bank 2 intake",         camInputs3
+        field = "Cam sensor bank 2 exhaust",        camInputs4
+		field = "Invert cam inputs",                invertCamVVTSignal
 		panel = triggerInputComparator @@if_ts_show_trigger_comparator
 
 
@@ -1953,8 +1973,8 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 		field = "Extra cyl #12",                       timing_offset_cylinder12, {cylindersCount > 11}
 
 	dialog = multisparkDwellParams, "Delay & Dwell"
-		field = "Spark Duration",						multisparkSparkDuration, {multisparkEnable}
-		field = "Dwell",								multisparkDwell, {multisparkEnable}
+		field = "Spark duration",						multisparkSparkDuration, {multisparkEnable}
+		field = "Subsequent spark dwell",				multisparkDwell, {multisparkEnable}
 
 	dialog = multisparkMain, "Configuration"
 		field = "Maximum engine speed",					multisparkMaxRpm, {multisparkEnable}
@@ -2100,7 +2120,6 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 
 ;			Sensor Inputs
 	dialog = otherSensorInputs,					"Other Sensor Inputs"
-		field = "Fuel level", 						fuelLevelSensor
 		field = "Clutch down switch",					clutchDownPin
 		field = "Clutch down inverted",					clutchDownPinMode
 		field = "Clutch up switch",						clutchUpPin
@@ -2110,6 +2129,10 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 		field = "A/C switch",						acSwitch
 		field = "A/C switch mode",					acSwitchMode
 		field = "Flex fuel sensor",					flexSensorPin
+
+	dialog = fuelLevelDialog,				"Fuel Level Sensor"
+		field = "Input channel", 						fuelLevelSensor
+		panel = fuelLevelCurve
 
 	dialog = triggerInputComparator, "Built-in Comparator Settings (Kinetis-only)"
 		field = "Comparator Center Point Voltage", triggerCompCenterVolt
@@ -2622,19 +2645,10 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 		field = "A/C Relay",						acRelayPin
 		field = "A/C Relay Mode",					acRelayPinMode
 
-	dialog = fuelPumpConfig, "Fuel Pump"
+	dialog = fuelPump, "Fuel Pump"
 		field = "Pin",						fuelPumpPin
 		field = "Pin mode",         	        fuelPumpPinMode
 		field = "Prime duration",				startUpFuelPumpDuration
-
-	dialog = fuelRailConfig, "Fuel Rail"
-		field = "Absolute Fuel Pressure",			absoluteFuelPressure
-		field = "Fuel Rail pressure",			fuelRailPressure, {absoluteFuelPressure == 1}
-
-	dialog = fuelPump, ""
-		panel = fuelPumpConfig
-		panel = fuelRailConfig
-
 
 ;			Controller->Actuator Outputs
 	dialog = mainRelayDialog, "Main relay output"
@@ -2784,16 +2798,15 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 		panel = stftPartitionSettingsPower, {fuelClosedLoopCorrectionEnabled == 1}
 		panel = stftPartitionSettingsOverrun, {fuelClosedLoopCorrectionEnabled == 1}
 
-	dialog = vvtPidDialog0, "VVT PID0"
-		field = "First Shaft Bank#1",					auxPidPins1
-        field = "Second Shaft Bank#1",                  auxPidPins2
-        field = "First Shaft Bank#2",                   auxPidPins3
-        field = "Second Shaft Bank#2",                  auxPidPins4
-		field = "PWM Frequency",						auxPidFrequency1, {auxPidPins1 != 0 || auxPidPins2 != 0}
+	dialog = vvtPidDialog0, "Configuration"
+		field = "VVT solenoid bank 1 intake",					auxPidPins1
+        field = "VVT solenoid bank 1 exhaust",                  auxPidPins2
+        field = "VVT solenoid bank 2 intake",                   auxPidPins3
+        field = "VVT solenoid bank 2 exhaust",                  auxPidPins4
+		field = "PWM frequency",						auxPidFrequency1, {auxPidPins1 != 0 || auxPidPins2 != 0}
 		field = "Detailed status in console",			isVerboseAuxPid1, {auxPidPins1 != 0 || auxPidPins2 != 0}
-		field = "control period",						auxPid1_periodMs, {auxPidPins1 != 0 || auxPidPins2 != 0}
 
-    dialog = vvtPidDialog1, "First Shaft PID"
+    dialog = vvtPidDialog1, "Intake PID"
         field = "offset",                               auxPid1_offset, {auxPidPins1 != 0}
         field = "P factor",                             auxPid1_pFactor, {auxPidPins1 != 0}
         field = "I factor",                             auxPid1_iFactor, {auxPidPins1 != 0}
@@ -2801,7 +2814,7 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
         field = "Min",                                  auxPid1_minValue, {auxPidPins1 != 0}
         field = "Max",                                  auxPid1_maxValue, {auxPidPins1 != 0}
 
-    dialog = vvtPidDialog2, "Second Shaft PID"
+    dialog = vvtPidDialog2, "Exhaust PID"
         field = "offset",                               auxPid2_offset, {auxPidPins2 != 0}
         field = "P factor",                             auxPid2_pFactor, {auxPidPins2 != 0}
         field = "I factor",                             auxPid2_iFactor, {auxPidPins2 != 0}
@@ -2809,7 +2822,7 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
         field = "Min",                                  auxPid2_minValue, {auxPidPins2 != 0}
         field = "Max",                                  auxPid2_maxValue, {auxPidPins2 != 0}
 
-    dialog = vvtPidDialog, "VVT PID", border
+    dialog = vvtPidDialog, "VVT Configuration & PID", border
         panel = vvtPidDialog0,         West
         panel = vvtPidDialog1,  Center
         panel = vvtPidDialog2,    East

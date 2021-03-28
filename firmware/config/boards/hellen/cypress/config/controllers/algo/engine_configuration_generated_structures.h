@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on hellen_cypress_gen_config.bat integration/rusefi_config.txt Sun Mar 14 21:29:44 UTC 2021
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on hellen_cypress_gen_config.bat integration/rusefi_config.txt Sun Mar 28 12:41:00 UTC 2021
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -711,9 +711,8 @@ struct engine_configuration_s {
 	offset 76 bit 18 */
 	bool useInstantRpmForIdle : 1;
 	/**
-	 * If your fuel regulator does not have vacuum line
 	offset 76 bit 19 */
-	bool absoluteFuelPressure : 1;
+	bool unused76b19 : 1;
 	/**
 	offset 76 bit 20 */
 	bool launchControlEnabled : 1;
@@ -899,10 +898,9 @@ struct engine_configuration_s {
 	 */
 	ignition_mode_e ignitionMode;
 	/**
-	 * this value could be used to offset the whole ignition timing table by a constant
 	 * offset 444
 	 */
-	angle_t ignitionOffset;
+	float unusedOldIgnitionOffset;
 	/**
 	 * Dynamic uses the timing map to decide the ignition timing, Static timing fixes the timing to the value set below (only use for checking static timing with a timing light).
 	 * offset 448
@@ -1053,7 +1051,6 @@ struct engine_configuration_s {
 	float maxKnockSubDeg;
 	/**
 	 * Camshaft input could be used either just for engine phase detection if your trigger shape does not include cam sensor as 'primary' channel, or it could be used for Variable Valve timing on one of the camshafts.
-	 * TODO #660
 	 * offset 556
 	 */
 	brain_input_pin_e camInputs[CAM_INPUTS_COUNT];
@@ -1272,11 +1269,7 @@ struct engine_configuration_s {
 	/**
 	 * offset 684
 	 */
-	float fuelLevelEmptyTankVoltage;
-	/**
-	 * offset 688
-	 */
-	float fuelLevelFullTankVoltage;
+	uint8_t fuelLevelValues[FUEL_LEVEL_TABLE_COUNT];
 	/**
 	 * AFR, WBO, EGO - whatever you like to call it
 	 * offset 692
@@ -1752,14 +1745,17 @@ struct engine_configuration_s {
 	 */
 	pin_input_mode_e clutchUpPinMode;
 	/**
+	 * Disable multispark above this engine speed.
 	 * offset 972
 	 */
 	uint16_t multisparkMaxRpm;
 	/**
+	 * This parameter sets the latest that the last multispark can occur after the main ignition event. For example, if the ignition timing is 30 degrees BTDC, and this parameter is set to 45, no multispark will ever be fired after 15 degrees ATDC.
 	 * offset 974
 	 */
 	uint8_t multisparkMaxSparkingAngle;
 	/**
+	 * Configures the maximum number of extra sparks to fire (does not include main spark)
 	 * offset 975
 	 */
 	uint8_t multisparkMaxExtraSparkCount;
@@ -1861,10 +1857,10 @@ struct engine_configuration_s {
 	bool unusedBit_251_29 : 1;
 	/**
 	offset 976 bit 30 */
-	bool unusedBit_289_30 : 1;
+	bool unusedBit_288_30 : 1;
 	/**
 	offset 976 bit 31 */
-	bool unusedBit_289_31 : 1;
+	bool unusedBit_288_31 : 1;
 	/**
 	 * offset 980
 	 */
@@ -2002,7 +1998,11 @@ struct engine_configuration_s {
 	/**
 	 * offset 1204
 	 */
-	int unusedAtOldBoardConfigurationEnd[63];
+	uint16_t fuelLevelBins[FUEL_LEVEL_TABLE_COUNT];
+	/**
+	 * offset 1220
+	 */
+	int unusedAtOldBoardConfigurationEnd[59];
 	/**
 	 * offset 1456
 	 */
@@ -2388,7 +2388,7 @@ struct engine_configuration_s {
 	/**
 	 * offset 1756
 	 */
-	float fuelRailPressure;
+	float unused1756;
 	/**
 	 * offset 1760
 	 */
@@ -2439,10 +2439,12 @@ struct engine_configuration_s {
 	 */
 	float mapErrorDetectionTooHigh;
 	/**
+	 * How long to wait for the spark to fire before recharging the coil for another spark.
 	 * offset 1784
 	 */
 	uint16_t multisparkSparkDuration;
 	/**
+	 * This sets the dwell time for subsequent sparks. The main spark's dwell is set by the dwell table.
 	 * offset 1786
 	 */
 	uint16_t multisparkDwell;
@@ -3864,4 +3866,4 @@ struct persistent_config_s {
 typedef struct persistent_config_s persistent_config_s;
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on hellen_cypress_gen_config.bat integration/rusefi_config.txt Sun Mar 14 21:29:44 UTC 2021
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on hellen_cypress_gen_config.bat integration/rusefi_config.txt Sun Mar 28 12:41:00 UTC 2021

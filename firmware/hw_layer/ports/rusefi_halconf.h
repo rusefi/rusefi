@@ -75,9 +75,12 @@
 // USB Mass Storage
 #ifdef EFI_USE_COMPRESSED_INI_MSD
 // if enabled, we do gzip decompression on the MSD thread - it requires more stack space
-#define USB_MSD_THREAD_WA_SIZE 512
+#define USB_MSD_THREAD_WA_SIZE 2048
 #endif
 
 // SPI
 #define SPI_USE_WAIT                TRUE
 #define SPI_USE_MUTUAL_EXCLUSION    TRUE
+
+// Extra field in the UART driver's struct to store a reference to the DMA receive buffer object
+#define UART_DRIVER_EXT_FIELDS void* dmaAdapterInstance;

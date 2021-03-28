@@ -144,7 +144,7 @@ static constexpr ADCConversionGroup convGroupSlow = {
 	.ltr	= 0,
 	// Simply sequence every channel in order
 	.sqr1	= ADC_SQR1_SQ13_N(12) | ADC_SQR1_SQ14_N(13) | ADC_SQR1_SQ15_N(14) | ADC_SQR1_SQ16_N(15) | ADC_SQR1_NUM_CH(16), // Conversion group sequence 13...16 + sequence length
-	.sqr2	= ADC_SQR2_SQ7_N(6)   | ADC_SQR2_SQ8_N(7)   | ADC_SQR2_SQ9_N(8)   | ADC_SQR2_SQ10_N(8)  | ADC_SQR2_SQ11_N(10) | ADC_SQR2_SQ12_N(11), // Conversion group sequence 7...12
+	.sqr2	= ADC_SQR2_SQ7_N(6)   | ADC_SQR2_SQ8_N(7)   | ADC_SQR2_SQ9_N(8)   | ADC_SQR2_SQ10_N(9)  | ADC_SQR2_SQ11_N(10) | ADC_SQR2_SQ12_N(11), // Conversion group sequence 7...12
 	.sqr3	= ADC_SQR3_SQ1_N(0)   | ADC_SQR3_SQ2_N(1)   | ADC_SQR3_SQ3_N(2)   |  ADC_SQR3_SQ4_N(3)  |   ADC_SQR3_SQ5_N(4) |   ADC_SQR3_SQ6_N(5), // Conversion group sequence 1...6
 };
 
@@ -159,7 +159,7 @@ bool readSlowAnalogInputs(adcsample_t* convertedSamples) {
 	}
 
 	// Average samples to get some noise filtering and oversampling
-	for (int i = 0; i < slowChannelCount; i++) {
+	for (size_t i = 0; i < slowChannelCount; i++) {
 		uint32_t sum = 0;
 		size_t index = i;
 		for (size_t j = 0; j < SLOW_ADC_OVERSAMPLE; j++) {

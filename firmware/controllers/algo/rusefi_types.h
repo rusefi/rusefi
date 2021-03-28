@@ -113,7 +113,7 @@ typedef uint8_t gppwm_table_t[GPPWM_LOAD_COUNT][GPPWM_RPM_COUNT];
 // this is different type simply to have different hi/low range in rusefi.ini
 typedef ignition_table_t angle_table_t;
 
-typedef int cylinders_count_t;
+typedef uint32_t cylinders_count_t;
 
 typedef int32_t bool32_t;
 

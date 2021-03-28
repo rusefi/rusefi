@@ -31,7 +31,7 @@ typedef enum {
  * - send AT-commands to the module;
  * - restore connection to PC.
  */
-void bluetoothStart(ts_channel_s *btChannel, bluetooth_module_e moduleType, const char *baudRate, const char *name, const char *pinCode);
+void bluetoothStart(SerialTsChannelBase *btChannel, bluetooth_module_e moduleType, const char *baudRate, const char *name, const char *pinCode);
 
 /**
  * Cancel Bluetooth procedure

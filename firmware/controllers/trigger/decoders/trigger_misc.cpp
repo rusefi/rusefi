@@ -92,3 +92,44 @@ void configureDaihatsu4(TriggerWaveform * s) {
 	s->addEventAngle(s->getCycleDuration(), T_PRIMARY, TV_FALL);
 
 }
+
+void configureBarra3plus1cam(TriggerWaveform *s) {
+	s->initialize(FOUR_STROKE_CAM_SENSOR);
+
+	s->useRiseEdge = true;
+	// TODO: gapBothDirections?
+
+	// This wheel has four teeth
+	// two short gaps, and two long gaps
+	// short = 60 deg
+	// long = 120 deg
+
+	{
+		int offset = 120;
+
+		s->addEventAngle(offset + 2 * 0 - 10, T_PRIMARY, TV_RISE);
+		s->addEventAngle(offset + 2 * 0 +  0, T_PRIMARY, TV_FALL);
+
+		// short gap 60 deg
+
+		s->addEventAngle(offset + 2 * 60 - 10, T_PRIMARY, TV_RISE);
+		s->addEventAngle(offset + 2 * 60 +  0, T_PRIMARY, TV_FALL);
+
+		// long gap 120 deg
+
+		s->addEventAngle(offset + 2 * 180 - 10, T_PRIMARY, TV_RISE);
+		s->addEventAngle(offset + 2 * 180 +  0, T_PRIMARY, TV_FALL);
+
+		// long gap 120 deg
+
+		s->addEventAngle(offset + 2 * 300 - 10, T_PRIMARY, TV_RISE);
+		s->addEventAngle(offset + 2 * 300 +  0, T_PRIMARY, TV_FALL);
+
+		// short gap, 60 deg back to zero/720
+	}
+
+	// sync tooth is the zero tooth, the first short gap after two long gaps
+	s->setTriggerSynchronizationGap3(0, 1.6f, 2.4f);
+	// previous gap should be 1.0
+	s->setTriggerSynchronizationGap3(1, 0.8f, 1.2f);
+}

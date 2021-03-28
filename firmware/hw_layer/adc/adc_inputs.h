@@ -43,7 +43,7 @@ adc_channel_e getAdcChannel(brain_pin_e pin);
 brain_pin_e getAdcChannelBrainPin(const char *msg, adc_channel_e hwChannel);
 
 // wait until at least 1 slowADC sampling is complete
-void waitForSlowAdc(int lastAdcCounter = 0);
+void waitForSlowAdc(uint32_t lastAdcCounter = 0);
 // get a number of completed slowADC samples
 int getSlowAdcCounter();
 

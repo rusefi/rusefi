@@ -118,11 +118,6 @@ persistent_config_s configWorkingCopy;
 
 static efitimems_t previousWriteReportMs = 0;
 
-static ts_channel_s tsChannel;
-
-// this thread wants a bit extra stack
-static THD_WORKING_AREA(tunerstudioThreadStack, CONNECTIVITY_THREAD_STACK);
-
 static void resetTs(void) {
 	memset(&tsState, 0, sizeof(tsState));
 }
@@ -156,33 +151,19 @@ static void setTsSpeed(int value) {
 
 #if EFI_BLUETOOTH_SETUP
 
-#if defined(CONSOLE_USB_DEVICE)
- /**
-  * we run BT on "primary" channel which is TTL if we have USB console
-  */
- extern ts_channel_s primaryChannel;
- #define BT_CHANNEL primaryChannel
-#else
- /**
-  * if we run two TTL channels we run BT on 2nd TTL channel
-  */
- #define BT_CHANNEL tsChannel
-#endif
-
-
 // Bluetooth HC-05 module initialization start (it waits for disconnect and then communicates to the module)
 static void bluetoothHC05(const char *baudRate, const char *name, const char *pinCode) {
-	bluetoothStart(&BT_CHANNEL, BLUETOOTH_HC_05, baudRate, name, pinCode);
+	bluetoothStart(getBluetoothChannel(), BLUETOOTH_HC_05, baudRate, name, pinCode);
 }
 
 // Bluetooth HC-06 module initialization start (it waits for disconnect and then communicates to the module)
 static void bluetoothHC06(const char *baudRate, const char *name, const char *pinCode) {
-	bluetoothStart(&BT_CHANNEL, BLUETOOTH_HC_06, baudRate, name, pinCode);
+	bluetoothStart(getBluetoothChannel(), BLUETOOTH_HC_06, baudRate, name, pinCode);
 }
 
 // Bluetooth SPP-C module initialization start (it waits for disconnect and then communicates to the module)
 static void bluetoothSPP(const char *baudRate, const char *name, const char *pinCode) {
-	bluetoothStart(&BT_CHANNEL, BLUETOOTH_SPP, baudRate, name, pinCode);
+	bluetoothStart(getBluetoothChannel(), BLUETOOTH_SPP, baudRate, name, pinCode);
 }
 #endif  /* EFI_BLUETOOTH_SETUP */
 
@@ -253,7 +234,6 @@ static void onlineApplyWorkingCopyBytes(uint32_t offset, int count) {
 	// open question what's the best strategy to balance coding efforts, performance matters and tune crc functionality
 	// open question what is the runtime cost of wiping 2K of bytes on each IO communication, could be that 2K of byte memset
 	// is negligable comparing with the IO costs?
-	//		wipeStrings(PASS_ENGINE_PARAMETER_SIGNATURE);
 }
 
 static const void * getStructAddr(int structId) {
@@ -366,7 +346,7 @@ static void handleWriteValueCommand(TsChannelBase* tsChannel, ts_response_format
 	tunerStudioDebug("got W (Write)"); // we can get a lot of these
 
 #if EFI_TUNER_STUDIO_VERBOSE
-//	scheduleMsg(logger, "Page number %d\r\n", pageId); // we can get a lot of these
+//	scheduleMsg(logger, "Page number %d", pageId); // we can get a lot of these
 #endif
 
 	if (validateOffsetCount(offset, 1, tsChannel)) {
@@ -567,24 +547,24 @@ static void tsProcessOne(TsChannelBase* tsChannel) {
 	}
 
 	int success = tsInstance.handleCrcCommand(tsChannel, tsChannel->scratchBuffer, incomingPacketSize);
-	if (!success)
-		print("got unexpected TunerStudio command %x:%c\r\n", command, command);
-}
 
-void runBinaryProtocolLoop(TsChannelBase* tsChannel) {
-	// Until the end of time, process incoming messages.
-	while(true) {
-		tsProcessOne(tsChannel);
+	if (!success) {
+		scheduleMsg(&tsLogger, "got unexpected TunerStudio command %x:%c", command, command);
 	}
 }
 
-static THD_FUNCTION(tsThreadEntryPoint, arg) {
-	(void) arg;
-	chRegSetThreadName("tunerstudio thread");
+void TunerstudioThread::ThreadTask() {
+	auto channel = setupChannel();
 
-	startTsPort(&tsChannel);
+	// No channel configured for this thread, cancel.
+	if (!channel || !channel->isConfigured()) {
+		return;
+	}
 
-	runBinaryProtocolLoop(&tsChannel);
+	// Until the end of time, process incoming messages.
+	while(true) {
+		tsProcessOne(channel);
+	}
 }
 
 /**
@@ -911,8 +891,6 @@ void startTunerStudioConnectivity(void) {
 	addConsoleActionSSS("bluetooth_spp", bluetoothSPP);
 	addConsoleAction("bluetooth_cancel", bluetoothCancel);
 #endif /* EFI_BLUETOOTH_SETUP */
-
-	chThdCreateStatic(tunerstudioThreadStack, sizeof(tunerstudioThreadStack), PRIO_CONSOLE, (tfunc_t)tsThreadEntryPoint, NULL);
 }
 
 #endif

@@ -1,4 +1,4 @@
-#include "../stm32f4ems/efifeatures.h"
+#include "../stm32f7ems/efifeatures.h"
 
 #pragma once
 
@@ -14,18 +14,6 @@
 #undef EFI_CJ125
 #define EFI_CJ125 FALSE
 
-// todo: our "DMA-half" ChibiOS patch not implemented for USARTv2/STM32H7
-#undef TS_UART_DMA_MODE
-#define TS_UART_DMA_MODE FALSE
-
-#undef PRIMARY_UART_DMA_MODE
-#define PRIMARY_UART_DMA_MODE FALSE
-
-#undef TS_UART_DEVICE
-//#define TS_UART_DEVICE (&UARTD3)
-
-#undef EFI_CONSOLE_UART_DEVICE
-
 #undef BOARD_TLE6240_COUNT
 #undef BOARD_MC33972_COUNT
 #undef BOARD_TLE8888_COUNT
@@ -40,3 +28,6 @@
 #define BOARD_EXT_GPIOCHIPS			(BOARD_TLE6240_COUNT + BOARD_MC33972_COUNT + BOARD_TLE8888_COUNT + BOARD_DRV8860_COUNT + BOARD_MC33810_COUNT)
 
 #define EFI_USE_COMPRESSED_INI_MSD
+
+// H7 has dual bank, so flash on its own (low priority) thread so as to not block any other operations
+#define EFI_FLASH_WRITE_THREAD TRUE

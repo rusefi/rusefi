@@ -316,7 +316,7 @@ public:
 	/**
 	 * this is invoked each time we register a trigger tooth signal
 	 */
-	void onTriggerSignalEvent(efitick_t nowNt);
+	void onTriggerSignalEvent();
 	EngineState engineState;
 	SensorsState sensors;
 	efitick_t mainRelayBenchStartNt = 0;
