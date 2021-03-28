@@ -352,7 +352,10 @@
 #define EFI_USE_UART_DMA TRUE
 #endif
 
+#ifndef TS_PRIMARY_UART
 #define TS_PRIMARY_UART UARTD3
+#endif
+
 #undef TS_SECONDARY_UART
 
 #define AUX_SERIAL_DEVICE (&SD6)
