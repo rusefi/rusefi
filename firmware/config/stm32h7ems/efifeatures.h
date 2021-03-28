@@ -1,4 +1,4 @@
-#include "../stm32f4ems/efifeatures.h"
+#include "../stm32f7ems/efifeatures.h"
 
 #pragma once
 
@@ -13,18 +13,6 @@
 
 #undef EFI_CJ125
 #define EFI_CJ125 FALSE
-
-// todo: our "DMA-half" ChibiOS patch not implemented for USARTv2/STM32H7
-#undef TS_UART_DMA_MODE
-#define TS_UART_DMA_MODE FALSE
-
-#undef PRIMARY_UART_DMA_MODE
-#define PRIMARY_UART_DMA_MODE FALSE
-
-#undef TS_UART_DEVICE
-//#define TS_UART_DEVICE (&UARTD3)
-
-#undef EFI_CONSOLE_UART_DEVICE
 
 #undef BOARD_TLE6240_COUNT
 #undef BOARD_MC33972_COUNT

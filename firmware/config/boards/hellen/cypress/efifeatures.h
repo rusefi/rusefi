@@ -45,10 +45,6 @@
 
 //#define EFI_UART_ECHO_TEST_MODE FALSE
 
-//#define EFI_USE_UART_FOR_CONSOLE FALSE
-
-#define EFI_CONSOLE_NO_THREAD
-
 /**
  * Build-in logic analyzer support. Logic analyzer viewer is one of the java console panes.
  */
@@ -283,20 +279,18 @@
  *  STM32_UART_USE_USARTx
  * in mcuconf.h
  */
-#define TS_UART_DMA_MODE FALSE
-#define TS_UART_MODE FALSE
-#define PRIMARY_UART_DMA_MODE FALSE
+#define EFI_USE_UART_DMA FALSE
 
-#undef TS_UART_DEVICE
-#undef TS_SERIAL_DEVICE
+#undef TS_SECONDARY_UART
+#undef TS_SECONDARY_SERIAL
 
 // todo: add CAN support
 //#define TS_CAN_DEVICE CAND1
 #define TS_CAN_AF PAL_MODE_ALTERNATIVE_CAN
 #define TS_CAN_DEVICE_SHORT_PACKETS_IN_ONE_FRAME
 
-#undef EFI_CONSOLE_SERIAL_DEVICE
-#undef EFI_CONSOLE_UART_DEVICE
+#undef TS_PRIMARY_SERIAL
+#undef TS_PRIMARY_UART
 
 #define EFI_USB_SERIAL TRUE
 #define EFI_CONSOLE_USB_DEVICE SDU1

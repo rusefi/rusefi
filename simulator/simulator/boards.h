@@ -13,12 +13,12 @@
 // see SIM_SD1_PORT
 #define CONSOLE_PORT (&SD1)
 // see SIM_SD2_PORT
-#define TS_SIMULATOR_PORT (&SD2)
+#define TS_PRIMARY_SERIAL SD2
 
 /**
  * This implementation writes to both windows console and console port
  */
-#define EFI_CONSOLE_SERIAL_DEVICE (&serialAdapterInstance)
+#define TS_PRIMARY_SERIAL (&serialAdapterInstance)
 
 int getAdcValue(const char *msg, int channel);
 #define getSlowAdcCounter() 0

@@ -347,41 +347,15 @@
  *  PE5
  */
 
-
-// todo: start using consoleUartDevice? Not sure
-#ifndef EFI_CONSOLE_SERIAL_DEVICE
-//#define EFI_CONSOLE_SERIAL_DEVICE (&SD3)
+// allow override of EFI_USE_UART_DMA from cmdline passed defs
+#ifndef EFI_USE_UART_DMA
+#define EFI_USE_UART_DMA TRUE
 #endif
 
-/**
- * Use 'HAL_USE_UART' DMA-mode driver instead of 'HAL_USE_SERIAL'
- *
- * See also
- *  STM32_SERIAL_USE_USARTx
- *  STM32_UART_USE_USARTx
- * in mcuconf.h
- */
-#ifndef TS_UART_DMA_MODE
-#define TS_UART_DMA_MODE FALSE
-#endif
-
-#ifndef PRIMARY_UART_DMA_MODE
-#define PRIMARY_UART_DMA_MODE TRUE
-#endif
-
-#if (PRIMARY_UART_DMA_MODE || TS_UART_DMA_MODE || TS_UART_MODE)
-#define EFI_CONSOLE_UART_DEVICE (&UARTD3)
-#endif
-
-//#define TS_UART_DEVICE (&UARTD3)
-//#define TS_SERIAL_DEVICE (&SD3)
+#define TS_PRIMARY_UART UARTD3
+#undef TS_SECONDARY_UART
 
 #define AUX_SERIAL_DEVICE (&SD6)
-
-// todo: add DMA-mode for Console?
-#if (TS_UART_DMA_MODE || TS_UART_MODE)
-#undef EFI_CONSOLE_SERIAL_DEVICE
-#endif
 
 // todo: start using consoleSerialTxPin? Not sure
 #ifndef EFI_CONSOLE_TX_BRAIN_PIN
