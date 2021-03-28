@@ -173,6 +173,7 @@ CPPSRC = $(ALLCPPSRC) \
 	$(TUNERSTUDIO_SRC_CPP) \
 	$(CONSOLE_SRC_CPP) \
 	$(PROJECT_DIR)/console/binary/tunerstudio_io.cpp \
+	$(PROJECT_DIR)/console/binary/tunerstudio_io_serial.cpp \
 	$(PROJECT_DIR)/controllers/system/efi_gpio.cpp \
 	$(PROJECT_DIR)/controllers/algo/engine_configuration.cpp \
 	$(PROJECT_DIR)/controllers/persistent_store.cpp \

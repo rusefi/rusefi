@@ -21,7 +21,6 @@ extern "C"
 LoggingWithStorage tsLogger("binary");
 static bool wasCommand = false;
 
-
 static THD_WORKING_AREA(waBootloaderSerial, 128);
 static THD_FUNCTION(thBootloaderSerial, arg) {
    	(void)arg;
@@ -45,8 +44,8 @@ int main(void) {
 */
 
 	// start UART
-	startTsPort(getTsChannel());
-	
+	getTsChannel()->start(38400);	// TODO: should bootloader serial speed be configurable?
+
 	// start a serial port reader thread
 	thread_t *thrSerial = chThdCreateStatic(waBootloaderSerial, sizeof(waBootloaderSerial), NORMALPRIO, thBootloaderSerial, NULL);
 	
