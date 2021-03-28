@@ -883,7 +883,6 @@
 #define ignitionIatCorrTable_offset 12804
 #define ignitionLoadBins_offset 17284
 #define ignitionMode_offset 440
-#define ignitionOffset_offset 444
 #define ignitionPinMode_offset 649
 #define ignitionPins10_offset 645
 #define ignitionPins11_offset 646
@@ -1231,8 +1230,8 @@
 #define showHumanReadableWarning_offset 976
 #define showSdCardWarning_offset 76
 #define SIGNATURE_BOARD kin
-#define SIGNATURE_DATE 2021.03.27
-#define SIGNATURE_HASH 1071868949
+#define SIGNATURE_DATE 2021.03.28
+#define SIGNATURE_HASH 249597379
 #define silentTriggerError_offset 1464
 #define slowAdcAlpha_offset 2088
 #define sparkDwellRpmBins_offset 332
@@ -1567,7 +1566,7 @@
 #define ts_show_spi true
 #define ts_show_trigger_comparator true
 #define ts_show_tunerstudio_port true
-#define TS_SIGNATURE "rusEFI 2021.03.27.kin.1071868949"
+#define TS_SIGNATURE "rusEFI 2021.03.28.kin.249597379"
 #define TS_SINGLE_WRITE_COMMAND 'W'
 #define TS_SINGLE_WRITE_COMMAND_char W
 #define TS_TEST_COMMAND 't' // 0x74
@@ -1697,6 +1696,7 @@
 #define unusedBit_490_9_offset 2116
 #define unusedHereWeHave_offset 1464
 #define unusedOldBiquad_offset 2322
+#define unusedOldIgnitionOffset_offset 444
 #define unusedSpiPadding4_offset 2585
 #define unusedSpiPadding5_offset 2687
 #define unusedSpiPadding8_offset 3982

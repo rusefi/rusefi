@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Sat Mar 27 23:02:01 UTC 2021
+// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Sun Mar 28 12:08:45 UTC 2021
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -874,7 +874,6 @@ public class Fields {
 	public static final int ignitionIatCorrTable_offset = 12832;
 	public static final int ignitionLoadBins_offset = 17312;
 	public static final int ignitionMode_offset = 440;
-	public static final int ignitionOffset_offset = 444;
 	public static final int ignitionPinMode_offset = 649;
 	public static final int ignitionPins10_offset = 645;
 	public static final int ignitionPins11_offset = 646;
@@ -1482,7 +1481,7 @@ public class Fields {
 	public static final char TS_SD_R_COMMAND = 'r';
 	public static final char TS_SD_W_COMMAND = 'w';
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI 2021.03.27.all.2184870713";
+	public static final String TS_SIGNATURE = "rusEFI 2021.03.28.all.3006896879";
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final int TT_TT_1_16 = 50;
 	public static final int TT_TT_2JZ_1_12 = 29;
@@ -1609,6 +1608,7 @@ public class Fields {
 	public static final int unusedBit_490_9_offset = 2116;
 	public static final int unusedHereWeHave_offset = 1464;
 	public static final int unusedOldBiquad_offset = 2330;
+	public static final int unusedOldIgnitionOffset_offset = 444;
 	public static final int unusedSpiPadding4_offset = 2593;
 	public static final int unusedSpiPadding5_offset = 2715;
 	public static final int unusedSpiPadding8_offset = 4010;
@@ -1770,7 +1770,7 @@ public class Fields {
 	public static final Field EXTRAINJECTIONOFFSET = Field.create("EXTRAINJECTIONOFFSET", 432, FieldType.FLOAT);
 	public static final Field CRANKINGTIMINGANGLE = Field.create("CRANKINGTIMINGANGLE", 436, FieldType.FLOAT);
 	public static final Field IGNITIONMODE = Field.create("IGNITIONMODE", 440, FieldType.INT);
-	public static final Field IGNITIONOFFSET = Field.create("IGNITIONOFFSET", 444, FieldType.FLOAT);
+	public static final Field UNUSEDOLDIGNITIONOFFSET = Field.create("UNUSEDOLDIGNITIONOFFSET", 444, FieldType.FLOAT);
 	public static final Field TIMINGMODE = Field.create("TIMINGMODE", 448, FieldType.INT);
 	public static final Field FIXEDMODETIMING = Field.create("FIXEDMODETIMING", 452, FieldType.FLOAT);
 	public static final Field GLOBALTRIGGERANGLEOFFSET = Field.create("GLOBALTRIGGERANGLEOFFSET", 456, FieldType.FLOAT);
@@ -2853,7 +2853,7 @@ public class Fields {
 	EXTRAINJECTIONOFFSET,
 	CRANKINGTIMINGANGLE,
 	IGNITIONMODE,
-	IGNITIONOFFSET,
+	UNUSEDOLDIGNITIONOFFSET,
 	TIMINGMODE,
 	FIXEDMODETIMING,
 	GLOBALTRIGGERANGLEOFFSET,
