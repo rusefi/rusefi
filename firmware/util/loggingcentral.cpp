@@ -116,7 +116,7 @@ chibios_rt::Mailbox<LogLineBuffer*, lineBufferCount> filledBuffers;
 
 class LoggingBufferFlusher : public ThreadController<256> {
 public:
-	LoggingBufferFlusher() : ThreadController("lbf", PRIO_TEXT_LOG) { }
+	LoggingBufferFlusher() : ThreadController("log flush", PRIO_TEXT_LOG) { }
 
 	void ThreadTask() override {
 		while (true) {
