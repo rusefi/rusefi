@@ -67,7 +67,7 @@ static NamedOutputPin intHold(PROTOCOL_HIP_NAME);
 static NamedOutputPin Cs(PROTOCOL_HIP_NAME);
 
 class Hip9011Hardware : public Hip9011HardwareInterface {
-	int sendSyncCommand(uint8_t command) override;
+	int sendSyncCommand(uint8_t command, uint8_t *rx_ptr) override;
 };
 
 /* TODO: include following stuff in object */
@@ -81,9 +81,6 @@ static Hip9011Hardware hardware;
 static float hipValueMax = 0;
 
 HIP9011 instance(&hardware);
-
-static uint8_t tx_buff[1];
-static uint8_t rx_buff[1];
 
 static scheduling_s endTimer;
 
@@ -120,8 +117,9 @@ static void hip_addconsoleActions(void);
 /* Local functions.															*/
 /*==========================================================================*/
 
-static int checkResponse(void) {
-	if (tx_buff[0] == rx_buff[0]) {
+static int checkResponse(uint8_t tx, uint8_t rx) {
+	/* TODO: implement response check for Advanced SPI mode too */
+	if (tx == rx) {
 		instance.correctResponsesCount++;
 		return 0;
 	} else {
@@ -130,8 +128,9 @@ static int checkResponse(void) {
 	}
 }
 
-int Hip9011Hardware::sendSyncCommand(uint8_t command) {
+int Hip9011Hardware::sendSyncCommand(uint8_t tx, uint8_t *rx_ptr) {
 	int ret;
+	uint8_t rx;
 
 	/* Acquire ownership of the bus. */
 	spiAcquireBus(spi);
@@ -140,19 +139,25 @@ int Hip9011Hardware::sendSyncCommand(uint8_t command) {
 	/* Slave Select assertion. */
 	spiSelect(spi);
 	/* Transfer */
-	tx_buff[0] = command;
-	//spiExchange(spi, 1, tx_buff, rx_buff);
-	rx_buff[0] = spiPolledExchange(spi, tx_buff[0]);
+	rx = spiPolledExchange(spi, tx);
 	/* Slave Select de-assertion. */
 	spiUnselect(spi);
 	/* Ownership release. */
 	spiReleaseBus(spi);
 	/* check response */
-	ret = checkResponse();
-	/* ??? */
-	chThdSleepMilliseconds(10);
+	if (instance.adv_mode == false) {
+		/* only default SPI mode SDO is directly equals the SDI (echo function) */
+		ret = checkResponse(tx, rx);
 
-	return ret;
+		if (ret)
+			return ret;
+	}
+
+	if (rx_ptr) {
+		*rx_ptr = rx;
+	}
+
+	return 0;
 }
 
 EXTERN_ENGINE;
@@ -233,23 +238,23 @@ void hipAdcCallback(adcsample_t adcValue) {
 static int hip_init(void) {
 	int ret;
 
-	ret = instance.hw->sendSyncCommand(SET_PRESCALER_CMD(instance.currentPrescaler));
+	ret = instance.hw->sendSyncCommand(SET_PRESCALER_CMD(instance.currentPrescaler), NULL);
 	if (ret)
 		return ret;
 
 	// '0' for channel #1
-	ret = instance.hw->sendSyncCommand(SET_CHANNEL_CMD(0));
+	ret = instance.hw->sendSyncCommand(SET_CHANNEL_CMD(0), NULL);
 	if (ret)
 		return ret;
 
 	// band index depends on cylinder bore
-	ret = instance.hw->sendSyncCommand(SET_BAND_PASS_CMD(instance.currentBandIndex));
+	ret = instance.hw->sendSyncCommand(SET_BAND_PASS_CMD(instance.currentBandIndex), NULL);
 	if (ret)
 		return ret;
 
 	if (CONFIG(useTpicAdvancedMode)) {
 		// enable advanced mode for digital integrator output
-		ret = instance.hw->sendSyncCommand(SET_ADVANCED_MODE_CMD);
+		ret = instance.hw->sendSyncCommand(SET_ADVANCED_MODE_CMD, NULL);
 		if (ret)
 			return ret;
 		instance.adv_mode = true;

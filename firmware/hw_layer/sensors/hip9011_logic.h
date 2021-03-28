@@ -18,7 +18,7 @@
  */
 class Hip9011HardwareInterface {
 public:
-	virtual int sendSyncCommand(unsigned char command) = 0;
+	virtual int sendSyncCommand(unsigned char command, uint8_t *rx_ptr) = 0;
 };
 
 #if EFI_PROD_CODE || EFI_SIMULATOR
@@ -64,18 +64,17 @@ public:
 	void setAngleWindowWidth(DEFINE_HIP_PARAMS);
 	void handleSettings(int rpm DEFINE_PARAM_SUFFIX(DEFINE_HIP_PARAMS));
 
-	/**
-	 * band index is only send to HIP chip on startup
-	 */
+	/* Settings loaded to chip */
+	int currentIntergratorIndex = -1;
 	int currentBandIndex = 0;
+	int currentPrescaler = 0;
 	int currentGainIndex = -1;
+
 	int correctResponsesCount = 0;
 	int invalidHip9011ResponsesCount = 0;
 	float angleWindowWidth = - 1;
 
-	int currentIntergratorIndex = -1;
 	int totalKnockEventsCount = 0;
-	int currentPrescaler = 0;
 	Hip9011HardwareInterface *hw;
 	bool adv_mode = false;
 	/**

@@ -15,7 +15,7 @@ HIP9011::HIP9011(Hip9011HardwareInterface *hardware) : rpmLookup() {
 }
 
 int HIP9011::sendCommand(uint8_t cmd) {
-	return hardware->sendSyncCommand(cmd);
+	return hw->sendSyncCommand(cmd, NULL);
 }
 
 /**
