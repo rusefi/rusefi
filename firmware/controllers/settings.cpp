@@ -185,7 +185,6 @@ void printConfiguration(const engine_configuration_s *engineConfiguration) {
 	if (engineConfiguration->timingMode == TM_FIXED) {
 		scheduleMsg(&logger, "fixedModeTiming: %d", (int) engineConfiguration->fixedModeTiming);
 	}
-	scheduleMsg(&logger, "ignitionOffset=%.2f", engineConfiguration->ignitionOffset);
 
 	scheduleMsg(&logger, "=== injection ===");
 	scheduleMsg(&logger, "injection %s offset=%.2f/enabled=%s", getInjection_mode_e(engineConfiguration->injectionMode),
@@ -274,12 +273,6 @@ static void setIdlePinMode(int value) {
 
 static void setInjectionOffset(float value) {
 	engineConfiguration->extraInjectionOffset = value;
-	doPrintConfiguration();
-	incrementGlobalConfigurationVersion(PASS_ENGINE_PARAMETER_SIGNATURE);
-}
-
-static void setIgnitionOffset(float value) {
-	engineConfiguration->ignitionOffset = value;
 	doPrintConfiguration();
 	incrementGlobalConfigurationVersion(PASS_ENGINE_PARAMETER_SIGNATURE);
 }
@@ -1010,7 +1003,6 @@ const plain_get_float_s getF_plain[] = {
 		{"adcVcc", &engineConfiguration->adcVcc},
 		{"cranking_dwell", &engineConfiguration->ignitionDwellForCrankingMs},
 		{"idle_position", &engineConfiguration->manIdlePosition},
-		{"ignition_offset", &engineConfiguration->ignitionOffset},
 		{"injection_offset", &engineConfiguration->extraInjectionOffset},
 		{"global_trigger_offset_angle", &engineConfiguration->globalTriggerAngleOffset},
 		{"global_fuel_correction", &engineConfiguration->globalFuelCorrection},
@@ -1118,7 +1110,6 @@ const command_f_s commandsF[] = {
 		{MOCK_MAP_COMMAND, setMockMapVoltage},
 		{MOCK_CLT_COMMAND, setMockCltVoltage},
 #endif // EFI_ENABLE_MOCK_ADC
-		{"ignition_offset", setIgnitionOffset},
 		{"injection_offset", setInjectionOffset},
 		{"global_trigger_offset_angle", setGlobalTriggerAngleOffset},
 		{"global_fuel_correction", setGlobalFuelCorrection},

@@ -48,7 +48,6 @@ void setFordInline6(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	engineConfiguration->trigger.customSkippedToothCount = 0;
 
 	engineConfiguration->globalTriggerAngleOffset = 0;
-	engineConfiguration->ignitionOffset = 13;
 	engineConfiguration->extraInjectionOffset = 207.269999;
 
 	engineConfiguration->clt.config = {-10, 60, 120, 160310, 7700, 1180, 2700};
