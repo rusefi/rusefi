@@ -63,5 +63,8 @@ void resetConfigurationExt(Logging * logger, configuration_callback_t boardCallb
 void resetConfigurationExt(Logging * logger, engine_type_e engineType DECLARE_ENGINE_PARAMETER_SUFFIX);
 #endif /* __cplusplus */
 
+void setBoardDefaultConfiguration(void);
+void setBoardConfigOverrides(void);
+
 // TODO: remove me
 #define CONFIG_OVERRIDE(__x__) CONFIG(__x__)
