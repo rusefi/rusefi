@@ -1,12 +1,11 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Sun Mar 28 12:08:45 UTC 2021
+// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Sun Mar 28 12:40:35 UTC 2021
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
 
 public class Fields {
-	public static final int absoluteFuelPressure_offset = 76;
 	public static final int accelerometerSpiDevice_offset = 2712;
 	public static final int acCutoffHighRpm_offset = 1494;
 	public static final int acCutoffLowRpm_offset = 1492;
@@ -609,7 +608,6 @@ public class Fields {
 	public static final int fuelLevelValues_offset = 684;
 	public static final int fuelPumpPin_offset = 658;
 	public static final int fuelPumpPinMode_offset = 659;
-	public static final int fuelRailPressure_offset = 1756;
 	public static final int fuelReferencePressure_offset = 2420;
 	public static final String GAUGE_COIL_DWELL_TIME = "dwell: coil charge time";
 	public static final String GAUGE_NAME_ACCEL_X = "Acceleration: X";
@@ -1481,7 +1479,7 @@ public class Fields {
 	public static final char TS_SD_R_COMMAND = 'r';
 	public static final char TS_SD_W_COMMAND = 'w';
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI 2021.03.28.all.3006896879";
+	public static final String TS_SIGNATURE = "rusEFI 2021.03.28.all.3974396767";
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final int TT_TT_1_16 = 50;
 	public static final int TT_TT_2JZ_1_12 = 29;
@@ -1544,6 +1542,7 @@ public class Fields {
 	public static final int unused1476b8_offset = 1476;
 	public static final int unused15136_offset = 16032;
 	public static final int unused1708_offset = 1708;
+	public static final int unused1756_offset = 1756;
 	public static final int unused2260_offset = 2260;
 	public static final int unused2419_offset = 2419;
 	public static final int unused2432_offset = 2432;
@@ -1558,6 +1557,7 @@ public class Fields {
 	public static final int unused542_offset = 542;
 	public static final int unused6312_offset = 6312;
 	public static final int unused744b4_offset = 744;
+	public static final int unused76b19_offset = 76;
 	public static final int unused976b11_offset = 976;
 	public static final int unused_1484_bit_24_offset = 1476;
 	public static final int unused_1484_bit_25_offset = 1476;
@@ -1710,7 +1710,7 @@ public class Fields {
 	public static final Field USECICPIDFORIDLE = Field.create("USECICPIDFORIDLE", 76, FieldType.BIT, 16);
 	public static final Field USETLE8888_CRANKING_HACK = Field.create("USETLE8888_CRANKING_HACK", 76, FieldType.BIT, 17);
 	public static final Field USEINSTANTRPMFORIDLE = Field.create("USEINSTANTRPMFORIDLE", 76, FieldType.BIT, 18);
-	public static final Field ABSOLUTEFUELPRESSURE = Field.create("ABSOLUTEFUELPRESSURE", 76, FieldType.BIT, 19);
+	public static final Field UNUSED76B19 = Field.create("UNUSED76B19", 76, FieldType.BIT, 19);
 	public static final Field LAUNCHCONTROLENABLED = Field.create("LAUNCHCONTROLENABLED", 76, FieldType.BIT, 20);
 	public static final Field ROLLINGLAUNCHENABLED = Field.create("ROLLINGLAUNCHENABLED", 76, FieldType.BIT, 21);
 	public static final Field ANTILAGENABLED = Field.create("ANTILAGENABLED", 76, FieldType.BIT, 22);
@@ -2370,7 +2370,7 @@ public class Fields {
 	public static final Field ETB_PERIODMS = Field.create("ETB_PERIODMS", 1750, FieldType.INT16);
 	public static final Field ETB_MINVALUE = Field.create("ETB_MINVALUE", 1752, FieldType.INT16);
 	public static final Field ETB_MAXVALUE = Field.create("ETB_MAXVALUE", 1754, FieldType.INT16);
-	public static final Field FUELRAILPRESSURE = Field.create("FUELRAILPRESSURE", 1756, FieldType.FLOAT);
+	public static final Field UNUSED1756 = Field.create("UNUSED1756", 1756, FieldType.FLOAT);
 	public static final Field ALTERNATOR_DERIVATIVEFILTERLOSS = Field.create("ALTERNATOR_DERIVATIVEFILTERLOSS", 1760, FieldType.FLOAT);
 	public static final Field ALTERNATOR_ANTIWINDUPFREQ = Field.create("ALTERNATOR_ANTIWINDUPFREQ", 1764, FieldType.FLOAT);
 	public static final Field TPS2MIN = Field.create("TPS2MIN", 1768, FieldType.INT16);
@@ -2795,7 +2795,7 @@ public class Fields {
 	USECICPIDFORIDLE,
 	USETLE8888_CRANKING_HACK,
 	USEINSTANTRPMFORIDLE,
-	ABSOLUTEFUELPRESSURE,
+	UNUSED76B19,
 	LAUNCHCONTROLENABLED,
 	ROLLINGLAUNCHENABLED,
 	ANTILAGENABLED,
@@ -3441,7 +3441,7 @@ public class Fields {
 	ETB_PERIODMS,
 	ETB_MINVALUE,
 	ETB_MAXVALUE,
-	FUELRAILPRESSURE,
+	UNUSED1756,
 	ALTERNATOR_DERIVATIVEFILTERLOSS,
 	ALTERNATOR_ANTIWINDUPFREQ,
 	TPS2MIN,

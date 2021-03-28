@@ -2,7 +2,6 @@
 // was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt
 //
 
-#define absoluteFuelPressure_offset 76
 #define accelerometerSpiDevice_offset 2712
 #define acCutoffHighRpm_offset 1494
 #define acCutoffLowRpm_offset 1492
@@ -628,7 +627,6 @@
 #define fuelLevelValues_offset 684
 #define fuelPumpPin_offset 658
 #define fuelPumpPinMode_offset 659
-#define fuelRailPressure_offset 1756
 #define fuelReferencePressure_offset 2420
 #define GAUGE_COIL_DWELL_TIME "dwell: coil charge time"
 #define GAUGE_NAME_ACCEL_X "Acceleration: X"
@@ -1244,7 +1242,7 @@
 #define showSdCardWarning_offset 76
 #define SIGNATURE_BOARD all
 #define SIGNATURE_DATE 2021.03.28
-#define SIGNATURE_HASH 3006896879
+#define SIGNATURE_HASH 3974396767
 #define silentTriggerError_offset 1464
 #define slowAdcAlpha_offset 2088
 #define sparkDwellRpmBins_offset 332
@@ -1579,7 +1577,7 @@
 #define ts_show_spi true
 #define ts_show_trigger_comparator false
 #define ts_show_tunerstudio_port true
-#define TS_SIGNATURE "rusEFI 2021.03.28.all.3006896879"
+#define TS_SIGNATURE "rusEFI 2021.03.28.all.3974396767"
 #define TS_SINGLE_WRITE_COMMAND 'W'
 #define TS_SINGLE_WRITE_COMMAND_char W
 #define TS_TEST_COMMAND 't' // 0x74
@@ -1645,6 +1643,7 @@
 #define unused1476b8_offset 1476
 #define unused15136_offset 16032
 #define unused1708_offset 1708
+#define unused1756_offset 1756
 #define unused2260_offset 2260
 #define unused2419_offset 2419
 #define unused2432_offset 2432
@@ -1659,6 +1658,7 @@
 #define unused542_offset 542
 #define unused6312_offset 6312
 #define unused744b4_offset 744
+#define unused76b19_offset 76
 #define unused976b11_offset 976
 #define unused_1484_bit_24_offset 1476
 #define unused_1484_bit_25_offset 1476

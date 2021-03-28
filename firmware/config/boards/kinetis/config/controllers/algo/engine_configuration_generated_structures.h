@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Sun Mar 28 12:09:10 UTC 2021
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Sun Mar 28 12:40:58 UTC 2021
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -711,9 +711,8 @@ struct engine_configuration_s {
 	offset 76 bit 18 */
 	bool useInstantRpmForIdle : 1;
 	/**
-	 * If your fuel regulator does not have vacuum line
 	offset 76 bit 19 */
-	bool absoluteFuelPressure : 1;
+	bool unused76b19 : 1;
 	/**
 	offset 76 bit 20 */
 	bool launchControlEnabled : 1;
@@ -1746,14 +1745,17 @@ struct engine_configuration_s {
 	 */
 	pin_input_mode_e clutchUpPinMode;
 	/**
+	 * Disable multispark above this engine speed.
 	 * offset 972
 	 */
 	uint16_t multisparkMaxRpm;
 	/**
+	 * This parameter sets the latest that the last multispark can occur after the main ignition event. For example, if the ignition timing is 30 degrees BTDC, and this parameter is set to 45, no multispark will ever be fired after 15 degrees ATDC.
 	 * offset 974
 	 */
 	uint8_t multisparkMaxSparkingAngle;
 	/**
+	 * Configures the maximum number of extra sparks to fire (does not include main spark)
 	 * offset 975
 	 */
 	uint8_t multisparkMaxExtraSparkCount;
@@ -2386,7 +2388,7 @@ struct engine_configuration_s {
 	/**
 	 * offset 1756
 	 */
-	float fuelRailPressure;
+	float unused1756;
 	/**
 	 * offset 1760
 	 */
@@ -2437,10 +2439,12 @@ struct engine_configuration_s {
 	 */
 	float mapErrorDetectionTooHigh;
 	/**
+	 * How long to wait for the spark to fire before recharging the coil for another spark.
 	 * offset 1784
 	 */
 	uint16_t multisparkSparkDuration;
 	/**
+	 * This sets the dwell time for subsequent sparks. The main spark's dwell is set by the dwell table.
 	 * offset 1786
 	 */
 	uint16_t multisparkDwell;
@@ -3857,4 +3861,4 @@ struct persistent_config_s {
 typedef struct persistent_config_s persistent_config_s;
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Sun Mar 28 12:09:10 UTC 2021
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Sun Mar 28 12:40:58 UTC 2021
