@@ -56,6 +56,8 @@ static LENameOrdinalPair leFan(LE_METHOD_FAN, "fan");
 static LENameOrdinalPair leCoolant(LE_METHOD_COOLANT, "coolant");
 static LENameOrdinalPair leIntakeTemp(LE_METHOD_INTAKE_AIR, "iat");
 static LENameOrdinalPair leIsCoolantBroken(LE_METHOD_IS_COOLANT_BROKEN, "is_clt_broken");
+static LENameOrdinalPair leOilPressure(LE_METHOD_OIL_PRESSURE, "oilp");
+
 // @returns boolean state of A/C toggle switch
 static LENameOrdinalPair leAcToggle(LE_METHOD_AC_TOGGLE, "ac_on_switch");
 // @returns float number of seconds since last A/C toggle
@@ -73,6 +75,7 @@ static LENameOrdinalPair leStartupFuelPumpDuration(LE_METHOD_STARTUP_FUEL_PUMP_D
 static LENameOrdinalPair leInShutdown(LE_METHOD_IN_SHUTDOWN, "in_shutdown");
 static LENameOrdinalPair leInMrBench(LE_METHOD_IN_MR_BENCH, "in_mr_bench");
 static LENameOrdinalPair leTimeSinceTrigger(LE_METHOD_TIME_SINCE_TRIGGER_EVENT, "time_since_trigger");
+static LENameOrdinalPair leFuelRate(LE_METHOD_FUEL_FLOW_RATE, "fuel_flow");
 
 #include "fsio_names.def"
 
@@ -165,6 +168,10 @@ FsioResult getEngineValue(le_action_e action DECLARE_ENGINE_PARAMETER_SUFFIX) {
 		return Sensor::get(SensorType::BatteryVoltage).value_or(0);
 	case LE_METHOD_TPS:
 		return Sensor::get(SensorType::DriverThrottleIntent).value_or(0);
+	case LE_METHOD_FUEL_FLOW_RATE:
+		return engine->engineState.fuelConsumption.getConsumptionGramPerSecond();
+	case LE_METHOD_OIL_PRESSURE:
+		return Sensor::get(SensorType::OilPressure).value_or(0);
 	// cfg_xxx references are code generated
 #include "fsio_getters.def"
 	default:
