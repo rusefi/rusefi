@@ -9,9 +9,13 @@
 
 #include "efifeatures.h"
 #include "rusefi_enums.h"
-#include "hip9011_lookup.h"
 
+#define PIF						3.14159f
 #define HIP9011_BAND(bore) (900 / (PIF * (bore) / 2))
+
+#define INT_LOOKUP_SIZE 		32
+#define GAIN_LOOKUP_SIZE 		64
+#define BAND_LOOKUP_SIZE 		64
 
 /**
  * this interface defines hardware communication layer for HIP9011 chip

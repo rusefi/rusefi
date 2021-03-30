@@ -9,16 +9,3 @@
 
 #include "engine.h"
 
-#define INT_LOOKUP_SIZE 32
-#define GAIN_LOOKUP_SIZE 64
-#define BAND_LOOKUP_SIZE 64
-
-#define PIF 3.14159f
-#define DESIRED_OUTPUT_VALUE 5.0f
-
-extern const int integratorValues[INT_LOOKUP_SIZE];
-extern const float gainLookupInReverseOrder[GAIN_LOOKUP_SIZE];
-extern const float bandFreqLookup[BAND_LOOKUP_SIZE];
-
-extern float rpmLookup[INT_LOOKUP_SIZE];
-
