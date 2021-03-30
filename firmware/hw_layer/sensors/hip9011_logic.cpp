@@ -23,7 +23,7 @@ int HIP9011::sendCommand(uint8_t cmd) {
  */
 float HIP9011::getBand(DEFINE_HIP_PARAMS) {
 	return GET_CONFIG_VALUE(knockBandCustom) == 0 ?
-			BAND(GET_CONFIG_VALUE(cylinderBore)) :
+			HIP9011_BAND(GET_CONFIG_VALUE(cylinderBore)) :
 			GET_CONFIG_VALUE(knockBandCustom);
 }
 

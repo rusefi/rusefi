@@ -11,7 +11,7 @@
 #include "rusefi_enums.h"
 #include "hip9011_lookup.h"
 
-#define BAND(bore) (900 / (PIF * (bore) / 2))
+#define HIP9011_BAND(bore) (900 / (PIF * (bore) / 2))
 
 /**
  * this interface defines hardware communication layer for HIP9011 chip
