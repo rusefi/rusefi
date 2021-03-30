@@ -152,7 +152,7 @@ engine_configuration_s & activeConfiguration = activeConfigurationLocalStorage;
 
 extern engine_configuration_s *engineConfiguration;
 
-static void rememberCurrentConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+void rememberCurrentConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 #if ! EFI_ACTIVE_CONFIGURATION_IN_FLASH
 	memcpy(&activeConfiguration, engineConfiguration, sizeof(engine_configuration_s));
 #else
@@ -1144,6 +1144,11 @@ void loadConfiguration(Logging* logger DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	palSetPadMode(CONFIG_RESET_SWITCH_PORT, CONFIG_RESET_SWITCH_PIN, PAL_MODE_INPUT_PULLUP);
 #endif /* CONFIG_RESET_SWITCH_PORT */
 
+#if ! EFI_ACTIVE_CONFIGURATION_IN_FLASH
+	// Clear the active configuration so that registered output pins (etc) detect the change on startup and init properly
+	prepareVoidConfiguration(&activeConfiguration);
+#endif /* EFI_ACTIVE_CONFIGURATION_IN_FLASH */
+
 #if EFI_INTERNAL_FLASH
 	if (SHOULD_IGNORE_FLASH() || IGNORE_FLASH_CONFIGURATION) {
 		engineConfiguration->engineType = DEFAULT_ENGINE_TYPE;
@@ -1159,8 +1164,6 @@ void loadConfiguration(Logging* logger DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	engineConfiguration->engineType = DEFAULT_ENGINE_TYPE;
 	resetConfigurationExt(logger, engineConfiguration->engineType PASS_ENGINE_PARAMETER_SUFFIX);
 #endif /* EFI_INTERNAL_FLASH */
-
-	rememberCurrentConfiguration(PASS_ENGINE_PARAMETER_SIGNATURE);
 }
 
 void resetConfigurationExt(Logging * logger, configuration_callback_t boardCallback, engine_type_e engineType DECLARE_ENGINE_PARAMETER_SUFFIX) {
