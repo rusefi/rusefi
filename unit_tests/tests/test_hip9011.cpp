@@ -23,6 +23,7 @@ TEST(hip9011, lookup) {
 	EXPECT_EQ(0, instance.getGainIndex(/* knockBandCustom*/NAN, /*cylinderBore*/NAN, /*hip9011Gain*/2, 0, NAN, NAN));
 	EXPECT_EQ(47, instance.getGainIndex(/* knockBandCustom*/NAN, /*cylinderBore*/NAN, /*hip9011Gain*/0.234, 0, NAN, NAN));
 	EXPECT_EQ(63, instance.getGainIndex(/* knockBandCustom*/NAN, /*cylinderBore*/NAN, /*hip9011Gain*/0.000001, 0, NAN, NAN));
+	EXPECT_EQ(63, instance.getGainIndex(/* knockBandCustom*/NAN, /*cylinderBore*/NAN, /*hip9011Gain*/-1.0, 0, NAN, NAN));
 
 }
 

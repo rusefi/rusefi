@@ -80,13 +80,24 @@ float HIP9011::getBand(DEFINE_HIP_PARAMS) {
 
 int HIP9011::getBandIndex(DEFINE_HIP_PARAMS) {
 	float freq = getBand(FORWARD_HIP_PARAMS);
-	return findIndexMsg("freq", bandFreqLookup, BAND_LOOKUP_SIZE, freq);
+	int i = findIndexMsg("freq", bandFreqLookup, BAND_LOOKUP_SIZE, freq);
+	if (i < 0)
+		i = 0;
+	if (i > BAND_LOOKUP_SIZE - 1)
+		i = BAND_LOOKUP_SIZE - 1;
+
+	return i;
 }
 
 int HIP9011::getGainIndex(DEFINE_HIP_PARAMS) {
-	int i = GAIN_LOOKUP_SIZE - 1 - findIndexMsg("fGain", gainLookupInReverseOrder, GAIN_LOOKUP_SIZE, GET_CONFIG_VALUE(hip9011Gain));
-	// GAIN_LOOKUP_SIZE is returned for index which is too low
-	return i == GAIN_LOOKUP_SIZE ? GAIN_LOOKUP_SIZE - 1 : i;
+	int i = findIndexMsg("fGain", gainLookupInReverseOrder, GAIN_LOOKUP_SIZE, GET_CONFIG_VALUE(hip9011Gain));
+	if (i < 0)
+		i = 0;
+	if (i > GAIN_LOOKUP_SIZE - 1)
+		i = GAIN_LOOKUP_SIZE - 1;
+
+	/* reverse order */
+	return GAIN_LOOKUP_SIZE - 1 - i;
 }
 
 /**
