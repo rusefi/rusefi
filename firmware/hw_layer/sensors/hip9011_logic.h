@@ -89,7 +89,7 @@ public:
 	 */
 	hip_state_e state;
 	uint8_t cylinderNumber;
-	adcsample_t raw_value;
+	int raw_value;
 
 	/* error counters */
 	int overrun = 0;
