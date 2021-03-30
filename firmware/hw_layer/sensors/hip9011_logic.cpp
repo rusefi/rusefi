@@ -29,13 +29,30 @@ float HIP9011::getBand(DEFINE_HIP_PARAMS) {
 
 int HIP9011::getBandIndex(DEFINE_HIP_PARAMS) {
 	float freq = getBand(FORWARD_HIP_PARAMS);
-	return getHip9011BandIndex(freq);
+	return findIndexMsg("freq", bandFreqLookup, BAND_LOOKUP_SIZE, freq);
 }
 
 int HIP9011::getGainIndex(DEFINE_HIP_PARAMS) {
-	int i = GAIN_INDEX(GET_CONFIG_VALUE(hip9011Gain));
+	int i = GAIN_LOOKUP_SIZE - 1 - findIndexMsg("fGain", gainLookupInReverseOrder, GAIN_LOOKUP_SIZE, GET_CONFIG_VALUE(hip9011Gain));
 	// GAIN_LOOKUP_SIZE is returned for index which is too low
 	return i == GAIN_LOOKUP_SIZE ? GAIN_LOOKUP_SIZE - 1 : i;
+}
+
+/**
+ * 'TC is typically TINT/(2*Pi*VOUT)'
+ * Knock Sensor Training TPIC8101, page 24
+ */
+float HIP9011::getRpmByAngleWindowAndTimeUs(int timeUs, float angleWindowWidth) {
+	/**
+	 * TINT = TC * 2 * PI * VOUT
+	 */
+	float integrationTimeUs = timeUs * 2 * PIF * DESIRED_OUTPUT_VALUE;
+	/**
+	 * rpm = 60 seconds / time
+	 * '60000000' because revolutions per MINUTE in uS conversion
+	 */
+	float windowWidthMult = angleWindowWidth / 360.0f;
+	return 60000000.0f / integrationTimeUs * windowWidthMult;
 }
 
 /**

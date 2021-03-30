@@ -5,7 +5,6 @@
  */
 
 #include "unit_test_framework.h"
-#include "hip9011_lookup.h"
 #include "hip9011_logic.h"
 #include "test_parameters.h"
 using ::testing::_;
@@ -13,12 +12,12 @@ using ::testing::_;
 TEST(hip9011, lookup) {
 	HIP9011 instance(NULL);
 
-	assertEqualsM2("", 3183.1013, getRpmByAngleWindowAndTimeUs(600, 360), 0.1);
-	assertEqualsM2("40us", 47746.5195, getRpmByAngleWindowAndTimeUs(40, 360), 0.1);
+	assertEqualsM2("", 3183.1013, instance.getRpmByAngleWindowAndTimeUs(600, 360), 0.1);
+	assertEqualsM2("40us", 47746.5195, instance.getRpmByAngleWindowAndTimeUs(40, 360), 0.1);
 
-	assertEqualsM2("600us 50 degree", 442.0974, getRpmByAngleWindowAndTimeUs(600, 50), 0.1);
-	assertEqualsM2("240us 50 degree", 1105.2435, getRpmByAngleWindowAndTimeUs(240, 50), 0.1);
-	assertEqualsM2("240us 50 degree", 6631.4619, getRpmByAngleWindowAndTimeUs(40, 50), 0.1);
+	assertEqualsM2("600us 50 degree", 442.0974, instance.getRpmByAngleWindowAndTimeUs(600, 50), 0.1);
+	assertEqualsM2("240us 50 degree", 1105.2435, instance.getRpmByAngleWindowAndTimeUs(240, 50), 0.1);
+	assertEqualsM2("240us 50 degree", 6631.4619, instance.getRpmByAngleWindowAndTimeUs(40, 50), 0.1);
 
 	EXPECT_EQ(0, instance.getGainIndex(/* knockBandCustom*/NAN, /*cylinderBore*/NAN, /*hip9011Gain*/3, 0, NAN, NAN));
 	EXPECT_EQ(0, instance.getGainIndex(/* knockBandCustom*/NAN, /*cylinderBore*/NAN, /*hip9011Gain*/2, 0, NAN, NAN));

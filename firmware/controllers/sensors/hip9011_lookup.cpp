@@ -41,30 +41,6 @@ const float bandFreqLookup[BAND_LOOKUP_SIZE] = {
 /* 56 */13.72, 14.36, 15.07, 15.84, 16.71, 17.67, 18.76, 19.98
 };
 
-/**
- * 'TC is typically TINT/(2*Pi*VOUT)'
- * Knock Sensor Training TPIC8101, page 24
- */
-float getRpmByAngleWindowAndTimeUs(int timeUs, float angleWindowWidth) {
-	/**
-	 * TINT = TC * 2 * PI * VOUT
-	 */
-	float integrationTimeUs = timeUs * 2 * PIF * DESIRED_OUTPUT_VALUE;
-	/**
-	 * rpm = 60 seconds / time
-	 * '60000000' because revolutions per MINUTE in uS conversion
-	 */
-	float windowWidthMult = angleWindowWidth / 360.0f;
-	return 60000000.0f / integrationTimeUs * windowWidthMult;
-}
-
-/**
- * @param frequency knock frequency, in kHz
- */
-int getHip9011BandIndex(float frequency) {
-	return findIndexMsg("freq", bandFreqLookup, BAND_LOOKUP_SIZE, frequency);
-}
-
 EXTERN_ENGINE;
 
 void initEngineNoiseTable(DECLARE_ENGINE_PARAMETER_SIGNATURE) {

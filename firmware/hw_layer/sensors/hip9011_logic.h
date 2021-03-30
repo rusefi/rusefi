@@ -60,6 +60,7 @@ public:
 	explicit HIP9011(Hip9011HardwareInterface *hardware);
 	int sendCommand(uint8_t cmd);
 
+	float getRpmByAngleWindowAndTimeUs(int timeUs, float angleWindowWidth);
 	void prepareRpmLookup(void);
 	void setAngleWindowWidth(DEFINE_HIP_PARAMS);
 	void handleSettings(int rpm DEFINE_PARAM_SUFFIX(DEFINE_HIP_PARAMS));

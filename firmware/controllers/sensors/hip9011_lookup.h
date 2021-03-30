@@ -20,12 +20,6 @@ extern const int integratorValues[INT_LOOKUP_SIZE];
 extern const float gainLookupInReverseOrder[GAIN_LOOKUP_SIZE];
 extern const float bandFreqLookup[BAND_LOOKUP_SIZE];
 
-float getRpmByAngleWindowAndTimeUs(int timeUs, float angleWindowWidth);
-
-int getHip9011BandIndex(float frequency);
-
-#define GAIN_INDEX(gain) (GAIN_LOOKUP_SIZE - 1 - findIndexMsg("fGain", gainLookupInReverseOrder, GAIN_LOOKUP_SIZE, (gain)))
-
 extern float rpmLookup[INT_LOOKUP_SIZE];
 void initEngineNoiseTable(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 
