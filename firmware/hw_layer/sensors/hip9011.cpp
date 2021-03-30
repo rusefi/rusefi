@@ -243,12 +243,7 @@ static int hip_init(void) {
 		return ret;
 
 	// '0' for channel #1
-	ret = instance.hw->sendSyncCommand(SET_CHANNEL_CMD(0), NULL);
-	if (ret)
-		return ret;
-
-	// band index depends on cylinder bore
-	ret = instance.hw->sendSyncCommand(SET_BAND_PASS_CMD(instance.currentBandIndex), NULL);
+	ret = instance.hw->sendSyncCommand(SET_CHANNEL_CMD(instance.channel), NULL);
 	if (ret)
 		return ret;
 
@@ -298,12 +293,20 @@ static msg_t hipThread(void *arg) {
 	} while (ret);
 
 	while (1) {
-		msg_t msg = chSemWaitTimeout(&wake, TIME_INFINITE);
+		msg_t msg;
+
+		/* load new/updated settings */
+		instance.handleSettings(GET_RPM() DEFINE_PARAM_SUFFIX(PASS_HIP_PARAMS));
+		/* State */
+		instance.state = READY_TO_INTEGRATE;
+
+		msg = chSemWaitTimeout(&wake, TIME_INFINITE);
 		if (msg == MSG_TIMEOUT) {
 			/* ??? */
 		} else {
-			/* calculations */
+			/* TODO: check for correct cylinder/input */
 			if (1) {
+				/* calculations */
 				float knockVolts = instance.raw_value * adcToVolts(1) * CONFIG(analogInputDividerCoefficient);
 				hipValueMax = maxF(knockVolts, hipValueMax);
 				engine->knockLogic(knockVolts);
@@ -312,10 +315,6 @@ static msg_t hipThread(void *arg) {
 				tsOutputChannels.knockLevels[instance.cylinderNumber] = knockVolts;
 				tsOutputChannels.knockLevel = knockVolts;
 			}
-			/* new settings */
-			instance.handleSettings(GET_RPM() DEFINE_PARAM_SUFFIX(PASS_HIP_PARAMS));
-			/* State */
-			instance.state = READY_TO_INTEGRATE;
 		}
 	}
 
@@ -346,7 +345,7 @@ void initHip9011(Logging *sharedLogger) {
 		return;
 
 #if EFI_PROD_CODE
-	spi = getSpiDevice(engineConfiguration->hip9011SpiDevice);
+	spi = getSpiDevice(CONFIG(hip9011SpiDevice));
 	if (spi == NULL) {
 		// error already reported
 		return;
@@ -359,9 +358,8 @@ void initHip9011(Logging *sharedLogger) {
 	startHip9001_pins();
 
 	/* load settings */
-	instance.currentBandIndex = getBandIndex();
-	instance.setAngleWindowWidth();
-	instance.currentPrescaler = engineConfiguration->hip9011PrescalerAndSDO;
+	instance.channel = 0;
+	instance.currentPrescaler = CONFIG(hip9011PrescalerAndSDO);
 
 	scheduleMsg(logger, "Starting HIP9011/TPIC8101 driver");
 

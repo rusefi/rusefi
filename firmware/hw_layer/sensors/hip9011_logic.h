@@ -69,6 +69,7 @@ public:
 	int currentBandIndex = 0;
 	int currentPrescaler = 0;
 	int currentGainIndex = -1;
+	int channel = 0;
 
 	int correctResponsesCount = 0;
 	int invalidHip9011ResponsesCount = 0;
