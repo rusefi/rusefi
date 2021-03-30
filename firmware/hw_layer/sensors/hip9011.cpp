@@ -39,7 +39,6 @@
 #include "rpm_calculator.h"
 #include "trigger_central.h"
 #include "hip9011_logic.h"
-#include "hip9011_lookup.h"
 #include "hip9011.h"
 #include "adc_inputs.h"
 #include "perf_trace.h"
