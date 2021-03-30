@@ -237,6 +237,9 @@ void runRusEfi(void) {
 		 */
 		initEngineContoller(&sharedLogger PASS_ENGINE_PARAMETER_SIGNATURE);
 
+		// This has to happen after RegisteredOutputPins are init'd: otherwise no change will be detected, and no init will happen
+		rememberCurrentConfiguration(PASS_ENGINE_PARAMETER_SIGNATURE);
+
 	#if EFI_PERF_METRICS
 		initTimePerfActions(&sharedLogger);
 	#endif
