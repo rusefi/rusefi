@@ -325,13 +325,8 @@ void hipAdcCallback(adcsample_t adcValue) {
 	if (instance.state == WAITING_FOR_ADC_TO_SKIP) {
 		instance.state = WAITING_FOR_RESULT_ADC;
 	} else if (instance.state == WAITING_FOR_RESULT_ADC) {
-		float knockVolts = adcValue * adcToVolts(1) * CONFIG(analogInputDividerCoefficient);
-		hipValueMax = maxF(knockVolts, hipValueMax);
-		engine->knockLogic(knockVolts);
-
-		/* TunerStudio */
-		tsOutputChannels.knockLevels[instance.cylinderNumber] = knockVolts;
-		tsOutputChannels.knockLevel = knockVolts;
+		/* offload calculations to driver thread */
+		instance.raw_value = adcValue;
 		instance.state = NOT_READY;
 		hip_wake_driver();
 	}
@@ -403,6 +398,16 @@ static msg_t hipThread(void *arg) {
 		if (msg == MSG_TIMEOUT) {
 			/* ??? */
 		} else {
+			/* calculations */
+			if (1) {
+				float knockVolts = instance.raw_value * adcToVolts(1) * CONFIG(analogInputDividerCoefficient);
+				hipValueMax = maxF(knockVolts, hipValueMax);
+				engine->knockLogic(knockVolts);
+
+				/* TunerStudio */
+				tsOutputChannels.knockLevels[instance.cylinderNumber] = knockVolts;
+				tsOutputChannels.knockLevel = knockVolts;
+			}
 			/* new settings */
 			instance.handleSettings(GET_RPM() DEFINE_PARAM_SUFFIX(PASS_HIP_PARAMS));
 			/* State */
