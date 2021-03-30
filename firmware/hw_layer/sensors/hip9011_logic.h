@@ -58,21 +58,25 @@ public:
 class HIP9011 {
 public:
 	explicit HIP9011(Hip9011HardwareInterface *hardware);
-	void prepareHip9011RpmLookup(float angleWindowWidth);
-	int getIntegrationIndexByRpm(float rpm);
 	int sendCommand(uint8_t cmd);
+
+	void prepareRpmLookup(void);
 	void setAngleWindowWidth(DEFINE_HIP_PARAMS);
 	void handleSettings(int rpm DEFINE_PARAM_SUFFIX(DEFINE_HIP_PARAMS));
+	float getBand(DEFINE_HIP_PARAMS);
+	int getIntegrationIndexByRpm(float rpm);
+	int getBandIndex(DEFINE_HIP_PARAMS);
+	int getGainIndex(DEFINE_HIP_PARAMS);
 
 	/* Settings loaded to chip */
-	int currentIntergratorIndex = -1;
-	int currentBandIndex = 0;
-	int currentPrescaler = 0;
-	int currentGainIndex = -1;
-	int channel = 0;
+	uint8_t intergratorIdx = 0xff;
+	uint8_t bandIdx = 0xff;
+	uint8_t prescaler = 0xff;
+	uint8_t gainIdx = 0xff;
+	uint8_t channelIdx = 0xff;
 
 	int correctResponsesCount = 0;
-	int invalidHip9011ResponsesCount = 0;
+	int invalidResponsesCount = 0;
 	float angleWindowWidth = - 1;
 
 	int totalKnockEventsCount = 0;
@@ -97,10 +101,6 @@ public:
 
 	float rpmLookup[INT_LOOKUP_SIZE];
 };
-
-float getHIP9011Band(DEFINE_HIP_PARAMS);
-int getBandIndex(DEFINE_HIP_PARAMS);
-int getHip9011GainIndex(DEFINE_HIP_PARAMS);
 
 // 0b010x.xxxx
 #define SET_PRESCALER_CMD(v) 	(0x40 | ((v) & 0x1f))

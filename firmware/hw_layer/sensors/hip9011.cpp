@@ -123,7 +123,7 @@ static int checkResponse(uint8_t tx, uint8_t rx) {
 		instance.correctResponsesCount++;
 		return 0;
 	} else {
-		instance.invalidHip9011ResponsesCount++;
+		instance.invalidResponsesCount++;
 		return -1;
 	}
 }
@@ -238,12 +238,12 @@ void hipAdcCallback(adcsample_t adcValue) {
 static int hip_init(void) {
 	int ret;
 
-	ret = instance.hw->sendSyncCommand(SET_PRESCALER_CMD(instance.currentPrescaler), NULL);
+	ret = instance.hw->sendSyncCommand(SET_PRESCALER_CMD(instance.prescaler), NULL);
 	if (ret)
 		return ret;
 
 	// '0' for channel #1
-	ret = instance.hw->sendSyncCommand(SET_CHANNEL_CMD(instance.channel), NULL);
+	ret = instance.hw->sendSyncCommand(SET_CHANNEL_CMD(instance.channelIdx), NULL);
 	if (ret)
 		return ret;
 
@@ -358,8 +358,8 @@ void initHip9011(Logging *sharedLogger) {
 	startHip9001_pins();
 
 	/* load settings */
-	instance.channel = 0;
-	instance.currentPrescaler = CONFIG(hip9011PrescalerAndSDO);
+	instance.channelIdx = 0;
+	instance.prescaler = CONFIG(hip9011PrescalerAndSDO);
 
 	scheduleMsg(logger, "Starting HIP9011/TPIC8101 driver");
 
@@ -384,17 +384,17 @@ static void showHipInfo(void) {
 
 	scheduleMsg(logger, " bore=%.2fmm freq=%.2fkHz",
 		engineConfiguration->cylinderBore,
-		getHIP9011Band(PASS_HIP_PARAMS));
+		instance.getBand(PASS_HIP_PARAMS));
 
-	scheduleMsg(logger, " band_index=%d integrator index=%d  gain %.2f (%d) output=%s",
-		instance.currentBandIndex,
-		instance.currentIntergratorIndex,
+	scheduleMsg(logger, " band idx=%d integrator idx=%d  gain %.2f (idx %d) output=%s",
+		instance.bandIdx,
+		instance.intergratorIdx,
 		engineConfiguration->hip9011Gain,
-		instance.currentGainIndex,
+		instance.gainIdx,
 		getAdc_channel_e(engineConfiguration->hipOutputChannel));
 
 	scheduleMsg(logger, " PaSDO=0x%x",
-		engineConfiguration->hip9011PrescalerAndSDO);
+		instance.prescaler);
 
 	scheduleMsg(logger, " knockVThreshold=%.2f knockCount=%d maxKnockSubDeg=%.2f",
 		engineConfiguration->knockVThreshold,
@@ -406,8 +406,8 @@ static void showHipInfo(void) {
 		hwPortname(CONFIG(hip9011IntHoldPin)),
 		CONFIG(hip9011IntHoldPinMode),
 		instance.correctResponsesCount,
-		instance.invalidHip9011ResponsesCount,
-		instance.invalidHip9011ResponsesCount > 0 ? "NOT GOOD" : "ok");
+		instance.invalidResponsesCount,
+		instance.invalidResponsesCount > 0 ? "NOT GOOD" : "ok");
 
 #if EFI_PROD_CODE
 	scheduleMsg(logger, "hip %.2fv/last=%.2f/max=%.2f adv=%d",

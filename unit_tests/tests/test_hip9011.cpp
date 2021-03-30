@@ -11,6 +11,8 @@
 using ::testing::_;
 
 TEST(hip9011, lookup) {
+	HIP9011 instance(NULL);
+
 	assertEqualsM2("", 3183.1013, getRpmByAngleWindowAndTimeUs(600, 360), 0.1);
 	assertEqualsM2("40us", 47746.5195, getRpmByAngleWindowAndTimeUs(40, 360), 0.1);
 
@@ -18,17 +20,18 @@ TEST(hip9011, lookup) {
 	assertEqualsM2("240us 50 degree", 1105.2435, getRpmByAngleWindowAndTimeUs(240, 50), 0.1);
 	assertEqualsM2("240us 50 degree", 6631.4619, getRpmByAngleWindowAndTimeUs(40, 50), 0.1);
 
-	EXPECT_EQ(0, getHip9011GainIndex(/* knockBandCustom*/NAN, /*cylinderBore*/NAN, /*hip9011Gain*/3, 0, NAN, NAN));
-	EXPECT_EQ(0, getHip9011GainIndex(/* knockBandCustom*/NAN, /*cylinderBore*/NAN, /*hip9011Gain*/2, 0, NAN, NAN));
-	EXPECT_EQ(47, getHip9011GainIndex(/* knockBandCustom*/NAN, /*cylinderBore*/NAN, /*hip9011Gain*/0.234, 0, NAN, NAN));
-	EXPECT_EQ(63, getHip9011GainIndex(/* knockBandCustom*/NAN, /*cylinderBore*/NAN, /*hip9011Gain*/0.000001, 0, NAN, NAN));
+	EXPECT_EQ(0, instance.getGainIndex(/* knockBandCustom*/NAN, /*cylinderBore*/NAN, /*hip9011Gain*/3, 0, NAN, NAN));
+	EXPECT_EQ(0, instance.getGainIndex(/* knockBandCustom*/NAN, /*cylinderBore*/NAN, /*hip9011Gain*/2, 0, NAN, NAN));
+	EXPECT_EQ(47, instance.getGainIndex(/* knockBandCustom*/NAN, /*cylinderBore*/NAN, /*hip9011Gain*/0.234, 0, NAN, NAN));
+	EXPECT_EQ(63, instance.getGainIndex(/* knockBandCustom*/NAN, /*cylinderBore*/NAN, /*hip9011Gain*/0.000001, 0, NAN, NAN));
 
 }
 
 TEST(hip9011, rpmLookup) {
 	HIP9011 instance(NULL);
 
-	instance.prepareHip9011RpmLookup(50);
+	instance.angleWindowWidth = 50.0;
+	instance.prepareRpmLookup();
 
 	EXPECT_EQ(31, instance.getIntegrationIndexByRpm(1));
 	EXPECT_EQ(21, instance.getIntegrationIndexByRpm(1100));
@@ -37,11 +40,12 @@ TEST(hip9011, rpmLookup) {
 }
 
 TEST(hip9011, band) {
+	HIP9011 instance(NULL);
 
-	EXPECT_FLOAT_EQ(3, getHIP9011Band(/* knockBandCustom*/3, /*cylinderBore*/76, /*hip9011Gain*/NAN, 0, NAN, NAN));
-	EXPECT_FLOAT_EQ(7.5389242, getHIP9011Band(/* knockBandCustom*/0, /*cylinderBore*/76, /*hip9011Gain*/NAN, 0, NAN, NAN));
+	EXPECT_FLOAT_EQ(3, instance.getBand(/* knockBandCustom*/3, /*cylinderBore*/76, /*hip9011Gain*/NAN, 0, NAN, NAN));
+	EXPECT_FLOAT_EQ(7.5389242, instance.getBand(/* knockBandCustom*/0, /*cylinderBore*/76, /*hip9011Gain*/NAN, 0, NAN, NAN));
 
-	EXPECT_EQ(42, getBandIndex(/* knockBandCustom*/0, /*cylinderBore*/76, /*hip9011Gain*/NAN, 0, NAN, NAN));
+	EXPECT_EQ(42, instance.getBandIndex(/* knockBandCustom*/0, /*cylinderBore*/76, /*hip9011Gain*/NAN, 0, NAN, NAN));
 
 }
 
