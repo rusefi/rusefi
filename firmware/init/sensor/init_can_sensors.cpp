@@ -45,6 +45,10 @@ ObdCanSensor<1, 0> obdTpsSensor(
 //	SensorType::Tps, TIMEOUT
 //);
 
+#include can_EGTtoCAN.h
+static EGTtoCAN EMEGT14 (0, SensorType::EGT14);
+static EGTtoCAN EMEGT58 (1, SensorType::EGT58);
+
 void initCanSensors() {
 	if (CONFIG(consumeObdSensors)) {
 //		registerCanSensor(canPedalSensor);
