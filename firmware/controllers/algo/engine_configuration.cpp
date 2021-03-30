@@ -32,7 +32,6 @@
 #include "sensor.h"
 #include "flash_main.h"
 
-#include "hip9011_lookup.h"
 #include "hip9011_logic.h"
 
 #if EFI_MEMS
@@ -658,6 +657,19 @@ void setDefaultGppwmParameters(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	}
 }
 
+void setDefaultEngineNoiseTable(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+	setRpmTableBin(engineConfiguration->knockNoiseRpmBins, ENGINE_NOISE_CURVE_SIZE);
+
+	engineConfiguration->knockNoise[0] = 2; // 800
+	engineConfiguration->knockNoise[1] = 2; // 1700
+	engineConfiguration->knockNoise[2] = 2; // 2600
+	engineConfiguration->knockNoise[3] = 2; // 3400
+	engineConfiguration->knockNoise[4] = 2; // 4300
+	engineConfiguration->knockNoise[5] = 2; // 5200
+	engineConfiguration->knockNoise[6] = 2; // 6100
+	engineConfiguration->knockNoise[7] = 2; // 7000
+}
+
 /**
  * @brief	Global default engine configuration
  * This method sets the global engine configuration defaults. These default values are then
@@ -824,7 +836,7 @@ static void setDefaultEngineConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	setLinearCurve(config->fsioTable4LoadBins, 20, 120, 10);
 	setRpmTableBin(config->fsioTable4RpmBins, FSIO_TABLE_8);
 
-	initEngineNoiseTable(PASS_ENGINE_PARAMETER_SIGNATURE);
+	setDefaultEngineNoiseTable(PASS_ENGINE_PARAMETER_SIGNATURE);
 
 	engineConfiguration->clt.config = {0, 23.8889, 48.8889, 9500, 2100, 1000, 1500};
 
@@ -972,7 +984,6 @@ static void setDefaultEngineConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	engineConfiguration->HD44780height = 4;
 
 	engineConfiguration->cylinderBore = 87.5;
-	engineConfiguration->knockBandCustom = BAND(engineConfiguration->cylinderBore);
 
 	setEgoSensor(ES_14Point7_Free PASS_CONFIG_PARAMETER_SUFFIX);
 

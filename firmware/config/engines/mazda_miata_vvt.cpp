@@ -790,7 +790,7 @@ void setMiataNB2_ProteusEngineConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE) 
     CONFIG(enableSoftwareKnock) = true;
     // second harmonic (aka double) is usually quieter background noise
     // 13.8
-	engineConfiguration->knockBandCustom = 2 * BAND(engineConfiguration->cylinderBore);
+	engineConfiguration->knockBandCustom = 2 * HIP9011_BAND(engineConfiguration->cylinderBore);
 
     engineConfiguration->malfunctionIndicatorPin = GPIOB_6; // "Lowside 10"    # pin 20/black35
 
