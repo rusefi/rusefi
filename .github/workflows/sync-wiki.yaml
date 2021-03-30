@@ -21,7 +21,7 @@ on: gollum
 jobs:
   sync:
     runs-on: ubuntu-latest
-    if: ${{github.actor != "actions-user"}}
+    if: ${{ github.actor != 'actions-user' }}
 
     steps:
     - name: Check out docs repo
