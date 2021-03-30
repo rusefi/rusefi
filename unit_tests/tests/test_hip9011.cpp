@@ -50,8 +50,7 @@ class MockHip9011Hardware : public Hip9011HardwareInterface
 public:
 	MockHip9011Hardware() {  }
 
-    MOCK_METHOD1(sendSyncCommand, int(unsigned char));
-    MOCK_METHOD1(sendCommand, void(unsigned char));
+    MOCK_METHOD2(sendSyncCommand, int(unsigned char, unsigned char *));
 };
 
 TEST(hip9011, configurationCommands) {
@@ -64,24 +63,13 @@ TEST(hip9011, configurationCommands) {
 #define PARAMETERS 600, /* knockBandCustom*/0, /*cylinderBore*/76, /*hip9011Gain*/1, HIP_8MHZ_PRESCALER, 0.0, 50.0
 
 	 // Not making assumptions on the message send ...
-	EXPECT_CALL(mock, sendSyncCommand(_)).Times(0);
-	EXPECT_CALL(mock, sendCommand(SET_GAIN_CMD(0xE))).Times(1);
-	instance.handleValue(PARAMETERS);
-
-	EXPECT_CALL(mock, sendSyncCommand(_)).Times(0);
-	EXPECT_CALL(mock, sendCommand(SET_INTEGRATOR_CMD(0x1C))).Times(1);
-	instance.handleValue(PARAMETERS);
-
-	EXPECT_CALL(mock, sendSyncCommand(_)).Times(0);
-	EXPECT_CALL(mock, sendCommand(SET_BAND_PASS_CMD(0x2A))).Times(1);
-	instance.handleValue(PARAMETERS);
-
-	EXPECT_CALL(mock, sendSyncCommand(_)).Times(0);
-	EXPECT_CALL(mock, sendCommand(SET_PRESCALER_CMD(6))).Times(1);
-	instance.handleValue(PARAMETERS);
+	EXPECT_CALL(mock, sendSyncCommand(SET_GAIN_CMD(0xE), 0)).Times(1);
+	EXPECT_CALL(mock, sendSyncCommand(SET_INTEGRATOR_CMD(0x1C), 0)).Times(1);
+	EXPECT_CALL(mock, sendSyncCommand(SET_BAND_PASS_CMD(0x2A), 0)).Times(1);
+	EXPECT_CALL(mock, sendSyncCommand(SET_PRESCALER_CMD(6), 0)).Times(1);
+	instance.handleSettings(PARAMETERS);
 
 	// initialization is over, no commands should be sent
-	EXPECT_CALL(mock, sendSyncCommand(_)).Times(0);
-	EXPECT_CALL(mock, sendCommand(_)).Times(0);
-	instance.handleValue(PARAMETERS);
+	EXPECT_CALL(mock, sendSyncCommand(_, _)).Times(0);
+	instance.handleSettings(PARAMETERS);
 }
