@@ -11,7 +11,7 @@
 EXTERN_ENGINE;
 
 HIP9011::HIP9011(Hip9011HardwareInterface *hardware) : rpmLookup() {
-	this->hardware = hardware;
+	this->hw = hardware;
 }
 
 int HIP9011::sendCommand(uint8_t cmd) {

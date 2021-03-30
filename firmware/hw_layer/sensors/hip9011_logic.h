@@ -76,7 +76,8 @@ public:
 	int currentIntergratorIndex = -1;
 	int totalKnockEventsCount = 0;
 	int currentPrescaler = 0;
-	Hip9011HardwareInterface *hardware;
+	Hip9011HardwareInterface *hw;
+	bool adv_mode = false;
 	/**
 	 * Int/Hold pin is controlled from scheduler call-backs which are set according to current RPM
 	 *
