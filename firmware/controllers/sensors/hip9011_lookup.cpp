@@ -40,18 +40,3 @@ const float bandFreqLookup[BAND_LOOKUP_SIZE] = {
 /* 48 */10.12, 10.46, 10.83, 11.22, 11.65, 12.10, 12.60, 13.14,
 /* 56 */13.72, 14.36, 15.07, 15.84, 16.71, 17.67, 18.76, 19.98
 };
-
-EXTERN_ENGINE;
-
-void initEngineNoiseTable(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
-	setRpmTableBin(engineConfiguration->knockNoiseRpmBins, ENGINE_NOISE_CURVE_SIZE);
-
-	engineConfiguration->knockNoise[0] = 2; // 800
-	engineConfiguration->knockNoise[1] = 2; // 1700
-	engineConfiguration->knockNoise[2] = 2; // 2600
-	engineConfiguration->knockNoise[3] = 2; // 3400
-	engineConfiguration->knockNoise[4] = 2; // 4300
-	engineConfiguration->knockNoise[5] = 2; // 5200
-	engineConfiguration->knockNoise[6] = 2; // 6100
-	engineConfiguration->knockNoise[7] = 2; // 7000
-}

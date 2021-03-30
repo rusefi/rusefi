@@ -21,5 +21,4 @@ extern const float gainLookupInReverseOrder[GAIN_LOOKUP_SIZE];
 extern const float bandFreqLookup[BAND_LOOKUP_SIZE];
 
 extern float rpmLookup[INT_LOOKUP_SIZE];
-void initEngineNoiseTable(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 
