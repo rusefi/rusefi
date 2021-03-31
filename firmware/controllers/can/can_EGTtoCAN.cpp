@@ -1,4 +1,3 @@
-
 /**
  * @file	can_EGTtoCAN.cpp
  *
@@ -10,6 +9,7 @@
 
 #include "global.h"
 #include "globalaccess.h"
+#include "can_EGTtoCAN.h"
 
 // EGTTOCAN message format - MsgID, Length, EGT#, EGT#, EGT#, EGT#
 // EGT 1-4 comes in on SID 610h, EGT 5-8 comes in on SID 611h
