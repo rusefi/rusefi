@@ -61,6 +61,8 @@ typedef void (*configuration_callback_t)(engine_configuration_s*);
 void loadConfiguration(Logging* logger DECLARE_ENGINE_PARAMETER_SUFFIX);
 void resetConfigurationExt(Logging * logger, configuration_callback_t boardCallback, engine_type_e engineType DECLARE_ENGINE_PARAMETER_SUFFIX);
 void resetConfigurationExt(Logging * logger, engine_type_e engineType DECLARE_ENGINE_PARAMETER_SUFFIX);
+
+void rememberCurrentConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 #endif /* __cplusplus */
 
 void setBoardDefaultConfiguration(void);
