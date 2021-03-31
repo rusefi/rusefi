@@ -37,6 +37,9 @@ static const char* s_sensorNames[] = {
 	"Lambda 1",
 	"Lambda 2",
 
+	"EMEGT14", //ECUMaster can egt sensors 1 to 4
+	"EMEGT58", //ECUMaster can egt sensors 5 to 8
+
 	"Wastegate Position",
 	"Idle Valve Position",
 

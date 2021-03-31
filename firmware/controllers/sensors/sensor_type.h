@@ -57,6 +57,9 @@ enum class SensorType : unsigned char {
 	Lambda1,
 	Lambda2,
 
+	EMEGT14, //ECUMaster can egt sensors 1 to 4
+	EMEGT58, //ECUMaster can egt sensors 5 to 8
+
 	WastegatePosition,
 	IdlePosition,
 
