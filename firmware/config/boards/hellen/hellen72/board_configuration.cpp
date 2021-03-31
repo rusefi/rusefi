@@ -19,15 +19,6 @@
 
 EXTERN_ENGINE;
 
-static const ConfigOverrides configOverrides = {
-	.canTxPin = GPIOD_1,
-	.canRxPin = GPIOD_0,
-};
-
-const ConfigOverrides& getConfigOverrides() {
-	return configOverrides;
-}
-
 static void setInjectorPins() {
 	engineConfiguration->injectionPins[0] = GPIOG_7;
 	engineConfiguration->injectionPins[1] = GPIOG_8;
@@ -107,13 +98,23 @@ static void setupDefaultSensorInputs() {
 	engineConfiguration->afr.hwChannel = EFI_ADC_1;
 
 	engineConfiguration->clt.adcChannel = EFI_ADC_12;
-	engineConfiguration->clt.config.bias_resistor = 4700;
 
 	engineConfiguration->iat.adcChannel = EFI_ADC_13;
-	engineConfiguration->iat.config.bias_resistor = 4700;
 
 	engineConfiguration->auxTempSensor1.adcChannel = EFI_ADC_NONE;
 	engineConfiguration->auxTempSensor2.adcChannel = EFI_ADC_NONE;
+}
+
+void setBoardConfigOverrides(void) {
+	setLedPins();
+	setupVbatt();
+	setSdCardConfigurationOverrides();
+
+	engineConfiguration->clt.config.bias_resistor = 4700;
+	engineConfiguration->iat.config.bias_resistor = 4700;
+
+	engineConfiguration->canTxPin = GPIOD_1;
+	engineConfiguration->canRxPin = GPIOD_0;
 }
 
 void setPinConfigurationOverrides(void) {
@@ -138,9 +139,8 @@ void setSerialConfigurationOverrides(void) {
 void setBoardDefaultConfiguration(void) {
 	setInjectorPins();
 	setIgnitionPins();
-	setLedPins();
-	setupVbatt();
-	setSdCardConfigurationOverrides();
+
+	engineConfiguration->isSdCardEnabled = true;
 
 	CONFIG(enableSoftwareKnock) = true;
 
@@ -180,5 +180,4 @@ void setSdCardConfigurationOverrides(void) {
 	engineConfiguration->spi2sckPin = GPIOB_13;
 	engineConfiguration->sdCardCsPin = GPIOB_12;
 	CONFIG(is_enabled_spi_2) = true;
-	engineConfiguration->isSdCardEnabled = true;
 }
