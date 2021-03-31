@@ -670,6 +670,42 @@ void setDefaultEngineNoiseTable(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	engineConfiguration->knockNoise[7] = 2; // 7000
 }
 
+static void setHip9011FrankensoPinout() {
+	/**
+	 * SPI on PB13/14/15
+	 */
+	//	CONFIG(hip9011CsPin) = GPIOD_0; // rev 0.1
+
+	CONFIG(isHip9011Enabled) = true;
+	engineConfiguration->hip9011PrescalerAndSDO = HIP_8MHZ_PRESCALER; // 8MHz chip
+	CONFIG(is_enabled_spi_2) = true;
+	// todo: convert this to rusEfi, hardware-independent enum
+#if EFI_PROD_CODE
+#ifdef EFI_HIP_CS_PIN
+	CONFIG(hip9011CsPin) = EFI_HIP_CS_PIN;
+#else
+	CONFIG(hip9011CsPin) = GPIOB_0; // rev 0.4
+#endif
+	CONFIG(hip9011CsPinMode) = OM_OPENDRAIN;
+
+	CONFIG(hip9011IntHoldPin) = GPIOB_11;
+	CONFIG(hip9011IntHoldPinMode) = OM_OPENDRAIN;
+
+	engineConfiguration->spi2SckMode = PO_OPENDRAIN; // 4
+	engineConfiguration->spi2MosiMode = PO_OPENDRAIN; // 4
+	engineConfiguration->spi2MisoMode = PO_PULLUP; // 32
+#endif /* EFI_PROD_CODE */
+
+	engineConfiguration->hip9011Gain = 1;
+	engineConfiguration->knockVThreshold = 4;
+	engineConfiguration->maxKnockSubDeg = 20;
+
+
+	if (!CONFIG(useTpicAdvancedMode)) {
+	    engineConfiguration->hipOutputChannel = EFI_ADC_10; // PC0
+	}
+}
+
 /**
  * @brief	Global default engine configuration
  * This method sets the global engine configuration defaults. These default values are then
