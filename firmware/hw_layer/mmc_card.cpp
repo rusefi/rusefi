@@ -384,6 +384,7 @@ static BaseBlockDevice* initializeMmcBlockDevice() {
 		UNLOCK_SD_SPI;
 		return nullptr;
 	}
+	// todo: shall we 'UNLOCK_SD_SPI' here or document why not?
 
 	return reinterpret_cast<BaseBlockDevice*>(&MMCD1);
 }
