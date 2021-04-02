@@ -19,9 +19,9 @@
 //Need to add a config field for EM EGTtoCAN to allow .ini to have { max31855_cs1 != 0 || enableEcumasterEgt }
 
 
-EGTtoCAN::EGTtoCAN(uint8_t sensorIndex, SensorType type)
+EGTtoCAN::EGTtoCAN(uint8_t EGTIndex, SensorType type)
 	: CanSensorBase(
-		0x610 + EGTIndex,	// EGT 1-4 
+		0x610 + EGTIndex,	
 	)
 {}
 
@@ -30,14 +30,16 @@ void EGTtoCAN::decodeFrame(const CANRxFrame& frame, efitick_t nowNt) {
 		invalidate();
 		return;
 	}
-	if EGTIndex = 0 
+	if (EGTIndex = 0) {
 	uint16_t egt1 = SWAP_UINT16(frame.data16[0]);
 	uint16_t egt2 = SWAP_UINT16(frame.data16[2]);
 	uint16_t egt3 = SWAP_UINT16(frame.data16[4]);
 	uint16_t egt4 = SWAP_UINT16(frame.data16[6]);
-	else
-	uint16_t egt5 = SWAP_UINT16(frame.data16[0]);
-	uint16_t egt6 = SWAP_UINT16(frame.data16[2]);
-	uint16_t egt7 = SWAP_UINT16(frame.data16[4]);
-	uint16_t egt8 = SWAP_UINT16(frame.data16[6]);
+		}
+			else {
+				
+		uint16_t egt5 = SWAP_UINT16(frame.data16[0]);
+		uint16_t egt6 = SWAP_UINT16(frame.data16[2]);
+		uint16_t egt7 = SWAP_UINT16(frame.data16[4]);
+		uint16_t egt8 = SWAP_UINT16(frame.data16[6]);
 }
