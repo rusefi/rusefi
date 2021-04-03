@@ -33,6 +33,12 @@ SensorResult RedundantFordTps::get() const {
 
 	// Case 1: both sensors show low position, average result
 	if (tps1.Value < avgThreshold && tps2Actual < avgThreshold) {
+		// Check that the resolved positions are close
+		float delta = absF(tps1.Value - tps2Actual);
+		if (delta > m_maxDifference) {
+			return unexpected;
+		}
+
 		return (tps1.Value + tps2Actual) / 2;
 	}
 
