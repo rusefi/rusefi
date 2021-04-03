@@ -28,4 +28,7 @@ private:
 
 	// How far apart do we allow the sensors to be before reporting an issue?
 	float m_maxDifference = 0;
+
+	// At what primary % does the secondary hit 100%?
+	float m_secondaryMaximum = 50;
 };

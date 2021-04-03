@@ -25,13 +25,19 @@ SensorResult RedundantFordTps::get() const {
 		return unexpected;
 	}
 
+	// The "actual" position resolved by the second throttle - this tops out at m_secondaryMaximum instead of 100%
+	float tps2Actual = tps2.Value * m_secondaryMaximum / 100;
+
+	// Switch modes slightly below the maximum of the secondary, to avoid misbehavior near 100%
+	float avgThreshold = m_secondaryMaximum * 0.9f;
+
 	// Case 1: both sensors show low position, average result
-	if (tps1.Value < 45 && tps2.Value < 90) {
-		return (tps1.Value + tps2.Value / 2) / 2;
+	if (tps1.Value < avgThreshold && tps2Actual < avgThreshold) {
+		return (tps1.Value + tps2Actual) / 2;
 	}
 
-	// Case 2: both sensors show high position, return "full scale" sensor
-	if (tps1.Value > 45 && tps2.Value > 85) {
+	// Case 2: both sensors show high position, return "full scale" sensor's position
+	if (tps1.Value > avgThreshold && tps2Actual > (avgThreshold - 3)) {
 		return tps1;
 	}
 
