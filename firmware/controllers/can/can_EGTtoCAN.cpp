@@ -22,7 +22,7 @@
 EGTtoCAN::EGTtoCAN(uint8_t EGTIndex, SensorType type)
 	: CanSensorBase(
 		0x610 + EGTIndex,	
-		type,
+		type
 	)
 {}
 
