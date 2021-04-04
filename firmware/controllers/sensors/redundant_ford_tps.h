@@ -30,5 +30,5 @@ private:
 	float m_maxDifference = 0;
 
 	// At what primary % does the secondary hit 100%?
-	float m_secondaryMaximum = 50;
+	float m_secondaryMaximum = 52.6f;
 };
