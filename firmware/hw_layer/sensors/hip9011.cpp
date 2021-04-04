@@ -143,6 +143,10 @@ int Hip9011Hardware::sendSyncCommand(uint8_t tx, uint8_t *rx_ptr) {
 	spiUnselect(spi);
 	/* Ownership release. */
 	spiReleaseBus(spi);
+	/* received data */
+	if (rx_ptr) {
+		*rx_ptr = rx;
+	}
 	/* check response */
 	if (instance.adv_mode == false) {
 		/* only default SPI mode SDO is directly equals the SDI (echo function) */
@@ -150,10 +154,6 @@ int Hip9011Hardware::sendSyncCommand(uint8_t tx, uint8_t *rx_ptr) {
 
 		if (ret)
 			return ret;
-	}
-
-	if (rx_ptr) {
-		*rx_ptr = rx;
 	}
 
 	return 0;
@@ -246,6 +246,40 @@ void hipAdcCallback(adcsample_t adcValue) {
 	}
 }
 
+static int hip_testAdvMode(void) {
+	int ret;
+	uint8_t ret0, ret1, ret2;
+
+	/* do not care about configuration values, we meed replyes only.
+	 * correct values will be uploaded later */
+
+	/* A control byte is written to the SDI and shifted with the MSB
+	 * first. The response byte on the SDO is shifted out with the MSB
+	 * first. The response byte corresponds to the previous command.
+	 * Therefore, the SDI shifts in a control byte n and shifts out a
+	 * response command byte n − 1. */
+	ret = instance.hw->sendSyncCommand(SET_BAND_PASS_CMD(0), NULL);
+	if (ret)
+		return ret;
+	ret = instance.hw->sendSyncCommand(SET_GAIN_CMD(0), &ret0);
+	if (ret)
+		return ret;
+	ret = instance.hw->sendSyncCommand(SET_INTEGRATOR_CMD(0), &ret1);
+	if (ret)
+		return ret;
+	ret = instance.hw->sendSyncCommand(SET_INTEGRATOR_CMD(0), &ret2);
+	if (ret)
+		return ret;
+
+	/* magic reply bytes from DS Table 2 */
+	if ((ret0 == SET_BAND_PASS_REP) &&
+		(ret1 == SET_GAIN_REP) &&
+		(ret2 == SET_INTEGRATOR_REP))
+		return 0;
+
+	return -1;
+}
+
 static int hip_init(void) {
 	int ret;
 
@@ -258,7 +292,14 @@ static int hip_init(void) {
 		ret = instance.hw->sendSyncCommand(SET_ADVANCED_MODE_CMD, NULL);
 		if (ret)
 			return ret;
+		/* set before testing so checkResponse will srip Rx=Tx check */
 		instance.adv_mode = true;
+
+		ret = hip_testAdvMode();
+		if (ret) {
+			warning(CUSTOM_OBD_KNOCK_PROCESSOR, "TPIC/HIP does not support advanced mode");
+			instance.adv_mode = false;
+		}
 	}
 
 	instance.state = READY_TO_INTEGRATE;

@@ -120,12 +120,20 @@ public:
 #define SET_CHANNEL_CMD(v) 		(0xE0 | ((v) & 0x01))
 // 0b00xx.xxxx
 #define SET_BAND_PASS_CMD(v)	(0x00 | ((v) & 0x3f))
+/* magic replyed on SET_BAND_PASS_CMD in advanced mode */
+#define SET_BAND_PASS_REP		(0x01)
 // 0b10xx.xxxx
 #define SET_GAIN_CMD(v)			(0x80 | ((v) & 0x3f))
+/* magic replyed on SET_GAIN_CMD in advanced mode */
+#define SET_GAIN_REP			(0xe0)
 // 0b110x.xxxx
 #define SET_INTEGRATOR_CMD(v)	(0xC0 | ((v) & 0x1f))
+/* magic replyed on SET_INTEGRATOR_CMD in advanced mode */
+#define SET_INTEGRATOR_REP		(0x71)
 // 0b0111.0001
 #define SET_ADVANCED_MODE_CMD	(0x71)
+/* magic replyed on SET_ADVANCED_MODE_CMD in advanced mode */
+#define SET_ADVANCED_MODE_REP	((~SET_ADVANCED_MODE_CMD) & 0xff)
 
 //	D[4:1] = 0000 : 4 MHz
 #define HIP_4MHZ_PRESCALER		(0x0 << 1)
