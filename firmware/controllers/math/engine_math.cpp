@@ -356,6 +356,22 @@ int getCylinderId(int index DECLARE_ENGINE_PARAMETER_SUFFIX) {
 }
 
 /**
+ * @param prevCylinderId from one to cylindersCount
+ * @return cylinderId from one to cylindersCount
+ */
+int getNextFiringCylinderId(int prevCylinderId DECLARE_ENGINE_PARAMETER_SUFFIX) {
+	const int firingOrderLength = getFiringOrderLength(PASS_ENGINE_PARAMETER_SIGNATURE);
+	const int *firingOrderTable = getFiringOrderTable(PASS_ENGINE_PARAMETER_SIGNATURE);
+
+	if (firingOrderTable) {
+		for (size_t i = 0; i < firingOrderLength; i++)
+			if (firingOrderTable[i] == prevCylinderId)
+				return firingOrderTable[(i + 1) % firingOrderLength];
+	}
+	return 1;
+}
+
+/**
  * @param cylinderIndex from 0 to cylinderCount, not cylinder number
  */
 static int getIgnitionPinForIndex(int cylinderIndex DECLARE_ENGINE_PARAMETER_SUFFIX) {
