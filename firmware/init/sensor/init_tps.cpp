@@ -109,7 +109,7 @@ void initTps(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 		initTpsFunc(tpsFunc2p, tpsSens2p, CONFIG(tps2_1AdcChannel), CONFIG(tps2Min), CONFIG(tps2Max), min, max);
 
 		// Secondary TPS sensors (and redundant combining)
-		bool isFordTps = false; // CONFIG(...);
+		bool isFordTps = CONFIG(useFordRedundantTps);
 		initTpsFuncAndRedund(tps1, &fordTps1, isFordTps, tpsFunc1s, tpsSens1s, CONFIG(tps1_2AdcChannel), CONFIG(tps1SecondaryMin), CONFIG(tps1SecondaryMax), min, max);
 		initTpsFuncAndRedund(tps2, &fordTps2, isFordTps, tpsFunc2s, tpsSens2s, CONFIG(tps2_2AdcChannel), CONFIG(tps2SecondaryMin), CONFIG(tps2SecondaryMax), min, max);
 
