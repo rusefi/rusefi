@@ -131,6 +131,7 @@ floatms_t getSparkDwell(int rpm DECLARE_ENGINE_PARAMETER_SUFFIX) {
 #endif
 }
 
+static const int order_1[] = {1};
 
 static const int order_1_2[] = {1, 2};
 
@@ -239,6 +240,87 @@ static int getFiringOrderLength(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	return 1;
 }
 
+static const int *getFiringOrderTable(DECLARE_ENGINE_PARAMETER_SIGNATURE)
+{
+	switch (CONFIG(specs.firingOrder)) {
+	case FO_1:
+		return order_1;
+// 2 cylinder
+	case FO_1_2:
+		return order_1_2;
+// 3 cylinder
+	case FO_1_2_3:
+		return order_1_2_3;
+	case FO_1_3_2:
+		return order_1_3_2;
+// 4 cylinder
+	case FO_1_3_4_2:
+		return order_1_THEN_3_THEN_4_THEN2;
+	case FO_1_2_4_3:
+		return order_1_THEN_2_THEN_4_THEN3;
+	case FO_1_3_2_4:
+		return order_1_THEN_3_THEN_2_THEN4;
+	case FO_1_4_3_2:
+		return order_1_THEN_4_THEN_3_THEN2;
+// 5 cylinder
+	case FO_1_2_4_5_3:
+		return order_1_2_4_5_3;
+
+// 6 cylinder
+	case FO_1_5_3_6_2_4:
+		return order_1_THEN_5_THEN_3_THEN_6_THEN_2_THEN_4;
+	case FO_1_4_2_5_3_6:
+		return order_1_THEN_4_THEN_2_THEN_5_THEN_3_THEN_6;
+	case FO_1_2_3_4_5_6:
+		return order_1_THEN_2_THEN_3_THEN_4_THEN_5_THEN_6;
+	case FO_1_6_3_2_5_4:
+		return order_1_6_3_2_5_4;
+
+// 8 cylinder
+	case FO_1_8_4_3_6_5_7_2:
+		return order_1_8_4_3_6_5_7_2;
+	case FO_1_8_7_2_6_5_4_3:
+		return order_1_8_7_2_6_5_4_3;
+	case FO_1_5_4_2_6_3_7_8:
+		return order_1_5_4_2_6_3_7_8;
+	case FO_1_2_7_8_4_5_6_3:
+		return order_1_2_7_8_4_5_6_3;
+	case FO_1_3_7_2_6_5_4_8:
+		return order_1_3_7_2_6_5_4_8;
+	case FO_1_2_3_4_5_6_7_8:
+		return order_1_2_3_4_5_6_7_8;
+	case FO_1_5_4_8_6_3_7_2:
+		return order_1_5_4_8_6_3_7_2;
+
+// 9 cylinder
+	case FO_1_2_3_4_5_6_7_8_9:
+		return order_1_2_3_4_5_6_7_8_9;
+
+
+// 10 cylinder
+	case FO_1_10_9_4_3_6_5_8_7_2:
+		return order_1_10_9_4_3_6_5_8_7_2;
+
+// 12 cylinder
+	case FO_1_7_5_11_3_9_6_12_2_8_4_10:
+		return order_1_7_5_11_3_9_6_12_2_8_4_10;
+	case FO_1_7_4_10_2_8_6_12_3_9_5_11:
+		return order_1_7_4_10_2_8_6_12_3_9_5_11;
+	case FO_1_12_5_8_3_10_6_7_2_11_4_9:
+		return order_1_12_5_8_3_10_6_7_2_11_4_9;
+	case FO_1_2_3_4_5_6_7_8_9_10_11_12:
+		return order_1_2_3_4_5_6_7_8_9_10_11_12;
+
+// do not ask
+	case FO_1_14_9_4_7_12_15_6_13_8_3_16_11_2_5_10:
+		return order_1_14_9_4_7_12_15_6_13_8_3_16_11_2_5_10;
+
+	default:
+		firmwareError(CUSTOM_OBD_UNKNOWN_FIRING_ORDER, "Invalid firing order: %d", CONFIG(specs.firingOrder));
+	}
+
+	return NULL;
+}
 
 /**
  * @param index from zero to cylindersCount - 1
@@ -264,81 +346,27 @@ int getCylinderId(int index DECLARE_ENGINE_PARAMETER_SUFFIX) {
 		return 1;
 	}
 
-	switch (CONFIG(specs.firingOrder)) {
-	case FO_1:
-		return 1;
-// 2 cylinder
-	case FO_1_2:
-		return order_1_2[index];
-// 3 cylinder
-	case FO_1_2_3:
-		return order_1_2_3[index];
-	case FO_1_3_2:
-		return order_1_3_2[index];
-// 4 cylinder
-	case FO_1_3_4_2:
-		return order_1_THEN_3_THEN_4_THEN2[index];
-	case FO_1_2_4_3:
-		return order_1_THEN_2_THEN_4_THEN3[index];
-	case FO_1_3_2_4:
-		return order_1_THEN_3_THEN_2_THEN4[index];
-	case FO_1_4_3_2:
-		return order_1_THEN_4_THEN_3_THEN2[index];
-// 5 cylinder
-	case FO_1_2_4_5_3:
-		return order_1_2_4_5_3[index];
+	const int *firingOrderTable = getFiringOrderTable(PASS_ENGINE_PARAMETER_SIGNATURE);
+	if (firingOrderTable)
+		return firingOrderTable[index];
+	/* else
+		error already reported */
 
-// 6 cylinder
-	case FO_1_5_3_6_2_4:
-		return order_1_THEN_5_THEN_3_THEN_6_THEN_2_THEN_4[index];
-	case FO_1_4_2_5_3_6:
-		return order_1_THEN_4_THEN_2_THEN_5_THEN_3_THEN_6[index];
-	case FO_1_2_3_4_5_6:
-		return order_1_THEN_2_THEN_3_THEN_4_THEN_5_THEN_6[index];
-	case FO_1_6_3_2_5_4:
-		return order_1_6_3_2_5_4[index];
+	return 1;
+}
 
-// 8 cylinder
-	case FO_1_8_4_3_6_5_7_2:
-		return order_1_8_4_3_6_5_7_2[index];
-	case FO_1_8_7_2_6_5_4_3:
-		return order_1_8_7_2_6_5_4_3[index];
-	case FO_1_5_4_2_6_3_7_8:
-		return order_1_5_4_2_6_3_7_8[index];
-	case FO_1_2_7_8_4_5_6_3:
-		return order_1_2_7_8_4_5_6_3[index];
-	case FO_1_3_7_2_6_5_4_8:
-		return order_1_3_7_2_6_5_4_8[index];
-	case FO_1_2_3_4_5_6_7_8:
-		return order_1_2_3_4_5_6_7_8[index];
-	case FO_1_5_4_8_6_3_7_2:
-		return order_1_5_4_8_6_3_7_2[index];
+/**
+ * @param prevCylinderId from one to cylindersCount
+ * @return cylinderId from one to cylindersCount
+ */
+int getNextFiringCylinderId(int prevCylinderId DECLARE_ENGINE_PARAMETER_SUFFIX) {
+	const int firingOrderLength = getFiringOrderLength(PASS_ENGINE_PARAMETER_SIGNATURE);
+	const int *firingOrderTable = getFiringOrderTable(PASS_ENGINE_PARAMETER_SIGNATURE);
 
-// 9 cylinder
-	case FO_1_2_3_4_5_6_7_8_9:
-		return order_1_2_3_4_5_6_7_8_9[index];
-
-
-// 10 cylinder
-	case FO_1_10_9_4_3_6_5_8_7_2:
-		return order_1_10_9_4_3_6_5_8_7_2[index];
-
-// 12 cylinder
-	case FO_1_7_5_11_3_9_6_12_2_8_4_10:
-		return order_1_7_5_11_3_9_6_12_2_8_4_10[index];
-	case FO_1_7_4_10_2_8_6_12_3_9_5_11:
-		return order_1_7_4_10_2_8_6_12_3_9_5_11[index];
-	case FO_1_12_5_8_3_10_6_7_2_11_4_9:
-		return order_1_12_5_8_3_10_6_7_2_11_4_9[index];
-	case FO_1_2_3_4_5_6_7_8_9_10_11_12:
-		return order_1_2_3_4_5_6_7_8_9_10_11_12[index];
-
-// do not ask
-	case FO_1_14_9_4_7_12_15_6_13_8_3_16_11_2_5_10:
-		return order_1_14_9_4_7_12_15_6_13_8_3_16_11_2_5_10[index];
-
-	default:
-		firmwareError(CUSTOM_OBD_UNKNOWN_FIRING_ORDER, "Invalid firing order: %d", CONFIG(specs.firingOrder));
+	if (firingOrderTable) {
+		for (size_t i = 0; i < firingOrderLength; i++)
+			if (firingOrderTable[i] == prevCylinderId)
+				return firingOrderTable[(i + 1) % firingOrderLength];
 	}
 	return 1;
 }
