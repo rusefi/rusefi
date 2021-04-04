@@ -116,15 +116,19 @@ static void hip_addconsoleActions(void);
 /* Local functions.															*/
 /*==========================================================================*/
 
-static int checkResponse(uint8_t tx, uint8_t rx) {
-	/* TODO: implement response check for Advanced SPI mode too */
+static int checkResponseDefMode(uint8_t tx, uint8_t rx) {
+	/* in default SPI mode SDO is directly equals the SDI (echo function) */
 	if (tx == rx) {
-		instance.correctResponsesCount++;
 		return 0;
 	} else {
-		instance.invalidResponsesCount++;
 		return -1;
 	}
+}
+
+static int checkResponseAdvMode(uint8_t tx, uint8_t rx) {
+	UNUSED(tx); UNUSED(rx);
+	/* TODO: no check for advanced mode yet */
+	return 0;
 }
 
 int Hip9011Hardware::sendSyncCommand(uint8_t tx, uint8_t *rx_ptr) {
@@ -144,19 +148,21 @@ int Hip9011Hardware::sendSyncCommand(uint8_t tx, uint8_t *rx_ptr) {
 	/* Ownership release. */
 	spiReleaseBus(spi);
 	/* received data */
-	if (rx_ptr) {
+	if (rx_ptr)
 		*rx_ptr = rx;
-	}
 	/* check response */
-	if (instance.adv_mode == false) {
-		/* only default SPI mode SDO is directly equals the SDI (echo function) */
-		ret = checkResponse(tx, rx);
+	if (instance.adv_mode == false)
+		ret = checkResponseDefMode(tx, rx);
+	else
+		ret = checkResponseAdvMode(tx, rx);
 
-		if (ret)
-			return ret;
-	}
+	/* statistic counters */
+	if (ret)
+		instance.invalidResponsesCount++;
+	else
+		instance.correctResponsesCount++;
 
-	return 0;
+	return ret;
 }
 
 EXTERN_ENGINE;
