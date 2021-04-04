@@ -325,6 +325,9 @@ static int hip_init(void) {
 		}
 	}
 
+	/* reset error counter now */
+	instance.invalidResponsesCount = 0;
+
 	instance.state = READY_TO_INTEGRATE;
 
 	return 0;
