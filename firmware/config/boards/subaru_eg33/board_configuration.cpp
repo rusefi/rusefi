@@ -195,6 +195,8 @@ void setBoardDefaultConfiguration(void) {
 	engineConfiguration->hip9011IntHoldPinMode = OM_OPENDRAIN;
 	engineConfiguration->hipOutputChannel = EFI_ADC_7; /* PA7 */
 	engineConfiguration->isHip9011Enabled = true;
+	/* this board has TPIC8101, that supports advanced mode */
+	engineConfiguration->useTpicAdvancedMode = true;
 
 
 	engineConfiguration->hip9011PrescalerAndSDO = (0x6 << 1); //HIP_16MHZ_PRESCALER;
