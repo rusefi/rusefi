@@ -529,7 +529,7 @@ bit launchControlEnabled;
 bit rollingLaunchEnabled;
 bit antiLagEnabled;
 bit useRunningMathForCranking,"Fuel Map","Fixed";
-bit displayLogicLevelsInEngineSniffer;
+bit displayLogicLevelsInEngineSniffer;+Shall we display real life signal or just the part consumed by trigger decoder.
 bit useTLE8888_stepper;
 bit enableMapEstimationTableFallback;+If enabled, the MAP estimate table will be used if the MAP sensor fails to estimate manifold pressure based on RPM and TPS.
 bit useFSIOTableForCanSniffingFiltering;
