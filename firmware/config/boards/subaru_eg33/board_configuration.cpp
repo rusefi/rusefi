@@ -206,6 +206,14 @@ void setBoardDefaultConfiguration(void) {
 	engineConfiguration->cylinderBore = 96.9;
 	engineConfiguration->maxKnockSubDeg = 20.0;
 
+	/* Cylinder to knock bank mapping */
+	engineConfiguration->knockBankCyl1 = 0;
+	engineConfiguration->knockBankCyl2 = 1;
+	engineConfiguration->knockBankCyl3 = 0;
+	engineConfiguration->knockBankCyl4 = 1;
+	engineConfiguration->knockBankCyl5 = 0;
+	engineConfiguration->knockBankCyl6 = 1;
+
 #if 0
 	engineConfiguration->cj125SpiDevice = SPI_DEVICE_3;
 	engineConfiguration->cj125ua = EFI_ADC_9;
