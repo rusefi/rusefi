@@ -193,7 +193,7 @@ int HIP9011::cylinderToChannelIdx(int cylinder) {
 	return getCylinderKnockBank(cylinder);
 }
 
-void HIP9011::handleChannel(DEFINE_PARAM_SUFFIX(DEFINE_HIP_PARAMS)) {
+void HIP9011::handleChannel(DEFINE_HIP_PARAMS) {
 	int ret;
 
 	/* we did not receive any callback from spark logic with valid cylinder yet */
@@ -202,7 +202,7 @@ void HIP9011::handleChannel(DEFINE_PARAM_SUFFIX(DEFINE_HIP_PARAMS)) {
 
 	/* find next firing cylinder */
 	/* MAGIC +1 -1, couse getNextFiringCylinderId expect cylinders to start from 1 */
-	expectedCylinderNumber = getNextFiringCylinderId(cylinderNumber + 1) - 1;
+	expectedCylinderNumber = getNextFiringCylinderId((cylinderNumber + 1) PASS_ENGINE_PARAMETER_SUFFIX) - 1;
 
 	int nextChannelIdx = cylinderToChannelIdx(expectedCylinderNumber);
 	if (nextChannelIdx == channelIdx)

@@ -61,6 +61,8 @@ public:
 
 class HIP9011 {
 public:
+	DECLARE_ENGINE_PTR;
+
 	explicit HIP9011(Hip9011HardwareInterface *hardware);
 	int sendCommand(uint8_t cmd);
 
@@ -69,7 +71,7 @@ public:
 	void setAngleWindowWidth(DEFINE_HIP_PARAMS);
 	void handleSettings(int rpm DEFINE_PARAM_SUFFIX(DEFINE_HIP_PARAMS));
 	int cylinderToChannelIdx(int cylinder);
-	void handleChannel(DEFINE_PARAM_SUFFIX(DEFINE_HIP_PARAMS));
+	void handleChannel(DEFINE_HIP_PARAMS);
 	float getBand(DEFINE_HIP_PARAMS);
 	int getIntegrationIndexByRpm(float rpm);
 	int getBandIndex(DEFINE_HIP_PARAMS);
