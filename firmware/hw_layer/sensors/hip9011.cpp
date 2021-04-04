@@ -214,13 +214,25 @@ void hip9011_startKnockSampling(uint8_t cylinderNumber, efitick_t nowNt) {
 		return;
 	}
 
-	instance.cylinderNumber = cylinderNumber;
-	startIntegration(NULL);
+	if (cylinderNumber == instance.expectedCylinderNumber) {
+		/* save currect cylinder */
+		instance.cylinderNumber = cylinderNumber;
+		startIntegration(NULL);
 
-	/* TODO: reference to knockDetectionWindowStart */
-	scheduleByAngle(&endTimer, nowNt,
-			engineConfiguration->knockDetectionWindowEnd - engineConfiguration->knockDetectionWindowStart,
-			&endIntegration);
+		/* TODO: reference to knockDetectionWindowStart */
+		scheduleByAngle(&endTimer, nowNt,
+				engineConfiguration->knockDetectionWindowEnd - engineConfiguration->knockDetectionWindowStart,
+				&endIntegration);
+	} else {
+		/* out of sync */
+		if (instance.expectedCylinderNumber >= 0)
+			instance.unsync++;
+		/* save currect cylinder */
+		instance.cylinderNumber = cylinderNumber;
+		/* Skip integration, call driver task to prepare for next cylinder */
+		instance.state = NOT_READY;
+		hip_wake_driver();
+	}
 }
 
 void hipAdcCallback(adcsample_t adcValue) {
@@ -238,11 +250,6 @@ static int hip_init(void) {
 	int ret;
 
 	ret = instance.hw->sendSyncCommand(SET_PRESCALER_CMD(instance.prescaler), NULL);
-	if (ret)
-		return ret;
-
-	// '0' for channel #1
-	ret = instance.hw->sendSyncCommand(SET_CHANNEL_CMD(instance.channelIdx), NULL);
 	if (ret)
 		return ret;
 
@@ -296,6 +303,8 @@ static msg_t hipThread(void *arg) {
 
 		/* load new/updated settings */
 		instance.handleSettings(GET_RPM() DEFINE_PARAM_SUFFIX(PASS_HIP_PARAMS));
+		/* switch input channel */
+		instance.handleChannel(DEFINE_PARAM_SUFFIX(PASS_HIP_PARAMS));
 		/* State */
 		instance.state = READY_TO_INTEGRATE;
 
@@ -303,8 +312,8 @@ static msg_t hipThread(void *arg) {
 		if (msg == MSG_TIMEOUT) {
 			/* ??? */
 		} else {
-			/* TODO: check for correct cylinder/input */
-			if (1) {
+			/* Check for correct cylinder/input */
+			if (instance.cylinderNumber == instance.expectedCylinderNumber) {
 				/* calculations */
 				float knockVolts = instance.raw_value * adcToVolts(1) * CONFIG(analogInputDividerCoefficient);
 				hipValueMax = maxF(knockVolts, hipValueMax);
@@ -313,6 +322,11 @@ static msg_t hipThread(void *arg) {
 				/* TunerStudio */
 				tsOutputChannels.knockLevels[instance.cylinderNumber] = knockVolts;
 				tsOutputChannels.knockLevel = knockVolts;
+
+				/* counters */
+				instance.samples++;
+			} else {
+				/* out of sync event already calculated, nothing to do */
 			}
 		}
 	}
@@ -357,7 +371,6 @@ void initHip9011(Logging *sharedLogger) {
 	startHip9001_pins();
 
 	/* load settings */
-	instance.channelIdx = 0;
 	instance.prescaler = CONFIG(hip9011PrescalerAndSDO);
 
 	scheduleMsg(logger, "Starting HIP9011/TPIC8101 driver");
@@ -377,9 +390,10 @@ static void showHipInfo(void) {
 		return;
 	}
 
-	scheduleMsg(logger, "enabled=%s state=%s",
+	scheduleMsg(logger, "enabled=%s state=%s channel=%d cylinder=%d next=%d",
 		boolToString(CONFIG(isHip9011Enabled)),
-		getHip_state_e(instance.state));
+		getHip_state_e(instance.state),
+		instance.channelIdx, instance.cylinderNumber, instance.expectedCylinderNumber);
 
 	scheduleMsg(logger, " bore=%.2fmm freq=%.2fkHz",
 		engineConfiguration->cylinderBore,
@@ -423,8 +437,8 @@ static void showHipInfo(void) {
 		engineConfiguration->knockDetectionWindowStart,
 		engineConfiguration->knockDetectionWindowEnd);
 
-	scheduleMsg(logger, "Status: overruns %d",
-		instance.overrun);
+	scheduleMsg(logger, "Status: samples %d overruns %d sync miss %d",
+		instance.samples, instance.overrun, instance.unsync);
 
 	hipValueMax = 0;
 	engine->printKnockState();

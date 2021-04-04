@@ -7,6 +7,10 @@
 
 #include "global.h"
 #include "engine.h"
+/* getNextFiringCylinderId */
+#include "engine_math.h"
+/* getCylinderKnockBank */
+#include "knock_logic.h"
 #include "hip9011_logic.h"
 
 /*==========================================================================*/
@@ -182,4 +186,29 @@ void HIP9011::handleSettings(int rpm DEFINE_PARAM_SUFFIX(DEFINE_HIP_PARAMS)) {
 		if (ret == 0)
 			prescaler = new_prescaler;
 	}
+}
+
+int HIP9011::cylinderToChannelIdx(int cylinder) {
+	/* TODO: hip9011 inputs to bank mapping? */
+	return getCylinderKnockBank(cylinder);
+}
+
+void HIP9011::handleChannel(DEFINE_PARAM_SUFFIX(DEFINE_HIP_PARAMS)) {
+	int ret;
+
+	/* we did not receive any callback from spark logic with valid cylinder yet */
+	if (cylinderNumber < 0)
+		return;
+
+	/* find next firing cylinder */
+	/* MAGIC +1 -1, couse getNextFiringCylinderId expect cylinders to start from 1 */
+	expectedCylinderNumber = getNextFiringCylinderId(cylinderNumber + 1) - 1;
+
+	int nextChannelIdx = cylinderToChannelIdx(expectedCylinderNumber);
+	if (nextChannelIdx == channelIdx)
+		return;
+
+	ret = sendCommand(SET_CHANNEL_CMD(nextChannelIdx));
+	if (ret == 0)
+		channelIdx = nextChannelIdx;
 }

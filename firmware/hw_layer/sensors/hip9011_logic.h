@@ -68,6 +68,8 @@ public:
 	void prepareRpmLookup(void);
 	void setAngleWindowWidth(DEFINE_HIP_PARAMS);
 	void handleSettings(int rpm DEFINE_PARAM_SUFFIX(DEFINE_HIP_PARAMS));
+	int cylinderToChannelIdx(int cylinder);
+	void handleChannel(DEFINE_PARAM_SUFFIX(DEFINE_HIP_PARAMS));
 	float getBand(DEFINE_HIP_PARAMS);
 	int getIntegrationIndexByRpm(float rpm);
 	int getBandIndex(DEFINE_HIP_PARAMS);
@@ -98,11 +100,14 @@ public:
 	 * hipOutput should be set to used FAST adc device
 	 */
 	hip_state_e state;
-	uint8_t cylinderNumber;
+	int8_t cylinderNumber = -1;
+	int8_t expectedCylinderNumber = -1;
 	int raw_value;
 
-	/* error counters */
+	/* counters */
+	int samples = 0;
 	int overrun = 0;
+	int unsync = 0;
 
 	float rpmLookup[INT_LOOKUP_SIZE];
 };
