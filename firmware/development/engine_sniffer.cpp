@@ -75,7 +75,7 @@ static void resetNow(void) {
 	skipUntilEngineCycle = getRevolutionCounter() + 3;
 	waveChart.reset();
 }
-#endif
+#endif // EFI_UNIT_TEST
 
 WaveChart::WaveChart() : logging("wave chart", WAVE_LOGGING_BUFFER, sizeof(WAVE_LOGGING_BUFFER)) {
 }
@@ -115,6 +115,7 @@ bool WaveChart::isFull() const {
 	return counter >= CONFIG(engineChartSize);
 }
 
+#if ! EFI_UNIT_TEST
 static void printStatus(void) {
 	scheduleMsg(&logger, "engine chart: %s", boolToString(engineConfiguration->isEngineChartEnabled));
 	scheduleMsg(&logger, "engine chart size=%d", engineConfiguration->engineChartSize);
@@ -135,6 +136,7 @@ void setChartSize(int newSize) {
 	engineConfiguration->engineChartSize = newSize;
 	printStatus();
 }
+#endif // EFI_UNIT_TEST
 
 void WaveChart::publishIfFull() {
 	if (isFull() || isStartedTooLongAgo()) {
@@ -236,17 +238,16 @@ void initWaveChart(WaveChart *chart) {
 	 */
 	chart->init();
 
-	printStatus();
-
 #if EFI_HISTOGRAMS
 	initHistogram(&engineSnifferHisto, "wave chart");
 #endif /* EFI_HISTOGRAMS */
 
+#if ! EFI_UNIT_TEST
+	printStatus();
 	addConsoleActionI("chartsize", setChartSize);
 	addConsoleActionI("chart", setChartActive);
-#if ! EFI_UNIT_TEST
 	addConsoleAction(CMD_RESET_ENGINE_SNIFFER, resetNow);
-#endif
+#endif // EFI_UNIT_TEST
 }
 
 #endif /* EFI_ENGINE_SNIFFER */
