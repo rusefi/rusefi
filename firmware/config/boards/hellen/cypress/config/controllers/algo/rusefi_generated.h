@@ -1246,8 +1246,8 @@
 #define showHumanReadableWarning_offset 976
 #define showSdCardWarning_offset 76
 #define SIGNATURE_BOARD hellen_cypress
-#define SIGNATURE_DATE 2021.04.04
-#define SIGNATURE_HASH 1754588456
+#define SIGNATURE_DATE 2021.04.05
+#define SIGNATURE_HASH 963982174
 #define silentTriggerError_offset 1464
 #define slowAdcAlpha_offset 2088
 #define sparkDwellRpmBins_offset 332
@@ -1582,7 +1582,7 @@
 #define ts_show_spi true
 #define ts_show_trigger_comparator false
 #define ts_show_tunerstudio_port true
-#define TS_SIGNATURE "rusEFI 2021.04.04.hellen_cypress.1754588456"
+#define TS_SIGNATURE "rusEFI 2021.04.05.hellen_cypress.963982174"
 #define TS_SINGLE_WRITE_COMMAND 'W'
 #define TS_SINGLE_WRITE_COMMAND_char W
 #define TS_TEST_COMMAND 't' // 0x74

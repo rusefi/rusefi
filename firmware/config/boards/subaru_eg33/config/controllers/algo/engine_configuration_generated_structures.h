@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on config/boards/subaru_eg33/config/gen_config.sh integration/rusefi_config.txt Sun Apr 04 00:30:46 UTC 2021
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on config/boards/subaru_eg33/config/gen_config.sh integration/rusefi_config.txt Mon Apr 05 00:01:20 UTC 2021
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -726,6 +726,7 @@ struct engine_configuration_s {
 	offset 76 bit 23 */
 	bool useRunningMathForCranking : 1;
 	/**
+	 * Shall we display real life signal or just the part consumed by trigger decoder.
 	offset 76 bit 24 */
 	bool displayLogicLevelsInEngineSniffer : 1;
 	/**
@@ -3866,4 +3867,4 @@ struct persistent_config_s {
 typedef struct persistent_config_s persistent_config_s;
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on config/boards/subaru_eg33/config/gen_config.sh integration/rusefi_config.txt Sun Apr 04 00:30:46 UTC 2021
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on config/boards/subaru_eg33/config/gen_config.sh integration/rusefi_config.txt Mon Apr 05 00:01:20 UTC 2021
