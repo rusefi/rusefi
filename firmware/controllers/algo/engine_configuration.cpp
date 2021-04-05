@@ -670,7 +670,7 @@ void setDefaultEngineNoiseTable(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	engineConfiguration->knockNoise[7] = 2; // 7000
 }
 
-static void setHip9011FrankensoPinout() {
+static void setHip9011FrankensoPinout(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	/**
 	 * SPI on PB13/14/15
 	 */
@@ -1161,7 +1161,7 @@ void setDefaultFrankensoConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 #endif /* EFI_MEMS */
 
 #if EFI_HIP_9011
-	setHip9011FrankensoPinout();
+	setHip9011FrankensoPinout(PASS_CONFIG_PARAMETER_SIGNATURE);
 #endif /* EFI_HIP_9011 */
 
 #if EFI_FILE_LOGGING
