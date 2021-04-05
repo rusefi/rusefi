@@ -85,6 +85,7 @@ angle_t TriggerCentral::getVVTPosition(uint8_t bankIndex, uint8_t camIndex) {
 
 #define miataNbIndex (0)
 
+// todo: should we hard-code the list of 'not real decoder' modes instead of adding to list of 'real decoders'? these days we only add 'real decode' modes
 static bool vvtWithRealDecoder(vvt_mode_e vvtMode) {
 	return vvtMode == VVT_MIATA_NB2
 			|| vvtMode == VVT_BOSCH_QUICK_START
