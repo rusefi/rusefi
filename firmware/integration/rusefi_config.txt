@@ -506,7 +506,7 @@ end_struct
 injector_s injector
 
 bit isForcedInduction;
-bit unused_294_1;
+bit useFordRedundantTps;
 bit isVerboseAuxPid1;
 bit unused_294_3;
 bit unused_294_4;
