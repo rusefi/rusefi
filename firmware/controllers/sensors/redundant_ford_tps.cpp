@@ -9,8 +9,9 @@ RedundantFordTps::RedundantFordTps(SensorType outputType, SensorType first, Sens
 {
 }
 
-void RedundantFordTps::configure(float maxDifference) {
+void RedundantFordTps::configure(float maxDifference, float secondaryMaximum) {
 	m_maxDifference = maxDifference;
+	m_secondaryMaximum = secondaryMaximum;
 }
 
 SensorResult RedundantFordTps::get() const {

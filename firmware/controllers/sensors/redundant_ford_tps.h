@@ -11,7 +11,7 @@ public:
 		SensorType secondSensor
 	);
 
-	void configure(float maxDifference);
+	void configure(float maxDifference, float secondaryMaximum);
 
 	SensorResult get() const override;
 
@@ -30,5 +30,5 @@ private:
 	float m_maxDifference = 0;
 
 	// At what primary % does the secondary hit 100%?
-	float m_secondaryMaximum = 52.6f;
+	float m_secondaryMaximum = 0;
 };

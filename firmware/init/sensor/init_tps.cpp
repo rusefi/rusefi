@@ -91,7 +91,7 @@ static void initTpsFuncAndRedund(RedundantSensor& redund, RedundantFordTps* ford
 	bool hasSecond = initTpsFunc(func, sensor, channel, closed, open, min, max);
 
 	if (isFordTps && fordTps) {
-		fordTps->configure(5.0f);
+		fordTps->configure(5.0f, 52.6f);
 		fordTps->Register();
 	} else {
 		redund.configure(5.0f, !hasSecond);
