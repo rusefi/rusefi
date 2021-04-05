@@ -137,7 +137,7 @@ void hwHandleVvtCamSignal(trigger_value_e front, efitick_t nowNt, int index DECL
 		return;
 	}
 
-	if (CONFIG(displayLogicLevelsInEngineSniffer)) {
+	if (CONFIG(displayLogicLevelsInEngineSniffer) && isImportantFront) {
 		if (CONFIG(vvtCamSensorUseRise)) {
 			// todo: unify TS composite logger code with console Engine Sniffer
 			// todo: better API to reduce copy/paste?
