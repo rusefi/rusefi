@@ -18,6 +18,12 @@
 #include "tooth_logger.h"
 #include "logicdata.h"
 
+#if EFI_ENGINE_SNIFFER
+#include "engine_sniffer.h"
+extern WaveChart waveChart;
+#endif /* EFI_ENGINE_SNIFFER */
+
+
 extern int timeNowUs;
 extern WarningCodeState unitTestWarningCodeState;
 extern engine_configuration_s & activeConfiguration;
@@ -56,6 +62,9 @@ EngineTestHelper::EngineTestHelper(engine_type_e engineType, configuration_callb
 	Engine *engine = &this->engine;
 	engine->setConfig(engine, &persistentConfig.engineConfiguration, &persistentConfig);
 	EXPAND_Engine;
+
+	INJECT_ENGINE_REFERENCE(&waveChart);
+	waveChart.init();
 
 	setCurveValue(config->cltFuelCorrBins, config->cltFuelCorr, CLT_CURVE_SIZE, -40, 1.5);
 	setCurveValue(config->cltFuelCorrBins, config->cltFuelCorr, CLT_CURVE_SIZE, -30, 1.5);
