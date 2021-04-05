@@ -16,6 +16,7 @@
 #include "tooth_logger.h"
 
 #include "hip9011.h"
+#include "engine_ptr.h"
 
 #if EFI_ENGINE_CONTROL
 
@@ -246,6 +247,7 @@ static void startDwellByTurningSparkPinHigh(IgnitionEvent *event, IgnitionOutput
 #if HW_CHECK_SPARK_FSIO
 	enginePins.fsioOutputs[event->cylinderIndex].setValue(1);
 #endif // HW_CHECK_SPARK_FSIO
+    INJECT_ENGINE_REFERENCE(output);
 	output->setHigh();
 }
 

@@ -143,6 +143,7 @@ CPPSRC = $(UTILSRC_CPP) \
 	$(TRIGGER_SRC_CPP) \
 	$(INIT_SRC_CPP) \
 	$(PROJECT_DIR)/../unit_tests/logicdata.cpp \
+	$(DEVELOPMENT_DIR)/engine_sniffer.cpp \
 	$(PROJECT_DIR)/../unit_tests/main.cpp \
 	$(PROJECT_DIR)/console/binary/tooth_logger.cpp \
 	$(PROJECT_DIR)/console/binary_log/log_field.cpp \
