@@ -31,6 +31,7 @@ public:
 	bool isStartedTooLongAgo() const;
 	// looks like this is only used by functional tests on real hardware
 	efitick_t pauseEngineSnifferUntilNt = 0;
+	int getSize();
 
 private:
 	Logging logging;
