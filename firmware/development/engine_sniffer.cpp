@@ -115,6 +115,10 @@ bool WaveChart::isFull() const {
 	return counter >= CONFIG(engineChartSize);
 }
 
+int WaveChart::getSize() {
+	return counter;
+}
+
 #if ! EFI_UNIT_TEST
 static void printStatus(void) {
 	scheduleMsg(&logger, "engine chart: %s", boolToString(engineConfiguration->isEngineChartEnabled));
