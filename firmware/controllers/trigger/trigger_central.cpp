@@ -131,7 +131,8 @@ void hwHandleVvtCamSignal(trigger_value_e front, efitick_t nowNt, int index DECL
 	}
 
 
-	if (!vvtWithRealDecoder(engineConfiguration->vvtMode[camIndex]) && (CONFIG(vvtCamSensorUseRise) ^ (front != TV_FALL))) {
+	bool isImportantFront = (CONFIG(vvtCamSensorUseRise) ^ (front == TV_FALL));
+	if (!vvtWithRealDecoder(engineConfiguration->vvtMode[camIndex]) && !isImportantFront) {
 		// todo: there should be a way to always use real trigger code for this logic?
 		return;
 	}
