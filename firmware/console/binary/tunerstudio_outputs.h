@@ -166,7 +166,7 @@ typedef struct {
 	scaled_channel<uint16_t, 100> afrTableYAxis; // 106
 
 	// Knock
-	float knockLevel; // 108
+	scaled_channel<float> knockLevel; // 108
 
 	// Mode, firmware, protocol, run time
 	uint32_t timeSeconds; // 112

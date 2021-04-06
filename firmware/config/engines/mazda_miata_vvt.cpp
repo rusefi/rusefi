@@ -296,6 +296,11 @@ static void setMazdaMiataEngineNB2Defaults(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	setCommonNTCSensor(&engineConfiguration->iat, 2700);
 	setMAFTransferFunction(PASS_CONFIG_PARAMETER_SIGNATURE);
 
+	// set tps_min 90
+	engineConfiguration->tpsMin = 100; // convert 12to10 bit (ADC/4)
+	// set tps_max 540
+	engineConfiguration->tpsMax = 650; // convert 12to10 bit (ADC/4)
+
 	// set idle_position 35
 	engineConfiguration->manIdlePosition = 35;
 
@@ -435,10 +440,6 @@ void setMazdaMiata2003EngineConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	engineConfiguration->ignitionPins[2] = GPIOC_9;
 	engineConfiguration->ignitionPins[3] = GPIO_UNASSIGNED;
 
-	// set tps_min 90
-	engineConfiguration->tpsMin = 100; // convert 12to10 bit (ADC/4)
-	// set tps_max 540
-	engineConfiguration->tpsMax = 650; // convert 12to10 bit (ADC/4)
 
 
 	engineConfiguration->malfunctionIndicatorPin = GPIOD_5;

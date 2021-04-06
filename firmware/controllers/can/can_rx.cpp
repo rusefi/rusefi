@@ -80,19 +80,23 @@ static void printPacket(const CANRxFrame &rx, Logging *logger) {
 
 volatile float canMap = 0;
 
-CanSensorBase *cansensors_head = nullptr;
+CanListener *canListeners_head = nullptr;
 
 void serviceCanSubscribers(const CANRxFrame &frame, efitick_t nowNt) {
-	CanSensorBase *current = cansensors_head;
+	CanListener *current = canListeners_head;
 
 	while (current) {
 		current = current->processFrame(frame, nowNt);
 	}
 }
 
-void registerCanSensor(CanSensorBase &sensor) {
-	sensor.setNext(cansensors_head);
-	cansensors_head = &sensor;
+void registerCanListener(CanListener& listener) {
+	listener.setNext(canListeners_head);
+	canListeners_head = &listener;
+}
+
+void registerCanSensor(CanSensorBase& sensor) {
+	registerCanListener(sensor);
 	sensor.Register();
 }
 

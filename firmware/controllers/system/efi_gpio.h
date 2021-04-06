@@ -91,6 +91,8 @@ private:
  */
 class NamedOutputPin : public virtual OutputPin {
 public:
+	DECLARE_ENGINE_PTR;
+
 	NamedOutputPin();
 	explicit NamedOutputPin(const char *name);
 	void setHigh();

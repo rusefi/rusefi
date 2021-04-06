@@ -8,6 +8,9 @@
 #include "engine_test_helper.h"
 extern WarningCodeState unitTestWarningCodeState;
 
+#include "engine_sniffer.h"
+extern WaveChart waveChart;
+
 TEST(trigger, testNoStartUpWarningsNoSyncronizationTrigger) {
 	WITH_ENGINE_TEST_HELPER(TEST_ENGINE);
 	// one tooth does not need synchronization it just counts tooth
@@ -163,4 +166,6 @@ TEST(sensors, testNB2CamInput) {
 	ASSERT_NEAR(-67.6 - 720 - 720, engine->triggerCentral.getVVTPosition(0, 0), EPS3D);
 	// actually position based on VVT!
 	ASSERT_EQ(totalRevolutionCountBeforeVvtSync + 2, engine->triggerCentral.triggerState.getTotalRevolutionCounter());
+
+	ASSERT_EQ(26, waveChart.getSize());
 }
