@@ -3,7 +3,7 @@
 
 #include "can_sensor.h"
 
-class EGTtoCAN final : public CanSensorBase {
+class EGTtoCAN final : public CanListener {
 public:
 	EGTtoCAN(uint8_t EGTIndex, SensorType type);
 
