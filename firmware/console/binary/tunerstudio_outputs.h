@@ -272,7 +272,7 @@ typedef struct {
 	scaled_angle vvtPositionBank2; // 292
 	scaled_angle secondVvtPositionBank2; // 294
 
-	scaled_percent fuelTrim[2];	// 296
+	scaled_percent fuelTrim[2];	// 296 & 298
 
 	uint8_t unusedAtTheEnd[38]; // we have some unused bytes to allow compatible TS changes
 
