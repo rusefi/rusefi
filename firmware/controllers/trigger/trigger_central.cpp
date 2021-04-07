@@ -85,6 +85,7 @@ angle_t TriggerCentral::getVVTPosition(uint8_t bankIndex, uint8_t camIndex) {
 
 #define miataNbIndex (0)
 
+// todo: should we hard-code the list of 'not real decoder' modes instead of adding to list of 'real decoders'? these days we only add 'real decode' modes
 static bool vvtWithRealDecoder(vvt_mode_e vvtMode) {
 	return vvtMode == VVT_MIATA_NB2
 			|| vvtMode == VVT_BOSCH_QUICK_START
@@ -130,12 +131,13 @@ void hwHandleVvtCamSignal(trigger_value_e front, efitick_t nowNt, int index DECL
 	}
 
 
-	if (!vvtWithRealDecoder(engineConfiguration->vvtMode[camIndex]) && (CONFIG(vvtCamSensorUseRise) ^ (front != TV_FALL))) {
+	bool isImportantFront = (CONFIG(vvtCamSensorUseRise) ^ (front == TV_FALL));
+	if (!vvtWithRealDecoder(engineConfiguration->vvtMode[camIndex]) && !isImportantFront) {
 		// todo: there should be a way to always use real trigger code for this logic?
 		return;
 	}
 
-	if (CONFIG(displayLogicLevelsInEngineSniffer)) {
+	if (CONFIG(displayLogicLevelsInEngineSniffer) && isImportantFront) {
 		if (CONFIG(vvtCamSensorUseRise)) {
 			// todo: unify TS composite logger code with console Engine Sniffer
 			// todo: better API to reduce copy/paste?

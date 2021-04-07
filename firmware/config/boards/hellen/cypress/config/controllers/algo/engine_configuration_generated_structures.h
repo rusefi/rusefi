@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on hellen_cypress_gen_config.bat integration/rusefi_config.txt Mon Mar 29 13:06:07 UTC 2021
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on hellen_cypress_gen_config.bat integration/rusefi_config.txt Mon Apr 05 19:58:27 UTC 2021
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -650,7 +650,7 @@ struct engine_configuration_s {
 	bool isForcedInduction : 1;
 	/**
 	offset 76 bit 1 */
-	bool unused_294_1 : 1;
+	bool useFordRedundantTps : 1;
 	/**
 	offset 76 bit 2 */
 	bool isVerboseAuxPid1 : 1;
@@ -726,6 +726,7 @@ struct engine_configuration_s {
 	offset 76 bit 23 */
 	bool useRunningMathForCranking : 1;
 	/**
+	 * Shall we display real life signal or just the part consumed by trigger decoder.
 	offset 76 bit 24 */
 	bool displayLogicLevelsInEngineSniffer : 1;
 	/**
@@ -3866,4 +3867,4 @@ struct persistent_config_s {
 typedef struct persistent_config_s persistent_config_s;
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on hellen_cypress_gen_config.bat integration/rusefi_config.txt Mon Mar 29 13:06:07 UTC 2021
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on hellen_cypress_gen_config.bat integration/rusefi_config.txt Mon Apr 05 19:58:27 UTC 2021

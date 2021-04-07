@@ -2,6 +2,7 @@
 #include "proxy_sensor.h"
 #include "functional_sensor.h"
 #include "redundant_sensor.h"
+#include "redundant_ford_tps.h"
 #include "rpm_calculator.h"
 #include "Lps25Sensor.h"
 #include "linear_func.h"
@@ -35,6 +36,10 @@ void CanSensorBase::showInfo(Logging* logger, const char* sensorName) const {
 
 void RedundantSensor::showInfo(Logging* logger, const char* sensorName) const {
 	scheduleMsg(logger, "Sensor \"%s\" is redundant combining \"%s\" and \"%s\"", sensorName, getSensorName(m_first), getSensorName(m_second));
+}
+
+void RedundantFordTps::showInfo(Logging* logger, const char* sensorName) const {
+	scheduleMsg(logger, "Sensor \"%s\" is Ford-type redundant TPS combining \"%s\" and \"%s\"", sensorName, getSensorName(m_first), getSensorName(m_second));
 }
 
 void RpmCalculator::showInfo(Logging* logger, const char* /*sensorName*/) const {

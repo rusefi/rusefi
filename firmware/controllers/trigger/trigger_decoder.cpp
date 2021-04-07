@@ -90,6 +90,9 @@ void TriggerState::setTriggerErrorState() {
 void TriggerState::resetCurrentCycleState() {
 	memset(currentCycle.eventCount, 0, sizeof(currentCycle.eventCount));
 	memset(currentCycle.timeOfPreviousEventNt, 0, sizeof(currentCycle.timeOfPreviousEventNt));
+#if EFI_UNIT_TEST
+	memcpy(currentCycle.totalTimeNtCopy, currentCycle.totalTimeNt, sizeof(currentCycle.totalTimeNt));
+#endif
 	memset(currentCycle.totalTimeNt, 0, sizeof(currentCycle.totalTimeNt));
 	currentCycle.current_index = 0;
 }

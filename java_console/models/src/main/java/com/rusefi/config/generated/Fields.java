@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Mon Mar 29 13:05:35 UTC 2021
+// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Mon Apr 05 19:58:05 UTC 2021
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -617,6 +617,8 @@ public class Fields {
 	public static final String GAUGE_NAME_AFR2 = "Air/Fuel Ratio 2";
 	public static final String GAUGE_NAME_AIR_FLOW = "MAF air flow";
 	public static final String GAUGE_NAME_AIR_MASS = "air mass";
+	public static final String GAUGE_NAME_AUX_TEMP1 = "Aux temp 1";
+	public static final String GAUGE_NAME_AUX_TEMP2 = "Aux temp 2";
 	public static final String GAUGE_NAME_BARO_PRESSURE = "Barometric pressure";
 	public static final String GAUGE_NAME_CLT = "CLT";
 	public static final String GAUGE_NAME_CPU_TEMP = "CPU Temperature";
@@ -651,7 +653,6 @@ public class Fields {
 	public static final String GAUGE_NAME_FUEL_INJ_DUTY = "fuel: injector duty cycle";
 	public static final String GAUGE_NAME_FUEL_LAST_INJECTION = "fuel: Last injection";
 	public static final String GAUGE_NAME_FUEL_LOAD = "fuel: load";
-	public static final String GAUGE_NAME_FUEL_PID_CORR = "fuel: Short-term fuel trim";
 	public static final String GAUGE_NAME_FUEL_PRESSURE_HIGH = "Fuel pressure (high)";
 	public static final String GAUGE_NAME_FUEL_PRESSURE_HIGH_UNITS = "bar";
 	public static final String GAUGE_NAME_FUEL_PRESSURE_LOW = "Fuel pressure (low)";
@@ -659,6 +660,7 @@ public class Fields {
 	public static final String GAUGE_NAME_FUEL_RUNNING = "fuel: running";
 	public static final String GAUGE_NAME_FUEL_TPS_EXTRA = "fuel: TPS acceleration extra fuel ms";
 	public static final String GAUGE_NAME_FUEL_TPS_ROC = "fuel: TPS change";
+	public static final String GAUGE_NAME_FUEL_TRIM = "fuel: fuel trim";
 	public static final String GAUGE_NAME_FUEL_VE = "fuel: VE";
 	public static final String GAUGE_NAME_FUEL_WALL_AMOUNT = "fuel: wall amount";
 	public static final String GAUGE_NAME_FUEL_WALL_CORRECTION = "fuel: wall corr ms";
@@ -1196,6 +1198,7 @@ public class Fields {
 	public static final int servoOutputPins8_offset = 3147;
 	public static final int showHumanReadableWarning_offset = 976;
 	public static final int showSdCardWarning_offset = 76;
+	public static final int SIGNATURE_HASH = 1309068320;
 	public static final int silentTriggerError_offset = 1464;
 	public static final int slowAdcAlpha_offset = 2088;
 	public static final int sparkDwellRpmBins_offset = 332;
@@ -1479,7 +1482,7 @@ public class Fields {
 	public static final char TS_SD_R_COMMAND = 'r';
 	public static final char TS_SD_W_COMMAND = 'w';
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI 2021.03.29.all.3808906512";
+	public static final String TS_SIGNATURE = "rusEFI 2021.04.05.all.1309068320";
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final int TT_TT_1_16 = 50;
 	public static final int TT_TT_2JZ_1_12 = 29;
@@ -1567,7 +1570,6 @@ public class Fields {
 	public static final int unused_1484_bit_29_offset = 1476;
 	public static final int unused_1484_bit_30_offset = 1476;
 	public static final int unused_1484_bit_31_offset = 1476;
-	public static final int unused_294_1_offset = 76;
 	public static final int unused_294_3_offset = 76;
 	public static final int unused_294_4_offset = 76;
 	public static final int unused_294_5_offset = 76;
@@ -1617,6 +1619,7 @@ public class Fields {
 	public static final int useConstantDwellDuringCranking_offset = 1464;
 	public static final int useETBforIdleControl_offset = 744;
 	public static final int useFixedBaroCorrFromMap_offset = 1476;
+	public static final int useFordRedundantTps_offset = 76;
 	public static final int useFSIO10ForServo3_offset = 1464;
 	public static final int useFSIO11ForServo4_offset = 1464;
 	public static final int useFSIO12ForIdleOffset_offset = 1464;
@@ -1692,7 +1695,7 @@ public class Fields {
 	public static final Field ENGINESNIFFERRPMTHRESHOLD = Field.create("ENGINESNIFFERRPMTHRESHOLD", 4, FieldType.INT);
 	public static final Field INJECTOR_FLOW = Field.create("INJECTOR_FLOW", 8, FieldType.FLOAT);
 	public static final Field ISFORCEDINDUCTION = Field.create("ISFORCEDINDUCTION", 76, FieldType.BIT, 0);
-	public static final Field UNUSED_294_1 = Field.create("UNUSED_294_1", 76, FieldType.BIT, 1);
+	public static final Field USEFORDREDUNDANTTPS = Field.create("USEFORDREDUNDANTTPS", 76, FieldType.BIT, 1);
 	public static final Field ISVERBOSEAUXPID1 = Field.create("ISVERBOSEAUXPID1", 76, FieldType.BIT, 2);
 	public static final Field UNUSED_294_3 = Field.create("UNUSED_294_3", 76, FieldType.BIT, 3);
 	public static final Field UNUSED_294_4 = Field.create("UNUSED_294_4", 76, FieldType.BIT, 4);
@@ -2777,7 +2780,7 @@ public class Fields {
 	ENGINESNIFFERRPMTHRESHOLD,
 	INJECTOR_FLOW,
 	ISFORCEDINDUCTION,
-	UNUSED_294_1,
+	USEFORDREDUNDANTTPS,
 	ISVERBOSEAUXPID1,
 	UNUSED_294_3,
 	UNUSED_294_4,

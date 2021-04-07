@@ -38,8 +38,10 @@
 #define SD_STATE_SEEK_FAILED "SEEK_FAILED"
 #define SD_STATE_NOT_INSERTED "NOT_INSERTED"
 #define SD_STATE_CONNECTING "CONNECTING"
+#define SD_STATE_MSD "MSD"
 #define SD_STATE_NOT_CONNECTED "NOT_CONNECTED"
 
+// todo: shall we migrate to enum with enum2string for consistency? maybe not until we start reading sdStatus?
 static const char *sdStatus = SD_STATE_INIT;
 static bool fs_ready = false;
 
@@ -384,6 +386,7 @@ static BaseBlockDevice* initializeMmcBlockDevice() {
 		UNLOCK_SD_SPI;
 		return nullptr;
 	}
+	// We intentionally never unlock in case of success, we take exclusive access of that spi device for SD use
 
 	return reinterpret_cast<BaseBlockDevice*>(&MMCD1);
 }
@@ -430,6 +433,7 @@ static bool mountMmc() {
 		// Mount the real card to USB
 		msdStart(&USBMSD1, usb_driver, cardBlockDevice, blkbuf, &scsi_inquiry_response, NULL);
 
+		sdStatus = SD_STATE_MSD;
 		// At this point we're done: don't try to write files ourselves
 		return false;
 	} else {
