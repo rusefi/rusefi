@@ -131,6 +131,7 @@ public:
 	efitick_t toothed_previous_time;
 
 	current_cycle_state_s currentCycle;
+	const char *name = nullptr;
 
 	int expectedTotalTime[PWM_PHASE_MAX_WAVE_PER_PWM];
 
