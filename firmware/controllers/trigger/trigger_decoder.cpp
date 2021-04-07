@@ -550,7 +550,12 @@ void TriggerState::decodeTriggerEvent(
 
 				int rpm = GET_RPM();
 				floatms_t engineCycleDuration = getEngineCycleDuration(rpm PASS_ENGINE_PARAMETER_SUFFIX);
-				scheduleMsg(logger, "duty %f", currentCycle.totalTimeNt[0] / engineCycleDuration);
+				int time = currentCycle.totalTimeNt[0];
+				scheduleMsg(logger, "%s duty %f %d",
+						name,
+						time / engineCycleDuration,
+						time
+						);
 
 				for (int i = 0;i<triggerShape.gapTrackingLength;i++) {
 					float ratioFrom = triggerShape.syncronizationRatioFrom[i];
