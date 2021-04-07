@@ -10,6 +10,7 @@
 #include "global.h"
 #include "globalaccess.h"
 #include "can_EGTtoCAN.h"
+#include "tunerstudio_outputs.h"
 
 // EGTTOCAN message format - MsgID, Length, EGT#, EGT#, EGT#, EGT#
 // EGT 1-4 comes in on SID 610h, EGT 5-8 comes in on SID 611h
@@ -19,28 +20,28 @@
 // Need to add a config field for EM EGTtoCAN to allow .ini to have { max31855_cs1 != 0 || enableEcumasterEgt }
 
 
-EGTtoCAN::EGTtoCAN(uint8_t EGTIndex, SensorType type)
-	: CanSensorBase(
-		0x610 + EGTIndex,	
-		type
-	)
-{}
+EGTtoCAN::EGTtoCAN(uint8_t EGTIndex)
+	: CanListener(0x610 + EGTIndex)
+	, m_egtIndex(EGTIndex)
+{
+}
 
 void EGTtoCAN::decodeFrame(const CANRxFrame& frame, efitick_t nowNt) {
 	if (frame.DLC != 8) {
-		invalidate();
 		return;
 	}
-	if (EGTIndex = 0) {
-		uint16_t egt1 = SWAP_UINT16(frame.data16[0]);
-		uint16_t egt2 = SWAP_UINT16(frame.data16[2]);
-		uint16_t egt3 = SWAP_UINT16(frame.data16[4]);
-		uint16_t egt4 = SWAP_UINT16(frame.data16[6]);
-	}
-	else {
-		uint16_t egt5 = SWAP_UINT16(frame.data16[0]);
-		uint16_t egt6 = SWAP_UINT16(frame.data16[2]);
-		uint16_t egt7 = SWAP_UINT16(frame.data16[4]);
-		uint16_t egt8 = SWAP_UINT16(frame.data16[6]);
+
+	auto& egts = tsOutputChannels.egtValues.values;
+
+	if (m_egtIndex == 0) {
+		egts[0] = SWAP_UINT16(frame.data16[0]);
+		egts[1] = SWAP_UINT16(frame.data16[2]);
+		egts[2] = SWAP_UINT16(frame.data16[4]);
+		egts[3] = SWAP_UINT16(frame.data16[6]);
+	} else {
+		egts[4] = SWAP_UINT16(frame.data16[0]);
+		egts[5] = SWAP_UINT16(frame.data16[2]);
+		egts[6] = SWAP_UINT16(frame.data16[4]);
+		egts[7] = SWAP_UINT16(frame.data16[6]);
 	}
 }

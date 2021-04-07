@@ -46,8 +46,8 @@ ObdCanSensor<1, 0> obdTpsSensor(
 //);
 
 #include "can_EGTtoCAN.h"
-static EGTtoCAN EMEGT14 (0, SensorType::EMEGT14);
-static EGTtoCAN EMEGT58 (1, SensorType::EMEGT58);
+static EGTtoCAN EMEGT14(0);
+static EGTtoCAN EMEGT58(1);
 
 void initCanSensors() {
 	if (CONFIG(consumeObdSensors)) {
@@ -57,5 +57,8 @@ void initCanSensors() {
 		registerCanSensor(obdIatSensor);
 		registerCanSensor(obdTpsSensor);
 	}
+
+	registerCanListener(EMEGT14);
+	registerCanListener(EMEGT58);
 }
 #endif // EFI_CAN_SUPPORT
