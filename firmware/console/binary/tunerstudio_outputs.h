@@ -133,7 +133,7 @@ typedef struct {
 	scaled_percent iatCorrection; // 64
 	scaled_percent cltCorrection; // 66
 	scaled_percent baroCorrection; // 68
-	scaled_percent shortTermFuelTrim; // 70
+	uint16_t unused70; // 70
 
 	// Wall model AE
 	scaled_ms wallFuelAmount; // 72
@@ -271,7 +271,10 @@ typedef struct {
 	scaled_angle secondVvtPositionBank1; // 290
 	scaled_angle vvtPositionBank2; // 292
 	scaled_angle secondVvtPositionBank2; // 294
-	uint8_t unusedAtTheEnd[42]; // we have some unused bytes to allow compatible TS changes
+
+	scaled_percent fuelTrim[2];	// 296
+
+	uint8_t unusedAtTheEnd[38]; // we have some unused bytes to allow compatible TS changes
 
 	// Temporary - will remove soon
 	TsDebugChannels* getDebugChannels() {

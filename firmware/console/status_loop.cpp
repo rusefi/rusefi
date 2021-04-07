@@ -597,9 +597,8 @@ void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels DECLARE_
 	// 120
 	tsOutputChannels->firmwareVersion = getRusEfiVersion();
 	// 268
-	tsOutputChannels->shortTermFuelTrim = 100.0f * (ENGINE(stftCorrection) - 1.0f);
-	//tsOutputChannels->fuelTrim[0] = 100.0f * (ENGINE(stftCorrection)[0] - 1.0f);
-	//tsOutputChannels->fuelTrim[1] = 100.0f * (ENGINE(stftCorrection)[1] - 1.0f);
+	tsOutputChannels->fuelTrim[0] = 100.0f * (ENGINE(stftCorrection)[0] - 1.0f);
+	tsOutputChannels->fuelTrim[1] = 100.0f * (ENGINE(stftCorrection)[1] - 1.0f);
 
 	// 276
 	tsOutputChannels->accelerationX = engine->sensors.accelerometer.x;
