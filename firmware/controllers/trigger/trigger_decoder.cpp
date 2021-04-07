@@ -547,6 +547,11 @@ void TriggerState::decodeTriggerEvent(
 
 #if EFI_PROD_CODE || EFI_SIMULATOR
 			if (triggerConfiguration.VerboseTriggerSynchDetails || (someSortOfTriggerError && !silentTriggerError)) {
+
+				int rpm = GET_RPM();
+				floatms_t engineCycleDuration = getEngineCycleDuration(rpm PASS_ENGINE_PARAMETER_SUFFIX);
+				scheduleMsg(logger, "duty %f", currentCycle.totalTimeNt[0] / engineCycleDuration);
+
 				for (int i = 0;i<triggerShape.gapTrackingLength;i++) {
 					float ratioFrom = triggerShape.syncronizationRatioFrom[i];
 					if (cisnan(ratioFrom)) {

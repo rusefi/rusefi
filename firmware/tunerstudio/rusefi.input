@@ -1833,7 +1833,8 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 		;field = "VVT offset bank 1 exhaust",			vvtOffset2
 		;field = "VVT offset bank 2 intake",			vvtOffset3
 		;field = "VVT offset bank 2 exhaust",			vvtOffset4
-	    field = "print verbose VVT sync details to console",verboseVVTDecoding
+	    field = "Print verbose VVT sync details to console",verboseVVTDecoding
+	    field = "Print verbose trigger sync to console",   verboseTriggerSynchDetails
 	    field = "Do not print messages in case of sync error",  silentTriggerError
 	    field = "Enable noise filtering",				useNoiselessTriggerDecoder, {trigger_type == @@TT_TT_TOOTHED_WHEEL_60_2@@ || trigger_type == @@TT_TT_TOOTHED_WHEEL_36_1@@}
 
