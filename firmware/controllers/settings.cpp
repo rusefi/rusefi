@@ -812,6 +812,8 @@ static void enableOrDisable(const char *param, bool isEnabled) {
 		CONFIG(useTLE8888_cranking_hack) = isEnabled;
 	} else if (strEqualCaseInsensitive(param, "verboseTLE8888")) {
 		CONFIG(verboseTLE8888) = isEnabled;
+	} else if (strEqualCaseInsensitive(param, "logic_level_trigger")) {
+		CONFIG(displayLogicLevelsInEngineSniffer) = isEnabled;
 	} else if (strEqualCaseInsensitive(param, "can_broadcast")) {
 		CONFIG(enableVerboseCanTx) = isEnabled;
 	} else if (strEqualCaseInsensitive(param, "etb_auto")) {
