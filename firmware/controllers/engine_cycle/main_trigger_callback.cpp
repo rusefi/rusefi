@@ -205,9 +205,13 @@ void InjectionEvent::onTriggerTooth(size_t trgEventIndex, int rpm, efitick_t now
 		return;
 	}
 
+	// Select fuel mass from the correct bank
+	uint8_t bankIndex = CONFIG(cylinderBankSelect[this->ownIndex]);
+	float injectionMassGrams = ENGINE(injectionMass)[bankIndex];
+
 	// Perform wall wetting adjustment on fuel mass, not duration, so that
 	// it's correct during fuel pressure (injector flow) or battery voltage (deadtime) transients
-	const float injectionMassGrams = wallFuel.adjust(ENGINE(injectionMass) PASS_ENGINE_PARAMETER_SUFFIX);
+	injectionMassGrams = wallFuel.adjust(injectionMassGrams PASS_ENGINE_PARAMETER_SUFFIX);
 	const floatms_t injectionDuration = ENGINE(injectorModel)->getInjectionDuration(injectionMassGrams);
 
 #if EFI_PRINTF_FUEL_DETAILS
@@ -231,7 +235,8 @@ void InjectionEvent::onTriggerTooth(size_t trgEventIndex, int rpm, efitick_t now
 
 	ENGINE(engineState.fuelConsumption).consumeFuel(injectionMassGrams * numberOfInjections, nowNt);
 
-	ENGINE(actualLastInjection) = injectionDuration;
+	ENGINE(actualLastInjection)[bankIndex] = injectionDuration;
+
 	if (cisnan(injectionDuration)) {
 		warning(CUSTOM_OBD_NAN_INJECTION, "NaN injection pulse");
 		return;

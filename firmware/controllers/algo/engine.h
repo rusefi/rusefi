@@ -238,12 +238,14 @@ public:
 	floatms_t injectionDuration = 0;
 
 	// Per-injection fuel mass, including TPS accel enrich
-	float injectionMass = 0;
+	float injectionMass[STFT_BANK_COUNT] = {0};
+
+	float stftCorrection[STFT_BANK_COUNT] = {0};
 
 	/**
 	 * This one with wall wetting accounted for, used for logging.
 	 */
-	floatms_t actualLastInjection = 0;
+	floatms_t actualLastInjection[STFT_BANK_COUNT] = {0};
 
 	// Standard cylinder air charge - 100% VE at standard temperature, grams per cylinder
 	float standardAirCharge = 0;
