@@ -10,7 +10,9 @@
 
 #include "hal.h"
 
-#if HAL_USE_USB_MSD
-void initUsbMsd();
-void attachMsdSdCard(BaseBlockDevice* blkdev);
-#endif
+struct NullDevice {
+	const struct BaseBlockDeviceVMT *vmt;
+	_base_block_device_data
+};
+
+extern NullDevice ND1;

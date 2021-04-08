@@ -125,7 +125,7 @@
 #include "mpu_util.h"
 #include "tunerstudio.h"
 #include "mmc_card.h"
-#include "null_device.h"
+#include "mass_storage_init.h"
 #include "trigger_emulator_algo.h"
 
 #if EFI_HD44780_LCD

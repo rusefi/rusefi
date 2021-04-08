@@ -26,7 +26,7 @@
 #include "engine_configuration.h"
 #include "status_loop.h"
 #include "buffered_writer.h"
-#include "null_device.h"
+#include "mass_storage_init.h"
 #include "thread_priority.h"
 
 #include "rtc_helper.h"
