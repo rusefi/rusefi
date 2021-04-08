@@ -132,7 +132,7 @@ typedef FLStack<float, MAX_STACK_DEPTH> calc_stack_t;
 class LECalculator {
 public:
 	LECalculator();
-	float evaluate(float selfValue, const LEElement* element DECLARE_ENGINE_PARAMETER_SUFFIX);
+	float evaluate(const char * msg, float selfValue, const LEElement* element DECLARE_ENGINE_PARAMETER_SUFFIX);
 	void reset();
 
 	// Log history of calculation actions for debugging

@@ -259,7 +259,7 @@ FsioResult LECalculator::processElement(const LEElement *element DECLARE_ENGINE_
 	}
 }
 
-float LECalculator::evaluate(float selfValue, const LEElement* element DECLARE_ENGINE_PARAMETER_SUFFIX) {
+float LECalculator::evaluate(const char * msg, float selfValue, const LEElement* element DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	if (!element) {
 		warning(CUSTOM_NO_FSIO, "no FSIO code");
 		return NAN;
