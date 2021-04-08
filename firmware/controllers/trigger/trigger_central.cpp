@@ -227,7 +227,7 @@ void hwHandleVvtCamSignal(trigger_value_e front, efitick_t nowNt, int index DECL
     // we do NOT clamp VVT position into the [0, engineCycle) range - we expect vvtOffset to be configured so that
     // it's not necessary
 	tc->vvtPosition[bankIndex][camIndex] = engineConfiguration->vvtOffset - currentPosition;
-	if (tc->vvtPosition[bankIndex][camIndex] < 0 || tc->vvtPosition[bankIndex][camIndex] > ENGINE(engineCycle)) {
+	if (tc->vvtPosition[bankIndex][camIndex] < -ENGINE(engineCycle) / 2 || tc->vvtPosition[bankIndex][camIndex] > ENGINE(engineCycle) / 2) {
 		warning(CUSTOM_ERR_VVT_OUT_OF_RANGE, "Please adjust vvtOffset since position %f", tc->vvtPosition);
 	}
 
