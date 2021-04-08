@@ -2,6 +2,8 @@
 #include "mass_storage_device.h"
 #include "null_device.h"
 
+#if HAL_USE_USB_MSD
+
 #if EFI_EMBED_INI_MSD
 	#ifdef EFI_USE_COMPRESSED_INI_MSD
 		#include "compressed_block_device.h"
@@ -22,7 +24,6 @@
 	#endif
 #endif
 
-#if HAL_USE_USB_MSD
 #if STM32_USB_USE_OTG2
   USBDriver *usb_driver = &USBD2;
 #else
@@ -105,4 +106,5 @@ void initUsbMsd() {
 	// start the mass storage thread
 	msd.Start();
 }
-#endif
+
+#endif // HAL_USE_USB_MSD
