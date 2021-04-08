@@ -345,7 +345,7 @@ float getFsioOutputValue(int index DECLARE_ENGINE_PARAMETER_SUFFIX) {
 		warning(CUSTOM_NO_FSIO, "no FSIO for #%d %s", index + 1, hwPortname(CONFIG(fsioOutputPins)[index]));
 		return NAN;
 	} else {
-		return calc.evaluate(engine->fsioState.fsioLastValue[index], state.fsioLogics[index] PASS_ENGINE_PARAMETER_SUFFIX);
+		return calc.evaluate("FSIO", engine->fsioState.fsioLastValue[index], state.fsioLogics[index] PASS_ENGINE_PARAMETER_SUFFIX);
 	}
 }
 
@@ -412,7 +412,7 @@ static void setPinState(const char * msg, OutputPin *pin, LEElement *element DEC
 	if (!element) {
 		warning(CUSTOM_FSIO_INVALID_EXPRESSION, "invalid expression for %s", msg);
 	} else {
-		int value = (int)calc.evaluate(pin->getLogicValue(), element PASS_ENGINE_PARAMETER_SUFFIX);
+		int value = (int)calc.evaluate(msg, pin->getLogicValue(), element PASS_ENGINE_PARAMETER_SUFFIX);
 		if (pin->isInitialized() && value != pin->getLogicValue()) {
 
 			for (int i = 0;i < calc.currentCalculationLogPosition;i++) {
@@ -454,7 +454,7 @@ static bool updateValueOrWarning(int humanIndex, const char *msg, float *value D
 		return false;
 	} else {
 		float beforeValue = *value;
-		*value = calc.evaluate(beforeValue, element PASS_ENGINE_PARAMETER_SUFFIX);
+		*value = calc.evaluate(msg, beforeValue, element PASS_ENGINE_PARAMETER_SUFFIX);
 		// floating '==' comparison without EPS seems fine here
 		return (beforeValue != *value);
 	}
@@ -674,7 +674,7 @@ static void rpnEval(char *line) {
 	if (e == NULL) {
 		scheduleMsg(logger, "parsing failed");
 	} else {
-		float result = evalCalc.evaluate(0, e PASS_ENGINE_PARAMETER_SUFFIX);
+		float result = evalCalc.evaluate("eval", 0, e PASS_ENGINE_PARAMETER_SUFFIX);
 		scheduleMsg(logger, "Evaluate result: %.2f", result);
 	}
 #endif
