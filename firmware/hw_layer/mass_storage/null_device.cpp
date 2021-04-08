@@ -93,10 +93,10 @@ static CompressedBlockDevice cbd;
 #else
 static RamDisk ramdisk;
 #endif
-#else
+#endif
+
 // This device is always ready and has no state
 static NullDevice nd = { &ndVmt, BLK_READY };
-#endif
 
 #if HAL_USE_USB_MSD
 #if STM32_USB_USE_OTG2
