@@ -1,7 +1,7 @@
 #include "mass_storage_device.h"
 
-//#define MSD_REQ_RESET                   0xFF
-//#define MSD_REQ_GET_MAX_LUN             0xFE
+#define MSD_REQ_RESET                   0xFF
+#define MSD_REQ_GET_MAX_LUN             0xFE
 
 #define MSD_CBW_SIGNATURE               0x43425355
 #define MSD_CSW_SIGNATURE               0x53425355
@@ -13,6 +13,13 @@
 #define CSW_STATUS_PASSED               0x00
 #define CSW_STATUS_FAILED               0x01
 #define CSW_STATUS_PHASE_ERROR          0x02
+
+#define MSD_SETUP_WORD(setup, index) (uint16_t)(((uint16_t)setup[index+1] << 8)\
+                                                | (setup[index] & 0x00FF))
+
+#define MSD_SETUP_VALUE(setup)  MSD_SETUP_WORD(setup, 2)
+#define MSD_SETUP_INDEX(setup)  MSD_SETUP_WORD(setup, 4)
+#define MSD_SETUP_LENGTH(setup) MSD_SETUP_WORD(setup, 6)
 
 static uint32_t scsi_transport_transmit(const SCSITransport *transport,
 										const uint8_t *data, size_t len) {
@@ -172,4 +179,40 @@ void MassStorageController<TLunCount>::attachLun(uint8_t lunIndex,
 	lun.config.transport = &m_scsiTransport;
 
 	scsiStart(&lun.target, &lun.config);
+}
+
+template class MassStorageController<2>;
+
+
+extern "C" bool msd_request_hook2(USBDriver *usbp) {
+  /* check that the request is for interface 0.*/
+  if (MSD_SETUP_INDEX(usbp->setup) != 0)
+    return false;
+
+  if (usbp->setup[0] == (USB_RTYPE_TYPE_CLASS | USB_RTYPE_RECIPIENT_INTERFACE | USB_RTYPE_DIR_HOST2DEV)
+    && usbp->setup[1] == MSD_REQ_RESET) {
+    /* Bulk-Only Mass Storage Reset (class-specific request)
+    This request is used to reset the mass storage device and its associated interface.
+    This class-specific request shall ready the device for the next CBW from the host. */
+    /* Do any special reset code here. */
+    /* The device shall NAK the status stage of the device request until
+     * the Bulk-Only Mass Storage Reset is complete.
+     * NAK EP1 in and out */
+    // usbp->otg->ie[1].DIEPCTL = DIEPCTL_SNAK;
+    // usbp->otg->oe[1].DOEPCTL = DOEPCTL_SNAK;
+    /* response to this request using EP0 */
+    usbSetupTransfer(usbp, 0, 0, NULL);
+    return true;
+  } else if (usbp->setup[0] == (USB_RTYPE_TYPE_CLASS | USB_RTYPE_RECIPIENT_INTERFACE | USB_RTYPE_DIR_DEV2HOST)
+    && usbp->setup[1] == MSD_REQ_GET_MAX_LUN) {
+    /* Return the maximum supported LUN. */
+    static uint8_t zero = 1;
+    usbSetupTransfer(usbp, &zero, 1, NULL);
+    return true;
+    /* OR */
+    /* Return false to stall to indicate that we don't support LUN */
+    // return false;
+  }
+
+  return false;
 }

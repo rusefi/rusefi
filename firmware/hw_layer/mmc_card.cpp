@@ -70,15 +70,6 @@ spi_device_e mmcSpiDevice = SPI_NONE;
 #define LS_RESPONSE "ls_result"
 #define FILE_LIST_MAX_COUNT 20
 
-#if HAL_USE_USB_MSD
-#include "hal_usb_msd.h"
-#if STM32_USB_USE_OTG2
-  USBDriver *usb_driver = &USBD2;
-#else
-  USBDriver *usb_driver = &USBD1;
-#endif
-#endif /* HAL_USE_USB_MSD */
-
 static THD_WORKING_AREA(mmcThreadStack, 3 * UTILITY_THREAD_STACK_SIZE);		// MMC monitor thread
 
 #if HAL_USE_MMC_SPI
@@ -325,21 +316,6 @@ static void mmcUnMount(void) {
 }
 
 #if HAL_USE_USB_MSD
-static NO_CACHE uint8_t blkbuf[MMCSD_BLOCK_SIZE];
-
-static const scsi_inquiry_response_t scsi_inquiry_response = {
-    0x00,           /* direct access block device     */
-    0x80,           /* removable                      */
-    0x04,           /* SPC-2                          */
-    0x02,           /* response data format           */
-    0x20,           /* response has 0x20 + 4 bytes    */
-    0x00,
-    0x00,
-    0x00,
-    "rusEFI",
-    "SD Card",
-    {'v',CH_KERNEL_MAJOR+'0','.',CH_KERNEL_MINOR+'0'}
-};
 
 static chibios_rt::BinarySemaphore usbConnectedSemaphore(/* taken =*/ true);
 
@@ -431,14 +407,11 @@ static bool mountMmc() {
 	// mount the null device and try to mount the filesystem ourselves
 	if (cardBlockDevice && hasUsb) {
 		// Mount the real card to USB
-		msdStart(&USBMSD1, usb_driver, cardBlockDevice, blkbuf, &scsi_inquiry_response, NULL);
+		attachMsdSdCard(cardBlockDevice);
 
 		sdStatus = SD_STATE_MSD;
 		// At this point we're done: don't try to write files ourselves
 		return false;
-	} else {
-		// Mount a  "no media" device to USB
-		msdMountNullDevice(&USBMSD1, usb_driver, blkbuf, &scsi_inquiry_response);
 	}
 #endif
 

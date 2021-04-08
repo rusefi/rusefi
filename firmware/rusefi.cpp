@@ -125,6 +125,7 @@
 #include "mpu_util.h"
 #include "tunerstudio.h"
 #include "mmc_card.h"
+#include "null_device.h"
 #include "trigger_emulator_algo.h"
 
 #if EFI_HD44780_LCD
@@ -200,6 +201,8 @@ void runRusEfi(void) {
 #if EFI_USB_SERIAL
 	startUsbConsole();
 #endif
+
+	initUsbMsd();
 
 	/**
 	 * Next we should initialize serial port console, it's important to know what's going on

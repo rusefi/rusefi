@@ -422,11 +422,13 @@ static void sof_handler(USBDriver *usbp) {
   osalSysUnlockFromISR();
 }
 
+bool msd_request_hook2(USBDriver *usbp);
+
 // We need a custom hook to handle both MSD and CDC at the same time
 static bool hybridRequestHook(USBDriver *usbp) {
 #if HAL_USE_USB_MSD
 	// Try the MSD driver first
-	if (msd_request_hook(usbp)) {
+	if (msd_request_hook2(usbp)) {
 		return true;
 	}
 #endif // HAL_USE_USB_MSD

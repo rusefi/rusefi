@@ -11,5 +11,6 @@
 #include "hal.h"
 
 #if HAL_USE_USB_MSD
-void msdMountNullDevice(USBMassStorageDriver* msdp, USBDriver *usbp, uint8_t* blkbuf, const scsi_inquiry_response_t* inquiry);
+void initUsbMsd();
+void attachMsdSdCard(BaseBlockDevice* blkdev);
 #endif

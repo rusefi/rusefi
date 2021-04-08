@@ -10,6 +10,10 @@
 
 #include "hal.h"
 
+#include "mass_storage_device.h"
+
+#include "global.h"
+
 #if EFI_EMBED_INI_MSD
 #include "ramdisk.h"
 #include "compressed_block_device.h"
@@ -95,15 +99,61 @@ static NullDevice nd = { &ndVmt, BLK_READY };
 #endif
 
 #if HAL_USE_USB_MSD
-void msdMountNullDevice(USBMassStorageDriver* msdp, USBDriver *usbp, uint8_t* blkbuf, const scsi_inquiry_response_t* inquiry) {
-	// TODO: implement multi-LUN so we can mount the ini image and SD card at the same time
+#if STM32_USB_USE_OTG2
+  USBDriver *usb_driver = &USBD2;
+#else
+  USBDriver *usb_driver = &USBD1;
+#endif
+
+static NO_CACHE uint8_t blkbuf0[MMCSD_BLOCK_SIZE];
+static NO_CACHE uint8_t blkbuf1[MMCSD_BLOCK_SIZE];
+
+
+static MassStorageController<2> msd(usb_driver);
+
+static const scsi_inquiry_response_t iniDriveInquiry = {
+    0x00,           /* direct access block device     */
+    0x80,           /* removable                      */
+    0x04,           /* SPC-2                          */
+    0x02,           /* response data format           */
+    0x20,           /* response has 0x20 + 4 bytes    */
+    0x00,
+    0x00,
+    0x00,
+    "rusEFI",
+    "INI Drive",
+    {'v',CH_KERNEL_MAJOR+'0','.',CH_KERNEL_MINOR+'0'}
+};
+
+static const scsi_inquiry_response_t sdCardInquiry = {
+    0x00,           /* direct access block device     */
+    0x80,           /* removable                      */
+    0x04,           /* SPC-2                          */
+    0x02,           /* response data format           */
+    0x20,           /* response has 0x20 + 4 bytes    */
+    0x00,
+    0x00,
+    0x00,
+    "rusEFI",
+    "SD Card",
+    {'v',CH_KERNEL_MAJOR+'0','.',CH_KERNEL_MINOR+'0'}
+};
+
+void attachMsdSdCard(BaseBlockDevice* blkdev) {
+	msd.attachLun(1, blkdev, blkbuf1, &sdCardInquiry, nullptr);
+}
+
+void initUsbMsd() {
+	// attach a null device in place of the SD card for now
+	msd.attachLun(1, (BaseBlockDevice*)&nd, blkbuf1, &sdCardInquiry, nullptr);
+
 
 #if EFI_EMBED_INI_MSD
 #ifdef EFI_USE_COMPRESSED_INI_MSD
 	uzlib_init();
 	compressedBlockDeviceObjectInit(&cbd);
 	compressedBlockDeviceStart(&cbd, ramdisk_image_gz, sizeof(ramdisk_image_gz));
-	msdStart(msdp, usbp, (BaseBlockDevice*)&cbd, blkbuf, inquiry, nullptr);
+	msd.attachLun(0, (BaseBlockDevice*)&cbd, blkbuf0, &iniDriveInquiry, nullptr);
 #else // not EFI_USE_COMPRESSED_INI_MSD
 	ramdiskObjectInit(&ramdisk);
 
@@ -116,11 +166,14 @@ void msdMountNullDevice(USBMassStorageDriver* msdp, USBDriver *usbp, uint8_t* bl
 
 	ramdiskStart(&ramdisk, const_cast<uint8_t*>(ramdisk_image), blockSize, blockCount, /*readonly =*/ true);
 
-	msdStart(msdp, usbp, (BaseBlockDevice*)&ramdisk, blkbuf, inquiry, nullptr);
+	msd.attachLun(0, (BaseBlockDevice*)&ramdisk, blkbuf0, &iniDriveInquiry, nullptr);
 #endif // EFI_USE_COMPRESSED_INI_MSD
 #else // not EFI_EMBED_INI_MSD
 	// No embedded ini file, just mount the null device instead
-	msdStart(msdp, usbp, (BaseBlockDevice*)&nd, blkbuf, inquiry, nullptr);
+	msd.attachLun(0, (BaseBlockDevice*)&nd, blkbuf0, &iniDriveInquiry, nullptr);
 #endif
+
+	// start the mass storage thread
+	msd.Start();
 }
 #endif
