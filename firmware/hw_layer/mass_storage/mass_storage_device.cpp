@@ -1,5 +1,7 @@
 #include "mass_storage_device.h"
 
+#if HAL_USE_USB_MSD
+
 #define MSD_REQ_RESET                   0xFF
 #define MSD_REQ_GET_MAX_LUN             0xFE
 
@@ -176,34 +178,34 @@ void MassStorageController::attachLun(uint8_t lunIndex,
 }
 
 extern "C" bool msd_request_hook_new(USBDriver *usbp) {
-  /* check that the request is for interface 0.*/
-  if (MSD_SETUP_INDEX(usbp->setup) != 0)
-    return false;
+	/* check that the request is for interface 0.*/
+	if (MSD_SETUP_INDEX(usbp->setup) != 0) {
+		return false;
+	}
 
-  if (usbp->setup[0] == (USB_RTYPE_TYPE_CLASS | USB_RTYPE_RECIPIENT_INTERFACE | USB_RTYPE_DIR_HOST2DEV)
-    && usbp->setup[1] == MSD_REQ_RESET) {
-    /* Bulk-Only Mass Storage Reset (class-specific request)
-    This request is used to reset the mass storage device and its associated interface.
-    This class-specific request shall ready the device for the next CBW from the host. */
-    /* Do any special reset code here. */
-    /* The device shall NAK the status stage of the device request until
-     * the Bulk-Only Mass Storage Reset is complete.
-     * NAK EP1 in and out */
-    // usbp->otg->ie[1].DIEPCTL = DIEPCTL_SNAK;
-    // usbp->otg->oe[1].DOEPCTL = DOEPCTL_SNAK;
-    /* response to this request using EP0 */
-    usbSetupTransfer(usbp, 0, 0, NULL);
-    return true;
-  } else if (usbp->setup[0] == (USB_RTYPE_TYPE_CLASS | USB_RTYPE_RECIPIENT_INTERFACE | USB_RTYPE_DIR_DEV2HOST)
-    && usbp->setup[1] == MSD_REQ_GET_MAX_LUN) {
-    /* Return the maximum supported LUN. */
-    static uint8_t zero = USB_MSD_LUN_COUNT - 1;
-    usbSetupTransfer(usbp, &zero, 1, NULL);
-    return true;
-    /* OR */
-    /* Return false to stall to indicate that we don't support LUN */
-    // return false;
-  }
+	if (usbp->setup[0] == (USB_RTYPE_TYPE_CLASS | USB_RTYPE_RECIPIENT_INTERFACE | USB_RTYPE_DIR_HOST2DEV)
+		&& usbp->setup[1] == MSD_REQ_RESET) {
+		/* Bulk-Only Mass Storage Reset (class-specific request)
+		This request is used to reset the mass storage device and its associated interface.
+		This class-specific request shall ready the device for the next CBW from the host. */
+		/* Do any special reset code here. */
+		/* The device shall NAK the status stage of the device request until
+		* the Bulk-Only Mass Storage Reset is complete.
+		* NAK EP1 in and out */
+		// usbp->otg->ie[1].DIEPCTL = DIEPCTL_SNAK;
+		// usbp->otg->oe[1].DOEPCTL = DOEPCTL_SNAK;
+		/* response to this request using EP0 */
+		usbSetupTransfer(usbp, 0, 0, NULL);
+		return true;
+	} else if (usbp->setup[0] == (USB_RTYPE_TYPE_CLASS | USB_RTYPE_RECIPIENT_INTERFACE | USB_RTYPE_DIR_DEV2HOST)
+		&& usbp->setup[1] == MSD_REQ_GET_MAX_LUN) {
+		/* Return the maximum supported LUN. */
+		static uint8_t zero = USB_MSD_LUN_COUNT - 1;
+		usbSetupTransfer(usbp, &zero, 1, NULL);
+		return true;
+	}
 
-  return false;
+	return false;
 }
+
+#endif // HAL_USE_USB_MSD
