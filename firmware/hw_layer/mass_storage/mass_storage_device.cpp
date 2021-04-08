@@ -41,11 +41,10 @@ static uint32_t scsi_transport_receive(const SCSITransport *transport,
 		return 0;
 }
 
-template <size_t TLunCount>
-MassStorageController<TLunCount>::MassStorageController(USBDriver* usb)
+MassStorageController::MassStorageController(USBDriver* usb)
 	: ThreadController("MSD", MSD_THD_PRIO)
 	, m_usb(usb) {
-	for (size_t i = 0; i < TLunCount; i++) {
+	for (size_t i = 0; i < USB_MSD_LUN_COUNT; i++) {
 		scsiObjectInit(&m_luns[i].target);
 	}
 
@@ -56,8 +55,7 @@ MassStorageController<TLunCount>::MassStorageController(USBDriver* usb)
 	m_scsiTransport.receive  = scsi_transport_receive;
 }
 
-template <size_t TLunCount>
-void MassStorageController<TLunCount>::ThreadTask() {
+void MassStorageController::ThreadTask() {
 	while (!chThdShouldTerminateX()) {
 		const msg_t status = usbReceive(m_usb, USB_MSD_DATA_EP, (uint8_t*)&m_cbw, sizeof(m_cbw));
 
@@ -81,8 +79,7 @@ void MassStorageController<TLunCount>::ThreadTask() {
 	}
 }
 
-template <size_t TLunCount>
-/*static*/ bool MassStorageController<TLunCount>::cbwValid(const msd_cbw_t& cbw, msg_t recvd) {
+/*static*/ bool MassStorageController::cbwValid(const msd_cbw_t& cbw, msg_t recvd) {
 	// check valid size
 	if (sizeof(msd_cbw_t) != recvd) {
 		return false;
@@ -96,8 +93,7 @@ template <size_t TLunCount>
 	return true;
 }
 
-template <size_t TLunCount>
-/*static*/ bool MassStorageController<TLunCount>::cbwMeaningful(const msd_cbw_t& cbw) {
+/*static*/ bool MassStorageController::cbwMeaningful(const msd_cbw_t& cbw) {
 	if ((cbw.cmd_len & CBW_CMD_LEN_RESERVED_MASK) != 0) {
 		return false;
 	}
@@ -106,15 +102,14 @@ template <size_t TLunCount>
 		return false;
 	}
 
-	if (cbw.lun >= TLunCount) {
+	if (cbw.lun >= USB_MSD_LUN_COUNT) {
 		return false;
 	}
 
 	return true;
 }
 
-template <size_t TLunCount>
-void MassStorageController<TLunCount>::sendCsw(uint8_t status, uint32_t residue) {
+void MassStorageController::sendCsw(uint8_t status, uint32_t residue) {
 	m_csw.signature = MSD_CSW_SIGNATURE;
 	m_csw.data_residue = residue;
 	m_csw.tag = m_cbw.tag;
@@ -152,8 +147,7 @@ static const scsi_unit_serial_number_inquiry_response_t default_scsi_unit_serial
     "0000000"
 };
 
-template <size_t TLunCount>
-void MassStorageController<TLunCount>::attachLun(uint8_t lunIndex,
+void MassStorageController::attachLun(uint8_t lunIndex,
 						BaseBlockDevice *blkdev, uint8_t *blkbuf,
 						const scsi_inquiry_response_t *inquiry,
 						const scsi_unit_serial_number_inquiry_response_t *serialInquiry) {
@@ -181,10 +175,7 @@ void MassStorageController<TLunCount>::attachLun(uint8_t lunIndex,
 	scsiStart(&lun.target, &lun.config);
 }
 
-template class MassStorageController<2>;
-
-
-extern "C" bool msd_request_hook2(USBDriver *usbp) {
+extern "C" bool msd_request_hook_new(USBDriver *usbp) {
   /* check that the request is for interface 0.*/
   if (MSD_SETUP_INDEX(usbp->setup) != 0)
     return false;
@@ -206,7 +197,7 @@ extern "C" bool msd_request_hook2(USBDriver *usbp) {
   } else if (usbp->setup[0] == (USB_RTYPE_TYPE_CLASS | USB_RTYPE_RECIPIENT_INTERFACE | USB_RTYPE_DIR_DEV2HOST)
     && usbp->setup[1] == MSD_REQ_GET_MAX_LUN) {
     /* Return the maximum supported LUN. */
-    static uint8_t zero = 1;
+    static uint8_t zero = USB_MSD_LUN_COUNT - 1;
     usbSetupTransfer(usbp, &zero, 1, NULL);
     return true;
     /* OR */

@@ -3,7 +3,6 @@
 #include "hal_usb_msd.h"
 #include "thread_controller.h"
 
-template <size_t TLunCount>
 class MassStorageController : public ThreadController<USB_MSD_THREAD_WA_SIZE> {
 public:
 	MassStorageController(USBDriver* usb);
@@ -38,5 +37,5 @@ private:
 		SCSITargetConfig config;
 	};
 
-	LunEntry m_luns[TLunCount];
+	LunEntry m_luns[USB_MSD_LUN_COUNT];
 };

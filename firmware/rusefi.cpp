@@ -202,7 +202,9 @@ void runRusEfi(void) {
 	startUsbConsole();
 #endif
 
+#if HAL_USE_USB_MSD
 	initUsbMsd();
+#endif
 
 	/**
 	 * Next we should initialize serial port console, it's important to know what's going on
