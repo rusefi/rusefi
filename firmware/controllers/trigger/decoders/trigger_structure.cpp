@@ -544,6 +544,9 @@ void TriggerWaveform::initializeTriggerWaveform(Logging *logger, operation_mode_
 		break;
 
 	case TT_KAWA_KX450F:
+		configureKawaKX450F(this);
+		break;
+
 	case TT_SKODA_FAVORIT:
 		setSkodaFavorit(this);
 		break;
