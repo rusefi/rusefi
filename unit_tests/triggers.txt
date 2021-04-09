@@ -3415,3 +3415,17 @@ event 4 0 1 360.00
 event 5 0 0 370.00
 event 6 0 1 480.00
 event 7 0 0 490.00
+TRIGGERTYPE 57 12 TT_KAWA_KX450F 134.00
+# duty 0.26 0.00
+event 0 0 1 0.00
+event 1 0 0 131.00
+event 2 0 1 134.00
+event 3 0 0 137.00
+event 4 0 1 180.00
+event 5 0 0 314.00
+event 6 0 1 360.00
+event 7 0 0 491.00
+event 8 0 1 494.00
+event 9 0 0 497.00
+event 10 0 1 540.00
+event 11 0 0 674.00
