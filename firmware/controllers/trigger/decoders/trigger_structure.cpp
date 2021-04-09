@@ -543,6 +543,7 @@ void TriggerWaveform::initializeTriggerWaveform(Logging *logger, operation_mode_
 		configureFordAspireTriggerWaveform(this);
 		break;
 
+	case TT_KAWA_KX450F:
 	case TT_SKODA_FAVORIT:
 		setSkodaFavorit(this);
 		break;
