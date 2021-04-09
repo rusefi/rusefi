@@ -101,6 +101,10 @@ void configure3_1_cam(TriggerWaveform *s) {
 	s->isSynchronizationNeeded = false;
 }
 
+void configureKawaKX450F(TriggerWaveform *s) {
+
+}
+
 void configureQuickStartSenderWheel(TriggerWaveform *s) {
 	s->initialize(FOUR_STROKE_CAM_SENSOR);
 

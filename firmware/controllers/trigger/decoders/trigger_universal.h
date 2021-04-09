@@ -26,3 +26,6 @@ void configure3_1_cam(TriggerWaveform *s);
 void configureOnePlusOne(TriggerWaveform *s);
 // TT_VVT_BOSCH_QUICK_START
 void configureQuickStartSenderWheel(TriggerWaveform *s);
+
+// TT_KAWA_KX450F
+void configureKawaKX450F(TriggerWaveform *s);
