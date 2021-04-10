@@ -10,6 +10,9 @@
 
 #include "hal.h"
 
-#if HAL_USE_USB_MSD
-void msdMountNullDevice(USBMassStorageDriver* msdp, USBDriver *usbp, uint8_t* blkbuf, const scsi_inquiry_response_t* inquiry);
-#endif
+struct NullDevice {
+	const struct BaseBlockDeviceVMT *vmt;
+	_base_block_device_data
+};
+
+extern NullDevice ND1;
