@@ -15,49 +15,49 @@ pins:
 
   - pin: 3
     id: GPIOD_7
-    function: Injector #1
+    function: "Injector #1"
     class: outputs
     ts_name: Lowside 1
     type: ls
 
   - pin: 4
     id: GPIOG_10
-    function: Injector #3
+    function: "Injector #3"
     class: outputs
     ts_name: Lowside 3
     type: ls
 
   - pin: 5
     id: GPIOG_12
-    function: Injector #5
+    function: "Injector #5"
     class: outputs
     ts_name: Lowside 5
     type: ls
 
   - pin: 6
     id: GPIOG_13
-    function: Injector #6
+    function: "Injector #6"
     class: outputs
     ts_name: Lowside 6
     type: ls
 
   - pin: 7
     id: GPIOG_14
-    function: Injector #7
+    function: "Injector #7"
     class: outputs
     ts_name: Lowside 7
     type: ls
 
   - pin: 8
     id: GPIOB_5
-    function: Injector #9
+    function: "Injector #9"
     class: outputs
     ts_name: Lowside 9
     type: ls
 
   - pin: 9
     id: GPIOB_7
-    function: Injector #11
+    function: "Injector #11"
     class: outputs
     ts_name: Lowside 11
     type: ls
@@ -99,14 +99,14 @@ pins:
 
   - pin: 15
     id: GPIOG_9
-    function: Injector #2
+    function: "Injector #2"
     class: outputs
     ts_name: Lowside 2
     type: ls
 
   - pin: 16
     id: GPIOG_11
-    function: Injector #4
+    function: "Injector #4"
     class: outputs
     ts_name: Lowside 4
     type: ls
@@ -121,21 +121,21 @@ pins:
 
   - pin: 19
     id: GPIOB_4
-    function: Injector #8
+    function: "Injector #8"
     class: outputs
     ts_name: Lowside 8
     type: ls
 
   - pin: 20
     id: GPIOB_6
-    function: Injector #10
+    function: "Injector #10"
     class: outputs
     ts_name: Lowside 10
     type: ls
 
   - pin: 21
     id: GPIOB_8
-    function: Injector #12
+    function: "Injector #12"
     class: outputs
     ts_name: Lowside 12
     type: ls
