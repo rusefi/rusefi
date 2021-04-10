@@ -1,3 +1,12 @@
+/**
+ * @file	mass_storage_device.cpp
+ *
+ * @date April 9, 2021
+ * @author Matthew Kennedy, (c) 2021
+ *
+ * This file implements a USB mass storage device with multiple LUNs, so multiple drives can be mounted at once.
+ */
+
 #include "mass_storage_device.h"
 
 #if HAL_USE_USB_MSD
