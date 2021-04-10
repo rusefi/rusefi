@@ -21,7 +21,7 @@ pins:
     type: din
 
   - pin: 4
-    function: Variable Reluctance #2 positive
+    function: "Variable Reluctance #2 positive"
     type: vr
 
   - id: GPIOE_8
@@ -29,7 +29,7 @@ pins:
     ts_name: VR 2
 
   - pin: 5
-    function: Variable Reluctance #1 positive
+    function: "Variable Reluctance #1 positive"
     type: vr
 
   - id: GPIOE_7
@@ -70,11 +70,11 @@ pins:
     type: din
 
   - pin: 12
-    function: Variable Reluctance #2 negative
+    function: "Variable Reluctance #2 negative"
     type: vr
 
   - pin: 13
-    function: Variable Reluctance #1 negative
+    function: "Variable Reluctance #1 negative"
     type: vr
 
   - pin: 14
