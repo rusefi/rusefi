@@ -106,7 +106,7 @@ typedef enum {
 
 	VW_ABA = ET_VW_ABA,
 
-	UNUSED_33 = 33,
+	HELLEN72_ETB = 33,
 
 	UNUSED_34 = 34,
 
