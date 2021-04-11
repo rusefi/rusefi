@@ -1328,6 +1328,9 @@ void resetConfigurationExt(Logging * logger, configuration_callback_t boardCallb
 	case HELLEN_NB2:
 		setMiataNB2_Hellen72(PASS_CONFIG_PARAMETER_SIGNATURE);
 		break;
+	case HELLEN72_ETB:
+		setHellen72etb(PASS_CONFIG_PARAMETER_SIGNATURE);
+		break;
 #endif // HW_HELLEN
 #if HW_FRANKENSO
 	case DEFAULT_FRANKENSO:
