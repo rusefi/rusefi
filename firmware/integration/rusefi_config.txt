@@ -331,7 +331,7 @@ struct spi_pins
 end_struct
 
 
-#define gppwm_channel_e_enum "TPS", "MAP", "CLT", "IAT", "Fuel Load", "Ignition Load", "INVALID", "INVALID"
+#define gppwm_channel_e_enum "TPS", "MAP", "CLT", "IAT", "Fuel Load", "Ignition Load", "Aux Temp 1", "Aux Temp 2"
 custom gppwm_channel_e 1 bits, U08, @OFFSET@, [0:2], @@gppwm_channel_e_enum@@
 
 struct gppwm_channel
@@ -443,6 +443,7 @@ end_struct
 #define TT_TT_GM_60_2_2_2 54
 #define TT_TT_SKODA_FAVORIT 55
 #define TT_TT_VVT_BARRA_3_PLUS_1 56
+#define TT_TT_KAWA_KX450F 57
 
 
 ! todo https://github.com/rusefi/rusefi/issues/2102
@@ -506,7 +507,7 @@ end_struct
 injector_s injector
 
 bit isForcedInduction;
-bit unused_294_1;
+bit useFordRedundantTps;
 bit isVerboseAuxPid1;
 bit unused_294_3;
 bit unused_294_4;
@@ -524,12 +525,12 @@ bit cj125isUrDivided;+Is your UR CJ125 output wired to MCU via resistor divider?
 bit useCicPidForIdle;+Switch between Industrial and Cic PID implementation
 bit useTLE8888_cranking_hack;
 bit useInstantRpmForIdle;
-bit absoluteFuelPressure;+If your fuel regulator does not have vacuum line
+bit unused76b19;
 bit launchControlEnabled;
 bit rollingLaunchEnabled;
 bit antiLagEnabled;
 bit useRunningMathForCranking,"Fuel Map","Fixed";
-bit displayLogicLevelsInEngineSniffer;
+bit displayLogicLevelsInEngineSniffer;+Shall we display real life signal or just the part consumed by trigger decoder.\nenable logic_level_trigger
 bit useTLE8888_stepper;
 bit enableMapEstimationTableFallback;+If enabled, the MAP estimate table will be used if the MAP sensor fails to estimate manifold pressure based on RPM and TPS.
 bit useFSIOTableForCanSniffingFiltering;
@@ -603,7 +604,7 @@ angle_t crankingTimingAngle;+Ignition advance angle used during engine cranking,
 custom ignition_mode_e 4 bits,    U32,    @OFFSET@, [0:1], "Single Coil", "Individual Coils", "Wasted Spark", "Two Distributors"
 ignition_mode_e ignitionMode;+"Single Coil" is for use on distributed ignition system. "Individual Coils" is to be used when you have one coil per cylinder (COP or similar). "Wasted Spark" means one coil is driving two spark plugs in two cylinders, with one of the sparks not doing anything since it's happening on the exhaust cycle\nset ignition_mode X
 
-angle_t ignitionOffset;+This value could be used to offset the whole ignition timing table by a constant\nSee also timing_offset_cylinder;"RPM",    1,      0,       0,  3000.0,      0
+float unusedOldIgnitionOffset;;"unused",1,0,0,1,0
 
 custom timing_mode_e 4 bits, U32, @OFFSET@, [0:0], "dynamic", "fixed"
 timing_mode_e timingMode;+Dynamic uses the timing map to decide the ignition timing, Static timing fixes the timing to the value set below (only use for checking static timing with a timing light).
@@ -648,14 +649,14 @@ adc_channel_e fuelLevelSensor;+This is the processor pin that your fuel level se
 
 
 	float idle_derivativeFilterLoss;+0.1 is a good default value;    "x",    1,      0.0,       -1000000,  1000000,        4
-	int sensorChartFrequency;;"index",      1,      0,       0, 300,      0
+	int unused520;;"index",      1,      0,       0, 300,      0
 
 struct trigger_config_s @brief Trigger wheel(s) configuration
 
 
 custom bool32_t 4 bits,    U32,   @OFFSET@, [0:0], "false", "true"
 
-#define trigger_type_e_enum "custom toothed wheel", "Ford Aspire", "Dodge Neon 1995", "Miata NA", "Miata NB", "GM_7X", "Cooper R50", "Mazda SOHC 4", "60/2", "36/1", "Honda 4+24+1", "Mitsubishi", "Honda 4+24", "Honda 1+4+24", "Dodge Neon 2003", "Mazda DOHC 1+4", "1+1", "INVALID", "Single Tooth", "Dodge Ram 1+16", "60/2 VW", "Honda 1+24", "Dodge Stratus",  "36_2_2_2", "Nissan Primera", "dev 2JZ 3/34 simulator", "Rover K", "GM LS 24", "Honda CBR 600", "2JZ_1_12", "Honda CBR 600 custom", "3/1 skipped" , "Dodge Neon 2003 crank", "Miata VVT", "trg34", "trg35", "Subaru 7+6", "Jeep 18-2-2-2", "WIP", "Dodge Neon 1995 crank only", "Jeep XJ 4 cyl", "FiatIAQ_P8", "Mazda Z5", "trg43", "Renix 44-2-2", "Renix 66-2-2-2", "Honda K 12+1", "trg47", "36/2", "Subaru SVX", "1+16", "Subaru 7 without 6", "trg52", "TriTach", "GM 60/2/2/2", "Skoda Favorit", "Barra 3+1 Cam", "trg57", "INVALID"
+#define trigger_type_e_enum "custom toothed wheel", "Ford Aspire", "Dodge Neon 1995", "Miata NA", "Miata NB", "GM_7X", "Cooper R50", "Mazda SOHC 4", "60/2", "36/1", "Honda 4+24+1", "Mitsubishi", "Honda 4+24", "Honda 1+4+24", "Dodge Neon 2003", "Mazda DOHC 1+4", "1+1", "INVALID", "Single Tooth", "Dodge Ram 1+16", "60/2 VW", "Honda 1+24", "Dodge Stratus",  "36_2_2_2", "Nissan Primera", "dev 2JZ 3/34 simulator", "Rover K", "GM LS 24", "Honda CBR 600", "2JZ_1_12", "Honda CBR 600 custom", "3/1 skipped" , "Dodge Neon 2003 crank", "Miata VVT", "trg34", "trg35", "Subaru 7+6", "Jeep 18-2-2-2", "WIP", "Dodge Neon 1995 crank only", "Jeep XJ 4 cyl", "FiatIAQ_P8", "Mazda Z5", "trg43", "Renix 44-2-2", "Renix 66-2-2-2", "Honda K 12+1", "trg47", "36/2", "Subaru SVX", "1+16", "Subaru 7 without 6", "trg52", "TriTach", "GM 60/2/2/2", "Skoda Favorit", "Barra 3+1 Cam", "Kawa KX450F", "trg58", "trg59", "trg60", "INVALID"
 
 custom trigger_type_e 4 bits,    U32,   @OFFSET@, [0:5], @@trigger_type_e_enum@@
 	trigger_type_e type;set trigger_type X
@@ -949,9 +950,9 @@ custom maf_sensor_type_e 4 bits, S32, @OFFSET@, [0:1], @@maf_sensor_type_e_enum@
 	switch_input_pin_e clutchUpPin;Some vehicles have a switch to indicate that clutch pedal is all the way up
 	brain_input_pin_e frequencyReportingMapInputPin;
 	pin_input_mode_e clutchUpPinMode;
-	uint16_t multisparkMaxRpm;;"rpm", 1, 0, 0, 3000, 0
-	uint8_t multisparkMaxSparkingAngle;;"deg", 1, 0, 0, 60, 0
-	uint8_t multisparkMaxExtraSparkCount;;"count", 1, 0, 0, 5, 0
+	uint16_t multisparkMaxRpm;+Disable multispark above this engine speed.;"rpm", 1, 0, 0, 3000, 0
+	uint8_t multisparkMaxSparkingAngle;+This parameter sets the latest that the last multispark can occur after the main ignition event.  For example, if the ignition timing is 30 degrees BTDC, and this parameter is set to 45, no multispark will ever be fired after 15 degrees ATDC.;"deg", 1, 0, 0, 60, 0
+	uint8_t multisparkMaxExtraSparkCount;+Configures the maximum number of extra sparks to fire (does not include main spark);"count", 1, 0, 1, 5, 0
 	bit todoClutchUpPinInverted
 	bit todoClutchDownPinInverted
 	bit useHbridges;+If enabled we use two H-bridges to drive stepper idle air valve
@@ -1167,7 +1168,7 @@ custom pin_mode_e 1 bits,    U08,   @OFFSET@, [0:6], @@pin_mode_e_enum@@
 	float wwaeTau;+Length of time the deposited wall fuel takes to dissipate after the start of acceleration. ;"Seconds",        1,     0,    0.0,    3.0,  2
 	pid_s alternatorControl;
 	pid_s etb;
-	float fuelRailPressure;;     "kPa",    1,      0.0,       0,  1000.0,        2
+	float unused1756;;"",1,0,0,1,0
 	float alternator_derivativeFilterLoss;;    "x",    1,      0.0,       -1000000,  1000000,        4
 	float alternator_antiwindupFreq;;    "x",    1,      0.0,       -1000000,  1000000,        4
 int16_t tps2Min;Closed throttle#2. todo: extract these two fields into a structure\nSee also tps2_1AdcChannel\nset tps2_min X;"ADC",      1,     0,    0, 1023,      0
@@ -1180,8 +1181,8 @@ int16_t tps2Max;Full throttle#2. tpsMax value as 10 bit ADC value. Not Voltage!\
 ! todo: mapErrorDetectionIdleTooLow? 30kPa is usually lowest on idle	
 	float mapErrorDetectionTooLow;kPa value which is too low to be true;"kPa",        1,     0,    -100.0,    100.0,  2
 	float mapErrorDetectionTooHigh;kPa value which is too high to be true;"kPa",        1,     0,    -100.0,    800.0,  2
-	uint16_t multisparkSparkDuration;; "ms", 0.001, 0, 0, 3, 2
-	uint16_t multisparkDwell;; "ms", 0.001, 0, 0, 3, 2
+	uint16_t multisparkSparkDuration;+How long to wait for the spark to fire before recharging the coil for another spark.; "ms", 0.001, 0, 0, 3, 2
+	uint16_t multisparkDwell;+This sets the dwell time for subsequent sparks. The main spark's dwell is set by the dwell table.; "ms", 0.001, 0, 0, 3, 2
 	pid_s idleRpmPid;See cltIdleRpmBins
 	float wwaeBeta;+0 = No fuel settling on port walls 1 = All the fuel settling on port walls setting this to 0 disables the wall wetting enrichment. ;"Fraction",        1,     0,    0.0,    1.0,  2
 	
@@ -1328,8 +1329,8 @@ tle8888_mode_e tle8888mode;
 	float unused244_2;;"units", 1, 0, -20, 100, 0
 	float unused244_3;;"units", 1, 0, -20, 100, 0
 	float unused2432;;"units", 1, 0, -20, 100, 0
-	float postCrankingFactor;+Fuel multiplier (enrichment) immediately after engine start;"mult",        1,     0,  0,    100,  4
-	float postCrankingDurationSec;+Time over which to taper out after start enrichment;"seconds",        1,     0,  0,    100,  2
+	float postCrankingFactor;+Fuel multiplier (enrichment) immediately after engine start;"mult",        1,     0,  1,    3,  2
+	float postCrankingDurationSec;+Time over which to taper out after start enrichment;"seconds",        1,     0,  0,    30,  2
 	ThermistorConf auxTempSensor1;todo: finish implementation #332
 	ThermistorConf auxTempSensor2;todo: finish implementation #332
 	uint8_t[6] unused2508;;"units", 1, 0, -20, 100, 0
@@ -1400,10 +1401,10 @@ float[CRANKING_ADVANCE_CURVE_SIZE] crankingAdvance    ;+Optional timing advance 
 
 	brain_pin_e[SERVO_COUNT iterate] servoOutputPins;todo: more comments
 
-	int16_t coastingFuelCutRpmHigh;+This sets the RPM limit above which the fuel cut is deactivated, activating this maintains fuel flow at high RPM to help cool pistons;"rpm",        1,     0,  0,    5000,  0
-	int16_t coastingFuelCutRpmLow;+This sets the RPM limit below which the fuel cut is deactivated, this prevents jerking or issues transitioning to idle;"rpm",        1,     0,  0,    5000,  0
-	int16_t coastingFuelCutTps;+percent between 0 and 100 below which the fuel cut is deactivated, this helps low speed drivability.;"%",        1,     0,  0,    100,  1
-	int16_t coastingFuelCutClt;+Fuel cutoff is deactivated below this coolant threshold.;"C",        1,     0,  -100,    100,  0
+	int16_t coastingFuelCutRpmHigh;+This sets the RPM above which fuel cut is active.;"rpm",        1,     0,  0,    5000,  0
+	int16_t coastingFuelCutRpmLow;+This sets the RPM below which fuel cut is deactivated, this prevents jerking or issues transitioning to idle;"rpm",        1,     0,  0,    5000,  0
+	int16_t coastingFuelCutTps;+Throttle position below which fuel cut is active.;"%",        1,     0,  0,    20,  1
+	int16_t coastingFuelCutClt;+Fuel cutoff is disabled when the engine is cold.;"C",        1,     0,  -100,    100,  0
 	
 	int16_t pidExtraForLowRpm;+Increases PID reaction for RPM<target by adding extra percent to PID-error;"%",        1,     0,  0,    100,  0
 	int16_t coastingFuelCutMap;+MAP value above which fuel injection is re-enabled.;"kPa", 1, 0, 0, 250, 0
@@ -1657,6 +1658,8 @@ end_struct
 #define GAUGE_NAME_RPM "RPM"
 #define GAUGE_NAME_CLT "CLT"
 #define GAUGE_NAME_IAT "IAT"
+#define GAUGE_NAME_AUX_TEMP1 "Aux temp 1"
+#define GAUGE_NAME_AUX_TEMP2 "Aux temp 2"
 #define GAUGE_NAME_TPS "TPS"
 #define GAUGE_NAME_TPS2 "TPS2"
 #define GAUGE_NAME_MAP "MAP"
@@ -1719,7 +1722,7 @@ end_struct
 #define GAUGE_NAME_FUEL_RUNNING "fuel: running"
 #define GAUGE_NAME_FUEL_LAST_INJECTION  "fuel: Last injection"
 #define GAUGE_NAME_FUEL_BASE "fuel: base mass"
-#define GAUGE_NAME_FUEL_PID_CORR "fuel: Short-term fuel trim"
+#define GAUGE_NAME_FUEL_TRIM "fuel: fuel trim"
 #define GAUGE_NAME_FUEL_WALL_AMOUNT "fuel: wall amount"
 #define GAUGE_NAME_FUEL_WALL_CORRECTION "fuel: wall corr ms"
 #define GAUGE_NAME_FUEL_LOAD "fuel: load"

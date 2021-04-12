@@ -739,3 +739,11 @@ void setTest33816EngineConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	CONFIG(mc33816spiDevice) = SPI_DEVICE_3;
 	setBoschHDEV_5_injectors(PASS_CONFIG_PARAMETER_SIGNATURE);
 }
+
+void setHellen72etb(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
+	CONFIG(etbIo[0].directionPin1) = GPIOC_6;
+	CONFIG(etbIo[0].directionPin2) = GPIOC_7;
+	engineConfiguration->etb_use_two_wires = true;
+
+}
+

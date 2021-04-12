@@ -26,7 +26,7 @@
 #include "engine_configuration.h"
 #include "status_loop.h"
 #include "buffered_writer.h"
-#include "null_device.h"
+#include "mass_storage_init.h"
 #include "thread_priority.h"
 
 #include "rtc_helper.h"
@@ -38,8 +38,10 @@
 #define SD_STATE_SEEK_FAILED "SEEK_FAILED"
 #define SD_STATE_NOT_INSERTED "NOT_INSERTED"
 #define SD_STATE_CONNECTING "CONNECTING"
+#define SD_STATE_MSD "MSD"
 #define SD_STATE_NOT_CONNECTED "NOT_CONNECTED"
 
+// todo: shall we migrate to enum with enum2string for consistency? maybe not until we start reading sdStatus?
 static const char *sdStatus = SD_STATE_INIT;
 static bool fs_ready = false;
 
@@ -67,15 +69,6 @@ spi_device_e mmcSpiDevice = SPI_NONE;
 
 #define LS_RESPONSE "ls_result"
 #define FILE_LIST_MAX_COUNT 20
-
-#if HAL_USE_USB_MSD
-#include "hal_usb_msd.h"
-#if STM32_USB_USE_OTG2
-  USBDriver *usb_driver = &USBD2;
-#else
-  USBDriver *usb_driver = &USBD1;
-#endif
-#endif /* HAL_USE_USB_MSD */
 
 static THD_WORKING_AREA(mmcThreadStack, 3 * UTILITY_THREAD_STACK_SIZE);		// MMC monitor thread
 
@@ -323,21 +316,6 @@ static void mmcUnMount(void) {
 }
 
 #if HAL_USE_USB_MSD
-static NO_CACHE uint8_t blkbuf[MMCSD_BLOCK_SIZE];
-
-static const scsi_inquiry_response_t scsi_inquiry_response = {
-    0x00,           /* direct access block device     */
-    0x80,           /* removable                      */
-    0x04,           /* SPC-2                          */
-    0x02,           /* response data format           */
-    0x20,           /* response has 0x20 + 4 bytes    */
-    0x00,
-    0x00,
-    0x00,
-    "rusEFI",
-    "SD Card",
-    {'v',CH_KERNEL_MAJOR+'0','.',CH_KERNEL_MINOR+'0'}
-};
 
 static chibios_rt::BinarySemaphore usbConnectedSemaphore(/* taken =*/ true);
 
@@ -384,6 +362,7 @@ static BaseBlockDevice* initializeMmcBlockDevice() {
 		UNLOCK_SD_SPI;
 		return nullptr;
 	}
+	// We intentionally never unlock in case of success, we take exclusive access of that spi device for SD use
 
 	return reinterpret_cast<BaseBlockDevice*>(&MMCD1);
 }
@@ -428,13 +407,11 @@ static bool mountMmc() {
 	// mount the null device and try to mount the filesystem ourselves
 	if (cardBlockDevice && hasUsb) {
 		// Mount the real card to USB
-		msdStart(&USBMSD1, usb_driver, cardBlockDevice, blkbuf, &scsi_inquiry_response, NULL);
+		attachMsdSdCard(cardBlockDevice);
 
+		sdStatus = SD_STATE_MSD;
 		// At this point we're done: don't try to write files ourselves
 		return false;
-	} else {
-		// Mount a  "no media" device to USB
-		msdMountNullDevice(&USBMSD1, usb_driver, blkbuf, &scsi_inquiry_response);
 	}
 #endif
 

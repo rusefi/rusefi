@@ -105,20 +105,26 @@ trigger_type_e getVvtTriggerType(vvt_mode_e vvtMode) {
 	}
 }
 
-static void initVvtShape(Logging *logger, int index, TriggerState &initState DECLARE_ENGINE_PARAMETER_SUFFIX) {
-	vvt_mode_e vvtMode = engineConfiguration->vvtMode[index];
-	TriggerWaveform *shape = &ENGINE(triggerCentral).vvtShape[index];
+static void initVvtShape(Logging *logger, int camIndex, TriggerState &initState DECLARE_ENGINE_PARAMETER_SUFFIX) {
+	vvt_mode_e vvtMode = engineConfiguration->vvtMode[camIndex];
+	TriggerWaveform *shape = &ENGINE(triggerCentral).vvtShape[camIndex];
+
+	// not ideas but good for now code
+	ENGINE(triggerCentral).vvtState[0][0].name = "vvt00";
+	ENGINE(triggerCentral).vvtState[0][1].name = "vvt01";
+	ENGINE(triggerCentral).vvtState[1][0].name = "vvt10";
+	ENGINE(triggerCentral).vvtState[1][1].name = "vvt11";
 
 	if (vvtMode != VVT_INACTIVE) {
 		trigger_config_s config;
-		ENGINE(triggerCentral).vvtTriggerType[index] = config.type = getVvtTriggerType(vvtMode);
+		ENGINE(triggerCentral).vvtTriggerType[camIndex] = config.type = getVvtTriggerType(vvtMode);
 
 		shape->initializeTriggerWaveform(logger,
 				engineConfiguration->ambiguousOperationMode,
 				CONFIG(vvtCamSensorUseRise), &config);
 
 		shape->initializeSyncPoint(initState,
-				engine->vvtTriggerConfiguration[index],
+				engine->vvtTriggerConfiguration[camIndex],
 				config);
 	}
 
@@ -150,6 +156,7 @@ void Engine::initializeTriggerWaveform(Logging *logger DECLARE_ENGINE_PARAMETER_
 		calculateTriggerSynchPoint(ENGINE(triggerCentral.triggerShape),
 				initState PASS_ENGINE_PARAMETER_SUFFIX);
 
+		ENGINE(triggerCentral.triggerState).name = "TRG";
 		engine->engineCycleEventCount = TRIGGER_WAVEFORM(getLength());
 	}
 

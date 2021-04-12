@@ -152,8 +152,6 @@ void setDodgeNeon1995EngineConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 
 	// set global_trigger_offset_angle 497
 	engineConfiguration->globalTriggerAngleOffset = 497;
-	// set ignition_offset 350
-	engineConfiguration->ignitionOffset = 350;
 	 // set injection_offset 510
 	engineConfiguration->extraInjectionOffset = 510 + 497;
 
@@ -203,8 +201,6 @@ void setDodgeNeon1995EngineConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	engineConfiguration->ignitionPinMode = OM_DEFAULT;
 
 	engineConfiguration->clt.config = {0, 30, 100, 32500, 7550, 700, 2700};
-
-	engineConfiguration->sensorChartFrequency = 7;
 }
 
 void setDodgeNeonNGCEngineConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE) {

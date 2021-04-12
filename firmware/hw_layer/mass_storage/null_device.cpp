@@ -10,23 +10,7 @@
 
 #include "hal.h"
 
-#if EFI_EMBED_INI_MSD
-#include "ramdisk.h"
-#include "compressed_block_device.h"
-
-#ifdef EFI_USE_COMPRESSED_INI_MSD
-#include "ramdisk_image_compressed.h"
-#else
-#include "ramdisk_image.h"
-#endif
-
-// If the ramdisk image told us not to use it, don't use it.
-#ifdef RAMDISK_INVALID
-#undef EFI_EMBED_INI_MSD
-#define EFI_EMBED_INI_MSD FALSE
-#endif
-
-#endif
+#include "global.h"
 
 #include <cstring>
 
@@ -83,44 +67,5 @@ static const struct BaseBlockDeviceVMT ndVmt = {
 	nd_get_info
 };
 
-#if EFI_EMBED_INI_MSD
-#ifdef EFI_USE_COMPRESSED_INI_MSD
-static CompressedBlockDevice cbd;
-#else
-static RamDisk ramdisk;
-#endif
-#else
 // This device is always ready and has no state
-static NullDevice nd = { &ndVmt, BLK_READY };
-#endif
-
-#if HAL_USE_USB_MSD
-void msdMountNullDevice(USBMassStorageDriver* msdp, USBDriver *usbp, uint8_t* blkbuf, const scsi_inquiry_response_t* inquiry) {
-	// TODO: implement multi-LUN so we can mount the ini image and SD card at the same time
-
-#if EFI_EMBED_INI_MSD
-#ifdef EFI_USE_COMPRESSED_INI_MSD
-	uzlib_init();
-	compressedBlockDeviceObjectInit(&cbd);
-	compressedBlockDeviceStart(&cbd, ramdisk_image_gz, sizeof(ramdisk_image_gz));
-	msdStart(msdp, usbp, (BaseBlockDevice*)&cbd, blkbuf, inquiry, nullptr);
-#else // not EFI_USE_COMPRESSED_INI_MSD
-	ramdiskObjectInit(&ramdisk);
-
-	constexpr size_t ramdiskSize = sizeof(ramdisk_image);
-	constexpr size_t blockSize = 512;
-	constexpr size_t blockCount = ramdiskSize / blockSize;
-
-	// Ramdisk should be a round number of blocks
-	static_assert(ramdiskSize % blockSize == 0);
-
-	ramdiskStart(&ramdisk, const_cast<uint8_t*>(ramdisk_image), blockSize, blockCount, /*readonly =*/ true);
-
-	msdStart(msdp, usbp, (BaseBlockDevice*)&ramdisk, blkbuf, inquiry, nullptr);
-#endif // EFI_USE_COMPRESSED_INI_MSD
-#else // not EFI_EMBED_INI_MSD
-	// No embedded ini file, just mount the null device instead
-	msdStart(msdp, usbp, (BaseBlockDevice*)&nd, blkbuf, inquiry, nullptr);
-#endif
-}
-#endif
+NullDevice ND1 = { &ndVmt, BLK_READY };

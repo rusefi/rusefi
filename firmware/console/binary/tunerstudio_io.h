@@ -55,22 +55,6 @@ private:
 	void writeCrcPacketLarge(uint8_t responseCode, const uint8_t* buf, size_t size);
 };
 
-#if EFI_UNIT_TEST
-struct BaseChannel;
-#endif
-
-struct ts_channel_s : public TsChannelBase {
-	void write(const uint8_t* buffer, size_t size) override;
-	size_t readTimeout(uint8_t* buffer, size_t size, int timeout) override;
-	bool isConfigured() const override;
-
-	BaseChannel * channel = nullptr;
-
-#if TS_UART_DMA_MODE || PRIMARY_UART_DMA_MODE || TS_UART_MODE
-	UARTDriver *uartp = nullptr;
-#endif // TS_UART_DMA_MODE
-};
-
 // This class represents a channel for a physical async serial poart
 class SerialTsChannelBase : public TsChannelBase {
 public:
@@ -98,6 +82,7 @@ private:
 #if HAL_USE_UART
 // This class implements a ChibiOS UART Driver
 class UartTsChannel : public SerialTsChannelBase {
+public:
 	UartTsChannel(UARTDriver& driver) : m_driver(&driver) { }
 
 	void start(uint32_t baud) override;
@@ -106,7 +91,7 @@ class UartTsChannel : public SerialTsChannelBase {
 	void write(const uint8_t* buffer, size_t size) override;
 	size_t readTimeout(uint8_t* buffer, size_t size, int timeout) override;
 
-private:
+protected:
 	UARTDriver* const m_driver;
 	UARTConfig m_config;
 };
@@ -116,13 +101,13 @@ private:
 // todo: double-check this
 #define CRC_WRAPPING_SIZE (CRC_VALUE_SIZE + 3)
 
-void startTsPort(ts_channel_s *tsChannel);
-bool stopTsPort(ts_channel_s *tsChannel);
-
 // that's 1 second
 #define BINARY_IO_TIMEOUT TIME_MS2I(1000)
 
 // that's 1 second
 #define SR5_READ_TIMEOUT TIME_MS2I(1000)
+
+void startSerialChannels();
+SerialTsChannelBase* getBluetoothChannel();
 
 void sendOkResponse(TsChannelBase *tsChannel, ts_response_format_e mode);

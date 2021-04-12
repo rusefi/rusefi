@@ -17,12 +17,14 @@
 #define CAN_TIMEOUT MS2NT(100)
 
 class Logging;
+class CanListener;
 class CanSensorBase;
 
 #if EFI_CAN_SUPPORT
 void processCanRxMessage(const CANRxFrame& msg, Logging* logger, efitick_t nowNt);
 #endif // EFI_CAN_SUPPORT
 
+void registerCanListener(CanListener& listener);
 void registerCanSensor(CanSensorBase& sensor);
 
 // Indicate that an ack response was received from the wideband bootloader

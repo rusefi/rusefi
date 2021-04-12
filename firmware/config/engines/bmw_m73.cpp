@@ -110,7 +110,6 @@ void m73engine(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	engineConfiguration->cranking.baseFuel = 30;
 
 	engineConfiguration->cylinderBore = 85.0;
-	engineConfiguration->knockBandCustom = BAND(engineConfiguration->cylinderBore);
 }
 
 

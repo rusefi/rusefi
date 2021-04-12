@@ -259,9 +259,9 @@ FsioResult LECalculator::processElement(const LEElement *element DECLARE_ENGINE_
 	}
 }
 
-float LECalculator::evaluate(float selfValue, const LEElement* element DECLARE_ENGINE_PARAMETER_SUFFIX) {
+float LECalculator::evaluate(const char * msg, float selfValue, const LEElement* element DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	if (!element) {
-		warning(CUSTOM_NO_FSIO, "no FSIO code");
+		warning(CUSTOM_NO_FSIO, "%s no FSIO code", msg);
 		return NAN;
 	}
 
@@ -293,7 +293,7 @@ float LECalculator::evaluate(float selfValue, const LEElement* element DECLARE_E
 
 	// The stack should have exactly one element on it
 	if (stack.size() != 1) {
-		warning(CUSTOM_FSIO_STACK_SIZE, "unexpected FSIO stack size at return: %d", stack.size());
+		warning(CUSTOM_FSIO_STACK_SIZE, "%s unexpected FSIO stack size at return: %d", msg, stack.size());
 		return NAN;
 	}
 	return stack.pop();

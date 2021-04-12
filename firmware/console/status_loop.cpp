@@ -102,6 +102,8 @@ extern int icuFallingCallbackCounter;
 extern WaveChart waveChart;
 #endif /* EFI_ENGINE_SNIFFER */
 
+#include "sensor_chart.h"
+
 extern pin_output_mode_e DEFAULT_OUTPUT;
 extern pin_output_mode_e INVERTED_OUTPUT;
 
@@ -134,7 +136,7 @@ static void setWarningEnabled(int value) {
 
 #if EFI_FILE_LOGGING
 // this one needs to be in main ram so that SD card SPI DMA works fine
-static NO_CACHE char sdLogBuffer[100];
+static NO_CACHE char sdLogBuffer[150];
 static uint64_t binaryLogCount = 0;
 
 #endif /* EFI_FILE_LOGGING */
@@ -198,6 +200,10 @@ void printOverallStatus(efitimesec_t nowSeconds) {
 	waveChart.publishIfFull();
 #endif /* EFI_ENGINE_SNIFFER */
 
+#if EFI_SENSOR_CHART
+	publishSensorChartIfFull();
+#endif // EFI_SENSOR_CHART
+
 	/**
 	 * we report the version every 4 seconds - this way the console does not need to
 	 * request it and we will display it pretty soon
@@ -247,12 +253,6 @@ void updateDevConsoleState(void) {
 //	for(int i=0;i<strlen(msg);i++) {
 //		ITM_SendChar(msg[i]);
 //	}
-
-
-
-	if (!isCommandLineConsoleReady()) {
-		return;
-	}
 
 #if EFI_PROD_CODE
 	// todo: unify with simulator!
@@ -643,7 +643,7 @@ void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels DECLARE_
 
 	tsOutputChannels->isWarnNow = engine->engineState.warnings.isWarningNow(timeSeconds, true);
 #if EFI_HIP_9011
-	tsOutputChannels->isKnockChipOk = (instance.invalidHip9011ResponsesCount == 0);
+	tsOutputChannels->isKnockChipOk = (instance.invalidResponsesCount == 0);
 #endif /* EFI_HIP_9011 */
 
 #if EFI_LAUNCH_CONTROL
@@ -824,7 +824,7 @@ void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels DECLARE_
 	case DBG_KNOCK:
 		// todo: maybe extract hipPostState(tsOutputChannels);
 		tsOutputChannels->debugIntField1 = instance.correctResponsesCount;
-		tsOutputChannels->debugIntField2 = instance.invalidHip9011ResponsesCount;
+		tsOutputChannels->debugIntField2 = instance.invalidResponsesCount;
 		break;
 #endif /* EFI_HIP_9011 */
 #if EFI_CJ125 && HAL_USE_SPI

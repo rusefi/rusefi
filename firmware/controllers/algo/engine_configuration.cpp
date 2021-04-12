@@ -32,7 +32,6 @@
 #include "sensor.h"
 #include "flash_main.h"
 
-#include "hip9011_lookup.h"
 #include "hip9011_logic.h"
 
 #if EFI_MEMS
@@ -152,7 +151,7 @@ engine_configuration_s & activeConfiguration = activeConfigurationLocalStorage;
 
 extern engine_configuration_s *engineConfiguration;
 
-static void rememberCurrentConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+void rememberCurrentConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 #if ! EFI_ACTIVE_CONFIGURATION_IN_FLASH
 	memcpy(&activeConfiguration, engineConfiguration, sizeof(engine_configuration_s));
 #else
@@ -658,6 +657,55 @@ void setDefaultGppwmParameters(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	}
 }
 
+void setDefaultEngineNoiseTable(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+	setRpmTableBin(engineConfiguration->knockNoiseRpmBins, ENGINE_NOISE_CURVE_SIZE);
+
+	engineConfiguration->knockNoise[0] = 2; // 800
+	engineConfiguration->knockNoise[1] = 2; // 1700
+	engineConfiguration->knockNoise[2] = 2; // 2600
+	engineConfiguration->knockNoise[3] = 2; // 3400
+	engineConfiguration->knockNoise[4] = 2; // 4300
+	engineConfiguration->knockNoise[5] = 2; // 5200
+	engineConfiguration->knockNoise[6] = 2; // 6100
+	engineConfiguration->knockNoise[7] = 2; // 7000
+}
+
+static void setHip9011FrankensoPinout(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+	/**
+	 * SPI on PB13/14/15
+	 */
+	//	CONFIG(hip9011CsPin) = GPIOD_0; // rev 0.1
+
+	CONFIG(isHip9011Enabled) = true;
+	engineConfiguration->hip9011PrescalerAndSDO = HIP_8MHZ_PRESCALER; // 8MHz chip
+	CONFIG(is_enabled_spi_2) = true;
+	// todo: convert this to rusEfi, hardware-independent enum
+#if EFI_PROD_CODE
+#ifdef EFI_HIP_CS_PIN
+	CONFIG(hip9011CsPin) = EFI_HIP_CS_PIN;
+#else
+	CONFIG(hip9011CsPin) = GPIOB_0; // rev 0.4
+#endif
+	CONFIG(hip9011CsPinMode) = OM_OPENDRAIN;
+
+	CONFIG(hip9011IntHoldPin) = GPIOB_11;
+	CONFIG(hip9011IntHoldPinMode) = OM_OPENDRAIN;
+
+	engineConfiguration->spi2SckMode = PO_OPENDRAIN; // 4
+	engineConfiguration->spi2MosiMode = PO_OPENDRAIN; // 4
+	engineConfiguration->spi2MisoMode = PO_PULLUP; // 32
+#endif /* EFI_PROD_CODE */
+
+	engineConfiguration->hip9011Gain = 1;
+	engineConfiguration->knockVThreshold = 4;
+	engineConfiguration->maxKnockSubDeg = 20;
+
+
+	if (!CONFIG(useTpicAdvancedMode)) {
+	    engineConfiguration->hipOutputChannel = EFI_ADC_10; // PC0
+	}
+}
+
 /**
  * @brief	Global default engine configuration
  * This method sets the global engine configuration defaults. These default values are then
@@ -824,7 +872,7 @@ static void setDefaultEngineConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	setLinearCurve(config->fsioTable4LoadBins, 20, 120, 10);
 	setRpmTableBin(config->fsioTable4RpmBins, FSIO_TABLE_8);
 
-	initEngineNoiseTable(PASS_ENGINE_PARAMETER_SIGNATURE);
+	setDefaultEngineNoiseTable(PASS_ENGINE_PARAMETER_SIGNATURE);
 
 	engineConfiguration->clt.config = {0, 23.8889, 48.8889, 9500, 2100, 1000, 1500};
 
@@ -923,8 +971,6 @@ static void setDefaultEngineConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	engineConfiguration->ignitionMode = IM_ONE_COIL;
 	engineConfiguration->globalTriggerAngleOffset = 0;
 	engineConfiguration->extraInjectionOffset = 0;
-	engineConfiguration->ignitionOffset = 0;
-	engineConfiguration->sensorChartFrequency = 20;
 
 	engineConfiguration->fuelAlgorithm = LM_SPEED_DENSITY;
 
@@ -973,7 +1019,6 @@ static void setDefaultEngineConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	engineConfiguration->HD44780height = 4;
 
 	engineConfiguration->cylinderBore = 87.5;
-	engineConfiguration->knockBandCustom = BAND(engineConfiguration->cylinderBore);
 
 	setEgoSensor(ES_14Point7_Free PASS_CONFIG_PARAMETER_SUFFIX);
 
@@ -1115,7 +1160,7 @@ void setDefaultFrankensoConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 #endif /* EFI_MEMS */
 
 #if EFI_HIP_9011
-	setHip9011FrankensoPinout();
+	setHip9011FrankensoPinout(PASS_CONFIG_PARAMETER_SIGNATURE);
 #endif /* EFI_HIP_9011 */
 
 #if EFI_FILE_LOGGING
@@ -1145,6 +1190,11 @@ void loadConfiguration(Logging* logger DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	palSetPadMode(CONFIG_RESET_SWITCH_PORT, CONFIG_RESET_SWITCH_PIN, PAL_MODE_INPUT_PULLUP);
 #endif /* CONFIG_RESET_SWITCH_PORT */
 
+#if ! EFI_ACTIVE_CONFIGURATION_IN_FLASH
+	// Clear the active configuration so that registered output pins (etc) detect the change on startup and init properly
+	prepareVoidConfiguration(&activeConfiguration);
+#endif /* EFI_ACTIVE_CONFIGURATION_IN_FLASH */
+
 #if EFI_INTERNAL_FLASH
 	if (SHOULD_IGNORE_FLASH() || IGNORE_FLASH_CONFIGURATION) {
 		engineConfiguration->engineType = DEFAULT_ENGINE_TYPE;
@@ -1161,7 +1211,8 @@ void loadConfiguration(Logging* logger DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	resetConfigurationExt(logger, engineConfiguration->engineType PASS_ENGINE_PARAMETER_SUFFIX);
 #endif /* EFI_INTERNAL_FLASH */
 
-	rememberCurrentConfiguration(PASS_ENGINE_PARAMETER_SIGNATURE);
+	// Force any board configuration options that humans shouldn't be able to change
+	setBoardConfigOverrides();
 }
 
 void resetConfigurationExt(Logging * logger, configuration_callback_t boardCallback, engine_type_e engineType DECLARE_ENGINE_PARAMETER_SUFFIX) {
@@ -1181,6 +1232,7 @@ void resetConfigurationExt(Logging * logger, configuration_callback_t boardCallb
 #if EFI_PROD_CODE
 	// call overrided board-specific configuration setup, if needed (for custom boards only)
 	setBoardDefaultConfiguration();
+	setBoardConfigOverrides();
 #endif
 
 	engineConfiguration->engineType = engineType;
@@ -1274,6 +1326,9 @@ void resetConfigurationExt(Logging * logger, configuration_callback_t boardCallb
 #if HW_HELLEN
 	case HELLEN_NB2:
 		setMiataNB2_Hellen72(PASS_CONFIG_PARAMETER_SIGNATURE);
+		break;
+	case HELLEN72_ETB:
+		setHellen72etb(PASS_CONFIG_PARAMETER_SIGNATURE);
 		break;
 #endif // HW_HELLEN
 #if HW_FRANKENSO
@@ -1506,8 +1561,6 @@ void setFrankenso0_1_joystick(engine_configuration_s *engineConfiguration) {
 	engineConfiguration->joystickDPin = GPIOD_11;
 }
 
-static const ConfigOverrides defaultConfigOverrides{};
-// This symbol is weak so that a board_configuration.cpp file can override it
-__attribute__((weak)) const ConfigOverrides& getConfigOverrides() {
-	return defaultConfigOverrides;
-}
+// These symbols are weak so that a board_configuration.cpp file can override them
+__attribute__((weak)) void setBoardDefaultConfiguration(void) { }
+__attribute__((weak)) void setBoardConfigOverrides(void) { }

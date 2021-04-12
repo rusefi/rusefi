@@ -56,6 +56,8 @@ static LENameOrdinalPair leFan(LE_METHOD_FAN, "fan");
 static LENameOrdinalPair leCoolant(LE_METHOD_COOLANT, "coolant");
 static LENameOrdinalPair leIntakeTemp(LE_METHOD_INTAKE_AIR, "iat");
 static LENameOrdinalPair leIsCoolantBroken(LE_METHOD_IS_COOLANT_BROKEN, "is_clt_broken");
+static LENameOrdinalPair leOilPressure(LE_METHOD_OIL_PRESSURE, "oilp");
+
 // @returns boolean state of A/C toggle switch
 static LENameOrdinalPair leAcToggle(LE_METHOD_AC_TOGGLE, "ac_on_switch");
 // @returns float number of seconds since last A/C toggle
@@ -73,6 +75,7 @@ static LENameOrdinalPair leStartupFuelPumpDuration(LE_METHOD_STARTUP_FUEL_PUMP_D
 static LENameOrdinalPair leInShutdown(LE_METHOD_IN_SHUTDOWN, "in_shutdown");
 static LENameOrdinalPair leInMrBench(LE_METHOD_IN_MR_BENCH, "in_mr_bench");
 static LENameOrdinalPair leTimeSinceTrigger(LE_METHOD_TIME_SINCE_TRIGGER_EVENT, "time_since_trigger");
+static LENameOrdinalPair leFuelRate(LE_METHOD_FUEL_FLOW_RATE, "fuel_flow");
 
 #include "fsio_names.def"
 
@@ -165,6 +168,10 @@ FsioResult getEngineValue(le_action_e action DECLARE_ENGINE_PARAMETER_SUFFIX) {
 		return Sensor::get(SensorType::BatteryVoltage).value_or(0);
 	case LE_METHOD_TPS:
 		return Sensor::get(SensorType::DriverThrottleIntent).value_or(0);
+	case LE_METHOD_FUEL_FLOW_RATE:
+		return engine->engineState.fuelConsumption.getConsumptionGramPerSecond();
+	case LE_METHOD_OIL_PRESSURE:
+		return Sensor::get(SensorType::OilPressure).value_or(0);
 	// cfg_xxx references are code generated
 #include "fsio_getters.def"
 	default:
@@ -338,7 +345,7 @@ float getFsioOutputValue(int index DECLARE_ENGINE_PARAMETER_SUFFIX) {
 		warning(CUSTOM_NO_FSIO, "no FSIO for #%d %s", index + 1, hwPortname(CONFIG(fsioOutputPins)[index]));
 		return NAN;
 	} else {
-		return calc.evaluate(engine->fsioState.fsioLastValue[index], state.fsioLogics[index] PASS_ENGINE_PARAMETER_SUFFIX);
+		return calc.evaluate("FSIO", engine->fsioState.fsioLastValue[index], state.fsioLogics[index] PASS_ENGINE_PARAMETER_SUFFIX);
 	}
 }
 
@@ -405,7 +412,7 @@ static void setPinState(const char * msg, OutputPin *pin, LEElement *element DEC
 	if (!element) {
 		warning(CUSTOM_FSIO_INVALID_EXPRESSION, "invalid expression for %s", msg);
 	} else {
-		int value = (int)calc.evaluate(pin->getLogicValue(), element PASS_ENGINE_PARAMETER_SUFFIX);
+		int value = (int)calc.evaluate(msg, pin->getLogicValue(), element PASS_ENGINE_PARAMETER_SUFFIX);
 		if (pin->isInitialized() && value != pin->getLogicValue()) {
 
 			for (int i = 0;i < calc.currentCalculationLogPosition;i++) {
@@ -447,7 +454,7 @@ static bool updateValueOrWarning(int humanIndex, const char *msg, float *value D
 		return false;
 	} else {
 		float beforeValue = *value;
-		*value = calc.evaluate(beforeValue, element PASS_ENGINE_PARAMETER_SUFFIX);
+		*value = calc.evaluate(msg, beforeValue, element PASS_ENGINE_PARAMETER_SUFFIX);
 		// floating '==' comparison without EPS seems fine here
 		return (beforeValue != *value);
 	}
@@ -667,7 +674,7 @@ static void rpnEval(char *line) {
 	if (e == NULL) {
 		scheduleMsg(logger, "parsing failed");
 	} else {
-		float result = evalCalc.evaluate(0, e PASS_ENGINE_PARAMETER_SUFFIX);
+		float result = evalCalc.evaluate("eval", 0, e PASS_ENGINE_PARAMETER_SUFFIX);
 		scheduleMsg(logger, "Evaluate result: %.2f", result);
 	}
 #endif

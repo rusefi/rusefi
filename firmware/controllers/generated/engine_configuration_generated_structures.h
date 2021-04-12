@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Sat Mar 27 23:02:01 UTC 2021
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Mon Apr 12 18:12:18 UTC 2021
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -650,7 +650,7 @@ struct engine_configuration_s {
 	bool isForcedInduction : 1;
 	/**
 	offset 76 bit 1 */
-	bool unused_294_1 : 1;
+	bool useFordRedundantTps : 1;
 	/**
 	offset 76 bit 2 */
 	bool isVerboseAuxPid1 : 1;
@@ -711,9 +711,8 @@ struct engine_configuration_s {
 	offset 76 bit 18 */
 	bool useInstantRpmForIdle : 1;
 	/**
-	 * If your fuel regulator does not have vacuum line
 	offset 76 bit 19 */
-	bool absoluteFuelPressure : 1;
+	bool unused76b19 : 1;
 	/**
 	offset 76 bit 20 */
 	bool launchControlEnabled : 1;
@@ -727,6 +726,8 @@ struct engine_configuration_s {
 	offset 76 bit 23 */
 	bool useRunningMathForCranking : 1;
 	/**
+	 * Shall we display real life signal or just the part consumed by trigger decoder.
+	 * enable logic_level_trigger
 	offset 76 bit 24 */
 	bool displayLogicLevelsInEngineSniffer : 1;
 	/**
@@ -899,11 +900,9 @@ struct engine_configuration_s {
 	 */
 	ignition_mode_e ignitionMode;
 	/**
-	 * This value could be used to offset the whole ignition timing table by a constant
-	 * See also timing_offset_cylinder
 	 * offset 444
 	 */
-	angle_t ignitionOffset;
+	float unusedOldIgnitionOffset;
 	/**
 	 * Dynamic uses the timing map to decide the ignition timing, Static timing fixes the timing to the value set below (only use for checking static timing with a timing light).
 	 * offset 448
@@ -1014,7 +1013,7 @@ struct engine_configuration_s {
 	/**
 	 * offset 520
 	 */
-	int sensorChartFrequency;
+	int unused520;
 	/**
 	 * offset 524
 	 */
@@ -1748,14 +1747,17 @@ struct engine_configuration_s {
 	 */
 	pin_input_mode_e clutchUpPinMode;
 	/**
+	 * Disable multispark above this engine speed.
 	 * offset 972
 	 */
 	uint16_t multisparkMaxRpm;
 	/**
+	 * This parameter sets the latest that the last multispark can occur after the main ignition event. For example, if the ignition timing is 30 degrees BTDC, and this parameter is set to 45, no multispark will ever be fired after 15 degrees ATDC.
 	 * offset 974
 	 */
 	uint8_t multisparkMaxSparkingAngle;
 	/**
+	 * Configures the maximum number of extra sparks to fire (does not include main spark)
 	 * offset 975
 	 */
 	uint8_t multisparkMaxExtraSparkCount;
@@ -2388,7 +2390,7 @@ struct engine_configuration_s {
 	/**
 	 * offset 1756
 	 */
-	float fuelRailPressure;
+	float unused1756;
 	/**
 	 * offset 1760
 	 */
@@ -2439,10 +2441,12 @@ struct engine_configuration_s {
 	 */
 	float mapErrorDetectionTooHigh;
 	/**
+	 * How long to wait for the spark to fire before recharging the coil for another spark.
 	 * offset 1784
 	 */
 	uint16_t multisparkSparkDuration;
 	/**
+	 * This sets the dwell time for subsequent sparks. The main spark's dwell is set by the dwell table.
 	 * offset 1786
 	 */
 	uint16_t multisparkDwell;
@@ -3214,22 +3218,22 @@ struct engine_configuration_s {
 	 */
 	brain_pin_e servoOutputPins[SERVO_COUNT];
 	/**
-	 * This sets the RPM limit above which the fuel cut is deactivated, activating this maintains fuel flow at high RPM to help cool pistons
+	 * This sets the RPM above which fuel cut is active.
 	 * offset 3148
 	 */
 	int16_t coastingFuelCutRpmHigh;
 	/**
-	 * This sets the RPM limit below which the fuel cut is deactivated, this prevents jerking or issues transitioning to idle
+	 * This sets the RPM below which fuel cut is deactivated, this prevents jerking or issues transitioning to idle
 	 * offset 3150
 	 */
 	int16_t coastingFuelCutRpmLow;
 	/**
-	 * percent between 0 and 100 below which the fuel cut is deactivated, this helps low speed drivability.
+	 * Throttle position below which fuel cut is active.
 	 * offset 3152
 	 */
 	int16_t coastingFuelCutTps;
 	/**
-	 * Fuel cutoff is deactivated below this coolant threshold.
+	 * Fuel cutoff is disabled when the engine is cold.
 	 * offset 3154
 	 */
 	int16_t coastingFuelCutClt;
@@ -3864,4 +3868,4 @@ struct persistent_config_s {
 typedef struct persistent_config_s persistent_config_s;
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Sat Mar 27 23:02:01 UTC 2021
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Mon Apr 12 18:12:18 UTC 2021

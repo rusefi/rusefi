@@ -21,17 +21,13 @@
 #define LED_RUNING_BRAIN_PIN_MODE		INVERTED_OUTPUT
 
 /* debug console */
-#undef EFI_USE_UART_FOR_CONSOLE
-#define EFI_USE_UART_FOR_CONSOLE		TRUE
-#undef EFI_CONSOLE_SERIAL_DEVICE
-#define EFI_CONSOLE_SERIAL_DEVICE		(&SD1)
+#undef TS_PRIMARY_SERIAL
+#undef TS_PRIMARY_UART
+#define TS_PRIMARY_SERIAL		SD1
 
-/* TunerStudio binary protocol */
-/* do not use UART  device for console */
-#undef TS_UART_DEVICE
-
-/* do not use serial device for console */
-#undef TS_SERIAL_DEVICE
+// no secondary channel
+#undef TS_SECONDARY_UART
+#undef TS_SECONDARY_SERIAL
 
 /* Knock detection */
 #undef EFI_HIP_9011
@@ -101,7 +97,7 @@
 #undef SERIAL_SPEED
 #define SERIAL_SPEED				115200
 
-#ifdef EFI_CONSOLE_SERIAL_DEVICE
+#ifdef TS_PRIMARY_SERIAL
 	#undef EFI_CONSOLE_TX_PORT
 	#define EFI_CONSOLE_TX_PORT 		GPIOA
 	#undef EFI_CONSOLE_TX_PIN

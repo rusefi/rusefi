@@ -32,6 +32,8 @@
 // If USB and File logging, enable USB Mass Storage & community
 #define HAL_USE_USB_MSD (EFI_FILE_LOGGING && EFI_USB_SERIAL)
 #define HAL_USE_COMMUNITY (EFI_FILE_LOGGING && EFI_USB_SERIAL)
+#define USB_MSD_LUN_COUNT 2
+
 // only the MSD driver requires USB_USE_WAIT
 #define USB_USE_WAIT (EFI_FILE_LOGGING && EFI_USB_SERIAL)
 
@@ -81,3 +83,6 @@
 // SPI
 #define SPI_USE_WAIT                TRUE
 #define SPI_USE_MUTUAL_EXCLUSION    TRUE
+
+// Extra field in the UART driver's struct to store a reference to the DMA receive buffer object
+#define UART_DRIVER_EXT_FIELDS void* dmaAdapterInstance;
