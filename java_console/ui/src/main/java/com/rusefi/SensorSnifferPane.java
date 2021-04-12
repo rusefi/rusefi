@@ -111,7 +111,6 @@ public class SensorSnifferPane {
         content.add(lowerPanel, BorderLayout.SOUTH);
 
         lowerPanel.add(new EnumConfigField(uiContext, Fields.SENSORCHARTMODE, "Mode").getContent());
-        lowerPanel.add(new ConfigField(uiContext, Fields.SENSORCHARTFREQUENCY, "Every XXX engine cycles").getContent());
         lowerPanel.add(new ConfigField(uiContext, Fields.SENSORSNIFFERRPMTHRESHOLD, "RPM threshold").getContent());
     }
 
