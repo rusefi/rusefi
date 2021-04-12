@@ -5,6 +5,7 @@
 #include "error_handling.h"
 #include "functional_sensor.h"
 #include "redundant_sensor.h"
+#include "redundant_ford_tps.h"
 #include "proxy_sensor.h"
 #include "linear_func.h"
 #include "tps.h"
@@ -21,8 +22,13 @@ FunctionalSensor tpsSens1s(SensorType::Tps1Secondary, MS2NT(10));
 FunctionalSensor tpsSens2p(SensorType::Tps2Primary, MS2NT(10));
 FunctionalSensor tpsSens2s(SensorType::Tps2Secondary, MS2NT(10));
 
+// Used in case of "normal", non-Ford ETB TPS
 RedundantSensor tps1(SensorType::Tps1, SensorType::Tps1Primary, SensorType::Tps1Secondary);
 RedundantSensor tps2(SensorType::Tps2, SensorType::Tps2Primary, SensorType::Tps2Secondary);
+
+// Used only in case of weird Ford-style ETB TPS
+RedundantFordTps fordTps1(SensorType::Tps1, SensorType::Tps1Primary, SensorType::Tps1Secondary);
+RedundantFordTps fordTps2(SensorType::Tps2, SensorType::Tps2Primary, SensorType::Tps2Secondary);
 
 LinearFunc pedalFuncPrimary;
 LinearFunc pedalFuncSecondary;
@@ -81,12 +87,16 @@ static bool initTpsFunc(LinearFunc& func, FunctionalSensor& sensor, adc_channel_
 	return sensor.Register();
 }
 
-static void initTpsFuncAndRedund(RedundantSensor& redund, LinearFunc& func, FunctionalSensor& sensor, adc_channel_e channel, float closed, float open, float min, float max) {
+static void initTpsFuncAndRedund(RedundantSensor& redund, RedundantFordTps* fordTps, bool isFordTps, LinearFunc& func, FunctionalSensor& sensor, adc_channel_e channel, float closed, float open, float min, float max) {
 	bool hasSecond = initTpsFunc(func, sensor, channel, closed, open, min, max);
 
-	redund.configure(5.0f, !hasSecond);
-
-	redund.Register();
+	if (isFordTps && fordTps) {
+		fordTps->configure(5.0f, 52.6f);
+		fordTps->Register();
+	} else {
+		redund.configure(5.0f, !hasSecond);
+		redund.Register();
+	}
 }
 
 void initTps(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
@@ -94,12 +104,18 @@ void initTps(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	percent_t max = CONFIG(tpsErrorDetectionTooHigh);
 
 	if (!CONFIG(consumeObdSensors)) {
+		// primary TPS sensors
 		initTpsFunc(tpsFunc1p, tpsSens1p, CONFIG(tps1_1AdcChannel), CONFIG(tpsMin), CONFIG(tpsMax), min, max);
-		initTpsFuncAndRedund(tps1, tpsFunc1s, tpsSens1s, CONFIG(tps1_2AdcChannel), CONFIG(tps1SecondaryMin), CONFIG(tps1SecondaryMax), min, max);
 		initTpsFunc(tpsFunc2p, tpsSens2p, CONFIG(tps2_1AdcChannel), CONFIG(tps2Min), CONFIG(tps2Max), min, max);
-		initTpsFuncAndRedund(tps2, tpsFunc2s, tpsSens2s, CONFIG(tps2_2AdcChannel), CONFIG(tps2SecondaryMin), CONFIG(tps2SecondaryMax), min, max);
+
+		// Secondary TPS sensors (and redundant combining)
+		bool isFordTps = CONFIG(useFordRedundantTps);
+		initTpsFuncAndRedund(tps1, &fordTps1, isFordTps, tpsFunc1s, tpsSens1s, CONFIG(tps1_2AdcChannel), CONFIG(tps1SecondaryMin), CONFIG(tps1SecondaryMax), min, max);
+		initTpsFuncAndRedund(tps2, &fordTps2, isFordTps, tpsFunc2s, tpsSens2s, CONFIG(tps2_2AdcChannel), CONFIG(tps2SecondaryMin), CONFIG(tps2SecondaryMax), min, max);
+
+		// Pedal sensors
 		initTpsFunc(pedalFuncPrimary, pedalSensorPrimary, CONFIG(throttlePedalPositionAdcChannel), CONFIG(throttlePedalUpVoltage), CONFIG(throttlePedalWOTVoltage), min, max);
-		initTpsFuncAndRedund(pedal, pedalFuncSecondary, pedalSensorSecondary, CONFIG(throttlePedalPositionSecondAdcChannel), CONFIG(throttlePedalSecondaryUpVoltage), CONFIG(throttlePedalSecondaryWOTVoltage), min, max);
+		initTpsFuncAndRedund(pedal, nullptr, false, pedalFuncSecondary, pedalSensorSecondary, CONFIG(throttlePedalPositionSecondAdcChannel), CONFIG(throttlePedalSecondaryUpVoltage), CONFIG(throttlePedalSecondaryWOTVoltage), min, max);
 
 		// TPS-like stuff that isn't actually a TPS
 		initTpsFunc(wastegateFunc, wastegateSens, CONFIG(wastegatePositionSensor), CONFIG(wastegatePositionMin), CONFIG(wastegatePositionMax), min, max);

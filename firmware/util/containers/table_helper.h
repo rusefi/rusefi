@@ -52,7 +52,7 @@ public:
 		}
 
 		// todo: we have a bit of a mess: in TunerStudio, RPM is X-axis
-		return interpolate3d<vType, kType>(y, loadBins, LOAD_BIN_SIZE, xRpm, rpmBins, RPM_BIN_SIZE, pointers) * TValueMultiplier::asFloat();
+		return interpolate3d<vType, kType>(name, y, loadBins, LOAD_BIN_SIZE, xRpm, rpmBins, RPM_BIN_SIZE, pointers) * TValueMultiplier::asFloat();
 	}
 
 	void setAll(vType value) {

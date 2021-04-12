@@ -4,6 +4,7 @@
 #include "biquad.h"
 #include "perf_trace.h"
 #include "thread_controller.h"
+#include "knock_logic.h"
 #include "software_knock.h"
 #include "thread_priority.h"
 
@@ -93,31 +94,11 @@ static const ADCConversionGroup adcConvGroupCh2 = { FALSE, 1, &completionCallbac
 	0,	// sqr2
 	ADC_SQR3_SQ1_N(KNOCK_ADC_CH2)
 };
-
-static bool cylinderUsesChannel2(uint8_t cylinderIndex) {
-	// C/C++ can't index in to bit fields, we have to provide lookup ourselves
-	switch (cylinderIndex) {
-		case 0: return CONFIG(knockBankCyl1);
-		case 1: return CONFIG(knockBankCyl2);
-		case 2: return CONFIG(knockBankCyl3);
-		case 3: return CONFIG(knockBankCyl4);
-		case 4: return CONFIG(knockBankCyl5);
-		case 5: return CONFIG(knockBankCyl6);
-		case 6: return CONFIG(knockBankCyl7);
-		case 7: return CONFIG(knockBankCyl8);
-		case 8: return CONFIG(knockBankCyl9);
-		case 9: return CONFIG(knockBankCyl10);
-		case 10: return CONFIG(knockBankCyl11);
-		case 11: return CONFIG(knockBankCyl12);
-		default: return false;
-	}
-}
-
 #endif // KNOCK_HAS_CH2
 
 const ADCConversionGroup* getConversionGroup(uint8_t cylinderIndex) {
 #if KNOCK_HAS_CH2
-	if (cylinderUsesChannel2(cylinderIndex)) {
+	if (getCylinderKnockBank(cylinderIndex)) {
 		return &adcConvGroupCh2;
 	}
 #else

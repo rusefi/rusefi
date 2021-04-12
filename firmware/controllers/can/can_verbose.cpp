@@ -102,9 +102,8 @@ static void populateFrame(Sensors1& msg) {
     msg.clt = Sensor::get(SensorType::Clt).value_or(0) + PACK_ADD_TEMPERATURE;
     msg.iat = Sensor::get(SensorType::Iat).value_or(0) + PACK_ADD_TEMPERATURE;
 
-    // todo: does aux temp even work?
-    msg.aux1 = 0 + PACK_ADD_TEMPERATURE;
-    msg.aux2 = 0 + PACK_ADD_TEMPERATURE;
+    msg.aux1 = Sensor::get(SensorType::AuxTemp1).value_or(0) + PACK_ADD_TEMPERATURE;
+    msg.aux2 = Sensor::get(SensorType::AuxTemp2).value_or(0) + PACK_ADD_TEMPERATURE;
 
     msg.mcuTemp = getMCUInternalTemperature();
     msg.fuelLevel = Sensor::get(SensorType::FuelLevel).value_or(0);

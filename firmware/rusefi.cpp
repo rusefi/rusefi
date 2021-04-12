@@ -125,6 +125,7 @@
 #include "mpu_util.h"
 #include "tunerstudio.h"
 #include "mmc_card.h"
+#include "mass_storage_init.h"
 #include "trigger_emulator_algo.h"
 
 #if EFI_HD44780_LCD
@@ -201,6 +202,10 @@ void runRusEfi(void) {
 	startUsbConsole();
 #endif
 
+#if HAL_USE_USB_MSD
+	initUsbMsd();
+#endif
+
 	/**
 	 * Next we should initialize serial port console, it's important to know what's going on
 	 */
@@ -236,6 +241,9 @@ void runRusEfi(void) {
 		 * todo: should we initialize some? most? controllers before hardware?
 		 */
 		initEngineContoller(&sharedLogger PASS_ENGINE_PARAMETER_SIGNATURE);
+
+		// This has to happen after RegisteredOutputPins are init'd: otherwise no change will be detected, and no init will happen
+		rememberCurrentConfiguration(PASS_ENGINE_PARAMETER_SIGNATURE);
 
 	#if EFI_PERF_METRICS
 		initTimePerfActions(&sharedLogger);

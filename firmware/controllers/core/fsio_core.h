@@ -13,8 +13,9 @@
 #define MAX_TABLE_INDEX 4
 
 typedef enum {
+	LE_UNDEFINED = 0,
+	LE_METHOD_RETURN = 130,
 
-	LE_UNDEFINED = 0 ,
 	LE_NUMERIC_VALUE = 1,
 	LE_BOOLEAN_VALUE = 126,
 	LE_OPERATOR_LESS = 2,
@@ -58,7 +59,8 @@ typedef enum {
 	LE_METHOD_PPS = 125,
 	LE_METHOD_TIME_SINCE_TRIGGER_EVENT = 127,
 	LE_METHOD_IN_MR_BENCH = 128,
-	LE_METHOD_RETURN = 130,
+	LE_METHOD_FUEL_FLOW_RATE = 131,
+	LE_METHOD_OIL_PRESSURE = 132,
 
 #include "fsio_enums_generated.def"
 
@@ -130,7 +132,7 @@ typedef FLStack<float, MAX_STACK_DEPTH> calc_stack_t;
 class LECalculator {
 public:
 	LECalculator();
-	float evaluate(float selfValue, const LEElement* element DECLARE_ENGINE_PARAMETER_SUFFIX);
+	float evaluate(const char * msg, float selfValue, const LEElement* element DECLARE_ENGINE_PARAMETER_SUFFIX);
 	void reset();
 
 	// Log history of calculation actions for debugging

@@ -20,7 +20,7 @@
 
 EXTERN_ENGINE;
 
-extern CanSensorBase* cansensors_head;
+extern CanListener* canListeners_head;
 
 CanWrite::CanWrite()
 	: PeriodicController("CAN TX", PRIO_CAN_TX, 50)
@@ -35,7 +35,7 @@ void CanWrite::PeriodicTask(efitime_t nowNt) {
 		sendCanVerbose();
 	}
 
-	CanSensorBase* current = cansensors_head;
+	CanListener* current = canListeners_head;
 
 	while (current) {
 		current = current->request();

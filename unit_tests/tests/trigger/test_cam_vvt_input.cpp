@@ -8,6 +8,9 @@
 #include "engine_test_helper.h"
 extern WarningCodeState unitTestWarningCodeState;
 
+#include "engine_sniffer.h"
+extern WaveChart waveChart;
+
 TEST(trigger, testNoStartUpWarningsNoSyncronizationTrigger) {
 	WITH_ENGINE_TEST_HELPER(TEST_ENGINE);
 	// one tooth does not need synchronization it just counts tooth
@@ -83,7 +86,7 @@ TEST(trigger, testCamInput) {
 	setOperationMode(engineConfiguration, FOUR_STROKE_CRANK_SENSOR);
 	engineConfiguration->useOnlyRisingEdgeForTrigger = true;
 	engineConfiguration->vvtMode[0] = VVT_FIRST_HALF;
-	engineConfiguration->vvtOffset = 720;
+	engineConfiguration->vvtOffset = 360;
 	eth.setTriggerType(TT_ONE PASS_ENGINE_PARAMETER_SUFFIX);
 	engineConfiguration->camInputs[0] = GPIOA_10; // we just need to indicate that we have CAM
 
@@ -114,7 +117,7 @@ TEST(trigger, testCamInput) {
 
 	// asserting that error code has cleared
 	ASSERT_EQ(0,  unitTestWarningCodeState.recentWarnings.getCount()) << "warningCounter#testCamInput #3";
-	ASSERT_NEAR(720 - 181, engine->triggerCentral.getVVTPosition(0, 0), EPS3D);
+	ASSERT_NEAR(360 - 181, engine->triggerCentral.getVVTPosition(0, 0), EPS3D);
 }
 
 TEST(sensors, testNB2CamInput) {
@@ -149,18 +152,28 @@ TEST(sensors, testNB2CamInput) {
 	// this would be be first VVT signal - gap duration would be calculated against 'DEEP_IN_THE_PAST_SECONDS' initial value
 	hwHandleVvtCamSignal(TV_RISE, getTimeNowNt(), 0 PASS_ENGINE_PARAMETER_SUFFIX);
 
-	eth.moveTimeForwardUs(MS2US(20));
+	eth.moveTimeForwardUs(MS2US(10));
+	hwHandleVvtCamSignal(TV_FALL, getTimeNowNt(), 0 PASS_ENGINE_PARAMETER_SUFFIX);
+	eth.moveTimeForwardUs(MS2US(10));
 	// this second important front would give us first real VVT gap duration
 	hwHandleVvtCamSignal(TV_RISE, getTimeNowNt(), 0 PASS_ENGINE_PARAMETER_SUFFIX);
 
 	ASSERT_FLOAT_EQ(0, engine->triggerCentral.getVVTPosition(0, 0));
 	ASSERT_EQ(totalRevolutionCountBeforeVvtSync, engine->triggerCentral.triggerState.getTotalRevolutionCounter());
 
-	eth.moveTimeForwardUs(MS2US(130));
+	eth.moveTimeForwardUs(MS2US(100));
+	hwHandleVvtCamSignal(TV_FALL, getTimeNowNt(), 0 PASS_ENGINE_PARAMETER_SUFFIX);
+	eth.moveTimeForwardUs(MS2US( 30));
 	// this third important front would give us first comparison between two real gaps
 	hwHandleVvtCamSignal(TV_RISE, getTimeNowNt(), 0 PASS_ENGINE_PARAMETER_SUFFIX);
 
 	ASSERT_NEAR(-67.6 - 720 - 720, engine->triggerCentral.getVVTPosition(0, 0), EPS3D);
 	// actually position based on VVT!
 	ASSERT_EQ(totalRevolutionCountBeforeVvtSync + 2, engine->triggerCentral.triggerState.getTotalRevolutionCounter());
+
+	float dutyCycleNt = engine->triggerCentral.vvtState[0][0].currentCycle.totalTimeNtCopy[0];
+	ASSERT_FLOAT_EQ(6'000'000, dutyCycleNt);
+	ASSERT_FLOAT_EQ(0.059722222, engine->triggerCentral.vvtShape[0].expectedDutyCycle[0]);
+
+	ASSERT_EQ(26, waveChart.getSize());
 }
