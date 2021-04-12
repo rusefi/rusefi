@@ -72,7 +72,7 @@ public:
 class LoggingWithStorage : public Logging {
 public:
 	explicit LoggingWithStorage(const char *name);
-	char DEFAULT_BUFFER[200];
+	char DEFAULT_BUFFER[100];
 };
 
 void initLoggingExt(Logging *logging, const char *name, char *buffer, int bufferSize);
