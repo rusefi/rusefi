@@ -39,8 +39,6 @@ void setMazda626EngineConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	// chartsize 600
 	engineConfiguration->engineChartSize = 600;
 
-	engineConfiguration->sensorChartFrequency = 2;
-
 	engineConfiguration->injector.flow = 330;
 	engineConfiguration->specs.displacement = 2.0;
 
