@@ -89,9 +89,10 @@ void writeToFlashIfPending() {
 template <typename TStorage>
 int eraseAndFlashCopy(flashaddr_t storageAddress, const TStorage& data)
 {
-	if (FLASH_RETURN_SUCCESS != intFlashErase(storageAddress, sizeof(TStorage))) {
-		firmwareError("Failed to erase flash at %#010x", storageAddress);
-		return;
+	auto err = intFlashErase(storageAddress, sizeof(TStorage));
+	if (FLASH_RETURN_SUCCESS != err) {
+		firmwareError(OBD_PCM_Processor_Fault, "Failed to erase flash at %#010x", storageAddress);
+		return err;
 	}
 
 	return intFlashWrite(storageAddress, reinterpret_cast<const char*>(&data), sizeof(TStorage));
