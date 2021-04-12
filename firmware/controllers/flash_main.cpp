@@ -90,7 +90,7 @@ template <typename TStorage>
 int eraseAndFlashCopy(flashaddr_t storageAddress, const TStorage& data)
 {
 	if (FLASH_RETURN_SUCCESS != intFlashErase(storageAddress, sizeof(TStorage))) {
-		firmwareError("problem erasing flash at %#08x", storageAddress);
+		firmwareError("Failed to erase flash at %#010x", storageAddress);
 		return;
 	}
 
