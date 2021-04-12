@@ -649,7 +649,7 @@ adc_channel_e fuelLevelSensor;+This is the processor pin that your fuel level se
 
 
 	float idle_derivativeFilterLoss;+0.1 is a good default value;    "x",    1,      0.0,       -1000000,  1000000,        4
-	int sensorChartFrequency;;"index",      1,      0,       0, 300,      0
+	int unused520;;"index",      1,      0,       0, 300,      0
 
 struct trigger_config_s @brief Trigger wheel(s) configuration
 

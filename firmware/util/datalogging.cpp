@@ -77,7 +77,7 @@ bool Logging::validateBuffer(const char *text, uint32_t extraLen) {
 	if (remainingSize() < extraLen + 1) {
 #if EFI_PROD_CODE
 		const char * msg = extraLen > 50 ? "(long)" : text;
-		warning(CUSTOM_LOGGING_BUFFER_OVERFLOW, "output overflow %s %d [%s]", name, extraLen, msg);
+		warning(CUSTOM_LOGGING_BUFFER_OVERFLOW, "output overflow %s %d", name, extraLen);
 #endif /* EFI_PROD_CODE */
 		return true;
 	}
