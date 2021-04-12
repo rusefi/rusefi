@@ -1227,7 +1227,6 @@
 #define secondSolenoidPin_offset 810
 #define sensor_chart_e_auto_enum "SC_OFF", "SC_TRIGGER", "SC_MAP", "SC_RPM_ACCEL", "SC_DETAILED_RPM", "SC_AUX_FAST1"
 #define sensor_chart_e_enum "none", "trigger", "MAP", "RPM ACCEL", "DETAILED RPM", "Fast Aux1", "INVALID", "INVALID"
-#define sensorChartFrequency_offset 520
 #define sensorChartMode_offset 944
 #define sensorSnifferRpmThreshold_offset 412
 #define SERVO_COUNT 8
@@ -1247,7 +1246,7 @@
 #define showSdCardWarning_offset 76
 #define SIGNATURE_BOARD subaru_eg33_f7
 #define SIGNATURE_DATE 2021.04.12
-#define SIGNATURE_HASH 3694755857
+#define SIGNATURE_HASH 4251649284
 #define silentTriggerError_offset 1464
 #define slowAdcAlpha_offset 2088
 #define sparkDwellRpmBins_offset 332
@@ -1582,7 +1581,7 @@
 #define ts_show_spi true
 #define ts_show_trigger_comparator false
 #define ts_show_tunerstudio_port false
-#define TS_SIGNATURE "rusEFI 2021.04.12.subaru_eg33_f7.3694755857"
+#define TS_SIGNATURE "rusEFI 2021.04.12.subaru_eg33_f7.4251649284"
 #define TS_SINGLE_WRITE_COMMAND 'W'
 #define TS_SINGLE_WRITE_COMMAND_char W
 #define TS_TEST_COMMAND 't' // 0x74
@@ -1661,6 +1660,7 @@
 #define unused3942_offset 3992
 #define unused3988_offset 3988
 #define unused4028_offset 4028
+#define unused520_offset 520
 #define unused542_offset 542
 #define unused6312_offset 6312
 #define unused744b4_offset 744
