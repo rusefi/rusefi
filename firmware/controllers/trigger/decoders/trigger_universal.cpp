@@ -123,7 +123,6 @@ void configureQuickStartSenderWheel(TriggerWaveform *s) {
 	s->initialize(FOUR_STROKE_CAM_SENSOR);
 
 	s->useRiseEdge = false;
-	s->gapBothDirections = false;
 
 	int offset = 2 * 20;
 
