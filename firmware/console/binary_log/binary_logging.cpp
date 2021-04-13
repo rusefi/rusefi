@@ -18,7 +18,7 @@ static scaled_channel<uint32_t, TIME_PRECISION> packedTime;
 
 // todo: we are at the edge of sdLogBuffer size and at the moment we have no code to make sure buffer does not overflow
 // todo: make this logic smarter
-static const LogField fields[] = {
+static constexpr LogField fields[] = {
 	{tsOutputChannels.rpm, GAUGE_NAME_RPM, "rpm", 0},
 	{packedTime, GAUGE_NAME_TIME, "sec", 0},
 	{tsOutputChannels.totalTriggerErrorCounter, GAUGE_NAME_TRG_ERR, "err", 0},
