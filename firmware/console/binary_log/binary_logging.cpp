@@ -74,6 +74,17 @@ static constexpr LogField fields[] = {
 	{tsOutputChannels.knockLevel, GAUGE_NAME_KNOCK_LEVEL, "dBv", 0},
 };
 
+static constexpr uint16_t computeFieldsRecordLength() {
+	uint16_t recLength = 0;
+	for (size_t i = 0; i < efi::size(fields); i++) {
+		recLength += fields[i].getSize();
+	}
+
+	return recLength;
+}
+
+static constexpr uint16_t recordLength = computeFieldsRecordLength();
+
 void writeHeader(Writer& outBuffer) {
 	char buffer[MLQ_HEADER_SIZE];
 	// File format: MLVLG\0
@@ -102,13 +113,8 @@ void writeHeader(Writer& outBuffer) {
 	buffer[17] = headerSize & 0xFF;
 
 	// Record length - length of a single data record: sum size of all fields
-	uint16_t recLength = 0;
-	for (size_t i = 0; i < efi::size(fields); i++) {
-		recLength += fields[i].getSize();
-	}
-
-	buffer[18] = recLength >> 8;
-	buffer[19] = recLength & 0xFF;
+	buffer[18] = recordLength >> 8;
+	buffer[19] = recordLength & 0xFF;
 
 	// Number of logger fields
 	buffer[20] = 0;
