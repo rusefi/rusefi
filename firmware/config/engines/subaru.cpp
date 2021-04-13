@@ -21,8 +21,6 @@ void setSubaru2003Wrx(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	engineConfiguration->trigger.customTotalToothCount = 5;
 	engineConfiguration->trigger.customSkippedToothCount = 1;
 
-	engineConfiguration->sensorChartFrequency = 2;
-
 	engineConfiguration->useStepperIdle = true;
 
 	// See http://rusefi.com/forum/viewtopic.php?f=4&t=1161

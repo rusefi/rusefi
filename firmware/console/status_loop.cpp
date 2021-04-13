@@ -102,6 +102,8 @@ extern int icuFallingCallbackCounter;
 extern WaveChart waveChart;
 #endif /* EFI_ENGINE_SNIFFER */
 
+#include "sensor_chart.h"
+
 extern pin_output_mode_e DEFAULT_OUTPUT;
 extern pin_output_mode_e INVERTED_OUTPUT;
 
@@ -134,7 +136,7 @@ static void setWarningEnabled(int value) {
 
 #if EFI_FILE_LOGGING
 // this one needs to be in main ram so that SD card SPI DMA works fine
-static NO_CACHE char sdLogBuffer[100];
+static NO_CACHE char sdLogBuffer[150];
 static uint64_t binaryLogCount = 0;
 
 #endif /* EFI_FILE_LOGGING */
@@ -197,6 +199,10 @@ void printOverallStatus(efitimesec_t nowSeconds) {
 #if EFI_ENGINE_SNIFFER
 	waveChart.publishIfFull();
 #endif /* EFI_ENGINE_SNIFFER */
+
+#if EFI_SENSOR_CHART
+	publishSensorChartIfFull();
+#endif // EFI_SENSOR_CHART
 
 	/**
 	 * we report the version every 4 seconds - this way the console does not need to

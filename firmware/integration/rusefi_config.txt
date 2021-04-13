@@ -649,7 +649,7 @@ adc_channel_e fuelLevelSensor;+This is the processor pin that your fuel level se
 
 
 	float idle_derivativeFilterLoss;+0.1 is a good default value;    "x",    1,      0.0,       -1000000,  1000000,        4
-	int sensorChartFrequency;;"index",      1,      0,       0, 300,      0
+	int unused520;;"index",      1,      0,       0, 300,      0
 
 struct trigger_config_s @brief Trigger wheel(s) configuration
 
@@ -1401,10 +1401,10 @@ float[CRANKING_ADVANCE_CURVE_SIZE] crankingAdvance    ;+Optional timing advance 
 
 	brain_pin_e[SERVO_COUNT iterate] servoOutputPins;todo: more comments
 
-	int16_t coastingFuelCutRpmHigh;+This sets the RPM limit above which the fuel cut is deactivated, activating this maintains fuel flow at high RPM to help cool pistons;"rpm",        1,     0,  0,    5000,  0
-	int16_t coastingFuelCutRpmLow;+This sets the RPM limit below which the fuel cut is deactivated, this prevents jerking or issues transitioning to idle;"rpm",        1,     0,  0,    5000,  0
-	int16_t coastingFuelCutTps;+percent between 0 and 100 below which the fuel cut is deactivated, this helps low speed drivability.;"%",        1,     0,  0,    100,  1
-	int16_t coastingFuelCutClt;+Fuel cutoff is deactivated below this coolant threshold.;"C",        1,     0,  -100,    100,  0
+	int16_t coastingFuelCutRpmHigh;+This sets the RPM above which fuel cut is active.;"rpm",        1,     0,  0,    5000,  0
+	int16_t coastingFuelCutRpmLow;+This sets the RPM below which fuel cut is deactivated, this prevents jerking or issues transitioning to idle;"rpm",        1,     0,  0,    5000,  0
+	int16_t coastingFuelCutTps;+Throttle position below which fuel cut is active.;"%",        1,     0,  0,    20,  1
+	int16_t coastingFuelCutClt;+Fuel cutoff is disabled when the engine is cold.;"C",        1,     0,  -100,    100,  0
 	
 	int16_t pidExtraForLowRpm;+Increases PID reaction for RPM<target by adding extra percent to PID-error;"%",        1,     0,  0,    100,  0
 	int16_t coastingFuelCutMap;+MAP value above which fuel injection is re-enabled.;"kPa", 1, 0, 0, 250, 0

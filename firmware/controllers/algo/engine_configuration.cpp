@@ -971,7 +971,6 @@ static void setDefaultEngineConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	engineConfiguration->ignitionMode = IM_ONE_COIL;
 	engineConfiguration->globalTriggerAngleOffset = 0;
 	engineConfiguration->extraInjectionOffset = 0;
-	engineConfiguration->sensorChartFrequency = 20;
 
 	engineConfiguration->fuelAlgorithm = LM_SPEED_DENSITY;
 

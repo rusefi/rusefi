@@ -2979,7 +2979,6 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 	dialog = monitoringSettings, "rusEFI Console Settings"
 		field = "Sensor Sniffer",         	    		sensorChartMode
 		field = "  Threshold",							sensorSnifferRpmThreshold
-		field = "  Each X cycle",						sensorChartFrequency
 		field = "Engine Sniffer", 						isEngineChartEnabled			
 		field = "  Threshold", 							engineSnifferRpmThreshold
 		
@@ -3477,14 +3476,13 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
         field = "Switch Input",                 antiLagActivatePin,  {antiLagActivationMode == 1 && antiLagEnabled == 1}
 
 
-	    
 	dialog = coastingFuelCutControl, "Coasting Fuel Cutoff Settings"
 		field = "Enable Coasting Fuel Cutoff",			coastingFuelCutEnabled
-		field = "Cutoff Activation RPM High Limit",		coastingFuelCutRpmHigh, {coastingFuelCutEnabled == 1}
-		field = "Cutoff Deactivation RPM Low Limit",	coastingFuelCutRpmLow, {coastingFuelCutEnabled == 1}
-		field = "TPS Deactivation Threshold",			coastingFuelCutTps, {coastingFuelCutEnabled == 1}
-		field = "CLT Activation Threshold",				coastingFuelCutClt, {coastingFuelCutEnabled == 1}
-		field = "MAP Deactivation Threshold",      coastingFuelCutMap, {coastingFuelCutEnabled == 1}
+		field = "No cut below CLT",				coastingFuelCutClt, {coastingFuelCutEnabled == 1}
+		field = "Cut fuel above",		coastingFuelCutRpmHigh, {coastingFuelCutEnabled == 1}
+		field = "Restore fuel below",	coastingFuelCutRpmLow, {coastingFuelCutEnabled == 1}
+		field = "Cut fuel below TPS",			coastingFuelCutTps, {coastingFuelCutEnabled == 1}
+		field = "Cut fuel below MAP",      coastingFuelCutMap, {coastingFuelCutEnabled == 1}
 
 	dialog = parkingLot, "Experimental/Broken"
 		field = "#System hacks"
