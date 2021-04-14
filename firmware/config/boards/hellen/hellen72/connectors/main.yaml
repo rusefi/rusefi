@@ -274,7 +274,7 @@ pins:
     color: black W4
 
   - pin: 4B
-    id: [GPIOF_9, EFI_ADC_2]
+    id: [GPIOF_9, ADC3_CHANNEL_7]
     class: [switch_inputs, analog_inputs]
     ts_name: 4B - Brake/RES1 (A7)
     function: Brake Switch
