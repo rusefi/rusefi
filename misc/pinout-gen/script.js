@@ -13,7 +13,7 @@ function addRow(table, pin, pdiv) {
   var cdata = clone.querySelector(".color-data");
   pdata.textContent = pin.pin;
   pdata.dataset.type = pin.type;
-  idata.textContent = pin.tsName;
+  idata.textContent = pin.ts_name;
   tdata.textContent = pin.type
   fdata.textContent = pin.function;
   cdata.textContent = pin.color
