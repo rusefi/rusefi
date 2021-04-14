@@ -19,12 +19,13 @@ function addRow(table, pin, pdiv) {
   cdata.textContent = pin.color
   row.addEventListener('click', function(table, pin, pdiv) {
     clickPin(table.parentElement.parentElement.parentElement.querySelector(".info-table tbody"), pin, pdiv);
+    table.parentElement.parentElement.parentElement.scrollIntoView()
   }.bind(null, table, pin, pdiv));
   table.appendChild(clone);
 }
 
 function clickPin(table, pin, pdiv) {
-  table.style.display = "";
+  table.parentElement.style.display = "table";
   table.innerHTML = "";
   addRow(table, pin, pdiv);
   var pins = document.querySelectorAll(".pin-marker");
