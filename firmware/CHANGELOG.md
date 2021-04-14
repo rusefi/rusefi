@@ -28,6 +28,8 @@ All notable user-facing or behavior-altering changes will be documented in this 
 ## Month 202x Release - "Release Name"
 
 ## April 2021 Release "Be Kind to Lawyers Day"
+### Added
+ - mount SD card and drive containing TunerStudio ini at the same time
 ### Fixed
  - engine sniffer "show only interesting" fix #2528
 
