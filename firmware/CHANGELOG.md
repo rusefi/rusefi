@@ -25,7 +25,9 @@ Release template (copy/paste this for new release):
 
 All notable user-facing or behavior-altering changes will be documented in this file.
 
-## XXX 2021 Release
+## Month 202x Release - "Release Name"
+
+## April 2021 Release "Be Kind to Lawyers Day"
 ### Fixed
  - engine sniffer "show only interesting" fix #2528
 
