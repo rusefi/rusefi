@@ -229,10 +229,7 @@ static void removeFile(const char *pathx) {
 	f_unlink(pathx);
 }
 
-int
-    mystrncasecmp(const char *s1, const char *s2, size_t n)
-    {
-
+int mystrncasecmp(const char *s1, const char *s2, size_t n) {
            if (n != 0) {
                     const char *us1 = (const char *)s1;
                     const char *us2 = (const char *)s2;
@@ -446,7 +443,7 @@ struct SdLogBufferWriter final : public BufferedWriter<512> {
 		FRESULT err = f_write(&FDLogFile, buffer, count, &bytesWritten);
 
 		if (bytesWritten != count) {
-			printError("write error or disk full", err); // error or disk full
+			printError("write error or disk full", err);
 
 			// Close file and unmount volume
 			mmcUnMount();
