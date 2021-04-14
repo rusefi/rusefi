@@ -17,13 +17,14 @@ function addRow(table, pin, pdiv) {
   tdata.textContent = pin.type
   fdata.textContent = pin.function;
   cdata.textContent = pin.color
-  row.addEventListener('click', function(pin, pdiv) {
-    clickPin(pin, pdiv);
-  }.bind(null, pin, pdiv));
+  row.addEventListener('click', function(table, pin, pdiv) {
+    clickPin(table.parentElement.parentElement.parentElement.querySelector(".info-table tbody"), pin, pdiv);
+  }.bind(null, table, pin, pdiv));
   table.appendChild(clone);
 }
 
 function clickPin(table, pin, pdiv) {
+  table.style.display = "";
   table.innerHTML = "";
   addRow(table, pin, pdiv);
   var pins = document.querySelectorAll(".pin-marker");
