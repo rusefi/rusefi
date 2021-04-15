@@ -62,9 +62,7 @@ void initializeMazdaMiataNb2Crank(TriggerWaveform *s) {
 	s->tdcPosition = 60 + 655;
 
 	s->setTriggerSynchronizationGap2(0.35f, 0.98f);
-	// 384
 	s->addEventAngle(96.0f, T_PRIMARY, TV_FALL);
-	// 400
 	s->addEventAngle(100.0f, T_PRIMARY, TV_RISE);
 	s->addEventAngle(176.0f, T_PRIMARY, TV_FALL);
 	s->addEventAngle(180.0f, T_PRIMARY, TV_RISE);
