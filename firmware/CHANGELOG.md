@@ -28,6 +28,8 @@ All notable user-facing or behavior-altering changes will be documented in this 
 ## Month 202x Release - "Release Name"
 ### Fixed
  - SD card logs bugfix #2556 
+ - Too many small logs are zero size #2553
+ - Launcher splash screen is freezy #2560
 
 ## April 2021 Release "Be Kind to Lawyers Day"
 ### Added
