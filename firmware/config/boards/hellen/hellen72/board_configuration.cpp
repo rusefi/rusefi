@@ -39,10 +39,10 @@ static void setInjectorPins() {
 }
 
 static void setIgnitionPins() {
-	engineConfiguration->ignitionPins[0] = GPIOI_8;
-	engineConfiguration->ignitionPins[1] = GPIOE_5;
-	engineConfiguration->ignitionPins[2] = GPIOE_4;
-	engineConfiguration->ignitionPins[3] = GPIOE_3;
+	engineConfiguration->ignitionPins[0] = GPIOI_8; // 3F - IGN_1 (1&4)
+	engineConfiguration->ignitionPins[1] = GPIO_UNASSIGNED ; // GPIOE_4
+	engineConfiguration->ignitionPins[2] = GPIOE_5; // 3I - IGN_2 (2&3)
+	engineConfiguration->ignitionPins[3] = GPIO_UNASSIGNED; // GPIOE_3
 
 	//engineConfiguration->ignitionPins[4] = GPIOE_2;
 	//engineConfiguration->ignitionPins[5] = GPIOI_5;

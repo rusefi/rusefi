@@ -183,6 +183,10 @@ table th {
   color: black;
 }
 
+.info-table {
+  display: none;
+}
+
 @media (prefers-color-scheme: dark) {
   html {
     background-color: black;
@@ -217,7 +221,7 @@ table th {
     display: flex;
     flex-direction: column;
   }
-  .info-table, .id-data, .id-header, .type-data, .type-header, .color-data, .color-header, thead {
+  .info-table, .ts-data, .ts-header, .type-data, .type-header, .color-data, .color-header, thead {
     display: none;
   }
   .connector-container {

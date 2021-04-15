@@ -7,34 +7,27 @@ function addRow(table, pin, pdiv) {
   var clone = template.content.cloneNode(true);
   var row = clone.querySelector(".data");
   var pdata = clone.querySelector(".pin-data");
-  var idata = clone.querySelector(".id-data");
+  var idata = clone.querySelector(".ts-data");
   var tdata = clone.querySelector(".type-data");
   var fdata = clone.querySelector(".function-data");
   var cdata = clone.querySelector(".color-data");
   pdata.textContent = pin.pin;
   pdata.dataset.type = pin.type;
-  idata.textContent = pin.id;
+  idata.textContent = pin.ts_name;
   tdata.textContent = pin.type
   fdata.textContent = pin.function;
   cdata.textContent = pin.color
-  row.addEventListener('click', function(pin, pdiv) {
-    clickPin(pin, pdiv);
-  }.bind(null, pin, pdiv));
+  row.addEventListener('click', function(table, pin, pdiv) {
+    clickPin(table.parentElement.parentElement.parentElement.querySelector(".info-table tbody"), pin, pdiv);
+    table.parentElement.parentElement.parentElement.scrollIntoView()
+  }.bind(null, table, pin, pdiv));
   table.appendChild(clone);
 }
 
 function clickPin(table, pin, pdiv) {
+  table.parentElement.style.display = "table";
   table.innerHTML = "";
-  if (Array.isArray(pin.id)) {
-    var pinIds = pin.id.filter((value, index) => {
-      return pin.id.indexOf(value) === index;
-    });
-    for (var i = 0; i < pinIds.length; i++) {
-      addRow(table, {pin: pin.pin, id: pinIds[i], function: pin.function, type: pin.type}, pdiv);
-    }
-  } else {
-    addRow(table, pin, pdiv);
-  }
+  addRow(table, pin, pdiv);
   var pins = document.querySelectorAll(".pin-marker");
   for (var i = 0; i < pins.length; i++) {
     if (pins[i].dataset.type == pin.type) {

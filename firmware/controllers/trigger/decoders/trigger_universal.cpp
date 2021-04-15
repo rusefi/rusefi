@@ -108,6 +108,8 @@ void configureKawaKX450F(TriggerWaveform *s) {
 	float engineCycle = FOUR_STROKE_ENGINE_CYCLE;
 	s->initialize(FOUR_STROKE_CRANK_SENSOR);
 
+	s->setTriggerSynchronizationGap(2.28);
+
 	float toothWidth = 3 / 20.0;
 
 	addSkippedToothTriggerEvents(T_PRIMARY, s, 18, 0, toothWidth, 0, engineCycle,
@@ -121,7 +123,6 @@ void configureQuickStartSenderWheel(TriggerWaveform *s) {
 	s->initialize(FOUR_STROKE_CAM_SENSOR);
 
 	s->useRiseEdge = false;
-	s->gapBothDirections = false;
 
 	int offset = 2 * 20;
 
