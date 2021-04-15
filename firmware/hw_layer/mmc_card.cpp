@@ -47,7 +47,7 @@ static bool fs_ready = false;
 
 EXTERN_ENGINE;
 
-#define F_SYNC_FREQUENCY 100
+#define F_SYNC_FREQUENCY 10
 
 static int totalLoggedBytes = 0;
 static int fileCreatedCounter = 0;
