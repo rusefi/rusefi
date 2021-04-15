@@ -30,6 +30,7 @@ All notable user-facing or behavior-altering changes will be documented in this 
  - SD card logs bugfix #2556 
  - Too many small logs are zero size #2553
  - Launcher splash screen is freezy #2560
+ - NB2 trigger decoder #2533
 
 ## April 2021 Release "Be Kind to Lawyers Day"
 ### Added
