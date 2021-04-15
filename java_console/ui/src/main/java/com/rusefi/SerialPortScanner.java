@@ -32,7 +32,7 @@ public enum SerialPortScanner {
     void findAllAvailablePorts() {
         List<String> ports = new ArrayList<>();
         String[] serialPorts = LinkManager.getCommPorts();
-        if (serialPorts.length > 0 || serialPorts.length < 15)
+        if (serialPorts.length > 0 && serialPorts.length < 15)
             ports.add(AUTO_SERIAL);
         ports.addAll(Arrays.asList(serialPorts));
         ports.addAll(TcpConnector.getAvailablePorts());
