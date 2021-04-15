@@ -64,9 +64,10 @@ void initializeMazdaMiataNb2Crank(TriggerWaveform *s) {
 	s->tdcPosition = 60 + 655;
 
 	s->setTriggerSynchronizationGap2(0.35f, 0.98f);
-	s->addEventAngle(96.0f, T_PRIMARY, TV_FALL);
-	s->addEventAngle(100.0f, T_PRIMARY, TV_RISE);
-	s->addEventAngle(176.0f, T_PRIMARY, TV_FALL);
+	// todo: NB2 fronts are inverted comparing to NB1, life is not perfect :(
+	s->addEventAngle(180.0f - NB_CRANK_MAGIC - 4, T_PRIMARY, TV_FALL);
+	s->addEventAngle(180.0f - NB_CRANK_MAGIC, T_PRIMARY, TV_RISE);
+	s->addEventAngle(180.0f - 4, T_PRIMARY, TV_FALL);
 	s->addEventAngle(180.0f, T_PRIMARY, TV_RISE);
 }
 
@@ -101,8 +102,8 @@ static void initializeMazdaMiataNb1ShapeWithOffset(TriggerWaveform *s, float off
 	s->addEvent720(380.0f, T_PRIMARY, TV_RISE);
 	s->addEvent720(400.0f, T_PRIMARY, TV_FALL);
 
-	addNBCrankTooth(s, offset + 426.0f, T_SECONDARY);
-	addNBCrankTooth(s, offset + 496.0f, T_SECONDARY);
+	addNBCrankTooth(s, offset + 66.0f + 360, T_SECONDARY);
+	addNBCrankTooth(s, offset + 66.0f + 360 + NB_CRANK_MAGIC, T_SECONDARY);
 	addNBCrankTooth(s, offset + 66.0f + 540, T_SECONDARY);
 	addNBCrankTooth(s, offset + 66.0f + 540 + NB_CRANK_MAGIC, T_SECONDARY);
 
