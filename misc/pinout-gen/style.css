@@ -183,6 +183,10 @@ table th {
   color: black;
 }
 
+.info-table {
+  display: none;
+}
+
 @media (prefers-color-scheme: dark) {
   html {
     background-color: black;
