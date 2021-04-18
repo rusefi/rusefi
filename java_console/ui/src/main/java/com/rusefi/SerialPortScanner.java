@@ -4,7 +4,6 @@ import com.rusefi.io.LinkManager;
 import com.rusefi.io.tcp.TcpConnector;
 import org.jetbrains.annotations.NotNull;
 
-import javax.swing.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -16,23 +15,21 @@ import java.util.concurrent.CopyOnWriteArrayList;
 public enum SerialPortScanner {
     INSTANCE;
 
+    private volatile boolean isRunning = true;
+
     static final String AUTO_SERIAL = "Auto Serial";
     @NotNull
-    private List<String> knownPorts = new ArrayList<>();
+    private final List<String> knownPorts = new ArrayList<>();
 
     public List<Listener> listeners = new CopyOnWriteArrayList<>();
-
-    private final Timer scanPortsTimer = new Timer(1000, e -> findAllAvailablePorts());
-
 
     /**
      * Find all available serial ports and checks if simulator local TCP port is available
      */
-    @NotNull
     void findAllAvailablePorts() {
         List<String> ports = new ArrayList<>();
         String[] serialPorts = LinkManager.getCommPorts();
-        if (serialPorts.length > 0 || serialPorts.length < 15)
+        if (serialPorts.length > 0 && serialPorts.length < 15)
             ports.add(AUTO_SERIAL);
         ports.addAll(Arrays.asList(serialPorts));
         ports.addAll(TcpConnector.getAvailablePorts());
@@ -57,11 +54,23 @@ public enum SerialPortScanner {
     }
 
     public void startTimer() {
-        scanPortsTimer.start();
+        Thread portsScanner = new Thread(() -> {
+            while (isRunning) {
+                findAllAvailablePorts();
+                try {
+                    Thread.sleep(1000);
+                } catch (InterruptedException e) {
+                    throw new IllegalStateException(e);
+                }
+            }
+
+        }, "Ports Scanner");
+        portsScanner.setDaemon(true);
+        portsScanner.start();
     }
 
     public void stopTimer() {
-        scanPortsTimer.stop();
+        isRunning = false;
     }
 
     interface Listener {
