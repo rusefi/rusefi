@@ -84,7 +84,8 @@ static SPIDriver *spi;
 
 static Hip9011Hardware hardware;
 
-static float hipValueMax = 0;
+static float normalizedValue[HIP_INPUT_CHANNELS];
+static float normalizedValueMax[HIP_INPUT_CHANNELS];
 
 HIP9011 instance(&hardware);
 
@@ -187,10 +188,10 @@ int Hip9011Hardware::sendSyncCommand(uint8_t tx, uint8_t *rx_ptr) {
 	if (rx_ptr)
 		*rx_ptr = rx;
 	/* check response */
-	if (instance.adv_mode == false)
-		ret = checkResponseDefMode(tx, rx);
-	else
+	if (instance.adv_mode)
 		ret = checkResponseAdvMode(tx, rx);
+	else
+		ret = checkResponseDefMode(tx, rx);
 
 	/* statistic counters */
 	if (ret)
@@ -239,7 +240,14 @@ static void endIntegration(void *) {
 	 */
 	if (instance.state == IS_INTEGRATING) {
 		intHold.setLow();
-		instance.state = WAITING_FOR_ADC_TO_SKIP;
+		if (instance.adv_mode) {
+			/* read value over SPI in thread mode */
+			instance.state = NOT_READY;
+			hip_wake_driver();
+		} else {
+			/* wait for ADC samples */
+			instance.state = WAITING_FOR_ADC_TO_SKIP;
+		}
 	}
 }
 
@@ -278,11 +286,16 @@ void hip9011_startKnockSampling(uint8_t cylinderNumber, efitick_t nowNt) {
 }
 
 void hipAdcCallback(adcsample_t adcValue) {
+	/* we read in digital mode */
+	if (instance.adv_mode)
+		return;
 	if (instance.state == WAITING_FOR_ADC_TO_SKIP) {
 		instance.state = WAITING_FOR_RESULT_ADC;
 	} else if (instance.state == WAITING_FOR_RESULT_ADC) {
 		/* offload calculations to driver thread */
-		instance.raw_value = adcValue;
+		if (instance.channelIdx < HIP_INPUT_CHANNELS) {
+			instance.rawValue[instance.channelIdx] = adcValue;
+		}
 		instance.state = NOT_READY;
 		hip_wake_driver();
 	}
@@ -406,8 +419,11 @@ static msg_t hipThread(void *arg) {
 
 		/* load new/updated settings */
 		instance.handleSettings(GET_RPM() DEFINE_PARAM_SUFFIX(PASS_HIP_PARAMS));
-		/* switch input channel */
-		instance.handleChannel(DEFINE_PARAM_SUFFIX(PASS_HIP_PARAMS));
+		/* in advanced more driver will set channel while reading integrator value */
+		if (!instance.adv_mode) {
+			/* switch input channel */
+			instance.handleChannel(DEFINE_PARAM_SUFFIX(PASS_HIP_PARAMS));
+		}
 		/* State */
 		instance.state = READY_TO_INTEGRATE;
 
@@ -415,11 +431,50 @@ static msg_t hipThread(void *arg) {
 		if (msg == MSG_TIMEOUT) {
 			/* ??? */
 		} else {
+			int rawValue;
+			/* check now, before readValueAndHandleChannel did not overwrite expectedCylinderNumber */
+			bool correctCylinder = (instance.cylinderNumber == instance.expectedCylinderNumber);
+
+			/* this needs to be called in any case to set proper channel for next cycle */
+			if (instance.adv_mode) {
+				rawValue = instance.readValueAndHandleChannel(DEFINE_PARAM_SUFFIX(PASS_HIP_PARAMS));
+
+				/* spi communication issue? */
+				if (rawValue < 0)
+					continue;
+			}
+
+			/* check that we know channel for current measurement */
+			int idx = instance.channelIdx;
+			if (!(idx < HIP_INPUT_CHANNELS))
+				continue;
+
+			float knockNormalized = 0.0f;
+			float knockVolts = 0.0f;
+
+			/* calculations */
+			if (instance.adv_mode) {
+				/* store for debug */
+				instance.rawValue[idx] = rawValue;
+				/* convert 10 bit integer value to 0.0 .. 1.0 float */
+				knockNormalized = ((float)rawValue) / HIP9011_DIGITAL_OUTPUT_MAX;
+				/* convert to magic volts */
+				knockVolts = knockNormalized * HIP9011_DESIRED_OUTPUT_VALUE;
+			} else {
+				rawValue = instance.rawValue[idx];
+				/* first calculate ouput volts */
+				knockVolts = adcToVolts(rawValue) * CONFIG(analogInputDividerCoefficient);
+				/* and then normalize */
+				knockNormalized = knockVolts / HIP9011_DESIRED_OUTPUT_VALUE;
+			}
+
 			/* Check for correct cylinder/input */
-			if (instance.cylinderNumber == instance.expectedCylinderNumber) {
-				/* calculations */
-				float knockVolts = instance.raw_value * adcToVolts(1) * CONFIG(analogInputDividerCoefficient);
-				hipValueMax = maxF(knockVolts, hipValueMax);
+			if (correctCylinder) {
+				/* debug */
+				normalizedValue[idx] = knockNormalized;
+				normalizedValueMax[idx] = maxF(knockNormalized, normalizedValueMax[idx]);
+
+				/* report */
 				engine->knockLogic(knockVolts);
 
 				/* TunerStudio */
@@ -524,10 +579,6 @@ static void showHipInfo(void) {
 		engine->knockCount,
 		engineConfiguration->maxKnockSubDeg);
 
-	efiPrintf(" Adc input %s (%.2f V)",
-		getAdc_channel_e(engineConfiguration->hipOutputChannel),
-		getVoltage("hipinfo", engineConfiguration->hipOutputChannel));
-
 	efiPrintf(" IntHold %s (mode 0x%x)",
 		hwPortname(CONFIG(hip9011IntHoldPin)),
 		CONFIG(hip9011IntHoldPinMode));
@@ -541,22 +592,32 @@ static void showHipInfo(void) {
 	printSpiConfig("hip9011", CONFIG(hip9011SpiDevice));
 #endif /* EFI_PROD_CODE */
 
-	efiPrintf(" SPI good response %d incorrect response %d",
+	efiPrintf(" SPI: good response %d incorrect response %d",
 		instance.correctResponsesCount,
 		instance.invalidResponsesCount);
 
-	efiPrintf(" hip %.2f vmax=%.2f",
-		engine->knockVolts,
-		hipValueMax);
+	efiPrintf(" Counters: samples %d overruns %d sync miss %d",
+		instance.samples, instance.overrun, instance.unsync);
 
 	efiPrintf(" Window start %.2f end %.2f",
 		engineConfiguration->knockDetectionWindowStart,
 		engineConfiguration->knockDetectionWindowEnd);
 
-	efiPrintf(" Counters: samples %d overruns %d sync miss %d",
-		instance.samples, instance.overrun, instance.unsync);
+	if (!instance.adv_mode) {
+		efiPrintf(" Adc input %s (%.2f V)",
+			getAdc_channel_e(engineConfiguration->hipOutputChannel),
+			getVoltage("hipinfo", engineConfiguration->hipOutputChannel));
+	}
 
-	hipValueMax = 0;
+	for (int i = 0; i < HIP_INPUT_CHANNELS; i++) {
+		efiPrintf("  input[%d] %d -> %.3f (max %.3f)",
+			i,
+			instance.rawValue[i],
+			normalizedValue[i],
+			normalizedValueMax[i]);
+		normalizedValueMax[i] = 0.0;
+	}
+
 	engine->printKnockState();
 }
 

@@ -17,8 +17,6 @@
 /* Local definitions.														*/
 /*==========================================================================*/
 
-#define DESIRED_OUTPUT_VALUE	5.0f
-
 /*==========================================================================*/
 /* Local variables and types.												*/
 /*==========================================================================*/
@@ -73,6 +71,10 @@ int HIP9011::sendCommand(uint8_t cmd) {
 	return hw->sendSyncCommand(cmd, NULL);
 }
 
+int HIP9011::sendCommandGetReply(uint8_t cmd, uint8_t *reply) {
+	return hw->sendSyncCommand(cmd, reply);
+}
+
 /**
  * @return frequency band we are interested in
  */
@@ -112,7 +114,7 @@ float HIP9011::getRpmByAngleWindowAndTimeUs(int timeUs, float angleWindowWidth) 
 	/**
 	 * TINT = TC * 2 * PI * VOUT
 	 */
-	float integrationTimeUs = timeUs * 2 * PIF * DESIRED_OUTPUT_VALUE;
+	float integrationTimeUs = timeUs * 2 * PIF * HIP9011_DESIRED_OUTPUT_VALUE;
 	/**
 	 * rpm = 60 seconds / time
 	 * '60000000' because revolutions per MINUTE in uS conversion
@@ -193,12 +195,12 @@ int HIP9011::cylinderToChannelIdx(int cylinder) {
 	return getCylinderKnockBank(cylinder);
 }
 
-void HIP9011::handleChannel(DEFINE_HIP_PARAMS) {
+int HIP9011::handleChannel(DEFINE_HIP_PARAMS) {
 	int ret;
 
 	/* we did not receive any callback from spark logic with valid cylinder yet */
 	if (cylinderNumber < 0)
-		return;
+		return -1;
 
 	/* find next firing cylinder */
 	/* MAGIC +1 -1, couse getNextFiringCylinderId expect cylinders to start from 1 */
@@ -206,9 +208,53 @@ void HIP9011::handleChannel(DEFINE_HIP_PARAMS) {
 
 	int nextChannelIdx = cylinderToChannelIdx(expectedCylinderNumber);
 	if (nextChannelIdx == channelIdx)
-		return;
+		return 0;
 
 	ret = sendCommand(SET_CHANNEL_CMD(nextChannelIdx));
-	if (ret == 0)
-		channelIdx = nextChannelIdx;
+	if (ret)
+		return ret;
+
+	channelIdx = nextChannelIdx;
+
+	return 0;
+}
+
+int HIP9011::readValueAndHandleChannel(DEFINE_HIP_PARAMS) {
+	int ret;
+	uint8_t rx[2];
+
+	/* we did not receive any callback from spark logic with valid cylinder yet */
+	if (cylinderNumber < 0)
+		return -1;
+
+	/* find next firing cylinder */
+	/* MAGIC +1 -1, couse getNextFiringCylinderId expect cylinders to start from 1 */
+	expectedCylinderNumber = getNextFiringCylinderId((cylinderNumber + 1) PASS_ENGINE_PARAMETER_SUFFIX) - 1;
+
+	int nextChannelIdx = cylinderToChannelIdx(expectedCylinderNumber);
+
+	/* use cached values, let handleSettings take care of settings update */
+	/* don't care about rx'ed data now */
+	ret = sendCommand(SET_PRESCALER_CMD(prescaler));
+	if (ret)
+		return ret;
+
+	/* reply from Set Prescaler CMD -> D7 to D0 of the digital integrator output */
+	ret = sendCommandGetReply(SET_CHANNEL_CMD(nextChannelIdx), &rx[0]);
+	if (ret)
+		return ret;
+
+	/* Same connand to get reply for previous command:
+	 * reply from Select the channel CMD -> D9 to D8 of difital integrator output and six zeroes */
+	ret = sendCommandGetReply(SET_CHANNEL_CMD(nextChannelIdx), &rx[1]);
+	if (ret)
+		return ret;
+
+	channelIdx = nextChannelIdx;
+
+	/* D9..D8 in high bits */
+	rx[1] = (rx[1] >> 6) & 0x03;
+
+	/* return digital integrator value */
+	return (rx[0] | (rx[1]  << 8));
 }
