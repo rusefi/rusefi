@@ -285,7 +285,7 @@ private:
 
 		if (widebandUpdatePending) {
 #if EFI_WIDEBAND_FIRMWARE_UPDATE && EFI_CAN_SUPPORT
-			updateWidebandFirmware(logger);
+			updateWidebandFirmware();
 #endif
 			widebandUpdatePending = false;
 		}
@@ -437,7 +437,7 @@ void executeTSCommand(uint16_t subsystem, uint16_t index) {
 		break;
 #ifdef EFI_WIDEBAND_FIRMWARE_UPDATE
 	case 0x15:
-		setWidebandOffset(logger, index);
+		setWidebandOffset(index);
 		break;
 #endif // EFI_WIDEBAND_FIRMWARE_UPDATE
 	case CMD_TS_BENCH_CATEGORY:
@@ -506,7 +506,7 @@ void initBenchTest(Logging *sharedLogger) {
 
 #if EFI_WIDEBAND_FIRMWARE_UPDATE
 	addConsoleAction("update_wideband", []() { widebandUpdatePending = true; });
-	addConsoleActionI("set_wideband_index", [](int index) { setWidebandOffset(logger, index); });
+	addConsoleActionI("set_wideband_index", [](int index) { setWidebandOffset(index); });
 #endif // EFI_WIDEBAND_FIRMWARE_UPDATE
 
 	addConsoleAction(CMD_STARTER_BENCH, starterRelayBench);

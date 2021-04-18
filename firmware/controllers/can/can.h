@@ -30,9 +30,9 @@ void registerCanSensor(CanSensorBase& sensor);
 // Indicate that an ack response was received from the wideband bootloader
 void handleWidebandBootloaderAck();
 // Update the firmware on any connected wideband controller
-void updateWidebandFirmware(Logging*);
+void updateWidebandFirmware();
 // Set the CAN index offset of any attached wideband controller
-void setWidebandOffset(Logging* logging, uint8_t index);
+void setWidebandOffset(uint8_t index);
 
 class CanWrite final : public PeriodicController<512> {
 public:

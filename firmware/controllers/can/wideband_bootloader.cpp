@@ -24,17 +24,17 @@ bool waitAck() {
 	return chEvtWaitAnyTimeout(EVT_BOOTLOADER_ACK, TIME_MS2I(1000)) != 0;
 }
 
-void updateWidebandFirmware(Logging* logging) {
+void updateWidebandFirmware() {
 	// Clear any pending acks for this thread
 	chEvtGetAndClearEvents(EVT_BOOTLOADER_ACK);
 
 	// Send messages to the current thread when acks come in
 	waitingBootloaderThread = chThdGetSelfX();
 
-	scheduleMsg(logging, "***************************************");
-	scheduleMsg(logging, "        WIDEBAND FIRMWARE UPDATE");
-	scheduleMsg(logging, "***************************************");
-	scheduleMsg(logging, "Wideband Update: Rebooting to bootloader...");
+	efiPrintf("***************************************");
+	efiPrintf("        WIDEBAND FIRMWARE UPDATE");
+	efiPrintf("***************************************");
+	efiPrintf("Wideband Update: Rebooting to bootloader...");
 
 	// The first request will reboot the chip (if necessary), and the second one will enable bootloader mode
 	// If the chip was already in bootloader (aka manual mode), then that's ok - the second request will
@@ -46,7 +46,7 @@ void updateWidebandFirmware(Logging* logging) {
 		}
 
 		if (!waitAck()) {
-			scheduleMsg(logging, "Wideband Update ERROR: Expected ACK from entry to bootloader, didn't get one.");
+			efiPrintf("Wideband Update ERROR: Expected ACK from entry to bootloader, didn't get one.");
 			return;
 		}
 
@@ -54,7 +54,7 @@ void updateWidebandFirmware(Logging* logging) {
 		chThdSleepMilliseconds(200);
 	}
 
-	scheduleMsg(logging, "Wideband Update: in update mode, erasing flash...");
+	efiPrintf("Wideband Update: in update mode, erasing flash...");
 
 	{
 		// Erase flash - opcode 1, magic value 0x5A5A
@@ -62,13 +62,13 @@ void updateWidebandFirmware(Logging* logging) {
 	}
 
 	if (!waitAck()) {
-		scheduleMsg(logging, "Wideband Update ERROR: Expected ACK from flash erase command, didn't get one.");
+		efiPrintf("Wideband Update ERROR: Expected ACK from flash erase command, didn't get one.");
 		return;
 	}
 
 	size_t totalSize = sizeof(build_wideband_image_bin);
 
-	scheduleMsg(logging, "Wideband Update: Flash erased! Sending %d bytes...", totalSize);
+	efiPrintf("Wideband Update: Flash erased! Sending %d bytes...", totalSize);
 
 	// Send flash data 8 bytes at a time
 	for (size_t i = 0; i < totalSize; i += 8) {
@@ -78,12 +78,12 @@ void updateWidebandFirmware(Logging* logging) {
 		}
 
 		if (!waitAck()) {
-			scheduleMsg(logging, "Wideband Update ERROR: Expected ACK from data write, didn't get one.");
+			efiPrintf("Wideband Update ERROR: Expected ACK from data write, didn't get one.");
 			return;
 		}
 	}
 
-	scheduleMsg(logging, "Wideband Update: Update complete! Rebooting controller.");
+	efiPrintf("Wideband Update: Update complete! Rebooting controller.");
 
 	{
 		// Reboot to firmware!
@@ -95,17 +95,17 @@ void updateWidebandFirmware(Logging* logging) {
 	waitingBootloaderThread = nullptr;
 }
 
-void setWidebandOffset(Logging* logging, uint8_t index) {
+void setWidebandOffset(uint8_t index) {
 	// Clear any pending acks for this thread
 	chEvtGetAndClearEvents(EVT_BOOTLOADER_ACK);
 
 	// Send messages to the current thread when acks come in
 	waitingBootloaderThread = chThdGetSelfX();
 
-	scheduleMsg(logging, "***************************************");
-	scheduleMsg(logging, "          WIDEBAND INDEX SET");
-	scheduleMsg(logging, "***************************************");
-	scheduleMsg(logging, "Setting all connected widebands to index %d...", index);
+	efiPrintf("***************************************");
+	efiPrintf("          WIDEBAND INDEX SET");
+	efiPrintf("***************************************");
+	efiPrintf("Setting all connected widebands to index %d...", index);
 
 	{
 		CanTxMessage m(0xEF4'0000, 1, true);
