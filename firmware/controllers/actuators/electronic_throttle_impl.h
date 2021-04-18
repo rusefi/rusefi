@@ -23,8 +23,6 @@
 #define ETB_LOOP_FREQUENCY 500
 #define DEFAULT_ETB_PWM_FREQUENCY 800
 
-class Logging;
-
 class EtbController : public IEtbController {
 public:
 	bool init(etb_function_e function, DcMotor *motor, pid_s *pidParameters, const ValueProvider3D* pedalMap, bool initializeThrottles) override;
@@ -40,7 +38,7 @@ public:
 	void onConfigurationChange(pid_s* previousConfiguration);
 	
 	// Print this throttle's status.
-	void showStatus(Logging* logger);
+	void showStatus();
 
 	// Helpers for individual parts of throttle control
 	expected<percent_t> observePlant() const override;
