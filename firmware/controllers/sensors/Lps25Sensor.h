@@ -8,7 +8,7 @@ public:
 	explicit Lps25Sensor(Lps25& sensor);
 	void update();
 
-	void showInfo(Logging* logger, const char* sensorName) const override;
+	void showInfo(const char* sensorName) const override;
 
 private:
 	Lps25* m_sensor;

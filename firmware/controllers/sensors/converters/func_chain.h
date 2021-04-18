@@ -25,9 +25,8 @@ protected:
 		return input;
 	}
 
-	void showInfo(Logging* logger, float testInputValue) const {
+	void showInfo(float testInputValue) const {
 		// base case does nothing
-		(void)logger;
 		(void)testInputValue;
 	}
 };
@@ -64,14 +63,14 @@ public:
 		return TBase::template get<TGet>();
 	}
 
-	void showInfo(Logging* logger, float testInputValue) const {
+	void showInfo(float testInputValue) const {
 		// Print info about this level
-		m_f.showInfo(logger, testInputValue);
+		m_f.showInfo(testInputValue);
 
 		// If valid, recurse down
 		auto res = m_f.convert(testInputValue);
 		if (res.Valid) {
-			TBase::showInfo(logger, res.Value);
+			TBase::showInfo(res.Value);
 		}
 	}
 
@@ -94,8 +93,8 @@ public:
 		return m_fs.template get<TGet>();
 	}
 
-	void showInfo(Logging* logger, float testInputValue) const override {
-		m_fs.showInfo(logger, testInputValue);
+	void showInfo(float testInputValue) const override {
+		m_fs.showInfo(testInputValue);
 	}
 
 private:

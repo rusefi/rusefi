@@ -25,7 +25,7 @@ struct MockSensor final : public StoredValueSensor
 		m_hasSensor = h;
 	}
 
-	void showInfo(Logging* logger, const char* name) const override {}
+	void showInfo(const char* name) const override {}
 
 private:
 	bool m_hasSensor = true;

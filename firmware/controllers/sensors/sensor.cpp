@@ -110,16 +110,16 @@ public:
 		return unexpected;
 	}
 
-	void showInfo(Logging* logger, const char* sensorName) const {
+	void showInfo(const char* sensorName) const {
 		if (m_useMock) {
-			scheduleMsg(logger, "Sensor \"%s\" mocked with value %.2f", sensorName, m_mockValue);
+			efiPrintf("Sensor \"%s\" mocked with value %.2f", sensorName, m_mockValue);
 		} else {
 			const auto sensor = m_sensor;
 
 			if (sensor) {
-				sensor->showInfo(logger, sensorName);
+				sensor->showInfo(sensorName);
 			} else {
-				scheduleMsg(logger, "Sensor \"%s\" is not configured.", sensorName);
+				efiPrintf("Sensor \"%s\" is not configured.", sensorName);
 			}
 		}
 	}
@@ -258,20 +258,20 @@ bool Sensor::Register() {
 }
 
 // Print information about all sensors
-/*static*/ void Sensor::showAllSensorInfo(Logging* logger) {
+/*static*/ void Sensor::showAllSensorInfo() {
 	for (size_t i = 1; i < efi::size(s_sensorRegistry); i++) {
 		auto& entry = s_sensorRegistry[i];
 		const char* name = s_sensorNames[i];
 
-		entry.showInfo(logger, name);
+		entry.showInfo(name);
 	}
 }
 
 // Print information about a particular sensor
-/*static*/ void Sensor::showInfo(Logging* logger, SensorType type) {
+/*static*/ void Sensor::showInfo(SensorType type) {
 	auto entry = getEntryForType(type);
 
 	if (entry) {
-		entry->showInfo(logger, getSensorName(type));
+		entry->showInfo(getSensorName(type));
 	}
 }
