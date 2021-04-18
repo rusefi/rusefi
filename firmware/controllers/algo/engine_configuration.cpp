@@ -1330,6 +1330,9 @@ void resetConfigurationExt(Logging * logger, configuration_callback_t boardCallb
 	case HELLEN72_ETB:
 		setHellen72etb(PASS_CONFIG_PARAMETER_SIGNATURE);
 		break;
+	case HELLEN_NA6:
+		setHellenNA6(PASS_CONFIG_PARAMETER_SIGNATURE);
+		break;
 #endif // HW_HELLEN
 #if HW_FRANKENSO
 	case DEFAULT_FRANKENSO:

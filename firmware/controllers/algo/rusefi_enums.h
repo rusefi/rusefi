@@ -108,7 +108,7 @@ typedef enum {
 
 	HELLEN72_ETB = 33,
 
-	UNUSED_34 = 34,
+	HELLEN_NA6 = 34,
 
 	CAMARO_4 = ET_CAMARO,
 
