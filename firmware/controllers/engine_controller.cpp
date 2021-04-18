@@ -568,7 +568,7 @@ void commonInitEngineController(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_S
 	initNewSensors();
 #endif /* EFI_UNIT_TEST */
 
-	initSensors(sharedLogger PASS_ENGINE_PARAMETER_SUFFIX);
+	initSensors(PASS_ENGINE_PARAMETER_SIGNATURE);
 
 	initAccelEnrichment(sharedLogger PASS_ENGINE_PARAMETER_SUFFIX);
 

@@ -429,7 +429,7 @@ void applyNewHardwareSettings(void) {
 
 #if EFI_IDLE_CONTROL
 	if (isIdleHardwareRestartNeeded()) {
-		 initIdleHardware(sharedLogger);
+		 initIdleHardware();
 	}
 #endif
 
