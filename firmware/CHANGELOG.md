@@ -28,7 +28,12 @@ All notable user-facing or behavior-altering changes will be documented in this 
 ## Month 202x Release - "Release Name"
 
 ## April 2021 Release - "Malbec" 
+### Added
+ - mount SD card and drive containing TunerStudio ini at the same time
+ - VAG MQB tachometer CAN integration
 ### Fixed
+ - fix error/warning buffer overflow #2456
+ - engine sniffer "show only interesting" fix #2528
  - SD card logs bugfix #2556 
  - Too many small logs are zero size #2553
  - Launcher splash screen is freezy #2560
