@@ -175,6 +175,12 @@ void runRusEfi(void) {
 	efiAssertVoid(CUSTOM_RM_STACK_1, getCurrentRemainingStack() > 512, "init s");
 	assertEngineReference();
 	engine->setConfig();
+
+#if EFI_TEXT_LOGGING
+	// Initialize logging system early - we can't log until this is called
+	startLoggingProcessor();
+#endif
+
 	addConsoleAction(CMD_REBOOT, scheduleReboot);
 	addConsoleAction(CMD_REBOOT_DFU, jump_to_bootloader);
 

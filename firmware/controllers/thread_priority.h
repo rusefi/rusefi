@@ -25,7 +25,10 @@
 #define PRIO_CJ125 (NORMALPRIO + 5)
 
 // Console thread 
-#define PRIO_CONSOLE (NORMALPRIO + 1)
+#define PRIO_CONSOLE (NORMALPRIO + 3)
+
+// Logging buffer flush is *slightly* above NORMALPRIO so that we don't starve logging buffers during initialization
+#define PRIO_TEXT_LOG (NORMALPRIO + 1)
 
 // Less important things
 #define PRIO_MMC (NORMALPRIO - 1)
