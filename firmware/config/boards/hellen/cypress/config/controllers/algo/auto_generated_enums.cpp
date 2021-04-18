@@ -1,7 +1,7 @@
 #include "global.h"
 #include "rusefi_enums.h"
 #include "rusefi_hw_enums.h"
-// was generated automatically by rusEfi tool  from rusefi_hw_enums.h // was generated automatically by rusEfi tool  from rusefi_enums.h // by enum2string.jar tool on Thu Apr 15 05:22:15 UTC 2021
+// was generated automatically by rusEfi tool  from rusefi_hw_enums.h // was generated automatically by rusEfi tool  from rusefi_enums.h // by enum2string.jar tool on Sun Apr 18 10:16:41 EDT 2021
 // see also gen_config_and_enums.bat
 
 
@@ -875,6 +875,8 @@ case GY6_139QMB:
   return "GY6_139QMB";
 case HELLEN72_ETB:
   return "HELLEN72_ETB";
+case HELLEN_NA6:
+  return "HELLEN_NA6";
 case HELLEN_NB2:
   return "HELLEN_NB2";
 case HONDA_600:
@@ -981,8 +983,6 @@ case TOYOTA_2JZ_GTE_VVTi:
   return "TOYOTA_2JZ_GTE_VVTi";
 case TOYOTA_JZS147:
   return "TOYOTA_JZS147";
-case UNUSED_34:
-  return "UNUSED_34";
 case UNUSED_36:
   return "UNUSED_36";
 case VAG_18_TURBO:
