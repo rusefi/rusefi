@@ -67,6 +67,13 @@ static NamedOutputPin Cs(PROTOCOL_HIP_NAME);
 
 class Hip9011Hardware : public Hip9011HardwareInterface {
 	int sendSyncCommand(uint8_t command, uint8_t *rx_ptr) override;
+
+private:
+	int checkResponseDefMode(uint8_t tx, uint8_t rx);
+	int checkResponseAdvMode(uint8_t tx, uint8_t rx);
+
+	uint8_t rep_mask;
+	uint8_t rep_value;
 };
 
 /* TODO: include following stuff in object */
@@ -114,7 +121,7 @@ static void hip_addconsoleActions(void);
 /* Local functions.															*/
 /*==========================================================================*/
 
-static int checkResponseDefMode(uint8_t tx, uint8_t rx) {
+int Hip9011Hardware::checkResponseDefMode(uint8_t tx, uint8_t rx) {
 	/* in default SPI mode SDO is directly equals the SDI (echo function) */
 	if (tx == rx) {
 		return 0;
@@ -123,10 +130,41 @@ static int checkResponseDefMode(uint8_t tx, uint8_t rx) {
 	}
 }
 
-static int checkResponseAdvMode(uint8_t tx, uint8_t rx) {
-	UNUSED(tx); UNUSED(rx);
-	/* TODO: no check for advanced mode yet */
-	return 0;
+int Hip9011Hardware::checkResponseAdvMode(uint8_t tx, uint8_t rx) {
+	int ret = 0;
+
+	/* check reply */
+	if ((rx & rep_mask) != rep_value)
+		ret = -1;
+
+	/* extract mask and value for next reply */
+	if ((tx & 0xe0) == SET_PRESCALER_CMD(0)){
+		/* D7 to D0 of digital integrator output */
+		rep_mask  = 0x00;
+		rep_value = 0x00;
+	} else if ((tx & 0xfe) == SET_CHANNEL_CMD(0)) {
+		/* D9 to D8 of digital integrator output and six zeroes */
+		rep_mask  = 0x3f;
+		rep_value = 0x00;
+	} else if ((tx & 0xc0) == SET_BAND_PASS_CMD(0)) {
+		rep_mask  = 0xff;
+		rep_value = SET_BAND_PASS_REP;
+	} else if ((tx & 0xc0) == SET_GAIN_CMD(0)) {
+		rep_mask  = 0xff;
+		rep_value = SET_GAIN_REP;
+	} else if ((tx & 0xe0) == SET_INTEGRATOR_CMD(0)) {
+		rep_mask  = 0xff;
+		rep_value = SET_INTEGRATOR_REP;
+	} else if ((tx & 0xff) == SET_ADVANCED_MODE_CMD) {
+		rep_mask  = 0xff;
+		rep_value = SET_ADVANCED_MODE_REP;
+	} else {
+		/* unknown */
+		rep_mask  = 0x00;
+		rep_value = 0x00;
+	}
+
+	return ret;
 }
 
 int Hip9011Hardware::sendSyncCommand(uint8_t tx, uint8_t *rx_ptr) {
