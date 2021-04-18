@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on config/boards/subaru_eg33/config/gen_config.sh integration/rusefi_config.txt Thu Apr 15 05:22:41 UTC 2021
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on config/boards/subaru_eg33/config/gen_config.sh integration/rusefi_config.txt Sun Apr 18 13:37:19 UTC 2021
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -432,6 +432,7 @@ typedef struct specs_s specs_s;
 // start of trigger_config_s
 struct trigger_config_s {
 	/**
+	 * https://github.com/rusefi/rusefi/wiki/All-Supported-Triggers
 	 * set trigger_type X
 	 * offset 0
 	 */
@@ -3868,4 +3869,4 @@ struct persistent_config_s {
 typedef struct persistent_config_s persistent_config_s;
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on config/boards/subaru_eg33/config/gen_config.sh integration/rusefi_config.txt Thu Apr 15 05:22:41 UTC 2021
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on config/boards/subaru_eg33/config/gen_config.sh integration/rusefi_config.txt Sun Apr 18 13:37:19 UTC 2021
