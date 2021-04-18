@@ -579,7 +579,7 @@ void commonInitEngineController(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_S
 	initGpPwm(PASS_ENGINE_PARAMETER_SIGNATURE);
 
 #if EFI_IDLE_CONTROL
-	startIdleThread(sharedLogger PASS_ENGINE_PARAMETER_SUFFIX);
+	startIdleThread(PASS_ENGINE_PARAMETER_SIGNATURE);
 #endif /* EFI_IDLE_CONTROL */
 
 	initButtonShift(PASS_ENGINE_PARAMETER_SIGNATURE);

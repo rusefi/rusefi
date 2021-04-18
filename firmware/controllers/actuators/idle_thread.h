@@ -28,8 +28,6 @@ struct IIdleController {
 	virtual float getOpenLoop(Phase phase, float clt, SensorResult tps) const = 0;
 };
 
-class Logging;
-
 class IdleController : public IIdleController {
 public:
 	DECLARE_ENGINE_PTR;
@@ -76,7 +74,7 @@ bool isIdling();
 void applyIACposition(percent_t position DECLARE_ENGINE_PARAMETER_SUFFIX);
 void setManualIdleValvePosition(int positionPercent);
 
-void startIdleThread(Logging* sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX);
+void startIdleThread(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 void setDefaultIdleParameters(DECLARE_CONFIG_PARAMETER_SIGNATURE);
 void startIdleBench(void);
 void setIdleOffset(float value);
