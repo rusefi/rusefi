@@ -1,2 +1,2 @@
 @echo off
-bash.exe compile_hellen72.sh
+bash.exe compile_hellenNA6.sh

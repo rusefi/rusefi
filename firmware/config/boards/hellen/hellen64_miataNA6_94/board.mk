@@ -1,12 +1,12 @@
 # Combine the related files for a specific platform and MCU.
 
 # Target ECU board design
-BOARDCPPSRC = $(BOARDS_DIR)/hellen/hellen72/board_configuration.cpp
-BOARDINC = $(BOARDS_DIR)/hellen/hellen72
+BOARDCPPSRC = $(BOARDS_DIR)/hellen/hellen64_miataNA6_94/board_configuration.cpp
+BOARDINC = $(BOARDS_DIR)/hellen/hellen64_miataNA6_94
 
-# Set this if you want a default engine type other than normal Hellen72
+# Set this if you want a default engine type other than normal hellen64_miataNA6_94
 ifeq ($(DEFAULT_ENGINE_TYPE),)
-  DEFAULT_ENGINE_TYPE = -DDEFAULT_ENGINE_TYPE=HELLEN_NB2
+  DEFAULT_ENGINE_TYPE = -DDEFAULT_ENGINE_TYPE=HELLEN_NA6
 endif
 
 ifeq ($(LED_CRITICAL_ERROR_BRAIN_PIN),)
@@ -28,7 +28,7 @@ DDEFS += -DLED_COMMUNICATION_BRAIN_PIN_MODE=INVERTED_OUTPUT
 DDEFS += -DTS_NO_PRIMARY -DTS_NO_SECONDARY
 
 # Add them all together
-DDEFS += -DEFI_USE_OSC=TRUE -DFIRMWARE_ID=\"hellen72\" $(DEFAULT_ENGINE_TYPE) $(LED_CRITICAL_ERROR_BRAIN_PIN) $(LED_COMMUNICATION_BRAIN_PIN)
+DDEFS += -DEFI_USE_OSC=TRUE -DFIRMWARE_ID=\"hellenNA6\" $(DEFAULT_ENGINE_TYPE) $(LED_CRITICAL_ERROR_BRAIN_PIN) $(LED_COMMUNICATION_BRAIN_PIN)
 # -DEFI_SOFTWARE_KNOCK=TRUE -DSTM32_ADC_USE_ADC3=TRUE
 DDEFS += -DEFI_ICU_INPUTS=FALSE -DHAL_TRIGGER_USE_PAL=TRUE -DHAL_VSS_USE_PAL=TRUE 
 # todo: is it broken?
