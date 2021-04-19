@@ -24,7 +24,7 @@ extern CanListener* canListeners_head;
 
 
 CanWrite::CanWrite()
-	: PeriodicController("CAN TX", PRIO_CAN_TX, 50)
+	: PeriodicController("CAN TX", PRIO_CAN_TX, 5)
 {
 }
 
@@ -53,6 +53,9 @@ void CanWrite::PeriodicTask(efitime_t nowNt) {
 	cycleCount++;
 	if ((cycleCount % 2) == 0) {
 		cycleMask |= CAM_10ms;
+	}
+	if ((cycleCount % 4) == 0) {
+		cycleMask |= CAM_20ms;
 	}
 	if ((cycleCount % 10) == 0) {
 		cycleMask |= CAM_50ms;
@@ -98,7 +101,7 @@ void CanWrite::PeriodicTask(efitime_t nowNt) {
 		canDashboardHaltech(cycleMask);
 		break;
 	case CAN_BUS_MQB:
-		canDashboardVagMqb();
+		canDashboardVagMqb(cycleMask);
 		break;
 	default:
 		break;

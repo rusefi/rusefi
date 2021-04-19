@@ -77,7 +77,6 @@ static time_msecs_t mph_ctr;
 static uint8_t rpmcounter;
 static uint16_t e90msgcounter;
 static uint16_t mph_counter = 0xF000;
-static uint8_t rpmcounter;
 static uint8_t seatbeltcnt;
 static uint8_t abscounter = 0xF0;
 static uint8_t brakecnt_1 = 0xF0, brakecnt_2 = 0xF0;
@@ -250,21 +249,23 @@ void canDashboardW202(uint16_t cycle) {
 /**
  * https://docs.google.com/spreadsheets/d/1XMfeGlhgl0lBL54lNtPdmmFd8gLr2T_YTriokb30kJg
  */
-void canDashboardVagMqb() {
+void canDashboardVagMqb(uint16_t cycle) {
 
-	{ // 'turn-on'
-		CanTxMessage msg(0x3C0, 4);
-		// ignition ON
-		msg[2] = 3;
-	}
-	{ //RPM
-		CanTxMessage msg(0x107, 8);
-		msg[3] = ((int)(GET_RPM() / 3.5)) & 0xFF;
-		msg[4] = ((int)(GET_RPM() / 3.5)) >> 8;
+	if((cycle&CAM_50ms)==CAM_50ms) {
+		{ // 'turn-on'
+			CanTxMessage msg(0x3C0, 4);
+			// ignition ON
+			msg[2] = 3;
+		}
+		{ //RPM
+			CanTxMessage msg(0x107, 8);
+			msg[3] = ((int)(GET_RPM() / 3.5)) & 0xFF;
+			msg[4] = ((int)(GET_RPM() / 3.5)) >> 8;
+		}
 	}
 }
 
-void canDashboardBMWE90()
+void canDashboardBMWE90(uint16_t cycle)
 {
 	if (e90msgcounter == UINT16_MAX)
 		e90msgcounter = 0;
@@ -430,7 +431,7 @@ void canDashboardHaltech(uint16_t cycle) {
 		msg[0] = (tmp >> 8);
 		msg[1] = (tmp & 0x00ff);
 		/* MAP */
-		tmp = (uint16_t)(Sensor::get(SensorType::Map).value_or(0)); 
+		tmp = (((uint16_t)(Sensor::get(SensorType::Map).value_or(0))) * 10); 
 		msg[2] = (tmp >> 8);
 		msg[3] = (tmp & 0x00ff);
 		/* TPS  y = x/10 */
@@ -654,7 +655,7 @@ void canDashboardHaltech(uint16_t cycle) {
 	if((cycle&CAM_100ms)==CAM_100ms) { 
 		CanTxMessage msg(0x372, 8);
 		/* Battery Voltage */
-		tmp = (getVBatt(PASS_ENGINE_PARAMETER_SIGNATURE) * 10);
+		tmp =  (uint16_t)(Sensor::get(SensorType::BatteryVoltage).value_or(0) * 10);
 		msg[0] = (tmp >> 8);
 		msg[1] = (tmp & 0x00ff);
 		/* unused */
