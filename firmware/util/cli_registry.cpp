@@ -469,8 +469,7 @@ int tokenLength(const char *msgp) {
 	return result;
 }
 
-void initConsoleLogic(Logging *sharedLogger) {
-	logging = sharedLogger;
+void initConsoleLogic() {
 //	resetConsoleActions();
 	addConsoleAction("help", helpCommand);
 	addConsoleActionI("echo", echo);

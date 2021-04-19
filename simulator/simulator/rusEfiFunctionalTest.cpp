@@ -105,7 +105,7 @@ void rusEfiFunctionalTest(void) {
 
 	engine->setConfig();
 
-	initializeConsole(&sharedLogger);
+	initializeConsole();
 
 	initStatusLoop();
 	initDataStructures(PASS_ENGINE_PARAMETER_SIGNATURE);
