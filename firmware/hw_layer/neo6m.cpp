@@ -26,8 +26,6 @@
 #include "rtc_helper.h"
 #include "engine.h"
 
-static LoggingWithStorage logging("uart gps");
-
 static SerialConfig GPSserialConfig = { GPS_SERIAL_SPEED, 0, USART_CR2_STOP1_BITS | USART_CR2_LINEN, 0 };
 static THD_WORKING_AREA(gpsThreadStack, UTILITY_THREAD_STACK_SIZE);
 
@@ -46,13 +44,13 @@ float getCurrentSpeed(void) {
 EXTERN_ENGINE;
 
 static void printGpsInfo(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
-	scheduleMsg(&logging, "GPS RX %s", hwPortname(CONFIG(gps_rx_pin)));
-	scheduleMsg(&logging, "GPS TX %s", hwPortname(CONFIG(gps_tx_pin)));
+	efiPrintf("GPS RX %s", hwPortname(CONFIG(gps_rx_pin)));
+	efiPrintf("GPS TX %s", hwPortname(CONFIG(gps_tx_pin)));
 
-	scheduleMsg(&logging, "m=%d,e=%d: vehicle speed = %.2f", gpsMesagesCount, uartErrors, getCurrentSpeed());
+	efiPrintf("m=%d,e=%d: vehicle speed = %.2f", gpsMesagesCount, uartErrors, getCurrentSpeed());
 
 	float sec = currentTimeMillis() / 1000.0;
-	scheduleMsg(&logging, "communication speed: %.2f", gpsMesagesCount / sec);
+	efiPrintf("communication speed: %.2f", gpsMesagesCount / sec);
 
 	print("GPS latitude = %.2f\r\n", GPSdata.latitude);
 	print("GPS longitude = %.2f\r\n", GPSdata.longitude);

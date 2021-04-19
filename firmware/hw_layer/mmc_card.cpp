@@ -92,8 +92,6 @@ static MMCConfig mmccfg = { NULL, &mmc_ls_spicfg, &mmc_hs_spicfg };
  */
 static NO_CACHE FATFS MMC_FS;
 
-static LoggingWithStorage logger("mmcCard");
-
 static int fatFsErrors = 0;
 
 static void mmcUnMount(void);
@@ -109,7 +107,7 @@ static void printError(const char *str, FRESULT f_error) {
 		return;
 	}
 
-	scheduleMsg(&logger, "FATfs Error \"%s\" %d", str, f_error);
+	efiPrintf("FATfs Error \"%s\" %d", str, f_error);
 }
 
 static FIL FDLogFile NO_CACHE;
@@ -121,20 +119,20 @@ static int logFileIndex = MIN_FILE_INDEX;
 static char logName[_MAX_FILLER + 20];
 
 static void printMmcPinout(void) {
-	scheduleMsg(&logger, "MMC CS %s", hwPortname(CONFIG(sdCardCsPin)));
+	efiPrintf("MMC CS %s", hwPortname(CONFIG(sdCardCsPin)));
 	// todo: we need to figure out the right SPI pinout, not just SPI2
-//	scheduleMsg(&logger, "MMC SCK %s:%d", portname(EFI_SPI2_SCK_PORT), EFI_SPI2_SCK_PIN);
-//	scheduleMsg(&logger, "MMC MISO %s:%d", portname(EFI_SPI2_MISO_PORT), EFI_SPI2_MISO_PIN);
-//	scheduleMsg(&logger, "MMC MOSI %s:%d", portname(EFI_SPI2_MOSI_PORT), EFI_SPI2_MOSI_PIN);
+//	efiPrintf("MMC SCK %s:%d", portname(EFI_SPI2_SCK_PORT), EFI_SPI2_SCK_PIN);
+//	efiPrintf("MMC MISO %s:%d", portname(EFI_SPI2_MISO_PORT), EFI_SPI2_MISO_PIN);
+//	efiPrintf("MMC MOSI %s:%d", portname(EFI_SPI2_MOSI_PORT), EFI_SPI2_MOSI_PIN);
 }
 
 static void sdStatistics(void) {
 	printMmcPinout();
-	scheduleMsg(&logger, "SD enabled=%s status=%s", boolToString(CONFIG(isSdCardEnabled)),
+	efiPrintf("SD enabled=%s status=%s", boolToString(CONFIG(isSdCardEnabled)),
 			sdStatus);
 	printSpiConfig(&logger, "SD", mmcSpiDevice);
 	if (isSdCardAlive()) {
-		scheduleMsg(&logger, "filename=%s size=%d", logName, totalLoggedBytes);
+		efiPrintf("filename=%s size=%d", logName, totalLoggedBytes);
 	}
 }
 
@@ -146,11 +144,11 @@ static void incLogFileName(void) {
 	UINT result = 0;
 	if (err != FR_OK && err != FR_EXIST) {
 			logFileIndex = MIN_FILE_INDEX;
-			scheduleMsg(&logger, "%s: not found or error: %d", LOG_INDEX_FILENAME, err);
+			efiPrintf("%s: not found or error: %d", LOG_INDEX_FILENAME, err);
 	} else {
 		f_read(&FDCurrFile, (void*)data, sizeof(data), &result);
 
-		scheduleMsg(&logger, "Got content [%s] size %d", data, result);
+		efiPrintf("Got content [%s] size %d", data, result);
 		f_close(&FDCurrFile);
 		if (result < 5) {
             data[result] = 0;
@@ -169,7 +167,7 @@ static void incLogFileName(void) {
 	itoa10(data, logFileIndex);
 	f_write(&FDCurrFile, (void*)data, strlen(data), &result);
 	f_close(&FDCurrFile);
-	scheduleMsg(&logger, "Done %d", logFileIndex);
+	efiPrintf("Done %d", logFileIndex);
 }
 
 static void prepareLogFileName(void) {
@@ -223,7 +221,7 @@ static void createLogFile(void) {
 
 static void removeFile(const char *pathx) {
 	if (!isSdCardAlive()) {
-		scheduleMsg(&logger, "Error: No File system is mounted");
+		efiPrintf("Error: No File system is mounted");
 		return;
 	}
 
@@ -249,7 +247,7 @@ int mystrncasecmp(const char *s1, const char *s2, size_t n) {
 static void listDirectory(const char *path) {
 
 	if (!isSdCardAlive()) {
-		scheduleMsg(&logger, "Error: No File system is mounted");
+		efiPrintf("Error: No File system is mounted");
 		return;
 	}
 
@@ -257,11 +255,11 @@ static void listDirectory(const char *path) {
 	FRESULT res = f_opendir(&dir, path);
 
 	if (res != FR_OK) {
-		scheduleMsg(&logger, "Error opening directory %s", path);
+		efiPrintf("Error opening directory %s", path);
 		return;
 	}
 
-	scheduleMsg(&logger, LS_RESPONSE);
+	efiPrintf(LS_RESPONSE);
 
 	for (int count = 0;count < FILE_LIST_MAX_COUNT;) {
 		FILINFO fno;
@@ -276,10 +274,10 @@ static void listDirectory(const char *path) {
 		if ((fno.fattrib & AM_DIR) || mystrncasecmp(RUSEFI_LOG_PREFIX, fno.fname, sizeof(RUSEFI_LOG_PREFIX) - 1)) {
 			continue;
 		}
-		scheduleMsg(&logger, "logfile%lu:%s", fno.fsize, fno.fname);
+		efiPrintf("logfile%lu:%s", fno.fsize, fno.fname);
 		count++;
 
-//			scheduleMsg(&logger, "%c%c%c%c%c %u/%02u/%02u %02u:%02u %9lu  %-12s", (fno.fattrib & AM_DIR) ? 'D' : '-',
+//			efiPrintf("%c%c%c%c%c %u/%02u/%02u %02u:%02u %9lu  %-12s", (fno.fattrib & AM_DIR) ? 'D' : '-',
 //					(fno.fattrib & AM_RDO) ? 'R' : '-', (fno.fattrib & AM_HID) ? 'H' : '-',
 //					(fno.fattrib & AM_SYS) ? 'S' : '-', (fno.fattrib & AM_ARC) ? 'A' : '-', (fno.fdate >> 9) + 1980,
 //					(fno.fdate >> 5) & 15, fno.fdate & 31, (fno.ftime >> 11), (fno.ftime >> 5) & 63, fno.fsize,
@@ -292,7 +290,7 @@ static void listDirectory(const char *path) {
  */
 static void mmcUnMount(void) {
 	if (!isSdCardAlive()) {
-		scheduleMsg(&logger, "Error: No File system is mounted. \"mountsd\" first");
+		efiPrintf("Error: No File system is mounted. \"mountsd\" first");
 		return;
 	}
 	f_close(&FDLogFile);						// close file
@@ -310,7 +308,7 @@ static void mmcUnMount(void) {
 	f_mount(NULL, 0, 0);						// FATFS: Unregister work area prior to discard it
 	memset(&FDLogFile, 0, sizeof(FIL));			// clear FDLogFile
 	setSdCardReady(false);						// status = false
-	scheduleMsg(&logger, "MMC/SD card removed");
+	efiPrintf("MMC/SD card removed");
 }
 
 #if HAL_USE_USB_MSD
@@ -425,7 +423,7 @@ static bool mountMmc() {
 		incLogFileName();
 		createLogFile();
 		fileCreatedCounter++;
-		scheduleMsg(&logger, "MMC/SD mounted!");
+		efiPrintf("MMC/SD mounted!");
 		return true;
 	} else {
 		sdStatus = SD_STATE_MOUNT_FAILED;

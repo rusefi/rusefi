@@ -53,8 +53,6 @@
 #include "gpio/tle8888.h"
 #endif
 
-LoggingWithStorage engineLogger("engine");
-
 EXTERN_ENGINE;
 
 #if EFI_ENGINE_SNIFFER
@@ -181,7 +179,7 @@ static void cylinderCleanupControl(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	}
 	if (newValue != engine->isCylinderCleanupMode) {
 		engine->isCylinderCleanupMode = newValue;
-		scheduleMsg(&engineLogger, "isCylinderCleanupMode %s", boolToString(newValue));
+		efiPrintf("isCylinderCleanupMode %s", boolToString(newValue));
 	}
 #endif
 }
@@ -259,7 +257,7 @@ void Engine::periodicSlowCallback(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 		static bool isHappyTest = false;
 		if (!isHappyTest) {
 			setTriggerEmulatorRPM(5 * HW_CHECK_RPM);
-			scheduleMsg(&engineLogger, "TEST PASSED");
+			efiPrintf("TEST PASSED");
 			isHappyTest = true;
 		}
 	}
@@ -392,7 +390,7 @@ void Engine::OnTriggerStateDecodingError() {
 	triggerCentral.triggerState.totalTriggerErrorCounter++;
 	if (CONFIG(verboseTriggerSynchDetails) || (triggerCentral.triggerState.someSortOfTriggerError && !CONFIG(silentTriggerError))) {
 #if EFI_PROD_CODE
-		scheduleMsg(&engineLogger, "error: synchronizationPoint @ index %d expected %d/%d/%d got %d/%d/%d",
+		efiPrintf("error: synchronizationPoint @ index %d expected %d/%d/%d got %d/%d/%d",
 				triggerCentral.triggerState.currentCycle.current_index,
 				TRIGGER_WAVEFORM(expectedEventCount[0]),
 				TRIGGER_WAVEFORM(expectedEventCount[1]),
@@ -476,7 +474,7 @@ void Engine::setConfig(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 }
 
 void Engine::printKnockState(void) {
-	scheduleMsg(&engineLogger, "knock now=%s/ever=%s", boolToString(knockNow), boolToString(knockEver));
+	efiPrintf("knock now=%s/ever=%s", boolToString(knockNow), boolToString(knockEver));
 }
 
 void Engine::knockLogic(float knockVolts DECLARE_ENGINE_PARAMETER_SUFFIX) {
@@ -532,8 +530,8 @@ void Engine::watchdog() {
 	isSpinning = false;
 	ignitionEvents.isReady = false;
 #if EFI_PROD_CODE || EFI_SIMULATOR
-	scheduleMsg(&engineLogger, "engine has STOPPED");
-	scheduleMsg(&engineLogger, "templog engine has STOPPED %f", secondsSinceTriggerEvent);
+	efiPrintf("engine has STOPPED");
+	efiPrintf("templog engine has STOPPED %f", secondsSinceTriggerEvent);
 	triggerInfo();
 #endif
 
@@ -558,7 +556,7 @@ void Engine::checkShutdown(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 		if ((Sensor::get(SensorType::BatteryVoltage).value_or(VBAT_FALLBACK_VALUE) > vBattThresholdOn) && !isInShutdownMode(PASS_ENGINE_PARAMETER_SIGNATURE)) {
 			ignitionOnTimeNt = getTimeNowNt();
 			stopEngineRequestTimeNt = 0;
-			scheduleMsg(&engineLogger, "Ignition voltage detected! Cancel the engine shutdown!");
+			efiPrintf("Ignition voltage detected! Cancel the engine shutdown!");
 		}
 	}
 #endif /* EFI_MAIN_RELAY_CONTROL */
@@ -671,7 +669,7 @@ void Engine::periodicFastCallback(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 }
 
 void doScheduleStopEngine(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
-	scheduleMsg(&engineLogger, "Starting doScheduleStopEngine");
+	efiPrintf("Starting doScheduleStopEngine");
 	engine->stopEngineRequestTimeNt = getTimeNowNt();
 	engine->ignitionOnTimeNt = 0;
 	// let's close injectors or else if these happen to be open right now
