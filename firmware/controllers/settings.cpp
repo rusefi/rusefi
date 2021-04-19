@@ -331,7 +331,7 @@ void printTPSInfo(void) {
 
 static void printTemperatureInfo(void) {
 #if EFI_ANALOG_SENSORS
-	Sensor::showAllSensorInfo(&logger);
+	Sensor::showAllSensorInfo();
 
 	scheduleMsg(&logger, "fan=%s @ %s", boolToString(enginePins.fanRelay.getLogicValue()),
 			hwPortname(engineConfiguration->fanPin));

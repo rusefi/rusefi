@@ -225,8 +225,8 @@ void EtbController::onConfigurationChange(pid_s* previousConfiguration) {
 	}
 }
 
-void EtbController::showStatus(Logging* logger) {
-	m_pid.showPidStatus(logger, "ETB");
+void EtbController::showStatus() {
+	m_pid.showPidStatus("ETB");
 }
 
 expected<percent_t> EtbController::observePlant() const {
@@ -540,7 +540,7 @@ void EtbController::update() {
 	m_pid.iTermMax = engineConfiguration->etb_iTermMax;
 
 	if (engineConfiguration->isVerboseETB) {
-		m_pid.showPidStatus(&logger, "ETB");
+		m_pid.showPidStatus("ETB");
 	}
 
 	// Update local state about autotune
@@ -714,7 +714,7 @@ static void showEthInfo(void) {
 		scheduleMsg(&logger, " dir2=%s", hwPortname(CONFIG(etbIo[i].directionPin2)));
 		scheduleMsg(&logger, " control=%s", hwPortname(CONFIG(etbIo[i].controlPin1)));
 		scheduleMsg(&logger, " disable=%s", hwPortname(CONFIG(etbIo[i].disablePin)));
-		showDcMotorInfo(&logger, i);
+		showDcMotorInfo(i);
 	}
 
 #endif /* EFI_PROD_CODE */

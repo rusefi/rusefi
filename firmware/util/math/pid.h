@@ -30,7 +30,6 @@
 #define MS2SEC(x) (x * 0.001)
 
 struct pid_s;
-class Logging;
 
 /**
  * default basic implementation also known as PidParallelController
@@ -69,7 +68,7 @@ public:
 	void postState(TunerStudioOutputChannels *tsOutputChannels) const;
 	void postState(TunerStudioOutputChannels *tsOutputChannels, int pMult) const;
 #endif /* EFI_TUNER_STUDIO */
-	void showPidStatus(Logging *logging, const char*msg) const;
+	void showPidStatus(const char* msg) const;
 	void sleep();
 	int resetCounter;
 	// todo: move this to pid_s one day

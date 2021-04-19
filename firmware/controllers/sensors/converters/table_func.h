@@ -26,7 +26,7 @@ public:
 		return interpolate2d(inputValue, m_bins, m_values) * TOutputScale::asFloat();
 	}
 
-	void showInfo(Logging* /*logger*/, float /*testInputValue*/) const override { }
+	void showInfo(float /*testInputValue*/) const override { }
 
 private:
 	TBin (&m_bins)[TSize];

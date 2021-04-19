@@ -490,7 +490,7 @@ static bool cj125periodic(CJ125 *instance DECLARE_ENGINE_PARAMETER_SUFFIX) {
 				float duty = globalInstance.heaterPid.getOutput(globalInstance.vUr, globalInstance.vUrCal, MS2SEC(CJ125_TICK_DELAY));
 				instance->SetHeater(duty PASS_ENGINE_PARAMETER_SUFFIX);
 				if (engineConfiguration->isCJ125Verbose) {
-					globalInstance.heaterPid.showPidStatus(logger, "cj heater");
+					globalInstance.heaterPid.showPidStatus("cj heater");
 					cjPrintData();
 				}
 				instance->prevNt = nowNt;

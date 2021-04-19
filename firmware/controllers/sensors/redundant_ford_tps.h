@@ -19,7 +19,7 @@ public:
 		return true;
 	}
 
-	void showInfo(Logging* logger, const char* sensorName) const override;
+	void showInfo(const char* sensorName) const override;
 
 private:
 	// The two sensors we interpret to form one redundant sensor
