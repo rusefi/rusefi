@@ -16,8 +16,6 @@ static critical_msg_t criticalErrorMessageBuffer;
 #include "lcd_HD44780.h"
 #endif /* EFI_HD44780_LCD */
 
-static LoggingWithStorage logger("error handling");
-
 EXTERN_ENGINE;
 
 extern int warningEnabled;
@@ -121,7 +119,7 @@ bool warning(obd_code_e code, const char *fmt, ...) {
 #endif /* EFI_TUNER_STUDIO */
 	}
 
-	scheduleMsg(&logger, "WARNING: %s", warningBuffer);
+	efiPrintf("WARNING: %s", warningBuffer);
 #else
 	// todo: we need access to 'engine' here so that we can migrate to real 'engine->engineState.warnings'
 	unitTestWarningCodeState.addWarningCode(code);

@@ -29,8 +29,6 @@ EXTERN_ENGINE;
 #include "main_trigger_callback.h"
 #endif /* EFI_ENGINE_CONTROL */
 
-static LoggingWithStorage logger("io_pins");
-
 bool efiReadPin(brain_pin_e pin) {
 	if (!isBrainPinValid(pin))
 		return false;

@@ -21,8 +21,6 @@
 
 EXTERN_ENGINE;
 
-static LoggingWithStorage logger("AUX Serial RX");
-
 uint8_t ser_buffer[SERBUFFLEN] = {};
 size_t innovate_msg_len = 1;
 innovate_serial_id_state_t innovate_serial_id_state = UNKNOWN;

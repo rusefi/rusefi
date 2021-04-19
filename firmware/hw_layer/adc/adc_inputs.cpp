@@ -96,7 +96,6 @@ AdcDevice::AdcDevice(ADCConversionGroup* hwConfig, adcsample_t *buf, size_t buf_
 #endif /* ADC_FAST_DEVICE */
 
 static uint32_t slowAdcCounter = 0;
-static LoggingWithStorage logger("ADC");
 
 // todo: move this flag to Engine god object
 static int adcDebugReporting = false;
@@ -318,7 +317,7 @@ adc_channel_e AdcDevice::getAdcHardwareIndexByInternalIndex(int index) const {
 static void printAdcValue(int channel) {
 	int value = getAdcValue("print", (adc_channel_e)channel);
 	float volts = adcToVoltsDivided(value);
-	scheduleMsg(&logger, "adc voltage : %.2f", volts);
+	efiPrintf("adc voltage : %.2f", volts);
 }
 
 static uint32_t slowAdcConversionCount = 0;
@@ -326,7 +325,7 @@ static uint32_t slowAdcErrorsCount = 0;
 
 static void printFullAdcReport(Logging *logger) {
 #if EFI_USE_FAST_ADC
-	scheduleMsg(logger, "fast %d slow %d", fastAdc.conversionCount, slowAdcConversionCount);
+	efiPrintf("fast %d slow %d", fastAdc.conversionCount, slowAdcConversionCount);
 
 	for (int index = 0; index < fastAdc.size(); index++) {
 		appendMsgPrefix(logger);
@@ -372,7 +371,7 @@ static void printFullAdcReport(Logging *logger) {
 
 static void setAdcDebugReporting(int value) {
 	adcDebugReporting = value;
-	scheduleMsg(&logger, "adcDebug=%d", adcDebugReporting);
+	efiPrintf("adcDebug=%d", adcDebugReporting);
 }
 
 void waitForSlowAdc(uint32_t lastAdcCounter) {
@@ -516,7 +515,7 @@ static void configureInputs(void) {
 static SlowAdcController slowAdcController;
 
 void initAdcInputs() {
-	scheduleMsg(&logger, "initAdcInputs()");
+	efiPrintf("initAdcInputs()");
 
 	configureInputs();
 
@@ -538,7 +537,7 @@ void initAdcInputs() {
 
 	addConsoleActionI("adc", (VoidInt) printAdcValue);
 #else
-	scheduleMsg(&logger, "ADC disabled");
+	efiPrintf("ADC disabled");
 #endif
 }
 

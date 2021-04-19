@@ -159,8 +159,6 @@ void rememberCurrentConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 #endif /* EFI_ACTIVE_CONFIGURATION_IN_FLASH */
 }
 
-extern LoggingWithStorage sharedLogger;
-
 static void wipeString(char *string, int size) {
 	// we have to reset bytes after \0 symbol in order to calculate correct tune CRC from MSQ file
 	for (int i = strlen(string) + 1; i < size; i++) {
@@ -194,7 +192,7 @@ void onBurnRequest(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 void incrementGlobalConfigurationVersion(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	ENGINE(globalConfigurationVersion++);
 #if EFI_DEFAILED_LOGGING
-	scheduleMsg(&sharedLogger, "set globalConfigurationVersion=%d", globalConfigurationVersion);
+	efiPrintf("set globalConfigurationVersion=%d", globalConfigurationVersion);
 #endif /* EFI_DEFAILED_LOGGING */
 /**
  * All these callbacks could be implemented as listeners, but these days I am saving RAM

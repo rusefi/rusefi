@@ -44,9 +44,6 @@ static THD_WORKING_AREA(btThreadStack, UTILITY_THREAD_STACK_SIZE);
 static thread_t *btThread = nullptr;
 static thread_reference_t btThreadRef = nullptr; // used by thread suspend/resume as a flag
 
-static LoggingWithStorage btLogger("bluetooth");
-
-
 EXTERN_ENGINE;
 
 
@@ -131,19 +128,19 @@ static void runCommands() {
 
 	// the connection is already restored to the current baud rate, so print the result
 	if (cmdIdx == numCommands)
-		scheduleMsg(&btLogger, "SUCCESS! All commands (%d of %d) passed to the Bluetooth module!", cmdIdx, numCommands);
+		efiPrintf("SUCCESS! All commands (%d of %d) passed to the Bluetooth module!", cmdIdx, numCommands);
 	else
-		scheduleMsg(&btLogger, "FAIL! Only %d commands (of %d total) were passed to the Bluetooth module!", cmdIdx, numCommands);
+		efiPrintf("FAIL! Only %d commands (of %d total) were passed to the Bluetooth module!", cmdIdx, numCommands);
 }
 
 static THD_FUNCTION(btThreadEntryPoint, arg) {
 	(void) arg;
 	chRegSetThreadName("bluetooth thread");
 
-	scheduleMsg(&btLogger, "*** Bluetooth module setup procedure ***");
-	scheduleMsg(&btLogger, "!Warning! Please make sure you're not currently using the BT module for communication (not paired)!");
-	scheduleMsg(&btLogger, "TO START THE PROCEDURE: PLEASE DISCONNECT YOUR PC COM-PORT FROM THE BOARD NOW!");
-	scheduleMsg(&btLogger, "After that please don't turn off the board power and wait for ~15 seconds to complete. Then reconnect to the board!");
+	efiPrintf("*** Bluetooth module setup procedure ***");
+	efiPrintf("!Warning! Please make sure you're not currently using the BT module for communication (not paired)!");
+	efiPrintf("TO START THE PROCEDURE: PLEASE DISCONNECT YOUR PC COM-PORT FROM THE BOARD NOW!");
+	efiPrintf("After that please don't turn off the board power and wait for ~15 seconds to complete. Then reconnect to the board!");
 
 	// now wait
 	chSysLock();
@@ -151,7 +148,7 @@ static THD_FUNCTION(btThreadEntryPoint, arg) {
 	chSysUnlock();
 	
 	if (msg == MSG_TIMEOUT) {
-		scheduleMsg(&btLogger, "The Bluetooth module init procedure is cancelled (timeout)!");
+		efiPrintf("The Bluetooth module init procedure is cancelled (timeout)!");
 		return;
 	} else {
 		// call this when the thread is resumed (after the disconnect)
@@ -172,12 +169,12 @@ void bluetoothStart(SerialTsChannelBase *btChan, bluetooth_module_e moduleType, 
 	
 	// if a binary protocol uses USB, we cannot init the bluetooth module!
 	if (!CONFIG(useSerialPort)) {
-		scheduleMsg(&btLogger, "Failed! Serial Port connection is disabled!");
+		efiPrintf("Failed! Serial Port connection is disabled!");
 		return;
 	}
 
 	if (btProcessIsStarted) {
-		scheduleMsg(&btLogger, "The Bluetooth module init procedure is already started and waiting! To cancel it, run \"bluetooth_cancel\" command!");
+		efiPrintf("The Bluetooth module init procedure is already started and waiting! To cancel it, run \"bluetooth_cancel\" command!");
 		return;
 	}
 
@@ -198,10 +195,10 @@ void bluetoothStart(SerialTsChannelBase *btChan, bluetooth_module_e moduleType, 
 	// check the baud rate index
 	if (setBaudIdx < 1) {
 		if (baud == 0)
-			scheduleMsg(&btLogger, "The <baud> parameter is set to zero! The baud rate won't be set!");
+			efiPrintf("The <baud> parameter is set to zero! The baud rate won't be set!");
 		else { 
 			// unknown baud rate
-			scheduleMsg(&btLogger, "Wrong <baud> parameter '%s'! %s", baudRate, usage);
+			efiPrintf("Wrong <baud> parameter '%s'! %s", baudRate, usage);
 			return;
 		}
 	} else {
@@ -211,7 +208,7 @@ void bluetoothStart(SerialTsChannelBase *btChan, bluetooth_module_e moduleType, 
 	
 	// 2) check name
 	if (name == NULL || strlen(name) < 1 || strlen(name) > 20) {
-		scheduleMsg(&btLogger, "Wrong <name> parameter! Up to 20 characters expected! %s", usage);
+		efiPrintf("Wrong <name> parameter! Up to 20 characters expected! %s", usage);
 		return;
 	}
 
@@ -225,7 +222,7 @@ void bluetoothStart(SerialTsChannelBase *btChan, bluetooth_module_e moduleType, 
 		}
 	}
 	if (numDigits != 4) {
-		scheduleMsg(&btLogger, "Wrong <pincode> parameter! 4 digits expected! %s", usage);
+		efiPrintf("Wrong <pincode> parameter! 4 digits expected! %s", usage);
 		return;
 	}
 
@@ -254,7 +251,7 @@ void bluetoothStart(SerialTsChannelBase *btChan, bluetooth_module_e moduleType, 
 		break;
 	default:
 		// todo: add support for other BT module types
-		scheduleMsg(&btLogger, "This Bluetooth module is currently not supported!");
+		efiPrintf("This Bluetooth module is currently not supported!");
 		return;
 	}
 	commands[numCommands++] = cmdHello; // this command is added to test a connection
@@ -279,7 +276,7 @@ void bluetoothSoftwareDisconnectNotify() {
 
 void bluetoothCancel() {
 	if (!btProcessIsStarted) {
-		scheduleMsg(&btLogger, "The Bluetooth module init procedure was not started! Nothing to cancel!");
+		efiPrintf("The Bluetooth module init procedure was not started! Nothing to cancel!");
 		return;
 	}
 
@@ -290,7 +287,7 @@ void bluetoothCancel() {
 	chThdTerminate(btThread);
 	
 	btProcessIsStarted = false;
-	scheduleMsg(&btLogger, "The Bluetooth module init procedure is cancelled!");
+	efiPrintf("The Bluetooth module init procedure is cancelled!");
 }
 
 #endif /* EFI_BLUETOOTH_SETUP */
