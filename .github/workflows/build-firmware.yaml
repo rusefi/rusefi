@@ -12,7 +12,7 @@ jobs:
       matrix:
         # What boards should we build for? In the 'include' section below,
         # set up what each of these boards needs to build.
-        build-target: [hellen72, hellen64_miataNA6_94, cypress, frankenso_na6, kinetis, mre_f4, mre_f4_recovery, mre_f4_hardware_QC_special_build, mre_f7, prometheus_405, prometheus_469, proteus_f4, proteus_f4_hardware_QC_special_build, proteus_f7, proteus_h7, stm32f767_nucleo, stm32h743_nucleo, subaru_eg33_f7]
+        build-target: [hellen72, hellenNA6, cypress, frankenso_na6, kinetis, mre_f4, mre_f4_recovery, mre_f4_hardware_QC_special_build, mre_f7, prometheus_405, prometheus_469, proteus_f4, proteus_f4_hardware_QC_special_build, proteus_f7, proteus_h7, stm32f767_nucleo, stm32h743_nucleo, subaru_eg33_f7]
         
         include:
           # Board configurations
@@ -21,7 +21,7 @@ jobs:
             ini-file: rusefi_hellen72.ini
 
           # Board configurations
-          - build-target: hellen64_miataNA6_94
+          - build-target: hellenNA6
             folder: hellen/hellen64_miataNA6_94
             ini-file: rusefi_hellenNA6.ini
 
