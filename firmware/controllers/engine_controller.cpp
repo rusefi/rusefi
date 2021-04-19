@@ -602,7 +602,7 @@ void commonInitEngineController(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_S
 #endif /* EFI_BOOST_CONTROL */
 
 #if EFI_LAUNCH_CONTROL
-	initLaunchControl(sharedLogger PASS_ENGINE_PARAMETER_SUFFIX);
+	initLaunchControl(PASS_ENGINE_PARAMETER_SIGNATURE);
 #endif
 
 #if EFI_SHAFT_POSITION_INPUT
