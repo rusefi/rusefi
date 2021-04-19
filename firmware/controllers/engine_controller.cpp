@@ -605,10 +605,6 @@ void commonInitEngineController(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_S
 	initLaunchControl(sharedLogger PASS_ENGINE_PARAMETER_SUFFIX);
 #endif
 
-#if EFI_DYNO_VIEW
-	initDynoView(sharedLogger PASS_ENGINE_PARAMETER_SUFFIX);
-#endif
-
 #if EFI_SHAFT_POSITION_INPUT
 	/**
 	 * there is an implicit dependency on the fact that 'tachometer' listener is the 1st listener - this case

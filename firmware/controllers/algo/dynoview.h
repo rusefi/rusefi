@@ -9,8 +9,6 @@
 
 #include "engine_ptr.h"
 
-class Logging;
-void initDynoView(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX);
 void updateDynoView(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 void updateDynoViewCan(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 float getDynoviewAcceleration(DECLARE_ENGINE_PARAMETER_SIGNATURE);
