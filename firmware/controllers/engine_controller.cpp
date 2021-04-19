@@ -677,7 +677,7 @@ void initEngineContoller(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX) 
 #endif /* EFI_ALTERNATOR_CONTROL */
 
 #if EFI_AUX_PID
-	initAuxPid(sharedLogger);
+	initAuxPid();
 #endif /* EFI_AUX_PID */
 
 #if EFI_MALFUNCTION_INDICATOR
