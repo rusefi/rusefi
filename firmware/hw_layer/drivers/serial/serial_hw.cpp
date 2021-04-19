@@ -23,19 +23,18 @@ EXTERN_ENGINE;
 static bool isSerialEnabled = false;
 static bool isSerialTXEnabled = false;
 static bool isSerialRXEnabled = false;
-static LoggingWithStorage logger("SERIAL driver");
 
 static SerialConfig uartCfg;
 static SerialRead serialRead;
 
 static void auxInfo(void) {
 	if (!isSerialEnabled) {
-		scheduleMsg(&logger, "AUX Serial is not enabled, please enable & restart");
+		efiPrintf("AUX Serial is not enabled, please enable & restart");
 		return;
 	}
 
-	scheduleMsg(&logger, "AUX Serial TX %s", hwPortname(CONFIG(auxSerialTxPin)));
-	scheduleMsg(&logger, "AUX Serial RX %s", hwPortname(CONFIG(auxSerialRxPin)));
+	efiPrintf("AUX Serial TX %s", hwPortname(CONFIG(auxSerialTxPin)));
+	efiPrintf("AUX Serial RX %s", hwPortname(CONFIG(auxSerialRxPin)));
 }
 
 void enableAuxSerial(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
@@ -46,7 +45,7 @@ void enableAuxSerial(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	uartCfg.speed = engineConfiguration->auxSerialSpeed;
 	sdStart(AUX_SERIAL_DEVICE, &uartCfg);
 
-	scheduleMsg(&logger, "AUX Serial started");
+	efiPrintf("AUX Serial started");
 }
 
 void stopAuxSerialPins(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
