@@ -58,12 +58,6 @@ int waveChartUsedSize;
 
 //#define DEBUG_WAVE 1
 
-#if DEBUG_WAVE
-static LoggingWithStorage debugLogging("debug");
-#endif /* DEBUG_WAVE */
-
-static LoggingWithStorage logger("wave info");
-
 /**
  * We want to skip some engine cycles to skip what was scheduled before parameters were changed
  */
@@ -87,7 +81,7 @@ void WaveChart::init() {
 
 void WaveChart::reset() {
 #if DEBUG_WAVE
-	scheduleSimpleMsg(&debugLogging, "reset while at ", counter);
+	efiPrintf("reset while at ", counter);
 #endif /* DEBUG_WAVE */
 	logging.reset();
 	counter = 0;
@@ -121,8 +115,8 @@ int WaveChart::getSize() {
 
 #if ! EFI_UNIT_TEST
 static void printStatus(void) {
-	scheduleMsg(&logger, "engine chart: %s", boolToString(engineConfiguration->isEngineChartEnabled));
-	scheduleMsg(&logger, "engine chart size=%d", engineConfiguration->engineChartSize);
+	efiPrintf("engine chart: %s", boolToString(engineConfiguration->isEngineChartEnabled));
+	efiPrintf("engine chart size=%d", engineConfiguration->engineChartSize);
 }
 
 static void setChartActive(int value) {
@@ -154,7 +148,7 @@ void WaveChart::publish() {
 	waveChartUsedSize = logging.loggingSize();
 #if DEBUG_WAVE
 	Logging *l = &chart->logging;
-	scheduleSimpleMsg(&debugLogging, "IT'S TIME", strlen(l->buffer));
+	efiPrintf("IT'S TIME", strlen(l->buffer));
 #endif
 	if (ENGINE(isEngineChartEnabled)) {
 		scheduleLogging(&logging);
@@ -192,7 +186,7 @@ void WaveChart::addEvent3(const char *name, const char * msg) {
 
 	efiAssertVoid(CUSTOM_ERR_6653, isInitialized, "chart not initialized");
 #if DEBUG_WAVE
-	scheduleSimpleMsg(&debugLogging, "current", chart->counter);
+	efiPrintf("current", chart->counter);
 #endif /* DEBUG_WAVE */
 	if (isFull()) {
 		return;
