@@ -1,5 +1,9 @@
 package com.rusefi;
 
+import com.rusefi.f4discovery.CommonFunctionalTest;
+import com.rusefi.f4discovery.HighRevTest;
+import com.rusefi.f4discovery.PwmHardwareTest;
+import com.rusefi.f4discovery.VssHardwareLoopTest;
 import org.junit.runner.JUnitCore;
 import org.junit.runner.Result;
 
@@ -21,7 +25,7 @@ public class RealHardwareTestLauncher {
     public static void main(String[] args) throws InterruptedException {
         JUnitCore junit = new JUnitCore();
         Result result = junit.run(
-            FunctionalTest.class,
+            CommonFunctionalTest.class,
             PwmHardwareTest.class,
             VssHardwareLoopTest.class,
             HighRevTest.class

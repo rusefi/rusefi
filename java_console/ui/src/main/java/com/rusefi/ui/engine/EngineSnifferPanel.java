@@ -132,9 +132,8 @@ public class EngineSnifferPanel {
             lowerButtons.add(new ConfigField(uiContext, Fields.GLOBALTRIGGERANGLEOFFSET, "Trigger Offset").getContent());
             lowerButtons.add(new BitConfigField(uiContext, Fields.VERBOSETRIGGERSYNCHDETAILS, "Verbose trigger Sync").getContent());
             lowerButtons.add(new BitConfigField(uiContext, Fields.ISENGINECHARTENABLED, "Collect Engine Data").getContent());
-            lowerButtons.add(new ConfigField(uiContext, Fields.SENSORCHARTFREQUENCY, "Frequency").getContent());
             lowerButtons.add(new ConfigField(uiContext, Fields.ENGINECHARTSIZE, "Engine Sniffer size").getContent());
-            lowerButtons.add(new ConfigField(uiContext, Fields.ENGINESNIFFERRPMTHRESHOLD, "RPM threashold").getContent());
+            lowerButtons.add(new ConfigField(uiContext, Fields.ENGINESNIFFERRPMTHRESHOLD, "RPM threshold").getContent());
             bottomPanel.add(lowerButtons, BorderLayout.NORTH);
         }
 

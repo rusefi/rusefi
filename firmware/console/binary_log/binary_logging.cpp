@@ -18,7 +18,7 @@ static scaled_channel<uint32_t, TIME_PRECISION> packedTime;
 
 // todo: we are at the edge of sdLogBuffer size and at the moment we have no code to make sure buffer does not overflow
 // todo: make this logic smarter
-static const LogField fields[] = {
+static constexpr LogField fields[] = {
 	{tsOutputChannels.rpm, GAUGE_NAME_RPM, "rpm", 0},
 	{packedTime, GAUGE_NAME_TIME, "sec", 0},
 	{tsOutputChannels.totalTriggerErrorCounter, GAUGE_NAME_TRG_ERR, "err", 0},
@@ -26,6 +26,8 @@ static const LogField fields[] = {
 	{tsOutputChannels.internalMcuTemperature, GAUGE_NAME_CPU_TEMP, "C", 0},
 	{tsOutputChannels.coolantTemperature, GAUGE_NAME_CLT, "C", 1},
 	{tsOutputChannels.intakeAirTemperature, GAUGE_NAME_IAT, "C", 1},
+	{tsOutputChannels.auxTemp1, GAUGE_NAME_AUX_TEMP1, "C", 1},
+	{tsOutputChannels.auxTemp2, GAUGE_NAME_AUX_TEMP2, "C", 1},
 	{tsOutputChannels.throttlePosition, GAUGE_NAME_TPS, "%", 2},
 	{tsOutputChannels.throttle2Position, GAUGE_NAME_TPS2, "%", 2},
 	{tsOutputChannels.pedalPosition, GAUGE_NAME_THROTTLE_PEDAL, "%", 2},
@@ -49,7 +51,7 @@ static const LogField fields[] = {
 	{tsOutputChannels.veValue, GAUGE_NAME_FUEL_VE, "%", 1},
 	{tsOutputChannels.tCharge, "tCharge", "C", 1},
 	{tsOutputChannels.injectorLagMs, GAUGE_NAME_INJECTOR_LAG, "ms", 3},
-	{tsOutputChannels.shortTermFuelTrim, GAUGE_NAME_FUEL_PID_CORR, "%", 3},
+	{tsOutputChannels.shortTermFuelTrim, GAUGE_NAME_FUEL_TRIM, "%", 3},
 	{tsOutputChannels.wallFuelCorrection, GAUGE_NAME_FUEL_WALL_CORRECTION, "ms", 3},
 	{tsOutputChannels.tpsAccelFuel, GAUGE_NAME_FUEL_TPS_EXTRA, "ms", 3},
 	{tsOutputChannels.ignitionAdvance, GAUGE_NAME_TIMING_ADVANCE, "deg", 1},
@@ -63,7 +65,23 @@ static const LogField fields[] = {
 	{tsOutputChannels.fuelingLoad, GAUGE_NAME_FUEL_LOAD, "%", 1},
 	{tsOutputChannels.ignitionLoad, GAUGE_NAME_IGNITION_LOAD, "%", 1},
 	{tsOutputChannels.massAirFlow, GAUGE_NAME_AIR_FLOW, "kg/h", 1},
+	{tsOutputChannels.flexPercent, GAUGE_NAME_FLEX, "%", 1},
+	{tsOutputChannels.fuelFlowRate, GAUGE_NAME_FUEL_FLOW, "g/s", 3},
+	{tsOutputChannels.totalFuelConsumption, GAUGE_NAME_FUEL_CONSUMPTION, "g", 1},
+	{tsOutputChannels.engineLoad, GAUGE_NAME_ENGINE_LOAD, "%", 1},
+	{tsOutputChannels.knockLevel, GAUGE_NAME_KNOCK_LEVEL, "dBv", 0},
 };
+
+static constexpr uint16_t computeFieldsRecordLength() {
+	uint16_t recLength = 0;
+	for (size_t i = 0; i < efi::size(fields); i++) {
+		recLength += fields[i].getSize();
+	}
+
+	return recLength;
+}
+
+static constexpr uint16_t recordLength = computeFieldsRecordLength();
 
 void writeHeader(Writer& outBuffer) {
 	char buffer[MLQ_HEADER_SIZE];
@@ -93,13 +111,8 @@ void writeHeader(Writer& outBuffer) {
 	buffer[17] = headerSize & 0xFF;
 
 	// Record length - length of a single data record: sum size of all fields
-	uint16_t recLength = 0;
-	for (size_t i = 0; i < efi::size(fields); i++) {
-		recLength += fields[i].getSize();
-	}
-
-	buffer[18] = recLength >> 8;
-	buffer[19] = recLength & 0xFF;
+	buffer[18] = recordLength >> 8;
+	buffer[19] = recordLength & 0xFF;
 
 	// Number of logger fields
 	buffer[20] = 0;

@@ -9,6 +9,7 @@
 
 /**
  * This trigger is also used by Nissan and Mazda
+ * https://rusefi.com/forum/viewtopic.php?f=2&t=1932
  */
 void initialize36_2_2_2(TriggerWaveform *s) {
 	s->initialize(FOUR_STROKE_CAM_SENSOR);
@@ -16,7 +17,6 @@ void initialize36_2_2_2(TriggerWaveform *s) {
 	float wide = 30 * 2;
 	float narrow = 10 * 2;
 
-	s->isSynchronizationNeeded = true;
 	s->setTriggerSynchronizationGap(0.5);
 	s->setSecondTriggerSynchronizationGap(1);
 
@@ -116,8 +116,6 @@ static void initializeSubaru7_6(TriggerWaveform *s, bool withCrankWheel) {
 
 	s->setTriggerSynchronizationGap2(4.9, 9);
 	s->setTriggerSynchronizationGap3(1, 0.6, 1.25);
-
-	s->isSynchronizationNeeded = true;
 
 	s->useOnlyPrimaryForSync = true;
 

@@ -25,7 +25,6 @@ import java.util.List;
 import static com.rusefi.ui.storage.PersistentConfiguration.getConfig;
 import static com.rusefi.ui.util.UiUtils.getAllComponents;
 import static com.rusefi.ui.util.UiUtils.setToolTip;
-import static java.awt.image.ImageObserver.ABORT;
 import static javax.swing.JOptionPane.YES_NO_OPTION;
 
 /**
@@ -39,7 +38,7 @@ import static javax.swing.JOptionPane.YES_NO_OPTION;
  */
 public class StartupFrame {
     private static final String LOGO = "/com/rusefi/logo.gif";
-    public static final String LINK_TEXT = "rusEFI (c) 2012-2020";
+    public static final String LINK_TEXT = "rusEFI (c) 2012-2021";
     private static final String URI = "http://rusefi.com/?java_console";
     // private static final int RUSEFI_ORANGE = 0xff7d03;
 
@@ -50,10 +49,10 @@ public class StartupFrame {
     @NotNull
     private List<String> currentlyDisplayedPorts = new ArrayList<>();
     private boolean isFirstTimeApplyingPorts = true;
-    private JPanel leftPanel = new JPanel(new VerticalFlowLayout());
+    private final JPanel leftPanel = new JPanel(new VerticalFlowLayout());
 
-    private JPanel realHardwarePanel = new JPanel(new MigLayout());
-    private JPanel miscPanel = new JPanel(new MigLayout()) {
+    private final JPanel realHardwarePanel = new JPanel(new MigLayout());
+    private final JPanel miscPanel = new JPanel(new MigLayout()) {
         @Override
         public Dimension getPreferredSize() {
             // want miscPanel and realHardwarePanel to be the same width
@@ -66,7 +65,7 @@ public class StartupFrame {
      * closing the application.
      */
     private boolean isProceeding;
-    private JLabel noPortsMessage = new JLabel("No ports found!");
+    private final JLabel noPortsMessage = new JLabel("No ports found!");
 
     public StartupFrame() {
 //        AudioPlayback.start();
@@ -152,28 +151,25 @@ public class StartupFrame {
             realHardwarePanel.add(new EraseChip().getButton(), "right, wrap");
         }
 
-        SerialPortScanner.INSTANCE.listeners.add(new SerialPortScanner.Listener() {
-            @Override
-            public void onChange() {
-                List<String> ports = SerialPortScanner.INSTANCE.getKnownPorts();
-                if (!currentlyDisplayedPorts.equals(ports) || isFirstTimeApplyingPorts) {
-                    FileLog.MAIN.logLine("Available ports " + ports);
-                    isFirstTimeApplyingPorts = false;
-                    connectPanel.setVisible(!ports.isEmpty());
-                    noPortsMessage.setVisible(ports.isEmpty());
+        SerialPortScanner.INSTANCE.listeners.add(() -> SwingUtilities.invokeLater(() -> {
+            List<String> ports = SerialPortScanner.INSTANCE.getKnownPorts();
+            if (!currentlyDisplayedPorts.equals(ports) || isFirstTimeApplyingPorts) {
+                FileLog.MAIN.logLine("Available ports " + ports);
+                isFirstTimeApplyingPorts = false;
+                connectPanel.setVisible(!ports.isEmpty());
+                noPortsMessage.setVisible(ports.isEmpty());
 //        panel.add(comboSpeeds); // todo: finish speed selector UI component
 //            horizontalLine.setVisible(!ports.isEmpty());
 
-                    applyPortSelectionToUIcontrol(ports);
-                    currentlyDisplayedPorts = ports;
-                    UiUtils.trueLayout(connectPanel);
-                    frame.pack();
-                }
-
+                applyPortSelectionToUIcontrol(ports);
+                currentlyDisplayedPorts = ports;
+                UiUtils.trueLayout(connectPanel);
+                frame.pack();
             }
-        });
+        }));
 
 
+        // todo: invoke this NOT on AWT thread?
         SerialPortScanner.INSTANCE.findAllAvailablePorts();
 
         final JButton buttonLogViewer = new JButton();

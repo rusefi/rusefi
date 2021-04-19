@@ -6,6 +6,7 @@
  */
 
 #include "trigger_universal.h"
+#include "error_handling.h"
 
 /**
  * @see getCycleDuration
@@ -28,6 +29,7 @@ void addSkippedToothTriggerEvents(trigger_wheel_e wheel, TriggerWaveform *s, int
 
 	float angleDown = engineCycle / totalTeethCount * (totalTeethCount - skippedCount - 1 + (1 - toothWidth));
 	s->addEventClamped(offset + angleDown, wheel, TV_RISE, filterLeft, filterRight);
+	// custom handling of last event in order to avoid rounding error
 	s->addEventClamped(offset + engineCycle, wheel, TV_FALL, filterLeft, filterRight);
 }
 
@@ -99,11 +101,28 @@ void configure3_1_cam(TriggerWaveform *s) {
 	s->isSynchronizationNeeded = false;
 }
 
+/**
+ * https://rusefi.com/forum/viewtopic.php?f=5&t=1977
+ */
+void configureKawaKX450F(TriggerWaveform *s) {
+	float engineCycle = FOUR_STROKE_ENGINE_CYCLE;
+	s->initialize(FOUR_STROKE_CRANK_SENSOR);
+
+	s->setTriggerSynchronizationGap(2.28);
+
+	float toothWidth = 3 / 20.0;
+
+	addSkippedToothTriggerEvents(T_PRIMARY, s, 18, 0, toothWidth, 0, engineCycle,
+			NO_LEFT_FILTER, 720 - 39);
+
+	s->addEvent(0.97, T_PRIMARY, TV_RISE);
+	s->addEvent(1, T_PRIMARY, TV_FALL);
+}
+
 void configureQuickStartSenderWheel(TriggerWaveform *s) {
 	s->initialize(FOUR_STROKE_CAM_SENSOR);
 
 	s->useRiseEdge = false;
-	s->gapBothDirections = false;
 
 	int offset = 2 * 20;
 

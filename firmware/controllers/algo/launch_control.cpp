@@ -45,14 +45,14 @@ static int retardThresholdRpm;
 bool LaunchControlBase::isInsideSwitchCondition() const {
 	switch (CONFIG(launchActivationMode)) {
 	case SWITCH_INPUT_LAUNCH:
-		if (CONFIG(launchActivatePin) != GPIO_UNASSIGNED) {
+		if (isBrainPinValid(CONFIG(launchActivatePin))) {
 			//todo: we should take into consideration if this sw is pulled high or low!
 			engine->launchActivatePinState = efiReadPin(CONFIG(launchActivatePin));
 		}
 		return engine->launchActivatePinState;
 
 	case CLUTCH_INPUT_LAUNCH:
-		if (CONFIG(clutchDownPin) != GPIO_UNASSIGNED) {
+		if (isBrainPinValid(CONFIG(clutchDownPin))) {
 			engine->clutchDownState = efiReadPin(CONFIG(clutchDownPin));
 			
 			if (CONFIG(clutchDownPinMode) == PI_PULLDOWN)

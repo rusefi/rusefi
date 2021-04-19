@@ -27,15 +27,6 @@
 
 EXTERN_ENGINE;
 
-static const ConfigOverrides configOverrides = {
-	.canTxPin = GPIOB_6,
-	.canRxPin = GPIOB_12,
-};
-
-const ConfigOverrides& getConfigOverrides() {
-	return configOverrides;
-}
-
 static void setInjectorPins() {
 	engineConfiguration->injectionPins[0] = TLE8888_PIN_1;
 	engineConfiguration->injectionPins[1] = TLE8888_PIN_2;
@@ -161,11 +152,9 @@ static void setupDefaultSensorInputs() {
 
 	// clt = "18 - AN temp 1"
 	engineConfiguration->clt.adcChannel = EFI_ADC_0;
-	engineConfiguration->clt.config.bias_resistor = 2700;
 
 	// iat = "23 - AN temp 2"
 	engineConfiguration->iat.adcChannel = EFI_ADC_1;
-	engineConfiguration->iat.config.bias_resistor = 2700;
 
 	setCommonNTCSensor(&engineConfiguration->auxTempSensor1, 2700);
 	setCommonNTCSensor(&engineConfiguration->auxTempSensor2, 2700);
@@ -174,6 +163,28 @@ static void setupDefaultSensorInputs() {
 	engineConfiguration->auxTempSensor1.adcChannel = EFI_ADC_2;
 	engineConfiguration->auxTempSensor2.adcChannel = EFI_ADC_3;
 #endif // HW_CHECK_MODE
+}
+
+void setBoardConfigOverrides(void) {
+	setLedPins();
+	setupVbatt();
+	setupTle8888();
+	setupEtb();
+
+	engineConfiguration->clt.config.bias_resistor = 2700;
+	engineConfiguration->iat.config.bias_resistor = 2700;
+
+	engineConfiguration->canTxPin = GPIOB_6;
+	engineConfiguration->canRxPin = GPIOB_12;
+
+	// SPI for SD card
+	CONFIG(is_enabled_spi_3) = true;
+	engineConfiguration->sdCardSpiDevice = SPI_DEVICE_3;
+	engineConfiguration->sdCardCsPin = GPIOB_9;
+
+	engineConfiguration->spi3mosiPin = GPIOC_12;
+	engineConfiguration->spi3misoPin = GPIOC_11;
+	engineConfiguration->spi3sckPin = GPIOC_10;
 }
 
 void setPinConfigurationOverrides(void) {
@@ -190,22 +201,15 @@ void setSerialConfigurationOverrides(void) {
 
 
 /**
- * @brief   Board-specific configuration code overrides.
+ * @brief   Board-specific configuration defaults.
  *
  * See also setDefaultEngineConfiguration
  *
  * @todo    Add your board-specific code, if any.
  */
-void setBoardConfigurationOverrides(void) {
+void setBoardDefaultConfiguration(void) {
 	setInjectorPins();
 	setIgnitionPins();
-	setLedPins();
-	setupVbatt();
-	setupTle8888();
-	setupEtb();
-
-	engineConfiguration->canTxPin = GPIOB_6;
-	engineConfiguration->canRxPin = GPIOB_12;
 
 	// MRE has a special main relay control low side pin
 	// rusEfi firmware is totally not involved with main relay control on microRusEfi board
@@ -214,14 +218,7 @@ void setBoardConfigurationOverrides(void) {
 	// TLE8888_PIN_21: "35 - GP Out 1"
 	engineConfiguration->fuelPumpPin = TLE8888_PIN_21;
 
-	engineConfiguration->sdCardSpiDevice = SPI_DEVICE_3;
-	engineConfiguration->spi3mosiPin = GPIOC_12;
-	engineConfiguration->spi3misoPin = GPIOC_11;
-	engineConfiguration->spi3sckPin = GPIOC_10;
-	engineConfiguration->sdCardCsPin = GPIOB_9;
-	CONFIG(is_enabled_spi_3) = true;
 //	engineConfiguration->isSdCardEnabled = true;
-
 
 	// TLE8888 high current low side: VVT2 IN9 / OUT5
 	// GPIOE_10: "3 - Lowside 2"
@@ -246,9 +243,6 @@ void setBoardConfigurationOverrides(void) {
 	engineConfiguration->ignitionMode = IM_INDIVIDUAL_COILS; // IM_WASTED_SPARK
 	engineConfiguration->crankingInjectionMode = IM_SIMULTANEOUS;
 	engineConfiguration->injectionMode = IM_SIMULTANEOUS;//IM_BATCH;// IM_SEQUENTIAL;
-}
-
-void setAdcChannelOverrides(void) {
 }
 
 /**

@@ -4,8 +4,12 @@ on: [push,pull_request]
 
 jobs:
   build:
-    runs-on: ubuntu-20.04
-    
+    runs-on: ${{ matrix.os }}
+
+    strategy:
+      matrix:
+        os: [ubuntu-20.04, macos-latest]
+
     steps:
     - uses: actions/checkout@v1
       with:
@@ -13,20 +17,23 @@ jobs:
         fetch-depth: 0
 
     - name: Discover cores
+      if: ${{ matrix.os != 'macos-latest' }}
       run: lscpu | egrep 'Model name|Socket|Thread|NUMA|CPU\(s\)'
 
     - name: Generate Configs
       working-directory: ./firmware/
       run: bash gen_config_default.sh
 
+    - name: Generate Enums
+      working-directory: ./firmware/
+      run: bash gen_enum_to_string.sh
+
     - name: Generate Live Documentation
       working-directory: ./firmware/
       run: bash gen_live_documentation.sh
 
-    - name: Install gcc8
-      run: sudo apt-get install -y gcc-8
-
-    - name: Print GCC version
+    - name: Print Compiler version
+      # NOTE: on mac, this is actually symlink'd to clang, not gcc, but that's ok - we want to build on both
       working-directory: .
       run: gcc -v
 
@@ -38,15 +45,17 @@ jobs:
       run: ./unit_tests/build/rusefi_test
 
     - name: Install Coverage Tools
+      if: ${{ matrix.os != 'macos-latest' }}
       run: sudo apt-get install ncftp lcov
 
     - name: Generate Code Coverage
+      if: ${{ matrix.os != 'macos-latest' }}
       working-directory: ./unit_tests/
       run: ./ci_gcov.sh ${{ secrets.RUSEFI_DOXYGEN_FTP_USER }} ${{ secrets.RUSEFI_DOXYGEN_FTP_PASS }} ${{ secrets.RUSEFI_FTP_SERVER }}
 
     # Commit changes and catch the error that occurs if nothing has been changed (without catching other errors)
     - name: Commit fresh triggers.txt
-      if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/master' }}
+      if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/master' && matrix.os != 'macos-latest' }}
       env:
         ACTIONS_ALLOW_UNSECURE_COMMANDS: 'true'
       #
@@ -57,13 +66,17 @@ jobs:
       run: |
         git config --local user.email "action@github.com"
         git config --local user.name "GitHub build-unit-tests Action"
+        git status
+        git remote -v
+        echo See https://github.com/rusefi/rusefi/issues/2446
+        git pull https://github.com/rusefi/rusefi master
         mv triggers.txt unit_tests
         mv *.logicdata  unit_tests
         git add unit_tests/triggers.txt
         git status
         OUT=$(git commit -m "Trigger wheel definitions" unit_tests/triggers.txt 2>&1) || echo "commit failed, finding out why"
         echo "$OUT"
-        if echo "$OUT" | grep 'nothing to commit'; then
+        if echo "$OUT" | grep -E 'nothing to commit|no changes added'; then
           echo "::set-env name=NOCOMMIT::true"
           exit 0
         elif echo "$OUT" | grep 'changed'; then
@@ -73,7 +86,7 @@ jobs:
         fi
 
     - name: Push configs
-      if: ${{github.event_name == 'push' && github.ref == 'refs/heads/master' && env.NOCOMMIT != 'true'}}
+      if: ${{github.event_name == 'push' && github.ref == 'refs/heads/master' && env.NOCOMMIT != 'true' && matrix.os != 'macos-latest'}}
       uses: ad-m/github-push-action@master
       with:
         github_token: ${{ github.token }}

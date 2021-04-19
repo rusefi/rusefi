@@ -8,6 +8,7 @@ import com.rusefi.autodetect.PortDetector;
 import com.rusefi.io.DfuHelper;
 import com.rusefi.io.IoStream;
 import com.rusefi.io.serial.SerialIoStreamJSerialComm;
+import com.rusefi.ui.StatusConsumer;
 import com.rusefi.ui.StatusWindow;
 import com.rusefi.ui.util.URLLabel;
 
@@ -16,6 +17,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
  * @see FirmwareFlasher
@@ -80,13 +82,23 @@ public class DfuFlasher {
         } catch (InterruptedException e) {
             throw new IllegalStateException(e);
         }
+        AtomicBoolean errorReported = new AtomicBoolean();
         StringBuffer stdout = new StringBuffer();
         String errorResponse = ExecHelper.executeCommand(FirmwareFlasher.BINARY_LOCATION,
                 FirmwareFlasher.BINARY_LOCATION + File.separator + getDfuCommand(),
-                DFU_BINARY, wnd, stdout);
-        if (stdout.toString().contains("0x12340005")) {
-            wnd.appendMsg("Driver issue? Maybe driver conflict with STM32Cube? rusEFI currently uses older incompatible driver");
-        } else if (stdout.toString().contains("Verify successful") || stdout.toString().contains("Upgrade successful")) {
+                DFU_BINARY, s -> {
+                    if (s.contains("0x12340005") && errorReported.compareAndSet(false, true)) {
+                        wnd.appendMsg("   ***************");
+                        wnd.appendMsg("   ***************");
+                        wnd.appendMsg("ERROR: Maybe DFU device not attached? Please check Device Manager.");
+                        wnd.appendMsg("ERROR: Maybe ST DFU Driver is missing?");
+                        wnd.appendMsg("ERROR: Maybe driver conflict with STM32Cube?");
+                        wnd.appendMsg("   ***************");
+                        wnd.appendMsg("   ***************");
+                    }
+                    wnd.appendMsg(s);
+                }, stdout);
+        if (stdout.toString().contains("Verify successful") || stdout.toString().contains("Upgrade successful")) {
             // looks like sometimes we are not catching the last line of the response? 'Upgrade' happens before 'Verify'
             wnd.appendMsg("SUCCESS!");
         } else {

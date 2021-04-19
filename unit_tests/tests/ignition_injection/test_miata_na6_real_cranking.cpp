@@ -29,7 +29,7 @@ static void fireTriggerEvent(EngineTestHelper*eth, double timestampS, int channe
 	EXPAND_Engine;
 	timeNowUs = 1000000 * timestampS;
 	printf("MIATANA: posting time=%d event=%d\r\n", timeNowUs, event);
-	engine->triggerCentral.handleShaftSignal(event, getTimeNowNt(), engine, engine->engineConfigurationPtr, &eth->persistentConfig);
+	engine->triggerCentral.handleShaftSignal(event, getTimeNowNt() PASS_ENGINE_PARAMETER_SUFFIX);
 }
 
 TEST(miataNA6, realCranking) {

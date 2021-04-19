@@ -73,13 +73,13 @@ extern engine_configuration_s *engineConfiguration;
 
 static void printOutputs(const engine_configuration_s *engineConfiguration) {
 	scheduleMsg(&logger, "injectionPins: mode %s", getPin_output_mode_e(engineConfiguration->injectionPinMode));
-	for (int i = 0; i < engineConfiguration->specs.cylindersCount; i++) {
+	for (size_t i = 0; i < engineConfiguration->specs.cylindersCount; i++) {
 		brain_pin_e brainPin = engineConfiguration->injectionPins[i];
 		scheduleMsg(&logger, "injection #%d @ %s", (1 + i), hwPortname(brainPin));
 	}
 
 	scheduleMsg(&logger, "ignitionPins: mode %s", getPin_output_mode_e(engineConfiguration->ignitionPinMode));
-	for (int i = 0; i < engineConfiguration->specs.cylindersCount; i++) {
+	for (size_t i = 0; i < engineConfiguration->specs.cylindersCount; i++) {
 		brain_pin_e brainPin = engineConfiguration->ignitionPins[i];
 		scheduleMsg(&logger, "ignition #%d @ %s", (1 + i), hwPortname(brainPin));
 	}
@@ -185,7 +185,6 @@ void printConfiguration(const engine_configuration_s *engineConfiguration) {
 	if (engineConfiguration->timingMode == TM_FIXED) {
 		scheduleMsg(&logger, "fixedModeTiming: %d", (int) engineConfiguration->fixedModeTiming);
 	}
-	scheduleMsg(&logger, "ignitionOffset=%.2f", engineConfiguration->ignitionOffset);
 
 	scheduleMsg(&logger, "=== injection ===");
 	scheduleMsg(&logger, "injection %s offset=%.2f/enabled=%s", getInjection_mode_e(engineConfiguration->injectionMode),
@@ -278,12 +277,6 @@ static void setInjectionOffset(float value) {
 	incrementGlobalConfigurationVersion(PASS_ENGINE_PARAMETER_SIGNATURE);
 }
 
-static void setIgnitionOffset(float value) {
-	engineConfiguration->ignitionOffset = value;
-	doPrintConfiguration();
-	incrementGlobalConfigurationVersion(PASS_ENGINE_PARAMETER_SIGNATURE);
-}
-
 static void setFuelPumpPinMode(int value) {
 	engineConfiguration->fuelPumpPinMode = (pin_output_mode_e) value;
 	doPrintConfiguration();
@@ -338,7 +331,7 @@ void printTPSInfo(void) {
 
 static void printTemperatureInfo(void) {
 #if EFI_ANALOG_SENSORS
-	Sensor::showAllSensorInfo(&logger);
+	Sensor::showAllSensorInfo();
 
 	scheduleMsg(&logger, "fan=%s @ %s", boolToString(enginePins.fanRelay.getLogicValue()),
 			hwPortname(engineConfiguration->fanPin));
@@ -819,6 +812,8 @@ static void enableOrDisable(const char *param, bool isEnabled) {
 		CONFIG(useTLE8888_cranking_hack) = isEnabled;
 	} else if (strEqualCaseInsensitive(param, "verboseTLE8888")) {
 		CONFIG(verboseTLE8888) = isEnabled;
+	} else if (strEqualCaseInsensitive(param, "logic_level_trigger")) {
+		CONFIG(displayLogicLevelsInEngineSniffer) = isEnabled;
 	} else if (strEqualCaseInsensitive(param, "can_broadcast")) {
 		CONFIG(enableVerboseCanTx) = isEnabled;
 	} else if (strEqualCaseInsensitive(param, "etb_auto")) {
@@ -863,12 +858,6 @@ static void enableOrDisable(const char *param, bool isEnabled) {
 		engineConfiguration->isVerboseIAC = isEnabled;
 	} else if (strEqualCaseInsensitive(param, "auxdebug1")) {
 		engineConfiguration->isVerboseAuxPid1 = isEnabled;
-	} else if (strEqualCaseInsensitive(param, "auxdebug2")) {
-		engineConfiguration->isVerboseAuxPid2 = isEnabled;
-	} else if (strEqualCaseInsensitive(param, "auxdebug3")) {
-		engineConfiguration->isVerboseAuxPid3 = isEnabled;
-	} else if (strEqualCaseInsensitive(param, "auxdebug4")) {
-		engineConfiguration->isVerboseAuxPid4 = isEnabled;
 	} else if (strEqualCaseInsensitive(param, "altdebug")) {
 		engineConfiguration->isVerboseAlternator = isEnabled;
 	} else if (strEqualCaseInsensitive(param, "tpic_advanced_mode")) {
@@ -897,8 +886,20 @@ static void enableOrDisable(const char *param, bool isEnabled) {
 		engineConfiguration->invertCamVVTSignal = isEnabled;
 	} else if (strEqualCaseInsensitive(param, CMD_IGNITION)) {
 		engineConfiguration->isIgnitionEnabled = isEnabled;
+#if EFI_EMULATE_POSITION_SENSORS
 	} else if (strEqualCaseInsensitive(param, CMD_SELF_STIMULATION)) {
-		engine->directSelfStimulation = isEnabled;
+		if (isEnabled) {
+			enableTriggerStimulator();
+		} else {
+			disableTriggerStimulator();
+		}
+	} else if (strEqualCaseInsensitive(param, CMD_EXTERNAL_STIMULATION)) {
+		if (isEnabled) {
+			enableExternalTriggerStimulator();
+		} else {
+			disableTriggerStimulator();
+		}
+#endif
 	} else if (strEqualCaseInsensitive(param, "engine_control")) {
 		engineConfiguration->isEngineControlEnabled = isEnabled;
 	} else if (strEqualCaseInsensitive(param, "map_avg")) {
@@ -1004,7 +1005,6 @@ const plain_get_float_s getF_plain[] = {
 		{"adcVcc", &engineConfiguration->adcVcc},
 		{"cranking_dwell", &engineConfiguration->ignitionDwellForCrankingMs},
 		{"idle_position", &engineConfiguration->manIdlePosition},
-		{"ignition_offset", &engineConfiguration->ignitionOffset},
 		{"injection_offset", &engineConfiguration->extraInjectionOffset},
 		{"global_trigger_offset_angle", &engineConfiguration->globalTriggerAngleOffset},
 		{"global_fuel_correction", &engineConfiguration->globalFuelCorrection},
@@ -1110,10 +1110,8 @@ const command_f_s commandsF[] = {
 		{MOCK_MAF_COMMAND, setMockMafVoltage},
 		{MOCK_AFR_COMMAND, setMockAfrVoltage},
 		{MOCK_MAP_COMMAND, setMockMapVoltage},
-		{"mock_vbatt_voltage", setMockVBattVoltage},
 		{MOCK_CLT_COMMAND, setMockCltVoltage},
 #endif // EFI_ENABLE_MOCK_ADC
-		{"ignition_offset", setIgnitionOffset},
 		{"injection_offset", setInjectionOffset},
 		{"global_trigger_offset_angle", setGlobalTriggerAngleOffset},
 		{"global_fuel_correction", setGlobalFuelCorrection},
@@ -1282,7 +1280,7 @@ static void setValue(const char *paramStr, const char *valueStr) {
 	} else if (strEqualCaseInsensitive(paramStr, "vvt_offset")) {
 		engineConfiguration->vvtOffset = valueF;
 	} else if (strEqualCaseInsensitive(paramStr, "vvt_mode")) {
-		engineConfiguration->vvtMode = (vvt_mode_e)valueI;
+		engineConfiguration->vvtMode[0] = (vvt_mode_e)valueI;
 	} else if (strEqualCaseInsensitive(paramStr, "operation_mode")) {
 		engineConfiguration->ambiguousOperationMode = (operation_mode_e)valueI;
 	} else if (strEqualCaseInsensitive(paramStr, "vvtCamSensorUseRise")) {

@@ -27,6 +27,7 @@
 #include "os_access.h"
 #include "engine.h"
 #include "obd2.h"
+#include "can.h"
 #include "can_msg_tx.h"
 #include "vehicle_speed.h"
 #include "map.h"
@@ -44,6 +45,7 @@ static const int16_t supportedPids0120[] = {
 	PID_ENGINE_LOAD,
 	PID_COOLANT_TEMP,
 	PID_STFT_BANK1,
+	PID_STFT_BANK2,
 	PID_INTAKE_MAP,
 	PID_RPM,
 	PID_SPEED,
@@ -132,8 +134,12 @@ static void handleGetDataRequest(const CANRxFrame& rx) {
 	case PID_STFT_BANK1:
 		obdSendValue(_1_MODE, pid, 1, 128 * ENGINE(engineState.running.pidCorrection));
 		break;
+	case PID_STFT_BANK2:
+		// TODO: use second fueling bank
+		obdSendValue(_1_MODE, pid, 1, 128 * ENGINE(engineState.running.pidCorrection));
+		break;
 	case PID_INTAKE_MAP:
-		obdSendValue(_1_MODE, pid, 1, getMap(PASS_ENGINE_PARAMETER_SIGNATURE));
+		obdSendValue(_1_MODE, pid, 1, Sensor::get(SensorType::Map).value_or(0));
 		break;
 	case PID_RPM:
 		obdSendValue(_1_MODE, pid, 2, GET_RPM() * ODB_RPM_MULT);	//	rotation/min.	(A*256+B)/4
@@ -165,10 +171,13 @@ static void handleGetDataRequest(const CANRxFrame& rx) {
 
 		obdSendPacket(1, pid, 4, scaled << 16);
 		break;
-	} case PID_FUEL_RATE:
-		obdSendValue(_1_MODE, pid, 2, engine->engineState.fuelConsumption.perSecondConsumption * 20.0f);	//	L/h.	(A*256+B)/20
+	} case PID_FUEL_RATE: {
+		float gPerSecond = engine->engineState.fuelConsumption.getConsumptionGramPerSecond();
+		float gPerHour = gPerSecond * 3600;
+		float literPerHour = gPerHour * 0.00139f;
+		obdSendValue(_1_MODE, pid, 2, literPerHour * 20.0f);	//	L/h.	(A*256+B)/20
 		break;
-	default:
+	} default:
 		// ignore unhandled PIDs
 		break;
 	}
@@ -190,7 +199,7 @@ static void handleDtcRequest(int numCodes, int *dtcCode) {
 
 #if HAL_USE_CAN
 void obdOnCanPacketRx(const CANRxFrame& rx) {
-	if (rx.SID != OBD_TEST_REQUEST) {
+	if (CAN_SID(rx) != OBD_TEST_REQUEST) {
 		return;
 	}
 

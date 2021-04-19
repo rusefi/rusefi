@@ -70,6 +70,11 @@ EXTERN_ENGINE;
 
 static time_msecs_t mph_timer;
 static time_msecs_t mph_ctr;
+// Nissan z33 350Z and else
+// 0x23d = 573
+#define NISSAN_RPM_CLT 0x23d
+
+static uint8_t rpmcounter;
 static uint16_t e90msgcounter;
 static uint16_t mph_counter = 0xF000;
 static uint8_t rpmcounter;
@@ -140,7 +145,7 @@ void canMazdaRX8(uint16_t cycle) {
 		msg[4] = 0x01; //Oil Pressure (not really a gauge)
 		msg[5] = 0x00; //check engine light
 		msg[6] = 0x00; //Coolant, oil and battery
-		if ((GET_RPM()>0) && (engine->sensors.vBatt<13)) {
+		if ((GET_RPM()>0) && (Sensor::get(SensorType::BatteryVoltage).value_or(VBAT_FALLBACK_VALUE)<13)) {
 			msg.setBit(6, 6); // battery light
 		}
 		if (!clt.Valid || clt.Value > 105) {
@@ -242,7 +247,28 @@ void canDashboardW202(uint16_t cycle) {
 	}
 }
 
-void canDashboardBMWE90(uint16_t cycle) {
+/**
+ * https://docs.google.com/spreadsheets/d/1XMfeGlhgl0lBL54lNtPdmmFd8gLr2T_YTriokb30kJg
+ */
+void canDashboardVagMqb() {
+
+	{ // 'turn-on'
+		CanTxMessage msg(0x3C0, 4);
+		// ignition ON
+		msg[2] = 3;
+	}
+	{ //RPM
+		CanTxMessage msg(0x107, 8);
+		msg[3] = ((int)(GET_RPM() / 3.5)) & 0xFF;
+		msg[4] = ((int)(GET_RPM() / 3.5)) >> 8;
+	}
+}
+
+void canDashboardBMWE90()
+{
+	if (e90msgcounter == UINT16_MAX)
+		e90msgcounter = 0;
+	e90msgcounter++;
 
 	//T15 'turn-on'
 	if((cycle&CAM_50ms)==CAM_50ms) { 

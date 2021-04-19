@@ -13,8 +13,9 @@
 #define MAX_TABLE_INDEX 4
 
 typedef enum {
+	LE_UNDEFINED = 0,
+	LE_METHOD_RETURN = 130,
 
-	LE_UNDEFINED = 0 ,
 	LE_NUMERIC_VALUE = 1,
 	LE_BOOLEAN_VALUE = 126,
 	LE_OPERATOR_LESS = 2,
@@ -57,6 +58,9 @@ typedef enum {
 	LE_METHOD_FSIO_SETTING = 124,
 	LE_METHOD_PPS = 125,
 	LE_METHOD_TIME_SINCE_TRIGGER_EVENT = 127,
+	LE_METHOD_IN_MR_BENCH = 128,
+	LE_METHOD_FUEL_FLOW_RATE = 131,
+	LE_METHOD_OIL_PRESSURE = 132,
 
 #include "fsio_enums_generated.def"
 
@@ -102,20 +106,19 @@ public:
 
 	le_action_e action;
 	float fValue;
-
-	LEElement *next;
 };
 
 class LEElementPool {
 public:
 	LEElementPool(LEElement *pool, int size);
-	LEElement *pool;
-	LEElement *next();
+
 	void reset();
 	LEElement * parseExpression(const char * line);
 	int getSize() const;
 private:
-	int index;
+	LEElement* m_pool;
+	LEElement* m_nextFree;
+
 	int size;
 };
 
@@ -129,20 +132,19 @@ typedef FLStack<float, MAX_STACK_DEPTH> calc_stack_t;
 class LECalculator {
 public:
 	LECalculator();
-	float getValue(float selfValue DECLARE_ENGINE_PARAMETER_SUFFIX);
-	float getValue2(float selfValue, LEElement *fistElementInList DECLARE_ENGINE_PARAMETER_SUFFIX);
-	void add(LEElement *element);
-	bool isEmpty() const;
+	float evaluate(const char * msg, float selfValue, const LEElement* element DECLARE_ENGINE_PARAMETER_SUFFIX);
 	void reset();
-	void reset(LEElement *element);
+
+	// Log history of calculation actions for debugging
 	le_action_e calcLogAction[MAX_CALC_LOG];
 	float calcLogValue[MAX_CALC_LOG];
 	int currentCalculationLogPosition;
+
 private:
 	void push(le_action_e action, float value);
-	FsioResult processElement(LEElement *element DECLARE_ENGINE_PARAMETER_SUFFIX);
+	FsioResult processElement(const LEElement* element DECLARE_ENGINE_PARAMETER_SUFFIX);
 	float pop(le_action_e action);
-	LEElement *first;
+
 	calc_stack_t stack;
 };
 

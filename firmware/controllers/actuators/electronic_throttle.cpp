@@ -83,6 +83,7 @@
 #include "dc_motor.h"
 #include "dc_motors.h"
 #include "pid_auto_tune.h"
+#include "thread_priority.h"
 
 #if defined(HAS_OS_ACCESS)
 #error "Unexpected OS ACCESS HERE"
@@ -96,6 +97,8 @@ static LoggingWithStorage logger("ETB");
 static pedal2tps_t pedal2tpsMap("Pedal2Tps");
 
 EXTERN_ENGINE;
+
+constexpr float etbPeriodSeconds = 1.0f / ETB_LOOP_FREQUENCY;
 
 static bool startupPositionError = false;
 
@@ -204,6 +207,9 @@ bool EtbController::init(etb_function_e function, DcMotor *motor, pid_s *pidPara
 	m_pid.initPidClass(pidParameters);
 	m_pedalMap = pedalMap;
 
+	// Ignore 3% position error before complaining
+	m_errorAccumulator.init(3.0f, etbPeriodSeconds);
+
 	reset();
 
 	return true;
@@ -219,8 +225,8 @@ void EtbController::onConfigurationChange(pid_s* previousConfiguration) {
 	}
 }
 
-void EtbController::showStatus(Logging* logger) {
-	m_pid.showPidStatus(logger, "ETB");
+void EtbController::showStatus() {
+	m_pid.showPidStatus("ETB");
 }
 
 expected<percent_t> EtbController::observePlant() const {
@@ -263,6 +269,11 @@ expected<percent_t> EtbController::getSetpointWastegate() const {
 }
 
 expected<percent_t> EtbController::getSetpointEtb() const {
+	// Autotune runs with 50% target position
+	if (m_isAutotune) {
+		return 50.0f;
+	}
+
 	// A few extra preconditions if throttle control is invalid
 	if (startupPositionError) {
 		return unexpected;
@@ -312,7 +323,7 @@ expected<percent_t> EtbController::getOpenLoop(percent_t target) const {
 	// Don't apply open loop for wastegate/idle valve, only real ETB
 	if (m_function != ETB_Wastegate
 		&& m_function != ETB_IdleValve) {
-		ff = interpolate2d("etbb", target, engineConfiguration->etbBiasBins, engineConfiguration->etbBiasValues);
+		ff = interpolate2d(target, engineConfiguration->etbBiasBins, engineConfiguration->etbBiasValues);
 	}
 
 	engine->engineState.etbFeedForward = ff;
@@ -320,9 +331,10 @@ expected<percent_t> EtbController::getOpenLoop(percent_t target) const {
 	return ff;
 }
 
-expected<percent_t> EtbController::getClosedLoopAutotune(percent_t actualThrottlePosition) {
-	// Estimate gain at 60% position - this should be well away from the spring and in the linear region
-	bool isPositive = actualThrottlePosition > 60.0f;
+expected<percent_t> EtbController::getClosedLoopAutotune(percent_t target, percent_t actualThrottlePosition) {
+	// Estimate gain at current position - this should be well away from the spring and in the linear region
+	// GetSetpoint sets this to 50%
+	bool isPositive = actualThrottlePosition > target;
 
 	float autotuneAmplitude = 20;
 
@@ -438,13 +450,26 @@ expected<percent_t> EtbController::getClosedLoop(percent_t target, percent_t obs
 	}
 
 	// Only allow autotune with stopped engine, and on the first throttle
-	if (GET_RPM() == 0
-		&& engine->etbAutoTune
-		&& m_function == ETB_Throttle1) {
-		return getClosedLoopAutotune(observation);
+	if (m_isAutotune) {
+		return getClosedLoopAutotune(target, observation);
 	} else {
+		// Check that we're not over the error limit
+		float errorIntegral = m_errorAccumulator.accumulate(target - observation);
+
+#if EFI_TUNER_STUDIO
+		if (m_function == ETB_Throttle1 && CONFIG(debugMode) == DBG_ETB_LOGIC) {
+			tsOutputChannels.debugFloatField3 = errorIntegral;
+		}
+#endif // EFI_TUNER_STUDIO
+
+		// Allow up to 10 percent-seconds of error
+		if (errorIntegral > 10.0f) {
+			// TODO: figure out how to handle uncalibrated ETB 
+			//ENGINE(limpManager).etbProblem();
+		}
+
 		// Normal case - use PID to compute closed loop part
-		return m_pid.getOutput(target, observation, 1.0f / ETB_LOOP_FREQUENCY);
+		return m_pid.getOutput(target, observation, etbPeriodSeconds);
 	}
 }
 
@@ -495,6 +520,15 @@ void EtbController::update() {
 		return;
 	}
 
+	if (CONFIG(disableEtbWhenEngineStopped)) {
+		if (engine->triggerCentral.getTimeSinceTriggerEvent(getTimeNowNt()) > 1) {
+			// If engine is stopped and so configured, skip the ETB update entirely
+			// This is quieter and pulls less power than leaving it on all the time
+			m_motor->disable();
+			return;
+		}
+	}
+
 #if EFI_TUNER_STUDIO
 	if (engineConfiguration->debugMode == DBG_ETB_LOGIC) {
 		tsOutputChannels.debugFloatField1 = engine->engineState.targetFromTable;
@@ -506,8 +540,13 @@ void EtbController::update() {
 	m_pid.iTermMax = engineConfiguration->etb_iTermMax;
 
 	if (engineConfiguration->isVerboseETB) {
-		m_pid.showPidStatus(&logger, "ETB");
+		m_pid.showPidStatus("ETB");
 	}
+
+	// Update local state about autotune
+	m_isAutotune = GET_RPM() == 0
+		&& engine->etbAutoTune
+		&& m_function == ETB_Throttle1;
 
 	ClosedLoopController::update();
 
@@ -642,7 +681,7 @@ struct EtbImpl final : public EtbController {
 static EtbImpl etbControllers[ETB_COUNT];
 
 struct EtbThread final : public PeriodicController<512> {
-	EtbThread() : PeriodicController("ETB", NORMALPRIO + 3, ETB_LOOP_FREQUENCY) {}
+	EtbThread() : PeriodicController("ETB", PRIO_ETB, ETB_LOOP_FREQUENCY) {}
 
 	void PeriodicTask(efitick_t) override {
 		// Simply update all controllers
@@ -675,7 +714,7 @@ static void showEthInfo(void) {
 		scheduleMsg(&logger, " dir2=%s", hwPortname(CONFIG(etbIo[i].directionPin2)));
 		scheduleMsg(&logger, " control=%s", hwPortname(CONFIG(etbIo[i].controlPin1)));
 		scheduleMsg(&logger, " disable=%s", hwPortname(CONFIG(etbIo[i].disablePin)));
-		showDcMotorInfo(&logger, i);
+		showDcMotorInfo(i);
 	}
 
 #endif /* EFI_PROD_CODE */

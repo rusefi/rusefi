@@ -18,7 +18,7 @@ CONTROLLERS_SRC_CPP = \
 	$(CONTROLLERS_DIR)/actuators/idle_hardware.cpp \
 	$(CONTROLLERS_DIR)/actuators/idle_thread.cpp \
 	$(CONTROLLERS_DIR)/actuators/pwm_tester.cpp \
-	$(CONTROLLERS_DIR)/actuators/algo/aux_pid.cpp \
+	$(CONTROLLERS_DIR)/actuators/vvt.cpp \
 	$(CONTROLLERS_DIR)/actuators/gppwm/gppwm_channel.cpp \
 	$(CONTROLLERS_DIR)/actuators/gppwm/gppwm.cpp \
 	$(CONTROLLERS_DIR)/gauges/tachometer.cpp \
@@ -34,6 +34,7 @@ CONTROLLERS_SRC_CPP = \
 	$(CONTROLLERS_DIR)/engine_cycle/high_pressure_fuel_pump.cpp \
 	$(CONTROLLERS_DIR)/engine_cycle/rpm_calculator.cpp \
 	$(CONTROLLERS_DIR)/engine_cycle/spark_logic.cpp \
+	$(CONTROLLERS_DIR)/engine_cycle/knock_logic.cpp \
 	$(CONTROLLERS_DIR)/engine_cycle/main_trigger_callback.cpp \
 	$(CONTROLLERS_DIR)/engine_cycle/aux_valves.cpp \
 	$(CONTROLLERS_DIR)/engine_cycle/fuel_schedule.cpp \

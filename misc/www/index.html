@@ -28,7 +28,9 @@
 
   <!-- FONT
   –––––––––––––––––––––––––––––––––––––––––––––––––– -->
-  <link href='//fonts.googleapis.com/css?family=Raleway:400,300,600' rel='stylesheet' type='text/css'>
+  <link rel="preconnect" href="https://fonts.gstatic.com">
+  <link href='https://fonts.googleapis.com/css?family=Raleway:400,300,600' rel='stylesheet' type='text/css'>
+  <link href="https://fonts.googleapis.com/css2?family=Work+Sans:wght@900&display=swap" rel="stylesheet"> 
 
   <!-- CSS
   –––––––––––––––––––––––––––––––––––––––––––––––––– -->
@@ -82,7 +84,7 @@
       </ul>
     </topnav>
     <div class="container">
-      <img src="images/site/logo_wht.png" width="70%">
+      <img src="images/site/logo_wht.png" width="50%">
       <h4 class="title">A GPL open source Engine Management System</h4>
       <a class="github-button" href="https://github.com/rusefi" data-size="large"
         aria-label="Follow @rusefi on GitHub">Follow @rusefi</a>
@@ -91,7 +93,14 @@
       <div class="value-props row">
       </div>
     </div>
+    <a class="arrow" href="index.html#intro">
+      <span></span>
+      <span></span>
+      <span></span>
+    </a>
   </div>
+
+
 
   <div class="nav-mobile"><a id="nav-toggle" href="#!"><span></span></a></div>
   <nav class="navbar">
@@ -207,27 +216,31 @@
             <td class='oddrow'><i class="fa fa-check-circle-o fa-2x" aria-hidden="true"></i></td>
           </tr>
           <tr>
-            <td class='evenrow'><a href='https://github.com/rusefi/rusefi/wiki/All-Supported-Triggers'>20+ OEM triggers
-                supported</a></td>
+            <td class='evenrow'>Flex Fuel</td>
             <td class='evenrow'><i class="fa fa-check-circle-o fa-2x" aria-hidden="true"></i></td>
           </tr>
           <tr>
-            <td class='oddrow'>Automatic Transmission Control</td>
-            <td class='oddrow'><i class="fa fa-check-circle-o fa-2x" aria-hidden="true"
-                style="color:rgba(0, 0, 0, 0.3);"></i></td>
+            <td class='oddrow'><a href='https://github.com/rusefi/rusefi/wiki/All-Supported-Triggers'>20+ OEM triggers
+                supported</a></td>
+            <td class='oddrow'><i class="fa fa-check-circle-o fa-2x" aria-hidden="true"></i></td>
           </tr>
           <tr>
-            <td class='evenrow'><a href='https://github.com/rusefi/rusefi/wiki/GDI-status'>Direct Injection</a></td>
+            <td class='evenrow'>Automatic Transmission Control</td>
             <td class='evenrow'><i class="fa fa-check-circle-o fa-2x" aria-hidden="true"
                 style="color:rgba(0, 0, 0, 0.3);"></i></td>
           </tr>
           <tr>
-            <td class='oddrow'>Flat Shifting</td>
-            <td class='oddrow'><i class="fa fa-times fa-2x" aria-hidden="true"></i></td>
+            <td class='oddrow'><a href='https://github.com/rusefi/rusefi/wiki/GDI-status'>Direct Injection</a></td>
+            <td class='oddrow'><i class="fa fa-check-circle-o fa-2x" aria-hidden="true"
+                style="color:rgba(0, 0, 0, 0.3);"></i></td>
           </tr>
           <tr>
-            <td class='evenrow'>Rotary Engines</td>
+            <td class='evenrow'>Flat Shifting</td>
             <td class='evenrow'><i class="fa fa-times fa-2x" aria-hidden="true"></i></td>
+          </tr>
+          <tr>
+            <td class='oddrow'>Rotary Engines</td>
+            <td class='oddrow'><i class="fa fa-times fa-2x" aria-hidden="true"></i></td>
           </tr>
         </tbody>
       </table>
@@ -242,78 +255,87 @@
     </div>
   </div>
 
-  <!-- Microrusefi -->
-  <div class="docs-section" id="microrusefi">
-    <div class="container">
-      <h6 class="docs-header">microRusEFI</h6>
-      <img src="images/site/rusefi_mreheader.png" width="100%">
-      <p>microRusEFI is a small & cheap Engine Management System board designed for fully sequential 1, 2, 3 and 4
-        cylinder applications.<br>
-        microRusEFI uses a waterproof connector and its aluminum enclosure could be sealed.<br>
-        microRusEfi supports dual Hall shaft position sensor input or 1xHall + 1xVR shaft position sensor input (A few
-        resistors must be replaced on the PCB to switch from one setup to another)<br>
-        Open-source design available in <a href="https://github.com/rusefi/hw_microRusEfi">this repository</a>, or
-        available as a kit or completely assembled. <br>
-        This is an excellent option for racing series that allow modifications inside the stock ECU case.
-      </p>
-      <b>Features</b>
-      <ul>
-        <li>Primary VR or Hall input (configurable with few resistor changes)</li>
-        <li>Secondary Hall input</li>
-        <li>4 analog thermistor (temperature) inputs</li>
-        <li>10 analog voltage inputs (0-5v)</li>
-        <li>4 high-Z injector outputs</li>
-        <li>2 high-current low side outputs for IAC/VVT/other solenoids</li>
-        <li>Dedicated main relay control output</li>
-        <li>4 low-current low side outputs for relays or warning lights</li>
-        <li>4 5v logic-level ignition outputs</li>
-        <li>2 logic level outputs (5v/12v configurable, requires resistor changes)</li>
-        <li>Electronic throttle body (drive by wire)</li>
-        <li>CAN connectivity on the plug</li>
-        <li>USB connectivity on the plug</li>
-        <li>SPI and TTL available on PCB</li>
-      </ul>
-      <a class="button button-primary" href="https://www.ebay.com/itm/333532119947">Get microRusEFI hardware</a>
-      <a class="button button-primary" href="https://github.com/rusefi/rusefi/wiki/microRusEFI-Manual">microRusEFI
-        Manual</a>
+  <div class="mre" id="microrusefi">
+    <div class="mre-left">
+      <div class="mre-content">
+        <img src="images/site/mre_ecu.png" width="100%">
+      </div>
+    </div>
+    <div class="mre-right">
+      <div class="mre-content">
+        <h6 class="docs-header">microRusEFI</h6>
+        <img src="images/site/mre_logo.png" width="50%">
+        <br><br>
+        <p>microRusEFI is a small & cheap Engine Management System board designed for fully sequential 1, 2, 3 and 4
+          cylinder applications.<br>
+          microRusEFI uses a waterproof connector and its aluminum enclosure could be sealed.<br>
+          microRusEfi supports dual Hall shaft position sensor input or 1xHall + 1xVR shaft position sensor input (A few
+          resistors must be replaced on the PCB to switch from one setup to another)<br>
+          Open-source design available in <a href="https://github.com/rusefi/hw_microRusEfi">this repository</a>, or
+          available as a kit or completely assembled. <br>
+          This is an excellent option for racing series that allow modifications inside the stock ECU case.
+        </p>
+        <b>Features</b>
+        <ul>
+          <li>Primary VR or Hall input (configurable with few resistor changes)</li>
+          <li>Secondary Hall input</li>
+          <li>4 analog thermistor (temperature) inputs</li>
+          <li>10 analog voltage inputs (0-5v)</li>
+          <li>4 high-Z injector outputs</li>
+          <li>2 high-current low side outputs for IAC/VVT/other solenoids</li>
+          <li>Dedicated main relay control output</li>
+          <li>4 low-current low side outputs for relays or warning lights</li>
+          <li>4 5v logic-level ignition outputs</li>
+          <li>2 logic level outputs (5v/12v configurable, requires resistor changes)</li>
+          <li>Electronic throttle body (drive by wire)</li>
+          <li>CAN connectivity on the plug</li>
+          <li>USB connectivity on the plug</li>
+          <li>SPI and TTL available on PCB</li>
+        </ul>
+        <a class="button button-white" href="https://www.ebay.com/itm/333532119947">Get microRusEFI hardware</a>
+        <a class="button button-white" href="https://github.com/rusefi/rusefi/wiki/microRusEFI-Manual">microRusEFI
+          Manual</a>
+      </div>
     </div>
   </div>
 
-  <div class="docs-section" id="proteus">
-    <div class="container">
-      <h6 class="docs-header">Proteus</h6>
-      <p>A high-featured board compatible with rusEFI firmware. Open-source design available in <a href="https://github.com/mck1117/proteus">this repository</a>.
-      </p>
-      <b>Features</b>
-      <ul>
-        <li>2x VR crank/cam/vehicle speed inputs</li>
-        <li>6x hall cam/crank or digital input</li>
-        <li>Full operation from 6-24v supply</li>
-        <li>Dual 5v sensor supplies, 150mA each, fully protected</li>
-        <li>Dual protected 12v external sensor supply</li>
-        <li>16x 4A low-side drivers</li>
-        <li>12x 5v ignition (or general purpose) outputs</li>
-        <li>Dual H-bridges for electronic throttle (also supports stepper idle valve!)</li>
-        <li>4x 12v 3A high-side outputs</li>
-        <li>12x Analog voltage inputs</li>
-        <li>4x Analog temperature inputs</li>
-        <li>180 MHz ARM Cortex-M7</li>
-        <li>TE Connectivity AMPSEAL connectors</li>
-        <li>Internal data-logging</li>
-      </ul>
-      <a class="button button-primary" href="https://www.ebay.com/itm/333811680319">Get Proteus hardware</a>
-      <a class="button button-primary" href="https://github.com/rusefi/rusefi/wiki/Proteus-Manual">Proteus Manual</a>
+  <div class="proteus" id="proteus">
+    <div class="proteus-left">
+      <div class="proteus-content">
+        <h6 class="docs-header">Proteus</h6>
+        <!-- <img src="images/site/mre_logo.png" width="50%"> -->
+        <h1><span class="blinking">|</span>PROTEUS</h1>
+        <br><br>
+        <p>A high-featured board compatible with rusEFI firmware. Open-source design available in <a
+            href="https://github.com/mck1117/proteus">this repository</a>.
+        </p>
+        <b>Features</b>
+        <ul>
+          <li>2x VR crank/cam/vehicle speed inputs</li>
+          <li>6x hall cam/crank or digital input</li>
+          <li>Full operation from 6-24v supply</li>
+          <li>Dual 5v sensor supplies, 150mA each, fully protected</li>
+          <li>Dual protected 12v external sensor supply</li>
+          <li>16x 4A low-side drivers</li>
+          <li>12x 5v ignition (or general purpose) outputs</li>
+          <li>Dual H-bridges for electronic throttle (also supports stepper idle valve!)</li>
+          <li>4x 12v 3A high-side outputs</li>
+          <li>12x Analog voltage inputs</li>
+          <li>4x Analog temperature inputs</li>
+          <li>180 MHz ARM Cortex-M7</li>
+          <li>TE Connectivity AMPSEAL connectors</li>
+          <li>Internal data-logging</li>
+        </ul>
+        <a class="button button-black" href="https://www.ebay.com/itm/333841923141">Get Proteus hardware</a>
+        <a class="button button-black" href="https://github.com/rusefi/rusefi/wiki/Proteus-Manual">Proteus Manual</a>
+      </div>
+    </div>
+    <div class="proteus-right">
+      <div class="proteus-content">
+        <img src="images/site/proteus_case.png" width="100%">
+      </div>
     </div>
   </div>
-
-  <!-- <div class="docs-section" id="miata_pnp">
-    <div class="container">
-      <h6 class="docs-header">Miata</h6>
-      <a class="button button-primary" href="https://www.ebay.com/itm/333808079911">Get NA6 Miata hardware</a>
-
-      <a class="button button-primary" href="https://www.ebay.com/itm/333808081077">Get 94/95 Miata hardware</a>
-    </div>
-  </div> -->
 
   <!-- Shop -->
   <div class="docs-section" id="shop">
@@ -326,7 +348,7 @@
             <tr>
               <td><img src="images/site/38p_board.jpg" width="250px" alt=""></td>
               <td>38 pin breakout</td>
-              <td><a class="button button-primary" href="https://www.ebay.com/itm/333735833268">Get it on eBay</a></td>
+              <td><a class="button button-primary" href="https://www.ebay.com/itm/333942848819">Get it on eBay</a></td>
             </tr>
             <tr>
               <td><img src="images/site/52p_board_connector.jpg" width="250px" alt=""></td>
@@ -351,7 +373,7 @@
             <tr>
               <td><img src="images/site/60_board_with_connector.jpg" width="250px" alt=""></td>
               <td>60 pin Ford EEC-IV connector</td>
-              <td><a class="button button-primary" href="https://www.ebay.com/itm/333647826399">Get it on eBay</a> <br>
+              <td><a class="button button-primary" href="https://www.ebay.com/itm/333886904183">Get it on eBay</a> <br>
               </td>
             </tr>
             <tr>
@@ -370,7 +392,7 @@
             <tr>
               <td><img src="images/site/72_board_with_connector.jpg" width="250px" alt=""></td>
               <td>72 pin connector with breakout board</td>
-              <td><a class="button button-primary" href="https://www.ebay.com/itm/332771651266">Get it on eBay</a> <br>
+              <td><a class="button button-primary" href="https://www.ebay.com/itm/333862654517">Get it on eBay</a> <br>
               </td>
             </tr>
             <tr>
@@ -400,10 +422,16 @@
               </td>
             </tr>
             <tr>
+              <td><img src="images/site/breakout_125.jpg" width="250px" alt=""></td>
+              <td>125 pin breakout board
+              <td><a class="button button-primary" href="https://www.ebay.com/itm/333855911372">Get it on eBay</a>
+              </td>
+            </tr>
+            <tr>
               <td><img src="images/site/134_board_with_connector.jpg" width="250px" alt=""></td>
               <td>134 pin connector<br />134 pin breakout</td>
-              <td><a class="button button-primary" href="https://www.ebay.com/itm/333779143374">Get it on eBay</a><br>
-                <a class="button button-primary" href="https://www.ebay.com/itm/333534819202">Get it on eBay</a> <br>
+              <td><a class="button button-primary" href="https://www.ebay.com/itm/333930686976">Get it on eBay</a><br>
+                <a class="button button-primary" href="https://www.ebay.com/itm/333930686664">Get it on eBay</a> <br>
               </td>
             </tr>
             <tr>
@@ -447,6 +475,16 @@
           <p class="example-description">Got a question? <br> This a great place to start exploring to see what rusEFI
             has to offer</p>
           <a class="button" href="https://rusefi.com/forum/" target="_blank">rusEFI forum</a>
+        </div>
+      </div>
+      <div class="row example">
+        <a class="example-screenshot-wrapper" target="_blank">
+          <img class="example-screenshot" src="images/site/rewiki.png">
+        </a>
+        <div class="one-half offset-by-one-half column">
+          <h6 class="example-header">rusEFI wiki</h6>
+          <p class="example-description">More in-depth information related to rusEFI and it's current features.</p>
+          <a class="button" href="https://github.com/rusefi/rusefi/wiki" target="_blank">rusEFI WIKI</a>
         </div>
       </div>
       <br>

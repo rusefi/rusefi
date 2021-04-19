@@ -15,6 +15,9 @@
 #include "perf_trace.h"
 #include "tooth_logger.h"
 
+#include "hip9011.h"
+#include "engine_ptr.h"
+
 #if EFI_ENGINE_CONTROL
 
 #if EFI_TUNER_STUDIO
@@ -34,11 +37,6 @@ static cyclic_buffer<int> ignitionErrorDetection;
 static Logging *logger;
 
 static const char *prevSparkName = nullptr;
-
-int isInjectionEnabled(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
-	// todo: is this worth a method? should this be inlined?
-	return CONFIG(isInjectionEnabled);
-}
 
 int isIgnitionTimingError(void) {
 	return ignitionErrorDetection.sum(6) > 4;
@@ -209,6 +207,9 @@ if (engineConfiguration->debugMode == DBG_DWELL_METRIC) {
 #if EFI_SOFTWARE_KNOCK
 	startKnockSampling(event->cylinderNumber);
 #endif
+#if EFI_HIP_9011
+	hip9011_startKnockSampling(event->cylinderNumber, nowNt);
+#endif
 }
 
 static void startDwellByTurningSparkPinHigh(IgnitionEvent *event, IgnitionOutputPin *output) {
@@ -246,6 +247,7 @@ static void startDwellByTurningSparkPinHigh(IgnitionEvent *event, IgnitionOutput
 #if HW_CHECK_SPARK_FSIO
 	enginePins.fsioOutputs[event->cylinderIndex].setValue(1);
 #endif // HW_CHECK_SPARK_FSIO
+    INJECT_ENGINE_REFERENCE(output);
 	output->setHigh();
 }
 
@@ -415,7 +417,7 @@ void initializeIgnitionActions(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	}
 	efiAssertVoid(CUSTOM_ERR_6592, engineConfiguration->specs.cylindersCount > 0, "cylindersCount");
 
-	for (int cylinderIndex = 0; cylinderIndex < CONFIG(specs.cylindersCount); cylinderIndex++) {
+	for (size_t cylinderIndex = 0; cylinderIndex < CONFIG(specs.cylindersCount); cylinderIndex++) {
 		list->elements[cylinderIndex].cylinderIndex = cylinderIndex;
 #if EFI_UNIT_TEST
 		list->elements[cylinderIndex].engine = engine;
@@ -505,7 +507,7 @@ void onTriggerEventSparkLogic(bool limitedSpark, uint32_t trgEventIndex, int rpm
 
 //	scheduleSimpleMsg(&logger, "eventId spark ", eventIndex);
 	if (ENGINE(ignitionEvents.isReady)) {
-		for (int i = 0; i < CONFIG(specs.cylindersCount); i++) {
+		for (size_t i = 0; i < CONFIG(specs.cylindersCount); i++) {
 			IgnitionEvent *event = &ENGINE(ignitionEvents.elements[i]);
 			if (event->dwellPosition.triggerEventIndex != trgEventIndex)
 				continue;

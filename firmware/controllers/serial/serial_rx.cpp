@@ -17,10 +17,9 @@
 
 #include "allsensors.h"
 #include "vehicle_speed.h"
+#include "thread_priority.h"
 
 EXTERN_ENGINE;
-
-static LoggingWithStorage logger("AUX Serial RX");
 
 uint8_t ser_buffer[SERBUFFLEN] = {};
 size_t innovate_msg_len = 1;
@@ -29,7 +28,7 @@ uint8_t sb = 0;
 bool clear_ser_buffer = false;
 
 SerialRead::SerialRead()
-	: ThreadController("AUX Serial RX", NORMALPRIO) {
+	: ThreadController("AUX Serial RX", PRIO_AUX_SERIAL) {
 }
 
 void SerialRead::ThreadTask() {

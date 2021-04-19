@@ -128,10 +128,10 @@ void setSdCardConfigurationOverrides(void) {
 }
 
 /**
- * @brief   Board-specific configuration code overrides.
+ * @brief   Board-specific configuration defaults.
  * @todo    Add your board-specific code, if any.
  */
-void setBoardConfigurationOverrides(void) {
+void setBoardDefaultConfiguration(void) {
 	// give a chance to trigger SWD programmer... Wait for 2 secs (=2000 ms).
 	// TODO: remove it when the bootloader is ready
 	chThdSleepMilliseconds(2000);
@@ -216,9 +216,6 @@ void setBoardConfigurationOverrides(void) {
 	engineConfiguration->triggerSimulatorPinModes[1] = OM_DEFAULT;
 	engineConfiguration->triggerSimulatorPinModes[2] = OM_DEFAULT;
 	engineConfiguration->vehicleSpeedSensorInputPin = GPIO_UNASSIGNED;
-
-	engineConfiguration->digitalPotentiometerSpiDevice = SPI_NONE;
-	engineConfiguration->max31855spiDevice = SPI_NONE;
 
 	/////////////////////////////////////////////////////////
 	

@@ -28,7 +28,6 @@ typedef unsigned int time_t;
 
 // time in seconds
 typedef time_t efitimesec_t;
-typedef uint16_t efitimesec16_t;
 
 /**
  * integer time in milliseconds (1/1_000 of a second)
@@ -93,6 +92,7 @@ typedef brain_pin_e egt_cs_array_t[EGT_CHANNEL_COUNT];
 typedef uint8_t lambda_table_t[FUEL_LOAD_COUNT][FUEL_RPM_COUNT];
 // todo: merge these two types together? but these tables have different TS parameters like ranges etc
 typedef float fuel_table_t[FUEL_LOAD_COUNT][FUEL_RPM_COUNT];
+typedef uint16_t map_estimate_table_t[FUEL_LOAD_COUNT][FUEL_RPM_COUNT];
 typedef float ignition_table_t[IGN_LOAD_COUNT][IGN_RPM_COUNT];
 typedef int16_t ignition_tps_table_t[IGN_LOAD_COUNT][IGN_RPM_COUNT];
 typedef uint8_t pedal_to_tps_t[PEDAL_TO_TPS_SIZE][PEDAL_TO_TPS_SIZE];
@@ -113,7 +113,7 @@ typedef uint8_t gppwm_table_t[GPPWM_LOAD_COUNT][GPPWM_RPM_COUNT];
 // this is different type simply to have different hi/low range in rusefi.ini
 typedef ignition_table_t angle_table_t;
 
-typedef int cylinders_count_t;
+typedef uint32_t cylinders_count_t;
 
 typedef int32_t bool32_t;
 

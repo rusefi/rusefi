@@ -9,7 +9,7 @@ SIGNATURE_FILE_NAME=tunerstudio/generated/signature_${SHORT_BOARDNAME}.txt
 echo "Generating signature for ${SHORT_BOARDNAME}"
 
 # generate a unique signature
-date=$(date +"%Y.%m.%d")
+date=`TZ=Europe/London date +"%Y.%m.%d"`
 echo "#define SIGNATURE_DATE $date" > ${SIGNATURE_FILE_NAME}
 echo "#define SIGNATURE_BOARD ${SHORT_BOARDNAME}" >> ${SIGNATURE_FILE_NAME}
 

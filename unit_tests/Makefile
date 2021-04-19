@@ -20,7 +20,7 @@ include $(PROJECT_DIR)/rusefi_rules.mk
 ifeq ($(USE_OPT),)
 # -O2 is needed for mingw, without it there is a linking issue to isnanf?!?!
   #USE_OPT = $(RFLAGS) -O2 -fgnu89-inline -ggdb -fomit-frame-pointer -falign-functions=16 -std=gnu99 -Werror-implicit-function-declaration -Werror -Wno-error=pointer-sign -Wno-error=unused-function -Wno-error=unused-variable -Wno-error=sign-compare -Wno-error=unused-parameter -Wno-error=missing-field-initializers
-  USE_OPT = -c -Wall -O0 -ggdb -g3
+  USE_OPT = -c -Wall -O0 -ggdb -g
   USE_OPT += -fprofile-arcs -ftest-coverage
   USE_OPT += -Werror=missing-field-initializers
 endif
@@ -111,10 +111,6 @@ include $(PROJECT_DIR)/init/init.mk
 include test.mk
 include tests/tests.mk
 
-# Define linker script file here
-#LDSCRIPT= config/system/STM32F407xG.ld
-#LDSCRIPT= $(PORTLD)/STM32F407xG_CCM.ld
-
 # C sources that can be compiled in ARM or THUMB mode depending on the global
 # setting.
 CSRC =	$(UTILSRC) \
@@ -147,6 +143,7 @@ CPPSRC = $(UTILSRC_CPP) \
 	$(TRIGGER_SRC_CPP) \
 	$(INIT_SRC_CPP) \
 	$(PROJECT_DIR)/../unit_tests/logicdata.cpp \
+	$(DEVELOPMENT_DIR)/engine_sniffer.cpp \
 	$(PROJECT_DIR)/../unit_tests/main.cpp \
 	$(PROJECT_DIR)/console/binary/tooth_logger.cpp \
 	$(PROJECT_DIR)/console/binary_log/log_field.cpp \
@@ -193,6 +190,7 @@ INCDIR = . \
 	googletest/googletest \
 	googletest/googletest/include \
 	$(PROJECT_DIR)/../unit_tests/tests \
+	$(PROJECT_DIR)/../unit_tests/tests/sensor \
 	$(PROJECT_DIR)/../unit_tests/test_basic_math
 	
 

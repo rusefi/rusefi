@@ -43,8 +43,6 @@ typedef uint32_t systime_t;
 
 void chDbgAssert(int c, char *msg, void *arg);
 
-void print(const char *fmt, ...);
-
 #define TICKS_IN_MS 100
 
 #define chDbgCheck(x, y) chDbgAssert(x, y, NULL)
@@ -63,14 +61,6 @@ void print(const char *fmt, ...);
 #define EFI_ERROR_CODE 0xffffffff
 
 #define CCM_OPTIONAL
-
-#define EXTERN_ENGINE extern EnginePins enginePins; \
-	 extern engine_configuration_s & activeConfiguration
-
-#define EXTERN_CONFIG
-
-#define DEFINE_CONFIG_PARAM(x, y) , x y
-#define PASS_CONFIG_PARAM(x) , x
 
 /**
  * this macro provides references to engine from EngineTestHelper

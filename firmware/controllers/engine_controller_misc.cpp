@@ -12,7 +12,6 @@
 
 EXTERN_ENGINE;
 
-extern LoggingWithStorage sharedLogger;
 extern ButtonDebounce startStopButtonDebounce;
 
 #if ENABLE_PERF_TRACE
@@ -65,10 +64,6 @@ void setMockAfrVoltage(float voltage DECLARE_ENGINE_PARAMETER_SUFFIX) {
 
 void setMockMapVoltage(float voltage DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	setMockVoltage(engineConfiguration->map.sensor.hwChannel, voltage PASS_ENGINE_PARAMETER_SUFFIX);
-}
-
-void setMockVBattVoltage(float voltage DECLARE_ENGINE_PARAMETER_SUFFIX) {
-	setMockVoltage(engineConfiguration->vbattAdcChannel, voltage PASS_ENGINE_PARAMETER_SUFFIX);
 }
 #endif /* EFI_ENABLE_MOCK_ADC */
 
@@ -139,12 +134,12 @@ static void onStartStopButtonToggle(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 		bool wasStarterEngaged = enginePins.starterControl.getAndSet(1);
 		if (!wasStarterEngaged) {
 		    engine->startStopStateLastPushTime = getTimeNowNt();
-		    scheduleMsg(&sharedLogger, "Let's crank this engine for up to %d seconds via %s!",
+		    efiPrintf("Let's crank this engine for up to %d seconds via %s!",
 		    		CONFIG(startCrankingDuration),
 					hwPortname(CONFIG(starterControlPin)));
 		}
 	} else if (engine->rpmCalculator.isRunning()) {
-		scheduleMsg(&sharedLogger, "Let's stop this engine!");
+		efiPrintf("Let's stop this engine!");
 		doScheduleStopEngine(PASS_ENGINE_PARAMETER_SIGNATURE);
 	}
 }
@@ -169,7 +164,7 @@ void slowStartStopButtonCallback(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 		// turn starter off once engine is running
 		bool wasStarterEngaged = enginePins.starterControl.getAndSet(0);
 		if (wasStarterEngaged) {
-			scheduleMsg(&sharedLogger, "Engine runs we can disengage the starter");
+			efiPrintf("Engine runs we can disengage the starter");
 			engine->startStopStateLastPushTime = 0;
 		}
 	}
@@ -177,7 +172,7 @@ void slowStartStopButtonCallback(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	if (getTimeNowNt() - engine->startStopStateLastPushTime > NT_PER_SECOND * CONFIG(startCrankingDuration)) {
 		bool wasStarterEngaged = enginePins.starterControl.getAndSet(0);
 		if (wasStarterEngaged) {
-			scheduleMsg(&sharedLogger, "Cranking timeout %d seconds", CONFIG(startCrankingDuration));
+			efiPrintf("Cranking timeout %d seconds", CONFIG(startCrankingDuration));
 			engine->startStopStateLastPushTime = 0;
 		}
 	}

@@ -18,6 +18,12 @@
 #include "tooth_logger.h"
 #include "logicdata.h"
 
+#if EFI_ENGINE_SNIFFER
+#include "engine_sniffer.h"
+extern WaveChart waveChart;
+#endif /* EFI_ENGINE_SNIFFER */
+
+
 extern int timeNowUs;
 extern WarningCodeState unitTestWarningCodeState;
 extern engine_configuration_s & activeConfiguration;
@@ -53,10 +59,12 @@ EngineTestHelper::EngineTestHelper(engine_type_e engineType, configuration_callb
 	enginePins.reset();
 	enginePins.unregisterPins();
 
-	persistent_config_s *config = &persistentConfig;
 	Engine *engine = &this->engine;
-	engine->setConfig(config);
-	engine_configuration_s *engineConfiguration = engine->engineConfigurationPtr;
+	engine->setConfig(engine, &persistentConfig.engineConfiguration, &persistentConfig);
+	EXPAND_Engine;
+
+	INJECT_ENGINE_REFERENCE(&waveChart);
+	waveChart.init();
 
 	setCurveValue(config->cltFuelCorrBins, config->cltFuelCorr, CLT_CURVE_SIZE, -40, 1.5);
 	setCurveValue(config->cltFuelCorrBins, config->cltFuelCorr, CLT_CURVE_SIZE, -30, 1.5);
@@ -128,7 +136,7 @@ void EngineTestHelper::fireRise(float delayMs) {
 }
 
 void EngineTestHelper::smartFireRise(float delayMs) {
-	smartMoveTimeForwardUs(MS2US(delayMs));
+	moveTimeForwardAndInvokeEventsUs(MS2US(delayMs));
 	firePrimaryTriggerRise();
 }
 
@@ -138,7 +146,7 @@ void EngineTestHelper::fireFall(float delayMs) {
 }
 
 void EngineTestHelper::smartFireFall(float delayMs) {
-	smartMoveTimeForwardUs(MS2US(delayMs));
+	moveTimeForwardAndInvokeEventsUs(MS2US(delayMs));
 	firePrimaryTriggerFall();
 }
 
@@ -150,7 +158,7 @@ void EngineTestHelper::firePrimaryTriggerRise() {
 	Engine *engine = &this->engine;
 	EXPAND_Engine;
 	LogTriggerTooth(SHAFT_PRIMARY_RISING, nowNt PASS_ENGINE_PARAMETER_SUFFIX);
-	engine->triggerCentral.handleShaftSignal(SHAFT_PRIMARY_RISING, nowNt, engine, engine->engineConfigurationPtr, &persistentConfig);
+	engine->triggerCentral.handleShaftSignal(SHAFT_PRIMARY_RISING, nowNt PASS_ENGINE_PARAMETER_SUFFIX);
 }
 
 void EngineTestHelper::firePrimaryTriggerFall() {
@@ -158,7 +166,7 @@ void EngineTestHelper::firePrimaryTriggerFall() {
 	Engine *engine = &this->engine;
 	EXPAND_Engine;
 	LogTriggerTooth(SHAFT_PRIMARY_FALLING, nowNt PASS_ENGINE_PARAMETER_SUFFIX);
-	engine->triggerCentral.handleShaftSignal(SHAFT_PRIMARY_FALLING, nowNt, engine, engine->engineConfigurationPtr, &persistentConfig);
+	engine->triggerCentral.handleShaftSignal(SHAFT_PRIMARY_FALLING, nowNt PASS_ENGINE_PARAMETER_SUFFIX);
 }
 
 void EngineTestHelper::fireTriggerEventsWithDuration(float durationMs) {
@@ -197,6 +205,10 @@ void EngineTestHelper::moveTimeForwardMs(float deltaTimeMs) {
 	moveTimeForwardUs(MS2US(deltaTimeMs));
 }
 
+void EngineTestHelper::moveTimeForwardSec(float deltaTimeSec) {
+	moveTimeForwardUs(MS2US(1000 * deltaTimeSec));
+}
+
 void EngineTestHelper::moveTimeForwardUs(int deltaTimeUs) {
 	if (printTriggerDebug || printFuelDebug) {
 		printf("moveTimeForwardUs %.1fms\r\n", deltaTimeUs / 1000.0);
@@ -204,16 +216,16 @@ void EngineTestHelper::moveTimeForwardUs(int deltaTimeUs) {
 	timeNowUs += deltaTimeUs;
 }
 
-void EngineTestHelper::smartMoveTimeForwardSeconds(int deltaTimeSeconds) {
-	smartMoveTimeForwardUs(MS2US(1000 * deltaTimeSeconds));
+void EngineTestHelper::moveTimeForwardAndInvokeEventsSec(int deltaTimeSeconds) {
+	moveTimeForwardAndInvokeEventsUs(MS2US(1000 * deltaTimeSeconds));
 }
 
 /**
- * this method executed all pending events wile
+ * this method executes all pending events while moving time forward
  */
-void EngineTestHelper::smartMoveTimeForwardUs(int deltaTimeUs) {
+void EngineTestHelper::moveTimeForwardAndInvokeEventsUs(int deltaTimeUs) {
 	if (printTriggerDebug || printFuelDebug) {
-		printf("smartMoveTimeForwardUs %.1fms\r\n", deltaTimeUs / 1000.0);
+		printf("moveTimeForwardAndInvokeEventsUs %.1fms\r\n", deltaTimeUs / 1000.0);
 	}
 	int targetTime = timeNowUs + deltaTimeUs;
 

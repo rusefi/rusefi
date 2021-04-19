@@ -1,32 +1,38 @@
 #include "limp_manager.h"
 #include "engine.h"
-#include "map.h"
 #include "efilib.h"
 
 EXTERN_ENGINE;
 
 void LimpManager::updateState(int rpm) {
-	// User-configured hard RPM limit
-	bool isRevLimited = rpm > engine->getRpmHardLimit(PASS_ENGINE_PARAMETER_SIGNATURE);
+	Clearable allowFuel = CONFIG(isInjectionEnabled);
+	Clearable allowSpark = CONFIG(isIgnitionEnabled);
 
-	// TODO: user configurable what gets limited
-	bool limitFuel = isRevLimited;
-	bool limitSpark = isRevLimited;
+	// User-configured hard RPM limit
+	if (rpm > engine->getRpmHardLimit(PASS_ENGINE_PARAMETER_SIGNATURE)) {
+		if (CONFIG(cutFuelOnHardLimit)) {
+			allowFuel.clear();
+		}
+
+		if (CONFIG(cutSparkOnHardLimit)) {
+			allowSpark.clear();
+		}
+	}
 
 	// Force fuel limiting on the fault rev limit
 	if (rpm > m_faultRevLimit) {
-		limitFuel = true;
+		allowFuel.clear();
 	}
 
 	// Limit fuel only on boost pressure (limiting spark bends valves)
 	if (CONFIG(boostCutPressure) != 0) {
-		if (getMap(PASS_ENGINE_PARAMETER_SIGNATURE) > CONFIG(boostCutPressure)) {
-			limitFuel = true;
+		if (Sensor::get(SensorType::Map).value_or(0) > CONFIG(boostCutPressure)) {
+			allowFuel.clear();
 		}
 	}
 
-	m_transientLimitInjection = limitFuel;
-	m_transientLimitIgnition = limitSpark;
+	m_transientAllowInjection = allowFuel;
+	m_transientAllowIgnition = allowSpark;
 }
 
 void LimpManager::etbProblem() {
@@ -58,9 +64,9 @@ bool LimpManager::allowTriggerInput() const {
 }
 
 bool LimpManager::allowInjection() const {
-	return !m_transientLimitInjection && m_allowInjection;
+	return m_transientAllowInjection && m_allowInjection;
 }
 
 bool LimpManager::allowIgnition() const {
-	return !m_transientLimitIgnition && m_allowIgnition;
+	return m_transientAllowIgnition && m_allowIgnition;
 }

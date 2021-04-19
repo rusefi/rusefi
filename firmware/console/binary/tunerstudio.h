@@ -11,6 +11,8 @@
 
 #if EFI_TUNER_STUDIO
 #include "tunerstudio_outputs.h"
+#include "thread_controller.h"
+#include "thread_priority.h"
 
 typedef struct {
 	int queryCommandCounter;
@@ -35,12 +37,12 @@ extern tunerstudio_counters_s tsState;
 /**
  * handle non CRC wrapped command
  */
-bool handlePlainCommand(ts_channel_s *tsChannel, uint8_t command);
+bool handlePlainCommand(TsChannelBase* tsChannel, uint8_t command);
 
 /**
  * this command is part of protocol initialization
  */
-void handleQueryCommand(ts_channel_s *tsChannel, ts_response_format_e mode);
+void handleQueryCommand(TsChannelBase* tsChannel, ts_response_format_e mode);
 
 char *getWorkingPageAddr();
 
@@ -53,7 +55,6 @@ void requestBurn(void);
 
 void startTunerStudioConnectivity(void);
 void syncTunerStudioCopy(void);
-void runBinaryProtocolLoop(ts_channel_s *tsChannel);
 
 #if defined __GNUC__
 // GCC
@@ -70,5 +71,18 @@ post_packed {
 	short int offset;
 	short int count;
 } TunerStudioWriteChunkRequest;
+
+class TunerstudioThread : public ThreadController<CONNECTIVITY_THREAD_STACK> {
+public:
+	TunerstudioThread(const char* name)
+		: ThreadController(name, PRIO_CONSOLE)
+	{
+	}
+
+	// Initialize and return the channel to use for this thread.
+	virtual TsChannelBase* setupChannel() = 0;
+
+	void ThreadTask() override;
+};
 
 #endif /* EFI_TUNER_STUDIO */

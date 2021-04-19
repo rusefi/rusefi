@@ -15,7 +15,7 @@ jobs:
         fetch-depth: 0
 
     - name: Install Tools
-      run: sudo apt-get install ncftp sshpass
+      run: sudo apt-get install ncftp sshpass mtools
 
     - name: Generate Enum Strings
       working-directory: ./firmware/
@@ -41,6 +41,8 @@ jobs:
       run: |
         git config --local user.email "action@github.com"
         git config --local user.name "GitHub build-firmware Action"
+        # get the original ramdisk images back in order to not overwrite the default placeholder
+        git checkout -- firmware/hw_layer/mass_storage/ramdisk_image.h firmware/hw_layer/mass_storage/ramdisk_image_compressed.h
         git status
         OUT=$(git commit -am "Auto-generated configs and docs" 2>&1) || echo "commit failed, finding out why"
         if echo "$OUT" | grep 'nothing to commit'; then

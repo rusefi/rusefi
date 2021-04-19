@@ -5,6 +5,7 @@
 #include "table_helper.h"
 #include "pwm_generator_logic.h"
 #include "airmass.h"
+#include "injector_model.h"
 
 #include "gmock/gmock.h"
 
@@ -65,4 +66,11 @@ public:
 	MockVp3d veTable;
 
 	MOCK_METHOD(AirmassResult, getAirmass, (int rpm), (override));
+};
+
+class MockInjectorModel2 : public IInjectorModel {
+public:
+	MOCK_METHOD(void, prepare, (), (override));
+	MOCK_METHOD(floatms_t, getInjectionDuration, (float fuelMassGram), (const, override));
+	MOCK_METHOD(float, getFuelMassForDuration, (floatms_t duration), (const, override));
 };

@@ -37,4 +37,22 @@ public class VariableRegistryTest {
         assertEquals("ab'r'", registry.applyVariables("ab@@SD_r@@"));
         assertEquals("abr", registry.applyVariables("ab@@SD_r" + CHAR_SUFFIX + "@@"));
     }
+
+    @Test
+    public void testPrepend() {
+        VariableRegistry registry = new VariableRegistry();
+        registry.register("key_string", "value_1");
+        assertEquals("value_1", registry.get("key_string"));
+
+        registry.register("key_string", "value_2");
+        assertEquals("value_1", registry.get("key_string"));
+
+        registry.register("key_int", 1);
+        assertEquals("1", registry.get("key_int"));
+        assertEquals("1", registry.get("key_int" + _HEX_SUFFIX));
+
+        registry.register("key_int", 2);
+        assertEquals("1", registry.get("key_int"));
+        assertEquals("1", registry.get("key_int" + _HEX_SUFFIX));
+    }
 }

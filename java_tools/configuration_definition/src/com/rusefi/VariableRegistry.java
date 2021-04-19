@@ -1,6 +1,5 @@
 package com.rusefi;
 
-import com.rusefi.board_generator.BoardReader;
 import com.rusefi.enum_reader.Value;
 import com.rusefi.util.LazyFile;
 import com.rusefi.util.SystemOut;
@@ -64,7 +63,7 @@ public class VariableRegistry  {
             if (sb.length() > 0)
                 sb.append(", ");
 
-            String value = valueNameById.getOrDefault(i, BoardReader.INVALID);
+            String value = valueNameById.getOrDefault(i, "INVALID");
             sb.append("\"" + value + "\"");
         }
         return sb.toString();
@@ -105,8 +104,8 @@ public class VariableRegistry  {
         value = applyVariables(value);
         int multPosition = value.indexOf(MULT_TOKEN);
         if (!isQuoted(value, '"') && multPosition != -1) {
-            Integer first = Integer.valueOf(value.substring(0, multPosition));
-            Integer second = Integer.valueOf(value.substring(multPosition + 1));
+            Integer first = Integer.valueOf(value.substring(0, multPosition).trim());
+            Integer second = Integer.valueOf(value.substring(multPosition + 1).trim());
             value = String.valueOf(first * second);
         }
 

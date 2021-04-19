@@ -203,7 +203,7 @@ static void showLine(lcd_line_e line, int /*screenY*/) {
 		lcdPrintf("ING LAG %.2f", engine->engineState.running.injectorLag);
 		return;
 	case LL_VBATT:
-		lcdPrintf("Battery %.2fv", getVBatt(PASS_ENGINE_PARAMETER_SIGNATURE));
+		lcdPrintf("Battery %.2fv", Sensor::get(SensorType::BatteryVoltage).value_or(0));
 		return;
 	case LL_KNOCK:
 		getPinNameByAdcChannel("hip", engineConfiguration->hipOutputChannel, buffer);
@@ -212,7 +212,7 @@ static void showLine(lcd_line_e line, int /*screenY*/) {
 
 #if	EFI_ANALOG_SENSORS
 	case LL_BARO:
-		if (hasBaroSensor()) {
+		if (Sensor::hasSensor(SensorType::BarometricPressure)) {
 			lcdPrintf("Baro: %.2f", getBaroPressure());
 		} else {
 			lcdPrintf("Baro: none");
@@ -228,7 +228,7 @@ static void showLine(lcd_line_e line, int /*screenY*/) {
 		return;
 	case LL_MAP:
 		if (hasMapSensor(PASS_ENGINE_PARAMETER_SIGNATURE)) {
-			lcdPrintf("MAP %.2f", getMap(PASS_ENGINE_PARAMETER_SIGNATURE));
+			lcdPrintf("MAP %.2f", Sensor::get(SensorType::Map).value_or(0));
 		} else {
 			lcdPrintf("MAP: none");
 		}

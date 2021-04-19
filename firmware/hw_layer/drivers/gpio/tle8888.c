@@ -40,7 +40,7 @@
 #include "gpio/gpio_ext.h"
 #include "pin_repository.h"
 #include "os_util.h"
-#include "voltage.h"
+#include "thread_priority.h"
 
 EXTERN_ENGINE_CONFIGURATION;
 
@@ -344,7 +344,6 @@ static int tle8888_spi_rw(struct tle8888_priv *chip, uint16_t tx, uint16_t *rx_p
 	spiSelect(spi);
 	/* Atomic transfer operations. */
 	rx = spiPolledExchange(spi, tx);
-	//spiExchange(spi, 2, &tx, &rxb); 8 bit version just in case?
 	/* Slave Select de-assertion. */
 	spiUnselect(spi);
 	/* Ownership release. */
@@ -393,7 +392,7 @@ static int tle8888_spi_rw_array(struct tle8888_priv *chip, const uint16_t *tx, u
 		spiSelect(spi);
 		/* data transfer */
 		rxdata = spiPolledExchange(spi, tx[i]);
-		//spiExchange(spi, 2, &tx, &rxb); 8 bit version just in case?
+
 		if (rx)
 			rx[i] = rxdata;
 		/* Slave Select de-assertion. */
@@ -1200,7 +1199,7 @@ static int tle8888_init(void * data)
 
 	/* start thread */
 	chip->thread = chThdCreateStatic(chip->thread_wa, sizeof(chip->thread_wa),
-									 NORMALPRIO + 1, tle8888_driver_thread, chip);
+									 PRIO_GPIOCHIP, tle8888_driver_thread, chip);
 
 	return 0;
 }
@@ -1237,7 +1236,7 @@ struct gpiochip_ops tle8888_ops = {
  * @return return gpio chip base
  */
 
-int tle8888_add(unsigned int index, const struct tle8888_config *cfg) {
+int tle8888_add(brain_pin_e base, unsigned int index, const struct tle8888_config *cfg) {
 
 	efiAssert(OBD_PCM_Processor_Fault, cfg != NULL, "8888CFG", 0)
 
@@ -1262,11 +1261,13 @@ int tle8888_add(unsigned int index, const struct tle8888_config *cfg) {
 	chip->o_data_cached = 0;
 	chip->drv_state = TLE8888_WAIT_INIT;
 
-	/* register, return gpio chip base */
-	int ret = gpiochip_register(DRIVER_NAME, &tle8888_ops, TLE8888_SIGNALS, chip);
+	/* register */
+	int ret = gpiochip_register(base, DRIVER_NAME, &tle8888_ops, TLE8888_OUTPUTS, chip);
+	if (ret < 0)
+		return ret;
 
 	/* set default pin names, board init code can rewrite */
-	gpiochips_setPinNames(ret, tle8888_pin_names);
+	gpiochips_setPinNames(base, tle8888_pin_names);
 
 	return ret;
 }
@@ -1291,9 +1292,9 @@ void tle8888_req_init(void)
 
 #else /* BOARD_TLE8888_COUNT > 0 */
 
-int tle8888_add(unsigned int index, const struct tle8888_config *cfg)
+int tle8888_add(brain_pin_e base, unsigned int index, const struct tle8888_config *cfg)
 {
-	(void)index; (void)cfg;
+	(void)base; (void)index; (void)cfg;
 
 	return -1;
 }

@@ -42,7 +42,7 @@ static void showEgtInfo(void) {
 	scheduleMsg(logger, "EGT spi: %d", CONFIG(max31855spiDevice));
 
 	for (int i = 0; i < EGT_CHANNEL_COUNT; i++) {
-		if (CONFIG(max31855_cs)[i] != GPIO_UNASSIGNED) {
+		if (isBrainPinValid(CONFIG(max31855_cs)[i])) {
 			scheduleMsg(logger, "%d ETG @ %s", i, hwPortname(CONFIG(max31855_cs)[i]));
 		}
 	}
@@ -157,7 +157,7 @@ void initMax31855(Logging *sharedLogger, spi_device_e device, egt_cs_array_t max
 	addConsoleAction("egtread", (Void) egtRead);
 
 	for (int i = 0; i < EGT_CHANNEL_COUNT; i++) {
-		if (max31855_cs[i] != GPIO_UNASSIGNED) {
+		if (isBrainPinValid(max31855_cs[i])) {
 
 			initSpiCs(&spiConfig[i], max31855_cs[i]);
 

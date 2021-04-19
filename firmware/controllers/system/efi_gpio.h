@@ -91,6 +91,8 @@ private:
  */
 class NamedOutputPin : public virtual OutputPin {
 public:
+	DECLARE_ENGINE_PTR;
+
 	NamedOutputPin();
 	explicit NamedOutputPin(const char *name);
 	void setHigh();
@@ -200,7 +202,6 @@ public:
 
 	OutputPin fsioOutputs[FSIO_COMMAND_COUNT];
 	RegisteredOutputPin triggerDecoderErrorPin;
-	RegisteredOutputPin hipCs;
 	OutputPin sdCsPin;
 	OutputPin accelerometerCs;
 
@@ -216,6 +217,7 @@ private:
 
 	void stopInjectionPins();
 	void stopIgnitionPins();
+	void stopAuxValves();
 };
 
 #endif /* __cplusplus */

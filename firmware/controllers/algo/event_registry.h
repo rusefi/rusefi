@@ -58,6 +58,9 @@ class FuelSchedule {
 public:
 	FuelSchedule();
 
+	// Call this function if something happens that requires a rebuild, like a change to the trigger pattern
+	void invalidate();
+
 	// Call this every trigger tooth.  It will schedule all required injector events.
 	void onTriggerTooth(size_t toothIndex, int rpm, efitick_t nowNt DECLARE_ENGINE_PARAMETER_SUFFIX);
 
@@ -73,10 +76,7 @@ public:
 	 * injection events, per cylinder
 	 */
 	InjectionEvent elements[MAX_INJECTION_OUTPUT_COUNT];
-	bool isReady;
-
-private:
-	void clear();
+	bool isReady = false;
 };
 
 class AngleBasedEvent {

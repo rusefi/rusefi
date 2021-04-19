@@ -27,10 +27,7 @@ float getFuelCutOffCorrection(efitick_t nowNt, int rpm DECLARE_ENGINE_PARAMETER_
 angle_t getCltTimingCorrection(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 float getCrankingFuel(float baseFuel DECLARE_ENGINE_PARAMETER_SUFFIX);
 float getCrankingFuel3(float baseFuel, uint32_t revolutionCounterSinceStart DECLARE_ENGINE_PARAMETER_SUFFIX);
-floatms_t getInjectionDuration(int rpm DECLARE_ENGINE_PARAMETER_SUFFIX);
+floatms_t getInjectionMass(int rpm DECLARE_ENGINE_PARAMETER_SUFFIX);
 percent_t getInjectorDutyCycle(int rpm DECLARE_ENGINE_PARAMETER_SUFFIX);
 
 float getStandardAirCharge(DECLARE_ENGINE_PARAMETER_SIGNATURE);
-
-// convert injection duration (Ms/Nt) to fuel rate (L/h)
-float getFuelRate(floatms_t totalInjDuration, efitick_t timePeriod DECLARE_ENGINE_PARAMETER_SUFFIX);

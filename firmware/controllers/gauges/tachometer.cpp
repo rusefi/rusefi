@@ -8,6 +8,7 @@
  * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
+#include "pin_repository.h"
 #include "tachometer.h"
 #include "pwm_generator_logic.h"
 
@@ -67,7 +68,7 @@ void tachSignalCallback(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 
 void initTachometer(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	tachHasInit = false;
-	if (CONFIG(tachOutputPin) == GPIO_UNASSIGNED) {
+	if (!isBrainPinValid(CONFIG(tachOutputPin))) {
 		return;
 	}
 

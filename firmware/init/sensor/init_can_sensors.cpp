@@ -5,6 +5,7 @@
  * @author Matthew Kennedy, (c) 2020
  */
 
+#include "pin_repository.h"
 #include "engine_configuration.h"
 
 #if EFI_CAN_SUPPORT

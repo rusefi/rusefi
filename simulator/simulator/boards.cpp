@@ -11,8 +11,6 @@
 #include "engine_sniffer.h"
 #include "adc_math.h"
 
-static LoggingWithStorage logger("simulator board");
-
 EXTERN_ENGINE;
 
 int getAdcValue(const char *msg, int hwChannel) {

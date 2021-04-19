@@ -39,6 +39,14 @@ static const char* s_sensorNames[] = {
 
 	"Wastegate Position",
 	"Idle Valve Position",
+
+	"Flex Fuel",
+
+	"Battery Voltage",
+
+	"Barometric Pressure",
+
+	"Fuel Level %",
 };
 
 // This struct represents one sensor in the registry.
@@ -89,6 +97,11 @@ public:
 		// Get the sensor out of the entry
 		const Sensor *s = m_sensor;
 		if (s) {
+			// If this sensor says it doesn't exist, return unexpected
+			if (!s->hasSensor()) {
+				return unexpected;
+			}
+
 			// If we found the sensor, ask it for a result.
 			return s->get();
 		}
@@ -97,22 +110,22 @@ public:
 		return unexpected;
 	}
 
-	void showInfo(Logging* logger, const char* sensorName) const {
+	void showInfo(const char* sensorName) const {
 		if (m_useMock) {
-			scheduleMsg(logger, "Sensor \"%s\" mocked with value %.2f", sensorName, m_mockValue);
+			efiPrintf("Sensor \"%s\" mocked with value %.2f", sensorName, m_mockValue);
 		} else {
 			const auto sensor = m_sensor;
 
 			if (sensor) {
-				sensor->showInfo(logger, sensorName);
+				sensor->showInfo(sensorName);
 			} else {
-				scheduleMsg(logger, "Sensor \"%s\" is not configured.", sensorName);
+				efiPrintf("Sensor \"%s\" is not configured.", sensorName);
 			}
 		}
 	}
 
 	bool hasSensor() const {
-		return m_useMock || m_sensor;
+		return m_useMock || (m_sensor && m_sensor->hasSensor());
 	}
 
 	float getRaw() const {
@@ -245,20 +258,20 @@ bool Sensor::Register() {
 }
 
 // Print information about all sensors
-/*static*/ void Sensor::showAllSensorInfo(Logging* logger) {
+/*static*/ void Sensor::showAllSensorInfo() {
 	for (size_t i = 1; i < efi::size(s_sensorRegistry); i++) {
 		auto& entry = s_sensorRegistry[i];
 		const char* name = s_sensorNames[i];
 
-		entry.showInfo(logger, name);
+		entry.showInfo(name);
 	}
 }
 
 // Print information about a particular sensor
-/*static*/ void Sensor::showInfo(Logging* logger, SensorType type) {
+/*static*/ void Sensor::showInfo(SensorType type) {
 	auto entry = getEntryForType(type);
 
 	if (entry) {
-		entry->showInfo(logger, getSensorName(type));
+		entry->showInfo(getSensorName(type));
 	}
 }

@@ -17,18 +17,34 @@
 #define CAN_TIMEOUT MS2NT(100)
 
 class Logging;
+class CanListener;
 class CanSensorBase;
 
+#if EFI_CAN_SUPPORT
 void processCanRxMessage(const CANRxFrame& msg, Logging* logger, efitick_t nowNt);
+#endif // EFI_CAN_SUPPORT
+
+void registerCanListener(CanListener& listener);
 void registerCanSensor(CanSensorBase& sensor);
 
 // Indicate that an ack response was received from the wideband bootloader
 void handleWidebandBootloaderAck();
 // Update the firmware on any connected wideband controller
-void updateWidebandFirmware(Logging*);
+void updateWidebandFirmware();
+// Set the CAN index offset of any attached wideband controller
+void setWidebandOffset(uint8_t index);
 
 class CanWrite final : public PeriodicController<512> {
 public:
 	CanWrite();
 	void PeriodicTask(efitime_t nowNt) override;
 };
+
+// We need these helpers because the frame layout is different on STM32H7
+#ifdef STM32H7XX
+#define CAN_SID(f) ((f).std.SID)
+#define CAN_EID(f) ((f).ext.EID)
+#else
+#define CAN_SID(f) ((f).SID)
+#define CAN_EID(f) ((f).EID)
+#endif

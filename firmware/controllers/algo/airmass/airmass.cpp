@@ -1,5 +1,6 @@
 #include "airmass.h"
 #include "sensor.h"
+#include "idle_thread.h"
 
 EXTERN_ENGINE;
 
@@ -23,9 +24,9 @@ float AirmassModelBase::getVe(int rpm, float load) const {
 	float ve = m_veTable->getValue(rpm, load);
 
 	auto tps = Sensor::get(SensorType::Tps1);
-	// get VE from the separate table for Idle
-	if (tps.Valid && CONFIG(useSeparateVeForIdle)) {
-		float idleVe = interpolate2d("idleVe", rpm, config->idleVeBins, config->idleVe);
+	// get VE from the separate table for Idle if idling
+	if (isIdling() && tps && CONFIG(useSeparateVeForIdle)) {
+		float idleVe = interpolate2d(rpm, config->idleVeBins, config->idleVe);
 		// interpolate between idle table and normal (running) table using TPS threshold
 		ve = interpolateClamped(0.0f, idleVe, CONFIG(idlePidDeactivationTpsThreshold), ve, tps.Value);
 	}

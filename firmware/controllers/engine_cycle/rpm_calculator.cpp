@@ -45,7 +45,7 @@ extern WaveChart waveChart;
 #endif /* NO_RPM_EVENTS_TIMEOUT_SECS */
 
 float RpmCalculator::getRpmAcceleration() const {
-	return 1.0 * previousRpmValue / rpmValue;
+	return rpmRate;
 }
 
 bool RpmCalculator::isStopped() const {
@@ -94,9 +94,6 @@ RpmCalculator::RpmCalculator() :
 #endif /* EFI_PROD_CODE */
 	// todo: reuse assignRpmValue() method which needs PASS_ENGINE_PARAMETER_SUFFIX
 	// which we cannot provide inside this parameter-less constructor. need a solution for this minor mess
-
-	// we need this initial to have not_running at first invocation
-	lastRpmEventTimeNt = (efitick_t) DEEP_IN_THE_PAST_SECONDS * NT_PER_SECOND;
 }
 
 /**
@@ -118,11 +115,15 @@ bool RpmCalculator::checkIfSpinning(efitick_t nowNt) const {
 	 * note that the result of this subtraction could be negative, that would happen if
 	 * we have a trigger event between the time we've invoked 'getTimeNow' and here
 	 */
-	bool noRpmEventsForTooLong = nowNt - lastRpmEventTimeNt >= NT_PER_SECOND * NO_RPM_EVENTS_TIMEOUT_SECS; // Anything below 60 rpm is not running
+
+	// Anything below 60 rpm is not running
+	bool noRpmEventsForTooLong = lastTdcTimer.getElapsedSeconds(nowNt) > NO_RPM_EVENTS_TIMEOUT_SECS;
+
 	/**
 	 * Also check if there were no trigger events
 	 */
-	bool noTriggerEventsForTooLong = nowNt - engine->triggerCentral.triggerState.previousShaftEventTimeNt >= NT_PER_SECOND;
+	bool noTriggerEventsForTooLong = engine->triggerCentral.getTimeSinceTriggerEvent(nowNt) >= 1;
+
 	if (noRpmEventsForTooLong || noTriggerEventsForTooLong) {
 		return false;
 	}
@@ -201,6 +202,9 @@ uint32_t RpmCalculator::getRevolutionCounterM(void) const {
 
 void RpmCalculator::setStopped() {
 	revolutionCounterSinceStart = 0;
+
+	rpmRate = 0;
+
 	if (rpmValue != 0) {
 		assignRpmValue(0);
 		// needed by 'useNoiselessTriggerDecoder'
@@ -249,8 +253,9 @@ void rpmShaftPositionCallback(trigger_event_e ckpSignalType,
 	if (index == 0) {
 		bool hadRpmRecently = rpmState->checkIfSpinning(nowNt);
 
+		float periodSeconds = engine->rpmCalculator.lastTdcTimer.getElapsedSecondsAndReset(nowNt);
+
 		if (hadRpmRecently) {
-			efitick_t diffNt = nowNt - rpmState->lastRpmEventTimeNt;
 		/**
 		 * Four stroke cycle is two crankshaft revolutions
 		 *
@@ -258,16 +263,21 @@ void rpmShaftPositionCallback(trigger_event_e ckpSignalType,
 		 * and each revolution of crankshaft consists of two engine cycles revolutions
 		 *
 		 */
-			if (diffNt == 0) {
+			if (periodSeconds == 0) {
 				rpmState->setRpmValue(NOISY_RPM);
+				rpmState->rpmRate = 0;
 			} else {
 				int mult = (int)getEngineCycle(engine->getOperationMode(PASS_ENGINE_PARAMETER_SIGNATURE)) / 360;
-				float rpm = 60.0 * NT_PER_SECOND * mult / diffNt;
+				float rpm = 60 * mult / periodSeconds;
+
+				auto rpmDelta = rpm - rpmState->previousRpmValue;
+				rpmState->rpmRate = rpmDelta / (mult * periodSeconds);
+
 				rpmState->setRpmValue(rpm > UNREALISTIC_RPM ? NOISY_RPM : rpm);
 			}
 		}
+
 		rpmState->onNewEngineCycle();
-		rpmState->lastRpmEventTimeNt = nowNt;
 	}
 
 
@@ -286,9 +296,14 @@ void rpmShaftPositionCallback(trigger_event_e ckpSignalType,
 		// while transitioning  from 'spinning' to 'running'
 		// Replace 'normal' RPM with instant RPM for the initial spin-up period
 		engine->triggerCentral.triggerState.movePreSynchTimestamps(PASS_ENGINE_PARAMETER_SIGNATURE);
-		int prevIndex;
-		float instantRpm = engine->triggerCentral.triggerState.calculateInstantRpm(&engine->triggerCentral.triggerFormDetails,
-				&prevIndex, nowNt PASS_ENGINE_PARAMETER_SUFFIX);
+	}
+
+	// Always update instant RPM even when not spinning up
+	engine->triggerCentral.triggerState.updateInstantRpm(&engine->triggerCentral.triggerFormDetails, nowNt PASS_ENGINE_PARAMETER_SUFFIX);
+
+	if (rpmState->isSpinningUp()) {
+		float instantRpm = engine->triggerCentral.triggerState.getInstantRpm();
+
 		// validate instant RPM - we shouldn't skip the cranking state
 		instantRpm = minF(instantRpm, CONFIG(cranking.rpm) - 1);
 		rpmState->assignRpmValue(instantRpm);
@@ -307,6 +322,7 @@ static char rpmBuffer[_MAX_FILLER];
  * digital sniffer.
  */
 static void onTdcCallback(Engine *engine) {
+	UNUSED(engine);
 #if EFI_UNIT_TEST
 	if (!engine->needTdcCallback) {
 		return;
@@ -349,16 +365,13 @@ void tdcMarkCallback(
  * @return Current crankshaft angle, 0 to 720 for four-stroke
  */
 float getCrankshaftAngleNt(efitick_t timeNt DECLARE_ENGINE_PARAMETER_SUFFIX) {
-	efitick_t timeSinceZeroAngleNt = timeNt
-			- engine->rpmCalculator.lastRpmEventTimeNt;
+	float timeSinceZeroAngle = engine->rpmCalculator.lastTdcTimer.getElapsedSeconds(timeNt);
 
-	/**
-	 * even if we use 'getOneDegreeTimeUs' macros here, it looks like the
-	 * compiler is not smart enough to figure out that "A / ( B / C)" could be optimized into
-	 * "A * C / B" in order to replace a slower division with a faster multiplication.
-	 */
 	int rpm = GET_RPM();
-	return rpm == 0 ? NAN : timeSinceZeroAngleNt / getOneDegreeTimeNt(rpm);
+
+	float oneDegreeSeconds = (60.0f / 360) / rpm;
+
+	return rpm == 0 ? NAN : timeSinceZeroAngle / oneDegreeSeconds;
 }
 
 void initRpmCalculator(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX) {

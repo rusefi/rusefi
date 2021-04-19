@@ -21,11 +21,16 @@ public:
 		m_proxiedSensor = proxiedSensor;
 	}
 
-	void showInfo(Logging* logger, const char* sensorName) const override;
+	void showInfo(const char* sensorName) const override;
 
 private:
 	SensorResult get() const override {
 		return Sensor::get(m_proxiedSensor);
+	}
+
+	bool hasSensor() const override {
+		// query if the underlying sensor exists
+		return Sensor::hasSensor(m_proxiedSensor);
 	}
 
 	SensorType m_proxiedSensor = SensorType::Invalid;

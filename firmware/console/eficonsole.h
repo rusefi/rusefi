@@ -10,5 +10,4 @@
 #include "datalogging.h"
 
 void initializeConsole(Logging *sharedLogger);
-void print(const char *fmt, ...);
-
+void startUsbConsole();

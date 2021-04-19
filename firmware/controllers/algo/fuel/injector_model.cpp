@@ -23,6 +23,11 @@ expected<float> InjectorModel::getAbsoluteRailPressure() const {
 			// TODO: should this add baro pressure instead of 1atm?
 			return (CONFIG(fuelReferencePressure) + 101.325f);
 		case ICM_SensedRailPressure:
+			if (!Sensor::hasSensor(SensorType::FuelPressureInjector)) {
+				firmwareError(OBD_PCM_Processor_Fault, "Fuel pressure compensation is set to use a pressure sensor, but none is configured.");
+				return unexpected;
+			}
+
 			// TODO: what happens when the sensor fails?
 			return Sensor::get(SensorType::FuelPressureInjector);
 		default: return unexpected;
@@ -43,10 +48,20 @@ float InjectorModel::getInjectorFlowRatio() const {
 		return 1.0f;
 	}
 
-	float map = getMap(PASS_ENGINE_PARAMETER_SIGNATURE);
+	auto map = Sensor::get(SensorType::Map);
 
-	// TODO: what to do when pressureDelta is less than 0?
-	float pressureDelta = absRailPressure.Value - map;
+	// Map has failed, assume nominal pressure
+	if (!map) {
+		return 1.0f;
+	}
+
+	float pressureDelta = absRailPressure.Value - map.Value;
+
+	// Somehow pressure delta is less than 0, assume failed sensor and return default flow
+	if (pressureDelta <= 0) {
+		return 1.0f;
+	}
+
 	float pressureRatio = pressureDelta / referencePressure;
 	float flowRatio = sqrtf(pressureRatio);
 
@@ -73,8 +88,7 @@ float InjectorModel::getInjectorMassFlowRate() const {
 
 float InjectorModel::getDeadtime() const {
 	return interpolate2d(
-		"lag",
-		ENGINE(sensors.vBatt),
+		Sensor::get(SensorType::BatteryVoltage).value_or(VBAT_FALLBACK_VALUE),
 		engineConfiguration->injector.battLagCorrBins,
 		engineConfiguration->injector.battLagCorr
 	);
@@ -95,4 +109,9 @@ float InjectorModelBase::getInjectionDuration(float fuelMassGram) const {
 	} else {
 		return baseDuration + m_deadtime;
 	}
+}
+
+float InjectorModelBase::getFuelMassForDuration(floatms_t duration) const {
+	// Convert from ms -> grams
+	return duration * m_massFlowRate * 0.001f;
 }

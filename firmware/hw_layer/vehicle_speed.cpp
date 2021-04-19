@@ -68,7 +68,7 @@ static void speedInfo(void) {
 }
 
 bool hasVehicleSpeedSensor() {
-	return CONFIG(vehicleSpeedSensorInputPin) != GPIO_UNASSIGNED;
+	return (isBrainPinValid(CONFIG(vehicleSpeedSensorInputPin)));
 }
 
 #if HAL_VSS_USE_PAL

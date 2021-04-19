@@ -103,7 +103,7 @@ void rusEfiFunctionalTest(void) {
 	initTriggerDecoderLogger(&sharedLogger);
 #endif /* EFI_SHAFT_POSITION_INPUT */
 
-	engine->setConfig(config);
+	engine->setConfig();
 
 	initializeConsole(&sharedLogger);
 
@@ -114,7 +114,7 @@ void rusEfiFunctionalTest(void) {
 	// todo: reduce code duplication with initEngineContoller
 
 	resetConfigurationExt(NULL, FORD_ESCORT_GT PASS_ENGINE_PARAMETER_SUFFIX);
-	engine->directSelfStimulation = true;
+	enableTriggerStimulator();
 
 	commonInitEngineController(&sharedLogger);
 
@@ -162,5 +162,5 @@ void logMsg(const char *format, ...) {
 }
 
 BaseChannel * getConsoleChannel(void) {
-	return (BaseChannel *)EFI_CONSOLE_SERIAL_DEVICE;
+	return (BaseChannel *)TS_PRIMARY_SERIAL;
 }

@@ -2,6 +2,10 @@
 
 #include "efitime.h"
 
+/**
+ * Helper class with "has X amount of time elapsed since most recent reset" methods
+ * Brand new instances have most recent reset time far in the past, i.e. "hasElapse" is true for any reasonable range
+ */
 class Timer {
 public:
 	void reset();
@@ -18,6 +22,7 @@ public:
 	// then a time period representing 2^32 counts will be returned.
 	float getElapsedSeconds() const;
 	float getElapsedSeconds(efitick_t nowNt) const;
+	float getElapsedUs(efitick_t nowNt) const;
 
 	// Perform an atomic update event based on the passed timestamp,
 	// returning the delta between the last reset and the provided timestamp

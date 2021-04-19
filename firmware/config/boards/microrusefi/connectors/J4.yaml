@@ -1,0 +1,41 @@
+pins:
+  - pin: 3
+    id: GPIOB_8
+    class: outputs
+    function: I2C1_SCL or CAN1_RX
+    ts_name: AUX J2 PB8
+
+  - pin: 6
+    id: GPIOB_9
+    class: outputs
+    function: I2C1_SDA or CAN1_TX
+    ts_name: AUX J2 PB9
+
+  - pin: 10
+    id: GPIOC_12
+    class: outputs
+    function: SPI3_MOSI or USART3_CK or UART5_TX
+    ts_name: AUX J2 PC12
+
+  - pin: 7
+    id: GPIOA_15
+    class: outputs
+    function: SPI3_NSS (Chip Select)
+    ts_name: AUX J2 PA15
+
+info:
+  image:
+    file: J4.jpg
+  pins:
+    - pin: 3
+      x: 132
+      y: 257
+    - pin: 6
+      x: 211
+      y: 180
+    - pin: 7
+      x: 286
+      y: 255
+    - pin: 10
+      x: 366
+      y: 254

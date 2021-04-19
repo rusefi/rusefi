@@ -13,6 +13,21 @@
 
 #define SLOW_ADC_RATE 500
 
+static inline bool isAdcChannelValid(adc_channel_e hwChannel) {
+	if (hwChannel <= EFI_ADC_NONE) {
+		return false;
+	} else if (hwChannel >= EFI_ADC_LAST_CHANNEL) {
+		/* this should not happen!
+		 * if we have enum out of range somewhere in settings
+		 * that means something goes terribly wrong
+		 * TODO: should we say something?
+		 */
+		return false;
+	} else {
+		return true;
+	}
+}
+
 #if HAL_USE_ADC
 
 adc_channel_mode_e getAdcMode(adc_channel_e hwChannel);
@@ -28,7 +43,7 @@ adc_channel_e getAdcChannel(brain_pin_e pin);
 brain_pin_e getAdcChannelBrainPin(const char *msg, adc_channel_e hwChannel);
 
 // wait until at least 1 slowADC sampling is complete
-void waitForSlowAdc(int lastAdcCounter = 0);
+void waitForSlowAdc(uint32_t lastAdcCounter = 0);
 // get a number of completed slowADC samples
 int getSlowAdcCounter();
 
@@ -41,22 +56,8 @@ float getMCUInternalTemperature(void);
 void addChannel(const char *name, adc_channel_e setting, adc_channel_mode_e mode);
 void removeChannel(const char *name, adc_channel_e setting);
 
-/* Depth of the conversion buffer, channels are sampled X times each.*/
-#ifndef ADC_BUF_DEPTH_SLOW
-#define ADC_BUF_DEPTH_SLOW      8
-#endif /* ADC_BUF_DEPTH_SLOW */
-
-#ifndef ADC_BUF_DEPTH_FAST
-#define ADC_BUF_DEPTH_FAST      4
-#endif /* ADC_BUF_DEPTH_FAST */
-
-// todo: preprocessor way of doing 'max'?
-// max(ADC_BUF_DEPTH_SLOW, ADC_BUF_DEPTH_FAST)
-#define MAX_ADC_GRP_BUF_DEPTH 8
-
 #define getAdcValue(msg, hwChannel) getInternalAdcValue(msg, hwChannel)
 
-// todo: migrate to adcToVoltageInputDividerCoefficient
 #define adcToVoltsDivided(adc) (adcToVolts(adc) * engineConfiguration->analogInputDividerCoefficient)
 
 #else

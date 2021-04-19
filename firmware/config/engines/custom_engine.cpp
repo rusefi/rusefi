@@ -11,6 +11,7 @@
  * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
+#include "pin_repository.h"
 #include "custom_engine.h"
 #include "allsensors.h"
 #include "engine_math.h"
@@ -51,7 +52,7 @@ static void toggleTestAndScheduleNext(void *) {
  * https://github.com/rusefi/rusefi/issues/557 common rail / direct injection scheduling control test
  */
 void runSchedulingPrecisionTestIfNeeded(void) {
-	if (engineConfiguration->test557pin == GPIO_UNASSIGNED) {
+	if (!isBrainPinValid(engineConfiguration->test557pin)) {
 		return;
 	}
 
@@ -738,3 +739,11 @@ void setTest33816EngineConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	CONFIG(mc33816spiDevice) = SPI_DEVICE_3;
 	setBoschHDEV_5_injectors(PASS_CONFIG_PARAMETER_SIGNATURE);
 }
+
+void setHellen72etb(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
+	CONFIG(etbIo[0].directionPin1) = GPIOC_6;
+	CONFIG(etbIo[0].directionPin2) = GPIOC_7;
+	engineConfiguration->etb_use_two_wires = true;
+
+}
+

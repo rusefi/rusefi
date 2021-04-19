@@ -8,6 +8,8 @@
 
 #pragma once
 
+#define VBAT_FALLBACK_VALUE 12
+
 /**
  **************************************
  * SEE sensor.h ON HOW TO ADD NEW SENSOR TYPES
@@ -57,6 +59,14 @@ enum class SensorType : unsigned char {
 
 	WastegatePosition,
 	IdlePosition,
+
+	FuelEthanolPercent,
+
+	BatteryVoltage,
+
+	BarometricPressure,
+
+	FuelLevel,
 
 	// Leave me at the end!
 	PlaceholderLast

@@ -27,7 +27,7 @@ import static com.rusefi.waves.EngineReport.isCloseEnough;
 public class TestingUtils {
     private static final Logging log = getLogging(TestingUtils.class);
 
-    static boolean isRealHardware;
+    public static boolean isRealHardware;
 
     static void assertTrue(String msg, boolean b) {
         if (!b)

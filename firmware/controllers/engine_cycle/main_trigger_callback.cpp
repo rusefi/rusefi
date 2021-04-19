@@ -52,6 +52,7 @@
 #include "engine.h"
 #include "perf_trace.h"
 #include "sensor.h"
+#include "injector_model.h"
 #if EFI_LAUNCH_CONTROL
 #include "launch_control.h"
 #endif
@@ -78,7 +79,7 @@ void startSimultaniousInjection(Engine *engine) {
 	EXPAND_Engine;
 #endif // EFI_UNIT_TEST
 	efitick_t nowNt = getTimeNowNt();
-	for (int i = 0; i < engine->engineConfigurationPtr->specs.cylindersCount; i++) {
+	for (size_t i = 0; i < CONFIG(specs.cylindersCount); i++) {
 		enginePins.injectors[i].open(nowNt PASS_ENGINE_PARAMETER_SUFFIX);
 	}
 }
@@ -88,7 +89,7 @@ static void endSimultaniousInjectionOnlyTogglePins(Engine *engine) {
 	EXPAND_Engine;
 #endif
 	efitick_t nowNt = getTimeNowNt();
-	for (int i = 0; i < engine->engineConfigurationPtr->specs.cylindersCount; i++) {
+	for (size_t i = 0; i < CONFIG(specs.cylindersCount); i++) {
 		enginePins.injectors[i].close(nowNt PASS_ENGINE_PARAMETER_SUFFIX);
 	}
 }
@@ -126,6 +127,7 @@ void InjectorOutputPin::open(efitick_t nowNt DECLARE_ENGINE_PARAMETER_SUFFIX) {
 #if EFI_TOOTH_LOGGER
 	LogTriggerInjectorState(nowNt, true PASS_ENGINE_PARAMETER_SUFFIX);
 #endif // EFI_TOOTH_LOGGER
+		INJECT_ENGINE_REFERENCE(this);
 		setHigh();
 	}
 }
@@ -203,13 +205,11 @@ void InjectionEvent::onTriggerTooth(size_t trgEventIndex, int rpm, efitick_t now
 		return;
 	}
 
-	/**
-	 * todo: this is a bit tricky with batched injection. is it? Does the same
-	 * wetting coefficient works the same way for any injection mode, or is something
-	 * x2 or /2?
-	 */
+	// Perform wall wetting adjustment on fuel mass, not duration, so that
+	// it's correct during fuel pressure (injector flow) or battery voltage (deadtime) transients
+	const float injectionMassGrams = wallFuel.adjust(ENGINE(injectionMass) PASS_ENGINE_PARAMETER_SUFFIX);
+	const floatms_t injectionDuration = ENGINE(injectorModel)->getInjectionDuration(injectionMassGrams);
 
-	const floatms_t injectionDuration = wallFuel.adjust(ENGINE(injectionDuration) PASS_ENGINE_PARAMETER_SUFFIX);
 #if EFI_PRINTF_FUEL_DETAILS
 	if (printFuelDebug) {
 		printf("fuel index=%d injectionDuration=%.2fms adjusted=%.2fms\n",
@@ -224,15 +224,13 @@ void InjectionEvent::onTriggerTooth(size_t trgEventIndex, int rpm, efitick_t now
 	 * todo: pre-calculate 'numberOfInjections'
 	 * see also injectorDutyCycle
 	 */
-	if (!isCranking && injectionDuration * getNumberOfInjections(engineConfiguration->injectionMode PASS_ENGINE_PARAMETER_SUFFIX) > getEngineCycleDuration(rpm PASS_ENGINE_PARAMETER_SUFFIX)) {
+	int numberOfInjections = isCranking ? getNumberOfInjections(engineConfiguration->crankingInjectionMode PASS_ENGINE_PARAMETER_SUFFIX) : getNumberOfInjections(engineConfiguration->injectionMode PASS_ENGINE_PARAMETER_SUFFIX);
+	if (injectionDuration * numberOfInjections > getEngineCycleDuration(rpm PASS_ENGINE_PARAMETER_SUFFIX)) {
 		warning(CUSTOM_TOO_LONG_FUEL_INJECTION, "Too long fuel injection %.2fms", injectionDuration);
-	} else if (isCranking && injectionDuration * getNumberOfInjections(engineConfiguration->crankingInjectionMode PASS_ENGINE_PARAMETER_SUFFIX) > getEngineCycleDuration(rpm PASS_ENGINE_PARAMETER_SUFFIX)) {
-		warning(CUSTOM_TOO_LONG_CRANKING_FUEL_INJECTION, "Too long cranking fuel injection %.2fms", injectionDuration);
 	}
 
-	// Store 'pure' injection duration (w/o injector lag) for fuel rate calc.
-	engine->engineState.fuelConsumption.addData(injectionDuration - ENGINE(engineState.running.injectorLag));
-	
+	ENGINE(engineState.fuelConsumption).consumeFuel(injectionMassGrams * numberOfInjections, nowNt);
+
 	ENGINE(actualLastInjection) = injectionDuration;
 	if (cisnan(injectionDuration)) {
 		warning(CUSTOM_OBD_NAN_INJECTION, "NaN injection pulse");
@@ -320,7 +318,13 @@ static void handleFuel(const bool limitedFuel, uint32_t trgEventIndex, int rpm, 
 	efiAssertVoid(CUSTOM_STACK_6627, getCurrentRemainingStack() > 128, "lowstck#3");
 	efiAssertVoid(CUSTOM_ERR_6628, trgEventIndex < engine->engineCycleEventCount, "handleFuel/event index");
 
-	if (!isInjectionEnabled(PASS_ENGINE_PARAMETER_SIGNATURE) || limitedFuel) {
+	ENGINE(tpsAccelEnrichment.onNewValue(Sensor::get(SensorType::Tps1).value_or(0) PASS_ENGINE_PARAMETER_SUFFIX));
+	if (trgEventIndex == 0) {
+		ENGINE(tpsAccelEnrichment.onEngineCycleTps(PASS_ENGINE_PARAMETER_SIGNATURE));
+		ENGINE(engineLoadAccelEnrichment.onEngineCycle(PASS_ENGINE_PARAMETER_SIGNATURE));
+	}
+
+	if (limitedFuel) {
 		return;
 	}
 	if (ENGINE(isCylinderCleanupMode)) {
@@ -348,12 +352,6 @@ static void handleFuel(const bool limitedFuel, uint32_t trgEventIndex, int rpm, 
 	}
 #endif /* FUEL_MATH_EXTREME_LOGGING */
 
-	ENGINE(tpsAccelEnrichment.onNewValue(Sensor::get(SensorType::Tps1).value_or(0) PASS_ENGINE_PARAMETER_SUFFIX));
-	if (trgEventIndex == 0) {
-		ENGINE(tpsAccelEnrichment.onEngineCycleTps(PASS_ENGINE_PARAMETER_SIGNATURE));
-		ENGINE(engineLoadAccelEnrichment.onEngineCycle(PASS_ENGINE_PARAMETER_SIGNATURE));
-	}
-
 	fs->onTriggerTooth(trgEventIndex, rpm, nowNt PASS_ENGINE_PARAMETER_SUFFIX);
 }
 
@@ -371,7 +369,7 @@ uint32_t *cyccnt = (uint32_t*) &DWT->CYCCNT;
 void mainTriggerCallback(uint32_t trgEventIndex, efitick_t edgeTimestamp DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	ScopePerf perf(PE::MainTriggerCallback);
 
-	if (CONFIG(vvtMode) == MIATA_NB2 && ENGINE(triggerCentral.vvtSyncTimeNt) == 0) {
+	if (CONFIG(vvtMode[0]) == VVT_MIATA_NB2 && ENGINE(triggerCentral.vvtSyncTimeNt) == 0) {
 		// this is a bit spaghetti code for sure
 		// do not spark & do not fuel until we have VVT sync. NB2 is a special case
 		// due to symmetrical crank wheel and we need to make sure no spark happens out of sync
@@ -389,7 +387,7 @@ void mainTriggerCallback(uint32_t trgEventIndex, efitick_t edgeTimestamp DECLARE
 #endif // HW_CHECK_MODE
 
 #if EFI_CDM_INTEGRATION
-	if (trgEventIndex == 0 && CONFIG(cdmInputPin) != GPIO_UNASSIGNED) {
+	if (trgEventIndex == 0 && isBrainPinValid(CONFIG(cdmInputPin))) {
 		int cdmKnockValue = getCurrentCdmValue(engine->triggerCentral.triggerState.getTotalRevolutionCounter());
 		engine->knockLogic(cdmKnockValue);
 	}
@@ -450,7 +448,7 @@ void mainTriggerCallback(uint32_t trgEventIndex, efitick_t edgeTimestamp DECLARE
 	}
 
 	if (trgEventIndex == (uint32_t)CONFIG(ignMathCalculateAtIndex)) {
-		if (CONFIG(externalKnockSenseAdc) != EFI_ADC_NONE) {
+		if (isAdcChannelValid(CONFIG(externalKnockSenseAdc))) {
 			float externalKnockValue = getVoltageDivided("knock", engineConfiguration->externalKnockSenseAdc PASS_ENGINE_PARAMETER_SUFFIX);
 			engine->knockLogic(externalKnockValue PASS_ENGINE_PARAMETER_SUFFIX);
 		}
@@ -542,7 +540,7 @@ static void showMainInfo(Engine *engine) {
 	int rpm = GET_RPM();
 	float el = getFuelingLoad(PASS_ENGINE_PARAMETER_SIGNATURE);
 	scheduleMsg(logger, "rpm %d engine_load %.2f", rpm, el);
-	scheduleMsg(logger, "fuel %.2fms timing %.2f", getInjectionDuration(rpm PASS_ENGINE_PARAMETER_SUFFIX), engine->engineState.timingAdvance);
+	scheduleMsg(logger, "fuel %.2fms timing %.2f", ENGINE(injectionDuration), engine->engineState.timingAdvance);
 #endif /* EFI_PROD_CODE */
 }
 
@@ -553,9 +551,7 @@ void initMainEventListener(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX
 #if EFI_PROD_CODE
 	addConsoleActionP("maininfo", (VoidPtr) showMainInfo, engine);
 
-	printMsg(logger, "initMainLoop: %d", currentTimeMillis());
-	if (!isInjectionEnabled(PASS_ENGINE_PARAMETER_SIGNATURE))
-		printMsg(logger, "!!!!!!!!!!!!!!!!!!! injection disabled");
+	scheduleMsg(logger, "initMainLoop: %d", currentTimeMillis());
 #endif
 
 

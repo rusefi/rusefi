@@ -24,3 +24,4 @@ void canMazdaRX8(uint16_t cycle);
 void canDashboardW202(uint16_t cycle);
 void canDashboardBMWE90(uint16_t cycle);
 void canDashboardHaltech(uint16_t cycle);
+void canDashboardVagMqb();

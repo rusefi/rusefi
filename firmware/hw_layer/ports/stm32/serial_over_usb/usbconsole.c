@@ -13,6 +13,7 @@
 
 #include "usbconsole.h"
 #include "usbcfg.h"
+#include "mpu_util.h"
 
 static bool isUsbSerialInitialized = false;
 
@@ -20,6 +21,11 @@ static bool isUsbSerialInitialized = false;
  * start USB serial using hard-coded communications pins (see comments inside the code)
  */
 void usb_serial_start(void) {
+	usbPopulateSerialNumber(MCU_SERIAL_NUMBER_LOCATION, MCU_SERIAL_NUMBER_BYTES);
+
+	efiSetPadMode("USB DM", EFI_USB_SERIAL_DM, PAL_MODE_ALTERNATE(EFI_USB_AF));
+	efiSetPadMode("USB DP", EFI_USB_SERIAL_DP, PAL_MODE_ALTERNATE(EFI_USB_AF));
+
 	/*
 	 * Initializes a serial-over-USB CDC driver.
 	 */
@@ -34,19 +40,10 @@ void usb_serial_start(void) {
 // See also https://github.com/rusefi/rusefi/issues/705
 #ifndef EFI_SKIP_USB_DISCONNECT
 	usbDisconnectBus(serusbcfg.usbp);
-	chThdSleepMilliseconds(1500);
+	chThdSleepMilliseconds(250);
 #endif/* EFI_SKIP_USB_DISCONNECT */
 	usbStart(serusbcfg.usbp, &usbcfg);
 	usbConnectBus(serusbcfg.usbp);
-	
-#if HAL_USE_SERIAL
-	efiSetPadMode("USB DM", EFI_USB_SERIAL_DM, PAL_MODE_ALTERNATE(EFI_USB_AF));
-	efiSetPadMode("USB DP", EFI_USB_SERIAL_DP, PAL_MODE_ALTERNATE(EFI_USB_AF));
-	/*
-	 * Activates the serial driver using the driver default configuration.
-	 */
-	sdStart(&USB_SERIAL_DRIVER, NULL);
-#endif /* HAL_USE_SERIAL */
 
 	isUsbSerialInitialized = true;
 }

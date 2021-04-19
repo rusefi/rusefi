@@ -29,9 +29,9 @@ EXTERN_ENGINE;
 #include "main_trigger_callback.h"
 #endif /* EFI_ENGINE_CONTROL */
 
-static LoggingWithStorage logger("io_pins");
-
 bool efiReadPin(brain_pin_e pin) {
+	if (!isBrainPinValid(pin))
+		return false;
 	if (brain_pin_is_onchip(pin))
 		return palReadPad(getHwPort("readPin", pin), getHwPin("readPin", pin));
 	#if (BOARD_EXT_GPIOCHIPS > 0)
@@ -69,7 +69,7 @@ void efiSetPadModeWithoutOwnershipAcquisition(const char *msg, brain_pin_e brain
  */
 void efiSetPadMode(const char *msg, brain_pin_e brainPin, iomode_t mode)
 {
-	if (brainPin == GPIO_UNASSIGNED) {
+	if (!isBrainPinValid(brainPin)) {
 		// No pin configured, nothing to do here.
 		return;
 	}

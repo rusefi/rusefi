@@ -18,6 +18,7 @@
 #include "gpio/gpio_ext.h"
 #include "gpio/mc33972.h"
 #include "pin_repository.h"
+#include "thread_priority.h"
 
 #if (BOARD_MC33972_COUNT > 0)
 
@@ -304,7 +305,7 @@ static int mc33972_init(void * data)
 
 	if (!drv_task_ready) {
 		chThdCreateStatic(mc33972_thread_1_wa, sizeof(mc33972_thread_1_wa),
-						  NORMALPRIO + 1, mc33972_driver_thread, NULL);
+						  PRIO_GPIOCHIP, mc33972_driver_thread, NULL);
 		drv_task_ready = true;
 	}
 
@@ -332,7 +333,7 @@ struct gpiochip_ops mc33972_ops = {
  * @details Checks for valid config
  */
 
-int mc33972_add(unsigned int index, const struct mc33972_config *cfg)
+int mc33972_add(brain_pin_e base, unsigned int index, const struct mc33972_config *cfg)
 {
 	struct mc33972_priv *chip;
 
@@ -357,14 +358,14 @@ int mc33972_add(unsigned int index, const struct mc33972_config *cfg)
 	chip->drv_state = MC33972_WAIT_INIT;
 
 	/* register, return gpio chip base */
-	return gpiochip_register(DRIVER_NAME, &mc33972_ops, MC33972_INPUTS, chip);
+	return gpiochip_register(base, DRIVER_NAME, &mc33972_ops, MC33972_INPUTS, chip);
 }
 
 #else /* BOARD_MC33972_COUNT > 0 */
 
-int mc33972_add(unsigned int index, const struct mc33972_config *cfg)
+int mc33972_add(brain_pin_e base, unsigned int index, const struct mc33972_config *cfg)
 {
-	(void)index; (void)cfg;
+	(void)base; (void)index; (void)cfg;
 
 	return -1;
 }

@@ -14,9 +14,8 @@ expected<float> readGppwmChannel(gppwm_channel_e channel DECLARE_ENGINE_PARAMETE
 	switch (channel) {
 	case GPPWM_Tps:
 		return Sensor::get(SensorType::Tps1);
-	case GPPWM_Map: {
+	case GPPWM_Map:
 		return Sensor::get(SensorType::Map);
-	}
 	case GPPWM_Clt:
 		return Sensor::get(SensorType::Clt);
 	case GPPWM_Iat:
@@ -25,9 +24,15 @@ expected<float> readGppwmChannel(gppwm_channel_e channel DECLARE_ENGINE_PARAMETE
 		return getFuelingLoad(PASS_ENGINE_PARAMETER_SIGNATURE);
 	case GPPWM_IgnLoad:
 		return getIgnitionLoad(PASS_ENGINE_PARAMETER_SIGNATURE);
-	default:
-		return unexpected;
+	case GPPWM_AuxTemp1:
+		return Sensor::get(SensorType::AuxTemp1);
+	case GPPWM_AuxTemp2:
+		return Sensor::get(SensorType::AuxTemp2);
+	case GPPWM_Zero:
+		return 0;
 	}
+
+	return unexpected;
 }
 
 void GppwmChannel::setOutput(float result) {

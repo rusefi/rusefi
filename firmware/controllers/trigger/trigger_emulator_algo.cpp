@@ -16,6 +16,7 @@
 #include "state_sequence.h"
 #include "global.h"
 #include "efi_gpio.h"
+#include "pin_repository.h"
 
 int getPreviousIndex(const int currentIndex, const int size) {
 	return (currentIndex + size - 1) % size;
@@ -82,11 +83,6 @@ static float pwmSwitchTimesBuffer[PWM_PHASE_MAX_COUNT];
 
 PwmConfig triggerSignal(pwmSwitchTimesBuffer, sr);
 
-#define DO_NOT_STOP 999999999
-
-static int stopEmulationAtIndex = DO_NOT_STOP;
-static bool isEmulating = true;
-
 static Logging *logger;
 static int atTriggerVersion = 0;
 
@@ -134,13 +130,6 @@ static TriggerEmulatorHelper helper;
 static bool hasStimPins = false;
 
 static void emulatorApplyPinState(int stateIndex, PwmConfig *state) /* pwm_gen_callback */ {
-	if (stopEmulationAtIndex == stateIndex) {
-		isEmulating = false;
-	}
-	if (!isEmulating) {
-		return;
-	}
-
 	if (engine->directSelfStimulation) {
 		/**
 		 * this callback would invoke the input signal handlers directly
@@ -154,20 +143,15 @@ static void emulatorApplyPinState(int stateIndex, PwmConfig *state) /* pwm_gen_c
 		applyPinState(stateIndex, state);
 	}
 #endif /* EFI_PROD_CODE */
-
 }
 
-static void setEmulatorAtIndex(int index) {
-	stopEmulationAtIndex = index;
-}
+static bool hasInitTriggerEmulator = false;
 
-static void resumeStimulator() {
-	isEmulating = true;
-	stopEmulationAtIndex = DO_NOT_STOP;
-}
-
-void initTriggerEmulatorLogic(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX) {
-	logger = sharedLogger;
+static void initTriggerPwm() {
+	// No need to start more than once
+	if (hasInitTriggerEmulator) {
+		return;
+	}
 
 	TriggerWaveform *s = &engine->triggerCentral.triggerShape;
 	setTriggerEmulatorRPM(engineConfiguration->triggerSimulatorFrequency PASS_ENGINE_PARAMETER_SUFFIX);
@@ -175,14 +159,36 @@ void initTriggerEmulatorLogic(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUF
 			s->wave.channels[0].pinStates,
 			s->wave.channels[1].pinStates,
 			s->wave.channels[2].pinStates };
+	int phaseCount = s->getSize();
+	assertIsInBounds(phaseCount - 1, pwmSwitchTimesBuffer, "pwmSwitchTimesBuffer");
 	triggerSignal.weComplexInit("position sensor",
 			&engine->executor,
-			s->getSize(), s->wave.switchTimes, PWM_PHASE_MAX_WAVE_PER_PWM,
+			phaseCount, s->wave.switchTimes, PWM_PHASE_MAX_WAVE_PER_PWM,
 			pinStates, updateTriggerWaveformIfNeeded, (pwm_gen_callback*)emulatorApplyPinState);
 
+	hasInitTriggerEmulator = true;
+}
+
+void enableTriggerStimulator() {
+	initTriggerPwm();
+	engine->directSelfStimulation = true;
+}
+
+void enableExternalTriggerStimulator() {
+	initTriggerPwm();
+	engine->directSelfStimulation = false;
+}
+
+void disableTriggerStimulator() {
+	engine->directSelfStimulation = false;
+	triggerSignal.stop();
+	hasInitTriggerEmulator = false;
+}
+
+void initTriggerEmulatorLogic(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX) {
+	logger = sharedLogger;
+
 	addConsoleActionI(CMD_RPM, setTriggerEmulatorRPM);
-	addConsoleActionI("stop_stimulator_at_index", setEmulatorAtIndex);
-	addConsoleAction("resume_stimulator", resumeStimulator);
 }
 
 void onConfigurationChangeRpmEmulatorCallback(engine_configuration_s *previousConfiguration) {
@@ -209,7 +215,7 @@ void startTriggerEmulatorPins() {
 		brain_pin_e pin = CONFIG(triggerSimulatorPins)[i];
 
 		// Only bother trying to set output pins if they're configured
-		if (pin != GPIO_UNASSIGNED) {
+		if (isBrainPinValid(pin)) {
 			hasStimPins = true;
 		}
 

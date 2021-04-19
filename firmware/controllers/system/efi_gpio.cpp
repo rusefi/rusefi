@@ -34,7 +34,7 @@ extern WaveChart waveChart;
 EnginePins enginePins;
 static Logging* logger;
 
-static pin_output_mode_e DEFAULT_OUTPUT = OM_DEFAULT;
+pin_output_mode_e DEFAULT_OUTPUT = OM_DEFAULT;
 pin_output_mode_e INVERTED_OUTPUT = OM_INVERTED;
 
 static const char *sparkNames[] = { "Coil 1", "Coil 2", "Coil 3", "Coil 4", "Coil 5", "Coil 6", "Coil 7", "Coil 8",
@@ -116,8 +116,7 @@ EnginePins::EnginePins() :
 		alternatorPin("Alternator control", CONFIG_PIN_OFFSETS(alternatorControl)),
 		checkEnginePin("checkEnginePin", CONFIG_PIN_OFFSETS(malfunctionIndicator)),
 		tachOut("tachOut", CONFIG_PIN_OFFSETS(tachOutput)),
-		triggerDecoderErrorPin("led: trigger debug", CONFIG_PIN_OFFSETS(triggerError)),
-		hipCs("hipCs", CONFIG_PIN_OFFSETS(hip9011Cs))
+		triggerDecoderErrorPin("led: trigger debug", CONFIG_PIN_OFFSETS(triggerError))
 {
 	tachOut.name = PROTOCOL_TACH_NAME;
 	hpfpValve.name = PROTOCOL_HPFP_NAME;
@@ -177,6 +176,7 @@ bool EnginePins::stopPins() {
 void EnginePins::unregisterPins() {
 	stopInjectionPins();
     stopIgnitionPins();
+    stopAuxValves();
 
 #if EFI_ELECTRONIC_THROTTLE_BODY
 	unregisterEtbPins();
@@ -247,18 +247,33 @@ void EnginePins::stopInjectionPins(void) {
 #endif /* EFI_PROD_CODE */
 }
 
+void EnginePins::stopAuxValves(void) {
+#if EFI_PROD_CODE
+	for (int i = 0; i < AUX_DIGITAL_VALVE_COUNT; i++) {
+		NamedOutputPin *output = &enginePins.auxValve[i];
+		// todo: do we need auxValveMode and reuse code?
+		if (isConfigurationChanged(auxValves[i])) {
+			(output)->deInit();
+		}
+	}
+#endif /* EFI_PROD_CODE */
+}
+
 void EnginePins::startAuxValves(void) {
 #if EFI_PROD_CODE
 	for (int i = 0; i < AUX_DIGITAL_VALVE_COUNT; i++) {
 		NamedOutputPin *output = &enginePins.auxValve[i];
-		output->initPin(output->name, engineConfiguration->auxValves[i]);
+		// todo: do we need auxValveMode and reuse code?
+		if (isConfigurationChanged(auxValves[i])) {
+			output->initPin(output->name, engineConfiguration->auxValves[i]);
+		}
 	}
 #endif /* EFI_PROD_CODE */
 }
 
 void EnginePins::startIgnitionPins(void) {
 #if EFI_PROD_CODE
-	for (int i = 0; i < engineConfiguration->specs.cylindersCount; i++) {
+	for (size_t i = 0; i < engineConfiguration->specs.cylindersCount; i++) {
 		NamedOutputPin *output = &enginePins.coils[i];
 		if (isPinOrModeChanged(ignitionPins[i], ignitionPinMode)) {
 			output->initPin(output->name, CONFIG(ignitionPins)[i], &CONFIG(ignitionPinMode));
@@ -270,7 +285,7 @@ void EnginePins::startIgnitionPins(void) {
 void EnginePins::startInjectionPins(void) {
 #if EFI_PROD_CODE
 	// todo: should we move this code closer to the injection logic?
-	for (int i = 0; i < engineConfiguration->specs.cylindersCount; i++) {
+	for (size_t i = 0; i < engineConfiguration->specs.cylindersCount; i++) {
 		NamedOutputPin *output = &enginePins.injectors[i];
 		if (isPinOrModeChanged(injectionPins[i], injectionPinMode)) {
 			output->initPin(output->name, CONFIG(injectionPins)[i],
@@ -397,7 +412,7 @@ void OutputPin::setValue(int logicValue) {
 	currentLogicValue = logicValue;
 
 	// Nothing else to do if not configured
-	if (brainPin == GPIO_UNASSIGNED) {
+	if (!isBrainPinValid(brainPin)) {
 		return;
 	}
 
@@ -458,7 +473,7 @@ void OutputPin::initPin(const char *msg, brain_pin_e brainPin) {
 }
 
 void OutputPin::initPin(const char *msg, brain_pin_e brainPin, const pin_output_mode_e *outputMode) {
-	if (brainPin == GPIO_UNASSIGNED) {
+	if (!isBrainPinValid(brainPin)) {
 		return;
 	}
 
@@ -467,7 +482,7 @@ void OutputPin::initPin(const char *msg, brain_pin_e brainPin, const pin_output_
 
 	// Check that this OutputPin isn't already assigned to another pin (reinit is allowed to change mode)
 	// To avoid this error, call deInit() first
-	if (this->brainPin != GPIO_UNASSIGNED && this->brainPin != brainPin) {
+	if (isBrainPinValid(this->brainPin) && this->brainPin != brainPin) {
 		firmwareError(CUSTOM_OBD_PIN_CONFLICT, "outputPin [%s] already assigned, cannot reassign without unregister first", msg);
 		return;
 	}
@@ -544,7 +559,7 @@ void OutputPin::deInit() {
 	chibios_rt::CriticalSectionLocker csl;
 
 	// nothing to do if not registered in the first place
-	if (brainPin == GPIO_UNASSIGNED) {
+	if (!isBrainPinValid(brainPin)) {
 		return;
 	}
 

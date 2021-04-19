@@ -105,7 +105,7 @@ void initPotentiometers(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX) {
 
 	for (int i = 0; i < DIGIPOT_COUNT; i++) {
 		brain_pin_e csPin = CONFIG(digitalPotentiometerChipSelect)[i];
-		if (csPin == GPIO_UNASSIGNED) {
+		if (!isBrainPinValid(csPin)) {
 			continue;
                 }
 
@@ -124,8 +124,6 @@ void initPotentiometers(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX) {
 
 	setPotResistance(&potConfig[0], 0, 3000);
 	setPotResistance(&potConfig[0], 1, 7000);
-#else
-	print("digiPot logic disabled\r\n");
 #endif
 }
 

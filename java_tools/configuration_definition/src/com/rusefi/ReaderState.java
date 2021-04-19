@@ -49,8 +49,8 @@ public class ReaderState {
         }
         String[] bitNameParts = bitName.split(",");
 
-        String trueName = bitNameParts.length > 1 ? bitNameParts[1] : null;
-        String falseName = bitNameParts.length > 2 ? bitNameParts[2] : null;
+        String trueName = bitNameParts.length > 1 ? bitNameParts[1].replaceAll("\"", "") : null;
+        String falseName = bitNameParts.length > 2 ? bitNameParts[2].replaceAll("\"", "") : null;
 
         ConfigField bitField = new ConfigField(state, bitNameParts[0], comment, null, BOOLEAN_T, 0, null, false, false, null, -1, trueName, falseName);
         if (state.stack.isEmpty())
@@ -113,7 +113,7 @@ public class ReaderState {
 
         int multPosition = customSize.indexOf(MULT_TOKEN);
         if (multPosition != -1) {
-            String firstPart = customSize.substring(0, multPosition);
+            String firstPart = customSize.substring(0, multPosition).trim();
             int first;
             try {
                 first = Integer.parseInt(firstPart);
