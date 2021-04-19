@@ -142,11 +142,11 @@ static void showIdleInfo(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 			scheduleMsg(logger, "Coil A:");
 			scheduleMsg(logger, " pin1=%s", hwPortname(CONFIG(stepperDcIo[0].directionPin1)));
 			scheduleMsg(logger, " pin2=%s", hwPortname(CONFIG(stepperDcIo[0].directionPin2)));
-			showDcMotorInfo(logger, 2);
+			showDcMotorInfo(2);
 			scheduleMsg(logger, "Coil B:");
 			scheduleMsg(logger, " pin1=%s", hwPortname(CONFIG(stepperDcIo[1].directionPin1)));
 			scheduleMsg(logger, " pin2=%s", hwPortname(CONFIG(stepperDcIo[1].directionPin2)));
-			showDcMotorInfo(logger, 3);
+			showDcMotorInfo(3);
 		} else {
 			scheduleMsg(logger, "directionPin=%s reactionTime=%.2f", hwPortname(CONFIG(idle).stepperDirectionPin),
 					engineConfiguration->idleStepperReactionTime);
@@ -167,7 +167,7 @@ static void showIdleInfo(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	}
 
 	if (engineConfiguration->idleMode == IM_AUTO) {
-		getIdlePid(PASS_ENGINE_PARAMETER_SIGNATURE)->showPidStatus(logger, "idle");
+		getIdlePid(PASS_ENGINE_PARAMETER_SIGNATURE)->showPidStatus("idle");
 	}
 }
 
@@ -479,8 +479,8 @@ static percent_t automaticIdleController(float tpsPos, float rpm, int targetRpm,
 		engine->engineState.isAutomaticIdle = tps.Valid && engineConfiguration->idleMode == IM_AUTO;
 
 		if (engineConfiguration->isVerboseIAC && engine->engineState.isAutomaticIdle) {
-			scheduleMsg(logger, "Idle state %s", getIdle_state_e(engine->engineState.idle.idleState));
-			getIdlePid(PASS_ENGINE_PARAMETER_SIGNATURE)->showPidStatus(logger, "idle");
+			efiPrintf("Idle state %s", getIdle_state_e(engine->engineState.idle.idleState));
+			getIdlePid(PASS_ENGINE_PARAMETER_SIGNATURE)->showPidStatus("idle");
 		}
 
 		finishIdleTestIfNeeded();

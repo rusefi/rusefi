@@ -56,7 +56,6 @@ using SensorResult = expected<float>;
 
 // Fwd declare - nobody outside of Sensor.cpp needs to see inside this type
 class SensorRegistryEntry;
-class Logging;
 
 class Sensor {
 public:
@@ -66,13 +65,13 @@ public:
 	bool Register();
 
 	// Print information about this sensor
-	virtual void showInfo(Logging* logger, const char* sensorName) const = 0;
+	virtual void showInfo(const char* sensorName) const = 0;
 
 	// Print information about all sensors
-	static void showAllSensorInfo(Logging* logger);
+	static void showAllSensorInfo();
 
 	// Print information about a particular sensor
-	static void showInfo(Logging* logger, SensorType type);
+	static void showInfo(SensorType type);
 
 	// Remove all sensors from the sensor registry - tread carefully if you use this outside of a unit test
 	static void resetRegistry();

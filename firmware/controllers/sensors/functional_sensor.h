@@ -38,7 +38,7 @@ public:
 		return m_rawValue;
 	}
 
-	void showInfo(Logging* logger, const char* sensorName) const override;
+	void showInfo(const char* sensorName) const override;
 
 private:
 	// Conversion function for this sensor

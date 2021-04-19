@@ -122,7 +122,7 @@ public:
 
 protected:
 	// Print sensor info - current RPM state
-	void showInfo(Logging* logger, const char* sensorName) const override;
+	void showInfo(const char* sensorName) const override;
 
 private:
 	/**
