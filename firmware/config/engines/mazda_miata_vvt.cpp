@@ -781,6 +781,8 @@ void setMiataNB2_ProteusEngineConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE) 
     engineConfiguration->injectionMode = IM_SEQUENTIAL;
 
 
+    engineConfiguration->tachOutputPin = GPIOD_13; // 3O - TACH (PWM7)
+
     engineConfiguration->injectionPins[0] = GPIOD_7;  // BLU  # pin 3/black35
     engineConfiguration->injectionPins[1] = GPIOG_9;  // BLK  # pin 15/black35
     engineConfiguration->injectionPins[2] = GPIOG_10; // GRN  # pin 4/black35
