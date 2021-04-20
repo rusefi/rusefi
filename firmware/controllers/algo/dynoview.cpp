@@ -12,8 +12,6 @@
 #include "dynoview.h"
 #include "vehicle_speed.h"
 
-static Logging *logger;
-
 #if EFI_TUNER_STUDIO
 #include "tunerstudio_outputs.h"
 extern TunerStudioOutputChannels tsOutputChannels;
@@ -171,10 +169,6 @@ void updateDynoViewCan(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
     }
     
     dynoInstance.update(CAN);
-}
-
-void initDynoView(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX) {
-	logger = sharedLogger;
 }
 
 #endif /* EFI_DYNO_VIEW */

@@ -63,7 +63,7 @@ bool acceptCanRx(int sid DECLARE_ENGINE_PARAMETER_SUFFIX) {
 /**
  * this build-in CAN sniffer is very basic but that's our CAN sniffer
  */
-static void printPacket(const CANRxFrame &rx, Logging *logger) {
+static void printPacket(const CANRxFrame &rx) {
 	bool accept = acceptCanRx(CAN_SID(rx));
 	if (!accept) {
 		return;
@@ -72,7 +72,7 @@ static void printPacket(const CANRxFrame &rx, Logging *logger) {
 	// only print info if we're in can debug mode
 
 	// internet people use both hex and decimal to discuss packed IDs, for usability it's better to print both right here
-	scheduleMsg(logger, "CAN_rx %x %d %x, %x %x %x %x %x %x %x %x", CAN_SID(rx),
+	efiPrintf("CAN_rx %x %d %x, %x %x %x %x %x %x %x %x", CAN_SID(rx),
 			CAN_SID(rx), rx.DLC, rx.data8[0], rx.data8[1], rx.data8[2], rx.data8[3],
 			rx.data8[4], rx.data8[5], rx.data8[6], rx.data8[7]);
 
@@ -100,10 +100,9 @@ void registerCanSensor(CanSensorBase& sensor) {
 	sensor.Register();
 }
 
-void processCanRxMessage(const CANRxFrame &frame, Logging *logger,
-		efitick_t nowNt) {
+void processCanRxMessage(const CANRxFrame &frame, efitick_t nowNt) {
 	if (CONFIG(debugMode) == DBG_CAN) {
-		printPacket(frame, logger);
+		printPacket(frame);
 	}
 
 	serviceCanSubscribers(frame, nowNt);

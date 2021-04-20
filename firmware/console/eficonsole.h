@@ -7,7 +7,6 @@
  */
 
 #pragma once
-#include "datalogging.h"
 
-void initializeConsole(Logging *sharedLogger);
+void initializeConsole();
 void startUsbConsole();

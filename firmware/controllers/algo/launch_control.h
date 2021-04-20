@@ -10,8 +10,7 @@
 #include "engine_ptr.h"
 #include "timer.h"
 
-class Logging;
-void initLaunchControl(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX);
+void initLaunchControl(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 void setDefaultLaunchParameters(DECLARE_CONFIG_PARAMETER_SIGNATURE);
 void applyLaunchControlLimiting(bool *limitedSpark, bool *limitedFuel DECLARE_ENGINE_PARAMETER_SUFFIX);
 void updateLaunchConditions(DECLARE_ENGINE_PARAMETER_SIGNATURE);

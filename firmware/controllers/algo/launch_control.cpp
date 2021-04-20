@@ -25,7 +25,6 @@
 #include "advance_map.h"
 
 static bool isInit = false;
-static Logging *logger;
 
 LaunchControlBase launchInstance;
 
@@ -205,8 +204,7 @@ void applyLaunchControlLimiting(bool *limitedSpark, bool *limitedFuel DECLARE_EN
 	} 
 }
 
-void initLaunchControl(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX) {
-	logger = sharedLogger;
+void initLaunchControl(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	INJECT_ENGINE_REFERENCE(&launchInstance);
 
 	isInit = true;

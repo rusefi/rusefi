@@ -59,7 +59,7 @@ class StepperMotor final : private ThreadController<UTILITY_THREAD_STACK_SIZE> {
 public:
 	StepperMotor();
 
-	void initialize(StepperHw *hardware, int totalSteps, Logging *sharedLogger);
+	void initialize(StepperHw *hardware, int totalSteps);
 
 	void setTargetPosition(int targetPosition);
 	int getTargetPosition() const;

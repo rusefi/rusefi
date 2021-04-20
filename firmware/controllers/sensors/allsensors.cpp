@@ -15,8 +15,8 @@ EXTERN_ENGINE;
 
 ButtonDebounce acDebounce("ac_switch");
 
-void initSensors(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX) {
-	initMapDecoder(sharedLogger PASS_ENGINE_PARAMETER_SUFFIX);
+void initSensors(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+	initMapDecoder(PASS_ENGINE_PARAMETER_SIGNATURE);
 	acDebounce.init(15, CONFIG(acSwitch), CONFIG(acSwitchMode));
 }
 

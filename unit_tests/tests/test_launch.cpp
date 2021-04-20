@@ -128,9 +128,7 @@ TEST(LaunchControl, CompleteRun) {
 	bool spark, fuel;
 	WITH_ENGINE_TEST_HELPER(TEST_ENGINE);
 
-	LoggingWithStorage logger("test");
-
-	initLaunchControl(&logger,PASS_ENGINE_PARAMETER_SIGNATURE);
+	initLaunchControl(PASS_ENGINE_PARAMETER_SIGNATURE);
 
 	//load default config
 	setDefaultLaunchParameters(PASS_CONFIG_PARAMETER_SIGNATURE);

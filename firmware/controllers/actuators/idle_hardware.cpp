@@ -28,8 +28,6 @@ StepperMotor iacMotor;
 
 EXTERN_ENGINE;
 
-static Logging* logger;
-
 /**
  * When the IAC position value change is insignificant (lower than this threshold), leave the poor valve alone
  * todo: why do we have this logic? is this ever useful?
@@ -109,9 +107,7 @@ bool isIdleMotorBusy(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	return iacMotor.isBusy();
 }
 
-void initIdleHardware(Logging* sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX) {
-	logger = sharedLogger;
-
+void initIdleHardware(DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	if (CONFIG(useStepperIdle)) {
 		StepperHw* hw;
 
@@ -141,7 +137,7 @@ void initIdleHardware(Logging* sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX) {
 			hw = &iacStepperHw;
 		}
 
-		iacMotor.initialize(hw, CONFIG(idleStepperTotalSteps), logger);
+		iacMotor.initialize(hw, CONFIG(idleStepperTotalSteps));
 
 		// This greatly improves PID accuracy for steppers with a small number of steps
 		idlePositionSensitivityThreshold = 1.0f / engineConfiguration->idleStepperTotalSteps;
