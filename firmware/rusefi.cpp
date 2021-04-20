@@ -215,7 +215,7 @@ void runRusEfi(void) {
 	/**
 	 * Next we should initialize serial port console, it's important to know what's going on
 	 */
-	initializeConsole(&sharedLogger);
+	initializeConsole();
 
 #if EFI_TUNER_STUDIO
 	startTunerStudioConnectivity();

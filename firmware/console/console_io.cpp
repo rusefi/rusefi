@@ -62,9 +62,6 @@ void onDataArrived(void) {
 
 CommandHandler console_line_callback;
 
-static Logging *logger;
-
-void startConsole(Logging *sharedLogger, CommandHandler console_line_callback_p) {
-	logger = sharedLogger;
+void startConsole(CommandHandler console_line_callback_p) {
 	console_line_callback = console_line_callback_p;
 }

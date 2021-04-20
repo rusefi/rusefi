@@ -25,8 +25,6 @@ EXTERN_ENGINE;
 static fsio8_Map3D_u8t vvtTable1("vvt#1");
 static fsio8_Map3D_u8t vvtTable2("vvt#2");
 
-static Logging *logger;
-
 void VvtController::init(int index, int bankIndex, int camIndex, const ValueProvider3D* targetMap) {
 	this->index = index;
 	m_bank = bankIndex;
@@ -71,7 +69,7 @@ expected<percent_t> VvtController::getClosedLoop(angle_t setpoint, angle_t obser
 	float retVal = m_pid.getOutput(setpoint, observation);
 
 	if (engineConfiguration->isVerboseAuxPid1) {
-		scheduleMsg(logger, "aux duty: %.2f/value=%.2f/p=%.2f/i=%.2f/d=%.2f int=%.2f", retVal, observation,
+		efiPrintf("aux duty: %.2f/value=%.2f/p=%.2f/i=%.2f/d=%.2f int=%.2f", retVal, observation,
 				m_pid.getP(), m_pid.getI(), m_pid.getD(), m_pid.getIntegration());
 	}
 
@@ -130,15 +128,12 @@ void stopVvtControlPins() {
 	}
 }
 
-void initAuxPid(Logging *sharedLogger) {
+void initAuxPid() {
 
 	vvtTable1.init(config->vvtTable1, config->vvtTable1LoadBins,
 			config->vvtTable1RpmBins);
 	vvtTable2.init(config->vvtTable2, config->vvtTable2LoadBins,
 			config->vvtTable2RpmBins);
-
-
-	logger = sharedLogger;
 
 	for (int i = 0;i < CAM_INPUTS_COUNT;i++) {
 		INJECT_ENGINE_REFERENCE(&instances[i]);

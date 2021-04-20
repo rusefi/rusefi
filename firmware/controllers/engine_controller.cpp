@@ -568,7 +568,7 @@ void commonInitEngineController(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_S
 	initNewSensors();
 #endif /* EFI_UNIT_TEST */
 
-	initSensors(sharedLogger PASS_ENGINE_PARAMETER_SUFFIX);
+	initSensors(PASS_ENGINE_PARAMETER_SIGNATURE);
 
 	initAccelEnrichment(sharedLogger PASS_ENGINE_PARAMETER_SUFFIX);
 
@@ -579,7 +579,7 @@ void commonInitEngineController(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_S
 	initGpPwm(PASS_ENGINE_PARAMETER_SIGNATURE);
 
 #if EFI_IDLE_CONTROL
-	startIdleThread(sharedLogger PASS_ENGINE_PARAMETER_SUFFIX);
+	startIdleThread(PASS_ENGINE_PARAMETER_SIGNATURE);
 #endif /* EFI_IDLE_CONTROL */
 
 	initButtonShift(PASS_ENGINE_PARAMETER_SIGNATURE);
@@ -602,11 +602,7 @@ void commonInitEngineController(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_S
 #endif /* EFI_BOOST_CONTROL */
 
 #if EFI_LAUNCH_CONTROL
-	initLaunchControl(sharedLogger PASS_ENGINE_PARAMETER_SUFFIX);
-#endif
-
-#if EFI_DYNO_VIEW
-	initDynoView(sharedLogger PASS_ENGINE_PARAMETER_SUFFIX);
+	initLaunchControl(PASS_ENGINE_PARAMETER_SIGNATURE);
 #endif
 
 #if EFI_SHAFT_POSITION_INPUT
@@ -677,7 +673,7 @@ void initEngineContoller(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX) 
 #endif /* EFI_ALTERNATOR_CONTROL */
 
 #if EFI_AUX_PID
-	initAuxPid(sharedLogger);
+	initAuxPid();
 #endif /* EFI_AUX_PID */
 
 #if EFI_MALFUNCTION_INDICATOR

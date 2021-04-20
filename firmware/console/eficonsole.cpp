@@ -170,10 +170,10 @@ static void cmd_threads(void) {
 #endif
 }
 
-void initializeConsole(Logging *sharedLogger) {
-	initConsoleLogic(sharedLogger);
+void initializeConsole() {
+	initConsoleLogic();
 
-	startConsole(sharedLogger, &handleConsoleLine);
+	startConsole(&handleConsoleLine);
 
 	sayHello();
 	addConsoleAction("test", [](){ /* do nothing */});
