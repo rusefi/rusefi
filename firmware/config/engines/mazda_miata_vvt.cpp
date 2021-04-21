@@ -296,6 +296,10 @@ static void setMazdaMiataEngineNB2Defaults(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	setCommonNTCSensor(&engineConfiguration->iat, 2700);
 	setMAFTransferFunction(PASS_CONFIG_PARAMETER_SIGNATURE);
 
+    // second harmonic (aka double) is usually quieter background noise
+    // 13.8
+	engineConfiguration->knockBandCustom = 2 * HIP9011_BAND(engineConfiguration->cylinderBore);
+
 	// set tps_min 90
 	engineConfiguration->tpsMin = 100; // convert 12to10 bit (ADC/4)
 	// set tps_max 540
@@ -781,8 +785,6 @@ void setMiataNB2_ProteusEngineConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE) 
     engineConfiguration->injectionMode = IM_SEQUENTIAL;
 
 
-    engineConfiguration->tachOutputPin = GPIOD_13; // 3O - TACH (PWM7)
-
     engineConfiguration->injectionPins[0] = GPIOD_7;  // BLU  # pin 3/black35
     engineConfiguration->injectionPins[1] = GPIOG_9;  // BLK  # pin 15/black35
     engineConfiguration->injectionPins[2] = GPIOG_10; // GRN  # pin 4/black35
@@ -791,9 +793,6 @@ void setMiataNB2_ProteusEngineConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE) 
 
 
     CONFIG(enableSoftwareKnock) = true;
-    // second harmonic (aka double) is usually quieter background noise
-    // 13.8
-	engineConfiguration->knockBandCustom = 2 * HIP9011_BAND(engineConfiguration->cylinderBore);
 
     engineConfiguration->malfunctionIndicatorPin = GPIOB_6; // "Lowside 10"    # pin 20/black35
 
@@ -828,5 +827,8 @@ void setMiataNB2_ProteusEngineConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE) 
 void setMiataNB2_Hellen72(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
     setMazdaMiataEngineNB2Defaults(PASS_CONFIG_PARAMETER_SIGNATURE);
 	strcpy(CONFIG(vehicleName), "H72 test");
+
+    engineConfiguration->tachOutputPin = GPIOD_13; // 3O - TACH (PWM7)
+    engineConfiguration->alternatorControlPin = GPIOD_15; // 3M - ALTERN (PWM6)
 }
 #endif // HW_HELLEN
