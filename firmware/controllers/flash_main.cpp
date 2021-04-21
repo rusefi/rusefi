@@ -60,7 +60,7 @@ static void flashWriteThread(void*) {
 #endif // EFI_FLASH_WRITE_THREAD
 
 void setNeedToWriteConfiguration(void) {
-	scheduleMsg(logger, "Scheduling configuration write");
+	efiPrintf("Scheduling configuration write");
 	needToWriteConfiguration = true;
 
 #if EFI_FLASH_WRITE_THREAD
@@ -99,7 +99,7 @@ int eraseAndFlashCopy(flashaddr_t storageAddress, const TStorage& data)
 }
 
 void writeToFlashNow(void) {
-	scheduleMsg(logger, "Writing pending configuration...");
+	efiPrintf("Writing pending configuration...");
 
 	// Set up the container
 	persistentState.size = sizeof(persistentState);
@@ -114,9 +114,9 @@ void writeToFlashNow(void) {
 	bool isSuccess = (result1 == FLASH_RETURN_SUCCESS) && (result2 == FLASH_RETURN_SUCCESS);
 
 	if (isSuccess) {
-		scheduleMsg(logger, "FLASH_SUCCESS");
+		efiPrintf("FLASH_SUCCESS");
 	} else {
-		scheduleMsg(logger, "Flashing failed");
+		efiPrintf("Flashing failed");
 	}
 	assertEngineReference();
 
@@ -145,7 +145,7 @@ typedef enum {
 } persisted_configuration_state_e;
 
 static persisted_configuration_state_e doReadConfiguration(flashaddr_t address, Logging * logger) {
-	scheduleMsg(logger, "readFromFlash %x", address);
+	efiPrintf("readFromFlash %x", address);
 	intFlashRead(address, (char *) &persistentState, sizeof(persistentState));
 
 	if (!isValidCrc(&persistentState)) {
@@ -165,7 +165,7 @@ static persisted_configuration_state_e readConfiguration(Logging* logger) {
 	efiAssert(CUSTOM_ERR_ASSERT, getCurrentRemainingStack() > EXPECTED_REMAINING_STACK, "read f", PC_ERROR);
 	persisted_configuration_state_e result = doReadConfiguration(getFlashAddrFirstCopy(), logger);
 	if (result != PC_OK) {
-		scheduleMsg(logger, "Reading second configuration copy");
+		efiPrintf("Reading second configuration copy");
 		result = doReadConfiguration(getFlashAddrSecondCopy(), logger);
 	}
 
@@ -192,11 +192,11 @@ void readFromFlash() {
 	persisted_configuration_state_e result = readConfiguration(logger);
 
 	if (result == CRC_FAILED) {
-		scheduleMsg(logger, "Need to reset flash to default due to CRC");
+		efiPrintf("Need to reset flash to default due to CRC");
 	} else if (result == INCOMPATIBLE_VERSION) {
-		scheduleMsg(logger, "Resetting due to version mismatch but preserving engine type [%d]", engineConfiguration->engineType);
+		efiPrintf("Resetting due to version mismatch but preserving engine type [%d]", engineConfiguration->engineType);
 	} else {
-		scheduleMsg(logger, "Read valid configuration from flash!");
+		efiPrintf("Read valid configuration from flash!");
 	}
 }
 

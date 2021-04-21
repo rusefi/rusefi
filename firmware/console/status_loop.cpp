@@ -179,8 +179,6 @@ void writeLogLine(Writer& buffer) {
 
 static int prevCkpEventCounter = -1;
 
-static LoggingWithStorage logger2("main event handler");
-
 /**
  * Time when the firmware version was reported last time, in seconds
  * TODO: implement a request/response instead of just constantly sending this out
@@ -257,7 +255,7 @@ void updateDevConsoleState(void) {
 #if EFI_PROD_CODE
 	// todo: unify with simulator!
 	if (hasFirmwareError()) {
-		scheduleMsg(&logger, "%s error: %s", CRITICAL_PREFIX, getFirmwareError());
+		efiPrintf("%s error: %s", CRITICAL_PREFIX, getFirmwareError());
 		warningEnabled = false;
 		return;
 	}
@@ -295,27 +293,27 @@ void updateDevConsoleState(void) {
  */
 
 static void showFuelInfo2(float rpm, float engineLoad) {
-	scheduleMsg(&logger, "inj flow %.2fcc/min displacement %.2fL", engineConfiguration->injector.flow,
+	efiPrintf("inj flow %.2fcc/min displacement %.2fL", engineConfiguration->injector.flow,
 			engineConfiguration->specs.displacement);
 
-	scheduleMsg(&logger2, "algo=%s/pump=%s", getEngine_load_mode_e(engineConfiguration->fuelAlgorithm),
+	efiPrintf("algo=%s/pump=%s", getEngine_load_mode_e(engineConfiguration->fuelAlgorithm),
 			boolToString(enginePins.fuelPumpRelay.getLogicValue()));
 
-	scheduleMsg(&logger2, "injection phase=%.2f/global fuel correction=%.2f", getInjectionOffset(rpm, getFuelingLoad()), engineConfiguration->globalFuelCorrection);
+	efiPrintf("injection phase=%.2f/global fuel correction=%.2f", getInjectionOffset(rpm, getFuelingLoad()), engineConfiguration->globalFuelCorrection);
 
-	scheduleMsg(&logger2, "baro correction=%.2f", engine->engineState.baroCorrection);
+	efiPrintf("baro correction=%.2f", engine->engineState.baroCorrection);
 
 #if EFI_ENGINE_CONTROL
-	scheduleMsg(&logger, "base cranking fuel %.2f", engineConfiguration->cranking.baseFuel);
-	scheduleMsg(&logger2, "cranking fuel: %.2f", ENGINE(engineState.cranking.fuel));
+	efiPrintf("base cranking fuel %.2f", engineConfiguration->cranking.baseFuel);
+	efiPrintf("cranking fuel: %.2f", ENGINE(engineState.cranking.fuel));
 
 	if (!engine->rpmCalculator.isStopped()) {
 		float iatCorrection = engine->engineState.running.intakeTemperatureCoefficient;
 		float cltCorrection = engine->engineState.running.coolantTemperatureCoefficient;
 		floatms_t injectorLag = engine->engineState.running.injectorLag;
-		scheduleMsg(&logger2, "rpm=%.2f engineLoad=%.2f", rpm, engineLoad);
+		efiPrintf("rpm=%.2f engineLoad=%.2f", rpm, engineLoad);
 
-		scheduleMsg(&logger2, "iatCorrection=%.2f cltCorrection=%.2f injectorLag=%.2f", iatCorrection, cltCorrection,
+		efiPrintf("iatCorrection=%.2f cltCorrection=%.2f injectorLag=%.2f", iatCorrection, cltCorrection,
 				injectorLag);
 	}
 #endif

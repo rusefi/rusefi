@@ -113,7 +113,7 @@ static efitick_t getNextSwitchTimeNt(PwmConfig *state) {
 	float switchTime = state->mode == PM_NORMAL ? state->multiChannelStateSequence.getSwitchTime(state->safe.phaseIndex) : 1;
 	float periodNt = state->safe.periodNt;
 #if DEBUG_PWM
-	scheduleMsg(&logger, "iteration=%d switchTime=%.2f period=%.2f", iteration, switchTime, period);
+	efiPrintf("iteration=%d switchTime=%.2f period=%.2f", iteration, switchTime, period);
 #endif /* DEBUG_PWM */
 
 	/**
@@ -123,7 +123,7 @@ static efitick_t getNextSwitchTimeNt(PwmConfig *state) {
 	uint32_t timeToSwitchNt = (uint32_t)((iteration + switchTime) * periodNt);
 
 #if DEBUG_PWM
-	scheduleMsg(&logger, "start=%d timeToSwitch=%d", state->safe.start, timeToSwitch);
+	efiPrintf("start=%d timeToSwitch=%d", state->safe.start, timeToSwitch);
 #endif /* DEBUG_PWM */
 	return state->safe.startNt + timeToSwitchNt;
 }
@@ -170,7 +170,7 @@ void PwmConfig::handleCycleStart() {
 
 			forceCycleStart = false;
 #if DEBUG_PWM
-			scheduleMsg(&logger, "state reset start=%d iteration=%d", state->safe.start, state->safe.iteration);
+			efiPrintf("state reset start=%d iteration=%d", state->safe.start, state->safe.iteration);
 #endif
 		}
 }
@@ -184,8 +184,8 @@ efitick_t PwmConfig::togglePwmState() {
 	}
 
 #if DEBUG_PWM
-	scheduleMsg(&logger, "togglePwmState phaseIndex=%d iteration=%d", safe.phaseIndex, safe.iteration);
-	scheduleMsg(&logger, "period=%.2f safe.period=%.2f", period, safe.periodNt);
+	efiPrintf("togglePwmState phaseIndex=%d iteration=%d", safe.phaseIndex, safe.iteration);
+	efiPrintf("period=%.2f safe.period=%.2f", period, safe.periodNt);
 #endif
 
 	if (cisnan(periodNt)) {
@@ -224,7 +224,7 @@ efitick_t PwmConfig::togglePwmState() {
 
 	efitick_t nextSwitchTimeNt = getNextSwitchTimeNt(this);
 #if DEBUG_PWM
-	scheduleMsg(&logger, "%s: nextSwitchTime %d", state->name, nextSwitchTime);
+	efiPrintf("%s: nextSwitchTime %d", state->name, nextSwitchTime);
 #endif /* DEBUG_PWM */
 
 	// If we're very far behind schedule, restart the cycle fresh to avoid scheduling a huge pile of events all at once

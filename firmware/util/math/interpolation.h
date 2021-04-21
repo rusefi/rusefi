@@ -306,7 +306,7 @@ float interpolate3d(const char *msg, float x, const kType xBin[], int xBinSize, 
 	return interpolateMsg(msg, keyMin, keyMinValue, keyMax, keyMaxValue, y);
 }
 void setCurveValue(float bins[], float values[], int size, float key, float value);
-void initInterpolation(Logging *sharedLogger);
+void initInterpolation();
 
 class FastInterpolation {
 public:

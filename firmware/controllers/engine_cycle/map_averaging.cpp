@@ -315,7 +315,7 @@ void mapAveragingTriggerCallback(
 }
 
 static void showMapStats(void) {
-	scheduleMsg(logger, "per revolution %d", measurementsPerRevolution);
+	efiPrintf("per revolution %d", measurementsPerRevolution);
 }
 
 #if EFI_PROD_CODE

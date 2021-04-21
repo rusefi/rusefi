@@ -105,8 +105,6 @@ EXTERN_ENGINE;
 
 #if !EFI_UNIT_TEST
 
-static LoggingWithStorage logger("Engine Controller");
-
 /**
  * Would love to pass reference to configuration object into constructor but C++ does allow attributes after parenthesized initializer
  */
@@ -306,12 +304,12 @@ static void printAnalogChannelInfoExt(const char *name, adc_channel_e hwChannel,
 		float dividerCoeff) {
 #if HAL_USE_ADC
 	if (!isAdcChannelValid(hwChannel)) {
-		scheduleMsg(&logger, "ADC is not assigned for %s", name);
+		efiPrintf("ADC is not assigned for %s", name);
 		return;
 	}
 
 	float voltage = adcVoltage * dividerCoeff;
-	scheduleMsg(&logger, "%s ADC%d %s %s adc=%.2f/input=%.2fv/divider=%.2f", name, hwChannel, getAdc_channel_mode_e(getAdcMode(hwChannel)),
+	efiPrintf("%s ADC%d %s %s adc=%.2f/input=%.2fv/divider=%.2f", name, hwChannel, getAdc_channel_mode_e(getAdcMode(hwChannel)),
 			getPinNameByAdcChannel(name, hwChannel, pinNameBuffer), adcVoltage, voltage, dividerCoeff);
 #endif /* HAL_USE_ADC */
 }
@@ -323,7 +321,7 @@ static void printAnalogChannelInfo(const char *name, adc_channel_e hwChannel) {
 }
 
 static void printAnalogInfo(void) {
-	scheduleMsg(&logger, "analogInputDividerCoefficient: %.2f", engineConfiguration->analogInputDividerCoefficient);
+	efiPrintf("analogInputDividerCoefficient: %.2f", engineConfiguration->analogInputDividerCoefficient);
 
 	printAnalogChannelInfo("hip9011", engineConfiguration->hipOutputChannel);
 	printAnalogChannelInfo("fuel gauge", engineConfiguration->fuelLevelSensor);
@@ -371,7 +369,7 @@ static void getShort(int offset) {
 	/**
 	 * this response is part of rusEfi console API
 	 */
-	scheduleMsg(&logger, "short%s%d is %d", CONSOLE_DATA_PROTOCOL_TAG, offset, value);
+	efiPrintf("short%s%d is %d", CONSOLE_DATA_PROTOCOL_TAG, offset, value);
 }
 
 static void getByte(int offset) {
@@ -382,7 +380,7 @@ static void getByte(int offset) {
 	/**
 	 * this response is part of rusEfi console API
 	 */
-	scheduleMsg(&logger, "byte%s%d is %d", CONSOLE_DATA_PROTOCOL_TAG, offset, value);
+	efiPrintf("byte%s%d is %d", CONSOLE_DATA_PROTOCOL_TAG, offset, value);
 }
 
 static void onConfigurationChanged() {
@@ -398,7 +396,7 @@ static void onConfigurationChanged() {
 static void setBit(const char *offsetStr, const char *bitStr, const char *valueStr) {
 	int offset = atoi(offsetStr);
 	if (absI(offset) == absI(ERROR_CODE)) {
-		scheduleMsg(&logger, "invalid offset [%s]", offsetStr);
+		efiPrintf("invalid offset [%s]", offsetStr);
 		return;
 	}
 	if (isOutOfBounds(offset)) {
@@ -406,12 +404,12 @@ static void setBit(const char *offsetStr, const char *bitStr, const char *valueS
 	}
 	int bit = atoi(bitStr);
 	if (absI(bit) == absI(ERROR_CODE)) {
-		scheduleMsg(&logger, "invalid bit [%s]", bitStr);
+		efiPrintf("invalid bit [%s]", bitStr);
 		return;
 	}
 	int value = atoi(valueStr);
 	if (absI(value) == absI(ERROR_CODE)) {
-		scheduleMsg(&logger, "invalid value [%s]", valueStr);
+		efiPrintf("invalid value [%s]", valueStr);
 		return;
 	}
 	int *ptr = (int *) (&((char *) engineConfiguration)[offset]);
@@ -419,7 +417,7 @@ static void setBit(const char *offsetStr, const char *bitStr, const char *valueS
 	/**
 	 * this response is part of rusEfi console API
 	 */
-	scheduleMsg(&logger, "bit%s%d/%d is %d", CONSOLE_DATA_PROTOCOL_TAG, offset, bit, value);
+	efiPrintf("bit%s%d/%d is %d", CONSOLE_DATA_PROTOCOL_TAG, offset, bit, value);
 	onConfigurationChanged();
 }
 
@@ -449,7 +447,7 @@ static void getBit(int offset, int bit) {
 	/**
 	 * this response is part of rusEfi console API
 	 */
-	scheduleMsg(&logger, "bit%s%d/%d is %d", CONSOLE_DATA_PROTOCOL_TAG, offset, bit, value);
+	efiPrintf("bit%s%d/%d is %d", CONSOLE_DATA_PROTOCOL_TAG, offset, bit, value);
 }
 
 static void getInt(int offset) {
@@ -460,7 +458,7 @@ static void getInt(int offset) {
 	/**
 	 * this response is part of rusEfi console API
 	 */
-	scheduleMsg(&logger, "int%s%d is %d", CONSOLE_DATA_PROTOCOL_TAG, offset, value);
+	efiPrintf("int%s%d is %d", CONSOLE_DATA_PROTOCOL_TAG, offset, value);
 }
 
 static void setInt(const int offset, const int value) {
@@ -480,20 +478,20 @@ static void getFloat(int offset) {
 	/**
 	 * this response is part of rusEfi console API
 	 */
-	scheduleMsg(&logger, "float%s%d is %.5f", CONSOLE_DATA_PROTOCOL_TAG, offset, value);
+	efiPrintf("float%s%d is %.5f", CONSOLE_DATA_PROTOCOL_TAG, offset, value);
 }
 
 static void setFloat(const char *offsetStr, const char *valueStr) {
 	int offset = atoi(offsetStr);
 	if (absI(offset) == absI(ERROR_CODE)) {
-		scheduleMsg(&logger, "invalid offset [%s]", offsetStr);
+		efiPrintf("invalid offset [%s]", offsetStr);
 		return;
 	}
 	if (isOutOfBounds(offset))
 		return;
 	float value = atoff(valueStr);
 	if (cisnan(value)) {
-		scheduleMsg(&logger, "invalid value [%s]", valueStr);
+		efiPrintf("invalid value [%s]", valueStr);
 		return;
 	}
 	float *ptr = (float *) (&((char *) engineConfiguration)[offset]);
@@ -519,7 +517,7 @@ static void initConfigActions(void) {
 // todo: move this logic somewhere else?
 static void getKnockInfo(void) {
 	adc_channel_e hwChannel = engineConfiguration->externalKnockSenseAdc;
-	scheduleMsg(&logger, "externalKnockSenseAdc on ADC", getPinNameByAdcChannel("knock", hwChannel, pinNameBuffer));
+	efiPrintf("externalKnockSenseAdc on ADC", getPinNameByAdcChannel("knock", hwChannel, pinNameBuffer));
 
 	engine->printKnockState();
 }
@@ -527,7 +525,7 @@ static void getKnockInfo(void) {
 
 // this method is used by real firmware and simulator and unit test
 void commonInitEngineController(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX) {
-	initInterpolation(sharedLogger);
+	initInterpolation();
 
 #if EFI_SIMULATOR
 	printf("commonInitEngineController\n");
@@ -584,7 +582,7 @@ void commonInitEngineController(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_S
 
 	initButtonShift(PASS_ENGINE_PARAMETER_SIGNATURE);
 
-	initButtonDebounce(sharedLogger);
+	initButtonDebounce();
 	initStartStopButton(PASS_ENGINE_PARAMETER_SIGNATURE);
 
 #if EFI_ELECTRONIC_THROTTLE_BODY

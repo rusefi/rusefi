@@ -472,7 +472,7 @@ void TriggerWaveform::initializeTriggerWaveform(Logging *logger, operation_mode_
 
 #if EFI_PROD_CODE
 	efiAssertVoid(CUSTOM_ERR_6641, getCurrentRemainingStack() > EXPECTED_REMAINING_STACK, "init t");
-	scheduleMsg(logger, "initializeTriggerWaveform(%s/%d)", getTrigger_type_e(triggerConfig->type), (int) triggerConfig->type);
+	efiPrintf("initializeTriggerWaveform(%s/%d)", getTrigger_type_e(triggerConfig->type), (int) triggerConfig->type);
 #endif
 
 	shapeDefinitionError = false;

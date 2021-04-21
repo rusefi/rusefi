@@ -220,8 +220,6 @@ angle_t getEngineCycle(operation_mode_e operationMode);
 
 class Engine;
 
-void initTriggerDecoderLogger(Logging *sharedLogger);
-
 void calculateTriggerSynchPoint(
 	TriggerWaveform& shape,
 	TriggerState& state

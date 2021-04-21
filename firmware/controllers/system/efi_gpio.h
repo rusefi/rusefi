@@ -14,7 +14,7 @@
 #include "engine_configuration.h"
 #include "smart_gpio.h"
 
-void initPrimaryPins(Logging *sharedLogger);
+void initPrimaryPins();
 void initOutputPins(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 
 #if EFI_GPIO_HARDWARE
