@@ -49,7 +49,7 @@ int getSlowAdcCounter();
 
 int getAdcHardwareIndexByInternalIndex(int index);
 
-void printFullAdcReportIfNeeded();
+void printFullAdcReportIfNeeded(Logging *log);
 int getInternalAdcValue(const char *msg, adc_channel_e index);
 float getMCUInternalTemperature(void);
 
