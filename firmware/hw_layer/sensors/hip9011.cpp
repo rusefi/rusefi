@@ -83,8 +83,6 @@ HIP9011 instance(&hardware);
 
 static scheduling_s endTimer;
 
-static Logging *logger;
-
 // SPI_CR1_BR_1 // 5MHz
 // SPI_CR1_CPHA Clock Phase
 // todo: nicer method which would mention SPI speed explicitly?
@@ -418,9 +416,7 @@ void startHip9001_pins() {
 	Cs.initPin("hip CS", CONFIG(hip9011CsPin), &CONFIG(hip9011CsPinMode));
 }
 
-void initHip9011(Logging *sharedLogger) {
-	logger = sharedLogger;
-
+void initHip9011() {
 	if (!CONFIG(isHip9011Enabled))
 		return;
 
@@ -504,7 +500,7 @@ static void showHipInfo(void) {
 		CONFIG(hip9011CsPinMode));
 
 #if EFI_PROD_CODE
-	printSpiConfig(logger, "hip9011", CONFIG(hip9011SpiDevice));
+	printSpiConfig("hip9011", CONFIG(hip9011SpiDevice));
 #endif /* EFI_PROD_CODE */
 
 	efiPrintf(" SPI good response %d incorrect response %d",

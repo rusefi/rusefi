@@ -17,8 +17,6 @@
 
 EXTERN_ENGINE;
 
-static Logging *logger;
-
 static efitick_t lastSignalTimeNt = 0;
 static efitick_t vssDiff = 0;
 
@@ -103,8 +101,7 @@ void startVSSPins(void) {
 #endif /* HAL_VSS_USE_PAL, HAL_USE_ICU */
 }
 
-void initVehicleSpeed(Logging *l) {
-	logger = l;
+void initVehicleSpeed() {
 	addConsoleAction("speedinfo", speedInfo);
 	startVSSPins();
 }

@@ -524,7 +524,7 @@ static void getKnockInfo(void) {
 #endif /* EFI_UNIT_TEST */
 
 // this method is used by real firmware and simulator and unit test
-void commonInitEngineController(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX) {
+void commonInitEngineController(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	initInterpolation();
 
 #if EFI_SIMULATOR
@@ -568,10 +568,10 @@ void commonInitEngineController(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_S
 
 	initSensors(PASS_ENGINE_PARAMETER_SIGNATURE);
 
-	initAccelEnrichment(sharedLogger PASS_ENGINE_PARAMETER_SUFFIX);
+	initAccelEnrichment(PASS_ENGINE_PARAMETER_SIGNATURE);
 
 #if EFI_FSIO
-	initFsioImpl(sharedLogger PASS_ENGINE_PARAMETER_SUFFIX);
+	initFsioImpl(PASS_ENGINE_PARAMETER_SIGNATURE);
 #endif /* EFI_FSIO */
 
 	initGpPwm(PASS_ENGINE_PARAMETER_SIGNATURE);
@@ -591,12 +591,12 @@ void commonInitEngineController(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_S
 
 #if EFI_MAP_AVERAGING
 	if (engineConfiguration->isMapAveragingEnabled) {
-		initMapAveraging(sharedLogger PASS_ENGINE_PARAMETER_SUFFIX);
+		initMapAveraging(PASS_ENGINE_PARAMETER_SIGNATURE);
 	}
 #endif /* EFI_MAP_AVERAGING */
 
 #if EFI_BOOST_CONTROL
-	initBoostCtrl(sharedLogger PASS_ENGINE_PARAMETER_SUFFIX);
+	initBoostCtrl(PASS_ENGINE_PARAMETER_SIGNATURE);
 #endif /* EFI_BOOST_CONTROL */
 
 #if EFI_LAUNCH_CONTROL
@@ -608,17 +608,16 @@ void commonInitEngineController(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_S
 	 * there is an implicit dependency on the fact that 'tachometer' listener is the 1st listener - this case
 	 * other listeners can access current RPM value
 	 */
-	initRpmCalculator(sharedLogger PASS_ENGINE_PARAMETER_SUFFIX);
+	initRpmCalculator(PASS_ENGINE_PARAMETER_SIGNATURE);
 #endif /* EFI_SHAFT_POSITION_INPUT */
 
 #if (EFI_ENGINE_CONTROL && EFI_SHAFT_POSITION_INPUT) || EFI_SIMULATOR || EFI_UNIT_TEST
 	if (CONFIG(isEngineControlEnabled)) {
-		initAuxValves(sharedLogger PASS_ENGINE_PARAMETER_SUFFIX);
+		initAuxValves(PASS_ENGINE_PARAMETER_SIGNATURE);
 		/**
 		 * This method adds trigger listener which actually schedules ignition
 		 */
-		initSparkLogic(sharedLogger);
-		initMainEventListener(sharedLogger PASS_ENGINE_PARAMETER_SUFFIX);
+		initMainEventListener(PASS_ENGINE_PARAMETER_SIGNATURE);
 #if EFI_HPFP
 		initHPFP(PASS_ENGINE_PARAMETER_SIGNATURE);
 #endif // EFI_HPFP
@@ -630,18 +629,18 @@ void commonInitEngineController(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_S
 
 #if !EFI_UNIT_TEST
 
-void initEngineContoller(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX) {
+void initEngineContoller(DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	addConsoleAction("analoginfo", printAnalogInfo);
 
 #if EFI_PROD_CODE && EFI_ENGINE_CONTROL
-	initBenchTest(sharedLogger);
+	initBenchTest();
 #endif /* EFI_PROD_CODE && EFI_ENGINE_CONTROL */
 
-	commonInitEngineController(sharedLogger);
+	commonInitEngineController();
 
 #if EFI_LOGIC_ANALYZER
 	if (engineConfiguration->isWaveAnalyzerEnabled) {
-		initWaveAnalyzer(sharedLogger);
+		initWaveAnalyzer();
 	}
 #endif /* EFI_LOGIC_ANALYZER */
 
@@ -649,7 +648,7 @@ void initEngineContoller(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX) 
 	/**
 	 * this uses SimplePwm which depends on scheduler, has to be initialized after scheduler
 	 */
-	initCJ125(sharedLogger PASS_ENGINE_PARAMETER_SUFFIX);
+	initCJ125(PASS_ENGINE_PARAMETER_SIGNATURE);
 #endif /* EFI_CJ125 */
 
 
@@ -667,7 +666,7 @@ void initEngineContoller(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX) 
 #endif /* EFI_PWM_TESTER */
 
 #if EFI_ALTERNATOR_CONTROL
-	initAlternatorCtrl(sharedLogger PASS_ENGINE_PARAMETER_SUFFIX);
+	initAlternatorCtrl(PASS_ENGINE_PARAMETER_SIGNATURE);
 #endif /* EFI_ALTERNATOR_CONTROL */
 
 #if EFI_AUX_PID

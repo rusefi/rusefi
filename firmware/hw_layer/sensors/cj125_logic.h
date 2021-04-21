@@ -55,7 +55,6 @@ class CJ125 {
 public:
 	CJ125();
 	Cj125SpiStream *spi = nullptr;
-	Logging *logger = nullptr;
 
 	SimplePwm wboHeaterControl;
 

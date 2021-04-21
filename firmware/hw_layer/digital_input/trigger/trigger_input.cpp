@@ -19,11 +19,11 @@ EXTERN_ENGINE;
 #if (HAL_USE_ICU == TRUE) || (HAL_TRIGGER_USE_PAL == TRUE)
 
 #if (HAL_USE_ICU == TRUE)
-	void icuTriggerTurnOnInputPins(Logging *sharedLogger);
+	void icuTriggerTurnOnInputPins();
 	int  icuTriggerTurnOnInputPin(const char *msg, int index, bool isTriggerShaft);
 	void icuTriggerTurnOffInputPin(brain_pin_e brainPin);
 #else
-	#define icuTriggerTurnOnInputPins(sharedLogger) ((void)0)
+	#define icuTriggerTurnOnInputPins() ((void)0)
 	int  icuTriggerTurnOnInputPin(const char *msg, int index, bool isTriggerShaft) {
 		UNUSED(msg);
 		UNUSED(index);
@@ -35,11 +35,11 @@ EXTERN_ENGINE;
 #endif
 
 #if (HAL_TRIGGER_USE_PAL == TRUE)
-	void extiTriggerTurnOnInputPins(Logging *sharedLogger);
+	void extiTriggerTurnOnInputPins();
 	int  extiTriggerTurnOnInputPin(const char *msg, int index, bool isTriggerShaft);
 	void extiTriggerTurnOffInputPin(brain_pin_e brainPin);
 #else
-	#define extiTriggerTurnOnInputPins(sharedLogger) ((void)0)
+	#define extiTriggerTurnOnInputPins() ((void)0)
 	int  extiTriggerTurnOnInputPin(const char *msg, int index, bool isTriggerShaft) {
 		UNUSED(msg);
 		UNUSED(index);
@@ -161,10 +161,10 @@ void startTriggerInputPins(void) {
 	}
 }
 
-void turnOnTriggerInputPins(Logging *sharedLogger) {
+void turnOnTriggerInputPins() {
 	/* init all trigger HW available */
-	icuTriggerTurnOnInputPins(sharedLogger);
-	extiTriggerTurnOnInputPins(sharedLogger);
+	icuTriggerTurnOnInputPins();
+	extiTriggerTurnOnInputPins();
 
 	applyNewTriggerInputPins();
 }

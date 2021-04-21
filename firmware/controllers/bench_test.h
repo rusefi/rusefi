@@ -12,7 +12,7 @@
 
 #include "global.h"
 
-void initBenchTest(Logging *sharedLogger);
+void initBenchTest();
 
 bool isRunningBenchTest(void);
 

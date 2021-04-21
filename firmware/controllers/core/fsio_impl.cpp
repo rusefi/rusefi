@@ -115,7 +115,6 @@ static LEElement * starterRelayDisableLogic;
 static LEElement * mainRelayLogic;
 #endif /* EFI_MAIN_RELAY_CONTROL */
 
-static Logging *logger;
 #if EFI_PROD_CODE || EFI_SIMULATOR
 
 FsioResult getEngineValue(le_action_e action DECLARE_ENGINE_PARAMETER_SUFFIX) {
@@ -693,10 +692,8 @@ ValueProvider3D *getFSIOTable(int index) {
 	}
 }
 
-void initFsioImpl(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX) {
-#if EFI_PROD_CODE || EFI_SIMULATOR
-	logger = sharedLogger;
-#else
+void initFsioImpl(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+#if EFI_UNIT_TEST
 	// only unit test needs this
 	sysPool.reset();
 #endif

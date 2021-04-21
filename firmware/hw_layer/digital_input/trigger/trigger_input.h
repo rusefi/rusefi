@@ -28,7 +28,7 @@
 
 #define TRIGGER_SUPPORTED_CHANNELS 2
 
-void turnOnTriggerInputPins(Logging *sharedLogger);
+void turnOnTriggerInputPins();
 void applyNewTriggerInputPins(void);
 void startTriggerInputPins(void);
 void stopTriggerInputPins(void);

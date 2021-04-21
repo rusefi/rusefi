@@ -51,8 +51,6 @@ EXTERN_ENGINE;
 #define SPI_POT_CONFIG SPI_CR1_BR_2 | SPI_CR1_BR_1 | SPI_CR1_DFF
 #endif /* defined(STM32F4XX) */
 
-static Logging * logger;
-
 #if EFI_POTENTIOMETER
 static Mcp42010Driver potConfig[DIGIPOT_COUNT];
 
@@ -94,8 +92,7 @@ static void setPotValue1(int value) {
 
 #endif /* EFI_POTENTIOMETER */
 
-void initPotentiometers(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX) {
-	logger = sharedLogger;
+void initPotentiometers(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 #if EFI_POTENTIOMETER
 	if (CONFIG(digitalPotentiometerSpiDevice) == SPI_NONE) {
 		efiPrintf("digiPot spi disabled");

@@ -34,7 +34,6 @@ extern bool verboseMode;
 #endif // EFI_PRINTF_FUEL_DETAILS
 
 static cyclic_buffer<int> ignitionErrorDetection;
-static Logging *logger;
 
 static const char *prevSparkName = nullptr;
 
@@ -514,10 +513,6 @@ void onTriggerEventSparkLogic(bool limitedSpark, uint32_t trgEventIndex, int rpm
 			handleSparkEvent(limitedSpark, trgEventIndex, event, rpm, edgeTimestamp PASS_ENGINE_PARAMETER_SUFFIX);
 		}
 	}
-}
-
-void initSparkLogic(Logging *sharedLogger) {
-	logger = sharedLogger;
 }
 
 /**

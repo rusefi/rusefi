@@ -142,7 +142,7 @@ TEST(misc, testAngleResolver) {
 
 	TriggerWaveform * ts = &engine->triggerCentral.triggerShape;
 	TriggerFormDetails *triggerFormDetails = &engine->triggerCentral.triggerFormDetails;
-	engine->initializeTriggerWaveform(NULL PASS_ENGINE_PARAMETER_SUFFIX);
+	engine->initializeTriggerWaveform(PASS_ENGINE_PARAMETER_SIGNATURE);
 
 	assertEqualsM("index 2", 52.76, triggerFormDetails->eventAngles[3]); // this angle is relation to synch point
 	assertEqualsM("time 2", 0.3233, ts->wave.getSwitchTime(2));

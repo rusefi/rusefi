@@ -1182,7 +1182,7 @@ void setDefaultFrankensoConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 #define IGNORE_FLASH_CONFIGURATION false
 #endif
 
-void loadConfiguration(Logging* logger DECLARE_ENGINE_PARAMETER_SUFFIX) {
+void loadConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 #ifdef CONFIG_RESET_SWITCH_PORT
 	// initialize the reset pin if necessary
 	palSetPadMode(CONFIG_RESET_SWITCH_PORT, CONFIG_RESET_SWITCH_PIN, PAL_MODE_INPUT_PULLUP);
@@ -1196,7 +1196,7 @@ void loadConfiguration(Logging* logger DECLARE_ENGINE_PARAMETER_SUFFIX) {
 #if EFI_INTERNAL_FLASH
 	if (SHOULD_IGNORE_FLASH() || IGNORE_FLASH_CONFIGURATION) {
 		engineConfiguration->engineType = DEFAULT_ENGINE_TYPE;
-		resetConfigurationExt(logger, engineConfiguration->engineType PASS_ENGINE_PARAMETER_SUFFIX);
+		resetConfigurationExt(engineConfiguration->engineType PASS_ENGINE_PARAMETER_SUFFIX);
 		writeToFlashNow();
 	} else {
 		// this call reads configuration from flash memory or sets default configuration
@@ -1206,14 +1206,14 @@ void loadConfiguration(Logging* logger DECLARE_ENGINE_PARAMETER_SUFFIX) {
 #else // not EFI_INTERNAL_FLASH
 	// This board doesn't load configuration, initialize the default
 	engineConfiguration->engineType = DEFAULT_ENGINE_TYPE;
-	resetConfigurationExt(logger, engineConfiguration->engineType PASS_ENGINE_PARAMETER_SUFFIX);
+	resetConfigurationExt(engineConfiguration->engineType PASS_ENGINE_PARAMETER_SUFFIX);
 #endif /* EFI_INTERNAL_FLASH */
 
 	// Force any board configuration options that humans shouldn't be able to change
 	setBoardConfigOverrides();
 }
 
-void resetConfigurationExt(Logging * logger, configuration_callback_t boardCallback, engine_type_e engineType DECLARE_ENGINE_PARAMETER_SUFFIX) {
+void resetConfigurationExt(configuration_callback_t boardCallback, engine_type_e engineType DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	enginePins.reset(); // that's mostly important for functional tests
 	/**
 	 * Let's apply global defaults first
@@ -1474,7 +1474,7 @@ void resetConfigurationExt(Logging * logger, configuration_callback_t boardCallb
 	default:
 		firmwareError(CUSTOM_UNEXPECTED_ENGINE_TYPE, "Unexpected engine type: %d", engineType);
 	}
-	applyNonPersistentConfiguration(logger PASS_ENGINE_PARAMETER_SUFFIX);
+	applyNonPersistentConfiguration(PASS_ENGINE_PARAMETER_SIGNATURE);
 
 #if EFI_TUNER_STUDIO
 	syncTunerStudioCopy();
@@ -1485,8 +1485,8 @@ void emptyCallbackWithConfiguration(engine_configuration_s * engineConfiguration
 	UNUSED(engineConfiguration);
 }
 
-void resetConfigurationExt(Logging * logger, engine_type_e engineType DECLARE_ENGINE_PARAMETER_SUFFIX) {
-	resetConfigurationExt(logger, &emptyCallbackWithConfiguration, engineType PASS_ENGINE_PARAMETER_SUFFIX);
+void resetConfigurationExt(engine_type_e engineType DECLARE_ENGINE_PARAMETER_SUFFIX) {
+	resetConfigurationExt(&emptyCallbackWithConfiguration, engineType PASS_ENGINE_PARAMETER_SUFFIX);
 }
 
 void validateConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
@@ -1504,7 +1504,7 @@ void validateConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	}
 }
 
-void applyNonPersistentConfiguration(Logging * logger DECLARE_ENGINE_PARAMETER_SUFFIX) {
+void applyNonPersistentConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 #if EFI_PROD_CODE
 	efiAssertVoid(CUSTOM_APPLY_STACK, getCurrentRemainingStack() > EXPECTED_REMAINING_STACK, "apply c");
 	efiPrintf("applyNonPersistentConfiguration()");
@@ -1513,7 +1513,7 @@ void applyNonPersistentConfiguration(Logging * logger DECLARE_ENGINE_PARAMETER_S
 	assertEngineReference();
 
 #if EFI_ENGINE_CONTROL
-	ENGINE(initializeTriggerWaveform(logger PASS_ENGINE_PARAMETER_SUFFIX));
+	ENGINE(initializeTriggerWaveform(PASS_ENGINE_PARAMETER_SIGNATURE));
 #endif // EFI_ENGINE_CONTROL
 
 #if EFI_FSIO

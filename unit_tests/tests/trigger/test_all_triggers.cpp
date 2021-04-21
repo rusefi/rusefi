@@ -64,7 +64,7 @@ TEST_P(AllTriggersFixture, TestTrigger) {
 
 	TriggerWaveform *shape = &engine->triggerCentral.triggerShape;
 	TriggerFormDetails *triggerFormDetails = &engine->triggerCentral.triggerFormDetails;
-	engine->initializeTriggerWaveform(NULL PASS_ENGINE_PARAMETER_SUFFIX);
+	engine->initializeTriggerWaveform(PASS_ENGINE_PARAMETER_SIGNATURE);
 
 	ASSERT_FALSE(shape->shapeDefinitionError) << "Trigger shapeDefinitionError";
 

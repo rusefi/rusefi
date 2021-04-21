@@ -18,7 +18,6 @@ extern "C"
 
 #include "dfu.h"
 
-LoggingWithStorage tsLogger("binary");
 static bool wasCommand = false;
 
 static THD_WORKING_AREA(waBootloaderSerial, 128);

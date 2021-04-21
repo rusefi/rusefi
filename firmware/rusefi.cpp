@@ -136,8 +136,6 @@
 #include "engine_emulator.h"
 #endif /* EFI_ENGINE_EMULATOR */
 
-LoggingWithStorage sharedLogger("main");
-
 bool main_loop_started = false;
 
 static char panicMessage[200];
@@ -190,10 +188,10 @@ void runRusEfi(void) {
 	initDataStructures(PASS_ENGINE_PARAMETER_SIGNATURE);
 
 	// Perform hardware initialization that doesn't need configuration
-	initHardwareNoConfig(&sharedLogger);
+	initHardwareNoConfig();
 
 	// Read configuration from flash memory
-	loadConfiguration(&sharedLogger PASS_ENGINE_PARAMETER_SUFFIX);
+	loadConfiguration(PASS_ENGINE_PARAMETER_SIGNATURE);
 
 #if EFI_USB_SERIAL
 	startUsbConsole();
@@ -237,17 +235,17 @@ void runRusEfi(void) {
 		 * Now let's initialize actual engine control logic
 		 * todo: should we initialize some? most? controllers before hardware?
 		 */
-		initEngineContoller(&sharedLogger PASS_ENGINE_PARAMETER_SIGNATURE);
+		initEngineContoller(PASS_ENGINE_PARAMETER_SIGNATURE);
 
 		// This has to happen after RegisteredOutputPins are init'd: otherwise no change will be detected, and no init will happen
 		rememberCurrentConfiguration(PASS_ENGINE_PARAMETER_SIGNATURE);
 
 	#if EFI_PERF_METRICS
-		initTimePerfActions(&sharedLogger);
+		initTimePerfActions();
 	#endif
 			
 	#if EFI_ENGINE_EMULATOR
-		initEngineEmulator(&sharedLogger PASS_ENGINE_PARAMETER_SIGNATURE);
+		initEngineEmulator(PASS_ENGINE_PARAMETER_SIGNATURE);
 	#endif
 		startStatusThreads();
 

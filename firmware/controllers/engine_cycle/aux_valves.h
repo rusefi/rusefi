@@ -9,6 +9,6 @@
 
 #include "engine.h"
 
-void initAuxValves(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX);
+void initAuxValves(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 void recalculateAuxValveTiming(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 void auxPlainPinTurnOn(AuxActor *current);

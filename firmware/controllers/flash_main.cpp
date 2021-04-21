@@ -27,7 +27,6 @@
 static bool needToWriteConfiguration = false;
 
 EXTERN_ENGINE;
-static Logging* logger;
 
 extern persistent_config_container_s persistentState;
 
@@ -133,7 +132,7 @@ static bool isValidCrc(persistent_config_container_s *state) {
 }
 
 static void doResetConfiguration(void) {
-	resetConfigurationExt(logger, engineConfiguration->engineType PASS_ENGINE_PARAMETER_SUFFIX);
+	resetConfigurationExt(engineConfiguration->engineType PASS_ENGINE_PARAMETER_SUFFIX);
 }
 
 typedef enum {
@@ -144,7 +143,7 @@ typedef enum {
 	PC_ERROR = 4
 } persisted_configuration_state_e;
 
-static persisted_configuration_state_e doReadConfiguration(flashaddr_t address, Logging * logger) {
+static persisted_configuration_state_e doReadConfiguration(flashaddr_t address) {
 	efiPrintf("readFromFlash %x", address);
 	intFlashRead(address, (char *) &persistentState, sizeof(persistentState));
 
@@ -161,25 +160,25 @@ static persisted_configuration_state_e doReadConfiguration(flashaddr_t address, 
  * this method could and should be executed before we have any
  * connectivity so no console output here
  */
-static persisted_configuration_state_e readConfiguration(Logging* logger) {
+static persisted_configuration_state_e readConfiguration() {
 	efiAssert(CUSTOM_ERR_ASSERT, getCurrentRemainingStack() > EXPECTED_REMAINING_STACK, "read f", PC_ERROR);
-	persisted_configuration_state_e result = doReadConfiguration(getFlashAddrFirstCopy(), logger);
+	persisted_configuration_state_e result = doReadConfiguration(getFlashAddrFirstCopy());
 	if (result != PC_OK) {
 		efiPrintf("Reading second configuration copy");
-		result = doReadConfiguration(getFlashAddrSecondCopy(), logger);
+		result = doReadConfiguration(getFlashAddrSecondCopy());
 	}
 
 	if (result == CRC_FAILED) {
 	    // we are here on first boot on brand new chip
 		warning(CUSTOM_ERR_FLASH_CRC_FAILED, "flash CRC failed");
-		resetConfigurationExt(logger, DEFAULT_ENGINE_TYPE PASS_ENGINE_PARAMETER_SUFFIX);
+		resetConfigurationExt(DEFAULT_ENGINE_TYPE PASS_ENGINE_PARAMETER_SUFFIX);
 	} else if (result == INCOMPATIBLE_VERSION) {
-		resetConfigurationExt(logger, engineConfiguration->engineType PASS_ENGINE_PARAMETER_SUFFIX);
+		resetConfigurationExt(engineConfiguration->engineType PASS_ENGINE_PARAMETER_SUFFIX);
 	} else {
 		/**
 		 * At this point we know that CRC and version number is what we expect. Safe to assume it's a valid configuration.
 		 */
-		applyNonPersistentConfiguration(logger PASS_ENGINE_PARAMETER_SUFFIX);
+		applyNonPersistentConfiguration(PASS_ENGINE_PARAMETER_SIGNATURE);
 	}
 	// we can only change the state after the CRC check
 	engineConfiguration->byFirmwareVersion = getRusEfiVersion();
@@ -189,7 +188,7 @@ static persisted_configuration_state_e readConfiguration(Logging* logger) {
 }
 
 void readFromFlash() {
-	persisted_configuration_state_e result = readConfiguration(logger);
+	persisted_configuration_state_e result = readConfiguration();
 
 	if (result == CRC_FAILED) {
 		efiPrintf("Need to reset flash to default due to CRC");
@@ -215,9 +214,7 @@ static void writeConfigCommand() {
 	writeToFlashNow();
 }
 
-void initFlash(Logging *sharedLogger) {
-	logger = sharedLogger;
-
+void initFlash() {
 	addConsoleAction("readconfig", readFromFlash);
 	/**
 	 * This would write NOW (you should not be doing this while connected to real engine)

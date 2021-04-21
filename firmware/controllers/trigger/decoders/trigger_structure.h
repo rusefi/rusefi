@@ -86,7 +86,7 @@ class Logging;
 class TriggerWaveform {
 public:
 	TriggerWaveform();
-	void initializeTriggerWaveform(Logging *logger, operation_mode_e ambiguousOperationMode,
+	void initializeTriggerWaveform(operation_mode_e ambiguousOperationMode,
 			bool useOnlyRisingEdgeForTrigger, const trigger_config_s *triggerConfig);
 	void setShapeDefinitionError(bool value);
 
