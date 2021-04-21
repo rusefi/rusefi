@@ -238,6 +238,8 @@ void lcd_HD44780_init() {
 	if (!lcd_HD44780_is_enabled())
 		return;
 
+	startHD44780_pins();
+
 	chThdSleepMilliseconds(20); // LCD needs some time to wake up
 	lcd_HD44780_write(LCD_HD44780_RESET); // reset 1x
 	chThdSleepMilliseconds(1);
