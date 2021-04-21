@@ -440,7 +440,7 @@ void initHip9011(Logging *sharedLogger) {
 	/* load settings */
 	instance.prescaler = CONFIG(hip9011PrescalerAndSDO);
 
-	scheduleMsg(logger, "Starting HIP9011/TPIC8101 driver");
+	efiPrintf("Starting HIP9011/TPIC8101 driver");
 
 	chThdCreateStatic(hipThreadStack, sizeof(hipThreadStack), PRIO_HIP9011, (tfunc_t)(void*) hipThread, NULL);
 
@@ -453,52 +453,52 @@ void initHip9011(Logging *sharedLogger) {
 
 static void showHipInfo(void) {
 	if (!CONFIG(isHip9011Enabled)) {
-		scheduleMsg(logger, "hip9011 driver not active");
+		efiPrintf("hip9011 driver not active");
 		return;
 	}
 
-	scheduleMsg(logger, "HIP9011: enabled %s state %s",
+	efiPrintf("HIP9011: enabled %s state %s",
 		boolToString(CONFIG(isHip9011Enabled)),
 		getHip_state_e(instance.state));
 
-	scheduleMsg(logger, " Advanced mode: enabled %d used %d",
+	efiPrintf(" Advanced mode: enabled %d used %d",
 		CONFIG(useTpicAdvancedMode),
 		instance.adv_mode);
 
-	scheduleMsg(logger, " Input Ch %d (cylinder %d next %d)",
+	efiPrintf(" Input Ch %d (cylinder %d next %d)",
 		instance.channelIdx,
 		instance.cylinderNumber,
 		instance.expectedCylinderNumber);
 
-	scheduleMsg(logger, " Cyl bore %.2fmm freq %.2fkHz band idx 0x%x",
+	efiPrintf(" Cyl bore %.2fmm freq %.2fkHz band idx 0x%x",
 		engineConfiguration->cylinderBore,
 		instance.getBand(PASS_HIP_PARAMS),
 		instance.bandIdx);
 
-	scheduleMsg(logger, " Integrator idx 0x%x",
+	efiPrintf(" Integrator idx 0x%x",
 		instance.intergratorIdx);
 
-	scheduleMsg(logger, " Gain %.2f idx 0x%x",
+	efiPrintf(" Gain %.2f idx 0x%x",
 		engineConfiguration->hip9011Gain,
 		instance.gainIdx);
 
-	scheduleMsg(logger, " PaSDO=0x%x",
+	efiPrintf(" PaSDO=0x%x",
 		instance.prescaler);
 
-	scheduleMsg(logger, " knockVThreshold=%.2f knockCount=%d maxKnockSubDeg=%.2f",
+	efiPrintf(" knockVThreshold=%.2f knockCount=%d maxKnockSubDeg=%.2f",
 		engineConfiguration->knockVThreshold,
 		engine->knockCount,
 		engineConfiguration->maxKnockSubDeg);
 
-	scheduleMsg(logger, " Adc input %s (%.2f V)",
+	efiPrintf(" Adc input %s (%.2f V)",
 		getAdc_channel_e(engineConfiguration->hipOutputChannel),
 		getVoltage("hipinfo", engineConfiguration->hipOutputChannel));
 
-	scheduleMsg(logger, " IntHold %s (mode 0x%x)",
+	efiPrintf(" IntHold %s (mode 0x%x)",
 		hwPortname(CONFIG(hip9011IntHoldPin)),
 		CONFIG(hip9011IntHoldPinMode));
 
-	scheduleMsg(logger, " Spi %s CS %s (mode 0x%x)",
+	efiPrintf(" Spi %s CS %s (mode 0x%x)",
 		getSpi_device_e(engineConfiguration->hip9011SpiDevice),
 		hwPortname(CONFIG(hip9011CsPin)),
 		CONFIG(hip9011CsPinMode));
@@ -507,19 +507,19 @@ static void showHipInfo(void) {
 	printSpiConfig(logger, "hip9011", CONFIG(hip9011SpiDevice));
 #endif /* EFI_PROD_CODE */
 
-	scheduleMsg(logger, " SPI good response %d incorrect response %d",
+	efiPrintf(" SPI good response %d incorrect response %d",
 		instance.correctResponsesCount,
 		instance.invalidResponsesCount);
 
-	scheduleMsg(logger, " hip %.2f vmax=%.2f",
+	efiPrintf(" hip %.2f vmax=%.2f",
 		engine->knockVolts,
 		hipValueMax);
 
-	scheduleMsg(logger, " Window start %.2f end %.2f",
+	efiPrintf(" Window start %.2f end %.2f",
 		engineConfiguration->knockDetectionWindowStart,
 		engineConfiguration->knockDetectionWindowEnd);
 
-	scheduleMsg(logger, " Counters: samples %d overruns %d sync miss %d",
+	efiPrintf(" Counters: samples %d overruns %d sync miss %d",
 		instance.samples, instance.overrun, instance.unsync);
 
 	hipValueMax = 0;

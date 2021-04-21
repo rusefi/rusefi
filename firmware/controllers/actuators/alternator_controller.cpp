@@ -109,7 +109,7 @@ class AlternatorController : public PeriodicTimerController {
 		} else {
 			currentAltDuty = alternatorPid.getOutput(targetVoltage, vBatt.Value);
 			if (CONFIG(isVerboseAlternator)) {
-				scheduleMsg(logger, "alt duty: %.2f/vbatt=%.2f/p=%.2f/i=%.2f/d=%.2f int=%.2f", currentAltDuty, vBatt.Value,
+				efiPrintf("alt duty: %.2f/vbatt=%.2f/p=%.2f/i=%.2f/d=%.2f int=%.2f", currentAltDuty, vBatt.Value,
 						alternatorPid.getP(), alternatorPid.getI(), alternatorPid.getD(), alternatorPid.getIntegration());
 			}
 
@@ -121,18 +121,18 @@ class AlternatorController : public PeriodicTimerController {
 static AlternatorController instance;
 
 void showAltInfo(void) {
-	scheduleMsg(logger, "alt=%s @%s t=%dms", boolToString(engineConfiguration->isAlternatorControlEnabled),
+	efiPrintf("alt=%s @%s t=%dms", boolToString(engineConfiguration->isAlternatorControlEnabled),
 			hwPortname(CONFIG(alternatorControlPin)),
 			engineConfiguration->alternatorControl.periodMs);
-	scheduleMsg(logger, "p=%.2f/i=%.2f/d=%.2f offset=%.2f", engineConfiguration->alternatorControl.pFactor,
+	efiPrintf("p=%.2f/i=%.2f/d=%.2f offset=%.2f", engineConfiguration->alternatorControl.pFactor,
 			0, 0, engineConfiguration->alternatorControl.offset); // todo: i & d
-	scheduleMsg(logger, "vbatt=%.2f/duty=%.2f/target=%.2f", Sensor::get(SensorType::BatteryVoltage).value_or(0), currentAltDuty,
+	efiPrintf("vbatt=%.2f/duty=%.2f/target=%.2f", Sensor::get(SensorType::BatteryVoltage).value_or(0), currentAltDuty,
 			engineConfiguration->targetVBatt);
 }
 
 void setAltPFactor(float p) {
 	engineConfiguration->alternatorControl.pFactor = p;
-	scheduleMsg(logger, "setAltPid: %.2f", p);
+	efiPrintf("setAltPid: %.2f", p);
 	pidReset();
 	showAltInfo();
 }

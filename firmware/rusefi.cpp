@@ -156,7 +156,7 @@ void rebootNow(void) {
  * Once day we will write graceful shutdown, but that would be one day.
  */
 static void scheduleReboot(void) {
-	scheduleMsg(&sharedLogger, "Rebooting in 3 seconds...");
+	efiPrintf("Rebooting in 3 seconds...");
 	chibios_rt::CriticalSectionLocker csl;
 	chVTSetI(&resetTimer, TIME_MS2I(3000), (vtfunc_t) rebootNow, NULL);
 }
@@ -183,15 +183,6 @@ void runRusEfi(void) {
 
 	addConsoleAction(CMD_REBOOT, scheduleReboot);
 	addConsoleAction(CMD_REBOOT_DFU, jump_to_bootloader);
-
-#if EFI_SHAFT_POSITION_INPUT
-	/**
-	 * This is so early because we want to init logger
-	 * which would be used while finding trigger sync index
-	 * while reading configuration
-	 */
-	initTriggerDecoderLogger(&sharedLogger);
-#endif /* EFI_SHAFT_POSITION_INPUT */
 
 	/**
 	 * we need to initialize table objects before default configuration can set values
@@ -263,7 +254,7 @@ void runRusEfi(void) {
 		runSchedulingPrecisionTestIfNeeded();
 	}
 
-	scheduleMsg(&sharedLogger, "Running main loop");
+	efiPrintf("Running main loop");
 	main_loop_started = true;
 	/**
 	 * This loop is the closes we have to 'main loop' - but here we only publish the status. The main logic of engine

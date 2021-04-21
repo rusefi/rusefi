@@ -80,7 +80,7 @@ static void sendToPot(Mcp42010Driver *driver, int channel, int value) {
 void setPotResistance(Mcp42010Driver *driver, int channel, int resistance) {
 	int value = getPotStep(resistance);
 
-	scheduleMsg(logger, "Sending to potentiometer%d: %d for R=%d", channel, value, resistance);
+	efiPrintf("Sending to potentiometer%d: %d for R=%d", channel, value, resistance);
 	sendToPot(driver, channel, value);
 }
 
@@ -98,7 +98,7 @@ void initPotentiometers(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	logger = sharedLogger;
 #if EFI_POTENTIOMETER
 	if (CONFIG(digitalPotentiometerSpiDevice) == SPI_NONE) {
-		scheduleMsg(logger, "digiPot spi disabled");
+		efiPrintf("digiPot spi disabled");
 		return;
 	}
 	turnOnSpi(CONFIG(digitalPotentiometerSpiDevice));

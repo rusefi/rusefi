@@ -454,13 +454,13 @@ void applyNewHardwareSettings(void) {
 }
 
 void setBor(int borValue) {
-	scheduleMsg(sharedLogger, "setting BOR to %d", borValue);
+	efiPrintf("setting BOR to %d", borValue);
 	BOR_Set((BOR_Level_t)borValue);
 	showBor();
 }
 
 void showBor(void) {
-	scheduleMsg(sharedLogger, "BOR=%d", (int)BOR_Get());
+	efiPrintf("BOR=%d", (int)BOR_Get());
 }
 
 // This function initializes hardware that can do so before configuration is loaded
@@ -470,7 +470,7 @@ void initHardwareNoConfig(Logging *l) {
 	efiAssertVoid(CUSTOM_EC_NULL, engineConfiguration!=NULL, "engineConfiguration");
 	
 
-	scheduleMsg(sharedLogger, "initHardware()");
+	efiPrintf("initHardware()");
 
 	initPinRepository();
 
@@ -484,7 +484,7 @@ void initHardwareNoConfig(Logging *l) {
 	/**
 	 * We need the LED_ERROR pin even before we read configuration
 	 */
-	initPrimaryPins(sharedLogger);
+	initPrimaryPins();
 
 	// it's important to initialize this pretty early in the game before any scheduling usages
 	initSingleTimerExecutorHardware();
@@ -605,7 +605,7 @@ void initHardware() {
 
 	calcFastAdcIndexes();
 
-	scheduleMsg(sharedLogger, "initHardware() OK!");
+	efiPrintf("initHardware() OK!");
 }
 
 #endif /* EFI_PROD_CODE */

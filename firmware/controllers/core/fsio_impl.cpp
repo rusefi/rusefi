@@ -190,50 +190,50 @@ static void setFsioAnalogInputPin(const char *indexStr, const char *pinName) {
 // todo: reduce code duplication between all "set pin methods"
 	int index = atoi(indexStr) - 1;
 	if (index < 0 || index >= FSIO_ANALOG_INPUT_COUNT) {
-		scheduleMsg(logger, "invalid FSIO index: %d", index);
+		efiPrintf("invalid FSIO index: %d", index);
 		return;
 	}
 	brain_pin_e pin = parseBrainPin(pinName);
 	// todo: extract method - code duplication with other 'set_xxx_pin' methods?
 	if (pin == GPIO_INVALID) {
-		scheduleMsg(logger, "invalid pin name [%s]", pinName);
+		efiPrintf("invalid pin name [%s]", pinName);
 		return;
 	}
 	engineConfiguration->fsioAdc[index] = (adc_channel_e) pin;
-	scheduleMsg(logger, "FSIO analog input pin #%d [%s]", (index + 1), hwPortname(pin));
+	efiPrintf("FSIO analog input pin #%d [%s]", (index + 1), hwPortname(pin));
 }
 
 static void setFsioDigitalInputPin(const char *indexStr, const char *pinName) {
 	// todo: reduce code duplication between all "set pin methods"
 	int index = atoi(indexStr) - 1;
 	if (index < 0 || index >= FSIO_COMMAND_COUNT) {
-		scheduleMsg(logger, "invalid FSIO index: %d", index);
+		efiPrintf("invalid FSIO index: %d", index);
 		return;
 	}
 	brain_pin_e pin = parseBrainPin(pinName);
 	// todo: extract method - code duplication with other 'set_xxx_pin' methods?
 	if (pin == GPIO_INVALID) {
-		scheduleMsg(logger, "invalid pin name [%s]", pinName);
+		efiPrintf("invalid pin name [%s]", pinName);
 		return;
 	}
 	CONFIG(fsioDigitalInputs)[index] = pin;
-	scheduleMsg(logger, "FSIO digital input pin #%d [%s]", (index + 1), hwPortname(pin));
+	efiPrintf("FSIO digital input pin #%d [%s]", (index + 1), hwPortname(pin));
 }
 
 static void setFsioPidOutputPin(const char *indexStr, const char *pinName) {
 	int index = atoi(indexStr) - 1;
 	if (index < 0 || index >= CAM_INPUTS_COUNT) {
-		scheduleMsg(logger, "invalid VVT index: %d", index);
+		efiPrintf("invalid VVT index: %d", index);
 		return;
 	}
 	brain_pin_e pin = parseBrainPin(pinName);
 	// todo: extract method - code duplication with other 'set_xxx_pin' methods?
 	if (pin == GPIO_INVALID) {
-		scheduleMsg(logger, "invalid pin name [%s]", pinName);
+		efiPrintf("invalid pin name [%s]", pinName);
 		return;
 	}
 	engineConfiguration->auxPidPins[index] = pin;
-	scheduleMsg(logger, "VVT pid pin #%d [%s]", (index + 1), hwPortname(pin));
+	efiPrintf("VVT pid pin #%d [%s]", (index + 1), hwPortname(pin));
 }
 
 static void showFsioInfo(void);
@@ -241,18 +241,18 @@ static void showFsioInfo(void);
 static void setFsioOutputPin(const char *indexStr, const char *pinName) {
 	int index = atoi(indexStr) - 1;
 	if (index < 0 || index >= FSIO_COMMAND_COUNT) {
-		scheduleMsg(logger, "invalid FSIO index: %d", index);
+		efiPrintf("invalid FSIO index: %d", index);
 		return;
 	}
 	brain_pin_e pin = parseBrainPin(pinName);
 	// todo: extract method - code duplication with other 'set_xxx_pin' methods?
 	if (pin == GPIO_INVALID) {
-		scheduleMsg(logger, "invalid pin name [%s]", pinName);
+		efiPrintf("invalid pin name [%s]", pinName);
 		return;
 	}
 	CONFIG(fsioOutputPins)[index] = pin;
-	scheduleMsg(logger, "FSIO output pin #%d [%s]", (index + 1), hwPortname(pin));
-	scheduleMsg(logger, "please writeconfig and reboot for pin to take effect");
+	efiPrintf("FSIO output pin #%d [%s]", (index + 1), hwPortname(pin));
+	efiPrintf("please writeconfig and reboot for pin to take effect");
 	showFsioInfo();
 }
 #endif /* EFI_PROD_CODE */
@@ -368,7 +368,7 @@ static void runFsioCalculation(int index DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	} else {
 		int value = (int) fvalue;
 		if (value != enginePins.fsioOutputs[index].getLogicValue()) {
-			//		scheduleMsg(logger, "setting %s %s", getIo_pin_e(pin), boolToString(value));
+			//		efiPrintf("setting %s %s", getIo_pin_e(pin), boolToString(value));
 			enginePins.fsioOutputs[index].setValue(value);
 		}
 	}
@@ -416,10 +416,10 @@ static void setPinState(const char * msg, OutputPin *pin, LEElement *element DEC
 		if (pin->isInitialized() && value != pin->getLogicValue()) {
 
 			for (int i = 0;i < calc.currentCalculationLogPosition;i++) {
-				scheduleMsg(logger, "calc %d: action %s value %.2f", i, action2String(calc.calcLogAction[i]), calc.calcLogValue[i]);
+				efiPrintf("calc %d: action %s value %.2f", i, action2String(calc.calcLogAction[i]), calc.calcLogValue[i]);
 			}
 
-			scheduleMsg(logger, "setPin %s %s", msg, value ? "on" : "off");
+			efiPrintf("setPin %s %s", msg, value ? "on" : "off");
 			pin->setValue(value);
 		}
 	}
@@ -430,14 +430,14 @@ static void setPinState(const char * msg, OutputPin *pin, LEElement *element DEC
 static void setFsioFrequency(int index, int frequency) {
 	index--;
 	if (index < 0 || index >= FSIO_COMMAND_COUNT) {
-		scheduleMsg(logger, "invalid FSIO index: %d", index);
+		efiPrintf("invalid FSIO index: %d", index);
 		return;
 	}
 	CONFIG(fsioFrequency)[index] = frequency;
 	if (frequency == 0) {
-		scheduleMsg(logger, "FSIO output #%d@%s set to on/off mode", index + 1, hwPortname(CONFIG(fsioOutputPins)[index]));
+		efiPrintf("FSIO output #%d@%s set to on/off mode", index + 1, hwPortname(CONFIG(fsioOutputPins)[index]));
 	} else {
-		scheduleMsg(logger, "Setting FSIO frequency %dHz on #%d@%s", frequency, index + 1, hwPortname(CONFIG(fsioOutputPins)[index]));
+		efiPrintf("Setting FSIO frequency %dHz on #%d@%s", frequency, index + 1, hwPortname(CONFIG(fsioOutputPins)[index]));
 	}
 }
 #endif /* EFI_PROD_CODE */
@@ -566,18 +566,18 @@ void runFsio(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 static void showFsio(const char *msg, LEElement *element) {
 #if EFI_PROD_CODE || EFI_SIMULATOR
 	if (msg != NULL)
-		scheduleMsg(logger, "%s:", msg);
+		efiPrintf("%s:", msg);
 	while (element->action != LE_METHOD_RETURN) {
-		scheduleMsg(logger, "action %d: fValue=%.2f", element->action, element->fValue);
+		efiPrintf("action %d: fValue=%.2f", element->action, element->fValue);
 		element++;
 	}
-	scheduleMsg(logger, "<end>");
+	efiPrintf("<end>");
 #endif
 }
 
 static void showFsioInfo(void) {
 #if EFI_PROD_CODE || EFI_SIMULATOR
-	scheduleMsg(logger, "sys used %d/user used %d", sysPool.getSize(), userPool.getSize());
+	efiPrintf("sys used %d/user used %d", sysPool.getSize(), userPool.getSize());
 	showFsio("a/c", acRelayLogic);
 	showFsio("fuel", fuelPumpLogic);
 	showFsio("fan", radiatorFanLogic);
@@ -586,7 +586,7 @@ static void showFsioInfo(void) {
 	for (int i = 0; i < CAM_INPUTS_COUNT ; i++) {
 		brain_pin_e pin = engineConfiguration->auxPidPins[i];
 		if (isBrainPinValid(pin)) {
-			scheduleMsg(logger, "VVT pid #%d [%s]", (i + 1),
+			efiPrintf("VVT pid #%d [%s]", (i + 1),
 					hwPortname(pin));
 
 		}
@@ -603,24 +603,24 @@ static void showFsioInfo(void) {
 			 */
 			int freq = CONFIG(fsioFrequency)[i];
 			const char *modeMessage = freq == 0 ? " (on/off mode)" : "";
-			scheduleMsg(logger, "FSIO #%d [%s] at %s@%dHz%s value=%.2f", (i + 1), exp,
+			efiPrintf("FSIO #%d [%s] at %s@%dHz%s value=%.2f", (i + 1), exp,
 					hwPortname(CONFIG(fsioOutputPins)[i]),
 					freq, modeMessage,
 					engine->fsioState.fsioLastValue[i]);
-//			scheduleMsg(logger, "user-defined #%d value=%.2f", i, engine->engineConfigurationPtr2->fsioLastValue[i]);
+//			efiPrintf("user-defined #%d value=%.2f", i, engine->engineConfigurationPtr2->fsioLastValue[i]);
 			showFsio(NULL, state.fsioLogics[i]);
 		}
 	}
 	for (int i = 0; i < FSIO_COMMAND_COUNT; i++) {
 		float v = CONFIG(fsio_setting)[i];
 		if (!cisnan(v)) {
-			scheduleMsg(logger, "user property #%d: %.2f", i + 1, v);
+			efiPrintf("user property #%d: %.2f", i + 1, v);
 		}
 	}
 	for (int i = 0; i < FSIO_COMMAND_COUNT; i++) {
 		brain_pin_e inputPin = CONFIG(fsioDigitalInputs)[i];
 		if (isBrainPinValid(inputPin)) {
-			scheduleMsg(logger, "FSIO digital input #%d: %s", i, hwPortname(inputPin));
+			efiPrintf("FSIO digital input #%d: %s", i, hwPortname(inputPin));
 		}
 	}
 #endif
@@ -633,7 +633,7 @@ static void setFsioSetting(float humanIndexF, float value) {
 #if EFI_PROD_CODE || EFI_SIMULATOR
 	int index = (int)humanIndexF - 1;
 	if (index < 0 || index >= FSIO_COMMAND_COUNT) {
-		scheduleMsg(logger, "invalid FSIO index: %d", (int)humanIndexF);
+		efiPrintf("invalid FSIO index: %d", (int)humanIndexF);
 		return;
 	}
 	engineConfiguration->fsio_setting[index] = value;
@@ -644,16 +644,16 @@ static void setFsioSetting(float humanIndexF, float value) {
 void setFsioExpression(const char *indexStr, const char *quotedLine DECLARE_CONFIG_PARAMETER_SUFFIX) {
 	int index = atoi(indexStr) - 1;
 	if (index < 0 || index >= FSIO_COMMAND_COUNT) {
-		scheduleMsg(logger, "invalid FSIO index: %d", index);
+		efiPrintf("invalid FSIO index: %d", index);
 		return;
 	}
 	char * l = unquote((char*) quotedLine);
 	if (strlen(l) > LE_COMMAND_LENGTH - 1) {
-		scheduleMsg(logger, "Too long %d", strlen(l));
+		efiPrintf("Too long %d", strlen(l));
 		return;
 	}
 
-	scheduleMsg(logger, "setting user out #%d to [%s]", index + 1, l);
+	efiPrintf("setting user out #%d to [%s]", index + 1, l);
 	strcpy(config->fsioFormulas[index], l);
 }
 
@@ -668,14 +668,14 @@ void applyFsioExpression(const char *indexStr, const char *quotedLine DECLARE_EN
 static void rpnEval(char *line) {
 #if EFI_PROD_CODE || EFI_SIMULATOR
 	line = unquote(line);
-	scheduleMsg(logger, "Parsing [%s]", line);
+	efiPrintf("Parsing [%s]", line);
 	evalPool.reset();
 	LEElement * e = evalPool.parseExpression(line);
 	if (e == NULL) {
-		scheduleMsg(logger, "parsing failed");
+		efiPrintf("parsing failed");
 	} else {
 		float result = evalCalc.evaluate("eval", 0, e PASS_ENGINE_PARAMETER_SUFFIX);
-		scheduleMsg(logger, "Evaluate result: %.2f", result);
+		efiPrintf("Evaluate result: %.2f", result);
 	}
 #endif
 }
