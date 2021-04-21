@@ -525,7 +525,7 @@ static void getKnockInfo(void) {
 
 // this method is used by real firmware and simulator and unit test
 void commonInitEngineController(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX) {
-	initInterpolation(sharedLogger);
+	initInterpolation();
 
 #if EFI_SIMULATOR
 	printf("commonInitEngineController\n");
@@ -582,7 +582,7 @@ void commonInitEngineController(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_S
 
 	initButtonShift(PASS_ENGINE_PARAMETER_SIGNATURE);
 
-	initButtonDebounce(sharedLogger);
+	initButtonDebounce();
 	initStartStopButton(PASS_ENGINE_PARAMETER_SIGNATURE);
 
 #if EFI_ELECTRONIC_THROTTLE_BODY

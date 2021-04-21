@@ -25,8 +25,6 @@ int needInterpolationLogging(void) {
 
 #define BINARY_PERF true
 
-Logging * logger;
-
 #if BINARY_PERF && ! EFI_UNIT_TEST
 
 #define COUNT 10000
@@ -202,8 +200,7 @@ void setCurveValue(float bins[], float values[], int size, float key, float valu
 	values[index] = value;
 }
 
-void initInterpolation(Logging *sharedLogger) {
-	logger = sharedLogger;
+void initInterpolation() {
 #if BINARY_PERF && ! EFI_UNIT_TEST
 	addConsoleAction("binarytest", testBinary);
 #endif

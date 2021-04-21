@@ -11,7 +11,6 @@
 #include "hardware.h"
 
 ButtonDebounce* ButtonDebounce::s_firstDebounce = nullptr;
-static Logging *logger;
 
 ButtonDebounce::ButtonDebounce(const char *name)
 	: m_name(name)
@@ -126,9 +125,7 @@ void ButtonDebounce::debug() {
     }
 }
 
-void initButtonDebounce(Logging *sharedLogger) {
-	logger = sharedLogger;
-
+void initButtonDebounce() {
 #if !EFI_UNIT_TEST
 	addConsoleAction("debounce", ButtonDebounce::debug);
 #endif /* EFI_UNIT_TEST */
