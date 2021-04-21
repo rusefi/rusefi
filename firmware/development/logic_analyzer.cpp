@@ -45,8 +45,6 @@ static volatile efitimeus_t previousEngineCycleTimeUs = 0;
 static int waveReaderCount = 0;
 static WaveReader readers[MAX_ICU_COUNT];
 
-static Logging * logger;
-
 static void ensureInitialized(WaveReader *reader) {
 	/*may be*/UNUSED(reader);
 	efiAssertVoid(CUSTOM_ERR_6654, reader->hw != NULL && reader->hw->started, "wave analyzer NOT INITIALIZED");
@@ -223,8 +221,7 @@ void showWaveInfo(void) {
 	efiPrintf("logic input #1: %d/%d", readers[0].fallEventCounter, readers[0].riseEventCounter);
 }
 
-void initWaveAnalyzer(Logging *sharedLogger) {
-	logger = sharedLogger;
+void initWaveAnalyzer() {
 	if (hasFirmwareError()) {
 		return;
 	}

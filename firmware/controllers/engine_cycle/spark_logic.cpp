@@ -34,7 +34,6 @@ extern bool verboseMode;
 #endif // EFI_PRINTF_FUEL_DETAILS
 
 static cyclic_buffer<int> ignitionErrorDetection;
-static Logging *logger;
 
 static const char *prevSparkName = nullptr;
 

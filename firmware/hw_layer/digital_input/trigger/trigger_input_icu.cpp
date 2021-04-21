@@ -25,8 +25,6 @@ int icuFallingCallbackCounter = 0;
 
 EXTERN_ENGINE;
 
-static Logging *logger;
-
 static void vvtRisingCallback(void *arg) {
 	efitick_t now = getTimeNowNt();
 	TRIGGER_BAIL_IF_DISABLED

@@ -113,8 +113,6 @@ bool printTriggerTrace = false;
 float actualSynchGap;
 #endif /* ! EFI_PROD_CODE */
 
-static Logging * logger = nullptr;
-
 void TriggerWaveform::initializeSyncPoint(TriggerState& state,
 			const TriggerConfiguration& triggerConfiguration,
 			const trigger_config_s& triggerConfig) {

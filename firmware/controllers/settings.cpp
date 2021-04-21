@@ -56,9 +56,6 @@ extern WaveChart waveChart;
 #define SETTINGS_LOGGING_BUFFER_SIZE 1000
 #endif /* SETTINGS_LOGGING_BUFFER_SIZE */
 
-static char LOGGING_BUFFER[SETTINGS_LOGGING_BUFFER_SIZE];
-static Logging logger("settings control", LOGGING_BUFFER, sizeof(LOGGING_BUFFER));
-
 EXTERN_ENGINE;
 
 void printSpiState(const engine_configuration_s *engineConfiguration) {
