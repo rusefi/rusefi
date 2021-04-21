@@ -323,7 +323,7 @@ static void printAdcValue(int channel) {
 static uint32_t slowAdcConversionCount = 0;
 static uint32_t slowAdcErrorsCount = 0;
 
-static void printFullAdcReport(Logging *logger) {
+static void printFullAdcReport() {
 #if EFI_USE_FAST_ADC
 	efiPrintf("fast %d slow %d", fastAdc.conversionCount, slowAdcConversionCount);
 
@@ -541,10 +541,10 @@ void initAdcInputs() {
 #endif
 }
 
-void printFullAdcReportIfNeeded(Logging *logger) {
+void printFullAdcReportIfNeeded() {
 	if (!adcDebugReporting)
 		return;
-	printFullAdcReport(logger);
+	printFullAdcReport();
 }
 
 #else /* not HAL_USE_ADC */
