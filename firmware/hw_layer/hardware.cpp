@@ -484,7 +484,7 @@ void initHardwareNoConfig(Logging *l) {
 	/**
 	 * We need the LED_ERROR pin even before we read configuration
 	 */
-	initPrimaryPins(sharedLogger);
+	initPrimaryPins();
 
 	// it's important to initialize this pretty early in the game before any scheduling usages
 	initSingleTimerExecutorHardware();

@@ -32,7 +32,6 @@ extern WaveChart waveChart;
 
 // todo: clean this mess, this should become 'static'/private
 EnginePins enginePins;
-static Logging* logger;
 
 pin_output_mode_e DEFAULT_OUTPUT = OM_DEFAULT;
 pin_output_mode_e INVERTED_OUTPUT = OM_INVERTED;
@@ -589,8 +588,7 @@ uint8_t criticalErrorLedState;
 #define LED_ERROR_BRAIN_PIN_MODE DEFAULT_OUTPUT
 #endif /* LED_ERROR_BRAIN_PIN_MODE */
 
-void initPrimaryPins(Logging *sharedLogger) {
-	logger = sharedLogger;
+void initPrimaryPins() {
 #if EFI_PROD_CODE
 	enginePins.errorLedPin.initPin("led: CRITICAL status", LED_CRITICAL_ERROR_BRAIN_PIN, &(LED_ERROR_BRAIN_PIN_MODE));
 	criticalErrorLedPort = getHwPort("CRITICAL", LED_CRITICAL_ERROR_BRAIN_PIN);
