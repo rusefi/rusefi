@@ -303,11 +303,11 @@ void InjectionEvent::onTriggerTooth(size_t trgEventIndex, int rpm, efitick_t now
 		printf("scheduling injection angle=%.2f/delay=%.2f injectionDuration=%.2f\r\n", injectionStart.angleOffsetFromTriggerEvent, NT2US(startTime - nowNt), injectionDuration);
 #endif
 #if EFI_DEFAILED_LOGGING
-	scheduleMsg(logger, "handleFuel pin=%s eventIndex %d duration=%.2fms %d", outputs[0]->name,
+	efiPrintf("handleFuel pin=%s eventIndex %d duration=%.2fms %d", outputs[0]->name,
 			injEventIndex,
 			injectionDuration,
 			getRevolutionCounter());
-	scheduleMsg(logger, "handleFuel pin=%s delay=%.2f %d", outputs[0]->name, NT2US(startTime - nowNt),
+	efiPrintf("handleFuel pin=%s delay=%.2f %d", outputs[0]->name, NT2US(startTime - nowNt),
 			getRevolutionCounter());
 #endif /* EFI_DEFAILED_LOGGING */
 }
@@ -348,7 +348,7 @@ static void handleFuel(const bool limitedFuel, uint32_t trgEventIndex, int rpm, 
 
 #if FUEL_MATH_EXTREME_LOGGING
 	if (printFuelDebug) {
-		scheduleMsg(logger, "handleFuel ind=%d %d", trgEventIndex, getRevolutionCounter());
+		efiPrintf("handleFuel ind=%d %d", trgEventIndex, getRevolutionCounter());
 	}
 #endif /* FUEL_MATH_EXTREME_LOGGING */
 
@@ -539,8 +539,8 @@ static void showMainInfo(Engine *engine) {
 #if EFI_PROD_CODE
 	int rpm = GET_RPM();
 	float el = getFuelingLoad(PASS_ENGINE_PARAMETER_SIGNATURE);
-	scheduleMsg(logger, "rpm %d engine_load %.2f", rpm, el);
-	scheduleMsg(logger, "fuel %.2fms timing %.2f", ENGINE(injectionDuration), engine->engineState.timingAdvance);
+	efiPrintf("rpm %d engine_load %.2f", rpm, el);
+	efiPrintf("fuel %.2fms timing %.2f", ENGINE(injectionDuration), engine->engineState.timingAdvance);
 #endif /* EFI_PROD_CODE */
 }
 
@@ -551,7 +551,7 @@ void initMainEventListener(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX
 #if EFI_PROD_CODE
 	addConsoleActionP("maininfo", (VoidPtr) showMainInfo, engine);
 
-	scheduleMsg(logger, "initMainLoop: %d", currentTimeMillis());
+	efiPrintf("initMainLoop: %d", currentTimeMillis());
 #endif
 
 

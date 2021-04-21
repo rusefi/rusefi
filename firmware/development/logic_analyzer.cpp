@@ -128,7 +128,7 @@ static void initWave(const char *name, int index) {
 		reader->hw->setPeriodCallback((VoidInt)(void*) waIcuPeriodCallback, (void*) reader);
 	}
 
-	scheduleMsg(logger, "wave%d input on %s", index, hwPortname(brainPin));
+	efiPrintf("wave%d input on %s", index, hwPortname(brainPin));
 }
 
 WaveReader::WaveReader() {
@@ -220,7 +220,7 @@ void printWave(Logging *logging) {
 }
 
 void showWaveInfo(void) {
-	scheduleMsg(logger, "logic input #1: %d/%d", readers[0].fallEventCounter, readers[0].riseEventCounter);
+	efiPrintf("logic input #1: %d/%d", readers[0].fallEventCounter, readers[0].riseEventCounter);
 }
 
 void initWaveAnalyzer(Logging *sharedLogger) {

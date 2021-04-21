@@ -202,7 +202,7 @@ void EnginePins::debug() {
 #if EFI_PROD_CODE
 	RegisteredOutputPin * pin = registeredOutputHead;
 	while (pin != nullptr) {
-		scheduleMsg(logger, "%s %d", pin->registrationName, pin->currentLogicValue);
+		efiPrintf("%s %d", pin->registrationName, pin->currentLogicValue);
 		pin = pin->next;
 	}
 #endif // EFI_PROD_CODE
@@ -341,7 +341,7 @@ bool NamedOutputPin::stop() {
 #if EFI_GPIO_HARDWARE
 	if (isInitialized() && getLogicValue()) {
 		setValue(false);
-		scheduleMsg(logger, "turning off %s", name);
+		efiPrintf("turning off %s", name);
 		return true;
 	}
 #endif /* EFI_GPIO_HARDWARE */
@@ -567,7 +567,7 @@ void OutputPin::deInit() {
 	ext = false;
 #endif // (BOARD_EXT_GPIOCHIPS > 0)
 
-	scheduleMsg(logger, "unregistering %s", hwPortname(brainPin));
+	efiPrintf("unregistering %s", hwPortname(brainPin));
 
 #if EFI_GPIO_HARDWARE && EFI_PROD_CODE
 	efiSetPadUnused(brainPin);

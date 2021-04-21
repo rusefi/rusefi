@@ -62,7 +62,7 @@ static Logging logger("settings control", LOGGING_BUFFER, sizeof(LOGGING_BUFFER)
 EXTERN_ENGINE;
 
 void printSpiState(Logging *logger, const engine_configuration_s *engineConfiguration) {
-	scheduleMsg(logger, "spi 1=%s/2=%s/3=%s/4=%s",
+	efiPrintf("spi 1=%s/2=%s/3=%s/4=%s",
 		boolToString(engineConfiguration->is_enabled_spi_1),
 		boolToString(engineConfiguration->is_enabled_spi_2),
 		boolToString(engineConfiguration->is_enabled_spi_3),

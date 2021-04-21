@@ -209,7 +209,7 @@ void RpmCalculator::setStopped() {
 		assignRpmValue(0);
 		// needed by 'useNoiselessTriggerDecoder'
 		engine->triggerCentral.noiseFilter.resetAccumSignalData();
-		scheduleMsg(logger, "engine stopped");
+		efiPrintf("engine stopped");
 	}
 	state = STOPPED;
 }
@@ -308,7 +308,7 @@ void rpmShaftPositionCallback(trigger_event_e ckpSignalType,
 		instantRpm = minF(instantRpm, CONFIG(cranking.rpm) - 1);
 		rpmState->assignRpmValue(instantRpm);
 #if 0
-		scheduleMsg(logger, "** RPM: idx=%d sig=%d iRPM=%d", index, ckpSignalType, instantRpm);
+		efiPrintf("** RPM: idx=%d sig=%d iRPM=%d", index, ckpSignalType, instantRpm);
 #endif
 	}
 }

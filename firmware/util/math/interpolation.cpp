@@ -58,14 +58,14 @@ static void testBinary(void) {
 			}
 			timeNew = getTimeNowLowerNt() - start;
 		}
-		scheduleMsg(logger, "for v=%d old=%d ticks", v, timeOld);
-		scheduleMsg(logger, "for v=%d new=%d ticks", v, timeNew);
+		efiPrintf("for v=%d old=%d ticks", v, timeOld);
+		efiPrintf("for v=%d new=%d ticks", v, timeNew);
 
 		totalOld += timeOld;
 		totalNew += timeNew;
 	}
-	scheduleMsg(logger, "totalOld=%d ticks", totalOld);
-	scheduleMsg(logger, "totalNew=%d ticks", totalNew);
+	efiPrintf("totalOld=%d ticks", totalOld);
+	efiPrintf("totalNew=%d ticks", totalNew);
 
 }
 

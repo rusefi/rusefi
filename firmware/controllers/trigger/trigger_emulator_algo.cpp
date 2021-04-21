@@ -106,13 +106,13 @@ void setTriggerEmulatorRPM(int rpm DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	}
 	engine->resetEngineSnifferIfInTestMode();
 
-	scheduleMsg(logger, "Emulating position sensor(s). RPM=%d", rpm);
+	efiPrintf("Emulating position sensor(s). RPM=%d", rpm);
 }
 
 static void updateTriggerWaveformIfNeeded(PwmConfig *state) {
 	if (atTriggerVersion < engine->triggerCentral.triggerShape.version) {
 		atTriggerVersion = engine->triggerCentral.triggerShape.version;
-		scheduleMsg(logger, "Stimulator: updating trigger shape: %d/%d %d", atTriggerVersion,
+		efiPrintf("Stimulator: updating trigger shape: %d/%d %d", atTriggerVersion,
 				engine->getGlobalConfigurationVersion(), currentTimeMillis());
 
 

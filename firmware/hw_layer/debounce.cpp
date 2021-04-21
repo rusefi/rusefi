@@ -118,8 +118,8 @@ void ButtonDebounce::debug() {
     ButtonDebounce *listItem = s_firstDebounce;
     while (listItem != nullptr) {
 #if EFI_PROD_CODE || EFI_UNIT_TEST
-        scheduleMsg(logger, "%s timeLast %d", listItem->m_name, listItem->timeLast);
-        scheduleMsg(logger, "physical state %d value %d", efiReadPin(listItem->active_pin), listItem->storedValue);
+        efiPrintf("%s timeLast %d", listItem->m_name, listItem->timeLast);
+        efiPrintf("physical state %d value %d", efiReadPin(listItem->active_pin), listItem->storedValue);
 #endif
 
         listItem = listItem->nextDebounce;

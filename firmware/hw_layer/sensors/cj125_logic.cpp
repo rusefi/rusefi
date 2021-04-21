@@ -23,7 +23,7 @@ void CJ125::SetHeater(float value DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	float maxDuty = (Sensor::get(SensorType::BatteryVoltage).value_or(VBAT_FALLBACK_VALUE) > CJ125_HEATER_LIMITING_VOLTAGE) ? CJ125_HEATER_LIMITING_RATE : 1.0f;
 	heaterDuty = (value < CJ125_HEATER_MIN_DUTY) ? 0.0f : minF(maxF(value, 0.0f), maxDuty);
 #ifdef CJ125_DEBUG
-	scheduleMsg(logger, "cjSetHeater: %.2f", heaterDuty);
+	efiPrintf("cjSetHeater: %.2f", heaterDuty);
 #endif
 	// a little trick to disable PWM if needed.
 	// todo: this should be moved to wboHeaterControl.setPwmDutyCycle()
@@ -69,9 +69,9 @@ static void printDiagCode(Logging * logging, const char *msg, int code, const ch
 
 void CJ125::printDiag() {
 	if (diag == CJ125_DIAG_NORM) {
-		scheduleMsg(logger, "cj125: diag Looks great!");
+		efiPrintf("cj125: diag Looks great!");
 	} else {
-		scheduleMsg(logger, "cj125: diag NOT GOOD");
+		efiPrintf("cj125: diag NOT GOOD");
 		printDiagCode(logger, "VM", diag, LOW_VOLTAGE);
 		printDiagCode(logger, "UN", diag >> 2, LOW_VOLTAGE);
 		printDiagCode(logger, "IA", diag >> 4, LOW_VOLTAGE);
@@ -99,14 +99,14 @@ bool CJ125::cjIdentify(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	int init2 = spi->ReadRegister(INIT_REG2_RD);
 
 	diag = spi->ReadRegister(DIAG_REG_RD);
-	scheduleMsg(logger, "cj125: Check ident=0x%x diag=0x%x init1=0x%x init2=0x%x", ident, diag, init1, init2);
+	efiPrintf("cj125: Check ident=0x%x diag=0x%x init1=0x%x init2=0x%x", ident, diag, init1, init2);
 	if (ident != CJ125_IDENT) {
-		scheduleMsg(logger, "cj125: Error! Wrong ident! Cannot communicate with CJ125!");
+		efiPrintf("cj125: Error! Wrong ident! Cannot communicate with CJ125!");
 		setError(CJ125_ERROR_WRONG_IDENT PASS_ENGINE_PARAMETER_SUFFIX);
 		return false;
 	}
 	if (init1 != CJ125_INIT1_NORMAL_17 || init2 != CJ125_INIT2_DIAG) {
-		scheduleMsg(logger, "cj125: Error! Cannot set init registers! Cannot communicate with CJ125!");
+		efiPrintf("cj125: Error! Cannot set init registers! Cannot communicate with CJ125!");
 		setError(CJ125_ERROR_WRONG_IDENT PASS_ENGINE_PARAMETER_SUFFIX);
 		return false;
 	}

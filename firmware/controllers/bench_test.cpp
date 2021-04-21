@@ -89,8 +89,8 @@ static void runBench(brain_pin_e brainPin, OutputPin *output, float delayMs, flo
 		return;
 	}
 
-	scheduleMsg(logger, "Running bench: ON_TIME=%d us OFF_TIME=%d us Counter=%d", onTimeUs, offTimeUs, count);
-	scheduleMsg(logger, "output on %s", hwPortname(brainPin));
+	efiPrintf("Running bench: ON_TIME=%d us OFF_TIME=%d us Counter=%d", onTimeUs, offTimeUs, count);
+	efiPrintf("output on %s", hwPortname(brainPin));
 
 	chThdSleepMicroseconds(delayUs);
 
@@ -110,7 +110,7 @@ static void runBench(brain_pin_e brainPin, OutputPin *output, float delayMs, flo
 		chThdSleepMicroseconds(onTimeUs + offTimeUs);
 	}
 
-	scheduleMsg(logger, "Done!");
+	efiPrintf("Done!");
 	isRunningBench = false;
 }
 
@@ -138,7 +138,7 @@ static void pinbench(const char *delayStr, const char *onTimeStr, const char *of
 static void doRunFuel(cylinders_count_t humanIndex, const char *delayStr, const char * onTimeStr, const char *offTimeStr,
 		const char *countStr) {
 	if (humanIndex < 1 || humanIndex > engineConfiguration->specs.cylindersCount) {
-		scheduleMsg(logger, "Invalid index: %d", humanIndex);
+		efiPrintf("Invalid index: %d", humanIndex);
 		return;
 	}
 	brain_pin_e b = CONFIG(injectionPins)[humanIndex - 1];
@@ -148,7 +148,7 @@ static void doRunFuel(cylinders_count_t humanIndex, const char *delayStr, const 
 static void doTestSolenoid(int humanIndex, const char *delayStr, const char * onTimeStr, const char *offTimeStr,
 		const char *countStr) {
 	if (humanIndex < 1 || humanIndex > TCU_SOLENOID_COUNT) {
-		scheduleMsg(logger, "Invalid index: %d", humanIndex);
+		efiPrintf("Invalid index: %d", humanIndex);
 		return;
 	}
 	brain_pin_e b = CONFIG(tcu_solenoid)[humanIndex - 1];
@@ -158,7 +158,7 @@ static void doTestSolenoid(int humanIndex, const char *delayStr, const char * on
 static void doBenchTestFsio(int humanIndex, const char *delayStr, const char * onTimeStr, const char *offTimeStr,
 		const char *countStr) {
 	if (humanIndex < 1 || humanIndex > FSIO_COMMAND_COUNT) {
-		scheduleMsg(logger, "Invalid index: %d", humanIndex);
+		efiPrintf("Invalid index: %d", humanIndex);
 		return;
 	}
 	brain_pin_e b = CONFIG(fsioOutputPins)[humanIndex - 1];
@@ -243,7 +243,7 @@ static void fuelbench(const char * onTimeStr, const char *offTimeStr, const char
 static void doRunSpark(cylinders_count_t humanIndex, const char *delayStr, const char * onTimeStr, const char *offTimeStr,
 		const char *countStr) {
 	if (humanIndex < 1 || humanIndex > engineConfiguration->specs.cylindersCount) {
-		scheduleMsg(logger, "Invalid index: %d", humanIndex);
+		efiPrintf("Invalid index: %d", humanIndex);
 		return;
 	}
 	brain_pin_e b = CONFIG(ignitionPins)[humanIndex - 1];
@@ -399,7 +399,7 @@ static void fatalErrorForPresetApply() {
 }
 
 void executeTSCommand(uint16_t subsystem, uint16_t index) {
-	scheduleMsg(logger, "IO test subsystem=%d index=%d", subsystem, index);
+	efiPrintf("IO test subsystem=%d index=%d", subsystem, index);
 
 	bool running = !ENGINE(rpmCalculator).isStopped();
 

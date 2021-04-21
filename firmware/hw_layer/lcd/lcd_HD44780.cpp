@@ -186,12 +186,12 @@ void lcd_HD44780_print_string(const char* string) {
 
 //getHwPin(CONFIG(HD44780_db7))
 static void lcdInfo(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
-	scheduleMsg(logger, "HD44780 RS=%s", hwPortname(CONFIG(HD44780_rs)));
-	scheduleMsg(logger, "HD44780 E=%s", hwPortname(CONFIG(HD44780_e)));
-	scheduleMsg(logger, "HD44780 D4=%s", hwPortname(CONFIG(HD44780_db4)));
-	scheduleMsg(logger, "HD44780 D5=%s", hwPortname(CONFIG(HD44780_db5)));
-	scheduleMsg(logger, "HD44780 D6=%s", hwPortname(CONFIG(HD44780_db6)));
-	scheduleMsg(logger, "HD44780 D7=%s", hwPortname(CONFIG(HD44780_db7)));
+	efiPrintf("HD44780 RS=%s", hwPortname(CONFIG(HD44780_rs)));
+	efiPrintf("HD44780 E=%s", hwPortname(CONFIG(HD44780_e)));
+	efiPrintf("HD44780 D4=%s", hwPortname(CONFIG(HD44780_db4)));
+	efiPrintf("HD44780 D5=%s", hwPortname(CONFIG(HD44780_db5)));
+	efiPrintf("HD44780 D6=%s", hwPortname(CONFIG(HD44780_db6)));
+	efiPrintf("HD44780 D7=%s", hwPortname(CONFIG(HD44780_db7)));
 }
 
 void stopHD44780_pins() {
@@ -237,7 +237,7 @@ void lcd_HD44780_init(Logging *sharedLogger) {
 		return;
 	}
 
-	scheduleMsg(logger, "lcd_HD44780_init %d", engineConfiguration->displayMode);
+	efiPrintf("lcd_HD44780_init %d", engineConfiguration->displayMode);
 
 	if (!lcd_HD44780_is_enabled())
 		return;
@@ -267,7 +267,7 @@ void lcd_HD44780_init(Logging *sharedLogger) {
 	lcd_HD44780_write_command(LCD_HD44780_DISPLAY_ON);
 
 	lcd_HD44780_set_position(0, 0);
-	scheduleMsg(logger, "lcd_HD44780_init() done");
+	efiPrintf("lcd_HD44780_init() done");
 }
 
 void lcdShowPanicMessage(char *message) {
