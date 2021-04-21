@@ -283,6 +283,8 @@ static void setMazdaMiataEngineNB2Defaults(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	engineConfiguration->useOnlyRisingEdgeForTrigger = true;
 	engineConfiguration->trigger.type = TT_MIATA_VVT;
 
+	engineConfiguration->idleMode = IM_AUTO;
+
 	setOperationMode(engineConfiguration, FOUR_STROKE_SYMMETRICAL_CRANK_SENSOR);
 	engineConfiguration->specs.displacement = 1.839;
 	engineConfiguration->cylinderBore = 83;
@@ -515,7 +517,6 @@ void setMazdaMiata2003EngineConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	// set_analog_input_pin tps PC3
 	engineConfiguration->tps1_1AdcChannel = EFI_ADC_13; // PC3 blue
 
-	engineConfiguration->idleMode = IM_AUTO;
 	// set_analog_input_pin pps PA2
 /* a step back - Frankenso does not use ETB
 	engineConfiguration->throttlePedalPositionAdcChannel = EFI_ADC_2;
@@ -636,8 +637,6 @@ static void setMiataNB2_MRE_common(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 
 	// set tps_max 540
 	engineConfiguration->tpsMax = 870;
-
-	engineConfiguration->idleMode = IM_AUTO;
 
 	// 0.3#4 has wrong R139? TODO: fix that custom board to match proper value!!!
 	// set vbatt_divider 10.956
