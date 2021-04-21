@@ -17,7 +17,7 @@
 #define CAN_TIMEOUT MS2NT(100)
 
 //can tx periodic task cycle time in frequency, 200hz -> 5ms period
-#define CAN_CYCLE_FREQ		(200)
+#define CAN_CYCLE_FREQ		(200.0f)
 //can tx periodic task cycle time in ms
 #define CAN_CYCLE_PERIOD    (CH_CFG_ST_FREQUENCY / CAN_CYCLE_FREQ)
 

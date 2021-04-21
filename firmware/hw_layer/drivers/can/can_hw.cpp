@@ -278,8 +278,6 @@ void initCan(void) {
 
 	// fire up threads, as necessary
 	if (CONFIG(canWriteEnabled)) {
-		//remove user interaction to ensure we do have correct period timing
-		canWrite.setPeriod(CAN_CYCLE_PERIOD);
 		canWrite.Start();
 	}
 
