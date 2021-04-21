@@ -77,12 +77,12 @@ static void extCallback(ioportmask_t channel) {
 }
 
 static void joystickInfo(void) {
-	scheduleMsg(sharedLogger, "total %d center=%d@%s", joyTotal, joyCenter,
+	efiPrintf("total %d center=%d@%s", joyTotal, joyCenter,
 			hwPortname(CONFIG(joystickCenterPin)));
-	scheduleMsg(sharedLogger, "a=%d@%s", joyA, hwPortname(CONFIG(joystickAPin)));
-	scheduleMsg(sharedLogger, "b=%d@%s", joyB, hwPortname(CONFIG(joystickBPin)));
-	scheduleMsg(sharedLogger, "c=%d@%s", joyC, hwPortname(CONFIG(joystickCPin)));
-	scheduleMsg(sharedLogger, "d=%d@%s", joyD, hwPortname(CONFIG(joystickDPin)));
+	efiPrintf("a=%d@%s", joyA, hwPortname(CONFIG(joystickAPin)));
+	efiPrintf("b=%d@%s", joyB, hwPortname(CONFIG(joystickBPin)));
+	efiPrintf("c=%d@%s", joyC, hwPortname(CONFIG(joystickCPin)));
+	efiPrintf("d=%d@%s", joyD, hwPortname(CONFIG(joystickDPin)));
 }
 
 static bool isJoystickEnabled() {

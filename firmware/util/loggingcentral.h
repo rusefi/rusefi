@@ -16,14 +16,13 @@ const char* swapOutputBuffers(size_t *actualOutputBufferSize);
 
 namespace priv
 {
-	// internal implementation, use scheduleMsg below
+	// internal implementation, use efiPrintf below
 	void efiPrintfInternal(const char *fmt, ...);
 }
 
 // "normal" logging messages need a header and footer, so put them in
 // the format string at compile time
 #define efiPrintf(fmt, ...) priv::efiPrintfInternal(PROTOCOL_MSG DELIMETER fmt DELIMETER, ##__VA_ARGS__)
-#define scheduleMsg(logging, fmt, ...) efiPrintf(fmt, ##__VA_ARGS__)
 
 /**
  * This is the legacy function to copy the contents of a local Logging object in to the output buffer
