@@ -17,7 +17,6 @@
 
 EXTERN_ENGINE;
 
-static Logging *logger;
 static bool isInit = false;
 static uint16_t filterCanID = 0;
 static efitick_t frameTime;
@@ -115,10 +114,8 @@ float getVehicleCanSpeed(void) {
     }
 }
 
-void initCanVssSupport(Logging *logger_ptr) {
-
+void initCanVssSupport() {
     addConsoleAction("canvssinfo", canVssInfo);
-    logger = logger_ptr;
 
     if (CONFIG(enableCanVss)) {
 

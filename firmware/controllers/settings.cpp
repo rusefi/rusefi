@@ -61,7 +61,7 @@ static Logging logger("settings control", LOGGING_BUFFER, sizeof(LOGGING_BUFFER)
 
 EXTERN_ENGINE;
 
-void printSpiState(Logging *logger, const engine_configuration_s *engineConfiguration) {
+void printSpiState(const engine_configuration_s *engineConfiguration) {
 	efiPrintf("spi 1=%s/2=%s/3=%s/4=%s",
 		boolToString(engineConfiguration->is_enabled_spi_1),
 		boolToString(engineConfiguration->is_enabled_spi_2),
@@ -213,7 +213,7 @@ void printConfiguration(const engine_configuration_s *engineConfiguration) {
 	}
 #if EFI_PROD_CODE
 
-	printSpiState(&logger, engineConfiguration);
+	printSpiState(engineConfiguration);
 
 #endif /* EFI_PROD_CODE */
 }
@@ -238,8 +238,8 @@ void setEngineType(int value) {
 	{
 		chibios_rt::CriticalSectionLocker csl;
 
-		engineConfiguration->engineType = (engine_type_e) value;
-		resetConfigurationExt(&logger, (engine_type_e) value PASS_ENGINE_PARAMETER_SUFFIX);
+		engineConfiguration->engineType = (engine_type_e)value;
+		resetConfigurationExt((engine_type_e)value PASS_ENGINE_PARAMETER_SUFFIX);
 		engine->resetEngineSnifferIfInTestMode();
 
 	#if EFI_INTERNAL_FLASH
@@ -461,7 +461,6 @@ static void setToothedWheel(int total, int skipped DECLARE_ENGINE_PARAMETER_SUFF
 
 	efiPrintf("toothed: total=%d/skipped=%d", total, skipped);
 	setToothedWheelConfiguration(&engine->triggerCentral.triggerShape, total, skipped, engineConfiguration->ambiguousOperationMode);
-//	initializeTriggerWaveform(&logger, engineConfiguration, engineConfiguration2);
 	incrementGlobalConfigurationVersion(PASS_ENGINE_PARAMETER_SIGNATURE);
 	doPrintConfiguration();
 }
@@ -802,7 +801,7 @@ static void setSpiMode(int index, bool mode) {
 		efiPrintf("invalid spi index %d", index);
 		return;
 	}
-	printSpiState(&logger, engineConfiguration);
+	printSpiState(engineConfiguration);
 }
 
 static void enableOrDisable(const char *param, bool isEnabled) {

@@ -18,8 +18,6 @@
 
 EXTERN_ENGINE;
 
-static Logging *logger;
-
 static volatile int centeredDacValue = 127;
 static volatile int toothCnt = 0;
 static volatile int dacHysteresisMin = 1;	// = 5V * 1/256 (8-bit DAC) = ~20mV
@@ -98,8 +96,7 @@ static COMPConfig comp_shaft_cfg = {
 
 static bool isCompEnabled = false;
 
-void turnOnTriggerInputPins(Logging *sharedLogger) {
-	logger = sharedLogger;
+void turnOnTriggerInputPins() {
 	compInit();
 	compStart(EFI_COMP_PRIMARY_DEVICE, &comp_shaft_cfg);
 

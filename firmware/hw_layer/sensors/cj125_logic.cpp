@@ -50,19 +50,19 @@ void CJ125::StartHeaterControl(pwm_gen_callback *stateChangeCallback DECLARE_ENG
 	SetIdleHeater(PASS_ENGINE_PARAMETER_SIGNATURE);
 }
 
-static void printDiagCode(Logging * logging, const char *msg, int code, const char *code1message) {
+static void printDiagCode(const char *msg, int code, const char *code1message) {
 	switch(code & 0x3) {
 	case 0:
-		scheduleMsg(logging, "%s Short to GND", msg);
+		efiPrintf("%s Short to GND", msg);
 		return;
 	case 1:
-		scheduleMsg(logging, "%s %s", msg, code1message);
+		efiPrintf("%s %s", msg, code1message);
 		return;
 	case 2:
-		scheduleMsg(logging, "%s Short to Vbatt", msg);
+		efiPrintf("%s Short to Vbatt", msg);
 		return;
 	case 3:
-		scheduleMsg(logging, "%s LOOKS GOOD", msg);
+		efiPrintf("%s LOOKS GOOD", msg);
 		return;
 	}
 }
@@ -72,10 +72,10 @@ void CJ125::printDiag() {
 		efiPrintf("cj125: diag Looks great!");
 	} else {
 		efiPrintf("cj125: diag NOT GOOD");
-		printDiagCode(logger, "VM", diag, LOW_VOLTAGE);
-		printDiagCode(logger, "UN", diag >> 2, LOW_VOLTAGE);
-		printDiagCode(logger, "IA", diag >> 4, LOW_VOLTAGE);
-		printDiagCode(logger, "HR", diag >> 6, "open load");
+		printDiagCode("VM", diag, LOW_VOLTAGE);
+		printDiagCode("UN", diag >> 2, LOW_VOLTAGE);
+		printDiagCode("IA", diag >> 4, LOW_VOLTAGE);
+		printDiagCode("HR", diag >> 6, "open load");
 /* todo: do we want to throw CRITICAL on diag start-up error? probably not?
 		firmwareError(CUSTOM_ERR_CJ125_DIAG, "CJ125 is not well");
 */

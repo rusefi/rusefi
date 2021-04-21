@@ -19,8 +19,6 @@
 
 EXTERN_ENGINE;
 
-static Logging *logger;
-
 enum {
 	LCD_HD44780_DISPLAY_CLEAR = 0x01,
 	LCD_HD44780_SHIFT_CURSOR_RIGHT = 0x06,
@@ -222,9 +220,7 @@ void startHD44780_pins() {
 	}
 }
 
-void lcd_HD44780_init(Logging *sharedLogger) {
-	logger = sharedLogger;
-
+void lcd_HD44780_init() {
 	addConsoleAction("lcdinfo", lcdInfo);
 
 	if (engineConfiguration->displayMode == DM_NONE) {

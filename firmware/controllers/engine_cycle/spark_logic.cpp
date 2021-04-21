@@ -516,10 +516,6 @@ void onTriggerEventSparkLogic(bool limitedSpark, uint32_t trgEventIndex, int rpm
 	}
 }
 
-void initSparkLogic(Logging *sharedLogger) {
-	logger = sharedLogger;
-}
-
 /**
  * Number of sparks per physical coil
  * @see getNumberOfInjections

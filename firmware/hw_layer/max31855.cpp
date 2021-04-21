@@ -29,15 +29,13 @@
 
 static SPIDriver *driver;
 
-static Logging* logger;
-
 static SPIConfig spiConfig[EGT_CHANNEL_COUNT];
 
 EXTERN_ENGINE;
 
 static void showEgtInfo(void) {
 #if EFI_PROD_CODE
-	printSpiState(logger, engineConfiguration);
+	printSpiState(engineConfiguration);
 
 	efiPrintf("EGT spi: %d", CONFIG(max31855spiDevice));
 
@@ -141,14 +139,12 @@ static void egtRead(void) {
 	}
 }
 
-void initMax31855(Logging *sharedLogger, spi_device_e device, egt_cs_array_t max31855_cs) {
+void initMax31855(spi_device_e device, egt_cs_array_t max31855_cs) {
 	driver = getSpiDevice(device);
 	if (driver == NULL) {
 		// error already reported
 		return;
 	}
-
-	logger = sharedLogger;
 
 	// todo:spi device is now enabled separately - should probably be enabled here
 

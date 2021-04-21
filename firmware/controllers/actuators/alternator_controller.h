@@ -11,7 +11,7 @@
 #pragma once
 
 #include "engine.h"
-void initAlternatorCtrl(Logging *sharedLogger);
+void initAlternatorCtrl();
 void startAlternatorPin(void);
 void stopAlternatorPin(void);
 void setAltPFactor(float p);

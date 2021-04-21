@@ -27,7 +27,6 @@
 
 EXTERN_ENGINE;
 
-static Logging *logger;
 static boostOpenLoop_Map3D_t boostMapOpen("boostmapopen");
 static boostOpenLoop_Map3D_t boostMapClosed("boostmapclosed");
 static SimplePwm boostPwmControl("boost");
@@ -204,7 +203,7 @@ void onConfigurationChangeBoostCallback(engine_configuration_s *previousConfigur
 	boostController.onConfigurationChange(&previousConfiguration->boostPid);
 }
 
-void initBoostCtrl(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX) {
+void initBoostCtrl(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	// todo: why do we have 'isBoostControlEnabled' setting exactly?
 	// 'initAuxPid' is an example of a subsystem without explicit enable
 	if (!CONFIG(isBoostControlEnabled)) {
@@ -221,8 +220,6 @@ void initBoostCtrl(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	if (!isBrainPinValid(CONFIG(boostControlPin)) && !hasAnyEtbWastegate) {
 		return;
 	}
-
-	logger = sharedLogger;
 
 	// Set up open & closed loop tables
 	boostMapOpen.init(config->boostTableOpenLoop, config->boostTpsBins, config->boostRpmBins);

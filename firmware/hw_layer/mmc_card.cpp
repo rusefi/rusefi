@@ -130,7 +130,7 @@ static void sdStatistics(void) {
 	printMmcPinout();
 	efiPrintf("SD enabled=%s status=%s", boolToString(CONFIG(isSdCardEnabled)),
 			sdStatus);
-	printSpiConfig(nullptr, "SD", mmcSpiDevice);
+	printSpiConfig("SD", mmcSpiDevice);
 	if (isSdCardAlive()) {
 		efiPrintf("filename=%s size=%d", logName, totalLoggedBytes);
 	}

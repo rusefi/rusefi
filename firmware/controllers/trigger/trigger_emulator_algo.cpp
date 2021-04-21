@@ -83,7 +83,6 @@ static float pwmSwitchTimesBuffer[PWM_PHASE_MAX_COUNT];
 
 PwmConfig triggerSignal(pwmSwitchTimesBuffer, sr);
 
-static Logging *logger;
 static int atTriggerVersion = 0;
 
 #if EFI_ENGINE_SNIFFER
@@ -185,9 +184,7 @@ void disableTriggerStimulator() {
 	hasInitTriggerEmulator = false;
 }
 
-void initTriggerEmulatorLogic(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX) {
-	logger = sharedLogger;
-
+void initTriggerEmulatorLogic(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	addConsoleActionI(CMD_RPM, setTriggerEmulatorRPM);
 }
 
@@ -199,12 +196,12 @@ void onConfigurationChangeRpmEmulatorCallback(engine_configuration_s *previousCo
 	setTriggerEmulatorRPM(engineConfiguration->triggerSimulatorFrequency);
 }
 
-void initTriggerEmulator(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX) {
-	scheduleMsg(sharedLogger, "Emulating %s", getConfigurationName(engineConfiguration->engineType));
+void initTriggerEmulator(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+	efiPrintf("Emulating %s", getConfigurationName(engineConfiguration->engineType));
 
 	startTriggerEmulatorPins();
 
-	initTriggerEmulatorLogic(sharedLogger);
+	initTriggerEmulatorLogic();
 }
 
 void startTriggerEmulatorPins() {

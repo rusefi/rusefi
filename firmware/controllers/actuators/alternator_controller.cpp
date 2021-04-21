@@ -31,8 +31,6 @@
 
 EXTERN_ENGINE;
 
-static Logging *logger;
-
 static SimplePwm alternatorControl("alt");
 static PidIndustrial alternatorPid(&persistentState.persistentConfiguration.engineConfiguration.alternatorControl);
 
@@ -163,8 +161,7 @@ void onConfigurationChangeAlternatorCallback(engine_configuration_s *previousCon
 	shouldResetPid = !alternatorPid.isSame(&previousConfiguration->alternatorControl);
 }
 
-void initAlternatorCtrl(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX) {
-	logger = sharedLogger;
+void initAlternatorCtrl(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	addConsoleAction("altinfo", showAltInfo);
 	if (!isBrainPinValid(CONFIG(alternatorControlPin)))
 		return;

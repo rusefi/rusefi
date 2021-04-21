@@ -136,7 +136,6 @@ void icuTriggerTurnOffInputPin(brain_pin_e brainPin) {
 	stopDigitalCapture("trigger", brainPin);
 }
 
-void icuTriggerTurnOnInputPins(Logging *sharedLogger) {
-	logger = sharedLogger;
+void icuTriggerTurnOnInputPins() {
 }
 #endif /* (EFI_SHAFT_POSITION_INPUT && (HAL_USE_ICU == TRUE)) */

@@ -68,8 +68,7 @@ void auxPlainPinTurnOn(AuxActor *current) {
 			);
 	}
 
-void initAuxValves(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX) {
-	UNUSED(sharedLogger);
+void initAuxValves(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	if (!isBrainPinValid(engineConfiguration->auxValves[0])) {
 		return;
 	}
