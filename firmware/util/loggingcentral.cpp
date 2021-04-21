@@ -236,7 +236,7 @@ void efiPrintfInternal(const char *format, ...) {
  * This method appends the content of specified thread-local logger into the global buffer
  * of logging content.
  * 
- * This is a legacy function, most normal logging should use scheduleMsg
+ * This is a legacy function, most normal logging should use efiPrintf
  */
 void scheduleLogging(Logging *logging) {
 #if EFI_PROD_CODE && EFI_TEXT_LOGGING
