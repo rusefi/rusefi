@@ -20,9 +20,7 @@ extern "C" void toggleLed(int led, int mode);
 #define BOARD_MOD1_PORT GPIOD
 #define BOARD_MOD1_PIN 5
 
-EXTERN_ENGINE
-;
-static Logging *logger;
+EXTERN_ENGINE;
 
 #if 0
 static volatile int centeredDacValue = 127;
@@ -181,9 +179,7 @@ static void comp_cam_callback(COMPDriver *comp) {
 }
 #endif
 
-void turnOnTriggerInputPins(Logging *sharedLogger) {
-	logger = sharedLogger;
-
+void turnOnTriggerInputPins() {
 	applyNewTriggerInputPins();
 }
 

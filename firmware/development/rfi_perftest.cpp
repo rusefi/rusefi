@@ -22,8 +22,6 @@
 #if EFI_PERF_METRICS
 #include "test.h"
 
-static Logging* logger;
-
 static void testSystemCalls(const int count) {
 	time_t start, time;
 	long result = 0;
@@ -297,8 +295,7 @@ static void runChibioTest(void) {
 	TestThread(getConsoleChannel());
 }
 
-void initTimePerfActions(Logging *sharedLogger) {
-	logger = sharedLogger;
+void initTimePerfActions() {
 #if EFI_RTC
 	rtcStartTime = rtcGetTimeUnixSec(&RTCD1);
 #endif

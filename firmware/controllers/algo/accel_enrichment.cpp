@@ -36,8 +36,6 @@ EXTERN_ENGINE;
 
 tps_tps_Map3D_t tpsTpsMap("tpsTps");
 
-static Logging *logger = nullptr;
-
 void WallFuel::resetWF() {
 	wallFuel = 0;
 }
@@ -326,9 +324,6 @@ AccelEnrichment::AccelEnrichment() {
 #if ! EFI_UNIT_TEST
 
 static void accelInfo() {
-	if (!logger) {
-		return;
-	}
 //	efiPrintf("EL accel length=%d", mapInstance.cb.getSize());
 	efiPrintf("EL accel th=%.2f/mult=%.2f", engineConfiguration->engineLoadAccelEnrichmentThreshold, engineConfiguration->engineLoadAccelEnrichmentMultiplier);
 	efiPrintf("EL decel th=%.2f/mult=%.2f", engineConfiguration->engineLoadDecelEnleanmentThreshold, engineConfiguration->engineLoadDecelEnleanmentMultiplier);
@@ -400,8 +395,7 @@ void updateAccelParameters() {
 #endif /* ! EFI_UNIT_TEST */
 
 
-void initAccelEnrichment(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX) {
-	logger = sharedLogger;
+void initAccelEnrichment(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	tpsTpsMap.init(config->tpsTpsAccelTable, config->tpsTpsAccelFromRpmBins, config->tpsTpsAccelToRpmBins);
 
 #if ! EFI_UNIT_TEST

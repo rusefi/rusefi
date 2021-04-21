@@ -41,7 +41,6 @@ static bool flag0after = false;
 
 static unsigned short mcChipId;
 static unsigned short mcDriverStatus;
-static Logging* logger;
 
 static SPIConfig spiCfg = { .circular = false,
 		.end_cb = NULL,
@@ -415,9 +414,7 @@ static void download_register(int r_target) {
 
 static bool haveMc33816 = false;
 
-void initMc33816(Logging *sharedLogger) {
-	logger = sharedLogger;
-
+void initMc33816() {
 	//
 	// see setTest33816EngineConfiguration for default configuration
 	// Pins

@@ -39,7 +39,7 @@ expected<float> getEngineValue(le_action_e action DECLARE_ENGINE_PARAMETER_SUFFI
 void setFsio(int index, brain_pin_e pin, const char * exp DECLARE_CONFIG_PARAMETER_SUFFIX);
 void setFsioExt(int index, brain_pin_e pin, const char * exp, int pwmFrequency DECLARE_CONFIG_PARAMETER_SUFFIX);
 
-void initFsioImpl(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX);
+void initFsioImpl(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 void runFsio(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 void setFsioExpression(const char *indexStr, const char *quotedLine DECLARE_CONFIG_PARAMETER_SUFFIX);
 void applyFsioExpression(const char *indexStr, const char *quotedLine DECLARE_ENGINE_PARAMETER_SUFFIX);

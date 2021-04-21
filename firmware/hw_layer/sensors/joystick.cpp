@@ -32,7 +32,6 @@ static int joyD = 0;
 // 50ms
 #define NT_EVENT_GAP US2NT(50 *1000)
 
-static Logging *sharedLogger;
 static efitick_t lastEventTime = 0;
 
 static bool isJitter() {
@@ -111,12 +110,11 @@ void startJoystickPins() {
 	efiSetPadModeWithoutOwnershipAcquisition("joy D", CONFIG(joystickDPin), PAL_MODE_INPUT_PULLUP);
 }
 
-void initJoystick(Logging *shared) {
+void initJoystick() {
 	int channel;
 	addConsoleAction("joystickinfo", joystickInfo);
 	if (!isJoystickEnabled())
 		return;
-	sharedLogger = shared;
 
 	channel = getHwPin("joy", CONFIG(joystickCenterPin));
 	efiExtiEnablePin("joy", CONFIG(joystickCenterPin), PAL_EVENT_MODE_RISING_EDGE, (palcallback_t)(void *)extCallback, (void *)channel);

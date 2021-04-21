@@ -8,7 +8,7 @@
 #pragma once
 
 float getVehicleCanSpeed(void);
-void initCanVssSupport(Logging *logger_ptr);
+void initCanVssSupport();
 void setCanVss(int type);
 
 #if EFI_CAN_SUPPORT

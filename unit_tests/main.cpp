@@ -29,8 +29,6 @@ efitick_t getTimeNowNt(void) {
 	return getTimeNowUs() * US_TO_NT_MULTIPLIER;
 }
 
-LoggingWithStorage sharedLogger("main");
-
 bool verboseMode = false;
 
 GTEST_API_ int main(int argc, char **argv) {

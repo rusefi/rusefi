@@ -77,8 +77,6 @@ int TriggerCentral::getHwEventCounter(int index) const {
 
 EXTERN_ENGINE;
 
-static Logging *logger;
-
 angle_t TriggerCentral::getVVTPosition(uint8_t bankIndex, uint8_t camIndex) {
 	return vvtPosition[bankIndex][camIndex];
 }
@@ -686,7 +684,7 @@ void onConfigurationChangeTriggerCallback(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 		assertEngineReference();
 
 	#if EFI_ENGINE_CONTROL
-		ENGINE(initializeTriggerWaveform(logger PASS_ENGINE_PARAMETER_SUFFIX));
+		ENGINE(initializeTriggerWaveform(PASS_ENGINE_PARAMETER_SIGNATURE));
 		engine->triggerCentral.noiseFilter.resetAccumSignalData();
 	#endif
 	}
@@ -711,8 +709,7 @@ bool isTriggerConfigChanged(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	return engine->isTriggerConfigChanged;
 }
 
-void initTriggerCentral(Logging *sharedLogger) {
-	logger = sharedLogger;
+void initTriggerCentral() {
 	strcpy((char*) shaft_signal_msg_index, "x_");
 
 #if EFI_ENGINE_SNIFFER

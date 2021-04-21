@@ -21,8 +21,6 @@
 	#error "PAL_USE_CALLBACKS should be enabled to use HAL_TRIGGER_USE_PAL"
 #endif
 
-static Logging *logger;
-
 EXTERN_ENGINE;
 
 static ioline_t shaftLines[TRIGGER_SUPPORTED_CHANNELS];
@@ -109,8 +107,7 @@ void extiTriggerTurnOffInputPin(brain_pin_e brainPin) {
 	efiExtiDisablePin(brainPin);
 }
 
-void extiTriggerTurnOnInputPins(Logging *sharedLogger) {
-	logger = sharedLogger;
+void extiTriggerTurnOnInputPins() {
 }
 
 #endif /* (EFI_SHAFT_POSITION_INPUT && (HAL_TRIGGER_USE_PAL == TRUE)) */

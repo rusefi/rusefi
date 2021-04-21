@@ -65,8 +65,6 @@ static const char *prevOutputName = nullptr;
 
 static InjectionEvent primeInjEvent;
 
-static Logging *logger;
-
 // todo: figure out if this even helps?
 //#if defined __GNUC__
 //#define RAM_METHOD_PREFIX __attribute__((section(".ram")))
@@ -544,8 +542,7 @@ static void showMainInfo(Engine *engine) {
 #endif /* EFI_PROD_CODE */
 }
 
-void initMainEventListener(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX) {
-	logger = sharedLogger;
+void initMainEventListener(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	efiAssertVoid(CUSTOM_ERR_6631, engine!=NULL, "null engine");
 
 #if EFI_PROD_CODE

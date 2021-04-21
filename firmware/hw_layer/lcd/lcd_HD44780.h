@@ -14,7 +14,7 @@ extern "C"
 
 void startHD44780_pins();
 void stopHD44780_pins();
-void lcd_HD44780_init(Logging *sharedLogger);
+void lcd_HD44780_init();
 void lcd_HD44780_set_position(uint8_t row, uint8_t column);
 void lcd_HD44780_print_char(char data);
 void lcd_HD44780_print_string(const char *string);

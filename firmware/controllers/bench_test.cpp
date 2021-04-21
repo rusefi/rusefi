@@ -60,7 +60,6 @@
 
 EXTERN_ENGINE;
 
-static Logging * logger;
 static bool isRunningBench = false;
 
 bool isRunningBenchTest(void) {
@@ -494,9 +493,7 @@ void executeTSCommand(uint16_t subsystem, uint16_t index) {
 	}
 }
 
-void initBenchTest(Logging *sharedLogger) {
-	logger = sharedLogger;
-
+void initBenchTest() {
 	addConsoleAction("fuelpumpbench", fuelPumpBench);
 	addConsoleAction("acrelaybench", acRelayBench);
 	addConsoleActionS("fuelpumpbench2", fuelPumpBenchExt);

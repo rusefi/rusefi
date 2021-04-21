@@ -84,8 +84,6 @@ int RpmCalculator::getRpm() const {
 
 EXTERN_ENGINE;
 
-static Logging * logger;
-
 RpmCalculator::RpmCalculator() :
 		StoredValueSensor(SensorType::Rpm, 0)
 	{
@@ -374,10 +372,9 @@ float getCrankshaftAngleNt(efitick_t timeNt DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	return rpm == 0 ? NAN : timeSinceZeroAngle / oneDegreeSeconds;
 }
 
-void initRpmCalculator(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX) {
+void initRpmCalculator(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	INJECT_ENGINE_REFERENCE(&ENGINE(rpmCalculator));
 
-	logger = sharedLogger;
 #if ! HW_CHECK_MODE
 	if (hasFirmwareError()) {
 		return;

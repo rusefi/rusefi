@@ -37,8 +37,6 @@ EXTERN_ENGINE;
 
 extern WaveChart waveChart;
 
-LoggingWithStorage sharedLogger("simulator");
-
 int getRemainingStack(thread_t *otp) {
 	return 99999;
 }
@@ -104,13 +102,13 @@ void rusEfiFunctionalTest(void) {
 
 	// todo: reduce code duplication with initEngineContoller
 
-	resetConfigurationExt(NULL, FORD_ESCORT_GT PASS_ENGINE_PARAMETER_SUFFIX);
+	resetConfigurationExt(FORD_ESCORT_GT PASS_ENGINE_PARAMETER_SUFFIX);
 	enableTriggerStimulator();
 
-	commonInitEngineController(&sharedLogger);
+	commonInitEngineController();
 
-	initTriggerCentral(&sharedLogger);
-	initTriggerEmulator(&sharedLogger PASS_ENGINE_PARAMETER_SUFFIX);
+	initTriggerCentral();
+	initTriggerEmulator(PASS_ENGINE_PARAMETER_SIGNATURE);
 
 	startStatusThreads();
 

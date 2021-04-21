@@ -103,7 +103,7 @@ trigger_type_e getVvtTriggerType(vvt_mode_e vvtMode) {
 	}
 }
 
-static void initVvtShape(Logging *logger, int camIndex, TriggerState &initState DECLARE_ENGINE_PARAMETER_SUFFIX) {
+static void initVvtShape(int camIndex, TriggerState &initState DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	vvt_mode_e vvtMode = engineConfiguration->vvtMode[camIndex];
 	TriggerWaveform *shape = &ENGINE(triggerCentral).vvtShape[camIndex];
 
@@ -117,7 +117,7 @@ static void initVvtShape(Logging *logger, int camIndex, TriggerState &initState 
 		trigger_config_s config;
 		ENGINE(triggerCentral).vvtTriggerType[camIndex] = config.type = getVvtTriggerType(vvtMode);
 
-		shape->initializeTriggerWaveform(logger,
+		shape->initializeTriggerWaveform(
 				engineConfiguration->ambiguousOperationMode,
 				CONFIG(vvtCamSensorUseRise), &config);
 
@@ -128,7 +128,7 @@ static void initVvtShape(Logging *logger, int camIndex, TriggerState &initState 
 
 }
 
-void Engine::initializeTriggerWaveform(Logging *logger DECLARE_ENGINE_PARAMETER_SUFFIX) {
+void Engine::initializeTriggerWaveform(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	static TriggerState initState;
 	INJECT_ENGINE_REFERENCE(&initState);
 
@@ -142,7 +142,7 @@ void Engine::initializeTriggerWaveform(Logging *logger DECLARE_ENGINE_PARAMETER_
 	// we have a confusing threading model so some synchronization would not hurt
 	chibios_rt::CriticalSectionLocker csl;
 
-	TRIGGER_WAVEFORM(initializeTriggerWaveform(logger,
+	TRIGGER_WAVEFORM(initializeTriggerWaveform(
 			engineConfiguration->ambiguousOperationMode,
 			engineConfiguration->useOnlyRisingEdgeForTrigger, &engineConfiguration->trigger));
 
@@ -159,8 +159,8 @@ void Engine::initializeTriggerWaveform(Logging *logger DECLARE_ENGINE_PARAMETER_
 	}
 
 
-	initVvtShape(logger, 0, initState PASS_ENGINE_PARAMETER_SUFFIX);
-	initVvtShape(logger, 1, initState PASS_ENGINE_PARAMETER_SUFFIX);
+	initVvtShape(0, initState PASS_ENGINE_PARAMETER_SUFFIX);
+	initVvtShape(1, initState PASS_ENGINE_PARAMETER_SUFFIX);
 
 
 	if (!TRIGGER_WAVEFORM(shapeDefinitionError)) {

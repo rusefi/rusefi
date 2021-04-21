@@ -37,8 +37,6 @@ EXTERN_ENGINE;
 #include "backup_ram.h"
 #include "pin_repository.h"
 
-static Logging *logger;
-
 static CJ125 globalInstance;
 
 #if ! EFI_UNIT_TEST
@@ -243,7 +241,7 @@ static void cjSetI(float value) {
 static void cjInfo() {
 	cjPrintState();
 #if HAL_USE_SPI
-	printSpiConfig(logger, "cj125", CONFIG(cj125SpiDevice));
+	printSpiConfig("cj125", CONFIG(cj125SpiDevice));
 #endif /* HAL_USE_SPI */
 }
 
@@ -604,10 +602,8 @@ void cjPostState(TunerStudioOutputChannels *tsOutputChannels) {
 }
 #endif /* EFI_TUNER_STUDIO */
 
-void initCJ125(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX) {
-	logger = sharedLogger;
+void initCJ125(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	globalInstance.spi = &spi;
-	globalInstance.logger = sharedLogger;
 
 	if (!CONFIG(isCJ125Enabled)) {
 		globalInstance.errorCode = CJ125_ERROR_DISABLED;

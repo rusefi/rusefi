@@ -468,7 +468,7 @@ void TriggerWaveform::setSecondTriggerSynchronizationGap(float syncRatio) {
 /**
  * External logger is needed because at this point our logger is not yet initialized
  */
-void TriggerWaveform::initializeTriggerWaveform(Logging *logger, operation_mode_e ambiguousOperationMode, bool useOnlyRisingEdgeForTrigger, const trigger_config_s *triggerConfig) {
+void TriggerWaveform::initializeTriggerWaveform(operation_mode_e ambiguousOperationMode, bool useOnlyRisingEdgeForTrigger, const trigger_config_s *triggerConfig) {
 
 #if EFI_PROD_CODE
 	efiAssertVoid(CUSTOM_ERR_6641, getCurrentRemainingStack() > EXPECTED_REMAINING_STACK, "init t");
