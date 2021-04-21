@@ -171,8 +171,6 @@ void Logging::appendFloat(float value, int precision) {
 	}
 }
 
-static char header[16];
-
 void appendMsgPrefix(Logging *logging) {
 	logging->append(PROTOCOL_MSG DELIMETER);
 }
