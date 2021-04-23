@@ -378,7 +378,7 @@ class CommunicationBlinkingTask : public PeriodicTimerController {
 			enginePins.communicationLedPin.setValue(0);
 #if HW_CHECK_SD
 extern int totalLoggedBytes;
-			if (totalLoggedBytes > 50000) {
+			if (totalLoggedBytes > 2000) {
 				enginePins.communicationLedPin.setValue(1);
 			}
 #endif // HW_CHECK_SD
