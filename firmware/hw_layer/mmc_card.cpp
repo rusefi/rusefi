@@ -50,7 +50,7 @@ EXTERN_ENGINE;
 // at about 20Hz we write about 2Kb per second, looks like we flush once every ~2 seconds
 #define F_SYNC_FREQUENCY 10
 
-static int totalLoggedBytes = 0;
+int totalLoggedBytes = 0;
 static int fileCreatedCounter = 0;
 static int writeCounter = 0;
 static int totalWritesCounter = 0;
