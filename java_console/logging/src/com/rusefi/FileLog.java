@@ -54,7 +54,8 @@ public enum FileLog {
         try {
             fileLog = openLog();
         } catch (FileNotFoundException e) {
-            throw new IllegalStateException(e);
+            // Access is denied would be an example of a legit exception to happen here
+            return;
         }
         new Thread(FileLog::writeReadmeFile).start();
         // a bit strange spot for this invocation for sure
