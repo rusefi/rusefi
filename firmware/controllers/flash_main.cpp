@@ -162,7 +162,14 @@ static persisted_configuration_state_e doReadConfiguration(flashaddr_t address) 
  */
 static persisted_configuration_state_e readConfiguration() {
 	efiAssert(CUSTOM_ERR_ASSERT, getCurrentRemainingStack() > EXPECTED_REMAINING_STACK, "read f", PC_ERROR);
+#if HW_CHECK_MODE
+	persisted_configuration_state_e result = PC_OK;
+	resetConfigurationExt(DEFAULT_ENGINE_TYPE PASS_ENGINE_PARAMETER_SUFFIX);
+#else // HW_CHECK_MODE
 	persisted_configuration_state_e result = doReadConfiguration(getFlashAddrFirstCopy());
+
+
+
 	if (result != PC_OK) {
 		efiPrintf("Reading second configuration copy");
 		result = doReadConfiguration(getFlashAddrSecondCopy());
@@ -180,6 +187,7 @@ static persisted_configuration_state_e readConfiguration() {
 		 */
 		applyNonPersistentConfiguration(PASS_ENGINE_PARAMETER_SIGNATURE);
 	}
+#endif // HW_CHECK_MODE
 	// we can only change the state after the CRC check
 	engineConfiguration->byFirmwareVersion = getRusEfiVersion();
 	memset(persistentState.persistentConfiguration.warning_message , 0, ERROR_BUFFER_SIZE);
