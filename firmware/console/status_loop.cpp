@@ -376,6 +376,13 @@ class CommunicationBlinkingTask : public PeriodicTimerController {
 			setAllLeds(0);
 		} else if (counter % 2 == 0) {
 			enginePins.communicationLedPin.setValue(0);
+#if HW_CHECK_SD
+extern int totalLoggedBytes;
+			if (totalLoggedBytes > 50000) {
+				enginePins.communicationLedPin.setValue(1);
+			}
+#endif // HW_CHECK_SD
+
 #if HW_CHECK_MODE
 			// we have to do anything possible to help users notice FACTORY MODE
 			enginePins.errorLedPin.setValue(1);
