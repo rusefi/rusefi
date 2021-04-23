@@ -63,7 +63,7 @@ void TriggerEmulatorHelper::handleEmulatorCallback(PwmConfig *state, int stateIn
 
 			trigger_event_e event = (currentValue ? riseEvents : fallEvents)[i];
 
-			hwHandleShaftSignal(event, stamp);
+			handleShaftSignal(event, stamp);
 		}
 	}
 }
