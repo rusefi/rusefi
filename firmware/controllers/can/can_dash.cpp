@@ -77,6 +77,7 @@ static uint8_t seatbeltcnt;
 static uint8_t abscounter = 0xF0;
 static uint8_t brakecnt_1 = 0xF0, brakecnt_2 = 0xF0;
 static uint8_t mph_a, mph_2a, mph_last, tmp_cnt, gear_cnt;
+static uint16_t mph_counter = 0xF000;
 static bool cluster_time_set;
 
 constexpr uint8_t e90_temp_offset = 49;
@@ -956,6 +957,7 @@ void canDashboardHaltech(CanCycle cycle) {
 			msg[6] = 0x00;
 			msg[7] = 0x00;
 		}
+	}
 
 	if (cycle.isInterval(CI::_200ms)) {
 		/* 0x3E0 = 5Hz rate */
