@@ -278,7 +278,6 @@ void initCan(void) {
 
 	// fire up threads, as necessary
 	if (CONFIG(canWriteEnabled)) {
-		canWrite.setPeriod(CONFIG(canSleepPeriodMs));
 		canWrite.Start();
 	}
 
