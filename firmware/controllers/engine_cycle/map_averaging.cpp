@@ -44,7 +44,6 @@
 
 #define FAST_MAP_CHART_SKIP_FACTOR 16
 
-static Logging *logger;
 /**
  * this instance does not have a real physical pin - it's only used for engine sniffer
  */
@@ -315,7 +314,7 @@ void mapAveragingTriggerCallback(
 }
 
 static void showMapStats(void) {
-	scheduleMsg(logger, "per revolution %d", measurementsPerRevolution);
+	efiPrintf("per revolution %d", measurementsPerRevolution);
 }
 
 #if EFI_PROD_CODE
@@ -339,9 +338,7 @@ float getMap(void) {
 }
 #endif /* EFI_PROD_CODE */
 
-void initMapAveraging(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX) {
-	logger = sharedLogger;
-
+void initMapAveraging(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 #if !EFI_UNIT_TEST
 	addConsoleAction("faststat", showMapStats);
 #endif /* EFI_UNIT_TEST */

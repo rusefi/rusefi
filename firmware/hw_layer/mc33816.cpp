@@ -41,7 +41,6 @@ static bool flag0after = false;
 
 static unsigned short mcChipId;
 static unsigned short mcDriverStatus;
-static Logging* logger;
 
 static SPIConfig spiCfg = { .circular = false,
 		.end_cb = NULL,
@@ -62,21 +61,21 @@ static bool validateChipId() {
 
 static void showStats() {
 	if (!isInitializaed) {
-		scheduleMsg(logger, "WAITINIG FOR VBatt...");
+		efiPrintf("WAITINIG FOR VBatt...");
 	}
 	// x9D is product code or something, and 43 is the revision?
-	scheduleMsg(logger, "MC 0x%x %s", mcChipId, validateChipId() ? "hooray!" : "not hooray :(");
+	efiPrintf("MC 0x%x %s", mcChipId, validateChipId() ? "hooray!" : "not hooray :(");
 
     if (isBrainPinValid(CONFIG(mc33816_flag0))) {
-    	scheduleMsg(logger, "flag0 before %d after %d", flag0before, flag0after);
+    	efiPrintf("flag0 before %d after %d", flag0before, flag0after);
 
-    	scheduleMsg(logger, "flag0 right now %d", efiReadPin(CONFIG(mc33816_flag0)));
+    	efiPrintf("flag0 right now %d", efiReadPin(CONFIG(mc33816_flag0)));
 
     } else {
-    	scheduleMsg(logger, "No flag0 pin selected");
+    	efiPrintf("No flag0 pin selected");
     }
-    scheduleMsg(logger, "MC voltage %d", CONFIG(mc33_hvolt));
-    scheduleMsg(logger, "MC driver status 0x%x", mcDriverStatus);
+    efiPrintf("MC voltage %d", CONFIG(mc33_hvolt));
+    efiPrintf("MC driver status 0x%x", mcDriverStatus);
 }
 
 static void mcRestart();
@@ -415,9 +414,7 @@ static void download_register(int r_target) {
 
 static bool haveMc33816 = false;
 
-void initMc33816(Logging *sharedLogger) {
-	logger = sharedLogger;
-
+void initMc33816() {
 	//
 	// see setTest33816EngineConfiguration for default configuration
 	// Pins
@@ -469,13 +466,13 @@ static void mcRestart() {
 	flag0before = false;
 	flag0after = false;
 
-	scheduleMsg(logger, "MC Restart");
+	efiPrintf("MC Restart");
 	showStats();
 
 	driven.setValue(0); // ensure driven is off
 
 	if (Sensor::get(SensorType::BatteryVoltage).value_or(VBAT_FALLBACK_VALUE) < LOW_VBATT) {
-		scheduleMsg(logger, "GDI not Restarting until we see VBatt");
+		efiPrintf("GDI not Restarting until we see VBatt");
 		return;
 	}
 

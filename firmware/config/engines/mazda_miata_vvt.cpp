@@ -283,6 +283,8 @@ static void setMazdaMiataEngineNB2Defaults(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	engineConfiguration->useOnlyRisingEdgeForTrigger = true;
 	engineConfiguration->trigger.type = TT_MIATA_VVT;
 
+	engineConfiguration->idleMode = IM_AUTO;
+
 	setOperationMode(engineConfiguration, FOUR_STROKE_SYMMETRICAL_CRANK_SENSOR);
 	engineConfiguration->specs.displacement = 1.839;
 	engineConfiguration->cylinderBore = 83;
@@ -295,6 +297,10 @@ static void setMazdaMiataEngineNB2Defaults(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	setCommonNTCSensor(&engineConfiguration->clt, 2700);
 	setCommonNTCSensor(&engineConfiguration->iat, 2700);
 	setMAFTransferFunction(PASS_CONFIG_PARAMETER_SIGNATURE);
+
+    // second harmonic (aka double) is usually quieter background noise
+    // 13.8
+	engineConfiguration->knockBandCustom = 2 * HIP9011_BAND(engineConfiguration->cylinderBore);
 
 	// set tps_min 90
 	engineConfiguration->tpsMin = 100; // convert 12to10 bit (ADC/4)
@@ -511,7 +517,6 @@ void setMazdaMiata2003EngineConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	// set_analog_input_pin tps PC3
 	engineConfiguration->tps1_1AdcChannel = EFI_ADC_13; // PC3 blue
 
-	engineConfiguration->idleMode = IM_AUTO;
 	// set_analog_input_pin pps PA2
 /* a step back - Frankenso does not use ETB
 	engineConfiguration->throttlePedalPositionAdcChannel = EFI_ADC_2;
@@ -632,8 +637,6 @@ static void setMiataNB2_MRE_common(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 
 	// set tps_max 540
 	engineConfiguration->tpsMax = 870;
-
-	engineConfiguration->idleMode = IM_AUTO;
 
 	// 0.3#4 has wrong R139? TODO: fix that custom board to match proper value!!!
 	// set vbatt_divider 10.956
@@ -789,9 +792,6 @@ void setMiataNB2_ProteusEngineConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE) 
 
 
     CONFIG(enableSoftwareKnock) = true;
-    // second harmonic (aka double) is usually quieter background noise
-    // 13.8
-	engineConfiguration->knockBandCustom = 2 * HIP9011_BAND(engineConfiguration->cylinderBore);
 
     engineConfiguration->malfunctionIndicatorPin = GPIOB_6; // "Lowside 10"    # pin 20/black35
 
@@ -826,5 +826,8 @@ void setMiataNB2_ProteusEngineConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE) 
 void setMiataNB2_Hellen72(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
     setMazdaMiataEngineNB2Defaults(PASS_CONFIG_PARAMETER_SIGNATURE);
 	strcpy(CONFIG(vehicleName), "H72 test");
+
+    engineConfiguration->tachOutputPin = GPIOD_13; // 3O - TACH (PWM7)
+    engineConfiguration->alternatorControlPin = GPIOD_15; // 3M - ALTERN (PWM6)
 }
 #endif // HW_HELLEN

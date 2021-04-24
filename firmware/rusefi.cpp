@@ -136,8 +136,6 @@
 #include "engine_emulator.h"
 #endif /* EFI_ENGINE_EMULATOR */
 
-LoggingWithStorage sharedLogger("main");
-
 bool main_loop_started = false;
 
 static char panicMessage[200];
@@ -156,7 +154,7 @@ void rebootNow(void) {
  * Once day we will write graceful shutdown, but that would be one day.
  */
 static void scheduleReboot(void) {
-	scheduleMsg(&sharedLogger, "Rebooting in 3 seconds...");
+	efiPrintf("Rebooting in 3 seconds...");
 	chibios_rt::CriticalSectionLocker csl;
 	chVTSetI(&resetTimer, TIME_MS2I(3000), (vtfunc_t) rebootNow, NULL);
 }
@@ -184,25 +182,16 @@ void runRusEfi(void) {
 	addConsoleAction(CMD_REBOOT, scheduleReboot);
 	addConsoleAction(CMD_REBOOT_DFU, jump_to_bootloader);
 
-#if EFI_SHAFT_POSITION_INPUT
-	/**
-	 * This is so early because we want to init logger
-	 * which would be used while finding trigger sync index
-	 * while reading configuration
-	 */
-	initTriggerDecoderLogger(&sharedLogger);
-#endif /* EFI_SHAFT_POSITION_INPUT */
-
 	/**
 	 * we need to initialize table objects before default configuration can set values
 	 */
 	initDataStructures(PASS_ENGINE_PARAMETER_SIGNATURE);
 
 	// Perform hardware initialization that doesn't need configuration
-	initHardwareNoConfig(&sharedLogger);
+	initHardwareNoConfig();
 
 	// Read configuration from flash memory
-	loadConfiguration(&sharedLogger PASS_ENGINE_PARAMETER_SUFFIX);
+	loadConfiguration(PASS_ENGINE_PARAMETER_SIGNATURE);
 
 #if EFI_USB_SERIAL
 	startUsbConsole();
@@ -215,7 +204,7 @@ void runRusEfi(void) {
 	/**
 	 * Next we should initialize serial port console, it's important to know what's going on
 	 */
-	initializeConsole(&sharedLogger);
+	initializeConsole();
 
 #if EFI_TUNER_STUDIO
 	startTunerStudioConnectivity();
@@ -246,24 +235,24 @@ void runRusEfi(void) {
 		 * Now let's initialize actual engine control logic
 		 * todo: should we initialize some? most? controllers before hardware?
 		 */
-		initEngineContoller(&sharedLogger PASS_ENGINE_PARAMETER_SIGNATURE);
+		initEngineContoller(PASS_ENGINE_PARAMETER_SIGNATURE);
 
 		// This has to happen after RegisteredOutputPins are init'd: otherwise no change will be detected, and no init will happen
 		rememberCurrentConfiguration(PASS_ENGINE_PARAMETER_SIGNATURE);
 
 	#if EFI_PERF_METRICS
-		initTimePerfActions(&sharedLogger);
+		initTimePerfActions();
 	#endif
 			
 	#if EFI_ENGINE_EMULATOR
-		initEngineEmulator(&sharedLogger PASS_ENGINE_PARAMETER_SIGNATURE);
+		initEngineEmulator(PASS_ENGINE_PARAMETER_SIGNATURE);
 	#endif
 		startStatusThreads();
 
 		runSchedulingPrecisionTestIfNeeded();
 	}
 
-	scheduleMsg(&sharedLogger, "Running main loop");
+	efiPrintf("Running main loop");
 	main_loop_started = true;
 	/**
 	 * This loop is the closes we have to 'main loop' - but here we only publish the status. The main logic of engine

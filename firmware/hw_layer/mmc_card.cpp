@@ -50,7 +50,7 @@ EXTERN_ENGINE;
 // at about 20Hz we write about 2Kb per second, looks like we flush once every ~2 seconds
 #define F_SYNC_FREQUENCY 10
 
-static int totalLoggedBytes = 0;
+int totalLoggedBytes = 0;
 static int fileCreatedCounter = 0;
 static int writeCounter = 0;
 static int totalWritesCounter = 0;
@@ -130,7 +130,7 @@ static void sdStatistics(void) {
 	printMmcPinout();
 	efiPrintf("SD enabled=%s status=%s", boolToString(CONFIG(isSdCardEnabled)),
 			sdStatus);
-	printSpiConfig(nullptr, "SD", mmcSpiDevice);
+	printSpiConfig("SD", mmcSpiDevice);
 	if (isSdCardAlive()) {
 		efiPrintf("filename=%s size=%d", logName, totalLoggedBytes);
 	}

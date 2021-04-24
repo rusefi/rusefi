@@ -63,7 +63,7 @@ void TriggerEmulatorHelper::handleEmulatorCallback(PwmConfig *state, int stateIn
 
 			trigger_event_e event = (currentValue ? riseEvents : fallEvents)[i];
 
-			hwHandleShaftSignal(event, stamp);
+			handleShaftSignal(event, stamp);
 		}
 	}
 }
@@ -83,7 +83,6 @@ static float pwmSwitchTimesBuffer[PWM_PHASE_MAX_COUNT];
 
 PwmConfig triggerSignal(pwmSwitchTimesBuffer, sr);
 
-static Logging *logger;
 static int atTriggerVersion = 0;
 
 #if EFI_ENGINE_SNIFFER
@@ -106,13 +105,13 @@ void setTriggerEmulatorRPM(int rpm DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	}
 	engine->resetEngineSnifferIfInTestMode();
 
-	scheduleMsg(logger, "Emulating position sensor(s). RPM=%d", rpm);
+	efiPrintf("Emulating position sensor(s). RPM=%d", rpm);
 }
 
 static void updateTriggerWaveformIfNeeded(PwmConfig *state) {
 	if (atTriggerVersion < engine->triggerCentral.triggerShape.version) {
 		atTriggerVersion = engine->triggerCentral.triggerShape.version;
-		scheduleMsg(logger, "Stimulator: updating trigger shape: %d/%d %d", atTriggerVersion,
+		efiPrintf("Stimulator: updating trigger shape: %d/%d %d", atTriggerVersion,
 				engine->getGlobalConfigurationVersion(), currentTimeMillis());
 
 
@@ -185,9 +184,7 @@ void disableTriggerStimulator() {
 	hasInitTriggerEmulator = false;
 }
 
-void initTriggerEmulatorLogic(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX) {
-	logger = sharedLogger;
-
+void initTriggerEmulatorLogic(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	addConsoleActionI(CMD_RPM, setTriggerEmulatorRPM);
 }
 
@@ -199,12 +196,12 @@ void onConfigurationChangeRpmEmulatorCallback(engine_configuration_s *previousCo
 	setTriggerEmulatorRPM(engineConfiguration->triggerSimulatorFrequency);
 }
 
-void initTriggerEmulator(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX) {
-	scheduleMsg(sharedLogger, "Emulating %s", getConfigurationName(engineConfiguration->engineType));
+void initTriggerEmulator(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+	efiPrintf("Emulating %s", getConfigurationName(engineConfiguration->engineType));
 
 	startTriggerEmulatorPins();
 
-	initTriggerEmulatorLogic(sharedLogger);
+	initTriggerEmulatorLogic();
 }
 
 void startTriggerEmulatorPins() {

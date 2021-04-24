@@ -32,7 +32,6 @@ static int joyD = 0;
 // 50ms
 #define NT_EVENT_GAP US2NT(50 *1000)
 
-static Logging *sharedLogger;
 static efitick_t lastEventTime = 0;
 
 static bool isJitter() {
@@ -78,12 +77,12 @@ static void extCallback(ioportmask_t channel) {
 }
 
 static void joystickInfo(void) {
-	scheduleMsg(sharedLogger, "total %d center=%d@%s", joyTotal, joyCenter,
+	efiPrintf("total %d center=%d@%s", joyTotal, joyCenter,
 			hwPortname(CONFIG(joystickCenterPin)));
-	scheduleMsg(sharedLogger, "a=%d@%s", joyA, hwPortname(CONFIG(joystickAPin)));
-	scheduleMsg(sharedLogger, "b=%d@%s", joyB, hwPortname(CONFIG(joystickBPin)));
-	scheduleMsg(sharedLogger, "c=%d@%s", joyC, hwPortname(CONFIG(joystickCPin)));
-	scheduleMsg(sharedLogger, "d=%d@%s", joyD, hwPortname(CONFIG(joystickDPin)));
+	efiPrintf("a=%d@%s", joyA, hwPortname(CONFIG(joystickAPin)));
+	efiPrintf("b=%d@%s", joyB, hwPortname(CONFIG(joystickBPin)));
+	efiPrintf("c=%d@%s", joyC, hwPortname(CONFIG(joystickCPin)));
+	efiPrintf("d=%d@%s", joyD, hwPortname(CONFIG(joystickDPin)));
 }
 
 static bool isJoystickEnabled() {
@@ -111,12 +110,11 @@ void startJoystickPins() {
 	efiSetPadModeWithoutOwnershipAcquisition("joy D", CONFIG(joystickDPin), PAL_MODE_INPUT_PULLUP);
 }
 
-void initJoystick(Logging *shared) {
+void initJoystick() {
 	int channel;
 	addConsoleAction("joystickinfo", joystickInfo);
 	if (!isJoystickEnabled())
 		return;
-	sharedLogger = shared;
 
 	channel = getHwPin("joy", CONFIG(joystickCenterPin));
 	efiExtiEnablePin("joy", CONFIG(joystickCenterPin), PAL_EVENT_MODE_RISING_EDGE, (palcallback_t)(void *)extCallback, (void *)channel);

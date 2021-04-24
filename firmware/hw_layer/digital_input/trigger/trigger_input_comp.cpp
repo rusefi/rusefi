@@ -18,8 +18,6 @@
 
 EXTERN_ENGINE;
 
-static Logging *logger;
-
 static volatile int centeredDacValue = 127;
 static volatile int toothCnt = 0;
 static volatile int dacHysteresisMin = 1;	// = 5V * 1/256 (8-bit DAC) = ~20mV
@@ -44,7 +42,7 @@ static void setHysteresis(COMPDriver *comp, int sign) {
 		toothCnt = 0;
 		prevNt = nowNt;
 #ifdef TRIGGER_COMP_EXTREME_LOGGING
-		scheduleMsg(logger, "* f=%f d=%d", curVrFreqNt * 1000.0f, dacHysteresisDelta);
+		efiPrintf("* f=%f d=%d", curVrFreqNt * 1000.0f, dacHysteresisDelta);
 #endif /* TRIGGER_COMP_EXTREME_LOGGING */
 	}
 #endif /* EFI_TRIGGER_COMP_ADAPTIVE_HYSTERESIS */
@@ -98,8 +96,7 @@ static COMPConfig comp_shaft_cfg = {
 
 static bool isCompEnabled = false;
 
-void turnOnTriggerInputPins(Logging *sharedLogger) {
-	logger = sharedLogger;
+void turnOnTriggerInputPins() {
 	compInit();
 	compStart(EFI_COMP_PRIMARY_DEVICE, &comp_shaft_cfg);
 
@@ -114,7 +111,7 @@ static int getDacValue(uint8_t voltage DECLARE_ENGINE_PARAMETER_SUFFIX) {
 void startTriggerInputPins(void) {
 	//efiAssertVoid(CUSTOM_ERR_, !isCompEnabled, "isCompEnabled");
 	if (isCompEnabled) {
-		scheduleMsg(logger, "startTIPins(): already enabled!");
+		efiPrintf("startTIPins(): already enabled!");
 		return;
 	}
 
@@ -130,10 +127,10 @@ void startTriggerInputPins(void) {
 	float saturatedToothDurationUs = 60.0f * US_PER_SECOND_F / satRpm / hystUpdatePeriodNumEvents;
 	saturatedVrFreqNt = 1.0f / US2NT(saturatedToothDurationUs);
 	
-	scheduleMsg(logger, "startTIPins(): cDac=%d hystMin=%d hystMax=%d satRpm=%.0f satFreq*1k=%f period=%d", 
+	efiPrintf("startTIPins(): cDac=%d hystMin=%d hystMax=%d satRpm=%.0f satFreq*1k=%f period=%d", 
 		centeredDacValue, dacHysteresisMin, dacHysteresisMax, satRpm, saturatedVrFreqNt * 1000.0f, hystUpdatePeriodNumEvents);
 #ifdef EFI_TRIGGER_COMP_ADAPTIVE_HYSTERESIS
-	scheduleMsg(logger, "startTIPins(): ADAPTIVE_HYSTERESIS enabled!");
+	efiPrintf("startTIPins(): ADAPTIVE_HYSTERESIS enabled!");
 #endif /* EFI_TRIGGER_COMP_ADAPTIVE_HYSTERESIS */
 		
 	int channel = EFI_COMP_TRIGGER_CHANNEL; // todo: use getInputCaptureChannel(hwPin);
@@ -153,11 +150,11 @@ void startTriggerInputPins(void) {
 
 void stopTriggerInputPins(void) {
 	if (!isCompEnabled) {
-		scheduleMsg(logger, "stopTIPins(): already disabled!");
+		efiPrintf("stopTIPins(): already disabled!");
 		return;
 	}
 
-	scheduleMsg(logger, "stopTIPins();");
+	efiPrintf("stopTIPins();");
 
 	compDisable(EFI_COMP_PRIMARY_DEVICE);
 	isCompEnabled = false;

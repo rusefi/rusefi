@@ -77,7 +77,7 @@ public:
 	int invocationCounter = 0;
 };
 
-void initAccelEnrichment(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX);
+void initAccelEnrichment(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 
 void setEngineLoadAccelLen(int len);
 void setEngineLoadAccelThr(float value);

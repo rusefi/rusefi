@@ -25,8 +25,6 @@ int needInterpolationLogging(void) {
 
 #define BINARY_PERF true
 
-Logging * logger;
-
 #if BINARY_PERF && ! EFI_UNIT_TEST
 
 #define COUNT 10000
@@ -58,14 +56,14 @@ static void testBinary(void) {
 			}
 			timeNew = getTimeNowLowerNt() - start;
 		}
-		scheduleMsg(logger, "for v=%d old=%d ticks", v, timeOld);
-		scheduleMsg(logger, "for v=%d new=%d ticks", v, timeNew);
+		efiPrintf("for v=%d old=%d ticks", v, timeOld);
+		efiPrintf("for v=%d new=%d ticks", v, timeNew);
 
 		totalOld += timeOld;
 		totalNew += timeNew;
 	}
-	scheduleMsg(logger, "totalOld=%d ticks", totalOld);
-	scheduleMsg(logger, "totalNew=%d ticks", totalNew);
+	efiPrintf("totalOld=%d ticks", totalOld);
+	efiPrintf("totalNew=%d ticks", totalNew);
 
 }
 
@@ -202,8 +200,7 @@ void setCurveValue(float bins[], float values[], int size, float key, float valu
 	values[index] = value;
 }
 
-void initInterpolation(Logging *sharedLogger) {
-	logger = sharedLogger;
+void initInterpolation() {
 #if BINARY_PERF && ! EFI_UNIT_TEST
 	addConsoleAction("binarytest", testBinary);
 #endif

@@ -18,6 +18,6 @@ typedef enum {
 } joystick_button_e;
 
 void onJoystick(joystick_button_e button);
-void initJoystick(Logging *shared);
+void initJoystick();
 void startJoystickPins();
 void stopJoystickPins();

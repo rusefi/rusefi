@@ -105,8 +105,6 @@ EXTERN_ENGINE;
 
 #if !EFI_UNIT_TEST
 
-static LoggingWithStorage logger("Engine Controller");
-
 /**
  * Would love to pass reference to configuration object into constructor but C++ does allow attributes after parenthesized initializer
  */
@@ -306,12 +304,12 @@ static void printAnalogChannelInfoExt(const char *name, adc_channel_e hwChannel,
 		float dividerCoeff) {
 #if HAL_USE_ADC
 	if (!isAdcChannelValid(hwChannel)) {
-		scheduleMsg(&logger, "ADC is not assigned for %s", name);
+		efiPrintf("ADC is not assigned for %s", name);
 		return;
 	}
 
 	float voltage = adcVoltage * dividerCoeff;
-	scheduleMsg(&logger, "%s ADC%d %s %s adc=%.2f/input=%.2fv/divider=%.2f", name, hwChannel, getAdc_channel_mode_e(getAdcMode(hwChannel)),
+	efiPrintf("%s ADC%d %s %s adc=%.2f/input=%.2fv/divider=%.2f", name, hwChannel, getAdc_channel_mode_e(getAdcMode(hwChannel)),
 			getPinNameByAdcChannel(name, hwChannel, pinNameBuffer), adcVoltage, voltage, dividerCoeff);
 #endif /* HAL_USE_ADC */
 }
@@ -323,7 +321,7 @@ static void printAnalogChannelInfo(const char *name, adc_channel_e hwChannel) {
 }
 
 static void printAnalogInfo(void) {
-	scheduleMsg(&logger, "analogInputDividerCoefficient: %.2f", engineConfiguration->analogInputDividerCoefficient);
+	efiPrintf("analogInputDividerCoefficient: %.2f", engineConfiguration->analogInputDividerCoefficient);
 
 	printAnalogChannelInfo("hip9011", engineConfiguration->hipOutputChannel);
 	printAnalogChannelInfo("fuel gauge", engineConfiguration->fuelLevelSensor);
@@ -371,7 +369,7 @@ static void getShort(int offset) {
 	/**
 	 * this response is part of rusEfi console API
 	 */
-	scheduleMsg(&logger, "short%s%d is %d", CONSOLE_DATA_PROTOCOL_TAG, offset, value);
+	efiPrintf("short%s%d is %d", CONSOLE_DATA_PROTOCOL_TAG, offset, value);
 }
 
 static void getByte(int offset) {
@@ -382,7 +380,7 @@ static void getByte(int offset) {
 	/**
 	 * this response is part of rusEfi console API
 	 */
-	scheduleMsg(&logger, "byte%s%d is %d", CONSOLE_DATA_PROTOCOL_TAG, offset, value);
+	efiPrintf("byte%s%d is %d", CONSOLE_DATA_PROTOCOL_TAG, offset, value);
 }
 
 static void onConfigurationChanged() {
@@ -398,7 +396,7 @@ static void onConfigurationChanged() {
 static void setBit(const char *offsetStr, const char *bitStr, const char *valueStr) {
 	int offset = atoi(offsetStr);
 	if (absI(offset) == absI(ERROR_CODE)) {
-		scheduleMsg(&logger, "invalid offset [%s]", offsetStr);
+		efiPrintf("invalid offset [%s]", offsetStr);
 		return;
 	}
 	if (isOutOfBounds(offset)) {
@@ -406,12 +404,12 @@ static void setBit(const char *offsetStr, const char *bitStr, const char *valueS
 	}
 	int bit = atoi(bitStr);
 	if (absI(bit) == absI(ERROR_CODE)) {
-		scheduleMsg(&logger, "invalid bit [%s]", bitStr);
+		efiPrintf("invalid bit [%s]", bitStr);
 		return;
 	}
 	int value = atoi(valueStr);
 	if (absI(value) == absI(ERROR_CODE)) {
-		scheduleMsg(&logger, "invalid value [%s]", valueStr);
+		efiPrintf("invalid value [%s]", valueStr);
 		return;
 	}
 	int *ptr = (int *) (&((char *) engineConfiguration)[offset]);
@@ -419,7 +417,7 @@ static void setBit(const char *offsetStr, const char *bitStr, const char *valueS
 	/**
 	 * this response is part of rusEfi console API
 	 */
-	scheduleMsg(&logger, "bit%s%d/%d is %d", CONSOLE_DATA_PROTOCOL_TAG, offset, bit, value);
+	efiPrintf("bit%s%d/%d is %d", CONSOLE_DATA_PROTOCOL_TAG, offset, bit, value);
 	onConfigurationChanged();
 }
 
@@ -449,7 +447,7 @@ static void getBit(int offset, int bit) {
 	/**
 	 * this response is part of rusEfi console API
 	 */
-	scheduleMsg(&logger, "bit%s%d/%d is %d", CONSOLE_DATA_PROTOCOL_TAG, offset, bit, value);
+	efiPrintf("bit%s%d/%d is %d", CONSOLE_DATA_PROTOCOL_TAG, offset, bit, value);
 }
 
 static void getInt(int offset) {
@@ -460,7 +458,7 @@ static void getInt(int offset) {
 	/**
 	 * this response is part of rusEfi console API
 	 */
-	scheduleMsg(&logger, "int%s%d is %d", CONSOLE_DATA_PROTOCOL_TAG, offset, value);
+	efiPrintf("int%s%d is %d", CONSOLE_DATA_PROTOCOL_TAG, offset, value);
 }
 
 static void setInt(const int offset, const int value) {
@@ -480,20 +478,20 @@ static void getFloat(int offset) {
 	/**
 	 * this response is part of rusEfi console API
 	 */
-	scheduleMsg(&logger, "float%s%d is %.5f", CONSOLE_DATA_PROTOCOL_TAG, offset, value);
+	efiPrintf("float%s%d is %.5f", CONSOLE_DATA_PROTOCOL_TAG, offset, value);
 }
 
 static void setFloat(const char *offsetStr, const char *valueStr) {
 	int offset = atoi(offsetStr);
 	if (absI(offset) == absI(ERROR_CODE)) {
-		scheduleMsg(&logger, "invalid offset [%s]", offsetStr);
+		efiPrintf("invalid offset [%s]", offsetStr);
 		return;
 	}
 	if (isOutOfBounds(offset))
 		return;
 	float value = atoff(valueStr);
 	if (cisnan(value)) {
-		scheduleMsg(&logger, "invalid value [%s]", valueStr);
+		efiPrintf("invalid value [%s]", valueStr);
 		return;
 	}
 	float *ptr = (float *) (&((char *) engineConfiguration)[offset]);
@@ -519,15 +517,15 @@ static void initConfigActions(void) {
 // todo: move this logic somewhere else?
 static void getKnockInfo(void) {
 	adc_channel_e hwChannel = engineConfiguration->externalKnockSenseAdc;
-	scheduleMsg(&logger, "externalKnockSenseAdc on ADC", getPinNameByAdcChannel("knock", hwChannel, pinNameBuffer));
+	efiPrintf("externalKnockSenseAdc on ADC", getPinNameByAdcChannel("knock", hwChannel, pinNameBuffer));
 
 	engine->printKnockState();
 }
 #endif /* EFI_UNIT_TEST */
 
 // this method is used by real firmware and simulator and unit test
-void commonInitEngineController(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX) {
-	initInterpolation(sharedLogger);
+void commonInitEngineController(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+	initInterpolation();
 
 #if EFI_SIMULATOR
 	printf("commonInitEngineController\n");
@@ -568,23 +566,23 @@ void commonInitEngineController(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_S
 	initNewSensors();
 #endif /* EFI_UNIT_TEST */
 
-	initSensors(sharedLogger PASS_ENGINE_PARAMETER_SUFFIX);
+	initSensors(PASS_ENGINE_PARAMETER_SIGNATURE);
 
-	initAccelEnrichment(sharedLogger PASS_ENGINE_PARAMETER_SUFFIX);
+	initAccelEnrichment(PASS_ENGINE_PARAMETER_SIGNATURE);
 
 #if EFI_FSIO
-	initFsioImpl(sharedLogger PASS_ENGINE_PARAMETER_SUFFIX);
+	initFsioImpl(PASS_ENGINE_PARAMETER_SIGNATURE);
 #endif /* EFI_FSIO */
 
 	initGpPwm(PASS_ENGINE_PARAMETER_SIGNATURE);
 
 #if EFI_IDLE_CONTROL
-	startIdleThread(sharedLogger PASS_ENGINE_PARAMETER_SUFFIX);
+	startIdleThread(PASS_ENGINE_PARAMETER_SIGNATURE);
 #endif /* EFI_IDLE_CONTROL */
 
 	initButtonShift(PASS_ENGINE_PARAMETER_SIGNATURE);
 
-	initButtonDebounce(sharedLogger);
+	initButtonDebounce();
 	initStartStopButton(PASS_ENGINE_PARAMETER_SIGNATURE);
 
 #if EFI_ELECTRONIC_THROTTLE_BODY
@@ -593,20 +591,16 @@ void commonInitEngineController(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_S
 
 #if EFI_MAP_AVERAGING
 	if (engineConfiguration->isMapAveragingEnabled) {
-		initMapAveraging(sharedLogger PASS_ENGINE_PARAMETER_SUFFIX);
+		initMapAveraging(PASS_ENGINE_PARAMETER_SIGNATURE);
 	}
 #endif /* EFI_MAP_AVERAGING */
 
 #if EFI_BOOST_CONTROL
-	initBoostCtrl(sharedLogger PASS_ENGINE_PARAMETER_SUFFIX);
+	initBoostCtrl(PASS_ENGINE_PARAMETER_SIGNATURE);
 #endif /* EFI_BOOST_CONTROL */
 
 #if EFI_LAUNCH_CONTROL
-	initLaunchControl(sharedLogger PASS_ENGINE_PARAMETER_SUFFIX);
-#endif
-
-#if EFI_DYNO_VIEW
-	initDynoView(sharedLogger PASS_ENGINE_PARAMETER_SUFFIX);
+	initLaunchControl(PASS_ENGINE_PARAMETER_SIGNATURE);
 #endif
 
 #if EFI_SHAFT_POSITION_INPUT
@@ -614,17 +608,16 @@ void commonInitEngineController(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_S
 	 * there is an implicit dependency on the fact that 'tachometer' listener is the 1st listener - this case
 	 * other listeners can access current RPM value
 	 */
-	initRpmCalculator(sharedLogger PASS_ENGINE_PARAMETER_SUFFIX);
+	initRpmCalculator(PASS_ENGINE_PARAMETER_SIGNATURE);
 #endif /* EFI_SHAFT_POSITION_INPUT */
 
 #if (EFI_ENGINE_CONTROL && EFI_SHAFT_POSITION_INPUT) || EFI_SIMULATOR || EFI_UNIT_TEST
 	if (CONFIG(isEngineControlEnabled)) {
-		initAuxValves(sharedLogger PASS_ENGINE_PARAMETER_SUFFIX);
+		initAuxValves(PASS_ENGINE_PARAMETER_SIGNATURE);
 		/**
 		 * This method adds trigger listener which actually schedules ignition
 		 */
-		initSparkLogic(sharedLogger);
-		initMainEventListener(sharedLogger PASS_ENGINE_PARAMETER_SUFFIX);
+		initMainEventListener(PASS_ENGINE_PARAMETER_SIGNATURE);
 #if EFI_HPFP
 		initHPFP(PASS_ENGINE_PARAMETER_SIGNATURE);
 #endif // EFI_HPFP
@@ -636,18 +629,18 @@ void commonInitEngineController(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_S
 
 #if !EFI_UNIT_TEST
 
-void initEngineContoller(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX) {
+void initEngineContoller(DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	addConsoleAction("analoginfo", printAnalogInfo);
 
 #if EFI_PROD_CODE && EFI_ENGINE_CONTROL
-	initBenchTest(sharedLogger);
+	initBenchTest();
 #endif /* EFI_PROD_CODE && EFI_ENGINE_CONTROL */
 
-	commonInitEngineController(sharedLogger);
+	commonInitEngineController();
 
 #if EFI_LOGIC_ANALYZER
 	if (engineConfiguration->isWaveAnalyzerEnabled) {
-		initWaveAnalyzer(sharedLogger);
+		initWaveAnalyzer();
 	}
 #endif /* EFI_LOGIC_ANALYZER */
 
@@ -655,7 +648,7 @@ void initEngineContoller(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX) 
 	/**
 	 * this uses SimplePwm which depends on scheduler, has to be initialized after scheduler
 	 */
-	initCJ125(sharedLogger PASS_ENGINE_PARAMETER_SUFFIX);
+	initCJ125(PASS_ENGINE_PARAMETER_SIGNATURE);
 #endif /* EFI_CJ125 */
 
 
@@ -673,11 +666,11 @@ void initEngineContoller(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX) 
 #endif /* EFI_PWM_TESTER */
 
 #if EFI_ALTERNATOR_CONTROL
-	initAlternatorCtrl(sharedLogger PASS_ENGINE_PARAMETER_SUFFIX);
+	initAlternatorCtrl(PASS_ENGINE_PARAMETER_SIGNATURE);
 #endif /* EFI_ALTERNATOR_CONTROL */
 
 #if EFI_AUX_PID
-	initAuxPid(sharedLogger);
+	initAuxPid();
 #endif /* EFI_AUX_PID */
 
 #if EFI_MALFUNCTION_INDICATOR

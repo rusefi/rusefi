@@ -20,8 +20,6 @@
 
 EXTERN_ENGINE;
 
-static Logging *logger;
-
 void StepperMotor::saveStepperPos(int pos) {
 	// use backup-power RTC registers to store the data
 #if EFI_PROD_CODE
@@ -74,10 +72,10 @@ void StepperMotor::setInitialPosition(void) {
 	bool forceStepperParking = !isRunning && tpsPos > STEPPER_PARKING_TPS;
 	if (CONFIG(stepperForceParkingEveryRestart))
 		forceStepperParking = true;
-	scheduleMsg(logger, "Stepper: savedStepperPos=%d forceStepperParking=%d (tps=%.2f)", m_currentPosition, (forceStepperParking ? 1 : 0), tpsPos);
+	efiPrintf("Stepper: savedStepperPos=%d forceStepperParking=%d (tps=%.2f)", m_currentPosition, (forceStepperParking ? 1 : 0), tpsPos);
 
 	if (m_currentPosition < 0 || forceStepperParking) {
-		scheduleMsg(logger, "Stepper: starting parking...");
+		efiPrintf("Stepper: starting parking...");
 		// reset saved value
 		saveStepperPos(-1);
 		
@@ -101,7 +99,7 @@ void StepperMotor::setInitialPosition(void) {
 		// set & save zero stepper position after the parking completion
 		m_currentPosition = 0;
 		saveStepperPos(m_currentPosition);
-		scheduleMsg(logger, "Stepper: parking finished!");
+		efiPrintf("Stepper: parking finished!");
 	} else {
 		// The initial target position should correspond to the saved stepper position.
 		// Idle thread starts later and sets a new target position.
@@ -208,12 +206,10 @@ bool StepDirectionStepper::step(bool positive) {
 	return pulse();
 }
 
-void StepperMotor::initialize(StepperHw *hardware, int totalSteps, Logging *sharedLogger) {
+void StepperMotor::initialize(StepperHw *hardware, int totalSteps) {
 	m_totalSteps = maxI(3, totalSteps);
 
 	m_hw = hardware;
-
-	logger = sharedLogger;
 
 	Start();
 }

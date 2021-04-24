@@ -17,8 +17,6 @@
 
 EXTERN_ENGINE;
 
-static Logging *logger;
-
 static efitick_t lastSignalTimeNt = 0;
 static efitick_t vssDiff = 0;
 
@@ -57,14 +55,14 @@ static void vsAnaWidthCallback(void) {
 }
 
 static void speedInfo(void) {
-	scheduleMsg(logger, "VSS input at %s",
+	efiPrintf("VSS input at %s",
 			hwPortname(CONFIG(vehicleSpeedSensorInputPin)));
 
-	scheduleMsg(logger, "c=%.2f eventCounter=%d speed=%.2f",
+	efiPrintf("c=%.2f eventCounter=%d speed=%.2f",
 			engineConfiguration->vehicleSpeedCoef,
 			engine->engineState.vssEventCounter,
 			getVehicleSpeed());
-	scheduleMsg(logger, "vss diff %d", vssDiff);
+	efiPrintf("vss diff %d", vssDiff);
 }
 
 bool hasVehicleSpeedSensor() {
@@ -103,8 +101,7 @@ void startVSSPins(void) {
 #endif /* HAL_VSS_USE_PAL, HAL_USE_ICU */
 }
 
-void initVehicleSpeed(Logging *l) {
-	logger = l;
+void initVehicleSpeed() {
 	addConsoleAction("speedinfo", speedInfo);
 	startVSSPins();
 }

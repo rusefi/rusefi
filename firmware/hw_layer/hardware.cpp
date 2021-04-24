@@ -137,8 +137,6 @@ SPIDriver * getSpiDevice(spi_device_e spiDevice) {
 }
 #endif
 
-static Logging *sharedLogger;
-
 #if EFI_PROD_CODE
 
 #define TPS_IS_SLOW -1
@@ -271,7 +269,7 @@ static void adcConfigListener(Engine *engine) {
 	calcFastAdcIndexes();
 }
 
-void turnOnHardware(Logging *sharedLogger) {
+static void turnOnHardware() {
 #if EFI_FASTER_UNIFORM_ADC
 	for (int i = 0; i < ADC_MAX_CHANNELS_COUNT; i++) {
 		averagedSamples[i] = 0;
@@ -280,7 +278,7 @@ void turnOnHardware(Logging *sharedLogger) {
 #endif /* EFI_FASTER_UNIFORM_ADC */
 
 #if EFI_SHAFT_POSITION_INPUT
-	turnOnTriggerInputPins(sharedLogger);
+	turnOnTriggerInputPins();
 #endif /* EFI_SHAFT_POSITION_INPUT */
 }
 
@@ -429,7 +427,7 @@ void applyNewHardwareSettings(void) {
 
 #if EFI_IDLE_CONTROL
 	if (isIdleHardwareRestartNeeded()) {
-		 initIdleHardware(sharedLogger);
+		 initIdleHardware();
 	}
 #endif
 
@@ -454,23 +452,22 @@ void applyNewHardwareSettings(void) {
 }
 
 void setBor(int borValue) {
-	scheduleMsg(sharedLogger, "setting BOR to %d", borValue);
+	efiPrintf("setting BOR to %d", borValue);
 	BOR_Set((BOR_Level_t)borValue);
 	showBor();
 }
 
 void showBor(void) {
-	scheduleMsg(sharedLogger, "BOR=%d", (int)BOR_Get());
+	efiPrintf("BOR=%d", (int)BOR_Get());
 }
 
 // This function initializes hardware that can do so before configuration is loaded
-void initHardwareNoConfig(Logging *l) {
+void initHardwareNoConfig() {
 	efiAssertVoid(CUSTOM_IH_STACK, getCurrentRemainingStack() > EXPECTED_REMAINING_STACK, "init h");
-	sharedLogger = l;
 	efiAssertVoid(CUSTOM_EC_NULL, engineConfiguration!=NULL, "engineConfiguration");
 	
 
-	scheduleMsg(sharedLogger, "initHardware()");
+	efiPrintf("initHardware()");
 
 	initPinRepository();
 
@@ -484,7 +481,7 @@ void initHardwareNoConfig(Logging *l) {
 	/**
 	 * We need the LED_ERROR pin even before we read configuration
 	 */
-	initPrimaryPins(sharedLogger);
+	initPrimaryPins();
 
 	// it's important to initialize this pretty early in the game before any scheduling usages
 	initSingleTimerExecutorHardware();
@@ -492,12 +489,12 @@ void initHardwareNoConfig(Logging *l) {
 	initRtc();
 
 #if EFI_INTERNAL_FLASH
-	initFlash(sharedLogger);
+	initFlash();
 #endif
 
 #if EFI_SHAFT_POSITION_INPUT
 	// todo: figure out better startup logic
-	initTriggerCentral(sharedLogger);
+	initTriggerCentral();
 #endif /* EFI_SHAFT_POSITION_INPUT */
 
 #if EFI_FILE_LOGGING
@@ -507,7 +504,7 @@ void initHardwareNoConfig(Logging *l) {
 
 void initHardware() {
 #if EFI_HD44780_LCD
-	lcd_HD44780_init(sharedLogger);
+	lcd_HD44780_init();
 	if (hasFirmwareError())
 		return;
 
@@ -547,11 +544,11 @@ void initHardware() {
 #endif /* EFI_ENGINE_CONTROL */
 
 #if EFI_MC33816
-	initMc33816(sharedLogger);
+	initMc33816();
 #endif /* EFI_MC33816 */
 
 #if EFI_MAX_31855
-	initMax31855(sharedLogger, CONFIG(max31855spiDevice), CONFIG(max31855_cs));
+	initMax31855(CONFIG(max31855spiDevice), CONFIG(max31855_cs));
 #endif /* EFI_MAX_31855 */
 
 #if EFI_CAN_SUPPORT
@@ -561,10 +558,10 @@ void initHardware() {
 //	init_adc_mcp3208(&adcState, &SPID2);
 //	requestAdcValue(&adcState, 0);
 
-	turnOnHardware(sharedLogger);
+	turnOnHardware();
 
 #if EFI_HIP_9011
-	initHip9011(sharedLogger);
+	initHip9011();
 #endif /* EFI_HIP_9011 */
 
 #if EFI_MEMS
@@ -588,11 +585,11 @@ void initHardware() {
 #endif /* EFI_AUX_SERIAL */
 
 #if EFI_VEHICLE_SPEED
-	initVehicleSpeed(sharedLogger);
+	initVehicleSpeed();
 #endif // EFI_VEHICLE_SPEED
 
 #if EFI_CAN_SUPPORT
-	initCanVssSupport(sharedLogger);
+	initCanVssSupport();
 #endif // EFI_CAN_SUPPORT
 
 #if EFI_CDM_INTEGRATION
@@ -600,12 +597,12 @@ void initHardware() {
 #endif // EFI_CDM_INTEGRATION
 
 #if (HAL_USE_PAL && EFI_JOYSTICK)
-	initJoystick(sharedLogger);
+	initJoystick();
 #endif /* HAL_USE_PAL && EFI_JOYSTICK */
 
 	calcFastAdcIndexes();
 
-	scheduleMsg(sharedLogger, "initHardware() OK!");
+	efiPrintf("initHardware() OK!");
 }
 
 #endif /* EFI_PROD_CODE */

@@ -32,7 +32,6 @@ static int canReadCounter = 0;
 int canWriteOk = 0;
 int canWriteNotOk = 0;
 static bool isCanEnabled = false;
-static LoggingWithStorage logger("CAN driver");
 
 // Values below calculated with http://www.bittiming.can-wiki.info/
 // Pick ST micro bxCAN
@@ -155,7 +154,7 @@ public:
 			// Process the message
 			canReadCounter++;
 
-			processCanRxMessage(m_buffer, &logger, getTimeNowNt());
+			processCanRxMessage(m_buffer, getTimeNowNt());
 		}
 	}
 
@@ -168,17 +167,17 @@ static CanWrite canWrite;
 
 static void canInfo(void) {
 	if (!isCanEnabled) {
-		scheduleMsg(&logger, "CAN is not enabled, please enable & restart");
+		efiPrintf("CAN is not enabled, please enable & restart");
 		return;
 	}
 
-	scheduleMsg(&logger, "CAN TX %s", hwPortname(CONFIG_OVERRIDE(canTxPin)));
-	scheduleMsg(&logger, "CAN RX %s", hwPortname(CONFIG_OVERRIDE(canRxPin)));
-	scheduleMsg(&logger, "type=%d canReadEnabled=%s canWriteEnabled=%s period=%d", engineConfiguration->canNbcType,
+	efiPrintf("CAN TX %s", hwPortname(CONFIG_OVERRIDE(canTxPin)));
+	efiPrintf("CAN RX %s", hwPortname(CONFIG_OVERRIDE(canRxPin)));
+	efiPrintf("type=%d canReadEnabled=%s canWriteEnabled=%s period=%d", engineConfiguration->canNbcType,
 			boolToString(engineConfiguration->canReadEnabled), boolToString(engineConfiguration->canWriteEnabled),
 			engineConfiguration->canSleepPeriodMs);
 
-	scheduleMsg(&logger, "CAN rx_cnt=%d/tx_ok=%d/tx_not_ok=%d", canReadCounter, canWriteOk, canWriteNotOk);
+	efiPrintf("CAN rx_cnt=%d/tx_ok=%d/tx_not_ok=%d", canReadCounter, canWriteOk, canWriteNotOk);
 }
 
 void setCanType(int type) {
@@ -279,11 +278,6 @@ void initCan(void) {
 
 	// fire up threads, as necessary
 	if (CONFIG(canWriteEnabled)) {
-		/**
-		 * We use 5ms cycle time to ensure cyclic messages on time, user should not redefine this.
-		 * Config for periodic TX applyes only for verbose (broadcast).
-		 */
-		canWrite.setPeriod(5);
 		canWrite.Start();
 	}
 

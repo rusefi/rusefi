@@ -20,9 +20,7 @@ extern "C" void toggleLed(int led, int mode);
 #define BOARD_MOD1_PORT GPIOD
 #define BOARD_MOD1_PIN 5
 
-EXTERN_ENGINE
-;
-static Logging *logger;
+EXTERN_ENGINE;
 
 #if 0
 static volatile int centeredDacValue = 127;
@@ -88,7 +86,7 @@ static void setHysteresis(int sign) {
 		toothCnt = 0;
 		prevNt = nowNt;
 #ifdef TRIGGER_COMP_EXTREME_LOGGING
-		scheduleMsg(logger, "* f=%f d=%d", curVrFreqNt * 1000.0f, dacHysteresisDelta);
+		efiPrintf("* f=%f d=%d", curVrFreqNt * 1000.0f, dacHysteresisDelta);
 #endif /* TRIGGER_COMP_EXTREME_LOGGING */
 	}
 #endif /* EFI_TRIGGER_COMP_ADAPTIVE_HYSTERESIS */
@@ -181,9 +179,7 @@ static void comp_cam_callback(COMPDriver *comp) {
 }
 #endif
 
-void turnOnTriggerInputPins(Logging *sharedLogger) {
-	logger = sharedLogger;
-
+void turnOnTriggerInputPins() {
 	applyNewTriggerInputPins();
 }
 
@@ -244,7 +240,7 @@ static int turnOnTriggerInputPin(const char *msg, int index, bool isTriggerShaft
 	float saturatedToothDurationUs = 60.0f * US_PER_SECOND_F / satRpm / hystUpdatePeriodNumEvents;
 	saturatedVrFreqNt = 1.0f / US2NT(saturatedToothDurationUs);
 	
-	scheduleMsg(logger, "startTIPins(): cDac=%d hystMin=%d hystMax=%d satRpm=%.0f satFreq*1k=%f period=%d", 
+	efiPrintf("startTIPins(): cDac=%d hystMin=%d hystMax=%d satRpm=%.0f satFreq*1k=%f period=%d", 
 		centeredDacValue, dacHysteresisMin, dacHysteresisMax, satRpm, saturatedVrFreqNt * 1000.0f, hystUpdatePeriodNumEvents);
 #endif
 
@@ -254,7 +250,7 @@ static int turnOnTriggerInputPin(const char *msg, int index, bool isTriggerShaft
 	triggerInputPin = getHwPin("trg", brainPin);
 
 	ioline_t pal_line = PAL_LINE(triggerInputPort, triggerInputPin);
-	scheduleMsg(logger, "turnOnTriggerInputPin %s l=%d", hwPortname(brainPin), pal_line);
+	efiPrintf("turnOnTriggerInputPin %s l=%d", hwPortname(brainPin), pal_line);
 	
 	efiExtiEnablePin(msg, brainPin, PAL_EVENT_MODE_BOTH_EDGES, isTriggerShaft ? shaft_callback : cam_callback, (void *)pal_line);
 	
@@ -275,7 +271,7 @@ void startTriggerInputPins(void) {
 
 
 void stopTriggerInputPins(void) {
-	scheduleMsg(logger, "stopTIPins();");
+	efiPrintf("stopTIPins();");
 
 #if 0
 	for (int i = 0; i < TRIGGER_SUPPORTED_CHANNELS; i++) {

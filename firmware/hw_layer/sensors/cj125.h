@@ -102,7 +102,7 @@
 void cjPostState(TunerStudioOutputChannels *tsOutputChannels);
 #endif /* EFI_TUNER_STUDIO */
 
-void initCJ125(Logging *shared DECLARE_ENGINE_PARAMETER_SUFFIX);
+void initCJ125(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 
 void cjRestart(void);
 void cjStartCalibration(void);

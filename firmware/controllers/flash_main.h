@@ -11,7 +11,7 @@
 #include "engine.h"
 
 void readFromFlash();
-void initFlash(Logging *sharedLogger);
+void initFlash();
 
 /**
  * Because of hardware-related issues, stm32f4 chip is totally

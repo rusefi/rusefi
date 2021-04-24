@@ -46,8 +46,6 @@
 #include "stepper.h"
 #endif
 
-static Logging *logger;
-
 EXTERN_ENGINE;
 
 // todo: move all static vars to engine->engineState.idle?
@@ -127,42 +125,42 @@ static iacPidMultiplier_t iacPidMultMap("iacPidMultiplier");
 #if ! EFI_UNIT_TEST
 
 void idleDebug(const char *msg, percent_t value) {
-	scheduleMsg(logger, "idle debug: %s%.2f", msg, value);
+	efiPrintf("idle debug: %s%.2f", msg, value);
 }
 
 static void showIdleInfo(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	const char * idleModeStr = getIdle_mode_e(engineConfiguration->idleMode);
-	scheduleMsg(logger, "useStepperIdle=%s useHbridges=%s",
+	efiPrintf("useStepperIdle=%s useHbridges=%s",
 			boolToString(CONFIG(useStepperIdle)), boolToString(CONFIG(useHbridges)));
-	scheduleMsg(logger, "idleMode=%s position=%.2f",
+	efiPrintf("idleMode=%s position=%.2f",
 			idleModeStr, getIdlePosition());
 
 	if (CONFIG(useStepperIdle)) {
 		if (CONFIG(useHbridges)) {
-			scheduleMsg(logger, "Coil A:");
-			scheduleMsg(logger, " pin1=%s", hwPortname(CONFIG(stepperDcIo[0].directionPin1)));
-			scheduleMsg(logger, " pin2=%s", hwPortname(CONFIG(stepperDcIo[0].directionPin2)));
+			efiPrintf("Coil A:");
+			efiPrintf(" pin1=%s", hwPortname(CONFIG(stepperDcIo[0].directionPin1)));
+			efiPrintf(" pin2=%s", hwPortname(CONFIG(stepperDcIo[0].directionPin2)));
 			showDcMotorInfo(2);
-			scheduleMsg(logger, "Coil B:");
-			scheduleMsg(logger, " pin1=%s", hwPortname(CONFIG(stepperDcIo[1].directionPin1)));
-			scheduleMsg(logger, " pin2=%s", hwPortname(CONFIG(stepperDcIo[1].directionPin2)));
+			efiPrintf("Coil B:");
+			efiPrintf(" pin1=%s", hwPortname(CONFIG(stepperDcIo[1].directionPin1)));
+			efiPrintf(" pin2=%s", hwPortname(CONFIG(stepperDcIo[1].directionPin2)));
 			showDcMotorInfo(3);
 		} else {
-			scheduleMsg(logger, "directionPin=%s reactionTime=%.2f", hwPortname(CONFIG(idle).stepperDirectionPin),
+			efiPrintf("directionPin=%s reactionTime=%.2f", hwPortname(CONFIG(idle).stepperDirectionPin),
 					engineConfiguration->idleStepperReactionTime);
-			scheduleMsg(logger, "stepPin=%s steps=%d", hwPortname(CONFIG(idle).stepperStepPin),
+			efiPrintf("stepPin=%s steps=%d", hwPortname(CONFIG(idle).stepperStepPin),
 					engineConfiguration->idleStepperTotalSteps);
-			scheduleMsg(logger, "enablePin=%s/%d", hwPortname(engineConfiguration->stepperEnablePin),
+			efiPrintf("enablePin=%s/%d", hwPortname(engineConfiguration->stepperEnablePin),
 					engineConfiguration->stepperEnablePinMode);
 		}
 	} else {
 		if (!CONFIG(isDoubleSolenoidIdle)) {
-			scheduleMsg(logger, "idle valve freq=%d on %s", CONFIG(idle).solenoidFrequency,
+			efiPrintf("idle valve freq=%d on %s", CONFIG(idle).solenoidFrequency,
 					hwPortname(CONFIG(idle).solenoidPin));
 		} else {
-			scheduleMsg(logger, "idle valve freq=%d on %s", CONFIG(idle).solenoidFrequency,
+			efiPrintf("idle valve freq=%d on %s", CONFIG(idle).solenoidFrequency,
 					hwPortname(CONFIG(idle).solenoidPin));
-			scheduleMsg(logger, " and %s", hwPortname(CONFIG(secondSolenoidPin)));
+			efiPrintf(" and %s", hwPortname(CONFIG(secondSolenoidPin)));
 		}
 	}
 
@@ -183,7 +181,7 @@ percent_t getIdlePosition() {
 void setManualIdleValvePosition(int positionPercent) {
 	if (positionPercent < 1 || positionPercent > 99)
 		return;
-	scheduleMsg(logger, "setting idle valve position %d", positionPercent);
+	efiPrintf("setting idle valve position %d", positionPercent);
 #if ! EFI_UNIT_TEST
 	showIdleInfo();
 #endif /* EFI_UNIT_TEST */
@@ -612,7 +610,7 @@ void onConfigurationChangeIdleCallback(engine_configuration_s *previousConfigura
 
 void setTargetIdleRpm(int value) {
 	setTargetRpmCurve(value PASS_ENGINE_PARAMETER_SUFFIX);
-	scheduleMsg(logger, "target idle RPM %d", value);
+	efiPrintf("target idle RPM %d", value);
 	showIdleInfo();
 }
 
@@ -644,14 +642,13 @@ void setIdleDFactor(float value) {
  */
 void startIdleBench(void) {
 	timeToStopIdleTest = getTimeNowUs() + MS2US(3000); // 3 seconds
-	scheduleMsg(logger, "idle valve bench test");
+	efiPrintf("idle valve bench test");
 	showIdleInfo();
 }
 
 #endif /* EFI_UNIT_TEST */
 
-void startIdleThread(Logging*sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX) {
-	logger = sharedLogger;
+void startIdleThread(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	INJECT_ENGINE_REFERENCE(&idleControllerInstance);
 	idleControllerInstance.init(&CONFIG(idleTimingPid));
 	INJECT_ENGINE_REFERENCE(&industrialWithOverrideIdlePid);
@@ -663,7 +660,7 @@ void startIdleThread(Logging*sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX) {
 #if ! EFI_UNIT_TEST
 	// todo: we still have to explicitly init all hardware on start in addition to handling configuration change via
 	// 'applyNewHardwareSettings' todo: maybe unify these two use-cases?
-	initIdleHardware(sharedLogger PASS_ENGINE_PARAMETER_SUFFIX);
+	initIdleHardware(PASS_ENGINE_PARAMETER_SIGNATURE);
 #endif /* EFI_UNIT_TEST */
 
 	DISPLAY_STATE(Engine)
@@ -706,9 +703,6 @@ void startIdleThread(Logging*sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	/* DISPLAY_ELSE */
 			DISPLAY_TEXT(Manual_idle_control);
 	/* DISPLAY_ENDIF */
-
-
-	//scheduleMsg(logger, "initial idle %d", idlePositionController.value);
 
 #if ! EFI_UNIT_TEST
 	// this is neutral/no gear switch input. on Miata it's wired both to clutch pedal and neutral in gearbox

@@ -74,7 +74,6 @@ class Engine;
 class TriggerState;
 class TriggerFormDetails;
 class TriggerConfiguration;
-class Logging;
 
 // https://github.com/rusefi/rusefi/issues/2010 shows the corner case wheel with huge depth requirement
 #define GAP_TRACKING_LENGTH 18
@@ -86,7 +85,7 @@ class Logging;
 class TriggerWaveform {
 public:
 	TriggerWaveform();
-	void initializeTriggerWaveform(Logging *logger, operation_mode_e ambiguousOperationMode,
+	void initializeTriggerWaveform(operation_mode_e ambiguousOperationMode,
 			bool useOnlyRisingEdgeForTrigger, const trigger_config_s *triggerConfig);
 	void setShapeDefinitionError(bool value);
 

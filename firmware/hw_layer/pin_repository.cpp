@@ -146,11 +146,11 @@ static void reportPins(void) {
 	efiPrintf("Total pins count: %d", pinRepository.totalPinsUsed);
 }
 
-void printSpiConfig(Logging *logging, const char *msg, spi_device_e device) {
+void printSpiConfig(const char *msg, spi_device_e device) {
 #if HAL_USE_SPI
-	scheduleMsg(logging, "%s %s mosi=%s", msg, getSpi_device_e(device), hwPortname(getMosiPin(device)));
-	scheduleMsg(logging, "%s %s miso=%s", msg, getSpi_device_e(device), hwPortname(getMisoPin(device)));
-	scheduleMsg(logging, "%s %s sck=%s",  msg, getSpi_device_e(device), hwPortname(getSckPin(device)));
+	efiPrintf("%s %s mosi=%s", msg, getSpi_device_e(device), hwPortname(getMosiPin(device)));
+	efiPrintf("%s %s miso=%s", msg, getSpi_device_e(device), hwPortname(getMisoPin(device)));
+	efiPrintf("%s %s sck=%s",  msg, getSpi_device_e(device), hwPortname(getSckPin(device)));
 #endif // HAL_USE_SPI
 }
 

@@ -1055,7 +1055,7 @@ custom maf_sensor_type_e 4 bits, S32, @OFFSET@, [0:1], @@maf_sensor_type_e_enum@
 	bit canWriteEnabled;enable can_write/disable can_write
 	bit useLinearIatSensor
 	bit useFSIO16ForTimingAdjustment;+See fsioTimingAdjustment
-	bit tachPulseDurationAsDutyCycle
+	bit tachPulseDurationAsDutyCycle;+Treat milliseconds value as duty cycle value, i.e. 0.5ms would become 50%
 	bit isAlternatorControlEnabled;+This enables smart alternator control and activates the extra alternator settings.
 	bit invertPrimaryTriggerSignal;+This setting flips the signal from the primary engine speed sensor.
 	bit invertSecondaryTriggerSignal;+This setting flips the signal from the secondary engine speed sensor.

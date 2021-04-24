@@ -10,7 +10,7 @@
 
 #define HIP_THREAD_PERIOD 100
 
-void initHip9011(Logging *sharedLogger);
+void initHip9011();
 void startHip9001_pins();
 void stopHip9001_pins();
 #if HAL_USE_ADC

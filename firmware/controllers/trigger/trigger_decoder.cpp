@@ -113,8 +113,6 @@ bool printTriggerTrace = false;
 float actualSynchGap;
 #endif /* ! EFI_PROD_CODE */
 
-static Logging * logger = nullptr;
-
 void TriggerWaveform::initializeSyncPoint(TriggerState& state,
 			const TriggerConfiguration& triggerConfiguration,
 			const trigger_config_s& triggerConfig) {
@@ -551,7 +549,7 @@ void TriggerState::decodeTriggerEvent(
 				int rpm = GET_RPM();
 				floatms_t engineCycleDuration = getEngineCycleDuration(rpm PASS_ENGINE_PARAMETER_SUFFIX);
 				int time = currentCycle.totalTimeNt[0];
-				scheduleMsg(logger, "%s duty %f %d",
+				efiPrintf("%s duty %f %d",
 						name,
 						time / engineCycleDuration,
 						time
@@ -566,10 +564,10 @@ void TriggerState::decodeTriggerEvent(
 
 					float gap = 1.0 * toothDurations[i] / toothDurations[i + 1];
 					if (cisnan(gap)) {
-						scheduleMsg(logger, "index=%d NaN gap, you have noise issues?",
+						efiPrintf("index=%d NaN gap, you have noise issues?",
 								i);
 					} else {
-						scheduleMsg(logger, "%s rpm=%d time=%d index=%d: gap=%.3f expected from %.3f to %.3f error=%s",
+						efiPrintf("%s rpm=%d time=%d index=%d: gap=%.3f expected from %.3f to %.3f error=%s",
 								triggerConfiguration.PrintPrefix,
 								GET_RPM(),
 							/* cast is needed to make sure we do not put 64 bit value to stack*/ (int)getTimeNowSeconds(),
@@ -724,10 +722,6 @@ uint32_t TriggerState::findTriggerZeroEventIndex(
 			syncIndex, *this, shape);
 
 	return syncIndex % shape.getSize();
-}
-
-void initTriggerDecoderLogger(Logging *sharedLogger) {
-	logger = sharedLogger;
 }
 
 #endif /* EFI_SHAFT_POSITION_INPUT */

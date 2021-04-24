@@ -23,6 +23,7 @@
 #include "engine_math.h"
 #include "local_version_holder.h"
 #include "trigger_simulator.h"
+#include "trigger_emulator_algo.h"
 
 #include "rpm_calculator.h"
 #include "tooth_logger.h"
@@ -77,8 +78,6 @@ int TriggerCentral::getHwEventCounter(int index) const {
 
 EXTERN_ENGINE;
 
-static Logging *logger;
-
 angle_t TriggerCentral::getVVTPosition(uint8_t bankIndex, uint8_t camIndex) {
 	return vvtPosition[bankIndex][camIndex];
 }
@@ -109,6 +108,7 @@ void hwHandleVvtCamSignal(trigger_value_e front, efitick_t nowNt, int index DECL
 	// from experience we know that assembly mistakes happen and quality control is required
 	extern ioportid_t criticalErrorLedPort;
 	extern ioportmask_t criticalErrorLedPin;
+
 
 	for (int i = 0 ; i < 100 ; i++) {
 		// turning pin ON and busy-waiting a bit
@@ -288,19 +288,21 @@ int maxTriggerReentraint = 0;
 uint32_t triggerDuration;
 uint32_t triggerMaxDuration = 0;
 
+/**
+ * this method is invoked only by real hardware call-backs
+ */
+
 void hwHandleShaftSignal(trigger_event_e signal, efitick_t timestamp) {
-	ScopePerf perf(PE::HandleShaftSignal);
-
-	// Don't accept trigger input in case of some problems
-	if (!engine->limpManager.allowTriggerInput()) {
-		return;
-	}
-
 #if VR_HW_CHECK_MODE
 	// some boards do not have hardware VR input LEDs which makes such boards harder to validate
 	// from experience we know that assembly mistakes happen and quality control is required
 	extern ioportid_t criticalErrorLedPort;
 	extern ioportmask_t criticalErrorLedPin;
+
+#if HW_CHECK_ALWAYS_STIMULATE
+	disableTriggerStimulator();
+#endif // HW_CHECK_ALWAYS_STIMULATE
+
 
 	for (int i = 0 ; i < 100 ; i++) {
 		// turning pin ON and busy-waiting a bit
@@ -309,6 +311,22 @@ void hwHandleShaftSignal(trigger_event_e signal, efitick_t timestamp) {
 
 	palWritePad(criticalErrorLedPort, criticalErrorLedPin, 0);
 #endif // VR_HW_CHECK_MODE
+
+	handleShaftSignal(signal, timestamp);
+
+}
+
+/**
+ * this method is invoked by both real hardware and self-stimulator
+ */
+void handleShaftSignal(trigger_event_e signal, efitick_t timestamp) {
+	ScopePerf perf(PE::HandleShaftSignal);
+
+	// Don't accept trigger input in case of some problems
+	if (!engine->limpManager.allowTriggerInput()) {
+		return;
+	}
+
 
 #if EFI_TOOTH_LOGGER
 	// Log to the Tunerstudio tooth logger
@@ -520,7 +538,7 @@ void TriggerCentral::handleShaftSignal(trigger_event_e signal, efitick_t timesta
 		ScopePerf perf(PE::ShaftPositionListeners);
 
 #if TRIGGER_EXTREME_LOGGING
-	scheduleMsg(logger, "trigger %d %d %d", triggerIndexForListeners, getRevolutionCounter(), (int)getTimeNowUs());
+	efiPrintf("trigger %d %d %d", triggerIndexForListeners, getRevolutionCounter(), (int)getTimeNowUs());
 #endif /* TRIGGER_EXTREME_LOGGING */
 
 		rpmShaftPositionCallback(signal, triggerIndexForListeners, timestamp PASS_ENGINE_PARAMETER_SUFFIX);
@@ -549,11 +567,11 @@ static void triggerShapeInfo(void) {
 #if EFI_PROD_CODE || EFI_SIMULATOR
 	TriggerWaveform *shape = &engine->triggerCentral.triggerShape;
 	TriggerFormDetails *triggerFormDetails = &engine->triggerCentral.triggerFormDetails;
-	scheduleMsg(logger, "useRise=%s", boolToString(TRIGGER_WAVEFORM(useRiseEdge)));
-	scheduleMsg(logger, "gap from %.2f to %.2f", TRIGGER_WAVEFORM(syncronizationRatioFrom[0]), TRIGGER_WAVEFORM(syncronizationRatioTo[0]));
+	efiPrintf("useRise=%s", boolToString(TRIGGER_WAVEFORM(useRiseEdge)));
+	efiPrintf("gap from %.2f to %.2f", TRIGGER_WAVEFORM(syncronizationRatioFrom[0]), TRIGGER_WAVEFORM(syncronizationRatioTo[0]));
 
 	for (size_t i = 0; i < shape->getSize(); i++) {
-		scheduleMsg(logger, "event %d %.2f", i, triggerFormDetails->eventAngles[i]);
+		efiPrintf("event %d %.2f", i, triggerFormDetails->eventAngles[i]);
 	}
 #endif
 }
@@ -574,84 +592,84 @@ void triggerInfo(void) {
 
 
 #if (HAL_TRIGGER_USE_PAL == TRUE) && (PAL_USE_CALLBACKS == TRUE)
-		scheduleMsg(logger, "trigger PAL mode %d", engine->hwTriggerInputEnabled);
+		efiPrintf("trigger PAL mode %d", engine->hwTriggerInputEnabled);
 #else
 
 #if HAL_USE_ICU == TRUE
-	scheduleMsg(logger, "trigger ICU hw: %d %d %d", icuRisingCallbackCounter, icuFallingCallbackCounter, engine->hwTriggerInputEnabled);
+	efiPrintf("trigger ICU hw: %d %d %d", icuRisingCallbackCounter, icuFallingCallbackCounter, engine->hwTriggerInputEnabled);
 #endif /* HAL_USE_ICU */
 
 #endif /* HAL_TRIGGER_USE_PAL */
 
-	scheduleMsg(logger, "Template %s (%d) trigger %s (%d) useRiseEdge=%s onlyFront=%s useOnlyFirstChannel=%s tdcOffset=%.2f",
+	efiPrintf("Template %s (%d) trigger %s (%d) useRiseEdge=%s onlyFront=%s useOnlyFirstChannel=%s tdcOffset=%.2f",
 			getConfigurationName(engineConfiguration->engineType), engineConfiguration->engineType,
 			getTrigger_type_e(engineConfiguration->trigger.type), engineConfiguration->trigger.type,
 			boolToString(TRIGGER_WAVEFORM(useRiseEdge)), boolToString(engineConfiguration->useOnlyRisingEdgeForTrigger),
 			boolToString(engineConfiguration->trigger.useOnlyFirstChannel), TRIGGER_WAVEFORM(tdcPosition));
 
 	if (engineConfiguration->trigger.type == TT_TOOTHED_WHEEL) {
-		scheduleMsg(logger, "total %d/skipped %d", engineConfiguration->trigger.customTotalToothCount,
+		efiPrintf("total %d/skipped %d", engineConfiguration->trigger.customTotalToothCount,
 				engineConfiguration->trigger.customSkippedToothCount);
 	}
 
-	scheduleMsg(logger, "trigger#1 event counters up=%d/down=%d", engine->triggerCentral.getHwEventCounter(0),
+	efiPrintf("trigger#1 event counters up=%d/down=%d", engine->triggerCentral.getHwEventCounter(0),
 			engine->triggerCentral.getHwEventCounter(1));
 
 	if (ts->needSecondTriggerInput) {
-		scheduleMsg(logger, "trigger#2 event counters up=%d/down=%d", engine->triggerCentral.getHwEventCounter(2),
+		efiPrintf("trigger#2 event counters up=%d/down=%d", engine->triggerCentral.getHwEventCounter(2),
 				engine->triggerCentral.getHwEventCounter(3));
 	}
-	scheduleMsg(logger, "expected cycle events %d/%d/%d", TRIGGER_WAVEFORM(expectedEventCount[0]),
+	efiPrintf("expected cycle events %d/%d/%d", TRIGGER_WAVEFORM(expectedEventCount[0]),
 			TRIGGER_WAVEFORM(expectedEventCount[1]), TRIGGER_WAVEFORM(expectedEventCount[2]));
 
-	scheduleMsg(logger, "trigger type=%d/need2ndChannel=%s", engineConfiguration->trigger.type,
+	efiPrintf("trigger type=%d/need2ndChannel=%s", engineConfiguration->trigger.type,
 			boolToString(TRIGGER_WAVEFORM(needSecondTriggerInput)));
-	scheduleMsg(logger, "expected duty #0=%.2f/#1=%.2f", TRIGGER_WAVEFORM(expectedDutyCycle[0]), TRIGGER_WAVEFORM(expectedDutyCycle[1]));
+	efiPrintf("expected duty #0=%.2f/#1=%.2f", TRIGGER_WAVEFORM(expectedDutyCycle[0]), TRIGGER_WAVEFORM(expectedDutyCycle[1]));
 
-	scheduleMsg(logger, "synchronizationNeeded=%s/isError=%s/total errors=%d ord_err=%d/total revolutions=%d/self=%s",
+	efiPrintf("synchronizationNeeded=%s/isError=%s/total errors=%d ord_err=%d/total revolutions=%d/self=%s",
 			boolToString(ts->isSynchronizationNeeded),
 			boolToString(isTriggerDecoderError()), engine->triggerCentral.triggerState.totalTriggerErrorCounter,
 			engine->triggerCentral.triggerState.orderingErrorCounter, engine->triggerCentral.triggerState.getTotalRevolutionCounter(),
 			boolToString(engine->directSelfStimulation));
 
 	if (TRIGGER_WAVEFORM(isSynchronizationNeeded)) {
-		scheduleMsg(logger, "gap from %.2f to %.2f", TRIGGER_WAVEFORM(syncronizationRatioFrom[0]), TRIGGER_WAVEFORM(syncronizationRatioTo[0]));
+		efiPrintf("gap from %.2f to %.2f", TRIGGER_WAVEFORM(syncronizationRatioFrom[0]), TRIGGER_WAVEFORM(syncronizationRatioTo[0]));
 	}
 
 #endif /* EFI_PROD_CODE || EFI_SIMULATOR */
 
 #if EFI_PROD_CODE
 	if (HAVE_CAM_INPUT()) {
-		scheduleMsg(logger, "VVT input: %s mode %s", hwPortname(engineConfiguration->camInputs[0]),
+		efiPrintf("VVT input: %s mode %s", hwPortname(engineConfiguration->camInputs[0]),
 				getVvt_mode_e(engineConfiguration->vvtMode[0]));
-		scheduleMsg(logger, "VVT event counters: %d/%d", engine->triggerCentral.vvtEventRiseCounter, engine->triggerCentral.vvtEventFallCounter);
+		efiPrintf("VVT event counters: %d/%d", engine->triggerCentral.vvtEventRiseCounter, engine->triggerCentral.vvtEventFallCounter);
 
 	}
 
-	scheduleMsg(logger, "primary trigger input: %s", hwPortname(CONFIG(triggerInputPins)[0]));
-	scheduleMsg(logger, "primary trigger simulator: %s %s freq=%d",
+	efiPrintf("primary trigger input: %s", hwPortname(CONFIG(triggerInputPins)[0]));
+	efiPrintf("primary trigger simulator: %s %s freq=%d",
 			hwPortname(CONFIG(triggerSimulatorPins)[0]),
 			getPin_output_mode_e(CONFIG(triggerSimulatorPinModes)[0]),
 			CONFIG(triggerSimulatorFrequency));
 
 	if (ts->needSecondTriggerInput) {
-		scheduleMsg(logger, "secondary trigger input: %s", hwPortname(CONFIG(triggerInputPins)[1]));
+		efiPrintf("secondary trigger input: %s", hwPortname(CONFIG(triggerInputPins)[1]));
 #if EFI_EMULATE_POSITION_SENSORS
-		scheduleMsg(logger, "secondary trigger simulator: %s %s phase=%d",
+		efiPrintf("secondary trigger simulator: %s %s phase=%d",
 				hwPortname(CONFIG(triggerSimulatorPins)[1]),
 				getPin_output_mode_e(CONFIG(triggerSimulatorPinModes)[1]), triggerSignal.safe.phaseIndex);
 #endif /* EFI_EMULATE_POSITION_SENSORS */
 	}
-//	scheduleMsg(logger, "3rd trigger simulator: %s %s", hwPortname(CONFIG(triggerSimulatorPins)[2]),
+//	efiPrintf("3rd trigger simulator: %s %s", hwPortname(CONFIG(triggerSimulatorPins)[2]),
 //			getPin_output_mode_e(CONFIG(triggerSimulatorPinModes)[2]));
 
-	scheduleMsg(logger, "trigger error extra LED: %s %s", hwPortname(CONFIG(triggerErrorPin)),
+	efiPrintf("trigger error extra LED: %s %s", hwPortname(CONFIG(triggerErrorPin)),
 			getPin_output_mode_e(CONFIG(triggerErrorPinMode)));
-	scheduleMsg(logger, "primary logic input: %s", hwPortname(CONFIG(logicAnalyzerPins)[0]));
-	scheduleMsg(logger, "secondary logic input: %s", hwPortname(CONFIG(logicAnalyzerPins)[1]));
+	efiPrintf("primary logic input: %s", hwPortname(CONFIG(logicAnalyzerPins)[0]));
+	efiPrintf("secondary logic input: %s", hwPortname(CONFIG(logicAnalyzerPins)[1]));
 
 
-	scheduleMsg(logger, "totalTriggerHandlerMaxTime=%d", triggerMaxDuration);
+	efiPrintf("totalTriggerHandlerMaxTime=%d", triggerMaxDuration);
 
 #endif /* EFI_PROD_CODE */
 }
@@ -686,12 +704,12 @@ void onConfigurationChangeTriggerCallback(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 		assertEngineReference();
 
 	#if EFI_ENGINE_CONTROL
-		ENGINE(initializeTriggerWaveform(logger PASS_ENGINE_PARAMETER_SUFFIX));
+		ENGINE(initializeTriggerWaveform(PASS_ENGINE_PARAMETER_SIGNATURE));
 		engine->triggerCentral.noiseFilter.resetAccumSignalData();
 	#endif
 	}
 #if EFI_DEFAILED_LOGGING
-	scheduleMsg(logger, "isTriggerConfigChanged=%d", engine->isTriggerConfigChanged);
+	efiPrintf("isTriggerConfigChanged=%d", engine->isTriggerConfigChanged);
 #endif /* EFI_DEFAILED_LOGGING */
 
 	// we do not want to miss two updates in a row
@@ -711,8 +729,7 @@ bool isTriggerConfigChanged(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	return engine->isTriggerConfigChanged;
 }
 
-void initTriggerCentral(Logging *sharedLogger) {
-	logger = sharedLogger;
+void initTriggerCentral() {
 	strcpy((char*) shaft_signal_msg_index, "x_");
 
 #if EFI_ENGINE_SNIFFER
