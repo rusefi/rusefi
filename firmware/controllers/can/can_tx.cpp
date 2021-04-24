@@ -22,6 +22,7 @@ EXTERN_ENGINE;
 
 extern CanListener* canListeners_head;
 
+
 CanWrite::CanWrite()
 	: PeriodicController("CAN TX", PRIO_CAN_TX, CAN_CYCLE_FREQ)
 {
