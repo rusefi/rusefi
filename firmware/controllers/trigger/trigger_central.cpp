@@ -103,7 +103,7 @@ void hwHandleVvtCamSignal(trigger_value_e front, efitick_t nowNt, int index DECL
 		tc->vvtEventFallCounter++;
 	}
 	extern const char *vvtNames[];
-	const char vvtName = vvtNames[index];
+	const char *vvtName = vvtNames[index];
 
 #if VR_HW_CHECK_MODE
 	// some boards do not have hardware VR input LEDs which makes such boards harder to validate
