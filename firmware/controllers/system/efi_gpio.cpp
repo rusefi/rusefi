@@ -39,6 +39,12 @@ pin_output_mode_e INVERTED_OUTPUT = OM_INVERTED;
 static const char *sparkNames[] = { "Coil 1", "Coil 2", "Coil 3", "Coil 4", "Coil 5", "Coil 6", "Coil 7", "Coil 8",
 		"Coil 9", "Coil 10", "Coil 11", "Coil 12"};
 
+const char *vvtNames[] = {
+		PROTOCOL_VVT1_NAME,
+		PROTOCOL_VVT2_NAME,
+		PROTOCOL_VVT3_NAME,
+		PROTOCOL_VVT4_NAME};
+
 // these short names are part of engine sniffer protocol
 static const char *sparkShortNames[] = { PROTOCOL_COIL1_SHORT_NAME, "c2", "c3", "c4", "c5", "c6", "c7", "c8",
 		"c9", "cA", "cB", "cD"};

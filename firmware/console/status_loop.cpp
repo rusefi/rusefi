@@ -215,7 +215,10 @@ void printOverallStatus(efitimesec_t nowSeconds) {
 #if EFI_PROD_CODE
 	printOutPin(PROTOCOL_CRANK1, CONFIG(triggerInputPins)[0]);
 	printOutPin(PROTOCOL_CRANK2, CONFIG(triggerInputPins)[1]);
-	printOutPin(PROTOCOL_VVT_NAME, engineConfiguration->camInputs[0]);
+	for (int i = 0;i<CAM_INPUTS_COUNT;i++) {
+		extern const char *vvtNames[];
+		printOutPin(vvtNames[i], engineConfiguration->camInputs[i]);
+	}
 	printOutPin(PROTOCOL_HIP_NAME, CONFIG(hip9011IntHoldPin));
 	printOutPin(PROTOCOL_TACH_NAME, CONFIG(tachOutputPin));
 #if EFI_LOGIC_ANALYZER
