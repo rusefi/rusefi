@@ -1211,7 +1211,10 @@
 #define PROTOCOL_TACH_NAME "tach"
 #define PROTOCOL_TEST_RESPONSE_TAG "ts_p_alive"
 #define PROTOCOL_VERSION_TAG "rusEfiVersion"
-#define PROTOCOL_VVT_NAME "VVT"
+#define PROTOCOL_VVT1_NAME "VVT1"
+#define PROTOCOL_VVT2_NAME "VVT2"
+#define PROTOCOL_VVT3_NAME "VVT3"
+#define PROTOCOL_VVT4_NAME "VVT4"
 #define PROTOCOL_WA_CHANNEL_1 "input1"
 #define PROTOCOL_WA_CHANNEL_2 "input2"
 #define PROTOCOL_WA_CHANNEL_3 "input3"
@@ -1245,8 +1248,8 @@
 #define showHumanReadableWarning_offset 976
 #define showSdCardWarning_offset 76
 #define SIGNATURE_BOARD hellen_cypress
-#define SIGNATURE_DATE 2021.04.20
-#define SIGNATURE_HASH 2889007321
+#define SIGNATURE_DATE 2021.04.25
+#define SIGNATURE_HASH 1307686168
 #define silentTriggerError_offset 1464
 #define slowAdcAlpha_offset 2088
 #define sparkDwellRpmBins_offset 332
@@ -1581,7 +1584,7 @@
 #define ts_show_spi true
 #define ts_show_trigger_comparator false
 #define ts_show_tunerstudio_port true
-#define TS_SIGNATURE "rusEFI 2021.04.20.hellen_cypress.2889007321"
+#define TS_SIGNATURE "rusEFI 2021.04.25.hellen_cypress.1307686168"
 #define TS_SINGLE_WRITE_COMMAND 'W'
 #define TS_SINGLE_WRITE_COMMAND_char W
 #define TS_TEST_COMMAND 't' // 0x74
