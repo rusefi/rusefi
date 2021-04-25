@@ -102,6 +102,8 @@ void hwHandleVvtCamSignal(trigger_value_e front, efitick_t nowNt, int index DECL
 	} else {
 		tc->vvtEventFallCounter++;
 	}
+	extern const char *vvtNames[];
+	const char vvtName = vvtNames[index];
 
 #if VR_HW_CHECK_MODE
 	// some boards do not have hardware VR input LEDs which makes such boards harder to validate
@@ -119,7 +121,7 @@ void hwHandleVvtCamSignal(trigger_value_e front, efitick_t nowNt, int index DECL
 #endif // VR_HW_CHECK_MODE
 
 	if (!CONFIG(displayLogicLevelsInEngineSniffer)) {
-		addEngineSnifferEvent(PROTOCOL_VVT_NAME, front == TV_RISE ? PROTOCOL_ES_UP : PROTOCOL_ES_DOWN);
+		addEngineSnifferEvent(vvtName, front == TV_RISE ? PROTOCOL_ES_UP : PROTOCOL_ES_DOWN);
 
 #if EFI_TOOTH_LOGGER
 		if (front == TV_RISE) {
@@ -145,16 +147,16 @@ void hwHandleVvtCamSignal(trigger_value_e front, efitick_t nowNt, int index DECL
 			LogTriggerTooth(SHAFT_SECONDARY_RISING, nowNt PASS_ENGINE_PARAMETER_SUFFIX);
 			LogTriggerTooth(SHAFT_SECONDARY_FALLING, nowNt PASS_ENGINE_PARAMETER_SUFFIX);
 #endif /* EFI_TOOTH_LOGGER */
-			addEngineSnifferEvent(PROTOCOL_VVT_NAME, PROTOCOL_ES_UP);
-			addEngineSnifferEvent(PROTOCOL_VVT_NAME, PROTOCOL_ES_DOWN);
+			addEngineSnifferEvent(vvtName, PROTOCOL_ES_UP);
+			addEngineSnifferEvent(vvtName, PROTOCOL_ES_DOWN);
 		} else {
 #if EFI_TOOTH_LOGGER
 			LogTriggerTooth(SHAFT_SECONDARY_FALLING, nowNt PASS_ENGINE_PARAMETER_SUFFIX);
 			LogTriggerTooth(SHAFT_SECONDARY_RISING, nowNt PASS_ENGINE_PARAMETER_SUFFIX);
 #endif /* EFI_TOOTH_LOGGER */
 
-			addEngineSnifferEvent(PROTOCOL_VVT_NAME, PROTOCOL_ES_DOWN);
-			addEngineSnifferEvent(PROTOCOL_VVT_NAME, PROTOCOL_ES_UP);
+			addEngineSnifferEvent(vvtName, PROTOCOL_ES_DOWN);
+			addEngineSnifferEvent(vvtName, PROTOCOL_ES_UP);
 		}
 	}
 
