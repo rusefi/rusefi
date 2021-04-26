@@ -774,6 +774,10 @@ static void setDefaultEngineConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 
 	CONFIG(mapMinBufferLength) = 1;
 
+	// 50% duty cycle is the default for tach signal
+	CONFIG(tachPulseDurationAsDutyCycle) = true;
+	CONFIG(tachPulseDuractionMs) = 0.5;
+
 	CONFIG(startCrankingDuration) = 3;
 
 	CONFIG(compressionRatio) = 9;
