@@ -201,14 +201,7 @@ pins:
     ts_name: 28 - AN volt 10
     type: av
 
-  - pin: 28
-    id: [GPIOA_4]
-    class: outputs
-    color: light blue left
-    ts_name: AUX AV10 reuse
-    type: av
-
-  - id: AV10
+  - id: GPIOA_4
     class: outputs
     ts_name: AUX AV10 reuse
 
@@ -240,7 +233,7 @@ pins:
     ts_name: 32 - AN volt 6
     type: av
 
-  - id: AV6
+  - id: GPIOC_4
     class: outputs
     ts_name: AUX AV6 reuse
 
@@ -279,7 +272,7 @@ pins:
     ts_name: 36 - AN volt 8
     type: av
 
-  - id: AV8
+  - id: GPIOB_0
     class: outputs
     ts_name: AUX AV8 reuse
 
@@ -311,7 +304,7 @@ pins:
     ts_name: 40 - AN volt 9
     type: av
 
-  - id: AV9
+  - id: GPIOB_1
     class: outputs
     ts_name: AUX AV9 reuse
 
