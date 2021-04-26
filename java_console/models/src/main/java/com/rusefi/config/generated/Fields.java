@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Sun Apr 25 13:24:13 UTC 2021
+// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Mon Apr 26 01:45:33 UTC 2021
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -679,6 +679,8 @@ public class Fields {
 	public static final String GAUGE_NAME_RAW_FUEL_PRESSURE_HIGH = "Fuel pressure raw (high)";
 	public static final String GAUGE_NAME_RAW_FUEL_PRESSURE_LOW = "Fuel pressure raw (low)";
 	public static final String GAUGE_NAME_RPM = "RPM";
+	public static final String GAUGE_NAME_SECOND_VVT_BANK_1 = "VVT second position bank 1";
+	public static final String GAUGE_NAME_SECOND_VVT_BANK_2 = "VVT second position bank 2";
 	public static final String GAUGE_NAME_TARGET_AFR = "fuel: target AFR";
 	public static final String GAUGE_NAME_TARGET_LAMBDA = "fuel: target lambda";
 	public static final String GAUGE_NAME_TCHARGE = "fuel: SD tCharge";
@@ -692,6 +694,7 @@ public class Fields {
 	public static final String GAUGE_NAME_VERSION = "firmware";
 	public static final String GAUGE_NAME_VVS = "Vehicle Speed";
 	public static final String GAUGE_NAME_VVT = "VVT position";
+	public static final String GAUGE_NAME_VVT_BANK_2 = "VVT position bank 2";
 	public static final String GAUGE_NAME_WARNING_COUNTER = "warning: counter";
 	public static final String GAUGE_NAME_WARNING_LAST = "warning: last";
 	public static final String GAUGE_NAME_WG_POSITION = "Wastegate position sensor";
@@ -1200,7 +1203,7 @@ public class Fields {
 	public static final int servoOutputPins8_offset = 3147;
 	public static final int showHumanReadableWarning_offset = 976;
 	public static final int showSdCardWarning_offset = 76;
-	public static final int SIGNATURE_HASH = 260927176;
+	public static final int SIGNATURE_HASH = 138139077;
 	public static final int silentTriggerError_offset = 1464;
 	public static final int slowAdcAlpha_offset = 2088;
 	public static final int sparkDwellRpmBins_offset = 332;
@@ -1484,7 +1487,7 @@ public class Fields {
 	public static final char TS_SD_R_COMMAND = 'r';
 	public static final char TS_SD_W_COMMAND = 'w';
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI 2021.04.25.all.260927176";
+	public static final String TS_SIGNATURE = "rusEFI 2021.04.26.all.138139077";
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final int TT_TT_1_16 = 50;
 	public static final int TT_TT_2JZ_1_12 = 29;
