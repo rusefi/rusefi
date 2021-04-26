@@ -21,6 +21,7 @@ import java.util.zip.ZipInputStream;
 /**
  * Andrey Belomutskiy, (c) 2013-2020
  * 1/12/15
+ * @see ConfigurationConsumer
  */
 @SuppressWarnings("StringConcatenationInsideStringBufferAppend")
 public class ConfigDefinition {
@@ -465,8 +466,14 @@ public class ConfigDefinition {
     }
 
 
-    public static String getComment(String comment, int currentOffset) {
-        return "\t/**" + EOL + packComment(comment, "\t") + "\t * offset " + currentOffset + EOL + "\t */" + EOL;
+    public static String getComment(String comment, int currentOffset, String units) {
+        String start = "\t/**";
+        String packedComment = packComment(comment, "\t");
+        String unitsComment = units.isEmpty() ? "" : "\t" + units + EOL;
+        return start + EOL +
+                packedComment +
+                unitsComment +
+                "\t * offset " + currentOffset + EOL + "\t */" + EOL;
     }
 
     public static String packComment(String comment, String linePrefix) {
