@@ -201,6 +201,13 @@ pins:
     ts_name: 28 - AN volt 10
     type: av
 
+  - pin: 28
+    id: [GPIOA_4]
+    class: outputs
+    color: light blue left
+    ts_name: AUX AV10 reuse
+    type: av
+
   - id: AV10
     class: outputs
     ts_name: AUX AV10 reuse
