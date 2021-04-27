@@ -10,6 +10,7 @@
 
 #include "io_pins.h"
 #include "efi_gpio.h"
+#include "pin_repository.h"
 
 void BitbangI2c::sda_high() {
 #if EFI_PROD_CODE

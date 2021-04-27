@@ -1,6 +1,6 @@
 #include "engine.h"
 #include "Lps25Sensor.h"
-#include "pin_repository.h"
+
 #include "rusefi_hw_enums.h"
 
 EXTERN_ENGINE;
