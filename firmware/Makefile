@@ -365,7 +365,7 @@ UINCDIR =
 ULIBDIR =
 
 # List all user libraries here
-ULIBS = -lm
+ULIBS = -lm --specs=nano.specs
 
 #
 # End of user defines
