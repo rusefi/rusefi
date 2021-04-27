@@ -4,36 +4,37 @@ LUA_EXT=$(PROJECT_DIR)/ext/lua
 ALLCPPSRC += $(LUA_DIR)/lua.cpp \
 			 $(LUA_DIR)/lua_hooks.cpp \
 
-ALLINC += $(LUA_DIR) $(LUA_EXT)/src $(LUA_EXT)/etc
-ALLCSRC += 	$(LUA_EXT)/src/lapi.c \
-	$(LUA_EXT)/src/lcode.c \
-	$(LUA_EXT)/src/lctype.c \
-	$(LUA_EXT)/src/ldebug.c \
-	$(LUA_EXT)/src/ldo.c \
-	$(LUA_EXT)/src/ldump.c \
-	$(LUA_EXT)/src/lfunc.c \
-	$(LUA_EXT)/src/lgc.c \
-	$(LUA_EXT)/src/llex.c \
-	$(LUA_EXT)/src/lmem.c \
-	$(LUA_EXT)/src/lobject.c \
-	$(LUA_EXT)/src/lopcodes.c \
-	$(LUA_EXT)/src/lparser.c \
-	$(LUA_EXT)/src/lstate.c \
-	$(LUA_EXT)/src/lstring.c \
-	$(LUA_EXT)/src/ltable.c \
-	$(LUA_EXT)/src/ltm.c \
-	$(LUA_EXT)/src/lundump.c \
-	$(LUA_EXT)/src/lvm.c \
-	$(LUA_EXT)/src/lzio.c \
-	$(LUA_EXT)/src/lauxlib.c \
-	$(LUA_EXT)/src/lbaselib.c \
-	$(LUA_EXT)/src/lcorolib.c \
-	$(LUA_EXT)/src/ldblib.c \
-	$(LUA_EXT)/src/liolib.c \
-	$(LUA_EXT)/src/lmathlib.c \
-	$(LUA_EXT)/src/loadlib.c \
-	$(LUA_EXT)/src/loslib.c \
-	$(LUA_EXT)/src/lstrlib.c \
-	$(LUA_EXT)/src/ltablib.c \
-	$(LUA_EXT)/src/lutf8lib.c \
-	$(LUA_EXT)/src/linit.c \
+ALLINC += $(LUA_DIR) $(LUA_EXT)
+ALLCSRC += \
+	$(LUA_EXT)/lapi.c \
+	$(LUA_EXT)/lcode.c \
+	$(LUA_EXT)/lctype.c \
+	$(LUA_EXT)/ldebug.c \
+	$(LUA_EXT)/ldo.c \
+	$(LUA_EXT)/ldump.c \
+	$(LUA_EXT)/lfunc.c \
+	$(LUA_EXT)/lgc.c \
+	$(LUA_EXT)/llex.c \
+	$(LUA_EXT)/lmem.c \
+	$(LUA_EXT)/lobject.c \
+	$(LUA_EXT)/lopcodes.c \
+	$(LUA_EXT)/lparser.c \
+	$(LUA_EXT)/lstate.c \
+	$(LUA_EXT)/lstring.c \
+	$(LUA_EXT)/ltable.c \
+	$(LUA_EXT)/ltm.c \
+	$(LUA_EXT)/lundump.c \
+	$(LUA_EXT)/lvm.c \
+	$(LUA_EXT)/lzio.c \
+	$(LUA_EXT)/lauxlib.c \
+	$(LUA_EXT)/lbaselib.c \
+	$(LUA_EXT)/lcorolib.c \
+	$(LUA_EXT)/ldblib.c \
+	$(LUA_EXT)/liolib.c \
+	$(LUA_EXT)/lmathlib.c \
+	$(LUA_EXT)/loadlib.c \
+	$(LUA_EXT)/loslib.c \
+	$(LUA_EXT)/lstrlib.c \
+	$(LUA_EXT)/ltablib.c \
+	$(LUA_EXT)/lutf8lib.c \
+	$(LUA_EXT)/linit.c \
