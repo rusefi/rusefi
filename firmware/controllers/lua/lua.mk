@@ -3,8 +3,9 @@ LUA_EXT=$(PROJECT_DIR)/ext/lua
 
 ALLCPPSRC += $(LUA_DIR)/lua.cpp
 ALLINC += $(LUA_EXT)/src $(LUA_EXT)/etc
-ALLCSRC += $(LUA_EXT)/src/lapi.c \
+ALLCSRC += 	$(LUA_EXT)/src/lapi.c \
 	$(LUA_EXT)/src/lcode.c \
+	$(LUA_EXT)/src/lctype.c \
 	$(LUA_EXT)/src/ldebug.c \
 	$(LUA_EXT)/src/ldo.c \
 	$(LUA_EXT)/src/ldump.c \
@@ -22,15 +23,15 @@ ALLCSRC += $(LUA_EXT)/src/lapi.c \
 	$(LUA_EXT)/src/lundump.c \
 	$(LUA_EXT)/src/lvm.c \
 	$(LUA_EXT)/src/lzio.c \
-	$(LUA_EXT)/src/lrotable.c \
 	$(LUA_EXT)/src/lauxlib.c \
 	$(LUA_EXT)/src/lbaselib.c \
+	$(LUA_EXT)/src/lcorolib.c \
 	$(LUA_EXT)/src/ldblib.c \
+	$(LUA_EXT)/src/liolib.c \
 	$(LUA_EXT)/src/lmathlib.c \
-	$(LUA_EXT)/src/loslib.c \
-	$(LUA_EXT)/src/ltablib.c \
-	$(LUA_EXT)/src/lstrlib.c \
 	$(LUA_EXT)/src/loadlib.c \
+	$(LUA_EXT)/src/loslib.c \
+	$(LUA_EXT)/src/lstrlib.c \
+	$(LUA_EXT)/src/ltablib.c \
+	$(LUA_EXT)/src/lutf8lib.c \
 	$(LUA_EXT)/src/linit.c \
-	$(LUA_EXT)/src/bit.c \
-	$(LUA_EXT)/src/modp_numtoa.c \
