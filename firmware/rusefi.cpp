@@ -127,6 +127,7 @@
 #include "mmc_card.h"
 #include "mass_storage_init.h"
 #include "trigger_emulator_algo.h"
+#include "rusefi_lua.h"
 
 #if EFI_HD44780_LCD
 #include "lcd_HD44780.h"
@@ -227,6 +228,10 @@ void runRusEfi(void) {
 	// to be executed at the place of assembly
 	enableTriggerStimulator();
 #endif // HW_CHECK_ALWAYS_STIMULATE
+
+#if EFI_LUA
+	startLua();
+#endif // EFI_LUA
 
 	// Config could be completely bogus - don't start anything else!
 	if (validateConfig()) {
