@@ -26,7 +26,7 @@ void initCanSensors();
 void initLambda(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 void initFlexSensor(DECLARE_CONFIG_PARAMETER_SIGNATURE);
 void initFuelLevel(DECLARE_CONFIG_PARAMETER_SIGNATURE);
-void initBaro();
+void initBaro(DECLARE_CONFIG_PARAMETER_SIGNATURE);
 
 // Sensor reconfiguration
 void reconfigureVbatt(DECLARE_CONFIG_PARAMETER_SIGNATURE);
