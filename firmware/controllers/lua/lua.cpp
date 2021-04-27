@@ -75,12 +75,13 @@ void stopLua(lua_State* ls) {
 }
 
 void loadScript(lua_State* ls) {
-	auto scriptStr = "n=0\nfunction onTick()\nefiprint('hello lua ' ..n)\nn=n+1\nend\n";
+	auto scriptStr = "n=0\nfunction onTick()\nprint('hello lua ' ..n)\nn=n+1\nend\n";
 
 	efiPrintf("loading script length: %d", efiStrlen(scriptStr));
 
 	if (0 != luaL_dostring(ls, scriptStr)) {
-		// TODO: handle script load fail
+		efiPrintf("LUA error loading script: %s", lua_tostring(ls, -1));
+		lua_pop(ls, 1);
 		return;
 	}
 
@@ -120,9 +121,10 @@ void LuaThread::ThreadTask() {
 		int status = lua_pcall(ls, 0, 0, 0);
 
 		if (0 != status) {
-			// error calling function
-			// TODO: handle
-			// error msg = lua_tostring(ls, -1)
+			// error calling hook function
+			auto errMsg = lua_tostring(ls, -1);
+			efiPrintf("lua err %s", errMsg);
+			lua_pop(ls, 1);
 		}
 
 		lua_settop(ls, 0);
