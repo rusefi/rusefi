@@ -2,6 +2,8 @@
 #include "lua_hooks.h"
 #include "thread_controller.h"
 
+#if EFI_LUA
+
 #if EFI_PROD_CODE
 #include "ch.h"
 
@@ -144,3 +146,5 @@ void startLua() {
 }
 
 #endif // EFI_UNIT_TEST
+
+#endif // EFI_LUA
