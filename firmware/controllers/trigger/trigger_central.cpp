@@ -23,6 +23,7 @@
 #include "engine_math.h"
 #include "local_version_holder.h"
 #include "trigger_simulator.h"
+#include "trigger_emulator_algo.h"
 
 #include "rpm_calculator.h"
 #include "tooth_logger.h"
@@ -101,12 +102,15 @@ void hwHandleVvtCamSignal(trigger_value_e front, efitick_t nowNt, int index DECL
 	} else {
 		tc->vvtEventFallCounter++;
 	}
+	extern const char *vvtNames[];
+	const char *vvtName = vvtNames[index];
 
 #if VR_HW_CHECK_MODE
 	// some boards do not have hardware VR input LEDs which makes such boards harder to validate
 	// from experience we know that assembly mistakes happen and quality control is required
 	extern ioportid_t criticalErrorLedPort;
 	extern ioportmask_t criticalErrorLedPin;
+
 
 	for (int i = 0 ; i < 100 ; i++) {
 		// turning pin ON and busy-waiting a bit
@@ -117,7 +121,7 @@ void hwHandleVvtCamSignal(trigger_value_e front, efitick_t nowNt, int index DECL
 #endif // VR_HW_CHECK_MODE
 
 	if (!CONFIG(displayLogicLevelsInEngineSniffer)) {
-		addEngineSnifferEvent(PROTOCOL_VVT_NAME, front == TV_RISE ? PROTOCOL_ES_UP : PROTOCOL_ES_DOWN);
+		addEngineSnifferEvent(vvtName, front == TV_RISE ? PROTOCOL_ES_UP : PROTOCOL_ES_DOWN);
 
 #if EFI_TOOTH_LOGGER
 		if (front == TV_RISE) {
@@ -143,16 +147,16 @@ void hwHandleVvtCamSignal(trigger_value_e front, efitick_t nowNt, int index DECL
 			LogTriggerTooth(SHAFT_SECONDARY_RISING, nowNt PASS_ENGINE_PARAMETER_SUFFIX);
 			LogTriggerTooth(SHAFT_SECONDARY_FALLING, nowNt PASS_ENGINE_PARAMETER_SUFFIX);
 #endif /* EFI_TOOTH_LOGGER */
-			addEngineSnifferEvent(PROTOCOL_VVT_NAME, PROTOCOL_ES_UP);
-			addEngineSnifferEvent(PROTOCOL_VVT_NAME, PROTOCOL_ES_DOWN);
+			addEngineSnifferEvent(vvtName, PROTOCOL_ES_UP);
+			addEngineSnifferEvent(vvtName, PROTOCOL_ES_DOWN);
 		} else {
 #if EFI_TOOTH_LOGGER
 			LogTriggerTooth(SHAFT_SECONDARY_FALLING, nowNt PASS_ENGINE_PARAMETER_SUFFIX);
 			LogTriggerTooth(SHAFT_SECONDARY_RISING, nowNt PASS_ENGINE_PARAMETER_SUFFIX);
 #endif /* EFI_TOOTH_LOGGER */
 
-			addEngineSnifferEvent(PROTOCOL_VVT_NAME, PROTOCOL_ES_DOWN);
-			addEngineSnifferEvent(PROTOCOL_VVT_NAME, PROTOCOL_ES_UP);
+			addEngineSnifferEvent(vvtName, PROTOCOL_ES_DOWN);
+			addEngineSnifferEvent(vvtName, PROTOCOL_ES_UP);
 		}
 	}
 
@@ -286,19 +290,21 @@ int maxTriggerReentraint = 0;
 uint32_t triggerDuration;
 uint32_t triggerMaxDuration = 0;
 
+/**
+ * this method is invoked only by real hardware call-backs
+ */
+
 void hwHandleShaftSignal(trigger_event_e signal, efitick_t timestamp) {
-	ScopePerf perf(PE::HandleShaftSignal);
-
-	// Don't accept trigger input in case of some problems
-	if (!engine->limpManager.allowTriggerInput()) {
-		return;
-	}
-
 #if VR_HW_CHECK_MODE
 	// some boards do not have hardware VR input LEDs which makes such boards harder to validate
 	// from experience we know that assembly mistakes happen and quality control is required
 	extern ioportid_t criticalErrorLedPort;
 	extern ioportmask_t criticalErrorLedPin;
+
+#if HW_CHECK_ALWAYS_STIMULATE
+	disableTriggerStimulator();
+#endif // HW_CHECK_ALWAYS_STIMULATE
+
 
 	for (int i = 0 ; i < 100 ; i++) {
 		// turning pin ON and busy-waiting a bit
@@ -307,6 +313,22 @@ void hwHandleShaftSignal(trigger_event_e signal, efitick_t timestamp) {
 
 	palWritePad(criticalErrorLedPort, criticalErrorLedPin, 0);
 #endif // VR_HW_CHECK_MODE
+
+	handleShaftSignal(signal, timestamp);
+
+}
+
+/**
+ * this method is invoked by both real hardware and self-stimulator
+ */
+void handleShaftSignal(trigger_event_e signal, efitick_t timestamp) {
+	ScopePerf perf(PE::HandleShaftSignal);
+
+	// Don't accept trigger input in case of some problems
+	if (!engine->limpManager.allowTriggerInput()) {
+		return;
+	}
+
 
 #if EFI_TOOTH_LOGGER
 	// Log to the Tunerstudio tooth logger

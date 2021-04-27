@@ -236,5 +236,22 @@ public class ConfigField {
         return fsioVisible;
     }
 
+    public String getUnits() {
+        if (tsInfo == null)
+            return "";
+        String[] tokens = tsInfo.split("\\,");
+        if (tokens.length == 0)
+            return "";
+        return unquote(tokens[0].trim());
+    }
+
+    private static String unquote(String token) {
+        int length = token.length();
+        if (length < 2)
+            return token;
+        if (token.charAt(0) == '\"')
+            return token.substring(1, length - 1);
+        return token;
+    }
 }
 

@@ -886,7 +886,7 @@ custom uart_device_e 1 bits,U08,   @OFFSET@, [0:1], "Off", "UART1", "UART2", "UA
 	uint16_t tps1SecondaryMin;;"ADC", 1, 0, 0, 1000, 0
 	uint16_t tps1SecondaryMax;;"ADC", 1, 0, 0, 1000, 0
 	int16_t antiLagRpmTreshold;;"rpm", 1, 0, 0, 20000, 0
-	uint16_t startCrankingDuration;Maximum time to crank starter;"Seconds",      1,      0,       0, 30,      0
+	uint16_t startCrankingDuration;+Maximum time to crank starter when start/stop button is pressed;"Seconds",      1,      0,       0, 30,      0
 
 	brain_pin_e triggerErrorPin;+This pin is used for debugging - snap a logic analyzer on it and see if it's ever high
 	pin_output_mode_e triggerErrorPinMode;
@@ -1650,7 +1650,12 @@ end_struct
 
 #define GAUGE_NAME_VERSION "firmware"
 #define GAUGE_NAME_TRG_ERR "trg err"
+
 #define GAUGE_NAME_VVT "VVT position"
+#define GAUGE_NAME_SECOND_VVT_BANK_1 "VVT second position bank 1"
+#define GAUGE_NAME_VVT_BANK_2 "VVT position bank 2"
+#define GAUGE_NAME_SECOND_VVT_BANK_2 "VVT second position bank 2"
+
 #define GAUGE_NAME_TIMING_ADVANCE "timing"
 #define GAUGE_NAME_VVS "Vehicle Speed"
 #define GAUGE_NAME_VBAT "VBatt"
@@ -1861,7 +1866,10 @@ end_struct
 #define PROTOCOL_CRANK2 "t2"
 #define PROTOCOL_CRANK3 "t3"
 
-#define PROTOCOL_VVT_NAME "VVT"
+#define PROTOCOL_VVT1_NAME "VVT1"
+#define PROTOCOL_VVT2_NAME "VVT2"
+#define PROTOCOL_VVT3_NAME "VVT3"
+#define PROTOCOL_VVT4_NAME "VVT4"
 #define PROTOCOL_HIP_NAME "HIP"
 #define PROTOCOL_TACH_NAME "tach"
 #define PROTOCOL_HPFP_NAME "hpfp"

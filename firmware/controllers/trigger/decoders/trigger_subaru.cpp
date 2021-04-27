@@ -17,8 +17,8 @@ void initialize36_2_2_2(TriggerWaveform *s) {
 	float wide = 30 * 2;
 	float narrow = 10 * 2;
 
-	s->setTriggerSynchronizationGap(0.5);
-	s->setSecondTriggerSynchronizationGap(1);
+	s->setTriggerSynchronizationGap(0.6);
+	s->setSecondTriggerSynchronizationGap(0.9);
 
 	float base = 0;
 
