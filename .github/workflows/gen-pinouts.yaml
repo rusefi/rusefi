@@ -3,7 +3,7 @@ name: Generate Interactive Pinouts
 on:
   schedule:
     - cron: '0 0 * * *'
-  workflow_dispatch
+  workflow_dispatch:
 
 jobs:
   generate:
