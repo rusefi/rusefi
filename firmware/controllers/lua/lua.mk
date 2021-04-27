@@ -2,7 +2,7 @@ LUA_DIR=$(CONTROLLERS_DIR)/lua
 LUA_EXT=$(PROJECT_DIR)/ext/lua
 
 # ALLCPPSRC += $(LUA_DIR)/lua.cpp
-# ALLINC += $(LUA_EXT)/src $(LUA_EXT)/etc
+ALLINC += $(LUA_DIR) # $(LUA_EXT)/src $(LUA_EXT)/etc
 # ALLCSRC += $(LUA_EXT)/src/lapi.c \
 # 	$(LUA_EXT)/src/lcode.c \
 # 	$(LUA_EXT)/src/ldebug.c \
