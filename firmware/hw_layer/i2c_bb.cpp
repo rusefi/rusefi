@@ -35,9 +35,13 @@ void BitbangI2c::scl_low() {
 #endif
 }
 
-void BitbangI2c::init(brain_pin_e scl, brain_pin_e sda) {
+bool BitbangI2c::init(brain_pin_e scl, brain_pin_e sda) {
 #if EFI_PROD_CODE
-	if (m_sdaPort) return;
+	if (m_sdaPort) return false;
+
+	if (!isBrainPinValid(scl) || !isBrainPinValid(sda)) {
+		return false;
+	}
 
 	efiSetPadMode("i2c", scl, PAL_MODE_OUTPUT_OPENDRAIN); //PAL_STM32_OTYPE_OPENDRAIN
 	efiSetPadMode("i2c", sda, PAL_MODE_OUTPUT_OPENDRAIN);
@@ -52,6 +56,8 @@ void BitbangI2c::init(brain_pin_e scl, brain_pin_e sda) {
 	// Both lines idle high
 	scl_high();
 	sda_high();
+
+	return true;
 }
 
 void BitbangI2c::start() {

@@ -27,7 +27,9 @@ static constexpr uint8_t expectedWhoAmI = 0xBD;
 #define REG_PressureOutH 0x2A
 
 bool Lps25::init(brain_pin_e scl, brain_pin_e sda) {
-	m_i2c.init(scl, sda);
+	if (!m_i2c.init(scl, sda)) {
+		return false;
+	}
 
 	// Read ident register
 	auto whoAmI = m_i2c.readRegister(addr, REG_WhoAmI);

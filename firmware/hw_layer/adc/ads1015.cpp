@@ -9,7 +9,9 @@ constexpr uint8_t addr = 0x48;
 #define ADS1015_HI_THRESH (3)
 
 bool Ads1015::init(brain_pin_e scl, brain_pin_e sda) {
-	m_i2c.init(scl, sda);
+	if (!m_i2c.init(scl, sda)) {
+		return false;
+	}
 
 	// ADS1015 has no ID register - so we read the Lo_thresh instead
 	uint16_t loThresh = readReg(ADS1015_LO_THRESH);
