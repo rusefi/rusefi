@@ -113,7 +113,8 @@ include tests/tests.mk
 
 # C sources that can be compiled in ARM or THUMB mode depending on the global
 # setting.
-CSRC =	$(UTILSRC) \
+CSRC = $(ALLCSRC) \
+	$(UTILSRC) \
 	$(CONTROLLERS_ALGO_SRC) \
 	$(CONTROLLERS_CORE_SRC) \
 	$(CONTROLLERS_MATH_SRC) \
@@ -124,7 +125,8 @@ CSRC =	$(UTILSRC) \
 
 # C++ sources that can be compiled in ARM or THUMB mode depending on the global
 # setting.
-CPPSRC = $(UTILSRC_CPP) \
+CPPSRC = $(ALLCPPSRC) \
+	$(UTILSRC_CPP) \
 	gtest-all.cpp \
 	gmock-all.cpp \
 	$(CONTROLLERS_ALGO_SRC_CPP) \
@@ -174,6 +176,7 @@ ASMSRC = $(PORTASM)
 
 
 INCDIR = . \
+	$(ALLINC) \
 	$(UTIL_INC) \
 	$(PROJECT_DIR)/config/engines \
 	$(CONTROLLERS_INC) \

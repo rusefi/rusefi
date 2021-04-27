@@ -1,12 +1,15 @@
-#include "ch.h"
 #include "lua.hpp"
+#include "lua_hooks.h"
 #include "thread_controller.h"
+
+#if EFI_PROD_CODE
+#include "ch.h"
 
 #define LUA_HEAP_SIZE 20000
 
 static memory_heap_t heap;
 
-static void* myAlloc(void * /*ud*/, void *ptr, size_t /*osize*/, size_t nsize) {
+static void* myAlloc(void* /*ud*/, void* ptr, size_t /*osize*/, size_t nsize) {
 	if (nsize == 0) {
 		// requested size is zero, free if necessary and return nullptr
 		if (ptr) {
@@ -31,22 +34,12 @@ static void* myAlloc(void * /*ud*/, void *ptr, size_t /*osize*/, size_t nsize) {
 
 	return new_mem;
 }
-
-struct LuaThread : ThreadController<4096> {
-	LuaThread() : ThreadController("lua", PRIO_LUA) { }
-
-	void ThreadTask() override;
-};
-
-static int lua_efi_print(lua_State* l) {
-	luaL_checkstring(l, 1);
-
-	auto msg = lua_tostring(l, 1);
-
-	efiPrintf("LUA: %s", msg);
-
-	return 0;
+#else // not EFI_PROD_CODE
+// Non-MCU code can use plain realloc function instead of custom implementation
+static void* myAlloc(void* /*ud*/, void* ptr, size_t /*osize*/, size_t nsize) {
+	return realloc(ptr, nsize);
 }
+#endif // EFI_PROD_CODE
 
 lua_State* setupLuaState() {
 	auto *ls = lua_newstate(myAlloc, NULL);
@@ -58,12 +51,13 @@ lua_State* setupLuaState() {
 		return nullptr;
 	}
 
-	lua_register(ls, "print", lua_efi_print);
-
 	// load libraries
 	luaopen_base(ls);
 	luaopen_string(ls);
 	luaopen_math(ls);
+
+	// Load rusEFI hooks
+	configureRusefiLuaHooks(ls);
 
 	// run a GC cycle
 	lua_gc(ls, LUA_GCCOLLECT, 0);
@@ -92,6 +86,13 @@ void loadScript(lua_State* ls) {
 
 	efiPrintf("script loaded");
 }
+
+#if !EFI_UNIT_TEST
+struct LuaThread : ThreadController<4096> {
+	LuaThread() : ThreadController("lua", PRIO_LUA) { }
+
+	void ThreadTask() override;
+};
 
 void LuaThread::ThreadTask() {
 	void* buf = malloc(LUA_HEAP_SIZE);
@@ -133,3 +134,11 @@ static LuaThread luaThread;
 void startLua() {
 	luaThread.Start();
 }
+
+#else // not EFI_UNIT_TEST
+
+void startLua() {
+	// todo
+}
+
+#endif // EFI_UNIT_TEST
