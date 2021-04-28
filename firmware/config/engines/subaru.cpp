@@ -10,6 +10,7 @@
 
 #include "subaru.h"
 #include "custom_engine.h"
+#include "allsensors.h"
 
 EXTERN_CONFIG;
 
@@ -81,9 +82,7 @@ void setSubaruEG33Defaults(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	/* TODO: */
 	engineConfiguration->globalTriggerAngleOffset = 114;	// the end of 19th tooth?
 
-	/* TODO: */
-	//engineConfiguration->fuelAlgorithm = LM_REAL_MAF;
-	engineConfiguration->fuelAlgorithm = LM_ALPHA_N;
+	engineConfiguration->fuelAlgorithm = LM_REAL_MAF;
 
 	engineConfiguration->specs.displacement = 3.30;
 	engineConfiguration->injector.flow = 250;
@@ -101,10 +100,9 @@ void setSubaruEG33Defaults(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	engineConfiguration->canReadEnabled = true;
 	engineConfiguration->canWriteEnabled = false;
 
-	/* TODO: */
-	//engineConfiguration->tpsMin = convertVoltageTo10bitADC(0.250);
-	//engineConfiguration->tpsMax = convertVoltageTo10bitADC(4.538);
-	//engineConfiguration->tpsMax = convertVoltageTo10bitADC(5.000);
+	/* Reversed: fully closed - 4.7V, fully opened - 0.9 */
+	engineConfiguration->tpsMin = convertVoltageTo10bitADC(4.7);
+	engineConfiguration->tpsMax = convertVoltageTo10bitADC(0.9);
 	engineConfiguration->tpsErrorDetectionTooLow = -10; // -10% open
 	engineConfiguration->tpsErrorDetectionTooHigh = 110; // 110% open
 
