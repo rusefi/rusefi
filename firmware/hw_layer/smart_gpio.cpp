@@ -86,7 +86,7 @@ struct mc33972_config mc33972 = {
 		.ssport = NULL,
 		.sspad = 0,
 		.cr1 =
-			SPI_CR1_24BIT_MODE |
+			SPI_CR1_8BIT_MODE |
 			SPI_CR1_SSM |
 			SPI_CR1_SSI |
 			/* SPI_CR1_LSBFIRST | */
@@ -95,7 +95,7 @@ struct mc33972_config mc33972 = {
 			/* SPI_CR1_CPOL | */ /* = 0 */
 			SPI_CR1_CPHA | /* = 1 */
 			0,
-		.cr2 = SPI_CR2_24BIT_MODE
+		.cr2 = SPI_CR2_8BIT_MODE
 	},
 };
 #endif /* (BOARD_MC33972_COUNT > 0) */
