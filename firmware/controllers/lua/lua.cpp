@@ -55,7 +55,6 @@ lua_State* setupLuaState() {
 
 	// load libraries
 	luaopen_base(ls);
-	luaopen_string(ls);
 	luaopen_math(ls);
 
 	// Load rusEFI hooks
@@ -65,9 +64,8 @@ lua_State* setupLuaState() {
 	lua_gc(ls, LUA_GCCOLLECT, 0);
 
 	// set GC settings
-	// TODO: why these values
-	lua_gc(ls, LUA_GCSETPAUSE, 99);
-	lua_gc(ls, LUA_GCSETSTEPMUL, 1000);
+	// see https://www.lua.org/manual/5.4/manual.html#2.5.1
+	lua_gc(ls, LUA_GCINC, 50, 1000, 9);
 
 	return ls;
 }
