@@ -31,7 +31,8 @@ for c in $CONNECTORS; do
 done
 
 if [ -n "$RUSEFI_FTP_SERVER" ]; then
-  echo "Uploading Pinouts"
-  ncftpput -R -z -m -V -u "$RUSEFI_DOXYGEN_FTP_USER" -p "$RUSEFI_DOXYGEN_FTP_PASS" "$RUSEFI_FTP_SERVER" / pinouts
+  echo "Uploading Pinouts..."
+  ncftpput -R -z -m -v -u "$RUSEFI_DOXYGEN_FTP_USER" -p "$RUSEFI_DOXYGEN_FTP_PASS" "$RUSEFI_FTP_SERVER" / pinouts
+  echo "Uploaded!"
 fi
 [ $? -eq 0 ] || { echo "upload FAILED"; exit 1; }
