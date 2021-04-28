@@ -1,6 +1,7 @@
 #include "lua.hpp"
 #include "lua_hooks.h"
 #include "thread_controller.h"
+#include "perf_trace.h"
 
 #if EFI_LUA
 
@@ -118,13 +119,17 @@ void LuaThread::ThreadTask() {
 			continue;
 		}
 
-		int status = lua_pcall(ls, 0, 0, 0);
+		{
+			ScopePerf perf(PE::LuaTickFunction);
 
-		if (0 != status) {
-			// error calling hook function
-			auto errMsg = lua_tostring(ls, -1);
-			efiPrintf("lua err %s", errMsg);
-			lua_pop(ls, 1);
+			int status = lua_pcall(ls, 0, 0, 0);
+
+			if (0 != status) {
+				// error calling hook function
+				auto errMsg = lua_tostring(ls, -1);
+				efiPrintf("lua err %s", errMsg);
+				lua_pop(ls, 1);
+			}
 		}
 
 		lua_settop(ls, 0);
