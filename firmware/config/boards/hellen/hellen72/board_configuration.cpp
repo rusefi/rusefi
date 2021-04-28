@@ -19,6 +19,10 @@
 
 EXTERN_ENGINE;
 
+static void hellenWbo() {
+	engineConfiguration->enableAemXSeries = true;
+}
+
 static void setInjectorPins() {
 	engineConfiguration->injectionPins[0] = GPIOG_7;
 	engineConfiguration->injectionPins[1] = GPIOG_8;
@@ -115,6 +119,7 @@ void setBoardConfigOverrides(void) {
 
 	engineConfiguration->canTxPin = GPIOD_1;
 	engineConfiguration->canRxPin = GPIOD_0;
+	hellenWbo();
 }
 
 void setPinConfigurationOverrides(void) {
