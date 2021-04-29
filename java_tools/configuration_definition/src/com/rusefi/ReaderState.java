@@ -72,7 +72,7 @@ public class ReaderState {
         int index = line.indexOf(' ');
         String name = line.substring(0, index);
 
-        String autoEnumOptions = VariableRegistry.getEnumOptionsForTunerStudio(state.enumsReader, VariableRegistry.INSTANCE, name);
+        String autoEnumOptions = VariableRegistry.INSTANCE.getEnumOptionsForTunerStudio(state.enumsReader, name);
         if (autoEnumOptions != null) {
             VariableRegistry.INSTANCE.register(name + "_auto_enum", autoEnumOptions);
         }

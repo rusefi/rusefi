@@ -23,7 +23,7 @@ public class ConfigDefinitionTest {
         ConfigDefinition.readPrependValues(variableRegistry, FIRMWARE + File.separator + "integration/rusefi_config.txt");
 
 
-        String sb = VariableRegistry.getEnumOptionsForTunerStudio(enumsReader, variableRegistry, "engine_type_e");
+        String sb = variableRegistry.getEnumOptionsForTunerStudio(enumsReader, "engine_type_e");
 
         System.out.println(sb);
         assertNotNull(sb);
