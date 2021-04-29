@@ -12,6 +12,10 @@ public class EnumsReader {
 
     private final Map<String, Map<String, Value>> enums = new TreeMap<>();
 
+    public Map<String /*enum name*/, Map<String/*enum member*/, Value>> getEnums() {
+        return enums;
+    }
+
     public void process(String path, String fileName) throws IOException {
         process(new FileReader(path + File.separator + fileName));
     }
@@ -23,6 +27,7 @@ public class EnumsReader {
         while ((line = reader.readLine()) != null) {
             line = removeSpaces(line);
 
+            line = line.replaceAll("//.+", "");
             if (line.startsWith("typedefenum{") || line.startsWith("typedefenum__attribute__")) {
                 SystemOut.println("  EnumsReader: Entering enum");
                 currentValues.clear();
@@ -33,7 +38,6 @@ public class EnumsReader {
                 SystemOut.println("  EnumsReader: Ending enum " + line  + " found " + currentValues.size() + " values");
                 enums.put(line, new TreeMap<>(currentValues));
             } else {
-                line = line.replaceAll("//.+", "");
                 if (isInsideEnum) {
                     if (isKeyValueLine(line)) {
                         line = line.replace(",", "");
@@ -53,11 +57,7 @@ public class EnumsReader {
         }
     }
 
-    public Map<String, Map<String, Value>> getEnums() {
-        return enums;
-    }
-
-    static String removeSpaces(String line) {
+    private static String removeSpaces(String line) {
         return line.replaceAll("\\s+", "");
     }
 
