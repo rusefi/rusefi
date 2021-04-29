@@ -1,9 +1,12 @@
-#include "lua.hpp"
-#include "lua_hooks.h"
+
+#include "rusefi_lua.h"
 #include "thread_controller.h"
 #include "perf_trace.h"
 
 #if EFI_LUA
+
+#include "lua.hpp"
+#include "lua_hooks.h"
 
 #if EFI_PROD_CODE
 #include "ch.h"
@@ -44,7 +47,7 @@ static void* myAlloc(void* /*ud*/, void* ptr, size_t /*osize*/, size_t nsize) {
 }
 #endif // EFI_PROD_CODE
 
-lua_State* setupLuaState() {
+static lua_State* setupLuaState() {
 	auto *ls = lua_newstate(myAlloc, NULL);
 
 	// TODO handle null ls
@@ -75,18 +78,18 @@ void stopLua(lua_State* ls) {
 	lua_close(ls);
 }
 
-void loadScript(lua_State* ls) {
-	auto scriptStr = "n=0\nfunction onTick()\nprint('hello lua ' ..n)\nn=n+1\nend\n";
-
+static bool loadScript(lua_State* ls, const char* scriptStr) {
 	efiPrintf("loading script length: %d", efiStrlen(scriptStr));
 
 	if (0 != luaL_dostring(ls, scriptStr)) {
 		efiPrintf("LUA error loading script: %s", lua_tostring(ls, -1));
 		lua_pop(ls, 1);
-		return;
+		return false;
 	}
 
 	efiPrintf("script loaded");
+
+	return true;
 }
 
 #if !EFI_UNIT_TEST
@@ -107,7 +110,10 @@ void LuaThread::ThreadTask() {
 		return;
 	}
 
-	loadScript(ls);
+	//auto scriptStr = "function onTick()\nlocal rpm = getSensor(3)\nif rpm ~= nil then\nprint('RPM: ' ..rpm)\nend\nend\n";
+	auto scriptStr = "n=0\nfunction onTick()\nprint('hello lua ' ..n)\nn=n+1\nend\n";
+
+	loadScript(ls, scriptStr);
 
 	while (!chThdShouldTerminateX()) {
 		// run the tick function
@@ -146,6 +152,93 @@ void startLua() {
 
 void startLua() {
 	// todo
+}
+
+#include <stdexcept>
+
+static lua_State* runScript(const char* script) {
+	auto ls = setupLuaState();
+
+	if (!ls) {
+		throw new std::logic_error("Call to setupLuaState failed, returned null");
+	}
+
+	if (!loadScript(ls, script)) {
+		lua_close(ls);
+		throw new std::logic_error("Call to loadScript failed");
+	}
+
+	lua_getglobal(ls, "testFunc");
+	if (lua_isnil(ls, -1)) {
+		lua_close(ls);
+		throw new std::logic_error("Failed to find function testFunc");
+	}
+
+	int status = lua_pcall(ls, 0, 1, 0);
+
+	if (0 != status) {
+		std::string msg = std::string("lua error while running script: ") + lua_tostring(ls, -1);
+		lua_close(ls);
+		throw new std::logic_error(msg);
+	}
+
+	return ls;
+}
+
+expected<float> testLuaReturnsNumberOrNil(const char* script) {
+	auto ls = runScript(script);
+
+	// check nil return first
+	if (lua_isnil(ls, -1)) {
+		lua_close(ls);
+		return unexpected;
+	}
+
+	// If not nil, it should be a number
+	if (!lua_isnumber(ls, -1)) {
+		lua_close(ls);
+		throw new std::logic_error("Returned value is not a number");
+	}
+
+	// pop the return value
+	float retVal = lua_tonumber(ls, -1);
+
+	lua_close(ls);
+
+	return retVal;
+}
+
+float testLuaReturnsNumber(const char* script) {
+	auto ls = runScript(script);
+
+	// check the return value
+	if (!lua_isnumber(ls, -1)) {
+		lua_close(ls);
+		throw new std::logic_error("Returned value is not a number");
+	}
+
+	// pop the return value
+	float retVal = lua_tonumber(ls, -1);
+
+	lua_close(ls);
+
+	return retVal;
+}
+
+int testLuaReturnsInteger(const char* script) {
+	auto ls = runScript(script);
+
+	// pop the return value;
+	if (!lua_isinteger(ls, -1)) {
+		lua_close(ls);
+		throw new std::logic_error("Returned value is not an integer");
+	}
+
+	int retVal = lua_tointeger(ls, -1);
+
+	lua_close(ls);
+
+	return retVal;
 }
 
 #endif // EFI_UNIT_TEST
