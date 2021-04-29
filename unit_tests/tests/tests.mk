@@ -15,6 +15,8 @@ TESTS_SRC_CPP = \
 	tests/ignition_injection/test_fuelCut.cpp \
 	tests/ignition_injection/test_fuel_computer.cpp \
 	tests/ignition_injection/test_injector_model.cpp \
+	tests/lua/test_lua_basic.cpp \
+	tests/lua/test_lua_hooks.cpp \
 	tests/sensor/test_cj125.cpp \
 	tests/util/test_buffered_writer.cpp \
 	tests/util/test_error_accumulator.cpp \
