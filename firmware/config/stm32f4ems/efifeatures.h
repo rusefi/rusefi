@@ -44,6 +44,7 @@
 #define SC_BUFFER_SIZE 4000
 #endif
 
+#define EFI_LUA FALSE
 
 /**
  * if you have a 60-2 trigger, or if you just want better performance, you

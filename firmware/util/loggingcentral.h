@@ -7,6 +7,9 @@
 #pragma once
 
 #include <cstddef>
+#include "rusefi_generated.h"
+
+#define DELIMETER	","
 
 class Logging;
 
