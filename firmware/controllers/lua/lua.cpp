@@ -72,6 +72,18 @@ private:
 	lua_State* m_ptr;
 };
 
+static int luaTickPeriodMs;
+
+static int lua_setTickRate(lua_State* l) {
+	float freq = luaL_checknumber(l, 1);
+
+	// Limit to 1..100 hz
+	freq = clampF(1, freq, 100);
+
+	luaTickPeriodMs = 1000.0f / freq;
+	return 0;
+}
+
 static LuaHandle setupLuaState() {
 	LuaHandle ls = lua_newstate(myAlloc, NULL);
 
@@ -130,6 +142,9 @@ void LuaThread::ThreadTask() {
 		return;
 	}
 
+	// Reset default tick rate
+	luaTickPeriodMs = 100;
+
 	//auto scriptStr = "function onTick()\nlocal rpm = getSensor(3)\nif rpm ~= nil then\nprint('RPM: ' ..rpm)\nend\nend\n";
 	auto scriptStr = "n=0\nfunction onTick()\nprint('hello lua ' ..n)\nn=n+1\nend\n";
 
@@ -161,6 +176,8 @@ void LuaThread::ThreadTask() {
 		}
 
 		lua_settop(ls, 0);
+
+		chThdSleepMilliseconds(luaTickPeriodMs);
 	}
 }
 
