@@ -1244,8 +1244,8 @@ int16_t tps2Max;Full throttle#2. tpsMax value as 10 bit ADC value. Not Voltage!\
 	brain_pin_e binarySerialRxPin;	
 	
 	brain_pin_e[AUX_DIGITAL_VALVE_COUNT iterate] auxValves
-	int unused1206
-	int unused1207
+	int unused1206;;"units", 1, 0, -20, 100, 0
+	int unused1207;;"units", 1, 0, -20, 100, 0
 
 
 	float[ENGINE_NOISE_CURVE_SIZE] knockNoise;Knock sensor output knock detection threshold depending on current RPM;"v",      1,     0,   0.0,    10,   2
