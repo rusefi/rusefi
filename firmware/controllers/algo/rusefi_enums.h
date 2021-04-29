@@ -991,18 +991,18 @@ typedef enum {
 } antiLagActivationMode_e;
 
 typedef enum {
-	PARK = 0,
-	NEUTRAL,
-	PARK_NEUTRAL,
-	REVERSE,
-	DRIVE,
-	MANUAL,
-	LOW,
-	UPSHIFT,
-	DOWNSHIFT,
-	GEAR_3,
-	GEAR_2,
-	GEAR_1,
+	ROLE_PARK = 0,
+	ROLE_NEUTRAL,
+	ROLE_PARK_NEUTRAL,
+	ROLE_REVERSE,
+	ROLE_DRIVE,
+	ROLE_MANUAL,
+	ROLE_LOW,
+	ROLE_UPSHIFT,
+	ROLE_DOWNSHIFT,
+	ROLE_GEAR_3,
+	ROLE_GEAR_2,
+	ROLE_GEAR_1,
 } tcu_role_e;
 
 typedef enum __attribute__ ((__packed__)) {
