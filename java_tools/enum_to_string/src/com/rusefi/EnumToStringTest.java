@@ -40,7 +40,7 @@ public class EnumToStringTest {
                         "\tGPIO_UNASSIGNED = 0,\n" +
                         "\tGPIO_INVALID = 1,\n" +
                         "\tGPIO_HEX = 0xA1,\n" +
-                        "}brain_pin_e;"));
+                        "}brain_pin_e; // hello"));
 
         List<Value> values = new ArrayList<>(enumsReader.getEnums().get("brain_pin_e").values());
         assertEquals(3, values.size());
