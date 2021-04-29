@@ -59,6 +59,10 @@ float minF(float i1, float i2) {
 	return i1 < i2 ? i1 : i2;
 }
 
+int clampI(int min, int clamp, int max) {
+	return maxI(min, minI(clamp, max));
+}
+
 float clampF(float min, float clamp, float max) {
 	return maxF(min, minF(clamp, max));
 }
