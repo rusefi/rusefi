@@ -98,6 +98,7 @@ static LuaHandle setupLuaState() {
 	luaopen_math(ls);
 
 	// Load rusEFI hooks
+	lua_register(ls, "setTickRate", lua_setTickRate);
 	configureRusefiLuaHooks(ls);
 
 	// run a GC cycle
