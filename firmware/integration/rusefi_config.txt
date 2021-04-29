@@ -228,6 +228,8 @@ custom afr_table_t @@FUEL_RPM_COUNT@@x@@FUEL_LOAD_COUNT@@ array,   U08,   @OFFSE
 
 custom tcubinary_table_t @@TCU_SOLENOID_COUNT@@x@@TCU_GEAR_COUNT@@ array,   U08,   @OFFSET@, [@@TCU_SOLENOID_COUNT@@x@@TCU_GEAR_COUNT@@],"onoff", 1,     0,        0,  1,  0
 
+custom tcuinput_table_t 6x8 array,   U08,   @OFFSET@, [6x8],"onoff", 1,     0,        0,  5,  0
+
 custom fsio_table_8x8_u8t	@@FSIO_TABLE_8@@x@@FSIO_TABLE_8@@ array,   U08,   @OFFSET@, [@@FSIO_TABLE_8@@x@@FSIO_TABLE_8@@],"value",      1,     0,      0.0,   255.0,   0
 custom fsio_table_8x8_f32t	4*@@FSIO_TABLE_8@@x@@FSIO_TABLE_8@@ array,   F32,   @OFFSET@, [@@FSIO_TABLE_8@@x@@FSIO_TABLE_8@@],"value",      1,     0,      0.0,   30000.0,   2
 custom tps_tps_table_t	4*@@TPS_TPS_ACCEL_TABLE@@x@@TPS_TPS_ACCEL_TABLE@@ array,   F32,   @OFFSET@, [@@TPS_TPS_ACCEL_TABLE@@x@@TPS_TPS_ACCEL_TABLE@@],"value",      1,     0,      0.0,   30000.0,   2
@@ -997,7 +999,7 @@ custom maf_sensor_type_e 4 bits, S32, @OFFSET@, [0:1], @@maf_sensor_type_e_enum@
 	bit knockBankCyl11,"Channel 2","Channel 1"
 	bit knockBankCyl12,"Channel 2","Channel 1"
 	bit tcuEnabled
-	bit unusedBit_251_29
+	bit tcuInputMode,"Digital","Analog";
 	
 	dc_io[ETB_COUNT iterate] etbIo
 
@@ -1052,7 +1054,40 @@ custom maf_sensor_type_e 4 bits, S32, @OFFSET@, [0:1], @@maf_sensor_type_e_enum@
 
 	output_pin_e[LUA_PWM_COUNT iterate] luaOutputPins
 
-	int[57] unusedAtOldBoardConfigurationEnd;;"units", 1, 0, -20, 100, 0
+	#define tcu_role_e_enum "Park", "Neutral" , "Park/Neutral", "Reverse", "Drive", "Manual", "Low", "Upshift", "Downshift", "3", "2", "1"
+	custom tcu_role_e 1 bits, U08, @OFFSET@, [0:3], @@tcu_role_e_enum@@
+	tcu_role_e	tcuState0Role;
+	tcu_role_e	tcuState1Role;
+	tcu_role_e	tcuState2Role;
+	tcu_role_e	tcuState3Role;
+	tcu_role_e	tcuState4Role;
+	tcu_role_e	tcuState5Role;
+	tcu_role_e	tcuState6Role;
+	tcu_role_e	tcuState7Role;
+
+	brain_pin_e	tcuInputPin1D;
+	brain_pin_e	tcuInputPin2D;
+	brain_pin_e	tcuInputPin3D;
+	brain_pin_e	tcuInputPin4D;
+	brain_pin_e	tcuInputPin5D;
+	brain_pin_e	tcuInputPin6D;
+
+	adc_channel_e	tcuInputPin1A;
+	adc_channel_e	tcuInputPin2A;
+	adc_channel_e	tcuInputPin3A;
+	adc_channel_e	tcuInputPin4A;
+	adc_channel_e	tcuInputPin5A;
+	adc_channel_e	tcuInputPin6A;
+
+	pin_input_mode_e	tcuInputPin1Mode;
+	pin_input_mode_e	tcuInputPin2Mode;
+	pin_input_mode_e	tcuInputPin3Mode;
+	pin_input_mode_e	tcuInputPin4Mode;
+	pin_input_mode_e	tcuInputPin5Mode;
+	pin_input_mode_e	tcuInputPin6Mode;
+
+	int[32] unusedAtOldBoardConfigurationEnd;;"units", 1, 0, -20, 100, 0
+
 	uint16_t vehicleWeight;;"kg", 1, 0, 0, 10000, 0
 	brain_pin_e lps25BaroSensorScl
 	brain_pin_e lps25BaroSensorSda
@@ -1209,8 +1244,8 @@ int16_t tps2Max;Full throttle#2. tpsMax value as 10 bit ADC value. Not Voltage!\
 	brain_pin_e binarySerialRxPin;	
 	
 	brain_pin_e[AUX_DIGITAL_VALVE_COUNT iterate] auxValves
-	switch_input_pin_e tcuUpshiftButtonPin
-	switch_input_pin_e tcuDownshiftButtonPin
+	int unused1206
+	int unused1207
 
 
 	float[ENGINE_NOISE_CURVE_SIZE] knockNoise;Knock sensor output knock detection threshold depending on current RPM;"v",      1,     0,   0.0,    10,   2
@@ -1435,7 +1470,9 @@ float[CLT_CURVE_SIZE] iacCoasting;    CLT-based idle position for coasting (used
 int8_t[CLT_LIMITER_CURVE_SIZE] cltRevLimitRpmBins;CLT-based target RPM for hard limit depending on CLT like on Lexus LFA;"C",        1,     0,   -70,    120,  0
 uint16_t[CLT_LIMITER_CURVE_SIZE] cltRevLimitRpm;See idleRpmPid;"",      1,     0,      0,    8000,   0
 
-uint8_t[524] unused3328;;"units", 1, 0, -20, 100, 0
+tcuinput_table_t tcuInputTable;
+
+uint8_t[476] unused3328;;"units", 1, 0, -20, 100, 0
 
 float tChargeAirCoefMin;;"Min tCharge Coeff.",        1,     0,  0.0,    1.0,  4
 float tChargeAirCoefMax;;"Max tCharge Coeff.",        1,     0,  0.0,    1.0,  4
@@ -1509,8 +1546,8 @@ tChargeMode_e tChargeMode;
 	uint16_t mc33_t_hold_off;;"us",   1,   0.0,        0,  10000,   0
 	uint16_t mc33_t_hold_tot;;"us",   1,   0.0,        0,  10000,   0
 
-	pin_input_mode_e tcuUpshiftButtonPinMode
-	pin_input_mode_e tcuDownshiftButtonPinMode
+	int unused1506
+	int unused1507
 
 	pin_input_mode_e acSwitchMode
 

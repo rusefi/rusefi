@@ -367,8 +367,10 @@ enable2ndByteCanID = false
     sd_status         = scalar,  U08,    246,  "", 1.0, 0.0
 
 ; Transmission
-      tcuCurrentGear  = scalar,  S08,     247,   "gear",    1,         0
-      tcuDesiredGear  = scalar,  S08,     262,   "gear",    1,         0
+	tcuCurrentGear  = scalar,  S08,     247,   "gear",    1,         0
+	tcuDesiredGear  = scalar,  S08,     262,   "gear",    1,         0
+	tcuCurrentState = scalar, U08, 295, "state", 1, 0
+	one = scalar, U08, 296, "unit", 1, 0
 
 	knock1 = scalar, S08, 250, "dbv", 1, 0
 	knock2 = scalar, S08, 251, "dbv", 1, 0
@@ -427,6 +429,9 @@ enable2ndByteCanID = false
 
     gearCountArray = array, S08, [@@TCU_GEAR_COUNT@@], "Gear", 1, 0, -1, { @@TCU_GEAR_COUNT@@ - 2 }, 0, noMsqSave
     solenoidCountArray = array, U08, [@@TCU_SOLENOID_COUNT@@], "Solenoid", 1, 0, 1, @@TCU_SOLENOID_COUNT@@, 0, noMsqSave
+
+	tcuInputArray = array, U08, [6], "Pin", 1, 0, 1, 6, 0, noMsqSave
+	tcuStateArray = array, U08, [8], "State", 1, 0, 0, 7, 0, noMsqSave
 
 ; These are inverted (false = "Yes") so that they default to enabled
 	enableLogDebugChannels = bits, U08, [0:0], "Yes", "No"
@@ -542,6 +547,10 @@ enable2ndByteCanID = false
 	readOnly = gearCountArray
 	defaultValue = solenoidCountArray, 1 2 3 4 5 6 7 8
 	readOnly = solenoidCountArray
+	defaultValue = tcuInputArray, 1 2 3 4 5 6
+	readOnly = tcuInputArray
+	defaultValue = tcuStateArray, 0 1 2 3 4 5 6 7
+	readOnly = tcuStateArray
 
 
 [CurveEditor]
@@ -959,6 +968,12 @@ enable2ndByteCanID = false
 		zBins		= tcuSolenoidTable
 		xyLabels	= "Solenoid", "Gear"
 
+	table = tcuInputTableTbl,  tcuInputTableMap,  "Input States",   1
+		xBins		= tcuInputArray, one
+		yBins		= tcuStateArray, tcuCurrentState
+		zBins		= tcuInputTable
+		xyLabels	= "Pin", "Mode"
+
 [GaugeConfigurations]
 
 gaugeCategory = Sensors - Extra 2
@@ -1350,6 +1365,7 @@ gaugeCategory = DynoView
 ; Transmission
    entry = tcuDesiredGear,  "Desired Gear", int, "%d"
    entry = tcuCurrentGear,  "Current Gear", int, "%d"
+   entry = tcuCurrentState, "Input State", int, "%d"
 
    entry = knock1, "Knock 1", int, "%d"
    entry = knock2, "Knock 2", int, "%d"
@@ -1514,6 +1530,7 @@ menuDialog = main
 		subMenu = std_separator
 		subMenu = tcuControls,			"Transmission Settings"
 		subMenu = tcuSolenoidTableTbl,		"TCU Solenoids"
+		subMenu = tcuInputTableTbl,		"TCU Input States"
 
 	menu = "&Sensors"
 		# Base analog input settings
@@ -2368,8 +2385,10 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 		field = "AUX Serial RX", 						auxSerialRxPin
 		field = "External Knock",						externalKnockSenseAdc
 		field = "Start/Stop Button",					startStopButtonPin
-		field = "Upshift Pin",							tcuUpshiftButtonPin
-		field = "Downshift Pin",						tcuDownshiftButtonPin
+		field = "TCU Input Pin 1",						tcuInputPin1
+		field = "TCU Input Pin 2",						tcuInputPin2
+		field = "TCU Input Pin 3",						tcuInputPin3
+		field = "TCU Input Pin 4",						tcuInputPin4
 
 	dialog = allPins3_1_and_2, "All Pins 3/3", xAxis
 		panel = allPins3_1
@@ -3253,28 +3272,54 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 
 	dialog = solenoidPanel, "Shift Solenoids"
 		field = "Solenoid 1 Pin"	tcu_solenoid1,		{ tcuEnabled }
-		field = "Solenoid 2 Pin"	tcu_solenoid2,		{ tcuEnabled }
-		field = "Solenoid 3 Pin"	tcu_solenoid3,		{ tcuEnabled }
-		field = "Solenoid 4 Pin"	tcu_solenoid4,		{ tcuEnabled }
-		field = "Solenoid 5 Pin"	tcu_solenoid5,		{ tcuEnabled }
-		field = "Solenoid 6 Pin"	tcu_solenoid6,		{ tcuEnabled }
 		field = "Solenoid 1 Pin Mode"	tcu_solenoid_mode1,	{ tcuEnabled }
+		field = "Solenoid 2 Pin"	tcu_solenoid2,		{ tcuEnabled }
 		field = "Solenoid 2 Pin Mode"	tcu_solenoid_mode2,	{ tcuEnabled }
+		field = "Solenoid 3 Pin"	tcu_solenoid3,		{ tcuEnabled }
 		field = "Solenoid 3 Pin Mode"	tcu_solenoid_mode3,	{ tcuEnabled }
+		field = "Solenoid 4 Pin"	tcu_solenoid4,		{ tcuEnabled }
 		field = "Solenoid 4 Pin Mode"	tcu_solenoid_mode4,	{ tcuEnabled }
+		field = "Solenoid 5 Pin"	tcu_solenoid5,		{ tcuEnabled }
 		field = "Solenoid 5 Pin Mode"	tcu_solenoid_mode5,	{ tcuEnabled }
+		field = "Solenoid 6 Pin"	tcu_solenoid6,		{ tcuEnabled }
 		field = "Solenoid 6 Pin Mode"	tcu_solenoid_mode6,	{ tcuEnabled }
 
-	dialog = buttonShiftInputPanel, "Switch/Button Shift"
-		field = "Upshift Pin"		tcuUpshiftButtonPin,		{ tcuEnabled }
-		field = "Upshift Pin Mode"	tcuUpshiftButtonPinMode,	{ tcuEnabled }
-		field = "Downshift Pin"		tcuDownshiftButtonPin,		{ tcuEnabled }
-		field = "Downshift Pin Mode"	tcuDownshiftButtonPinMode,	{ tcuEnabled }
+	dialog = tcuInputPanel, "Range/Gear Selection Inputs"
+		field = "Input Mode"		tcuInputMode,			{ tcuEnabled }
+		field = "Input Pin 1"		tcuInputPin1D,			{ tcuEnabled && tcuInputMode }
+		field = "Input Pin 1"		tcuInputPin1A,			{ tcuEnabled && !tcuInputMode }
+		field = "Input Pin 1 Mode"	tcuInputPin1Mode,		{ tcuEnabled && tcuInputMode }
+		field = "Input Pin 2"		tcuInputPin2D,			{ tcuEnabled && tcuInputMode }
+		field = "Input Pin 2"		tcuInputPin2A,			{ tcuEnabled && !tcuInputMode }
+		field = "Input Pin 2 Mode"	tcuInputPin2Mode,		{ tcuEnabled && tcuInputMode }
+		field = "Input Pin 3"		tcuInputPin3D,			{ tcuEnabled && tcuInputMode }
+		field = "Input Pin 3"		tcuInputPin3A,			{ tcuEnabled && !tcuInputMode }
+		field = "Input Pin 3 Mode"	tcuInputPin3Mode,		{ tcuEnabled && tcuInputMode }
+		field = "Input Pin 4"		tcuInputPin4D,			{ tcuEnabled && tcuInputMode }
+		field = "Input Pin 4"		tcuInputPin4A,			{ tcuEnabled && !tcuInputMode }
+		field = "Input Pin 4 Mode"	tcuInputPin4Mode,		{ tcuEnabled && tcuInputMode }
+		field = "Input Pin 5"		tcuInputPin5D,			{ tcuEnabled && tcuInputMode }
+		field = "Input Pin 5"		tcuInputPin5A,			{ tcuEnabled && !tcuInputMode }
+		field = "Input Pin 5 Mode"	tcuInputPin5Mode,		{ tcuEnabled && tcuInputMode }
+		field = "Input Pin 6"		tcuInputPin6D,			{ tcuEnabled && tcuInputMode }
+		field = "Input Pin 6"		tcuInputPin6A,			{ tcuEnabled && !tcuInputMode }
+		field = "Input Pin 6 Mode"	tcuInputPin6Mode,		{ tcuEnabled && tcuInputMode }
+
+	dialog = tcuInputStatePanel, "Range/Gear Input State Roles"
+		field = "Input State 0 Role"	tcuState0Role,		{ tcuEnabled }
+		field = "Input State 1 Role"	tcuState1Role,		{ tcuEnabled }
+		field = "Input State 2 Role"	tcuState2Role,		{ tcuEnabled }
+		field = "Input State 3 Role"	tcuState3Role,		{ tcuEnabled }
+		field = "Input State 4 Role"	tcuState4Role,		{ tcuEnabled }
+		field = "Input State 5 Role"	tcuState5Role,		{ tcuEnabled }
+		field = "Input State 6 Role"	tcuState6Role,		{ tcuEnabled }
+		field = "Input State 7 Role"	tcuState7Role,		{ tcuEnabled }
 
 	dialog = tcuControls, "Transmission Settings"
 		panel = transmissionPanel
 		panel = solenoidPanel
-		panel = buttonShiftInputPanel
+		panel = tcuInputPanel
+		panel = tcuInputStatePanel
 
 ;Boost Open Loop
 
