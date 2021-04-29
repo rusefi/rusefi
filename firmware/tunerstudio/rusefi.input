@@ -1816,8 +1816,8 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 	dialog = triggerConfiguration_settings,	"Trigger Pattern"
 		field = "!https://rusefi.com/s/trigger"
 		field = "Trigger type",							trigger_type
-		field = "Total tooth count",					trigger_customTotalToothCount, {trigger_type == 0}, {trigger_type == 0}
-		field = "Missing/skipped tooth count",					trigger_customSkippedToothCount, {trigger_type == 0}, {trigger_type == 0}
+		field = "Total tooth count",					trigger_customTotalToothCount, {trigger_type == @@TT_TT_TOOTHED_WHEEL@@}, {trigger_type == @@TT_TT_TOOTHED_WHEEL@@}
+		field = "Missing/skipped tooth count",					trigger_customSkippedToothCount, {trigger_type == @@TT_TT_TOOTHED_WHEEL@@}, {trigger_type == @@TT_TT_TOOTHED_WHEEL@@}
 
 		; see also in firmware '[doesTriggerImplyOperationMode]' tag
 		field = "Operation mode / speed",				ambiguousOperationMode
