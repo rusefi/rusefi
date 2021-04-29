@@ -50,8 +50,9 @@ void setBoardDefaultConfiguration(void) {
 	engineConfiguration->vbattAdcChannel = EFI_ADC_6;
 	/* Throttle position */
 	engineConfiguration->tps1_1AdcChannel = EFI_ADC_12;
-	/* MAP */
-	engineConfiguration->map.sensor.hwChannel = EFI_ADC_10;
+	/* MAP: stock car dows not have MAP
+	 * but EFI_ADC_10 is reserved for this purpose */
+	engineConfiguration->map.sensor.hwChannel = EFI_ADC_NONE;
 	/* MAF */
 	engineConfiguration->mafAdcChannel = EFI_ADC_3;
 	/* coolant t */
@@ -118,13 +119,13 @@ void setBoardDefaultConfiguration(void) {
 	/* MC33972 */
 	engineConfiguration->mc33972spiDevice = SPI_DEVICE_4;
 	engineConfiguration->mc33972_cs = GPIOE_10;	/* SPI4_NSS2 */
-	engineConfiguration->mc33972_csPinMode = OM_OPENDRAIN;
+	engineConfiguration->mc33972_csPinMode = OM_DEFAULT;
 
 	/* TLE6240 - OUT3, also PG2 */
 	engineConfiguration->tachOutputPin = TLE6240_PIN_2;
 	engineConfiguration->tachOutputPinMode = OM_DEFAULT;
 	/* spi driven - TLE6240 - OUT5 */
-#if 0
+#if 1
 	engineConfiguration->fuelPumpPin = TLE6240_PIN_5;
 	engineConfiguration->fuelPumpPinMode = OM_DEFAULT;
 	/* self shutdown? */
