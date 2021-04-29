@@ -990,6 +990,21 @@ typedef enum {
 	Force_4bytes_size_antiLagActivationMode_e = ENUM_32_BITS,
 } antiLagActivationMode_e;
 
+typedef enum {
+	PARK = 0,
+	NEUTRAL,
+	PARK_NEUTRAL,
+	REVERSE,
+	DRIVE,
+	MANUAL,
+	LOW,
+	UPSHIFT,
+	DOWNSHIFT,
+	GEAR_3,
+	GEAR_2,
+	GEAR_1,
+} tcu_role_e;
+
 typedef enum __attribute__ ((__packed__)) {
 	GPPWM_Tps = 0,
 	GPPWM_Map = 1,
@@ -1047,3 +1062,4 @@ typedef enum __attribute__ ((__packed__)) {
 	ICM_FixedRailPressure = 1,
 	ICM_SensedRailPressure = 2,
 } injector_compensation_mode_e;
+
