@@ -155,6 +155,7 @@ void startLua() {
 }
 
 #include <stdexcept>
+#include <string>
 
 static lua_State* runScript(const char* script) {
 	auto ls = setupLuaState();
