@@ -12,6 +12,11 @@ public class FileUtil {
         ZipInputStream zis = new ZipInputStream(new FileInputStream(zipFileName));
         ZipEntry zipEntry = zis.getNextEntry();
         while (zipEntry != null) {
+            /**
+             * drama: java API does not have access to file permission meta info
+             * apache commons compress does
+             * https://stackoverflow.com/questions/1050560/maintain-file-permissions-when-extracting-from-a-zip-file-using-jdk-5-api
+             */
             File newFile = newFile(destDir, zipEntry);
             if (zipEntry.isDirectory()) {
                 if (!newFile.isDirectory()) {
