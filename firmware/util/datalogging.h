@@ -12,8 +12,6 @@
 #include <cstdint>
 #include <cstddef>
 
-#define DELIMETER	","
-
 // todo: migrate to external buffer so that different instances have different
 // size of buffers?
 class Logging {
