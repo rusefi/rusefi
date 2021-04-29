@@ -19,7 +19,7 @@
 class BitbangI2c {
 public:
 	// Initialize the I2C driver
-	void init(brain_pin_e scl, brain_pin_e sda);
+	bool init(brain_pin_e scl, brain_pin_e sda);
 
 	// Write a sequence of bytes to the specified device
 	void write(uint8_t addr, const uint8_t* data, size_t size);

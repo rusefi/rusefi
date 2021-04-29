@@ -3,21 +3,21 @@
 
 #include "rusefi_hw_enums.h"
 
+EXTERN_ENGINE;
+
 static Lps25 device;
 static Lps25Sensor sensor(device);
 
-void initBaro() {
+void initBaro(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	// If there's already an external (analog) baro sensor configured,
 	// don't configure the internal one.
 	if (Sensor::hasSensor(SensorType::BarometricPressure)) {
 		return;
 	}
 
-#if HW_PROTEUS
-	if (device.init(GPIOB_10, GPIOB_11)) {
+	if (device.init(CONFIG(lps25BaroSensorScl), CONFIG(lps25BaroSensorSda))) {
 		sensor.Register();
 	}
-#endif
 }
 
 void baroUpdate() {
