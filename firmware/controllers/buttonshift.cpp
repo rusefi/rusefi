@@ -12,31 +12,15 @@ EXTERN_ENGINE;
 
 ButtonShiftController buttonShiftController;
 
-
-ButtonShiftController::ButtonShiftController() :
-		debounceUp("gear_up"),
-		debounceDown("gear_down")
-		{
-
-}
-
 void ButtonShiftController::init(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
-	// 500 millisecond is maybe a little long?
-	debounceUp.init(500, CONFIG(tcuUpshiftButtonPin), CONFIG(tcuUpshiftButtonPinMode));
-	debounceDown.init(500, CONFIG(tcuDownshiftButtonPin), CONFIG(tcuDownshiftButtonPinMode));
-
 	GearControllerBase::init(PASS_ENGINE_PARAMETER_SIGNATURE);
 }
 
 void ButtonShiftController::update() {
-    bool upPinState = false;
-    bool downPinState = false;
-    // Read pins
-    upPinState = debounceUp.readPinEvent();
-    downPinState = debounceDown.readPinEvent();
+    int role = getInputRole();
     gear_e gear = getDesiredGear();
     // Select new gear based on current desired gear.
-    if (upPinState) {
+    if (role == ROLE_UPSHIFT) {
         switch (gear) {
             case REVERSE:
                 setDesiredGear(NEUTRAL);
@@ -56,7 +40,7 @@ void ButtonShiftController::update() {
             default:
                 break;
         }
-    } else if (downPinState) {
+    } else if (role == ROLE_DOWNSHIFT) {
         switch (gear) {
             case NEUTRAL:
                 setDesiredGear(REVERSE);
