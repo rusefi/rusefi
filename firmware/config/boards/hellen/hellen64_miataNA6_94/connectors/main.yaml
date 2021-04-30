@@ -18,6 +18,12 @@ pins:
     class: outputs
     function: Check Engine Light
     type: ls
+    
+    pin: 1F
+    class: outputs
+    ts_name: Tach_Out_95.5
+    function: Tachometer
+    type: ls
 
   - pin: 1G
     class: outputs
@@ -34,15 +40,18 @@ pins:
 
   - pin: 1J
     class: outputs
+    ts_name: 1J - AC_Relay
     function: A/C Relay
     type: ls
 
   - pin: 1L
     class: outputs
+    ts_name: 1L - Radiator_Fan_94-95
     function: Radiator Fan Relay
     type: ls
 
   - pin: 1N
+    ts_name: 1N - 5v_REF_NA6
     function: Sensor +5V
 
   - pin: 1Q
@@ -52,17 +61,20 @@ pins:
 
   - pin: 1R
     class: outputs
-    function: A/C Fan Relay
+    ts_name: Coolant_Fan
+    function: Coolant Fan Relay
     type: ls
 
   - pin: 1S
-    function: USB D-
+    ts_name: A/C Input
+    function: A/C Input
 
   - pin: 1T
-    function: USB D+
+    function: EGR Solenoid
 
   - pin: 1V
     class: switch_inputs
+    ts_name: Clutch_Switch
     function: Clutch switch input
     type: din
 
@@ -97,7 +109,17 @@ pins:
     class: [event_inputs]
     ts_name: 3G - CAM
     function: Camshaft Sensor
-
+    
+    - pin: 3i
+    class: outputs
+    ts_name: 3i - Tacho_90-95.5
+    function: tachometer
+    
+    - pin: 3k
+    class: outputs
+    ts_name: 3k - TPS_5v_94-95
+    function: 5v reference
+    
   - pin: 3O
     class: analog_inputs
     ts_name: 3O - MAF
@@ -107,6 +129,11 @@ pins:
     class: analog_inputs
     ts_name: 3P - IAT
     function: IAT sensor
+            
+    - pin: 3S
+    class: outputs
+    ts_name: 3S - A/C_Fan
+    function: A/C Fan
 
   - pin: 3T
     class: outputs
