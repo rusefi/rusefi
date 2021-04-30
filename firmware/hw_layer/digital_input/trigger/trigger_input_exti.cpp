@@ -30,9 +30,9 @@ static void shaft_callback(void *arg) {
 	// do the time sensitive things as early as possible!
 	efitick_t stamp = getTimeNowNt();
 	TRIGGER_BAIL_IF_DISABLED
-#if HW_CHECK_MODE
-	TRIGGER_BAIL_IF_SELF_STIM
-#endif
+//#if HW_CHECK_MODE
+//	TRIGGER_BAIL_IF_SELF_STIM
+//#endif
 
 	int index = (int)arg;
 	ioline_t pal_line = shaftLines[index];
@@ -64,9 +64,9 @@ static void shaft_callback(void *arg) {
 static void cam_callback(void *arg) {
 	efitick_t stamp = getTimeNowNt();
 	TRIGGER_BAIL_IF_DISABLED
-#if HW_CHECK_MODE
-	TRIGGER_BAIL_IF_SELF_STIM
-#endif
+//#if HW_CHECK_MODE
+//	TRIGGER_BAIL_IF_SELF_STIM
+//#endif
 
 	int index = (int)arg;
 	ioline_t pal_line = camLines[index];
