@@ -430,8 +430,8 @@ enable2ndByteCanID = false
     gearCountArray = array, S08, [@@TCU_GEAR_COUNT@@], "Gear", 1, 0, -1, { @@TCU_GEAR_COUNT@@ - 2 }, 0, noMsqSave
     solenoidCountArray = array, U08, [@@TCU_SOLENOID_COUNT@@], "Solenoid", 1, 0, 1, @@TCU_SOLENOID_COUNT@@, 0, noMsqSave
 
-	tcuInputArray = array, U08, [6], "Pin", 1, 0, 1, 6, 0, noMsqSave
-	tcuStateArray = array, U08, [8], "State", 1, 0, 0, 7, 0, noMsqSave
+	tcuInputArray = array, U08, [@@TCU_INPUT_COUNT@@], "Pin", 1, 0, 1, @@TCU_INPUT_COUNT@@, 0, noMsqSave
+	tcuStateArray = array, U08, [@@TCU_STATE_COUNT@@], "State", 1, 0, 0, {@@TCU_STATE_COUNT@@ - 1 }, 0, noMsqSave
 
 ; These are inverted (false = "Yes") so that they default to enabled
 	enableLogDebugChannels = bits, U08, [0:0], "Yes", "No"
