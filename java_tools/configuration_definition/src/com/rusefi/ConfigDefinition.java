@@ -1,11 +1,8 @@
 package com.rusefi;
 
 import com.rusefi.output.*;
-import com.rusefi.util.IoUtils;
-import com.rusefi.util.LazyFile;
-import com.rusefi.util.SystemOut;
+import com.rusefi.util.*;
 import com.rusefi.enum_reader.Value;
-import com.rusefi.util.ZipUtil;
 import org.yaml.snakeyaml.Yaml;
 
 import java.io.*;
@@ -203,7 +200,7 @@ public class ConfigDefinition {
 
         boolean needToUpdateTsFiles = isNeedToUpdateTsFiles(tsPath, cachePath, cacheZipFile, inputAllFiles);
 
-        boolean needToUpdateOtherFiles = checkIfOutputFilesAreOutdated(inputFiles, cachePath, cacheZipFile);
+        boolean needToUpdateOtherFiles = CachingStrategy.checkIfOutputFilesAreOutdated(inputFiles, cachePath, cacheZipFile);
         if (!needToUpdateTsFiles && !needToUpdateOtherFiles) {
             SystemOut.println("All output files are up-to-date, nothing to do here!");
             return;
@@ -266,7 +263,7 @@ public class ConfigDefinition {
             processTextTemplate(romRaiderInputFile, romRaiderDestination);
         }
 
-        saveCachedInputFiles(inputAllFiles, cachePath, cacheZipFile);
+        CachingStrategy.saveCachedInputFiles(inputAllFiles, cachePath, cacheZipFile);
     }
 
     private static void handleFiringOrder(String firingEnumFileName) throws IOException {
@@ -295,7 +292,7 @@ public class ConfigDefinition {
         boolean needToUpdateTsFiles = false;
         if (tsPath != null) {
             SystemOut.println("Check the input/output TS files:");
-            needToUpdateTsFiles = checkIfOutputFilesAreOutdated(inputAllFiles, cachePath, cacheZipFile);
+            needToUpdateTsFiles = CachingStrategy.checkIfOutputFilesAreOutdated(inputAllFiles, cachePath, cacheZipFile);
         }
         return needToUpdateTsFiles;
     }
@@ -510,72 +507,6 @@ public class ConfigDefinition {
             // For specifying wrong message digest algorithms
             throw new RuntimeException(e);
         }
-    }
-
-    private static boolean checkIfOutputFilesAreOutdated(List<String> inputFileNames, String cachePath, String cacheZipFile) {
-        if (cachePath == null)
-            return true;
-        SystemOut.println("Check the input/output other files:");
-        // find if any input file was changed from the cached version
-        for (String inputFileName : inputFileNames) {
-            File inputFile = new File(inputFileName);
-            try {
-                byte[] inputFileContent = Files.readAllBytes(inputFile.toPath());
-                byte[] f2;
-                if (cacheZipFile != null) {
-                    f2 = ZipUtil.unzipFileContents(cacheZipFile, cachePath + File.separator + inputFileName);
-                } else {
-                    String cachedFileName = getCachedInputFileName(cachePath, inputFile.getName());
-                    SystemOut.println("* cache ZIP file not specified, reading " + cachedFileName + " vs " + inputFileName);
-                    /**
-                     * todo: do we have a bug in this branch? how often do we simply read same 'inputFile'?
-                     */
-                    File cachedFile = new File(cachedFileName);
-                    f2 = Files.readAllBytes(cachedFile.toPath());
-                }
-                boolean isEqual = Arrays.equals(inputFileContent, f2);
-                if (!isEqual) {
-                    SystemOut.println("* the file " + inputFileName + " is changed!");
-                    return true;
-                } else {
-                    SystemOut.println("* the file " + inputFileName + " is NOT changed!");
-                }
-            } catch (IOException e) {
-                SystemOut.println("* cannot validate the file " + inputFileName + ", so assuming it's changed.");
-                return true;
-            }
-        }
-        SystemOut.println("* all the files are up-to-date!");
-        return false;
-    }
-
-    private static boolean saveCachedInputFiles(List<String> inputFiles, String cachePath, String cacheZipFile) throws IOException {
-        if (cachePath == null) {
-            SystemOut.println("* cache storage is disabled.");
-            return false;
-        }
-        // copy all input files to the cache
-        if (cacheZipFile != null) {
-            ZipUtil.zipAddFiles(cacheZipFile, inputFiles, cachePath);
-        } else {
-            for (String iFile : inputFiles) {
-                File newFile = new File(iFile);
-                File cachedFile = new File(getCachedInputFileName(cachePath, newFile.getName()));
-                cachedFile.mkdirs();
-                try {
-                    Files.copy(newFile.toPath(), cachedFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
-                } catch (IOException e) {
-                    SystemOut.println("* cannot store the cached file for " + iFile);
-                    throw e;
-                }
-            }
-        }
-        SystemOut.println("* input files copied to the cached folder");
-        return true;
-    }
-
-    private static String getCachedInputFileName(String cachePath, String inputFile) {
-        return cachePath + File.separator + inputFile;
     }
 
     private static long getCrc32(String fileName) throws IOException {
