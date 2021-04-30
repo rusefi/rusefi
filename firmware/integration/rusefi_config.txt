@@ -507,7 +507,7 @@ end_struct
 injector_s injector
 
 bit isForcedInduction;
-bit useFordRedundantTps;
+bit useFordRedundantTps;+On Ford vehicles one of the sensors is not linear on the full range, i.e. in the specific range of the positions we effectively have only one sensor.
 bit isVerboseAuxPid1;
 bit unused_294_3;
 bit unused_294_4;
