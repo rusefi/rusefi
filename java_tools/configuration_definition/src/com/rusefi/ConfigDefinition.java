@@ -5,18 +5,16 @@ import com.rusefi.util.IoUtils;
 import com.rusefi.util.LazyFile;
 import com.rusefi.util.SystemOut;
 import com.rusefi.enum_reader.Value;
+import com.rusefi.util.ZipUtil;
 import org.yaml.snakeyaml.Yaml;
 
 import java.io.*;
 import java.math.BigInteger;
-import java.net.URI;
 import java.nio.file.*;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.*;
 import java.util.zip.CRC32;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipInputStream;
 
 /**
  * Andrey Belomutskiy, (c) 2013-2020
@@ -49,7 +47,6 @@ public class ConfigDefinition {
     public static final String KEY_SIGNATURE_DESTINATION = "-signature_destination";
     public static final String KEY_CACHE = "-cache";
     public static final String KEY_CACHE_ZIP_FILE = "-cache_zip_file";
-    private static final String KEY_SKIP = "-skip";
     private static final String KEY_ZERO_INIT = "-initialize_to_zero";
     private static final String KEY_BOARD_NAME = "-board";
     public static boolean needZeroInit = true;
@@ -94,7 +91,6 @@ public class ConfigDefinition {
         String javaDestinationFileName = null;
         String romRaiderDestination = null;
         List<String> prependFiles = new ArrayList<>();
-        String skipRebuildFile = null;
         String romRaiderInputFile = null;
         String firingEnumFileName = null;
         String cachePath = null;
@@ -181,10 +177,6 @@ public class ConfigDefinition {
                 case KEY_CACHE_ZIP_FILE:
                     cacheZipFile = args[i + 1];
                     break;
-                case KEY_SKIP:
-                    // is this now not needed in light if LazyFile surving the same goal of not changing output unless needed?
-                    skipRebuildFile = args[i + 1];
-                    break;
                 case "-ts_output_name":
                     TSProjectConsumer.TS_FILE_OUTPUT_NAME = args[i + 1];
                     break;
@@ -224,16 +216,6 @@ public class ConfigDefinition {
         MESSAGE = getGeneratedAutomaticallyTag() + definitionInputFile + " " + new Date();
 
         SystemOut.println("Reading definition from " + definitionInputFile);
-
-        String currentMD5 = getDefinitionMD5(definitionInputFile);
-
-        if (skipRebuildFile != null) {
-            boolean nothingToDoHere = needToSkipRebuild(skipRebuildFile, currentMD5);
-            if (nothingToDoHere) {
-                SystemOut.println("Nothing to do here according to " + skipRebuildFile + " hash " + currentMD5);
-                return;
-            }
-        }
 
         for (String prependFile : prependFiles)
             readPrependValues(VariableRegistry.INSTANCE, prependFile);
@@ -283,12 +265,6 @@ public class ConfigDefinition {
         if (romRaiderDestination != null && romRaiderInputFile != null && needToUpdateOtherFiles) {
             processTextTemplate(romRaiderInputFile, romRaiderDestination);
         }
-        if (skipRebuildFile != null) {
-            SystemOut.println("Writing " + currentMD5 + " to " + skipRebuildFile);
-            PrintWriter writer = new PrintWriter(new FileWriter(skipRebuildFile));
-            writer.write(currentMD5);
-            writer.close();
-        }
 
         saveCachedInputFiles(inputAllFiles, cachePath, cacheZipFile);
     }
@@ -322,22 +298,6 @@ public class ConfigDefinition {
             needToUpdateTsFiles = checkIfOutputFilesAreOutdated(inputAllFiles, cachePath, cacheZipFile);
         }
         return needToUpdateTsFiles;
-    }
-
-    private static boolean needToSkipRebuild(String skipRebuildFile, String currentMD5) throws IOException {
-        if (currentMD5 == null || !(new File(skipRebuildFile).exists()))
-            return false;
-        String finishedMD5 = new BufferedReader(new FileReader(skipRebuildFile)).readLine();
-        return finishedMD5 != null && finishedMD5.equals(currentMD5);
-    }
-
-    private static String getDefinitionMD5(String fullFileName) throws IOException {
-        File source = new File(fullFileName);
-        FileInputStream fileInputStream = new FileInputStream(fullFileName);
-        byte[] content = new byte[(int) source.length()];
-        if (fileInputStream.read(content) != content.length)
-            return "";
-        return getMd5(content);
     }
 
     public static void readPrependValues(VariableRegistry registry, String prependFile) throws IOException {
@@ -563,7 +523,7 @@ public class ConfigDefinition {
                 byte[] inputFileContent = Files.readAllBytes(inputFile.toPath());
                 byte[] f2;
                 if (cacheZipFile != null) {
-                    f2 = unzipFileContents(cacheZipFile, cachePath + File.separator + inputFileName);
+                    f2 = ZipUtil.unzipFileContents(cacheZipFile, cachePath + File.separator + inputFileName);
                 } else {
                     String cachedFileName = getCachedInputFileName(cachePath, inputFile.getName());
                     SystemOut.println("* cache ZIP file not specified, reading " + cachedFileName + " vs " + inputFileName);
@@ -596,7 +556,7 @@ public class ConfigDefinition {
         }
         // copy all input files to the cache
         if (cacheZipFile != null) {
-            zipAddFiles(cacheZipFile, inputFiles, cachePath);
+            ZipUtil.zipAddFiles(cacheZipFile, inputFiles, cachePath);
         } else {
             for (String iFile : inputFiles) {
                 File newFile = new File(iFile);
@@ -631,46 +591,4 @@ public class ConfigDefinition {
         return c.getValue();
     }
 
-    private static byte[] unzipFileContents(String zipFileName, String fileName) throws IOException {
-        ZipInputStream zis = new ZipInputStream(new FileInputStream(zipFileName));
-        ZipEntry zipEntry;
-        byte[] data = null;
-        while ((zipEntry = zis.getNextEntry()) != null) {
-            Path zippedName = Paths.get(zipEntry.getName()).normalize();
-            Path searchName = Paths.get(fileName).normalize();
-            if (zippedName.equals(searchName)) {
-                ByteArrayOutputStream baos = new ByteArrayOutputStream();
-                byte[] buffer = new byte[4096];
-                int read;
-                while ((read = zis.read(buffer)) != -1) {
-                    baos.write(buffer, 0, read);
-                }
-                data = baos.toByteArray();
-                break;
-            }
-        }
-        zis.closeEntry();
-        zis.close();
-        System.out.println("Unzip " + zipFileName + ": " + fileName + (data != null ? " extracted!" : " failed!"));
-        return data;
-    }
-
-    private static boolean zipAddFiles(String zipFileName, List<String> fileNames, String zipPath) throws IOException {
-        // requires Java7+
-        Map<String, String> env = new HashMap<>();
-        env.put("create", "true");
-        Path path = Paths.get(zipFileName);
-        URI uri = URI.create("jar:" + path.toUri());
-        FileSystem fs = FileSystems.newFileSystem(uri, env);
-        for (String fileName : fileNames) {
-            String fileNameInZip = zipPath + File.separator + fileName;
-            Path extFile = Paths.get(fileName);
-            Path zippedFile = fs.getPath(fileNameInZip);
-            Files.createDirectories(zippedFile.getParent());
-            //fs.provider().checkAccess(zippedFile, AccessMode.READ);
-            Files.copy(extFile, zippedFile, StandardCopyOption.REPLACE_EXISTING);
-        }
-        fs.close();
-        return true;
-    }
 }
