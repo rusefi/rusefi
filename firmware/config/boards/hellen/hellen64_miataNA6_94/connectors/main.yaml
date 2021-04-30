@@ -18,7 +18,7 @@ pins:
     class: outputs
     function: Check Engine Light
     type: ls
-    
+
     pin: 1F
     class: outputs
     ts_name: Tach_Out_95.5
@@ -110,16 +110,16 @@ pins:
     ts_name: 3G - CAM
     function: Camshaft Sensor
     
-    - pin: 3i
+  - pin: 3i
     class: outputs
     ts_name: 3i - Tacho_90-95.5
     function: tachometer
     
-    - pin: 3k
+  - pin: 3k
     class: outputs
     ts_name: 3k - TPS_5v_94-95
     function: 5v reference
-    
+
   - pin: 3O
     class: analog_inputs
     ts_name: 3O - MAF
@@ -130,7 +130,7 @@ pins:
     ts_name: 3P - IAT
     function: IAT sensor
             
-    - pin: 3S
+  - pin: 3S
     class: outputs
     ts_name: 3S - A/C_Fan
     function: A/C Fan
