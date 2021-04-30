@@ -27,7 +27,7 @@ public class ConfigDefinition {
     public static String TOOL = "(unknown script)";
     private static final String ROM_RAIDER_XML_TEMPLATE = "rusefi_template.xml";
     public static final String KEY_DEFINITION = "-definition";
-    private static final String KEY_ROM_INPUT = "-romraider";
+    private static final String KEY_ROMRAIDER_INPUT = "-romraider";
     public static final String KEY_TS_DESTINATION = "-ts_destination";
     private static final String KEY_C_DESTINATION = "-c_destination";
     private static final String KEY_C_FSIO_CONSTANTS = "-c_fsio_constants";
@@ -165,6 +165,7 @@ public class ConfigDefinition {
                     break;
                 case EnumToString.KEY_ENUM_INPUT_FILE:
                     String inputFile = args[i + 1];
+                    // todo: 1) can we 2) should we move this relatively heavy processing after we've checked if generation is needed?
                     state.enumsReader.process(".", inputFile);
                     SystemOut.println(state.enumsReader.getEnums() + " total enumsReader");
                     break;
@@ -177,7 +178,7 @@ public class ConfigDefinition {
                 case "-ts_output_name":
                     TSProjectConsumer.TS_FILE_OUTPUT_NAME = args[i + 1];
                     break;
-                case KEY_ROM_INPUT:
+                case KEY_ROMRAIDER_INPUT:
                     String inputFilePath = args[i + 1];
                     romRaiderInputFile = inputFilePath + File.separator + ROM_RAIDER_XML_TEMPLATE;
                     inputFiles.add(romRaiderInputFile);
@@ -192,9 +193,9 @@ public class ConfigDefinition {
             }
         }
 
-        // used to update .ini files
         List<String> inputAllFiles = new ArrayList<>(inputFiles);
         if (tsPath != null) {
+            // used to update .ini files
             inputAllFiles.add(TSProjectConsumer.getTsFileInputName(tsPath));
         }
 
@@ -253,6 +254,10 @@ public class ConfigDefinition {
 
         if (destinations.isEmpty())
             throw new IllegalArgumentException("No destinations specified");
+        /*
+         * this is the most important invocation - here we read the primary input file and generated code into all
+         * the destinations/writers
+         */
         state.readBufferedReader(definitionReader, destinations);
 
 
