@@ -390,7 +390,7 @@ typedef enum {
 	TT_UNUSED = 58, // this is used if we want to iterate over all trigger types
 
 	Force_4_bytes_size_trigger_type = ENUM_32_BITS,
-} trigger_type_e;
+} trigger_type_e; // TriggerProcessor.java has this "trigger_type_e" name hard-coded!
 
 typedef enum {
 	ADC_OFF = 0,

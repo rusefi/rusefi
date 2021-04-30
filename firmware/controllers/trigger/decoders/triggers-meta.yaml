@@ -1,0 +1,32 @@
+# this file is consumed by TriggerProcessor.java during the gen_config.sh code generation phase
+
+triggers:
+  - name: TT_GM_LS_24
+    isFirstCrankBased: true
+
+  - name: TT_HONDA_K_12_1
+    isFirstCrankBased: true
+
+  - name: TT_RENIX_44_2_2
+    isFirstCrankBased: true
+
+  - name: TT_RENIX_66_2_2_2
+    isFirstCrankBased: true
+
+  - name: TT_MIATA_VVT
+    isFirstCrankBased: true
+
+  - name: TT_TRI_TACH
+    isFirstCrankBased: true
+
+  - name: TT_60_2_VW
+    isFirstCrankBased: true
+
+  - name: TT_SKODA_FAVORIT
+    isFirstCrankBased: true
+
+  - name: TT_KAWA_KX450F
+    isFirstCrankBased: true
+
+  - name: TT_GM_7X
+    isFirstCrankBased: true
