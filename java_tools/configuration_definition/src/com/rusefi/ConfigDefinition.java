@@ -205,38 +205,22 @@ public class ConfigDefinition {
 
         // used to update .ini files
         List<String> inputAllFiles = new ArrayList<>(inputFiles);
-        boolean needToUpdateTsFiles = false;
         if (tsPath != null) {
             inputAllFiles.add(TSProjectConsumer.getTsFileInputName(tsPath));
         }
 
-        if (tsPath != null) {
-            SystemOut.println("Check the input/output TS files:");
-            needToUpdateTsFiles = checkIfOutputFilesAreOutdated(inputAllFiles, cachePath, cacheZipFile);
-        }
-        SystemOut.println("Check the input/output other files:");
+        boolean needToUpdateTsFiles = isNeedToUpdateTsFiles(tsPath, cachePath, cacheZipFile, inputAllFiles);
+
         boolean needToUpdateOtherFiles = checkIfOutputFilesAreOutdated(inputFiles, cachePath, cacheZipFile);
         if (!needToUpdateTsFiles && !needToUpdateOtherFiles) {
             SystemOut.println("All output files are up-to-date, nothing to do here!");
             return;
         }
 
-        // get CRC32 of given input files
-        long crc32 = 0;
-        for (String iFile : inputAllFiles) {
-            long c = getCrc32(iFile) & 0xffffffffL;
-            SystemOut.println("CRC32 from " + iFile + " = " + c);
-            crc32 ^= c;
-        }
-        SystemOut.println("CRC32 from all input files = " + crc32);
-        // store the CRC32 as a built-in variable
-        if (tsPath != null) // nasty trick - do not insert signature into live data files
-            VariableRegistry.INSTANCE.register(SIGNATURE_HASH, "" + crc32);
+        long crc32 = signatureHash(tsPath, inputAllFiles);
 
-        if (firingEnumFileName != null) {
-            SystemOut.println("Reading firing from " + firingEnumFileName);
-            VariableRegistry.INSTANCE.register("FIRINGORDER", FiringOrderTSLogic.invoke(firingEnumFileName));
-        }
+        handleFiringOrder(firingEnumFileName);
+
         MESSAGE = getGeneratedAutomaticallyTag() + definitionInputFile + " " + new Date();
 
         SystemOut.println("Reading definition from " + definitionInputFile);
@@ -307,6 +291,37 @@ public class ConfigDefinition {
         }
 
         saveCachedInputFiles(inputAllFiles, cachePath, cacheZipFile);
+    }
+
+    private static void handleFiringOrder(String firingEnumFileName) throws IOException {
+        if (firingEnumFileName != null) {
+            SystemOut.println("Reading firing from " + firingEnumFileName);
+            VariableRegistry.INSTANCE.register("FIRINGORDER", FiringOrderTSLogic.invoke(firingEnumFileName));
+        }
+    }
+
+    private static long signatureHash(String tsPath, List<String> inputAllFiles) throws IOException {
+        // get CRC32 of given input files
+        long crc32 = 0;
+        for (String iFile : inputAllFiles) {
+            long c = getCrc32(iFile) & 0xffffffffL;
+            SystemOut.println("CRC32 from " + iFile + " = " + c);
+            crc32 ^= c;
+        }
+        SystemOut.println("CRC32 from all input files = " + crc32);
+        // store the CRC32 as a built-in variable
+        if (tsPath != null) // nasty trick - do not insert signature into live data files
+            VariableRegistry.INSTANCE.register(SIGNATURE_HASH, "" + crc32);
+        return crc32;
+    }
+
+    private static boolean isNeedToUpdateTsFiles(String tsPath, String cachePath, String cacheZipFile, List<String> inputAllFiles) {
+        boolean needToUpdateTsFiles = false;
+        if (tsPath != null) {
+            SystemOut.println("Check the input/output TS files:");
+            needToUpdateTsFiles = checkIfOutputFilesAreOutdated(inputAllFiles, cachePath, cacheZipFile);
+        }
+        return needToUpdateTsFiles;
     }
 
     private static boolean needToSkipRebuild(String skipRebuildFile, String currentMD5) throws IOException {
@@ -540,6 +555,7 @@ public class ConfigDefinition {
     private static boolean checkIfOutputFilesAreOutdated(List<String> inputFileNames, String cachePath, String cacheZipFile) {
         if (cachePath == null)
             return true;
+        SystemOut.println("Check the input/output other files:");
         // find if any input file was changed from the cached version
         for (String inputFileName : inputFileNames) {
             File inputFile = new File(inputFileName);
