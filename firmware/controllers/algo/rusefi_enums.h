@@ -992,17 +992,17 @@ typedef enum {
 
 typedef enum {
 	ROLE_PARK = 0,
-	ROLE_NEUTRAL,
-	ROLE_PARK_NEUTRAL,
-	ROLE_REVERSE,
-	ROLE_DRIVE,
-	ROLE_MANUAL,
-	ROLE_LOW,
-	ROLE_UPSHIFT,
-	ROLE_DOWNSHIFT,
-	ROLE_GEAR_3,
-	ROLE_GEAR_2,
-	ROLE_GEAR_1,
+	ROLE_NEUTRAL = 1,
+	ROLE_PARK_NEUTRAL = 2,
+	ROLE_REVERSE = 3,
+	ROLE_DRIVE = 4,
+	ROLE_MANUAL = 5,
+	ROLE_LOW = 6,
+	ROLE_UPSHIFT = 7,
+	ROLE_DOWNSHIFT = 8,
+	ROLE_GEAR_3 = 9,
+	ROLE_GEAR_2 = 10,
+	ROLE_GEAR_1 = 11,
 } tcu_role_e;
 
 typedef enum __attribute__ ((__packed__)) {
