@@ -1,10 +1,13 @@
+#
+# open issues: knock do we need to do anything?
+#
+
 pins:
   - pin: 1A
     function: 12V all times
     type: 12V
   
   - pin: 1B
-    id: EFI_ADC_5
     function: ECU power in start & run
     type: 12V
 
