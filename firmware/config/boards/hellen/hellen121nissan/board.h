@@ -30,7 +30,7 @@
 /*
  * Board identifier.
  */
-#define BOARD_NAME                  "Hellen72"
+#define BOARD_NAME                  "hellen121nissan"
 
 #define EFI_USB_AF 10U
 #define EFI_USB_SERIAL_DM GPIOA_11

@@ -1,10 +1,10 @@
 /**
- * @file boards/hellen/hellen72/board_configuration.cpp
+ * @file boards/hellen/hellen121vag/board_configuration.cpp
  *
  *
- * @brief Configuration defaults for the Hellen72 board
+ * @brief Configuration defaults for the hellen121vag board
  *
- * See https://rusefi.com/s/hellen72
+ * See https://rusefi.com/s/hellen121vag
  *
  * @author andreika <prometheus.pcb@gmail.com>
  * @author Andrey Belomutskiy, (c) 2012-2020
