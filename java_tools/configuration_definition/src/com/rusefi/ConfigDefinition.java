@@ -349,10 +349,15 @@ public class ConfigDefinition {
         Objects.requireNonNull(data, "data");
         for (Map<String, Object> pin : data) {
             if (pin.get("id") instanceof ArrayList) {
-                for (int i = 0; i < ((ArrayList) pin.get("id")).size(); i++) {
-                    findMatchingEnum((String) ((ArrayList) pin.get("id")).get(i),
+                ArrayList IDs = (ArrayList) pin.get("id");
+                for (int i = 0; i < IDs.size(); i++) {
+                    String id = (String) IDs.get(i);
+                    Object classes = pin.get("class");
+                    if (!(classes instanceof ArrayList))
+                        throw new IllegalStateException("Expected multiple classes for " + IDs);
+                    findMatchingEnum(id,
                             (String) pin.get("ts_name"),
-                            (String) ((ArrayList) pin.get("class")).get(i),
+                            (String) ((ArrayList) classes).get(i),
                             state, listOutputs, listAnalogInputs, listEventInputs, listSwitchInputs);
                 }
             } else if (pin.get("id") instanceof String ) {
