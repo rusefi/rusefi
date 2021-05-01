@@ -1,5 +1,6 @@
 #
 # open issues: knock do we need to do anything?
+# todo: we've inhecrited dual mode on A/C etc from H72 needs to be addressed
 #
 
 pins:
@@ -76,7 +77,7 @@ pins:
 
   - pin: 1Q
     id: [GPIOB_0, EFI_ADC_8]
-    class: switch_inputs
+    class: [switch_inputs, analog_inputs]
     function: A/C switch input
     type: din
 
@@ -96,7 +97,7 @@ pins:
 
   - pin: 1V
     id: [GPIOC_5, EFI_ADC_15]
-    class: switch_inputs
+    class: [switch_inputs, analog_inputs]
     ts_name: Clutch_Switch
     function: Clutch switch input
     type: din
@@ -121,8 +122,8 @@ pins:
     color: white
 
   - pin: 3E
-    id: [GPIOB_1, EFI_ADC_9]
-    class: [event_inputs]
+    id: GPIOB_1
+    class: event_inputs
     ts_name: 3E - CRANK
     function: Crankshaft Sensor
   
@@ -132,8 +133,8 @@ pins:
     color: white
 
   - pin: 3G
-    id: [GPIOA_6, EFI_ADC_6]
-    class: [event_inputs]
+    id: GPIOA_6
+    class: event_inputs
     ts_name: 3G - CAM
     function: Camshaft Sensor
     
@@ -185,7 +186,7 @@ pins:
     type: ls
 
   - pin: 3N
-    ID: EFI_ADC_0
+    id: EFI_ADC_0
     class: analog_inputs
     ts_name: 3N - O2S
     function: External Wideband signal
