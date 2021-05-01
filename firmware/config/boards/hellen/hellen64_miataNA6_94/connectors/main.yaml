@@ -2,46 +2,56 @@ pins:
   - pin: 1A
     function: 12V all times
     type: 12V
+  
   - pin: 1B
     id: EFI_ADC_5
     function: ECU power in start & run
     type: 12V
+
   - pin: 1D
     function: CAN bus high
     type: can
+
   - pin: 1F
     function: CAN bus low
     type: can
+
   - pin: 1E
     id: GPIOG_4
     class: outputs
     function: Check Engine Light
     type: ls
-    pin: 1F
+
+  - pin: 1F
     id: GPIOD_13
     class: outputs
     ts_name: Tach_Out_95.5
     function: Tachometer
     type: ls
+
   - pin: 1G
     id: GPIOI_8
     class: outputs
     ts_name: 1G - IGN_1 (1&4)
     type: ign
+ 
   - pin: 1H
+    id: GPIOE_5
     class: outputs
-    ts_name: 1H - IGN_2
+    ts_name: 1H - IGN_2 (2&3)
     type: ign
 
   - pin: 1I
     function: USB GND
     type: gnd
+
   - pin: 1J
     id: GPIOH_15
     class: outputs
     ts_name: 1J - AC_Relay
     function: A/C Relay
     type: ls
+
   - pin: 1L
     id: GPIOD_12
     class: outputs
@@ -49,16 +59,24 @@ pins:
     function: Radiator Fan Relay
     type: ls
 
+  - pin: 1M
+    id: GPIOF_11
+    class: event_inputs
+    ts_name: 1m - VSS
+    function: VSS IN
+    
   - pin: 1N
     ts_name: 1N - 5v_REF_NA6
     function: Sensor +5V
 
   - pin: 1Q
+    id: [GPIOB_0, EFI_ADC_8]
     class: switch_inputs
     function: A/C switch input
     type: din
 
   - pin: 1R
+    id: GPIOD_12
     class: outputs
     ts_name: Coolant_Fan
     function: Coolant Fan Relay
@@ -72,6 +90,7 @@ pins:
     function: EGR Solenoid
 
   - pin: 1V
+    id: [GPIOC_5, EFI_ADC_15]
     class: switch_inputs
     ts_name: Clutch_Switch
     function: Clutch switch input
@@ -90,26 +109,31 @@ pins:
     function: Sensor GND
     type: gnd
     color: white
+  
   - pin: 3D
     function: Sensor GND
     type: gnd
     color: white
 
   - pin: 3E
+    id: [GPIOB_1, EFI_ADC_9]
     class: [event_inputs]
     ts_name: 3E - CRANK
     function: Crankshaft Sensor
+  
   - pin: 3F
     function: MAF GND
     type: gnd
     color: white
 
   - pin: 3G
+    id: [GPIOA_6, EFI_ADC_6]
     class: [event_inputs]
     ts_name: 3G - CAM
     function: Camshaft Sensor
     
   - pin: 3i
+    id: GPIOD_13
     class: outputs
     ts_name: 3i - Tacho_90-95.5
     function: tachometer
@@ -118,63 +142,86 @@ pins:
     class: outputs
     ts_name: 3k - TPS_5v_94-95
     function: 5v reference
+    
+  - pin: 3l
+    id: EFI_ADC_4
+    class: analog_inputs
+    ts_name: 3L - TPS_90-93
+    function: TPS INPUT
+    
+  - pin: 3m
+    id: EFI_ADC_4
+    class: analog_inputs
+    ts_name: 3M - TPS_94-95
+    function: TPS INPUT
 
   - pin: 3O
-    class: analog_inputs
-    ts_name: 3O - MAF
-    function: VAF/MAF sensor
+    id: GPIOG_2
+    class: outputs
+    ts_name: 3O - FEUL_PUMP_NA6
+    function: FUEL PUMP OUTPUT
 
   - pin: 3P
+    id: EFI_ADC_13
     class: analog_inputs
     ts_name: 3P - IAT
     function: IAT sensor
             
   - pin: 3S
+    id: GPIOD_9
     class: outputs
-    ts_name: 3S - A/C_Fan
+    ts_name: 3S - A/C_Fan 94-95
     function: A/C Fan
 
   - pin: 3T
+    id: GPIOG_2
     class: outputs
     function: Fuel Pump Relay
     type: ls
 
   - pin: 3N
+    ID: EFI_ADC_0
     class: analog_inputs
-    ts_name: 3N - AFR
+    ts_name: 3N - O2S
     function: External Wideband signal
 
   - pin: 3Q
+    id: EFI_ADC_13
     class: analog_inputs
     ts_name: 3Q - CLT
     function: CLT sensor
 
 
   - pin: 3U
+    id: GPIOG_7
     class: outputs
     ts_name: 3U - INJ_1
     function: Injector #1
     type: inj
 
   - pin: 3V
+    id: GPIOG_8
     class: outputs
     ts_name: 3V - INJ_2
     function: Injector #2
     type: inj
 
   - pin: 3W
+    id: GPIOD_14
     class: outputs
     ts_name: 3W - IDLE
     function: IAC idle
     type: ls
 
   - pin: 3Y
+    id: GPIOD_11
     class: outputs
-    ts_name: 3Y - INJ_4
+    ts_name: 3Y - INJ_3
     function: Injector #3
     type: inj
 
   - pin: 3Z
+    id: GPIOD_10
     class: outputs
     ts_name: 3Z - INJ_4
     function: Injector #4
@@ -190,93 +237,112 @@ info:
     - pin: 1B
       x: 3984
       y: 512
+
     - pin: 1C
       x: 3860
       y: 312
     - pin: 1D
       x: 3860
       y: 512
+
     - pin: 1E
       x: 3735
       y: 352
     - pin: 1F
       x: 3735
       y: 544
+
     - pin: 1G
       x: 3624
       y: 352
     - pin: 1H
       x: 3624
       y: 544
+
     - pin: 1I
       x: 3508
       y: 352
     - pin: 1J
       x: 3508
       y: 544
+
     - pin: 1M
       x: 3284
       y: 352
     - pin: 1N
       x: 3284
       y: 544
+
     - pin: 1R
       x: 3062
       y: 544
+
     - pin: 1S
       x: 2952
       y: 352
     - pin: 1T
       x: 2952
       y: 544
+
     - pin: 1V
       x: 2838
       y: 512
+
     - pin: 3A
       x: 1604
       y: 312
     - pin: 3B
       x: 1604
       y: 512
+
     - pin: 3C
       x: 1488
       y: 312
     - pin: 3D
       x: 1488
       y: 512
+
     - pin: 3E
       x: 1368
       y: 360
     - pin: 3F
       x: 1368
       y: 552
+
     - pin: 3G
       x: 1256
       y: 360
+
     - pin: 3I
       x: 1140
       y: 360
     - pin: 3J
       x: 1140
       y: 552
+
     - pin: 3O
       x: 807
       y: 360
     - pin: 3P
       x: 807
       y: 552
+
     - pin: 3Q
       x: 690
       y: 360
+
+
     - pin: 3U
       x: 460
       y: 312
     - pin: 3V
       x: 460
       y: 512
+
     - pin: 3W
       x: 330
       y: 312
+
     - pin: 3Y
       x: 200
       y: 312
