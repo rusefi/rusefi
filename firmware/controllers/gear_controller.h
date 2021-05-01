@@ -16,8 +16,13 @@ public:
     virtual void init(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 private:
     gear_e desiredGear = NEUTRAL;
+    adc_channel_e getAnalogInputPin;
+    brain_pin_e getDigitalInputPin;
+    int getInputRoleD();
+    int getInputRoleA();
 protected:
     gear_e setDesiredGear(gear_e);
+    int getInputRole();
 
 private:
     void postState();
