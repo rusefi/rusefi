@@ -8,6 +8,8 @@ pins:
     type: 12V
   
   - pin: 1B
+    id: EFI_ADC_5
+    class: analog_inputs
     function: ECU power in start & run
     type: 12V
 

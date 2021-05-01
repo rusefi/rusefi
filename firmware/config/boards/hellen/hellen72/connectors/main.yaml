@@ -363,6 +363,7 @@ pins:
     color: white B2
 
   - pin: 4S
+    # todo: mention is this one is 2002 or 2003 vbatt sensor input here
     id: EFI_ADC_5
     class: analog_inputs
     ts_name: 4S - Alternator voltage (A5)
@@ -370,6 +371,7 @@ pins:
     color: red B2
 
   - pin: 4T
+    # todo: mention is this one is 2002 or 2003 vbatt sensor input here
     id: EFI_ADC_5
     class: analog_inputs
     ts_name: 4T - Alternator voltage (A5)
