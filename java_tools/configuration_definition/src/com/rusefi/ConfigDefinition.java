@@ -385,6 +385,8 @@ public class ConfigDefinition {
                                       Map<Integer, String> listAnalogInputs,
                                       Map<Integer, String> listEventInputs,
                                       Map<Integer, String> listSwitchInputs) {
+        Objects.requireNonNull(id, "id");
+        Objects.requireNonNull(className, "classname for " + id);
 
         switch (className) {
             case "outputs":
