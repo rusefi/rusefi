@@ -20,6 +20,8 @@ private:
     brain_pin_e getDigitalInputPin;
     int getInputRoleD();
     int getInputRoleA();
+    bool tcuDigitalInputs[TCU_INPUT_COUNT];
+    float tcuAnalogInputs[TCU_INPUT_COUNT];
 protected:
     gear_e setDesiredGear(gear_e);
     int getInputRole();
