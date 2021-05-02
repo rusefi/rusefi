@@ -309,9 +309,9 @@ pins:
     function: Neutral Switch
 
   - pin: 4I
-    id: [GPIOC_5, EFI_ADC_15]
-    class: [switch_inputs, analog_inputs]
-    ts_name: 4I - Clutch/AUX3 (A22)
+    id: [ GPIOF_8 ]
+    class: [ switch_inputs ]
+    ts_name: 4I - Clutch (A8)
     function: Clutch Switch
 
   - pin: 4J
@@ -434,9 +434,15 @@ pins:
     function: ECU - TCM, Communication for A/T
 
   - pin: 4AD
+    id: EFI_ADC_14
+    class: analog_inputs
+    ts_name: 4AD - FUEL_LEVEL (A21)
     function: Fuel Level Sensor
 
   - pin: 4AE
+    id: EFI_ADC_15
+    class: analog_inputs
+    ts_name: 4AE - EGR/MAP4 (A22)
     function: EGR Boost Pressure Sensor
 
   - pin: 4AF
