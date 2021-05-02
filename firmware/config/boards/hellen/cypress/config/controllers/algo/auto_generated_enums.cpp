@@ -1,7 +1,7 @@
 #include "global.h"
 #include "rusefi_enums.h"
 #include "rusefi_hw_enums.h"
-// was generated automatically by rusEFI tool  from rusefi_hw_enums.h // was generated automatically by rusEFI tool  from rusefi_enums.h // by enum2string.jar tool on Fri Apr 30 05:39:10 UTC 2021
+// was generated automatically by rusEFI tool  from rusefi_hw_enums.h // was generated automatically by rusEFI tool  from rusefi_enums.h // by enum2string.jar tool on Sun May 02 18:44:16 EDT 2021
 // see also gen_config_and_enums.bat
 
 
@@ -875,6 +875,18 @@ case GY6_139QMB:
   return "GY6_139QMB";
 case HELLEN72_ETB:
   return "HELLEN72_ETB";
+case HELLEN_121_NISSAN:
+  return "HELLEN_121_NISSAN";
+case HELLEN_121_VAG:
+  return "HELLEN_121_VAG";
+case HELLEN_134_BMW:
+  return "HELLEN_134_BMW";
+case HELLEN_154_VAG:
+  return "HELLEN_154_VAG";
+case HELLEN_55_BMW:
+  return "HELLEN_55_BMW";
+case HELLEN_88_BMW:
+  return "HELLEN_88_BMW";
 case HELLEN_NA6:
   return "HELLEN_NA6";
 case HELLEN_NB2:
