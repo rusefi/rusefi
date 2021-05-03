@@ -126,6 +126,53 @@ static bool loadScript(LuaHandle& ls, const char* scriptStr) {
 }
 
 #if !EFI_UNIT_TEST
+static bool interactivePending = false;
+static char interactiveCmd[100];
+
+void doInteractive(LuaHandle& ls) {
+	if (!interactivePending) {
+		// no cmd pending, return
+		return;
+	}
+
+	auto status = luaL_dostring(ls, interactiveCmd);
+
+	if (0 == status) {
+		
+	} else {
+		// error with interactive command, print it
+		efiPrintf("LUA interactive error: %s", lua_tostring(ls, -1));
+	}
+
+	interactivePending = false;
+
+	lua_settop(ls, 0);
+}
+
+void invokeTick(LuaHandle& ls) {
+	ScopePerf perf(PE::LuaTickFunction);
+
+	// run the tick function
+	lua_getglobal(ls, "onTick");
+	if (lua_isnil(ls, -1)) {
+		// TODO: handle missing tick function
+		lua_pop(ls, 1);
+		lua_settop(ls, 0);
+		return;
+	}
+
+	int status = lua_pcall(ls, 0, 0, 0);
+
+	if (0 != status) {
+		// error calling hook function
+		auto errMsg = lua_tostring(ls, -1);
+		efiPrintf("lua err %s", errMsg);
+		lua_pop(ls, 1);
+	}
+
+	lua_settop(ls, 0);
+}
+
 struct LuaThread : ThreadController<4096> {
 	LuaThread() : ThreadController("lua", PRIO_LUA) { }
 
@@ -154,29 +201,10 @@ void LuaThread::ThreadTask() {
 	}
 
 	while (!chThdShouldTerminateX()) {
-		// run the tick function
-		lua_getglobal(ls, "onTick");
-		if (lua_isnil(ls, -1)) {
-			// TODO: handle missing tick function
-			lua_pop(ls, 1);
-			lua_settop(ls, 0);
-			continue;
-		}
+		// First, check if there is a pending interactive command entered by the user
+		doInteractive(ls);
 
-		{
-			ScopePerf perf(PE::LuaTickFunction);
-
-			int status = lua_pcall(ls, 0, 0, 0);
-
-			if (0 != status) {
-				// error calling hook function
-				auto errMsg = lua_tostring(ls, -1);
-				efiPrintf("lua err %s", errMsg);
-				lua_pop(ls, 1);
-			}
-		}
-
-		lua_settop(ls, 0);
+		invokeTick(ls);
 
 		chThdSleepMilliseconds(luaTickPeriodMs);
 	}
@@ -186,6 +214,16 @@ static LuaThread luaThread;
 
 void startLua() {
 	luaThread.Start();
+
+	addConsoleActionS("lua", [](const char* str){
+		if (interactivePending) {
+			return;
+		}
+
+		strncpy(interactiveCmd, str, sizeof(interactiveCmd));
+
+		interactivePending = true;
+	});
 }
 
 #else // not EFI_UNIT_TEST
