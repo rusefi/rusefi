@@ -1,0 +1,76 @@
+# 12 pin connector
+
+pins:
+  - pin: 1
+    color:
+    function: TPS sensor GND
+    type: sgnd
+
+  - pin: 2
+    id: EFI_ADC_12
+    class: analog_inputs
+    function: TPS Ain
+    ts_name: B02 - TPS Ain
+    type: av
+
+  - pin: 3
+    function: "TPS Analog supply (+5)"
+    type: 5v
+
+  - pin: 4
+    function: "MAP Supply (+12)"
+    type: 5v
+
+  - pin: 5
+    id: EFI_ADC_3
+    class: analog_inputs
+    function: MAF Ain
+    ts_name: B05 - MAF Ain
+    type: av
+
+  - pin: 6
+    color:
+    function: MAF sensor GND
+    type: sgnd
+
+  - pin: 7
+    id: GPIO_UNASSIGNED
+    class: switch_inputs
+    function: Power Steering Switch
+    ts_name: B07 - Power Steering Switch
+    type: av
+
+  - pin: 8
+    id: TLE6240_PIN_15
+    class: outputs
+    function: AC clutch
+    ts_name: B08 - AC clutch
+    type: gp_low
+
+  - pin: 9
+    id: MC33972_PIN_20
+    class: switch_inputs
+    function: P pos Din
+    ts_name: B09 - P pos Din
+    type: av
+
+  - pin: 10
+    id: MC33972_PIN_19
+    class: switch_inputs
+    function: N pos Din
+    ts_name: B10 - N pos Din
+    type: av
+
+  - pin: 11
+    id: GPIOD_14
+    class: event_inputs
+    function: Speed Din
+    ts_name: B11 - Speed Din
+    type: din
+
+  - pin: 12
+    id: MC33972_PIN_17
+    class: switch_inputs
+    function: IGN Din
+    ts_name: B12 - IGN Din
+    type: av

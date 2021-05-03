@@ -5,15 +5,11 @@
 BOARDNAME=subaru_eg33
 SHORT_BOARDNAME=${BOARDNAME}_f7
 BOARD_DIR=config/boards/${BOARDNAME}
-BUILD_DIR=build_${BOARDNAME}
 
 bash gen_signature.sh ${SHORT_BOARDNAME}
 
-mkdir -p ${BUILD_DIR}
-
 java \
  -DSystemOut.name=gen_config_subaru_eg33 \
- -Drusefi.generator.lazyfile.enabled=true \
  -jar ../java_tools/ConfigDefinition.jar \
  -definition integration/rusefi_config.txt \
  -cache ${SHORT_BOARDNAME} \
@@ -29,9 +25,8 @@ java \
  -signature tunerstudio/generated/signature_${SHORT_BOARDNAME}.txt \
  -signature_destination controllers/generated/signature_${SHORT_BOARDNAME}.h \
  -enumInputFile controllers/algo/rusefi_enums.h \
- -enumInputFile controllers/algo/rusefi_hw_enums.h \
- -board {BOARDNAME} \
- -prepend tunerstudio/generated/${BOARDNAME}_prefix.txt \
+ -enumInputFile ${BOARD_DIR}/rusefi_hw_enums.h \
+ -board ${BOARDNAME} \
  -prepend config/boards/${BOARDNAME}/prepend.txt
 
 [ $? -eq 0 ] || { echo "ERROR generating TunerStudio config for ${BOARDNAME}"; exit 1; }
