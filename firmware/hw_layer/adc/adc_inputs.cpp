@@ -323,7 +323,7 @@ static void printAdcValue(int channel) {
 static uint32_t slowAdcConversionCount = 0;
 static uint32_t slowAdcErrorsCount = 0;
 
-static void printFullAdcReport(Logging *logger) {
+static void printFullAdcReport(void) {
 #if EFI_USE_FAST_ADC
 	efiPrintf("fast %d samples", fastAdc.conversionCount);
 
@@ -331,20 +331,13 @@ static void printFullAdcReport(Logging *logger) {
 		adc_channel_e hwIndex = fastAdc.getAdcHardwareIndexByInternalIndex(internalIndex);
 
 		if (isAdcChannelValid(hwIndex)) {
-			appendMsgPrefix(logger);
-
 			ioportid_t port = getAdcChannelPort("print", hwIndex);
 			int pin = getAdcChannelPin(hwIndex);
-
 			int adcValue = getAvgAdcValue(internalIndex, fastAdc.samples, ADC_BUF_DEPTH_FAST, fastAdc.size());
-			logger->appendPrintf(" F ch[%2d] @ %s%d", internalIndex, portname(port), pin);
-			/* Human index starts from 1 */
-			logger->appendPrintf(" ADC%d 12bit=%4d", hwIndex - EFI_ADC_0 + 1, adcValue);
 			float volts = adcToVolts(adcValue);
-			logger->appendPrintf(" %.2fV", volts);
-
-			appendMsgPostfix(logger);
-			scheduleLogging(logger);
+			/* Human index starts from 1 */
+			efiPrintf(" F ch[%2d] @ %s%d ADC%d 12bit=%4d %.2fV",
+				internalIndex, portname(port), pin, hwIndex - EFI_ADC_0 + 1, adcValue, volts);
 		}
 	}
 #endif // EFI_USE_FAST_ADC
@@ -355,20 +348,13 @@ static void printFullAdcReport(Logging *logger) {
 		adc_channel_e hwIndex = static_cast<adc_channel_e>(internalIndex + EFI_ADC_0);
 
 		if (isAdcChannelValid(hwIndex)) {
-			appendMsgPrefix(logger);
-
 			ioportid_t port = getAdcChannelPort("print", hwIndex);
 			int pin = getAdcChannelPin(hwIndex);
-
 			int adcValue = slowAdcSamples[internalIndex];
-			logger->appendPrintf(" S ch[%2d] @ %s%d", internalIndex, portname(port), pin);
-			/* Human index starts from 1 */
-			logger->appendPrintf(" ADC%d 12bit=%4d", hwIndex - EFI_ADC_0 + 1, adcValue);
 			float volts = adcToVolts(adcValue);
-			logger->appendPrintf(" %.2fV", volts);
-
-			appendMsgPostfix(logger);
-			scheduleLogging(logger);
+			/* Human index starts from 1 */
+			efiPrintf(" S ch[%2d] @ %s%d ADC%d 12bit=%4d %.2fV",
+				internalIndex, portname(port), pin, hwIndex - EFI_ADC_0 + 1, adcValue, volts);
 		}
 	}
 }
@@ -545,10 +531,10 @@ void initAdcInputs() {
 #endif
 }
 
-void printFullAdcReportIfNeeded(Logging *logger) {
+void printFullAdcReportIfNeeded(void) {
 	if (!adcDebugReporting)
 		return;
-	printFullAdcReport(logger);
+	printFullAdcReport();
 }
 
 #else /* not HAL_USE_ADC */
