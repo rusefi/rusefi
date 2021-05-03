@@ -6,6 +6,13 @@
 EXTERN_CONFIG
 
 void GearControllerBase::init(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+    for (var i = 0; i < TCU_INPUT_COUNT; i++) {
+        if (CONFIG(tcuInputMode)) {
+            tcuDigitalInputs[i].init(10, getDigitalInputPin(i), getDigitalInputPinMode(i))
+        } else {
+            tcuAnalogInputs[i] = getAnalogInputPin(i)
+        }
+    }
     INJECT_ENGINE_REFERENCE(&transmissionController);
     transmissionController.init();
 }
@@ -67,6 +74,27 @@ brain_pin_e GearControllerBase::getDigitalInputPin(int input) {
             return CONFIG(tcuInputPin7D)
         case 8:
             return CONFIG(tcuInputPin8D)
+    }
+}
+
+pin_input_mode_e GearControllerBase::getDigitalInputPinMode(int input) {
+    switch (input) {
+        case 1:
+            return CONFIG(tcuInputPin1Mode)
+        case 2:
+            return CONFIG(tcuInputPin2Mode)
+        case 3:
+            return CONFIG(tcuInputPin3Mode)
+        case 4:
+            return CONFIG(tcuInputPin4Mode)
+        case 5:
+            return CONFIG(tcuInputPin5Mode)
+        case 6:
+            return CONFIG(tcuInputPin6Mode)
+        case 7:
+            return CONFIG(tcuInputPin7Mode)
+        case 8:
+            return CONFIG(tcuInputPin8Mode)
     }
 }
 

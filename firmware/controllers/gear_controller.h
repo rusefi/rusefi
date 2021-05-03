@@ -6,6 +6,7 @@
 #include "engine_configuration_generated_structures.h"
 #include "globalaccess.h"
 #include "simple_tcu.h"
+#include "debounce.h"
 
 class GearControllerBase {
 public:
