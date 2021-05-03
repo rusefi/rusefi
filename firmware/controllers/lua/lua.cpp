@@ -156,7 +156,6 @@ void invokeTick(LuaHandle& ls) {
 	lua_getglobal(ls, "onTick");
 	if (lua_isnil(ls, -1)) {
 		// TODO: handle missing tick function
-		lua_pop(ls, 1);
 		lua_settop(ls, 0);
 		return;
 	}
