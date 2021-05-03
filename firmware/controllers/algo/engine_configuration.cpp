@@ -1259,7 +1259,6 @@ void resetConfigurationExt(configuration_callback_t boardCallback, engine_type_e
 	case TEST_ISSUE_366_RISE:
 		setTestEngineIssue366rise(PASS_CONFIG_PARAMETER_SIGNATURE);
 		break;
-	case UNUSED_36:
 	case TEST_ISSUE_898:
 		setIssue898(PASS_CONFIG_PARAMETER_SIGNATURE);
 		break;
