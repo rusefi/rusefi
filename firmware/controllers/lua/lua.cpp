@@ -8,6 +8,8 @@
 #include "lua.hpp"
 #include "lua_hooks.h"
 
+#define TAG "LUA "
+
 #if EFI_PROD_CODE
 #include "ch.h"
 
@@ -112,15 +114,15 @@ static LuaHandle setupLuaState() {
 }
 
 static bool loadScript(LuaHandle& ls, const char* scriptStr) {
-	efiPrintf("loading script length: %d", efiStrlen(scriptStr));
+	efiPrintf(TAG "loading script length: %d...", efiStrlen(scriptStr));
 
 	if (0 != luaL_dostring(ls, scriptStr)) {
-		efiPrintf("LUA error loading script: %s", lua_tostring(ls, -1));
+		efiPrintf(TAG "ERROR loading script: %s", lua_tostring(ls, -1));
 		lua_pop(ls, 1);
 		return false;
 	}
 
-	efiPrintf("script loaded");
+	efiPrintf(TAG "script loaded successfully!");
 
 	return true;
 }
@@ -138,10 +140,21 @@ void doInteractive(LuaHandle& ls) {
 	auto status = luaL_dostring(ls, interactiveCmd);
 
 	if (0 == status) {
-		
+		// Function call was OK, resolve return value and print it
+		if (lua_isinteger(ls, -1)) {
+			efiPrintf(TAG "interactive returned integer: %d", lua_tointeger(ls, -1));
+		} else if (lua_isnumber(ls, -1)) {
+			efiPrintf(TAG "interactive returned number: %f", lua_tonumber(ls, -1));
+		} else if (lua_isstring(ls, -1)) {
+			efiPrintf(TAG "interactive returned string: '%s'", lua_tostring(ls, -1));
+		} else if (lua_isnil(ls, -1)) {
+			efiPrintf(TAG "interactive returned nil.");
+		} else {
+			efiPrintf(TAG "interactive returned nothing.");
+		}
 	} else {
 		// error with interactive command, print it
-		efiPrintf("LUA interactive error: %s", lua_tostring(ls, -1));
+		efiPrintf(TAG "interactive error: %s", lua_tostring(ls, -1));
 	}
 
 	interactivePending = false;
@@ -165,7 +178,7 @@ void invokeTick(LuaHandle& ls) {
 	if (0 != status) {
 		// error calling hook function
 		auto errMsg = lua_tostring(ls, -1);
-		efiPrintf("lua err %s", errMsg);
+		efiPrintf(TAG "error %s", errMsg);
 		lua_pop(ls, 1);
 	}
 
