@@ -51,6 +51,8 @@ public:
 
 	bool engineMovedRecently() const {
 		// Trigger event some time in the past second = engine moving
+		// distributor single tooth, large engines crank at close to 120 RPM
+		// todo: make this logic account current trigger to stop idle much faster if we have more teeth on trigger wheels?
 		return getTimeSinceTriggerEvent(getTimeNowNt()) < 1.0f;
 	}
 
