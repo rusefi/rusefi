@@ -178,21 +178,7 @@ static void miataNAcommonEngineSettings(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 
 	engineConfiguration->idle.solenoidFrequency = 160;
 	engineConfiguration->ignitionMode = IM_WASTED_SPARK;
-}
 
-void miataNAcommon(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
-
-	miataNAcommonEngineSettings(PASS_CONFIG_PARAMETER_SIGNATURE);
-
-	engineConfiguration->idle.solenoidPin = GPIOB_9; // this W61 <> W61 jumper, pin 3W
-
-	engineConfiguration->ignitionPins[0] = GPIOE_14; // Frankenso high side - pin 1G
-	engineConfiguration->ignitionPins[1] = GPIO_UNASSIGNED;
-	engineConfiguration->ignitionPins[2] = GPIOC_7; // Frankenso high side - pin 1H
-	engineConfiguration->ignitionPins[3] = GPIO_UNASSIGNED;
-}
-
-static void setMiataNA6_settings(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	engineConfiguration->isFasterEngineSpinUpEnabled = true;
 
 
@@ -250,17 +236,26 @@ static void setMiataNA6_settings(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	engineConfiguration->injectionMode = IM_BATCH;
 }
 
+static void miataNAcommon(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
+
+	engineConfiguration->idle.solenoidPin = GPIOB_9; // this W61 <> W61 jumper, pin 3W
+
+	engineConfiguration->ignitionPins[0] = GPIOE_14; // Frankenso high side - pin 1G
+	engineConfiguration->ignitionPins[1] = GPIO_UNASSIGNED;
+	engineConfiguration->ignitionPins[2] = GPIOC_7; // Frankenso high side - pin 1H
+	engineConfiguration->ignitionPins[3] = GPIO_UNASSIGNED;
+}
+
 /**
  * MIATA_NA6_MAP
  */
 void setMiataNA6_MAP_Frankenso(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	setDefaultFrankensoConfiguration(PASS_CONFIG_PARAMETER_SIGNATURE);
-
 	setFrankensoConfiguration(PASS_CONFIG_PARAMETER_SIGNATURE);
+	miataNAcommonEngineSettings(PASS_CONFIG_PARAMETER_SIGNATURE);
+
 
 	engineConfiguration->isHip9011Enabled = false;
-
-	setMiataNA6_settings(PASS_CONFIG_PARAMETER_SIGNATURE);
 
 	// Frankenso middle plug 2J, W32 top <> W47 bottom "#5 Green" jumper, not OEM
 	engineConfiguration->map.sensor.hwChannel = EFI_ADC_4;
@@ -375,7 +370,6 @@ void setMiataNA6_VAF_MRE(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
  * set engine_type 66
  */
 void setMiataNA6_MAP_MRE(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
-	setMiataNA6_settings(PASS_CONFIG_PARAMETER_SIGNATURE);
 	miataNAcommonEngineSettings(PASS_CONFIG_PARAMETER_SIGNATURE);
 
 	engineConfiguration->triggerInputPins[0] = GPIOA_5;
@@ -471,5 +465,6 @@ void setMiata94_MAP_MRE(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 }
 
 void setHellenNA6(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
+	miataNAcommonEngineSettings(PASS_CONFIG_PARAMETER_SIGNATURE);
 
 }
