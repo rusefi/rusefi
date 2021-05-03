@@ -265,7 +265,7 @@ void updateDevConsoleState(void) {
 #endif /* EFI_PROD_CODE */
 
 #if HAL_USE_ADC
-	printFullAdcReportIfNeeded(&logger);
+	printFullAdcReportIfNeeded();
 #endif /* HAL_USE_ADC */
 
 	systime_t nowSeconds = getTimeNowSeconds();
