@@ -325,43 +325,47 @@ static uint32_t slowAdcErrorsCount = 0;
 
 static void printFullAdcReport(Logging *logger) {
 #if EFI_USE_FAST_ADC
-	efiPrintf("fast %d slow %d", fastAdc.conversionCount, slowAdcConversionCount);
+	efiPrintf("fast %d samples", fastAdc.conversionCount);
 
-	for (int index = 0; index < fastAdc.size(); index++) {
-		appendMsgPrefix(logger);
-
-		adc_channel_e hwIndex = fastAdc.getAdcHardwareIndexByInternalIndex(index);
+	for (int internalIndex = 0; internalIndex < fastAdc.size(); internalIndex++) {
+		adc_channel_e hwIndex = fastAdc.getAdcHardwareIndexByInternalIndex(internalIndex);
 
 		if (isAdcChannelValid(hwIndex)) {
+			appendMsgPrefix(logger);
+
 			ioportid_t port = getAdcChannelPort("print", hwIndex);
 			int pin = getAdcChannelPin(hwIndex);
 
-			int adcValue = getAvgAdcValue(hwIndex, fastAdc.samples, ADC_BUF_DEPTH_FAST, fastAdc.size());
-			logger->appendPrintf(" F ch%d %s%d", index, portname(port), pin);
-			logger->appendPrintf(" ADC%d 12bit=%d", hwIndex, adcValue);
+			int adcValue = getAvgAdcValue(internalIndex, fastAdc.samples, ADC_BUF_DEPTH_FAST, fastAdc.size());
+			logger->appendPrintf(" F ch[%2d] @ %s%d", internalIndex, portname(port), pin);
+			/* Human index starts from 1 */
+			logger->appendPrintf(" ADC%d 12bit=%4d", hwIndex - EFI_ADC_0 + 1, adcValue);
 			float volts = adcToVolts(adcValue);
-			logger->appendPrintf(" v=%.2f", volts);
+			logger->appendPrintf(" %.2fV", volts);
 
 			appendMsgPostfix(logger);
 			scheduleLogging(logger);
 		}
 	}
 #endif // EFI_USE_FAST_ADC
+	efiPrintf("slow %d samples", slowAdcConversionCount);
 
-	for (int index = 0; index < ADC_MAX_CHANNELS_COUNT; index++) {
-		appendMsgPrefix(logger);
-
-		adc_channel_e hwIndex = static_cast<adc_channel_e>(index + EFI_ADC_0);
+	/* we assume that all slow ADC channels are enabled */
+	for (int internalIndex = 0; internalIndex < ADC_MAX_CHANNELS_COUNT; internalIndex++) {
+		adc_channel_e hwIndex = static_cast<adc_channel_e>(internalIndex + EFI_ADC_0);
 
 		if (isAdcChannelValid(hwIndex)) {
+			appendMsgPrefix(logger);
+
 			ioportid_t port = getAdcChannelPort("print", hwIndex);
 			int pin = getAdcChannelPin(hwIndex);
 
-			int adcValue = slowAdcSamples[index];
-			logger->appendPrintf(" S ch%d %s%d", index, portname(port), pin);
-			logger->appendPrintf(" ADC%d 12bit=%d", hwIndex, adcValue);
+			int adcValue = slowAdcSamples[internalIndex];
+			logger->appendPrintf(" S ch[%2d] @ %s%d", internalIndex, portname(port), pin);
+			/* Human index starts from 1 */
+			logger->appendPrintf(" ADC%d 12bit=%4d", hwIndex - EFI_ADC_0 + 1, adcValue);
 			float volts = adcToVolts(adcValue);
-			logger->appendPrintf(" v=%.2f", volts);
+			logger->appendPrintf(" %.2fV", volts);
 
 			appendMsgPostfix(logger);
 			scheduleLogging(logger);
