@@ -217,8 +217,7 @@ void LuaThread::ThreadTask() {
 	// Reset default tick rate
 	luaTickPeriodMs = 100;
 
-	//auto scriptStr = "function onTick()\nlocal rpm = getSensor(3)\nif rpm ~= nil then\nprint('RPM: ' ..rpm)\nend\nend\n";
-	auto scriptStr = "n=0\nfunction onTick()\nprint('hello lua ' ..n)\nn=n+1\nend\n";
+	auto scriptStr = "function onTick() end";
 
 	if (!loadScript(ls, scriptStr)) {
 		return;
