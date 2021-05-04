@@ -44,8 +44,6 @@
 #define SC_BUFFER_SIZE 4000
 #endif
 
-#define EFI_LUA FALSE
-
 /**
  * if you have a 60-2 trigger, or if you just want better performance, you
  * probably want EFI_ENABLE_ASSERTS to be FALSE. Also you would probably want to FALSE
@@ -264,9 +262,14 @@
 
 #define EFI_CONSOLE_USB_DEVICE SDU1
 
-// F42x has more memory, so we can use compressed USB MSD image (requires 32k of memory)
+// F42x has more memory, so we can:
+//  - use compressed USB MSD image (requires 32k of memory)
+//  - use Lua interpreter (requires ~20k of memory)
 #ifdef EFI_IS_F42x
-#define EFI_USE_COMPRESSED_INI_MSD
+	#define EFI_USE_COMPRESSED_INI_MSD
+	#define EFI_LUA TRUE
+#else
+	#define EFI_LUA FALSE
 #endif
 
 #ifndef EFI_ENGINE_SNIFFER

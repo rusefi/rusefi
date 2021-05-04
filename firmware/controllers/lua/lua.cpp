@@ -191,9 +191,10 @@ struct LuaThread : ThreadController<4096> {
 	void ThreadTask() override;
 };
 
+static char luaHeap[LUA_HEAP_SIZE];
+
 void LuaThread::ThreadTask() {
-	void* buf = malloc(LUA_HEAP_SIZE);
-	chHeapObjectInit(&heap, buf, LUA_HEAP_SIZE);
+	chHeapObjectInit(&heap, &luaHeap, sizeof(luaHeap));
 
 	auto ls = setupLuaState();
 
