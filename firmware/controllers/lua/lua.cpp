@@ -12,12 +12,24 @@
 
 #if EFI_PROD_CODE
 #include "ch.h"
+#include "engine.h"
+#include "tunerstudio_outputs.h"
+
+EXTERN_ENGINE;
 
 #define LUA_HEAP_SIZE 20000
 
 static memory_heap_t heap;
 
-static void* myAlloc(void* /*ud*/, void* ptr, size_t /*osize*/, size_t nsize) {
+static int32_t memoryUsed = 0;
+
+static void* myAlloc(void* /*ud*/, void* ptr, size_t osize, size_t nsize) {
+	memoryUsed += nsize - osize;
+
+	if (CONFIG(debugMode) == DBG_LUA) {
+		tsOutputChannels.debugIntField1 = memoryUsed;
+	}
+
 	if (nsize == 0) {
 		// requested size is zero, free if necessary and return nullptr
 		if (ptr) {
@@ -206,8 +218,7 @@ void LuaThread::ThreadTask() {
 	// Reset default tick rate
 	luaTickPeriodMs = 100;
 
-	//auto scriptStr = "function onTick()\nlocal rpm = getSensor(3)\nif rpm ~= nil then\nprint('RPM: ' ..rpm)\nend\nend\n";
-	auto scriptStr = "n=0\nfunction onTick()\nprint('hello lua ' ..n)\nn=n+1\nend\n";
+	auto scriptStr = "function onTick() end";
 
 	if (!loadScript(ls, scriptStr)) {
 		return;
