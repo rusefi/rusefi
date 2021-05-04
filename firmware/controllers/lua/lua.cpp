@@ -12,12 +12,24 @@
 
 #if EFI_PROD_CODE
 #include "ch.h"
+#include "engine.h"
+#include "tunerstudio_outputs.h"
+
+EXTERN_ENGINE;
 
 #define LUA_HEAP_SIZE 20000
 
 static memory_heap_t heap;
 
-static void* myAlloc(void* /*ud*/, void* ptr, size_t /*osize*/, size_t nsize) {
+static int32_t memoryUsed = 0;
+
+static void* myAlloc(void* /*ud*/, void* ptr, size_t osize, size_t nsize) {
+	memoryUsed += nsize - osize;
+
+	if (CONFIG(debugMode) == DBG_LUA) {
+		tsOutputChannels.debugIntField1 = memoryUsed;
+	}
+
 	if (nsize == 0) {
 		// requested size is zero, free if necessary and return nullptr
 		if (ptr) {
