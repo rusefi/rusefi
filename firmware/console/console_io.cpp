@@ -47,13 +47,6 @@
 
 EXTERN_ENGINE;
 
-// 10 seconds
-#define CONSOLE_WRITE_TIMEOUT 10000
-
-#if (defined(TS_PRIMARY_SERIAL) && ! EFI_SIMULATOR)
-static event_listener_t consoleEventListener;
-#endif
-
 bool consoleByteArrived = false;
 
 void onDataArrived(void) {
