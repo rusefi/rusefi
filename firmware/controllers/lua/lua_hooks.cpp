@@ -6,6 +6,7 @@
 #include "sensor.h"
 #include "adc_inputs.h"
 #include "efilib.h"
+#include "tunerstudio_outputs.h"
 
 // Some functions lean on existing FSIO implementation
 #include "fsio_impl.h"
@@ -100,6 +101,26 @@ static int lua_getDigital(lua_State* l) {
 	lua_pushboolean(l, state);
 	return 1;
 }
+
+static int lua_setDebug(lua_State* l) {
+	// wrong debug mode, ignore
+	if (CONFIG(debugMode) != DBG_LUA) {
+		return 0;
+	}
+
+	auto idx = luaL_checkinteger(l, 1);
+	auto val = luaL_checknumber(l, 2);
+
+	// invalid index, ignore
+	if (idx < 1 || idx > 7) {
+		return 0;
+	}
+
+	auto firstDebugField = &tsOutputChannels.debugFloatField1;
+	firstDebugField[idx - 1] = val;
+
+	return 0;
+}
 #endif // EFI_UNIT_TEST
 
 void configureRusefiLuaHooks(lua_State* l) {
@@ -113,5 +134,6 @@ void configureRusefiLuaHooks(lua_State* l) {
 	lua_register(l, "getFan", lua_fan);
 	lua_register(l, "getAnalog", lua_getAnalog);
 	lua_register(l, "getDigital", lua_getDigital);
+	lua_register(l, "setDebug", lua_setDebug);
 #endif
 }

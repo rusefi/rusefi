@@ -795,7 +795,7 @@ typedef enum {
 	DBG_LOGIC_ANALYZER = 45,
 	DBG_RUSEFI_WIDEBAND = 46,
 	DBG_TCU = 47,
-	DBG_48 = 48,
+	DBG_LUA = 48,
 
 	Force_4_bytes_size_debug_mode_e = ENUM_32_BITS,
 } debug_mode_e;
