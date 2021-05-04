@@ -27,10 +27,6 @@ void setOperationMode(engine_configuration_s *engineConfiguration, operation_mod
 void prepareVoidConfiguration(engine_configuration_s *activeConfiguration);
 void setTargetRpmCurve(int rpm DECLARE_CONFIG_PARAMETER_SUFFIX);
 void setLambdaMap(lambda_table_t table, float value);
-/**
- * See also setLinearCurve()
- */
-void setMap(fuel_table_t table, float value);
 void setWholeIgnitionIatCorr(float value DECLARE_CONFIG_PARAMETER_SUFFIX);
 void setFuelTablesLoadBin(float minValue, float maxValue DECLARE_CONFIG_PARAMETER_SUFFIX);
 void setWholeIatCorrTimingTable(float value DECLARE_CONFIG_PARAMETER_SUFFIX);

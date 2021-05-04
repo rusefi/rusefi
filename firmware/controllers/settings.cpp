@@ -496,9 +496,7 @@ static void setWholeTimingMap(float value) {
 
 static void setWholePhaseMapCmd(float value) {
 	efiPrintf("Setting whole injection phase map to %.2f", value);
-#if IGN_LOAD_COUNT == DEFAULT_IGN_LOAD_COUNT
-	setMap(config->injectionPhase, value);
-#endif
+	setTable(config->injectionPhase, value);
 }
 
 static void setWholeTimingMapCmd(float value) {
@@ -512,7 +510,7 @@ static void setWholeVeCmd(float value) {
 	if (engineConfiguration->fuelAlgorithm != LM_SPEED_DENSITY) {
 		efiPrintf("WARNING: setting VE map not in SD mode is pointless");
 	}
-	setMap(config->veTable, value);
+	setTable(config->veTable, value);
 	engine->resetEngineSnifferIfInTestMode();
 }
 
