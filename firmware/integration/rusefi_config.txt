@@ -46,6 +46,7 @@
 ! and "can_baudrate_e canBaudRate; set can_baudrate" creates a parameter of that custom type "can_baudrate_e"
 !
 !
+! bit bitName,"true value","false value";+Tooltip text
 
 !
 ! this is here so that rusEFI console can access it, too
@@ -1067,13 +1068,13 @@ custom maf_sensor_type_e 4 bits, S32, @OFFSET@, [0:1], @@maf_sensor_type_e_enum@
 	bit canWriteEnabled;enable can_write/disable can_write
 	bit useLinearIatSensor
 	bit useFSIO16ForTimingAdjustment;+See fsioTimingAdjustment
-	bit tachPulseDurationAsDutyCycle,"Constant time","Duty cycle";+Treat milliseconds value as duty cycle value, i.e. 0.5ms would become 50%
+	bit tachPulseDurationAsDutyCycle,"Duty cycle","Constant time";+Treat milliseconds value as duty cycle value, i.e. 0.5ms would become 50%
 	bit isAlternatorControlEnabled;+This enables smart alternator control and activates the extra alternator settings.
 	bit invertPrimaryTriggerSignal;+This setting flips the signal from the primary engine speed sensor.
 	bit invertSecondaryTriggerSignal;+This setting flips the signal from the secondary engine speed sensor.
 	
-bit cutFuelOnHardLimit
-bit cutSparkOnHardLimit
+bit cutFuelOnHardLimit,"yes","no"
+bit cutSparkOnHardLimit,"yes","no"
 bit launchFuelCutEnable
 bit launchSparkCutEnable;+This is the Cut Mode normally used
 bit hasFrequencyReportingMapSensor;

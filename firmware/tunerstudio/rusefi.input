@@ -3000,9 +3000,9 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 		field = "Debug mode",							debugMode
 
 	dialog = limits, "Limits"
-		field = "RPM hard limit",         	    		rpmHardLimit
 		field = "Cut fuel on RPM limit",				cutFuelOnHardLimit
 		field = "Cut spark on RPM limit",				cutSparkOnHardLimit
+        field = "RPM hard limit",                       rpmHardLimit, { cutFuelOnHardLimit || cutSparkOnHardLimit }
 		field = "Boost cut pressure",					boostCutPressure
 	
 	dialog = fallbacks, "Fallbacks"
