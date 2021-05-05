@@ -1067,7 +1067,7 @@ custom maf_sensor_type_e 4 bits, S32, @OFFSET@, [0:1], @@maf_sensor_type_e_enum@
 	bit canWriteEnabled;enable can_write/disable can_write
 	bit useLinearIatSensor
 	bit useFSIO16ForTimingAdjustment;+See fsioTimingAdjustment
-	bit tachPulseDurationAsDutyCycle;+Treat milliseconds value as duty cycle value, i.e. 0.5ms would become 50%
+	bit tachPulseDurationAsDutyCycle,"Constant time","Duty cycle";+Treat milliseconds value as duty cycle value, i.e. 0.5ms would become 50%
 	bit isAlternatorControlEnabled;+This enables smart alternator control and activates the extra alternator settings.
 	bit invertPrimaryTriggerSignal;+This setting flips the signal from the primary engine speed sensor.
 	bit invertSecondaryTriggerSignal;+This setting flips the signal from the secondary engine speed sensor.
@@ -1174,7 +1174,8 @@ custom pin_mode_e 1 bits,    U08,   @OFFSET@, [0:6], @@pin_mode_e_enum@@
 	float[CRANKING_CURVE_SIZE] crankingTpsCoef;Cranking fuel correction coefficient based on TPS;"Ratio",      1,     0,      0.0,    700.0,   2
 	float[CRANKING_CURVE_SIZE] crankingTpsBins;;"%",        1,     0,    0.0,    100.0,  2
 	
-	float tachPulseDuractionMs;;"ms",        1,     0,    0.0,    100.0,  2
+! todo: rename field remove 'ms' since unusual case of dual-purpose field - it could be either ms or percent	
+	float tachPulseDuractionMs;;"",        1,     0,    0.0,    100.0,  2
 	int unused1708;;"units", 1, 0, -20, 100, 0
 	
 	float wwaeTau;+Length of time the deposited wall fuel takes to dissipate after the start of acceleration. ;"Seconds",        1,     0,    0.0,    3.0,  2
