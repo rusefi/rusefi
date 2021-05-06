@@ -11,6 +11,7 @@ pins:
   - pin: 1B
     id: EFI_ADC_5
     class: analog_inputs
+    ts_name: Battery Sense
     function: ECU power in start & run
     type: 12V
 
@@ -25,26 +26,27 @@ pins:
   - pin: 1E
     id: GPIOG_4
     class: outputs
+    ts_name: 1E - Check Engine Light
     function: Check Engine Light
     type: ls
 
   - pin: 1F
     id: GPIOD_13
     class: outputs
-    ts_name: Tach_Out_95.5
+    ts_name: Tach Out 95.5
     function: Tachometer
     type: ls
 
   - pin: 1G
     id: GPIOI_8
     class: outputs
-    ts_name: 1G - IGN_1 (1&4)
+    ts_name: 1G - Ignition 1 & 4
     type: ign
  
   - pin: 1H
     id: GPIOE_5
     class: outputs
-    ts_name: 1H - IGN_2 (2&3)
+    ts_name: 1H - Ignition 2 & 3
     type: ign
 
   - pin: 1I
@@ -54,25 +56,25 @@ pins:
   - pin: 1J
     id: GPIOH_15
     class: outputs
-    ts_name: 1J - AC_Relay
+    ts_name: 1J - AC Relay
     function: A/C Relay
     type: ls
 
   - pin: 1L
     id: GPIOD_12
     class: outputs
-    ts_name: 1L - Radiator_Fan_94-95
+    ts_name: 1L - Radiator Fan 94-95
     function: Radiator Fan Relay
     type: ls
 
   - pin: 1M
     id: GPIOF_11
     class: event_inputs
-    ts_name: 1m - VSS
+    ts_name: 1M - VSS
     function: VSS IN
     
   - pin: 1N
-    ts_name: 1N - 5v_REF_NA6
+    ts_name: 1N - 5v ref NA6
     function: Sensor +5V
 
   - pin: 1Q
@@ -84,7 +86,7 @@ pins:
   - pin: 1R
     id: GPIOD_12
     class: outputs
-    ts_name: Coolant_Fan
+    ts_name: 1R - Coolant Fan
     function: Coolant Fan Relay
     type: ls
 
@@ -98,7 +100,7 @@ pins:
   - pin: 1V
     id: [GPIOC_5, EFI_ADC_15]
     class: [switch_inputs, analog_inputs]
-    ts_name: Clutch_Switch
+    ts_name: Clutch Switch
     function: Clutch switch input
     type: din
 
@@ -106,6 +108,7 @@ pins:
     function: Power GND
     type: pgnd
     color: white
+
   - pin: 3B
     function: Power GND
     type: pgnd
@@ -138,33 +141,33 @@ pins:
     ts_name: 3G - CAM
     function: Camshaft Sensor
     
-  - pin: 3i
+  - pin: 3I
     id: GPIOD_13
     class: outputs
-    ts_name: 3i - Tacho_90-95.5
+    ts_name: 3I - Tacho 90-95.5
     function: tachometer
     
-  - pin: 3k
+  - pin: 3K
     class: outputs
-    ts_name: 3k - TPS_5v_94-95
+    ts_name: 3K - TPS 5v 94-95
     function: 5v reference
     
-  - pin: 3l
+  - pin: 3L
     id: EFI_ADC_4
     class: analog_inputs
-    ts_name: 3L - TPS_90-93
+    ts_name: 3L - TPS 90-93
     function: TPS INPUT
     
-  - pin: 3m
+  - pin: 3M
     id: EFI_ADC_4
     class: analog_inputs
-    ts_name: 3M - TPS_94-95
+    ts_name: 3M - TPS 94-95
     function: TPS INPUT
 
   - pin: 3O
     id: GPIOG_2
     class: outputs
-    ts_name: 3O - FEUL_PUMP_NA6
+    ts_name: 3O - Fuel Pump NA6
     function: FUEL PUMP OUTPUT
 
   - pin: 3P
@@ -176,12 +179,13 @@ pins:
   - pin: 3S
     id: GPIOD_9
     class: outputs
-    ts_name: 3S - A/C_Fan 94-95
+    ts_name: 3S - A/C Fan 94-95
     function: A/C Fan
 
   - pin: 3T
     id: GPIOG_2
     class: outputs
+    ts_name: 3T - Fuel Pump Relay
     function: Fuel Pump Relay
     type: ls
 
@@ -197,18 +201,17 @@ pins:
     ts_name: 3Q - CLT
     function: CLT sensor
 
-
   - pin: 3U
     id: GPIOG_7
     class: outputs
-    ts_name: 3U - INJ_1
+    ts_name: 3U - Injector 1
     function: Injector #1
     type: inj
 
   - pin: 3V
     id: GPIOG_8
     class: outputs
-    ts_name: 3V - INJ_2
+    ts_name: 3V - Injector 2
     function: Injector #2
     type: inj
 
@@ -222,14 +225,14 @@ pins:
   - pin: 3Y
     id: GPIOD_11
     class: outputs
-    ts_name: 3Y - INJ_3
+    ts_name: 3Y - Injector 3
     function: Injector #3
     type: inj
 
   - pin: 3Z
     id: GPIOD_10
     class: outputs
-    ts_name: 3Z - INJ_4
+    ts_name: 3Z - Injector 4
     function: Injector #4
     type: inj
 
