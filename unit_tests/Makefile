@@ -176,7 +176,7 @@ TCPPSRC =
 ASMSRC = $(PORTASM)
 
 
-INCDIR = . \
+INCDIR = $(UNIT_TESTS_DIR) \
 	$(ALLINC) \
 	$(UTIL_INC) \
 	$(PROJECT_DIR)/config/engines \
@@ -193,9 +193,9 @@ INCDIR = . \
 	$(UNIT_TESTS_DIR)/googletest/googlemock/include \
 	$(UNIT_TESTS_DIR)/googletest/googletest \
 	$(UNIT_TESTS_DIR)/googletest/googletest/include \
-	$(PROJECT_DIR)/../unit_tests/tests \
-	$(PROJECT_DIR)/../unit_tests/tests/sensor \
-	$(PROJECT_DIR)/../unit_tests/test_basic_math
+	$(UNIT_TESTS_DIR)/tests \
+	$(UNIT_TESTS_DIR)/tests/sensor \
+	$(UNIT_TESTS_DIR)/test_basic_math
 	
 
 #
