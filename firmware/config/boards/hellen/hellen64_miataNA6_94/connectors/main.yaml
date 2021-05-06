@@ -196,7 +196,7 @@ pins:
     function: External Wideband signal
 
   - pin: 3Q
-    id: EFI_ADC_13
+    id: EFI_ADC_12
     class: analog_inputs
     ts_name: 3Q - CLT
     function: CLT sensor
