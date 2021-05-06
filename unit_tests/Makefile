@@ -3,8 +3,10 @@
 # NOTE: Can be overridden externally.
 #
 
+PROJECT_DIR = ../firmware
+UNIT_TESTS_DIR=$(PROJECT_DIR)/../unit_tests
 
-ifeq ("$(wildcard googletest/LICENSE)","")
+ifeq ("$(wildcard $(UNIT_TESTS_DIR)/googletest/LICENSE)","")
 $(info Invoking "git submodule update --init")
 $(shell git submodule update --init)
 $(info Invoked "git submodule update --init")
@@ -13,7 +15,6 @@ $(error Please run 'make' again. Please make sure you have 'git' command in PATH
 endif
 
 
-PROJECT_DIR = ../firmware
 include $(PROJECT_DIR)/rusefi_rules.mk
 
 # Compiler options here.
@@ -108,8 +109,8 @@ include $(PROJECT_DIR)/hw_layer/drivers/drivers.mk
 include $(PROJECT_DIR)/hw_layer/sensors/sensors.mk
 include $(PROJECT_DIR)/util/util.mk
 include $(PROJECT_DIR)/init/init.mk
-include test.mk
-include tests/tests.mk
+include $(UNIT_TESTS_DIR)/test.mk
+include $(UNIT_TESTS_DIR)/tests/tests.mk
 
 # C sources that can be compiled in ARM or THUMB mode depending on the global
 # setting.
@@ -188,10 +189,10 @@ INCDIR = . \
 	$(HW_LAYER_INC) \
 	$(HW_SENSORS_INC) \
 	$(HW_LAYER_DRIVERS_INC) \
-	test_data_structures \
-	googletest/googlemock/include \
-	googletest/googletest \
-	googletest/googletest/include \
+	$(UNIT_TESTS_DIR)/test_data_structures \
+	$(UNIT_TESTS_DIR)/googletest/googlemock/include \
+	$(UNIT_TESTS_DIR)/googletest/googletest \
+	$(UNIT_TESTS_DIR)/googletest/googletest/include \
 	$(PROJECT_DIR)/../unit_tests/tests \
 	$(PROJECT_DIR)/../unit_tests/tests/sensor \
 	$(PROJECT_DIR)/../unit_tests/test_basic_math
@@ -302,4 +303,4 @@ ULIBS += --coverage
 # End of user defines
 ##############################################################################
 
-include rules.mk
+include $(UNIT_TESTS_DIR)/rules.mk
