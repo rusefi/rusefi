@@ -6,14 +6,6 @@
 PROJECT_DIR = ../firmware
 UNIT_TESTS_DIR=$(PROJECT_DIR)/../unit_tests
 
-ifeq ("$(wildcard $(UNIT_TESTS_DIR)/googletest/LICENSE)","")
-$(info Invoking "git submodule update --init")
-$(shell git submodule update --init)
-$(info Invoked "git submodule update --init")
-# make is not happy about newly checked out module for some reason but next invocation would work
-$(error Please run 'make' again. Please make sure you have 'git' command in PATH)
-endif
-
 
 include $(PROJECT_DIR)/rusefi_rules.mk
 
@@ -80,23 +72,6 @@ endif
 
 # List all default C defines here, like -D_DEBUG=1
 DDEFS =
-
-#
-# Architecture or project specific options
-##############################################################################
-
-##############################################################################
-# Project, sources and paths
-#
-
-# Define project name here
-PROJECT = rusefi_test
-
-#PROJECT_BOARD = OLIMEX_STM32_E407
-#ifneq ($(PROJECT_BOARD),OLIMEX_STM32_E407)
-#  PROJECT_BOARD = ST_STM32F4_DISCOVERY
-#endif
-#DDEFS += -D$(PROJECT_BOARD)
 
 # Imported source files and paths
 include $(PROJECT_DIR)/config/engines/engines.mk
@@ -302,5 +277,7 @@ ULIBS += --coverage
 #
 # End of user defines
 ##############################################################################
+
+include $(UNIT_TESTS_DIR)/unit_test_rules.mk
 
 include $(UNIT_TESTS_DIR)/rules.mk
