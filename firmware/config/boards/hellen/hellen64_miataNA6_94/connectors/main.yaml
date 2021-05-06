@@ -235,6 +235,11 @@ pins:
     ts_name: 3Z - Injector 4
     function: Injector #4
     type: inj
+    
+   - pin: int_map
+    id: EFI_ADC_2
+    class: analog_inputs
+    ts_name: intMAP (A15)
 
 info:
   image:
