@@ -1,10 +1,11 @@
 # ARM Cortex-Mx common makefile scripts and rules.
 
-# Output directory and files
 ifeq ($(BUILDDIR),)
+  # Define if not specified
   BUILDDIR = build
 endif
 ifeq ($(BUILDDIR),.)
+  # Redefine if pointing at current folder
   BUILDDIR = build
 endif
 OUTFILES = $(BUILDDIR)/$(PROJECT)
