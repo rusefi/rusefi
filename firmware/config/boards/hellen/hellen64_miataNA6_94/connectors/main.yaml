@@ -11,7 +11,7 @@ pins:
   - pin: 1B
     id: EFI_ADC_5
     class: analog_inputs
-    ts_name: Battery Sense
+    ts_name: 1B - Battery Sense
     function: ECU power in start & run
     type: 12V
 
@@ -33,7 +33,7 @@ pins:
   - pin: 1F
     id: GPIOD_13
     class: outputs
-    ts_name: Tach Out 95.5
+    ts_name: 1F - Tachometer 95.5
     function: Tachometer
     type: ls
 
@@ -91,7 +91,7 @@ pins:
     type: ls
 
   - pin: 1S
-    ts_name: A/C Input
+    ts_name: 1S - A/C Input
     function: A/C Input
 
   - pin: 1T
@@ -100,7 +100,7 @@ pins:
   - pin: 1V
     id: [GPIOC_5, EFI_ADC_15]
     class: [switch_inputs, analog_inputs]
-    ts_name: Clutch Switch
+    ts_name: 1V - Clutch Switch
     function: Clutch switch input
     type: din
 
@@ -144,7 +144,7 @@ pins:
   - pin: 3I
     id: GPIOD_13
     class: outputs
-    ts_name: 3I - Tacho 90-95.5
+    ts_name: 3I - Tachometer 90-95.5
     function: tachometer
     
   - pin: 3K
