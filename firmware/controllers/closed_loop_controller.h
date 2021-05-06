@@ -1,3 +1,7 @@
+/**
+ * @file closed_loop_controller.h
+ */
+
 #pragma once
 
 #include "expected.h"
