@@ -8,10 +8,6 @@
 #include "cj125_logic.h"
 #include "engine_test_helper.h"
 
-static void applyHeaterPinState(PwmConfig *state, int stateIndex) {
-
-}
-
 class TestSpi : public Cj125SpiStream {
 public:
 	MOCK_METHOD1(ReadRegister, uint8_t(uint8_t));
@@ -27,7 +23,7 @@ TEST(testCJ125, testInitialState) {
 
 	WITH_ENGINE_TEST_HELPER(FORD_ASPIRE_1996);
 
-	cj.StartHeaterControl((pwm_gen_callback*)&applyHeaterPinState PASS_ENGINE_PARAMETER_SUFFIX);
+	cj.StartHeaterControl(PASS_ENGINE_PARAMETER_SIGNATURE);
 	ASSERT_EQ(cj.heaterDuty, CJ125_HEATER_IDLE_RATE);
 
 	TestSpi mock;
