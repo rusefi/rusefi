@@ -267,6 +267,10 @@
 //  - use Lua interpreter (requires ~20k of memory)
 #ifdef EFI_IS_F42x
 	#define EFI_USE_COMPRESSED_INI_MSD
+	#define ENABLE_PERF_TRACE TRUE
+#else
+	// small memory F40x can't fit perf trace
+	#define ENABLE_PERF_TRACE FALSE
 #endif
 
 #define EFI_LUA TRUE
