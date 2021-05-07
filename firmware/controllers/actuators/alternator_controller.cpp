@@ -70,11 +70,15 @@ class AlternatorController : public PeriodicTimerController {
 
 		// todo: migrate this to FSIO
 		bool alternatorShouldBeEnabledAtCurrentRpm = GET_RPM() > engineConfiguration->cranking.rpm;
-		engine->isAlternatorControlEnabled = CONFIG(isAlternatorControlEnabled) && alternatorShouldBeEnabledAtCurrentRpm;
+		bool isAlternatorControlEnabled = CONFIG(isAlternatorControlEnabled) && alternatorShouldBeEnabledAtCurrentRpm;
 
-		if (!engine->isAlternatorControlEnabled) {
+		if (!isAlternatorControlEnabled) {
 			// we need to avoid accumulating iTerm while engine is not running
 			pidReset();
+
+			// Shut off output if not needed
+			alternatorControl.setSimplePwmDutyCycle(0);
+
 			return;
 		}
 
@@ -133,18 +137,6 @@ void setAltPFactor(float p) {
 	efiPrintf("setAltPid: %.2f", p);
 	pidReset();
 	showAltInfo();
-}
-
-static void applyAlternatorPinState(int stateIndex, PwmConfig *state) /* pwm_gen_callback */ {
-	efiAssertVoid(CUSTOM_ERR_6643, stateIndex < PWM_PHASE_MAX_COUNT, "invalid stateIndex");
-	efiAssertVoid(CUSTOM_IDLE_WAVE_CNT, state->multiChannelStateSequence.waveCount == 1, "invalid idle waveCount");
-	OutputPin *output = state->outputPins[0];
-	int value = state->multiChannelStateSequence.getChannelState(/*channelIndex*/0, stateIndex);
-	/**
-	 * 'engine->isAlternatorControlEnabled' would be false is RPM is too low
-	 */
-	if (!value || engine->isAlternatorControlEnabled)
-		output->setValue(value);
 }
 
 void setDefaultAlternatorParameters(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
