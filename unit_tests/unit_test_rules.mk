@@ -1,3 +1,73 @@
+include $(PROJECT_DIR)/rusefi_rules.mk
+
+
+# Compiler options here.
+ifeq ($(USE_OPT),)
+# -O2 is needed for mingw, without it there is a linking issue to isnanf?!?!
+  #USE_OPT = $(RFLAGS) -O2 -fgnu89-inline -ggdb -fomit-frame-pointer -falign-functions=16 -std=gnu99 -Werror-implicit-function-declaration -Werror -Wno-error=pointer-sign -Wno-error=unused-function -Wno-error=unused-variable -Wno-error=sign-compare -Wno-error=unused-parameter -Wno-error=missing-field-initializers
+  USE_OPT = -c -Wall -O0 -ggdb -g
+  USE_OPT += -fprofile-arcs -ftest-coverage
+  USE_OPT += -Werror=missing-field-initializers
+endif
+
+
+#TODO! this is a nice goal
+#USE_OPT += $(RUSEFI_OPT)
+#USE_OPT += -Wno-error=format= -Wno-error=register -Wno-error=write-strings
+
+# See explanation in main firmware Makefile for these three defines
+USE_OPT += -DEFI_UNIT_TEST=1 -DEFI_PROD_CODE=0 -DEFI_SIMULATOR=0
+
+# Pretend we are all different hardware so that all canned engine configs are included
+USE_OPT += -DHW_MICRO_RUSEFI=1 -DHW_PROTEUS=1 -DHW_FRANKENSO=1
+
+ifeq ($(CCACHE_DIR),)
+ $(info No CCACHE_DIR)
+else
+ $(info CCACHE_DIR is ${CCACHE_DIR})
+ CCPREFIX=ccache
+endif
+
+# C specific options here (added to USE_OPT).
+ifeq ($(USE_COPT),)
+  USE_COPT = -std=gnu99 -fgnu89-inline
+endif
+
+# C++ specific options here (added to USE_OPT).
+ifeq ($(USE_CPPOPT),)
+  USE_CPPOPT = -std=gnu++17 -fno-rtti -fpermissive -fexceptions -fno-use-cxa-atexit
+endif
+
+# Enable this if you want the linker to remove unused code and data
+ifeq ($(USE_LINK_GC),)
+  USE_LINK_GC = yes
+endif
+
+# If enabled, this option allows to compile the application in THUMB mode.
+ifeq ($(USE_THUMB),)
+  USE_THUMB = no
+endif
+
+# Enable this if you want to see the full log while compiling.
+ifeq ($(USE_VERBOSE_COMPILE),)
+  USE_VERBOSE_COMPILE = no
+endif
+
+# C sources to be compiled in ARM mode regardless of the global setting.
+ACSRC =
+
+# C++ sources to be compiled in ARM mode regardless of the global setting.
+ACPPSRC =
+
+# C sources to be compiled in THUMB mode regardless of the global setting.
+TCSRC =
+
+# C sources to be compiled in THUMB mode regardless of the global setting.
+TCPPSRC =
+
+# List ASM source files here
+ASMSRC =
+
 ##############################################################################
 # Compiler settings
 #
@@ -110,3 +180,4 @@ $(info Invoked "git submodule update --init")
 $(error Please run 'make' again. Please make sure you have 'git' command in PATH)
 endif
 
+include $(UNIT_TESTS_DIR)/rules.mk
