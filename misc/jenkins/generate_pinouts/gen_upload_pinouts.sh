@@ -21,6 +21,9 @@ for c in $CONNECTORS; do
   fi
   file $DIR/index.html
   IMG=$(yq r $c 'info.image.file')
+  if [ $? -ne 0 ]; then
+    exit 1;
+  fi
   echo "IMG "$IMG
   if [ $IMG ]; then
     cp $(dirname $c)/$IMG $DIR
