@@ -162,7 +162,7 @@ void initAlternatorCtrl(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 				"Alternator control",
 				&engine->executor,
 				&enginePins.alternatorPin,
-				engineConfiguration->alternatorPwmFrequency, 0.1, (pwm_gen_callback*)applyAlternatorPinState);
+				engineConfiguration->alternatorPwmFrequency, 0);
 	}
 	instance.Start();
 }
