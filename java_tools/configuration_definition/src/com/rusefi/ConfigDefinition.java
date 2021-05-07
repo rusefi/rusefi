@@ -189,6 +189,11 @@ public class ConfigDefinition {
                     File dirName = new File(dirPath);
                     FilenameFilter filter = (f, name) -> name.endsWith(".yaml");
                     yamlFiles = dirName.listFiles(filter);
+                    if (yamlFiles != null) {
+                        for (int f = 0; f < yamlFiles.length; f++) {
+                            inputFiles.add("config/boards/" + boardName + "/connectors/" + yamlFiles[f].getName());
+                        }
+                    }
                     break;
             }
         }
