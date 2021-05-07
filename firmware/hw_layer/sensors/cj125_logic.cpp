@@ -41,12 +41,12 @@ bool CJ125::isWorkingState(void) const {
 	return state != CJ125_ERROR && state != CJ125_INIT && state != CJ125_IDLE;
 }
 
-void CJ125::StartHeaterControl(pwm_gen_callback *stateChangeCallback DECLARE_ENGINE_PARAMETER_SUFFIX) {
+void CJ125::StartHeaterControl(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	// todo: use custom pin state method, turn pin off while not running
 	startSimplePwmExt(&wboHeaterControl, "wboHeaterPin",
 			&engine->executor,
 			CONFIG(wboHeaterPin),
-			&wboHeaterPin, CJ125_HEATER_PWM_FREQ, 0.0f, stateChangeCallback);
+			&wboHeaterPin, CJ125_HEATER_PWM_FREQ, 0.0f);
 	SetIdleHeater(PASS_ENGINE_PARAMETER_SIGNATURE);
 }
 

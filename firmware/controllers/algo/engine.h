@@ -185,10 +185,6 @@ public:
 	 * this is based on sensorChartMode and sensorSnifferRpmThreshold settings
 	 */
 	sensor_chart_e sensorChartMode = SC_OFF;
-	/**
-	 * based on current RPM and isAlternatorControlEnabled setting
-	 */
-	bool isAlternatorControlEnabled = false;
 
 	bool slowCallBackWasInvoked = false;
 

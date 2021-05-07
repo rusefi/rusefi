@@ -628,7 +628,7 @@ void initCJ125(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	if (!cjStartSpi(PASS_ENGINE_PARAMETER_SIGNATURE))
 		return;
 	efiPrintf("cj125: Starting heater control");
-	globalInstance.StartHeaterControl((pwm_gen_callback*)applyPinState PASS_ENGINE_PARAMETER_SUFFIX);
+	globalInstance.StartHeaterControl(PASS_ENGINE_PARAMETER_SIGNATURE);
 	cjStart(PASS_ENGINE_PARAMETER_SIGNATURE);
 	
 #ifdef CJ125_DEBUG
