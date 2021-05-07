@@ -334,31 +334,6 @@ void PwmConfig::weComplexInit(const char *msg, ExecutorInterface *executor,
 	timerCallback(this);
 }
 
-/**
- * This method controls the actual hardware pins
- *
- * This method takes ~350 ticks.
- */
-static void applyPinState(int stateIndex, PwmConfig *state) /* pwm_gen_callback */ {
-#if EFI_PROD_CODE
-	if (!engine->isPwmEnabled) {
-		for (int channelIndex = 0; channelIndex < state->multiChannelStateSequence.waveCount; channelIndex++) {
-			OutputPin *output = state->outputPins[channelIndex];
-			output->setValue(0);
-		}
-		return;
-	}
-#endif // EFI_PROD_CODE
-
-	efiAssertVoid(CUSTOM_ERR_6663, stateIndex < PWM_PHASE_MAX_COUNT, "invalid stateIndex");
-	efiAssertVoid(CUSTOM_ERR_6664, state->multiChannelStateSequence.waveCount <= PWM_PHASE_MAX_WAVE_PER_PWM, "invalid waveCount");
-	for (int channelIndex = 0; channelIndex < state->multiChannelStateSequence.waveCount; channelIndex++) {
-		OutputPin *output = state->outputPins[channelIndex];
-		int value = state->multiChannelStateSequence.getChannelState(channelIndex, stateIndex);
-		output->setValue(value);
-	}
-}
-
 void startSimplePwm(SimplePwm *state, const char *msg, ExecutorInterface *executor,
 		OutputPin *output, float frequency, float dutyCycle) {
 	efiAssertVoid(CUSTOM_ERR_PWM_STATE_ASSERT, state != NULL, "state");
@@ -412,7 +387,7 @@ void startSimplePwmHard(SimplePwm *state, const char *msg,
  *
  * This method takes ~350 ticks.
  */
-static void applyPinState(int stateIndex, PwmConfig *state) /* pwm_gen_callback */ {
+void applyPinState(int stateIndex, PwmConfig *state) /* pwm_gen_callback */ {
 #if EFI_PROD_CODE
 	if (!engine->isPwmEnabled) {
 		for (int channelIndex = 0; channelIndex < state->multiChannelStateSequence.waveCount; channelIndex++) {
