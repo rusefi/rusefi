@@ -36,8 +36,6 @@ CSRC = $(ALLCSRC) \
 # setting.
 CPPSRC = $(ALLCPPSRC) \
 	$(UTILSRC_CPP) \
-	gtest-all.cpp \
-	gmock-all.cpp \
 	$(CONTROLLERS_ALGO_SRC_CPP) \
 	$(TRIGGER_DECODERS_SRC_CPP) \
 	$(ENGINES_SRC_CPP) \
@@ -56,6 +54,7 @@ CPPSRC = $(ALLCPPSRC) \
 	$(PROJECT_DIR)/../unit_tests/logicdata.cpp \
 	$(DEVELOPMENT_DIR)/engine_sniffer.cpp \
 	$(PROJECT_DIR)/../unit_tests/main.cpp \
+	$(PROJECT_DIR)/../unit_tests/global_mocks.cpp \
 	$(PROJECT_DIR)/console/binary/tooth_logger.cpp \
 	$(PROJECT_DIR)/console/binary_log/log_field.cpp \
 
@@ -73,9 +72,6 @@ INCDIR = $(UNIT_TESTS_DIR) \
 	$(HW_SENSORS_INC) \
 	$(HW_LAYER_DRIVERS_INC) \
 	$(UNIT_TESTS_DIR)/test_data_structures \
-	$(UNIT_TESTS_DIR)/googletest/googlemock/include \
-	$(UNIT_TESTS_DIR)/googletest/googletest \
-	$(UNIT_TESTS_DIR)/googletest/googletest/include \
 	$(UNIT_TESTS_DIR)/tests \
 	$(UNIT_TESTS_DIR)/tests/sensor \
 	$(UNIT_TESTS_DIR)/test_basic_math
