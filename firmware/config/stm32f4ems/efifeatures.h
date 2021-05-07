@@ -267,10 +267,9 @@
 //  - use Lua interpreter (requires ~20k of memory)
 #ifdef EFI_IS_F42x
 	#define EFI_USE_COMPRESSED_INI_MSD
-	#define EFI_LUA TRUE
-#else
-	#define EFI_LUA FALSE
 #endif
+
+#define EFI_LUA TRUE
 
 #ifndef EFI_ENGINE_SNIFFER
 #define EFI_ENGINE_SNIFFER TRUE
