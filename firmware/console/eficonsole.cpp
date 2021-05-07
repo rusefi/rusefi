@@ -51,7 +51,14 @@ static void sayHello(void) {
 
 	int mcuRevision = DBGMCU->IDCODE & MCU_REVISION_MASK;
 
-	efiPrintf("rev=%x size=%d", mcuRevision, TM_ID_GetFlashSize());
+#define MIN_FLASH_SIZE 1024
+
+	int flashSize = TM_ID_GetFlashSize();
+	if (flashSize < MIN_FLASH_SIZE) {
+		firmwareError(OBD_PCM_Processor_Fault, "rusEFI expected at least %dK of flash", MIN_FLASH_SIZE);
+	}
+
+	efiPrintf("rev=%x size=%d", mcuRevision, flashSize);
 #endif
 
 
