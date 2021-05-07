@@ -1,5 +1,15 @@
-include $(PROJECT_DIR)/rusefi_rules.mk
+UNIT_TESTS_DIR=$(PROJECT_DIR)/../unit_tests
 
+CPPSRC += 	gtest-all.cpp \
+          	gmock-all.cpp \
+
+
+INCDIR += 	$(UNIT_TESTS_DIR)/googletest/googlemock/include \
+          	$(UNIT_TESTS_DIR)/googletest/googletest \
+          	$(UNIT_TESTS_DIR)/googletest/googletest/include \
+
+
+include $(PROJECT_DIR)/rusefi_rules.mk
 
 # Compiler options here.
 ifeq ($(USE_OPT),)
