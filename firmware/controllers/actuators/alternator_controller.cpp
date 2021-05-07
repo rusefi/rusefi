@@ -70,9 +70,8 @@ class AlternatorController : public PeriodicTimerController {
 
 		// todo: migrate this to FSIO
 		bool alternatorShouldBeEnabledAtCurrentRpm = GET_RPM() > engineConfiguration->cranking.rpm;
-		bool isAlternatorControlEnabled = CONFIG(isAlternatorControlEnabled) && alternatorShouldBeEnabledAtCurrentRpm;
 
-		if (!isAlternatorControlEnabled) {
+		if (!CONFIG(isAlternatorControlEnabled) || !alternatorShouldBeEnabledAtCurrentRpm) {
 			// we need to avoid accumulating iTerm while engine is not running
 			pidReset();
 
