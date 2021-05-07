@@ -335,10 +335,9 @@ void PwmConfig::weComplexInit(const char *msg, ExecutorInterface *executor,
 }
 
 void startSimplePwm(SimplePwm *state, const char *msg, ExecutorInterface *executor,
-		OutputPin *output, float frequency, float dutyCycle, pwm_gen_callback *stateChangeCallback) {
+		OutputPin *output, float frequency, float dutyCycle) {
 	efiAssertVoid(CUSTOM_ERR_PWM_STATE_ASSERT, state != NULL, "state");
 	efiAssertVoid(CUSTOM_ERR_PWM_DUTY_ASSERT, dutyCycle >= 0 && dutyCycle <= 1, "dutyCycle");
-	efiAssertVoid(CUSTOM_ERR_PWM_CALLBACK_ASSERT, stateChangeCallback != NULL, "listener");
 	if (frequency < 1) {
 		warning(CUSTOM_OBD_LOW_FREQUENCY, "low frequency %.2f", frequency);
 		return;
@@ -353,17 +352,17 @@ void startSimplePwm(SimplePwm *state, const char *msg, ExecutorInterface *execut
 	state->outputPins[0] = output;
 
 	state->setFrequency(frequency);
-	state->weComplexInit(msg, executor, 2, switchTimes, 1, pinStates, NULL, stateChangeCallback);
+	state->weComplexInit(msg, executor, 2, switchTimes, 1, pinStates, NULL, (pwm_gen_callback*)applyPinState);
 }
 
 void startSimplePwmExt(SimplePwm *state, const char *msg,
 		ExecutorInterface *executor,
 		brain_pin_e brainPin, OutputPin *output, float frequency,
-		float dutyCycle, pwm_gen_callback *stateChangeCallback) {
+		float dutyCycle) {
 
 	output->initPin(msg, brainPin);
 
-	startSimplePwm(state, msg, executor, output, frequency, dutyCycle, stateChangeCallback);
+	startSimplePwm(state, msg, executor, output, frequency, dutyCycle);
 }
 
 void startSimplePwmHard(SimplePwm *state, const char *msg,

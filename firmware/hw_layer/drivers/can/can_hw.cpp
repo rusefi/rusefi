@@ -162,8 +162,8 @@ private:
 	CANRxFrame m_buffer;
 };
 
-static CanRead canRead;
-static CanWrite canWrite;
+static CanRead canRead CCM_OPTIONAL;
+static CanWrite canWrite CCM_OPTIONAL;
 
 static void canInfo(void) {
 	if (!isCanEnabled) {
