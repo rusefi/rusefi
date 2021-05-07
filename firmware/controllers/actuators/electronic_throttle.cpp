@@ -690,7 +690,7 @@ struct EtbThread final : public PeriodicController<512> {
 	}
 };
 
-static EtbThread etbThread;
+static EtbThread etbThread CCM_OPTIONAL;
 
 #endif
 
