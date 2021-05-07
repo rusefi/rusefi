@@ -12,6 +12,9 @@
 #include "efitime.h"
 #include "os_util.h"
 
+#ifndef ENABLE_PERF_TRACE
+#error ENABLE_PERF_TRACE must be defined!
+#endif
 
 #ifndef TRACE_BUFFER_LENGTH
 #define TRACE_BUFFER_LENGTH 2048
