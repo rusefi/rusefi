@@ -68,6 +68,10 @@ static NamedOutputPin Cs(PROTOCOL_HIP_NAME);
 class Hip9011Hardware : public Hip9011HardwareInterface {
 	int sendSyncCommand(uint8_t command, uint8_t *rx_ptr) override;
 
+public:
+	scheduling_s startTimer;
+	scheduling_s endTimer;
+
 private:
 	int checkResponseDefMode(uint8_t tx, uint8_t rx);
 	int checkResponseAdvMode(uint8_t tx, uint8_t rx);
@@ -85,8 +89,6 @@ static SPIDriver *spi;
 static Hip9011Hardware hardware;
 
 HIP9011 instance(&hardware);
-
-static scheduling_s endTimer;
 
 #if EFI_HIP_9011_DEBUG
 	static float normalizedValue[HIP_INPUT_CHANNELS];
@@ -228,31 +230,35 @@ static int hip_wake_driver(void)
 	return 0;
 }
 
-static void startIntegration(void *) {
-	if (instance.state == READY_TO_INTEGRATE) {
+static void startIntegration(HIP9011 *hip) {
+	if (hip->state == READY_TO_INTEGRATE) {
 		/**
 		 * SPI communication is only allowed while not integrating, so we postpone the exchange
 		 * until we are done integrating
 		 */
-		instance.state = IS_INTEGRATING;
+		hip->state = IS_INTEGRATING;
 		intHold.setHigh();
+	} else {
+		#if EFI_HIP_9011_DEBUG
+			hip->overrun++;
+		#endif
 	}
 }
 
-static void endIntegration(void *) {
+static void endIntegration(HIP9011 *hip) {
 	/**
 	 * isIntegrating could be 'false' if an SPI command was pending thus we did not integrate during this
 	 * engine cycle
 	 */
-	if (instance.state == IS_INTEGRATING) {
+	if (hip->state == IS_INTEGRATING) {
 		intHold.setLow();
 		if (instance.adv_mode) {
 			/* read value over SPI in thread mode */
-			instance.state = NOT_READY;
+			hip->state = NOT_READY;
 			hip_wake_driver();
 		} else {
 			/* wait for ADC samples */
-			instance.state = WAITING_FOR_ADC_TO_SKIP;
+			hip->state = WAITING_FOR_ADC_TO_SKIP;
 		}
 	}
 }
@@ -264,23 +270,27 @@ void hip9011_onFireEvent(uint8_t cylinderNumber, efitick_t nowNt) {
 	if (!CONFIG(isHip9011Enabled))
 		return;
 
-	/* overrun? */
-	if (instance.state != READY_TO_INTEGRATE) {
-		#if EFI_HIP_9011_DEBUG
-			instance.overrun++;
-		#endif
-		return;
-	}
+	/* We are not checking here for READY_TO_INTEGRATE state as
+	 * previous integration may be stil in progress, while
+	 * we are scheduling next integration start only
+	 * knockDetectionWindowStart from now.
+	 * Check for correct state will be done at startIntegration () */
 
 	if (cylinderNumber == instance.expectedCylinderNumber) {
 		/* save currect cylinder */
 		instance.cylinderNumber = cylinderNumber;
-		startIntegration(NULL);
 
-		/* TODO: reference to knockDetectionWindowStart */
-		scheduleByAngle(&endTimer, nowNt,
-				engineConfiguration->knockDetectionWindowEnd - engineConfiguration->knockDetectionWindowStart,
-				&endIntegration);
+		/* smart books says we need to sence knock few degrees after TDC
+		 * currently I have no idea how to hook to cylinder TDC in correct way.
+		 * So schedule start of integration + knockDetectionWindowStart from fire event
+		 * Keep this is mind when setting knockDetectionWindowStart */
+		scheduleByAngle(&hardware.startTimer, nowNt,
+				engineConfiguration->knockDetectionWindowStart,
+				{ startIntegration, &instance });
+
+		scheduleByAngle(&hardware.endTimer, nowNt,
+				engineConfiguration->knockDetectionWindowEnd,
+				{ endIntegration, &instance });
 	} else {
 		#if EFI_HIP_9011_DEBUG
 			/* out of sync */
