@@ -76,15 +76,6 @@ private:
 	const char *name;
 };
 
-template<int RPM_BIN_SIZE, int LOAD_BIN_SIZE, typename vType, typename kType, typename TValueMultiplier = efi::ratio<1>>
-void copy2DTable(const vType source[LOAD_BIN_SIZE][RPM_BIN_SIZE], vType destination[LOAD_BIN_SIZE][RPM_BIN_SIZE]) {
-	for (int k = 0; k < LOAD_BIN_SIZE; k++) {
-		for (int rpmIndex = 0; rpmIndex < RPM_BIN_SIZE; rpmIndex++) {
-			destination[k][rpmIndex] = source[k][rpmIndex];
-		}
-	}
-}
-
 typedef Map3D<FUEL_RPM_COUNT, FUEL_LOAD_COUNT, uint8_t, float, efi::ratio<1, PACK_MULT_LAMBDA_CFG>> lambda_Map3D_t;
 typedef Map3D<IGN_RPM_COUNT, IGN_LOAD_COUNT, float, float> ign_Map3D_t;
 typedef Map3D<FUEL_RPM_COUNT, FUEL_LOAD_COUNT, float, float> fuel_Map3D_t;
