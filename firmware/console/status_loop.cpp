@@ -652,7 +652,7 @@ void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels DECLARE_
 #endif // HW_CHECK_MODE
 
 	tsOutputChannels->isWarnNow = engine->engineState.warnings.isWarningNow(timeSeconds, true);
-#if EFI_HIP_9011
+#if EFI_HIP_9011_DEBUG
 	tsOutputChannels->isKnockChipOk = (instance.invalidResponsesCount == 0);
 #endif /* EFI_HIP_9011 */
 
@@ -830,7 +830,7 @@ void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels DECLARE_
 	case DBG_CRANKING_DETAILS:
 		tsOutputChannels->debugIntField1 = engine->rpmCalculator.getRevolutionCounterSinceStart();
 		break;
-#if EFI_HIP_9011
+#if EFI_HIP_9011_DEBUG
 	case DBG_KNOCK:
 		// todo: maybe extract hipPostState(tsOutputChannels);
 		tsOutputChannels->debugIntField1 = instance.correctResponsesCount;

@@ -10,6 +10,11 @@
 #include "efifeatures.h"
 #include "rusefi_enums.h"
 
+/* enable debug by default */
+#ifndef EFI_HIP_9011_DEBUG
+#define EFI_HIP_9011_DEBUG TRUE
+#endif
+
 #define PIF						3.14159f
 #define HIP9011_BAND(bore)		(900 / (PIF * (bore) / 2))
 #define HIP9011_DESIRED_OUTPUT_VALUE	5.0f
@@ -102,11 +107,8 @@ public:
 	uint8_t gainIdx = 0xff;
 	uint8_t channelIdx = 0xff;
 
-	int correctResponsesCount = 0;
-	int invalidResponsesCount = 0;
 	float angleWindowWidth = - 1;
 
-	int totalKnockEventsCount = 0;
 	Hip9011HardwareInterface *hw;
 	bool adv_mode = false;
 	/**
@@ -124,12 +126,18 @@ public:
 	int8_t expectedCylinderNumber = -1;
 	int rawValue[HIP_INPUT_CHANNELS];
 
-	/* counters */
-	int samples = 0;
-	int overrun = 0;
-	int unsync = 0;
-
 	float rpmLookup[INT_LOOKUP_SIZE];
+
+	#if EFI_HIP_9011_DEBUG
+		/* SPI counters */
+		int correctResponsesCount = 0;
+		int invalidResponsesCount = 0;
+
+		/* counters */
+		int samples = 0;
+		int overrun = 0;
+		int unsync = 0;
+	#endif
 };
 
 // 0b010x.xxxx

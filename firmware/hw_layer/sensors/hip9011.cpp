@@ -84,12 +84,14 @@ static SPIDriver *spi;
 
 static Hip9011Hardware hardware;
 
-static float normalizedValue[HIP_INPUT_CHANNELS];
-static float normalizedValueMax[HIP_INPUT_CHANNELS];
-
 HIP9011 instance(&hardware);
 
 static scheduling_s endTimer;
+
+#if EFI_HIP_9011_DEBUG
+	static float normalizedValue[HIP_INPUT_CHANNELS];
+	static float normalizedValueMax[HIP_INPUT_CHANNELS];
+#endif
 
 // SPI_CR1_BR_1 // 5MHz
 // SPI_CR1_CPHA Clock Phase
@@ -116,7 +118,9 @@ static SPIConfig hipSpiCfg = {
 /* Forward declarations														*/
 /*==========================================================================*/
 
-static void hip_addconsoleActions(void);
+#if EFI_HIP_9011_DEBUG
+	static void hip_addconsoleActions(void);
+#endif
 
 /*==========================================================================*/
 /* Local functions.															*/
@@ -193,11 +197,13 @@ int Hip9011Hardware::sendSyncCommand(uint8_t tx, uint8_t *rx_ptr) {
 	else
 		ret = checkResponseDefMode(tx, rx);
 
-	/* statistic counters */
-	if (ret)
-		instance.invalidResponsesCount++;
-	else
-		instance.correctResponsesCount++;
+	#if EFI_HIP_9011_DEBUG
+		/* statistic counters */
+		if (ret)
+			instance.invalidResponsesCount++;
+		else
+			instance.correctResponsesCount++;
+	#endif
 
 	return ret;
 }
@@ -260,7 +266,9 @@ void hip9011_startKnockSampling(uint8_t cylinderNumber, efitick_t nowNt) {
 
 	/* overrun? */
 	if (instance.state != READY_TO_INTEGRATE) {
-		instance.overrun++;
+		#if EFI_HIP_9011_DEBUG
+			instance.overrun++;
+		#endif
 		return;
 	}
 
@@ -274,9 +282,11 @@ void hip9011_startKnockSampling(uint8_t cylinderNumber, efitick_t nowNt) {
 				engineConfiguration->knockDetectionWindowEnd - engineConfiguration->knockDetectionWindowStart,
 				&endIntegration);
 	} else {
-		/* out of sync */
-		if (instance.expectedCylinderNumber >= 0)
-			instance.unsync++;
+		#if EFI_HIP_9011_DEBUG
+			/* out of sync */
+			if (instance.expectedCylinderNumber >= 0)
+				instance.unsync++;
+		#endif
 		/* save currect cylinder */
 		instance.cylinderNumber = cylinderNumber;
 		/* Skip integration, call driver task to prepare for next cylinder */
@@ -374,8 +384,10 @@ static int hip_init(void) {
 		}
 	}
 
-	/* reset error counter now */
-	instance.invalidResponsesCount = 0;
+	#if EFI_HIP_9011_DEBUG
+		/* reset error counter now */
+		instance.invalidResponsesCount = 0;
+	#endif
 
 	instance.state = READY_TO_INTEGRATE;
 
@@ -470,10 +482,6 @@ static msg_t hipThread(void *arg) {
 
 			/* Check for correct cylinder/input */
 			if (correctCylinder) {
-				/* debug */
-				normalizedValue[idx] = knockNormalized;
-				normalizedValueMax[idx] = maxF(knockNormalized, normalizedValueMax[idx]);
-
 				/* report */
 				engine->knockLogic(knockVolts);
 
@@ -481,8 +489,13 @@ static msg_t hipThread(void *arg) {
 				tsOutputChannels.knockLevels[instance.cylinderNumber] = knockVolts;
 				tsOutputChannels.knockLevel = knockVolts;
 
-				/* counters */
-				instance.samples++;
+				#if EFI_HIP_9011_DEBUG
+					/* debug */
+					normalizedValue[idx] = knockNormalized;
+					normalizedValueMax[idx] = maxF(knockNormalized, normalizedValueMax[idx]);
+					/* counters */
+					instance.samples++;
+				#endif
 			} else {
 				/* out of sync event already calculated, nothing to do */
 			}
@@ -533,12 +546,16 @@ void initHip9011() {
 
 	chThdCreateStatic(hipThreadStack, sizeof(hipThreadStack), PRIO_HIP9011, (tfunc_t)(void*) hipThread, NULL);
 
-	hip_addconsoleActions();
+	#if EFI_HIP_9011_DEBUG
+		hip_addconsoleActions();
+	#endif
 }
 
 /*==========================================================================*/
 /* Debug functions.															*/
 /*==========================================================================*/
+
+#if EFI_HIP_9011_DEBUG
 
 static const char *hip_state_names[] =
 {
@@ -662,5 +679,7 @@ static void hip_addconsoleActions(void) {
     addConsoleActionF("set_knock_threshold", setKnockThresh);
     addConsoleActionI("set_max_knock_sub_deg", setMaxKnockSubDeg);
 }
+
+#endif /* EFI_HIP_9011_DEBUG */
 
 #endif /* EFI_HIP_9011 */
