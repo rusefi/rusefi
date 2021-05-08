@@ -11,7 +11,10 @@
 #include "rusefi_enums.h"
 
 #define PIF						3.14159f
-#define HIP9011_BAND(bore) (900 / (PIF * (bore) / 2))
+#define HIP9011_BAND(bore)		(900 / (PIF * (bore) / 2))
+#define HIP9011_DESIRED_OUTPUT_VALUE	5.0f
+#define HIP9011_DIGITAL_OUTPUT_MAX		0x03ff	/* 10 bit max value */
+#define HIP_INPUT_CHANNELS		2
 
 #define INT_LOOKUP_SIZE 		32
 #define GAIN_LOOKUP_SIZE 		64
@@ -65,13 +68,15 @@ public:
 
 	explicit HIP9011(Hip9011HardwareInterface *hardware);
 	int sendCommand(uint8_t cmd);
+	int sendCommandGetReply(uint8_t cmd, uint8_t *reply);
 
 	float getRpmByAngleWindowAndTimeUs(int timeUs, float angleWindowWidth);
 	void prepareRpmLookup(void);
 	void setAngleWindowWidth(DEFINE_HIP_PARAMS);
 	void handleSettings(int rpm DEFINE_PARAM_SUFFIX(DEFINE_HIP_PARAMS));
 	int cylinderToChannelIdx(int cylinder);
-	void handleChannel(DEFINE_HIP_PARAMS);
+	int handleChannel(DEFINE_HIP_PARAMS);
+	int readValueAndHandleChannel(DEFINE_HIP_PARAMS);
 	float getBand(DEFINE_HIP_PARAMS);
 	int getIntegrationIndexByRpm(float rpm);
 	int getBandIndex(DEFINE_HIP_PARAMS);
@@ -104,7 +109,7 @@ public:
 	hip_state_e state;
 	int8_t cylinderNumber = -1;
 	int8_t expectedCylinderNumber = -1;
-	int raw_value;
+	int rawValue[HIP_INPUT_CHANNELS];
 
 	/* counters */
 	int samples = 0;
