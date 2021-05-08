@@ -232,8 +232,8 @@ static const float mafTransferKgH[MAF_TRANSFER_SIZE] = {
 
 
 static void setMAFTransferFunction(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
-	copyArray(config->mafDecoding, mafTransferKgH);
-	copyArray(config->mafDecodingBins, mafTransferVolts);
+	memcpy(config->mafDecoding, mafTransferKgH, sizeof(mafTransferKgH));
+	memcpy(config->mafDecodingBins, mafTransferVolts, sizeof(mafTransferVolts));
 	for (int i = MAF_TRANSFER_SIZE;i<MAF_DECODING_COUNT;i++) {
 		config->mafDecodingBins[i] = config->mafDecodingBins[MAF_TRANSFER_SIZE - 1] + i * 0.01;
 		config->mafDecoding[i] = config->mafDecoding[MAF_TRANSFER_SIZE - 1];
