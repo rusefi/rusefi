@@ -231,7 +231,7 @@ void setDodgeNeonNGCEngineConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	 */
 	//setWholeTimingTable_d(12 PASS_CONFIG_PARAMETER_SUFFIX);
 #if IGN_LOAD_COUNT == DEFAULT_IGN_LOAD_COUNT
-	MEMCPY(config->ignitionTable, fromODB);
+	copyTable(config->ignitionTable, fromODB);
 #endif
 
 	copyTable(config->fsioTable1, vBattTarget);
