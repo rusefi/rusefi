@@ -259,7 +259,8 @@ enable2ndByteCanID = false
       iatCorrection   = scalar,  S16,     64,        "%",{1/@@PACK_MULT_PERCENT@@},         0
       cltCorrection   = scalar,  S16,     66,        "%",{1/@@PACK_MULT_PERCENT@@},         0
       baroCorrection  = scalar,  S16,     68,        "%",{1/@@PACK_MULT_PERCENT@@},         0
-      fuelPidCorrection=scalar,  S16,     70,       "%",{1/@@PACK_MULT_PERCENT@@},         0
+      fuelPidCorrection=scalar,  S16,    296,       "%",{1/@@PACK_MULT_PERCENT@@},         0
+	  fuelPidCorrection2=scalar, S16,    298,       "%",{1/@@PACK_MULT_PERCENT@@},         0
 
 ; Wall model AE
       wallFuelAmount  = scalar,  U16,     72,     "ms",{1/@@PACK_MULT_MS@@},         0
@@ -1070,6 +1071,7 @@ gaugeCategory = Fueling
    fuelRunningGauge     = fuelRunning,       @@GAUGE_NAME_FUEL_RUNNING@@,      "mg",        0,   100,     0,    0,      100,    100,   3, 1
    baseFuelGauge     = baseFuel,       @@GAUGE_NAME_FUEL_BASE@@,      "mg",        0,   100, 0, 0, 100, 100,   2, 0
    fuelPidCorrectionGauge = fuelPidCorrection,       @@GAUGE_NAME_FUEL_TRIM@@,      "%",        -10,   10,     -8, -5, 5, 8,   3, 1
+   fuelPidCorrectionGauge2= fuelPidCorrection2,      @@GAUGE_NAME_FUEL_TRIM_2@@,      "%",        -10,   10,     -8, -5, 5, 8,   3, 1
    fuelingLoadGauge = fuelingLoad, @@GAUGE_NAME_FUEL_LOAD@@, "%", 0, 300, 0, 0, 300, 300, 1, 1
    totalFuelConsumptionGauge = totalFuelConsumption, @@GAUGE_NAME_FUEL_CONSUMPTION@@, "g", 0, 10000, 0, 0, 10000, 10000, 0, 0
    fuelFlowRateGauge = fuelFlowRate, @@GAUGE_NAME_FUEL_FLOW@@, "g/s", 0, 50, 0, 0, 50, 50, 2, 0
@@ -1262,6 +1264,7 @@ gaugeCategory = DynoView
    entry = actualLastInjection,     @@GAUGE_NAME_FUEL_LAST_INJECTION@@, float,  "%.3f"
    entry = baseFuel,	    @@GAUGE_NAME_FUEL_BASE@@,  float,  "%.2f"
    entry = fuelPidCorrection,@@GAUGE_NAME_FUEL_TRIM@@,  float,  "%.2f"
+   entry = fuelPidCorrection2,@@GAUGE_NAME_FUEL_TRIM_2@@,  float,  "%.2f"
    entry = veValue,         @@GAUGE_NAME_FUEL_VE@@,    float,  "%.3f"
    entry = injectorDutyCycle,@@GAUGE_NAME_FUEL_INJ_DUTY@@,float,"%.3f"
    entry = coilDutyCycle,	@@GAUGE_NAME_DWELL_DUTY@@,	float,"%.3f"

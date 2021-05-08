@@ -132,11 +132,10 @@ static void handleGetDataRequest(const CANRxFrame& rx) {
 		obdSendValue(_1_MODE, pid, 1, Sensor::get(SensorType::Clt).value_or(0) + ODB_TEMP_EXTRA);
 		break;
 	case PID_STFT_BANK1:
-		obdSendValue(_1_MODE, pid, 1, 128 * ENGINE(engineState.running.pidCorrection));
+		obdSendValue(_1_MODE, pid, 1, 128 * ENGINE(stftCorrection)[0]);
 		break;
 	case PID_STFT_BANK2:
-		// TODO: use second fueling bank
-		obdSendValue(_1_MODE, pid, 1, 128 * ENGINE(engineState.running.pidCorrection));
+		obdSendValue(_1_MODE, pid, 1, 128 * ENGINE(stftCorrection)[1]);
 		break;
 	case PID_INTAKE_MAP:
 		obdSendValue(_1_MODE, pid, 1, Sensor::get(SensorType::Map).value_or(0));
