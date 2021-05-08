@@ -12,5 +12,6 @@
     <orderEntry type="module" module-name="inifile" />
     <orderEntry type="module" module-name="logging" />
     <orderEntry type="module" module-name="logging-api" />
+    <orderEntry type="library" name="snakeyaml" level="project" />
   </component>
 </module>

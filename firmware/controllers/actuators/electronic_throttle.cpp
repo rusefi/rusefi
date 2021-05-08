@@ -93,7 +93,6 @@
 #define ETB_MAX_COUNT 2
 #endif /* ETB_MAX_COUNT */
 
-static LoggingWithStorage logger("ETB");
 static pedal2tps_t pedal2tpsMap("Pedal2Tps");
 
 EXTERN_ENGINE;
@@ -225,8 +224,8 @@ void EtbController::onConfigurationChange(pid_s* previousConfiguration) {
 	}
 }
 
-void EtbController::showStatus(Logging* logger) {
-	m_pid.showPidStatus(logger, "ETB");
+void EtbController::showStatus() {
+	m_pid.showPidStatus("ETB");
 }
 
 expected<percent_t> EtbController::observePlant() const {
@@ -540,7 +539,7 @@ void EtbController::update() {
 	m_pid.iTermMax = engineConfiguration->etb_iTermMax;
 
 	if (engineConfiguration->isVerboseETB) {
-		m_pid.showPidStatus(&logger, "ETB");
+		m_pid.showPidStatus("ETB");
 	}
 
 	// Update local state about autotune
@@ -691,30 +690,30 @@ struct EtbThread final : public PeriodicController<512> {
 	}
 };
 
-static EtbThread etbThread;
+static EtbThread etbThread CCM_OPTIONAL;
 
 #endif
 
 static void showEthInfo(void) {
 #if EFI_PROD_CODE
-	scheduleMsg(&logger, "etbAutoTune=%d",
+	efiPrintf("etbAutoTune=%d",
 			engine->etbAutoTune);
 
-	scheduleMsg(&logger, "TPS=%.2f", Sensor::get(SensorType::Tps1).value_or(0));
+	efiPrintf("TPS=%.2f", Sensor::get(SensorType::Tps1).value_or(0));
 
 
-	scheduleMsg(&logger, "etbControlPin1=%s duty=%.2f freq=%d",
+	efiPrintf("etbControlPin1=%s duty=%.2f freq=%d",
 			hwPortname(CONFIG(etbIo[0].controlPin1)),
 			currentEtbDuty,
 			engineConfiguration->etbFreq);
 
 	for (int i = 0; i < ETB_COUNT; i++) {
-		scheduleMsg(&logger, "ETB%d", i);
-		scheduleMsg(&logger, " dir1=%s", hwPortname(CONFIG(etbIo[i].directionPin1)));
-		scheduleMsg(&logger, " dir2=%s", hwPortname(CONFIG(etbIo[i].directionPin2)));
-		scheduleMsg(&logger, " control=%s", hwPortname(CONFIG(etbIo[i].controlPin1)));
-		scheduleMsg(&logger, " disable=%s", hwPortname(CONFIG(etbIo[i].disablePin)));
-		showDcMotorInfo(&logger, i);
+		efiPrintf("ETB%d", i);
+		efiPrintf(" dir1=%s", hwPortname(CONFIG(etbIo[i].directionPin1)));
+		efiPrintf(" dir2=%s", hwPortname(CONFIG(etbIo[i].directionPin2)));
+		efiPrintf(" control=%s", hwPortname(CONFIG(etbIo[i].controlPin1)));
+		efiPrintf(" disable=%s", hwPortname(CONFIG(etbIo[i].disablePin)));
+		showDcMotorInfo(i);
 	}
 
 #endif /* EFI_PROD_CODE */
@@ -738,7 +737,7 @@ static void etbPidReset(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
  * manual duty cycle control without PID. Percent value from 0 to 100
  */
 void setThrottleDutyCycle(percent_t level) {
-	scheduleMsg(&logger, "setting ETB duty=%f%%", level);
+	efiPrintf("setting ETB duty=%f%%", level);
 	if (cisnan(level)) {
 		directPwmValue = NAN;
 		return;
@@ -749,7 +748,7 @@ void setThrottleDutyCycle(percent_t level) {
 	for (int i = 0 ; i < ETB_COUNT; i++) {
 		setDcMotorDuty(i, dc);
 	}
-	scheduleMsg(&logger, "duty ETB duty=%f", dc);
+	efiPrintf("duty ETB duty=%f", dc);
 }
 
 static void setEtbFrequency(int frequency) {
@@ -761,7 +760,7 @@ static void setEtbFrequency(int frequency) {
 }
 
 static void etbReset() {
-	scheduleMsg(&logger, "etbReset");
+	efiPrintf("etbReset");
 	
 	for (int i = 0 ; i < ETB_COUNT; i++) {
 		setDcMotorDuty(i, 0);

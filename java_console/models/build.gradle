@@ -11,6 +11,7 @@ dependencies {
     implementation project(':shared_io')
     implementation project(':inifile')
     implementation libs.annotations
+    implementation libs.snakeyaml
 
     testImplementation libs.junit
 }

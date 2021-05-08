@@ -6,10 +6,8 @@
 
 #include "engine_ptr.h"
 
-class Logging;
-
 // Call this once at startup to initialize, configure, and subscribe sensors
-void initNewSensors(Logging* logger DECLARE_ENGINE_PARAMETER_SUFFIX);
+void initNewSensors(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 
 // Call this whenever the configuration may have changed, so any sensors
 // can be reconfigured with the new settings.
@@ -28,7 +26,7 @@ void initCanSensors();
 void initLambda(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 void initFlexSensor(DECLARE_CONFIG_PARAMETER_SIGNATURE);
 void initFuelLevel(DECLARE_CONFIG_PARAMETER_SIGNATURE);
-void initBaro();
+void initBaro(DECLARE_CONFIG_PARAMETER_SIGNATURE);
 
 // Sensor reconfiguration
 void reconfigureVbatt(DECLARE_CONFIG_PARAMETER_SIGNATURE);

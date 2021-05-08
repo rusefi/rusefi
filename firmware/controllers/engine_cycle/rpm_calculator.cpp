@@ -84,8 +84,6 @@ int RpmCalculator::getRpm() const {
 
 EXTERN_ENGINE;
 
-static Logging * logger;
-
 RpmCalculator::RpmCalculator() :
 		StoredValueSensor(SensorType::Rpm, 0)
 	{
@@ -209,7 +207,7 @@ void RpmCalculator::setStopped() {
 		assignRpmValue(0);
 		// needed by 'useNoiselessTriggerDecoder'
 		engine->triggerCentral.noiseFilter.resetAccumSignalData();
-		scheduleMsg(logger, "engine stopped");
+		efiPrintf("engine stopped");
 	}
 	state = STOPPED;
 }
@@ -308,7 +306,7 @@ void rpmShaftPositionCallback(trigger_event_e ckpSignalType,
 		instantRpm = minF(instantRpm, CONFIG(cranking.rpm) - 1);
 		rpmState->assignRpmValue(instantRpm);
 #if 0
-		scheduleMsg(logger, "** RPM: idx=%d sig=%d iRPM=%d", index, ckpSignalType, instantRpm);
+		efiPrintf("** RPM: idx=%d sig=%d iRPM=%d", index, ckpSignalType, instantRpm);
 #endif
 	}
 }
@@ -374,10 +372,9 @@ float getCrankshaftAngleNt(efitick_t timeNt DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	return rpm == 0 ? NAN : timeSinceZeroAngle / oneDegreeSeconds;
 }
 
-void initRpmCalculator(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX) {
+void initRpmCalculator(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	INJECT_ENGINE_REFERENCE(&ENGINE(rpmCalculator));
 
-	logger = sharedLogger;
 #if ! HW_CHECK_MODE
 	if (hasFirmwareError()) {
 		return;

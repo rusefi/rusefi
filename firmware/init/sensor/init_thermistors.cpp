@@ -28,13 +28,12 @@ static CCM_OPTIONAL FunctionalSensor aux2(SensorType::AuxTemp2, MS2NT(10));
 static FuncPair fclt, fiat, faux1, faux2;
 
 void validateThermistorConfig(thermistor_conf_s& cfg) {
-	if (
-		cfg.tempC_1 >= cfg.tempC_2 ||
-		cfg.tempC_2 >= cfg.tempC_3 ||
-		cfg.resistance_1 < cfg.resistance_2 ||
-		cfg.resistance_2 < cfg.resistance_3
-	) {
-		firmwareError(OBD_Engine_Coolant_Temperature_Circuit_Malfunction, "Invalid thermistor configuration: please check that temperatures & resistances are in the correct order.");
+	if (cfg.tempC_1 >= cfg.tempC_2 ||
+		cfg.tempC_2 >= cfg.tempC_3) {
+		firmwareError(OBD_Engine_Coolant_Temperature_Circuit_Malfunction, "Invalid thermistor configuration: please check that temperatures are in the ascending order %f %f %f",
+				cfg.tempC_1,
+				cfg.tempC_2,
+				cfg.tempC_3);
 	}
 }
 

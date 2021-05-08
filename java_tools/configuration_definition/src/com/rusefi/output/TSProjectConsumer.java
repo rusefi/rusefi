@@ -13,14 +13,13 @@ import static com.rusefi.ConfigDefinition.EOL;
 
 public class TSProjectConsumer implements ConfigurationConsumer {
     private static final String TS_FILE_INPUT_NAME = "rusefi.input";
-    private static final int LENGTH = 24;
     private static final String CONFIG_DEFINITION_START = "CONFIG_DEFINITION_START";
     private static final String CONFIG_DEFINITION_END = "CONFIG_DEFINITION_END";
     private static final String TS_CONDITION = "@@if_";
     public static final String SETTING_CONTEXT_HELP_END = "SettingContextHelpEnd";
     public static final String SETTING_CONTEXT_HELP = "SettingContextHelp";
     public static String TS_FILE_OUTPUT_NAME = "rusefi.ini";
-    private StringBuilder settingContextHelp = new StringBuilder();
+    private final StringBuilder settingContextHelp = new StringBuilder();
 
     private final CharArrayWriter tsWriter;
     private final String tsPath;
@@ -148,7 +147,7 @@ public class TSProjectConsumer implements ConfigurationConsumer {
     }
 
     protected void writeTunerStudioFile(String tsPath, String fieldsSection) throws IOException {
-        TsFileContent tsContent = readTsFile(tsPath);
+        TsFileContent tsContent = readTsTemplateInputFile(tsPath);
         SystemOut.println("Got " + tsContent.getPrefix().length() + "/" + tsContent.getPostfix().length() + " of " + TS_FILE_INPUT_NAME);
 
         // File.getPath() would eliminate potential separator at the end of the path
@@ -175,7 +174,11 @@ public class TSProjectConsumer implements ConfigurationConsumer {
         tsHeader.close();
     }
 
-    private static TsFileContent readTsFile(String tsPath) throws IOException {
+    /**
+     * rusefi.input has all the content of the future .ini file with the exception of data page
+     * TODO: start generating [outputs] section as well
+     */
+    private static TsFileContent readTsTemplateInputFile(String tsPath) throws IOException {
         String fileName = getTsFileInputName(tsPath);
         BufferedReader r = new BufferedReader(new InputStreamReader(new FileInputStream(fileName), CHARSET.name()));
 
@@ -198,7 +201,7 @@ public class TSProjectConsumer implements ConfigurationConsumer {
             if (line.contains(TS_CONDITION)) {
                 String token = getToken(line);
                 String strValue = VariableRegistry.INSTANCE.get(token);
-                boolean value = Boolean.valueOf(strValue);
+                boolean value = Boolean.parseBoolean(strValue);
                 if (!value)
                     continue; // skipping this line
                 line = removeToken(line);

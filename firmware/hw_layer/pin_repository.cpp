@@ -33,8 +33,6 @@ bool isBrainPinValid(brain_pin_e brainPin)
 #include "smart_gpio.h"
 #include "hardware.h"
 
-static LoggingWithStorage logger("pin repos");
-
 EXTERN_CONFIG;
 
 static PinRepository pinRepository;
@@ -77,14 +75,14 @@ void tle8888_dump_regs(void)
 	// since responses are always in the NEXT transmission we will have this one first
 	tle8888_read_reg(0, NULL);
 
-	scheduleMsg(&logger, "register: data");
+	efiPrintf("register: data");
 	for (int request = 0; request <= 0x7e + 1; request++) {
 		uint16_t tmp;
 		tle8888_read_reg(request < (0x7e + 1) ? request : 0x7e, &tmp);
 		uint8_t reg = getRegisterFromResponse(tmp);
 		uint8_t data = getDataFromResponse(tmp);
 
-		scheduleMsg(&logger, "%02x: %02x", reg, data);
+		efiPrintf("%02x: %02x", reg, data);
 	}
 }
 #endif
@@ -99,7 +97,7 @@ static void reportPins(void) {
 			int pin = getBrainPinIndex(brainPin);
 			ioportid_t port = getBrainPinPort(brainPin);
 
-			scheduleMsg(&logger, "pin %s%d: %s", portname(port), pin, pin_user);
+			efiPrintf("pin %s%d: %s", portname(port), pin, pin_user);
 		}
 	}
 
@@ -132,27 +130,27 @@ static void reportPins(void) {
 			/* here show all pins, unused too */
 			if (pin_name != NULL) {
 				// this probably uses a lot of output buffer!
-				scheduleMsg(&logger, "ext %s: %s diagnostic: %s",
+				efiPrintf("ext %s: %s diagnostic: %s",
 					pin_name, pin_user ? pin_user : "free", pin_error);
 			} else {
 				const char *chip_name = gpiochips_getChipName(brainPin);
 				/* if chip exist */
 				if (chip_name != NULL) {
-					scheduleMsg(&logger, "ext %s.%d: %s diagnostic: %s",
+					efiPrintf("ext %s.%d: %s diagnostic: %s",
 						chip_name, gpiochips_getPinOffset(brainPin), pin_user ? pin_user : "free", pin_error);
 				}
 			}
 		}
 	#endif
 
-	scheduleMsg(&logger, "Total pins count: %d", pinRepository.totalPinsUsed);
+	efiPrintf("Total pins count: %d", pinRepository.totalPinsUsed);
 }
 
-void printSpiConfig(Logging *logging, const char *msg, spi_device_e device) {
+void printSpiConfig(const char *msg, spi_device_e device) {
 #if HAL_USE_SPI
-	scheduleMsg(logging, "%s %s mosi=%s", msg, getSpi_device_e(device), hwPortname(getMosiPin(device)));
-	scheduleMsg(logging, "%s %s miso=%s", msg, getSpi_device_e(device), hwPortname(getMisoPin(device)));
-	scheduleMsg(logging, "%s %s sck=%s",  msg, getSpi_device_e(device), hwPortname(getSckPin(device)));
+	efiPrintf("%s %s mosi=%s", msg, getSpi_device_e(device), hwPortname(getMosiPin(device)));
+	efiPrintf("%s %s miso=%s", msg, getSpi_device_e(device), hwPortname(getMisoPin(device)));
+	efiPrintf("%s %s sck=%s",  msg, getSpi_device_e(device), hwPortname(getSckPin(device)));
 #endif // HAL_USE_SPI
 }
 
@@ -228,7 +226,7 @@ bool brain_pin_is_ext(brain_pin_e brainPin)
 
 bool brain_pin_markUsed(brain_pin_e brainPin, const char *msg) {
 #if ! EFI_BOOTLOADER
-	scheduleMsg(&logger, "%s on %s", msg, hwPortname(brainPin));
+	efiPrintf("%s on %s", msg, hwPortname(brainPin));
 #endif
 
 	int index = brainPin_to_index(brainPin);

@@ -16,7 +16,6 @@
 #include "engine_configuration.h"
 
 EXTERN_CONFIG
-extern LoggingWithStorage sharedLogger;
 
 extern int canWriteOk;
 extern int canWriteNotOk;
@@ -58,7 +57,7 @@ CanTxMessage::~CanTxMessage() {
 	}
 
 	if (CONFIG(debugMode) == DBG_CAN) {
-		scheduleMsg(&sharedLogger, "Sending CAN message: SID %x/%x %x %x %x %x %x %x %x %x", CAN_SID(m_frame), m_frame.DLC,
+		efiPrintf("Sending CAN message: SID %x/%x %x %x %x %x %x %x %x %x", CAN_SID(m_frame), m_frame.DLC,
 				m_frame.data8[0], m_frame.data8[1],
 				m_frame.data8[2], m_frame.data8[3],
 				m_frame.data8[4], m_frame.data8[5],

@@ -10,6 +10,7 @@
 
 #include "subaru.h"
 #include "custom_engine.h"
+#include "allsensors.h"
 
 EXTERN_CONFIG;
 
@@ -20,8 +21,6 @@ void setSubaru2003Wrx(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	engineConfiguration->trigger.type = TT_TOOTHED_WHEEL;
 	engineConfiguration->trigger.customTotalToothCount = 5;
 	engineConfiguration->trigger.customSkippedToothCount = 1;
-
-	engineConfiguration->sensorChartFrequency = 2;
 
 	engineConfiguration->useStepperIdle = true;
 
@@ -83,9 +82,7 @@ void setSubaruEG33Defaults(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	/* TODO: */
 	engineConfiguration->globalTriggerAngleOffset = 114;	// the end of 19th tooth?
 
-	/* TODO: */
-	//engineConfiguration->fuelAlgorithm = LM_REAL_MAF;
-	engineConfiguration->fuelAlgorithm = LM_ALPHA_N;
+	engineConfiguration->fuelAlgorithm = LM_REAL_MAF;
 
 	engineConfiguration->specs.displacement = 3.30;
 	engineConfiguration->injector.flow = 250;
@@ -103,10 +100,9 @@ void setSubaruEG33Defaults(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	engineConfiguration->canReadEnabled = true;
 	engineConfiguration->canWriteEnabled = false;
 
-	/* TODO: */
-	//engineConfiguration->tpsMin = convertVoltageTo10bitADC(0.250);
-	//engineConfiguration->tpsMax = convertVoltageTo10bitADC(4.538);
-	//engineConfiguration->tpsMax = convertVoltageTo10bitADC(5.000);
+	/* Fully closed - 0.9V, fully opened - 4.7 (?) */
+	engineConfiguration->tpsMin = convertVoltageTo10bitADC(0.9);
+	engineConfiguration->tpsMax = convertVoltageTo10bitADC(4.7);
 	engineConfiguration->tpsErrorDetectionTooLow = -10; // -10% open
 	engineConfiguration->tpsErrorDetectionTooHigh = 110; // 110% open
 

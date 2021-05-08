@@ -122,7 +122,7 @@ public:
 
 protected:
 	// Print sensor info - current RPM state
-	void showInfo(Logging* logger, const char* sensorName) const override;
+	void showInfo(const char* sensorName) const override;
 
 private:
 	/**
@@ -168,7 +168,7 @@ void tdcMarkCallback(
 /**
  * @brief   Initialize RPM calculator
  */
-void initRpmCalculator(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX);
+void initRpmCalculator(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 
 float getCrankshaftAngleNt(efitick_t timeNt DECLARE_ENGINE_PARAMETER_SUFFIX);
 

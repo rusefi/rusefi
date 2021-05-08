@@ -21,8 +21,6 @@
 	#error "PAL_USE_CALLBACKS should be enabled to use HAL_TRIGGER_USE_PAL"
 #endif
 
-static Logging *logger;
-
 EXTERN_ENGINE;
 
 static ioline_t shaftLines[TRIGGER_SUPPORTED_CHANNELS];
@@ -32,9 +30,9 @@ static void shaft_callback(void *arg) {
 	// do the time sensitive things as early as possible!
 	efitick_t stamp = getTimeNowNt();
 	TRIGGER_BAIL_IF_DISABLED
-#if HW_CHECK_MODE
-	TRIGGER_BAIL_IF_SELF_STIM
-#endif
+//#if HW_CHECK_MODE
+//	TRIGGER_BAIL_IF_SELF_STIM
+//#endif
 
 	int index = (int)arg;
 	ioline_t pal_line = shaftLines[index];
@@ -66,9 +64,9 @@ static void shaft_callback(void *arg) {
 static void cam_callback(void *arg) {
 	efitick_t stamp = getTimeNowNt();
 	TRIGGER_BAIL_IF_DISABLED
-#if HW_CHECK_MODE
-	TRIGGER_BAIL_IF_SELF_STIM
-#endif
+//#if HW_CHECK_MODE
+//	TRIGGER_BAIL_IF_SELF_STIM
+//#endif
 
 	int index = (int)arg;
 	ioline_t pal_line = camLines[index];
@@ -89,7 +87,7 @@ static void cam_callback(void *arg) {
 int extiTriggerTurnOnInputPin(const char *msg, int index, bool isTriggerShaft) {
 	brain_pin_e brainPin = isTriggerShaft ? CONFIG(triggerInputPins)[index] : engineConfiguration->camInputs[index];
 
-	scheduleMsg(logger, "extiTriggerTurnOnInputPin %s %s", msg, hwPortname(brainPin));
+	efiPrintf("extiTriggerTurnOnInputPin %s %s", msg, hwPortname(brainPin));
 
 	/* TODO:
 	 * * do not set to both edges if we need only one
@@ -109,8 +107,7 @@ void extiTriggerTurnOffInputPin(brain_pin_e brainPin) {
 	efiExtiDisablePin(brainPin);
 }
 
-void extiTriggerTurnOnInputPins(Logging *sharedLogger) {
-	logger = sharedLogger;
+void extiTriggerTurnOnInputPins() {
 }
 
 #endif /* (EFI_SHAFT_POSITION_INPUT && (HAL_TRIGGER_USE_PAL == TRUE)) */

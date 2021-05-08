@@ -67,6 +67,8 @@ float maxF(float i1, float i2);
 float minF(float i1, float i2);
 char* itoa10(char *p, int num);
 bool isSameF(float v1, float v2);
+
+int clampI(int min, int clamp, int max);
 float clampF(float min, float clamp, float max);
 
 /**

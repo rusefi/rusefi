@@ -81,11 +81,11 @@ EngineTestHelper::EngineTestHelper(engine_type_e engineType, configuration_callb
 
 	initDataStructures(PASS_ENGINE_PARAMETER_SIGNATURE);
 
-	resetConfigurationExt(NULL, configurationCallback, engineType PASS_ENGINE_PARAMETER_SUFFIX);
+	resetConfigurationExt(configurationCallback, engineType PASS_ENGINE_PARAMETER_SUFFIX);
 
 	enginePins.startPins(PASS_ENGINE_PARAMETER_SIGNATURE);
 
-	commonInitEngineController(NULL PASS_ENGINE_PARAMETER_SUFFIX);
+	commonInitEngineController(PASS_ENGINE_PARAMETER_SIGNATURE);
 
 	engineConfiguration->mafAdcChannel = EFI_ADC_10;
 	engine->engineState.mockAdcState.setMockVoltage(EFI_ADC_10, 0 PASS_ENGINE_PARAMETER_SUFFIX);
@@ -323,7 +323,7 @@ void EngineTestHelper::applyTriggerWaveform() {
 	Engine *engine = &this->engine;
 	EXPAND_Engine
 
-	ENGINE(initializeTriggerWaveform(NULL PASS_ENGINE_PARAMETER_SUFFIX));
+	ENGINE(initializeTriggerWaveform(PASS_ENGINE_PARAMETER_SIGNATURE));
 
 	incrementGlobalConfigurationVersion(PASS_ENGINE_PARAMETER_SIGNATURE);
 }

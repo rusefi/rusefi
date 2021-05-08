@@ -51,6 +51,8 @@ public:
 
 	bool engineMovedRecently() const {
 		// Trigger event some time in the past second = engine moving
+		// distributor single tooth, large engines crank at close to 120 RPM
+		// todo: make this logic account current trigger to stop idle much faster if we have more teeth on trigger wheels?
 		return getTimeSinceTriggerEvent(getTimeNowNt()) < 1.0f;
 	}
 
@@ -84,10 +86,11 @@ public:
 };
 
 void triggerInfo(void);
+void handleShaftSignal(trigger_event_e signal, efitick_t timestamp);
 void hwHandleShaftSignal(trigger_event_e signal, efitick_t timestamp);
 void hwHandleVvtCamSignal(trigger_value_e front, efitick_t timestamp, int index DECLARE_ENGINE_PARAMETER_SUFFIX);
 
-void initTriggerCentral(Logging *sharedLogger);
+void initTriggerCentral();
 
 int isSignalDecoderError(void);
 

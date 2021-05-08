@@ -47,13 +47,6 @@
 
 EXTERN_ENGINE;
 
-// 10 seconds
-#define CONSOLE_WRITE_TIMEOUT 10000
-
-#if (defined(TS_PRIMARY_SERIAL) && ! EFI_SIMULATOR)
-static event_listener_t consoleEventListener;
-#endif
-
 bool consoleByteArrived = false;
 
 void onDataArrived(void) {
@@ -62,9 +55,6 @@ void onDataArrived(void) {
 
 CommandHandler console_line_callback;
 
-static Logging *logger;
-
-void startConsole(Logging *sharedLogger, CommandHandler console_line_callback_p) {
-	logger = sharedLogger;
+void startConsole(CommandHandler console_line_callback_p) {
 	console_line_callback = console_line_callback_p;
 }

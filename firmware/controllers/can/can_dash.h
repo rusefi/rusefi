@@ -6,11 +6,6 @@
  */
 
 #pragma once
+#include "can.h"
 
-void canDashboardBMW();
-void canDashboardFiat();
-void canDashboardVAG();
-void canMazdaRX8();
-void canDashboardW202();
-void canDashboardBMWE90();
-void canDashboardVagMqb();
+void updateDash(CanCycle cycle);

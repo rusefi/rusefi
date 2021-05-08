@@ -1,3 +1,7 @@
+/**
+ * @file knock_config.h
+ */
+
 #pragma once
 
 // Knock is on ADC3

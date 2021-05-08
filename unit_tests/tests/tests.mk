@@ -15,9 +15,9 @@ TESTS_SRC_CPP = \
 	tests/ignition_injection/test_fuelCut.cpp \
 	tests/ignition_injection/test_fuel_computer.cpp \
 	tests/ignition_injection/test_injector_model.cpp \
+	tests/lua/test_lua_basic.cpp \
+	tests/lua/test_lua_hooks.cpp \
 	tests/sensor/test_cj125.cpp \
-	tests/util/test_buffered_writer.cpp \
-	tests/util/test_error_accumulator.cpp \
 	tests/util/test_timer.cpp \
 	tests/test_util.cpp \
 	tests/test_start_stop.cpp \
@@ -40,6 +40,7 @@ TESTS_SRC_CPP = \
 	tests/test_tunerstudio.cpp \
 	tests/test_pwm_generator.cpp \
 	tests/test_logic_expression.cpp \
+	tests/test_log_buffer.cpp \
 	tests/test_signal_executor.cpp \
 	tests/test_cpp_memory_layout.cpp \
 	tests/test_sensors.cpp \

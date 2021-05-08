@@ -25,7 +25,25 @@ Release template (copy/paste this for new release):
 
 All notable user-facing or behavior-altering changes will be documented in this file.
 
-## XXX 2021 Release
+## Month 202x Release - "Release Name"
+### Fixed
+ - LCD screen works again #2576
+
+## April 2021 Release - "Malbec" 
+### Added
+ - mount SD card and drive containing TunerStudio ini at the same time
+ - VAG MQB tachometer CAN integration
+### Fixed
+ - fix error/warning buffer overflow #2456
+ - engine sniffer "show only interesting" fix #2528
+ - SD card logs bugfix #2556 
+ - Too many small logs are zero size #2553
+ - Launcher splash screen is freezy #2560
+ - NB2 trigger decoder #2533
+
+## April 2021 Release "Be Kind to Lawyers Day"
+### Added
+ - mount SD card and drive containing TunerStudio ini at the same time
 ### Fixed
  - engine sniffer "show only interesting" fix #2528
 

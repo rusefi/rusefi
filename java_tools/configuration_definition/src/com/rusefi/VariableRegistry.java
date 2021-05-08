@@ -3,7 +3,6 @@ package com.rusefi;
 import com.rusefi.enum_reader.Value;
 import com.rusefi.util.LazyFile;
 import com.rusefi.util.SystemOut;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.IOException;
@@ -35,7 +34,8 @@ public class VariableRegistry  {
     public VariableRegistry() {
     }
 
-    public static String getEnumOptionsForTunerStudio(EnumsReader enumsReader, VariableRegistry variableRegistry, String enumName) {
+    @Nullable
+    public TreeMap<Integer, String> resolveEnumValues(EnumsReader enumsReader, String enumName) {
         TreeMap<Integer, String> valueNameById = new TreeMap<>();
 
         Map<String, Value> stringValueMap = enumsReader.getEnums().get(enumName);
@@ -48,13 +48,20 @@ public class VariableRegistry  {
             if (isNumeric(value.getValue())) {
                 valueNameById.put(value.getIntValue(), value.getName());
             } else {
-                String valueFromRegistry = variableRegistry.get(value.getValue());
+                String valueFromRegistry = get(value.getValue());
                 if (valueFromRegistry == null)
                     throw new IllegalStateException("No value for " + value);
                 int intValue = Integer.parseInt(valueFromRegistry);
                 valueNameById.put(intValue, value.getName());
             }
         }
+        return valueNameById;
+    }
+
+    public String getEnumOptionsForTunerStudio(EnumsReader enumsReader, String enumName) {
+        TreeMap<Integer, String> valueNameById = resolveEnumValues(enumsReader, enumName);
+        if (valueNameById == null)
+            return null;
 
         int maxValue = valueNameById.lastKey();
 

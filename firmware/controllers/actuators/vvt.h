@@ -13,10 +13,9 @@
 #include "pwm_generator_logic.h"
 #include "pid.h"
 
-class Logging;
 class ValueProvider3D;
 
-void initAuxPid(Logging *sharedLogger);
+void initAuxPid();
 void startVvtControlPins();
 void stopVvtControlPins();
 

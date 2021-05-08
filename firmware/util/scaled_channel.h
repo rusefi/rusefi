@@ -23,19 +23,26 @@
 template <typename T, int mult = 1>
 class scaled_channel {
 public:
-	scaled_channel() : m_value(static_cast<T>(0)) { }
-	scaled_channel(float val)
+	constexpr scaled_channel() : m_value(static_cast<T>(0)) { }
+	constexpr scaled_channel(float val)
 		: m_value(val * mult)
 	{
 	}
 
 	// Allow reading back out as a float (note: this may be lossy!)
-	operator float() const {
+	constexpr operator float() const {
 		return m_value / (float)mult;
 	}
 
+	constexpr const char* getFirstByteAddr() const {
+		return &m_firstByte;
+	}
+
 private:
-	T m_value;
+	union {
+		T m_value;
+		char m_firstByte;
+	};
 };
 
 // We need to guarantee that scaled values containing some type are the same size

@@ -51,7 +51,7 @@ brain_pin_e getSckPin(spi_device_e device);
 void applyNewHardwareSettings(void);
 
 // Initialize hardware that doesn't require configuration to be loaded
-void initHardwareNoConfig(Logging *l);
+void initHardwareNoConfig();
 
 // Initialize hardware with configuration loaded
 void initHardware();

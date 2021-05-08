@@ -32,9 +32,6 @@
 
 EXTERN_ENGINE;
 
-// this does not look exactly right
-extern LoggingWithStorage engineLogger;
-
 WarningCodeState::WarningCodeState() {
 	clear();
 }
@@ -69,7 +66,7 @@ MockAdcState::MockAdcState() {
 #if EFI_ENABLE_MOCK_ADC
 void MockAdcState::setMockVoltage(int hwChannel, float voltage DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	efiAssertVoid(OBD_PCM_Processor_Fault, hwChannel >= 0 && hwChannel < MOCK_ADC_SIZE, "hwChannel out of bounds");
-	scheduleMsg(&engineLogger, "fake voltage: channel %d value %.2f", hwChannel, voltage);
+	efiPrintf("fake voltage: channel %d value %.2f", hwChannel, voltage);
 
 	fakeAdcValues[hwChannel] = voltsToAdc(voltage);
 	hasMockAdc[hwChannel] = true;
@@ -218,10 +215,10 @@ void StartupFuelPumping::setPumpsCounter(int newValue) {
 		pumpsCounter = newValue;
 
 		if (pumpsCounter == PUMPS_TO_PRIME) {
-			scheduleMsg(&engineLogger, "let's squirt prime pulse %.2f", pumpsCounter);
+			efiPrintf("let's squirt prime pulse %.2f", pumpsCounter);
 			pumpsCounter = 0;
 		} else {
-			scheduleMsg(&engineLogger, "setPumpsCounter %d", pumpsCounter);
+			efiPrintf("setPumpsCounter %d", pumpsCounter);
 		}
 	}
 }

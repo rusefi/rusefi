@@ -59,6 +59,10 @@ float minF(float i1, float i2) {
 	return i1 < i2 ? i1 : i2;
 }
 
+int clampI(int min, int clamp, int max) {
+	return maxI(min, minI(clamp, max));
+}
+
 float clampF(float min, float clamp, float max) {
 	return maxF(min, minF(clamp, max));
 }
@@ -237,7 +241,7 @@ float atoff(const char *param) {
 	char *string = todofixthismesswithcopy;
 	if (indexOf(string, 'n') != -1 || indexOf(string, 'N') != -1) {
 #if ! EFI_SIMULATOR
-		scheduleMsg(nullptr, "NAN from [%s]", string);
+		efiPrintf("NAN from [%s]", string);
 #endif
 		return (float) NAN;
 	}

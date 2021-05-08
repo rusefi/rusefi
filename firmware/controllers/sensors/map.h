@@ -8,10 +8,9 @@
 
 #include "engine_ptr.h"
 
-class Logging;
 struct air_pressure_sensor_config_s;
 
-void initMapDecoder(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX);
+void initMapDecoder(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 
 /**
  * @return Raw MAP sensor value right now

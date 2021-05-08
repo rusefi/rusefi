@@ -27,10 +27,6 @@ void setOperationMode(engine_configuration_s *engineConfiguration, operation_mod
 void prepareVoidConfiguration(engine_configuration_s *activeConfiguration);
 void setTargetRpmCurve(int rpm DECLARE_CONFIG_PARAMETER_SUFFIX);
 void setLambdaMap(lambda_table_t table, float value);
-/**
- * See also setLinearCurve()
- */
-void setMap(fuel_table_t table, float value);
 void setWholeIgnitionIatCorr(float value DECLARE_CONFIG_PARAMETER_SUFFIX);
 void setFuelTablesLoadBin(float minValue, float maxValue DECLARE_CONFIG_PARAMETER_SUFFIX);
 void setWholeIatCorrTimingTable(float value DECLARE_CONFIG_PARAMETER_SUFFIX);
@@ -58,9 +54,9 @@ typedef void (*configuration_callback_t)(engine_configuration_s*);
 
 #ifdef __cplusplus
 // because of 'Logging' class parameter these functions are visible only to C++ code but C code
-void loadConfiguration(Logging* logger DECLARE_ENGINE_PARAMETER_SUFFIX);
-void resetConfigurationExt(Logging * logger, configuration_callback_t boardCallback, engine_type_e engineType DECLARE_ENGINE_PARAMETER_SUFFIX);
-void resetConfigurationExt(Logging * logger, engine_type_e engineType DECLARE_ENGINE_PARAMETER_SUFFIX);
+void loadConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE);
+void resetConfigurationExt(configuration_callback_t boardCallback, engine_type_e engineType DECLARE_ENGINE_PARAMETER_SUFFIX);
+void resetConfigurationExt(engine_type_e engineType DECLARE_ENGINE_PARAMETER_SUFFIX);
 
 void rememberCurrentConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 #endif /* __cplusplus */

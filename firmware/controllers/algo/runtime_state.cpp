@@ -43,27 +43,20 @@ void resetMaxValues() {
 #endif /* EFI_PROD_CODE  */
 }
 
-extern LoggingWithStorage sharedLogger;
-
-
 void printRuntimeStats(void) {
-	Logging *logger = &sharedLogger;
-
-	scheduleMsg(logger, "maxSchedulingPrecisionLoss=%d", maxSchedulingPrecisionLoss);
+	efiPrintf("maxSchedulingPrecisionLoss=%d", maxSchedulingPrecisionLoss);
 
 #if EFI_CLOCK_LOCKS
-	scheduleMsg(logger, "maxLockedDuration=%d / maxTriggerReentraint=%d", maxLockedDuration, maxTriggerReentraint);
+	efiPrintf("maxLockedDuration=%d / maxTriggerReentraint=%d", maxLockedDuration, maxTriggerReentraint);
 
-	scheduleMsg(logger, "perSecondIrqDuration=%d ticks / perSecondIrqCounter=%d", perSecondIrqDuration, perSecondIrqCounter);
-	scheduleMsg(logger, "IRQ CPU utilization %f%%", perSecondIrqDuration / (float)CORE_CLOCK * 100);
+	efiPrintf("perSecondIrqDuration=%d ticks / perSecondIrqCounter=%d", perSecondIrqDuration, perSecondIrqCounter);
+	efiPrintf("IRQ CPU utilization %f%%", perSecondIrqDuration / (float)CORE_CLOCK * 100);
 
 #endif /* EFI_CLOCK_LOCKS */
 
-	scheduleMsg(logger, "maxEventCallbackDuration=%d", maxEventCallbackDuration);
+	efiPrintf("maxEventCallbackDuration=%d", maxEventCallbackDuration);
 
 #if EFI_HIP_9011
-	scheduleMsg(logger, "hipLastExecutionCount=%d", hipLastExecutionCount);
+	efiPrintf("hipLastExecutionCount=%d", hipLastExecutionCount);
 #endif /* EFI_HIP_9011 */
-
-
 }

@@ -11,7 +11,7 @@ public:
 
 	void onEdge(efitick_t nowNt);
 
-	void showInfo(Logging* /*logger*/, const char* /*sensorName*/) const override { }
+	void showInfo(const char* /*sensorName*/) const override { }
 
 private:
 	Timer m_edgeTimer;

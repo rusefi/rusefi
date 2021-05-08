@@ -8,10 +8,10 @@ struct Writer;
 class LogField {
 public:
 	template <typename TValue, int TMult = 1>
-	LogField(const scaled_channel<TValue, TMult>& toRead, const char* name, const char* units, int8_t digits)
+	constexpr LogField(const scaled_channel<TValue, TMult>& toRead, const char* name, const char* units, int8_t digits)
 		: m_type(resolveType<TValue>())
 		, m_multiplier(TMult)
-		, m_addr(reinterpret_cast<const char*>(&toRead))
+		, m_addr(toRead.getFirstByteAddr())
 		, m_digits(digits)
 		, m_size(sizeForType(resolveType<TValue>()))
 		, m_name(name)
@@ -30,7 +30,7 @@ public:
 		F32 = 7,
 	};
 
-	size_t getSize() const {
+	constexpr size_t getSize() const {
 		return m_size;
 	}
 
@@ -43,9 +43,9 @@ public:
 
 private:
 	template<typename T>
-	static Type resolveType();
+	static constexpr Type resolveType();
 
-	static size_t sizeForType(Type t) {
+	static constexpr size_t sizeForType(Type t) {
 		switch (t) {
 			case Type::U08:
 			case Type::S08:

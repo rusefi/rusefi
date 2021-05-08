@@ -96,7 +96,6 @@ AdcDevice::AdcDevice(ADCConversionGroup* hwConfig, adcsample_t *buf, size_t buf_
 #endif /* ADC_FAST_DEVICE */
 
 static uint32_t slowAdcCounter = 0;
-static LoggingWithStorage logger("ADC");
 
 // todo: move this flag to Engine god object
 static int adcDebugReporting = false;
@@ -318,61 +317,51 @@ adc_channel_e AdcDevice::getAdcHardwareIndexByInternalIndex(int index) const {
 static void printAdcValue(int channel) {
 	int value = getAdcValue("print", (adc_channel_e)channel);
 	float volts = adcToVoltsDivided(value);
-	scheduleMsg(&logger, "adc voltage : %.2f", volts);
+	efiPrintf("adc voltage : %.2f", volts);
 }
 
 static uint32_t slowAdcConversionCount = 0;
 static uint32_t slowAdcErrorsCount = 0;
 
-static void printFullAdcReport(Logging *logger) {
+static void printFullAdcReport(void) {
 #if EFI_USE_FAST_ADC
-	scheduleMsg(logger, "fast %d slow %d", fastAdc.conversionCount, slowAdcConversionCount);
+	efiPrintf("fast %d samples", fastAdc.conversionCount);
 
-	for (int index = 0; index < fastAdc.size(); index++) {
-		appendMsgPrefix(logger);
-
-		adc_channel_e hwIndex = fastAdc.getAdcHardwareIndexByInternalIndex(index);
+	for (int internalIndex = 0; internalIndex < fastAdc.size(); internalIndex++) {
+		adc_channel_e hwIndex = fastAdc.getAdcHardwareIndexByInternalIndex(internalIndex);
 
 		if (isAdcChannelValid(hwIndex)) {
 			ioportid_t port = getAdcChannelPort("print", hwIndex);
 			int pin = getAdcChannelPin(hwIndex);
-
-			int adcValue = getAvgAdcValue(hwIndex, fastAdc.samples, ADC_BUF_DEPTH_FAST, fastAdc.size());
-			logger->appendPrintf(" F ch%d %s%d", index, portname(port), pin);
-			logger->appendPrintf(" ADC%d 12bit=%d", hwIndex, adcValue);
+			int adcValue = getAvgAdcValue(internalIndex, fastAdc.samples, ADC_BUF_DEPTH_FAST, fastAdc.size());
 			float volts = adcToVolts(adcValue);
-			logger->appendPrintf(" v=%.2f", volts);
-
-			appendMsgPostfix(logger);
-			scheduleLogging(logger);
+			/* Human index starts from 1 */
+			efiPrintf(" F ch[%2d] @ %s%d ADC%d 12bit=%4d %.2fV",
+				internalIndex, portname(port), pin, hwIndex - EFI_ADC_0 + 1, adcValue, volts);
 		}
 	}
 #endif // EFI_USE_FAST_ADC
+	efiPrintf("slow %d samples", slowAdcConversionCount);
 
-	for (int index = 0; index < ADC_MAX_CHANNELS_COUNT; index++) {
-		appendMsgPrefix(logger);
-
-		adc_channel_e hwIndex = static_cast<adc_channel_e>(index + EFI_ADC_0);
+	/* we assume that all slow ADC channels are enabled */
+	for (int internalIndex = 0; internalIndex < ADC_MAX_CHANNELS_COUNT; internalIndex++) {
+		adc_channel_e hwIndex = static_cast<adc_channel_e>(internalIndex + EFI_ADC_0);
 
 		if (isAdcChannelValid(hwIndex)) {
 			ioportid_t port = getAdcChannelPort("print", hwIndex);
 			int pin = getAdcChannelPin(hwIndex);
-
-			int adcValue = slowAdcSamples[index];
-			logger->appendPrintf(" S ch%d %s%d", index, portname(port), pin);
-			logger->appendPrintf(" ADC%d 12bit=%d", hwIndex, adcValue);
+			int adcValue = slowAdcSamples[internalIndex];
 			float volts = adcToVolts(adcValue);
-			logger->appendPrintf(" v=%.2f", volts);
-
-			appendMsgPostfix(logger);
-			scheduleLogging(logger);
+			/* Human index starts from 1 */
+			efiPrintf(" S ch[%2d] @ %s%d ADC%d 12bit=%4d %.2fV",
+				internalIndex, portname(port), pin, hwIndex - EFI_ADC_0 + 1, adcValue, volts);
 		}
 	}
 }
 
 static void setAdcDebugReporting(int value) {
 	adcDebugReporting = value;
-	scheduleMsg(&logger, "adcDebug=%d", adcDebugReporting);
+	efiPrintf("adcDebug=%d", adcDebugReporting);
 }
 
 void waitForSlowAdc(uint32_t lastAdcCounter) {
@@ -516,7 +505,7 @@ static void configureInputs(void) {
 static SlowAdcController slowAdcController;
 
 void initAdcInputs() {
-	scheduleMsg(&logger, "initAdcInputs()");
+	efiPrintf("initAdcInputs()");
 
 	configureInputs();
 
@@ -538,14 +527,14 @@ void initAdcInputs() {
 
 	addConsoleActionI("adc", (VoidInt) printAdcValue);
 #else
-	scheduleMsg(&logger, "ADC disabled");
+	efiPrintf("ADC disabled");
 #endif
 }
 
-void printFullAdcReportIfNeeded(Logging *logger) {
+void printFullAdcReportIfNeeded(void) {
 	if (!adcDebugReporting)
 		return;
-	printFullAdcReport(logger);
+	printFullAdcReport();
 }
 
 #else /* not HAL_USE_ADC */

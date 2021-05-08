@@ -21,6 +21,8 @@
 #include "trigger_mazda.h"
 #include "error_handling.h"
 
+#define NB_CRANK_MAGIC 70
+
 void initializeMazdaMiataNaShape(TriggerWaveform *s) {
 	s->initialize(FOUR_STROKE_CAM_SENSOR);
 	s->setTriggerSynchronizationGap2(1.4930 * 0.6f, 1.4930 * 1.3f);
@@ -62,12 +64,16 @@ void initializeMazdaMiataNb2Crank(TriggerWaveform *s) {
 	s->tdcPosition = 60 + 655;
 
 	s->setTriggerSynchronizationGap2(0.35f, 0.98f);
-	// 384
-	s->addEventAngle(96.0f, T_PRIMARY, TV_FALL);
-	// 400
-	s->addEventAngle(100.0f, T_PRIMARY, TV_RISE);
-	s->addEventAngle(176.0f, T_PRIMARY, TV_FALL);
+	// todo: NB2 fronts are inverted comparing to NB1, life is not perfect :(
+	s->addEventAngle(180.0f - NB_CRANK_MAGIC - 4, T_PRIMARY, TV_FALL);
+	s->addEventAngle(180.0f - NB_CRANK_MAGIC, T_PRIMARY, TV_RISE);
+	s->addEventAngle(180.0f - 4, T_PRIMARY, TV_FALL);
 	s->addEventAngle(180.0f, T_PRIMARY, TV_RISE);
+}
+
+static void addNBCrankTooth(TriggerWaveform *s, angle_t angle, trigger_wheel_e const channelIndex) {
+	s->addEvent720(angle, channelIndex, TV_RISE);
+	s->addEvent720(angle + 4, channelIndex, TV_FALL);
 }
 
 static void initializeMazdaMiataNb1ShapeWithOffset(TriggerWaveform *s, float offset) {
@@ -85,14 +91,10 @@ static void initializeMazdaMiataNb1ShapeWithOffset(TriggerWaveform *s, float off
 	 */
 	s->addEvent720(20.0f, T_PRIMARY, TV_FALL);
 
-	s->addEvent720(offset + 66.0f, T_SECONDARY,  TV_RISE);
-	s->addEvent720(offset + 70.0f, T_SECONDARY, TV_FALL);
-	s->addEvent720(offset + 136.0f, T_SECONDARY, TV_RISE);
-	s->addEvent720(offset + 140.0f, T_SECONDARY, TV_FALL);
-	s->addEvent720(offset + 246.0f, T_SECONDARY, TV_RISE);
-	s->addEvent720(offset + 250.0f, T_SECONDARY, TV_FALL);
-	s->addEvent720(offset + 316.0f, T_SECONDARY, TV_RISE);
-	s->addEvent720(offset + 320.0f, T_SECONDARY, TV_FALL);
+	addNBCrankTooth(s, offset + 66.0f, T_SECONDARY);
+	addNBCrankTooth(s, offset + 66.0f + NB_CRANK_MAGIC, T_SECONDARY);
+	addNBCrankTooth(s, offset + 66.0f + 180, T_SECONDARY);
+	addNBCrankTooth(s, offset + 66.0f + 180 + NB_CRANK_MAGIC, T_SECONDARY);
 
 	s->addEvent720(340.0f, T_PRIMARY, TV_RISE);
 	s->addEvent720(360.0f, T_PRIMARY, TV_FALL);
@@ -100,14 +102,10 @@ static void initializeMazdaMiataNb1ShapeWithOffset(TriggerWaveform *s, float off
 	s->addEvent720(380.0f, T_PRIMARY, TV_RISE);
 	s->addEvent720(400.0f, T_PRIMARY, TV_FALL);
 
-	s->addEvent720(offset + 426.0f, T_SECONDARY, TV_RISE);
-	s->addEvent720(offset + 430.0f, T_SECONDARY, TV_FALL);
-	s->addEvent720(offset + 496.0f, T_SECONDARY, TV_RISE);
-	s->addEvent720(offset + 500.0f, T_SECONDARY, TV_FALL);
-	s->addEvent720(offset + 606.0f, T_SECONDARY, TV_RISE);
-	s->addEvent720(offset + 610.0f, T_SECONDARY, TV_FALL);
-	s->addEvent720(offset + 676.0f, T_SECONDARY, TV_RISE);
-	s->addEvent720(offset + 680.0f, T_SECONDARY, TV_FALL);
+	addNBCrankTooth(s, offset + 66.0f + 360, T_SECONDARY);
+	addNBCrankTooth(s, offset + 66.0f + 360 + NB_CRANK_MAGIC, T_SECONDARY);
+	addNBCrankTooth(s, offset + 66.0f + 540, T_SECONDARY);
+	addNBCrankTooth(s, offset + 66.0f + 540 + NB_CRANK_MAGIC, T_SECONDARY);
 
 	s->addEvent720(720.0f, T_PRIMARY, TV_RISE);
 }

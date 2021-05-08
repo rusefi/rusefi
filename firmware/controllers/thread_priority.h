@@ -24,6 +24,9 @@
 #define PRIO_STEPPER (NORMALPRIO + 5)
 #define PRIO_CJ125 (NORMALPRIO + 5)
 
+// Logging buffer flush is *slightly* above PRIO_CONSOLE so that we don't starve logging buffers during initialization and console commands
+#define PRIO_TEXT_LOG (NORMALPRIO + 2)
+
 // Console thread 
 #define PRIO_CONSOLE (NORMALPRIO + 1)
 
@@ -36,7 +39,10 @@
 #define PRIO_HIP9011 (NORMALPRIO - 10)
 
 // These are intentionally low priority so they can't get in the way of anything else
-#define PRIO_FLASH_WRITE LOWPRIO
+#define PRIO_FLASH_WRITE LOWPRIO + 20
 
 // USB mass storage
-#define MSD_THD_PRIO LOWPRIO
+#define MSD_THD_PRIO LOWPRIO + 20
+
+// Lua interpreter must be lowest priority, as the user's code may get stuck in an infinite loop
+#define PRIO_LUA LOWPRIO + 10

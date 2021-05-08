@@ -14,7 +14,7 @@ public abstract class BaseCHeaderConsumer implements ConfigurationConsumer {
             return comment + "\t" + BOOLEAN_TYPE + " " + configField.getName() + " : 1;" + EOL;
         }
 
-        String cEntry = ConfigDefinition.getComment(configField.getCommentContent(), currentOffset);
+        String cEntry = ConfigDefinition.getComment(configField.getCommentContent(), currentOffset, configField.getUnits());
 
         if (!configField.isArray()) {
             // not an array

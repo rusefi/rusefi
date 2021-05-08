@@ -60,7 +60,6 @@
 
 EXTERN_ENGINE;
 
-static Logging * logger;
 static bool isRunningBench = false;
 
 bool isRunningBenchTest(void) {
@@ -89,8 +88,8 @@ static void runBench(brain_pin_e brainPin, OutputPin *output, float delayMs, flo
 		return;
 	}
 
-	scheduleMsg(logger, "Running bench: ON_TIME=%d us OFF_TIME=%d us Counter=%d", onTimeUs, offTimeUs, count);
-	scheduleMsg(logger, "output on %s", hwPortname(brainPin));
+	efiPrintf("Running bench: ON_TIME=%d us OFF_TIME=%d us Counter=%d", onTimeUs, offTimeUs, count);
+	efiPrintf("output on %s", hwPortname(brainPin));
 
 	chThdSleepMicroseconds(delayUs);
 
@@ -110,7 +109,7 @@ static void runBench(brain_pin_e brainPin, OutputPin *output, float delayMs, flo
 		chThdSleepMicroseconds(onTimeUs + offTimeUs);
 	}
 
-	scheduleMsg(logger, "Done!");
+	efiPrintf("Done!");
 	isRunningBench = false;
 }
 
@@ -135,10 +134,10 @@ static void pinbench(const char *delayStr, const char *onTimeStr, const char *of
 	isBenchTestPending = true; // let's signal bench thread to wake up
 }
 
-static void doRunFuel(int humanIndex, const char *delayStr, const char * onTimeStr, const char *offTimeStr,
+static void doRunFuel(cylinders_count_t humanIndex, const char *delayStr, const char * onTimeStr, const char *offTimeStr,
 		const char *countStr) {
 	if (humanIndex < 1 || humanIndex > engineConfiguration->specs.cylindersCount) {
-		scheduleMsg(logger, "Invalid index: %d", humanIndex);
+		efiPrintf("Invalid index: %d", humanIndex);
 		return;
 	}
 	brain_pin_e b = CONFIG(injectionPins)[humanIndex - 1];
@@ -148,7 +147,7 @@ static void doRunFuel(int humanIndex, const char *delayStr, const char * onTimeS
 static void doTestSolenoid(int humanIndex, const char *delayStr, const char * onTimeStr, const char *offTimeStr,
 		const char *countStr) {
 	if (humanIndex < 1 || humanIndex > TCU_SOLENOID_COUNT) {
-		scheduleMsg(logger, "Invalid index: %d", humanIndex);
+		efiPrintf("Invalid index: %d", humanIndex);
 		return;
 	}
 	brain_pin_e b = CONFIG(tcu_solenoid)[humanIndex - 1];
@@ -158,7 +157,7 @@ static void doTestSolenoid(int humanIndex, const char *delayStr, const char * on
 static void doBenchTestFsio(int humanIndex, const char *delayStr, const char * onTimeStr, const char *offTimeStr,
 		const char *countStr) {
 	if (humanIndex < 1 || humanIndex > FSIO_COMMAND_COUNT) {
-		scheduleMsg(logger, "Invalid index: %d", humanIndex);
+		efiPrintf("Invalid index: %d", humanIndex);
 		return;
 	}
 	brain_pin_e b = CONFIG(fsioOutputPins)[humanIndex - 1];
@@ -240,10 +239,10 @@ static void fuelbench(const char * onTimeStr, const char *offTimeStr, const char
 	fuelbench2("0", "1", onTimeStr, offTimeStr, countStr);
 }
 
-static void doRunSpark(int humanIndex, const char *delayStr, const char * onTimeStr, const char *offTimeStr,
+static void doRunSpark(cylinders_count_t humanIndex, const char *delayStr, const char * onTimeStr, const char *offTimeStr,
 		const char *countStr) {
 	if (humanIndex < 1 || humanIndex > engineConfiguration->specs.cylindersCount) {
-		scheduleMsg(logger, "Invalid index: %d", humanIndex);
+		efiPrintf("Invalid index: %d", humanIndex);
 		return;
 	}
 	brain_pin_e b = CONFIG(ignitionPins)[humanIndex - 1];
@@ -285,7 +284,7 @@ private:
 
 		if (widebandUpdatePending) {
 #if EFI_WIDEBAND_FIRMWARE_UPDATE && EFI_CAN_SUPPORT
-			updateWidebandFirmware(logger);
+			updateWidebandFirmware();
 #endif
 			widebandUpdatePending = false;
 		}
@@ -399,7 +398,7 @@ static void fatalErrorForPresetApply() {
 }
 
 void executeTSCommand(uint16_t subsystem, uint16_t index) {
-	scheduleMsg(logger, "IO test subsystem=%d index=%d", subsystem, index);
+	efiPrintf("IO test subsystem=%d index=%d", subsystem, index);
 
 	bool running = !ENGINE(rpmCalculator).isStopped();
 
@@ -437,7 +436,7 @@ void executeTSCommand(uint16_t subsystem, uint16_t index) {
 		break;
 #ifdef EFI_WIDEBAND_FIRMWARE_UPDATE
 	case 0x15:
-		setWidebandOffset(logger, index);
+		setWidebandOffset(index);
 		break;
 #endif // EFI_WIDEBAND_FIRMWARE_UPDATE
 	case CMD_TS_BENCH_CATEGORY:
@@ -494,9 +493,7 @@ void executeTSCommand(uint16_t subsystem, uint16_t index) {
 	}
 }
 
-void initBenchTest(Logging *sharedLogger) {
-	logger = sharedLogger;
-
+void initBenchTest() {
 	addConsoleAction("fuelpumpbench", fuelPumpBench);
 	addConsoleAction("acrelaybench", acRelayBench);
 	addConsoleActionS("fuelpumpbench2", fuelPumpBenchExt);
@@ -506,7 +503,7 @@ void initBenchTest(Logging *sharedLogger) {
 
 #if EFI_WIDEBAND_FIRMWARE_UPDATE
 	addConsoleAction("update_wideband", []() { widebandUpdatePending = true; });
-	addConsoleActionI("set_wideband_index", [](int index) { setWidebandOffset(logger, index); });
+	addConsoleActionI("set_wideband_index", [](int index) { setWidebandOffset(index); });
 #endif // EFI_WIDEBAND_FIRMWARE_UPDATE
 
 	addConsoleAction(CMD_STARTER_BENCH, starterRelayBench);

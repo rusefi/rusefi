@@ -1,7 +1,7 @@
 #include "global.h"
 #include "rusefi_enums.h"
 #include "rusefi_hw_enums.h"
-// was generated automatically by rusEfi tool  from rusefi_hw_enums.h // was generated automatically by rusEfi tool  from rusefi_enums.h // by enum2string.jar tool on Mon Mar 29 13:05:34 UTC 2021
+// was generated automatically by rusEFI tool  from rusefi_hw_enums.h // was generated automatically by rusEFI tool  from rusefi_enums.h // by enum2string.jar tool on Sat May 08 16:52:30 MSK 2021
 // see also gen_config_and_enums.bat
 
 
@@ -687,8 +687,6 @@ case DBG_16:
   return "DBG_16";
 case DBG_34:
   return "DBG_34";
-case DBG_48:
-  return "DBG_48";
 case DBG_ALTERNATOR_PID:
   return "DBG_ALTERNATOR_PID";
 case DBG_ANALOG_INPUTS:
@@ -755,6 +753,8 @@ case DBG_LAUNCH:
   return "DBG_LAUNCH";
 case DBG_LOGIC_ANALYZER:
   return "DBG_LOGIC_ANALYZER";
+case DBG_LUA:
+  return "DBG_LUA";
 case DBG_MAP:
   return "DBG_MAP";
 case DBG_METRICS:
@@ -873,6 +873,24 @@ case Force_4_bytes_size_engine_type:
   return "Force_4_bytes_size_engine_type";
 case GY6_139QMB:
   return "GY6_139QMB";
+case HELLEN72_ETB:
+  return "HELLEN72_ETB";
+case HELLEN_121_NISSAN:
+  return "HELLEN_121_NISSAN";
+case HELLEN_121_VAG:
+  return "HELLEN_121_VAG";
+case HELLEN_128_MERCEDES:
+  return "HELLEN_128_MERCEDES";
+case HELLEN_134_BMW:
+  return "HELLEN_134_BMW";
+case HELLEN_154_VAG:
+  return "HELLEN_154_VAG";
+case HELLEN_55_BMW:
+  return "HELLEN_55_BMW";
+case HELLEN_88_BMW:
+  return "HELLEN_88_BMW";
+case HELLEN_NA6:
+  return "HELLEN_NA6";
 case HELLEN_NB2:
   return "HELLEN_NB2";
 case HONDA_600:
@@ -979,12 +997,6 @@ case TOYOTA_2JZ_GTE_VVTi:
   return "TOYOTA_2JZ_GTE_VVTi";
 case TOYOTA_JZS147:
   return "TOYOTA_JZS147";
-case UNUSED_33:
-  return "UNUSED_33";
-case UNUSED_34:
-  return "UNUSED_34";
-case UNUSED_36:
-  return "UNUSED_36";
 case VAG_18_TURBO:
   return "VAG_18_TURBO";
 case VW_ABA:
@@ -1044,6 +1056,8 @@ case GPPWM_Map:
   return "GPPWM_Map";
 case GPPWM_Tps:
   return "GPPWM_Tps";
+case GPPWM_Zero:
+  return "GPPWM_Zero";
   }
  return NULL;
 }
@@ -1053,23 +1067,6 @@ case GPPWM_GreaterThan:
   return "GPPWM_GreaterThan";
 case GPPWM_LessThan:
   return "GPPWM_LessThan";
-  }
- return NULL;
-}
-const char *getHip_state_e(hip_state_e value){
-switch(value) {
-case IS_INTEGRATING:
-  return "IS_INTEGRATING";
-case IS_SENDING_SPI_COMMAND:
-  return "IS_SENDING_SPI_COMMAND";
-case NOT_READY:
-  return "NOT_READY";
-case READY_TO_INTEGRATE:
-  return "READY_TO_INTEGRATE";
-case WAITING_FOR_ADC_TO_SKIP:
-  return "WAITING_FOR_ADC_TO_SKIP";
-case WAITING_FOR_RESULT_ADC:
-  return "WAITING_FOR_RESULT_ADC";
   }
  return NULL;
 }
@@ -1411,6 +1408,8 @@ case TT_JEEP_18_2_2_2:
   return "TT_JEEP_18_2_2_2";
 case TT_JEEP_4_CYL:
   return "TT_JEEP_4_CYL";
+case TT_KAWA_KX450F:
+  return "TT_KAWA_KX450F";
 case TT_MAZDA_DOHC_1_4:
   return "TT_MAZDA_DOHC_1_4";
 case TT_MAZDA_MIATA_NA:

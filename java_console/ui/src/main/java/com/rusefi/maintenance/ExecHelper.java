@@ -5,6 +5,7 @@ import com.rusefi.ui.StatusConsumer;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.*;
+import java.util.concurrent.TimeUnit;
 
 /**
  * @see SimulatorExecHelper
@@ -66,7 +67,7 @@ public class ExecHelper {
             Process p = Runtime.getRuntime().exec(command, null, workingDir);
             startStreamThread(p, p.getInputStream(), output, wnd);
             startStreamThread(p, p.getErrorStream(), error, wnd);
-            p.waitFor();
+            p.waitFor(3, TimeUnit.MINUTES);
         } catch (IOException e) {
             wnd.appendMsg("IOError: " + e);
         } catch (InterruptedException e) {

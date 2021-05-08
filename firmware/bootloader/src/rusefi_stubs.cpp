@@ -12,7 +12,10 @@
 void chDbgPanic3(const char* /*msg*/, const char* /*file*/, int /*line*/) {
 }
 
-void scheduleMsg(Logging* /*logging*/, const char* /*fmt*/, ...) {
+namespace priv
+{
+void efiPrintfInternal(const char* /*fmt*/, ...) {
+}
 }
 
 void firmwareError(obd_code_e /*code*/, const char* /*fmt*/, ...) {

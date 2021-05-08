@@ -77,6 +77,7 @@ public class ConnectionAndMeta {
         ctx.init(new KeyManager[0], new TrustManager[]{new AcceptAnyCertificateTrustManager()}, new SecureRandom());
 
         URL url = new URL(baseUrl + zipFileName);
+        System.out.println("Connecting to " + url);
         httpConnection = (HttpsURLConnection) url.openConnection();
         httpConnection.setSSLSocketFactory(ctx.getSocketFactory());
         completeFileSize = httpConnection.getContentLength();

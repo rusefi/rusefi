@@ -26,7 +26,7 @@
 #include "engine_configuration.h"
 #include "status_loop.h"
 #include "buffered_writer.h"
-#include "null_device.h"
+#include "mass_storage_init.h"
 #include "thread_priority.h"
 
 #include "rtc_helper.h"
@@ -47,9 +47,10 @@ static bool fs_ready = false;
 
 EXTERN_ENGINE;
 
-#define F_SYNC_FREQUENCY 100
+// at about 20Hz we write about 2Kb per second, looks like we flush once every ~2 seconds
+#define F_SYNC_FREQUENCY 10
 
-static int totalLoggedBytes = 0;
+int totalLoggedBytes = 0;
 static int fileCreatedCounter = 0;
 static int writeCounter = 0;
 static int totalWritesCounter = 0;
@@ -69,15 +70,6 @@ spi_device_e mmcSpiDevice = SPI_NONE;
 
 #define LS_RESPONSE "ls_result"
 #define FILE_LIST_MAX_COUNT 20
-
-#if HAL_USE_USB_MSD
-#include "hal_usb_msd.h"
-#if STM32_USB_USE_OTG2
-  USBDriver *usb_driver = &USBD2;
-#else
-  USBDriver *usb_driver = &USBD1;
-#endif
-#endif /* HAL_USE_USB_MSD */
 
 static THD_WORKING_AREA(mmcThreadStack, 3 * UTILITY_THREAD_STACK_SIZE);		// MMC monitor thread
 
@@ -100,8 +92,6 @@ static MMCConfig mmccfg = { NULL, &mmc_ls_spicfg, &mmc_hs_spicfg };
  */
 static NO_CACHE FATFS MMC_FS;
 
-static LoggingWithStorage logger("mmcCard");
-
 static int fatFsErrors = 0;
 
 static void mmcUnMount(void);
@@ -117,7 +107,7 @@ static void printError(const char *str, FRESULT f_error) {
 		return;
 	}
 
-	scheduleMsg(&logger, "FATfs Error \"%s\" %d", str, f_error);
+	efiPrintf("FATfs Error \"%s\" %d", str, f_error);
 }
 
 static FIL FDLogFile NO_CACHE;
@@ -129,20 +119,20 @@ static int logFileIndex = MIN_FILE_INDEX;
 static char logName[_MAX_FILLER + 20];
 
 static void printMmcPinout(void) {
-	scheduleMsg(&logger, "MMC CS %s", hwPortname(CONFIG(sdCardCsPin)));
+	efiPrintf("MMC CS %s", hwPortname(CONFIG(sdCardCsPin)));
 	// todo: we need to figure out the right SPI pinout, not just SPI2
-//	scheduleMsg(&logger, "MMC SCK %s:%d", portname(EFI_SPI2_SCK_PORT), EFI_SPI2_SCK_PIN);
-//	scheduleMsg(&logger, "MMC MISO %s:%d", portname(EFI_SPI2_MISO_PORT), EFI_SPI2_MISO_PIN);
-//	scheduleMsg(&logger, "MMC MOSI %s:%d", portname(EFI_SPI2_MOSI_PORT), EFI_SPI2_MOSI_PIN);
+//	efiPrintf("MMC SCK %s:%d", portname(EFI_SPI2_SCK_PORT), EFI_SPI2_SCK_PIN);
+//	efiPrintf("MMC MISO %s:%d", portname(EFI_SPI2_MISO_PORT), EFI_SPI2_MISO_PIN);
+//	efiPrintf("MMC MOSI %s:%d", portname(EFI_SPI2_MOSI_PORT), EFI_SPI2_MOSI_PIN);
 }
 
 static void sdStatistics(void) {
 	printMmcPinout();
-	scheduleMsg(&logger, "SD enabled=%s status=%s", boolToString(CONFIG(isSdCardEnabled)),
+	efiPrintf("SD enabled=%s status=%s", boolToString(CONFIG(isSdCardEnabled)),
 			sdStatus);
-	printSpiConfig(&logger, "SD", mmcSpiDevice);
+	printSpiConfig("SD", mmcSpiDevice);
 	if (isSdCardAlive()) {
-		scheduleMsg(&logger, "filename=%s size=%d", logName, totalLoggedBytes);
+		efiPrintf("filename=%s size=%d", logName, totalLoggedBytes);
 	}
 }
 
@@ -154,11 +144,11 @@ static void incLogFileName(void) {
 	UINT result = 0;
 	if (err != FR_OK && err != FR_EXIST) {
 			logFileIndex = MIN_FILE_INDEX;
-			scheduleMsg(&logger, "%s: not found or error: %d", LOG_INDEX_FILENAME, err);
+			efiPrintf("%s: not found or error: %d", LOG_INDEX_FILENAME, err);
 	} else {
 		f_read(&FDCurrFile, (void*)data, sizeof(data), &result);
 
-		scheduleMsg(&logger, "Got content [%s] size %d", data, result);
+		efiPrintf("Got content [%s] size %d", data, result);
 		f_close(&FDCurrFile);
 		if (result < 5) {
             data[result] = 0;
@@ -177,7 +167,7 @@ static void incLogFileName(void) {
 	itoa10(data, logFileIndex);
 	f_write(&FDCurrFile, (void*)data, strlen(data), &result);
 	f_close(&FDCurrFile);
-	scheduleMsg(&logger, "Done %d", logFileIndex);
+	efiPrintf("Done %d", logFileIndex);
 }
 
 static void prepareLogFileName(void) {
@@ -231,17 +221,14 @@ static void createLogFile(void) {
 
 static void removeFile(const char *pathx) {
 	if (!isSdCardAlive()) {
-		scheduleMsg(&logger, "Error: No File system is mounted");
+		efiPrintf("Error: No File system is mounted");
 		return;
 	}
 
 	f_unlink(pathx);
 }
 
-int
-    mystrncasecmp(const char *s1, const char *s2, size_t n)
-    {
-
+int mystrncasecmp(const char *s1, const char *s2, size_t n) {
            if (n != 0) {
                     const char *us1 = (const char *)s1;
                     const char *us2 = (const char *)s2;
@@ -260,7 +247,7 @@ int
 static void listDirectory(const char *path) {
 
 	if (!isSdCardAlive()) {
-		scheduleMsg(&logger, "Error: No File system is mounted");
+		efiPrintf("Error: No File system is mounted");
 		return;
 	}
 
@@ -268,11 +255,11 @@ static void listDirectory(const char *path) {
 	FRESULT res = f_opendir(&dir, path);
 
 	if (res != FR_OK) {
-		scheduleMsg(&logger, "Error opening directory %s", path);
+		efiPrintf("Error opening directory %s", path);
 		return;
 	}
 
-	scheduleMsg(&logger, LS_RESPONSE);
+	efiPrintf(LS_RESPONSE);
 
 	for (int count = 0;count < FILE_LIST_MAX_COUNT;) {
 		FILINFO fno;
@@ -287,10 +274,10 @@ static void listDirectory(const char *path) {
 		if ((fno.fattrib & AM_DIR) || mystrncasecmp(RUSEFI_LOG_PREFIX, fno.fname, sizeof(RUSEFI_LOG_PREFIX) - 1)) {
 			continue;
 		}
-		scheduleMsg(&logger, "logfile%lu:%s", fno.fsize, fno.fname);
+		efiPrintf("logfile%lu:%s", fno.fsize, fno.fname);
 		count++;
 
-//			scheduleMsg(&logger, "%c%c%c%c%c %u/%02u/%02u %02u:%02u %9lu  %-12s", (fno.fattrib & AM_DIR) ? 'D' : '-',
+//			efiPrintf("%c%c%c%c%c %u/%02u/%02u %02u:%02u %9lu  %-12s", (fno.fattrib & AM_DIR) ? 'D' : '-',
 //					(fno.fattrib & AM_RDO) ? 'R' : '-', (fno.fattrib & AM_HID) ? 'H' : '-',
 //					(fno.fattrib & AM_SYS) ? 'S' : '-', (fno.fattrib & AM_ARC) ? 'A' : '-', (fno.fdate >> 9) + 1980,
 //					(fno.fdate >> 5) & 15, fno.fdate & 31, (fno.ftime >> 11), (fno.ftime >> 5) & 63, fno.fsize,
@@ -303,7 +290,7 @@ static void listDirectory(const char *path) {
  */
 static void mmcUnMount(void) {
 	if (!isSdCardAlive()) {
-		scheduleMsg(&logger, "Error: No File system is mounted. \"mountsd\" first");
+		efiPrintf("Error: No File system is mounted. \"mountsd\" first");
 		return;
 	}
 	f_close(&FDLogFile);						// close file
@@ -321,25 +308,10 @@ static void mmcUnMount(void) {
 	f_mount(NULL, 0, 0);						// FATFS: Unregister work area prior to discard it
 	memset(&FDLogFile, 0, sizeof(FIL));			// clear FDLogFile
 	setSdCardReady(false);						// status = false
-	scheduleMsg(&logger, "MMC/SD card removed");
+	efiPrintf("MMC/SD card removed");
 }
 
 #if HAL_USE_USB_MSD
-static NO_CACHE uint8_t blkbuf[MMCSD_BLOCK_SIZE];
-
-static const scsi_inquiry_response_t scsi_inquiry_response = {
-    0x00,           /* direct access block device     */
-    0x80,           /* removable                      */
-    0x04,           /* SPC-2                          */
-    0x02,           /* response data format           */
-    0x20,           /* response has 0x20 + 4 bytes    */
-    0x00,
-    0x00,
-    0x00,
-    "rusEFI",
-    "SD Card",
-    {'v',CH_KERNEL_MAJOR+'0','.',CH_KERNEL_MINOR+'0'}
-};
 
 static chibios_rt::BinarySemaphore usbConnectedSemaphore(/* taken =*/ true);
 
@@ -431,14 +403,11 @@ static bool mountMmc() {
 	// mount the null device and try to mount the filesystem ourselves
 	if (cardBlockDevice && hasUsb) {
 		// Mount the real card to USB
-		msdStart(&USBMSD1, usb_driver, cardBlockDevice, blkbuf, &scsi_inquiry_response, NULL);
+		attachMsdSdCard(cardBlockDevice);
 
 		sdStatus = SD_STATE_MSD;
 		// At this point we're done: don't try to write files ourselves
 		return false;
-	} else {
-		// Mount a  "no media" device to USB
-		msdMountNullDevice(&USBMSD1, usb_driver, blkbuf, &scsi_inquiry_response);
 	}
 #endif
 
@@ -454,7 +423,7 @@ static bool mountMmc() {
 		incLogFileName();
 		createLogFile();
 		fileCreatedCounter++;
-		scheduleMsg(&logger, "MMC/SD mounted!");
+		efiPrintf("MMC/SD mounted!");
 		return true;
 	} else {
 		sdStatus = SD_STATE_MOUNT_FAILED;
@@ -473,7 +442,7 @@ struct SdLogBufferWriter final : public BufferedWriter<512> {
 		FRESULT err = f_write(&FDLogFile, buffer, count, &bytesWritten);
 
 		if (bytesWritten != count) {
-			printError("write error or disk full", err); // error or disk full
+			printError("write error or disk full", err);
 
 			// Close file and unmount volume
 			mmcUnMount();

@@ -102,6 +102,8 @@ extern int icuFallingCallbackCounter;
 extern WaveChart waveChart;
 #endif /* EFI_ENGINE_SNIFFER */
 
+#include "sensor_chart.h"
+
 extern pin_output_mode_e DEFAULT_OUTPUT;
 extern pin_output_mode_e INVERTED_OUTPUT;
 
@@ -134,7 +136,7 @@ static void setWarningEnabled(int value) {
 
 #if EFI_FILE_LOGGING
 // this one needs to be in main ram so that SD card SPI DMA works fine
-static NO_CACHE char sdLogBuffer[100];
+static NO_CACHE char sdLogBuffer[150];
 static uint64_t binaryLogCount = 0;
 
 #endif /* EFI_FILE_LOGGING */
@@ -177,8 +179,6 @@ void writeLogLine(Writer& buffer) {
 
 static int prevCkpEventCounter = -1;
 
-static LoggingWithStorage logger2("main event handler");
-
 /**
  * Time when the firmware version was reported last time, in seconds
  * TODO: implement a request/response instead of just constantly sending this out
@@ -198,6 +198,10 @@ void printOverallStatus(efitimesec_t nowSeconds) {
 	waveChart.publishIfFull();
 #endif /* EFI_ENGINE_SNIFFER */
 
+#if EFI_SENSOR_CHART
+	publishSensorChartIfFull();
+#endif // EFI_SENSOR_CHART
+
 	/**
 	 * we report the version every 4 seconds - this way the console does not need to
 	 * request it and we will display it pretty soon
@@ -211,7 +215,10 @@ void printOverallStatus(efitimesec_t nowSeconds) {
 #if EFI_PROD_CODE
 	printOutPin(PROTOCOL_CRANK1, CONFIG(triggerInputPins)[0]);
 	printOutPin(PROTOCOL_CRANK2, CONFIG(triggerInputPins)[1]);
-	printOutPin(PROTOCOL_VVT_NAME, engineConfiguration->camInputs[0]);
+	for (int i = 0;i<CAM_INPUTS_COUNT;i++) {
+		extern const char *vvtNames[];
+		printOutPin(vvtNames[i], engineConfiguration->camInputs[i]);
+	}
 	printOutPin(PROTOCOL_HIP_NAME, CONFIG(hip9011IntHoldPin));
 	printOutPin(PROTOCOL_TACH_NAME, CONFIG(tachOutputPin));
 #if EFI_LOGIC_ANALYZER
@@ -251,14 +258,14 @@ void updateDevConsoleState(void) {
 #if EFI_PROD_CODE
 	// todo: unify with simulator!
 	if (hasFirmwareError()) {
-		scheduleMsg(&logger, "%s error: %s", CRITICAL_PREFIX, getFirmwareError());
+		efiPrintf("%s error: %s", CRITICAL_PREFIX, getFirmwareError());
 		warningEnabled = false;
 		return;
 	}
 #endif /* EFI_PROD_CODE */
 
 #if HAL_USE_ADC
-	printFullAdcReportIfNeeded(&logger);
+	printFullAdcReportIfNeeded();
 #endif /* HAL_USE_ADC */
 
 	systime_t nowSeconds = getTimeNowSeconds();
@@ -289,27 +296,27 @@ void updateDevConsoleState(void) {
  */
 
 static void showFuelInfo2(float rpm, float engineLoad) {
-	scheduleMsg(&logger, "inj flow %.2fcc/min displacement %.2fL", engineConfiguration->injector.flow,
+	efiPrintf("inj flow %.2fcc/min displacement %.2fL", engineConfiguration->injector.flow,
 			engineConfiguration->specs.displacement);
 
-	scheduleMsg(&logger2, "algo=%s/pump=%s", getEngine_load_mode_e(engineConfiguration->fuelAlgorithm),
+	efiPrintf("algo=%s/pump=%s", getEngine_load_mode_e(engineConfiguration->fuelAlgorithm),
 			boolToString(enginePins.fuelPumpRelay.getLogicValue()));
 
-	scheduleMsg(&logger2, "injection phase=%.2f/global fuel correction=%.2f", getInjectionOffset(rpm, getFuelingLoad()), engineConfiguration->globalFuelCorrection);
+	efiPrintf("injection phase=%.2f/global fuel correction=%.2f", getInjectionOffset(rpm, getFuelingLoad()), engineConfiguration->globalFuelCorrection);
 
-	scheduleMsg(&logger2, "baro correction=%.2f", engine->engineState.baroCorrection);
+	efiPrintf("baro correction=%.2f", engine->engineState.baroCorrection);
 
 #if EFI_ENGINE_CONTROL
-	scheduleMsg(&logger, "base cranking fuel %.2f", engineConfiguration->cranking.baseFuel);
-	scheduleMsg(&logger2, "cranking fuel: %.2f", ENGINE(engineState.cranking.fuel));
+	efiPrintf("base cranking fuel %.2f", engineConfiguration->cranking.baseFuel);
+	efiPrintf("cranking fuel: %.2f", ENGINE(engineState.cranking.fuel));
 
 	if (!engine->rpmCalculator.isStopped()) {
 		float iatCorrection = engine->engineState.running.intakeTemperatureCoefficient;
 		float cltCorrection = engine->engineState.running.coolantTemperatureCoefficient;
 		floatms_t injectorLag = engine->engineState.running.injectorLag;
-		scheduleMsg(&logger2, "rpm=%.2f engineLoad=%.2f", rpm, engineLoad);
+		efiPrintf("rpm=%.2f engineLoad=%.2f", rpm, engineLoad);
 
-		scheduleMsg(&logger2, "iatCorrection=%.2f cltCorrection=%.2f injectorLag=%.2f", iatCorrection, cltCorrection,
+		efiPrintf("iatCorrection=%.2f cltCorrection=%.2f injectorLag=%.2f", iatCorrection, cltCorrection,
 				injectorLag);
 	}
 #endif
@@ -372,11 +379,18 @@ class CommunicationBlinkingTask : public PeriodicTimerController {
 			setAllLeds(0);
 		} else if (counter % 2 == 0) {
 			enginePins.communicationLedPin.setValue(0);
-#if HW_CHECK_MODE
-			// we have to do anything possible to help users notice FACTORY MODE
-			enginePins.errorLedPin.setValue(1);
-			enginePins.runningLedPin.setValue(1);
-#endif // HW_CHECK_MODE
+#if HW_CHECK_SD
+extern int totalLoggedBytes;
+			if (totalLoggedBytes > 2000) {
+				enginePins.communicationLedPin.setValue(1);
+			}
+#endif // HW_CHECK_SD
+
+//#if HW_CHECK_MODE
+//			// we have to do anything possible to help users notice FACTORY MODE
+//			enginePins.errorLedPin.setValue(1);
+//			enginePins.runningLedPin.setValue(1);
+//#endif // HW_CHECK_MODE
 			if (!lowVBatt) {
 				enginePins.warningLedPin.setValue(0);
 			}
@@ -407,11 +421,11 @@ class CommunicationBlinkingTask : public PeriodicTimerController {
 			}
 
 			enginePins.communicationLedPin.setValue(1);
-#if HW_CHECK_MODE
-			// we have to do anything possible to help users notice FACTORY MODE
-			enginePins.errorLedPin.setValue(0);
-			enginePins.runningLedPin.setValue(0);
-#endif // HW_CHECK_MODE
+//#if HW_CHECK_MODE
+//			// we have to do anything possible to help users notice FACTORY MODE
+//			enginePins.errorLedPin.setValue(0);
+//			enginePins.runningLedPin.setValue(0);
+//#endif // HW_CHECK_MODE
 
 	#if EFI_ENGINE_CONTROL
 			if (lowVBatt || isTriggerErrorNow() || isIgnitionTimingError()) {

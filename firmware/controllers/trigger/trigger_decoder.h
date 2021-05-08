@@ -131,6 +131,7 @@ public:
 	efitick_t toothed_previous_time;
 
 	current_cycle_state_s currentCycle;
+	const char *name = nullptr;
 
 	int expectedTotalTime[PWM_PHASE_MAX_WAVE_PER_PWM];
 
@@ -218,8 +219,6 @@ private:
 angle_t getEngineCycle(operation_mode_e operationMode);
 
 class Engine;
-
-void initTriggerDecoderLogger(Logging *sharedLogger);
 
 void calculateTriggerSynchPoint(
 	TriggerWaveform& shape,

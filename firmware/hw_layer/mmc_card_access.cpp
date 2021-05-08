@@ -66,8 +66,6 @@ static FILE *uploading;
 static FIL uploading NO_CACHE;
 #endif // EFI_FILE_LOGGING
 
-extern LoggingWithStorage sharedLogger;
-
 #define TRANSFER_SIZE 2048
 
 static uint8_t buffer[TRANSFER_SIZE + 2];
@@ -101,13 +99,13 @@ void handleTsR(TsChannelBase* tsChannel, char *input) {
 	const uint16_t *data16 = reinterpret_cast<uint16_t*>(input);
 
 	if (input[0] == 0 && input[1] == TS_SD_PROTOCOL_RTC) {
-		scheduleMsg(&sharedLogger, "TS_SD: RTC read command");
+		efiPrintf("TS_SD: RTC read command");
 		memset(buffer, 0, 9);
 		tsChannel->sendResponse(TS_CRC, buffer, 9);
 
 	} else if (input[0] == 0 && input[1] == TS_SD_PROTOCOL_FETCH_INFO) {
 		uint16_t length = SWAP_UINT16(data16[2]);
-		scheduleMsg(&sharedLogger, "TS_SD: fetch buffer command, length=%d",
+		efiPrintf("TS_SD: fetch buffer command, length=%d",
 				length);
 
 		if (length == 16) {
@@ -167,7 +165,7 @@ void handleTsR(TsChannelBase* tsChannel, char *input) {
 			DIR dir;
 			FRESULT res = f_opendir(&dir, ROOT_DIR);
 			if (res != FR_OK) {
-				scheduleMsg(&sharedLogger, "Error opening directory");
+				efiPrintf("Error opening directory");
 			} else {
 				int index = 0;
 				while (true) {
@@ -210,7 +208,7 @@ void handleTsR(TsChannelBase* tsChannel, char *input) {
 		}
 	} else if (input[0] == 0 && input[1] == TS_SD_PROTOCOL_FETCH_DATA) {
 		uint16_t blockNumber = SWAP_UINT16(data16[1]);
-		scheduleMsg(&sharedLogger, "TS_SD: fetch data command blockNumber=%d",
+		efiPrintf("TS_SD: fetch data command blockNumber=%d",
 				blockNumber);
 
 //		int offset = blockNumber * TRANSFER_SIZE;
@@ -230,7 +228,7 @@ void handleTsR(TsChannelBase* tsChannel, char *input) {
 
 		tsChannel->sendResponse(TS_CRC, buffer, 2 + got);
 	} else {
-		scheduleMsg(&sharedLogger, "TS_SD: unexpected r");
+		efiPrintf("TS_SD: unexpected r");
 	}
 }
 
@@ -243,13 +241,13 @@ void handleTsW(TsChannelBase* tsChannel, char *input) {
 
 	if (input[0] == 0 && input[1] == TS_SD_PROTOCOL_FETCH_INFO) {
 		int code = data16[2];
-		scheduleMsg(&sharedLogger, "TS_SD: w, code=%d", code);
+		efiPrintf("TS_SD: w, code=%d", code);
 
 		if (input[5] == TS_SD_PROTOCOL_DO) {
-			scheduleMsg(&sharedLogger, "TS_SD_PROTOCOL_DO");
+			efiPrintf("TS_SD_PROTOCOL_DO");
 			sendOkResponse(tsChannel, TS_CRC);
 		} else if (input[5] == TS_SD_PROTOCOL_READ_DIR) {
-			scheduleMsg(&sharedLogger, "TS_SD_PROTOCOL_READ_DIR");
+			efiPrintf("TS_SD_PROTOCOL_READ_DIR");
 			sendOkResponse(tsChannel, TS_CRC);
 		} else if (input[5] == TS_SD_PROTOCOL_REMOVE_FILE) {
 #if EFI_SIMULATOR
@@ -279,7 +277,7 @@ void handleTsW(TsChannelBase* tsChannel, char *input) {
 			DIR dir;
 			FRESULT res = f_opendir(&dir, ROOT_DIR);
 			if (res != FR_OK) {
-				scheduleMsg(&sharedLogger, "Error opening directory");
+				efiPrintf("Error opening directory");
 			} else {
 				while (true) {
 					FILINFO fno;
@@ -291,7 +289,7 @@ void handleTsW(TsChannelBase* tsChannel, char *input) {
 					if (isLogFile(fileName)) {
 						int dotIndex = indexOf(fileName, DOT);
 						if (0 == strncmp(input + 6, &fileName[dotIndex - 4], 4)) {
-							scheduleMsg(&sharedLogger, "Removing %s", fileName);
+							efiPrintf("Removing %s", fileName);
 							f_unlink(fileName);
 							break;
 						}
@@ -337,7 +335,7 @@ void handleTsW(TsChannelBase* tsChannel, char *input) {
 			FRESULT res = f_opendir(&dir, ROOT_DIR);
 
 			if (res != FR_OK) {
-				scheduleMsg(&sharedLogger, "Error opening directory");
+				efiPrintf("Error opening directory");
 			} else {
 				memset(&uploading, 0, sizeof(FIL));			// clear the memory
 				while (true) {
@@ -364,7 +362,7 @@ void handleTsW(TsChannelBase* tsChannel, char *input) {
 		}
 
 	} else {
-		scheduleMsg(&sharedLogger, "TS_SD: unexpected w");
+		efiPrintf("TS_SD: unexpected w");
 	}
 }
 

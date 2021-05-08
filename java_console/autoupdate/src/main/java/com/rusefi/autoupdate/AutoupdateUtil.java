@@ -69,7 +69,7 @@ public class AutoupdateUtil {
 
     public static boolean hasExistingFile(String zipFileName, long completeFileSize, long lastModified) {
         File file = new File(zipFileName);
-        System.out.println("We have " + file.length() + " " + new Date(file.lastModified()));
+        System.out.println("We have " + file.length() + " " + new Date(file.lastModified()) + " " + file.getAbsolutePath());
         return file.length() == completeFileSize && file.lastModified() == lastModified;
     }
 

@@ -12,8 +12,6 @@
 #include <cstdint>
 #include <cstddef>
 
-#define DELIMETER	","
-
 // todo: migrate to external buffer so that different instances have different
 // size of buffers?
 class Logging {
@@ -72,25 +70,10 @@ public:
 class LoggingWithStorage : public Logging {
 public:
 	explicit LoggingWithStorage(const char *name);
-	char DEFAULT_BUFFER[200];
+	char DEFAULT_BUFFER[100];
 };
 
 void initLoggingExt(Logging *logging, const char *name, char *buffer, int bufferSize);
 
 void appendMsgPrefix(Logging *logging);
 void appendMsgPostfix(Logging *logging);
-
-
-#ifdef __cplusplus
-extern "C"
-{
-#endif /* __cplusplus */
-/**
- * this method copies the line into the intermediate buffer for later output by
- * the main thread
- */
-void scheduleLogging(Logging *logging);
-
-#ifdef __cplusplus
-}
-#endif /* __cplusplus */

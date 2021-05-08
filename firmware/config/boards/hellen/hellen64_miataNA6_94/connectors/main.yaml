@@ -1,8 +1,17 @@
+#
+# open issues: knock do we need to do anything?
+# todo: we've inhecrited dual mode on A/C etc from H72 needs to be addressed
+#
+
 pins:
   - pin: 1A
     function: 12V all times
     type: 12V
+  
   - pin: 1B
+    id: EFI_ADC_5
+    class: analog_inputs
+    ts_name: 1B - Battery Sense
     function: ECU power in start & run
     type: 12V
 
@@ -15,17 +24,29 @@ pins:
     type: can
 
   - pin: 1E
+    id: GPIOG_4
     class: outputs
+    ts_name: 1E - Check Engine Light
     function: Check Engine Light
     type: ls
 
+  - pin: 1F
+    id: GPIOD_13
+    class: outputs
+    ts_name: 1F - Tachometer 95.5
+    function: Tachometer
+    type: ls
+
   - pin: 1G
+    id: GPIOI_8
     class: outputs
-    ts_name: 1G - IGN_1
+    ts_name: 1G - Ignition 1 & 4
     type: ign
+ 
   - pin: 1H
+    id: GPIOE_5
     class: outputs
-    ts_name: 1H - IGN_2
+    ts_name: 1H - Ignition 2 & 3
     type: ign
 
   - pin: 1I
@@ -33,36 +54,53 @@ pins:
     type: gnd
 
   - pin: 1J
+    id: GPIOH_15
     class: outputs
+    ts_name: 1J - AC Relay
     function: A/C Relay
     type: ls
 
   - pin: 1L
+    id: GPIOD_12
     class: outputs
+    ts_name: 1L - Radiator Fan 94-95
     function: Radiator Fan Relay
     type: ls
 
+  - pin: 1M
+    id: GPIOF_11
+    class: event_inputs
+    ts_name: 1M - VSS
+    function: VSS IN
+    
   - pin: 1N
+    ts_name: 1N - 5v ref NA6
     function: Sensor +5V
 
   - pin: 1Q
-    class: switch_inputs
+    id: [GPIOB_0, EFI_ADC_8]
+    class: [switch_inputs, analog_inputs]
     function: A/C switch input
     type: din
 
   - pin: 1R
+    id: GPIOD_12
     class: outputs
-    function: A/C Fan Relay
+    ts_name: 1R - Coolant Fan
+    function: Coolant Fan Relay
     type: ls
 
   - pin: 1S
-    function: USB D-
+    ts_name: 1S - A/C Input
+    function: A/C Input
 
   - pin: 1T
-    function: USB D+
+    function: EGR Solenoid
 
   - pin: 1V
-    class: switch_inputs
+    id: [GPIOC_5, EFI_ADC_15]
+    class: [switch_inputs, analog_inputs]
+    ts_name: 1V - Clutch Switch
     function: Clutch switch input
     type: din
 
@@ -70,6 +108,7 @@ pins:
     function: Power GND
     type: pgnd
     color: white
+
   - pin: 3B
     function: Power GND
     type: pgnd
@@ -79,80 +118,128 @@ pins:
     function: Sensor GND
     type: gnd
     color: white
+  
   - pin: 3D
     function: Sensor GND
     type: gnd
     color: white
 
   - pin: 3E
-    class: [event_inputs]
+    id: GPIOB_1
+    class: event_inputs
     ts_name: 3E - CRANK
     function: Crankshaft Sensor
+  
   - pin: 3F
     function: MAF GND
     type: gnd
     color: white
 
   - pin: 3G
-    class: [event_inputs]
+    id: GPIOA_6
+    class: event_inputs
     ts_name: 3G - CAM
     function: Camshaft Sensor
+    
+  - pin: 3I
+    id: GPIOD_13
+    class: outputs
+    ts_name: 3I - Tachometer 90-95.5
+    function: tachometer
+    
+  - pin: 3K
+    class: outputs
+    ts_name: 3K - TPS 5v 94-95
+    function: 5v reference
+    
+  - pin: 3L
+    id: EFI_ADC_4
+    class: analog_inputs
+    ts_name: 3L - TPS 90-93
+    function: TPS INPUT
+    
+  - pin: 3M
+    id: EFI_ADC_4
+    class: analog_inputs
+    ts_name: 3M - TPS 94-95
+    function: TPS INPUT
 
   - pin: 3O
-    class: analog_inputs
-    ts_name: 3O - MAF
-    function: VAF/MAF sensor
+    id: GPIOG_2
+    class: outputs
+    ts_name: 3O - Fuel Pump NA6
+    function: FUEL PUMP OUTPUT
 
   - pin: 3P
+    id: EFI_ADC_13
     class: analog_inputs
     ts_name: 3P - IAT
     function: IAT sensor
+            
+  - pin: 3S
+    id: GPIOD_9
+    class: outputs
+    ts_name: 3S - A/C Fan 94-95
+    function: A/C Fan
 
   - pin: 3T
+    id: GPIOG_2
     class: outputs
+    ts_name: 3T - Fuel Pump Relay
     function: Fuel Pump Relay
     type: ls
 
   - pin: 3N
+    id: EFI_ADC_0
     class: analog_inputs
-    ts_name: 3N - AFR
+    ts_name: 3N - O2S
     function: External Wideband signal
 
   - pin: 3Q
+    id: EFI_ADC_12
     class: analog_inputs
     ts_name: 3Q - CLT
     function: CLT sensor
 
-
   - pin: 3U
+    id: GPIOG_7
     class: outputs
-    ts_name: 3U - INJ_1
+    ts_name: 3U - Injector 1
     function: Injector #1
     type: inj
 
   - pin: 3V
+    id: GPIOG_8
     class: outputs
-    ts_name: 3V - INJ_2
+    ts_name: 3V - Injector 2
     function: Injector #2
     type: inj
 
   - pin: 3W
+    id: GPIOD_14
     class: outputs
     ts_name: 3W - IDLE
     function: IAC idle
     type: ls
 
   - pin: 3Y
+    id: GPIOD_11
     class: outputs
-    ts_name: 3Y - INJ_4
+    ts_name: 3Y - Injector 3
     function: Injector #3
     type: inj
 
   - pin: 3Z
+    id: GPIOD_10
     class: outputs
-    ts_name: 3Z - INJ_4
+    ts_name: 3Z - Injector 4
     function: Injector #4
     type: inj
+    
+  - pin: int_map
+    id: EFI_ADC_2
+    class: analog_inputs
+    ts_name: intMAP (A15)
 
 info:
   image:

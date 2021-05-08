@@ -36,8 +36,6 @@ EXTERN_ENGINE;
 
 tps_tps_Map3D_t tpsTpsMap("tpsTps");
 
-static Logging *logger = nullptr;
-
 void WallFuel::resetWF() {
 	wallFuel = 0;
 }
@@ -326,17 +324,14 @@ AccelEnrichment::AccelEnrichment() {
 #if ! EFI_UNIT_TEST
 
 static void accelInfo() {
-	if (!logger) {
-		return;
-	}
-//	scheduleMsg(logger, "EL accel length=%d", mapInstance.cb.getSize());
-	scheduleMsg(logger, "EL accel th=%.2f/mult=%.2f", engineConfiguration->engineLoadAccelEnrichmentThreshold, engineConfiguration->engineLoadAccelEnrichmentMultiplier);
-	scheduleMsg(logger, "EL decel th=%.2f/mult=%.2f", engineConfiguration->engineLoadDecelEnleanmentThreshold, engineConfiguration->engineLoadDecelEnleanmentMultiplier);
+//	efiPrintf("EL accel length=%d", mapInstance.cb.getSize());
+	efiPrintf("EL accel th=%.2f/mult=%.2f", engineConfiguration->engineLoadAccelEnrichmentThreshold, engineConfiguration->engineLoadAccelEnrichmentMultiplier);
+	efiPrintf("EL decel th=%.2f/mult=%.2f", engineConfiguration->engineLoadDecelEnleanmentThreshold, engineConfiguration->engineLoadDecelEnleanmentMultiplier);
 
-//	scheduleMsg(logger, "TPS accel length=%d", tpsInstance.cb.getSize());
-	scheduleMsg(logger, "TPS accel th=%.2f/mult=%.2f", engineConfiguration->tpsAccelEnrichmentThreshold, -1);
+//	efiPrintf("TPS accel length=%d", tpsInstance.cb.getSize());
+	efiPrintf("TPS accel th=%.2f/mult=%.2f", engineConfiguration->tpsAccelEnrichmentThreshold, -1);
 
-	scheduleMsg(logger, "beta=%.2f/tau=%.2f", engineConfiguration->wwaeBeta, engineConfiguration->wwaeTau);
+	efiPrintf("beta=%.2f/tau=%.2f", engineConfiguration->wwaeBeta, engineConfiguration->wwaeTau);
 }
 
 void setEngineLoadAccelThr(float value) {
@@ -376,7 +371,7 @@ void setDecelMult(float value) {
 
 void setTpsAccelLen(int length) {
 	if (length < 1) {
-		scheduleMsg(logger, "Length should be positive");
+		efiPrintf("Length should be positive");
 		return;
 	}
 	engine->tpsAccelEnrichment.setLength(length);
@@ -385,7 +380,7 @@ void setTpsAccelLen(int length) {
 
 void setEngineLoadAccelLen(int length) {
 	if (length < 1) {
-		scheduleMsg(logger, "Length should be positive");
+		efiPrintf("Length should be positive");
 		return;
 	}
 	engine->engineLoadAccelEnrichment.setLength(length);
@@ -400,8 +395,7 @@ void updateAccelParameters() {
 #endif /* ! EFI_UNIT_TEST */
 
 
-void initAccelEnrichment(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX) {
-	logger = sharedLogger;
+void initAccelEnrichment(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	tpsTpsMap.init(config->tpsTpsAccelTable, config->tpsTpsAccelFromRpmBins, config->tpsTpsAccelToRpmBins);
 
 #if ! EFI_UNIT_TEST

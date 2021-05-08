@@ -456,7 +456,7 @@ TEST(misc, testRpmCalculator) {
 }
 
 TEST(misc, testAnotherTriggerDecoder) {
-	testTriggerDecoder2("Miata 2003", MAZDA_MIATA_2003, 3, 0.4444458, 0.0);
+	testTriggerDecoder2("Miata 2003", MAZDA_MIATA_2003, 3, 0.38888889, 0.0);
 }
 
 TEST(misc, testTriggerDecoder) {
@@ -518,7 +518,7 @@ TEST(misc, testTriggerDecoder) {
 
 		eth.persistentConfig.engineConfiguration.useOnlyRisingEdgeForTrigger = false;
 		eth.persistentConfig.engineConfiguration.sensorChartMode = SC_DETAILED_RPM;
-		applyNonPersistentConfiguration(NULL PASS_ENGINE_PARAMETER_SUFFIX);
+		applyNonPersistentConfiguration(PASS_ENGINE_PARAMETER_SIGNATURE);
 
 	}
 	testTriggerDecoder2("miata 1990", MIATA_1990, 11, 0.2985, 0.3890);
@@ -534,7 +534,7 @@ TEST(misc, testTriggerDecoder) {
 		printf("!!!!!!!!!!!!!!!!!! Now trying with only rising edges !!!!!!!!!!!!!!!!!\r\n");
 		engineConfiguration->useOnlyRisingEdgeForTrigger = true;
 
-		applyNonPersistentConfiguration(NULL PASS_ENGINE_PARAMETER_SUFFIX);
+		applyNonPersistentConfiguration(PASS_ENGINE_PARAMETER_SIGNATURE);
 		prepareShapes(PASS_ENGINE_PARAMETER_SIGNATURE);
 	}
 

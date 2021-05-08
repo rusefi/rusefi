@@ -1,3 +1,8 @@
+#
+# todo: what's the deal with dual mode A/C switch?
+# todo: what's the deal with dual mode Power Steering Switch? and a few others?
+#
+
 pins:
   - pin: 2A
     id: GPIOG_7
@@ -274,7 +279,7 @@ pins:
     color: black W4
 
   - pin: 4B
-    id: [GPIOF_9, EFI_ADC_2]
+    id: [GPIOF_9, ADC3_CHANNEL_7]
     class: [switch_inputs, analog_inputs]
     ts_name: 4B - Brake/RES1 (A7)
     function: Brake Switch
@@ -304,9 +309,9 @@ pins:
     function: Neutral Switch
 
   - pin: 4I
-    id: [GPIOC_5, EFI_ADC_15]
-    class: [switch_inputs, analog_inputs]
-    ts_name: 4I - Clutch/AUX3 (A22)
+    id: [ GPIOF_8 ]
+    class: [ switch_inputs ]
+    ts_name: 4I - Clutch (A8)
     function: Clutch Switch
 
   - pin: 4J
@@ -363,6 +368,7 @@ pins:
     color: white B2
 
   - pin: 4S
+    # todo: mention is this one is 2002 or 2003 vbatt sensor input here
     id: EFI_ADC_5
     class: analog_inputs
     ts_name: 4S - Alternator voltage (A5)
@@ -370,6 +376,7 @@ pins:
     color: red B2
 
   - pin: 4T
+    # todo: mention is this one is 2002 or 2003 vbatt sensor input here
     id: EFI_ADC_5
     class: analog_inputs
     ts_name: 4T - Alternator voltage (A5)
@@ -382,6 +389,11 @@ pins:
     function: NC, extra main relay for diode
     color: red, short wire
     type: ign
+
+  - pin: int_map
+    id: EFI_ADC_2
+    class: analog_inputs
+    ts_name: intMAP (A15)
 
   - pin: 4V
     id: EFI_ADC_4
@@ -422,9 +434,15 @@ pins:
     function: ECU - TCM, Communication for A/T
 
   - pin: 4AD
+    id: EFI_ADC_14
+    class: analog_inputs
+    ts_name: 4AD - FUEL_LEVEL (A21)
     function: Fuel Level Sensor
 
   - pin: 4AE
+    id: EFI_ADC_15
+    class: analog_inputs
+    ts_name: 4AE - EGR/MAP4 (A22)
     function: EGR Boost Pressure Sensor
 
   - pin: 4AF

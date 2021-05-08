@@ -86,7 +86,7 @@ TEST(trigger, testCamInput) {
 	setOperationMode(engineConfiguration, FOUR_STROKE_CRANK_SENSOR);
 	engineConfiguration->useOnlyRisingEdgeForTrigger = true;
 	engineConfiguration->vvtMode[0] = VVT_FIRST_HALF;
-	engineConfiguration->vvtOffset = 720;
+	engineConfiguration->vvtOffset = 360;
 	eth.setTriggerType(TT_ONE PASS_ENGINE_PARAMETER_SUFFIX);
 	engineConfiguration->camInputs[0] = GPIOA_10; // we just need to indicate that we have CAM
 
@@ -117,7 +117,7 @@ TEST(trigger, testCamInput) {
 
 	// asserting that error code has cleared
 	ASSERT_EQ(0,  unitTestWarningCodeState.recentWarnings.getCount()) << "warningCounter#testCamInput #3";
-	ASSERT_NEAR(720 - 181, engine->triggerCentral.getVVTPosition(0, 0), EPS3D);
+	ASSERT_NEAR(360 - 181, engine->triggerCentral.getVVTPosition(0, 0), EPS3D);
 }
 
 TEST(sensors, testNB2CamInput) {

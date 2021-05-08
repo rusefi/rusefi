@@ -201,8 +201,6 @@ void setDodgeNeon1995EngineConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	engineConfiguration->ignitionPinMode = OM_DEFAULT;
 
 	engineConfiguration->clt.config = {0, 30, 100, 32500, 7550, 700, 2700};
-
-	engineConfiguration->sensorChartFrequency = 7;
 }
 
 void setDodgeNeonNGCEngineConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE) {

@@ -9,7 +9,14 @@ rm -f gen_config_board.log
 bash gen_config_default.sh
 [ $? -eq 0 ] || { echo "ERROR generating default"; exit 1; }
 
-for BOARD in "hellen/hellen72 hellen72" "microrusefi mre_f7" "microrusefi mre_f4" "frankenso frankenso_na6" "prometheus prometheus_469" "prometheus prometheus_405" "proteus proteus_f7" "proteus proteus_f4"; do
+#
+# see also build-firmware where we compile all versions of firmware
+#
+# While adding a new board do not forget to manually git add/commit .h and .ini into
+# firmware\tunerstudio\generated and firmware\controllers\generated folders
+# maybe one day we will automate but not yet
+#
+for BOARD in "hellen/hellen128 hellen128" "hellen/hellen121vag hellen121vag" "hellen/hellen121nissan hellen121nissan" "hellen/hellen72 hellen72" "hellen/hellen64_miataNA6_94 hellenNA6" "microrusefi mre_f7" "microrusefi mre_f4" "frankenso frankenso_na6" "prometheus prometheus_469" "prometheus prometheus_405" "proteus proteus_f7" "proteus proteus_f4"; do
  BOARD_NAME="${BOARD% *}"
  BOARD_SHORT_NAME="${BOARD#* }"
  bash gen_config_board.sh $BOARD_NAME $BOARD_SHORT_NAME

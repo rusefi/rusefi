@@ -113,9 +113,9 @@ void setDcMotorDuty(size_t index, float duty) {
 }
 
 
-void showDcMotorInfo(Logging* logger, int i) {
+void showDcMotorInfo(int i) {
 	DcHardware *dc = &dcHardware[i];
 
-	scheduleMsg(logger, " motor: dir=%d DC=%f", dc->dcMotor.isOpenDirection(), dc->dcMotor.get());
+	efiPrintf(" motor: dir=%d DC=%f", dc->dcMotor.isOpenDirection(), dc->dcMotor.get());
 }
 
