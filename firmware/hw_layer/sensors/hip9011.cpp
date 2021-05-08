@@ -540,6 +540,15 @@ void initHip9011() {
 /* Debug functions.															*/
 /*==========================================================================*/
 
+static const char *hip_state_names[] =
+{
+	"Not ready/calculating",
+	"Ready for integration",
+	"Integrating",
+	"Waiting for first ADC sample",
+	"Waiting for second ADC sample"
+};
+
 static void showHipInfo(void) {
 	if (!CONFIG(isHip9011Enabled)) {
 		efiPrintf("hip9011 driver not active");
@@ -548,7 +557,7 @@ static void showHipInfo(void) {
 
 	efiPrintf("HIP9011: enabled %s state %s",
 		boolToString(CONFIG(isHip9011Enabled)),
-		getHip_state_e(instance.state));
+		hip_state_names[instance.state]);
 
 	efiPrintf(" Advanced mode: enabled %d used %d",
 		CONFIG(useTpicAdvancedMode),
