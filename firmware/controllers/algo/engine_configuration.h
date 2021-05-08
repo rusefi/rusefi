@@ -45,8 +45,6 @@ void incrementGlobalConfigurationVersion(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 void commonFrankensoAnalogInputs(engine_configuration_s *engineConfiguration);
 void setFrankenso0_1_joystick(engine_configuration_s *engineConfiguration);
 
-#define MEMCPY(dest, src) {memcpy(dest, src, sizeof(src));}
-
 void emptyCallbackWithConfiguration(engine_configuration_s * engine);
 void setDefaultFrankensoConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE);
 
