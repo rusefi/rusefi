@@ -4,10 +4,8 @@ BOARDCPPSRC =  $(PROJECT_DIR)/config/boards/proteus/board_configuration.cpp \
 
 BOARDINC = $(PROJECT_DIR)/config/boards/proteus
 
-# Target processor details
-ifeq ($(PROJECT_CPU),ARCH_STM32F7)
-  PROTEUS_LEGACY = TRUE
-endif
+# Uncomment if you have a v0.1 or v0.2 board
+# PROTEUS_LEGACY = TRUE
 
 ifeq ($(PROJECT_CPU),ARCH_STM32F4)
   IS_STM32F429 = yes
