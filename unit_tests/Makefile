@@ -19,10 +19,12 @@ include $(PROJECT_DIR)/util/util.mk
 include $(PROJECT_DIR)/init/init.mk
 include $(UNIT_TESTS_DIR)/test.mk
 include $(UNIT_TESTS_DIR)/tests/tests.mk
+include $(PROJECT_DIR)/../unit_tests/tests/util/test_util.mk
+
 
 # C sources that can be compiled in ARM or THUMB mode depending on the global
 # setting.
-CSRC = $(ALLCSRC) \
+CSRC += $(ALLCSRC) \
 	$(UTILSRC) \
 	$(CONTROLLERS_ALGO_SRC) \
 	$(CONTROLLERS_CORE_SRC) \
@@ -34,7 +36,7 @@ CSRC = $(ALLCSRC) \
 
 # C++ sources that can be compiled in ARM or THUMB mode depending on the global
 # setting.
-CPPSRC = $(ALLCPPSRC) \
+CPPSRC += $(ALLCPPSRC) \
 	$(UTILSRC_CPP) \
 	$(CONTROLLERS_ALGO_SRC_CPP) \
 	$(TRIGGER_DECODERS_SRC_CPP) \
@@ -58,7 +60,7 @@ CPPSRC = $(ALLCPPSRC) \
 	$(PROJECT_DIR)/console/binary/tooth_logger.cpp \
 	$(PROJECT_DIR)/console/binary_log/log_field.cpp \
 
-INCDIR = $(UNIT_TESTS_DIR) \
+INCDIR += $(UNIT_TESTS_DIR) \
 	$(ALLINC) \
 	$(UTIL_INC) \
 	$(PROJECT_DIR)/config/engines \
