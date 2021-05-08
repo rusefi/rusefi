@@ -411,6 +411,9 @@ static msg_t hipThread(void *arg) {
 	UNUSED(arg);
 	chRegSetThreadName("hip9011 worker");
 
+	/* This strange code was here before me.
+	 * Not sure why we need it */
+#if 0
 	/* Acquire ownership of the bus. */
 	spiAcquireBus(spi);
 	// some time to let the hardware start
@@ -422,10 +425,8 @@ static msg_t hipThread(void *arg) {
 	/* Ownership release. */
 	spiReleaseBus(spi);
 
-	/* init semaphore */
-	chSemObjectInit(&wake, 10);
-
 	chThdSleepMilliseconds(100);
+#endif
 
 	do {
 		/* retry until success */
@@ -554,6 +555,8 @@ void initHip9011() {
 
 	efiPrintf("Starting HIP9011/TPIC8101 driver");
 
+	/* init semaphore */
+	chSemObjectInit(&wake, 10);
 	chThdCreateStatic(hipThreadStack, sizeof(hipThreadStack), PRIO_HIP9011, (tfunc_t)(void*) hipThread, NULL);
 
 	#if EFI_HIP_9011_DEBUG
