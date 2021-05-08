@@ -12,7 +12,7 @@
 
 /* enable debug by default */
 #ifndef EFI_HIP_9011_DEBUG
-#define EFI_HIP_9011_DEBUG TRUE
+#define EFI_HIP_9011_DEBUG EFI_HIP_9011
 #endif
 
 #define PIF						3.14159f
