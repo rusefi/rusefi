@@ -129,4 +129,13 @@ constexpr void setTable(TElement (&dest)[N][M], const TElement value) {
 	}
 }
 
+template <typename TDest, typename TSource, size_t N, size_t M>
+constexpr void copyTable(TDest (&dest)[N][M], const TSource (&source)[N][M], float multiply = 1.0f) {
+	for (size_t n = 0; n < N; n++) {
+		for (size_t m = 0; m < M; m++) {
+			dest[n][m] = source[n][m] * multiply;
+		}
+	}
+}
+
 void setRpmTableBin(float array[], int size);
