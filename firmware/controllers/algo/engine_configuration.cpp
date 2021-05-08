@@ -1041,8 +1041,12 @@ static void setDefaultEngineConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	engineConfiguration->debugMode = DBG_ALTERNATOR_PID;
 
 	engineConfiguration->acIdleRpmBump = 200;
-	engineConfiguration->knockDetectionWindowStart = 35;
-	engineConfiguration->knockDetectionWindowEnd = 135;
+
+	/* these two are used for HIP9011 only
+	 * Currently this is offset from fire event, not TDC */
+	/* TODO: convert to offset from TDC */
+	engineConfiguration->knockDetectionWindowStart = 15.0 + 5.0;
+	engineConfiguration->knockDetectionWindowEnd = 15.0 + 45.0;
 
 	/**
 	 * this is RPM. 10000 rpm is only 166Hz, 800 rpm is 13Hz

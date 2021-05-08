@@ -207,7 +207,7 @@ if (engineConfiguration->debugMode == DBG_DWELL_METRIC) {
 	startKnockSampling(event->cylinderNumber);
 #endif
 #if EFI_HIP_9011
-	hip9011_startKnockSampling(event->cylinderNumber, nowNt);
+	hip9011_onFireEvent(event->cylinderNumber, nowNt);
 #endif
 }
 
