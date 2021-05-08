@@ -20,6 +20,19 @@
 #define GAIN_LOOKUP_SIZE 		64
 #define BAND_LOOKUP_SIZE 		64
 
+typedef enum {
+	/* initial state and state used during value read and calculations */
+	NOT_READY,
+	/* chip is configuread and ready for next integration */
+	READY_TO_INTEGRATE,
+	/* integration is in progress */
+	IS_INTEGRATING,
+	/* in default mode driver is waiting for first ADC callback */
+	WAITING_FOR_ADC_TO_SKIP,
+	/* in default mode driver is waiting for second ADC callback, saves it and switched to NOT_READY state */
+	WAITING_FOR_RESULT_ADC
+} hip_state_e;
+
 /**
  * this interface defines hardware communication layer for HIP9011 chip
  */

@@ -1,7 +1,7 @@
 #include "global.h"
 #include "rusefi_enums.h"
 #include "rusefi_hw_enums.h"
-// was generated automatically by rusEFI tool  from rusefi_hw_enums.h // was generated automatically by rusEFI tool  from rusefi_enums.h // by enum2string.jar tool on Tue May 04 14:13:02 UTC 2021
+// was generated automatically by rusEFI tool  from rusefi_hw_enums.h // was generated automatically by rusEFI tool  from rusefi_enums.h // by enum2string.jar tool on Sat May 08 16:52:29 MSK 2021
 // see also gen_config_and_enums.bat
 
 
@@ -863,23 +863,6 @@ case GPPWM_GreaterThan:
   return "GPPWM_GreaterThan";
 case GPPWM_LessThan:
   return "GPPWM_LessThan";
-  }
- return NULL;
-}
-const char *getHip_state_e(hip_state_e value){
-switch(value) {
-case IS_INTEGRATING:
-  return "IS_INTEGRATING";
-case IS_SENDING_SPI_COMMAND:
-  return "IS_SENDING_SPI_COMMAND";
-case NOT_READY:
-  return "NOT_READY";
-case READY_TO_INTEGRATE:
-  return "READY_TO_INTEGRATE";
-case WAITING_FOR_ADC_TO_SKIP:
-  return "WAITING_FOR_ADC_TO_SKIP";
-case WAITING_FOR_RESULT_ADC:
-  return "WAITING_FOR_RESULT_ADC";
   }
  return NULL;
 }
