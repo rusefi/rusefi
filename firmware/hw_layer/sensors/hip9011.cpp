@@ -260,7 +260,7 @@ static void endIntegration(void *) {
 /**
  * Ignition callback used to start HIP integration and schedule finish
  */
-void hip9011_startKnockSampling(uint8_t cylinderNumber, efitick_t nowNt) {
+void hip9011_onFireEvent(uint8_t cylinderNumber, efitick_t nowNt) {
 	if (!CONFIG(isHip9011Enabled))
 		return;
 
