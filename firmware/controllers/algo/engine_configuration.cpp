@@ -237,23 +237,15 @@ void setFuelTablesLoadBin(float minValue, float maxValue DECLARE_CONFIG_PARAMETE
 	setLinearCurve(config->lambdaLoadBins, minValue, maxValue, 1);
 }
 
-void setTimingMap(ignition_table_t map, float value) {
-	for (int l = 0; l < IGN_LOAD_COUNT; l++) {
-		for (int r = 0; r < IGN_RPM_COUNT; r++) {
-			map[l][r] = value;
-		}
-	}
-}
-
 void setWholeIatCorrTimingTable(float value DECLARE_CONFIG_PARAMETER_SUFFIX) {
-	setTimingMap(config->ignitionIatCorrTable, value);
+	setTable(config->ignitionIatCorrTable, value);
 }
 
 /**
  * See also crankingTimingAngle
  */
 void setWholeTimingTable_d(angle_t value DECLARE_CONFIG_PARAMETER_SUFFIX) {
-	setTimingMap(config->ignitionTable, value);
+	setTable(config->ignitionTable, value);
 }
 
 static void initTemperatureCurve(float *bins, float *values, int size, float defaultValue) {
