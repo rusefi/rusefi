@@ -47,6 +47,11 @@ static const char* s_sensorNames[] = {
 	"Barometric Pressure",
 
 	"Fuel Level %",
+
+	"Aux 1",
+	"Aux 2",
+	"Aux 3",
+	"Aux 4",
 };
 
 // This struct represents one sensor in the registry.
