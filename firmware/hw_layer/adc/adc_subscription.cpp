@@ -5,8 +5,6 @@
 #include "perf_trace.h"
 #include "biquad.h"
 
-#include <iterator>
-
 EXTERN_ENGINE;
 
 #if EFI_UNIT_TEST
@@ -29,7 +27,7 @@ struct AdcSubscriptionEntry {
 };
 
 static size_t s_nextEntry = 0;
-static AdcSubscriptionEntry s_entries[8];
+static AdcSubscriptionEntry s_entries[16];
 
 void AdcSubscription::SubscribeSensor(FunctionalSensor &sensor,
 									  adc_channel_e channel,
@@ -40,10 +38,20 @@ void AdcSubscription::SubscribeSensor(FunctionalSensor &sensor,
 		return;
 	}
 
-	// bounds check
-	if (s_nextEntry >= std::size(s_entries)) {
+	const char* name = sensor.getSensorName();
+	if (/*type-limited (int)setting < 0 || */(int)channel >= HW_MAX_ADC_INDEX) {
+		firmwareError(CUSTOM_INVALID_ADC, "Invalid ADC setting %s", name);
 		return;
 	}
+
+	// Ensure that enough entries are available
+	if (s_nextEntry >= efi::size(s_entries)) {
+		firmwareError(CUSTOM_INVALID_ADC, "too many ADC subscriptions");
+		return;
+	}
+
+	// Enable the input pin
+	efiSetPadMode(name, getAdcChannelBrainPin(name, channel), PAL_MODE_INPUT_ANALOG);
 
 	// if 0, default to the board's divider coefficient
 	if (voltsPerAdcVolt == 0) {
