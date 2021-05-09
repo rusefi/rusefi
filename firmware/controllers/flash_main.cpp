@@ -86,8 +86,12 @@ void writeToFlashIfPending() {
 
 // Erase and write a copy of the configuration at the specified address
 template <typename TStorage>
-int eraseAndFlashCopy(flashaddr_t storageAddress, const TStorage& data)
-{
+int eraseAndFlashCopy(flashaddr_t storageAddress, const TStorage& data) {
+	// error already reported, return
+	if (!storageAddress) {
+		return FLASH_RETURN_SUCCESS;
+	}
+
 	auto err = intFlashErase(storageAddress, sizeof(TStorage));
 	if (FLASH_RETURN_SUCCESS != err) {
 		firmwareError(OBD_PCM_Processor_Fault, "Failed to erase flash at %#010x", storageAddress);
@@ -145,6 +149,12 @@ typedef enum {
 
 static persisted_configuration_state_e doReadConfiguration(flashaddr_t address) {
 	efiPrintf("readFromFlash %x", address);
+
+	// error already reported, return
+	if (!address) {
+		return CRC_FAILED;
+	}
+
 	intFlashRead(address, (char *) &persistentState, sizeof(persistentState));
 
 	if (!isValidCrc(&persistentState)) {
