@@ -10,12 +10,33 @@
 #include "efifeatures.h"
 #include "rusefi_enums.h"
 
+/* enable debug by default */
+#ifndef EFI_HIP_9011_DEBUG
+#define EFI_HIP_9011_DEBUG EFI_HIP_9011
+#endif
+
 #define PIF						3.14159f
-#define HIP9011_BAND(bore) (900 / (PIF * (bore) / 2))
+#define HIP9011_BAND(bore)		(900 / (PIF * (bore) / 2))
+#define HIP9011_DESIRED_OUTPUT_VALUE	5.0f
+#define HIP9011_DIGITAL_OUTPUT_MAX		0x03ff	/* 10 bit max value */
+#define HIP_INPUT_CHANNELS		2
 
 #define INT_LOOKUP_SIZE 		32
 #define GAIN_LOOKUP_SIZE 		64
 #define BAND_LOOKUP_SIZE 		64
+
+typedef enum {
+	/* initial state and state used during value read and calculations */
+	NOT_READY,
+	/* chip is configuread and ready for next integration */
+	READY_TO_INTEGRATE,
+	/* integration is in progress */
+	IS_INTEGRATING,
+	/* in default mode driver is waiting for first ADC callback */
+	WAITING_FOR_ADC_TO_SKIP,
+	/* in default mode driver is waiting for second ADC callback, saves it and switched to NOT_READY state */
+	WAITING_FOR_RESULT_ADC
+} hip_state_e;
 
 /**
  * this interface defines hardware communication layer for HIP9011 chip
@@ -65,13 +86,15 @@ public:
 
 	explicit HIP9011(Hip9011HardwareInterface *hardware);
 	int sendCommand(uint8_t cmd);
+	int sendCommandGetReply(uint8_t cmd, uint8_t *reply);
 
 	float getRpmByAngleWindowAndTimeUs(int timeUs, float angleWindowWidth);
 	void prepareRpmLookup(void);
 	void setAngleWindowWidth(DEFINE_HIP_PARAMS);
 	void handleSettings(int rpm DEFINE_PARAM_SUFFIX(DEFINE_HIP_PARAMS));
 	int cylinderToChannelIdx(int cylinder);
-	void handleChannel(DEFINE_HIP_PARAMS);
+	int handleChannel(DEFINE_HIP_PARAMS);
+	int readValueAndHandleChannel(DEFINE_HIP_PARAMS);
 	float getBand(DEFINE_HIP_PARAMS);
 	int getIntegrationIndexByRpm(float rpm);
 	int getBandIndex(DEFINE_HIP_PARAMS);
@@ -84,11 +107,8 @@ public:
 	uint8_t gainIdx = 0xff;
 	uint8_t channelIdx = 0xff;
 
-	int correctResponsesCount = 0;
-	int invalidResponsesCount = 0;
 	float angleWindowWidth = - 1;
 
-	int totalKnockEventsCount = 0;
 	Hip9011HardwareInterface *hw;
 	bool adv_mode = false;
 	/**
@@ -104,14 +124,20 @@ public:
 	hip_state_e state;
 	int8_t cylinderNumber = -1;
 	int8_t expectedCylinderNumber = -1;
-	int raw_value;
-
-	/* counters */
-	int samples = 0;
-	int overrun = 0;
-	int unsync = 0;
+	int rawValue[HIP_INPUT_CHANNELS];
 
 	float rpmLookup[INT_LOOKUP_SIZE];
+
+	#if EFI_HIP_9011_DEBUG
+		/* SPI counters */
+		int correctResponsesCount = 0;
+		int invalidResponsesCount = 0;
+
+		/* counters */
+		int samples = 0;
+		int overrun = 0;
+		int unsync = 0;
+	#endif
 };
 
 // 0b010x.xxxx

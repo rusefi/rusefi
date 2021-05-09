@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEfi tool ConfigDefinition.jar based on (unknown script) integration/engine_state.txt Mon Jul 06 06:07:19 UTC 2020
+// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) integration/engine_state.txt Sat May 08 21:43:54 UTC 2021
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -101,14 +101,13 @@ public class EngineState {
 	public static final Field RUNNING_COOLANTTEMPERATURECOEFFICIENT = Field.create("RUNNING_COOLANTTEMPERATURECOEFFICIENT", 120, FieldType.FLOAT);
 	public static final Field RUNNING_TIMESINCECRANKINGINSECS = Field.create("RUNNING_TIMESINCECRANKINGINSECS", 124, FieldType.FLOAT);
 	public static final Field RUNNING_INJECTORLAG = Field.create("RUNNING_INJECTORLAG", 128, FieldType.FLOAT);
-	public static final Field RUNNING_PIDCORRECTION = Field.create("RUNNING_PIDCORRECTION", 132, FieldType.FLOAT);
-	public static final Field RUNNING_BASEFUEL = Field.create("RUNNING_BASEFUEL", 136, FieldType.FLOAT);
-	public static final Field RUNNING_FUEL = Field.create("RUNNING_FUEL", 140, FieldType.FLOAT);
-	public static final Field ETBFEEDFORWARD = Field.create("ETBFEEDFORWARD", 144, FieldType.FLOAT);
-	public static final Field TARGETFROMTABLE = Field.create("TARGETFROMTABLE", 148, FieldType.FLOAT);
-	public static final Field SPARKDWELL = Field.create("SPARKDWELL", 152, FieldType.FLOAT);
-	public static final Field DWELLANGLE = Field.create("DWELLANGLE", 156, FieldType.FLOAT);
-	public static final Field CLTTIMINGCORRECTION = Field.create("CLTTIMINGCORRECTION", 160, FieldType.FLOAT);
+	public static final Field RUNNING_BASEFUEL = Field.create("RUNNING_BASEFUEL", 132, FieldType.FLOAT);
+	public static final Field RUNNING_FUEL = Field.create("RUNNING_FUEL", 136, FieldType.FLOAT);
+	public static final Field ETBFEEDFORWARD = Field.create("ETBFEEDFORWARD", 140, FieldType.FLOAT);
+	public static final Field TARGETFROMTABLE = Field.create("TARGETFROMTABLE", 144, FieldType.FLOAT);
+	public static final Field SPARKDWELL = Field.create("SPARKDWELL", 148, FieldType.FLOAT);
+	public static final Field DWELLANGLE = Field.create("DWELLANGLE", 152, FieldType.FLOAT);
+	public static final Field CLTTIMINGCORRECTION = Field.create("CLTTIMINGCORRECTION", 156, FieldType.FLOAT);
 	public static final Field[] VALUES = {
 	ISTCHARGEAIRMODEL,
 	UNUSEDBIT_1_1,
@@ -205,7 +204,6 @@ public class EngineState {
 	RUNNING_COOLANTTEMPERATURECOEFFICIENT,
 	RUNNING_TIMESINCECRANKINGINSECS,
 	RUNNING_INJECTORLAG,
-	RUNNING_PIDCORRECTION,
 	RUNNING_BASEFUEL,
 	RUNNING_FUEL,
 	ETBFEEDFORWARD,

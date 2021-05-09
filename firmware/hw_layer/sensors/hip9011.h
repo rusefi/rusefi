@@ -17,4 +17,4 @@ void stopHip9001_pins();
 void hipAdcCallback(adcsample_t value);
 #endif /* HAL_USE_ADC */
 
-void hip9011_startKnockSampling(uint8_t cylinderNumber, efitick_t nowNt);
+void hip9011_onFireEvent(uint8_t cylinderNumber, efitick_t nowNt);

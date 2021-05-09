@@ -67,6 +67,17 @@ static NamedOutputPin Cs(PROTOCOL_HIP_NAME);
 
 class Hip9011Hardware : public Hip9011HardwareInterface {
 	int sendSyncCommand(uint8_t command, uint8_t *rx_ptr) override;
+
+public:
+	scheduling_s startTimer;
+	scheduling_s endTimer;
+
+private:
+	int checkResponseDefMode(uint8_t tx, uint8_t rx);
+	int checkResponseAdvMode(uint8_t tx, uint8_t rx);
+
+	uint8_t rep_mask;
+	uint8_t rep_value;
 };
 
 /* TODO: include following stuff in object */
@@ -77,11 +88,12 @@ static SPIDriver *spi;
 
 static Hip9011Hardware hardware;
 
-static float hipValueMax = 0;
-
 HIP9011 instance(&hardware);
 
-static scheduling_s endTimer;
+#if EFI_HIP_9011_DEBUG
+	static float normalizedValue[HIP_INPUT_CHANNELS];
+	static float normalizedValueMax[HIP_INPUT_CHANNELS];
+#endif
 
 // SPI_CR1_BR_1 // 5MHz
 // SPI_CR1_CPHA Clock Phase
@@ -108,13 +120,15 @@ static SPIConfig hipSpiCfg = {
 /* Forward declarations														*/
 /*==========================================================================*/
 
-static void hip_addconsoleActions(void);
+#if EFI_HIP_9011_DEBUG
+	static void hip_addconsoleActions(void);
+#endif
 
 /*==========================================================================*/
 /* Local functions.															*/
 /*==========================================================================*/
 
-static int checkResponseDefMode(uint8_t tx, uint8_t rx) {
+int Hip9011Hardware::checkResponseDefMode(uint8_t tx, uint8_t rx) {
 	/* in default SPI mode SDO is directly equals the SDI (echo function) */
 	if (tx == rx) {
 		return 0;
@@ -123,10 +137,41 @@ static int checkResponseDefMode(uint8_t tx, uint8_t rx) {
 	}
 }
 
-static int checkResponseAdvMode(uint8_t tx, uint8_t rx) {
-	UNUSED(tx); UNUSED(rx);
-	/* TODO: no check for advanced mode yet */
-	return 0;
+int Hip9011Hardware::checkResponseAdvMode(uint8_t tx, uint8_t rx) {
+	int ret = 0;
+
+	/* check reply */
+	if ((rx & rep_mask) != rep_value)
+		ret = -1;
+
+	/* extract mask and value for next reply */
+	if ((tx & 0xe0) == SET_PRESCALER_CMD(0)){
+		/* D7 to D0 of digital integrator output */
+		rep_mask  = 0x00;
+		rep_value = 0x00;
+	} else if ((tx & 0xfe) == SET_CHANNEL_CMD(0)) {
+		/* D9 to D8 of digital integrator output and six zeroes */
+		rep_mask  = 0x3f;
+		rep_value = 0x00;
+	} else if ((tx & 0xc0) == SET_BAND_PASS_CMD(0)) {
+		rep_mask  = 0xff;
+		rep_value = SET_BAND_PASS_REP;
+	} else if ((tx & 0xc0) == SET_GAIN_CMD(0)) {
+		rep_mask  = 0xff;
+		rep_value = SET_GAIN_REP;
+	} else if ((tx & 0xe0) == SET_INTEGRATOR_CMD(0)) {
+		rep_mask  = 0xff;
+		rep_value = SET_INTEGRATOR_REP;
+	} else if ((tx & 0xff) == SET_ADVANCED_MODE_CMD) {
+		rep_mask  = 0xff;
+		rep_value = SET_ADVANCED_MODE_REP;
+	} else {
+		/* unknown */
+		rep_mask  = 0x00;
+		rep_value = 0x00;
+	}
+
+	return ret;
 }
 
 int Hip9011Hardware::sendSyncCommand(uint8_t tx, uint8_t *rx_ptr) {
@@ -149,16 +194,18 @@ int Hip9011Hardware::sendSyncCommand(uint8_t tx, uint8_t *rx_ptr) {
 	if (rx_ptr)
 		*rx_ptr = rx;
 	/* check response */
-	if (instance.adv_mode == false)
-		ret = checkResponseDefMode(tx, rx);
-	else
+	if (instance.adv_mode)
 		ret = checkResponseAdvMode(tx, rx);
-
-	/* statistic counters */
-	if (ret)
-		instance.invalidResponsesCount++;
 	else
-		instance.correctResponsesCount++;
+		ret = checkResponseDefMode(tx, rx);
+
+	#if EFI_HIP_9011_DEBUG
+		/* statistic counters */
+		if (ret)
+			instance.invalidResponsesCount++;
+		else
+			instance.correctResponsesCount++;
+	#endif
 
 	return ret;
 }
@@ -183,54 +230,73 @@ static int hip_wake_driver(void)
 	return 0;
 }
 
-static void startIntegration(void *) {
-	if (instance.state == READY_TO_INTEGRATE) {
+static void startIntegration(HIP9011 *hip) {
+	if (hip->state == READY_TO_INTEGRATE) {
 		/**
 		 * SPI communication is only allowed while not integrating, so we postpone the exchange
 		 * until we are done integrating
 		 */
-		instance.state = IS_INTEGRATING;
+		hip->state = IS_INTEGRATING;
 		intHold.setHigh();
+	} else {
+		#if EFI_HIP_9011_DEBUG
+			hip->overrun++;
+		#endif
 	}
 }
 
-static void endIntegration(void *) {
+static void endIntegration(HIP9011 *hip) {
 	/**
 	 * isIntegrating could be 'false' if an SPI command was pending thus we did not integrate during this
 	 * engine cycle
 	 */
-	if (instance.state == IS_INTEGRATING) {
+	if (hip->state == IS_INTEGRATING) {
 		intHold.setLow();
-		instance.state = WAITING_FOR_ADC_TO_SKIP;
+		if (instance.adv_mode) {
+			/* read value over SPI in thread mode */
+			hip->state = NOT_READY;
+			hip_wake_driver();
+		} else {
+			/* wait for ADC samples */
+			hip->state = WAITING_FOR_ADC_TO_SKIP;
+		}
 	}
 }
 
 /**
  * Ignition callback used to start HIP integration and schedule finish
  */
-void hip9011_startKnockSampling(uint8_t cylinderNumber, efitick_t nowNt) {
+void hip9011_onFireEvent(uint8_t cylinderNumber, efitick_t nowNt) {
 	if (!CONFIG(isHip9011Enabled))
 		return;
 
-	/* overrun? */
-	if (instance.state != READY_TO_INTEGRATE) {
-		instance.overrun++;
-		return;
-	}
+	/* We are not checking here for READY_TO_INTEGRATE state as
+	 * previous integration may be stil in progress, while
+	 * we are scheduling next integration start only
+	 * knockDetectionWindowStart from now.
+	 * Check for correct state will be done at startIntegration () */
 
 	if (cylinderNumber == instance.expectedCylinderNumber) {
 		/* save currect cylinder */
 		instance.cylinderNumber = cylinderNumber;
-		startIntegration(NULL);
 
-		/* TODO: reference to knockDetectionWindowStart */
-		scheduleByAngle(&endTimer, nowNt,
-				engineConfiguration->knockDetectionWindowEnd - engineConfiguration->knockDetectionWindowStart,
-				&endIntegration);
+		/* smart books says we need to sence knock few degrees after TDC
+		 * currently I have no idea how to hook to cylinder TDC in correct way.
+		 * So schedule start of integration + knockDetectionWindowStart from fire event
+		 * Keep this is mind when setting knockDetectionWindowStart */
+		scheduleByAngle(&hardware.startTimer, nowNt,
+				engineConfiguration->knockDetectionWindowStart,
+				{ startIntegration, &instance });
+
+		scheduleByAngle(&hardware.endTimer, nowNt,
+				engineConfiguration->knockDetectionWindowEnd,
+				{ endIntegration, &instance });
 	} else {
-		/* out of sync */
-		if (instance.expectedCylinderNumber >= 0)
-			instance.unsync++;
+		#if EFI_HIP_9011_DEBUG
+			/* out of sync */
+			if (instance.expectedCylinderNumber >= 0)
+				instance.unsync++;
+		#endif
 		/* save currect cylinder */
 		instance.cylinderNumber = cylinderNumber;
 		/* Skip integration, call driver task to prepare for next cylinder */
@@ -240,11 +306,16 @@ void hip9011_startKnockSampling(uint8_t cylinderNumber, efitick_t nowNt) {
 }
 
 void hipAdcCallback(adcsample_t adcValue) {
+	/* we read in digital mode */
+	if (instance.adv_mode)
+		return;
 	if (instance.state == WAITING_FOR_ADC_TO_SKIP) {
 		instance.state = WAITING_FOR_RESULT_ADC;
 	} else if (instance.state == WAITING_FOR_RESULT_ADC) {
 		/* offload calculations to driver thread */
-		instance.raw_value = adcValue;
+		if (instance.channelIdx < HIP_INPUT_CHANNELS) {
+			instance.rawValue[instance.channelIdx] = adcValue;
+		}
 		instance.state = NOT_READY;
 		hip_wake_driver();
 	}
@@ -323,8 +394,10 @@ static int hip_init(void) {
 		}
 	}
 
-	/* reset error counter now */
-	instance.invalidResponsesCount = 0;
+	#if EFI_HIP_9011_DEBUG
+		/* reset error counter now */
+		instance.invalidResponsesCount = 0;
+	#endif
 
 	instance.state = READY_TO_INTEGRATE;
 
@@ -338,6 +411,9 @@ static msg_t hipThread(void *arg) {
 	UNUSED(arg);
 	chRegSetThreadName("hip9011 worker");
 
+	/* This strange code was here before me.
+	 * Not sure why we need it */
+#if 0
 	/* Acquire ownership of the bus. */
 	spiAcquireBus(spi);
 	// some time to let the hardware start
@@ -349,10 +425,8 @@ static msg_t hipThread(void *arg) {
 	/* Ownership release. */
 	spiReleaseBus(spi);
 
-	/* init semaphore */
-	chSemObjectInit(&wake, 10);
-
 	chThdSleepMilliseconds(100);
+#endif
 
 	do {
 		/* retry until success */
@@ -368,8 +442,11 @@ static msg_t hipThread(void *arg) {
 
 		/* load new/updated settings */
 		instance.handleSettings(GET_RPM() DEFINE_PARAM_SUFFIX(PASS_HIP_PARAMS));
-		/* switch input channel */
-		instance.handleChannel(DEFINE_PARAM_SUFFIX(PASS_HIP_PARAMS));
+		/* in advanced more driver will set channel while reading integrator value */
+		if (!instance.adv_mode) {
+			/* switch input channel */
+			instance.handleChannel(DEFINE_PARAM_SUFFIX(PASS_HIP_PARAMS));
+		}
 		/* State */
 		instance.state = READY_TO_INTEGRATE;
 
@@ -377,19 +454,59 @@ static msg_t hipThread(void *arg) {
 		if (msg == MSG_TIMEOUT) {
 			/* ??? */
 		} else {
+			int rawValue;
+			/* check now, before readValueAndHandleChannel did not overwrite expectedCylinderNumber */
+			bool correctCylinder = (instance.cylinderNumber == instance.expectedCylinderNumber);
+
+			/* this needs to be called in any case to set proper channel for next cycle */
+			if (instance.adv_mode) {
+				rawValue = instance.readValueAndHandleChannel(DEFINE_PARAM_SUFFIX(PASS_HIP_PARAMS));
+
+				/* spi communication issue? */
+				if (rawValue < 0)
+					continue;
+			}
+
+			/* check that we know channel for current measurement */
+			int idx = instance.channelIdx;
+			if (!(idx < HIP_INPUT_CHANNELS))
+				continue;
+
+			float knockNormalized = 0.0f;
+			float knockVolts = 0.0f;
+
+			/* calculations */
+			if (instance.adv_mode) {
+				/* store for debug */
+				instance.rawValue[idx] = rawValue;
+				/* convert 10 bit integer value to 0.0 .. 1.0 float */
+				knockNormalized = ((float)rawValue) / HIP9011_DIGITAL_OUTPUT_MAX;
+				/* convert to magic volts */
+				knockVolts = knockNormalized * HIP9011_DESIRED_OUTPUT_VALUE;
+			} else {
+				rawValue = instance.rawValue[idx];
+				/* first calculate ouput volts */
+				knockVolts = adcToVolts(rawValue) * CONFIG(analogInputDividerCoefficient);
+				/* and then normalize */
+				knockNormalized = knockVolts / HIP9011_DESIRED_OUTPUT_VALUE;
+			}
+
 			/* Check for correct cylinder/input */
-			if (instance.cylinderNumber == instance.expectedCylinderNumber) {
-				/* calculations */
-				float knockVolts = instance.raw_value * adcToVolts(1) * CONFIG(analogInputDividerCoefficient);
-				hipValueMax = maxF(knockVolts, hipValueMax);
+			if (correctCylinder) {
+				/* report */
 				engine->knockLogic(knockVolts);
 
 				/* TunerStudio */
 				tsOutputChannels.knockLevels[instance.cylinderNumber] = knockVolts;
 				tsOutputChannels.knockLevel = knockVolts;
 
-				/* counters */
-				instance.samples++;
+				#if EFI_HIP_9011_DEBUG
+					/* debug */
+					normalizedValue[idx] = knockNormalized;
+					normalizedValueMax[idx] = maxF(knockNormalized, normalizedValueMax[idx]);
+					/* counters */
+					instance.samples++;
+				#endif
 			} else {
 				/* out of sync event already calculated, nothing to do */
 			}
@@ -438,14 +555,29 @@ void initHip9011() {
 
 	efiPrintf("Starting HIP9011/TPIC8101 driver");
 
+	/* init semaphore */
+	chSemObjectInit(&wake, 10);
 	chThdCreateStatic(hipThreadStack, sizeof(hipThreadStack), PRIO_HIP9011, (tfunc_t)(void*) hipThread, NULL);
 
-	hip_addconsoleActions();
+	#if EFI_HIP_9011_DEBUG
+		hip_addconsoleActions();
+	#endif
 }
 
 /*==========================================================================*/
 /* Debug functions.															*/
 /*==========================================================================*/
+
+#if EFI_HIP_9011_DEBUG
+
+static const char *hip_state_names[] =
+{
+	"Not ready/calculating",
+	"Ready for integration",
+	"Integrating",
+	"Waiting for first ADC sample",
+	"Waiting for second ADC sample"
+};
 
 static void showHipInfo(void) {
 	if (!CONFIG(isHip9011Enabled)) {
@@ -455,7 +587,7 @@ static void showHipInfo(void) {
 
 	efiPrintf("HIP9011: enabled %s state %s",
 		boolToString(CONFIG(isHip9011Enabled)),
-		getHip_state_e(instance.state));
+		hip_state_names[instance.state]);
 
 	efiPrintf(" Advanced mode: enabled %d used %d",
 		CONFIG(useTpicAdvancedMode),
@@ -486,10 +618,6 @@ static void showHipInfo(void) {
 		engine->knockCount,
 		engineConfiguration->maxKnockSubDeg);
 
-	efiPrintf(" Adc input %s (%.2f V)",
-		getAdc_channel_e(engineConfiguration->hipOutputChannel),
-		getVoltage("hipinfo", engineConfiguration->hipOutputChannel));
-
 	efiPrintf(" IntHold %s (mode 0x%x)",
 		hwPortname(CONFIG(hip9011IntHoldPin)),
 		CONFIG(hip9011IntHoldPinMode));
@@ -503,22 +631,32 @@ static void showHipInfo(void) {
 	printSpiConfig("hip9011", CONFIG(hip9011SpiDevice));
 #endif /* EFI_PROD_CODE */
 
-	efiPrintf(" SPI good response %d incorrect response %d",
+	efiPrintf(" SPI: good response %d incorrect response %d",
 		instance.correctResponsesCount,
 		instance.invalidResponsesCount);
 
-	efiPrintf(" hip %.2f vmax=%.2f",
-		engine->knockVolts,
-		hipValueMax);
+	efiPrintf(" Counters: samples %d overruns %d sync miss %d",
+		instance.samples, instance.overrun, instance.unsync);
 
 	efiPrintf(" Window start %.2f end %.2f",
 		engineConfiguration->knockDetectionWindowStart,
 		engineConfiguration->knockDetectionWindowEnd);
 
-	efiPrintf(" Counters: samples %d overruns %d sync miss %d",
-		instance.samples, instance.overrun, instance.unsync);
+	if (!instance.adv_mode) {
+		efiPrintf(" Adc input %s (%.2f V)",
+			getAdc_channel_e(engineConfiguration->hipOutputChannel),
+			getVoltage("hipinfo", engineConfiguration->hipOutputChannel));
+	}
 
-	hipValueMax = 0;
+	for (int i = 0; i < HIP_INPUT_CHANNELS; i++) {
+		efiPrintf("  input[%d] %d -> %.3f (max %.3f)",
+			i,
+			instance.rawValue[i],
+			normalizedValue[i],
+			normalizedValueMax[i]);
+		normalizedValueMax[i] = 0.0;
+	}
+
 	engine->printKnockState();
 }
 
@@ -554,5 +692,7 @@ static void hip_addconsoleActions(void) {
     addConsoleActionF("set_knock_threshold", setKnockThresh);
     addConsoleActionI("set_max_knock_sub_deg", setMaxKnockSubDeg);
 }
+
+#endif /* EFI_HIP_9011_DEBUG */
 
 #endif /* EFI_HIP_9011 */

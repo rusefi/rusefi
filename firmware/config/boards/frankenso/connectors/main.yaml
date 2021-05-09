@@ -2,6 +2,7 @@ pins:
   - pin: 2
     function: Power Ignition On (input)
 
+
   - pin: 6
     id: GPIOC_9
     class: outputs
