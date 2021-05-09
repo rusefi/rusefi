@@ -15,7 +15,9 @@ fatlabel ramdisk.image RUSEFI
 # Put the zip inside the filesystem
 mcopy -i ramdisk.image $1 ::
 # Put a readme text file in there too
-mcopy -i ramdisk.image hw_layer/mass_storage/README.txt ::
+mcopy -i ramdisk.image hw_layer/mass_storage/filesystem_contents/README.nozip.txt ::README.txt
+mcopy -i ramdisk.image hw_layer/mass_storage/filesystem_contents/rusEFI\ Forum.url ::
+mcopy -i ramdisk.image hw_layer/mass_storage/filesystem_contents/rusEFI\ Wiki.url ::
 
 # Compress the image as DEFLATE with gzip
 gzip ramdisk.image
