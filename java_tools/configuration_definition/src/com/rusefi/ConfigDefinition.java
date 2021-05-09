@@ -35,6 +35,9 @@ public class ConfigDefinition {
     private static final String KEY_C_FSIO_NAMES = "-c_fsio_names";
     private static final String KEY_C_FSIO_STRING = "-c_fsio_strings";
     private static final String KEY_C_DEFINES = "-c_defines";
+    /**
+     * @see CHeaderConsumer#withC_Defines
+     */
     private static final String KEY_WITH_C_DEFINES = "-with_c_defines";
     private static final String KEY_JAVA_DESTINATION = "-java_destination";
     private static final String KEY_ROMRAIDER_DESTINATION = "-romraider_destination";
@@ -46,6 +49,11 @@ public class ConfigDefinition {
     public static final String KEY_CACHE_ZIP_FILE = "-cache_zip_file";
     private static final String KEY_ZERO_INIT = "-initialize_to_zero";
     private static final String KEY_BOARD_NAME = "-board";
+    /**
+     * This flag controls if we assign default zero value (useful while generating structures used for class inheritance)
+     * versus not assigning default zero value like we need for non-class headers
+     * This could be related to configuration header use-case versus "live data" (not very alive idea) use-case
+     */
     public static boolean needZeroInit = true;
     public static String definitionInputFile = null;
 
