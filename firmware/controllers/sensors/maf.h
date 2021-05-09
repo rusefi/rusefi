@@ -14,7 +14,6 @@
 #include "global.h"
 
 float getMafVoltage(DECLARE_ENGINE_PARAMETER_SIGNATURE);
-bool hasMafSensor(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 float getRealMaf(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 
 void setBosch0280218037(persistent_config_s *engineConfiguration);

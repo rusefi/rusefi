@@ -154,7 +154,7 @@ static int packEngineMode(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 }
 
 static float getAirFlowGauge(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
-	return hasMafSensor() ? getRealMaf(PASS_ENGINE_PARAMETER_SIGNATURE) : engine->engineState.airFlow;
+	return Sensor::hasSensor(SensorType::Maf) ? getRealMaf(PASS_ENGINE_PARAMETER_SIGNATURE) : engine->engineState.airFlow;
 }
 
 void writeLogLine(Writer& buffer) {
