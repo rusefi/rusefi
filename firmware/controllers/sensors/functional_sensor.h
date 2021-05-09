@@ -25,7 +25,7 @@
  */
 class FunctionalSensor final : public StoredValueSensor {
 public:
-	explicit FunctionalSensor(SensorType type, efitick_t timeoutPeriod)
+	FunctionalSensor(SensorType type, efitick_t timeoutPeriod)
 		: StoredValueSensor(type, timeoutPeriod) { }
 
 	void postRawValue(float inputValue, efitick_t timestamp);
