@@ -204,7 +204,7 @@ void InjectionEvent::onTriggerTooth(size_t trgEventIndex, int rpm, efitick_t now
 	}
 
 	// Select fuel mass from the correct bank
-	uint8_t bankIndex = CONFIG(cylinderBankSelect[this->ownIndex]);
+	uint8_t bankIndex = CONFIG(cylinderBankSelect[this->cylinderNumber]);
 	float injectionMassGrams = ENGINE(injectionMass)[bankIndex];
 
 	// Perform wall wetting adjustment on fuel mass, not duration, so that

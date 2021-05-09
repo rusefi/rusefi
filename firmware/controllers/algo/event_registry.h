@@ -32,7 +32,8 @@ public:
 	 */
 	bool isSimultanious = false;
 	InjectorOutputPin *outputs[MAX_WIRES_COUNT];
-	int ownIndex = 0;
+	uint8_t ownIndex = 0;
+	uint8_t cylinderNumber = 0;
 	DECLARE_ENGINE_PTR;
 	event_trigger_position_s injectionStart;
 
