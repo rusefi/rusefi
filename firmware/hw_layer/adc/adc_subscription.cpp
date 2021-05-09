@@ -5,8 +5,6 @@
 #include "perf_trace.h"
 #include "biquad.h"
 
-#include <iterator>
-
 EXTERN_ENGINE;
 
 #if EFI_UNIT_TEST
@@ -47,7 +45,7 @@ void AdcSubscription::SubscribeSensor(FunctionalSensor &sensor,
 	}
 
 	// Ensure that enough entries are available
-	if (s_nextEntry >= std::size(s_entries)) {
+	if (s_nextEntry >= efi::size(s_entries)) {
 		firmwareError(CUSTOM_INVALID_ADC, "too many ADC subscriptions");
 		return;
 	}
