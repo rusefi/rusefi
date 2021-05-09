@@ -14,7 +14,7 @@ endif
 
 # disable some modules to shrink bootloader binary
 DDEFS += -DEFI_BOOTLOADER
-DDEFS += -DHAL_USE_EXT=FALSE -DHAL_USE_ICU=FALSE -DHAL_USE_PWM=FALSE -DHAL_USE_RTC=FALSE -DEF_LUA=FALSE
+DDEFS += -DHAL_USE_EXT=FALSE -DHAL_USE_ICU=FALSE -DHAL_USE_PWM=FALSE -DHAL_USE_RTC=FALSE
 #disable ChibiOS flsah driver and prevent header from include
 DDEFS += -DHAL_USE_FLASH=FALSE
 
@@ -62,7 +62,7 @@ endif
 
 # Enable this if you want link time optimizations (LTO)
 ifeq ($(USE_LTO),)
-  USE_LTO = yes
+  USE_LTO = no
 endif
 
 # If enabled, this option allows to compile the application in THUMB mode.
