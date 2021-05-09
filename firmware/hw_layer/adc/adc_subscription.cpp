@@ -40,10 +40,19 @@ void AdcSubscription::SubscribeSensor(FunctionalSensor &sensor,
 		return;
 	}
 
-	// bounds check
+	const char* name = sensor.getSensorName();
+	if (/*type-limited (int)setting < 0 || */(int)channel >= HW_MAX_ADC_INDEX) {
+		firmwareError(CUSTOM_INVALID_ADC, "Invalid ADC setting %s", name);
+		return;
+	}
+
+	// Ensure that enough entries are available
 	if (s_nextEntry >= std::size(s_entries)) {
 		return;
 	}
+
+	// Enable the input pin
+	efiSetPadMode(name, getAdcChannelBrainPin(name, channel), PAL_MODE_INPUT_ANALOG);
 
 	// if 0, default to the board's divider coefficient
 	if (voltsPerAdcVolt == 0) {
