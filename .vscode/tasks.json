@@ -7,6 +7,9 @@
             "label": "Build Firmware (Frankenso/default)",
             "type": "shell",
             "command": "make -j12",
+			"windows": {
+				"command": "wsl bash -lc 'make -j12'"
+			},
             "options": {
                 "cwd": "${workspaceRoot}/firmware"
             },
@@ -20,6 +23,9 @@
             "label": "Build Firmware (Proteus F4)",
             "type": "shell",
             "command": "make -j12 PROJECT_BOARD=proteus",
+            "windows": {
+				"command": "wsl bash -lc 'make -j12 PROJECT_BOARD=proteus'"
+			},
             "options": {
                 "cwd": "${workspaceRoot}/firmware"
             },
@@ -33,6 +39,9 @@
             "label": "Build Firmware (Proteus F7)",
             "type": "shell",
             "command": "make -j16 PROJECT_BOARD=proteus PROJECT_CPU=ARCH_STM32F7",
+			"windows": {
+				"command": "wsl bash -lc 'make -j12 PROJECT_BOARD=proteus PROJECT_CPU=ARCH_STM32F7'"
+			},
             "options": {
                 "cwd": "${workspaceRoot}/firmware"
             },
@@ -46,6 +55,9 @@
             "label": "Build Firmware (Proteus H7) EXPERIMENTAL",
             "type": "shell",
             "command": "make -j16 PROJECT_BOARD=proteus PROJECT_CPU=ARCH_STM32H7",
+			"windows": {
+				"command": "wsl bash -lc 'make -j12 PROJECT_BOARD=proteus PROJECT_CPU=ARCH_STM32H7'"
+			},
             "options": {
                 "cwd": "${workspaceRoot}/firmware"
             },
@@ -59,6 +71,9 @@
             "label": "Build Firmware (hellen72)",
             "type": "shell",
             "command": "make -j16 PROJECT_BOARD=hellen/hellen72",
+			"windows": {
+				"command": "wsl bash -lc 'make -j12 PROJECT_BOARD=hellen/hellen72'"
+			},
             "options": {
                 "cwd": "${workspaceRoot}/firmware"
             },
@@ -72,6 +87,9 @@
             "label": "Build Firmware (microRusEfi F4)",
             "type": "shell",
             "command": "make -j12 PROJECT_BOARD=microrusefi",
+			"windows": {
+				"command": "wsl bash -lc 'make -j12 PROJECT_BOARD=microrusefi'"
+			},
             "options": {
                 "cwd": "${workspaceRoot}/firmware"
             },
@@ -85,6 +103,9 @@
             "label": "Build Firmware (microRusEfi F7)",
             "type": "shell",
             "command": "make -j12 PROJECT_BOARD=microrusefi PROJECT_CPU=ARCH_STM32F7",
+			"windows": {
+				"command": "wsl bash -lc 'make -j12 PROJECT_BOARD=microrusefi PROJECT_CPU=ARCH_STM32F7'"
+			},
             "options": {
                 "cwd": "${workspaceRoot}/firmware"
             },
@@ -98,6 +119,9 @@
             "label": "Build Unit Tests",
             "type": "shell",
             "command": "make -j12",
+			"windows": {
+				"command": "wsl make -j12"
+			},
             "options": {
                 "cwd": "${workspaceRoot}/unit_tests"
             },
