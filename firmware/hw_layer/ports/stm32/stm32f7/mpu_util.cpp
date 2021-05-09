@@ -49,6 +49,7 @@ static DeviceType determineDevice() {
 	return DeviceType::Unknown;
 }
 
+// See ST AN4826
 size_t flashSectorSize(flashsector_t sector) {
 	// 1MB devices have 8 sectors per bank
 	// 2MB devices have 12 sectors per bank
