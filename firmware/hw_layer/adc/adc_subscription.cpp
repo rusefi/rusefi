@@ -29,7 +29,7 @@ struct AdcSubscriptionEntry {
 };
 
 static size_t s_nextEntry = 0;
-static AdcSubscriptionEntry s_entries[8];
+static AdcSubscriptionEntry s_entries[16];
 
 void AdcSubscription::SubscribeSensor(FunctionalSensor &sensor,
 									  adc_channel_e channel,
