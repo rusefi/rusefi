@@ -474,10 +474,6 @@ static void configureInputs(void) {
 		addChannel("CJ125 UA", engineConfiguration->cj125ua, ADC_SLOW);
 	}
 
-	for (int i = 0; i < FSIO_ANALOG_INPUT_COUNT ; i++) {
-		addChannel("FSIOadc", engineConfiguration->fsioAdc[i], ADC_SLOW);
-	}
-
 	setAdcChannelOverrides();
 }
 
