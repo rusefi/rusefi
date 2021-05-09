@@ -264,17 +264,12 @@
 
 // F42x has more memory, so we can:
 //  - use compressed USB MSD image (requires 32k of memory)
-//  - use perf trace (requires ~16k of memory)
+//  - use Lua interpreter (requires ~20k of memory)
 #ifdef EFI_IS_F42x
 	#define EFI_USE_COMPRESSED_INI_MSD
-	#define ENABLE_PERF_TRACE TRUE
+	#define EFI_LUA TRUE
 #else
-	// small memory F40x can't fit perf trace
-	#define ENABLE_PERF_TRACE FALSE
-#endif
-
-#ifndef EFI_LUA
-#define EFI_LUA TRUE
+	#define EFI_LUA FALSE
 #endif
 
 #ifndef EFI_ENGINE_SNIFFER

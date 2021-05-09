@@ -244,8 +244,7 @@ void startLua() {
 			return;
 		}
 
-		strncpy(interactiveCmd, str, sizeof(interactiveCmd) - 1);
-		interactiveCmd[sizeof(interactiveCmd) - 1] = '\0';
+		strncpy(interactiveCmd, str, sizeof(interactiveCmd));
 
 		interactivePending = true;
 	});
