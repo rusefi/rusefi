@@ -15,7 +15,7 @@
 */
 
 /*
- * STM32F76xxI generic setup.
+ * STM32F7 memory setup.
  * 
  * RAM0 - Data, Heap.
  * RAM3 - Main Stack, Process Stack, BSS, NOCACHE, ETH.
@@ -27,7 +27,7 @@
 MEMORY
 {
     bl          : org = 0x08000000, len = 16k       /* bootloader section */
-    flash0 (rx) : org = DEFINED(BOOTLOADER) ? 0x08008000 : 0x08000000, len = DEFINED(BOOTLOADER) ? 1992k : 2048k
+    flash0 (rx) : org = DEFINED(BOOTLOADER) ? 0x08008000 : 0x08000000, len = DEFINED(BOOTLOADER) ? 736k : 768k  /* change address & length if bootloader */
     flash1 (rx) : org = 0x00200000, len = 2M        /* Flash as ITCM */ /* TODO: do we need BOOTLOADER logic here? */
     flash2 (rx) : org = 0x00000000, len = 0
     flash3 (rx) : org = 0x00000000, len = 0
