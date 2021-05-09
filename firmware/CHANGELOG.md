@@ -28,6 +28,7 @@ All notable user-facing or behavior-altering changes will be documented in this 
 ## Month 202x Release - "Release Name"
 ### Fixed
  - LCD screen works again #2576
+ - Support STM32F7 1MB devices
 ### Added
  - Per-bank closed loop fuel correction (each cylinder corrected by the sensor that sees its exhaust)
 
