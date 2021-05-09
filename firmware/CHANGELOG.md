@@ -29,7 +29,7 @@ All notable user-facing or behavior-altering changes will be documented in this 
 ### Fixed
  - LCD screen works again #2576
 ### Added
- - Multiple closed loop fuel correction banks (each cylinder corrected by the sensor that sees its exhaust)
+ - Per-bank closed loop fuel correction (each cylinder corrected by the sensor that sees its exhaust)
 
 ## April 2021 Release - "Malbec" 
 ### Added
