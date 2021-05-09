@@ -48,6 +48,7 @@ void AdcSubscription::SubscribeSensor(FunctionalSensor &sensor,
 
 	// Ensure that enough entries are available
 	if (s_nextEntry >= std::size(s_entries)) {
+		firmwareError(CUSTOM_INVALID_ADC, "too many ADC subscriptions");
 		return;
 	}
 

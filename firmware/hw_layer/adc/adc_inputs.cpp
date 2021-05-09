@@ -463,32 +463,11 @@ static void configureInputs(void) {
 
 	addChannel("Baro Press", engineConfiguration->baroSensor.hwChannel, ADC_SLOW);
 
-	addChannel("TPS 1 Primary", engineConfiguration->tps1_1AdcChannel, ADC_SLOW);
-	addChannel("TPS 1 Secondary", engineConfiguration->tps1_2AdcChannel, ADC_SLOW);
-	addChannel("TPS 2 Primary", engineConfiguration->tps2_1AdcChannel, ADC_SLOW);
-	addChannel("TPS 2 Secondary", engineConfiguration->tps2_2AdcChannel, ADC_SLOW);
-
-	addChannel("Wastegate Position", engineConfiguration->wastegatePositionSensor, ADC_SLOW);
-	addChannel("Idle Position Sensor", engineConfiguration->idlePositionSensor, ADC_SLOW);
-
-	addChannel("Fuel Level", engineConfiguration->fuelLevelSensor, ADC_SLOW);
-	addChannel("Acc Pedal1", engineConfiguration->throttlePedalPositionAdcChannel, ADC_SLOW);
-	addChannel("Acc Pedal2", engineConfiguration->throttlePedalPositionSecondAdcChannel, ADC_SLOW);
-	addChannel("VBatt", engineConfiguration->vbattAdcChannel, ADC_SLOW);
 	// not currently used	addChannel("Vref", engineConfiguration->vRefAdcChannel, ADC_SLOW);
-	addChannel("CLT", engineConfiguration->clt.adcChannel, ADC_SLOW);
-	addChannel("IAT", engineConfiguration->iat.adcChannel, ADC_SLOW);
-	addChannel("AUX Temp 1", engineConfiguration->auxTempSensor1.adcChannel, ADC_SLOW);
-	addChannel("AUX Temp 2", engineConfiguration->auxTempSensor2.adcChannel, ADC_SLOW);
 
 	addChannel("AUXF#1", engineConfiguration->auxFastSensor1_adcChannel, ADC_FAST);
 
 	addChannel("AFR", engineConfiguration->afr.hwChannel, ADC_SLOW);
-	addChannel("Oil Pressure", engineConfiguration->oilPressure.hwChannel, ADC_SLOW);
-
-	addChannel("LFP", engineConfiguration->lowPressureFuel.hwChannel, ADC_SLOW);
-	addChannel("HFP", engineConfiguration->highPressureFuel.hwChannel, ADC_SLOW);
-
 
 	if (CONFIG(isCJ125Enabled)) {
 		addChannel("CJ125 UR", engineConfiguration->cj125ur, ADC_SLOW);
