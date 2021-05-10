@@ -27,7 +27,7 @@ SensorResult ThermistorFunc::convert(float ohms) const {
 
 	// bounds check result - please don't try to run rusEfi when colder than -50C
 	// high end limit is required as this could be an oil temp sensor
-	if (celsius < -50 || celsius > 200) {
+	if (celsius < -50 || celsius > 250) {
 		return unexpected;
 	}
 
