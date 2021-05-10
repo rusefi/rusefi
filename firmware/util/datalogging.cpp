@@ -40,36 +40,6 @@
 #include "os_util.h"
 #endif // EFI_UNIT_TEST
 
-static uint8_t intermediateLoggingBufferData[INTERMEDIATE_LOGGING_BUFFER_SIZE] CCM_OPTIONAL;
-
-class IntermediateLogging {
-public:
-	/**
-	 * Class constructors are a great way to have simple initialization sequence
-	 */
-	IntermediateLogging() {
-#if ! EFI_UNIT_TEST
-		msObjectInit(&intermediateLoggingBuffer, intermediateLoggingBufferData, INTERMEDIATE_LOGGING_BUFFER_SIZE, 0);
-#endif // EFI_UNIT_TEST
-	}
-#if ! EFI_UNIT_TEST
-	MemoryStream intermediateLoggingBuffer;
-#endif // EFI_UNIT_TEST
-
-	// todo: look into chsnprintf once on Chibios 3
-	void vappendPrintfI(Logging *logging, const char *fmt, va_list arg) {
-#if ! EFI_UNIT_TEST
-		intermediateLoggingBuffer.eos = 0; // reset
-		efiAssertVoid(CUSTOM_ERR_6603, getCurrentRemainingStack() > 128, "lowstck#1b");
-		chvprintf((BaseSequentialStream *) &intermediateLoggingBuffer, fmt, arg);
-		intermediateLoggingBuffer.buffer[intermediateLoggingBuffer.eos] = 0; // need to terminate explicitly
-		logging->append((char *)intermediateLoggingBuffer.buffer);
-#endif // EFI_UNIT_TEST
-	}
-};
-
-static IntermediateLogging intermediateLogging;
-
 /**
  * @returns true if data does not fit into this buffer
  */
@@ -108,22 +78,6 @@ void Logging::appendFast(const char *text) {
 	linePointer = s - 1;
 }
 
-/**
- * this method acquires system lock to guard the shared intermediateLoggingBuffer memory stream
- */
-void Logging::vappendPrintf(const char *fmt, va_list arg) {
-#if ! EFI_UNIT_TEST
-#if EFI_ENABLE_ASSERTS
-	// todo: Kinetis needs real getCurrentRemainingStack or mock
-	if (getCurrentRemainingStack() < 128) {
-		firmwareError(CUSTOM_ERR_6604, "lowstck#5b %s", chThdGetSelfX()->name);
-	}
-#endif // EFI_ENABLE_ASSERTS
-	chibios_rt::CriticalSectionLocker csl;
-	intermediateLogging.vappendPrintfI(this, fmt, arg);
-#endif // EFI_UNIT_TEST
-}
-
 void Logging::appendPrintf(const char *fmt, ...) {
 #if EFI_UNIT_TEST
 	va_list ap;
@@ -132,10 +86,20 @@ void Logging::appendPrintf(const char *fmt, ...) {
 	va_end(ap);
 #else
 	efiAssertVoid(CUSTOM_APPEND_STACK, getCurrentRemainingStack() > 128, "lowstck#4");
+
+	size_t available = remainingSize();
+
 	va_list ap;
 	va_start(ap, fmt);
-	vappendPrintf(fmt, ap);
+	size_t written = chvsnprintf(linePointer, available, fmt, ap);
 	va_end(ap);
+
+	// chvnsprintf returns how many bytes WOULD HAVE been written if it fit,
+	// so clip it to the available space if necessary
+	linePointer += (written > available) ? available : written;
+	// ensure buffer is always null terminated
+	buffer[bufferSize - 1] = '\0';
+
 #endif // EFI_UNIT_TEST
 }
 
