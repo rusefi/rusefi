@@ -672,18 +672,10 @@ static void setTestBug299(EngineTestHelper *eth) {
 	ASSERT_EQ( 1,  engine->engineState.running.coolantTemperatureCoefficient) << "cltC";
 	ASSERT_EQ( 0,  engine->engineState.running.injectorLag) << "lag";
 
-	engineConfiguration->mafAdcChannel = EFI_ADC_10;
-	engine->engineState.mockAdcState.setMockVoltage(EFI_ADC_10, 0 PASS_ENGINE_PARAMETER_SUFFIX);
-
-	ASSERT_EQ( 0,  getMafVoltage(PASS_ENGINE_PARAMETER_SIGNATURE)) << "maf";
-
 	ASSERT_EQ( 3000,  GET_RPM()) << "setTestBug299: RPM";
 
 	assertEqualsM("fuel#1", 1.5, engine->injectionDuration);
 	assertEqualsM("duty for maf=0", 7.5, getInjectorDutyCycle(GET_RPM() PASS_ENGINE_PARAMETER_SUFFIX));
-
-	engine->engineState.mockAdcState.setMockVoltage(EFI_ADC_10, 3 PASS_ENGINE_PARAMETER_SUFFIX);
-	ASSERT_EQ( 3,  getMafVoltage(PASS_ENGINE_PARAMETER_SIGNATURE)) << "maf";
 }
 
 static void assertInjectors(const char *msg, int value0, int value1) {
