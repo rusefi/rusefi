@@ -215,12 +215,12 @@ jobs:
         name: rusefi_${{matrix.build-target}}.bin
         path: ./firmware/deliver/rusefi*.bin
 
-    - name: Upload build hex
+    - name: Upload build elf
       if: ${{ github.event_name != 'push' || github.ref != 'refs/heads/master' }}
       uses: actions/upload-artifact@v2
       with:
-        name: rusefi_${{matrix.build-target}}.hex
-        path: ./firmware/deliver/rusefi*.hex
+        name: rusefi_${{matrix.build-target}}.elf
+        path: ./firmware/deliver/rusefi*.elf
 
     - name: Upload build dfu
       if: ${{ github.event_name != 'push' || github.ref != 'refs/heads/master' }}
