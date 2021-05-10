@@ -106,7 +106,7 @@ typedef struct {
 	scaled_pressure baroPressure; // 32
 
 	scaled_lambda lambda; // 34
-	scaled_channel<uint16_t, 100> engineLoad; // 36
+	uint16_t unused36; // 36
 
 	// misc sensors
 	scaled_voltage vBatt; // 38

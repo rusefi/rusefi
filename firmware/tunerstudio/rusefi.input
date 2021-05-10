@@ -232,7 +232,6 @@ enable2ndByteCanID = false
       MAPValue        = scalar,  U16,     30,     "kPa",{1/@@PACK_MULT_PRESSURE@@},       0.0
       baroPressure    = scalar,  U16,     32,     "kPa",{1/@@PACK_MULT_PRESSURE@@},       0.0
       lambdaValue     = scalar,  U16,     34,      "",{1/@@PACK_MULT_LAMBDA@@},       0.0
-      engineLoad      = scalar,  U16,     36,        "%",{1/@@PACK_MULT_PERCENT@@},       0.0 ; Blend of MAP and TPS, depends on algorithm
 
 ; misc sensors
       VBatt           = scalar,	 U16,     38,        "V",{1/@@PACK_MULT_VOLTAGE@@},       0.0
@@ -1240,7 +1239,6 @@ gaugeCategory = DynoView
    entry = lambdaValue,     @@GAUGE_NAME_LAMBDA@@,     float,  "%.2f"
    entry = lambdaValue2,     @@GAUGE_NAME_LAMBDA2@@,    float,  "%.2f"
    entry = VBatt,           @@GAUGE_NAME_VBAT@@,       float,  "%.2f"
-   entry = engineLoad,	    @@GAUGE_NAME_ENGINE_LOAD@@, 	   float,  "%.1f"
    entry = fuelingLoad,     @@GAUGE_NAME_FUEL_LOAD@@,     float, "%.1f"
    entry = ignitionLoad,    @@GAUGE_NAME_IGNITION_LOAD@@, float, "%.1f"
    entry = ignitionAdvance,	@@GAUGE_NAME_TIMING_ADVANCE@@,	   float,  "%.2f"
