@@ -25,6 +25,7 @@ void initNewSensors(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 
 	#if !EFI_UNIT_TEST
 		initFuelLevel(PASS_CONFIG_PARAMETER_SIGNATURE);
+		initMaf(PASS_CONFIG_PARAMETER_SIGNATURE);
 	#endif
 
 	// Init CLI functionality for sensors (mocking)

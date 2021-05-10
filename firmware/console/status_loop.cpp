@@ -154,7 +154,7 @@ static int packEngineMode(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 }
 
 static float getAirFlowGauge(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
-	return hasMafSensor() ? getRealMaf(PASS_ENGINE_PARAMETER_SIGNATURE) : engine->engineState.airFlow;
+	return Sensor::get(SensorType::Maf).value_or(engine->engineState.airFlow);
 }
 
 void writeLogLine(Writer& buffer) {
@@ -531,9 +531,7 @@ void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels DECLARE_
 	tsOutputChannels->rawOilPressure = Sensor::getRaw(SensorType::OilPressure);
 	tsOutputChannels->rawLowFuelPressure = Sensor::getRaw(SensorType::FuelPressureLow);
 	tsOutputChannels->rawHighFuelPressure = Sensor::getRaw(SensorType::FuelPressureHigh);
-
-	// offset 16
-	tsOutputChannels->massAirFlowVoltage = hasMafSensor() ? getMafVoltage(PASS_ENGINE_PARAMETER_SIGNATURE) : 0;
+	tsOutputChannels->massAirFlowVoltage = Sensor::getRaw(SensorType::Maf);
 
 	float lambdaValue = Sensor::get(SensorType::Lambda1).value_or(0);
 	tsOutputChannels->lambda = lambdaValue;

@@ -688,7 +688,7 @@ custom spi_device_e 1 bits, U08,   @OFFSET@, [0:2], "Off", "SPI1", "SPI2", "SPI3
 	spi_device_e hip9011SpiDevice;
 	uint8_t failedMapFallback;+This value is only used for speed density fueling calculations.;"kPa",      1,     0,    0, 100,     0
 	uint8_t unused542;;"unit",      1,     0,    0, 100,     0
-	adc_channel_e mafAdcChannel;See hasMafSensor
+	adc_channel_e mafAdcChannel 
 
 float globalFuelCorrection;set global_fuel_correction X;"coef",    1,      0.0,       0,  1000.0,        2
 

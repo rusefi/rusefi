@@ -135,7 +135,7 @@ FsioResult getEngineValue(le_action_e action DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	case LE_METHOD_RPM:
 		return Sensor::get(SensorType::Rpm).value_or(0);
 	case LE_METHOD_MAF:
-		return getRealMaf(PASS_ENGINE_PARAMETER_SIGNATURE);
+		return Sensor::get(SensorType::Maf).value_or(0);
 	case LE_METHOD_MAP:
 		return Sensor::get(SensorType::Map).value_or(0);
 #if EFI_SHAFT_POSITION_INPUT

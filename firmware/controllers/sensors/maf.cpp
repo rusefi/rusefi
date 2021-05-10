@@ -1,29 +1,8 @@
 #include "global.h"
 #include "engine.h"
-#include "adc_inputs.h"
 #include "maf.h"
 
 EXTERN_ENGINE;
-
-/**
- * @return MAF sensor voltage
- */
-float getMafVoltage(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
-	return getVoltageDivided("maf", engineConfiguration->mafAdcChannel PASS_ENGINE_PARAMETER_SUFFIX);
-}
-
-bool hasMafSensor(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
-	return isAdcChannelValid(engineConfiguration->mafAdcChannel);
-}
-
-/**
- * @return kg/hour value
- */
-float getRealMaf(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
-	float volts = getMafVoltage(PASS_ENGINE_PARAMETER_SIGNATURE);
-
-	return interpolate2d(volts, config->mafDecodingBins, config->mafDecoding);
-}
 
 static void fillTheRest(persistent_config_s *e, int i) {
 	/**

@@ -5,6 +5,7 @@ INIT_SRC_CPP =	$(PROJECT_DIR)/init/sensor/init_sensors.cpp \
 				$(PROJECT_DIR)/init/sensor/init_can_sensors.cpp \
 				$(PROJECT_DIR)/init/sensor/init_thermistors.cpp \
 				$(PROJECT_DIR)/init/sensor/init_lambda.cpp \
+				$(PROJECT_DIR)/init/sensor/init_maf.cpp \
 				$(PROJECT_DIR)/init/sensor/init_map.cpp \
 				$(PROJECT_DIR)/init/sensor/init_flex.cpp \
 				$(PROJECT_DIR)/init/sensor/init_vbatt.cpp \
