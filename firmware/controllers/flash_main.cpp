@@ -172,17 +172,18 @@ static persisted_configuration_state_e doReadConfiguration(flashaddr_t address) 
  */
 static persisted_configuration_state_e readConfiguration() {
 	efiAssert(CUSTOM_ERR_ASSERT, getCurrentRemainingStack() > EXPECTED_REMAINING_STACK, "read f", PC_ERROR);
+	auto firstCopyAddr = getFlashAddrFirstCopy();
+	auto secondyCopyAddr = getFlashAddrSecondCopy();
+
 #if HW_CHECK_MODE
 	persisted_configuration_state_e result = PC_OK;
 	resetConfigurationExt(DEFAULT_ENGINE_TYPE PASS_ENGINE_PARAMETER_SUFFIX);
 #else // HW_CHECK_MODE
-	persisted_configuration_state_e result = doReadConfiguration(getFlashAddrFirstCopy());
-
-
+	persisted_configuration_state_e result = doReadConfiguration(firstCopyAddr);
 
 	if (result != PC_OK) {
 		efiPrintf("Reading second configuration copy");
-		result = doReadConfiguration(getFlashAddrSecondCopy());
+		result = doReadConfiguration(secondyCopyAddr);
 	}
 
 	if (result == CRC_FAILED) {
