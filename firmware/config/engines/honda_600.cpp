@@ -18,7 +18,7 @@
 #endif
 
 #if IGN_LOAD_COUNT == DEFAULT_IGN_LOAD_COUNT
-static const ignition_table_t default_custom_timing_table = {
+static const uint8_t default_custom_timing_table[16][16] = {
   /* RPM			   0   500   1000   1500   2000   2500   3000   3500   4000    4500   5000    5500   6000   6500   7000	 */
   /* Load  0% */{	10,  10,    10,    12,    12,   12,    12,   15,    15,     15,    15,     26,    28,    30,    32},
   /* Load 10% */{	10,  10,    10,    12,    12,   12,    12,   15,    15,     15,    15,     26,    28,    30,    32},
@@ -41,7 +41,7 @@ static void setDefaultCustomMaps(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	setTimingRpmBin(0,7000 PASS_CONFIG_PARAMETER_SUFFIX);
 
 #if IGN_LOAD_COUNT == DEFAULT_IGN_LOAD_COUNT
-	MEMCPY(config->ignitionTable, default_custom_timing_table);
+	copyTable(config->ignitionTable, default_custom_timing_table);
 #endif
 }
 

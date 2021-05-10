@@ -70,7 +70,7 @@ float getEngineLoadT(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	case LM_ALPHA_N:
 		return Sensor::get(SensorType::Tps1).value_or(0);
 	case LM_REAL_MAF:
-		return getRealMaf(PASS_ENGINE_PARAMETER_SIGNATURE);
+		return Sensor::get(SensorType::Maf).value_or(0);
 	default:
 		firmwareError(CUSTOM_UNKNOWN_ALGORITHM, "Unexpected engine load parameter: %d", engineConfiguration->fuelAlgorithm);
 		return 0;

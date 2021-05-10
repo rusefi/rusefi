@@ -12,6 +12,10 @@ import static com.rusefi.ConfigDefinition.EOL;
  * Configuration consumer which writes C header file
  */
 public class CHeaderConsumer extends BaseCHeaderConsumer {
+    /**
+     * looks like sometimes we want to not include "define XXX value" into generated C headers
+     * TODO: document the use-case better
+     */
     public static boolean withC_Defines;
     private final LazyFile cHeader;
 

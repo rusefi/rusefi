@@ -20,7 +20,6 @@
 
 #include "fsio_core.h"
 #include "fsio_impl.h"
-#include "adc_inputs.h"
 
 extern fsio8_Map3D_f32t fsioTable1;
 extern fsio8_Map3D_u8t fsioTable2;
@@ -247,7 +246,8 @@ FsioResult LECalculator::processElement(const LEElement *element DECLARE_ENGINE_
 	case LE_METHOD_FSIO_ANALOG_INPUT:
 	{
 		int index = clampF(0, pop(LE_METHOD_FSIO_ANALOG_INPUT), FSIO_ANALOG_INPUT_COUNT - 1);
-		return getVoltage("fsio", engineConfiguration->fsioAdc[index] PASS_ENGINE_PARAMETER_SUFFIX);
+		int sensorIdx = static_cast<int>(SensorType::Aux1) + index;
+		return Sensor::get(static_cast<SensorType>(sensorIdx));
 	}
 	case LE_METHOD_KNOCK:
 		return ENGINE(knockCount);

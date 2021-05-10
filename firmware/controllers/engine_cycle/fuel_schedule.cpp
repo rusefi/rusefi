@@ -106,6 +106,8 @@ bool FuelSchedule::addFuelEventsForCylinder(int i  DECLARE_ENGINE_PARAMETER_SUFF
 	ev->outputs[0] = output;
 	ev->outputs[1] = secondOutput;
 	ev->isSimultanious = isSimultanious;
+	// Stash the cylinder number so we can select the correct fueling bank later
+	ev->cylinderNumber = injectorIndex;
 
 	if (!isSimultanious && !output->isInitialized()) {
 		// todo: extract method for this index math

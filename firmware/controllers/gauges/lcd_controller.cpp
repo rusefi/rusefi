@@ -234,15 +234,15 @@ static void showLine(lcd_line_e line, int /*screenY*/) {
 		}
 		return;
 	case LL_MAF_V:
-		if (hasMafSensor()) {
-			lcdPrintf("MAF: %.2fv", getMafVoltage(PASS_ENGINE_PARAMETER_SIGNATURE));
+		if (Sensor::hasSensor(SensorType::Maf)) {
+			lcdPrintf("MAF: %.2fv", Sensor::getRaw(SensorType::Maf));
 		} else {
 			lcdPrintf("MAF: none");
 		}
 		return;
 	case LL_MAF_KG_HR:
-		if (hasMafSensor()) {
-			lcdPrintf("MAF: %.2f kg/hr", getRealMaf(PASS_ENGINE_PARAMETER_SIGNATURE));
+		if (Sensor::hasSensor(SensorType::Maf)) {
+			lcdPrintf("MAF: %.2f kg/hr", Sensor::get(SensorType::Maf).value_or(0));
 		} else {
 			lcdPrintf("MAF: none");
 		}
