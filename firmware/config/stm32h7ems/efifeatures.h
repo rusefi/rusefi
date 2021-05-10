@@ -32,5 +32,5 @@
 // H7 has dual bank, so flash on its own (low priority) thread so as to not block any other operations
 #define EFI_FLASH_WRITE_THREAD TRUE
 
-#undef ENABLE_PERF_TRACE
-#define ENABLE_PERF_TRACE TRUE
+#undef EFI_LUA
+#define EFI_LUA TRUE

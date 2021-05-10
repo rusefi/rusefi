@@ -741,6 +741,10 @@
 /* Port-specific settings (override port settings defaulted in chcore.h).    */
 /*===========================================================================*/
 
+#undef ENABLE_PERF_TRACE
+#define ENABLE_PERF_TRACE FALSE
+#define TRACE_BUFFER_LENGTH 1
+
 #endif  /* CHCONF_H */
 
 /** @} */
