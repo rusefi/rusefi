@@ -250,6 +250,11 @@ void startLua() {
 
 		interactivePending = true;
 	});
+
+	addConsoleAction("luamemory", [](){
+		float pct = 100.0f * memoryUsed / LUA_HEAP_SIZE;
+		efiPrintf("Lua memory: %d / %d bytes = %.1f%%", memoryUsed, LUA_HEAP_SIZE, pct);
+	});
 }
 
 #else // not EFI_UNIT_TEST
