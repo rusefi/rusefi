@@ -327,6 +327,11 @@ void onUsbConnectedNotifyMmcI() {
  * Returns a BaseBlockDevice* corresponding to the SD card if successful, otherwise nullptr.
  */
 static BaseBlockDevice* initializeMmcBlockDevice() {
+	// Don't try to mount SD card in case of fatal error - hardware may be in an unexpected state
+	if (hasFirmwareError()) {
+		return nullptr;
+	}
+	
 	if (!CONFIG(isSdCardEnabled)) {
 		return nullptr;
 	}
