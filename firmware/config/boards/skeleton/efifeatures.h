@@ -321,12 +321,6 @@
 #define CONFIG_RESET_SWITCH_PIN 6
 #endif
 
-/**
- * This is the size of the MemoryStream used by chvprintf
- */
-#define INTERMEDIATE_LOGGING_BUFFER_SIZE 2000
-
-
 // Enable file logging (like SD card) logic
 #define EFI_FILE_LOGGING FALSE
 
