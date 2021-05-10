@@ -172,6 +172,11 @@ static persisted_configuration_state_e doReadConfiguration(flashaddr_t address) 
  */
 static persisted_configuration_state_e readConfiguration() {
 	efiAssert(CUSTOM_ERR_ASSERT, getCurrentRemainingStack() > EXPECTED_REMAINING_STACK, "read f", PC_ERROR);
+	/*
+	 * getFlashAddr does device validation, we want validation to be invoked even while we are
+	 * HW_CHECK_MODE mode where we would not need actual address
+	 * todo: rename method to emphasis the fact of validation check?
+	 */
 	auto firstCopyAddr = getFlashAddrFirstCopy();
 	auto secondyCopyAddr = getFlashAddrSecondCopy();
 
