@@ -129,7 +129,7 @@ public class AnyCommand {
             listener.onSend();
         int timeout = CommandQueue.getTimeout(cmd);
         reentrant = true;
-        uiContext.getCommandQueue().write(cmd.toLowerCase(), timeout);
+        uiContext.getCommandQueue().write(cmd, timeout);
         reentrant = false;
     }
 

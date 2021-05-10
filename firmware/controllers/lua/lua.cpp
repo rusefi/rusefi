@@ -159,6 +159,8 @@ void doInteractive(LuaHandle& ls) {
 			efiPrintf(TAG "interactive returned number: %f", lua_tonumber(ls, -1));
 		} else if (lua_isstring(ls, -1)) {
 			efiPrintf(TAG "interactive returned string: '%s'", lua_tostring(ls, -1));
+		} else if (lua_isboolean(ls, -1)) {
+			efiPrintf(TAG "interactive returned bool: %s", lua_toboolean(ls, -1) ? "true" : "false");
 		} else if (lua_isnil(ls, -1)) {
 			efiPrintf(TAG "interactive returned nil.");
 		} else {
@@ -247,6 +249,11 @@ void startLua() {
 		strncpy(interactiveCmd, str, sizeof(interactiveCmd));
 
 		interactivePending = true;
+	});
+
+	addConsoleAction("luamemory", [](){
+		float pct = 100.0f * memoryUsed / LUA_HEAP_SIZE;
+		efiPrintf("Lua memory: %d / %d bytes = %.1f%%", memoryUsed, LUA_HEAP_SIZE, pct);
 	});
 }
 
