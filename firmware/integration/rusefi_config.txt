@@ -1683,7 +1683,6 @@ end_struct
 #define GAUGE_NAME_TPS2 "TPS2"
 #define GAUGE_NAME_MAP "MAP"
 #define GAUGE_NAME_MAF "MAF"
-#define GAUGE_NAME_ENGINE_LOAD "Engine Load"
 #define GAUGE_NAME_CPU_TEMP "CPU Temperature"
 #define GAUGE_NAME_ETB_TARGET "ETB position target"
 #define GAUGE_NAME_WG_POSITION "Wastegate position sensor"
