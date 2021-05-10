@@ -33,6 +33,7 @@ mv build/rusefi.elf deliver/rusefi.elf
 mv build/rusefi.hex deliver/rusefi.hex
 # Keeping file in place since hw_test.bat would take it from current location
 cp build/rusefi.bin deliver/rusefi.bin
+cp build/rusefi.elf deliver/rusefi.elf
 echo Debug compilation results 2/2
 echo "TIMESTAMP $(date "+%D %T.%2N")"
 ls -l build
