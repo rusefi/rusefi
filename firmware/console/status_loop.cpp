@@ -541,9 +541,6 @@ void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels DECLARE_
 	tsOutputChannels->lambda2 = lambda2Value;
 	tsOutputChannels->airFuelRatio2 = lambda2Value * ENGINE(engineState.stoichiometricRatio);
 
-	// offset 24
-	tsOutputChannels->engineLoad = getEngineLoadT(PASS_ENGINE_PARAMETER_SIGNATURE);
-
 	tsOutputChannels->fuelingLoad = getFuelingLoad(PASS_ENGINE_PARAMETER_SIGNATURE);
 	tsOutputChannels->ignitionLoad = getIgnitionLoad(PASS_ENGINE_PARAMETER_SIGNATURE);
 	tsOutputChannels->veTableYAxis = ENGINE(engineState.currentVeLoad);
