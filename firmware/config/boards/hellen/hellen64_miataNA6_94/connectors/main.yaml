@@ -31,7 +31,7 @@ pins:
     type: ls
 
   - pin: 1F
-    id: GPIOD_13
+    id: GPIOF_12
     class: outputs
     ts_name: 1F - Tachometer 95.5
     function: Tachometer
@@ -142,7 +142,7 @@ pins:
     function: Camshaft Sensor
     
   - pin: 3I
-    id: GPIOD_13
+    id: GPIOF_12
     class: outputs
     ts_name: 3I - Tachometer 90-95.5
     function: tachometer
