@@ -316,7 +316,17 @@ static int mc33810_chip_init(struct mc33810_priv *chip)
 	 * - read diagnostic
 	 */
 
-	/* Default setting are quite good */
+	uint16_t spark_settings =
+		//(3 << 9) |	/* max dwell is 16 mS */
+		(2 << 9) |	/* max dwell is 8 mS */
+		BIT(8) |	/* enable max dwell control */
+		(3 << 2) |	/* Open Secondary OSFLT = 100 uS, default */
+		(1 << 0) |	/* End Spark THreshold: VPWR +5.5V, defaul */
+		0;
+	ret = mc33810_spi_rw(chip, MC_CMD_SPARK(spark_settings), NULL);
+	if (ret) {
+		goto err_gpios;
+	}
 
 	/* n. set EN pin low - active */
 	if (cfg->en.port != NULL) {
