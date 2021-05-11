@@ -104,6 +104,32 @@ pins:
     function: Clutch switch input
     type: din
 
+  - pin: 2A
+    id: GPIOH_13
+    class: outputs
+    ts_name: 2A - Boost Control
+    function: Boost Control Solenoid
+
+  - pin: 2B
+    id: GPIOF_7
+    class: input
+    ts_name: 2B - Knock Sensor
+    function: Knock Sensor Input
+    
+  - pin: 2L
+    id: GPIOE_13
+    class: outputs
+    ts_name: 2L - Flex Fuel
+    function: Flex Fuel Input
+  
+  - pin: 2I
+    function: Options Sensor Ground
+    type: Gnd
+    
+  - pin: 2J
+    function: +5v options port
+    type: +5v
+
   - pin: 3A
     function: Power GND
     type: pgnd
