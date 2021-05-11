@@ -316,9 +316,11 @@ static int mc33810_chip_init(struct mc33810_priv *chip)
 	 * - read diagnostic
 	 */
 
-	/* n. sen EN pin high */
+	/* Default setting are quite good */
+
+	/* n. set EN pin low - active */
 	if (cfg->en.port != NULL) {
-		palSetPort(cfg->en.port,
+		palClearPort(cfg->en.port,
 				   PAL_PORT_BIT(cfg->en.pad));
 	}
 
@@ -327,8 +329,12 @@ static int mc33810_chip_init(struct mc33810_priv *chip)
 err_gpios:
 	/* unmark pins */
 	//gpio_pin_markUnused(cfg->spi_config.ssport, cfg->spi_config.sspad);
-	if (cfg->en.port != NULL)
+	if (cfg->en.port != NULL) {
+		/* disable and mark unused */
+		palSetPort(cfg->en.port,
+				   PAL_PORT_BIT(cfg->en.pad));
 		gpio_pin_markUnused(cfg->en.port, cfg->en.pad);
+	}
 	for (n = 0; n < MC33810_DIRECT_OUTPUTS; n++)
 		if (cfg->direct_io[n].port)
 			gpio_pin_markUnused(cfg->direct_io[n].port, cfg->direct_io[n].pad);
