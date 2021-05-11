@@ -457,7 +457,6 @@ static void configureInputs(void) {
 	 */
 
 	addChannel("MAP", engineConfiguration->map.sensor.hwChannel, ADC_FAST);
-	addChannel("MAF", engineConfiguration->mafAdcChannel, ADC_SLOW);
 
 	addChannel("HIP9011", engineConfiguration->hipOutputChannel, ADC_FAST);
 
