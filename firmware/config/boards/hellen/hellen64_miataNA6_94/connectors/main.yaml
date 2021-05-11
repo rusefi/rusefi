@@ -24,7 +24,7 @@ pins:
     type: can
 
   - pin: 1E
-    id: GPIOG_4
+    id: GPIOA_8
     class: outputs
     ts_name: 1E - Check Engine Light
     function: Check Engine Light
@@ -54,7 +54,7 @@ pins:
     type: gnd
 
   - pin: 1J
-    id: GPIOH_15
+    id: GPIOB_0
     class: outputs
     ts_name: 1J - AC Relay
     function: A/C Relay
@@ -78,8 +78,8 @@ pins:
     function: Sensor +5V
 
   - pin: 1Q
-    id: [GPIOB_0, EFI_ADC_8]
-    class: [switch_inputs, analog_inputs]
+    id: GPIOE_12
+    class: switch_inputs
     function: A/C switch input
     type: din
 
@@ -98,7 +98,7 @@ pins:
     function: EGR Solenoid
 
   - pin: 1V
-    id: [GPIOC_5, EFI_ADC_15]
+    id: [GPIOC_4, EFI_ADC_14]
     class: [switch_inputs, analog_inputs]
     ts_name: 1V - Clutch Switch
     function: Clutch switch input
@@ -165,7 +165,7 @@ pins:
     function: TPS INPUT
 
   - pin: 3O
-    id: GPIOG_2
+    id: GPIOA_6
     class: outputs
     ts_name: 3O - Fuel Pump NA6
     function: FUEL PUMP OUTPUT
@@ -183,7 +183,7 @@ pins:
     function: A/C Fan
 
   - pin: 3T
-    id: GPIOG_2
+    id: GPIOG_4
     class: outputs
     ts_name: 3T - Fuel Pump Relay
     function: Fuel Pump Relay
@@ -216,7 +216,7 @@ pins:
     type: inj
 
   - pin: 3W
-    id: GPIOD_14
+    id: GPIOD_15
     class: outputs
     ts_name: 3W - IDLE
     function: IAC idle
