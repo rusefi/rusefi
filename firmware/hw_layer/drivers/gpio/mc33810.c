@@ -316,9 +316,21 @@ static int mc33810_chip_init(struct mc33810_priv *chip)
 	 * - read diagnostic
 	 */
 
-	/* n. sen EN pin high */
+	uint16_t spark_settings =
+		//(3 << 9) |	/* max dwell is 16 mS */
+		(2 << 9) |	/* max dwell is 8 mS */
+		BIT(8) |	/* enable max dwell control */
+		(3 << 2) |	/* Open Secondary OSFLT = 100 uS, default */
+		(1 << 0) |	/* End Spark THreshold: VPWR +5.5V, defaul */
+		0;
+	ret = mc33810_spi_rw(chip, MC_CMD_SPARK(spark_settings), NULL);
+	if (ret) {
+		goto err_gpios;
+	}
+
+	/* n. set EN pin low - active */
 	if (cfg->en.port != NULL) {
-		palSetPort(cfg->en.port,
+		palClearPort(cfg->en.port,
 				   PAL_PORT_BIT(cfg->en.pad));
 	}
 
@@ -327,8 +339,12 @@ static int mc33810_chip_init(struct mc33810_priv *chip)
 err_gpios:
 	/* unmark pins */
 	//gpio_pin_markUnused(cfg->spi_config.ssport, cfg->spi_config.sspad);
-	if (cfg->en.port != NULL)
+	if (cfg->en.port != NULL) {
+		/* disable and mark unused */
+		palSetPort(cfg->en.port,
+				   PAL_PORT_BIT(cfg->en.pad));
 		gpio_pin_markUnused(cfg->en.port, cfg->en.pad);
+	}
 	for (n = 0; n < MC33810_DIRECT_OUTPUTS; n++)
 		if (cfg->direct_io[n].port)
 			gpio_pin_markUnused(cfg->direct_io[n].port, cfg->direct_io[n].pad);
