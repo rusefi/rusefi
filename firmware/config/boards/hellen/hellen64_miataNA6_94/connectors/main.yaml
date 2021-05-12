@@ -191,7 +191,7 @@ pins:
     function: TPS INPUT
 
   - pin: 3O
-    id: GPIOA_6
+    id: GPIOG_4
     class: outputs
     ts_name: 3O - Fuel Pump NA6
     function: FUEL PUMP OUTPUT
