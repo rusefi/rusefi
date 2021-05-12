@@ -43,6 +43,7 @@ private:
 
 	uint32_t m_lowTime;
 	uint32_t m_highTime;
+	bool m_stop = false;
 
 	float m_duty = 0;
 	float m_frequency = 100;

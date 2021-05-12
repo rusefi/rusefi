@@ -40,7 +40,15 @@ void SimplePwm::setFrequency(float hz) {
 }
 
 void SimplePwm::update() {
-	floatus_t period = 1e6 / m_frequency;
+	auto frequency = m_frequency;
+
+	// If NaN frequency, cancel the update and signal that PWM should stop
+	if (cisnan(frequency)) {
+		m_stop = true;
+		return;
+	}
+
+	floatus_t period = 1e6 / frequency;
 
 	float periodNt = USF2NT(period);
 
@@ -58,6 +66,13 @@ void SimplePwm::update() {
 		m_highTime = highTimeNt;
 		m_lowTime = periodNt - highTimeNt;
 	}
+
+	// If previously stopped, start PWM running and clear flag
+	if (m_stop) {
+		m_stop = false;
+
+		scheduleFall();
+	}
 }
 
 /*static*/ void SimplePwm::setLowAdapter(SimplePwm* pwm) {
@@ -69,6 +84,16 @@ void SimplePwm::update() {
 }
 
 void SimplePwm::scheduleFall() {
+	if (m_stop) {
+		return;
+	}
+
+	// If 0% duty, set low immediately and return
+	if (m_highTime == 0) {
+		setLow();
+		return;
+	}
+
 	// 0 low time -> 100% duty, so don't schedule the fall.  Reschedule another rise in a full period.
 	action_s action = m_lowTime == 0
 		? action_s(SimplePwm::setHighAdapter, this)
@@ -78,6 +103,16 @@ void SimplePwm::scheduleFall() {
 }
 
 void SimplePwm::scheduleRise() {
+	if (m_stop) {
+		return;
+	}
+
+	// If 100% duty, set high immediately and return
+	if (m_lowTime == 0) {
+		setHigh();
+		return;
+	}
+
 	// 0 high time -> 0% duty, so don't schedule the rise.  Reschedule another fall in a full period.
 	action_s action = m_highTime == 0
 		? action_s(SimplePwm::setLowAdapter, this)
@@ -116,6 +151,7 @@ void SimplePwm::init(ExecutorInterface* executor, OutputPin* pin, float frequenc
 	m_frequency = frequency;
 	m_duty = duty;
 
+	// Set the stop flag to force a reschedule in update()
+	m_stop = true;
 	update();
-	scheduleRise();
 }
