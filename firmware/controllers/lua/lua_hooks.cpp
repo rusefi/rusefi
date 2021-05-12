@@ -7,6 +7,7 @@
 #include "adc_inputs.h"
 #include "efilib.h"
 #include "tunerstudio_outputs.h"
+#include "pwm_generator_logic.h"
 
 // Some functions lean on existing FSIO implementation
 #include "fsio_impl.h"
@@ -63,6 +64,50 @@ static int lua_table3d(lua_State* l) {
 	return 1;
 }
 
+SimplePwm& findFsioPwm(size_t channel) {
+	// TODO
+	static SimplePwm p;
+	return p;
+}
+
+static int lua_setPwmDuty(lua_State* l) {
+	auto channel = luaL_checkinteger(l, 1);
+	auto duty = luaL_checknumber(l, 2);
+
+	// Ensure channel is valid
+	if (channel < 0 || channel >= FSIO_COMMAND_COUNT) {
+		return luaL_error(l, "setPwmDuty invalid channel %d", channel);
+	}
+
+	// clamp to 0..1
+	duty = clampF(0, duty, 1);
+
+	auto pwm = findFsioPwm(channel);
+
+	pwm.setSimplePwmDutyCycle(duty);
+
+	return 0;
+}
+
+static int lua_setPwmFreq(lua_State* l) {
+	auto channel = luaL_checkinteger(l, 1);
+	auto freq = luaL_checknumber(l, 2);
+
+	// Ensure channel is valid
+	if (channel < 0 || channel >= FSIO_COMMAND_COUNT) {
+		return luaL_error(l, "setPwmFreq invalid channel %d", channel);
+	}
+
+	// clamp to 1..1000 hz
+	freq = clampF(1, freq, 1000);
+
+	auto pwm = findFsioPwm(channel);
+
+	pwm.setFrequency(freq);
+
+	return 0;
+}
+
 #if !EFI_UNIT_TEST
 static int lua_fan(lua_State* l) {
 	lua_pushboolean(l, enginePins.fanRelay.getLogicValue());
@@ -116,6 +161,9 @@ void configureRusefiLuaHooks(lua_State* l) {
 	lua_register(l, "getSensorRaw", lua_getSensorRaw);
 	lua_register(l, "hasSensor", lua_hasSensor);
 	lua_register(l, "table3d", lua_table3d);
+
+	lua_register(l, "setPwmDuty", lua_setPwmDuty);
+	lua_register(l, "setPwmFreq", lua_setPwmFreq);
 
 #if !EFI_UNIT_TEST
 	lua_register(l, "getFan", lua_fan);
