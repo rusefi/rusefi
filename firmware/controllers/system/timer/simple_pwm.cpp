@@ -108,11 +108,13 @@ void SimplePwm::setLow() {
 	scheduleRise();
 }
 
+#if EFI_PROD_CODE && HAL_USE_PWM
 bool SimplePwm::initHard(brain_pin_e pin, float frequency, float duty) {
 	m_hardPwm = hardware_pwm::tryInitPin(m_name, pin, frequency, duty);
 
 	return m_hardPwm;
 }
+#endif
 
 void SimplePwm::init(ExecutorInterface* executor, OutputPin* pin, float frequency, float duty) {
 	m_executor = executor;

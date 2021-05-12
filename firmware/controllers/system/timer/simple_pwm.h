@@ -11,7 +11,10 @@ public:
 	SimplePwm() = default;
 	explicit SimplePwm(const char* name);
 
+#if EFI_PROD_CODE && HAL_USE_PWM
 	bool initHard(brain_pin_e pin, float frequency, float duty);
+#endif
+
 	void init(ExecutorInterface* executor, OutputPin* pin, float frequency, float duty);
 
 	virtual void setSimplePwmDutyCycle(float duty);
