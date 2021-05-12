@@ -6,7 +6,6 @@ rm -f gen_config_board.log
 bash gen_signature.sh all
 
 java -DSystemOut.name=gen_config \
- -Drusefi.generator.lazyfile.enabled=true \
  -jar ../java_tools/ConfigDefinition.jar \
  -definition integration/rusefi_config.txt \
  -romraider integration \

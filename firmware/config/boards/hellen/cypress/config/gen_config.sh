@@ -16,7 +16,6 @@ bash gen_signature.sh hellen_cypress
 
 java \
  -DSystemOut.name=gen_config_hellen_cypress \
- -Drusefi.generator.lazyfile.enabled=true \
  -jar ../java_tools/ConfigDefinition.jar \
  -definition integration/rusefi_config.txt \
  -cache hellen_cypress \
