@@ -17,15 +17,9 @@ void SimplePwm::setSimplePwmDutyCycle(float duty) {
 	if (cisnan(duty)) {
 		//warning(CUSTOM_DUTY_INVALID, "spwd:dutyCycle %.2f", dutyCycle);
 		return;
-	} else if (duty < 0) {
-		//warning(CUSTOM_DUTY_TOO_LOW, "spwd:dutyCycle %.2f", dutyCycle);
-		duty = 0;
-	} else if (duty > 1) {
-		//warning(CUSTOM_DUTY_TOO_HIGH, "spwd:dutyCycle %.2f", dutyCycle);
-		duty = 1;
 	}
 
-	m_duty = duty;
+	m_duty = clampF(0, duty, 1);
 
 	update();
 }
@@ -48,7 +42,7 @@ void SimplePwm::setFrequency(float hz) {
 void SimplePwm::update() {
 	floatus_t period = 1e6 / m_frequency;
 
-	efitick_t periodNt = US2NT(period);
+	float periodNt = USF2NT(period);
 
 	auto duty = m_duty;
 
@@ -59,10 +53,10 @@ void SimplePwm::update() {
 		m_highTime = 0;
 		m_lowTime = periodNt;
 	} else {
-		floatus_t highTime = period * duty;
+		float highTimeNt = periodNt * duty;
 
-		m_highTime = US2NT(highTime);
-		m_lowTime = periodNt - m_highTime;
+		m_highTime = highTimeNt;
+		m_lowTime = periodNt - highTimeNt;
 	}
 }
 
