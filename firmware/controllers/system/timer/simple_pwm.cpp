@@ -3,30 +3,29 @@
 #include "efi_gpio.h"
 #include "perf_trace.h"
 
-SimplePwm::SimplePwm() {
-
+SimplePwm::SimplePwm(const char* name)
+	: m_name(name)
+{
 }
 
-SimplePwm::SimplePwm(const char*) {}
-
-void SimplePwm::setSimplePwmDutyCycle(float dutyCycle) {
+void SimplePwm::setSimplePwmDutyCycle(float duty) {
 	/*if (isStopRequested) {
 		// we are here in order to not change pin once PWM stop was requested
 		return;
 	}*/
 
-	if (cisnan(dutyCycle)) {
+	if (cisnan(duty)) {
 		//warning(CUSTOM_DUTY_INVALID, "spwd:dutyCycle %.2f", dutyCycle);
 		return;
-	} else if (dutyCycle < 0) {
+	} else if (duty < 0) {
 		//warning(CUSTOM_DUTY_TOO_LOW, "spwd:dutyCycle %.2f", dutyCycle);
-		dutyCycle = 0;
-	} else if (dutyCycle > 1) {
+		duty = 0;
+	} else if (duty > 1) {
 		//warning(CUSTOM_DUTY_TOO_HIGH, "spwd:dutyCycle %.2f", dutyCycle);
-		dutyCycle = 1;
+		duty = 1;
 	}
 
-	m_duty = dutyCycle;
+	m_duty = duty;
 
 	update();
 }
@@ -109,11 +108,17 @@ void SimplePwm::setLow() {
 	scheduleRise();
 }
 
-void SimplePwm::init(ExecutorInterface* executor, OutputPin* pin, float frequency, float dutyCycle) {
+bool SimplePwm::initHard(brain_pin_e pin, float frequency, float duty) {
+	m_hardPwm = hardware_pwm::tryInitPin(m_name, pin, frequency, duty);
+
+	return m_hardPwm;
+}
+
+void SimplePwm::init(ExecutorInterface* executor, OutputPin* pin, float frequency, float duty) {
 	m_executor = executor;
 	m_pin = pin;
 	m_frequency = frequency;
-	m_duty = dutyCycle;
+	m_duty = duty;
 
 	update();
 	scheduleRise();

@@ -4,15 +4,17 @@
 #include "scheduler.h"
 
 class OutputPin;
+struct hardware_pwm;
 
 class SimplePwm {
 public:
-	SimplePwm();
-	SimplePwm(const char* name);
+	SimplePwm() = default;
+	explicit SimplePwm(const char* name);
 
-	void init(ExecutorInterface* executor, OutputPin* pin, float frequency, float dutyCycle);
+	bool initHard(brain_pin_e pin, float frequency, float duty);
+	void init(ExecutorInterface* executor, OutputPin* pin, float frequency, float duty);
 
-	virtual void setSimplePwmDutyCycle(float dutyCycle);
+	virtual void setSimplePwmDutyCycle(float duty);
 	virtual void setFrequency(float hz);
 
 private:
@@ -28,8 +30,13 @@ private:
 	void scheduleFall();
 
 private:
+	const char* const m_name = "pwm";
 	ExecutorInterface* m_executor;
 	OutputPin* m_pin;
+
+#if EFI_PROD_CODE && HAL_USE_PWM
+	hardware_pwm* m_hardPwm = nullptr;
+#endif
 
 	uint32_t m_lowTime;
 	uint32_t m_highTime;

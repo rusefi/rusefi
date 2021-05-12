@@ -305,11 +305,7 @@ void startSimplePwmHard(SimplePwm *state, const char *msg,
 		brain_pin_e brainPin, OutputPin *output, float frequency,
 		float dutyCycle) {
 #if EFI_PROD_CODE && HAL_USE_PWM
-	auto hardPwm = hardware_pwm::tryInitPin(msg, brainPin, frequency, dutyCycle);
-
-	if (hardPwm) {
-		state->hardPwm = hardPwm;
-	} else {
+	if (!state->initHard(brainPin, frequency, dutyCycle)) {
 #endif
 		startSimplePwmExt(state, msg, executor, brainPin, output, frequency, dutyCycle);
 #if EFI_PROD_CODE && HAL_USE_PWM
