@@ -18,11 +18,16 @@
 
 class PinRepository {
 	public:
+	/**
+	 * Class constructors are a great way to have simple initialization sequence
+	 */
 	PinRepository();
-
+	int totalPinsUsed = 0;
 };
 
 #endif /* __cplusplus */
+
+bool isBrainPinValid(brain_pin_e brainPin);
 
 void initPinRepository(void);
 EXTERNC bool brain_pin_is_onchip(brain_pin_e brainPin);
@@ -46,10 +51,11 @@ EXTERNC void gpio_pin_markUnused(ioportid_t port, ioportmask_t pin);
 #endif /* EFI_PROD_CODE*/
 
 /* defined in ports/ */
-int getBrainIndex(ioportid_t port, ioportmask_t pin);
-ioportid_t getBrainPort(brain_pin_e brainPin);
+int getPortPinIndex(ioportid_t port, ioportmask_t pin);
+ioportid_t getBrainPinPort(brain_pin_e brainPin);
 int getBrainPinIndex(brain_pin_e brainPin);
-unsigned int getNumBrainPins(void);
+unsigned int getBrainPinOnchipNum(void);
+unsigned int getBrainPinTotalNum(void);
 void initBrainUsedPins(void);
 
 #ifdef __cplusplus

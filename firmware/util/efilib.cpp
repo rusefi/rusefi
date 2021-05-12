@@ -35,8 +35,8 @@ float efiFloor(float value, float precision) {
  */
 float efiRound(float value, float precision) {
 	efiAssert(CUSTOM_ERR_ASSERT, precision != 0, "zero precision", NAN);
-	float a = rintf (value / precision);
-	return a * precision;
+	float a = round(value / precision);
+	return fixNegativeZero(a * precision);
 }
 
 float absF(float value) {
@@ -59,12 +59,16 @@ float minF(float i1, float i2) {
 	return i1 < i2 ? i1 : i2;
 }
 
+int clampI(int min, int clamp, int max) {
+	return maxI(min, minI(clamp, max));
+}
+
 float clampF(float min, float clamp, float max) {
 	return maxF(min, minF(clamp, max));
 }
 
 uint32_t efiStrlen(const char *param) {
-	register const char *s;
+	const char *s;
 	for (s = param; *s; ++s)
 		;
 	return (s - param);
@@ -96,7 +100,7 @@ bool startsWith(const char *line, const char *prefix) {
 }
 
 int indexOf(const char *string, char ch) {
-	// todo: there should be a standard function for this
+	// a standard function for this is strnchr?
 	// todo: on the other hand MISRA wants us not to use standard headers
 	int len = efiStrlen(string);
 	for (int i = 0; i < len; i++) {
@@ -237,7 +241,7 @@ float atoff(const char *param) {
 	char *string = todofixthismesswithcopy;
 	if (indexOf(string, 'n') != -1 || indexOf(string, 'N') != -1) {
 #if ! EFI_SIMULATOR
-		print("NAN from [%s]\r\n", string);
+		efiPrintf("NAN from [%s]", string);
 #endif
 		return (float) NAN;
 	}
@@ -312,12 +316,12 @@ void printHistogram(Logging *logging, histogram_s *histogram) {
 	int report[5];
 	int len = hsReport(histogram, report);
 
-	resetLogging(logging);
+	logging->reset();
 	appendMsgPrefix(logging);
-	appendPrintf(logging, "histogram %s *", histogram->name);
+	logging.appendPrintf("histogram %s *", histogram->name);
 	for (int i = 0; i < len; i++)
-	appendPrintf(logging, "%d ", report[i]);
-	appendPrintf(logging, "*");
+	logging.appendPrintf("%d ", report[i]);
+	logging.appendPrintf("*");
 	appendMsgPostfix(logging);
 	scheduleLogging(logging);
 #else
@@ -370,4 +374,30 @@ constexpr float expf_taylor_impl(float x, uint8_t n)
 float expf_taylor(float x)
 {
 	return expf_taylor_impl(x, 4);
+}
+
+float tanf_taylor(float x) {
+	// This exists because the "normal" implementation, tanf, pulls in like 6kb of
+	// code and loookup tables
+
+	// This is only specified from [0, pi/2 - 0.01)
+	// Inside that range it has an error of less than 0.1%, and it gets worse as theta -> pi/2
+
+	// Precompute some exponents of x
+	float x2 = x * x;
+	float x3 = x2 * x;
+	float x4 = x3 * x;
+	float x5 = x4 * x;
+	float x6 = x5 * x;
+	// x7 not used
+	float x8 = x6 * x2;
+
+	// 3-term Taylor Series for sin(theta)
+	float sin_val = x - (x3 / 6) + (x5 / 120);
+
+	// 5-term Taylor Series for cos(theta)
+	float cos_val = 1 - (x2 / 2) + (x4 / 24) - (x6 / 720) + (x8 / 40320);
+
+	// tan = sin / cos
+	return sin_val / cos_val;
 }

@@ -43,15 +43,6 @@ static const brain_pin_e ignPins[] = {
 	GPIOG_2,
 };
 
-static const ConfigOverrides configOverrides = {
-	.canTxPin = GPIOD_1,
-	.canRxPin = GPIOD_0,
-};
-
-const ConfigOverrides& getConfigOverrides() {
-	return configOverrides;
-}
-
 static void setInjectorPins() {
 	copyArray(engineConfiguration->injectionPins, injPins);
 	engineConfiguration->injectionPinMode = OM_DEFAULT;
@@ -66,10 +57,10 @@ void setSdCardConfigurationOverrides(void) {
 }
 
 static void setLedPins() {
-	CONFIG(warningLedPin) = GPIOE_3;
+	// PE3 is error LED, configured in board.mk
 	CONFIG(communicationLedPin) = GPIOE_4;
-	engineConfiguration->runningLedPin = GPIOE_5;
-	engineConfiguration->triggerErrorPin = GPIOE_6;
+	CONFIG(runningLedPin) = GPIOE_5;
+	CONFIG(warningLedPin) = GPIOE_6;
 }
 
 static void setupVbatt() {
@@ -78,7 +69,9 @@ static void setupVbatt() {
 
 	// 82k high side/10k low side = 9.2
 	engineConfiguration->vbattDividerCoeff = (92.0f / 10.0f);
-	//engineConfiguration->vbattAdcChannel = TODO;
+
+	// Battery sense on PA7
+	engineConfiguration->vbattAdcChannel = EFI_ADC_7;
 
 	engineConfiguration->adcVcc = 3.3f;
 }
@@ -116,19 +109,26 @@ static void setupEtb() {
 
 static void setupDefaultSensorInputs() {
 	// trigger inputs
+#if VR_HW_CHECK_MODE
+	// set_trigger_input_pin 0 PE7
+	// GPIOE_7:  "VR 1"
+	engineConfiguration->triggerInputPins[0] = GPIOE_7;
+	// GPIOE_8:  "VR 2"
+	engineConfiguration->camInputs[0] = GPIOE_8;
+#else
 	// Digital channel 1 as default - others not set
 	engineConfiguration->triggerInputPins[0] = GPIOC_6;
+	engineConfiguration->camInputs[0] = GPIO_UNASSIGNED;
+#endif
+
 	engineConfiguration->triggerInputPins[1] = GPIO_UNASSIGNED;
 	engineConfiguration->triggerInputPins[2] = GPIO_UNASSIGNED;
-	engineConfiguration->camInputs[0] = GPIO_UNASSIGNED;
 
 	// CLT = Analog Temp 3 = PB0
 	engineConfiguration->clt.adcChannel = EFI_ADC_8;
-	engineConfiguration->clt.config.bias_resistor = 2700;
 
 	// IAT = Analog Temp 2 = PC5
 	engineConfiguration->iat.adcChannel = EFI_ADC_15;
-	engineConfiguration->iat.config.bias_resistor = 2700;
 
 	// TPS = Analog volt 2 = PC1
 	engineConfiguration->tps1_1AdcChannel = EFI_ADC_11;
@@ -136,8 +136,35 @@ static void setupDefaultSensorInputs() {
 	// MAP = Analog volt 1 = PC0
 	engineConfiguration->map.sensor.hwChannel = EFI_ADC_10;
 
-	// No battery voltage setting - see adc_hack.cpp
-	engineConfiguration->vbattAdcChannel = EFI_ADC_NONE;
+	// pin #28 WBO AFR "Analog Volt 10"
+	engineConfiguration->afr.hwChannel = EFI_ADC_5;
+}
+
+static void setupSdCard() {
+
+	engineConfiguration->sdCardSpiDevice = SPI_DEVICE_3;
+	engineConfiguration->sdCardCsPin = GPIOD_2;
+
+	engineConfiguration->is_enabled_spi_3 = true;
+	engineConfiguration->spi3sckPin = GPIOC_10;
+	engineConfiguration->spi3misoPin = GPIOC_11;
+	engineConfiguration->spi3mosiPin = GPIOC_12;
+}
+
+void setBoardConfigOverrides(void) {
+	setupSdCard();
+	setupEtb();
+	setLedPins();
+	setupVbatt();
+
+	engineConfiguration->clt.config.bias_resistor = 2700;
+	engineConfiguration->iat.config.bias_resistor = 2700;
+
+	engineConfiguration->canTxPin = GPIOD_1;
+	engineConfiguration->canRxPin = GPIOD_0;
+
+	engineConfiguration->lps25BaroSensorScl = GPIOB_10;
+	engineConfiguration->lps25BaroSensorSda = GPIOB_11;
 }
 
 void setPinConfigurationOverrides(void) {
@@ -147,24 +174,23 @@ void setSerialConfigurationOverrides(void) {
 	engineConfiguration->useSerialPort = false;
 	engineConfiguration->binarySerialTxPin = GPIO_UNASSIGNED;
 	engineConfiguration->binarySerialRxPin = GPIO_UNASSIGNED;
-	engineConfiguration->consoleSerialTxPin = GPIO_UNASSIGNED;
-	engineConfiguration->consoleSerialRxPin = GPIO_UNASSIGNED;
+//	engineConfiguration->consoleSerialTxPin = GPIO_UNASSIGNED;
+//	engineConfiguration->consoleSerialRxPin = GPIO_UNASSIGNED;
 }
 
 
 /**
- * @brief   Board-specific configuration code overrides.
+ * @brief   Board-specific configuration defaults.
  *
  * See also setDefaultEngineConfiguration
  *
  * @todo    Add your board-specific code, if any.
  */
-void setBoardConfigurationOverrides(void) {
+void setBoardDefaultConfiguration(void) {
 	setInjectorPins();
 	setIgnitionPins();
-	setLedPins();
-	setupVbatt();
-	setupEtb();
+
+	engineConfiguration->isSdCardEnabled = true;
 
 	// "required" hardware is done - set some reasonable defaults
 	setupDefaultSensorInputs();
@@ -178,14 +204,19 @@ void setBoardConfigurationOverrides(void) {
 	engineConfiguration->specs.cylindersCount = 8;
 	engineConfiguration->specs.firingOrder = FO_1_8_7_2_6_5_4_3;
 
+	CONFIG(enableSoftwareKnock) = true;
+
 	engineConfiguration->ignitionMode = IM_INDIVIDUAL_COILS;
 	engineConfiguration->crankingInjectionMode = IM_SIMULTANEOUS;
 	engineConfiguration->injectionMode = IM_SIMULTANEOUS;
 
-	// output 13
-	CONFIG(mainRelayPin) = GPIOB_9;
-	// output 15
-	CONFIG(fanPin) = GPIOE_1;
-	// output 16
-	CONFIG(fuelPumpPin) = GPIOE_2;
+	CONFIG(mainRelayPin) = GPIOB_9;//  "Lowside 13"    # pin 10/black35
+	CONFIG(fanPin) = GPIOE_1;//  "Lowside 15"    # pin 12/black35
+	CONFIG(fuelPumpPin) = GPIOE_2;//  "Lowside 16"    # pin 23/black35
+
+	// If we're running as hardware CI, borrow a few extra pins for that
+#ifdef HARDWARE_CI
+	engineConfiguration->triggerSimulatorPins[0] = GPIOG_3;
+	engineConfiguration->triggerSimulatorPins[1] = GPIOG_2;
+#endif
 }

@@ -20,8 +20,5 @@ void configureHonda_1_4_24(TriggerWaveform *s, bool withOneEventSignal, bool wit
 void configureOnePlus16(TriggerWaveform *s);
 
 void configureHondaCbr600(TriggerWaveform *s);
-void configureHondaCbr600custom(TriggerWaveform *s);
 
 void configureHondaK_12_1(TriggerWaveform *s);
-
-

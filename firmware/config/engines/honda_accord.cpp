@@ -39,7 +39,6 @@ EXTERN_CONFIG;
 
 static void setHondaAccordConfigurationCommon(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	engineConfiguration->map.sensor.type = MT_DENSO183;
-	engineConfiguration->isFastAdcEnabled = true;
 
 	// set ignition_mode 0
 	engineConfiguration->ignitionMode = IM_ONE_COIL;
@@ -57,7 +56,6 @@ static void setHondaAccordConfigurationCommon(DECLARE_CONFIG_PARAMETER_SIGNATURE
 	engineConfiguration->injector.flow = 248;
 
 	setAlgorithm(LM_SPEED_DENSITY PASS_CONFIG_PARAMETER_SUFFIX);
-	setFuelLoadBin(0, 100 PASS_CONFIG_PARAMETER_SUFFIX);
 
 	buildTimingMap(35 PASS_CONFIG_PARAMETER_SUFFIX);
 
@@ -82,12 +80,6 @@ static void setHondaAccordConfigurationCommon(DECLARE_CONFIG_PARAMETER_SIGNATURE
 	engineConfiguration->rpmHardLimit = 4000; // yes, 4k. let's play it safe for now
 	// set_cranking_rpm 2000
 	engineConfiguration->cranking.rpm = 500;
-
-
-	// set ignition_offset 350
-//	engineConfiguration->ignitionOffset = 350;
-	 // set injection_offset 510
-//	engineConfiguration->extraInjectionOffset = 510;
 
 
 	/**

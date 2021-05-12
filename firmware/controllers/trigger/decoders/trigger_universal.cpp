@@ -6,7 +6,11 @@
  */
 
 #include "trigger_universal.h"
+#include "error_handling.h"
 
+/**
+ * @see getCycleDuration
+ */
 angle_t getEngineCycle(operation_mode_e operationMode) {
 	return operationMode == TWO_STROKE ? 360 : FOUR_STROKE_ENGINE_CYCLE;
 }
@@ -25,13 +29,14 @@ void addSkippedToothTriggerEvents(trigger_wheel_e wheel, TriggerWaveform *s, int
 
 	float angleDown = engineCycle / totalTeethCount * (totalTeethCount - skippedCount - 1 + (1 - toothWidth));
 	s->addEventClamped(offset + angleDown, wheel, TV_RISE, filterLeft, filterRight);
+	// custom handling of last event in order to avoid rounding error
 	s->addEventClamped(offset + engineCycle, wheel, TV_FALL, filterLeft, filterRight);
 }
 
 void initializeSkippedToothTriggerWaveformExt(TriggerWaveform *s, int totalTeethCount, int skippedCount,
 		operation_mode_e operationMode) {
 	if (totalTeethCount <= 0) {
-		warning(CUSTOM_OBD_TRIGGER_WAVEFORM, "totalTeethCount is zero or less: %d", totalTeethCount);
+		firmwareError(CUSTOM_OBD_TRIGGER_WAVEFORM, "Invalid total tooth count for missing tooth decoder: %d", totalTeethCount);
 		s->setShapeDefinitionError(true);
 		return;
 	}
@@ -47,7 +52,6 @@ void initializeSkippedToothTriggerWaveformExt(TriggerWaveform *s, int totalTeeth
 	NO_LEFT_FILTER, NO_RIGHT_FILTER);
 }
 
-
 void configureOnePlusOne(TriggerWaveform *s) {
 	s->initialize(FOUR_STROKE_CAM_SENSOR);
 
@@ -56,25 +60,6 @@ void configureOnePlusOne(TriggerWaveform *s) {
 
 	s->addEvent720(540, T_SECONDARY, TV_RISE);
 	s->addEvent720(720, T_SECONDARY, TV_FALL);
-
-	s->isSynchronizationNeeded = false;
-	s->useOnlyPrimaryForSync = true;
-}
-
-// todo: open question if we need this trigger
-void configureOnePlus60_2(TriggerWaveform *s) {
-	s->initialize(FOUR_STROKE_CAM_SENSOR);
-
-	int totalTeethCount = 60;
-	int skippedCount = 2;
-
-	s->addEvent720(2, T_PRIMARY, TV_RISE);
-	addSkippedToothTriggerEvents(T_SECONDARY, s, totalTeethCount, skippedCount, 0.5, 0, 360, 2, 20);
-	s->addEvent720(20, T_PRIMARY, TV_FALL);
-	addSkippedToothTriggerEvents(T_SECONDARY, s, totalTeethCount, skippedCount, 0.5, 0, 360, 20, NO_RIGHT_FILTER);
-
-	addSkippedToothTriggerEvents(T_SECONDARY, s, totalTeethCount, skippedCount, 0.5, 360, 360, NO_LEFT_FILTER,
-	NO_RIGHT_FILTER);
 
 	s->isSynchronizationNeeded = false;
 	s->useOnlyPrimaryForSync = true;
@@ -116,11 +101,28 @@ void configure3_1_cam(TriggerWaveform *s) {
 	s->isSynchronizationNeeded = false;
 }
 
+/**
+ * https://rusefi.com/forum/viewtopic.php?f=5&t=1977
+ */
+void configureKawaKX450F(TriggerWaveform *s) {
+	float engineCycle = FOUR_STROKE_ENGINE_CYCLE;
+	s->initialize(FOUR_STROKE_CRANK_SENSOR);
+
+	s->setTriggerSynchronizationGap(2.28);
+
+	float toothWidth = 3 / 20.0;
+
+	addSkippedToothTriggerEvents(T_PRIMARY, s, 18, 0, toothWidth, 0, engineCycle,
+			NO_LEFT_FILTER, 720 - 39);
+
+	s->addEvent(0.97, T_PRIMARY, TV_RISE);
+	s->addEvent(1, T_PRIMARY, TV_FALL);
+}
+
 void configureQuickStartSenderWheel(TriggerWaveform *s) {
 	s->initialize(FOUR_STROKE_CAM_SENSOR);
 
 	s->useRiseEdge = false;
-	s->gapBothDirections = false;
 
 	int offset = 2 * 20;
 

@@ -1,7 +1,7 @@
 package com.rusefi;
 
 /**
- * (c) Andrey Belomutskiy
+ * Andrey Belomutskiy, (c) 2013-2020
  * 6/4/2015.
  */
 public class BitState {

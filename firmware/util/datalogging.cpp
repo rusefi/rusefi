@@ -30,7 +30,7 @@
  *
  */
 
-#include "global.h"
+#include "globalaccess.h"
 
 #if ! EFI_UNIT_TEST
 #include "os_access.h"
@@ -38,35 +38,26 @@
 #include "memstreams.h"
 #include "console_io.h"
 #include "os_util.h"
-
-static MemoryStream intermediateLoggingBuffer;
-static uint8_t intermediateLoggingBufferData[INTERMEDIATE_LOGGING_BUFFER_SIZE] CCM_OPTIONAL;
-//todo define max-printf-buffer
-static bool intermediateLoggingBufferInited = false;
+#endif // EFI_UNIT_TEST
 
 /**
  * @returns true if data does not fit into this buffer
  */
-static ALWAYS_INLINE bool validateBuffer(Logging *logging, const char *text, uint32_t extraLen) {
-	if (logging->buffer == NULL) {
-		firmwareError(CUSTOM_ERR_LOGGING_NOT_READY, "Logging not initialized: %s", logging->name);
-		return true;
-	}
-
-	if (remainingSize(logging) < extraLen + 1) {
+bool Logging::validateBuffer(const char *text, uint32_t extraLen) {
+	if (remainingSize() < extraLen + 1) {
 #if EFI_PROD_CODE
-		const char * msg = extraLen > 50 ? "(long)" : text;
-		warning(CUSTOM_LOGGING_BUFFER_OVERFLOW, "output overflow %s %d [%s]", logging->name, extraLen, msg);
+		warning(CUSTOM_LOGGING_BUFFER_OVERFLOW, "output overflow %s %d", name, extraLen);
 #endif /* EFI_PROD_CODE */
 		return true;
 	}
+
 	return false;
 }
 
 void Logging::append(const char *text) {
 	efiAssertVoid(CUSTOM_APPEND_NULL, text != NULL, "append NULL");
 	uint32_t extraLen = efiStrlen(text);
-	bool isCapacityProblem = validateBuffer(this, text, extraLen);
+	bool isCapacityProblem = validateBuffer(text, extraLen);
 	if (isCapacityProblem) {
 		return;
 	}
@@ -77,83 +68,42 @@ void Logging::append(const char *text) {
 	linePointer += extraLen;
 }
 
-// todo: inline
-void append(Logging *logging, const char *text) {
-	logging->append(text);
-}
-
 /**
  * @note This method if fast because it does not validate much, be sure what you are doing
  */
-void appendFast(Logging *logging, const char *text) {
-	register char *s;
-	s = logging->linePointer;
+void Logging::appendFast(const char *text) {
+	char *s = linePointer;
 	while ((*s++ = *text++) != 0)
 		;
-	logging->linePointer = s - 1;
-}
-
-// todo: look into chsnprintf once on Chibios 3
-static void vappendPrintfI(Logging *logging, const char *fmt, va_list arg) {
-	if (!intermediateLoggingBufferInited) {
-		firmwareError(CUSTOM_ERR_BUFF_INIT_ERROR, "intermediateLoggingBufferInited not inited!");
-		return;
-	}
-	intermediateLoggingBuffer.eos = 0; // reset
-	efiAssertVoid(CUSTOM_ERR_6603, getCurrentRemainingStack() > 128, "lowstck#1b");
-	chvprintf((BaseSequentialStream *) &intermediateLoggingBuffer, fmt, arg);
-	intermediateLoggingBuffer.buffer[intermediateLoggingBuffer.eos] = 0; // need to terminate explicitly
-	logging->append((char *)intermediateLoggingBuffer.buffer);
-}
-
-/**
- * this method acquires system lock to guard the shared intermediateLoggingBuffer memory stream
- */
-void Logging::vappendPrintf(const char *fmt, va_list arg) {
-	efiAssertVoid(CUSTOM_ERR_6604, getCurrentRemainingStack() > 128, "lowstck#5b");
-	int wasLocked = lockAnyContext();
-	vappendPrintfI(this, fmt, arg);
-	if (!wasLocked) {
-		unlockAnyContext();
-	}
-}
-
-// todo: replace with logging->appendPrintf
-void appendPrintf(Logging *logging, const char *fmt, ...) {
-	efiAssertVoid(CUSTOM_APPEND_STACK, getCurrentRemainingStack() > 128, "lowstck#4");
-	va_list ap;
-	va_start(ap, fmt);
-	logging->vappendPrintf(fmt, ap);
-	va_end(ap);
+	linePointer = s - 1;
 }
 
 void Logging::appendPrintf(const char *fmt, ...) {
-	efiAssertVoid(CUSTOM_APPEND_STACK, getCurrentRemainingStack() > 128, "lowstck#4");
+#if EFI_UNIT_TEST
 	va_list ap;
 	va_start(ap, fmt);
-	vappendPrintf(fmt, ap);
+	vsprintf(buffer, fmt, ap);
 	va_end(ap);
+#else
+	efiAssertVoid(CUSTOM_APPEND_STACK, getCurrentRemainingStack() > 128, "lowstck#4");
+
+	size_t available = remainingSize();
+
+	va_list ap;
+	va_start(ap, fmt);
+	size_t written = chvsnprintf(linePointer, available, fmt, ap);
+	va_end(ap);
+
+	// chvnsprintf returns how many bytes WOULD HAVE been written if it fit,
+	// so clip it to the available space if necessary
+	linePointer += (written > available) ? available : written;
+	// ensure buffer is always null terminated
+	buffer[bufferSize - 1] = '\0';
+
+#endif // EFI_UNIT_TEST
 }
 
-void Logging::initLoggingExt(const char *name, char *buffer, int bufferSize) {
-	this->name = name;
-	this->buffer = buffer;
-	this->bufferSize = bufferSize;
-	resetLogging(this);
-	this->isInitialized = true;
-}
-
-int isInitialized(Logging *logging) {
-	return logging->isInitialized;
-}
-
-void debugInt(Logging *logging, const char *caption, int value) {
-	append(logging, caption);
-	append(logging, DELIMETER);
-	appendPrintf(logging, "%d%s", value, DELIMETER);
-}
-
-void appendFloat(Logging *logging, float value, int precision) {
+void Logging::appendFloat(float value, int precision) {
 	/**
 	 * todo: #1 this implementation is less than perfect
 	 * todo: #2 The only way to avoid double promotion would probably be using *float instead of float
@@ -161,149 +111,48 @@ void appendFloat(Logging *logging, float value, int precision) {
 	 */
 	switch (precision) {
 	case 1:
-		appendPrintf(logging, "%.1f", value);
+		appendPrintf("%.1f", value);
 		break;
 	case 2:
-		appendPrintf(logging, "%.2f", value);
+		appendPrintf("%.2f", value);
 		break;
 	case 3:
-		appendPrintf(logging, "%.3f", value);
+		appendPrintf("%.3f", value);
 		break;
 	case 4:
-		appendPrintf(logging, "%.4f", value);
+		appendPrintf("%.4f", value);
 		break;
 	case 5:
-		appendPrintf(logging, "%.5f", value);
+		appendPrintf("%.5f", value);
 		break;
 	case 6:
-		appendPrintf(logging, "%.6f", value);
+		appendPrintf("%.6f", value);
 		break;
 
 	default:
-		appendPrintf(logging, "%.2f", value);
+		appendPrintf("%.2f", value);
 	}
-}
-
-void debugFloat(Logging *logging, const char *caption, float value, int precision) {
-	append(logging, caption);
-	append(logging, DELIMETER);
-
-	appendFloat(logging, value, precision);
-	append(logging, DELIMETER);
-}
-
-static char header[16];
-
-/**
- * this method should invoked on the main thread only
- */
-void printWithLength(char *line) {
-	int len;
-	char *p;
-
-	if (!isCommandLineConsoleReady())
-		return;
-
-	/**
-	 * this is my way to detect serial port transmission errors
-	 * following code is functionally identical to
-	 *   print("line:%d:%s\r\n", len, line);
-	 * but it is faster because it outputs the whole buffer, not single characters
-	 * We need this optimization because when we output larger chunks of data like the wave_chart:
-	 * When we work with actual hardware, it is faster to invoke 'chSequentialStreamWrite' for the
-	 * whole buffer then to invoke 'chSequentialStreamPut' once per character.
-	 */
-	// todo: if needed we can probably know line length without calculating it, but seems like this is done not
-	// under a lock so not a problem?
-
-	len = efiStrlen(line);
-	strcpy(header, "line:");
-	p = header + efiStrlen(header);
-	p = itoa10(p, len);
-	*p++ = ':';
-	*p++ = '\0';
-
-	p = line;
-	p += len;
-	*p++ = '\r';
-	*p++ = '\n';
-
-	consoleOutputBuffer((const uint8_t *) header, strlen(header));
-	consoleOutputBuffer((const uint8_t *) line, p - line);
 }
 
 void appendMsgPrefix(Logging *logging) {
-	append(logging, "msg" DELIMETER);
+	logging->append(PROTOCOL_MSG DELIMETER);
 }
 
 void appendMsgPostfix(Logging *logging) {
-	append(logging, DELIMETER);
+	logging->append(DELIMETER);
 }
 
-void resetLogging(Logging *logging) {
-	char *buffer = logging->buffer;
-	if (buffer == NULL) {
-		firmwareError(ERROR_NULL_BUFFER, "Null buffer: %s", logging->name);
-		return;
-	}
-	logging->linePointer = buffer;
-	logging->linePointer[0] = 0;
+void Logging::reset() {
+	linePointer = buffer;
+	*linePointer = 0;
 }
 
-/**
- * This method would output a simple console message immediately.
- * This method should only be invoked on main thread because only the main thread can write to the console
- */
-void printMsg(Logging *logger, const char *fmt, ...) {
-	efiAssertVoid(CUSTOM_ERR_6605, getCurrentRemainingStack() > 128, "lowstck#5o");
-//	resetLogging(logging); // I guess 'reset' is not needed here?
-	appendMsgPrefix(logger);
-
-	va_list ap;
-	va_start(ap, fmt);
-	logger->vappendPrintf(fmt, ap);
-	va_end(ap);
-
-	append(logger, DELIMETER);
-	printWithLength(logger->buffer);
-	resetLogging(logger);
-}
-
-uint32_t remainingSize(Logging *logging) {
-	return logging->bufferSize - loggingSize(logging);
-}
-
-void initIntermediateLoggingBuffer(void) {
-	initLoggingCentral();
-
-	msObjectInit(&intermediateLoggingBuffer, intermediateLoggingBufferData, INTERMEDIATE_LOGGING_BUFFER_SIZE, 0);
-	intermediateLoggingBufferInited = true;
-}
-
-#else
-/* unit test implementations */
-void Logging::vappendPrintf(const char *fmt, va_list arg) {
-
-}
-
-void Logging::appendPrintf(const char *fmt, ...) {
-	va_list ap;
-	va_start(ap, fmt);
-	vsprintf(buffer, fmt, ap);
-	va_end(ap);
-}
-
-#endif /* ! EFI_UNIT_TEST */
-
-Logging::Logging() {
-}
-
-Logging::Logging(char const *name, char *buffer, int bufferSize) : Logging() {
-#if ! EFI_UNIT_TEST
-	initLoggingExt(name, buffer, bufferSize);
-#else
-	this->buffer = buffer;
-#endif /* ! EFI_UNIT_TEST */
+Logging::Logging(char const *name, char *buffer, int bufferSize)
+	: name(name)
+	, buffer(buffer)
+	, bufferSize(bufferSize)
+{
+	reset();
 }
 
 LoggingWithStorage::LoggingWithStorage(const char *name) : Logging(name, DEFAULT_BUFFER, sizeof(DEFAULT_BUFFER))   {

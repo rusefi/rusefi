@@ -50,7 +50,7 @@ TEST(misc, cppPlainStructMemoryLayout) {
 	memcpy(&destimationInt, &c, 4);
 	ASSERT_EQ(540, destimationInt);
 
-	ASSERT_EQ(0, (int)&c.field0 - (int)&c);
+	ASSERT_EQ((uintptr_t)&c.field0, (uintptr_t)&c);
 }
 
 static int valueWePointAt;
@@ -58,13 +58,11 @@ static int valueWePointAt;
 TEST(misc, cppVirtualStructMemoryLayout) {
 	TestChildWithVirtual c;
 
-	int * valuePointer = &valueWePointAt;
-	int pointerSize = sizeof(valuePointer);
+	int pointerSize = sizeof(int*);
 
 
 	// '4' in case of 32 bit target
 	// '8' in case of 64 bit target
-	// this '8' is totally compiler and platform dependent
 	int MAGIC_VTABLE_SIZE = pointerSize;
 
 	// validate field initializers just for fun
@@ -80,9 +78,9 @@ TEST(misc, cppVirtualStructMemoryLayout) {
 
 	// static_cast is smart to skip the vtable, we like static_cast
 	TestParent *parent = static_cast<TestParent*>(&c);
-	ASSERT_EQ(0, (int)&c.field0 - (int)parent);
+	ASSERT_EQ((uintptr_t)&c.field0, (uintptr_t)parent);
 
-	ASSERT_EQ(MAGIC_VTABLE_SIZE, (int)&c.field0 - (int)&c);
+	ASSERT_EQ(MAGIC_VTABLE_SIZE, (uintptr_t)&c.field0 - (uintptr_t)&c);
 
 
 }
@@ -96,5 +94,5 @@ TEST(misc, cppPlainExtraFieldsStructMemoryLayout) {
 	// parent fields go first
 	memcpy(&destimationInt, &c, 4);
 	ASSERT_EQ(540, destimationInt);
-	ASSERT_EQ(0, (int)&c.field0 - (int)&c);
+	ASSERT_EQ(0, (uintptr_t)&c.field0 - (uintptr_t)&c);
 }

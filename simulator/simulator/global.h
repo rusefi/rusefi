@@ -26,17 +26,9 @@
 
 #define efiSetPadMode(msg, brainPin, mode) {}
 
-#define EFI_UNIT_TEST FALSE
-
 #define hasOsPanicError() (FALSE)
 
 #define US_TO_NT_MULTIPLIER 100
-
-#define ALWAYS_INLINE
-
-#define US2NT(x) (US_TO_NT_MULTIPLIER * (x))
-
-#define NT2US(x) ((x) / US_TO_NT_MULTIPLIER)
 
 // need to fight 32bit int overflow
 
@@ -56,6 +48,8 @@
 
 extern BaseChannel serialAdapterInstance;
 
+#define UNIT_TEST_BUSY_WAIT_CALLBACK() {}
+
 #ifdef __cplusplus
 extern "C"
 {
@@ -67,9 +61,6 @@ void printToConsole(char *p);
 
 int getRemainingStack(thread_t *otp);
 
-// todo: move somewhere else?
-bool lockAnyContext(void);
-void unlockAnyContext(void);
 void applyNewConfiguration(void);
 
 #ifdef __cplusplus

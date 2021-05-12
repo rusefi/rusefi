@@ -36,9 +36,9 @@ import java.io.IOException;
 import static com.romraider.Version.VERSION;
 
 public class SettingsManager {
-    private static final String SETTINGS_FILE = "/settings.xml";
+    private static final String SETTINGS_FILE = "/romraider_settings.xml";
     private static final String USER_HOME =
-            System.getProperty("user.home") + "/.rusefi.RomRaider";
+            System.getProperty("user.home") + "/.rusEFI";
     private static final String START_DIR = System.getProperty("user.dir");
     private static String settingsDir = USER_HOME;
 

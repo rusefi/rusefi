@@ -19,6 +19,9 @@
 
 #define BIT(n) (UINT32_C(1) << (n))
 
+// we also have efi::size which probably does not work for C code
+#define ARRAY_SIZE(x) (sizeof(x) / sizeof((x)[0]))
+
 // human-readable IDs start from 1 while computer-readbale indexes start from 0
 #define ID2INDEX(id) ((id) - 1)
 
@@ -29,6 +32,9 @@
 #define frequency2periodUs(freq) ((1000000.0f) / (freq))
 
 #define ERROR_CODE 311223344
+
+#define Q(x) #x
+#define QUOTE(x) Q(x)
 
 #ifdef __cplusplus
 extern "C"
@@ -61,6 +67,8 @@ float maxF(float i1, float i2);
 float minF(float i1, float i2);
 char* itoa10(char *p, int num);
 bool isSameF(float v1, float v2);
+
+int clampI(int min, int clamp, int max);
 float clampF(float min, float clamp, float max);
 
 /**
@@ -78,10 +86,17 @@ float limitRateOfChange(float newValue, float oldValue, float incrLimitPerSec, f
 // bogus results outside the range -2 < x < 0.
 float expf_taylor(float x);
 
+// @brief Compute tan(theta) using a ratio of the Taylor series for sin and cos
+// Valid for the range [0, pi/2 - 0.01]
+float tanf_taylor(float theta);
+
 #ifdef __cplusplus
 }
 
 #include <cstddef>
+
+#define IS_NEGATIVE_ZERO(value) (__builtin_signbit(value) && value==0)
+#define fixNegativeZero(value) (IS_NEGATIVE_ZERO(value) ? 0 : value)
 
 // C++ helpers go here
 namespace efi
@@ -91,6 +106,10 @@ constexpr size_t size(const T(&)[N]) {
     return N;
 }
 } // namespace efi
+
+#define assertIsInBounds(length, array, msg) efiAssertVoid(OBD_PCM_Processor_Fault, (length) >= 0 && (length) < efi::size(array), msg)
+
+#define assertIsInBoundsWithResult(length, array, msg, failedResult) efiAssert(OBD_PCM_Processor_Fault, (length) >= 0 && (length) < efi::size(array), msg, failedResult)
 
 /**
  * Copies an array from src to dest.  The lengths of the arrays must match.

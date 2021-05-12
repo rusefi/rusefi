@@ -7,16 +7,21 @@
 
 #pragma once
 
-// todo: narrow this dependency further? only 'bi_quard_s' is needed, should it be extracted / moved to a smaller header?
-// todo: do we need to make code generation smarted and produce a larger number of smaller headers instead of one monster header?
-#include "engine_configuration.h"
-
 class Biquad {
 public:
-    Biquad();
-    void initValue(float input, bi_quard_s *settings);
-    float getValue(float input);
+	Biquad();
 
-    float a0, a1, a2, b1, b2;
-    float z1, z2;
+	float filter(float input);
+	void reset();
+	void cookSteadyState(float steadyStateInput);
+
+	void configureBandpass(float samplingFrequency, float centerFrequency, float Q);
+
+	// Default Q = 0.54, which is the maximum quality factor without time domain overshoot
+	// note that it is less than the maximally flat (frequency domain) Q=0.707, which gives some overshoot
+	void configureLowpass(float samplingFrequency, float cutoffFrequency, float Q = 0.54f);
+
+private:
+	float a0, a1, a2, b1, b2;
+	float z1, z2;
 };

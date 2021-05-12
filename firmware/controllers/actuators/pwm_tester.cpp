@@ -15,8 +15,6 @@
 #include "pwm_generator_logic.h"
 #include "engine.h"
 
-static LoggingWithStorage logger;
-
 static SimplePwm pwmTest[5];
 
 extern OutputPin warningLedPin;
@@ -24,7 +22,7 @@ extern OutputPin warningLedPin;
 EXTERN_ENGINE;
 
 static void startPwmTest(int freq) {
-	scheduleMsg(&logger, "running pwm test @%d", freq);
+	efiPrintf("running pwm test @%d", freq);
 
 	engine->isRunningPwmTest = true;
 

@@ -17,16 +17,20 @@ CHIBIOS = ../firmware/ChibiOS
 RULESPATH = $(CHIBIOS)/os/common/startup/SIMIA32/compilers/GCC
 RULESFILE = $(RULESPATH)/rules.mk
 
+PROJECT_CPU=simulator
+
 include ../firmware/rusefi.mk
 RULESFILE = ../firmware/rusefi_rules.mk
 
+# used by USE_SMART_BUILD
+CONFDIR = .
 
 
 # Compiler options here.
 ifeq ($(USE_OPT),)
 # this config if debugging is needed, but the binary is about 50M
-#  USE_OPT = -Wall     -ggdb     -Werror-implicit-function-declaration -Werror -Wno-error=pointer-sign -Wno-error=unused-function -Wno-error=unused-variable -Wno-error=sign-compare -Wno-error=unused-parameter -Wno-error=missing-field-initializers -Wno-error=write-strings -Wno-error=strict-aliasing
-#  USE_OPT = -Wall -O0 -ggdb -g3 -Wno-error=implicit-fallthrough -Werror-implicit-function-declaration -Werror -Wno-error=pointer-sign -Wno-error=unused-function -Wno-error=unused-variable -Wno-error=sign-compare -Wno-error=unused-parameter -Wno-error=missing-field-initializers -Wno-error=write-strings
+#  USE_OPT = -Wall     -ggdb    -Werror-implicit-function-declaration -Werror -Wno-error=pointer-sign -Wno-error=unused-function -Wno-error=unused-variable -Wno-error=sign-compare -Wno-error=unused-parameter -Wno-error=missing-field-initializers -Wno-error=write-strings -Wno-error=strict-aliasing
+#  USE_OPT = -Wall -O0 -ggdb -g -Wno-error=implicit-fallthrough -Werror-implicit-function-declaration -Werror -Wno-error=pointer-sign -Wno-error=unused-function -Wno-error=unused-variable -Wno-error=sign-compare -Wno-error=unused-parameter -Wno-error=missing-field-initializers -Wno-error=write-strings
 # this config producec a smaller binary file
 # 7.3 compiler would want -Wno-error=implicit-fallthrough while 6.4 does not know about it
 # see https://github.com/rusefi/rusefi/issues/517
@@ -38,7 +42,8 @@ ifeq ($(USE_OPT),)
 	endif
 endif
 
-USE_OPT += $(RUSEFI_OPT)
+# See explanation in main firmware Makefile for these three defines
+USE_OPT += $(RUSEFI_OPT) -DEFI_UNIT_TEST=0 -DEFI_PROD_CODE=0 -DEFI_SIMULATOR=1
 
 ifeq ($(CCACHE_DIR),)
  $(info No CCACHE_DIR)
@@ -80,7 +85,7 @@ endif
 # If enabled, this option makes the build process faster by not compiling
 # modules not used in the current configuration.
 ifeq ($(USE_SMART_BUILD),)
-  USE_SMART_BUILD = yes
+  USE_SMART_BUILD = no
 endif
 
 #
@@ -100,20 +105,28 @@ endif
 #
 
 # Define project name here
-PROJECT = rusefi_simulator
+ifeq ($(OS),Windows_NT)
+  PROJECT = rusefi_simulator.exe
+else
+  PROJECT = rusefi_simulator
+endif
 PROJECT_DIR = ../firmware
 
 # Imported source files and paths
 
+# Licensing files.
+include $(CHIBIOS)/os/license/license.mk
 # Startup files.
 # HAL-OSAL files (optional).
 include $(CHIBIOS)/os/hal/hal.mk
 include $(CHIBIOS)/os/hal/boards/simulator/board.mk
-include $(CHIBIOS)/os/hal/osal/rt/osal.mk
+include $(CHIBIOS)/os/hal/osal/rt-nil/osal.mk
 # RTOS files (optional).
 include $(CHIBIOS)/os/rt/rt.mk
 include $(CHIBIOS)/os/common/ports/SIMIA32/compilers/GCC/port.mk
 # Other files (optional).
+include $(CHIBIOS)/os/hal/lib/streams/streams.mk
+#include $(CHIBIOS)/os/various/cpp_wrappers/chcpp.mk
 
 ifeq ($(OS),Windows_NT)
   include ${CHIBIOS}/os/hal/ports/simulator/win32/platform.mk
@@ -134,25 +147,21 @@ include $(PROJECT_DIR)/util/util.mk
 
 # C sources that can be compiled in ARM or THUMB mode depending on the global
 # setting.
-CSRC =  ${PORTSRC} \
-        ${KERNSRC} \
-        ${HALSRC} \
-        ${PLATFORMSRC} \
+CSRC =  $(ALLCSRC) \
         $(SYSTEMSRC) \
         $(CONSOLESRC) \
         $(CONTROLLERS_ALGO_SRC) \
         $(CONTROLLERS_CORE_SRC) \
         $(CONTROLLERS_SENSORS_SRC) \
         $(ENGINES_SRC) \
-        $(BOARDSRC) \
-        $(CHIBIOS)/os/hal/lib/streams/memstreams.c \
-        $(CHIBIOS)/os/hal/lib/streams/chprintf.c \
         $(UTILSRC) \
         main.c
 
 # C++ sources that can be compiled in ARM or THUMB mode depending on the global
 # setting.
-CPPSRC = $(UTILSRC_CPP) \
+CPPSRC = $(ALLCPPSRC) \
+  $(CHIBIOS)/os/various/cpp_wrappers/ch.cpp \
+        $(UTILSRC_CPP) \
 	$(CONTROLLERS_ALGO_SRC_CPP) \
 	$(CONTROLLERS_SRC_CPP) \
 	$(PROJECT_DIR)/development/sensor_chart.cpp \
@@ -179,27 +188,21 @@ CPPSRC = $(UTILSRC_CPP) \
 ASMSRC = $(PORTASM)
 
 INCDIR = . \
-          $(CHIBIOS)/os/license \
-          $(PORTINC) \
-          $(KERNINC) \
-          $(OSALINC) \
-          $(HALINC) \
-          $(PLATFORMINC) \
-          $(BOARDINC) \
+          $(ALLINC) \
+          $(CHIBIOS)/os/various/cpp_wrappers \
           $(UTIL_INC) \
           $(PROJECT_DIR)/init \
-          $(PROJECT_DIR)/console \
-          $(PROJECT_DIR)/console/binary \
-          $(PROJECT_DIR)/console/fl_binary \
+          $(CONSOLE_INC) \
           $(PROJECT_DIR)/config/engines \
           $(PROJECT_DIR)/ext_algo \
-         $(HW_LAYER_DRIVERS_INC) \
-          $(PROJECT_DIR)/hw_layer \
+          $(HW_LAYER_DRIVERS_INC) \
+          $(HW_LAYER_INC) \
+	  $(HW_SENSORS_INC) \
           $(PROJECT_DIR)/hw_layer/algo \
           $(PROJECT_DIR)/hw_layer/drivers/can \
           $(HW_SENSORS_INC) \
- 	$(DEVELOPMENT_DIR) \
-    $(CONTROLLERS_INC) \
+          $(DEVELOPMENT_DIR) \
+          $(CONTROLLERS_INC) \
           ${CHIBIOS}/os/various \
           $(CHIBIOS)/os/hal/lib/streams \
           simulator
@@ -215,6 +218,8 @@ ASMXSRC = $(STARTUPASM) $(PORTASM) $(OSALASM)
 ##############################################################################
 # Compiler settings
 #
+
+$(info OS is [${OS}])
 
 ifeq ($(OS),Windows_NT)
   # ChibiOS seem to require 32 bit compiler at least on Windows

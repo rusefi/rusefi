@@ -1,0 +1,13 @@
+plugins {
+    id 'java'
+}
+
+apply from: '../../android/dependencies.gradle'
+
+dependencies {
+    implementation project(':logging-api')
+    implementation project(':shared_io')
+    implementation libs.annotations
+
+    testImplementation libs.junit
+}

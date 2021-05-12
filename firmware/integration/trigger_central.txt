@@ -9,6 +9,5 @@ int vvtCamCounter
 int vvtEventRiseCounter
 int vvtEventFallCounter
 
-
 end_struct
 

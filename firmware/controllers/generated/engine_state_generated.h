@@ -1,8 +1,7 @@
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on integration/engine_state.txt Fri Apr 10 12:53:32 EDT 2020
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) integration/engine_state.txt Sat May 08 21:43:54 UTC 2021
 // by class com.rusefi.output.CHeaderConsumer
 // begin
-#ifndef CONTROLLERS_GENERATED_ENGINE_STATE_GENERATED_H
-#define CONTROLLERS_GENERATED_ENGINE_STATE_GENERATED_H
+#pragma once
 #include "rusefi_types.h"
 // start of speed_density_s
 struct speed_density_s {
@@ -227,12 +226,7 @@ struct running_fuel_s {
 	 */
 	floatms_t injectorLag = (floatms_t)0;
 	/**
-	 * closed-loop fuel correction
 	 * offset 20
-	 */
-	floatms_t pidCorrection = (floatms_t)0;
-	/**
-	 * offset 24
 	 */
 	floatms_t baseFuel = (floatms_t)0;
 	/**
@@ -240,10 +234,10 @@ struct running_fuel_s {
 	 * Without injector lag.
 	 * @see baseFuel
 	 * @see actualLastInjection
-	 * offset 28
+	 * offset 24
 	 */
 	floatms_t fuel = (floatms_t)0;
-	/** total size 32*/
+	/** total size 28*/
 };
 
 typedef struct running_fuel_s running_fuel_s;
@@ -399,35 +393,34 @@ struct engine_state2_s {
 	 */
 	running_fuel_s running;
 	/**
-	 * offset 144
+	 * offset 140
 	 */
 	percent_t etbFeedForward = (percent_t)0;
 	/**
-	 * offset 148
+	 * offset 144
 	 */
 	percent_t targetFromTable = (percent_t)0;
 	/**
 	 * ignition dwell duration in ms
 	 * See also dwellAngle
-	 * offset 152
+	 * offset 148
 	 */
 	floatms_t sparkDwell = (floatms_t)0;
 	/**
 	 * ignition dwell duration as crankshaft angle
 	 * NAN if engine is stopped
 	 * See also sparkDwell
-	 * offset 156
+	 * offset 152
 	 */
 	angle_t dwellAngle = (angle_t)0;
 	/**
-	 * offset 160
+	 * offset 156
 	 */
 	angle_t cltTimingCorrection = (angle_t)0;
-	/** total size 164*/
+	/** total size 160*/
 };
 
 typedef struct engine_state2_s engine_state2_s;
 
-#endif
 // end
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on integration/engine_state.txt Fri Apr 10 12:53:32 EDT 2020
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) integration/engine_state.txt Sat May 08 21:43:54 UTC 2021

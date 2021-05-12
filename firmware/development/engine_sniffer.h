@@ -18,6 +18,8 @@
  */
 class WaveChart {
 public:
+	DECLARE_ENGINE_PTR;
+
 	WaveChart();
 	void init();
 	void addEvent3(const char *name, const char *msg);
@@ -27,7 +29,9 @@ public:
 	void publish();
 	bool isFull() const;
 	bool isStartedTooLongAgo() const;
+	// looks like this is only used by functional tests on real hardware
 	efitick_t pauseEngineSnifferUntilNt = 0;
+	int getSize();
 
 private:
 	Logging logging;

@@ -25,6 +25,7 @@
 #include "gpio/tle6240.h"
 #include "pin_repository.h"
 #include "os_util.h"
+#include "thread_priority.h"
 
 #if (BOARD_TLE6240_COUNT > 0)
 
@@ -314,17 +315,18 @@ static int tle6240_wake_driver(struct tle6240_priv *chip)
 {
 	(void)chip;
 
-	if (isIsrContext()) {
-		// this is for normal runtime
-		int wasLocked = lockAnyContext();
-		chSemSignalI(&tle6240_wake);
-		if (!wasLocked) {
-			unlockAnyContext();
-		}
-	} else {
-		// this is for start-up to not hang up
-		chSemSignal(&tle6240_wake);
+	/* Entering a reentrant critical zone.*/
+	syssts_t sts = chSysGetStatusAndLockX();
+	chSemSignalI(&tle6240_wake);
+	if (!port_is_isr_context()) {
+		/**
+		 * chSemSignalI above requires rescheduling
+		 * interrupt handlers have implicit rescheduling
+		 */
+		chSchRescheduleS();
 	}
+	/* Leaving the critical zone.*/
+	chSysRestoreStatusX(sts);
 
 	return 0;
 }
@@ -449,7 +451,7 @@ static int tle6240_init(void * data)
 
 	if (!drv_task_ready) {
 		chThdCreateStatic(tle6240_thread_1_wa, sizeof(tle6240_thread_1_wa),
-						  NORMALPRIO + 1, tle6240_driver_thread, NULL);
+						  PRIO_GPIOCHIP, tle6240_driver_thread, NULL);
 		drv_task_ready = true;
 	}
 
@@ -477,7 +479,7 @@ struct gpiochip_ops tle6240_ops = {
  * @details Checks for valid config
  */
 
-int tle6240_add(unsigned int index, const struct tle6240_config *cfg)
+int tle6240_add(brain_pin_e base, unsigned int index, const struct tle6240_config *cfg)
 {
 	int i;
 	int ret;
@@ -511,19 +513,21 @@ int tle6240_add(unsigned int index, const struct tle6240_config *cfg)
 	chip->drv_state = TLE6240_WAIT_INIT;
 
 	/* register, return gpio chip base */
-	ret = gpiochip_register(DRIVER_NAME, &tle6240_ops, TLE6240_OUTPUTS, chip);
+	ret = gpiochip_register(base, DRIVER_NAME, &tle6240_ops, TLE6240_OUTPUTS, chip);
+	if (ret < 0)
+		return ret;
 
 	/* set default pin names, board init code can rewrite */
-	gpiochips_setPinNames(ret, tle6240_pin_names);
+	gpiochips_setPinNames(base, tle6240_pin_names);
 
 	return ret;
 }
 
 #else /* BOARD_TLE6240_COUNT > 0 */
 
-int tle6240_add(unsigned int index, const struct tle6240_config *cfg)
+int tle6240_add(brain_pin_e base, unsigned int index, const struct tle6240_config *cfg)
 {
-	(void)index; (void)cfg;
+	(void)base; (void)index; (void)cfg;
 
 	return -1;
 }

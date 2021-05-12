@@ -39,8 +39,6 @@ void setMazda626EngineConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	// chartsize 600
 	engineConfiguration->engineChartSize = 600;
 
-	engineConfiguration->sensorChartFrequency = 2;
-
 	engineConfiguration->injector.flow = 330;
 	engineConfiguration->specs.displacement = 2.0;
 
@@ -54,7 +52,7 @@ void setMazda626EngineConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	engineConfiguration->crankingChargeAngle = 70;
 
 	// set cranking_fuel 9
-	engineConfiguration->cranking.baseFuel = 2.5;
+	engineConfiguration->cranking.baseFuel = 30;
 
 	engineConfiguration->rpmHardLimit = 7400;
 
@@ -62,10 +60,6 @@ void setMazda626EngineConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	engineConfiguration->tpsMax = 764;
 
 	setAlgorithm(LM_SPEED_DENSITY PASS_CONFIG_PARAMETER_SUFFIX);
-	setFuelLoadBin(0, 100 PASS_CONFIG_PARAMETER_SUFFIX);
-
-	// set_whole_fuel_map 9
-	setWholeFuelMap(9 PASS_CONFIG_PARAMETER_SUFFIX);
 
 // set_whole_timing_map 10
 	setWholeTimingTable_d(10 PASS_CONFIG_PARAMETER_SUFFIX);

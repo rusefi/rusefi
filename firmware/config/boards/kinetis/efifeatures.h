@@ -20,12 +20,8 @@
 
 #define EFI_PWM_TESTER FALSE
 
-#define HAL_USE_USB_MSD FALSE
-
 #define EFI_ENABLE_CRITICAL_ENGINE_STOP FALSE
 #define EFI_ENABLE_ENGINE_WARNING TRUE
-
-#define EFI_USE_CCM FALSE
 
 /**
  * if you have a 60-2 trigger, or if you just want better performance, you
@@ -44,13 +40,9 @@
 #endif /* EFI_ENABLE_MOCK_ADC */
 
 
-#define EFI_TEXT_LOGGING TRUE
+#define EFI_TEXT_LOGGING FALSE
 
 //#define EFI_UART_ECHO_TEST_MODE FALSE
-
-//#define EFI_USE_UART_FOR_CONSOLE FALSE
-
-#define EFI_CONSOLE_NO_THREAD TRUE
 
 /**
  * Build-in logic analyzer support. Logic analyzer viewer is one of the java console panes.
@@ -148,9 +140,9 @@
 #define EFI_INTERNAL_ADC TRUE
 #endif
 
-#define EFI_NARROW_EGO_AVERAGING FALSE
+#define EFI_USE_FAST_ADC TRUE
 
-#define EFI_DENSO_ADC FALSE
+#define EFI_NARROW_EGO_AVERAGING FALSE
 
 #ifndef EFI_CAN_SUPPORT
 #define EFI_CAN_SUPPORT FALSE
@@ -189,12 +181,6 @@
 #endif
 
 /**
- * This macros is used to hide pieces of the code from unit tests, so it only makes sense in folders exposed to the tests project.
- * This macros is NOT about taking out logging in general.
- */
-#define EFI_PROD_CODE TRUE
-
-/**
  * Do we need file logging (like SD card) logic?
  */
 #ifndef EFI_FILE_LOGGING
@@ -204,11 +190,6 @@
 #ifndef EFI_USB_SERIAL
 #define EFI_USB_SERIAL FALSE
 #endif
-
-/**
- * Should PnP engine configurations be included in the binary?
- */
-#define EFI_INCLUDE_ENGINE_PRESETS FALSE
 
 #ifndef EFI_ENGINE_SNIFFER
 #define EFI_ENGINE_SNIFFER FALSE
@@ -287,19 +268,13 @@
  *  STM32_UART_USE_USARTx
  * in mcuconf.h
  */
-#define TS_UART_DMA_MODE FALSE
-#define TS_UART_MODE TRUE
+#define EFI_USE_UART_DMA FALSE
 
-#define TS_UART_DEVICE (&UARTD2)
-#undef TS_SERIAL_DEVICE
+#define TS_PRIMARY_UART UARTD2
+#undef TS_SECONDARY_UART
 
-#undef EFI_CONSOLE_SERIAL_DEVICE
-#define EFI_CONSOLE_UART_DEVICE (&UARTD1)
-
-#define EFI_CONSOLE_TX_PORT GPIOA
-#define EFI_CONSOLE_TX_PIN 10
-#define EFI_CONSOLE_RX_PORT GPIOA
-#define EFI_CONSOLE_RX_PIN 11
+#define EFI_CONSOLE_TX_BRAIN_PIN GPIOA_10
+#define EFI_CONSOLE_RX_BRAIN_PIN GPIOA_11
 #define EFI_CONSOLE_AF 3
 
 #define TS_SERIAL_AF 2
@@ -317,11 +292,10 @@
 
 #define LED_WARNING_BRAIN_PIN GPIOD_13
 
-#define LED_ERROR_BRAIN_PIN GPIOD_14
+#define LED_CRITICAL_ERROR_BRAIN_PIN GPIOD_14
+#define LED_ERROR_BRAIN_PIN_MODE DEFAULT_OUTPUT
 
 #define EFI_WARNING_LED FALSE
-
-#define EFI_UNIT_TEST FALSE
 
 #undef CONSOLE_MODE_SWITCH_PORT
 #undef CONFIG_RESET_SWITCH_PORT
@@ -329,7 +303,6 @@
 /**
  * This is the size of the MemoryStream used by chvprintf
  */
-#define INTERMEDIATE_LOGGING_BUFFER_SIZE 200 /*2000*/
 #define STATUS_LOGGING_BUFFER_SIZE 120 /*1800*/
 #define SETTINGS_LOGGING_BUFFER_SIZE 100 /*1000*/
 #define DL_OUTPUT_BUFFER 10 /*6500*/
@@ -341,6 +314,8 @@
 #define BOARD_TLE6240_COUNT 1
 #define BOARD_MC33972_COUNT 0
 #define BOARD_TLE8888_COUNT 0
+#define BOARD_DRV8860_COUNT 0
+#define BOARD_MC33810_COUNT 0
 
 #define TLE6240_SS_PORT GPIOB
 #define TLE6240_SS_PAD  0U
@@ -359,9 +334,6 @@
 		[7] = {.port = NULL, .pad = 0},
 
 #define EFI_BOSCH_YAW FALSE
-#define ADC_SNIFFER FALSE
-
-#define GPTDEVICE GPTD1
 
 #define EFI_BOARD_TEST FALSE
 #define EFI_JOYSTICK FALSE
@@ -372,15 +344,14 @@
 #define EXTREME_TERM_LOGGING FALSE
 #define EFI_PRINTF_FUEL_DETAILS FALSE
 
-#define EFI_SIMULATOR FALSE
-
 #define RAM_UNUSED_SIZE 1
 #define CCM_UNUSED_SIZE 1
 
 #define EFI_PRINT_ERRORS_AS_WARNINGS TRUE
-#define EFI_PRINT_MESSAGES_TO_TERMINAL TRUE
+// #define EFI_PRINT_MESSAGES_TO_TERMINAL TRUE
 
-#define EFI_ACTIVE_CONFIGURATION_IN_FLASH
+#undef EFI_ACTIVE_CONFIGURATION_IN_FLASH
+#define EFI_ACTIVE_CONFIGURATION_IN_FLASH TRUE
 
 //#define PWM_PHASE_MAX_COUNT 122
 
@@ -390,7 +361,7 @@
 	if (__debugEnabled) { \
 		extern char __debugBuffer[80]; \
 		chsnprintf(__debugBuffer, sizeof(__debugBuffer), fmt, ##__VA_ARGS__); \
-		uart_lld_blocking_send(EFI_CONSOLE_UART_DEVICE, strlen(__debugBuffer), (void *)__debugBuffer); \
+		uart_lld_blocking_send(TS_PRIMARY_UART, strlen(__debugBuffer), (void *)__debugBuffer); \
 	} \
 }
 

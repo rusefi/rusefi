@@ -23,6 +23,7 @@
  */
 
 #include "global.h"
+#include "os_access.h"
 #include "scheduler.h"
 #include "main_trigger_callback.h"
 
@@ -30,6 +31,10 @@
 // this is about debugging
 #include "efi_gpio.h"
 #endif /* EFI_SIMULATOR */
+
+#if EFI_PRINTF_FUEL_DETAILS
+bool printSchedulerDebug = true;
+#endif // EFI_PRINTF_FUEL_DETAILS
 
 #if EFI_SIGNAL_EXECUTOR_SLEEP
 
@@ -43,14 +48,15 @@ void SleepExecutor::scheduleByTimestampNt(scheduling_s* scheduling, efitick_t ti
 
 static void timerCallback(scheduling_s *scheduling) {
 #if EFI_PRINTF_FUEL_DETAILS
-	if (scheduling->action.getCallback() == (schfunc_t)&turnInjectionPinLow) {
-		printf("executing cb=turnInjectionPinLow p=%d sch=%d now=%d\r\n", (int)scheduling->action.getArgument(), (int)scheduling,
+	if (printSchedulerDebug) {
+		if (scheduling->action.getCallback() == (schfunc_t)&turnInjectionPinLow) {
+			printf("executing cb=turnInjectionPinLow p=%d sch=%d now=%d\r\n", (int)scheduling->action.getArgument(), (int)scheduling,
 				(int)getTimeNowUs());
-	} else {
+		} else {
 //		printf("exec cb=%d p=%d\r\n", (int)scheduling->callback, (int)scheduling->param);
+		}
 	}
-
-#endif /* EFI_SIMULATOR */
+#endif // EFI_PRINTF_FUEL_DETAILS
 	scheduling->action.execute();
 }
 
@@ -64,7 +70,8 @@ static void doScheduleForLater(scheduling_s *scheduling, int delayUs, action_s a
 		return;
 	}
 
-	bool alreadyLocked = lockAnyContext();
+	chibios_rt::CriticalSectionLocker csl;
+
 	scheduling->action = action;
 	int isArmed = chVTIsArmedI(&scheduling->timer);
 	if (isArmed) {
@@ -83,9 +90,6 @@ static void doScheduleForLater(scheduling_s *scheduling, int delayUs, action_s a
 #endif /* EFI_SIMULATOR */
 
 	chVTSetI(&scheduling->timer, delaySt, (vtfunc_t)timerCallback, scheduling);
-	if (!alreadyLocked) {
-		unlockAnyContext();
-	}
 }
 
 void SleepExecutor::scheduleForLater(scheduling_s *scheduling, int delayUs, action_s action) {

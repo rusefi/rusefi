@@ -10,14 +10,13 @@
 #include "global.h"
 
 #if EFI_TUNER_STUDIO
-#include "tunerstudio_configuration.h"
+#include "tunerstudio_outputs.h"
 #endif /* EFI_TUNER_STUDIO */
 
 #if EFI_ALTERNATOR_CONTROL
 #include "engine.h"
 #include "rpm_calculator.h"
 #include "alternator_controller.h"
-#include "voltage.h"
 #include "pid.h"
 #include "local_version_holder.h"
 #include "periodic_task.h"
@@ -31,8 +30,6 @@
 #endif /* HAS_OS_ACCESS */
 
 EXTERN_ENGINE;
-
-static Logging *logger;
 
 static SimplePwm alternatorControl("alt");
 static PidIndustrial alternatorPid(&persistentState.persistentConfiguration.engineConfiguration.alternatorControl);
@@ -72,21 +69,29 @@ class AlternatorController : public PeriodicTimerController {
 		}
 
 		// todo: migrate this to FSIO
-		bool alternatorShouldBeEnabledAtCurrentRpm = GET_RPM_VALUE > engineConfiguration->cranking.rpm;
-		engine->isAlternatorControlEnabled = CONFIG(isAlternatorControlEnabled) && alternatorShouldBeEnabledAtCurrentRpm;
+		bool alternatorShouldBeEnabledAtCurrentRpm = GET_RPM() > engineConfiguration->cranking.rpm;
 
-		if (!engine->isAlternatorControlEnabled) {
+		if (!CONFIG(isAlternatorControlEnabled) || !alternatorShouldBeEnabledAtCurrentRpm) {
 			// we need to avoid accumulating iTerm while engine is not running
 			pidReset();
+
+			// Shut off output if not needed
+			alternatorControl.setSimplePwmDutyCycle(0);
+
 			return;
 		}
 
-		float vBatt = getVBatt(PASS_ENGINE_PARAMETER_SIGNATURE);
+		auto vBatt = Sensor::get(SensorType::BatteryVoltage);
 		float targetVoltage = engineConfiguration->targetVBatt;
 
 		if (CONFIG(onOffAlternatorLogic)) {
+			if (!vBatt) {
+				// Somehow battery voltage isn't valid, disable alternator control
+				enginePins.alternatorPin.setValue(false);
+			}
+
 			float h = 0.1;
-			bool newState = (vBatt < targetVoltage - h) || (currentPlainOnOffState && vBatt < targetVoltage);
+			bool newState = (vBatt.Value < targetVoltage - h) || (currentPlainOnOffState && vBatt.Value < targetVoltage);
 			enginePins.alternatorPin.setValue(newState);
 			currentPlainOnOffState = newState;
 			if (engineConfiguration->debugMode == DBG_ALTERNATOR_PID) {
@@ -98,47 +103,39 @@ class AlternatorController : public PeriodicTimerController {
 			return;
 		}
 
+		if (!vBatt) {
+			// Somehow battery voltage isn't valid, disable alternator control
+			alternatorPid.reset();
+			alternatorControl.setSimplePwmDutyCycle(0);
+		} else {
+			currentAltDuty = alternatorPid.getOutput(targetVoltage, vBatt.Value);
+			if (CONFIG(isVerboseAlternator)) {
+				efiPrintf("alt duty: %.2f/vbatt=%.2f/p=%.2f/i=%.2f/d=%.2f int=%.2f", currentAltDuty, vBatt.Value,
+						alternatorPid.getP(), alternatorPid.getI(), alternatorPid.getD(), alternatorPid.getIntegration());
+			}
 
-		currentAltDuty = alternatorPid.getOutput(targetVoltage, vBatt);
-		if (CONFIG(isVerboseAlternator)) {
-			scheduleMsg(logger, "alt duty: %.2f/vbatt=%.2f/p=%.2f/i=%.2f/d=%.2f int=%.2f", currentAltDuty, vBatt,
-					alternatorPid.getP(), alternatorPid.getI(), alternatorPid.getD(), alternatorPid.getIntegration());
+			alternatorControl.setSimplePwmDutyCycle(PERCENT_TO_DUTY(currentAltDuty));
 		}
-
-
-		alternatorControl.setSimplePwmDutyCycle(PERCENT_TO_DUTY(currentAltDuty));
 	}
 };
 
 static AlternatorController instance;
 
 void showAltInfo(void) {
-	scheduleMsg(logger, "alt=%s @%s t=%dms", boolToString(engineConfiguration->isAlternatorControlEnabled),
+	efiPrintf("alt=%s @%s t=%dms", boolToString(engineConfiguration->isAlternatorControlEnabled),
 			hwPortname(CONFIG(alternatorControlPin)),
 			engineConfiguration->alternatorControl.periodMs);
-	scheduleMsg(logger, "p=%.2f/i=%.2f/d=%.2f offset=%.2f", engineConfiguration->alternatorControl.pFactor,
+	efiPrintf("p=%.2f/i=%.2f/d=%.2f offset=%.2f", engineConfiguration->alternatorControl.pFactor,
 			0, 0, engineConfiguration->alternatorControl.offset); // todo: i & d
-	scheduleMsg(logger, "vbatt=%.2f/duty=%.2f/target=%.2f", getVBatt(PASS_ENGINE_PARAMETER_SIGNATURE), currentAltDuty,
+	efiPrintf("vbatt=%.2f/duty=%.2f/target=%.2f", Sensor::get(SensorType::BatteryVoltage).value_or(0), currentAltDuty,
 			engineConfiguration->targetVBatt);
 }
 
 void setAltPFactor(float p) {
 	engineConfiguration->alternatorControl.pFactor = p;
-	scheduleMsg(logger, "setAltPid: %.2f", p);
+	efiPrintf("setAltPid: %.2f", p);
 	pidReset();
 	showAltInfo();
-}
-
-static void applyAlternatorPinState(int stateIndex, PwmConfig *state) /* pwm_gen_callback */ {
-	efiAssertVoid(CUSTOM_ERR_6643, stateIndex < PWM_PHASE_MAX_COUNT, "invalid stateIndex");
-	efiAssertVoid(CUSTOM_IDLE_WAVE_CNT, state->multiChannelStateSequence.waveCount == 1, "invalid idle waveCount");
-	OutputPin *output = state->outputPins[0];
-	int value = state->multiChannelStateSequence.getChannelState(/*channelIndex*/0, stateIndex);
-	/**
-	 * 'engine->isAlternatorControlEnabled' would be false is RPM is too low
-	 */
-	if (!value || engine->isAlternatorControlEnabled)
-		output->setValue(value);
 }
 
 void setDefaultAlternatorParameters(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
@@ -155,23 +152,29 @@ void onConfigurationChangeAlternatorCallback(engine_configuration_s *previousCon
 	shouldResetPid = !alternatorPid.isSame(&previousConfiguration->alternatorControl);
 }
 
-void initAlternatorCtrl(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX) {
-	logger = sharedLogger;
+void initAlternatorCtrl(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	addConsoleAction("altinfo", showAltInfo);
-	if (CONFIG(alternatorControlPin) == GPIO_UNASSIGNED)
+	if (!isBrainPinValid(CONFIG(alternatorControlPin)))
 		return;
 
-	if (CONFIG(onOffAlternatorLogic)) {
-		enginePins.alternatorPin.initPin("Alternator control", CONFIG(alternatorControlPin));
-	} else {
-		startSimplePwmExt(&alternatorControl,
+	if (!CONFIG(onOffAlternatorLogic)) {
+		startSimplePwm(&alternatorControl,
 				"Alternator control",
 				&engine->executor,
-				CONFIG(alternatorControlPin),
 				&enginePins.alternatorPin,
-				engineConfiguration->alternatorPwmFrequency, 0.1, (pwm_gen_callback*)applyAlternatorPinState);
+				engineConfiguration->alternatorPwmFrequency, 0);
 	}
 	instance.Start();
 }
+
+// todo: start invoking this method like 'startVvtControlPins'
+void startAlternatorPin(void) {
+
+}
+
+void stopAlternatorPin(void) {
+	// todo: implementation!
+}
+
 
 #endif /* EFI_ALTERNATOR_CONTROL */

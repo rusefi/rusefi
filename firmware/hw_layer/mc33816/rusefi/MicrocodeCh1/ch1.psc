@@ -1,67 +1,20 @@
-********************************************************************************
-* Example Code
-*
-* Copyright(C) 2019 NXP Semiconductors
-* NXP Semiconductors Confidential and Proprietary
-*
-* Software that is described herein is for illustrative purposes only
-* which provides customers with programming information regarding the
-* NXP products.  This software is supplied "AS IS" without any warranties
-* of any kind, and NXP Semiconductors and its licensor disclaim any and
-* all warranties, express or implied, including all implied warranties of
-* merchantability, fitness for a particular purpose and non-infringement of
-* intellectual property rights.  NXP Semiconductors assumes no responsibility
-* or liability for the use of the software, conveys no license or rights
-* under any patent, copyright, mask work right, or any other intellectual
-* property rights in or to any products. NXP Semiconductors reserves the
-* right to make changes in the software without notification. NXP
-* Semiconductors also makes no representation or warranty that such
-* application will be suitable for the specified use without further testing
-* or modification.
-*
-* IN NO EVENT WILL NXP SEMICONDUCTORS BE LIABLE, WHETHER IN CONTRACT, 
-* TORT, OR OTHERWISE, FOR ANY INCIDENTAL, SPECIAL, INDIRECT, CONSEQUENTIAL 
-* OR PUNITIVE DAMAGES, INCLUDING, BUT NOT LIMITED TO, DAMAGES FOR ANY 
-* LOSS OF USE, LOSS OF TIME, INCONVENIENCE, COMMERCIAL LOSS, OR LOST 
-* PROFITS, SAVINGS, OR REVENUES, TO THE FULL EXTENT SUCH MAY BE DISCLAIMED  
-* BY LAW. NXP SEMICONDUCTOR???S TOTAL LIABILITY FOR ALL COSTS, DAMAGES, 
-* CLAIMS, OR LOSSES WHATSOEVER ARISING OUT OF OR IN CONNECTION WITH THE 
-* SOFTWARE IS LIMITED TO THE AGGREGATE AMOUNT PAID BY YOU TO NXP SEMICONDUCTORS
-* IN CONNECTION WITH THE SOFTWARE TO WHICH LOSSES OR DAMAGES ARE CLAIMED.
-*
-* Permission to use, copy, modify, and distribute this software and its
-* documentation is hereby granted, under NXP Semiconductors' and its
-* licensor's relevant copyrights in the software, without fee, provided
-* that it is used in conjunction with NXP Semiconductors devices.  This
-* copyright, permission, and disclaimer notice must appear in all copies
-* of this code.
-********************************************************************************
-
 #include "dram1.def";
-
 * ### Channel 1 - uCore0 controls the injectors 1 and 2 ###
 
-* ### Variables declaration  ###
 
-* Note: The data are stored into the dataRAM of the channel 1.
-* Note: The Thold_tot variable defines the current profile time out.
-*       The active STARTx pin is expected to toggle in is low state before this time out.
+* Note: The Thold_tot variable defines the current profile time out. The active STARTx pin is expected to toggle in is low state before this time out.
 
 * ### Initialization phase ###
-init0:      stgn gain8.68 sssc;                     * Set the gain of the opamp of the current measure block 1
+init0:      stgn gain12.6 sssc;                     * Set the gain of the opamp of the current measure block 1 
             ldjr1 eoinj0;                           * Load the eoinj line label Code RAM address into the register jr1 
             ldjr2 idle0;                            * Load the idle line label Code RAM address into the register jr2
             cwef jr1 _start row1;                   * If the start signal goes low, go to eoinj phase       
 
-* ### Idle phase- the uPC loops here until start signal is present ###
-idle0:      cwer CheckStart start row2;             * Define entry table for high start pin
-            stoc on sssc;                           * Turn ON offset compensation
-WaitLoop:   wait row2;                              * uPC is stuck here for almost the whole idle time
-CheckStart: joslr inj1_start start1;                * Jump to inj1 if start 1 is high
-            joslr inj2_start start2;                * Jump to inj2 if start 2 is high
-            jmpr WaitLoop;
-            
-            
+* ### Idle phase- the uPC loops here until start signal is present ###              
+idle0:      joslr inj1_start start1;                * Perform an actuation on inj1 if start 1 (only) is active
+            joslr inj2_start start2;                * Perform an actuation on inj2 if start 2 (only) is active
+            jmpf jr1;                               * If more than 1 start active at the same time(or none), no actuation
+
 * ### Shortcuts definition per the injector to be actuated ###
 inj1_start: dfsct hs1 hs2 ls1;                      * Set the 3 shortcuts: VBAT, VBOOST, LS
             jmpr boost0;                            * Jump to launch phase
@@ -70,9 +23,7 @@ inj2_start: dfsct hs1 hs2 ls2;                      * Set the 3 shortcuts: VBAT,
             jmpr boost0;                            * Jump to launch phase
 
 * ### Launch phase enable boost ###
-boost0:     stoc off sssc;                          * Turn OFF offset compensation
-            bias all on;                            * Enable all biasing structures, kept ON even during actuation
-            load Iboost dac_sssc _ofs;              * Load the boost phase current threshold in the current DAC
+boost0:     load Iboost dac_sssc _ofs;              * Load the boost phase current threshold in the current DAC
             cwer peak0 ocur row2;                   * Jump to peak phase when current is over threshold
             stf low b0;                             * set flag0 low to force the DC-DC converter in idle mode
             stos off on on;                         * Turn VBAT off, BOOST on, LS on
@@ -124,25 +75,17 @@ eoinj0:     stos off off off;                       * Turn VBAT off, BOOST off, 
 
 * ### Channel 1 - uCore1 controls the injectors 3 and 4 ###
 
-* ### Variables declaration  ###
-
-* Note: The data that defines the profiles are shared between the two microcores.
-
 * ### Initialization phase ###
-init1:      stgn gain8.68 sssc;                     * Set the gain of the opamp of the current measure block 1
+init1:      stgn gain12.6 sssc;                     * Set the gain of the opamp of the current measure block 1
             ldjr1 eoinj1;                           * Load the eoinj line label Code RAM address into the register jr1
             ldjr2 idle1;                            * Load the idle line label Code RAM address into the register jr2
             cwef jr1 _start row1;                   * If the start signal goes low, go to eoinj phase
             
-
-* ### Idle phase- the uPC loops here until start signal is present ###
-idle1:      cwer CheckStart1 start row2;            * Define entry table for high start pin
-            stoc on sssc;                           * Turn ON offset compensation    
-WaitLoop1:  wait row2;                              * uPC is stuck here for almost the whole idle time
-CheckStart1:joslr inj3_start start3;                * Jump to inj1 if start 1 is high
-            joslr inj4_start start4;                * Jump to inj2 if start 2 is high
-            jmpr WaitLoop1;
             
+* ### Idle phase- the uPC loops here until start signal is present ###              
+idle1:      joslr inj3_start start3;                * Perform an actuation on inj1 if start 1 (only) is active
+            joslr inj4_start start4;                * Perform an actuation on inj2 if start 2 (only) is active
+            jmpf jr1;                               * If more than 1 start active at the same time(or none), no actuation            
             
 * ### Shortcuts definition per the injector to be actuated ###
 inj3_start: dfsct hs3 hs4 ls3;                      * Set the 3 shortcuts: VBAT, VBOOST, LS
@@ -152,8 +95,7 @@ inj4_start: dfsct hs3 hs4 ls4;                      * Set the 3 shortcuts: VBAT,
             jmpr boost1;                            * Jump to launch phase
 
 * ### Launch phase enable boost ###
-boost1:     stoc off sssc;                          * Turn OFF offset compensation
-            load Iboost dac_sssc _ofs;              * Load the boost phase current threshold in the current DAC
+boost1:     load Iboost dac_sssc _ofs;              * Load the boost phase current threshold in the current DAC
             cwer peak1 ocur row2;                   * Jump to peak phase when current is over threshold
             stf low b0;                             * set flag0 low to force the DC-DC converter in idle mode
             stos off on on;                         * Turn VBAT off, BOOST on, LS on

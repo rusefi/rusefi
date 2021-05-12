@@ -10,6 +10,17 @@
 
 #include "device_mpu_util.h"
 
+#define MCU_SERIAL_NUMBER_BYTES 12
+
+// 4mhz was chosen because it's the GCD of (84, 108, 200), the three speeds of STM32 TIM5 clock currently supported
+// https://www.wolframalpha.com/input/?i=common+factors+of+168+180+216
+#define US_TO_NT_MULTIPLIER (4)
+
+// Scheduler queue timer - use TIM5
+#define SCHEDULER_PWM_DEVICE PWMD5
+#define SCHEDULER_TIMER_DEVICE TIM5
+#define SCHEDULER_TIMER_FREQ (US_TO_NT_MULTIPLIER * 1'000'000)
+
 typedef enum {
 	BOR_Level_None = OB_BOR_OFF, // 0x0C=12  Supply voltage ranges from 1.62 to 2.10 V
 	BOR_Level_1 = OB_BOR_LEVEL1, // 0x08     Supply voltage ranges from 2.10 to 2.40 V
@@ -47,15 +58,6 @@ typedef enum {
 
 #ifndef GPIO_AF_TIM9
 #define GPIO_AF_TIM9 3
-#endif
-
-// F4/F7 have the same ADC peripheral
-#ifndef ADC_TwoSamplingDelay_5Cycles
-#define ADC_TwoSamplingDelay_5Cycles ((uint32_t)0x00000000)
-#endif
-
-#ifndef ADC_TwoSamplingDelay_20Cycles
-#define ADC_TwoSamplingDelay_20Cycles ((uint32_t)0x00000F00)
 #endif
 
 #ifndef ADC_CR2_SWSTART

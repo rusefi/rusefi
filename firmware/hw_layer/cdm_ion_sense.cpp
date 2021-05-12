@@ -74,12 +74,7 @@ static void extIonCallback(void *arg) {
 }
 
 void cdmIonInit(void) {
-	if (CONFIG(cdmInputPin) == GPIO_UNASSIGNED) {
-		return;
-	}
-	int pin = (int)CONFIG(cdmInputPin);
-	if (pin <= 0 || pin > (int)GPIO_UNASSIGNED) {
-		// todo: remove this protection once we migrate to new mandatory configuration
+	if (!isBrainPinValid(CONFIG(cdmInputPin))) {
 		return;
 	}
 

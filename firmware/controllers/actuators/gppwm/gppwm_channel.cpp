@@ -6,7 +6,7 @@
 #include "table_helper.h"
 #include "expected.h"
 #include "sensor.h"
-#include "map.h"
+#include "engine_math.h"
 
 EXTERN_ENGINE;
 
@@ -14,31 +14,38 @@ expected<float> readGppwmChannel(gppwm_channel_e channel DECLARE_ENGINE_PARAMETE
 	switch (channel) {
 	case GPPWM_Tps:
 		return Sensor::get(SensorType::Tps1);
-	case GPPWM_Map: {
-		float map = getMap(PASS_ENGINE_PARAMETER_SIGNATURE);
-
-		if (cisnan(map)) {
-			return unexpected;
-		}
-
-		return map;
-	}
+	case GPPWM_Map:
+		return Sensor::get(SensorType::Map);
 	case GPPWM_Clt:
 		return Sensor::get(SensorType::Clt);
 	case GPPWM_Iat:
 		return Sensor::get(SensorType::Iat);
-	default:
-		return unexpected;
+	case GPPWM_FuelLoad:
+		return getFuelingLoad(PASS_ENGINE_PARAMETER_SIGNATURE);
+	case GPPWM_IgnLoad:
+		return getIgnitionLoad(PASS_ENGINE_PARAMETER_SIGNATURE);
+	case GPPWM_AuxTemp1:
+		return Sensor::get(SensorType::AuxTemp1);
+	case GPPWM_AuxTemp2:
+		return Sensor::get(SensorType::AuxTemp2);
+	case GPPWM_Zero:
+		return 0;
 	}
+
+	return unexpected;
 }
 
 void GppwmChannel::setOutput(float result) {
 	// Not init yet, nothing to do.
-	if (!m_pwm || !m_config) {
+	if (!m_config) {
 		return;
 	}
-	
-	if (!m_usePwm) {
+
+	if (m_usePwm) {
+		efiAssertVoid(OBD_PCM_Processor_Fault, m_usePwm, "m_usePwm null");
+		m_pwm->setSimplePwmDutyCycle(clampF(0, result / 100.0f, 1));
+	} else {
+		efiAssertVoid(OBD_PCM_Processor_Fault, m_output, "m_output null");
 		// Apply hysteresis with provided values
 		if (m_state && result < m_config->offBelowDuty) {
 			m_state = false;
@@ -46,20 +53,19 @@ void GppwmChannel::setOutput(float result) {
 			m_state = true;
 		}
 
-		result = m_state ? 100 : 0;
+		m_output->setValue(m_state);
 	}
-
-	m_pwm->setSimplePwmDutyCycle(clampF(0, result / 100.0f, 1));
 }
 
-void GppwmChannel::init(bool usePwm, SimplePwm* pwm, const ValueProvider3D* table, const gppwm_channel* config) {
+void GppwmChannel::init(bool usePwm, SimplePwm* pwm, OutputPin* outputPin, const ValueProvider3D* table, const gppwm_channel* config) {
 	m_usePwm = usePwm;
 	m_pwm = pwm;
+	m_output = outputPin;
 	m_table = table;
 	m_config = config;
 }
 
-float GppwmChannel::getOutput() const {
+percent_t GppwmChannel::getOutput() const {
 	expected<float> loadAxisValue = readGppwmChannel(m_config->loadAxis PASS_ENGINE_PARAMETER_SUFFIX);
 
 	// If we couldn't get load axis value, fall back on error value
@@ -78,12 +84,13 @@ float GppwmChannel::getOutput() const {
 	return result;
 }
 
-void GppwmChannel::update() {
+float GppwmChannel::update() {
 	// Without a config, nothing to do.
 	if (!m_config) {
-		return;
+		return 0;
 	}
 
 	float output = getOutput();
 	setOutput(output);
+	return output;
 }

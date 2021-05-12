@@ -7,24 +7,25 @@
 # for 'release' options see 'clean_compile_two_versions.bat' file
 
 ifeq ($(DEBUG_LEVEL_OPT),)
-  # this value would be used by default. For 'debug' configuration override with '-O0 -ggdb -g3' or something along these lines
+  # this value would be used by default. For 'debug' configuration override with '-O0 -ggdb -g' or something along these lines
   DEBUG_LEVEL_OPT = -O2
   DDEFS += -DEFI_ENABLE_ASSERTS=FALSE -DCH_DBG_ENABLE_ASSERTS=FALSE -DCH_DBG_ENABLE_STACK_CHECK=FALSE -DCH_DBG_FILL_THREADS=FALSE -DCH_DBG_THREADS_PROFILING=FALSE
 endif
 
-ifeq ($(CONFDIR),)
-  CONFDIR = $(PROJECT_DIR)/config/stm32f4ems
-endif
-
 # disable some modules to shrink bootloader binary
-DDEFS += -DHAL_USE_ADC=FALSE -DHAL_USE_CAN=FALSE -DHAL_USE_EXT=FALSE -DHAL_USE_GPT=FALSE -DHAL_USE_I2C=FALSE -DHAL_USE_ICU=FALSE -DHAL_USE_PWM=FALSE -DHAL_USE_RTC=FALSE -DHAL_USE_I2C=FALSE 
+DDEFS += -DEFI_BOOTLOADER
+DDEFS += -DHAL_USE_EXT=FALSE -DHAL_USE_ICU=FALSE -DHAL_USE_PWM=FALSE -DHAL_USE_RTC=FALSE
 #disable ChibiOS flsah driver and prevent header from include
 DDEFS += -DHAL_USE_FLASH=FALSE
 
+DDEFS += -DEFI_USE_UART_DMA=FALSE
+
 # disable USB (The bootloader has currently UART support only)
-DDEFS += -DEFI_USB_SERIAL=FALSE -DHAL_USE_SERIAL_USB=FALSE -DHAL_USE_USB=FALSE -DHAL_USE_USB_MSD=FALSE
+DDEFS += -DEFI_USB_SERIAL=FALSE
 # disable CAN
 DDEFS += -DEFI_CAN_SUPPORT=FALSE
+
+DDEFS += -DEFI_UNIT_TEST=0 -DEFI_PROD_CODE=1 -DEFI_SIMULATOR=0
 
 # Compiler options here.
 ifeq ($(USE_OPT),)
@@ -77,7 +78,7 @@ endif
 # If enabled, this option makes the build process faster by not compiling
 # modules not used in the current configuration.
 ifeq ($(USE_SMART_BUILD),)
-  USE_SMART_BUILD = yes
+  USE_SMART_BUILD = no
 endif
 
 #
@@ -121,22 +122,28 @@ PROJECT_DIR = ..
 CHIBIOS = $(PROJECT_DIR)/ChibiOS
 CHIBIOS_CONTRIB = $(PROJECT_DIR)/ChibiOS-Contrib
 
-RULESPATH = $(CHIBIOS)/os/common/startup/ARMCMx/compilers/GCC
+RULESPATH = $(CHIBIOS)/os/common/startup/ARMCMx/compilers/GCC/mk
 RULESFILE = $(RULESPATH)/rules.mk
 
 include $(PROJECT_DIR)/rusefi.mk
 
 CONFIG = $(PROJECT_DIR)/config
 
+# Include various ChibiOS mk files
+# Licensing files.
+include $(CHIBIOS)/os/license/license.mk
 # Startup files.
 include $(CHIBIOS)/os/common/startup/ARMCMx/compilers/GCC/mk/$(CPU_STARTUP)
 # HAL-OSAL files (optional).
 include $(CHIBIOS_CONTRIB)/os/hal/hal.mk
 include $(CHIBIOS)/os/hal/ports/STM32/$(CPU_PLATFORM)
-include $(CHIBIOS)/os/hal/osal/rt/osal.mk
+include $(CHIBIOS)/os/hal/osal/rt-nil/osal.mk
 # RTOS files (optional).
 include $(CHIBIOS)/os/rt/rt.mk
 include $(CHIBIOS)/os/common/ports/ARMCMx/compilers/GCC/mk/port_v7m.mk
+include $(CHIBIOS)/os/various/cpp_wrappers/chcpp.mk
+# EX files (optional).
+include $(CHIBIOS)/os/hal/lib/streams/streams.mk
 
 include $(CONFIG)/boards/$(PROJECT_BOARD)/board.mk
 include $(PROJECT_DIR)/init/init.mk
@@ -146,23 +153,10 @@ include $(PROJECT_DIR)/controllers/controllers.mk
 include $(PROJECT_DIR)/hw_layer/$(CPU_HWLAYER)/hw_ports.mk
 include $(PROJECT_DIR)/hw_layer/drivers/drivers.mk
 
-# Define linker script file here
-ifeq ($(LDSCRIPT),)
-  LDSCRIPT= $(CONFIG)/stm32f4ems/STM32F407xG.ld
-endif
-
 # C sources that can be compiled in ARM or THUMB mode depending on the global
 # setting.
-CSRC = $(STARTUPSRC) \
-	$(KERNSRC) \
-	$(PORTSRC) \
-	$(OSALSRC) \
-	$(HALSRC) \
-	$(PLATFORMSRC) \
-	$(BOARDSRC) \
+CSRC =  $(ALLCSRC) \
 	$(CHIBIOS)/os/various/syscalls.c \
-	$(CHIBIOS)/os/hal/lib/streams/memstreams.c \
-	$(CHIBIOS)/os/hal/lib/streams/chprintf.c \
 	$(CONSOLESRC) \
 	$(DEV_SRC) \
 	$(HW_LAYER_EMS) \
@@ -172,14 +166,14 @@ CSRC = $(STARTUPSRC) \
 
 # C++ sources that can be compiled in ARM or THUMB mode depending on the global
 # setting.
-CPPSRC = $(CHCPPSRC) \
+CPPSRC = $(ALLCPPSRC) \
 	$(DEV_SRC_CPP) \
-	$(BOARDSRC_CPP) \
 	$(HW_LAYER_EMS_CPP) \
 	$(HW_SENSORS_SRC) \
 	$(TUNERSTUDIO_SRC_CPP) \
 	$(CONSOLE_SRC_CPP) \
 	$(PROJECT_DIR)/console/binary/tunerstudio_io.cpp \
+	$(PROJECT_DIR)/console/binary/tunerstudio_io_serial.cpp \
 	$(PROJECT_DIR)/controllers/system/efi_gpio.cpp \
 	$(PROJECT_DIR)/controllers/algo/engine_configuration.cpp \
 	$(PROJECT_DIR)/controllers/persistent_store.cpp \
@@ -214,37 +208,25 @@ TCPPSRC =
 # List ASM source files here
 ASMXSRC = $(STARTUPASM) $(PORTASM) $(OSALASM)
 
-ifeq ($(CONFIGPATH),)
-  CONFIGPATH=$(PROJECT_DIR)/config/stm32f4ems
-endif
-
-
-INCDIR = .. $(CHIBIOS)/os/license \
-	$(PORTINC) \
-	$(OSALINC) \
-	$(KERNINC) \
-	$(TESTINC) \
-	$(STARTUPINC) \
-	$(HALINC) \
-	$(PLATFORMINC) \
-	$(BOARDINC) \
-	$(CHCPPINC) \
-	$(CHIBIOS)/os/hal/lib/streams \
+INCDIR = $(ALLINC) \
+	.. \
 	$(CHIBIOS)/os/various \
 	$(CHIBIOS)/os/ex/ST \
 	$(CHIBIOS)/os/hal/lib/peripherals/sensors \
-	$(CONFIGPATH) \
 	$(CONFIG)/engines \
 	$(CONFIG) \
+	$(CONFDIR) \
 	$(PROJECT_DIR)/ext \
 	$(PROJECT_DIR)/ext_algo \
 	$(UTIL_INC) \
 	$(PROJECT_DIR)/console_util \
 	$(PROJECT_DIR)/console \
 	$(PROJECT_DIR)/console/binary \
+	$(PROJECT_DIR)/console/binary_log \
 	$(PROJECT_DIR)/console/fl_binary \
 	$(PROJECT_DIR)/hw_layer \
-	$(PROJECT_DIR)/mass_storage \
+	$(PROJECT_DIR)/hw_layer/adc \
+	$(PROJECT_DIR)/hw_layer/mass_storage \
 	$(PROJECT_DIR)/hw_layer/serial_over_usb \
 	$(PROJECT_DIR)/hw_layer/algo \
 	$(PROJECT_DIR)/hw_layer/lcd \
@@ -274,8 +256,12 @@ BUILDDIR=blbuild
 
 MCU  = cortex-m4
 
-#TRGT = arm-elf-
-TRGT = arm-none-eabi-
+ifeq ($(CROSS_COMPILE),)
+  #TRGT = arm-elf-
+  TRGT = arm-none-eabi-
+else
+  TRGT = $(CROSS_COMPILE)
+endif
 CC   = $(CCPREFIX) $(TRGT)gcc
 CPPC = $(CCPREFIX) $(TRGT)g++
 # Enable loading with g++ only if you need C++ runtime support.
@@ -324,7 +310,7 @@ UINCDIR =
 ULIBDIR =
 
 # List all user libraries here
-ULIBS = -lm
+ULIBS = -lm --specs=nano.specs
 
 #
 # End of user defines

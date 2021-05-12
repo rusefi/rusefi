@@ -1,9 +1,15 @@
+build_hw
+autoupdate_build
+rusefi_autoupdate.jar
 logs/
 rusefi_console_properties.xml
-output.c
+generated*.cpp
 currenttune.msq
+output.msq
 rusefi.ini
 openocd
 DfuSe
 rusefi_*.*
 triggers
+unit_test*.xml
+*trace.json

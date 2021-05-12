@@ -1,12 +1,22 @@
 #pragma once
 
-#include "rusefi_enums.h"
+#include "rusefi_types.h"
 
 #include "port_mpu_util.h"
+
+#ifdef __cplusplus
 
 // Base MCU
 void baseMCUInit(void);
 void jump_to_bootloader();
+
+// ADC
+#if HAL_USE_ADC
+void portInitAdc();
+float getMcuTemperature();
+// Convert all slow ADC inputs.  Returns true if the conversion succeeded, false if a failure occured.
+bool readSlowAnalogInputs(adcsample_t* convertedSamples);
+#endif
 
 // CAN bus
 #if HAL_USE_CAN
@@ -14,6 +24,9 @@ bool isValidCanTxPin(brain_pin_e pin);
 bool isValidCanRxPin(brain_pin_e pin);
 CANDriver * detectCanDevice(brain_pin_e pinRx, brain_pin_e pinTx);
 #endif // HAL_USE_CAN
+
+bool isValidSerialTxPin(brain_pin_e pin);
+bool isValidSerialRxPin(brain_pin_e pin);
 
 // SPI
 #if HAL_USE_SPI
@@ -27,6 +40,20 @@ void initSpiCs(SPIConfig *spiConfig, brain_pin_e csPin);
 void turnOnSpi(spi_device_e device);
 #endif // HAL_USE_SPI
 
+// MMC Card
+#if HAL_USE_MMC_SPI
+// HS = max 50MHz SPI
+extern SPIConfig mmc_hs_spicfg;
+// LS = max 25MHz SPI
+extern SPIConfig mmc_ls_spicfg;
+#endif
+
+// Hardware PWM
+struct hardware_pwm {
+	static hardware_pwm* tryInitPin(const char* msg, brain_pin_e pin, float frequencyHz, float duty);
+	virtual void setDuty(float duty) = 0;
+};
+
 // Brownout Reset
 typedef enum {
 	BOR_Result_Ok = 0x00,
@@ -36,7 +63,6 @@ typedef enum {
 BOR_Level_t BOR_Get(void);
 BOR_Result_t BOR_Set(BOR_Level_t BORValue);
 
-#ifdef __cplusplus
 extern "C"
 {
 #endif /* __cplusplus */

@@ -1,0 +1,5 @@
+(sym_lib_table
+  (lib (name bosch_88pin_02x44)(type Legacy)(uri ${KIPRJMOD}/../rusefi_lib/bosch_88pin_02x44.lib)(options "")(descr ""))
+  (lib (name Off_Road_Disclaimer)(type Legacy)(uri ${KIPRJMOD}/../rusefi_lib/Off_Road_Disclaimer.lib)(options "")(descr ""))
+  (lib (name logo)(type Legacy)(uri ${KIPRJMOD}/../rusefi_lib/logo.lib)(options "")(descr ""))
+)

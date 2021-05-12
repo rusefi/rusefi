@@ -142,7 +142,7 @@ static void lcdPrintf(const char *fmt, ...) {
 	lcd_HD44780_print_string(lcdLineBuffer);
 }
 
-static void showLine(lcd_line_e line, int screenY) {
+static void showLine(lcd_line_e line, int /*screenY*/) {
 	static char buffer[_MAX_FILLER + 2];
 
 	switch (line) {
@@ -200,10 +200,10 @@ static void showLine(lcd_line_e line, int screenY) {
 		lcdPrintf("IAT corr %.2f", getIatFuelCorrection(PASS_ENGINE_PARAMETER_SIGNATURE));
 		return;
 	case LL_FUEL_INJECTOR_LAG:
-		lcdPrintf("ING LAG %.2f", getInjectorLag(engine->sensors.vBatt PASS_ENGINE_PARAMETER_SIGNATURE));
+		lcdPrintf("ING LAG %.2f", engine->engineState.running.injectorLag);
 		return;
 	case LL_VBATT:
-		lcdPrintf("Battery %.2fv", getVBatt(PASS_ENGINE_PARAMETER_SIGNATURE));
+		lcdPrintf("Battery %.2fv", Sensor::get(SensorType::BatteryVoltage).value_or(0));
 		return;
 	case LL_KNOCK:
 		getPinNameByAdcChannel("hip", engineConfiguration->hipOutputChannel, buffer);
@@ -212,7 +212,7 @@ static void showLine(lcd_line_e line, int screenY) {
 
 #if	EFI_ANALOG_SENSORS
 	case LL_BARO:
-		if (hasBaroSensor()) {
+		if (Sensor::hasSensor(SensorType::BarometricPressure)) {
 			lcdPrintf("Baro: %.2f", getBaroPressure());
 		} else {
 			lcdPrintf("Baro: none");
@@ -220,29 +220,29 @@ static void showLine(lcd_line_e line, int screenY) {
 		return;
 #endif
 	case LL_AFR:
-		if (hasAfrSensor(PASS_ENGINE_PARAMETER_SIGNATURE)) {
-			lcdPrintf("AFR: %.2f", getAfr());
+		if (Sensor::hasSensor(SensorType::Lambda1)) {
+			lcdPrintf("AFR: %.2f", Sensor::get(SensorType::Lambda1).value_or(0));
 		} else {
 			lcdPrintf("AFR: none");
 		}
 		return;
 	case LL_MAP:
 		if (hasMapSensor(PASS_ENGINE_PARAMETER_SIGNATURE)) {
-			lcdPrintf("MAP %.2f", getMap(PASS_ENGINE_PARAMETER_SIGNATURE));
+			lcdPrintf("MAP %.2f", Sensor::get(SensorType::Map).value_or(0));
 		} else {
 			lcdPrintf("MAP: none");
 		}
 		return;
 	case LL_MAF_V:
-		if (hasMafSensor()) {
-			lcdPrintf("MAF: %.2fv", getMafVoltage(PASS_ENGINE_PARAMETER_SIGNATURE));
+		if (Sensor::hasSensor(SensorType::Maf)) {
+			lcdPrintf("MAF: %.2fv", Sensor::getRaw(SensorType::Maf));
 		} else {
 			lcdPrintf("MAF: none");
 		}
 		return;
 	case LL_MAF_KG_HR:
-		if (hasMafSensor()) {
-			lcdPrintf("MAF: %.2f kg/hr", getRealMaf(PASS_ENGINE_PARAMETER_SIGNATURE));
+		if (Sensor::hasSensor(SensorType::Maf)) {
+			lcdPrintf("MAF: %.2f kg/hr", Sensor::get(SensorType::Maf).value_or(0));
 		} else {
 			lcdPrintf("MAF: none");
 		}

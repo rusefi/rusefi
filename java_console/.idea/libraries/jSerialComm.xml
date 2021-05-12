@@ -2,8 +2,12 @@
   <library name="jSerialComm">
     <CLASSES>
       <root url="jar://$PROJECT_DIR$/lib/jSerialComm.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/jSerialComm-src.zip!/" />
     </CLASSES>
     <JAVADOC />
-    <SOURCES />
+    <SOURCES>
+      <root url="jar://$PROJECT_DIR$/lib/jSerialComm-src.zip!/jSerialComm-2.5.3/src/main/java" />
+      <root url="jar://$PROJECT_DIR$/lib/jSerialComm-src.zip!/jSerialComm-2.5.3/src/test/java" />
+    </SOURCES>
   </library>
 </component>

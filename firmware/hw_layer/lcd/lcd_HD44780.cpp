@@ -19,8 +19,6 @@
 
 EXTERN_ENGINE;
 
-static Logging *logger;
-
 enum {
 	LCD_HD44780_DISPLAY_CLEAR = 0x01,
 	LCD_HD44780_SHIFT_CURSOR_RIGHT = 0x06,
@@ -47,7 +45,7 @@ enum {
 //	LCD_2X16_BUSY_FLAG = 0x80,
 //	LCD_2X16_COMMAND = 0x01,
 //	LCD_2X16_DATA = 0x00,
-} lcd_HD44780_command;
+} /*lcd_HD44780_command*/;
 
 // http://web.alfredstate.edu/weimandn/lcd/lcd_addressing/lcd_addressing_index.html
 static const int lineStart[] = { 0, 0x40, 0x14, 0x54 };
@@ -80,6 +78,17 @@ static void writePad(const char *msg, brain_pin_e pin, int bit) {
 	palWritePad(getHwPort(msg, pin), getHwPin(msg, pin), bit);
 }
 
+static bool lcd_HD44780_is_enabled(void) {
+	/* check for valid LCD setting */
+	return ((engineConfiguration->displayMode == DM_HD44780) &&
+		(isBrainPinValid(CONFIG(HD44780_rs))) &&
+		(isBrainPinValid(CONFIG(HD44780_e))) &&
+		(isBrainPinValid(CONFIG(HD44780_db4))) &&
+		(isBrainPinValid(CONFIG(HD44780_db5))) &&
+		(isBrainPinValid(CONFIG(HD44780_db6))) &&
+		(isBrainPinValid(CONFIG(HD44780_db7))));
+}
+
 //-----------------------------------------------------------------------------
 static void lcd_HD44780_write(uint8_t data) {
 	if (engineConfiguration->displayMode == DM_HD44780) {
@@ -106,24 +115,12 @@ static void lcd_HD44780_write(uint8_t data) {
 		//	LCD Pin RW -> P1
 		//	LCD Pin E  -> P2
 
-#if HAL_USE_I2C
 		// todo: finish all this stuff
-				i2cAcquireBus(&I2CD1);
-//
-//				txbuf[0] = 4;
-//				i2cMasterTransmit(&I2CD1, LCD_PORT_EXP_ADDR, txbuf, 1, NULL, 0);
-//				lcdSleep(10); // enable pulse must be >450ns
-//
-//				txbuf[0] = 0;
-//				i2cMasterTransmit(&I2CD1, LCD_PORT_EXP_ADDR, txbuf, 1, NULL, 0);
-//
-				i2cReleaseBus(&I2CD1);
-#endif /* HAL_USE_I2C */
 	}
 }
 
 //-----------------------------------------------------------------------------
-void lcd_HD44780_write_command(uint8_t data) {
+static void lcd_HD44780_write_command(uint8_t data) {
 	palClearPad(getHwPort("lcd", CONFIG(HD44780_rs)), getHwPin("lcd", CONFIG(HD44780_rs)));
 
 	lcd_HD44780_write(data);
@@ -131,7 +128,7 @@ void lcd_HD44780_write_command(uint8_t data) {
 }
 
 //-----------------------------------------------------------------------------
-void lcd_HD44780_write_data(uint8_t data) {
+static void lcd_HD44780_write_data(uint8_t data) {
 	palSetPad(getHwPort("lcd", CONFIG(HD44780_rs)), getHwPin("lcd", CONFIG(HD44780_rs)));
 
 	lcd_HD44780_write(data);
@@ -143,6 +140,9 @@ void lcd_HD44780_write_data(uint8_t data) {
 
 //-----------------------------------------------------------------------------
 void lcd_HD44780_set_position(uint8_t row, uint8_t column) {
+	if (!lcd_HD44780_is_enabled())
+		return;
+
 	efiAssertVoid(CUSTOM_ERR_6657, row <= engineConfiguration->HD44780height, "invalid row");
 	currentRow = row;
 	currentColumn = column;
@@ -150,14 +150,23 @@ void lcd_HD44780_set_position(uint8_t row, uint8_t column) {
 }
 
 int getCurrentHD44780row(void) {
+	if (!lcd_HD44780_is_enabled())
+		return 0;
+
 	return currentRow;
 }
 
 int getCurrentHD44780column(void) {
+	if (!lcd_HD44780_is_enabled())
+		return 0;
+
 	return currentColumn;
 }
 
 void lcd_HD44780_print_char(char data) {
+	if (!lcd_HD44780_is_enabled())
+		return;
+
 	if (data == '\n') {
 		lcd_HD44780_set_position(++currentRow, 0);
 	} else {
@@ -166,31 +175,34 @@ void lcd_HD44780_print_char(char data) {
 }
 
 void lcd_HD44780_print_string(const char* string) {
+	if (!lcd_HD44780_is_enabled())
+		return;
+
 	while (*string != 0x00)
 		lcd_HD44780_print_char(*string++);
 }
 
 //getHwPin(CONFIG(HD44780_db7))
 static void lcdInfo(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
-	scheduleMsg(logger, "HD44780 RS=%s", hwPortname(CONFIG(HD44780_rs)));
-	scheduleMsg(logger, "HD44780 E=%s", hwPortname(CONFIG(HD44780_e)));
-	scheduleMsg(logger, "HD44780 D4=%s", hwPortname(CONFIG(HD44780_db4)));
-	scheduleMsg(logger, "HD44780 D5=%s", hwPortname(CONFIG(HD44780_db5)));
-	scheduleMsg(logger, "HD44780 D6=%s", hwPortname(CONFIG(HD44780_db6)));
-	scheduleMsg(logger, "HD44780 D7=%s", hwPortname(CONFIG(HD44780_db7)));
+	efiPrintf("HD44780 RS=%s", hwPortname(CONFIG(HD44780_rs)));
+	efiPrintf("HD44780 E=%s", hwPortname(CONFIG(HD44780_e)));
+	efiPrintf("HD44780 D4=%s", hwPortname(CONFIG(HD44780_db4)));
+	efiPrintf("HD44780 D5=%s", hwPortname(CONFIG(HD44780_db5)));
+	efiPrintf("HD44780 D6=%s", hwPortname(CONFIG(HD44780_db6)));
+	efiPrintf("HD44780 D7=%s", hwPortname(CONFIG(HD44780_db7)));
 }
 
 void stopHD44780_pins() {
-	brain_pin_markUnused(activeConfiguration.HD44780_rs);
-	brain_pin_markUnused(activeConfiguration.HD44780_e);
-	brain_pin_markUnused(activeConfiguration.HD44780_db4);
-	brain_pin_markUnused(activeConfiguration.HD44780_db5);
-	brain_pin_markUnused(activeConfiguration.HD44780_db6);
-	brain_pin_markUnused(activeConfiguration.HD44780_db7);
+	efiSetPadUnused(activeConfiguration.HD44780_rs);
+	efiSetPadUnused(activeConfiguration.HD44780_e);
+	efiSetPadUnused(activeConfiguration.HD44780_db4);
+	efiSetPadUnused(activeConfiguration.HD44780_db5);
+	efiSetPadUnused(activeConfiguration.HD44780_db6);
+	efiSetPadUnused(activeConfiguration.HD44780_db7);
 }
 
 void startHD44780_pins() {
-	if (engineConfiguration->displayMode == DM_HD44780) {
+	if (lcd_HD44780_is_enabled()) {
 		// initialize hardware lines
 		efiSetPadMode("lcd RS", CONFIG(HD44780_rs), PAL_MODE_OUTPUT_PUSHPULL);
 		efiSetPadMode("lcd E", CONFIG(HD44780_e), PAL_MODE_OUTPUT_PUSHPULL);
@@ -199,19 +211,21 @@ void startHD44780_pins() {
 		efiSetPadMode("lcd DB6", CONFIG(HD44780_db6), PAL_MODE_OUTPUT_PUSHPULL);
 		efiSetPadMode("lcd DB7", CONFIG(HD44780_db7), PAL_MODE_OUTPUT_PUSHPULL);
 		// and zero values
-		palWritePad(getHwPort("lcd", CONFIG(HD44780_rs)), getHwPin("lcd", CONFIG(HD44780_rs)), 0);
-		palWritePad(getHwPort("lcd", CONFIG(HD44780_e)), getHwPin("lcd", CONFIG(HD44780_e)), 0);
-		palWritePad(getHwPort("lcd", CONFIG(HD44780_db4)), getHwPin("lcd", CONFIG(HD44780_db4)), 0);
-		palWritePad(getHwPort("lcd", CONFIG(HD44780_db5)), getHwPin("lcd", CONFIG(HD44780_db5)), 0);
-		palWritePad(getHwPort("lcd", CONFIG(HD44780_db6)), getHwPin("lcd", CONFIG(HD44780_db6)), 0);
-		palWritePad(getHwPort("lcd", CONFIG(HD44780_db7)), getHwPin("lcd", CONFIG(HD44780_db7)), 0);
+		writePad("lcd", CONFIG(HD44780_rs), 0);
+		writePad("lcd", CONFIG(HD44780_e), 0);
+		writePad("lcd", CONFIG(HD44780_db4), 0);
+		writePad("lcd", CONFIG(HD44780_db5), 0);
+		writePad("lcd", CONFIG(HD44780_db6), 0);
+		writePad("lcd", CONFIG(HD44780_db7), 0);
 	}
 }
 
-void lcd_HD44780_init(Logging *sharedLogger) {
-	logger = sharedLogger;
-
+void lcd_HD44780_init() {
 	addConsoleAction("lcdinfo", lcdInfo);
+
+	if (engineConfiguration->displayMode == DM_NONE) {
+		return;
+	}
 
 	if (engineConfiguration->displayMode > DM_HD44780_OVER_PCF8574) {
 		warning(CUSTOM_ERR_DISPLAY_MODE, "Unexpected displayMode %d", engineConfiguration->displayMode);
@@ -219,7 +233,10 @@ void lcd_HD44780_init(Logging *sharedLogger) {
 		return;
 	}
 
-	printMsg(logger, "lcd_HD44780_init %d", engineConfiguration->displayMode);
+	efiPrintf("lcd_HD44780_init %d", engineConfiguration->displayMode);
+
+	if (!lcd_HD44780_is_enabled())
+		return;
 
 	startHD44780_pins();
 
@@ -248,10 +265,15 @@ void lcd_HD44780_init(Logging *sharedLogger) {
 	lcd_HD44780_write_command(LCD_HD44780_DISPLAY_ON);
 
 	lcd_HD44780_set_position(0, 0);
-	printMsg(logger, "lcd_HD44780_init() done");
+	efiPrintf("lcd_HD44780_init() done");
 }
 
 void lcdShowPanicMessage(char *message) {
+	/* this is not a good idea to access config data
+	 * when everything goes wrong... */
+	if (!lcd_HD44780_is_enabled())
+		return;
+
 	BUSY_WAIT_DELAY = TRUE;
 	lcd_HD44780_set_position(0, 0);
 	lcd_HD44780_print_string("PANIC\n");

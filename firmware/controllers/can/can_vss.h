@@ -8,6 +8,9 @@
 #pragma once
 
 float getVehicleCanSpeed(void);
-void processCanRxVss(const CANRxFrame& frame, efitick_t nowNt);
-void initCanVssSupport(Logging *logger_ptr);
+void initCanVssSupport();
 void setCanVss(int type);
+
+#if EFI_CAN_SUPPORT
+void processCanRxVss(const CANRxFrame& frame, efitick_t nowNt);
+#endif

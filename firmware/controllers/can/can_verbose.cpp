@@ -97,17 +97,16 @@ struct Sensors1 {
 };
 
 static void populateFrame(Sensors1& msg) {
-    msg.map = getMap();
+    msg.map = Sensor::get(SensorType::Map).value_or(0);
 
     msg.clt = Sensor::get(SensorType::Clt).value_or(0) + PACK_ADD_TEMPERATURE;
     msg.iat = Sensor::get(SensorType::Iat).value_or(0) + PACK_ADD_TEMPERATURE;
 
-    // todo: does aux temp even work?
-    msg.aux1 = 0 + PACK_ADD_TEMPERATURE;
-    msg.aux2 = 0 + PACK_ADD_TEMPERATURE;
+    msg.aux1 = Sensor::get(SensorType::AuxTemp1).value_or(0) + PACK_ADD_TEMPERATURE;
+    msg.aux2 = Sensor::get(SensorType::AuxTemp2).value_or(0) + PACK_ADD_TEMPERATURE;
 
     msg.mcuTemp = getMCUInternalTemperature();
-    msg.fuelLevel = engine->sensors.fuelTankLevel;
+    msg.fuelLevel = Sensor::get(SensorType::FuelLevel).value_or(0);
 }
 
 struct Sensors2 {
@@ -118,10 +117,10 @@ struct Sensors2 {
 };
 
 static void populateFrame(Sensors2& msg) {
-    msg.afr = getAfr();
+    msg.afr = Sensor::get(SensorType::Lambda1).value_or(0) * 14.7f;
     msg.oilPressure = Sensor::get(SensorType::OilPressure).value_or(-1);
-    msg.vvtPos = engine->triggerCentral.getVVTPosition();
-    msg.vbatt = getVBatt();
+    msg.vvtPos = engine->triggerCentral.getVVTPosition(0, 0);
+    msg.vbatt = Sensor::get(SensorType::BatteryVoltage).value_or(0);
 }
 
 struct Fueling {
@@ -134,7 +133,7 @@ struct Fueling {
 static void populateFrame(Fueling& msg) {
     msg.cylAirmass = engine->engineState.sd.airMassInOneCylinder;
     msg.estAirflow = engine->engineState.airFlow;
-    msg.fuel_pulse = engine->actualLastInjection;
+    msg.fuel_pulse = engine->actualLastInjection[0];
 
     // todo
     msg.stft = 0;

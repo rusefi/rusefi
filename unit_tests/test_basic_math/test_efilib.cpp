@@ -36,3 +36,12 @@ TEST(EfiLibTest, clampf) {
 	EXPECT_EQ(clampF(-10, 50, 10), 10);
 
 }
+
+TEST(EfiLibTest, tanf_taylor) {
+	// Function is only specified from [0, pi/2) ish, so test that range
+	for (float i = 0; i < 1.5; i += 0.1f)
+	{
+		// Compare to libc implementation
+		EXPECT_NEAR(tanf_taylor(i), tanf(i), 0.05f) << "I = " << i;
+	}
+}

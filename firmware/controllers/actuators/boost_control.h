@@ -8,13 +8,43 @@
 
 #include "engine.h"
 #include "periodic_task.h"
+#include "closed_loop_controller.h"
+#include "pid.h"
 
-void startBoostPin(void);
-void stopBoostPin(void);
-void initBoostCtrl(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX);
-void setBoostPFactor(float p);
-void setBoostIFactor(float i);
-void setBoostDFactor(float d);
+class SimplePwm;
+
+class BoostController : public ClosedLoopController<float, percent_t> {
+public:
+	DECLARE_ENGINE_PTR;
+
+	void init(SimplePwm* pmw, const ValueProvider3D* openLoopMap, const ValueProvider3D* closedLoopTargetMap, pid_s* pidParams);
+	void update();
+
+	// Called when the configuration may have changed.  Controller will
+	// reset if necessary.
+	void onConfigurationChange(pid_s* previousConfiguration);
+
+	// Helpers for individual parts of boost control
+	expected<float> observePlant() const override;
+	expected<float> getSetpoint() const override;
+
+	expected<percent_t> getOpenLoop(float target) const override;
+	expected<percent_t> getClosedLoop(float target, float manifoldPressure) override;
+
+	void setOutput(expected<percent_t> outputValue) override;
+
+private:
+	bool m_shouldResetPid = false;
+	Pid m_pid;
+
+	const ValueProvider3D* m_openLoopMap = nullptr;
+	const ValueProvider3D* m_closedLoopTargetMap = nullptr;
+	SimplePwm* m_pwm = nullptr;
+};
+
+void startBoostPin();
+void initBoostCtrl(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 void setDefaultBoostParameters(DECLARE_CONFIG_PARAMETER_SIGNATURE);
-void showBoostInfo(void);
 void onConfigurationChangeBoostCallback(engine_configuration_s *previousConfiguration);
+
+void updateBoostControl();

@@ -16,20 +16,17 @@
 #include "flash_int.h"
 #include "engine_math.h"
 
-// this message is part of console API, see FLASH_SUCCESS_MSG in java code
-#define FLASH_SUCCESS_MSG "FLASH_SUCESS"
-
 #if EFI_TUNER_STUDIO
 #include "tunerstudio.h"
 #endif
 
+#include "runtime_state.h"
 
 #include "engine_controller.h"
 
 static bool needToWriteConfiguration = false;
 
 EXTERN_ENGINE;
-static Logging* logger;
 
 extern persistent_config_container_s persistentState;
 
@@ -46,9 +43,29 @@ crc_t flashStateCrc(persistent_config_container_s *state) {
 	return calc_crc((const crc_t*) &state->persistentConfiguration, sizeof(persistent_config_s));
 }
 
+#if EFI_FLASH_WRITE_THREAD
+chibios_rt::BinarySemaphore flashWriteSemaphore(/*taken =*/ true);
+
+static THD_WORKING_AREA(flashWriteStack, UTILITY_THREAD_STACK_SIZE);
+static void flashWriteThread(void*) {
+	while (true) {
+		// Wait for a request to come in
+		flashWriteSemaphore.wait();
+
+		// Do the actual flash write operation
+		writeToFlashNow();
+	}
+}
+#endif // EFI_FLASH_WRITE_THREAD
+
 void setNeedToWriteConfiguration(void) {
-	scheduleMsg(logger, "Scheduling configuration write");
+	efiPrintf("Scheduling configuration write");
 	needToWriteConfiguration = true;
+
+#if EFI_FLASH_WRITE_THREAD
+	// Signal the flash writer thread to wake up and write at its leisure
+	flashWriteSemaphore.signal();
+#endif // EFI_FLASH_WRITE_THREAD
 }
 
 bool getNeedToWriteConfiguration(void) {
@@ -56,25 +73,36 @@ bool getNeedToWriteConfiguration(void) {
 }
 
 void writeToFlashIfPending() {
+// with a flash write thread, the schedule happens directly from
+// setNeedToWriteConfiguration, so there's nothing to do here
+#if !EFI_FLASH_WRITE_THREAD
 	if (!getNeedToWriteConfiguration()) {
 		return;
 	}
-	// todo: technically we need a lock here, realistically we should be fine.
-	needToWriteConfiguration = false;
-	scheduleMsg(logger, "Writing pending configuration");
+
 	writeToFlashNow();
+#endif
 }
 
 // Erase and write a copy of the configuration at the specified address
 template <typename TStorage>
-int eraseAndFlashCopy(flashaddr_t storageAddress, const TStorage& data)
-{
-	intFlashErase(storageAddress, sizeof(TStorage));
+int eraseAndFlashCopy(flashaddr_t storageAddress, const TStorage& data) {
+	// error already reported, return
+	if (!storageAddress) {
+		return FLASH_RETURN_SUCCESS;
+	}
+
+	auto err = intFlashErase(storageAddress, sizeof(TStorage));
+	if (FLASH_RETURN_SUCCESS != err) {
+		firmwareError(OBD_PCM_Processor_Fault, "Failed to erase flash at %#010x", storageAddress);
+		return err;
+	}
+
 	return intFlashWrite(storageAddress, reinterpret_cast<const char*>(&data), sizeof(TStorage));
 }
 
 void writeToFlashNow(void) {
-	scheduleMsg(logger, " !!!!!!!!!!!!!!!!!!!! BE SURE NOT WRITE WITH IGNITION ON !!!!!!!!!!!!!!!!!!!!");
+	efiPrintf("Writing pending configuration...");
 
 	// Set up the container
 	persistentState.size = sizeof(persistentState);
@@ -89,15 +117,16 @@ void writeToFlashNow(void) {
 	bool isSuccess = (result1 == FLASH_RETURN_SUCCESS) && (result2 == FLASH_RETURN_SUCCESS);
 
 	if (isSuccess) {
-		scheduleMsg(logger, FLASH_SUCCESS_MSG);
+		efiPrintf("FLASH_SUCCESS");
 	} else {
-		scheduleMsg(logger, "Flashing failed");
+		efiPrintf("Flashing failed");
 	}
 	assertEngineReference();
 
-#if EFI_SHAFT_POSITION_INPUT
 	resetMaxValues();
-#endif
+
+	// Write complete, clear the flag
+	needToWriteConfiguration = false;
 }
 
 static bool isValidCrc(persistent_config_container_s *state) {
@@ -107,13 +136,25 @@ static bool isValidCrc(persistent_config_container_s *state) {
 }
 
 static void doResetConfiguration(void) {
-	resetConfigurationExt(logger, engineConfiguration->engineType PASS_ENGINE_PARAMETER_SUFFIX);
+	resetConfigurationExt(engineConfiguration->engineType PASS_ENGINE_PARAMETER_SUFFIX);
 }
 
-persisted_configuration_state_e flashState;
+typedef enum {
+	PC_OK = 0,
+	CRC_FAILED = 1,
+	INCOMPATIBLE_VERSION = 2,
+	RESET_REQUESTED = 3,
+	PC_ERROR = 4
+} persisted_configuration_state_e;
 
-static persisted_configuration_state_e doReadConfiguration(flashaddr_t address, Logging * logger) {
-	printMsg(logger, "readFromFlash %x", address);
+static persisted_configuration_state_e doReadConfiguration(flashaddr_t address) {
+	efiPrintf("readFromFlash %x", address);
+
+	// error already reported, return
+	if (!address) {
+		return CRC_FAILED;
+	}
+
 	intFlashRead(address, (char *) &persistentState, sizeof(persistentState));
 
 	if (!isValidCrc(&persistentState)) {
@@ -129,25 +170,40 @@ static persisted_configuration_state_e doReadConfiguration(flashaddr_t address, 
  * this method could and should be executed before we have any
  * connectivity so no console output here
  */
-persisted_configuration_state_e readConfiguration(Logging * logger) {
+static persisted_configuration_state_e readConfiguration() {
 	efiAssert(CUSTOM_ERR_ASSERT, getCurrentRemainingStack() > EXPECTED_REMAINING_STACK, "read f", PC_ERROR);
-	persisted_configuration_state_e result = doReadConfiguration(getFlashAddrFirstCopy(), logger);
+	/*
+	 * getFlashAddr does device validation, we want validation to be invoked even while we are
+	 * HW_CHECK_MODE mode where we would not need actual address
+	 * todo: rename method to emphasis the fact of validation check?
+	 */
+	auto firstCopyAddr = getFlashAddrFirstCopy();
+	auto secondyCopyAddr = getFlashAddrSecondCopy();
+
+#if HW_CHECK_MODE
+	persisted_configuration_state_e result = PC_OK;
+	resetConfigurationExt(DEFAULT_ENGINE_TYPE PASS_ENGINE_PARAMETER_SUFFIX);
+#else // HW_CHECK_MODE
+	persisted_configuration_state_e result = doReadConfiguration(firstCopyAddr);
+
 	if (result != PC_OK) {
-		printMsg(logger, "Reading second configuration copy");
-		result = doReadConfiguration(getFlashAddrSecondCopy(), logger);
+		efiPrintf("Reading second configuration copy");
+		result = doReadConfiguration(secondyCopyAddr);
 	}
 
 	if (result == CRC_FAILED) {
+	    // we are here on first boot on brand new chip
 		warning(CUSTOM_ERR_FLASH_CRC_FAILED, "flash CRC failed");
-		resetConfigurationExt(logger, DEFAULT_ENGINE_TYPE PASS_ENGINE_PARAMETER_SUFFIX);
+		resetConfigurationExt(DEFAULT_ENGINE_TYPE PASS_ENGINE_PARAMETER_SUFFIX);
 	} else if (result == INCOMPATIBLE_VERSION) {
-		resetConfigurationExt(logger, engineConfiguration->engineType PASS_ENGINE_PARAMETER_SUFFIX);
+		resetConfigurationExt(engineConfiguration->engineType PASS_ENGINE_PARAMETER_SUFFIX);
 	} else {
 		/**
 		 * At this point we know that CRC and version number is what we expect. Safe to assume it's a valid configuration.
 		 */
-		applyNonPersistentConfiguration(logger PASS_ENGINE_PARAMETER_SUFFIX);
+		applyNonPersistentConfiguration(PASS_ENGINE_PARAMETER_SIGNATURE);
 	}
+#endif // HW_CHECK_MODE
 	// we can only change the state after the CRC check
 	engineConfiguration->byFirmwareVersion = getRusEfiVersion();
 	memset(persistentState.persistentConfiguration.warning_message , 0, ERROR_BUFFER_SIZE);
@@ -155,15 +211,15 @@ persisted_configuration_state_e readConfiguration(Logging * logger) {
 	return result;
 }
 
-void readFromFlash(void) {
-	persisted_configuration_state_e result = readConfiguration(logger);
+void readFromFlash() {
+	persisted_configuration_state_e result = readConfiguration();
 
 	if (result == CRC_FAILED) {
-		printMsg(logger, "Need to reset flash to default due to CRC");
+		efiPrintf("Need to reset flash to default due to CRC");
 	} else if (result == INCOMPATIBLE_VERSION) {
-		printMsg(logger, "Resetting but saving engine type [%d]", engineConfiguration->engineType);
+		efiPrintf("Resetting due to version mismatch but preserving engine type [%d]", engineConfiguration->engineType);
 	} else {
-		printMsg(logger, "Got valid configuration from flash!");
+		efiPrintf("Read valid configuration from flash!");
 	}
 }
 
@@ -182,9 +238,7 @@ static void writeConfigCommand() {
 	writeToFlashNow();
 }
 
-void initFlash(Logging *sharedLogger) {
-	logger = sharedLogger;
-
+void initFlash() {
 	addConsoleAction("readconfig", readFromFlash);
 	/**
 	 * This would write NOW (you should not be doing this while connected to real engine)
@@ -198,6 +252,10 @@ void initFlash(Logging *sharedLogger) {
 #endif
 	addConsoleAction("resetconfig", doResetConfiguration);
 	addConsoleAction("rewriteconfig", rewriteConfig);
+
+#if EFI_FLASH_WRITE_THREAD
+	chThdCreateStatic(flashWriteStack, sizeof(flashWriteStack), PRIO_FLASH_WRITE, flashWriteThread, nullptr);
+#endif
 }
 
 #endif /* EFI_INTERNAL_FLASH */

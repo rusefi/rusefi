@@ -15,6 +15,7 @@ import java.util.List;
 import java.util.concurrent.atomic.AtomicReference;
 
 public class ScreenGenerator {
+    public static final String FILE_NAME = "output.xml";
     private static final String PNG = "png";
     private static ArrayList<AbstractButton> topLevelButtons = new ArrayList<>();
 
@@ -61,7 +62,7 @@ public class ScreenGenerator {
 
         handleTopLevelButtons(mainFrame, topLevelButtons);
 
-        XmlUtil.writeXml(contentModel);
+        XmlUtil.writeXml(contentModel, ContentModel.class, FILE_NAME);
     }
 
     private static void waitForMainFrame(Frame mainFrame) throws InterruptedException {

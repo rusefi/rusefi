@@ -1,0 +1,6 @@
+(sym_lib_table
+  (lib (name eec-iv)(type Legacy)(uri ${KIPRJMOD}/../rusefi_lib/eec-iv.lib)(options "")(descr ""))
+  (lib (name logo)(type Legacy)(uri ${KIPRJMOD}/../rusefi_lib/logo.lib)(options "")(descr ""))
+  (lib (name Off_Road_Disclaimer)(type Legacy)(uri ${KIPRJMOD}/../rusefi_lib/Off_Road_Disclaimer.lib)(options "")(descr ""))
+  (lib (name Breakout_60pin_EEC-IV-rescue)(type Legacy)(uri ${KIPRJMOD}/Breakout_60pin_EEC-IV-rescue.lib)(options "")(descr ""))
+)

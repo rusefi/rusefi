@@ -22,6 +22,7 @@ void setCamaro4(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 
 	engineConfiguration->specs.displacement = 5.7;
 	engineConfiguration->specs.cylindersCount = 8;
+	strcpy(CONFIG(engineMake), ENGINE_MAKE_GM);
 
 	engineConfiguration->specs.firingOrder = FO_1_8_7_2_6_5_4_3;
 	engineConfiguration->triggerInputPins[0] = GPIOA_5;

@@ -65,7 +65,7 @@ import javax.swing.JTextArea;
 import javax.swing.SwingWorker;
 import javax.swing.tree.TreePath;
 
-import com.rusefi.Launcher;
+import com.rusefi.ConsoleUI;
 import org.w3c.dom.Document;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
@@ -73,7 +73,6 @@ import org.xml.sax.SAXParseException;
 
 import com.romraider.Settings;
 import com.romraider.maps.Rom;
-import com.romraider.swing.AbstractFrame;
 import com.romraider.swing.CustomToolbarLayout;
 import com.romraider.swing.ECUEditorMenuBar;
 import com.romraider.swing.ECUEditorToolBar;
@@ -164,7 +163,7 @@ public class ECUEditor {
 //        frame.setIconImage(editorIcon.getImage());
 
 //        frame.setDefaultCloseOperation(AbstractFrame.EXIT_ON_CLOSE);
-        Launcher.getFrame().addWindowListener(wListenr);
+        ConsoleUI.getFrame().addWindowListener(wListenr);
 //        frame.setTitle(titleText);
 //        frame.setVisible(true);
 //        frame.toFront();
@@ -257,7 +256,7 @@ public class ECUEditor {
             if (answer == 0) {
 //                BrowserControl.displayURL(ECU_DEFS_URL);
             } else {
-                showMessageDialog(Launcher.getFrame(),
+                showMessageDialog(ConsoleUI.getFrame(),
                         "ECU definition files need to be configured before ROM images can be opened.\nMenu: ECU Definitions > ECU Definition Manager...",
                         "Editor Configuration",
                         INFORMATION_MESSAGE);
@@ -286,7 +285,7 @@ public class ECUEditor {
                 JScrollPane scroller = new JScrollPane(releaseNotes, VERTICAL_SCROLLBAR_ALWAYS, HORIZONTAL_SCROLLBAR_NEVER);
                 scroller.setPreferredSize(new Dimension(600, 500));
 
-                showMessageDialog(Launcher.getFrame(), scroller,
+                showMessageDialog(ConsoleUI.getFrame(), scroller,
                         PRODUCT_NAME + VERSION + " Release Notes", INFORMATION_MESSAGE);
             } finally {
                 br.close();
@@ -355,7 +354,7 @@ public class ECUEditor {
             });
 
             infoPanel.add(check);
-            showMessageDialog(Launcher.getFrame(), infoPanel, "ECU Revision is Obsolete", INFORMATION_MESSAGE);
+            showMessageDialog(ConsoleUI.getFrame(), infoPanel, "ECU Revision is Obsolete", INFORMATION_MESSAGE);
         }
     }
 
@@ -414,7 +413,7 @@ public class ECUEditor {
     }
 
     public void closeImage() {
-        Launcher.getFrame().setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
+        ConsoleUI.getFrame().setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
         closeImageWorker = new CloseImageWorker(getLastSelectedRom());
         closeImageWorker.addPropertyChangeListener(getStatusPanel());
         closeImageWorker.execute();
@@ -507,7 +506,7 @@ public class ECUEditor {
     }
 
     public void openImage(File inputFile) throws Exception {
-        Launcher.getFrame().setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
+        ConsoleUI.getFrame().setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
         openImageWorker = new OpenImageWorker(inputFile);
         openImageWorker.addPropertyChangeListener(getStatusPanel());
         openImageWorker.execute();
@@ -526,7 +525,7 @@ public class ECUEditor {
     }
 
     public void launchLogger() {
-        Launcher.getFrame().setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
+        ConsoleUI.getFrame().setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
 //        launchLoggerWorker = new LaunchLoggerWorker();
 //        launchLoggerWorker.addPropertyChangeListener(getStatusPanel());
 //        launchLoggerWorker.execute();
@@ -575,7 +574,7 @@ class LaunchLoggerWorker extends SwingWorker<Void, Void> {
         ECUEditor editor = ECUEditorManager.getECUEditor();
         editor.getStatusPanel().setStatus("Ready...");
         setProgress(0);
-        Launcher.getFrame().setCursor(null);
+        ConsoleUI.getFrame().setCursor(null);
         editor.refreshUI();
     }
 }
@@ -605,7 +604,7 @@ class SetUserLevelWorker extends SwingWorker<Void, Void> {
         ECUEditor editor = ECUEditorManager.getECUEditor();
         editor.getStatusPanel().setStatus("Ready...");
         setProgress(0);
-        Launcher.getFrame().setCursor(null);
+        ConsoleUI.getFrame().setCursor(null);
         editor.refreshUI();
     }
 }
@@ -643,7 +642,7 @@ class CloseImageWorker extends SwingWorker<Void, Void> {
         ECUEditor editor = ECUEditorManager.getECUEditor();
         editor.getStatusPanel().setStatus("Ready...");
         setProgress(0);
-        Launcher.getFrame().setCursor(null);
+        ConsoleUI.getFrame().setCursor(null);
         editor.refreshUI();
         System.gc();
     }
@@ -686,23 +685,23 @@ class OpenImageWorker extends SwingWorker<Void, Void> {
             }
 
             // if code executes to this point, no ROM was found, report to user
-            showMessageDialog(Launcher.getFrame(), "ECU Definition Not Found", "Error Loading " + inputFile.getName(), ERROR_MESSAGE);
+            showMessageDialog(ConsoleUI.getFrame(), "ECU Definition Not Found", "Error Loading " + inputFile.getName(), ERROR_MESSAGE);
 
         } catch (SAXParseException spe) {
             // catch general parsing exception - enough people don't unzip the defs that a better error message is in order
-            showMessageDialog(Launcher.getFrame(), "Unable to read XML definitions.  Please make sure the definition file is correct.  If it is in a ZIP archive, unzip the file and try again.", "Error Loading " + inputFile.getName(), ERROR_MESSAGE);
+            showMessageDialog(ConsoleUI.getFrame(), "Unable to read XML definitions.  Please make sure the definition file is correct.  If it is in a ZIP archive, unzip the file and try again.", "Error Loading " + inputFile.getName(), ERROR_MESSAGE);
 
         } catch (StackOverflowError ex) {
             // handles looped inheritance, which will use up all available memory
-            showMessageDialog(Launcher.getFrame(), "Looped \"base\" attribute in XML definitions.", "Error Loading " + inputFile.getName(), ERROR_MESSAGE);
+            showMessageDialog(ConsoleUI.getFrame(), "Looped \"base\" attribute in XML definitions.", "Error Loading " + inputFile.getName(), ERROR_MESSAGE);
 
         } catch (OutOfMemoryError ome) {
             // handles Java heap space issues when loading multiple Roms.
-            showMessageDialog(Launcher.getFrame(), "Error loading Image. Out of memeory.", "Error Loading " + inputFile.getName(), ERROR_MESSAGE);
+            showMessageDialog(ConsoleUI.getFrame(), "Error loading Image. Out of memeory.", "Error Loading " + inputFile.getName(), ERROR_MESSAGE);
 
         } catch (Exception ex) {
             ex.printStackTrace();
-            showMessageDialog(Launcher.getFrame(), "Error Loading.  Unknown Exception.", "Error Loading " + inputFile.getName(), ERROR_MESSAGE);
+            showMessageDialog(ConsoleUI.getFrame(), "Error Loading.  Unknown Exception.", "Error Loading " + inputFile.getName(), ERROR_MESSAGE);
         }
         return null;
     }
@@ -720,7 +719,7 @@ class OpenImageWorker extends SwingWorker<Void, Void> {
         ECUEditor editor = ECUEditorManager.getECUEditor();
         editor.getStatusPanel().setStatus("Ready...");
         setProgress(0);
-        Launcher.getFrame().setCursor(null);
+        ConsoleUI.getFrame().setCursor(null);
         editor.refreshUI();
         System.gc();
     }

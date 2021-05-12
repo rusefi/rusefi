@@ -14,7 +14,7 @@
 
 class StepperHw {
 public:
-	virtual void step(bool positive) = 0;
+	virtual bool step(bool positive) = 0;
 	void pause() const;
 
 protected:
@@ -28,10 +28,10 @@ class StepDirectionStepper final : public StepperHw {
 public:
 	void initialize(brain_pin_e stepPin, brain_pin_e directionPin, pin_output_mode_e directionPinMode, float reactionTime, brain_pin_e enablePin, pin_output_mode_e enablePinMode);
 
-	void step(bool positive) override;
+	bool step(bool positive) override;
 
 private:
-	void pulse();
+	bool pulse();
 	void setDirection(bool isIncrementing);
 
 	bool m_currentDirection = false;
@@ -46,11 +46,11 @@ class DualHBridgeStepper final : public StepperHw {
 public:
     void initialize(DcMotor* motorPhaseA, DcMotor* motorPhaseB, float reactionTime);
 
-    void step(bool positive) override;
+    bool step(bool positive) override;
 
 private:
-    DcMotor* m_motorPhaseA;
-    DcMotor* m_motorPhaseB;
+    DcMotor* m_motorPhaseA = nullptr;
+    DcMotor* m_motorPhaseB = nullptr;
 
     uint8_t m_phase = 0;
 };
@@ -59,20 +59,30 @@ class StepperMotor final : private ThreadController<UTILITY_THREAD_STACK_SIZE> {
 public:
 	StepperMotor();
 
-	void initialize(StepperHw *hardware, int totalSteps, Logging *sharedLogger);
+	void initialize(StepperHw *hardware, int totalSteps);
 
 	void setTargetPosition(int targetPosition);
 	int getTargetPosition() const;
+
+	bool isBusy() const;
 
 	int m_currentPosition = 0;
 	int m_totalSteps = 0;
 
 protected:
 	void ThreadTask() override;
+	void setInitialPosition(void);
+
+	void saveStepperPos(int pos);
+	int loadStepperPos();
+
+	void changeCurrentPosition(bool positive);
+	void postCurrentPosition(void);
 
 private:
 	StepperHw* m_hw = nullptr;
 
 	int m_targetPosition = 0;
+	bool initialPositionSet = false;
 };
 

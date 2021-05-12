@@ -40,12 +40,11 @@ void vag_18_Turbo(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	engineConfiguration->injectionPinMode = OM_OPENDRAIN_INVERTED;
 	engineConfiguration->isCylinderCleanupEnabled = true;
 	engineConfiguration->rpmHardLimit = 8000;
-	engineConfiguration->cranking.baseFuel = 4;
+	engineConfiguration->cranking.baseFuel = 28;
 
 
 	//Analog Inputs
 
-	engineConfiguration->isFastAdcEnabled = true;
 	engineConfiguration->map.sensor.type = MT_GM_3_BAR;
 	setCommonNTCSensor(&engineConfiguration->clt, 2700);
 	setCommonNTCSensor(&engineConfiguration->iat, 2700);
@@ -94,9 +93,11 @@ void vag_18_Turbo(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	engineConfiguration->is_enabled_spi_1 = true;
 	engineConfiguration->is_enabled_spi_3 = false;
 
+#if EFI_CJ125
 	cj125defaultPinout(PASS_CONFIG_PARAMETER_SIGNATURE);
 	engineConfiguration->cj125ur = EFI_ADC_11; // PC3
 	engineConfiguration->cj125CsPin = GPIOB_11;
+#endif
 
 	engineConfiguration->debugMode = DBG_CJ125;
 
@@ -165,7 +166,6 @@ void vag_18_Turbo(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 
 	// VVT Settings
 
-	engineConfiguration->activateAuxPid1 = true;
 	engineConfiguration->auxPidFrequency[0] = 300;
 	engineConfiguration->fsio_setting[0] = 0.0;
 	engineConfiguration->auxPid[0].pFactor = 2;

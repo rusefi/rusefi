@@ -26,35 +26,24 @@ void setOperationMode(engine_configuration_s *engineConfiguration, operation_mod
 
 void prepareVoidConfiguration(engine_configuration_s *activeConfiguration);
 void setTargetRpmCurve(int rpm DECLARE_CONFIG_PARAMETER_SUFFIX);
-int getTargetRpmForIdleCorrection(DECLARE_ENGINE_PARAMETER_SIGNATURE);
-void setAfrMap(afr_table_t table, float value);
-/**
- * See also setLinearCurve()
- */
-void setMap(fuel_table_t table, float value);
-void setWholeFuelMap(float value DECLARE_CONFIG_PARAMETER_SUFFIX);
+void setLambdaMap(lambda_table_t table, float value);
 void setWholeIgnitionIatCorr(float value DECLARE_CONFIG_PARAMETER_SUFFIX);
 void setFuelTablesLoadBin(float minValue, float maxValue DECLARE_CONFIG_PARAMETER_SUFFIX);
 void setWholeIatCorrTimingTable(float value DECLARE_CONFIG_PARAMETER_SUFFIX);
 void setWholeTimingTable_d(angle_t value DECLARE_CONFIG_PARAMETER_SUFFIX);
 #define setWholeTimingTable(x) setWholeTimingTable_d(x PASS_CONFIG_PARAMETER_SUFFIX);
 void setConstantDwell(floatms_t dwellMs DECLARE_CONFIG_PARAMETER_SUFFIX);
-void printFloatArray(const char *prefix, float array[], int size);
 
 // needed by bootloader
 void setDefaultBasePins(DECLARE_CONFIG_PARAMETER_SIGNATURE);
 
 void setDefaultSdCardParameters(DECLARE_CONFIG_PARAMETER_SIGNATURE);
 
-void rememberCurrentConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE);
+void onBurnRequest(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 void incrementGlobalConfigurationVersion(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 
 void commonFrankensoAnalogInputs(engine_configuration_s *engineConfiguration);
 void setFrankenso0_1_joystick(engine_configuration_s *engineConfiguration);
-
-void copyTargetAfrTable(fuel_table_t const source, afr_table_t destination);
-void copyFuelTable(fuel_table_t const source, fuel_table_t destination);
-void copyTimingTable(ignition_table_t const source, ignition_table_t destination);
 
 void emptyCallbackWithConfiguration(engine_configuration_s * engine);
 void setDefaultFrankensoConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE);
@@ -63,26 +52,15 @@ typedef void (*configuration_callback_t)(engine_configuration_s*);
 
 #ifdef __cplusplus
 // because of 'Logging' class parameter these functions are visible only to C++ code but C code
-void resetConfigurationExt(Logging * logger, configuration_callback_t boardCallback, engine_type_e engineType DECLARE_ENGINE_PARAMETER_SUFFIX);
-void resetConfigurationExt(Logging * logger, engine_type_e engineType DECLARE_ENGINE_PARAMETER_SUFFIX);
+void loadConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE);
+void resetConfigurationExt(configuration_callback_t boardCallback, engine_type_e engineType DECLARE_ENGINE_PARAMETER_SUFFIX);
+void resetConfigurationExt(engine_type_e engineType DECLARE_ENGINE_PARAMETER_SUFFIX);
+
+void rememberCurrentConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 #endif /* __cplusplus */
 
-struct ConfigOverrides {
-	// CAN pinout
-	brain_pin_e canTxPin;
-	brain_pin_e canRxPin;
-};
+void setBoardDefaultConfiguration(void);
+void setBoardConfigOverrides(void);
 
-const ConfigOverrides& getConfigOverrides();
-
-// If the overide value is default initialized
-// Use the value from config if not overriden
-// Otherwise use the override
-// the == decltype(CONFIG(__x__)){} part means
-// - take the type of the corresponding config field
-// - default construct (ie, 0) an object of the corresponding type
-// - check if the override value matches that (GPIO_UNASSIGNED, SPI_NONE, etc)
-// If it matches, that field hasn't been overridden, so read from the config.
-#define CONFIG_OVERRIDE(__x__) (			\
-	(( getConfigOverrides().__x__ ) == decltype(CONFIG(__x__)){}) \
-	? (CONFIG( __x__ )) : ( getConfigOverrides().__x__ ))
+// TODO: remove me
+#define CONFIG_OVERRIDE(__x__) CONFIG(__x__)

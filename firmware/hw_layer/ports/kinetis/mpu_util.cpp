@@ -257,5 +257,27 @@ uintptr_t getFlashAddrSecondCopy() {
 	return 0x10008000;
 }
 
-#endif /* EFI_PROD_CODE */
+/*static*/ hardware_pwm* hardware_pwm::tryInitPin(const char*, brain_pin_e, float, float) {
+	// TODO: implement me!
+	return nullptr;
+}
 
+void portInitAdc() {
+	// Init slow ADC
+	adcStart(&ADCD1, NULL);
+
+	// Init fast ADC (MAP sensor)
+	adcStart(&ADCD2, NULL);
+}
+
+float getMcuTemperature() {
+	// TODO: implement me!
+	return 0;
+}
+
+bool readSlowAnalogInputs(adcsample_t* convertedSamples) {
+	// TODO: implement me!
+	return true;
+}
+
+#endif /* EFI_PROD_CODE */

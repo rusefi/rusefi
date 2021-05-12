@@ -17,11 +17,12 @@ void initializeMazdaMiataNb2Crank(TriggerWaveform *s);
 void initializeMazdaMiataVVtTestShape(TriggerWaveform *s);
 void configureMazdaProtegeSOHC(TriggerWaveform *s);
 void configureMazdaProtegeLx(TriggerWaveform *s);
-void initialize_Mazda_Engine_z5_Shape(TriggerWaveform *s);
 
 /**
- * TT_MIATA_NB2_VVT_CAM
- * if you unplug VVT you can start & run your engine on it
+ * TT_VVT_MIATA_NB2
+ * if you unplug crank sensor you can start & run your engine on just this cam decoder
  * trigger offset "-90" seems to be doing the job
+ *
+ * same decoder is used for VVT processing
  */
 void initializeMazdaMiataVVtCamShape(TriggerWaveform *s);

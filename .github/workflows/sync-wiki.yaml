@@ -1,0 +1,55 @@
+#
+# ACCESS_TOKEN - Personal Access Token with "public_repo" permission
+#
+#
+# Note: This action will not run on all file changes!
+# Some file extensions will not trigger an action run,
+# but they will be synced the next time a file is changed.
+# .png and .jpg files do not trigger runs.
+# .md, .txt, and .html files do.
+# I have not tested any others.
+# If we could set this up to trigger on a push to rusefi.wiki, that
+# would be optimal, but unfortunately that does not seem to be possible.
+#
+# the opposite sync is https://github.com/rusefi/rusefi_documentation/blob/master/.github/workflows/sync-wiki.yaml
+#
+
+name: Sync Wiki
+
+on: gollum
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    if: ${{ github.actor != 'actions-user' }}
+
+    steps:
+    - name: Check out docs repo
+      uses: actions/checkout@v2
+      with:
+        fetch-depth: 0
+        repository: rusefi/rusefi_documentation
+        persist-credentials: false
+
+    - name: Merge from rusefi/wiki
+      run: |
+        git remote add best-wiki-git https://github.com/rusefi/rusefi.wiki.git
+        git fetch best-wiki-git
+        git show --name-only  best-wiki-git/master
+        git config --local user.email "action@github.com"
+        git config --local user.name "GitHub Action"
+        # merge, but don't commit the merge
+        git merge --no-ff --no-commit best-wiki-git/master
+        # unstage the file
+        git reset HEAD .github/workflows/sync-wiki.yaml
+        # revert the file to its original state
+        git checkout -- .github/workflows/sync-wiki.yaml
+        # commit the merge
+        git commit -m "merge rusEFI wiki"
+
+    - name: Push changes to rusefi_documentation technical wiki
+      uses: ad-m/github-push-action@master
+      with:
+        repository: rusefi/rusefi_documentation
+        github_token: ${{ secrets.ACCESS_TOKEN }}
+        branch: master

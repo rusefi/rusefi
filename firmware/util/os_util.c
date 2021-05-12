@@ -26,7 +26,7 @@
 #include "os_util.h"
 
 void chVTSetAny(virtual_timer_t *vtp, systime_t time, vtfunc_t vtfunc, void *par) {
-	bool wasLocked = lockAnyContext();
+	syssts_t sts = chSysGetStatusAndLockX();
 
 	/**
 	 * todo: this could be simplified once we migrate to ChibiOS 3.0
@@ -37,67 +37,7 @@ void chVTSetAny(virtual_timer_t *vtp, systime_t time, vtfunc_t vtfunc, void *par
 	}
 
 	chVTSetI(vtp, time, vtfunc, par);
-	if (!wasLocked) {
-		unlockAnyContext();
-	}
-}
-
-/**
- * @return TRUE if already in locked context
- * TODO: refactor to new 'syssts_t sts = chSysGetStatusAndLockX();' pattern
- */
-bool lockAnyContext(void) {
-	int alreadyLocked = isLocked();
-	if (alreadyLocked)
-		return true;
-#if USE_PORT_LOCK
-	port_lock();
-#else /* #if USE_PORT_LOCK */
-	if (isIsrContext()) {
-		chSysLockFromISR()
-		;
-	} else {
-		chSysLock()
-		;
-	}
-#endif /* #if USE_PORT_LOCK */
-	return false;
-}
-
-/**
- * TODO: refactor to new 'chSysRestoreStatusX(sts);' pattern
- */
-void unlockAnyContext(void) {
-#if USE_PORT_LOCK
-	port_unlock();
-#else /* #if USE_PORT_LOCK */
-	if (isIsrContext()) {
-		chSysUnlockFromISR()
-		;
-	} else {
-		chSysUnlock()
-		;
-	}
-#endif /* #if USE_PORT_LOCK */
+	chSysRestoreStatusX(sts);
 }
 
 #endif /* EFI_UNIT_TEST */
-
-
-/**
- * See also getRemainingStack()
- */
-int getMaxUsedStack(uint8_t *ptr, int size) {
-	/**
-	 * maximum used stack size total stack buffer size minus position of first modified byte
-	 */
-#if ! EFI_UNIT_TEST
-	for (int i = 0; i < size; i++) {
-		if (ptr[i] != CH_DBG_STACK_FILL_VALUE) {
-			return size - i;
-		}
-	}
-#endif /* EFI_UNIT_TEST */
-	return 0;
-}
-

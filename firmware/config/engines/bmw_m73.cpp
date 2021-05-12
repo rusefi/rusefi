@@ -35,11 +35,16 @@
  * ECU pin 27: OUT         ORG injector #6
  * ECU pin 28: OUT         RED injector #5
  * ECU pin 32: IN          ORG VR positive crankshaft sensor - only 2x 5k per channel, R111 not installed, W1002 not installed
+ * ECU pin 34: IN              IAT sensor (only on second ECU)
+ * ECU pin 36: IN              Knock Sensor #2
+ * ECU pin 37: GND             Knock Sensor GND
  * ECU pin 40: OUT BRN/BLK GRN injector #3
  * ECU pin 41: OUT BRN/WHT BLU injector #1
  * ECU pin 45: GND             crankshaft shield
  * ECU pin 46: IN  BLK     BLU VR negative crankshaft sensor
- * ECU pin 47: IN              IAT sensor (only on second ECU)
+ * ECU pin 47: GND BRN     BLK IAT sensor Ground (only on second ECU)
+ * ECU pin 49: IN              Knock Sensor #1
+ * ECU pin 50: GND             Knock Sensor GND
  *
  * Plug #4 40 pin
  * ECU pin 6:  IN              start signal from ignition key
@@ -69,6 +74,11 @@
 
 #include "bmw_m73.h"
 #include "custom_engine.h"
+#include "hip9011_logic.h"
+
+#if EFI_ELECTRONIC_THROTTLE_BODY
+#include "electronic_throttle.h"
+#endif // EFI_ELECTRONIC_THROTTLE_BODY
 
 EXTERN_CONFIG;
 
@@ -78,10 +88,13 @@ void m73engine(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 
 	engineConfiguration->specs.cylindersCount = 12;
 	engineConfiguration->specs.displacement = 5.4;
+	strcpy(CONFIG(engineMake), ENGINE_MAKE_BMW);
+	strcpy(CONFIG(engineCode), "M73");
 	engineConfiguration->specs.firingOrder = FO_1_7_5_11_3_9_6_12_2_8_4_10;
 	CONFIG(isFasterEngineSpinUpEnabled) = true;
+	CONFIG(fuelAlgorithm) = LM_ALPHA_N;
 
-	engineConfiguration->vvtMode = VVT_FIRST_HALF;
+	engineConfiguration->vvtMode[0] = VVT_FIRST_HALF;
 
 	engineConfiguration->globalTriggerAngleOffset = 90;
 	setOperationMode(engineConfiguration, FOUR_STROKE_CRANK_SENSOR);
@@ -94,7 +107,9 @@ void m73engine(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	engineConfiguration->ignitionMode = IM_TWO_COILS;
 
 	// set cranking_fuel 15
-	engineConfiguration->cranking.baseFuel = 15;
+	engineConfiguration->cranking.baseFuel = 30;
+
+	engineConfiguration->cylinderBore = 85.0;
 }
 
 
@@ -216,8 +231,6 @@ GPIOA_6
 	engineConfiguration->injectionPins[9] = GPIO_UNASSIGNED;
 	engineConfiguration->injectionPins[10] = GPIO_UNASSIGNED;
 	engineConfiguration->injectionPins[11] = GPIO_UNASSIGNED;
-
-
 }
 
 /**
@@ -258,6 +271,7 @@ GPIOA_6
  * white#24: red      : TPS#1
  *
  */
+#if HW_PROTEUS
 void setEngineBMW_M73_Proteus(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	m73engine(PASS_CONFIG_PARAMETER_SIGNATURE);
 
@@ -265,14 +279,34 @@ void setEngineBMW_M73_Proteus(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	// set_analog_input_pin pps pa4
 	engineConfiguration->throttlePedalPositionAdcChannel = EFI_ADC_4;
 
+	strcpy(CONFIG(vehicleName), "Using Proteus");
+
+	// set_trigger_input_pin 0 PE7
+	// GPIOE_7:  "VR 1"
+	engineConfiguration->triggerInputPins[0] = GPIOE_7;
+
+	// GPIOE_11: "Digital 2"
+	engineConfiguration->camInputs[0] = GPIOE_11;
+
 	// set vbatt_divider 8.16
 	// engineConfiguration->vbattDividerCoeff = (49.0f / 10.0f) * 16.8f / 10.0f;
 	// todo: figure out exact values from TLE8888 breakout board used by Manhattan
-	engineConfiguration->vbattDividerCoeff = 7.6;
-
-	// TPS#2 = Analog volt
-	// set_analog_input_pin tps2 pa6
-	engineConfiguration->tps2_1AdcChannel = EFI_ADC_6;
+	// engineConfiguration->vbattDividerCoeff = 7.6; // is that Proteus 0.2 value?
 
 
+	// no idea why https://github.com/rusefi/rusefi/wiki/HOWTO-M73-v12-on-Proteus uses non default CLT pin
+	// AT3, Proteus pin #31
+	engineConfiguration->clt.adcChannel = EFI_ADC_9;
+
+
+	// GPIOE_0:  "Lowside 14"
+	CONFIG(starterControlPin) = GPIOE_0;
+	// GPIOE_12: "Digital 3"
+	CONFIG(startStopButtonPin) = GPIOE_12;
+	CONFIG(startStopButtonMode) = PI_PULLUP;
+
+	setProteusHitachiEtbDefaults(PASS_CONFIG_PARAMETER_SIGNATURE);
+
+	CONFIG(useETBforIdleControl) = true;
 }
+#endif // HW_PROTEUS

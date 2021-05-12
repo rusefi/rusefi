@@ -11,7 +11,6 @@
 #include "pid.h"
 
 TEST(util, pid) {
-	print("******************************************* testPidController\r\n");
 	pid_s pidS;
 	pidS.pFactor = 50;
 	pidS.iFactor = 0.5;
@@ -23,21 +22,21 @@ TEST(util, pid) {
 
 	Pid pid(&pidS);
 
-	ASSERT_EQ( 90,  pid.getOutput(14, 12, 0.1)) << "getValue#90";
+	ASSERT_FLOAT_EQ( 90,  pid.getOutput(14, 12, 0.1)) << "getValue#90";
 
 
-	ASSERT_EQ( 10,  pid.getOutput(14, 16, 0.1)) << "getValue#10";
-	ASSERT_EQ(10, pid.getOutput(14, 16, 1));
+	ASSERT_FLOAT_EQ( 10,  pid.getOutput(14, 16, 0.1)) << "getValue#10";
+	ASSERT_FLOAT_EQ(10, pid.getOutput(14, 16, 1));
 
 	pid.updateFactors(29, 0, 0);
-	ASSERT_EQ(10, pid.getOutput(14, 16, 1));
-//	ASSERT_EQ(68, pid.getIntegration());
+	ASSERT_FLOAT_EQ(10, pid.getOutput(14, 16, 1));
+//	ASSERT_FLOAT_EQ(68, pid.getIntegration());
 
-	ASSERT_EQ(10, pid.getOutput(14, 16, 1));
-//	ASSERT_EQ(0, pid.getIntegration());
+	ASSERT_FLOAT_EQ(10, pid.getOutput(14, 16, 1));
+//	ASSERT_FLOAT_EQ(0, pid.getIntegration());
 
-	ASSERT_EQ(10, pid.getOutput(14, 16, 1));
-//	ASSERT_EQ(68, pid.getIntegration());
+	ASSERT_FLOAT_EQ(10, pid.getOutput(14, 16, 1));
+//	ASSERT_FLOAT_EQ(68, pid.getIntegration());
 
 
 
@@ -51,42 +50,57 @@ TEST(util, pid) {
 
 	pid.reset();
 
-	ASSERT_EQ( 50,  pid.getOutput(/*target*/50, /*input*/0)) << "target=50, input=0";
-	ASSERT_EQ( 0,  pid.iTerm) << "target=50, input=0 iTerm";
+	ASSERT_FLOAT_EQ( 50,  pid.getOutput(/*target*/50, /*input*/0)) << "target=50, input=0";
+	ASSERT_FLOAT_EQ( 0,  pid.iTerm) << "target=50, input=0 iTerm";
 
-	ASSERT_EQ( 0,  pid.getOutput(/*target*/50, /*input*/70)) << "target=50, input=70";
-	ASSERT_EQ( 0,  pid.iTerm) << "target=50, input=70 iTerm";
+	ASSERT_FLOAT_EQ( 0,  pid.getOutput(/*target*/50, /*input*/70)) << "target=50, input=70";
+	ASSERT_FLOAT_EQ( 0,  pid.iTerm) << "target=50, input=70 iTerm";
 
-	ASSERT_EQ( 0,  pid.getOutput(/*target*/50, /*input*/70)) << "target=50, input=70 #2";
-	ASSERT_EQ( 0,  pid.iTerm) << "target=50, input=70 iTerm #2";
+	ASSERT_FLOAT_EQ( 0,  pid.getOutput(/*target*/50, /*input*/70)) << "target=50, input=70 #2";
+	ASSERT_FLOAT_EQ( 0,  pid.iTerm) << "target=50, input=70 iTerm #2";
 
-	ASSERT_EQ( 0,  pid.getOutput(/*target*/50, /*input*/50)) << "target=50, input=50";
-	ASSERT_EQ( 0,  pid.iTerm) << "target=50, input=50 iTerm";
-
+	ASSERT_FLOAT_EQ( 0,  pid.getOutput(/*target*/50, /*input*/50)) << "target=50, input=50";
+	ASSERT_FLOAT_EQ( 0,  pid.iTerm) << "target=50, input=50 iTerm";
 }
 
-TEST(util, pidLimits) {
+static void commonPidTestParameters(pid_s * pidS) {
+	pidS->pFactor = 0;
+	pidS->iFactor = 50;
+	pidS->dFactor = 0;
+	pidS->offset = 0;
+	pidS->minValue = 10;
+	pidS->maxValue = 40;
+	pidS->periodMs = 1;
+}
 
+static void commonPidTest(Pid *pid) {
+	pid->iTermMax = 45;
+
+	ASSERT_FLOAT_EQ( 12.5,  pid->getOutput(/*target*/50, /*input*/0)) << "target=50, input=0 #0";
+	ASSERT_FLOAT_EQ( 12.5,  pid->getIntegration());
+	ASSERT_FLOAT_EQ( 25  ,  pid->getOutput(/*target*/50, /*input*/0)) << "target=50, input=0 #1";
+
+	ASSERT_FLOAT_EQ( 37.5,  pid->getOutput(/*target*/50, /*input*/0)) << "target=50, input=0 #2";
+	ASSERT_FLOAT_EQ( 37.5,  pid->getIntegration());
+
+	ASSERT_FLOAT_EQ( 40.0,  pid->getOutput(/*target*/50, /*input*/0)) << "target=50, input=0 #3";
+	ASSERT_FLOAT_EQ( 45,    pid->getIntegration());
+}
+
+TEST(util, parallelPidLimits) {
 	pid_s pidS;
-	pidS.pFactor = 0;
-	pidS.iFactor = 50;
-	pidS.dFactor = 0;
-	pidS.offset = 0;
-	pidS.minValue = 10;
-	pidS.maxValue = 40;
-	pidS.periodMs = 1;
+	commonPidTestParameters(&pidS);
 
 	Pid pid(&pidS);
+	commonPidTest(&pid);
+}
 
-	pid.iTermMax = 45;
+TEST(util, industrialPidLimits) {
+	pid_s pidS;
+	commonPidTestParameters(&pidS);
 
-	ASSERT_EQ( 12.5,  pid.getOutput(/*target*/50, /*input*/0)) << "target=50, input=0 #0";
-	ASSERT_EQ( 25  ,  pid.getOutput(/*target*/50, /*input*/0)) << "target=50, input=0 #1";
-
-	ASSERT_EQ( 37.5,  pid.getOutput(/*target*/50, /*input*/0)) << "target=50, input=0 #2";
-
-	ASSERT_EQ( 40.0,  pid.getOutput(/*target*/50, /*input*/0)) << "target=50, input=0 #3";
-
+	PidIndustrial pid(&pidS);
+	commonPidTest(&pid);
 }
 
 TEST(util, pidIndustrial) {
@@ -111,12 +125,12 @@ TEST(util, pidIndustrial) {
 
 	float industValue = pid.getOutput(/*target*/1, /*input*/0);
 	// check if the first output is clamped because of large deviative
-	ASSERT_EQ(100.0, industValue);
+	ASSERT_FLOAT_EQ(100.0, industValue);
 
 	// check if all output of the 'zeroed' PidIndustrial (w/o new features) is the same as our "normal" Pid
 	for (int i = 0; i < 10; i++) {
 		float normalValue = pid0.getOutput(1, 0);
-		ASSERT_EQ(normalValue, industValue) << "[" << i << "]";
+		ASSERT_FLOAT_EQ(normalValue, industValue) << "[" << i << "]";
 		industValue = pid.getOutput(1, 0);
 	}
 
@@ -126,11 +140,11 @@ TEST(util, pidIndustrial) {
 	pid.derivativeFilterLoss = 0.01;
 
 	// now the first value is less (and not clipped!) due to the derivative filtering
-	ASSERT_EQ(67.671669f, pid.getOutput(1, 0));
+	ASSERT_FLOAT_EQ(67.671669f, pid.getOutput(1, 0));
 	// here we still have some leftovers of the initial D-term
-	ASSERT_EQ(45.4544487f, pid.getOutput(1, 0));
+	ASSERT_FLOAT_EQ(45.4544487f, pid.getOutput(1, 0));
 	// but the value is quickly fading
-	ASSERT_EQ(30.6446342f, pid.getOutput(1, 0));
+	ASSERT_FLOAT_EQ(30.6446342f, pid.getOutput(1, 0));
 
 	pid.reset();
 
@@ -151,7 +165,7 @@ TEST(util, pidIndustrial) {
 	pid.antiwindupFreq = 0.1;
 
 	// the first value is clipped, and that's when the anti-windup comes into effect
-	ASSERT_EQ(100.0f, pid.getOutput(1, 0));
+	ASSERT_FLOAT_EQ(100.0f, pid.getOutput(1, 0));
 	// it stores a small negative offset in the I-term to avoid it's saturation!
 	ASSERT_NEAR(-0.0455025025f, pid.getIntegration(), EPS4D);
 	// and that's why the second output is smaller then that of normal PID (=1.00999999)

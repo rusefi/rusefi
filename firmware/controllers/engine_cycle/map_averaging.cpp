@@ -44,7 +44,6 @@
 
 #define FAST_MAP_CHART_SKIP_FACTOR 16
 
-static Logging *logger;
 /**
  * this instance does not have a real physical pin - it's only used for engine sniffer
  */
@@ -112,13 +111,12 @@ static void endAveraging(void *arg);
 static void startAveraging(scheduling_s *endAveragingScheduling) {
 	efiAssertVoid(CUSTOM_ERR_6649, getCurrentRemainingStack() > 128, "lowstck#9");
 
-	bool wasLocked = lockAnyContext();
-	// with locking we would have a consistent state
-	mapAdcAccumulator = 0;
-	mapMeasurementsCounter = 0;
-	isAveraging = true;
-	if (!wasLocked) {
-		unlockAnyContext();
+	{
+		// with locking we will have a consistent state
+		chibios_rt::CriticalSectionLocker csl;
+		mapAdcAccumulator = 0;
+		mapMeasurementsCounter = 0;
+		isAveraging = true;
 	}
 
 	mapAveragingPin.setHigh();
@@ -169,22 +167,19 @@ void mapAveragingAdcCallback(adcsample_t adcValue) {
 	readIndex = writeIndex;
 
 	// todo: migrate to the lock-free implementation
-	bool alreadyLocked = lockAnyContext();
-	;
-	// with locking we would have a consistent state
-
-	mapAdcAccumulator += adcValue;
-	mapMeasurementsCounter++;
-	if (!alreadyLocked)
-		unlockAnyContext();
-	;
+	{
+		// with locking we will have a consistent state
+		chibios_rt::CriticalSectionLocker csl;
+		mapAdcAccumulator += adcValue;
+		mapMeasurementsCounter++;
+	}
 }
 #endif
 
 static void endAveraging(void *arg) {
 	(void) arg;
 #if ! EFI_UNIT_TEST
-	bool wasLocked = lockAnyContext();
+	chibios_rt::CriticalSectionLocker csl;
 #endif
 	isAveraging = false;
 	// with locking we would have a consistent state
@@ -205,11 +200,6 @@ static void endAveraging(void *arg) {
 	} else {
 		warning(CUSTOM_UNEXPECTED_MAP_VALUE, "No MAP values");
 	}
-#endif
-#if ! EFI_UNIT_TEST
-	if (!wasLocked)
-		unlockAnyContext();
-	;
 #endif
 	mapAveragingPin.setLow();
 }
@@ -235,16 +225,16 @@ void postMapState(TunerStudioOutputChannels *tsOutputChannels) {
 #endif /* EFI_TUNER_STUDIO */
 
 void refreshMapAveragingPreCalc(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
-	int rpm = GET_RPM_VALUE;
+	int rpm = GET_RPM();
 	if (isValidRpm(rpm)) {
 		MAP_sensor_config_s * c = &engineConfiguration->map;
-		angle_t start = interpolate2d("mapa", rpm, c->samplingAngleBins, c->samplingAngle);
+		angle_t start = interpolate2d(rpm, c->samplingAngleBins, c->samplingAngle);
 		efiAssertVoid(CUSTOM_ERR_MAP_START_ASSERT, !cisnan(start), "start");
 
-		angle_t offsetAngle = TRIGGER_WAVEFORM(eventAngles[CONFIG(mapAveragingSchedulingAtIndex)]);
+		angle_t offsetAngle = ENGINE(triggerCentral.triggerFormDetails).eventAngles[CONFIG(mapAveragingSchedulingAtIndex)];
 		efiAssertVoid(CUSTOM_ERR_MAP_AVG_OFFSET, !cisnan(offsetAngle), "offsetAngle");
 
-		for (int i = 0; i < engineConfiguration->specs.cylindersCount; i++) {
+		for (size_t i = 0; i < engineConfiguration->specs.cylindersCount; i++) {
 			angle_t cylinderOffset = getEngineCycle(engine->getOperationMode(PASS_ENGINE_PARAMETER_SIGNATURE)) * i / engineConfiguration->specs.cylindersCount;
 			efiAssertVoid(CUSTOM_ERR_MAP_CYL_OFFSET, !cisnan(cylinderOffset), "cylinderOffset");
 			// part of this formula related to specific cylinder offset is never changing - we can
@@ -254,9 +244,9 @@ void refreshMapAveragingPreCalc(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 			fixAngle(cylinderStart, "cylinderStart", CUSTOM_ERR_6562);
 			engine->engineState.mapAveragingStart[i] = cylinderStart;
 		}
-		engine->engineState.mapAveragingDuration = interpolate2d("samp", rpm, c->samplingWindowBins, c->samplingWindow);
+		engine->engineState.mapAveragingDuration = interpolate2d(rpm, c->samplingWindowBins, c->samplingWindow);
 	} else {
-		for (int i = 0; i < engineConfiguration->specs.cylindersCount; i++) {
+		for (size_t i = 0; i < engineConfiguration->specs.cylindersCount; i++) {
 			engine->engineState.mapAveragingStart[i] = NAN;
 		}
 		engine->engineState.mapAveragingDuration = NAN;
@@ -267,21 +257,19 @@ void refreshMapAveragingPreCalc(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 /**
  * Shaft Position callback used to schedule start and end of MAP averaging
  */
-static void mapAveragingTriggerCallback(trigger_event_e ckpEventType,
+void mapAveragingTriggerCallback(
 		uint32_t index, efitick_t edgeTimestamp DECLARE_ENGINE_PARAMETER_SUFFIX) {
-
-	ScopePerf perf(PE::MapAveragingTriggerCallback);
-	
 #if EFI_ENGINE_CONTROL
 	// this callback is invoked on interrupt thread
-	UNUSED(ckpEventType);
 	if (index != (uint32_t)CONFIG(mapAveragingSchedulingAtIndex))
 		return;
 
-	int rpm = GET_RPM_VALUE;
+	int rpm = GET_RPM();
 	if (!isValidRpm(rpm)) {
 		return;
 	}
+
+	ScopePerf perf(PE::MapAveragingTriggerCallback);
 
 	if (CONFIG(mapMinBufferLength) != mapMinBufferLength) {
 		applyMapMinBufferLength(PASS_ENGINE_PARAMETER_SIGNATURE);
@@ -290,12 +278,14 @@ static void mapAveragingTriggerCallback(trigger_event_e ckpEventType,
 	measurementsPerRevolution = measurementsPerRevolutionCounter;
 	measurementsPerRevolutionCounter = 0;
 
+	// todo: this could be pre-calculated
 	int samplingCount = CONFIG(measureMapOnlyInOneCylinder) ? 1 : engineConfiguration->specs.cylindersCount;
 
 	for (int i = 0; i < samplingCount; i++) {
 		angle_t samplingStart = ENGINE(engineState.mapAveragingStart[i]);
 
 		angle_t samplingDuration = ENGINE(engineState.mapAveragingDuration);
+		// todo: this assertion could be moved out of trigger handler
 		assertAngleRange(samplingDuration, "samplingDuration", CUSTOM_ERR_6563);
 		if (samplingDuration <= 0) {
 			warning(CUSTOM_MAP_ANGLE_PARAM, "map sampling angle should be positive");
@@ -310,6 +300,7 @@ static void mapAveragingTriggerCallback(trigger_event_e ckpEventType,
 			return;
 		}
 
+		// todo: pre-calculate samplingEnd for each cylinder
 		fixAngle(samplingEnd, "samplingEnd", CUSTOM_ERR_6563);
 		// only if value is already prepared
 		int structIndex = getRevolutionCounter() % 2;
@@ -323,7 +314,7 @@ static void mapAveragingTriggerCallback(trigger_event_e ckpEventType,
 }
 
 static void showMapStats(void) {
-	scheduleMsg(logger, "per revolution %d", measurementsPerRevolution);
+	efiPrintf("per revolution %d", measurementsPerRevolution);
 }
 
 #if EFI_PROD_CODE
@@ -338,7 +329,7 @@ float getMap(void) {
 	}
 
 #if EFI_ANALOG_SENSORS
-	if (!isValidRpm(GET_RPM_VALUE) || currentPressure == NO_VALUE_YET)
+	if (!isValidRpm(GET_RPM()) || currentPressure == NO_VALUE_YET)
 		return validateMap(getRawMap()); // maybe return NaN in case of stopped engine?
 	return validateMap(currentPressure);
 #else
@@ -347,13 +338,7 @@ float getMap(void) {
 }
 #endif /* EFI_PROD_CODE */
 
-void initMapAveraging(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX) {
-	logger = sharedLogger;
-
-#if EFI_SHAFT_POSITION_INPUT
-	addTriggerEventListener(&mapAveragingTriggerCallback, "MAP averaging", engine);
-#endif /* EFI_SHAFT_POSITION_INPUT */
-
+void initMapAveraging(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 #if !EFI_UNIT_TEST
 	addConsoleAction("faststat", showMapStats);
 #endif /* EFI_UNIT_TEST */

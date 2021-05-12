@@ -55,23 +55,23 @@
 using SensorResult = expected<float>;
 
 // Fwd declare - nobody outside of Sensor.cpp needs to see inside this type
-struct SensorRegistryEntry;
-class Logging;
+class SensorRegistryEntry;
 
 class Sensor {
 public:
 	// Register this sensor in the sensor registry.
 	// Returns true if registration succeeded, or false if
 	// another sensor of the same type is already registered.
-	// The return value should not be ignored: no error handling/reporting is
-	// done internally!
-	[[nodiscard]] bool Register();
+	bool Register();
 
 	// Print information about this sensor
-	virtual void showInfo(Logging* logger, const char* sensorName) const = 0;
+	virtual void showInfo(const char* sensorName) const = 0;
 
 	// Print information about all sensors
-	static void showAllSensorInfo(Logging* logger);
+	static void showAllSensorInfo();
+
+	// Print information about a particular sensor
+	static void showInfo(SensorType type);
 
 	// Remove all sensors from the sensor registry - tread carefully if you use this outside of a unit test
 	static void resetRegistry();
@@ -92,6 +92,11 @@ public:
 	static float getRaw(SensorType type);
 
 	/*
+	 * Get whether a sensor is redundant (a composite of multiple other sensors that can check consistency between them)
+	 */
+	static bool isRedundant(SensorType type);
+
+	/*
 	 * Query whether there is a sensor of a particular type currently registered.
 	 */
 	static bool hasSensor(SensorType type);
@@ -99,7 +104,7 @@ public:
 	/*
 	 * Mock a value for a particular sensor.
 	 */
-	static void setMockValue(SensorType type, float value);
+	static void setMockValue(SensorType type, float value, bool mockRedundant = false);
 
 	/*
 	 * Mock a value for a particular sensor.
@@ -121,21 +126,19 @@ public:
 	 * For example, CLT, IAT, Throttle Position 2, etc.
 	 */
 	const char* getSensorName() { return getSensorName(m_type); }
-
-protected:
-	// Protected constructor - only subclasses call this
-	explicit Sensor(SensorType type)
-		: m_type(type) {}
-
 	static const char* getSensorName(SensorType type);
 
-private:
 	// Retrieve the current reading from the sensor.
 	//
 	// Override this in a particular sensor's implementation.  As reading sensors is in many hot paths,
 	// it is unwise to synchronously read the sensor or do anything otherwise costly here.  At the most,
 	// this should be field lookup and simple math.
 	virtual SensorResult get() const = 0;
+
+	// Retrieve whether the sensor is present.  Some sensors may be registered but not present, ie if inintialization failed.
+	virtual bool hasSensor() const {
+		return true;
+	}
 
 	/*
 	 * Get an unconverted value from the sensor, if available.
@@ -144,6 +147,20 @@ private:
 		return 0;
 	}
 
+	/*
+	 * Get whether this sensor is redundant (backed by multiple other sensors)
+	 */
+	virtual bool isRedundant() const {
+		// By default sensors are not redundant
+		return false;
+	}
+
+protected:
+	// Protected constructor - only subclasses call this
+	explicit Sensor(SensorType type)
+		: m_type(type) {}
+
+private:
 	const SensorType m_type;
 
 	// Get this sensor's index in the list

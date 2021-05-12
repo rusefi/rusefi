@@ -6,16 +6,17 @@
 
 #pragma once
 
-#include "engine_configuration.h"
+#include "engine_ptr.h"
 
-void initMapDecoder(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX);
+struct air_pressure_sensor_config_s;
+
+void initMapDecoder(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 
 /**
  * @return Raw MAP sensor value right now
  */
 float getRawMap(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 float getBaroPressure(DECLARE_ENGINE_PARAMETER_SIGNATURE);
-bool hasBaroSensor(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 bool hasMapSensor(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 
 /**
@@ -28,9 +29,14 @@ float validateMap(float mapKPa DECLARE_ENGINE_PARAMETER_SUFFIX);
 
 #define KPA_PER_PSI 6.89475728f
 
-// PSI (relative to atmosphere) to kPa (relative to vacuum)
-#define PSI2KPA(psi)  (101.32500411216164f + KPA_PER_PSI * (psi))
+#define PSI2KPA(psi)  (KPA_PER_PSI * (psi))
 
-#define INHG2KPA(inhg) ((inhg) * 3.386375)
-#define KPA2INHG(kpa) ((kpa) / 3.386375)
+#define BAR2KPA(bar) (100 * (bar))
+#define KPA2BAR(kpa) (0.01f * (kpa))
+
+// PSI (relative to atmosphere) to kPa (relative to vacuum)
+#define PSI2KPA_RELATIVE(psi)  (101.32500411216164f + PSI2KPA(psi))
+
+#define INHG2KPA(inhg) ((inhg) * 3.386375f)
+#define KPA2INHG(kpa) ((kpa) / 3.386375f)
 

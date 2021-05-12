@@ -16,7 +16,11 @@
 #include "advance_map.h"
 #include "aux_valves.h"
 #include "perf_trace.h"
+#include "closed_loop_fuel.h"
 #include "sensor.h"
+#include "launch_control.h"
+#include "injector_model.h"
+
 
 #if EFI_PROD_CODE
 #include "svnversion.h"
@@ -26,13 +30,7 @@
 #include "status_loop.h"
 #endif
 
-extern fuel_Map3D_t veMap;
-extern afr_Map3D_t afrMap;
-
 EXTERN_ENGINE;
-
-// this does not look exactly right
-extern LoggingWithStorage engineLogger;
 
 WarningCodeState::WarningCodeState() {
 	clear();
@@ -68,66 +66,41 @@ MockAdcState::MockAdcState() {
 #if EFI_ENABLE_MOCK_ADC
 void MockAdcState::setMockVoltage(int hwChannel, float voltage DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	efiAssertVoid(OBD_PCM_Processor_Fault, hwChannel >= 0 && hwChannel < MOCK_ADC_SIZE, "hwChannel out of bounds");
-	scheduleMsg(&engineLogger, "fake voltage: channel %d value %.2f", hwChannel, voltage);
+	efiPrintf("fake voltage: channel %d value %.2f", hwChannel, voltage);
 
 	fakeAdcValues[hwChannel] = voltsToAdc(voltage);
 	hasMockAdc[hwChannel] = true;
 }
 #endif /* EFI_ENABLE_MOCK_ADC */
 
-FuelConsumptionState::FuelConsumptionState() {
-	accumulatedSecondPrevNt = accumulatedMinutePrevNt = getTimeNowNt();
-}
+void FuelConsumptionState::consumeFuel(float grams, efitick_t nowNt) {
+	m_consumedGrams += grams;
 
-void FuelConsumptionState::addData(float durationMs) {
-	if (durationMs > 0.0f) {
-		perSecondAccumulator += durationMs;
-		perMinuteAccumulator += durationMs;
+	float elapsedSecond = m_timer.getElapsedSecondsAndReset(nowNt);
+
+	// If it's been a long time since last injection, ignore this pulse
+	if (elapsedSecond > 0.2f) {
+		m_rate = 0;
+	} else {
+		m_rate = grams / elapsedSecond;
 	}
 }
 
-void FuelConsumptionState::update(efitick_t nowNt DECLARE_ENGINE_PARAMETER_SUFFIX) {
-	efitick_t deltaNt = nowNt - accumulatedSecondPrevNt;
-	if (deltaNt >= NT_PER_SECOND) {
-		perSecondConsumption = getFuelRate(perSecondAccumulator, deltaNt PASS_ENGINE_PARAMETER_SUFFIX);
-		perSecondAccumulator = 0;
-		accumulatedSecondPrevNt = nowNt;
-	}
-
-	deltaNt = nowNt - accumulatedMinutePrevNt;
-	if (deltaNt >= NT_PER_SECOND * 60) {
-		perMinuteConsumption = getFuelRate(perMinuteAccumulator, deltaNt PASS_ENGINE_PARAMETER_SUFFIX);
-		perMinuteAccumulator = 0;
-		accumulatedMinutePrevNt = nowNt;
-	}
+float FuelConsumptionState::getConsumedGrams() const {
+	return m_consumedGrams;
 }
 
-TransmissionState::TransmissionState() {
+float FuelConsumptionState::getConsumptionGramPerSecond() const {
+	return m_rate;
 }
 
 EngineState::EngineState() {
 	timeSinceLastTChargeK = getTimeNowNt();
-
-#if ! EFI_PROD_CODE
-	memset(mockPinStates, 0, sizeof(mockPinStates));
-#endif /* EFI_PROD_CODE */
 }
 
 void EngineState::updateSlowSensors(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	// this feeds rusEfi console Live Data
-	engine->engineState.isCrankingState = ENGINE(rpmCalculator).isCranking(PASS_ENGINE_PARAMETER_SIGNATURE);
-
-
-	engine->sensors.iat = getIntakeAirTemperatureM(PASS_ENGINE_PARAMETER_SIGNATURE);
-#if !EFI_CANBUS_SLAVE
-	engine->sensors.clt = getCoolantTemperatureM(PASS_ENGINE_PARAMETER_SIGNATURE);
-#endif /* EFI_CANBUS_SLAVE */
-
-#if EFI_UNIT_TEST
-	if (!cisnan(engine->sensors.mockClt)) {
-		engine->sensors.clt = engine->sensors.mockClt;
-	}
-#endif
+	engine->engineState.isCrankingState = ENGINE(rpmCalculator).isCranking();
 }
 
 void EngineState::periodicFastCallback(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
@@ -138,28 +111,22 @@ void EngineState::periodicFastCallback(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 		warning(CUSTOM_SLOW_NOT_INVOKED, "Slow not invoked yet");
 	}
 	efitick_t nowNt = getTimeNowNt();
-	if (ENGINE(rpmCalculator).isCranking(PASS_ENGINE_PARAMETER_SIGNATURE)) {
+	if (ENGINE(rpmCalculator).isCranking()) {
 		crankingTime = nowNt;
 		timeSinceCranking = 0.0f;
 	} else {
 		timeSinceCranking = nowNt - crankingTime;
 	}
-	updateAuxValves(PASS_ENGINE_PARAMETER_SIGNATURE);
+	recalculateAuxValveTiming(PASS_ENGINE_PARAMETER_SIGNATURE);
 
-	int rpm = ENGINE(rpmCalculator).getRpm(PASS_ENGINE_PARAMETER_SIGNATURE);
+	int rpm = ENGINE(rpmCalculator).getRpm();
 	sparkDwell = getSparkDwell(rpm PASS_ENGINE_PARAMETER_SUFFIX);
 	dwellAngle = cisnan(rpm) ? NAN :  sparkDwell / getOneDegreeTimeMs(rpm);
-	if (hasAfrSensor(PASS_ENGINE_PARAMETER_SIGNATURE)) {
-		engine->sensors.currentAfr = getAfr(PASS_ENGINE_PARAMETER_SIGNATURE);
-	}
 
 	// todo: move this into slow callback, no reason for IAT corr to be here
 	running.intakeTemperatureCoefficient = getIatFuelCorrection(PASS_ENGINE_PARAMETER_SIGNATURE);
 	// todo: move this into slow callback, no reason for CLT corr to be here
 	running.coolantTemperatureCoefficient = getCltFuelCorrection(PASS_ENGINE_PARAMETER_SIGNATURE);
-
-	// update fuel consumption states
-	fuelConsumption.update(nowNt PASS_ENGINE_PARAMETER_SUFFIX);
 
 	// Fuel cut-off isn't just 0 or 1, it can be tapered
 	fuelCutoffCorrection = getFuelCutOffCorrection(nowNt, rpm PASS_ENGINE_PARAMETER_SUFFIX);
@@ -178,44 +145,41 @@ void EngineState::periodicFastCallback(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 
 	cltTimingCorrection = getCltTimingCorrection(PASS_ENGINE_PARAMETER_SIGNATURE);
 
-	engineNoiseHipLevel = interpolate2d("knock", rpm, engineConfiguration->knockNoiseRpmBins,
+	engineNoiseHipLevel = interpolate2d(rpm, engineConfiguration->knockNoiseRpmBins,
 					engineConfiguration->knockNoise);
 
 	baroCorrection = getBaroCorrection(PASS_ENGINE_PARAMETER_SIGNATURE);
 
-	injectionOffset = getInjectionOffset(rpm PASS_ENGINE_PARAMETER_SUFFIX);
-	float engineLoad = getEngineLoadT(PASS_ENGINE_PARAMETER_SIGNATURE);
-	timingAdvance = getAdvance(rpm, engineLoad PASS_ENGINE_PARAMETER_SUFFIX);
+	auto tps = Sensor::get(SensorType::Tps1);
+	updateTChargeK(rpm, tps.value_or(0) PASS_ENGINE_PARAMETER_SUFFIX);
 
+	float injectionMass = getInjectionMass(rpm PASS_ENGINE_PARAMETER_SUFFIX);
+	auto clResult = fuelClosedLoopCorrection(PASS_ENGINE_PARAMETER_SIGNATURE);
+
+	// compute per-bank fueling
+	for (size_t i = 0; i < STFT_BANK_COUNT; i++) {
+		float corr = clResult.banks[i];
+		ENGINE(injectionMass)[i] = injectionMass * corr;
+		ENGINE(stftCorrection)[i] = corr;
+	}
+
+	// Store the pre-wall wetting injection duration for scheduling purposes only, not the actual injection duration
+	ENGINE(injectionDuration) = ENGINE(injectorModel)->getInjectionDuration(injectionMass);
+
+	float fuelLoad = getFuelingLoad(PASS_ENGINE_PARAMETER_SIGNATURE);
+	injectionOffset = getInjectionOffset(rpm, fuelLoad PASS_ENGINE_PARAMETER_SUFFIX);
+
+	float ignitionLoad = getIgnitionLoad(PASS_ENGINE_PARAMETER_SIGNATURE);
+	timingAdvance = getAdvance(rpm, ignitionLoad PASS_ENGINE_PARAMETER_SUFFIX);
 	multispark.count = getMultiSparkCount(rpm PASS_ENGINE_PARAMETER_SUFFIX);
 
-	if (engineConfiguration->fuelAlgorithm == LM_SPEED_DENSITY) {
-		auto tps = Sensor::get(SensorType::Tps1);
-		updateTChargeK(rpm, tps.value_or(0) PASS_ENGINE_PARAMETER_SUFFIX);
-		float map = getMap(PASS_ENGINE_PARAMETER_SIGNATURE);
+#if EFI_LAUNCH_CONTROL
+	updateLaunchConditions(PASS_ENGINE_PARAMETER_SIGNATURE);
+#endif //EFI_LAUNCH_CONTROL
 
-		/**
-		 * *0.01 because of https://sourceforge.net/p/rusefi/tickets/153/
-		 */
-		if (CONFIG(useTPSBasedVeTable)) {
-			// todo: should we have 'veTpsMap' fuel_Map3D_t variable here?
-			currentRawVE = interpolate3d<float, float>(tps.value_or(50), CONFIG(ignitionTpsBins), IGN_TPS_COUNT, rpm, config->veRpmBins, FUEL_RPM_COUNT, veMap.pointers);
-		} else {
-			currentRawVE = veMap.getValue(rpm, map);
-		}
+	engine->limpManager.updateState(rpm);
 
-		// get VE from the separate table for Idle
-		if (tps.Valid && CONFIG(useSeparateVeForIdle)) {
-			float idleVe = interpolate2d("idleVe", rpm, config->idleVeBins, config->idleVe);
-			// interpolate between idle table and normal (running) table using TPS threshold
-			currentRawVE = interpolateClamped(0.0f, idleVe, CONFIG(idlePidDeactivationTpsThreshold), currentRawVE, tps.Value);
-		}
-		currentBaroCorrectedVE = baroCorrection * currentRawVE * PERCENT_DIV;
-		targetAFR = afrMap.getValue(rpm, map);
-	} else {
-		baseTableFuel = getBaseTableFuel(rpm, engineLoad);
-	}
-#endif
+#endif // EFI_ENGINE_CONTROL
 }
 
 void EngineState::updateTChargeK(int rpm, float tps DECLARE_ENGINE_PARAMETER_SUFFIX) {
@@ -251,10 +215,10 @@ void StartupFuelPumping::setPumpsCounter(int newValue) {
 		pumpsCounter = newValue;
 
 		if (pumpsCounter == PUMPS_TO_PRIME) {
-			scheduleMsg(&engineLogger, "let's squirt prime pulse %.2f", pumpsCounter);
+			efiPrintf("let's squirt prime pulse %.2f", pumpsCounter);
 			pumpsCounter = 0;
 		} else {
-			scheduleMsg(&engineLogger, "setPumpsCounter %d", pumpsCounter);
+			efiPrintf("setPumpsCounter %d", pumpsCounter);
 		}
 	}
 }
@@ -281,7 +245,8 @@ void StartupFuelPumping::update(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 #endif
 
 void printCurrentState(Logging *logging, int seconds, const char *engineTypeName, const char *firmwareBuildId) {
-	logging->appendPrintf("%s%s%d@%s%s %s %d%s", PROTOCOL_VERSION_TAG, DELIMETER,
+	// VersionChecker in rusEFI console is parsing these version string, please follow the expected format
+	logging->appendPrintf("%s%s%d@%s %s %s %d%s", PROTOCOL_VERSION_TAG, DELIMETER,
 			getRusEfiVersion(), VCS_VERSION,
 			firmwareBuildId,
 			engineTypeName,
@@ -289,3 +254,32 @@ void printCurrentState(Logging *logging, int seconds, const char *engineTypeName
 			DELIMETER);
 }
 
+void TriggerConfiguration::update() {
+	UseOnlyRisingEdgeForTrigger = isUseOnlyRisingEdgeForTrigger();
+	VerboseTriggerSynchDetails = isVerboseTriggerSynchDetails();
+	TriggerType = getType();
+}
+
+bool PrimaryTriggerConfiguration::isUseOnlyRisingEdgeForTrigger() const {
+	return CONFIG(useOnlyRisingEdgeForTrigger);
+}
+
+trigger_type_e PrimaryTriggerConfiguration::getType() const {
+	return CONFIG(trigger.type);
+}
+
+bool PrimaryTriggerConfiguration::isVerboseTriggerSynchDetails() const {
+	return CONFIG(verboseTriggerSynchDetails);
+}
+
+bool VvtTriggerConfiguration::isUseOnlyRisingEdgeForTrigger() const {
+	return CONFIG(vvtCamSensorUseRise);
+}
+
+trigger_type_e VvtTriggerConfiguration::getType() const {
+	return engine->triggerCentral.vvtTriggerType[index];
+}
+
+bool VvtTriggerConfiguration::isVerboseTriggerSynchDetails() const {
+	return CONFIG(verboseVVTDecoding);
+}

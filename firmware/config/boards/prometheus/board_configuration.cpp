@@ -29,6 +29,8 @@ static void setPrometheusDefaults(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	//engineConfiguration->useOnlyRisingEdgeForTrigger = true;
 	setAlgorithm(LM_SPEED_DENSITY PASS_CONFIG_PARAMETER_SUFFIX);
 
+	CONFIG(useCicPidForIdle) = true;
+
 	engineConfiguration->specs.cylindersCount = 4;
 	engineConfiguration->specs.firingOrder = FO_1_3_4_2;
 
@@ -41,7 +43,7 @@ static void setPrometheusDefaults(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	engineConfiguration->specs.displacement = 1.645;
 	engineConfiguration->injector.flow = 200;
 	
-	engineConfiguration->cranking.baseFuel = 5;		// ???
+	engineConfiguration->cranking.baseFuel = 25;		// ???
 	engineConfiguration->crankingChargeAngle = 70;
 	engineConfiguration->cranking.rpm = 600;
 
@@ -112,8 +114,8 @@ void setSerialConfigurationOverrides(void) {
 	engineConfiguration->useSerialPort = true;
 	engineConfiguration->binarySerialTxPin = GPIOA_0;
 	engineConfiguration->binarySerialRxPin = GPIOA_1;
-	engineConfiguration->consoleSerialTxPin = GPIOA_0;
-	engineConfiguration->consoleSerialRxPin = GPIOA_1;
+//	engineConfiguration->consoleSerialTxPin = GPIOA_0;
+//	engineConfiguration->consoleSerialRxPin = GPIOA_1;
 	engineConfiguration->tunerStudioSerialSpeed = SERIAL_SPEED;
 	engineConfiguration->uartConsoleSerialSpeed = SERIAL_SPEED;
 }
@@ -126,10 +128,10 @@ void setSdCardConfigurationOverrides(void) {
 }
 
 /**
- * @brief   Board-specific configuration code overrides.
+ * @brief   Board-specific configuration defaults.
  * @todo    Add your board-specific code, if any.
  */
-void setBoardConfigurationOverrides(void) {
+void setBoardDefaultConfiguration(void) {
 	// give a chance to trigger SWD programmer... Wait for 2 secs (=2000 ms).
 	// TODO: remove it when the bootloader is ready
 	chThdSleepMilliseconds(2000);
@@ -171,7 +173,6 @@ void setBoardConfigurationOverrides(void) {
 
 	engineConfiguration->communicationLedPin = GPIO_UNASSIGNED;// GPIOA_13; // yellow LED
 	engineConfiguration->runningLedPin = GPIOA_13; //GPIOA_13; // yellow LED
-	//engineConfiguration->fatalErrorPin = GPIOA_13;
 	engineConfiguration->warningLedPin = GPIO_UNASSIGNED;
 
 	engineConfiguration->triggerInputPins[0] = GPIOA_5;
@@ -199,7 +200,6 @@ void setBoardConfigurationOverrides(void) {
 	engineConfiguration->triggerSimulatorPinModes[0] = OM_DEFAULT;
 
 	// not used
-	engineConfiguration->dizzySparkOutputPin = GPIO_UNASSIGNED;
 	engineConfiguration->externalKnockSenseAdc = EFI_ADC_NONE;
 	engineConfiguration->displayMode = DM_NONE;
 	engineConfiguration->HD44780_rs = GPIO_UNASSIGNED;
@@ -216,9 +216,6 @@ void setBoardConfigurationOverrides(void) {
 	engineConfiguration->triggerSimulatorPinModes[1] = OM_DEFAULT;
 	engineConfiguration->triggerSimulatorPinModes[2] = OM_DEFAULT;
 	engineConfiguration->vehicleSpeedSensorInputPin = GPIO_UNASSIGNED;
-
-	engineConfiguration->digitalPotentiometerSpiDevice = SPI_NONE;
-	engineConfiguration->max31855spiDevice = SPI_NONE;
 
 	/////////////////////////////////////////////////////////
 	

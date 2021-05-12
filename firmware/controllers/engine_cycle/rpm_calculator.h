@@ -10,6 +10,8 @@
 
 #include "globalaccess.h"
 #include "scheduler.h"
+#include "stored_value_sensor.h"
+#include "timer.h"
 
 // we use this value in case of noise on trigger input lines
 #define NOISY_RPM -1
@@ -40,8 +42,10 @@ typedef enum {
 	RUNNING,
 } spinning_state_e;
 
-class RpmCalculator {
+class RpmCalculator : public StoredValueSensor {
 public:
+	DECLARE_ENGINE_PTR;
+
 #if !EFI_PROD_CODE
 	int mockRpm;
 #endif /* EFI_PROD_CODE */
@@ -49,21 +53,21 @@ public:
 	/**
 	 * Returns true if the engine is not spinning (RPM==0)
 	 */
-	bool isStopped(DECLARE_ENGINE_PARAMETER_SIGNATURE) const;
+	bool isStopped() const;
 	/**
 	 * Returns true if the engine is spinning up
 	 */
-	bool isSpinningUp(DECLARE_ENGINE_PARAMETER_SIGNATURE) const;
+	bool isSpinningUp() const;
 	/**
 	 * Returns true if the engine is cranking OR spinning up
 	 */
-	bool isCranking(DECLARE_ENGINE_PARAMETER_SIGNATURE) const;
+	bool isCranking() const;
 	/**
 	 * Returns true if the engine is running and not cranking
 	 */
-	bool isRunning(DECLARE_ENGINE_PARAMETER_SIGNATURE) const;
+	bool isRunning() const;
 
-	bool checkIfSpinning(efitick_t nowNt DECLARE_ENGINE_PARAMETER_SUFFIX) const;
+	bool checkIfSpinning(efitick_t nowNt) const;
 
 	/**
 	 * This accessor is used in unit-tests.
@@ -73,39 +77,34 @@ public:
 	/**
 	 * Should be called on every trigger event when the engine is just starting to spin up.
 	 */
-	void setSpinningUp(efitick_t nowNt DECLARE_ENGINE_PARAMETER_SUFFIX);
+	void setSpinningUp(efitick_t nowNt );
 	/**
 	 * Called if the synchronization is lost due to a trigger timeout.
 	 */
-	void setStopSpinning(DECLARE_ENGINE_PARAMETER_SIGNATURE);
+	void setStopSpinning();
 
 	/**
 	 * Just a getter for rpmValue
 	 * Also handles mockRpm if not EFI_PROD_CODE
 	 */
-	int getRpm(DECLARE_ENGINE_PARAMETER_SIGNATURE) const;
+	int getRpm() const;
 	/**
 	 * This method is invoked once per engine cycle right after we calculate new RPM value
 	 */
 	void onNewEngineCycle();
 	uint32_t getRevolutionCounterM(void) const;
-	void setRpmValue(float value DECLARE_ENGINE_PARAMETER_SUFFIX);
+	void setRpmValue(float value);
 	/**
 	 * The same as setRpmValue() but without state change.
 	 * We need this to be public because of calling rpmState->assignRpmValue() from rpmShaftPositionCallback()
 	 */
-	void assignRpmValue(float value DECLARE_ENGINE_PARAMETER_SUFFIX);
+	void assignRpmValue(float value);
 	uint32_t getRevolutionCounterSinceStart(void) const;
 	/**
 	 * RPM rate of change between current RPM and RPM measured during previous engine cycle
 	 * see also SC_RPM_ACCEL
 	 */
 	float getRpmAcceleration() const;
-	/**
-	 * This is public because sometimes we cannot afford to call isRunning() and the value is good enough
-	 * Zero if engine is not running
-	 */
-	volatile int rpmValue = 0;
 	/**
 	 * this is RPM on previous engine cycle.
 	 */
@@ -115,12 +114,27 @@ public:
 	 * NaN while engine is not spinning
 	 */
 	volatile floatus_t oneDegreeUs = NAN;
-	volatile efitick_t lastRpmEventTimeNt = 0;
+
+	Timer lastTdcTimer;
+
+	// RPM rate of change, in RPM per second
+	float rpmRate = 0;
+
+protected:
+	// Print sensor info - current RPM state
+	void showInfo(const char* sensorName) const override;
+
 private:
+	/**
+	 * Sometimes we cannot afford to call isRunning() and the value is good enough
+	 * Zero if engine is not running
+	 */
+	 int rpmValue = 0;
+
 	/**
 	 * Should be called once we've realized engine is not spinning any more.
 	 */
-	void setStopped(DECLARE_ENGINE_PARAMETER_SIGNATURE);
+	void setStopped();
 
 	/**
 	 * This counter is incremented with each revolution of one of the shafts. Could be
@@ -142,18 +156,19 @@ private:
 };
 
 // Just a getter for rpmValue which also handles mockRpm if not EFI_PROD_CODE
-#define GET_RPM() ( ENGINE(rpmCalculator.getRpm(PASS_ENGINE_PARAMETER_SIGNATURE)) )
-
-// simple variable access, theoretically could be faster than getter method but that's a long stretch
-#define GET_RPM_VALUE ( ENGINE(rpmCalculator.rpmValue) )
+#define GET_RPM() ( ENGINE(rpmCalculator.getRpm()) )
 
 #define isValidRpm(rpm) ((rpm) > 0 && (rpm) < UNREALISTIC_RPM)
 
-void rpmShaftPositionCallback(trigger_event_e ckpSignalType, uint32_t index DECLARE_ENGINE_PARAMETER_SUFFIX);
+void rpmShaftPositionCallback(trigger_event_e ckpSignalType, uint32_t index, efitick_t edgeTimestamp DECLARE_ENGINE_PARAMETER_SUFFIX);
+
+void tdcMarkCallback(
+		uint32_t index0, efitick_t edgeTimestamp DECLARE_ENGINE_PARAMETER_SUFFIX);
+
 /**
  * @brief   Initialize RPM calculator
  */
-void initRpmCalculator(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX);
+void initRpmCalculator(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 
 float getCrankshaftAngleNt(efitick_t timeNt DECLARE_ENGINE_PARAMETER_SUFFIX);
 

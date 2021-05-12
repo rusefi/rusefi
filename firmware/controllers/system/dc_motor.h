@@ -77,7 +77,7 @@ private:
 	OutputPin* const m_disable;
     float m_value = 0;
 
-    ControlType m_type;
+    ControlType m_type = ControlType::PwmDirectionPins;
 public:
     /**
      * @param enable SimplePwm driver for enable pin, for PWM speed control.
@@ -90,8 +90,8 @@ public:
     float get() const override;
     bool isOpenDirection() const override;
 
-	void enable();
-	void disable();
+	void enable() override;
+	void disable() override;
 
     void setType(ControlType type) { m_type = type; }
 };

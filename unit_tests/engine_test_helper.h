@@ -13,6 +13,9 @@
 #include "main_trigger_callback.h"
 #include "unit_test_framework.h"
 #include "sensor.h"
+#include "mocks.h"
+
+#include <unordered_map>
 
 extern EnginePins enginePins;
 
@@ -31,12 +34,28 @@ class EngineTestHelper : public EngineTestHelperBase {
 public:
 	EngineTestHelper(engine_type_e engineType, const std::unordered_map<SensorType, float>& sensorValues);
 	EngineTestHelper(engine_type_e engineType, configuration_callback_t boardCallback);
+	EngineTestHelper(engine_type_e engineType, configuration_callback_t boardCallback, const std::unordered_map<SensorType, float>& sensorValues);
 	~EngineTestHelper();
 
 	void applyTriggerWaveform();
 	void setTriggerType(trigger_type_e trigger DECLARE_ENGINE_PARAMETER_SUFFIX);
+	/**
+	 * DEPRECATED these methods do not execute events on the queue
+	 */
 	void fireRise(float delayMs);
 	void fireFall(float delayMs);
+	void moveTimeForwardUs(int deltaTimeUs);
+	void fireTriggerEvents2(int count, float delayMs);
+
+	/**
+	 * these methods execute events while moving time forward
+	 * todo: better naming convention?
+	 */
+	void smartFireRise(float delayMs);
+	void smartFireFall(float delayMs);
+	void moveTimeForwardAndInvokeEventsUs(int deltaTimeUs);
+	void moveTimeForwardAndInvokeEventsSec(int deltaTimeSeconds);
+	void smartFireTriggerEvents2(int count, float delayMs);
 
 	/**
 	 * See also #fireRise() which would also move time forward
@@ -48,7 +67,6 @@ public:
 	void firePrimaryTriggerFall();
 	void fireTriggerEvents(int count);
 	void fireTriggerEventsWithDuration(float delayMs);
-	void fireTriggerEvents2(int count, float delayMs);
 	void clearQueue();
 
 	scheduling_s * assertEvent5(const char *msg, int index, void *callback, efitime_t expectedTimestamp);
@@ -64,11 +82,16 @@ public:
 
 	int executeActions();
 	void moveTimeForwardMs(float deltaTimeMs);
-	void moveTimeForwardUs(int deltaTimeUs);
+	void moveTimeForwardSec(float deltaTimeSec);
 	efitimeus_t getTimeNowUs(void);
 
 	Engine engine;
 	persistent_config_s persistentConfig;
+
+	::testing::NiceMock<MockAirmass> mockAirmass;
+
+private:
+	void writeEvents(const char *fileName);
 };
 
 void setupSimpleTestEngineWithMafAndTT_ONE_trigger(EngineTestHelper *eth, injection_mode_e injMode = IM_BATCH);

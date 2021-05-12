@@ -13,11 +13,12 @@
 #include "pwm_generator_logic.h"
 #include "perf_trace.h"
 
-/**
- * We need to limit the number of iterations in order to avoid precision loss while calculating
- * next toggle time
- */
-#define ITERATION_LIMIT 1000
+EXTERN_ENGINE;
+
+#if EFI_PROD_CODE
+#include "mpu_util.h"
+#include "engine.h"
+#endif // EFI_PROD_CODE
 
 // 1% duty cycle
 #define ZERO_PWM_THRESHOLD 0.01
@@ -55,17 +56,17 @@ static efitick_t getNextSwitchTimeNt(PwmConfig *state) {
 	float switchTime = state->mode == PM_NORMAL ? state->multiChannelStateSequence.getSwitchTime(state->safe.phaseIndex) : 1;
 	float periodNt = state->safe.periodNt;
 #if DEBUG_PWM
-	scheduleMsg(&logger, "iteration=%d switchTime=%.2f period=%.2f", iteration, switchTime, period);
+	efiPrintf("iteration=%d switchTime=%.2f period=%.2f", iteration, switchTime, period);
 #endif /* DEBUG_PWM */
 
 	/**
 	 * Once 'iteration' gets relatively high, we might lose calculation precision here.
-	 * This is addressed by ITERATION_LIMIT
+	 * This is addressed by iterationLimit below, using any many cycles as possible without overflowing timeToSwitchNt
 	 */
-	efitick_t timeToSwitchNt = (efitick_t) ((iteration + switchTime) * periodNt);
+	uint32_t timeToSwitchNt = (uint32_t)((iteration + switchTime) * periodNt);
 
 #if DEBUG_PWM
-	scheduleMsg(&logger, "start=%d timeToSwitch=%d", state->safe.start, timeToSwitch);
+	efiPrintf("start=%d timeToSwitch=%d", state->safe.start, timeToSwitch);
 #endif /* DEBUG_PWM */
 	return state->safe.startNt + timeToSwitchNt;
 }
@@ -78,8 +79,9 @@ void PwmConfig::setFrequency(float frequency) {
 	}
 	/**
 	 * see #handleCycleStart()
+	 * 'periodNt' is below 10 seconds here so we use 32 bit type for performance reasons
 	 */
-	periodNt = US2NT(frequency2periodUs(frequency));
+	periodNt = USF2NT(frequency2periodUs(frequency));
 }
 
 void PwmConfig::stop() {
@@ -96,16 +98,22 @@ void PwmConfig::handleCycleStart() {
 	if (pwmCycleCallback != NULL) {
 		pwmCycleCallback(this);
 	}
+		// Compute the maximum number of iterations without overflowing a uint32_t worth of timestamp
+		uint32_t iterationLimit = (0xFFFFFFFF / periodNt) - 2;
+
 		efiAssertVoid(CUSTOM_ERR_6580, periodNt != 0, "period not initialized");
-		if (safe.periodNt != periodNt || safe.iteration == ITERATION_LIMIT) {
+		efiAssertVoid(CUSTOM_ERR_6580, iterationLimit > 0, "iterationLimit invalid");
+		if (forceCycleStart || safe.periodNt != periodNt || safe.iteration == iterationLimit) {
 			/**
 			 * period length has changed - we need to reset internal state
 			 */
 			safe.startNt = getTimeNowNt();
 			safe.iteration = 0;
 			safe.periodNt = periodNt;
+
+			forceCycleStart = false;
 #if DEBUG_PWM
-			scheduleMsg(&logger, "state reset start=%d iteration=%d", state->safe.start, state->safe.iteration);
+			efiPrintf("state reset start=%d iteration=%d", state->safe.start, state->safe.iteration);
 #endif
 		}
 }
@@ -114,15 +122,13 @@ void PwmConfig::handleCycleStart() {
  * @return Next time for signal toggle
  */
 efitick_t PwmConfig::togglePwmState() {
-	ScopePerf perf(PE::PwmConfigTogglePwmState);
-
 	if (isStopRequested) {
 		return 0;
 	}
 
 #if DEBUG_PWM
-	scheduleMsg(&logger, "togglePwmState phaseIndex=%d iteration=%d", safe.phaseIndex, safe.iteration);
-	scheduleMsg(&logger, "period=%.2f safe.period=%.2f", period, safe.periodNt);
+	efiPrintf("togglePwmState phaseIndex=%d iteration=%d", safe.phaseIndex, safe.iteration);
+	efiPrintf("period=%.2f safe.period=%.2f", period, safe.periodNt);
 #endif
 
 	if (cisnan(periodNt)) {
@@ -161,27 +167,21 @@ efitick_t PwmConfig::togglePwmState() {
 
 	efitick_t nextSwitchTimeNt = getNextSwitchTimeNt(this);
 #if DEBUG_PWM
-	scheduleMsg(&logger, "%s: nextSwitchTime %d", state->name, nextSwitchTime);
+	efiPrintf("%s: nextSwitchTime %d", state->name, nextSwitchTime);
 #endif /* DEBUG_PWM */
-	// signed value is needed here
-//	int64_t timeToSwitch = nextSwitchTimeUs - getTimeNowUs();
-//	if (timeToSwitch < 1) {
-//		/**
-//		 * We are here if we are late for a state transition.
-//		 * At 12000RPM=200Hz with a 60 toothed wheel we need to change state every
-//		 * 1000000 / 200 / 120 = ~41 uS. We are kind of OK.
-//		 *
-//		 * We are also here after a flash write. Flash write freezes the whole chip for a couple of seconds,
-//		 * so PWM generation and trigger simulation generation would have to recover from this time lag.
-//		 */
-//		//todo: introduce error and test this error handling		warning(OBD_PCM_Processor_Fault, "PWM: negative switch time");
-//		timeToSwitch = 10;
-//	}
+
+	// If we're very far behind schedule, restart the cycle fresh to avoid scheduling a huge pile of events all at once
+	// This can happen during config write or debugging where CPU is halted for multiple seconds
+	bool isVeryBehindSchedule = nextSwitchTimeNt < getTimeNowNt() - MS2NT(10);
 
 	safe.phaseIndex++;
-	if (safe.phaseIndex == phaseCount || mode != PM_NORMAL) {
+	if (isVeryBehindSchedule || safe.phaseIndex == phaseCount || mode != PM_NORMAL) {
 		safe.phaseIndex = 0; // restart
 		safe.iteration++;
+
+		if (isVeryBehindSchedule) {
+			forceCycleStart = true;
+		}
 	}
 #if EFI_UNIT_TEST
 	printf("PWM: nextSwitchTimeNt=%d phaseIndex=%d iteration=%d\r\n", nextSwitchTimeNt,
@@ -234,7 +234,7 @@ void copyPwmParameters(PwmConfig *state, int phaseCount, float const *switchTime
 		}
 	}
 	if (state->mode == PM_NORMAL) {
-		state->multiChannelStateSequence.checkSwitchTimes(phaseCount);
+		state->multiChannelStateSequence.checkSwitchTimes(phaseCount, 1);
 	}
 }
 
@@ -278,10 +278,9 @@ void PwmConfig::weComplexInit(const char *msg, ExecutorInterface *executor,
 }
 
 void startSimplePwm(SimplePwm *pwm, const char *msg, ExecutorInterface *executor,
-		OutputPin *output, float frequency, float dutyCycle, pwm_gen_callback *stateChangeCallback) {
+		OutputPin *output, float frequency, float dutyCycle) {
 	efiAssertVoid(CUSTOM_ERR_PWM_STATE_ASSERT, pwm != nullptr, "state");
 	efiAssertVoid(CUSTOM_ERR_PWM_DUTY_ASSERT, dutyCycle >= 0 && dutyCycle <= 1, "dutyCycle");
-	efiAssertVoid(CUSTOM_ERR_PWM_CALLBACK_ASSERT, stateChangeCallback != nullptr, "listener");
 
 	if (frequency < 1) {
 		warning(CUSTOM_OBD_LOW_FREQUENCY, "low frequency %.2f", frequency);
@@ -294,11 +293,28 @@ void startSimplePwm(SimplePwm *pwm, const char *msg, ExecutorInterface *executor
 void startSimplePwmExt(SimplePwm *state, const char *msg,
 		ExecutorInterface *executor,
 		brain_pin_e brainPin, OutputPin *output, float frequency,
-		float dutyCycle, pwm_gen_callback *stateChangeCallback) {
+		float dutyCycle) {
 
 	output->initPin(msg, brainPin);
 
-	startSimplePwm(state, msg, executor, output, frequency, dutyCycle, stateChangeCallback);
+	startSimplePwm(state, msg, executor, output, frequency, dutyCycle);
+}
+
+void startSimplePwmHard(SimplePwm *state, const char *msg,
+		ExecutorInterface *executor,
+		brain_pin_e brainPin, OutputPin *output, float frequency,
+		float dutyCycle) {
+#if EFI_PROD_CODE && HAL_USE_PWM
+	auto hardPwm = hardware_pwm::tryInitPin(msg, brainPin, frequency, dutyCycle);
+
+	if (hardPwm) {
+		state->hardPwm = hardPwm;
+	} else {
+#endif
+		startSimplePwmExt(state, msg, executor, brainPin, output, frequency, dutyCycle);
+#if EFI_PROD_CODE && HAL_USE_PWM
+	}
+#endif
 }
 
 /**
@@ -307,6 +323,16 @@ void startSimplePwmExt(SimplePwm *state, const char *msg,
  * This method takes ~350 ticks.
  */
 void applyPinState(int stateIndex, PwmConfig *state) /* pwm_gen_callback */ {
+#if EFI_PROD_CODE
+	if (!engine->isPwmEnabled) {
+		for (int channelIndex = 0; channelIndex < state->multiChannelStateSequence.waveCount; channelIndex++) {
+			OutputPin *output = state->outputPins[channelIndex];
+			output->setValue(0);
+		}
+		return;
+	}
+#endif // EFI_PROD_CODE
+
 	efiAssertVoid(CUSTOM_ERR_6663, stateIndex < PWM_PHASE_MAX_COUNT, "invalid stateIndex");
 	efiAssertVoid(CUSTOM_ERR_6664, state->multiChannelStateSequence.waveCount <= PWM_PHASE_MAX_WAVE_PER_PWM, "invalid waveCount");
 	for (int channelIndex = 0; channelIndex < state->multiChannelStateSequence.waveCount; channelIndex++) {

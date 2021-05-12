@@ -94,7 +94,6 @@ void configureHondaAccordCDDip(TriggerWaveform *s) {
 	s->addEvent720(720.0f, T_SECONDARY, TV_RISE);
 
 	s->isSynchronizationNeeded = false;
-	s->useOnlyPrimaryForSync = true;
 }
 
 /**
@@ -169,8 +168,6 @@ void configureHonda_1_4_24(TriggerWaveform *s, bool withOneEventSignal, bool wit
 void configureHondaCbr600(TriggerWaveform *s) {
 	s->initialize(FOUR_STROKE_CAM_SENSOR);
 	s->useOnlyPrimaryForSync = true;
-	s->isSynchronizationNeeded = true;
-
 	s->setTriggerSynchronizationGap(6);
 
 
@@ -209,80 +206,6 @@ void configureHondaCbr600(TriggerWaveform *s) {
 	s->addEvent720(720.0f, T_PRIMARY, TV_RISE);
 }
 
-void configureHondaCbr600custom(TriggerWaveform *s) {
-
-	// w = 15
-	float w = 720 / 2 / 24;
-//	s->initialize(FOUR_STROKE_CAM_SENSOR);
-	s->initialize(FOUR_STROKE_CAM_SENSOR);
-
-	s->useOnlyPrimaryForSync = true;
-	s->isSynchronizationNeeded = true;
-	s->setTriggerSynchronizationGap2(0.7, 1.1);
-
-
-	float a = 0;
-
-	a += w;
-	s->addEvent720(a, T_SECONDARY, TV_RISE);
-	a += w;
-	s->addEvent720(a - 1, T_SECONDARY, TV_FALL); // 30
-
-	a += w;
-	s->addEvent720(a, T_SECONDARY, TV_RISE);
-	s->addEvent720(52.4, T_PRIMARY, TV_FALL);
-	a += w;
-	s->addEvent720(a - 1, T_SECONDARY, TV_FALL); // 60
-
-	for (int i = 0;i<10;i++) {
-		a += w;
-		s->addEvent720(a, T_SECONDARY, TV_RISE);
-		a += w;
-		s->addEvent720(a, T_SECONDARY, TV_FALL);
-	}
-
-	a += w;
-	s->addEvent720(a, T_SECONDARY, TV_RISE);
-
-	s->addEvent720(381.34f, T_PRIMARY, TV_RISE);
-
-	a += w;
-	s->addEvent720(a - 1, T_SECONDARY, TV_FALL);
-
-	for (int i = 0;i<1;i++) {
-		a += w;
-		s->addEvent720(a, T_SECONDARY, TV_RISE);
-		a += w;
-		s->addEvent720(a, T_SECONDARY, TV_FALL);
-	}
-
-	a += w;
-	s->addEvent720(a, T_SECONDARY, TV_RISE);
-
-
-	s->addEvent720(449.1f, T_PRIMARY, TV_FALL);
-
-	a += w;
-	s->addEvent720(a, T_SECONDARY, TV_FALL);
-
-
-	for (int i = 0;i<8;i++) {
-		a += w;
-		s->addEvent720(a, T_SECONDARY, TV_RISE);
-		a += w;
-		s->addEvent720(a, T_SECONDARY, TV_FALL);
-	}
-
-	a += w;
-	s->addEvent720(a, T_SECONDARY, TV_RISE);
-	a += w;
-	s->addEvent720(a - 1, T_SECONDARY, TV_FALL);
-
-
-	s->addEvent720(720.0f, T_PRIMARY, TV_RISE);
-
-}
-
 void configureHondaAccordShifted(TriggerWaveform *s) {
 	s->initialize(FOUR_STROKE_CAM_SENSOR);
 
@@ -309,27 +232,25 @@ void configureHondaAccordShifted(TriggerWaveform *s) {
 	}
 
 
-
-	s->useOnlyPrimaryForSync = true;
 	s->isSynchronizationNeeded = false;
 }
 
 void configureOnePlus16(TriggerWaveform *s) {
 	s->initialize(FOUR_STROKE_CAM_SENSOR);
 
-	int totalTeethCount = 16;
-	int skippedCount = 0;
+	int count = 16;
+	float tooth = s->getCycleDuration() / count;
+	float width = tooth / 2; // for VR we only handle rises so width does not matter much
 
-	s->addEvent720(2, T_PRIMARY, TV_RISE);
-	addSkippedToothTriggerEvents(T_SECONDARY, s, totalTeethCount, skippedCount, 0.5, 0, 360, 2, 20);
-	s->addEvent720(20, T_PRIMARY, TV_FALL);
-	addSkippedToothTriggerEvents(T_SECONDARY, s, totalTeethCount, skippedCount, 0.5, 0, 360, 20, NO_RIGHT_FILTER);
+	s->addEventAngle(1, T_PRIMARY, TV_RISE);
+	s->addEventAngle(5, T_PRIMARY, TV_FALL);
 
-	addSkippedToothTriggerEvents(T_SECONDARY, s, totalTeethCount, skippedCount, 0.5, 360, 360, NO_LEFT_FILTER,
-	NO_RIGHT_FILTER);
+	for (int i = 1; i <= count; i++) {
+		s->addEventAngle(tooth * i - width, T_SECONDARY, TV_RISE);
+		s->addEventAngle(tooth * i,         T_SECONDARY, TV_FALL);
+	}
 
 	s->isSynchronizationNeeded = false;
-	s->useOnlyPrimaryForSync = true;
 }
 
 // TT_HONDA_K_12_1

@@ -18,7 +18,7 @@ void assertEqualsM2(const char *msg, float expected, float actual, float eps) {
 }
 
 void assertEqualsM4(const char *prefix, const char *msg, float expected, float actual) {
-	ASSERT_NEAR(expected, actual, 0.00001) << prefix << msg;
+	ASSERT_NEAR(expected, actual, 0.0001f) << prefix << msg;
 }
 
 void assertEqualsLM(const char *msg, long expected, long actual) {
@@ -36,5 +36,6 @@ void chDbgAssert(int c, char *msg, void *arg) {
 	}
 }
 
-
-
+uint32_t getTimeNowLowerNt(void) {
+	return 0;
+}

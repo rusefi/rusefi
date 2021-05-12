@@ -12,9 +12,9 @@
  *
  * For version see engine_controller.cpp getRusEfiVersion
  *
- * @section sec_into
+ * @section sec_intro Intro
  *
- * rusEfi is implemented based on the idea that with modern 100+ MHz microprocessors the relatively
+ * rusEFI is implemented based on the idea that with modern 100+ MHz microprocessors the relatively
  * undemanding task of internal combustion engine control could be implemented in a high-level, processor-independent
  * (to some extent) manner. Thus the key concepts of rusEfi: dependency on high-level hardware abstraction layer, software-based PWM etc.
  *
@@ -50,11 +50,11 @@
  *
  * @section sec_timers Timers
  * At the moment rusEfi is build using 5 times:
- * 1) 1MHz microsecond_timer.cpp
- * 2) 10KHz fast ADC callback pwmpcb_fast adc_inputs.cpp
- * 3) slow ADC callback pwmpcb_slow adc_inputs.cpp
- * 4) periodicFastTimer engine_controller.cpp
- * 5) periodicSlowTimer engine_controller.cpp
+ * <BR>1) 1MHz microsecond_timer.cpp
+ * <BR>2) 10KHz fast ADC callback pwmpcb_fast adc_inputs.cpp
+ * <BR>3) slow ADC callback pwmpcb_slow adc_inputs.cpp
+ * <BR>4) periodicFastTimer engine_controller.cpp
+ * <BR>5) periodicSlowTimer engine_controller.cpp
  *
  *
  *
@@ -93,10 +93,12 @@
  * <br>See flash_main.cpp
  *
  *
+ * todo: merge https://github.com/rusefi/rusefi/wiki/Dev-Tips into here
+ *
  * @section sec_fuel_injection Fuel Injection
  *
  *
- * @sectuion sec_misc Misc
+ * @section sec_misc Misc
  *
  * <BR>See main_trigger_callback.cpp for main trigger event handler
  * <BR>See fuel_math.cpp for details on fuel amount logic
@@ -118,10 +120,14 @@
 #include "eficonsole.h"
 #include "status_loop.h"
 #include "pin_repository.h"
-#include "flash_main.h"
 #include "custom_engine.h"
 #include "engine_math.h"
 #include "mpu_util.h"
+#include "tunerstudio.h"
+#include "mmc_card.h"
+#include "mass_storage_init.h"
+#include "trigger_emulator_algo.h"
+#include "rusefi_lua.h"
 
 #if EFI_HD44780_LCD
 #include "lcd_HD44780.h"
@@ -130,8 +136,6 @@
 #if EFI_ENGINE_EMULATOR
 #include "engine_emulator.h"
 #endif /* EFI_ENGINE_EMULATOR */
-
-LoggingWithStorage sharedLogger("main");
 
 bool main_loop_started = false;
 
@@ -151,82 +155,109 @@ void rebootNow(void) {
  * Once day we will write graceful shutdown, but that would be one day.
  */
 static void scheduleReboot(void) {
-	scheduleMsg(&sharedLogger, "Rebooting in 3 seconds...");
-	lockAnyContext();
+	efiPrintf("Rebooting in 3 seconds...");
+	chibios_rt::CriticalSectionLocker csl;
 	chVTSetI(&resetTimer, TIME_MS2I(3000), (vtfunc_t) rebootNow, NULL);
-	unlockAnyContext();
+}
+
+// Returns false if there's an obvious problem with the loaded configuration
+static bool validateConfig() {
+	if (CONFIG(specs.cylindersCount) > minI(INJECTION_PIN_COUNT, IGNITION_PIN_COUNT)) {
+		firmwareError(OBD_PCM_Processor_Fault, "Invalid cylinder count: %d", CONFIG(specs.cylindersCount));
+		return false;
+	}
+
+	return true;
 }
 
 void runRusEfi(void) {
-	initErrorHandlingDataStructures();
 	efiAssertVoid(CUSTOM_RM_STACK_1, getCurrentRemainingStack() > 512, "init s");
 	assertEngineReference();
-	engine->setConfig(config);
-	initIntermediateLoggingBuffer();
+	engine->setConfig();
+
+#if EFI_TEXT_LOGGING
+	// Initialize logging system early - we can't log until this is called
+	startLoggingProcessor();
+#endif
+
 	addConsoleAction(CMD_REBOOT, scheduleReboot);
 	addConsoleAction(CMD_REBOOT_DFU, jump_to_bootloader);
-
-#if EFI_SHAFT_POSITION_INPUT
-	/**
-	 * This is so early because we want to init logger
-	 * which would be used while finding trigger sync index
-	 * while reading configuration
-	 */
-	initTriggerDecoderLogger(&sharedLogger);
-#endif /* EFI_SHAFT_POSITION_INPUT */
 
 	/**
 	 * we need to initialize table objects before default configuration can set values
 	 */
 	initDataStructures(PASS_ENGINE_PARAMETER_SIGNATURE);
 
-	/**
-	 * First data structure keeps track of which hardware I/O pins are used by whom
-	 */
-	initPinRepository();
+	// Perform hardware initialization that doesn't need configuration
+	initHardwareNoConfig();
 
-#if EFI_INTERNAL_FLASH
-	/**
-	 * First thing is reading configuration from flash memory.
-	 * In order to have complete flexibility configuration has to go before anything else.
-	 */
-	readConfiguration(&sharedLogger);
-#endif /* EFI_INTERNAL_FLASH */
-#ifndef EFI_ACTIVE_CONFIGURATION_IN_FLASH
-	// TODO: need to fix this place!!! should be a version of PASS_ENGINE_PARAMETER_SIGNATURE somehow
-	prepareVoidConfiguration(&activeConfiguration);
-#endif /* EFI_ACTIVE_CONFIGURATION_IN_FLASH */
+	// Read configuration from flash memory
+	loadConfiguration(PASS_ENGINE_PARAMETER_SIGNATURE);
+
+#if EFI_USB_SERIAL
+	startUsbConsole();
+#endif
+
+#if HAL_USE_USB_MSD
+	initUsbMsd();
+#endif
 
 	/**
 	 * Next we should initialize serial port console, it's important to know what's going on
 	 */
-	initializeConsole(&sharedLogger);
+	initializeConsole();
+
+#if EFI_TUNER_STUDIO
+	startTunerStudioConnectivity();
+#endif /* EFI_TUNER_STUDIO */
+
+	// Start hardware serial ports (including bluetooth, if present)
+	startSerialChannels();
 
 	/**
 	 * Initialize hardware drivers
 	 */
-	initHardware(&sharedLogger);
+	initHardware();
 
-	initStatusLoop();
-	/**
-	 * Now let's initialize actual engine control logic
-	 * todo: should we initialize some? most? controllers before hardware?
-	 */
-	initEngineContoller(&sharedLogger PASS_ENGINE_PARAMETER_SIGNATURE);
-	rememberCurrentConfiguration();
+#if EFI_FILE_LOGGING
+	initMmcCard();
+#endif /* EFI_FILE_LOGGING */
 
-#if EFI_PERF_METRICS
-	initTimePerfActions(&sharedLogger);
-#endif
-        
-#if EFI_ENGINE_EMULATOR
-	initEngineEmulator(&sharedLogger PASS_ENGINE_PARAMETER_SIGNATURE);
-#endif
-	startStatusThreads();
+#if HW_CHECK_ALWAYS_STIMULATE
+	// we need a special binary for final assembly check. We cannot afford to require too much software or too many steps
+	// to be executed at the place of assembly
+	enableTriggerStimulator();
+#endif // HW_CHECK_ALWAYS_STIMULATE
 
-	runSchedulingPrecisionTestIfNeeded();
+#if EFI_LUA
+	startLua();
+#endif // EFI_LUA
 
-	print("Running main loop\r\n");
+	// Config could be completely bogus - don't start anything else!
+	if (validateConfig()) {
+		initStatusLoop();
+		/**
+		 * Now let's initialize actual engine control logic
+		 * todo: should we initialize some? most? controllers before hardware?
+		 */
+		initEngineContoller(PASS_ENGINE_PARAMETER_SIGNATURE);
+
+		// This has to happen after RegisteredOutputPins are init'd: otherwise no change will be detected, and no init will happen
+		rememberCurrentConfiguration(PASS_ENGINE_PARAMETER_SIGNATURE);
+
+	#if EFI_PERF_METRICS
+		initTimePerfActions();
+	#endif
+			
+	#if EFI_ENGINE_EMULATOR
+		initEngineEmulator(PASS_ENGINE_PARAMETER_SIGNATURE);
+	#endif
+		startStatusThreads();
+
+		runSchedulingPrecisionTestIfNeeded();
+	}
+
+	efiPrintf("Running main loop");
 	main_loop_started = true;
 	/**
 	 * This loop is the closes we have to 'main loop' - but here we only publish the status. The main logic of engine
@@ -237,10 +268,11 @@ void runRusEfi(void) {
 
 #if EFI_CLI_SUPPORT && !EFI_UART_ECHO_TEST_MODE
 		// sensor state + all pending messages for our own rusEfi console
+		// todo: is this mostly dead code?
 		updateDevConsoleState();
 #endif /* EFI_CLI_SUPPORT */
 
-		chThdSleepMilliseconds(CONFIG(consoleLoopPeriodMs));
+		chThdSleepMilliseconds(200);
 	}
 }
 

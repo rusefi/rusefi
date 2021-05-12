@@ -16,22 +16,9 @@
 #if EFI_PROD_CODE
 #include "can_hw.h"
 #endif
-static const fuel_table_t default_custom_fuel_table = {
-  {1.8,  1.8,  1.65, 1.65, 1.65, 1.65, 1.5,  1.5,   2.025, 1.5,  1.5,  1.5,  1.5},
-  {1.8,  1.8,  1.65, 1.65, 1.65, 1.65, 1.5,  1.5,   2.025, 1.5,  1.5,  1.5,  1.5},
-  {1.95, 1.95, 1.95, 1.8,  2.1,  2.25, 2.34, 2.25,	2.7,   2.7,  2.7,  2.7,  2.7},
-  {2.55, 2.55, 2.55, 2.55, 2.55, 2.55, 2.55, 2.55,	2.4,   2.55, 3,    3,    2.7},
-  {3,    3,    3,    3,    3,    3.3,  3.3,  3.45,	3,     3.3,  3.6,  3.6,  3.3},
-  {3,    3,    3,    3,    3,    3,    3.6,	 4.305,	3.6,   3.6,  3.9,  3.9,  3.3},
-  {3,    3,    3,    3,    3,    3,    3.6,	 3.75 , 3.9,   3.9,  4.2,  4.2,  3.9},
-  {3,    3,    3,    3,    3,    3,    3.6,	 3.9,   4.2,   4.5,  4.5,  4.5,  4.5},
-  {3,    3,    3,    3,    3,    3,    3,    3,     3,     3,    3,    3,    3},
-  {3,    3,    3,    3,    3,    3,    3,    3,     3,     3,    3,    3,    3},
-  {3,    3,    3,    3,    3,    3,    3,    3,     3,     3,    3,    3,    3}
-};
 
 #if IGN_LOAD_COUNT == DEFAULT_IGN_LOAD_COUNT
-static const ignition_table_t default_custom_timing_table = {
+static const uint8_t default_custom_timing_table[16][16] = {
   /* RPM			   0   500   1000   1500   2000   2500   3000   3500   4000    4500   5000    5500   6000   6500   7000	 */
   /* Load  0% */{	10,  10,    10,    12,    12,   12,    12,   15,    15,     15,    15,     26,    28,    30,    32},
   /* Load 10% */{	10,  10,    10,    12,    12,   12,    12,   15,    15,     15,    15,     26,    28,    30,    32},
@@ -50,22 +37,17 @@ static const ignition_table_t default_custom_timing_table = {
 EXTERN_CONFIG;
 
 static void setDefaultCustomMaps(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
-
-	setFuelLoadBin(0,100 PASS_CONFIG_PARAMETER_SUFFIX);
-	setFuelRpmBin(0, 7000 PASS_CONFIG_PARAMETER_SUFFIX);
 	setTimingLoadBin(0,100 PASS_CONFIG_PARAMETER_SUFFIX);
 	setTimingRpmBin(0,7000 PASS_CONFIG_PARAMETER_SUFFIX);
 
-	copyFuelTable(default_custom_fuel_table, config->fuelTable);
-	copyFuelTable(default_custom_fuel_table, config->veTable);
 #if IGN_LOAD_COUNT == DEFAULT_IGN_LOAD_COUNT
-	copyTimingTable(default_custom_timing_table, config->ignitionTable);
+	copyTable(config->ignitionTable, default_custom_timing_table);
 #endif
 }
 
 void setHonda600(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	setDefaultFrankensoConfiguration(PASS_CONFIG_PARAMETER_SIGNATURE);
-	engineConfiguration->trigger.type = TT_HONDA_CBR_600_CUSTOM;
+	engineConfiguration->trigger.type = TT_HONDA_CBR_600;
 	engineConfiguration->fuelAlgorithm = LM_ALPHA_N;
 
 	// upside down wiring
@@ -93,9 +75,8 @@ void setHonda600(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	setFrankenso_01_LCD(engineConfiguration);
 	commonFrankensoAnalogInputs(engineConfiguration);
 	setFrankenso0_1_joystick(engineConfiguration);
-#if IGN_LOAD_COUNT == DEFAULT_IGN_LOAD_COUNT
-	setMap(config->injectionPhase, 320);
-#endif
+	setTable(config->injectionPhase, 320.0f);
+
 	/**
 	 * Frankenso analog #1 PC2 ADC12 CLT
 	 * Frankenso analog #2 PC1 ADC11 IAT

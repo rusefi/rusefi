@@ -1,0 +1,84 @@
+apply plugin: 'com.android.application'
+
+apply from: '../../android/dependencies.gradle'
+
+android {
+    packagingOptions {
+        exclude 'META-INF/DEPENDENCIES'
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+
+    compileSdkVersion 30
+    buildToolsVersion "30.0.0"
+    project.archivesBaseName = "rusEFI";
+
+    defaultConfig {
+        applicationId "com.rusefi.app"
+        // API level 19 = Android 4.4 () Samsung S4 is nicely rootable with KingRoot
+        // API level 21 = Android_5.0_Lollipop
+        minSdkVersion 19
+        targetSdkVersion 29
+        versionCode 1
+        versionName "1.0"
+
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+    }
+
+    signingConfigs {
+        release {
+            storeFile file("../certs/rusEFI.jks")
+            storePassword System.getenv("RUSEFI_ANDROID_KEYPASS")
+            keyAlias "key0"
+            keyPassword System.getenv("RUSEFI_ANDROID_KEYPASS")
+        }
+    }
+
+    buildTypes {
+	debug {
+	    minifyEnabled false
+	}
+        release {
+            minifyEnabled false
+            signingConfig signingConfigs.release
+        }
+    }
+}
+
+dependencies {
+    implementation project(':ecu_io')
+    implementation project(':autoupdate')
+    implementation project(':logging-api')
+    implementation project(':shared_io')
+    implementation project(':models')
+    implementation libs.annotations
+
+    def acraVersion = '5.7.0'
+    implementation "ch.acra:acra-http:$acraVersion"
+    implementation "ch.acra:acra-mail:$acraVersion"
+    implementation "ch.acra:acra-dialog:$acraVersion"
+    implementation "ch.acra:acra-toast:$acraVersion"
+
+    implementation files('lib/dfu_java.jar')
+    implementation 'com.github.mik3y:usb-serial-for-android:v2.2.3'
+    implementation fileTree(dir: "libs", include: ["*.jar"])
+    implementation 'androidx.appcompat:appcompat:1.1.0'
+    implementation 'com.google.android.material:material:1.1.0'
+    implementation 'androidx.constraintlayout:constraintlayout:1.1.3'
+    implementation 'androidx.navigation:navigation-fragment:2.1.0'
+    implementation 'androidx.navigation:navigation-ui:2.1.0'
+    implementation 'androidx.coordinatorlayout:coordinatorlayout:1.1.0'
+
+    androidTestImplementation 'androidx.test.ext:junit:1.1.1'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
+
+    testImplementation libs.junit
+}
+
+/*
+gradle.taskGraph.afterTask { task ->
+    project.logger.lifecycle("Password " + System.getenv('RUSEFI_ANDROID_KEYPASS'));
+}
+ */

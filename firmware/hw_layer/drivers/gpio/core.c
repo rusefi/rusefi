@@ -20,10 +20,6 @@
 /* Local definitions.														*/
 /*==========================================================================*/
 
-/* fist available gpio number after on-chip gpios */
-#define EXT_GPIOS_FIRST (BRAIN_PIN_LAST_ONCHIP + 1)
-static brain_pin_e gpio_base_free = EXT_GPIOS_FIRST;
-
 /*==========================================================================*/
 /* Exported variables.														*/
 /*==========================================================================*/
@@ -118,11 +114,6 @@ const char *gpiochips_getPinName(brain_pin_e pin)
 	return NULL;
 }
 
-void gpiochip_use_gpio_base(int size) {
-	gpio_base_free += size;
-}
-
-
 /**
  * @brief Register gpiochip
  * @details should be called from board file. Can be called before os ready.
@@ -132,19 +123,34 @@ void gpiochip_use_gpio_base(int size) {
  * else returns chip base
  */
 
-int gpiochip_register(const char *name, struct gpiochip_ops *ops, size_t size, void *priv)
+int gpiochip_register(brain_pin_e base, const char *name, struct gpiochip_ops *ops, size_t size, void *priv)
 {
 	int i;
-	struct gpiochip *chip = NULL;
 
 	/* no ops provided, zero size? */
 	if ((!ops) || (!size))
+		return -1;
+
+	/* outside? */
+	if (((size_t)base + size - 1 > BRAIN_PIN_LAST) || (base <= BRAIN_PIN_ONCHIP_LAST))
 		return -1;
 
 	/* no 'writePad' and no 'readPad' implementation? return error code */
 	if ((!ops->writePad) && (!ops->readPad))
 		return -1;
 
+	/* check for overlap with other chips */
+	for (i = 0; i < BOARD_EXT_GPIOCHIPS; i++) {
+		if (chips[i].base != 0) {
+			#define in_range(a, b, c)	(((a) > (b)) && ((a) < (c)))
+			if (in_range(base, chips[i].base, chips[i].base + chips[i].size))
+				return -1;
+			if (in_range(base + size, chips[i].base, chips[i].base + chips[i].size))
+				return -1;
+		}
+	}
+
+	struct gpiochip *chip = NULL;
 	/* find free gpiochip struct */
 	for (i = 0; i < BOARD_EXT_GPIOCHIPS; i++) {
 		if (chips[i].base == 0) {
@@ -161,13 +167,41 @@ int gpiochip_register(const char *name, struct gpiochip_ops *ops, size_t size, v
 	/* register chip */
 	chip->name = name;
 	chip->ops  = ops;
-	chip->base = gpio_base_free;
+	chip->base = base;
 	chip->size = size;
+	chip->gpio_names = NULL;
 	chip->priv = priv;
 
-	gpiochip_use_gpio_base(size);
-
 	return (chip->base);
+}
+
+
+/**
+ * @brief Unregister gpiochip
+ * @details removes chip from list
+ * TODO: call deinit?
+ */
+
+int gpiochip_unregister(brain_pin_e base)
+{
+	struct gpiochip *chip = gpiochip_find(base);
+
+	if (!chip)
+		return -1;
+
+	/* gpiochip_find - returns chip if base within its range, but we need it to be base */
+	if (chip->base != base)
+		return -1;
+
+	/* unregister chip */
+	chip->name = NULL;
+	chip->ops  = NULL;
+	chip->base = 0;
+	chip->size = 0;
+	chip->gpio_names = NULL;
+	chip->priv = NULL;
+
+	return 0;
 }
 
 /**
@@ -176,9 +210,9 @@ int gpiochip_register(const char *name, struct gpiochip_ops *ops, size_t size, v
  * Names array size should be aqual to chip gpio count
  */
 
-int gpiochips_setPinNames(brain_pin_e pin, const char **names)
+int gpiochips_setPinNames(brain_pin_e base, const char **names)
 {
-	struct gpiochip *chip = gpiochip_find(pin);
+	struct gpiochip *chip = gpiochip_find(base);
 
 	if (!chip)
 		return -1;
@@ -227,8 +261,9 @@ int gpiochips_init(void)
  * return -1 if driver does not implemet setPadMode ops
  * else return value from gpiochip driver.
  */
-
-int gpiochips_setPadMode(brain_pin_e pin, int mode)
+/* this fuction uses iomode_t that is related to STM32 (or other MCU)
+ * output modes. Use some common enums? */
+int gpiochips_setPadMode(brain_pin_e pin, iomode_t mode)
 {
 	struct gpiochip *chip = gpiochip_find(pin);
 
@@ -313,7 +348,19 @@ brain_pin_diag_e gpiochips_getDiag(brain_pin_e pin)
 
 int gpiochips_get_total_pins(void)
 {
-	return (gpio_base_free - EXT_GPIOS_FIRST);
+	int i;
+	int cnt = 0;
+
+	for (i = 0; i < BOARD_EXT_GPIOCHIPS; i++) {
+		struct gpiochip *chip = &chips[i];
+
+		if (!chip->base)
+			continue;
+
+		cnt += chip->size;
+	}
+
+	return cnt;
 }
 
 #else /* BOARD_EXT_GPIOCHIPS > 0 */
@@ -336,14 +383,9 @@ const char *gpiochips_getPinName(brain_pin_e pin) {
 	return NULL;
 }
 
-void gpiochip_use_gpio_base(int size)
+int gpiochip_register(brain_pin_e base, const char *name, struct gpiochip_ops *ops, size_t size, void *priv)
 {
-	(void)size;
-}
-
-int gpiochip_register(const char *name, struct gpiochip_ops *ops, size_t size, void *priv)
-{
-	(void)name; (void)ops; (void)size; (void)priv;
+	(void)base; (void)name; (void)ops; (void)size; (void)priv;
 
 	return 0;
 }

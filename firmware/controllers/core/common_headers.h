@@ -27,6 +27,7 @@
 #include "efitime.h"
 
 #ifdef __cplusplus
+#include "engine_ptr.h"
 #include "datalogging.h"
 #include "loggingcentral.h"
 #include "cli_registry.h"
@@ -73,25 +74,7 @@
 #define DISPLAY_SENSOR(x) {}
 #define DISPLAY_IF(x) x
 
-#define DECLARE_ENGINE_PTR                                 \
-	Engine *engine = nullptr;                              \
-	engine_configuration_s *engineConfiguration = nullptr; \
-	persistent_config_s *config = nullptr;
-
-
-#define INJECT_ENGINE_REFERENCE(x)                  \
-	(x)->engine = engine;                           \
-	(x)->engineConfiguration = engineConfiguration; \
-	(x)->config = config;
-
-#define EXPAND_Engine \
-	    engine_configuration_s *engineConfiguration = engine->engineConfigurationPtr; \
-		persistent_config_s *config = engine->config; \
-		(void)engineConfiguration; \
-		(void)config; \
-		
-
-#ifndef EFI_ACTIVE_CONFIGURATION_IN_FLASH
+#if ! EFI_ACTIVE_CONFIGURATION_IN_FLASH
 // We store a special changeable copy of configuration is RAM, so we can just compare them
 #define isConfigurationChanged(x) (engineConfiguration->x != activeConfiguration.x)
 #else
@@ -103,3 +86,9 @@ extern bool isActiveConfigurationVoid;
 #endif /* EFI_ACTIVE_CONFIGURATION_IN_FLASH */
 
 #define isPinOrModeChanged(pin, mode) (isConfigurationChanged(pin) || isConfigurationChanged(mode))
+
+
+#ifndef FIRMWARE_ID
+#define FIRMWARE_ID "source"
+#endif
+

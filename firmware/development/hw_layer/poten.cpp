@@ -51,8 +51,6 @@ EXTERN_ENGINE;
 #define SPI_POT_CONFIG SPI_CR1_BR_2 | SPI_CR1_BR_1 | SPI_CR1_DFF
 #endif /* defined(STM32F4XX) */
 
-static Logging * logger;
-
 #if EFI_POTENTIOMETER
 static Mcp42010Driver potConfig[DIGIPOT_COUNT];
 
@@ -74,13 +72,13 @@ static void sendToPot(Mcp42010Driver *driver, int channel, int value) {
 	spiSend(driver->spi, 1, &word);
 	spiUnselect(driver->spi);
 	spiStop(driver->spi);
-	unlockSpi();
+	unlockSpi(SPI_NONE);
 }
 
 void setPotResistance(Mcp42010Driver *driver, int channel, int resistance) {
 	int value = getPotStep(resistance);
 
-	scheduleMsg(logger, "Sending to potentiometer%d: %d for R=%d", channel, value, resistance);
+	efiPrintf("Sending to potentiometer%d: %d for R=%d", channel, value, resistance);
 	sendToPot(driver, channel, value);
 }
 
@@ -94,18 +92,17 @@ static void setPotValue1(int value) {
 
 #endif /* EFI_POTENTIOMETER */
 
-void initPotentiometers(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX) {
-	logger = sharedLogger;
+void initPotentiometers(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 #if EFI_POTENTIOMETER
 	if (CONFIG(digitalPotentiometerSpiDevice) == SPI_NONE) {
-		scheduleMsg(logger, "digiPot spi disabled");
+		efiPrintf("digiPot spi disabled");
 		return;
 	}
 	turnOnSpi(CONFIG(digitalPotentiometerSpiDevice));
 
 	for (int i = 0; i < DIGIPOT_COUNT; i++) {
 		brain_pin_e csPin = CONFIG(digitalPotentiometerChipSelect)[i];
-		if (csPin == GPIO_UNASSIGNED) {
+		if (!isBrainPinValid(csPin)) {
 			continue;
                 }
 
@@ -124,8 +121,6 @@ void initPotentiometers(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX) {
 
 	setPotResistance(&potConfig[0], 0, 3000);
 	setPotResistance(&potConfig[0], 1, 7000);
-#else
-	print("digiPot logic disabled\r\n");
 #endif
 }
 

@@ -1,6 +1,6 @@
 <roms>
 
-<!-- was generated automatically by rusEfi tool ConfigDefinition.jar based on Fri Jul 12 14:02:51 EDT 2019 -->
+<!-- was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh Mon May 10 12:31:45 UTC 2021 -->
 
     <rom>
         <romid>
@@ -61,23 +61,6 @@
                    logparam="engine_load">
                 <scaling units="degree" expression="x" to_byte="x" format="0.00" fineincrement=".1"
                          coarseincrement="1"/>
-            </table>
-        </table>
-
-        <table type="3D" name="Fuel Table" 
-        category="Fuel"
-        storageaddress="3b20" sizex="16"
-               sizey="16" storagetype="float" endian="big">
-            <scaling units="Engine Load" expression="x" to_byte="x" format="0.00" fineincrement=".1"
-                     coarseincrement="1"/>
-            <table type="X Axis" storageaddress="3f60" storagetype="float" endian="big"
-                   logparam="engine_load">
-                <scaling units="RPM" expression="x" to_byte="x" format="0.00" fineincrement=".1"
-                         coarseincrement="1"/>
-            </table>
-            <table type="Y Axis" storageaddress="3f20" storagetype="float" endian="big"
-                   logparam="rpm">
-                <scaling units="engine_load" expression="x" to_byte="x" format="0.00" fineincrement=".1" coarseincrement="1"/>
             </table>
         </table>
 
@@ -153,7 +136,7 @@
         category="Fuel"
         storageaddress="48a0" sizex="16"
                sizey="16" storagetype="uint8" endian="big">
-            <scaling units="Engine Load" expression="x/10" to_byte="x*10" format="0.00" fineincrement=".1"
+            <scaling units="Engine Load" expression="x/147" to_byte="x*147" format="0.00" fineincrement=".01"
                      coarseincrement="1"/>
             <table type="X Axis" storageaddress="49e0" storagetype="float" endian="big">
                 <scaling units="RPM" expression="x" to_byte="x" format="0.00" fineincrement=".1"

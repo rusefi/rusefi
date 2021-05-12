@@ -11,13 +11,13 @@
 #include "listener_array.h"
 #include "trigger_decoder.h"
 #include "trigger_central_generated.h"
-
-
+#include "timer.h"
+#include "pin_repository.h"
 
 class Engine;
 typedef void (*ShaftPositionListener)(trigger_event_e signal, uint32_t index, efitick_t edgeTimestamp DECLARE_ENGINE_PARAMETER_SUFFIX);
 
-#define HAVE_CAM_INPUT() engineConfiguration->camInputs[0] != GPIO_UNASSIGNED
+#define HAVE_CAM_INPUT() (isBrainPinValid(engineConfiguration->camInputs[0]))
 
 class TriggerNoiseFilter {
 public:
@@ -36,51 +36,68 @@ public:
  * Probably not: we have an instance of TriggerState which is used for trigger initialization,
  * also composition probably better than inheritance here
  */
-class TriggerCentral : public trigger_central_s {
+class TriggerCentral final : public trigger_central_s {
 public:
 	TriggerCentral();
-	void addEventListener(ShaftPositionListener handler, const char *name, Engine *engine);
+	void init(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 	void handleShaftSignal(trigger_event_e signal, efitick_t timestamp DECLARE_ENGINE_PARAMETER_SUFFIX);
 	int getHwEventCounter(int index) const;
 	void resetCounters();
 	void validateCamVvtCounters();
-	TriggerStateWithRunningStatistics triggerState;
+
+	float getTimeSinceTriggerEvent(efitick_t nowNt) const {
+		return m_lastEventTimer.getElapsedSeconds(nowNt);
+	}
+
+	bool engineMovedRecently() const {
+		// Trigger event some time in the past second = engine moving
+		// distributor single tooth, large engines crank at close to 120 RPM
+		// todo: make this logic account current trigger to stop idle much faster if we have more teeth on trigger wheels?
+		return getTimeSinceTriggerEvent(getTimeNowNt()) < 1.0f;
+	}
 
 	TriggerNoiseFilter noiseFilter;
 
-	angle_t getVVTPosition();
+	trigger_type_e vvtTriggerType[CAMS_PER_BANK];
+	angle_t getVVTPosition(uint8_t bankIndex, uint8_t camIndex);
 
-	angle_t vvtPosition = 0;
-	/**
-	 * this is similar to TriggerState#startOfCycleNt but with the crank-only sensor magic
-	 */
-	efitick_t timeAtVirtualZeroNt = 0;
+#if EFI_UNIT_TEST
+	// latest VVT event position (could be not synchronization event)
+	angle_t currentVVTEventPosition[BANKS_COUNT][CAMS_PER_BANK];
+#endif // EFI_UNIT_TEST
 
-	efitick_t vvtSyncTimeNt = 0;
+	// synchronization event position
+	angle_t vvtPosition[BANKS_COUNT][CAMS_PER_BANK];
 
+	Timer virtualZeroTimer;
+
+	efitick_t vvtSyncTimeNt[BANKS_COUNT][CAMS_PER_BANK];
+
+	TriggerStateWithRunningStatistics triggerState;
 	TriggerWaveform triggerShape;
 
-	efitick_t previousVvtCamTime = DEEP_IN_THE_PAST_SECONDS * NT_PER_SECOND;
-	efitick_t previousVvtCamDuration = 0;
+	TriggerState vvtState[BANKS_COUNT][CAMS_PER_BANK];
+	TriggerWaveform vvtShape[CAMS_PER_BANK];
 
-private:
-	IntListenerArray<15> triggerListeneres;
+	TriggerFormDetails triggerFormDetails;
 
+	// Keep track of the last time we got a valid trigger event
+	Timer m_lastEventTimer;
 };
 
 void triggerInfo(void);
+void handleShaftSignal(trigger_event_e signal, efitick_t timestamp);
 void hwHandleShaftSignal(trigger_event_e signal, efitick_t timestamp);
-void hwHandleVvtCamSignal(trigger_value_e front, efitick_t timestamp DECLARE_ENGINE_PARAMETER_SUFFIX);
+void hwHandleVvtCamSignal(trigger_value_e front, efitick_t timestamp, int index DECLARE_ENGINE_PARAMETER_SUFFIX);
 
-void initTriggerCentral(Logging *sharedLogger);
-void printAllTriggers();
+void initTriggerCentral();
 
-void addTriggerEventListener(ShaftPositionListener handler, const char *name, Engine *engine);
 int isSignalDecoderError(void);
-void resetMaxValues();
 
 void onConfigurationChangeTriggerCallback(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 bool checkIfTriggerConfigChanged(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 bool isTriggerConfigChanged(DECLARE_ENGINE_PARAMETER_SIGNATURE);
+
+bool isTriggerDecoderError(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 
 #define SYMMETRICAL_CRANK_SENSOR_DIVIDER 4

@@ -59,7 +59,7 @@ public:
 
 	void weComplexInit(const char *msg,
 			ExecutorInterface *executor,
-			const int phaseCount, float const *swithcTimes, const int waveCount, pin_state_t *const*pinStates,
+			const int phaseCount, float const *switchTimes, const int waveCount, pin_state_t *const*pinStates,
 			pwm_cycle_callback *pwmCycleCallback,
 			pwm_gen_callback *callback);
 
@@ -110,6 +110,9 @@ private:
 	 * PWM generation is not happening while this value is NAN
 	 */
 	float periodNt;
+
+	// Set if we are very far behind schedule and need to reset back to the beginning of a cycle to find our way
+	bool forceCycleStart = true;
 };
 
 #include "simple_pwm.h"
@@ -128,7 +131,7 @@ void applyPinState(int stateIndex, PwmConfig* state) /* pwm_gen_callback */;
 void startSimplePwm(SimplePwm *state, const char *msg,
 		ExecutorInterface *executor,
 		OutputPin *output,
-		float frequency, float dutyCycle, pwm_gen_callback *stateChangeCallback = (pwm_gen_callback*)applyPinState);
+		float frequency, float dutyCycle);
 
 /**
  * initialize GPIO pin and start a one-channel software PWM driver.
@@ -139,7 +142,12 @@ void startSimplePwmExt(SimplePwm *state,
 		const char *msg,
 		ExecutorInterface *executor,
 		brain_pin_e brainPin, OutputPin *output,
-		float frequency, float dutyCycle, pwm_gen_callback *stateChangeCallback = (pwm_gen_callback*)applyPinState);
+		float frequency, float dutyCycle);
+
+void startSimplePwmHard(SimplePwm *state, const char *msg,
+		ExecutorInterface *executor,
+		brain_pin_e brainPin, OutputPin *output, float frequency,
+		float dutyCycle);
 
 void copyPwmParameters(PwmConfig *state, int phaseCount, float const *switchTimes,
 		int waveCount, pin_state_t *const *pinStates);

@@ -1,8 +1,8 @@
 <component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="TriggerImage" type="Application" factoryName="Application" nameIsGenerated="true">
+  <configuration default="false" name="TriggerImage" type="Application" factoryName="Application" folderName="Trigger Renderer" nameIsGenerated="true">
     <option name="MAIN_CLASS_NAME" value="com.rusefi.TriggerImage" />
     <module name="ui" />
-    <option name="WORKING_DIRECTORY" value="file://$PROJECT_DIR$" />
+    <option name="PROGRAM_PARAMETERS" value="../unit_tests" />
     <extension name="coverage">
       <pattern>
         <option name="PATTERN" value="com.rusefi.ui.console.*" />

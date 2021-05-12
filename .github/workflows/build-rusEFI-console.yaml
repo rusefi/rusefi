@@ -1,0 +1,36 @@
+name: rusEFI console
+
+on: [push,pull_request]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          submodules: recursive
+      - uses: actions/setup-java@v1
+        with:
+          java-version: '8'
+
+      - name: Test Compiler
+        run: javac -version
+
+      - name: Install Tools
+        run: sudo apt-get install ncftp
+
+      - name: Build console
+        working-directory: ./java_console
+        run: ant server_jar
+
+      - name: Attach console junit results
+        if: always()
+        uses: actions/upload-artifact@v2
+        with:
+          name: console junit
+          path: ./java_console/build/*.txt
+
+      - name: Upload rusEFI server
+        working-directory: .
+        run: java_console/upload_server.sh ${{ secrets.RUSEFI_BUILD_FTP_USER }} ${{ secrets.RUSEFI_BUILD_FTP_PASS }} ${{ secrets.RUSEFI_FTP_SERVER }} autoupdate java_console_binary/rusefi_server.jar

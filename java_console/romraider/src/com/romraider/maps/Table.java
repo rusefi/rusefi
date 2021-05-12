@@ -24,8 +24,7 @@ import com.romraider.editor.ecu.ECUEditorManager;
 import com.romraider.swing.TableToolBar;
 import com.romraider.util.JEPUtil;
 import com.romraider.util.SettingsManager;
-import com.romraider.xml.RomAttributeParser;
-import com.rusefi.Launcher;
+import com.rusefi.ConsoleUI;
 
 import javax.naming.NameNotFoundException;
 import javax.swing.*;
@@ -35,7 +34,6 @@ import java.awt.datatransfer.UnsupportedFlavorException;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.StringTokenizer;
@@ -877,7 +875,7 @@ public abstract class Table extends JPanel implements Serializable {
             ancestorWindow.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
         }
 
-        Launcher.getFrame().setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
+        ConsoleUI.getFrame().setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
         setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
         copySelectionWorker = new CopySelectionWorker(this);
         copySelectionWorker.execute();
@@ -899,7 +897,7 @@ public abstract class Table extends JPanel implements Serializable {
         if(null != ancestorWindow) {
             ancestorWindow.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
         }
-        Launcher.getFrame().setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
+        ConsoleUI.getFrame().setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
         setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
         copyTableWorker = new CopyTableWorker(this);
         copyTableWorker.execute();

@@ -12,6 +12,7 @@
 #include "interpolation.h"
 #include "map.h"
 #include "engine_controller.h"
+#include "sensor.h"
 
 #if EFI_PROD_CODE
 #include "digital_input_icu.h"
@@ -22,8 +23,6 @@
 #if EFI_ANALOG_SENSORS
 
 EXTERN_ENGINE;
-
-static Logging *logger;
 
 static FastInterpolation customMap;
 static efitick_t prevWidthTimeNt = 0;
@@ -54,6 +53,10 @@ static FastInterpolation subyDenso(0, 0, 5, 200);
 
 static FastInterpolation gm3bar(0.631, 40, 4.914, 304);
 
+static FastInterpolation gm2bar(0, 8.8, 5, 208);
+
+static FastInterpolation gm1bar(0, 10, 5, 105);
+
 static FastInterpolation mpx4250(0, 8, 5, 260);
 
 static FastInterpolation mpx4250A(0.25, 20, 4.875, 250);
@@ -70,6 +73,16 @@ static FastInterpolation mpx4100(0.3, 20, 4.9, 105);
 static FastInterpolation dodgeNeon2003(0.4 /* volts */, 15.34 /* kPa */, 4.5 /* volts */ , 100 /* kPa */);
 
 static FastInterpolation densoToyota(3.7 - 2 /* volts */, 33.322271 /* kPa */, 3.7 /* volts */ , 100 /* kPa */);
+
+/**
+ * Open question how to get this Miata NB2 sensor read MAP
+ */
+static FastInterpolation mazda1bar(0 /* volts */, 15 /* kPa */, 5 /* volts */ , 115 /* kPa */);
+
+/**
+ * Bosch 2.5 Bar TMap Map Sensor with IAT
+ */
+static FastInterpolation bosch2_5(0.4 /* volts */, 20 /* kPa */, 4.65 /* volts */ , 250 /* kPa */);
 
 /**
  * We hold a reference to current decoder to reduce code branching
@@ -92,8 +105,12 @@ float decodePressure(float voltage, air_pressure_sensor_config_s * mapConfig DEC
 	case MT_DODGE_NEON_2003:
 	case MT_SUBY_DENSO:
 	case MT_GM_3_BAR:
+	case MT_GM_2_BAR:
+	case MT_GM_1_BAR:
 	case MT_TOYOTA_89420_02010:
 	case MT_MPX4100:
+	case MT_BOSCH_2_5:
+	case MT_MAZDA_1_BAR:
 		return getDecoder(mapConfig->type)->getValue(voltage);
 	default:
 		firmwareError(CUSTOM_ERR_MAP_TYPE, "Unknown MAP type: p %d", mapConfig->type);
@@ -155,16 +172,8 @@ float getRawMap(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	return getMapByVoltage(voltage PASS_ENGINE_PARAMETER_SUFFIX);
 }
 
-/**
- * Returns true if a real Baro sensor is present.
- * Also if 'useFixedBaroCorrFromMap' option is enabled, and we have the initial pressure value stored and passed validation.
- */
-bool hasBaroSensor(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
-	return engineConfiguration->baroSensor.hwChannel != EFI_ADC_NONE || !cisnan(storedInitialBaroPressure);
-}
-
 bool hasMapSensor(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
-	return engineConfiguration->map.sensor.hwChannel != EFI_ADC_NONE;
+	return isAdcChannelValid(engineConfiguration->map.sensor.hwChannel);
 }
 
 float getBaroPressure(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
@@ -193,8 +202,16 @@ static FastInterpolation *getDecoder(air_pressure_sensor_type_e type) {
 		return &subyDenso;
 	case MT_GM_3_BAR:
 		return &gm3bar;
+	case MT_GM_2_BAR:
+		return &gm2bar;
+	case MT_GM_1_BAR:
+		return &gm1bar;
 	case MT_TOYOTA_89420_02010:
 		return &densoToyota;
+	case MT_MAZDA_1_BAR:
+		return &mazda1bar;
+	case MT_BOSCH_2_5:
+		return &bosch2_5;
 	default:
 		firmwareError(CUSTOM_ERR_MAP_TYPE, "Unknown MAP type: d %d", type);
 		return &customMap;
@@ -221,14 +238,14 @@ extern int mapMinBufferLength;
 
 static void printMAPInfo(void) {
 #if EFI_ANALOG_SENSORS
-	scheduleMsg(logger, "instant value=%.2fkPa", getRawMap());
+	efiPrintf("instant value=%.2fkPa", getRawMap());
 
 
 	if (engineConfiguration->hasFrequencyReportingMapSensor) {
-		scheduleMsg(logger, "instant value=%.2fHz @ %s", mapFreq, hwPortname(CONFIG(frequencyReportingMapInputPin)));
+		efiPrintf("instant value=%.2fHz @ %s", mapFreq, hwPortname(CONFIG(frequencyReportingMapInputPin)));
 	} else {
 #if EFI_MAP_AVERAGING
-		scheduleMsg(logger, "map type=%d/%s MAP=%.2fkPa mapMinBufferLength=%d", engineConfiguration->map.sensor.type,
+		efiPrintf("map type=%d/%s MAP=%.2fkPa mapMinBufferLength=%d", engineConfiguration->map.sensor.type,
 				getAir_pressure_sensor_type_e(engineConfiguration->map.sensor.type),
 				getMap(),
 				mapMinBufferLength);
@@ -237,10 +254,10 @@ static void printMAPInfo(void) {
 		adc_channel_e mapAdc = engineConfiguration->map.sensor.hwChannel;
 		static char pinNameBuffer[16];
 
-		scheduleMsg(logger, "MAP %.2fv @%s", getVoltage("mapinfo", mapAdc PASS_ENGINE_PARAMETER_SUFFIX),
+		efiPrintf("MAP %.2fv @%s", getVoltage("mapinfo", mapAdc PASS_ENGINE_PARAMETER_SUFFIX),
 				getPinNameByAdcChannel("map", mapAdc, pinNameBuffer));
 		if (engineConfiguration->map.sensor.type == MT_CUSTOM) {
-			scheduleMsg(logger, "at %.2fv=%.2f at %.2fv=%.2f",
+			efiPrintf("at %.2fv=%.2f at %.2fv=%.2f",
 					engineConfiguration->mapLowValueVoltage,
 					engineConfiguration->map.sensor.lowValue,
 					engineConfiguration->mapHighValueVoltage,
@@ -248,10 +265,10 @@ static void printMAPInfo(void) {
 		}
 	}
 
-	if (hasBaroSensor(PASS_ENGINE_PARAMETER_SIGNATURE)) {
-		scheduleMsg(logger, "baro type=%d value=%.2f", engineConfiguration->baroSensor.type, getBaroPressure(PASS_ENGINE_PARAMETER_SIGNATURE));
+	if (Sensor::hasSensor(SensorType::BarometricPressure)) {
+		efiPrintf("baro type=%d value=%.2f", engineConfiguration->baroSensor.type, Sensor::get(SensorType::BarometricPressure).value_or(-1));
 		if (engineConfiguration->baroSensor.type == MT_CUSTOM) {
-			scheduleMsg(logger, "min=%.2f@%.2f max=%.2f@%.2f",
+			efiPrintf("min=%.2f@%.2f max=%.2f@%.2f",
 					engineConfiguration->baroSensor.lowValue,
 					engineConfiguration->mapLowValueVoltage,
 					engineConfiguration->baroSensor.highValue,
@@ -263,13 +280,12 @@ static void printMAPInfo(void) {
 #endif /* EFI_PROD_CODE */
 
 
-void initMapDecoder(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX) {
-	logger = sharedLogger;
+void initMapDecoder(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	applyConfiguration(PASS_ENGINE_PARAMETER_SIGNATURE);
 	//engine->configurationListeners.registerCallback(applyConfiguration);
 
 	if (engineConfiguration->hasFrequencyReportingMapSensor) {
-#if HAL_USE_ICU
+#if EFI_ICU_INPUTS
 		digital_input_s* digitalMapInput = startDigitalCapture("MAP freq", CONFIG(frequencyReportingMapInputPin));
 
 		digitalMapInput->setWidthCallback((VoidInt) digitalMapWidthCallback, NULL);
@@ -289,13 +305,13 @@ void initMapDecoder(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	if (CONFIG(useFixedBaroCorrFromMap)) {
 		// Read initial MAP sensor value and store it for Baro correction.
 		storedInitialBaroPressure = getRawMap(PASS_ENGINE_PARAMETER_SIGNATURE);
-		scheduleMsg(logger, "Get initial baro MAP pressure = %.2fkPa", storedInitialBaroPressure);
+		efiPrintf("Get initial baro MAP pressure = %.2fkPa", storedInitialBaroPressure);
 		// validate if it's within a reasonable range (the engine should not be spinning etc.)
 		storedInitialBaroPressure = validateBaroMap(storedInitialBaroPressure PASS_ENGINE_PARAMETER_SUFFIX);
 		if (!cisnan(storedInitialBaroPressure)) {
-			scheduleMsg(logger, "Using this fixed MAP pressure to override the baro correction!");
+			efiPrintf("Using this fixed MAP pressure to override the baro correction!");
 		} else {
-			scheduleMsg(logger, "The baro pressure is invalid. The fixed baro correction will be disabled!");
+			efiPrintf("The baro pressure is invalid. The fixed baro correction will be disabled!");
 		}
 	}
 	
@@ -306,7 +322,7 @@ void initMapDecoder(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX) {
 
 #else /* EFI_ANALOG_SENSORS */
 
-void initMapDecoder(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX) {
+void initMapDecoder(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 }
 
 #endif /* EFI_ANALOG_SENSORS */

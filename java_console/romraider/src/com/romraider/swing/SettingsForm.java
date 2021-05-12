@@ -20,13 +20,11 @@
 package com.romraider.swing;
 
 import static com.romraider.Version.PRODUCT_NAME;
-import static java.io.File.separator;
 
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
-import java.io.File;
 import java.util.StringTokenizer;
 
 import javax.swing.ButtonGroup;
@@ -53,14 +51,14 @@ import com.romraider.editor.ecu.ECUEditor;
 import com.romraider.editor.ecu.ECUEditorManager;
 //import com.romraider.util.FileAssociator;
 import com.romraider.util.SettingsManager;
-import com.rusefi.Launcher;
+import com.rusefi.ConsoleUI;
 
 public class SettingsForm extends JFrame implements MouseListener {
 
     private static final long serialVersionUID = 3910602424260147767L;
 
     public SettingsForm() {
-        this.setIconImage(Launcher.getFrame().getIconImage());
+        this.setIconImage(ConsoleUI.getFrame().getIconImage());
         initComponents();
         initSettings();
 

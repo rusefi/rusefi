@@ -1718,7 +1718,7 @@ typedef enum {
 	CUSTOM_OBD_TRG_DECODING = 6035,
 	// todo: looks like following two errors always happen together, it's just timing affects which one is published?
 	CUSTOM_SYNC_ERROR = 6036,
-	CUSTOM_SYNC_COUNT_MISMATCH = 6037,
+	CUSTOM_6037 = 6037,
 	/**
 	 * This error happens if some pinout configuration changes were applied but ECU was not reset afterwards.
 	 */
@@ -1730,23 +1730,20 @@ typedef enum {
 	CUSTOM_OBD_LOCAL_FREEZE = 6042,
 	CUSTOM_6043 = 6043,
 	CUSTOM_LOGGING_BUFFER_OVERFLOW = 6044,
-	/**
-	 * This is not engine miss detection - this is only internal scheduler state validation
-	 * Should not happen
-	 */
-	CUSTOM_OBD_SKIPPED_SPARK = 6045,
+	CUSTOM_OBD_6045 = 6045,
+	CUSTOM_OBD_6046 = 6046,
 	CUSTOM_OBD_6047 = 6047,
 	CUSTOM_OBD_PIN_CONFLICT = 6048,
 	CUSTOM_OBD_LOW_FREQUENCY = 6049,
 
-	CUSTOM_OBD_ZERO_CYLINDER_COUNT = 6051,
+	CUSTOM_6051 = 6051,
 	CUSTOM_OBD_TS_PAGE_MISMATCH = 6052,
 	CUSTOM_OBD_TS_OUTPUT_MISMATCH = 6053,
 	CUSTOM_TOO_LONG_CRANKING_FUEL_INJECTION = 6054,
 	CUSTOM_INTERPOLATE_NAN = 6055,
 	ERROR_HISTO_NAME = 6056,
 	CUSTOM_AUX_OUT_OF_ORDER = 6057,
-	CUSTOM_OBD_58 = 6058,
+	CUSTOM_OBD_HIGH_FREQUENCY = 6058,
 	CUSTOM_OBD_59 = 6059,
 
 	CUSTOM_OBD_MMC_START1 = 6060,
@@ -1825,7 +1822,7 @@ typedef enum {
 	CUSTOM_ERR_6129 = 6129,
 
 	CUSTOM_ERR_INVALID_PIN = 6130,
-	CUSTOM_ERR_PIN_REPO = 6131,
+	CUSTOM_ERR_6131 = 6131,
 	CUSTOM_ERR_UNKNOWN_PORT = 6132,
 	CUSTOM_ERR_PIN_ALREADY_USED_1 = 6133,
 	CUSTOM_ERR_PIN_ALREADY_USED_2 = 6134,
@@ -2084,13 +2081,19 @@ typedef enum {
 	CUSTOM_INVALID_MODE_SETTING = 6721,
 	CUSTOM_ERR_TASK_TIMER_OVERFLOW = 6722,
 	CUSTOM_NO_ETB_FOR_IDLE = 6723,
-	CUSTOM_ERR_6724 = 6724,
-	CUSTOM_ERR_6725 = 6725,
-	CUSTOM_ERR_6726 = 6726,
+	CUSTOM_ERR_TLE8888_RESPONSE = 6724,
+	CUSTOM_ERR_CJ125_DIAG = 6725,
+	CUSTOM_ERR_VVT_OUT_OF_RANGE = 6726,
 	CUSTOM_ERR_6727 = 6727,
 	CUSTOM_ERR_6728 = 6728,
 	CUSTOM_ERR_6729 = 6729,
 
+
+	STACK_USAGE_COMMUNICATION = 6900,
+	STACK_USAGE_MIL = 6901,
+	STACK_USAGE_BENCH = 6902,
+	STACK_USAGE_STATUS = 6903,
+	STACK_USAGE_4 = 6904,
 
 	// 8000-8050 logging errors
 	CUSTOM_OBD_MMC_ERROR = 8000,
@@ -2099,6 +2102,12 @@ typedef enum {
 
 	CUSTOM_ERR_TRIGGER_SYNC = 9000,
 	CUSTOM_OBD_TRIGGER_WAVEFORM = 9001,
+	CUSTOM_SYNC_COUNT_MISMATCH = 9002,
+	/**
+	 * This is not engine miss detection - this is only internal scheduler state validation
+	 * Should not happen
+	 */
+	CUSTOM_OBD_SKIPPED_SPARK = 9009,
 	/**
 	 * This is not engine miss detection - this is only internal scheduler state validation
 	 * Should not happen

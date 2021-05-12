@@ -11,3 +11,4 @@
 
 void scAddData(float angle, float value);
 void initSensorChart(void);
+void publishSensorChartIfFull();

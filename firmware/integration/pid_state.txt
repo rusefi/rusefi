@@ -7,5 +7,4 @@ struct_no_prefix pid_state_s
 	float errorAmplificationCoef;
 	float previousError
 
-
 end_struct

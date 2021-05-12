@@ -1,14 +1,11 @@
 package com.rusefi.test;
 
-import com.rusefi.ConfigField;
-import com.rusefi.ReaderState;
-import com.rusefi.TypesHelper;
-import com.rusefi.VariableRegistry;
-import com.rusefi.output.FsioSettingsConsumer;
-import com.rusefi.output.JavaFieldsConsumer;
+import com.rusefi.*;
+import com.rusefi.output.*;
 import org.junit.Test;
 
 import java.io.BufferedReader;
+import java.io.CharArrayWriter;
 import java.io.IOException;
 import java.io.StringReader;
 import java.util.Arrays;
@@ -17,7 +14,7 @@ import java.util.Collections;
 import static org.junit.Assert.*;
 
 /**
- * (c) Andrey Belomutskiy
+ * Andrey Belomutskiy, (c) 2013-2020
  * 1/15/15
  */
 public class ConfigFieldParserTest {
@@ -32,6 +29,23 @@ public class ConfigFieldParserTest {
             assertEquals(cf.getSize(null), 8);
             assertFalse("isIterate", cf.isIterate());
         }
+    }
+
+    @Test
+    public void testCustomEnum() throws IOException {
+        String test = "struct pid_s\n" +
+                "#define ego_sensor_e_enum \"BPSX\", \"Innovate\", \"14Point7\"\n" +
+                "custom ego_sensor_e 4 bits, S32, @OFFSET@, [0:1], @@ego_sensor_e_enum@@\n" +
+                "ego_sensor_e afr_type;\n" +
+                "end_struct\n";
+        ReaderState state = new ReaderState();
+        BufferedReader reader = new BufferedReader(new StringReader(test));
+
+        CharArrayWriter writer = new CharArrayWriter();
+        TestTSProjectConsumer javaFieldsConsumer = new TestTSProjectConsumer(writer, "", state);
+        state.readBufferedReader(reader, Arrays.asList(javaFieldsConsumer));
+        assertEquals("afr_type = bits, S32, 0, [0:1], \"BPSX\", \"Innovate\", \"14Point7\", \"INVALID\"\n" +
+                "; total TS size = 4\n", new String(writer.toCharArray()));
     }
 
     @Test
@@ -50,6 +64,21 @@ public class ConfigFieldParserTest {
         state.readBufferedReader(reader, Arrays.asList(javaFieldsConsumer));
 
         assertEquals(16, TypesHelper.getElementSize(state, "pid_s"));
+
+        ConfigStructure structure = state.structures.get("pid_s");
+        ConfigField firstField = structure.cFields.get(0);
+        assertEquals("ms", firstField.getUnits());
+    }
+
+    @Test
+    public void manyStartAreNotMultiplication() throws IOException {
+        String test = "struct pid_s\n" +
+                "#define ERROR_BUFFER_SIZE \"***\"\n" +
+                "end_struct\n" +
+                "";
+        VariableRegistry.INSTANCE.clear();
+        BufferedReader reader = new BufferedReader(new StringReader(test));
+        new ReaderState().readBufferedReader(reader, Collections.emptyList());
     }
 
     @Test
@@ -57,7 +86,7 @@ public class ConfigFieldParserTest {
         String test = "struct pid_s\n" +
                 "#define ERROR_BUFFER_SIZE 120\n" +
                 "#define ERROR_BUFFER_COUNT 120\n" +
-                "#define RESULT @@ERROR_BUFFER_SIZE@@*@@ERROR_BUFFER_COUNT@@\n" +
+                "#define RESULT @@ERROR_BUFFER_SIZE@@ * @@ERROR_BUFFER_COUNT@@\n" +
                 "\tint16_t periodMs;PID dTime;\"ms\",      1,      0,       0, 3000,      0\n" +
                 "end_struct\n" +
                 "";
@@ -70,9 +99,34 @@ public class ConfigFieldParserTest {
                 "#define ERROR_BUFFER_SIZE 120\n" +
                 "#define RESULT 14400\n", VariableRegistry.INSTANCE.getDefinesSection());
     }
+    @Test
+    public void expressionInMultiplier() throws IOException {
+        String test = "struct pid_s\n" +
+                "\tint16_t periodMs;PID dTime;\"ms\",      {1/10},      0,       0, 3000,      0\n" +
+                "\tint16_t periodMs2;PID dTime;\"ms\",      1,      0,       0, 3000,      0\n" +
+                "custom afr_table_t 4x4 array,   U08,   @OFFSET@, [4x4],\"deg\",\t   {1/10},     0,        0,  25.0,     1 \n" +
+                "afr_table_t afrTable;\t\t\n" +
+                "end_struct\n" +
+                "";
+
+        VariableRegistry.INSTANCE.clear();
+        BufferedReader reader = new BufferedReader(new StringReader(test));
+
+        CharArrayWriter writer = new CharArrayWriter();
+        ReaderState state = new ReaderState();
+        TSProjectConsumer javaFieldsConsumer = new TestTSProjectConsumer(writer, "", state);
+
+        state.readBufferedReader(reader, Collections.singletonList(javaFieldsConsumer));
+
+        assertEquals("periodMs = scalar, S16, 0, \"ms\", 0.1, 0, 0, 3000, 0\n" +
+                "periodMs2 = scalar, S16, 2, \"ms\", 1.0, 0, 0, 3000, 0\n" +
+                "afrTable = array, U08, 4, [4x4],\"deg\", 0.1, 0, 0, 25.0, 1\n" +
+                "; total TS size = 20\n", new String(writer.toCharArray()));
+    }
 
     @Test
     public void useCustomType() throws IOException {
+        VariableRegistry.INSTANCE.clear();
         ReaderState state = new ReaderState();
         String test = "struct pid_s\n" +
                 "#define ERROR_BUFFER_SIZE 120\n" +
@@ -86,10 +140,45 @@ public class ConfigFieldParserTest {
         JavaFieldsConsumer javaFieldsConsumer = new TestJavaFieldsConsumer(state);
         state.readBufferedReader(reader, Arrays.asList(javaFieldsConsumer));
 
-        assertEquals("\tpublic static final Field VAR = Field.create(\"VAR\", 0, FieldType.INT);\n" +
+        assertEquals("\tpublic static final Field VAR = Field.create(\"VAR\", 0, 120, FieldType.STRING);\n" +
                         "\tpublic static final Field PERIODMS = Field.create(\"PERIODMS\", 120, FieldType.INT16);\n",
                 javaFieldsConsumer.getJavaFieldsWriter());
+    }
 
+    @Test
+    public void testDefineChar() throws IOException {
+        VariableRegistry.INSTANCE.clear();
+        ReaderState state = new ReaderState();
+        String test =
+                "#define SD_r 'r'\n" +
+                        "";
+        BufferedReader reader = new BufferedReader(new StringReader(test));
+
+        JavaFieldsConsumer javaFieldsConsumer = new TestJavaFieldsConsumer(state);
+        state.readBufferedReader(reader, Arrays.asList(javaFieldsConsumer));
+
+        assertEquals("\tpublic static final char SD_r = 'r';\n" +
+                        "",
+                VariableRegistry.INSTANCE.getJavaConstants());
+    }
+
+    @Test
+    public void testDefine() throws IOException {
+        VariableRegistry.INSTANCE.clear();
+        ReaderState state = new ReaderState();
+        String test =
+                "#define ERROR_BUFFER_SIZE 120\n" +
+                        "#define ERROR_BUFFER_SIZE_H 0x120\n" +
+                "";
+        BufferedReader reader = new BufferedReader(new StringReader(test));
+
+        JavaFieldsConsumer javaFieldsConsumer = new TestJavaFieldsConsumer(state);
+        state.readBufferedReader(reader, Arrays.asList(javaFieldsConsumer));
+
+        assertEquals("\tpublic static final int ERROR_BUFFER_SIZE = 120;\n" +
+                        "\tpublic static final int ERROR_BUFFER_SIZE_H = 0x120;\n" +
+                        "",
+                VariableRegistry.INSTANCE.getJavaConstants());
     }
 
     @Test
@@ -201,6 +290,34 @@ public class ConfigFieldParserTest {
                     "\tcase FSIO_SETTING_ETB2_MINVALUE:\n" +
                     "\t\treturn \"cfg_etb2_minValue\";\n", fsioSettingsConsumer.getStrings());
         }
+    }
+
+    @Test
+    public void testArrayOfOne() throws IOException {
+        String test = "struct pid_s\n" +
+                "#define ERROR_BUFFER_SIZE 1\n" +
+                "int[ERROR_BUFFER_SIZE iterate] field\n" +
+                "end_struct\n" +
+                "";
+        VariableRegistry.INSTANCE.clear();
+        BufferedReader reader = new BufferedReader(new StringReader(test));
+        BaseCHeaderConsumer consumer = new BaseCHeaderConsumer() {
+            @Override
+            public void endFile() {
+            }
+        };
+        new ReaderState().readBufferedReader(reader, Collections.singletonList(consumer));
+        assertEquals("// start of pid_s\n" +
+                "struct pid_s {\n" +
+                "\t/**\n" +
+                "\t * offset 0\n" +
+                "\t */\n" +
+                "\tint field[ERROR_BUFFER_SIZE];\n" +
+                "\t/** total size 4*/\n" +
+                "};\n" +
+                "\n" +
+                "typedef struct pid_s pid_s;\n" +
+                "\n", consumer.getContent().toString());
     }
 
     @Test

@@ -29,21 +29,19 @@
 
 static SPIDriver *driver;
 
-static Logging* logger;
-
 static SPIConfig spiConfig[EGT_CHANNEL_COUNT];
 
 EXTERN_ENGINE;
 
 static void showEgtInfo(void) {
 #if EFI_PROD_CODE
-	printSpiState(logger, engineConfiguration);
+	printSpiState(engineConfiguration);
 
-	scheduleMsg(logger, "EGT spi: %d", CONFIG(max31855spiDevice));
+	efiPrintf("EGT spi: %d", CONFIG(max31855spiDevice));
 
 	for (int i = 0; i < EGT_CHANNEL_COUNT; i++) {
-		if (CONFIG(max31855_cs)[i] != GPIO_UNASSIGNED) {
-			scheduleMsg(logger, "%d ETG @ %s", i, hwPortname(CONFIG(max31855_cs)[i]));
+		if (isBrainPinValid(CONFIG(max31855_cs)[i])) {
+			efiPrintf("%d ETG @ %s", i, hwPortname(CONFIG(max31855_cs)[i]));
 		}
 	}
 #endif
@@ -120,35 +118,33 @@ uint16_t getEgtValue(int egtChannel) {
 static void egtRead(void) {
 
 	if (driver == NULL) {
-		scheduleMsg(logger, "No SPI selected for EGT");
+		efiPrintf("No SPI selected for EGT");
 		return;
 	}
 
-	scheduleMsg(logger, "Reading egt");
+	efiPrintf("Reading egt");
 
 	uint32_t egtPacket = readEgtPacket(0);
 
 	max_32855_code code = getResultCode(egtPacket);
 
-	scheduleMsg(logger, "egt %x code=%d %s", egtPacket, code, getMcCode(code));
+	efiPrintf("egt %x code=%d %s", egtPacket, code, getMcCode(code));
 
 	if (code != MC_INVALID) {
 		int refBits = ((egtPacket & 0xFFFF) / 16); // bits 15:4
 		float refTemp = refBits / 16.0;
-		scheduleMsg(logger, "reference temperature %.2f", refTemp);
+		efiPrintf("reference temperature %.2f", refTemp);
 
-		scheduleMsg(logger, "EGT temperature %d", GET_TEMPERATURE_C(egtPacket));
+		efiPrintf("EGT temperature %d", GET_TEMPERATURE_C(egtPacket));
 	}
 }
 
-void initMax31855(Logging *sharedLogger, spi_device_e device, egt_cs_array_t max31855_cs) {
+void initMax31855(spi_device_e device, egt_cs_array_t max31855_cs) {
 	driver = getSpiDevice(device);
 	if (driver == NULL) {
 		// error already reported
 		return;
 	}
-
-	logger = sharedLogger;
 
 	// todo:spi device is now enabled separately - should probably be enabled here
 
@@ -157,7 +153,7 @@ void initMax31855(Logging *sharedLogger, spi_device_e device, egt_cs_array_t max
 	addConsoleAction("egtread", (Void) egtRead);
 
 	for (int i = 0; i < EGT_CHANNEL_COUNT; i++) {
-		if (max31855_cs[i] != GPIO_UNASSIGNED) {
+		if (isBrainPinValid(max31855_cs[i])) {
 
 			initSpiCs(&spiConfig[i], max31855_cs[i]);
 

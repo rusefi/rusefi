@@ -20,7 +20,6 @@
 
 #include "fsio_core.h"
 #include "fsio_impl.h"
-#include "adc_inputs.h"
 
 extern fsio8_Map3D_f32t fsioTable1;
 extern fsio8_Map3D_u8t fsioTable2;
@@ -42,6 +41,7 @@ static LENameOrdinalPair leAnd2(LE_OPERATOR_AND, "&");
 static LENameOrdinalPair leOr(LE_OPERATOR_OR, "or");
 static LENameOrdinalPair leOr2(LE_OPERATOR_OR, "|");
 static LENameOrdinalPair leNot(LE_OPERATOR_NOT, "not");
+static LENameOrdinalPair leNot2(LE_OPERATOR_NOT, "!");
 
 static LENameOrdinalPair leAdd(LE_OPERATOR_ADDITION, "+");
 static LENameOrdinalPair leSub(LE_OPERATOR_SUBTRACTION, "-");
@@ -72,9 +72,7 @@ LEElement::LEElement() {
 
 void LEElement::clear() {
 	action = LE_UNDEFINED;
-	next = nullptr;
 	fValue = NAN;
-	iValue = 0;
 }
 
 void LEElement::init(le_action_e action) {
@@ -86,32 +84,19 @@ void LEElement::init(le_action_e action, float fValue) {
 	this->fValue = fValue;
 }
 
+void LEElement::init(le_action_e action, bool bValue) {
+	this->action = action;
+	this->fValue = bValue ? 1 : 0;
+}
+
 LECalculator::LECalculator() {
 	reset();
 }
 
 void LECalculator::reset() {
-	first = nullptr;
 	stack.reset();
 	currentCalculationLogPosition = 0;
 	memset(calcLogAction, 0, sizeof(calcLogAction));
-}
-
-void LECalculator::reset(LEElement *element) {
-	reset();
-	add(element);
-}
-
-void LECalculator::add(LEElement *element) {
-	if (first == nullptr) {
-		first = element;
-	} else {
-		LEElement *last = first;
-		while (last->next != NULL) {
-			last = last->next;
-		}
-		last->next = element;
-	}
 }
 
 bool float2bool(float v) {
@@ -135,237 +120,209 @@ void LECalculator::push(le_action_e action, float value) {
 	}
 }
 
+static FsioResult doBinaryBoolean(le_action_e action, float lhs, float rhs) {
+	bool v1 = float2bool(lhs);
+	bool v2 = float2bool(rhs);
+	
+	switch (action) {
+		case LE_OPERATOR_AND:
+			return v1 && v2;
+		case LE_OPERATOR_OR:
+			return v1 || v2;
+		default:
+			return unexpected;
+	}
+}
+
+static FsioResult doBinaryNumeric(le_action_e action, float v1, float v2) {
+	// Process based on the action type
+	switch (action) {
+		case LE_OPERATOR_ADDITION:
+			return v1 + v2;
+		case LE_OPERATOR_SUBTRACTION:
+			return v1 - v2;
+		case LE_OPERATOR_MULTIPLICATION:
+			return v1 * v2;
+		case LE_OPERATOR_DIVISION:
+			return v1 / v2;
+		case LE_OPERATOR_LESS:
+			return v1 < v2;
+		case LE_OPERATOR_MORE:
+			return v1 > v2;
+		case LE_OPERATOR_LESS_OR_EQUAL:
+			return v1 <= v2;
+		case LE_OPERATOR_MORE_OR_EQUAL:
+			return v1 >= v2;
+		case LE_METHOD_MIN:
+			return minF(v1, v2);
+		case LE_METHOD_MAX:
+			return maxF(v1, v2);
+		default:
+			return unexpected;
+	}
+}
+
 /**
  * @return true in case of error, false otherwise
  */
-bool LECalculator::processElement(LEElement *element DECLARE_ENGINE_PARAMETER_SUFFIX) {
+FsioResult LECalculator::processElement(const LEElement *element DECLARE_ENGINE_PARAMETER_SUFFIX) {
 #if EFI_PROD_CODE
-	efiAssert(CUSTOM_ERR_ASSERT, getCurrentRemainingStack() > 64, "FSIO logic", false);
+	efiAssert(CUSTOM_ERR_ASSERT, getCurrentRemainingStack() > 64, "FSIO logic", unexpected);
 #endif
 	switch (element->action) {
-
+	// Literal values
 	case LE_NUMERIC_VALUE:
-		push(element->action, element->fValue);
-		break;
-	case LE_OPERATOR_AND: {
-		float v1 = pop(LE_OPERATOR_AND);
-		float v2 = pop(LE_OPERATOR_AND);
-
-		push(element->action, float2bool(v1) && float2bool(v2));
-	}
-		break;
+		return element->fValue;
+	case LE_BOOLEAN_VALUE:
+		return element->fValue != 0;
+	// Boolean input binary operators
+	case LE_OPERATOR_AND:
 	case LE_OPERATOR_OR: {
 		float v1 = pop(LE_OPERATOR_OR);
 		float v2 = pop(LE_OPERATOR_OR);
 
-		push(element->action, float2bool(v1) || float2bool(v2));
+		return doBinaryBoolean(element->action, v1, v2);
 	}
-		break;
-	case LE_OPERATOR_LESS: {
+	// Numeric input binary operators
+	case LE_OPERATOR_ADDITION:
+	case LE_OPERATOR_SUBTRACTION:
+	case LE_OPERATOR_MULTIPLICATION:
+	case LE_OPERATOR_DIVISION:
+	case LE_OPERATOR_LESS:
+	case LE_OPERATOR_MORE:
+	case LE_OPERATOR_LESS_OR_EQUAL:
+	case LE_OPERATOR_MORE_OR_EQUAL:
+	case LE_METHOD_MIN:
+	case LE_METHOD_MAX: {
 		// elements on stack are in reverse order
-		float v2 = pop(LE_OPERATOR_LESS);
-		float v1 = pop(LE_OPERATOR_LESS);
+		float v2 = pop(element->action);
+		float v1 = pop(element->action);
 
-		push(element->action, v1 < v2);
+		return doBinaryNumeric(element->action, v1, v2);
 	}
-		break;
+	// Boolean input unary operator
 	case LE_OPERATOR_NOT: {
 		float v = pop(LE_OPERATOR_NOT);
-		push(element->action, !float2bool(v));
+		return !float2bool(v) ? 1 : 0;
 	}
-		break;
-	case LE_OPERATOR_MORE: {
-		// elements on stack are in reverse order
-		float v2 = pop(LE_OPERATOR_MORE);
-		float v1 = pop(LE_OPERATOR_MORE);
-
-		push(element->action, v1 > v2);
-	}
-		break;
-	case LE_OPERATOR_ADDITION: {
-		// elements on stack are in reverse order
-		float v2 = pop(LE_OPERATOR_MORE);
-		float v1 = pop(LE_OPERATOR_MORE);
-
-		push(element->action, v1 + v2);
-	}
-		break;
-	case LE_OPERATOR_SUBTRACTION: {
-		// elements on stack are in reverse order
-		float v2 = pop(LE_OPERATOR_MORE);
-		float v1 = pop(LE_OPERATOR_MORE);
-
-		push(element->action, v1 - v2);
-	}
-		break;
-	case LE_OPERATOR_MULTIPLICATION: {
-		// elements on stack are in reverse order
-		float v2 = pop(LE_OPERATOR_MORE);
-		float v1 = pop(LE_OPERATOR_MORE);
-
-		push(element->action, v1 * v2);
-	}
-		break;
-	case LE_OPERATOR_DIVISION: {
-		// elements on stack are in reverse order
-		float v2 = pop(LE_OPERATOR_MORE);
-		float v1 = pop(LE_OPERATOR_MORE);
-
-		push(element->action, v1 / v2);
-	}
-		break;
-	case LE_OPERATOR_LESS_OR_EQUAL: {
-		// elements on stack are in reverse order
-		float v2 = pop(LE_OPERATOR_LESS_OR_EQUAL);
-		float v1 = pop(LE_OPERATOR_LESS_OR_EQUAL);
-
-		push(element->action, v1 <= v2);
-	}
-		break;
-	case LE_OPERATOR_MORE_OR_EQUAL: {
-		// elements on stack are in reverse order
-		float v2 = pop(LE_OPERATOR_MORE_OR_EQUAL);
-		float v1 = pop(LE_OPERATOR_MORE_OR_EQUAL);
-
-		push(element->action, v1 >= v2);
-	}
-		break;
 	case LE_METHOD_IF: {
 		// elements on stack are in reverse order
 		float vFalse = pop(LE_METHOD_IF);
 		float vTrue = pop(LE_METHOD_IF);
 		float vCond = pop(LE_METHOD_IF);
-		push(element->action, vCond != 0 ? vTrue : vFalse);
+		return vCond != 0 ? vTrue : vFalse;
 	}
-		break;
-	case LE_METHOD_MAX: {
-		float v2 = pop(LE_METHOD_MAX);
-		float v1 = pop(LE_METHOD_MAX);
-		push(element->action, maxF(v1, v2));
-	}
-		break;
-	case LE_METHOD_MIN: {
-		float v2 = pop(LE_METHOD_MIN);
-		float v1 = pop(LE_METHOD_MIN);
-		push(element->action, minF(v1, v2));
-	}
-		break;
 	case LE_METHOD_FSIO_SETTING: {
 		float humanIndex = pop(LE_METHOD_FSIO_SETTING);
 		int index = (int) humanIndex - 1;
 		if (index >= 0 && index < FSIO_COMMAND_COUNT) {
-			push(element->action, CONFIG(fsio_setting)[index]);
+			return CONFIG(fsio_setting)[index];
 		} else {
-			push(element->action, NAN);
+			return unexpected;
 		}
 	}
-		break;
 	case LE_METHOD_FSIO_TABLE: {
 		float i = pop(LE_METHOD_FSIO_TABLE);
 		float yValue = pop(LE_METHOD_FSIO_TABLE);
 		float xValue = pop(LE_METHOD_FSIO_TABLE);
 		int index = (int) i;
 		if (index < 1 || index > MAX_TABLE_INDEX) {
-			push(element->action, NAN);
+			return unexpected;
 		} else {
 			if (index == 1) {
 				fsio8_Map3D_f32t *t = &fsioTable1;
 
-				push(element->action, t->getValue(xValue, yValue));
+				return t->getValue(xValue, yValue);
 			} else {
 				fsio8_Map3D_u8t *t = fsio8t_tables[index];
 
-				push(element->action, t->getValue(xValue, yValue));
+				return t->getValue(xValue, yValue);
 			}
 		}
 	}
-		break;
 	case LE_METHOD_FSIO_DIGITAL_INPUT:
-		// todo: implement code for digital inout!!!
+		// todo: implement code for digital input!!!
+		return unexpected;
 	case LE_METHOD_FSIO_ANALOG_INPUT:
-		// todo: start taking index parameter!!!
-		push(element->action, getVoltage("fsio", engineConfiguration->fsioAdc[0] PASS_ENGINE_PARAMETER_SUFFIX));
-		break;
+	{
+		int index = clampF(0, pop(LE_METHOD_FSIO_ANALOG_INPUT), FSIO_ANALOG_INPUT_COUNT - 1);
+		int sensorIdx = static_cast<int>(SensorType::Aux1) + index;
+		return Sensor::get(static_cast<SensorType>(sensorIdx));
+	}
 	case LE_METHOD_KNOCK:
-		push(element->action, ENGINE(knockCount));
-		break;
+		return ENGINE(knockCount);
 	case LE_UNDEFINED:
 		warning(CUSTOM_UNKNOWN_FSIO, "FSIO undefined action");
-		return true;
+		return unexpected;
 	default:
-		push(element->action, getEngineValue(element->action PASS_ENGINE_PARAMETER_SUFFIX));
+		return getEngineValue(element->action PASS_ENGINE_PARAMETER_SUFFIX);
 	}
-	return false;
 }
 
-float LECalculator::getValue2(float selfValue, LEElement *fistElementInList DECLARE_ENGINE_PARAMETER_SUFFIX) {
-	reset(fistElementInList);
-	return getValue(selfValue PASS_ENGINE_PARAMETER_SUFFIX);
-}
-
-bool LECalculator::isEmpty() const {
-	return first == NULL;
-}
-
-float LECalculator::getValue(float selfValue DECLARE_ENGINE_PARAMETER_SUFFIX) {
-	if (isEmpty()) {
-		warning(CUSTOM_NO_FSIO, "no FSIO code");
+float LECalculator::evaluate(const char * msg, float selfValue, const LEElement* element DECLARE_ENGINE_PARAMETER_SUFFIX) {
+	if (!element) {
+		warning(CUSTOM_NO_FSIO, "%s no FSIO code", msg);
 		return NAN;
 	}
-	LEElement *element = first;
 
-	stack.reset();
+	reset();
 
 	int counter = 0;
-	while (element != NULL) {
+
+	// while not a return statement, execute instructions
+	while (element->action != LE_METHOD_RETURN) {
 		efiAssert(CUSTOM_ERR_ASSERT, counter < 200, "FSIOcount", NAN); // just in case
 
 		if (element->action == LE_METHOD_SELF) {
 			push(element->action, selfValue);
 		} else {
-			bool isError = processElement(element PASS_ENGINE_PARAMETER_SUFFIX);
-			if (isError) {
+			FsioResult result = processElement(element PASS_ENGINE_PARAMETER_SUFFIX);
+
+			if (!result) {
 				// error already reported
 				return NAN;
 			}
+
+			push(element->action, result.Value);
 		}
-		element = element->next;
+
+		// Step forward to the next instruction in sequence
+		element++;
 		counter++;
 	}
+
+	// The stack should have exactly one element on it
 	if (stack.size() != 1) {
-		warning(CUSTOM_FSIO_STACK_SIZE, "unexpected FSIO stack size: %d", stack.size());
+		warning(CUSTOM_FSIO_STACK_SIZE, "%s unexpected FSIO stack size at return: %d", msg, stack.size());
 		return NAN;
 	}
 	return stack.pop();
 }
 
 LEElementPool::LEElementPool(LEElement *pool, int size) {
-	this->pool = pool;
+	this->m_pool = pool;
 	this->size = size;
 	reset();
 }
 
 void LEElementPool::reset() {
-	index = 0;
+	// Next free element is the first one
+	m_nextFree = m_pool;
 }
 
 int LEElementPool::getSize() const {
-	return index;
-}
-
-LEElement *LEElementPool::next() {
-	if (index >= size) {
-		// todo: this should not be a fatal error, just an error
-		firmwareError(CUSTOM_ERR_FSIO_POOL, "LE_ELEMENT_POOL_SIZE overflow");
-		return NULL;
-	}
-	LEElement *result = &pool[index++];
-	result->clear();
-	return result;
+	return m_nextFree - m_pool;
 }
 
 bool isNumeric(const char* line) {
 	return line[0] >= '0' && line[0] <= '9';
+}
+
+bool isBoolean(const char* line) {
+	bool isTrue = 0 == strcmp(line, "true");
+	bool isFalse = 0 == strcmp(line, "false");
+
+	return isTrue || isFalse;
 }
 
 /**
@@ -403,49 +360,83 @@ le_action_e parseAction(const char * line) {
 
 static char parsingBuffer[64];
 
-LEElement *LEElementPool::parseExpression(const char * line) {
-
-	LEElement *first = nullptr;
-	LEElement *last = nullptr;
+LEElement* LEElementPool::parseExpression(const char * line) {
+	LEElement* expressionHead = m_nextFree;
+	LEElement* n = expressionHead;
 
 	while (true) {
 		line = getNextToken(line, parsingBuffer, sizeof(parsingBuffer));
 
-		if (line == nullptr) {
+		if (!line) {
 			/**
-			 * No more tokens in this line
+			 * No more tokens in this line, parsing complete!
 			 */
-			return first;
-		}
 
-		LEElement *n = next();
-		if (n == nullptr) {
-			return first;
+			// Push a return statement on the end
+			n->init(LE_METHOD_RETURN);
+
+			// The next available element is the one after the return
+			m_nextFree = n + 1;
+			return expressionHead;
 		}
 
 		if (isNumeric(parsingBuffer)) {
 			n->init(LE_NUMERIC_VALUE, atoff(parsingBuffer));
+		} else if (isBoolean(parsingBuffer)) {
+			n->init(LE_BOOLEAN_VALUE, parsingBuffer[0] == 't');
 		} else {
 			le_action_e action = parseAction(parsingBuffer);
 			if (action == LE_UNDEFINED) {
 				/**
 				 * Cannot recognize token
 				 */
-				warning(CUSTOM_ERR_PARSING_ERROR, "unrecognized [%s]", parsingBuffer);
+				firmwareError(CUSTOM_ERR_PARSING_ERROR, "unrecognized FSIO keyword [%s]", parsingBuffer);
+
 				return nullptr;
 			}
 			n->init(action);
 		}
 
-		if (first == nullptr) {
-			first = n;
-			last = n;
-		} else {
-			last->next = n;
-			last = last->next;
-		}
+		n++;
 	}
-	return first;
+}
+
+FsioValue::FsioValue(float f)
+{
+	u.f32 = f;
+	
+	// The low bit represents whether this is a bool or not, clear it for float
+	u.u32 &= 0xFFFFFFFE;
+}
+
+FsioValue::FsioValue(bool b)
+{
+	u.u32 = (b ? 2 : 0);	// second bit is the actual value of the bool
+
+	// Low bit indicates this is a bool
+	u.u32 |= 0x1;
+}
+
+bool FsioValue::isFloat() const {
+	uint32_t typeBit = u.u32 & 0x1;
+
+	return typeBit == 0;
+}
+
+float FsioValue::asFloat() const {
+	return u.f32;
+}
+
+bool FsioValue::isBool() const {
+	uint32_t typeBit = u.u32 & 0x1;
+
+	return typeBit == 1;
+}
+
+bool FsioValue::asBool() const {
+	uint32_t boolBit = u.u32 & 0x2;
+
+	return boolBit != 0;
 }
 
 #endif /* EFI_FSIO */

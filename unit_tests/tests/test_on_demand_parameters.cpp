@@ -13,9 +13,9 @@ TestParameters* TestParameters::put(string key, float value) {
 	return this;
 }
 
-float TestParameters::get(string key) const {
+float TestParameters::get(string key) {
 	// WAT? 'contains' method only defined in C++20?!
-	std::unordered_map<std::string, float>::const_iterator got = values.find (key);
+	std::unordered_map<std::string, float>::const_iterator got = values.find(key);
 	if (got == values.end())
 		throw "No value for this key: " + key;
 	return values[key];

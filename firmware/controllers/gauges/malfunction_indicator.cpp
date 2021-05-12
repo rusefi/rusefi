@@ -32,6 +32,7 @@
 #include "malfunction_central.h"
 #include "malfunction_indicator.h"
 #include "efi_gpio.h"
+#include "os_access.h"
 #include "periodic_thread_controller.h"
 
 #define TEST_MIL_CODE FALSE
@@ -87,6 +88,8 @@ private:
 	void PeriodicTask(efitick_t nowNt) override	{
 		UNUSED(nowNt);
 
+		validateStack("MIL", STACK_USAGE_MIL, 128);
+
 		if (nowNt - engine->triggerCentral.triggerState.mostRecentSyncTime < MS2NT(500)) {
 			enginePins.checkEnginePin.setValue(1);
 			chThdSleepMilliseconds(500);
@@ -114,7 +117,7 @@ static void testMil(void) {
 #endif /* TEST_MIL_CODE */
 
 bool isMilEnabled() {
-	return CONFIG(malfunctionIndicatorPin) != GPIO_UNASSIGNED;
+	return isBrainPinValid(CONFIG(malfunctionIndicatorPin));
 }
 
 void initMalfunctionIndicator(void) {

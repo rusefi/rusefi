@@ -29,14 +29,12 @@
 #include "engine_math.h"
 #include "perf_trace.h"
 #if EFI_TUNER_STUDIO
-#include "tunerstudio_configuration.h"
+#include "tunerstudio_outputs.h"
 #endif /* EFI_TUNER_STUDIO */
 
 EXTERN_ENGINE;
 
 tps_tps_Map3D_t tpsTpsMap("tpsTps");
-
-static Logging *logger = nullptr;
 
 void WallFuel::resetWF() {
 	wallFuel = 0;
@@ -49,7 +47,7 @@ floatms_t WallFuel::adjust(floatms_t desiredFuel DECLARE_ENGINE_PARAMETER_SUFFIX
 		return desiredFuel;
 	}
 	// disable this correction for cranking
-	if (ENGINE(rpmCalculator).isCranking(PASS_ENGINE_PARAMETER_SIGNATURE)) {
+	if (ENGINE(rpmCalculator).isCranking()) {
 		return desiredFuel;
 	}
 
@@ -242,7 +240,7 @@ float LoadAccelEnrichment::getEngineLoadEnrichment(DECLARE_ENGINE_PARAMETER_SIGN
 		if (distance <= 0) // checking if indexes are out of order due to circular buffer nature
 			distance += minI(cb.getCount(), cb.getSize());
 
-		taper = interpolate2d("accel", distance, engineConfiguration->mapAccelTaperBins, engineConfiguration->mapAccelTaperMult);
+		taper = interpolate2d(distance, engineConfiguration->mapAccelTaperBins, engineConfiguration->mapAccelTaperMult);
 
 		result = taper * d * engineConfiguration->engineLoadAccelEnrichmentMultiplier;
 	} else if (d < -engineConfiguration->engineLoadDecelEnleanmentThreshold) {
@@ -315,7 +313,7 @@ void TpsAccelEnrichment::onEngineCycleTps(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 }
 
 void LoadAccelEnrichment::onEngineCycle(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
-	onNewValue(getEngineLoadT(PASS_ENGINE_PARAMETER_SIGNATURE) PASS_ENGINE_PARAMETER_SUFFIX);
+	onNewValue(getFuelingLoad(PASS_ENGINE_PARAMETER_SIGNATURE) PASS_ENGINE_PARAMETER_SUFFIX);
 }
 
 AccelEnrichment::AccelEnrichment() {
@@ -326,17 +324,14 @@ AccelEnrichment::AccelEnrichment() {
 #if ! EFI_UNIT_TEST
 
 static void accelInfo() {
-	if (!logger) {
-		return;
-	}
-//	scheduleMsg(logger, "EL accel length=%d", mapInstance.cb.getSize());
-	scheduleMsg(logger, "EL accel th=%.2f/mult=%.2f", engineConfiguration->engineLoadAccelEnrichmentThreshold, engineConfiguration->engineLoadAccelEnrichmentMultiplier);
-	scheduleMsg(logger, "EL decel th=%.2f/mult=%.2f", engineConfiguration->engineLoadDecelEnleanmentThreshold, engineConfiguration->engineLoadDecelEnleanmentMultiplier);
+//	efiPrintf("EL accel length=%d", mapInstance.cb.getSize());
+	efiPrintf("EL accel th=%.2f/mult=%.2f", engineConfiguration->engineLoadAccelEnrichmentThreshold, engineConfiguration->engineLoadAccelEnrichmentMultiplier);
+	efiPrintf("EL decel th=%.2f/mult=%.2f", engineConfiguration->engineLoadDecelEnleanmentThreshold, engineConfiguration->engineLoadDecelEnleanmentMultiplier);
 
-//	scheduleMsg(logger, "TPS accel length=%d", tpsInstance.cb.getSize());
-	scheduleMsg(logger, "TPS accel th=%.2f/mult=%.2f", engineConfiguration->tpsAccelEnrichmentThreshold, -1);
+//	efiPrintf("TPS accel length=%d", tpsInstance.cb.getSize());
+	efiPrintf("TPS accel th=%.2f/mult=%.2f", engineConfiguration->tpsAccelEnrichmentThreshold, -1);
 
-	scheduleMsg(logger, "beta=%.2f/tau=%.2f", engineConfiguration->wwaeBeta, engineConfiguration->wwaeTau);
+	efiPrintf("beta=%.2f/tau=%.2f", engineConfiguration->wwaeBeta, engineConfiguration->wwaeTau);
 }
 
 void setEngineLoadAccelThr(float value) {
@@ -376,7 +371,7 @@ void setDecelMult(float value) {
 
 void setTpsAccelLen(int length) {
 	if (length < 1) {
-		scheduleMsg(logger, "Length should be positive");
+		efiPrintf("Length should be positive");
 		return;
 	}
 	engine->tpsAccelEnrichment.setLength(length);
@@ -385,7 +380,7 @@ void setTpsAccelLen(int length) {
 
 void setEngineLoadAccelLen(int length) {
 	if (length < 1) {
-		scheduleMsg(logger, "Length should be positive");
+		efiPrintf("Length should be positive");
 		return;
 	}
 	engine->engineLoadAccelEnrichment.setLength(length);
@@ -400,8 +395,7 @@ void updateAccelParameters() {
 #endif /* ! EFI_UNIT_TEST */
 
 
-void initAccelEnrichment(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX) {
-	logger = sharedLogger;
+void initAccelEnrichment(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	tpsTpsMap.init(config->tpsTpsAccelTable, config->tpsTpsAccelFromRpmBins, config->tpsTpsAccelToRpmBins);
 
 #if ! EFI_UNIT_TEST

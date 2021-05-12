@@ -13,17 +13,29 @@
 
 EXTERN_CONFIG;
 
+#if (BOARD_TLE8888_COUNT > 0)
+void setLadaKalina(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
+	/* MRE uses TLE8888_PIN_21 for fuel pump */
+	engineConfiguration->fuelPumpPin = GPIO_UNASSIGNED;
+	/* PRE uses TLE8888_PIN_22 for fan */
+	engineConfiguration->fanPin = GPIO_UNASSIGNED;
+	// TLE8888 two bridge drivers for stepper
+	engineConfiguration->stepperDcIo[0].directionPin1 = TLE8888_PIN_21;
+	engineConfiguration->stepperDcIo[0].directionPin2 = TLE8888_PIN_22;
+	engineConfiguration->stepperDcIo[1].directionPin1 = TLE8888_PIN_23;
+	engineConfiguration->stepperDcIo[1].directionPin2 = TLE8888_PIN_24;
+	/* IDLE configuration */
+	engineConfiguration->useStepperIdle = true;
+	engineConfiguration->useHbridges = true;
+	engineConfiguration->idleMode = IM_AUTO;
+	engineConfiguration->useTLE8888_stepper = true;
+}
+
+#else
+
 void setLadaKalina(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	setFrankensoConfiguration(PASS_CONFIG_PARAMETER_SIGNATURE);
 	disableLCD(engineConfiguration);
-
-	engineConfiguration->HD44780_rs = GPIO_UNASSIGNED;
-	engineConfiguration->HD44780_e = GPIO_UNASSIGNED;
-	engineConfiguration->HD44780_db4 = GPIO_UNASSIGNED;
-	engineConfiguration->HD44780_db5 = GPIO_UNASSIGNED;
-	engineConfiguration->HD44780_db6 = GPIO_UNASSIGNED;
-	engineConfiguration->HD44780_db7 = GPIO_UNASSIGNED;
-
 
 	setOperationMode(engineConfiguration, FOUR_STROKE_CRANK_SENSOR);
 	engineConfiguration->trigger.type = TT_TOOTHED_WHEEL_60_2;
@@ -59,3 +71,4 @@ void setLadaKalina(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	setFsioExt(0, GPIOE_3, RPM_BELOW_USER_SETTING_1, 0 PASS_CONFIG_PARAMETER_SUFFIX);
 #endif /* EFI_FSIO */
 }
+#endif

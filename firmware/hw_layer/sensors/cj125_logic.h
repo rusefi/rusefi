@@ -55,7 +55,6 @@ class CJ125 {
 public:
 	CJ125();
 	Cj125SpiStream *spi = nullptr;
-	Logging *logger = nullptr;
 
 	SimplePwm wboHeaterControl;
 
@@ -100,7 +99,7 @@ public:
 	bool isWorkingState(void) const;
 	void SetHeater(float value DECLARE_ENGINE_PARAMETER_SUFFIX);
 	void SetIdleHeater(DECLARE_ENGINE_PARAMETER_SIGNATURE);
-	void StartHeaterControl(pwm_gen_callback *stateChangeCallback DECLARE_ENGINE_PARAMETER_SUFFIX);
+	void StartHeaterControl(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 	bool cjIdentify(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 	void printDiag();
 	void calibrate(DECLARE_ENGINE_PARAMETER_SIGNATURE);

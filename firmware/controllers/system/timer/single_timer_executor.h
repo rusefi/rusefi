@@ -10,20 +10,22 @@
 #include "scheduler.h"
 #include "event_queue.h"
 
-class SingleTimerExecutor : public ExecutorInterface {
+class SingleTimerExecutor final : public ExecutorInterface {
 public:
 	SingleTimerExecutor();
 	void scheduleByTimestamp(scheduling_s *scheduling, efitimeus_t timeUs, action_s action) override;
 	void scheduleByTimestampNt(scheduling_s *scheduling, efitime_t timeNt, action_s action) override;
 	void scheduleForLater(scheduling_s *scheduling, int delayUs, action_s action) override;
 	void onTimerCallback();
-	int timerCallbackCounter;
-	int scheduleCounter;
-	int doExecuteCounter;
+	int timerCallbackCounter = 0;
+	int scheduleCounter = 0;
+	int maxExecuteCounter = 0;
+	int executeCounter;
+	int executeAllPendingActionsInvocationCounter = 0;
 private:
 	EventQueue queue;
-	bool reentrantFlag;
-	void doExecute();
+	bool reentrantFlag = false;
+	void executeAllPendingActions();
 	void scheduleTimerCallback();
 };
 

@@ -96,7 +96,7 @@ void initEgoAveraging(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 #endif
 
 bool hasAfrSensor(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
-	if (CONFIG(enableAemXSeries)) {
+	if (CONFIG(enableAemXSeries) || CONFIG(enableInnovateLC2)) {
 		return true;
 	}
 
@@ -105,16 +105,15 @@ bool hasAfrSensor(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 		return cjHasAfrSensor(PASS_ENGINE_PARAMETER_SIGNATURE);
 	}
 #endif /* EFI_CJ125 && HAL_USE_SPI */
-	return engineConfiguration->afr.hwChannel != EFI_ADC_NONE;
+	return isAdcChannelValid(engineConfiguration->afr.hwChannel);
 }
 
-extern float aemXSeriesLambda;
+extern float InnovateLC2AFR;
 
 float getAfr(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
-#if EFI_CAN_SUPPORT
-	if (CONFIG(enableAemXSeries)) {
-		return aemXSeriesLambda * 14.7f;
-	}
+#if EFI_AUX_SERIAL
+	if (CONFIG(enableInnovateLC2))
+		return InnovateLC2AFR;
 #endif
 
 #if EFI_CJ125 && HAL_USE_SPI
@@ -124,10 +123,14 @@ float getAfr(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 #endif /* EFI_CJ125 && HAL_USE_SPI */
 	afr_sensor_s * sensor = &CONFIG(afr);
 
+	if (!isAdcChannelValid(engineConfiguration->afr.hwChannel)) {
+		return 0;
+	}
+
 	float volts = getVoltageDivided("ego", sensor->hwChannel PASS_ENGINE_PARAMETER_SUFFIX);
 
 	if (CONFIG(afr_type) == ES_NarrowBand) {
-		float afr = interpolate2d("narrow", volts, engineConfiguration->narrowToWideOxygenBins, engineConfiguration->narrowToWideOxygen);
+		float afr = interpolate2d(volts, engineConfiguration->narrowToWideOxygenBins, engineConfiguration->narrowToWideOxygen);
 #ifdef EFI_NARROW_EGO_AVERAGING
 		if (useAveraging)
 			afr = updateEgoAverage(afr);

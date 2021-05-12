@@ -157,8 +157,8 @@ void Pid::sleep() {
 #endif /* EFI_UNIT_TEST */
 }
 
-void Pid::showPidStatus(Logging *logging, const char*msg) const {
-	scheduleMsg(logging, "%s settings: offset=%f P=%.5f I=%.5f D=%.5f period=%dms",
+void Pid::showPidStatus(const char*msg) const {
+	efiPrintf("%s settings: offset=%f P=%.5f I=%.5f D=%.5f period=%dms",
 			msg,
 			getOffset(),
 			parameters->pFactor,
@@ -166,7 +166,7 @@ void Pid::showPidStatus(Logging *logging, const char*msg) const {
 			parameters->dFactor,
 			parameters->periodMs);
 
-	scheduleMsg(logging, "%s status: value=%.2f input=%.2f/target=%.2f iTerm=%.5f dTerm=%.5f",
+	efiPrintf("%s status: value=%.2f input=%.2f/target=%.2f iTerm=%.5f dTerm=%.5f",
 			msg,
 			output,
 			input,
@@ -251,9 +251,6 @@ float PidIndustrial::getOutput(float target, float input, float dTime) {
 	float error = (target - input) * errorAmplificationCoef;
 	float pTerm = parameters->pFactor * error;
 
-	// update the I-term
-	iTerm += parameters->iFactor * dTime * error;
-	
 	// calculate dTerm coefficients
 	if (fabsf(derivativeFilterLoss) > DBL_EPSILON) {
 		// restore Td in the Standard form from the Parallel form: Td = Kd / Kc
@@ -272,11 +269,13 @@ float PidIndustrial::getOutput(float target, float input, float dTime) {
 	// (error - previousError) = (target-input) - (target-prevousInput) = -(input - prevousInput)
 	dTerm = dTerm * ad + (error - previousError) * bd;
 
+	updateITerm(parameters->iFactor * dTime * error);
+
 	// calculate output and apply the limits
-	float output = pTerm + iTerm + dTerm + parameters->offset;
+	float output = pTerm + iTerm + dTerm + getOffset();
 	float limitedOutput = limitOutput(output);
 
-	// apply the integrator anti-windup
+	// apply the integrator anti-windup on top of the "normal" iTerm change above
 	// If p.antiwindupFreq = 0, then iTerm is equal to PidParallelController's
 	iTerm += dTime * antiwindupFreq * (limitedOutput - output);
 	
@@ -287,8 +286,8 @@ float PidIndustrial::getOutput(float target, float input, float dTime) {
 }
 
 float PidIndustrial::limitOutput(float v) const {
-	if (v < parameters->minValue)
-		v = parameters->minValue;
+	if (v < getMinValue())
+		v = getMinValue();
 	if (v > parameters->maxValue)
 		v = parameters->maxValue;
 	return v;

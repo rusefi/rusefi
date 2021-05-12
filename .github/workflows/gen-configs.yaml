@@ -1,0 +1,68 @@
+name: Generate configs and live docs
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  generate:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+      with:
+        fetch-depth: 0
+
+    - name: Install Tools
+      run: sudo apt-get install ncftp sshpass mtools
+
+    - name: Generate Enum Strings
+      working-directory: ./firmware/
+      run: bash gen_enum_to_string.sh
+
+    - name: Generate Configs
+      working-directory: ./firmware/
+      run: bash gen_config.sh
+
+    - name: Upload .ini files
+      working-directory: ./firmware/tunerstudio/generated
+#      run: ./upload.sh ${{ secrets.RUSEFI_DOXYGEN_FTP_USER }} ${{ secrets.RUSEFI_DOXYGEN_FTP_PASS }} ${{ secrets.RUSEFI_FTP_SERVER }}
+      run: ../upload_ini.sh ${{ secrets.RUSEFI_ONLINE_FTP_USER }} ${{ secrets.RUSEFI_ONLINE_FTP_PASS }} ${{ secrets.RUSEFI_FTP_SERVER }}
+
+    - name: Generate Live Documentation
+      working-directory: ./firmware/
+      run: bash gen_live_documentation.sh
+
+    # Commit changes and catch the error that occurs if nothing has been changed (without catching other errors)
+    - name: Commit fresh generated headers and TS project
+      env:
+        ACTIONS_ALLOW_UNSECURE_COMMANDS: 'true'
+      run: |
+        git config --local user.email "action@github.com"
+        git config --local user.name "GitHub build-firmware Action"
+        # get the original ramdisk images back in order to not overwrite the default placeholder
+        git checkout -- firmware/hw_layer/mass_storage/ramdisk_image.h firmware/hw_layer/mass_storage/ramdisk_image_compressed.h
+        git status
+        OUT=$(git commit -am "Auto-generated configs and docs" 2>&1) || echo "commit failed, finding out why"
+        if echo "$OUT" | grep 'nothing to commit'; then
+          echo "::set-env name=NOCOMMIT::true"
+          exit 0
+        elif echo "$OUT" | grep 'changed'; then
+          exit 0
+        else
+          exit 1
+        fi
+
+    # We need to know what branch this is in order to push to the correct branch
+    - name: Extract branch name
+      shell: bash
+      run: echo "##[set-output name=branch;]$(echo ${GITHUB_REF#refs/heads/})"
+      id: extract_branch
+
+    - name: Push configs
+      if: ${{env.NOCOMMIT != 'true'}}
+      uses: ad-m/github-push-action@master
+      with:
+        github_token: ${{ github.token }}
+        branch: ${{ steps.extract_branch.outputs.branch }}

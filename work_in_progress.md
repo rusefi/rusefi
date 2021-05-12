@@ -1,3 +1,32 @@
+Feb 9, 2021 status
+* AndreiKA is focusing on Hellen-One
+* AndreyB is focusing on quad VVT
+* Matt is working on wideband and VR without ASIC
+
+Jan, 2 2021 status
+* We had GDI vehicle start & idle! GDI effort is now suspected since too many projects in the works.
+* TCU first real hardware test was not a success
+
+Nov, 18 2020 status
+* GDI test mule was damaged during GDI tests
+* Matt is working on fueling, wideband and knock detection logic
+* TCU first hardware tests are getting closer!
+
+Sep, 7 2020 status
+* Stefan is happy enough with idle control and now manufacturing a batch of Miata NA6 & developing a Miata NB2 PnP board 
+* AndreiKA and AndreyB are merging Hellen code into rusEFI master
+* Matt is working on fueling and knock detection logic
+* AndreiKA and AndreyB are making rusEFI Online better
+* David is making TCU progress
+* GDI is slooooowly moving forward
+
+July, 19 2020 status
+* Stefan and AndreiKA are looking to improve miata idle (again!)
+* AndreiKA and AndreyB are focused on rusEFI Online
+* Matt is dealing with a number of different scheduling defects
+* Miata NA base tune is getting closer
+* GDI is a bit on hold
+
 Apr, 20 2020 status:
 * Nick and Chris are focusing on GDI progress
 * Matt is focusing on ETB https://github.com/rusefi/rusefi/issues/1240 https://github.com/rusefi/rusefi/issues/1336

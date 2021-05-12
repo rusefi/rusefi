@@ -1,0 +1,224 @@
+pins:
+  - pin: 2
+    function: Power Ignition On (input)
+
+
+  - pin: 6
+    id: GPIOC_9
+    class: outputs
+    function: Ignition Coil #1
+    ts_name: Coil 1F
+
+  - pin: 7
+    id: GPIOE_14
+    class: outputs
+    function: Ignition Coil #3
+    ts_name: Coil 1G
+
+  - pin: 8
+    id: GPIOC_7
+    class: outputs
+    function: Ignition Coil #2
+    ts_name: Coil 1H
+
+  - pin: 9
+    id: GPIOE_10
+    class: outputs
+    function: Spare High #5
+    ts_name: Coil 1I
+
+  - pin: 12
+    id: GPIOE_8
+    class: outputs
+    function: Spare High #6
+    ts_name: Coil 1L
+
+  - pin: 13
+    id: GPIOE_12
+    class: outputs
+    function: Ignition Coil #4
+    ts_name: Coil 1M
+
+  - pin: 15
+    id: GPIOD_8
+    class: outputs
+    function: Spare High #8
+    ts_name: Coil 1O
+
+  - pin: 16
+    id: GPIOD_9
+    class: outputs
+    function: Spare High #7
+    ts_name: Coil 1P
+
+  - pin: 23
+    function: Crank Pos/Trigger #1 +
+
+  - pin: 24
+    function: Crank Neg/Trigger #1 -
+
+  - pin: 25
+    function: Cam Pos/Trigger #2 +
+
+  - pin: 26
+    function: Cam Neg/Trigger #2 -
+
+  - pin: 29
+    function: Knock sensor
+
+  - pin: 30
+    function: Knock sensor
+
+  - pin: 33
+    function: CAN high
+
+  - pin: 34
+    function: CAN low
+
+  - pin: 35
+    id: GPIOC_13
+    class: outputs
+    ts_name: Injector 2M
+    function: Idle Valve Control Solenoid
+
+  - pin: 36
+    id: GPIOD_7
+    class: outputs
+    ts_name: Injector 2N
+    function: Main Relay
+
+  - pin: 37
+    id: GPIOE_5
+    class: outputs
+    ts_name: Injector 2O
+    function: Coolant Fan Relay
+
+  - pin: 38
+    id: GPIOE_6
+    class: outputs
+    ts_name: Injector 2P
+    function: Spare low #2
+
+  - pin: 39
+    function: Ground
+
+  - pin: 40
+    function: Ground
+
+  - pin: 41
+    function: Ground
+
+  - pin: 42
+    function: Ground
+
+  - pin: 43
+    id: EFI_ADC_15
+    class: analog_inputs
+    ts_name: Analog 3E
+
+  - pin: 45
+    id: EFI_ADC_7
+    class: analog_inputs
+    ts_name: Analog 3G
+
+  - pin: 46
+    id: EFI_ADC_6
+    class: analog_inputs
+    ts_name: Analog 3H
+
+  - pin: 47
+    id: EFI_ADC_4
+    class: analog_inputs
+    ts_name: Analog 3I
+
+  - pin: 48
+    id: EFI_ADC_3
+    class: analog_inputs
+    ts_name: Analog 3J
+
+  - pin: 49
+    function: 5V Sensor Power Supply Output
+
+  - pin: 50
+    id: EFI_ADC_1
+    class: analog_inputs
+    ts_name: Analog 3L
+    function: Extra Input
+
+  - pin: 51
+    id: EFI_ADC_2
+    class: analog_inputs
+    ts_name: Analog 3M
+    function: Throttle Position Sensor
+
+  - pin: 52
+    id: EFI_ADC_13
+    class: analog_inputs
+    ts_name: Analog 3N
+    function: O2 Sensor
+
+  - pin: 53
+    id: EFI_ADC_0
+    class: analog_inputs
+    ts_name: Analog 3O
+    function: MAP Sensor
+
+  - pin: 54
+    id: EFI_ADC_11
+    class: analog_inputs
+    ts_name: Analog 3P
+    function: Intake air temp Sensor
+
+  - pin: 55
+    id: EFI_ADC_12
+    class: analog_inputs
+    ts_name: Analog 3Q
+    function: Coolant Temp Sensor
+
+  - pin: 57
+    id: GPIOE_3
+    class: outputs
+    ts_name: Injector 3S
+    function: Spare low #1
+
+  - pin: 58
+    id: GPIOE_4
+    class: outputs
+    ts_name: Injector 3T
+    function: Fuel Pump Relay
+
+  - pin: 59
+    id: GPIOD_3
+    class: outputs
+    ts_name: Injector 3U
+    function: Spare low
+
+  - pin: 60
+    id: GPIOE_2
+    class: outputs
+    ts_name: Injector 3V
+    function: Injector #2
+
+  - pin: 61
+    id: GPIOB_9
+    class: outputs
+    ts_name: Injector 3W
+    function: Injector #1
+
+  - pin: 62
+    id: GPIOD_5
+    class: outputs
+    ts_name: Injector 3X
+    function: Spare low
+
+  - pin: 63
+    id: GPIOB_8
+    class: outputs
+    ts_name: Injector 3Y
+    function: Injector #3
+
+  - pin: 64
+    id: GPIOB_7
+    class: outputs
+    ts_name: Injector 3Z
+    function: Injector #4

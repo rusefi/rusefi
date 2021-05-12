@@ -7,13 +7,9 @@
 
 #include "scheduler.h"
 #include "utlist.h"
+#include "expected.h"
 
 #pragma once
-
-/**
- * this is a large value which is expected to be larger than any real time
- */
-#define EMPTY_QUEUE 0x0FFFFFFFFFFFFFFFLL
 
 #define QUEUE_LENGTH_LIMIT 1000
 
@@ -45,7 +41,10 @@
  */
 class EventQueue {
 public:
-	EventQueue();
+	// See comment in EventQueue::executeAll for info about lateDelay - it sets the 
+	// time gap between events for which we will wait instead of rescheduling the next
+	// event in a group of events near one another.
+	EventQueue(efitime_t lateDelay = 0) : lateDelay(lateDelay) {}
 
 	/**
 	 * O(size) - linear search in sorted linked list
@@ -53,20 +52,19 @@ public:
 	bool insertTask(scheduling_s *scheduling, efitime_t timeX, action_s action);
 
 	int executeAll(efitime_t now);
+	bool executeOne(efitime_t now);
 
-	efitime_t getNextEventTime(efitime_t nowUs) const;
+	expected<efitime_t> getNextEventTime(efitime_t nowUs) const;
 	void clear(void);
 	int size(void) const;
 	scheduling_s *getElementAtIndexForUnitText(int index);
-	void setLateDelay(int value);
 	scheduling_s * getHead();
 	void assertListIsSorted() const;
 private:
-	bool checkIfPending(scheduling_s *scheduling);
 	/**
 	 * this list is sorted
 	 */
-	scheduling_s *head;
-	efitime_t lateDelay;
+	scheduling_s *head = nullptr;
+	const efitime_t lateDelay;
 };
 

@@ -10,10 +10,6 @@
 #include "engine.h"
 #include "pin_repository.h"
 
-extern ioportid_t PORTS[];
-
-ioportid_t PORTS[] = { GPIOA, GPIOB, GPIOC, GPIOD, GPIOE};
-
 #if HAL_USE_ADC || defined(__DOXYGEN__)
 
 // ADC_CHANNEL_IN0 // PA2   (def=VIGN)
@@ -34,6 +30,8 @@ ioportid_t PORTS[] = { GPIOA, GPIOB, GPIOC, GPIOD, GPIOE};
 // ADC_CHANNEL_IN15 // PC17 (def=IAT)
 
 brain_pin_e getAdcChannelBrainPin(const char *msg, adc_channel_e hwChannel) {
+	static_assert(EFI_ADC_NONE == ADC_CHANNEL_NONE);
+
 	// todo: replace this with an array :)
 	switch (hwChannel) {
 	case EFI_ADC_0:

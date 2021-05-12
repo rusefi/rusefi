@@ -4,7 +4,7 @@
 #
 
 CHIBIOS = ChibiOS
-RULESPATH = $(CHIBIOS)/os/common/startup/ARMCMx/compilers/GCC
+RULESPATH = $(CHIBIOS)/os/common/startup/ARMCMx/compilers/GCC/mk
 RULESFILE = $(RULESPATH)/rules.mk
 
 include rusefi_rules.mk
@@ -23,10 +23,10 @@ include rusefi.mk
 
 ifeq ($(DEBUG_LEVEL_OPT),)
   # Default to a release build - but leave in debug info.  It doesn't change the hex/bin output.
-  DEBUG_LEVEL_OPT = -O2 -ggdb -g3
+  DEBUG_LEVEL_OPT = -O2 -ggdb -g
   # Comment the above and uncomment the line below if you want to debug the firmware (it's difficult-to-impossible
   # to debug firmware with optimization enabled).
-  # DEBUG_LEVEL_OPT = -O0 -ggdb -g3
+  # DEBUG_LEVEL_OPT = -O0 -ggdb -g
 endif
 
 
@@ -40,10 +40,13 @@ endif
 
 # Compiler options here.
 ifeq ($(USE_OPT),)
-  USE_OPT = $(EXTRA_PARAMS) $(DEBUG_LEVEL_OPT) $(RFLAGS) -fomit-frame-pointer -falign-functions=16
+  USE_OPT = $(EXTRA_PARAMS) $(DEBUG_LEVEL_OPT) $(RFLAGS) -fomit-frame-pointer -falign-functions=16 -fsingle-precision-constant
 endif
 
-USE_OPT += $(RUSEFI_OPT)
+# EFI_UNIT_TEST determines if we are running in a unit test (hide things from hw/sim)
+# EFI_PROD_CODE determines if we are running on real hardware (hide things from tests/sim)
+# EFI_SIMULATOR determines if we are running in the simulator (hide things from hw/tests)
+USE_OPT += $(RUSEFI_OPT) -DEFI_UNIT_TEST=0 -DEFI_PROD_CODE=1 -DEFI_SIMULATOR=0
 
 # C specific options here (added to USE_OPT).
 ifeq ($(USE_COPT),)
@@ -54,6 +57,9 @@ endif
 ifeq ($(USE_CPPOPT),)
   USE_CPPOPT = -std=c++17 -Wno-register -fno-rtti -fno-threadsafe-statics -fno-exceptions -fno-use-cxa-atexit
 endif
+
+# Hellen is one of the boards which cares
+USE_CPPOPT += -Wno-error=tautological-compare
 
 # Enable this if you want the linker to remove unused code and data
 ifeq ($(USE_LINK_GC),)
@@ -78,6 +84,13 @@ endif
 # Enable this if you want to see the full log while compiling.
 ifeq ($(USE_VERBOSE_COMPILE),)
   USE_VERBOSE_COMPILE = no
+endif
+
+# If enabled, this option makes the build process faster by not compiling
+# modules not used in the current configuration.
+# without USE_SMART_BUILD all ChibiOS (including all drivers) are builded. And all drivers includes get included.
+ifeq ($(USE_SMART_BUILD),)
+  USE_SMART_BUILD = no
 endif
 
 ifeq ($(USE_BOOTLOADER),)
@@ -131,31 +144,30 @@ BOARDS_DIR = $(PROJECT_DIR)/config/boards
 
 include $(PROJECT_DIR)/config/boards/$(PROJECT_BOARD)/board.mk
 
-# If enabled, this option makes the build process faster by not compiling
-# modules not used in the current configuration.
-# without USE_SMART_BUILD all ChibiOS (including all drivers) are builded. And all drivers includes get included.
-ifeq ($(USE_SMART_BUILD),)
-  USE_SMART_BUILD = yes
-endif
-ifeq ($(CONFDIR),)
-  CONFDIR = $(PROJECT_DIR)/config/stm32f4ems
-endif
-
+# Include various ChibiOS mk files
+# Licensing files.
+include $(CHIBIOS)/os/license/license.mk
 # Startup files.
 include $(CPU_STARTUP_DIR)
 # HAL-OSAL files (optional).
 include $(CHIBIOS_CONTRIB)/os/hal/hal.mk
 include $(CPU_PLATFORM_DIR)
-include $(CHIBIOS)/os/hal/osal/rt/osal.mk
+include $(CHIBIOS)/os/hal/osal/rt-nil/osal.mk
 # RTOS files (optional).
 include $(CHIBIOS)/os/rt/rt.mk
 include $(CHIBIOS)/os/common/ports/ARMCMx/compilers/GCC/mk/port_v7m.mk
+# EX files (optional).
+ifneq ($(USE_LIS302),no)
+include $(CHIBIOS)/os/ex/devices/ST/lis302dl.mk
+endif
+include $(CHIBIOS)/os/hal/lib/streams/streams.mk
+include $(CHIBIOS)/os/various/cpp_wrappers/chcpp.mk
 
 ifeq ($(USE_FATFS),yes)
 include $(CHIBIOS)/os/various/fatfs_bindings/fatfs.mk
 endif
-include $(CHIBIOS)/os/various/cpp_wrappers/chcpp.mk
 
+#Now include RusEFI mk files
 include console/binary/tunerstudio.mk
 ifeq ($(USE_FATFS),yes)
 include $(PROJECT_DIR)/ext/fatfs.mk
@@ -181,32 +193,25 @@ ifeq ($(USE_BOOTLOADER),yes)
 include $(PROJECT_DIR)/bootloader/bootloader.mk
 endif
 
-# Define linker script file here
-ifeq ($(LDSCRIPT),)
-  LDSCRIPT= config/stm32f4ems/STM32F407xG.ld
-endif
+$(info PROJECT_BOARD: $(PROJECT_BOARD))
+$(info PROJECT_CPU:   $(PROJECT_CPU))
+$(info CONFDIR:       $(CONFDIR))
+$(info LDSCRIPT:      $(LDSCRIPT))
 
 # C sources that can be compiled in ARM or THUMB mode depending on the global
 # setting.
-CSRC = $(STARTUPSRC) \
-	$(KERNSRC) \
-	$(PORTSRC) \
-	$(OSALSRC) \
-	$(HALSRC) \
-	$(HALSRC_CONTRIB) \
-	$(PLATFORMSRC) \
-	$(PLATFORMSRC_CONTRIB) \
-	$(BOARDSRC) \
-	$(BOOTLOADERSRC) \
-	$(CHIBIOS)/os/ex/ST/lis302dl.c \
+CSRC =  $(ALLCSRC) \
 	$(CHIBIOS)/os/various/syscalls.c \
-	$(CHIBIOS)/os/hal/lib/streams/memstreams.c \
-	$(CHIBIOS)/os/hal/lib/streams/chprintf.c \
+	$(CHIBIOS_CONTRIB)/os/various/ramdisk.c \
+	$(TRIGGER_SRC) \
+	$(TRIGGER_DECODERS_SRC) \
+	$(DEV_SRC) \
+	$(BOOTLOADERSRC) \
 	${HW_MASS_STORAGE_SRC_C} \
 	$(UTILSRC) \
+	$(SYSTEMSRC) \
 	$(ENGINES_SRC) \
 	$(CONSOLESRC) \
-	$(DEV_SRC) \
 	$(HW_LAYER_EMS) \
 	$(HW_LAYER_DRIVERS_CORE) \
 	$(HW_LAYER_DRIVERS) \
@@ -214,28 +219,26 @@ CSRC = $(STARTUPSRC) \
 	$(CONTROLLERS_ALGO_SRC) \
 	$(CONTROLLERS_CORE_SRC) \
 	$(CONTROLLERS_SENSORS_SRC) \
-	$(FATFSSRC) \
-	$(SYSTEMSRC) \
 	main_hardfault.c
 
 # C++ sources that can be compiled in ARM or THUMB mode depending on the global
 # setting.
-CPPSRC = $(CHCPPSRC) \
+CPPSRC = $(ALLCPPSRC) \
 	$(TRIGGER_SRC_CPP) \
 	$(TRIGGER_DECODERS_SRC_CPP) \
 	$(DEV_SRC_CPP) \
 	$(CONTROLLERS_ALGO_SRC_CPP) \
+	$(UTILSRC_CPP) \
 	$(SYSTEMSRC_CPP) \
-	$(BOARDSRC_CPP) \
 	$(ENGINES_SRC_CPP) \
 	$(HW_LAYER_EMS_CPP) \
+	$(HW_LAYER_DRIVERS_CORE_CPP) \
 	$(HW_LAYER_DRIVERS_CPP) \
 	$(HW_SENSORS_SRC) \
 	$(TUNERSTUDIO_SRC_CPP) \
 	$(CONSOLE_SRC_CPP) \
 	$(CONTROLLERS_SENSORS_SRC_CPP) \
 	$(CONTROLLERS_SRC_CPP) \
-	$(UTILSRC_CPP) \
 	$(CONTROLLERS_CORE_SRC_CPP) \
 	$(CONTROLLERS_MATH_SRC_CPP) \
 	$(INIT_SRC_CPP) \
@@ -263,43 +266,23 @@ TCSRC =
 TCPPSRC =
 
 # List ASM source files here
-# List ASM source files here
-ASMXSRC = $(STARTUPASM) $(PORTASM) $(OSALASM) \
+ASMXSRC = $(ALLXASMSRC) \
 	$(RUSEFIASM)
 
-ifeq ($(CONFIGPATH),)
-  CONFIGPATH=config/stm32f4ems
-endif
-
-
-INCDIR = $(CHIBIOS)/os/license \
-        $(PORTINC) \
-	$(OSALINC) \
-	$(KERNINC) \
+INCDIR = $(ALLINC) \
 	$(TESTINC) \
-	$(STARTUPINC) \
-	$(HALINC) \
-	$(HALINC_CONTRIB) \
-	$(PLATFORMINC) \
-	$(PLATFORMINC_CONTRIB) \
-	$(BOARDINC) \
 	$(BOOTLOADERINC) \
-	$(CHCPPINC) \
-	$(CHIBIOS)/os/hal/lib/streams \
 	$(CHIBIOS)/os/various \
-	$(CHIBIOS)/os/ex/ST \
 	$(CHIBIOS)/os/hal/lib/peripherals/sensors \
-	$(CONFIGPATH) \
+	$(CONFDIR) \
 	config/engines \
 	config \
 	ext \
 	ext_algo \
 	console_util \
-	console \
-	$(PROJECT_DIR)/console/binary \
-	$(PROJECT_DIR)/console/fl_binary \
-	$(PROJECT_DIR)/hw_layer \
-	$(PROJECT_DIR)/mass_storage \
+	$(CONSOLE_INC) \
+	$(HW_LAYER_INC) \
+	$(PROJECT_DIR)/hw_layer/mass_storage \
 	$(PROJECT_DIR)/hw_layer/serial_over_usb \
 	$(PROJECT_DIR)/hw_layer/algo \
 	$(PROJECT_DIR)/hw_layer/lcd \
@@ -312,7 +295,9 @@ INCDIR = $(CHIBIOS)/os/license \
 	$(DEVELOPMENT_DIR) \
 	development/hw_layer \
 	development/test \
-	$(CONTROLLERS_INC)
+	$(CONTROLLERS_INC) \
+	$(CHIBIOS_CONTRIB)/os/various
+	# contrib/os/various must go at the end because it also contains pid.h which conflicts with our pid.h
 
 #
 # Project, sources and paths
@@ -322,7 +307,9 @@ INCDIR = $(CHIBIOS)/os/license \
 # Compiler settings
 #
 
-MCU  = cortex-m4
+ifeq ($(MCU),)
+	MCU = cortex-m4
+endif
 
 ifeq ($(CROSS_COMPILE),)
   TRGT = arm-none-eabi-
@@ -377,7 +364,7 @@ UINCDIR =
 ULIBDIR =
 
 # List all user libraries here
-ULIBS = -lm
+ULIBS = -lm --specs=nano.specs
 
 #
 # End of user defines

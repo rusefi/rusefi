@@ -25,8 +25,6 @@
 #include "engine_math.h"
 
 InjectionEvent::InjectionEvent() {
-	isSimultanious = false;
-	ownIndex = 0;
 	memset(outputs, 0, sizeof(outputs));
 }
 

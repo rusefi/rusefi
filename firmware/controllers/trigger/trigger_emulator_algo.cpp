@@ -16,15 +16,17 @@
 #include "state_sequence.h"
 #include "global.h"
 #include "efi_gpio.h"
+#include "pin_repository.h"
 
 int getPreviousIndex(const int currentIndex, const int size) {
 	return (currentIndex + size - 1) % size;
 }
 
-bool needEvent(const int currentIndex, const int size, MultiChannelStateSequence *multiChannelStateSequence, int channelIndex) {
+bool needEvent(const int currentIndex, const int size, const MultiChannelStateSequence& mcss, int channelIndex) {
 	int prevIndex = getPreviousIndex(currentIndex, size);
-	pin_state_t previousValue = multiChannelStateSequence->getChannelState(channelIndex, /*phaseIndex*/prevIndex);
-	pin_state_t currentValue = multiChannelStateSequence->getChannelState(channelIndex, /*phaseIndex*/currentIndex);
+	pin_state_t previousValue = mcss.getChannelState(channelIndex, /*phaseIndex*/prevIndex);
+	pin_state_t currentValue = mcss.getChannelState(channelIndex, /*phaseIndex*/currentIndex);
+
 	return previousValue != currentValue;
 }
 
@@ -53,7 +55,7 @@ void TriggerEmulatorHelper::handleEmulatorCallback(PwmConfig *state, int stateIn
 
 	for (size_t i = 0; i < efi::size(emulatorOutputs); i++)
 	{
-		if (needEvent(stateIndex, state->phaseCount, &state->multiChannelStateSequence, i)) {
+		if (needEvent(stateIndex, state->phaseCount, state->multiChannelStateSequence, i)) {
 			pin_state_t currentValue = multiChannelStateSequence->getChannelState(/*phaseIndex*/i, stateIndex);
 			
 			constexpr trigger_event_e riseEvents[] = { SHAFT_PRIMARY_RISING, SHAFT_SECONDARY_RISING, SHAFT_3RD_RISING };
@@ -61,7 +63,7 @@ void TriggerEmulatorHelper::handleEmulatorCallback(PwmConfig *state, int stateIn
 
 			trigger_event_e event = (currentValue ? riseEvents : fallEvents)[i];
 
-			hwHandleShaftSignal(event, stamp);
+			handleShaftSignal(event, stamp);
 		}
 	}
 }
@@ -77,16 +79,10 @@ static SingleChannelStateSequence waves[PWM_PHASE_MAX_WAVE_PER_PWM] = { SingleCh
 		SingleChannelStateSequence(pinStates3) };
 static SingleChannelStateSequence sr[PWM_PHASE_MAX_WAVE_PER_PWM] = { waves[0], waves[1], waves[2] };
 
-static float switchTimesBuffer[PWM_PHASE_MAX_COUNT];
+static float pwmSwitchTimesBuffer[PWM_PHASE_MAX_COUNT];
 
-PwmConfig triggerSignal(switchTimesBuffer, sr);
+PwmConfig triggerSignal(pwmSwitchTimesBuffer, sr);
 
-#define DO_NOT_STOP 999999999
-
-static int stopEmulationAtIndex = DO_NOT_STOP;
-static bool isEmulating = true;
-
-static Logging *logger;
 static int atTriggerVersion = 0;
 
 #if EFI_ENGINE_SNIFFER
@@ -109,13 +105,13 @@ void setTriggerEmulatorRPM(int rpm DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	}
 	engine->resetEngineSnifferIfInTestMode();
 
-	scheduleMsg(logger, "Emulating position sensor(s). RPM=%d", rpm);
+	efiPrintf("Emulating position sensor(s). RPM=%d", rpm);
 }
 
 static void updateTriggerWaveformIfNeeded(PwmConfig *state) {
 	if (atTriggerVersion < engine->triggerCentral.triggerShape.version) {
 		atTriggerVersion = engine->triggerCentral.triggerShape.version;
-		scheduleMsg(logger, "Stimulator: updating trigger shape: %d/%d %d", atTriggerVersion,
+		efiPrintf("Stimulator: updating trigger shape: %d/%d %d", atTriggerVersion,
 				engine->getGlobalConfigurationVersion(), currentTimeMillis());
 
 
@@ -133,13 +129,6 @@ static TriggerEmulatorHelper helper;
 static bool hasStimPins = false;
 
 static void emulatorApplyPinState(int stateIndex, PwmConfig *state) /* pwm_gen_callback */ {
-	if (stopEmulationAtIndex == stateIndex) {
-		isEmulating = false;
-	}
-	if (!isEmulating) {
-		return;
-	}
-
 	if (engine->directSelfStimulation) {
 		/**
 		 * this callback would invoke the input signal handlers directly
@@ -149,24 +138,19 @@ static void emulatorApplyPinState(int stateIndex, PwmConfig *state) /* pwm_gen_c
 
 #if EFI_PROD_CODE
 	// Only set pins if they're configured - no need to waste the cycles otherwise
-	if (hasStimPins) {
+	else if (hasStimPins) {
 		applyPinState(stateIndex, state);
 	}
 #endif /* EFI_PROD_CODE */
-
 }
 
-static void setEmulatorAtIndex(int index) {
-	stopEmulationAtIndex = index;
-}
+static bool hasInitTriggerEmulator = false;
 
-static void resumeStimulator() {
-	isEmulating = true;
-	stopEmulationAtIndex = DO_NOT_STOP;
-}
-
-void initTriggerEmulatorLogic(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX) {
-	logger = sharedLogger;
+static void initTriggerPwm() {
+	// No need to start more than once
+	if (hasInitTriggerEmulator) {
+		return;
+	}
 
 	TriggerWaveform *s = &engine->triggerCentral.triggerShape;
 	setTriggerEmulatorRPM(engineConfiguration->triggerSimulatorFrequency PASS_ENGINE_PARAMETER_SUFFIX);
@@ -174,14 +158,34 @@ void initTriggerEmulatorLogic(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUF
 			s->wave.channels[0].pinStates,
 			s->wave.channels[1].pinStates,
 			s->wave.channels[2].pinStates };
+	int phaseCount = s->getSize();
+	assertIsInBounds(phaseCount - 1, pwmSwitchTimesBuffer, "pwmSwitchTimesBuffer");
 	triggerSignal.weComplexInit("position sensor",
 			&engine->executor,
-			s->getSize(), s->wave.switchTimes, PWM_PHASE_MAX_WAVE_PER_PWM,
+			phaseCount, s->wave.switchTimes, PWM_PHASE_MAX_WAVE_PER_PWM,
 			pinStates, updateTriggerWaveformIfNeeded, (pwm_gen_callback*)emulatorApplyPinState);
 
-	addConsoleActionI("rpm", setTriggerEmulatorRPM);
-	addConsoleActionI("stop_stimulator_at_index", setEmulatorAtIndex);
-	addConsoleAction("resume_stimulator", resumeStimulator);
+	hasInitTriggerEmulator = true;
+}
+
+void enableTriggerStimulator() {
+	initTriggerPwm();
+	engine->directSelfStimulation = true;
+}
+
+void enableExternalTriggerStimulator() {
+	initTriggerPwm();
+	engine->directSelfStimulation = false;
+}
+
+void disableTriggerStimulator() {
+	engine->directSelfStimulation = false;
+	triggerSignal.stop();
+	hasInitTriggerEmulator = false;
+}
+
+void initTriggerEmulatorLogic(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+	addConsoleActionI(CMD_RPM, setTriggerEmulatorRPM);
 }
 
 void onConfigurationChangeRpmEmulatorCallback(engine_configuration_s *previousConfiguration) {
@@ -192,27 +196,37 @@ void onConfigurationChangeRpmEmulatorCallback(engine_configuration_s *previousCo
 	setTriggerEmulatorRPM(engineConfiguration->triggerSimulatorFrequency);
 }
 
-void initTriggerEmulator(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX) {
-	print("Emulating %s\r\n", getConfigurationName(engineConfiguration->engineType));
+void initTriggerEmulator(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+	efiPrintf("Emulating %s", getConfigurationName(engineConfiguration->engineType));
 
-	for (size_t i = 0; i < efi::size(emulatorOutputs); i++)
-	{
+	startTriggerEmulatorPins();
+
+	initTriggerEmulatorLogic();
+}
+
+void startTriggerEmulatorPins() {
+	hasStimPins = false;
+	for (size_t i = 0; i < efi::size(emulatorOutputs); i++) {
 		triggerSignal.outputPins[i] = &emulatorOutputs[i];
 
 		brain_pin_e pin = CONFIG(triggerSimulatorPins)[i];
 
 		// Only bother trying to set output pins if they're configured
-		if (pin != GPIO_UNASSIGNED) {
+		if (isBrainPinValid(pin)) {
 			hasStimPins = true;
 		}
 
 #if EFI_PROD_CODE
 		triggerSignal.outputPins[i]->initPin("Trigger emulator", pin,
 					&CONFIG(triggerSimulatorPinModes)[i]);
-#endif
+#endif // EFI_PROD_CODE
 	}
+}
 
-	initTriggerEmulatorLogic(sharedLogger);
+void stopTriggerEmulatorPins() {
+	for (size_t i = 0; i < efi::size(emulatorOutputs); i++) {
+		triggerSignal.outputPins[i]->deInit();
+	}
 }
 
 #endif /* EFI_EMULATE_POSITION_SENSORS */

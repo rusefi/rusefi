@@ -10,7 +10,9 @@
 #include "tunerstudio_io.h"
 
 #if EFI_TUNER_STUDIO
-#include "tunerstudio_configuration.h"
+#include "tunerstudio_outputs.h"
+#include "thread_controller.h"
+#include "thread_priority.h"
 
 typedef struct {
 	int queryCommandCounter;
@@ -29,31 +31,20 @@ typedef struct {
 
 extern tunerstudio_counters_s tsState;
 
+// SD protocol file removal is one of the stack consuming use-cases
+#define CONNECTIVITY_THREAD_STACK (3 * UTILITY_THREAD_STACK_SIZE)
+
 /**
  * handle non CRC wrapped command
  */
-bool handlePlainCommand(ts_channel_s *tsChannel, uint8_t command);
-int tunerStudioHandleCrcCommand(ts_channel_s *tsChannel, char *data, int incomingPacketSize);
+bool handlePlainCommand(TsChannelBase* tsChannel, uint8_t command);
 
-/**
- * rusEfi own test command
- */
-void handleTestCommand(ts_channel_s *tsChannel);
 /**
  * this command is part of protocol initialization
  */
-void handleQueryCommand(ts_channel_s *tsChannel, ts_response_format_e mode);
-/**
- * Gauges refresh
- */
-void handleOutputChannelsCommand(ts_channel_s *tsChannel, ts_response_format_e mode);
+void handleQueryCommand(TsChannelBase* tsChannel, ts_response_format_e mode);
 
 char *getWorkingPageAddr();
-void handleWriteValueCommand(ts_channel_s *tsChannel, ts_response_format_e mode, uint16_t page, uint16_t offset, uint8_t value);
-void handleWriteChunkCommand(ts_channel_s *tsChannel, ts_response_format_e mode, short offset, short count, void *content);
-void handlePageSelectCommand(ts_channel_s *tsChannel, ts_response_format_e mode, uint16_t pageId);
-void handlePageReadCommand(ts_channel_s *tsChannel, ts_response_format_e mode, uint16_t pageId, uint16_t offset, uint16_t count);
-void handleBurnCommand(ts_channel_s *tsChannel, ts_response_format_e mode, uint16_t page);
 
 void tunerStudioDebug(const char *msg);
 void tunerStudioError(const char *msg);
@@ -64,7 +55,6 @@ void requestBurn(void);
 
 void startTunerStudioConnectivity(void);
 void syncTunerStudioCopy(void);
-void runBinaryProtocolLoop(ts_channel_s *tsChannel);
 
 #if defined __GNUC__
 // GCC
@@ -77,30 +67,22 @@ void runBinaryProtocolLoop(ts_channel_s *tsChannel);
 #endif
 
 typedef pre_packed struct
-	post_packed {
-		short int offset;
-		short int count;
-	} TunerStudioOchRequest;
+post_packed {
+	short int offset;
+	short int count;
+} TunerStudioWriteChunkRequest;
 
+class TunerstudioThread : public ThreadController<CONNECTIVITY_THREAD_STACK> {
+public:
+	TunerstudioThread(const char* name)
+		: ThreadController(name, PRIO_CONSOLE)
+	{
+	}
 
-	typedef pre_packed struct
-	post_packed {
-		short int page;
-		short int offset;
-		short int count;
-	} TunerStudioWriteChunkRequest;
+	// Initialize and return the channel to use for this thread.
+	virtual TsChannelBase* setupChannel() = 0;
 
-	typedef pre_packed struct
-		post_packed {
-			short int page;
-			short int offset;
-			short int count;
-		} TunerStudioReadRequest;
-
-		typedef pre_packed struct
-			post_packed {
-				short int offset;
-				unsigned char value;
-			} TunerStudioWriteValueRequest;
+	void ThreadTask() override;
+};
 
 #endif /* EFI_TUNER_STUDIO */

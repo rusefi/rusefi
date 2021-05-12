@@ -18,17 +18,14 @@ typedef uint32_t iomode_t;
 typedef uint32_t ioportid_t;
 typedef uint32_t ioportmask_t;
 
+#define DL_OUTPUT_BUFFER 200
+
 // just a stub implementation for unit tests
 #define EXPECTED_REMAINING_STACK 1
 #define getCurrentRemainingStack() (999999)
 
 // this is needed by all DECLARE_ENGINE_PARAMETER_* usages
 #include "engine_configuration_generated_structures.h"
-
-#ifdef __cplusplus
-// this is needed by all DECLARE_ENGINE_PARAMETER_* usages
-class Engine;
-#endif /* __cplusplus */
 
 
 #ifdef __cplusplus
@@ -45,8 +42,6 @@ typedef uint32_t systime_t;
 
 void chDbgAssert(int c, char *msg, void *arg);
 
-void print(const char *fmt, ...);
-
 #define TICKS_IN_MS 100
 
 #define chDbgCheck(x, y) chDbgAssert(x, y, NULL)
@@ -60,25 +55,11 @@ void print(const char *fmt, ...);
 #define VCS_VERSION "321"
 #define RUS_EFI_VERSION_TAG "rusEfiVersion"
 
-#define ALWAYS_INLINE INLINE
-
-#define US2NT(x) (US_TO_NT_MULTIPLIER * (x))
-
-#define NT2US(x) ((x) / US_TO_NT_MULTIPLIER)
-
 #define INLINE inline
 
 #define EFI_ERROR_CODE 0xffffffff
 
 #define CCM_OPTIONAL
-
-#define EXTERN_ENGINE extern EnginePins enginePins; \
-	 extern engine_configuration_s & activeConfiguration
-
-#define EXTERN_CONFIG
-
-#define DEFINE_CONFIG_PARAM(x, y) , x y
-#define PASS_CONFIG_PARAM(x) , x
 
 /**
  * this macro provides references to engine from EngineTestHelper
@@ -97,6 +78,11 @@ void print(const char *fmt, ...);
 
 #define CONFIG_PARAM(x) (x)
 
-#define lockAnyContext() false
+#ifdef __cplusplus
+namespace chibios_rt {
+	// Noop for unit tests - this does real lock in FW/sim
+	class CriticalSectionLocker { };
+}
+#endif
 
-#define unlockAnyContext() {}
+#define UNIT_TEST_BUSY_WAIT_CALLBACK() { 	timeNowUs++; }

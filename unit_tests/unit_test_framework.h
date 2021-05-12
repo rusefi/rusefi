@@ -13,7 +13,8 @@
 using ::testing::Return;
 
 // This lets us inspect private state from unit tests
-#define private public
+// cool hack but probably should not be used, even conditional private/public compilation is more obvious
+//#define private public
 
 /**
  * These are usually used with ASSETR_NEAR(val1, val2, abs_error)
@@ -31,3 +32,5 @@ void assertEqualsM(const char *msg, float expected, float actual);
 void assertEqualsLM(const char *msg, long expected, long actual);
 void assertEqualsM4(const char *prefix, const char *msg, float expected, float actual);
 
+#define EXPECT_NO_FATAL_ERROR EXPECT_NO_THROW
+#define EXPECT_FATAL_ERROR(expr) EXPECT_THROW((expr), std::logic_error)

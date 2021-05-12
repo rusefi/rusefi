@@ -1,6 +1,6 @@
 package com.romraider.maps;
 
-import com.rusefi.Launcher;
+import com.rusefi.ConsoleUI;
 
 import javax.swing.*;
 import java.awt.*;
@@ -29,6 +29,6 @@ class CopyTableWorker extends SwingWorker<Void, Void> {
             ancestorWindow.setCursor(null);
         }
         table.setCursor(null);
-        Launcher.getFrame().setCursor(null);
+        ConsoleUI.getFrame().setCursor(null);
     }
 }

@@ -19,19 +19,10 @@
 #include "perf_trace.h"
 
 #if EFI_UNIT_TEST
+extern int timeNowUs;
 extern bool verboseMode;
 #endif /* EFI_UNIT_TEST */
 
-uint32_t maxSchedulingPrecisionLoss = 0;
-
-EventQueue::EventQueue() {
-	head = nullptr;
-	setLateDelay(100);
-}
-
-bool EventQueue::checkIfPending(scheduling_s *scheduling) {
-	assertNotInListMethodBody(scheduling_s, head, scheduling, nextScheduling_s);
-}
 
 /**
  * @return true if inserted into the head of the list
@@ -46,7 +37,7 @@ bool EventQueue::insertTask(scheduling_s *scheduling, efitime_t timeX, action_s 
 
 // please note that simulator does not use this code at all - simulator uses signal_executor_sleep
 
-	if (scheduling->isScheduled) {
+	if (scheduling->action) {
 #if EFI_UNIT_TEST
 		if (verboseMode) {
 			printf("Already scheduled was %d\r\n", (int)scheduling->momentX);
@@ -58,7 +49,6 @@ bool EventQueue::insertTask(scheduling_s *scheduling, efitime_t timeX, action_s 
 
 	scheduling->momentX = timeX;
 	scheduling->action = action;
-	scheduling->isScheduled = true;
 
 	if (head == NULL || timeX < head->momentX) {
 		// here we insert into head of the linked list
@@ -89,23 +79,24 @@ bool EventQueue::insertTask(scheduling_s *scheduling, efitime_t timeX, action_s 
  * This method is always invoked under a lock
  * @return Get the timestamp of the soonest pending action, skipping all the actions in the past
  */
-efitime_t EventQueue::getNextEventTime(efitime_t nowX) const {
-	
+expected<efitime_t> EventQueue::getNextEventTime(efitime_t nowX) const {
 	if (head != NULL) {
 		if (head->momentX <= nowX) {
 			/**
-			 * We are here if action timestamp is in the past
+			 * We are here if action timestamp is in the past. We should rarely be here since this 'getNextEventTime()' is
+			 * always invoked by 'scheduleTimerCallback' which is always invoked right after 'executeAllPendingActions' - but still,
+			 * for events which are really close to each other we would end up here.
 			 *
 			 * looks like we end up here after 'writeconfig' (which freezes the firmware) - we are late
 			 * for the next scheduled event
 			 */
-			efitime_t aBitInTheFuture = nowX + lateDelay;
-			return aBitInTheFuture;
+			return nowX + lateDelay;
 		} else {
 			return head->momentX;
 		}
 	}
-	return EMPTY_QUEUE;
+
+	return unexpected;
 }
 
 /**
@@ -126,47 +117,66 @@ int EventQueue::executeAll(efitime_t now) {
 	assertListIsSorted();
 #endif
 
-	while (true) {
-		// Read the head every time - a previously executed event could
-		// have inserted something new at the head
-		scheduling_s* current = head;
+	bool didExecute;
+	do {
+		didExecute = executeOne(now);
+		executionCounter += didExecute ? 1 : 0;
+	} while (didExecute);
 
-		// Queue is empty - bail
-		if (!current) {
-			break;
-		}
+	return executionCounter;
+}
 
-		// Only execute events that occured in the past.
-		// The list is sorted, so as soon as we see an event
-		// in the future, we're done.
-		if (current->momentX > now) {
-			break;
-		}
+bool EventQueue::executeOne(efitime_t now) {
+	// Read the head every time - a previously executed event could
+	// have inserted something new at the head
+	scheduling_s* current = head;
 
-		executionCounter++;
+	// Queue is empty - bail
+	if (!current) {
+		return false;
+	}
 
-		// step the head forward, unlink this element, clear scheduled flag
-		head = current->nextScheduling_s;
-		current->nextScheduling_s = nullptr;
-		current->isScheduled = false;
+	// If the next event is far in the future, we'll reschedule
+	// and execute it next time.
+	// We do this when the next event is close enough that the overhead of
+	// resetting the timer and scheduling an new interrupt is greater than just
+	// waiting for the time to arrive.  On current CPUs, this is reasonable to set
+	// around 10 microseconds.
+	if (current->momentX > now + lateDelay) {
+		return false;
+	}
+
+	// near future - spin wait for the event to happen and avoid the
+	// overhead of rescheduling the timer.
+	// yes, that's a busy wait but that's what we need here
+	while (current->momentX > getTimeNowNt()) {
+		UNIT_TEST_BUSY_WAIT_CALLBACK();
+	}
+
+	// step the head forward, unlink this element, clear scheduled flag
+	head = current->nextScheduling_s;
+	current->nextScheduling_s = nullptr;
+
+	// Grab the action but clear it in the event so we can reschedule from the action's execution
+	auto action = current->action;
+	current->action = {};
 
 #if EFI_UNIT_TEST
-		printf("QUEUE: execute current=%d param=%d\r\n", (long)current, (long)current->action.getArgument());
+	printf("QUEUE: execute current=%d param=%d\r\n", (long)current, (long)action.getArgument());
 #endif
 
-		// Execute the current element
-		{
-			ScopePerf perf2(PE::EventQueueExecuteCallback);
-			current->action.execute();
-		}
+	// Execute the current element
+	{
+		ScopePerf perf2(PE::EventQueueExecuteCallback);
+		action.execute();
+	}
 
 #if EFI_UNIT_TEST
 	// (tests only) Ensure we didn't break anything
 	assertListIsSorted();
 #endif
-	}
 
-	return executionCounter;
+	return true;
 }
 
 int EventQueue::size(void) const {
@@ -182,10 +192,6 @@ void EventQueue::assertListIsSorted() const {
 		efiAssertVoid(CUSTOM_ERR_6623, current->momentX <= current->nextScheduling_s->momentX, "list order");
 		current = current->nextScheduling_s;
 	}
-}
-
-void EventQueue::setLateDelay(int value) {
-	lateDelay = value;
 }
 
 scheduling_s * EventQueue::getHead() {
@@ -209,5 +215,17 @@ scheduling_s *EventQueue::getElementAtIndexForUnitText(int index) {
 }
 
 void EventQueue::clear(void) {
+	// Flush the queue, resetting all scheduling_s as though we'd executed them
+	while(head) {
+		auto x = head;
+		// link next element to head
+		head = x->nextScheduling_s;
+
+		// Reset this element
+		x->momentX = 0;
+		x->nextScheduling_s = nullptr;
+		x->action = {};
+	}
+
 	head = nullptr;
 }

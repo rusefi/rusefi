@@ -10,7 +10,7 @@
 
 using ::testing::_;
 
-static int testchip_readPad(void *data, brain_pin_e pin)
+static int testchip_readPad(void *data, unsigned int pin)
 {
 	if (pin & 0x01)
 		return 1;
@@ -19,7 +19,7 @@ static int testchip_readPad(void *data, brain_pin_e pin)
 
 static int io_state = 0;
 
-static int testchip_writePad(void *data, brain_pin_e pin, int value)
+static int testchip_writePad(void *data, unsigned int pin, int value)
 {
 	if (value)
 		io_state |=  (1 << value);
@@ -39,7 +39,7 @@ static int testchip_init(void *data)
 }
 
 static int calls_to_failed_chip = 0;
-static int testchip_failed_writePad(void *data, brain_pin_e pin, int value)
+static int testchip_failed_writePad(void *data, unsigned int pin, int value)
 {
 	calls_to_failed_chip++;
 	return 0;
@@ -97,21 +97,27 @@ TEST(gpioext, testGpioExt) {
 	printf("====================================================================================== testGpioExt\r\n");
 
 	/* should fail to register chip with no readPad and writePad */
-	EXPECT_FALSE(gpiochip_register("invalid", &testchip0, 16, NULL) > 0);
+	EXPECT_FALSE(gpiochip_register((brain_pin_e)(BRAIN_PIN_ONCHIP_LAST + 1), "invalid", &testchip0, 16, NULL) > 0);
 
 	/* should fail to register chip with zero gpios */
-	EXPECT_FALSE(gpiochip_register("invalid", &testchip1, 0, NULL) > 0);
+	EXPECT_FALSE(gpiochip_register((brain_pin_e)(BRAIN_PIN_ONCHIP_LAST + 1), "invalid", &testchip1, 0, NULL) > 0);
 
-	chip1_base = gpiochip_register("input only", &testchip1, 16, NULL);
+	/* should fail to register chip with base overlapig on-chip gpios */
+	EXPECT_FALSE(gpiochip_register((brain_pin_e)(BRAIN_PIN_ONCHIP_LAST - 1), "invalid", &testchip1, 0, NULL) > 0);
+
+	chip1_base = gpiochip_register((brain_pin_e)(BRAIN_PIN_ONCHIP_LAST + 1), "input only", &testchip1, 16, NULL);
 	EXPECT_TRUE(chip1_base > 0);
 
 	EXPECT_EQ(16, gpiochips_get_total_pins());
 
-	chip2_base = gpiochip_register("output only", &testchip2, 16, NULL);
+	/* should fail to register chip overlapping other one */
+	EXPECT_FALSE(gpiochip_register((brain_pin_e)(BRAIN_PIN_ONCHIP_LAST + 1 + 15), "output only", &testchip2, 16, NULL) > 0);
+
+	chip2_base = gpiochip_register((brain_pin_e)(BRAIN_PIN_ONCHIP_LAST + 1 + 16), "output only", &testchip2, 16, NULL);
 	EXPECT_TRUE(chip2_base > 0);
 
 	/* this chip will fail to init, but should be registered without errors */
-	chip3_base = gpiochip_register("failed chip", &testchip3, 16, NULL);
+	chip3_base = gpiochip_register((brain_pin_e)(BRAIN_PIN_ONCHIP_LAST + 1 + 16 + 16), "failed chip", &testchip3, 16, NULL);
 	EXPECT_TRUE(chip2_base > 0);
 
 	EXPECT_EQ(48, gpiochips_get_total_pins());

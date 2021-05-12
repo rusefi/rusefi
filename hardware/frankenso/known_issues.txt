@@ -192,6 +192,7 @@
 185)                    comma is a challenging symbol for field names. We are hacking/cheating when we use a comma in field name like "MFG,MFG#" and field value "microchip,MCP6004-E/SL" and this breaks IBOM tool. The fair way is to have two separate fields.
                         PS: not breaking iBOM tool anymore but still a hack :)
 186)                    change JP9 & JP11 footprint from "SIL-2" to "SM0805_jumper" matching the Wxx jumper footprint this allows 0R SMT jumpers to be installed facilitate assembly
+187)                    mention "Multiple 5ks for increased stand off voltage. Yes 4.7 k should be ok." on the schematics/PDF
 
 For honda add-on / rewiring board
 -- Add 2A high side solinoid drive for VTec sol

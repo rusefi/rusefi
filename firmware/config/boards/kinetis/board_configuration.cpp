@@ -21,7 +21,7 @@ char __debugBuffer[80];
 int __debugEnabled = 0;
 #endif
 
-void setBoardConfigurationOverrides(void) {
+void setBoardDefaultConfiguration(void) {
 	setOperationMode(engineConfiguration, FOUR_STROKE_CRANK_SENSOR);
 	engineConfiguration->trigger.type = TT_TOOTHED_WHEEL_60_2;
 	engineConfiguration->useOnlyRisingEdgeForTrigger = true;
@@ -43,7 +43,7 @@ void setBoardConfigurationOverrides(void) {
 	engineConfiguration->specs.displacement = 1.645;
 	engineConfiguration->injector.flow = 200;
 	
-	engineConfiguration->cranking.baseFuel = 5;		// ???
+	engineConfiguration->cranking.baseFuel = 25;		// ???
 	engineConfiguration->crankingChargeAngle = 70;
 	engineConfiguration->cranking.rpm = 600;
 
@@ -74,20 +74,6 @@ void setBoardConfigurationOverrides(void) {
 
 	engineConfiguration->mapMinBufferLength = 4;
 
-	// todo:
-	engineConfiguration->map.sensor.hwChannel = EFI_ADC_NONE;
-	engineConfiguration->mafAdcChannel = EFI_ADC_NONE;
-	engineConfiguration->hipOutputChannel = EFI_ADC_NONE;
-	engineConfiguration->tps1_1AdcChannel = EFI_ADC_NONE;
-	engineConfiguration->fuelLevelSensor = EFI_ADC_NONE;
-	engineConfiguration->throttlePedalPositionAdcChannel = EFI_ADC_NONE;
-	engineConfiguration->vbattAdcChannel = EFI_ADC_NONE;
-	engineConfiguration->clt.adcChannel = EFI_ADC_NONE;
-	engineConfiguration->iat.adcChannel = EFI_ADC_NONE;
-	engineConfiguration->afr.hwChannel = EFI_ADC_NONE;
-	engineConfiguration->oilPressure.hwChannel = EFI_ADC_NONE;
-	engineConfiguration->acSwitchAdc = EFI_ADC_NONE;
-	
 	engineConfiguration->clt.adcChannel = EFI_ADC_14;
 
 	engineConfiguration->triggerInputPins[0] = GPIOE_7;
@@ -120,8 +106,8 @@ void setSerialConfigurationOverrides(void) {
 	engineConfiguration->useSerialPort = true;
 	engineConfiguration->binarySerialTxPin = GPIOC_7;
 	engineConfiguration->binarySerialRxPin = GPIOC_6;
-	engineConfiguration->consoleSerialTxPin = GPIOA_10;
-	engineConfiguration->consoleSerialRxPin = GPIOA_11;
+//	engineConfiguration->consoleSerialTxPin = GPIOA_10;
+//	engineConfiguration->consoleSerialRxPin = GPIOA_11;
 	engineConfiguration->tunerStudioSerialSpeed = SERIAL_SPEED;
 	engineConfiguration->uartConsoleSerialSpeed = SERIAL_SPEED;
 }

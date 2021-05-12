@@ -35,12 +35,7 @@ EXTERN_ENGINE;
 
 static ign_Map3D_t advanceMap("advance");
 // This coeff in ctor parameter is sufficient for int16<->float conversion!
-static ign_tps_Map3D_t advanceTpsMap("advanceTps", 1.0 / ADVANCE_TPS_STORAGE_MULT);
 static ign_Map3D_t iatAdvanceCorrectionMap("iat corr");
-
-// Init PID later (make it compatible with unit-tests)
-static Pid idleTimingPid;
-static bool shouldResetTimingPid = false;
 
 static int minCrankingRpm = 0;
 
@@ -48,23 +43,24 @@ static int minCrankingRpm = 0;
 static const float iatTimingRpmBins[IGN_LOAD_COUNT] = {880,	1260,	1640,	2020,	2400,	2780,	3000,	3380,	3760,	4140,	4520,	5000,	5700,	6500,	7200,	8000};
 
 //880	1260	1640	2020	2400	2780	3000	3380	3760	4140	4520	5000	5700	6500	7200	8000
-static const ignition_table_t defaultIatTiming = {
-		{ 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 2, 2, 2, 2, 2},
-		{ 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 2, 2, 2, 2, 2},
-		{ 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 2, 2, 2, 2, 2},
-		{ 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 2, 2, 2, 2, 2},
-		{3.5, 3.5, 3.5, 3.5, 3.5, 3.5, 3.5, 3.5, 3.5, 3.5, 3.5, 2, 2, 2, 2, 2},
-		{ 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 2, 2, 2, 2, 2},
-		{ 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 0, 0, 0, 0, 0},
+static const int8_t defaultIatTiming[16][16] = {
+	// NOTE: this table is stored in tenths of a degree (so we can use int8_t instead of float), converted upon copy (see copyTable call below)
+		{ 40, 40, 40, 40, 40, 40, 40, 40, 40, 40, 40, 20, 20, 20, 20, 20 },
+		{ 40, 40, 40, 40, 40, 40, 40, 40, 40, 40, 40, 20, 20, 20, 20, 20 },
+		{ 40, 40, 40, 40, 40, 40, 40, 40, 40, 40, 40, 20, 20, 20, 20, 20 },
+		{ 40, 40, 40, 40, 40, 40, 40, 40, 40, 40, 40, 20, 20, 20, 20, 20 },
+		{ 35, 35, 35, 35, 35, 35, 35, 35, 35, 35, 35, 20, 20, 20, 20, 20 },
+		{ 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 20, 20, 20, 20, 2},
+		{ 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 0, 0, 0, 0, 0},
 		{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
 		{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-		{ 0, 0, -0.9, -0.9, -0.9, -0.9, -0.9, -0.9, -0.9, -0.9, -0.9, -0.9, -0.9, -0.9, -0.9, -0.9},
-		{ -3.3, -3.4, -4.9, -4.9, -4.9, -4.9, -4.4, -4.4, -4.4, -4.4, -4.4, -0.9, -0.9, -0.9, -0.9, -0.9},
-		{ -4.4, -4.9, -5.9, -5.9, -5.9, -5.9, -4.9, -4.9, -4.9, -4.9, -4.9, -2.4, -2.4, -2.4, -2.4, -2.4},
-		{ -4.4, -4.9, -5.9, -5.9, -5.9, -5.9, -4.9, -4.9, -4.9, -4.9, -4.9, -2.9, -2.9, -2.9, -2.9, -2.9},
-		{-4.4, -4.9, -5.9, -5.9, -5.9, -5.9, -4.9, -4.9, -4.9, -4.9, -4.9, -3.9, -3.9, -3.9, -3.9, -3.9},
-		{-4.4, -4.9, -5.9, -5.9, -5.9, -5.9, -4.9, -4.9, -4.9, -4.9, -4.9, -3.9, -3.9, -3.9, -3.9, -3.9},
-		{-4.4, -4.9, -5.9, -5.9, -5.9, -5.9, -4.9, -4.9, -4.9, -4.9, -4.9, -3.9, -3.9, -3.9, -3.9, -3.9},
+		{   0,   0,  -9,  -9,  -9,  -9,  -9,  -9,  -9,  -9,  -9,  -9,  -9,  -9,  -9,  -9},
+		{ -33, -34, -49, -49, -49, -49, -44, -44, -44, -44, -44,  -9,  -9,  -9,  -9,  -9},
+		{ -44, -49, -59, -59, -59, -59, -49, -49, -49, -49, -49, -24, -24, -24, -24, -24},
+		{ -44, -49, -59, -59, -59, -59, -49, -49, -49, -49, -49, -29, -29, -29, -29, -29},
+		{ -44, -49, -59, -59, -59, -59, -49, -49, -49, -49, -49, -39, -39, -39, -39, -39},
+		{ -44, -49, -59, -59, -59, -59, -49, -49, -49, -49, -49, -39, -39, -39, -39, -39},
+		{ -44, -49, -59, -59, -59, -59, -49, -49, -49, -49, -49, -39, -39, -39, -39, -39},
 };
 
 #endif /* IGN_LOAD_COUNT == DEFAULT_IGN_LOAD_COUNT */
@@ -84,18 +80,11 @@ static angle_t getRunningAdvance(int rpm, float engineLoad DECLARE_ENGINE_PARAME
 
 	efiAssert(CUSTOM_ERR_ASSERT, !cisnan(engineLoad), "invalid el", NAN);
 
-	float advanceAngle;
-	if (CONFIG(useTPSAdvanceTable)) {
-		// TODO: what do we do about multi-TPS?
-		float tps = Sensor::get(SensorType::Tps1).value_or(0);
-		advanceAngle = advanceTpsMap.getValue(rpm, tps);
-	} else {
-		advanceAngle = advanceMap.getValue((float) rpm, engineLoad);
-	}
+	float advanceAngle = advanceMap.getValue((float) rpm, engineLoad);
 
 	// get advance from the separate table for Idle
-	if (CONFIG(useSeparateAdvanceForIdle)) {
-		float idleAdvance = interpolate2d("idleAdvance", rpm, config->idleAdvanceBins, config->idleAdvance);
+	if (CONFIG(useSeparateAdvanceForIdle) && isIdling()) {
+		float idleAdvance = interpolate2d(rpm, config->idleAdvanceBins, config->idleAdvance);
 
 		auto [valid, tps] = Sensor::get(SensorType::DriverThrottleIntent);
 		if (valid) {
@@ -104,7 +93,6 @@ static angle_t getRunningAdvance(int rpm, float engineLoad DECLARE_ENGINE_PARAME
 		}
 	}
 
-	
 #if EFI_LAUNCH_CONTROL
 	if (engine->isLaunchCondition && CONFIG(enableLaunchRetard)) {
         if (CONFIG(launchSmoothRetard)) {
@@ -130,42 +118,10 @@ angle_t getAdvanceCorrections(int rpm DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	if (!iatValid) {
 		iatCorrection = 0;
 	} else {
-		iatCorrection = iatAdvanceCorrectionMap.getValue((float) rpm, iat);
+		iatCorrection = iatAdvanceCorrectionMap.getValue(rpm, iat);
 	}
 
-	// PID Ignition Advance angle correction
-	float pidTimingCorrection = 0.0f;
-	if (CONFIG(useIdleTimingPidControl)) {
-		int targetRpm = getTargetRpmForIdleCorrection(PASS_ENGINE_PARAMETER_SIGNATURE);
-		int rpmDelta = absI(rpm - targetRpm);
-
-		auto [valid, tps] = Sensor::get(SensorType::Tps1);
-
-		// If TPS is invalid, or we aren't in the region, so reset state and don't apply PID
-		if (!valid || tps >= CONFIG(idlePidDeactivationTpsThreshold)) {
-			// we are not in the idle mode anymore, so the 'reset' flag will help us when we return to the idle.
-			shouldResetTimingPid = true;
-		} 
-		else if (rpmDelta > CONFIG(idleTimingPidDeadZone) && rpmDelta < CONFIG(idleTimingPidWorkZone) + CONFIG(idlePidFalloffDeltaRpm)) {
-			// We're now in the idle mode, and RPM is inside the Timing-PID regulator work zone!
-			// So if we need to reset the PID, let's do it now
-			if (shouldResetTimingPid) {
-				idleTimingPid.reset();
-				shouldResetTimingPid = false;
-			}
-			// get PID value (this is not an actual Advance Angle, but just a additive correction!)
-			percent_t timingRawCorr = idleTimingPid.getOutput(targetRpm, rpm,
-					/* is this the right dTime? this period is not exactly the period at which this code is invoked*/engineConfiguration->idleTimingPid.periodMs);
-			// tps idle-running falloff
-			pidTimingCorrection = interpolateClamped(0.0f, timingRawCorr, CONFIG(idlePidDeactivationTpsThreshold), 0.0f, tps);
-			// rpm falloff
-			pidTimingCorrection = interpolateClamped(0.0f, pidTimingCorrection, CONFIG(idlePidFalloffDeltaRpm), 0.0f, rpmDelta - CONFIG(idleTimingPidWorkZone));
-		} else {
-			shouldResetTimingPid = true;
-		}
-	} else {
-		shouldResetTimingPid = true;
-	}
+	float pidTimingCorrection = getIdleTimingAdjustment(rpm);
 
 	if (engineConfiguration->debugMode == DBG_IGNITION_TIMING) {
 #if EFI_TUNER_STUDIO
@@ -191,7 +147,7 @@ angle_t getAdvanceCorrections(int rpm DECLARE_ENGINE_PARAMETER_SUFFIX) {
 static angle_t getCrankingAdvance(int rpm, float engineLoad DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	// get advance from the separate table for Cranking
 	if (CONFIG(useSeparateAdvanceForCranking)) {
-		return interpolate2d("crankingAdvance", rpm, CONFIG(crankingAdvanceBins), CONFIG(crankingAdvance));
+		return interpolate2d(rpm, CONFIG(crankingAdvanceBins), CONFIG(crankingAdvance));
 	}
 
 	// Interpolate the cranking timing angle to the earlier running angle for faster engine start
@@ -211,7 +167,7 @@ angle_t getAdvance(int rpm, float engineLoad DECLARE_ENGINE_PARAMETER_SUFFIX) {
 
 	angle_t angle;
 
-	bool isCranking = ENGINE(rpmCalculator).isCranking(PASS_ENGINE_PARAMETER_SIGNATURE);
+	bool isCranking = ENGINE(rpmCalculator).isCranking();
 	if (isCranking) {
 		angle = getCrankingAdvance(rpm, engineLoad PASS_ENGINE_PARAMETER_SUFFIX);
 		assertAngleRange(angle, "crAngle", CUSTOM_ERR_6680);
@@ -237,7 +193,6 @@ angle_t getAdvance(int rpm, float engineLoad DECLARE_ENGINE_PARAMETER_SUFFIX) {
 		}
 	}
 
-	angle -= engineConfiguration->ignitionOffset;
 	efiAssert(CUSTOM_ERR_ASSERT, !cisnan(angle), "_AngleN5", 0);
 	fixAngle(angle, "getAdvance", CUSTOM_ERR_ADCANCE_CALC_ANGLE);
 	return angle;
@@ -259,8 +214,9 @@ size_t getMultiSparkCount(int rpm DECLARE_ENGINE_PARAMETER_SUFFIX) {
 		floatus_t multiDelay = CONFIG(multisparkSparkDuration);
 		floatus_t multiDwell = CONFIG(multisparkDwell);
 
-		ENGINE(engineState.multispark.delay) = US2NT(multiDelay);
-		ENGINE(engineState.multispark.dwell) = US2NT(multiDwell);
+        // dwell times are below 10 seconds here so we use 32 bit type for performance reasons
+		ENGINE(engineState.multispark.delay) = (uint32_t)USF2NT(multiDelay);
+		ENGINE(engineState.multispark.dwell) = (uint32_t)USF2NT(multiDwell);
 
 		constexpr float usPerDegreeAt1Rpm = 60e6 / 360;
 		floatus_t usPerDegree = usPerDegreeAt1Rpm / rpm;
@@ -286,8 +242,9 @@ size_t getMultiSparkCount(int rpm DECLARE_ENGINE_PARAMETER_SUFFIX) {
 void setDefaultIatTimingCorrection(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	setLinearCurve(config->ignitionIatCorrLoadBins, /*from*/CLT_CURVE_RANGE_FROM, 110, 1);
 #if IGN_LOAD_COUNT == DEFAULT_IGN_LOAD_COUNT
-	memcpy(config->ignitionIatCorrRpmBins, iatTimingRpmBins, sizeof(iatTimingRpmBins));
-	copyTimingTable(defaultIatTiming, config->ignitionIatCorrTable);
+	copyArray(config->ignitionIatCorrRpmBins, iatTimingRpmBins);
+	// defaultIatTiming stored in tenths of a degree, see table above
+	copyTable(config->ignitionIatCorrTable, defaultIatTiming, 0.1f);
 #else
 	setLinearCurve(config->ignitionIatCorrLoadBins, /*from*/0, 6000, 1);
 #endif /* IGN_LOAD_COUNT == DEFAULT_IGN_LOAD_COUNT */
@@ -297,12 +254,8 @@ void initTimingMap(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	// We init both tables in RAM because here we're at a very early stage, with no config settings loaded.
 	advanceMap.init(config->ignitionTable, config->ignitionLoadBins,
 			config->ignitionRpmBins);
-	advanceTpsMap.init(CONFIG(ignitionTpsTable), CONFIG(ignitionTpsBins),
-			config->ignitionRpmBins);
 	iatAdvanceCorrectionMap.init(config->ignitionIatCorrTable, config->ignitionIatCorrLoadBins,
 			config->ignitionIatCorrRpmBins);
-	// init timing PID
-	idleTimingPid = Pid(&CONFIG(idleTimingPid));
 }
 
 /**
@@ -368,8 +321,7 @@ float getInitialAdvance(int rpm, float map, float advanceMax) {
  * this method builds a good-enough base timing advance map bases on a number of heuristics
  */
 void buildTimingMap(float advanceMax DECLARE_CONFIG_PARAMETER_SUFFIX) {
-	if (engineConfiguration->fuelAlgorithm != LM_SPEED_DENSITY &&
-			engineConfiguration->fuelAlgorithm != LM_MAP) {
+	if (engineConfiguration->fuelAlgorithm != LM_SPEED_DENSITY) {
 		warning(CUSTOM_WRONG_ALGORITHM, "wrong algorithm for MAP-based timing");
 		return;
 	}

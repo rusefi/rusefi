@@ -10,17 +10,20 @@
 #pragma once
 
 #ifdef __cplusplus
-extern "C"
-{
-#endif /* __cplusplus */
+#include "tunerstudio_io.h"
 
-void initMmcCard(void);
+#define DOT_MLG ".mlg"
+
+bool isLogFile(const char *fileName);
+void initEarlyMmcCard();
+void initMmcCard();
 bool isSdCardAlive(void);
-void appendToLog(const char *line);
 
 void readLogFileContent(char *buffer, short fileId, short offset, short length);
 
-#ifdef __cplusplus
-}
-#endif /* __cplusplus */
+void handleTsR(TsChannelBase* tsChannel, char *input);
+void handleTsW(TsChannelBase* tsChannel, char *input);
 
+extern "C"
+#endif
+void onUsbConnectedNotifyMmcI(void);

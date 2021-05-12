@@ -160,27 +160,25 @@ typedef enum __attribute__ ((__packed__)) {
 	GPIOH_14 = 128,
 	GPIOH_15 = 129,
 
-	/* TLE6240 pins go right after on chips */
-	//#define TLE6240_PIN(n)		((brain_pin_e)((int)BRAIN_PIN_LAST_ONCHIP + 1 + (n)))
-	TLE6240_PIN_1 = 130,
-	TLE6240_PIN_2 = 131,
-	TLE6240_PIN_3 = 132,
-	TLE6240_PIN_4 = 133,
-	TLE6240_PIN_5 = 134,
-	TLE6240_PIN_6 = 135,
-	TLE6240_PIN_7 = 136,
-	TLE6240_PIN_8 = 137,
-	TLE6240_PIN_9 = 138,
-	TLE6240_PIN_10 = 139,
-	TLE6240_PIN_11 = 140,
-	TLE6240_PIN_12 = 141,
-	TLE6240_PIN_13 = 142,
-	TLE6240_PIN_14 = 143,
-	TLE6240_PIN_15 = 144,
-	TLE6240_PIN_16 = 145,
+	/* Used by 176-pin STM32 MCUs */
+	GPIOI_0 = 130,
+	GPIOI_1 = 131,
+	GPIOI_2 = 132,
+	GPIOI_3 = 133,
+	GPIOI_4 = 134,
+	GPIOI_5 = 135,
+	GPIOI_6 = 136,
+	GPIOI_7 = 137,
+	GPIOI_8 = 138,
+	GPIOI_9 = 139,
+	GPIOI_10 = 140,
+	GPIOI_11 = 141,
+	GPIOI_12 = 142,
+	GPIOI_13 = 143,
+	GPIOI_14 = 144,
+	GPIOI_15 = 145,
 
-	/* MC33972 pins go right after TLE6240 */
-	//#define MC33972_PIN(n)		((brain_pin_e)((int)BRAIN_PIN_LAST_ONCHIP + 1 + 16 + (n)))
+	/* MC33972 pins go right after on_chip pins */
 	MC33972_PIN_1 = 146,
 	MC33972_PIN_21 = 166,
 	MC33972_PIN_22 = 167,
@@ -213,10 +211,34 @@ typedef enum __attribute__ ((__packed__)) {
 	TLE8888_PIN_26 = 193,
 	TLE8888_PIN_27 = 194,
 	TLE8888_PIN_28 = 195,
+	TLE8888_PIN_MR = 196,
+	TLE8888_PIN_KEY = 197,
+	TLE8888_PIN_WAKE = 198,
+
+	/* TLE6240 pins */
+	TLE6240_PIN_1 = 199,
+	TLE6240_PIN_2 = 200,
+	TLE6240_PIN_3 = 201,
+	TLE6240_PIN_4 = 202,
+	TLE6240_PIN_5 = 203,
+	TLE6240_PIN_6 = 204,
+	TLE6240_PIN_7 = 205,
+	TLE6240_PIN_8 = 206,
+	TLE6240_PIN_9 = 207,
+	TLE6240_PIN_10 = 208,
+	TLE6240_PIN_11 = 209,
+	TLE6240_PIN_12 = 210,
+	TLE6240_PIN_13 = 211,
+	TLE6240_PIN_14 = 212,
+	TLE6240_PIN_15 = 213,
+	TLE6240_PIN_16 = 214,
 } brain_pin_e;
 
-/* Plase keep updating this define */
-#define BRAIN_PIN_LAST_ONCHIP	GPIOH_15
+/* Plase keep updating these defines */
+#define BRAIN_PIN_ONCHIP_LAST	GPIOI_15
+#define BRAIN_PIN_ONCHIP_PINS	(BRAIN_PIN_ONCHIP_LAST - GPIOA_0 + 1)
+#define BRAIN_PIN_LAST 			TLE8888_PIN_WAKE
+#define BRAIN_PIN_TOTAL_PINS	(BRAIN_PIN_LAST - GPIOA_0 + 1)
 
 /* diagnostic for brain pins
  * can be combination of few bits
@@ -248,36 +270,26 @@ typedef enum __attribute__ ((__packed__))
  */
 
 typedef enum __attribute__ ((__packed__)) {
-	EFI_ADC_0 = 0, // PA0
-	EFI_ADC_1 = 1, // PA1
-	EFI_ADC_2 = 2, // PA2
-	EFI_ADC_3 = 3, // PA3
-	EFI_ADC_4 = 4, // PA4
-	EFI_ADC_5 = 5, // PA5
-	EFI_ADC_6 = 6, // PA6
-	EFI_ADC_7 = 7, // PA7
-	EFI_ADC_8 = 8, // PB0
-	EFI_ADC_9 = 9, // PB1
-	EFI_ADC_10 = 10, // PC0
-	EFI_ADC_11 = 11, // PC1
-	EFI_ADC_12 = 12, // PC2
-	EFI_ADC_13 = 13, // PC3
-	EFI_ADC_14 = 14, // PC4
-	EFI_ADC_15 = 15, // PC5
+	EFI_ADC_NONE = 0,
 
-	// todo: bad choice of value since now we have ADC_CHANNEL_SENSOR and could end up with 17 and 18 also
-	EFI_ADC_NONE = 16,
-	EFI_ADC_ERROR = 17,
-#if EFI_UNIT_TEST
-	/**
-	 * these values are unfortunately visible to BoardReader
-	 * and TunerStudio would need these ordinals to fit into field size
-	 */
-    TEST_MAF_CHANNEL = 18,
-    TEST_CLT_CHANNEL = 19,
-    TEST_IAT_CHANNEL = 20,
-#endif /* EFI_UNIT_TEST */
+	EFI_ADC_0 = 1, // PA0
+	EFI_ADC_1 = 2, // PA1
+	EFI_ADC_2 = 3, // PA2
+	EFI_ADC_3 = 4, // PA3
+	EFI_ADC_4 = 5, // PA4
+	EFI_ADC_5 = 6, // PA5
+	EFI_ADC_6 = 7, // PA6
+	EFI_ADC_7 = 8, // PA7
+	EFI_ADC_8 = 9, // PB0
+	EFI_ADC_9 = 10, // PB1
+	EFI_ADC_10 = 11, // PC0
+	EFI_ADC_11 = 12, // PC1
+	EFI_ADC_12 = 13, // PC2
+	EFI_ADC_13 = 14, // PC3
+	EFI_ADC_14 = 15, // PC4
+	EFI_ADC_15 = 16, // PC5
+
+	EFI_ADC_LAST_CHANNEL = 17,	// Please keep this in sync with the last valid channel index!
+
+	EFI_ADC_ERROR = 50,
 } adc_channel_e;
-
-#define INCOMPATIBLE_CONFIG_CHANGE EFI_ADC_0
-

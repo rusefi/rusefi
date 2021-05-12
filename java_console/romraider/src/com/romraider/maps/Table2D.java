@@ -21,7 +21,7 @@ package com.romraider.maps;
 
 import com.romraider.Settings;
 import com.romraider.util.SettingsManager;
-import com.rusefi.Launcher;
+import com.rusefi.ConsoleUI;
 
 import javax.naming.NameNotFoundException;
 import javax.swing.*;
@@ -241,7 +241,7 @@ public class Table2D extends TableWithData {
         if(null != ancestorWindow) {
             ancestorWindow.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
         }
-        Launcher.getFrame().setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
+        ConsoleUI.getFrame().setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
         setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
         super.copySelection();
         copySelection2DWorker = new CopySelection2DWorker(this);
@@ -254,7 +254,7 @@ public class Table2D extends TableWithData {
         if(null != ancestorWindow) {
             ancestorWindow.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
         }
-        Launcher.getFrame().setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
+        ConsoleUI.getFrame().setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
         setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
         CopyTable2DWorker copyTable2DWorker = new CopyTable2DWorker(this);
         copyTable2DWorker.execute();

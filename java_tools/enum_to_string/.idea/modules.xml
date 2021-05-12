@@ -3,7 +3,8 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/enum_to_string.iml" filepath="$PROJECT_DIR$/enum_to_string.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../../java_console/logging/logging.iml" filepath="$PROJECT_DIR$/../../java_console/logging/logging.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../../java_console/logging-api/logging-api.iml" filepath="$PROJECT_DIR$/../../java_console/logging-api/logging-api.iml" />
     </modules>
   </component>
 </project>
-

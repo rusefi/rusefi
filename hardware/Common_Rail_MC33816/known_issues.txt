@@ -1,15 +1,23 @@
- 1) RESOLVED IN R0.2 Move C26, it's currently under an inductor. 2 parts can not sit in the same physical space
- 2) RESOLVED IN R0.2 Add via for battery wire to be attached. 
- 3) RESOLVED IN R0.2 L1 wire leads interfere with C14 and C15. 
- 4) RESOLVED IN R0.2 Jumpers are not needed. Connect VccIO->VccIO_Ext and Clk->Y1-3
- 5) RESOLVED IN R0.2 D9 had wrong footprint blah. Wrong pin numbers to wrong pins. 
- 6) RESOLVED IN R0.2 D10 --> D10_2, and D11 --> D11_2 should be the same package, they were 2 different / wrong footprints. 
- 7) RESOLVED IN R0.3 Moved several 0805 components to the back side of the PCB for lower cost assembly.
- 8)                  J15 needs silk and larger hole. J20 needs silk and should use same larger terminal as J8-J9-J10
- 9)                  J15 & J20 silk ^^^ should be on both top and bottom sides of the board
-10)                  power LED. back side is pretty much free pre-assembled, front side is manual assembly. maybe one LED on each side?
-11)                  J5&J6 why do we need as jumpers? Shall we connect those permanently since looks like those shall be connected?
-12)                  move more small stuff to same (back) side
-13)
-14)
-15)
+ 1) RESOLVED IN R0.2   Move C26, it's currently under an inductor. 2 parts can not sit in the same physical space
+ 2) RESOLVED IN R0.2   Add via for battery wire to be attached. 
+ 3) RESOLVED IN R0.2   L1 wire leads interfere with C14 and C15. 
+ 4) RESOLVED IN R0.2   Jumpers are not needed. Connect VccIO->VccIO_Ext and Clk->Y1-3
+ 5) RESOLVED IN R0.2   D9 had wrong footprint blah. Wrong pin numbers to wrong pins. 
+ 6) RESOLVED IN R0.2   D10 --> D10_2, and D11 --> D11_2 should be the same package, they were 2 different / wrong footprints. 
+ 7) RESOLVED IN R0.3   Moved several 0805 components to the back side of the PCB for lower cost assembly.
+ 8) RESOLVED IN R0.3.2 J15 needs silk and larger hole. J20 needs silk and should use same larger terminal as J8-J9-J10
+ 9) RESOLVED IN R0.3.2 J15 & J20 silk ^^^ should be on both top and bottom sides of the board
+10) See 14             power LED. back side is pretty much free pre-assembled, front side is manual assembly. maybe one LED on each side?
+11) RESOLVED IN R0.3.2 J5&J6 why do we need as jumpers? Shall we connect those permanently since looks like those shall be connected?
+12) See 14             move more small stuff to same (back) side
+13) RESOLVED IN R0.3.2 Fix courtyard warnings on back side, move components slightly. 
+14) RESOLVED IN R0.3.2 The current board layout is very hard to work with - can we please have all components on top? PCB space cost nothing comparing with the stress of flipping and poking
+15) RESOLVED IN R0.3.2 Noxz is asking to move C21 to next to C22
+16) RESOLVED IN R0.3.2 terminals usability is asking for improvements. Ideally can we move more terminals to the edge of the board? ADDED TP2, TP3, TP4, TP5, TP7, TP7, and TP8 
+17) RESOLVED IN R0.3.2 Add many LED's for easier diagnostics like PT2000 board. 
+18) RESOLVED IN R0.3.3 Update BoostV indicator LED per https://rusefi.com/forum/viewtopic.php?f=4&t=1337&start=75
+19) RESOLVED IN R0.3.3 Can we connect connect TP6 to VCCIO since both are 3v?
+20) RESOLVED IN R0.3.3 silkscreen font should be larger for DRIVER RSTB etc  https://raw.githubusercontent.com/wiki/rusefi/rusefi/Hardware/MC33816_test_board/MC33816_test_board_3_2_assembled.jpg
+21) RESOLVED IN R0.3.3 silkscreen for FLAG0 etc is covered by header plastic https://raw.githubusercontent.com/wiki/rusefi/rusefi/Hardware/MC33816_test_board/MC33816_test_board_3_2_assembled.jpg
+22) RESOLVED IN R0.3.3 move TP7=GND to a safer location on the edge of the PCB
+23)

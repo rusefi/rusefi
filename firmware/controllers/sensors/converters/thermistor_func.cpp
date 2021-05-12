@@ -6,7 +6,6 @@
 
 #include "thermistors.h"
 
-#include "loggingcentral.h"
 #include <math.h>
 
 SensorResult ThermistorFunc::convert(float ohms) const {
@@ -25,6 +24,12 @@ SensorResult ThermistorFunc::convert(float ohms) const {
 	float kelvin = 1 / recip;
 
 	float celsius = convertKelvinToCelcius(kelvin);
+
+	// bounds check result - please don't try to run rusEfi when colder than -50C
+	// high end limit is required as this could be an oil temp sensor
+	if (celsius < -50 || celsius > 250) {
+		return unexpected;
+	}
 
 	return celsius;
 }
@@ -45,9 +50,4 @@ void ThermistorFunc::configure(thermistor_conf_s &cfg) {
 	m_c = ((u3 - u2) / (l3 - l2)) / (l1 + l2 + l3);
 	m_b = u2 - m_c * (l1 * l1 + l1 * l2 + l2 * l2);
 	m_a = y1 - (m_b + l1 * l1 * m_c) * l1;
-}
-
-void ThermistorFunc::showInfo(Logging* logger, float testInputValue) const {
-	const auto [valid, value] = convert(testInputValue);
-	scheduleMsg(logger, "    %.1f ohms -> valid: %d. %.1f deg C", testInputValue, valid, value);
 }

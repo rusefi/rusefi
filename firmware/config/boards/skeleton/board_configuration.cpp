@@ -20,7 +20,7 @@
  *
  * These initialization functions are called from
  * firmware/controllers/algo/engine_configuration.cpp
- *  void setBoardConfigurationOverrides(void);
+ *  void setBoardDefaultConfiguration(void);
  *  void setPinConfigurationOverrides(void);
  *  void setSerialConfigurationOverrides(void);
  *
@@ -122,8 +122,8 @@ void setSerialConfigurationOverrides(void) {
 	engineConfiguration->useSerialPort = false;
 	engineConfiguration->binarySerialTxPin = GPIO_UNASSIGNED;
 	engineConfiguration->binarySerialRxPin = GPIO_UNASSIGNED;
-	engineConfiguration->consoleSerialTxPin = GPIO_UNASSIGNED;
-	engineConfiguration->consoleSerialRxPin = GPIO_UNASSIGNED;
+//	engineConfiguration->consoleSerialTxPin = GPIO_UNASSIGNED;
+//	engineConfiguration->consoleSerialRxPin = GPIO_UNASSIGNED;
 }
 
 
@@ -134,13 +134,12 @@ void setSerialConfigurationOverrides(void) {
  *
  * @todo    Add any board-specific code
  */
-void setBoardConfigurationOverrides(void) {
+void setBoardDefaultConfiguration(void) {
 
 	// Set indicator LED pins.
 	// This is often redundant with efifeatures.h or the run-time config
 	engineConfiguration->triggerErrorPin = GPIOE_1;
 	engineConfiguration->communicationLedPin = GPIOE_2;
-	engineConfiguration->FatalErrorPin = GPIOE_3;
 	engineConfiguration->runningLedPin = GPIOE_4;
 	engineConfiguration->warningLedPin = GPIOE_5;
 	engineConfiguration->checkEngineLedPin = GPIOE_6;
@@ -196,13 +195,13 @@ void setBoardConfigurationOverrides(void) {
 
 	// Configure the TLE8888 half bridges (pushpull, lowside, or high-low)
 	// TLE8888_IN11 -> TLE8888_OUT21
-	// GPIOE_8: "35 - GP Out 1"
-	engineConfiguration->fuelPumpPin = GPIOE_8;
+	// TLE8888_PIN_21: "35 - GP Out 1"
+	engineConfiguration->fuelPumpPin = TLE8888_PIN_21;
 
 
 	// TLE8888 high current low side: VVT2 IN9 / OUT5
-	// GPIOE_10: "3 - Lowside 2"
-	engineConfiguration->idle.solenoidPin = GPIOE_10;
+	// TLE8888_PIN_4: "3 - Lowside 2"
+	engineConfiguration->idle.solenoidPin = TLE8888_PIN_5;
 
 
 	// TLE8888_PIN_22: "34 - GP Out 2"
@@ -227,9 +226,6 @@ void setBoardConfigurationOverrides(void) {
 	engineConfiguration->injectionMode = IM_SIMULTANEOUS;
 }
 
-void setAdcChannelOverrides(void) {
-}
-
 /*
  * Local variables:
  *  c-basic-indent: 4

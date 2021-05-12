@@ -20,7 +20,7 @@ typedef struct {
 } Mcp42010Driver;
 
 //void initPotentiometer(Mcp42010Driver *driver, SPIDriver *spi, ioportid_t port, ioportmask_t pin);
-void initPotentiometers(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX);
+void initPotentiometers(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 void setPotResistance(Mcp42010Driver *driver, int channel, int resistance);
 
 #endif

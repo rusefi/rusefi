@@ -16,6 +16,9 @@
 #include "accel_enrichment.h"
 #include "trigger_central.h"
 #include "local_version_holder.h"
+#include "buttonshift.h"
+#include "gear_controller.h"
+#include "limp_manager.h"
 
 #if EFI_SIGNAL_EXECUTOR_ONE_TIMER
 // PROD real firmware uses this implementation
@@ -29,8 +32,10 @@
 #endif /* EFI_UNIT_TEST */
 
 #define FAST_CALLBACK_PERIOD_MS 5
+#define SLOW_CALLBACK_PERIOD_MS 50
 
 class RpmCalculator;
+class AirmassModelBase;
 
 #define MAF_DECODING_CACHE_SIZE 256
 
@@ -48,15 +53,52 @@ class RpmCalculator;
 #define CYCLE_ALTERNATION 2
 
 class IEtbController;
+struct IFuelComputer;
+struct IInjectorModel;
+struct IIdleController;
 
-class Engine : public TriggerStateListener {
+class PrimaryTriggerConfiguration final : public TriggerConfiguration {
 public:
-	explicit Engine(persistent_config_s *config);
+	PrimaryTriggerConfiguration() : TriggerConfiguration("TRG ") {}
+
+protected:
+	bool isUseOnlyRisingEdgeForTrigger() const override;
+	bool isVerboseTriggerSynchDetails() const override;
+	trigger_type_e getType() const override;
+};
+
+class VvtTriggerConfiguration final : public TriggerConfiguration {
+public:
+	VvtTriggerConfiguration() : TriggerConfiguration("TRG ") {}
+	// todo: is it possible to make 'index' constructor argument?
+	int index = 0;
+
+protected:
+	bool isUseOnlyRisingEdgeForTrigger() const override;
+	bool isVerboseTriggerSynchDetails() const override;
+	trigger_type_e getType() const override;
+};
+
+class Engine final : public TriggerStateListener {
+public:
+	DECLARE_ENGINE_PTR;
+
 	Engine();
+	bool isPwmEnabled = true;
+	int triggerActivitySecond = 0;
 
 	IEtbController *etbControllers[ETB_COUNT] = {nullptr};
+	IFuelComputer *fuelComputer = nullptr;
+	IInjectorModel *injectorModel = nullptr;
+	IIdleController* idleController = nullptr;
 
 	cyclic_buffer<int> triggerErrorDetection;
+
+	GearControllerBase *gearController;
+
+	PrimaryTriggerConfiguration primaryTriggerConfiguration;
+	VvtTriggerConfiguration vvtTriggerConfiguration[CAMS_PER_BANK];
+	efitick_t startStopStateLastPushTime = 0;
 
 #if EFI_SHAFT_POSITION_INPUT
 	void OnTriggerStateDecodingError();
@@ -66,7 +108,7 @@ public:
 	void OnTriggerSynchronizationLost() override;
 #endif
 
-	void setConfig(persistent_config_s *config);
+	void setConfig(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 	injection_mode_e getCurrentInjectionMode(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 
 	LocalVersionHolder versionForConfigurationListeners;
@@ -86,13 +128,7 @@ public:
 	bool applyLaunchExtraFuel = false;
 	bool setLaunchBoostDuty = false;
 	bool applyLaunchControlRetard = false;
-	bool rpmHardCut = false;
 #endif /* EFI_LAUNCH_CONTROL */
-
-	/**
-	 * if 2nd TPS is not configured we do not run 2nd ETB
-	 */
-	int etbActualCount = 0;
 
 	/**
 	 * By the way 32-bit value should hold at least 400 hours of events at 6K RPM x 12 events per revolution
@@ -133,7 +169,6 @@ public:
 	IgnitionEventList ignitionEvents;
 #endif /* EFI_ENGINE_CONTROL */
 
-	WallFuel wallFuel[INJECTION_PIN_COUNT];
 	bool needToStopEngine(efitick_t nowNt) const;
 	bool etbAutoTune = false;
 	/**
@@ -150,12 +185,7 @@ public:
 	 * this is based on sensorChartMode and sensorSnifferRpmThreshold settings
 	 */
 	sensor_chart_e sensorChartMode = SC_OFF;
-	/**
-	 * based on current RPM and isAlternatorControlEnabled setting
-	 */
-	bool isAlternatorControlEnabled = false;
 
-	bool isCltBroken = false;
 	bool slowCallBackWasInvoked = false;
 
 	/**
@@ -164,19 +194,7 @@ public:
 	 */
 	efitimems64_t callFromPitStopEndTime = 0;
 
-	/**
-	 * This flag indicated a big enough problem that engine control would be
-	 * prohibited if this flag is set to true.
-	 */
-	bool withError = false;
-
 	RpmCalculator rpmCalculator;
-	persistent_config_s *config = nullptr;
-	/**
-	 * we use funny unique name to make sure that compiler is not confused between global variable and class member
-	 * todo: this variable is probably a sign of some problem, should we even have it?
-	 */
-	engine_configuration_s *engineConfigurationPtr = nullptr;
 
 	/**
 	 * this is about 'stopengine' command
@@ -185,8 +203,12 @@ public:
 
 
 	bool startStopState = false;
-	efitick_t startStopStateLastPushTime = 0;
 	int startStopStateToggleCounter = 0;
+
+	/**
+	 * this is needed by getTimeIgnitionSeconds() and checkShutdown()
+	 */
+	efitick_t ignitionOnTimeNt = 0;
 
 	/**
 	 * This counter is incremented every time user adjusts ECU parameters online (either via rusEfi console or other
@@ -211,15 +233,24 @@ public:
 	 */
 	floatms_t injectionDuration = 0;
 
+	// Per-injection fuel mass, including TPS accel enrich
+	float injectionMass[STFT_BANK_COUNT] = {0};
+
+	float stftCorrection[STFT_BANK_COUNT] = {0};
+
 	/**
 	 * This one with wall wetting accounted for, used for logging.
 	 */
-	floatms_t actualLastInjection = 0;
+	floatms_t actualLastInjection[STFT_BANK_COUNT] = {0};
+
+	// Standard cylinder air charge - 100% VE at standard temperature, grams per cylinder
+	float standardAirCharge = 0;
 
 	void periodicFastCallback(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 	void periodicSlowCallback(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 	void updateSlowSensors(DECLARE_ENGINE_PARAMETER_SIGNATURE);
-	void initializeTriggerWaveform(Logging *logger DECLARE_ENGINE_PARAMETER_SUFFIX);
+	void updateSwitchInputs(DECLARE_ENGINE_PARAMETER_SIGNATURE);
+	void initializeTriggerWaveform(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 
 	bool clutchUpState = false;
 	bool clutchDownState = false;
@@ -231,6 +262,7 @@ public:
 
 	bool isRunningPwmTest = false;
 
+	int getRpmHardLimit(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 
 	FsioState fsioState;
 
@@ -258,8 +290,11 @@ public:
 	 * are we running any kind of functional test? this affect
 	 * some areas
 	 */
-	bool isTestMode = false;
+	bool isFunctionalTestMode = false;
 
+	/**
+	 * See also triggerSimulatorFrequency
+	 */
 	bool directSelfStimulation = false;
 
 	void resetEngineSnifferIfInTestMode();
@@ -276,23 +311,13 @@ public:
 	 */
 	int ignitionPin[IGNITION_PIN_COUNT];
 
-	// Store current ignition mode for prepareIgnitionPinIndices()
-	ignition_mode_e ignitionModeForPinIndices = Force_4_bytes_size_ignition_mode;
-
 	/**
 	 * this is invoked each time we register a trigger tooth signal
 	 */
-	void onTriggerSignalEvent(efitick_t nowNt);
+	void onTriggerSignalEvent();
 	EngineState engineState;
 	SensorsState sensors;
-	efitick_t lastTriggerToothEventTimeNt = 0;
-
-
-	/**
-	 * This coefficient translates ADC value directly into voltage adjusted according to
-	 * voltage divider configuration with just one multiplication. This is a future (?) performance optimization.
-	 */
-	float adcToVoltageInputDividerCoefficient = NAN;
+	efitick_t mainRelayBenchStartNt = 0;
 
 	/**
 	 * This field is true if we are in 'cylinder cleanup' state right now
@@ -312,17 +337,38 @@ public:
 
 	/**
 	 * Needed by EFI_MAIN_RELAY_CONTROL to shut down the engine correctly.
+	 * This method cancels shutdown if the ignition voltage is detected.
 	 */
-	void checkShutdown();
-	
+	void checkShutdown(DECLARE_ENGINE_PARAMETER_SIGNATURE);
+
 	/**
 	 * Allows to finish some long-term shutdown procedures (stepper motor parking etc.)
+	   Called when the ignition switch is turned off (vBatt is too low).
 	   Returns true if some operations are in progress on background.
 	 */
-	bool isInShutdownMode() const;
+	bool isInShutdownMode(DECLARE_ENGINE_PARAMETER_SIGNATURE) const;
+
+	bool isInMainRelayBench(DECLARE_ENGINE_PARAMETER_SIGNATURE);
+
+	/**
+	 * The stepper does not work if the main relay is turned off (it requires +12V).
+	 * Needed by the stepper motor code to detect if it works.
+	 */
+	bool isMainRelayEnabled(DECLARE_ENGINE_PARAMETER_SIGNATURE) const;
+
+	/**
+	 * Needed by EFI_MAIN_RELAY_CONTROL to handle fuel pump and shutdown timings correctly.
+	 * This method returns the number of seconds since the ignition voltage is present.
+	 * The return value is float for more FSIO flexibility.
+	 */
+	float getTimeIgnitionSeconds(void) const;
 
 	void knockLogic(float knockVolts DECLARE_ENGINE_PARAMETER_SUFFIX);
 	void printKnockState(void);
+
+	AirmassModelBase* mockAirmassModel = nullptr;
+
+	LimpManager limpManager;
 
 private:
 	/**
@@ -333,11 +379,17 @@ private:
 	 */
 	bool isSpinning = false;
 	void reset();
+
+	void injectEngineReferences();
 };
 
 void prepareShapes(DECLARE_ENGINE_PARAMETER_SIGNATURE);
-void applyNonPersistentConfiguration(Logging * logger DECLARE_ENGINE_PARAMETER_SUFFIX);
+void applyNonPersistentConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 void prepareOutputSignals(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 
 void validateConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 void doScheduleStopEngine(DECLARE_ENGINE_PARAMETER_SIGNATURE);
+
+#define HW_CHECK_RPM 200
+
+

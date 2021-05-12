@@ -1,3 +1,7 @@
+#
+# TODO: is this file used at all?
+#
+
 # Added if USE_BOOTLOADER=yes in Makefile
 BOOTLOADERSRC= $(PROJECT_DIR)/bootloader/bootloader_storage.c
 

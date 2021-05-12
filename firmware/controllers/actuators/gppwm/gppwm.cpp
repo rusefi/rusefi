@@ -1,15 +1,16 @@
 
 #include "global.h"
 #include "engine.h"
+#include "pin_repository.h"
 
 #include "gppwm_channel.h"
 #include "pwm_generator_logic.h"
 
 EXTERN_ENGINE;
 
-static GppwmChannel channels[4];
-static OutputPin pins[4];
-static SimplePwm outputs[4];
+static GppwmChannel channels[GPPWM_CHANNELS];
+static OutputPin pins[GPPWM_CHANNELS];
+static SimplePwm outputs[GPPWM_CHANNELS];
 
 static gppwm_Map3D_t table1("GPPWM 1");
 static gppwm_Map3D_t table2("GPPWM 2");
@@ -28,7 +29,9 @@ void initGpPwm(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 		auto& cfg = CONFIG(gppwm)[i];
 
 		// If no pin, don't enable this channel.
-		if (cfg.pin == GPIO_UNASSIGNED) continue;
+		if (!isBrainPinValid(cfg.pin)) {
+			continue;
+		}
 
 		// Determine frequency and whether PWM is enabled
 		float freq = cfg.pwmFrequency;
@@ -43,12 +46,22 @@ void initGpPwm(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 
 		// Finally configure the channel
 		INJECT_ENGINE_REFERENCE(&channels[i]);
-		channels[i].init(usePwm, &outputs[i], tables[i], &cfg);
+		channels[i].init(usePwm, &outputs[i], &pins[i], tables[i], &cfg);
 	}
 }
 
 void updateGppwm() {
+	// There are only 8 debug float fields, this will overflow if more channels
+	static_assert(efi::size(channels) <= 8);
+
 	for (size_t i = 0; i < efi::size(channels); i++) {
-		channels[i].update();
+		float result = channels[i].update();
+
+#ifdef EFI_TUNER_STUDIO
+		if (CONFIG(debugMode) == DBG_GPPWM) {
+			float* debugFloats = &tsOutputChannels.debugFloatField1;
+			debugFloats[i] = result;
+		}
+#endif
 	}
 }

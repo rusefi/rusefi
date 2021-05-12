@@ -11,7 +11,9 @@
 #include "pid_state_generated.h"
 
 #if EFI_PROD_CODE || EFI_SIMULATOR
-#include "tunerstudio_configuration.h"
+#include "tunerstudio_outputs.h"
+#else
+#include "engine.h"
 #endif
 
 // See PidCic below
@@ -28,11 +30,15 @@
 #define MS2SEC(x) (x * 0.001)
 
 struct pid_s;
-class Logging;
 
+/**
+ * default basic implementation also known as PidParallelController
+ */
 class Pid : public pid_state_s {
 
 public:
+	DECLARE_ENGINE_PTR;
+
 	Pid();
 	explicit Pid(pid_s *parameters);
 	void initPidClass(pid_s *parameters);
@@ -62,7 +68,7 @@ public:
 	void postState(TunerStudioOutputChannels *tsOutputChannels) const;
 	void postState(TunerStudioOutputChannels *tsOutputChannels, int pMult) const;
 #endif /* EFI_TUNER_STUDIO */
-	void showPidStatus(Logging *logging, const char*msg) const;
+	void showPidStatus(const char* msg) const;
 	void sleep();
 	int resetCounter;
 	// todo: move this to pid_s one day
@@ -70,8 +76,6 @@ public:
 	float iTermMax =  1000000.0;
 protected:
 	pid_s *parameters;
-
-private:
 	virtual void updateITerm(float value);
 };
 
@@ -110,6 +114,8 @@ private:
  * See: Wittenmark B., Astrom K., Arzen K. IFAC Professional Brief. Computer Control: An Overview. 
  * Two additional parameters used: derivativeFilterLoss and antiwindupFreq
  * (If both are 0, then this controller is identical to PidParallelController)
+ *
+ * TODO: should PidIndustrial replace all usages of Pid/PidParallelController?
  */
 class PidIndustrial : public Pid {
 public:

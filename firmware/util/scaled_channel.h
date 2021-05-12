@@ -23,19 +23,26 @@
 template <typename T, int mult = 1>
 class scaled_channel {
 public:
-	scaled_channel() : m_value(static_cast<T>(0)) { }
-	scaled_channel(float val)
+	constexpr scaled_channel() : m_value(static_cast<T>(0)) { }
+	constexpr scaled_channel(float val)
 		: m_value(val * mult)
 	{
 	}
 
 	// Allow reading back out as a float (note: this may be lossy!)
-	operator float() const {
+	constexpr operator float() const {
 		return m_value / (float)mult;
 	}
 
+	constexpr const char* getFirstByteAddr() const {
+		return &m_firstByte;
+	}
+
 private:
-	T m_value;
+	union {
+		T m_value;
+		char m_firstByte;
+	};
 };
 
 // We need to guarantee that scaled values containing some type are the same size
@@ -51,6 +58,9 @@ using scaled_temperature = scaled_channel<int16_t, PACK_MULT_TEMPERATURE>;	// +-
 using scaled_ms = scaled_channel<int16_t, PACK_MULT_MS>;				// +- 100ms at 0.003ms precision
 using scaled_percent = scaled_channel<int16_t, PACK_MULT_PERCENT>;		// +-327% at 0.01% resolution
 using scaled_pressure = scaled_channel<uint16_t, PACK_MULT_PRESSURE>;		// 0-2000kPa (~300psi) at 0.03kPa resolution
+using scaled_high_pressure = scaled_channel<uint16_t, PACK_MULT_HIGH_PRESSURE>;	// 0-6553 bar (~95k psi) at 0.1 bar resolution
 using scaled_angle = scaled_channel<int16_t, PACK_MULT_ANGLE>;			// +-655 degrees at 0.02 degree resolution
 using scaled_voltage = scaled_channel<uint16_t, PACK_MULT_VOLTAGE>;		// 0-65v at 1mV resolution
 using scaled_afr = scaled_channel<uint16_t, PACK_MULT_AFR>;			// 0-65afr at 0.001 resolution
+using scaled_lambda = scaled_channel<uint16_t, PACK_MULT_LAMBDA>;	// 0-6.5 lambda at 0.0001 resolution
+using scaled_fuel_mass_mg = scaled_channel<uint16_t, PACK_MULT_FUEL_MASS>;	// 0 - 655.35 milligrams, 0.01mg resolution

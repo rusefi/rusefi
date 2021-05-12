@@ -1,20 +1,38 @@
-name: Simulator CI
+name: Build Simulator
 
-on: [push,pull_request]
+on: [push, pull_request]
 
 jobs:
-  build:
-
+  # This is just to ensure the simulator compiles on Linux
+  build-simulator:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Install Simulator Deps
-      run: sudo apt-get update && sudo apt-get install -y gcc-multilib g++-multilib
-
     - uses: actions/checkout@v1
       with:
         submodules: recursive
 
-    - name: Build Simulator
+    - name: Install multilib
+      run: |
+        sudo apt-get update
+        sudo apt-get install gcc-multilib g++-multilib
+
+    - name: Generate Configs
+      working-directory: ./firmware/
+      run: |
+        bash gen_config_default.sh
+
+    - name: Generate Enums
+      working-directory: ./firmware/
+      run: |
+        bash gen_enum_to_string.sh
+
+    - name: Compile Simulator
       working-directory: ./simulator/
-      run: make -j4
+      run: bash compile.sh
+
+    - name: Upload built simulator
+      uses: actions/upload-artifact@v2
+      with:
+        name: rusefi_simulator_linux
+        path: ./simulator/build/rusefi_simulator

@@ -20,6 +20,7 @@
 #include "toyota_jzs147.h"
 #include "custom_engine.h"
 #include "thermistors.h"
+#include "mazda_miata_vvt.h"
 
 EXTERN_CONFIG;
 
@@ -95,19 +96,21 @@ void setToyota_jzs147EngineConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 
 }
 
+/**
+ * TOYOTA_2JZ_GTE_VVTi
+ * set engine_type 44
+ */
 void setToyota_2jz_vics(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	common2jz(PASS_CONFIG_PARAMETER_SIGNATURE);
 
-	engineConfiguration->isSdCardEnabled = true;
-
 	setOperationMode(engineConfiguration, FOUR_STROKE_CRANK_SENSOR);
-	engineConfiguration->trigger.type = TT_2JZ_3_34;
+	engineConfiguration->trigger.type = TT_TOOTHED_WHEEL_36_2;
 
 	engineConfiguration->triggerInputPins[0] = GPIOA_5; // crank sensor
 	engineConfiguration->triggerInputPins[1] = GPIO_UNASSIGNED; // cam sensor will he handled by custom vtti code
 
 	engineConfiguration->camInputs[0] = GPIOC_6;
-	engineConfiguration->vvtMode = VVT_2GZ;
+	engineConfiguration->vvtMode[0] = VVT_2JZ;
 
 	// set global_trigger_offset_angle 155
 	engineConfiguration->globalTriggerAngleOffset = 155; // todo
@@ -117,8 +120,21 @@ void setToyota_2jz_vics(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	engineConfiguration->twoWireBatchIgnition = true;
 	engineConfiguration->twoWireBatchInjection = true;
 
+	strcpy(CONFIG(engineMake), ENGINE_MAKE_TOYOTA);
+	strcpy(CONFIG(engineCode), "2JZ");
+	strcpy(CONFIG(vehicleName), "VVT example");
 
 
+	engineConfiguration->debugMode = DBG_VVT;
+
+	// todo: these magic values would be hardcoded once we find out proper magic values
+	engineConfiguration->fsio_setting[14] = 175 - 45;
+	engineConfiguration->fsio_setting[15] = 175 + 45;
+
+	engineConfiguration->auxPidPins[0] = GPIOE_3; // VVT solenoid control
+
+	// Mazda VVT settings have nothing to do wit Toyota 2JZ settings but those are a good starting point for settings
+	setMazdaNB2VVTSettings(PASS_CONFIG_PARAMETER_SIGNATURE);
 }
 
 

@@ -26,7 +26,7 @@ TEST(GpPwm, OutputWithPwm) {
 		EXPECT_CALL(pwm, setSimplePwmDutyCycle(1.0f));
 	}
 
-	ch.init(true, &pwm, nullptr, &cfg);
+	ch.init(true, &pwm, nullptr, nullptr, &cfg);
 
 	// Set the output - should set directly to PWM
 	ch.setOutput(25.0f);
@@ -44,19 +44,23 @@ TEST(GpPwm, OutputOnOff) {
 	cfg.onAboveDuty = 50;
 	cfg.offBelowDuty = 40;
 
-	MockPwm pwm;
+	MockOutputPin pin;
 
 	{
 		InSequence i;
-		EXPECT_CALL(pwm, setSimplePwmDutyCycle(0.0f));
-		EXPECT_CALL(pwm, setSimplePwmDutyCycle(1.0f));
-		EXPECT_CALL(pwm, setSimplePwmDutyCycle(1.0f));
-		EXPECT_CALL(pwm, setSimplePwmDutyCycle(1.0f));
-		EXPECT_CALL(pwm, setSimplePwmDutyCycle(0.0f));
-		EXPECT_CALL(pwm, setSimplePwmDutyCycle(0.0f));
+
+		// Rising edge test
+		EXPECT_CALL(pin, setValue(0));
+		EXPECT_CALL(pin, setValue(1));
+		EXPECT_CALL(pin, setValue(1));
+
+		// Falling edge test
+		EXPECT_CALL(pin, setValue(1));
+		EXPECT_CALL(pin, setValue(0));
+		EXPECT_CALL(pin, setValue(0));
 	}
 
-	ch.init(false, &pwm, nullptr, &cfg);
+	ch.init(false, nullptr, &pin, nullptr, &cfg);
 
 	// Test rising edge - these should output 0, 1, 1
 	ch.setOutput(49.0f);
@@ -86,7 +90,7 @@ TEST(GpPwm, GetOutput) {
 			return tps;
 		});
 
-	ch.init(false, nullptr, &table, &cfg);
+	ch.init(false, nullptr, nullptr, &table, &cfg);
 
 	Sensor::resetAllMocks();
 

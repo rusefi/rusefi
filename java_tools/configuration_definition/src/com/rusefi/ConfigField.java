@@ -9,7 +9,7 @@ import java.util.regex.Pattern;
 
 /**
  * This is an immutable model of an individual field
- * (c) Andrey Belomutskiy
+ * Andrey Belomutskiy, (c) 2013-2020
  * 1/15/15
  */
 public class ConfigField {
@@ -21,10 +21,13 @@ public class ConfigField {
 
     private static final Pattern FIELD = Pattern.compile(typePattern + "\\s(" + namePattern + ")(" + commentPattern + ")?(;(.*))?");
 
+    private static final Pattern DIRECTIVE = Pattern.compile("#(if\\s" + namePattern + "|else|elif\\s\" + namePattern + \"|endif)");
+
     public static final char TS_COMMENT_TAG = '+';
     public static final String ENUM_SUFFIX = "_enum";
     public static final String VOID_NAME = "";
     public static final String BOOLEAN_T = "boolean";
+    public static final String DIRECTIVE_T = "directive";
 
     private final String name;
     private final String comment;
@@ -78,6 +81,10 @@ public class ConfigField {
         this.isIterate = isIterate;
     }
 
+    public boolean isArray() {
+        return arraySizeVariableName != null || arraySize != 1;
+    }
+
     public String getTrueName() {
         return trueName;
     }
@@ -101,6 +108,10 @@ public class ConfigField {
 
     public boolean isBit() {
         return BOOLEAN_T.equalsIgnoreCase(type);
+    }
+
+    public boolean isDirective() {
+        return DIRECTIVE_T.equalsIgnoreCase(type);
     }
 
     private boolean isVoid() {
@@ -150,6 +161,11 @@ public class ConfigField {
         SystemOut.println("comment " + comment);
 
         return field;
+    }
+
+    public static boolean isPreprocessorDirective(ReaderState state, String line) {
+        Matcher matcher = DIRECTIVE.matcher(line);
+        return matcher.matches();
     }
 
     public int getSize(ConfigField next) {
@@ -220,5 +236,22 @@ public class ConfigField {
         return fsioVisible;
     }
 
+    public String getUnits() {
+        if (tsInfo == null)
+            return "";
+        String[] tokens = tsInfo.split("\\,");
+        if (tokens.length == 0)
+            return "";
+        return unquote(tokens[0].trim());
+    }
+
+    private static String unquote(String token) {
+        int length = token.length();
+        if (length < 2)
+            return token;
+        if (token.charAt(0) == '\"')
+            return token.substring(1, length - 1);
+        return token;
+    }
 }
 

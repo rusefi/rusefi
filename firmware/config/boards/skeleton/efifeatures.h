@@ -45,14 +45,6 @@
 
 // Internal MCU features
 
-// Use STM32 Core Coupled Memory as general purpose RAM.
-#define EFI_USE_CCM TRUE
-
-// Support USB Mass Storage Devices
-// Typically off as it requires USB OTG and power output.
-#define HAL_USE_USB_MSD FALSE
-
-
 // Hardware feature and chip support
 // Some require a non-zero count to include support, others are TRUE/FALSE
 // Other inconsistencies, such as naming, abound.
@@ -64,6 +56,8 @@
 #define EFI_POTENTIOMETER FALSE
 // MC33816 Programmable Gate Driver over SPI
 #define EFI_MC33816 FALSE
+
+#define EFI_HPFP FALSE
 // MAX31855 Thermocouple interface over SPI
 #define EFI_MAX_31855 FALSE
 // MCP3208 ADC over SPI
@@ -85,6 +79,7 @@
 #define BOARD_TLE6240_COUNT	0
 #define BOARD_MC33972_COUNT	0
 #define BOARD_TLE8888_COUNT 	0
+#define BOARD_MC33810_COUNT	0
 
 /**
  * if you have a 60-2 trigger, or if you just want better performance, you
@@ -104,14 +99,15 @@
 #endif /* EFI_ENABLE_MOCK_ADC */
 
 
-//#define EFI_UART_ECHO_TEST_MODE TRUE
-
-
 #define EFI_ICU_INPUTS TRUE
 
 #ifndef HAL_TRIGGER_USE_PAL
 #define HAL_TRIGGER_USE_PAL FALSE
 #endif /* HAL_TRIGGER_USE_PAL */
+
+#ifndef HAL_TRIGGER_USE_ADC
+#define HAL_TRIGGER_USE_ADC FALSE
+#endif /* HAL_TRIGGER_USE_ADC */
 
 // TunerStudio support.
 #define EFI_TUNER_STUDIO TRUE
@@ -162,13 +158,11 @@
 
 #define EFI_NARROW_EGO_AVERAGING TRUE
 
-#define EFI_DENSO_ADC FALSE
-
 #ifndef EFI_IDLE_CONTROL
 #define EFI_IDLE_CONTROL TRUE
 #endif
 
-#define EFI_IDLE_PID_CIC FALSE
+#define EFI_IDLE_PID_CIC TRUE
 
 /**
  * Control the main power relay based on measured ignition voltage (Vbatt)
@@ -196,16 +190,6 @@
 #endif
 
 /**
- * This macros is used to hide hardware-specific pieces of the code from unit tests and simulator, so it only makes
- * sense in folders exposed to the tests projects (simulator and unit tests).
- * This macros is NOT about taking out logging in general.
- * See also EFI_UNIT_TEST
- * See also EFI_SIMULATOR
- * todo: do we want to rename any of these three options?
- */
-#define EFI_PROD_CODE TRUE
-
-/**
  * Do we need file logging (like SD card) logic?
  */
 #ifndef EFI_FILE_LOGGING
@@ -213,11 +197,6 @@
 #endif
 
 #define EFI_USB_SERIAL TRUE
-
-/**
- * Should PnP engine configurations be included in the binary?
- */
-#define EFI_INCLUDE_ENGINE_PRESETS TRUE
 
 #ifndef EFI_ENGINE_SNIFFER
 #define EFI_ENGINE_SNIFFER TRUE
@@ -254,7 +233,7 @@
 
 // todo: most of this should become configurable
 
-// todo: switch to continues ADC conversion for fast ADC?
+// todo: switch to continuous ADC conversion for fast ADC?
 #define EFI_INTERNAL_FAST_ADC_GPT	&GPTD6
 
 #define EFI_SPI1_AF 5
@@ -311,7 +290,9 @@
  */
 #define TS_UART_DMA_MODE FALSE
 
-#define TS_UART_DEVICE (&UARTD3)
+#define PRIMARY_UART_DMA_MODE FALSE
+
+//#define TS_UART_DEVICE (&UARTD3)
 #define TS_SERIAL_DEVICE (&SD3)
 
 // todo: add DMA-mode for Console?
@@ -319,8 +300,11 @@
 #undef EFI_CONSOLE_SERIAL_DEVICE
 #endif
 
-#ifndef LED_ERROR_BRAIN_PIN
-#define LED_ERROR_BRAIN_PIN GPIOD_14
+#ifndef LED_CRITICAL_ERROR_BRAIN_PIN
+#define LED_CRITICAL_ERROR_BRAIN_PIN GPIOD_14
+#endif
+#ifndef LED_ERROR_BRAIN_PIN_MODE
+#define LED_ERROR_BRAIN_PIN_MODE DEFAULT_OUTPUT
 #endif
 
 // USART1 -> check defined STM32_SERIAL_USE_USART1
@@ -337,15 +321,8 @@
 #define CONFIG_RESET_SWITCH_PIN 6
 #endif
 
-/**
- * This is the size of the MemoryStream used by chvprintf
- */
-#define INTERMEDIATE_LOGGING_BUFFER_SIZE 2000
-
-
 // Enable file logging (like SD card) logic
 #define EFI_FILE_LOGGING FALSE
-#define EFI_PRINT_ERRORS_AS_WARNINGS TRUE
 
 #define EFI_USB_SERIAL TRUE
 
@@ -363,19 +340,14 @@
 #undef TS_SERIAL_DEVICE
 #undef TS_UART_MODE
 #define EFI_CONSOLE_SERIAL_DEVICE (&SD1)
-//#define EFI_CONSOLE_SERIAL_DEVICE (&SDU1)
 #define EFI_UART_ECHO_TEST_MODE TRUE
-#define TS_UART_DEVICE (&UARTD3)
-#define TS_SERIAL_DEVICE (&SD3)
 
 // USART3 is Alternate Function 7, UART4 is AF8
 // todo: start using consoleSerial{Tx,Rx}Pin
 #define EFI_CONSOLE_AF 7
 #define TS_SERIAL_AF 7
-#define EFI_CONSOLE_TX_PORT GPIOC
-#define EFI_CONSOLE_TX_PIN 10
-#define EFI_CONSOLE_RX_PORT GPIOC
-#define EFI_CONSOLE_RX_PIN 11
+#define EFI_CONSOLE_TX_BRAIN_PIN GPIOC_10
+#define EFI_CONSOLE_RX_BRAIN_PIN GPIOC_11
 
 // todo: document the limitations of DMA mode for the UART.
 #undef TS_UART_DMA_MODE

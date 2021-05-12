@@ -8,4 +8,5 @@ HW_SENSORS_SRC = \
 	$(HW_SENSORS_DIR)/yaw_rate_sensor.cpp \
 	$(HW_SENSORS_DIR)/accelerometer.cpp \
 	$(HW_SENSORS_DIR)/joystick.cpp \
+	$(HW_SENSORS_DIR)/lps25.cpp \
 	

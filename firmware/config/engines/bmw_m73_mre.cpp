@@ -71,6 +71,8 @@ void setEngineBMW_M73_microRusEfi(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 
 	CONFIG(isFasterEngineSpinUpEnabled) = true;
 
+	strcpy(CONFIG(vehicleName), "microRusEFIx2");
+
 	engineConfiguration->globalTriggerAngleOffset = 90;
 	engineConfiguration->specs.cylindersCount = 6;
 	engineConfiguration->specs.displacement = 5.4 / 2;
@@ -100,18 +102,13 @@ void setEngineBMW_M73_microRusEfi(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 
 
 	engineConfiguration->canNbcType = CAN_BUS_NBC_NONE;
-#if EFI_CANBUS_SLAVE
-	engineConfiguration->canReadEnabled = true;
-	engineConfiguration->canWriteEnabled = false;
-#else /* EFI_CANBUS_SLAVE */
 	// set_analog_input_pin pps PA7
 	// EFI_ADC_7: "31 - AN volt 3" - PA7
 	CONFIG(throttlePedalPositionAdcChannel) = EFI_ADC_7;
 
-	engineConfiguration->canReadEnabled = false;
+	engineConfiguration->canReadEnabled = true;
 	engineConfiguration->canWriteEnabled = true;
 	CONFIG(enableVerboseCanTx) = true;
-#endif /* EFI_CANBUS_SLAVE */
 
 
 	// do I have VR wires flipped?
@@ -120,7 +117,7 @@ void setEngineBMW_M73_microRusEfi(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	// this large engine seems to crank at around only 150 RPM? And happily idle at 400RPM?
 	engineConfiguration->cranking.rpm = 280;
 
-	CONFIG(crankingTimingAngle) = 15;
+	CONFIG(crankingTimingAngle) = 30;
 
 	// I am too lazy to add MAP sensor
 	engineConfiguration->fuelAlgorithm = LM_ALPHA_N;

@@ -4,12 +4,10 @@
 
 #pragma once
 
-#include "globalaccess.h"
-
-class Logging;
+#include "engine_ptr.h"
 
 // Call this once at startup to initialize, configure, and subscribe sensors
-void initNewSensors(Logging* logger DECLARE_ENGINE_PARAMETER_SUFFIX);
+void initNewSensors(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 
 // Call this whenever the configuration may have changed, so any sensors
 // can be reconfigured with the new settings.
@@ -19,12 +17,21 @@ void reconfigureSensors(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 
 // Internal init functions for individual systems
 // Sensor init/config
-void initTps(DECLARE_ENGINE_PARAMETER_SIGNATURE);
-void initOilPressure(DECLARE_ENGINE_PARAMETER_SIGNATURE);
-void initNewThermistors(DECLARE_ENGINE_PARAMETER_SIGNATURE);
-void initCanSensors(DECLARE_ENGINE_PARAMETER_SIGNATURE);
+void initVbatt(DECLARE_CONFIG_PARAMETER_SIGNATURE);
+void initMaf(DECLARE_CONFIG_PARAMETER_SIGNATURE);
+void initMap(DECLARE_ENGINE_PARAMETER_SIGNATURE);
+void initTps(DECLARE_CONFIG_PARAMETER_SIGNATURE);
+void initOilPressure(DECLARE_CONFIG_PARAMETER_SIGNATURE);
+void initThermistors(DECLARE_CONFIG_PARAMETER_SIGNATURE);
+void initCanSensors();
+void initLambda(DECLARE_ENGINE_PARAMETER_SIGNATURE);
+void initFlexSensor(DECLARE_CONFIG_PARAMETER_SIGNATURE);
+void initFuelLevel(DECLARE_CONFIG_PARAMETER_SIGNATURE);
+void initBaro(DECLARE_CONFIG_PARAMETER_SIGNATURE);
+void initAuxSensors(DECLARE_CONFIG_PARAMETER_SIGNATURE);
 
 // Sensor reconfiguration
-void reconfigureTps(DECLARE_ENGINE_PARAMETER_SIGNATURE);
-void reconfigureThermistors(DECLARE_ENGINE_PARAMETER_SIGNATURE);
-void reconfigureOilPressure(DECLARE_ENGINE_PARAMETER_SIGNATURE);
+void reconfigureVbatt(DECLARE_CONFIG_PARAMETER_SIGNATURE);
+void reconfigureTps(DECLARE_CONFIG_PARAMETER_SIGNATURE);
+void reconfigureThermistors(DECLARE_CONFIG_PARAMETER_SIGNATURE);
+void reconfigureOilPressure(DECLARE_CONFIG_PARAMETER_SIGNATURE);

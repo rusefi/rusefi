@@ -37,8 +37,6 @@ EXTERN_ENGINE;
 
 extern WaveChart waveChart;
 
-static LoggingWithStorage sharedLogger("simulator");
-
 int getRemainingStack(thread_t *otp) {
 	return 99999;
 }
@@ -69,20 +67,20 @@ static void runChprintfTest() {
 
 	{
 		LoggingWithStorage testLogging("test");
-		appendFloat(&testLogging, 1.23, 5);
-		appendFloat(&testLogging, 1.234, 2);
+		testLogging.appendFloat(1.23, 5);
+		testLogging.appendFloat(1.234, 2);
 		assertString(testLogging.buffer, "1.230001.23");
 
 	}
 
 	{
 		LoggingWithStorage testLogging("test");
-		appendFloat(&testLogging, -1.23, 5);
+		testLogging.appendFloat(-1.23, 5);
 		assertString(testLogging.buffer, "-1.23000");
 	}
 	{
 		LoggingWithStorage testLogging("test");
-		appendPrintf(&testLogging, "a%.2fb%fc", -1.2, -3.4);
+		testLogging.appendPrintf( "a%.2fb%fc", -1.2, -3.4);
 		assertString(testLogging.buffer, "a-1.20b-3.400000095c");
 	}
 
@@ -90,25 +88,13 @@ static void runChprintfTest() {
 
 void rusEfiFunctionalTest(void) {
 	printToConsole("Running rusEfi simulator version:");
-	initErrorHandlingDataStructures();
 	static char versionBuffer[20];
 	itoa10(versionBuffer, (int)getRusEfiVersion());
 	printToConsole(versionBuffer);
 
-#if EFI_SHAFT_POSITION_INPUT
-	/**
-	 * This is so early because we want to init logger
-	 * which would be used while finding trigger sync index
-	 * while reading configuration
-	 */
-	initTriggerDecoderLogger(&sharedLogger);
-#endif /* EFI_SHAFT_POSITION_INPUT */
+	engine->setConfig();
 
-	initIntermediateLoggingBuffer();
-
-	engine->setConfig(config);
-
-	initializeConsole(&sharedLogger);
+	initializeConsole();
 
 	initStatusLoop();
 	initDataStructures(PASS_ENGINE_PARAMETER_SIGNATURE);
@@ -116,13 +102,13 @@ void rusEfiFunctionalTest(void) {
 
 	// todo: reduce code duplication with initEngineContoller
 
-	resetConfigurationExt(NULL, FORD_ESCORT_GT PASS_ENGINE_PARAMETER_SUFFIX);
-	engine->directSelfStimulation = true;
+	resetConfigurationExt(FORD_ESCORT_GT PASS_ENGINE_PARAMETER_SUFFIX);
+	enableTriggerStimulator();
 
-	commonInitEngineController(&sharedLogger);
+	commonInitEngineController();
 
-	initTriggerCentral(&sharedLogger);
-	initTriggerEmulator(&sharedLogger PASS_ENGINE_PARAMETER_SUFFIX);
+	initTriggerCentral();
+	initTriggerEmulator(PASS_ENGINE_PARAMETER_SIGNATURE);
 
 	startStatusThreads();
 
@@ -165,5 +151,5 @@ void logMsg(const char *format, ...) {
 }
 
 BaseChannel * getConsoleChannel(void) {
-	return (BaseChannel *)EFI_CONSOLE_SERIAL_DEVICE;
+	return (BaseChannel *)TS_PRIMARY_SERIAL;
 }

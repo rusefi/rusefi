@@ -19,7 +19,7 @@
 
 EXTERN_ENGINE;
 
-class EtbHardware {
+class DcHardware {
 private:
 	OutputPin m_pinEnable;
 	OutputPin m_pinDir1;
@@ -31,7 +31,7 @@ private:
 	SimplePwm m_pwmDir2;
 
 public:
-	EtbHardware() : dcMotor(&m_pwmEnable, &m_pwmDir1, &m_pwmDir2, &m_disablePin) {}
+	DcHardware() : dcMotor(&m_pwmEnable, &m_pwmDir1, &m_pwmDir2, &m_disablePin) {}
 
 	TwoPinDcMotor dcMotor;
 	
@@ -52,32 +52,32 @@ public:
 
 		// Configure the disable pin first - ensure things are in a safe state
 		m_disablePin.initPin("ETB Disable", pinDisable);
-
-		m_pinEnable.initPin("ETB Enable", pinEnable);
-		m_pinDir1.initPin("ETB Dir 1", pinDir1);
-		m_pinDir2.initPin("ETB Dir 2", pinDir2);
+		m_disablePin.setValue(0);
 
 		// Clamp to >100hz
 		int clampedFrequency = maxI(100, frequency);
 
 // no need to complicate event queue with ETB PWM in unit tests
 #if ! EFI_UNIT_TEST
-		startSimplePwm(&m_pwmEnable, "ETB Enable",
+		startSimplePwmHard(&m_pwmEnable, "ETB Enable",
 			executor,
+			pinEnable,
 			&m_pinEnable,
 			clampedFrequency,
 			0
 		);
 
-		startSimplePwm(&m_pwmDir1, "ETB Dir 1",
+		startSimplePwmHard(&m_pwmDir1, "ETB Dir 1",
 			executor,
+			pinDir1,
 			&m_pinDir1,
 			clampedFrequency,
 			0
 		);
 
-		startSimplePwm(&m_pwmDir2, "ETB Dir 2",
+		startSimplePwmHard(&m_pwmDir2, "ETB Dir 2",
 			executor,
+			pinDir2,
 			&m_pinDir2,
 			clampedFrequency,
 			0
@@ -86,23 +86,10 @@ public:
 	}
 };
 
-static EtbHardware etbHardware[ETB_COUNT * 2];
+static DcHardware dcHardware[ETB_COUNT + DC_PER_STEPPER];
 
-// We needed more H-bridge configs - so the IO configs are split
-// across two arrays of settings to preserve config compatibility
-const etb_io& getConfigForMotor(size_t index DECLARE_ENGINE_PARAMETER_SUFFIX) {
-	size_t firstSize = efi::size(engineConfiguration->etbIo);
-
-	if (index < firstSize) {
-		return engineConfiguration->etbIo[index];
-	}
-
-	return engineConfiguration->etbIo2[index - firstSize];
-}
-
-DcMotor* initDcMotor(size_t index, bool useTwoWires DECLARE_ENGINE_PARAMETER_SUFFIX) {
-	const auto& io = getConfigForMotor(index PASS_ENGINE_PARAMETER_SUFFIX);
-	auto& hw = etbHardware[index];
+DcMotor* initDcMotor(const dc_io& io, size_t index, bool useTwoWires DECLARE_ENGINE_PARAMETER_SUFFIX) {
+	auto& hw = dcHardware[index];
 
 	hw.start(
 		useTwoWires,
@@ -118,20 +105,17 @@ DcMotor* initDcMotor(size_t index, bool useTwoWires DECLARE_ENGINE_PARAMETER_SUF
 }
 
 void setDcMotorFrequency(size_t index, int hz) {
-	etbHardware[index].setFrequency(hz);
+	dcHardware[index].setFrequency(hz);
 }
 
 void setDcMotorDuty(size_t index, float duty) {
-	etbHardware[index].dcMotor.set(duty);
+	dcHardware[index].dcMotor.set(duty);
 }
 
-#if EFI_PROD_CODE
-void showDcMotorInfo(Logging* logger) {
-	for (int i = 0 ; i < engine->etbActualCount; i++) {
-		EtbHardware *etb = &etbHardware[i];
 
-		scheduleMsg(logger, "ETB %d", i);
-		scheduleMsg(logger, "Motor: dir=%d DC=%f", etb->dcMotor.isOpenDirection(), etb->dcMotor.get());
-	}
+void showDcMotorInfo(int i) {
+	DcHardware *dc = &dcHardware[i];
+
+	efiPrintf(" motor: dir=%d DC=%f", dc->dcMotor.isOpenDirection(), dc->dcMotor.get());
 }
-#endif
+

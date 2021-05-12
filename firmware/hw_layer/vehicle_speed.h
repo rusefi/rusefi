@@ -13,7 +13,7 @@
  * @return vehicle speed, in kilometers per hour
  */
 float getVehicleSpeed(void);
-void initVehicleSpeed(Logging *logger);
+void initVehicleSpeed();
 void setMockVehicleSpeed(float speedKPH);
 bool hasVehicleSpeedSensor();
 void stopVSSPins(void);

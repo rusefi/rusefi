@@ -98,6 +98,4 @@
 #define STM32_HAS_GPIOG             KINETIS_HAS_GPIOG
 #define STM32_HAS_GPIOH             KINETIS_HAS_GPIOH
 
-#define adcSTM32EnableTSVREFE()
-
 #endif /* KINETIS_STM32_H_ */

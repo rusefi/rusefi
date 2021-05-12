@@ -13,10 +13,10 @@
 #include "engine_configuration.h"
 #include "engine.h"
 #include "vehicle_speed.h"
+#include "dynoview.h"
 
 EXTERN_ENGINE;
 
-static Logging *logger;
 static bool isInit = false;
 static uint16_t filterCanID = 0;
 static efitick_t frameTime;
@@ -63,16 +63,16 @@ void processW202(const CANRxFrame& frame) {
     
     tmp = (frame.data8[2] << 8);
     tmp |= frame.data8[3];
-    vssSpeed = ((float)tmp) * 0.0277;
+    vssSpeed = ((float)tmp) * 0.0625;
 }
 
 /* End of specific processing functions */
 
 void canVssInfo(void) {
-    scheduleMsg(logger, "vss using can option selected %x", CONFIG(canVssNbcType));
-    scheduleMsg(logger, "vss filter for %x canID", filterCanID);
-    scheduleMsg(logger, "Vss module is %d", isInit);
-    scheduleMsg(logger, "CONFIG_enableCanVss is %d", CONFIG(enableCanVss));
+    efiPrintf("vss using can option selected %x", CONFIG(canVssNbcType));
+    efiPrintf("vss filter for %x canID", filterCanID);
+    efiPrintf("Vss module is %d", isInit);
+    efiPrintf("CONFIG_enableCanVss is %d", CONFIG(enableCanVss));
 }
 
 void processCanRxVss(const CANRxFrame& frame, efitick_t nowNt) {
@@ -81,7 +81,7 @@ void processCanRxVss(const CANRxFrame& frame, efitick_t nowNt) {
     }
 
     //filter it we need to process the can message or not
-    if ( frame.SID != filterCanID ) {
+    if (CAN_SID(frame) != filterCanID ) {
         return;
     }
 
@@ -94,10 +94,13 @@ void processCanRxVss(const CANRxFrame& frame, efitick_t nowNt) {
             processW202(frame);
             break;
         default:
-            scheduleMsg(logger, "vss unsupported can option selected %x", CONFIG(canVssNbcType) );
+            efiPrintf("vss unsupported can option selected %x", CONFIG(canVssNbcType) );
             break;
     }
 
+#if EFI_DYNO_VIEW
+    updateDynoViewCan(PASS_ENGINE_PARAMETER_SIGNATURE);
+#endif
 }
 
 float getVehicleCanSpeed(void) {
@@ -111,10 +114,8 @@ float getVehicleCanSpeed(void) {
     }
 }
 
-void initCanVssSupport(Logging *logger_ptr) {
-
+void initCanVssSupport() {
     addConsoleAction("canvssinfo", canVssInfo);
-    logger = logger_ptr;
 
     if (CONFIG(enableCanVss)) {
 

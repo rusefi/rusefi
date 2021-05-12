@@ -8,9 +8,11 @@ import java.util.function.Consumer;
 
 /**
  * 3/18/14
- * (c) Andrey Belomutskiy
+ * Andrey Belomutskiy, (c) 2013-2020
  */
 public class SimulatorExecHelper {
+    private final static NamedThreadFactory THREAD_FACTORY = new NamedThreadFactory("SimulatorExecHelper", true);
+
     // see also SimulatorHelper
     private static final String SIMULATOR_BINARY = "../simulator/build/rusefi_simulator.exe";
     static Process simulatorProcess;
@@ -42,8 +44,7 @@ public class SimulatorExecHelper {
     public static void dumpProcessOutput(Process process) throws IOException {
         BufferedReader input =
                 new BufferedReader(new InputStreamReader(process.getInputStream()));
-        Thread thread = new Thread(createErrorStreamEcho(process));
-        thread.setDaemon(true);
+        Thread thread = THREAD_FACTORY.newThread(createErrorStreamEcho(process));
         thread.start();
 
         String prefix = "from console: ";

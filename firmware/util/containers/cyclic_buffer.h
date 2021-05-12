@@ -41,7 +41,7 @@ class cyclic_buffer
     volatile T elements[maxSize];
     volatile int currentIndex;
 
-  private:
+  protected:
     void baseC(int size);
     /**
      * number of elements added into this buffer, would be eventually bigger then size

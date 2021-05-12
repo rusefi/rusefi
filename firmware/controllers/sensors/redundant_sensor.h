@@ -15,7 +15,12 @@ public:
 
 	SensorResult get() const override;
 
-	void showInfo(Logging* logger, const char* sensorName) const override;
+	bool isRedundant() const override {
+		// This sensor is redundant when not ignoring the second channel
+		return !m_ignoreSecond;
+	}
+
+	void showInfo(const char* sensorName) const override;
 
 private:
 	// The two sensors we interpret to form one redundant sensor

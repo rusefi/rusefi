@@ -6,7 +6,7 @@ extern float getTachDuty(void);
 
 TEST(tachometer, testPulsePerRev) {
     // This engine has a tach pin set - we need that
-    WITH_ENGINE_TEST_HELPER(BMW_E34);
+    WITH_ENGINE_TEST_HELPER(MAZDA_MIATA_2003);
 
     // We don't actually care about ign/inj at all, just tach
     engineConfiguration->isInjectionEnabled = false;
@@ -17,9 +17,9 @@ TEST(tachometer, testPulsePerRev) {
     engineConfiguration->tachPulsePerRev = 4;
     engineConfiguration->tachPulseDuractionMs = 0.5f;
     engineConfiguration->tachPulseDurationAsDutyCycle = true;
-    engineConfiguration->tachPulseTriggerIndex = 0;
 
     // Set predictable trigger settings
+	engineConfiguration->trigger.type = TT_TOOTHED_WHEEL;
     engineConfiguration->trigger.customTotalToothCount = 8;
     engineConfiguration->trigger.customSkippedToothCount = 0;
     engineConfiguration->useOnlyRisingEdgeForTrigger = false;
@@ -29,13 +29,13 @@ TEST(tachometer, testPulsePerRev) {
     // get the engine running - 6 revolutions
     eth.fireTriggerEvents(48);
 
-    // ensure engine speed and position
+    // ensure engine speed
 	ASSERT_EQ(1500,  GET_RPM()) << "RPM";
-	ASSERT_EQ(15,  engine->triggerCentral.triggerState.getCurrentIndex()) << "index #1";
     ASSERT_EQ(engine->triggerCentral.triggerState.shaft_is_synchronized, true);
-    ASSERT_EQ(100,getTachFreq());
-    ASSERT_EQ(0.5,getTachDuty());
-std::cerr << "Tach Freq: " << getTachFreq() << "\n" << std::endl;
-std::cerr << "Tach Duty: " << getTachDuty() << "\n" << std::endl;
- 
+
+	// Poke the fast callback to update the tach
+	engine->periodicFastCallback(PASS_ENGINE_PARAMETER_SIGNATURE);
+
+    ASSERT_EQ(100, getTachFreq());
+    ASSERT_EQ(0.5, getTachDuty());
 }

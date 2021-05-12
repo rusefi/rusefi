@@ -23,21 +23,22 @@
 #include "yaw_rate_sensor.h"
 #include "pin_repository.h"
 #include "max31855.h"
+#include "logic_analyzer.h"
 #include "smart_gpio.h"
 #include "accelerometer.h"
 #include "eficonsole.h"
 #include "console_io.h"
 #include "sensor_chart.h"
+#include "serial_hw.h"
 
 #include "mpu_util.h"
-//#include "usb_msd.h"
+#include "mmc_card.h"
 
 #include "AdcConfiguration.h"
-#include "idle_thread.h"
+#include "idle_hardware.h"
 #include "mcp3208.h"
 #include "hip9011.h"
 #include "histogram.h"
-#include "mmc_card.h"
 #include "neo6m.h"
 #include "lcd_HD44780.h"
 #include "settings.h"
@@ -46,9 +47,11 @@
 #include "trigger_central.h"
 #include "svnversion.h"
 #include "engine_configuration.h"
-#include "aux_pid.h"
+#include "vvt.h"
 #include "perf_trace.h"
+#include "trigger_emulator_algo.h"
 #include "boost_control.h"
+#include "software_knock.h"
 #if EFI_MC33816
 #include "mc33816.h"
 #endif /* EFI_MC33816 */
@@ -67,28 +70,23 @@
 
 EXTERN_ENGINE;
 
-static mutex_t spiMtx;
-
-#if HAL_USE_SPI
-extern bool isSpiInitialized[5];
-
 /**
  * #311 we want to test RTC before engine start so that we do not test it while engine is running
  */
 bool rtcWorks = true;
+#if HAL_USE_SPI
+extern bool isSpiInitialized[5];
 
 /**
  * Only one consumer can use SPI bus at a given time
  */
 void lockSpi(spi_device_e device) {
-	UNUSED(device);
 	efiAssertVoid(CUSTOM_STACK_SPI, getCurrentRemainingStack() > 128, "lockSpi");
-	// todo: different locks for different SPI devices!
-	chMtxLock(&spiMtx);
+	spiAcquireBus(getSpiDevice(device));
 }
 
-void unlockSpi(void) {
-	chMtxUnlock(&spiMtx);
+void unlockSpi(spi_device_e device) {
+	spiReleaseBus(getSpiDevice(device));
 }
 
 static void initSpiModules(engine_configuration_s *engineConfiguration) {
@@ -139,39 +137,6 @@ SPIDriver * getSpiDevice(spi_device_e spiDevice) {
 }
 #endif
 
-#if HAL_USE_I2C
-#if defined(STM32F7XX)
-// values calculated with STM32CubeMX tool, 100kHz I2C clock for Nucleo-767 @168 MHz, PCK1=42MHz
-#define HAL_I2C_F7_100_TIMINGR 0x00A0A3F7
-static I2CConfig i2cfg = { HAL_I2C_F7_100_TIMINGR, 0, 0 };	// todo: does it work?
-#else /* defined(STM32F4XX) */
-static I2CConfig i2cfg = { OPMODE_I2C, 100000, STD_DUTY_CYCLE, };
-#endif /* defined(STM32F4XX) */
-
-void initI2Cmodule(void) {
-	print("Starting I2C module\r\n");
-	i2cInit();
-	i2cStart(&I2CD1, &i2cfg);
-
-	efiSetPadMode("I2C clock", EFI_I2C_SCL_BRAIN_PIN, PAL_MODE_ALTERNATE(EFI_I2C_AF) | PAL_STM32_OTYPE_OPENDRAIN);
-	efiSetPadMode("I2C data", EFI_I2C_SDA_BRAIN_PIN, PAL_MODE_ALTERNATE(EFI_I2C_AF) | PAL_STM32_OTYPE_OPENDRAIN);
-}
-
-//static char txbuf[1];
-
-static void sendI2Cbyte(int addr, int data) {
-	(void)addr;
-	(void)data;
-//	i2cAcquireBus(&I2CD1);
-//	txbuf[0] = data;
-//	i2cMasterTransmit(&I2CD1, addr, txbuf, 1, NULL, 0);
-//	i2cReleaseBus(&I2CD1);
-}
-
-#endif
-
-static Logging *sharedLogger;
-
 #if EFI_PROD_CODE
 
 #define TPS_IS_SLOW -1
@@ -180,13 +145,67 @@ static int fastMapSampleIndex;
 static int hipSampleIndex;
 static int tpsSampleIndex;
 
+#if HAL_TRIGGER_USE_ADC
+static int triggerSampleIndex;
+#endif
+
 #if HAL_USE_ADC
 extern AdcDevice fastAdc;
+
+#if EFI_FASTER_UNIFORM_ADC
+static int adcCallbackCounter = 0;
+static volatile int averagedSamples[ADC_MAX_CHANNELS_COUNT];
+static adcsample_t avgBuf[ADC_MAX_CHANNELS_COUNT];
+
+void adc_callback_fast_internal(ADCDriver *adcp);
+
+void adc_callback_fast(ADCDriver *adcp) {
+	adcsample_t *buffer = adcp->samples;
+	//size_t n = adcp->depth;
+
+	if (adcp->state == ADC_COMPLETE) {
+#if HAL_TRIGGER_USE_ADC
+		// we need to call this ASAP, because trigger processing is time-critical
+		if (triggerSampleIndex >= 0)
+			triggerAdcCallback(buffer[triggerSampleIndex]);
+#endif /* HAL_TRIGGER_USE_ADC */
+
+		// store the values for averaging
+		for (int i = fastAdc.size() - 1; i >= 0; i--) {
+			averagedSamples[i] += fastAdc.samples[i];
+		}
+
+		// if it's time to process the data
+		if (++adcCallbackCounter >= ADC_BUF_NUM_AVG) {
+			// get an average
+			for (int i = fastAdc.size() - 1; i >= 0; i--) {
+				avgBuf[i] = (adcsample_t)(averagedSamples[i] / ADC_BUF_NUM_AVG);	// todo: rounding?
+			}
+
+			// call the real callback (see below)
+			adc_callback_fast_internal(adcp);
+
+			// reset the avg buffer & counter
+			for (int i = fastAdc.size() - 1; i >= 0; i--) {
+				averagedSamples[i] = 0;
+			}
+			adcCallbackCounter = 0;
+		}
+	}
+}
+
+#endif /* EFI_FASTER_UNIFORM_ADC */
 
 /**
  * This method is not in the adc* lower-level file because it is more business logic then hardware.
  */
-void adc_callback_fast(ADCDriver *adcp, adcsample_t *buffer, size_t n) {
+#if EFI_FASTER_UNIFORM_ADC
+void adc_callback_fast_internal(ADCDriver *adcp) {
+#else
+void adc_callback_fast(ADCDriver *adcp) {
+#endif
+	adcsample_t *buffer = adcp->samples;
+	size_t n = adcp->depth;
 	(void) buffer;
 	(void) n;
 
@@ -198,8 +217,6 @@ void adc_callback_fast(ADCDriver *adcp, adcsample_t *buffer, size_t n) {
 	 * */
 	if (adcp->state == ADC_COMPLETE) {
 		ScopePerf perf(PE::AdcCallbackFastComplete);
-
-		fastAdc.invalidateSamplesCache();
 
 		/**
 		 * this callback is executed 10 000 times a second, it needs to be as fast as possible
@@ -214,31 +231,34 @@ void adc_callback_fast(ADCDriver *adcp, adcsample_t *buffer, size_t n) {
 #endif /* EFI_SENSOR_CHART */
 
 #if EFI_MAP_AVERAGING
-		mapAveragingAdcCallback(fastAdc.samples[fastMapSampleIndex]);
+		mapAveragingAdcCallback(buffer[fastMapSampleIndex]);
 #endif /* EFI_MAP_AVERAGING */
 #if EFI_HIP_9011
 		if (CONFIG(isHip9011Enabled)) {
-			hipAdcCallback(fastAdc.samples[hipSampleIndex]);
+			hipAdcCallback(buffer[hipSampleIndex]);
 		}
 #endif /* EFI_HIP_9011 */
 //		if (tpsSampleIndex != TPS_IS_SLOW) {
-//			tpsFastAdc = fastAdc.samples[tpsSampleIndex];
+//			tpsFastAdc = buffer[tpsSampleIndex];
 //		}
 	}
 }
 #endif /* HAL_USE_ADC */
 
 static void calcFastAdcIndexes(void) {
-#if HAL_USE_ADC
+#if HAL_USE_ADC && EFI_USE_FAST_ADC
 	fastMapSampleIndex = fastAdc.internalAdcIndexByHardwareIndex[engineConfiguration->map.sensor.hwChannel];
 	hipSampleIndex =
-			engineConfiguration->hipOutputChannel == EFI_ADC_NONE ?
-					-1 : fastAdc.internalAdcIndexByHardwareIndex[engineConfiguration->hipOutputChannel];
-	if (engineConfiguration->tps1_1AdcChannel != EFI_ADC_NONE) {
-		tpsSampleIndex = fastAdc.internalAdcIndexByHardwareIndex[engineConfiguration->tps1_1AdcChannel];
-	} else {
-		tpsSampleIndex = TPS_IS_SLOW;
-	}
+			isAdcChannelValid(engineConfiguration->hipOutputChannel) ?
+					fastAdc.internalAdcIndexByHardwareIndex[engineConfiguration->hipOutputChannel] : -1;
+	tpsSampleIndex =
+			isAdcChannelValid(engineConfiguration->tps1_1AdcChannel) ?
+					fastAdc.internalAdcIndexByHardwareIndex[engineConfiguration->tps1_1AdcChannel] : TPS_IS_SLOW;
+#if HAL_TRIGGER_USE_ADC
+	adc_channel_e triggerChannel = getAdcChannelForTrigger();
+	triggerSampleIndex = isAdcChannelValid(triggerChannel) ?
+		fastAdc.internalAdcIndexByHardwareIndex[triggerChannel] : -1;
+#endif /* HAL_TRIGGER_USE_ADC */
 
 #endif/* HAL_USE_ADC */
 }
@@ -249,9 +269,16 @@ static void adcConfigListener(Engine *engine) {
 	calcFastAdcIndexes();
 }
 
-void turnOnHardware(Logging *sharedLogger) {
+static void turnOnHardware() {
+#if EFI_FASTER_UNIFORM_ADC
+	for (int i = 0; i < ADC_MAX_CHANNELS_COUNT; i++) {
+		averagedSamples[i] = 0;
+	}
+	adcCallbackCounter = 0;
+#endif /* EFI_FASTER_UNIFORM_ADC */
+
 #if EFI_SHAFT_POSITION_INPUT
-	turnOnTriggerInputPins(sharedLogger);
+	turnOnTriggerInputPins();
 #endif /* EFI_SHAFT_POSITION_INPUT */
 }
 
@@ -261,9 +288,9 @@ void stopSpi(spi_device_e device) {
 		return; // not turned on
 	}
 	isSpiInitialized[device] = false;
-	brain_pin_markUnused(getSckPin(device));
-	brain_pin_markUnused(getMisoPin(device));
-	brain_pin_markUnused(getMosiPin(device));
+	efiSetPadUnused(getSckPin(device));
+	efiSetPadUnused(getMisoPin(device));
+	efiSetPadUnused(getMosiPin(device));
 #endif /* HAL_USE_SPI */
 }
 
@@ -271,8 +298,17 @@ void stopSpi(spi_device_e device) {
  * this method is NOT currently invoked on ECU start
  * todo: maybe start invoking this method on ECU start so that peripheral start-up initialization and restart are unified?
  */
+
 void applyNewHardwareSettings(void) {
-    // all 'stop' methods need to go before we begin starting pins
+    /**
+     * All 'stop' methods need to go before we begin starting pins.
+     *
+     * We take settings from 'activeConfiguration' not 'engineConfiguration' while stopping hardware.
+     * Some hardware is restart unconditionally on change of parameters while for some systems we make extra effort and restart only
+     * relevant settings were changes.
+     *
+     */
+	ButtonDebounce::stopConfigurationList();
 
 #if EFI_SHAFT_POSITION_INPUT
 	stopTriggerInputPins();
@@ -282,34 +318,37 @@ void applyNewHardwareSettings(void) {
 #if (HAL_USE_PAL && EFI_JOYSTICK)
 	stopJoystickPins();
 #endif /* HAL_USE_PAL && EFI_JOYSTICK */
-       
-	enginePins.stopInjectionPins();
-    enginePins.stopIgnitionPins();
+
 #if EFI_CAN_SUPPORT
 	stopCanPins();
 #endif /* EFI_CAN_SUPPORT */
+
+#if EFI_AUX_SERIAL
+	stopAuxSerialPins();
+#endif /* EFI_AUX_SERIAL */
 
 #if EFI_HIP_9011
 	stopHip9001_pins();
 #endif /* EFI_HIP_9011 */
 
-#if EFI_IDLE_CONTROL
-	bool isIdleRestartNeeded = isIdleHardwareRestartNeeded();
-	if (isIdleRestartNeeded) {
-		stopIdleHardware();
-	}
-#endif
-
-#if (BOARD_TLE6240_COUNT > 0)
+#if (BOARD_EXT_GPIOCHIPS > 0)
 	stopSmartCsPins();
-#endif /* (BOARD_MC33972_COUNT > 0) */
+#endif /* (BOARD_EXT_GPIOCHIPS > 0) */
 
 #if EFI_VEHICLE_SPEED
 	stopVSSPins();
 #endif /* EFI_VEHICLE_SPEED */
 
+#if EFI_LOGIC_ANALYZER
+	stopLogicAnalyzerPins();
+#endif /* EFI_LOGIC_ANALYZER */
+
+#if EFI_EMULATE_POSITION_SENSORS
+	stopTriggerEmulatorPins();
+#endif /* EFI_EMULATE_POSITION_SENSORS */
+
 #if EFI_AUX_PID
-	stopAuxPins();
+	stopVvtControlPins();
 #endif /* EFI_AUX_PID */
 
 	if (isConfigurationChanged(is_enabled_spi_1)) {
@@ -332,18 +371,17 @@ void applyNewHardwareSettings(void) {
 	stopHD44780_pins();
 #endif /* #if EFI_HD44780_LCD */
 
-#if EFI_BOOST_CONTROL
-	stopBoostPin();
-#endif
 	if (isPinOrModeChanged(clutchUpPin, clutchUpPinMode)) {
-		brain_pin_markUnused(activeConfiguration.clutchUpPin);
-	}
-
-	if (isPinOrModeChanged(startStopButtonPin, startStopButtonMode)) {
-		brain_pin_markUnused(activeConfiguration.startStopButtonPin);
+		efiSetPadUnused(activeConfiguration.clutchUpPin);
 	}
 
 	enginePins.unregisterPins();
+
+	ButtonDebounce::startConfigurationList();
+
+	/*******************************************
+	 * Start everything back with new settings *
+	 ******************************************/
 
 #if EFI_SHAFT_POSITION_INPUT
 	startTriggerInputPins();
@@ -357,12 +395,30 @@ void applyNewHardwareSettings(void) {
 	startHD44780_pins();
 #endif /* #if EFI_HD44780_LCD */
 
-	enginePins.startInjectionPins();
-	enginePins.startIgnitionPins();
+#if (BOARD_EXT_GPIOCHIPS > 0)
+	/* TODO: properly restart gpio chips...
+	 * This is only workaround for "CS pin lost" bug
+	 * see: https://github.com/rusefi/rusefi/issues/2107
+	 * We should provide better way to gracefully stop all
+	 * gpio chips: set outputs to safe state, release all
+	 * on-chip resources (gpios, SPIs, etc) and then restart
+	 * with updated settings.
+	 * Following code just re-inits CS pins for all external
+	 * gpio chips, but does not update CS pin definition in
+	 * gpio chips private data/settings. So changing CS pin
+	 * on-fly does not work */
+	startSmartCsPins();
+#endif /* (BOARD_EXT_GPIOCHIPS > 0) */
+
+	enginePins.startPins();
 
 #if EFI_CAN_SUPPORT
 	startCanPins();
 #endif /* EFI_CAN_SUPPORT */
+
+#if EFI_AUX_SERIAL
+	startAuxSerialPins();
+#endif /* EFI_AUX_SERIAL */
 
 #if EFI_HIP_9011
 	startHip9001_pins();
@@ -370,7 +426,7 @@ void applyNewHardwareSettings(void) {
 
 
 #if EFI_IDLE_CONTROL
-	if (isIdleRestartNeeded) {
+	if (isIdleHardwareRestartNeeded()) {
 		 initIdleHardware();
 	}
 #endif
@@ -382,36 +438,38 @@ void applyNewHardwareSettings(void) {
 #if EFI_BOOST_CONTROL
 	startBoostPin();
 #endif
+#if EFI_EMULATE_POSITION_SENSORS
+	startTriggerEmulatorPins();
+#endif /* EFI_EMULATE_POSITION_SENSORS */
+#if EFI_LOGIC_ANALYZER
+	startLogicAnalyzerPins();
+#endif /* EFI_LOGIC_ANALYZER */
 #if EFI_AUX_PID
-	startAuxPins();
+	startVvtControlPins();
 #endif /* EFI_AUX_PID */
 
 	adcConfigListener(engine);
 }
 
 void setBor(int borValue) {
-	scheduleMsg(sharedLogger, "setting BOR to %d", borValue);
+	efiPrintf("setting BOR to %d", borValue);
 	BOR_Set((BOR_Level_t)borValue);
 	showBor();
 }
 
 void showBor(void) {
-	scheduleMsg(sharedLogger, "BOR=%d", (int)BOR_Get());
+	efiPrintf("BOR=%d", (int)BOR_Get());
 }
 
-void initHardware(Logging *l) {
+// This function initializes hardware that can do so before configuration is loaded
+void initHardwareNoConfig() {
 	efiAssertVoid(CUSTOM_IH_STACK, getCurrentRemainingStack() > EXPECTED_REMAINING_STACK, "init h");
-	sharedLogger = l;
-	engine_configuration_s *engineConfiguration = engine->engineConfigurationPtr;
 	efiAssertVoid(CUSTOM_EC_NULL, engineConfiguration!=NULL, "engineConfiguration");
 	
 
-	printMsg(sharedLogger, "initHardware()");
-	// todo: enable protection. it's disabled because it takes
-	// 10 extra seconds to re-flash the chip
-	//flashProtect();
+	efiPrintf("initHardware()");
 
-	chMtxObjectInit(&spiMtx);
+	initPinRepository();
 
 #if EFI_HISTOGRAMS
 	/**
@@ -423,43 +481,30 @@ void initHardware(Logging *l) {
 	/**
 	 * We need the LED_ERROR pin even before we read configuration
 	 */
-	initPrimaryPins(sharedLogger);
-
-	if (hasFirmwareError()) {
-		return;
-	}
-
-#if EFI_INTERNAL_FLASH
-
-#ifdef CONFIG_RESET_SWITCH_PORT
-	palSetPadMode(CONFIG_RESET_SWITCH_PORT, CONFIG_RESET_SWITCH_PIN, PAL_MODE_INPUT_PULLUP);
-#endif /* CONFIG_RESET_SWITCH_PORT */
-
-	initFlash(sharedLogger);
-	/**
-	 * this call reads configuration from flash memory or sets default configuration
-	 * if flash state does not look right.
-	 *
-	 * interesting fact that we have another read from flash before we get here
-	 */
-	if (SHOULD_INGORE_FLASH()) {
-		engineConfiguration->engineType = DEFAULT_ENGINE_TYPE;
-		resetConfigurationExt(sharedLogger, engineConfiguration->engineType PASS_ENGINE_PARAMETER_SUFFIX);
-		writeToFlashNow();
-	} else {
-		readFromFlash();
-	}
-#else
-	engineConfiguration->engineType = DEFAULT_ENGINE_TYPE;
-	resetConfigurationExt(sharedLogger, engineConfiguration->engineType PASS_ENGINE_PARAMETER_SUFFIX);
-#endif /* EFI_INTERNAL_FLASH */
+	initPrimaryPins();
 
 	// it's important to initialize this pretty early in the game before any scheduling usages
 	initSingleTimerExecutorHardware();
 
+	initRtc();
+
+#if EFI_INTERNAL_FLASH
+	initFlash();
+#endif
+
+#if EFI_SHAFT_POSITION_INPUT
+	// todo: figure out better startup logic
+	initTriggerCentral();
+#endif /* EFI_SHAFT_POSITION_INPUT */
+
+#if EFI_FILE_LOGGING
+	initEarlyMmcCard();
+#endif // EFI_FILE_LOGGING
+}
+
+void initHardware() {
 #if EFI_HD44780_LCD
-//	initI2Cmodule();
-	lcd_HD44780_init(sharedLogger);
+	lcd_HD44780_init();
 	if (hasFirmwareError())
 		return;
 
@@ -471,17 +516,16 @@ void initHardware(Logging *l) {
 		return;
 	}
 
-#if EFI_SHAFT_POSITION_INPUT
-	initTriggerDecoder(PASS_ENGINE_PARAMETER_SIGNATURE);
-#endif
-
 #if HAL_USE_ADC
 	initAdcInputs();
+
 	// wait for first set of ADC values so that we do not produce invalid sensor data
 	waitForSlowAdc(1);
 #endif /* HAL_USE_ADC */
 
-	initRtc();
+#if EFI_SOFTWARE_KNOCK
+	initSoftwareKnock();
+#endif /* EFI_SOFTWARE_KNOCK */
 
 #if HAL_USE_SPI
 	initSpiModules(engineConfiguration);
@@ -492,21 +536,19 @@ void initHardware(Logging *l) {
 	initSmartGpio(PASS_ENGINE_PARAMETER_SIGNATURE);
 #endif
 
-	if (CONFIG(startStopButtonPin) != GPIO_UNASSIGNED) {
-		efiSetPadMode("start/stop", CONFIG(startStopButtonPin),
-				getInputMode(CONFIG(startStopButtonMode)));
-	}
-
-
 	// output pins potentially depend on 'initSmartGpio'
 	initOutputPins(PASS_ENGINE_PARAMETER_SIGNATURE);
 
+#if EFI_ENGINE_CONTROL
+	enginePins.startPins(PASS_ENGINE_PARAMETER_SIGNATURE);
+#endif /* EFI_ENGINE_CONTROL */
+
 #if EFI_MC33816
-	initMc33816(sharedLogger);
+	initMc33816();
 #endif /* EFI_MC33816 */
 
 #if EFI_MAX_31855
-	initMax31855(sharedLogger, CONFIG(max31855spiDevice), CONFIG(max31855_cs));
+	initMax31855(CONFIG(max31855spiDevice), CONFIG(max31855_cs));
 #endif /* EFI_MAX_31855 */
 
 #if EFI_CAN_SUPPORT
@@ -516,32 +558,19 @@ void initHardware(Logging *l) {
 //	init_adc_mcp3208(&adcState, &SPID2);
 //	requestAdcValue(&adcState, 0);
 
-#if EFI_SHAFT_POSITION_INPUT
-	// todo: figure out better startup logic
-	initTriggerCentral(sharedLogger);
-#endif /* EFI_SHAFT_POSITION_INPUT */
-
-	turnOnHardware(sharedLogger);
+	turnOnHardware();
 
 #if EFI_HIP_9011
-	initHip9011(sharedLogger);
+	initHip9011();
 #endif /* EFI_HIP_9011 */
-
-#if EFI_FILE_LOGGING
-	initMmcCard();
-#endif /* EFI_FILE_LOGGING */
 
 #if EFI_MEMS
 	initAccelerometer(PASS_ENGINE_PARAMETER_SIGNATURE);
 #endif
-//	initFixedLeds();
-
 
 #if EFI_BOSCH_YAW
 	initBoschYawRateSensor();
 #endif /* EFI_BOSCH_YAW */
-
-	//	initBooleanInputs();
 
 #if EFI_UART_GPS
 	initGps();
@@ -551,47 +580,29 @@ void initHardware(Logging *l) {
 	initServo();
 #endif
 
-#if ADC_SNIFFER
-	initAdcDriver();
-#endif
-
-#if HAL_USE_I2C
-	addConsoleActionII("i2c", sendI2Cbyte);
-#endif
-
-
-//	USBMassStorageDriver UMSD1;
-
-//	while (true) {
-//		for (int addr = 0x20; addr < 0x28; addr++) {
-//			sendI2Cbyte(addr, 0);
-//			int err = i2cGetErrors(&I2CD1);
-//			print("I2C: err=%x from %d\r\n", err, addr);
-//			chThdSleepMilliseconds(5);
-//			sendI2Cbyte(addr, 255);
-//			chThdSleepMilliseconds(5);
-//		}
-//	}
+#if EFI_AUX_SERIAL
+	initAuxSerial();
+#endif /* EFI_AUX_SERIAL */
 
 #if EFI_VEHICLE_SPEED
-	initVehicleSpeed(sharedLogger);
-#endif
+	initVehicleSpeed();
+#endif // EFI_VEHICLE_SPEED
 
 #if EFI_CAN_SUPPORT
-	initCanVssSupport(sharedLogger);
-#endif
+	initCanVssSupport();
+#endif // EFI_CAN_SUPPORT
 
 #if EFI_CDM_INTEGRATION
 	cdmIonInit();
-#endif
+#endif // EFI_CDM_INTEGRATION
 
 #if (HAL_USE_PAL && EFI_JOYSTICK)
-	initJoystick(sharedLogger);
+	initJoystick();
 #endif /* HAL_USE_PAL && EFI_JOYSTICK */
 
 	calcFastAdcIndexes();
 
-	printMsg(sharedLogger, "initHardware() OK!");
+	efiPrintf("initHardware() OK!");
 }
 
 #endif /* EFI_PROD_CODE */

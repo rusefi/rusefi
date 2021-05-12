@@ -1,0 +1,14 @@
+<component name="libraryTable">
+  <library name="httpclient">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/../../java_console/lib/httpclient.jar!/" />
+      <root url="jar://$PROJECT_DIR$/../../java_console/lib/httpcore.jar!/" />
+      <root url="jar://$PROJECT_DIR$/../../java_console/lib/httpmime.jar!/" />
+    </CLASSES>
+    <JAVADOC>
+      <root url="jar://$PROJECT_DIR$/../../java_console/lib/httpmime-javadoc.jar!/" />
+      <root url="jar://$PROJECT_DIR$/../../java_console/lib/httpclient-javadoc.jar!/" />
+    </JAVADOC>
+    <SOURCES />
+  </library>
+</component>

@@ -11,6 +11,7 @@
 #include "error_handling.h"
 #include "interpolation.h"
 #include "efilib.h"
+#include "efi_ratio.h"
 
 // popular left edge of CLT-based correction curves
 #define CLT_CURVE_RANGE_FROM -40
@@ -24,144 +25,67 @@ public:
 /**
  * this helper class brings together 3D table with two 2D axis curves
  */
-template<int RPM_BIN_SIZE, int LOAD_BIN_SIZE, typename vType, typename kType>
+template<int RPM_BIN_SIZE, int LOAD_BIN_SIZE, typename vType, typename kType, typename TValueMultiplier = efi::ratio<1>>
 class Map3D : public ValueProvider3D {
 public:
-	explicit Map3D(const char*name);
-	Map3D(const char*name, float multiplier);
-	void init(vType table[RPM_BIN_SIZE][LOAD_BIN_SIZE], const kType loadBins[LOAD_BIN_SIZE], const kType rpmBins[RPM_BIN_SIZE]);
-	float getValue(float xRpm, float y) const override;
-	void setAll(vType value);
+	explicit Map3D(const char*name) {
+		create(name);
+	}
+
+	void init(vType table[RPM_BIN_SIZE][LOAD_BIN_SIZE], const kType loadBins[LOAD_BIN_SIZE], const kType rpmBins[RPM_BIN_SIZE]) {
+		// this method cannot use logger because it's invoked before everything
+		// that's because this method needs to be invoked before initial configuration processing
+		// and initial configuration load is done prior to logging initialization
+		for (int k = 0; k < LOAD_BIN_SIZE; k++) {
+			pointers[k] = table[k];
+		}
+
+		this->loadBins = loadBins;
+		this->rpmBins = rpmBins;
+	}
+
+	float getValue(float xRpm, float y) const override {
+		efiAssert(CUSTOM_ERR_ASSERT, loadBins, "map not initialized", NAN);
+		if (cisnan(y)) {
+			warning(CUSTOM_PARAM_RANGE, "%s: y is NaN", name);
+			return NAN;
+		}
+
+		// todo: we have a bit of a mess: in TunerStudio, RPM is X-axis
+		return interpolate3d<vType, kType>(name, y, loadBins, LOAD_BIN_SIZE, xRpm, rpmBins, RPM_BIN_SIZE, pointers) * TValueMultiplier::asFloat();
+	}
+
+	void setAll(vType value) {
+		efiAssertVoid(CUSTOM_ERR_6573, loadBins, "map not initialized");
+		for (int l = 0; l < LOAD_BIN_SIZE; l++) {
+			for (int r = 0; r < RPM_BIN_SIZE; r++) {
+				pointers[l][r] = value / TValueMultiplier::asFloat();
+			}
+		}
+	}
+
 	vType *pointers[LOAD_BIN_SIZE];
 private:
-	void create(const char*name, float multiplier);
+	void create(const char* name) {
+		this->name = name;
+		memset(&pointers, 0, sizeof(pointers));
+	}
+
 	const kType *loadBins = NULL;
 	const kType *rpmBins = NULL;
-	bool initialized =  false;
 	const char *name;
-	float multiplier;
 };
 
-/*
- * this dead code is a questionable performance optimization idea: instead of division every time
- * we want interpolation for a curve we can pre-calculate A and B and save the division at the cost of more RAM usage
- * Realistically we probably value RAM over CPU at this time and the costs are not justified.
-template<int SIZE>
-class Table2D {
-public:
-	Table2D();
-	void preCalc(float *bin, float *values);
-	float aTable[SIZE];
-	float bTable[SIZE];
-	float *bin;
-};
-template<int SIZE>
-Table2D<SIZE>::Table2D() {
-	bin = NULL;
-}
-
-template<int SIZE>
-void Table2D<SIZE>::preCalc(float *bin, float *values) {
-	this->bin = bin;
-	for (int i = 0; i < SIZE - 1; i++) {
-		float x1 = bin[i];
-		float x2 = bin[i + 1];
-		if (x1 == x2) {
-			warning(CUSTOM_INTEPOLATE_ERROR_4, "preCalc: Same x1 and x2 in interpolate: %.2f/%.2f", x1, x2);
-			return;
-		}
-
-		float y1 = values[i];
-		float y2 = values[i + 1];
-
-		aTable[i] = INTERPOLATION_A(x1, y1, x2, y2);
-		bTable[i] = y1 - aTable[i] * x1;
-	}
-}
-*/
-
-template<int RPM_BIN_SIZE, int LOAD_BIN_SIZE, typename vType, typename kType>
-void Map3D<RPM_BIN_SIZE, LOAD_BIN_SIZE, vType, kType>::init(vType table[RPM_BIN_SIZE][LOAD_BIN_SIZE],
-		const kType loadBins[LOAD_BIN_SIZE],
-		const kType rpmBins[RPM_BIN_SIZE]) {
-	// this method cannot use logger because it's invoked before everything
-	// that's because this method needs to be invoked before initial configuration processing
-	// and initial configuration load is done prior to logging initialization
-
-  for (int k = 0; k < LOAD_BIN_SIZE; k++) {
-		pointers[k] = table[k];
-  }
-	initialized = true;
-	this->loadBins = loadBins;
-	this->rpmBins = rpmBins;
-}
-
-template<int RPM_BIN_SIZE, int LOAD_BIN_SIZE, typename vType, typename kType>
-float Map3D<RPM_BIN_SIZE, LOAD_BIN_SIZE, vType, kType>::getValue(float xRpm, float y) const {
-	efiAssert(CUSTOM_ERR_ASSERT, initialized, "map not initialized", NAN);
-	if (cisnan(y)) {
-		warning(CUSTOM_PARAM_RANGE, "%s: y is NaN", name);
-		return NAN;
-	}
-	// todo: we have a bit of a mess: in TunerStudio, RPM is X-axis
-	return multiplier * interpolate3d<vType, kType>(y, loadBins, LOAD_BIN_SIZE, xRpm, rpmBins, RPM_BIN_SIZE, pointers);
-}
-
-template<int RPM_BIN_SIZE, int LOAD_BIN_SIZE, typename vType, typename kType>
-Map3D<RPM_BIN_SIZE, LOAD_BIN_SIZE, vType, kType>::Map3D(const char *name) {
-	create(name, 1);
-}
-
-template<int RPM_BIN_SIZE, int LOAD_BIN_SIZE, typename vType, typename kType>
-Map3D<RPM_BIN_SIZE, LOAD_BIN_SIZE, vType, kType>::Map3D(const char *name, float multiplier) {
-	create(name, multiplier);
-}
-
-template<int RPM_BIN_SIZE, int LOAD_BIN_SIZE, typename vType, typename kType>
-void Map3D<RPM_BIN_SIZE, LOAD_BIN_SIZE, vType, kType>::create(const char *name, float multiplier) {
-	this->name = name;
-	this->multiplier = multiplier;
-	memset(&pointers, 0, sizeof(pointers));
-}
-
-template<int RPM_BIN_SIZE, int LOAD_BIN_SIZE, typename vType, typename kType>
-void Map3D<RPM_BIN_SIZE, LOAD_BIN_SIZE, vType, kType>::setAll(vType value) {
-	efiAssertVoid(CUSTOM_ERR_6573, initialized, "map not initialized");
-	for (int l = 0; l < LOAD_BIN_SIZE; l++) {
-		for (int r = 0; r < RPM_BIN_SIZE; r++) {
-			pointers[l][r] = value / multiplier;
-		}
-	}
-}
-
-template<int RPM_BIN_SIZE, int LOAD_BIN_SIZE, typename vType, typename kType>
-void copy2DTable(const vType source[LOAD_BIN_SIZE][RPM_BIN_SIZE], vType destination[LOAD_BIN_SIZE][RPM_BIN_SIZE]) {
-	for (int k = 0; k < LOAD_BIN_SIZE; k++) {
-		for (int rpmIndex = 0; rpmIndex < RPM_BIN_SIZE; rpmIndex++) {
-			destination[k][rpmIndex] = source[k][rpmIndex];
-		}
-	}
-}
-
-/**
- * AFR value is packed into uint8_t with a multiplier of 10
- */
-#define AFR_STORAGE_MULT 10
-/**
- * TPS-based Advance value is packed into int16_t with a multiplier of 100
- */
-#define ADVANCE_TPS_STORAGE_MULT 100
-
-typedef Map3D<FUEL_RPM_COUNT, FUEL_LOAD_COUNT, uint8_t, float> afr_Map3D_t;
+typedef Map3D<FUEL_RPM_COUNT, FUEL_LOAD_COUNT, uint8_t, float, efi::ratio<1, PACK_MULT_LAMBDA_CFG>> lambda_Map3D_t;
 typedef Map3D<IGN_RPM_COUNT, IGN_LOAD_COUNT, float, float> ign_Map3D_t;
-typedef Map3D<IGN_RPM_COUNT, IGN_TPS_COUNT, int16_t, float> ign_tps_Map3D_t;
 typedef Map3D<FUEL_RPM_COUNT, FUEL_LOAD_COUNT, float, float> fuel_Map3D_t;
 typedef Map3D<BARO_CORR_SIZE, BARO_CORR_SIZE, float, float> baroCorr_Map3D_t;
 typedef Map3D<PEDAL_TO_TPS_SIZE, PEDAL_TO_TPS_SIZE, uint8_t, uint8_t> pedal2tps_t;
-typedef Map3D<BOOST_RPM_COUNT, BOOST_LOAD_COUNT, uint8_t, uint8_t> boostOpenLoop_Map3D_t;
+typedef Map3D<BOOST_RPM_COUNT, BOOST_LOAD_COUNT, uint8_t, uint8_t, efi::ratio<LOAD_1_BYTE_PACKING_MULT>> boostOpenLoop_Map3D_t;
 typedef Map3D<BOOST_RPM_COUNT, BOOST_LOAD_COUNT, uint8_t, uint8_t> boostClosedLoop_Map3D_t;
 typedef Map3D<IAC_PID_MULT_SIZE, IAC_PID_MULT_SIZE, uint8_t, uint8_t> iacPidMultiplier_t;
 typedef Map3D<GPPWM_RPM_COUNT, GPPWM_LOAD_COUNT, uint8_t, uint8_t> gppwm_Map3D_t;
+typedef Map3D<FUEL_RPM_COUNT, FUEL_LOAD_COUNT, uint16_t, uint16_t, efi::ratio<1, PACK_MULT_MAP_ESTIMATE>> mapEstimate_Map3D_t;
 
 void setRpmBin(float array[], int size, float idleRpm, float topRpm);
 
@@ -184,6 +108,24 @@ template<typename TValue, int TSize>
 void setArrayValues(TValue (&array)[TSize], TValue value) {
 	for (int i = 0; i < TSize; i++) {
 		array[i] = value;
+	}
+}
+
+template <typename TElement, size_t N, size_t M>
+constexpr void setTable(TElement (&dest)[N][M], const TElement value) {
+	for (size_t n = 0; n < N; n++) {
+		for (size_t m = 0; m < M; m++) {
+			dest[n][m] = value;
+		}
+	}
+}
+
+template <typename TDest, typename TSource, size_t N, size_t M>
+constexpr void copyTable(TDest (&dest)[N][M], const TSource (&source)[N][M], float multiply = 1.0f) {
+	for (size_t n = 0; n < N; n++) {
+		for (size_t m = 0; m < M; m++) {
+			dest[n][m] = source[n][m] * multiply;
+		}
 	}
 }
 

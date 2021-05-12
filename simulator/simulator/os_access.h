@@ -19,6 +19,9 @@ extern "C"
 
 #ifdef __cplusplus
 }
+
+// ChibiOS c++ wrappers
+#include "ch.hpp"
 #endif /* __cplusplus */
 
 #define HAS_OS_ACCESS

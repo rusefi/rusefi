@@ -19,9 +19,9 @@
 typedef unsigned int time_t;
 #endif
 
+#include "rusefi_generated.h"
 #include "rusefi_enums.h"
 #include "firing_order.h"
-#include "rusefi_generated.h"
 
 #define DEFAULT_FUEL_LOAD_COUNT 16
 #define DEFAULT_IGN_LOAD_COUNT 16
@@ -83,13 +83,16 @@ typedef void (*Void)(void);
 
 typedef char error_message_t[ERROR_BUFFER_SIZE];
 
+typedef char vehicle_info_t[VEHICLE_INFO_SIZE];
+
 typedef char le_formula_t[LE_COMMAND_LENGTH];
 
 typedef brain_pin_e egt_cs_array_t[EGT_CHANNEL_COUNT];
 
-typedef uint8_t afr_table_t[FUEL_LOAD_COUNT][FUEL_RPM_COUNT];
+typedef uint8_t lambda_table_t[FUEL_LOAD_COUNT][FUEL_RPM_COUNT];
 // todo: merge these two types together? but these tables have different TS parameters like ranges etc
 typedef float fuel_table_t[FUEL_LOAD_COUNT][FUEL_RPM_COUNT];
+typedef uint16_t map_estimate_table_t[FUEL_LOAD_COUNT][FUEL_RPM_COUNT];
 typedef float ignition_table_t[IGN_LOAD_COUNT][IGN_RPM_COUNT];
 typedef int16_t ignition_tps_table_t[IGN_LOAD_COUNT][IGN_RPM_COUNT];
 typedef uint8_t pedal_to_tps_t[PEDAL_TO_TPS_SIZE][PEDAL_TO_TPS_SIZE];
@@ -97,17 +100,20 @@ typedef uint8_t iac_pid_mult_t[IAC_PID_MULT_SIZE][IAC_PID_MULT_SIZE];
 
 typedef float baro_corr_table_t[BARO_CORR_SIZE][BARO_CORR_SIZE];
 
+typedef bool tcubinary_table_t[TCU_GEAR_COUNT][TCU_SOLENOID_COUNT];
+
 typedef float fsio_table_8x8_f32t[FSIO_TABLE_8][FSIO_TABLE_8];
 typedef float tps_tps_table_t[TPS_TPS_ACCEL_TABLE][TPS_TPS_ACCEL_TABLE];
 typedef uint8_t fsio_table_8x8_u8t[FSIO_TABLE_8][FSIO_TABLE_8];
 typedef uint8_t boost_table_t[BOOST_LOAD_COUNT][BOOST_RPM_COUNT];
+typedef uint8_t boost_target_table_t[BOOST_LOAD_COUNT][BOOST_RPM_COUNT];
 typedef uint8_t gppwm_table_t[GPPWM_LOAD_COUNT][GPPWM_RPM_COUNT]; 
 
 
 // this is different type simply to have different hi/low range in rusefi.ini
 typedef ignition_table_t angle_table_t;
 
-typedef int cylinders_count_t;
+typedef uint32_t cylinders_count_t;
 
 typedef int32_t bool32_t;
 

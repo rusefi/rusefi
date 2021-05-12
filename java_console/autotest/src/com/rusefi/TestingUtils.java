@@ -1,19 +1,23 @@
 package com.rusefi;
 
+import com.devexperts.logging.Logging;
 import com.rusefi.config.generated.Fields;
 import com.rusefi.core.EngineState;
-import com.rusefi.io.LinkManager;
+import com.rusefi.functional_tests.EcuTestHelper;
+import com.rusefi.io.CommandQueue;
 import com.rusefi.waves.EngineChart;
 import com.rusefi.waves.EngineReport;
 import com.rusefi.waves.RevolutionLog;
 import com.rusefi.waves.EngineChartParser;
-import sun.misc.IOUtils;
 
 import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.atomic.AtomicReference;
 
+import static org.junit.Assert.fail;
+
+import static com.devexperts.logging.Logging.getLogging;
 import static com.rusefi.waves.EngineReport.isCloseEnough;
 
 /**
@@ -21,7 +25,9 @@ import static com.rusefi.waves.EngineReport.isCloseEnough;
  *         3/19/14.
  */
 public class TestingUtils {
-    static boolean isRealHardware;
+    private static final Logging log = getLogging(TestingUtils.class);
+
+    public static boolean isRealHardware;
 
     static void assertTrue(String msg, boolean b) {
         if (!b)
@@ -46,13 +52,6 @@ public class TestingUtils {
         while (angle >= 720)
             angle -= 720;
         return angle;
-    }
-
-    private static void fail(String message) {
-        FileLog.MAIN.logLine("FAILURE: " + message);
-        IllegalStateException exception = new IllegalStateException(message);
-        FileLog.MAIN.log(exception);
-        throw exception;
     }
 
     static void assertTrue(boolean b) {
@@ -101,37 +100,20 @@ public class TestingUtils {
         }
     }
 
-    static void assertNull(String msg, Object value) {
+    public static void assertNull(String msg, Object value) {
         assertTrue(msg, value == null);
     }
 
-    static EngineChart nextChart() {
+    public static EngineChart nextChart(CommandQueue commandQueue) {
         long start = System.currentTimeMillis();
-        /**
-         * we are pretty inefficient here :( we wait for the next chart with new settings already applied
-         * a potential improvement would be maybe a special test mode which would reset engine sniffer buffer on each
-         * setting change?
-         *
-         * also open question why do we skip TWO full charts. maybe we account for fast or slow callback period?
-         *
-         * WOW, actually we DO have CMD_RESET_ENGINE_SNIFFER already and yet things are STILL pretty slow and unreliable?!
-         * @see Fields#CMD_FUNCTIONAL_TEST_MODE
-         * @see Fields#CMD_RESET_ENGINE_SNIFFER
-         */
-//        getNextWaveChart();
-//        getNextWaveChart();
-        EngineChart chart = EngineChartParser.unpackToMap(getNextWaveChart());
+        EngineChart chart = EngineChartParser.unpackToMap(getNextWaveChart(commandQueue), FileLog.LOGGER);
         FileLog.MAIN.logLine("AUTOTEST nextChart() in " + (System.currentTimeMillis() - start));
         return chart;
     }
 
-    static EngineChart nextChart1() {
-        return EngineChartParser.unpackToMap(getNextWaveChart());
-    }
-
-    static String getNextWaveChart() {
-        IoUtil.sendCommand(Fields.CMD_RESET_ENGINE_SNIFFER);
-        String result = getEngineChart();
+    static String getNextWaveChart(CommandQueue commandQueue) {
+        IoUtil.sendCommand(Fields.CMD_RESET_ENGINE_SNIFFER, commandQueue);
+        String result = getEngineChart(commandQueue);
         FileLog.MAIN.logLine("current chart: " + result);
         return result;
     }
@@ -140,27 +122,28 @@ public class TestingUtils {
      * This method is blocking and waits for the next wave chart to arrive
      *
      * @return next wave chart in the I/O pipeline
+     * @param commandQueue
      */
-    private static String getEngineChart() {
+    private static String getEngineChart(CommandQueue commandQueue) {
         final CountDownLatch engineChartLatch = new CountDownLatch(1);
 
         final AtomicReference<String> result = new AtomicReference<>();
 
         FileLog.MAIN.logLine("waiting for next chart");
-        LinkManager.engineState.replaceStringValueAction(EngineReport.ENGINE_CHART, new EngineState.ValueCallback<String>() {
+        commandQueue.getLinkManager().getEngineState().replaceStringValueAction(EngineReport.ENGINE_CHART, new EngineState.ValueCallback<String>() {
             @Override
             public void onUpdate(String value) {
                 engineChartLatch.countDown();
                 result.set(value);
             }
         });
-        int timeout = 60;
+        int timeoutMs = 60 * Timeouts.SECOND;
         long waitStartTime = System.currentTimeMillis();
-        IoUtil.wait(engineChartLatch, timeout);
-        FileLog.MAIN.logLine("got next chart in " + (System.currentTimeMillis() - waitStartTime) + "ms for engine_type " + AutoTest.currentEngineType);
-        LinkManager.engineState.replaceStringValueAction(EngineReport.ENGINE_CHART, (EngineState.ValueCallback<String>) EngineState.ValueCallback.VOID);
+        IoUtil.wait(engineChartLatch, timeoutMs);
+        log.info("got next chart in " + (System.currentTimeMillis() - waitStartTime) + "ms for engine_type " + EcuTestHelper.currentEngineType);
+        commandQueue.getLinkManager().getEngineState().replaceStringValueAction(EngineReport.ENGINE_CHART, (EngineState.ValueCallback<String>) EngineState.ValueCallback.VOID);
         if (result.get() == null)
-            throw new IllegalStateException("Chart timeout: " + timeout);
+            throw new IllegalStateException("Chart timeout: " + timeoutMs);
         return result.get();
     }
 }

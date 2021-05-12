@@ -12,6 +12,7 @@
 #include "scheduler.h"
 #include "fl_stack.h"
 #include "trigger_structure.h"
+#include "accel_enrichment.h"
 
 #define MAX_INJECTION_OUTPUT_COUNT INJECTION_PIN_COUNT
 #define MAX_WIRES_COUNT 2
@@ -21,13 +22,18 @@ class Engine;
 class InjectionEvent {
 public:
 	InjectionEvent();
+
+	// Call this every decoded trigger tooth.  It will schedule any relevant events for this injector.
+	void onTriggerTooth(size_t toothIndex, int rpm, efitick_t nowNt);
+
 	/**
 	 * This is a performance optimization for IM_SIMULTANEOUS fuel strategy.
 	 * It's more efficient to handle all injectors together if that's the case
 	 */
-	bool isSimultanious;
+	bool isSimultanious = false;
 	InjectorOutputPin *outputs[MAX_WIRES_COUNT];
-	int ownIndex;
+	uint8_t ownIndex = 0;
+	uint8_t cylinderNumber = 0;
 	DECLARE_ENGINE_PTR;
 	event_trigger_position_s injectionStart;
 
@@ -42,8 +48,9 @@ public:
 	 * TODO: make watchdog decrement relevant counter
 	 */
 	bool isScheduled = false;
-};
 
+	WallFuel wallFuel;
+};
 
 /**
  * This class knows about when to inject fuel
@@ -51,20 +58,26 @@ public:
 class FuelSchedule {
 public:
 	FuelSchedule();
+
+	// Call this function if something happens that requires a rebuild, like a change to the trigger pattern
+	void invalidate();
+
+	// Call this every trigger tooth.  It will schedule all required injector events.
+	void onTriggerTooth(size_t toothIndex, int rpm, efitick_t nowNt DECLARE_ENGINE_PARAMETER_SUFFIX);
+
 	/**
 	 * this method schedules all fuel events for an engine cycle
 	 */
 	void addFuelEvents(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 	bool addFuelEventsForCylinder(int cylinderIndex DECLARE_ENGINE_PARAMETER_SUFFIX);
 
+	void resetOverlapping();
+
 	/**
 	 * injection events, per cylinder
 	 */
 	InjectionEvent elements[MAX_INJECTION_OUTPUT_COUNT];
-	bool isReady;
-
-private:
-	void clear();
+	bool isReady = false;
 };
 
 class AngleBasedEvent {
@@ -95,12 +108,12 @@ public:
 	 * Desired timing advance
 	 */
 	angle_t sparkAngle = NAN;
-	floatms_t sparkDwell;
+	floatms_t sparkDwell = 0;
 	/**
 	 * this timestamp allows us to measure actual dwell time
 	 */
-	uint32_t actualStartOfDwellNt;
-	event_trigger_position_s dwellPosition;
+	uint32_t actualStartOfDwellNt = 0;
+	event_trigger_position_s dwellPosition{};
 	/**
 	 * Sequential number of currently processed spark event
 	 * @see globalSparkIdCounter
@@ -110,6 +123,7 @@ public:
 	 * [0, specs.cylindersCount)
 	 */
 	int cylinderIndex = 0;
+	int8_t cylinderNumber = 0;
 	char *name = nullptr;
 	DECLARE_ENGINE_PTR;
 	IgnitionOutputPin *getOutputForLoggins();

@@ -6,8 +6,7 @@
  * @author andreika <prometheus.pcb@gmail.com>
  */
 
-#ifndef RUSEFI_HW_ENUMS_H_
-#define RUSEFI_HW_ENUMS_H_
+#pragma once
 
 // todo: migrate/unify with pin_output_mode_e? rename? something is messy here
 // this enum is currently only used for SPI pins
@@ -122,7 +121,6 @@ typedef enum __attribute__ ((__packed__)) {
 	GPIOE_17 = 91,
 
 	// TLE6240 pins go right after on chips
-	//#define TLE6240_PIN(n)		((brain_pin_e)((int)BRAIN_PIN_LAST_ONCHIP + 1 + (n)))
 	TLE6240_PIN_1 = 130,
 	TLE6240_PIN_2 = 131,
 	TLE6240_PIN_3 = 132,
@@ -142,8 +140,11 @@ typedef enum __attribute__ ((__packed__)) {
 
 } brain_pin_e;
 
-/* Plase keep updating this define */
-#define BRAIN_PIN_LAST_ONCHIP	GPIOE_17
+/* Plase keep updating these defines */
+#define BRAIN_PIN_ONCHIP_LAST	GPIOE_17
+#define BRAIN_PIN_ONCHIP_PINS	(BRAIN_PIN_ONCHIP_LAST - GPIOA_0 + 1)
+#define BRAIN_PIN_LAST 			TLE6240_PIN_16
+#define BRAIN_PIN_TOTAL_PINS	(BRAIN_PIN_LAST - GPIOA_0 + 1)
 
 /* diagnostic for brain pins
  * can be combination of few bits
@@ -160,37 +161,25 @@ typedef enum __attribute__ ((__packed__))
 } brain_pin_diag_e;
 
 typedef enum __attribute__ ((__packed__)) {
-	EFI_ADC_0 = 0,
-	EFI_ADC_1 = 1,
-	EFI_ADC_2 = 2,
-	EFI_ADC_3 = 3,
-	EFI_ADC_4 = 4,
-	EFI_ADC_5 = 5,
-	EFI_ADC_6 = 6,
-	EFI_ADC_7 = 7,
-	EFI_ADC_8 = 8,
-	EFI_ADC_9 = 9,
-	EFI_ADC_10 = 10,
-	EFI_ADC_11 = 11,
-	EFI_ADC_12 = 12,
-	EFI_ADC_13 = 13,
-	EFI_ADC_14 = 14,
-	EFI_ADC_15 = 15,
+	EFI_ADC_NONE = 0,
 
-	// todo: bad choice of value since now we have ADC_CHANNEL_SENSOR and could end up with 17 and 18 also
-	EFI_ADC_NONE = 16,
-	EFI_ADC_ERROR = 17,
-#if EFI_UNIT_TEST
-	/**
-	 * these values are unfortunately visible to BoardReader
-	 * and TunerStudio would need these ordinals to fit into field size
-	 */
-    TEST_MAF_CHANNEL = 18,
-    TEST_CLT_CHANNEL = 19,
-    TEST_IAT_CHANNEL = 20,
-#endif /* EFI_UNIT_TEST */
+	EFI_ADC_0 = 1,
+	EFI_ADC_1 = 2,
+	EFI_ADC_2 = 3,
+	EFI_ADC_3 = 4,
+	EFI_ADC_4 = 5,
+	EFI_ADC_5 = 6,
+	EFI_ADC_6 = 7,
+	EFI_ADC_7 = 8,
+	EFI_ADC_8 = 9,
+	EFI_ADC_9 = 10,
+	EFI_ADC_10 = 11,
+	EFI_ADC_11 = 12,
+	EFI_ADC_12 = 13,
+	EFI_ADC_13 = 14,
+	EFI_ADC_14 = 15,
+	EFI_ADC_15 = 16,
+	EFI_ADC_LAST_CHANNEL = 17,	// Please keep this in sync with the last valid channel index!
+
+	EFI_ADC_ERROR = 50,
 } adc_channel_e;
-
-#define INCOMPATIBLE_CONFIG_CHANGE EFI_ADC_0
-
-#endif /* RUSEFI_HW_ENUMS_H_ */

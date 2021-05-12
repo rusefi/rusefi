@@ -27,9 +27,6 @@ void setDodgeRam1996(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	// set cranking_charge_angle 30
 	engineConfiguration->crankingChargeAngle = 30;
 
-	// set_whole_fuel_map 6
-	setWholeFuelMap(6 PASS_CONFIG_PARAMETER_SUFFIX);
-
 	//Base engine setting
 	engineConfiguration->specs.cylindersCount = 8;
 	engineConfiguration->specs.firingOrder = FO_1_8_4_3_6_5_7_2;

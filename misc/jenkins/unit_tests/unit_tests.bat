@@ -7,20 +7,13 @@ pwd
 
 rem Prior to running unit tests we build real hardware firmware
 
-cd firmware
 
 git submodule update --init
 
-rm -fR .dep
-rm -fR build
+cd firmware
 call update_version.bat
 IF NOT ERRORLEVEL 0 echo ERROR: INVOKING VERSION HEADER GENERATOR
 IF NOT ERRORLEVEL 0 EXIT /B 1
-
-
-make -j6
-if not exist build/rusefi.hex echo ERROR: FAILED TO COMPILE FIRMWARE
-if not exist build/rusefi.hex exit -1
 cd ..
 
 echo We are in root folder
@@ -48,15 +41,3 @@ cd ..
 echo Back to root folder
 pwd
 
-
-
-echo Preparing firmware-only fast upload
-zip -j firmware/build/rusefi_firmware.zip firmware/svnversion.h firmware/build/rusefi.hex firmware/build/rusefi.bin  firmware/build/rusefi.elf firmware/tunerstudio/rusefi.ini
-IF NOT ERRORLEVEL 0 echo ERROR: Invoking ZIP has failed
-IF NOT ERRORLEVEL 0 EXIT /B 1
-
-echo "TIMESTAMP %date% %time% Now uploading only firmware
-
-ncftpput -u %RUSEFI_BUILD_FTP_USER% -p %RUSEFI_BUILD_FTP_PASS% %RUSEFI_FTP_SERVER% separate_files firmware/build/rusefi_firmware.zip
-IF NOT ERRORLEVEL 0 echo ERROR: Invoking ncftpput has failed
-IF NOT ERRORLEVEL 0 EXIT /B 1

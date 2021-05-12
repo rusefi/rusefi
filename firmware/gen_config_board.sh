@@ -1,9 +1,11 @@
-#!/bin/sh
+#!/bin/bash
 
-#set -x
+# file gen_config_board.sh
 
-echo "This batch files reads rusefi_config.txt and produses firmware persistent configuration headers"
-echo "the storage section of rusefi.ini is updated as well"
+set -e
+
+echo "This script reads rusefi_config.txt and produces firmware persistent configuration headers"
+echo "the storage section of rusefiXXX.ini is updated as well"
 
 if [ -z "$1" ]; then
 	echo "Board name parameter expected"
@@ -11,41 +13,37 @@ if [ -z "$1" ]; then
 fi
 
 BOARDNAME=$1
+SHORT_BOARDNAME=$2
 
-echo "BOARDNAME=${BOARDNAME}"
+echo "BOARDNAME=${BOARDNAME} SHORT_BOARDNAME=${SHORT_BOARDNAME}"
 
-echo lazy is broken - TS input is not considered a change
-rm build/config.gen
+bash gen_signature.sh ${SHORT_BOARDNAME}
 
-java -DSystemOut.name=gen_config_board \
-	-cp ../java_tools/ConfigDefinition.jar:../java_tools/configuration_definition/lib/snakeyaml.jar \
-	com.rusefi.board_generator.BoardReader \
-	-board ${BOARDNAME} \
-	-firmware_path . \
-	-out tunerstudio \
-	-enumInputFile controllers/algo/rusefi_enums.h \
-	-enumInputFile controllers/algo/rusefi_hw_enums.h
-
-[ $? -eq 0 ] || (echo "ERROR generating TunerStudio config for ${BOARDNAME}"; exit $?)
-
+# work in progress: migrating to rusefi_${BUNDLE_NAME}.txt
 java -DSystemOut.name=gen_config_board \
 	-jar ../java_tools/ConfigDefinition.jar \
 	-definition integration/rusefi_config.txt \
+	-tool gen_config.sh \
 	-ts_destination tunerstudio \
-	-ts_output_name rusefi_${BOARDNAME}.ini \
-	-prepend tunerstudio/${BOARDNAME}_prefix.txt \
-	-prepend config/boards/${BOARDNAME}/prepend.txt \
-	-skip build/config.gen
+	-cache ${SHORT_BOARDNAME} \
+	-cache_zip_file tunerstudio/generated/cache.zip \
+	-firing_order controllers/algo/firing_order.h \
+	-ts_output_name generated/rusefi_${SHORT_BOARDNAME}.ini \
+	-signature tunerstudio/generated/signature_${SHORT_BOARDNAME}.txt \
+	-signature_destination controllers/generated/signature_${SHORT_BOARDNAME}.h \
+	-enumInputFile controllers/algo/rusefi_enums.h \
+	-enumInputFile controllers/algo/rusefi_hw_enums.h \
+	-board ${BOARDNAME} \
+	-prepend config/boards/${BOARDNAME}/prepend.txt
 
-[ $? -eq 0 ] || (echo "ERROR generating TunerStudio config for ${BOARDNAME}"; exit $?)
+[ $? -eq 0 ] || { echo "ERROR generating TunerStudio config for ${BOARDNAME}"; exit 1; }
 
-if [ -z "${TS_PATH}" ]; then
-	echo "TS_PATH not defined"
-else
-	if [ -d "${TS_PATH}/dev_${BOARDNAME}/" ]; then
-		echo "This would automatically copy latest file to 'dev_${BOARDNAME}' TS project $TS_PATH"
-		cp -v tunerstudio/rusefi_microrusefi.ini ${TS_PATH}/dev_${BOARDNAME}/projectCfg/mainController.ini
-	fi
-fi
+# todo: make things consistent by
+# 0) having generated content not in the same folder with the tool generating content?
+# 1) using unique file name for each configuration?
+# 2) leverage consistent caching mechanism so that image is generated only in case of fresh .ini. Laziest approach would be to return exit code from java process above
+#
+./hw_layer/mass_storage/create_ini_image.sh ./tunerstudio/generated/rusefi_${SHORT_BOARDNAME}.ini ./hw_layer/mass_storage/ramdisk_image.h
+./hw_layer/mass_storage/create_ini_image_compressed.sh ./tunerstudio/generated/rusefi_${SHORT_BOARDNAME}.ini ./hw_layer/mass_storage/ramdisk_image_compressed.h
 
 exit 0
