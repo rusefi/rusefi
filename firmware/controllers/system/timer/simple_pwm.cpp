@@ -25,10 +25,6 @@ void SimplePwm::setSimplePwmDutyCycle(float duty) {
 }
 
 void SimplePwm::setFrequency(float hz) {
-	if (cisnan(hz)) {
-		return;
-	}
-
 	// Don't allow really low frequencies
 	if (hz < 1.0f) {
 		hz = 1.0f;
