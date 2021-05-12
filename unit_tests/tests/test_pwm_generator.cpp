@@ -32,9 +32,7 @@ static void assertNextEvent(const char *msg, int expectedPinState, TestExecutor 
 	ASSERT_EQ( 1,  executor->size()) << "PWM_test: queue.size";
 }
 
-static void test100dutyCycle() {
-	printf("*************************************** test100dutyCycle\r\n");
-
+TEST(pwm, dutyCycle100) {
 	expectedTimeOfNextEvent = timeNowUs = 0;
 	TestExecutor executor;
 	SimplePwm pwm("test PWM1");
@@ -58,9 +56,7 @@ static void test100dutyCycle() {
 	assertNextEvent("exec3@100", HIGH_VALUE, &executor, pin);
 }
 
-static void testSwitchToNanPeriod() {
-	printf("*************************************** testSwitchToNanPeriod\r\n");
-
+TEST(pwm, switchToNanPeriod) {
 	expectedTimeOfNextEvent = timeNowUs = 0;
 	TestExecutor executor;
 	SimplePwm pwm("test PWM1");
@@ -93,9 +89,6 @@ static void testSwitchToNanPeriod() {
 }
 
 TEST(misc, testPwmGenerator) {
-	test100dutyCycle();
-	testSwitchToNanPeriod();
-
 	expectedTimeOfNextEvent = timeNowUs = 0;
 	TestExecutor executor;
 	SimplePwm pwm("test PWM3");
@@ -150,7 +143,3 @@ TEST(misc, testPwmGenerator) {
 
 	assertNextEvent("exec@6", LOW_VALUE /* pin value */, &executor, pin);
 }
-
-
-
-
