@@ -114,8 +114,7 @@ static adcsample_t getAvgAdcValue(int index, adcsample_t *samples, int bufDepth,
 }
 
 
-// See https://github.com/rusefi/rusefi/issues/976 for discussion on these values
-#define ADC_SAMPLING_SLOW ADC_SAMPLE_56
+// See https://github.com/rusefi/rusefi/issues/976 for discussion on this value
 #define ADC_SAMPLING_FAST ADC_SAMPLE_28
 
 #if EFI_USE_FAST_ADC
