@@ -52,7 +52,7 @@ typedef struct {
 	unsigned int hasSdCard : 1; // bit 0, 72
 	unsigned int isIgnitionEnabledIndicator : 1; // bit 1
 	unsigned int isInjectionEnabledIndicator : 1; // bit 2
-	unsigned int isCylinderCleanupEnabled : 1; // bit 3
+	unsigned int unusedb3 : 1; // bit 3
 	unsigned int isCylinderCleanupActivated : 1; // bit 4
 	unsigned int isFuelPumpOn : 1; // bit 5
 	unsigned int isFanOn : 1; // bit 6
