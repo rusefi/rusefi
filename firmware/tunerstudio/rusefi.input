@@ -206,6 +206,7 @@ enable2ndByteCanID = false
 	  ind_pedal_error  =bits,    U32,      0,  [26:26], "true", "false";
 	  isTps2Error     = bits,    U32,      0,  [29:29], "true", "false";
 	  isIdleClosedLoop= bits,    U32,      0,  [30:30], "true", "false";
+	  isIdleCoasting  = bits,    U32,      0,  [31:31], "true", "false";
 
 ; RPM, vss
       RPMValue        = scalar,  U16,      4,      "RPM",    1,   0.00000
@@ -1198,7 +1199,8 @@ gaugeCategory = DynoView
     indicator = { clutchDownState }, "clutch",   "cltch Down",   white, black, yellow,   black
     indicator = { brakePedalIndicator }, "brake",   "brake down",   white, black, red,   black
     indicator = { acSwitchState }, "AC off",   "AC on",   white, black, blue,   white
-	indicator = { isIdleClosedLoop }, "idle open loop", "idle closed loop", white, black, green, black
+	indicator = { isIdleClosedLoop }, "not idling", "idling", white, black, green, black
+	indicator = { isIdleCoasting }, "not coasting", "coasting", white, black, green, black
 
     ; error codes
     indicator = { isTpsError}, "tps",   "tps error",   white, black, red,   black
