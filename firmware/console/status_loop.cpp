@@ -699,7 +699,6 @@ void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels DECLARE_
 	tsOutputChannels->isO2HeaterOn = enginePins.o2heater.getLogicValue();
 	tsOutputChannels->isIgnitionEnabledIndicator = ENGINE(limpManager).allowIgnition();
 	tsOutputChannels->isInjectionEnabledIndicator = ENGINE(limpManager).allowInjection();
-	tsOutputChannels->isCylinderCleanupEnabled = engineConfiguration->isCylinderCleanupEnabled;
 	tsOutputChannels->isCylinderCleanupActivated = engine->isCylinderCleanupMode;
 
 #if EFI_VEHICLE_SPEED
