@@ -74,7 +74,7 @@ AdcDevice::AdcDevice(ADCConversionGroup* hwConfig, adcsample_t *buf, size_t buf_
 	hwConfig->sqr5 = 0;
 #endif /* ADC_MAX_CHANNELS_COUNT */
 	memset(hardwareIndexByIndernalAdcIndex, EFI_ADC_NONE, sizeof(hardwareIndexByIndernalAdcIndex));
-	memset(internalAdcIndexByHardwareIndex, 0xFFFFFFFF, sizeof(internalAdcIndexByHardwareIndex));
+	memset(internalAdcIndexByHardwareIndex, 0xFF, sizeof(internalAdcIndexByHardwareIndex));
 }
 
 #if !defined(GPT_FREQ_FAST) || !defined(GPT_PERIOD_FAST)
