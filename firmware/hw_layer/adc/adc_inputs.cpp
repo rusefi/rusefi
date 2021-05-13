@@ -221,7 +221,7 @@ int getInternalAdcValue(const char *msg, adc_channel_e hwChannel) {
 	}
 #endif // EFI_USE_FAST_ADC
 
-	return slowAdcSamples[hwChannel - 1];
+	return slowAdcSamples[hwChannel - EFI_ADC_0];
 }
 
 #if EFI_USE_FAST_ADC
@@ -273,14 +273,17 @@ bool AdcDevice::isHwUsed(adc_channel_e hwChannelIndex) const {
 }
 
 void AdcDevice::enableChannel(adc_channel_e hwChannel) {
-	if (channelCount >= efi::size(values.adc_data)) {
+	if ((channelCount + 1) >= ADC_MAX_CHANNELS_COUNT) {
 		firmwareError(OBD_PCM_Processor_Fault, "Too many ADC channels configured");
 		return;
 	}
 
 	int logicChannel = channelCount++;
 
-	size_t channelAdcIndex = hwChannel - 1;
+	/* TODO: following is correct for STM32 ADC1/2.
+	 * ADC3 has another input to gpio mapping
+	 * and should be handled separately */
+	size_t channelAdcIndex = hwChannel - EFI_ADC_0;
 
 	internalAdcIndexByHardwareIndex[hwChannel] = logicChannel;
 	hardwareIndexByIndernalAdcIndex[logicChannel] = hwChannel;
