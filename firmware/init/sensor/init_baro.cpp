@@ -22,7 +22,7 @@ void initBaro(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 
 void baroLps25Update() {
 #if EFI_PROD_CODE
-	if (device.m_hasInit) {
+	if (device.hasInit()) {
 		sensor.update();
 	}
 #endif // EFI_PROD_CODE
