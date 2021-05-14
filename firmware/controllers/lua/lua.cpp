@@ -24,8 +24,6 @@ static memory_heap_t heap;
 static int32_t memoryUsed = 0;
 
 static void* myAlloc(void* /*ud*/, void* ptr, size_t osize, size_t nsize) {
-	memoryUsed += nsize - osize;
-
 	if (CONFIG(debugMode) == DBG_LUA) {
 		tsOutputChannels.debugIntField1 = memoryUsed;
 	}
@@ -34,12 +32,14 @@ static void* myAlloc(void* /*ud*/, void* ptr, size_t osize, size_t nsize) {
 		// requested size is zero, free if necessary and return nullptr
 		if (ptr) {
 			chHeapFree(ptr);
+			memoryUsed -= osize;
 		}
 
 		return nullptr;
 	}
 
 	void *new_mem = chHeapAlloc(&heap, nsize);
+	memoryUsed += nsize;
 
 	if (!ptr) {
 		// No old pointer passed in, simply return allocated block
@@ -50,6 +50,7 @@ static void* myAlloc(void* /*ud*/, void* ptr, size_t osize, size_t nsize) {
 	if (new_mem != nullptr) {
 		memcpy(new_mem, ptr, chHeapGetSize(ptr) > nsize ? nsize : chHeapGetSize(ptr));
 		chHeapFree(ptr);
+		memoryUsed -= osize;
 	}
 
 	return new_mem;
