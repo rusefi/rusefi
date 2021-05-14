@@ -1,7 +1,6 @@
 package com.rusefi.ui.lua;
 
 import com.opensr5.ConfigurationImage;
-import com.rusefi.CommandControl;
 import com.rusefi.FixedCommandControl;
 import com.rusefi.binaryprotocol.BinaryProtocol;
 import com.rusefi.config.generated.Fields;
@@ -18,8 +17,6 @@ import java.awt.event.ActionListener;
 import java.nio.ByteBuffer;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
-
-import static com.rusefi.CommandControl.TEST;
 
 public class LuaScriptPanel {
     private final UIContext context;
@@ -96,7 +93,25 @@ public class LuaScriptPanel {
         BinaryProtocol bp = this.context.getLinkManager().getCurrentStreamState();
 
         String script = scriptText.getText();
-        bp.writeData(script.getBytes(StandardCharsets.US_ASCII), Fields.luaScript_offset, Fields.LUA_SCRIPT_SIZE);
+
+        byte paddedScript[] = new byte[Fields.LUA_SCRIPT_SIZE];
+        byte scriptBytes[] = script.getBytes(StandardCharsets.US_ASCII);
+        System.arraycopy(scriptBytes, 0, paddedScript, 0, scriptBytes.length);
+
+        int idx = 0;
+        int remaining;
+
+        do {
+            remaining = paddedScript.length - idx;
+            int thisWrite = remaining > Fields.BLOCKING_FACTOR ? Fields.BLOCKING_FACTOR : remaining;
+
+            bp.writeData(paddedScript, idx, Fields.luaScript_offset + idx, thisWrite);
+
+            idx += thisWrite;
+
+            remaining -= thisWrite;
+        } while (remaining > 0);
+
         bp.burn();
 
         // Burning doesn't reload lua script, so we have to do it manually
