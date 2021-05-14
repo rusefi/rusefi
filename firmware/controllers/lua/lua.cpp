@@ -24,8 +24,6 @@ static memory_heap_t heap;
 static int32_t memoryUsed = 0;
 
 static void* myAlloc(void* /*ud*/, void* ptr, size_t osize, size_t nsize) {
-	memoryUsed += nsize - osize;
-
 	if (CONFIG(debugMode) == DBG_LUA) {
 		tsOutputChannels.debugIntField1 = memoryUsed;
 	}
@@ -34,12 +32,14 @@ static void* myAlloc(void* /*ud*/, void* ptr, size_t osize, size_t nsize) {
 		// requested size is zero, free if necessary and return nullptr
 		if (ptr) {
 			chHeapFree(ptr);
+			memoryUsed -= osize;
 		}
 
 		return nullptr;
 	}
 
 	void *new_mem = chHeapAlloc(&heap, nsize);
+	memoryUsed += nsize;
 
 	if (!ptr) {
 		// No old pointer passed in, simply return allocated block
@@ -50,6 +50,7 @@ static void* myAlloc(void* /*ud*/, void* ptr, size_t osize, size_t nsize) {
 	if (new_mem != nullptr) {
 		memcpy(new_mem, ptr, chHeapGetSize(ptr) > nsize ? nsize : chHeapGetSize(ptr));
 		chHeapFree(ptr);
+		memoryUsed -= osize;
 	}
 
 	return new_mem;
@@ -77,7 +78,10 @@ public:
 
 	// Destruction cleans up lua state
 	~LuaHandle() {
-		if (m_ptr) lua_close(m_ptr);
+		if (m_ptr) {
+			efiPrintf("LUA: Tearing down instance...");
+			lua_close(m_ptr);
+		}
 	}
 
 	operator lua_State*() const { return m_ptr; }
@@ -207,14 +211,23 @@ struct LuaThread : ThreadController<4096> {
 
 static char luaHeap[LUA_HEAP_SIZE];
 
-void LuaThread::ThreadTask() {
-	chHeapObjectInit(&heap, &luaHeap, sizeof(luaHeap));
+static bool needsReset = false;
+
+// Each invocation of runOneLua will:
+// - create a new Lua instance
+// - read the script from config
+// - run the tick function until needsReset is set
+// Returns true if it should be re-called immediately,
+// or false if there was a problem setting up the interpreter
+// or parsing the script.
+static bool runOneLua() {
+	needsReset = false;
 
 	auto ls = setupLuaState();
 
 	// couldn't start Lua interpreter, bail out
 	if (!ls) {
-		return;
+		return false;
 	}
 
 	// Reset default tick rate
@@ -223,16 +236,34 @@ void LuaThread::ThreadTask() {
 	auto scriptStr = "function onTick() end";
 
 	if (!loadScript(ls, scriptStr)) {
-		return;
+		return false;
 	}
 
-	while (!chThdShouldTerminateX()) {
+	while (!needsReset && !chThdShouldTerminateX()) {
 		// First, check if there is a pending interactive command entered by the user
 		doInteractive(ls);
 
 		invokeTick(ls);
 
 		chThdSleepMilliseconds(luaTickPeriodMs);
+	}
+
+	return true;
+}
+
+void LuaThread::ThreadTask() {
+	chHeapObjectInit(&heap, &luaHeap, sizeof(luaHeap));
+
+	while (!chThdShouldTerminateX()) {
+		bool wasOk = runOneLua();
+
+		if (!wasOk) {
+			// Something went wrong executing the script, spin
+			// until reset invoked (maybe the user fixed the script)
+			while (!needsReset) {
+				chThdSleepMilliseconds(100);
+			}
+		}
 	}
 }
 
@@ -249,6 +280,10 @@ void startLua() {
 		strncpy(interactiveCmd, str, sizeof(interactiveCmd));
 
 		interactivePending = true;
+	});
+
+	addConsoleAction("luareset", [](){
+		needsReset = true;
 	});
 
 	addConsoleAction("luamemory", [](){
