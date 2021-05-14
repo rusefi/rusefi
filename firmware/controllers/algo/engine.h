@@ -35,7 +35,7 @@
 #define SLOW_CALLBACK_PERIOD_MS 50
 
 class RpmCalculator;
-class AirmassModelBase;
+struct AirmassModelBase;
 
 #define MAF_DECODING_CACHE_SIZE 256
 

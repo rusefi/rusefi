@@ -9,7 +9,7 @@ public:
 		, m_mapEstimationTable(&mapEstimationTable)
 	{}
 
-	AirmassResult getAirmass(int rpm) override;
+	AirmassResult getAirmass(int rpm) const override;
 
 	float getMap(int rpm) const;
 
