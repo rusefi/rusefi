@@ -25,3 +25,5 @@ void initSmartGpio(void);
 void startSmartCsPins(void);
 void stopSmartCsPins(void);
 
+void tle8888startup(void);
+
