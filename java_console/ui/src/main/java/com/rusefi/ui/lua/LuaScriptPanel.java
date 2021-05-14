@@ -46,7 +46,8 @@ public class LuaScriptPanel {
 
         // Center panel - script editor and log
         JPanel scriptPanel = new JPanel(new BorderLayout());
-        this.scriptText = new JTextArea("hello");
+        this.scriptText = new JTextArea();
+        this.scriptText.setTabSize(2);
         scriptPanel.add(this.scriptText, BorderLayout.CENTER);
 
         //centerPanel.add(, BorderLayout.WEST);
@@ -86,7 +87,9 @@ public class LuaScriptPanel {
         ConfigurationImage image = bp.getControllerConfiguration();
         ByteBuffer luaScriptBuffer = image.getByteBuffer(Fields.luaScript_offset, Fields.LUA_SCRIPT_SIZE);
 
-        scriptText.setText(new String(luaScriptBuffer.array(), Charset.forName("ASCII")));
+        byte scriptArr[] = new byte[Fields.LUA_SCRIPT_SIZE];
+        luaScriptBuffer.get(scriptArr);
+        scriptText.setText(new String(scriptArr, Charset.forName("ASCII")));
     }
 
     void write() {
