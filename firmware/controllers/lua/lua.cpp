@@ -207,14 +207,23 @@ struct LuaThread : ThreadController<4096> {
 
 static char luaHeap[LUA_HEAP_SIZE];
 
-void LuaThread::ThreadTask() {
-	chHeapObjectInit(&heap, &luaHeap, sizeof(luaHeap));
+static bool needsReset = false;
+
+// Each invocation of runOneLua will:
+// - create a new Lua instance
+// - read the script from config
+// - run the tick function until needsReset is set
+// Returns true if it should be re-called immediately,
+// or false if there was a problem setting up the interpreter
+// or parsing the script.
+static bool runOneLua() {
+	needsReset = false;
 
 	auto ls = setupLuaState();
 
 	// couldn't start Lua interpreter, bail out
 	if (!ls) {
-		return;
+		return false;
 	}
 
 	// Reset default tick rate
@@ -223,16 +232,34 @@ void LuaThread::ThreadTask() {
 	auto scriptStr = "function onTick() end";
 
 	if (!loadScript(ls, scriptStr)) {
-		return;
+		return false;
 	}
 
-	while (!chThdShouldTerminateX()) {
+	while (!needsReset && !chThdShouldTerminateX()) {
 		// First, check if there is a pending interactive command entered by the user
 		doInteractive(ls);
 
 		invokeTick(ls);
 
 		chThdSleepMilliseconds(luaTickPeriodMs);
+	}
+
+	return true;
+}
+
+void LuaThread::ThreadTask() {
+	chHeapObjectInit(&heap, &luaHeap, sizeof(luaHeap));
+
+	while (!chThdShouldTerminateX()) {
+		bool wasOk = runOneLua();
+
+		if (!wasOk) {
+			// Something went wrong executing the script, spin
+			// until reset invoked (maybe the user fixed the script)
+			while (!needsReset) {
+				chThdSleepMilliseconds(100);
+			}
+		}
 	}
 }
 
@@ -258,7 +285,7 @@ void startLua() {
 }
 
 void resetLuaInterpreter() {
-	// TODO: implement me!
+	needsReset = true;
 }
 
 #else // not EFI_UNIT_TEST
