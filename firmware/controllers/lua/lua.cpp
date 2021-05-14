@@ -77,7 +77,10 @@ public:
 
 	// Destruction cleans up lua state
 	~LuaHandle() {
-		if (m_ptr) lua_close(m_ptr);
+		if (m_ptr) {
+			efiPrintf("LUA: Tearing down instance...");
+			lua_close(m_ptr);
+		}
 	}
 
 	operator lua_State*() const { return m_ptr; }
@@ -276,6 +279,10 @@ void startLua() {
 		strncpy(interactiveCmd, str, sizeof(interactiveCmd));
 
 		interactivePending = true;
+	});
+
+	addConsoleAction("luareset", [](){
+		needsReset = true;
 	});
 
 	addConsoleAction("luamemory", [](){
