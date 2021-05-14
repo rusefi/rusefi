@@ -3,7 +3,6 @@
 #pragma once
 
 void startLua();
-void resetLuaInterpreter();
 
 #if EFI_UNIT_TEST
 #include "expected.h"
