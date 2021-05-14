@@ -18,8 +18,9 @@ public:
 	bool init(brain_pin_e scl, brain_pin_e sda);
 
 	expected<float> readPressureKpa();
+	// todo: make this private and get getter?
+	bool m_hasInit = false;
 
 private:
 	BitbangI2c m_i2c;
-	bool m_hasInit = false;
 };
