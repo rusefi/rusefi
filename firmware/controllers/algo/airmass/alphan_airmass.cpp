@@ -1,7 +1,7 @@
 #include "alphan_airmass.h"
 #include "sensor.h"
 
-AirmassResult AlphaNAirmass::getAirmass(int rpm) {
+AirmassResult AlphaNAirmass::getAirmass(int rpm) const {
 	auto tps = Sensor::get(SensorType::Tps1);
 
 	if (!tps.Valid) {
