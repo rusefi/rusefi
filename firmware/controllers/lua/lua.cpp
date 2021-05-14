@@ -291,10 +291,6 @@ void startLua() {
 	});
 }
 
-void resetLuaInterpreter() {
-	needsReset = true;
-}
-
 #else // not EFI_UNIT_TEST
 
 void startLua() {
