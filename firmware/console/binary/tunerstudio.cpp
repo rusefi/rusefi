@@ -88,7 +88,6 @@
 #include "mmc_card.h"
 #include "perf_trace.h"
 #include "thread_priority.h"
-#include "rusefi_lua.h"
 
 #include "signature.h"
 
@@ -851,11 +850,6 @@ int TunerStudioBase::handleCrcCommand(TsChannelBase* tsChannel, char *data, int 
 		tsChannel->sendResponse(TS_CRC, reinterpret_cast<const uint8_t*>(configError), strlen(configError));
 		break;
 	}
-#if EFI_LUA
-	case TS_RESET_LUA:
-		resetLuaInterpreter();
-		break;
-#endif
 	default:
 		sendErrorCode(tsChannel, TS_RESPONSE_UNRECOGNIZED_COMMAND);
 		tunerStudioError("ERROR: ignoring unexpected command");
