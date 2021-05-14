@@ -1432,10 +1432,7 @@ float[CLT_CURVE_SIZE] iacCoasting;    CLT-based idle position for coasting (used
 int8_t[CLT_LIMITER_CURVE_SIZE] cltRevLimitRpmBins;CLT-based target RPM for hard limit depending on CLT like on Lexus LFA;"C",        1,     0,   -70,    120,  0
 uint16_t[CLT_LIMITER_CURVE_SIZE] cltRevLimitRpm;See idleRpmPid;"",      1,     0,      0,    8000,   0
 
-#define LUA_SCRIPT_SIZE 500
-uint8_t[LUA_SCRIPT_SIZE] luaScript;;"units", 1, 0, -20, 100, 0
-
-uint8_t[24] unused3328;;"units", 1, 0, -20, 100, 0
+uint8_t[524] unused3328;;"units", 1, 0, -20, 100, 0
 
 float tChargeAirCoefMin;;"Min tCharge Coeff.",        1,     0,  0.0,    1.0,  4
 float tChargeAirCoefMax;;"Max tCharge Coeff.",        1,     0,  0.0,    1.0,  4
