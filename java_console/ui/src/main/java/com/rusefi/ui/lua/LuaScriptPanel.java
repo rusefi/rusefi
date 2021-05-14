@@ -17,6 +17,7 @@ import java.awt.event.ActionListener;
 import java.nio.ByteBuffer;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
+import java.util.Arrays;
 
 public class LuaScriptPanel {
     private final UIContext context;
@@ -89,7 +90,11 @@ public class LuaScriptPanel {
 
         byte scriptArr[] = new byte[Fields.LUA_SCRIPT_SIZE];
         luaScriptBuffer.get(scriptArr);
-        scriptText.setText(new String(scriptArr, Charset.forName("ASCII")));
+
+        int i;
+        // Find the null terminator
+        for (i = 0; i < scriptArr.length && scriptArr[i] != 0; i++) ;
+        scriptText.setText(new String(scriptArr, 0, i, Charset.forName("ASCII")));
     }
 
     void write() {
