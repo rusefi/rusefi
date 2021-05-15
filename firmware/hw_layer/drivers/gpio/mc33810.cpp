@@ -316,16 +316,18 @@ static int mc33810_chip_init(mc33810_priv *chip)
 	 * - read diagnostic
 	 */
 
-	uint16_t spark_settings =
-		//(3 << 9) |	/* max dwell is 16 mS */
-		(2 << 9) |	/* max dwell is 8 mS */
-		BIT(8) |	/* enable max dwell control */
-		(3 << 2) |	/* Open Secondary OSFLT = 100 uS, default */
-		(1 << 0) |	/* End Spark THreshold: VPWR +5.5V, defaul */
-		0;
-	ret = mc33810_spi_rw(chip, MC_CMD_SPARK(spark_settings), NULL);
-	if (ret) {
-		goto err_gpios;
+	{
+		uint16_t spark_settings =
+			//(3 << 9) |	/* max dwell is 16 mS */
+			(2 << 9) |	/* max dwell is 8 mS */
+			BIT(8) |	/* enable max dwell control */
+			(3 << 2) |	/* Open Secondary OSFLT = 100 uS, default */
+			(1 << 0) |	/* End Spark THreshold: VPWR +5.5V, defaul */
+			0;
+		ret = mc33810_spi_rw(chip, MC_CMD_SPARK(spark_settings), NULL);
+		if (ret) {
+			goto err_gpios;
+		}
 	}
 
 	/* n. set EN pin low - active */
@@ -461,7 +463,7 @@ brain_pin_diag_e mc33810_getDiag(void *data, unsigned int pin)
 {
 	int val;
 	mc33810_priv *chip;
-	brain_pin_diag_e diag = PIN_OK;
+	int diag = PIN_OK;
 
 	if ((pin >= MC33810_DIRECT_OUTPUTS) || (data == NULL))
 		return PIN_INVALID;
@@ -497,7 +499,7 @@ brain_pin_diag_e mc33810_getDiag(void *data, unsigned int pin)
 			diag |= PIN_OVERLOAD;
 	}
 	/* convert to some common enum? */
-	return diag;
+	return static_cast<brain_pin_diag_e>(diag);
 }
 
 int mc33810_init(void * data)
@@ -531,6 +533,7 @@ int mc33810_deinit(void *data)
 }
 
 struct gpiochip_ops mc33810_ops = {
+	.setPadMode = nullptr,
 	.writePad	= mc33810_writePad,
 	.readPad	= NULL,	/* chip outputs only */
 	.getDiag	= mc33810_getDiag,
@@ -585,7 +588,7 @@ int mc33810_add(brain_pin_e base, unsigned int index, const mc33810_config *cfg)
 		return ret;
 
 	/* set default pin names, board init code can rewrite */
-	gpiochips_setPinNames(ret, mc33810_pin_names);
+	gpiochips_setPinNames(static_cast<brain_pin_e>(ret), mc33810_pin_names);
 
 	chip->drv_state = MC33810_WAIT_INIT;
 
