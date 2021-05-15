@@ -91,7 +91,7 @@ static THD_WORKING_AREA(mc33810_thread_1_wa, 256);
 
 /* Driver */
 struct mc33810_priv {
-	const struct mc33810_config	*cfg;
+	const mc33810_config	*cfg;
 	/* cached output state - state last send to chip */
 	uint8_t					o_state_cached;
 	/* state to be sended to chip */
@@ -114,7 +114,7 @@ struct mc33810_priv {
 	mc33810_drv_state		drv_state;
 };
 
-static struct mc33810_priv chips[BOARD_MC33810_COUNT];
+static mc33810_priv chips[BOARD_MC33810_COUNT];
 
 static const char* mc33810_pin_names[MC33810_OUTPUTS] = {
 	"mc33810.OUT1",		"mc33810.OUT2",		"mc33810.OUT3",		"mc33810.OUT4",
@@ -125,7 +125,7 @@ static const char* mc33810_pin_names[MC33810_OUTPUTS] = {
 /* Driver local functions.													*/
 /*==========================================================================*/
 
-static SPIDriver *get_bus(struct mc33810_priv *chip)
+static SPIDriver *get_bus(mc33810_priv *chip)
 {
 	/* return non-const SPIDriver* from const struct cfg */
 	return chip->cfg->spi_bus;
@@ -137,7 +137,7 @@ static SPIDriver *get_bus(struct mc33810_priv *chip)
  * after transaction.
  */
 
-static int mc33810_spi_rw(struct mc33810_priv *chip, uint16_t tx, uint16_t *rx)
+static int mc33810_spi_rw(mc33810_priv *chip, uint16_t tx, uint16_t *rx)
 {
 	uint16_t rxb;
 	SPIDriver *spi = get_bus(chip);
@@ -180,7 +180,7 @@ static int mc33810_spi_rw(struct mc33810_priv *chip, uint16_t tx, uint16_t *rx)
  * @details Sends ORed data to register, also receive diagnostic.
  */
 
-static int mc33810_update_output_and_diag(struct mc33810_priv *chip)
+static int mc33810_update_output_and_diag(mc33810_priv *chip)
 {
 	int ret = 0;
 
@@ -262,12 +262,12 @@ static int mc33810_update_output_and_diag(struct mc33810_priv *chip)
  * @details Checks communication. Check chip presense.
  */
 
-static int mc33810_chip_init(struct mc33810_priv *chip)
+static int mc33810_chip_init(mc33810_priv *chip)
 {
 	int n;
 	int ret;
 	uint16_t rx;
-	const struct mc33810_config *cfg = chip->cfg;
+	const mc33810_config *cfg = chip->cfg;
 
 	/* mark pins used */
 	//ret = gpio_pin_markUsed(cfg->spi_config.ssport, cfg->spi_config.sspad, DRIVER_NAME " CS");
@@ -358,7 +358,7 @@ err_gpios:
  * diagnostic update.
  */
 
-static int mc33810_wake_driver(struct mc33810_priv *chip)
+static int mc33810_wake_driver(mc33810_priv *chip)
 {
 	(void)chip;
 
@@ -399,7 +399,7 @@ static THD_FUNCTION(mc33810_driver_thread, p)
 
 		for (i = 0; i < BOARD_MC33810_COUNT; i++) {
 			int ret;
-			struct mc33810_priv *chip;
+			mc33810_priv *chip;
 
 			chip = &chips[i];
 			if ((chip->cfg == NULL) ||
@@ -428,12 +428,12 @@ static THD_FUNCTION(mc33810_driver_thread, p)
 
 int mc33810_writePad(void *data, unsigned int pin, int value)
 {
-	struct mc33810_priv *chip;
+	mc33810_priv *chip;
 
 	if ((pin >= MC33810_OUTPUTS) || (data == NULL))
 		return -1;
 
-	chip = (struct mc33810_priv *)data;
+	chip = (mc33810_priv *)data;
 
 	/* TODO: lock */
 	if (value)
@@ -460,13 +460,13 @@ int mc33810_writePad(void *data, unsigned int pin, int value)
 brain_pin_diag_e mc33810_getDiag(void *data, unsigned int pin)
 {
 	int val;
-	struct mc33810_priv *chip;
+	mc33810_priv *chip;
 	brain_pin_diag_e diag = PIN_OK;
 
 	if ((pin >= MC33810_DIRECT_OUTPUTS) || (data == NULL))
 		return PIN_INVALID;
 
-	chip = (struct mc33810_priv *)data;
+	chip = (mc33810_priv *)data;
 
 	if (pin < 4) {
 		/* OUT drivers */
@@ -503,9 +503,9 @@ brain_pin_diag_e mc33810_getDiag(void *data, unsigned int pin)
 int mc33810_init(void * data)
 {
 	int ret;
-	struct mc33810_priv *chip;
+	mc33810_priv *chip;
 
-	chip = (struct mc33810_priv *)data;
+	chip = (mc33810_priv *)data;
 
 	ret = mc33810_chip_init(chip);
 	if (ret)
@@ -543,11 +543,11 @@ struct gpiochip_ops mc33810_ops = {
  * @details Checks for valid config
  */
 
-int mc33810_add(brain_pin_e base, unsigned int index, const struct mc33810_config *cfg)
+int mc33810_add(brain_pin_e base, unsigned int index, const mc33810_config *cfg)
 {
 	int i;
 	int ret;
-	struct mc33810_priv *chip;
+	mc33810_priv *chip;
 
 	/* no config or no such chip */
 	if ((!cfg) || (!cfg->spi_bus) || (index >= BOARD_MC33810_COUNT))
@@ -594,7 +594,7 @@ int mc33810_add(brain_pin_e base, unsigned int index, const struct mc33810_confi
 
 #else /* BOARD_MC33810_COUNT > 0 */
 
-int mc33810_add(brain_pin_e base, unsigned int index, const struct mc33810_config *cfg)
+int mc33810_add(brain_pin_e base, unsigned int index, const mc33810_config *cfg)
 {
 	(void)base; (void)index; (void)cfg;
 
