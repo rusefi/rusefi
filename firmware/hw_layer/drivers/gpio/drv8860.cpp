@@ -50,7 +50,7 @@ static THD_WORKING_AREA(drv8860_thread_1_wa, 256);
 
 /* Driver */
 struct drv8860_priv {
-	const struct drv8860_config	*cfg;
+	const drv8860_config		*cfg;
 	/* cached output state - state last send to chip */
 	uint16_t					o_state_cached;
 	/* state to be sended to chip */
@@ -59,7 +59,7 @@ struct drv8860_priv {
 	drv8860_drv_state			drv_state;
 };
 
-static struct drv8860_priv chips[BOARD_DRV8860_COUNT];
+static drv8860_priv chips[BOARD_DRV8860_COUNT];
 
 static const char* drv8860_pin_names[DRV8860_OUTPUTS] = {
 	"drv8860.OUT1",		"drv8860.OUT2",		"drv8860.OUT3",		"drv8860.OUT4",
@@ -72,7 +72,7 @@ static const char* drv8860_pin_names[DRV8860_OUTPUTS] = {
 /* Driver local functions.													*/
 /*==========================================================================*/
 
-static SPIDriver *get_bus(struct drv8860_priv *chip) {
+static SPIDriver *get_bus(drv8860_priv *chip) {
 	/* return non-const SPIDriver* from const struct cfg */
 	return chip->cfg->spi_bus;
 }
@@ -82,7 +82,7 @@ static SPIDriver *get_bus(struct drv8860_priv *chip) {
  * @details Sends 8/16 bits. CS asserted before and released after transaction.
  */
 
-static void drv8860_spi_send(struct drv8860_priv *chip, uint16_t tx) {
+static void drv8860_spi_send(drv8860_priv *chip, uint16_t tx) {
 	SPIDriver *spi = get_bus(chip);
 	
 	/* Acquire ownership of the bus. */
@@ -103,7 +103,7 @@ static void drv8860_spi_send(struct drv8860_priv *chip, uint16_t tx) {
  * @brief DRV8860 send output data.
  */
 
-static void drv8860_update_outputs(struct drv8860_priv *chip) {
+static void drv8860_update_outputs(drv8860_priv *chip) {
 	/* TODO: lock? */
 
 	/* atomic */
@@ -122,7 +122,7 @@ static void drv8860_update_outputs(struct drv8860_priv *chip) {
  * @todo: Checks direct io signals integrity, read initial diagnostic state.
  */
 
-static int drv8860_chip_init(struct drv8860_priv *chip) {
+static int drv8860_chip_init(drv8860_priv *chip) {
 	/* upload pin states */
 	drv8860_update_outputs(chip);
 
@@ -134,7 +134,7 @@ static int drv8860_chip_init(struct drv8860_priv *chip) {
  * @details Wake up driver. Will cause output register update.
  */
 
-static int drv8860_wake_driver(struct drv8860_priv *chip) {
+static int drv8860_wake_driver(drv8860_priv *chip) {
 	(void)chip;
 
     /* Entering a reentrant critical zone.*/
@@ -165,7 +165,7 @@ static THD_FUNCTION(drv8860_driver_thread, p) {
 		(void)msg;
 
 		for (i = 0; i < BOARD_DRV8860_COUNT; i++) {
-			struct drv8860_priv *chip;
+			drv8860_priv *chip;
 
 			chip = &chips[i];
 			if ((chip->cfg == NULL) ||
@@ -189,12 +189,12 @@ static THD_FUNCTION(drv8860_driver_thread, p) {
 /*==========================================================================*/
 
 int drv8860_writePad(void *data, unsigned int pin, int value) {
-	struct drv8860_priv *chip;
+	drv8860_priv *chip;
 
 	if ((pin >= DRV8860_OUTPUTS) || (data == NULL))
 		return -1;
 
-	chip = (struct drv8860_priv *)data;
+	chip = (drv8860_priv *)data;
 
 	/* TODO: lock */
 	if (value)
@@ -214,9 +214,9 @@ brain_pin_diag_e drv8860_getDiag(void *data, unsigned int pin) {
 
 int drv8860_init(void * data) {
 	int ret;
-	struct drv8860_priv *chip;
+	drv8860_priv *chip;
 
-	chip = (struct drv8860_priv *)data;
+	chip = (drv8860_priv *)data;
 
 	ret = drv8860_chip_init(chip);
 	if (ret)
@@ -253,10 +253,10 @@ struct gpiochip_ops drv8860_ops = {
  * @details Checks for valid config
  */
 
-int drv8860_add(brain_pin_e base, unsigned int index, const struct drv8860_config *cfg) {
+int drv8860_add(brain_pin_e base, unsigned int index, const drv8860_config *cfg) {
 	int i;
 	int ret;
-	struct drv8860_priv *chip;
+	drv8860_priv *chip;
 
 	/* no config or no such chip */
 	if ((!cfg) || (!cfg->spi_bus) || (index >= BOARD_DRV8860_COUNT))
@@ -291,7 +291,7 @@ int drv8860_add(brain_pin_e base, unsigned int index, const struct drv8860_confi
 
 #else /* BOARD_DRV8860_COUNT > 0 */
 
-int drv8860_add(brain_pin_e base, unsigned int index, const struct drv8860_config *cfg) {
+int drv8860_add(brain_pin_e base, unsigned int index, const drv8860_config *cfg) {
 	(void)base; (void)index; (void)cfg;
 
 	return -1;
