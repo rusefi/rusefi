@@ -37,4 +37,4 @@ struct mc33810_config {
 	} en;
 };
 
-int mc33810_add(brain_pin_e base, unsigned int index, const struct mc33810_config *cfg);
+int mc33810_add(brain_pin_e base, unsigned int index, const mc33810_config *cfg);
