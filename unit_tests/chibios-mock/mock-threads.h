@@ -2,7 +2,6 @@
 
 typedef int tprio_t;
 
-class thread_t {
+struct thread_t {
 	char *name;
-
 };
