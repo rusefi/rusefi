@@ -74,6 +74,7 @@ INCDIR += $(UNIT_TESTS_DIR) \
 	$(HW_SENSORS_INC) \
 	$(HW_LAYER_DRIVERS_INC) \
 	$(UNIT_TESTS_DIR)/test_data_structures \
+	$(UNIT_TESTS_DIR)/chibios-mock \
 	$(UNIT_TESTS_DIR)/tests \
 	$(UNIT_TESTS_DIR)/tests/sensor \
 	$(UNIT_TESTS_DIR)/test_basic_math
