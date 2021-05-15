@@ -467,6 +467,7 @@ static int tle6240_deinit(void *data)
 }
 
 struct gpiochip_ops tle6240_ops = {
+	.setPadMode = nullptr,
 	.writePad	= tle6240_writePad,
 	.readPad	= NULL,	/* chip outputs only */
 	.getDiag	= tle6240_getDiag,
