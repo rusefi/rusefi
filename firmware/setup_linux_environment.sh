@@ -19,6 +19,9 @@ rm -rf ~/.rusefi-tools
 mkdir ~/.rusefi-tools
 cd ~/.rusefi-tools
 
+# in case not first execution
+rm -rf arm-none-eabi-gcc.tar.bz2
+
 # Download and extract GCC compiler
 curl -L -o arm-none-eabi-gcc.tar.bz2 https://developer.arm.com/-/media/Files/downloads/gnu-rm/9-2020q2/gcc-arm-none-eabi-9-2020-q2-update-x86_64-linux.tar.bz2
 tar -xjvf arm-none-eabi-gcc.tar.bz2
