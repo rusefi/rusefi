@@ -40,7 +40,7 @@
 #include "hip9011.h"
 #include "histogram.h"
 #include "gps_uart.h"
-#include "lcd_HD44780.h"
+#include "HD44780.h"
 #include "settings.h"
 #include "joystick.h"
 #include "cdm_ion_sense.h"

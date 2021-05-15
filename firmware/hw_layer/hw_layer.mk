@@ -24,7 +24,6 @@ HW_LAYER_EMS_CPP = \
 	$(PROJECT_DIR)/hw_layer/smart_gpio.cpp \
 	$(PROJECT_DIR)/hw_layer/mmc_card.cpp \
 	$(PROJECT_DIR)/hw_layer/mmc_card_access.cpp \
-	$(PROJECT_DIR)/hw_layer/lcd/lcd_HD44780.cpp \
 	$(PROJECT_DIR)/hw_layer/adc/adc_inputs.cpp \
 	$(PROJECT_DIR)/hw_layer/adc/adc_subscription.cpp \
 	$(PROJECT_DIR)/hw_layer/adc/ads1015.cpp \
