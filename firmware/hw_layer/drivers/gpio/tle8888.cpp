@@ -598,12 +598,12 @@ static brain_pin_diag_e tle8888_2b_to_diag_no_temp(unsigned int bits)
 
 static brain_pin_diag_e tle8888_2b_to_diag_with_temp(unsigned int bits)
 {
-	brain_pin_diag_e diag = tle8888_2b_to_diag_no_temp(bits);
+	int diag = tle8888_2b_to_diag_no_temp(bits);
 
 	if (diag == PIN_SHORT_TO_BAT)
 		diag |= PIN_DRIVER_OVERTEMP;
 
-	return diag;
+	return static_cast<brain_pin_diag_e>(diag);
 }
 
 static int tle8888_chip_reset(tle8888_priv *chip) {
@@ -810,7 +810,7 @@ static int tle8888_calc_sleep_interval(tle8888_priv *chip) {
 /*==========================================================================*/
 
 static THD_FUNCTION(tle8888_driver_thread, p) {
-	tle8888_priv *chip = p;
+	tle8888_priv *chip = reinterpret_cast<tle8888_priv*>(p);
 	sysinterval_t poll_interval = 0;
 
 	chRegSetThreadName(DRIVER_NAME);
@@ -992,7 +992,7 @@ static brain_pin_diag_e tle8888_getOutputDiag(tle8888_priv *chip, unsigned int p
 	}
 	/* OUT8 to OUT13, indexes 7..12 */
 	if (pin < 13) {
-		brain_pin_diag_e ret;
+		int ret;
 
 		/* OUT8 */
 		if (pin == 7)
@@ -1008,7 +1008,7 @@ static brain_pin_diag_e tle8888_getOutputDiag(tle8888_priv *chip, unsigned int p
 		if (chip->PPOVDiag & BIT(pin - 7))
 			ret |= PIN_SHORT_TO_BAT;
 
-		return ret;
+		return static_cast<brain_pin_diag_e>(ret);
 	}
 	/* OUT14 to OUT16, indexes 13..15 */
 	if (pin < 16)
@@ -1019,7 +1019,7 @@ static brain_pin_diag_e tle8888_getOutputDiag(tle8888_priv *chip, unsigned int p
 	/* OUT21..OUT24, indexes 20..23 */
 	if (pin < 24) {
 		/* half bridges */
-		brain_pin_diag_e diag;
+		int diag;
 
 		diag = tle8888_2b_to_diag_no_temp((chip->BriDiag[0] >> ((pin - 20) * 2)) & 0x03);
 		if (((pin == 22) || (pin == 23)) &&
@@ -1031,7 +1031,7 @@ static brain_pin_diag_e tle8888_getOutputDiag(tle8888_priv *chip, unsigned int p
 		if (chip->BriDiag[1] & BIT(pin - 20))
 			diag |= PIN_OVERLOAD; /* overcurrent */
 
-		return diag;
+		return static_cast<brain_pin_diag_e>(diag);
 	}
 	if (pin < 28)
 		return tle8888_2b_to_diag_with_temp((chip->IgnDiag >> ((pin - 24) * 2)) & 0x03);
