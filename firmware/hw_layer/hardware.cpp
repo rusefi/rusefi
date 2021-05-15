@@ -39,7 +39,7 @@
 #include "mcp3208.h"
 #include "hip9011.h"
 #include "histogram.h"
-#include "neo6m.h"
+#include "gps_uart.h"
 #include "lcd_HD44780.h"
 #include "settings.h"
 #include "joystick.h"
