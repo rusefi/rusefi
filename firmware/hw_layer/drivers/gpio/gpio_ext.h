@@ -19,11 +19,6 @@
 /* Checks																	*/
 /*==========================================================================*/
 
-#ifdef __cplusplus
-extern "C"
-{
-#endif /* __cplusplus */
-
 struct gpiochip_ops {
 	/* pin argument is pin number within gpio chip, not a global number */
 	int (*setPadMode)(void *data, unsigned int pin, iomode_t mode);
@@ -39,7 +34,7 @@ const char *gpiochips_getChipName(brain_pin_e pin);
 const char *gpiochips_getPinName(brain_pin_e pin);
 
 /* register/unregister GPIO chip */
-int gpiochip_register(brain_pin_e base, const char *name, struct gpiochip_ops *ops, size_t size, void *priv);
+int gpiochip_register(brain_pin_e base, const char *name, gpiochip_ops *ops, size_t size, void *priv);
 int gpiochip_unregister(brain_pin_e base);
 
 /* Set individual names for pins */
@@ -55,7 +50,3 @@ brain_pin_diag_e gpiochips_getDiag(brain_pin_e pin);
 
 /* return total number of external gpios */
 int gpiochips_get_total_pins(void);
-
-#ifdef __cplusplus
-}
-#endif
