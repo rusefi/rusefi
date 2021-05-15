@@ -70,8 +70,8 @@ typedef enum {
 /* CD7:0 */
 #define CMD_REG_DATA(d)		(((d) & 0xff) << 8)
 
-#define CMD_W(a, d)			(CMD_WRITE | CMD_REG_ADDR(a) | CMD_REG_DATA(d))
-#define CMD_R(a)			(CMD_READ | CMD_REG_ADDR(a))
+#define CMD_W(a, d)			(static_cast<uint16_t>((CMD_WRITE | CMD_REG_ADDR(a) | CMD_REG_DATA(d))))
+#define CMD_R(a)			(static_cast<uint16_t>((CMD_READ | CMD_REG_ADDR(a))))
 
 #define REG_INVALID			0x00
 
