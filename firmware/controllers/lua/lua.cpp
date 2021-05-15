@@ -81,6 +81,7 @@ public:
 		if (m_ptr) {
 			efiPrintf("LUA: Tearing down instance...");
 			lua_close(m_ptr);
+			efiAssertVoid(OBD_PCM_Processor_Fault, memoryUsed == 0, "Lua memory leak: %d bytes used after teardown", memoryUsed);
 		}
 	}
 
@@ -233,9 +234,7 @@ static bool runOneLua() {
 	// Reset default tick rate
 	luaTickPeriodMs = 100;
 
-	auto scriptStr = "function onTick() end";
-
-	if (!loadScript(ls, scriptStr)) {
+	if (!loadScript(ls, config->luaScript)) {
 		return false;
 	}
 
