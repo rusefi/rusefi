@@ -414,7 +414,7 @@ static int tle6240_writePad(void *data, unsigned int pin, int value)
 static brain_pin_diag_e tle6240_getDiag(void *data, unsigned int pin)
 {
 	int val;
-	brain_pin_diag_e diag;
+	int diag;
 	tle6240_priv *chip;
 
 	if ((pin >= TLE6240_OUTPUTS) || (data == NULL))
@@ -433,7 +433,7 @@ static brain_pin_diag_e tle6240_getDiag(void *data, unsigned int pin)
 	else if (val == 0x0)
 		diag = PIN_SHORT_TO_GND;
 
-	return diag;
+	return static_cast<brain_pin_diag_e>(diag);
 }
 
 static int tle6240_init(void * data)
