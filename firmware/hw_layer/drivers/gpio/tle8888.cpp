@@ -176,7 +176,7 @@ float vBattForTle8888 = 0;
 
 /* Driver private data */
 struct tle8888_priv {
-	const struct tle8888_config	*cfg;
+	const tle8888_config	*cfg;
 
 	/* thread stuff */
 	thread_t 					*thread;
@@ -241,7 +241,7 @@ struct tle8888_priv {
 	uint16_t					rx;
 };
 
-static struct tle8888_priv chips[BOARD_TLE8888_COUNT];
+static tle8888_priv chips[BOARD_TLE8888_COUNT];
 
 static const char* tle8888_pin_names[TLE8888_SIGNALS] = {
 	"TLE8888.INJ1",		"TLE8888.INJ2",		"TLE8888.INJ3",		"TLE8888.INJ4",
@@ -257,7 +257,7 @@ static const char* tle8888_pin_names[TLE8888_SIGNALS] = {
 #if EFI_TUNER_STUDIO
 // set debug_mode 31
 void tle8888PostState(TsDebugChannels *debugChannels) {
-	struct tle8888_priv *chip = &chips[0];
+	tle8888_priv *chip = &chips[0];
 
 	debugChannels->debugIntField1 = chip->wwd_err_cnt;
 	debugChannels->debugIntField2 = chip->fwd_err_cnt;
@@ -278,13 +278,13 @@ void tle8888PostState(TsDebugChannels *debugChannels) {
 /* Driver local functions.													*/
 /*==========================================================================*/
 
-static SPIDriver *get_bus(struct tle8888_priv *chip)
+static SPIDriver *get_bus(tle8888_priv *chip)
 {
 	/* return non-const SPIDriver* from const struct cfg */
 	return chip->cfg->spi_bus;
 }
 
-static int tle8888_spi_validate(struct tle8888_priv *chip, uint16_t rx)
+static int tle8888_spi_validate(tle8888_priv *chip, uint16_t rx)
 {
 	uint8_t reg = getRegisterFromResponse(rx);
 
@@ -322,7 +322,7 @@ static int tle8888_spi_validate(struct tle8888_priv *chip, uint16_t rx)
 /**
  * @returns -1 in case of communication error
  */
-static int tle8888_spi_rw(struct tle8888_priv *chip, uint16_t tx, uint16_t *rx_ptr)
+static int tle8888_spi_rw(tle8888_priv *chip, uint16_t tx, uint16_t *rx_ptr)
 {
 	int ret;
 	uint16_t rx;
@@ -368,7 +368,7 @@ static int tle8888_spi_rw(struct tle8888_priv *chip, uint16_t tx, uint16_t *rx_p
 /**
  * @return -1 in case of communication error
  */
-static int tle8888_spi_rw_array(struct tle8888_priv *chip, const uint16_t *tx, uint16_t *rx, int n)
+static int tle8888_spi_rw_array(tle8888_priv *chip, const uint16_t *tx, uint16_t *rx, int n)
 {
 	int ret;
 	uint16_t rxdata;
@@ -422,7 +422,7 @@ static int tle8888_spi_rw_array(struct tle8888_priv *chip, const uint16_t *tx, u
  * @details Sends ORed data to register.
  */
 
-static int tle8888_update_output(struct tle8888_priv *chip)
+static int tle8888_update_output(tle8888_priv *chip)
 {
 	int i;
 	int ret;
@@ -480,7 +480,7 @@ static int tle8888_update_output(struct tle8888_priv *chip)
  * @brief read TLE8888 diagnostic registers data.
  * @details Chained read of several registers
  */
-static int tle8888_update_status_and_diag(struct tle8888_priv *chip)
+static int tle8888_update_status_and_diag(tle8888_priv *chip)
 {
 	int ret = 0;
 	const uint16_t tx[] = {
@@ -527,10 +527,10 @@ static int tle8888_update_status_and_diag(struct tle8888_priv *chip)
  * @details This is faster than updating Cont registers over SPI
  */
 
-static int tle8888_update_direct_output(struct tle8888_priv *chip, int pin, int value)
+static int tle8888_update_direct_output(tle8888_priv *chip, int pin, int value)
 {
 	int index = -1;
-	const struct tle8888_config	*cfg = chip->cfg;
+	const tle8888_config	*cfg = chip->cfg;
 
 	if (pin < 4) {
 		/* OUT1..4 */
@@ -567,7 +567,7 @@ static int tle8888_update_direct_output(struct tle8888_priv *chip, int pin, int 
  * @details Wake up driver. Will cause output register update
  */
 
-static int tle8888_wake_driver(struct tle8888_priv *chip)
+static int tle8888_wake_driver(tle8888_priv *chip)
 {
     /* Entering a reentrant critical zone.*/
     syssts_t sts = chSysGetStatusAndLockX();
@@ -606,7 +606,7 @@ static brain_pin_diag_e tle8888_2b_to_diag_with_temp(unsigned int bits)
 	return diag;
 }
 
-static int tle8888_chip_reset(struct tle8888_priv *chip) {
+static int tle8888_chip_reset(tle8888_priv *chip) {
 	int ret;
 
 	ret = tle8888_spi_rw(chip, CMD_SR, NULL);
@@ -620,7 +620,7 @@ static int tle8888_chip_reset(struct tle8888_priv *chip) {
 	return ret;
 }
 
-static int tle8888_chip_init(struct tle8888_priv *chip)
+static int tle8888_chip_init(tle8888_priv *chip)
 {
 	int ret;
 
@@ -687,7 +687,7 @@ static int tle8888_chip_init(struct tle8888_priv *chip)
 	/* TODO: unlock? */
 
 	if (ret == 0) {
-		const struct tle8888_config	*cfg = chip->cfg;
+		const tle8888_config *cfg = chip->cfg;
 
 		/* enable pins */
 		if (cfg->ign_en.port)
@@ -703,13 +703,13 @@ static int tle8888_chip_init(struct tle8888_priv *chip)
 	return ret;
 }
 
-static int tle8888_wwd_feed(struct tle8888_priv *chip) {
+static int tle8888_wwd_feed(tle8888_priv *chip) {
 	tle8888_spi_rw(chip, CMD_WWDSERVICECMD, NULL);
 
 	return 0;
 }
 
-static int tle8888_fwd_feed(struct tle8888_priv *chip) {
+static int tle8888_fwd_feed(tle8888_priv *chip) {
 	uint16_t reg;
 
 	tle8888_spi_rw(chip, CMD_FWDSTAT(1), NULL);
@@ -731,7 +731,7 @@ static int tle8888_fwd_feed(struct tle8888_priv *chip) {
 	return 0;
 }
 
-static int tle8888_wd_get_status(struct tle8888_priv *chip) {
+static int tle8888_wd_get_status(tle8888_priv *chip) {
 	uint16_t reg;
 
 	tle8888_spi_rw(chip, CMD_WDDIAG, NULL);
@@ -753,7 +753,7 @@ static int tle8888_wd_get_status(struct tle8888_priv *chip) {
 	return 0;
 }
 
-static int tle8888_wd_feed(struct tle8888_priv *chip) {
+static int tle8888_wd_feed(tle8888_priv *chip) {
 	bool update_status;
 
 	if (chip->wwd_ts <= chVTGetSystemTimeX()) {
@@ -791,7 +791,7 @@ static int tle8888_wd_feed(struct tle8888_priv *chip) {
 	}
 }
 
-static int tle8888_calc_sleep_interval(struct tle8888_priv *chip) {
+static int tle8888_calc_sleep_interval(tle8888_priv *chip) {
 	systime_t now = chVTGetSystemTimeX();
 
 	sysinterval_t wwd_delay = chTimeDiffX(now, chip->wwd_ts);
@@ -810,7 +810,7 @@ static int tle8888_calc_sleep_interval(struct tle8888_priv *chip) {
 /*==========================================================================*/
 
 static THD_FUNCTION(tle8888_driver_thread, p) {
-	struct tle8888_priv *chip = p;
+	tle8888_priv *chip = p;
 	sysinterval_t poll_interval = 0;
 
 	chRegSetThreadName(DRIVER_NAME);
@@ -907,7 +907,7 @@ static int tle8888_setPadMode(void *data, unsigned int pin, iomode_t mode) {
 	if ((pin >= TLE8888_SIGNALS) || (data == NULL))
 		return -1;
 
-	struct tle8888_priv *chip = (struct tle8888_priv *)data;
+	tle8888_priv *chip = (tle8888_priv *)data;
 
 	/* if someone has requested MR pin - switch it to manual mode */
 	if (pin == TLE8888_OUTPUT_MR) {
@@ -940,7 +940,7 @@ static int tle8888_writePad(void *data, unsigned int pin, int value) {
 	if ((pin >= TLE8888_OUTPUTS) || (data == NULL))
 		return -1;
 
-	struct tle8888_priv *chip = (struct tle8888_priv *)data;
+	tle8888_priv *chip = (tle8888_priv *)data;
 
 	/* TODO: lock */
 	if (value) {
@@ -962,7 +962,7 @@ static int tle8888_readPad(void *data, unsigned int pin) {
 	if ((pin >= TLE8888_OUTPUTS) || (data == NULL))
 		return -1;
 
-	struct tle8888_priv *chip = (struct tle8888_priv *)data;
+	tle8888_priv *chip = (tle8888_priv *)data;
 
 	if (pin < TLE8888_OUTPUTS_REGULAR) {
 		/* return output state */
@@ -981,7 +981,7 @@ static int tle8888_readPad(void *data, unsigned int pin) {
 	return -1;
 }
 
-static brain_pin_diag_e tle8888_getOutputDiag(struct tle8888_priv *chip, unsigned int pin)
+static brain_pin_diag_e tle8888_getOutputDiag(tle8888_priv *chip, unsigned int pin)
 {
 	/* OUT1..OUT4, indexes 0..3 */
 	if (pin < 4)
@@ -1039,7 +1039,7 @@ static brain_pin_diag_e tle8888_getOutputDiag(struct tle8888_priv *chip, unsigne
 	return PIN_OK;
 }
 
-static brain_pin_diag_e tle8888_getInputDiag(struct tle8888_priv *chip, unsigned int pin)
+static brain_pin_diag_e tle8888_getInputDiag(tle8888_priv *chip, unsigned int pin)
 {
 	(void)chip; (void)pin;
 
@@ -1051,7 +1051,7 @@ static brain_pin_diag_e tle8888_getDiag(void *data, unsigned int pin)
 	if ((pin >= TLE8888_SIGNALS) || (data == NULL))
 		return PIN_INVALID;
 
-	struct tle8888_priv *chip = (struct tle8888_priv *)data;
+	tle8888_priv *chip = (tle8888_priv *)data;
 
 	if (pin < TLE8888_OUTPUTS)
 		return tle8888_getOutputDiag(chip, pin);
@@ -1061,8 +1061,8 @@ static brain_pin_diag_e tle8888_getDiag(void *data, unsigned int pin)
 
 static int tle8888_chip_init_data(void * data) {
 	int i;
-	struct tle8888_priv *chip = (struct tle8888_priv *)data;
-	const struct tle8888_config	*cfg = chip->cfg;
+	tle8888_priv *chip = (tle8888_priv *)data;
+	const tle8888_config	*cfg = chip->cfg;
 
 	int ret = 0;
 
@@ -1172,9 +1172,9 @@ err_gpios:
 static int tle8888_init(void * data)
 {
 	int ret;
-	struct tle8888_priv *chip;
+	tle8888_priv *chip;
 
-	chip = (struct tle8888_priv *)data;
+	chip = (tle8888_priv *)data;
 
 	/* check for multiple init */
 	if (chip->drv_state != TLE8888_WAIT_INIT)
@@ -1206,8 +1206,8 @@ static int tle8888_init(void * data)
 
 static int tle8888_deinit(void *data)
 {
-	struct tle8888_priv *chip = (struct tle8888_priv *)data;
-	const struct tle8888_config	*cfg = chip->cfg;
+	tle8888_priv *chip = (tle8888_priv *)data;
+	const tle8888_config	*cfg = chip->cfg;
 
 	/* disable pins */
 	if (cfg->ign_en.port)
@@ -1236,7 +1236,7 @@ struct gpiochip_ops tle8888_ops = {
  * @return return gpio chip base
  */
 
-int tle8888_add(brain_pin_e base, unsigned int index, const struct tle8888_config *cfg) {
+int tle8888_add(brain_pin_e base, unsigned int index, const tle8888_config *cfg) {
 
 	efiAssert(OBD_PCM_Processor_Fault, cfg != NULL, "8888CFG", 0)
 
@@ -1249,7 +1249,7 @@ int tle8888_add(brain_pin_e base, unsigned int index, const struct tle8888_confi
 	if (cfg->spi_config.ssport == NULL)
 		return -1;
 
-	struct tle8888_priv *chip = &chips[index];
+	tle8888_priv *chip = &chips[index];
 
 	/* already initted? */
 	if (chip->cfg != NULL)
@@ -1277,14 +1277,14 @@ int tle8888_add(brain_pin_e base, unsigned int index, const struct tle8888_confi
 /*==========================================================================*/
 void tle8888_read_reg(uint16_t reg, uint16_t *val)
 {
-	struct tle8888_priv *chip = &chips[0];
+	tle8888_priv *chip = &chips[0];
 
 	tle8888_spi_rw(chip, CMD_R(reg), val);
 }
 
 void tle8888_req_init(void)
 {
-	struct tle8888_priv *chip = &chips[0];
+	tle8888_priv *chip = &chips[0];
 
 	chip->need_init = true;
 	chip->init_req_cnt++;
@@ -1292,7 +1292,7 @@ void tle8888_req_init(void)
 
 #else /* BOARD_TLE8888_COUNT > 0 */
 
-int tle8888_add(brain_pin_e base, unsigned int index, const struct tle8888_config *cfg)
+int tle8888_add(brain_pin_e base, unsigned int index, const tle8888_config *cfg)
 {
 	(void)base; (void)index; (void)cfg;
 
