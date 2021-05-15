@@ -207,7 +207,7 @@ int drv8860_writePad(void *data, unsigned int pin, int value) {
 	return 0;
 }
 
-brain_pin_diag_e drv8860_getDiag(void *data, unsigned int pin) {
+brain_pin_diag_e drv8860_getDiag(void* /*data*/, unsigned int /*pin*/) {
 	// todo: implement diag
 	return PIN_OK;
 }
@@ -241,6 +241,7 @@ int drv8860_deinit(void *data) {
 }
 
 struct gpiochip_ops drv8860_ops = {
+	.setPadMode = nullptr,
 	.writePad	= drv8860_writePad,
 	.readPad	= NULL,	/* chip outputs only */
 	.getDiag	= drv8860_getDiag,
@@ -254,7 +255,6 @@ struct gpiochip_ops drv8860_ops = {
  */
 
 int drv8860_add(brain_pin_e base, unsigned int index, const drv8860_config *cfg) {
-	int i;
 	int ret;
 	drv8860_priv *chip;
 
@@ -284,7 +284,7 @@ int drv8860_add(brain_pin_e base, unsigned int index, const drv8860_config *cfg)
 		return ret;
 
 	/* set default pin names, board init code can rewrite */
-	gpiochips_setPinNames(ret, drv8860_pin_names);
+	gpiochips_setPinNames(static_cast<brain_pin_e>(ret), drv8860_pin_names);
 
 	return ret;
 }
