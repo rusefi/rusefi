@@ -13,7 +13,7 @@
 // see SIM_SD1_PORT
 #define CONSOLE_PORT (&SD1)
 // see SIM_SD2_PORT
-#define TS_PRIMARY_SERIAL SD2
+//#define TS_PRIMARY_SERIAL SD2
 
 /**
  * This implementation writes to both windows console and console port
