@@ -615,7 +615,7 @@ angle_t extraInjectionOffset;+this is about deciding when the injector starts it
 angle_t crankingTimingAngle;+Ignition advance angle used during engine cranking, 5-10 degrees will work as a base setting for most engines.\nset cranking_timing_angle X;     "deg",    1,      0.0,    -360,     360,        2
 
 custom ignition_mode_e 4 bits,    U32,    @OFFSET@, [0:1], "Single Coil", "Individual Coils", "Wasted Spark", "Two Distributors"
-ignition_mode_e ignitionMode;+"Single Coil" is for use on distributed ignition system. "Individual Coils" is to be used when you have one coil per cylinder (COP or similar). "Wasted Spark" means one coil is driving two spark plugs in two cylinders, with one of the sparks not doing anything since it's happening on the exhaust cycle\nset ignition_mode X
+ignition_mode_e ignitionMode;+Single coil = distributor\nIndividual coils = one coil per cylinder (COP, coil-near-plug), requires sequential mode\nWasted spark = Fires pairs of cylinders together, either one coil per pair of cylinders or one coil per cylinder\nTwo distributors = A pair of distributors, found on some BMW, Toyota and other engines
 
 float unusedOldIgnitionOffset;;"unused",1,0,0,1,0
 
@@ -1113,7 +1113,7 @@ custom idle_mode_e 4 bits,    U32,   @OFFSET@, [0:0], "Automatic", "Manual"
 	bit isManualSpinningMode;Usually if we have no trigger events that means engine is stopped\nUnless we are troubleshooting and spinning the engine by hand - this case a longer\ndelay is needed
 	bit twoWireBatchInjection;+This is needed if your coils are individually wired and you wish to use batch injection.\nenable two_wire_batch_injection
 	bit useOnlyRisingEdgeForTrigger;+VR sensors are only precise on rising front\nenable trigger_only_front
-	bit twoWireBatchIgnition;+This is needed if your coils are individually wired (COP) and you wish to use batch ignition (Wasted Spark).
+	bit twoWireBatchIgnition;+This is needed if your coils are individually wired (COP) and you wish to use wasted spark, perhaps because you have no cam position sensor.
 bit useFixedBaroCorrFromMap
 bit useSeparateAdvanceForCranking;+This activates a separate advance table for cranking conditions, this allows cranking advance to be RPM dependant.
 bit useAdvanceCorrectionsForCranking;+This enables the various ignition corrections during cranking (IAT, CLT, FSIO and PID idle).
