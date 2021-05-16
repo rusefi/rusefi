@@ -284,7 +284,7 @@ custom ego_sensor_e 4 bits, S32, @OFFSET@, [0:2], @@ego_sensor_e_enum@@
 
 struct cranking_parameters_s
 float baseFuel;+Base mass of the per-cylinder fuel injected during cranking.  This is then modified by the multipliers for CLT, IAT, TPS ect, to give the final cranking pulse width.\nA reasonable starting point is 60mg per liter per cylinder.\nex: 2 liter 4 cyl = 500cc/cyl, so 30mg cranking fuel.;"mg",       1,     0,    0, 500,     1
-int16_t rpm;+This sets the RPM limit below which the ECU will use cranking fuel and ignition logic, typically this is around 350-450rpm. \nset cranking_rpm X;"RPM",      1,     0,    0, 3000,      0
+int16_t rpm;+This sets the RPM limit below which the ECU will use cranking fuel and ignition logic, typically this is around 350-450rpm.;"RPM",      1,     0,    0, 3000,      0
 end_struct
 
 #define debug_mode_e_enum "Alternator PID", "TPS acceleration enrichment", "GPPWM", "Idle Control", "Engine Load accl enrich", "Trigger Counters", "FSIO_ADC", "AUX_PID_1", "VVT input", "Cranking", "Timing", "Closed-loop fuel corr PID", "VSS", "SD card", "sr5", "Knock", "mode16", "Electronic Throttle", "Executor", "Bench Test / TS commands", "Aux Valves", "Analog inputs #1", "INSTANT_RPM", "FSIO_EXPRESSION_1_7", "Status", "CJ125", "CAN", "MAP", "Metrics", "ETB#2", "Ion Sense", "TLE8888", "Analog inputs #2", "Dwell Metric", "INVALID", "ETB Logic", "Boost Control", "Start/Stop", "Launch", "ETB Autotune", "FSIO_COMPOSITE_LOG", "FSIO_EXPRESSION_8_14", "FSIO_SPECIAL", "Injector Compensation", "Dyno_View", "Logic_Analyzer", "rusEFI Wideband", "TCU", "Lua"
@@ -542,8 +542,8 @@ bit unused76b19;
 bit launchControlEnabled;
 bit rollingLaunchEnabled;
 bit antiLagEnabled;
-bit useRunningMathForCranking,"Fuel Map","Fixed";
-bit displayLogicLevelsInEngineSniffer;+Shall we display real life signal or just the part consumed by trigger decoder.\nenable logic_level_trigger
+bit useRunningMathForCranking,"Fuel Map","Fixed";+For cranking either use the specified fixed base fuel mass, or use the normal running math (VE table).
+bit displayLogicLevelsInEngineSniffer;+Shall we display real life signal or just the part consumed by trigger decoder.
 bit useTLE8888_stepper;
 bit enableMapEstimationTableFallback;+If enabled, the MAP estimate table will be used if the MAP sensor fails to estimate manifold pressure based on RPM and TPS.
 bit useFSIOTableForCanSniffingFiltering;
@@ -612,7 +612,7 @@ custom injection_mode_e 4 bits, U32, @OFFSET@, [0:1], "Simultaneous", "Sequentia
 injection_mode_e crankingInjectionMode;+This is the injection strategy during engine start.  See Fuel/Injection settings for more detail. It is suggested to use "Simultaneous".
 injection_mode_e injectionMode;+This is where the fuel injection type is defined: "Simultaneous" means all injectors will fire together at once. "Sequential" fires the injectors on a per cylinder basis, which requires individually wired injectors. "Batched" will fire the injectors in groups.  If your injectors are individually wired you will also need to enable "Two wire batch emulation". \nset injection_mode X\nSee also twoWireBatchInjection
 angle_t extraInjectionOffset;+this is about deciding when the injector starts it's squirt\nSee also injectionPhase map\ntodo: do we need even need this since we have the map anyway?;"deg",    1,      0.0,       -720,     720,        2
-angle_t crankingTimingAngle;+Ignition advance angle used during engine cranking, 5-10 degrees will work as a base setting for most engines.\nset cranking_timing_angle X;     "deg",    1,      0.0,    -360,     360,        2
+angle_t crankingTimingAngle;+Ignition advance angle used during engine cranking, 5-10 degrees will work as a base setting for most engines.; "deg", 1, 0.0, -30, 30, 0
 
 custom ignition_mode_e 4 bits,    U32,    @OFFSET@, [0:1], "Single Coil", "Individual Coils", "Wasted Spark", "Two Distributors"
 ignition_mode_e ignitionMode;+Single coil = distributor\nIndividual coils = one coil per cylinder (COP, coil-near-plug), requires sequential mode\nWasted spark = Fires pairs of cylinders together, either one coil per pair of cylinders or one coil per cylinder\nTwo distributors = A pair of distributors, found on some BMW, Toyota and other engines
