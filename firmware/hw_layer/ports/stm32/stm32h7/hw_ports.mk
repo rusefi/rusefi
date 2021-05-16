@@ -1,16 +1,19 @@
-include $(PROJECT_DIR)/hw_layer/ports/stm32/stm32_common.mk
-
-HW_LAYER_SRC += $(PROJECT_DIR)/hw_layer/ports/stm32/stm32h7/stm32h7xx_hal_flash.c \
-				$(PROJECT_DIR)/hw_layer/ports/stm32/stm32h7/stm32h7xx_hal_flash_ex.c
-
-HW_LAYER_CPP += $(PROJECT_DIR)/hw_layer/ports/stm32/stm32h7/mpu_util.cpp \
-					$(PROJECT_DIR)/hw_layer/ports/stm32/stm32_adc_v4.cpp \
+include $(HW_LAYER_DIR)/ports/stm32/stm32_common.mk
 
 DDEFS += -DSTM32H743xx
 MCU = cortex-m7
-LDSCRIPT = $(PROJECT_DIR)/hw_layer/ports/stm32/stm32h7/STM32H743xI.ld
+LDSCRIPT =$(HW_PORT_DIR)/STM32H743xI.ld
 ALLCSRC += $(CHIBIOS)/os/hal/boards/ST_NUCLEO144_H743ZI/board.c
-CONFDIR = $(PROJECT_DIR)/hw_layer/ports/stm32/stm32h7/cfg
+CONFDIR = $(HW_PORT_DIR)/cfg
+
+HW_PORTS_SRC += \
+	$(HW_PORT_DIR)/stm32h7xx_hal_flash.c \
+	$(HW_PORT_DIR)/stm32h7xx_hal_flash_ex.c
+
+HW_PORTS_CPP += \
+	$(HW_PORT_DIR)/mpu_util.cpp \
+	$(HW_LAYER_DIR)/ports/stm32/stm32_adc_v4.cpp \
 
 # TODO: remove, for efifeatures.h
-ALLINC += $(PROJECT_DIR)/config/stm32h7ems
+HW_PORTS_INC += \
+	$(PROJECT_DIR)/config/stm32h7ems

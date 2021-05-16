@@ -1,13 +1,17 @@
-HW_LAYER_SRC += $(PROJECT_DIR)/hw_layer/ports/stm32/serial_over_usb/usbcfg.c \
-	            $(PROJECT_DIR)/hw_layer/ports/stm32/serial_over_usb/usbconsole.c \
-				$(PROJECT_DIR)/hw_layer/ports/stm32/flash_int.c \
+HW_PORTS_SRC = \
+	$(HW_LAYER_DIR)/ports/stm32/serial_over_usb/usbcfg.c \
+	$(HW_LAYER_DIR)/ports/stm32/serial_over_usb/usbconsole.c \
+	$(HW_LAYER_DIR)/ports/stm32/flash_int.c
 
-HW_LAYER_CPP += \
-	$(PROJECT_DIR)/hw_layer/ports/stm32/stm32_pins.cpp \
-	$(PROJECT_DIR)/hw_layer/ports/stm32/stm32_common.cpp \
-	$(PROJECT_DIR)/hw_layer/ports/stm32/backup_ram.cpp \
-	$(PROJECT_DIR)/hw_layer/ports/stm32/microsecond_timer_stm32.cpp \
+HW_PORTS_CPP = \
+	$(HW_LAYER_DIR)/ports/stm32/stm32_pins.cpp \
+	$(HW_LAYER_DIR)/ports/stm32/stm32_common.cpp \
+	$(HW_LAYER_DIR)/ports/stm32/backup_ram.cpp \
+	$(HW_LAYER_DIR)/ports/stm32/microsecond_timer_stm32.cpp \
 
-RUSEFIASM = $(PROJECT_DIR)/hw_layer/ports/stm32/rusEfiStartup.S
+RUSEFIASM = \
+	$(HW_LAYER_DIR)/ports/stm32/rusEfiStartup.S
 
-HW_INC += $(PROJECT_DIR)/hw_layer/ports/stm32 $(PROJECT_DIR)/hw_layer/ports/stm32/serial_over_usb
+HW_PORTS_INC = \
+	$(HW_LAYER_DIR)/ports/stm32 \
+	$(HW_LAYER_DIR)/ports/stm32/serial_over_usb

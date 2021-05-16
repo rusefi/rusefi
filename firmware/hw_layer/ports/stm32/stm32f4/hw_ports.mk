@@ -1,16 +1,10 @@
-include $(PROJECT_DIR)/hw_layer/ports/stm32/stm32_common.mk
-
-HW_LAYER_SRC += $(PROJECT_DIR)/hw_layer/ports/stm32/stm32f4/stm32f4xx_hal_flash.c \
-				$(PROJECT_DIR)/hw_layer/ports/stm32/stm32f4/stm32f4xx_hal_flash_ex.c \
-               
-HW_LAYER_CPP += $(PROJECT_DIR)/hw_layer/ports/stm32/stm32f4/mpu_util.cpp \
-					$(PROJECT_DIR)/hw_layer/ports/stm32/stm32_adc_v2.cpp \
+include $(HW_LAYER_DIR)/ports/stm32/stm32_common.mk
 
 DDEFS += -DSTM32F407xx
 MCU = cortex-m4
-LDSCRIPT = $(PROJECT_DIR)/hw_layer/ports/stm32/stm32f4/STM32F4.ld
+LDSCRIPT = $(HW_PORT_DIR)/STM32F4.ld
 ALLCSRC += $(CHIBIOS)/os/hal/boards/ST_STM32F4_DISCOVERY/board.c
-CONFDIR = $(PROJECT_DIR)/hw_layer/ports/stm32/stm32f4/cfg
+CONFDIR = $(HW_PORT_DIR)/cfg
 
 # STM32F42x has extra memory, so change some flags so we can use it.
 ifeq ($(IS_STM32F429),yes)
@@ -18,5 +12,14 @@ ifeq ($(IS_STM32F429),yes)
 	DDEFS += -DEFI_IS_F42x
 endif
 
+HW_PORTS_SRC += \
+	$(HW_PORT_DIR)/stm32f4xx_hal_flash.c \
+	$(HW_PORT_DIR)/stm32f4xx_hal_flash_ex.c \
+
+HW_PORTS_CPP += \
+	$(HW_PORT_DIR)/mpu_util.cpp \
+	$(HW_LAYER_DIR)/ports/stm32/stm32_adc_v2.cpp \
+
 # TODO: remove, for efifeatures.h
-ALLINC += $(PROJECT_DIR)/config/stm32f4ems
+HW_PORTS_INC += \
+	$(PROJECT_DIR)/config/stm32f4ems
