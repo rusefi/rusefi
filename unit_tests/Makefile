@@ -50,7 +50,7 @@ CPPSRC += $(ALLCPPSRC) \
 	$(SYSTEMSRC_CPP) \
 	$(HW_LAYER_EMS_CPP) \
 	$(TUNERSTUDIO_SRC_CPP) \
-	$(HW_SENSORS_SRC) \
+	$(HW_SENSORS_CPP) \
 	$(TRIGGER_SRC_CPP) \
 	$(INIT_SRC_CPP) \
 	$(PROJECT_DIR)/../unit_tests/logicdata.cpp \
