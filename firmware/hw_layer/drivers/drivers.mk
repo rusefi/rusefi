@@ -5,6 +5,8 @@ HW_LAYER_DRIVERS_INC = \
 	$(DRIVERS_DIR)/gpio \
 	$(DRIVERS_DIR)/can \
 	$(DRIVERS_DIR)/serial \
+	$(DRIVERS_DIR)/i2c \
+	$(DRIVERS_DIR)/lcd \
 
 HW_LAYER_DRIVERS_CORE = \
 	$(DRIVERS_DIR)/gpio/core.c \
@@ -21,4 +23,6 @@ HW_LAYER_DRIVERS = \
 HW_LAYER_DRIVERS_CPP = \
 	$(DRIVERS_DIR)/can/can_hw.cpp \
 	$(DRIVERS_DIR)/can/can_msg_tx.cpp \
-	$(DRIVERS_DIR)/serial/serial_hw.cpp
+	$(DRIVERS_DIR)/serial/serial_hw.cpp \
+	$(DRIVERS_DIR)/i2c/i2c_bb.cpp \
+	$(DRIVERS_DIR)/lcd/HD44780.cpp
