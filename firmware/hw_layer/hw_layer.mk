@@ -10,6 +10,9 @@ HW_INC = \
 	$(HW_LAYER_DIR)/ports
 
 HW_LAYER_INC = \
+	$(HW_INC) \
+	$(HW_LAYER_DRIVERS_INC) \
+	$(HW_SENSORS_INC) \
 	$(HW_LAYER_DIR) \
 	$(HW_LAYER_DIR)/adc \
 	$(HW_LAYER_DIR)/algo \
@@ -21,11 +24,17 @@ HW_LAYER_INC = \
 	$(HW_LAYER_DIR)/microsecond_timer
 
 HW_LAYER_SRC = \
+	$(HW_LAYER_DRIVERS_CORE_SRC) \
+	$(HW_LAYER_DRIVERS_SRC) \
+	$(HW_SENSORS_SRC) \
 	$(HW_LAYER_EGT) \
 	$(HW_LAYER_DIR)/adc/mcp3208.c \
 	$(HW_LAYER_DIR)/mc33816_data.c
 
 HW_LAYER_CPP = \
+	$(HW_LAYER_DRIVERS_CORE_CPP) \
+	$(HW_LAYER_DRIVERS_CPP) \
+	$(HW_SENSORS_CPP) \
 	$(HW_LAYER_DIR)/pin_repository.cpp \
 	$(HW_LAYER_DIR)/microsecond_timer/microsecond_timer.cpp \
 	$(HW_LAYER_DIR)/digital_input/digital_input.cpp \

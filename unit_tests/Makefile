@@ -13,8 +13,6 @@ include $(PROJECT_DIR)/development/development.mk
 include $(PROJECT_DIR)/console/console.mk
 include $(PROJECT_DIR)/console/binary/tunerstudio.mk
 include $(PROJECT_DIR)/hw_layer/hw_layer.mk
-include $(PROJECT_DIR)/hw_layer/drivers/drivers.mk
-include $(PROJECT_DIR)/hw_layer/sensors/sensors.mk
 include $(PROJECT_DIR)/util/util.mk
 include $(PROJECT_DIR)/init/init.mk
 include $(UNIT_TESTS_DIR)/test.mk
@@ -31,7 +29,7 @@ CSRC += $(ALLCSRC) \
 	$(CONTROLLERS_MATH_SRC) \
 	$(CONTROLLERS_SENSORS_SRC) \
 	$(ENGINES_SRC) \
-	$(HW_LAYER_DRIVERS_CORE) \
+	$(HW_LAYER_SRC) \
 	$(TEST_SRC_C)
 
 # C++ sources that can be compiled in ARM or THUMB mode depending on the global
@@ -42,7 +40,6 @@ CPPSRC += $(ALLCPPSRC) \
 	$(TRIGGER_DECODERS_SRC_CPP) \
 	$(ENGINES_SRC_CPP) \
 	$(CONTROLLERS_SRC_CPP) \
-	$(HW_LAYER_DRIVERS_CORE_CPP) \
 	$(CONTROLLERS_CORE_SRC_CPP) \
 	$(CONTROLLERS_MATH_SRC_CPP) \
 	$(CONTROLLERS_SENSORS_SRC_CPP) \
@@ -51,7 +48,6 @@ CPPSRC += $(ALLCPPSRC) \
 	$(SYSTEMSRC_CPP) \
 	$(HW_LAYER_CPP) \
 	$(TUNERSTUDIO_SRC_CPP) \
-	$(HW_SENSORS_CPP) \
 	$(TRIGGER_SRC_CPP) \
 	$(INIT_SRC_CPP) \
 	$(PROJECT_DIR)/../unit_tests/logicdata.cpp \
@@ -70,10 +66,8 @@ INCDIR += $(UNIT_TESTS_DIR) \
  	$(DEVELOPMENT_DIR) \
 	$(PROJECT_DIR)/ext_algo \
 	$(PROJECT_DIR)/init/ \
-	$(PROJECT_DIR)/hw_layer/algo \
 	$(HW_LAYER_INC) \
 	$(HW_SENSORS_INC) \
-	$(HW_LAYER_DRIVERS_INC) \
 	$(UNIT_TESTS_DIR)/test_data_structures \
 	$(UNIT_TESTS_DIR)/chibios-mock \
 	$(UNIT_TESTS_DIR)/tests \

@@ -165,9 +165,6 @@ CPPSRC = $(ALLCPPSRC) \
 	$(CONTROLLERS_SRC_CPP) \
 	$(PROJECT_DIR)/development/sensor_chart.cpp \
 	$(HW_LAYER_CPP) \
-	$(HW_SENSORS_CPP) \
-	$(HW_LAYER_DRIVERS_CPP) \
-	$(HW_LAYER_DRIVERS_CORE_CPP) \
 	$(TRIGGER_SRC_CPP) \
 	$(TRIGGER_DECODERS_SRC_CPP) \
 	$(SYSTEMSRC_CPP) \
@@ -196,7 +193,6 @@ INCDIR = . \
           $(CONSOLE_INC) \
           $(PROJECT_DIR)/config/engines \
           $(PROJECT_DIR)/ext_algo \
-          $(HW_LAYER_DRIVERS_INC) \
           $(HW_LAYER_INC) \
 	  $(HW_SENSORS_INC) \
           $(HW_SENSORS_INC) \
