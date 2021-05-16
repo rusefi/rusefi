@@ -178,9 +178,6 @@ include $(PROJECT_DIR)/console/console.mk
 include $(PROJECT_DIR)/controllers/controllers.mk
 include $(PROJECT_DIR)/development/development.mk
 include $(PROJECT_DIR)/hw_layer/hw_layer.mk
-include $(PROJECT_DIR)/hw_layer/drivers/drivers.mk
-include $(PROJECT_DIR)/hw_layer/sensors/sensors.mk
-include $(PROJECT_DIR)/hw_layer/mass_storage/mass_storage.mk
 include $(PROJECT_DIR)/init/init.mk
 include $(PROJECT_DIR)/util/util.mk
 
@@ -282,11 +279,6 @@ INCDIR = $(ALLINC) \
 	console_util \
 	$(CONSOLE_INC) \
 	$(HW_LAYER_INC) \
-	$(PROJECT_DIR)/hw_layer/mass_storage \
-	$(PROJECT_DIR)/hw_layer/serial_over_usb \
-	$(PROJECT_DIR)/hw_layer/algo \
-	$(PROJECT_DIR)/hw_layer/lcd \
-	$(PROJECT_DIR)/hw_layer/mass_storage \
 	$(HW_SENSORS_INC) \
 	$(HW_INC) \
 	$(HW_LAYER_DRIVERS_INC) \

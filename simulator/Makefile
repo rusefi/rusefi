@@ -140,8 +140,6 @@ include $(PROJECT_DIR)/config/engines/engines.mk
 include $(PROJECT_DIR)/controllers/controllers.mk
 include $(PROJECT_DIR)/development/development.mk
 include $(PROJECT_DIR)/hw_layer/hw_layer.mk
-include $(PROJECT_DIR)/hw_layer/drivers/drivers.mk
-include $(PROJECT_DIR)/hw_layer/sensors/sensors.mk
 include $(PROJECT_DIR)/init/init.mk
 include $(PROJECT_DIR)/util/util.mk
 
@@ -201,8 +199,6 @@ INCDIR = . \
           $(HW_LAYER_DRIVERS_INC) \
           $(HW_LAYER_INC) \
 	  $(HW_SENSORS_INC) \
-          $(PROJECT_DIR)/hw_layer/algo \
-          $(PROJECT_DIR)/hw_layer/drivers/can \
           $(HW_SENSORS_INC) \
           $(DEVELOPMENT_DIR) \
           $(CONTROLLERS_INC) \

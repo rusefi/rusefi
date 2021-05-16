@@ -1,5 +1,9 @@
 HW_LAYER_DIR=$(PROJECT_DIR)/hw_layer
 
+include $(HW_LAYER_DIR)/drivers/drivers.mk
+include $(HW_LAYER_DIR)/sensors/sensors.mk
+include $(HW_LAYER_DIR)/mass_storage/mass_storage.mk
+
 # this var is used in bootloader
 HW_INC = \
 	$(HW_LAYER_DIR)/$(CPU_HWLAYER) \
@@ -8,9 +12,13 @@ HW_INC = \
 HW_LAYER_INC = \
 	$(HW_LAYER_DIR) \
 	$(HW_LAYER_DIR)/adc \
+	$(HW_LAYER_DIR)/algo \
+	$(HW_LAYER_DIR)/drivers/can \
 	$(HW_LAYER_DIR)/digital_input \
 	$(HW_LAYER_DIR)/digital_input/trigger \
-	$(HW_LAYER_DIR)/microsecond_timer \
+	$(HW_LAYER_DIR)/lcd \
+	$(HW_LAYER_DIR)/mass_storage \
+	$(HW_LAYER_DIR)/microsecond_timer
 
 HW_LAYER_EMS = \
 	$(HW_LAYER_EGT) \
