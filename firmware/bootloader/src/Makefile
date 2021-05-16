@@ -150,8 +150,7 @@ include $(PROJECT_DIR)/init/init.mk
 include $(PROJECT_DIR)/util/util.mk
 
 include $(PROJECT_DIR)/controllers/controllers.mk
-include $(PROJECT_DIR)/hw_layer/$(CPU_HWLAYER)/hw_ports.mk
-include $(PROJECT_DIR)/hw_layer/drivers/drivers.mk
+include $(PROJECT_DIR)/hw_layer/hw_layer.mk
 
 # C sources that can be compiled in ARM or THUMB mode depending on the global
 # setting.
@@ -159,7 +158,7 @@ CSRC =  $(ALLCSRC) \
 	$(CHIBIOS)/os/various/syscalls.c \
 	$(CONSOLESRC) \
 	$(DEV_SRC) \
-	$(HW_LAYER_SRC) \
+	$(HW_PORTS_SRC) \
 	$(HW_LAYER_DRIVERS_CORE) \
 	$(FATFSSRC) \
 	$(SYSTEMSRC) \
@@ -168,7 +167,7 @@ CSRC =  $(ALLCSRC) \
 # setting.
 CPPSRC = $(ALLCPPSRC) \
 	$(DEV_SRC_CPP) \
-	$(HW_LAYER_CPP) \
+	$(HW_PORTS_CPP) \
 	$(HW_SENSORS_SRC) \
 	$(TUNERSTUDIO_SRC_CPP) \
 	$(CONSOLE_SRC_CPP) \
@@ -234,7 +233,7 @@ INCDIR = $(ALLINC) \
 	$(PROJECT_DIR)/hw_layer/mass_storage \
 	$(PROJECT_DIR)/hw_layer/ports \
 	$(PROJECT_DIR)/hw_layer/$(CPU_HWLAYER) \
-	$(HW_INC) \
+	$(HW_PORTS_INC) \
 	$(HW_LAYER_DRIVERS_INC) \
 	$(PROJECT_DIR)/development \
 	$(PROJECT_DIR)/development/hw_layer \
