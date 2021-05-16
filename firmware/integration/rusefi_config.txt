@@ -1335,7 +1335,7 @@ tle8888_mode_e tle8888mode;
 	pin_output_mode_e LIS302DLCsPinMode;
 
 	custom injector_compensation_mode_e 1 bits, U08, @OFFSET@, [0:1], "None", "Fixed rail pressure", "Sensed Rail Pressure"
-	injector_compensation_mode_e injectorCompensationMode;
+	injector_compensation_mode_e injectorCompensationMode;+None = I have a MAP-referenced fuel pressure regulator\nFixed rail pressure = I have an atmosphere-referenced fuel pressure regulator (returnless, typically)\nSensed rail pressure = I have a fuel pressure sensor;
 
 	uint8_t unused2419;;"units", 1, 0, -20, 100, 0
 	float fuelReferencePressure;+This is the pressure at which your injector flow is known.\nFor example if your injectors flow 400cc/min at 3.5 bar, enter 350kpa here.;"kPa", 1, 0, 0, 700000, 0
