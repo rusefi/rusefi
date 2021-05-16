@@ -9,10 +9,11 @@
 
 #include "ch.hpp"
 #include "hal.h"
-#include "hal_usb_msd.h"
 #include "thread_controller.h"
 
 #if HAL_USE_USB_MSD
+
+#include "hal_usb_msd.h"
 
 class MassStorageController : public ThreadController<USB_MSD_THREAD_WA_SIZE> {
 public:

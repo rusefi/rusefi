@@ -372,6 +372,14 @@
 #define USB_USE_WAIT                FALSE
 #endif
 
+/* halconf_community.h */
+/**
+ * @brief   Enables the USB_MSD subsystem.
+ */
+#if !defined(HAL_USE_USB_MSD) || defined(__DOXYGEN__)
+#define HAL_USE_USB_MSD             FALSE
+#endif
+
 #endif /* _HALCONF_H_ */
 
 /** @} */
