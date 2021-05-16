@@ -1,0 +1,4 @@
+-with_c_defines false \
+-initialize_to_zero false \
+-c_defines ${BOARD_DIR}/config/controllers/algo/rusefi_generated.h \
+-c_destination ${BOARD_DIR}/config/controllers/algo/engine_configuration_generated_structures.h \
