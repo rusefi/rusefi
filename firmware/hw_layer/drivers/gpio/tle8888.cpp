@@ -31,10 +31,9 @@
 
 #include "global.h"
 
-#include "gpio/tle8888.h"
-
 #if (BOARD_TLE8888_COUNT > 0)
 
+#include "gpio/tle8888.h"
 #include "persistent_configuration.h"
 #include "hardware.h"
 #include "gpio/gpio_ext.h"

@@ -21,13 +21,14 @@
  */
 
 #include "global.h"
+
+#if (BOARD_TLE6240_COUNT > 0)
+
 #include "gpio/gpio_ext.h"
 #include "gpio/tle6240.h"
 #include "pin_repository.h"
 #include "os_util.h"
 #include "thread_priority.h"
-
-#if (BOARD_TLE6240_COUNT > 0)
 
 /*
  * TODO list:

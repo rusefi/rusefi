@@ -11,13 +11,14 @@
  */
 
 #include "global.h"
+
+#if (BOARD_MC33810_COUNT > 0)
+
 #include "gpio/gpio_ext.h"
 #include "gpio/mc33810.h"
 #include "pin_repository.h"
 #include "os_util.h"
 #include "thread_priority.h"
-
-#if (BOARD_MC33810_COUNT > 0)
 
 /*
  * TODO list:
