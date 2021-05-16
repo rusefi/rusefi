@@ -4,7 +4,7 @@ HW_MASS_STORAGE_INC = \
 	$(PROJECT_DIR)/ext/uzlib/src
 
 HW_MASS_STORAGE_SRC = \
-	$(PROJECT_DIR)/ChibiOS-Contrib/os/various/lib_scsi.c \
+	$(CHIBIOS_CONTRIB)/os/various/lib_scsi.c \
 	$(PROJECT_DIR)/ext/uzlib/src/tinflate.c \
 	$(PROJECT_DIR)/ext/uzlib/src/tinfgzip.c
 

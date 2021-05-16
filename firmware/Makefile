@@ -14,7 +14,7 @@ PROJECT = rusefi
 PROJECT_DIR = .
 
 # Imported source files and paths
-CHIBIOS_CONTRIB = ChibiOS-Contrib
+CHIBIOS_CONTRIB = $(PROJECT_DIR)/ChibiOS-Contrib
 
 include rusefi.mk
 
