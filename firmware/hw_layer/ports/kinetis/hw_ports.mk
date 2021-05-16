@@ -1,14 +1,18 @@
 ifeq ($(KINETIS_CONTRIB),)
-  KINETIS_CONTRIB = $(CHIBIOS_CONTRIB)
+	KINETIS_CONTRIB = $(CHIBIOS_CONTRIB)
 endif
 
-HW_LAYER_SRC += 	$(PROJECT_DIR)/hw_layer/ports/kinetis/flash_int.c \
-					$(KINETIS_CONTRIB)/os/hal/ports/KINETIS/KE1xF/fsl/fsl_ftfx_flexnvm.c \
-					$(KINETIS_CONTRIB)/os/hal/ports/KINETIS/KE1xF/fsl/fsl_ftfx_controller.c
+HW_PORTS_SRC = \
+	$(HW_PORT_DIR)/flash_int.c \
+	$(KINETIS_CONTRIB)/os/hal/ports/KINETIS/KE1xF/fsl/fsl_ftfx_flexnvm.c \
+	$(KINETIS_CONTRIB)/os/hal/ports/KINETIS/KE1xF/fsl/fsl_ftfx_controller.c
 
-HW_LAYER_CPP += $(PROJECT_DIR)/hw_layer/ports/kinetis/mpu_util.cpp \
-	$(PROJECT_DIR)/hw_layer/ports/kinetis/kinetis_pins.cpp \
-	$(PROJECT_DIR)/hw_layer/ports/kinetis/backup_ram.cpp \
-	$(PROJECT_DIR)/hw_layer/ports/kinetis/kinetis_common.cpp \
-	$(PROJECT_DIR)/hw_layer/trigger_input_comp.cpp \
-	$(PROJECT_DIR)/hw_layer/microsecond_timer/microsecond_timer_gpt.cpp \
+HW_PORTS_CPP = \
+	$(HW_PORT_DIR)/mpu_util.cpp \
+	$(HW_PORT_DIR)/kinetis_pins.cpp \
+	$(HW_PORT_DIR)/backup_ram.cpp \
+	$(HW_PORT_DIR)/kinetis_common.cpp \
+	$(HW_LAYER_DIR)/trigger_input_comp.cpp \
+	$(HW_LAYER_DIR)/microsecond_timer/microsecond_timer_gpt.cpp
+
+HW_PORTS_INC =
