@@ -2,7 +2,10 @@ HW_LAYER_DIR=$(PROJECT_DIR)/hw_layer
 
 include $(HW_LAYER_DIR)/drivers/drivers.mk
 include $(HW_LAYER_DIR)/sensors/sensors.mk
+
+ifneq ($(UNITTEST_BUILD),yes)
 include $(HW_LAYER_DIR)/mass_storage/mass_storage.mk
+endif
 
 # this var is used in bootloader
 HW_INC = \

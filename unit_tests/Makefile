@@ -3,6 +3,8 @@
 # NOTE: Can be overridden externally.
 #
 
+UNITTEST_BUILD=yes
+
 PROJECT_DIR = ../firmware
 UNIT_TESTS_DIR=$(PROJECT_DIR)/../unit_tests
 
