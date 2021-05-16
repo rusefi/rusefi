@@ -604,13 +604,4 @@ int mc33810_add(brain_pin_e base, unsigned int index, const mc33810_config *cfg)
 	return ret;
 }
 
-#else /* BOARD_MC33810_COUNT > 0 */
-
-int mc33810_add(brain_pin_e base, unsigned int index, const mc33810_config *cfg)
-{
-	(void)base; (void)index; (void)cfg;
-
-	return -1;
-}
-
-#endif /* BOARD_MC33810_COUNT */
+#endif /* BOARD_MC33810_COUNT > 0 */

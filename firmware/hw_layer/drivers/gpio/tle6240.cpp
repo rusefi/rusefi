@@ -525,13 +525,4 @@ int tle6240_add(brain_pin_e base, unsigned int index, const tle6240_config *cfg)
 	return ret;
 }
 
-#else /* BOARD_TLE6240_COUNT > 0 */
-
-int tle6240_add(brain_pin_e base, unsigned int index, const tle6240_config *cfg)
-{
-	(void)base; (void)index; (void)cfg;
-
-	return -1;
-}
-
-#endif /* BOARD_TLE6240_COUNT */
+#endif /* BOARD_TLE6240_COUNT > 0 */

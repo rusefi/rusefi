@@ -463,13 +463,4 @@ int mc33972_add(brain_pin_e base, unsigned int index, const struct mc33972_confi
 	return gpiochip_register(base, DRIVER_NAME, &mc33972_ops, MC33972_INPUTS, chip);
 }
 
-#else /* BOARD_MC33972_COUNT > 0 */
-
-int mc33972_add(brain_pin_e base, unsigned int index, const struct mc33972_config *cfg)
-{
-	(void)base; (void)index; (void)cfg;
-
-	return -1;
-}
-
-#endif /* BOARD_MC33972_COUNT */
+#endif /* BOARD_MC33972_COUNT > 0 */

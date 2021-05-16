@@ -1287,13 +1287,4 @@ void tle8888_req_init(void)
 	chip->init_req_cnt++;
 }
 
-#else /* BOARD_TLE8888_COUNT > 0 */
-
-int tle8888_add(brain_pin_e base, unsigned int index, const tle8888_config *cfg)
-{
-	(void)base; (void)index; (void)cfg;
-
-	return -1;
-}
-
-#endif /* (BOARD_TLE8888_COUNT > 0) */
+#endif /* BOARD_TLE8888_COUNT > 0 */

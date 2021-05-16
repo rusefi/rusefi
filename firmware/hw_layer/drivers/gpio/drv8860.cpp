@@ -290,12 +290,4 @@ int drv8860_add(brain_pin_e base, unsigned int index, const drv8860_config *cfg)
 	return ret;
 }
 
-#else /* BOARD_DRV8860_COUNT > 0 */
-
-int drv8860_add(brain_pin_e base, unsigned int index, const drv8860_config *cfg) {
-	(void)base; (void)index; (void)cfg;
-
-	return -1;
-}
-
-#endif /* BOARD_DRV8860_COUNT */
+#endif /* BOARD_DRV8860_COUNT > 0 */
