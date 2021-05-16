@@ -2624,7 +2624,7 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 	dialog = idleSettings, "", yAxis
 		field = "Idle control mode",					idleMode
 
-		field = "! Solenoid idle control requires above zero RPM"
+		field = "! Solenoid idle control is disabled at zero RPM"
 		slider = "Open loop idle position",				manIdlePosition, horizontal
 		field = ""
 
