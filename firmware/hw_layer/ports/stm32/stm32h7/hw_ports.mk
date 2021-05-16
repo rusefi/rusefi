@@ -1,9 +1,9 @@
 include $(PROJECT_DIR)/hw_layer/ports/stm32/stm32_common.mk
 
-HW_LAYER_EMS += $(PROJECT_DIR)/hw_layer/ports/stm32/stm32h7/stm32h7xx_hal_flash.c \
+HW_LAYER_SRC += $(PROJECT_DIR)/hw_layer/ports/stm32/stm32h7/stm32h7xx_hal_flash.c \
 				$(PROJECT_DIR)/hw_layer/ports/stm32/stm32h7/stm32h7xx_hal_flash_ex.c
 
-HW_LAYER_EMS_CPP += $(PROJECT_DIR)/hw_layer/ports/stm32/stm32h7/mpu_util.cpp \
+HW_LAYER_CPP += $(PROJECT_DIR)/hw_layer/ports/stm32/stm32h7/mpu_util.cpp \
 					$(PROJECT_DIR)/hw_layer/ports/stm32/stm32_adc_v4.cpp \
 
 DDEFS += -DSTM32H743xx

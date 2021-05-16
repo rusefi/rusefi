@@ -159,7 +159,7 @@ CSRC =  $(ALLCSRC) \
 	$(CHIBIOS)/os/various/syscalls.c \
 	$(CONSOLESRC) \
 	$(DEV_SRC) \
-	$(HW_LAYER_EMS) \
+	$(HW_LAYER_SRC) \
 	$(HW_LAYER_DRIVERS_CORE) \
 	$(FATFSSRC) \
 	$(SYSTEMSRC) \
@@ -168,7 +168,7 @@ CSRC =  $(ALLCSRC) \
 # setting.
 CPPSRC = $(ALLCPPSRC) \
 	$(DEV_SRC_CPP) \
-	$(HW_LAYER_EMS_CPP) \
+	$(HW_LAYER_CPP) \
 	$(HW_SENSORS_SRC) \
 	$(TUNERSTUDIO_SRC_CPP) \
 	$(CONSOLE_SRC_CPP) \

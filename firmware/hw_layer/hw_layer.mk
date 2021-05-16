@@ -20,12 +20,12 @@ HW_LAYER_INC = \
 	$(HW_LAYER_DIR)/mass_storage \
 	$(HW_LAYER_DIR)/microsecond_timer
 
-HW_LAYER_EMS = \
+HW_LAYER_SRC = \
 	$(HW_LAYER_EGT) \
 	$(HW_LAYER_DIR)/adc/mcp3208.c \
 	$(HW_LAYER_DIR)/mc33816_data.c
 
-HW_LAYER_EMS_CPP = \
+HW_LAYER_CPP = \
 	$(HW_LAYER_DIR)/pin_repository.cpp \
 	$(HW_LAYER_DIR)/microsecond_timer/microsecond_timer.cpp \
 	$(HW_LAYER_DIR)/digital_input/digital_input.cpp \
@@ -57,4 +57,3 @@ HW_LAYER_EMS_CPP = \
 # '-include' is a magic kind of 'include' which would survive if file to be included is not found
 #	
 -include $(HW_LAYER_DIR)/$(CPU_HWLAYER)/hw_ports.mk
-
