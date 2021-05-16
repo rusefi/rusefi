@@ -894,7 +894,7 @@ custom uart_device_e 1 bits,U08,   @OFFSET@, [0:1], "Off", "UART1", "UART2", "UA
 	switch_input_pin_e startStopButtonPin;See also starterControlPin
 	
 	int mapMinBufferLength;;"count",        1,     0,  0,    24,  0
-	int16_t idlePidDeactivationTpsThreshold;+Below this throttle position, the engine is considered idling.;"%",        1,     0,  0,    100.0,  0
+	int16_t idlePidDeactivationTpsThreshold;+Below this throttle position, the engine is considered idling.;"%",1,0,0,50,0
 	int16_t stepperParkingExtraSteps;;"%",        1,     0,  0,    3000.0,  0
 	uint16_t tps1SecondaryMin;;"ADC", 1, 0, 0, 1000, 0
 	uint16_t tps1SecondaryMax;;"ADC", 1, 0, 0, 1000, 0
@@ -1133,8 +1133,7 @@ bit unused_1484_bit_31
 
 	uint32_t engineChartSize;;"count",      1,      0,       0, 300,      0
 
-
-	int16_t idlePidRpmUpperLimit;+Relative to the target idle RPM - this limit is coupled with useIacTableForCoasting and iacCoasting parameters;"RPM",      1,      0,       0, 9000,      0
+	int16_t idlePidRpmUpperLimit;+How far above idle speed do we consider idling?\nFor example, if target = 800, this param = 200, then anything below 1000 RPM is considered idle.;"RPM", 1, 0, 0, 500, 0
     int16_t primeInjFalloffTemperature;+This sets the temperature above which no priming pulse is used, The value at -40 is reduced until there is no more priming injection at this temperature.;"*C",    1,      0,       0,  1000.0,        0
 
 
@@ -1217,7 +1216,7 @@ int16_t tps2Max;Full throttle#2. tpsMax value as 10 bit ADC value. Not Voltage!\
 	float throttlePedalWOTVoltage;+Pedal in the floor;"voltage",      1,     0,    -6,   6,      2
 	
 	int16_t fsio_visible startUpFuelPumpDuration;+on ECU start turn fuel pump on to build fuel pressure;"seconds",        1,     0,  0,    6000,  0
-	int16_t idlePidRpmDeadZone;If RPM is close enough let's leave IAC alone, and maybe engage timing PID correction;"RPM",        1,     0,  0,    1000,  0
+	int16_t idlePidRpmDeadZone;+If the RPM closer to target than this value, disable closed loop idle correction to prevent oscillation;"RPM",        1,     0,  0,    200,  0
 	
 	
 	float[CLT_CURVE_SIZE] cltIdleRpmBins;CLT-based target RPM for automatic idle controller;"C",        1,     0,   -100.0,    250.0,  2
