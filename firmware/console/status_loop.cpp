@@ -69,7 +69,7 @@ extern bool main_loop_started;
 #if EFI_PROD_CODE
 // todo: move this logic to algo folder!
 #include "rtc_helper.h"
-#include "lcd_HD44780.h"
+#include "HD44780.h"
 #include "rusefi.h"
 #include "pin_repository.h"
 #include "flash_main.h"
