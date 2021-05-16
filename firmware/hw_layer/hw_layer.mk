@@ -37,7 +37,6 @@ HW_LAYER_SRC = \
 	$(HW_SENSORS_SRC) \
 	${HW_MASS_STORAGE_SRC} \
 	$(HW_PORTS_SRC) \
-	$(HW_LAYER_EGT) \
 	$(HW_LAYER_DIR)/adc/mcp3208.c \
 	$(HW_LAYER_DIR)/mc33816_data.c
 
