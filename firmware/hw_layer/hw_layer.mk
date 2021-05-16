@@ -1,4 +1,5 @@
 HW_LAYER_DIR=$(PROJECT_DIR)/hw_layer
+HW_PORT_DIR=$(HW_LAYER_DIR)/$(CPU_HWLAYER)
 
 include $(HW_LAYER_DIR)/drivers/drivers.mk
 include $(HW_LAYER_DIR)/sensors/sensors.mk
@@ -7,16 +8,19 @@ ifneq ($(UNITTEST_BUILD),yes)
 include $(HW_LAYER_DIR)/mass_storage/mass_storage.mk
 endif
 
-# this var is used in bootloader
-HW_INC = \
-	$(HW_LAYER_DIR)/$(CPU_HWLAYER) \
-	$(HW_LAYER_DIR)/ports
+#
+# '-include' is a magic kind of 'include' which would survive if file to be included is not found
+#
+-include $(HW_LAYER_DIR)/$(CPU_HWLAYER)/hw_ports.mk
 
 HW_LAYER_INC = \
+	$(HW_LAYER_DIR)/ports \
+	$(HW_LAYER_DIR)/$(CPU_HWLAYER) \
 	$(HW_INC) \
 	$(HW_LAYER_DRIVERS_INC) \
 	$(HW_SENSORS_INC) \
 	$(HW_MASS_STORAGE_INC) \
+	$(HW_PORTS_INC) \
 	$(HW_LAYER_DIR) \
 	$(HW_LAYER_DIR)/adc \
 	$(HW_LAYER_DIR)/algo \
@@ -32,6 +36,7 @@ HW_LAYER_SRC = \
 	$(HW_LAYER_DRIVERS_SRC) \
 	$(HW_SENSORS_SRC) \
 	${HW_MASS_STORAGE_SRC} \
+	$(HW_PORTS_SRC) \
 	$(HW_LAYER_EGT) \
 	$(HW_LAYER_DIR)/adc/mcp3208.c \
 	$(HW_LAYER_DIR)/mc33816_data.c
@@ -41,6 +46,7 @@ HW_LAYER_CPP = \
 	$(HW_LAYER_DRIVERS_CPP) \
 	$(HW_SENSORS_CPP) \
 	${HW_MASS_STORAGE_CPP} \
+	$(HW_PORTS_CPP) \
 	$(HW_LAYER_DIR)/pin_repository.cpp \
 	$(HW_LAYER_DIR)/microsecond_timer/microsecond_timer.cpp \
 	$(HW_LAYER_DIR)/digital_input/digital_input.cpp \
@@ -66,9 +72,4 @@ HW_LAYER_CPP = \
 	$(HW_LAYER_DIR)/io_pins.cpp \
 	$(HW_LAYER_DIR)/rtc_helper.cpp \
 	$(HW_LAYER_DIR)/cdm_ion_sense.cpp \
-	$(HW_LAYER_DIR)/debounce.cpp \
-
-#
-# '-include' is a magic kind of 'include' which would survive if file to be included is not found
-#	
--include $(HW_LAYER_DIR)/$(CPU_HWLAYER)/hw_ports.mk
+	$(HW_LAYER_DIR)/debounce.cpp
