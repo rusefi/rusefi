@@ -1996,7 +1996,8 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 	dialog = multisparkSettings, "Multispark"
 		field = "#WARNING! These settings have the potential to overheat ignition components"
 		field = "#and cause other nasty misbehavior.  Use with care, at your own risk!"
-		field = "Enable Multiple Sparks",				multisparkEnable
+		field = "#Not recommended for use on distributor or wasted spark ignition systems."
+		field = "Enable multiple sparks",				multisparkEnable
 		panel = multisparkMain
 		panel = multisparkDwellParams
 
@@ -2775,26 +2776,26 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 		field = "Power region load",					stft_minPowerLoad
 
 	dialog = stftPartitionSettingsMain, "Main Region", xAxis
-		field = "Time Const",							stft_cellCfgs4_timeConstant
+		field = "Time const",							stft_cellCfgs4_timeConstant
 		field = "Max add",								stft_cellCfgs4_maxAdd
 		field = "Max remove",							stft_cellCfgs4_maxRemove
 
 	dialog = stftPartitionSettingsIdle, "Idle Region", xAxis
-		field = "Time Const",							stft_cellCfgs1_timeConstant
+		field = "Time const",							stft_cellCfgs1_timeConstant
 		field = "Max add",								stft_cellCfgs1_maxAdd
 		field = "Max remove",							stft_cellCfgs1_maxRemove
 
 	dialog = stftPartitionSettingsPower, "Power Region", xAxis
-		field = "Time Const",							stft_cellCfgs3_timeConstant
+		field = "Time const",							stft_cellCfgs3_timeConstant
 		field = "Max add",								stft_cellCfgs3_maxAdd
 		field = "Max remove",							stft_cellCfgs3_maxRemove
 
 	dialog = stftPartitionSettingsOverrun, "Overrun Region", xAxis
-		field = "Time Const",							stft_cellCfgs2_timeConstant
+		field = "Time const",							stft_cellCfgs2_timeConstant
 		field = "Max add",								stft_cellCfgs2_maxAdd
 		field = "Max remove",							stft_cellCfgs2_maxRemove
 
-	dialog = fuelClosedLoopDialog, "Short-term fuel trim"
+	dialog = fuelClosedLoopDialog, "Closed loop fuel correction"
 		field = "Enabled",								fuelClosedLoopCorrectionEnabled
 
 		field = "Startup delay"							stft_startupDelay, {fuelClosedLoopCorrectionEnabled == 1}
