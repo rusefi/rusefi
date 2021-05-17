@@ -81,6 +81,8 @@ typedef float percent_t;
 
 typedef void (*Void)(void);
 
+typedef char lua_script_t[LUA_SCRIPT_SIZE];
+
 typedef char error_message_t[ERROR_BUFFER_SIZE];
 
 typedef char vehicle_info_t[VEHICLE_INFO_SIZE];

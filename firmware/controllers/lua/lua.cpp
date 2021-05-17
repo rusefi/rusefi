@@ -233,9 +233,7 @@ static bool runOneLua() {
 	// Reset default tick rate
 	luaTickPeriodMs = 100;
 
-	auto scriptStr = "function onTick() end";
-
-	if (!loadScript(ls, scriptStr)) {
+	if (!loadScript(ls, config->luaScript)) {
 		return false;
 	}
 
