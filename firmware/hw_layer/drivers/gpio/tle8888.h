@@ -72,11 +72,6 @@ struct tle8888_config {
 	bool			stepper;
 };
 
-#ifdef __cplusplus
-extern "C"
-{
-#endif /* __cplusplus */
-
 /**
  * @return return gpio chip base
  */
@@ -90,8 +85,3 @@ void tle8888_req_init(void);
 #include "tunerstudio_debug_struct.h"
 void tle8888PostState(TsDebugChannels *tsDebugChannels);
 #endif /* EFI_TUNER_STUDIO */
-
-#ifdef __cplusplus
-}
-#endif /* __cplusplus */
-
