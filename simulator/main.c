@@ -31,8 +31,6 @@ void printToConsole(char *p) {
 	cputs(p);
 }
 
-BaseChannel serialAdapterInstance;
-
 /*
  * Console print server done using synchronous messages. This makes the access
  * to the C printf() thread safe and the print operation atomic among threads.
@@ -136,9 +134,6 @@ bool verboseMode = true;
  * Simulator main.                                                        *
  *------------------------------------------------------------------------*/
 int main(void) {
-
-	initTestStream(&serialAdapterInstance);
-
 	/*
 	 * System initializations.
 	 * - HAL initialization, this also initializes the configured device drivers
