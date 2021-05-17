@@ -569,8 +569,8 @@ static int tle8888_update_direct_output(tle8888_priv *chip, int pin, int value)
 
 static int tle8888_wake_driver(tle8888_priv *chip)
 {
-    /* Entering a reentrant critical zone.*/
-    syssts_t sts = chSysGetStatusAndLockX();
+	/* Entering a reentrant critical zone.*/
+	chibios_rt::CriticalSectionLocker csl;
 	chSemSignalI(&chip->wake);
 	if (!port_is_isr_context()) {
 		/**
@@ -579,8 +579,6 @@ static int tle8888_wake_driver(tle8888_priv *chip)
 		 */
 		chSchRescheduleS();
 	}
-    /* Leaving the critical zone.*/
-    chSysRestoreStatusX(sts);
 
 	return 0;
 }

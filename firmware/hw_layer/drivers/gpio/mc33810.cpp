@@ -428,10 +428,9 @@ static THD_FUNCTION(mc33810_driver_thread, p)
 
 int mc33810_writePad(void *data, unsigned int pin, int value)
 {
-	mc33810_priv *chip;
-
-	if ((pin >= MC33810_OUTPUTS) || (data == NULL))
+	if ((pin >= MC33810_OUTPUTS) || !data) {
 		return -1;
+	}
 
 	auto chip = (mc33810_priv*)data;
 
