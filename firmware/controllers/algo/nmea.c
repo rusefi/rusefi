@@ -19,6 +19,10 @@
  *
  * see #testGpsParser
  */
+#include "efifeatures.h"
+
+#if EFI_UART_GPS
+
 #include "global.h"
 #include <time.h>
 #include "nmea.h"
@@ -320,3 +324,5 @@ void gps_location(loc_t *coord, char *buffer) {
 	}
 
 }
+
+#endif // EFI_UART_GPS
