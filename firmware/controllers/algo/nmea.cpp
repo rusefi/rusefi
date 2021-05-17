@@ -283,11 +283,11 @@ nmea_message_type nmea_get_message_type(const char *message) {
 int nmea_valid_checksum(const char *message) {
 	char p;
 	int sum = 0;
-	char *starPtr = strrchr(message, '*');
+	const char* starPtr = strrchr(message, '*');
 	if (!starPtr) {
 		return NMEA_CHECKSUM_ERR;
 	}
-	char *int_message = starPtr + 1;
+	const char* int_message = starPtr + 1;
 	long checksum = hex2int(int_message, 2);
 
 	++message;
