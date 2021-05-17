@@ -112,6 +112,8 @@ void rusEfiFunctionalTest(void) {
 
 	startStatusThreads();
 
+	startLoggingProcessor();
+
 	runChprintfTest();
 
 	initPeriodicEvents(PASS_ENGINE_PARAMETER_SIGNATURE);
