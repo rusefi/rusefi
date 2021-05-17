@@ -118,6 +118,8 @@ void rusEfiFunctionalTest(void) {
 
 	setTriggerEmulatorRPM(DEFAULT_SIM_RPM PASS_ENGINE_PARAMETER_SUFFIX);
 	engineConfiguration->engineSnifferRpmThreshold = DEFAULT_SNIFFER_THR;
+
+	startSerialChannels();
 }
 
 void printPendingMessages(void) {
@@ -148,8 +150,4 @@ void logMsg(const char *format, ...) {
 //	vfprintf(fp, format, args);
 //
 //	fclose(fp);
-}
-
-BaseChannel * getConsoleChannel(void) {
-	return (BaseChannel *)TS_PRIMARY_SERIAL;
 }
