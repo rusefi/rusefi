@@ -488,6 +488,9 @@ static void setDefaultCrankingSettings(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 
 	static const float advanceBins[] = { 0, 200, 400, 1000 };
 	copyArray(engineConfiguration->crankingAdvanceBins, advanceBins);
+
+	engineConfiguration->postCrankingFactor = 1.2;
+	engineConfiguration->postCrankingDurationSec = 10;
 }
 
 /**
