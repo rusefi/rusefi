@@ -20,6 +20,8 @@ echo We are in root folder
 pwd
 
 cd unit_tests
+rem Clean build is needed since some file renames would produce a broken incremental build
+make clean
 
 rem Only here we are building unit_tests
 call compile.bat
