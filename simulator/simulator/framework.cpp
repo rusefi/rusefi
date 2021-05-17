@@ -6,7 +6,6 @@
  */
 
 #include "global.h"
-#include "framework.h"
 #include "efitime.h"
 
 efitick_t getTimeNowNt(void) {

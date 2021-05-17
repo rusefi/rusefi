@@ -17,7 +17,6 @@
 #include "global.h"
 #include "chprintf.h"
 #include "rusEfiFunctionalTest.h"
-#include "framework.h"
 
 #define CONSOLE_WA_SIZE     THD_WORKING_AREA_SIZE(4096)
 
