@@ -6,7 +6,7 @@
 
 #include "engine.h"
 
-#if EFI_PROD_CODE
+#if EFI_PROD_CODE || EFI_SIMULATOR
 #include "tunerstudio.h"
 #include "tunerstudio_io.h"
 #include "connector_uart_dma.h"

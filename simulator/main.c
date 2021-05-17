@@ -17,7 +17,6 @@
 #include "global.h"
 #include "chprintf.h"
 #include "rusEfiFunctionalTest.h"
-#include "framework.h"
 
 #define CONSOLE_WA_SIZE     THD_WORKING_AREA_SIZE(4096)
 
@@ -30,8 +29,6 @@ static thread_t *cdtp;
 void printToConsole(char *p) {
 	cputs(p);
 }
-
-BaseChannel serialAdapterInstance;
 
 /*
  * Console print server done using synchronous messages. This makes the access
@@ -136,9 +133,6 @@ bool verboseMode = true;
  * Simulator main.                                                        *
  *------------------------------------------------------------------------*/
 int main(void) {
-
-	initTestStream(&serialAdapterInstance);
-
 	/*
 	 * System initializations.
 	 * - HAL initialization, this also initializes the configured device drivers
@@ -148,12 +142,6 @@ int main(void) {
 	 */
 	halInit();
 	chSysInit();
-
-	/*
-	 * Serial ports (simulated) initialization.
-	 */
-	sdStart(&SD1, NULL);
-	sdStart(&SD2, NULL);
 
 	/*
 	 * Console thread started.
@@ -179,7 +167,7 @@ int main(void) {
 	while (!chThdShouldTerminateX()) {
 		chEvtDispatch(fhandlers, chEvtWaitOne(ALL_EVENTS));
 		printPendingMessages();
-		chThdSleepMilliseconds(100);
+		chThdSleepMilliseconds(1);
 	}
 
 	/*
