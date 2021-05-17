@@ -266,7 +266,7 @@ void nmea_parse_gprmc(char *nmea, loc_t *loc) {
 nmea_message_type nmea_get_message_type(const char *message) {
 	int checksum = nmea_valid_checksum(message);
 	if (checksum != _EMPTY) {
-		return checksum;
+		return static_cast<nmea_message_type>(checksum);
 	}
 
 	if (strstr(message, NMEA_GPGGA_STR) != NULL) {
