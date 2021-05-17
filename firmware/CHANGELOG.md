@@ -26,6 +26,8 @@ Release template (copy/paste this for new release):
 All notable user-facing or behavior-altering changes will be documented in this file.
 
 ## Month 202x Release - "Release Name"
+
+# 2021 May "Piercing Day"
 ### Fixed
  - LCD screen works again #2576
  - Support STM32F7 1MB devices
