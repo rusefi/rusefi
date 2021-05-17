@@ -12,6 +12,7 @@ HW_LAYER_DRIVERS_CORE = \
 
 HW_LAYER_DRIVERS_CORE_CPP = \
 	$(DRIVERS_DIR)/gpio/core.cpp \
+	$(DRIVERS_DIR)/i2c/i2c_bb.cpp \
 
 HW_LAYER_DRIVERS =
 
@@ -24,5 +25,4 @@ HW_LAYER_DRIVERS_CPP = \
 	$(DRIVERS_DIR)/gpio/mc33972.cpp \
 	$(DRIVERS_DIR)/gpio/mc33810.cpp \
 	$(DRIVERS_DIR)/gpio/drv8860.cpp \
-	$(DRIVERS_DIR)/i2c/i2c_bb.cpp \
 	$(DRIVERS_DIR)/lcd/HD44780.cpp \
