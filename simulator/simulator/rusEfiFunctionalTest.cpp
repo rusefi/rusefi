@@ -29,6 +29,7 @@
 #include "map_averaging.h"
 #include "memstreams.h"
 #include <chprintf.h>
+#include "rusefi_lua.h"
 
 #define DEFAULT_SIM_RPM 1200
 #define DEFAULT_SNIFFER_THR 2500
@@ -122,6 +123,8 @@ void rusEfiFunctionalTest(void) {
 	engineConfiguration->engineSnifferRpmThreshold = DEFAULT_SNIFFER_THR;
 
 	startSerialChannels();
+
+	startLua();
 }
 
 void printPendingMessages(void) {
