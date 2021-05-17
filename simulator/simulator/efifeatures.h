@@ -151,3 +151,5 @@
 
 #define EFI_BOARD_TEST FALSE
 #define EFI_JOYSTICK FALSE
+
+#define EFI_LUA TRUE
