@@ -365,7 +365,7 @@ static int mc33810_wake_driver(mc33810_priv *chip)
 	(void)chip;
 
 	/* Entering a reentrant critical zone.*/
-	syssts_t sts = chSysGetStatusAndLockX();
+	chibios_rt::CriticalSectionLocker csl;
 	chSemSignalI(&mc33810_wake);
 	if (!port_is_isr_context()) {
 		/**
@@ -374,8 +374,6 @@ static int mc33810_wake_driver(mc33810_priv *chip)
 		 */
 		chSchRescheduleS();
 	}
-	/* Leaving the critical zone.*/
-	chSysRestoreStatusX(sts);
 
 	return 0;
 }
@@ -435,14 +433,18 @@ int mc33810_writePad(void *data, unsigned int pin, int value)
 	if ((pin >= MC33810_OUTPUTS) || (data == NULL))
 		return -1;
 
-	chip = (mc33810_priv *)data;
+	auto chip = (mc33810_priv*)data;
 
-	/* TODO: lock */
-	if (value)
-		chip->o_state |=  BIT(pin);
-	else
-		chip->o_state &= ~BIT(pin);
-	/* TODO: unlock */
+	{
+		// mutate driver state under lock
+		chibios_rt::CriticalSectionLocker csl;
+
+		if (value)
+			chip->o_state |=  BIT(pin);
+		else
+			chip->o_state &= ~BIT(pin);
+	}
+	
 	/* direct driven? */
 	if (chip->o_direct_mask & BIT(pin)) {
 		/* TODO: ensure that output driver enabled */
