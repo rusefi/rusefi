@@ -23,7 +23,7 @@
 #include <time.h>
 #include "nmea.h"
 
-static long hex2int(char *a, int len) {
+static long hex2int(const char *a, int len) {
 	int i;
 	long val = 0;
 
@@ -35,7 +35,7 @@ static long hex2int(char *a, int len) {
 	return val;
 }
 
-static int str2int(char *a, int len) {
+static int str2int(const char *a, int len) {
 	 int i = 0,  k = 0;
 	while (i<len) {
 		k = (k<<3)+(k<<1)+(*a)-'0';
@@ -266,7 +266,7 @@ void nmea_parse_gprmc(char *nmea, loc_t *loc) {
 nmea_message_type nmea_get_message_type(const char *message) {
 	int checksum = nmea_valid_checksum(message);
 	if (checksum != _EMPTY) {
-		return checksum;
+		return static_cast<nmea_message_type>(checksum);
 	}
 
 	if (strstr(message, NMEA_GPGGA_STR) != NULL) {
@@ -283,11 +283,11 @@ nmea_message_type nmea_get_message_type(const char *message) {
 int nmea_valid_checksum(const char *message) {
 	char p;
 	int sum = 0;
-	char *starPtr = strrchr(message, '*');
+	const char* starPtr = strrchr(message, '*');
 	if (!starPtr) {
 		return NMEA_CHECKSUM_ERR;
 	}
-	char *int_message = starPtr + 1;
+	const char* int_message = starPtr + 1;
 	long checksum = hex2int(int_message, 2);
 
 	++message;
