@@ -33,14 +33,4 @@ struct tle6240_config {
 	} reset;
 };
 
-#ifdef __cplusplus
-extern "C"
-{
-#endif /* __cplusplus */
-
 int tle6240_add(brain_pin_e base, unsigned int index, const struct tle6240_config *cfg);
-
-#ifdef __cplusplus
-}
-#endif /* __cplusplus */
-

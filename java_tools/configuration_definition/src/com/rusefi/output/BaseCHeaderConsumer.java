@@ -56,9 +56,6 @@ public abstract class BaseCHeaderConsumer implements ConfigurationConsumer {
 
         content.append("\t/** total size " + currentOffset + "*/" + EOL);
         content.append("};" + EOL + EOL);
-
-        // https://stackoverflow.com/questions/1675351/typedef-struct-vs-struct-definitions
-        content.append("typedef struct " + structure.name + " " + structure.name + ";" + EOL + EOL);
     }
 
     public StringBuilder getContent() {

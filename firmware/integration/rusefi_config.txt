@@ -1,5 +1,3 @@
-
-
 ! this file defines the format of rusEfi persistent configuration structure
 ! this file is processed by ../java_tools/config_definition.jar tool
 ! comments start with '!'
@@ -10,7 +8,6 @@
 !
 ! The only difference here is that engine_configuration_s area does not support hot modification while tuning tables could
 ! be modified without burning changes
-!
 !
 ! See also ../tunerstudio/readme.txt
 !

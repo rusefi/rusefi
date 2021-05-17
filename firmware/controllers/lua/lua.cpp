@@ -2,6 +2,7 @@
 #include "rusefi_lua.h"
 #include "thread_controller.h"
 #include "perf_trace.h"
+#include "thread_priority.h"
 
 #if EFI_LUA
 
@@ -10,7 +11,7 @@
 
 #define TAG "LUA "
 
-#if EFI_PROD_CODE
+#if EFI_PROD_CODE || EFI_SIMULATOR
 #include "ch.h"
 #include "engine.h"
 #include "tunerstudio_outputs.h"
