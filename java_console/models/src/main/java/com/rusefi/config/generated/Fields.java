@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Mon May 10 12:31:44 UTC 2021
+// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Mon May 17 14:32:44 PDT 2021
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -1036,6 +1036,8 @@ public class Fields {
 	public static final int lowPressureFuel_value2_offset = 3324;
 	public static final int lps25BaroSensorScl_offset = 1458;
 	public static final int lps25BaroSensorSda_offset = 1459;
+	public static final int LUA_SCRIPT_SIZE = 256;
+	public static final int luaScript_offset = 16032;
 	public static final int MAF_DECODING_COUNT = 256;
 	public static final int mafAdcChannel_offset = 543;
 	public static final int mafDecoding_offset = 10784;
@@ -1210,7 +1212,7 @@ public class Fields {
 	public static final int servoOutputPins8_offset = 3147;
 	public static final int showHumanReadableWarning_offset = 976;
 	public static final int showSdCardWarning_offset = 76;
-	public static final int SIGNATURE_HASH = 1939953051;
+	public static final int SIGNATURE_HASH = 1633848417;
 	public static final int silentTriggerError_offset = 1464;
 	public static final int slowAdcAlpha_offset = 2088;
 	public static final int sparkDwellRpmBins_offset = 332;
@@ -1494,7 +1496,7 @@ public class Fields {
 	public static final char TS_SD_R_COMMAND = 'r';
 	public static final char TS_SD_W_COMMAND = 'w';
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI 2021.05.10.all.1939953051";
+	public static final String TS_SIGNATURE = "rusEFI 2021.05.17.all.1633848417";
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final int TT_TT_1_16 = 50;
 	public static final int TT_TT_2JZ_1_12 = 29;
@@ -1556,7 +1558,6 @@ public class Fields {
 	public static final int unused1476b20_offset = 1476;
 	public static final int unused1476b3_offset = 1476;
 	public static final int unused1476b8_offset = 1476;
-	public static final int unused15136_offset = 16032;
 	public static final int unused1708_offset = 1708;
 	public static final int unused1756_offset = 1756;
 	public static final int unused2260_offset = 2260;
@@ -2781,6 +2782,7 @@ public class Fields {
 	public static final Field MAPESTIMATETABLE = Field.create("MAPESTIMATETABLE", 15200, FieldType.INT);
 	public static final Field VVTTABLE1 = Field.create("VVTTABLE1", 15776, FieldType.INT);
 	public static final Field VVTTABLE2 = Field.create("VVTTABLE2", 15904, FieldType.INT);
+	public static final Field LUASCRIPT = Field.create("LUASCRIPT", 16032, 256, FieldType.STRING);
 	public static final Field IGNITIONTABLE = Field.create("IGNITIONTABLE", 16288, FieldType.INT);
 	public static final Field VETABLE = Field.create("VETABLE", 17440, FieldType.INT);
 	public static final Field LAMBDATABLE = Field.create("LAMBDATABLE", 18592, FieldType.INT);
@@ -3844,6 +3846,7 @@ public class Fields {
 	MAPESTIMATETABLE,
 	VVTTABLE1,
 	VVTTABLE2,
+	LUASCRIPT,
 	IGNITIONTABLE,
 	VETABLE,
 	LAMBDATABLE,
