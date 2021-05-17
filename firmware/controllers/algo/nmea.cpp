@@ -23,7 +23,7 @@
 #include <time.h>
 #include "nmea.h"
 
-static long hex2int(char *a, int len) {
+static long hex2int(const char *a, int len) {
 	int i;
 	long val = 0;
 
@@ -35,7 +35,7 @@ static long hex2int(char *a, int len) {
 	return val;
 }
 
-static int str2int(char *a, int len) {
+static int str2int(const char *a, int len) {
 	 int i = 0,  k = 0;
 	while (i<len) {
 		k = (k<<3)+(k<<1)+(*a)-'0';
