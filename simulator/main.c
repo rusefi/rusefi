@@ -150,12 +150,6 @@ int main(void) {
 	chSysInit();
 
 	/*
-	 * Serial ports (simulated) initialization.
-	 */
-	sdStart(&SD1, NULL);
-	sdStart(&SD2, NULL);
-
-	/*
 	 * Console thread started.
 	 */
 	cdtp = chThdCreateFromHeap(NULL, CONSOLE_WA_SIZE,
