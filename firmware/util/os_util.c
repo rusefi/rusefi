@@ -19,9 +19,8 @@
  * If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "global.h"
-
 #if !EFI_UNIT_TEST
+#include "global.h"
 #include "os_access.h"
 #include "os_util.h"
 

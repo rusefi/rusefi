@@ -315,7 +315,6 @@ public class ConfigFieldParserTest {
                 "\tint field[ERROR_BUFFER_SIZE];\n" +
                 "\t/** total size 4*/\n" +
                 "};\n" +
-                "\n" +
                 "\n", consumer.getContent().toString());
     }
 
