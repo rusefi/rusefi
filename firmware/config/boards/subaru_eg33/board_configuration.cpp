@@ -331,8 +331,7 @@ static const struct mc33810_config mc33810_even = {
 		[7] = {.port = GPIOI, .pad = 9},	/* IGN 8 */
 	},
 	/* en shared between two chips */
-	// TODO: dron0gus, what to do here?
-	.en = {.port = GPIOI, .pad = 7}
+	.en = {.port = nullptr, .pad = 0}
 };
 
 static void board_init_ext_gpios(void)

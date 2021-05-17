@@ -272,11 +272,15 @@ static int mc33810_chip_init(mc33810_priv *chip)
 	/* mark pins used */
 	//ret = gpio_pin_markUsed(cfg->spi_config.ssport, cfg->spi_config.sspad, DRIVER_NAME " CS");
 	ret = 0;
-	if (cfg->en.port != NULL)
+	if (cfg->en.port) {
 		ret |= gpio_pin_markUsed(cfg->en.port, cfg->en.pad, DRIVER_NAME " EN");
-	for (n = 0; n < MC33810_DIRECT_OUTPUTS; n++)
-		if (cfg->direct_io[n].port)
+	}
+
+	for (n = 0; n < MC33810_DIRECT_OUTPUTS; n++) {
+		if (cfg->direct_io[n].port) {
 			ret |= gpio_pin_markUsed(cfg->direct_io[n].port, cfg->direct_io[n].pad, DRIVER_NAME " DIRECT IO");
+		}
+	}
 
 	if (ret) {
 		ret = -1;
@@ -331,7 +335,7 @@ static int mc33810_chip_init(mc33810_priv *chip)
 	}
 
 	/* n. set EN pin low - active */
-	if (cfg->en.port != NULL) {
+	if (cfg->en.port) {
 		palClearPort(cfg->en.port,
 				   PAL_PORT_BIT(cfg->en.pad));
 	}
@@ -341,15 +345,18 @@ static int mc33810_chip_init(mc33810_priv *chip)
 err_gpios:
 	/* unmark pins */
 	//gpio_pin_markUnused(cfg->spi_config.ssport, cfg->spi_config.sspad);
-	if (cfg->en.port != NULL) {
+	if (cfg->en.port) {
 		/* disable and mark unused */
 		palSetPort(cfg->en.port,
 				   PAL_PORT_BIT(cfg->en.pad));
 		gpio_pin_markUnused(cfg->en.port, cfg->en.pad);
 	}
-	for (n = 0; n < MC33810_DIRECT_OUTPUTS; n++)
-		if (cfg->direct_io[n].port)
+
+	for (n = 0; n < MC33810_DIRECT_OUTPUTS; n++) {
+		if (cfg->direct_io[n].port) {
 			gpio_pin_markUnused(cfg->direct_io[n].port, cfg->direct_io[n].pad);
+		}
+	}
 
 	return ret;
 }
