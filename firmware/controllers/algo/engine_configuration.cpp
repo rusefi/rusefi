@@ -489,7 +489,11 @@ static void setDefaultCrankingSettings(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	static const float advanceBins[] = { 0, 200, 400, 1000 };
 	copyArray(engineConfiguration->crankingAdvanceBins, advanceBins);
 
+#if !EFI_UNIT_TEST
+	// don't set this for unit tests, as it makes things more complicated to test
 	engineConfiguration->postCrankingFactor = 1.2;
+#endif
+
 	engineConfiguration->postCrankingDurationSec = 10;
 }
 
