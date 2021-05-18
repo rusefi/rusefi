@@ -29,14 +29,14 @@
 	#define FLASH_BASE 0x08100000
 
 	// QW bit supercedes the older BSY bit
-	#define intFlashWaitWhileBusy() { while (FLASH_SR & FLASH_SR_QW) {} }
+	#define intFlashWaitWhileBusy() do { __DSB(); } while (FLASH_SR & FLASH_SR_QW);
 #else
 	#define FLASH_CR FLASH->CR
 	#define FLASH_SR FLASH->SR
 	#define FLASH_KEYR FLASH->KEYR
 
 	// Wait for the flash operation to finish
-	#define intFlashWaitWhileBusy() { while (FLASH->SR & FLASH_SR_BSY) {} }
+	#define intFlashWaitWhileBusy() do { __DSB(); } while (FLASH->SR & FLASH_SR_BSY);
 #endif
 
 flashaddr_t intFlashSectorBegin(flashsector_t sector) {
@@ -84,7 +84,25 @@ static bool intFlashUnlock(void) {
  */
 #define intFlashLock() { FLASH_CR |= FLASH_CR_LOCK; }
 
+#ifdef STM32F7XX
+static bool isDualBank(void) {
+	// cleared bit indicates dual bank
+	return (FLASH->OPTCR & FLASH_OPTCR_nDBANK) == 0;
+}
+#endif
+
 int intFlashSectorErase(flashsector_t sector) {
+#ifdef STM32F7XX
+	// On dual bank STM32F7, sector index doesn't match register value.
+	// High bit indicates bank, low 4 bits indicate sector within bank.
+	// Since each bank has 12 sectors, increment second-bank sector idx
+	// by 4 so that the first sector of the second bank (12) ends up with
+	// index 16 (0b10000)
+	if (isDualBank() && sector >= 12) {
+		sector += 4;
+	}
+#endif
+
 	/* Unlock flash for write access */
 	if (intFlashUnlock() == HAL_FAILED)
 		return FLASH_RETURN_NO_PERMISSION;
