@@ -29,14 +29,14 @@
 	#define FLASH_BASE 0x08100000
 
 	// QW bit supercedes the older BSY bit
-	#define intFlashWaitWhileBusy() { while (FLASH_SR & FLASH_SR_QW) {} }
+	#define intFlashWaitWhileBusy() do { __DSB(); } while (FLASH_SR & FLASH_SR_QW);
 #else
 	#define FLASH_CR FLASH->CR
 	#define FLASH_SR FLASH->SR
 	#define FLASH_KEYR FLASH->KEYR
 
 	// Wait for the flash operation to finish
-	#define intFlashWaitWhileBusy() { while (FLASH->SR & FLASH_SR_BSY) {} }
+	#define intFlashWaitWhileBusy() do { __DSB(); } while (FLASH->SR & FLASH_SR_BSY);
 #endif
 
 flashaddr_t intFlashSectorBegin(flashsector_t sector) {
