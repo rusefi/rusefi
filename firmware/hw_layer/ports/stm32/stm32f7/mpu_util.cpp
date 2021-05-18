@@ -60,6 +60,13 @@ size_t flashSectorSize(flashsector_t sector) {
 		return flashSectorSize(sector - 12);
 	}
 
+	// On 1MB devices, sectors 8-11 don't exist, therefore have zero size.
+	if (flashSize() == 1024) {
+		if (sector > 7 && sector < 12) {
+			return 0;
+		}
+	}
+
 	// Pages are twice the size when in single bank mode
 	size_t dbMul = isDualBank() ? 1 : 2;
 
