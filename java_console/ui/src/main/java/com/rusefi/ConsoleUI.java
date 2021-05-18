@@ -17,6 +17,7 @@ import com.rusefi.ui.console.MainFrame;
 import com.rusefi.ui.console.TabbedPanel;
 import com.rusefi.ui.engine.EngineSnifferPanel;
 import com.rusefi.ui.logview.LogViewer;
+import com.rusefi.ui.lua.LuaScriptPanel;
 import com.rusefi.ui.util.DefaultExceptionHandler;
 import com.rusefi.ui.util.JustOneInstance;
 
@@ -106,6 +107,11 @@ public class ConsoleUI {
             if (tabbedPane.paneSettings.showEtbPane)
                 tabbedPane.addTab("ETB", new ETBPane(uiContext).getContent());
             tabbedPane.addTab("Presets", new PresetsPane(uiContext).getContent());
+        }
+
+        if (!linkManager.isLogViewer()) {
+            LuaScriptPanel luaScriptPanel = new LuaScriptPanel(uiContext, getConfig().getRoot().getChild("lua"));
+            tabbedPaneAdd("Lua Scripting", luaScriptPanel.getPanel(), luaScriptPanel.getTabSelectedListener());
         }
 
         tabbedPaneAdd("Engine Sniffer", engineSnifferPanel.getPanel(), engineSnifferPanel.getTabSelectedListener());
