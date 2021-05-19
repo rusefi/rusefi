@@ -12,6 +12,7 @@
 #include "interpolation.h"
 #include "efilib.h"
 #include "efi_ratio.h"
+#include "scaled_channel.h"
 
 // popular left edge of CLT-based correction curves
 #define CLT_CURVE_RANGE_FROM -40
@@ -85,21 +86,17 @@ public:
 	}
 
 private:
-	static size_t getIndexForCoordinates(size_t row, size_t column)
-	{
-		// TODO: is row or column correct here?
-		//return row * RPM_BIN_SIZE + column;
-
-		return column * LOAD_BIN_SIZE + row;
+	static size_t getIndexForCoordinates(size_t row, size_t column) {
+		return row * RPM_BIN_SIZE + column;
 	}
 
-	vType getValueAtPosition(size_t row, size_t column) const
-	{
+	vType getValueAtPosition(size_t row, size_t column) const {
 		auto idx = getIndexForCoordinates(row, column);
 		return m_values[idx];
 	}
 
-	const vType* m_values = nullptr;
+	// TODO: should be const
+	/*const*/ vType* m_values = nullptr;
 
 	const kType *loadBins = NULL;
 	const kType *rpmBins = NULL;
