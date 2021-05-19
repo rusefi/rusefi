@@ -152,6 +152,10 @@ static void miataNAcommonEngineSettings(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	engineConfiguration->specs.cylindersCount = 4;
 	engineConfiguration->specs.firingOrder = FO_1_3_4_2;
 	engineConfiguration->compressionRatio = 9.1;
+	engineConfiguration->cranking.rpm = 450;
+	engineConfiguration->cylinderBore = 78;
+	engineConfiguration->knockBandCustom = 6.8;
+	engineConfiguration->vehicleWeight = 950;
 
 	engineConfiguration->debugMode = DBG_TRIGGER_COUNTERS;
 

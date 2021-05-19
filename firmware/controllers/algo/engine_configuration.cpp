@@ -711,6 +711,8 @@ static void setDefaultEngineConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
     setDefaultBoostParameters(PASS_CONFIG_PARAMETER_SIGNATURE);
 #endif
 
+    engineConfiguration->afterCrankingIACtaperDuration = 35;
+
     CONFIG(tachPulsePerRev) = 1;
 
     // OBD-II default rate is 500kbps
