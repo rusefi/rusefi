@@ -36,6 +36,11 @@ static void setInjectorPins() {
 	}
 
 	engineConfiguration->injectionPinMode = OM_DEFAULT;
+
+	engineConfiguration->clutchDownPin = GPIOC_4; // Clutch switch input
+	engineConfiguration->clutchDownPinMode = PI_PULLDOWN;
+	engineConfiguration->launchActivationMode = CLUTCH_INPUT_LAUNCH;
+	engineConfiguration->malfunctionIndicatorPin = GPIOG_4; //1E - Check Engine Light
 }
 
 static void setIgnitionPins() {
