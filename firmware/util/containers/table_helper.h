@@ -29,51 +29,80 @@ template<int RPM_BIN_SIZE, int LOAD_BIN_SIZE, typename vType, typename kType, ty
 class Map3D : public ValueProvider3D {
 public:
 	explicit Map3D(const char*name) {
-		create(name);
+	}
+
+	template<int mult>
+	void init(scaled_channel<vType, mult> table[RPM_BIN_SIZE][LOAD_BIN_SIZE], const kType loadBins[LOAD_BIN_SIZE], const kType rpmBins[RPM_BIN_SIZE]) {
+		static_assert(TValueMultiplier::den == mult);
+		static_assert(TValueMultiplier::num == 1);
+
+		m_values = reinterpret_cast<vType*>(&table[0][0]);
+
+		this->loadBins = loadBins;
+		this->rpmBins = rpmBins;
 	}
 
 	void init(vType table[RPM_BIN_SIZE][LOAD_BIN_SIZE], const kType loadBins[LOAD_BIN_SIZE], const kType rpmBins[RPM_BIN_SIZE]) {
-		// this method cannot use logger because it's invoked before everything
-		// that's because this method needs to be invoked before initial configuration processing
-		// and initial configuration load is done prior to logging initialization
-		for (int k = 0; k < LOAD_BIN_SIZE; k++) {
-			pointers[k] = table[k];
-		}
+		m_values = &table[0][0];
 
 		this->loadBins = loadBins;
 		this->rpmBins = rpmBins;
 	}
 
 	float getValue(float xRpm, float y) const override {
-		efiAssert(CUSTOM_ERR_ASSERT, loadBins, "map not initialized", NAN);
-		if (cisnan(y)) {
-			warning(CUSTOM_PARAM_RANGE, "%s: y is NaN", name);
-			return NAN;
+		if (!m_values) {
+			// not initialized, return 0
+			return 0;
 		}
+		
+		auto row = priv::getBinPtr<kType, LOAD_BIN_SIZE>(y, loadBins);
+		auto col = priv::getBinPtr<kType, RPM_BIN_SIZE>(xRpm, rpmBins);
 
-		// todo: we have a bit of a mess: in TunerStudio, RPM is X-axis
-		return interpolate3d<vType, kType>(name, y, loadBins, LOAD_BIN_SIZE, xRpm, rpmBins, RPM_BIN_SIZE, pointers) * TValueMultiplier::asFloat();
+		// Orient the table such that (0, 0) is the bottom left corner,
+		// then the following variable names will make sense
+		float lowerLeft = getValueAtPosition(row.Idx, col.Idx);
+		float upperLeft = getValueAtPosition(row.Idx + 1, col.Idx);
+		float lowerRight = getValueAtPosition(row.Idx, col.Idx + 1);
+		float upperRight = getValueAtPosition(row.Idx + 1, col.Idx + 1);
+
+		// Interpolate each side by itself
+		float left = priv::linterp(lowerLeft, upperLeft, row.Frac);
+		float right = priv::linterp(lowerRight, upperRight, row.Frac);
+
+		// Then interpolate between those
+		float tableValue = priv::linterp(left, right, col.Frac);
+
+		// Correct by the ratio of table units to "world" units
+		return tableValue * TValueMultiplier::asFloat();
 	}
 
 	void setAll(vType value) {
-		efiAssertVoid(CUSTOM_ERR_6573, loadBins, "map not initialized");
-		for (int l = 0; l < LOAD_BIN_SIZE; l++) {
-			for (int r = 0; r < RPM_BIN_SIZE; r++) {
-				pointers[l][r] = value / TValueMultiplier::asFloat();
-			}
+		efiAssertVoid(CUSTOM_ERR_6573, m_values, "map not initialized");
+
+		for (size_t i = 0; i < LOAD_BIN_SIZE * RPM_BIN_SIZE; i++) {
+			m_values[i] = value / TValueMultiplier::asFloat();
 		}
 	}
 
-	vType *pointers[LOAD_BIN_SIZE];
 private:
-	void create(const char* name) {
-		this->name = name;
-		memset(&pointers, 0, sizeof(pointers));
+	static size_t getIndexForCoordinates(size_t row, size_t column)
+	{
+		// TODO: is row or column correct here?
+		//return row * RPM_BIN_SIZE + column;
+
+		return column * LOAD_BIN_SIZE + row;
 	}
+
+	vType getValueAtPosition(size_t row, size_t column) const
+	{
+		auto idx = getIndexForCoordinates(row, column);
+		return m_values[idx];
+	}
+
+	const vType* m_values = nullptr;
 
 	const kType *loadBins = NULL;
 	const kType *rpmBins = NULL;
-	const char *name;
 };
 
 typedef Map3D<FUEL_RPM_COUNT, FUEL_LOAD_COUNT, uint8_t, float, efi::ratio<1, PACK_MULT_LAMBDA_CFG>> lambda_Map3D_t;
