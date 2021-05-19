@@ -711,6 +711,8 @@ static void setDefaultEngineConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
     setDefaultBoostParameters(PASS_CONFIG_PARAMETER_SIGNATURE);
 #endif
 
+    engineConfiguration->afterCrankingIACtaperDuration = 35;
+
     CONFIG(tachPulsePerRev) = 1;
 
     // OBD-II default rate is 500kbps
@@ -1072,6 +1074,8 @@ static void setDefaultEngineConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	// set_fsio_expression 1 "rpm > fsio_setting(1)"
 	setFsio(0, GPIO_UNASSIGNED, RPM_ABOVE_USER_SETTING_1 PASS_CONFIG_PARAMETER_SUFFIX);
 #endif /* EFI_FSIO */
+
+	strncpy(config->luaScript, "function onTick()\nend", efi::size(config->luaScript));
 }
 
 /**
