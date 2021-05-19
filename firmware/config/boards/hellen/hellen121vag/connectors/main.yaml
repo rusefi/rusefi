@@ -1,7 +1,78 @@
 pins:
-  - pin: 1A
-    function: 12V all times
-    type: 12V
+  - pin: 1a
+    function: GND
+    type: GND
+    
+  - pin: 2a
+    function: GND
+    type: GND
+    
+  - pin: 3a
+    function: +12v
+    type: vign
+    
+  - pin: 5a
+    function: LSU Heat -
+    type: wbo
+    
+  - pin: 7a
+    id: GPIOE_5
+    class: outputs
+    ts_name: 7 - IGN_2
+    type: ign
+    
+  - pin: 8a
+    id: GPIOI_6
+    class: outputs
+    ts_name: 8 - IGN_7
+    type: ign  
+
+  - pin: 14a
+    id: EFI_ADC_0
+    class: analog_input
+    ts_name: 14 - O2
+    function: O2 sensor signal
+    
+  - pin: 18a
+    id: GPIOC_9
+    class: outputs
+    ts_name: 18 - VVT2 B1
+    function: OUT_VVT2_B1
+    
+  - pin: 19a
+    id: GPIOF_13
+    class: outputs
+    ts_name: 19 - INJ 7
+    function: OUT_INJ7
+    type: inj
+    
+  - pin: 21a
+    id: GPIOI_2
+    class: outputs
+    ts_name: 21 - MAIN 
+    function: OUT_MAIN
+    type: ls
+   
+  - pin: 22a
+    id: GPIOI_0
+    class: outputs
+    ts_name: 22 - VVT1 1
+    function: OUT_VVT1_1
+
+  - pin: 23a
+    id: GPIOI_2
+    class: outputs
+    ts_name: 23 - MAIN 
+    function: OUT_MAIN
+    type: ls
+
+  - pin: 24a
+    id: GPIOF_14
+    class: outputs
+    ts_name: 24 - INJ 8
+    function: OUT_INJ8
+    type: inj
+
 
 info:
   image:
