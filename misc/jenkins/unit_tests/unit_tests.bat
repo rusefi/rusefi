@@ -7,7 +7,6 @@ pwd
 
 rem Prior to running unit tests we build real hardware firmware
 
-
 git submodule update --init
 
 cd firmware
