@@ -67,6 +67,7 @@ window.addEventListener('load', function() {
             break;
           }
         }
+        addRow(fullTable, connector.pins[i], pdiv);
         if (!pinfo.x) continue;
         var closest = 1000000;
         for (var ii = 0; ii < connector.info.pins.length; ii++) {
@@ -102,7 +103,6 @@ window.addEventListener('load', function() {
         pdiv.style.marginLeft = "-" + (width / 2) + "%";
         pdiv.style.fontSize = (height / 7.5) + "vw";
         cdiv.appendChild(pdiv);
-        addRow(fullTable, connector.pins[i], pdiv);
       }
     }.bind(null, connector, sdiv, img));
     img.src = connector.info.image.file;
