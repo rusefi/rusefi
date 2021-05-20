@@ -14,11 +14,12 @@
 float rpmBins[5] = { 100, 200, 300, 400, 500 };
 float mafBins[4] = { 1, 2, 3, 4 };
 
-float map[5][4] = {{ 1, 2, 3, 4 },
-                 { 2, 3, 4, 5 },
-                 { 3, 4, 200, 300 },
-                 { 4, 200, 500, 600 },
-                 { 4, 200, 500, 600 }};
+float map[4][5] = {
+	{ 1, 2, 3, 4, 4},
+	{ 2, 3, 4, 200, 200 },
+	{ 3, 4, 200, 500, 500 },
+	{ 4, 5, 300, 600, 600 },
+};
 
 static float getValue(float rpm, float maf) {
 	Map3D<5, 4, float, float> x("test");
@@ -35,7 +36,7 @@ static void newTestToComfirmInterpolation() {
 //__200_|__3|__4|
 //______|__2|__3|_LOAD
 
-	map[2][1] = 10;
+	map[1][2] = 10;
 
 
 	// let's start by testing corners
