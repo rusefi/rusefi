@@ -3207,6 +3207,7 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 	dialog = luaOutputs, "Lua Outputs"
 		field = "#Call startPwm to initialize, then call"
 		field = "#setPwmDuty and setPwmFreq to vary duty/freq"
+		field = "#See rusefi.com/s/lua for more info"
 		field = "output #1", 							luaOutputPins1
 		field = "output #2", 							luaOutputPins2
 		field = "output #3", 							luaOutputPins3
