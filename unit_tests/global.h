@@ -19,7 +19,6 @@ typedef uint32_t ioportid_t;
 typedef uint32_t ioportmask_t;
 
 #define DL_OUTPUT_BUFFER 200
-#define INTERMEDIATE_LOGGING_BUFFER_SIZE 100
 
 // just a stub implementation for unit tests
 #define EXPECTED_REMAINING_STACK 1
@@ -30,6 +29,7 @@ typedef uint32_t ioportmask_t;
 
 
 #ifdef __cplusplus
+#include "mock-threads.h"
 // todo: include it right here? #include "unit_test_framework.h"
 extern "C"
 {

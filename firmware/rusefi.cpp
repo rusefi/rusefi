@@ -129,10 +129,6 @@
 #include "trigger_emulator_algo.h"
 #include "rusefi_lua.h"
 
-#if EFI_HD44780_LCD
-#include "lcd_HD44780.h"
-#endif /* EFI_HD44780_LCD */
-
 #if EFI_ENGINE_EMULATOR
 #include "engine_emulator.h"
 #endif /* EFI_ENGINE_EMULATOR */

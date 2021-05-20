@@ -58,26 +58,6 @@ float getIgnitionLoad(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 }
 
 /**
- * @brief Returns engine load according to selected engine_load_mode
- *
- */
-float getEngineLoadT(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
-	efiAssert(CUSTOM_ERR_ASSERT, engine!=NULL, "engine 2NULL", NAN);
-	efiAssert(CUSTOM_ERR_ASSERT, engineConfiguration!=NULL, "engineConfiguration 2NULL", NAN);
-	switch (engineConfiguration->fuelAlgorithm) {
-	case LM_SPEED_DENSITY:
-		return Sensor::get(SensorType::Map).value_or(0);
-	case LM_ALPHA_N:
-		return Sensor::get(SensorType::Tps1).value_or(0);
-	case LM_REAL_MAF:
-		return getRealMaf(PASS_ENGINE_PARAMETER_SIGNATURE);
-	default:
-		firmwareError(CUSTOM_UNKNOWN_ALGORITHM, "Unexpected engine load parameter: %d", engineConfiguration->fuelAlgorithm);
-		return 0;
-	}
-}
-
-/**
  * see also setConstantDwell
  */
 void setSingleCoilDwell(DECLARE_CONFIG_PARAMETER_SIGNATURE) {

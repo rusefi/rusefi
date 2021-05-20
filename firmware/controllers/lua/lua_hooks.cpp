@@ -69,19 +69,6 @@ static int lua_fan(lua_State* l) {
 	return 1;
 }
 
-static int lua_getAnalog(lua_State* l) {
-	auto idx = luaL_checkinteger(l, 1);
-
-	// Sanitize parameter
-	idx = clampI(0, idx, FSIO_ANALOG_INPUT_COUNT - 1);
-
-	// Do the analog read
-	float voltage = getVoltage("lua", engineConfiguration->fsioAdc[idx]);
-
-	lua_pushnumber(l, voltage);
-	return 1;
-}
-
 static int lua_getDigital(lua_State* l) {
 	auto idx = luaL_checkinteger(l, 1);
 
@@ -132,7 +119,6 @@ void configureRusefiLuaHooks(lua_State* l) {
 
 #if !EFI_UNIT_TEST
 	lua_register(l, "getFan", lua_fan);
-	lua_register(l, "getAnalog", lua_getAnalog);
 	lua_register(l, "getDigital", lua_getDigital);
 	lua_register(l, "setDebug", lua_setDebug);
 #endif

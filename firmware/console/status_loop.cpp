@@ -69,7 +69,7 @@ extern bool main_loop_started;
 #if EFI_PROD_CODE
 // todo: move this logic to algo folder!
 #include "rtc_helper.h"
-#include "lcd_HD44780.h"
+#include "HD44780.h"
 #include "rusefi.h"
 #include "pin_repository.h"
 #include "flash_main.h"
@@ -154,7 +154,7 @@ static int packEngineMode(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 }
 
 static float getAirFlowGauge(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
-	return hasMafSensor() ? getRealMaf(PASS_ENGINE_PARAMETER_SIGNATURE) : engine->engineState.airFlow;
+	return Sensor::get(SensorType::Maf).value_or(engine->engineState.airFlow);
 }
 
 void writeLogLine(Writer& buffer) {
@@ -531,9 +531,7 @@ void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels DECLARE_
 	tsOutputChannels->rawOilPressure = Sensor::getRaw(SensorType::OilPressure);
 	tsOutputChannels->rawLowFuelPressure = Sensor::getRaw(SensorType::FuelPressureLow);
 	tsOutputChannels->rawHighFuelPressure = Sensor::getRaw(SensorType::FuelPressureHigh);
-
-	// offset 16
-	tsOutputChannels->massAirFlowVoltage = hasMafSensor() ? getMafVoltage(PASS_ENGINE_PARAMETER_SIGNATURE) : 0;
+	tsOutputChannels->massAirFlowVoltage = Sensor::getRaw(SensorType::Maf);
 
 	float lambdaValue = Sensor::get(SensorType::Lambda1).value_or(0);
 	tsOutputChannels->lambda = lambdaValue;
@@ -542,9 +540,6 @@ void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels DECLARE_
 	float lambda2Value = Sensor::get(SensorType::Lambda2).value_or(0);
 	tsOutputChannels->lambda2 = lambda2Value;
 	tsOutputChannels->airFuelRatio2 = lambda2Value * ENGINE(engineState.stoichiometricRatio);
-
-	// offset 24
-	tsOutputChannels->engineLoad = getEngineLoadT(PASS_ENGINE_PARAMETER_SIGNATURE);
 
 	tsOutputChannels->fuelingLoad = getFuelingLoad(PASS_ENGINE_PARAMETER_SIGNATURE);
 	tsOutputChannels->ignitionLoad = getIgnitionLoad(PASS_ENGINE_PARAMETER_SIGNATURE);
@@ -704,7 +699,6 @@ void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels DECLARE_
 	tsOutputChannels->isO2HeaterOn = enginePins.o2heater.getLogicValue();
 	tsOutputChannels->isIgnitionEnabledIndicator = ENGINE(limpManager).allowIgnition();
 	tsOutputChannels->isInjectionEnabledIndicator = ENGINE(limpManager).allowInjection();
-	tsOutputChannels->isCylinderCleanupEnabled = engineConfiguration->isCylinderCleanupEnabled;
 	tsOutputChannels->isCylinderCleanupActivated = engine->isCylinderCleanupMode;
 
 #if EFI_VEHICLE_SPEED

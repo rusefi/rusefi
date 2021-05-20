@@ -21,7 +21,6 @@ public:
 
 	void reset();
 
-	void vappendPrintf(const char *fmt, va_list arg);
 	void append(const char *text);
 	void appendFast(const char *text);
 	void appendPrintf(const char *fmt, ...);

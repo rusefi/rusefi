@@ -26,6 +26,9 @@ typedef unsigned int time_t;
 #define DEFAULT_FUEL_LOAD_COUNT 16
 #define DEFAULT_IGN_LOAD_COUNT 16
 
+// gasoline E0
+#define STOICH_RATIO				14.7f
+
 // time in seconds
 typedef time_t efitimesec_t;
 
@@ -80,6 +83,8 @@ typedef float floatus_t;
 typedef float percent_t;
 
 typedef void (*Void)(void);
+
+typedef char lua_script_t[LUA_SCRIPT_SIZE];
 
 typedef char error_message_t[ERROR_BUFFER_SIZE];
 

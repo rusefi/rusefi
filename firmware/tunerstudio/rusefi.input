@@ -179,8 +179,7 @@ enable2ndByteCanID = false
 ; Bit flags
 	  hasSdCard       = bits,    U32,      0,    [0:0], "true", "false";
 	  isIgnitionEnabledIndicator=bits,U32, 0,    [1:1], "true", "false";
-	  isInjectionEnabledIndicator=bits,U32,      0,    [2:2], "true", "false";
-	  isCylinderCleanupEnabled=bits,U32,   0,    [3:3], "true", "false";
+	  isInjectionEnabledIndicator=bits,U32,0,    [2:2], "true", "false";
 	  isCylinderCleanupActivated=bits,U32, 0,    [4:4], "true", "false";
 	  ind_fuel_pump   = bits,    U32,      0,    [5:5], "true", "false";
 	  ind_fan         = bits,    U32,      0,    [6:6], "true", "false";
@@ -206,6 +205,7 @@ enable2ndByteCanID = false
 	  ind_pedal_error  =bits,    U32,      0,  [26:26], "true", "false";
 	  isTps2Error     = bits,    U32,      0,  [29:29], "true", "false";
 	  isIdleClosedLoop= bits,    U32,      0,  [30:30], "true", "false";
+	  isIdleCoasting  = bits,    U32,      0,  [31:31], "true", "false";
 
 ; RPM, vss
       RPMValue        = scalar,  U16,      4,      "RPM",    1,   0.00000
@@ -232,7 +232,6 @@ enable2ndByteCanID = false
       MAPValue        = scalar,  U16,     30,     "kPa",{1/@@PACK_MULT_PRESSURE@@},       0.0
       baroPressure    = scalar,  U16,     32,     "kPa",{1/@@PACK_MULT_PRESSURE@@},       0.0
       lambdaValue     = scalar,  U16,     34,      "",{1/@@PACK_MULT_LAMBDA@@},       0.0
-      engineLoad      = scalar,  U16,     36,        "%",{1/@@PACK_MULT_PERCENT@@},       0.0 ; Blend of MAP and TPS, depends on algorithm
 
 ; misc sensors
       VBatt           = scalar,	 U16,     38,        "V",{1/@@PACK_MULT_VOLTAGE@@},       0.0
@@ -1199,7 +1198,8 @@ gaugeCategory = DynoView
     indicator = { clutchDownState }, "clutch",   "cltch Down",   white, black, yellow,   black
     indicator = { brakePedalIndicator }, "brake",   "brake down",   white, black, red,   black
     indicator = { acSwitchState }, "AC off",   "AC on",   white, black, blue,   white
-	indicator = { isIdleClosedLoop }, "idle open loop", "idle closed loop", white, black, green, black
+	indicator = { isIdleClosedLoop }, "not idling", "idling", white, black, green, black
+	indicator = { isIdleCoasting }, "not coasting", "coasting", white, black, green, black
 
     ; error codes
     indicator = { isTpsError}, "tps",   "tps error",   white, black, red,   black
@@ -1240,7 +1240,6 @@ gaugeCategory = DynoView
    entry = lambdaValue,     @@GAUGE_NAME_LAMBDA@@,     float,  "%.2f"
    entry = lambdaValue2,     @@GAUGE_NAME_LAMBDA2@@,    float,  "%.2f"
    entry = VBatt,           @@GAUGE_NAME_VBAT@@,       float,  "%.2f"
-   entry = engineLoad,	    @@GAUGE_NAME_ENGINE_LOAD@@, 	   float,  "%.1f"
    entry = fuelingLoad,     @@GAUGE_NAME_FUEL_LOAD@@,     float, "%.1f"
    entry = ignitionLoad,    @@GAUGE_NAME_IGNITION_LOAD@@, float, "%.1f"
    entry = ignitionAdvance,	@@GAUGE_NAME_TIMING_ADVANCE@@,	   float,  "%.2f"

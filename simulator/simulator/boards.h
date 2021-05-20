@@ -10,16 +10,6 @@
 #define ADC_LOGIC_INTAKE_AIR 0
 #define ADC_LOGIC_COOLANT 0
 
-// see SIM_SD1_PORT
-#define CONSOLE_PORT (&SD1)
-// see SIM_SD2_PORT
-#define TS_PRIMARY_SERIAL SD2
-
-/**
- * This implementation writes to both windows console and console port
- */
-#define TS_PRIMARY_SERIAL (&serialAdapterInstance)
-
 int getAdcValue(const char *msg, int channel);
 #define getSlowAdcCounter() 0
 #define waitForSlowAdc(x) {}

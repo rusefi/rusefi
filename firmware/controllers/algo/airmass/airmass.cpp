@@ -4,9 +4,9 @@
 
 EXTERN_ENGINE;
 
-AirmassModelBase::AirmassModelBase(const ValueProvider3D& veTable) : m_veTable(&veTable) {}
+AirmassVeModelBase::AirmassVeModelBase(const ValueProvider3D& veTable) : m_veTable(&veTable) {}
 
-float AirmassModelBase::getVeLoadAxis(float passedLoad) const {
+float AirmassVeModelBase::getVeLoadAxis(float passedLoad) const {
 	switch(CONFIG(veOverrideMode)) {
 		case VE_None: return passedLoad;
 		case VE_MAP: return Sensor::get(SensorType::Map).value_or(0);
@@ -15,7 +15,7 @@ float AirmassModelBase::getVeLoadAxis(float passedLoad) const {
 	}
 }
 
-float AirmassModelBase::getVe(int rpm, float load) const {
+float AirmassVeModelBase::getVe(int rpm, float load) const {
 	efiAssert(OBD_PCM_Processor_Fault, m_veTable != nullptr, "VE table null", 0);
 
 	// Override the load value if necessary

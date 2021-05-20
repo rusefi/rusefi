@@ -337,7 +337,6 @@
 /**
  * This is the size of the MemoryStream used by chvprintf
  */
-#define INTERMEDIATE_LOGGING_BUFFER_SIZE 2000
 #define STATUS_LOGGING_BUFFER_SIZE 1800
 #define SETTINGS_LOGGING_BUFFER_SIZE 1000
 #define DL_OUTPUT_BUFFER 6500

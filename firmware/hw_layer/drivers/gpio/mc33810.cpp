@@ -91,7 +91,7 @@ static THD_WORKING_AREA(mc33810_thread_1_wa, 256);
 
 /* Driver */
 struct mc33810_priv {
-	const struct mc33810_config	*cfg;
+	const mc33810_config	*cfg;
 	/* cached output state - state last send to chip */
 	uint8_t					o_state_cached;
 	/* state to be sended to chip */
@@ -114,7 +114,7 @@ struct mc33810_priv {
 	mc33810_drv_state		drv_state;
 };
 
-static struct mc33810_priv chips[BOARD_MC33810_COUNT];
+static mc33810_priv chips[BOARD_MC33810_COUNT];
 
 static const char* mc33810_pin_names[MC33810_OUTPUTS] = {
 	"mc33810.OUT1",		"mc33810.OUT2",		"mc33810.OUT3",		"mc33810.OUT4",
@@ -125,7 +125,7 @@ static const char* mc33810_pin_names[MC33810_OUTPUTS] = {
 /* Driver local functions.													*/
 /*==========================================================================*/
 
-static SPIDriver *get_bus(struct mc33810_priv *chip)
+static SPIDriver *get_bus(mc33810_priv *chip)
 {
 	/* return non-const SPIDriver* from const struct cfg */
 	return chip->cfg->spi_bus;
@@ -137,7 +137,7 @@ static SPIDriver *get_bus(struct mc33810_priv *chip)
  * after transaction.
  */
 
-static int mc33810_spi_rw(struct mc33810_priv *chip, uint16_t tx, uint16_t *rx)
+static int mc33810_spi_rw(mc33810_priv *chip, uint16_t tx, uint16_t *rx)
 {
 	uint16_t rxb;
 	SPIDriver *spi = get_bus(chip);
@@ -180,7 +180,7 @@ static int mc33810_spi_rw(struct mc33810_priv *chip, uint16_t tx, uint16_t *rx)
  * @details Sends ORed data to register, also receive diagnostic.
  */
 
-static int mc33810_update_output_and_diag(struct mc33810_priv *chip)
+static int mc33810_update_output_and_diag(mc33810_priv *chip)
 {
 	int ret = 0;
 
@@ -262,21 +262,25 @@ static int mc33810_update_output_and_diag(struct mc33810_priv *chip)
  * @details Checks communication. Check chip presense.
  */
 
-static int mc33810_chip_init(struct mc33810_priv *chip)
+static int mc33810_chip_init(mc33810_priv *chip)
 {
 	int n;
 	int ret;
 	uint16_t rx;
-	const struct mc33810_config *cfg = chip->cfg;
+	const mc33810_config *cfg = chip->cfg;
 
 	/* mark pins used */
 	//ret = gpio_pin_markUsed(cfg->spi_config.ssport, cfg->spi_config.sspad, DRIVER_NAME " CS");
 	ret = 0;
-	if (cfg->en.port != NULL)
+	if (cfg->en.port) {
 		ret |= gpio_pin_markUsed(cfg->en.port, cfg->en.pad, DRIVER_NAME " EN");
-	for (n = 0; n < MC33810_DIRECT_OUTPUTS; n++)
-		if (cfg->direct_io[n].port)
+	}
+
+	for (n = 0; n < MC33810_DIRECT_OUTPUTS; n++) {
+		if (cfg->direct_io[n].port) {
 			ret |= gpio_pin_markUsed(cfg->direct_io[n].port, cfg->direct_io[n].pad, DRIVER_NAME " DIRECT IO");
+		}
+	}
 
 	if (ret) {
 		ret = -1;
@@ -316,9 +320,23 @@ static int mc33810_chip_init(struct mc33810_priv *chip)
 	 * - read diagnostic
 	 */
 
-	/* n. sen EN pin high */
-	if (cfg->en.port != NULL) {
-		palSetPort(cfg->en.port,
+	{
+		uint16_t spark_settings =
+			//(3 << 9) |	/* max dwell is 16 mS */
+			(2 << 9) |	/* max dwell is 8 mS */
+			BIT(8) |	/* enable max dwell control */
+			(3 << 2) |	/* Open Secondary OSFLT = 100 uS, default */
+			(1 << 0) |	/* End Spark THreshold: VPWR +5.5V, defaul */
+			0;
+		ret = mc33810_spi_rw(chip, MC_CMD_SPARK(spark_settings), NULL);
+		if (ret) {
+			goto err_gpios;
+		}
+	}
+
+	/* n. set EN pin low - active */
+	if (cfg->en.port) {
+		palClearPort(cfg->en.port,
 				   PAL_PORT_BIT(cfg->en.pad));
 	}
 
@@ -327,11 +345,18 @@ static int mc33810_chip_init(struct mc33810_priv *chip)
 err_gpios:
 	/* unmark pins */
 	//gpio_pin_markUnused(cfg->spi_config.ssport, cfg->spi_config.sspad);
-	if (cfg->en.port != NULL)
+	if (cfg->en.port) {
+		/* disable and mark unused */
+		palSetPort(cfg->en.port,
+				   PAL_PORT_BIT(cfg->en.pad));
 		gpio_pin_markUnused(cfg->en.port, cfg->en.pad);
-	for (n = 0; n < MC33810_DIRECT_OUTPUTS; n++)
-		if (cfg->direct_io[n].port)
+	}
+
+	for (n = 0; n < MC33810_DIRECT_OUTPUTS; n++) {
+		if (cfg->direct_io[n].port) {
 			gpio_pin_markUnused(cfg->direct_io[n].port, cfg->direct_io[n].pad);
+		}
+	}
 
 	return ret;
 }
@@ -342,12 +367,12 @@ err_gpios:
  * diagnostic update.
  */
 
-static int mc33810_wake_driver(struct mc33810_priv *chip)
+static int mc33810_wake_driver(mc33810_priv *chip)
 {
 	(void)chip;
 
 	/* Entering a reentrant critical zone.*/
-	syssts_t sts = chSysGetStatusAndLockX();
+	chibios_rt::CriticalSectionLocker csl;
 	chSemSignalI(&mc33810_wake);
 	if (!port_is_isr_context()) {
 		/**
@@ -356,8 +381,6 @@ static int mc33810_wake_driver(struct mc33810_priv *chip)
 		 */
 		chSchRescheduleS();
 	}
-	/* Leaving the critical zone.*/
-	chSysRestoreStatusX(sts);
 
 	return 0;
 }
@@ -383,7 +406,7 @@ static THD_FUNCTION(mc33810_driver_thread, p)
 
 		for (i = 0; i < BOARD_MC33810_COUNT; i++) {
 			int ret;
-			struct mc33810_priv *chip;
+			mc33810_priv *chip;
 
 			chip = &chips[i];
 			if ((chip->cfg == NULL) ||
@@ -412,19 +435,22 @@ static THD_FUNCTION(mc33810_driver_thread, p)
 
 int mc33810_writePad(void *data, unsigned int pin, int value)
 {
-	struct mc33810_priv *chip;
-
-	if ((pin >= MC33810_OUTPUTS) || (data == NULL))
+	if ((pin >= MC33810_OUTPUTS) || !data) {
 		return -1;
+	}
 
-	chip = (struct mc33810_priv *)data;
+	auto chip = (mc33810_priv*)data;
 
-	/* TODO: lock */
-	if (value)
-		chip->o_state |=  BIT(pin);
-	else
-		chip->o_state &= ~BIT(pin);
-	/* TODO: unlock */
+	{
+		// mutate driver state under lock
+		chibios_rt::CriticalSectionLocker csl;
+
+		if (value)
+			chip->o_state |=  BIT(pin);
+		else
+			chip->o_state &= ~BIT(pin);
+	}
+	
 	/* direct driven? */
 	if (chip->o_direct_mask & BIT(pin)) {
 		/* TODO: ensure that output driver enabled */
@@ -444,13 +470,13 @@ int mc33810_writePad(void *data, unsigned int pin, int value)
 brain_pin_diag_e mc33810_getDiag(void *data, unsigned int pin)
 {
 	int val;
-	struct mc33810_priv *chip;
-	brain_pin_diag_e diag = PIN_OK;
+	mc33810_priv *chip;
+	int diag = PIN_OK;
 
 	if ((pin >= MC33810_DIRECT_OUTPUTS) || (data == NULL))
 		return PIN_INVALID;
 
-	chip = (struct mc33810_priv *)data;
+	chip = (mc33810_priv *)data;
 
 	if (pin < 4) {
 		/* OUT drivers */
@@ -481,15 +507,15 @@ brain_pin_diag_e mc33810_getDiag(void *data, unsigned int pin)
 			diag |= PIN_OVERLOAD;
 	}
 	/* convert to some common enum? */
-	return diag;
+	return static_cast<brain_pin_diag_e>(diag);
 }
 
 int mc33810_init(void * data)
 {
 	int ret;
-	struct mc33810_priv *chip;
+	mc33810_priv *chip;
 
-	chip = (struct mc33810_priv *)data;
+	chip = (mc33810_priv *)data;
 
 	ret = mc33810_chip_init(chip);
 	if (ret)
@@ -515,6 +541,7 @@ int mc33810_deinit(void *data)
 }
 
 struct gpiochip_ops mc33810_ops = {
+	.setPadMode = nullptr,
 	.writePad	= mc33810_writePad,
 	.readPad	= NULL,	/* chip outputs only */
 	.getDiag	= mc33810_getDiag,
@@ -527,11 +554,11 @@ struct gpiochip_ops mc33810_ops = {
  * @details Checks for valid config
  */
 
-int mc33810_add(brain_pin_e base, unsigned int index, const struct mc33810_config *cfg)
+int mc33810_add(brain_pin_e base, unsigned int index, const mc33810_config *cfg)
 {
 	int i;
 	int ret;
-	struct mc33810_priv *chip;
+	mc33810_priv *chip;
 
 	/* no config or no such chip */
 	if ((!cfg) || (!cfg->spi_bus) || (index >= BOARD_MC33810_COUNT))
@@ -569,7 +596,7 @@ int mc33810_add(brain_pin_e base, unsigned int index, const struct mc33810_confi
 		return ret;
 
 	/* set default pin names, board init code can rewrite */
-	gpiochips_setPinNames(ret, mc33810_pin_names);
+	gpiochips_setPinNames(static_cast<brain_pin_e>(ret), mc33810_pin_names);
 
 	chip->drv_state = MC33810_WAIT_INIT;
 
@@ -578,7 +605,7 @@ int mc33810_add(brain_pin_e base, unsigned int index, const struct mc33810_confi
 
 #else /* BOARD_MC33810_COUNT > 0 */
 
-int mc33810_add(brain_pin_e base, unsigned int index, const struct mc33810_config *cfg)
+int mc33810_add(brain_pin_e base, unsigned int index, const mc33810_config *cfg)
 {
 	(void)base; (void)index; (void)cfg;
 

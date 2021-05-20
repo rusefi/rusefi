@@ -324,7 +324,7 @@ public class BinaryProtocol {
             byte[] newBytes = newVersion.getRange(range.first, size);
             log.info("new " + Arrays.toString(newBytes));
 
-            writeData(newVersion.getContent(), range.first, size);
+            writeData(newVersion.getContent(), 0, range.first, size);
 
             offset = range.second;
         }
@@ -489,15 +489,15 @@ public class BinaryProtocol {
         Runtime.getRuntime().removeShutdownHook(hook);
     }
 
-    public void writeData(byte[] content, Integer offset, int size) {
+    public void writeData(byte[] content, int contentOffset, int ecuOffset, int size) {
         isBurnPending = true;
 
         byte packet[] = new byte[5 + size];
         packet[0] = Fields.TS_CHUNK_WRITE_COMMAND;
-        putShort(packet, 1, swap16(offset));
+        putShort(packet, 1, swap16(ecuOffset));
         putShort(packet, 3, swap16(size));
 
-        System.arraycopy(content, offset, packet, 7, size);
+        System.arraycopy(content, contentOffset, packet, 5, size);
 
         long start = System.currentTimeMillis();
         while (!isClosed && (System.currentTimeMillis() - start < Timeouts.BINARY_IO_TIMEOUT)) {

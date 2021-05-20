@@ -156,7 +156,7 @@ static void handleGetDataRequest(const CANRxFrame& rx) {
 		obdSendValue(_1_MODE, pid, 1, Sensor::get(SensorType::Iat).value_or(0) + ODB_TEMP_EXTRA);
 		break;
 	case PID_INTAKE_MAF:
-		obdSendValue(_1_MODE, pid, 2, getRealMaf(PASS_ENGINE_PARAMETER_SIGNATURE) * 100.0f);	// grams/sec	(A*256+B)/100
+		obdSendValue(_1_MODE, pid, 2, Sensor::get(SensorType::Maf).value_or(0) * 100.0f);	// grams/sec	(A*256+B)/100
 		break;
 	case PID_THROTTLE:
 		obdSendValue(_1_MODE, pid, 1, Sensor::get(SensorType::Tps1).value_or(0) * ODB_TPS_BYTE_PERCENT);	// (A*100/255)

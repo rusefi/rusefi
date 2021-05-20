@@ -1,9 +1,9 @@
 /**
- * @file	neo6m.cpp
- * @brief	Ublox 6M hardware UART driver
+ * @file	gps_uart.cpp
+ * @brief	GPS receiver hardware UART driver
  *
+ * Tested and developed for NEO-6M
  * http://www.u-blox.com/en/gps-modules/pvt-modules/previous-generations/neo-6-family.html
- *
  * Technically any UART GPS should work with this driver since NMEA protocol is pretty common anyway
  *
  * @date Dec 28, 2013
@@ -22,7 +22,7 @@
 #include "eficonsole.h"
 #include "pin_repository.h"
 #include "nmea.h"
-#include "neo6m.h"
+#include "gps_uart.h"
 #include "rtc_helper.h"
 #include "engine.h"
 

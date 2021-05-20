@@ -140,6 +140,7 @@ include $(PROJECT_DIR)/config/engines/engines.mk
 include $(PROJECT_DIR)/controllers/controllers.mk
 include $(PROJECT_DIR)/development/development.mk
 include $(PROJECT_DIR)/hw_layer/hw_layer.mk
+include $(PROJECT_DIR)/hw_layer/drivers/drivers.mk
 include $(PROJECT_DIR)/hw_layer/sensors/sensors.mk
 include $(PROJECT_DIR)/init/init.mk
 include $(PROJECT_DIR)/util/util.mk
@@ -166,7 +167,9 @@ CPPSRC = $(ALLCPPSRC) \
 	$(CONTROLLERS_SRC_CPP) \
 	$(PROJECT_DIR)/development/sensor_chart.cpp \
 	$(HW_LAYER_EMS_CPP) \
-	$(HW_SENSORS_SRC) \
+	$(HW_SENSORS_CPP) \
+	$(HW_LAYER_DRIVERS_CPP) \
+	$(HW_LAYER_DRIVERS_CORE_CPP) \
 	$(TRIGGER_SRC_CPP) \
 	$(TRIGGER_DECODERS_SRC_CPP) \
 	$(SYSTEMSRC_CPP) \
