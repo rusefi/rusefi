@@ -94,8 +94,6 @@ static float newKeyBin[newKeySize];
 
 //EngineConfiguration *engineConfiguration;
 
-extern bool needInterpolationLoggingValue;
-
 void resizeMap(void) {
 //	float keyMin = 1.2;
 //	float keyMax = 4.4;
@@ -120,8 +118,6 @@ void resizeMap(void) {
 //	ASSERT_EQ(15, interpolate3d(1.2, engineConfiguration->fuelKeyBins, FUEL_MAF_COUNT, 8000,
 //			engineConfiguration->fuelRpmBins,
 //			FUEL_RPM_COUNT, fuel_ptrs));
-
-	needInterpolationLoggingValue = 0;
 
 //	printf("static float ad_maf_table[AD_LOAD_COUNT] = {");
 //	for (int i = 0; i < newKeySize; i++) {
