@@ -19,45 +19,45 @@
 
 class ValueProvider3D {
 public:
-	virtual float getValue(float xRpm, float y) const = 0;
+	virtual float getValue(float xColumn, float yRow) const = 0;
 };
 
 
 /**
  * this helper class brings together 3D table with two 2D axis curves
  */
-template<int RPM_BIN_SIZE, int LOAD_BIN_SIZE, typename vType, typename kType, typename TValueMultiplier = efi::ratio<1>>
+template<int TColNum, int TRowNum, typename vType, typename kType, typename TValueMultiplier = efi::ratio<1>>
 class Map3D : public ValueProvider3D {
 public:
 	explicit Map3D(const char*name) {
 	}
 
 	template<int mult>
-	void init(scaled_channel<vType, mult> table[RPM_BIN_SIZE][LOAD_BIN_SIZE], const kType loadBins[LOAD_BIN_SIZE], const kType rpmBins[RPM_BIN_SIZE]) {
+	void init(scaled_channel<vType, mult> table[TRowNum][TColNum], const kType rowBins[TRowNum], const kType columnBins[TColNum]) {
 		static_assert(TValueMultiplier::den == mult);
 		static_assert(TValueMultiplier::num == 1);
 
 		m_values = reinterpret_cast<vType*>(&table[0][0]);
 
-		this->loadBins = loadBins;
-		this->rpmBins = rpmBins;
+		m_rowBins = rowBins;
+		m_columnBins = columnBins;
 	}
 
-	void init(vType table[RPM_BIN_SIZE][LOAD_BIN_SIZE], const kType loadBins[LOAD_BIN_SIZE], const kType rpmBins[RPM_BIN_SIZE]) {
+	void init(vType table[TRowNum][TColNum], const kType rowBins[TRowNum], const kType columnBins[TColNum]) {
 		m_values = &table[0][0];
 
-		this->loadBins = loadBins;
-		this->rpmBins = rpmBins;
+		m_rowBins = rowBins;
+		m_columnBins = columnBins;
 	}
 
-	float getValue(float xRpm, float y) const override {
+	float getValue(float xColumn, float yRow) const override {
 		if (!m_values) {
 			// not initialized, return 0
 			return 0;
 		}
 		
-		auto row = priv::getBinPtr<kType, LOAD_BIN_SIZE>(y, loadBins);
-		auto col = priv::getBinPtr<kType, RPM_BIN_SIZE>(xRpm, rpmBins);
+		auto row = priv::getBinPtr<kType, TRowNum>(yRow, m_rowBins);
+		auto col = priv::getBinPtr<kType, TColNum>(xColumn, m_columnBins);
 
 		// Orient the table such that (0, 0) is the bottom left corner,
 		// then the following variable names will make sense
@@ -80,14 +80,17 @@ public:
 	void setAll(vType value) {
 		efiAssertVoid(CUSTOM_ERR_6573, m_values, "map not initialized");
 
-		for (size_t i = 0; i < LOAD_BIN_SIZE * RPM_BIN_SIZE; i++) {
+		for (size_t i = 0; i < TRowNum * TColNum; i++) {
 			m_values[i] = value / TValueMultiplier::asFloat();
 		}
 	}
 
 private:
 	static size_t getIndexForCoordinates(size_t row, size_t column) {
-		return row * RPM_BIN_SIZE + column;
+		// Index 0 is bottom left corner
+		// Index TColNum - 1 is bottom right corner
+		// indicies count right, then up
+		return row * TColNum + column;
 	}
 
 	vType getValueAtPosition(size_t row, size_t column) const {
@@ -98,8 +101,8 @@ private:
 	// TODO: should be const
 	/*const*/ vType* m_values = nullptr;
 
-	const kType *loadBins = NULL;
-	const kType *rpmBins = NULL;
+	const kType *m_rowBins = nullptr;
+	const kType *m_columnBins = nullptr;
 };
 
 typedef Map3D<FUEL_RPM_COUNT, FUEL_LOAD_COUNT, uint8_t, float, efi::ratio<1, PACK_MULT_LAMBDA_CFG>> lambda_Map3D_t;
@@ -139,6 +142,15 @@ void setArrayValues(TValue (&array)[TSize], TValue value) {
 
 template <typename TElement, size_t N, size_t M>
 constexpr void setTable(TElement (&dest)[N][M], const TElement value) {
+	for (size_t n = 0; n < N; n++) {
+		for (size_t m = 0; m < M; m++) {
+			dest[n][m] = value;
+		}
+	}
+}
+
+template <typename TElement, size_t N, size_t M, int mult = 1>
+constexpr void setTable(scaled_channel<TElement, mult> (&dest)[N][M], float value) {
 	for (size_t n = 0; n < N; n++) {
 		for (size_t m = 0; m < M; m++) {
 			dest[n][m] = value;
