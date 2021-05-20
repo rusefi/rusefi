@@ -805,7 +805,7 @@ static void setDefaultEngineConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	setLinearCurve(engineConfiguration->map.samplingWindow, 50, 50, 1);
 
 	setLambdaMap(config->lambdaTable, 1.0f);
-	engineConfiguration->stoichRatioPrimary = 14.7f * PACK_MULT_AFR_CFG;
+	engineConfiguration->stoichRatioPrimary = STOICH_RATIO * PACK_MULT_AFR_CFG;
 	engineConfiguration->stoichRatioSecondary = 9.0f * PACK_MULT_AFR_CFG;
 
 	setDefaultVETable(PASS_ENGINE_PARAMETER_SIGNATURE);
