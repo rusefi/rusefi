@@ -1,5 +1,5 @@
 /*
- * @file    neo6m.h
+ * @file    gps_uart.h
  *
  *
  * @date Dec 30, 2013

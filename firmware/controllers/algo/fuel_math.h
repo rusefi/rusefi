@@ -7,8 +7,8 @@
 
 #pragma once
 
-#include "engine.h"
-#include "airmass.h"
+#include "engine_ptr.h"
+#include "rusefi_types.h"
 
 void initFuelMap(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 
@@ -31,3 +31,6 @@ floatms_t getInjectionMass(int rpm DECLARE_ENGINE_PARAMETER_SUFFIX);
 percent_t getInjectorDutyCycle(int rpm DECLARE_ENGINE_PARAMETER_SUFFIX);
 
 float getStandardAirCharge(DECLARE_ENGINE_PARAMETER_SIGNATURE);
+
+struct AirmassModelBase;
+AirmassModelBase* getAirmassModel(engine_load_mode_e mode DECLARE_ENGINE_PARAMETER_SUFFIX);

@@ -112,10 +112,10 @@ TEST(AirmassModes, VeOverride) {
 		EXPECT_CALL(veTable, getValue(_, 30.0f)).WillOnce(Return(0));
 	}
 
-	struct DummyAirmassModel : public AirmassModelBase {
-		DummyAirmassModel(const ValueProvider3D& veTable) : AirmassModelBase(veTable) {}
+	struct DummyAirmassModel : public AirmassVeModelBase {
+		DummyAirmassModel(const ValueProvider3D& veTable) : AirmassVeModelBase(veTable) {}
 
-		AirmassResult getAirmass(int rpm) override {
+		AirmassResult getAirmass(int rpm) const override {
 			// Default load value 10, will be overriden
 			getVe(rpm, 10.0f);
 

@@ -1,4 +1,4 @@
-CONTROLLERS_ALGO_SRC = $(PROJECT_DIR)/controllers/algo/nmea.c
+CONTROLLERS_ALGO_SRC =
 
 CONTROLLERS_ALGO_SRC_CPP = $(PROJECT_DIR)/controllers/algo/advance_map.cpp \
 	$(PROJECT_DIR)/controllers/algo/malfunction_central.cpp \
@@ -20,3 +20,4 @@ CONTROLLERS_ALGO_SRC_CPP = $(PROJECT_DIR)/controllers/algo/advance_map.cpp \
 	$(PROJECT_DIR)/controllers/algo/airmass/speed_density_base.cpp \
 	$(PROJECT_DIR)/controllers/algo/fuel/fuel_computer.cpp \
 	$(PROJECT_DIR)/controllers/algo/fuel/injector_model.cpp \
+	$(PROJECT_DIR)/controllers/algo/nmea.cpp \

@@ -33,7 +33,6 @@ ALLCSRC += \
 	$(LUA_EXT)/liolib.c \
 	$(LUA_EXT)/lmathlib.c \
 	$(LUA_EXT)/loadlib.c \
-	$(LUA_EXT)/loslib.c \
 	$(LUA_EXT)/lstrlib.c \
 	$(LUA_EXT)/ltablib.c \
 	$(LUA_EXT)/lutf8lib.c \

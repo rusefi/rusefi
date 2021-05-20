@@ -22,7 +22,7 @@
 #include "os_access.h"
 
 #include "lcd_controller.h"
-#include "lcd_HD44780.h"
+#include "HD44780.h"
 #include "rpm_calculator.h"
 #include "allsensors.h"
 #include "engine.h"

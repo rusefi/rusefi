@@ -74,7 +74,7 @@ AdcDevice::AdcDevice(ADCConversionGroup* hwConfig, adcsample_t *buf, size_t buf_
 	hwConfig->sqr5 = 0;
 #endif /* ADC_MAX_CHANNELS_COUNT */
 	memset(hardwareIndexByIndernalAdcIndex, EFI_ADC_NONE, sizeof(hardwareIndexByIndernalAdcIndex));
-	memset(internalAdcIndexByHardwareIndex, 0xFFFFFFFF, sizeof(internalAdcIndexByHardwareIndex));
+	memset(internalAdcIndexByHardwareIndex, 0xFF, sizeof(internalAdcIndexByHardwareIndex));
 }
 
 #if !defined(GPT_FREQ_FAST) || !defined(GPT_PERIOD_FAST)
@@ -114,8 +114,7 @@ static adcsample_t getAvgAdcValue(int index, adcsample_t *samples, int bufDepth,
 }
 
 
-// See https://github.com/rusefi/rusefi/issues/976 for discussion on these values
-#define ADC_SAMPLING_SLOW ADC_SAMPLE_56
+// See https://github.com/rusefi/rusefi/issues/976 for discussion on this value
 #define ADC_SAMPLING_FAST ADC_SAMPLE_28
 
 #if EFI_USE_FAST_ADC
@@ -221,7 +220,7 @@ int getInternalAdcValue(const char *msg, adc_channel_e hwChannel) {
 	}
 #endif // EFI_USE_FAST_ADC
 
-	return slowAdcSamples[hwChannel - 1];
+	return slowAdcSamples[hwChannel - EFI_ADC_0];
 }
 
 #if EFI_USE_FAST_ADC
@@ -273,14 +272,17 @@ bool AdcDevice::isHwUsed(adc_channel_e hwChannelIndex) const {
 }
 
 void AdcDevice::enableChannel(adc_channel_e hwChannel) {
-	if (channelCount >= efi::size(values.adc_data)) {
+	if ((channelCount + 1) >= ADC_MAX_CHANNELS_COUNT) {
 		firmwareError(OBD_PCM_Processor_Fault, "Too many ADC channels configured");
 		return;
 	}
 
 	int logicChannel = channelCount++;
 
-	size_t channelAdcIndex = hwChannel - 1;
+	/* TODO: following is correct for STM32 ADC1/2.
+	 * ADC3 has another input to gpio mapping
+	 * and should be handled separately */
+	size_t channelAdcIndex = hwChannel - EFI_ADC_0;
 
 	internalAdcIndexByHardwareIndex[hwChannel] = logicChannel;
 	hardwareIndexByIndernalAdcIndex[logicChannel] = hwChannel;

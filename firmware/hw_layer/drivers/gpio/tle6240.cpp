@@ -84,7 +84,7 @@ static THD_WORKING_AREA(tle6240_thread_1_wa, 256);
 
 /* Driver */
 struct tle6240_priv {
-	const struct tle6240_config	*cfg;
+	const tle6240_config	*cfg;
 	/* cached output state - state last send to chip */
 	uint16_t					o_state_cached;
 	/* state to be sended to chip */
@@ -100,7 +100,7 @@ struct tle6240_priv {
 	tle6240_drv_state			drv_state;
 };
 
-static struct tle6240_priv chips[BOARD_TLE6240_COUNT];
+static tle6240_priv chips[BOARD_TLE6240_COUNT];
 
 static const char* tle6240_pin_names[TLE6240_OUTPUTS] = {
 	"tle6240.OUT1",		"tle6240.OUT2",		"tle6240.OUT3",		"tle6240.OUT4",
@@ -113,7 +113,7 @@ static const char* tle6240_pin_names[TLE6240_OUTPUTS] = {
 /* Driver local functions.													*/
 /*==========================================================================*/
 
-static SPIDriver *get_bus(struct tle6240_priv *chip)
+static SPIDriver *get_bus(tle6240_priv *chip)
 {
 	/* return non-const SPIDriver* from const struct cfg */
 	return chip->cfg->spi_bus;
@@ -125,7 +125,7 @@ static SPIDriver *get_bus(struct tle6240_priv *chip)
  * after transaction.
  */
 
-static int tle6240_spi_rw(struct tle6240_priv *chip, uint16_t tx, uint16_t *rx)
+static int tle6240_spi_rw(tle6240_priv *chip, uint16_t tx, uint16_t *rx)
 {
 	uint16_t rxb;
 	SPIDriver *spi = get_bus(chip);
@@ -157,7 +157,7 @@ static int tle6240_spi_rw(struct tle6240_priv *chip, uint16_t tx, uint16_t *rx)
  * @details Sends ORed data to register, also receive 2-bit diagnostic.
  */
 
-static int tle6240_update_output_and_diag(struct tle6240_priv *chip)
+static int tle6240_update_output_and_diag(tle6240_priv *chip)
 {
 	int ret;
 	uint16_t out_data;
@@ -197,12 +197,12 @@ static int tle6240_update_output_and_diag(struct tle6240_priv *chip)
  * Reads initial diagnostic state.
  */
 
-static int tle6240_chip_init(struct tle6240_priv *chip)
+static int tle6240_chip_init(tle6240_priv *chip)
 {
 	int n;
 	int ret;
 	uint16_t rx;
-	const struct tle6240_config *cfg = chip->cfg;
+	const tle6240_config *cfg = chip->cfg;
 
 	/* mark pins used */
 	//ret = gpio_pin_markUsed(cfg->spi_config.ssport, cfg->spi_config.sspad, DRIVER_NAME " CS");
@@ -311,7 +311,7 @@ err_gpios:
  * diagnostic update.
  */
 
-static int tle6240_wake_driver(struct tle6240_priv *chip)
+static int tle6240_wake_driver(tle6240_priv *chip)
 {
 	(void)chip;
 
@@ -352,7 +352,7 @@ static THD_FUNCTION(tle6240_driver_thread, p)
 
 		for (i = 0; i < BOARD_TLE6240_COUNT; i++) {
 			int ret;
-			struct tle6240_priv *chip;
+			tle6240_priv *chip;
 
 			chip = &chips[i];
 			if ((chip->cfg == NULL) ||
@@ -380,12 +380,12 @@ static THD_FUNCTION(tle6240_driver_thread, p)
 
 static int tle6240_writePad(void *data, unsigned int pin, int value)
 {
-	struct tle6240_priv *chip;
+	tle6240_priv *chip;
 
 	if ((pin >= TLE6240_OUTPUTS) || (data == NULL))
 		return -1;
 
-	chip = (struct tle6240_priv *)data;
+	chip = (tle6240_priv *)data;
 
 	/* TODO: lock */
 	if (value)
@@ -414,13 +414,13 @@ static int tle6240_writePad(void *data, unsigned int pin, int value)
 static brain_pin_diag_e tle6240_getDiag(void *data, unsigned int pin)
 {
 	int val;
-	brain_pin_diag_e diag;
-	struct tle6240_priv *chip;
+	int diag;
+	tle6240_priv *chip;
 
 	if ((pin >= TLE6240_OUTPUTS) || (data == NULL))
 		return PIN_INVALID;
 
-	chip = (struct tle6240_priv *)data;
+	chip = (tle6240_priv *)data;
 
 	val = (chip->diag[(pin > 7) ? 1 : 0] >> ((pin % 8) * 2)) & 0x03;
 	if (val == 0x3)
@@ -433,15 +433,15 @@ static brain_pin_diag_e tle6240_getDiag(void *data, unsigned int pin)
 	else if (val == 0x0)
 		diag = PIN_SHORT_TO_GND;
 
-	return diag;
+	return static_cast<brain_pin_diag_e>(diag);
 }
 
 static int tle6240_init(void * data)
 {
 	int ret;
-	struct tle6240_priv *chip;
+	tle6240_priv *chip;
 
-	chip = (struct tle6240_priv *)data;
+	chip = (tle6240_priv *)data;
 
 	ret = tle6240_chip_init(chip);
 	if (ret)
@@ -467,6 +467,7 @@ static int tle6240_deinit(void *data)
 }
 
 struct gpiochip_ops tle6240_ops = {
+	.setPadMode = nullptr,
 	.writePad	= tle6240_writePad,
 	.readPad	= NULL,	/* chip outputs only */
 	.getDiag	= tle6240_getDiag,
@@ -479,11 +480,11 @@ struct gpiochip_ops tle6240_ops = {
  * @details Checks for valid config
  */
 
-int tle6240_add(brain_pin_e base, unsigned int index, const struct tle6240_config *cfg)
+int tle6240_add(brain_pin_e base, unsigned int index, const tle6240_config *cfg)
 {
 	int i;
 	int ret;
-	struct tle6240_priv *chip;
+	tle6240_priv *chip;
 
 	/* no config or no such chip */
 	if ((!cfg) || (!cfg->spi_bus) || (index >= BOARD_TLE6240_COUNT))
@@ -525,7 +526,7 @@ int tle6240_add(brain_pin_e base, unsigned int index, const struct tle6240_confi
 
 #else /* BOARD_TLE6240_COUNT > 0 */
 
-int tle6240_add(brain_pin_e base, unsigned int index, const struct tle6240_config *cfg)
+int tle6240_add(brain_pin_e base, unsigned int index, const tle6240_config *cfg)
 {
 	(void)base; (void)index; (void)cfg;
 

@@ -29,6 +29,7 @@ typedef uint32_t ioportmask_t;
 
 
 #ifdef __cplusplus
+#include "mock-threads.h"
 // todo: include it right here? #include "unit_test_framework.h"
 extern "C"
 {

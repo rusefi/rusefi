@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Mon May 10 12:31:44 UTC 2021
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Tue May 18 18:06:45 UTC 2021
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -22,8 +22,6 @@ struct stft_cell_cfg_s {
 	uint16_t timeConstant;
 	/** total size 4*/
 };
-
-typedef struct stft_cell_cfg_s stft_cell_cfg_s;
 
 // start of stft_s
 struct stft_s {
@@ -82,8 +80,6 @@ struct stft_s {
 	/** total size 24*/
 };
 
-typedef struct stft_s stft_s;
-
 // start of pid_s
 struct pid_s {
 	/**
@@ -122,8 +118,6 @@ struct pid_s {
 	/** total size 20*/
 };
 
-typedef struct pid_s pid_s;
-
 // start of cranking_parameters_s
 struct cranking_parameters_s {
 	/**
@@ -150,8 +144,6 @@ struct cranking_parameters_s {
 	/** total size 8*/
 };
 
-typedef struct cranking_parameters_s cranking_parameters_s;
-
 // start of spi_pins
 struct spi_pins {
 	/**
@@ -174,8 +166,6 @@ struct spi_pins {
 	uint8_t alignmentFill_at_3[1];
 	/** total size 4*/
 };
-
-typedef struct spi_pins spi_pins;
 
 // start of gppwm_channel
 struct gppwm_channel {
@@ -237,8 +227,6 @@ struct gppwm_channel {
 	/** total size 88*/
 };
 
-typedef struct gppwm_channel gppwm_channel;
-
 // start of air_pressure_sensor_config_s
 struct air_pressure_sensor_config_s {
 	/**
@@ -268,8 +256,6 @@ struct air_pressure_sensor_config_s {
 	uint8_t alignmentFill[3];
 	/** total size 16*/
 };
-
-typedef struct air_pressure_sensor_config_s air_pressure_sensor_config_s;
 
 /**
  * @brief MAP averaging configuration
@@ -303,8 +289,6 @@ struct MAP_sensor_config_s {
 	air_pressure_sensor_config_s sensor;
 	/** total size 144*/
 };
-
-typedef struct MAP_sensor_config_s MAP_sensor_config_s;
 
 /**
  * @brief Thermistor known values
@@ -352,8 +336,6 @@ struct thermistor_conf_s {
 	/** total size 28*/
 };
 
-typedef struct thermistor_conf_s thermistor_conf_s;
-
 /**
  * @brief Linear sensor interpolation
 
@@ -392,8 +374,6 @@ struct linear_sensor_s {
 	/** total size 20*/
 };
 
-typedef struct linear_sensor_s linear_sensor_s;
-
 /**
  * @brief Thermistor curve parameters
 
@@ -416,8 +396,6 @@ struct ThermistorConf {
 	uint8_t alignmentFill_at_29[3];
 	/** total size 32*/
 };
-
-typedef struct ThermistorConf ThermistorConf;
 
 // start of injector_s
 struct injector_s {
@@ -446,8 +424,6 @@ struct injector_s {
 	/** total size 68*/
 };
 
-typedef struct injector_s injector_s;
-
 // start of specs_s
 struct specs_s {
 	/**
@@ -467,8 +443,6 @@ struct specs_s {
 	firing_order_e firingOrder;
 	/** total size 12*/
 };
-
-typedef struct specs_s specs_s;
 
 /**
  * @brief Trigger wheel(s) configuration
@@ -592,8 +566,6 @@ struct trigger_config_s {
 	/** total size 16*/
 };
 
-typedef struct trigger_config_s trigger_config_s;
-
 // start of afr_sensor_s
 struct afr_sensor_s {
 	/**
@@ -628,8 +600,6 @@ struct afr_sensor_s {
 	/** total size 20*/
 };
 
-typedef struct afr_sensor_s afr_sensor_s;
-
 // start of idle_hardware_s
 struct idle_hardware_s {
 	/**
@@ -656,8 +626,6 @@ struct idle_hardware_s {
 	/** total size 8*/
 };
 
-typedef struct idle_hardware_s idle_hardware_s;
-
 // start of dc_io
 struct dc_io {
 	/**
@@ -678,8 +646,6 @@ struct dc_io {
 	brain_pin_e disablePin;
 	/** total size 4*/
 };
-
-typedef struct dc_io dc_io;
 
 // start of engine_configuration_s
 struct engine_configuration_s {
@@ -3821,8 +3787,6 @@ struct engine_configuration_s {
 	/** total size 6000*/
 };
 
-typedef struct engine_configuration_s engine_configuration_s;
-
 // start of persistent_config_s
 struct persistent_config_s {
 	/**
@@ -4086,10 +4050,9 @@ struct persistent_config_s {
 	 */
 	float vvtTable2RpmBins[FSIO_TABLE_8];
 	/**
-	units
 	 * offset 16032
 	 */
-	uint8_t unused15136[256];
+	lua_script_t luaScript;
 	/**
 	 * offset 16288
 	 */
@@ -4209,7 +4172,5 @@ struct persistent_config_s {
 	/** total size 20000*/
 };
 
-typedef struct persistent_config_s persistent_config_s;
-
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Mon May 10 12:31:44 UTC 2021
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Tue May 18 18:06:45 UTC 2021

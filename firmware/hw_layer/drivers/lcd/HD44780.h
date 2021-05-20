@@ -1,5 +1,5 @@
 /**
- * @file lcd_HD44780.h
+ * @file HD44780.h
  *
  * @date 13.12.2013
  * @author Andrey Belomutskiy, (c) 2012-2020

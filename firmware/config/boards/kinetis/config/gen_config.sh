@@ -16,7 +16,6 @@ bash gen_signature.sh kin
 
 java \
  -DSystemOut.name=gen_config_kinetis \
- -Drusefi.generator.lazyfile.enabled=true \
  -jar ../java_tools/ConfigDefinition.jar \
  -definition integration/rusefi_config.txt \
  -cache kinetis \

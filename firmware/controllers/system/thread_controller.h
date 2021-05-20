@@ -10,8 +10,6 @@
 #include "global.h"
 #include "controller_base.h"
 
-#if ! EFI_UNIT_TEST
-
 /**
  * @brief A base class for a controller that requires its own thread.
  * 
@@ -68,5 +66,3 @@ public:
 		m_isStarted = true;
     }
 };
-
-#endif

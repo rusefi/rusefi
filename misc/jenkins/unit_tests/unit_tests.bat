@@ -7,7 +7,6 @@ pwd
 
 rem Prior to running unit tests we build real hardware firmware
 
-
 git submodule update --init
 
 cd firmware
@@ -20,6 +19,8 @@ echo We are in root folder
 pwd
 
 cd unit_tests
+rem Clean build is needed since some file renames would produce a broken incremental build
+make clean
 
 rem Only here we are building unit_tests
 call compile.bat
