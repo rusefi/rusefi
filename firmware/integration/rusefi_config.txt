@@ -77,6 +77,8 @@ struct_no_prefix engine_configuration_s
 
 #define FSIO_ANALOG_INPUT_COUNT 4
 
+#define LUA_PWM_COUNT 8
+
 ! V engines or flat engines would have pairs of shafts with same trigger shape and target position
 #define BANKS_COUNT 2
 #define CAMS_PER_BANK 2
@@ -1045,7 +1047,9 @@ custom maf_sensor_type_e 4 bits, S32, @OFFSET@, [0:1], @@maf_sensor_type_e_enum@
 
 	uint16_t[FUEL_LEVEL_TABLE_COUNT] fuelLevelBins;;"volt", {1/@@PACK_MULT_VOLTAGE@@}, 0, 0, 5, 3
 
-	int[59] unusedAtOldBoardConfigurationEnd;;"units", 1, 0, -20, 100, 0
+	output_pin_e[LUA_PWM_COUNT iterate] luaOutputPins
+
+	int[57] unusedAtOldBoardConfigurationEnd;;"units", 1, 0, -20, 100, 0
 	uint16_t vehicleWeight;;"kg", 1, 0, 0, 10000, 0
 	brain_pin_e lps25BaroSensorScl
 	brain_pin_e lps25BaroSensorSda
