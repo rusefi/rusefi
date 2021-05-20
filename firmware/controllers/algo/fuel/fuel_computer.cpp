@@ -27,7 +27,7 @@ float FuelComputer::getStoichiometricRatio() const {
 	// Config compatibility: this field may be zero on ECUs with old defaults
 	if (primary < 5) {
 		// 14.7 = E0 gasoline AFR
-		primary = 14.7f;
+		primary = STOICH_RATIO;
 	}
 
 	// Without an ethanol/flex sensor, return primary configured stoich ratio
