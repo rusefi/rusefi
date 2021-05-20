@@ -112,8 +112,6 @@ float interpolate2d(const float value, const TBin (&bin)[TSize], const TValue (&
 	return priv::linterp(low, high, frac);
 }
 
-int needInterpolationLogging(void);
-
 /** @brief	Binary search
  * @returns	the highest index within sorted array such that array[i] is greater than or equal to the parameter
  * @note If the parameter is smaller than the first element of the array, -1 is returned.
