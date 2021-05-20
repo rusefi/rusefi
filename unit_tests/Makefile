@@ -9,6 +9,7 @@ UNIT_TESTS_DIR=$(PROJECT_DIR)/../unit_tests
 # Imported source files and paths
 include $(PROJECT_DIR)/config/engines/engines.mk
 include $(PROJECT_DIR)/controllers/controllers.mk
+include $(PROJECT_DIR)/controllers/lua/lua.mk
 include $(PROJECT_DIR)/development/development.mk
 include $(PROJECT_DIR)/console/console.mk
 include $(PROJECT_DIR)/console/binary/tunerstudio.mk
