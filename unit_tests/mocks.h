@@ -39,7 +39,7 @@ public:
 
 class MockVp3d : public ValueProvider3D {
 public:
-	MOCK_METHOD(float, getValue, (float xRpm, float y), (const, override));
+	MOCK_METHOD(float, getValue, (float xColumn, float yRow), (const, override));
 };
 
 class MockPwm : public SimplePwm {
