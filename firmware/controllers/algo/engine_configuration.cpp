@@ -249,7 +249,7 @@ static void initTemperatureCurve(float *bins, float *values, int size, float def
 
 void prepareVoidConfiguration(engine_configuration_s *engineConfiguration) {
 	efiAssertVoid(OBD_PCM_Processor_Fault, engineConfiguration != NULL, "ec NULL");
-	memset(engineConfiguration, 0, sizeof(engine_configuration_s));
+	efi::clear(engineConfiguration);
 
 	engineConfiguration->clutchDownPinMode = PI_PULLUP;
 	engineConfiguration->clutchUpPinMode = PI_PULLUP;
@@ -677,7 +677,7 @@ static void setHip9011FrankensoPinout(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
  */
 static void setDefaultEngineConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 #if (! EFI_UNIT_TEST)
-	memset(&persistentState.persistentConfiguration, 0, sizeof(persistentState.persistentConfiguration));
+	efi::clear(persistentState.persistentConfiguration);
 #endif
 	prepareVoidConfiguration(engineConfiguration);
 
