@@ -191,6 +191,7 @@ pins:
   
   - pin: 81a
     id: GPIOD_15
+    class: outputs
     function: OUT_FUEL_CONSUMPTION
     
   - pin: 82a
