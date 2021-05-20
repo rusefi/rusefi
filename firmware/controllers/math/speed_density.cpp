@@ -114,14 +114,14 @@ temperature_t getTCharge(int rpm, float tps DECLARE_ENGINE_PARAMETER_SUFFIX) {
 
 void setDefaultVETable(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	setRpmTableBin(config->veRpmBins, FUEL_RPM_COUNT);
-	veMap.setAll(80);
+	setTable(config->veTable, 80);
 
 //	setRpmTableBin(engineConfiguration->ve2RpmBins, FUEL_RPM_COUNT);
 //	setLinearCurve(engineConfiguration->ve2LoadBins, 10, 300, 1);
 //	ve2Map.setAll(0.81);
 
 	setRpmTableBin(config->lambdaRpmBins, FUEL_RPM_COUNT);
-	lambdaMap.setAll(1.0);
+	setTable(config->lambdaTable, 1);
 
 	setRpmTableBin(engineConfiguration->baroCorrRpmBins, BARO_CORR_SIZE);
 	setLinearCurve(engineConfiguration->baroCorrPressureBins, 75, 105, 1);
