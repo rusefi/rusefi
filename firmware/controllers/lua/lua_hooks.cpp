@@ -89,6 +89,9 @@ static int lua_startPwm(lua_State* l) {
 	auto freq = luaL_checknumber(l, 2);
 	auto duty = luaL_checknumber(l, 2);
 
+	// clamp to 1..1000 hz
+	freq = clampF(1, freq, 1000);
+
 	startSimplePwmExt(
 		&p.pwm, "lua", &engine->executor,
 		CONFIG(luaOutputPins[p.idx]), &pins[p.idx],
