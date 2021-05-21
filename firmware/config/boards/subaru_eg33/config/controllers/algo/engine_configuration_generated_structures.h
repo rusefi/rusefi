@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on config/boards/subaru_eg33/config/gen_config.sh integration/rusefi_config.txt Thu May 20 23:09:43 UTC 2021
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on config/boards/subaru_eg33/config/gen_config.sh integration/rusefi_config.txt Fri May 21 19:27:58 UTC 2021
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -745,6 +745,7 @@ struct engine_configuration_s {
 	offset 76 bit 22 */
 	bool antiLagEnabled : 1;
 	/**
+	 * For cranking either use the specified fixed base fuel mass, or use the normal running math (VE table).
 	offset 76 bit 23 */
 	bool useRunningMathForCranking : 1;
 	/**
@@ -934,7 +935,10 @@ struct engine_configuration_s {
 	 */
 	angle_t crankingTimingAngle;
 	/**
-	 * "Single Coil" is for use on distributed ignition system. "Individual Coils" is to be used when you have one coil per cylinder (COP or similar). "Wasted Spark" means one coil is driving two spark plugs in two cylinders, with one of the sparks not doing anything since it's happening on the exhaust cycle
+	 * Single coil = distributor
+	 * Individual coils = one coil per cylinder (COP, coil-near-plug), requires sequential mode
+	 * Wasted spark = Fires pairs of cylinders together, either one coil per pair of cylinders or one coil per cylinder
+	 * Two distributors = A pair of distributors, found on some BMW, Toyota and other engines
 	 * set ignition_mode X
 	 * offset 440
 	 */
@@ -2389,7 +2393,8 @@ struct engine_configuration_s {
 	 */
 	uint32_t engineChartSize;
 	/**
-	 * Relative to the target idle RPM - this limit is coupled with useIacTableForCoasting and iacCoasting parameters
+	 * How far above idle speed do we consider idling?
+	 * For example, if target = 800, this param = 200, then anything below 1000 RPM is considered idle.
 	RPM
 	 * offset 1484
 	 */
@@ -2662,7 +2667,7 @@ struct engine_configuration_s {
 	 */
 	int16_t startUpFuelPumpDuration;
 	/**
-	 * If RPM is close enough let's leave IAC alone, and maybe engage timing PID correction
+	 * If the RPM closer to target than this value, disable closed loop idle correction to prevent oscillation
 	RPM
 	 * offset 1894
 	 */
@@ -3150,6 +3155,9 @@ struct engine_configuration_s {
 	 */
 	pin_output_mode_e LIS302DLCsPinMode;
 	/**
+	 * None = I have a MAP-referenced fuel pressure regulator
+	 * Fixed rail pressure = I have an atmosphere-referenced fuel pressure regulator (returnless, typically)
+	 * Sensed rail pressure = I have a fuel pressure sensor
 	 * offset 2418
 	 */
 	injector_compensation_mode_e injectorCompensationMode;
@@ -3620,6 +3628,10 @@ struct engine_configuration_s {
 	spi_device_e tle6240spiDevice;
 	/**
 	 * Stoichiometric ratio for your primary fuel. When Flex Fuel is enabled, this value is used when the Flex Fuel sensor indicates E0.
+	 * E0 = 14.7
+	 * E10 = 14.1
+	 * E85 = 9.9
+	 * E100 = 9.0
 	:1
 	 * offset 4005
 	 */
@@ -3634,7 +3646,7 @@ struct engine_configuration_s {
 	 */
 	spi_device_e mc33972spiDevice;
 	/**
-	 * Stoichiometric ratio for your secondary fuel. This value is used when the Flex Fuel sensor indicates E100.
+	 * Stoichiometric ratio for your secondary fuel. This value is used when the Flex Fuel sensor indicates E100, typically 9.0
 	:1
 	 * offset 4009
 	 */
@@ -3645,7 +3657,7 @@ struct engine_configuration_s {
 	 */
 	uint8_t unusedSpiPadding8[2];
 	/**
-	 *  ETB idle authority
+	 * This sets the range of the idle control on the ETB. At 100% idle position, the value specified here sets the base ETB position.
 	%
 	 * offset 4012
 	 */
@@ -4177,4 +4189,4 @@ struct persistent_config_s {
 };
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on config/boards/subaru_eg33/config/gen_config.sh integration/rusefi_config.txt Thu May 20 23:09:43 UTC 2021
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on config/boards/subaru_eg33/config/gen_config.sh integration/rusefi_config.txt Fri May 21 19:27:58 UTC 2021
