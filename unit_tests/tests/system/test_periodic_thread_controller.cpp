@@ -5,6 +5,56 @@
  * @author Andrey Belomutskiy, (c) 2012-2021
  */
 
+#include <gmock/gmock.h>
+#include "periodic_thread_controller.h"
+#include <thread>
+
+class TestPeriodicController : public PeriodicController<111> {
+public:
+	TestPeriodicController() : PeriodicController("test") { }
+private:
+	void PeriodicTask(efitick_t nowNt) override	{
+		UNUSED(nowNt);
+	}
+};
+
+static TestPeriodicController instance;
+
+systime_t chVTGetSystemTime(void) {
+	return getTimeNowUs();
+}
+
+systime_t chThdSleepUntilWindowed(systime_t prev, systime_t next) {
+	return 0;
+}
+
+class taskq {
+public:
+//  int trigger(taskq &tq);
+//  mutex mtx;
+};
 
 
+void func_wrapper(taskq &tq) {
 
+}
+
+thread_t *chThdCreateStatic(void *wsp, size_t size,
+                            tprio_t prio, tfunc_t funcp, void *arg) {
+
+	taskq insta;
+
+	taskq &tq = insta;
+
+	std::thread thr(func_wrapper, std::ref(tq));
+
+	thread_t *thread = new thread_t();
+	thread->funcp = funcp;
+	thread->arg = arg;
+	return thread;
+
+}
+
+TEST(system, periodic) {
+	instance.Start();
+}
