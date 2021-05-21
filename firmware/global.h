@@ -34,6 +34,7 @@ typedef unsigned int time_t;
 
 #ifdef __cplusplus
 #include "eficonsole.h"
+#include <ch.hpp>
 #endif /* __cplusplus */
 
 

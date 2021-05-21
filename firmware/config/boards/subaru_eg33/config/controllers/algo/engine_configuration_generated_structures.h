@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on config/boards/subaru_eg33/config/gen_config.sh integration/rusefi_config.txt Mon May 10 12:32:11 UTC 2021
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on config/boards/subaru_eg33/config/gen_config.sh integration/rusefi_config.txt Thu May 20 23:09:43 UTC 2021
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -22,8 +22,6 @@ struct stft_cell_cfg_s {
 	uint16_t timeConstant;
 	/** total size 4*/
 };
-
-typedef struct stft_cell_cfg_s stft_cell_cfg_s;
 
 // start of stft_s
 struct stft_s {
@@ -82,8 +80,6 @@ struct stft_s {
 	/** total size 24*/
 };
 
-typedef struct stft_s stft_s;
-
 // start of pid_s
 struct pid_s {
 	/**
@@ -122,8 +118,6 @@ struct pid_s {
 	/** total size 20*/
 };
 
-typedef struct pid_s pid_s;
-
 // start of cranking_parameters_s
 struct cranking_parameters_s {
 	/**
@@ -150,8 +144,6 @@ struct cranking_parameters_s {
 	/** total size 8*/
 };
 
-typedef struct cranking_parameters_s cranking_parameters_s;
-
 // start of spi_pins
 struct spi_pins {
 	/**
@@ -174,8 +166,6 @@ struct spi_pins {
 	uint8_t alignmentFill_at_3[1];
 	/** total size 4*/
 };
-
-typedef struct spi_pins spi_pins;
 
 // start of gppwm_channel
 struct gppwm_channel {
@@ -237,8 +227,6 @@ struct gppwm_channel {
 	/** total size 88*/
 };
 
-typedef struct gppwm_channel gppwm_channel;
-
 // start of air_pressure_sensor_config_s
 struct air_pressure_sensor_config_s {
 	/**
@@ -268,8 +256,6 @@ struct air_pressure_sensor_config_s {
 	uint8_t alignmentFill[3];
 	/** total size 16*/
 };
-
-typedef struct air_pressure_sensor_config_s air_pressure_sensor_config_s;
 
 /**
  * @brief MAP averaging configuration
@@ -303,8 +289,6 @@ struct MAP_sensor_config_s {
 	air_pressure_sensor_config_s sensor;
 	/** total size 144*/
 };
-
-typedef struct MAP_sensor_config_s MAP_sensor_config_s;
 
 /**
  * @brief Thermistor known values
@@ -352,8 +336,6 @@ struct thermistor_conf_s {
 	/** total size 28*/
 };
 
-typedef struct thermistor_conf_s thermistor_conf_s;
-
 /**
  * @brief Linear sensor interpolation
 
@@ -392,8 +374,6 @@ struct linear_sensor_s {
 	/** total size 20*/
 };
 
-typedef struct linear_sensor_s linear_sensor_s;
-
 /**
  * @brief Thermistor curve parameters
 
@@ -416,8 +396,6 @@ struct ThermistorConf {
 	uint8_t alignmentFill_at_29[3];
 	/** total size 32*/
 };
-
-typedef struct ThermistorConf ThermistorConf;
 
 // start of injector_s
 struct injector_s {
@@ -446,8 +424,6 @@ struct injector_s {
 	/** total size 68*/
 };
 
-typedef struct injector_s injector_s;
-
 // start of specs_s
 struct specs_s {
 	/**
@@ -467,8 +443,6 @@ struct specs_s {
 	firing_order_e firingOrder;
 	/** total size 12*/
 };
-
-typedef struct specs_s specs_s;
 
 /**
  * @brief Trigger wheel(s) configuration
@@ -592,8 +566,6 @@ struct trigger_config_s {
 	/** total size 16*/
 };
 
-typedef struct trigger_config_s trigger_config_s;
-
 // start of afr_sensor_s
 struct afr_sensor_s {
 	/**
@@ -628,8 +600,6 @@ struct afr_sensor_s {
 	/** total size 20*/
 };
 
-typedef struct afr_sensor_s afr_sensor_s;
-
 // start of idle_hardware_s
 struct idle_hardware_s {
 	/**
@@ -656,8 +626,6 @@ struct idle_hardware_s {
 	/** total size 8*/
 };
 
-typedef struct idle_hardware_s idle_hardware_s;
-
 // start of dc_io
 struct dc_io {
 	/**
@@ -678,8 +646,6 @@ struct dc_io {
 	brain_pin_e disablePin;
 	/** total size 4*/
 };
-
-typedef struct dc_io dc_io;
 
 // start of engine_configuration_s
 struct engine_configuration_s {
@@ -2134,10 +2100,14 @@ struct engine_configuration_s {
 	 */
 	uint16_t fuelLevelBins[FUEL_LEVEL_TABLE_COUNT];
 	/**
-	units
 	 * offset 1220
 	 */
-	int unusedAtOldBoardConfigurationEnd[59];
+	output_pin_e luaOutputPins[LUA_PWM_COUNT];
+	/**
+	units
+	 * offset 1228
+	 */
+	int unusedAtOldBoardConfigurationEnd[57];
 	/**
 	kg
 	 * offset 1456
@@ -2904,76 +2874,76 @@ struct engine_configuration_s {
 	bool unused1130 : 1;
 	/**
 	offset 2116 bit 8 */
-	bool unusedBit_490_8 : 1;
+	bool unusedBit_491_8 : 1;
 	/**
 	offset 2116 bit 9 */
-	bool unusedBit_490_9 : 1;
+	bool unusedBit_491_9 : 1;
 	/**
 	offset 2116 bit 10 */
-	bool unusedBit_490_10 : 1;
+	bool unusedBit_491_10 : 1;
 	/**
 	offset 2116 bit 11 */
-	bool unusedBit_490_11 : 1;
+	bool unusedBit_491_11 : 1;
 	/**
 	offset 2116 bit 12 */
-	bool unusedBit_490_12 : 1;
+	bool unusedBit_491_12 : 1;
 	/**
 	offset 2116 bit 13 */
-	bool unusedBit_490_13 : 1;
+	bool unusedBit_491_13 : 1;
 	/**
 	offset 2116 bit 14 */
-	bool unusedBit_490_14 : 1;
+	bool unusedBit_491_14 : 1;
 	/**
 	offset 2116 bit 15 */
-	bool unusedBit_490_15 : 1;
+	bool unusedBit_491_15 : 1;
 	/**
 	offset 2116 bit 16 */
-	bool unusedBit_490_16 : 1;
+	bool unusedBit_491_16 : 1;
 	/**
 	offset 2116 bit 17 */
-	bool unusedBit_490_17 : 1;
+	bool unusedBit_491_17 : 1;
 	/**
 	offset 2116 bit 18 */
-	bool unusedBit_490_18 : 1;
+	bool unusedBit_491_18 : 1;
 	/**
 	offset 2116 bit 19 */
-	bool unusedBit_490_19 : 1;
+	bool unusedBit_491_19 : 1;
 	/**
 	offset 2116 bit 20 */
-	bool unusedBit_490_20 : 1;
+	bool unusedBit_491_20 : 1;
 	/**
 	offset 2116 bit 21 */
-	bool unusedBit_490_21 : 1;
+	bool unusedBit_491_21 : 1;
 	/**
 	offset 2116 bit 22 */
-	bool unusedBit_490_22 : 1;
+	bool unusedBit_491_22 : 1;
 	/**
 	offset 2116 bit 23 */
-	bool unusedBit_490_23 : 1;
+	bool unusedBit_491_23 : 1;
 	/**
 	offset 2116 bit 24 */
-	bool unusedBit_490_24 : 1;
+	bool unusedBit_491_24 : 1;
 	/**
 	offset 2116 bit 25 */
-	bool unusedBit_490_25 : 1;
+	bool unusedBit_491_25 : 1;
 	/**
 	offset 2116 bit 26 */
-	bool unusedBit_490_26 : 1;
+	bool unusedBit_491_26 : 1;
 	/**
 	offset 2116 bit 27 */
-	bool unusedBit_490_27 : 1;
+	bool unusedBit_491_27 : 1;
 	/**
 	offset 2116 bit 28 */
-	bool unusedBit_490_28 : 1;
+	bool unusedBit_491_28 : 1;
 	/**
 	offset 2116 bit 29 */
-	bool unusedBit_490_29 : 1;
+	bool unusedBit_491_29 : 1;
 	/**
 	offset 2116 bit 30 */
-	bool unusedBit_490_30 : 1;
+	bool unusedBit_491_30 : 1;
 	/**
 	offset 2116 bit 31 */
-	bool unusedBit_490_31 : 1;
+	bool unusedBit_491_31 : 1;
 	/**
 	 * set can_mode X
 	 * offset 2120
@@ -3821,8 +3791,6 @@ struct engine_configuration_s {
 	/** total size 6000*/
 };
 
-typedef struct engine_configuration_s engine_configuration_s;
-
 // start of persistent_config_s
 struct persistent_config_s {
 	/**
@@ -4086,10 +4054,9 @@ struct persistent_config_s {
 	 */
 	float vvtTable2RpmBins[FSIO_TABLE_8];
 	/**
-	units
 	 * offset 16032
 	 */
-	uint8_t unused15136[256];
+	lua_script_t luaScript;
 	/**
 	 * offset 16288
 	 */
@@ -4209,7 +4176,5 @@ struct persistent_config_s {
 	/** total size 20000*/
 };
 
-typedef struct persistent_config_s persistent_config_s;
-
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on config/boards/subaru_eg33/config/gen_config.sh integration/rusefi_config.txt Mon May 10 12:32:11 UTC 2021
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on config/boards/subaru_eg33/config/gen_config.sh integration/rusefi_config.txt Thu May 20 23:09:43 UTC 2021

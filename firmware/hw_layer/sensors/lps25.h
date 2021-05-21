@@ -18,8 +18,12 @@ public:
 	bool init(brain_pin_e scl, brain_pin_e sda);
 
 	expected<float> readPressureKpa();
+	bool hasInit() const {
+		return m_hasInit;
+	}
 
 private:
 	BitbangI2c m_i2c;
+
 	bool m_hasInit = false;
 };

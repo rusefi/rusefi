@@ -29,6 +29,7 @@
 #include "map_averaging.h"
 #include "memstreams.h"
 #include <chprintf.h>
+#include "rusefi_lua.h"
 
 #define DEFAULT_SIM_RPM 1200
 #define DEFAULT_SNIFFER_THR 2500
@@ -102,7 +103,7 @@ void rusEfiFunctionalTest(void) {
 
 	// todo: reduce code duplication with initEngineContoller
 
-	resetConfigurationExt(FORD_ESCORT_GT PASS_ENGINE_PARAMETER_SUFFIX);
+	resetConfigurationExt(MINIMAL_PINS PASS_ENGINE_PARAMETER_SUFFIX);
 	enableTriggerStimulator();
 
 	commonInitEngineController();
@@ -112,12 +113,18 @@ void rusEfiFunctionalTest(void) {
 
 	startStatusThreads();
 
+	startLoggingProcessor();
+
 	runChprintfTest();
 
 	initPeriodicEvents(PASS_ENGINE_PARAMETER_SIGNATURE);
 
 	setTriggerEmulatorRPM(DEFAULT_SIM_RPM PASS_ENGINE_PARAMETER_SUFFIX);
 	engineConfiguration->engineSnifferRpmThreshold = DEFAULT_SNIFFER_THR;
+
+	startSerialChannels();
+
+	startLua();
 }
 
 void printPendingMessages(void) {
@@ -148,8 +155,4 @@ void logMsg(const char *format, ...) {
 //	vfprintf(fp, format, args);
 //
 //	fclose(fp);
-}
-
-BaseChannel * getConsoleChannel(void) {
-	return (BaseChannel *)TS_PRIMARY_SERIAL;
 }

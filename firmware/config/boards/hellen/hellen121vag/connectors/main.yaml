@@ -1,8 +1,290 @@
 pins:
-  - pin: 1A
-    function: 12V all times
-    type: 12V
+  - pin: 1a
+    function: GND
+    type: GND
+    
+  - pin: 2a
+    function: GND
+    type: GND
+    
+  - pin: 3a
+    function: +12v
+    type: vign
+    
+  - pin: 5a
+    function: LSU Heat -    
+    
+  - pin: 7a
+    id: GPIOE_5
+    class: outputs
+    ts_name: 7 - IGN_2
+    type: ign
+    
+  - pin: 8a
+    id: GPIOI_6
+    class: outputs
+    ts_name: 8 - IGN_7
+    type: ign  
 
+  - pin: 14a
+    id: EFI_ADC_0
+    class: analog_input
+    ts_name: 14 - O2
+    function: O2 sensor signal
+    
+  - pin: 18a
+    id: GPIOC_9
+    class: outputs
+    ts_name: 18 - VVT2 B1
+    function: OUT_VVT2_B1
+    
+  - pin: 19a
+    id: GPIOF_13
+    class: outputs
+    ts_name: 19 - INJ 7
+    function: OUT_INJ7
+    type: inj
+    
+  - pin: 21a
+    id: GPIOI_2
+    class: outputs
+    ts_name: 21 - MAIN 
+    function: OUT_MAIN
+    type: ls
+   
+  - pin: 22a
+    id: GPIOI_0
+    class: outputs
+    ts_name: 22 - VVT1 1
+    function: OUT_VVT1_1
+
+  - pin: 23a
+    id: GPIOI_2
+    class: outputs
+    ts_name: 23 - MAIN 
+    function: OUT_MAIN
+    type: ls
+
+  - pin: 24a
+    id: GPIOF_14
+    class: outputs
+    ts_name: 24 - INJ 8
+    function: OUT_INJ8
+    type: inj
+
+  - pin: 26a
+    id: EFI_ADC_13
+    class: analog_inputs
+    ts_name: 26 - IAT
+    function: IAT sensor
+
+  - pin: 27a
+    function: GNDA
+    
+  - pin: 29a
+    id: EFI_ADC_10
+    class: analog_inputs
+    ts_name: 29 In Maf
+    function: MAF_IN
+    
+  - pin: 32a
+    function: GND
+
+  - pin: 33a
+    function: GNDA
+    
+  - pin: 34a
+    id: EFI_ADC_3
+    class: analog_inputs
+    ts_name: 34 In PPS1
+    function: IN_PPS1
+
+  - pin: 35a
+    id: EFI_ADC_14
+    class: analog_inputs
+    ts_name: 35 In PPS2
+    function: IN_PPS2
+    
+  - pin: 36a
+    function: GNDA
+    
+  - pin: 37
+    id: GPIOD_13
+    class: outputs
+    ts_name: 37 - TACH
+    function: Tach Out
+    type: ls
+    
+  - pin: 38
+    id: [GPIOF_9, ADC3_CHANNEL_7]
+    class: [switch_inputs, analog_inputs]
+    ts_name: 48 - IN RES1
+    function: IN_RES1
+
+  - pin: 39
+    id: [GPIOF_10, EFI_ADC_3]
+    class: [switch_inputs, analog_inputs]
+    ts_name: 39 - IN RES2
+    function: IN_RES2
+    
+  - pin: 47a
+    id: GPIOG_4
+    class: outputs
+    ts_name: 47 - CEL
+    function: MIL Control
+    type: ls
+    
+  - pin: 50a
+    function: GNDA
+    
+  - pin: 51a          
+    function: LSU_U/PUMP_I
+        
+  - pin: 52a         
+    function: LSU_PUMP_I
+    
+  - pin: 53a
+    function: Sensor +5V
+    
+  - pin: 54a
+    id: GPIOF_11
+    class: event_inputs
+    ts_name: 54 - VSS
+    function: VSS in
+    
+  - pin: 55a
+    id: GPIOE_12
+    ts_name: In D1
+    class: digital_input
+    function: IN_D1
+  
+  - pin: 57a
+    id: GPIOE_13
+    ts_name: In D2
+    class: digital_input
+    function: IN_D2
+    
+  - pin: 65A
+    id: GPIOH_14
+    class: outputs
+    ts_name: 65 - Fuel Pump
+    function: Fuel Pump Relay
+    type: ls
+  
+  - pin: 70a         
+    function: LSU_SENSOR_U
+  
+  - pin: 71a         
+    function: LSU_CALIBR_RES
+    
+  - pin: 75a
+    id: GPIOE_14
+    ts_name: In D3
+    class: digital_input
+    function: IN_D3
+  
+  - pin: 76a
+    id: GPIOE_15
+    ts_name: In D4
+    class: digital_input
+    function: IN_D4
+  
+  - pin: 81a
+    id: GPIOD_15
+    class: outputs
+    function: OUT_FUEL_CONSUMPTION
+    
+  - pin: 82a
+    function: IN_CRANK+
+    
+  - pin: 83a
+    function: 5v
+    
+  - pin: 84a
+    id: EFI_ADC_8
+    class: analog_inputs
+    ts_name: 84 - TPS2 
+    function: IN_TPS2
+    
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+    
+    
+    
 info:
   image:
     file: main.jpg

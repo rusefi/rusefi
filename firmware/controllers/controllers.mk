@@ -4,7 +4,6 @@ include $(PROJECT_DIR)/controllers/math/math.mk
 include $(PROJECT_DIR)/controllers/trigger/trigger.mk
 include $(PROJECT_DIR)/controllers/sensors/sensors.mk
 include $(PROJECT_DIR)/controllers/system/system.mk
-include $(PROJECT_DIR)/controllers/lua/lua.mk
 #include $(PROJECT_DIR)/controllers/gauges/gauges.mk
 
 CONTROLLERS_DIR=$(PROJECT_DIR)/controllers

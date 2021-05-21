@@ -7,6 +7,7 @@
 #include "adc_inputs.h"
 #include "efilib.h"
 #include "tunerstudio_outputs.h"
+#include "pwm_generator_logic.h"
 
 // Some functions lean on existing FSIO implementation
 #include "fsio_impl.h"
@@ -64,6 +65,66 @@ static int lua_table3d(lua_State* l) {
 }
 
 #if !EFI_UNIT_TEST
+static SimplePwm pwms[LUA_PWM_COUNT];
+static OutputPin pins[LUA_PWM_COUNT];
+
+struct P {
+	SimplePwm& pwm;
+	lua_Integer idx;
+};
+
+static P luaL_checkPwmIndex(lua_State* l, int pos) {
+	auto channel = luaL_checkinteger(l, pos);
+
+	// Ensure channel is valid
+	if (channel < 0 || channel >= FSIO_COMMAND_COUNT) {
+		luaL_error(l, "setPwmDuty invalid channel %d", channel);
+	}
+
+	return { pwms[channel], channel };
+}
+
+static int lua_startPwm(lua_State* l) {
+	auto p = luaL_checkPwmIndex(l, 1);
+	auto freq = luaL_checknumber(l, 2);
+	auto duty = luaL_checknumber(l, 2);
+
+	// clamp to 1..1000 hz
+	freq = clampF(1, freq, 1000);
+
+	startSimplePwmExt(
+		&p.pwm, "lua", &engine->executor,
+		CONFIG(luaOutputPins[p.idx]), &pins[p.idx],
+		freq, duty
+	);
+
+	return 0;
+}
+
+static int lua_setPwmDuty(lua_State* l) {
+	auto p = luaL_checkPwmIndex(l, 1);
+	auto duty = luaL_checknumber(l, 2);
+
+	// clamp to 0..1
+	duty = clampF(0, duty, 1);
+
+	p.pwm.setSimplePwmDutyCycle(duty);
+
+	return 0;
+}
+
+static int lua_setPwmFreq(lua_State* l) {
+	auto p = luaL_checkPwmIndex(l, 1);
+	auto freq = luaL_checknumber(l, 2);
+
+	// clamp to 1..1000 hz
+	freq = clampF(1, freq, 1000);
+
+	p.pwm.setFrequency(freq);
+
+	return 0;
+}
+
 static int lua_fan(lua_State* l) {
 	lua_pushboolean(l, enginePins.fanRelay.getLogicValue());
 	return 1;
@@ -118,6 +179,10 @@ void configureRusefiLuaHooks(lua_State* l) {
 	lua_register(l, "table3d", lua_table3d);
 
 #if !EFI_UNIT_TEST
+	lua_register(l, "startPwm", lua_startPwm);
+	lua_register(l, "setPwmDuty", lua_setPwmDuty);
+	lua_register(l, "setPwmFreq", lua_setPwmFreq);
+
 	lua_register(l, "getFan", lua_fan);
 	lua_register(l, "getDigital", lua_getDigital);
 	lua_register(l, "setDebug", lua_setDebug);

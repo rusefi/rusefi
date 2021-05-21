@@ -14,17 +14,18 @@
 float rpmBins[5] = { 100, 200, 300, 400, 500 };
 float mafBins[4] = { 1, 2, 3, 4 };
 
-float map0[4] = { 1, 2, 3, 4 };
-float map1[4] = { 2, 3, 4, 5 };
-float map2[4] = { 3, 4, 200, 300 };
-float map3[4] = { 4, 200, 500, 600 };
-float map4[4] = { 4, 200, 500, 600 };
-
-float *map[5] = { map0, map1, map2, map3, map4 };
-
+float map[4][5] = {
+	{ 1, 2, 3, 4, 4},
+	{ 2, 3, 4, 200, 200 },
+	{ 3, 4, 200, 500, 500 },
+	{ 4, 5, 300, 600, 600 },
+};
 
 static float getValue(float rpm, float maf) {
-	return interpolate3d("test", rpm, rpmBins, 5, maf, mafBins, 4, map);
+	Map3D<5, 4, float, float> x("test");
+	x.init(map, mafBins, rpmBins);
+
+	return x.getValue(rpm, maf);
 }
 
 static void newTestToComfirmInterpolation() {
@@ -35,7 +36,7 @@ static void newTestToComfirmInterpolation() {
 //__200_|__3|__4|
 //______|__2|__3|_LOAD
 
-	map2[1] = 10;
+	map[1][2] = 10;
 
 
 	// let's start by testing corners
@@ -79,8 +80,6 @@ static void newTestToComfirmInterpolation() {
 }
 
 TEST(misc, testInterpolate3d) {
-	printf("*************************************************** testInterpolate3d\r\n");
-
 	printf("*** no interpolation here 1\r\n");
 	ASSERT_FLOAT_EQ(2, getValue(100, 2));
 

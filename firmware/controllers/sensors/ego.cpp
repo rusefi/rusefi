@@ -38,7 +38,7 @@ static int totalEgoCnt = 0;
 static int prevEgoCnt = 0;
 
 // todo: move it to engineConfiguration
-static const float stoichAfr = 14.7f;
+static const float stoichAfr = STOICH_RATIO;
 static const float maxAfrDeviation = 5.0f;	// 9.7..19.7
 static const int minAvgSize = (EGO_AVG_BUF_SIZE / 2);	// ~0.6 sec for 20ms period of 'fast' callback, and it matches a lag time of most narrow EGOs
 static const int maxAvgSize = (EGO_AVG_BUF_SIZE - 1);	// the whole buffer

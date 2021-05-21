@@ -24,7 +24,7 @@ pins:
     type: can
 
   - pin: 1E
-    id: GPIOA_8
+    id: GPIOG_4
     class: outputs
     ts_name: 1E - Check Engine Light
     function: Check Engine Light
@@ -91,8 +91,8 @@ pins:
     type: ls
 
   - pin: 1S
-    ts_name: 1S - A/C Input
-    function: A/C Input
+    ts_name: 1S - Heate Input
+    function: Heater Input
 
   - pin: 1T
     function: EGR Solenoid
@@ -105,14 +105,14 @@ pins:
     type: din
 
   - pin: 2A
-    id: GPIOH_13
+    id: GPIOA_9
     class: outputs
     ts_name: 2A - Boost Control
     function: Boost Control Solenoid
 
   - pin: 2B
     id: GPIOF_7
-    class: input
+    class: analog_input
     ts_name: 2B - Knock Sensor
     function: Knock Sensor Input
     
@@ -191,7 +191,7 @@ pins:
     function: TPS INPUT
 
   - pin: 3O
-    id: GPIOA_6
+    id: GPIOG_2
     class: outputs
     ts_name: 3O - Fuel Pump NA6
     function: FUEL PUMP OUTPUT
@@ -209,7 +209,7 @@ pins:
     function: A/C Fan
 
   - pin: 3T
-    id: GPIOG_4
+    id: GPIOG_2
     class: outputs
     ts_name: 3T - Fuel Pump Relay
     function: Fuel Pump Relay
@@ -242,7 +242,7 @@ pins:
     type: inj
 
   - pin: 3W
-    id: GPIOD_15
+    id: GPIOD_14
     class: outputs
     ts_name: 3W - IDLE
     function: IAC idle

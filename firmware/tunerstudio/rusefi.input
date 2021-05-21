@@ -179,8 +179,7 @@ enable2ndByteCanID = false
 ; Bit flags
 	  hasSdCard       = bits,    U32,      0,    [0:0], "true", "false";
 	  isIgnitionEnabledIndicator=bits,U32, 0,    [1:1], "true", "false";
-	  isInjectionEnabledIndicator=bits,U32,      0,    [2:2], "true", "false";
-	  isCylinderCleanupEnabled=bits,U32,   0,    [3:3], "true", "false";
+	  isInjectionEnabledIndicator=bits,U32,0,    [2:2], "true", "false";
 	  isCylinderCleanupActivated=bits,U32, 0,    [4:4], "true", "false";
 	  ind_fuel_pump   = bits,    U32,      0,    [5:5], "true", "false";
 	  ind_fan         = bits,    U32,      0,    [6:6], "true", "false";
@@ -206,6 +205,7 @@ enable2ndByteCanID = false
 	  ind_pedal_error  =bits,    U32,      0,  [26:26], "true", "false";
 	  isTps2Error     = bits,    U32,      0,  [29:29], "true", "false";
 	  isIdleClosedLoop= bits,    U32,      0,  [30:30], "true", "false";
+	  isIdleCoasting  = bits,    U32,      0,  [31:31], "true", "false";
 
 ; RPM, vss
       RPMValue        = scalar,  U16,      4,      "RPM",    1,   0.00000
@@ -1198,7 +1198,8 @@ gaugeCategory = DynoView
     indicator = { clutchDownState }, "clutch",   "cltch Down",   white, black, yellow,   black
     indicator = { brakePedalIndicator }, "brake",   "brake down",   white, black, red,   black
     indicator = { acSwitchState }, "AC off",   "AC on",   white, black, blue,   white
-	indicator = { isIdleClosedLoop }, "idle open loop", "idle closed loop", white, black, green, black
+	indicator = { isIdleClosedLoop }, "not idling", "idling", white, black, green, black
+	indicator = { isIdleCoasting }, "not coasting", "coasting", white, black, green, black
 
     ; error codes
     indicator = { isTpsError}, "tps",   "tps error",   white, black, red,   black
@@ -1503,6 +1504,9 @@ menuDialog = main
 		subMenu = fsioCurve2,			    "FSIO Curve #2"
 		subMenu = fsioCurve3,			    "FSIO Curve #3"
 		subMenu = fsioCurve4,			    "FSIO Curve #4"
+
+		subMenu = std_separator
+		subMenu = luaOutputs,			"Lua PWM Outputs"
 
 		subMenu = std_separator
 		subMenu = tcuControls,			"Transmission Settings"
@@ -3199,6 +3203,19 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 		field = "ADC #2",								fsioAdc2
 		field = "ADC #3",								fsioAdc3
 		field = "ADC #4",								fsioAdc4
+
+	dialog = luaOutputs, "Lua Outputs"
+		field = "#Call startPwm to initialize, then call"
+		field = "#setPwmDuty and setPwmFreq to vary duty/freq"
+		field = "#See rusefi.com/s/lua for more info"
+		field = "output #0", 							luaOutputPins1
+		field = "output #1", 							luaOutputPins2
+		field = "output #2", 							luaOutputPins3
+		field = "output #3", 							luaOutputPins4
+		field = "output #4", 							luaOutputPins5
+		field = "output #5", 							luaOutputPins6
+		field = "output #6", 							luaOutputPins7
+		field = "output #7", 							luaOutputPins8
 
 	dialog = transmissionPanel
 		field = "TCU Enabled"		tcuEnabled

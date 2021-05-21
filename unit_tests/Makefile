@@ -9,6 +9,7 @@ UNIT_TESTS_DIR=$(PROJECT_DIR)/../unit_tests
 # Imported source files and paths
 include $(PROJECT_DIR)/config/engines/engines.mk
 include $(PROJECT_DIR)/controllers/controllers.mk
+include $(PROJECT_DIR)/controllers/lua/lua.mk
 include $(PROJECT_DIR)/development/development.mk
 include $(PROJECT_DIR)/console/console.mk
 include $(PROJECT_DIR)/console/binary/tunerstudio.mk
@@ -42,6 +43,7 @@ CPPSRC += $(ALLCPPSRC) \
 	$(TRIGGER_DECODERS_SRC_CPP) \
 	$(ENGINES_SRC_CPP) \
 	$(CONTROLLERS_SRC_CPP) \
+	$(HW_LAYER_DRIVERS_CORE_CPP) \
 	$(CONTROLLERS_CORE_SRC_CPP) \
 	$(CONTROLLERS_MATH_SRC_CPP) \
 	$(CONTROLLERS_SENSORS_SRC_CPP) \
@@ -50,7 +52,7 @@ CPPSRC += $(ALLCPPSRC) \
 	$(SYSTEMSRC_CPP) \
 	$(HW_LAYER_EMS_CPP) \
 	$(TUNERSTUDIO_SRC_CPP) \
-	$(HW_SENSORS_SRC) \
+	$(HW_SENSORS_CPP) \
 	$(TRIGGER_SRC_CPP) \
 	$(INIT_SRC_CPP) \
 	$(PROJECT_DIR)/../unit_tests/logicdata.cpp \
@@ -74,6 +76,7 @@ INCDIR += $(UNIT_TESTS_DIR) \
 	$(HW_SENSORS_INC) \
 	$(HW_LAYER_DRIVERS_INC) \
 	$(UNIT_TESTS_DIR)/test_data_structures \
+	$(UNIT_TESTS_DIR)/chibios-mock \
 	$(UNIT_TESTS_DIR)/tests \
 	$(UNIT_TESTS_DIR)/tests/sensor \
 	$(UNIT_TESTS_DIR)/test_basic_math

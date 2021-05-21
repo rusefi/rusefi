@@ -218,14 +218,6 @@ void setConstantDwell(floatms_t dwellMs DECLARE_CONFIG_PARAMETER_SUFFIX) {
 	setLinearCurve(engineConfiguration->sparkDwellValues, dwellMs, dwellMs, 0.01);
 }
 
-void setLambdaMap(lambda_table_t table, float value) {
-	for (int l = 0; l < FUEL_LOAD_COUNT; l++) {
-		for (int rpmIndex = 0; rpmIndex < FUEL_RPM_COUNT; rpmIndex++) {
-			table[l][rpmIndex] = (int)(value * PACK_MULT_LAMBDA_CFG);
-		}
-	}
-}
-
 void setWholeIgnitionIatCorr(float value DECLARE_CONFIG_PARAMETER_SUFFIX) {
 	// todo: make setMap a template
 	setTable(config->ignitionIatCorrTable, value);
@@ -257,7 +249,7 @@ static void initTemperatureCurve(float *bins, float *values, int size, float def
 
 void prepareVoidConfiguration(engine_configuration_s *engineConfiguration) {
 	efiAssertVoid(OBD_PCM_Processor_Fault, engineConfiguration != NULL, "ec NULL");
-	memset(engineConfiguration, 0, sizeof(engine_configuration_s));
+	efi::clear(engineConfiguration);
 
 	engineConfiguration->clutchDownPinMode = PI_PULLUP;
 	engineConfiguration->clutchUpPinMode = PI_PULLUP;
@@ -488,6 +480,13 @@ static void setDefaultCrankingSettings(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 
 	static const float advanceBins[] = { 0, 200, 400, 1000 };
 	copyArray(engineConfiguration->crankingAdvanceBins, advanceBins);
+
+#if !EFI_UNIT_TEST
+	// don't set this for unit tests, as it makes things more complicated to test
+	engineConfiguration->postCrankingFactor = 1.2;
+#endif
+
+	engineConfiguration->postCrankingDurationSec = 10;
 }
 
 /**
@@ -678,7 +677,7 @@ static void setHip9011FrankensoPinout(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
  */
 static void setDefaultEngineConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 #if (! EFI_UNIT_TEST)
-	memset(&persistentState.persistentConfiguration, 0, sizeof(persistentState.persistentConfiguration));
+	efi::clear(persistentState.persistentConfiguration);
 #endif
 	prepareVoidConfiguration(engineConfiguration);
 
@@ -703,6 +702,8 @@ static void setDefaultEngineConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 #if EFI_BOOST_CONTROL
     setDefaultBoostParameters(PASS_CONFIG_PARAMETER_SIGNATURE);
 #endif
+
+    engineConfiguration->afterCrankingIACtaperDuration = 35;
 
     CONFIG(tachPulsePerRev) = 1;
 
@@ -795,8 +796,8 @@ static void setDefaultEngineConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	setLinearCurve(engineConfiguration->map.samplingWindowBins, 800, 7000, 1);
 	setLinearCurve(engineConfiguration->map.samplingWindow, 50, 50, 1);
 
-	setLambdaMap(config->lambdaTable, 1.0f);
-	engineConfiguration->stoichRatioPrimary = 14.7f * PACK_MULT_AFR_CFG;
+	setTable(config->lambdaTable, 1.0f);
+	engineConfiguration->stoichRatioPrimary = STOICH_RATIO * PACK_MULT_AFR_CFG;
 	engineConfiguration->stoichRatioSecondary = 9.0f * PACK_MULT_AFR_CFG;
 
 	setDefaultVETable(PASS_ENGINE_PARAMETER_SIGNATURE);
@@ -1065,6 +1066,8 @@ static void setDefaultEngineConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	// set_fsio_expression 1 "rpm > fsio_setting(1)"
 	setFsio(0, GPIO_UNASSIGNED, RPM_ABOVE_USER_SETTING_1 PASS_CONFIG_PARAMETER_SUFFIX);
 #endif /* EFI_FSIO */
+
+	strncpy(config->luaScript, "function onTick()\nend", efi::size(config->luaScript));
 }
 
 /**

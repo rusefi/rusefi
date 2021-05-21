@@ -13,7 +13,7 @@ static critical_msg_t warningBuffer;
 static critical_msg_t criticalErrorMessageBuffer;
 
 #if EFI_HD44780_LCD
-#include "lcd_HD44780.h"
+#include "HD44780.h"
 #endif /* EFI_HD44780_LCD */
 
 EXTERN_ENGINE;

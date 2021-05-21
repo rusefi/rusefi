@@ -83,7 +83,7 @@ bool shouldUpdateCorrection(SensorType sensor DECLARE_ENGINE_PARAMETER_SUFFIX) {
 
 	// Pause (but don't reset) correction if the AFR is off scale.
 	// It's probably a transient and poorly tuned transient correction
-	auto afr = Sensor::get(sensor).value_or(0) * 14.7f;
+	auto afr = Sensor::get(sensor).value_or(0) * STOICH_RATIO;
 	if (!afr || afr < (cfg.minAfr * 0.1f) || afr > (cfg.maxAfr * 0.1f)) {
 		return false;
 	}
