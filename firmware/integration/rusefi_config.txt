@@ -541,7 +541,7 @@ bit unused76b19;
 bit launchControlEnabled;
 bit rollingLaunchEnabled;
 bit antiLagEnabled;
-bit useRunningMathForCranking,"Fuel Map","Fixed";
+bit useRunningMathForCranking,"Fuel Map","Fixed";+For cranking either use the specified fixed base fuel mass, or use the normal running math (VE table).
 bit displayLogicLevelsInEngineSniffer;+Shall we display real life signal or just the part consumed by trigger decoder.\nenable logic_level_trigger
 bit useTLE8888_stepper;
 bit enableMapEstimationTableFallback;+If enabled, the MAP estimate table will be used if the MAP sensor fails to estimate manifold pressure based on RPM and TPS.
@@ -611,10 +611,10 @@ custom injection_mode_e 4 bits, U32, @OFFSET@, [0:1], "Simultaneous", "Sequentia
 injection_mode_e crankingInjectionMode;+This is the injection strategy during engine start.  See Fuel/Injection settings for more detail. It is suggested to use "Simultaneous".
 injection_mode_e injectionMode;+This is where the fuel injection type is defined: "Simultaneous" means all injectors will fire together at once. "Sequential" fires the injectors on a per cylinder basis, which requires individually wired injectors. "Batched" will fire the injectors in groups.  If your injectors are individually wired you will also need to enable "Two wire batch emulation". \nset injection_mode X\nSee also twoWireBatchInjection
 angle_t extraInjectionOffset;+this is about deciding when the injector starts it's squirt\nSee also injectionPhase map\ntodo: do we need even need this since we have the map anyway?;"deg",    1,      0.0,       -720,     720,        2
-angle_t crankingTimingAngle;+Ignition advance angle used during engine cranking, 5-10 degrees will work as a base setting for most engines.\nset cranking_timing_angle X;     "deg",    1,      0.0,    -360,     360,        2
+angle_t crankingTimingAngle;+Ignition advance angle used during engine cranking, 5-10 degrees will work as a base setting for most engines.\nset cranking_timing_angle X; "deg", 1, 0.0, -30, 30, 0
 
 custom ignition_mode_e 4 bits,    U32,    @OFFSET@, [0:1], "Single Coil", "Individual Coils", "Wasted Spark", "Two Distributors"
-ignition_mode_e ignitionMode;+"Single Coil" is for use on distributed ignition system. "Individual Coils" is to be used when you have one coil per cylinder (COP or similar). "Wasted Spark" means one coil is driving two spark plugs in two cylinders, with one of the sparks not doing anything since it's happening on the exhaust cycle\nset ignition_mode X
+ignition_mode_e ignitionMode;+Single coil = distributor\nIndividual coils = one coil per cylinder (COP, coil-near-plug), requires sequential mode\nWasted spark = Fires pairs of cylinders together, either one coil per pair of cylinders or one coil per cylinder\nTwo distributors = A pair of distributors, found on some BMW, Toyota and other engines\nset ignition_mode X
 
 float unusedOldIgnitionOffset;;"unused",1,0,0,1,0
 
@@ -893,7 +893,7 @@ custom uart_device_e 1 bits,U08,   @OFFSET@, [0:1], "Off", "UART1", "UART2", "UA
 	switch_input_pin_e startStopButtonPin;See also starterControlPin
 	
 	int mapMinBufferLength;;"count",        1,     0,  0,    24,  0
-	int16_t idlePidDeactivationTpsThreshold;+Below this throttle position, the engine is considered idling.;"%",        1,     0,  0,    100.0,  0
+	int16_t idlePidDeactivationTpsThreshold;+Below this throttle position, the engine is considered idling.;"%",1,0,0,50,0
 	int16_t stepperParkingExtraSteps;;"%",        1,     0,  0,    3000.0,  0
 	uint16_t tps1SecondaryMin;;"ADC", 1, 0, 0, 1000, 0
 	uint16_t tps1SecondaryMax;;"ADC", 1, 0, 0, 1000, 0
@@ -1101,7 +1101,7 @@ custom idle_mode_e 4 bits,    U32,   @OFFSET@, [0:0], "Automatic", "Manual"
 
 	bit isInjectionEnabled;+Enable fuel injection - This is default off for new projects as a safety feature, set to "true" to enable fuel injection and further injector settings.
 	bit isIgnitionEnabled;+Enable ignition - This is default off for new projects as a safety feature, set to "true" to enable ignition and further ignition settings.
-	bit isCylinderCleanupEnabled;+When enabled if TPS is held above 95% no fuel is injected while cranking to clear excess fuel from the cylinders. 
+	bit isCylinderCleanupEnabled;+When enabled if TPS is held above 95% no fuel is injected while cranking to clear excess fuel from the cylinders.
 	bit unused1476b3
 	bit unusedBit4_1476
 	bit isMapAveragingEnabled
@@ -1134,8 +1134,7 @@ bit unused_1484_bit_31
 
 	uint32_t engineChartSize;;"count",      1,      0,       0, 300,      0
 
-
-	int16_t idlePidRpmUpperLimit;+Relative to the target idle RPM - this limit is coupled with useIacTableForCoasting and iacCoasting parameters;"RPM",      1,      0,       0, 9000,      0
+	int16_t idlePidRpmUpperLimit;+How far above idle speed do we consider idling?\nFor example, if target = 800, this param = 200, then anything below 1000 RPM is considered idle.;"RPM", 1, 0, 0, 500, 0
     int16_t primeInjFalloffTemperature;+This sets the temperature above which no priming pulse is used, The value at -40 is reduced until there is no more priming injection at this temperature.;"*C",    1,      0,       0,  1000.0,        0
 
 
@@ -1218,7 +1217,7 @@ int16_t tps2Max;Full throttle#2. tpsMax value as 10 bit ADC value. Not Voltage!\
 	float throttlePedalWOTVoltage;+Pedal in the floor;"voltage",      1,     0,    -6,   6,      2
 	
 	int16_t fsio_visible startUpFuelPumpDuration;+on ECU start turn fuel pump on to build fuel pressure;"seconds",        1,     0,  0,    6000,  0
-	int16_t idlePidRpmDeadZone;If RPM is close enough let's leave IAC alone, and maybe engage timing PID correction;"RPM",        1,     0,  0,    1000,  0
+	int16_t idlePidRpmDeadZone;+If the RPM closer to target than this value, disable closed loop idle correction to prevent oscillation;"RPM",        1,     0,  0,    200,  0
 	
 	
 	float[CLT_CURVE_SIZE] cltIdleRpmBins;CLT-based target RPM for automatic idle controller;"C",        1,     0,   -100.0,    250.0,  2
@@ -1337,7 +1336,7 @@ tle8888_mode_e tle8888mode;
 	pin_output_mode_e LIS302DLCsPinMode;
 
 	custom injector_compensation_mode_e 1 bits, U08, @OFFSET@, [0:1], "None", "Fixed rail pressure", "Sensed Rail Pressure"
-	injector_compensation_mode_e injectorCompensationMode;
+	injector_compensation_mode_e injectorCompensationMode;+None = I have a MAP-referenced fuel pressure regulator\nFixed rail pressure = I have an atmosphere-referenced fuel pressure regulator (returnless, typically)\nSensed rail pressure = I have a fuel pressure sensor;
 
 	uint8_t unused2419;;"units", 1, 0, -20, 100, 0
 	float fuelReferencePressure;+This is the pressure at which your injector flow is known.\nFor example if your injectors flow 400cc/min at 3.5 bar, enter 350kpa here.;"kPa", 1, 0, 0, 700000, 0
@@ -1467,15 +1466,15 @@ tChargeMode_e tChargeMode;
 	int16_t idlerpmpid_iTermMin;iTerm min value;"",        1,     0,  -30000,    30000.0,  0
 
 	spi_device_e tle6240spiDevice;
-	uint8_t stoichRatioPrimary;+Stoichiometric ratio for your primary fuel. When Flex Fuel is enabled, this value is used when the Flex Fuel sensor indicates E0.;":1", {1/@@PACK_MULT_AFR_CFG@@},0, 5, 25.0, 1
+	uint8_t stoichRatioPrimary;+Stoichiometric ratio for your primary fuel. When Flex Fuel is enabled, this value is used when the Flex Fuel sensor indicates E0.\nE0 = 14.7\nE10 = 14.1\nE85 = 9.9\nE100 = 9.0;":1", {1/@@PACK_MULT_AFR_CFG@@},0, 5, 25.0, 1
 	int16_t idlerpmpid_iTermMax;iTerm max value;"",        1,     0,  -30000,    30000.0,  0
 
 	spi_device_e mc33972spiDevice;
-	uint8_t stoichRatioSecondary;+Stoichiometric ratio for your secondary fuel. This value is used when the Flex Fuel sensor indicates E100.;":1", {1/@@PACK_MULT_AFR_CFG@@},0, 5, 25.0, 1
+	uint8_t stoichRatioSecondary;+Stoichiometric ratio for your secondary fuel. This value is used when the Flex Fuel sensor indicates E100, typically 9.0;":1", {1/@@PACK_MULT_AFR_CFG@@},0, 5, 25.0, 1
 	uint8_t[2] unusedSpiPadding8;;"units", 1, 0, -20, 100, 0
 
 
-	float etbIdleThrottleRange; ETB idle authority; "%", 1, 0, 0, 15, 0
+	float etbIdleThrottleRange;+This sets the range of the idle control on the ETB. At 100% idle position, the value specified here sets the base ETB position.; "%", 1, 0, 0, 15, 0
 
 	uint8_t[INJECTION_PIN_COUNT iterate] cylinderBankSelect;+Select which fuel correction bank this cylinder belongs to.  Group cylinders that share the same O2 sensor; "", 1, 1, 1, 2, 0
 
