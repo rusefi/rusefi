@@ -206,89 +206,190 @@ pins:
     ts_name: 84 - TPS2 
     function: IN_TPS2
     
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
+  - pin: 85a
+    id: EFI_ADC_13
+    class: analog_inputs
+    ts_name: 85 - IAT
+    function: IAT sensor
+  
+  - pin: 86a
+    id: [GPIOA_6, EFI_ADC_6]
+    class: [event_inputs, analog_inputs]
+    ts_name: 86 - CAM1
+    function: Camshaft Sensor 1
     
+  - pin: 87a
+    id: [GPIOA_7, EFI_ADC_7]
+    class: [event_inputs, analog_inputs]
+    ts_name: 87 - CAM2
+    function: Camshaft Sensor 2
+    
+  - pin: 88a
+    id: GPIOD_10
+    class: outputs
+    ts_name: 88 - INJ_4
+    function: Injector #4
+    type: inj
+
+  - pin: 89a
+    id: GPIOG_8
+    class: outputs
+    ts_name: 89 - INJ_2
+    function: Injector #2
+    type: inj
+  
+  - pin: 90a
+    function: IN_CRANK-
+    
+  - pin: 91a
+    function: GNDA  
+    
+  - pin: 92a
+    id: EFI_ADC_4
+    class: analog_inputs
+    ts_name: 92 - TPS 1
+    function: TPS 1 sensor input  
+    
+  - pin: 93a
+    id: EFI_ADC_12
+    class: analog_inputs
+    ts_name: 93 - CLT
+    function: CLT sensor   
+  
+  - pin: 94a
+    id: GPIOE_3
+    class: outputs
+    ts_name: 94 - IGN_4
+    type: ign
+  
+  - pin: 95a
+    id: GPIOI_7
+    class: outputs
+    ts_name: 95 - IGN_8
+    type: ign
+  
+  - pin: 96A
+    id: GPIOG_7
+    class: outputs
+    ts_name: 96 - INJ_1
+    function: Injector #1
+    type: inj
+  
+  - pin: 97A
+    id: GPIOD_11
+    class: outputs
+    ts_name: 97 - INJ_3
+    function: Injector #3
+    type: inj
+  
+  - pin: 98a
+    function: +5v
+    
+  - pin: 99a
+    function: GNDA
+    
+  - pin: 101a
+    id: [GPIOC_1, EFI_ADC_11]
+    class: [outputs, analog_inputs]
+    ts_name: 101 - MAP2
+    function: Map2    
+   
+  - pin: 102a
+    id: GPIOI_8
+    class: outputs
+    ts_name: 102 - IGN_1
+    function: Coil #1
+    type: ign
+  
+  - pin: 103a
+    id: GPIOE_2
+    class: outputs
+    ts_name: 103 - IGN_5
+    type: ign
+  
+  - pin: 104a
+    id: GPIOA_9
+    class: outputs
+    ts_name: 104 Wastegate
+    function: OUT_WASTEGATE
+  
+  - pin: 105a
+    id: GPIOD_14
+    class: outputs
+    ts_name: 105 - IDLE
+    function: IAC
+    type: ls
+  
+  - pin: 106a
+    id: EFI_ADC_5
+    class: analog_inputs
+    ts_name: 106 - KNOCK
+    function: Knock sens. in
+    
+  - pin: 107a
+    function: Knock 2
+    
+  - pin: 108a
+    function: GNDA
+    
+  - pin: 110a
+    id: GPIOI_5
+    class: outputs
+    ts_name: 110 - IGN_6
+    type: ign
+  
+  - pin: 111a
+    id: GPIOE_4
+    class: outputs
+    ts_name: 111 - IGN_3
+    type: ign
+    
+  - pin: 112a
+    id: GPIOF_12
+    class: outputs
+    ts_name: 112 INJ 6
+    function: INJ_6
+    type: inj
+  
+  - pin: 113a
+    id: GPIOD_9
+    class: outputs
+    ts_name: 113 INJ 5
+    function: INJ_5
+    type: inj
+  
+  - pin: 115a
+    id: GPIOG_3
+    class: outputs
+    ts_name: 115 - VVT1_2
+    function: OUT_VVT1_2
+  
+  - pin: 117a
+    id: GPIOC_6
+    class: output
+    ts_name: 117 ETB_OUT+
+    function: +ETB_OUT
+  
+  - pin: 118a
+    id: GPIOC_7
+    class: output
+    ts_name: 118 ETB_OUT-
+    function: -ETB_OUT     
+   
+  - pin: 120a
+    id: GPIOC_8
+    class: outputs
+    ts_name: 120 - VVT2 B2
+    function: OUT_VVT2_B2
+  
+  - pin: 121a
+    function: +12v
     
     
 info:
   image:
     file: main.jpg
   pins:
-    - pin: 1A
+    - pin: 1a
       x: 39
       y: 31
