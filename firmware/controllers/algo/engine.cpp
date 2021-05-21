@@ -458,7 +458,7 @@ void Engine::injectEngineReferences() {
 
 void Engine::setConfig(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	INJECT_ENGINE_REFERENCE(this);
-	memset(config, 0, sizeof(persistent_config_s));
+	efi::clear(config);
 
 	injectEngineReferences();
 }
