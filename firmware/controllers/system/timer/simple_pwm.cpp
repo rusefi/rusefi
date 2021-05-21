@@ -10,7 +10,7 @@ SimplePwm::SimplePwm(const char* name)
 
 void SimplePwm::setSimplePwmDutyCycle(float duty) {
 	if (cisnan(duty)) {
-		warning(CUSTOM_DUTY_INVALID, "spwd:dutyCycle %.2f", dutyCycle);
+		warning(CUSTOM_DUTY_INVALID, "spwd:dutyCycle %.2f", duty);
 		return;
 	}
 
