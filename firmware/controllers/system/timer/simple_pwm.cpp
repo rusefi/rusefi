@@ -9,13 +9,8 @@ SimplePwm::SimplePwm(const char* name)
 }
 
 void SimplePwm::setSimplePwmDutyCycle(float duty) {
-	/*if (isStopRequested) {
-		// we are here in order to not change pin once PWM stop was requested
-		return;
-	}*/
-
 	if (cisnan(duty)) {
-		//warning(CUSTOM_DUTY_INVALID, "spwd:dutyCycle %.2f", dutyCycle);
+		warning(CUSTOM_DUTY_INVALID, "spwd:dutyCycle %.2f", dutyCycle);
 		return;
 	}
 
@@ -53,9 +48,13 @@ void SimplePwm::update() {
 	if (duty > 0.99f) {
 		m_highTime = periodNt;
 		m_lowTime = 0;
+
+		setHigh();
 	} else if (duty < 0.01f) {
 		m_highTime = 0;
 		m_lowTime = periodNt;
+
+		setLow();
 	} else {
 		float highTimeNt = periodNt * duty;
 
@@ -119,16 +118,12 @@ void SimplePwm::scheduleRise() {
 
 // Callback on rising edge
 void SimplePwm::setHigh() {
-	ScopePerf perf(PE::Temporary1);
-
 	m_pin->setValue(true);
 	scheduleFall();
 }
 
 // Callback on falling edge
 void SimplePwm::setLow() {
-	ScopePerf perf(PE::Temporary2);
-
 	m_pin->setValue(false);
 	scheduleRise();
 }
