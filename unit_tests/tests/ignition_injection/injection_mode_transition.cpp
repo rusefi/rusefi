@@ -41,8 +41,7 @@ TEST(fuelControl, transitionIssue1592) {
 	engineConfiguration->ambiguousOperationMode = FOUR_STROKE_CAM_SENSOR;
 	engineConfiguration->isFasterEngineSpinUpEnabled = true;
 
-	extern fuel_Map3D_t fuelPhaseMap;
-	fuelPhaseMap.setAll(0);
+	setTable(config->injectionPhase, 0.0f);
 	setArrayValues(config->crankingFuelCoef, 1.0f);
 	setArrayValues(config->crankingCycleCoef, 1.0f);
 
