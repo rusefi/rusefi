@@ -164,7 +164,7 @@ pins:
     class: digital_input
     function: IN_D2
     
-  - pin: 65A
+  - pin: 65a
     id: GPIOH_14
     class: outputs
     ts_name: 65 - Fuel Pump
@@ -268,14 +268,14 @@ pins:
     ts_name: 95 - IGN_8
     type: ign
   
-  - pin: 96A
+  - pin: 96a
     id: GPIOG_7
     class: outputs
     ts_name: 96 - INJ_1
     function: Injector #1
     type: inj
   
-  - pin: 97A
+  - pin: 97a
     id: GPIOD_11
     class: outputs
     ts_name: 97 - INJ_3
@@ -398,6 +398,10 @@ info:
       x: 456
       y: 582
 
+    - pin: 3a
+      x: 375
+      y: 405
+
     - pin: 4a
       x: 286
       y: 250
@@ -405,3 +409,33 @@ info:
     - pin: 5a
       x: 456
       y: 250
+
+
+    - pin: 62a
+      x: 732
+      y: 495
+
+
+    - pin: 81a
+      x: 732
+      y: 579
+
+    - pin: 82a
+      x: 2724
+      y: 585
+
+    - pin: 83a
+      x: 2802
+      y: 585
+
+    - pin: 84a
+      x: 2877
+      y: 585
+
+    - pin: 85a
+      x: 2958
+      y: 585
+
+    - pin: 89a
+      x: 3282
+      y: 585
