@@ -391,5 +391,17 @@ info:
     file: main.jpg
   pins:
     - pin: 1a
-      x: 39
-      y: 31
+      x: 286
+      y: 582
+
+    - pin: 2a
+      x: 456
+      y: 582
+
+    - pin: 4a
+      x: 286
+      y: 250
+
+    - pin: 5a
+      x: 456
+      y: 250
