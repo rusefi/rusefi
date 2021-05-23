@@ -3038,8 +3038,8 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 		field = "Override IAC multiplier for cranking",	overrideCrankingIacSetting
 		
 	dialog = crankingIgnition, "Ignition"
-		field = "Advance", 								crankingTimingAngle, {useSeparateAdvanceForCranking == 0}
-		field = "Use separate Advance Table for cranking",	useSeparateAdvanceForCranking
+		field = "Timing Advance mode",	useSeparateAdvanceForCranking
+		field = "Advance",						crankingTimingAngle, {useSeparateAdvanceForCranking == 0}
 		field = "Use Advance Corrections for cranking",	useAdvanceCorrectionsForCranking
         field = "Use fixed cranking dwell",         			useConstantDwellDuringCranking
         field = "Fixed Cranking Dwell",           			ignitionDwellForCrankingMs, {useConstantDwellDuringCranking == 1}
