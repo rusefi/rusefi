@@ -1116,7 +1116,7 @@ custom idle_mode_e 4 bits,    U32,   @OFFSET@, [0:0], "Automatic", "Manual"
 	bit useOnlyRisingEdgeForTrigger;+VR sensors are only precise on rising front\nenable trigger_only_front
 	bit twoWireBatchIgnition;+This is needed if your coils are individually wired (COP) and you wish to use batch ignition (Wasted Spark).
 bit useFixedBaroCorrFromMap
-bit useSeparateAdvanceForCranking,"Table, untapered","Tapered Constant";+This activates a separate advance table for cranking conditions, this allows cranking advance to be RPM dependant.
+bit useSeparateAdvanceForCranking,"Table (untapered)","Tapered Constant";+This activates a separate advance table for cranking conditions, this allows cranking advance to be RPM dependant.
 bit useAdvanceCorrectionsForCranking;+This enables the various ignition corrections during cranking (IAT, CLT, FSIO and PID idle).
 bit unused1476b19;
 bit unused1476b20;
