@@ -87,6 +87,9 @@ struct_no_prefix engine_configuration_s
 #define CAM_INPUTS_COUNT @@BANKS_COUNT@@ * @@CAMS_PER_BANK@@
 #define CAM_INPUTS_COUNT_padding 0
 
+// https://github.com/rusefi/rusefi/issues/2010 shows the corner case wheel with huge depth requirement
+#define GAP_TRACKING_LENGTH 18
+
 #define SERVO_COUNT 8
 
 #define CONSOLE_DATA_PROTOCOL_TAG " @"
@@ -521,7 +524,7 @@ injector_s injector
 bit isForcedInduction;
 bit useFordRedundantTps;+On Ford vehicles one of the sensors is not linear on the full range, i.e. in the specific range of the positions we effectively have only one sensor.
 bit isVerboseAuxPid1;
-bit unused_294_3;
+bit overrideTriggerGaps;
 bit unused_294_4;
 bit unused_294_5;
 bit unused_294_6;
@@ -1515,7 +1518,9 @@ tChargeMode_e tChargeMode;
 
 	int8_t[IGN_RPM_COUNT] knockBaseNoise;;"dB", 1.0, 0, -30.0, 0, 2
 
-	int[365] mainUnusedEnd;;"units", 1, 0, -20, 100, 0
+	float[GAP_TRACKING_LENGTH iterate] triggerGapOverride;
+
+	int[347] mainUnusedEnd;;"units", 1, 0, -20, 100, 0
 
 ! end of engine_configuration_s
 end_struct
