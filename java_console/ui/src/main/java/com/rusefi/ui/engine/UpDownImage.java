@@ -33,7 +33,7 @@ public class UpDownImage extends JPanel {
     private static final SimpleDateFormat FORMAT = new SimpleDateFormat("yyyy-MM-dd'T'hh:mm:ss");
     private static final int LINE_SIZE = 20;
     public static final Color TIME_SCALE_COLOR = Color.red;
-    public static final Color ENGINE_CYCLE_COLOR = Color.green;
+    public static final Color ENGINE_CYCLE_COLOR = new Color(0, 153, 0);
     private static final BasicStroke TIME_SCALE_STROKE = new BasicStroke(1, BasicStroke.CAP_BUTT, BasicStroke.JOIN_BEVEL, 10.0f,
             new float[]{7.0f, 21.0f}, 0.0f);
     private static final BasicStroke ENGINE_CYCLE_STROKE = new BasicStroke(1, BasicStroke.CAP_BUTT, BasicStroke.JOIN_BEVEL, 10.0f,
