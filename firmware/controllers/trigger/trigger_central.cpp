@@ -701,6 +701,7 @@ void onConfigurationChangeTriggerCallback(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 		isConfigurationChanged(triggerInputPins[2]) ||
 		isConfigurationChanged(vvtMode) ||
 		isConfigurationChanged(vvtCamSensorUseRise) ||
+		isConfigurationChanged(overrideTriggerGaps) ||
 		isConfigurationChanged(vvtOffset);
 	if (changed) {
 		assertEngineReference();
