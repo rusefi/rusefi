@@ -689,6 +689,10 @@ void onConfigurationChangeTriggerCallback(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 		changed |= isConfigurationChanged(camInputs[i]);
 	}
 
+	for (int i = 0; i < GAP_TRACKING_LENGTH; i++) {
+		changed |= isConfigurationChanged(triggerGapOverride[i]);
+	}
+
 	changed |=
 		isConfigurationChanged(trigger.type) ||
 		isConfigurationChanged(ambiguousOperationMode) ||

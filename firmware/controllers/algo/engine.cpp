@@ -146,6 +146,17 @@ void Engine::initializeTriggerWaveform(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 			engineConfiguration->ambiguousOperationMode,
 			engineConfiguration->useOnlyRisingEdgeForTrigger, &engineConfiguration->trigger));
 
+	/**
+	 * this is only useful while troubleshooting a new trigger shape in the field
+	 * in very VERY rare circumstances
+	 */
+	if (CONFIG(overrideTriggerGaps)) {
+		for (int gapIndex = 0;gapIndex<GAP_TRACKING_LENGTH;gapIndex++) {
+			float gapOverride = CONFIG(triggerGapOverride[gapIndex]);
+			TRIGGER_WAVEFORM(setTriggerSynchronizationGap3(/*gapIndex*/gapIndex, gapOverride * TRIGGER_GAP_DEVIATION_LOW, gapOverride * TRIGGER_GAP_DEVIATION_HIGH));
+		}
+	}
+
 	if (!TRIGGER_WAVEFORM(shapeDefinitionError)) {
 		/**
 	 	 * 'initState' instance of TriggerState is used only to initialize 'this' TriggerWaveform instance
@@ -159,8 +170,9 @@ void Engine::initializeTriggerWaveform(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	}
 
 
-	initVvtShape(0, initState PASS_ENGINE_PARAMETER_SUFFIX);
-	initVvtShape(1, initState PASS_ENGINE_PARAMETER_SUFFIX);
+	for (int camIndex = 0;camIndex < CAMS_PER_BANK;camIndex++) {
+		initVvtShape(camIndex, initState PASS_ENGINE_PARAMETER_SUFFIX);
+	}
 
 
 	if (!TRIGGER_WAVEFORM(shapeDefinitionError)) {
