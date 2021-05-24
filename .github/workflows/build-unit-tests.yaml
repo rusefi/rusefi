@@ -71,8 +71,6 @@ jobs:
         git remote -v
         echo See https://github.com/rusefi/rusefi/issues/2446
         git pull https://github.com/rusefi/rusefi master
-        mv triggers.txt unit_tests
-        mv *.logicdata  unit_tests
         git add unit_tests/triggers.txt
         git status
         OUT=$(git commit -m "Trigger wheel definitions" unit_tests/triggers.txt 2>&1) || echo "commit failed, finding out why"
