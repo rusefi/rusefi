@@ -1839,10 +1839,10 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 	dialog = triggerConfiguration_gap, "Trigger Gap Override"
 		field = "!This is a pretty advanced feature for when you are debugging trigger syncronizaion"
 		field = "Override well known trigger gaps",    overrideTriggerGaps
-		field = gapTrackingLengthOverride,				gapTrackingLengthOverride
-		field = "First gap",							triggerGapOverride1
-		field = "Second gap",							triggerGapOverride2
-		field = "Third gap",							triggerGapOverride3
+		field = gapTrackingLengthOverride,				gapTrackingLengthOverride, { overrideTriggerGaps == 1 }
+		field = "First gap",							triggerGapOverride1, { overrideTriggerGaps == 1 }
+		field = "Second gap",							triggerGapOverride2, { overrideTriggerGaps == 1 }
+		field = "Third gap",							triggerGapOverride3, { overrideTriggerGaps == 1 }
 		
 
 	dialog = triggerConfiguration_IO,	"Advanced Trigger"
