@@ -42,7 +42,8 @@ jobs:
       run: make -j4
       
     - name: Run Tests
-      run: ./unit_tests/build/rusefi_test
+      working-directory: ./unit_tests/
+      run: build/rusefi_test
 
     - name: Install Coverage Tools
       if: ${{ matrix.os != 'macos-latest' }}
