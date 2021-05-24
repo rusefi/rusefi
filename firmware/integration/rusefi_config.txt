@@ -619,7 +619,8 @@ angle_t crankingTimingAngle;+Ignition advance angle used during engine cranking,
 custom ignition_mode_e 4 bits,    U32,    @OFFSET@, [0:1], "Single Coil", "Individual Coils", "Wasted Spark", "Two Distributors"
 ignition_mode_e ignitionMode;+Single coil = distributor\nIndividual coils = one coil per cylinder (COP, coil-near-plug), requires sequential mode\nWasted spark = Fires pairs of cylinders together, either one coil per pair of cylinders or one coil per cylinder\nTwo distributors = A pair of distributors, found on some BMW, Toyota and other engines\nset ignition_mode X
 
-float unusedOldIgnitionOffset;;"unused",1,0,0,1,0
+int8_t gapTrackingLengthOverride;;"count",1,0,0,@@GAP_TRACKING_LENGTH@@,0
+ int8_t[3] unusedOldIgnitionOffset;;"unused",1,0,0,1,0
 
 custom timing_mode_e 4 bits, U32, @OFFSET@, [0:0], "dynamic", "fixed"
 timing_mode_e timingMode;+Dynamic uses the timing map to decide the ignition timing, Static timing fixes the timing to the value set below (only use for checking static timing with a timing light).
