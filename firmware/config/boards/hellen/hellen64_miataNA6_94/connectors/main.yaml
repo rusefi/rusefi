@@ -105,7 +105,7 @@ pins:
     type: din
 
   - pin: 2A
-    id: GPIOA_9
+    id: GPIOC_6
     class: outputs
     ts_name: 2A - Boost Control
     function: Boost Control Solenoid
@@ -191,10 +191,10 @@ pins:
     function: TPS INPUT
 
   - pin: 3O
-    id: GPIOG_2
-    class: outputs
-    ts_name: 3O - Fuel Pump NA6
-    function: FUEL PUMP OUTPUT
+    id: EFI_ADC_10
+    class: analog_inputs
+    ts_name: 3O - MAF
+    function: MAF Input
 
   - pin: 3P
     id: EFI_ADC_13
@@ -211,7 +211,7 @@ pins:
   - pin: 3T
     id: GPIOG_2
     class: outputs
-    ts_name: 3T - Fuel Pump Relay
+    ts_name: Fuel Pump Relay
     function: Fuel Pump Relay
     type: ls
 
