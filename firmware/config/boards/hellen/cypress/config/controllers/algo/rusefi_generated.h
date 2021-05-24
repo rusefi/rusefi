@@ -638,6 +638,7 @@
 #define fuelPumpPinMode_offset 659
 #define fuelReferencePressure_offset 2420
 #define GAP_TRACKING_LENGTH 18
+#define gapTrackingLengthOverride_offset 444
 #define GAUGE_COIL_DWELL_TIME "dwell: coil charge time"
 #define GAUGE_NAME_ACCEL_X "Acceleration: X"
 #define GAUGE_NAME_ACCEL_Y "Acceleration: Y"
@@ -1272,7 +1273,7 @@
 #define showSdCardWarning_offset 76
 #define SIGNATURE_BOARD hellen_cypress
 #define SIGNATURE_DATE 2021.05.24
-#define SIGNATURE_HASH 4240265314
+#define SIGNATURE_HASH 2838919747
 #define silentTriggerError_offset 1464
 #define slowAdcAlpha_offset 2088
 #define sparkDwellRpmBins_offset 332
@@ -1625,7 +1626,7 @@
 #define ts_show_spi true
 #define ts_show_trigger_comparator false
 #define ts_show_tunerstudio_port true
-#define TS_SIGNATURE "rusEFI 2021.05.24.hellen_cypress.4240265314"
+#define TS_SIGNATURE "rusEFI 2021.05.24.hellen_cypress.2838919747"
 #define TS_SINGLE_WRITE_COMMAND 'W'
 #define TS_SINGLE_WRITE_COMMAND_char W
 #define TS_TEST_COMMAND 't' // 0x74
@@ -1727,36 +1728,36 @@
 #define unusedAuxVoltage2_TODO_332_offset 2714
 #define unusedBit4_1476_offset 1476
 #define unusedBit_251_29_offset 976
-#define unusedBit_288_30_offset 976
-#define unusedBit_288_31_offset 976
+#define unusedBit_289_30_offset 976
+#define unusedBit_289_31_offset 976
 #define unusedBit_34_31_offset 76
-#define unusedBit_491_10_offset 2116
-#define unusedBit_491_11_offset 2116
-#define unusedBit_491_12_offset 2116
-#define unusedBit_491_13_offset 2116
-#define unusedBit_491_14_offset 2116
-#define unusedBit_491_15_offset 2116
-#define unusedBit_491_16_offset 2116
-#define unusedBit_491_17_offset 2116
-#define unusedBit_491_18_offset 2116
-#define unusedBit_491_19_offset 2116
-#define unusedBit_491_20_offset 2116
-#define unusedBit_491_21_offset 2116
-#define unusedBit_491_22_offset 2116
-#define unusedBit_491_23_offset 2116
-#define unusedBit_491_24_offset 2116
-#define unusedBit_491_25_offset 2116
-#define unusedBit_491_26_offset 2116
-#define unusedBit_491_27_offset 2116
-#define unusedBit_491_28_offset 2116
-#define unusedBit_491_29_offset 2116
-#define unusedBit_491_30_offset 2116
-#define unusedBit_491_31_offset 2116
-#define unusedBit_491_8_offset 2116
-#define unusedBit_491_9_offset 2116
+#define unusedBit_492_10_offset 2116
+#define unusedBit_492_11_offset 2116
+#define unusedBit_492_12_offset 2116
+#define unusedBit_492_13_offset 2116
+#define unusedBit_492_14_offset 2116
+#define unusedBit_492_15_offset 2116
+#define unusedBit_492_16_offset 2116
+#define unusedBit_492_17_offset 2116
+#define unusedBit_492_18_offset 2116
+#define unusedBit_492_19_offset 2116
+#define unusedBit_492_20_offset 2116
+#define unusedBit_492_21_offset 2116
+#define unusedBit_492_22_offset 2116
+#define unusedBit_492_23_offset 2116
+#define unusedBit_492_24_offset 2116
+#define unusedBit_492_25_offset 2116
+#define unusedBit_492_26_offset 2116
+#define unusedBit_492_27_offset 2116
+#define unusedBit_492_28_offset 2116
+#define unusedBit_492_29_offset 2116
+#define unusedBit_492_30_offset 2116
+#define unusedBit_492_31_offset 2116
+#define unusedBit_492_8_offset 2116
+#define unusedBit_492_9_offset 2116
 #define unusedHereWeHave_offset 1464
 #define unusedOldBiquad_offset 2330
-#define unusedOldIgnitionOffset_offset 444
+#define unusedOldIgnitionOffset_offset 445
 #define unusedSpiPadding4_offset 2593
 #define unusedSpiPadding5_offset 2715
 #define unusedSpiPadding8_offset 4010
