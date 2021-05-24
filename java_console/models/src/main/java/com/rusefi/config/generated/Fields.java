@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Sun May 23 18:15:57 UTC 2021
+// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Sun May 23 23:59:14 UTC 2021
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -616,6 +616,7 @@ public class Fields {
 	public static final int fuelPumpPin_offset = 658;
 	public static final int fuelPumpPinMode_offset = 659;
 	public static final int fuelReferencePressure_offset = 2420;
+	public static final int GAP_TRACKING_LENGTH = 18;
 	public static final String GAUGE_COIL_DWELL_TIME = "dwell: coil charge time";
 	public static final String GAUGE_NAME_ACCEL_X = "Acceleration: X";
 	public static final String GAUGE_NAME_ACCEL_Y = "Acceleration: Y";
@@ -1054,7 +1055,7 @@ public class Fields {
 	public static final int mafSensorType_offset = 948;
 	public static final int mainRelayPin_offset = 706;
 	public static final int mainRelayPinMode_offset = 752;
-	public static final int mainUnusedEnd_offset = 4540;
+	public static final int mainUnusedEnd_offset = 4612;
 	public static final int malfunctionIndicatorPin_offset = 660;
 	public static final int malfunctionIndicatorPinMode_offset = 661;
 	public static final int manIdlePosition_offset = 608;
@@ -1145,6 +1146,7 @@ public class Fields {
 	public static final int oilPressure_value2_offset = 2708;
 	public static final int onOffAlternatorLogic_offset = 744;
 	public static final int overrideCrankingIacSetting_offset = 1476;
+	public static final int overrideTriggerGaps_offset = 76;
 	public static final int PACK_ADD_TEMPERATURE = 40;
 	public static final int PACK_MULT_AFR = 1000;
 	public static final int PACK_MULT_AFR_CFG = 10;
@@ -1221,7 +1223,6 @@ public class Fields {
 	public static final int servoOutputPins8_offset = 3147;
 	public static final int showHumanReadableWarning_offset = 976;
 	public static final int showSdCardWarning_offset = 76;
-	public static final int SIGNATURE_HASH = 1486833149;
 	public static final int silentTriggerError_offset = 1464;
 	public static final int slowAdcAlpha_offset = 2088;
 	public static final int sparkDwellRpmBins_offset = 332;
@@ -1452,6 +1453,24 @@ public class Fields {
 	public static final int triggerCompSensorSatRpm_offset = 4039;
 	public static final int triggerErrorPin_offset = 828;
 	public static final int triggerErrorPinMode_offset = 829;
+	public static final int triggerGapOverride10_offset = 4576;
+	public static final int triggerGapOverride11_offset = 4580;
+	public static final int triggerGapOverride12_offset = 4584;
+	public static final int triggerGapOverride13_offset = 4588;
+	public static final int triggerGapOverride14_offset = 4592;
+	public static final int triggerGapOverride15_offset = 4596;
+	public static final int triggerGapOverride16_offset = 4600;
+	public static final int triggerGapOverride17_offset = 4604;
+	public static final int triggerGapOverride18_offset = 4608;
+	public static final int triggerGapOverride1_offset = 4540;
+	public static final int triggerGapOverride2_offset = 4544;
+	public static final int triggerGapOverride3_offset = 4548;
+	public static final int triggerGapOverride4_offset = 4552;
+	public static final int triggerGapOverride5_offset = 4556;
+	public static final int triggerGapOverride6_offset = 4560;
+	public static final int triggerGapOverride7_offset = 4564;
+	public static final int triggerGapOverride8_offset = 4568;
+	public static final int triggerGapOverride9_offset = 4572;
 	public static final int triggerInputPins1_offset = 700;
 	public static final int triggerInputPins2_offset = 701;
 	public static final int triggerInputPins3_offset = 702;
@@ -1505,7 +1524,7 @@ public class Fields {
 	public static final char TS_SD_R_COMMAND = 'r';
 	public static final char TS_SD_W_COMMAND = 'w';
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI 2021.05.23.all.1486833149";
+	public static final String TS_SIGNATURE = "rusEFI 2021.05.24.all.3200355250";
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final int TT_TT_1_16 = 50;
 	public static final int TT_TT_2JZ_1_12 = 29;
@@ -1594,7 +1613,6 @@ public class Fields {
 	public static final int unused_1484_bit_29_offset = 1476;
 	public static final int unused_1484_bit_30_offset = 1476;
 	public static final int unused_1484_bit_31_offset = 1476;
-	public static final int unused_294_3_offset = 76;
 	public static final int unused_294_4_offset = 76;
 	public static final int unused_294_5_offset = 76;
 	public static final int unused_294_6_offset = 76;
@@ -1721,7 +1739,7 @@ public class Fields {
 	public static final Field ISFORCEDINDUCTION = Field.create("ISFORCEDINDUCTION", 76, FieldType.BIT, 0);
 	public static final Field USEFORDREDUNDANTTPS = Field.create("USEFORDREDUNDANTTPS", 76, FieldType.BIT, 1);
 	public static final Field ISVERBOSEAUXPID1 = Field.create("ISVERBOSEAUXPID1", 76, FieldType.BIT, 2);
-	public static final Field UNUSED_294_3 = Field.create("UNUSED_294_3", 76, FieldType.BIT, 3);
+	public static final Field OVERRIDETRIGGERGAPS = Field.create("OVERRIDETRIGGERGAPS", 76, FieldType.BIT, 3);
 	public static final Field UNUSED_294_4 = Field.create("UNUSED_294_4", 76, FieldType.BIT, 4);
 	public static final Field UNUSED_294_5 = Field.create("UNUSED_294_5", 76, FieldType.BIT, 5);
 	public static final Field UNUSED_294_6 = Field.create("UNUSED_294_6", 76, FieldType.BIT, 6);
@@ -2770,6 +2788,24 @@ public class Fields {
 	public static final Field TCU_SOLENOID_MODE5 = Field.create("TCU_SOLENOID_MODE5", 4521, FieldType.INT8, pin_output_mode_e);
 	public static final Field TCU_SOLENOID_MODE6 = Field.create("TCU_SOLENOID_MODE6", 4522, FieldType.INT8, pin_output_mode_e);
 	public static final Field ALIGNMENTFILL_AT_4539 = Field.create("ALIGNMENTFILL_AT_4539", 4539, FieldType.INT8);
+	public static final Field TRIGGERGAPOVERRIDE1 = Field.create("TRIGGERGAPOVERRIDE1", 4540, FieldType.FLOAT);
+	public static final Field TRIGGERGAPOVERRIDE2 = Field.create("TRIGGERGAPOVERRIDE2", 4544, FieldType.FLOAT);
+	public static final Field TRIGGERGAPOVERRIDE3 = Field.create("TRIGGERGAPOVERRIDE3", 4548, FieldType.FLOAT);
+	public static final Field TRIGGERGAPOVERRIDE4 = Field.create("TRIGGERGAPOVERRIDE4", 4552, FieldType.FLOAT);
+	public static final Field TRIGGERGAPOVERRIDE5 = Field.create("TRIGGERGAPOVERRIDE5", 4556, FieldType.FLOAT);
+	public static final Field TRIGGERGAPOVERRIDE6 = Field.create("TRIGGERGAPOVERRIDE6", 4560, FieldType.FLOAT);
+	public static final Field TRIGGERGAPOVERRIDE7 = Field.create("TRIGGERGAPOVERRIDE7", 4564, FieldType.FLOAT);
+	public static final Field TRIGGERGAPOVERRIDE8 = Field.create("TRIGGERGAPOVERRIDE8", 4568, FieldType.FLOAT);
+	public static final Field TRIGGERGAPOVERRIDE9 = Field.create("TRIGGERGAPOVERRIDE9", 4572, FieldType.FLOAT);
+	public static final Field TRIGGERGAPOVERRIDE10 = Field.create("TRIGGERGAPOVERRIDE10", 4576, FieldType.FLOAT);
+	public static final Field TRIGGERGAPOVERRIDE11 = Field.create("TRIGGERGAPOVERRIDE11", 4580, FieldType.FLOAT);
+	public static final Field TRIGGERGAPOVERRIDE12 = Field.create("TRIGGERGAPOVERRIDE12", 4584, FieldType.FLOAT);
+	public static final Field TRIGGERGAPOVERRIDE13 = Field.create("TRIGGERGAPOVERRIDE13", 4588, FieldType.FLOAT);
+	public static final Field TRIGGERGAPOVERRIDE14 = Field.create("TRIGGERGAPOVERRIDE14", 4592, FieldType.FLOAT);
+	public static final Field TRIGGERGAPOVERRIDE15 = Field.create("TRIGGERGAPOVERRIDE15", 4596, FieldType.FLOAT);
+	public static final Field TRIGGERGAPOVERRIDE16 = Field.create("TRIGGERGAPOVERRIDE16", 4600, FieldType.FLOAT);
+	public static final Field TRIGGERGAPOVERRIDE17 = Field.create("TRIGGERGAPOVERRIDE17", 4604, FieldType.FLOAT);
+	public static final Field TRIGGERGAPOVERRIDE18 = Field.create("TRIGGERGAPOVERRIDE18", 4608, FieldType.FLOAT);
 	public static final Field WARNING_MESSAGE = Field.create("WARNING_MESSAGE", 6000, 120, FieldType.STRING);
 	public static final Field BOOSTTABLEOPENLOOP = Field.create("BOOSTTABLEOPENLOOP", 6248, FieldType.INT);
 	public static final Field BOOSTTABLECLOSEDLOOP = Field.create("BOOSTTABLECLOSEDLOOP", 6328, FieldType.INT);
@@ -2815,7 +2851,7 @@ public class Fields {
 	ISFORCEDINDUCTION,
 	USEFORDREDUNDANTTPS,
 	ISVERBOSEAUXPID1,
-	UNUSED_294_3,
+	OVERRIDETRIGGERGAPS,
 	UNUSED_294_4,
 	UNUSED_294_5,
 	UNUSED_294_6,
@@ -3842,6 +3878,24 @@ public class Fields {
 	TCU_SOLENOID_MODE5,
 	TCU_SOLENOID_MODE6,
 	ALIGNMENTFILL_AT_4539,
+	TRIGGERGAPOVERRIDE1,
+	TRIGGERGAPOVERRIDE2,
+	TRIGGERGAPOVERRIDE3,
+	TRIGGERGAPOVERRIDE4,
+	TRIGGERGAPOVERRIDE5,
+	TRIGGERGAPOVERRIDE6,
+	TRIGGERGAPOVERRIDE7,
+	TRIGGERGAPOVERRIDE8,
+	TRIGGERGAPOVERRIDE9,
+	TRIGGERGAPOVERRIDE10,
+	TRIGGERGAPOVERRIDE11,
+	TRIGGERGAPOVERRIDE12,
+	TRIGGERGAPOVERRIDE13,
+	TRIGGERGAPOVERRIDE14,
+	TRIGGERGAPOVERRIDE15,
+	TRIGGERGAPOVERRIDE16,
+	TRIGGERGAPOVERRIDE17,
+	TRIGGERGAPOVERRIDE18,
 	WARNING_MESSAGE,
 	BOOSTTABLEOPENLOOP,
 	BOOSTTABLECLOSEDLOOP,

@@ -637,6 +637,7 @@
 #define fuelPumpPin_offset 658
 #define fuelPumpPinMode_offset 659
 #define fuelReferencePressure_offset 2420
+#define GAP_TRACKING_LENGTH 18
 #define GAUGE_COIL_DWELL_TIME "dwell: coil charge time"
 #define GAUGE_NAME_ACCEL_X "Acceleration: X"
 #define GAUGE_NAME_ACCEL_Y "Acceleration: Y"
@@ -1087,7 +1088,7 @@
 #define mafSensorType_offset 948
 #define mainRelayPin_offset 706
 #define mainRelayPinMode_offset 752
-#define mainUnusedEnd_offset 4540
+#define mainUnusedEnd_offset 4612
 #define malfunctionIndicatorPin_offset 660
 #define malfunctionIndicatorPinMode_offset 661
 #define manIdlePosition_offset 608
@@ -1180,6 +1181,7 @@
 #define operation_mode_e_auto_enum "OM_NONE", "FOUR_STROKE_CRANK_SENSOR", "FOUR_STROKE_CAM_SENSOR", "TWO_STROKE", "FOUR_STROKE_SYMMETRICAL_CRANK_SENSOR", "FOUR_STROKE_THREE_TIMES_CRANK_SENSOR"
 #define output_pin_e_enum "NONE","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","D05 - Self Shutdown","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","D17 - FAN 1 relay","D03 - FAN 2 relay","C16 - Tacho out","C14 - FPump modulator","D23 - Fuel Pump relay","D22 - EGR control","D19 - Check Engine indicator","C15 - AUX1 OD out","D18 - Auxillary air valve","D06 - Absorber purge valve","D02 - IDLE open","D01 - IDLE close","INVALID","INVALID","B08 - AC clutch","D20 - Inertia-Resonance Super-Charger control","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","D13 - Injector 1","D11 - Injector 3","A01 - Injector 5","INVALID","D07 - Ignition 1","D09 - Ignition 3","INVALID","D21 - Ignition 5","D12 - Injector 2","D26 - Injector 4","A12 - Injector 6","INVALID","INVALID","D10 - Ignition 6","D08 - Ignition 2","D10 - Ignition 4"
 #define overrideCrankingIacSetting_offset 1476
+#define overrideTriggerGaps_offset 76
 #define PACK_ADD_TEMPERATURE 40
 #define PACK_MULT_AFR 1000
 #define PACK_MULT_AFR_CFG 10
@@ -1269,8 +1271,8 @@
 #define showHumanReadableWarning_offset 976
 #define showSdCardWarning_offset 76
 #define SIGNATURE_BOARD subaru_eg33_f7
-#define SIGNATURE_DATE 2021.05.23
-#define SIGNATURE_HASH 3408387843
+#define SIGNATURE_DATE 2021.05.24
+#define SIGNATURE_HASH 762909004
 #define silentTriggerError_offset 1464
 #define slowAdcAlpha_offset 2088
 #define sparkDwellRpmBins_offset 332
@@ -1509,6 +1511,24 @@
 #define triggerCompSensorSatRpm_offset 4039
 #define triggerErrorPin_offset 828
 #define triggerErrorPinMode_offset 829
+#define triggerGapOverride10_offset 4576
+#define triggerGapOverride11_offset 4580
+#define triggerGapOverride12_offset 4584
+#define triggerGapOverride13_offset 4588
+#define triggerGapOverride14_offset 4592
+#define triggerGapOverride15_offset 4596
+#define triggerGapOverride16_offset 4600
+#define triggerGapOverride17_offset 4604
+#define triggerGapOverride18_offset 4608
+#define triggerGapOverride1_offset 4540
+#define triggerGapOverride2_offset 4544
+#define triggerGapOverride3_offset 4548
+#define triggerGapOverride4_offset 4552
+#define triggerGapOverride5_offset 4556
+#define triggerGapOverride6_offset 4560
+#define triggerGapOverride7_offset 4564
+#define triggerGapOverride8_offset 4568
+#define triggerGapOverride9_offset 4572
 #define triggerInputPins1_offset 700
 #define triggerInputPins2_offset 701
 #define triggerInputPins3_offset 702
@@ -1605,7 +1625,7 @@
 #define ts_show_spi true
 #define ts_show_trigger_comparator false
 #define ts_show_tunerstudio_port false
-#define TS_SIGNATURE "rusEFI 2021.05.23.subaru_eg33_f7.3408387843"
+#define TS_SIGNATURE "rusEFI 2021.05.24.subaru_eg33_f7.762909004"
 #define TS_SINGLE_WRITE_COMMAND 'W'
 #define TS_SINGLE_WRITE_COMMAND_char W
 #define TS_TEST_COMMAND 't' // 0x74
@@ -1697,7 +1717,6 @@
 #define unused_1484_bit_29_offset 1476
 #define unused_1484_bit_30_offset 1476
 #define unused_1484_bit_31_offset 1476
-#define unused_294_3_offset 76
 #define unused_294_4_offset 76
 #define unused_294_5_offset 76
 #define unused_294_6_offset 76

@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Sun May 23 18:16:22 UTC 2021
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Sun May 23 23:59:40 UTC 2021
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -678,7 +678,7 @@ struct engine_configuration_s {
 	bool isVerboseAuxPid1 : 1;
 	/**
 	offset 76 bit 3 */
-	bool unused_294_3 : 1;
+	bool overrideTriggerGaps : 1;
 	/**
 	offset 76 bit 4 */
 	bool unused_294_4 : 1;
@@ -3791,10 +3791,15 @@ struct engine_configuration_s {
 	 */
 	uint8_t alignmentFill_at_4511[1];
 	/**
-	units
+	ratio
 	 * offset 4512
 	 */
-	int mainUnusedEnd[365];
+	float triggerGapOverride[GAP_TRACKING_LENGTH];
+	/**
+	units
+	 * offset 4584
+	 */
+	int mainUnusedEnd[347];
 	/** total size 5972*/
 };
 
@@ -4184,4 +4189,4 @@ struct persistent_config_s {
 };
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Sun May 23 18:16:22 UTC 2021
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Sun May 23 23:59:40 UTC 2021
