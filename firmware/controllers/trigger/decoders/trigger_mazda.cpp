@@ -174,7 +174,7 @@ void configureMazdaProtegeLx(TriggerWaveform *s) {
 void initializeMazdaMiataVVtCamShape(TriggerWaveform *s) {
 	s->initialize(FOUR_STROKE_CAM_SENSOR);
 
-	s->setTriggerSynchronizationGap2(8.50 * 0.75, 14.0);
+	s->setTriggerSynchronizationGap2(8.50 * TRIGGER_GAP_DEVIATION_LOW, 14.0);
 
 
 	s->addEvent720(325, T_PRIMARY, TV_FALL);
