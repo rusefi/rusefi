@@ -548,12 +548,14 @@ void TriggerState::decodeTriggerEvent(
 
 				int rpm = GET_RPM();
 				floatms_t engineCycleDuration = getEngineCycleDuration(rpm PASS_ENGINE_PARAMETER_SUFFIX);
-				int time = currentCycle.totalTimeNt[0];
-				efiPrintf("%s duty %f %d",
+				if (!engineConfiguration->useOnlyRisingEdgeForTrigger) {
+					int time = currentCycle.totalTimeNt[0];
+					efiPrintf("%s duty %f %d",
 						name,
 						time / engineCycleDuration,
 						time
 						);
+				}
 
 				for (int i = 0;i<triggerShape.gapTrackingLength;i++) {
 					float ratioFrom = triggerShape.syncronizationRatioFrom[i];
@@ -567,10 +569,11 @@ void TriggerState::decodeTriggerEvent(
 						efiPrintf("index=%d NaN gap, you have noise issues?",
 								i);
 					} else {
-						efiPrintf("%s rpm=%d time=%d index=%d: gap=%.3f expected from %.3f to %.3f error=%s",
+						efiPrintf("%s rpm=%d time=%d eventIndex=%d gapIndex=%d: gap=%.3f expected from %.3f to %.3f error=%s",
 								triggerConfiguration.PrintPrefix,
 								GET_RPM(),
 							/* cast is needed to make sure we do not put 64 bit value to stack*/ (int)getTimeNowSeconds(),
+							currentCycle.current_index,
 							i,
 							gap,
 							ratioFrom,
