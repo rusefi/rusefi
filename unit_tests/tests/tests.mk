@@ -7,6 +7,7 @@ TESTS_SRC_CPP = \
 	tests/trigger/test_2jz_vvt.cpp \
 	tests/trigger/test_real_cranking_miata_NA.cpp \
 	tests/trigger/test_quad_cam.cpp \
+	tests/trigger/test_override_gaps.cpp \
 	tests/trigger/test_injection_scheduling.cpp \
 	tests/ignition_injection/injection_mode_transition.cpp \
 	tests/ignition_injection/test_startOfCrankingPrimingPulse.cpp \

@@ -7,10 +7,7 @@
 
 #include "engine_test_helper.h"
 
-
-
-
-TEST(cramking, realNA) {
+TEST(cranking, realNA) {
 	FILE * fp = fopen("tests/trigger/recourses/cranking_na_3.csv", "r");
 
 	ASSERT_TRUE(fp != nullptr);
