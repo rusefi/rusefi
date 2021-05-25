@@ -80,6 +80,7 @@ pins:
   - pin: 1Q
     id: GPIOE_12
     class: switch_inputs
+    ts_name: 1Q AC Switch
     function: A/C switch input
     type: din
 
@@ -118,7 +119,7 @@ pins:
     
   - pin: 2L
     id: GPIOE_13
-    class: outputs
+    class: analog_input
     ts_name: 2L - Flex Fuel
     function: Flex Fuel Input
   
