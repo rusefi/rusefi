@@ -417,6 +417,9 @@
 #define ET_FRANKENSO_MIATA_NB2 47
 #define ET_HELLEN_121_NISSAN 72
 #define ET_HELLEN_121_VAG 71
+#define ET_HELLEN_121_VAG_5_CYL 77
+#define ET_HELLEN_121_VAG_6_CYL 78
+#define ET_HELLEN_121_VAG_8_CYL 79
 #define ET_HELLEN_128_MERCEDES 36
 #define ET_HELLEN_134_BMW 75
 #define ET_HELLEN_154_VAG 76
@@ -1272,8 +1275,8 @@
 #define showHumanReadableWarning_offset 976
 #define showSdCardWarning_offset 76
 #define SIGNATURE_BOARD hellen_cypress
-#define SIGNATURE_DATE 2021.05.24
-#define SIGNATURE_HASH 2838919747
+#define SIGNATURE_DATE 2021.05.25
+#define SIGNATURE_HASH 1293846710
 #define silentTriggerError_offset 1464
 #define slowAdcAlpha_offset 2088
 #define sparkDwellRpmBins_offset 332
@@ -1626,7 +1629,7 @@
 #define ts_show_spi true
 #define ts_show_trigger_comparator false
 #define ts_show_tunerstudio_port true
-#define TS_SIGNATURE "rusEFI 2021.05.24.hellen_cypress.2838919747"
+#define TS_SIGNATURE "rusEFI 2021.05.25.hellen_cypress.1293846710"
 #define TS_SINGLE_WRITE_COMMAND 'W'
 #define TS_SINGLE_WRITE_COMMAND_char W
 #define TS_TEST_COMMAND 't' // 0x74
