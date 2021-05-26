@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on hellen_cypress_gen_config.bat integration/rusefi_config.txt Tue May 25 22:17:35 UTC 2021
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on hellen_cypress_gen_config.bat integration/rusefi_config.txt Wed May 26 18:20:13 UTC 2021
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -1588,6 +1588,7 @@ struct engine_configuration_s {
 	offset 744 bit 30 */
 	bool idleIncrementalPidCic : 1;
 	/**
+	 * AEM X-Series or rusEFI Wideband
 	offset 744 bit 31 */
 	bool enableAemXSeries : 1;
 	/**
@@ -4200,4 +4201,4 @@ struct persistent_config_s {
 };
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on hellen_cypress_gen_config.bat integration/rusefi_config.txt Tue May 25 22:17:35 UTC 2021
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on hellen_cypress_gen_config.bat integration/rusefi_config.txt Wed May 26 18:20:13 UTC 2021
