@@ -87,8 +87,8 @@ static void initializeSubaru7_6(TriggerWaveform *s, bool withCrankWheel) {
 	s->addEvent720(366 - width, T_PRIMARY, TV_RISE);
 	s->addEvent720(366, T_PRIMARY, TV_FALL);
 
-	s->addEvent720(384 - width, T_PRIMARY, TV_RISE);
-	s->addEvent720(384, T_PRIMARY, TV_FALL);
+	s->addEvent720(375 - width, T_PRIMARY, TV_RISE);
+	s->addEvent720(375, T_PRIMARY, TV_FALL);
 
 	if (withCrankWheel) {
 		s->addEvent720(magic + 180 - 87 - width, T_SECONDARY, TV_RISE);
@@ -115,7 +115,7 @@ static void initializeSubaru7_6(TriggerWaveform *s, bool withCrankWheel) {
 	s->addEvent720(720, T_PRIMARY, TV_FALL);
 
 	// why is this trigger gap wider than average?
-	s->setTriggerSynchronizationGap2(6.53 * TRIGGER_GAP_DEVIATION_LOW, 7.2 * TRIGGER_GAP_DEVIATION_HIGH);
+	s->setTriggerSynchronizationGap2(6.53 * TRIGGER_GAP_DEVIATION_LOW, 10.4 * TRIGGER_GAP_DEVIATION_HIGH);
 	s->setTriggerSynchronizationGap3(1, 0.8 * TRIGGER_GAP_DEVIATION_LOW, 1 * TRIGGER_GAP_DEVIATION_HIGH);
 
 	s->useOnlyPrimaryForSync = true;
