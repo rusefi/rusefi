@@ -518,21 +518,21 @@ end_struct
 
 injector_s injector
 
-bit isForcedInduction;
+bit isForcedInduction
 bit useFordRedundantTps;+On Ford vehicles one of the sensors is not linear on the full range, i.e. in the specific range of the positions we effectively have only one sensor.
-bit isVerboseAuxPid1;
-bit unused_294_3;
-bit unused_294_4;
-bit unused_294_5;
-bit unused_294_6;
-bit unused_294_7;
-bit unused_294_8;
+bit isVerboseAuxPid1
+bit unused_294_3
+bit unused_294_4
+bit unused_294_5
+bit unused_294_6
+bit unused_294_7
+bit unused_294_8
 bit isCJ125Verbose;enable cj125verbose/disable cj125verbose
 bit cj125isUaDivided;+Is your UA CJ125 output wired to MCU via resistor divider? Ua can go over 3.3v but only at lambda >3, i.e very lean AFR above 44.1\nWhen exposed to free air and 17x gain, Ua will be 4.17 volt
-bit cj125isLsu49;
+bit cj125isLsu49
 bit etb_use_two_wires;+TLE7209 uses two-wire mode. TLE9201 and VNH2SP30 do NOT use two wire mode.
 bit isDoubleSolenoidIdle;+Subaru/BMW style where default valve position is somewhere in the middle. First solenoid opens it more while second can close it more than default position.
-bit showSdCardWarning;
+bit showSdCardWarning
 bit cj125isUrDivided;+Is your UR CJ125 output wired to MCU via resistor divider?\nLooks like 3v range should be enough, divider generally not needed.
 bit useCicPidForIdle;+Switch between Industrial and Cic PID implementation
 bit useTLE8888_cranking_hack;
@@ -543,12 +543,12 @@ bit rollingLaunchEnabled;
 bit antiLagEnabled;
 bit useRunningMathForCranking,"Fuel Map","Fixed";+For cranking either use the specified fixed base fuel mass, or use the normal running math (VE table).
 bit displayLogicLevelsInEngineSniffer;+Shall we display real life signal or just the part consumed by trigger decoder.\nenable logic_level_trigger
-bit useTLE8888_stepper;
+bit useTLE8888_stepper
 bit enableMapEstimationTableFallback;+If enabled, the MAP estimate table will be used if the MAP sensor fails to estimate manifold pressure based on RPM and TPS.
-bit useFSIOTableForCanSniffingFiltering;
-bit issue_294_29;
-bit issue_294_30;
-bit issue_294_31,"si_example","nada_example";
+bit useFSIOTableForCanSniffingFiltering
+bit issue_294_29
+bit issue_294_30
+bit issue_294_31,"si_example","nada_example"
 
 
 !todo: extract these two fields into a structure
@@ -604,7 +604,7 @@ int sensorSnifferRpmThreshold;+Disable sensor sniffer above this rpm;"RPM",     
 
 
 custom engine_load_mode_e 4 bits, U32, @OFFSET@, [0:2], @@engine_load_mode_e_enum@@
-engine_load_mode_e fuelAlgorithm;+This setting controls which fuel quantity control algorithm is used.
+engine_load_mode_e fuelAlgorithm;+This setting controls which fuel quantity control algorithm is used.;
 
 
 custom injection_mode_e 4 bits, U32, @OFFSET@, [0:1], "Simultaneous", "Sequential", "Batch", "Single Point"
@@ -673,8 +673,8 @@ custom bool32_t 4 bits,    U32,   @OFFSET@, [0:0], "false", "true"
 custom trigger_type_e 4 bits,    U32,   @OFFSET@, [0:5], @@trigger_type_e_enum@@
 	trigger_type_e type;+https://github.com/rusefi/rusefi/wiki/All-Supported-Triggers\nset trigger_type X
 
-	bit todoRemoveMeOneDay0;
-	bit todoRemoveMeOneDay1;
+	bit todoRemoveMeOneDay0
+	bit todoRemoveMeOneDay1
 	bit useOnlyFirstChannel;+This option could be used if your second trigger channel is broken
 
 	int customTotalToothCount;;"number",    1,      0.0,       0,  500.0,        0
@@ -719,10 +719,10 @@ air_pressure_sensor_config_s baroSensor;@see hasBaroSensor
 struct idle_hardware_s
 	int solenoidFrequency;;"Hz",      1,      0,       0, 3000,      0
 
-	output_pin_e solenoidPin;
-	output_pin_e stepperDirectionPin;
-	output_pin_e stepperStepPin; 
-	pin_output_mode_e solenoidPinMode;
+	output_pin_e solenoidPin
+	output_pin_e stepperDirectionPin
+	output_pin_e stepperStepPin
+	pin_output_mode_e solenoidPinMode
 end_struct
 
 struct dc_io
@@ -837,10 +837,10 @@ bit is_enabled_spi_2
 	bit useSerialPort
 	bit useStepperIdle;+This setting should only be used if you have a stepper motor idle valve and a stepper motor driver installed. 
 	
-	bit enabledStep1Limiter;
-	bit useTpicAdvancedMode;
-	bit useLcdScreen;
-	bit verboseTLE8888;
+	bit enabledStep1Limiter
+	bit useTpicAdvancedMode
+	bit useLcdScreen
+	bit verboseTLE8888
 	bit enableVerboseCanTx;+CAN broadcast using custom rusEFI protocol\nenable can_broadcast/disable can_broadcast
 	bit onOffAlternatorLogic;+This will cause the alternator to be operated in a basic on or off mode, this is the simplest alternator control.
 	bit isCJ125Enabled;enable cj125/disable cj125
@@ -905,7 +905,6 @@ custom uart_device_e 1 bits,U08,   @OFFSET@, [0:1], "Off", "UART1", "UART2", "UA
 	output_pin_e acRelayPin;
 	pin_output_mode_e acRelayPinMode;
 
-custom pid_dt 4 scalar, U32,  @OFFSET@, "ms",      1,      0,       0, 3000,      0
 custom fsio_pwm_freq_t 2 scalar,  U16,   @OFFSET@,         "Hz",      1,      0,       0, 3000,      0
 	fsio_pwm_freq_t[FSIO_COMMAND_COUNT iterate] fsioFrequency;
 
@@ -925,7 +924,7 @@ custom fsio_setting_t 4 scalar,  F32,   @OFFSET@, 		"Val",	   1,	   0,       0, 
 	brain_pin_e spi3misoPin;
 
 	brain_pin_e spi3sckPin;
-	brain_pin_e cdmInputPin;+Saab Combustion Detection Module knock signal input pin\nalso known as Saab Ion Sensing Module
+	brain_pin_e cdmInputPin;+Saab Combustion Detection Module knock signal input pin\nalso known as Saab Ion Sensing Module;
 	brain_pin_e joystickCenterPin;
 	brain_pin_e joystickAPin;
 
@@ -937,7 +936,7 @@ custom fsio_setting_t 4 scalar,  F32,   @OFFSET@, 		"Val",	   1,	   0,       0, 
 
 #define sensor_chart_e_enum "none", "trigger", "MAP", "RPM ACCEL", "DETAILED RPM", "Fast Aux1", "INVALID", "INVALID"
 custom sensor_chart_e 4 bits, S32, @OFFSET@, [0:2], @@sensor_chart_e_enum@@
-sensor_chart_e sensorChartMode;+rusEfi console Sensor Sniffer mode
+sensor_chart_e sensorChartMode;+rusEfi console Sensor Sniffer mode;
 
 
 #define maf_sensor_type_e_enum "v0", "v1", "v2", "v3"
@@ -976,30 +975,30 @@ custom maf_sensor_type_e 4 bits, S32, @OFFSET@, [0:1], @@maf_sensor_type_e_enum@
 	bit enableInnovateLC2
 	bit showHumanReadableWarning
 	bit stftIgnoreErrorMagnitude;+If enabled, adjust at a constant rate instead of a rate proportional to the current lambda error.  This mode may be easier to tune, and more tolerant of sensor noise.  Use of this mode is required if you have a narrowband O2 sensor.
-	bit unused976b11;
+	bit unused976b11
 	bit enableSoftwareKnock
 	bit verboseVVTDecoding;enable vvt_details
 	bit invertCamVVTSignal;get invertCamVVTSignal
 	bit consumeObdSensors;+This property is useful if using rusEFI as TCM or BCM only\nenable consumeObdSensors
-	bit knockBankCyl1,"Channel 2","Channel 1";
-	bit knockBankCyl2,"Channel 2","Channel 1";
-	bit knockBankCyl3,"Channel 2","Channel 1";
-	bit knockBankCyl4,"Channel 2","Channel 1";
-	bit knockBankCyl5,"Channel 2","Channel 1";
-	bit knockBankCyl6,"Channel 2","Channel 1";
-	bit knockBankCyl7,"Channel 2","Channel 1";
-	bit knockBankCyl8,"Channel 2","Channel 1";
-	bit knockBankCyl9,"Channel 2","Channel 1";
-	bit knockBankCyl10,"Channel 2","Channel 1";
-	bit knockBankCyl11,"Channel 2","Channel 1";
-	bit knockBankCyl12,"Channel 2","Channel 1";
+	bit knockBankCyl1,"Channel 2","Channel 1"
+	bit knockBankCyl2,"Channel 2","Channel 1"
+	bit knockBankCyl3,"Channel 2","Channel 1"
+	bit knockBankCyl4,"Channel 2","Channel 1"
+	bit knockBankCyl5,"Channel 2","Channel 1"
+	bit knockBankCyl6,"Channel 2","Channel 1"
+	bit knockBankCyl7,"Channel 2","Channel 1"
+	bit knockBankCyl8,"Channel 2","Channel 1"
+	bit knockBankCyl9,"Channel 2","Channel 1"
+	bit knockBankCyl10,"Channel 2","Channel 1"
+	bit knockBankCyl11,"Channel 2","Channel 1"
+	bit knockBankCyl12,"Channel 2","Channel 1"
 	bit tcuEnabled
 	bit unusedBit_251_29
 	
 	dc_io[ETB_COUNT iterate] etbIo
 
 
-    output_pin_e boostControlPin;+Wastegate control Solenoid
+    output_pin_e boostControlPin;+Wastegate control Solenoid;
 	pin_output_mode_e boostControlPinMode;
     switch_input_pin_e antiLagActivatePin;
     switch_input_pin_e launchActivatePin;
@@ -1078,21 +1077,21 @@ bit cutFuelOnHardLimit,"yes","no"
 bit cutSparkOnHardLimit,"yes","no"
 bit launchFuelCutEnable
 bit launchSparkCutEnable;+This is the Cut Mode normally used
-bit hasFrequencyReportingMapSensor;
+bit hasFrequencyReportingMapSensor
 	bit useFSIO8ForServo1
 	bit useFSIO9ForServo2
 	bit useFSIO10ForServo3
 	bit useFSIO11ForServo4
 	bit useFSIO12ForServo5
-bit useFSIO15ForIdleRpmAdjustment;
+bit useFSIO15ForIdleRpmAdjustment
 bit useFSIO5ForCriticalIssueEngineStop;Sometimes we just have to shut the engine down. Use carefully!
 bit useFSIO4ForSeriousEngineWarning;Sometimes we have to miss injection on purpose to attract driver's attention
-bit useFSIO12ForIdleOffset;
-bit useFSIO13ForIdleMinValue;
-bit useFSIO6ForRevLimiter;
+bit useFSIO12ForIdleOffset
+bit useFSIO13ForIdleMinValue
+bit useFSIO6ForRevLimiter
 
 	adc_channel_e hipOutputChannel;
-	switch_input_pin_e acSwitch; A/C button input
+	switch_input_pin_e acSwitch;A/C button input;
 	adc_channel_e vRefAdcChannel;
 	uint8_t etbNeutralPosition;+Expected neutral position;"%",      1,      0,       0, 100,      0
 
@@ -1118,10 +1117,10 @@ custom idle_mode_e 4 bits,    U32,   @OFFSET@, [0:0], "Automatic", "Manual"
 bit useFixedBaroCorrFromMap
 bit useSeparateAdvanceForCranking;+This activates a separate advance table for cranking conditions, this allows cranking advance to be RPM dependant.
 bit useAdvanceCorrectionsForCranking;+This enables the various ignition corrections during cranking (IAT, CLT, FSIO and PID idle).
-bit unused1476b19;
-bit unused1476b20;
+bit unused1476b19
+bit unused1476b20
 bit useIacPidMultTable;+This flag allows to use a special 'PID Multiplier' table (0.0-1.0) to compensate for nonlinear nature of IAC-RPM controller
-bit isBoostControlEnabled;
+bit isBoostControlEnabled
 bit launchSmoothRetard;+Interpolates the Ignition Retard from 0 to 100% within the RPM Range
 bit unused_1484_bit_24
 bit unused_1484_bit_25
@@ -1352,8 +1351,7 @@ tle8888_mode_e tle8888mode;
 	pid_s etbWastegatePid;
 	uint8_t[4] unused2536;;"units", 1, 0, -20, 100, 0
 
-	custom cfg_float_t_1f 4 scalar,  F32,   @OFFSET@, 		"Val",	   1,	   0,       -20000000, 20000000,	  1
-	cfg_float_t_1f[IGNITION_PIN_COUNT iterate] timing_offset_cylinder;per-cylinder timing correction
+	angle_t[IGNITION_PIN_COUNT iterate] timing_offset_cylinder;per-cylinder timing correction
 
 	
 	float idlePidActivationTime;;"seconds",        1,     0,  0,    60,  1
@@ -1362,7 +1360,7 @@ tle8888_mode_e tle8888mode;
 	uint8_t[3] unusedSpiPadding4;;"units", 1, 0, -20, 100, 0
 
 	pin_mode_e spi1SckMode;
-	pin_mode_e spi1MosiMode;+Modes count be used for 3v<>5v integration using pull-ups/pull-downs etc.
+	pin_mode_e spi1MosiMode;+Modes count be used for 3v<>5v integration using pull-ups/pull-downs etc.;
 	pin_mode_e spi1MisoMode;
 
 	pin_mode_e spi2SckMode;
@@ -1401,7 +1399,7 @@ tle8888_mode_e tle8888mode;
 	float[FSIO_CURVE_8] fsioCurve4Bins;;"x",        1,     0,   -999,    1000.0,  3
 	float[FSIO_CURVE_8] fsioCurve4;;"y",      1,     0,      -999,    1000.0,   3
 
-	brain_input_pin_e flexSensorPin;+Continental/GM flex fuel sensor, 50-150hz type
+	brain_input_pin_e flexSensorPin;+Continental/GM flex fuel sensor, 50-150hz type;
 	brain_pin_e test557pin
 	pin_output_mode_e stepperDirectionPinMode;
 	adc_channel_e externalKnockSenseAdc;
