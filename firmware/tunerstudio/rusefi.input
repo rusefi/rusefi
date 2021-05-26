@@ -1376,6 +1376,7 @@ menuDialog = main
 		subMenu = limitsAndFallback,		"Limits and fallbacks"
 		subMenu = triggerConfiguration,		"Trigger"
 		subMenu = triggerConfiguration_IO, "Advanced Trigger"
+		subMenu = triggerConfiguration_gap, "Trigger Gap Override"
 		subMenu = std_separator
 		subMenu = energySystems,			"Battery and alternator"
 		subMenu = std_separator
@@ -1834,6 +1835,15 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 	    field = "!For well-known trigger types use '0' trigger angle offset"
 	    field = "Trigger Angle Advance",         		globalTriggerAngleOffset
 	    field = "Display logic signals",				displayLogicLevelsInEngineSniffer
+
+	dialog = triggerConfiguration_gap, "Trigger Gap Override"
+		field = "!This is a pretty advanced feature for when you are debugging trigger syncronizaion"
+		field = "Override well known trigger gaps",    overrideTriggerGaps
+		field = gapTrackingLengthOverride,				gapTrackingLengthOverride, { overrideTriggerGaps == 1 }
+		field = "First gap",							triggerGapOverride1, { overrideTriggerGaps == 1 }
+		field = "Second gap",							triggerGapOverride2, { overrideTriggerGaps == 1 }
+		field = "Third gap",							triggerGapOverride3, { overrideTriggerGaps == 1 }
+		
 
 	dialog = triggerConfiguration_IO,	"Advanced Trigger"
 	    field = "!https://rusefi.com/s/vvt"
@@ -3038,8 +3048,8 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 		field = "Override IAC multiplier for cranking",	overrideCrankingIacSetting
 		
 	dialog = crankingIgnition, "Ignition"
-		field = "Advance", 								crankingTimingAngle, {useSeparateAdvanceForCranking == 0}
-		field = "Use separate Advance Table for cranking",	useSeparateAdvanceForCranking
+		field = "Timing Advance mode",	useSeparateAdvanceForCranking
+		field = "Advance",						crankingTimingAngle, {useSeparateAdvanceForCranking == 0}
 		field = "Use Advance Corrections for cranking",	useAdvanceCorrectionsForCranking
         field = "Use fixed cranking dwell",         			useConstantDwellDuringCranking
         field = "Fixed Cranking Dwell",           			ignitionDwellForCrankingMs, {useConstantDwellDuringCranking == 1}

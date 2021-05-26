@@ -5,8 +5,8 @@ set -e
 
 rm -f rusefi.zip ramdisk_image.h
 
-# copy 100KB of zeroes
-dd if=/dev/zero of=ramdisk.image bs=1024 count=100
+# copy *count*KB of zeroes
+dd if=/dev/zero of=ramdisk.image bs=1024 count=112
 
 # create a FAT filesystem inside, name it RUSEFI
 mkfs.fat ramdisk.image

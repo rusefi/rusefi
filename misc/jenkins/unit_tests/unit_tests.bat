@@ -31,12 +31,10 @@ if not exist build/rusefi_test.exe exit -1
 
 echo "TIMESTAMP %date% %time% Unit tests build looks good, now executing unit tests"
 
-cd build
-call rusefi_test.exe
+call build\rusefi_test.exe
 IF NOT ERRORLEVEL 0 echo ERROR: UNIT TEST FAILED
 IF NOT ERRORLEVEL 0 EXIT /B 1
 
-cd ..
 cd ..
 
 echo Back to root folder

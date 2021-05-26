@@ -87,6 +87,9 @@ struct_no_prefix engine_configuration_s
 #define CAM_INPUTS_COUNT @@BANKS_COUNT@@ * @@CAMS_PER_BANK@@
 #define CAM_INPUTS_COUNT_padding 0
 
+// https://github.com/rusefi/rusefi/issues/2010 shows the corner case wheel with huge depth requirement
+#define GAP_TRACKING_LENGTH 18
+
 #define SERVO_COUNT 8
 
 #define CONSOLE_DATA_PROTOCOL_TAG " @"
@@ -499,6 +502,9 @@ end_struct
 #define ET_HELLEN_134_BMW 75
 #define ET_HELLEN_154_VAG 76
 
+#define ET_HELLEN_121_VAG_5_CYL 77
+#define ET_HELLEN_121_VAG_6_CYL 78
+#define ET_HELLEN_121_VAG_8_CYL 79
 
 #define ET_PROTEUS_ANALOG_PWM_TEST 106
 
@@ -521,7 +527,7 @@ injector_s injector
 bit isForcedInduction
 bit useFordRedundantTps;+On Ford vehicles one of the sensors is not linear on the full range, i.e. in the specific range of the positions we effectively have only one sensor.
 bit isVerboseAuxPid1
-bit unused_294_3
+bit overrideTriggerGaps
 bit unused_294_4
 bit unused_294_5
 bit unused_294_6
@@ -611,12 +617,13 @@ custom injection_mode_e 4 bits, U32, @OFFSET@, [0:1], "Simultaneous", "Sequentia
 injection_mode_e crankingInjectionMode;+This is the injection strategy during engine start.  See Fuel/Injection settings for more detail. It is suggested to use "Simultaneous".
 injection_mode_e injectionMode;+This is where the fuel injection type is defined: "Simultaneous" means all injectors will fire together at once. "Sequential" fires the injectors on a per cylinder basis, which requires individually wired injectors. "Batched" will fire the injectors in groups.  If your injectors are individually wired you will also need to enable "Two wire batch emulation". \nset injection_mode X\nSee also twoWireBatchInjection
 angle_t extraInjectionOffset;+this is about deciding when the injector starts it's squirt\nSee also injectionPhase map\ntodo: do we need even need this since we have the map anyway?;"deg",    1,      0.0,       -720,     720,        2
-angle_t crankingTimingAngle;+Ignition advance angle used during engine cranking, 5-10 degrees will work as a base setting for most engines.\nset cranking_timing_angle X; "deg", 1, 0.0, -30, 30, 0
+angle_t crankingTimingAngle;+Ignition advance angle used during engine cranking, 5-10 degrees will work as a base setting for most engines.\nThere is tapering towards running timing advance\nset cranking_timing_angle X; "deg", 1, 0.0, -30, 30, 0
 
 custom ignition_mode_e 4 bits,    U32,    @OFFSET@, [0:1], "Single Coil", "Individual Coils", "Wasted Spark", "Two Distributors"
 ignition_mode_e ignitionMode;+Single coil = distributor\nIndividual coils = one coil per cylinder (COP, coil-near-plug), requires sequential mode\nWasted spark = Fires pairs of cylinders together, either one coil per pair of cylinders or one coil per cylinder\nTwo distributors = A pair of distributors, found on some BMW, Toyota and other engines\nset ignition_mode X
 
-float unusedOldIgnitionOffset;;"unused",1,0,0,1,0
+int8_t gapTrackingLengthOverride;;"count",1,0,0,@@GAP_TRACKING_LENGTH@@,0
+ int8_t[3] unusedOldIgnitionOffset;;"unused",1,0,0,1,0
 
 custom timing_mode_e 4 bits, U32, @OFFSET@, [0:0], "dynamic", "fixed"
 timing_mode_e timingMode;+Dynamic uses the timing map to decide the ignition timing, Static timing fixes the timing to the value set below (only use for checking static timing with a timing light).
@@ -1108,7 +1115,7 @@ custom idle_mode_e 4 bits,    U32,   @OFFSET@, [0:0], "Automatic", "Manual"
 	bit useOnlyRisingEdgeForTrigger;+VR sensors are only precise on rising front\nenable trigger_only_front
 	bit twoWireBatchIgnition;+This is needed if your coils are individually wired (COP) and you wish to use batch ignition (Wasted Spark).
 bit useFixedBaroCorrFromMap
-bit useSeparateAdvanceForCranking;+This activates a separate advance table for cranking conditions, this allows cranking advance to be RPM dependant.
+bit useSeparateAdvanceForCranking,"Table (untapered)","Tapered Constant";+This activates a separate advance table for cranking conditions, this allows cranking advance to be RPM dependant.
 bit useAdvanceCorrectionsForCranking;+This enables the various ignition corrections during cranking (IAT, CLT, FSIO and PID idle).
 bit unused1476b19
 bit unused1476b20
@@ -1506,7 +1513,9 @@ tChargeMode_e tChargeMode;
 
 	int8_t[IGN_RPM_COUNT] knockBaseNoise;;"dB", 1.0, 0, -30.0, 0, 2
 
-	int[365] mainUnusedEnd;;"units", 1, 0, -20, 100, 0
+	float[GAP_TRACKING_LENGTH iterate] triggerGapOverride;;"ratio", 1.0, 0, 0, 20, 2
+
+	int[347] mainUnusedEnd;;"units", 1, 0, -20, 100, 0
 
 ! end of engine_configuration_s
 end_struct

@@ -37,6 +37,7 @@ static ign_Map3D_t advanceMap("advance");
 // This coeff in ctor parameter is sufficient for int16<->float conversion!
 static ign_Map3D_t iatAdvanceCorrectionMap("iat corr");
 
+// todo: reset this between cranking attempts?! #2735
 static int minCrankingRpm = 0;
 
 #if IGN_LOAD_COUNT == DEFAULT_IGN_LOAD_COUNT

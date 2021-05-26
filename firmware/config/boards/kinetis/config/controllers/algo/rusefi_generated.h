@@ -401,6 +401,9 @@
 #define ET_FRANKENSO_MIATA_NB2 47
 #define ET_HELLEN_121_NISSAN 72
 #define ET_HELLEN_121_VAG 71
+#define ET_HELLEN_121_VAG_5_CYL 77
+#define ET_HELLEN_121_VAG_6_CYL 78
+#define ET_HELLEN_121_VAG_8_CYL 79
 #define ET_HELLEN_128_MERCEDES 36
 #define ET_HELLEN_134_BMW 75
 #define ET_HELLEN_154_VAG 76
@@ -621,6 +624,8 @@
 #define fuelPumpPin_offset 658
 #define fuelPumpPinMode_offset 659
 #define fuelReferencePressure_offset 2412
+#define GAP_TRACKING_LENGTH 18
+#define gapTrackingLengthOverride_offset 444
 #define GAUGE_COIL_DWELL_TIME "dwell: coil charge time"
 #define GAUGE_NAME_ACCEL_X "Acceleration: X"
 #define GAUGE_NAME_ACCEL_Y "Acceleration: Y"
@@ -1071,7 +1076,7 @@
 #define mafSensorType_offset 948
 #define mainRelayPin_offset 706
 #define mainRelayPinMode_offset 752
-#define mainUnusedEnd_offset 4512
+#define mainUnusedEnd_offset 4584
 #define malfunctionIndicatorPin_offset 660
 #define malfunctionIndicatorPinMode_offset 661
 #define manIdlePosition_offset 608
@@ -1164,6 +1169,7 @@
 #define operation_mode_e_auto_enum "OM_NONE", "FOUR_STROKE_CRANK_SENSOR", "FOUR_STROKE_CAM_SENSOR", "TWO_STROKE", "FOUR_STROKE_SYMMETRICAL_CRANK_SENSOR", "FOUR_STROKE_THREE_TIMES_CRANK_SENSOR"
 #define output_pin_e_enum "NONE", "INVALID", "PA0", "PA1", "PA2", "PA3", "PA4", "PA5", "PA6", "PA7", "N/A", "N/A", "PA10", "PA11", "PA12", "PA13", "N/A", "N/A", "N/A", "N/A", "PB0", "PB1", "PB2", "PB3", "PB4", "PB5", "PB6", "PB7", "N/A", "N/A", "N/A", "N/A", "PB12", "PB13", "N/A", "N/A", "N/A", "N/A", "PC0", "PC1", "PC2", "PC3", "PC4", "PC5", "PC6", "PC7", "PC8", "PC9", "N/A", "N/A", "N/A", "N/A", "PC14", "PC15", "PC16", "PC17", "PD0", "PD1", "PD2", "PD3", "PD4", "PD5", "PD6", "PD7", "N/A", "N/A", "N/A", "N/A", "N/A", "N/A", "N/A", "PD15", "PD16", "N/A", "PE0", "PE1", "PE2", "PE3", "PE4", "PE5", "PE6", "PE7", "PE8", "PE9", "PE10", "PE11", "N/A", "N/A", "N/A", "N/A", "N/A", "N/A", "TLE6240_1", "TLE6240_2", "TLE6240_3", "TLE6240_4", "TLE6240_5", "TLE6240_6", "TLE6240_7", "TLE6240_8", "TLE6240_9", "TLE6240_10", "TLE6240_11", "TLE6240_12", "TLE6240_13", "TLE6240_14", "TLE6240_15", "TLE6240_16"
 #define overrideCrankingIacSetting_offset 1476
+#define overrideTriggerGaps_offset 76
 #define PACK_ADD_TEMPERATURE 40
 #define PACK_MULT_AFR 1000
 #define PACK_MULT_AFR_CFG 10
@@ -1253,8 +1259,8 @@
 #define showHumanReadableWarning_offset 976
 #define showSdCardWarning_offset 76
 #define SIGNATURE_BOARD kin
-#define SIGNATURE_DATE 2021.05.21
-#define SIGNATURE_HASH 1259571357
+#define SIGNATURE_DATE 2021.05.25
+#define SIGNATURE_HASH 2998617162
 #define silentTriggerError_offset 1464
 #define slowAdcAlpha_offset 2088
 #define sparkDwellRpmBins_offset 332
@@ -1493,6 +1499,24 @@
 #define triggerCompSensorSatRpm_offset 4011
 #define triggerErrorPin_offset 828
 #define triggerErrorPinMode_offset 829
+#define triggerGapOverride10_offset 4548
+#define triggerGapOverride11_offset 4552
+#define triggerGapOverride12_offset 4556
+#define triggerGapOverride13_offset 4560
+#define triggerGapOverride14_offset 4564
+#define triggerGapOverride15_offset 4568
+#define triggerGapOverride16_offset 4572
+#define triggerGapOverride17_offset 4576
+#define triggerGapOverride18_offset 4580
+#define triggerGapOverride1_offset 4512
+#define triggerGapOverride2_offset 4516
+#define triggerGapOverride3_offset 4520
+#define triggerGapOverride4_offset 4524
+#define triggerGapOverride5_offset 4528
+#define triggerGapOverride6_offset 4532
+#define triggerGapOverride7_offset 4536
+#define triggerGapOverride8_offset 4540
+#define triggerGapOverride9_offset 4544
 #define triggerInputPins1_offset 700
 #define triggerInputPins2_offset 701
 #define triggerInputPins3_offset 702
@@ -1589,7 +1613,7 @@
 #define ts_show_spi true
 #define ts_show_trigger_comparator true
 #define ts_show_tunerstudio_port true
-#define TS_SIGNATURE "rusEFI 2021.05.21.kin.1259571357"
+#define TS_SIGNATURE "rusEFI 2021.05.25.kin.2998617162"
 #define TS_SINGLE_WRITE_COMMAND 'W'
 #define TS_SINGLE_WRITE_COMMAND_char W
 #define TS_TEST_COMMAND 't' // 0x74
@@ -1681,7 +1705,6 @@
 #define unused_1484_bit_29_offset 1476
 #define unused_1484_bit_30_offset 1476
 #define unused_1484_bit_31_offset 1476
-#define unused_294_3_offset 76
 #define unused_294_4_offset 76
 #define unused_294_5_offset 76
 #define unused_294_6_offset 76
@@ -1692,36 +1715,36 @@
 #define unusedAuxVoltage2_TODO_332_offset 2686
 #define unusedBit4_1476_offset 1476
 #define unusedBit_251_29_offset 976
-#define unusedBit_288_30_offset 976
-#define unusedBit_288_31_offset 976
+#define unusedBit_289_30_offset 976
+#define unusedBit_289_31_offset 976
 #define unusedBit_34_31_offset 76
-#define unusedBit_491_10_offset 2116
-#define unusedBit_491_11_offset 2116
-#define unusedBit_491_12_offset 2116
-#define unusedBit_491_13_offset 2116
-#define unusedBit_491_14_offset 2116
-#define unusedBit_491_15_offset 2116
-#define unusedBit_491_16_offset 2116
-#define unusedBit_491_17_offset 2116
-#define unusedBit_491_18_offset 2116
-#define unusedBit_491_19_offset 2116
-#define unusedBit_491_20_offset 2116
-#define unusedBit_491_21_offset 2116
-#define unusedBit_491_22_offset 2116
-#define unusedBit_491_23_offset 2116
-#define unusedBit_491_24_offset 2116
-#define unusedBit_491_25_offset 2116
-#define unusedBit_491_26_offset 2116
-#define unusedBit_491_27_offset 2116
-#define unusedBit_491_28_offset 2116
-#define unusedBit_491_29_offset 2116
-#define unusedBit_491_30_offset 2116
-#define unusedBit_491_31_offset 2116
-#define unusedBit_491_8_offset 2116
-#define unusedBit_491_9_offset 2116
+#define unusedBit_492_10_offset 2116
+#define unusedBit_492_11_offset 2116
+#define unusedBit_492_12_offset 2116
+#define unusedBit_492_13_offset 2116
+#define unusedBit_492_14_offset 2116
+#define unusedBit_492_15_offset 2116
+#define unusedBit_492_16_offset 2116
+#define unusedBit_492_17_offset 2116
+#define unusedBit_492_18_offset 2116
+#define unusedBit_492_19_offset 2116
+#define unusedBit_492_20_offset 2116
+#define unusedBit_492_21_offset 2116
+#define unusedBit_492_22_offset 2116
+#define unusedBit_492_23_offset 2116
+#define unusedBit_492_24_offset 2116
+#define unusedBit_492_25_offset 2116
+#define unusedBit_492_26_offset 2116
+#define unusedBit_492_27_offset 2116
+#define unusedBit_492_28_offset 2116
+#define unusedBit_492_29_offset 2116
+#define unusedBit_492_30_offset 2116
+#define unusedBit_492_31_offset 2116
+#define unusedBit_492_8_offset 2116
+#define unusedBit_492_9_offset 2116
 #define unusedHereWeHave_offset 1464
 #define unusedOldBiquad_offset 2322
-#define unusedOldIgnitionOffset_offset 444
+#define unusedOldIgnitionOffset_offset 445
 #define unusedSpiPadding4_offset 2585
 #define unusedSpiPadding5_offset 2687
 #define unusedSpiPadding8_offset 3982

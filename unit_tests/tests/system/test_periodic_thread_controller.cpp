@@ -56,5 +56,5 @@ thread_t *chThdCreateStatic(void *wsp, size_t size,
 }
 
 TEST(system, periodic) {
-	instance.Start();
+//	instance.Start();
 }

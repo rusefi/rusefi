@@ -8,7 +8,7 @@ typedef uint32_t systime_t;
 
 class thread_t {
 public:
-	char *name;
+	const char *name;
 	  tfunc_t           funcp;
 	  void              *arg;
 

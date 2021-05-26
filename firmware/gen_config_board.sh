@@ -43,7 +43,7 @@ java -DSystemOut.name=gen_config_board \
 # 1) using unique file name for each configuration?
 # 2) leverage consistent caching mechanism so that image is generated only in case of fresh .ini. Laziest approach would be to return exit code from java process above
 #
-./hw_layer/mass_storage/create_ini_image.sh ./tunerstudio/generated/rusefi_${SHORT_BOARDNAME}.ini ./hw_layer/mass_storage/ramdisk_image.h
-./hw_layer/mass_storage/create_ini_image_compressed.sh ./tunerstudio/generated/rusefi_${SHORT_BOARDNAME}.ini ./hw_layer/mass_storage/ramdisk_image_compressed.h
+hw_layer/mass_storage/create_ini_image.sh ./tunerstudio/generated/rusefi_${SHORT_BOARDNAME}.ini ./hw_layer/mass_storage/ramdisk_image.h
+hw_layer/mass_storage/create_ini_image_compressed.sh ./tunerstudio/generated/rusefi_${SHORT_BOARDNAME}.ini ./hw_layer/mass_storage/ramdisk_image_compressed.h
 
 exit 0

@@ -75,8 +75,6 @@ class TriggerState;
 class TriggerFormDetails;
 class TriggerConfiguration;
 
-// https://github.com/rusefi/rusefi/issues/2010 shows the corner case wheel with huge depth requirement
-#define GAP_TRACKING_LENGTH 18
 
 /**
  * @brief Trigger shape has all the fields needed to describe and decode trigger signal.

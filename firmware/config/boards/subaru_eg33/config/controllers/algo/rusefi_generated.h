@@ -417,6 +417,9 @@
 #define ET_FRANKENSO_MIATA_NB2 47
 #define ET_HELLEN_121_NISSAN 72
 #define ET_HELLEN_121_VAG 71
+#define ET_HELLEN_121_VAG_5_CYL 77
+#define ET_HELLEN_121_VAG_6_CYL 78
+#define ET_HELLEN_121_VAG_8_CYL 79
 #define ET_HELLEN_128_MERCEDES 36
 #define ET_HELLEN_134_BMW 75
 #define ET_HELLEN_154_VAG 76
@@ -637,6 +640,8 @@
 #define fuelPumpPin_offset 658
 #define fuelPumpPinMode_offset 659
 #define fuelReferencePressure_offset 2420
+#define GAP_TRACKING_LENGTH 18
+#define gapTrackingLengthOverride_offset 444
 #define GAUGE_COIL_DWELL_TIME "dwell: coil charge time"
 #define GAUGE_NAME_ACCEL_X "Acceleration: X"
 #define GAUGE_NAME_ACCEL_Y "Acceleration: Y"
@@ -1087,7 +1092,7 @@
 #define mafSensorType_offset 948
 #define mainRelayPin_offset 706
 #define mainRelayPinMode_offset 752
-#define mainUnusedEnd_offset 4540
+#define mainUnusedEnd_offset 4612
 #define malfunctionIndicatorPin_offset 660
 #define malfunctionIndicatorPinMode_offset 661
 #define manIdlePosition_offset 608
@@ -1180,6 +1185,7 @@
 #define operation_mode_e_auto_enum "OM_NONE", "FOUR_STROKE_CRANK_SENSOR", "FOUR_STROKE_CAM_SENSOR", "TWO_STROKE", "FOUR_STROKE_SYMMETRICAL_CRANK_SENSOR", "FOUR_STROKE_THREE_TIMES_CRANK_SENSOR"
 #define output_pin_e_enum "NONE","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","D05 - Self Shutdown","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","D17 - FAN 1 relay","D03 - FAN 2 relay","C16 - Tacho out","C14 - FPump modulator","D23 - Fuel Pump relay","D22 - EGR control","D19 - Check Engine indicator","C15 - AUX1 OD out","D18 - Auxillary air valve","D06 - Absorber purge valve","D02 - IDLE open","D01 - IDLE close","INVALID","INVALID","B08 - AC clutch","D20 - Inertia-Resonance Super-Charger control","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","D13 - Injector 1","D11 - Injector 3","A01 - Injector 5","INVALID","D07 - Ignition 1","D09 - Ignition 3","INVALID","D21 - Ignition 5","D12 - Injector 2","D26 - Injector 4","A12 - Injector 6","INVALID","INVALID","D10 - Ignition 6","D08 - Ignition 2","D10 - Ignition 4"
 #define overrideCrankingIacSetting_offset 1476
+#define overrideTriggerGaps_offset 76
 #define PACK_ADD_TEMPERATURE 40
 #define PACK_MULT_AFR 1000
 #define PACK_MULT_AFR_CFG 10
@@ -1269,8 +1275,8 @@
 #define showHumanReadableWarning_offset 976
 #define showSdCardWarning_offset 76
 #define SIGNATURE_BOARD subaru_eg33_f7
-#define SIGNATURE_DATE 2021.05.21
-#define SIGNATURE_HASH 1701971279
+#define SIGNATURE_DATE 2021.05.25
+#define SIGNATURE_HASH 2631584152
 #define silentTriggerError_offset 1464
 #define slowAdcAlpha_offset 2088
 #define sparkDwellRpmBins_offset 332
@@ -1509,6 +1515,24 @@
 #define triggerCompSensorSatRpm_offset 4039
 #define triggerErrorPin_offset 828
 #define triggerErrorPinMode_offset 829
+#define triggerGapOverride10_offset 4576
+#define triggerGapOverride11_offset 4580
+#define triggerGapOverride12_offset 4584
+#define triggerGapOverride13_offset 4588
+#define triggerGapOverride14_offset 4592
+#define triggerGapOverride15_offset 4596
+#define triggerGapOverride16_offset 4600
+#define triggerGapOverride17_offset 4604
+#define triggerGapOverride18_offset 4608
+#define triggerGapOverride1_offset 4540
+#define triggerGapOverride2_offset 4544
+#define triggerGapOverride3_offset 4548
+#define triggerGapOverride4_offset 4552
+#define triggerGapOverride5_offset 4556
+#define triggerGapOverride6_offset 4560
+#define triggerGapOverride7_offset 4564
+#define triggerGapOverride8_offset 4568
+#define triggerGapOverride9_offset 4572
 #define triggerInputPins1_offset 700
 #define triggerInputPins2_offset 701
 #define triggerInputPins3_offset 702
@@ -1605,7 +1629,7 @@
 #define ts_show_spi true
 #define ts_show_trigger_comparator false
 #define ts_show_tunerstudio_port false
-#define TS_SIGNATURE "rusEFI 2021.05.21.subaru_eg33_f7.1701971279"
+#define TS_SIGNATURE "rusEFI 2021.05.25.subaru_eg33_f7.2631584152"
 #define TS_SINGLE_WRITE_COMMAND 'W'
 #define TS_SINGLE_WRITE_COMMAND_char W
 #define TS_TEST_COMMAND 't' // 0x74
@@ -1697,7 +1721,6 @@
 #define unused_1484_bit_29_offset 1476
 #define unused_1484_bit_30_offset 1476
 #define unused_1484_bit_31_offset 1476
-#define unused_294_3_offset 76
 #define unused_294_4_offset 76
 #define unused_294_5_offset 76
 #define unused_294_6_offset 76
@@ -1708,36 +1731,36 @@
 #define unusedAuxVoltage2_TODO_332_offset 2714
 #define unusedBit4_1476_offset 1476
 #define unusedBit_251_29_offset 976
-#define unusedBit_288_30_offset 976
-#define unusedBit_288_31_offset 976
+#define unusedBit_289_30_offset 976
+#define unusedBit_289_31_offset 976
 #define unusedBit_34_31_offset 76
-#define unusedBit_491_10_offset 2116
-#define unusedBit_491_11_offset 2116
-#define unusedBit_491_12_offset 2116
-#define unusedBit_491_13_offset 2116
-#define unusedBit_491_14_offset 2116
-#define unusedBit_491_15_offset 2116
-#define unusedBit_491_16_offset 2116
-#define unusedBit_491_17_offset 2116
-#define unusedBit_491_18_offset 2116
-#define unusedBit_491_19_offset 2116
-#define unusedBit_491_20_offset 2116
-#define unusedBit_491_21_offset 2116
-#define unusedBit_491_22_offset 2116
-#define unusedBit_491_23_offset 2116
-#define unusedBit_491_24_offset 2116
-#define unusedBit_491_25_offset 2116
-#define unusedBit_491_26_offset 2116
-#define unusedBit_491_27_offset 2116
-#define unusedBit_491_28_offset 2116
-#define unusedBit_491_29_offset 2116
-#define unusedBit_491_30_offset 2116
-#define unusedBit_491_31_offset 2116
-#define unusedBit_491_8_offset 2116
-#define unusedBit_491_9_offset 2116
+#define unusedBit_492_10_offset 2116
+#define unusedBit_492_11_offset 2116
+#define unusedBit_492_12_offset 2116
+#define unusedBit_492_13_offset 2116
+#define unusedBit_492_14_offset 2116
+#define unusedBit_492_15_offset 2116
+#define unusedBit_492_16_offset 2116
+#define unusedBit_492_17_offset 2116
+#define unusedBit_492_18_offset 2116
+#define unusedBit_492_19_offset 2116
+#define unusedBit_492_20_offset 2116
+#define unusedBit_492_21_offset 2116
+#define unusedBit_492_22_offset 2116
+#define unusedBit_492_23_offset 2116
+#define unusedBit_492_24_offset 2116
+#define unusedBit_492_25_offset 2116
+#define unusedBit_492_26_offset 2116
+#define unusedBit_492_27_offset 2116
+#define unusedBit_492_28_offset 2116
+#define unusedBit_492_29_offset 2116
+#define unusedBit_492_30_offset 2116
+#define unusedBit_492_31_offset 2116
+#define unusedBit_492_8_offset 2116
+#define unusedBit_492_9_offset 2116
 #define unusedHereWeHave_offset 1464
 #define unusedOldBiquad_offset 2330
-#define unusedOldIgnitionOffset_offset 444
+#define unusedOldIgnitionOffset_offset 445
 #define unusedSpiPadding4_offset 2593
 #define unusedSpiPadding5_offset 2715
 #define unusedSpiPadding8_offset 4010
