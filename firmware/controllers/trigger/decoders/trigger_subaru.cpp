@@ -51,7 +51,7 @@ static void initializeSubaru7_6(TriggerWaveform *s, bool withCrankWheel) {
 
 	float magic = 333;
 
-	s->tdcPosition = 200 + 360;
+	s->tdcPosition = 160 + 360;
 
 	float width = 5;
 
