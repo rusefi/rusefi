@@ -865,7 +865,7 @@ bit is_enabled_spi_2
 	bit alignEngineSnifferAtTDC
 	bit useETBforIdleControl;+This setting allows the ETB to act as the idle air control valve and move to regulate the airflow at idle.
 	bit idleIncrementalPidCic
-	bit enableAemXSeries
+	bit enableAemXSeries;+AEM X-Series or rusEFI Wideband
 ! 'enableAemXSeries' is the 32nd bit here, you would need another bit region if more bits are desired
 
 	brain_input_pin_e[LOGIC_ANALYZER_CHANNEL_COUNT iterate] logicAnalyzerPins;
