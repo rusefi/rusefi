@@ -352,12 +352,12 @@ pins:
     color: light green
 
   - pin: 47
-    function: CAN bus
+    function: CAN bus Low
     type: can
     color: light green
 
   - pin: 48
-    function: CAN bus
+    function: CAN bus High
     type: can
     color: light green
 
