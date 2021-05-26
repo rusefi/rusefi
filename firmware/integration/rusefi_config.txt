@@ -909,8 +909,12 @@ custom uart_device_e 1 bits,U08,   @OFFSET@, [0:1], "Off", "UART1", "UART2", "UA
 	output_pin_e acRelayPin;
 	pin_output_mode_e acRelayPinMode;
 
-	int16_t[FSIO_COMMAND_COUNT iterate] fsioFrequency;
-	float[FSIO_COMMAND_COUNT iterate] fsio_setting;
+custom fsio_pwm_freq_t 2 scalar,  U16,   @OFFSET@,         "Hz",      1,      0,       0, 3000,      0
+	fsio_pwm_freq_t[FSIO_COMMAND_COUNT iterate] fsioFrequency;
+
+
+custom fsio_setting_t 4 scalar,  F32,   @OFFSET@, 		"Val",	   1,	   0,       0, 18000,	  2
+	fsio_setting_t[FSIO_COMMAND_COUNT iterate] fsio_setting;
 
 ! todo: migrate to spi_pins & combine with spi pin modes
 	brain_pin_e spi1mosiPin;
@@ -1351,7 +1355,7 @@ tle8888_mode_e tle8888mode;
 	pid_s etbWastegatePid;
 	uint8_t[4] unused2536;;"units", 1, 0, -20, 100, 0
 
-	angle_t[IGNITION_PIN_COUNT iterate] timing_offset_cylinder;per-cylinder timing correction
+	angle_t[IGNITION_PIN_COUNT iterate] timing_offset_cylinder;per-cylinder timing correction;"deg", 1, 0, -720, 720, 1
 
 	
 	float idlePidActivationTime;;"seconds",        1,     0,  0,    60,  1
