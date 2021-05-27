@@ -234,8 +234,10 @@ float IdleController::getRunningOpenLoop(float clt, SensorResult tps) const {
 
 	// Now we bump it by the AC/fan amount if necessary
 	running += engine->acSwitchState ? CONFIG(acIdleExtraOffset) : 0;
-	// TODO: fan idle bump needs its own config field
-	running += enginePins.fanRelay.getLogicValue() ? CONFIG(acIdleExtraOffset) : 0;
+	running += enginePins.fanRelay.getLogicValue() ? CONFIG(fan1ExtraIdle) : 0;
+
+	// TODO: once we have dual fans, enable
+	//running += enginePins.fanRelay2.getLogicValue() ? CONFIG(fan2ExtraIdle) : 0;
 
 	// Now bump it by the specified amount when the throttle is opened (if configured)
 	// nb: invalid tps will make no change, no explicit check required
