@@ -1,7 +1,7 @@
 #include "global.h"
 #include "rusefi_enums.h"
 #include "rusefi_hw_enums.h"
-// was generated automatically by rusEFI tool  from rusefi_hw_enums.h // was generated automatically by rusEFI tool  from rusefi_enums.h // by enum2string.jar tool on Sat May 08 16:52:29 MSK 2021
+// was generated automatically by rusEFI tool  from rusefi_hw_enums.h // was generated automatically by rusEFI tool  from rusefi_enums.h // by enum2string.jar tool on Thu May 27 05:35:47 EDT 2021
 // see also gen_config_and_enums.bat
 
 
@@ -675,6 +675,12 @@ case HELLEN_121_NISSAN:
   return "HELLEN_121_NISSAN";
 case HELLEN_121_VAG:
   return "HELLEN_121_VAG";
+case HELLEN_121_VAG_5_CYL:
+  return "HELLEN_121_VAG_5_CYL";
+case HELLEN_121_VAG_6_CYL:
+  return "HELLEN_121_VAG_6_CYL";
+case HELLEN_121_VAG_8_CYL:
+  return "HELLEN_121_VAG_8_CYL";
 case HELLEN_128_MERCEDES:
   return "HELLEN_128_MERCEDES";
 case HELLEN_134_BMW:
