@@ -79,6 +79,9 @@ int TriggerCentral::getHwEventCounter(int index) const {
 EXTERN_ENGINE;
 
 angle_t TriggerCentral::getVVTPosition(uint8_t bankIndex, uint8_t camIndex) {
+	if (bankIndex >= BANKS_COUNT || camIndex >= CAMS_PER_BANK) {
+		return NAN;
+	}
 	return vvtPosition[bankIndex][camIndex];
 }
 
