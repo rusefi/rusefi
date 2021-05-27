@@ -13,7 +13,7 @@ TEST(subaru, overrideGap) {
 
 	CONFIG(overrideTriggerGaps) = true;
 	CONFIG(gapTrackingLengthOverride) = 2;
-	CONFIG(triggerGapOverride[0]) = 7.3;
+	CONFIG(triggerGapOverride[0]) = 11.3;
 	CONFIG(triggerGapOverride[1]) = 1;
 
 	eth.setTriggerType(TT_SUBARU_7_WITHOUT_6 PASS_ENGINE_PARAMETER_SUFFIX);

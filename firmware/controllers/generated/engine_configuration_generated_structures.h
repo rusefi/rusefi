@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Tue May 25 22:17:11 UTC 2021
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Thu May 27 12:25:00 UTC 2021
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -1588,6 +1588,7 @@ struct engine_configuration_s {
 	offset 744 bit 30 */
 	bool idleIncrementalPidCic : 1;
 	/**
+	 * AEM X-Series or rusEFI Wideband
 	offset 744 bit 31 */
 	bool enableAemXSeries : 1;
 	/**
@@ -2259,7 +2260,7 @@ struct engine_configuration_s {
 	 */
 	adc_channel_e hipOutputChannel;
 	/**
-	 *  A/C button input
+	 * A/C button input
 	 * offset 1469
 	 */
 	switch_input_pin_e acSwitch;
@@ -3237,9 +3238,10 @@ struct engine_configuration_s {
 	uint8_t unused2536[4];
 	/**
 	 * per-cylinder timing correction
+	deg
 	 * offset 2540
 	 */
-	cfg_float_t_1f timing_offset_cylinder[IGNITION_PIN_COUNT];
+	angle_t timing_offset_cylinder[IGNITION_PIN_COUNT];
 	/**
 	seconds
 	 * offset 2588
@@ -4200,4 +4202,4 @@ struct persistent_config_s {
 };
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Tue May 25 22:17:11 UTC 2021
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Thu May 27 12:25:00 UTC 2021

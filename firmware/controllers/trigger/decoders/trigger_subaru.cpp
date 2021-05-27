@@ -51,71 +51,71 @@ static void initializeSubaru7_6(TriggerWaveform *s, bool withCrankWheel) {
 
 	float magic = 333;
 
-	s->tdcPosition = 192;
+	s->tdcPosition = 160 + 360;
 
 	float width = 5;
 
-	s->addEvent720(25 - width, T_PRIMARY, TV_RISE);
-	s->addEvent720(25, T_PRIMARY, TV_FALL);
+	s->addEvent720(15 - width, T_PRIMARY, TV_RISE);
+	s->addEvent720(15, T_PRIMARY, TV_FALL);
 
 	if (withCrankWheel) {
-		s->addEvent720(magic - 180 - 87 - width, T_SECONDARY, TV_RISE);
-		s->addEvent720(magic - 180 - 87, T_SECONDARY, TV_FALL);
+		s->addEvent720(66 - width, T_SECONDARY, TV_RISE);
+		s->addEvent720(66, T_SECONDARY, TV_FALL);
 
-		s->addEvent720(magic - 180 - 55 - width, T_SECONDARY, TV_RISE);
-		s->addEvent720(magic - 180 - 55, T_SECONDARY, TV_FALL);
+		s->addEvent720(98 - width, T_SECONDARY, TV_RISE);
+		s->addEvent720(98, T_SECONDARY, TV_FALL);
 
-		s->addEvent720(magic - 180 - width, T_SECONDARY, TV_RISE);
-		s->addEvent720(magic - 180, T_SECONDARY, TV_FALL);
+		s->addEvent720(153 - width, T_SECONDARY, TV_RISE);
+		s->addEvent720(153, T_SECONDARY, TV_FALL);
 
 	}
-	s->addEvent720(182 - width, T_PRIMARY, TV_RISE);
-	s->addEvent720(182, T_PRIMARY, TV_FALL);
+	s->addEvent720(180 - width, T_PRIMARY, TV_RISE);
+	s->addEvent720(180, T_PRIMARY, TV_FALL);
 
 	if (withCrankWheel) {
-		s->addEvent720(magic - 87 - width, T_SECONDARY, TV_RISE);
-		s->addEvent720(magic - 87, T_SECONDARY, TV_FALL);
+		s->addEvent720(246 - width, T_SECONDARY, TV_RISE);
+		s->addEvent720(246, T_SECONDARY, TV_FALL);
 		s->addEvent720(magic - 55 - width, T_SECONDARY, TV_RISE);
 		s->addEvent720(magic - 55, T_SECONDARY, TV_FALL);
-		s->addEvent720(magic - width, T_SECONDARY, TV_RISE);
-		s->addEvent720(magic, T_SECONDARY, TV_FALL);
+		s->addEvent720(333 - width, T_SECONDARY, TV_RISE);
+		s->addEvent720(333, T_SECONDARY, TV_FALL);
 	}
 
-	s->addEvent720(343 - width, T_PRIMARY, TV_RISE);
-	s->addEvent720(343, T_PRIMARY, TV_FALL);
+	s->addEvent720(345 - width, T_PRIMARY, TV_RISE);
+	s->addEvent720(345, T_PRIMARY, TV_FALL);
 
-	s->addEvent720(366 - width, T_PRIMARY, TV_RISE);
-	s->addEvent720(366, T_PRIMARY, TV_FALL);
+	s->addEvent720(360 - width, T_PRIMARY, TV_RISE);
+	s->addEvent720(360, T_PRIMARY, TV_FALL);
 
-	s->addEvent720(384 - width, T_PRIMARY, TV_RISE);
-	s->addEvent720(384, T_PRIMARY, TV_FALL);
+	s->addEvent720(375 - width, T_PRIMARY, TV_RISE);
+	s->addEvent720(375, T_PRIMARY, TV_FALL);
 
 	if (withCrankWheel) {
-		s->addEvent720(magic + 180 - 87 - width, T_SECONDARY, TV_RISE);
-		s->addEvent720(magic + 180 - 87, T_SECONDARY, TV_FALL);
+		s->addEvent720(426 - width, T_SECONDARY, TV_RISE);
+		s->addEvent720(426, T_SECONDARY, TV_FALL);
 		s->addEvent720(magic + 180 - 55 - width, T_SECONDARY, TV_RISE);
 		s->addEvent720(magic + 180 - 55, T_SECONDARY, TV_FALL);
-		s->addEvent720(magic + 180 - width, T_SECONDARY, TV_RISE);
-		s->addEvent720(magic + 180, T_SECONDARY, TV_FALL);
+		s->addEvent720(513 - width, T_SECONDARY, TV_RISE);
+		s->addEvent720(513, T_SECONDARY, TV_FALL);
 	}
 
-	s->addEvent720(538 - width, T_PRIMARY, TV_RISE);
-	s->addEvent720(538, T_PRIMARY, TV_FALL);
+	s->addEvent720(540 - width, T_PRIMARY, TV_RISE);
+	s->addEvent720(540, T_PRIMARY, TV_FALL);
 
 	if (withCrankWheel) {
-		s->addEvent720(magic + 360 - 87 - width, T_SECONDARY, TV_RISE);
-		s->addEvent720(magic + 360 - 87, T_SECONDARY, TV_FALL);
+		s->addEvent720(606 - width, T_SECONDARY, TV_RISE);
+		s->addEvent720(606, T_SECONDARY, TV_FALL);
 		s->addEvent720(magic + 360 - 55 - width, T_SECONDARY, TV_RISE);
 		s->addEvent720(magic + 360 - 55, T_SECONDARY, TV_FALL);
-		s->addEvent720(magic + 360 - width, T_SECONDARY, TV_RISE);
-		s->addEvent720(magic + 360, T_SECONDARY, TV_FALL);
+		s->addEvent720(693 - width, T_SECONDARY, TV_RISE);
+		s->addEvent720(693, T_SECONDARY, TV_FALL);
 	}
 
 	s->addEvent720(720 - width, T_PRIMARY, TV_RISE);
 	s->addEvent720(720, T_PRIMARY, TV_FALL);
 
 	// why is this trigger gap wider than average?
-	s->setTriggerSynchronizationGap2(6.53 * TRIGGER_GAP_DEVIATION_LOW, 7.2 * TRIGGER_GAP_DEVIATION_HIGH);
+	s->setTriggerSynchronizationGap2(6.53 * TRIGGER_GAP_DEVIATION_LOW, 10.4 * TRIGGER_GAP_DEVIATION_HIGH);
 	s->setTriggerSynchronizationGap3(1, 0.8 * TRIGGER_GAP_DEVIATION_LOW, 1 * TRIGGER_GAP_DEVIATION_HIGH);
 
 	s->useOnlyPrimaryForSync = true;

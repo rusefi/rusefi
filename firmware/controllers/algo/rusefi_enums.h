@@ -200,6 +200,9 @@ typedef enum {
 	HELLEN_134_BMW = ET_HELLEN_134_BMW,
 	HELLEN_154_VAG = ET_HELLEN_154_VAG,
 
+	HELLEN_121_VAG_5_CYL = ET_HELLEN_121_VAG_5_CYL,
+	HELLEN_121_VAG_6_CYL = ET_HELLEN_121_VAG_6_CYL,
+	HELLEN_121_VAG_8_CYL = ET_HELLEN_121_VAG_8_CYL,
 
 	/**
 	 * this configuration has as few pins configured as possible
