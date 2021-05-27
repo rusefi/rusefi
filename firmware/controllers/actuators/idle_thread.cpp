@@ -350,6 +350,7 @@ float IdleController::getClosedLoop(IIdleController::Phase phase, SensorResult t
 		wasResetPid = true;
 
 		engine->engineState.idle.idleState = TPS_THRESHOLD;
+		m_lastAutomaticPosition = 0;
 		return 0;
 	}
 
