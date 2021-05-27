@@ -248,12 +248,6 @@ float IdleController::getRunningOpenLoop(float clt, SensorResult tps) const {
 }
 
 float IdleController::getOpenLoop(Phase phase, float clt, SensorResult tps) const {
-	// If coasting (and enabled), use the coasting position table instead of normal open loop
-	// TODO: this should be a table of open loop mult vs. RPM, not vs. clt
-	if (CONFIG(useIacTableForCoasting) && phase == Phase::Coasting) {
-		return interpolate2d(clt, CONFIG(iacCoastingBins), CONFIG(iacCoasting));
-	}
-
 	float running = getRunningOpenLoop(clt, tps);
 
 	// Cranking value is either its own table, or the running value if not overriden
@@ -262,6 +256,12 @@ float IdleController::getOpenLoop(Phase phase, float clt, SensorResult tps) cons
 	// if we're cranking, nothing more to do.
 	if (phase == Phase::Cranking) {
 		return cranking;
+	}
+
+	// If coasting (and enabled), use the coasting position table instead of normal open loop
+	// TODO: this should be a table of open loop mult vs. RPM, not vs. clt
+	if (CONFIG(useIacTableForCoasting) && phase == Phase::Coasting) {
+		return interpolate2d(clt, CONFIG(iacCoastingBins), CONFIG(iacCoasting));
 	}
 
 	// Interpolate between cranking and running over a short time
