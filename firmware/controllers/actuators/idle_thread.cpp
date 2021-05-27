@@ -395,7 +395,8 @@ float IdleController::getClosedLoop(IIdleController::Phase phase, SensorResult t
 	
 	// Apply PID Deactivation Threshold as a smooth taper for TPS transients.
 	// if tps==0 then PID just works as usual, or we completely disable it if tps>=threshold
-	// TODO: should we just remove this?
+	// TODO: should we just remove this? It reduces the gain if your zero throttle stop isn't perfect,
+	// which could give unstable results.
 	newValue = interpolateClamped(0, newValue, CONFIG(idlePidDeactivationTpsThreshold), 0, tpsPos.value_or(0));
 
 	m_lastAutomaticPosition = newValue;
