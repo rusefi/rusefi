@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Wed May 26 18:20:12 UTC 2021
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Thu May 27 12:25:28 UTC 2021
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -2260,7 +2260,7 @@ struct engine_configuration_s {
 	 */
 	adc_channel_e hipOutputChannel;
 	/**
-	 *  A/C button input
+	 * A/C button input
 	 * offset 1469
 	 */
 	switch_input_pin_e acSwitch;
@@ -3232,9 +3232,10 @@ struct engine_configuration_s {
 	uint8_t unused2536[4];
 	/**
 	 * per-cylinder timing correction
+	deg
 	 * offset 2532
 	 */
-	cfg_float_t_1f timing_offset_cylinder[IGNITION_PIN_COUNT];
+	angle_t timing_offset_cylinder[IGNITION_PIN_COUNT];
 	/**
 	seconds
 	 * offset 2580
@@ -4195,4 +4196,4 @@ struct persistent_config_s {
 };
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Wed May 26 18:20:12 UTC 2021
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Thu May 27 12:25:28 UTC 2021
