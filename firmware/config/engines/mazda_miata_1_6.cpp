@@ -394,25 +394,16 @@ void setMiataNA6_MAP_MRE(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	engineConfiguration->idle_antiwindupFreq = 0.1;
 	engineConfiguration->idle_derivativeFilterLoss = 0.1;
 	engineConfiguration->idleRpmPid.dFactor = 0.002;
-	engineConfiguration->idleRpmPid.offset = 37;
+	engineConfiguration->idleRpmPid.offset = 0;
 	engineConfiguration->acIdleExtraOffset = 14;
-	engineConfiguration->idleRpmPid.minValue = 30;
-	engineConfiguration->acIdleExtraMin = 14;
-	engineConfiguration->idleRpmPid.maxValue = 70;
+	engineConfiguration->idleRpmPid.minValue = -7;
+	engineConfiguration->idleRpmPid.maxValue = 35;
 	engineConfiguration->idleRpmPid.periodMs = 40;
 	engineConfiguration->idlerpmpid_iTermMin = -6;
 	engineConfiguration->idlerpmpid_iTermMax = 30;
 	engineConfiguration->pidExtraForLowRpm = 25;
 	engineConfiguration->idlePidRpmDeadZone = 25;
 	engineConfiguration->idlePidRpmUpperLimit = 1000;
-
-
-	engineConfiguration->useFSIO12ForIdleOffset = true;
-    setFsioExpression(QUOTE(MAGIC_OFFSET_FOR_IDLE_OFFSET), "ac_on_switch 0 cfg_acIdleExtraOffset if" PASS_CONFIG_PARAMETER_SUFFIX);
-
-	engineConfiguration->useFSIO13ForIdleMinValue = true;
-	setFsioExpression(QUOTE(MAGIC_OFFSET_FOR_IDLE_MIN_VALUE), "ac_on_switch 0 cfg_acIdleExtraMin if" PASS_CONFIG_PARAMETER_SUFFIX);
-
 
 	engineConfiguration->useIdleTimingPidControl = true;
 	engineConfiguration->idleTimingPid.pFactor = 0.05;
