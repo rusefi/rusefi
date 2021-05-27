@@ -40,8 +40,6 @@ typedef time_t efitimesec_t;
  */
 typedef uint32_t efitimems_t;
 
-typedef int pid_dt;
-
 /**
  * We use a signed type here so that subtraction result is a proper negative value.
  * A typical use-case negative result is when we do 'timeNow() - timeOfEvent' where timeOfEvent
@@ -123,12 +121,9 @@ typedef ignition_table_t angle_table_t;
 
 typedef uint32_t cylinders_count_t;
 
-typedef int32_t bool32_t;
-
 typedef int16_t fsio_pwm_freq_t;
 
 typedef float fsio_setting_t;
-typedef float cfg_float_t_1f;
 
 typedef brain_pin_e brain_input_pin_e;
 typedef brain_pin_e switch_input_pin_e;
