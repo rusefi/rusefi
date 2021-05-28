@@ -254,7 +254,9 @@ void initFlash() {
 	addConsoleAction("rewriteconfig", rewriteConfig);
 
 #if EFI_FLASH_WRITE_THREAD
-	chThdCreateStatic(flashWriteStack, sizeof(flashWriteStack), PRIO_FLASH_WRITE, flashWriteThread, nullptr);
+	if (allowFlashWhileRunning()) {
+		chThdCreateStatic(flashWriteStack, sizeof(flashWriteStack), PRIO_FLASH_WRITE, flashWriteThread, nullptr);
+	}
 #endif
 }
 
