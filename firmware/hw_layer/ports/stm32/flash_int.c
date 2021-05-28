@@ -92,14 +92,18 @@ static bool isDualBank(void) {
 #endif
 
 int intFlashSectorErase(flashsector_t sector) {
+	uint8_t sectorRegIdx = sector;
 #ifdef STM32F7XX
 	// On dual bank STM32F7, sector index doesn't match register value.
 	// High bit indicates bank, low 4 bits indicate sector within bank.
 	// Since each bank has 12 sectors, increment second-bank sector idx
 	// by 4 so that the first sector of the second bank (12) ends up with
 	// index 16 (0b10000)
-	if (isDualBank() && sector >= 12) {
-		sector += 4;
+	if (isDualBank() && sectorRegIdx >= 12) {
+		sectorRegIdx -= 12;
+		/* bit 4 defines bank.
+		 * Sectors starting from 12 are in bank #2 */
+		sectorRegIdx |= 0x10;
 	}
 #endif
 
@@ -120,32 +124,15 @@ int intFlashSectorErase(flashsector_t sector) {
 	 * 00001 sector 1
 	 * ...
 	 * 01011 sector 11 (the end of 1st bank, 1Mb border)
-	 * 01100 sector 12 (start of 2nd bank)
+	 * 10000 sector 12 (start of 2nd bank)
 	 * ...
-	 * 10111 sector 23 (the end of 2nd bank, 2Mb border)
+	 * 11011 sector 23 (the end of 2nd bank, 2Mb border)
 	 * others not allowed */
-#ifndef FLASH_CR_SNB_3
-	FLASH_CR &= ~(FLASH_CR_SNB_0 | FLASH_CR_SNB_1 | FLASH_CR_SNB_2);
-#elif !defined(FLASH_CR_SNB_4)
-	FLASH_CR &= ~(FLASH_CR_SNB_0 | FLASH_CR_SNB_1 | FLASH_CR_SNB_2 | FLASH_CR_SNB_3);
-#else
-	FLASH_CR &= ~(FLASH_CR_SNB_0 | FLASH_CR_SNB_1 | FLASH_CR_SNB_2 | FLASH_CR_SNB_3 | FLASH_CR_SNB_4);
-#endif
-	if (sector & 0x1)
-		FLASH_CR |= FLASH_CR_SNB_0;
-	if (sector & 0x2)
-		FLASH_CR |= FLASH_CR_SNB_1;
-	if (sector & 0x4)
-		FLASH_CR |= FLASH_CR_SNB_2;
-#ifdef FLASH_CR_SNB_4
-	if (sector & 0x8)
-		FLASH_CR |= FLASH_CR_SNB_3;
-#endif
-#ifdef FLASH_CR_SNB_4
-	if (sector & 0x10)
-		FLASH_CR |= FLASH_CR_SNB_4;
-#endif
+	FLASH_CR &= ~FLASH_CR_SNB_Msk;
+	FLASH_CR |= (sectorRegIdx << FLASH_CR_SNB_Pos) & FLASH_CR_SNB_Msk;
+	/* sector erase */
 	FLASH_CR |= FLASH_CR_SER;
+	/* start erase operation */
 	FLASH_CR |= FLASH_CR_STRT;
 
 	/* Wait until it's finished. */
