@@ -123,6 +123,8 @@ rootStatement
     : definition
     | struct
     | typedef
+    // TODO: remove me, and build multi-lambda-table in to the language
+    | ('#if' | '#else' | '#endif') restOfLine
     | // empty line counts as a statement
     ;
 
