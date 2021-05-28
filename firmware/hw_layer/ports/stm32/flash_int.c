@@ -124,9 +124,9 @@ int intFlashSectorErase(flashsector_t sector) {
 	 * 00001 sector 1
 	 * ...
 	 * 01011 sector 11 (the end of 1st bank, 1Mb border)
-	 * 01100 sector 12 (start of 2nd bank)
+	 * 10000 sector 12 (start of 2nd bank)
 	 * ...
-	 * 10111 sector 23 (the end of 2nd bank, 2Mb border)
+	 * 11011 sector 23 (the end of 2nd bank, 2Mb border)
 	 * others not allowed */
 	FLASH_CR &= ~FLASH_CR_SNB_Msk;
 	FLASH_CR |= (sectorRegIdx << FLASH_CR_SNB_Pos) & FLASH_CR_SNB_Msk;
