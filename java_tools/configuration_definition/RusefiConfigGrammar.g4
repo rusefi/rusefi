@@ -120,10 +120,10 @@ typedef: Custom identifier (enumTypedefSuffix | scalarTypedefSuffix | arrayTyped
 
 // Root statement is allowed to appear in the root of the file
 rootStatement
-    : ENDL
-    | definition
+    : definition
     | struct
     | typedef
+    | // empty line counts as a statement
     ;
 
 rootStatements
