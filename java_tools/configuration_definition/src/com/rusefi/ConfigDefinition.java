@@ -255,7 +255,8 @@ public class ConfigDefinition {
                 listener.setDefinitionPolicy(Definition.OverwritePolicy.IgnoreNew);
 
                 for (String prependFile : prependFiles) {
-                    parseFile(listener, prependFile);
+                    // TODO: fix signature define file parsing
+                    //parseFile(listener, prependFile);
                 }
             }
 
