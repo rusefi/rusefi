@@ -38,7 +38,7 @@
             <jvmarg value="-ea"/>
             <jvmarg value="-XX:+HeapDumpOnOutOfMemoryError"/>
             <formatter type="brief"/>
-            <classpath path="build/classes:lib/junit.jar:lib/annotations.jar:lib/snakeyaml.jar"/>
+            <classpath path="build/classes:lib/junit.jar:lib/annotations.jar:lib/snakeyaml.jar:lib/antlr-4.5-complete.jar"/>
             <batchtest todir="build">
                 <fileset dir="src" includes="**/test/**/*Test.java"/>
                 <fileset dir="../enum_to_string/src" includes="**/test/**/*Test.java"/>
@@ -55,6 +55,7 @@
             </manifest>
             <zipfileset dir="build/classes" includes="**/*.class"/>
             <zipfileset src="lib/snakeyaml.jar" includes="**/*.class"/>
+			<zipfileset src="lib/antlr-4.5-complete.jar" includes="**/*.class"/>
         </jar>
     </target>
 
