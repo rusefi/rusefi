@@ -238,6 +238,10 @@ CANDriver * detectCanDevice(brain_pin_e pinRx, brain_pin_e pinTx) {
 
 #endif /* EFI_CAN_SUPPORT */
 
+bool allowFlashWhileRunning() {
+	return false;
+}
+
 size_t flashSectorSize(flashsector_t sector) {
 	// sectors 0..11 are the 1st memory bank (1Mb), and 12..23 are the 2nd (the same structure).
 	if (sector <= 3 || (sector >= 12 && sector <= 15))
