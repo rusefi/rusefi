@@ -30,6 +30,8 @@ expected<float> readGppwmChannel(gppwm_channel_e channel DECLARE_ENGINE_PARAMETE
 		return Sensor::get(SensorType::AuxTemp2);
 	case GPPWM_Zero:
 		return 0;
+	case GPPWM_AccelPedal:
+		return Sensor::get(SensorType::AcceleratorPedal);
 	}
 
 	return unexpected;
