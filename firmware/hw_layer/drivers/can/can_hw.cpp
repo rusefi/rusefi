@@ -78,51 +78,54 @@ static bool isCanEnabled = false;
  */
 #if defined(STM32F4XX) || defined(STM32F7XX)
 static const CANConfig canConfig100 = {
-CAN_MCR_ABOM | CAN_MCR_AWUM | CAN_MCR_TXFP,
-CAN_BTR_100 };
+	.mcr = CAN_MCR_ABOM | CAN_MCR_AWUM | CAN_MCR_TXFP,
+	.btr = CAN_BTR_100
+};
 
 static const CANConfig canConfig250 = {
-CAN_MCR_ABOM | CAN_MCR_AWUM | CAN_MCR_TXFP,
-CAN_BTR_250 };
+	.mcr = CAN_MCR_ABOM | CAN_MCR_AWUM | CAN_MCR_TXFP,
+	.btr = CAN_BTR_250
+};
 
 static const CANConfig canConfig500 = {
-CAN_MCR_ABOM | CAN_MCR_AWUM | CAN_MCR_TXFP,
-CAN_BTR_500 };
+	.mcr = CAN_MCR_ABOM | CAN_MCR_AWUM | CAN_MCR_TXFP,
+	.btr = CAN_BTR_500
+};
 
 static const CANConfig canConfig1000 = {
 CAN_MCR_ABOM | CAN_MCR_AWUM | CAN_MCR_TXFP,
 CAN_BTR_1k0 };
 #elif defined(STM32H7XX)
 static const CANConfig canConfig100 = {
-	CAN_NBTP_100,
-	CAN_DBTP_100,
-	0, // CCCR
-	0, // TEST
-	0,
+	.NBTP = CAN_NBTP_100,
+	.DBTP = CAN_DBTP_100,
+	.CCCR = 0,
+	.TEST = 0,
+	.RXGFC = 0,
 };
 
 static const CANConfig canConfig250 = {
-	CAN_NBTP_250,
-	CAN_DBTP_250,
-	0, // CCCR
-	0, // TEST
-	0,
+	.NBTP = CAN_NBTP_250,
+	.DBTP = CAN_DBTP_250,
+	.CCCR = 0,
+	.TEST = 0,
+	.RXGFC = 0,
 };
 
 static const CANConfig canConfig500 = {
-	CAN_NBTP_500,
-	CAN_DBTP_500,
-	0, // CCCR
-	0, // TEST
-	0,
+	.NBTP = CAN_NBTP_500,
+	.DBTP = CAN_DBTP_500,
+	.CCCR = 0,
+	.TEST = 0,
+	.RXGFC = 0,
 };
 
 static const CANConfig canConfig1000 = {
-	CAN_NBTP_1k0,
-	CAN_DBTP_1k0,
-	0, // CCCR
-	0, // TEST
-	0,
+	.NBTP = CAN_NBTP_1k0,
+	.DBTP = CAN_DBTP_1k0,
+	.CCCR = 0,
+	.TEST = 0,
+	.RXGFC = 0,
 };
 #endif
 
