@@ -1,7 +1,14 @@
 package com.rusefi;
 
+import com.rusefi.generated.*;
+import com.rusefi.newparse.ParseState;
+import com.rusefi.newparse.parsing.Definition;
 import com.rusefi.output.*;
 import com.rusefi.util.*;
+import org.antlr.v4.runtime.*;
+import org.antlr.v4.runtime.tree.ParseTree;
+import org.antlr.v4.runtime.tree.ParseTreeWalker;
+
 import com.rusefi.enum_reader.Value;
 import org.yaml.snakeyaml.Yaml;
 
@@ -233,6 +240,45 @@ public class ConfigDefinition {
 
         if (yamlFiles != null) {
            processYamls(VariableRegistry.INSTANCE, yamlFiles, state);
+        }
+
+        // Parse the input files
+        {
+            ParseState listener = new ParseState();
+
+            // First process yaml files
+            //processYamls(listener, yamlFiles);
+
+            // First load prepend files
+            {
+                // Ignore duplicates of definitions made during prepend phase
+                listener.setDefinitionPolicy(Definition.OverwritePolicy.IgnoreNew);
+
+                for (String prependFile : prependFiles) {
+                    parseFile(listener, prependFile);
+                }
+            }
+
+            // Now load the main config file
+            {
+                // don't allow duplicates in the main file
+                listener.setDefinitionPolicy(Definition.OverwritePolicy.NotAllowed);
+                parseFile(listener, definitionInputFile);
+            }
+
+            // Write C structs
+            // PrintStream cPrintStream = new PrintStream(new FileOutputStream(destCHeaderFileName));
+            // for (Struct s : listener.getStructs()) {
+            //     StructLayout sl = new StructLayout(0, "root", s);
+            //     sl.writeCLayoutRoot(cPrintStream);
+            // }
+            // cPrintStream.close();
+
+            // Write tunerstudio layout
+            // PrintStream tsPrintStream = new PrintStream(new FileOutputStream(tsPath + "/test.ini"));
+            // StructLayout root = new StructLayout(0, "root", listener.getLastStruct());
+            // root.writeTunerstudioLayout(tsPrintStream, new StructNamePrefixer());
+            // tsPrintStream.close();
         }
 
         BufferedReader definitionReader = new BufferedReader(new InputStreamReader(new FileInputStream(definitionInputFile), IoUtils.CHARSET.name()));
@@ -548,4 +594,19 @@ public class ConfigDefinition {
         return c.getValue();
     }
 
+    private static void parseFile(ParseState listener, String filePath) throws FileNotFoundException, IOException {
+        SystemOut.println("Parsing file (Antlr) " + filePath);
+
+        CharStream in = new ANTLRInputStream(new FileInputStream(filePath));
+
+        long start = System.nanoTime();
+
+        RusefiConfigGrammarParser parser = new RusefiConfigGrammarParser(new CommonTokenStream(new RusefiConfigGrammarLexer(in)));
+
+        ParseTree tree = parser.content();
+        new ParseTreeWalker().walk(listener, tree);
+        double durationMs = (System.nanoTime() - start) / 1e6;
+
+        SystemOut.println("Successfully parsed " + filePath + " in " + durationMs + "ms");
+    }
 }
