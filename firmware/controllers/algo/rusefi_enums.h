@@ -1000,6 +1000,7 @@ typedef enum __attribute__ ((__packed__)) {
 	GPPWM_AuxTemp1 = 6,
 	GPPWM_AuxTemp2 = 7,
 	GPPWM_Zero = 8,
+	GPPWM_AccelPedal = 9,
 } gppwm_channel_e;
 
 typedef enum __attribute__ ((__packed__)) {
