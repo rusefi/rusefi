@@ -128,28 +128,11 @@ int intFlashSectorErase(flashsector_t sector) {
 	 * ...
 	 * 10111 sector 23 (the end of 2nd bank, 2Mb border)
 	 * others not allowed */
-#ifndef FLASH_CR_SNB_3
-	FLASH_CR &= ~(FLASH_CR_SNB_0 | FLASH_CR_SNB_1 | FLASH_CR_SNB_2);
-#elif !defined(FLASH_CR_SNB_4)
-	FLASH_CR &= ~(FLASH_CR_SNB_0 | FLASH_CR_SNB_1 | FLASH_CR_SNB_2 | FLASH_CR_SNB_3);
-#else
-	FLASH_CR &= ~(FLASH_CR_SNB_0 | FLASH_CR_SNB_1 | FLASH_CR_SNB_2 | FLASH_CR_SNB_3 | FLASH_CR_SNB_4);
-#endif
-	if (sectorRegIdx & 0x1)
-		FLASH_CR |= FLASH_CR_SNB_0;
-	if (sectorRegIdx & 0x2)
-		FLASH_CR |= FLASH_CR_SNB_1;
-	if (sectorRegIdx & 0x4)
-		FLASH_CR |= FLASH_CR_SNB_2;
-#ifdef FLASH_CR_SNB_4
-	if (sectorRegIdx & 0x8)
-		FLASH_CR |= FLASH_CR_SNB_3;
-#endif
-#ifdef FLASH_CR_SNB_4
-	if (sectorRegIdx & 0x10)
-		FLASH_CR |= FLASH_CR_SNB_4;
-#endif
+	FLASH_CR &= ~FLASH_CR_SNB_Msk;
+	FLASH_CR |= (sectorRegIdx << FLASH_CR_SNB_Pos) & FLASH_CR_SNB_Msk;
+	/* sector erase */
 	FLASH_CR |= FLASH_CR_SER;
+	/* start erase operation */
 	FLASH_CR |= FLASH_CR_STRT;
 
 	/* Wait until it's finished. */
