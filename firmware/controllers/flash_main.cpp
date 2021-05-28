@@ -94,7 +94,7 @@ int eraseAndFlashCopy(flashaddr_t storageAddress, const TStorage& data) {
 
 	auto err = intFlashErase(storageAddress, sizeof(TStorage));
 	if (FLASH_RETURN_SUCCESS != err) {
-		firmwareError(OBD_PCM_Processor_Fault, "Failed to erase flash at %#010x", storageAddress);
+		firmwareError(OBD_PCM_Processor_Fault, "Failed to erase flash at 0x%08x", storageAddress);
 		return err;
 	}
 
