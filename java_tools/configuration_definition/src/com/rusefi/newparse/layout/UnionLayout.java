@@ -50,6 +50,12 @@ public class UnionLayout extends Layout {
     }
 
     @Override
+    public int getAlignment() {
+        // The alignment of the union is the largest alignment required by one of the members
+        return this.children.stream().map(l -> l.getAlignment()).max(Integer::compare).get();
+    }
+
+    @Override
     public void writeTunerstudioLayout(PrintStream ps, StructNamePrefixer prefixer) {
         // Simply write out all children - no container necessary as fields can overlap in TS
         this.children.forEach(c -> c.writeTunerstudioLayout(ps, prefixer));
