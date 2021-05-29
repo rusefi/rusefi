@@ -13,10 +13,14 @@ public class BitGroupLayout extends Layout {
     private class BitLayout {
         public final String name;
         public final String comment;
+        public final String trueValue;
+        public final String falseValue;
 
-        public BitLayout(String name, String comment) {
+        public BitLayout(String name, String comment, String trueValue, String falseValue) {
             this.name = name;
             this.comment = comment;
+            this.trueValue = trueValue;
+            this.falseValue = falseValue;
         }
     }
 
@@ -28,7 +32,7 @@ public class BitGroupLayout extends Layout {
             throw new RuntimeException("tried to create bit group starting with " + bitGroup.bitFields.get(0).name + " but it contained " + size + " which is more than the maximum of 32.");
         }
 
-        this.bits = bitGroup.bitFields.stream().map(bf -> new BitLayout(bf.name, bf.comment)).collect(Collectors.toList());
+        this.bits = bitGroup.bitFields.stream().map(bf -> new BitLayout(bf.name, bf.comment, bf.trueValue, bf.falseValue)).collect(Collectors.toList());
     }
 
     @Override
@@ -51,8 +55,7 @@ public class BitGroupLayout extends Layout {
             ps.print(", [");
             ps.print(i + ":" + i);
 
-            // TODO: print actual bit options
-            ps.print("], \"false\", \"true\"");
+            ps.print("], " + bit.falseValue + ", " + bit.trueValue);
 
             ps.println();
         }
