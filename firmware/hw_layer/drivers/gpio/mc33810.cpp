@@ -332,6 +332,11 @@ static int mc33810_chip_init(mc33810_priv *chip)
 		if (ret) {
 			goto err_gpios;
 		}
+
+		ret = mc33810_spi_rw(chip, MC_CMD_MODE_SELECT(0xf << 8), NULL);
+		if (ret) {
+			goto err_gpios;
+		}		
 	}
 
 	/* n. set EN pin low - active */
