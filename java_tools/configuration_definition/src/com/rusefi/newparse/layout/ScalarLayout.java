@@ -28,9 +28,9 @@ public class ScalarLayout extends Layout {
         return "Scalar " + type.cType + " " + super.toString();
     }
 
-    private void printBeforeArrayLength(PrintStream ps, StructNamePrefixer prefixer) {
+    private void printBeforeArrayLength(PrintStream ps, StructNamePrefixer prefixer, String fieldType) {
         ps.print(prefixer.get(this.name));
-        ps.print(" = scalar, ");
+        ps.print(" = " + fieldType + ", ");
         ps.print(this.type.tsType);
         ps.print(", ");
         ps.print(this.offset);
@@ -45,7 +45,12 @@ public class ScalarLayout extends Layout {
 
     @Override
     public void writeTunerstudioLayout(PrintStream ps, StructNamePrefixer prefixer, int arrayLength) {
-        printBeforeArrayLength(ps, prefixer);
+        if (arrayLength == 0) {
+            // Skip zero length arrays, they may be used for dynamic padding but TS doesn't like them
+            return;
+        }
+
+        printBeforeArrayLength(ps, prefixer, "array");
 
         ps.print("[");
         ps.print(arrayLength);
@@ -56,7 +61,7 @@ public class ScalarLayout extends Layout {
 
     @Override
     public void writeTunerstudioLayout(PrintStream ps, StructNamePrefixer prefixer) {
-        printBeforeArrayLength(ps, prefixer);
+        printBeforeArrayLength(ps, prefixer, "scalar");
         printAfterArrayLength(ps);
     }
 
