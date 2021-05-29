@@ -105,7 +105,7 @@ window.addEventListener('load', function() {
         pdiv.style.width = width + "%";
         pdiv.style.marginTop = "-" + (width / 2) + "%";
         pdiv.style.marginLeft = "-" + (width / 2) + "%";
-        pdiv.style.fontSize = (height / 7.5) + "vw";
+        pdiv.style.fontSize = (height * 1.8) + "px";
         cdiv.appendChild(pdiv);
         addRow(fullTable, connector.pins[i], pdiv);
       }
