@@ -50,7 +50,7 @@ TEST(etb, initializationMissingThrottle) {
 	EXPECT_CALL(mocks[1], init(ETB_None, _, _, _, true)).WillOnce(Return(false));
 
 	// Must have a sensor configured before init
-	Sensor::setMockValue(SensorType::AcceleratorPedal, 0);
+	Sensor::setMockValue(SensorType::AcceleratorPedal, 0, true);
 	Sensor::setMockValue(SensorType::AcceleratorPedalPrimary, 0);
 
 	// This should throw: a pedal is configured but no throttles
@@ -67,7 +67,7 @@ TEST(etb, initializationSingleThrottle) {
 	}
 
 	// Must have a sensor configured before init
-	Sensor::setMockValue(SensorType::AcceleratorPedal, 0);
+	Sensor::setMockValue(SensorType::AcceleratorPedal, 0, true);
 	Sensor::setMockValue(SensorType::AcceleratorPedalPrimary, 0);
 
 	engineConfiguration->etbFunctions[0] = ETB_Throttle1;
@@ -92,8 +92,8 @@ TEST(etb, initializationSingleThrottleInSecondSlot) {
 	}
 
 	// Must have a sensor configured before init
-	Sensor::setMockValue(SensorType::AcceleratorPedal, 0);
-	Sensor::setMockValue(SensorType::AcceleratorPedalPrimary, 0);
+	Sensor::setMockValue(SensorType::AcceleratorPedal, 0, true);
+	Sensor::setMockValue(SensorType::AcceleratorPedalPrimary, 0, false);
 
 	engineConfiguration->etbFunctions[0] = ETB_None;
 	engineConfiguration->etbFunctions[1] = ETB_Throttle1;
@@ -117,8 +117,8 @@ TEST(etb, initializationDualThrottle) {
 	}
 
 	// Must have a sensor configured before init
-	Sensor::setMockValue(SensorType::AcceleratorPedal, 0);
-	Sensor::setMockValue(SensorType::AcceleratorPedalPrimary, 0);
+	Sensor::setMockValue(SensorType::AcceleratorPedal, 0, true);
+	Sensor::setMockValue(SensorType::AcceleratorPedalPrimary, 0, false);
 
 	Sensor::setMockValue(SensorType::Tps1, 25.0f, true);
 	Sensor::setMockValue(SensorType::Tps2, 25.0f, true);
@@ -172,10 +172,22 @@ TEST(etb, initializationNotRedundantTps) {
 	EtbController dut;
 
 	// Needs pedal for init
-	Sensor::setMockValue(SensorType::AcceleratorPedal, 0.0f);
+	Sensor::setMockValue(SensorType::AcceleratorPedal, 0.0f, true);
 
 	// Not redundant, should fail upon init
 	Sensor::setMockValue(SensorType::Tps1, 0.0f, false);
+
+	EXPECT_FATAL_ERROR(dut.init(ETB_Throttle1, nullptr, nullptr, nullptr, true));
+}
+
+TEST(etb, initializationNotRedundantPedal) {
+	EtbController dut;
+
+	// Init pedal without redundancy
+	Sensor::setMockValue(SensorType::AcceleratorPedal, 0.0f, false);
+
+	// Normal redundant TPS
+	Sensor::setMockValue(SensorType::Tps1, 0.0f, true);
 
 	EXPECT_FATAL_ERROR(dut.init(ETB_Throttle1, nullptr, nullptr, nullptr, true));
 }
@@ -209,7 +221,7 @@ TEST(etb, idlePlumbing) {
 	WITH_ENGINE_TEST_HELPER(TEST_ENGINE);
 	engineConfiguration->useETBforIdleControl = true;
 
-	Sensor::setMockValue(SensorType::AcceleratorPedal, 50.0f);
+	Sensor::setMockValue(SensorType::AcceleratorPedal, 50.0f, true);
 
 	for (int i = 0; i < ETB_COUNT; i++) {
 		engine->etbControllers[i] = &mocks[i];
@@ -245,30 +257,30 @@ TEST(etb, testSetpointOnlyPedal) {
 	etb.init(ETB_Throttle1, nullptr, nullptr, &pedalMap, true);
 
 	// Check endpoints and midpoint
-	Sensor::setMockValue(SensorType::AcceleratorPedal, 0.0f);
+	Sensor::setMockValue(SensorType::AcceleratorPedal, 0.0f, true);
 	EXPECT_EQ(0, etb.getSetpoint().value_or(-1));
-	Sensor::setMockValue(SensorType::AcceleratorPedal, 50.0f);
+	Sensor::setMockValue(SensorType::AcceleratorPedal, 50.0f, true);
 	EXPECT_EQ(50, etb.getSetpoint().value_or(-1));
-	Sensor::setMockValue(SensorType::AcceleratorPedal, 100.0f);
+	Sensor::setMockValue(SensorType::AcceleratorPedal, 100.0f, true);
 	EXPECT_EQ(100, etb.getSetpoint().value_or(-1));
 
 	// Test some floating point pedal/output values
-	Sensor::setMockValue(SensorType::AcceleratorPedal, 50.8302f);
+	Sensor::setMockValue(SensorType::AcceleratorPedal, 50.8302f, true);
 	EXPECT_NEAR(50.8302, etb.getSetpoint().value_or(-1), EPS4D);
-	Sensor::setMockValue(SensorType::AcceleratorPedal, 51.6605f);
+	Sensor::setMockValue(SensorType::AcceleratorPedal, 51.6605f, true);
 	EXPECT_NEAR(51.6605, etb.getSetpoint().value_or(-1), EPS4D);
 
 	// Valid but out of range - should clamp to [0, 100]
-	Sensor::setMockValue(SensorType::AcceleratorPedal, -5);
+	Sensor::setMockValue(SensorType::AcceleratorPedal, -5, true);
 	EXPECT_EQ(0, etb.getSetpoint().value_or(-1));
-	Sensor::setMockValue(SensorType::AcceleratorPedal, 105);
+	Sensor::setMockValue(SensorType::AcceleratorPedal, 105, true);
 	EXPECT_EQ(100, etb.getSetpoint().value_or(-1));
 
 	// Check that ETB idle does NOT work - it's disabled
 	etb.setIdlePosition(50);
-	Sensor::setMockValue(SensorType::AcceleratorPedal, 0);
+	Sensor::setMockValue(SensorType::AcceleratorPedal, 0, true);
 	EXPECT_EQ(0, etb.getSetpoint().value_or(-1));
-	Sensor::setMockValue(SensorType::AcceleratorPedal, 20);
+	Sensor::setMockValue(SensorType::AcceleratorPedal, 20, true);
 	EXPECT_EQ(20, etb.getSetpoint().value_or(-1));
 
 	// Test invalid pedal position - should give 0 position
@@ -298,9 +310,9 @@ TEST(etb, setpointIdle) {
 	etb.init(ETB_Throttle1, nullptr, nullptr, &pedalMap, true);
 
 	// No idle range, should just pass pedal
-	Sensor::setMockValue(SensorType::AcceleratorPedal, 0.0f);
+	Sensor::setMockValue(SensorType::AcceleratorPedal, 0.0f, true);
 	EXPECT_EQ(0, etb.getSetpoint().value_or(-1));
-	Sensor::setMockValue(SensorType::AcceleratorPedal, 50.0f);
+	Sensor::setMockValue(SensorType::AcceleratorPedal, 50.0f, true);
 	EXPECT_EQ(50, etb.getSetpoint().value_or(-1));
 
 	// Idle should now have 10% range
@@ -308,27 +320,27 @@ TEST(etb, setpointIdle) {
 
 	// 50% idle position should increase setpoint by 5% when closed, and 0% when open
 	etb.setIdlePosition(50);
-	Sensor::setMockValue(SensorType::AcceleratorPedal, 0.0f);
+	Sensor::setMockValue(SensorType::AcceleratorPedal, 0.0f, true);
 	EXPECT_FLOAT_EQ(5, etb.getSetpoint().value_or(-1));
-	Sensor::setMockValue(SensorType::AcceleratorPedal, 50.0f);
+	Sensor::setMockValue(SensorType::AcceleratorPedal, 50.0f, true);
 	EXPECT_FLOAT_EQ(52.5, etb.getSetpoint().value_or(-1));
-	Sensor::setMockValue(SensorType::AcceleratorPedal, 100.0f);
+	Sensor::setMockValue(SensorType::AcceleratorPedal, 100.0f, true);
 	EXPECT_FLOAT_EQ(100, etb.getSetpoint().value_or(-1));
 
 	// 100% setpoint should increase by 10% closed, scaled 0% at wot
 	etb.setIdlePosition(100);
-	Sensor::setMockValue(SensorType::AcceleratorPedal, 0.0f);
+	Sensor::setMockValue(SensorType::AcceleratorPedal, 0.0f, true);
 	EXPECT_FLOAT_EQ(10, etb.getSetpoint().value_or(-1));
-	Sensor::setMockValue(SensorType::AcceleratorPedal, 50.0f);
+	Sensor::setMockValue(SensorType::AcceleratorPedal, 50.0f, true);
 	EXPECT_FLOAT_EQ(55, etb.getSetpoint().value_or(-1));
-	Sensor::setMockValue(SensorType::AcceleratorPedal, 100.0f);
+	Sensor::setMockValue(SensorType::AcceleratorPedal, 100.0f, true);
 	EXPECT_FLOAT_EQ(100, etb.getSetpoint().value_or(-1));
 
 	// 125% setpoint should clamp to 10% increase
 	etb.setIdlePosition(125);
-	Sensor::setMockValue(SensorType::AcceleratorPedal, 0.0f);
+	Sensor::setMockValue(SensorType::AcceleratorPedal, 0.0f, true);
 	EXPECT_FLOAT_EQ(10, etb.getSetpoint().value_or(-1));
-	Sensor::setMockValue(SensorType::AcceleratorPedal, 50.0f);
+	Sensor::setMockValue(SensorType::AcceleratorPedal, 50.0f, true);
 	EXPECT_FLOAT_EQ(55, etb.getSetpoint().value_or(-1));
 }
 
