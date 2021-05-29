@@ -49,6 +49,11 @@ static DeviceType determineDevice() {
 	return DeviceType::Unknown;
 }
 
+bool allowFlashWhileRunning() {
+	// Allow flash-while-running if dual bank mode is enabled, and we're a 2MB device (ie, no code located in second bank)
+	return determineDevice() == DeviceType::DualBank2MB;
+}
+
 // See ST AN4826
 size_t flashSectorSize(flashsector_t sector) {
 	// 1MB devices have 8 sectors per bank

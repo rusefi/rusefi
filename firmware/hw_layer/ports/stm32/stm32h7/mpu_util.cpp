@@ -7,6 +7,11 @@
 
 #include "flash_int.h"
 
+bool allowFlashWhileRunning() {
+	// We only support dual bank H7, so always allow flash while running.
+	return true;
+}
+
 size_t flashSectorSize(flashsector_t sector) {
 	// All sectors on H7 are 128k
 	return 128 * 1024;
