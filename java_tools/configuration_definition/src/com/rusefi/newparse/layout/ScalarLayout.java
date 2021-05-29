@@ -1,5 +1,6 @@
 package com.rusefi.newparse.layout;
 
+import com.rusefi.ConfigDefinition;
 import com.rusefi.newparse.parsing.FieldOptions;
 import com.rusefi.newparse.parsing.ScalarField;
 import com.rusefi.newparse.parsing.Type;
@@ -62,7 +63,13 @@ public class ScalarLayout extends Layout {
     @Override
     public void writeCLayout(PrintStream ps) {
         this.writeCOffsetHeader(ps, this.options.comment, this.options.units);
-        ps.println("\t" + this.type.cType.replaceAll("^int32_t$", "int") + " " + this.name + ";");
+        ps.print("\t" + this.type.cType.replaceAll("^int32_t$", "int") + " " + this.name);
+
+        if (ConfigDefinition.needZeroInit) {
+            ps.print(" = (" + this.type.cType.replaceAll("^int32_t$", "int") + ")0");
+        }
+
+        ps.println(";");
     }
 
     @Override
