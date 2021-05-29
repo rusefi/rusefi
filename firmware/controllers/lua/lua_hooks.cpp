@@ -169,6 +169,12 @@ static int lua_setDebug(lua_State* l) {
 
 	return 0;
 }
+
+static int lua_stopEngine(lua_State* l) {
+	doScheduleStopEngine();
+
+	return 0;
+}
 #endif // EFI_UNIT_TEST
 
 void configureRusefiLuaHooks(lua_State* l) {
@@ -186,5 +192,7 @@ void configureRusefiLuaHooks(lua_State* l) {
 	lua_register(l, "getFan", lua_fan);
 	lua_register(l, "getDigital", lua_getDigital);
 	lua_register(l, "setDebug", lua_setDebug);
+
+	lua_register(l, "stopEngine", lua_stopEngine);
 #endif
 }
