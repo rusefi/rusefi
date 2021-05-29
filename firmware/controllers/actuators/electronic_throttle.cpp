@@ -201,7 +201,7 @@ bool EtbController::init(etb_function_e function, DcMotor *motor, pid_s *pidPara
 			return false;
 		}
 
-		if (!Sensor.isRedundant(SensorType::AcceleratorPedal)) {
+		if (!Sensor::isRedundant(SensorType::AcceleratorPedal)) {
 			firmwareError(
 				OBD_Throttle_Position_Sensor_Circuit_Malfunction,
 				"Use of electronic throttle requires accelerator pedal to be redundant."
