@@ -1,5 +1,6 @@
 package com.rusefi.newparse;
 
+import com.rusefi.VariableRegistry;
 import com.rusefi.generated.RusefiConfigGrammarBaseListener;
 import com.rusefi.generated.RusefiConfigGrammarParser;
 import com.rusefi.newparse.parsing.*;
@@ -106,8 +107,6 @@ public class ParseState extends RusefiConfigGrammarBaseListener {
 
         String values = ctx.enumRhs().getText();
 
-        // TODO: many enum defs are missing so this doesn't work yet
-        /*
         if (values.startsWith("@@")) {
             Definition def = this.definitions.get(values.replaceAll("@", ""));
 
@@ -116,7 +115,7 @@ public class ParseState extends RusefiConfigGrammarBaseListener {
             }
 
             values = def.value;
-        }*/
+        }
 
         this.typedefs.put(this.typedefName, new EnumTypedef(this.typedefName, datatype, startBit, endBit, values));
     }
