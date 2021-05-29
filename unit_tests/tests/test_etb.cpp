@@ -180,18 +180,6 @@ TEST(etb, initializationNotRedundantTps) {
 	EXPECT_FATAL_ERROR(dut.init(ETB_Throttle1, nullptr, nullptr, nullptr, true));
 }
 
-TEST(etb, initializationNotRedundantPedal) {
-	EtbController dut;
-
-	// Not redundant, should fail
-	Sensor::setMockValue(SensorType::AcceleratorPedal, 0.0f, false);
-
-	// Redundant TPS
-	Sensor::setMockValue(SensorType::Tps1, 0.0f, true);
-
-	EXPECT_FATAL_ERROR(dut.init(ETB_Throttle1, nullptr, nullptr, nullptr, true));
-}
-
 TEST(etb, initializationNoThrottles) {
 	// This tests the case where you don't want an ETB, and expect everything to go fine
 	EtbController duts[2];
