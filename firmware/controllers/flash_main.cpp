@@ -63,8 +63,10 @@ void setNeedToWriteConfiguration(void) {
 	needToWriteConfiguration = true;
 
 #if EFI_FLASH_WRITE_THREAD
-	// Signal the flash writer thread to wake up and write at its leisure
-	flashWriteSemaphore.signal();
+	if (allowFlashWhileRunning()) {
+		// Signal the flash writer thread to wake up and write at its leisure
+		flashWriteSemaphore.signal();
+	}
 #endif // EFI_FLASH_WRITE_THREAD
 }
 
@@ -73,15 +75,13 @@ bool getNeedToWriteConfiguration(void) {
 }
 
 void writeToFlashIfPending() {
-// with a flash write thread, the schedule happens directly from
-// setNeedToWriteConfiguration, so there's nothing to do here
-#if !EFI_FLASH_WRITE_THREAD
-	if (!getNeedToWriteConfiguration()) {
+	// with a flash write thread, the schedule happens directly from
+	// setNeedToWriteConfiguration, so there's nothing to do here
+	if (allowFlashWhileRunning() || !getNeedToWriteConfiguration()) {
 		return;
 	}
 
 	writeToFlashNow();
-#endif
 }
 
 // Erase and write a copy of the configuration at the specified address
@@ -254,7 +254,9 @@ void initFlash() {
 	addConsoleAction("rewriteconfig", rewriteConfig);
 
 #if EFI_FLASH_WRITE_THREAD
-	chThdCreateStatic(flashWriteStack, sizeof(flashWriteStack), PRIO_FLASH_WRITE, flashWriteThread, nullptr);
+	if (allowFlashWhileRunning()) {
+		chThdCreateStatic(flashWriteStack, sizeof(flashWriteStack), PRIO_FLASH_WRITE, flashWriteThread, nullptr);
+	}
 #endif
 }
 
