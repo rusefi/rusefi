@@ -32,12 +32,10 @@
 struct gpiochip {
 	brain_pin_e			base;
 	size_t				size;
-	gpiochip_ops	*ops;
+	GpioChip			*chip;
 	const char			*name;
 	/* optional names of each gpio */
 	const char			**gpio_names;
-	/* private driver data passed to ops */
-	void				*priv;
 };
 
 static gpiochip chips[BOARD_EXT_GPIOCHIPS];
@@ -58,7 +56,7 @@ static gpiochip *gpiochip_find(brain_pin_e pin)
 			return chip;
 	}
 
-	return NULL;
+	return nullptr;
 }
 
 /*==========================================================================*/
@@ -92,7 +90,7 @@ const char *gpiochips_getChipName(brain_pin_e pin) {
 	if (chip)
 		return chip->name;
 
-	return NULL;
+	return nullptr;
 }
 
 /**
@@ -111,7 +109,7 @@ const char *gpiochips_getPinName(brain_pin_e pin)
 			return chip->gpio_names[offset];
 	}
 
-	return NULL;
+	return nullptr;
 }
 
 /**
@@ -123,24 +121,18 @@ const char *gpiochips_getPinName(brain_pin_e pin)
  * else returns chip base
  */
 
-int gpiochip_register(brain_pin_e base, const char *name, gpiochip_ops *ops, size_t size, void *priv)
+int gpiochip_register(brain_pin_e base, const char *name, GpioChip& gpioChip, size_t size)
 {
-	int i;
-
-	/* no ops provided, zero size? */
-	if ((!ops) || (!size))
+	/* zero size? */
+	if (!size)
 		return -1;
 
 	/* outside? */
 	if (((size_t)base + size - 1 > BRAIN_PIN_LAST) || (base <= BRAIN_PIN_ONCHIP_LAST))
 		return -1;
 
-	/* no 'writePad' and no 'readPad' implementation? return error code */
-	if ((!ops->writePad) && (!ops->readPad))
-		return -1;
-
 	/* check for overlap with other chips */
-	for (i = 0; i < BOARD_EXT_GPIOCHIPS; i++) {
+	for (int i = 0; i < BOARD_EXT_GPIOCHIPS; i++) {
 		if (chips[i].base != 0) {
 			#define in_range(a, b, c)	(((a) > (b)) && ((a) < (c)))
 			if (in_range(base, chips[i].base, chips[i].base + chips[i].size))
@@ -150,9 +142,10 @@ int gpiochip_register(brain_pin_e base, const char *name, gpiochip_ops *ops, siz
 		}
 	}
 
-	gpiochip *chip = NULL;
+	gpiochip *chip = nullptr;
+
 	/* find free gpiochip struct */
-	for (i = 0; i < BOARD_EXT_GPIOCHIPS; i++) {
+	for (int i = 0; i < BOARD_EXT_GPIOCHIPS; i++) {
 		if (chips[i].base == 0) {
 			chip = &chips[i];
 			break;
@@ -166,13 +159,12 @@ int gpiochip_register(brain_pin_e base, const char *name, gpiochip_ops *ops, siz
 
 	/* register chip */
 	chip->name = name;
-	chip->ops  = ops;
+	chip->chip = &gpioChip;
 	chip->base = base;
 	chip->size = size;
-	chip->gpio_names = NULL;
-	chip->priv = priv;
+	chip->gpio_names = nullptr;
 
-	return (chip->base);
+	return base;
 }
 
 
@@ -194,12 +186,11 @@ int gpiochip_unregister(brain_pin_e base)
 		return -1;
 
 	/* unregister chip */
-	chip->name = NULL;
-	chip->ops  = NULL;
+	chip->name = nullptr;
+	chip->chip = nullptr;
 	chip->base = GPIO_UNASSIGNED;
 	chip->size = 0;
-	chip->gpio_names = NULL;
-	chip->priv = NULL;
+	chip->gpio_names = nullptr;
 
 	return 0;
 }
@@ -240,10 +231,7 @@ int gpiochips_init(void)
 		if (!chip->base)
 			continue;
 
-		if (chip->ops->init)
-			ret = chip->ops->init(chip->priv);
-
-		if (ret < 0) {
+		if (chip->chip->init() < 0) {
 			/* remove chip if it fails to init */
 			/* TODO: we will have a gap, is it ok? */
 			chip->base = GPIO_UNASSIGNED;
@@ -270,10 +258,7 @@ int gpiochips_setPadMode(brain_pin_e pin, iomode_t mode)
 	if (!chip)
 		return -1;
 
-	if ((chip->ops->setPadMode))
-		return chip->ops->setPadMode(chip->priv, pin - chip->base, mode);
-
-	return -1;
+	return chip->chip->setPadMode(pin - chip->base, mode);
 }
 
 /**
@@ -292,10 +277,7 @@ int gpiochips_writePad(brain_pin_e pin, int value)
 	if (!chip)
 		return -1;
 
-	if (chip->ops->writePad)
-		return chip->ops->writePad(chip->priv, pin - chip->base, value);
-
-	return -1;
+	return chip->chip->writePad(pin - chip->base, value);
 }
 
 /**
@@ -313,10 +295,7 @@ int gpiochips_readPad(brain_pin_e pin)
 	if (!chip)
 		return -1;
 
-	if (chip->ops->readPad)
-		return chip->ops->readPad(chip->priv, pin - chip->base);
-
-	return -1;
+	return chip->chip->readPad(pin - chip->base);
 }
 
 /**
@@ -334,10 +313,7 @@ brain_pin_diag_e gpiochips_getDiag(brain_pin_e pin)
 	if (!chip)
 		return PIN_INVALID;
 
-	if (chip->ops->getDiag)
-		return chip->ops->getDiag(chip->priv, pin - chip->base);
-
-	return PIN_OK;
+	return chip->chip->getDiag(pin - chip->base);
 }
 
 /**
@@ -374,18 +350,18 @@ int gpiochips_getPinOffset(brain_pin_e pin) {
 const char *gpiochips_getChipName(brain_pin_e pin) {
 	(void)pin;
 
-	return NULL;
+	return nullptr;
 }
 
 const char *gpiochips_getPinName(brain_pin_e pin) {
 	(void)pin;
 
-	return NULL;
+	return nullptr;
 }
 
-int gpiochip_register(brain_pin_e base, const char *name, gpiochip_ops *ops, size_t size, void *priv)
+int gpiochip_register(brain_pin_e base, const char *name, GpioChip&, size_t size)
 {
-	(void)base; (void)name; (void)ops; (void)size; (void)priv;
+	(void)base; (void)name; (void)size;
 
 	return 0;
 }
