@@ -102,6 +102,7 @@ public class ConfigDefinition {
         String cacheZipFile = null;
         String signatureDestination = null;
         String signaturePrependFile = null;
+        List<String> enumInputFiles = new ArrayList<>();
         CHeaderConsumer.withC_Defines = true;
         File[] yamlFiles = null;
 
@@ -172,10 +173,7 @@ public class ConfigDefinition {
                     signatureDestination = args[i + 1];
                     break;
                 case EnumToString.KEY_ENUM_INPUT_FILE:
-                    String inputFile = args[i + 1];
-                    // todo: 1) can we 2) should we move this relatively heavy processing after we've checked if generation is needed?
-                    state.enumsReader.process(".", inputFile);
-                    SystemOut.println(state.enumsReader.getEnums() + " total enumsReader");
+                    enumInputFiles.add(args[i + 1]);
                     break;
                 case KEY_CACHE:
                     cachePath = args[i + 1];
@@ -218,6 +216,14 @@ public class ConfigDefinition {
         if (!needToUpdateTsFiles && !needToUpdateOtherFiles) {
             SystemOut.println("All output files are up-to-date, nothing to do here!");
             return;
+        }
+
+        if (!enumInputFiles.isEmpty()) {
+            for (String ef : enumInputFiles) {
+                state.enumsReader.process(".", ef);
+            }
+
+            SystemOut.println(state.enumsReader.getEnums() + " total enumsReader");
         }
 
         long crc32 = signatureHash(tsPath, inputAllFiles);
@@ -536,16 +542,16 @@ public class ConfigDefinition {
     }
 
     private static long getCrc32(String fileName) throws IOException {
-        File file = new File(fileName);
-        byte[] fileContent = Files.readAllBytes(file.toPath());
-        for (int i = 0; i < fileContent.length; i++) {
-            byte aByte = fileContent[i];
-            if (aByte == '\r')
-                throw new IllegalStateException("CR \\r 0x0D byte not allowed in cacheable content " + fileName + " at index=" + i);
-        }
-        CRC32 c = new CRC32();
-        c.update(fileContent, 0, fileContent.length);
-        return c.getValue();
+       File file = new File(fileName);
+       byte[] fileContent = Files.readAllBytes(file.toPath());
+       for (int i = 0; i < fileContent.length; i++) {
+           byte aByte = fileContent[i];
+           if (aByte == '\r')
+               throw new IllegalStateException("CR \\r 0x0D byte not allowed in cacheable content " + fileName + " at index=" + i);
+       }
+       CRC32 c = new CRC32();
+       c.update(fileContent, 0, fileContent.length);
+       return c.getValue();
     }
 
 }
