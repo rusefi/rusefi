@@ -275,9 +275,11 @@ void initializeSubaru_SVX(TriggerWaveform *s) {
 	/* +10 - TDC #4 */
 	/****** 720 *****/
 
-	s->setTriggerSynchronizationGap2(4.9, 9);
-	s->setTriggerSynchronizationGap3(1, 0.6, 1.25);
+//	s->setTriggerSynchronizationGap2(4.9, 9);
+//	s->setTriggerSynchronizationGap3(1, 0.6, 1.25);
 
 	s->isSynchronizationNeeded = false;
 	s->useOnlyPrimaryForSync = true;
+
+	s->tdcPosition = -60;
 }
