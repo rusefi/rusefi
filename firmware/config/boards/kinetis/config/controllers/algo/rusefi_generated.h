@@ -123,6 +123,7 @@
 #define BOOST_RPM_COUNT 8
 #define boostControlPin_offset 988
 #define boostControlPinMode_offset 989
+#define boostControlSafeDutyCycle_offset 542
 #define boostCutPressure_offset 2132
 #define boostPid_dFactor_offset 1000
 #define boostPid_iFactor_offset 996
@@ -1259,8 +1260,8 @@
 #define showHumanReadableWarning_offset 976
 #define showSdCardWarning_offset 76
 #define SIGNATURE_BOARD kin
-#define SIGNATURE_DATE 2021.05.28
-#define SIGNATURE_HASH 3628224759
+#define SIGNATURE_DATE 2021.05.30
+#define SIGNATURE_HASH 911040208
 #define silentTriggerError_offset 1464
 #define slowAdcAlpha_offset 2088
 #define sparkDwellRpmBins_offset 332
@@ -1613,7 +1614,7 @@
 #define ts_show_spi true
 #define ts_show_trigger_comparator true
 #define ts_show_tunerstudio_port true
-#define TS_SIGNATURE "rusEFI 2021.05.28.kin.3628224759"
+#define TS_SIGNATURE "rusEFI 2021.05.30.kin.911040208"
 #define TS_SINGLE_WRITE_COMMAND 'W'
 #define TS_SINGLE_WRITE_COMMAND_char W
 #define TS_TEST_COMMAND 't' // 0x74
@@ -1692,7 +1693,6 @@
 #define unused3988_offset 3960
 #define unused4028_offset 4000
 #define unused520_offset 520
-#define unused542_offset 542
 #define unused6312_offset 6284
 #define unused744b4_offset 744
 #define unused76b19_offset 76

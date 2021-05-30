@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on hellen_cypress_gen_config.bat integration/rusefi_config.txt Fri May 28 07:40:28 UTC 2021
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on hellen_cypress_gen_config.bat integration/rusefi_config.txt Sun May 30 11:06:00 UTC 2021
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -1093,10 +1093,11 @@ struct engine_configuration_s {
 	 */
 	uint8_t failedMapFallback;
 	/**
-	unit
+	 * Duty cycle to use in case of a sensor failure. This duty cycle should produce the minimum possible amount of boost.
+	%
 	 * offset 542
 	 */
-	uint8_t unused542;
+	uint8_t boostControlSafeDutyCycle;
 	/**
 	 * offset 543
 	 */
@@ -4202,4 +4203,4 @@ struct persistent_config_s {
 };
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on hellen_cypress_gen_config.bat integration/rusefi_config.txt Fri May 28 07:40:28 UTC 2021
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on hellen_cypress_gen_config.bat integration/rusefi_config.txt Sun May 30 11:06:00 UTC 2021
