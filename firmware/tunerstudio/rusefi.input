@@ -3041,7 +3041,9 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 		field = "Injection mode",						crankingInjectionMode
 		field = "Fuel Source For Cranking",             useRunningMathForCranking
 		field = "Base fuel mass", 				cranking_baseFuel, {useRunningMathForCranking == 0}
-
+        panel = primingFuelPulsePanel
+        panel = postCrankingEnrichment
+        
 	dialog = crankingIAC, "IAC"
 		field = "Cranking IAC position",					crankingIACposition
 		field = "After cranking IAC taper duration",	afterCrankingIACtaperDuration
@@ -3070,11 +3072,9 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 		field = "Enable flood clear",				isCylinderCleanupEnabled
 		field = ""
 		field = "Enable faster engine spin-up",			isFasterEngineSpinUpEnabled
-		panel = primingFuelPulsePanel
 		panel = crankingFuel
 		panel = crankingIgnition
 		panel = crankingIAC
-		panel = postCrankingEnrichment
 
 	dialog = EngineLoadAccelPanel, "Engine Load (alpha version)"
 		field = "Length",						engineLoadAccelLength
