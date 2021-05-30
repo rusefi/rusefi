@@ -3265,6 +3265,7 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 		field = "Output Mode",                      boostControlPinMode, { isBoostControlEnabled }
 		field = "Frequency",						boostPwmFrequency, { isBoostControlEnabled }
 
+		field = "Safe duty cycle",					boostControlSafeDutyCycle, { isBoostControlEnabled }
          dialog = boostDialog, "", border
                 panel = boost_left, West
                 panel = boostTableTbl, Center
