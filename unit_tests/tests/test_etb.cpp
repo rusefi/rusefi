@@ -251,8 +251,9 @@ TEST(etb, testSetpointOnlyPedal) {
 	// Uninitialized ETB must return unexpected (and not deference a null pointer)
 	EXPECT_EQ(etb.getSetpoint(), unexpected);
 
-	// Must have TPS initialized for ETB setup
+	// Must have TPS & PPS initialized for ETB setup
 	Sensor::setMockValue(SensorType::Tps1, 0.0f, true);
+	Sensor::setMockValue(SensorType::AcceleratorPedal, 0.0f, true);
 
 	etb.init(ETB_Throttle1, nullptr, nullptr, &pedalMap, true);
 
@@ -295,8 +296,9 @@ TEST(etb, setpointIdle) {
 	engineConfiguration->useETBforIdleControl = true;
 	engineConfiguration->etbIdleThrottleRange = 0;
 
-	// Must have TPS initialized for ETB setup
+	// Must have TPS & PPS initialized for ETB setup
 	Sensor::setMockValue(SensorType::Tps1, 0.0f, true);
+	Sensor::setMockValue(SensorType::AcceleratorPedal, 0.0f, true);
 
 	EtbController etb;
 	INJECT_ENGINE_REFERENCE(&etb);
@@ -347,8 +349,9 @@ TEST(etb, setpointIdle) {
 TEST(etb, setpointNoPedalMap) {
 	EtbController etb;
 
-	// Must have TPS initialized for ETB setup
+	// Must have TPS & PPS initialized for ETB setup
 	Sensor::setMockValue(SensorType::Tps1, 0.0f, true);
+	Sensor::setMockValue(SensorType::AcceleratorPedal, 0.0f, true);
 
 	// Don't pass a pedal map
 	etb.init(ETB_Throttle1, nullptr, nullptr, nullptr, true);
@@ -449,8 +452,9 @@ TEST(etb, setOutputValid) {
 	WITH_ENGINE_TEST_HELPER(TEST_ENGINE);
 	StrictMock<MockMotor> motor;
 
-	// Must have TPS initialized for ETB setup
+	// Must have TPS & PPS initialized for ETB setup
 	Sensor::setMockValue(SensorType::Tps1, 0.0f, true);
+	Sensor::setMockValue(SensorType::AcceleratorPedal, 0.0f, true);
 
 	EtbController etb;
 	INJECT_ENGINE_REFERENCE(&etb);
@@ -468,8 +472,9 @@ TEST(etb, setOutputValid2) {
 	WITH_ENGINE_TEST_HELPER(TEST_ENGINE);
 	StrictMock<MockMotor> motor;
 
-	// Must have TPS initialized for ETB setup
+	// Must have TPS & PPS initialized for ETB setup
 	Sensor::setMockValue(SensorType::Tps1, 0.0f, true);
+	Sensor::setMockValue(SensorType::AcceleratorPedal, 0.0f, true);
 
 	EtbController etb;
 	INJECT_ENGINE_REFERENCE(&etb);
@@ -487,8 +492,9 @@ TEST(etb, setOutputOutOfRangeHigh) {
 	WITH_ENGINE_TEST_HELPER(TEST_ENGINE);
 	StrictMock<MockMotor> motor;
 
-	// Must have TPS initialized for ETB setup
+	// Must have TPS & PPS initialized for ETB setup
 	Sensor::setMockValue(SensorType::Tps1, 0.0f, true);
+	Sensor::setMockValue(SensorType::AcceleratorPedal, 0.0f, true);
 
 	EtbController etb;
 	INJECT_ENGINE_REFERENCE(&etb);
@@ -506,8 +512,9 @@ TEST(etb, setOutputOutOfRangeLow) {
 	WITH_ENGINE_TEST_HELPER(TEST_ENGINE);
 	StrictMock<MockMotor> motor;
 
-	// Must have TPS initialized for ETB setup
+	// Must have TPS & PPS initialized for ETB setup
 	Sensor::setMockValue(SensorType::Tps1, 0.0f, true);
+	Sensor::setMockValue(SensorType::AcceleratorPedal, 0.0f, true);
 
 	EtbController etb;
 	INJECT_ENGINE_REFERENCE(&etb);
@@ -525,8 +532,9 @@ TEST(etb, setOutputPauseControl) {
 	WITH_ENGINE_TEST_HELPER(TEST_ENGINE);
 	StrictMock<MockMotor> motor;
 
-	// Must have TPS initialized for ETB setup
+	// Must have TPS & PPS initialized for ETB setup
 	Sensor::setMockValue(SensorType::Tps1, 0.0f, true);
+	Sensor::setMockValue(SensorType::AcceleratorPedal, 0.0f, true);
 
 	EtbController etb;
 	INJECT_ENGINE_REFERENCE(&etb);
@@ -545,8 +553,9 @@ TEST(etb, setOutputLimpHome) {
 	WITH_ENGINE_TEST_HELPER(TEST_ENGINE);
 	StrictMock<MockMotor> motor;
 
-	// Must have TPS initialized for ETB setup
+	// Must have TPS & PPS initialized for ETB setup
 	Sensor::setMockValue(SensorType::Tps1, 0.0f, true);
+	Sensor::setMockValue(SensorType::AcceleratorPedal, 0.0f, true);
 
 	EtbController etb;
 	INJECT_ENGINE_REFERENCE(&etb);
@@ -567,8 +576,9 @@ TEST(etb, closedLoopPid) {
 	pid.maxValue = 75;
 	pid.minValue = -60;
 
-	// Must have TPS initialized for ETB setup
+	// Must have TPS & PPS initialized for ETB setup
 	Sensor::setMockValue(SensorType::Tps1, 0.0f, true);
+	Sensor::setMockValue(SensorType::AcceleratorPedal, 0.0f, true);
 
 	EtbController etb;
 	etb.init(ETB_Throttle1, nullptr, &pid, nullptr, true);
