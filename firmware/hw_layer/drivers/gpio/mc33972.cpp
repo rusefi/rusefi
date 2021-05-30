@@ -133,8 +133,6 @@ static int mc33972_spi_w(mc33972_priv *chip, uint32_t tx)
 	/* Slave Select assertion. */
 	spiSelect(spi);
 	/* Atomic transfer operations. */
-	/* TODO: check why spiExchange transfers invalid data on STM32F7xx, DMA issue? */
-	//spiExchange(spi, 3, txb, rxb);
 	for (i = 0; i < 3; i++)
 		rxb[i] = spiPolledExchange(spi, txb[i]);
 	/* Slave Select de-assertion. */
@@ -156,15 +154,7 @@ static int mc33972_spi_w(mc33972_priv *chip, uint32_t tx)
 
 static int mc33972_update_status(mc33972_priv *chip)
 {
-	int ret;
-
-	/* TODO: lock? */
-
-	ret = mc33972_spi_w(chip, CMD_STATUS);
-	
-	/* TODO: unlock? */
-
-	return ret;
+	return mc33972_spi_w(chip, CMD_STATUS);
 }
 
 static int mc33972_update_pullups(mc33972_priv *chip)

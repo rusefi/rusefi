@@ -137,8 +137,6 @@ static int tle6240_spi_rw(tle6240_priv *chip, uint16_t tx, uint16_t *rx)
 	/* Slave Select assertion. */
 	spiSelect(spi);
 	/* Atomic transfer operations. */
-	/* TODO: check why spiExchange transfers invalid data on STM32F7xx, DMA issue? */
-	//spiExchange(spi, 2, &tx, &rxb);
 	rxb = spiPolledExchange(spi, tx);
 	/* Slave Select de-assertion. */
 	spiUnselect(spi);
@@ -162,8 +160,6 @@ static int tle6240_update_output_and_diag(tle6240_priv *chip)
 	int ret;
 	uint16_t out_data;
 
-	/* TODO: lock? */
-
 	/* atomic */
 	/* set value only for non-direct driven pins */
 	out_data = chip->o_state & (~chip->o_direct_mask);
@@ -184,8 +180,6 @@ static int tle6240_update_output_and_diag(tle6240_priv *chip)
 		chip->o_state_cached = out_data;
 		chip->diag_8_reguested = true;
 	}
-
-	/* TODO: unlock? */
 
 	return ret;
 }
@@ -387,12 +381,15 @@ static int tle6240_writePad(void *data, unsigned int pin, int value)
 
 	chip = (tle6240_priv *)data;
 
-	/* TODO: lock */
-	if (value)
-		chip->o_state |=  (1 << pin);
-	else
-		chip->o_state &= ~(1 << pin);
-	/* TODO: unlock */
+	{
+		chibios_rt::CriticalSectionLocker csl;
+	
+		if (value)
+			chip->o_state |=  (1 << pin);
+		else
+			chip->o_state &= ~(1 << pin);
+	}
+
 	/* direct driven? */
 	if (chip->o_direct_mask & (1 << pin)) {
 		int n = (pin < 8) ? pin : (pin - 4);
