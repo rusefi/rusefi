@@ -1,4 +1,4 @@
-var connectorYaml = [
+var connectorData = [
 ///DATA///
 ];
 
@@ -43,8 +43,8 @@ function clickPin(table, pin, pdiv) {
 }
 
 window.addEventListener('load', function() {
-  for (var c = 0; c < connectorYaml.length; c++) {
-    var connector = YAML.parse(connectorYaml[c]);
+  for (var c = 0; c < connectorData.length; c++) {
+    var connector = JSON.parse(connectorData[c]);
     var template = document.getElementById("connector-template");
     var clone = template.content.cloneNode(true);
     document.body.appendChild(clone);
