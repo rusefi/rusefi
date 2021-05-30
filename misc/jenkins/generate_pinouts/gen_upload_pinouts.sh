@@ -29,8 +29,6 @@ for c in $CONNECTORS; do
     cp $(dirname $c)/$IMG $DIR
   fi
   ls $DIR
-  cp misc/pinout-gen/yaml.min.js $DIR
-  ls $DIR
 done
 
 if [ -n "$RUSEFI_FTP_SERVER" ]; then
