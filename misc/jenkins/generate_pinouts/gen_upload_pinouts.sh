@@ -15,9 +15,9 @@ for c in $CONNECTORS; do
   echo "NAME "$NAME
   mkdir -p $DIR
   if [ -f $DIR/index.html ]; then
-    bash misc/pinout-gen/append.sh $c $DIR/index.html
+    bash misc/pinout-gen/append.sh "$(yq -j eval $c)" $DIR/index.html
   else
-    bash misc/pinout-gen/gen.sh $c $DIR/index.html
+    bash misc/pinout-gen/gen.sh "$(yq -j eval $c)" $DIR/index.html
   fi
   file $DIR/index.html
   IMG=$(yq r $c 'info.image.file')
