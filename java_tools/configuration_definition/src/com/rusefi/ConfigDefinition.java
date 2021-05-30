@@ -542,16 +542,16 @@ public class ConfigDefinition {
     }
 
     private static long getCrc32(String fileName) throws IOException {
-       File file = new File(fileName);
-       byte[] fileContent = Files.readAllBytes(file.toPath());
-       for (int i = 0; i < fileContent.length; i++) {
-           byte aByte = fileContent[i];
-           if (aByte == '\r')
-               throw new IllegalStateException("CR \\r 0x0D byte not allowed in cacheable content " + fileName + " at index=" + i);
-       }
-       CRC32 c = new CRC32();
-       c.update(fileContent, 0, fileContent.length);
-       return c.getValue();
+        File file = new File(fileName);
+        byte[] fileContent = Files.readAllBytes(file.toPath());
+        for (int i = 0; i < fileContent.length; i++) {
+            byte aByte = fileContent[i];
+            if (aByte == '\r')
+                throw new IllegalStateException("CR \\r 0x0D byte not allowed in cacheable content " + fileName + " at index=" + i);
+        }
+        CRC32 c = new CRC32();
+        c.update(fileContent, 0, fileContent.length);
+        return c.getValue();
     }
 
 }
