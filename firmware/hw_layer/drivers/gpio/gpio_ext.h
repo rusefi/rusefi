@@ -20,18 +20,15 @@
 /*==========================================================================*/
 
 struct GpioChip {
-	/* pin argument is pin number within gpio chip, not a global number */
-
-	virtual int setPadMode(size_t pin, iomode_t mode) = 0;
-	virtual int writePad(size_t pin, int value) = 0;
-	virtual int readPad(size_t pin) = 0;
-
-	virtual brain_pin_diag_e getDiag(size_t pin) {
-		return PIN_OK;
-	}
-
 	virtual int init() = 0;
-	virtual int deinit() = 0;
+
+	// These functions need not be implemented if not supported by the particular chip.
+	/* pin argument is pin number within gpio chip, not a global number */
+	virtual int setPadMode(size_t pin, iomode_t mode) { return -1; }
+	virtual int writePad(size_t pin, int value) { return -1; }
+	virtual int readPad(size_t pin) { return -1; }
+	virtual brain_pin_diag_e getDiag(size_t pin) { return PIN_OK; }
+	virtual int deinit() { return 0; }
 };
 
 int gpiochips_getPinOffset(brain_pin_e pin);
@@ -39,7 +36,7 @@ const char *gpiochips_getChipName(brain_pin_e pin);
 const char *gpiochips_getPinName(brain_pin_e pin);
 
 /* register/unregister GPIO chip */
-int gpiochip_register(brain_pin_e base, const char *name, GpioChip& chip, size_t size, void *priv);
+int gpiochip_register(brain_pin_e base, const char *name, GpioChip& chip, size_t size);
 int gpiochip_unregister(brain_pin_e base);
 
 /* Set individual names for pins */
