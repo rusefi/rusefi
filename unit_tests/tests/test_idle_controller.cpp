@@ -194,7 +194,44 @@ TEST(idle_v2, runningOpenLoopBasic) {
 	EXPECT_FLOAT_EQ(25, dut.getRunningOpenLoop(50, 0));
 }
 
-// TODO: test AC/fan open loop compensation
+TEST(idle_v2, runningFanAcBump) {
+	WITH_ENGINE_TEST_HELPER(TEST_ENGINE);
+	IdleController dut;
+	INJECT_ENGINE_REFERENCE(&dut);
+
+	engineConfiguration->manIdlePosition = 50;
+	engineConfiguration->acIdleExtraOffset = 9;
+	engineConfiguration->fan1ExtraIdle = 7;
+	engineConfiguration->fan2ExtraIdle = 3;
+
+	setArrayValues(config->cltIdleCorr, 1.0f);
+
+	// Start with fan off
+	enginePins.fanRelay.setValue(0);
+
+	// Should be base position
+	EXPECT_FLOAT_EQ(50, dut.getRunningOpenLoop(10, 0));
+
+	// Turn on AC!
+	engine->acSwitchState = true;
+	EXPECT_FLOAT_EQ(50 + 9, dut.getRunningOpenLoop(10, 0));
+	engine->acSwitchState = false;
+
+	// Turn the fan on!
+	enginePins.fanRelay.setValue(1);
+	EXPECT_FLOAT_EQ(50 + 7, dut.getRunningOpenLoop(10, 0));
+	enginePins.fanRelay.setValue(0);
+
+	// Turn on the other fan!
+	//enginePins.fanRelay2.setValue(1);
+	//EXPECT_FLOAT_EQ(50 + 3, dut.getRunningOpenLoop(10, 0));
+
+	// Turn on everything!
+	engine->acSwitchState = true;
+	enginePins.fanRelay.setValue(1);
+	///nginePins.fanRelay2.setValue(1);
+	EXPECT_FLOAT_EQ(50 + 9 + 7 /* + 3 */, dut.getRunningOpenLoop(10, 0));
+}
 
 TEST(idle_v2, runningOpenLoopTpsTaper) {
 	WITH_ENGINE_TEST_HELPER(TEST_ENGINE);

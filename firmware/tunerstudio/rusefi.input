@@ -2624,13 +2624,19 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 		field = "use Cic Pid",							useCicPidForIdle
 		field = "Use IAC PID Multiplier Table",			useIacPidMultTable
 
+	dialog = idleOpenLoop, "Open Loop Idle"
+		slider = "Open loop base position",				manIdlePosition, horizontal
+		field = "A/C adder",							acIdleExtraOffset
+		field = "Fan #1 adder",							fan1ExtraIdle
+		;field = "Fan #2 adder",						fan2ExtraIdle
+		field = "Extra idle air if throttle pressed",	iacByTpsTaper
+
 	dialog = idleGating, "Idle Detection Thresholds"
 		field = "TPS threshold",	idlePidDeactivationTpsThreshold
 		field = "RPM upper limit",	idlePidRpmUpperLimit
 		field = "RPM deadzone",	idlePidRpmDeadZone
 
 	dialog = idleExtra, "Extra Idle Features"
-		field = "Extra idle air if throttle pressed",						iacByTpsTaper
 		field = "Use idle ignition table",	useSeparateAdvanceForIdle
 		field = "Use idle VE table",		useSeparateVeForIdle
 		field = "Use coasting idle table",	useIacTableForCoasting, {idleMode == 0}
@@ -2641,10 +2647,9 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 		field = "Idle control mode",					idleMode
 
 		field = "! Solenoid idle control is disabled at zero RPM"
-		slider = "Open loop idle position",				manIdlePosition, horizontal
-		field = ""
 
 		panel = idleGating
+		panel = idleOpenLoop
 		panel = idlePidSettings, { idleMode == 0}
 		panel = idleExtra
 
