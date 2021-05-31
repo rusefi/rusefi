@@ -1064,7 +1064,7 @@ custom maf_sensor_type_e 4 bits, S32, @OFFSET@, [0:1], @@maf_sensor_type_e_enum@
 	bit fuelClosedLoopCorrectionEnabled;+Enables lambda sensor closed loop feedback for fuelling.
 	bit isVerboseIAC;+Print details into rusEfi console\nenable verbose_idle
 	bit isVerboseETB;+Prints ETB details to rusEFI console
-	bit useConstantDwellDuringCranking;+If set to true, will use the specified duration for cranking dwell. If set to false, will use the specified dwell angle.  Unless you have a really good reason to, leave this set to true to use duration mode.
+	bit useConstantDwellDuringCranking,"Time-based","Angle-based";+If set to true, will use the specified duration for cranking dwell. If set to false, will use the specified dwell angle.  Unless you have a really good reason to, leave this set to true to use duration mode.
 	bit isEngineChartEnabled;+This options enables data for 'engine sniffer' tab in console, which comes at some CPU price 
 	bit silentTriggerError;+Sometimes we have a performance issue while printing error
 	bit useLinearCltSensor

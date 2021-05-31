@@ -229,9 +229,14 @@ IIdleController::Phase IdleController::determinePhase(int rpm, int targetRpm, Se
 }
 
 float IdleController::getCrankingOpenLoop(float clt) const {
-	return 
-		CONFIG(crankingIACposition)		// Base cranking position (cranking page)
-		 * interpolate2d(clt, config->cltCrankingCorrBins, config->cltCrankingCorr);
+	float mult =
+		CONFIG(overrideCrankingIacSetting)
+		// Override to separate table
+	 	? interpolate2d(clt, config->cltCrankingCorrBins, config->cltCrankingCorr)
+		// Otherwise use plain running table
+		: interpolate2d(clt, config->cltIdleCorrBins, config->cltIdleCorr);
+
+	return CONFIG(crankingIACposition) * mult;
 }
 
 float IdleController::getRunningOpenLoop(float clt, SensorResult tps) const {
@@ -258,9 +263,7 @@ float IdleController::getRunningOpenLoop(float clt, SensorResult tps) const {
 
 float IdleController::getOpenLoop(Phase phase, float clt, SensorResult tps) const {
 	float running = getRunningOpenLoop(clt, tps);
-
-	// Cranking value is either its own table, or the running value if not overriden
-	float cranking = CONFIG(overrideCrankingIacSetting) ? getCrankingOpenLoop(clt) : running;
+	float cranking = getCrankingOpenLoop(clt);
 
 	// if we're cranking, nothing more to do.
 	if (phase == Phase::Cranking) {

@@ -2,21 +2,38 @@ var connectorData = [
 ///DATA///
 ];
 
+function hideEmptyColumns(table) {
+  var rows = table.querySelector('tbody').children;
+  var tableHead = table.querySelector("thead>tr")
+  var cols = tableHead.children
+  for (var i = 0; i < cols.length; i++) {
+    var empty = true;
+    for (var ii = 0; ii < rows.length; ii++) {
+      empty = rows[ii].children[i].textContent.length > 0 ? false : empty;
+    }
+    if (empty) {
+      tableHead.querySelectorAll('th')[i].style.display = 'none';
+      for (var ii = 0; ii < rows.length; ii++) {
+        rows[ii].children[i].style.display = 'none';
+      }
+    } else {
+      tableHead.querySelectorAll('th')[i].style.display = '';
+      for (var ii = 0; ii < rows.length; ii++) {
+        rows[ii].children[i].style.display = '';
+      }
+    }
+  }
+}
+
 function addRow(table, pin, pdiv) {
   var template = document.getElementById("table-template");
   var clone = template.content.cloneNode(true);
   var row = clone.querySelector(".data");
-  var pdata = clone.querySelector(".pin-data");
-  var idata = clone.querySelector(".ts-data");
-  var tdata = clone.querySelector(".type-data");
-  var fdata = clone.querySelector(".function-data");
-  var cdata = clone.querySelector(".color-data");
-  pdata.textContent = pin.pin;
-  pdata.dataset.type = pin.type;
-  idata.textContent = pin.ts_name;
-  tdata.textContent = pin.type
-  fdata.textContent = pin.function;
-  cdata.textContent = pin.color
+  var cells = row.children;
+  for (var i = 0; i < cells.length; i++) {
+    var cell = cells[i];
+    cell.textContent = pin[cell.dataset.field];
+  }
   if (pdiv) {
     row.addEventListener('click', function(table, pin, pdiv) {
       clickPin(table.parentElement.parentElement.parentElement.querySelector(".info-table tbody"), pin, pdiv);
@@ -25,7 +42,6 @@ function addRow(table, pin, pdiv) {
   }
   table.appendChild(clone);
 }
-
 function clickPin(table, pin, pdiv) {
   table.parentElement.style.display = "table";
   table.innerHTML = "";
@@ -40,6 +56,7 @@ function clickPin(table, pin, pdiv) {
     pins[i].classList.remove("selected");
   }
   pdiv.classList.add("selected");
+  hideEmptyColumns(table.parentElement);
 }
 
 window.addEventListener('load', function() {
@@ -109,6 +126,7 @@ window.addEventListener('load', function() {
         cdiv.appendChild(pdiv);
         addRow(fullTable, connector.pins[i], pdiv);
       }
+      hideEmptyColumns(sdiv.querySelector('.pinout-table'));
     }.bind(null, connector, sdiv, img));
     img.src = connector.info.image.file;
   }
