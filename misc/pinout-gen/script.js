@@ -1,4 +1,4 @@
-var connectorYaml = [
+var connectorData = [
 ///DATA///
 ];
 
@@ -17,10 +17,12 @@ function addRow(table, pin, pdiv) {
   tdata.textContent = pin.type
   fdata.textContent = pin.function;
   cdata.textContent = pin.color
-  row.addEventListener('click', function(table, pin, pdiv) {
-    clickPin(table.parentElement.parentElement.parentElement.querySelector(".info-table tbody"), pin, pdiv);
-    table.parentElement.parentElement.parentElement.scrollIntoView()
-  }.bind(null, table, pin, pdiv));
+  if (pdiv) {
+    row.addEventListener('click', function(table, pin, pdiv) {
+      clickPin(table.parentElement.parentElement.parentElement.querySelector(".info-table tbody"), pin, pdiv);
+      table.parentElement.parentElement.parentElement.scrollIntoView()
+    }.bind(null, table, pin, pdiv));
+  }
   table.appendChild(clone);
 }
 
@@ -41,8 +43,8 @@ function clickPin(table, pin, pdiv) {
 }
 
 window.addEventListener('load', function() {
-  for (var c = 0; c < connectorYaml.length; c++) {
-    var connector = YAML.parse(connectorYaml[c]);
+  for (var c = 0; c < connectorData.length; c++) {
+    var connector = JSON.parse(connectorData[c]);
     var template = document.getElementById("connector-template");
     var clone = template.content.cloneNode(true);
     document.body.appendChild(clone);
@@ -67,8 +69,10 @@ window.addEventListener('load', function() {
             break;
           }
         }
-        addRow(fullTable, connector.pins[i], pdiv);
-        if (!pinfo.x) continue;
+        if (!pinfo.x) {
+          addRow(fullTable, connector.pins[i], null);
+          continue;
+        }
         var closest = 1000000;
         for (var ii = 0; ii < connector.info.pins.length; ii++) {
           var tinfo = connector.info.pins[ii];
@@ -101,8 +105,9 @@ window.addEventListener('load', function() {
         pdiv.style.width = width + "%";
         pdiv.style.marginTop = "-" + (width / 2) + "%";
         pdiv.style.marginLeft = "-" + (width / 2) + "%";
-        pdiv.style.fontSize = (height / 7.5) + "vw";
+        pdiv.style.fontSize = (height * 1.8) + "px";
         cdiv.appendChild(pdiv);
+        addRow(fullTable, connector.pins[i], pdiv);
       }
     }.bind(null, connector, sdiv, img));
     img.src = connector.info.image.file;

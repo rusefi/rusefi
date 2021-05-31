@@ -20,8 +20,8 @@ constexpr float convertToGramsPerSecond(float ccPerMinute) {
 expected<float> InjectorModel::getAbsoluteRailPressure() const {
 	switch (CONFIG(injectorCompensationMode)) {
 		case ICM_FixedRailPressure:
-			// TODO: should this add baro pressure instead of 1atm?
-			return (CONFIG(fuelReferencePressure) + 101.325f);
+			// Add barometric pressure, as "fixed" really means "fixed pressure above atmosphere"
+			return CONFIG(fuelReferencePressure) + Sensor::get(SensorType::BarometricPressure).value_or(101.325f);
 		case ICM_SensedRailPressure:
 			if (!Sensor::hasSensor(SensorType::FuelPressureInjector)) {
 				firmwareError(OBD_PCM_Processor_Fault, "Fuel pressure compensation is set to use a pressure sensor, but none is configured.");

@@ -1,7 +1,7 @@
 #include "global.h"
 #include "rusefi_enums.h"
 #include "rusefi_hw_enums.h"
-// was generated automatically by rusEFI tool  from rusefi_hw_enums.h // was generated automatically by rusEFI tool  from rusefi_enums.h // by enum2string.jar tool on Thu May 27 05:35:49 EDT 2021
+// was generated automatically by rusEFI tool  from rusefi_hw_enums.h // was generated automatically by rusEFI tool  from rusefi_enums.h // by enum2string.jar tool on Fri May 28 07:39:53 UTC 2021
 // see also gen_config_and_enums.bat
 
 
@@ -1042,6 +1042,8 @@ case REVERSE:
 }
 const char *getGppwm_channel_e(gppwm_channel_e value){
 switch(value) {
+case GPPWM_AccelPedal:
+  return "GPPWM_AccelPedal";
 case GPPWM_AuxTemp1:
   return "GPPWM_AuxTemp1";
 case GPPWM_AuxTemp2:

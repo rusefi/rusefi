@@ -47,29 +47,29 @@ pins:
   - pin: 7
     id: MC33810_0_GD_0
     class: outputs
-    function: Ignition 1
-    ts_name: D07 - Ignition 1
+    function: Ignition 4
+    ts_name: D07 - Ignition Cyl 4
     type: ign
 
   - pin: 8
     id: MC33810_1_GD_2
     class: outputs
     function: Ignition 2
-    ts_name: D08 - Ignition 2
+    ts_name: D08 - Ignition Cyl 2
     type: ign
 
   - pin: 9
     id: MC33810_0_GD_1
     class: outputs
     function: Ignition 3
-    ts_name: D09 - Ignition 3
+    ts_name: D09 - Ignition Cyl 3
     type: ign
 
   - pin: 10
     id: MC33810_1_GD_3
     class: outputs
-    function: Ignition 4
-    ts_name: D10 - Ignition 4
+    function: Ignition 1
+    ts_name: D10 - Ignition Cyl 1
     type: ign
 
   - pin: 11
@@ -105,7 +105,7 @@ pins:
     id: MC33810_1_GD_1
     class: outputs
     function: Ignition 6
-    ts_name: D10 - Ignition 6
+    ts_name: D16 - Ignition Cyl 6
     type: ign
 
   - pin: 17
@@ -140,7 +140,7 @@ pins:
     id: MC33810_0_GD_3
     class: outputs
     function: Ignition 5
-    ts_name: D21 - Ignition 5
+    ts_name: D21 - Ignition Cyl 5
     type: ign
 
   - pin: 22

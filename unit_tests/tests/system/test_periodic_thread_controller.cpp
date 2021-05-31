@@ -45,6 +45,10 @@ thread_t *chThdCreateStatic(void *wsp, size_t size,
 	taskq insta;
 
 	taskq &tq = insta;
+	/**
+	 * I do not understand what's going on here. Do allocate thread on stack and that would crash once method is over?
+	 * how do we dynamically create new std::thread?
+	 */
 
 	std::thread thr(func_wrapper, std::ref(tq));
 

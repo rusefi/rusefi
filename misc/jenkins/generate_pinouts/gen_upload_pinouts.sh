@@ -15,9 +15,9 @@ for c in $CONNECTORS; do
   echo "NAME "$NAME
   mkdir -p $DIR
   if [ -f $DIR/index.html ]; then
-    bash misc/pinout-gen/append.sh $c $DIR/index.html
+    bash misc/pinout-gen/append.sh "$(yq -j r $c)" $DIR/index.html
   else
-    bash misc/pinout-gen/gen.sh $c $DIR/index.html
+    bash misc/pinout-gen/gen.sh "$(yq -j r $c)" $DIR/index.html
   fi
   file $DIR/index.html
   IMG=$(yq r $c 'info.image.file')
@@ -28,8 +28,6 @@ for c in $CONNECTORS; do
   if [ $IMG ]; then
     cp $(dirname $c)/$IMG $DIR
   fi
-  ls $DIR
-  cp misc/pinout-gen/yaml.min.js $DIR
   ls $DIR
 done
 

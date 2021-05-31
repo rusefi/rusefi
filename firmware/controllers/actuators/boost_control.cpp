@@ -128,8 +128,7 @@ expected<percent_t> BoostController::getClosedLoop(float target, float manifoldP
 }
 
 void BoostController::setOutput(expected<float> output) {
-	// TODO: hook up safe duty cycle
-	percent_t percent = output.value_or(/*CONFIG(boostControlSafeDutyCycle)*/ 0);
+	percent_t percent = output.value_or(CONFIG(boostControlSafeDutyCycle));
 	float duty = PERCENT_TO_DUTY(percent);
 
 	if (m_pwm) {

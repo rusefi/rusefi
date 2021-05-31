@@ -9,6 +9,7 @@
 // Base MCU
 void baseMCUInit(void);
 void jump_to_bootloader();
+bool allowFlashWhileRunning();
 
 // ADC
 #if HAL_USE_ADC

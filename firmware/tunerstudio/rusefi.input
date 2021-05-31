@@ -1444,6 +1444,8 @@ menuDialog = main
 		
 	menu = "&Cranking"
 		subMenu = crankingDialog,			"Cranking settings"
+		subMenu = postCrankingEnrichment,	"After-start enrichment"
+		subMenu = primingFuelPulsePanel,	"Priming pulse"
 		subMenu = std_separator
 
 		subMenu = crankingCltCurve,			"Fuel CLT multiplier"
@@ -1451,10 +1453,10 @@ menuDialog = main
 		subMenu = crankingTpsCurve,			"Fuel TPS multiplier"
 		subMenu = std_separator
 
-		subMenu = crankingAdvanceCurve,		"Ignition advance", 0, {useSeparateAdvanceForCranking == 1}
+		subMenu = crankingAdvanceCurve,		"Cranking ignition advance", 0, {useSeparateAdvanceForCranking == 1}
 		subMenu = std_separator
 
-		subMenu = cltCrankingCurve,			"IAC multiplier", 0, {overrideCrankingIacSetting == 1}	
+		subMenu = cltCrankingCurve,			"Cranking IAC CLT multiplier", 0, {overrideCrankingIacSetting == 1}	
 		
 	menu = "&Idle"
 		subMenu = idleSettings,				"Idle settings"
@@ -3048,19 +3050,16 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 		field = "Fuel Source For Cranking",             useRunningMathForCranking
 		field = "Base fuel mass", 				cranking_baseFuel, {useRunningMathForCranking == 0}
 
-	dialog = crankingIAC, "IAC"
-		field = "Cranking IAC position",					crankingIACposition
-		field = "After cranking IAC taper duration",	afterCrankingIACtaperDuration
-		field = "Override IAC multiplier for cranking",	overrideCrankingIacSetting
-		
+	dialog = crankingIAC, "Idle air valve"
+		field = "Cranking base IAC position",			crankingIACposition
+		field = "After cranking IAC taper duration",afterCrankingIACtaperDuration
+		field = "Override cranking IAC CLT multiplier",		overrideCrankingIacSetting
+
 	dialog = crankingIgnition, "Ignition"
 		field = "Timing Advance mode",	useSeparateAdvanceForCranking
-		field = "Advance",						crankingTimingAngle, {useSeparateAdvanceForCranking == 0}
-		field = "Use Advance Corrections for cranking",	useAdvanceCorrectionsForCranking
-        field = "Use fixed cranking dwell",         			useConstantDwellDuringCranking
+		field = "Fixed cranking advance",	crankingTimingAngle, {useSeparateAdvanceForCranking == 0}
         field = "Fixed Cranking Dwell",           			ignitionDwellForCrankingMs, {useConstantDwellDuringCranking == 1}
-		field = "Cranking Dwell Angle", 						crankingChargeAngle, {useConstantDwellDuringCranking == 0}
-	
+
 	dialog = postCrankingEnrichment, "After start enrichment"
 		field = "Post-Cranking factor", 				postCrankingFactor
 		field = "Duration", 				postCrankingDurationSec
@@ -3068,19 +3067,21 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 	dialog = primingFuelPulsePanel, "Priming fuel pulse"
 		field = "Duration at -40C degrees",	startOfCrankingPrimingPulse
 		field = "Falloff temperature", primeInjFalloffTemperature
-		
-		
+
+	dialog = crankingAdv, "Advanced"
+		field = "Enable flood clear",				isCylinderCleanupEnabled
+		field = "Enable faster engine spin-up",			isFasterEngineSpinUpEnabled
+		field = "Use Advance Corrections for cranking",	useAdvanceCorrectionsForCranking
+		field = "Use fixed cranking dwell",         			useConstantDwellDuringCranking
+		field = "Cranking Dwell Angle", 						crankingChargeAngle, {useConstantDwellDuringCranking == 0}
+
 ;			Cranking->Cranking Settings
 	dialog = crankingDialog, "Cranking Settings"
 		field = "Cranking RPM limit",                	cranking_rpm
-		field = "Enable flood clear",				isCylinderCleanupEnabled
-		field = ""
-		field = "Enable faster engine spin-up",			isFasterEngineSpinUpEnabled
-		panel = primingFuelPulsePanel
 		panel = crankingFuel
 		panel = crankingIgnition
 		panel = crankingIAC
-		panel = postCrankingEnrichment
+		panel = crankingAdv
 
 	dialog = EngineLoadAccelPanel, "Engine Load (alpha version)"
 		field = "Length",						engineLoadAccelLength
@@ -3271,6 +3272,7 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 		field = "Output Mode",                      boostControlPinMode, { isBoostControlEnabled }
 		field = "Frequency",						boostPwmFrequency, { isBoostControlEnabled }
 
+		field = "Safe duty cycle",					boostControlSafeDutyCycle, { isBoostControlEnabled }
          dialog = boostDialog, "", border
                 panel = boost_left, West
                 panel = boostTableTbl, Center
