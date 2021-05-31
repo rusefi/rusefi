@@ -16,6 +16,11 @@ function hideEmptyColumns(table) {
       for (var ii = 0; ii < rows.length; ii++) {
         rows[ii].children[i].style.display = 'none';
       }
+    } else {
+      tableHead.querySelectorAll('th')[i].style.display = '';
+      for (var ii = 0; ii < rows.length; ii++) {
+        rows[ii].children[i].style.display = '';
+      }
     }
   }
 }
