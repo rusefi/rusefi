@@ -566,10 +566,8 @@ void setDefaultIdleParameters(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 #if ! EFI_UNIT_TEST
 
 void onConfigurationChangeIdleCallback(engine_configuration_s *previousConfiguration) {
-	auto idlePid = getIdlePid(PASS_ENGINE_PARAMETER_SIGNATURE);
-	if (idlePid->isSame(&previousConfiguration->idleRpmPid)) {
-		mustResetPid = true;
-	}
+	shouldResetPid = !getIdlePid(PASS_ENGINE_PARAMETER_SIGNATURE)->isSame(&previousConfiguration->idleRpmPid);
+	mustResetPid = shouldResetPid;
 }
 
 void setTargetIdleRpm(int value) {
