@@ -340,7 +340,7 @@ static void undoIdleBlipIfNeeded() {
 /**
  * @return idle valve position percentage for automatic closed loop mode
  */
-static percent_t automaticIdleController(float tpsPos, float rpm, int targetRpm, IIdleController::Phase phase DECLARE_ENGINE_PARAMETER_SUFFIX) {
+float IdleController::getClosedLoop(IIdleController::Phase phase, float tpsPos, int rpm, int targetRpm) {
 	if (shouldResetPid) {
 		// we reset only if I-term is negative, because the positive I-term is good - it keeps RPM from dropping too low
 		if (getIdlePid(PASS_ENGINE_PARAMETER_SIGNATURE)->getIntegration() <= 0 || mustResetPid) {
@@ -513,7 +513,7 @@ static percent_t automaticIdleController(float tpsPos, float rpm, int targetRpm,
 				// let's re-apply CLT correction
 				iacPosition = manualIdleController(cltCorrection PASS_ENGINE_PARAMETER_SUFFIX);
 			} else {
-				iacPosition = automaticIdleController(tps.Value, rpm, targetRpm, phase PASS_ENGINE_PARAMETER_SUFFIX);
+				iacPosition = getClosedLoop(phase, tps.Value, rpm, targetRpm);
 			}
 			
 			iacPosition = clampPercentValue(iacPosition);
