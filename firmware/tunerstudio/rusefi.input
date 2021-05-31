@@ -3053,9 +3053,7 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 		field = "Timing Advance mode",	useSeparateAdvanceForCranking
 		field = "Fixed cranking advance",	crankingTimingAngle, {useSeparateAdvanceForCranking == 0}
 		field = "Use Advance Corrections for cranking",	useAdvanceCorrectionsForCranking
-        field = "Use fixed cranking dwell",         			useConstantDwellDuringCranking
         field = "Fixed Cranking Dwell",           			ignitionDwellForCrankingMs, {useConstantDwellDuringCranking == 1}
-		field = "Cranking Dwell Angle", 						crankingChargeAngle, {useConstantDwellDuringCranking == 0}
 
 	dialog = postCrankingEnrichment, "After start enrichment"
 		field = "Post-Cranking factor", 				postCrankingFactor
@@ -3068,6 +3066,8 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 	dialog = crankingAdv, "Advanced"
 		field = "Enable flood clear",				isCylinderCleanupEnabled
 		field = "Enable faster engine spin-up",			isFasterEngineSpinUpEnabled
+		field = "Use fixed cranking dwell",         			useConstantDwellDuringCranking
+		field = "Cranking Dwell Angle", 						crankingChargeAngle, {useConstantDwellDuringCranking == 0}
 
 ;			Cranking->Cranking Settings
 	dialog = crankingDialog, "Cranking Settings"
