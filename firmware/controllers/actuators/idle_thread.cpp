@@ -370,8 +370,9 @@ static percent_t automaticIdleController(float tpsPos, float rpm, int targetRpm,
 	// When rpm < targetRpm, there's a risk of dropping RPM too low - and the engine dies out.
 	// So PID reaction should be increased by adding extra percent to PID-error:
 	percent_t errorAmpCoef = 1.0f;
-	if (rpm < targetRpm)
+	if (rpm < targetRpm) {
 		errorAmpCoef += (float)CONFIG(pidExtraForLowRpm) / PERCENT_MULT;
+	}
 	
 	// if PID was previously reset, we store the time when it turned on back (see errorAmpCoef correction below)
 	if (wasResetPid) {
@@ -382,7 +383,7 @@ static percent_t automaticIdleController(float tpsPos, float rpm, int targetRpm,
 	// todo: move restoreAfterPidResetTimeUs to engineState.idle?
 	efitimeus_t timeSincePidResetUs = nowUs - /*engine->engineState.idle.*/restoreAfterPidResetTimeUs;
 	// todo: add 'pidAfterResetDampingPeriodMs' setting
-	errorAmpCoef = interpolateClamped(0.0f, 0.0f, MS2US(/*CONFIG(pidAfterResetDampingPeriodMs)*/1000), errorAmpCoef, timeSincePidResetUs);
+	errorAmpCoef = interpolateClamped(0, 0, MS2US(/*CONFIG(pidAfterResetDampingPeriodMs)*/1000), errorAmpCoef, timeSincePidResetUs);
 	// If errorAmpCoef > 1.0, then PID thinks that RPM is lower than it is, and controls IAC more aggressively
 	idlePid->setErrorAmplification(errorAmpCoef);
 
@@ -397,12 +398,12 @@ static percent_t automaticIdleController(float tpsPos, float rpm, int targetRpm,
 		float engineLoad = getFuelingLoad(PASS_ENGINE_PARAMETER_SIGNATURE);
 		float multCoef = iacPidMultMap.getValue(rpm / RPM_1_BYTE_PACKING_MULT, engineLoad);
 		// PID can be completely disabled of multCoef==0, or it just works as usual if multCoef==1
-		newValue = interpolateClamped(0.0f, engine->engineState.idle.baseIdlePosition, 1.0f, newValue, multCoef);
+		newValue = interpolateClamped(0, engine->engineState.idle.baseIdlePosition, 1.0f, newValue, multCoef);
 	}
 	
 	// Apply PID Deactivation Threshold as a smooth taper for TPS transients.
 	// if tps==0 then PID just works as usual, or we completely disable it if tps>=threshold
-	newValue = interpolateClamped(0.0f, newValue, CONFIG(idlePidDeactivationTpsThreshold), engine->engineState.idle.baseIdlePosition, tpsPos);
+	newValue = interpolateClamped(0, newValue, CONFIG(idlePidDeactivationTpsThreshold), engine->engineState.idle.baseIdlePosition, tpsPos);
 
 	// Interpolate to the manual position when RPM is close to the upper RPM limit (if idlePidRpmUpperLimit is set).
 	// If RPM increases and the throttle is closed, then we're in coasting mode, and we should smoothly disable auto-pid.
