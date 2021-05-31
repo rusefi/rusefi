@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on config/boards/subaru_eg33/config/gen_config.sh integration/rusefi_config.txt Sun May 30 11:06:02 UTC 2021
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on config/boards/subaru_eg33/config/gen_config.sh integration/rusefi_config.txt Mon May 31 08:21:17 UTC 2021
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -1548,8 +1548,7 @@ struct engine_configuration_s {
 	offset 744 bit 19 */
 	bool stepperForceParkingEveryRestart : 1;
 	/**
-	 * Smarter cranking logic.
-	 * See also startOfCrankingPrimingPulse
+	 * If enabled, try to fire the engine before a full engine cycle has been completed using RPM estimated from the last 90 degrees of engine rotation. As soon as the trigger syncs plus 90 degrees rotation, fuel and ignition events will occur. If disabled, worst case may require up to 4 full crank rotations before any events are scheduled.
 	offset 744 bit 20 */
 	bool isFasterEngineSpinUpEnabled : 1;
 	/**
@@ -2302,7 +2301,8 @@ struct engine_configuration_s {
 	offset 1476 bit 5 */
 	bool isMapAveragingEnabled : 1;
 	/**
-	 * This setting overrides the normal multiplication values that have been set for the idle air control valve during cranking. If this setting is enabled the "IAC multiplier" table in the Cranking settings tab needs to be adjusted appropriately or potentially no IAC opening will occur.
+	 * If enabled, use separate temperature multiplier table for cranking idle position.
+	 * If disabled, use normal running multiplier table applied to the cranking base position.
 	offset 1476 bit 6 */
 	bool overrideCrankingIacSetting : 1;
 	/**
@@ -2347,11 +2347,13 @@ struct engine_configuration_s {
 	offset 1476 bit 16 */
 	bool useFixedBaroCorrFromMap : 1;
 	/**
-	 * This activates a separate advance table for cranking conditions, this allows cranking advance to be RPM dependant.
+	 * In Constant mode, timing is automatically tapered to running as RPM increases.
+	 * In Table mode, the "Cranking ignition advance" table is used directly.
 	offset 1476 bit 17 */
 	bool useSeparateAdvanceForCranking : 1;
 	/**
 	 * This enables the various ignition corrections during cranking (IAT, CLT, FSIO and PID idle).
+	 * You probably don't need this.
 	offset 1476 bit 18 */
 	bool useAdvanceCorrectionsForCranking : 1;
 	/**
@@ -4203,4 +4205,4 @@ struct persistent_config_s {
 };
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on config/boards/subaru_eg33/config/gen_config.sh integration/rusefi_config.txt Sun May 30 11:06:02 UTC 2021
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on config/boards/subaru_eg33/config/gen_config.sh integration/rusefi_config.txt Mon May 31 08:21:17 UTC 2021
