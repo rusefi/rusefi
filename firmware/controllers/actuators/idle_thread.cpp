@@ -334,7 +334,7 @@ static void undoIdleBlipIfNeeded() {
 /**
  * @return idle valve position percentage for automatic closed loop mode
  */
-float IdleController::getClosedLoop(IIdleController::Phase phase, SensorResult tpsPos, int rpm, int targetRpm) {
+float IdleController::getClosedLoop(IIdleController::Phase phase, float tpsPos, int rpm, int targetRpm) {
 	auto idlePid = getIdlePid(PASS_ENGINE_PARAMETER_SIGNATURE);
 
 	// todo: move this to pid_s one day
@@ -400,7 +400,7 @@ float IdleController::getClosedLoop(IIdleController::Phase phase, SensorResult t
 	// if tps==0 then PID just works as usual, or we completely disable it if tps>=threshold
 	// TODO: should we just remove this? It reduces the gain if your zero throttle stop isn't perfect,
 	// which could give unstable results.
-	newValue = interpolateClamped(0, newValue, CONFIG(idlePidDeactivationTpsThreshold), 0, tpsPos.value_or(0));
+	newValue = interpolateClamped(0, newValue, CONFIG(idlePidDeactivationTpsThreshold), 0, tpsPos);
 
 	m_lastAutomaticPosition = newValue;
 	return newValue;
@@ -463,7 +463,7 @@ float IdleController::getClosedLoop(IIdleController::Phase phase, SensorResult t
 
 			// If TPS is working and automatic mode enabled, add any automatic correction
 			if (tps.Valid && engineConfiguration->idleMode == IM_AUTO) {
-				iacPosition += getClosedLoop(phase, tps, rpm, targetRpm);
+				iacPosition += getClosedLoop(phase, tps.Value, rpm, targetRpm);
 			}
 
 			iacPosition = clampPercentValue(iacPosition);

@@ -343,7 +343,7 @@ TEST(idle_v2, closedLoopBasic) {
 
 	CONFIG(idlePidRpmDeadZone) = 0;
 
-	// burn one then advance time 5 seconds to avoid difficulty from wasResetPid
+	// burn one update then advance time 5 seconds to avoid difficulty from wasResetPid
 	dut.getClosedLoop(ICP::Idling, 0, 900, 900);
 	timeNowUs += 5'000'000;
 
