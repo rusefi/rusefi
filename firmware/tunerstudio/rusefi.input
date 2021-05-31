@@ -3044,10 +3044,10 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 		field = "Fuel Source For Cranking",             useRunningMathForCranking
 		field = "Base fuel mass", 				cranking_baseFuel, {useRunningMathForCranking == 0}
 
-	dialog = crankingIAC, "IAC"
+	dialog = crankingIAC, "Idle air valve"
 		field = "Cranking base IAC position",			crankingIACposition
 		field = "After cranking IAC taper duration",afterCrankingIACtaperDuration
-		field = "Override IAC CLT mult for cranking",		overrideCrankingIacSetting
+		field = "Override cranking IAC CLT multiplier",		overrideCrankingIacSetting
 
 	dialog = crankingIgnition, "Ignition"
 		field = "Timing Advance mode",	useSeparateAdvanceForCranking
