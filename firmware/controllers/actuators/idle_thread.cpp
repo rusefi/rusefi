@@ -346,7 +346,7 @@ static percent_t automaticIdleController(float tpsPos, float rpm, int targetRpm,
 		// Don't store old I and D terms if PID doesn't work anymore.
 		// Otherwise they will affect the idle position much later, when the throttle is closed.
 		// we reset only if I-term is negative, because the positive I-term is good - it keeps RPM from dropping too low
-		if (getIdlePid(PASS_ENGINE_PARAMETER_SIGNATURE)->getIntegration() <= 0 || mustResetPid) {
+		if (idlePid->getIntegration() <= 0 || mustResetPid) {
 			idlePid->reset();
 		}
 
