@@ -105,7 +105,7 @@ pins:
     id: MC33810_1_GD_1
     class: outputs
     function: Ignition 6
-    ts_name: D10 - Ignition 6
+    ts_name: D16 - Ignition 6
     type: ign
 
   - pin: 17
