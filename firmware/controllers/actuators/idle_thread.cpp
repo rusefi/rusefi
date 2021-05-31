@@ -341,10 +341,12 @@ static void undoIdleBlipIfNeeded() {
  * @return idle valve position percentage for automatic closed loop mode
  */
 float IdleController::getClosedLoop(IIdleController::Phase phase, float tpsPos, int rpm, int targetRpm) {
+	auto idlePid = getIdlePid(PASS_ENGINE_PARAMETER_SIGNATURE);
+
 	if (shouldResetPid) {
 		// we reset only if I-term is negative, because the positive I-term is good - it keeps RPM from dropping too low
-		if (getIdlePid(PASS_ENGINE_PARAMETER_SIGNATURE)->getIntegration() <= 0 || mustResetPid) {
-			getIdlePid(PASS_ENGINE_PARAMETER_SIGNATURE)->reset();
+		if (idlePid->getIntegration() <= 0 || mustResetPid) {
+			idlePid->reset();
 			mustResetPid = false;
 		}
 //			alternatorPidResetCounter++;
@@ -395,11 +397,11 @@ float IdleController::getClosedLoop(IIdleController::Phase phase, float tpsPos, 
 	// todo: move restoreAfterPidResetTimeUs to engineState.idle?
 	efitimeus_t timeSincePidResetUs = nowUs - /*engine->engineState.idle.*/restoreAfterPidResetTimeUs;
 	// todo: add 'pidAfterResetDampingPeriodMs' setting
-	errorAmpCoef = interpolateClamped(0.0f, 0.0f, MS2US(/*CONFIG(pidAfterResetDampingPeriodMs)*/1000), errorAmpCoef, timeSincePidResetUs);
+	errorAmpCoef = interpolateClamped(0, 0, MS2US(/*CONFIG(pidAfterResetDampingPeriodMs)*/1000), errorAmpCoef, timeSincePidResetUs);
 	// If errorAmpCoef > 1.0, then PID thinks that RPM is lower than it is, and controls IAC more aggressively
-	getIdlePid(PASS_ENGINE_PARAMETER_SIGNATURE)->setErrorAmplification(errorAmpCoef);
+	idlePid->setErrorAmplification(errorAmpCoef);
 
-	percent_t newValue = getIdlePid(PASS_ENGINE_PARAMETER_SIGNATURE)->getOutput(targetRpm, rpm, SLOW_CALLBACK_PERIOD_MS / 1000.0f);
+	percent_t newValue = idlePid->getOutput(targetRpm, rpm, SLOW_CALLBACK_PERIOD_MS / 1000.0f);
 	engine->engineState.idle.idleState = PID_VALUE;
 
 	// the state of PID has been changed, so we might reset it now, but only when needed (see idlePidDeactivationTpsThreshold)
@@ -410,7 +412,7 @@ float IdleController::getClosedLoop(IIdleController::Phase phase, float tpsPos, 
 		float engineLoad = getFuelingLoad(PASS_ENGINE_PARAMETER_SIGNATURE);
 		float multCoef = iacPidMultMap.getValue(rpm / RPM_1_BYTE_PACKING_MULT, engineLoad);
 		// PID can be completely disabled of multCoef==0, or it just works as usual if multCoef==1
-		newValue = interpolateClamped(0.0f, engine->engineState.idle.baseIdlePosition, 1.0f, newValue, multCoef);
+		newValue = interpolateClamped(0, engine->engineState.idle.baseIdlePosition, 1.0f, newValue, multCoef);
 	}
 	
 	// Apply PID Deactivation Threshold as a smooth taper for TPS transients.
