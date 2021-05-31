@@ -50,6 +50,13 @@ EXTERN_ENGINE;
 
 // todo: move all static vars to engine->engineState.idle?
 
+static bool shouldResetPid = false;
+// The idea of 'mightResetPid' is to reset PID only once - each time when TPS > idlePidDeactivationTpsThreshold.
+// The throttle pedal can be pressed for a long time, making the PID data obsolete (thus the reset is required).
+// We set 'mightResetPid' to true only if PID was actually used (i.e. idlePid.getOutput() was called) to save some CPU resources.
+// See automaticIdleController().
+static bool mightResetPid = false;
+
 // This is needed to slowly turn on the PID back after it was reset.
 static bool wasResetPid = false;
 // This is used when the PID configuration is changed, to guarantee the reset
@@ -337,23 +344,34 @@ static void undoIdleBlipIfNeeded() {
 float IdleController::getClosedLoop(IIdleController::Phase phase, float tpsPos, int rpm, int targetRpm) {
 	auto idlePid = getIdlePid(PASS_ENGINE_PARAMETER_SIGNATURE);
 
+	if (shouldResetPid) {
+		// we reset only if I-term is negative, because the positive I-term is good - it keeps RPM from dropping too low
+		if (idlePid->getIntegration() <= 0 || mustResetPid) {
+			idlePid->reset();
+			mustResetPid = false;
+		}
+//			alternatorPidResetCounter++;
+		shouldResetPid = false;
+		wasResetPid = true;
+	}
+
 	// todo: move this to pid_s one day
 	industrialWithOverrideIdlePid.antiwindupFreq = engineConfiguration->idle_antiwindupFreq;
 	industrialWithOverrideIdlePid.derivativeFilterLoss = engineConfiguration->idle_derivativeFilterLoss;
 
 	efitimeus_t nowUs = getTimeNowUs();
 
-	if (phase != IIdleController::Phase::Idling || mustResetPid) {
+	if (phase != IIdleController::Phase::Idling) {
 		// Don't store old I and D terms if PID doesn't work anymore.
 		// Otherwise they will affect the idle position much later, when the throttle is closed.
-		idlePid->reset();
-
-		mustResetPid = false;
-		wasResetPid = true;
+		if (mightResetPid) {
+			mightResetPid = false;
+			shouldResetPid = true;
+		}
 
 		engine->engineState.idle.idleState = TPS_THRESHOLD;
-		m_lastAutomaticPosition = 0;
-		return 0;
+		// just leave IAC position as is (but don't return currentIdlePosition - it may already contain additionalAir)
+		return m_lastAutomaticPosition;
 	}
 
 	// #1553 we need to give FSIO variable offset or minValue a chance
@@ -387,6 +405,9 @@ float IdleController::getClosedLoop(IIdleController::Phase phase, float tpsPos, 
 
 	percent_t newValue = idlePid->getOutput(targetRpm, rpm, SLOW_CALLBACK_PERIOD_MS / 1000.0f);
 	engine->engineState.idle.idleState = PID_VALUE;
+
+	// the state of PID has been changed, so we might reset it now, but only when needed (see idlePidDeactivationTpsThreshold)
+	mightResetPid = true;
 
 	// Apply PID Multiplier if used
 	if (CONFIG(useIacPidMultTable)) {
