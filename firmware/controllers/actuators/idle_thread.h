@@ -51,6 +51,9 @@ public:
 	float getIdleTimingAdjustment(int rpm);
 	float getIdleTimingAdjustment(int rpm, int targetRpm, Phase phase);
 
+	// CLOSED LOOP CORRECTION
+	float getClosedLoop(IIdleController::Phase phase, float tpsPos, int rpm, int targetRpm);
+
 	// Allow querying state from outside
 	bool isIdling() {
 		return m_lastPhase == Phase::Idling;
