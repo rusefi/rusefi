@@ -132,8 +132,6 @@ void initializeSubaru7_6(TriggerWaveform *s) {
 
 void initializeSubaru_SVX(TriggerWaveform *s) {
 	int n;
-	/* crank 2 falling happens between crank #1 fallings */
-	float crank_2_offset = 15.0;
 	float cam_offset = 15.0;
 	/* we should use only falling edges */
 	float width = 5.0;
@@ -151,6 +149,11 @@ void initializeSubaru_SVX(TriggerWaveform *s) {
 //#define SVX_CRANK_2			T_CHANNEL_3
 #define SVX_CAM				T_PRIMARY
 
+#ifdef SVX_CRANK_2
+	/* crank 2 falling happens between crank #1 fallings */
+	float crank_2_offset = 15.0;
+#endif
+
 	s->initialize(FOUR_STROKE_CAM_SENSOR);
 
 	/******  0  *****/
@@ -160,9 +163,11 @@ void initializeSubaru_SVX(TriggerWaveform *s) {
 	n = 1;
 	s->addEvent720(CRANK_1_RISE(n), SVX_CRANK_1, TV_RISE);
 	s->addEvent720(CRANK_1_FALL(n), SVX_CRANK_1, TV_FALL);
-	/* crank #2 - one 1/1 */
-//	s->addEvent720(CRANK_1_RISE(n) + crank_2_offset, SVX_CRANK_2, TV_RISE);
-//	s->addEvent720(CRANK_1_FALL(n) + crank_2_offset, SVX_CRANK_2, TV_FALL);
+	#ifdef SVX_CRANK_2
+		/* crank #2 - one 1/1 */
+		s->addEvent720(CRANK_1_RISE(n) + crank_2_offset, SVX_CRANK_2, TV_RISE);
+		s->addEvent720(CRANK_1_FALL(n) + crank_2_offset, SVX_CRANK_2, TV_FALL);
+	#endif
 	n = 2;
 	s->addEvent720(CRANK_1_RISE(n), SVX_CRANK_1, TV_RISE);
 	s->addEvent720(CRANK_1_FALL(n), SVX_CRANK_1, TV_FALL);
@@ -173,43 +178,53 @@ void initializeSubaru_SVX(TriggerWaveform *s) {
 	n = 4;
 	s->addEvent720(CRANK_1_RISE(n), SVX_CRANK_1, TV_RISE);
 	s->addEvent720(CRANK_1_FALL(n), SVX_CRANK_1, TV_FALL);
-	/* cam - one */
-	s->addEvent720(CRANK_1_RISE(n) + cam_offset, SVX_CAM, TV_RISE);
-	s->addEvent720(CRANK_1_FALL(n) + cam_offset, SVX_CAM, TV_FALL);
+			/* cam - one */
+			s->addEvent720(CRANK_1_RISE(n) + cam_offset, SVX_CAM, TV_RISE);
+			s->addEvent720(CRANK_1_FALL(n) + cam_offset, SVX_CAM, TV_FALL);
 	n = 5;
 	s->addEvent720(CRANK_1_RISE(n), SVX_CRANK_1, TV_RISE);
 	s->addEvent720(CRANK_1_FALL(n), SVX_CRANK_1, TV_FALL);
-	/* crank #2 - three - 1/3 */
-//	s->addEvent720(CRANK_1_RISE(n) + crank_2_offset, SVX_CRANK_2, TV_RISE);
-//	s->addEvent720(CRANK_1_FALL(n) + crank_2_offset, SVX_CRANK_2, TV_FALL);
+	#ifdef SVX_CRANK_2
+		/* crank #2 - three - 1/3 */
+		s->addEvent720(CRANK_1_RISE(n) + crank_2_offset, SVX_CRANK_2, TV_RISE);
+		s->addEvent720(CRANK_1_FALL(n) + crank_2_offset, SVX_CRANK_2, TV_FALL);
+	#endif
 	n = 6;
 	s->addEvent720(CRANK_1_RISE(n), SVX_CRANK_1, TV_RISE);
 	s->addEvent720(CRANK_1_FALL(n), SVX_CRANK_1, TV_FALL);
-	/* crank #2 - three - 2/3 */
-//	s->addEvent720(CRANK_1_RISE(n) + crank_2_offset, SVX_CRANK_2, TV_RISE);
-//	s->addEvent720(CRANK_1_FALL(n) + crank_2_offset, SVX_CRANK_2, TV_FALL);
+	#ifdef SVX_CRANK_2
+		/* crank #2 - three - 2/3 */
+		s->addEvent720(CRANK_1_RISE(n) + crank_2_offset, SVX_CRANK_2, TV_RISE);
+		s->addEvent720(CRANK_1_FALL(n) + crank_2_offset, SVX_CRANK_2, TV_FALL);
+	#endif
 	n = 7;
 	s->addEvent720(CRANK_1_RISE(n), SVX_CRANK_1, TV_RISE);
 	s->addEvent720(CRANK_1_FALL(n), SVX_CRANK_1, TV_FALL);
 	/* +10 - TDC #6 */
-	/* crank #2 - three - 3/3 */
-//	s->addEvent720(CRANK_1_RISE(n) + crank_2_offset, SVX_CRANK_2, TV_RISE);
-//	s->addEvent720(CRANK_1_FALL(n) + crank_2_offset, SVX_CRANK_2, TV_FALL);
+	#ifdef SVX_CRANK_2
+		/* crank #2 - three - 3/3 */
+		s->addEvent720(CRANK_1_RISE(n) + crank_2_offset, SVX_CRANK_2, TV_RISE);
+		s->addEvent720(CRANK_1_FALL(n) + crank_2_offset, SVX_CRANK_2, TV_FALL);
+	#endif
 	n = 8;
 	s->addEvent720(CRANK_1_RISE(n), SVX_CRANK_1, TV_RISE);
 	s->addEvent720(CRANK_1_FALL(n), SVX_CRANK_1, TV_FALL);
 	n = 9;
 	s->addEvent720(CRANK_1_RISE(n), SVX_CRANK_1, TV_RISE);
 	s->addEvent720(CRANK_1_FALL(n), SVX_CRANK_1, TV_FALL);
-	/* crank #2 - two - 1/2 */
-//	s->addEvent720(CRANK_1_RISE(n) + crank_2_offset, SVX_CRANK_2, TV_RISE);
-//	s->addEvent720(CRANK_1_FALL(n) + crank_2_offset, SVX_CRANK_2, TV_FALL);
+	#ifdef SVX_CRANK_2
+		/* crank #2 - two - 1/2 */
+		s->addEvent720(CRANK_1_RISE(n) + crank_2_offset, SVX_CRANK_2, TV_RISE);
+		s->addEvent720(CRANK_1_FALL(n) + crank_2_offset, SVX_CRANK_2, TV_FALL);
+	#endif
 	n = 10;
 	s->addEvent720(CRANK_1_RISE(n), SVX_CRANK_1, TV_RISE);
 	s->addEvent720(CRANK_1_FALL(n), SVX_CRANK_1, TV_FALL);
-	/* crank #2 - two - 2/2 */
-//	s->addEvent720(CRANK_1_RISE(n) + crank_2_offset, SVX_CRANK_2, TV_RISE);
-//	s->addEvent720(CRANK_1_FALL(n) + crank_2_offset, SVX_CRANK_2, TV_FALL);
+	#ifdef SVX_CRANK_2
+		/* crank #2 - two - 2/2 */
+		s->addEvent720(CRANK_1_RISE(n) + crank_2_offset, SVX_CRANK_2, TV_RISE);
+		s->addEvent720(CRANK_1_FALL(n) + crank_2_offset, SVX_CRANK_2, TV_FALL);
+	#endif
 	n = 11;
 	s->addEvent720(CRANK_1_RISE(n), SVX_CRANK_1, TV_RISE);
 	s->addEvent720(CRANK_1_FALL(n), SVX_CRANK_1, TV_FALL);
@@ -222,9 +237,11 @@ void initializeSubaru_SVX(TriggerWaveform *s) {
 	n = 13;
 	s->addEvent720(CRANK_1_RISE(n), SVX_CRANK_1, TV_RISE);
 	s->addEvent720(CRANK_1_FALL(n), SVX_CRANK_1, TV_FALL);
-	/* crank #2 - one - 1/1 */
-//	s->addEvent720(CRANK_1_RISE(n) + crank_2_offset, SVX_CRANK_2, TV_RISE);
-//	s->addEvent720(CRANK_1_FALL(n) + crank_2_offset, SVX_CRANK_2, TV_FALL);
+	#ifdef SVX_CRANK_2
+		/* crank #2 - one - 1/1 */
+		s->addEvent720(CRANK_1_RISE(n) + crank_2_offset, SVX_CRANK_2, TV_RISE);
+		s->addEvent720(CRANK_1_FALL(n) + crank_2_offset, SVX_CRANK_2, TV_FALL);
+	#endif
 	n = 14;
 	s->addEvent720(CRANK_1_RISE(n), SVX_CRANK_1, TV_RISE);
 	s->addEvent720(CRANK_1_FALL(n), SVX_CRANK_1, TV_FALL);
@@ -238,45 +255,52 @@ void initializeSubaru_SVX(TriggerWaveform *s) {
 	n = 17;
 	s->addEvent720(CRANK_1_RISE(n), SVX_CRANK_1, TV_RISE);
 	s->addEvent720(CRANK_1_FALL(n), SVX_CRANK_1, TV_FALL);
-	/* crank #2 - three - 1/3 */
-//	s->addEvent720(CRANK_1_RISE(n) + crank_2_offset, SVX_CRANK_2, TV_RISE);
-//	s->addEvent720(CRANK_1_FALL(n) + crank_2_offset, SVX_CRANK_2, TV_FALL);
+	#ifdef SVX_CRANK_2
+		/* crank #2 - three - 1/3 */
+		s->addEvent720(CRANK_1_RISE(n) + crank_2_offset, SVX_CRANK_2, TV_RISE);
+		s->addEvent720(CRANK_1_FALL(n) + crank_2_offset, SVX_CRANK_2, TV_FALL);
+	#endif
 	n = 18;
 	s->addEvent720(CRANK_1_RISE(n), SVX_CRANK_1, TV_RISE);
 	s->addEvent720(CRANK_1_FALL(n), SVX_CRANK_1, TV_FALL);
-	/* crank #2 - three - 2/3 */
-//	s->addEvent720(CRANK_1_RISE(n) + crank_2_offset, SVX_CRANK_2, TV_RISE);
-//	s->addEvent720(CRANK_1_FALL(n) + crank_2_offset, SVX_CRANK_2, TV_FALL);
+	#ifdef SVX_CRANK_2
+		/* crank #2 - three - 2/3 */
+		s->addEvent720(CRANK_1_RISE(n) + crank_2_offset, SVX_CRANK_2, TV_RISE);
+		s->addEvent720(CRANK_1_FALL(n) + crank_2_offset, SVX_CRANK_2, TV_FALL);
+	#endif
 	n = 19;
 	s->addEvent720(CRANK_1_RISE(n), SVX_CRANK_1, TV_RISE);
 	s->addEvent720(CRANK_1_FALL(n), SVX_CRANK_1, TV_FALL);
 	/* +10 - TDC #5 */
-	/* crank #2 - three - 3/3 */
-//	s->addEvent720(CRANK_1_RISE(n) + crank_2_offset, SVX_CRANK_2, TV_RISE);
-//	s->addEvent720(CRANK_1_FALL(n) + crank_2_offset, SVX_CRANK_2, TV_FALL);
+	#ifdef SVX_CRANK_2
+		/* crank #2 - three - 3/3 */
+		s->addEvent720(CRANK_1_RISE(n) + crank_2_offset, SVX_CRANK_2, TV_RISE);
+		s->addEvent720(CRANK_1_FALL(n) + crank_2_offset, SVX_CRANK_2, TV_FALL);
+	#endif
 	n = 20;
 	s->addEvent720(CRANK_1_RISE(n), SVX_CRANK_1, TV_RISE);
 	s->addEvent720(CRANK_1_FALL(n), SVX_CRANK_1, TV_FALL);
 	n = 21;
 	s->addEvent720(CRANK_1_RISE(n), SVX_CRANK_1, TV_RISE);
 	s->addEvent720(CRANK_1_FALL(n), SVX_CRANK_1, TV_FALL);
-	/* crank #2 - two - 1/2 */
-//	s->addEvent720(CRANK_1_RISE(n) + crank_2_offset, SVX_CRANK_2, TV_RISE);
-//	s->addEvent720(CRANK_1_FALL(n) + crank_2_offset, SVX_CRANK_2, TV_FALL);
+	#ifdef SVX_CRANK_2
+		/* crank #2 - two - 1/2 */
+		s->addEvent720(CRANK_1_RISE(n) + crank_2_offset, SVX_CRANK_2, TV_RISE);
+		s->addEvent720(CRANK_1_FALL(n) + crank_2_offset, SVX_CRANK_2, TV_FALL);
+	#endif
 	n = 22;
 	s->addEvent720(CRANK_1_RISE(n), SVX_CRANK_1, TV_RISE);
 	s->addEvent720(CRANK_1_FALL(n), SVX_CRANK_1, TV_FALL);
-	/* crank #2 - two - 2/2 */
-//	s->addEvent720(CRANK_1_RISE(n) + crank_2_offset, SVX_CRANK_2, TV_RISE);
-//	s->addEvent720(CRANK_1_FALL(n) + crank_2_offset, SVX_CRANK_2, TV_FALL);
+	#ifdef SVX_CRANK_2
+		/* crank #2 - two - 2/2 */
+		s->addEvent720(CRANK_1_RISE(n) + crank_2_offset, SVX_CRANK_2, TV_RISE);
+		s->addEvent720(CRANK_1_FALL(n) + crank_2_offset, SVX_CRANK_2, TV_FALL);
+	#endif
 	n = 23;
 	s->addEvent720(CRANK_1_RISE(n), SVX_CRANK_1, TV_RISE);
 	s->addEvent720(CRANK_1_FALL(n), SVX_CRANK_1, TV_FALL);
 	/* +10 - TDC #4 */
 	/****** 720 *****/
-
-//	s->setTriggerSynchronizationGap2(4.9, 9);
-//	s->setTriggerSynchronizationGap3(1, 0.6, 1.25);
 
 	s->isSynchronizationNeeded = false;
 	s->useOnlyPrimaryForSync = true;
