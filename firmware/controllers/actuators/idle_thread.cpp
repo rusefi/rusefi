@@ -50,13 +50,6 @@ EXTERN_ENGINE;
 
 // todo: move all static vars to engine->engineState.idle?
 
-static bool shouldResetPid = false;
-// The idea of 'mightResetPid' is to reset PID only once - each time when TPS > idlePidDeactivationTpsThreshold.
-// The throttle pedal can be pressed for a long time, making the PID data obsolete (thus the reset is required).
-// We set 'mightResetPid' to true only if PID was actually used (i.e. idlePid.getOutput() was called) to save some CPU resources.
-// See automaticIdleController().
-static bool mightResetPid = false;
-
 // This is needed to slowly turn on the PID back after it was reset.
 static bool wasResetPid = false;
 // This is used when the PID configuration is changed, to guarantee the reset
@@ -100,7 +93,7 @@ static PidWithOverrides industrialWithOverrideIdlePid;
 static PidCic idleCicPid;
 #endif //EFI_IDLE_PID_CIC
 
-Pid * getIdlePid(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+Pid* getIdlePid(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 #if EFI_IDLE_PID_CIC
 	if (CONFIG(useCicPidForIdle)) {
 		return &idleCicPid;
@@ -341,16 +334,7 @@ static void undoIdleBlipIfNeeded() {
  * @return idle valve position percentage for automatic closed loop mode
  */
 static percent_t automaticIdleController(float tpsPos, float rpm, int targetRpm, IIdleController::Phase phase DECLARE_ENGINE_PARAMETER_SUFFIX) {
-	if (shouldResetPid) {
-		// we reset only if I-term is negative, because the positive I-term is good - it keeps RPM from dropping too low
-		if (getIdlePid(PASS_ENGINE_PARAMETER_SIGNATURE)->getIntegration() <= 0 || mustResetPid) {
-			getIdlePid(PASS_ENGINE_PARAMETER_SIGNATURE)->reset();
-			mustResetPid = false;
-		}
-//			alternatorPidResetCounter++;
-		shouldResetPid = false;
-		wasResetPid = true;
-	}
+	auto idlePid = getIdlePid(PASS_ENGINE_PARAMETER_SIGNATURE);
 
 	// todo: move this to pid_s one day
 	industrialWithOverrideIdlePid.antiwindupFreq = engineConfiguration->idle_antiwindupFreq;
@@ -358,13 +342,16 @@ static percent_t automaticIdleController(float tpsPos, float rpm, int targetRpm,
 
 	efitimeus_t nowUs = getTimeNowUs();
 
-	if (phase != IIdleController::Phase::Idling) {
+	if (phase != IIdleController::Phase::Idling || mustResetPid) {
 		// Don't store old I and D terms if PID doesn't work anymore.
 		// Otherwise they will affect the idle position much later, when the throttle is closed.
-		if (mightResetPid) {
-			mightResetPid = false;
-			shouldResetPid = true;
+		// we reset only if I-term is negative, because the positive I-term is good - it keeps RPM from dropping too low
+		if (getIdlePid(PASS_ENGINE_PARAMETER_SIGNATURE)->getIntegration() <= 0 || mustResetPid) {
+			idlePid->reset();
 		}
+
+		mustResetPid = false;
+		wasResetPid = true;
 
 		engine->engineState.idle.idleState = TPS_THRESHOLD;
 		// just leave IAC position as is (but don't return currentIdlePosition - it may already contain additionalAir)
@@ -397,9 +384,9 @@ static percent_t automaticIdleController(float tpsPos, float rpm, int targetRpm,
 	// todo: add 'pidAfterResetDampingPeriodMs' setting
 	errorAmpCoef = interpolateClamped(0.0f, 0.0f, MS2US(/*CONFIG(pidAfterResetDampingPeriodMs)*/1000), errorAmpCoef, timeSincePidResetUs);
 	// If errorAmpCoef > 1.0, then PID thinks that RPM is lower than it is, and controls IAC more aggressively
-	getIdlePid(PASS_ENGINE_PARAMETER_SIGNATURE)->setErrorAmplification(errorAmpCoef);
+	idlePid->setErrorAmplification(errorAmpCoef);
 
-	percent_t newValue = getIdlePid(PASS_ENGINE_PARAMETER_SIGNATURE)->getOutput(targetRpm, rpm, SLOW_CALLBACK_PERIOD_MS / 1000.0f);
+	percent_t newValue = idlePid->getOutput(targetRpm, rpm, SLOW_CALLBACK_PERIOD_MS / 1000.0f);
 	engine->engineState.idle.idleState = PID_VALUE;
 
 	// the state of PID has been changed, so we might reset it now, but only when needed (see idlePidDeactivationTpsThreshold)
