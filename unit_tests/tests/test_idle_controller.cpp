@@ -386,7 +386,7 @@ struct IntegrationIdleMock : public IdleController {
 	MOCK_METHOD(int, getTargetRpm, (float clt), (const, override));
 	MOCK_METHOD(ICP, determinePhase, (int rpm, int targetRpm, SensorResult tps), (const, override));
 	MOCK_METHOD(float, getOpenLoop, (ICP phase, float clt, SensorResult tps), (const, override));
-	MOCK_METHOD(float, getClosedLoop, (ICP phase, SensorResult tps, int rpm, int target), (override));
+	MOCK_METHOD(float, getClosedLoop, (ICP phase, float tps, int rpm, int target), (override));
 };
 
 TEST(idle_v2, IntegrationManual) {
@@ -443,7 +443,7 @@ TEST(idle_v2, IntegrationAutomatic) {
 		.WillOnce(Return(13));
 
 	// Closed loop should get called
-	EXPECT_CALL(dut, getClosedLoop(ICP::Idling, expectedTps, 950, 1000))
+	EXPECT_CALL(dut, getClosedLoop(ICP::Idling, expectedTps.Value, 950, 1000))
 		.WillOnce(Return(7));
 
 	// Result should be open + closed
@@ -476,7 +476,7 @@ TEST(idle_v2, IntegrationClamping) {
 		.WillOnce(Return(75));
 
 	// Closed loop should get called
-	EXPECT_CALL(dut, getClosedLoop(ICP::Idling, expectedTps, 950, 1000))
+	EXPECT_CALL(dut, getClosedLoop(ICP::Idling, expectedTps.Value, 950, 1000))
 		.WillOnce(Return(75));
 
 	// Result would be 75 + 75 = 150, but it should clamp to 100
