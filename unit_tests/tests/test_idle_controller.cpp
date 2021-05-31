@@ -308,11 +308,27 @@ TEST(idle_v2, openLoopRunningTaper) {
 	EXPECT_FLOAT_EQ(25, dut.getOpenLoop(ICP::Idling, 30, 0));
 }
 
+TEST(idle_v2, openLoopCoastingTable) {
+	WITH_ENGINE_TEST_HELPER(TEST_ENGINE);
+	StrictMock<IdleController> dut;
+	INJECT_ENGINE_REFERENCE(&dut);
+
+	// enable & configure feature
+	CONFIG(useIacTableForCoasting) = true;
+	for (size_t i = 0; i < CLT_CURVE_SIZE; i++) {
+		CONFIG(iacCoastingBins)[i] = 10 * i;
+		CONFIG(iacCoasting)[i] = 5 * i;
+	}
+
+	EXPECT_FLOAT_EQ(10, dut.getOpenLoop(ICP::Coasting, 20, 0));
+	EXPECT_FLOAT_EQ(20, dut.getOpenLoop(ICP::Coasting, 40, 0));
+}
+
 extern int timeNowUs;
 
 TEST(idle_v2, closedLoopBasic) {
 	WITH_ENGINE_TEST_HELPER(TEST_ENGINE);
-	StrictMock<MockOpenLoopIdler> dut;
+	StrictMock<IdleController> dut;
 	INJECT_ENGINE_REFERENCE(&dut);
 
 	// Not testing PID here, so we can set very simple PID gains
@@ -340,7 +356,7 @@ TEST(idle_v2, closedLoopBasic) {
 
 TEST(idle_v2, closedLoopDeadzone) {
 	WITH_ENGINE_TEST_HELPER(TEST_ENGINE);
-	StrictMock<MockOpenLoopIdler> dut;
+	StrictMock<IdleController> dut;
 	INJECT_ENGINE_REFERENCE(&dut);
 
 	// Not testing PID here, so we can set very simple PID gains
