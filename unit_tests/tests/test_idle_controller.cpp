@@ -310,7 +310,7 @@ TEST(idle_v2, openLoopRunningTaper) {
 
 TEST(idle_v2, openLoopCoastingTable) {
 	WITH_ENGINE_TEST_HELPER(TEST_ENGINE);
-	StrictMock<IdleController> dut;
+	IdleController dut;
 	INJECT_ENGINE_REFERENCE(&dut);
 
 	// enable & configure feature
@@ -328,7 +328,7 @@ extern int timeNowUs;
 
 TEST(idle_v2, closedLoopBasic) {
 	WITH_ENGINE_TEST_HELPER(TEST_ENGINE);
-	StrictMock<IdleController> dut;
+	IdleController dut;
 	INJECT_ENGINE_REFERENCE(&dut);
 
 	// Not testing PID here, so we can set very simple PID gains
@@ -356,7 +356,7 @@ TEST(idle_v2, closedLoopBasic) {
 
 TEST(idle_v2, closedLoopDeadzone) {
 	WITH_ENGINE_TEST_HELPER(TEST_ENGINE);
-	StrictMock<IdleController> dut;
+	IdleController dut;
 	INJECT_ENGINE_REFERENCE(&dut);
 
 	// Not testing PID here, so we can set very simple PID gains
@@ -380,4 +380,105 @@ TEST(idle_v2, closedLoopDeadzone) {
 
 	// Inside deadzone, should return same as last time
 	EXPECT_FLOAT_EQ(-25, dut.getClosedLoop(ICP::Idling, 0, /*rpm*/ 900, /*tgt*/ 900));
+}
+
+struct IntegrationIdleMock : public IdleController {
+	MOCK_METHOD(int, getTargetRpm, (float clt), (const, override));
+	MOCK_METHOD(ICP, determinePhase, (int rpm, int targetRpm, SensorResult tps), (const, override));
+	MOCK_METHOD(float, getOpenLoop, (ICP phase, float clt, SensorResult tps), (const, override));
+	MOCK_METHOD(float, getClosedLoop, (ICP phase, SensorResult tps, int rpm, int target), (override));
+};
+
+TEST(idle_v2, IntegrationManual) {
+	WITH_ENGINE_TEST_HELPER(TEST_ENGINE);
+	StrictMock<IntegrationIdleMock> dut;
+	INJECT_ENGINE_REFERENCE(&dut);
+
+	SensorResult expectedTps = 1;
+	float expectedClt = 37;
+	Sensor::setMockValue(SensorType::DriverThrottleIntent, expectedTps.Value);
+	Sensor::setMockValue(SensorType::Clt, expectedClt);
+	ENGINE(rpmCalculator.mockRpm) = 950;
+
+	// Target of 1000 rpm
+	EXPECT_CALL(dut, getTargetRpm(expectedClt))
+		.WillOnce(Return(1000));
+
+	// Determine phase will claim we're idling
+	EXPECT_CALL(dut, determinePhase(950, 1000, expectedTps))
+		.WillOnce(Return(ICP::Idling));
+
+	// Open loop should be asked for an open loop position
+	EXPECT_CALL(dut, getOpenLoop(ICP::Idling, expectedClt, expectedTps))
+		.WillOnce(Return(13));
+
+	// getClosedLoop() should not be called!
+
+	EXPECT_EQ(13, dut.getIdlePosition());
+}
+
+TEST(idle_v2, IntegrationAutomatic) {
+	WITH_ENGINE_TEST_HELPER(TEST_ENGINE);
+	StrictMock<IntegrationIdleMock> dut;
+	INJECT_ENGINE_REFERENCE(&dut);
+
+	CONFIG(idleMode) = IM_AUTO;
+
+	SensorResult expectedTps = 1;
+	float expectedClt = 37;
+	Sensor::setMockValue(SensorType::DriverThrottleIntent, expectedTps.Value);
+	Sensor::setMockValue(SensorType::Clt, expectedClt);
+	ENGINE(rpmCalculator.mockRpm) = 950;
+
+	// Target of 1000 rpm
+	EXPECT_CALL(dut, getTargetRpm(expectedClt))
+		.WillOnce(Return(1000));
+
+	// Determine phase will claim we're idling
+	EXPECT_CALL(dut, determinePhase(950, 1000, expectedTps))
+		.WillOnce(Return(ICP::Idling));
+
+	// Open loop should be asked for an open loop position
+	EXPECT_CALL(dut, getOpenLoop(ICP::Idling, expectedClt, expectedTps))
+		.WillOnce(Return(13));
+
+	// Closed loop should get called
+	EXPECT_CALL(dut, getClosedLoop(ICP::Idling, expectedTps, 950, 1000))
+		.WillOnce(Return(7));
+
+	// Result should be open + closed
+	EXPECT_EQ(13 + 7, dut.getIdlePosition());
+}
+
+TEST(idle_v2, IntegrationClamping) {
+	WITH_ENGINE_TEST_HELPER(TEST_ENGINE);
+	StrictMock<IntegrationIdleMock> dut;
+	INJECT_ENGINE_REFERENCE(&dut);
+
+	CONFIG(idleMode) = IM_AUTO;
+
+	SensorResult expectedTps = 1;
+	float expectedClt = 37;
+	Sensor::setMockValue(SensorType::DriverThrottleIntent, expectedTps.Value);
+	Sensor::setMockValue(SensorType::Clt, expectedClt);
+	ENGINE(rpmCalculator.mockRpm) = 950;
+
+	// Target of 1000 rpm
+	EXPECT_CALL(dut, getTargetRpm(expectedClt))
+		.WillOnce(Return(1000));
+
+	// Determine phase will claim we're idling
+	EXPECT_CALL(dut, determinePhase(950, 1000, expectedTps))
+		.WillOnce(Return(ICP::Idling));
+
+	// Open loop should be asked for an open loop position
+	EXPECT_CALL(dut, getOpenLoop(ICP::Idling, expectedClt, expectedTps))
+		.WillOnce(Return(75));
+
+	// Closed loop should get called
+	EXPECT_CALL(dut, getClosedLoop(ICP::Idling, expectedTps, 950, 1000))
+		.WillOnce(Return(75));
+
+	// Result would be 75 + 75 = 150, but it should clamp to 100
+	EXPECT_EQ(100, dut.getIdlePosition());
 }
