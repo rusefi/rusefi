@@ -1454,7 +1454,7 @@ menuDialog = main
 		subMenu = crankingAdvanceCurve,		"Ignition advance", 0, {useSeparateAdvanceForCranking == 1}
 		subMenu = std_separator
 
-		subMenu = cltCrankingCurve,			"IAC multiplier", 0, {overrideCrankingIacSetting == 1}	
+		subMenu = cltCrankingCurve,			"IAC CLT multiplier", 0, {overrideCrankingIacSetting == 1}	
 		
 	menu = "&Idle"
 		subMenu = idleSettings,				"Idle settings"
