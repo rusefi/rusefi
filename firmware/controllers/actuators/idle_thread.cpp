@@ -100,7 +100,7 @@ static PidWithOverrides industrialWithOverrideIdlePid;
 static PidCic idleCicPid;
 #endif //EFI_IDLE_PID_CIC
 
-Pid* getIdlePid(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+Pid * getIdlePid(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 #if EFI_IDLE_PID_CIC
 	if (CONFIG(useCicPidForIdle)) {
 		return &idleCicPid;
