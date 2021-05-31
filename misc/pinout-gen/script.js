@@ -109,6 +109,50 @@ window.addEventListener('load', function() {
         cdiv.appendChild(pdiv);
         addRow(fullTable, connector.pins[i], pdiv);
       }
+      pempty = true;
+      iempty = true;
+      tempty = true;
+      fempty = true;
+      cempty = true;
+      rows = fullTable.children;
+      for (var i = 0; i < rows.length; i++) {
+          pempty = rows[i].children[0].textContent.length > 0 ? false : pempty;
+          iempty = rows[i].children[1].textContent.length > 0 ? false : iempty;
+          tempty = rows[i].children[2].textContent.length > 0 ? false : tempty;
+          fempty = rows[i].children[3].textContent.length > 0 ? false : fempty;
+          cempty = rows[i].children[4].textContent.length > 0 ? false : cempty;
+      }
+      fullTableHead = sdiv.querySelector(".pinout-table>thead")
+      if (pempty) {
+        fullTableHead.querySelector('thead>tr>th.pin-header').style.display = 'none';
+        for (var i = 0; i < rows.length; i++) {
+          rows[i].children[0].style.display = 'none';
+        }
+      }
+      if (iempty) {
+        fullTableHead.querySelector('thead>tr>th.ts-header').style.display = 'none';
+        for (var i = 0; i < rows.length; i++) {
+          rows[i].children[1].style.display = 'none';
+        }
+      }
+      if (tempty) {
+        fullTableHead.querySelector('thead>tr>th.type-header').style.display = 'none';
+        for (var i = 0; i < rows.length; i++) {
+          rows[i].children[2].style.display = 'none';
+        }
+      }
+      if (fempty) {
+        fullTableHead.querySelector('thead>tr>th.function-header').style.display = 'none';
+        for (var i = 0; i < rows.length; i++) {
+          rows[i].children[3].style.display = 'none';
+        }
+      }
+      if (cempty) {
+        fullTableHead.querySelector('thead>tr>th.color-header').style.display = 'none';
+        for (var i = 0; i < rows.length; i++) {
+          rows[i].children[4].style.display = 'none';
+        }
+      }
     }.bind(null, connector, sdiv, img));
     img.src = connector.info.image.file;
   }
