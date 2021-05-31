@@ -162,8 +162,18 @@ TEST(idle_v2, crankingOpenLoop) {
 	for (size_t i = 0; i < efi::size(config->cltCrankingCorrBins); i++) {
 		config->cltCrankingCorrBins[i] = i * 10;
 		config->cltCrankingCorr[i] = i * 0.1f;
+
+		// different values in running so we can tell which one is used
+		config->cltIdleCorrBins[i] = i * 10;
+		config->cltIdleCorr[i] = i * 0.2f;
 	}
 
+	// First test without override (ie, normal running CLT corr table)
+	EXPECT_FLOAT_EQ(10, dut.getCrankingOpenLoop(10));
+	EXPECT_FLOAT_EQ(50, dut.getCrankingOpenLoop(50));
+
+	// Test with override (use separate table)
+	engineConfiguration->overrideCrankingIacSetting = true;
 	EXPECT_FLOAT_EQ(5, dut.getCrankingOpenLoop(10));
 	EXPECT_FLOAT_EQ(25, dut.getCrankingOpenLoop(50));
 }
@@ -214,17 +224,7 @@ struct MockOpenLoopIdler : public IdleController {
 	MOCK_METHOD(float, getRunningOpenLoop, (float clt, SensorResult tps), (const, override));
 };
 
-TEST(idle_v2, testOpenLoopCrankingNoOverride) {
-	WITH_ENGINE_TEST_HELPER(TEST_ENGINE);
-	StrictMock<MockOpenLoopIdler> dut;
-	INJECT_ENGINE_REFERENCE(&dut);
-
-	EXPECT_CALL(dut, getRunningOpenLoop(30, SensorResult(0))).WillOnce(Return(33));
-
-	EXPECT_FLOAT_EQ(33, dut.getOpenLoop(ICP::Cranking, 30, 0));
-}
-
-TEST(idle_v2, testOpenLoopCrankingOverride) {
+TEST(idle_v2, testOpenLoopCranking) {
 	WITH_ENGINE_TEST_HELPER(TEST_ENGINE);
 	StrictMock<MockOpenLoopIdler> dut;
 	INJECT_ENGINE_REFERENCE(&dut);
@@ -243,7 +243,6 @@ TEST(idle_v2, openLoopRunningTaper) {
 	StrictMock<MockOpenLoopIdler> dut;
 	INJECT_ENGINE_REFERENCE(&dut);
 
-	CONFIG(overrideCrankingIacSetting) = true;
 	CONFIG(afterCrankingIACtaperDuration) = 500;
 
 	EXPECT_CALL(dut, getRunningOpenLoop(30, SensorResult(0))).WillRepeatedly(Return(25));
