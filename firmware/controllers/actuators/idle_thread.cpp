@@ -390,9 +390,6 @@ static percent_t automaticIdleController(float tpsPos, float rpm, int targetRpm,
 	percent_t newValue = idlePid->getOutput(targetRpm, rpm, SLOW_CALLBACK_PERIOD_MS / 1000.0f);
 	engine->engineState.idle.idleState = PID_VALUE;
 
-	// the state of PID has been changed, so we might reset it now, but only when needed (see idlePidDeactivationTpsThreshold)
-	mightResetPid = true;
-
 	// Apply PID Multiplier if used
 	if (CONFIG(useIacPidMultTable)) {
 		float engineLoad = getFuelingLoad(PASS_ENGINE_PARAMETER_SIGNATURE);
