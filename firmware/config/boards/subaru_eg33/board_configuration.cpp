@@ -89,16 +89,18 @@ void setBoardDefaultConfiguration(void) {
 	engineConfiguration->injectionPins[4 - 1] = MC33810_1_OUT_1;
 	engineConfiguration->injectionPins[5 - 1] = MC33810_0_OUT_2;
 	engineConfiguration->injectionPins[6 - 1] = MC33810_1_OUT_2;
+	/* Additional, not used for EG33 */
 	engineConfiguration->injectionPins[7 - 1] = MC33810_0_OUT_3;
 	engineConfiguration->injectionPins[8 - 1] = MC33810_1_OUT_3;
 
 	/* Ignition */
-	engineConfiguration->ignitionPins[1 - 1] = MC33810_0_GD_0;
+	engineConfiguration->ignitionPins[1 - 1] = MC33810_1_GD_3;
 	engineConfiguration->ignitionPins[2 - 1] = MC33810_1_GD_2;
 	engineConfiguration->ignitionPins[3 - 1] = MC33810_0_GD_1;
-	engineConfiguration->ignitionPins[4 - 1] = MC33810_1_GD_3;
+	engineConfiguration->ignitionPins[4 - 1] = MC33810_0_GD_0;
 	engineConfiguration->ignitionPins[5 - 1] = MC33810_0_GD_3;
 	engineConfiguration->ignitionPins[6 - 1] = MC33810_1_GD_1;
+	/* Additional, not used for EG33 */
 	engineConfiguration->ignitionPins[7 - 1] = MC33810_0_GD_2;
 	engineConfiguration->ignitionPins[8 - 1] = MC33810_1_GD_0;
 	//engineConfiguration->ignitionPinMode = OM_INVERTED;
@@ -139,9 +141,15 @@ void setBoardDefaultConfiguration(void) {
 	engineConfiguration->fuelPumpPin = TLE6240_PIN_5;
 	engineConfiguration->fuelPumpPinMode = OM_DEFAULT;
 
-	/* self shutdown? */
-	engineConfiguration->mainRelayPin = GPIOH_7;
-	engineConfiguration->mainRelayPinMode = OM_DEFAULT;
+	/* Self shutdown ouput:
+	 * High level on this pin will keep Main Relay enabled in any position of ignition key
+	 * This cause inability to stop engine by key.
+	 * From other side main relay is powered from key position "IGN" OR this output (through diodes)
+	 * So ECU does not need to drive this signal.
+	 * The only puprose of this output is to keep ECU powered to finish some stuff before power off itself
+	 * To support this we need to sense ING input from key switch */
+	//engineConfiguration->mainRelayPin = GPIOH_7;
+	//engineConfiguration->mainRelayPinMode = OM_DEFAULT;
 
 	/* spi driven - TLE6240 - OUT1, OUT2 */
 	engineConfiguration->fanPin = TLE6240_PIN_1;
