@@ -307,3 +307,61 @@ TEST(idle_v2, openLoopRunningTaper) {
 	}
 	EXPECT_FLOAT_EQ(25, dut.getOpenLoop(ICP::Idling, 30, 0));
 }
+
+extern int timeNowUs;
+
+TEST(idle_v2, closedLoopBasic) {
+	WITH_ENGINE_TEST_HELPER(TEST_ENGINE);
+	StrictMock<MockOpenLoopIdler> dut;
+	INJECT_ENGINE_REFERENCE(&dut);
+
+	// Not testing PID here, so we can set very simple PID gains
+	CONFIG(idleRpmPid).pFactor = 0.5;	// 0.5 output per 1 RPM error = 50% per 100 rpm
+	CONFIG(idleRpmPid).iFactor = 0;
+	CONFIG(idleRpmPid).dFactor = 0;
+	CONFIG(idleRpmPid).offset = 0;
+	CONFIG(idleRpmPid).iFactor = 0;
+	CONFIG(idleRpmPid).periodMs = 0;
+	CONFIG(idleRpmPid).minValue = -50;
+	CONFIG(idleRpmPid).maxValue = 50;
+
+	CONFIG(idlePidRpmDeadZone) = 0;
+
+	// burn one then advance time 5 seconds to avoid difficulty from wasResetPid
+	dut.getClosedLoop(ICP::Idling, 0, 900, 900);
+	timeNowUs += 5'000'000;
+
+	// Test above target, should return negative
+	EXPECT_FLOAT_EQ(-25, dut.getClosedLoop(ICP::Idling, 0, /*rpm*/ 950, /*tgt*/ 900));
+
+	// Below target, should return positive
+	EXPECT_FLOAT_EQ(25, dut.getClosedLoop(ICP::Idling, 0, /*rpm*/ 850, /*tgt*/ 900));
+}
+
+TEST(idle_v2, closedLoopDeadzone) {
+	WITH_ENGINE_TEST_HELPER(TEST_ENGINE);
+	StrictMock<MockOpenLoopIdler> dut;
+	INJECT_ENGINE_REFERENCE(&dut);
+
+	// Not testing PID here, so we can set very simple PID gains
+	CONFIG(idleRpmPid).pFactor = 0.5;	// 0.5 output per 1 RPM error = 50% per 100 rpm
+	CONFIG(idleRpmPid).iFactor = 0;
+	CONFIG(idleRpmPid).dFactor = 0;
+	CONFIG(idleRpmPid).offset = 0;
+	CONFIG(idleRpmPid).iFactor = 0;
+	CONFIG(idleRpmPid).periodMs = 0;
+	CONFIG(idleRpmPid).minValue = -50;
+	CONFIG(idleRpmPid).maxValue = 50;
+
+	CONFIG(idlePidRpmDeadZone) = 25;
+
+	// burn one then advance time 5 seconds to avoid difficulty from wasResetPid
+	dut.getClosedLoop(ICP::Idling, 0, 900, 900);
+	timeNowUs += 5'000'000;
+
+	// Test above target, should return negative
+	EXPECT_FLOAT_EQ(-25, dut.getClosedLoop(ICP::Idling, 0, /*rpm*/ 950, /*tgt*/ 900));
+
+	// Inside deadzone, should return same as last time
+	EXPECT_FLOAT_EQ(-25, dut.getClosedLoop(ICP::Idling, 0, /*rpm*/ 900, /*tgt*/ 900));
+}
