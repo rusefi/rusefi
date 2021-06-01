@@ -188,10 +188,10 @@ TEST(misc, test1995FordInline6TriggerDecoder) {
 	IgnitionEventList *ecl = &engine->ignitionEvents;
 	ASSERT_EQ( 1,  ecl->isReady) << "ford inline ignition events size";
 	ASSERT_EQ( 0,  ecl->elements[0].dwellPosition.triggerEventIndex) << "event index";
-	ASSERT_NEAR(7.8621, ecl->elements[0].dwellPosition.angleOffsetFromTriggerEvent, EPS4D) << "angle offset#1";
+	ASSERT_NEAR(7.9579, ecl->elements[0].dwellPosition.angleOffsetFromTriggerEvent, EPS4D) << "angle offset#1";
 
 	ASSERT_EQ( 10,  ecl->elements[5].dwellPosition.triggerEventIndex) << "event index";
-	ASSERT_NEAR(7.8621, ecl->elements[5].dwellPosition.angleOffsetFromTriggerEvent, EPS4D) << "angle offset#2";
+	ASSERT_NEAR(7.9579, ecl->elements[5].dwellPosition.angleOffsetFromTriggerEvent, EPS4D) << "angle offset#2";
 
 
 	ASSERT_FLOAT_EQ(0.5, getSparkDwell(2000 PASS_ENGINE_PARAMETER_SUFFIX)) << "running dwell";
