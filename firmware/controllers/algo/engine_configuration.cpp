@@ -450,29 +450,15 @@ static void setDefaultCrankingSettings(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 
 	// Cranking cycle compensation
 
-	static const float crankingCycleCoef[] = {
-		1.5,
-		1.35,
-		1.05,
-		0.75,
-		0.5,
-		0.5,
-		0.5,
-		0.5
-	};
-	copyArray(config->crankingCycleCoef, crankingCycleCoef);
+	// Whole table is 1.0, except first two values are steeper
+	setArrayValues(CONFIG(crankingCycleCoef), 1.0f);
+	CONFIG(crankingCycleCoef)[0] = 2.0f;
+	CONFIG(crankingCycleCoef)[1] = 1.3f;
 
-	static const float crankingCycleBins[] = {
-		4,
-		8,
-		12,
-		16,
-		74,
-		75,
-		76,
-		77
-	};
-	copyArray(config->crankingCycleBins, crankingCycleBins);
+	// X values are simply counting up cycle number starting at 1
+	for (size_t i = 0; i < efi::size(CONFIG(crankingCycleBins)); i++) {
+		CONFIG(crankingCycleBins)[i] = i + 1;
+	}
 
 	// Cranking ignition timing
 	static const float advanceValues[] = { 0, 0, 0, 0 };
