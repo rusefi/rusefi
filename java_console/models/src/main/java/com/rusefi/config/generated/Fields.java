@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Mon May 31 12:20:03 UTC 2021
+// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Mon May 31 22:02:06 UTC 2021
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -470,6 +470,8 @@ public class Fields {
 	public static final int externalKnockSenseAdc_offset = 3103;
 	public static final int extraInjectionOffset_offset = 432;
 	public static final int failedMapFallback_offset = 541;
+	public static final int fan1ExtraIdle_offset = 2252;
+	public static final int fan2ExtraIdle_offset = 2330;
 	public static final int fanOffTemperature_offset = 472;
 	public static final int fanOnTemperature_offset = 468;
 	public static final int fanPin_offset = 663;
@@ -1529,7 +1531,7 @@ public class Fields {
 	public static final char TS_SD_R_COMMAND = 'r';
 	public static final char TS_SD_W_COMMAND = 'w';
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI 2021.05.31.all.4000983283";
+	public static final String TS_SIGNATURE = "rusEFI 2021.05.31.all.2943684823";
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final int TT_TT_1_16 = 50;
 	public static final int TT_TT_2JZ_1_12 = 29;
@@ -1585,7 +1587,6 @@ public class Fields {
 	public static final int unused1128_offset = 2116;
 	public static final int unused1129_offset = 2116;
 	public static final int unused1130_offset = 2116;
-	public static final int unused1301_offset = 2252;
 	public static final int unused1366_offset = 2652;
 	public static final int unused1476b19_offset = 1476;
 	public static final int unused1476b20_offset = 1476;
@@ -1655,7 +1656,7 @@ public class Fields {
 	public static final int unusedBit_492_8_offset = 2116;
 	public static final int unusedBit_492_9_offset = 2116;
 	public static final int unusedHereWeHave_offset = 1464;
-	public static final int unusedOldBiquad_offset = 2330;
+	public static final int unusedOldBiquad_offset = 2331;
 	public static final int unusedOldIgnitionOffset_offset = 445;
 	public static final int unusedSpiPadding4_offset = 2593;
 	public static final int unusedSpiPadding5_offset = 2715;
@@ -2559,12 +2560,13 @@ public class Fields {
 	public static final Field TCHARGEMAXRPMMAXTPS = Field.create("TCHARGEMAXRPMMAXTPS", 2244, FieldType.FLOAT);
 	public static final Field AUXPIDFREQUENCY1 = Field.create("AUXPIDFREQUENCY1", 2248, FieldType.INT16);
 	public static final Field AUXPIDFREQUENCY2 = Field.create("AUXPIDFREQUENCY2", 2250, FieldType.INT16);
-	public static final Field UNUSED1301 = Field.create("UNUSED1301", 2252, FieldType.INT8);
+	public static final Field FAN1EXTRAIDLE = Field.create("FAN1EXTRAIDLE", 2252, FieldType.INT8);
 	public static final Field ALTERNATORPWMFREQUENCY = Field.create("ALTERNATORPWMFREQUENCY", 2256, FieldType.INT);
 	public static final Field UNUSED2260 = Field.create("UNUSED2260", 2260, FieldType.INT);
 	public static final String[] vvt_mode_e = {"Inactive", "Single Tooth Second Half", "2GZ", "Miata NB2", "Single Tooth First Half", "Bosch Quick Start", "4/1", "ST 170", "Ford Barra 3+1"};
 	public static final Field VVTMODE1 = Field.create("VVTMODE1", 2328, FieldType.INT8, vvt_mode_e);
 	public static final Field VVTMODE2 = Field.create("VVTMODE2", 2329, FieldType.INT8, vvt_mode_e);
+	public static final Field FAN2EXTRAIDLE = Field.create("FAN2EXTRAIDLE", 2330, FieldType.INT8);
 	public static final Field TLE8888MODE = Field.create("TLE8888MODE", 2416, FieldType.INT8);
 	public static final Field LIS302DLCSPINMODE = Field.create("LIS302DLCSPINMODE", 2417, FieldType.INT8, pin_output_mode_e);
 	public static final Field INJECTORCOMPENSATIONMODE = Field.create("INJECTORCOMPENSATIONMODE", 2418, FieldType.INT8);
@@ -3653,11 +3655,12 @@ public class Fields {
 	TCHARGEMAXRPMMAXTPS,
 	AUXPIDFREQUENCY1,
 	AUXPIDFREQUENCY2,
-	UNUSED1301,
+	FAN1EXTRAIDLE,
 	ALTERNATORPWMFREQUENCY,
 	UNUSED2260,
 	VVTMODE1,
 	VVTMODE2,
+	FAN2EXTRAIDLE,
 	TLE8888MODE,
 	LIS302DLCSPINMODE,
 	INJECTORCOMPENSATIONMODE,

@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Mon May 31 12:20:27 UTC 2021
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Mon May 31 22:02:30 UTC 2021
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -1396,8 +1396,8 @@ struct engine_configuration_s {
 	 */
 	pin_input_mode_e throttlePedalUpPinMode;
 	/**
-	 * Additional idle PID offset while A/C is active
-	Percent
+	 * Additional idle % while A/C is active
+	%
 	 * offset 711
 	 */
 	uint8_t acIdleExtraOffset;
@@ -3094,10 +3094,11 @@ struct engine_configuration_s {
 	 */
 	fsio_pwm_freq_t auxPidFrequency[CAMS_PER_BANK];
 	/**
-	units
+	 * Additional idle % when fan #1 is active
+	%
 	 * offset 2246
 	 */
-	uint8_t unused1301;
+	uint8_t fan1ExtraIdle;
 	/**
 	 * need 4 byte alignment
 	units
@@ -3135,10 +3136,16 @@ struct engine_configuration_s {
 	 */
 	uint8_t vvtModePadding[CAMS_PER_BANK_padding];
 	/**
-	units
+	 * Additional idle % when fan #2 is active
+	%
 	 * offset 2322
 	 */
-	uint8_t unusedOldBiquad[22];
+	uint8_t fan2ExtraIdle;
+	/**
+	units
+	 * offset 2323
+	 */
+	uint8_t unusedOldBiquad[21];
 	/**
 	 * CLT-based timing correction
 	C
@@ -4199,4 +4206,4 @@ struct persistent_config_s {
 };
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Mon May 31 12:20:27 UTC 2021
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Mon May 31 22:02:30 UTC 2021
