@@ -427,9 +427,9 @@ static void setDefaultCrankingSettings(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 		2.8,
 		2.2,
 		1.8,
-		1.5,
-		1.0,
-		1.0,
+		1.55,
+		1.3,
+		1.1,
 		1.0,
 		1.0
 	};
@@ -440,7 +440,7 @@ static void setDefaultCrankingSettings(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 		-20,
 		-10,
 		5,
-		30,
+		20,
 		35,
 		50,
 		65,
