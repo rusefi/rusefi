@@ -473,6 +473,8 @@ static void setDefaultCrankingSettings(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 #endif
 
 	engineConfiguration->postCrankingDurationSec = 10;
+
+	CONFIG(crankingTimingAngle) = 6;
 }
 
 /**
