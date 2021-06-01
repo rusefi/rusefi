@@ -451,13 +451,13 @@ static void setDefaultCrankingSettings(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	// Cranking cycle compensation
 
 	// Whole table is 1.0, except first two values are steeper
-	setArrayValues(CONFIG(crankingCycleCoef), 1.0f);
-	CONFIG(crankingCycleCoef)[0] = 2.0f;
-	CONFIG(crankingCycleCoef)[1] = 1.3f;
+	setArrayValues(config->crankingCycleCoef, 1.0f);
+	config->crankingCycleCoef[0] = 2.0f;
+	config->crankingCycleCoef[1] = 1.3f;
 
 	// X values are simply counting up cycle number starting at 1
-	for (size_t i = 0; i < efi::size(CONFIG(crankingCycleBins)); i++) {
-		CONFIG(crankingCycleBins)[i] = i + 1;
+	for (size_t i = 0; i < efi::size(config->crankingCycleBins); i++) {
+		config->crankingCycleBins[i] = i + 1;
 	}
 
 	// Cranking ignition timing
