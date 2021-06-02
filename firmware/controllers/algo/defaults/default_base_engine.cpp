@@ -1,6 +1,8 @@
 #include "defaults.h"
 #include "engine_configuration.h"
 
+EXTERN_ENGINE;
+
 void setDefaultBaseEngine(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	// Base Engine Settings
 	engineConfiguration->specs.cylindersCount = 4;
