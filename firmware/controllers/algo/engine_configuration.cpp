@@ -668,6 +668,7 @@ static void setDefaultEngineConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	engineConfiguration->slowAdcAlpha = 0.33333;
 	engineConfiguration->engineSnifferRpmThreshold = 2500;
 	engineConfiguration->sensorSnifferRpmThreshold = 2500;
+	engineConfiguration->cranking.rpm = 550;
 
 	engineConfiguration->noAccelAfterHardLimitPeriodSecs = 3;
 
