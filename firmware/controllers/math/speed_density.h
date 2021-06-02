@@ -16,5 +16,5 @@
 
 temperature_t getTCharge(int rpm, float tps DECLARE_ENGINE_PARAMETER_SUFFIX);
 
-void setDefaultVETable(DECLARE_ENGINE_PARAMETER_SIGNATURE);
+void setDefaultVETable(DECLARE_CONFIG_PARAMETER_SIGNATURE);
 void initSpeedDensity(DECLARE_ENGINE_PARAMETER_SIGNATURE);

@@ -112,7 +112,7 @@ temperature_t getTCharge(int rpm, float tps DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	return Tcharge;
 }
 
-void setDefaultVETable(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+void setDefaultVETable(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	setRpmTableBin(config->veRpmBins, FUEL_RPM_COUNT);
 	setTable(config->veTable, 80);
 
