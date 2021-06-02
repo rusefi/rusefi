@@ -65,6 +65,7 @@ CONTROLLERS_INC=\
 	$(CONTROLLERS_DIR)/system/timer \
 	$(CONTROLLERS_DIR)/algo \
 	$(CONTROLLERS_DIR)/algo/airmass \
+	$(CONTROLLERS_DIR)/algo/defaults \
 	$(CONTROLLERS_DIR)/algo/fuel \
 	$(CONTROLLERS_DIR)/engine_cycle \
 	$(CONTROLLERS_DIR)/trigger/decoders \
