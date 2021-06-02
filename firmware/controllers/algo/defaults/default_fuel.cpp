@@ -163,7 +163,7 @@ static const uint8_t tpsTpsTable[TPS_TPS_ACCEL_TABLE][TPS_TPS_ACCEL_TABLE] = {
 
 static void setMazdaMiataNbTpsTps(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	copyArray(config->tpsTpsAccelFromRpmBins, tpsTspSame);
-	copyArray(config->tpsTpsAccelFromRpmBins, tpsTspSame);
+	copyArray(config->tpsTpsAccelToRpmBins, tpsTspSame);
 	copyTable(config->tpsTpsAccelTable, tpsTpsTable);
 }
 
