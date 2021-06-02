@@ -3,6 +3,16 @@
 
 EXTERN_CONFIG;
 
+static void setDefaultAlternatorParameters(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
+	engineConfiguration->alternatorOffAboveTps = 120;
+
+	engineConfiguration->targetVBatt = 14;
+
+	engineConfiguration->alternatorControl.offset = 0;
+	engineConfiguration->alternatorControl.pFactor = 30;
+	engineConfiguration->alternatorControl.periodMs = 100;
+}
+
 void setDefaultBaseEngine(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	// Base Engine Settings
 	engineConfiguration->specs.cylindersCount = 4;
