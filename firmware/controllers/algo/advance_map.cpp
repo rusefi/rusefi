@@ -43,27 +43,6 @@ static int minCrankingRpm = 0;
 #if IGN_LOAD_COUNT == DEFAULT_IGN_LOAD_COUNT
 static const float iatTimingRpmBins[IGN_LOAD_COUNT] = {880,	1260,	1640,	2020,	2400,	2780,	3000,	3380,	3760,	4140,	4520,	5000,	5700,	6500,	7200,	8000};
 
-//880	1260	1640	2020	2400	2780	3000	3380	3760	4140	4520	5000	5700	6500	7200	8000
-static const int8_t defaultIatTiming[16][16] = {
-	// NOTE: this table is stored in tenths of a degree (so we can use int8_t instead of float), converted upon copy (see copyTable call below)
-		{ 40, 40, 40, 40, 40, 40, 40, 40, 40, 40, 40, 20, 20, 20, 20, 20 },
-		{ 40, 40, 40, 40, 40, 40, 40, 40, 40, 40, 40, 20, 20, 20, 20, 20 },
-		{ 40, 40, 40, 40, 40, 40, 40, 40, 40, 40, 40, 20, 20, 20, 20, 20 },
-		{ 40, 40, 40, 40, 40, 40, 40, 40, 40, 40, 40, 20, 20, 20, 20, 20 },
-		{ 35, 35, 35, 35, 35, 35, 35, 35, 35, 35, 35, 20, 20, 20, 20, 20 },
-		{ 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 20, 20, 20, 20, 2},
-		{ 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 0, 0, 0, 0, 0},
-		{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-		{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-		{   0,   0,  -9,  -9,  -9,  -9,  -9,  -9,  -9,  -9,  -9,  -9,  -9,  -9,  -9,  -9},
-		{ -33, -34, -49, -49, -49, -49, -44, -44, -44, -44, -44,  -9,  -9,  -9,  -9,  -9},
-		{ -44, -49, -59, -59, -59, -59, -49, -49, -49, -49, -49, -24, -24, -24, -24, -24},
-		{ -44, -49, -59, -59, -59, -59, -49, -49, -49, -49, -49, -29, -29, -29, -29, -29},
-		{ -44, -49, -59, -59, -59, -59, -49, -49, -49, -49, -49, -39, -39, -39, -39, -39},
-		{ -44, -49, -59, -59, -59, -59, -49, -49, -49, -49, -49, -39, -39, -39, -39, -39},
-		{ -44, -49, -59, -59, -59, -59, -49, -49, -49, -49, -49, -39, -39, -39, -39, -39},
-};
-
 #endif /* IGN_LOAD_COUNT == DEFAULT_IGN_LOAD_COUNT */
 
 /**
@@ -244,8 +223,30 @@ void setDefaultIatTimingCorrection(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	setLinearCurve(config->ignitionIatCorrLoadBins, /*from*/CLT_CURVE_RANGE_FROM, 110, 1);
 #if IGN_LOAD_COUNT == DEFAULT_IGN_LOAD_COUNT
 	copyArray(config->ignitionIatCorrRpmBins, iatTimingRpmBins);
-	// defaultIatTiming stored in tenths of a degree, see table above
-	copyTable(config->ignitionIatCorrTable, defaultIatTiming, 0.1f);
+
+	static constexpr int8_t defaultIatCorr[16] = {
+		4,	// -40 deg
+		4,
+		3,
+		2,
+		0,	// 0 deg
+		0,
+		0,
+		0,
+		0,
+		-1,	// 50 deg
+		-2,
+		-4,
+		-4,
+		-4,
+		-4,
+		-4,	// 110 deg
+	};
+
+	// Set each row of the table to the same value (no rpm dependence by default)
+	for (size_t i = 0; i < efi::size(defaultIatCorr); i++) {
+		setArrayValues(config->ignitionIatCorrTable[i], (float)defaultIatCorr[i]);
+	}
 #else
 	setLinearCurve(config->ignitionIatCorrLoadBins, /*from*/0, 6000, 1);
 #endif /* IGN_LOAD_COUNT == DEFAULT_IGN_LOAD_COUNT */

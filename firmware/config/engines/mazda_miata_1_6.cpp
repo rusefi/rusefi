@@ -170,9 +170,6 @@ static void miataNAcommonEngineSettings(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 
 	engineConfiguration->manIdlePosition = 34;
 
-	miataNA_setCrankingCycleBins(PASS_CONFIG_PARAMETER_SIGNATURE);
-	miataNA_setCrankingFuelBins(PASS_CONFIG_PARAMETER_SIGNATURE);
-
 	miataNA_setCltIdleCorrBins(PASS_CONFIG_PARAMETER_SIGNATURE);
 	miataNA_setCltIdleRpmBins(PASS_CONFIG_PARAMETER_SIGNATURE);
 	miataNA_setIacCoastingBins(PASS_CONFIG_PARAMETER_SIGNATURE);
