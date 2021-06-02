@@ -616,8 +616,6 @@ static void setDefaultEngineConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 #if EFI_ENGINE_CONTROL
 	setDefaultWarmupIdleCorrection(PASS_CONFIG_PARAMETER_SIGNATURE);
 
-	setDefaultFuelCutParameters(PASS_ENGINE_PARAMETER_SIGNATURE);
-
 	/**
 	 * 4ms is global default dwell for the whole RPM range
 	 * if you only have one coil and many cylinders or high RPM you would need lower value at higher RPM

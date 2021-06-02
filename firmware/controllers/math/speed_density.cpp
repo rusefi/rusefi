@@ -112,27 +112,6 @@ temperature_t getTCharge(int rpm, float tps DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	return Tcharge;
 }
 
-void setDefaultVETable(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
-	setRpmTableBin(config->veRpmBins, FUEL_RPM_COUNT);
-	setTable(config->veTable, 80);
-
-//	setRpmTableBin(engineConfiguration->ve2RpmBins, FUEL_RPM_COUNT);
-//	setLinearCurve(engineConfiguration->ve2LoadBins, 10, 300, 1);
-//	ve2Map.setAll(0.81);
-
-	setRpmTableBin(config->lambdaRpmBins, FUEL_RPM_COUNT);
-	setTable(config->lambdaTable, 1);
-
-	setRpmTableBin(engineConfiguration->baroCorrRpmBins, BARO_CORR_SIZE);
-	setLinearCurve(engineConfiguration->baroCorrPressureBins, 75, 105, 1);
-	for (int i = 0; i < BARO_CORR_SIZE;i++) {
-		for (int j = 0; j < BARO_CORR_SIZE;j++) {
-			// Default baro table is all 1.0, we can't recommend a reasonable default here
-			engineConfiguration->baroCorrTable[i][j] = 1;
-		}
-	}
-}
-
 void initSpeedDensity(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	veMap.init(config->veTable, config->veLoadBins, config->veRpmBins);
 //	ve2Map.init(engineConfiguration->ve2Table, engineConfiguration->ve2LoadBins, engineConfiguration->ve2RpmBins);

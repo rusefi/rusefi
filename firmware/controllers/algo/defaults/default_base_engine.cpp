@@ -1,5 +1,5 @@
 #include "defaults.h"
-#include "engine_configuration_generated_structures.h"
+#include "engine_configuration.h"
 
 void setDefaultBaseEngine(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	// Base Engine Settings

@@ -1,6 +1,7 @@
 #include "defaults.h"
-#include "engine_configuration_generated_structures.h"
+#include "engine_configuration.h"
 #include "table_helper.h"
+#include "mazda_miata_vvt.h"
 
 static void setBosch02880155868(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	// http://www.boschdealer.com/specsheets/0280155868cs.jpg
@@ -73,6 +74,27 @@ static void setDefaultWarmupFuelEnrichment(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	};
 
 	copyArray(config->cltFuelCorr, values);
+}
+
+static void setDefaultVETable(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
+	setRpmTableBin(config->veRpmBins, FUEL_RPM_COUNT);
+	setTable(config->veTable, 80);
+
+//	setRpmTableBin(engineConfiguration->ve2RpmBins, FUEL_RPM_COUNT);
+//	setLinearCurve(engineConfiguration->ve2LoadBins, 10, 300, 1);
+//	ve2Map.setAll(0.81);
+
+	setRpmTableBin(config->lambdaRpmBins, FUEL_RPM_COUNT);
+	setTable(config->lambdaTable, 1);
+
+	setRpmTableBin(engineConfiguration->baroCorrRpmBins, BARO_CORR_SIZE);
+	setLinearCurve(engineConfiguration->baroCorrPressureBins, 75, 105, 1);
+	for (int i = 0; i < BARO_CORR_SIZE;i++) {
+		for (int j = 0; j < BARO_CORR_SIZE;j++) {
+			// Default baro table is all 1.0, we can't recommend a reasonable default here
+			engineConfiguration->baroCorrTable[i][j] = 1;
+		}
+	}
 }
 
 static void setDefaultFuelCutParameters(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
