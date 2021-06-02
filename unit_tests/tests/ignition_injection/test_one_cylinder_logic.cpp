@@ -25,8 +25,8 @@ TEST(issues, issueOneCylinderSpecialCase968) {
 	eth.fireTriggerEvents2(/* count */ 1, 50 /* ms */);
 
 	ASSERT_EQ( 2,  engine->executor.size()) << "first revolution(s)";
-	eth.assertEvent5("spark up#0", 0, (void*)turnSparkPinHigh, -44293);
-	eth.assertEvent5("spark down#0", 1, (void*)fireSparkAndPrepareNextSchedule, -38293);
+	eth.assertEvent5("spark up#0", 0, (void*)turnSparkPinHigh, -45167);
+	eth.assertEvent5("spark down#0", 1, (void*)fireSparkAndPrepareNextSchedule, -39167);
 
 
 	eth.fireTriggerEvents2(/* count */ 1, 50 /* ms */);
