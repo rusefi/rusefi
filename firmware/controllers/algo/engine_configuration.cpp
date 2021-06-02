@@ -636,6 +636,8 @@ static void setDefaultEngineConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	setLinearCurve(engineConfiguration->map.samplingWindowBins, 800, 7000, 1);
 	setLinearCurve(engineConfiguration->map.samplingWindow, 50, 50, 1);
 
+	setDefaultIatTimingCorrection(PASS_ENGINE_PARAMETER_SIGNATURE);
+
 	setLinearCurve(config->vvtTable1LoadBins, 20, 120, 10);
 	setRpmTableBin(config->vvtTable1RpmBins, FSIO_TABLE_8);
 	setLinearCurve(config->vvtTable2LoadBins, 20, 120, 10);
