@@ -1,7 +1,7 @@
 #include "defaults.h"
 #include "engine_configuration.h"
 
-EXTERN_ENGINE;
+EXTERN_CONFIG;
 
 void setDefaultBaseEngine(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	// Base Engine Settings
