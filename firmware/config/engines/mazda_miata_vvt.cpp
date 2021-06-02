@@ -369,9 +369,6 @@ static void setMazdaMiataEngineNB2Defaults(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	engineConfiguration->idleRpmPid.dFactor = 5;
 	engineConfiguration->idleRpmPid.periodMs = 10;
 
-	miataNA_setCrankingCycleBins(PASS_CONFIG_PARAMETER_SIGNATURE);
-	miataNA_setCrankingFuelBins(PASS_CONFIG_PARAMETER_SIGNATURE);
-
 	miataNA_setCltIdleCorrBins(PASS_CONFIG_PARAMETER_SIGNATURE);
 	miataNA_setCltIdleRpmBins(PASS_CONFIG_PARAMETER_SIGNATURE);
 	miataNA_setIacCoastingBins(PASS_CONFIG_PARAMETER_SIGNATURE);
