@@ -354,7 +354,7 @@ int Mc33972::setPadMode(size_t pin, iomode_t mode) {
 	en_pins |= PIN_MASK(pin);
 
 	/* ask for reinit */
-	Mc33972::wake_driver();
+	wake_driver();
 
 	return 0;
 }
