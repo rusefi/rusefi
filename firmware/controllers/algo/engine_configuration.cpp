@@ -328,70 +328,6 @@ static void setDefaultWarmupIdleCorrection(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	setCurveValue(CLT_MANUAL_IDLE_CORRECTION,  70, 33.0 / baseIdle);
 }
 
-static void setDefaultCrankingSettings(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
-	CONFIG(useTLE8888_cranking_hack) = true;
-
-	setLinearCurve(engineConfiguration->crankingTpsCoef, /*from*/1, /*to*/1, 1);
-	setLinearCurve(engineConfiguration->crankingTpsBins, 0, 100, 1);
-
-	setLinearCurve(config->cltCrankingCorrBins, CLT_CURVE_RANGE_FROM, 100, 1);
-	setLinearCurve(config->cltCrankingCorr, 1.0, 1.0, 1);
-
-	// Cranking temperature compensation
-	static const float crankingCoef[] = {
-		2.8,
-		2.2,
-		1.8,
-		1.55,
-		1.3,
-		1.1,
-		1.0,
-		1.0
-	};
-	copyArray(config->crankingFuelCoef, crankingCoef);
-
-	// Deg C
-	static const float crankingBins[] = {
-		-20,
-		-10,
-		5,
-		20,
-		35,
-		50,
-		65,
-		90
-	};
-	copyArray(config->crankingFuelBins, crankingBins);
-
-	// Cranking cycle compensation
-
-	// Whole table is 1.0, except first two values are steeper
-	setArrayValues(config->crankingCycleCoef, 1.0f);
-	config->crankingCycleCoef[0] = 2.0f;
-	config->crankingCycleCoef[1] = 1.3f;
-
-	// X values are simply counting up cycle number starting at 1
-	for (size_t i = 0; i < efi::size(config->crankingCycleBins); i++) {
-		config->crankingCycleBins[i] = i + 1;
-	}
-
-	// Cranking ignition timing
-	static const float advanceValues[] = { 0, 0, 0, 0 };
-	copyArray(engineConfiguration->crankingAdvance, advanceValues);
-
-	static const float advanceBins[] = { 0, 200, 400, 1000 };
-	copyArray(engineConfiguration->crankingAdvanceBins, advanceBins);
-
-#if !EFI_UNIT_TEST
-	// don't set this for unit tests, as it makes things more complicated to test
-	engineConfiguration->postCrankingFactor = 1.2;
-#endif
-
-	engineConfiguration->postCrankingDurationSec = 10;
-
-	CONFIG(crankingTimingAngle) = 6;
-}
-
 /**
  * see also setTargetRpmCurve()
  */
@@ -538,6 +474,7 @@ static void setDefaultEngineConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	setDefaultBaseEngine(PASS_CONFIG_PARAMETER_SIGNATURE);
 	setDefaultFuel(PASS_CONFIG_PARAMETER_SIGNATURE);
 	setDefaultIgnition(PASS_CONFIG_PARAMETER_SIGNATURE);
+	setDefaultCranking(PASS_CONFIG_PARAMETER_SIGNATURE);
 
 #if EFI_IDLE_CONTROL
 	setDefaultIdleParameters(PASS_CONFIG_PARAMETER_SIGNATURE);
@@ -550,8 +487,6 @@ static void setDefaultEngineConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 #if EFI_BOOST_CONTROL
     setDefaultBoostParameters(PASS_CONFIG_PARAMETER_SIGNATURE);
 #endif
-
-	engineConfiguration->afterCrankingIACtaperDuration = 35;
 
     // OBD-II default rate is 500kbps
     CONFIG(canBaudRate) = B500KBPS;
@@ -603,13 +538,6 @@ static void setDefaultEngineConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 #if EFI_ENGINE_CONTROL
 	setDefaultWarmupIdleCorrection(PASS_CONFIG_PARAMETER_SIGNATURE);
 
-	/**
-	 * Use angle-based duration during cranking
-	 * this is equivalent to 'disable cranking_constant_dwell' console command
-	 */
-	engineConfiguration->useConstantDwellDuringCranking = true;
-	engineConfiguration->ignitionDwellForCrankingMs = 6;
-
 	setLinearCurve(engineConfiguration->map.samplingAngleBins, 800, 7000, 1);
 	setLinearCurve(engineConfiguration->map.samplingAngle, 100, 130, 1);
 	setLinearCurve(engineConfiguration->map.samplingWindowBins, 800, 7000, 1);
@@ -645,11 +573,8 @@ static void setDefaultEngineConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	engineConfiguration->slowAdcAlpha = 0.33333;
 	engineConfiguration->engineSnifferRpmThreshold = 2500;
 	engineConfiguration->sensorSnifferRpmThreshold = 2500;
-	engineConfiguration->cranking.rpm = 550;
 
 	engineConfiguration->noAccelAfterHardLimitPeriodSecs = 3;
-
-	setDefaultCrankingSettings(PASS_ENGINE_PARAMETER_SIGNATURE);
 
 	/**
 	 * Idle control defaults
@@ -667,21 +592,12 @@ static void setDefaultEngineConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	engineConfiguration->idle.solenoidFrequency = 200;
 	// set idle_position 50
 	engineConfiguration->manIdlePosition = 50;
-	engineConfiguration->crankingIACposition = 50;
 //	engineConfiguration->idleMode = IM_AUTO;
 	engineConfiguration->idleMode = IM_MANUAL;
 
 	engineConfiguration->useStepperIdle = false;
 
 	setDefaultStepperIdleParameters(PASS_ENGINE_PARAMETER_SIGNATURE);
-
-	/**
-	 * Cranking defaults
-	 */
-	engineConfiguration->cranking.baseFuel = 27;
-	engineConfiguration->crankingChargeAngle = 70;
-
-	setDefaultMultisparkParameters(PASS_ENGINE_PARAMETER_SIGNATURE);
 
 	setDefaultGppwmParameters(PASS_ENGINE_PARAMETER_SIGNATURE);
 
@@ -694,8 +610,6 @@ static void setDefaultEngineConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 
 
 	engineConfiguration->extraInjectionOffset = 0;
-
-	engineConfiguration->fuelAlgorithm = LM_SPEED_DENSITY;
 
 	engineConfiguration->tpsMin = convertVoltageTo10bitADC(0);
 	engineConfiguration->tpsMax = convertVoltageTo10bitADC(5);
