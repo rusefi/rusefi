@@ -93,7 +93,7 @@
 #define ETB_MAX_COUNT 2
 #endif /* ETB_MAX_COUNT */
 
-static pedal2tps_t pedal2tpsMap("Pedal2Tps");
+static pedal2tps_t pedal2tpsMap;
 
 EXTERN_ENGINE;
 

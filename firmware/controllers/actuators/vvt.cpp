@@ -22,8 +22,8 @@
 
 EXTERN_ENGINE;
 
-static fsio8_Map3D_u8t vvtTable1("vvt#1");
-static fsio8_Map3D_u8t vvtTable2("vvt#2");
+static fsio8_Map3D_u8t vvtTable1;
+static fsio8_Map3D_u8t vvtTable2;
 
 void VvtController::init(int index, int bankIndex, int camIndex, const ValueProvider3D* targetMap) {
 	this->index = index;
