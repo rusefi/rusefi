@@ -24,10 +24,10 @@ struct GpioChip {
 
 	// These functions need not be implemented if not supported by the particular chip.
 	/* pin argument is pin number within gpio chip, not a global number */
-	virtual int setPadMode(size_t pin, iomode_t mode) { return -1; }
-	virtual int writePad(size_t pin, int value) { return -1; }
-	virtual int readPad(size_t pin) { return -1; }
-	virtual brain_pin_diag_e getDiag(size_t pin) { return PIN_OK; }
+	virtual int setPadMode(size_t /*pin*/, iomode_t /*mode*/) { return -1; }
+	virtual int writePad(size_t /*pin*/, int /*value*/) { return -1; }
+	virtual int readPad(size_t /*pin*/) { return -1; }
+	virtual brain_pin_diag_e getDiag(size_t /*pin*/) { return PIN_OK; }
 	virtual int deinit() { return 0; }
 };
 
