@@ -130,6 +130,22 @@
                 "kind": "build",
                 "isDefault": true
             }
+		},
+		{
+            "label": "Build Simulator",
+            "type": "shell",
+            "command": "make -j12",
+			"windows": {
+				"command": "wsl make -j12"
+			},
+            "options": {
+                "cwd": "${workspaceRoot}/simulator"
+            },
+            "problemMatcher": [],
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            }
         }
 	]
 }

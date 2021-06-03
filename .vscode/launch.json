@@ -25,6 +25,25 @@
 			]
 		},
 		{
+			"name": "Debug simulator (gdb)",
+			"type": "cppdbg",
+			"request": "launch",
+			"program": "${workspaceFolder}/simulator/build/rusefi_simulator",
+			// uncomment args below to only debug a particular test
+			"stopAtEntry": false,
+			"cwd": "${workspaceFolder}/",
+			"environment": [],
+			"externalConsole": false,
+			"MIMode": "gdb",
+			"setupCommands": [
+				{
+					"description": "Enable pretty-printing for gdb",
+					"text": "-enable-pretty-printing",
+					"ignoreFailures": true
+				}
+			]
+		},
+		{
 			"name": "Debug Unit Tests (lldb)",
 			"type": "lldb",
 			"request": "launch",
