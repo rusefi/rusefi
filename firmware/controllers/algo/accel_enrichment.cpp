@@ -34,7 +34,7 @@
 
 EXTERN_ENGINE;
 
-tps_tps_Map3D_t tpsTpsMap("tpsTps");
+static tps_tps_Map3D_t tpsTpsMap;
 
 void WallFuel::resetWF() {
 	wallFuel = 0;

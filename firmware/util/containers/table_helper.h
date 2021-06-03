@@ -29,9 +29,6 @@ public:
 template<int TColNum, int TRowNum, typename vType, typename kType, typename TValueMultiplier = efi::ratio<1>>
 class Map3D : public ValueProvider3D {
 public:
-	explicit Map3D(const char*name) {
-	}
-
 	template<int mult>
 	void init(scaled_channel<vType, mult> table[TRowNum][TColNum], const kType rowBins[TRowNum], const kType columnBins[TColNum]) {
 		static_assert(TValueMultiplier::den == mult);

@@ -12,10 +12,10 @@ static GppwmChannel channels[GPPWM_CHANNELS];
 static OutputPin pins[GPPWM_CHANNELS];
 static SimplePwm outputs[GPPWM_CHANNELS];
 
-static gppwm_Map3D_t table1("GPPWM 1");
-static gppwm_Map3D_t table2("GPPWM 2");
-static gppwm_Map3D_t table3("GPPWM 3");
-static gppwm_Map3D_t table4("GPPWM 4");
+static gppwm_Map3D_t table1;
+static gppwm_Map3D_t table2;
+static gppwm_Map3D_t table3;
+static gppwm_Map3D_t table4;
 
 static gppwm_Map3D_t* tables[] = {
 	&table1,
