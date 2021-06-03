@@ -22,7 +22,7 @@ float map[4][5] = {
 };
 
 static float getValue(float rpm, float maf) {
-	Map3D<5, 4, float, float> x("test");
+	Map3D<5, 4, float, float> x;
 	x.init(map, mafBins, rpmBins);
 
 	return x.getValue(rpm, maf);

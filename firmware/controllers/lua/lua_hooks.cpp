@@ -170,7 +170,7 @@ static int lua_setDebug(lua_State* l) {
 	return 0;
 }
 
-static int lua_stopEngine(lua_State* l) {
+static int lua_stopEngine(lua_State*) {
 	doScheduleStopEngine();
 
 	return 0;

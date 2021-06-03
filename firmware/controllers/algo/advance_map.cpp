@@ -33,9 +33,8 @@
 
 EXTERN_ENGINE;
 
-static ign_Map3D_t advanceMap("advance");
-// This coeff in ctor parameter is sufficient for int16<->float conversion!
-static ign_Map3D_t iatAdvanceCorrectionMap("iat corr");
+static ign_Map3D_t advanceMap;
+static ign_Map3D_t iatAdvanceCorrectionMap;
 
 // todo: reset this between cranking attempts?! #2735
 int minCrankingRpm = 0;

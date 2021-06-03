@@ -21,13 +21,6 @@
 #include "fsio_core.h"
 #include "fsio_impl.h"
 
-extern fsio8_Map3D_f32t fsioTable1;
-extern fsio8_Map3D_u8t fsioTable2;
-extern fsio8_Map3D_u8t fsioTable3;
-extern fsio8_Map3D_u8t fsioTable4;
-
-static fsio8_Map3D_u8t * fsio8t_tables[] = {NULL, NULL, &fsioTable2, &fsioTable3, &fsioTable4};
-
 EXTERN_ENGINE;
 
 LENameOrdinalPair * LE_FIRST = nullptr;
@@ -229,15 +222,8 @@ FsioResult LECalculator::processElement(const LEElement *element DECLARE_ENGINE_
 		if (index < 1 || index > MAX_TABLE_INDEX) {
 			return unexpected;
 		} else {
-			if (index == 1) {
-				fsio8_Map3D_f32t *t = &fsioTable1;
-
-				return t->getValue(xValue, yValue);
-			} else {
-				fsio8_Map3D_u8t *t = fsio8t_tables[index];
-
-				return t->getValue(xValue, yValue);
-			}
+			// index parameter is 1-based, getFSIOTable is 0-based
+			return getFSIOTable(index - 1)->getValue(xValue, yValue);
 		}
 	}
 	case LE_METHOD_FSIO_DIGITAL_INPUT:

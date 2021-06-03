@@ -27,8 +27,8 @@
 
 EXTERN_ENGINE;
 
-static boostOpenLoop_Map3D_t boostMapOpen("boostmapopen");
-static boostOpenLoop_Map3D_t boostMapClosed("boostmapclosed");
+static boostOpenLoop_Map3D_t boostMapOpen;
+static boostOpenLoop_Map3D_t boostMapClosed;
 static SimplePwm boostPwmControl("boost");
 
 void BoostController::init(SimplePwm* pwm, const ValueProvider3D* openLoopMap, const ValueProvider3D* closedLoopTargetMap, pid_s* pidParams) {

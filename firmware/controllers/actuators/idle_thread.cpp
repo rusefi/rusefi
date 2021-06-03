@@ -120,7 +120,7 @@ float getIdlePidMinValue(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 static uint32_t lastCrankingCyclesCounter = 0;
 static float lastCrankingIacPosition;
 
-static iacPidMultiplier_t iacPidMultMap("iacPidMultiplier");
+static iacPidMultiplier_t iacPidMultMap;
 
 #if ! EFI_UNIT_TEST
 

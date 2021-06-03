@@ -26,10 +26,9 @@
 
 EXTERN_ENGINE;
 
-fuel_Map3D_t veMap("VE");
-fuel_Map3D_t ve2Map("VE2");
-lambda_Map3D_t lambdaMap("lambda");
-baroCorr_Map3D_t baroCorrMap("baro");
+fuel_Map3D_t veMap;
+lambda_Map3D_t lambdaMap;
+baroCorr_Map3D_t baroCorrMap;
 
 #define tpMin 0
 #define tpMax 100
