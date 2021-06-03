@@ -85,7 +85,6 @@ static THD_WORKING_AREA(tle6240_thread_1_wa, 256);
 /* Driver */
 struct Tle6240 : public GpioChip {
 	int init() override;
-	int deinit() override;
 
 	int writePad(size_t pin, int value) override;
 	brain_pin_diag_e getDiag(size_t pin) override;
@@ -442,12 +441,6 @@ int Tle6240::init()
 		drv_task_ready = true;
 	}
 
-	return 0;
-}
-
-int Tle6240::deinit()
-{
-	/* TODO: set all pins to inactive state, stop task? */
 	return 0;
 }
 
