@@ -1273,12 +1273,28 @@ void Tle8888::read_reg(uint16_t reg, uint16_t *val)
 	spi_rw(CMD_R(reg), val);
 }
 
-void tle8888_req_init()
-{
+void tle8888_req_init() {
 	auto& tle = chips[0];
 
 	tle.need_init = true;
 	tle.init_req_cnt++;
+}
+
+void tle8888_dump_regs() {
+	auto& chip = chips[0];
+
+	// since responses are always in the NEXT transmission we will have this one first
+	chip.read_reg(0, NULL);
+
+	efiPrintf("register: data");
+	for (int request = 0; request <= 0x7e + 1; request++) {
+		uint16_t tmp;
+		chip.read_reg(request < (0x7e + 1) ? request : 0x7e, &tmp);
+		uint8_t reg = getRegisterFromResponse(tmp);
+		uint8_t data = getDataFromResponse(tmp);
+
+		efiPrintf("%02x: %02x", reg, data);
+	}
 }
 
 #else /* BOARD_TLE8888_COUNT > 0 */

@@ -78,8 +78,8 @@ struct tle8888_config {
 int tle8888_add(brain_pin_e base, unsigned int index, const struct tle8888_config *cfg);
 
 /* debug */
-void tle8888_read_reg(uint16_t reg, uint16_t *val);
-void tle8888_req_init(void);
+void tle8888_req_init();
+void tle8888_dump_regs();
 
 #if EFI_TUNER_STUDIO
 #include "tunerstudio_debug_struct.h"
