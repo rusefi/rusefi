@@ -21,6 +21,8 @@ void setDefaultBaseEngine(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 
 	CONFIG(compressionRatio) = 9;
 
+	engineConfiguration->fuelAlgorithm = LM_SPEED_DENSITY;
+
 	// Limits and Fallbacks
 	engineConfiguration->rpmHardLimit = 7000;
 	engineConfiguration->cutFuelOnHardLimit = true;
