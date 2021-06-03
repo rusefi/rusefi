@@ -8,7 +8,4 @@ export DEFAULT_ENGINE_TYPE="-DDEFAULT_ENGINE_TYPE=SUBARUEG33_DEFAULTS"
 #export DEBUG_LEVEL_OPT="-O0"
 #export USE_BOOTLOADER=yes
 
-#bash config/boards/common_make.sh
-
-#CROSS_COMPILE=../../toolchain/gcc-arm-none-eabi-8-2018-q4-major/bin/arm-none-eabi- make $*
-CROSS_COMPILE=../../toolchain/gcc-arm-none-eabi-9-2019-q4-major/bin/arm-none-eabi- make $*
+bash ../common_make.sh

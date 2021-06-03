@@ -38,6 +38,7 @@
 #include "accelerometer.h"
 #endif
 
+#include "defaults.h"
 #include "custom_engine.h"
 #include "engine_template.h"
 #include "bmw_m73.h"
@@ -219,7 +220,6 @@ void setConstantDwell(floatms_t dwellMs DECLARE_CONFIG_PARAMETER_SUFFIX) {
 }
 
 void setWholeIgnitionIatCorr(float value DECLARE_CONFIG_PARAMETER_SUFFIX) {
-	// todo: make setMap a template
 	setTable(config->ignitionIatCorrTable, value);
 }
 
@@ -309,36 +309,6 @@ void setDefaultSdCardParameters(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 #endif /* EFI_PROD_CODE */
 }
 
-
-// todo: move injector calibration somewhere else?
-// todo: add a enum? if we have enough data?
-static void setBosch02880155868(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
-	// http://www.boschdealer.com/specsheets/0280155868cs.jpg
-	engineConfiguration->injector.battLagCorrBins[0] = 6;
-	engineConfiguration->injector.battLagCorr[0] = 3.371;
-
-	engineConfiguration->injector.battLagCorrBins[1] = 8;
-	engineConfiguration->injector.battLagCorr[1] = 1.974;
-
-	engineConfiguration->injector.battLagCorrBins[2] = 10;
-	engineConfiguration->injector.battLagCorr[2] = 1.383;
-
-	engineConfiguration->injector.battLagCorrBins[3] = 11;
-	engineConfiguration->injector.battLagCorr[3] = 1.194;
-
-	engineConfiguration->injector.battLagCorrBins[4] = 12;
-	engineConfiguration->injector.battLagCorr[4] = 1.04;
-
-	engineConfiguration->injector.battLagCorrBins[5] = 13;
-	engineConfiguration->injector.battLagCorr[5] = 0.914;
-
-	engineConfiguration->injector.battLagCorrBins[6] = 14;
-	engineConfiguration->injector.battLagCorr[6] = 0.797;
-
-	engineConfiguration->injector.battLagCorrBins[7] = 15;
-	engineConfiguration->injector.battLagCorr[7] = 0.726;
-}
-
 static void setDefaultWarmupIdleCorrection(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	initTemperatureCurve(CLT_MANUAL_IDLE_CORRECTION, 1.0);
 
@@ -358,61 +328,6 @@ static void setDefaultWarmupIdleCorrection(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	setCurveValue(CLT_MANUAL_IDLE_CORRECTION,  70, 33.0 / baseIdle);
 }
 
-static void setDefaultWarmupFuelEnrichment(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
-	static const float bins[] =
-	{
-		-40,
-		-30,
-		-20,
-		-10,
-		0,
-		10,
-		20,
-		30,
-		40,
-		50,
-		60,
-		70,
-		80,
-		90,
-		100,
-		110
-	};
-
-	copyArray(config->cltFuelCorrBins, bins);
-
-	static const float values[] =
-	{
-		1.50,
-		1.50,
-		1.42,
-		1.36,
-		1.28,
-		1.19,
-		1.12,
-		1.10,
-		1.06,
-		1.06,
-		1.03,
-		1.01,
-		1,
-		1,
-		1,
-		1
-	};
-
-	copyArray(config->cltFuelCorr, values);
-}
-
-static void setDefaultFuelCutParameters(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
-	engineConfiguration->coastingFuelCutEnabled = false;
-	engineConfiguration->coastingFuelCutRpmLow = 1300;
-	engineConfiguration->coastingFuelCutRpmHigh = 1500;
-	engineConfiguration->coastingFuelCutTps = 2;
-	engineConfiguration->coastingFuelCutMap = 30;
-	engineConfiguration->coastingFuelCutClt = 30;
-}
-
 static void setDefaultCrankingSettings(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	CONFIG(useTLE8888_cranking_hack) = true;
 
@@ -427,9 +342,9 @@ static void setDefaultCrankingSettings(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 		2.8,
 		2.2,
 		1.8,
-		1.5,
-		1.0,
-		1.0,
+		1.55,
+		1.3,
+		1.1,
 		1.0,
 		1.0
 	};
@@ -440,7 +355,7 @@ static void setDefaultCrankingSettings(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 		-20,
 		-10,
 		5,
-		30,
+		20,
 		35,
 		50,
 		65,
@@ -450,29 +365,15 @@ static void setDefaultCrankingSettings(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 
 	// Cranking cycle compensation
 
-	static const float crankingCycleCoef[] = {
-		1.5,
-		1.35,
-		1.05,
-		0.75,
-		0.5,
-		0.5,
-		0.5,
-		0.5
-	};
-	copyArray(config->crankingCycleCoef, crankingCycleCoef);
+	// Whole table is 1.0, except first two values are steeper
+	setArrayValues(config->crankingCycleCoef, 1.0f);
+	config->crankingCycleCoef[0] = 2.0f;
+	config->crankingCycleCoef[1] = 1.3f;
 
-	static const float crankingCycleBins[] = {
-		4,
-		8,
-		12,
-		16,
-		74,
-		75,
-		76,
-		77
-	};
-	copyArray(config->crankingCycleBins, crankingCycleBins);
+	// X values are simply counting up cycle number starting at 1
+	for (size_t i = 0; i < efi::size(config->crankingCycleBins); i++) {
+		config->crankingCycleBins[i] = i + 1;
+	}
 
 	// Cranking ignition timing
 	static const float advanceValues[] = { 0, 0, 0, 0 };
@@ -487,6 +388,8 @@ static void setDefaultCrankingSettings(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 #endif
 
 	engineConfiguration->postCrankingDurationSec = 10;
+
+	CONFIG(crankingTimingAngle) = 6;
 }
 
 /**
@@ -533,7 +436,7 @@ void setTargetRpmCurve(int rpm DECLARE_CONFIG_PARAMETER_SUFFIX) {
 	setLinearCurve(engineConfiguration->cltIdleRpm, rpm, rpm, 10);
 }
 
-void setDefaultMultisparkParameters(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+static void setDefaultMultisparkParameters(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	// 1ms spark + 2ms dwell
 	engineConfiguration->multisparkSparkDuration = 1000;
 	engineConfiguration->multisparkDwell = 2000;
@@ -542,44 +445,6 @@ void setDefaultMultisparkParameters(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	engineConfiguration->multisparkMaxRpm = 1500;
 	engineConfiguration->multisparkMaxExtraSparkCount = 2;
 	engineConfiguration->multisparkMaxSparkingAngle = 30;
-}
-
-void setDefaultStftSettings(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
-	auto& cfg = CONFIG(stft);
-
-	// Default to disabled
-	CONFIG(fuelClosedLoopCorrectionEnabled) = false;
-
-	// Default to proportional mode (for wideband sensors)
-	CONFIG(stftIgnoreErrorMagnitude) = false;
-
-	// 60 second startup delay - some O2 sensors are slow to warm up.
-	cfg.startupDelay = 60;
-
-	// Only correct in [12.0, 17.0]
-	cfg.minAfr = 120;
-	cfg.maxAfr = 170;
-
-	// Above 60 deg C
-	cfg.minClt = 60;
-
-	// 0.5% deadband
-	cfg.deadband = 5;
-
-	// Sensible region defaults
-	cfg.maxIdleRegionRpm = 1000 / RPM_1_BYTE_PACKING_MULT;
-	cfg.maxOverrunLoad = 35;
-	cfg.minPowerLoad = 85;
-
-	// Sensible cell defaults
-	for (size_t i = 0; i < efi::size(cfg.cellCfgs); i++) {
-		// 30 second time constant - nice and slow
-		cfg.cellCfgs[i].timeConstant = 30 * 10;
-
-		/// Allow +-5%
-		cfg.cellCfgs[i].maxAdd = 5;
-		cfg.cellCfgs[i].maxRemove = -5;
-	}
 }
 
 void setDefaultGppwmParameters(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
@@ -681,19 +546,12 @@ static void setDefaultEngineConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 #endif
 	prepareVoidConfiguration(engineConfiguration);
 
-#if EFI_ALTERNATOR_CONTROL
-	setDefaultAlternatorParameters(PASS_CONFIG_PARAMETER_SIGNATURE);
-#endif /* EFI_ALTERNATOR_CONTROL */
+	setDefaultBaseEngine(PASS_CONFIG_PARAMETER_SIGNATURE);
+	setDefaultFuel(PASS_CONFIG_PARAMETER_SIGNATURE);
 
 #if EFI_IDLE_CONTROL
 	setDefaultIdleParameters(PASS_CONFIG_PARAMETER_SIGNATURE);
 #endif /* EFI_IDLE_CONTROL */
-
-#if !EFI_UNIT_TEST
-	// todo: this is a reasonable default for what kinds of engines exactly?
-	engineConfiguration->wwaeTau = 0.3;
-	engineConfiguration->wwaeBeta = 0.3;
-#endif // EFI_UNIT_TEST
 
 #if EFI_ELECTRONIC_THROTTLE_BODY
 	setDefaultEtbParameters(PASS_CONFIG_PARAMETER_SIGNATURE);
@@ -703,17 +561,13 @@ static void setDefaultEngineConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
     setDefaultBoostParameters(PASS_CONFIG_PARAMETER_SIGNATURE);
 #endif
 
-    engineConfiguration->afterCrankingIACtaperDuration = 35;
-
-    CONFIG(tachPulsePerRev) = 1;
+	engineConfiguration->afterCrankingIACtaperDuration = 35;
 
     // OBD-II default rate is 500kbps
     CONFIG(canBaudRate) = B500KBPS;
 
 	CONFIG(mafSensorType) = Bosch0280218037;
 	setBosch0280218037(config);
-
-	setBosch02880155868(PASS_ENGINE_PARAMETER_SIGNATURE);
 
 	engineConfiguration->canSleepPeriodMs = 50;
 	engineConfiguration->canReadEnabled = true;
@@ -730,22 +584,14 @@ static void setDefaultEngineConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	}
 
 	CONFIG(mapMinBufferLength) = 1;
-
-	// 50% duty cycle is the default for tach signal
-	CONFIG(tachPulseDurationAsDutyCycle) = true;
-	CONFIG(tachPulseDuractionMs) = 0.5;
-
+	
 	CONFIG(startCrankingDuration) = 3;
-
-	CONFIG(compressionRatio) = 9;
 
 	engineConfiguration->idlePidRpmDeadZone = 50;
 	engineConfiguration->startOfCrankingPrimingPulse = 0;
 
 	engineConfiguration->acCutoffLowRpm = 700;
 	engineConfiguration->acCutoffHighRpm = 5000;
-
-	engineConfiguration->postCrankingDurationSec = 2;
 
 	initTemperatureCurve(IAT_FUEL_CORRECTION_CURVE, 1);
 
@@ -770,12 +616,6 @@ static void setDefaultEngineConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 #if EFI_ENGINE_CONTROL
 	setDefaultWarmupIdleCorrection(PASS_CONFIG_PARAMETER_SIGNATURE);
 
-	setDefaultWarmupFuelEnrichment(PASS_ENGINE_PARAMETER_SIGNATURE);
-
-	setDefaultFuelCutParameters(PASS_ENGINE_PARAMETER_SIGNATURE);
-
-	setMazdaMiataNbTpsTps(PASS_CONFIG_PARAMETER_SIGNATURE);
-
 	/**
 	 * 4ms is global default dwell for the whole RPM range
 	 * if you only have one coil and many cylinders or high RPM you would need lower value at higher RPM
@@ -796,23 +636,7 @@ static void setDefaultEngineConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	setLinearCurve(engineConfiguration->map.samplingWindowBins, 800, 7000, 1);
 	setLinearCurve(engineConfiguration->map.samplingWindow, 50, 50, 1);
 
-	setTable(config->lambdaTable, 1.0f);
-	engineConfiguration->stoichRatioPrimary = STOICH_RATIO * PACK_MULT_AFR_CFG;
-	engineConfiguration->stoichRatioSecondary = 9.0f * PACK_MULT_AFR_CFG;
-
-	setDefaultVETable(PASS_ENGINE_PARAMETER_SIGNATURE);
-
-	setTable(config->injectionPhase, -180.0f);
-
-	setRpmTableBin(config->injPhaseRpmBins, FUEL_RPM_COUNT);
-	setFuelTablesLoadBin(10, 160 PASS_CONFIG_PARAMETER_SUFFIX);
 	setDefaultIatTimingCorrection(PASS_ENGINE_PARAMETER_SIGNATURE);
-
-	setLinearCurve(engineConfiguration->mapAccelTaperBins, 0, 32, 4);
-	setLinearCurve(engineConfiguration->mapAccelTaperMult, 1, 1, 1);
-
-	setLinearCurve(config->tpsTpsAccelFromRpmBins, 0, 100, 10);
-	setLinearCurve(config->tpsTpsAccelToRpmBins, 0, 100, 10);
 
 	setLinearCurve(config->vvtTable1LoadBins, 20, 120, 10);
 	setRpmTableBin(config->vvtTable1RpmBins, FSIO_TABLE_8);
@@ -834,12 +658,6 @@ static void setDefaultEngineConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 // todo: this value is way off! I am pretty sure temp coeffs are off also
 	engineConfiguration->iat.config = {32, 75, 120, 9500, 2100, 1000, 2700};
 
-#if EFI_PROD_CODE
-	engineConfiguration->warningPeriod = 10;
-#else
-	engineConfiguration->warningPeriod = 0;
-#endif /* EFI_PROD_CODE */
-
 	engineConfiguration->launchRpm = 3000;
  	engineConfiguration->launchTimingRetard = 10;
 	engineConfiguration->launchTimingRpmRange = 500;
@@ -850,28 +668,11 @@ static void setDefaultEngineConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	engineConfiguration->slowAdcAlpha = 0.33333;
 	engineConfiguration->engineSnifferRpmThreshold = 2500;
 	engineConfiguration->sensorSnifferRpmThreshold = 2500;
-	engineConfiguration->rpmHardLimit = 7000;
 	engineConfiguration->cranking.rpm = 550;
-	engineConfiguration->cutFuelOnHardLimit = true;
-	engineConfiguration->cutSparkOnHardLimit = true;
-	engineConfiguration->failedMapFallback = 60;
-
-	engineConfiguration->tChargeMinRpmMinTps = 0.25;
-	engineConfiguration->tChargeMinRpmMaxTps = 0.25;
-	engineConfiguration->tChargeMaxRpmMinTps = 0.25;
-	engineConfiguration->tChargeMaxRpmMaxTps = 0.9;
-	engineConfiguration->tChargeMode = TCHARGE_MODE_RPM_TPS;
-	engineConfiguration->tChargeAirCoefMin = 0.098f;
-	engineConfiguration->tChargeAirCoefMax = 0.902f;
-	engineConfiguration->tChargeAirFlowMax = 153.6f;
-	engineConfiguration->tChargeAirIncrLimit = 1.0f;
-	engineConfiguration->tChargeAirDecrLimit = 12.5f;
 
 	engineConfiguration->noAccelAfterHardLimitPeriodSecs = 3;
 
 	setDefaultCrankingSettings(PASS_ENGINE_PARAMETER_SIGNATURE);
-
-	setDefaultStftSettings(PASS_ENGINE_PARAMETER_SIGNATURE);
 
 	/**
 	 * Idle control defaults
@@ -900,7 +701,6 @@ static void setDefaultEngineConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	/**
 	 * Cranking defaults
 	 */
-	engineConfiguration->startUpFuelPumpDuration = 4;
 	engineConfiguration->cranking.baseFuel = 27;
 	engineConfiguration->crankingChargeAngle = 70;
 
@@ -919,20 +719,10 @@ static void setDefaultEngineConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	// performance optimization
 	engineConfiguration->sensorChartMode = SC_OFF;
 
-	engineConfiguration->specs.firingOrder = FO_1_3_4_2;
-	engineConfiguration->crankingInjectionMode = IM_SIMULTANEOUS;
-	engineConfiguration->injectionMode = IM_SEQUENTIAL;
 
-	engineConfiguration->ignitionMode = IM_ONE_COIL;
-	engineConfiguration->globalTriggerAngleOffset = 0;
 	engineConfiguration->extraInjectionOffset = 0;
 
 	engineConfiguration->fuelAlgorithm = LM_SPEED_DENSITY;
-
-	engineConfiguration->vbattDividerCoeff = ((float) (15 + 65)) / 15;
-
-	engineConfiguration->fanOnTemperature = 95;
-	engineConfiguration->fanOffTemperature = 91;
 
 	engineConfiguration->tpsMin = convertVoltageTo10bitADC(0);
 	engineConfiguration->tpsMax = convertVoltageTo10bitADC(5);
@@ -954,21 +744,11 @@ static void setDefaultEngineConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	engineConfiguration->oilPressure.value1 = 0;
 	engineConfiguration->oilPressure.value2 = 689.476f;	// 100psi = 689.476kPa
 
-	setOperationMode(engineConfiguration, FOUR_STROKE_CAM_SENSOR);
-	engineConfiguration->specs.cylindersCount = 4;
-	engineConfiguration->specs.displacement = 2;
-	/**
-	 * By the way http://users.erols.com/srweiss/tableifc.htm has a LOT of data
-	 */
-	engineConfiguration->injector.flow = 200;
-
 	engineConfiguration->mapLowValueVoltage = 0;
 	// todo: start using this for custom MAP
 	engineConfiguration->mapHighValueVoltage = 5;
 
 	engineConfiguration->logFormat = LF_NATIVE;
-
-	engineConfiguration->trigger.type = TT_TOOTHED_WHEEL_60_2;
 
 	engineConfiguration->HD44780width = 20;
 	engineConfiguration->HD44780height = 4;
@@ -988,10 +768,6 @@ static void setDefaultEngineConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 
 	engineConfiguration->isEngineChartEnabled = true;
 
-	engineConfiguration->useOnlyRisingEdgeForTrigger = false;
-	// Default this to on - if you want to diagnose, turn it off.
-	engineConfiguration->silentTriggerError = true;
-
 #if EFI_PROD_CODE
 	engineConfiguration->engineChartSize = 300;
 #else
@@ -1001,9 +777,7 @@ static void setDefaultEngineConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 
 	engineConfiguration->primingSquirtDurationMs = 5;
 
-	engineConfiguration->isInjectionEnabled = true;
 	engineConfiguration->isIgnitionEnabled = true;
-	engineConfiguration->isCylinderCleanupEnabled = false; // this feature is evil if one does not have TPS, better turn off by default
 
 	engineConfiguration->isMapAveragingEnabled = true;
 	engineConfiguration->isWaveAnalyzerEnabled = true;
@@ -1043,13 +817,6 @@ static void setDefaultEngineConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	engineConfiguration->hip9011Gain = 1;
 
 	engineConfiguration->isEngineControlEnabled = true;
-
-	engineConfiguration->engineLoadAccelLength = 6;
-	engineConfiguration->engineLoadAccelEnrichmentThreshold = 5; // kPa
-	engineConfiguration->engineLoadAccelEnrichmentMultiplier = 0; // todo: improve implementation and re-enable by default
-
-	engineConfiguration->tpsAccelLength = 12;
-	engineConfiguration->tpsAccelEnrichmentThreshold = 40; // TPS % change, per engine cycle
 #endif // EFI_ENGINE_CONTROL
 #if EFI_FSIO
 	/**

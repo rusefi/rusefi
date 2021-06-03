@@ -457,8 +457,6 @@ int Tle8888::update_output()
 	int i;
 	int ret;
 
-	/* TODO: lock? */
-
 	uint8_t briconfig0 = 0;
 
 	/* calculate briconfig0 */
@@ -496,8 +494,6 @@ int Tle8888::update_output()
 	};
 	ret = spi_rw_array(tx, NULL, ARRAY_SIZE(tx));
 
-	/* TODO: unlock? */
-
 	if (ret == 0) {
 		/* atomic */
 		o_data_cached = o_data;
@@ -529,9 +525,7 @@ int Tle8888::update_status_and_diag()
 	};
 	uint16_t rx[ARRAY_SIZE(tx)];
 
-	/* TODO: lock? */
 	ret = spi_rw_array(tx, rx, ARRAY_SIZE(tx));
-	/* TODO: unlock? */
 
 	if (ret == 0) {
 		/* the address and content of the selected register is transmitted with the
@@ -709,9 +703,8 @@ int Tle8888::chip_init()
 		/* enable outputs */
 		CMD_OE_SET
 	};
-	/* TODO: lock? */
+
 	ret = spi_rw_array(tx, NULL, ARRAY_SIZE(tx));
-	/* TODO: unlock? */
 
 	if (ret == 0) {
 		/* enable pins */
@@ -962,13 +955,16 @@ int Tle8888::writePad(unsigned int pin, int value) {
 	if (pin >= TLE8888_OUTPUTS)
 		return -1;
 
-	/* TODO: lock */
-	if (value) {
-		o_state |=  (1 << pin);
-	} else {
-		o_state &= ~(1 << pin);
+	{
+		chibios_rt::CriticalSectionLocker csl;
+
+		if (value) {
+			o_state |=  (1 << pin);
+		} else {
+			o_state &= ~(1 << pin);
+		}
 	}
-	/* TODO: unlock */
+
 	/* direct driven? */
 	if (o_direct_mask & (1 << pin)) {
 		return update_direct_output(pin, value);

@@ -229,9 +229,14 @@ IIdleController::Phase IdleController::determinePhase(int rpm, int targetRpm, Se
 }
 
 float IdleController::getCrankingOpenLoop(float clt) const {
-	return 
-		CONFIG(crankingIACposition)		// Base cranking position (cranking page)
-		 * interpolate2d(clt, config->cltCrankingCorrBins, config->cltCrankingCorr);
+	float mult =
+		CONFIG(overrideCrankingIacSetting)
+		// Override to separate table
+	 	? interpolate2d(clt, config->cltCrankingCorrBins, config->cltCrankingCorr)
+		// Otherwise use plain running table
+		: interpolate2d(clt, config->cltIdleCorrBins, config->cltIdleCorr);
+
+	return CONFIG(crankingIACposition) * mult;
 }
 
 float IdleController::getRunningOpenLoop(float clt, SensorResult tps) const {
@@ -241,8 +246,10 @@ float IdleController::getRunningOpenLoop(float clt, SensorResult tps) const {
 
 	// Now we bump it by the AC/fan amount if necessary
 	running += engine->acSwitchState ? CONFIG(acIdleExtraOffset) : 0;
-	// TODO: fan idle bump needs its own config field
-	running += enginePins.fanRelay.getLogicValue() ? CONFIG(acIdleExtraOffset) : 0;
+	running += enginePins.fanRelay.getLogicValue() ? CONFIG(fan1ExtraIdle) : 0;
+
+	// TODO: once we have dual fans, enable
+	//running += enginePins.fanRelay2.getLogicValue() ? CONFIG(fan2ExtraIdle) : 0;
 
 	// Now bump it by the specified amount when the throttle is opened (if configured)
 	// nb: invalid tps will make no change, no explicit check required
@@ -256,13 +263,17 @@ float IdleController::getRunningOpenLoop(float clt, SensorResult tps) const {
 
 float IdleController::getOpenLoop(Phase phase, float clt, SensorResult tps) const {
 	float running = getRunningOpenLoop(clt, tps);
-
-	// Cranking value is either its own table, or the running value if not overriden
-	float cranking = CONFIG(overrideCrankingIacSetting) ? getCrankingOpenLoop(clt) : running;
+	float cranking = getCrankingOpenLoop(clt);
 
 	// if we're cranking, nothing more to do.
 	if (phase == Phase::Cranking) {
 		return cranking;
+	}
+
+	// If coasting (and enabled), use the coasting position table instead of normal open loop
+	// TODO: this should be a table of open loop mult vs. RPM, not vs. clt
+	if (CONFIG(useIacTableForCoasting) && phase == Phase::Coasting) {
+		return interpolate2d(clt, CONFIG(iacCoastingBins), CONFIG(iacCoasting));
 	}
 
 	// Interpolate between cranking and running over a short time
@@ -340,11 +351,13 @@ static void undoIdleBlipIfNeeded() {
 /**
  * @return idle valve position percentage for automatic closed loop mode
  */
-static percent_t automaticIdleController(float tpsPos, float rpm, int targetRpm, IIdleController::Phase phase DECLARE_ENGINE_PARAMETER_SUFFIX) {
+float IdleController::getClosedLoop(IIdleController::Phase phase, float tpsPos, int rpm, int targetRpm) {
+	auto idlePid = getIdlePid(PASS_ENGINE_PARAMETER_SIGNATURE);
+
 	if (shouldResetPid) {
 		// we reset only if I-term is negative, because the positive I-term is good - it keeps RPM from dropping too low
-		if (getIdlePid(PASS_ENGINE_PARAMETER_SIGNATURE)->getIntegration() <= 0 || mustResetPid) {
-			getIdlePid(PASS_ENGINE_PARAMETER_SIGNATURE)->reset();
+		if (idlePid->getIntegration() <= 0 || mustResetPid) {
+			idlePid->reset();
 			mustResetPid = false;
 		}
 //			alternatorPidResetCounter++;
@@ -395,11 +408,11 @@ static percent_t automaticIdleController(float tpsPos, float rpm, int targetRpm,
 	// todo: move restoreAfterPidResetTimeUs to engineState.idle?
 	efitimeus_t timeSincePidResetUs = nowUs - /*engine->engineState.idle.*/restoreAfterPidResetTimeUs;
 	// todo: add 'pidAfterResetDampingPeriodMs' setting
-	errorAmpCoef = interpolateClamped(0.0f, 0.0f, MS2US(/*CONFIG(pidAfterResetDampingPeriodMs)*/1000), errorAmpCoef, timeSincePidResetUs);
+	errorAmpCoef = interpolateClamped(0, 0, MS2US(/*CONFIG(pidAfterResetDampingPeriodMs)*/1000), errorAmpCoef, timeSincePidResetUs);
 	// If errorAmpCoef > 1.0, then PID thinks that RPM is lower than it is, and controls IAC more aggressively
-	getIdlePid(PASS_ENGINE_PARAMETER_SIGNATURE)->setErrorAmplification(errorAmpCoef);
+	idlePid->setErrorAmplification(errorAmpCoef);
 
-	percent_t newValue = getIdlePid(PASS_ENGINE_PARAMETER_SIGNATURE)->getOutput(targetRpm, rpm, SLOW_CALLBACK_PERIOD_MS / 1000.0f);
+	percent_t newValue = idlePid->getOutput(targetRpm, rpm, SLOW_CALLBACK_PERIOD_MS / 1000.0f);
 	engine->engineState.idle.idleState = PID_VALUE;
 
 	// the state of PID has been changed, so we might reset it now, but only when needed (see idlePidDeactivationTpsThreshold)
@@ -410,7 +423,7 @@ static percent_t automaticIdleController(float tpsPos, float rpm, int targetRpm,
 		float engineLoad = getFuelingLoad(PASS_ENGINE_PARAMETER_SIGNATURE);
 		float multCoef = iacPidMultMap.getValue(rpm / RPM_1_BYTE_PACKING_MULT, engineLoad);
 		// PID can be completely disabled of multCoef==0, or it just works as usual if multCoef==1
-		newValue = interpolateClamped(0.0f, engine->engineState.idle.baseIdlePosition, 1.0f, newValue, multCoef);
+		newValue = interpolateClamped(0, engine->engineState.idle.baseIdlePosition, 1.0f, newValue, multCoef);
 	}
 	
 	// Apply PID Deactivation Threshold as a smooth taper for TPS transients.
@@ -513,7 +526,7 @@ static percent_t automaticIdleController(float tpsPos, float rpm, int targetRpm,
 				// let's re-apply CLT correction
 				iacPosition = manualIdleController(cltCorrection PASS_ENGINE_PARAMETER_SUFFIX);
 			} else {
-				iacPosition = automaticIdleController(tps.Value, rpm, targetRpm, phase PASS_ENGINE_PARAMETER_SUFFIX);
+				iacPosition = getClosedLoop(phase, tps.Value, rpm, targetRpm);
 			}
 			
 			iacPosition = clampPercentValue(iacPosition);

@@ -690,7 +690,7 @@ trigger_config_s trigger;
 custom spi_device_e 1 bits, U08,   @OFFSET@, [0:2], "Off", "SPI1", "SPI2", "SPI3", "SPI4", "INVALID", "INVALID", "INVALID" 
 	spi_device_e hip9011SpiDevice;
 	uint8_t failedMapFallback;+This value is only used for speed density fueling calculations.;"kPa",      1,     0,    0, 100,     0
-	uint8_t unused542;;"unit",      1,     0,    0, 100,     0
+	uint8_t boostControlSafeDutyCycle;+Duty cycle to use in case of a sensor failure.  This duty cycle should produce the minimum possible amount of boost.;"%",1,0,0,100,0
 	adc_channel_e mafAdcChannel 
 
 float globalFuelCorrection;set global_fuel_correction X;"coef",    1,      0.0,       0,  1000.0,        2
@@ -808,7 +808,7 @@ custom adc_channel_mode_e 4 bits,    U32,   @OFFSET@, [0:1], "Off", "Slow", "Fas
 	brain_pin_e canRxPin;set_can_rx_pin X
 
 pin_input_mode_e throttlePedalUpPinMode;
-		uint8_t fsio_visible acIdleExtraOffset;+Additional idle PID offset while A/C is active;"Percent", 1, 0, 0, 255, 0
+	uint8_t fsio_visible acIdleExtraOffset;+Additional idle % while A/C is active;"%", 1, 0, 0, 100, 0
 
 	int can2SleepPeriodMs;+CANbus thread period, ms;"ms",    1,      0,       0,  1000.0,        2
 	uint16_t wastegatePositionMin;+Voltage when the wastegate is closed.\nYou probably don't have one of these!;"mv", 1, 0, 0, 5000, 0
@@ -851,7 +851,7 @@ bit is_enabled_spi_2
 	bit vvtCamSensorUseRise;+Use rise or fall signal front\nget vvtCamSensorUseRise
 	bit measureMapOnlyInOneCylinder;+Useful for individual intakes
 	bit stepperForceParkingEveryRestart
-	bit isFasterEngineSpinUpEnabled;+Smarter cranking logic.\nSee also startOfCrankingPrimingPulse
+	bit isFasterEngineSpinUpEnabled;+If enabled, try to fire the engine before a full engine cycle has been completed using RPM estimated from the last 90 degrees of engine rotation.  As soon as the trigger syncs plus 90 degrees rotation, fuel and ignition events will occur.  If disabled, worst case may require up to 4 full crank rotations before any events are scheduled.
 	bit coastingFuelCutEnabled;+This setting disables fuel injection while the engine is in overrun, this is useful as a fuel saving measure and to prevent back firing.
 	bit useIacTableForCoasting;+This setting allows the ECU to open the IAC during overrun conditions to help reduce engine breaking, this can be helpful for large engines in light weight cars. Used in Auto-PID Idle mode.
 	bit useNoiselessTriggerDecoder
@@ -1064,7 +1064,7 @@ custom maf_sensor_type_e 4 bits, S32, @OFFSET@, [0:1], @@maf_sensor_type_e_enum@
 	bit fuelClosedLoopCorrectionEnabled;+Enables lambda sensor closed loop feedback for fuelling.
 	bit isVerboseIAC;+Print details into rusEfi console\nenable verbose_idle
 	bit isVerboseETB;+Prints ETB details to rusEFI console
-	bit useConstantDwellDuringCranking;+If set to true, will use the specified duration for cranking dwell. If set to false, will use the specified dwell angle.  Unless you have a really good reason to, leave this set to true to use duration mode.
+	bit useConstantDwellDuringCranking,"Time-based","Angle-based";+If set to true, will use the specified duration for cranking dwell. If set to false, will use the specified dwell angle.  Unless you have a really good reason to, leave this set to true to use duration mode.
 	bit isEngineChartEnabled;+This options enables data for 'engine sniffer' tab in console, which comes at some CPU price 
 	bit silentTriggerError;+Sometimes we have a performance issue while printing error
 	bit useLinearCltSensor
@@ -1108,7 +1108,7 @@ custom idle_mode_e 4 bits,    U32,   @OFFSET@, [0:0], "Automatic", "Manual"
 	bit unused1476b3
 	bit unusedBit4_1476
 	bit isMapAveragingEnabled
-	bit overrideCrankingIacSetting;+This setting overrides the normal multiplication values that have been set for the idle air control valve during cranking. If this setting is enabled the "IAC multiplier" table in the Cranking settings tab needs to be adjusted appropriately or potentially no IAC opening will occur.
+	bit overrideCrankingIacSetting;+If enabled, use separate temperature multiplier table for cranking idle position.\nIf disabled, use normal running multiplier table applied to the cranking base position.
 	bit useSeparateAdvanceForIdle;+This activates a separate ignition timing table for idle conditions, this can help idle stability by using ignition retard and advance either side of the desired idle speed. Extra retard at low idle speeds will prevent stalling and extra advance at high idle speeds can help reduce engine power and slow the idle speed.
 	bit unused1476b8
 	bit isWaveAnalyzerEnabled
@@ -1119,8 +1119,8 @@ custom idle_mode_e 4 bits,    U32,   @OFFSET@, [0:0], "Automatic", "Manual"
 	bit useOnlyRisingEdgeForTrigger;+VR sensors are only precise on rising front\nenable trigger_only_front
 	bit twoWireBatchIgnition;+This is needed if your coils are individually wired (COP) and you wish to use batch ignition (Wasted Spark).
 bit useFixedBaroCorrFromMap
-bit useSeparateAdvanceForCranking,"Table (untapered)","Tapered Constant";+This activates a separate advance table for cranking conditions, this allows cranking advance to be RPM dependant.
-bit useAdvanceCorrectionsForCranking;+This enables the various ignition corrections during cranking (IAT, CLT, FSIO and PID idle).
+bit useSeparateAdvanceForCranking,"Table","Fixed (auto taper)";+In Constant mode, timing is automatically tapered to running as RPM increases.\nIn Table mode, the "Cranking ignition advance" table is used directly.
+bit useAdvanceCorrectionsForCranking;+This enables the various ignition corrections during cranking (IAT, CLT, FSIO and PID idle).\nYou probably don't need this.
 bit unused1476b19
 bit unused1476b20
 bit useIacPidMultTable;+This flag allows to use a special 'PID Multiplier' table (0.0-1.0) to compensate for nonlinear nature of IAC-RPM controller
@@ -1322,7 +1322,7 @@ float[MAP_ACCEL_TAPER] mapAccelTaperMult;;"mult",      1,     0,   0.0,    300, 
 	float tChargeMaxRpmMaxTps;;"mult",        1,     0,  0,    3,  4   
 
 	fsio_pwm_freq_t[CAMS_PER_BANK iterate] auxPidFrequency;
-	uint8_t unused1301;;"units", 1, 0, -20, 100, 0
+	uint8_t fan1ExtraIdle;+Additional idle % when fan #1 is active;"%", 1, 0, 0, 100, 0
 	int alternatorPwmFrequency;;"Hz",        1,     0,  0,    3000.0,  0
 	int unused2260;;"units", 1, 0, -20, 100, 0
 
@@ -1330,7 +1330,8 @@ float[MAP_ACCEL_TAPER] mapAccelTaperMult;;"mult",      1,     0,   0.0,    300, 
 	float[NARROW_BAND_WIDE_BAND_CONVERSION_SIZE] narrowToWideOxygen;;"ratio",      1,     0,      -40.0,    40.0,   2
 	vvt_mode_e[CAMS_PER_BANK iterate] vvtMode;set vvt_mode X
 	uint8_t[CAMS_PER_BANK_padding] vvtModePadding;;
-	uint8_t[22] unusedOldBiquad;;"units", 1, 0, -20, 100, 0
+	uint8_t fan2ExtraIdle;+Additional idle % when fan #2 is active;"%", 1, 0, 0, 100, 0
+	uint8_t[21] unusedOldBiquad;;"units", 1, 0, -20, 100, 0
 	float[CLT_TIMING_CURVE_SIZE] cltTimingBins;CLT-based timing correction;"C",        1,     0,   -100.0,    250.0,  1
 	float[CLT_TIMING_CURVE_SIZE] cltTimingExtra;;"degree",      1,     0,      -400.0,    400.0,   0
 custom tle8888_mode_e 1 bits, U08, @OFFSET@, [0:1], "Auto", "SemiAuto", "Manual", "Hall"
@@ -1347,7 +1348,7 @@ tle8888_mode_e tle8888mode;
 	float unused244_3;;"units", 1, 0, -20, 100, 0
 	float unused2432;;"units", 1, 0, -20, 100, 0
 	float postCrankingFactor;+Fuel multiplier (enrichment) immediately after engine start;"mult",        1,     0,  1,    3,  2
-	float postCrankingDurationSec;+Time over which to taper out after start enrichment;"seconds",        1,     0,  0,    30,  2
+	float postCrankingDurationSec;+Time over which to taper out after start enrichment;"seconds",        1,     0,  0,    30,  0
 	ThermistorConf auxTempSensor1;todo: finish implementation #332
 	ThermistorConf auxTempSensor2;todo: finish implementation #332
 	uint8_t[6] unused2508;;"units", 1, 0, -20, 100, 0

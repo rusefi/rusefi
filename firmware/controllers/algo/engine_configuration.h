@@ -60,6 +60,3 @@ void rememberCurrentConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 
 void setBoardDefaultConfiguration(void);
 void setBoardConfigOverrides(void);
-
-// TODO: remove me
-#define CONFIG_OVERRIDE(__x__) CONFIG(__x__)
