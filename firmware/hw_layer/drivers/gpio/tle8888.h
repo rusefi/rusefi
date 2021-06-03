@@ -56,7 +56,7 @@ struct tle8888_config {
 	/* IN9..IN12 to output mapping */
 	struct {
 		/* ...used to drive output (starts from 1, as in DS, coders gonna hate) */
-		int 			output;
+		uint8_t 			output;
 	} direct_maps[TLE8888_DIRECT_MISC];
 	struct {
 		ioportid_t		port;
