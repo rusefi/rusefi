@@ -1,0 +1,76 @@
+#include "defaults.h"
+#include "engine_configuration.h"
+#include "engine_math.h"
+#include "table_helper.h"
+
+EXTERN_CONFIG;
+
+static void setDefaultMultisparkParameters(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+	// 1ms spark + 2ms dwell
+	engineConfiguration->multisparkSparkDuration = 1000;
+	engineConfiguration->multisparkDwell = 2000;
+
+	// Conservative defaults - probably won't blow up coils
+	engineConfiguration->multisparkMaxRpm = 1500;
+	engineConfiguration->multisparkMaxExtraSparkCount = 2;
+	engineConfiguration->multisparkMaxSparkingAngle = 30;
+}
+
+static void setDefaultIatTimingCorrection(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+	setLinearCurve(config->ignitionIatCorrLoadBins, /*from*/CLT_CURVE_RANGE_FROM, 110, 1);
+#if IGN_LOAD_COUNT == DEFAULT_IGN_LOAD_COUNT
+	copyArray(config->ignitionIatCorrRpmBins, iatTimingRpmBins);
+
+	static constexpr int8_t defaultIatCorr[16] = {
+		4,	// -40 deg
+		4,
+		3,
+		2,
+		0,	// 0 deg
+		0,
+		0,
+		0,
+		0,
+		-1,	// 50 deg
+		-2,
+		-4,
+		-4,
+		-4,
+		-4,
+		-4,	// 110 deg
+	};
+
+	// Set each row of the table to the same value (no rpm dependence by default)
+	for (size_t i = 0; i < efi::size(defaultIatCorr); i++) {
+		setArrayValues(config->ignitionIatCorrTable[i], (float)defaultIatCorr[i]);
+	}
+#else
+	setLinearCurve(config->ignitionIatCorrLoadBins, /*from*/0, 6000, 1);
+#endif /* IGN_LOAD_COUNT == DEFAULT_IGN_LOAD_COUNT */
+}
+
+void setDefaultIgnition(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
+	// Ignition base settings
+	CONFIG(isIgnitionEnabled) = true;
+
+	engineConfiguration->timingMode = TM_DYNAMIC;
+	engineConfiguration->fixedModeTiming = 50;
+
+	// Dwell table
+	setConstantDwell(4 PASS_CONFIG_PARAMETER_SUFFIX);
+
+	// Multispark
+	setDefaultMultisparkParameters(PASS_CONFIG_PARAMETER_SIGNATURE);
+
+	// Ignition advance table
+	// TODO: populate some values that aren't all 0?
+	setTimingLoadBin(1.2, 4.4 PASS_CONFIG_PARAMETER_SUFFIX);
+	setTimingRpmBin(800, 7000 PASS_CONFIG_PARAMETER_SUFFIX);
+
+	// CLT correction
+	setLinearCurve(engineConfiguration->cltTimingBins, CLT_CURVE_RANGE_FROM, 120, 1);
+	setArrayValues(engineConfiguration->cltTimingExtra, 0);
+
+	// IAT correction
+	setDefaultIatTimingCorrection(PASS_ENGINE_PARAMETER_SIGNATURE);
+}

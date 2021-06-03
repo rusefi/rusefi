@@ -216,7 +216,7 @@ void setConstantDwell(floatms_t dwellMs DECLARE_CONFIG_PARAMETER_SUFFIX) {
 	for (int i = 0; i < DWELL_CURVE_SIZE; i++) {
 		engineConfiguration->sparkDwellRpmBins[i] = 1000 * i;
 	}
-	setLinearCurve(engineConfiguration->sparkDwellValues, dwellMs, dwellMs, 0.01);
+	setArrayValues(engineConfiguration->sparkDwellValues, dwellMs);
 }
 
 void setWholeIgnitionIatCorr(float value DECLARE_CONFIG_PARAMETER_SUFFIX) {
@@ -436,17 +436,6 @@ void setTargetRpmCurve(int rpm DECLARE_CONFIG_PARAMETER_SUFFIX) {
 	setLinearCurve(engineConfiguration->cltIdleRpm, rpm, rpm, 10);
 }
 
-static void setDefaultMultisparkParameters(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
-	// 1ms spark + 2ms dwell
-	engineConfiguration->multisparkSparkDuration = 1000;
-	engineConfiguration->multisparkDwell = 2000;
-
-	// Conservative defaults - probably won't blow up coils
-	engineConfiguration->multisparkMaxRpm = 1500;
-	engineConfiguration->multisparkMaxExtraSparkCount = 2;
-	engineConfiguration->multisparkMaxSparkingAngle = 30;
-}
-
 void setDefaultGppwmParameters(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	// Same config for all channels
 	for (size_t i = 0; i < efi::size(CONFIG(gppwm)); i++) {
@@ -548,6 +537,7 @@ static void setDefaultEngineConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 
 	setDefaultBaseEngine(PASS_CONFIG_PARAMETER_SIGNATURE);
 	setDefaultFuel(PASS_CONFIG_PARAMETER_SIGNATURE);
+	setDefaultIgnition(PASS_CONFIG_PARAMETER_SIGNATURE);
 
 #if EFI_IDLE_CONTROL
 	setDefaultIdleParameters(PASS_CONFIG_PARAMETER_SIGNATURE);
@@ -601,9 +591,6 @@ static void setDefaultEngineConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	engineConfiguration->alternatorControl.minValue = 10;
 	engineConfiguration->alternatorControl.maxValue = 90;
 
-	setLinearCurve(engineConfiguration->cltTimingBins, CLT_CURVE_RANGE_FROM, 120, 1);
-	setLinearCurve(engineConfiguration->cltTimingExtra, 0, 0, 1);
-
 	setLinearCurve(engineConfiguration->fsioCurve1Bins, 0, 100, 1);
 	setLinearCurve(engineConfiguration->fsioCurve1, 0, 100, 1);
 
@@ -617,26 +604,16 @@ static void setDefaultEngineConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	setDefaultWarmupIdleCorrection(PASS_CONFIG_PARAMETER_SIGNATURE);
 
 	/**
-	 * 4ms is global default dwell for the whole RPM range
-	 * if you only have one coil and many cylinders or high RPM you would need lower value at higher RPM
-	 */
-	setConstantDwell(4 PASS_CONFIG_PARAMETER_SUFFIX);
-	/**
 	 * Use angle-based duration during cranking
 	 * this is equivalent to 'disable cranking_constant_dwell' console command
 	 */
 	engineConfiguration->useConstantDwellDuringCranking = true;
 	engineConfiguration->ignitionDwellForCrankingMs = 6;
 
-	setTimingLoadBin(1.2, 4.4 PASS_CONFIG_PARAMETER_SUFFIX);
-	setTimingRpmBin(800, 7000 PASS_CONFIG_PARAMETER_SUFFIX);
-
 	setLinearCurve(engineConfiguration->map.samplingAngleBins, 800, 7000, 1);
 	setLinearCurve(engineConfiguration->map.samplingAngle, 100, 130, 1);
 	setLinearCurve(engineConfiguration->map.samplingWindowBins, 800, 7000, 1);
 	setLinearCurve(engineConfiguration->map.samplingWindow, 50, 50, 1);
-
-	setDefaultIatTimingCorrection(PASS_ENGINE_PARAMETER_SIGNATURE);
 
 	setLinearCurve(config->vvtTable1LoadBins, 20, 120, 10);
 	setRpmTableBin(config->vvtTable1RpmBins, FSIO_TABLE_8);
@@ -703,10 +680,6 @@ static void setDefaultEngineConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	 */
 	engineConfiguration->cranking.baseFuel = 27;
 	engineConfiguration->crankingChargeAngle = 70;
-
-
-	engineConfiguration->timingMode = TM_DYNAMIC;
-	engineConfiguration->fixedModeTiming = 50;
 
 	setDefaultMultisparkParameters(PASS_ENGINE_PARAMETER_SIGNATURE);
 
@@ -776,8 +749,6 @@ static void setDefaultEngineConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 #endif
 
 	engineConfiguration->primingSquirtDurationMs = 5;
-
-	engineConfiguration->isIgnitionEnabled = true;
 
 	engineConfiguration->isMapAveragingEnabled = true;
 	engineConfiguration->isWaveAnalyzerEnabled = true;

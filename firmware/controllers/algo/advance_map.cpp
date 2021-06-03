@@ -219,39 +219,6 @@ size_t getMultiSparkCount(int rpm DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	}
 }
 
-void setDefaultIatTimingCorrection(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
-	setLinearCurve(config->ignitionIatCorrLoadBins, /*from*/CLT_CURVE_RANGE_FROM, 110, 1);
-#if IGN_LOAD_COUNT == DEFAULT_IGN_LOAD_COUNT
-	copyArray(config->ignitionIatCorrRpmBins, iatTimingRpmBins);
-
-	static constexpr int8_t defaultIatCorr[16] = {
-		4,	// -40 deg
-		4,
-		3,
-		2,
-		0,	// 0 deg
-		0,
-		0,
-		0,
-		0,
-		-1,	// 50 deg
-		-2,
-		-4,
-		-4,
-		-4,
-		-4,
-		-4,	// 110 deg
-	};
-
-	// Set each row of the table to the same value (no rpm dependence by default)
-	for (size_t i = 0; i < efi::size(defaultIatCorr); i++) {
-		setArrayValues(config->ignitionIatCorrTable[i], (float)defaultIatCorr[i]);
-	}
-#else
-	setLinearCurve(config->ignitionIatCorrLoadBins, /*from*/0, 6000, 1);
-#endif /* IGN_LOAD_COUNT == DEFAULT_IGN_LOAD_COUNT */
-}
-
 void initTimingMap(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	// We init both tables in RAM because here we're at a very early stage, with no config settings loaded.
 	advanceMap.init(config->ignitionTable, config->ignitionLoadBins,
