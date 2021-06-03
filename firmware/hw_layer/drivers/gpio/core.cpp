@@ -221,11 +221,9 @@ int gpiochips_setPinNames(brain_pin_e base, const char **names)
 
 int gpiochips_init(void)
 {
-	int i;
-	int ret = -1;
 	int pins_added = 0;
 
-	for (i = 0; i < BOARD_EXT_GPIOCHIPS; i++) {
+	for (int i = 0; i < BOARD_EXT_GPIOCHIPS; i++) {
 		gpiochip *chip = &chips[i];
 
 		if (!chip->base)
