@@ -5,7 +5,7 @@
 
 EXTERN_CONFIG;
 
-static void setDefaultMultisparkParameters(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+static void setDefaultMultisparkParameters(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	// 1ms spark + 2ms dwell
 	engineConfiguration->multisparkSparkDuration = 1000;
 	engineConfiguration->multisparkDwell = 2000;
@@ -16,7 +16,9 @@ static void setDefaultMultisparkParameters(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	engineConfiguration->multisparkMaxSparkingAngle = 30;
 }
 
-static void setDefaultIatTimingCorrection(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+static constexpr float iatTimingRpmBins[] = { 880, 1260, 1640, 2020, 2400, 2780, 3000, 3380, 3760, 4140, 4520, 5000, 5700, 6500, 7200, 8000 };
+
+static void setDefaultIatTimingCorrection(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	setLinearCurve(config->ignitionIatCorrLoadBins, /*from*/CLT_CURVE_RANGE_FROM, 110, 1);
 #if IGN_LOAD_COUNT == DEFAULT_IGN_LOAD_COUNT
 	copyArray(config->ignitionIatCorrRpmBins, iatTimingRpmBins);
@@ -69,8 +71,8 @@ void setDefaultIgnition(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 
 	// CLT correction
 	setLinearCurve(engineConfiguration->cltTimingBins, CLT_CURVE_RANGE_FROM, 120, 1);
-	setArrayValues(engineConfiguration->cltTimingExtra, 0);
+	setArrayValues(engineConfiguration->cltTimingExtra, 0.0f);
 
 	// IAT correction
-	setDefaultIatTimingCorrection(PASS_ENGINE_PARAMETER_SIGNATURE);
+	setDefaultIatTimingCorrection(PASS_CONFIG_PARAMETER_SIGNATURE);
 }

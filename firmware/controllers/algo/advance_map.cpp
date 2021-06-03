@@ -40,11 +40,6 @@ static ign_Map3D_t iatAdvanceCorrectionMap("iat corr");
 // todo: reset this between cranking attempts?! #2735
 int minCrankingRpm = 0;
 
-#if IGN_LOAD_COUNT == DEFAULT_IGN_LOAD_COUNT
-static const float iatTimingRpmBins[IGN_LOAD_COUNT] = {880,	1260,	1640,	2020,	2400,	2780,	3000,	3380,	3760,	4140,	4520,	5000,	5700,	6500,	7200,	8000};
-
-#endif /* IGN_LOAD_COUNT == DEFAULT_IGN_LOAD_COUNT */
-
 /**
  * @return ignition timing angle advance before TDC
  */
