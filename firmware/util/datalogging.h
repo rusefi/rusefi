@@ -47,7 +47,7 @@ public:
 	}
 
 //private:
-	bool validateBuffer(const char *text, uint32_t extraLen);
+	bool validateBuffer(uint32_t extraLen);
 
 	const char* const name = nullptr;
 
