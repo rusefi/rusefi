@@ -210,8 +210,6 @@ struct Tle8888 : public GpioChip {
 
 	int chip_init_data();
 
-	void req_init();
-
 	const tle8888_config	*cfg;
 
 	/* thread stuff */
@@ -1275,10 +1273,12 @@ void Tle8888::read_reg(uint16_t reg, uint16_t *val)
 	spi_rw(CMD_R(reg), val);
 }
 
-void Tle8888::req_init()
+void tle8888_req_init()
 {
-	need_init = true;
-	init_req_cnt++;
+	auto& tle = chips[0];
+
+	tle.need_init = true;
+	tle.init_req_cnt++;
 }
 
 #else /* BOARD_TLE8888_COUNT > 0 */
