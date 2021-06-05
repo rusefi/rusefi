@@ -48,7 +48,7 @@ pins:
   - pin: 21a
     id: GPIOI_2
     class: outputs
-    ts_name: 21 - MAIN 
+    ts_name: 21 - Main Relay
     function: OUT_MAIN
     type: ls
    
@@ -195,7 +195,11 @@ pins:
     function: OUT_FUEL_CONSUMPTION
     
   - pin: 82a
-    function: IN_CRANK+
+    function: Crank Sensor
+    id: [GPIOB_1]
+    class: [event_inputs]
+    ts_name: 82 - VR
+
     
   - pin: 83a
     function: 5v
