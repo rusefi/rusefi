@@ -148,6 +148,11 @@ void setBoardDefaultConfiguration(void) {
 	setInjectorPins();
 	setIgnitionPins();
 
+	engineConfiguration->etbIo[0].directionPin1 = GPIOC_6; // out_pwm2
+	engineConfiguration->etbIo[0].directionPin2 = GPIOC_7; // out_pwm3
+	engineConfiguration->etbIo[0].controlPin1 = GPIOA_8; // ETB_EN out_io12
+	CONFIG(etb_use_two_wires) = true;
+
 	engineConfiguration->isSdCardEnabled = true;
 
 	CONFIG(enableSoftwareKnock) = true;
