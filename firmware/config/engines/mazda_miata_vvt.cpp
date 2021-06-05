@@ -469,7 +469,7 @@ void setMazdaMiata2003EngineConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	// PWM
 	CONFIG(etb_use_two_wires) = true;
 
-	engineConfiguration->etbIo[0].controlPin1 = GPIO_UNASSIGNED;
+	engineConfiguration->etbIo[0].controlPin = GPIO_UNASSIGNED;
 
 	//
 	engineConfiguration->etbIo[0].directionPin1 = GPIOE_12; // orange

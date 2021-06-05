@@ -66,7 +66,7 @@ static void setupTle9201Etb() {
 	// This chip has PWM/DIR, not dira/dirb
 	engineConfiguration->etb_use_two_wires = false;
 	// PWM and DIR pins
-	engineConfiguration->etbIo[0].controlPin1 = GPIOC_7;
+	engineConfiguration->etbIo[0].controlPin = GPIOC_7;
 	engineConfiguration->etbIo[0].directionPin1 = GPIOA_8;
 	engineConfiguration->etbIo[0].directionPin2 = GPIO_UNASSIGNED;
 }
