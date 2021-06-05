@@ -732,7 +732,7 @@ end_struct
 struct dc_io
 	brain_pin_e directionPin1;
 	brain_pin_e directionPin2;
-	brain_pin_e controlPin1;Acts as EN pin in two-wire mode
+	brain_pin_e controlPin;Acts as EN pin in two-wire mode
 	brain_pin_e disablePin;
 end_struct
 	
