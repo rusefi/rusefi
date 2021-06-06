@@ -10,9 +10,13 @@
  * @author Andrey Belomutskiy, (c) 2012-2021
  */
 
-#include "pch.h"
+#include "global.h"
+#include "engine.h"
+#include "engine_math.h"
+#include "allsensors.h"
 #include "fsio_impl.h"
-#include "../hellen_meta.h"
+#include "engine_configuration.h"
+
 
 static void setInjectorPins() {
 	engineConfiguration->injectionPins[0] = GPIOG_7;
@@ -158,7 +162,7 @@ void setBoardDefaultConfiguration(void) {
 	setOperationMode(engineConfiguration, FOUR_STROKE_CRANK_SENSOR);
 	engineConfiguration->trigger.type = TT_TOOTHED_WHEEL_60_2;
 	engineConfiguration->useOnlyRisingEdgeForTrigger = true;
-	setAlgorithm(LM_SPEED_DENSITY);
+	setAlgorithm(LM_SPEED_DENSITY PASS_CONFIG_PARAMETER_SUFFIX);
 
 	engineConfiguration->specs.cylindersCount = 4;
 	engineConfiguration->specs.firingOrder = FO_1_3_4_2;
@@ -173,6 +177,17 @@ void setBoardDefaultConfiguration(void) {
  * @todo    Add your board-specific code, if any.
  */
 void setSdCardConfigurationOverrides(void) {
+// Hellen81a uses SPI2 for SD-card
+#if 1
+	engineConfiguration->sdCardSpiDevice = SPI_DEVICE_2;
+
+	engineConfiguration->spi2mosiPin = GPIOB_15;
+	engineConfiguration->spi2misoPin = GPIOB_14;
+	engineConfiguration->spi2sckPin = GPIOB_13;
+	engineConfiguration->sdCardCsPin = GPIOB_12;
+
+	CONFIG(is_enabled_spi_2) = true;
+#else
 	engineConfiguration->sdCardSpiDevice = SPI_DEVICE_3;
 
 	engineConfiguration->spi3mosiPin = GPIOC_12;
@@ -180,9 +195,6 @@ void setSdCardConfigurationOverrides(void) {
 	engineConfiguration->spi3sckPin = GPIOC_10;
 	engineConfiguration->sdCardCsPin = GPIOA_15;
 
-//	engineConfiguration->spi2mosiPin = GPIOB_15;
-//	engineConfiguration->spi2misoPin = GPIOB_14;
-//	engineConfiguration->spi2sckPin = GPIOB_13;
-//	engineConfiguration->sdCardCsPin = GPIOB_12;
-	engineConfiguration->is_enabled_spi_3 = true;
+	CONFIG(is_enabled_spi_3) = true;
+#endif
 }

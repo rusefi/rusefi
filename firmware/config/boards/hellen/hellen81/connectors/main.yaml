@@ -98,7 +98,7 @@ pins:
 
   - pin: 14
     function: Main Relay Output
-    id: GPIOH_13
+    id: GPIOI_2
     class: outputs
     ts_name: 14 - OUT_MAIN
     type: ls
@@ -511,7 +511,6 @@ pins:
     function: CAN-L (ME7.8.8-compatible)
 
 info:
-  title: Hellen 81
   image:
     file: main.jpg
   pins:
