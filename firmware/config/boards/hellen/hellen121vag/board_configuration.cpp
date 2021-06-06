@@ -155,6 +155,12 @@ void setBoardDefaultConfiguration(void) {
 
 	engineConfiguration->isSdCardEnabled = true;
 
+	// todo: should this be a global default not just Hellen121?
+	engineConfiguration->boostCutPressure = 200;
+
+	engineConfiguration->vvtMode[0] = VVT_BOSCH_QUICK_START;
+	engineConfiguration->map.sensor.type = MT_BOSCH_2_5;
+
 	CONFIG(enableSoftwareKnock) = true;
 
 	engineConfiguration->canTxPin = GPIOD_1;
