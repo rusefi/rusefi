@@ -5,6 +5,8 @@
 
 EXTERN_CONFIG
 
+#define vRange(x,y,z) (x > (y-z) && x < (y+z))
+
 void GearControllerBase::init(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
     for (int i = 0; i < TCU_INPUT_COUNT; i++) {
         if (CONFIG(tcuInputMode)) {
@@ -47,6 +49,17 @@ int GearControllerBase::getInputRoleD() {
     for (int i = 0; i < TCU_INPUT_COUNT; i++) {
         states[i] = tcuDigitalInputs[i].readPinState();
     }
+    for (int i = 0; i < TCU_STATE_COUNT; i++) {
+        for (int ii = 0; ii < TCU_INPUT_COUNT; ii++) {
+            if ((config->tcuInputTable[ii][i] != states[i]) && (config->tcuInputTable[ii][i] >= 0)) {
+                break;
+            }
+            if (ii == (TCU_INPUT_COUNT - 1)) {
+                return i;
+            }
+        }
+    }
+    return -1;
 }
 
 int GearControllerBase::getInputRoleA() {
@@ -54,6 +67,17 @@ int GearControllerBase::getInputRoleA() {
     for (int i = 0; i < TCU_INPUT_COUNT; i++) {
         levels[i] = adcToVolts(getAdcValue("tcuinput", tcuAnalogInputs[i]));
     }
+    for (int i = 0; i < TCU_STATE_COUNT; i++) {
+        for (int ii = 0; ii < TCU_INPUT_COUNT; ii++) {
+            if (!(vrange(levels(i),config->tcuInputTable[ii][i],config->tcuAnalogInputTolerance) && (config->tcuInputTable[ii][i] >= 0)) {
+                break;
+            }
+            if (ii == (TCU_INPUT_COUNT - 1)) {
+                return i;
+            }
+        }
+    }
+    return -1;
 }
 
 brain_pin_e* GearControllerBase::getDigitalInputPin(int input) {
