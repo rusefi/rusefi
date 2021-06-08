@@ -161,6 +161,11 @@ void RpmCalculator::setRpmValue(float value) {
 	if (rpmValue == 0) {
 		state = STOPPED;
 	} else if (rpmValue >= CONFIG(cranking.rpm)) {
+		if (state != RUNNING) {
+			// Store the time the engine started
+			engineStartTimer.reset();
+		}
+
 		state = RUNNING;
 	} else if (state == STOPPED || state == SPINNING_UP) {
 		/**
@@ -309,6 +314,10 @@ void rpmShaftPositionCallback(trigger_event_e ckpSignalType,
 		efiPrintf("** RPM: idx=%d sig=%d iRPM=%d", index, ckpSignalType, instantRpm);
 #endif
 	}
+}
+
+float RpmCalculator::getTimeSinceEngineStart(efitick_t nowNt) const {
+	return engineStartTimer.getElapsedSeconds(nowNt);
 }
 
 static scheduling_s tdcScheduler[2];

@@ -4,7 +4,7 @@
 
 EXTERN_ENGINE;
 
-void LimpManager::updateState(int rpm) {
+void LimpManager::updateState(int rpm, efitick_t nowNt) {
 	Clearable allowFuel = CONFIG(isInjectionEnabled);
 	Clearable allowSpark = CONFIG(isIgnitionEnabled);
 
@@ -31,18 +31,31 @@ void LimpManager::updateState(int rpm) {
 		}
 	}
 
-	{
+	if (ENGINE(rpmCalculator).isRunning()) {
 		uint16_t minCrankingOilPressure = CONFIG(minCrankingOilPressure);
 
-		// Only check if the setting is enabled and we're cranking
-		if (minCrankingOilPressure > 0 && ENGINE(rpmCalculator).isCranking()) {
+		// Only check if the setting is enabled
+		if (minCrankingOilPressure > 0) {
 			auto oilp = Sensor::get(SensorType::OilPressure);
 
-			// If the sensor is working and pressure is too low, cut fuel
-			if (oilp && oilp.Value < minCrankingOilPressure) {
-				allowFuel.clear();
+			if (oilp) {
+				// We had oil pressure! Set the flag.
+				if (oilp.Value > minCrankingOilPressure) {
+					m_hadOilPressureAfterStart = true;
+				}
+
+				// Has it been long enough we should have pressure?
+				bool isTimedOut = ENGINE(rpmCalculator).getTimeSinceEngineStart(nowNt) > 5.0f;
+
+				// If time is up, the sensor works, and no pressure, kill the engine.
+				if (isTimedOut && !m_hadOilPressureAfterStart) {
+					allowFuel.clear();
+				}
 			}
 		}
+	} else {
+		// reset state in case of stalled engine
+		m_hadOilPressureAfterStart = false;
 	}
 
 	m_transientAllowInjection = allowFuel;

@@ -177,7 +177,7 @@ void EngineState::periodicFastCallback(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	updateLaunchConditions(PASS_ENGINE_PARAMETER_SIGNATURE);
 #endif //EFI_LAUNCH_CONTROL
 
-	engine->limpManager.updateState(rpm);
+	engine->limpManager.updateState(rpm, nowNt);
 
 #endif // EFI_ENGINE_CONTROL
 }

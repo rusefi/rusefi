@@ -27,7 +27,7 @@ public:
 	DECLARE_ENGINE_PTR;
 
 	// This is called from periodicFastCallback to update internal state
-	void updateState(int rpm);
+	void updateState(int rpm, efitick_t nowNt);
 
 	// Other subsystems call these APIs to determine their behavior
 	bool allowElectronicThrottle() const;
@@ -54,4 +54,6 @@ private:
 
 	bool m_transientAllowInjection = true;
 	bool m_transientAllowIgnition = true;
+
+	bool m_hadOilPressureAfterStart = false;
 };
