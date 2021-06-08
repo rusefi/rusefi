@@ -18,8 +18,9 @@ public:
 private:
     gear_e desiredGear = NEUTRAL;
 protected:
-    adc_channel_e getAnalogInputPin;
-    brain_pin_e getDigitalInputPin;
+    adc_channel_e getAnalogInputPin(int);
+    brain_pin_e getDigitalInputPin(int);
+    pin_input_mode_e getDigitalInputPinMode(int);
     int getInputRoleD();
     int getInputRoleA();
     ButtonDebounce tcuDigitalInputs[TCU_INPUT_COUNT];

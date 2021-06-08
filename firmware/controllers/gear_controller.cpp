@@ -6,7 +6,7 @@
 EXTERN_CONFIG
 
 void GearControllerBase::init(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
-    for (var i = 0; i < TCU_INPUT_COUNT; i++) {
+    for (int i = 0; i < TCU_INPUT_COUNT; i++) {
         if (CONFIG(tcuInputMode)) {
             tcuDigitalInputs[i].init(10, getDigitalInputPin(i), getDigitalInputPinMode(i))
         } else {
