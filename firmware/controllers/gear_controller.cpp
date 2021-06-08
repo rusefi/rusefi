@@ -71,6 +71,7 @@ brain_pin_e GearControllerBase::getDigitalInputPin(int input) {
         case 6:
             return CONFIG(tcuInputPin6D);
     }
+    return 0;
 }
 
 pin_input_mode_e GearControllerBase::getDigitalInputPinMode(int input) {
@@ -88,6 +89,7 @@ pin_input_mode_e GearControllerBase::getDigitalInputPinMode(int input) {
         case 6:
             return CONFIG(tcuInputPin6Mode);
     }
+    return 0;
 }
 
 adc_channel_e GearControllerBase::getAnalogInputPin(int input) {
@@ -105,6 +107,7 @@ adc_channel_e GearControllerBase::getAnalogInputPin(int input) {
         case 6:
             return CONFIG(tcuInputPin6A);
     }
+    return 0;
 }
 
 void GearControllerBase::postState() {
