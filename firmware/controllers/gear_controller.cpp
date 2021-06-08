@@ -8,9 +8,9 @@ EXTERN_CONFIG
 void GearControllerBase::init(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
     for (int i = 0; i < TCU_INPUT_COUNT; i++) {
         if (CONFIG(tcuInputMode)) {
-            tcuDigitalInputs[i].init(10, getDigitalInputPin(i), getDigitalInputPinMode(i))
+            tcuDigitalInputs[i].init(10, getDigitalInputPin(i), getDigitalInputPinMode(i));
         } else {
-            tcuAnalogInputs[i] = getAnalogInputPin(i)
+            tcuAnalogInputs[i] = getAnalogInputPin(i);
         }
     }
     INJECT_ENGINE_REFERENCE(&transmissionController);
@@ -59,63 +59,51 @@ int GearControllerBase::getInputRoleA() {
 brain_pin_e GearControllerBase::getDigitalInputPin(int input) {
     switch (input) {
         case 1:
-            return CONFIG(tcuInputPin1D)
+            return CONFIG(tcuInputPin1D);
         case 2:
-            return CONFIG(tcuInputPin2D)
+            return CONFIG(tcuInputPin2D);
         case 3:
-            return CONFIG(tcuInputPin3D)
+            return CONFIG(tcuInputPin3D);
         case 4:
-            return CONFIG(tcuInputPin4D)
+            return CONFIG(tcuInputPin4D);
         case 5:
-            return CONFIG(tcuInputPin5D)
+            return CONFIG(tcuInputPin5D);
         case 6:
-            return CONFIG(tcuInputPin6D)
-        case 7:
-            return CONFIG(tcuInputPin7D)
-        case 8:
-            return CONFIG(tcuInputPin8D)
+            return CONFIG(tcuInputPin6D);
     }
 }
 
 pin_input_mode_e GearControllerBase::getDigitalInputPinMode(int input) {
     switch (input) {
         case 1:
-            return CONFIG(tcuInputPin1Mode)
+            return CONFIG(tcuInputPin1Mode);
         case 2:
-            return CONFIG(tcuInputPin2Mode)
+            return CONFIG(tcuInputPin2Mode);
         case 3:
-            return CONFIG(tcuInputPin3Mode)
+            return CONFIG(tcuInputPin3Mode);
         case 4:
-            return CONFIG(tcuInputPin4Mode)
+            return CONFIG(tcuInputPin4Mode);
         case 5:
-            return CONFIG(tcuInputPin5Mode)
+            return CONFIG(tcuInputPin5Mode);
         case 6:
-            return CONFIG(tcuInputPin6Mode)
-        case 7:
-            return CONFIG(tcuInputPin7Mode)
-        case 8:
-            return CONFIG(tcuInputPin8Mode)
+            return CONFIG(tcuInputPin6Mode);
     }
 }
 
 adc_channel_e GearControllerBase::getAnalogInputPin(int input) {
     switch (input) {
         case 1:
-            return CONFIG(tcuInputPin1A)
+            return CONFIG(tcuInputPin1A);
         case 2:
-            return CONFIG(tcuInputPin2A)
+            return CONFIG(tcuInputPin2A);
         case 3:
-            return CONFIG(tcuInputPin3A)
+            return CONFIG(tcuInputPin3A);
         case 4:
-            return CONFIG(tcuInputPin4A)
+            return CONFIG(tcuInputPin4A);
         case 5:
-            return CONFIG(tcuInputPin5A)
+            return CONFIG(tcuInputPin5A);
         case 6:
-            return CONFIG(tcuInputPin6A)
-        case 7:
-            return CONFIG(tcuInputPin7A)
-        case 8:
-            return CONFIG(tcuInputPin8A)
+            return CONFIG(tcuInputPin6A);
     }
 }
 
