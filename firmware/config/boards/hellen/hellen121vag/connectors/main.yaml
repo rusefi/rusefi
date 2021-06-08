@@ -121,8 +121,8 @@ pins:
     function: IN_RES1
 
   - pin: 39
-    id: [GPIOF_10, EFI_ADC_3]
-    class: [switch_inputs, analog_inputs]
+    id: [GPIOF_10]
+    class: [switch_inputs]
     ts_name: 39 - IN RES2
     function: IN_RES2
     
