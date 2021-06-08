@@ -74,22 +74,22 @@ brain_pin_e* GearControllerBase::getDigitalInputPin(int input) {
     return nullptr;
 }
 
-pin_input_mode_e GearControllerBase::getDigitalInputPinMode(int input) {
+pin_input_mode_e* GearControllerBase::getDigitalInputPinMode(int input) {
     switch (input) {
         case 1:
-            return CONFIG(tcuInputPin1Mode);
+            return &CONFIG(tcuInputPin1Mode);
         case 2:
-            return CONFIG(tcuInputPin2Mode);
+            return &CONFIG(tcuInputPin2Mode);
         case 3:
-            return CONFIG(tcuInputPin3Mode);
+            return &CONFIG(tcuInputPin3Mode);
         case 4:
-            return CONFIG(tcuInputPin4Mode);
+            return &CONFIG(tcuInputPin4Mode);
         case 5:
-            return CONFIG(tcuInputPin5Mode);
+            return &CONFIG(tcuInputPin5Mode);
         case 6:
-            return CONFIG(tcuInputPin6Mode);
+            return &CONFIG(tcuInputPin6Mode);
     }
-    return PI_DEFAULT;
+    return nullptr;
 }
 
 adc_channel_e GearControllerBase::getAnalogInputPin(int input) {
