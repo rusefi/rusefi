@@ -32,15 +32,15 @@ void LimpManager::updateState(int rpm, efitick_t nowNt) {
 	}
 
 	if (ENGINE(rpmCalculator).isRunning()) {
-		uint16_t minCrankingOilPressure = CONFIG(minCrankingOilPressure);
+		uint16_t minOilPressure = CONFIG(minOilPressureAfterStart);
 
 		// Only check if the setting is enabled
-		if (minCrankingOilPressure > 0) {
+		if (minOilPressure > 0) {
 			auto oilp = Sensor::get(SensorType::OilPressure);
 
 			if (oilp) {
 				// We had oil pressure! Set the flag.
-				if (oilp.Value > minCrankingOilPressure) {
+				if (oilp.Value > minOilPressure) {
 					m_hadOilPressureAfterStart = true;
 				}
 
