@@ -56,7 +56,7 @@ int GearControllerBase::getInputRoleA() {
     }
 }
 
-brain_pin_e *GearControllerBase::getDigitalInputPin(int input) {
+brain_pin_e* GearControllerBase::getDigitalInputPin(int input) {
     switch (input) {
         case 1:
             return &CONFIG(tcuInputPin1D);
