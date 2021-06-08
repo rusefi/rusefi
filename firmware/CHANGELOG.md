@@ -27,6 +27,9 @@ All notable user-facing or behavior-altering changes will be documented in this 
 
 ## Month 202x Release - "Release Name"
 
+### Added
+ - "inhibit start until oil pressure" prevents starting the engine with no/low oil pressure #2799
+
 # 2021 May "Piercing Day"
 ### Fixed
  - LCD screen works again #2576

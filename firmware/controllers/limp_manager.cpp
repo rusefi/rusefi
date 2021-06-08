@@ -31,6 +31,20 @@ void LimpManager::updateState(int rpm) {
 		}
 	}
 
+	{
+		uint16_t minCrankingOilPressure = CONFIG(minCrankingOilPressure);
+
+		// Only check if the setting is enabled and we're cranking
+		if (minCrankingOilPressure > 0 && ENGINE(rpmCalculator).isCranking()) {
+			auto oilp = Sensor::get(SensorType::OilPressure);
+
+			// If the sensor is working and pressure is too low, cut fuel
+			if (oilp && oilp.Value < minCrankingOilPressure) {
+				allowFuel.clear();
+			}
+		}
+	}
+
 	m_transientAllowInjection = allowFuel;
 	m_transientAllowIgnition = allowSpark;
 }
