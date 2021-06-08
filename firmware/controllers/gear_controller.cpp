@@ -51,7 +51,7 @@ int GearControllerBase::getInputRoleD() {
     }
     for (int i = 0; i < TCU_STATE_COUNT; i++) {
         for (int ii = 0; ii < TCU_INPUT_COUNT; ii++) {
-            if ((config->tcuInputTable[ii][i] != states[i]) && (config->tcuInputTable[ii][i] >= 0)) {
+            if ((CONFIG(tcuInputTable)[ii][i] != states[i]) && (CONFIG(tcuInputTable)[ii][i] >= 0)) {
                 break;
             }
             if (ii == (TCU_INPUT_COUNT - 1)) {
@@ -69,7 +69,7 @@ int GearControllerBase::getInputRoleA() {
     }
     for (int i = 0; i < TCU_STATE_COUNT; i++) {
         for (int ii = 0; ii < TCU_INPUT_COUNT; ii++) {
-            if (!(vRange(levels[i],config->tcuInputTable[ii][i],config->tcuAnalogInputTolerance)) && (config->tcuInputTable[ii][i] >= 0)) {
+            if (!(vRange(levels[i],CONGIF(tcuInputTable)[ii][i],CONFIG(tcuAnalogInputTolerance))) && (CONFIG(tcuInputTable)[ii][i] >= 0)) {
                 break;
             }
             if (ii == (TCU_INPUT_COUNT - 1)) {
