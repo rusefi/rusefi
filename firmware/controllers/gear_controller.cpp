@@ -8,7 +8,7 @@ EXTERN_CONFIG
 void GearControllerBase::init(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
     for (int i = 0; i < TCU_INPUT_COUNT; i++) {
         if (CONFIG(tcuInputMode)) {
-            tcuDigitalInputs[i].init(10, getDigitalInputPin(i), getDigitalInputPinMode(i));
+            tcuDigitalInputs[i].init(10, *getDigitalInputPin(i), *getDigitalInputPinMode(i));
         } else {
             tcuAnalogInputs[i] = getAnalogInputPin(i);
         }
@@ -56,22 +56,22 @@ int GearControllerBase::getInputRoleA() {
     }
 }
 
-brain_pin_e GearControllerBase::getDigitalInputPin(int input) {
+brain_pin_e *GearControllerBase::getDigitalInputPin(int input) {
     switch (input) {
         case 1:
-            return CONFIG(tcuInputPin1D);
+            return &CONFIG(tcuInputPin1D);
         case 2:
-            return CONFIG(tcuInputPin2D);
+            return &CONFIG(tcuInputPin2D);
         case 3:
-            return CONFIG(tcuInputPin3D);
+            return &CONFIG(tcuInputPin3D);
         case 4:
-            return CONFIG(tcuInputPin4D);
+            return &CONFIG(tcuInputPin4D);
         case 5:
-            return CONFIG(tcuInputPin5D);
+            return &CONFIG(tcuInputPin5D);
         case 6:
-            return CONFIG(tcuInputPin6D);
+            return &CONFIG(tcuInputPin6D);
     }
-    return GPIO_UNASSIGNED;
+    return nullptr;
 }
 
 pin_input_mode_e GearControllerBase::getDigitalInputPinMode(int input) {
