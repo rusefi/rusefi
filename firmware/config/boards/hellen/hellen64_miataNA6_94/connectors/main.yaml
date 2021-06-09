@@ -78,8 +78,8 @@ pins:
     function: Sensor +5V
 
   - pin: 1Q
-    id: GPIOE_12
-    class: switch_inputs
+    id: [GPIOC_5, EFI_ADC_15]
+    class: [switch_inputs, analog_inputs]
     ts_name: 1Q AC Switch
     function: A/C switch input
     type: din
