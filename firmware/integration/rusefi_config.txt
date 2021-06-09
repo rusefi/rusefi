@@ -231,7 +231,7 @@ custom afr_table_t @@FUEL_RPM_COUNT@@x@@FUEL_LOAD_COUNT@@ array,   U08,   @OFFSE
 
 custom tcubinary_table_t @@TCU_SOLENOID_COUNT@@x@@TCU_GEAR_COUNT@@ array,   U08,   @OFFSET@, [@@TCU_SOLENOID_COUNT@@x@@TCU_GEAR_COUNT@@],"onoff", 1,     0,        0,  1,  0
 
-custom tcuinput_table_t @@TCU_INPUT_COUNT@@x@@TCU_STATE_COUNT@@ array,   S08,   @OFFSET@, [@@TCU_INPUT_COUNT@@x@@TCU_STATE_COUNT@@],"state", 1,     0,        -1,  5,  0
+custom tcuinput_table_t @@TCU_INPUT_COUNT@@x@@TCU_STATE_COUNT@@ array,   S08,   @OFFSET@, [@@TCU_INPUT_COUNT@@x@@TCU_STATE_COUNT@@],"state", 5,     -1,        0,  5,  0
 
 custom fsio_table_8x8_u8t	@@FSIO_TABLE_8@@x@@FSIO_TABLE_8@@ array,   U08,   @OFFSET@, [@@FSIO_TABLE_8@@x@@FSIO_TABLE_8@@],"value",      1,     0,      0.0,   255.0,   0
 custom fsio_table_8x8_f32t	4*@@FSIO_TABLE_8@@x@@FSIO_TABLE_8@@ array,   F32,   @OFFSET@, [@@FSIO_TABLE_8@@x@@FSIO_TABLE_8@@],"value",      1,     0,      0.0,   30000.0,   2
