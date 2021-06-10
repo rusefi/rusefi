@@ -113,6 +113,7 @@ EnginePins::EnginePins() :
 		starterControl("Starter Relay", CONFIG_PIN_OFFSETS(starterControl)),
 		starterRelayDisable("Starter Disable Relay", CONFIG_PIN_OFFSETS(starterRelayDisable)),
 		fanRelay("Fan Relay", CONFIG_PIN_OFFSETS(fan)),
+		fanRelay2("Fan Relay 2", CONFIG_PIN_OFFSETS(fan2)),
 		acRelay("A/C Relay", CONFIG_PIN_OFFSETS(acRelay)),
 		fuelPumpRelay("Fuel pump Relay", CONFIG_PIN_OFFSETS(fuelPump)),
 	    boostPin("Boost", CONFIG_PIN_OFFSETS(boostControl)),

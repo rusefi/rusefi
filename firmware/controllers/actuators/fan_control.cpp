@@ -34,5 +34,5 @@ void updateFans(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 #endif
 
 	fanControl(enginePins.fanRelay, CONFIG(fanOnTemperature), CONFIG(fanOffTemperature), CONFIG(enableFan1WithAc) PASS_ENGINE_PARAMETER_SUFFIX);
-	//fanControl(enginePins.fanRelay2, CONFIG(fan2OnTemperature), CONFIG(fan2OffTemperature), CONFIG(enableFan2WithAc) PASS_ENGINE_PARAMETER_SUFFIX);
+	fanControl(enginePins.fanRelay2, CONFIG(fan2OnTemperature), CONFIG(fan2OffTemperature), CONFIG(enableFan2WithAc) PASS_ENGINE_PARAMETER_SUFFIX);
 }
