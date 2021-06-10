@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Mon May 31 22:02:06 UTC 2021
+// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Sat Jun 05 20:20:27 UTC 2021
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -448,12 +448,12 @@ public class Fields {
 	public static final int etbFunctions1_offset = 1198;
 	public static final int etbFunctions2_offset = 1199;
 	public static final int etbIdleThrottleRange_offset = 4012;
-	public static final int etbIo1_controlPin1_offset = 982;
+	public static final int etbIo1_controlPin_offset = 982;
 	public static final int etbIo1_directionPin1_offset = 980;
 	public static final int etbIo1_directionPin2_offset = 981;
 	public static final int etbIo1_disablePin_offset = 983;
 	public static final int etbIo1_offset = 980;
-	public static final int etbIo2_controlPin1_offset = 986;
+	public static final int etbIo2_controlPin_offset = 986;
 	public static final int etbIo2_directionPin1_offset = 984;
 	public static final int etbIo2_directionPin2_offset = 985;
 	public static final int etbIo2_disablePin_offset = 987;
@@ -1230,6 +1230,7 @@ public class Fields {
 	public static final int servoOutputPins8_offset = 3147;
 	public static final int showHumanReadableWarning_offset = 976;
 	public static final int showSdCardWarning_offset = 76;
+	public static final int SIGNATURE_HASH = 233454178;
 	public static final int silentTriggerError_offset = 1464;
 	public static final int slowAdcAlpha_offset = 2088;
 	public static final int sparkDwellRpmBins_offset = 332;
@@ -1264,12 +1265,12 @@ public class Fields {
 	public static final int startStopButtonMode_offset = 1773;
 	public static final int startStopButtonPin_offset = 811;
 	public static final int startUpFuelPumpDuration_offset = 1892;
-	public static final int stepperDcIo1_controlPin1_offset = 1090;
+	public static final int stepperDcIo1_controlPin_offset = 1090;
 	public static final int stepperDcIo1_directionPin1_offset = 1088;
 	public static final int stepperDcIo1_directionPin2_offset = 1089;
 	public static final int stepperDcIo1_disablePin_offset = 1091;
 	public static final int stepperDcIo1_offset = 1088;
-	public static final int stepperDcIo2_controlPin1_offset = 1094;
+	public static final int stepperDcIo2_controlPin_offset = 1094;
 	public static final int stepperDcIo2_directionPin1_offset = 1092;
 	public static final int stepperDcIo2_directionPin2_offset = 1093;
 	public static final int stepperDcIo2_disablePin_offset = 1095;
@@ -1531,7 +1532,7 @@ public class Fields {
 	public static final char TS_SD_R_COMMAND = 'r';
 	public static final char TS_SD_W_COMMAND = 'w';
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI 2021.05.31.all.2943684823";
+	public static final String TS_SIGNATURE = "rusEFI 2021.06.05.all.233454178";
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final int TT_TT_1_16 = 50;
 	public static final int TT_TT_2JZ_1_12 = 29;
@@ -2222,11 +2223,11 @@ public class Fields {
 	public static final Field UNUSEDBIT_289_31 = Field.create("UNUSEDBIT_289_31", 976, FieldType.BIT, 31);
 	public static final Field ETBIO1_DIRECTIONPIN1 = Field.create("ETBIO1_DIRECTIONPIN1", 980, FieldType.INT8, brain_pin_e);
 	public static final Field ETBIO1_DIRECTIONPIN2 = Field.create("ETBIO1_DIRECTIONPIN2", 981, FieldType.INT8, brain_pin_e);
-	public static final Field ETBIO1_CONTROLPIN1 = Field.create("ETBIO1_CONTROLPIN1", 982, FieldType.INT8, brain_pin_e);
+	public static final Field ETBIO1_CONTROLPIN = Field.create("ETBIO1_CONTROLPIN", 982, FieldType.INT8, brain_pin_e);
 	public static final Field ETBIO1_DISABLEPIN = Field.create("ETBIO1_DISABLEPIN", 983, FieldType.INT8, brain_pin_e);
 	public static final Field ETBIO2_DIRECTIONPIN1 = Field.create("ETBIO2_DIRECTIONPIN1", 984, FieldType.INT8, brain_pin_e);
 	public static final Field ETBIO2_DIRECTIONPIN2 = Field.create("ETBIO2_DIRECTIONPIN2", 985, FieldType.INT8, brain_pin_e);
-	public static final Field ETBIO2_CONTROLPIN1 = Field.create("ETBIO2_CONTROLPIN1", 986, FieldType.INT8, brain_pin_e);
+	public static final Field ETBIO2_CONTROLPIN = Field.create("ETBIO2_CONTROLPIN", 986, FieldType.INT8, brain_pin_e);
 	public static final Field ETBIO2_DISABLEPIN = Field.create("ETBIO2_DISABLEPIN", 987, FieldType.INT8, brain_pin_e);
 	public static final Field BOOSTCONTROLPIN = Field.create("BOOSTCONTROLPIN", 988, FieldType.INT8, output_pin_e);
 	public static final Field BOOSTCONTROLPINMODE = Field.create("BOOSTCONTROLPINMODE", 989, FieldType.INT8, pin_output_mode_e);
@@ -2276,11 +2277,11 @@ public class Fields {
 	public static final Field STFT_CELLCFGS4_TIMECONSTANT = Field.create("STFT_CELLCFGS4_TIMECONSTANT", 1086, FieldType.INT16);
 	public static final Field STEPPERDCIO1_DIRECTIONPIN1 = Field.create("STEPPERDCIO1_DIRECTIONPIN1", 1088, FieldType.INT8, brain_pin_e);
 	public static final Field STEPPERDCIO1_DIRECTIONPIN2 = Field.create("STEPPERDCIO1_DIRECTIONPIN2", 1089, FieldType.INT8, brain_pin_e);
-	public static final Field STEPPERDCIO1_CONTROLPIN1 = Field.create("STEPPERDCIO1_CONTROLPIN1", 1090, FieldType.INT8, brain_pin_e);
+	public static final Field STEPPERDCIO1_CONTROLPIN = Field.create("STEPPERDCIO1_CONTROLPIN", 1090, FieldType.INT8, brain_pin_e);
 	public static final Field STEPPERDCIO1_DISABLEPIN = Field.create("STEPPERDCIO1_DISABLEPIN", 1091, FieldType.INT8, brain_pin_e);
 	public static final Field STEPPERDCIO2_DIRECTIONPIN1 = Field.create("STEPPERDCIO2_DIRECTIONPIN1", 1092, FieldType.INT8, brain_pin_e);
 	public static final Field STEPPERDCIO2_DIRECTIONPIN2 = Field.create("STEPPERDCIO2_DIRECTIONPIN2", 1093, FieldType.INT8, brain_pin_e);
-	public static final Field STEPPERDCIO2_CONTROLPIN1 = Field.create("STEPPERDCIO2_CONTROLPIN1", 1094, FieldType.INT8, brain_pin_e);
+	public static final Field STEPPERDCIO2_CONTROLPIN = Field.create("STEPPERDCIO2_CONTROLPIN", 1094, FieldType.INT8, brain_pin_e);
 	public static final Field STEPPERDCIO2_DISABLEPIN = Field.create("STEPPERDCIO2_DISABLEPIN", 1095, FieldType.INT8, brain_pin_e);
 	public static final Field ENGINEMAKE = Field.create("ENGINEMAKE", 1096, 32, FieldType.STRING);
 	public static final Field ENGINECODE = Field.create("ENGINECODE", 1128, 32, FieldType.STRING);
@@ -3323,11 +3324,11 @@ public class Fields {
 	UNUSEDBIT_289_31,
 	ETBIO1_DIRECTIONPIN1,
 	ETBIO1_DIRECTIONPIN2,
-	ETBIO1_CONTROLPIN1,
+	ETBIO1_CONTROLPIN,
 	ETBIO1_DISABLEPIN,
 	ETBIO2_DIRECTIONPIN1,
 	ETBIO2_DIRECTIONPIN2,
-	ETBIO2_CONTROLPIN1,
+	ETBIO2_CONTROLPIN,
 	ETBIO2_DISABLEPIN,
 	BOOSTCONTROLPIN,
 	BOOSTCONTROLPINMODE,
@@ -3375,11 +3376,11 @@ public class Fields {
 	STFT_CELLCFGS4_TIMECONSTANT,
 	STEPPERDCIO1_DIRECTIONPIN1,
 	STEPPERDCIO1_DIRECTIONPIN2,
-	STEPPERDCIO1_CONTROLPIN1,
+	STEPPERDCIO1_CONTROLPIN,
 	STEPPERDCIO1_DISABLEPIN,
 	STEPPERDCIO2_DIRECTIONPIN1,
 	STEPPERDCIO2_DIRECTIONPIN2,
-	STEPPERDCIO2_CONTROLPIN1,
+	STEPPERDCIO2_CONTROLPIN,
 	STEPPERDCIO2_DISABLEPIN,
 	ENGINEMAKE,
 	ENGINECODE,

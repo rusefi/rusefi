@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on hellen_cypress_gen_config.bat integration/rusefi_config.txt Mon May 31 22:02:32 UTC 2021
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on hellen_cypress_gen_config.bat integration/rusefi_config.txt Sat Jun 05 20:20:58 UTC 2021
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -637,9 +637,10 @@ struct dc_io {
 	 */
 	brain_pin_e directionPin2;
 	/**
+	 * Acts as EN pin in two-wire mode
 	 * offset 2
 	 */
-	brain_pin_e controlPin1;
+	brain_pin_e controlPin;
 	/**
 	 * offset 3
 	 */
@@ -4212,4 +4213,4 @@ struct persistent_config_s {
 };
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on hellen_cypress_gen_config.bat integration/rusefi_config.txt Mon May 31 22:02:32 UTC 2021
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on hellen_cypress_gen_config.bat integration/rusefi_config.txt Sat Jun 05 20:20:58 UTC 2021

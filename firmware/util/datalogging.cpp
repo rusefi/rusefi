@@ -43,7 +43,7 @@
 /**
  * @returns true if data does not fit into this buffer
  */
-bool Logging::validateBuffer(const char *text, uint32_t extraLen) {
+bool Logging::validateBuffer(uint32_t extraLen) {
 	if (remainingSize() < extraLen + 1) {
 #if EFI_PROD_CODE
 		warning(CUSTOM_LOGGING_BUFFER_OVERFLOW, "output overflow %s %d", name, extraLen);
@@ -57,7 +57,7 @@ bool Logging::validateBuffer(const char *text, uint32_t extraLen) {
 void Logging::append(const char *text) {
 	efiAssertVoid(CUSTOM_APPEND_NULL, text != NULL, "append NULL");
 	uint32_t extraLen = efiStrlen(text);
-	bool isCapacityProblem = validateBuffer(text, extraLen);
+	bool isCapacityProblem = validateBuffer(extraLen);
 	if (isCapacityProblem) {
 		return;
 	}

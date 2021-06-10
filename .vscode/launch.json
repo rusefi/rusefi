@@ -25,6 +25,24 @@
 			]
 		},
 		{
+			"name": "Debug simulator (gdb)",
+			"type": "cppdbg",
+			"request": "launch",
+			"program": "${workspaceFolder}/simulator/build/rusefi_simulator",
+			"stopAtEntry": false,
+			"cwd": "${workspaceFolder}/simulator/",
+			"environment": [],
+			"externalConsole": false,
+			"MIMode": "gdb",
+			"setupCommands": [
+				{
+					"description": "Enable pretty-printing for gdb",
+					"text": "-enable-pretty-printing",
+					"ignoreFailures": true
+				}
+			]
+		},
+		{
 			"name": "Debug Unit Tests (lldb)",
 			"type": "lldb",
 			"request": "launch",
@@ -33,56 +51,56 @@
 			"cwd": "${workspaceFolder}/unit_tests/build/",
 		},
 		{
-            "name": "Debug F40x",
-            "type": "cortex-debug",
-            "request": "launch",
-            "cwd": "${workspaceFolder}/firmware",
-            "executable": "${workspaceRoot}/firmware/build/rusefi.elf",
-            "device": "STM32F407V",
-            "v1": false,
-            "svdFile": "${workspaceRoot}/firmware/ext/cmsis-svd/data/STMicro/STM32F405.svd",
-            "servertype": "openocd",
-            "configFiles": ["interface/stlink.cfg", "target/stm32f4x.cfg"],
-            "runToMain": true
+			"name": "Debug F40x",
+			"type": "cortex-debug",
+			"request": "launch",
+			"cwd": "${workspaceFolder}/firmware",
+			"executable": "${workspaceRoot}/firmware/build/rusefi.elf",
+			"device": "STM32F407V",
+			"v1": false,
+			"svdFile": "${workspaceRoot}/firmware/ext/cmsis-svd/data/STMicro/STM32F405.svd",
+			"servertype": "openocd",
+			"configFiles": ["interface/stlink.cfg", "target/stm32f4x.cfg"],
+			"runToMain": true
 		},
 		{
-            "name": "Debug F42x",
-            "type": "cortex-debug",
-            "request": "launch",
-            "cwd": "${workspaceFolder}/firmware",
-            "executable": "${workspaceRoot}/firmware/build/rusefi.elf",
-            "device": "STM32F429Z",
-            "v1": false,
-            "svdFile": "${workspaceRoot}/firmware/ext/cmsis-svd/data/STMicro/STM32F427.svd",
-            "servertype": "openocd",
-            "configFiles": ["interface/stlink.cfg", "target/stm32f4x.cfg"],
-            "runToMain": true
+			"name": "Debug F42x",
+			"type": "cortex-debug",
+			"request": "launch",
+			"cwd": "${workspaceFolder}/firmware",
+			"executable": "${workspaceRoot}/firmware/build/rusefi.elf",
+			"device": "STM32F429Z",
+			"v1": false,
+			"svdFile": "${workspaceRoot}/firmware/ext/cmsis-svd/data/STMicro/STM32F427.svd",
+			"servertype": "openocd",
+			"configFiles": ["interface/stlink.cfg", "target/stm32f4x.cfg"],
+			"runToMain": true
 		},
 		{
-            "name": "Debug F7x6",
-            "type": "cortex-debug",
-            "request": "launch",
-            "cwd": "${workspaceFolder}/firmware",
-            "executable": "${workspaceRoot}/firmware/build/rusefi.elf",
-            "device": "STM32F767V",
-            "v1": false,
-            "svdFile": "${workspaceRoot}/firmware/ext/cmsis-svd/data/STMicro/STM32F7x7.svd",
-            "servertype": "openocd",
-            "configFiles": ["interface/stlink.cfg", "target/stm32f7x.cfg"],
-            "runToMain": true
-        },
-        {
-            "name": "Debug H743",
-            "type": "cortex-debug",
-            "request": "launch",
-            "cwd": "${workspaceFolder}/firmware",
-            "executable": "${workspaceRoot}/firmware/build/rusefi.elf",
-            "device": "STM32H743V",
-            "v1": false,
-            "svdFile": "${workspaceRoot}/firmware/ext/cmsis-svd/data/STMicro/STM32H743x.svd",
-            "servertype": "openocd",
-            "configFiles": ["interface/stlink.cfg", "target/stm32h7x.cfg"],
-            "runToMain": true
-        }
+			"name": "Debug F7x6",
+			"type": "cortex-debug",
+			"request": "launch",
+			"cwd": "${workspaceFolder}/firmware",
+			"executable": "${workspaceRoot}/firmware/build/rusefi.elf",
+			"device": "STM32F767V",
+			"v1": false,
+			"svdFile": "${workspaceRoot}/firmware/ext/cmsis-svd/data/STMicro/STM32F7x7.svd",
+			"servertype": "openocd",
+			"configFiles": ["interface/stlink.cfg", "target/stm32f7x.cfg"],
+			"runToMain": true
+		},
+		{
+			"name": "Debug H743",
+			"type": "cortex-debug",
+			"request": "launch",
+			"cwd": "${workspaceFolder}/firmware",
+			"executable": "${workspaceRoot}/firmware/build/rusefi.elf",
+			"device": "STM32H743V",
+			"v1": false,
+			"svdFile": "${workspaceRoot}/firmware/ext/cmsis-svd/data/STMicro/STM32H743x.svd",
+			"servertype": "openocd",
+			"configFiles": ["interface/stlink.cfg", "target/stm32h7x.cfg"],
+			"runToMain": true
+		}
 	]
 }

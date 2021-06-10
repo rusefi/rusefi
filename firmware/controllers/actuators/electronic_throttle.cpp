@@ -93,7 +93,7 @@
 #define ETB_MAX_COUNT 2
 #endif /* ETB_MAX_COUNT */
 
-static pedal2tps_t pedal2tpsMap("Pedal2Tps");
+static pedal2tps_t pedal2tpsMap;
 
 EXTERN_ENGINE;
 
@@ -711,8 +711,8 @@ static void showEthInfo(void) {
 	efiPrintf("TPS=%.2f", Sensor::get(SensorType::Tps1).value_or(0));
 
 
-	efiPrintf("etbControlPin1=%s duty=%.2f freq=%d",
-			hwPortname(CONFIG(etbIo[0].controlPin1)),
+	efiPrintf("etbControlPin=%s duty=%.2f freq=%d",
+			hwPortname(CONFIG(etbIo[0].controlPin)),
 			currentEtbDuty,
 			engineConfiguration->etbFreq);
 
@@ -720,7 +720,7 @@ static void showEthInfo(void) {
 		efiPrintf("ETB%d", i);
 		efiPrintf(" dir1=%s", hwPortname(CONFIG(etbIo[i].directionPin1)));
 		efiPrintf(" dir2=%s", hwPortname(CONFIG(etbIo[i].directionPin2)));
-		efiPrintf(" control=%s", hwPortname(CONFIG(etbIo[i].controlPin1)));
+		efiPrintf(" control=%s", hwPortname(CONFIG(etbIo[i].controlPin)));
 		efiPrintf(" disable=%s", hwPortname(CONFIG(etbIo[i].disablePin)));
 		showDcMotorInfo(i);
 	}

@@ -49,7 +49,20 @@ SEMAPHORE_DECL(drv8860_wake, 10 /* or BOARD_DRV8860_COUNT ? */);
 static THD_WORKING_AREA(drv8860_thread_1_wa, 256);
 
 /* Driver */
-struct drv8860_priv {
+struct Drv8860 : public GpioChip {
+	int init() override;
+
+	int writePad(size_t pin, int value) override;
+	brain_pin_diag_e getDiag(size_t pin) override;
+
+	// Internal helpers
+	int chip_init();
+
+	void spi_send(uint16_t tx);
+
+	void update_outputs();
+	int wake_driver();
+
 	const drv8860_config		*cfg;
 	/* cached output state - state last send to chip */
 	uint16_t					o_state_cached;
@@ -59,7 +72,7 @@ struct drv8860_priv {
 	drv8860_drv_state			drv_state;
 };
 
-static drv8860_priv chips[BOARD_DRV8860_COUNT];
+static Drv8860 chips[BOARD_DRV8860_COUNT];
 
 static const char* drv8860_pin_names[DRV8860_OUTPUTS] = {
 	"drv8860.OUT1",		"drv8860.OUT2",		"drv8860.OUT3",		"drv8860.OUT4",
@@ -72,23 +85,18 @@ static const char* drv8860_pin_names[DRV8860_OUTPUTS] = {
 /* Driver local functions.													*/
 /*==========================================================================*/
 
-static SPIDriver *get_bus(drv8860_priv *chip) {
-	/* return non-const SPIDriver* from const struct cfg */
-	return chip->cfg->spi_bus;
-}
-
 /**
  * @brief DRV8860 send routine.
  * @details Sends 8/16 bits. CS asserted before and released after transaction.
  */
 
-static void drv8860_spi_send(drv8860_priv *chip, uint16_t tx) {
-	SPIDriver *spi = get_bus(chip);
+void Drv8860::spi_send(uint16_t tx) {
+	SPIDriver *spi = cfg->spi_bus;
 	
 	/* Acquire ownership of the bus. */
 	spiAcquireBus(spi);
 	/* Setup transfer parameters. */
-	spiStart(spi, &chip->cfg->spi_config);
+	spiStart(spi, &cfg->spi_config);
 	/* Slave Select assertion. */
 	spiSelect(spi);
 	/* Atomic transfer operations. */
@@ -103,16 +111,16 @@ static void drv8860_spi_send(drv8860_priv *chip, uint16_t tx) {
  * @brief DRV8860 send output data.
  */
 
-static void drv8860_update_outputs(drv8860_priv *chip) {
+void Drv8860::update_outputs() {
 	/* TODO: lock? */
 
 	/* atomic */
 	/* set value only for non-direct driven pins */
-	drv8860_spi_send(chip, chip->o_state & 0xffff);
+	spi_send(o_state & 0xffff);
 
 	/* atomic */
-	chip->o_state_cached = chip->o_state;
-	
+	o_state_cached = o_state;
+
 	/* TODO: unlock? */
 }
 
@@ -122,9 +130,9 @@ static void drv8860_update_outputs(drv8860_priv *chip) {
  * @todo: Checks direct io signals integrity, read initial diagnostic state.
  */
 
-static int drv8860_chip_init(drv8860_priv *chip) {
+int Drv8860::chip_init() {
 	/* upload pin states */
-	drv8860_update_outputs(chip);
+	update_outputs();
 
 	return 0;
 }
@@ -134,14 +142,11 @@ static int drv8860_chip_init(drv8860_priv *chip) {
  * @details Wake up driver. Will cause output register update.
  */
 
-static int drv8860_wake_driver(drv8860_priv *chip) {
-	(void)chip;
+int Drv8860::wake_driver() {
+	/* Entering a reentrant critical zone.*/
+	chibios_rt::CriticalSectionLocker csl;
 
-    /* Entering a reentrant critical zone.*/
-    syssts_t sts = chSysGetStatusAndLockX();
 	chSemSignalI(&drv8860_wake);
-    /* Leaving the critical zone.*/
-    chSysRestoreStatusX(sts);
 
 	return 0;
 }
@@ -165,15 +170,13 @@ static THD_FUNCTION(drv8860_driver_thread, p) {
 		(void)msg;
 
 		for (i = 0; i < BOARD_DRV8860_COUNT; i++) {
-			drv8860_priv *chip;
-
-			chip = &chips[i];
+			auto chip = &chips[i];
 			if ((chip->cfg == NULL) ||
 				(chip->drv_state == DRV8860_DISABLED) ||
 				(chip->drv_state == DRV8860_FAILED))
 				continue;
 
-			drv8860_update_outputs(chip);
+			chip->update_outputs();
 		}
 	}
 }
@@ -188,41 +191,34 @@ static THD_FUNCTION(drv8860_driver_thread, p) {
 /* Driver exported functions.												*/
 /*==========================================================================*/
 
-int drv8860_writePad(void *data, unsigned int pin, int value) {
-	drv8860_priv *chip;
-
-	if ((pin >= DRV8860_OUTPUTS) || (data == NULL))
+int Drv8860::writePad(size_t pin, int value) {
+	if (pin >= DRV8860_OUTPUTS)
 		return -1;
-
-	chip = (drv8860_priv *)data;
 
 	/* TODO: lock */
 	if (value)
-		chip->o_state |=  (1 << pin);
+		o_state |=  (1 << pin);
 	else
-		chip->o_state &= ~(1 << pin);
+		o_state &= ~(1 << pin);
 	/* TODO: unlock */
-	drv8860_wake_driver(chip);
+	wake_driver();
 	
 	return 0;
 }
 
-brain_pin_diag_e drv8860_getDiag(void* /*data*/, unsigned int /*pin*/) {
+brain_pin_diag_e Drv8860::getDiag(size_t /*pin*/) {
 	// todo: implement diag
 	return PIN_OK;
 }
 
-int drv8860_init(void * data) {
+int Drv8860::init() {
 	int ret;
-	drv8860_priv *chip;
 
-	chip = (drv8860_priv *)data;
-
-	ret = drv8860_chip_init(chip);
+	ret = chip_init();
 	if (ret)
 		return ret;
 
-	chip->drv_state = DRV8860_READY;
+	drv_state = DRV8860_READY;
 
 	if (!drv_task_ready) {
 		chThdCreateStatic(drv8860_thread_1_wa, sizeof(drv8860_thread_1_wa),
@@ -233,22 +229,6 @@ int drv8860_init(void * data) {
 	return 0;
 }
 
-int drv8860_deinit(void *data) {
-	(void)data;
-
-	/* TODO: set all pins to inactive state, stop task? */
-	return 0;
-}
-
-struct gpiochip_ops drv8860_ops = {
-	.setPadMode = nullptr,
-	.writePad	= drv8860_writePad,
-	.readPad	= NULL,	/* chip outputs only */
-	.getDiag	= drv8860_getDiag,
-	.init		= drv8860_init,
-	.deinit 	= drv8860_deinit,
-};
-
 /**
  * @brief DRV8860 driver add.
  * @details Checks for valid config
@@ -256,7 +236,6 @@ struct gpiochip_ops drv8860_ops = {
 
 int drv8860_add(brain_pin_e base, unsigned int index, const drv8860_config *cfg) {
 	int ret;
-	drv8860_priv *chip;
 
 	/* no config or no such chip */
 	if ((!cfg) || (!cfg->spi_bus) || (index >= BOARD_DRV8860_COUNT))
@@ -267,19 +246,19 @@ int drv8860_add(brain_pin_e base, unsigned int index, const drv8860_config *cfg)
 	//if (cfg->spi_config.ssport == NULL)
 	//	return -1;
 
-	chip = &chips[index];
+	auto& chip = chips[index];
 
 	/* already initted? */
-	if (chip->cfg != NULL)
+	if (!chip.cfg)
 		return -1;
 
-	chip->cfg = cfg;
-	chip->o_state = 0;
-	chip->o_state_cached = 0;
-	chip->drv_state = DRV8860_WAIT_INIT;
+	chip.cfg = cfg;
+	chip.o_state = 0;
+	chip.o_state_cached = 0;
+	chip.drv_state = DRV8860_WAIT_INIT;
 
 	/* register, return gpio chip base */
-	ret = gpiochip_register(base, DRIVER_NAME, &drv8860_ops, DRV8860_OUTPUTS, chip);
+	ret = gpiochip_register(base, DRIVER_NAME, chip, DRV8860_OUTPUTS);
 	if (ret < 0)
 		return ret;
 

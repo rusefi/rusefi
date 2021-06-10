@@ -1,4 +1,11 @@
 pins:
+  - pin: MR
+    id: GPIOI_2
+    class: outputs
+    ts_name: Main Relay
+    function: OUT_MAIN
+    type: ls
+
   - pin: 1a
     function: GND
     type: GND
@@ -46,11 +53,7 @@ pins:
     type: inj
     
   - pin: 21a
-    id: GPIOI_2
-    class: outputs
-    ts_name: 21 - MAIN 
-    function: OUT_MAIN
-    type: ls
+    function: Main relay A
    
   - pin: 22a
     id: GPIOI_0
@@ -59,11 +62,7 @@ pins:
     function: OUT_VVT1_1
 
   - pin: 23a
-    id: GPIOI_2
-    class: outputs
-    ts_name: 23 - MAIN 
-    function: OUT_MAIN
-    type: ls
+    function: Main relay B
 
   - pin: 24a
     id: GPIOF_14
@@ -122,8 +121,8 @@ pins:
     function: IN_RES1
 
   - pin: 39
-    id: [GPIOF_10, EFI_ADC_3]
-    class: [switch_inputs, analog_inputs]
+    id: [GPIOF_10]
+    class: [switch_inputs]
     ts_name: 39 - IN RES2
     function: IN_RES2
     
@@ -195,7 +194,11 @@ pins:
     function: OUT_FUEL_CONSUMPTION
     
   - pin: 82a
-    function: IN_CRANK+
+    function: Crank Sensor
+    id: [GPIOB_1]
+    class: [event_inputs]
+    ts_name: 82 - VR
+
     
   - pin: 83a
     function: 5v

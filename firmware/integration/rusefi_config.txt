@@ -732,7 +732,7 @@ end_struct
 struct dc_io
 	brain_pin_e directionPin1;
 	brain_pin_e directionPin2;
-	brain_pin_e controlPin1;
+	brain_pin_e controlPin;Acts as EN pin in two-wire mode
 	brain_pin_e disablePin;
 end_struct
 	
@@ -1348,7 +1348,7 @@ tle8888_mode_e tle8888mode;
 	float unused244_3;;"units", 1, 0, -20, 100, 0
 	float unused2432;;"units", 1, 0, -20, 100, 0
 	float postCrankingFactor;+Fuel multiplier (enrichment) immediately after engine start;"mult",        1,     0,  1,    3,  2
-	float postCrankingDurationSec;+Time over which to taper out after start enrichment;"seconds",        1,     0,  0,    30,  2
+	float postCrankingDurationSec;+Time over which to taper out after start enrichment;"seconds",        1,     0,  0,    30,  0
 	ThermistorConf auxTempSensor1;todo: finish implementation #332
 	ThermistorConf auxTempSensor2;todo: finish implementation #332
 	uint8_t[6] unused2508;;"units", 1, 0, -20, 100, 0

@@ -41,11 +41,11 @@
 
 EXTERN_ENGINE;
 
-fuel_Map3D_t fuelPhaseMap("fl ph");
+static fuel_Map3D_t fuelPhaseMap;
 extern fuel_Map3D_t veMap;
 extern lambda_Map3D_t lambdaMap;
 extern baroCorr_Map3D_t baroCorrMap;
-mapEstimate_Map3D_t mapEstimationTable("map est");
+static mapEstimate_Map3D_t mapEstimationTable;
 
 #if EFI_ENGINE_CONTROL
 

@@ -38,10 +38,10 @@ EXTERN_ENGINE;
  */
 #define NO_PWM 0
 
-fsio8_Map3D_f32t fsioTable1("fsio#1");
-fsio8_Map3D_u8t fsioTable2("fsio#2");
-fsio8_Map3D_u8t fsioTable3("fsio#3");
-fsio8_Map3D_u8t fsioTable4("fsio#4");
+static fsio8_Map3D_f32t fsioTable1;
+static fsio8_Map3D_u8t fsioTable2;
+static fsio8_Map3D_u8t fsioTable3;
+static fsio8_Map3D_u8t fsioTable4;
 
 /**
  * Here we define all rusEfi-specific methods

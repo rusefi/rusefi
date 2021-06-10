@@ -2233,11 +2233,11 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 		field = "Fuel Pump Pin",						fuelPumpPin
 		field = "ETB#1 Dir #1",							etbIo1_directionPin1  @@if_ts_show_etb_pins
 		field = "ETB#1 Dir #2",							etbIo1_directionPin2  @@if_ts_show_etb_pins
-		field = "ETB#1 Control #1",						etbIo1_controlPin1    @@if_ts_show_etb_pins
+		field = "ETB#1 Control",						etbIo1_controlPin     @@if_ts_show_etb_pins
 		field = "ETB#1 Disable",						etbIo1_disablePin     @@if_ts_show_etb_pins
 		field = "ETB#2 Dir #1",							etbIo2_directionPin1  @@if_ts_show_etb_pins
 		field = "ETB#2 Dir #2",							etbIo2_directionPin2  @@if_ts_show_etb_pins
-		field = "ETB#2 Control #1",						etbIo2_controlPin1    @@if_ts_show_etb_pins
+		field = "ETB#2 Control",						etbIo2_controlPin     @@if_ts_show_etb_pins
 		field = "ETB#2 Disable",						etbIo2_disablePin     @@if_ts_show_etb_pins
 		field = "SD CS Pin",							sdCardCsPin @@if_ts_show_sd_card
 		field = "MIL / Check Engine Pin",				malfunctionIndicatorPin
@@ -2572,11 +2572,11 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 		field = "Two-wire mode",						etb_use_two_wires
 		field = "No1 Direction #1",						etbIo1_directionPin1
 		field = "No1 Direction #2",						etbIo1_directionPin2
-		field = "No1 Control #1",						etbIo1_controlPin1, { etb_use_two_wires == 0 }
+		field = "No1 Control",							etbIo1_controlPin
 		field = "No1 Disable",							etbIo1_disablePin
 		field = "No2 Direction #1",						etbIo2_directionPin1
 		field = "No2 Direction #2",						etbIo2_directionPin2
-		field = "No2 Control #1",						etbIo2_controlPin1, { etb_use_two_wires == 0}
+		field = "No2 Control",							etbIo2_controlPin
 		field = "No2 Disable",							etbIo2_disablePin
 
 	dialog = idleStepperHw, "Stepper Hardware"

@@ -138,16 +138,6 @@ void setAltPFactor(float p) {
 	showAltInfo();
 }
 
-void setDefaultAlternatorParameters(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
-	engineConfiguration->alternatorOffAboveTps = 120;
-
-	engineConfiguration->targetVBatt = 14;
-
-	engineConfiguration->alternatorControl.offset = 0;
-	engineConfiguration->alternatorControl.pFactor = 30;
-	engineConfiguration->alternatorControl.periodMs = 100;
-}
-
 void onConfigurationChangeAlternatorCallback(engine_configuration_s *previousConfiguration) {
 	shouldResetPid = !alternatorPid.isSame(&previousConfiguration->alternatorControl);
 }
