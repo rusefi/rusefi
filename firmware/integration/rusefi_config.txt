@@ -229,7 +229,7 @@ custom ve_table_t 4*@@FUEL_RPM_COUNT@@x@@FUEL_LOAD_COUNT@@ array,   F32,   @OFFS
 custom lambda_table_t @@FUEL_RPM_COUNT@@x@@FUEL_LOAD_COUNT@@ array,   U08,   @OFFSET@, [@@FUEL_RPM_COUNT@@x@@FUEL_LOAD_COUNT@@],"deg",	   {1/@@PACK_MULT_LAMBDA_CFG@@},     0,        0.6,  1.5,     2
 custom afr_table_t @@FUEL_RPM_COUNT@@x@@FUEL_LOAD_COUNT@@ array,   U08,   @OFFSET@, [@@FUEL_RPM_COUNT@@x@@FUEL_LOAD_COUNT@@],"deg",	   {1/@@PACK_MULT_AFR_CFG@@},     0,        0,  25.0,     1
 
-custom tcuinput_table_t @@TCU_INPUT_COUNT@@x@@TCU_STATE_COUNT@@ array,   F32,   @OFFSET@, [@@TCU_INPUT_COUNT@@x@@TCU_STATE_COUNT@@],"value", 1,     0,        0,  25.0,  1
+custom tcuinput_table_t @@TCU_INPUT_COUNT@@x@@TCU_STATE_COUNT@@ array,   F32,   @OFFSET@, [@@TCU_INPUT_COUNT@@x@@TCU_STATE_COUNT@@],"state", 1,     0,        0,  25.0,  2
 
 custom tcubinary_table_t @@TCU_SOLENOID_COUNT@@x@@TCU_GEAR_COUNT@@ array,   U08,   @OFFSET@, [@@TCU_SOLENOID_COUNT@@x@@TCU_GEAR_COUNT@@],"onoff", 1,     0,        0,  1,  0
 
