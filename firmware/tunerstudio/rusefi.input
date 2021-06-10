@@ -2676,7 +2676,7 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 		field = "Off temperature",					fanOffTemperature
 		field = "Enable with AC",					enableFan1WithAc
 
-	;dialog = fan1Settings, "Fan 1"
+	;dialog = fan2Settings, "Fan 2"
 	;	field = "Pin",								fan2Pin
 	;	field = "Pin mode",							fan2PinMode
 	;	field = "On temperature",					fan2OnTemperature
