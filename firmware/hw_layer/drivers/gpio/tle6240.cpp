@@ -218,7 +218,7 @@ int Tle6240::chip_init()
 	}
 
 	/* release reset */
-	if (!cfg->reset.port) {
+	if (cfg->reset.port) {
 		palClearPort(cfg->reset.port,
 					 PAL_PORT_BIT(cfg->reset.pad));
 		chThdSleepMilliseconds(1);
