@@ -528,8 +528,8 @@ bit isForcedInduction
 bit useFordRedundantTps;+On Ford vehicles one of the sensors is not linear on the full range, i.e. in the specific range of the positions we effectively have only one sensor.
 bit isVerboseAuxPid1
 bit overrideTriggerGaps
-bit unused_294_4
-bit unused_294_5
+bit enableFan1WithAc;+Turn on this fan when AC is on.
+bit enableFan2WithAc;+Turn on this fan when AC is on.
 bit unused_294_6
 bit unused_294_7
 bit unused_294_8
