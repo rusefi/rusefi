@@ -79,7 +79,30 @@ typedef enum {
 /*==========================================================================*/
 
 /* Driver */
-struct mc33972_priv {
+struct Mc33972 : public GpioChip {
+	int init() override;
+	int deinit() override;
+
+	// These functions need not be implemented if not supported by the particular chip.
+	/* pin argument is pin number within gpio chip, not a global number */
+	int setPadMode(size_t pin, iomode_t mode) override;
+	int readPad(size_t pin) override;
+	brain_pin_diag_e getDiag(size_t pin) override;
+
+	// internal functions
+
+	int chip_init();
+	int update_pullups();
+	int update_status();
+
+	void wake_driver();
+
+	int spi_w(uint32_t tx);
+
+	int comm_test();
+
+
+
 	const struct mc33972_config	*cfg;
 
 	/* thread stuff */
@@ -97,17 +120,11 @@ struct mc33972_priv {
 	mc33972_drv_state			drv_state;
 };
 
-static mc33972_priv chips[BOARD_MC33972_COUNT];
+static Mc33972 chips[BOARD_MC33972_COUNT];
 
 /*==========================================================================*/
 /* Driver local functions.													*/
 /*==========================================================================*/
-
-static SPIDriver *get_bus(mc33972_priv *chip)
-{
-	/* return non-const SPIDriver* from const struct cfg */
-	return chip->cfg->spi_bus;
-}
 
 /**
  * @brief MC33972 send cmd routine.
@@ -116,12 +133,12 @@ static SPIDriver *get_bus(mc33972_priv *chip)
  *  of diagnostic. This routine save it to chip->i_state
  */
 
-static int mc33972_spi_w(mc33972_priv *chip, uint32_t tx)
+int Mc33972::spi_w(uint32_t tx)
 {
 	int i;
 	uint8_t rxb[3];
 	uint8_t txb[3];
-	SPIDriver *spi = get_bus(chip);
+	SPIDriver *spi = cfg->spi_bus;
 
 	txb[0] = (tx >> 16) & 0xff;
 	txb[1] = (tx >>  8) & 0xff;
@@ -129,7 +146,7 @@ static int mc33972_spi_w(mc33972_priv *chip, uint32_t tx)
 	/* Acquire ownership of the bus. */
 	spiAcquireBus(spi);
 	/* Setup transfer parameters. */
-	spiStart(spi, &chip->cfg->spi_config);
+	spiStart(spi, &cfg->spi_config);
 	/* Slave Select assertion. */
 	spiSelect(spi);
 	/* Atomic transfer operations. */
@@ -141,7 +158,7 @@ static int mc33972_spi_w(mc33972_priv *chip, uint32_t tx)
 	spiReleaseBus(spi);
 
 	/* save received data */
-	chip->i_state = (rxb[0] << 16) | (rxb[1] << 8) | (rxb[2] << 0);
+	i_state = (rxb[0] << 16) | (rxb[1] << 8) | (rxb[2] << 0);
 
 	/* no errors for now */
 	return 0;
@@ -152,25 +169,25 @@ static int mc33972_spi_w(mc33972_priv *chip, uint32_t tx)
  * @details Chip reply with input data and two bits of diag
  */
 
-static int mc33972_update_status(mc33972_priv *chip)
+int Mc33972::update_status()
 {
-	return mc33972_spi_w(chip, CMD_STATUS);
+	return spi_w(CMD_STATUS);
 }
 
-static int mc33972_update_pullups(mc33972_priv *chip)
+int Mc33972::update_pullups()
 {
 	int ret;
 
 	/* enable tri-state for all unused pins */
-	ret = mc33972_spi_w(chip, CMD_TRI_STATE(SP_BANK, SP_PINS_EXTRACT(~chip->en_pins)));
+	ret = spi_w(CMD_TRI_STATE(SP_BANK, SP_PINS_EXTRACT(~en_pins)));
 	if (ret)
 		return ret;
-	ret = mc33972_spi_w(chip, CMD_TRI_STATE(SG_BANK, SG_PINS_EXTRACT(~chip->en_pins)));
+	ret = spi_w(CMD_TRI_STATE(SG_BANK, SG_PINS_EXTRACT(~en_pins)));
 
 	return ret;
 }
 
-static int mc33972_comm_test(mc33972_priv *chip)
+int Mc33972::comm_test()
 {
 	int ret;
 
@@ -182,14 +199,14 @@ static int mc33972_comm_test(mc33972_priv *chip)
 	 * check that muxed input bit is zero */
 	for (int i = 0; i < MC33972_INPUTS; i++) {
 		/* indexed starting from 1 */
-		ret = mc33972_spi_w(chip, CMD_ANALOG(0, i + 1));
+		ret = spi_w(CMD_ANALOG(0, i + 1));
 		if (ret)
 			return ret;
-		ret = mc33972_update_status(chip);
+		ret = update_status();
 		if (ret)
 			return ret;
 
-		if (chip->i_state & PIN_MASK(i))
+		if (i_state & PIN_MASK(i))
 			return -1;
 	}
 
@@ -202,12 +219,12 @@ static int mc33972_comm_test(mc33972_priv *chip)
  *  Performs reset.
  */
 
-static int mc33972_chip_init(mc33972_priv *chip)
+int Mc33972::chip_init()
 {
 	int ret;
 
 	/* reset first */
-	ret = mc33972_spi_w(chip, CMD_RST);
+	ret = spi_w(CMD_RST);
 	if (ret)
 		return ret;
 
@@ -226,20 +243,20 @@ static int mc33972_chip_init(mc33972_priv *chip)
 	 */
 
 	/* check communication */
-	ret = mc33972_comm_test(chip);
+	ret = comm_test();
 	if (ret)
 		return ret;
 
 	/* disable tri-state for used pins only */
-	ret = mc33972_update_pullups(chip);
+	ret = update_pullups();
 	if (ret)
 		return ret;
 
 	/* Set wetting current to 2 mA */
-	ret = mc33972_spi_w(chip, CMD_METALLIC(SP_BANK, 0));
+	ret = spi_w(CMD_METALLIC(SP_BANK, 0));
 	if (ret)
 		return ret;
-	ret = mc33972_spi_w(chip, CMD_METALLIC(SG_BANK, 0));
+	ret = spi_w(CMD_METALLIC(SG_BANK, 0));
 	if (ret)
 		return ret;
 
@@ -251,11 +268,12 @@ static int mc33972_chip_init(mc33972_priv *chip)
  * @details Wake up driver. Will cause input and diagnostic
  *  update
  */
-static int mc33972_wake_driver(mc33972_priv *chip)
+void Mc33972::wake_driver()
 {
-	/* Entering a reentrant critical zone.*/
-	syssts_t sts = chSysGetStatusAndLockX();
-	chSemSignalI(&chip->wake);
+	/* Entering a reentrant critical zone */
+	chibios_rt::CriticalSectionLocker csl;
+
+	chSemSignalI(&wake);
 	if (!port_is_isr_context()) {
 		/**
 		 * chSemSignalI above requires rescheduling
@@ -263,10 +281,6 @@ static int mc33972_wake_driver(mc33972_priv *chip)
 		 */
 		chSchRescheduleS();
 	}
-	/* Leaving the critical zone.*/
-	chSysRestoreStatusX(sts);
-
-	return 0;
 }
 
 /*==========================================================================*/
@@ -276,13 +290,13 @@ static int mc33972_wake_driver(mc33972_priv *chip)
 static THD_FUNCTION(mc33972_driver_thread, p)
 {
 	int ret;
-	mc33972_priv *chip = reinterpret_cast<mc33972_priv*>(p);
+	Mc33972 *chip = reinterpret_cast<Mc33972*>(p);
 
 	chRegSetThreadName(DRIVER_NAME);
 
 	/* repeat init until success */
 	do {
-		ret = mc33972_chip_init(chip);
+		ret = chip->chip_init();
 		if (ret) {
 			chThdSleepMilliseconds(1000);
 			continue;
@@ -301,11 +315,11 @@ static THD_FUNCTION(mc33972_driver_thread, p)
 
 		if (msg == MSG_TIMEOUT) {
 			/* only input state update */
-			ret = mc33972_update_status(chip);
+			ret = chip->update_status();
 		} else {
 			/* someone waked thread and asks us to update pin config */
-			/* inputs state is also readed */
-			ret = mc33972_update_pullups(chip);
+			/* inputs state is also read */
+			ret = chip->update_pullups();
 		}
 
 		if (ret) {
@@ -324,13 +338,9 @@ static THD_FUNCTION(mc33972_driver_thread, p)
 /* Driver exported functions.												*/
 /*==========================================================================*/
 
-static int mc33972_setPadMode(void *data, unsigned int pin, iomode_t mode) {
-	mc33972_priv *chip;
-
-	if ((pin >= MC33972_INPUTS) || (data == NULL))
+int Mc33972::setPadMode(size_t pin, iomode_t mode) {
+	if (pin >= MC33972_INPUTS)
 		return -1;
-
-	chip = (mc33972_priv *)data;
 
 	/* currently driver doesn't know how to hanlde different modes */
 	(void)mode;
@@ -341,83 +351,59 @@ static int mc33972_setPadMode(void *data, unsigned int pin, iomode_t mode) {
 	 * if this function is called for pin, that means someone
 	 * wants to read this pin and we can enable pull-up
 	 * Also pull down is not supported yet */
-	chip->en_pins |= PIN_MASK(pin);
+	en_pins |= PIN_MASK(pin);
 
 	/* ask for reinit */
-	mc33972_wake_driver(chip);
+	wake_driver();
 
 	return 0;
 }
 
-static int mc33972_readPad(void *data, unsigned int pin) {
-	mc33972_priv *chip;
-
-	if ((pin >= MC33972_INPUTS) || (data == NULL))
+int Mc33972::readPad(size_t pin) {
+	if (pin >= MC33972_INPUTS)
 		return -1;
 
-	chip = (mc33972_priv *)data;
-
 	/* convert to some common enum? */
-	return !!(chip->i_state & PIN_MASK(pin));
+	return !!(i_state & PIN_MASK(pin));
 }
 
-static brain_pin_diag_e mc33972_getDiag(void *data, unsigned int pin) {
+brain_pin_diag_e Mc33972::getDiag(size_t pin) {
 	brain_pin_diag_e diag = PIN_OK;
-	mc33972_priv *chip;
 
-	if ((pin >= MC33972_INPUTS) || (data == NULL))
+	if (pin >= MC33972_INPUTS)
 		return PIN_INVALID;
 
-	chip = (mc33972_priv *)data;
-
 	/* one diag bit for all pins */
-	if (chip->i_state & FLAG_THERM)
+	if (i_state & FLAG_THERM)
 		diag = PIN_DRIVER_OVERTEMP;
 
 	return diag;
 }
 
-static int mc33972_init(void * data)
+int Mc33972::init()
 {
-	mc33972_priv *chip;
-
-	chip = (mc33972_priv *)data;
-
 	/* no pins enabled yet */
-	chip->en_pins = 0x0000;
+	en_pins = 0x0000;
 
 	/* init semaphore */
-	chSemObjectInit(&chip->wake, 0);
+	chSemObjectInit(&wake, 0);
 
 	/* start thread */
-	chip->thread = chThdCreateStatic(chip->thread_wa, sizeof(chip->thread_wa),
-									 PRIO_GPIOCHIP, mc33972_driver_thread, chip);
+	thread = chThdCreateStatic(thread_wa, sizeof(thread_wa),
+									 PRIO_GPIOCHIP, mc33972_driver_thread, this);
 
 	return 0;
 }
 
-static int mc33972_deinit(void *data)
+int Mc33972::deinit()
 {
-	mc33972_priv *chip;
-
-	chip = (mc33972_priv *)data;
-
 	/* TODO: disable pulls for all pins? */
 
 	/* stop thread */
-	chThdTerminate(chip->thread);
+	chThdTerminate(thread);
 
 	return 0;
 }
-
-struct gpiochip_ops mc33972_ops = {
-	.setPadMode	= mc33972_setPadMode,
-	.writePad	= NULL,	/* chip input only */
-	.readPad	= mc33972_readPad,
-	.getDiag	= mc33972_getDiag,
-	.init		= mc33972_init,
-	.deinit 	= mc33972_deinit,
-};
 
 /**
  * @brief MC33972 driver add.
@@ -426,8 +412,6 @@ struct gpiochip_ops mc33972_ops = {
 
 int mc33972_add(brain_pin_e base, unsigned int index, const struct mc33972_config *cfg)
 {
-	mc33972_priv *chip;
-
 	/* no config or no such chip */
 	if ((!cfg) || (!cfg->spi_bus) || (index >= BOARD_MC33972_COUNT))
 		return -1;
@@ -438,18 +422,18 @@ int mc33972_add(brain_pin_e base, unsigned int index, const struct mc33972_confi
 		return -1;
 	}
 
-	chip = &chips[index];
+	Mc33972& chip = chips[index];
 
 	/* already initted? */
-	if (chip->cfg != NULL)
+	if (chip.cfg != NULL)
 		return -1;
 
-	chip->cfg = cfg;
-	chip->i_state = 0;
-	chip->drv_state = MC33972_WAIT_INIT;
+	chip.cfg = cfg;
+	chip.i_state = 0;
+	chip.drv_state = MC33972_WAIT_INIT;
 
 	/* register, return gpio chip base */
-	return gpiochip_register(base, DRIVER_NAME, &mc33972_ops, MC33972_INPUTS, chip);
+	return gpiochip_register(base, DRIVER_NAME, chip, MC33972_INPUTS);
 }
 
 #else /* BOARD_MC33972_COUNT > 0 */

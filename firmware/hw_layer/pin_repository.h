@@ -32,7 +32,6 @@ bool isBrainPinValid(brain_pin_e brainPin);
 void initPinRepository(void);
 EXTERNC bool brain_pin_is_onchip(brain_pin_e brainPin);
 EXTERNC bool brain_pin_is_ext(brain_pin_e brainPin);
-EXTERNC void tle8888_dump_regs(void);
 
 /**
  * Usually high-level code would invoke efiSetPadMode, not this method directly
