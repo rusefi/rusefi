@@ -54,7 +54,7 @@ pins:
     type: gnd
 
   - pin: 1J
-    id: GPIOB_0
+    id: GPIOH_15
     class: outputs
     ts_name: 1J - AC Relay
     function: A/C Relay
