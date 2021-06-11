@@ -528,8 +528,8 @@ bit isForcedInduction
 bit useFordRedundantTps;+On Ford vehicles one of the sensors is not linear on the full range, i.e. in the specific range of the positions we effectively have only one sensor.
 bit isVerboseAuxPid1
 bit overrideTriggerGaps
-bit unused_294_4
-bit unused_294_5
+bit enableFan1WithAc;+Turn on this fan when AC is on.
+bit enableFan2WithAc;+Turn on this fan when AC is on.
 bit unused_294_6
 bit unused_294_7
 bit unused_294_8
@@ -637,8 +637,8 @@ angle_t globalTriggerAngleOffset;+Angle between Top Dead Center (TDC) and the fi
 float analogInputDividerCoefficient;+Ratio/coefficient of input voltage dividers on your PCB. For example, use '2' if your board divides 5v into 2.5v. Use '1.66' if your board divides 5v into 3v.;"coef",    1,      0,    0.01,  10.0,   2
 float vbattDividerCoeff;+This is the ratio of the resistors for the battery voltage, measure the voltage at the battery and then adjust this number until the gauge matches the reading.;"coef",    1,      0,    0.01,  99.0,        2
 
-float fsio_visible fanOnTemperature;+Cooling fan turn-on temperature threshold, in Celsius;"*C",    1,      0,       0,  1000.0,        0
-float fsio_visible fanOffTemperature;+Cooling fan turn-off temperature threshold, in Celsius;"*C",    1,      0,       0,  1000.0,        0
+float fanOnTemperature;+Cooling fan turn-on temperature threshold, in Celsius;"deg C", 1, 0, 0, 150, 0
+float fanOffTemperature;+Cooling fan turn-off temperature threshold, in Celsius;"deg C", 1, 0, 0, 150, 0
 
 
 float vehicleSpeedCoef;+This coefficient translates vehicle speed input frequency (in Hz) into vehicle speed, km/h;"coef",    1,      0,    0.01,  2000.0,        2
