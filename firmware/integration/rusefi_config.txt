@@ -1474,7 +1474,7 @@ uint16_t[CLT_LIMITER_CURVE_SIZE] cltRevLimitRpm;See idleRpmPid;"",      1,     0
 
 tcuinput_table_t tcuInputTable;
 
-uint8_t[476] unused3328;;"units", 1, 0, -20, 100, 0
+uint8_t[332] unused3328;;"units", 1, 0, -20, 100, 0
 
 float tChargeAirCoefMin;;"Min tCharge Coeff.",        1,     0,  0.0,    1.0,  4
 float tChargeAirCoefMax;;"Max tCharge Coeff.",        1,     0,  0.0,    1.0,  4
