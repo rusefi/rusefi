@@ -1,4 +1,0 @@
--with_c_defines false \
--initialize_to_zero false \
--c_defines config/boards/hellen/cypress/config/controllers/algo/rusefi_generated.h \
--c_destination config/boards/hellen/cypress/config/controllers/algo/engine_configuration_generated_structures.h \
