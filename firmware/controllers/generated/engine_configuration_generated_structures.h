@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Sat Jun 05 20:20:27 UTC 2021
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Fri Jun 11 10:26:25 UTC 2021
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -681,11 +681,13 @@ struct engine_configuration_s {
 	offset 76 bit 3 */
 	bool overrideTriggerGaps : 1;
 	/**
+	 * Turn on this fan when AC is on.
 	offset 76 bit 4 */
-	bool unused_294_4 : 1;
+	bool enableFan1WithAc : 1;
 	/**
+	 * Turn on this fan when AC is on.
 	offset 76 bit 5 */
-	bool unused_294_5 : 1;
+	bool enableFan2WithAc : 1;
 	/**
 	offset 76 bit 6 */
 	bool unused_294_6 : 1;
@@ -990,13 +992,13 @@ struct engine_configuration_s {
 	float vbattDividerCoeff;
 	/**
 	 * Cooling fan turn-on temperature threshold, in Celsius
-	*C
+	deg C
 	 * offset 468
 	 */
 	float fanOnTemperature;
 	/**
 	 * Cooling fan turn-off temperature threshold, in Celsius
-	*C
+	deg C
 	 * offset 472
 	 */
 	float fanOffTemperature;
@@ -4213,4 +4215,4 @@ struct persistent_config_s {
 };
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Sat Jun 05 20:20:27 UTC 2021
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Fri Jun 11 10:26:25 UTC 2021
