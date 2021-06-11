@@ -1548,6 +1548,8 @@ tChargeMode_e tChargeMode;
 	uint16_t mc33_t_hold_off;;"us",   1,   0.0,        0,  10000,   0
 	uint16_t mc33_t_hold_tot;;"us",   1,   0.0,        0,  10000,   0
 
+        bit[2] unused1551
+
 	pin_input_mode_e acSwitchMode
 
 	pin_output_mode_e[TCU_SOLENOID_COUNT iterate] tcu_solenoid_mode;
