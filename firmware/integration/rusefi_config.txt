@@ -1548,7 +1548,7 @@ tChargeMode_e tChargeMode;
 	uint16_t mc33_t_hold_off;;"us",   1,   0.0,        0,  10000,   0
 	uint16_t mc33_t_hold_tot;;"us",   1,   0.0,        0,  10000,   0
 
-        int[2] unused1551;;"units", 1, 0, -20, 100, 0;
+        int unused1551;;"units", 1, 0, -20, 100, 0;
 
 	pin_input_mode_e acSwitchMode
 
