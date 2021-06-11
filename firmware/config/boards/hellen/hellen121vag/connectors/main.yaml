@@ -35,7 +35,7 @@ pins:
 
   - pin: 14a
     id: EFI_ADC_0
-    class: analog_input
+    class: analog_inputs
     ts_name: 14 - O2
     function: O2 sensor signal
     
