@@ -484,6 +484,7 @@ float IdleController::getClosedLoop(IIdleController::Phase phase, float tpsPos, 
 		} else {
 			// Always apply closed loop correction
 			iacPosition = getOpenLoop(phase, clt, tps);
+			engine->engineState.idle.baseIdlePosition = iacPosition;
 
 			// If TPS is working and automatic mode enabled, add any automatic correction
 			if (tps.Valid && engineConfiguration->idleMode == IM_AUTO) {
@@ -493,7 +494,6 @@ float IdleController::getClosedLoop(IIdleController::Phase phase, float tpsPos, 
 			iacPosition = clampPercentValue(iacPosition);
 		}
 
-		engine->engineState.idle.baseIdlePosition = iacPosition;
 
 #if EFI_TUNER_STUDIO
 		tsOutputChannels.isIdleClosedLoop = phase == Phase::Idling;
