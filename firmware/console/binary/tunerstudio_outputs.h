@@ -275,7 +275,10 @@ typedef struct {
 
 	scaled_percent fuelTrim[2];	// 296 & 298
 
-	uint8_t unusedAtTheEnd[38]; // we have some unused bytes to allow compatible TS changes
+	uint8_t tcuCurrentState; // 299
+	uint8_t one; // 300
+
+	uint8_t unusedAtTheEnd[36]; // we have some unused bytes to allow compatible TS changes
 
 	// Temporary - will remove soon
 	TsDebugChannels* getDebugChannels() {
