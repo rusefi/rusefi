@@ -42,6 +42,7 @@
 #define air_pressure_sensor_config_s_size 16
 #define air_pressure_sensor_type_e_auto_enum "MT_CUSTOM", "MT_DENSO183", "MT_MPX4250", "MT_HONDA3BAR", "MT_DODGE_NEON_2003", "MT_SUBY_DENSO", "MT_GM_3_BAR", "MT_MPX4100", "MT_TOYOTA_89420_02010", "MT_MPX4250A", "MT_BOSCH_2_5", "MT_MAZDA_1_BAR", "MT_GM_2_BAR", "MT_GM_1_BAR"
 #define alignEngineSnifferAtTDC_offset 744
+#define alignmentFill_at_1818_offset 1818
 #define alignmentFill_at_2227_offset 2227
 #define alignmentFill_at_2253_offset 2253
 #define alignmentFill_at_4539_offset 4539
@@ -1281,7 +1282,7 @@
 #define showSdCardWarning_offset 76
 #define SIGNATURE_BOARD hellen_cypress
 #define SIGNATURE_DATE 2021.06.12
-#define SIGNATURE_HASH 1015850303
+#define SIGNATURE_HASH 2012812307
 #define silentTriggerError_offset 1464
 #define slowAdcAlpha_offset 2088
 #define sparkDwellRpmBins_offset 332
@@ -1399,11 +1400,9 @@
 #define tcu_solenoid_mode5_offset 4521
 #define tcu_solenoid_mode6_offset 4522
 #define TCU_STATE_COUNT 8
-#define tcuDownshiftButtonPin_offset 1819
 #define tcuEnabled_offset 976
 #define tcuInputMode_offset 976
 #define tcuSolenoidTable_offset 15136
-#define tcuUpshiftButtonPin_offset 1818
 #define tempHpfpDuration_offset 726
 #define tempHpfpStart_offset 724
 #define test557pin_offset 3101
@@ -1635,7 +1634,7 @@
 #define ts_show_spi true
 #define ts_show_trigger_comparator false
 #define ts_show_tunerstudio_port true
-#define TS_SIGNATURE "rusEFI 2021.06.12.hellen_cypress.1015850303"
+#define TS_SIGNATURE "rusEFI 2021.06.12.hellen_cypress.2012812307"
 #define TS_SINGLE_WRITE_COMMAND 'W'
 #define TS_SINGLE_WRITE_COMMAND_char W
 #define TS_TEST_COMMAND 't' // 0x74
@@ -1736,30 +1735,30 @@
 #define unusedBit_289_30_offset 976
 #define unusedBit_289_31_offset 976
 #define unusedBit_34_31_offset 76
-#define unusedBit_492_10_offset 2116
-#define unusedBit_492_11_offset 2116
-#define unusedBit_492_12_offset 2116
-#define unusedBit_492_13_offset 2116
-#define unusedBit_492_14_offset 2116
-#define unusedBit_492_15_offset 2116
-#define unusedBit_492_16_offset 2116
-#define unusedBit_492_17_offset 2116
-#define unusedBit_492_18_offset 2116
-#define unusedBit_492_19_offset 2116
-#define unusedBit_492_20_offset 2116
-#define unusedBit_492_21_offset 2116
-#define unusedBit_492_22_offset 2116
-#define unusedBit_492_23_offset 2116
-#define unusedBit_492_24_offset 2116
-#define unusedBit_492_25_offset 2116
-#define unusedBit_492_26_offset 2116
-#define unusedBit_492_27_offset 2116
-#define unusedBit_492_28_offset 2116
-#define unusedBit_492_29_offset 2116
-#define unusedBit_492_30_offset 2116
-#define unusedBit_492_31_offset 2116
-#define unusedBit_492_8_offset 2116
-#define unusedBit_492_9_offset 2116
+#define unusedBit_491_10_offset 2116
+#define unusedBit_491_11_offset 2116
+#define unusedBit_491_12_offset 2116
+#define unusedBit_491_13_offset 2116
+#define unusedBit_491_14_offset 2116
+#define unusedBit_491_15_offset 2116
+#define unusedBit_491_16_offset 2116
+#define unusedBit_491_17_offset 2116
+#define unusedBit_491_18_offset 2116
+#define unusedBit_491_19_offset 2116
+#define unusedBit_491_20_offset 2116
+#define unusedBit_491_21_offset 2116
+#define unusedBit_491_22_offset 2116
+#define unusedBit_491_23_offset 2116
+#define unusedBit_491_24_offset 2116
+#define unusedBit_491_25_offset 2116
+#define unusedBit_491_26_offset 2116
+#define unusedBit_491_27_offset 2116
+#define unusedBit_491_28_offset 2116
+#define unusedBit_491_29_offset 2116
+#define unusedBit_491_30_offset 2116
+#define unusedBit_491_31_offset 2116
+#define unusedBit_491_8_offset 2116
+#define unusedBit_491_9_offset 2116
 #define unusedHereWeHave_offset 1464
 #define unusedOldBiquad_offset 2331
 #define unusedOldIgnitionOffset_offset 445

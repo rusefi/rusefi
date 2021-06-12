@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Sat Jun 12 04:03:05 UTC 2021
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Sat Jun 12 04:11:47 UTC 2021
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -2644,13 +2644,11 @@ struct engine_configuration_s {
 	 */
 	brain_pin_e auxValves[AUX_DIGITAL_VALVE_COUNT];
 	/**
+	 * need 4 byte alignment
+	units
 	 * offset 1818
 	 */
-	switch_input_pin_e tcuUpshiftButtonPin;
-	/**
-	 * offset 1819
-	 */
-	switch_input_pin_e tcuDownshiftButtonPin;
+	uint8_t alignmentFill_at_1818[2];
 	/**
 	 * Knock sensor output knock detection threshold depending on current RPM
 	v
@@ -2892,76 +2890,76 @@ struct engine_configuration_s {
 	bool unused1130 : 1;
 	/**
 	offset 2116 bit 8 */
-	bool unusedBit_492_8 : 1;
+	bool unusedBit_491_8 : 1;
 	/**
 	offset 2116 bit 9 */
-	bool unusedBit_492_9 : 1;
+	bool unusedBit_491_9 : 1;
 	/**
 	offset 2116 bit 10 */
-	bool unusedBit_492_10 : 1;
+	bool unusedBit_491_10 : 1;
 	/**
 	offset 2116 bit 11 */
-	bool unusedBit_492_11 : 1;
+	bool unusedBit_491_11 : 1;
 	/**
 	offset 2116 bit 12 */
-	bool unusedBit_492_12 : 1;
+	bool unusedBit_491_12 : 1;
 	/**
 	offset 2116 bit 13 */
-	bool unusedBit_492_13 : 1;
+	bool unusedBit_491_13 : 1;
 	/**
 	offset 2116 bit 14 */
-	bool unusedBit_492_14 : 1;
+	bool unusedBit_491_14 : 1;
 	/**
 	offset 2116 bit 15 */
-	bool unusedBit_492_15 : 1;
+	bool unusedBit_491_15 : 1;
 	/**
 	offset 2116 bit 16 */
-	bool unusedBit_492_16 : 1;
+	bool unusedBit_491_16 : 1;
 	/**
 	offset 2116 bit 17 */
-	bool unusedBit_492_17 : 1;
+	bool unusedBit_491_17 : 1;
 	/**
 	offset 2116 bit 18 */
-	bool unusedBit_492_18 : 1;
+	bool unusedBit_491_18 : 1;
 	/**
 	offset 2116 bit 19 */
-	bool unusedBit_492_19 : 1;
+	bool unusedBit_491_19 : 1;
 	/**
 	offset 2116 bit 20 */
-	bool unusedBit_492_20 : 1;
+	bool unusedBit_491_20 : 1;
 	/**
 	offset 2116 bit 21 */
-	bool unusedBit_492_21 : 1;
+	bool unusedBit_491_21 : 1;
 	/**
 	offset 2116 bit 22 */
-	bool unusedBit_492_22 : 1;
+	bool unusedBit_491_22 : 1;
 	/**
 	offset 2116 bit 23 */
-	bool unusedBit_492_23 : 1;
+	bool unusedBit_491_23 : 1;
 	/**
 	offset 2116 bit 24 */
-	bool unusedBit_492_24 : 1;
+	bool unusedBit_491_24 : 1;
 	/**
 	offset 2116 bit 25 */
-	bool unusedBit_492_25 : 1;
+	bool unusedBit_491_25 : 1;
 	/**
 	offset 2116 bit 26 */
-	bool unusedBit_492_26 : 1;
+	bool unusedBit_491_26 : 1;
 	/**
 	offset 2116 bit 27 */
-	bool unusedBit_492_27 : 1;
+	bool unusedBit_491_27 : 1;
 	/**
 	offset 2116 bit 28 */
-	bool unusedBit_492_28 : 1;
+	bool unusedBit_491_28 : 1;
 	/**
 	offset 2116 bit 29 */
-	bool unusedBit_492_29 : 1;
+	bool unusedBit_491_29 : 1;
 	/**
 	offset 2116 bit 30 */
-	bool unusedBit_492_30 : 1;
+	bool unusedBit_491_30 : 1;
 	/**
 	offset 2116 bit 31 */
-	bool unusedBit_492_31 : 1;
+	bool unusedBit_491_31 : 1;
 	/**
 	 * set can_mode X
 	 * offset 2120
@@ -4206,4 +4204,4 @@ struct persistent_config_s {
 };
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Sat Jun 12 04:03:05 UTC 2021
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Sat Jun 12 04:11:47 UTC 2021
