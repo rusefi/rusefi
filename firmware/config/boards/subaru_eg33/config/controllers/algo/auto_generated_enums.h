@@ -1,4 +1,4 @@
-// was generated automatically by rusEFI tool  from rusefi_hw_enums.h // was generated automatically by rusEFI tool  from rusefi_enums.h // by enum2string.jar tool on Sat May 08 16:45:49 MSK 2021
+// was generated automatically by rusEFI tool  from rusefi_hw_enums.h // was generated automatically by rusEFI tool  from rusefi_enums.h // by enum2string.jar tool on Sat Jun 12 04:02:42 UTC 2021
 // see also gen_config_and_enums.bat
 
 
@@ -47,6 +47,7 @@ const char *getSensor_chart_e(sensor_chart_e value);
 const char *getSpi_device_e(spi_device_e value);
 const char *getSpi_speed_e(spi_speed_e value);
 const char *getTChargeMode_e(tChargeMode_e value);
+const char *getTcu_role_e(tcu_role_e value);
 const char *getTiming_mode_e(timing_mode_e value);
 const char *getTle8888_mode_e(tle8888_mode_e value);
 const char *getTrigger_event_e(trigger_event_e value);
