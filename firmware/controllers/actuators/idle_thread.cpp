@@ -373,8 +373,10 @@ float IdleController::getClosedLoop(IIdleController::Phase phase, float tpsPos, 
 		}
 
 		engine->engineState.idle.idleState = TPS_THRESHOLD;
-		// just leave IAC position as is (but don't return currentIdlePosition - it may already contain additionalAir)
-		return m_lastAutomaticPosition;
+
+		// We aren't idling, so don't apply any correction.  A positive correction could inhibit a return to idle.
+		m_lastAutomaticPosition = 0;
+		return 0;
 	}
 
 	// #1553 we need to give FSIO variable offset or minValue a chance
