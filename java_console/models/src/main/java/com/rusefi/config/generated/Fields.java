@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Fri Jun 11 10:26:25 UTC 2021
+// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Sat Jun 12 04:02:42 UTC 2021
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -1232,7 +1232,7 @@ public class Fields {
 	public static final int servoOutputPins8_offset = 3147;
 	public static final int showHumanReadableWarning_offset = 976;
 	public static final int showSdCardWarning_offset = 76;
-	public static final int SIGNATURE_HASH = 238553099;
+	public static final int SIGNATURE_HASH = 2129690351;
 	public static final int silentTriggerError_offset = 1464;
 	public static final int slowAdcAlpha_offset = 2088;
 	public static final int sparkDwellRpmBins_offset = 332;
@@ -1331,6 +1331,7 @@ public class Fields {
 	public static final int tChargeMinRpmMinTps_offset = 2232;
 	public static final int tChargeMode_offset = 3884;
 	public static final int TCU_GEAR_COUNT = 10;
+	public static final int TCU_INPUT_COUNT = 6;
 	public static final int tcu_solenoid1_offset = 1192;
 	public static final int tcu_solenoid2_offset = 1193;
 	public static final int tcu_solenoid3_offset = 1194;
@@ -1344,12 +1345,12 @@ public class Fields {
 	public static final int tcu_solenoid_mode4_offset = 4520;
 	public static final int tcu_solenoid_mode5_offset = 4521;
 	public static final int tcu_solenoid_mode6_offset = 4522;
+	public static final int TCU_STATE_COUNT = 8;
 	public static final int tcuDownshiftButtonPin_offset = 1819;
-	public static final int tcuDownshiftButtonPinMode_offset = 4515;
 	public static final int tcuEnabled_offset = 976;
+	public static final int tcuInputMode_offset = 976;
 	public static final int tcuSolenoidTable_offset = 15136;
 	public static final int tcuUpshiftButtonPin_offset = 1818;
-	public static final int tcuUpshiftButtonPinMode_offset = 4514;
 	public static final int tempHpfpDuration_offset = 726;
 	public static final int tempHpfpStart_offset = 724;
 	public static final int test557pin_offset = 3101;
@@ -1534,7 +1535,7 @@ public class Fields {
 	public static final char TS_SD_R_COMMAND = 'r';
 	public static final char TS_SD_W_COMMAND = 'w';
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI 2021.06.11.all.238553099";
+	public static final String TS_SIGNATURE = "rusEFI 2021.06.12.all.2129690351";
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final int TT_TT_1_16 = 50;
 	public static final int TT_TT_2JZ_1_12 = 29;
@@ -1595,6 +1596,7 @@ public class Fields {
 	public static final int unused1476b20_offset = 1476;
 	public static final int unused1476b3_offset = 1476;
 	public static final int unused1476b8_offset = 1476;
+	public static final int unused1551_offset = 4514;
 	public static final int unused1708_offset = 1708;
 	public static final int unused1756_offset = 1756;
 	public static final int unused2260_offset = 2260;
@@ -1628,7 +1630,6 @@ public class Fields {
 	public static final int unusedAuxVoltage1_TODO_332_offset = 2713;
 	public static final int unusedAuxVoltage2_TODO_332_offset = 2714;
 	public static final int unusedBit4_1476_offset = 1476;
-	public static final int unusedBit_251_29_offset = 976;
 	public static final int unusedBit_289_30_offset = 976;
 	public static final int unusedBit_289_31_offset = 976;
 	public static final int unusedBit_34_31_offset = 76;
@@ -2218,7 +2219,7 @@ public class Fields {
 	public static final Field KNOCKBANKCYL11 = Field.create("KNOCKBANKCYL11", 976, FieldType.BIT, 26);
 	public static final Field KNOCKBANKCYL12 = Field.create("KNOCKBANKCYL12", 976, FieldType.BIT, 27);
 	public static final Field TCUENABLED = Field.create("TCUENABLED", 976, FieldType.BIT, 28);
-	public static final Field UNUSEDBIT_251_29 = Field.create("UNUSEDBIT_251_29", 976, FieldType.BIT, 29);
+	public static final Field TCUINPUTMODE = Field.create("TCUINPUTMODE", 976, FieldType.BIT, 29);
 	public static final Field UNUSEDBIT_289_30 = Field.create("UNUSEDBIT_289_30", 976, FieldType.BIT, 30);
 	public static final Field UNUSEDBIT_289_31 = Field.create("UNUSEDBIT_289_31", 976, FieldType.BIT, 31);
 	public static final Field ETBIO1_DIRECTIONPIN1 = Field.create("ETBIO1_DIRECTIONPIN1", 980, FieldType.INT8, brain_pin_e);
@@ -2785,8 +2786,6 @@ public class Fields {
 	public static final Field MC33_T_BYPASS = Field.create("MC33_T_BYPASS", 4508, FieldType.INT16);
 	public static final Field MC33_T_HOLD_OFF = Field.create("MC33_T_HOLD_OFF", 4510, FieldType.INT16);
 	public static final Field MC33_T_HOLD_TOT = Field.create("MC33_T_HOLD_TOT", 4512, FieldType.INT16);
-	public static final Field TCUUPSHIFTBUTTONPINMODE = Field.create("TCUUPSHIFTBUTTONPINMODE", 4514, FieldType.INT8, pin_input_mode_e);
-	public static final Field TCUDOWNSHIFTBUTTONPINMODE = Field.create("TCUDOWNSHIFTBUTTONPINMODE", 4515, FieldType.INT8, pin_input_mode_e);
 	public static final Field ACSWITCHMODE = Field.create("ACSWITCHMODE", 4516, FieldType.INT8, pin_input_mode_e);
 	public static final Field TCU_SOLENOID_MODE1 = Field.create("TCU_SOLENOID_MODE1", 4517, FieldType.INT8, pin_output_mode_e);
 	public static final Field TCU_SOLENOID_MODE2 = Field.create("TCU_SOLENOID_MODE2", 4518, FieldType.INT8, pin_output_mode_e);
@@ -3319,7 +3318,7 @@ public class Fields {
 	KNOCKBANKCYL11,
 	KNOCKBANKCYL12,
 	TCUENABLED,
-	UNUSEDBIT_251_29,
+	TCUINPUTMODE,
 	UNUSEDBIT_289_30,
 	UNUSEDBIT_289_31,
 	ETBIO1_DIRECTIONPIN1,
@@ -3876,8 +3875,6 @@ public class Fields {
 	MC33_T_BYPASS,
 	MC33_T_HOLD_OFF,
 	MC33_T_HOLD_TOT,
-	TCUUPSHIFTBUTTONPINMODE,
-	TCUDOWNSHIFTBUTTONPINMODE,
 	ACSWITCHMODE,
 	TCU_SOLENOID_MODE1,
 	TCU_SOLENOID_MODE2,

@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Fri Jun 11 10:26:51 UTC 2021
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Sat Jun 12 04:03:05 UTC 2021
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -1957,7 +1957,7 @@ struct engine_configuration_s {
 	bool tcuEnabled : 1;
 	/**
 	offset 976 bit 29 */
-	bool unusedBit_251_29 : 1;
+	bool tcuInputMode : 1;
 	/**
 	offset 976 bit 30 */
 	bool unusedBit_289_30 : 1;
@@ -3784,13 +3784,10 @@ struct engine_configuration_s {
 	 */
 	uint16_t mc33_t_hold_tot;
 	/**
+	units
 	 * offset 4486
 	 */
-	pin_input_mode_e tcuUpshiftButtonPinMode;
-	/**
-	 * offset 4487
-	 */
-	pin_input_mode_e tcuDownshiftButtonPinMode;
+	int8_t unused1551[2];
 	/**
 	 * offset 4488
 	 */
@@ -4209,4 +4206,4 @@ struct persistent_config_s {
 };
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Fri Jun 11 10:26:51 UTC 2021
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Sat Jun 12 04:03:05 UTC 2021

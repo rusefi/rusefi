@@ -1280,8 +1280,8 @@
 #define showHumanReadableWarning_offset 976
 #define showSdCardWarning_offset 76
 #define SIGNATURE_BOARD subaru_eg33_f7
-#define SIGNATURE_DATE 2021.06.11
-#define SIGNATURE_HASH 2741241373
+#define SIGNATURE_DATE 2021.06.12
+#define SIGNATURE_HASH 3551293689
 #define silentTriggerError_offset 1464
 #define slowAdcAlpha_offset 2088
 #define sparkDwellRpmBins_offset 332
@@ -1384,6 +1384,7 @@
 #define tChargeMode_e_enum "RPM+TPS (Default)", "Air Mass Interpolation"
 #define tChargeMode_offset 3884
 #define TCU_GEAR_COUNT 10
+#define TCU_INPUT_COUNT 6
 #define tcu_solenoid1_offset 1192
 #define tcu_solenoid2_offset 1193
 #define tcu_solenoid3_offset 1194
@@ -1397,12 +1398,12 @@
 #define tcu_solenoid_mode4_offset 4520
 #define tcu_solenoid_mode5_offset 4521
 #define tcu_solenoid_mode6_offset 4522
+#define TCU_STATE_COUNT 8
 #define tcuDownshiftButtonPin_offset 1819
-#define tcuDownshiftButtonPinMode_offset 4515
 #define tcuEnabled_offset 976
+#define tcuInputMode_offset 976
 #define tcuSolenoidTable_offset 15136
 #define tcuUpshiftButtonPin_offset 1818
-#define tcuUpshiftButtonPinMode_offset 4514
 #define tempHpfpDuration_offset 726
 #define tempHpfpStart_offset 724
 #define test557pin_offset 3101
@@ -1634,7 +1635,7 @@
 #define ts_show_spi true
 #define ts_show_trigger_comparator false
 #define ts_show_tunerstudio_port false
-#define TS_SIGNATURE "rusEFI 2021.06.11.subaru_eg33_f7.2741241373"
+#define TS_SIGNATURE "rusEFI 2021.06.12.subaru_eg33_f7.3551293689"
 #define TS_SINGLE_WRITE_COMMAND 'W'
 #define TS_SINGLE_WRITE_COMMAND_char W
 #define TS_TEST_COMMAND 't' // 0x74
@@ -1698,6 +1699,7 @@
 #define unused1476b20_offset 1476
 #define unused1476b3_offset 1476
 #define unused1476b8_offset 1476
+#define unused1551_offset 4514
 #define unused1708_offset 1708
 #define unused1756_offset 1756
 #define unused2260_offset 2260
@@ -1731,7 +1733,6 @@
 #define unusedAuxVoltage1_TODO_332_offset 2713
 #define unusedAuxVoltage2_TODO_332_offset 2714
 #define unusedBit4_1476_offset 1476
-#define unusedBit_251_29_offset 976
 #define unusedBit_289_30_offset 976
 #define unusedBit_289_31_offset 976
 #define unusedBit_34_31_offset 76
