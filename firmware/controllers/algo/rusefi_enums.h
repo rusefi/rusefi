@@ -991,21 +991,6 @@ typedef enum {
 } antiLagActivationMode_e;
 
 typedef enum __attribute__ ((__packed__)) {
-	ROLE_PARK = 0,
-	ROLE_NEUTRAL = 1,
-	ROLE_PARK_NEUTRAL = 2,
-	ROLE_REVERSE = 3,
-	ROLE_DRIVE = 4,
-	ROLE_MANUAL = 5,
-	ROLE_LOW = 6,
-	ROLE_UPSHIFT = 7,
-	ROLE_DOWNSHIFT = 8,
-	ROLE_GEAR_3 = 9,
-	ROLE_GEAR_2 = 10,
-	ROLE_GEAR_1 = 11,
-} tcu_role_e;
-
-typedef enum __attribute__ ((__packed__)) {
 	GPPWM_Tps = 0,
 	GPPWM_Map = 1,
 	GPPWM_Clt = 2,
