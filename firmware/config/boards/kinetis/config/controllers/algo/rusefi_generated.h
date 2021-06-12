@@ -1265,7 +1265,7 @@
 #define showSdCardWarning_offset 76
 #define SIGNATURE_BOARD kin
 #define SIGNATURE_DATE 2021.06.12
-#define SIGNATURE_HASH 1209820581
+#define SIGNATURE_HASH 3017875239
 #define silentTriggerError_offset 1464
 #define slowAdcAlpha_offset 2088
 #define sparkDwellRpmBins_offset 332
@@ -1368,7 +1368,6 @@
 #define tChargeMode_e_enum "RPM+TPS (Default)", "Air Mass Interpolation"
 #define tChargeMode_offset 3856
 #define TCU_GEAR_COUNT 10
-#define TCU_INPUT_COUNT 6
 #define tcu_solenoid1_offset 1192
 #define tcu_solenoid2_offset 1193
 #define tcu_solenoid3_offset 1194
@@ -1382,11 +1381,9 @@
 #define tcu_solenoid_mode4_offset 4492
 #define tcu_solenoid_mode5_offset 4493
 #define tcu_solenoid_mode6_offset 4494
-#define TCU_STATE_COUNT 8
 #define tcuDownshiftButtonPin_offset 1819
 #define tcuDownshiftButtonPinMode_offset 4487
 #define tcuEnabled_offset 976
-#define tcuInputMode_offset 976
 #define tcuSolenoidTable_offset 15108
 #define tcuUpshiftButtonPin_offset 1818
 #define tcuUpshiftButtonPinMode_offset 4486
@@ -1621,7 +1618,7 @@
 #define ts_show_spi true
 #define ts_show_trigger_comparator true
 #define ts_show_tunerstudio_port true
-#define TS_SIGNATURE "rusEFI 2021.06.12.kin.1209820581"
+#define TS_SIGNATURE "rusEFI 2021.06.12.kin.3017875239"
 #define TS_SINGLE_WRITE_COMMAND 'W'
 #define TS_SINGLE_WRITE_COMMAND_char W
 #define TS_TEST_COMMAND 't' // 0x74
@@ -1718,6 +1715,7 @@
 #define unusedAuxVoltage1_TODO_332_offset 2685
 #define unusedAuxVoltage2_TODO_332_offset 2686
 #define unusedBit4_1476_offset 1476
+#define unusedBit_251_29_offset 976
 #define unusedBit_289_30_offset 976
 #define unusedBit_289_31_offset 976
 #define unusedBit_34_31_offset 76

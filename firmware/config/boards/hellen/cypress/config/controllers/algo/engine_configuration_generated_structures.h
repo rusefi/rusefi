@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on hellen_cypress_gen_config.bat integration/rusefi_config.txt Sat Jun 12 11:28:01 UTC 2021
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on hellen_cypress_gen_config.bat integration/rusefi_config.txt Sat Jun 12 18:06:59 UTC 2021
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -1957,7 +1957,7 @@ struct engine_configuration_s {
 	bool tcuEnabled : 1;
 	/**
 	offset 976 bit 29 */
-	bool tcuInputMode : 1;
+	bool unusedBit_251_29 : 1;
 	/**
 	offset 976 bit 30 */
 	bool unusedBit_289_30 : 1;
@@ -4215,4 +4215,4 @@ struct persistent_config_s {
 };
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on hellen_cypress_gen_config.bat integration/rusefi_config.txt Sat Jun 12 11:28:01 UTC 2021
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on hellen_cypress_gen_config.bat integration/rusefi_config.txt Sat Jun 12 18:06:59 UTC 2021
