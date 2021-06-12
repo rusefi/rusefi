@@ -1,7 +1,7 @@
 #include "global.h"
 #include "rusefi_enums.h"
 #include "rusefi_hw_enums.h"
-// was generated automatically by rusEFI tool  from rusefi_hw_enums.h // was generated automatically by rusEFI tool  from rusefi_enums.h // by enum2string.jar tool on Sat Jun 12 04:02:41 UTC 2021
+// was generated automatically by rusEFI tool  from rusefi_hw_enums.h // was generated automatically by rusEFI tool  from rusefi_enums.h // by enum2string.jar tool on Sat Jun 12 18:06:26 UTC 2021
 // see also gen_config_and_enums.bat
 
 
@@ -1280,35 +1280,6 @@ case TCHARGE_MODE_AIR_INTERP:
   return "TCHARGE_MODE_AIR_INTERP";
 case TCHARGE_MODE_RPM_TPS:
   return "TCHARGE_MODE_RPM_TPS";
-  }
- return NULL;
-}
-const char *getTcu_role_e(tcu_role_e value){
-switch(value) {
-case ROLE_DOWNSHIFT:
-  return "ROLE_DOWNSHIFT";
-case ROLE_DRIVE:
-  return "ROLE_DRIVE";
-case ROLE_GEAR_1:
-  return "ROLE_GEAR_1";
-case ROLE_GEAR_2:
-  return "ROLE_GEAR_2";
-case ROLE_GEAR_3:
-  return "ROLE_GEAR_3";
-case ROLE_LOW:
-  return "ROLE_LOW";
-case ROLE_MANUAL:
-  return "ROLE_MANUAL";
-case ROLE_NEUTRAL:
-  return "ROLE_NEUTRAL";
-case ROLE_PARK:
-  return "ROLE_PARK";
-case ROLE_PARK_NEUTRAL:
-  return "ROLE_PARK_NEUTRAL";
-case ROLE_REVERSE:
-  return "ROLE_REVERSE";
-case ROLE_UPSHIFT:
-  return "ROLE_UPSHIFT";
   }
  return NULL;
 }

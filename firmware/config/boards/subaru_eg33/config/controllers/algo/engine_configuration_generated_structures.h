@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on config/boards/subaru_eg33/config/gen_config.sh integration/rusefi_config.txt Sat Jun 12 04:18:26 UTC 2021
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on config/boards/subaru_eg33/config/gen_config.sh integration/rusefi_config.txt Sat Jun 12 18:07:01 UTC 2021
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -1957,7 +1957,7 @@ struct engine_configuration_s {
 	bool tcuEnabled : 1;
 	/**
 	offset 976 bit 29 */
-	bool tcuInputMode : 1;
+	bool unusedBit_251_29 : 1;
 	/**
 	offset 976 bit 30 */
 	bool unusedBit_289_30 : 1;
@@ -2118,126 +2118,10 @@ struct engine_configuration_s {
 	 */
 	output_pin_e luaOutputPins[LUA_PWM_COUNT];
 	/**
+	units
 	 * offset 1228
 	 */
-	tcu_role_e tcuState0Role;
-	/**
-	 * offset 1229
-	 */
-	tcu_role_e tcuState1Role;
-	/**
-	 * offset 1230
-	 */
-	tcu_role_e tcuState2Role;
-	/**
-	 * offset 1231
-	 */
-	tcu_role_e tcuState3Role;
-	/**
-	 * offset 1232
-	 */
-	tcu_role_e tcuState4Role;
-	/**
-	 * offset 1233
-	 */
-	tcu_role_e tcuState5Role;
-	/**
-	 * offset 1234
-	 */
-	tcu_role_e tcuState6Role;
-	/**
-	 * offset 1235
-	 */
-	tcu_role_e tcuState7Role;
-	/**
-	 * offset 1236
-	 */
-	brain_pin_e tcuInputPin1D;
-	/**
-	 * offset 1237
-	 */
-	brain_pin_e tcuInputPin2D;
-	/**
-	 * offset 1238
-	 */
-	brain_pin_e tcuInputPin3D;
-	/**
-	 * offset 1239
-	 */
-	brain_pin_e tcuInputPin4D;
-	/**
-	 * offset 1240
-	 */
-	brain_pin_e tcuInputPin5D;
-	/**
-	 * offset 1241
-	 */
-	brain_pin_e tcuInputPin6D;
-	/**
-	 * offset 1242
-	 */
-	adc_channel_e tcuInputPin1A;
-	/**
-	 * offset 1243
-	 */
-	adc_channel_e tcuInputPin2A;
-	/**
-	 * offset 1244
-	 */
-	adc_channel_e tcuInputPin3A;
-	/**
-	 * offset 1245
-	 */
-	adc_channel_e tcuInputPin4A;
-	/**
-	 * offset 1246
-	 */
-	adc_channel_e tcuInputPin5A;
-	/**
-	 * offset 1247
-	 */
-	adc_channel_e tcuInputPin6A;
-	/**
-	 * offset 1248
-	 */
-	pin_input_mode_e tcuInputPin1Mode;
-	/**
-	 * offset 1249
-	 */
-	pin_input_mode_e tcuInputPin2Mode;
-	/**
-	 * offset 1250
-	 */
-	pin_input_mode_e tcuInputPin3Mode;
-	/**
-	 * offset 1251
-	 */
-	pin_input_mode_e tcuInputPin4Mode;
-	/**
-	 * offset 1252
-	 */
-	pin_input_mode_e tcuInputPin5Mode;
-	/**
-	 * offset 1253
-	 */
-	pin_input_mode_e tcuInputPin6Mode;
-	/**
-	 * need 4 byte alignment
-	units
-	 * offset 1254
-	 */
-	uint8_t alignmentFill_at_1254[2];
-	/**
-	 * voltage tolerance of analog inputs
-	v
-	 * offset 1256
-	 */
-	float tcuAnalogInputTolerance;
-	/**
-	units
-	 * offset 1260
-	 */
-	int unusedAtOldBoardConfigurationEnd[49];
+	int unusedAtOldBoardConfigurationEnd[57];
 	/**
 	kg
 	 * offset 1456
@@ -2760,11 +2644,13 @@ struct engine_configuration_s {
 	 */
 	brain_pin_e auxValves[AUX_DIGITAL_VALVE_COUNT];
 	/**
-	 * need 4 byte alignment
-	units
 	 * offset 1818
 	 */
-	uint8_t alignmentFill_at_1818[2];
+	switch_input_pin_e tcuUpshiftButtonPin;
+	/**
+	 * offset 1819
+	 */
+	switch_input_pin_e tcuDownshiftButtonPin;
 	/**
 	 * Knock sensor output knock detection threshold depending on current RPM
 	v
@@ -3006,76 +2892,76 @@ struct engine_configuration_s {
 	bool unused1130 : 1;
 	/**
 	offset 2116 bit 8 */
-	bool unusedBit_519_8 : 1;
+	bool unusedBit_492_8 : 1;
 	/**
 	offset 2116 bit 9 */
-	bool unusedBit_519_9 : 1;
+	bool unusedBit_492_9 : 1;
 	/**
 	offset 2116 bit 10 */
-	bool unusedBit_519_10 : 1;
+	bool unusedBit_492_10 : 1;
 	/**
 	offset 2116 bit 11 */
-	bool unusedBit_519_11 : 1;
+	bool unusedBit_492_11 : 1;
 	/**
 	offset 2116 bit 12 */
-	bool unusedBit_519_12 : 1;
+	bool unusedBit_492_12 : 1;
 	/**
 	offset 2116 bit 13 */
-	bool unusedBit_519_13 : 1;
+	bool unusedBit_492_13 : 1;
 	/**
 	offset 2116 bit 14 */
-	bool unusedBit_519_14 : 1;
+	bool unusedBit_492_14 : 1;
 	/**
 	offset 2116 bit 15 */
-	bool unusedBit_519_15 : 1;
+	bool unusedBit_492_15 : 1;
 	/**
 	offset 2116 bit 16 */
-	bool unusedBit_519_16 : 1;
+	bool unusedBit_492_16 : 1;
 	/**
 	offset 2116 bit 17 */
-	bool unusedBit_519_17 : 1;
+	bool unusedBit_492_17 : 1;
 	/**
 	offset 2116 bit 18 */
-	bool unusedBit_519_18 : 1;
+	bool unusedBit_492_18 : 1;
 	/**
 	offset 2116 bit 19 */
-	bool unusedBit_519_19 : 1;
+	bool unusedBit_492_19 : 1;
 	/**
 	offset 2116 bit 20 */
-	bool unusedBit_519_20 : 1;
+	bool unusedBit_492_20 : 1;
 	/**
 	offset 2116 bit 21 */
-	bool unusedBit_519_21 : 1;
+	bool unusedBit_492_21 : 1;
 	/**
 	offset 2116 bit 22 */
-	bool unusedBit_519_22 : 1;
+	bool unusedBit_492_22 : 1;
 	/**
 	offset 2116 bit 23 */
-	bool unusedBit_519_23 : 1;
+	bool unusedBit_492_23 : 1;
 	/**
 	offset 2116 bit 24 */
-	bool unusedBit_519_24 : 1;
+	bool unusedBit_492_24 : 1;
 	/**
 	offset 2116 bit 25 */
-	bool unusedBit_519_25 : 1;
+	bool unusedBit_492_25 : 1;
 	/**
 	offset 2116 bit 26 */
-	bool unusedBit_519_26 : 1;
+	bool unusedBit_492_26 : 1;
 	/**
 	offset 2116 bit 27 */
-	bool unusedBit_519_27 : 1;
+	bool unusedBit_492_27 : 1;
 	/**
 	offset 2116 bit 28 */
-	bool unusedBit_519_28 : 1;
+	bool unusedBit_492_28 : 1;
 	/**
 	offset 2116 bit 29 */
-	bool unusedBit_519_29 : 1;
+	bool unusedBit_492_29 : 1;
 	/**
 	offset 2116 bit 30 */
-	bool unusedBit_519_30 : 1;
+	bool unusedBit_492_30 : 1;
 	/**
 	offset 2116 bit 31 */
-	bool unusedBit_519_31 : 1;
+	bool unusedBit_492_31 : 1;
 	/**
 	 * set can_mode X
 	 * offset 2120
@@ -3642,14 +3528,10 @@ struct engine_configuration_s {
 	 */
 	uint16_t cltRevLimitRpm[CLT_LIMITER_CURVE_SIZE];
 	/**
+	units
 	 * offset 3340
 	 */
-	tcuinput_table_t tcuInputTable;
-	/**
-	units
-	 * offset 3388
-	 */
-	uint8_t unused3328[476];
+	uint8_t unused3328[524];
 	/**
 	Min tCharge Coeff.
 	 * offset 3864
@@ -3908,10 +3790,13 @@ struct engine_configuration_s {
 	 */
 	uint16_t mc33_t_hold_tot;
 	/**
-	units
 	 * offset 4514
 	 */
-	int8_t unused1551[2];
+	pin_input_mode_e tcuUpshiftButtonPinMode;
+	/**
+	 * offset 4515
+	 */
+	pin_input_mode_e tcuDownshiftButtonPinMode;
 	/**
 	 * offset 4516
 	 */
@@ -4330,4 +4215,4 @@ struct persistent_config_s {
 };
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on config/boards/subaru_eg33/config/gen_config.sh integration/rusefi_config.txt Sat Jun 12 04:18:26 UTC 2021
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on config/boards/subaru_eg33/config/gen_config.sh integration/rusefi_config.txt Sat Jun 12 18:07:01 UTC 2021

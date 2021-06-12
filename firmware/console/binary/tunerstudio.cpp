@@ -863,6 +863,8 @@ void startTunerStudioConnectivity(void) {
 	// Assert tune & output channel struct sizes
 	static_assert(sizeof(persistent_config_s) == TOTAL_CONFIG_SIZE, "TS datapage size mismatch");
 	static_assert(sizeof(TunerStudioOutputChannels) == TS_OUTPUT_SIZE, "TS output channels size mismatch");
+// useful trick if you need to know how far off is the static_assert
+//	char (*__kaboom)[sizeof(persistent_config_s)] = 1;
 
 	memset(&tsState, 0, sizeof(tsState));
 	syncTunerStudioCopy();
