@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Sat Jun 05 20:20:27 UTC 2021
+// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Sat Jun 12 18:06:28 UTC 2021
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -354,6 +354,8 @@ public class Fields {
 	public static final int enableAemXSeries_offset = 744;
 	public static final int enableCanVss_offset = 976;
 	public static final int enabledStep1Limiter_offset = 744;
+	public static final int enableFan1WithAc_offset = 76;
+	public static final int enableFan2WithAc_offset = 76;
 	public static final int enableInnovateLC2_offset = 976;
 	public static final int enableLaunchBoost_offset = 976;
 	public static final int enableLaunchRetard_offset = 976;
@@ -1230,7 +1232,7 @@ public class Fields {
 	public static final int servoOutputPins8_offset = 3147;
 	public static final int showHumanReadableWarning_offset = 976;
 	public static final int showSdCardWarning_offset = 76;
-	public static final int SIGNATURE_HASH = 233454178;
+	public static final int SIGNATURE_HASH = 238553099;
 	public static final int silentTriggerError_offset = 1464;
 	public static final int slowAdcAlpha_offset = 2088;
 	public static final int sparkDwellRpmBins_offset = 332;
@@ -1532,7 +1534,7 @@ public class Fields {
 	public static final char TS_SD_R_COMMAND = 'r';
 	public static final char TS_SD_W_COMMAND = 'w';
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI 2021.06.05.all.233454178";
+	public static final String TS_SIGNATURE = "rusEFI 2021.06.12.all.238553099";
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final int TT_TT_1_16 = 50;
 	public static final int TT_TT_2JZ_1_12 = 29;
@@ -1619,8 +1621,6 @@ public class Fields {
 	public static final int unused_1484_bit_29_offset = 1476;
 	public static final int unused_1484_bit_30_offset = 1476;
 	public static final int unused_1484_bit_31_offset = 1476;
-	public static final int unused_294_4_offset = 76;
-	public static final int unused_294_5_offset = 76;
 	public static final int unused_294_6_offset = 76;
 	public static final int unused_294_7_offset = 76;
 	public static final int unused_294_8_offset = 76;
@@ -1746,8 +1746,8 @@ public class Fields {
 	public static final Field USEFORDREDUNDANTTPS = Field.create("USEFORDREDUNDANTTPS", 76, FieldType.BIT, 1);
 	public static final Field ISVERBOSEAUXPID1 = Field.create("ISVERBOSEAUXPID1", 76, FieldType.BIT, 2);
 	public static final Field OVERRIDETRIGGERGAPS = Field.create("OVERRIDETRIGGERGAPS", 76, FieldType.BIT, 3);
-	public static final Field UNUSED_294_4 = Field.create("UNUSED_294_4", 76, FieldType.BIT, 4);
-	public static final Field UNUSED_294_5 = Field.create("UNUSED_294_5", 76, FieldType.BIT, 5);
+	public static final Field ENABLEFAN1WITHAC = Field.create("ENABLEFAN1WITHAC", 76, FieldType.BIT, 4);
+	public static final Field ENABLEFAN2WITHAC = Field.create("ENABLEFAN2WITHAC", 76, FieldType.BIT, 5);
 	public static final Field UNUSED_294_6 = Field.create("UNUSED_294_6", 76, FieldType.BIT, 6);
 	public static final Field UNUSED_294_7 = Field.create("UNUSED_294_7", 76, FieldType.BIT, 7);
 	public static final Field UNUSED_294_8 = Field.create("UNUSED_294_8", 76, FieldType.BIT, 8);
@@ -2859,8 +2859,8 @@ public class Fields {
 	USEFORDREDUNDANTTPS,
 	ISVERBOSEAUXPID1,
 	OVERRIDETRIGGERGAPS,
-	UNUSED_294_4,
-	UNUSED_294_5,
+	ENABLEFAN1WITHAC,
+	ENABLEFAN2WITHAC,
 	UNUSED_294_6,
 	UNUSED_294_7,
 	UNUSED_294_8,

@@ -65,6 +65,9 @@ private:
 	Phase m_lastPhase = Phase::Cranking;
 	int m_lastTargetRpm = 0;
 
+	// This is stored by getClosedLoop and used in case we want to "do nothing"
+	float m_lastAutomaticPosition = 0;
+
 	Pid m_timingPid;
 };
 

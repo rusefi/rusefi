@@ -371,6 +371,8 @@
 #define enableAemXSeries_offset 744
 #define enableCanVss_offset 976
 #define enabledStep1Limiter_offset 744
+#define enableFan1WithAc_offset 76
+#define enableFan2WithAc_offset 76
 #define enableInnovateLC2_offset 976
 #define enableLaunchBoost_offset 976
 #define enableLaunchRetard_offset 976
@@ -1278,8 +1280,8 @@
 #define showHumanReadableWarning_offset 976
 #define showSdCardWarning_offset 76
 #define SIGNATURE_BOARD hellen_cypress
-#define SIGNATURE_DATE 2021.06.05
-#define SIGNATURE_HASH 1335288242
+#define SIGNATURE_DATE 2021.06.12
+#define SIGNATURE_HASH 1279579099
 #define silentTriggerError_offset 1464
 #define slowAdcAlpha_offset 2088
 #define sparkDwellRpmBins_offset 332
@@ -1632,7 +1634,7 @@
 #define ts_show_spi true
 #define ts_show_trigger_comparator false
 #define ts_show_tunerstudio_port true
-#define TS_SIGNATURE "rusEFI 2021.06.05.hellen_cypress.1335288242"
+#define TS_SIGNATURE "rusEFI 2021.06.12.hellen_cypress.1279579099"
 #define TS_SINGLE_WRITE_COMMAND 'W'
 #define TS_SINGLE_WRITE_COMMAND_char W
 #define TS_TEST_COMMAND 't' // 0x74
@@ -1722,8 +1724,6 @@
 #define unused_1484_bit_29_offset 1476
 #define unused_1484_bit_30_offset 1476
 #define unused_1484_bit_31_offset 1476
-#define unused_294_4_offset 76
-#define unused_294_5_offset 76
 #define unused_294_6_offset 76
 #define unused_294_7_offset 76
 #define unused_294_8_offset 76
