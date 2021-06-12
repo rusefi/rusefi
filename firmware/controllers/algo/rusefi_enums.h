@@ -990,7 +990,7 @@ typedef enum {
 	Force_4bytes_size_antiLagActivationMode_e = ENUM_32_BITS,
 } antiLagActivationMode_e;
 
-typedef enum {
+typedef enum __attribute__ ((__packed__)) {
 	ROLE_PARK = 0,
 	ROLE_NEUTRAL = 1,
 	ROLE_PARK_NEUTRAL = 2,
