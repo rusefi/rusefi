@@ -143,7 +143,6 @@ void setFordEscortGt(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	// todo: change to 15?
 	// set cranking_timing_angle 3
 	engineConfiguration->crankingTimingAngle = 3;
-	engineConfiguration->crankingChargeAngle = 70;
 
 	setLinearCurve(config->ignitionLoadBins, 20, 105, 5);
 	setWholeTimingTable_d(10 PASS_CONFIG_PARAMETER_SUFFIX);

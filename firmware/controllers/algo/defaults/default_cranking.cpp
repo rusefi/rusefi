@@ -12,10 +12,8 @@ void setDefaultCranking(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	engineConfiguration->cranking.baseFuel = 27;
 
 	// Ignition
-	engineConfiguration->useConstantDwellDuringCranking = true;
 	engineConfiguration->ignitionDwellForCrankingMs = 6;
 	CONFIG(crankingTimingAngle) = 6;
-	engineConfiguration->crankingChargeAngle = 70;
 
 	// IAC
 	engineConfiguration->crankingIACposition = 50;

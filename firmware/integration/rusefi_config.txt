@@ -566,8 +566,8 @@ int16_t tpsErrorDetectionTooHigh;+TPS error detection: what throttle % is unreal
 
 cranking_parameters_s cranking
 float primingSquirtDurationMs;;"*C",       1,     0,    -40, 200,     1
-	float ignitionDwellForCrankingMs;Used if useConstantDwellDuringCranking is TRUE;"ms",        1,     0,    0, 200,     1
-float crankingChargeAngle;+While cranking (which causes battery voltage to drop) we can calculate dwell time in shaft\ndegrees, not in absolute time as in running mode.\nset cranking_charge_angle X;"deg",    1,      0,       0,  3000.0,      0
+	float ignitionDwellForCrankingMs;+Dwell duration while cranking;"ms",        1,     0,    0, 200,     1
+float unused104;;"deg",    1,      0,       0,  3000.0,      0
 
 
 MAP_sensor_config_s map;@see hasMapSensor\n@see isMapAveragingEnabled
@@ -1060,11 +1060,11 @@ custom maf_sensor_type_e 4 bits, S32, @OFFSET@, [0:1], @@maf_sensor_type_e_enum@
 	uint16_t tps2SecondaryMin;;"ADC", 1, 0, 0, 1000, 0
 	uint16_t tps2SecondaryMax;;"ADC", 1, 0, 0, 1000, 0
 
-	bit unusedHereWeHave
+	bit unused1464b0
 	bit fuelClosedLoopCorrectionEnabled;+Enables lambda sensor closed loop feedback for fuelling.
 	bit isVerboseIAC;+Print details into rusEfi console\nenable verbose_idle
 	bit isVerboseETB;+Prints ETB details to rusEFI console
-	bit useConstantDwellDuringCranking,"Time-based","Angle-based";+If set to true, will use the specified duration for cranking dwell. If set to false, will use the specified dwell angle.  Unless you have a really good reason to, leave this set to true to use duration mode.
+	bit unused1464b4
 	bit isEngineChartEnabled;+This options enables data for 'engine sniffer' tab in console, which comes at some CPU price 
 	bit silentTriggerError;+Sometimes we have a performance issue while printing error
 	bit useLinearCltSensor

@@ -49,7 +49,6 @@ void setMazda626EngineConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 
 	// set cranking_timing_angle 15
 	engineConfiguration->crankingTimingAngle = 8;
-	engineConfiguration->crankingChargeAngle = 70;
 
 	// set cranking_fuel 9
 	engineConfiguration->cranking.baseFuel = 30;
