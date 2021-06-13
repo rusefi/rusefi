@@ -478,6 +478,10 @@
 #define failedMapFallback_offset 541
 #define fan1ExtraIdle_offset 2246
 #define fan2ExtraIdle_offset 2322
+#define fan2OffTemperature_offset 2687
+#define fan2OnTemperature_offset 2686
+#define fan2Pin_offset 2685
+#define fan2PinMode_offset 2411
 #define fanOffTemperature_offset 472
 #define fanOnTemperature_offset 468
 #define fanPin_offset 663
@@ -1264,7 +1268,7 @@
 #define showSdCardWarning_offset 76
 #define SIGNATURE_BOARD kin
 #define SIGNATURE_DATE 2021.06.13
-#define SIGNATURE_HASH 2064559133
+#define SIGNATURE_HASH 2090827001
 #define silentTriggerError_offset 1464
 #define slowAdcAlpha_offset 2088
 #define sparkDwellRpmBins_offset 332
@@ -1617,7 +1621,7 @@
 #define ts_show_spi true
 #define ts_show_trigger_comparator true
 #define ts_show_tunerstudio_port true
-#define TS_SIGNATURE "rusEFI 2021.06.13.kin.2064559133"
+#define TS_SIGNATURE "rusEFI 2021.06.13.kin.2090827001"
 #define TS_SINGLE_WRITE_COMMAND 'W'
 #define TS_SINGLE_WRITE_COMMAND_char W
 #define TS_TEST_COMMAND 't' // 0x74
@@ -1687,7 +1691,6 @@
 #define unused1708_offset 1708
 #define unused1756_offset 1756
 #define unused2260_offset 2252
-#define unused2419_offset 2411
 #define unused2432_offset 2424
 #define unused244_2_offset 2416
 #define unused244_3_offset 2420
@@ -1714,8 +1717,6 @@
 #define unused_294_7_offset 76
 #define unused_294_8_offset 76
 #define unusedAtOldBoardConfigurationEnd_offset 1228
-#define unusedAuxVoltage1_TODO_332_offset 2685
-#define unusedAuxVoltage2_TODO_332_offset 2686
 #define unusedBit4_1476_offset 1476
 #define unusedBit_251_29_offset 976
 #define unusedBit_289_30_offset 976
@@ -1748,7 +1749,6 @@
 #define unusedOldBiquad_offset 2323
 #define unusedOldIgnitionOffset_offset 445
 #define unusedSpiPadding4_offset 2585
-#define unusedSpiPadding5_offset 2687
 #define unusedSpiPadding8_offset 3982
 #define useAdvanceCorrectionsForCranking_offset 1476
 #define useCicPidForIdle_offset 76

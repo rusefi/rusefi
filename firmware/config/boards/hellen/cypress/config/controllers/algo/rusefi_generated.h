@@ -494,6 +494,10 @@
 #define failedMapFallback_offset 541
 #define fan1ExtraIdle_offset 2252
 #define fan2ExtraIdle_offset 2330
+#define fan2OffTemperature_offset 2715
+#define fan2OnTemperature_offset 2714
+#define fan2Pin_offset 2713
+#define fan2PinMode_offset 2419
 #define fanOffTemperature_offset 472
 #define fanOnTemperature_offset 468
 #define fanPin_offset 663
@@ -1280,7 +1284,7 @@
 #define showSdCardWarning_offset 76
 #define SIGNATURE_BOARD hellen_cypress
 #define SIGNATURE_DATE 2021.06.13
-#define SIGNATURE_HASH 2225823969
+#define SIGNATURE_HASH 2201661445
 #define silentTriggerError_offset 1464
 #define slowAdcAlpha_offset 2088
 #define sparkDwellRpmBins_offset 332
@@ -1633,7 +1637,7 @@
 #define ts_show_spi true
 #define ts_show_trigger_comparator false
 #define ts_show_tunerstudio_port true
-#define TS_SIGNATURE "rusEFI 2021.06.13.hellen_cypress.2225823969"
+#define TS_SIGNATURE "rusEFI 2021.06.13.hellen_cypress.2201661445"
 #define TS_SINGLE_WRITE_COMMAND 'W'
 #define TS_SINGLE_WRITE_COMMAND_char W
 #define TS_TEST_COMMAND 't' // 0x74
@@ -1703,7 +1707,6 @@
 #define unused1708_offset 1708
 #define unused1756_offset 1756
 #define unused2260_offset 2260
-#define unused2419_offset 2419
 #define unused2432_offset 2432
 #define unused244_2_offset 2424
 #define unused244_3_offset 2428
@@ -1730,8 +1733,6 @@
 #define unused_294_7_offset 76
 #define unused_294_8_offset 76
 #define unusedAtOldBoardConfigurationEnd_offset 1228
-#define unusedAuxVoltage1_TODO_332_offset 2713
-#define unusedAuxVoltage2_TODO_332_offset 2714
 #define unusedBit4_1476_offset 1476
 #define unusedBit_251_29_offset 976
 #define unusedBit_289_30_offset 976
@@ -1764,7 +1765,6 @@
 #define unusedOldBiquad_offset 2331
 #define unusedOldIgnitionOffset_offset 445
 #define unusedSpiPadding4_offset 2593
-#define unusedSpiPadding5_offset 2715
 #define unusedSpiPadding8_offset 4010
 #define useAdvanceCorrectionsForCranking_offset 1476
 #define useCicPidForIdle_offset 76

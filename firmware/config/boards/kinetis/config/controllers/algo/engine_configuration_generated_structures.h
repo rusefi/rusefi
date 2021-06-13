@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Sun Jun 13 12:00:37 UTC 2021
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Sun Jun 13 12:08:19 UTC 2021
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -3172,10 +3172,9 @@ struct engine_configuration_s {
 	 */
 	injector_compensation_mode_e injectorCompensationMode;
 	/**
-	units
 	 * offset 2411
 	 */
-	uint8_t unused2419;
+	pin_output_mode_e fan2PinMode;
 	/**
 	 * This is the pressure at which your injector flow is known.
 	 * For example if your injectors flow 400cc/min at 3.5 bar, enter 350kpa here.
@@ -3346,20 +3345,21 @@ struct engine_configuration_s {
 	 */
 	spi_device_e accelerometerSpiDevice;
 	/**
-	units
 	 * offset 2685
 	 */
-	uint8_t unusedAuxVoltage1_TODO_332[1];
+	output_pin_e fan2Pin;
 	/**
-	units
+	 * Cooling fan turn-on temperature threshold, in Celsius
+	deg C
 	 * offset 2686
 	 */
-	uint8_t unusedAuxVoltage2_TODO_332[1];
+	uint8_t fan2OnTemperature;
 	/**
-	units
+	 * Cooling fan turn-off temperature threshold, in Celsius
+	deg C
 	 * offset 2687
 	 */
-	uint8_t unusedSpiPadding5[1];
+	uint8_t fan2OffTemperature;
 	/**
 	x
 	 * offset 2688
@@ -4205,4 +4205,4 @@ struct persistent_config_s {
 };
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Sun Jun 13 12:00:37 UTC 2021
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Sun Jun 13 12:08:19 UTC 2021

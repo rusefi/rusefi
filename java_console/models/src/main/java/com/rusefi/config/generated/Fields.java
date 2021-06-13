@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Sun Jun 13 12:00:12 UTC 2021
+// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Sun Jun 13 12:07:52 UTC 2021
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -473,6 +473,10 @@ public class Fields {
 	public static final int failedMapFallback_offset = 541;
 	public static final int fan1ExtraIdle_offset = 2252;
 	public static final int fan2ExtraIdle_offset = 2330;
+	public static final int fan2OffTemperature_offset = 2715;
+	public static final int fan2OnTemperature_offset = 2714;
+	public static final int fan2Pin_offset = 2713;
+	public static final int fan2PinMode_offset = 2419;
 	public static final int fanOffTemperature_offset = 472;
 	public static final int fanOnTemperature_offset = 468;
 	public static final int fanPin_offset = 663;
@@ -1532,7 +1536,7 @@ public class Fields {
 	public static final char TS_SD_R_COMMAND = 'r';
 	public static final char TS_SD_W_COMMAND = 'w';
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI 2021.06.13.all.3336026929";
+	public static final String TS_SIGNATURE = "rusEFI 2021.06.13.all.3242617813";
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final int TT_TT_1_16 = 50;
 	public static final int TT_TT_2JZ_1_12 = 29;
@@ -1599,7 +1603,6 @@ public class Fields {
 	public static final int unused1708_offset = 1708;
 	public static final int unused1756_offset = 1756;
 	public static final int unused2260_offset = 2260;
-	public static final int unused2419_offset = 2419;
 	public static final int unused2432_offset = 2432;
 	public static final int unused244_2_offset = 2424;
 	public static final int unused244_3_offset = 2428;
@@ -1626,8 +1629,6 @@ public class Fields {
 	public static final int unused_294_7_offset = 76;
 	public static final int unused_294_8_offset = 76;
 	public static final int unusedAtOldBoardConfigurationEnd_offset = 1228;
-	public static final int unusedAuxVoltage1_TODO_332_offset = 2713;
-	public static final int unusedAuxVoltage2_TODO_332_offset = 2714;
 	public static final int unusedBit4_1476_offset = 1476;
 	public static final int unusedBit_251_29_offset = 976;
 	public static final int unusedBit_289_30_offset = 976;
@@ -1660,7 +1661,6 @@ public class Fields {
 	public static final int unusedOldBiquad_offset = 2331;
 	public static final int unusedOldIgnitionOffset_offset = 445;
 	public static final int unusedSpiPadding4_offset = 2593;
-	public static final int unusedSpiPadding5_offset = 2715;
 	public static final int unusedSpiPadding8_offset = 4010;
 	public static final int useAdvanceCorrectionsForCranking_offset = 1476;
 	public static final int useCicPidForIdle_offset = 76;
@@ -2570,7 +2570,7 @@ public class Fields {
 	public static final Field TLE8888MODE = Field.create("TLE8888MODE", 2416, FieldType.INT8);
 	public static final Field LIS302DLCSPINMODE = Field.create("LIS302DLCSPINMODE", 2417, FieldType.INT8, pin_output_mode_e);
 	public static final Field INJECTORCOMPENSATIONMODE = Field.create("INJECTORCOMPENSATIONMODE", 2418, FieldType.INT8);
-	public static final Field UNUSED2419 = Field.create("UNUSED2419", 2419, FieldType.INT8);
+	public static final Field FAN2PINMODE = Field.create("FAN2PINMODE", 2419, FieldType.INT8, pin_output_mode_e);
 	public static final Field FUELREFERENCEPRESSURE = Field.create("FUELREFERENCEPRESSURE", 2420, FieldType.FLOAT);
 	public static final Field UNUSED244_2 = Field.create("UNUSED244_2", 2424, FieldType.FLOAT);
 	public static final Field UNUSED244_3 = Field.create("UNUSED244_3", 2428, FieldType.FLOAT);
@@ -2652,9 +2652,9 @@ public class Fields {
 	public static final Field OILPRESSURE_V2 = Field.create("OILPRESSURE_V2", 2704, FieldType.FLOAT);
 	public static final Field OILPRESSURE_VALUE2 = Field.create("OILPRESSURE_VALUE2", 2708, FieldType.FLOAT);
 	public static final Field ACCELEROMETERSPIDEVICE = Field.create("ACCELEROMETERSPIDEVICE", 2712, FieldType.INT8);
-	public static final Field UNUSEDAUXVOLTAGE1_TODO_332 = Field.create("UNUSEDAUXVOLTAGE1_TODO_332", 2713, FieldType.INT8);
-	public static final Field UNUSEDAUXVOLTAGE2_TODO_332 = Field.create("UNUSEDAUXVOLTAGE2_TODO_332", 2714, FieldType.INT8);
-	public static final Field UNUSEDSPIPADDING5 = Field.create("UNUSEDSPIPADDING5", 2715, FieldType.INT8);
+	public static final Field FAN2PIN = Field.create("FAN2PIN", 2713, FieldType.INT8, output_pin_e);
+	public static final Field FAN2ONTEMPERATURE = Field.create("FAN2ONTEMPERATURE", 2714, FieldType.INT8);
+	public static final Field FAN2OFFTEMPERATURE = Field.create("FAN2OFFTEMPERATURE", 2715, FieldType.INT8);
 	public static final Field FLEXSENSORPIN = Field.create("FLEXSENSORPIN", 3100, FieldType.INT8, brain_input_pin_e);
 	public static final Field TEST557PIN = Field.create("TEST557PIN", 3101, FieldType.INT8, brain_pin_e);
 	public static final Field STEPPERDIRECTIONPINMODE = Field.create("STEPPERDIRECTIONPINMODE", 3102, FieldType.INT8, pin_output_mode_e);
@@ -3664,7 +3664,7 @@ public class Fields {
 	TLE8888MODE,
 	LIS302DLCSPINMODE,
 	INJECTORCOMPENSATIONMODE,
-	UNUSED2419,
+	FAN2PINMODE,
 	FUELREFERENCEPRESSURE,
 	UNUSED244_2,
 	UNUSED244_3,
@@ -3745,9 +3745,9 @@ public class Fields {
 	OILPRESSURE_V2,
 	OILPRESSURE_VALUE2,
 	ACCELEROMETERSPIDEVICE,
-	UNUSEDAUXVOLTAGE1_TODO_332,
-	UNUSEDAUXVOLTAGE2_TODO_332,
-	UNUSEDSPIPADDING5,
+	FAN2PIN,
+	FAN2ONTEMPERATURE,
+	FAN2OFFTEMPERATURE,
 	FLEXSENSORPIN,
 	TEST557PIN,
 	STEPPERDIRECTIONPINMODE,
