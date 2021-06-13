@@ -24,9 +24,6 @@ void setDodgeRam1996(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	engineConfiguration->map.sensor.type = MT_DODGE_NEON_2003;
 	setAlgorithm(LM_SPEED_DENSITY PASS_CONFIG_PARAMETER_SUFFIX);
 
-	// set cranking_charge_angle 30
-	engineConfiguration->crankingChargeAngle = 30;
-
 	//Base engine setting
 	engineConfiguration->specs.cylindersCount = 8;
 	engineConfiguration->specs.firingOrder = FO_1_8_4_3_6_5_7_2;
