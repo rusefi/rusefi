@@ -53,9 +53,11 @@ void setDefaultBaseEngine(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	// Fuel pump
 	engineConfiguration->startUpFuelPumpDuration = 4;
 
-	// Fan
+	// Fans
 	engineConfiguration->fanOnTemperature = 95;
 	engineConfiguration->fanOffTemperature = 91;
+	engineConfiguration->fan2OnTemperature = 95;
+	engineConfiguration->fan2OffTemperature = 91;
 
 	// Tachometer
 	// 50% duty cycle is the default for tach signal

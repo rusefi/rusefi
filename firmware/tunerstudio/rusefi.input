@@ -2676,12 +2676,12 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 		field = "Off temperature",					fanOffTemperature
 		field = "Enable with AC",					enableFan1WithAc
 
-	;dialog = fan2Settings, "Fan 2"
-	;	field = "Pin",								fan2Pin
-	;	field = "Pin mode",							fan2PinMode
-	;	field = "On temperature",					fan2OnTemperature
-	;	field = "Off temperature",					fan2OffTemperature
-	;	field = "Enable with AC",					enableFan2WithAc
+	dialog = fan2Settings, "Fan 2"
+		field = "Pin",								fan2Pin
+		field = "Pin mode",							fan2PinMode
+		field = "On temperature",					fan2OnTemperature
+		field = "Off temperature",					fan2OffTemperature
+		field = "Enable with AC",					enableFan2WithAc
 
 	dialog = acSettings, "A/C Settings"
 		field = "A/C Relay",						acRelayPin
@@ -2689,7 +2689,7 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 
 	dialog = fanSetting, "Fan Settings"
 		panel = fan1Settings
-		;panel = fan2Settings
+		panel = fan2Settings
 		panel = acSettings
 
 	dialog = fuelPump, "Fuel Pump"
