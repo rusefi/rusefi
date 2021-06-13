@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Sat Jun 12 18:06:28 UTC 2021
+// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Sun Jun 13 12:00:12 UTC 2021
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -300,7 +300,6 @@ public class Fields {
 	public static final int cranking_rpm_offset = 92;
 	public static final int crankingAdvance_offset = 3124;
 	public static final int crankingAdvanceBins_offset = 3108;
-	public static final int crankingChargeAngle_offset = 104;
 	public static final int crankingCycleBins_offset = 10624;
 	public static final int crankingCycleCoef_offset = 10592;
 	public static final int crankingFuelBins_offset = 10560;
@@ -1232,7 +1231,6 @@ public class Fields {
 	public static final int servoOutputPins8_offset = 3147;
 	public static final int showHumanReadableWarning_offset = 976;
 	public static final int showSdCardWarning_offset = 76;
-	public static final int SIGNATURE_HASH = 238553099;
 	public static final int silentTriggerError_offset = 1464;
 	public static final int slowAdcAlpha_offset = 2088;
 	public static final int sparkDwellRpmBins_offset = 332;
@@ -1534,7 +1532,7 @@ public class Fields {
 	public static final char TS_SD_R_COMMAND = 'r';
 	public static final char TS_SD_W_COMMAND = 'w';
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI 2021.06.12.all.238553099";
+	public static final String TS_SIGNATURE = "rusEFI 2021.06.13.all.3336026929";
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final int TT_TT_1_16 = 50;
 	public static final int TT_TT_2JZ_1_12 = 29;
@@ -1584,6 +1582,7 @@ public class Fields {
 	public static final int twoWireBatchIgnition_offset = 1476;
 	public static final int twoWireBatchInjection_offset = 1476;
 	public static final int uartConsoleSerialSpeed_offset = 2076;
+	public static final int unused104_offset = 104;
 	public static final int unused1059_offset = 3964;
 	public static final int unused1126_offset = 2116;
 	public static final int unused1127_offset = 2116;
@@ -1591,6 +1590,8 @@ public class Fields {
 	public static final int unused1129_offset = 2116;
 	public static final int unused1130_offset = 2116;
 	public static final int unused1366_offset = 2652;
+	public static final int unused1464b0_offset = 1464;
+	public static final int unused1464b4_offset = 1464;
 	public static final int unused1476b19_offset = 1476;
 	public static final int unused1476b20_offset = 1476;
 	public static final int unused1476b3_offset = 1476;
@@ -1656,7 +1657,6 @@ public class Fields {
 	public static final int unusedBit_492_31_offset = 2116;
 	public static final int unusedBit_492_8_offset = 2116;
 	public static final int unusedBit_492_9_offset = 2116;
-	public static final int unusedHereWeHave_offset = 1464;
 	public static final int unusedOldBiquad_offset = 2331;
 	public static final int unusedOldIgnitionOffset_offset = 445;
 	public static final int unusedSpiPadding4_offset = 2593;
@@ -1664,7 +1664,6 @@ public class Fields {
 	public static final int unusedSpiPadding8_offset = 4010;
 	public static final int useAdvanceCorrectionsForCranking_offset = 1476;
 	public static final int useCicPidForIdle_offset = 76;
-	public static final int useConstantDwellDuringCranking_offset = 1464;
 	public static final int useETBforIdleControl_offset = 744;
 	public static final int useFixedBaroCorrFromMap_offset = 1476;
 	public static final int useFordRedundantTps_offset = 76;
@@ -1782,7 +1781,7 @@ public class Fields {
 	public static final Field CRANKING_RPM = Field.create("CRANKING_RPM", 92, FieldType.INT16);
 	public static final Field PRIMINGSQUIRTDURATIONMS = Field.create("PRIMINGSQUIRTDURATIONMS", 96, FieldType.FLOAT);
 	public static final Field IGNITIONDWELLFORCRANKINGMS = Field.create("IGNITIONDWELLFORCRANKINGMS", 100, FieldType.FLOAT);
-	public static final Field CRANKINGCHARGEANGLE = Field.create("CRANKINGCHARGEANGLE", 104, FieldType.FLOAT);
+	public static final Field UNUSED104 = Field.create("UNUSED104", 104, FieldType.FLOAT);
 	public static final Field MAP_SENSOR_LOWVALUE = Field.create("MAP_SENSOR_LOWVALUE", 236, FieldType.FLOAT);
 	public static final Field MAP_SENSOR_HIGHVALUE = Field.create("MAP_SENSOR_HIGHVALUE", 240, FieldType.FLOAT);
 	public static final Field MAP_SENSOR_TYPE = Field.create("MAP_SENSOR_TYPE", 244, FieldType.INT);
@@ -2311,11 +2310,11 @@ public class Fields {
 	public static final Field LPS25BAROSENSORSDA = Field.create("LPS25BAROSENSORSDA", 1459, FieldType.INT8, brain_pin_e);
 	public static final Field TPS2SECONDARYMIN = Field.create("TPS2SECONDARYMIN", 1460, FieldType.INT16);
 	public static final Field TPS2SECONDARYMAX = Field.create("TPS2SECONDARYMAX", 1462, FieldType.INT16);
-	public static final Field UNUSEDHEREWEHAVE = Field.create("UNUSEDHEREWEHAVE", 1464, FieldType.BIT, 0);
+	public static final Field UNUSED1464B0 = Field.create("UNUSED1464B0", 1464, FieldType.BIT, 0);
 	public static final Field FUELCLOSEDLOOPCORRECTIONENABLED = Field.create("FUELCLOSEDLOOPCORRECTIONENABLED", 1464, FieldType.BIT, 1);
 	public static final Field ISVERBOSEIAC = Field.create("ISVERBOSEIAC", 1464, FieldType.BIT, 2);
 	public static final Field ISVERBOSEETB = Field.create("ISVERBOSEETB", 1464, FieldType.BIT, 3);
-	public static final Field USECONSTANTDWELLDURINGCRANKING = Field.create("USECONSTANTDWELLDURINGCRANKING", 1464, FieldType.BIT, 4);
+	public static final Field UNUSED1464B4 = Field.create("UNUSED1464B4", 1464, FieldType.BIT, 4);
 	public static final Field ISENGINECHARTENABLED = Field.create("ISENGINECHARTENABLED", 1464, FieldType.BIT, 5);
 	public static final Field SILENTTRIGGERERROR = Field.create("SILENTTRIGGERERROR", 1464, FieldType.BIT, 6);
 	public static final Field USELINEARCLTSENSOR = Field.create("USELINEARCLTSENSOR", 1464, FieldType.BIT, 7);
@@ -2895,7 +2894,7 @@ public class Fields {
 	CRANKING_RPM,
 	PRIMINGSQUIRTDURATIONMS,
 	IGNITIONDWELLFORCRANKINGMS,
-	CRANKINGCHARGEANGLE,
+	UNUSED104,
 	MAP_SENSOR_LOWVALUE,
 	MAP_SENSOR_HIGHVALUE,
 	MAP_SENSOR_TYPE,
@@ -3410,11 +3409,11 @@ public class Fields {
 	LPS25BAROSENSORSDA,
 	TPS2SECONDARYMIN,
 	TPS2SECONDARYMAX,
-	UNUSEDHEREWEHAVE,
+	UNUSED1464B0,
 	FUELCLOSEDLOOPCORRECTIONENABLED,
 	ISVERBOSEIAC,
 	ISVERBOSEETB,
-	USECONSTANTDWELLDURINGCRANKING,
+	UNUSED1464B4,
 	ISENGINECHARTENABLED,
 	SILENTTRIGGERERROR,
 	USELINEARCLTSENSOR,

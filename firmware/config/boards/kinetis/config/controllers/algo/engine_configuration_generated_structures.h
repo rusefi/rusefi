@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Sat Jun 12 18:06:57 UTC 2021
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Sun Jun 13 12:00:37 UTC 2021
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -818,19 +818,16 @@ struct engine_configuration_s {
 	 */
 	float primingSquirtDurationMs;
 	/**
-	 * Used if useConstantDwellDuringCranking is TRUE
+	 * Dwell duration while cranking
 	ms
 	 * offset 100
 	 */
 	float ignitionDwellForCrankingMs;
 	/**
-	 * While cranking (which causes battery voltage to drop) we can calculate dwell time in shaft
-	 * degrees, not in absolute time as in running mode.
-	 * set cranking_charge_angle X
 	deg
 	 * offset 104
 	 */
-	float crankingChargeAngle;
+	float unused104;
 	/**
 	 * @see hasMapSensor
 	 * @see isMapAveragingEnabled
@@ -2147,7 +2144,7 @@ struct engine_configuration_s {
 	uint16_t tps2SecondaryMax;
 	/**
 	offset 1464 bit 0 */
-	bool unusedHereWeHave : 1;
+	bool unused1464b0 : 1;
 	/**
 	 * Enables lambda sensor closed loop feedback for fuelling.
 	offset 1464 bit 1 */
@@ -2162,9 +2159,8 @@ struct engine_configuration_s {
 	offset 1464 bit 3 */
 	bool isVerboseETB : 1;
 	/**
-	 * If set to true, will use the specified duration for cranking dwell. If set to false, will use the specified dwell angle. Unless you have a really good reason to, leave this set to true to use duration mode.
 	offset 1464 bit 4 */
-	bool useConstantDwellDuringCranking : 1;
+	bool unused1464b4 : 1;
 	/**
 	 * This options enables data for 'engine sniffer' tab in console, which comes at some CPU price
 	offset 1464 bit 5 */
@@ -4209,4 +4205,4 @@ struct persistent_config_s {
 };
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Sat Jun 12 18:06:57 UTC 2021
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Sun Jun 13 12:00:37 UTC 2021

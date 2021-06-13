@@ -312,7 +312,6 @@
 #define cranking_rpm_offset 92
 #define crankingAdvance_offset 3124
 #define crankingAdvanceBins_offset 3108
-#define crankingChargeAngle_offset 104
 #define crankingCycleBins_offset 10624
 #define crankingCycleCoef_offset 10592
 #define crankingFuelBins_offset 10560
@@ -1280,8 +1279,8 @@
 #define showHumanReadableWarning_offset 976
 #define showSdCardWarning_offset 76
 #define SIGNATURE_BOARD subaru_eg33_f7
-#define SIGNATURE_DATE 2021.06.12
-#define SIGNATURE_HASH 2741241373
+#define SIGNATURE_DATE 2021.06.13
+#define SIGNATURE_HASH 1804317991
 #define silentTriggerError_offset 1464
 #define slowAdcAlpha_offset 2088
 #define sparkDwellRpmBins_offset 332
@@ -1634,7 +1633,7 @@
 #define ts_show_spi true
 #define ts_show_trigger_comparator false
 #define ts_show_tunerstudio_port false
-#define TS_SIGNATURE "rusEFI 2021.06.12.subaru_eg33_f7.2741241373"
+#define TS_SIGNATURE "rusEFI 2021.06.13.subaru_eg33_f7.1804317991"
 #define TS_SINGLE_WRITE_COMMAND 'W'
 #define TS_SINGLE_WRITE_COMMAND_char W
 #define TS_TEST_COMMAND 't' // 0x74
@@ -1687,6 +1686,7 @@
 #define twoWireBatchInjection_offset 1476
 #define uart_device_e_auto_enum "UART_NONE", "UART_DEVICE_1", "UART_DEVICE_2", "UART_DEVICE_3", "UART_DEVICE_4"
 #define uartConsoleSerialSpeed_offset 2076
+#define unused104_offset 104
 #define unused1059_offset 3964
 #define unused1126_offset 2116
 #define unused1127_offset 2116
@@ -1694,6 +1694,8 @@
 #define unused1129_offset 2116
 #define unused1130_offset 2116
 #define unused1366_offset 2652
+#define unused1464b0_offset 1464
+#define unused1464b4_offset 1464
 #define unused1476b19_offset 1476
 #define unused1476b20_offset 1476
 #define unused1476b3_offset 1476
@@ -1759,7 +1761,6 @@
 #define unusedBit_492_31_offset 2116
 #define unusedBit_492_8_offset 2116
 #define unusedBit_492_9_offset 2116
-#define unusedHereWeHave_offset 1464
 #define unusedOldBiquad_offset 2331
 #define unusedOldIgnitionOffset_offset 445
 #define unusedSpiPadding4_offset 2593
@@ -1767,7 +1768,6 @@
 #define unusedSpiPadding8_offset 4010
 #define useAdvanceCorrectionsForCranking_offset 1476
 #define useCicPidForIdle_offset 76
-#define useConstantDwellDuringCranking_offset 1464
 #define useETBforIdleControl_offset 744
 #define useFixedBaroCorrFromMap_offset 1476
 #define useFordRedundantTps_offset 76
