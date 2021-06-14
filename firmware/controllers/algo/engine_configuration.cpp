@@ -950,6 +950,7 @@ void resetConfigurationExt(configuration_callback_t boardCallback, engine_type_e
 	case HELLEN_134_BMW:
 	case HELLEN_154_VAG:
 	case HELLEN_NA6:
+	case HELLEN_NA94:
 		setHellenNA6(PASS_CONFIG_PARAMETER_SIGNATURE);
 		break;
 #endif // HW_HELLEN
