@@ -1734,6 +1734,10 @@ cmd_set_engine_type_ET_MRE_SUBARU_EJ18				= "@@TS_IO_TEST_COMMAND_char@@\x00\x30
 cmd_set_engine_type_microRusEFI_Defaults			= "@@TS_IO_TEST_COMMAND_char@@\x00\x30@@ET_MRE_DEFAULTS_16_hex@@"
 cmd_set_engine_type_ET_MRE_M111						= "@@TS_IO_TEST_COMMAND_char@@\x00\x30@@ET_MRE_M111_16_hex@@"
 
+cmd_set_engine_type_hellen_NA6						= "@@TS_IO_TEST_COMMAND_char@@\x00\x30@@ET_HELLEN_NA6_16_hex@@"
+cmd_set_engine_type_hellen_NA94						= "@@TS_IO_TEST_COMMAND_char@@\x00\x30@@ET_HELLEN_NA94_16_hex@@"
+
+
 ; MIATA_NA6_MAP = 41
 cmd_set_engine_type_Frankenso_Miata_NA6_MAP			= "@@TS_IO_TEST_COMMAND_char@@\x00\x30@@ET_FRANKENSO_MIATA_NA6_16_hex@@"
 ; MIATA_NA6_VAF = 57
@@ -3457,6 +3461,9 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 		commandButton = "Proteus M73 v12",     		cmd_set_engine_type_Proteus_M73@@if_show_Proteus_presets
 		commandButton = "Proteus Miata TCU",		cmd_set_engine_type_Proteus_Miata_TCU@@if_show_Proteus_presets
 		commandButton = "Proteus Miata NB2",		cmd_set_engine_type_ET_PROTEUS_MIATA_NB2@@if_show_Proteus_presets
+		
+		commandButton = "Hellen NA6",				cmd_set_engine_type_hellen_NA6@@if_show_Hellen_presets
+		commandButton = "Hellen NA8 94-95",			cmd_set_engine_type_hellen_NA94@@if_show_Hellen_presets
 
 
 		commandButton = "ETB test bench", cmd_set_engine_type_etb_test@@if_show_test_presets
