@@ -223,14 +223,14 @@ TEST(idle_v2, runningFanAcBump) {
 	enginePins.fanRelay.setValue(0);
 
 	// Turn on the other fan!
-	//enginePins.fanRelay2.setValue(1);
-	//EXPECT_FLOAT_EQ(50 + 3, dut.getRunningOpenLoop(10, 0));
+	enginePins.fanRelay2.setValue(1);
+	EXPECT_FLOAT_EQ(50 + 3, dut.getRunningOpenLoop(10, 0));
 
 	// Turn on everything!
 	engine->acSwitchState = true;
 	enginePins.fanRelay.setValue(1);
-	///nginePins.fanRelay2.setValue(1);
-	EXPECT_FLOAT_EQ(50 + 9 + 7 /* + 3 */, dut.getRunningOpenLoop(10, 0));
+	enginePins.fanRelay2.setValue(1);
+	EXPECT_FLOAT_EQ(50 + 9 + 7 + 3, dut.getRunningOpenLoop(10, 0));
 }
 
 TEST(idle_v2, runningOpenLoopTpsTaper) {
