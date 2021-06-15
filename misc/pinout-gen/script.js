@@ -114,12 +114,12 @@ window.addEventListener('load', function() {
         var newheight = (closest / mult)
         var pxheight = divheight * 0.08;
         if (newheight < pxheight) {
-          pxheight = newheight - 6;
+          pxheight = newheight;
         }
         var height = (pxheight / divheight) * 100;
         var width = (pxheight / divwidth) * 100;
-        pdiv.style.height = height + "%";
-        pdiv.style.width = width + "%";
+        pdiv.style.height = "calc(" + height + "% - 0.21vw)";
+        pdiv.style.width = "calc(" +  width + "% - 0.21vw)";
         pdiv.style.marginTop = "-" + (width / 2) + "%";
         pdiv.style.marginLeft = "-" + (width / 2) + "%";
         pdiv.style.fontSize = (height * 1.8) + "px";
