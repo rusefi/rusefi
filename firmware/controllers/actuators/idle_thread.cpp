@@ -196,7 +196,7 @@ void IdleController::init(pid_s* idlePidConfig) {
 }
 
 int IdleController::getTargetRpm(float clt) const {
-	auto target = interpolate2d(clt, CONFIG(cltIdleRpmBins), CONFIG(cltIdleRpm))
+	auto target = interpolate2d(clt, CONFIG(cltIdleRpmBins), CONFIG(cltIdleRpm));
 
 	// Bump for AC
 	target += engine->acSwitchState ? CONFIG(acIdleRpmBump) : 0;
