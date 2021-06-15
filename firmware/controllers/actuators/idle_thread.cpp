@@ -196,11 +196,15 @@ void IdleController::init(pid_s* idlePidConfig) {
 }
 
 int IdleController::getTargetRpm(float clt) const {
-	// TODO: bump target rpm based on AC and/or fan(s)?
+	auto target = interpolate2d(clt, CONFIG(cltIdleRpmBins), CONFIG(cltIdleRpm));
 
-	float fsioBump = engine->fsioState.fsioIdleTargetRPMAdjustment;
+	// Bump for AC
+	target += engine->acSwitchState ? CONFIG(acIdleRpmBump) : 0;
 
-	return fsioBump + interpolate2d(clt, CONFIG(cltIdleRpmBins), CONFIG(cltIdleRpm));
+	// Bump by FSIO
+	target += engine->fsioState.fsioIdleTargetRPMAdjustment;
+
+	return target;
 }
 
 IIdleController::Phase IdleController::determinePhase(int rpm, int targetRpm, SensorResult tps) const {
@@ -247,9 +251,7 @@ float IdleController::getRunningOpenLoop(float clt, SensorResult tps) const {
 	// Now we bump it by the AC/fan amount if necessary
 	running += engine->acSwitchState ? CONFIG(acIdleExtraOffset) : 0;
 	running += enginePins.fanRelay.getLogicValue() ? CONFIG(fan1ExtraIdle) : 0;
-
-	// TODO: once we have dual fans, enable
-	//running += enginePins.fanRelay2.getLogicValue() ? CONFIG(fan2ExtraIdle) : 0;
+	running += enginePins.fanRelay2.getLogicValue() ? CONFIG(fan2ExtraIdle) : 0;
 
 	// Now bump it by the specified amount when the throttle is opened (if configured)
 	// nb: invalid tps will make no change, no explicit check required
