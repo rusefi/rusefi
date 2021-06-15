@@ -196,11 +196,15 @@ void IdleController::init(pid_s* idlePidConfig) {
 }
 
 int IdleController::getTargetRpm(float clt) const {
-	// TODO: bump target rpm based on AC and/or fan(s)?
+	auto target = interpolate2d(clt, CONFIG(cltIdleRpmBins), CONFIG(cltIdleRpm))
 
-	float fsioBump = engine->fsioState.fsioIdleTargetRPMAdjustment;
+	// Bump for AC
+	target += engine->acSwitchState ? CONFIG(acIdleRpmBump) : 0;
 
-	return fsioBump + interpolate2d(clt, CONFIG(cltIdleRpmBins), CONFIG(cltIdleRpm));
+	// Bump by FSIO
+	target += engine->fsioState.fsioIdleTargetRPMAdjustment;
+
+	return target;
 }
 
 IIdleController::Phase IdleController::determinePhase(int rpm, int targetRpm, SensorResult tps) const {

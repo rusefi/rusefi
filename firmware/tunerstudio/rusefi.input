@@ -2631,6 +2631,7 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 	dialog = idleOpenLoop, "Open Loop Idle"
 		slider = "Open loop base position",				manIdlePosition, horizontal
 		field = "A/C adder",							acIdleExtraOffset
+		field = "A/C target adder",						acIdleRpmBump
 		field = "Fan #1 adder",							fan1ExtraIdle
 		field = "Fan #2 adder",							fan2ExtraIdle
 		field = "Extra idle air if throttle pressed",	iacByTpsTaper
