@@ -1148,7 +1148,7 @@ bit unused_1484_bit_31
 ! todo: start using these parameters!
 	int16_t acCutoffLowRpm;;"RPM",      1,      0,       1, 15000,      0
 	int16_t acCutoffHighRpm;;"RPM",      1,      0,       1, 15000,      0
-	int16_t acIdleRpmBump;+Extra idle target speed when A/C is enabled. Some cars need the extra speed to keep the AC efficient while idling.;"RPM",      1,      0,       0, 1000,      0
+	int16_t acIdleRpmBump;+Extra idle target speed when A/C is enabled. Some cars need the extra speed to keep the AC efficient while idling.;"RPM", 1, 0, 0, 1000, 0
 
 	int16_t warningPeriod;set warningPeriod X;"seconds",      1,      0,       0, 60,      0
 
