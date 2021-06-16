@@ -74,3 +74,72 @@ TEST(limp, boostCut) {
 	dut.updateState(1000, 0);
 	EXPECT_TRUE(dut.allowInjection());
 }
+
+extern int timeNowUs;
+
+TEST(limp, oilPressureFailureCase) {
+	WITH_ENGINE_TEST_HELPER(TEST_ENGINE);
+	engineConfiguration->minOilPressureAfterStart = 200;
+
+	LimpManager dut;
+	INJECT_ENGINE_REFERENCE(&dut);
+
+	// Low oil pressure!
+	Sensor::setMockValue(SensorType::OilPressure, 50);
+
+	// Start the engine
+	ENGINE(rpmCalculator).setRpmValue(1000);
+
+	// update & check: injection should be allowed
+	dut.updateState(1000, getTimeNowNt());
+	EXPECT_TRUE(dut.allowInjection());
+
+	// 4.5 seconds later, should still be allowed (even though pressure is low)
+	timeNowUs += 4.5e6;
+	dut.updateState(1000, getTimeNowNt());
+	EXPECT_TRUE(dut.allowInjection());
+
+	// 1 second later (5.5 since start), injection should cut
+	timeNowUs += 1.0e6;
+	dut.updateState(1000, getTimeNowNt());
+	ASSERT_FALSE(dut.allowInjection());
+
+	// But then oil pressure arrives!
+	// Injection still isn't allowed, since now we're late.
+	Sensor::setMockValue(SensorType::OilPressure, 250);
+	dut.updateState(1000, getTimeNowNt());
+	ASSERT_FALSE(dut.allowInjection());
+}
+
+TEST(limp, oilPressureSuccessCase) {
+	WITH_ENGINE_TEST_HELPER(TEST_ENGINE);
+	engineConfiguration->minOilPressureAfterStart = 200;
+
+	LimpManager dut;
+	INJECT_ENGINE_REFERENCE(&dut);
+
+	// Low oil pressure!
+	Sensor::setMockValue(SensorType::OilPressure, 50);
+
+	// Start the engine
+	ENGINE(rpmCalculator).setRpmValue(1000);
+
+	// update & check: injection should be allowed
+	dut.updateState(1000, getTimeNowNt());
+	EXPECT_TRUE(dut.allowInjection());
+
+	// 4.5 seconds later, should still be allowed (even though pressure is low)
+	timeNowUs += 4.5e6;
+	dut.updateState(1000, getTimeNowNt());
+	EXPECT_TRUE(dut.allowInjection());
+
+	// But then oil pressure arrives!
+	Sensor::setMockValue(SensorType::OilPressure, 250);
+	dut.updateState(1000, getTimeNowNt());
+	ASSERT_TRUE(dut.allowInjection());
+
+	// 1 second later (5.5 since start), injection should be allowed since we saw pressure before the timeout
+	timeNowUs += 1.0e6;
+	dut.updateState(1000, getTimeNowNt());
+	ASSERT_TRUE(dut.allowInjection());
+}
