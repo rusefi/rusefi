@@ -3046,13 +3046,18 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 		field = "Cut spark on RPM limit",				cutSparkOnHardLimit
         field = "RPM hard limit",                       rpmHardLimit, { cutFuelOnHardLimit || cutSparkOnHardLimit }
 		field = "Boost cut pressure",					boostCutPressure
-	
+
+	dialog = etbLimits, "Electronic Throttle Limiting"
+		field = "Soft limiter start",				etbRevLimitStart
+		field = "Soft limiter range",				etbRevLimitRange
+
 	dialog = fallbacks, "Fallbacks"
 		field = "Use MAP estimation table as fallback",	enableMapEstimationTableFallback
 		field = "Failed MAP sensor fallback",			failedMapFallback, { !enableMapEstimationTableFallback }
 
 	dialog = limitsAndFallback, "Limits and fallbacks"
 		panel = limits
+		panel = etbLimits
 		panel = fallbacks
 	
 ;			Engine->Base Engine Settings
