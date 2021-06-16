@@ -569,8 +569,8 @@ int16_t tpsErrorDetectionTooHigh;+TPS error detection: what throttle % is unreal
 cranking_parameters_s cranking
 float primingSquirtDurationMs;;"*C",       1,     0,    -40, 200,     1
 	float ignitionDwellForCrankingMs;+Dwell duration while cranking;"ms",        1,     0,    0, 200,     1
-float unused104;;"deg",    1,      0,       0,  3000.0,      0
-
+	uint16_t etbRevLimitStart;+Once engine speed passes this value, start reducing ETB angle.;1, 0, 0, 15000, 0
+	uint16_t etbRevLimitRange;+This far above 'Soft limiter start', fully close the throttle. At the bottom of the range, throttle control is normal. At the top of the range, the throttle is fully closed.;1, 0, 0, 2000, 0
 
 MAP_sensor_config_s map;@see hasMapSensor\n@see isMapAveragingEnabled
 
