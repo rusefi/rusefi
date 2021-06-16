@@ -3048,6 +3048,7 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 		field = "Boost cut pressure",					boostCutPressure
 
 	dialog = etbLimits, "Electronic Throttle Limiting"
+		field = "Smoothly close the throttle to limit RPM."
 		field = "Soft limiter start",				etbRevLimitStart
 		field = "Soft limiter range",				etbRevLimitRange
 
