@@ -3046,6 +3046,7 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 		field = "Cut spark on RPM limit",				cutSparkOnHardLimit
         field = "RPM hard limit",                       rpmHardLimit, { cutFuelOnHardLimit || cutSparkOnHardLimit }
 		field = "Boost cut pressure",					boostCutPressure
+		field = "Minimum oil pressure after start",		minOilPressureAfterStart
 
 	dialog = etbLimits, "Electronic Throttle Limiting"
 		field = "Smoothly close the throttle to limit RPM."
