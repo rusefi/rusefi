@@ -346,6 +346,49 @@ TEST(etb, setpointIdle) {
 	EXPECT_FLOAT_EQ(55, etb.getSetpoint().value_or(-1));
 }
 
+TEST(etb, setpointRevLimit) {
+	WITH_ENGINE_TEST_HELPER(TEST_ENGINE);
+
+	// Configure 5000 limit start, with 750 rpm taper
+	engineConfiguration->etbRevLimitStart = 5000;
+	engineConfiguration->etbRevLimitRange = 750;
+
+	// Must have TPS & PPS initialized for ETB setup
+	Sensor::setMockValue(SensorType::Tps1, 0.0f, true);
+	Sensor::setMockValue(SensorType::AcceleratorPedal, 0.0f, true);
+
+	EtbController etb;
+	INJECT_ENGINE_REFERENCE(&etb);
+
+	// Mock pedal map to just return 80%
+	StrictMock<MockVp3d> pedalMap;
+	EXPECT_CALL(pedalMap, getValue(_, _))
+		.WillRepeatedly([](float, float) {
+			return 80;
+		});
+	etb.init(ETB_Throttle1, nullptr, nullptr, &pedalMap, true);
+
+	// Below threshold, should return unadjusted throttle
+	ENGINE(rpmCalculator.mockRpm) = 1000;
+	EXPECT_EQ(80, etb.getSetpoint().value_or(-1));
+
+	// At threshold, should return unadjusted throttle
+	ENGINE(rpmCalculator.mockRpm) = 5000;
+	EXPECT_EQ(80, etb.getSetpoint().value_or(-1));
+
+	// Middle of range, should return half of unadjusted
+	ENGINE(rpmCalculator.mockRpm) = 5375;
+	EXPECT_EQ(40, etb.getSetpoint().value_or(-1));
+
+	// At limit+range, should return 0
+	ENGINE(rpmCalculator.mockRpm) = 5750;
+	EXPECT_EQ(0, etb.getSetpoint().value_or(-1));
+
+	// Above limit+range, should return 0
+	ENGINE(rpmCalculator.mockRpm) = 6000;
+	EXPECT_EQ(0, etb.getSetpoint().value_or(-1));
+}
+
 TEST(etb, setpointNoPedalMap) {
 	EtbController etb;
 

@@ -316,6 +316,14 @@ expected<percent_t> EtbController::getSetpointEtb() const {
 	// 100% target from table -> 100% target position
 	percent_t targetPosition = interpolateClamped(0, etbIdleAddition, 100, 100, targetFromTable);
 
+	// Lastly, apply ETB rev limiter
+	auto etbRpmLimit = CONFIG(etbRevLimitStart);
+	if (etbRpmLimit != 0) {
+		auto fullyLimitedRpm = etbRpmLimit + CONFIG(etbRevLimitRange);
+		// Linearly taper throttle to closed from the limit across the range
+		targetPosition = interpolateClamped(etbRpmLimit, targetPosition, fullyLimitedRpm, 0, rpm);
+	}
+
 #if EFI_TUNER_STUDIO
 	if (m_function == ETB_Throttle1) {
 		tsOutputChannels.etbTarget = targetPosition;
