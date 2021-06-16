@@ -36,21 +36,24 @@ void LimpManager::updateState(int rpm, efitick_t nowNt) {
 
 		// Only check if the setting is enabled
 		if (minOilPressure > 0) {
-			auto oilp = Sensor::get(SensorType::OilPressure);
+			// Has it been long enough we should have pressure?
+			bool isTimedOut = ENGINE(rpmCalculator).getTimeSinceEngineStart(nowNt) > 5.0f;
 
-			if (oilp) {
-				// We had oil pressure! Set the flag.
-				if (oilp.Value > minOilPressure) {
-					m_hadOilPressureAfterStart = true;
+			// Only check before timed out
+			if (!isTimedOut) {
+				auto oilp = Sensor::get(SensorType::OilPressure);
+
+				if (oilp) {
+					// We had oil pressure! Set the flag.
+					if (oilp.Value > minOilPressure) {
+						m_hadOilPressureAfterStart = true;
+					}
 				}
+			}
 
-				// Has it been long enough we should have pressure?
-				bool isTimedOut = ENGINE(rpmCalculator).getTimeSinceEngineStart(nowNt) > 5.0f;
-
-				// If time is up, the sensor works, and no pressure, kill the engine.
-				if (isTimedOut && !m_hadOilPressureAfterStart) {
-					allowFuel.clear();
-				}
+			// If time is up, the sensor works, and no pressure, kill the engine.
+			if (isTimedOut && !m_hadOilPressureAfterStart) {
+				allowFuel.clear();
 			}
 		}
 	} else {
