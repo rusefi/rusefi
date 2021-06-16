@@ -107,7 +107,6 @@ static FsioPointers state;
 
 static LEElement * acRelayLogic;
 static LEElement * fuelPumpLogic;
-static LEElement * radiatorFanLogic;
 static LEElement * alternatorLogic;
 static LEElement * starterRelayDisableLogic;
 
@@ -507,10 +506,6 @@ void runFsio(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 //		setPinState("alternator", &enginePins.alternatorField, alternatorLogic, engine PASS_ENGINE_PARAMETER_SUFFIX);
 //	}
 
-	if (isBrainPinValid(CONFIG(fanPin))) {
-		setPinState("fan", &enginePins.fanRelay, radiatorFanLogic PASS_ENGINE_PARAMETER_SUFFIX);
-	}
-
 #if EFI_ENABLE_ENGINE_WARNING
 	if (engineConfiguration->useFSIO4ForSeriousEngineWarning) {
 		updateValueOrWarning(MAGIC_OFFSET_FOR_ENGINE_WARNING, "eng warning", &ENGINE(fsioState.isEngineWarning) PASS_ENGINE_PARAMETER_SUFFIX);
@@ -579,7 +574,6 @@ static void showFsioInfo(void) {
 	efiPrintf("sys used %d/user used %d", sysPool.getSize(), userPool.getSize());
 	showFsio("a/c", acRelayLogic);
 	showFsio("fuel", fuelPumpLogic);
-	showFsio("fan", radiatorFanLogic);
 	showFsio("alt", alternatorLogic);
 
 	for (int i = 0; i < CAM_INPUTS_COUNT ; i++) {
@@ -703,7 +697,6 @@ void initFsioImpl(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 #endif /* EFI_FUEL_PUMP */
 
 	acRelayLogic = sysPool.parseExpression(AC_RELAY_LOGIC);
-	radiatorFanLogic = sysPool.parseExpression(FAN_CONTROL_LOGIC);
 
 	alternatorLogic = sysPool.parseExpression(ALTERNATOR_LOGIC);
 	
@@ -781,12 +774,6 @@ void runHardcodedFsio(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	// see STARTER_RELAY_LOGIC
 	if (isBrainPinValid(CONFIG(starterRelayDisablePin))) {
 		enginePins.starterRelayDisable.setValue(engine->rpmCalculator.getRpm() < engineConfiguration->cranking.rpm);
-	}
-	// see FAN_CONTROL_LOGIC
-	if (isBrainPinValid(CONFIG(fanPin))) {
-		auto clt = Sensor::get(SensorType::Clt);
-		enginePins.fanRelay.setValue(!clt.Valid || (enginePins.fanRelay.getLogicValue() && (clt.Value > engineConfiguration->fanOffTemperature)) || 
-			(clt.Value > engineConfiguration->fanOnTemperature) || !clt.Valid);
 	}
 	// see AC_RELAY_LOGIC
 	if (isBrainPinValid(CONFIG(acRelayPin))) {

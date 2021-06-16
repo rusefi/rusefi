@@ -474,6 +474,7 @@ end_struct
 #define ET_MRE_OLD_TEST_BOARD 30
 #define ET_MRE_NEW_TEST_BOARD 31
 #define ET_VW_ABA 32
+#define ET_HELLEN_NA6 34
 #define ET_CAMARO 35
 #define ET_HELLEN_128_MERCEDES 36
 #define ET_MRE_SUBARU_EJ18 37
@@ -505,6 +506,7 @@ end_struct
 #define ET_HELLEN_121_VAG_5_CYL 77
 #define ET_HELLEN_121_VAG_6_CYL 78
 #define ET_HELLEN_121_VAG_8_CYL 79
+#define ET_HELLEN_NA94 80
 
 #define ET_PROTEUS_ANALOG_PWM_TEST 106
 
@@ -528,8 +530,8 @@ bit isForcedInduction
 bit useFordRedundantTps;+On Ford vehicles one of the sensors is not linear on the full range, i.e. in the specific range of the positions we effectively have only one sensor.
 bit isVerboseAuxPid1
 bit overrideTriggerGaps
-bit unused_294_4
-bit unused_294_5
+bit enableFan1WithAc;+Turn on this fan when AC is on.
+bit enableFan2WithAc;+Turn on this fan when AC is on.
 bit unused_294_6
 bit unused_294_7
 bit unused_294_8
@@ -566,8 +568,8 @@ int16_t tpsErrorDetectionTooHigh;+TPS error detection: what throttle % is unreal
 
 cranking_parameters_s cranking
 float primingSquirtDurationMs;;"*C",       1,     0,    -40, 200,     1
-	float ignitionDwellForCrankingMs;Used if useConstantDwellDuringCranking is TRUE;"ms",        1,     0,    0, 200,     1
-float crankingChargeAngle;+While cranking (which causes battery voltage to drop) we can calculate dwell time in shaft\ndegrees, not in absolute time as in running mode.\nset cranking_charge_angle X;"deg",    1,      0,       0,  3000.0,      0
+	float ignitionDwellForCrankingMs;+Dwell duration while cranking;"ms",        1,     0,    0, 200,     1
+float unused104;;"deg",    1,      0,       0,  3000.0,      0
 
 
 MAP_sensor_config_s map;@see hasMapSensor\n@see isMapAveragingEnabled
@@ -638,8 +640,8 @@ angle_t globalTriggerAngleOffset;+Angle between Top Dead Center (TDC) and the fi
 float analogInputDividerCoefficient;+Ratio/coefficient of input voltage dividers on your PCB. For example, use '2' if your board divides 5v into 2.5v. Use '1.66' if your board divides 5v into 3v.;"coef",    1,      0,    0.01,  10.0,   2
 float vbattDividerCoeff;+This is the ratio of the resistors for the battery voltage, measure the voltage at the battery and then adjust this number until the gauge matches the reading.;"coef",    1,      0,    0.01,  99.0,        2
 
-float fsio_visible fanOnTemperature;+Cooling fan turn-on temperature threshold, in Celsius;"*C",    1,      0,       0,  1000.0,        0
-float fsio_visible fanOffTemperature;+Cooling fan turn-off temperature threshold, in Celsius;"*C",    1,      0,       0,  1000.0,        0
+float fanOnTemperature;+Cooling fan turn-on temperature threshold, in Celsius;"deg C", 1, 0, 0, 150, 0
+float fanOffTemperature;+Cooling fan turn-off temperature threshold, in Celsius;"deg C", 1, 0, 0, 150, 0
 
 
 float vehicleSpeedCoef;+This coefficient translates vehicle speed input frequency (in Hz) into vehicle speed, km/h;"coef",    1,      0,    0.01,  2000.0,        2
@@ -1061,11 +1063,11 @@ custom maf_sensor_type_e 4 bits, S32, @OFFSET@, [0:1], @@maf_sensor_type_e_enum@
 	uint16_t tps2SecondaryMin;;"ADC", 1, 0, 0, 1000, 0
 	uint16_t tps2SecondaryMax;;"ADC", 1, 0, 0, 1000, 0
 
-	bit unusedHereWeHave
+	bit unused1464b0
 	bit fuelClosedLoopCorrectionEnabled;+Enables lambda sensor closed loop feedback for fuelling.
 	bit isVerboseIAC;+Print details into rusEfi console\nenable verbose_idle
 	bit isVerboseETB;+Prints ETB details to rusEFI console
-	bit useConstantDwellDuringCranking,"Time-based","Angle-based";+If set to true, will use the specified duration for cranking dwell. If set to false, will use the specified dwell angle.  Unless you have a really good reason to, leave this set to true to use duration mode.
+	bit unused1464b4
 	bit isEngineChartEnabled;+This options enables data for 'engine sniffer' tab in console, which comes at some CPU price 
 	bit silentTriggerError;+Sometimes we have a performance issue while printing error
 	bit useLinearCltSensor
@@ -1147,8 +1149,7 @@ bit unused_1484_bit_31
 ! todo: start using these parameters!
 	int16_t acCutoffLowRpm;;"RPM",      1,      0,       1, 15000,      0
 	int16_t acCutoffHighRpm;;"RPM",      1,      0,       1, 15000,      0
-	int16_t acIdleRpmBump;;"RPM",      1,      0,       1, 15000,      0
-
+	int16_t acIdleRpmBump;+Extra idle target speed when A/C is enabled. Some cars need the extra speed to keep the AC efficient while idling.;"RPM", 1, 0, 0, 1000, 0
 
 	int16_t warningPeriod;set warningPeriod X;"seconds",      1,      0,       0, 60,      0
 
@@ -1343,7 +1344,7 @@ tle8888_mode_e tle8888mode;
 	custom injector_compensation_mode_e 1 bits, U08, @OFFSET@, [0:1], "None", "Fixed rail pressure", "Sensed Rail Pressure"
 	injector_compensation_mode_e injectorCompensationMode;+None = I have a MAP-referenced fuel pressure regulator\nFixed rail pressure = I have an atmosphere-referenced fuel pressure regulator (returnless, typically)\nSensed rail pressure = I have a fuel pressure sensor;
 
-	uint8_t unused2419;;"units", 1, 0, -20, 100, 0
+	pin_output_mode_e fan2PinMode;
 	float fuelReferencePressure;+This is the pressure at which your injector flow is known.\nFor example if your injectors flow 400cc/min at 3.5 bar, enter 350kpa here.;"kPa", 1, 0, 0, 700000, 0
 	float unused244_2;;"units", 1, 0, -20, 100, 0
 	float unused244_3;;"units", 1, 0, -20, 100, 0
@@ -1393,9 +1394,9 @@ tle8888_mode_e tle8888mode;
 	linear_sensor_s oilPressure;
 
 	spi_device_e accelerometerSpiDevice;
-	uint8_t[1] unusedAuxVoltage1_TODO_332;;"units", 1, 0, -20, 100, 0
-	uint8_t[1] unusedAuxVoltage2_TODO_332;;"units", 1, 0, -20, 100, 0
-	uint8_t[1] unusedSpiPadding5;;"units", 1, 0, -20, 100, 0
+	output_pin_e fan2Pin;
+	uint8_t fan2OnTemperature;+Cooling fan turn-on temperature threshold, in Celsius;"deg C", 1, 0, 0, 150, 0
+	uint8_t fan2OffTemperature;+Cooling fan turn-off temperature threshold, in Celsius;"deg C", 1, 0, 0, 150, 0
 	float[FSIO_CURVE_16] fsioCurve1Bins;;"x",        1,     0,   -999,    1000.0,  3
 	float[FSIO_CURVE_16] fsioCurve1;;"y",      1,     0,      -999,    1000.0,   3
 	float[FSIO_CURVE_16] fsioCurve2Bins;;"x",        1,     0,   -999,    1000.0,  3

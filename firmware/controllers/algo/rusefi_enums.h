@@ -108,7 +108,7 @@ typedef enum {
 
 	HELLEN72_ETB = 33,
 
-	HELLEN_NA6 = 34,
+	HELLEN_NA6 = ET_HELLEN_NA6,
 
 	CAMARO_4 = ET_CAMARO,
 
@@ -203,6 +203,8 @@ typedef enum {
 	HELLEN_121_VAG_5_CYL = ET_HELLEN_121_VAG_5_CYL,
 	HELLEN_121_VAG_6_CYL = ET_HELLEN_121_VAG_6_CYL,
 	HELLEN_121_VAG_8_CYL = ET_HELLEN_121_VAG_8_CYL,
+
+	HELLEN_NA94 = ET_HELLEN_NA94,
 
 	/**
 	 * this configuration has as few pins configured as possible

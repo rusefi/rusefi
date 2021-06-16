@@ -216,12 +216,8 @@ TEST(misc, testFordAspire) {
 
 	ASSERT_EQ( 4,  TRIGGER_WAVEFORM(getTriggerWaveformSynchPointIndex())) << "getTriggerWaveformSynchPointIndex";
 
-	engineConfiguration->crankingChargeAngle = 65;
 	engineConfiguration->crankingTimingAngle = 31;
-	engineConfiguration->useConstantDwellDuringCranking = false;
 
-	engine->rpmCalculator.setRpmValue(200);
-	assertEqualsM("cranking dwell", 54.166670, getSparkDwell(200 PASS_ENGINE_PARAMETER_SUFFIX));
 	int rpm = 2000;
 	engine->rpmCalculator.setRpmValue(rpm);
 	ASSERT_EQ( 4,  getSparkDwell(rpm PASS_ENGINE_PARAMETER_SUFFIX)) << "running dwell";

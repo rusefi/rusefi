@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Sat Jun 05 20:20:27 UTC 2021
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Tue Jun 15 21:31:42 UTC 2021
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -681,11 +681,13 @@ struct engine_configuration_s {
 	offset 76 bit 3 */
 	bool overrideTriggerGaps : 1;
 	/**
+	 * Turn on this fan when AC is on.
 	offset 76 bit 4 */
-	bool unused_294_4 : 1;
+	bool enableFan1WithAc : 1;
 	/**
+	 * Turn on this fan when AC is on.
 	offset 76 bit 5 */
-	bool unused_294_5 : 1;
+	bool enableFan2WithAc : 1;
 	/**
 	offset 76 bit 6 */
 	bool unused_294_6 : 1;
@@ -816,19 +818,16 @@ struct engine_configuration_s {
 	 */
 	float primingSquirtDurationMs;
 	/**
-	 * Used if useConstantDwellDuringCranking is TRUE
+	 * Dwell duration while cranking
 	ms
 	 * offset 100
 	 */
 	float ignitionDwellForCrankingMs;
 	/**
-	 * While cranking (which causes battery voltage to drop) we can calculate dwell time in shaft
-	 * degrees, not in absolute time as in running mode.
-	 * set cranking_charge_angle X
 	deg
 	 * offset 104
 	 */
-	float crankingChargeAngle;
+	float unused104;
 	/**
 	 * @see hasMapSensor
 	 * @see isMapAveragingEnabled
@@ -990,13 +989,13 @@ struct engine_configuration_s {
 	float vbattDividerCoeff;
 	/**
 	 * Cooling fan turn-on temperature threshold, in Celsius
-	*C
+	deg C
 	 * offset 468
 	 */
 	float fanOnTemperature;
 	/**
 	 * Cooling fan turn-off temperature threshold, in Celsius
-	*C
+	deg C
 	 * offset 472
 	 */
 	float fanOffTemperature;
@@ -2145,7 +2144,7 @@ struct engine_configuration_s {
 	uint16_t tps2SecondaryMax;
 	/**
 	offset 1464 bit 0 */
-	bool unusedHereWeHave : 1;
+	bool unused1464b0 : 1;
 	/**
 	 * Enables lambda sensor closed loop feedback for fuelling.
 	offset 1464 bit 1 */
@@ -2160,9 +2159,8 @@ struct engine_configuration_s {
 	offset 1464 bit 3 */
 	bool isVerboseETB : 1;
 	/**
-	 * If set to true, will use the specified duration for cranking dwell. If set to false, will use the specified dwell angle. Unless you have a really good reason to, leave this set to true to use duration mode.
 	offset 1464 bit 4 */
-	bool useConstantDwellDuringCranking : 1;
+	bool unused1464b4 : 1;
 	/**
 	 * This options enables data for 'engine sniffer' tab in console, which comes at some CPU price
 	offset 1464 bit 5 */
@@ -2433,6 +2431,7 @@ struct engine_configuration_s {
 	 */
 	int16_t acCutoffHighRpm;
 	/**
+	 * Extra idle target speed when A/C is enabled. Some cars need the extra speed to keep the AC efficient while idling.
 	RPM
 	 * offset 1496
 	 */
@@ -3180,10 +3179,9 @@ struct engine_configuration_s {
 	 */
 	injector_compensation_mode_e injectorCompensationMode;
 	/**
-	units
 	 * offset 2419
 	 */
-	uint8_t unused2419;
+	pin_output_mode_e fan2PinMode;
 	/**
 	 * This is the pressure at which your injector flow is known.
 	 * For example if your injectors flow 400cc/min at 3.5 bar, enter 350kpa here.
@@ -3354,20 +3352,21 @@ struct engine_configuration_s {
 	 */
 	spi_device_e accelerometerSpiDevice;
 	/**
-	units
 	 * offset 2713
 	 */
-	uint8_t unusedAuxVoltage1_TODO_332[1];
+	output_pin_e fan2Pin;
 	/**
-	units
+	 * Cooling fan turn-on temperature threshold, in Celsius
+	deg C
 	 * offset 2714
 	 */
-	uint8_t unusedAuxVoltage2_TODO_332[1];
+	uint8_t fan2OnTemperature;
 	/**
-	units
+	 * Cooling fan turn-off temperature threshold, in Celsius
+	deg C
 	 * offset 2715
 	 */
-	uint8_t unusedSpiPadding5[1];
+	uint8_t fan2OffTemperature;
 	/**
 	x
 	 * offset 2716
@@ -4213,4 +4212,4 @@ struct persistent_config_s {
 };
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Sat Jun 05 20:20:27 UTC 2021
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Tue Jun 15 21:31:42 UTC 2021

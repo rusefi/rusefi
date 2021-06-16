@@ -166,10 +166,15 @@ void setBoardDefaultConfiguration(void) {
 	engineConfiguration->canTxPin = GPIOD_1;
 	engineConfiguration->canRxPin = GPIOD_0;
 
-	engineConfiguration->fuelPumpPin = GPIOG_2;	// OUT_IO9
+	engineConfiguration->fuelPumpPin = GPIOH_14;	// 65 - Fuel Pump
+	engineConfiguration->malfunctionIndicatorPin = GPIOG_4; // 47 - CEL
+	engineConfiguration->tachOutputPin = GPIOD_13; // 37 - TACH
 	engineConfiguration->idle.solenoidPin = GPIOD_14;	// OUT_PWM5
 	engineConfiguration->fanPin = GPIOD_12;	// OUT_PWM8
 	engineConfiguration->mainRelayPin = GPIOI_2;	// 21 - Main Relay
+
+//	engineConfiguration->injectorCompensationMode
+	engineConfiguration->fuelReferencePressure = 300;
 
 	// "required" hardware is done - set some reasonable defaults
 	setupDefaultSensorInputs();

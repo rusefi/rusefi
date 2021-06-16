@@ -310,7 +310,6 @@
 #define cranking_rpm_offset 92
 #define crankingAdvance_offset 3124
 #define crankingAdvanceBins_offset 3108
-#define crankingChargeAngle_offset 104
 #define crankingCycleBins_offset 10624
 #define crankingCycleCoef_offset 10592
 #define crankingFuelBins_offset 10560
@@ -369,6 +368,8 @@
 #define enableAemXSeries_offset 744
 #define enableCanVss_offset 976
 #define enabledStep1Limiter_offset 744
+#define enableFan1WithAc_offset 76
+#define enableFan2WithAc_offset 76
 #define enableInnovateLC2_offset 976
 #define enableLaunchBoost_offset 976
 #define enableLaunchRetard_offset 976
@@ -389,7 +390,7 @@
 #define ENGINE_MAKE_VAG "VAG"
 #define ENGINE_NOISE_CURVE_SIZE 8
 #define ENGINE_SNIFFER_UNIT_US 10
-#define engine_type_e_auto_enum "DEFAULT_FRANKENSO", "MIATA_PROTEUS_TCU", "DODGE_NEON_1995", "FORD_ASPIRE_1996", "INVALID", "NISSAN_PRIMERA", "HONDA_ACCORD_CD", "FORD_INLINE_6_1995", "GY6_139QMB", "MAZDA_MIATA_NB1", "INVALID", "MRE_MIATA_NB2_MAP", "MRE_MIATA_NA6_VAF", "MRE_MIATA_NB2_ETB", "FORD_ESCORT_GT", "MRE_MIATA_NB2_MAF", "MITSU_4G93", "HONDA_ACCORD_CD_TWO_WIRES", "HONDA_ACCORD_CD_DIP", "MIATA_1990", "MRE_MIATA_94_MAP", "MIATA_1996", "SUBARU_2003_WRX", "MRE_BODY_CONTROL", "BMW_M73_M", "INVALID", "TEST_ENGINE", "TEST_ISSUE_898", "MAZDA_626", "SACHS", "MRE_BOARD_OLD_TEST", "MRE_BOARD_NEW_TEST", "VW_ABA", "HELLEN72_ETB", "HELLEN_NA6", "CAMARO_4", "HELLEN_128_MERCEDES", "MRE_SUBARU_EJ18", "TOYOTA_JZS147", "LADA_KALINA", "BMW_M73_F", "MIATA_NA6_MAP", "PROTEUS_QC_TEST_BOARD", "HONDA_600", "TOYOTA_2JZ_GTE_VVTi", "TEST_ENGINE_VVT", "DODGE_NEON_2003_CRANK", "MAZDA_MIATA_2003", "HONDA_ACCORD_1_24_SHIFTED", "FRANKENSO_QA_ENGINE", "TEST_CIVIC_4_0_BOTH", "TEST_CIVIC_4_0_RISE", "TEST_ISSUE_366_BOTH", "TEST_ISSUE_366_RISE", "MAZDA_MIATA_2003_NA_RAIL", "MAZDA_MIATA_2003_BOARD_TEST", "MAZDA_MIATA_NA8", "MIATA_NA6_VAF", "ETB_BENCH_ENGINE", "TLE8888_BENCH_ENGINE", "MICRO_RUS_EFI", "PROTEUS_DEFAULTS", "VW_B6", "BMW_M73_PROTEUS", "DODGE_RAM", "CITROEN_TU3JP", "MRE_MIATA_NA6_MAP", "PROTEUS_MIATA_NB2", "MRE_M111", "HELLEN_NB2", "SUBARUEG33_DEFAULTS", "HELLEN_121_VAG", "HELLEN_121_NISSAN", "HELLEN_55_BMW", "HELLEN_88_BMW", "HELLEN_134_BMW", "HELLEN_154_VAG", "HELLEN_121_VAG_5_CYL", "HELLEN_121_VAG_6_CYL", "HELLEN_121_VAG_8_CYL", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "MINIMAL_PINS", "PROMETHEUS_DEFAULTS", "SUBARUEJ20G_DEFAULTS", "VAG_18_TURBO", "TEST_33816", "BMW_M73_MRE", "BMW_M73_MRE_SLAVE", "PROTEUS_ANALOG_PWM_TEST"
+#define engine_type_e_auto_enum "DEFAULT_FRANKENSO", "MIATA_PROTEUS_TCU", "DODGE_NEON_1995", "FORD_ASPIRE_1996", "INVALID", "NISSAN_PRIMERA", "HONDA_ACCORD_CD", "FORD_INLINE_6_1995", "GY6_139QMB", "MAZDA_MIATA_NB1", "INVALID", "MRE_MIATA_NB2_MAP", "MRE_MIATA_NA6_VAF", "MRE_MIATA_NB2_ETB", "FORD_ESCORT_GT", "MRE_MIATA_NB2_MAF", "MITSU_4G93", "HONDA_ACCORD_CD_TWO_WIRES", "HONDA_ACCORD_CD_DIP", "MIATA_1990", "MRE_MIATA_94_MAP", "MIATA_1996", "SUBARU_2003_WRX", "MRE_BODY_CONTROL", "BMW_M73_M", "INVALID", "TEST_ENGINE", "TEST_ISSUE_898", "MAZDA_626", "SACHS", "MRE_BOARD_OLD_TEST", "MRE_BOARD_NEW_TEST", "VW_ABA", "HELLEN72_ETB", "HELLEN_NA6", "CAMARO_4", "HELLEN_128_MERCEDES", "MRE_SUBARU_EJ18", "TOYOTA_JZS147", "LADA_KALINA", "BMW_M73_F", "MIATA_NA6_MAP", "PROTEUS_QC_TEST_BOARD", "HONDA_600", "TOYOTA_2JZ_GTE_VVTi", "TEST_ENGINE_VVT", "DODGE_NEON_2003_CRANK", "MAZDA_MIATA_2003", "HONDA_ACCORD_1_24_SHIFTED", "FRANKENSO_QA_ENGINE", "TEST_CIVIC_4_0_BOTH", "TEST_CIVIC_4_0_RISE", "TEST_ISSUE_366_BOTH", "TEST_ISSUE_366_RISE", "MAZDA_MIATA_2003_NA_RAIL", "MAZDA_MIATA_2003_BOARD_TEST", "MAZDA_MIATA_NA8", "MIATA_NA6_VAF", "ETB_BENCH_ENGINE", "TLE8888_BENCH_ENGINE", "MICRO_RUS_EFI", "PROTEUS_DEFAULTS", "VW_B6", "BMW_M73_PROTEUS", "DODGE_RAM", "CITROEN_TU3JP", "MRE_MIATA_NA6_MAP", "PROTEUS_MIATA_NB2", "MRE_M111", "HELLEN_NB2", "SUBARUEG33_DEFAULTS", "HELLEN_121_VAG", "HELLEN_121_NISSAN", "HELLEN_55_BMW", "HELLEN_88_BMW", "HELLEN_134_BMW", "HELLEN_154_VAG", "HELLEN_121_VAG_5_CYL", "HELLEN_121_VAG_6_CYL", "HELLEN_121_VAG_8_CYL", "HELLEN_NA94", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "MINIMAL_PINS", "PROMETHEUS_DEFAULTS", "SUBARUEJ20G_DEFAULTS", "VAG_18_TURBO", "TEST_33816", "BMW_M73_MRE", "BMW_M73_MRE_SLAVE", "PROTEUS_ANALOG_PWM_TEST"
 #define engineChartSize_offset 1480
 #define engineCode_offset 1128
 #define engineConfiguration_offset 0
@@ -424,6 +425,8 @@
 #define ET_HELLEN_154_VAG 76
 #define ET_HELLEN_55_BMW 73
 #define ET_HELLEN_88_BMW 74
+#define ET_HELLEN_NA6 34
+#define ET_HELLEN_NA94 80
 #define ET_HELLEN_NB2 69
 #define ET_MIATA_TCU_PROTEUS 1
 #define ET_MRE_BODY_CONTROL 23
@@ -491,6 +494,10 @@
 #define failedMapFallback_offset 541
 #define fan1ExtraIdle_offset 2252
 #define fan2ExtraIdle_offset 2330
+#define fan2OffTemperature_offset 2715
+#define fan2OnTemperature_offset 2714
+#define fan2Pin_offset 2713
+#define fan2PinMode_offset 2419
 #define fanOffTemperature_offset 472
 #define fanOnTemperature_offset 468
 #define fanPin_offset 663
@@ -1275,8 +1282,8 @@
 #define showHumanReadableWarning_offset 976
 #define showSdCardWarning_offset 76
 #define SIGNATURE_BOARD all
-#define SIGNATURE_DATE 2021.06.05
-#define SIGNATURE_HASH 233454178
+#define SIGNATURE_DATE 2021.06.15
+#define SIGNATURE_HASH 2726230643
 #define silentTriggerError_offset 1464
 #define slowAdcAlpha_offset 2088
 #define sparkDwellRpmBins_offset 332
@@ -1629,7 +1636,7 @@
 #define ts_show_spi true
 #define ts_show_trigger_comparator false
 #define ts_show_tunerstudio_port true
-#define TS_SIGNATURE "rusEFI 2021.06.05.all.233454178"
+#define TS_SIGNATURE "rusEFI 2021.06.15.all.2726230643"
 #define TS_SINGLE_WRITE_COMMAND 'W'
 #define TS_SINGLE_WRITE_COMMAND_char W
 #define TS_TEST_COMMAND 't' // 0x74
@@ -1682,6 +1689,7 @@
 #define twoWireBatchInjection_offset 1476
 #define uart_device_e_auto_enum "UART_NONE", "UART_DEVICE_1", "UART_DEVICE_2", "UART_DEVICE_3", "UART_DEVICE_4"
 #define uartConsoleSerialSpeed_offset 2076
+#define unused104_offset 104
 #define unused1059_offset 3964
 #define unused1126_offset 2116
 #define unused1127_offset 2116
@@ -1689,6 +1697,8 @@
 #define unused1129_offset 2116
 #define unused1130_offset 2116
 #define unused1366_offset 2652
+#define unused1464b0_offset 1464
+#define unused1464b4_offset 1464
 #define unused1476b19_offset 1476
 #define unused1476b20_offset 1476
 #define unused1476b3_offset 1476
@@ -1696,7 +1706,6 @@
 #define unused1708_offset 1708
 #define unused1756_offset 1756
 #define unused2260_offset 2260
-#define unused2419_offset 2419
 #define unused2432_offset 2432
 #define unused244_2_offset 2424
 #define unused244_3_offset 2428
@@ -1719,14 +1728,10 @@
 #define unused_1484_bit_29_offset 1476
 #define unused_1484_bit_30_offset 1476
 #define unused_1484_bit_31_offset 1476
-#define unused_294_4_offset 76
-#define unused_294_5_offset 76
 #define unused_294_6_offset 76
 #define unused_294_7_offset 76
 #define unused_294_8_offset 76
 #define unusedAtOldBoardConfigurationEnd_offset 1228
-#define unusedAuxVoltage1_TODO_332_offset 2713
-#define unusedAuxVoltage2_TODO_332_offset 2714
 #define unusedBit4_1476_offset 1476
 #define unusedBit_251_29_offset 976
 #define unusedBit_289_30_offset 976
@@ -1756,15 +1761,12 @@
 #define unusedBit_492_31_offset 2116
 #define unusedBit_492_8_offset 2116
 #define unusedBit_492_9_offset 2116
-#define unusedHereWeHave_offset 1464
 #define unusedOldBiquad_offset 2331
 #define unusedOldIgnitionOffset_offset 445
 #define unusedSpiPadding4_offset 2593
-#define unusedSpiPadding5_offset 2715
 #define unusedSpiPadding8_offset 4010
 #define useAdvanceCorrectionsForCranking_offset 1476
 #define useCicPidForIdle_offset 76
-#define useConstantDwellDuringCranking_offset 1464
 #define useETBforIdleControl_offset 744
 #define useFixedBaroCorrFromMap_offset 1476
 #define useFordRedundantTps_offset 76

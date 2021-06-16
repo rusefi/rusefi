@@ -567,7 +567,6 @@ static void setMiataNB2_MRE_common(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 
 	CONFIG(isSdCardEnabled) = true;
 
-	engineConfiguration->useConstantDwellDuringCranking = true;
 	engineConfiguration->ignitionDwellForCrankingMs = 8;
 
 	engineConfiguration->vvtOffset = 97;

@@ -144,8 +144,6 @@ void setDodgeNeon1995EngineConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	 * that's 1995 config
 	 */
 
-	// set cranking_charge_angle 70
-	engineConfiguration->crankingChargeAngle = 70;
 	// set cranking_timing_angle 0
 	engineConfiguration->crankingTimingAngle = 0;
 
@@ -222,8 +220,6 @@ void setDodgeNeonNGCEngineConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	copyTable(config->veTable, veDodgeNeon2003Table);
 	//setMap(config->veTable, 50);
 
-	// set cranking_charge_angle 70
-	engineConfiguration->crankingChargeAngle = 70;
 	// set cranking_timing_angle 710
 	engineConfiguration->crankingTimingAngle = -710;
 

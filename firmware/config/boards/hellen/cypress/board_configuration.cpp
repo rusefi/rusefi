@@ -43,7 +43,6 @@ void setBoardDefaultConfiguration(void) {
 	engineConfiguration->injector.flow = 200;
 	
 	engineConfiguration->cranking.baseFuel = 25;		// ???
-	engineConfiguration->crankingChargeAngle = 70;
 	engineConfiguration->cranking.rpm = 600;
 
 	engineConfiguration->rpmHardLimit = 3000; // yes, 3k. let's play it safe for now
