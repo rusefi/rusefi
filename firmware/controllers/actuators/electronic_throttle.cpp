@@ -322,6 +322,14 @@ expected<percent_t> EtbController::getSetpointEtb() const {
 	}
 #endif // EFI_TUNER_STUDIO
 
+	// Lastly, apply ETB rev limiter
+	auto etbRpmLimit = CONFIG(etbRevLimitStart);
+	if (etbRpmLimit != 0) {
+		auto fullyLimitedRpm = etbRpmLimit + CONFIG(etbRevLimitRange);
+		// Linearly taper throttle to closed from the limit across the range
+		return interpolateClamped(etbRpmLimit, targetPosition, fullyLimitedRpm, 0, rpm);
+	}
+
 	return targetPosition;
 }
 
