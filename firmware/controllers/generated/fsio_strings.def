@@ -1,10 +1,6 @@
-// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Fri May 28 07:39:54 UTC 2021
+// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Wed Jun 16 15:28:56 UTC 2021
 
 // by class com.rusefi.output.FileFsioSettingsConsumer
-	case FSIO_SETTING_FANONTEMPERATURE:
-		return "cfg_fanOnTemperature";
-	case FSIO_SETTING_FANOFFTEMPERATURE:
-		return "cfg_fanOffTemperature";
 	case FSIO_SETTING_ACIDLEEXTRAOFFSET:
 		return "cfg_acIdleExtraOffset";
 	case FSIO_SETTING_ACIDLEEXTRAMIN:

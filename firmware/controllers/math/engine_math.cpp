@@ -76,16 +76,6 @@ void setSingleCoilDwell(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	engineConfiguration->sparkDwellValues[7] = 0;
 }
 
-static floatms_t getCrankingSparkDwell(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
-	if (engineConfiguration->useConstantDwellDuringCranking) {
-		return engineConfiguration->ignitionDwellForCrankingMs;
-	} else {
-		// technically this could be implemented via interpolate2d
-		float angle = engineConfiguration->crankingChargeAngle;
-		return getOneDegreeTimeMs(GET_RPM()) * angle;
-	}
-}
-
 /**
  * @return Spark dwell time, in milliseconds. 0 if tables are not ready.
  */
@@ -93,7 +83,7 @@ floatms_t getSparkDwell(int rpm DECLARE_ENGINE_PARAMETER_SUFFIX) {
 #if EFI_ENGINE_CONTROL && EFI_SHAFT_POSITION_INPUT
 	float dwellMs;
 	if (ENGINE(rpmCalculator).isCranking()) {
-		dwellMs = getCrankingSparkDwell(PASS_ENGINE_PARAMETER_SIGNATURE);
+		dwellMs = CONFIG(ignitionDwellForCrankingMs);
 	} else {
 		efiAssert(CUSTOM_ERR_ASSERT, !cisnan(rpm), "invalid rpm", NAN);
 

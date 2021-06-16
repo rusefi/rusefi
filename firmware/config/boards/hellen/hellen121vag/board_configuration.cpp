@@ -24,9 +24,9 @@ static void hellenWbo() {
 }
 
 static void setInjectorPins() {
-	engineConfiguration->injectionPins[0] = GPIOG_7;
+	engineConfiguration->injectionPins[0] = GPIOG_7; // 96 - INJ_1
 	engineConfiguration->injectionPins[1] = GPIOG_8;
-	engineConfiguration->injectionPins[2] = GPIOD_11;
+	engineConfiguration->injectionPins[2] = GPIOD_11; // 97 - INJ_3
 	engineConfiguration->injectionPins[3] = GPIOD_10;
 
 	//engineConfiguration->injectionPins[4] = GPIOD_9;
@@ -43,10 +43,10 @@ static void setInjectorPins() {
 }
 
 static void setIgnitionPins() {
-	engineConfiguration->ignitionPins[0] = GPIOI_8; // 3F - IGN_1 (1&4)
-	engineConfiguration->ignitionPins[1] = GPIO_UNASSIGNED ; // GPIOE_4
-	engineConfiguration->ignitionPins[2] = GPIOE_5; // 3I - IGN_2 (2&3)
-	engineConfiguration->ignitionPins[3] = GPIO_UNASSIGNED; // GPIOE_3
+	engineConfiguration->ignitionPins[0] = GPIOI_8; // 102 - IGN_1
+	engineConfiguration->ignitionPins[1] = GPIOE_5 ; // 7 - IGN_2
+	engineConfiguration->ignitionPins[2] = GPIOE_4; // 111 - IGN_3
+	engineConfiguration->ignitionPins[3] = GPIOE_3; // 94 - IGN_4
 
 	//engineConfiguration->ignitionPins[4] = GPIOE_2;
 	//engineConfiguration->ignitionPins[5] = GPIOI_5;
@@ -87,14 +87,17 @@ static void setupVbatt() {
 
 static void setupDefaultSensorInputs() {
 	// trigger inputs
-	engineConfiguration->triggerInputPins[0] = GPIOB_1;
+	engineConfiguration->triggerInputPins[0] = GPIOB_1; // 82 - VR
 	engineConfiguration->triggerInputPins[1] = GPIO_UNASSIGNED;
 	engineConfiguration->triggerInputPins[2] = GPIO_UNASSIGNED;
 	// Direct hall-only cam input
-	engineConfiguration->camInputs[0] = GPIOA_6;
+	engineConfiguration->camInputs[0] = GPIOA_6; // 86 - CAM1
 
-	engineConfiguration->tps1_1AdcChannel = EFI_ADC_4;
+	engineConfiguration->tps1_1AdcChannel = EFI_ADC_4; // 92 - TPS 1
 	engineConfiguration->tps2_1AdcChannel = EFI_ADC_NONE;
+
+	engineConfiguration->throttlePedalPositionAdcChannel = EFI_ADC_3; // 34 In PPS1
+	engineConfiguration->throttlePedalPositionSecondAdcChannel = EFI_ADC_14; // 35 In PPS2
 
 	engineConfiguration->mafAdcChannel = EFI_ADC_10;
 	engineConfiguration->map.sensor.hwChannel = EFI_ADC_11;
@@ -145,17 +148,33 @@ void setBoardDefaultConfiguration(void) {
 	setInjectorPins();
 	setIgnitionPins();
 
+	engineConfiguration->etbIo[0].directionPin1 = GPIOC_6; // out_pwm2
+	engineConfiguration->etbIo[0].directionPin2 = GPIOC_7; // out_pwm3
+	engineConfiguration->etbIo[0].controlPin = GPIOA_8; // ETB_EN out_io12
+	CONFIG(etb_use_two_wires) = true;
+
 	engineConfiguration->isSdCardEnabled = true;
+
+	// todo: should this be a global default not just Hellen121?
+	engineConfiguration->boostCutPressure = 200;
+
+	engineConfiguration->vvtMode[0] = VVT_BOSCH_QUICK_START;
+	engineConfiguration->map.sensor.type = MT_BOSCH_2_5;
 
 	CONFIG(enableSoftwareKnock) = true;
 
 	engineConfiguration->canTxPin = GPIOD_1;
 	engineConfiguration->canRxPin = GPIOD_0;
 
-	engineConfiguration->fuelPumpPin = GPIOG_2;	// OUT_IO9
+	engineConfiguration->fuelPumpPin = GPIOH_14;	// 65 - Fuel Pump
+	engineConfiguration->malfunctionIndicatorPin = GPIOG_4; // 47 - CEL
+	engineConfiguration->tachOutputPin = GPIOD_13; // 37 - TACH
 	engineConfiguration->idle.solenoidPin = GPIOD_14;	// OUT_PWM5
 	engineConfiguration->fanPin = GPIOD_12;	// OUT_PWM8
-	engineConfiguration->mainRelayPin = GPIOI_2;	// OUT_LOW3
+	engineConfiguration->mainRelayPin = GPIOI_2;	// 21 - Main Relay
+
+//	engineConfiguration->injectorCompensationMode
+	engineConfiguration->fuelReferencePressure = 300;
 
 	// "required" hardware is done - set some reasonable defaults
 	setupDefaultSensorInputs();

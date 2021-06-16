@@ -29,10 +29,12 @@ extern WarningCodeState unitTestWarningCodeState;
 extern engine_configuration_s & activeConfiguration;
 extern bool printTriggerDebug;
 extern bool printFuelDebug;
+extern int minCrankingRpm;
 
 EngineTestHelperBase::EngineTestHelperBase() { 
 	// todo: make this not a global variable, we need currentTimeProvider interface on engine
 	timeNowUs = 0; 
+	minCrankingRpm = 0;
 	EnableToothLogger();
 }
 

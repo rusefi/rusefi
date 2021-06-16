@@ -111,7 +111,7 @@ static void setupEtb() {
 	// DIS - disables motor (enable low)
 
 	// PWM pin
-	engineConfiguration->etbIo[0].controlPin1 = GPIOC_7;
+	engineConfiguration->etbIo[0].controlPin = GPIOC_7;
 	// DIR pin
 	engineConfiguration->etbIo[0].directionPin1 = GPIOA_8;
 	// Disable pin

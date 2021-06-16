@@ -88,7 +88,6 @@ void setSubaruEG33Defaults(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	engineConfiguration->injector.flow = 250;
 
 	engineConfiguration->cranking.baseFuel = 5;		// ???
-	engineConfiguration->crankingChargeAngle = 70;
 	engineConfiguration->cranking.rpm = 400;
 
 	engineConfiguration->rpmHardLimit = 6500;
