@@ -34,6 +34,7 @@ function addRow(table, pin, pdiv) {
     var cell = cells[i];
     cell.textContent = pin[cell.dataset.field];
   }
+  clone.querySelector(".pin-data").dataset.type = pin.type;
   if (pdiv) {
     row.addEventListener('click', function(table, pin, pdiv) {
       clickPin(table.parentElement.parentElement.parentElement.querySelector(".info-table tbody"), pin, pdiv);
