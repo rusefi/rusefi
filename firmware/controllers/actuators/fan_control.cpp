@@ -10,7 +10,10 @@ EXTERN_ENGINE;
 static void fanControl(OutputPin& pin, int8_t fanOnTemp, int8_t fanOffTemp, bool enableWithAc DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	auto [cltValid, clt] = Sensor::get(SensorType::Clt);
 
-	if (!cltValid) {
+	if (!ENGINE(rpmCalculator).isRunning()) {
+		// Engine stopped, turn off the fan
+		pin.setValue(false);
+	} else if (!cltValid) {
 		// If CLT is broken, turn the fan on
 		pin.setValue(true);
 	} else if (enableWithAc && ENGINE(acSwitchState)) {
