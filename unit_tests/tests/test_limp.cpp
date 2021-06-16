@@ -142,4 +142,10 @@ TEST(limp, oilPressureSuccessCase) {
 	timeNowUs += 1.0e6;
 	dut.updateState(1000, getTimeNowNt());
 	ASSERT_TRUE(dut.allowInjection());
+
+	// Later, we lose oil pressure, but engine should stay running
+	timeNowUs += 10e6;
+	Sensor::setMockValue(SensorType::OilPressure, 10);
+	dut.updateState(1000, getTimeNowNt());
+	ASSERT_TRUE(dut.allowInjection());
 }
