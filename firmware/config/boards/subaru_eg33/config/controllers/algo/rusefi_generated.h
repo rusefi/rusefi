@@ -483,6 +483,8 @@
 #define etbIo2_disablePin_offset 987
 #define etbIo2_offset 984
 #define etbNeutralPosition_offset 1471
+#define etbRevLimitRange_offset 106
+#define etbRevLimitStart_offset 104
 #define etbWastegatePid_dFactor_offset 2524
 #define etbWastegatePid_iFactor_offset 2520
 #define etbWastegatePid_maxValue_offset 2534
@@ -1285,8 +1287,8 @@
 #define showHumanReadableWarning_offset 976
 #define showSdCardWarning_offset 76
 #define SIGNATURE_BOARD subaru_eg33_f7
-#define SIGNATURE_DATE 2021.06.15
-#define SIGNATURE_HASH 253949029
+#define SIGNATURE_DATE 2021.06.16
+#define SIGNATURE_HASH 3356526019
 #define silentTriggerError_offset 1464
 #define slowAdcAlpha_offset 2088
 #define sparkDwellRpmBins_offset 332
@@ -1639,7 +1641,7 @@
 #define ts_show_spi true
 #define ts_show_trigger_comparator false
 #define ts_show_tunerstudio_port false
-#define TS_SIGNATURE "rusEFI 2021.06.15.subaru_eg33_f7.253949029"
+#define TS_SIGNATURE "rusEFI 2021.06.16.subaru_eg33_f7.3356526019"
 #define TS_SINGLE_WRITE_COMMAND 'W'
 #define TS_SINGLE_WRITE_COMMAND_char W
 #define TS_TEST_COMMAND 't' // 0x74
@@ -1692,7 +1694,6 @@
 #define twoWireBatchInjection_offset 1476
 #define uart_device_e_auto_enum "UART_NONE", "UART_DEVICE_1", "UART_DEVICE_2", "UART_DEVICE_3", "UART_DEVICE_4"
 #define uartConsoleSerialSpeed_offset 2076
-#define unused104_offset 104
 #define unused1059_offset 3964
 #define unused1126_offset 2116
 #define unused1127_offset 2116
@@ -1737,33 +1738,33 @@
 #define unusedAtOldBoardConfigurationEnd_offset 1228
 #define unusedBit4_1476_offset 1476
 #define unusedBit_251_29_offset 976
-#define unusedBit_289_30_offset 976
-#define unusedBit_289_31_offset 976
+#define unusedBit_290_30_offset 976
+#define unusedBit_290_31_offset 976
 #define unusedBit_34_31_offset 76
-#define unusedBit_492_10_offset 2116
-#define unusedBit_492_11_offset 2116
-#define unusedBit_492_12_offset 2116
-#define unusedBit_492_13_offset 2116
-#define unusedBit_492_14_offset 2116
-#define unusedBit_492_15_offset 2116
-#define unusedBit_492_16_offset 2116
-#define unusedBit_492_17_offset 2116
-#define unusedBit_492_18_offset 2116
-#define unusedBit_492_19_offset 2116
-#define unusedBit_492_20_offset 2116
-#define unusedBit_492_21_offset 2116
-#define unusedBit_492_22_offset 2116
-#define unusedBit_492_23_offset 2116
-#define unusedBit_492_24_offset 2116
-#define unusedBit_492_25_offset 2116
-#define unusedBit_492_26_offset 2116
-#define unusedBit_492_27_offset 2116
-#define unusedBit_492_28_offset 2116
-#define unusedBit_492_29_offset 2116
-#define unusedBit_492_30_offset 2116
-#define unusedBit_492_31_offset 2116
-#define unusedBit_492_8_offset 2116
-#define unusedBit_492_9_offset 2116
+#define unusedBit_493_10_offset 2116
+#define unusedBit_493_11_offset 2116
+#define unusedBit_493_12_offset 2116
+#define unusedBit_493_13_offset 2116
+#define unusedBit_493_14_offset 2116
+#define unusedBit_493_15_offset 2116
+#define unusedBit_493_16_offset 2116
+#define unusedBit_493_17_offset 2116
+#define unusedBit_493_18_offset 2116
+#define unusedBit_493_19_offset 2116
+#define unusedBit_493_20_offset 2116
+#define unusedBit_493_21_offset 2116
+#define unusedBit_493_22_offset 2116
+#define unusedBit_493_23_offset 2116
+#define unusedBit_493_24_offset 2116
+#define unusedBit_493_25_offset 2116
+#define unusedBit_493_26_offset 2116
+#define unusedBit_493_27_offset 2116
+#define unusedBit_493_28_offset 2116
+#define unusedBit_493_29_offset 2116
+#define unusedBit_493_30_offset 2116
+#define unusedBit_493_31_offset 2116
+#define unusedBit_493_8_offset 2116
+#define unusedBit_493_9_offset 2116
 #define unusedOldBiquad_offset 2331
 #define unusedOldIgnitionOffset_offset 445
 #define unusedSpiPadding4_offset 2593
