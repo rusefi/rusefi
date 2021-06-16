@@ -601,6 +601,28 @@ public class ConfigDefinition {
         return c.getValue();
     }
 
+    public static class RusefiParseErrorStrategy extends DefaultErrorStrategy {
+        private boolean hadError = false;
+
+        public boolean hadError() {
+            return this.hadError;
+        }
+
+        @Override
+        public void recover(Parser recognizer, RecognitionException e) {
+            this.hadError = true;
+
+            super.recover(recognizer, e);
+        }
+
+        @Override
+        public Token recoverInline(Parser recognizer) throws RecognitionException {
+            this.hadError = true;
+
+            return super.recoverInline(recognizer);
+        }
+    }
+
     private static void parseFile(ParseState listener, String filePath) throws FileNotFoundException, IOException {
         SystemOut.println("Parsing file (Antlr) " + filePath);
 
@@ -610,9 +632,16 @@ public class ConfigDefinition {
 
         RusefiConfigGrammarParser parser = new RusefiConfigGrammarParser(new CommonTokenStream(new RusefiConfigGrammarLexer(in)));
 
+        RusefiParseErrorStrategy errorStrategy = new RusefiParseErrorStrategy();
+        parser.setErrorHandler(errorStrategy);
+
         ParseTree tree = parser.content();
         new ParseTreeWalker().walk(listener, tree);
         double durationMs = (System.nanoTime() - start) / 1e6;
+
+        if (errorStrategy.hadError()) {
+            throw new RuntimeException("Parse failed, see error output above!");
+        }
 
         SystemOut.println("Successfully parsed " + filePath + " in " + durationMs + "ms");
     }
