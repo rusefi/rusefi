@@ -162,8 +162,18 @@ TEST(idle_v2, crankingOpenLoop) {
 	for (size_t i = 0; i < efi::size(config->cltCrankingCorrBins); i++) {
 		config->cltCrankingCorrBins[i] = i * 10;
 		config->cltCrankingCorr[i] = i * 0.1f;
+
+		// different values in running so we can tell which one is used
+		config->cltIdleCorrBins[i] = i * 10;
+		config->cltIdleCorr[i] = i * 0.2f;
 	}
 
+	// First test without override (ie, normal running CLT corr table)
+	EXPECT_FLOAT_EQ(10, dut.getCrankingOpenLoop(10));
+	EXPECT_FLOAT_EQ(50, dut.getCrankingOpenLoop(50));
+
+	// Test with override (use separate table)
+	engineConfiguration->overrideCrankingIacSetting = true;
 	EXPECT_FLOAT_EQ(5, dut.getCrankingOpenLoop(10));
 	EXPECT_FLOAT_EQ(25, dut.getCrankingOpenLoop(50));
 }
@@ -184,7 +194,44 @@ TEST(idle_v2, runningOpenLoopBasic) {
 	EXPECT_FLOAT_EQ(25, dut.getRunningOpenLoop(50, 0));
 }
 
-// TODO: test AC/fan open loop compensation
+TEST(idle_v2, runningFanAcBump) {
+	WITH_ENGINE_TEST_HELPER(TEST_ENGINE);
+	IdleController dut;
+	INJECT_ENGINE_REFERENCE(&dut);
+
+	engineConfiguration->manIdlePosition = 50;
+	engineConfiguration->acIdleExtraOffset = 9;
+	engineConfiguration->fan1ExtraIdle = 7;
+	engineConfiguration->fan2ExtraIdle = 3;
+
+	setArrayValues(config->cltIdleCorr, 1.0f);
+
+	// Start with fan off
+	enginePins.fanRelay.setValue(0);
+
+	// Should be base position
+	EXPECT_FLOAT_EQ(50, dut.getRunningOpenLoop(10, 0));
+
+	// Turn on AC!
+	engine->acSwitchState = true;
+	EXPECT_FLOAT_EQ(50 + 9, dut.getRunningOpenLoop(10, 0));
+	engine->acSwitchState = false;
+
+	// Turn the fan on!
+	enginePins.fanRelay.setValue(1);
+	EXPECT_FLOAT_EQ(50 + 7, dut.getRunningOpenLoop(10, 0));
+	enginePins.fanRelay.setValue(0);
+
+	// Turn on the other fan!
+	enginePins.fanRelay2.setValue(1);
+	EXPECT_FLOAT_EQ(50 + 3, dut.getRunningOpenLoop(10, 0));
+
+	// Turn on everything!
+	engine->acSwitchState = true;
+	enginePins.fanRelay.setValue(1);
+	enginePins.fanRelay2.setValue(1);
+	EXPECT_FLOAT_EQ(50 + 9 + 7 + 3, dut.getRunningOpenLoop(10, 0));
+}
 
 TEST(idle_v2, runningOpenLoopTpsTaper) {
 	WITH_ENGINE_TEST_HELPER(TEST_ENGINE);
@@ -214,17 +261,7 @@ struct MockOpenLoopIdler : public IdleController {
 	MOCK_METHOD(float, getRunningOpenLoop, (float clt, SensorResult tps), (const, override));
 };
 
-TEST(idle_v2, testOpenLoopCrankingNoOverride) {
-	WITH_ENGINE_TEST_HELPER(TEST_ENGINE);
-	StrictMock<MockOpenLoopIdler> dut;
-	INJECT_ENGINE_REFERENCE(&dut);
-
-	EXPECT_CALL(dut, getRunningOpenLoop(30, SensorResult(0))).WillOnce(Return(33));
-
-	EXPECT_FLOAT_EQ(33, dut.getOpenLoop(ICP::Cranking, 30, 0));
-}
-
-TEST(idle_v2, testOpenLoopCrankingOverride) {
+TEST(idle_v2, testOpenLoopCranking) {
 	WITH_ENGINE_TEST_HELPER(TEST_ENGINE);
 	StrictMock<MockOpenLoopIdler> dut;
 	INJECT_ENGINE_REFERENCE(&dut);
@@ -243,7 +280,6 @@ TEST(idle_v2, openLoopRunningTaper) {
 	StrictMock<MockOpenLoopIdler> dut;
 	INJECT_ENGINE_REFERENCE(&dut);
 
-	CONFIG(overrideCrankingIacSetting) = true;
 	CONFIG(afterCrankingIACtaperDuration) = 500;
 
 	EXPECT_CALL(dut, getRunningOpenLoop(30, SensorResult(0))).WillRepeatedly(Return(25));
@@ -269,4 +305,179 @@ TEST(idle_v2, openLoopRunningTaper) {
 		engine->rpmCalculator.onNewEngineCycle();
 	}
 	EXPECT_FLOAT_EQ(25, dut.getOpenLoop(ICP::Idling, 30, 0));
+}
+
+TEST(idle_v2, openLoopCoastingTable) {
+	WITH_ENGINE_TEST_HELPER(TEST_ENGINE);
+	IdleController dut;
+	INJECT_ENGINE_REFERENCE(&dut);
+
+	// enable & configure feature
+	CONFIG(useIacTableForCoasting) = true;
+	for (size_t i = 0; i < CLT_CURVE_SIZE; i++) {
+		CONFIG(iacCoastingBins)[i] = 10 * i;
+		CONFIG(iacCoasting)[i] = 5 * i;
+	}
+
+	EXPECT_FLOAT_EQ(10, dut.getOpenLoop(ICP::Coasting, 20, 0));
+	EXPECT_FLOAT_EQ(20, dut.getOpenLoop(ICP::Coasting, 40, 0));
+}
+
+extern int timeNowUs;
+
+TEST(idle_v2, closedLoopBasic) {
+	WITH_ENGINE_TEST_HELPER(TEST_ENGINE);
+	IdleController dut;
+	INJECT_ENGINE_REFERENCE(&dut);
+
+	// Not testing PID here, so we can set very simple PID gains
+	CONFIG(idleRpmPid).pFactor = 0.5;	// 0.5 output per 1 RPM error = 50% per 100 rpm
+	CONFIG(idleRpmPid).iFactor = 0;
+	CONFIG(idleRpmPid).dFactor = 0;
+	CONFIG(idleRpmPid).offset = 0;
+	CONFIG(idleRpmPid).iFactor = 0;
+	CONFIG(idleRpmPid).periodMs = 0;
+	CONFIG(idleRpmPid).minValue = -50;
+	CONFIG(idleRpmPid).maxValue = 50;
+
+	CONFIG(idlePidRpmDeadZone) = 0;
+
+	// burn one update then advance time 5 seconds to avoid difficulty from wasResetPid
+	dut.getClosedLoop(ICP::Idling, 0, 900, 900);
+	timeNowUs += 5'000'000;
+
+	// Test above target, should return negative
+	EXPECT_FLOAT_EQ(-25, dut.getClosedLoop(ICP::Idling, 0, /*rpm*/ 950, /*tgt*/ 900));
+
+	// Below target, should return positive
+	EXPECT_FLOAT_EQ(25, dut.getClosedLoop(ICP::Idling, 0, /*rpm*/ 850, /*tgt*/ 900));
+}
+
+TEST(idle_v2, closedLoopDeadzone) {
+	WITH_ENGINE_TEST_HELPER(TEST_ENGINE);
+	IdleController dut;
+	INJECT_ENGINE_REFERENCE(&dut);
+
+	// Not testing PID here, so we can set very simple PID gains
+	CONFIG(idleRpmPid).pFactor = 0.5;	// 0.5 output per 1 RPM error = 50% per 100 rpm
+	CONFIG(idleRpmPid).iFactor = 0;
+	CONFIG(idleRpmPid).dFactor = 0;
+	CONFIG(idleRpmPid).offset = 0;
+	CONFIG(idleRpmPid).iFactor = 0;
+	CONFIG(idleRpmPid).periodMs = 0;
+	CONFIG(idleRpmPid).minValue = -50;
+	CONFIG(idleRpmPid).maxValue = 50;
+
+	CONFIG(idlePidRpmDeadZone) = 25;
+
+	// burn one then advance time 5 seconds to avoid difficulty from wasResetPid
+	dut.getClosedLoop(ICP::Idling, 0, 900, 900);
+	timeNowUs += 5'000'000;
+
+	// Test above target, should return negative
+	EXPECT_FLOAT_EQ(-25, dut.getClosedLoop(ICP::Idling, 0, /*rpm*/ 950, /*tgt*/ 900));
+
+	// Inside deadzone, should return same as last time
+	EXPECT_FLOAT_EQ(-25, dut.getClosedLoop(ICP::Idling, 0, /*rpm*/ 900, /*tgt*/ 900));
+}
+
+struct IntegrationIdleMock : public IdleController {
+	MOCK_METHOD(int, getTargetRpm, (float clt), (const, override));
+	MOCK_METHOD(ICP, determinePhase, (int rpm, int targetRpm, SensorResult tps), (const, override));
+	MOCK_METHOD(float, getOpenLoop, (ICP phase, float clt, SensorResult tps), (const, override));
+	MOCK_METHOD(float, getClosedLoop, (ICP phase, float tps, int rpm, int target), (override));
+};
+
+TEST(idle_v2, IntegrationManual) {
+	WITH_ENGINE_TEST_HELPER(TEST_ENGINE);
+	StrictMock<IntegrationIdleMock> dut;
+	INJECT_ENGINE_REFERENCE(&dut);
+
+	SensorResult expectedTps = 1;
+	float expectedClt = 37;
+	Sensor::setMockValue(SensorType::DriverThrottleIntent, expectedTps.Value);
+	Sensor::setMockValue(SensorType::Clt, expectedClt);
+	ENGINE(rpmCalculator.mockRpm) = 950;
+
+	// Target of 1000 rpm
+	EXPECT_CALL(dut, getTargetRpm(expectedClt))
+		.WillOnce(Return(1000));
+
+	// Determine phase will claim we're idling
+	EXPECT_CALL(dut, determinePhase(950, 1000, expectedTps))
+		.WillOnce(Return(ICP::Idling));
+
+	// Open loop should be asked for an open loop position
+	EXPECT_CALL(dut, getOpenLoop(ICP::Idling, expectedClt, expectedTps))
+		.WillOnce(Return(13));
+
+	// getClosedLoop() should not be called!
+
+	EXPECT_EQ(13, dut.getIdlePosition());
+}
+
+TEST(idle_v2, IntegrationAutomatic) {
+	WITH_ENGINE_TEST_HELPER(TEST_ENGINE);
+	StrictMock<IntegrationIdleMock> dut;
+	INJECT_ENGINE_REFERENCE(&dut);
+
+	CONFIG(idleMode) = IM_AUTO;
+
+	SensorResult expectedTps = 1;
+	float expectedClt = 37;
+	Sensor::setMockValue(SensorType::DriverThrottleIntent, expectedTps.Value);
+	Sensor::setMockValue(SensorType::Clt, expectedClt);
+	ENGINE(rpmCalculator.mockRpm) = 950;
+
+	// Target of 1000 rpm
+	EXPECT_CALL(dut, getTargetRpm(expectedClt))
+		.WillOnce(Return(1000));
+
+	// Determine phase will claim we're idling
+	EXPECT_CALL(dut, determinePhase(950, 1000, expectedTps))
+		.WillOnce(Return(ICP::Idling));
+
+	// Open loop should be asked for an open loop position
+	EXPECT_CALL(dut, getOpenLoop(ICP::Idling, expectedClt, expectedTps))
+		.WillOnce(Return(13));
+
+	// Closed loop should get called
+	EXPECT_CALL(dut, getClosedLoop(ICP::Idling, expectedTps.Value, 950, 1000))
+		.WillOnce(Return(7));
+
+	// Result should be open + closed
+	EXPECT_EQ(13 + 7, dut.getIdlePosition());
+}
+
+TEST(idle_v2, IntegrationClamping) {
+	WITH_ENGINE_TEST_HELPER(TEST_ENGINE);
+	StrictMock<IntegrationIdleMock> dut;
+	INJECT_ENGINE_REFERENCE(&dut);
+
+	CONFIG(idleMode) = IM_AUTO;
+
+	SensorResult expectedTps = 1;
+	float expectedClt = 37;
+	Sensor::setMockValue(SensorType::DriverThrottleIntent, expectedTps.Value);
+	Sensor::setMockValue(SensorType::Clt, expectedClt);
+	ENGINE(rpmCalculator.mockRpm) = 950;
+
+	// Target of 1000 rpm
+	EXPECT_CALL(dut, getTargetRpm(expectedClt))
+		.WillOnce(Return(1000));
+
+	// Determine phase will claim we're idling
+	EXPECT_CALL(dut, determinePhase(950, 1000, expectedTps))
+		.WillOnce(Return(ICP::Idling));
+
+	// Open loop should be asked for an open loop position
+	EXPECT_CALL(dut, getOpenLoop(ICP::Idling, expectedClt, expectedTps))
+		.WillOnce(Return(75));
+
+	// Closed loop should get called
+	EXPECT_CALL(dut, getClosedLoop(ICP::Idling, expectedTps.Value, 950, 1000))
+		.WillOnce(Return(75));
+
+	// Result would be 75 + 75 = 150, but it should clamp to 100
+	EXPECT_EQ(100, dut.getIdlePosition());
 }

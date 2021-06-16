@@ -34,7 +34,7 @@ ifeq ($(USE_OPT),)
 # this config producec a smaller binary file
 # 7.3 compiler would want -Wno-error=implicit-fallthrough while 6.4 does not know about it
 # see https://github.com/rusefi/rusefi/issues/517
-  USE_OPT = -Wall -O2    -Wno-error=implicit-fallthrough -Wno-error=write-strings -Wno-error=strict-aliasing
+  USE_OPT = -Wall -O2 -Wno-error=implicit-fallthrough -Wno-error=write-strings -Wno-error=strict-aliasing
 
 	ifeq ($(OS),Windows_NT)
 	else

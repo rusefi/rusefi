@@ -63,8 +63,10 @@ void setNeedToWriteConfiguration(void) {
 	needToWriteConfiguration = true;
 
 #if EFI_FLASH_WRITE_THREAD
-	// Signal the flash writer thread to wake up and write at its leisure
-	flashWriteSemaphore.signal();
+	if (allowFlashWhileRunning()) {
+		// Signal the flash writer thread to wake up and write at its leisure
+		flashWriteSemaphore.signal();
+	}
 #endif // EFI_FLASH_WRITE_THREAD
 }
 
@@ -73,15 +75,13 @@ bool getNeedToWriteConfiguration(void) {
 }
 
 void writeToFlashIfPending() {
-// with a flash write thread, the schedule happens directly from
-// setNeedToWriteConfiguration, so there's nothing to do here
-#if !EFI_FLASH_WRITE_THREAD
-	if (!getNeedToWriteConfiguration()) {
+	// with a flash write thread, the schedule happens directly from
+	// setNeedToWriteConfiguration, so there's nothing to do here
+	if (allowFlashWhileRunning() || !getNeedToWriteConfiguration()) {
 		return;
 	}
 
 	writeToFlashNow();
-#endif
 }
 
 // Erase and write a copy of the configuration at the specified address
@@ -94,7 +94,7 @@ int eraseAndFlashCopy(flashaddr_t storageAddress, const TStorage& data) {
 
 	auto err = intFlashErase(storageAddress, sizeof(TStorage));
 	if (FLASH_RETURN_SUCCESS != err) {
-		firmwareError(OBD_PCM_Processor_Fault, "Failed to erase flash at %#010x", storageAddress);
+		firmwareError(OBD_PCM_Processor_Fault, "Failed to erase flash at 0x%08x", storageAddress);
 		return err;
 	}
 
@@ -254,7 +254,9 @@ void initFlash() {
 	addConsoleAction("rewriteconfig", rewriteConfig);
 
 #if EFI_FLASH_WRITE_THREAD
-	chThdCreateStatic(flashWriteStack, sizeof(flashWriteStack), PRIO_FLASH_WRITE, flashWriteThread, nullptr);
+	if (allowFlashWhileRunning()) {
+		chThdCreateStatic(flashWriteStack, sizeof(flashWriteStack), PRIO_FLASH_WRITE, flashWriteThread, nullptr);
+	}
 #endif
 }
 

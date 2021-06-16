@@ -324,6 +324,9 @@ static void showMapStats(void) {
  * @return Manifold Absolute Pressure, in kPa
  */
 float getMap(void) {
+	if (!isAdcChannelValid(engineConfiguration->map.sensor.hwChannel))
+		return 0;
+
 	if (engineConfiguration->hasFrequencyReportingMapSensor) {
 		return getRawMap();
 	}

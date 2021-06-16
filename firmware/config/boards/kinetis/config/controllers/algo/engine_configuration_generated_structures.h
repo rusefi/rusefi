@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Thu May 27 12:25:28 UTC 2021
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Wed Jun 16 15:29:19 UTC 2021
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -637,9 +637,10 @@ struct dc_io {
 	 */
 	brain_pin_e directionPin2;
 	/**
+	 * Acts as EN pin in two-wire mode
 	 * offset 2
 	 */
-	brain_pin_e controlPin1;
+	brain_pin_e controlPin;
 	/**
 	 * offset 3
 	 */
@@ -680,11 +681,13 @@ struct engine_configuration_s {
 	offset 76 bit 3 */
 	bool overrideTriggerGaps : 1;
 	/**
+	 * Turn on this fan when AC is on.
 	offset 76 bit 4 */
-	bool unused_294_4 : 1;
+	bool enableFan1WithAc : 1;
 	/**
+	 * Turn on this fan when AC is on.
 	offset 76 bit 5 */
-	bool unused_294_5 : 1;
+	bool enableFan2WithAc : 1;
 	/**
 	offset 76 bit 6 */
 	bool unused_294_6 : 1;
@@ -815,19 +818,23 @@ struct engine_configuration_s {
 	 */
 	float primingSquirtDurationMs;
 	/**
-	 * Used if useConstantDwellDuringCranking is TRUE
+	 * Dwell duration while cranking
 	ms
 	 * offset 100
 	 */
 	float ignitionDwellForCrankingMs;
 	/**
-	 * While cranking (which causes battery voltage to drop) we can calculate dwell time in shaft
-	 * degrees, not in absolute time as in running mode.
-	 * set cranking_charge_angle X
-	deg
+	 * Once engine speed passes this value, start reducing ETB angle.
+	1
 	 * offset 104
 	 */
-	float crankingChargeAngle;
+	uint16_t etbRevLimitStart;
+	/**
+	 * This far above 'Soft limiter start', fully close the throttle. At the bottom of the range, throttle control is normal. At the top of the range, the throttle is fully closed.
+	1
+	 * offset 106
+	 */
+	uint16_t etbRevLimitRange;
 	/**
 	 * @see hasMapSensor
 	 * @see isMapAveragingEnabled
@@ -989,13 +996,13 @@ struct engine_configuration_s {
 	float vbattDividerCoeff;
 	/**
 	 * Cooling fan turn-on temperature threshold, in Celsius
-	*C
+	deg C
 	 * offset 468
 	 */
 	float fanOnTemperature;
 	/**
 	 * Cooling fan turn-off temperature threshold, in Celsius
-	*C
+	deg C
 	 * offset 472
 	 */
 	float fanOffTemperature;
@@ -1093,10 +1100,11 @@ struct engine_configuration_s {
 	 */
 	uint8_t failedMapFallback;
 	/**
-	unit
+	 * Duty cycle to use in case of a sensor failure. This duty cycle should produce the minimum possible amount of boost.
+	%
 	 * offset 542
 	 */
-	uint8_t unused542;
+	uint8_t boostControlSafeDutyCycle;
 	/**
 	 * offset 543
 	 */
@@ -1395,8 +1403,8 @@ struct engine_configuration_s {
 	 */
 	pin_input_mode_e throttlePedalUpPinMode;
 	/**
-	 * Additional idle PID offset while A/C is active
-	Percent
+	 * Additional idle % while A/C is active
+	%
 	 * offset 711
 	 */
 	uint8_t acIdleExtraOffset;
@@ -1547,8 +1555,7 @@ struct engine_configuration_s {
 	offset 744 bit 19 */
 	bool stepperForceParkingEveryRestart : 1;
 	/**
-	 * Smarter cranking logic.
-	 * See also startOfCrankingPrimingPulse
+	 * If enabled, try to fire the engine before a full engine cycle has been completed using RPM estimated from the last 90 degrees of engine rotation. As soon as the trigger syncs plus 90 degrees rotation, fuel and ignition events will occur. If disabled, worst case may require up to 4 full crank rotations before any events are scheduled.
 	offset 744 bit 20 */
 	bool isFasterEngineSpinUpEnabled : 1;
 	/**
@@ -1957,10 +1964,10 @@ struct engine_configuration_s {
 	bool unusedBit_251_29 : 1;
 	/**
 	offset 976 bit 30 */
-	bool unusedBit_289_30 : 1;
+	bool unusedBit_290_30 : 1;
 	/**
 	offset 976 bit 31 */
-	bool unusedBit_289_31 : 1;
+	bool unusedBit_290_31 : 1;
 	/**
 	 * offset 980
 	 */
@@ -2144,7 +2151,7 @@ struct engine_configuration_s {
 	uint16_t tps2SecondaryMax;
 	/**
 	offset 1464 bit 0 */
-	bool unusedHereWeHave : 1;
+	bool unused1464b0 : 1;
 	/**
 	 * Enables lambda sensor closed loop feedback for fuelling.
 	offset 1464 bit 1 */
@@ -2159,9 +2166,8 @@ struct engine_configuration_s {
 	offset 1464 bit 3 */
 	bool isVerboseETB : 1;
 	/**
-	 * If set to true, will use the specified duration for cranking dwell. If set to false, will use the specified dwell angle. Unless you have a really good reason to, leave this set to true to use duration mode.
 	offset 1464 bit 4 */
-	bool useConstantDwellDuringCranking : 1;
+	bool unused1464b4 : 1;
 	/**
 	 * This options enables data for 'engine sniffer' tab in console, which comes at some CPU price
 	offset 1464 bit 5 */
@@ -2301,7 +2307,8 @@ struct engine_configuration_s {
 	offset 1476 bit 5 */
 	bool isMapAveragingEnabled : 1;
 	/**
-	 * This setting overrides the normal multiplication values that have been set for the idle air control valve during cranking. If this setting is enabled the "IAC multiplier" table in the Cranking settings tab needs to be adjusted appropriately or potentially no IAC opening will occur.
+	 * If enabled, use separate temperature multiplier table for cranking idle position.
+	 * If disabled, use normal running multiplier table applied to the cranking base position.
 	offset 1476 bit 6 */
 	bool overrideCrankingIacSetting : 1;
 	/**
@@ -2346,11 +2353,13 @@ struct engine_configuration_s {
 	offset 1476 bit 16 */
 	bool useFixedBaroCorrFromMap : 1;
 	/**
-	 * This activates a separate advance table for cranking conditions, this allows cranking advance to be RPM dependant.
+	 * In Constant mode, timing is automatically tapered to running as RPM increases.
+	 * In Table mode, the "Cranking ignition advance" table is used directly.
 	offset 1476 bit 17 */
 	bool useSeparateAdvanceForCranking : 1;
 	/**
 	 * This enables the various ignition corrections during cranking (IAT, CLT, FSIO and PID idle).
+	 * You probably don't need this.
 	offset 1476 bit 18 */
 	bool useAdvanceCorrectionsForCranking : 1;
 	/**
@@ -2429,6 +2438,7 @@ struct engine_configuration_s {
 	 */
 	int16_t acCutoffHighRpm;
 	/**
+	 * Extra idle target speed when A/C is enabled. Some cars need the extra speed to keep the AC efficient while idling.
 	RPM
 	 * offset 1496
 	 */
@@ -2886,76 +2896,76 @@ struct engine_configuration_s {
 	bool unused1130 : 1;
 	/**
 	offset 2116 bit 8 */
-	bool unusedBit_492_8 : 1;
+	bool unusedBit_493_8 : 1;
 	/**
 	offset 2116 bit 9 */
-	bool unusedBit_492_9 : 1;
+	bool unusedBit_493_9 : 1;
 	/**
 	offset 2116 bit 10 */
-	bool unusedBit_492_10 : 1;
+	bool unusedBit_493_10 : 1;
 	/**
 	offset 2116 bit 11 */
-	bool unusedBit_492_11 : 1;
+	bool unusedBit_493_11 : 1;
 	/**
 	offset 2116 bit 12 */
-	bool unusedBit_492_12 : 1;
+	bool unusedBit_493_12 : 1;
 	/**
 	offset 2116 bit 13 */
-	bool unusedBit_492_13 : 1;
+	bool unusedBit_493_13 : 1;
 	/**
 	offset 2116 bit 14 */
-	bool unusedBit_492_14 : 1;
+	bool unusedBit_493_14 : 1;
 	/**
 	offset 2116 bit 15 */
-	bool unusedBit_492_15 : 1;
+	bool unusedBit_493_15 : 1;
 	/**
 	offset 2116 bit 16 */
-	bool unusedBit_492_16 : 1;
+	bool unusedBit_493_16 : 1;
 	/**
 	offset 2116 bit 17 */
-	bool unusedBit_492_17 : 1;
+	bool unusedBit_493_17 : 1;
 	/**
 	offset 2116 bit 18 */
-	bool unusedBit_492_18 : 1;
+	bool unusedBit_493_18 : 1;
 	/**
 	offset 2116 bit 19 */
-	bool unusedBit_492_19 : 1;
+	bool unusedBit_493_19 : 1;
 	/**
 	offset 2116 bit 20 */
-	bool unusedBit_492_20 : 1;
+	bool unusedBit_493_20 : 1;
 	/**
 	offset 2116 bit 21 */
-	bool unusedBit_492_21 : 1;
+	bool unusedBit_493_21 : 1;
 	/**
 	offset 2116 bit 22 */
-	bool unusedBit_492_22 : 1;
+	bool unusedBit_493_22 : 1;
 	/**
 	offset 2116 bit 23 */
-	bool unusedBit_492_23 : 1;
+	bool unusedBit_493_23 : 1;
 	/**
 	offset 2116 bit 24 */
-	bool unusedBit_492_24 : 1;
+	bool unusedBit_493_24 : 1;
 	/**
 	offset 2116 bit 25 */
-	bool unusedBit_492_25 : 1;
+	bool unusedBit_493_25 : 1;
 	/**
 	offset 2116 bit 26 */
-	bool unusedBit_492_26 : 1;
+	bool unusedBit_493_26 : 1;
 	/**
 	offset 2116 bit 27 */
-	bool unusedBit_492_27 : 1;
+	bool unusedBit_493_27 : 1;
 	/**
 	offset 2116 bit 28 */
-	bool unusedBit_492_28 : 1;
+	bool unusedBit_493_28 : 1;
 	/**
 	offset 2116 bit 29 */
-	bool unusedBit_492_29 : 1;
+	bool unusedBit_493_29 : 1;
 	/**
 	offset 2116 bit 30 */
-	bool unusedBit_492_30 : 1;
+	bool unusedBit_493_30 : 1;
 	/**
 	offset 2116 bit 31 */
-	bool unusedBit_492_31 : 1;
+	bool unusedBit_493_31 : 1;
 	/**
 	 * set can_mode X
 	 * offset 2120
@@ -3091,10 +3101,11 @@ struct engine_configuration_s {
 	 */
 	fsio_pwm_freq_t auxPidFrequency[CAMS_PER_BANK];
 	/**
-	units
+	 * Additional idle % when fan #1 is active
+	%
 	 * offset 2246
 	 */
-	uint8_t unused1301;
+	uint8_t fan1ExtraIdle;
 	/**
 	 * need 4 byte alignment
 	units
@@ -3132,10 +3143,16 @@ struct engine_configuration_s {
 	 */
 	uint8_t vvtModePadding[CAMS_PER_BANK_padding];
 	/**
-	units
+	 * Additional idle % when fan #2 is active
+	%
 	 * offset 2322
 	 */
-	uint8_t unusedOldBiquad[22];
+	uint8_t fan2ExtraIdle;
+	/**
+	units
+	 * offset 2323
+	 */
+	uint8_t unusedOldBiquad[21];
 	/**
 	 * CLT-based timing correction
 	C
@@ -3163,10 +3180,9 @@ struct engine_configuration_s {
 	 */
 	injector_compensation_mode_e injectorCompensationMode;
 	/**
-	units
 	 * offset 2411
 	 */
-	uint8_t unused2419;
+	pin_output_mode_e fan2PinMode;
 	/**
 	 * This is the pressure at which your injector flow is known.
 	 * For example if your injectors flow 400cc/min at 3.5 bar, enter 350kpa here.
@@ -3337,20 +3353,21 @@ struct engine_configuration_s {
 	 */
 	spi_device_e accelerometerSpiDevice;
 	/**
-	units
 	 * offset 2685
 	 */
-	uint8_t unusedAuxVoltage1_TODO_332[1];
+	output_pin_e fan2Pin;
 	/**
-	units
+	 * Cooling fan turn-on temperature threshold, in Celsius
+	deg C
 	 * offset 2686
 	 */
-	uint8_t unusedAuxVoltage2_TODO_332[1];
+	uint8_t fan2OnTemperature;
 	/**
-	units
+	 * Cooling fan turn-off temperature threshold, in Celsius
+	deg C
 	 * offset 2687
 	 */
-	uint8_t unusedSpiPadding5[1];
+	uint8_t fan2OffTemperature;
 	/**
 	x
 	 * offset 2688
@@ -4196,4 +4213,4 @@ struct persistent_config_s {
 };
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Thu May 27 12:25:28 UTC 2021
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Wed Jun 16 15:29:19 UTC 2021

@@ -93,7 +93,7 @@ DcMotor* initDcMotor(const dc_io& io, size_t index, bool useTwoWires DECLARE_ENG
 
 	hw.start(
 		useTwoWires,
-		io.controlPin1,
+		io.controlPin,
 		io.directionPin1,
 		io.directionPin2,
 		io.disablePin,

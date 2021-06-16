@@ -113,7 +113,7 @@ float decodePressure(float voltage, air_pressure_sensor_config_s * mapConfig DEC
 	case MT_MAZDA_1_BAR:
 		return getDecoder(mapConfig->type)->getValue(voltage);
 	default:
-		firmwareError(CUSTOM_ERR_MAP_TYPE, "Unknown MAP type: p %d", mapConfig->type);
+		firmwareError(CUSTOM_ERR_MAP_TYPE, "Unknown MAP type: pressure %d", mapConfig->type);
 		return NAN;
 	}
 }
@@ -192,6 +192,8 @@ static FastInterpolation *getDecoder(air_pressure_sensor_type_e type) {
 		return &denso183;
 	case MT_MPX4250:
 		return &mpx4250;
+	case MT_MPX4100:
+		return &mpx4100;
 	case MT_MPX4250A:
 		return &mpx4250A;
 	case MT_HONDA3BAR:
@@ -213,7 +215,7 @@ static FastInterpolation *getDecoder(air_pressure_sensor_type_e type) {
 	case MT_BOSCH_2_5:
 		return &bosch2_5;
 	default:
-		firmwareError(CUSTOM_ERR_MAP_TYPE, "Unknown MAP type: d %d", type);
+		firmwareError(CUSTOM_ERR_MAP_TYPE, "Unknown MAP type: decoder %d", type);
 		return &customMap;
 	}
 }

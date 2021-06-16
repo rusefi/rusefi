@@ -35,8 +35,6 @@ void setMitsubishiConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 
 	// set_cranking_rpm 550
 	engineConfiguration->cranking.rpm = 550;
-	// set cranking_charge_angle 70
-	engineConfiguration->crankingChargeAngle = 70;
 	// set cranking_timing_angle 715
 	engineConfiguration->crankingTimingAngle = -715;
 

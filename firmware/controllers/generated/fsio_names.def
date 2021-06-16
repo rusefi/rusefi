@@ -1,8 +1,6 @@
-// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Thu May 27 12:25:00 UTC 2021
+// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Wed Jun 16 15:28:56 UTC 2021
 
 // by class com.rusefi.output.FileFsioSettingsConsumer
-static LENameOrdinalPair lefanOnTemperature(FSIO_SETTING_FANONTEMPERATURE, "cfg_fanOnTemperature");
-static LENameOrdinalPair lefanOffTemperature(FSIO_SETTING_FANOFFTEMPERATURE, "cfg_fanOffTemperature");
 static LENameOrdinalPair leacIdleExtraOffset(FSIO_SETTING_ACIDLEEXTRAOFFSET, "cfg_acIdleExtraOffset");
 static LENameOrdinalPair leacIdleExtraMin(FSIO_SETTING_ACIDLEEXTRAMIN, "cfg_acIdleExtraMin");
 static LENameOrdinalPair leboostPid_offset(FSIO_SETTING_BOOSTPID_OFFSET, "cfg_boostPid_offset");

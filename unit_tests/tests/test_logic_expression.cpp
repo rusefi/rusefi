@@ -250,16 +250,6 @@ TEST(fsio, testLogicExpressions) {
 
 	{
 		WITH_ENGINE_TEST_HELPER_SENS(FORD_INLINE_6_1995, sensorVals);
-		engineConfiguration->fanOnTemperature = 0;
-		engineConfiguration->fanOffTemperature = 0;
-
-		testExpression2(0, "cfg_fanOffTemperature", 0, engine);
-		testExpression2(0, FAN_CONTROL_LOGIC, 1, engine);
-		testExpression2(0, "coolant cfg_fanOffTemperature >", 1, engine);
-	}
-
-	{
-		WITH_ENGINE_TEST_HELPER_SENS(FORD_INLINE_6_1995, sensorVals);
 		engine->fsioState.mockRpm = 900;
 		engine->fsioState.mockCrankingRpm = 200;
 		testExpression2(0, "rpm", 900, engine);

@@ -136,7 +136,7 @@ public:
 	}
 
 	void ThreadTask() override {
-		CANDriver* device = detectCanDevice(CONFIG_OVERRIDE(canRxPin), CONFIG_OVERRIDE(canTxPin));
+		CANDriver* device = detectCanDevice(CONFIG(canRxPin), CONFIG(canTxPin));
 
 		if (!device) {
 			warning(CUSTOM_ERR_CAN_CONFIGURATION, "CAN configuration issue");
@@ -171,8 +171,8 @@ static void canInfo(void) {
 		return;
 	}
 
-	efiPrintf("CAN TX %s", hwPortname(CONFIG_OVERRIDE(canTxPin)));
-	efiPrintf("CAN RX %s", hwPortname(CONFIG_OVERRIDE(canRxPin)));
+	efiPrintf("CAN TX %s", hwPortname(CONFIG(canTxPin)));
+	efiPrintf("CAN RX %s", hwPortname(CONFIG(canRxPin)));
 	efiPrintf("type=%d canReadEnabled=%s canWriteEnabled=%s period=%d", engineConfiguration->canNbcType,
 			boolToString(engineConfiguration->canReadEnabled), boolToString(engineConfiguration->canWriteEnabled),
 			engineConfiguration->canSleepPeriodMs);
@@ -211,8 +211,8 @@ void stopCanPins(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 
 void startCanPins(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	// Store pins so we can disable later
-	currentTxPin = CONFIG_OVERRIDE(canTxPin);
-	currentRxPin = CONFIG_OVERRIDE(canRxPin);
+	currentTxPin = CONFIG(canTxPin);
+	currentRxPin = CONFIG(canRxPin);
 
 	efiSetPadMode("CAN TX", currentTxPin, PAL_MODE_ALTERNATE(EFI_CAN_TX_AF));
 	efiSetPadMode("CAN RX", currentRxPin, PAL_MODE_ALTERNATE(EFI_CAN_RX_AF));
@@ -222,8 +222,8 @@ void initCan(void) {
 	addConsoleAction("caninfo", canInfo);
 
 	isCanEnabled = 
-		(isBrainPinValid(CONFIG_OVERRIDE(canTxPin))) && // both pins are set...
-		(isBrainPinValid(CONFIG_OVERRIDE(canRxPin))) &&
+		(isBrainPinValid(CONFIG(canTxPin))) && // both pins are set...
+		(isBrainPinValid(CONFIG(canRxPin))) &&
 		(CONFIG(canWriteEnabled) || CONFIG(canReadEnabled)) ; // ...and either read or write is enabled
 
 	// nothing to do if we aren't enabled...
@@ -232,13 +232,13 @@ void initCan(void) {
 	}
 
 	// Validate pins
-	if (!isValidCanTxPin(CONFIG_OVERRIDE(canTxPin))) {
-		firmwareError(CUSTOM_OBD_70, "invalid CAN TX %s", hwPortname(CONFIG_OVERRIDE(canTxPin)));
+	if (!isValidCanTxPin(CONFIG(canTxPin))) {
+		firmwareError(CUSTOM_OBD_70, "invalid CAN TX %s", hwPortname(CONFIG(canTxPin)));
 		return;
 	}
 
-	if (!isValidCanRxPin(CONFIG_OVERRIDE(canRxPin))) {
-		firmwareError(CUSTOM_OBD_70, "invalid CAN RX %s", hwPortname(CONFIG_OVERRIDE(canRxPin)));
+	if (!isValidCanRxPin(CONFIG(canRxPin))) {
+		firmwareError(CUSTOM_OBD_70, "invalid CAN RX %s", hwPortname(CONFIG(canRxPin)));
 		return;
 	}
 
@@ -272,8 +272,8 @@ void initCan(void) {
 
 	// Plumb CAN device to tx system
 	CanTxMessage::setDevice(detectCanDevice(
-		CONFIG_OVERRIDE(canRxPin),
-		CONFIG_OVERRIDE(canTxPin)
+		CONFIG(canRxPin),
+		CONFIG(canTxPin)
 	));
 
 	// fire up threads, as necessary
