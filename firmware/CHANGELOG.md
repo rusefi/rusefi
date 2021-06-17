@@ -27,8 +27,16 @@ All notable user-facing or behavior-altering changes will be documented in this 
 
 ## Month 202x Release - "Release Name"
 
+### Fixed
+ - Improved cranking defaults
+ - Simplified/clarified idle and cranking TunerStudio pages
+
 ### Added
+ - Idle improvements! Open loop corrections are now applied in closed loop mode.
+ - Electronic throttle rev limiter: close the throttle before hitting hard limit, OEM style.
  - "inhibit start until oil pressure" prevents starting the engine with no/low oil pressure #2799
+ - Dual cooling fans, with new "enable fan with AC" option
+ - Lua scripting: implement custom ECU behavior with a Lua script. https://github.com/rusefi/rusefi/wiki/Lua-Scripting
 
 # 2021 May "Piercing Day"
 ### Fixed
