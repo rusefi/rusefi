@@ -34,6 +34,7 @@ function addRow(table, pin, pdiv) {
     var cell = cells[i];
     cell.textContent = pin[cell.dataset.field];
   }
+  clone.querySelector(".pin-data").dataset.type = pin.type;
   if (pdiv) {
     row.addEventListener('click', function(table, pin, pdiv) {
       clickPin(table.parentElement.parentElement.parentElement.querySelector(".info-table tbody"), pin, pdiv);
@@ -114,15 +115,22 @@ window.addEventListener('load', function() {
         var newheight = (closest / mult)
         var pxheight = divheight * 0.08;
         if (newheight < pxheight) {
-          pxheight = newheight - 6;
+          pxheight = newheight;
         }
         var height = (pxheight / divheight) * 100;
         var width = (pxheight / divwidth) * 100;
-        pdiv.style.height = height + "%";
-        pdiv.style.width = width + "%";
+        pdiv.style.height = "calc(" + height + "% - 0.21vw)";
+        pdiv.style.width = "calc(" +  width + "% - 0.21vw)";
         pdiv.style.marginTop = "-" + (width / 2) + "%";
         pdiv.style.marginLeft = "-" + (width / 2) + "%";
         pdiv.style.fontSize = (height * 1.8) + "px";
+        pdiv.style.fontSize = (pxheight * 0.5) + "px";
+        window.addEventListener('beforeprint', function(pdiv, width, divwidth, event) {
+          pdiv.style.fontSize = "calc(calc(" + width + "px * min(640, "  + divwidth + ")) * 0.0055)";
+        }.bind(null, pdiv, width, divwidth));
+        window.addEventListener('afterprint', function(pdiv, pxheight, event) {
+          pdiv.style.fontSize = (pxheight * 0.5) + "px";
+        }.bind(null, pdiv, pxheight));
         cdiv.appendChild(pdiv);
         addRow(fullTable, connector.pins[i], pdiv);
       }
