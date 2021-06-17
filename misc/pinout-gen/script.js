@@ -124,6 +124,13 @@ window.addEventListener('load', function() {
         pdiv.style.marginTop = "-" + (width / 2) + "%";
         pdiv.style.marginLeft = "-" + (width / 2) + "%";
         pdiv.style.fontSize = (height * 1.8) + "px";
+        pdiv.style.fontSize = (pxheight * 0.5) + "px";
+        window.addEventListener('beforeprint', function(pdiv, width, divwidth, event) {
+          pdiv.style.fontSize = "calc(calc(" + width + "px * min(640, "  + divwidth + ")) * 0.0055)";
+        }.bind(null, pdiv, width, divwidth));
+        window.addEventListener('afterprint', function(pdiv, pxheight, event) {
+          pdiv.style.fontSize = (pxheight * 0.5) + "px";
+        }.bind(null, pdiv, pxheight));
         cdiv.appendChild(pdiv);
         addRow(fullTable, connector.pins[i], pdiv);
       }
