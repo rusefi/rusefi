@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on config/boards/subaru_eg33/config/gen_config.sh integration/rusefi_config.txt Thu Jun 17 13:51:31 UTC 2021
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on config/boards/subaru_eg33/config/gen_config.sh integration/rusefi_config.txt Thu Jun 17 15:40:25 UTC 2021
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -910,7 +910,8 @@ struct engine_configuration_s {
 	 */
 	int rpmHardLimit;
 	/**
-	 * This setting controls which fuel quantity control algorithm is used.\тAlpha-N means drive by TPS
+	 * This setting controls which fuel quantity control algorithm is used.
+	 * Alpha-N means drive by TPS
 	 * Speed Density requires MAP sensor
 	 * offset 420
 	 */
@@ -4226,4 +4227,4 @@ struct persistent_config_s {
 };
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on config/boards/subaru_eg33/config/gen_config.sh integration/rusefi_config.txt Thu Jun 17 13:51:31 UTC 2021
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on config/boards/subaru_eg33/config/gen_config.sh integration/rusefi_config.txt Thu Jun 17 15:40:25 UTC 2021
