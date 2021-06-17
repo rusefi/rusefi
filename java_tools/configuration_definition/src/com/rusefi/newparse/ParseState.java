@@ -154,7 +154,7 @@ public class ParseState extends RusefiConfigGrammarBaseListener {
     @Override
     public void enterUnionField(RusefiConfigGrammarParser.UnionFieldContext ctx) {
         // Unions behave like a struct as far as scope is concerned (but is processed differently later
-        // to overlap all members, instead of placing them in sequence
+        // to overlap all members, instead of placing them in sequence as in a struct)
         enterStruct(null);
     }
 
