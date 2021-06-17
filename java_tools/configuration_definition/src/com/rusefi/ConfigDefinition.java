@@ -426,6 +426,8 @@ public class ConfigDefinition {
             case "switch_inputs":
                 assignPinName("brain_pin_e", ts_name, id, listSwitchInputs, state, "GPIO_UNASSIGNED");
                 break;
+            default:
+                throw new RuntimeException("Unknown class: " + className);
         }
     }
 
