@@ -14,5 +14,14 @@
     <orderEntry type="module" module-name="inifile" />
     <orderEntry type="module" module-name="shared_io" />
     <orderEntry type="module" module-name="models" />
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/lib/antlr-4.5-complete.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
   </component>
 </module>
