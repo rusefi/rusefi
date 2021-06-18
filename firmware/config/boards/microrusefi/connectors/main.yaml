@@ -229,7 +229,7 @@ pins:
     id: [GPIOC_4, EFI_ADC_14]
     class: [switch_inputs, analog_inputs]
     color: pink
-    function: External wideband O2 sensor
+    function: External wideband O2 sensor WBO AFR EGO
     ts_name: 32 - AN volt 6
     type: av
 
