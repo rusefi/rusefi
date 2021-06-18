@@ -393,11 +393,11 @@ public class ConfigDefinition {
                     throw new RuntimeException("ID used multiple times: " + listPins(i).get("id"));
                 }
             }
-            String class = listPins.get(i).get("class");
-            ArrayList<String> classList = names.get(class);
+            String className = listPins.get(i).get("class");
+            ArrayList<String> classList = names.get(className);
             String pinType = "";
             String nothingName = "";
-            switch(listPins.get(i).get("class")) {
+            switch (listPins.get(i).get("class")) {
                 case "analog_inputs":
                     pinType = "adc_channel_e";
                     nothingName = "EFI_ADC_NONE";
@@ -407,15 +407,15 @@ public class ConfigDefinition {
                     nothingName = "GPIO_UNASSIGNED";
             }
             Map<String, Value> enumList = state.enumsReader.getEnums().get(pinType);
-            for(Map.Entry<String, Value> kv : enumList.entrySet()){
-                if(enum.getKey().equals(listPins.get(i).get("id"))){
+            for (Map.Entry<String, Value> kv : enumList.entrySet()){
+                if (kv.getKey().equals(listPins.get(i).get("id"))){
                     classList.ensureCapacity(i + 1);
                     for (var ii = classList.size(); ii <= i; ii++) {
                         classList.add(null);
                     }
                     classList.set(kv.getValue().getIntValue(), listPins.get(i).get("ts_name"));
                 // TODO doing this in the loop for every pin is unnecessary, we only need to do one loop for every [adc_channel_e, brain_pin_e]
-                } else if (enum.getKey().equals(nothingName)) {
+                } else if (kv.getKey().equals(nothingName)) {
                     classList.ensureCapacity(i + 1);
                     for (var ii = classList.size(); ii <= i; ii++) {
                         classList.add(null);
@@ -424,10 +424,10 @@ public class ConfigDefinition {
                 }
             }
         }
-        for(Map.Entry<String, Value> kv : names.entrySet()) {
+        for (Map.Entry<String, Value> kv : names.entrySet()) {
             String outputEnumName = "";
             Map<String, Value> enumList = state.enumsReader.getEnums().get(enumName);
-            switch(kv.getKey()) {
+            switch (kv.getKey()) {
                 case "outputs":
                     outputEnumName = "output_pin_e_enum"
                     break;
