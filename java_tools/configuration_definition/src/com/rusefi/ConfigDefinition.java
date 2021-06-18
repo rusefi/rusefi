@@ -358,25 +358,29 @@ public class ConfigDefinition {
         SystemOut.println(data);
         Objects.requireNonNull(data, "data");
         for (Map<String, Object> pin : data) {
-            Object idObject = pin.get("id");
-            if (idObject instanceof ArrayList) {
-                ArrayList IDs = (ArrayList) idObject;
-                Object classes = pin.get("class");
-                if (!(classes instanceof ArrayList))
-                    throw new IllegalStateException("Expected multiple classes for " + IDs);
-                for (int i = 0; i < IDs.size(); i++) {
-                    String id = (String) IDs.get(i);
+            Object pinId = pin.get("id");
+            Object pinClass = pin.get("class");
+            Object pinName = pin.get("ts_name");
+            if (((String) pinId).length() == 0 || ((String) pinClass).length() == 0 || ((String) pinName).length() == 0) {
+                continue;
+            }
+            if (pinId instanceof ArrayList) {
+                ArrayList pinIds = (ArrayList) pinId;
+                if (!(pinClass instanceof ArrayList))
+                    throw new IllegalStateException("Expected multiple classes for " + pinIds);
+                for (int i = 0; i < pinIds.size(); i++) {
+                    String id = (String) pinIds.get(i);
                     Map<String, Object> thisPin = new HashMap();
-                    thisPin.put("id", idObject);
-                    thisPin.put("ts_name", pin.get("ts_name"));
-                    thisPin.put("class", ((ArrayList) classes).get(i));
+                    thisPin.put("id", pinId);
+                    thisPin.put("ts_name", pinName);
+                    thisPin.put("class", ((ArrayList) pinClass).get(i));
                     listPins.add(thisPin);
                 }
-            } else if (idObject instanceof String ) {
+            } else if (pinId instanceof String ) {
                 Map<String, Object> thisPin = new HashMap();
-                thisPin.put("id", idObject);
-                thisPin.put("ts_name", pin.get("ts_name"));
-                thisPin.put("class", pin.get("class"));
+                thisPin.put("id", pinId);
+                thisPin.put("ts_name", pinName);
+                thisPin.put("class", pinClass);
                 listPins.add(thisPin);
             }
         }
