@@ -268,7 +268,7 @@ void setEtbTestConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	 */
 	CONFIG(etbIo[0].directionPin1) = GPIOC_7; // Frankenso high-side in order to get 5v control
 	CONFIG(etbIo[0].directionPin2) = GPIOC_9;
-	CONFIG(etbIo[0].controlPin1) = GPIOE_14;
+	CONFIG(etbIo[0].controlPin) = GPIOE_14;
 
 #if EFI_ELECTRONIC_THROTTLE_BODY
 	setBoschVNH2SP30Curve(PASS_CONFIG_PARAMETER_SIGNATURE);

@@ -1,29 +1,48 @@
-var connectorYaml = [
+var connectorData = [
 ///DATA///
 ];
+
+function hideEmptyColumns(table) {
+  var rows = table.querySelector('tbody').children;
+  var tableHead = table.querySelector("thead>tr")
+  var cols = tableHead.children
+  for (var i = 0; i < cols.length; i++) {
+    var empty = true;
+    for (var ii = 0; ii < rows.length; ii++) {
+      empty = rows[ii].children[i].textContent.length > 0 ? false : empty;
+    }
+    if (empty) {
+      tableHead.querySelectorAll('th')[i].style.display = 'none';
+      for (var ii = 0; ii < rows.length; ii++) {
+        rows[ii].children[i].style.display = 'none';
+      }
+    } else {
+      tableHead.querySelectorAll('th')[i].style.display = '';
+      for (var ii = 0; ii < rows.length; ii++) {
+        rows[ii].children[i].style.display = '';
+      }
+    }
+  }
+}
 
 function addRow(table, pin, pdiv) {
   var template = document.getElementById("table-template");
   var clone = template.content.cloneNode(true);
   var row = clone.querySelector(".data");
-  var pdata = clone.querySelector(".pin-data");
-  var idata = clone.querySelector(".ts-data");
-  var tdata = clone.querySelector(".type-data");
-  var fdata = clone.querySelector(".function-data");
-  var cdata = clone.querySelector(".color-data");
-  pdata.textContent = pin.pin;
-  pdata.dataset.type = pin.type;
-  idata.textContent = pin.ts_name;
-  tdata.textContent = pin.type
-  fdata.textContent = pin.function;
-  cdata.textContent = pin.color
-  row.addEventListener('click', function(table, pin, pdiv) {
-    clickPin(table.parentElement.parentElement.parentElement.querySelector(".info-table tbody"), pin, pdiv);
-    table.parentElement.parentElement.parentElement.scrollIntoView()
-  }.bind(null, table, pin, pdiv));
+  var cells = row.children;
+  for (var i = 0; i < cells.length; i++) {
+    var cell = cells[i];
+    cell.textContent = pin[cell.dataset.field];
+  }
+  clone.querySelector(".pin-data").dataset.type = pin.type;
+  if (pdiv) {
+    row.addEventListener('click', function(table, pin, pdiv) {
+      clickPin(table.parentElement.parentElement.parentElement.querySelector(".info-table tbody"), pin, pdiv);
+      table.parentElement.parentElement.parentElement.scrollIntoView()
+    }.bind(null, table, pin, pdiv));
+  }
   table.appendChild(clone);
 }
-
 function clickPin(table, pin, pdiv) {
   table.parentElement.style.display = "table";
   table.innerHTML = "";
@@ -38,11 +57,12 @@ function clickPin(table, pin, pdiv) {
     pins[i].classList.remove("selected");
   }
   pdiv.classList.add("selected");
+  hideEmptyColumns(table.parentElement);
 }
 
 window.addEventListener('load', function() {
-  for (var c = 0; c < connectorYaml.length; c++) {
-    var connector = YAML.parse(connectorYaml[c]);
+  for (var c = 0; c < connectorData.length; c++) {
+    var connector = JSON.parse(connectorData[c]);
     var template = document.getElementById("connector-template");
     var clone = template.content.cloneNode(true);
     document.body.appendChild(clone);
@@ -67,8 +87,10 @@ window.addEventListener('load', function() {
             break;
           }
         }
-        addRow(fullTable, connector.pins[i], pdiv);
-        if (!pinfo.x) continue;
+        if (!pinfo.x) {
+          addRow(fullTable, connector.pins[i], null);
+          continue;
+        }
         var closest = 1000000;
         for (var ii = 0; ii < connector.info.pins.length; ii++) {
           var tinfo = connector.info.pins[ii];
@@ -93,17 +115,26 @@ window.addEventListener('load', function() {
         var newheight = (closest / mult)
         var pxheight = divheight * 0.08;
         if (newheight < pxheight) {
-          pxheight = newheight - 6;
+          pxheight = newheight;
         }
         var height = (pxheight / divheight) * 100;
         var width = (pxheight / divwidth) * 100;
-        pdiv.style.height = height + "%";
-        pdiv.style.width = width + "%";
+        pdiv.style.height = "calc(" + height + "% - 0.21vw)";
+        pdiv.style.width = "calc(" +  width + "% - 0.21vw)";
         pdiv.style.marginTop = "-" + (width / 2) + "%";
         pdiv.style.marginLeft = "-" + (width / 2) + "%";
-        pdiv.style.fontSize = (height / 7.5) + "vw";
+        pdiv.style.fontSize = (height * 1.8) + "px";
+        pdiv.style.fontSize = (pxheight * 0.5) + "px";
+        window.addEventListener('beforeprint', function(pdiv, width, divwidth, event) {
+          pdiv.style.fontSize = "calc(calc(" + width + "px * min(640, "  + divwidth + ")) * 0.0055)";
+        }.bind(null, pdiv, width, divwidth));
+        window.addEventListener('afterprint', function(pdiv, pxheight, event) {
+          pdiv.style.fontSize = (pxheight * 0.5) + "px";
+        }.bind(null, pdiv, pxheight));
         cdiv.appendChild(pdiv);
+        addRow(fullTable, connector.pins[i], pdiv);
       }
+      hideEmptyColumns(sdiv.querySelector('.pinout-table'));
     }.bind(null, connector, sdiv, img));
     img.src = connector.info.image.file;
   }

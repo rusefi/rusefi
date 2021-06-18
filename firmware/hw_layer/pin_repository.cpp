@@ -69,24 +69,6 @@ PinRepository::PinRepository() {
 	initBrainUsedPins();
 }
 
-#if (BOARD_TLE8888_COUNT > 0)
-void tle8888_dump_regs(void)
-{
-	// since responses are always in the NEXT transmission we will have this one first
-	tle8888_read_reg(0, NULL);
-
-	efiPrintf("register: data");
-	for (int request = 0; request <= 0x7e + 1; request++) {
-		uint16_t tmp;
-		tle8888_read_reg(request < (0x7e + 1) ? request : 0x7e, &tmp);
-		uint8_t reg = getRegisterFromResponse(tmp);
-		uint8_t data = getDataFromResponse(tmp);
-
-		efiPrintf("%02x: %02x", reg, data);
-	}
-}
-#endif
-
 static void reportPins(void) {
 	for (unsigned int i = 0; i < getBrainPinOnchipNum(); i++) {
 		const char *pin_user = getBrainUsedPin(i);

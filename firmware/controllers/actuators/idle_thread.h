@@ -26,6 +26,7 @@ struct IIdleController {
 	virtual float getCrankingOpenLoop(float clt) const = 0;
 	virtual float getRunningOpenLoop(float clt, SensorResult tps) const = 0;
 	virtual float getOpenLoop(Phase phase, float clt, SensorResult tps) const = 0;
+	virtual float getClosedLoop(Phase phase, float tps, int rpm, int target) = 0;
 };
 
 class IdleController : public IIdleController {
@@ -51,6 +52,9 @@ public:
 	float getIdleTimingAdjustment(int rpm);
 	float getIdleTimingAdjustment(int rpm, int targetRpm, Phase phase);
 
+	// CLOSED LOOP CORRECTION
+	float getClosedLoop(IIdleController::Phase phase, float tpsPos, int rpm, int targetRpm) override;
+
 	// Allow querying state from outside
 	bool isIdling() {
 		return m_lastPhase == Phase::Idling;
@@ -60,6 +64,9 @@ private:
 	// These are stored by getIdlePosition() and used by getIdleTimingAdjustment()
 	Phase m_lastPhase = Phase::Cranking;
 	int m_lastTargetRpm = 0;
+
+	// This is stored by getClosedLoop and used in case we want to "do nothing"
+	float m_lastAutomaticPosition = 0;
 
 	Pid m_timingPid;
 };

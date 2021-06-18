@@ -202,14 +202,14 @@ GPIOA_6
 	engineConfiguration->tps2_1AdcChannel = EFI_ADC_4; // PA4
 
 	// PWM pin
-	engineConfiguration->etbIo[0].controlPin1 = GPIO_UNASSIGNED;
+	engineConfiguration->etbIo[0].controlPin = GPIO_UNASSIGNED;
 	// DIR pin
 	engineConfiguration->etbIo[0].directionPin1 = GPIOC_8;
 	engineConfiguration->etbIo[0].directionPin2 = GPIOC_9;
 	CONFIG(etb_use_two_wires) = true;
 
 	// PWM pin
-	engineConfiguration->etbIo[1].controlPin1 = GPIO_UNASSIGNED;
+	engineConfiguration->etbIo[1].controlPin = GPIO_UNASSIGNED;
 	// DIR pin
 	engineConfiguration->etbIo[1].directionPin1 = GPIOB_9;
 	engineConfiguration->etbIo[1].directionPin2 = GPIOB_8;

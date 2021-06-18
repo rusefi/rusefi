@@ -109,7 +109,7 @@ public class ConfigDefinition {
         String cacheZipFile = null;
         String signatureDestination = null;
         String signaturePrependFile = null;
-        String enumInputFile = null;
+        List<String> enumInputFiles = new ArrayList<>();
         CHeaderConsumer.withC_Defines = true;
         File[] yamlFiles = null;
 
@@ -180,7 +180,7 @@ public class ConfigDefinition {
                     signatureDestination = args[i + 1];
                     break;
                 case EnumToString.KEY_ENUM_INPUT_FILE:
-                    enumInputFile = args[i + 1];
+                    enumInputFiles.add(args[i + 1]);
                     break;
                 case KEY_CACHE:
                     cachePath = args[i + 1];
@@ -210,14 +210,7 @@ public class ConfigDefinition {
                     break;
             }
         }
-
-
-        if (enumInputFile != null) {
-            // todo: 1) can we 2) should we move this relatively heavy processing after we've checked if generation is needed?
-            state.enumsReader.process(".", enumInputFile);
-            SystemOut.println(state.enumsReader.getEnums() + " total enumsReader");
-        }
-
+        
         List<String> inputAllFiles = new ArrayList<>(inputFiles);
         if (tsPath != null) {
             // used to update .ini files
@@ -230,6 +223,14 @@ public class ConfigDefinition {
         if (!needToUpdateTsFiles && !needToUpdateOtherFiles) {
             SystemOut.println("All output files are up-to-date, nothing to do here!");
             return;
+        }
+
+        if (!enumInputFiles.isEmpty()) {
+            for (String ef : enumInputFiles) {
+                state.enumsReader.process(".", ef);
+            }
+
+            SystemOut.println(state.enumsReader.getEnums() + " total enumsReader");
         }
 
         long crc32 = signatureHash(tsPath, inputAllFiles);
@@ -245,6 +246,46 @@ public class ConfigDefinition {
 
         if (yamlFiles != null) {
            processYamls(VariableRegistry.INSTANCE, yamlFiles, state);
+        }
+
+        // Parse the input files
+        {
+            ParseState listener = new ParseState();
+
+            // First process yaml files
+            //processYamls(listener, yamlFiles);
+
+            // First load prepend files
+            {
+                // Ignore duplicates of definitions made during prepend phase
+                listener.setDefinitionPolicy(Definition.OverwritePolicy.IgnoreNew);
+
+                for (String prependFile : prependFiles) {
+                    // TODO: fix signature define file parsing
+                    //parseFile(listener, prependFile);
+                }
+            }
+
+            // Now load the main config file
+            {
+                // don't allow duplicates in the main file
+                listener.setDefinitionPolicy(Definition.OverwritePolicy.NotAllowed);
+                parseFile(listener, definitionInputFile);
+            }
+
+            // Write C structs
+            // PrintStream cPrintStream = new PrintStream(new FileOutputStream(destCHeaderFileName));
+            // for (Struct s : listener.getStructs()) {
+            //     StructLayout sl = new StructLayout(0, "root", s);
+            //     sl.writeCLayoutRoot(cPrintStream);
+            // }
+            // cPrintStream.close();
+
+            // Write tunerstudio layout
+            // PrintStream tsPrintStream = new PrintStream(new FileOutputStream(tsPath + "/test.ini"));
+            // StructLayout root = new StructLayout(0, "root", listener.getLastStruct());
+            // root.writeTunerstudioLayout(tsPrintStream, new StructNamePrefixer());
+            // tsPrintStream.close();
         }
 
         BufferedReader definitionReader = new BufferedReader(new InputStreamReader(new FileInputStream(definitionInputFile), IoUtils.CHARSET.name()));
@@ -609,6 +650,28 @@ public class ConfigDefinition {
         return c.getValue();
     }
 
+    public static class RusefiParseErrorStrategy extends DefaultErrorStrategy {
+        private boolean hadError = false;
+
+        public boolean hadError() {
+            return this.hadError;
+        }
+
+        @Override
+        public void recover(Parser recognizer, RecognitionException e) {
+            this.hadError = true;
+
+            super.recover(recognizer, e);
+        }
+
+        @Override
+        public Token recoverInline(Parser recognizer) throws RecognitionException {
+            this.hadError = true;
+
+            return super.recoverInline(recognizer);
+        }
+    }
+
     private static void parseFile(ParseState listener, String filePath) throws FileNotFoundException, IOException {
         SystemOut.println("Parsing file (Antlr) " + filePath);
 
@@ -618,9 +681,16 @@ public class ConfigDefinition {
 
         RusefiConfigGrammarParser parser = new RusefiConfigGrammarParser(new CommonTokenStream(new RusefiConfigGrammarLexer(in)));
 
+        RusefiParseErrorStrategy errorStrategy = new RusefiParseErrorStrategy();
+        parser.setErrorHandler(errorStrategy);
+
         ParseTree tree = parser.content();
         new ParseTreeWalker().walk(listener, tree);
         double durationMs = (System.nanoTime() - start) / 1e6;
+
+        if (errorStrategy.hadError()) {
+            throw new RuntimeException("Parse failed, see error output above!");
+        }
 
         SystemOut.println("Successfully parsed " + filePath + " in " + durationMs + "ms");
     }

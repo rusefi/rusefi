@@ -1444,6 +1444,8 @@ menuDialog = main
 		
 	menu = "&Cranking"
 		subMenu = crankingDialog,			"Cranking settings"
+		subMenu = postCrankingEnrichment,	"After-start enrichment"
+		subMenu = primingFuelPulsePanel,	"Priming pulse"
 		subMenu = std_separator
 
 		subMenu = crankingCltCurve,			"Fuel CLT multiplier"
@@ -1451,10 +1453,10 @@ menuDialog = main
 		subMenu = crankingTpsCurve,			"Fuel TPS multiplier"
 		subMenu = std_separator
 
-		subMenu = crankingAdvanceCurve,		"Ignition advance", 0, {useSeparateAdvanceForCranking == 1}
+		subMenu = crankingAdvanceCurve,		"Cranking ignition advance", 0, {useSeparateAdvanceForCranking == 1}
 		subMenu = std_separator
 
-		subMenu = cltCrankingCurve,			"IAC multiplier", 0, {overrideCrankingIacSetting == 1}	
+		subMenu = cltCrankingCurve,			"Cranking IAC CLT multiplier", 0, {overrideCrankingIacSetting == 1}	
 		
 	menu = "&Idle"
 		subMenu = idleSettings,				"Idle settings"
@@ -1731,6 +1733,10 @@ cmd_set_engine_type_ET_MRE_SUBARU_EJ18				= "@@TS_IO_TEST_COMMAND_char@@\x00\x30
 
 cmd_set_engine_type_microRusEFI_Defaults			= "@@TS_IO_TEST_COMMAND_char@@\x00\x30@@ET_MRE_DEFAULTS_16_hex@@"
 cmd_set_engine_type_ET_MRE_M111						= "@@TS_IO_TEST_COMMAND_char@@\x00\x30@@ET_MRE_M111_16_hex@@"
+
+cmd_set_engine_type_hellen_NA6						= "@@TS_IO_TEST_COMMAND_char@@\x00\x30@@ET_HELLEN_NA6_16_hex@@"
+cmd_set_engine_type_hellen_NA94						= "@@TS_IO_TEST_COMMAND_char@@\x00\x30@@ET_HELLEN_NA94_16_hex@@"
+
 
 ; MIATA_NA6_MAP = 41
 cmd_set_engine_type_Frankenso_Miata_NA6_MAP			= "@@TS_IO_TEST_COMMAND_char@@\x00\x30@@ET_FRANKENSO_MIATA_NA6_16_hex@@"
@@ -2231,11 +2237,11 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 		field = "Fuel Pump Pin",						fuelPumpPin
 		field = "ETB#1 Dir #1",							etbIo1_directionPin1  @@if_ts_show_etb_pins
 		field = "ETB#1 Dir #2",							etbIo1_directionPin2  @@if_ts_show_etb_pins
-		field = "ETB#1 Control #1",						etbIo1_controlPin1    @@if_ts_show_etb_pins
+		field = "ETB#1 Control",						etbIo1_controlPin     @@if_ts_show_etb_pins
 		field = "ETB#1 Disable",						etbIo1_disablePin     @@if_ts_show_etb_pins
 		field = "ETB#2 Dir #1",							etbIo2_directionPin1  @@if_ts_show_etb_pins
 		field = "ETB#2 Dir #2",							etbIo2_directionPin2  @@if_ts_show_etb_pins
-		field = "ETB#2 Control #1",						etbIo2_controlPin1    @@if_ts_show_etb_pins
+		field = "ETB#2 Control",						etbIo2_controlPin     @@if_ts_show_etb_pins
 		field = "ETB#2 Disable",						etbIo2_disablePin     @@if_ts_show_etb_pins
 		field = "SD CS Pin",							sdCardCsPin @@if_ts_show_sd_card
 		field = "MIL / Check Engine Pin",				malfunctionIndicatorPin
@@ -2570,11 +2576,11 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 		field = "Two-wire mode",						etb_use_two_wires
 		field = "No1 Direction #1",						etbIo1_directionPin1
 		field = "No1 Direction #2",						etbIo1_directionPin2
-		field = "No1 Control #1",						etbIo1_controlPin1, { etb_use_two_wires == 0 }
+		field = "No1 Control",							etbIo1_controlPin
 		field = "No1 Disable",							etbIo1_disablePin
 		field = "No2 Direction #1",						etbIo2_directionPin1
 		field = "No2 Direction #2",						etbIo2_directionPin2
-		field = "No2 Control #1",						etbIo2_controlPin1, { etb_use_two_wires == 0}
+		field = "No2 Control",							etbIo2_controlPin
 		field = "No2 Disable",							etbIo2_disablePin
 
 	dialog = idleStepperHw, "Stepper Hardware"
@@ -2622,13 +2628,20 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 		field = "use Cic Pid",							useCicPidForIdle
 		field = "Use IAC PID Multiplier Table",			useIacPidMultTable
 
+	dialog = idleOpenLoop, "Open Loop Idle"
+		slider = "Open loop base position",				manIdlePosition, horizontal
+		field = "A/C adder",							acIdleExtraOffset
+		field = "A/C target adder",						acIdleRpmBump
+		field = "Fan #1 adder",							fan1ExtraIdle
+		field = "Fan #2 adder",							fan2ExtraIdle
+		field = "Extra idle air if throttle pressed",	iacByTpsTaper
+
 	dialog = idleGating, "Idle Detection Thresholds"
 		field = "TPS threshold",	idlePidDeactivationTpsThreshold
 		field = "RPM upper limit",	idlePidRpmUpperLimit
 		field = "RPM deadzone",	idlePidRpmDeadZone
 
 	dialog = idleExtra, "Extra Idle Features"
-		field = "Extra idle air if throttle pressed",						iacByTpsTaper
 		field = "Use idle ignition table",	useSeparateAdvanceForIdle
 		field = "Use idle VE table",		useSeparateVeForIdle
 		field = "Use coasting idle table",	useIacTableForCoasting, {idleMode == 0}
@@ -2639,10 +2652,9 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 		field = "Idle control mode",					idleMode
 
 		field = "! Solenoid idle control is disabled at zero RPM"
-		slider = "Open loop idle position",				manIdlePosition, horizontal
-		field = ""
 
 		panel = idleGating
+		panel = idleOpenLoop
 		panel = idlePidSettings, { idleMode == 0}
 		panel = idleExtra
 
@@ -2662,14 +2674,28 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 		field = "#Use debug mode 'Timing' to view idle timing adjustment"
 
 ;			Engine->Fan Settings
-	dialog = fanSetting, "Fan Settings"
+	dialog = fan1Settings, "Fan 1"
 		field = "Pin",								fanPin
 		field = "Pin mode",							fanPinMode
 		field = "On temperature",					fanOnTemperature
 		field = "Off temperature",					fanOffTemperature
-; this one has build-in FSIO logic
+		field = "Enable with AC",					enableFan1WithAc
+
+	dialog = fan2Settings, "Fan 2"
+		field = "Pin",								fan2Pin
+		field = "Pin mode",							fan2PinMode
+		field = "On temperature",					fan2OnTemperature
+		field = "Off temperature",					fan2OffTemperature
+		field = "Enable with AC",					enableFan2WithAc
+
+	dialog = acSettings, "A/C Settings"
 		field = "A/C Relay",						acRelayPin
 		field = "A/C Relay Mode",					acRelayPinMode
+
+	dialog = fanSetting, "Fan Settings"
+		panel = fan1Settings
+		panel = fan2Settings
+		panel = acSettings
 
 	dialog = fuelPump, "Fuel Pump"
 		field = "Pin",						fuelPumpPin
@@ -3020,13 +3046,20 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 		field = "Cut spark on RPM limit",				cutSparkOnHardLimit
         field = "RPM hard limit",                       rpmHardLimit, { cutFuelOnHardLimit || cutSparkOnHardLimit }
 		field = "Boost cut pressure",					boostCutPressure
-	
+		field = "Minimum oil pressure after start",		minOilPressureAfterStart
+
+	dialog = etbLimits, "Electronic Throttle Limiting"
+		field = "Smoothly close the throttle to limit RPM."
+		field = "Soft limiter start",				etbRevLimitStart
+		field = "Soft limiter range",				etbRevLimitRange
+
 	dialog = fallbacks, "Fallbacks"
 		field = "Use MAP estimation table as fallback",	enableMapEstimationTableFallback
 		field = "Failed MAP sensor fallback",			failedMapFallback, { !enableMapEstimationTableFallback }
 
 	dialog = limitsAndFallback, "Limits and fallbacks"
 		panel = limits
+		panel = etbLimits
 		panel = fallbacks
 	
 ;			Engine->Base Engine Settings
@@ -3042,19 +3075,16 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 		field = "Fuel Source For Cranking",             useRunningMathForCranking
 		field = "Base fuel mass", 				cranking_baseFuel, {useRunningMathForCranking == 0}
 
-	dialog = crankingIAC, "IAC"
-		field = "Cranking IAC position",					crankingIACposition
-		field = "After cranking IAC taper duration",	afterCrankingIACtaperDuration
-		field = "Override IAC multiplier for cranking",	overrideCrankingIacSetting
-		
+	dialog = crankingIAC, "Idle air valve"
+		field = "Cranking base IAC position",			crankingIACposition
+		field = "After cranking IAC taper duration",afterCrankingIACtaperDuration
+		field = "Override cranking IAC CLT multiplier",		overrideCrankingIacSetting
+
 	dialog = crankingIgnition, "Ignition"
 		field = "Timing Advance mode",	useSeparateAdvanceForCranking
-		field = "Advance",						crankingTimingAngle, {useSeparateAdvanceForCranking == 0}
-		field = "Use Advance Corrections for cranking",	useAdvanceCorrectionsForCranking
-        field = "Use fixed cranking dwell",         			useConstantDwellDuringCranking
-        field = "Fixed Cranking Dwell",           			ignitionDwellForCrankingMs, {useConstantDwellDuringCranking == 1}
-		field = "Cranking Dwell Angle", 						crankingChargeAngle, {useConstantDwellDuringCranking == 0}
-	
+		field = "Fixed cranking advance",	crankingTimingAngle, {useSeparateAdvanceForCranking == 0}
+        field = "Fixed Cranking Dwell",           			ignitionDwellForCrankingMs
+
 	dialog = postCrankingEnrichment, "After start enrichment"
 		field = "Post-Cranking factor", 				postCrankingFactor
 		field = "Duration", 				postCrankingDurationSec
@@ -3062,19 +3092,19 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 	dialog = primingFuelPulsePanel, "Priming fuel pulse"
 		field = "Duration at -40C degrees",	startOfCrankingPrimingPulse
 		field = "Falloff temperature", primeInjFalloffTemperature
-		
-		
+
+	dialog = crankingAdv, "Advanced"
+		field = "Enable flood clear",				isCylinderCleanupEnabled
+		field = "Enable faster engine spin-up",			isFasterEngineSpinUpEnabled
+		field = "Use Advance Corrections for cranking",	useAdvanceCorrectionsForCranking
+
 ;			Cranking->Cranking Settings
 	dialog = crankingDialog, "Cranking Settings"
 		field = "Cranking RPM limit",                	cranking_rpm
-		field = "Enable flood clear",				isCylinderCleanupEnabled
-		field = ""
-		field = "Enable faster engine spin-up",			isFasterEngineSpinUpEnabled
-		panel = primingFuelPulsePanel
 		panel = crankingFuel
 		panel = crankingIgnition
 		panel = crankingIAC
-		panel = postCrankingEnrichment
+		panel = crankingAdv
 
 	dialog = EngineLoadAccelPanel, "Engine Load (alpha version)"
 		field = "Length",						engineLoadAccelLength
@@ -3265,6 +3295,7 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 		field = "Output Mode",                      boostControlPinMode, { isBoostControlEnabled }
 		field = "Frequency",						boostPwmFrequency, { isBoostControlEnabled }
 
+		field = "Safe duty cycle",					boostControlSafeDutyCycle, { isBoostControlEnabled }
          dialog = boostDialog, "", border
                 panel = boost_left, West
                 panel = boostTableTbl, Center
@@ -3438,6 +3469,9 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 		commandButton = "Proteus M73 v12",     		cmd_set_engine_type_Proteus_M73@@if_show_Proteus_presets
 		commandButton = "Proteus Miata TCU",		cmd_set_engine_type_Proteus_Miata_TCU@@if_show_Proteus_presets
 		commandButton = "Proteus Miata NB2",		cmd_set_engine_type_ET_PROTEUS_MIATA_NB2@@if_show_Proteus_presets
+		
+		commandButton = "Hellen NA6",				cmd_set_engine_type_hellen_NA6@@if_show_Hellen_presets
+		commandButton = "Hellen NA8 94-95",			cmd_set_engine_type_hellen_NA94@@if_show_Hellen_presets
 
 
 		commandButton = "ETB test bench", cmd_set_engine_type_etb_test@@if_show_test_presets

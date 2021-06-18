@@ -15,6 +15,7 @@ CONTROLLERS_SRC_CPP = \
 	$(CONTROLLERS_DIR)/actuators/alternator_controller.cpp \
 	$(CONTROLLERS_DIR)/actuators/boost_control.cpp \
 	$(CONTROLLERS_DIR)/actuators/dc_motors.cpp \
+	$(CONTROLLERS_DIR)/actuators/fan_control.cpp \
 	$(CONTROLLERS_DIR)/actuators/idle_hardware.cpp \
 	$(CONTROLLERS_DIR)/actuators/idle_thread.cpp \
 	$(CONTROLLERS_DIR)/actuators/pwm_tester.cpp \
@@ -65,6 +66,7 @@ CONTROLLERS_INC=\
 	$(CONTROLLERS_DIR)/system/timer \
 	$(CONTROLLERS_DIR)/algo \
 	$(CONTROLLERS_DIR)/algo/airmass \
+	$(CONTROLLERS_DIR)/algo/defaults \
 	$(CONTROLLERS_DIR)/algo/fuel \
 	$(CONTROLLERS_DIR)/engine_cycle \
 	$(CONTROLLERS_DIR)/trigger/decoders \

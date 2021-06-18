@@ -176,6 +176,8 @@ public:
 	RegisteredOutputPin starterRelayDisable;
 
 	RegisteredOutputPin fanRelay;
+	RegisteredOutputPin fanRelay2;
+
 	// see acRelayPin
 	RegisteredOutputPin acRelay;
 	RegisteredOutputPin fuelPumpRelay;

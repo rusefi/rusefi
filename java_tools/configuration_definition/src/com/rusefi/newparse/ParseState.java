@@ -1,6 +1,5 @@
 package com.rusefi.newparse;
 
-import com.rusefi.VariableRegistry;
 import com.rusefi.generated.RusefiConfigGrammarBaseListener;
 import com.rusefi.generated.RusefiConfigGrammarParser;
 import com.rusefi.newparse.parsing.*;
@@ -107,16 +106,6 @@ public class ParseState extends RusefiConfigGrammarBaseListener {
 
         String values = ctx.enumRhs().getText();
 
-        if (values.startsWith("@@")) {
-            Definition def = this.definitions.get(values.replaceAll("@", ""));
-
-            if (def == null) {
-                throw new RuntimeException("couldn't find definition for " + values);
-            }
-
-            values = def.value;
-        }
-
         this.typedefs.put(this.typedefName, new EnumTypedef(this.typedefName, datatype, startBit, endBit, values));
     }
 
@@ -153,7 +142,7 @@ public class ParseState extends RusefiConfigGrammarBaseListener {
     @Override
     public void enterUnionField(RusefiConfigGrammarParser.UnionFieldContext ctx) {
         // Unions behave like a struct as far as scope is concerned (but is processed differently later
-        // to overlap all members, instead of placing them in sequence
+        // to overlap all members, instead of placing them in sequence as in a struct)
         enterStruct(null);
     }
 
