@@ -524,6 +524,9 @@ void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels DECLARE_
 
 	// Set raw sensors
 	tsOutputChannels->rawTps1Primary = Sensor::getRaw(SensorType::Tps1Primary);
+	tsOutputChannels->rawTps1Secondary = Sensor::getRaw(SensorType::Tps1Secondary);
+	tsOutputChannels->rawTps2Primary = Sensor::getRaw(SensorType::Tps2Primary);
+	tsOutputChannels->rawTps2Secondary = Sensor::getRaw(SensorType::Tps2Secondary);
 	tsOutputChannels->rawPpsPrimary = Sensor::getRaw(SensorType::AcceleratorPedalPrimary);
 	tsOutputChannels->rawPpsSecondary = Sensor::getRaw(SensorType::AcceleratorPedalSecondary);
 	tsOutputChannels->rawClt = Sensor::getRaw(SensorType::Clt);
