@@ -42,7 +42,7 @@ public class TSProjectConsumer implements ConfigurationConsumer {
         }
 
         if (configField.getComment() != null && configField.getComment().startsWith(ConfigField.TS_COMMENT_TAG + "")) {
-            settingContextHelp.append(nameWithPrefix + " = \"" + configField.getCommentContent() + "\"" + EOL);
+            settingContextHelp.append("\t" + nameWithPrefix + " = \"" + configField.getCommentContent() + "\"" + EOL);
         }
         VariableRegistry.INSTANCE.register(nameWithPrefix + "_offset", tsPosition);
 
@@ -65,6 +65,10 @@ public class TSProjectConsumer implements ConfigurationConsumer {
 
         if (configField.getState().tsCustomLine.containsKey(configField.getType())) {
             String bits = configField.getState().tsCustomLine.get(configField.getType());
+            if (!bits.startsWith("bits")) {
+                bits = handleTsInfo(bits, 5);
+            }
+
             bits = bits.replaceAll("@OFFSET@", "" + tsPosition);
             tsHeader.write(nameWithPrefix + " = " + bits);
 
@@ -79,18 +83,41 @@ public class TSProjectConsumer implements ConfigurationConsumer {
             tsHeader.write(TypesHelper.convertToTs(configField.getType()) + ",");
             tsHeader.write(" " + tsPosition + ",");
             tsHeader.write(" [" + configField.getArraySize() + "],");
-            tsHeader.write(" " + configField.getTsInfo());
+            tsHeader.write(" " + handleTsInfo(configField.getTsInfo(), 1));
 
             tsPosition += configField.getArraySize() * configField.getElementSize();
         } else {
             tsHeader.write(nameWithPrefix + " = scalar, ");
             tsHeader.write(TypesHelper.convertToTs(configField.getType()) + ",");
             tsHeader.write(" " + tsPosition + ",");
-            tsHeader.write(" " + configField.getTsInfo());
+            tsHeader.write(" " + handleTsInfo(configField.getTsInfo(), 1));
             tsPosition += configField.getArraySize() * configField.getElementSize();
         }
         tsHeader.write(EOL);
         return tsPosition;
+    }
+
+    private static String handleTsInfo(String tsInfo, int mutliplierIndex) {
+        try {
+            String[] fields = tsInfo.split("\\,");
+            if (fields.length > mutliplierIndex) {
+                /**
+                 * Evaluate static math on .ini layer to simplify rusEFI java and rusEFI PHP project consumers
+                 * https://github.com/rusefi/web_backend/issues/97
+                 */
+                fields[mutliplierIndex] = " " + IniField.parseDouble(fields[mutliplierIndex]);
+            }
+            StringBuilder sb = new StringBuilder();
+            for (String f : fields) {
+                if (sb.length() > 0) {
+                    sb.append(",");
+                }
+                sb.append(f);
+            }
+            return sb.toString();
+        } catch (Throwable e) {
+            throw new IllegalStateException("While parsing " + tsInfo, e);
+        }
     }
 
     private int writeTunerStudio(ConfigStructure configStructure, String prefix, Writer tsHeader, int tsPosition) throws IOException {
