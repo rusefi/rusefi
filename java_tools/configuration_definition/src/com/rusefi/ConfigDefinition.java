@@ -366,18 +366,18 @@ public class ConfigDefinition {
                     throw new IllegalStateException("Expected multiple classes for " + IDs);
                 for (int i = 0; i < IDs.size(); i++) {
                     String id = (String) IDs.get(i);
-                    Map<String, Object> thisPin = new Map();
+                    Map<String, Object> thisPin = new HashMap();
                     thisPin.put("id", idObject);
                     thisPin.put("ts_name", pin.get("ts_name"));
                     thisPin.put("class", ((ArrayList) classes).get(i));
-                    listPins.put(thisPin);
+                    listPins.add(thisPin);
                 }
             } else if (idObject instanceof String ) {
-                Map<String, Object> thisPin = new Map();
+                Map<String, Object> thisPin = new HashMap();
                 thisPin.put("id", idObject);
                 thisPin.put("ts_name", pin.get("ts_name"));
                 thisPin.put("class", pin.get("class"));
-                listPins.put(thisPin);
+                listPins.add(thisPin);
             }
         }
     }
@@ -387,10 +387,10 @@ public class ConfigDefinition {
             return;
         }
         Map<String, ArrayList<String>> names = new HashMap();
-        for (int i = 0; i < listPins.length; i++) {
+        for (int i = 0; i < listPins.size(); i++) {
             for (int ii = i; ii < listPins.length; ii++) {
-                if (listPins[i].get("id") == listPins[ii].get("id")) {
-                    throw new RuntimeException("ID used multiple times: " + listPins(i).get("id"));
+                if (listPins.get(i).get("id") == listPins.get(ii).get("id")) {
+                    throw new RuntimeException("ID used multiple times: " + listPins.get(i).get("id"));
                 }
             }
             String className = listPins.get(i).get("class");
@@ -410,21 +410,21 @@ public class ConfigDefinition {
             for (Map.Entry<String, Value> kv : enumList.entrySet()){
                 if (kv.getKey().equals(listPins.get(i).get("id"))){
                     classList.ensureCapacity(i + 1);
-                    for (var ii = classList.size(); ii <= i; ii++) {
+                    for (int ii = classList.size(); ii <= i; ii++) {
                         classList.add(null);
                     }
                     classList.set(kv.getValue().getIntValue(), listPins.get(i).get("ts_name"));
                 // TODO doing this in the loop for every pin is unnecessary, we only need to do one loop for every [adc_channel_e, brain_pin_e]
                 } else if (kv.getKey().equals(nothingName)) {
                     classList.ensureCapacity(i + 1);
-                    for (var ii = classList.size(); ii <= i; ii++) {
+                    for (int ii = classList.size(); ii <= i; ii++) {
                         classList.add(null);
                     }
                     classList.set(kv.getValue().getIntValue(), "NONE");
                 }
             }
         }
-        for (Map.Entry<String, Value> kv : names.entrySet()) {
+        for (Map.Entry<String, ArrayList> kv : names.entrySet()) {
             String outputEnumName = "";
             Map<String, Value> enumList = state.enumsReader.getEnums().get(enumName);
             switch (kv.getKey()) {
