@@ -110,9 +110,11 @@ public class ParseState extends RusefiConfigGrammarBaseListener {
         /*
         if (values.startsWith("@@")) {
             Definition def = this.definitions.get(values.replaceAll("@", ""));
+
             if (def == null) {
                 throw new RuntimeException("couldn't find definition for " + values);
             }
+
             values = def.value;
         }*/
 
