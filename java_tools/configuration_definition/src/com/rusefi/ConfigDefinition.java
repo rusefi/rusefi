@@ -391,6 +391,10 @@ public class ConfigDefinition {
             return;
         }
         Map<String, ArrayList<String>> names = new HashMap();
+        names.put("outputs", new ArrayList<String>());
+        names.put("analog_inputs", new ArrayList<String>());
+        names.put("event_inputs", new ArrayList<String>());
+        names.put("switch_inputs", new ArrayList<String>());
         for (int i = 0; i < listPins.size(); i++) {
             for (int ii = i + 1; ii < listPins.size(); ii++) {
                 if (listPins.get(i).get("id") == listPins.get(ii).get("id")) {
