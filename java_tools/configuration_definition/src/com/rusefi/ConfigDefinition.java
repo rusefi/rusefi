@@ -342,7 +342,7 @@ public class ConfigDefinition {
         for (File yamlFile : yamlFiles) {
             processYamlFile(yamlFile, state, listPins);
         }
-        registerPins(listPins, registry);
+        registerPins(listPins, registry, state);
     }
 
     @SuppressWarnings("unchecked")
@@ -382,22 +382,22 @@ public class ConfigDefinition {
         }
     }
 
-    private static void registerPins(ArrayList<Map<String, Object>> listPins, VariableRegistry registry) {
+    private static void registerPins(ArrayList<Map<String, Object>> listPins, VariableRegistry registry, ReaderState state) {
         if (listPins == null || listPins.isEmpty()) {
             return;
         }
         Map<String, ArrayList<String>> names = new HashMap();
         for (int i = 0; i < listPins.size(); i++) {
-            for (int ii = i; ii < listPins.length; ii++) {
+            for (int ii = i; ii < listPins.size(); ii++) {
                 if (listPins.get(i).get("id") == listPins.get(ii).get("id")) {
                     throw new RuntimeException("ID used multiple times: " + listPins.get(i).get("id"));
                 }
             }
-            String className = listPins.get(i).get("class");
+            String className = (String) listPins.get(i).get("class");
             ArrayList<String> classList = names.get(className);
             String pinType = "";
             String nothingName = "";
-            switch (listPins.get(i).get("class")) {
+            switch ((String) listPins.get(i).get("class")) {
                 case "analog_inputs":
                     pinType = "adc_channel_e";
                     nothingName = "EFI_ADC_NONE";
@@ -413,7 +413,7 @@ public class ConfigDefinition {
                     for (int ii = classList.size(); ii <= i; ii++) {
                         classList.add(null);
                     }
-                    classList.set(kv.getValue().getIntValue(), listPins.get(i).get("ts_name"));
+                    classList.set(kv.getValue().getIntValue(), (String) listPins.get(i).get("ts_name"));
                 // TODO doing this in the loop for every pin is unnecessary, we only need to do one loop for every [adc_channel_e, brain_pin_e]
                 } else if (kv.getKey().equals(nothingName)) {
                     classList.ensureCapacity(i + 1);
@@ -426,7 +426,6 @@ public class ConfigDefinition {
         }
         for (Map.Entry<String, ArrayList> kv : names.entrySet()) {
             String outputEnumName = "";
-            Map<String, Value> enumList = state.enumsReader.getEnums().get(enumName);
             switch (kv.getKey()) {
                 case "outputs":
                     outputEnumName = "output_pin_e_enum";
