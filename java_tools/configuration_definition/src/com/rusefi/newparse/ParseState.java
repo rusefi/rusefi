@@ -106,6 +106,16 @@ public class ParseState extends RusefiConfigGrammarBaseListener {
 
         String values = ctx.enumRhs().getText();
 
+        // TODO: many enum defs are missing so this doesn't work yet
+        /*
+        if (values.startsWith("@@")) {
+            Definition def = this.definitions.get(values.replaceAll("@", ""));
+            if (def == null) {
+                throw new RuntimeException("couldn't find definition for " + values);
+            }
+            values = def.value;
+        }*/
+
         this.typedefs.put(this.typedefName, new EnumTypedef(this.typedefName, datatype, startBit, endBit, values));
     }
 
