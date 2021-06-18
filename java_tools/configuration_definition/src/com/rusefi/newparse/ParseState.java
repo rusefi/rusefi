@@ -151,6 +151,13 @@ public class ParseState extends RusefiConfigGrammarBaseListener {
         scope = new Scope();
     }
 
+    @Override
+    public void enterUnionField(RusefiConfigGrammarParser.UnionFieldContext ctx) {
+        // Unions behave like a struct as far as scope is concerned (but is processed differently later
+        // to overlap all members, instead of placing them in sequence as in a struct)
+        enterStruct(null);
+    }
+
     void handleFieldOptionsList(FieldOptions options, RusefiConfigGrammarParser.FieldOptionsListContext ctx) {
         // Null means no options were configured, use defaults
         if (ctx == null) {
@@ -410,6 +417,23 @@ public class ParseState extends RusefiConfigGrammarBaseListener {
         } else {
             scope = scopes.pop();
         }
+    }
+
+    @Override
+    public void exitUnionField(RusefiConfigGrammarParser.UnionFieldContext ctx) {
+        assert(scope != null);
+        assert(scope.structFields != null);
+
+        // unions must have at least 1 member
+        assert(!scope.structFields.isEmpty());
+
+        Union u = new Union(scope.structFields);
+
+        // Restore the containing scope
+        scope = scopes.pop();
+
+        // Lastly, add the union to the scope
+        scope.structFields.add(u);
     }
 
     private Stack<Float> evalStack = new Stack<>();
