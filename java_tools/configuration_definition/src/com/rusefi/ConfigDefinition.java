@@ -210,7 +210,7 @@ public class ConfigDefinition {
                     break;
             }
         }
-        
+
         List<String> inputAllFiles = new ArrayList<>(inputFiles);
         if (tsPath != null) {
             // used to update .ini files
@@ -335,55 +335,6 @@ public class ConfigDefinition {
         }
 
         CachingStrategy.saveCachedInputFiles(inputAllFiles, cachePath, cacheZipFile);
-
-
-        // Parse the input files
-        {
-            ParseState listener = new ParseState();
-
-            // Add auto generated enums
-//            for (Map.Entry<String, Map<String, Value>> e : state.enumsReader.getEnums().entrySet()) {
-//                // Sew them back together in to a string
-//                String value = VariableRegistry.INSTANCE.getEnumOptionsForTunerStudio(state.enumsReader, e.getKey());
-//                listener.addDefinition(e.getKey(), value, Definition.OverwritePolicy.NotAllowed);
-//            }
-            listener.addDefinition("engine_type_e_auto_enum", VariableRegistry.INSTANCE.getEnumOptionsForTunerStudio(state.enumsReader, "engine_type_e"), Definition.OverwritePolicy.NotAllowed);
-
-            // First process yaml files
-            //processYamls(listener, yamlFiles);
-
-            // First load prepend files
-            {
-                // Ignore duplicates of definitions made during prepend phase
-                listener.setDefinitionPolicy(Definition.OverwritePolicy.IgnoreNew);
-
-                for (String prependFile : prependFiles) {
-                    // TODO: fix signature define file parsing
-                    parseFile(listener, prependFile);
-                }
-            }
-
-            // Now load the main config file
-            {
-                // don't allow duplicates in the main file
-                listener.setDefinitionPolicy(Definition.OverwritePolicy.NotAllowed);
-                parseFile(listener, definitionInputFile);
-            }
-
-            // Write C structs
-            // PrintStream cPrintStream = new PrintStream(new FileOutputStream(destCHeaderFileName));
-            // for (Struct s : listener.getStructs()) {
-            //     StructLayout sl = new StructLayout(0, "root", s);
-            //     sl.writeCLayoutRoot(cPrintStream);
-            // }
-            // cPrintStream.close();
-
-            // Write tunerstudio layout
-            // PrintStream tsPrintStream = new PrintStream(new FileOutputStream(tsPath + "/test.ini"));
-            // StructLayout root = new StructLayout(0, "root", listener.getLastStruct());
-            // root.writeTunerstudioLayout(tsPrintStream, new StructNamePrefixer());
-            // tsPrintStream.close();
-        }
     }
 
     private static void handleFiringOrder(String firingEnumFileName) throws IOException {
