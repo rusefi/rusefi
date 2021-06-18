@@ -43,8 +43,9 @@ public class EnumLayout extends Layout {
         ps.print(this.offset);
         ps.print(", ");
 
-        // TODO: automatically compute number of bits required?
-        ps.print("[0:7], ");
+        ps.print("[0:");
+        ps.print(this.endBit);
+        ps.print("], ");
 
         writeEnumVal(ps, this.values[0]);
 
