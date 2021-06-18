@@ -429,16 +429,16 @@ public class ConfigDefinition {
             Map<String, Value> enumList = state.enumsReader.getEnums().get(enumName);
             switch (kv.getKey()) {
                 case "outputs":
-                    outputEnumName = "output_pin_e_enum"
+                    outputEnumName = "output_pin_e_enum";
                     break;
                 case "analog_inputs":
                     outputEnumName = "adc_channel_e_enum";
                     break;
                 case "event_inputs":
-                    outputEnumName = "brain_input_pin_e_enum"
+                    outputEnumName = "brain_input_pin_e_enum";
                     break;
                 case "switch_inputs":
-                    outputEnumName = "switch_input_pin_e_enum"
+                    outputEnumName = "switch_input_pin_e_enum";
                     break;
             }
             StringBuilder sb = new StringBuilder();
