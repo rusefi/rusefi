@@ -1,5 +1,6 @@
 package com.rusefi.newparse.layout;
 
+import com.rusefi.ConfigDefinition;
 import com.rusefi.newparse.parsing.FieldOptions;
 import com.rusefi.newparse.parsing.ScalarField;
 import com.rusefi.newparse.parsing.Type;
@@ -27,9 +28,9 @@ public class ScalarLayout extends Layout {
         return "Scalar " + type.cType + " " + super.toString();
     }
 
-    private void printBeforeArrayLength(PrintStream ps, StructNamePrefixer prefixer) {
+    private void printBeforeArrayLength(PrintStream ps, StructNamePrefixer prefixer, String fieldType) {
         ps.print(prefixer.get(this.name));
-        ps.print(" = scalar, ");
+        ps.print(" = " + fieldType + ", ");
         ps.print(this.type.tsType);
         ps.print(", ");
         ps.print(this.offset);
@@ -44,7 +45,12 @@ public class ScalarLayout extends Layout {
 
     @Override
     public void writeTunerstudioLayout(PrintStream ps, StructNamePrefixer prefixer, int arrayLength) {
-        printBeforeArrayLength(ps, prefixer);
+        if (arrayLength == 0) {
+            // Skip zero length arrays, they may be used for dynamic padding but TS doesn't like them
+            return;
+        }
+
+        printBeforeArrayLength(ps, prefixer, "array");
 
         ps.print("[");
         ps.print(arrayLength);
@@ -55,14 +61,20 @@ public class ScalarLayout extends Layout {
 
     @Override
     public void writeTunerstudioLayout(PrintStream ps, StructNamePrefixer prefixer) {
-        printBeforeArrayLength(ps, prefixer);
+        printBeforeArrayLength(ps, prefixer, "scalar");
         printAfterArrayLength(ps);
     }
 
     @Override
     public void writeCLayout(PrintStream ps) {
         this.writeCOffsetHeader(ps, this.options.comment, this.options.units);
-        ps.println("\t" + this.type.cType.replaceAll("^int32_t$", "int") + " " + this.name + ";");
+        ps.print("\t" + this.type.cType.replaceAll("^int32_t$", "int") + " " + this.name);
+
+        if (ConfigDefinition.needZeroInit) {
+            ps.print(" = (" + this.type.cType.replaceAll("^int32_t$", "int") + ")0");
+        }
+
+        ps.println(";");
     }
 
     @Override

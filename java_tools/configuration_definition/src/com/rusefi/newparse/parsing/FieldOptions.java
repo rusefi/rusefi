@@ -36,16 +36,27 @@ public class FieldOptions {
         return other;
     }
 
+    private static String tryRound(float value) {
+        int intVal = Math.round(value);
+
+        // If the rounded value can exactly represent this float, then print as an integer
+        if (value == intVal) {
+            return Integer.toString(intVal);
+        } else {
+            return Float.toString(value);
+        }
+    }
+
     public void printTsFormat(PrintStream ps) {
         ps.print(units);
         ps.print(", ");
-        ps.print(scale);
+        ps.print(tryRound(scale));
         ps.print(", ");
-        ps.print(offset);
+        ps.print(tryRound(offset));
         ps.print(", ");
-        ps.print(min);
+        ps.print(tryRound(min));
         ps.print(", ");
-        ps.print(max);
+        ps.print(tryRound(max));
         ps.print(", ");
         ps.print(digits);
     }

@@ -304,7 +304,15 @@ public class ParseState extends RusefiConfigGrammarBaseListener {
 
         String comment = ctx.SemicolonedSuffix() == null ? null : ctx.SemicolonedSuffix().getText();
 
-        group.addBitField(new BitField(name, comment));
+        String trueValue = "\"true\"";
+        String falseValue = "\"false\"";
+
+        if (!ctx.QuotedString().isEmpty()) {
+            trueValue = ctx.QuotedString(0).getText();
+            falseValue = ctx.QuotedString(1).getText();
+        }
+
+        group.addBitField(new BitField(name, comment, trueValue, falseValue));
     }
 
     @Override
