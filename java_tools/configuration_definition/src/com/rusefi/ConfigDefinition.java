@@ -388,7 +388,7 @@ public class ConfigDefinition {
         }
         Map<String, ArrayList<String>> names = new HashMap();
         for (int i = 0; i < listPins.size(); i++) {
-            for (int ii = i; ii < listPins.size(); ii++) {
+            for (int ii = i + 1; ii < listPins.size(); ii++) {
                 if (listPins.get(i).get("id") == listPins.get(ii).get("id")) {
                     throw new RuntimeException("ID used multiple times: " + listPins.get(i).get("id"));
                 }
