@@ -424,7 +424,7 @@ public class ConfigDefinition {
                 }
             }
         }
-        for (Map.Entry<String, ArrayList> kv : names.entrySet()) {
+        for (Map.Entry<String, ArrayList<String>> kv : names.entrySet()) {
             String outputEnumName = "";
             switch (kv.getKey()) {
                 case "outputs":
