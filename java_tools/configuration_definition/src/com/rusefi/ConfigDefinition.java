@@ -361,7 +361,7 @@ public class ConfigDefinition {
             Object pinId = pin.get("id");
             Object pinClass = pin.get("class");
             Object pinName = pin.get("ts_name");
-            if (((String) pinId).length() == 0 || ((String) pinClass).length() == 0 || ((String) pinName).length() == 0) {
+            if (pinId.toString().length() == 0 || pinClass.toString().length() == 0 || pinName.toString().length() == 0) {
                 continue;
             }
             if (pinId instanceof ArrayList) {
