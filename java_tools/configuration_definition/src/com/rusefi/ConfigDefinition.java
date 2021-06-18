@@ -399,6 +399,9 @@ public class ConfigDefinition {
             }
             String className = (String) listPins.get(i).get("class");
             ArrayList<String> classList = names.get(className);
+            if (classList == null) {
+                throw new RuntimeException("Class not found:  " + className);
+            }
             String pinType = "";
             String nothingName = "";
             switch ((String) listPins.get(i).get("class")) {
