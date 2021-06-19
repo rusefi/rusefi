@@ -369,13 +369,13 @@ pins:
   
   - pin: 117a
     id: GPIOC_6
-    class: output
+    class: outputs
     ts_name: 117 ETB_OUT+
     function: +ETB_OUT
   
   - pin: 118a
     id: GPIOC_7
-    class: output
+    class: outputs
     ts_name: 118 ETB_OUT-
     function: -ETB_OUT     
    
