@@ -9,10 +9,10 @@
     </target>
 
     <target name="antlr">
-        <java jar="lib/antlr-4.5-complete.jar" args="-o src/com/rusefi/generated RusefiConfigGrammar.g4" fork="true" />
+        <java jar="lib/antlr-4.5-complete.jar" args="-o src/com/rusefi/generated RusefiConfigGrammar.g4" fork="true" failonerror="true" />
     </target>
 
-    <target name="compile">
+    <target name="compile" depends="antlr">
         <mkdir dir="build/classes"/>
         <javac
                 source="${javac.source}"
