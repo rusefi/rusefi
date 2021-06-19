@@ -524,6 +524,9 @@ void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels DECLARE_
 
 	// Set raw sensors
 	tsOutputChannels->rawTps1Primary = Sensor::getRaw(SensorType::Tps1Primary);
+	tsOutputChannels->rawTps1Secondary = Sensor::getRaw(SensorType::Tps1Secondary);
+	tsOutputChannels->rawTps2Primary = Sensor::getRaw(SensorType::Tps2Primary);
+	tsOutputChannels->rawTps2Secondary = Sensor::getRaw(SensorType::Tps2Secondary);
 	tsOutputChannels->rawPpsPrimary = Sensor::getRaw(SensorType::AcceleratorPedalPrimary);
 	tsOutputChannels->rawPpsSecondary = Sensor::getRaw(SensorType::AcceleratorPedalSecondary);
 	tsOutputChannels->rawClt = Sensor::getRaw(SensorType::Clt);
@@ -867,6 +870,9 @@ void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels DECLARE_
 		tsOutputChannels->debugFloatField3 = Sensor::get(SensorType::Tps1).value_or(0) - Sensor::get(SensorType::Tps2).value_or(0);
 		// Pedal pri/sec split
 		tsOutputChannels->debugFloatField4 = Sensor::get(SensorType::AcceleratorPedalPrimary).value_or(0) - Sensor::get(SensorType::AcceleratorPedalSecondary).value_or(0);
+
+		// TPS 1 pri/sec ratio - useful for ford ETB that has partial-range second channel
+		tsOutputChannels->debugFloatField5 = 100 * Sensor::get(SensorType::Tps1Primary).value_or(0) / Sensor::get(SensorType::Tps1Secondary).value_or(0);
 		break;
 	case DBG_INSTANT_RPM:
 		{
