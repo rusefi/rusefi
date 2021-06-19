@@ -54,7 +54,7 @@ public class ParseState extends RusefiConfigGrammarBaseListener {
         }
 
         // Now iterate over all values, assembling as an array in-order
-        String[] result = new String[valueNameById.lastKey()];
+        String[] result = new String[valueNameById.lastKey() + 1];
         for (int i = 0; i < result.length; i++) {
             result[i] = valueNameById.getOrDefault(i, "INVALID");
         }
