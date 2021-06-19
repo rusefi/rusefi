@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Fri Jun 18 19:48:28 UTC 2021
+// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Sat Jun 19 03:22:22 UTC 2021
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -1240,6 +1240,7 @@ public class Fields {
 	public static final int servoOutputPins8_offset = 3147;
 	public static final int showHumanReadableWarning_offset = 976;
 	public static final int showSdCardWarning_offset = 76;
+	public static final int SIGNATURE_HASH = 1141497882;
 	public static final int silentTriggerError_offset = 1464;
 	public static final int slowAdcAlpha_offset = 2088;
 	public static final int sparkDwellRpmBins_offset = 332;
@@ -1541,7 +1542,7 @@ public class Fields {
 	public static final char TS_SD_R_COMMAND = 'r';
 	public static final char TS_SD_W_COMMAND = 'w';
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI 2021.06.18.all.3684837539";
+	public static final String TS_SIGNATURE = "rusEFI 2021.06.19.all.1141497882";
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final char TS_TEST_COMMAND = 't';
 	public static final int TT_TT_1_16 = 50;
@@ -2249,7 +2250,7 @@ public class Fields {
 	public static final Field BOOSTPID_MAXVALUE = Field.create("BOOSTPID_MAXVALUE", 1010, FieldType.INT16);
 	public static final Field BOOSTTYPE = Field.create("BOOSTTYPE", 1012, FieldType.INT);
 	public static final Field BOOSTPWMFREQUENCY = Field.create("BOOSTPWMFREQUENCY", 1016, FieldType.INT);
-	public static final String[] launchActivationMode_e = {"Switch Input", "Clutch Input", "Always Active(Disabled By Speed)","INVALID"};
+	public static final String[] launchActivationMode_e = {"Switch Input", "Clutch Input", "Always Active(Disabled By Speed)", "INVALID"};
 	public static final Field LAUNCHACTIVATIONMODE = Field.create("LAUNCHACTIVATIONMODE", 1020, FieldType.INT, launchActivationMode_e);
 	public static final String[] antiLagActivationMode_e = {"Always Active", "Switch Input"};
 	public static final Field ANTILAGACTIVATIONMODE = Field.create("ANTILAGACTIVATIONMODE", 1024, FieldType.INT, antiLagActivationMode_e);
