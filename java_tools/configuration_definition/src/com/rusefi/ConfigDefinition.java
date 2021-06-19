@@ -371,7 +371,7 @@ public class ConfigDefinition {
                 for (int i = 0; i < pinIds.size(); i++) {
                     String id = (String) pinIds.get(i);
                     Map<String, Object> thisPin = new HashMap();
-                    thisPin.put("id", pinId);
+                    thisPin.put("id", pinIds.get(i));
                     thisPin.put("ts_name", pinName);
                     thisPin.put("class", ((ArrayList) pinClass).get(i));
                     listPins.add(thisPin);
