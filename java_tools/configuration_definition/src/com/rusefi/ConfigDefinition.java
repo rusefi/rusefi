@@ -419,20 +419,19 @@ public class ConfigDefinition {
             }
             Map<String, Value> enumList = state.enumsReader.getEnums().get(pinType);
             for (Map.Entry<String, Value> kv : enumList.entrySet()){
+                String name = "";
                 if (kv.getKey().equals(listPins.get(i).get("id"))){
-                    classList.ensureCapacity(i + 1);
-                    for (int ii = classList.size(); ii <= i; ii++) {
-                        classList.add(null);
-                    }
-                    classList.set(kv.getValue().getIntValue(), (String) listPins.get(i).get("ts_name"));
+                    name = (String) listPins.get(i).get("ts_name");
                 // TODO doing this in the loop for every pin is unnecessary, we only need to do one loop for every [adc_channel_e, brain_pin_e]
                 } else if (kv.getKey().equals(nothingName)) {
-                    classList.ensureCapacity(i + 1);
-                    for (int ii = classList.size(); ii <= i; ii++) {
-                        classList.add(null);
-                    }
-                    classList.set(kv.getValue().getIntValue(), "NONE");
+                    name = "NONE";
                 }
+                int index = kv.getValue().getIntValue();
+                classList.ensureCapacity(index + 1);
+                for (int ii = classList.size(); ii <= index; ii++) {
+                    classList.add(null);
+                }
+                classList.set(index, name);
             }
         }
         for (Map.Entry<String, ArrayList<String>> kv : names.entrySet()) {
