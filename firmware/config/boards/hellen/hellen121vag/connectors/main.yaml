@@ -154,13 +154,13 @@ pins:
   - pin: 55a
     id: GPIOE_12
     ts_name: In D1
-    class: digital_inputs
+    class: switch_inputs
     function: IN_D1
   
   - pin: 57a
     id: GPIOE_13
     ts_name: In D2
-    class: digital_inputs
+    class: switch_inputs
     function: IN_D2
     
   - pin: 65a
@@ -179,13 +179,13 @@ pins:
   - pin: 75a
     id: GPIOE_14
     ts_name: In D3
-    class: digital_inputs
+    class: switch_inputs
     function: IN_D3
   
   - pin: 76a
     id: GPIOE_15
     ts_name: In D4
-    class: digital_inputs
+    class: switch_inputs
     function: IN_D4
   
   - pin: 81a
@@ -369,13 +369,13 @@ pins:
   
   - pin: 117a
     id: GPIOC_6
-    class: output
+    class: outputs
     ts_name: 117 ETB_OUT+
     function: +ETB_OUT
   
   - pin: 118a
     id: GPIOC_7
-    class: output
+    class: outputs
     ts_name: 118 ETB_OUT-
     function: -ETB_OUT     
    
