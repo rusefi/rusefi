@@ -504,7 +504,7 @@ public class ConfigDefinition {
                 if (kv.getValue().get(i) == null) {
                     sb.append("\"INVALID\"");
                 } else {
-                    sb.append("\"" + kv.getValue() + "\"");
+                    sb.append("\"" + kv.getValue().get(i) + "\"");
                 }
             }
             registry.register(outputEnumName, sb.toString());
