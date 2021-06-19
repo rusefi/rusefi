@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Tue Jun 15 21:31:42 UTC 2021
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Fri Jun 18 19:48:28 UTC 2021
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -824,10 +824,17 @@ struct engine_configuration_s {
 	 */
 	float ignitionDwellForCrankingMs;
 	/**
-	deg
+	 * Once engine speed passes this value, start reducing ETB angle.
+	rpm
 	 * offset 104
 	 */
-	float unused104;
+	uint16_t etbRevLimitStart;
+	/**
+	 * This far above 'Soft limiter start', fully close the throttle. At the bottom of the range, throttle control is normal. At the top of the range, the throttle is fully closed.
+	rpm
+	 * offset 106
+	 */
+	uint16_t etbRevLimitRange;
 	/**
 	 * @see hasMapSensor
 	 * @see isMapAveragingEnabled
@@ -904,6 +911,8 @@ struct engine_configuration_s {
 	int rpmHardLimit;
 	/**
 	 * This setting controls which fuel quantity control algorithm is used.
+	 * Alpha-N means drive by TPS
+	 * Speed Density requires MAP sensor
 	 * offset 420
 	 */
 	engine_load_mode_e fuelAlgorithm;
@@ -953,7 +962,13 @@ struct engine_configuration_s {
 	unused
 	 * offset 445
 	 */
-	int8_t unusedOldIgnitionOffset[3];
+	int8_t unusedOldIgnitionOffset[1];
+	/**
+	 * Expected oil pressure after starting the engine. If oil pressure does not reach this level within 5 seconds of engine start, fuel will be cut. Set to 0 to disable and always allow starting.
+	kPa
+	 * offset 446
+	 */
+	uint16_t minOilPressureAfterStart;
 	/**
 	 * Dynamic uses the timing map to decide the ignition timing, Static timing fixes the timing to the value set below (only use for checking static timing with a timing light).
 	 * offset 448
@@ -1957,10 +1972,10 @@ struct engine_configuration_s {
 	bool unusedBit_251_29 : 1;
 	/**
 	offset 976 bit 30 */
-	bool unusedBit_289_30 : 1;
+	bool unusedBit_291_30 : 1;
 	/**
 	offset 976 bit 31 */
-	bool unusedBit_289_31 : 1;
+	bool unusedBit_291_31 : 1;
 	/**
 	 * offset 980
 	 */
@@ -2889,76 +2904,76 @@ struct engine_configuration_s {
 	bool unused1130 : 1;
 	/**
 	offset 2116 bit 8 */
-	bool unusedBit_492_8 : 1;
+	bool unusedBit_494_8 : 1;
 	/**
 	offset 2116 bit 9 */
-	bool unusedBit_492_9 : 1;
+	bool unusedBit_494_9 : 1;
 	/**
 	offset 2116 bit 10 */
-	bool unusedBit_492_10 : 1;
+	bool unusedBit_494_10 : 1;
 	/**
 	offset 2116 bit 11 */
-	bool unusedBit_492_11 : 1;
+	bool unusedBit_494_11 : 1;
 	/**
 	offset 2116 bit 12 */
-	bool unusedBit_492_12 : 1;
+	bool unusedBit_494_12 : 1;
 	/**
 	offset 2116 bit 13 */
-	bool unusedBit_492_13 : 1;
+	bool unusedBit_494_13 : 1;
 	/**
 	offset 2116 bit 14 */
-	bool unusedBit_492_14 : 1;
+	bool unusedBit_494_14 : 1;
 	/**
 	offset 2116 bit 15 */
-	bool unusedBit_492_15 : 1;
+	bool unusedBit_494_15 : 1;
 	/**
 	offset 2116 bit 16 */
-	bool unusedBit_492_16 : 1;
+	bool unusedBit_494_16 : 1;
 	/**
 	offset 2116 bit 17 */
-	bool unusedBit_492_17 : 1;
+	bool unusedBit_494_17 : 1;
 	/**
 	offset 2116 bit 18 */
-	bool unusedBit_492_18 : 1;
+	bool unusedBit_494_18 : 1;
 	/**
 	offset 2116 bit 19 */
-	bool unusedBit_492_19 : 1;
+	bool unusedBit_494_19 : 1;
 	/**
 	offset 2116 bit 20 */
-	bool unusedBit_492_20 : 1;
+	bool unusedBit_494_20 : 1;
 	/**
 	offset 2116 bit 21 */
-	bool unusedBit_492_21 : 1;
+	bool unusedBit_494_21 : 1;
 	/**
 	offset 2116 bit 22 */
-	bool unusedBit_492_22 : 1;
+	bool unusedBit_494_22 : 1;
 	/**
 	offset 2116 bit 23 */
-	bool unusedBit_492_23 : 1;
+	bool unusedBit_494_23 : 1;
 	/**
 	offset 2116 bit 24 */
-	bool unusedBit_492_24 : 1;
+	bool unusedBit_494_24 : 1;
 	/**
 	offset 2116 bit 25 */
-	bool unusedBit_492_25 : 1;
+	bool unusedBit_494_25 : 1;
 	/**
 	offset 2116 bit 26 */
-	bool unusedBit_492_26 : 1;
+	bool unusedBit_494_26 : 1;
 	/**
 	offset 2116 bit 27 */
-	bool unusedBit_492_27 : 1;
+	bool unusedBit_494_27 : 1;
 	/**
 	offset 2116 bit 28 */
-	bool unusedBit_492_28 : 1;
+	bool unusedBit_494_28 : 1;
 	/**
 	offset 2116 bit 29 */
-	bool unusedBit_492_29 : 1;
+	bool unusedBit_494_29 : 1;
 	/**
 	offset 2116 bit 30 */
-	bool unusedBit_492_30 : 1;
+	bool unusedBit_494_30 : 1;
 	/**
 	offset 2116 bit 31 */
-	bool unusedBit_492_31 : 1;
+	bool unusedBit_494_31 : 1;
 	/**
 	 * set can_mode X
 	 * offset 2120
@@ -4212,4 +4227,4 @@ struct persistent_config_s {
 };
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Tue Jun 15 21:31:42 UTC 2021
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Fri Jun 18 19:48:28 UTC 2021

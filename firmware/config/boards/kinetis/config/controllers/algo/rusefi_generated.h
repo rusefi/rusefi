@@ -467,6 +467,8 @@
 #define etbIo2_disablePin_offset 987
 #define etbIo2_offset 984
 #define etbNeutralPosition_offset 1471
+#define etbRevLimitRange_offset 106
+#define etbRevLimitStart_offset 104
 #define etbWastegatePid_dFactor_offset 2516
 #define etbWastegatePid_iFactor_offset 2512
 #define etbWastegatePid_maxValue_offset 2526
@@ -1147,6 +1149,7 @@
 #define mc33_t_peak_off_offset 4476
 #define mc33_t_peak_tot_offset 4478
 #define measureMapOnlyInOneCylinder_offset 744
+#define minOilPressureAfterStart_offset 446
 #define MLQ_FIELD_HEADER_SIZE 55
 #define MLQ_HEADER_SIZE 22
 #define MOCK_AFR_COMMAND "mock_afr_voltage"
@@ -1269,8 +1272,8 @@
 #define showHumanReadableWarning_offset 976
 #define showSdCardWarning_offset 76
 #define SIGNATURE_BOARD kin
-#define SIGNATURE_DATE 2021.06.15
-#define SIGNATURE_HASH 531098975
+#define SIGNATURE_DATE 2021.06.18
+#define SIGNATURE_HASH 1719353231
 #define silentTriggerError_offset 1464
 #define slowAdcAlpha_offset 2088
 #define sparkDwellRpmBins_offset 332
@@ -1471,7 +1474,7 @@
 #define trigger_todoRemoveMeOneDay0_offset 528
 #define trigger_todoRemoveMeOneDay1_offset 528
 #define trigger_type_e_auto_enum "TT_TOOTHED_WHEEL", "TT_FORD_ASPIRE", "TT_DODGE_NEON_1995", "TT_MAZDA_MIATA_NA", "TT_MAZDA_MIATA_NB1", "TT_GM_7X", "TT_DAIHATSU", "TT_MAZDA_SOHC_4", "TT_TOOTHED_WHEEL_60_2", "TT_TOOTHED_WHEEL_36_1", "TT_HONDA_4_24_1", "TT_MITSUBISHI", "TT_HONDA_4_24", "TT_HONDA_1_4_24", "TT_DODGE_NEON_2003_CAM", "TT_MAZDA_DOHC_1_4", "TT_ONE_PLUS_ONE", "TT_VVT_JZ", "TT_ONE", "TT_DODGE_RAM", "TT_60_2_VW", "TT_HONDA_1_24", "TT_DODGE_STRATUS", "TT_36_2_2_2", "TT_NISSAN_SR20VE", "TT_2JZ_3_34", "TT_ROVER_K", "TT_GM_LS_24", "TT_HONDA_CBR_600", "TT_2JZ_1_12", "TT_CHRYSLER_NGC_36_2_2", "TT_3_1_CAM", "TT_DODGE_NEON_2003_CRANK", "TT_MIATA_VVT", "TT_HONDA_ACCORD_1_24_SHIFTED", "TT_MAZDA_MIATA_VVT_TEST", "TT_SUBARU_7_6", "TT_JEEP_18_2_2_2", "TT_NISSAN_SR20VE_360", "TT_DODGE_NEON_1995_ONLY_CRANK", "TT_JEEP_4_CYL", "TT_FIAT_IAW_P8", "TT_FORD_ST170", "TT_VVT_MIATA_NB2", "TT_RENIX_44_2_2", "TT_RENIX_66_2_2_2", "TT_HONDA_K_12_1", "TT_VVT_BOSCH_QUICK_START", "TT_TOOTHED_WHEEL_36_2", "TT_SUBARU_SVX", "TT_1_16", "TT_SUBARU_7_WITHOUT_6", "TT_52", "TT_TRI_TACH", "TT_GM_60_2_2_2", "TT_SKODA_FAVORIT", "TT_VVT_BARRA_3_PLUS_1", "TT_KAWA_KX450F", "TT_UNUSED"
-#define trigger_type_e_enum "custom toothed wheel", "Ford Aspire", "Dodge Neon 1995", "Miata NA", "Miata NB", "GM_7X", "Cooper R50", "Mazda SOHC 4", "60/2", "36/1", "Honda 4+24+1", "Mitsubishi", "Honda 4+24", "Honda 1+4+24", "Dodge Neon 2003", "Mazda DOHC 1+4", "1+1", "INVALID", "Single Tooth", "Dodge Ram 1+16", "60/2 VW", "Honda 1+24", "Dodge Stratus", "36_2_2_2", "Nissan Primera", "dev 2JZ 3/34 simulator", "Rover K", "GM LS 24", "Honda CBR 600", "2JZ_1_12", "Honda CBR 600 custom", "3/1 skipped" , "Dodge Neon 2003 crank", "Miata VVT", "trg34", "trg35", "Subaru 7+6", "Jeep 18-2-2-2", "WIP", "Dodge Neon 1995 crank only", "Jeep XJ 4 cyl", "FiatIAQ_P8", "Mazda Z5", "trg43", "Renix 44-2-2", "Renix 66-2-2-2", "Honda K 12+1", "trg47", "36/2", "Subaru SVX", "1+16", "Subaru 7 without 6", "trg52", "TriTach", "GM 60/2/2/2", "Skoda Favorit", "Barra 3+1 Cam", "Kawa KX450F", "trg58", "trg59", "trg60", "INVALID"
+#define trigger_type_e_enum "custom toothed wheel", "Ford Aspire", "Dodge Neon 1995", "Miata NA", "Miata NB", "GM_7X", "Cooper R50", "Mazda SOHC 4", "60/2", "36/1", "Honda 4+24+1", "Mitsubishi", "Honda 4+24", "Honda 1+4+24", "Dodge Neon 2003", "Mazda DOHC 1+4", "1+1", "INVALID", "Single Tooth", "Dodge Ram 1+16", "60/2 VW", "Honda 1+24", "Dodge Stratus", "36_2_2_2", "Nissan Primera", "dev 2JZ 3/34 simulator", "Rover K", "GM LS 24", "Honda CBR 600", "2JZ_1_12", "Honda CBR 600 custom", "3/1 skipped", "Dodge Neon 2003 crank", "Miata VVT", "trg34", "trg35", "Subaru 7+6", "Jeep 18-2-2-2", "WIP", "Dodge Neon 1995 crank only", "Jeep XJ 4 cyl", "FiatIAQ_P8", "Mazda Z5", "trg43", "Renix 44-2-2", "Renix 66-2-2-2", "Honda K 12+1", "trg47", "36/2", "Subaru SVX", "1+16", "Subaru 7 without 6", "trg52", "TriTach", "GM 60/2/2/2", "Skoda Favorit", "Barra 3+1 Cam", "Kawa KX450F", "trg58", "trg59", "trg60", "INVALID"
 #define trigger_type_offset 524
 #define trigger_unusedBit_4_10_offset 528
 #define trigger_unusedBit_4_11_offset 528
@@ -1623,10 +1626,11 @@
 #define ts_show_spi true
 #define ts_show_trigger_comparator true
 #define ts_show_tunerstudio_port true
-#define TS_SIGNATURE "rusEFI 2021.06.15.kin.531098975"
+#define TS_SIGNATURE "rusEFI 2021.06.18.kin.1719353231"
 #define TS_SINGLE_WRITE_COMMAND 'W'
 #define TS_SINGLE_WRITE_COMMAND_char W
-#define TS_TEST_COMMAND 't' // 0x74
+#define TS_TEST_COMMAND 't'
+#define TS_TEST_COMMAND_char t
 #define TT_TT_1_16 50
 #define TT_TT_2JZ_1_12 29
 #define TT_TT_2JZ_3_34 25
@@ -1676,7 +1680,6 @@
 #define twoWireBatchInjection_offset 1476
 #define uart_device_e_auto_enum "UART_NONE", "UART_DEVICE_1", "UART_DEVICE_2", "UART_DEVICE_3", "UART_DEVICE_4"
 #define uartConsoleSerialSpeed_offset 2076
-#define unused104_offset 104
 #define unused1059_offset 3936
 #define unused1126_offset 2116
 #define unused1127_offset 2116
@@ -1721,33 +1724,33 @@
 #define unusedAtOldBoardConfigurationEnd_offset 1228
 #define unusedBit4_1476_offset 1476
 #define unusedBit_251_29_offset 976
-#define unusedBit_289_30_offset 976
-#define unusedBit_289_31_offset 976
+#define unusedBit_291_30_offset 976
+#define unusedBit_291_31_offset 976
 #define unusedBit_34_31_offset 76
-#define unusedBit_492_10_offset 2116
-#define unusedBit_492_11_offset 2116
-#define unusedBit_492_12_offset 2116
-#define unusedBit_492_13_offset 2116
-#define unusedBit_492_14_offset 2116
-#define unusedBit_492_15_offset 2116
-#define unusedBit_492_16_offset 2116
-#define unusedBit_492_17_offset 2116
-#define unusedBit_492_18_offset 2116
-#define unusedBit_492_19_offset 2116
-#define unusedBit_492_20_offset 2116
-#define unusedBit_492_21_offset 2116
-#define unusedBit_492_22_offset 2116
-#define unusedBit_492_23_offset 2116
-#define unusedBit_492_24_offset 2116
-#define unusedBit_492_25_offset 2116
-#define unusedBit_492_26_offset 2116
-#define unusedBit_492_27_offset 2116
-#define unusedBit_492_28_offset 2116
-#define unusedBit_492_29_offset 2116
-#define unusedBit_492_30_offset 2116
-#define unusedBit_492_31_offset 2116
-#define unusedBit_492_8_offset 2116
-#define unusedBit_492_9_offset 2116
+#define unusedBit_494_10_offset 2116
+#define unusedBit_494_11_offset 2116
+#define unusedBit_494_12_offset 2116
+#define unusedBit_494_13_offset 2116
+#define unusedBit_494_14_offset 2116
+#define unusedBit_494_15_offset 2116
+#define unusedBit_494_16_offset 2116
+#define unusedBit_494_17_offset 2116
+#define unusedBit_494_18_offset 2116
+#define unusedBit_494_19_offset 2116
+#define unusedBit_494_20_offset 2116
+#define unusedBit_494_21_offset 2116
+#define unusedBit_494_22_offset 2116
+#define unusedBit_494_23_offset 2116
+#define unusedBit_494_24_offset 2116
+#define unusedBit_494_25_offset 2116
+#define unusedBit_494_26_offset 2116
+#define unusedBit_494_27_offset 2116
+#define unusedBit_494_28_offset 2116
+#define unusedBit_494_29_offset 2116
+#define unusedBit_494_30_offset 2116
+#define unusedBit_494_31_offset 2116
+#define unusedBit_494_8_offset 2116
+#define unusedBit_494_9_offset 2116
 #define unusedOldBiquad_offset 2323
 #define unusedOldIgnitionOffset_offset 445
 #define unusedSpiPadding4_offset 2585

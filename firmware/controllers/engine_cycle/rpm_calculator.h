@@ -105,6 +105,10 @@ public:
 	 * see also SC_RPM_ACCEL
 	 */
 	float getRpmAcceleration() const;
+
+	// Get elapsed time (seconds) since the engine transitioned to the running state.
+	float getTimeSinceEngineStart(efitick_t nowNt) const;
+
 	/**
 	 * this is RPM on previous engine cycle.
 	 */
@@ -153,6 +157,8 @@ private:
 	 * Needed by spinning-up logic.
 	 */
 	bool isSpinning = false;
+
+	Timer engineStartTimer;
 };
 
 // Just a getter for rpmValue which also handles mockRpm if not EFI_PROD_CODE
