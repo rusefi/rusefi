@@ -261,7 +261,7 @@ struct stft_s
 	uint8_t maxIdleRegionRpm;+Below this RPM, the idle region is active;"RPM", @@RPM_1_BYTE_PACKING_MULT@@, 0, 0, 12000, 0
 	uint8_t maxOverrunLoad;+Below this engine load, the overrun region is active;"load", 1, 0, 0, 250, 0
 	uint8_t minPowerLoad;+Above this engine load, the power region is active;"load", 1, 0, 0, 250, 0
-	uint8_t deadband;+When close to correct AFR, pause correction.  This can improve stability by not changing the adjustment if the error is extremely small, but is not required.;"%", 0.1, 0, 0, 3, 1
+	uint8_t deadband;+When close to correct AFR, pause correction. This can improve stability by not changing the adjustment if the error is extremely small, but is not required.;"%", 0.1, 0, 0, 3, 1
 
 	int8_t minClt;+Below this temperature, correction is disabled.;"C", 1, 0, -20, 100, 0
 	uint8_t minAfr;+Below this AFR, correction is paused;"afr", 0.1, 0, 10, 20, 1
@@ -285,7 +285,7 @@ end_struct
 custom ego_sensor_e 4 bits, S32, @OFFSET@, [0:2], @@ego_sensor_e_enum@@
 
 struct cranking_parameters_s
-float baseFuel;+Base mass of the per-cylinder fuel injected during cranking.  This is then modified by the multipliers for CLT, IAT, TPS ect, to give the final cranking pulse width.\nA reasonable starting point is 60mg per liter per cylinder.\nex: 2 liter 4 cyl = 500cc/cyl, so 30mg cranking fuel.;"mg", 1, 0, 0, 500, 1
+float baseFuel;+Base mass of the per-cylinder fuel injected during cranking. This is then modified by the multipliers for CLT, IAT, TPS ect, to give the final cranking pulse width.\nA reasonable starting point is 60mg per liter per cylinder.\nex: 2 liter 4 cyl = 500cc/cyl, so 30mg cranking fuel.;"mg", 1, 0, 0, 500, 1
 int16_t rpm;+This sets the RPM limit below which the ECU will use cranking fuel and ignition logic, typically this is around 350-450rpm. \nset cranking_rpm X;"RPM", 1, 0, 0, 3000, 0
 end_struct
 
@@ -585,7 +585,7 @@ ThermistorConf iat;
 
 
 float[DWELL_CURVE_SIZE] sparkDwellRpmBins;On Single Coil or Wasted Spark setups you have to lower dwell at high RPM;"RPM", 1, 0, 0, 18000, 2
-	float[DWELL_CURVE_SIZE] sparkDwellValues;;"ms",	   1, 0, 0, 30, 2
+	float[DWELL_CURVE_SIZE] sparkDwellValues;;"ms", 1, 0, 0, 30, 2
 
 struct_no_prefix specs_s
 float displacement;Engine displacement, in litres\nsee also cylindersCount;"L", 1, 0, 0, 1000, 2
@@ -616,8 +616,8 @@ engine_load_mode_e fuelAlgorithm;+This setting controls which fuel quantity cont
 
 
 custom injection_mode_e 4 bits, U32, @OFFSET@, [0:1], "Simultaneous", "Sequential", "Batch", "Single Point"
-injection_mode_e crankingInjectionMode;+This is the injection strategy during engine start.  See Fuel/Injection settings for more detail. It is suggested to use "Simultaneous".
-injection_mode_e injectionMode;+This is where the fuel injection type is defined: "Simultaneous" means all injectors will fire together at once. "Sequential" fires the injectors on a per cylinder basis, which requires individually wired injectors. "Batched" will fire the injectors in groups.  If your injectors are individually wired you will also need to enable "Two wire batch emulation". \nset injection_mode X\nSee also twoWireBatchInjection
+injection_mode_e crankingInjectionMode;+This is the injection strategy during engine start. See Fuel/Injection settings for more detail. It is suggested to use "Simultaneous".
+injection_mode_e injectionMode;+This is where the fuel injection type is defined: "Simultaneous" means all injectors will fire together at once. "Sequential" fires the injectors on a per cylinder basis, which requires individually wired injectors. "Batched" will fire the injectors in groups. If your injectors are individually wired you will also need to enable "Two wire batch emulation". \nset injection_mode X\nSee also twoWireBatchInjection
 angle_t extraInjectionOffset;+this is about deciding when the injector starts it's squirt\nSee also injectionPhase map\ntodo: do we need even need this since we have the map anyway?;"deg", 1, 0, -720, 720, 2
 angle_t crankingTimingAngle;+Ignition advance angle used during engine cranking, 5-10 degrees will work as a base setting for most engines.\nThere is tapering towards running timing advance\nset cranking_timing_angle X;"deg", 1, 0, -30, 30, 0
 
@@ -693,7 +693,7 @@ trigger_config_s trigger;
 custom spi_device_e 1 bits, U08, @OFFSET@, [0:2], "Off", "SPI1", "SPI2", "SPI3", "SPI4", "INVALID", "INVALID", "INVALID" 
 	spi_device_e hip9011SpiDevice;
 	uint8_t failedMapFallback;+This value is only used for speed density fueling calculations.;"kPa", 1, 0, 0, 100, 0
-	uint8_t boostControlSafeDutyCycle;+Duty cycle to use in case of a sensor failure.  This duty cycle should produce the minimum possible amount of boost.;"%", 1, 0, 0, 100, 0
+	uint8_t boostControlSafeDutyCycle;+Duty cycle to use in case of a sensor failure. This duty cycle should produce the minimum possible amount of boost.;"%", 1, 0, 0, 100, 0
 	adc_channel_e mafAdcChannel 
 
 float globalFuelCorrection;set global_fuel_correction X;"coef", 1, 0, 0, 1000, 2
@@ -854,7 +854,7 @@ bit is_enabled_spi_2
 	bit vvtCamSensorUseRise;+Use rise or fall signal front\nget vvtCamSensorUseRise
 	bit measureMapOnlyInOneCylinder;+Useful for individual intakes
 	bit stepperForceParkingEveryRestart
-	bit isFasterEngineSpinUpEnabled;+If enabled, try to fire the engine before a full engine cycle has been completed using RPM estimated from the last 90 degrees of engine rotation.  As soon as the trigger syncs plus 90 degrees rotation, fuel and ignition events will occur.  If disabled, worst case may require up to 4 full crank rotations before any events are scheduled.
+	bit isFasterEngineSpinUpEnabled;+If enabled, try to fire the engine before a full engine cycle has been completed using RPM estimated from the last 90 degrees of engine rotation. As soon as the trigger syncs plus 90 degrees rotation, fuel and ignition events will occur. If disabled, worst case may require up to 4 full crank rotations before any events are scheduled.
 	bit coastingFuelCutEnabled;+This setting disables fuel injection while the engine is in overrun, this is useful as a fuel saving measure and to prevent back firing.
 	bit useIacTableForCoasting;+This setting allows the ECU to open the IAC during overrun conditions to help reduce engine breaking, this can be helpful for large engines in light weight cars. Used in Auto-PID Idle mode.
 	bit useNoiselessTriggerDecoder
@@ -969,7 +969,7 @@ custom maf_sensor_type_e 4 bits, S32, @OFFSET@, [0:1], @@maf_sensor_type_e_enum@
 	brain_input_pin_e frequencyReportingMapInputPin;
 	pin_input_mode_e clutchUpPinMode;
 	uint16_t multisparkMaxRpm;+Disable multispark above this engine speed.;"rpm", 1, 0, 0, 3000, 0
-	uint8_t multisparkMaxSparkingAngle;+This parameter sets the latest that the last multispark can occur after the main ignition event.  For example, if the ignition timing is 30 degrees BTDC, and this parameter is set to 45, no multispark will ever be fired after 15 degrees ATDC.;"deg", 1, 0, 0, 60, 0
+	uint8_t multisparkMaxSparkingAngle;+This parameter sets the latest that the last multispark can occur after the main ignition event. For example, if the ignition timing is 30 degrees BTDC, and this parameter is set to 45, no multispark will ever be fired after 15 degrees ATDC.;"deg", 1, 0, 0, 60, 0
 	uint8_t multisparkMaxExtraSparkCount;+Configures the maximum number of extra sparks to fire (does not include main spark);"count", 1, 0, 1, 5, 0
 	bit todoClutchUpPinInverted
 	bit todoClutchDownPinInverted
@@ -981,7 +981,7 @@ custom maf_sensor_type_e 4 bits, S32, @OFFSET@, [0:1], @@maf_sensor_type_e_enum@
 	bit enableCanVss
 	bit enableInnovateLC2
 	bit showHumanReadableWarning
-	bit stftIgnoreErrorMagnitude;+If enabled, adjust at a constant rate instead of a rate proportional to the current lambda error.  This mode may be easier to tune, and more tolerant of sensor noise.  Use of this mode is required if you have a narrowband O2 sensor.
+	bit stftIgnoreErrorMagnitude;+If enabled, adjust at a constant rate instead of a rate proportional to the current lambda error. This mode may be easier to tune, and more tolerant of sensor noise. Use of this mode is required if you have a narrowband O2 sensor.
 	bit unused976b11
 	bit enableSoftwareKnock
 	bit verboseVVTDecoding;enable vvt_details
@@ -1481,7 +1481,7 @@ tChargeMode_e tChargeMode;
 
 	float etbIdleThrottleRange;+This sets the range of the idle control on the ETB. At 100% idle position, the value specified here sets the base ETB position.;"%", 1, 0, 0, 15, 0
 
-	uint8_t[INJECTION_PIN_COUNT iterate] cylinderBankSelect;+Select which fuel correction bank this cylinder belongs to.  Group cylinders that share the same O2 sensor;"", 1, 1, 1, 2, 0
+	uint8_t[INJECTION_PIN_COUNT iterate] cylinderBankSelect;+Select which fuel correction bank this cylinder belongs to. Group cylinders that share the same O2 sensor;"", 1, 1, 1, 2, 0
 
 	int[2] unused4028;;"units", 1, 0, -20, 100, 0
 
@@ -1626,27 +1626,27 @@ afr_table_t lambdaTable;
 ! end_union
 
 float[FUEL_LOAD_COUNT] lambdaLoadBins;;"",	1, 0, 0, 500, 2
-float[FUEL_RPM_COUNT] lambdaRpmBins;;"RPM",	   1, 0, 0, 18000, 2
+float[FUEL_RPM_COUNT] lambdaRpmBins;;"RPM",	  1, 0, 0, 18000, 2
 
 tps_tps_table_t tpsTpsAccelTable;
-float[TPS_TPS_ACCEL_TABLE] tpsTpsAccelFromRpmBins;;"from",	   1, 0, 0, 30000, 2
-float[TPS_TPS_ACCEL_TABLE] tpsTpsAccelToRpmBins;RPM is float and not integer in order to use unified methods for interpolation;"to",	   1, 0, 0, 25500, 2
+float[TPS_TPS_ACCEL_TABLE] tpsTpsAccelFromRpmBins;;"from",	  1, 0, 0, 30000, 2
+float[TPS_TPS_ACCEL_TABLE] tpsTpsAccelToRpmBins;RPM is float and not integer in order to use unified methods for interpolation;"to",	  1, 0, 0, 25500, 2
 
 fsio_table_8x8_f32t fsioTable1;
-float[FSIO_TABLE_8] fsioTable1LoadBins;;"L",	   1, 0, 0, 30000, 2
-float[FSIO_TABLE_8] fsioTable1RpmBins;RPM is float and not integer in order to use unified methods for interpolation;"RPM",	   1, 0, 0, 25500, 2
+float[FSIO_TABLE_8] fsioTable1LoadBins;;"L",	  1, 0, 0, 30000, 2
+float[FSIO_TABLE_8] fsioTable1RpmBins;RPM is float and not integer in order to use unified methods for interpolation;"RPM",	  1, 0, 0, 25500, 2
 
 fsio_table_8x8_u8t fsioTable2;
-float[FSIO_TABLE_8] fsioTable2LoadBins;;"L",	   1, 0, 0, 255, 0
-float[FSIO_TABLE_8] fsioTable2RpmBins;RPM is float and not integer in order to use unified methods for interpolation;"RPM",	   1, 0, 0, 25500, 2
+float[FSIO_TABLE_8] fsioTable2LoadBins;;"L",	  1, 0, 0, 255, 0
+float[FSIO_TABLE_8] fsioTable2RpmBins;RPM is float and not integer in order to use unified methods for interpolation;"RPM",	  1, 0, 0, 25500, 2
 
 fsio_table_8x8_u8t fsioTable3;
-float[FSIO_TABLE_8] fsioTable3LoadBins;;"L",	   1, 0, 0, 255, 0
-float[FSIO_TABLE_8] fsioTable3RpmBins;RPM is float and not integer in order to use unified methods for interpolation;"RPM",	   1, 0, 0, 25500, 2
+float[FSIO_TABLE_8] fsioTable3LoadBins;;"L",	  1, 0, 0, 255, 0
+float[FSIO_TABLE_8] fsioTable3RpmBins;RPM is float and not integer in order to use unified methods for interpolation;"RPM",	  1, 0, 0, 25500, 2
 
 fsio_table_8x8_u8t fsioTable4;
-float[FSIO_TABLE_8] fsioTable4LoadBins;;"L",	   1, 0, 0, 255, 0
-float[FSIO_TABLE_8] fsioTable4RpmBins;RPM is float and not integer in order to use unified methods for interpolation;"RPM",	   1, 0, 0, 25500, 2
+float[FSIO_TABLE_8] fsioTable4LoadBins;;"L",	  1, 0, 0, 255, 0
+float[FSIO_TABLE_8] fsioTable4RpmBins;RPM is float and not integer in order to use unified methods for interpolation;"RPM",	  1, 0, 0, 25500, 2
 
 
 end_struct
@@ -1751,7 +1751,7 @@ end_struct
 #define GAUGE_NAME_FUEL_VE "fuel: VE"
 #define GAUGE_NAME_FUEL_CRANKING "fuel: cranking"
 #define GAUGE_NAME_FUEL_RUNNING "fuel: running"
-#define GAUGE_NAME_FUEL_LAST_INJECTION  "fuel: Last injection"
+#define GAUGE_NAME_FUEL_LAST_INJECTION "fuel: Last injection"
 #define GAUGE_NAME_FUEL_BASE "fuel: base mass"
 #define GAUGE_NAME_FUEL_TRIM "fuel: fuel trim"
 #define GAUGE_NAME_FUEL_TRIM_2 "fuel: fuel trim 2"
@@ -1975,7 +1975,7 @@ end_struct
 #define TS_SD_PROTOCOL_FETCH_COMPRESSED 8
 
 ! High speed logger commands
-#define TS_SET_LOGGER_SWITCH   'l'
+#define TS_SET_LOGGER_SWITCH  'l'
 #define TS_GET_LOGGER_GET_BUFFER 'L'
 
 #define PROTOCOL_COIL1_SHORT_NAME "c1"
