@@ -5,23 +5,26 @@
  * @author Andrey Belomutskiy, (c) 2012-2021
  */
 
+#define _POSIX_C_SOURCE 200809L
+#define _GNU_SOURCE
 #include "engine_test_helper.h"
 
 TEST(cranking, realNA) {
 	FILE *fp = fopen("tests/trigger/recourses/cranking_na_3.csv", "r");
 
-	char *line = nullptr;
-	size_t len = 0;
 	ssize_t read;
 
+	char buffer[255];
+
 	int index = -1;
-	while ((read = getline(&line, &len, fp)) != -1) {
+	while (fgets(buffer, sizeof(buffer), fp)) {
 		index++;
 		if (index == 0) {
 			// skip header
 			continue;
 		}
 		const char s[2] = ",";
+		char *line = buffer;
 
 		char *token;
 
