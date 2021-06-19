@@ -106,7 +106,14 @@ public class TSProjectConsumer implements ConfigurationConsumer {
                  * https://github.com/rusefi/web_backend/issues/97
                  */
                 double val = IniField.parseDouble(fields[mutliplierIndex]);
-                fields[mutliplierIndex] = " " + (val == 1 ? "1" : val);
+
+                if (val == 0) {
+                    fields[mutliplierIndex] = " 0";
+                } else if (val == 1) {
+                    fields[mutliplierIndex] = " 1";
+                } else {
+                    fields[mutliplierIndex] = " " + val;
+                }
             }
             StringBuilder sb = new StringBuilder();
             for (String f : fields) {
