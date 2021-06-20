@@ -492,8 +492,11 @@ public class ConfigDefinition {
             }
             Map<String, Value> enumList = state.enumsReader.getEnums().get(pinType);
             for (Map.Entry<String, Value> kv : enumList.entrySet()){
-                String name = "";
-                boolean found = false;
+                if (classList.size() > kv.getValue().getIntValue()) {
+                    if (classList.get(kv.getValue().getIntValue()) == "NONE") {
+                        continue;
+                    }
+                }
                 if (kv.getKey().equals(listPins.get(i).get("id"))){
                     int index = kv.getValue().getIntValue();
                     classList.ensureCapacity(index + 1);
