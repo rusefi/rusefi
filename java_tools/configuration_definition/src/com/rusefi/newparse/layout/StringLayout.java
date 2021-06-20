@@ -33,7 +33,7 @@ public class StringLayout extends Layout {
     @Override
     public void writeTunerstudioLayout(PrintStream ps, StructNamePrefixer prefixer) {
         ps.print(prefixer.get(this.name));
-        ps.print(" = scalar, ASCII, ");
+        ps.print(" = string, ASCII, ");
         ps.print(this.offset);
         ps.print(", ");
         ps.print(size);

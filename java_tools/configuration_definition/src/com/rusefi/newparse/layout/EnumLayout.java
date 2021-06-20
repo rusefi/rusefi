@@ -10,13 +10,15 @@ public class EnumLayout extends Layout {
     private final String name;
     private final Type type;
     private final String enumType;
-    private final String values;
+    private final int endBit;
+    private final String[] values;
     private final FieldOptions options;
 
     public EnumLayout(EnumField field) {
         this.name = field.name;
         this.type = field.type;
         this.enumType = field.enumType;
+        this.endBit = field.endBit;
         this.values = field.values;
         this.options = field.options;
     }
@@ -24,6 +26,12 @@ public class EnumLayout extends Layout {
     @Override
     public int getSize() {
         return this.type.size;
+    }
+
+    private static void writeEnumVal(PrintStream ps, String enumVal) {
+        ps.print('"');
+        ps.print(enumVal);
+        ps.print('"');
     }
 
     @Override
@@ -35,11 +43,23 @@ public class EnumLayout extends Layout {
         ps.print(this.offset);
         ps.print(", ");
 
-        // TODO: automatically compute number of bits required?
-        ps.print("[0:7], ");
+        ps.print("[0:");
+        ps.print(this.endBit);
+        ps.print("], ");
 
-        // TODO: where should value define resolution happen?
-        ps.print(this.values);
+        writeEnumVal(ps, this.values[0]);
+
+        for (int i = 1; i < this.values.length; i++) {
+            ps.print(", ");
+            writeEnumVal(ps, this.values[i]);
+        }
+
+        // Pad out the rest of the enum's values with "INVALID"
+        int expectedNumber = 2 << this.endBit;
+        for (int i = this.values.length; i < expectedNumber; i++) {
+            ps.print(", ");
+            writeEnumVal(ps, "INVALID");
+        }
 
         ps.println();
     }
