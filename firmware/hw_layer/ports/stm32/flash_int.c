@@ -82,7 +82,10 @@ static bool intFlashUnlock(void) {
 /**
  * @brief Lock the flash memory for write access.
  */
-#define intFlashLock() { FLASH_CR |= FLASH_CR_LOCK; }
+static void intFlashLock(void)
+{
+	FLASH_CR |= FLASH_CR_LOCK;
+}
 
 #ifdef STM32F7XX
 static bool isDualBank(void) {
@@ -142,8 +145,7 @@ int intFlashSectorErase(flashsector_t sector) {
 	FLASH_CR &= ~FLASH_CR_SER;
 
 	/* Lock flash again */
-	intFlashLock()
-	;
+	intFlashLock();
 
 	/* Check deleted sector for errors */
 	if (intFlashIsErased(intFlashSectorBegin(sector), flashSectorSize(sector)) == FALSE)
@@ -354,8 +356,7 @@ int intFlashWrite(flashaddr_t address, const char* buffer, size_t size) {
 	}
 
 	/* Lock flash again */
-	intFlashLock()
-	;
+	intFlashLock();
 
 	return FLASH_RETURN_SUCCESS;
 }
