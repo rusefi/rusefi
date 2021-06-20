@@ -442,6 +442,32 @@ public class ConfigDefinition {
         names.put("analog_inputs", new ArrayList<String>());
         names.put("event_inputs", new ArrayList<String>());
         names.put("switch_inputs", new ArrayList<String>());
+        for (int i = 0; i < names.keySet().size(); i++) {
+            String className = (String) names.keySet().toArray()[i];
+            String pinType = "";
+            String nothingName = "";
+            switch (className) {
+                case "analog_inputs":
+                    pinType = "adc_channel_e";
+                    nothingName = "EFI_ADC_NONE";
+                    break;
+                default:
+                    pinType = "brain_pin_e";
+                    nothingName = "GPIO_UNASSIGNED";
+            }
+            Map<String, Value> enumList = state.enumsReader.getEnums().get(pinType);
+            for (Map.Entry<String, Value> kv : enumList.entrySet()){
+                if (kv.getKey().equals(nothingName)) {
+                    int index = kv.getValue().getIntValue();
+                    names.get(className).ensureCapacity(index + 1);
+                    for (int ii = names.get(className).size(); ii <= index; ii++) {
+                        names.get(className).add(null);
+                    }
+                    names.get(className).set(index, "NONE");
+                    break;
+                }
+            }
+        }
         for (int i = 0; i < listPins.size(); i++) {
             for (int ii = i + 1; ii < listPins.size(); ii++) {
                 if (listPins.get(i).get("id") == listPins.get(ii).get("id")) {
@@ -469,20 +495,12 @@ public class ConfigDefinition {
                 String name = "";
                 boolean found = false;
                 if (kv.getKey().equals(listPins.get(i).get("id"))){
-                    name = (String) listPins.get(i).get("ts_name");
-                    found = true;
-                // TODO doing this in the loop for every pin is unnecessary, we only need to do one loop for every [adc_channel_e, brain_pin_e]
-                } else if (kv.getKey().equals(nothingName)) {
-                    name = "NONE";
-                    found = true;
-                }
-                if (found) {
                     int index = kv.getValue().getIntValue();
                     classList.ensureCapacity(index + 1);
                     for (int ii = classList.size(); ii <= index; ii++) {
                         classList.add(null);
                     }
-                    classList.set(index, name);
+                    classList.set(index, (String) listPins.get(i).get("ts_name"));
                     break;
                 }
             }
