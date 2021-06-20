@@ -72,7 +72,9 @@ restOfLine
     | 'false';
 
 definition
-    : Definition identifier numexpr
+    : Definition identifier integer
+    | Definition identifier floatNum
+    | Definition identifier numexpr
     | Definition identifier restOfLine;
 struct: (Struct | StructNoPrefix) identifier ('@brief' restOfLine)? ENDL+ statements EndStruct;
 

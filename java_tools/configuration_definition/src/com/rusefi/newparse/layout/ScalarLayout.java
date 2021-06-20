@@ -48,6 +48,10 @@ public class ScalarLayout extends Layout {
         if (arrayLength == 0) {
             // Skip zero length arrays, they may be used for dynamic padding but TS doesn't like them
             return;
+        } else if (arrayLength == 1) {
+            // For 1-length arrays, emit as a plain scalar instead
+            writeTunerstudioLayout(ps, prefixer);
+            return;
         }
 
         printBeforeArrayLength(ps, prefixer, "array");

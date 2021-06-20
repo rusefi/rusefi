@@ -250,7 +250,7 @@ public class ConfigDefinition {
 
         // Parse the input files
         {
-            ParseState listener = new ParseState();
+            ParseState listener = new ParseState(state.enumsReader);
 
             // First process yaml files
             //processYamls(listener, yamlFiles);
