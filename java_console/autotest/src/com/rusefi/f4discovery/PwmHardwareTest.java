@@ -6,7 +6,6 @@ import com.rusefi.config.generated.Fields;
 import com.rusefi.core.Sensor;
 import com.rusefi.core.SensorCentral;
 import com.rusefi.functional_tests.EcuTestHelper;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import static com.rusefi.IoUtil.getDisableCommand;
@@ -28,6 +27,24 @@ public class PwmHardwareTest extends RusefiTestBase {
     }
 
     private static final int FREQUENCY = 160;
+
+    @Test
+    public void scheduleBurnDoesNotAffectTriggerIssue2839() {
+        ecu.setEngineType(ET_FORD_ASPIRE);
+        ecu.sendCommand("set " + "trigger_type" + " " + TT_TT_TOOTHED_WHEEL_60_2);
+        ecu.sendCommand(getDisableCommand(Fields.CMD_SELF_STIMULATION));
+        ecu.sendCommand(getEnableCommand(CMD_EXTERNAL_STIMULATION));
+        ecu.changeRpm(1200);
+        nextChart();
+        nextChart();
+        int triggerErrors = (int) SensorCentral.getInstance().getValueSource(Sensor.totalTriggerErrorCounter).getValue();
+/*
+        for (int i = 0; i < 7; i++)
+            ecu.sendCommand(CMD_BURNCONFIG);
+ */
+        int totalTriggerErrorsNow = (int) SensorCentral.getInstance().getValueSource(Sensor.totalTriggerErrorCounter).getValue();
+        EcuTestHelper.assertEquals("totalTriggerErrorCounter", totalTriggerErrorsNow, triggerErrors);
+    }
 
     @Test
     public void testIdlePin() {
