@@ -214,7 +214,7 @@ public class CommonFunctionalTest extends RusefiTestBase {
         ecu.changeRpm(200);
         ecu.changeRpm(250); // another approach to artificial delay
         ecu.changeRpm(200);
-        EcuTestHelper.assertEquals("VBatt", 12, SensorCentral.getInstance().getValue(Sensor.VBATT));
+        EcuTestHelper.assertSomewhatClose("VBatt", 12, SensorCentral.getInstance().getValue(Sensor.VBATT));
 
         chart = nextChart();
         double x = 100;
@@ -284,7 +284,7 @@ public class CommonFunctionalTest extends RusefiTestBase {
         ecu.changeRpm(200);
         String msg = "ProtegeLX cranking";
         chart = nextChart();
-        EcuTestHelper.assertEquals("", 12, SensorCentral.getInstance().getValue(Sensor.VBATT), 0.1);
+        EcuTestHelper.assertSomewhatClose("", 12, SensorCentral.getInstance().getValue(Sensor.VBATT), 0.1);
         assertWaveNotNull(msg, chart, EngineChart.SPARK_3);
         assertWaveNotNull(msg, chart, EngineChart.SPARK_1);
         assertWaveNotNull(msg, chart, EngineChart.INJECTOR_1);
@@ -359,9 +359,8 @@ public class CommonFunctionalTest extends RusefiTestBase {
         sendComplexCommand("set cranking_rpm 500");
         ecu.changeRpm(200);
 
-        double x;
         chart = nextChart();
-        EcuTestHelper.assertEquals(12, SensorCentral.getInstance().getValue(Sensor.VBATT));
+        EcuTestHelper.assertSomewhatClose(12, SensorCentral.getInstance().getValue(Sensor.VBATT));
         assertWaveNotNull("aspire default cranking ", chart, EngineChart.SPARK_1);
 
         ecu.changeRpm(600);
@@ -445,7 +444,7 @@ public class CommonFunctionalTest extends RusefiTestBase {
         ecu.changeRpm(2400);
         ecu.changeRpm(2000);
         chart = nextChart();
-        EcuTestHelper.assertEquals("MAP", 69.12, SensorCentral.getInstance().getValue(Sensor.MAP));
+        EcuTestHelper.assertSomewhatClose("MAP", 69.12, SensorCentral.getInstance().getValue(Sensor.MAP));
         //assertEquals(1, SensorCentral.getInstance().getValue(Sensor.));
 
         assertWaveNotNull(msg + " fuel SD #1", chart, EngineChart.INJECTOR_1);

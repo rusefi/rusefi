@@ -14,6 +14,7 @@ import static com.rusefi.IoUtil.getDisableCommand;
 import static com.rusefi.IoUtil.getEnableCommand;
 import static com.rusefi.binaryprotocol.BinaryProtocol.sleep;
 import static com.rusefi.config.generated.Fields.*;
+import static org.junit.Assert.assertEquals;
 
 /**
  * This test relies on jumpers connecting physical pins on Discovery:
@@ -50,7 +51,7 @@ public class PwmHardwareTest extends RusefiTestBase {
         int totalTriggerErrorsNow = (int) SensorCentral.getInstance().getValueSource(Sensor.totalTriggerErrorCounter).getValue();
         log.info("totalTriggerErrorsNow " + totalTriggerErrorsNow);
 
-        EcuTestHelper.assertTotallyEquals("totalTriggerErrorCounter", triggerErrors, totalTriggerErrorsNow);
+        assertEquals("totalTriggerErrorCounter", triggerErrors, totalTriggerErrorsNow);
     }
 
     @Test
@@ -84,6 +85,6 @@ public class PwmHardwareTest extends RusefiTestBase {
         sleep(2 * Timeouts.SECOND);
 
         /* +-1% is still acceptable */
-        EcuTestHelper.assertEquals("Idle PWM freq", FREQUENCY, SensorCentral.getInstance().getValue(Sensor.debugIntField1), 0.01);
+        EcuTestHelper.assertSomewhatClose("Idle PWM freq", FREQUENCY, SensorCentral.getInstance().getValue(Sensor.debugIntField1), 0.01);
     }
 }
