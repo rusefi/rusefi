@@ -248,7 +248,7 @@ void initFlash() {
 	/**
 	 * This would schedule write to flash once the engine is stopped
 	 */
-	addConsoleAction("burnconfig", requestBurn);
+	addConsoleAction(CMD_BURNCONFIG, requestBurn);
 #endif
 	addConsoleAction("resetconfig", doResetConfiguration);
 	addConsoleAction("rewriteconfig", rewriteConfig);
