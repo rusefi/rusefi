@@ -48,6 +48,8 @@ chibios_rt::BinarySemaphore flashWriteSemaphore(/*taken =*/ true);
 
 static THD_WORKING_AREA(flashWriteStack, UTILITY_THREAD_STACK_SIZE);
 static void flashWriteThread(void*) {
+	chRegSetThreadName("flash writer");
+
 	while (true) {
 		// Wait for a request to come in
 		flashWriteSemaphore.wait();
