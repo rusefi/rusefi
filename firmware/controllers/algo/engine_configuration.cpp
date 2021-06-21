@@ -157,7 +157,7 @@ static void wipeStrings(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 void onBurnRequest(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	wipeStrings(PASS_ENGINE_PARAMETER_SIGNATURE);
 
-//	incrementGlobalConfigurationVersion(PASS_ENGINE_PARAMETER_SIGNATURE);
+	incrementGlobalConfigurationVersion(PASS_ENGINE_PARAMETER_SIGNATURE);
 }
 
 /**
@@ -176,7 +176,7 @@ void incrementGlobalConfigurationVersion(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
  * All these callbacks could be implemented as listeners, but these days I am saving RAM
  */
 #if EFI_PROD_CODE
-	applyNewHardwareSettings();
+//todo 	#2839	applyNewHardwareSettings();
 	reconfigureSensors();
 #endif /* EFI_PROD_CODE */
 	engine->preCalculate(PASS_ENGINE_PARAMETER_SIGNATURE);
