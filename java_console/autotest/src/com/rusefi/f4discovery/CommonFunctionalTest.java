@@ -344,7 +344,7 @@ public class CommonFunctionalTest extends RusefiTestBase {
         assertWaveNotNull(msg, chart, EngineChart.SPARK_1);
 
         assertWaveNull(msg, chart, EngineChart.TRIGGER_2);
-        sendComplexCommand("set " + "trigger_type" + " 1"); // TT_FORD_ASPIRE
+        sendComplexCommand("set " + "trigger_type" + " " + TT_TT_FORD_ASPIRE);
         chart = nextChart();
         assertTrue(chart.get(EngineChart.TRIGGER_2) != null);
     }
@@ -463,9 +463,10 @@ public class CommonFunctionalTest extends RusefiTestBase {
 
     /**
      * This method waits for longer then usual.
+     * todo: inline this method? complex and less complex seem to have same timeout these days?
      */
     private void sendComplexCommand(String command) {
-        ecu.sendCommand(command, Timeouts.CMD_TIMEOUT);
+        ecu.sendCommand(command);
     }
 
     private static void assertWaveNull(EngineChart chart, String key) {
