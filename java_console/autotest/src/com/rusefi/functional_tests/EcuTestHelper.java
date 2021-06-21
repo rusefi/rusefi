@@ -66,6 +66,14 @@ public class EcuTestHelper {
         EcuTestHelper.assertEquals("", expected, actual);
     }
 
+    public static void assertTotallyEquals(String msg, double expected, double actual) {
+        assertEquals(msg, expected, actual, 0);
+    }
+
+    /**
+     * WARNING this is a LOOSE equals
+     * @see #assertTotallyEquals
+     */
     public static void assertEquals(String msg, double expected, double actual) {
         EcuTestHelper.assertEquals(msg, expected, actual, EngineReport.RATIO);
     }

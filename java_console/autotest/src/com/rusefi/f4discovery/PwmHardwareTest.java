@@ -1,5 +1,6 @@
 package com.rusefi.f4discovery;
 
+import com.devexperts.logging.Logging;
 import com.rusefi.RusefiTestBase;
 import com.rusefi.Timeouts;
 import com.rusefi.config.generated.Fields;
@@ -8,6 +9,7 @@ import com.rusefi.core.SensorCentral;
 import com.rusefi.functional_tests.EcuTestHelper;
 import org.junit.Test;
 
+import static com.devexperts.logging.Logging.getLogging;
 import static com.rusefi.IoUtil.getDisableCommand;
 import static com.rusefi.IoUtil.getEnableCommand;
 import static com.rusefi.binaryprotocol.BinaryProtocol.sleep;
@@ -20,6 +22,8 @@ import static com.rusefi.config.generated.Fields.*;
  */
 
 public class PwmHardwareTest extends RusefiTestBase {
+    private static final Logging log = getLogging(PwmHardwareTest.class);
+
     @Override
     protected boolean needsHardwareTriggerInput() {
         // This test uses hardware trigger input!
@@ -38,10 +42,15 @@ public class PwmHardwareTest extends RusefiTestBase {
         nextChart();
         nextChart();
         int triggerErrors = (int) SensorCentral.getInstance().getValueSource(Sensor.totalTriggerErrorCounter).getValue();
-        for (int i = 0; i < 7; i++)
+        log.info("triggerErrors " + triggerErrors);
+        for (int i = 0; i < 7; i++) {
             ecu.sendCommand(CMD_BURNCONFIG);
+            sleep(500);
+        }
         int totalTriggerErrorsNow = (int) SensorCentral.getInstance().getValueSource(Sensor.totalTriggerErrorCounter).getValue();
-        EcuTestHelper.assertEquals("totalTriggerErrorCounter", totalTriggerErrorsNow, triggerErrors);
+        log.info("totalTriggerErrorsNow " + totalTriggerErrorsNow);
+
+        EcuTestHelper.assertTotallyEquals("totalTriggerErrorCounter", totalTriggerErrorsNow, triggerErrors);
     }
 
     @Test
