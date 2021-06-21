@@ -455,17 +455,8 @@ public class ConfigDefinition {
             if (classList == null) {
                 throw new RuntimeException("Class not found:  " + className);
             }
-            String pinType = "";
-            String nothingName = "";
-            switch ((String) listPins.get(i).get("class")) {
-                case "analog_inputs":
-                    pinType = "adc_channel_e";
-                    nothingName = "EFI_ADC_NONE";
-                    break;
-                default:
-                    pinType = "brain_pin_e";
-                    nothingName = "GPIO_UNASSIGNED";
-            }
+            PinType listPinType = PinType.find((String) listPins.get(i).get("class"));
+            String pinType = listPinType.getPinType();
             Map<String, Value> enumList = state.enumsReader.getEnums().get(pinType);
             for (Map.Entry<String, Value> kv : enumList.entrySet()){
                 if (kv.getKey().equals(listPins.get(i).get("id"))){
@@ -480,31 +471,10 @@ public class ConfigDefinition {
             }
         }
         for (Map.Entry<String, ArrayList<String>> kv : names.entrySet()) {
-            String outputEnumName = "";
-            String pinType = "";
-            String nothingName = "";
-            switch (kv.getKey()) {
-                case "outputs":
-                    outputEnumName = "output_pin_e_enum";
-                    pinType = "brain_pin_e";
-                    nothingName = "GPIO_UNASSIGNED";
-                    break;
-                case "analog_inputs":
-                    outputEnumName = "adc_channel_e_enum";
-                    pinType = "adc_channel_e";
-                    nothingName = "EFI_ADC_NONE";
-                    break;
-                case "event_inputs":
-                    outputEnumName = "brain_input_pin_e_enum";
-                    pinType = "brain_pin_e";
-                    nothingName = "GPIO_UNASSIGNED";
-                    break;
-                case "switch_inputs":
-                    outputEnumName = "switch_input_pin_e_enum";
-                    pinType = "brain_pin_e";
-                    nothingName = "GPIO_UNASSIGNED";
-                    break;
-            }
+            PinType namePinType = PinType.find(kv.getKey());
+            String outputEnumName = namePinType.getOutputEnumName();
+            String pinType = namePinType.getPinType();
+            String nothingName = namePinType.getNothingName();
             Map<String, Value> enumList = state.enumsReader.getEnums().get(pinType);
             StringBuilder sb = new StringBuilder();
             for (int i = 0; i < kv.getValue().size(); i++) {
