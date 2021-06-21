@@ -1355,6 +1355,9 @@ void initSettings(void) {
 	addConsoleActionS("set_cj125_heater_pin", setCj125HeaterPin);
 	addConsoleActionS("set_trigger_sync_pin", setTriggerSyncPin);
 
+	/**
+	 * as of today we still do not have desperate time debugging "writepin" command
+	 */
 	addConsoleActionS("readpin", readPin);
 	addConsoleActionS("set_can_rx_pin", setCanRxPin);
 	addConsoleActionS("set_can_tx_pin", setCanTxPin);
