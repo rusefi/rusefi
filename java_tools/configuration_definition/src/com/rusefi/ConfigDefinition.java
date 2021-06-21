@@ -442,32 +442,6 @@ public class ConfigDefinition {
         names.put("analog_inputs", new ArrayList<String>());
         names.put("event_inputs", new ArrayList<String>());
         names.put("switch_inputs", new ArrayList<String>());
-        for (int i = 0; i < names.keySet().size(); i++) {
-            String className = (String) names.keySet().toArray()[i];
-            String pinType = "";
-            String nothingName = "";
-            switch (className) {
-                case "analog_inputs":
-                    pinType = "adc_channel_e";
-                    nothingName = "EFI_ADC_NONE";
-                    break;
-                default:
-                    pinType = "brain_pin_e";
-                    nothingName = "GPIO_UNASSIGNED";
-            }
-            Map<String, Value> enumList = state.enumsReader.getEnums().get(pinType);
-            for (Map.Entry<String, Value> kv : enumList.entrySet()){
-                if (kv.getKey().equals(nothingName)) {
-                    int index = kv.getValue().getIntValue();
-                    names.get(className).ensureCapacity(index + 1);
-                    for (int ii = names.get(className).size(); ii <= index; ii++) {
-                        names.get(className).add(null);
-                    }
-                    names.get(className).set(index, "NONE");
-                    break;
-                }
-            }
-        }
         for (int i = 0; i < listPins.size(); i++) {
             for (int ii = i + 1; ii < listPins.size(); ii++) {
                 if (listPins.get(i).get("id") == listPins.get(ii).get("id")) {
@@ -492,11 +466,6 @@ public class ConfigDefinition {
             }
             Map<String, Value> enumList = state.enumsReader.getEnums().get(pinType);
             for (Map.Entry<String, Value> kv : enumList.entrySet()){
-                if (classList.size() > kv.getValue().getIntValue()) {
-                    if (classList.get(kv.getValue().getIntValue()) == "NONE") {
-                        continue;
-                    }
-                }
                 if (kv.getKey().equals(listPins.get(i).get("id"))){
                     int index = kv.getValue().getIntValue();
                     classList.ensureCapacity(index + 1);
@@ -510,31 +479,53 @@ public class ConfigDefinition {
         }
         for (Map.Entry<String, ArrayList<String>> kv : names.entrySet()) {
             String outputEnumName = "";
+            String pinType = "";
+            String nothingName = "";
             switch (kv.getKey()) {
                 case "outputs":
                     outputEnumName = "output_pin_e_enum";
+                    pinType = "brain_pin_e";
+                    nothingName = "GPIO_UNASSIGNED";
                     break;
                 case "analog_inputs":
                     outputEnumName = "adc_channel_e_enum";
+                    pinType = "adc_channel_e";
+                    nothingName = "EFI_ADC_NONE";
                     break;
                 case "event_inputs":
                     outputEnumName = "brain_input_pin_e_enum";
+                    pinType = "brain_pin_e";
+                    nothingName = "GPIO_UNASSIGNED";
                     break;
                 case "switch_inputs":
                     outputEnumName = "switch_input_pin_e_enum";
+                    pinType = "brain_pin_e";
+                    nothingName = "GPIO_UNASSIGNED";
                     break;
             }
+            Map<String, Value> enumList = state.enumsReader.getEnums().get(pinType);
             StringBuilder sb = new StringBuilder();
             for (int i = 0; i < kv.getValue().size(); i++) {
                 if (sb.length() > 0)
                     sb.append(",");
-                if (kv.getValue().get(i) == null) {
+                String key = "";
+                for (Map.Entry<String, Value> entry : enumList.entrySet()) {
+                    if (entry.getValue().getIntValue() == i) {
+                        key = entry.getKey();
+                        break;
+                    }
+                }
+                if (key.equals(nothingName)) {
+                    sb.append("\"NONE\"");
+                } else if (kv.getValue().get(i) == null) {
                     sb.append("\"INVALID\"");
                 } else {
                     sb.append("\"" + kv.getValue().get(i) + "\"");
                 }
             }
-            registry.register(outputEnumName, sb.toString());
+            if (sb.length() > 0) {
+                registry.register(outputEnumName, sb.toString());
+            }
         }
     }
 
