@@ -184,8 +184,6 @@ extern bool printTriggerDebug;
 #endif
 
 void TriggerWaveform::calculateExpectedEventCounts(bool useOnlyRisingEdgeForTrigger) {
-	UNUSED(useOnlyRisingEdgeForTrigger);
-
 	if (!useOnlyRisingEdgeForTrigger) {
 		for (size_t i = 0; i < efi::size(expectedEventCount); i++) {
 			if (expectedEventCount[i] % 2 != 0) {
