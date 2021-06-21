@@ -767,7 +767,7 @@
 							 PIN_PUPDR_PULLUP(13)	| \
 							 PIN_PUPDR_FLOATING(14)	| \
 							 PIN_PUPDR_PULLUP(15))
-#define VAL_GPIOG_ODR		(PIN_ODR_LOW(0)			| \
+#define VAL_GPIOG_ODR		(PIN_ODR_HIGH(0)		| \
 							 PIN_ODR_LOW(2)			| \
 							 PIN_ODR_HIGH(3)		| \
 							 PIN_ODR_HIGH(6)		| \

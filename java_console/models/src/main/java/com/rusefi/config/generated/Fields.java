@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Sat Jun 19 03:22:22 UTC 2021
+// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Sun Jun 20 21:44:05 UTC 2021
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -1240,7 +1240,7 @@ public class Fields {
 	public static final int servoOutputPins8_offset = 3147;
 	public static final int showHumanReadableWarning_offset = 976;
 	public static final int showSdCardWarning_offset = 76;
-	public static final int SIGNATURE_HASH = 1141497882;
+	public static final int SIGNATURE_HASH = 1856451671;
 	public static final int silentTriggerError_offset = 1464;
 	public static final int slowAdcAlpha_offset = 2088;
 	public static final int sparkDwellRpmBins_offset = 332;
@@ -1542,7 +1542,7 @@ public class Fields {
 	public static final char TS_SD_R_COMMAND = 'r';
 	public static final char TS_SD_W_COMMAND = 'w';
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI 2021.06.19.all.1141497882";
+	public static final String TS_SIGNATURE = "rusEFI 2021.06.20.all.1856451671";
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final char TS_TEST_COMMAND = 't';
 	public static final int TT_TT_1_16 = 50;
@@ -2496,7 +2496,7 @@ public class Fields {
 	public static final Field AUXSERIALSPEED = Field.create("AUXSERIALSPEED", 2096, FieldType.INT);
 	public static final Field THROTTLEPEDALSECONDARYUPVOLTAGE = Field.create("THROTTLEPEDALSECONDARYUPVOLTAGE", 2100, FieldType.FLOAT);
 	public static final Field THROTTLEPEDALSECONDARYWOTVOLTAGE = Field.create("THROTTLEPEDALSECONDARYWOTVOLTAGE", 2104, FieldType.FLOAT);
-	public static final String[] can_baudrate_e = {"100kbps", "250kbps" , "500kbps", "1Mbps"};
+	public static final String[] can_baudrate_e = {"100kbps", "250kbps", "500kbps", "1Mbps"};
 	public static final Field CANBAUDRATE = Field.create("CANBAUDRATE", 2108, FieldType.INT8, can_baudrate_e);
 	public static final String[] ve_override_e = {"None", "MAP", "TPS"};
 	public static final Field VEOVERRIDEMODE = Field.create("VEOVERRIDEMODE", 2109, FieldType.INT8, ve_override_e);
