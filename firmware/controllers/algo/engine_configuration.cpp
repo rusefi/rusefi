@@ -157,7 +157,7 @@ static void wipeStrings(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 void onBurnRequest(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	wipeStrings(PASS_ENGINE_PARAMETER_SIGNATURE);
 
-	incrementGlobalConfigurationVersion(PASS_ENGINE_PARAMETER_SIGNATURE);
+//	incrementGlobalConfigurationVersion(PASS_ENGINE_PARAMETER_SIGNATURE);
 }
 
 /**
