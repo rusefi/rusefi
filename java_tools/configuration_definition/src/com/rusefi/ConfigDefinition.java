@@ -385,25 +385,16 @@ public class ConfigDefinition {
     }
 
     public static void processYamls(VariableRegistry registry, File[] yamlFiles, ReaderState state) throws IOException {
-        Map<Integer, String> listOutputs = new HashMap<>();
-        Map<Integer, String> listAnalogInputs = new HashMap<>();
-        Map<Integer, String> listEventInputs = new HashMap<>();
-        Map<Integer, String> listSwitchInputs = new HashMap<>();
+        ArrayList<Map<String, Object>> listPins = new ArrayList();
         for (File yamlFile : yamlFiles) {
-            processYamlFile(yamlFile, state, listOutputs, listAnalogInputs, listEventInputs, listSwitchInputs);
+            processYamlFile(yamlFile, state, listPins);
         }
-        registerPins(listOutputs, "output_pin_e_enum", registry);
-        registerPins(listAnalogInputs, "adc_channel_e_enum", registry);
-        registerPins(listEventInputs, "brain_input_pin_e_enum", registry);
-        registerPins(listSwitchInputs, "switch_input_pin_e_enum", registry);
+        registerPins(listPins, registry, state);
     }
 
     @SuppressWarnings("unchecked")
     private static void processYamlFile(File yamlFile, ReaderState state,
-                                        Map<Integer, String> listOutputs,
-                                        Map<Integer, String> listAnalogInputs,
-                                        Map<Integer, String> listEventInputs,
-                                        Map<Integer, String> listSwitchInputs) throws IOException {
+                                        ArrayList<Map<String, Object>> listPins) throws IOException {
         Yaml yaml = new Yaml();
         Map<String, Object> yamlData = yaml.load(new FileReader(yamlFile));
         List<Map<String, Object>> data = (List<Map<String, Object>>) yamlData.get("pins");
@@ -414,75 +405,98 @@ public class ConfigDefinition {
         SystemOut.println(data);
         Objects.requireNonNull(data, "data");
         for (Map<String, Object> pin : data) {
-            Object idObject = pin.get("id");
-            if (idObject instanceof ArrayList) {
-                ArrayList IDs = (ArrayList) idObject;
-                Object classes = pin.get("class");
-                if (!(classes instanceof ArrayList))
-                    throw new IllegalStateException("Expected multiple classes for " + IDs);
-                for (int i = 0; i < IDs.size(); i++) {
-                    String id = (String) IDs.get(i);
-                    findMatchingEnum(id,
-                            (String) pin.get("ts_name"),
-                            (String) ((ArrayList) classes).get(i),
-                            state, listOutputs, listAnalogInputs, listEventInputs, listSwitchInputs);
+            Object pinId = pin.get("id");
+            Object pinClass = pin.get("class");
+            Object pinName = pin.get("ts_name");
+            if (pinId == null || pinClass == null || pinName == null) {
+                continue;
+            }
+            if (pinId instanceof ArrayList) {
+                ArrayList pinIds = (ArrayList) pinId;
+                if (!(pinClass instanceof ArrayList))
+                    throw new IllegalStateException("Expected multiple classes for " + pinIds);
+                for (int i = 0; i < pinIds.size(); i++) {
+                    String id = (String) pinIds.get(i);
+                    Map<String, Object> thisPin = new HashMap();
+                    thisPin.put("id", pinIds.get(i));
+                    thisPin.put("ts_name", pinName);
+                    thisPin.put("class", ((ArrayList) pinClass).get(i));
+                    listPins.add(thisPin);
                 }
-            } else if (idObject instanceof String ) {
-                findMatchingEnum((String) idObject, (String) pin.get("ts_name"), (String) pin.get("class"), state, listOutputs, listAnalogInputs, listEventInputs, listSwitchInputs);
+            } else if (pinId instanceof String ) {
+                Map<String, Object> thisPin = new HashMap();
+                thisPin.put("id", pinId);
+                thisPin.put("ts_name", pinName);
+                thisPin.put("class", pinClass);
+                listPins.add(thisPin);
+            } else {
+                throw new IllegalStateException("Unexpected type of id field: " + pinId.getClass().getSimpleName());
             }
         }
     }
 
-    private static void registerPins(Map<Integer, String> listPins, String outputEnumName, VariableRegistry registry) {
+    private static void registerPins(ArrayList<Map<String, Object>> listPins, VariableRegistry registry, ReaderState state) {
         if (listPins == null || listPins.isEmpty()) {
             return;
         }
-        StringBuilder sb = new StringBuilder();
-        int maxValue = listPins.keySet().stream().max(Integer::compare).get();
-        for (int i = 0; i <= maxValue; i++) {
-            if (sb.length() > 0)
-                sb.append(",");
-
-            if (listPins.get(i) == null) {
-                sb.append("\"INVALID\"");
-            } else {
-                sb.append("\"" + listPins.get(i) + "\"");
+        Map<String, ArrayList<String>> names = new HashMap();
+        names.put("outputs", new ArrayList<String>());
+        names.put("analog_inputs", new ArrayList<String>());
+        names.put("event_inputs", new ArrayList<String>());
+        names.put("switch_inputs", new ArrayList<String>());
+        for (int i = 0; i < listPins.size(); i++) {
+            for (int ii = i + 1; ii < listPins.size(); ii++) {
+                if (listPins.get(i).get("id") == listPins.get(ii).get("id")) {
+                    throw new RuntimeException("ID used multiple times: " + listPins.get(i).get("id"));
+                }
+            }
+            String className = (String) listPins.get(i).get("class");
+            ArrayList<String> classList = names.get(className);
+            if (classList == null) {
+                throw new RuntimeException("Class not found:  " + className);
+            }
+            PinType listPinType = PinType.find((String) listPins.get(i).get("class"));
+            String pinType = listPinType.getPinType();
+            Map<String, Value> enumList = state.enumsReader.getEnums().get(pinType);
+            for (Map.Entry<String, Value> kv : enumList.entrySet()){
+                if (kv.getKey().equals(listPins.get(i).get("id"))){
+                    int index = kv.getValue().getIntValue();
+                    classList.ensureCapacity(index + 1);
+                    for (int ii = classList.size(); ii <= index; ii++) {
+                        classList.add(null);
+                    }
+                    classList.set(index, (String) listPins.get(i).get("ts_name"));
+                    break;
+                }
             }
         }
-        registry.register(outputEnumName, sb.toString());
-    }
-
-    private static void findMatchingEnum(String id, String ts_name, String className, ReaderState state,
-                                      Map<Integer, String> listOutputs,
-                                      Map<Integer, String> listAnalogInputs,
-                                      Map<Integer, String> listEventInputs,
-                                      Map<Integer, String> listSwitchInputs) {
-        Objects.requireNonNull(id, "id");
-        Objects.requireNonNull(className, "classname for " + id);
-
-        switch (className) {
-            case "outputs":
-                assignPinName("brain_pin_e", ts_name, id, listOutputs, state, "GPIO_UNASSIGNED");
-                break;
-            case "analog_inputs":
-                assignPinName("adc_channel_e", ts_name, id, listAnalogInputs, state, "EFI_ADC_NONE");
-                break;
-            case "event_inputs":
-                assignPinName("brain_pin_e", ts_name, id, listEventInputs, state, "GPIO_UNASSIGNED");
-                break;
-            case "switch_inputs":
-                assignPinName("brain_pin_e", ts_name, id, listSwitchInputs, state, "GPIO_UNASSIGNED");
-                break;
-        }
-    }
-
-    private static void assignPinName(String enumName, String ts_name, String id, Map<Integer, String> list, ReaderState state, String nothingName) {
-        Map<String, Value> enumList = state.enumsReader.getEnums().get(enumName);
-        for(Map.Entry<String, Value> kv : enumList.entrySet()){
-            if(kv.getKey().equals(id)){
-                list.put(kv.getValue().getIntValue(), ts_name);
-            } else if (kv.getKey().equals(nothingName)) {
-                list.put(kv.getValue().getIntValue(), "NONE");
+        for (Map.Entry<String, ArrayList<String>> kv : names.entrySet()) {
+            PinType namePinType = PinType.find(kv.getKey());
+            String outputEnumName = namePinType.getOutputEnumName();
+            String pinType = namePinType.getPinType();
+            String nothingName = namePinType.getNothingName();
+            Map<String, Value> enumList = state.enumsReader.getEnums().get(pinType);
+            StringBuilder sb = new StringBuilder();
+            for (int i = 0; i < kv.getValue().size(); i++) {
+                if (sb.length() > 0)
+                    sb.append(",");
+                String key = "";
+                for (Map.Entry<String, Value> entry : enumList.entrySet()) {
+                    if (entry.getValue().getIntValue() == i) {
+                        key = entry.getKey();
+                        break;
+                    }
+                }
+                if (key.equals(nothingName)) {
+                    sb.append("\"NONE\"");
+                } else if (kv.getValue().get(i) == null) {
+                    sb.append("\"INVALID\"");
+                } else {
+                    sb.append("\"" + kv.getValue().get(i) + "\"");
+                }
+            }
+            if (sb.length() > 0) {
+                registry.register(outputEnumName, sb.toString());
             }
         }
     }
