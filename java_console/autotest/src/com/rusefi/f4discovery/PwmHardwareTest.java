@@ -43,10 +43,8 @@ public class PwmHardwareTest extends RusefiTestBase {
         nextChart();
         int triggerErrors = (int) SensorCentral.getInstance().getValueSource(Sensor.totalTriggerErrorCounter).getValue();
         log.info("triggerErrors " + triggerErrors);
-        for (int i = 0; i < 7; i++) {
+        for (int i = 0; i < 7; i++)
             ecu.sendCommand(CMD_BURNCONFIG);
-            sleep(500);
-        }
         int totalTriggerErrorsNow = (int) SensorCentral.getInstance().getValueSource(Sensor.totalTriggerErrorCounter).getValue();
         log.info("totalTriggerErrorsNow " + totalTriggerErrorsNow);
 
