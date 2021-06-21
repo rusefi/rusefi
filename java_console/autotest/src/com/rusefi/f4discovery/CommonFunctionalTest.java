@@ -2,8 +2,6 @@ package com.rusefi.f4discovery;
 
 
 import com.rusefi.RusefiTestBase;
-import com.rusefi.TestingUtils;
-import com.rusefi.config.generated.Fields;
 import com.rusefi.core.Sensor;
 import com.rusefi.core.SensorCentral;
 import com.rusefi.functional_tests.EcuTestHelper;
@@ -12,9 +10,8 @@ import org.junit.Test;
 
 import java.util.Arrays;
 
-import static com.rusefi.IoUtil.getDisableCommand;
 import static com.rusefi.IoUtil.getEnableCommand;
-import static com.rusefi.TestingUtils.*;
+import static com.rusefi.TestingUtils.assertNull;
 import static com.rusefi.config.generated.Fields.*;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
@@ -28,22 +25,6 @@ import static org.junit.Assert.assertTrue;
  * 3/5/14
  */
 public class CommonFunctionalTest extends RusefiTestBase {
-    @Test
-    public void scheduleBurnDoesNotAffectTriggerIssue2839() {
-        ecu.setEngineType(ET_FORD_ASPIRE);
-        sendComplexCommand("set " + "trigger_type" + " " + TT_TT_TOOTHED_WHEEL_60_2);
-        ecu.sendCommand(getDisableCommand(Fields.CMD_SELF_STIMULATION));
-        ecu.sendCommand(getEnableCommand(CMD_EXTERNAL_STIMULATION));
-        ecu.changeRpm(1200);
-        nextChart();
-        nextChart();
-        int triggerErrors = (int) SensorCentral.getInstance().getValueSource(Sensor.totalTriggerErrorCounter).getValue();
-        for (int i = 0; i < 7; i++)
-            sendComplexCommand(CMD_BURNCONFIG);
-        int totalTriggerErrorsNow = (int) SensorCentral.getInstance().getValueSource(Sensor.totalTriggerErrorCounter).getValue();
-        EcuTestHelper.assertEquals("totalTriggerErrorCounter", totalTriggerErrorsNow, triggerErrors);
-    }
-
     @Test
     public void testChangingIgnitionMode() {
         ecu.setEngineType(ET_FORD_ASPIRE);
@@ -526,7 +507,4 @@ public class CommonFunctionalTest extends RusefiTestBase {
         Arrays.stream(keys).peek(k -> assertWaveNoRises(chart, k));
     }
 
-    private EngineChart nextChart() {
-        return TestingUtils.nextChart(ecu.commandQueue);
-    }
 }
