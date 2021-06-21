@@ -50,7 +50,7 @@ public class PwmHardwareTest extends RusefiTestBase {
         int totalTriggerErrorsNow = (int) SensorCentral.getInstance().getValueSource(Sensor.totalTriggerErrorCounter).getValue();
         log.info("totalTriggerErrorsNow " + totalTriggerErrorsNow);
 
-        EcuTestHelper.assertTotallyEquals("totalTriggerErrorCounter", totalTriggerErrorsNow, triggerErrors);
+        EcuTestHelper.assertTotallyEquals("totalTriggerErrorCounter", triggerErrors, totalTriggerErrorsNow);
     }
 
     @Test
