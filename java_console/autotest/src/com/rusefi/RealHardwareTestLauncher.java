@@ -22,7 +22,7 @@ import org.junit.runner.Result;
  */
 public class RealHardwareTestLauncher {
 
-    public static void main(String[] args) throws InterruptedException {
+    public static void main(String[] args) {
         JUnitCore junit = new JUnitCore();
         Result result = junit.run(
             CommonFunctionalTest.class,
