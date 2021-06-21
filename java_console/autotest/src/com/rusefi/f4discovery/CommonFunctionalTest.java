@@ -31,9 +31,9 @@ public class CommonFunctionalTest extends RusefiTestBase {
     @Test
     public void scheduleBurnDoesNotAffectTriggerIssue2839() {
         ecu.setEngineType(ET_FORD_ASPIRE);
+        sendComplexCommand("set " + "trigger_type" + " " + TT_TT_TOOTHED_WHEEL_60_2);
         ecu.sendCommand(getDisableCommand(Fields.CMD_SELF_STIMULATION));
         ecu.sendCommand(getEnableCommand(CMD_EXTERNAL_STIMULATION));
-        sendComplexCommand("set " + "trigger_type" + " " + TT_TT_TOOTHED_WHEEL_60_2);
         ecu.changeRpm(1200);
         nextChart();
         nextChart();
