@@ -66,8 +66,9 @@ public class EcuTestHelper {
         EcuTestHelper.assertEquals("", expected, actual);
     }
 
-    public static void assertTotallyEquals(String msg, double expected, double actual) {
-        assertEquals(msg, expected, actual, 0);
+    public static void assertTotallyEquals(String msg, int expected, int actual) {
+        if (expected != actual)
+            throw new IllegalStateException(msg + " Expected " + expected + " but got " + actual);
     }
 
     /**
