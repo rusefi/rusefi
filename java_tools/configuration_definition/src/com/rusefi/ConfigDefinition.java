@@ -429,6 +429,8 @@ public class ConfigDefinition {
                 thisPin.put("ts_name", pinName);
                 thisPin.put("class", pinClass);
                 listPins.add(thisPin);
+            } else {
+                throw new IllegalStateException("Unexpected type of id field: " + pinId.getClass().getSimpleName());
             }
         }
     }
