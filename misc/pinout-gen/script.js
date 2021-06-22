@@ -32,7 +32,7 @@ function addRow(table, pin, pdiv) {
   var cells = row.children;
   for (var i = 0; i < cells.length; i++) {
     var cell = cells[i];
-    cell.textContent = pin[cell.dataset.field];
+    cell.textContent = Array.isArray(pin[cell.dataset.field]) ? pin[cell.dataset.field].join(", ") : pin[cell.dataset.field];
   }
   clone.querySelector(".pin-data").dataset.type = pin.type;
   if (pdiv) {
@@ -105,7 +105,7 @@ window.addEventListener('load', function() {
         pdiv.textContent = pinfo.pin;
         pdiv.style.top = ((pinfo.y / imgHeight) * 100) + "%";
         pdiv.style.left = ((pinfo.x / imgWidth) * 100) + "%";
-        pdiv.dataset.type = Array.isArray(pin.type) ? pin.type.join(" ") : pin.type;
+        pdiv.dataset.type = pin.type;
         pdiv.addEventListener("click", function(table, pin, pdiv) {
           clickPin(table, pin, pdiv);
         }.bind(null, table, pin, pdiv));
