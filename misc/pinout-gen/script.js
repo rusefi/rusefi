@@ -43,6 +43,7 @@ function addRow(table, pin, pdiv) {
   }
   table.appendChild(clone);
 }
+
 function clickPin(table, pin, pdiv) {
   table.parentElement.style.display = "table";
   table.innerHTML = "";
@@ -104,7 +105,7 @@ window.addEventListener('load', function() {
         pdiv.textContent = pinfo.pin;
         pdiv.style.top = ((pinfo.y / imgHeight) * 100) + "%";
         pdiv.style.left = ((pinfo.x / imgWidth) * 100) + "%";
-        pdiv.dataset.type = pin.type;
+        pdiv.dataset.type = Array.isArray(pin.type) ? pin.type.join(" ") : pin.type;
         pdiv.addEventListener("click", function(table, pin, pdiv) {
           clickPin(table, pin, pdiv);
         }.bind(null, table, pin, pdiv));
