@@ -148,7 +148,8 @@ table {
 
 @media (max-width: 1000px) {
   table {
-    font-size: 3rem;
+    word-wrap: break-word;
+    font-size: 2.5rem;
   }
 }
 
