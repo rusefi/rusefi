@@ -6,12 +6,12 @@ TESTS_SRC_CPP = \
 	tests/trigger/test_cam_vvt_input.cpp \
 	tests/trigger/test_2jz_vvt.cpp \
 	tests/trigger/test_real_cranking_miata_NA.cpp \
+	tests/trigger/test_real_cranking_miata_na6.cpp \
 	tests/trigger/test_quad_cam.cpp \
 	tests/trigger/test_override_gaps.cpp \
 	tests/trigger/test_injection_scheduling.cpp \
 	tests/ignition_injection/injection_mode_transition.cpp \
 	tests/ignition_injection/test_startOfCrankingPrimingPulse.cpp \
-	tests/ignition_injection/test_miata_na6_real_cranking.cpp \
 	tests/ignition_injection/test_multispark.cpp \
 	tests/ignition_injection/test_ignition_scheduling.cpp \
 	tests/ignition_injection/test_fuelCut.cpp \

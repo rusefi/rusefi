@@ -1,5 +1,5 @@
 /*
- * test_miata_na6_real_cranking.cpp
+ * test_real_cranking_miata_na6.cpp
  *
  * @date May 11, 2019
  * @author Andrey Belomutskiy, (c) 2012-2020
@@ -32,14 +32,14 @@ static void fireTriggerEvent(EngineTestHelper*eth, double timestampS, int channe
 	engine->triggerCentral.handleShaftSignal(event, getTimeNowNt() PASS_ENGINE_PARAMETER_SUFFIX);
 }
 
-TEST(miataNA6, realCranking) {
+TEST(cranking, hardcodedRealCranking) {
 	WITH_ENGINE_TEST_HELPER(MIATA_NA6_VAF);
+	unitTestWarningCodeState.clear();
 
 #define EVENT(timestamp, channel, value) { fireTriggerEvent(&eth, timestamp, channel, value); }
 
 	/*
-	 * generates using logicdata2c tool
-	 *
+	 * Generated using logicdata2c tool
 	 */
 
 	/* 3 */ EVENT(/* timestamp*/0.597303, /*index*/0, /*value*/false);
