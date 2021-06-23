@@ -300,7 +300,7 @@ pins:
     id: [GPIOB_0, EFI_ADC_8]
     class: [switch_inputs, analog_inputs]
     ts_name: 4F - AC_PRES/AUX1 (A23)
-    function: AC Pressure In
+    function: A/C Pressure In
 
   - pin: 4H
     id: [GPIOC_4, EFI_ADC_14]
