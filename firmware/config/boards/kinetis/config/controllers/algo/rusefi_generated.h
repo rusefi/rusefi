@@ -213,6 +213,7 @@
 #define clutchDownPinMode_offset 667
 #define clutchUpPin_offset 969
 #define clutchUpPinMode_offset 971
+#define CMD_AC_RELAY_BENCH "acrelaybench"
 #define CMD_ALTERNATOR_PIN "set_alternator_pin"
 #define CMD_BOOST_PIN "set_boost_pin"
 #define CMD_BURNCONFIG "burnconfig"
@@ -225,6 +226,7 @@
 #define CMD_ENGINESNIFFERRPMTHRESHOLD "engineSnifferRpmThreshold"
 #define CMD_ETB_DUTY "set_etb_duty"
 #define CMD_EXTERNAL_STIMULATION "ext_stimulation"
+#define CMD_FAN_BENCH "fanbench"
 #define CMD_FUEL_BENCH "fuelbench"
 #define CMD_FUNCTIONAL_TEST_MODE "test_mode"
 #define CMD_HPFP_BENCH "hpfpbench"
@@ -242,6 +244,7 @@
 #define CMD_RESET_ENGINE_SNIFFER "reset_engine_chart"
 #define CMD_RPM "rpm"
 #define CMD_SELF_STIMULATION "self_stimulation"
+#define CMD_SPARK_BENCH "sparkbench"
 #define CMD_STARTER_BENCH "starterbench"
 #define CMD_TRIGGER_HW_INPUT "trigger_hw_input"
 #define CMD_TRIGGER_PIN "set_trigger_input_pin"
@@ -1273,8 +1276,8 @@
 #define showHumanReadableWarning_offset 976
 #define showSdCardWarning_offset 76
 #define SIGNATURE_BOARD kin
-#define SIGNATURE_DATE 2021.06.21
-#define SIGNATURE_HASH 3801366064
+#define SIGNATURE_DATE 2021.06.23
+#define SIGNATURE_HASH 3982362736
 #define silentTriggerError_offset 1464
 #define slowAdcAlpha_offset 2088
 #define sparkDwellRpmBins_offset 332
@@ -1627,7 +1630,7 @@
 #define ts_show_spi true
 #define ts_show_trigger_comparator true
 #define ts_show_tunerstudio_port true
-#define TS_SIGNATURE "rusEFI 2021.06.21.kin.3801366064"
+#define TS_SIGNATURE "rusEFI 2021.06.23.kin.3982362736"
 #define TS_SINGLE_WRITE_COMMAND 'W'
 #define TS_SINGLE_WRITE_COMMAND_char W
 #define TS_TEST_COMMAND 't'

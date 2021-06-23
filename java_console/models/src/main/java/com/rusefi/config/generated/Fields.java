@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Mon Jun 21 03:34:13 UTC 2021
+// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Wed Jun 23 18:53:31 UTC 2021
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -217,6 +217,7 @@ public class Fields {
 	public static final int clutchDownPinMode_offset = 667;
 	public static final int clutchUpPin_offset = 969;
 	public static final int clutchUpPinMode_offset = 971;
+	public static final String CMD_AC_RELAY_BENCH = "acrelaybench";
 	public static final String CMD_ALTERNATOR_PIN = "set_alternator_pin";
 	public static final String CMD_BOOST_PIN = "set_boost_pin";
 	public static final String CMD_BURNCONFIG = "burnconfig";
@@ -229,6 +230,7 @@ public class Fields {
 	public static final String CMD_ENGINESNIFFERRPMTHRESHOLD = "engineSnifferRpmThreshold";
 	public static final String CMD_ETB_DUTY = "set_etb_duty";
 	public static final String CMD_EXTERNAL_STIMULATION = "ext_stimulation";
+	public static final String CMD_FAN_BENCH = "fanbench";
 	public static final String CMD_FUEL_BENCH = "fuelbench";
 	public static final String CMD_FUNCTIONAL_TEST_MODE = "test_mode";
 	public static final String CMD_HPFP_BENCH = "hpfpbench";
@@ -246,6 +248,7 @@ public class Fields {
 	public static final String CMD_RESET_ENGINE_SNIFFER = "reset_engine_chart";
 	public static final String CMD_RPM = "rpm";
 	public static final String CMD_SELF_STIMULATION = "self_stimulation";
+	public static final String CMD_SPARK_BENCH = "sparkbench";
 	public static final String CMD_STARTER_BENCH = "starterbench";
 	public static final String CMD_TRIGGER_HW_INPUT = "trigger_hw_input";
 	public static final String CMD_TRIGGER_PIN = "set_trigger_input_pin";
@@ -1241,7 +1244,7 @@ public class Fields {
 	public static final int servoOutputPins8_offset = 3147;
 	public static final int showHumanReadableWarning_offset = 976;
 	public static final int showSdCardWarning_offset = 76;
-	public static final int SIGNATURE_HASH = 1598892316;
+	public static final int SIGNATURE_HASH = 1351032668;
 	public static final int silentTriggerError_offset = 1464;
 	public static final int slowAdcAlpha_offset = 2088;
 	public static final int sparkDwellRpmBins_offset = 332;
@@ -1543,7 +1546,7 @@ public class Fields {
 	public static final char TS_SD_R_COMMAND = 'r';
 	public static final char TS_SD_W_COMMAND = 'w';
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI 2021.06.21.all.1598892316";
+	public static final String TS_SIGNATURE = "rusEFI 2021.06.23.all.1351032668";
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final char TS_TEST_COMMAND = 't';
 	public static final int TT_TT_1_16 = 50;
