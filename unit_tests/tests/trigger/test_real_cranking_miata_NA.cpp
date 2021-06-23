@@ -8,35 +8,47 @@
 #include "engine_test_helper.h"
 #include <string>
 
-static constexpr trigger_event_e riseEvents[] = { SHAFT_PRIMARY_RISING, SHAFT_SECONDARY_RISING, SHAFT_3RD_RISING };
-static constexpr trigger_event_e fallEvents[] = { SHAFT_PRIMARY_FALLING, SHAFT_SECONDARY_FALLING, SHAFT_3RD_FALLING };
+static constexpr trigger_event_e riseEvents[] = { SHAFT_PRIMARY_RISING,
+		SHAFT_SECONDARY_RISING, SHAFT_3RD_RISING };
+static constexpr trigger_event_e fallEvents[] = { SHAFT_PRIMARY_FALLING,
+		SHAFT_SECONDARY_FALLING, SHAFT_3RD_FALLING };
 
-static char* trim(char*str) {
+static char* trim(char *str) {
 	while (str != nullptr && str[0] == ' ') {
 		str++;
 	}
 	return str;
 }
 
-TEST(cranking, realCrankingFromFile) {
-	FILE *fp = fopen("tests/trigger/recourses/cranking_na_3.csv", "r");
-	ASSERT_TRUE(fp != nullptr);
-
-	WITH_ENGINE_TEST_HELPER(MIATA_NA6_MAP);
-
-	ssize_t read;
-
+class CsvReader {
+public:
+	FILE *fp;
 	char buffer[255];
 
 	bool currentState[2];
 
-	int index = -1;
-	while (fgets(buffer, sizeof(buffer), fp)) {
-		index++;
-		if (index == 0) {
+	int lineIndex = -1;
+
+	void open(char *fileName) {
+		fp = fopen(fileName, "r");
+		ASSERT_TRUE(fp != nullptr);
+	}
+
+	bool haveMore() {
+		bool result = fgets(buffer, sizeof(buffer), fp) != nullptr;
+		lineIndex++;
+		if (lineIndex == 0) {
 			// skip header
-			continue;
+			return haveMore();
 		}
+
+		return result;
+	}
+
+	void processLine(EngineTestHelper *eth) {
+		Engine *engine = &eth->engine;
+		EXPAND_Engine
+
 		const char s[2] = ",";
 		char *line = buffer;
 
@@ -47,19 +59,54 @@ TEST(cranking, realCrankingFromFile) {
 
 		double timeStamp = std::stod(timeStampstr);
 
-		eth.setTimeAndInvokeEventsUs(1'000'000 * timeStamp);
-		for (int index = 0;index <2;index ++) {
+		eth->setTimeAndInvokeEventsUs(1'000'000 * timeStamp);
+		for (int index = 0; index < 2; index++) {
 			if (currentState[index] == newState[index]) {
 				continue;
 			}
-			trigger_event_e event = (newState[index] ? riseEvents : fallEvents)[index];
+			trigger_event_e event =
+					(newState[index] ? riseEvents : fallEvents)[index];
 			efitick_t nowNt = getTimeNowNt();
 			engine->triggerCentral.handleShaftSignal(event, nowNt PASS_ENGINE_PARAMETER_SUFFIX);
 
 			currentState[index] = newState[index];
 		}
 
-
 	}
 
+	void readLine(EngineTestHelper *eth) {
+		if (!haveMore())
+			return;
+		processLine(eth);
+	}
+
+};
+
+TEST(cranking, realCrankingFromFile) {
+	CsvReader reader;
+	reader.open("tests/trigger/recourses/cranking_na_3.csv");
+
+	WITH_ENGINE_TEST_HELPER (MIATA_NA6_MAP);
+
+	ssize_t read;
+
+	for (int i = 0; i < 8; i++) {
+		reader.readLine(&eth);
+	}
+
+	ASSERT_EQ( 0, GET_RPM())<< reader.lineIndex;
+	ASSERT_EQ( 0, eth.recentWarnings()->getCount())<< "warningCounter#got synch";
+
+	reader.readLine(&eth);
+	ASSERT_EQ( 94, GET_RPM())<< reader.lineIndex;
+
+	for (int i = 0; i < 6; i++) {
+		reader.readLine(&eth);
+	}
+	ASSERT_EQ( 1, eth.recentWarnings()->getCount())<< "warningCounter#with synch";
+
+	while (reader.haveMore()) {
+		reader.processLine(&eth);
+	}
+	ASSERT_EQ( 3, eth.recentWarnings()->getCount())<< "warningCounter#realCranking";
 }
