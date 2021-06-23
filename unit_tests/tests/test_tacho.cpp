@@ -1,6 +1,5 @@
 #include "engine_test_helper.h"
 
-extern WarningCodeState unitTestWarningCodeState;
 extern float getTachFreq(void);
 extern float getTachDuty(void);
 
