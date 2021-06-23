@@ -87,6 +87,10 @@ public:
 	bool isPwmEnabled = true;
 	int triggerActivitySecond = 0;
 
+	const char *prevOutputName = nullptr;
+
+	InjectionEvent primeInjEvent;
+
 	IEtbController *etbControllers[ETB_COUNT] = {nullptr};
 	IFuelComputer *fuelComputer = nullptr;
 	IInjectorModel *injectorModel = nullptr;

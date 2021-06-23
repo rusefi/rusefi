@@ -61,10 +61,6 @@
 
 EXTERN_ENGINE;
 
-static const char *prevOutputName = nullptr;
-
-static InjectionEvent primeInjEvent;
-
 // todo: figure out if this even helps?
 //#if defined __GNUC__
 //#define RAM_METHOD_PREFIX __attribute__((section(".ram")))
@@ -259,12 +255,12 @@ void InjectionEvent::onTriggerTooth(size_t trgEventIndex, int rpm, efitick_t now
 	// we are ignoring low RPM in order not to handle "engine was stopped to engine now running" transition
 	if (rpm > 2 * engineConfiguration->cranking.rpm) {
 		const char *outputName = outputs[0]->name;
-		if (prevOutputName == outputName
+		if (engine->prevOutputName == outputName
 				&& engineConfiguration->injectionMode != IM_SIMULTANEOUS
 				&& engineConfiguration->injectionMode != IM_SINGLE_POINT) {
 			warning(CUSTOM_OBD_SKIPPED_FUEL, "looks like skipped fuel event revCounter=%d %s", getRevolutionCounter(), outputName);
 		}
-		prevOutputName = outputName;
+		engine->prevOutputName = outputName;
 	}
 
 #if EFI_PRINTF_FUEL_DETAILS
@@ -481,7 +477,7 @@ static bool isPrimeInjectionPulseSkipped(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
  * See testStartOfCrankingPrimingPulse()
  */
 void startPrimeInjectionPulse(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
-	INJECT_ENGINE_REFERENCE(&primeInjEvent);
+	INJECT_ENGINE_REFERENCE(&engine->primeInjEvent);
 
 	// First, we need a protection against 'fake' ignition switch on and off (i.e. no engine started), to avoid repeated prime pulses.
 	// So we check and update the ignition switch counter in non-volatile backup-RAM
@@ -500,8 +496,8 @@ void startPrimeInjectionPulse(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 		ignSwitchCounter = -1;
 	// start prime injection if this is a 'fresh start'
 	if (ignSwitchCounter == 0) {
-		primeInjEvent.ownIndex = 0;
-		primeInjEvent.isSimultanious = true;
+		engine->primeInjEvent.ownIndex = 0;
+		engine->primeInjEvent.isSimultanious = true;
 
 		scheduling_s *sDown = &ENGINE(injectionEvents.elements[0]).endOfInjectionEvent;
 		// When the engine is hot, basically we don't need prime inj.pulse, so we use an interpolation over temperature (falloff).
