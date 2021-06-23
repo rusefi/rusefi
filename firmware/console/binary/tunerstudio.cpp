@@ -444,13 +444,7 @@ static void tsProcessOne(TsChannelBase* tsChannel) {
 
 	if (!tsChannel->isReady()) {
 		chThdSleepMilliseconds(10);
-		tsChannel->wasReady = false;
 		return;
-	}
-
-	if (!tsChannel->wasReady) {
-		tsChannel->wasReady = true;
-//			scheduleSimpleMsg(&logger, "ts channel is now ready ", hTimeNow());
 	}
 
 	tsState.totalCounter++;
@@ -471,8 +465,9 @@ static void tsProcessOne(TsChannelBase* tsChannel) {
 	}
 	onDataArrived();
 
-	if (handlePlainCommand(tsChannel, firstByte))
+	if (handlePlainCommand(tsChannel, firstByte)) {
 		return;
+	}
 
 	uint8_t secondByte;
 	received = tsChannel->read(&secondByte, 1);

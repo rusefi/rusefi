@@ -48,8 +48,6 @@ public:
 	 */
 	char scratchBuffer[BLOCKING_FACTOR + 30];
 
-	bool wasReady = false;
-
 private:
 	void writeCrcPacketSmall(uint8_t responseCode, const uint8_t* buf, size_t size);
 	void writeCrcPacketLarge(uint8_t responseCode, const uint8_t* buf, size_t size);
