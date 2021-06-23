@@ -23,7 +23,7 @@ public:
 	void start(uint32_t baud) override;
 
 	// Override only read from UartTsChannel
-	size_t readTimeout(uint8_t* buffer, size_t size, int timeout) override;
+	size_t readTimeout(uint8_t* buffer, size_t size, sysinterval_t timeout) override;
 
 	void copyDataFromDMA();
 

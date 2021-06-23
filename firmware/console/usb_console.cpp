@@ -27,7 +27,7 @@ public:
 		chnWriteTimeout(m_channel, buffer, size, BINARY_IO_TIMEOUT);
 	}
 
-	size_t readTimeout(uint8_t* buffer, size_t size, int timeout) override {
+	size_t readTimeout(uint8_t* buffer, size_t size, sysinterval_t timeout) override {
 		return chnReadTimeout(m_channel, buffer, size, timeout);
 	}
 

@@ -10,7 +10,7 @@ class CanTsChannel : public TsChannelBase {
 
 	// TsChannelBase implementation
 	void write(const uint8_t* buffer, size_t size) override;
-	size_t readTimeout(uint8_t* buffer, size_t size, int timeout) override;
+	size_t readTimeout(uint8_t* buffer, size_t size, sysinterval_t timeout) override;
 	void flush() override;
 	bool isReady() override;
 	void stop() override;
@@ -55,7 +55,7 @@ void CanTsChannel::write(const uint8_t* buffer, size_t size) {
 	canAddToTxStreamTimeout(&TS_CAN_DEVICE, &size, buffer, BINARY_IO_TIMEOUT);
 }
 
-size_t CanTsChannel::readTimeout(uint8_t* buffer, size_t size, int timeout) {
+size_t CanTsChannel::readTimeout(uint8_t* buffer, size_t size, sysinterval_t timeout) {
 	canStreamReceiveTimeout(&TS_CAN_DEVICE, &size, buffer, timeout);
 	return size;
 }

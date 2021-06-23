@@ -26,7 +26,7 @@ void SerialTsChannel::write(const uint8_t* buffer, size_t size) {
 	chnWriteTimeout(m_driver, buffer, size, BINARY_IO_TIMEOUT);
 }
 
-size_t SerialTsChannel::readTimeout(uint8_t* buffer, size_t size, int timeout) {
+size_t SerialTsChannel::readTimeout(uint8_t* buffer, size_t size, sysinterval_t timeout) {
 	return chnReadTimeout(m_driver, buffer, size, timeout);
 }
 
@@ -59,7 +59,7 @@ void UartTsChannel::write(const uint8_t* buffer, size_t size) {
 	uartSendTimeout(m_driver, &size, buffer, BINARY_IO_TIMEOUT);
 }
 
-size_t UartTsChannel::readTimeout(uint8_t* buffer, size_t size, int timeout) {
+size_t UartTsChannel::readTimeout(uint8_t* buffer, size_t size, sysinterval_t timeout) {
 	uartReceiveTimeout(m_driver, &size, buffer, timeout);
 	return size;
 }
