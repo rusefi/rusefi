@@ -37,6 +37,8 @@ public:
 	EngineTestHelper(engine_type_e engineType, configuration_callback_t boardCallback, const std::unordered_map<SensorType, float>& sensorValues);
 	~EngineTestHelper();
 
+	warningBuffer_t *recentWarnings();
+
 	void applyTriggerWaveform();
 	void setTriggerType(trigger_type_e trigger DECLARE_ENGINE_PARAMETER_SUFFIX);
 	/**

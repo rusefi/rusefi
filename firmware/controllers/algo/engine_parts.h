@@ -57,6 +57,8 @@ public:
 	gear_e gearSelectorPosition;
 };
 
+typedef cyclic_buffer<int, 8> warningBuffer_t;
+
 class WarningCodeState {
 public:
 	WarningCodeState();
@@ -67,7 +69,7 @@ public:
 	int lastErrorCode;
 	efitimesec_t timeOfPreviousWarning;
 	// todo: we need a way to post multiple recent warnings into TS
-	cyclic_buffer<int, 8> recentWarnings;
+	warningBuffer_t recentWarnings;
 };
 
 class FsioState {

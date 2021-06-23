@@ -46,6 +46,11 @@ EngineTestHelper::EngineTestHelper(engine_type_e engineType, const std::unordere
 	: EngineTestHelper(engineType, &emptyCallbackWithConfiguration, sensorValues) {
 }
 
+warningBuffer_t *EngineTestHelper::recentWarnings() {
+	return &unitTestWarningCodeState.recentWarnings;
+}
+
+
 EngineTestHelper::EngineTestHelper(engine_type_e engineType, configuration_callback_t configurationCallback, const std::unordered_map<SensorType, float>& sensorValues) {
 	Sensor::setMockValue(SensorType::Clt, 70);
 	Sensor::setMockValue(SensorType::Iat, 30);
