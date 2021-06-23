@@ -154,6 +154,7 @@ void setBoardDefaultConfiguration(void) {
 
 	engineConfiguration->acRelayPin = GPIOH_15;
 	engineConfiguration->acSwitch = GPIOB_0;
+	engineConfiguration->acSwitchMode = PI_PULLUP;
 
 	engineConfiguration->fuelPumpPin = GPIOG_2;	// OUT_IO9
 	engineConfiguration->idle.solenoidPin = GPIOD_14;	// OUT_PWM5
