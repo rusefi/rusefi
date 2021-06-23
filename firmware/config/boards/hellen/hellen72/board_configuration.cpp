@@ -159,6 +159,8 @@ void setBoardDefaultConfiguration(void) {
 	engineConfiguration->fuelPumpPin = GPIOG_2;	// OUT_IO9
 	engineConfiguration->idle.solenoidPin = GPIOD_14;	// OUT_PWM5
 	engineConfiguration->fanPin = GPIOD_12;	// OUT_PWM8
+	engineConfiguration->fan2Pin = GPIOD_9;
+	engineConfiguration->enableFan2WithAc = true;
 	engineConfiguration->mainRelayPin = GPIOI_2;	// OUT_LOW3
 
 	// "required" hardware is done - set some reasonable defaults
