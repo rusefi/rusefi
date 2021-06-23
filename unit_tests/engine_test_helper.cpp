@@ -229,8 +229,10 @@ void EngineTestHelper::moveTimeForwardAndInvokeEventsUs(int deltaTimeUs) {
 	if (printTriggerDebug || printFuelDebug) {
 		printf("moveTimeForwardAndInvokeEventsUs %.1fms\r\n", deltaTimeUs / 1000.0);
 	}
-	int targetTime = timeNowUs + deltaTimeUs;
+	setTimeAndInvokeEventsUs(timeNowUs + deltaTimeUs);
+}
 
+void EngineTestHelper::setTimeAndInvokeEventsUs(int targetTime) {
 	while (true) {
 		scheduling_s* nextScheduledEvent = engine.executor.getHead();
 		if (nextScheduledEvent == nullptr) {
