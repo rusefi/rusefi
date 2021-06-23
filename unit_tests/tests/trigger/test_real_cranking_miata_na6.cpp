@@ -27,8 +27,8 @@ static void fireTriggerEvent(EngineTestHelper*eth, double timestampS, int channe
 
 	Engine *engine = &eth->engine;
 	EXPAND_Engine;
-	timeNowUs = 1000000 * timestampS;
-	printf("MIATANA: posting time=%d event=%d\r\n", timeNowUs, event);
+	timeNowUs = 1'000'000 * timestampS;
+	printf("MIATANA: posting time=%d event=%d\n", timeNowUs, event);
 	engine->triggerCentral.handleShaftSignal(event, getTimeNowNt() PASS_ENGINE_PARAMETER_SUFFIX);
 }
 
