@@ -49,8 +49,8 @@ EXTERN_ENGINE;
 
 bool consoleByteArrived = false;
 
-void onDataArrived(void) {
-	consoleByteArrived = true;
+void onDataArrived(bool valid) {
+	consoleByteArrived = valid;
 }
 
 CommandHandler console_line_callback;
