@@ -467,8 +467,9 @@ static int tsProcessOne(TsChannelBase* tsChannel) {
 		return -1;
 	}
 
-	if (handlePlainCommand(tsChannel, firstByte))
+	if (handlePlainCommand(tsChannel, firstByte)) {
 		return -1;
+	}
 
 	uint8_t secondByte;
 	received = tsChannel->readTimeout(&secondByte, 1, TS_COMMUNICATION_TIMEOUT);
