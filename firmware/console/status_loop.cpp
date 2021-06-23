@@ -404,7 +404,6 @@ extern int totalLoggedBytes;
 				offTimeMs = 50;
 				onTimeMs = 450;
 			} else if (consoleByteArrived) {
-				consoleByteArrived = false;
 				offTimeMs = 100;
 				onTimeMs = 33;
 #if EFI_INTERNAL_FLASH
