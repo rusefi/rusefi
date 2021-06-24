@@ -28,4 +28,9 @@ public class Definition {
             return ((Integer)this.value).doubleValue();
         }
     }
+
+    @Override
+    public String toString() {
+        return this.value.toString();
+    }
 }
