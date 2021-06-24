@@ -56,9 +56,9 @@ public class UnionLayout extends Layout {
     }
 
     @Override
-    public void writeTunerstudioLayout(PrintStream ps, StructNamePrefixer prefixer) {
+    protected void writeTunerstudioLayout(PrintStream ps, StructNamePrefixer prefixer, int offsetAdd) {
         // Simply write out all children - no container necessary as fields can overlap in TS
-        this.children.forEach(c -> c.writeTunerstudioLayout(ps, prefixer));
+        this.children.forEach(c -> c.writeTunerstudioLayout(ps, prefixer, offsetAdd));
     }
 
     @Override

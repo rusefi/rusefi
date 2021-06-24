@@ -35,12 +35,12 @@ public class EnumLayout extends Layout {
     }
 
     @Override
-    public void writeTunerstudioLayout(PrintStream ps, StructNamePrefixer prefixer) {
+    protected void writeTunerstudioLayout(PrintStream ps, StructNamePrefixer prefixer, int offsetAdd) {
         ps.print(prefixer.get(this.name));
         ps.print(" = bits, ");
         ps.print(this.type.tsType);
         ps.print(", ");
-        ps.print(this.offset);
+        ps.print(this.offset + offsetAdd);
         ps.print(", ");
 
         ps.print("[0:");

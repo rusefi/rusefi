@@ -55,8 +55,8 @@ public class ArrayLayout extends Layout {
     }
 
     @Override
-    public void writeTunerstudioLayout(PrintStream ps, StructNamePrefixer prefixer) {
-        this.prototypeLayout.writeTunerstudioLayout(ps, prefixer, this.length);
+    protected void writeTunerstudioLayout(PrintStream ps, StructNamePrefixer prefixer, int offsetAdd) {
+        this.prototypeLayout.writeTunerstudioLayout(ps, prefixer, offsetAdd, this.length);
     }
 
     @Override

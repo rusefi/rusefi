@@ -156,13 +156,13 @@ public class StructLayout extends Layout {
 
 
     @Override
-    public void writeTunerstudioLayout(PrintStream ps, StructNamePrefixer prefixer) {
+    protected void writeTunerstudioLayout(PrintStream ps, StructNamePrefixer prefixer, int offsetAdd) {
         if (!this.noPrefix) {
             prefixer.push(this.name);
         }
 
         // print all children in sequence
-        this.children.forEach(c -> c.writeTunerstudioLayout(ps, prefixer));
+        this.children.forEach(c -> c.writeTunerstudioLayout(ps, prefixer, offsetAdd));
 
         if (!this.noPrefix) {
             prefixer.pop();

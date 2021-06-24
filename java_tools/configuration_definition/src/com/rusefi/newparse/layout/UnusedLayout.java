@@ -34,8 +34,8 @@ public class UnusedLayout extends Layout {
     }
 
     @Override
-    public void writeTunerstudioLayout(PrintStream ps, StructNamePrefixer prefixer) {
-        ps.println("; unused " + this.size + " bytes at offset " + this.offset);
+    protected void writeTunerstudioLayout(PrintStream ps, StructNamePrefixer prefixer, int offsetAdd) {
+        ps.println("; unused " + this.size + " bytes at offset " + (this.offset + offsetAdd));
     }
 
     @Override
