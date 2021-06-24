@@ -1,5 +1,6 @@
 package com.rusefi.newparse.layout;
 
+import com.rusefi.newparse.outputs.TsMetadata;
 import com.rusefi.newparse.parsing.StringField;
 import com.rusefi.newparse.parsing.UnusedField;
 
@@ -31,14 +32,18 @@ public class StringLayout extends Layout {
     }
 
     @Override
-    protected void writeTunerstudioLayout(PrintStream ps, StructNamePrefixer prefixer, int offsetAdd) {
-        ps.print(prefixer.get(this.name));
+    protected void writeTunerstudioLayout(PrintStream ps, TsMetadata meta, StructNamePrefixer prefixer, int offsetAdd) {
+        String name = prefixer.get(this.name);
+        ps.print(name);
         ps.print(" = string, ASCII, ");
         ps.print(this.offset + offsetAdd);
         ps.print(", ");
         ps.print(size);
 
         ps.println();
+
+        // TODO: write string comments
+        // meta.addComment(name, ??);
     }
 
     @Override

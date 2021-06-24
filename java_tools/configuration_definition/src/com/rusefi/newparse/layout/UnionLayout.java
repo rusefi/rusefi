@@ -1,5 +1,6 @@
 package com.rusefi.newparse.layout;
 
+import com.rusefi.newparse.outputs.TsMetadata;
 import com.rusefi.newparse.parsing.ArrayField;
 import com.rusefi.newparse.parsing.Field;
 import com.rusefi.newparse.parsing.ScalarField;
@@ -56,9 +57,9 @@ public class UnionLayout extends Layout {
     }
 
     @Override
-    protected void writeTunerstudioLayout(PrintStream ps, StructNamePrefixer prefixer, int offsetAdd) {
+    protected void writeTunerstudioLayout(PrintStream ps, TsMetadata meta, StructNamePrefixer prefixer, int offsetAdd) {
         // Simply write out all children - no container necessary as fields can overlap in TS
-        this.children.forEach(c -> c.writeTunerstudioLayout(ps, prefixer, offsetAdd));
+        this.children.forEach(c -> c.writeTunerstudioLayout(ps, meta, prefixer, offsetAdd));
     }
 
     @Override
