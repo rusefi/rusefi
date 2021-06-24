@@ -71,10 +71,6 @@ void chDbgPanic3(const char *msg, const char * file, int line) {
 #if EFI_HD44780_LCD
 	lcdShowPanicMessage((char *) msg);
 #endif /* EFI_HD44780_LCD */
-
-	if (!main_loop_started) {
-		chSysHalt("Main loop did not start");
-	}
 }
 
 #else
