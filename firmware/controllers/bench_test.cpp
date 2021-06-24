@@ -202,6 +202,10 @@ void fanBench(void) {
 	fanBenchExt("3000");
 }
 
+void fan2Bench(void) {
+	pinbench("0", "3000", "100", "1", &enginePins.fanRelay2, CONFIG(fan2Pin));
+}
+
 /**
  * we are blinking for 16 seconds so that one can click the button and walk around to see the light blinking
  */
@@ -317,6 +321,9 @@ static void handleBenchCategory(uint16_t index) {
 		return;
 	case CMD_TS_BENCH_FAN_RELAY:
 		fanBench();
+		return;
+	case CMD_TS_BENCH_AC_FAN_RELAY:
+		fan2Bench();
 		return;
 	default:
 		firmwareError(OBD_PCM_Processor_Fault, "Unexpected bench function %d", index);
@@ -495,9 +502,10 @@ void executeTSCommand(uint16_t subsystem, uint16_t index) {
 
 void initBenchTest() {
 	addConsoleAction("fuelpumpbench", fuelPumpBench);
-	addConsoleAction("acrelaybench", acRelayBench);
+	addConsoleAction(CMD_AC_RELAY_BENCH, acRelayBench);
 	addConsoleActionS("fuelpumpbench2", fuelPumpBenchExt);
-	addConsoleAction("fanbench", fanBench);
+	addConsoleAction(CMD_FAN_BENCH, fanBench);
+	addConsoleAction(CMD_FAN2_BENCH, fan2Bench);
 	addConsoleAction("mainrelaybench", mainRelayBench);
 	addConsoleActionS("fanbench2", fanBenchExt);
 
@@ -509,7 +517,7 @@ void initBenchTest() {
 	addConsoleAction(CMD_STARTER_BENCH, starterRelayBench);
 	addConsoleAction(CMD_MIL_BENCH, milBench);
 	addConsoleActionSSS(CMD_FUEL_BENCH, fuelbench);
-	addConsoleActionSSS("sparkbench", sparkbench);
+	addConsoleActionSSS(CMD_SPARK_BENCH, sparkbench);
 	addConsoleAction(CMD_HPFP_BENCH, hpfpValveBench);
 
 	addConsoleActionSSSSS("fuelbench2", fuelbench2);
