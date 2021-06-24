@@ -31,10 +31,10 @@ public class StringLayout extends Layout {
     }
 
     @Override
-    public void writeTunerstudioLayout(PrintStream ps, StructNamePrefixer prefixer) {
+    protected void writeTunerstudioLayout(PrintStream ps, StructNamePrefixer prefixer, int offsetAdd) {
         ps.print(prefixer.get(this.name));
         ps.print(" = string, ASCII, ");
-        ps.print(this.offset);
+        ps.print(this.offset + offsetAdd);
         ps.print(", ");
         ps.print(size);
 
