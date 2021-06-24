@@ -10,6 +10,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.io.PrintStream;
 import java.util.*;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 public class ParseState extends RusefiConfigGrammarBaseListener {
@@ -91,7 +92,7 @@ public class ParseState extends RusefiConfigGrammarBaseListener {
     }
 
     public void addDefinition(String name, Object value, Definition.OverwritePolicy overwritePolicy) {
-        Definition existingDefinition = definitions.getOrDefault(name, null);
+        Definition existingDefinition = this.definitions.getOrDefault(name, null);
 
         if (existingDefinition != null) {
             switch (existingDefinition.overwritePolicy) {
@@ -108,8 +109,21 @@ public class ParseState extends RusefiConfigGrammarBaseListener {
         definitions.put(name, new Definition(name, value, overwritePolicy));
     }
 
+    public Definition findDefinition(String name) {
+        return this.definitions.getOrDefault(name, null);
+    }
+
     public void setDefinitionPolicy(Definition.OverwritePolicy policy) {
         this.definitionOverwritePolicy = policy;
+    }
+
+    private static final Pattern CHAR_LITERAL = Pattern.compile("'.'");
+
+    private void handleIntDefinition(String name, int value) {
+        addDefinition(name, value);
+
+        // Also add ints as 16b hex
+        addDefinition(name + "_16_hex", String.format("\\\\x%02x\\\\x%02x", (value >> 8) & 0xFF, value & 0xFF));
     }
 
     @Override
@@ -117,7 +131,7 @@ public class ParseState extends RusefiConfigGrammarBaseListener {
         String name = ctx.identifier().getText();
 
         if (ctx.integer() != null) {
-            addDefinition(name, Integer.parseInt(ctx.integer().getText()));
+            handleIntDefinition(name, Integer.parseInt(ctx.integer().getText()));
         } else if (ctx.floatNum() != null) {
             addDefinition(name, Double.parseDouble(ctx.floatNum().getText()));
         } else if (ctx.numexpr() != null) {
@@ -126,14 +140,20 @@ public class ParseState extends RusefiConfigGrammarBaseListener {
 
             if (Math.abs(floored - evalResult) < 0.001) {
                 // value is an int, process as such
-                addDefinition(name, (int)floored);
+                handleIntDefinition(name, (int)floored);
             } else {
                 // Value is a double, add it
                 addDefinition(name, evalResult);
             }
         } else {
             // glue the list of definitions back together
-            addDefinition(name, ctx.restOfLine().getText());
+            String defText = ctx.restOfLine().getText();
+            addDefinition(name, defText);
+
+            // If the definition matches a char literal, add a special definition for that
+            if (CHAR_LITERAL.matcher(defText).find()) {
+                addDefinition(name + "_char", defText.charAt(1));
+            }
         }
     }
 

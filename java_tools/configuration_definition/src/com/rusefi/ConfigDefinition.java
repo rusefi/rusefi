@@ -256,7 +256,10 @@ public class ConfigDefinition {
             // First process yaml files
             //processYamls(listener, yamlFiles);
 
-            // First load prepend files
+            // Process firing order enum
+            handleFiringOrder(firingEnumFileName, listener);
+
+            // Load prepend files
             {
                 // Ignore duplicates of definitions made during prepend phase
                 listener.setDefinitionPolicy(Definition.OverwritePolicy.IgnoreNew);
@@ -341,6 +344,13 @@ public class ConfigDefinition {
         if (firingEnumFileName != null) {
             SystemOut.println("Reading firing from " + firingEnumFileName);
             VariableRegistry.INSTANCE.register("FIRINGORDER", FiringOrderTSLogic.invoke(firingEnumFileName));
+        }
+    }
+
+    private static void handleFiringOrder(String firingEnumFileName, ParseState parser) throws IOException {
+        if (firingEnumFileName != null) {
+            SystemOut.println("Reading firing from " + firingEnumFileName);
+            parser.addDefinition("FIRINGORDER", FiringOrderTSLogic.invoke(firingEnumFileName), Definition.OverwritePolicy.NotAllowed);
         }
     }
 
