@@ -14,9 +14,9 @@ public class ArrayIterateScalarLayout extends ArrayLayout {
         this.prototypeLayout.setOffset(offset + this.prototypeLayout.getSize() * idx);
 
         // Put a 1-based index on the end of the name to distinguish in TS
-        prefixer.setSuffix(Integer.toString(idx + 1));
+        prefixer.setIndex(idx);
         this.prototypeLayout.writeTunerstudioLayout(ps, prefixer, 0);
-        prefixer.resetSuffix();
+        prefixer.clearIndex();
     }
 
     @Override

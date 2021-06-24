@@ -14,9 +14,9 @@ public class ArrayIterateStructLayout extends ArrayLayout {
         int offsetAdd = offset + this.prototypeLayout.getSize() * idx;
 
         // Put a 1-based index on the end of the name to distinguish in TS
-        prefixer.setSuffix(Integer.toString(idx + 1));
+        prefixer.setIndex(idx);
         this.prototypeLayout.writeTunerstudioLayout(ps, prefixer, offsetAdd);
-        prefixer.resetSuffix();
+        prefixer.clearIndex();
     }
 
     @Override
