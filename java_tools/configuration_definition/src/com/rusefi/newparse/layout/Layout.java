@@ -26,12 +26,12 @@ public abstract class Layout {
     }
 
     public final void writeTunerstudioLayout(PrintStream ps) {
-        writeTunerstudioLayout(ps, new StructNamePrefixer());
+        writeTunerstudioLayout(ps, new StructNamePrefixer(), 0);
     }
 
-    public void writeTunerstudioLayout(PrintStream ps, StructNamePrefixer prefixer) {}
+    protected void writeTunerstudioLayout(PrintStream ps, StructNamePrefixer prefixer, int offsetAdd) {}
 
-    public void writeTunerstudioLayout(PrintStream ps, StructNamePrefixer prefixer, int arrayLength) {
+    protected void writeTunerstudioLayout(PrintStream ps, StructNamePrefixer prefixer, int offsetAdd, int arrayLength) {
         throw new IllegalStateException("This type can't be in an array!");
     }
 

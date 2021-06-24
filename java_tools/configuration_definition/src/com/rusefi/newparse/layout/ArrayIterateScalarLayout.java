@@ -15,16 +15,16 @@ public class ArrayIterateScalarLayout extends ArrayLayout {
 
         // Put a 1-based index on the end of the name to distinguish in TS
         prefixer.setSuffix(Integer.toString(idx + 1));
-        this.prototypeLayout.writeTunerstudioLayout(ps, prefixer);
+        this.prototypeLayout.writeTunerstudioLayout(ps, prefixer, 0);
         prefixer.resetSuffix();
     }
 
     @Override
-    public void writeTunerstudioLayout(PrintStream ps, StructNamePrefixer prefixer) {
+    protected void writeTunerstudioLayout(PrintStream ps, StructNamePrefixer prefixer, int offsetAdd) {
         // Time to iterate: emit one scalar per array element, with the name modified accordingly
 
         for (int i = 0; i < length; i++) {
-            emitOne(ps, prefixer, this.offset, i);
+            emitOne(ps, prefixer, this.offset + offsetAdd, i);
         }
     }
 
