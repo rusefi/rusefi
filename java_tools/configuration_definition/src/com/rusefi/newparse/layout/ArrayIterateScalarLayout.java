@@ -23,7 +23,7 @@ public class ArrayIterateScalarLayout extends ArrayLayout {
     protected void writeTunerstudioLayout(PrintStream ps, StructNamePrefixer prefixer, int offsetAdd) {
         // Time to iterate: emit one scalar per array element, with the name modified accordingly
 
-        for (int i = 0; i < length; i++) {
+        for (int i = 0; i < this.length; i++) {
             emitOne(ps, prefixer, this.offset + offsetAdd, i);
         }
     }
