@@ -1,5 +1,6 @@
 package com.rusefi.newparse.layout;
 
+import com.rusefi.newparse.outputs.TsMetadata;
 import com.rusefi.newparse.parsing.EnumField;
 import com.rusefi.newparse.parsing.Type;
 import com.rusefi.newparse.parsing.UnusedField;
@@ -34,7 +35,7 @@ public class UnusedLayout extends Layout {
     }
 
     @Override
-    protected void writeTunerstudioLayout(PrintStream ps, StructNamePrefixer prefixer, int offsetAdd) {
+    protected void writeTunerstudioLayout(PrintStream ps, TsMetadata meta, StructNamePrefixer prefixer, int offsetAdd) {
         ps.println("; unused " + this.size + " bytes at offset " + (this.offset + offsetAdd));
     }
 

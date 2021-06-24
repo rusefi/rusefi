@@ -1,5 +1,7 @@
 package com.rusefi.newparse.layout;
 
+import com.rusefi.newparse.outputs.TsMetadata;
+
 import java.io.PrintStream;
 
 public abstract class Layout {
@@ -25,13 +27,13 @@ public abstract class Layout {
         return "offset = " + offset + " size = " + this.getSize();
     }
 
-    public final void writeTunerstudioLayout(PrintStream ps) {
-        writeTunerstudioLayout(ps, new StructNamePrefixer(), 0);
+    public final void writeTunerstudioLayout(PrintStream ps, TsMetadata meta) {
+        writeTunerstudioLayout(ps, meta, new StructNamePrefixer(), 0);
     }
 
-    protected void writeTunerstudioLayout(PrintStream ps, StructNamePrefixer prefixer, int offsetAdd) {}
+    protected void writeTunerstudioLayout(PrintStream ps, TsMetadata meta, StructNamePrefixer prefixer, int offsetAdd) {}
 
-    protected void writeTunerstudioLayout(PrintStream ps, StructNamePrefixer prefixer, int offsetAdd, int arrayLength) {
+    protected void writeTunerstudioLayout(PrintStream ps, TsMetadata meta, StructNamePrefixer prefixer, int offsetAdd, int arrayLength) {
         throw new IllegalStateException("This type can't be in an array!");
     }
 
@@ -39,7 +41,6 @@ public abstract class Layout {
         ps.println("\t/**");
 
         if (comment != null) {
-            comment = comment.replaceAll(";", "");
             comment = comment.replaceAll("[+]", "");
             comment = comment.replaceAll("\\n", "\n\t * ");
             if (comment.length() == 0) {

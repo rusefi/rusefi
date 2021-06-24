@@ -1,5 +1,6 @@
 package com.rusefi.newparse.layout;
 
+import com.rusefi.newparse.outputs.TsMetadata;
 import com.rusefi.newparse.parsing.BitGroup;
 import com.rusefi.newparse.parsing.EnumField;
 import com.rusefi.newparse.parsing.Type;
@@ -46,11 +47,14 @@ public class BitGroupLayout extends Layout {
     }
 
     @Override
-    protected void writeTunerstudioLayout(PrintStream ps, StructNamePrefixer prefixer, int offsetAdd) {
+    protected void writeTunerstudioLayout(PrintStream ps, TsMetadata meta, StructNamePrefixer prefixer, int offsetAdd) {
         int actualOffset = this.offset + offsetAdd;
 
         for (int i = 0; i < bits.size(); i++) {
             BitLayout bit = bits.get(i);
+
+            String name = prefixer.get(bit.name);
+
             ps.print(prefixer.get(bit.name));
             ps.print(" = bits, U32, ");
             ps.print(actualOffset);
@@ -60,6 +64,8 @@ public class BitGroupLayout extends Layout {
             ps.print("], " + bit.falseValue + ", " + bit.trueValue);
 
             ps.println();
+
+            meta.addComment(name, bit.comment);
         }
     }
 

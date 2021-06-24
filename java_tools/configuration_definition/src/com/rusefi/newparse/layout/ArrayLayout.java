@@ -1,5 +1,6 @@
 package com.rusefi.newparse.layout;
 
+import com.rusefi.newparse.outputs.TsMetadata;
 import com.rusefi.newparse.parsing.*;
 
 import java.io.PrintStream;
@@ -55,8 +56,8 @@ public class ArrayLayout extends Layout {
     }
 
     @Override
-    protected void writeTunerstudioLayout(PrintStream ps, StructNamePrefixer prefixer, int offsetAdd) {
-        this.prototypeLayout.writeTunerstudioLayout(ps, prefixer, offsetAdd, this.length);
+    protected void writeTunerstudioLayout(PrintStream ps, TsMetadata meta, StructNamePrefixer prefixer, int offsetAdd) {
+        this.prototypeLayout.writeTunerstudioLayout(ps, meta, prefixer, offsetAdd, this.length);
     }
 
     @Override

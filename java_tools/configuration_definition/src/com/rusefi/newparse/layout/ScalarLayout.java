@@ -1,6 +1,7 @@
 package com.rusefi.newparse.layout;
 
 import com.rusefi.ConfigDefinition;
+import com.rusefi.newparse.outputs.TsMetadata;
 import com.rusefi.newparse.parsing.FieldOptions;
 import com.rusefi.newparse.parsing.ScalarField;
 import com.rusefi.newparse.parsing.Type;
@@ -28,13 +29,16 @@ public class ScalarLayout extends Layout {
         return "Scalar " + type.cType + " " + super.toString();
     }
 
-    private void printBeforeArrayLength(PrintStream ps, StructNamePrefixer prefixer, String fieldType, int offsetAdd) {
-        ps.print(prefixer.get(this.name));
+    private void printBeforeArrayLength(PrintStream ps, TsMetadata meta, StructNamePrefixer prefixer, String fieldType, int offsetAdd) {
+        String name = prefixer.get(this.name);
+        ps.print(name);
         ps.print(" = " + fieldType + ", ");
         ps.print(this.type.tsType);
         ps.print(", ");
         ps.print(this.offset + offsetAdd);
         ps.print(", ");
+
+        meta.addComment(name, this.options.comment);
     }
 
     private void printAfterArrayLength(PrintStream ps) {
@@ -44,17 +48,17 @@ public class ScalarLayout extends Layout {
     }
 
     @Override
-    protected void writeTunerstudioLayout(PrintStream ps, StructNamePrefixer prefixer, int offsetAdd, int arrayLength) {
+    protected void writeTunerstudioLayout(PrintStream ps, TsMetadata meta, StructNamePrefixer prefixer, int offsetAdd, int arrayLength) {
         if (arrayLength == 0) {
             // Skip zero length arrays, they may be used for dynamic padding but TS doesn't like them
             return;
         } else if (arrayLength == 1) {
             // For 1-length arrays, emit as a plain scalar instead
-            writeTunerstudioLayout(ps, prefixer, offsetAdd);
+            writeTunerstudioLayout(ps, meta, prefixer, offsetAdd);
             return;
         }
 
-        printBeforeArrayLength(ps, prefixer, "array", offsetAdd);
+        printBeforeArrayLength(ps, meta, prefixer, "array", offsetAdd);
 
         ps.print("[");
         ps.print(arrayLength);
@@ -64,8 +68,8 @@ public class ScalarLayout extends Layout {
     }
 
     @Override
-    protected void writeTunerstudioLayout(PrintStream ps, StructNamePrefixer prefixer, int offsetAdd) {
-        printBeforeArrayLength(ps, prefixer, "scalar", offsetAdd);
+    protected void writeTunerstudioLayout(PrintStream ps, TsMetadata meta, StructNamePrefixer prefixer, int offsetAdd) {
+        printBeforeArrayLength(ps, meta, prefixer, "scalar", offsetAdd);
         printAfterArrayLength(ps);
     }
 
