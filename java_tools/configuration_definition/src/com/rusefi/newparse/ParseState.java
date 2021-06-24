@@ -247,9 +247,10 @@ public class ParseState extends RusefiConfigGrammarBaseListener {
 
         if (ctx.fieldOption().size() == 0) {
             if (ctx.SemicolonedString() != null) {
-                options.comment = ctx.SemicolonedString().getText();
+                String text = ctx.SemicolonedString().getText();
+                options.comment = text.substring(1, text.length() - 1).trim();
             } else if (ctx.SemicolonedSuffix() != null) {
-                options.comment = ctx.SemicolonedSuffix().getText();
+                options.comment = ctx.SemicolonedSuffix().getText().substring(1).trim();
             } else {
                 options.comment = "";
             }
@@ -383,7 +384,7 @@ public class ParseState extends RusefiConfigGrammarBaseListener {
             scope.structFields.add(group);
         }
 
-        String comment = ctx.SemicolonedSuffix() == null ? null : ctx.SemicolonedSuffix().getText();
+        String comment = ctx.SemicolonedSuffix() == null ? null : ctx.SemicolonedSuffix().getText().substring(1).trim();
 
         String trueValue = "\"true\"";
         String falseValue = "\"false\"";

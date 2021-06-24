@@ -1,5 +1,6 @@
 package com.rusefi.newparse.layout;
 
+import com.rusefi.newparse.outputs.TsMetadata;
 import com.rusefi.newparse.parsing.EnumField;
 import com.rusefi.newparse.parsing.FieldOptions;
 import com.rusefi.newparse.parsing.Type;
@@ -35,8 +36,9 @@ public class EnumLayout extends Layout {
     }
 
     @Override
-    protected void writeTunerstudioLayout(PrintStream ps, StructNamePrefixer prefixer, int offsetAdd) {
-        ps.print(prefixer.get(this.name));
+    protected void writeTunerstudioLayout(PrintStream ps, TsMetadata meta, StructNamePrefixer prefixer, int offsetAdd) {
+        String name = prefixer.get(this.name);
+        ps.print(name);
         ps.print(" = bits, ");
         ps.print(this.type.tsType);
         ps.print(", ");
@@ -62,6 +64,8 @@ public class EnumLayout extends Layout {
         }
 
         ps.println();
+
+        meta.addComment(name, this.options.comment);
     }
 
     @Override

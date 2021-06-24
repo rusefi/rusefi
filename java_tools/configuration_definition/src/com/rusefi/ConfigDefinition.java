@@ -2,6 +2,7 @@ package com.rusefi;
 
 import com.rusefi.generated.*;
 import com.rusefi.newparse.ParseState;
+import com.rusefi.newparse.outputs.TsWriter;
 import com.rusefi.newparse.parsing.Definition;
 import com.rusefi.output.*;
 import com.rusefi.util.*;
@@ -282,10 +283,9 @@ public class ConfigDefinition {
             // cPrintStream.close();
 
             // Write tunerstudio layout
-            // PrintStream tsPrintStream = new PrintStream(new FileOutputStream(tsPath + "/test.ini"));
-            // StructLayout root = new StructLayout(0, "root", listener.getLastStruct());
-            // root.writeTunerstudioLayout(tsPrintStream, new StructNamePrefixer());
-            // tsPrintStream.close();
+            // TsWriter writer = new TsWriter();
+            // writer.writeTunerstudio(listener, "TODO", tsPath + "/test.ini");
+
         }
 
         BufferedReader definitionReader = new BufferedReader(new InputStreamReader(new FileInputStream(definitionInputFile), IoUtils.CHARSET.name()));
