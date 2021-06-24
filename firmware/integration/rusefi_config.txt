@@ -1806,6 +1806,7 @@ end_struct
 #define CMD_HPFP_BENCH "hpfpbench"
 #define CMD_AC_RELAY_BENCH "acrelaybench"
 #define CMD_FAN_BENCH "fanbench"
+#define CMD_FAN2_BENCH "fan2bench"
 #define CMD_PINS "pins"
 #define CMD_CALIBRATE_PEDAL_UP "calibrate_pedal_up"
 #define CMD_CALIBRATE_PEDAL_DOWN "calibrate_pedal_down"

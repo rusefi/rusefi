@@ -242,6 +242,7 @@
 #define CMD_ENGINESNIFFERRPMTHRESHOLD "engineSnifferRpmThreshold"
 #define CMD_ETB_DUTY "set_etb_duty"
 #define CMD_EXTERNAL_STIMULATION "ext_stimulation"
+#define CMD_FAN2_BENCH "fan2bench"
 #define CMD_FAN_BENCH "fanbench"
 #define CMD_FUEL_BENCH "fuelbench"
 #define CMD_FUNCTIONAL_TEST_MODE "test_mode"
@@ -1293,7 +1294,7 @@
 #define showSdCardWarning_offset 76
 #define SIGNATURE_BOARD hellen_cypress
 #define SIGNATURE_DATE 2021.06.23
-#define SIGNATURE_HASH 318489740
+#define SIGNATURE_HASH 2363904949
 #define silentTriggerError_offset 1464
 #define slowAdcAlpha_offset 2088
 #define sparkDwellRpmBins_offset 332
@@ -1646,7 +1647,7 @@
 #define ts_show_spi true
 #define ts_show_trigger_comparator false
 #define ts_show_tunerstudio_port true
-#define TS_SIGNATURE "rusEFI 2021.06.23.hellen_cypress.318489740"
+#define TS_SIGNATURE "rusEFI 2021.06.23.hellen_cypress.2363904949"
 #define TS_SINGLE_WRITE_COMMAND 'W'
 #define TS_SINGLE_WRITE_COMMAND_char W
 #define TS_TEST_COMMAND 't'
