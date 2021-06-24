@@ -2,6 +2,7 @@ package com.rusefi;
 
 import com.rusefi.generated.*;
 import com.rusefi.newparse.ParseState;
+import com.rusefi.newparse.outputs.CStructWriter;
 import com.rusefi.newparse.outputs.TsWriter;
 import com.rusefi.newparse.parsing.Definition;
 import com.rusefi.output.*;
@@ -278,12 +279,8 @@ public class ConfigDefinition {
             }
 
             // Write C structs
-            // PrintStream cPrintStream = new PrintStream(new FileOutputStream(destCHeaderFileName));
-            // for (Struct s : listener.getStructs()) {
-            //     StructLayout sl = new StructLayout(0, "root", s);
-            //     sl.writeCLayoutRoot(cPrintStream);
-            // }
-            // cPrintStream.close();
+            // CStructWriter cStructs = new CStructWriter();
+            // cStructs.writeCStructs(listener, destCHeaderFileName + ".test");
 
             // Write tunerstudio layout
             // TsWriter writer = new TsWriter();
