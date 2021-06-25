@@ -29,8 +29,11 @@ public:
 
 	int lineIndex = -1;
 
-	void open(char *fileName) {
+	int * columnIndeces;
+
+	void open(char *fileName, int * columnIndeces) {
 		fp = fopen(fileName, "r");
+		this->columnIndeces = columnIndeces;
 		ASSERT_TRUE(fp != nullptr);
 	}
 
@@ -54,8 +57,8 @@ public:
 
 		char *timeStampstr = trim(strtok(line, s));
 		bool newState[2];
-		newState[0] = trim(strtok(NULL, s))[0] == '1';
-		newState[1] = trim(strtok(NULL, s))[0] == '1';
+		newState[columnIndeces[0]] = trim(strtok(NULL, s))[0] == '1';
+		newState[columnIndeces[1]] = trim(strtok(NULL, s))[0] == '1';
 
 		double timeStamp = std::stod(timeStampstr);
 
@@ -84,13 +87,14 @@ public:
 
 TEST(cranking, realCrankingFromFile) {
 	CsvReader reader;
-	reader.open("tests/trigger/recourses/cranking_na_3.csv");
+	int indeces[2] = {1, 0}; // this logic data file has first trigger channel in second column and second trigger channel in first column
+	reader.open("tests/trigger/recourses/cranking_na_3.csv", indeces);
 
 	WITH_ENGINE_TEST_HELPER (MIATA_NA6_MAP);
 
 	ssize_t read;
 
-	for (int i = 0; i < 8; i++) {
+	for (int i = 0; i < 18; i++) {
 		reader.readLine(&eth);
 	}
 
@@ -98,15 +102,16 @@ TEST(cranking, realCrankingFromFile) {
 	ASSERT_EQ( 0, eth.recentWarnings()->getCount())<< "warningCounter#got synch";
 
 	reader.readLine(&eth);
-	ASSERT_EQ( 94, GET_RPM())<< reader.lineIndex;
+	ASSERT_EQ( 32, GET_RPM())<< reader.lineIndex;
 
-	for (int i = 0; i < 6; i++) {
+	for (int i = 0; i < 30; i++) {
 		reader.readLine(&eth);
 	}
-	ASSERT_EQ( 1, eth.recentWarnings()->getCount())<< "warningCounter#with synch";
+	ASSERT_EQ( 223, GET_RPM())<< reader.lineIndex;
 
 	while (reader.haveMore()) {
 		reader.processLine(&eth);
 	}
-	ASSERT_EQ( 3, eth.recentWarnings()->getCount())<< "warningCounter#realCranking";
+	ASSERT_EQ( 1, eth.recentWarnings()->getCount())<< "warningCounter#realCranking";
+	ASSERT_EQ( 775, GET_RPM())<< reader.lineIndex;
 }
