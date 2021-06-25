@@ -238,16 +238,17 @@ void runRusEfi(void) {
 		 */
 		initEngineContoller(PASS_ENGINE_PARAMETER_SIGNATURE);
 
+	#if EFI_ENGINE_EMULATOR
+		initEngineEmulator(PASS_ENGINE_PARAMETER_SIGNATURE);
+	#endif
+
 		// This has to happen after RegisteredOutputPins are init'd: otherwise no change will be detected, and no init will happen
 		rememberCurrentConfiguration(PASS_ENGINE_PARAMETER_SIGNATURE);
 
 	#if EFI_PERF_METRICS
 		initTimePerfActions();
 	#endif
-			
-	#if EFI_ENGINE_EMULATOR
-		initEngineEmulator(PASS_ENGINE_PARAMETER_SIGNATURE);
-	#endif
+
 		startStatusThreads();
 
 		runSchedulingPrecisionTestIfNeeded();
