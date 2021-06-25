@@ -185,6 +185,9 @@ public:
 	 * this is based on isEngineChartEnabled and engineSnifferRpmThreshold settings
 	 */
 	bool isEngineChartEnabled = false;
+
+	bool tdcMarkEnabled = true; // used by unit tests only
+
 	/**
 	 * this is based on sensorChartMode and sensorSnifferRpmThreshold settings
 	 */
