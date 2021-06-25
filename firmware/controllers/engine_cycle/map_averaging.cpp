@@ -97,8 +97,8 @@ EXTERN_ENGINE;
 /**
  * here we have averaging start and averaging end points for each cylinder
  */
-static scheduling_s startTimer[INJECTION_PIN_COUNT][2];
-static scheduling_s endTimer[INJECTION_PIN_COUNT][2];
+static scheduling_s startTimers[INJECTION_PIN_COUNT][2];
+static scheduling_s endTimers[INJECTION_PIN_COUNT][2];
 
 /**
  * that's a performance optimization: let's not bother averaging
@@ -119,12 +119,15 @@ static void startAveraging(scheduling_s *endAveragingScheduling) {
 		isAveraging = true;
 	}
 
+#if EFI_UNIT_TEST
+	Engine *engine = endAveragingScheduling->engine;
+	EXPAND_Engine;
+#endif
+
 	mapAveragingPin.setHigh();
 
-#if ! EFI_UNIT_TEST
 	scheduleByAngle(endAveragingScheduling, getTimeNowNt(), ENGINE(engineState.mapAveragingDuration),
 		endAveraging PASS_ENGINE_PARAMETER_SUFFIX);
-#endif
 }
 
 #if HAL_USE_ADC
@@ -304,11 +307,18 @@ void mapAveragingTriggerCallback(
 		fixAngle(samplingEnd, "samplingEnd", CUSTOM_ERR_6563);
 		// only if value is already prepared
 		int structIndex = getRevolutionCounter() % 2;
+
+		scheduling_s *starTimer = &startTimers[i][structIndex];
+		scheduling_s *endTimer = &endTimers[i][structIndex];
+		INJECT_ENGINE_REFERENCE(&mapAveragingPin);
+		INJECT_ENGINE_REFERENCE(starTimer);
+		INJECT_ENGINE_REFERENCE(endTimer);
+
 		// at the moment we schedule based on time prediction based on current RPM and angle
 		// we are loosing precision in case of changing RPM - the further away is the event the worse is precision
 		// todo: schedule this based on closest trigger event, same as ignition works
-		scheduleByAngle(&startTimer[i][structIndex], edgeTimestamp, samplingStart,
-				{ startAveraging, &endTimer[i][structIndex] } PASS_ENGINE_PARAMETER_SUFFIX);
+		scheduleByAngle(starTimer, edgeTimestamp, samplingStart,
+				{ startAveraging, endTimer } PASS_ENGINE_PARAMETER_SUFFIX);
 	}
 #endif
 }
