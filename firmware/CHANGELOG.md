@@ -26,6 +26,8 @@ Release template (copy/paste this for new release):
 All notable user-facing or behavior-altering changes will be documented in this file.
 
 ## Month 202x Release - "Release Name"
+### Fixed
+ - Minor change of Miata NA trigger shape #2855   
 
 ## June 2021 Release "Garbage Man Day"
 

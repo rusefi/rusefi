@@ -25,7 +25,7 @@
 
 void initializeMazdaMiataNaShape(TriggerWaveform *s) {
 	s->initialize(FOUR_STROKE_CAM_SENSOR);
-	s->setTriggerSynchronizationGap2(1.4930 * 0.6f, 1.4930 * 1.3f);
+	s->setTriggerSynchronizationGap2(1.4930 * 0.6f, 1.4930 * 1.4f);
 	s->useRiseEdge = false;
 
 	s->bothFrontsRequired = true;
