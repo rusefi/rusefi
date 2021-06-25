@@ -50,6 +50,9 @@ warningBuffer_t *EngineTestHelper::recentWarnings() {
 	return &unitTestWarningCodeState.recentWarnings;
 }
 
+int EngineTestHelper::getWarningCounter() {
+	return unitTestWarningCodeState.warningCounter;
+}
 
 EngineTestHelper::EngineTestHelper(engine_type_e engineType, configuration_callback_t configurationCallback, const std::unordered_map<SensorType, float>& sensorValues) {
 	Sensor::setMockValue(SensorType::Clt, 70);

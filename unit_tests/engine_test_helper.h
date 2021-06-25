@@ -38,6 +38,7 @@ public:
 	~EngineTestHelper();
 
 	warningBuffer_t *recentWarnings();
+	int getWarningCounter();
 
 	void applyTriggerWaveform();
 	void setTriggerType(trigger_type_e trigger DECLARE_ENGINE_PARAMETER_SUFFIX);
