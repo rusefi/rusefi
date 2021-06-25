@@ -687,19 +687,19 @@ static void resetRunningTriggerCounters() {
 
 void onConfigurationChangeTriggerCallback(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	bool changed = false;
-	for (int i = 0; i < efi::size(CONFIG(camInputs)); i++) {
+	for (size_t i = 0; i < efi::size(CONFIG(camInputs)); i++) {
 		changed |= isConfigurationChanged(camInputs[i]);
 	}
 
-	for (int i = 0; i < efi::size(CONFIG(triggerGapOverride)); i++) {
+	for (size_t i = 0; i < efi::size(CONFIG(triggerGapOverride)); i++) {
 		changed |= isConfigurationChanged(triggerGapOverride[i]);
 	}
 
-	for (int i = 0; i < efi::size(CONFIG(triggerInputPins)); i++) {
+	for (size_t i = 0; i < efi::size(CONFIG(triggerInputPins)); i++) {
 		changed |= isConfigurationChanged(triggerInputPins[i]);
 	}
 
-	for (int i = 0; i < efi::size(CONFIG(vvtMode)); i++) {
+	for (size_t i = 0; i < efi::size(CONFIG(vvtMode)); i++) {
 		changed |= isConfigurationChanged(vvtMode[i]);
 	}
 
