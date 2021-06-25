@@ -107,6 +107,7 @@ TEST(cranking, hardcodedRealCranking) {
 	/* 67 */ EVENT(/* timestamp*/2.308357, /*index*/0, /*value*/false);
 	/* 68 */ EVENT(/* timestamp*/2.33551175, /*index*/0, /*value*/true);
 	/* 69 */ EVENT(/* timestamp*/2.3601205, /*index*/1, /*value*/true);
+	ASSERT_EQ( 1,  unitTestWarningCodeState.recentWarnings.getCount()) << "warningCounter#realCranking";
 	/* 70 */ EVENT(/* timestamp*/2.382952, /*index*/0, /*value*/false);
 	/* 71 */ EVENT(/* timestamp*/2.41535525, /*index*/0, /*value*/true);
 	/* 74 */ EVENT(/* timestamp*/2.45321725, /*index*/1, /*value*/true);
@@ -117,6 +118,7 @@ TEST(cranking, hardcodedRealCranking) {
 	/* 81 */ EVENT(/* timestamp*/2.533664, /*index*/0, /*value*/true);
 	/* 84 */ EVENT(/* timestamp*/2.56564675, /*index*/1, /*value*/true);
 	/* 85 */ EVENT(/* timestamp*/2.57087425, /*index*/0, /*value*/false);
+	ASSERT_EQ( 2,  unitTestWarningCodeState.recentWarnings.getCount()) << "warningCounter#realCranking";
 	/* 86 */ EVENT(/* timestamp*/2.59612075, /*index*/0, /*value*/true);
 	/* 89 */ EVENT(/* timestamp*/2.61853375, /*index*/1, /*value*/true);
 	/* 90 */ EVENT(/* timestamp*/2.6365195, /*index*/0, /*value*/false);
@@ -140,9 +142,7 @@ TEST(cranking, hardcodedRealCranking) {
 	/* 120 */ EVENT(/* timestamp*/2.89112225, /*index*/0, /*value*/false);
 	/* 123 */ EVENT(/* timestamp*/2.9089625, /*index*/0, /*value*/true);
 
-	ASSERT_EQ( 1,  unitTestWarningCodeState.recentWarnings.getCount()) << "warningCounter#realCranking";
 	/* 124 */ EVENT(/* timestamp*/2.93429275, /*index*/1, /*value*/true);
-	ASSERT_EQ( 2,  unitTestWarningCodeState.recentWarnings.getCount()) << "warningCounter#realCranking";
 
 	/* 125 */ EVENT(/* timestamp*/2.93850475, /*index*/0, /*value*/false);
 	/* 128 */ EVENT(/* timestamp*/2.958108, /*index*/0, /*value*/true);
