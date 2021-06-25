@@ -320,8 +320,6 @@ float RpmCalculator::getTimeSinceEngineStart(efitick_t nowNt) const {
 	return engineStartTimer.getElapsedSeconds(nowNt);
 }
 
-static scheduling_s tdcScheduler[2];
-
 static char rpmBuffer[_MAX_FILLER];
 
 /**
@@ -361,7 +359,7 @@ void tdcMarkCallback(
 			angle_t tdcPosition = tdcPosition();
 			// we need a positive angle offset here
 			fixAngle(tdcPosition, "tdcPosition", CUSTOM_ERR_6553);
-			scheduleByAngle(&tdcScheduler[revIndex2], edgeTimestamp, tdcPosition,
+			scheduleByAngle(&engine->tdcScheduler[revIndex2], edgeTimestamp, tdcPosition,
 					{ onTdcCallback, engine } PASS_ENGINE_PARAMETER_SUFFIX);
 		}
 	}
