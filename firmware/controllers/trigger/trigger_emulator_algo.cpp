@@ -198,8 +198,6 @@ void onConfigurationChangeRpmEmulatorCallback(engine_configuration_s *previousCo
 	setTriggerEmulatorRPM(engineConfiguration->triggerSimulatorFrequency);
 }
 
-#endif /* EFI_UNIT_TEST */
-
 void initTriggerEmulator(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	efiPrintf("Emulating %s", getConfigurationName(engineConfiguration->engineType));
 
@@ -207,6 +205,8 @@ void initTriggerEmulator(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 
 	initTriggerEmulatorLogic(PASS_ENGINE_PARAMETER_SIGNATURE);
 }
+
+#endif /* EFI_UNIT_TEST */
 
 void startTriggerEmulatorPins(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	hasStimPins = false;
