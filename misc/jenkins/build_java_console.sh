@@ -3,11 +3,6 @@
 echo "java version"
 java -version
 
-echo "Generating Java (Antlr)"
-cd java_tools/configuration_definition
-ant antlr
-cd ../..
-
 echo "Building java console"
 pwd
 cd java_console
