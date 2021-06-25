@@ -229,7 +229,9 @@ void startTriggerEmulatorPins(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 
 void stopTriggerEmulatorPins() {
 	for (size_t i = 0; i < efi::size(emulatorOutputs); i++) {
-		triggerSignal.outputPins[i]->deInit();
+		if (isConfigurationChanged(triggerSimulatorPins[i])) {
+			triggerSignal.outputPins[i]->deInit();
+		}
 	}
 }
 
