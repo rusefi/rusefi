@@ -71,41 +71,24 @@ void TriggerStimulatorHelper::feedSimulatedEvent(
 
 	// todo: code duplication with TriggerEmulatorHelper::handleEmulatorCallback?
 
-	if (needEvent(stateIndex, size, multiChannelStateSequence, 0)) {
-		pin_state_t currentValue = multiChannelStateSequence.getChannelState(/*phaseIndex*/0, stateIndex);
-		trigger_event_e event = currentValue ? SHAFT_PRIMARY_RISING : SHAFT_PRIMARY_FALLING;
-		if (isUsefulSignal(event, triggerConfiguration)) {
-			state.decodeTriggerEvent(shape,
+	constexpr trigger_event_e riseEvents[] = { SHAFT_PRIMARY_RISING, SHAFT_SECONDARY_RISING, SHAFT_3RD_RISING };
+	constexpr trigger_event_e fallEvents[] = { SHAFT_PRIMARY_FALLING, SHAFT_SECONDARY_FALLING, SHAFT_3RD_FALLING };
+
+
+	for (size_t i = 0; i < PWM_PHASE_MAX_WAVE_PER_PWM; i++) {
+		if (needEvent(stateIndex, size, multiChannelStateSequence, i)) {
+			pin_state_t currentValue = multiChannelStateSequence.getChannelState(/*phaseIndex*/i, stateIndex);
+			trigger_event_e event = (currentValue ? riseEvents : fallEvents)[i];
+			if (isUsefulSignal(event, triggerConfiguration)) {
+				state.decodeTriggerEvent(shape,
 					triggerCycleCallback,
 					/* override */ nullptr,
 					triggerConfiguration,
 					event, time);
+			}
 		}
 	}
 
-	if (needEvent(stateIndex, size, multiChannelStateSequence, 1)) {
-		pin_state_t currentValue = multiChannelStateSequence.getChannelState(/*phaseIndex*/1, stateIndex);
-		trigger_event_e event = currentValue ? SHAFT_SECONDARY_RISING : SHAFT_SECONDARY_FALLING;
-		if (isUsefulSignal(event, triggerConfiguration)) {
-			state.decodeTriggerEvent(shape,
-					triggerCycleCallback,
-					/* override */ nullptr,
-					triggerConfiguration,
-					event, time);
-		}
-	}
-
-	if (needEvent(stateIndex, size, multiChannelStateSequence, 2)) {
-		pin_state_t currentValue = multiChannelStateSequence.getChannelState(/*phaseIndex*/2, stateIndex);
-		trigger_event_e event = currentValue ? SHAFT_3RD_RISING : SHAFT_3RD_FALLING;
-		if (isUsefulSignal(event, triggerConfiguration)) {
-			state.decodeTriggerEvent(shape,
-					triggerCycleCallback,
-					/* override */ nullptr,
-					triggerConfiguration,
-					event, time);
-		}
-	}
 }
 
 void TriggerStimulatorHelper::assertSyncPositionAndSetDutyCycle(

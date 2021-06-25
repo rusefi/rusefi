@@ -53,8 +53,7 @@ void TriggerEmulatorHelper::handleEmulatorCallback(PwmConfig *state, int stateIn
 	// todo: code duplication with TriggerStimulatorHelper::feedSimulatedEvent?
 	MultiChannelStateSequence *multiChannelStateSequence = &state->multiChannelStateSequence;
 
-	for (size_t i = 0; i < efi::size(emulatorOutputs); i++)
-	{
+	for (size_t i = 0; i < PWM_PHASE_MAX_WAVE_PER_PWM; i++) {
 		if (needEvent(stateIndex, state->phaseCount, state->multiChannelStateSequence, i)) {
 			pin_state_t currentValue = multiChannelStateSequence->getChannelState(/*phaseIndex*/i, stateIndex);
 			
