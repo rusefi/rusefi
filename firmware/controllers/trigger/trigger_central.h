@@ -86,7 +86,7 @@ public:
 };
 
 void triggerInfo(void);
-void handleShaftSignal(trigger_event_e signal, efitick_t timestamp);
+void handleShaftSignal2(trigger_event_e signal, efitick_t timestamp DECLARE_ENGINE_PARAMETER_SUFFIX);
 void hwHandleShaftSignal(trigger_event_e signal, efitick_t timestamp);
 void hwHandleVvtCamSignal(trigger_value_e front, efitick_t timestamp, int index DECLARE_ENGINE_PARAMETER_SUFFIX);
 

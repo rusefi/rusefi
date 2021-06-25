@@ -26,7 +26,7 @@ void disableTriggerStimulator();
 class TriggerEmulatorHelper {
 public:
     TriggerEmulatorHelper();
-	void handleEmulatorCallback(PwmConfig *state, int stateIndex);
+	void handleEmulatorCallback(PwmConfig *state, int stateIndex DECLARE_ENGINE_PARAMETER_SUFFIX);
 };
 
 void initTriggerEmulatorLogic(DECLARE_ENGINE_PARAMETER_SIGNATURE);
