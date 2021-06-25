@@ -47,7 +47,7 @@ EXTERN_ENGINE;
 
 static OutputPin emulatorOutputs[PWM_PHASE_MAX_WAVE_PER_PWM];
 
-void TriggerEmulatorHelper::handleEmulatorCallback(PwmConfig *state, int stateIndex) {
+void TriggerEmulatorHelper::handleEmulatorCallback(PwmConfig *state, int stateIndex DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	efitick_t stamp = getTimeNowNt();
 	
 	// todo: code duplication with TriggerStimulatorHelper::feedSimulatedEvent?
@@ -62,7 +62,7 @@ void TriggerEmulatorHelper::handleEmulatorCallback(PwmConfig *state, int stateIn
 
 			trigger_event_e event = (currentValue ? riseEvents : fallEvents)[i];
 
-			handleShaftSignal(event, stamp);
+			handleShaftSignal2(event, stamp PASS_ENGINE_PARAMETER_SUFFIX);
 		}
 	}
 }
