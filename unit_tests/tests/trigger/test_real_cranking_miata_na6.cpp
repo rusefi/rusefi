@@ -34,7 +34,6 @@ static void fireTriggerEvent(EngineTestHelper*eth, double timestampS, trigger_wh
 
 TEST(cranking, hardcodedRealCranking) {
 	WITH_ENGINE_TEST_HELPER(MIATA_NA6_VAF);
-	unitTestWarningCodeState.clear();
 
 #define EVENT(timestamp, channel, value) { fireTriggerEvent(&eth, timestamp, channel, value); }
 
@@ -76,7 +75,9 @@ TEST(cranking, hardcodedRealCranking) {
 	/* 27 */ EVENT(/* timestamp*/1.511785, T_SECONDARY, /*value*/true);
 	/* 28 */ EVENT(/* timestamp*/1.5908545, T_SECONDARY, /*value*/false);
 	/* 31 */ EVENT(/* timestamp*/1.6399845, T_SECONDARY, /*value*/true);
+	ASSERT_EQ( 1,  eth.getWarningCounter()) << "warningCounter#realCranking";
 	/* 32 */ EVENT(/* timestamp*/1.70975875, T_PRIMARY, /*value*/true);
+	ASSERT_EQ( 2,  eth.getWarningCounter()) << "warningCounter#realCranking";
 	/* 33 */ EVENT(/* timestamp*/1.7194455, T_SECONDARY, /*value*/false);
 	/* 36 */ EVENT(/* timestamp*/1.7697125, T_SECONDARY, /*value*/true);
 	/* 37 */ EVENT(/* timestamp*/1.817179, T_PRIMARY, /*value*/true);
