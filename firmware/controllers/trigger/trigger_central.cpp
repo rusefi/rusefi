@@ -286,12 +286,12 @@ void hwHandleVvtCamSignal(trigger_value_e front, efitick_t nowNt, int index DECL
 
 }
 
-#if EFI_PROD_CODE || EFI_SIMULATOR
-
 int triggerReentraint = 0;
 int maxTriggerReentraint = 0;
 uint32_t triggerDuration;
 uint32_t triggerMaxDuration = 0;
+
+#if EFI_PROD_CODE || EFI_SIMULATOR
 
 /**
  * this method is invoked only by real hardware call-backs
@@ -317,14 +317,16 @@ void hwHandleShaftSignal(trigger_event_e signal, efitick_t timestamp) {
 	palWritePad(criticalErrorLedPort, criticalErrorLedPin, 0);
 #endif // VR_HW_CHECK_MODE
 
-	handleShaftSignal(signal, timestamp);
+	handleShaftSignal2(signal, timestamp);
 
 }
+
+#endif /* EFI_PROD_CODE */
 
 /**
  * this method is invoked by both real hardware and self-stimulator
  */
-void handleShaftSignal(trigger_event_e signal, efitick_t timestamp) {
+void handleShaftSignal2(trigger_event_e signal, efitick_t timestamp DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	ScopePerf perf(PE::HandleShaftSignal);
 
 	// Don't accept trigger input in case of some problems
@@ -380,7 +382,6 @@ void handleShaftSignal(trigger_event_e signal, efitick_t timestamp) {
 	triggerDuration = getTimeNowLowerNt() - triggerHandlerEntryTime;
 	triggerMaxDuration = maxI(triggerMaxDuration, triggerDuration);
 }
-#endif /* EFI_PROD_CODE */
 
 void TriggerCentral::resetCounters() {
 	memset(hwEventCounters, 0, sizeof(hwEventCounters));

@@ -13,7 +13,7 @@ class PwmConfig;
 class MultiChannelStateSequence;
 
 void initTriggerEmulator(DECLARE_ENGINE_PARAMETER_SIGNATURE);
-void startTriggerEmulatorPins();
+void startTriggerEmulatorPins(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 void stopTriggerEmulatorPins();
 void setTriggerEmulatorRPM(int value DECLARE_ENGINE_PARAMETER_SUFFIX);
 void onConfigurationChangeRpmEmulatorCallback(engine_configuration_s *previousConfiguration);
@@ -26,7 +26,7 @@ void disableTriggerStimulator();
 class TriggerEmulatorHelper {
 public:
     TriggerEmulatorHelper();
-	void handleEmulatorCallback(PwmConfig *state, int stateIndex);
+	void handleEmulatorCallback(const int size, const MultiChannelStateSequence& mcss, int stateIndex DECLARE_ENGINE_PARAMETER_SUFFIX);
 };
 
 void initTriggerEmulatorLogic(DECLARE_ENGINE_PARAMETER_SIGNATURE);
