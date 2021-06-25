@@ -41,6 +41,7 @@ TEST(cranking, hardcodedRealCranking) {
 	/*
 	 * Generated using logicdata2c tool
 	 */
+	// looks like na_cranking4.logicdata file
 
 	/* 3 */ EVENT(/* timestamp*/0.597303, /*index*/0, /*value*/false);
 	/* 4 */ EVENT(/* timestamp*/0.69078225, /*index*/0, /*value*/true);
