@@ -687,28 +687,32 @@ static void resetRunningTriggerCounters() {
 
 void onConfigurationChangeTriggerCallback(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	bool changed = false;
-	for (int i = 0; i < CAM_INPUTS_COUNT; i++) {
+	for (size_t i = 0; i < efi::size(CONFIG(camInputs)); i++) {
 		changed |= isConfigurationChanged(camInputs[i]);
 	}
 
-	for (int i = 0; i < GAP_TRACKING_LENGTH; i++) {
+	for (size_t i = 0; i < efi::size(CONFIG(triggerGapOverride)); i++) {
 		changed |= isConfigurationChanged(triggerGapOverride[i]);
 	}
 
-	changed |=
-		isConfigurationChanged(trigger.type) ||
-		isConfigurationChanged(ambiguousOperationMode) ||
-		isConfigurationChanged(useOnlyRisingEdgeForTrigger) ||
-		isConfigurationChanged(globalTriggerAngleOffset) ||
-		isConfigurationChanged(trigger.customTotalToothCount) ||
-		isConfigurationChanged(trigger.customSkippedToothCount) ||
-		isConfigurationChanged(triggerInputPins[0]) ||
-		isConfigurationChanged(triggerInputPins[1]) ||
-		isConfigurationChanged(triggerInputPins[2]) ||
-		isConfigurationChanged(vvtMode) ||
-		isConfigurationChanged(vvtCamSensorUseRise) ||
-		isConfigurationChanged(overrideTriggerGaps) ||
-		isConfigurationChanged(vvtOffset);
+	for (size_t i = 0; i < efi::size(CONFIG(triggerInputPins)); i++) {
+		changed |= isConfigurationChanged(triggerInputPins[i]);
+	}
+
+	for (size_t i = 0; i < efi::size(CONFIG(vvtMode)); i++) {
+		changed |= isConfigurationChanged(vvtMode[i]);
+	}
+
+	changed |= isConfigurationChanged(trigger.type);
+	changed |= isConfigurationChanged(ambiguousOperationMode);
+	changed |= isConfigurationChanged(useOnlyRisingEdgeForTrigger);
+	changed |= isConfigurationChanged(globalTriggerAngleOffset);
+	changed |= isConfigurationChanged(trigger.customTotalToothCount);
+	changed |= isConfigurationChanged(trigger.customSkippedToothCount);
+	changed |= isConfigurationChanged(vvtCamSensorUseRise);
+	changed |= isConfigurationChanged(overrideTriggerGaps);
+	changed |= isConfigurationChanged(vvtOffset);
+
 	if (changed) {
 		assertEngineReference();
 

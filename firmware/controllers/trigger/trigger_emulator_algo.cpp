@@ -221,16 +221,22 @@ void startTriggerEmulatorPins(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 		}
 
 #if EFI_PROD_CODE
-		triggerSignal.outputPins[i]->initPin("Trigger emulator", pin,
+		if (isConfigurationChanged(triggerSimulatorPins[i])) {
+			triggerSignal.outputPins[i]->initPin("Trigger emulator", pin,
 					&CONFIG(triggerSimulatorPinModes)[i]);
+		}
 #endif // EFI_PROD_CODE
 	}
 }
 
 void stopTriggerEmulatorPins() {
+#if EFI_PROD_CODE
 	for (size_t i = 0; i < efi::size(emulatorOutputs); i++) {
-		triggerSignal.outputPins[i]->deInit();
+		if (isConfigurationChanged(triggerSimulatorPins[i])) {
+			triggerSignal.outputPins[i]->deInit();
+		}
 	}
+#endif // EFI_PROD_CODE
 }
 
 #endif /* EFI_EMULATE_POSITION_SENSORS */
