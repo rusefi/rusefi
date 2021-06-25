@@ -10,7 +10,7 @@
 #include "global.h"
 #include "listener_array.h"
 
-typedef struct {
+struct digital_input_s {
 #if HAL_USE_ICU
 	ICUDriver *driver;
 #endif /* HAL_USE_ICU */
@@ -24,4 +24,4 @@ typedef struct {
 	// Width/Period names are historically inherited from ICU implementation, todo: migrate to better names, high/low? rise/hall?
 	void setWidthCallback(VoidInt handler, void *arg);
 	void setPeriodCallback(VoidInt handler, void *arg);
-} digital_input_s;
+};
