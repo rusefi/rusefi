@@ -25,12 +25,13 @@
 
 void initializeMazdaMiataNaShape(TriggerWaveform *s) {
 	s->initialize(FOUR_STROKE_CAM_SENSOR);
-	s->setTriggerSynchronizationGap2(1.4930 * 0.6f, 1.4930 * 1.4f);
+	s->setTriggerSynchronizationGap2(4 * 0.75f, 4 * 1.4f);
 	s->useRiseEdge = false;
 
 	s->bothFrontsRequired = true;
+	s->gapBothDirections = true;
 
-	s->tdcPosition = 294;
+	s->tdcPosition = 436.965;
 
 	/**
 	 * http://rusefi.com/forum/viewtopic.php?f=3&t=729&p=12983#p12983
