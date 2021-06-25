@@ -548,9 +548,7 @@ void TriggerCentral::handleShaftSignal(trigger_event_e signal, efitick_t timesta
 
 		rpmShaftPositionCallback(signal, triggerIndexForListeners, timestamp PASS_ENGINE_PARAMETER_SUFFIX);
 
-#if !EFI_UNIT_TEST
 		tdcMarkCallback(triggerIndexForListeners, timestamp PASS_ENGINE_PARAMETER_SUFFIX);
-#endif
 
 #if !EFI_UNIT_TEST
 #if EFI_MAP_AVERAGING
