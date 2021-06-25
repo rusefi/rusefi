@@ -98,14 +98,13 @@ TEST(cranking, realCrankingFromFile) {
 		reader.readLine(&eth);
 	}
 
-	ASSERT_EQ( 0, GET_RPM())<< reader.lineIndex << " @ 0";
+	ASSERT_EQ( 42, GET_RPM())<< reader.lineIndex << " @ 0";
 	ASSERT_EQ( 0, eth.recentWarnings()->getCount())<< "warningCounter#got synch";
 
 	ASSERT_EQ(0, engine->tdcScheduler[1].momentX);
 	reader.readLine(&eth);
-	ASSERT_EQ(3645170, engine->tdcScheduler[1].momentX); // let's assert TDC position and sync point
 
-	ASSERT_EQ( 32, GET_RPM())<< reader.lineIndex << " @ 1";
+	ASSERT_EQ( 213, GET_RPM())<< reader.lineIndex << " @ 1";
 
 	for (int i = 0; i < 30; i++) {
 		reader.readLine(&eth);
@@ -116,11 +115,11 @@ TEST(cranking, realCrankingFromFile) {
 	for (int i = 0; i < 30; i++) {
 		reader.readLine(&eth);
 	}
-	ASSERT_EQ( 344, GET_RPM())<< reader.lineIndex << " @ 2";
+	ASSERT_EQ( 297, GET_RPM())<< reader.lineIndex << " @ 2";
 
 	while (reader.haveMore()) {
 		reader.processLine(&eth);
 	}
 	ASSERT_EQ( 0, eth.recentWarnings()->getCount())<< "warningCounter#realCranking";
-	ASSERT_EQ( 499, GET_RPM())<< reader.lineIndex;
+	ASSERT_EQ( 560, GET_RPM())<< reader.lineIndex;
 }
