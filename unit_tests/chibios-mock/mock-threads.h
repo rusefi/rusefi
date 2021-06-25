@@ -14,6 +14,7 @@ public:
 
 };
 
+bool chThdShouldTerminateX(void);
 systime_t chVTGetSystemTime(void);
 systime_t chThdSleepUntilWindowed(systime_t prev, systime_t next);
 
