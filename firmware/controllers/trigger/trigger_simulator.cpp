@@ -10,8 +10,6 @@
 #include "trigger_simulator.h"
 #include "trigger_emulator_algo.h"
 
-#define SIMULATION_CYCLE_PERIOD 720000
-
 EXTERN_ENGINE;
 
 #if EFI_UNIT_TEST
