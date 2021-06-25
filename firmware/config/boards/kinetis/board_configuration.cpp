@@ -127,7 +127,8 @@ void setAdcChannelOverrides(void) {
 #include <setjmp.h>
 
 void longjmp(jmp_buf /*env*/, int /*status*/) {
-	// noop
+	// noop, but noreturn
+	while (1) { }
 }
 
 int setjmp(jmp_buf /*env*/) {
