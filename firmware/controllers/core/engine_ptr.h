@@ -59,7 +59,7 @@ struct persistent_config_s;
 	#define PASS_CONFIG_PARAM(x) , x
 
 	#define EXPAND_Engine \
-		    efiAssertVoid(OBD_PCM_Processor_Fault, engine!=NULL, "EXPAND_Engine engine ptr missing"); \
+		    if (engine == nullptr) { firmwareError(OBD_PCM_Processor_Fault, "EXPAND_Engine engine ptr missing"); } \
 			engine_configuration_s *engineConfiguration = engine->engineConfiguration; \
 			persistent_config_s *config = engine->config; \
 			(void)engineConfiguration; \
