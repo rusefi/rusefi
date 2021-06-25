@@ -129,6 +129,8 @@
 #include "trigger_emulator_algo.h"
 #include "rusefi_lua.h"
 
+#include <setjmp.h>
+
 #if EFI_ENGINE_EMULATOR
 #include "engine_emulator.h"
 #endif /* EFI_ENGINE_EMULATOR */
@@ -166,6 +168,14 @@ static bool validateConfig() {
 	return true;
 }
 
+static jmp_buf jmpEnv;
+void onAssertionFailure() {
+	longjmp(jmpEnv, 1);
+}
+
+void runRusEfiWithConfig();
+void runMainLoop();
+
 void runRusEfi(void) {
 	efiAssertVoid(CUSTOM_RM_STACK_1, getCurrentRemainingStack() > 512, "init s");
 	assertEngineReference();
@@ -187,9 +197,6 @@ void runRusEfi(void) {
 	// Perform hardware initialization that doesn't need configuration
 	initHardwareNoConfig();
 
-	// Read configuration from flash memory
-	loadConfiguration(PASS_ENGINE_PARAMETER_SIGNATURE);
-
 #if EFI_USB_SERIAL
 	startUsbConsole();
 #endif
@@ -203,6 +210,9 @@ void runRusEfi(void) {
 	 */
 	initializeConsole();
 
+	// Read configuration from flash memory
+	loadConfiguration(PASS_ENGINE_PARAMETER_SIGNATURE);
+
 #if EFI_TUNER_STUDIO
 	startTunerStudioConnectivity();
 #endif /* EFI_TUNER_STUDIO */
@@ -210,10 +220,24 @@ void runRusEfi(void) {
 	// Start hardware serial ports (including bluetooth, if present)
 	startSerialChannels();
 
+	runRusEfiWithConfig();
+
+	runMainLoop();
+}
+
+void runRusEfiWithConfig() {
+	// If some config operation caused an OS assertion failure, return immediately
+	if (setjmp(jmpEnv)) {
+		return;
+	}
+
 	/**
 	 * Initialize hardware drivers
 	 */
 	initHardware();
+
+	// periodic events need to be initialized after fuel&spark pins to avoid a warning
+	initPeriodicEvents(PASS_ENGINE_PARAMETER_SIGNATURE);
 
 #if EFI_FILE_LOGGING
 	initMmcCard();
@@ -252,7 +276,9 @@ void runRusEfi(void) {
 
 		runSchedulingPrecisionTestIfNeeded();
 	}
+}
 
+void runMainLoop() {
 	efiPrintf("Running main loop");
 	main_loop_started = true;
 	/**
