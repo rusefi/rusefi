@@ -101,7 +101,10 @@ TEST(cranking, realCrankingFromFile) {
 	ASSERT_EQ( 0, GET_RPM())<< reader.lineIndex << " @ 0";
 	ASSERT_EQ( 0, eth.recentWarnings()->getCount())<< "warningCounter#got synch";
 
+	ASSERT_EQ(0, engine->tdcScheduler[1].momentX);
 	reader.readLine(&eth);
+	ASSERT_EQ(3645170, engine->tdcScheduler[1].momentX); // let's assert TDC position and sync point
+
 	ASSERT_EQ( 32, GET_RPM())<< reader.lineIndex << " @ 1";
 
 	for (int i = 0; i < 30; i++) {
