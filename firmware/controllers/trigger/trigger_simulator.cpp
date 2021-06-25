@@ -33,6 +33,13 @@ bool isUsefulSignal(trigger_event_e signal, const TriggerConfiguration& triggerC
 extern bool printTriggerDebug;
 #endif /* ! EFI_UNIT_TEST */
 
+int getSimulatedEventTime(const TriggerWaveform& shape, int i) {
+	int stateIndex = i % shape.getSize();
+	int loopIndex = i / shape.getSize();
+
+	return (int) (SIMULATION_CYCLE_PERIOD * (loopIndex + shape.wave.getSwitchTime(stateIndex)));
+}
+
 void TriggerStimulatorHelper::feedSimulatedEvent(
 		const TriggerStateCallback triggerCycleCallback,
 		const TriggerConfiguration& triggerConfiguration,
@@ -44,9 +51,7 @@ void TriggerStimulatorHelper::feedSimulatedEvent(
 	int stateIndex = i % shape.getSize();
 	int size = shape.getSize();
 
-	int loopIndex = i / shape.getSize();
-
-	int time = (int) (SIMULATION_CYCLE_PERIOD * (loopIndex + shape.wave.getSwitchTime(stateIndex)));
+	int time = getSimulatedEventTime(shape, i);
 
 	const MultiChannelStateSequence& multiChannelStateSequence = shape.wave;
 
