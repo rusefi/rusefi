@@ -42,12 +42,7 @@
         </jar>
     </target>
 
-<!--    todo: there must be a way to invoke a task from configuration_definition build.xml? -->
-    <target name="antlr">
-        <java jar="../java_tools/configuration_definition/lib/antlr-4.5-complete.jar" args="-o ../java_tools/configuration_definition/src/com/rusefi/generated ../java_tools/configuration_definition/RusefiConfigGrammar.g4" fork="true" failonerror="true" />
-    </target>
-
-    <target name="compile" depends="antlr">
+    <target name="compile">
         <mkdir dir="build/classes"/>
         <javac debug="yes" destdir="build/classes"
                classpath="${lib_list}">
