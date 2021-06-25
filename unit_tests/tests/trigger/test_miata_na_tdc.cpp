@@ -26,6 +26,6 @@ TEST(miata, miata_na_tdc) {
 	}
 
 	ASSERT_EQ(167,  GET_RPM()) << "miata_na_tdc RPM";
-	ASSERT_EQ(3894000, engine->tdcScheduler[0].momentX); // let's assert TDC position and sync point
-	ASSERT_EQ(4614000, engine->tdcScheduler[1].momentX); // let's assert TDC position and sync point
+	ASSERT_EQ(294000, engine->tdcScheduler[0].momentX % SIMULATION_CYCLE_PERIOD); // let's assert TDC position and sync point
+	ASSERT_EQ(294000, engine->tdcScheduler[1].momentX % SIMULATION_CYCLE_PERIOD); // let's assert TDC position and sync point
 }

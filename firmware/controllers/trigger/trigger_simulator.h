@@ -8,6 +8,8 @@
 
 #pragma once
 
+#define SIMULATION_CYCLE_PERIOD 720000
+
 #include "trigger_decoder.h"
 
 int getSimulatedEventTime(const TriggerWaveform& shape, int i);
