@@ -230,11 +230,13 @@ void startTriggerEmulatorPins(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 }
 
 void stopTriggerEmulatorPins() {
+#if EFI_PROD_CODE
 	for (size_t i = 0; i < efi::size(emulatorOutputs); i++) {
 		if (isConfigurationChanged(triggerSimulatorPins[i])) {
 			triggerSignal.outputPins[i]->deInit();
 		}
 	}
+#endif // EFI_PROD_CODE
 }
 
 #endif /* EFI_EMULATE_POSITION_SENSORS */
