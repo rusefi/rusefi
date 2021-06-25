@@ -47,15 +47,14 @@ EXTERN_ENGINE;
 
 static OutputPin emulatorOutputs[PWM_PHASE_MAX_WAVE_PER_PWM];
 
-void TriggerEmulatorHelper::handleEmulatorCallback(PwmConfig *state, int stateIndex DECLARE_ENGINE_PARAMETER_SUFFIX) {
+void TriggerEmulatorHelper::handleEmulatorCallback(const int size, const MultiChannelStateSequence& multiChannelStateSequence, int stateIndex DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	efitick_t stamp = getTimeNowNt();
 	
 	// todo: code duplication with TriggerStimulatorHelper::feedSimulatedEvent?
-	MultiChannelStateSequence *multiChannelStateSequence = &state->multiChannelStateSequence;
 
 	for (size_t i = 0; i < PWM_PHASE_MAX_WAVE_PER_PWM; i++) {
-		if (needEvent(stateIndex, state->phaseCount, state->multiChannelStateSequence, i)) {
-			pin_state_t currentValue = multiChannelStateSequence->getChannelState(/*phaseIndex*/i, stateIndex);
+		if (needEvent(stateIndex, size, multiChannelStateSequence, i)) {
+			pin_state_t currentValue = multiChannelStateSequence.getChannelState(/*phaseIndex*/i, stateIndex);
 			
 			constexpr trigger_event_e riseEvents[] = { SHAFT_PRIMARY_RISING, SHAFT_SECONDARY_RISING, SHAFT_3RD_RISING };
 			constexpr trigger_event_e fallEvents[] = { SHAFT_PRIMARY_FALLING, SHAFT_SECONDARY_FALLING, SHAFT_3RD_FALLING };
@@ -136,7 +135,9 @@ static void emulatorApplyPinState(int stateIndex, PwmConfig *state) /* pwm_gen_c
 		/**
 		 * this callback would invoke the input signal handlers directly
 		 */
-		helper.handleEmulatorCallback(state, stateIndex);
+		helper.handleEmulatorCallback(state->phaseCount,
+				state->multiChannelStateSequence,
+				stateIndex);
 	}
 
 #if EFI_PROD_CODE
