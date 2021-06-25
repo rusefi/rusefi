@@ -56,28 +56,24 @@ TEST(cranking, hardcodedRealCranking) {
 	ASSERT_EQ( 0,  GET_RPM()) << "RPM at the 14";
 	/* 14 */ EVENT(/* timestamp*/1.194742, T_PRIMARY, /*value*/true);
 	// first synch & fast spinning RPM
-	ASSERT_EQ( 48,  GET_RPM()) << "RPM at the 14";
+	ASSERT_EQ( 31,  GET_RPM()) << "RPM at the 14";
 	/* 15 */ EVENT(/* timestamp*/1.20417975, T_SECONDARY, /*value*/false);
 	/* 16 */ EVENT(/* timestamp*/1.25380075, T_SECONDARY, /*value*/true);
 	/* 17 */ EVENT(/* timestamp*/1.30114225, T_PRIMARY, /*value*/true);
 	ASSERT_EQ( 0,  unitTestWarningCodeState.recentWarnings.getCount()) << "warningCounter#realCranking";
 	/* 18 */ EVENT(/* timestamp*/1.3341915, T_SECONDARY, /*value*/false);
 	/* 19 */ EVENT(/* timestamp*/1.383534, T_SECONDARY, /*value*/true);
-	ASSERT_EQ( 107,  GET_RPM()) << "RPM at the 19";
-	ASSERT_EQ( 0,  unitTestWarningCodeState.recentWarnings.getCount()) << "warningCounter#realCranking";
+	ASSERT_EQ( 67,  GET_RPM()) << "RPM at the 19";
 
 	// second synch
 	/* 22 */ EVENT(/* timestamp*/1.45352675, T_PRIMARY, /*value*/true);
-	ASSERT_EQ( 1,  unitTestWarningCodeState.recentWarnings.getCount()) << "warningCounter#realCranking";
-	ASSERT_EQ( 464,  GET_RPM()) << "RPM at the 22";
+	ASSERT_EQ( 33,  GET_RPM()) << "RPM at the 22";
 	/* 23 */ EVENT(/* timestamp*/1.46291525, T_SECONDARY, /*value*/false);
 	/* 25 */ EVENT(/* timestamp*/1.49939025, T_PRIMARY, /*value*/false);
 	/* 27 */ EVENT(/* timestamp*/1.511785, T_SECONDARY, /*value*/true);
 	/* 28 */ EVENT(/* timestamp*/1.5908545, T_SECONDARY, /*value*/false);
 	/* 31 */ EVENT(/* timestamp*/1.6399845, T_SECONDARY, /*value*/true);
-	ASSERT_EQ( 1,  eth.getWarningCounter()) << "warningCounter#realCranking";
 	/* 32 */ EVENT(/* timestamp*/1.70975875, T_PRIMARY, /*value*/true);
-	ASSERT_EQ( 2,  eth.getWarningCounter()) << "warningCounter#realCranking";
 	/* 33 */ EVENT(/* timestamp*/1.7194455, T_SECONDARY, /*value*/false);
 	/* 36 */ EVENT(/* timestamp*/1.7697125, T_SECONDARY, /*value*/true);
 	/* 37 */ EVENT(/* timestamp*/1.817179, T_PRIMARY, /*value*/true);
@@ -85,9 +81,9 @@ TEST(cranking, hardcodedRealCranking) {
 	/* 41 */ EVENT(/* timestamp*/1.9011835, T_SECONDARY, /*value*/true);
 	/* 42 */ EVENT(/* timestamp*/1.97691675, T_PRIMARY, /*value*/true);
 	/* 43 */ EVENT(/* timestamp*/1.9822455, T_SECONDARY, /*value*/false);
-	ASSERT_EQ( 449,  GET_RPM()) << "RPM at the 17";
+	ASSERT_EQ( 233,  GET_RPM()) << "RPM at the 17";
 	/* 44 */ EVENT(/* timestamp*/2.001249, T_PRIMARY, /*value*/false);
-	ASSERT_EQ( 449,  GET_RPM()) << "RPM at the 17";
+	ASSERT_EQ( 233,  GET_RPM()) << "RPM at the 17";
 
 
 	/* 45 */ EVENT(/* timestamp*/2.0070235, T_SECONDARY, /*value*/true);
@@ -109,7 +105,6 @@ TEST(cranking, hardcodedRealCranking) {
 	/* 67 */ EVENT(/* timestamp*/2.308357, T_SECONDARY, /*value*/false);
 	/* 68 */ EVENT(/* timestamp*/2.33551175, T_SECONDARY, /*value*/true);
 	/* 69 */ EVENT(/* timestamp*/2.3601205, T_PRIMARY, /*value*/true);
-	ASSERT_EQ( 1,  unitTestWarningCodeState.recentWarnings.getCount()) << "warningCounter#realCranking";
 	/* 70 */ EVENT(/* timestamp*/2.382952, T_SECONDARY, /*value*/false);
 	/* 71 */ EVENT(/* timestamp*/2.41535525, T_SECONDARY, /*value*/true);
 	/* 74 */ EVENT(/* timestamp*/2.45321725, T_PRIMARY, /*value*/true);
@@ -120,7 +115,6 @@ TEST(cranking, hardcodedRealCranking) {
 	/* 81 */ EVENT(/* timestamp*/2.533664, T_SECONDARY, /*value*/true);
 	/* 84 */ EVENT(/* timestamp*/2.56564675, T_PRIMARY, /*value*/true);
 	/* 85 */ EVENT(/* timestamp*/2.57087425, T_SECONDARY, /*value*/false);
-	ASSERT_EQ( 2,  unitTestWarningCodeState.recentWarnings.getCount()) << "warningCounter#realCranking";
 	/* 86 */ EVENT(/* timestamp*/2.59612075, T_SECONDARY, /*value*/true);
 	/* 89 */ EVENT(/* timestamp*/2.61853375, T_PRIMARY, /*value*/true);
 	/* 90 */ EVENT(/* timestamp*/2.6365195, T_SECONDARY, /*value*/false);
@@ -154,8 +148,7 @@ TEST(cranking, hardcodedRealCranking) {
 	/* 134 */ EVENT(/* timestamp*/3.031735, T_PRIMARY, /*value*/true);
 
 
-	ASSERT_EQ( 2,  unitTestWarningCodeState.recentWarnings.getCount()) << "warningCounter#realCranking";
-	ASSERT_EQ(CUSTOM_SYNC_COUNT_MISMATCH, unitTestWarningCodeState.recentWarnings.get(0)) << "@0";
+	ASSERT_EQ( 0,  unitTestWarningCodeState.recentWarnings.getCount()) << "warningCounter#realCranking";
 
-	ASSERT_EQ( 1231,  GET_RPM()) << "RPM at the end";
+	ASSERT_EQ( 719,  GET_RPM()) << "RPM at the end";
 }
