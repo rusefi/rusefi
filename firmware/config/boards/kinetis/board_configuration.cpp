@@ -123,3 +123,14 @@ void setAdcChannelOverrides(void) {
 	removeChannel("TPS", engineConfiguration->tps1_1AdcChannel);
 	addChannel("TPS", engineConfiguration->tps1_1AdcChannel, ADC_SLOW);
 }
+
+#include <setjmp.h>
+
+void longjmp(jmp_buf /*env*/, int /*status*/) {
+	// noop
+}
+
+int setjmp(jmp_buf /*env*/) {
+	// Fake return 0, not implemented
+	return 0;
+}
