@@ -20,8 +20,8 @@ TEST(crankingVW, vwRealCrankingFromFile) {
 	while (reader.haveMore()) {
 		reader.processLine(&eth);
 	}
-	/*
+
 	ASSERT_EQ( 0, eth.recentWarnings()->getCount())<< "warningCounter#vwRealCranking";
-	ASSERT_EQ( 560, GET_RPM())<< reader.lineIndex;
-*/
+	ASSERT_EQ( 0, GET_RPM())<< reader.lineIndex;
+
 }
