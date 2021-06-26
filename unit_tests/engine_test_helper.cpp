@@ -28,6 +28,7 @@ extern int timeNowUs;
 extern WarningCodeState unitTestWarningCodeState;
 extern engine_configuration_s & activeConfiguration;
 extern bool printTriggerDebug;
+extern bool printTriggerTrace;
 extern bool printFuelDebug;
 extern int minCrankingRpm;
 
@@ -379,4 +380,9 @@ void EngineTestHelper::setTriggerType(trigger_type_e trigger DECLARE_ENGINE_PARA
 
 void setupSimpleTestEngineWithMafAndTT_ONE_trigger(EngineTestHelper *eth, injection_mode_e injectionMode) {
 	setupSimpleTestEngineWithMaf(eth, injectionMode, TT_ONE);
+}
+
+void setVerboseTrigger(bool isEnabled) {
+	printTriggerDebug = isEnabled;
+	printTriggerTrace = isEnabled;
 }
