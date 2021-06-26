@@ -23,10 +23,18 @@
 
 int findIndex(const float array[], int size, float value);
 #define findIndexMsg(msg, array, size, value) findIndexMsgExt<float>(msg, array, size, value)
-void ensureArrayIsAscending(const char *msg, const float array[], int size);
 int findIndex2(const float array[], unsigned size, float value);
 float interpolateClamped(float x1, float y1, float x2, float y2, float x);
 float interpolateMsg(const char *msg, float x1, float y1, float x2, float y2, float x);
+
+template<typename TValue, int TSize>
+void ensureArrayIsAscending(const char* msg, const TValue (&values)[TSize]) {
+	for (size_t i = 0; i < TSize - 1; i++) {
+		if (values[i + 1] < values[i]) {
+			firmwareError(CUSTOM_ERR_AXIS_ORDER, "Invalid table axis (must be ascending!): %s", msg);
+		}
+	}
+}
 
 namespace priv {
 struct BinResult
