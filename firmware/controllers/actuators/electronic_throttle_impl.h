@@ -31,7 +31,7 @@ public:
 	void reset() override;
 
 	// Update the controller's state: read sensors, send output, etc
-	void update();
+	void update() override;
 
 	// Called when the configuration may have changed.  Controller will
 	// reset if necessary.

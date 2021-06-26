@@ -13,10 +13,10 @@
 
 #define MAX_ERROR_CODES_COUNT 10
 
-typedef struct {
+struct error_codes_set_s {
 	int count = 0;
 	obd_code_e error_codes[MAX_ERROR_CODES_COUNT];
-} error_codes_set_s;
+};
 
 /**
  * @brief Adds an error code into the set of current errors.

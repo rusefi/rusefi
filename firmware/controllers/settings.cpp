@@ -887,20 +887,20 @@ static void printAllInfo(void) {
 #endif
 }
 
-typedef struct {
+struct plain_get_integer_s {
 	const char *token;
 	int *value;
-} plain_get_integer_s;
+};
 
-typedef struct {
+struct plain_get_short_s {
 	const char *token;
 	uint16_t *value;
-} plain_get_short_s;
+};
 
-typedef struct {
+struct plain_get_float_s {
 	const char *token;
 	float *value;
-} plain_get_float_s;
+};
 
 
 #if ! EFI_UNIT_TEST
@@ -1030,15 +1030,15 @@ static void setFsioCurve2Value(float value) {
 	setLinearCurve(engineConfiguration->fsioCurve2, value, value, 1);
 }
 
-typedef struct {
+struct command_i_s {
 	const char *token;
 	VoidInt callback;
-} command_i_s;
+};
 
-typedef struct {
+struct command_f_s {
 	const char *token;
 	VoidFloat callback;
-} command_f_s;
+};
 
 const command_f_s commandsF[] = {
 #if EFI_ENGINE_CONTROL
