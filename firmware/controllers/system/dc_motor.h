@@ -19,23 +19,23 @@
 class DcMotor
 {
 public:
-    /**
-     * @brief Sets the motor duty cycle.
-     * @param duty +1.0f represents full power forward, and -1.0f represents full power backward.
-     * @return True if any fault was detected driving the motor, and false if successful.
-     */
-    virtual bool set(float duty) = 0;
+	/**
+	 * @brief Sets the motor duty cycle.
+	 * @param duty +1.0f represents full power forward, and -1.0f represents full power backward.
+	 * @return True if any fault was detected driving the motor, and false if successful.
+	 */
+	virtual bool set(float duty) = 0;
 
-    /**
-     * @brief Get the current motor duty cycle.
-     * @return The current duty cycle setting. +1.0f represents full power forward, and -1.0f represents full power backward.
-     */
-    virtual float get() const = 0;
+	/**
+	 * @brief Get the current motor duty cycle.
+	 * @return The current duty cycle setting. +1.0f represents full power forward, and -1.0f represents full power backward.
+	 */
+	virtual float get() const = 0;
 
 	virtual void disable() = 0;
 	virtual void enable() = 0;
 
-    virtual bool isOpenDirection() const = 0;
+	virtual bool isOpenDirection() const = 0;
 };
 
 struct IPwm;
@@ -48,13 +48,13 @@ class OutputPin;
 class TwoPinDcMotor : public DcMotor
 {
 public:
-    enum class ControlType
-    {
-    	/**
-    	 * For example TLE7209 - two control wires:
-    	 * PWM on both wires - one to open, another to close
-    	 */
-        PwmDirectionPins,
+	enum class ControlType
+	{
+		/**
+		 * For example TLE7209 - two control wires:
+		 * PWM on both wires - one to open, another to close
+		 */
+		PwmDirectionPins,
 		/**
 		  * The control/enable pin is used for PWM and disable, and the two direction pins are used
 		  * to set the polarity of each half of the H bridge.  setting {dir1,dir2} = 10 should,
@@ -67,33 +67,33 @@ public:
 		 * TLE9201 with two wire control also uses this mode
 		 * PWM on one pin, open/close using one binary direction pin, second direction pin unused
 		 */
-        PwmEnablePin,
-    };
+		PwmEnablePin,
+	};
 
 private:
-    IPwm* m_enable;
-    IPwm* m_dir1;
-    IPwm* m_dir2;
+	IPwm* m_enable;
+	IPwm* m_dir1;
+	IPwm* m_dir2;
 	OutputPin* const m_disable;
-    float m_value = 0;
+	float m_value = 0;
 
-    ControlType m_type = ControlType::PwmDirectionPins;
+	ControlType m_type = ControlType::PwmDirectionPins;
 public:
-    /**
-     * @param enable IPwm driver for enable pin, for PWM speed control.
-     * @param dir1 Enable 1 or direction 1 pin.  Gets set high to rotate forward.
-     * @param dir2 Enable 2 or direction 2 pin.  Gets set high to rotate backward.
-     */
-    TwoPinDcMotor(OutputPin& disable);
+	/**
+	 * @param enable IPwm driver for enable pin, for PWM speed control.
+	 * @param dir1 Enable 1 or direction 1 pin.  Gets set high to rotate forward.
+	 * @param dir2 Enable 2 or direction 2 pin.  Gets set high to rotate backward.
+	 */
+	TwoPinDcMotor(OutputPin& disable);
 
 	void configure(IPwm& enable, IPwm& dir1, IPwm& dir2);
 
-    virtual bool set(float duty) override;
-    float get() const override;
-    bool isOpenDirection() const override;
+	virtual bool set(float duty) override;
+	float get() const override;
+	bool isOpenDirection() const override;
 
 	void enable() override;
 	void disable() override;
 
-    void setType(ControlType type) { m_type = type; }
+	void setType(ControlType type) { m_type = type; }
 };

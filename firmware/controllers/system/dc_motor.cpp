@@ -61,34 +61,34 @@ bool TwoPinDcMotor::set(float duty)
 		return false;
 	}
 
-    bool isPositive = duty > 0;
+	bool isPositive = duty > 0;
 
-    if (!isPositive) {
-        duty = -duty;
-    }
+	if (!isPositive) {
+		duty = -duty;
+	}
 
-    // below here 'duty' is a not negative
+	// below here 'duty' is a not negative
 
-    // Clamp to 100%
-    if (duty > 1.0f) {
-        duty = 1.0f;
-    }
-    // Disable for very small duty
-    else if (duty < 0.01f)
-    {
-        duty = 0.0f;
-    }
+	// Clamp to 100%
+	if (duty > 1.0f) {
+		duty = 1.0f;
+	}
+	// Disable for very small duty
+	else if (duty < 0.01f)
+	{
+		duty = 0.0f;
+	}
 
-    // If we're in two pin mode, force 100%, else use this pin to PWM
-    float enableDuty = m_type == ControlType::PwmEnablePin ? duty : 1;
+	// If we're in two pin mode, force 100%, else use this pin to PWM
+	float enableDuty = m_type == ControlType::PwmEnablePin ? duty : 1;
 
-    // Direction pins get 100% duty unless we're in PwmDirectionPins mode
-    float dirDuty = m_type == ControlType::PwmDirectionPins ? duty : 1;
+	// Direction pins get 100% duty unless we're in PwmDirectionPins mode
+	float dirDuty = m_type == ControlType::PwmDirectionPins ? duty : 1;
 
-    m_enable->setSimplePwmDutyCycle(enableDuty);
-    m_dir1->setSimplePwmDutyCycle(isPositive ? dirDuty : 0);
-    m_dir2->setSimplePwmDutyCycle(isPositive ? 0 : dirDuty);
+	m_enable->setSimplePwmDutyCycle(enableDuty);
+	m_dir1->setSimplePwmDutyCycle(isPositive ? dirDuty : 0);
+	m_dir2->setSimplePwmDutyCycle(isPositive ? 0 : dirDuty);
 
-    // This motor has no fault detection, so always return false (indicate success).
-    return false;
+	// This motor has no fault detection, so always return false (indicate success).
+	return false;
 }
