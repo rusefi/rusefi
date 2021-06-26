@@ -163,6 +163,67 @@ static bool validateConfig() {
 		return false;
 	}
 
+	// Fueling
+	{
+		ensureArrayIsAscending("VE load", config->veLoadBins);
+		ensureArrayIsAscending("VE RPM", config->veRpmBins);
+
+		ensureArrayIsAscending("Lambda/AFR load", config->lambdaLoadBins);
+		ensureArrayIsAscending("Lambda/AFR RPM", config->lambdaRpmBins);
+
+		ensureArrayIsAscending("Fuel CLT mult", config->cltFuelCorrBins);
+		ensureArrayIsAscending("Fuel IAT mult", config->iatFuelCorrBins);
+
+		ensureArrayIsAscending("Injection phase load", config->injPhaseLoadBins);
+		ensureArrayIsAscending("Injection phase RPM", config->injPhaseRpmBins);
+
+		ensureArrayIsAscending("TPS/TPS AE from", config->tpsTpsAccelFromRpmBins);
+		ensureArrayIsAscending("TPS/TPS AE to", config->tpsTpsAccelToRpmBins);
+	}
+
+	// Ignition
+	{
+		ensureArrayIsAscending("Dwell RPM", engineConfiguration->sparkDwellRpmBins);
+
+		ensureArrayIsAscending("Ignition load", config->ignitionLoadBins);
+		ensureArrayIsAscending("Ignition RPM", config->ignitionRpmBins);
+
+		ensureArrayIsAscending("Ignition CLT corr", engineConfiguration->cltTimingBins);
+
+		ensureArrayIsAscending("Ignition IAT corr IAT", config->ignitionIatCorrLoadBins);
+		ensureArrayIsAscending("Ignition IAT corr RPM", config->ignitionIatCorrRpmBins);
+	}
+
+	ensureArrayIsAscending("Map estimate TPS", config->mapEstimateTpsBins);
+	ensureArrayIsAscending("Map estimate RPM", config->mapEstimateRpmBins);
+	ensureArrayIsAscending("Ignition load", config->mafDecodingBins);
+
+	// Cranking tables
+	ensureArrayIsAscending("Cranking fuel mult", config->crankingFuelBins);
+	ensureArrayIsAscending("Cranking duration", config->crankingCycleBins);
+	ensureArrayIsAscending("Cranking TPS", engineConfiguration->crankingTpsBins);
+
+	// Idle tables
+	ensureArrayIsAscending("Idle target RPM", engineConfiguration->cltIdleRpmBins);
+	ensureArrayIsAscending("Idle warmup mult", config->cltIdleCorrBins);
+	ensureArrayIsAscending("Idle coasting position", engineConfiguration->iacCoastingBins);
+	ensureArrayIsAscending("Idle VE", config->idleVeBins);
+	ensureArrayIsAscending("Idle timing", config->idleAdvanceBins);
+
+	// Boost
+	ensureArrayIsAscending("Boost control TPS", config->boostTpsBins);
+	ensureArrayIsAscending("Boost control RPM", config->boostRpmBins);
+
+	// ETB
+	ensureArrayIsAscending("Pedal map pedal", config->pedalToTpsPedalBins);
+	ensureArrayIsAscending("Pedal map RPM", config->pedalToTpsRpmBins);
+
+	// VVT
+	ensureArrayIsAscending("VVT intake load", config->vvtTable1LoadBins);
+	ensureArrayIsAscending("VVT intake RPM", config->vvtTable1RpmBins);
+	ensureArrayIsAscending("VVT exhaust load", config->vvtTable2LoadBins);
+	ensureArrayIsAscending("VVT exhaust RPM", config->vvtTable2RpmBins);
+
 	return true;
 }
 
