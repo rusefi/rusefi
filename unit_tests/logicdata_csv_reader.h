@@ -13,6 +13,8 @@ public:
 
 	bool currentState[2];
 
+	int triggerCount = 2;
+
 	int lineIndex = -1;
 
 	int * columnIndeces;

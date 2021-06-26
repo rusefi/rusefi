@@ -46,8 +46,13 @@ void CsvReader::processLine(EngineTestHelper *eth) {
 
 	char *timeStampstr = trim(strtok(line, s));
 	bool newState[2];
-	newState[columnIndeces[0]] = trim(strtok(NULL, s))[0] == '1';
-	newState[columnIndeces[1]] = trim(strtok(NULL, s))[0] == '1';
+	char *firstToken = trim(strtok(NULL, s));
+	char *secondToken = trim(strtok(NULL, s));
+
+	newState[columnIndeces[0]] = firstToken[0] == '1';
+	if (secondToken != nullptr && triggerCount > 1) {
+		newState[columnIndeces[1]] = secondToken[0] == '1';
+	}
 
 	double timeStamp = std::stod(timeStampstr);
 
