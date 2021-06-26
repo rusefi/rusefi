@@ -19,7 +19,7 @@ public:
 
 	int * columnIndeces;
 
-	void open(char *fileName, int * columnIndeces);
+	void open(const char *fileName, int * columnIndeces);
 	bool haveMore();
 	void processLine(EngineTestHelper *eth);
 	void readLine(EngineTestHelper *eth);
