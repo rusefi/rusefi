@@ -20,7 +20,7 @@ static char* trim(char *str) {
 	return str;
 }
 
-void CsvReader::open(char *fileName, int *columnIndeces) {
+void CsvReader::open(const char *fileName, int *columnIndeces) {
 	fp = fopen(fileName, "r");
 	this->columnIndeces = columnIndeces;
 	ASSERT_TRUE(fp != nullptr);
