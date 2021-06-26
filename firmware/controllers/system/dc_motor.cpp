@@ -10,13 +10,16 @@
 #include "efi_gpio.h"
 #include "pwm_generator_logic.h"
 
-TwoPinDcMotor::TwoPinDcMotor(SimplePwm* enable, SimplePwm* dir1, SimplePwm* dir2, OutputPin* disablePin)
-    : m_enable(enable)
-    , m_dir1(dir1)
-    , m_dir2(dir2)
-	, m_disable(disablePin)
+TwoPinDcMotor::TwoPinDcMotor(OutputPin& disablePin)
+	: m_disable(&disablePin)
 {
 	disable();
+}
+
+void TwoPinDcMotor::configure(IPwm& enable, IPwm& dir1, IPwm& dir2) {
+	m_enable = &enable;
+	m_dir1 = &dir1;
+	m_dir2 = &dir2;
 }
 
 void TwoPinDcMotor::enable() {
@@ -48,6 +51,15 @@ float TwoPinDcMotor::get() const {
 bool TwoPinDcMotor::set(float duty)
 {
 	m_value = duty;
+
+	// If not init, don't try to set
+	if (!m_dir1 || !m_dir2 || !m_enable) {
+		if (m_disable) {
+			m_disable->setValue(true);
+		}
+
+		return false;
+	}
 
     bool isPositive = duty > 0;
 

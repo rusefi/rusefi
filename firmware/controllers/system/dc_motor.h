@@ -38,7 +38,7 @@ public:
     virtual bool isOpenDirection() const = 0;
 };
 
-class SimplePwm;
+struct IPwm;
 class OutputPin;
 
 /**
@@ -71,20 +71,22 @@ public:
     };
 
 private:
-    SimplePwm* const m_enable;
-    SimplePwm* const m_dir1;
-    SimplePwm* const m_dir2;
+    IPwm* m_enable;
+    IPwm* m_dir1;
+    IPwm* m_dir2;
 	OutputPin* const m_disable;
     float m_value = 0;
 
     ControlType m_type = ControlType::PwmDirectionPins;
 public:
     /**
-     * @param enable SimplePwm driver for enable pin, for PWM speed control.
+     * @param enable IPwm driver for enable pin, for PWM speed control.
      * @param dir1 Enable 1 or direction 1 pin.  Gets set high to rotate forward.
      * @param dir2 Enable 2 or direction 2 pin.  Gets set high to rotate backward.
      */
-    TwoPinDcMotor(SimplePwm* enable, SimplePwm* dir1, SimplePwm* dir2, OutputPin* disable);
+    TwoPinDcMotor(OutputPin& disable);
+
+	void configure(IPwm& enable, IPwm& dir1, IPwm& dir2);
 
     virtual bool set(float duty) override;
     float get() const override;
