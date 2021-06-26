@@ -33,15 +33,14 @@ typedef enum
 	SUPP_V_LOW = 9
 } sensor_error_code_t;
 
-typedef struct
-{
+struct sensor_data_t {
 	int function_code;
 	float AFR;
 	float AFR_multiplier;
 	float lambda;
 	float warmup;
 	sensor_error_code_t error_code;
-} sensor_data_t;
+};
 
 static sensor_data_t innovate_o2_sensor[NUM_INNOVATE_O2_SENSORS];
 
