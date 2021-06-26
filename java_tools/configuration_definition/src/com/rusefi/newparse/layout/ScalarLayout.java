@@ -48,11 +48,11 @@ public class ScalarLayout extends Layout {
     }
 
     @Override
-    protected void writeTunerstudioLayout(PrintStream ps, TsMetadata meta, StructNamePrefixer prefixer, int offsetAdd, int arrayLength) {
-        if (arrayLength == 0) {
+    protected void writeTunerstudioLayout(PrintStream ps, TsMetadata meta, StructNamePrefixer prefixer, int offsetAdd, int[] arrayLength) {
+        if (arrayLength[0] == 0) {
             // Skip zero length arrays, they may be used for dynamic padding but TS doesn't like them
             return;
-        } else if (arrayLength == 1) {
+        } else if (arrayLength[0] == 1) {
             // For 1-length arrays, emit as a plain scalar instead
             writeTunerstudioLayout(ps, meta, prefixer, offsetAdd);
             return;
@@ -61,7 +61,17 @@ public class ScalarLayout extends Layout {
         printBeforeArrayLength(ps, meta, prefixer, "array", offsetAdd);
 
         ps.print("[");
-        ps.print(arrayLength);
+        ps.print(arrayLength[0]);
+
+        for (int i = 1; i < arrayLength.length; i++) {
+            if (arrayLength[i] == 1) {
+                continue;
+            }
+
+            ps.print('x');
+            ps.print(arrayLength[i]);
+        }
+
         ps.print("], ");
 
         printAfterArrayLength(ps);
@@ -86,8 +96,18 @@ public class ScalarLayout extends Layout {
     }
 
     @Override
-    public void writeCLayout(PrintStream ps, int arrayLength) {
+    public void writeCLayout(PrintStream ps, int[] arrayLength) {
         this.writeCOffsetHeader(ps, this.options.comment, this.options.units);
-        ps.println("\t" + this.type.cType.replaceAll("^int32_t$", "int") + " " + this.name + "[" + arrayLength + "];");
+
+        StringBuilder al = new StringBuilder();
+
+        al.append(arrayLength[0]);
+
+        for (int i = 1; i < arrayLength.length; i++) {
+            al.append("][");
+            al.append(arrayLength[i]);
+        }
+
+        ps.println("\t" + this.type.cType.replaceAll("^int32_t$", "int") + " " + this.name + "[" + al + "];");
     }
 }

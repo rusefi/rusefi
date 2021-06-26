@@ -6,7 +6,7 @@ import com.rusefi.newparse.parsing.*;
 import java.io.PrintStream;
 
 public class ArrayIterateScalarLayout extends ArrayLayout {
-    public ArrayIterateScalarLayout(PrototypeField prototype, int length) {
+    public ArrayIterateScalarLayout(PrototypeField prototype, int[] length) {
         super(prototype, length);
     }
 
@@ -24,7 +24,7 @@ public class ArrayIterateScalarLayout extends ArrayLayout {
     protected void writeTunerstudioLayout(PrintStream ps, TsMetadata meta, StructNamePrefixer prefixer, int offsetAdd) {
         // Time to iterate: emit one scalar per array element, with the name modified accordingly
 
-        for (int i = 0; i < this.length; i++) {
+        for (int i = 0; i < this.length[0]; i++) {
             emitOne(ps, meta, prefixer, this.offset + offsetAdd, i);
         }
     }
