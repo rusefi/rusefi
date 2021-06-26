@@ -8,7 +8,18 @@
 
 class CsvReader {
 public:
-	void open(char *fileName, int * columnIndeces);
+	FILE *fp;
+	char buffer[255];
 
+	bool currentState[2];
+
+	int lineIndex = -1;
+
+	int * columnIndeces;
+
+	void open(char *fileName, int * columnIndeces);
+	bool haveMore();
+	void processLine(EngineTestHelper *eth);
+	void readLine(EngineTestHelper *eth);
 };
 
