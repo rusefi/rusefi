@@ -15,4 +15,4 @@ New board procedure
 
 1) manually add one .h and one .ini files into git - see gen_config.sh comment
 
-2) update gen_config.sh
+2) update gen_config.sh: add "board board" pair into 'for BOARD' iteration
