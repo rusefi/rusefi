@@ -18,9 +18,6 @@
 // Human-readable: ((time_since_boot >= 0) & (time_since_boot < startup_fuel_pump_duration)) | (time_since_trigger < 1)
 #define FUEL_PUMP_LOGIC "time_since_boot 0 >= time_since_boot startup_fuel_pump_duration < & time_since_trigger 1 < |"
 
-// Human-readable: vbatt < 14.5
-#define ALTERNATOR_LOGIC "vbatt 14.5 <"
-
 // Human-readable: coolant > 120
 #define TOO_HOT_LOGIC "coolant 120 >"
 
