@@ -59,8 +59,7 @@ void CsvReader::processLine(EngineTestHelper *eth) {
 
 	eth->setTimeAndInvokeEventsUs(1'000'000 * timeStamp);
 	for (int index = 0; index < 2; index++) {
-		bool current = newState[index];
-		if (lastState[index] == current) {
+		if (currentState[index] == newState[index]) {
 			continue;
 		}
 
@@ -69,9 +68,6 @@ void CsvReader::processLine(EngineTestHelper *eth) {
 		efitick_t nowNt = getTimeNowNt();
 		engine->triggerCentral.handleShaftSignal(event, nowNt PASS_ENGINE_PARAMETER_SUFFIX);
 	}
-
-	// Copy the current state to the last state
-	std::copy(std::begin(newState), std::end(newState), std::begin(lastState));
 }
 
 void CsvReader::readLine(EngineTestHelper *eth) {
