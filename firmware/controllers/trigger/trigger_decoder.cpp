@@ -352,7 +352,7 @@ bool TriggerState::isEvenRevolution() const {
 bool TriggerState::validateEventCounters(const TriggerWaveform& triggerShape) const {
 	bool isDecodingError = false;
 	for (int i = 0;i < PWM_PHASE_MAX_WAVE_PER_PWM;i++) {
-		isDecodingError |= (currentCycle.eventCount[i] != triggerShape.expectedEventCount[i]);
+		isDecodingError |= (currentCycle.eventCount[i] != triggerShape.getExpectedEventCount(i));
 	}
 
 
@@ -360,7 +360,7 @@ bool TriggerState::validateEventCounters(const TriggerWaveform& triggerShape) co
 			printf("sync point: isDecodingError=%d\r\n", isDecodingError);
 			if (isDecodingError) {
 				for (int i = 0;i < PWM_PHASE_MAX_WAVE_PER_PWM;i++) {
-					printf("count: cur=%d exp=%d\r\n", currentCycle.eventCount[i],  triggerShape.expectedEventCount[i]);
+					printf("count: cur=%d exp=%d\r\n", currentCycle.eventCount[i],  triggerShape.getExpectedEventCount(i));
 				}
 			}
 #endif /* EFI_UNIT_TEST */

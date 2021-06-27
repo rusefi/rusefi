@@ -446,7 +446,7 @@ bool TriggerNoiseFilter::noiseFilter(efitick_t nowNt,
 
 	// but first check if we're expecting a gap
 	bool isGapExpected = TRIGGER_WAVEFORM(isSynchronizationNeeded) && triggerState->shaft_is_synchronized &&
-			(triggerState->currentCycle.eventCount[ti] + 1) == TRIGGER_WAVEFORM(expectedEventCount[ti]);
+			(triggerState->currentCycle.eventCount[ti] + 1) == TRIGGER_WAVEFORM(getExpectedEventCount(ti));
 	
 	if (isGapExpected) {
 		// usually we need to extend the period for gaps, based on the trigger info
@@ -623,8 +623,10 @@ void triggerInfo(void) {
 		efiPrintf("trigger#2 event counters up=%d/down=%d", engine->triggerCentral.getHwEventCounter(2),
 				engine->triggerCentral.getHwEventCounter(3));
 	}
-	efiPrintf("expected cycle events %d/%d/%d", TRIGGER_WAVEFORM(expectedEventCount[0]),
-			TRIGGER_WAVEFORM(expectedEventCount[1]), TRIGGER_WAVEFORM(expectedEventCount[2]));
+	efiPrintf("expected cycle events %d/%d/%d",
+			TRIGGER_WAVEFORM(getExpectedEventCount(0)),
+			TRIGGER_WAVEFORM(getExpectedEventCount(1)),
+			TRIGGER_WAVEFORM(getExpectedEventCount(2)));
 
 	efiPrintf("trigger type=%d/need2ndChannel=%s", engineConfiguration->trigger.type,
 			boolToString(TRIGGER_WAVEFORM(needSecondTriggerInput)));
