@@ -64,8 +64,8 @@ bool updateAc(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	enginePins.acRelay.setValue(isEnabled);
 
 #if EFI_TUNER_STUDIO
-	tsOutputChannels->acSwitchState = engine->acSwitchState;
-	tsOutputChannels->acState = isEnabled;
+	tsOutputChannels.acSwitchState = engine->acSwitchState;
+	tsOutputChannels.acState = isEnabled;
 #endif // EFI_TUNER_STUDIO
 
 	return isEnabled;
