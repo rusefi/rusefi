@@ -8,11 +8,6 @@
 #include "engine_test_helper.h"
 #include "logicdata_csv_reader.h"
 
-static constexpr trigger_event_e riseEvents[] = { SHAFT_PRIMARY_RISING,
-		SHAFT_SECONDARY_RISING, SHAFT_3RD_RISING };
-static constexpr trigger_event_e fallEvents[] = { SHAFT_PRIMARY_FALLING,
-		SHAFT_SECONDARY_FALLING, SHAFT_3RD_FALLING };
-
 static char* trim(char *str) {
 	while (str != nullptr && str[0] == ' ') {
 		str++;
@@ -68,7 +63,6 @@ void CsvReader::processLine(EngineTestHelper *eth) {
 
 		currentState[index] = newState[index];
 	}
-
 }
 
 void CsvReader::readLine(EngineTestHelper *eth) {
