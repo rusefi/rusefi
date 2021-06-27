@@ -13,8 +13,6 @@ FUEL_PUMP_LOGIC=((time_since_boot >= 0) & (time_since_boot < startup_fuel_pump_d
 
 TOO_HOT_LOGIC=coolant > 120
 
-AC_RELAY_LOGIC=ac_on_switch & (rpm > 850)
-
 # Combined RPM, CLT and VBATT warning light
 COMBINED_WARNING_LIGHT=(rpm > fsio_setting(2)) | ((coolant > fsio_setting(3)) | (vbatt < fsio_setting(4)))
 
