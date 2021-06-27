@@ -291,13 +291,11 @@ int maxTriggerReentraint = 0;
 uint32_t triggerDuration;
 uint32_t triggerMaxDuration = 0;
 
-#if EFI_PROD_CODE || EFI_SIMULATOR
-
 /**
  * this method is invoked only by real hardware call-backs
  */
 
-void hwHandleShaftSignal(trigger_event_e signal, efitick_t timestamp) {
+void hwHandleShaftSignal(bool isPrimary, bool isRisingEdge, efitick_t timestamp DECLARE_ENGINE_PARAMETER_SUFFIX) {
 #if VR_HW_CHECK_MODE
 	// some boards do not have hardware VR input LEDs which makes such boards harder to validate
 	// from experience we know that assembly mistakes happen and quality control is required
@@ -317,11 +315,23 @@ void hwHandleShaftSignal(trigger_event_e signal, efitick_t timestamp) {
 	palWritePad(criticalErrorLedPort, criticalErrorLedPin, 0);
 #endif // VR_HW_CHECK_MODE
 
-	handleShaftSignal2(signal, timestamp);
+	if (!isPrimary && !TRIGGER_WAVEFORM(needSecondTriggerInput)) {
+		return;
+	}
 
+	trigger_event_e signal;
+	if (isRisingEdge) {
+		signal = isPrimary ?
+					(engineConfiguration->invertPrimaryTriggerSignal ? SHAFT_PRIMARY_FALLING : SHAFT_PRIMARY_RISING) :
+					(engineConfiguration->invertSecondaryTriggerSignal ? SHAFT_SECONDARY_FALLING : SHAFT_SECONDARY_RISING);
+	} else {
+		signal = isPrimary ?
+					(engineConfiguration->invertPrimaryTriggerSignal ? SHAFT_PRIMARY_RISING : SHAFT_PRIMARY_FALLING) :
+					(engineConfiguration->invertSecondaryTriggerSignal ? SHAFT_SECONDARY_RISING : SHAFT_SECONDARY_FALLING);
+	}
+
+	handleShaftSignal2(signal, timestamp PASS_ENGINE_PARAMETER_SUFFIX);
 }
-
-#endif /* EFI_PROD_CODE */
 
 /**
  * this method is invoked by both real hardware and self-stimulator

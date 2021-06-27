@@ -42,23 +42,8 @@ static void shaft_callback(void *arg) {
 	// todo: start using real event time from HW event, not just software timer?
 
 	bool isPrimary = index == 0;
-	if (!isPrimary && !TRIGGER_WAVEFORM(needSecondTriggerInput)) {
-		return;
-	}
 
-	trigger_event_e signal;
-	// todo: add support for 3rd channel
-	if (rise) {
-		signal = isPrimary ?
-					(engineConfiguration->invertPrimaryTriggerSignal ? SHAFT_PRIMARY_FALLING : SHAFT_PRIMARY_RISING) :
-					(engineConfiguration->invertSecondaryTriggerSignal ? SHAFT_SECONDARY_FALLING : SHAFT_SECONDARY_RISING);
-	} else {
-		signal = isPrimary ?
-					(engineConfiguration->invertPrimaryTriggerSignal ? SHAFT_PRIMARY_RISING : SHAFT_PRIMARY_FALLING) :
-					(engineConfiguration->invertSecondaryTriggerSignal ? SHAFT_SECONDARY_RISING : SHAFT_SECONDARY_FALLING);
-	}
-
-	hwHandleShaftSignal(signal, stamp);
+	hwHandleShaftSignal(isPrimary, rise, stamp);
 }
 
 static void cam_callback(void *arg) {

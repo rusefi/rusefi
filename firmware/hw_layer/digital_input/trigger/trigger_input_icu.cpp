@@ -70,14 +70,9 @@ static void shaftRisingCallback(bool isPrimary) {
 	icuRisingCallbackCounter++;
 // todo: support for 3rd trigger input channel
 
-	if (!isPrimary && !TRIGGER_WAVEFORM(needSecondTriggerInput)) {
-		return;
-	}
 	//	icucnt_t last_width = icuGetWidth(icup); so far we are fine with system time
 	// todo: add support for 3rd channel
-	trigger_event_e signal = isPrimary ? (engineConfiguration->invertPrimaryTriggerSignal ? SHAFT_PRIMARY_FALLING : SHAFT_PRIMARY_RISING) : (engineConfiguration->invertSecondaryTriggerSignal ? SHAFT_SECONDARY_FALLING : SHAFT_SECONDARY_RISING);
-
-	hwHandleShaftSignal(signal, stamp);
+	hwHandleShaftSignal(isPrimary, true, stamp);
 }
 
 static void shaftFallingCallback(bool isPrimary) {
@@ -90,14 +85,7 @@ static void shaftFallingCallback(bool isPrimary) {
 
 	icuFallingCallbackCounter++;
 
-	if (!isPrimary && !TRIGGER_WAVEFORM(needSecondTriggerInput)) {
-		return;
-	}
-
-	// todo: add support for 3rd channel
-	trigger_event_e signal =
-			isPrimary ? (engineConfiguration->invertPrimaryTriggerSignal ? SHAFT_PRIMARY_RISING : SHAFT_PRIMARY_FALLING) : (engineConfiguration->invertSecondaryTriggerSignal ? SHAFT_SECONDARY_RISING : SHAFT_SECONDARY_FALLING);
-	hwHandleShaftSignal(signal, stamp);
+	hwHandleShaftSignal(isPrimary, false, stamp);
 }
 
 /*==========================================================================*/
