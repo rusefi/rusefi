@@ -84,7 +84,7 @@ public:
 		);
 #endif /* EFI_UNIT_TEST */
 
-		dcMotor.configure(m_pwmEnable, m_pwmDir1, m_pmwDir2);
+		dcMotor.configure(m_pwmEnable, m_pwmDir1, m_pwmDir2);
 	}
 };
 
