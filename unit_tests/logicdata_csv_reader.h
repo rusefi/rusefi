@@ -11,7 +11,7 @@ public:
 	FILE *fp;
 	char buffer[255];
 
-	bool currentState[2];
+	bool lastState[2];
 
 	int triggerCount = 2;
 
