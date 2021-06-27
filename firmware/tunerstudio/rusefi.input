@@ -199,6 +199,7 @@ enable2ndByteCanID = false
 ;      ind_map_error   = bits,    U32,      0,  [20:20], "true", "false";
 
       ind_iat_error   = bits,    U32,      0,  [21:21], "true", "false";
+	  acState         = bits,    U32,      0,  [22:22], "true", "false";
       ind_isTriggerError = bits, U32,      0,  [23:23], "true", "false";
       ind_hasFatalError=bits,    U32,      0,  [24:24], "true", "false";
 	  ind_isWarnNow    =bits,    U32,      0,  [25:25], "true", "false";
@@ -1203,7 +1204,8 @@ gaugeCategory = DynoView
     indicator = { clutchUpState }, "clutch",   "cltch Up",   white, black, red,   black
     indicator = { clutchDownState }, "clutch",   "cltch Down",   white, black, yellow,   black
     indicator = { brakePedalIndicator }, "brake",   "brake down",   white, black, red,   black
-    indicator = { acSwitchState }, "AC off",   "AC on",   white, black, blue,   white
+    indicator = { acSwitchState }, "AC switch off", "AC switch on", white, black, blue, white
+	indicator = { acState }, "AC off", "AC on", white, black, blue, white
 	indicator = { isIdleClosedLoop }, "not idling", "idling", white, black, green, black
 	indicator = { isIdleCoasting }, "not coasting", "coasting", white, black, green, black
 

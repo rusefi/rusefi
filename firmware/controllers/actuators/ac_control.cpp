@@ -7,6 +7,7 @@
 
 EXTERN_ENGINE;
 
+// Deadbands to prevent rapid switching on/off of AC
 static Deadband<200> maxRpmDeadband;
 static Deadband<5> maxCltDeadband;
 static Deadband<5> maxTpsDeadband;
@@ -60,6 +61,11 @@ bool updateAc(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	bool isEnabled = getAcState(PASS_ENGINE_PARAMETER_SIGNATURE);
 
 	enginePins.acRelay.setValue(isEnabled);
+
+#if EFI_TUNER_STUDIO
+	tsOutputChannels->acSwitchState = engine->acSwitchState;
+	tsOutputChannels->acState = isEnabled;
+#endif // EFI_TUNER_STUDIO
 
 	return isEnabled;
 }
