@@ -13,4 +13,6 @@ Work in progress: SHORT_BOARDNAME becomes BUNDLE_NAME
 
 New board procedure
 
-1) manually add four new files to git see gen_config.h comment
+1) manually add one .h and one .ini files into git - see gen_config.sh comment
+
+2) update gen_config.sh
