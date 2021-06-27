@@ -31,7 +31,7 @@ private:
 	SimplePwm m_pwmDir2;
 
 public:
-	DcHardware() : dcMotor(&m_pwmEnable, &m_pwmDir1, &m_pwmDir2, &m_disablePin) {}
+	DcHardware() : dcMotor(m_disablePin) {}
 
 	TwoPinDcMotor dcMotor;
 	
@@ -83,6 +83,8 @@ public:
 			0
 		);
 #endif /* EFI_UNIT_TEST */
+
+		dcMotor.configure(m_pwmEnable, m_pwmDir1, m_pwmDir2);
 	}
 };
 

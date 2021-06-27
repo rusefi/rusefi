@@ -117,11 +117,15 @@ private:
 
 struct hardware_pwm;
 
-class SimplePwm : public PwmConfig {
+struct IPwm {
+	virtual void setSimplePwmDutyCycle(float dutyCycle) = 0;
+};
+
+class SimplePwm : public PwmConfig, public IPwm {
 public:
 	SimplePwm();
 	explicit SimplePwm(const char *name);
-	virtual void setSimplePwmDutyCycle(float dutyCycle);
+	void setSimplePwmDutyCycle(float dutyCycle) override;
 	pin_state_t pinStates[2];
 	SingleChannelStateSequence sr[1];
 	float _switchTimes[2];
