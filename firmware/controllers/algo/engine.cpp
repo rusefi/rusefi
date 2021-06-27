@@ -230,8 +230,8 @@ void Engine::periodicSlowCallback(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	runHardcodedFsio(PASS_ENGINE_PARAMETER_SIGNATURE);
 #endif /* EFI_FSIO */
 
-	updateFans(PASS_ENGINE_PARAMETER_SIGNATURE);
-	updateAc(PASS_ENGINE_PARAMETER_SIGNATURE);
+	bool acActive = updateAc(PASS_ENGINE_PARAMETER_SIGNATURE);
+	updateFans(acActive PASS_ENGINE_PARAMETER_SUFFIX);
 
 	updateGppwm();
 
