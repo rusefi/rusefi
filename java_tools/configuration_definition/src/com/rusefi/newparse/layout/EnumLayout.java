@@ -75,8 +75,8 @@ public class EnumLayout extends Layout {
     }
 
     @Override
-    public void writeCLayout(PrintStream ps, int arrayLength) {
+    public void writeCLayout(PrintStream ps, int[] arrayLength) {
         this.writeCOffsetHeader(ps, this.options.comment, this.options.units);
-        ps.println("\t" + this.enumType + " " + this.name + "[" + arrayLength + "];");
+        ps.println("\t" + this.enumType + " " + this.name + "[" + arrayLength[0] + "];");
     }
 }

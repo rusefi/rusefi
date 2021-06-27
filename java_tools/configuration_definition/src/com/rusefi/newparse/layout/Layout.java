@@ -33,7 +33,7 @@ public abstract class Layout {
 
     protected void writeTunerstudioLayout(PrintStream ps, TsMetadata meta, StructNamePrefixer prefixer, int offsetAdd) {}
 
-    protected void writeTunerstudioLayout(PrintStream ps, TsMetadata meta, StructNamePrefixer prefixer, int offsetAdd, int arrayLength) {
+    protected void writeTunerstudioLayout(PrintStream ps, TsMetadata meta, StructNamePrefixer prefixer, int offsetAdd, int[] arrayLength) {
         throw new IllegalStateException("This type can't be in an array!");
     }
 
@@ -64,7 +64,7 @@ public abstract class Layout {
 
     public void writeCLayout(PrintStream ps) { }
 
-    public void writeCLayout(PrintStream ps, int arrayLength) {
+    public void writeCLayout(PrintStream ps, int[] arrayLength) {
         throw new IllegalStateException("This type can't be in an array!");
     }
 }

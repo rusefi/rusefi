@@ -53,8 +53,8 @@ public class StringLayout extends Layout {
     }
 
     @Override
-    public void writeCLayout(PrintStream ps, int arrayLength) {
+    public void writeCLayout(PrintStream ps, int[] arrayLength) {
         this.writeCOffsetHeader(ps, null, null);
-        ps.println("\tchar " + this.name + "[" + arrayLength + "][" + this.size + "];");
+        ps.println("\tchar " + this.name + "[" + arrayLength[0] + "][" + this.size + "];");
     }
 }
