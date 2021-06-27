@@ -21,7 +21,6 @@
 
 #define MOCK_UNDEFINED -1
 
-float getRpmMultiplier(operation_mode_e mode);
 void setOperationMode(engine_configuration_s *engineConfiguration, operation_mode_e mode);
 
 void prepareVoidConfiguration(engine_configuration_s *activeConfiguration);
