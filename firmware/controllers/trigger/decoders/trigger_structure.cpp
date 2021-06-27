@@ -183,6 +183,10 @@ operation_mode_e TriggerWaveform::getOperationMode() const {
 extern bool printTriggerDebug;
 #endif
 
+int TriggerWaveform::getExpectedEventCount(int channelIndex) {
+	return expectedEventCount[channelIndex];
+}
+
 void TriggerWaveform::calculateExpectedEventCounts(bool useOnlyRisingEdgeForTrigger) {
 	if (!useOnlyRisingEdgeForTrigger) {
 		for (size_t i = 0; i < efi::size(expectedEventCount); i++) {

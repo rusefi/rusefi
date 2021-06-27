@@ -391,9 +391,9 @@ void Engine::OnTriggerStateDecodingError() {
 			triggerCentral.triggerState.currentCycle.eventCount[0],
 			triggerCentral.triggerState.currentCycle.eventCount[1],
 			triggerCentral.triggerState.currentCycle.eventCount[2],
-			TRIGGER_WAVEFORM(expectedEventCount[0]),
-			TRIGGER_WAVEFORM(expectedEventCount[1]),
-			TRIGGER_WAVEFORM(expectedEventCount[2]));
+			TRIGGER_WAVEFORM(getExpectedEventCount(0)),
+			TRIGGER_WAVEFORM(getExpectedEventCount(1)),
+			TRIGGER_WAVEFORM(getExpectedEventCount(2)));
 	triggerCentral.triggerState.setTriggerErrorState();
 
 
@@ -402,9 +402,9 @@ void Engine::OnTriggerStateDecodingError() {
 #if EFI_PROD_CODE
 		efiPrintf("error: synchronizationPoint @ index %d expected %d/%d/%d got %d/%d/%d",
 				triggerCentral.triggerState.currentCycle.current_index,
-				TRIGGER_WAVEFORM(expectedEventCount[0]),
-				TRIGGER_WAVEFORM(expectedEventCount[1]),
-				TRIGGER_WAVEFORM(expectedEventCount[2]),
+				TRIGGER_WAVEFORM(getExpectedEventCount(0)),
+				TRIGGER_WAVEFORM(getExpectedEventCount(1)),
+				TRIGGER_WAVEFORM(getExpectedEventCount(2)),
 				triggerCentral.triggerState.currentCycle.eventCount[0],
 				triggerCentral.triggerState.currentCycle.eventCount[1],
 				triggerCentral.triggerState.currentCycle.eventCount[2]);

@@ -21,6 +21,7 @@ static char* trim(char *str) {
 }
 
 void CsvReader::open(const char *fileName, int *columnIndeces) {
+	printf("Reading from %s\r\n", fileName);
 	fp = fopen(fileName, "r");
 	this->columnIndeces = columnIndeces;
 	ASSERT_TRUE(fp != nullptr);
