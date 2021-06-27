@@ -107,7 +107,6 @@ static FsioPointers state;
 
 static LEElement * acRelayLogic;
 static LEElement * fuelPumpLogic;
-static LEElement * alternatorLogic;
 static LEElement * starterRelayDisableLogic;
 
 #if EFI_MAIN_RELAY_CONTROL
@@ -502,10 +501,6 @@ void runFsio(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 		setPinState("A/C", &enginePins.acRelay, acRelayLogic PASS_ENGINE_PARAMETER_SUFFIX);
 	}
 
-//	if (isBrainPinValid(CONFIG(alternatorControlPin))) {
-//		setPinState("alternator", &enginePins.alternatorField, alternatorLogic, engine PASS_ENGINE_PARAMETER_SUFFIX);
-//	}
-
 #if EFI_ENABLE_ENGINE_WARNING
 	if (engineConfiguration->useFSIO4ForSeriousEngineWarning) {
 		updateValueOrWarning(MAGIC_OFFSET_FOR_ENGINE_WARNING, "eng warning", &ENGINE(fsioState.isEngineWarning) PASS_ENGINE_PARAMETER_SUFFIX);
@@ -574,7 +569,6 @@ static void showFsioInfo(void) {
 	efiPrintf("sys used %d/user used %d", sysPool.getSize(), userPool.getSize());
 	showFsio("a/c", acRelayLogic);
 	showFsio("fuel", fuelPumpLogic);
-	showFsio("alt", alternatorLogic);
 
 	for (int i = 0; i < CAM_INPUTS_COUNT ; i++) {
 		brain_pin_e pin = engineConfiguration->auxPidPins[i];
@@ -698,8 +692,6 @@ void initFsioImpl(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 
 	acRelayLogic = sysPool.parseExpression(AC_RELAY_LOGIC);
 
-	alternatorLogic = sysPool.parseExpression(ALTERNATOR_LOGIC);
-	
 #if EFI_MAIN_RELAY_CONTROL
 	if (isBrainPinValid(CONFIG(mainRelayPin)))
 		mainRelayLogic = sysPool.parseExpression(MAIN_RELAY_LOGIC);
