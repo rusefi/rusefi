@@ -451,8 +451,9 @@ void Engine::OnTriggerSyncronization(bool wasSynchronized) {
 
 		if (isTriggerDecoderError(PASS_ENGINE_PARAMETER_SIGNATURE)) {
 			warning(CUSTOM_OBD_TRG_DECODING, "trigger decoding issue. expected %d/%d/%d got %d/%d/%d",
-					TRIGGER_WAVEFORM(expectedEventCount[0]), TRIGGER_WAVEFORM(expectedEventCount[1]),
-					TRIGGER_WAVEFORM(expectedEventCount[2]),
+					TRIGGER_WAVEFORM(getExpectedEventCount(0)),
+					TRIGGER_WAVEFORM(getExpectedEventCount(1)),
+					TRIGGER_WAVEFORM(getExpectedEventCount(2)),
 					triggerCentral.triggerState.currentCycle.eventCount[0],
 					triggerCentral.triggerState.currentCycle.eventCount[1],
 					triggerCentral.triggerState.currentCycle.eventCount[2]);
