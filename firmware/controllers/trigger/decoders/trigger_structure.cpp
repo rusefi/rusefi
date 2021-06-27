@@ -183,7 +183,7 @@ operation_mode_e TriggerWaveform::getOperationMode() const {
 extern bool printTriggerDebug;
 #endif
 
-int TriggerWaveform::getExpectedEventCount(int channelIndex) {
+int TriggerWaveform::getExpectedEventCount(int channelIndex) const {
 	return expectedEventCount[channelIndex];
 }
 
@@ -191,12 +191,12 @@ void TriggerWaveform::calculateExpectedEventCounts(bool useOnlyRisingEdgeForTrig
 	if (!useOnlyRisingEdgeForTrigger) {
 		for (size_t i = 0; i < efi::size(expectedEventCount); i++) {
 			if (getExpectedEventCount(i) % 2 != 0) {
-				firmwareError(ERROR_TRIGGER_DRAMA, "Trigger: should be even %d %d", i, expectedEventCount[i]);
+				firmwareError(ERROR_TRIGGER_DRAMA, "Trigger: should be even %d %d", i, getExpectedEventCount(i));
 			}
 		}
 	}
 
-	bool isSingleToothOnPrimaryChannel = useOnlyRisingEdgeForTrigger ? expectedEventCount[0] == 1 : expectedEventCount[0] == 2;
+	bool isSingleToothOnPrimaryChannel = useOnlyRisingEdgeForTrigger ? getExpectedEventCount(0) == 1 : getExpectedEventCount(0) == 2;
 	// todo: next step would be to set 'isSynchronizationNeeded' automatically based on the logic we have here
 	if (!shapeWithoutTdc && isSingleToothOnPrimaryChannel != !isSynchronizationNeeded) {
 		firmwareError(ERROR_TRIGGER_DRAMA, "trigger sync constraint violation");

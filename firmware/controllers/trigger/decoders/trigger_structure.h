@@ -178,7 +178,7 @@ public:
 
 	void calculateExpectedEventCounts(bool useOnlyRisingEdgeForTrigger);
 
-	int getExpectedEventCount(int channelIndex);
+	int getExpectedEventCount(int channelIndex) const;
 
 	/**
 	 * This is used for signal validation
