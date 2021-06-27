@@ -1,4 +1,5 @@
 #include "ac_control.h"
+#include "engine.h"
 
 #include "efi_gpio.h"
 #include "sensor.h"
@@ -23,8 +24,13 @@ static bool getAcState(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	// 	return false;
 	// }
 
+	// TPS too high, disable
+	// if (Sensor::get(SensorType::Tps1).value_or(0) >= CONFIG(maxAcTps)) {
+	// 	return false;
+	// }
+
 	// All conditions OK, simply pass thru switch
-	return engine->acSwitchState;
+	return ENGINE(acSwitchState);
 }
 
 bool updateAc(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
