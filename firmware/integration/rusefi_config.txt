@@ -1182,7 +1182,10 @@ custom pin_mode_e 1 bits, U08, @OFFSET@, [0:6], @@pin_mode_e_enum@@
 	
 ! todo: rename field remove 'ms' since unusual case of dual-purpose field - it could be either ms or percent	
 	float tachPulseDuractionMs;;"", 1, 0, 0, 100, 2
-	int unused1708;;"units", 1, 0, -20, 100, 0
+	uint16_t maxAcRpm;+Above this RPM, disable AC. Set to 0 to disable check.;"rpm", 1, 0, 0, 10000, 0
+	uint8_t maxAcTps;+Above this TPS, disable AC. Set to 0 to disable check.;"%", 1, 0, 0, 100, 0
+	uint8_t maxAcClt;+Above this CLT, disable AC to prevent overheating the engine. Set to 0 to disable check.;"deg C", 1, 0, 0, 150, 0
+	
 	
 	float wwaeTau;+Length of time the deposited wall fuel takes to dissipate after the start of acceleration. ;"Seconds", 1, 0, 0, 3, 2
 	pid_s alternatorControl;

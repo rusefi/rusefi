@@ -1,10 +1,15 @@
 #include "ac_control.h"
 #include "engine.h"
 
+#include "deadband.h"
 #include "efi_gpio.h"
 #include "sensor.h"
 
 EXTERN_ENGINE;
+
+static Deadband<200> maxRpmDeadband;
+static Deadband<5> maxCltDeadband;
+static Deadband<5> maxTpsDeadband;
 
 static bool getAcState(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	auto rpm = Sensor::get(SensorType::Rpm).value_or(0);
@@ -15,21 +20,39 @@ static bool getAcState(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	}
 
 	// Engine too fast, disable
-	// if (rpm > CONFIG(maxAcRpm)) {
-	// 	return false;
-	// }
+	auto maxRpm = CONFIG(maxAcRpm);
+	if (maxRpm != 0) {
+		if (maxRpmDeadband.gt(rpm, maxRpm)) {
+			return false;
+		}
+	}
+
+	auto clt = Sensor::get(SensorType::Clt);
+
+	// No AC with failed CLT
+	if (!clt) {
+		return false;
+	}
 
 	// Engine too hot, disable
-	// if (Sensor::get(SensorType::Clt).value_or(FLOAT_MAX) > CONFIG(maxAcClt)) {
-	// 	return false;
-	// }
+	auto maxClt = CONFIG(maxAcClt);
+	if (maxClt != 0) {
+		if (maxCltDeadband.gt(maxClt, clt.Value)) {
+			return false;
+		}
+	}
 
 	// TPS too high, disable
-	// if (Sensor::get(SensorType::Tps1).value_or(0) >= CONFIG(maxAcTps)) {
-	// 	return false;
-	// }
+	auto maxTps = CONFIG(maxAcTps);
+	if (maxTps != 0) {
+		auto tps = Sensor::get(SensorType::Tps1).value_or(0);
 
-	// All conditions OK, simply pass thru switch
+		if (maxTpsDeadband.gt(maxTps, tps)) {
+			return false;
+		}
+	}
+
+	// All conditions allow AC, simply pass thru switch
 	return ENGINE(acSwitchState);
 }
 

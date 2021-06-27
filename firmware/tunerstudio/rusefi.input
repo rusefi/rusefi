@@ -1392,6 +1392,7 @@ menuDialog = main
 		subMenu = starterRelay,				"Starter Disable relay"
 		subMenu = fuelPump,					"Fuel pump"
 		subMenu = fanSetting,				"Fan"
+		subMenu = acSettings,				"Air Conditioning"
 		subMenu = tachSettings,				"Tachometer"
 		subMenu = malfunction,				"Check engine light"
 		subMenu = statusLeds,				"Status LEDs"
@@ -2698,11 +2699,13 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 	dialog = acSettings, "A/C Settings"
 		field = "A/C Relay",						acRelayPin
 		field = "A/C Relay Mode",					acRelayPinMode
+		field = "Max RPM",						maxAcRpm
+		field = "Max CLT",						maxAcClt
+		field = "Max TPS",						maxAcTps
 
 	dialog = fanSetting, "Fan Settings"
 		panel = fan1Settings
 		panel = fan2Settings
-		panel = acSettings
 
 	dialog = fuelPump, "Fuel Pump"
 		field = "Pin",						fuelPumpPin
