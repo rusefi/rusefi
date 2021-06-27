@@ -291,13 +291,11 @@ int maxTriggerReentraint = 0;
 uint32_t triggerDuration;
 uint32_t triggerMaxDuration = 0;
 
-#if EFI_PROD_CODE || EFI_SIMULATOR
-
 /**
  * this method is invoked only by real hardware call-backs
  */
 
-void hwHandleShaftSignal(trigger_event_e signal, efitick_t timestamp) {
+void hwHandleShaftSignal(trigger_event_e signal, efitick_t timestamp DECLARE_ENGINE_PARAMETER_SUFFIX) {
 #if VR_HW_CHECK_MODE
 	// some boards do not have hardware VR input LEDs which makes such boards harder to validate
 	// from experience we know that assembly mistakes happen and quality control is required
@@ -317,11 +315,9 @@ void hwHandleShaftSignal(trigger_event_e signal, efitick_t timestamp) {
 	palWritePad(criticalErrorLedPort, criticalErrorLedPin, 0);
 #endif // VR_HW_CHECK_MODE
 
-	handleShaftSignal2(signal, timestamp);
+	handleShaftSignal2(signal, timestamp PASS_ENGINE_PARAMETER_SUFFIX);
 
 }
-
-#endif /* EFI_PROD_CODE */
 
 /**
  * this method is invoked by both real hardware and self-stimulator
