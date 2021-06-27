@@ -296,6 +296,7 @@ uint32_t triggerMaxDuration = 0;
  */
 
 void hwHandleShaftSignal(int signalIndex, bool isRising, efitick_t timestamp DECLARE_ENGINE_PARAMETER_SUFFIX) {
+	ScopePerf perf(PE::HandleShaftSignal);
 #if VR_HW_CHECK_MODE
 	// some boards do not have hardware VR input LEDs which makes such boards harder to validate
 	// from experience we know that assembly mistakes happen and quality control is required
@@ -314,15 +315,6 @@ void hwHandleShaftSignal(int signalIndex, bool isRising, efitick_t timestamp DEC
 
 	palWritePad(criticalErrorLedPort, criticalErrorLedPin, 0);
 #endif // VR_HW_CHECK_MODE
-
-	handleShaftSignal2(signalIndex, isRising, timestamp PASS_ENGINE_PARAMETER_SUFFIX);
-}
-
-/**
- * this method is invoked by both real hardware and self-stimulator
- */
-void handleShaftSignal2(int signalIndex, bool isRising, efitick_t timestamp DECLARE_ENGINE_PARAMETER_SUFFIX) {
-	ScopePerf perf(PE::HandleShaftSignal);
 
 	bool isPrimary = signalIndex == 0;
 	if (!isPrimary && !TRIGGER_WAVEFORM(needSecondTriggerInput)) {

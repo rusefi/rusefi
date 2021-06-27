@@ -56,7 +56,7 @@ void TriggerEmulatorHelper::handleEmulatorCallback(const int size, const MultiCh
 		if (needEvent(stateIndex, size, multiChannelStateSequence, i)) {
 			pin_state_t currentValue = multiChannelStateSequence.getChannelState(/*phaseIndex*/i, stateIndex);
 
-			handleShaftSignal2(i, currentValue, stamp PASS_ENGINE_PARAMETER_SUFFIX);
+			hwHandleShaftSignal(i, currentValue, stamp PASS_ENGINE_PARAMETER_SUFFIX);
 		}
 	}
 }

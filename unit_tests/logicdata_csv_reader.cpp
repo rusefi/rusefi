@@ -64,7 +64,7 @@ void CsvReader::processLine(EngineTestHelper *eth) {
 		}
 
 		efitick_t nowNt = getTimeNowNt();
-		handleShaftSignal2(index, newState[index], nowNt PASS_ENGINE_PARAMETER_SUFFIX);
+		hwHandleShaftSignal(index, newState[index], nowNt PASS_ENGINE_PARAMETER_SUFFIX);
 
 		currentState[index] = newState[index];
 	}
