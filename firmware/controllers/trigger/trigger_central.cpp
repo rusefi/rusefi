@@ -474,6 +474,15 @@ bool TriggerNoiseFilter::noiseFilter(efitick_t nowNt,
 	return false;
 }
 
+int getCrankDivider(operation_mode_e operationMode) {
+	if (operationMode == FOUR_STROKE_CAM_SENSOR || operationMode == TWO_STROKE) {
+		// That's easy - trigger cycle matches engine cycle
+		return 1;
+	} else {
+		return operationMode == FOUR_STROKE_CRANK_SENSOR ? 2 : SYMMETRICAL_CRANK_SENSOR_DIVIDER;
+	}
+}
+
 /**
  * This method is NOT invoked for VR falls.
  */
@@ -518,18 +527,10 @@ void TriggerCentral::handleShaftSignal(trigger_event_e signal, efitick_t timesta
 	 * If we only have a crank position sensor with four stroke, here we are extending crank revolutions with a 360 degree
 	 * cycle into a four stroke, 720 degrees cycle.
 	 */
-	int triggerIndexForListeners;
 	operation_mode_e operationMode = engine->getOperationMode(PASS_ENGINE_PARAMETER_SIGNATURE);
-	if (operationMode == FOUR_STROKE_CAM_SENSOR || operationMode == TWO_STROKE) {
-		// That's easy - trigger cycle matches engine cycle
-		triggerIndexForListeners = triggerState.getCurrentIndex();
-	} else {
-		int crankDivider = operationMode == FOUR_STROKE_CRANK_SENSOR ? 2 : SYMMETRICAL_CRANK_SENSOR_DIVIDER;
-
-		int crankInternalIndex = triggerState.getTotalRevolutionCounter() % crankDivider;
-
-		triggerIndexForListeners = triggerState.getCurrentIndex() + (crankInternalIndex * getTriggerSize());
-	}
+	int crankDivider = getCrankDivider(operationMode);
+	int crankInternalIndex = triggerState.getTotalRevolutionCounter() % crankDivider;
+	int triggerIndexForListeners = triggerState.getCurrentIndex() + (crankInternalIndex * getTriggerSize());
 	if (triggerIndexForListeners == 0) {
 		virtualZeroTimer.reset(timestamp);
 	}
