@@ -8,6 +8,11 @@
 #include "engine_test_helper.h"
 #include "logicdata_csv_reader.h"
 
+static constexpr trigger_event_e riseEvents[] = { SHAFT_PRIMARY_RISING,
+		SHAFT_SECONDARY_RISING, SHAFT_3RD_RISING };
+static constexpr trigger_event_e fallEvents[] = { SHAFT_PRIMARY_FALLING,
+		SHAFT_SECONDARY_FALLING, SHAFT_3RD_FALLING };
+
 static char* trim(char *str) {
 	while (str != nullptr && str[0] == ' ') {
 		str++;
@@ -55,14 +60,14 @@ void CsvReader::processLine(EngineTestHelper *eth) {
 	eth->setTimeAndInvokeEventsUs(1'000'000 * timeStamp);
 	for (int index = 0; index < 2; index++) {
 		bool current = newState[index];
-		if (lastState[index] == newState[index]) {
+		if (lastState[index] == current) {
 			continue;
 		}
 
-		bool isPrimary = index == 0;
+		trigger_event_e event =
+				(newState[index] ? riseEvents : fallEvents)[index];
 		efitick_t nowNt = getTimeNowNt();
-
-		hwHandleShaftSignal(isPrimary, current, nowNt PASS_ENGINE_PARAMETER_SUFFIX);
+		engine->triggerCentral.handleShaftSignal(event, nowNt PASS_ENGINE_PARAMETER_SUFFIX);
 	}
 
 	// Copy the current state to the last state
