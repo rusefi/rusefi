@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Wed Jun 23 21:06:51 UTC 2021
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Sun Jun 27 22:53:14 UTC 2021
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -137,7 +137,6 @@ struct cranking_parameters_s {
 	int16_t rpm;
 	/**
 	 * need 4 byte alignment
-	units
 	 * offset 6
 	 */
 	uint8_t alignmentFill_at_6[2];
@@ -160,7 +159,6 @@ struct spi_pins {
 	brain_pin_e sckPin;
 	/**
 	 * need 4 byte alignment
-	units
 	 * offset 3
 	 */
 	uint8_t alignmentFill_at_3[1];
@@ -390,7 +388,6 @@ struct ThermistorConf {
 	adc_channel_e adcChannel;
 	/**
 	 * need 4 byte alignment
-	units
 	 * offset 29
 	 */
 	uint8_t alignmentFill_at_29[3];
@@ -2528,10 +2525,23 @@ struct engine_configuration_s {
 	 */
 	float tachPulseDuractionMs;
 	/**
-	units
+	 * Above this RPM, disable AC. Set to 0 to disable check.
+	rpm
 	 * offset 1708
 	 */
-	int unused1708;
+	uint16_t maxAcRpm;
+	/**
+	 * Above this TPS, disable AC. Set to 0 to disable check.
+	%
+	 * offset 1710
+	 */
+	uint8_t maxAcTps;
+	/**
+	 * Above this CLT, disable AC to prevent overheating the engine. Set to 0 to disable check.
+	deg C
+	 * offset 1711
+	 */
+	uint8_t maxAcClt;
 	/**
 	 * Length of time the deposited wall fuel takes to dissipate after the start of acceleration. 
 	Seconds
@@ -2904,76 +2914,76 @@ struct engine_configuration_s {
 	bool unused1130 : 1;
 	/**
 	offset 2116 bit 8 */
-	bool unusedBit_494_8 : 1;
+	bool unusedBit_496_8 : 1;
 	/**
 	offset 2116 bit 9 */
-	bool unusedBit_494_9 : 1;
+	bool unusedBit_496_9 : 1;
 	/**
 	offset 2116 bit 10 */
-	bool unusedBit_494_10 : 1;
+	bool unusedBit_496_10 : 1;
 	/**
 	offset 2116 bit 11 */
-	bool unusedBit_494_11 : 1;
+	bool unusedBit_496_11 : 1;
 	/**
 	offset 2116 bit 12 */
-	bool unusedBit_494_12 : 1;
+	bool unusedBit_496_12 : 1;
 	/**
 	offset 2116 bit 13 */
-	bool unusedBit_494_13 : 1;
+	bool unusedBit_496_13 : 1;
 	/**
 	offset 2116 bit 14 */
-	bool unusedBit_494_14 : 1;
+	bool unusedBit_496_14 : 1;
 	/**
 	offset 2116 bit 15 */
-	bool unusedBit_494_15 : 1;
+	bool unusedBit_496_15 : 1;
 	/**
 	offset 2116 bit 16 */
-	bool unusedBit_494_16 : 1;
+	bool unusedBit_496_16 : 1;
 	/**
 	offset 2116 bit 17 */
-	bool unusedBit_494_17 : 1;
+	bool unusedBit_496_17 : 1;
 	/**
 	offset 2116 bit 18 */
-	bool unusedBit_494_18 : 1;
+	bool unusedBit_496_18 : 1;
 	/**
 	offset 2116 bit 19 */
-	bool unusedBit_494_19 : 1;
+	bool unusedBit_496_19 : 1;
 	/**
 	offset 2116 bit 20 */
-	bool unusedBit_494_20 : 1;
+	bool unusedBit_496_20 : 1;
 	/**
 	offset 2116 bit 21 */
-	bool unusedBit_494_21 : 1;
+	bool unusedBit_496_21 : 1;
 	/**
 	offset 2116 bit 22 */
-	bool unusedBit_494_22 : 1;
+	bool unusedBit_496_22 : 1;
 	/**
 	offset 2116 bit 23 */
-	bool unusedBit_494_23 : 1;
+	bool unusedBit_496_23 : 1;
 	/**
 	offset 2116 bit 24 */
-	bool unusedBit_494_24 : 1;
+	bool unusedBit_496_24 : 1;
 	/**
 	offset 2116 bit 25 */
-	bool unusedBit_494_25 : 1;
+	bool unusedBit_496_25 : 1;
 	/**
 	offset 2116 bit 26 */
-	bool unusedBit_494_26 : 1;
+	bool unusedBit_496_26 : 1;
 	/**
 	offset 2116 bit 27 */
-	bool unusedBit_494_27 : 1;
+	bool unusedBit_496_27 : 1;
 	/**
 	offset 2116 bit 28 */
-	bool unusedBit_494_28 : 1;
+	bool unusedBit_496_28 : 1;
 	/**
 	offset 2116 bit 29 */
-	bool unusedBit_494_29 : 1;
+	bool unusedBit_496_29 : 1;
 	/**
 	offset 2116 bit 30 */
-	bool unusedBit_494_30 : 1;
+	bool unusedBit_496_30 : 1;
 	/**
 	offset 2116 bit 31 */
-	bool unusedBit_494_31 : 1;
+	bool unusedBit_496_31 : 1;
 	/**
 	 * set can_mode X
 	 * offset 2120
@@ -3116,7 +3126,6 @@ struct engine_configuration_s {
 	uint8_t fan1ExtraIdle;
 	/**
 	 * need 4 byte alignment
-	units
 	 * offset 2247
 	 */
 	uint8_t alignmentFill_at_2247[1];
@@ -3818,7 +3827,6 @@ struct engine_configuration_s {
 	int8_t knockBaseNoise[IGN_RPM_COUNT];
 	/**
 	 * need 4 byte alignment
-	units
 	 * offset 4511
 	 */
 	uint8_t alignmentFill_at_4511[1];
@@ -4221,4 +4229,4 @@ struct persistent_config_s {
 };
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Wed Jun 23 21:06:51 UTC 2021
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Sun Jun 27 22:53:14 UTC 2021
