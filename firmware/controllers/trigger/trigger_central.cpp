@@ -292,9 +292,11 @@ uint32_t triggerDuration;
 uint32_t triggerMaxDuration = 0;
 
 /**
- * this method is invoked only by real hardware call-backs
+ * This function is called by all trigger inputs:
+ *  - Hardware triggers
+ *  - Trigger simulator (on ECU)
+ *  - Trigger replay from CSV (unit tests)
  */
-
 void hwHandleShaftSignal(int signalIndex, bool isRising, efitick_t timestamp DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	ScopePerf perf(PE::HandleShaftSignal);
 #if VR_HW_CHECK_MODE
