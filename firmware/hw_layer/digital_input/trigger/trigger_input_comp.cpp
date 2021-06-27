@@ -54,22 +54,16 @@ static void comp_shaft_callback(COMPDriver *comp) {
 	
 	uint32_t status = comp_lld_get_status(comp);
 	int isPrimary = (comp == EFI_COMP_PRIMARY_DEVICE);
-	if (!isPrimary && !TRIGGER_WAVEFORM(needSecondTriggerInput)) {
-		return;
-	}
+
 	trigger_event_e signal;
 	if (status & COMP_IRQ_RISING) {
-		signal = isPrimary ? (engineConfiguration->invertPrimaryTriggerSignal ? SHAFT_PRIMARY_FALLING : SHAFT_PRIMARY_RISING) : 
-			(engineConfiguration->invertSecondaryTriggerSignal ? SHAFT_SECONDARY_FALLING : SHAFT_SECONDARY_RISING);
-		hwHandleShaftSignal(signal, stamp);
+		hwHandleShaftSignal(isPrimary ? 0 : 1, true, stamp);
 		// shift the threshold down a little bit to avoid false-triggering (threshold hysteresis)
 		setHysteresis(comp, -1);
 	}
 
 	if (status & COMP_IRQ_FALLING) {
-		signal = isPrimary ? (engineConfiguration->invertPrimaryTriggerSignal ? SHAFT_PRIMARY_RISING : SHAFT_PRIMARY_FALLING) : 
-			(engineConfiguration->invertSecondaryTriggerSignal ? SHAFT_SECONDARY_RISING : SHAFT_SECONDARY_FALLING);
-		hwHandleShaftSignal(signal, stamp);
+		hwHandleShaftSignal(isPrimary ? 0 : 1, false, stamp);
 		// shift the threshold up a little bit to avoid false-triggering (threshold hysteresis)
 		setHysteresis(comp, 1);
 	}

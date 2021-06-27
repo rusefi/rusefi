@@ -62,10 +62,9 @@ void CsvReader::processLine(EngineTestHelper *eth) {
 		if (currentState[index] == newState[index]) {
 			continue;
 		}
-		trigger_event_e event =
-				(newState[index] ? riseEvents : fallEvents)[index];
+
 		efitick_t nowNt = getTimeNowNt();
-		handleShaftSignal2(event, nowNt PASS_ENGINE_PARAMETER_SUFFIX);
+		handleShaftSignal2(index, newState[index], nowNt PASS_ENGINE_PARAMETER_SUFFIX);
 
 		currentState[index] = newState[index];
 	}
