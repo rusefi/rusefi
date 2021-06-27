@@ -9,6 +9,7 @@ TESTS_SRC_CPP = \
 	tests/trigger/test_real_cranking_miata_NA.cpp \
 	tests/trigger/test_real_cranking_miata_na6.cpp \
 	tests/trigger/test_real_volkswagen.cpp \
+	tests/trigger/test_rpm_multiplier.cpp \
 	tests/trigger/test_quad_cam.cpp \
 	tests/trigger/test_override_gaps.cpp \
 	tests/trigger/test_injection_scheduling.cpp \
