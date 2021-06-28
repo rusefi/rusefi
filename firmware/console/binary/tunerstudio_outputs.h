@@ -14,9 +14,9 @@
 #include "scaled_channel.h"
 #include "tunerstudio_debug_struct.h"
 
-typedef struct {
+struct egt_values_s {
 	uint16_t values[EGT_CHANNEL_COUNT];
-} egt_values_s;
+};
 
 
 enum class TsCalMode : uint8_t {
@@ -42,7 +42,7 @@ enum class TsCalMode : uint8_t {
  *
  * please be aware that 'float' (F32) type requires TunerStudio version 2.6 and later
  */
-typedef struct {
+struct TunerStudioOutputChannels {
 	/* see also [OutputChannels] in rusefi.input */
 
 	/**
@@ -71,7 +71,7 @@ typedef struct {
 	unsigned int isCltError : 1; // bit 19
 	unsigned int isMapError : 1; // bit 20
 	unsigned int isIatError : 1; // bit 21
-	unsigned int unusedAt22 : 1; // bit 22
+	unsigned int acState : 1; // bit 22 - 1 if AC is engaged, 0 otherwise
 	unsigned int isTriggerError : 1; // bit 23
 	unsigned int hasCriticalError : 1; // bit 24
 	unsigned int isWarnNow : 1; // bit 25
@@ -288,7 +288,6 @@ typedef struct {
 
 	/* see also [OutputChannels] in rusefi.input */
 	/* see also TS_OUTPUT_SIZE in rusefi_config.txt */
-
-} TunerStudioOutputChannels;
+};
 
 extern TunerStudioOutputChannels tsOutputChannels;

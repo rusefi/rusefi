@@ -6,11 +6,11 @@ import com.rusefi.newparse.parsing.*;
 import java.io.PrintStream;
 
 public class ArrayLayout extends Layout {
-    protected final int length;
+    protected final int[] length;
 
     protected final Layout prototypeLayout;
 
-    public ArrayLayout(PrototypeField prototype, int length) {
+    public ArrayLayout(PrototypeField prototype, int[] length) {
         this.length = length;
 
         if (prototype instanceof ScalarField) {
@@ -29,7 +29,13 @@ public class ArrayLayout extends Layout {
 
     @Override
     public int getSize() {
-        return this.prototypeLayout.getSize() * this.length;
+        int size = this.prototypeLayout.getSize();
+
+        for (int x : this.length) {
+            size *= x;
+        }
+
+        return size;
     }
 
     @Override
@@ -52,7 +58,7 @@ public class ArrayLayout extends Layout {
 
     @Override
     public String toString() {
-        return "Array of " + this.prototypeLayout.toString() + " length " + this.length + " " + super.toString();
+        return "Array of " + this.prototypeLayout.toString() + " length " + this.length[0] + " " + super.toString();
     }
 
     @Override
@@ -63,7 +69,7 @@ public class ArrayLayout extends Layout {
     @Override
     public void writeCLayout(PrintStream ps) {
         // Skip zero length arrays, they may be used for padding
-        if (this.length > 0) {
+        if (this.length[0] > 0) {
             this.prototypeLayout.writeCLayout(ps, this.length);
         }
     }

@@ -103,49 +103,6 @@ static void printOutputs(const engine_configuration_s *engineConfiguration) {
 			hwPortname(engineConfiguration->alternatorControlPin));
 }
 
-
-/**
- * These should be not very long because these are displayed on the LCD as is
- */
-const char* getConfigurationName(engine_type_e engineType) {
-	switch (engineType) {
-	case DEFAULT_FRANKENSO:
-		return "DEFAULT_FRANKENSO";
-	case DODGE_NEON_1995:
-		return "Neon95";
-	case FORD_ASPIRE_1996:
-		return "Aspire";
-	case NISSAN_PRIMERA:
-		return "Primera";
-	case HONDA_ACCORD_CD:
-		return "Accord3";
-	case HONDA_ACCORD_CD_TWO_WIRES:
-		return "Accord2";
-	case HONDA_ACCORD_1_24_SHIFTED:
-		return "Accord24sh";
-	case HONDA_ACCORD_CD_DIP:
-		return "HondaD";
-	case FORD_INLINE_6_1995:
-		return "Fordi6";
-	case GY6_139QMB:
-		return "Gy6139";
-	case MAZDA_MIATA_NB1:
-		return "MiataNB1";
-	case FORD_ESCORT_GT:
-		return "EscrtGT";
-	case CITROEN_TU3JP:
-		return "TU3JP";
-	case MITSU_4G93:
-		return "Mi4G93";
-	case MIATA_1990:
-		return "MX590";
-	case MIATA_1996:
-		return "MX596";
-	default:
-		return getEngine_type_e(engineType);
-	}
-}
-
 /**
  * @brief	Prints current engine configuration to human-readable console.
  */
@@ -930,20 +887,20 @@ static void printAllInfo(void) {
 #endif
 }
 
-typedef struct {
+struct plain_get_integer_s {
 	const char *token;
 	int *value;
-} plain_get_integer_s;
+};
 
-typedef struct {
+struct plain_get_short_s {
 	const char *token;
 	uint16_t *value;
-} plain_get_short_s;
+};
 
-typedef struct {
+struct plain_get_float_s {
 	const char *token;
 	float *value;
-} plain_get_float_s;
+};
 
 
 #if ! EFI_UNIT_TEST
@@ -1073,15 +1030,15 @@ static void setFsioCurve2Value(float value) {
 	setLinearCurve(engineConfiguration->fsioCurve2, value, value, 1);
 }
 
-typedef struct {
+struct command_i_s {
 	const char *token;
 	VoidInt callback;
-} command_i_s;
+};
 
-typedef struct {
+struct command_f_s {
 	const char *token;
 	VoidFloat callback;
-} command_f_s;
+};
 
 const command_f_s commandsF[] = {
 #if EFI_ENGINE_CONTROL
@@ -1374,3 +1331,45 @@ void initSettings(void) {
 }
 
 #endif /* !EFI_UNIT_TEST */
+
+/**
+ * These should be not very long because these are displayed on the LCD as is
+ */
+const char* getConfigurationName(engine_type_e engineType) {
+	switch (engineType) {
+	case DEFAULT_FRANKENSO:
+		return "DEFAULT_FRANKENSO";
+	case DODGE_NEON_1995:
+		return "Neon95";
+	case FORD_ASPIRE_1996:
+		return "Aspire";
+	case NISSAN_PRIMERA:
+		return "Primera";
+	case HONDA_ACCORD_CD:
+		return "Accord3";
+	case HONDA_ACCORD_CD_TWO_WIRES:
+		return "Accord2";
+	case HONDA_ACCORD_1_24_SHIFTED:
+		return "Accord24sh";
+	case HONDA_ACCORD_CD_DIP:
+		return "HondaD";
+	case FORD_INLINE_6_1995:
+		return "Fordi6";
+	case GY6_139QMB:
+		return "Gy6139";
+	case MAZDA_MIATA_NB1:
+		return "MiataNB1";
+	case FORD_ESCORT_GT:
+		return "EscrtGT";
+	case CITROEN_TU3JP:
+		return "TU3JP";
+	case MITSU_4G93:
+		return "Mi4G93";
+	case MIATA_1990:
+		return "MX590";
+	case MIATA_1996:
+		return "MX596";
+	default:
+		return getEngine_type_e(engineType);
+	}
+}

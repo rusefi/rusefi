@@ -532,8 +532,8 @@ bit isVerboseAuxPid1
 bit overrideTriggerGaps
 bit enableFan1WithAc;+Turn on this fan when AC is on.
 bit enableFan2WithAc;+Turn on this fan when AC is on.
-bit unused_294_6
-bit unused_294_7
+bit disableFan1WhenStopped;+Inhibit operation of this fan while the engine is not running.
+bit disableFan2WhenStopped;+Inhibit operation of this fan while the engine is not running.
 bit unused_294_8
 bit isCJ125Verbose;enable cj125verbose/disable cj125verbose
 bit cj125isUaDivided;+Is your UA CJ125 output wired to MCU via resistor divider? Ua can go over 3.3v but only at lambda >3, i.e very lean AFR above 44.1\nWhen exposed to free air and 17x gain, Ua will be 4.17 volt
@@ -1182,7 +1182,10 @@ custom pin_mode_e 1 bits, U08, @OFFSET@, [0:6], @@pin_mode_e_enum@@
 	
 ! todo: rename field remove 'ms' since unusual case of dual-purpose field - it could be either ms or percent	
 	float tachPulseDuractionMs;;"", 1, 0, 0, 100, 2
-	int unused1708;;"units", 1, 0, -20, 100, 0
+	uint16_t maxAcRpm;+Above this RPM, disable AC. Set to 0 to disable check.;"rpm", 1, 0, 0, 10000, 0
+	uint8_t maxAcTps;+Above this TPS, disable AC. Set to 0 to disable check.;"%", 1, 0, 0, 100, 0
+	uint8_t maxAcClt;+Above this CLT, disable AC to prevent overheating the engine. Set to 0 to disable check.;"deg C", 1, 0, 0, 150, 0
+	
 	
 	float wwaeTau;+Length of time the deposited wall fuel takes to dissipate after the start of acceleration. ;"Seconds", 1, 0, 0, 3, 2
 	pid_s alternatorControl;

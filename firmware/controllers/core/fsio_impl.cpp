@@ -105,9 +105,7 @@ FsioPointers::FsioPointers() : fsioLogics() {
 
 static FsioPointers state;
 
-static LEElement * acRelayLogic;
 static LEElement * fuelPumpLogic;
-static LEElement * alternatorLogic;
 static LEElement * starterRelayDisableLogic;
 
 #if EFI_MAIN_RELAY_CONTROL
@@ -498,14 +496,6 @@ void runFsio(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	 */
 	enginePins.o2heater.setValue(engine->rpmCalculator.isRunning());
 
-	if (isBrainPinValid(CONFIG(acRelayPin))) {
-		setPinState("A/C", &enginePins.acRelay, acRelayLogic PASS_ENGINE_PARAMETER_SUFFIX);
-	}
-
-//	if (isBrainPinValid(CONFIG(alternatorControlPin))) {
-//		setPinState("alternator", &enginePins.alternatorField, alternatorLogic, engine PASS_ENGINE_PARAMETER_SUFFIX);
-//	}
-
 #if EFI_ENABLE_ENGINE_WARNING
 	if (engineConfiguration->useFSIO4ForSeriousEngineWarning) {
 		updateValueOrWarning(MAGIC_OFFSET_FOR_ENGINE_WARNING, "eng warning", &ENGINE(fsioState.isEngineWarning) PASS_ENGINE_PARAMETER_SUFFIX);
@@ -572,9 +562,7 @@ static void showFsio(const char *msg, LEElement *element) {
 static void showFsioInfo(void) {
 #if EFI_PROD_CODE || EFI_SIMULATOR
 	efiPrintf("sys used %d/user used %d", sysPool.getSize(), userPool.getSize());
-	showFsio("a/c", acRelayLogic);
 	showFsio("fuel", fuelPumpLogic);
-	showFsio("alt", alternatorLogic);
 
 	for (int i = 0; i < CAM_INPUTS_COUNT ; i++) {
 		brain_pin_e pin = engineConfiguration->auxPidPins[i];
@@ -696,10 +684,6 @@ void initFsioImpl(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	fuelPumpLogic = sysPool.parseExpression(FUEL_PUMP_LOGIC);
 #endif /* EFI_FUEL_PUMP */
 
-	acRelayLogic = sysPool.parseExpression(AC_RELAY_LOGIC);
-
-	alternatorLogic = sysPool.parseExpression(ALTERNATOR_LOGIC);
-	
 #if EFI_MAIN_RELAY_CONTROL
 	if (isBrainPinValid(CONFIG(mainRelayPin)))
 		mainRelayLogic = sysPool.parseExpression(MAIN_RELAY_LOGIC);
@@ -774,10 +758,6 @@ void runHardcodedFsio(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	// see STARTER_RELAY_LOGIC
 	if (isBrainPinValid(CONFIG(starterRelayDisablePin))) {
 		enginePins.starterRelayDisable.setValue(engine->rpmCalculator.getRpm() < engineConfiguration->cranking.rpm);
-	}
-	// see AC_RELAY_LOGIC
-	if (isBrainPinValid(CONFIG(acRelayPin))) {
-		enginePins.acRelay.setValue(getAcToggle(PASS_ENGINE_PARAMETER_SIGNATURE) && engine->rpmCalculator.getRpm() > 850);
 	}
 	// see FUEL_PUMP_LOGIC
 	if (isBrainPinValid(CONFIG(fuelPumpPin))) {

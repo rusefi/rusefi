@@ -28,6 +28,7 @@ extern int timeNowUs;
 extern WarningCodeState unitTestWarningCodeState;
 extern engine_configuration_s & activeConfiguration;
 extern bool printTriggerDebug;
+extern bool printTriggerTrace;
 extern bool printFuelDebug;
 extern int minCrankingRpm;
 
@@ -114,7 +115,7 @@ EngineTestHelper::EngineTestHelper(engine_type_e engineType, configuration_callb
 EngineTestHelper::~EngineTestHelper() {
 	// Write history to file
 	std::stringstream filePath;
-	filePath << ::testing::UnitTest::GetInstance()->current_test_info()->name() << ".logicdata";
+	filePath << "unittest_" << ::testing::UnitTest::GetInstance()->current_test_info()->name() << ".logicdata";
 	writeEvents(filePath.str().c_str());
 
 	// Cleanup
@@ -379,4 +380,9 @@ void EngineTestHelper::setTriggerType(trigger_type_e trigger DECLARE_ENGINE_PARA
 
 void setupSimpleTestEngineWithMafAndTT_ONE_trigger(EngineTestHelper *eth, injection_mode_e injectionMode) {
 	setupSimpleTestEngineWithMaf(eth, injectionMode, TT_ONE);
+}
+
+void setVerboseTrigger(bool isEnabled) {
+	printTriggerDebug = isEnabled;
+	printTriggerTrace = isEnabled;
 }

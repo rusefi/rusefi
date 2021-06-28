@@ -35,6 +35,7 @@
 #include "dynoview.h"
 #include "boost_control.h"
 #include "fan_control.h"
+#include "ac_control.h"
 #if EFI_MC33816
  #include "mc33816.h"
 #endif // EFI_MC33816
@@ -229,7 +230,8 @@ void Engine::periodicSlowCallback(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	runHardcodedFsio(PASS_ENGINE_PARAMETER_SIGNATURE);
 #endif /* EFI_FSIO */
 
-	updateFans(PASS_ENGINE_PARAMETER_SIGNATURE);
+	bool acActive = updateAc(PASS_ENGINE_PARAMETER_SIGNATURE);
+	updateFans(acActive PASS_ENGINE_PARAMETER_SUFFIX);
 
 	updateGppwm();
 
@@ -391,9 +393,9 @@ void Engine::OnTriggerStateDecodingError() {
 			triggerCentral.triggerState.currentCycle.eventCount[0],
 			triggerCentral.triggerState.currentCycle.eventCount[1],
 			triggerCentral.triggerState.currentCycle.eventCount[2],
-			TRIGGER_WAVEFORM(expectedEventCount[0]),
-			TRIGGER_WAVEFORM(expectedEventCount[1]),
-			TRIGGER_WAVEFORM(expectedEventCount[2]));
+			TRIGGER_WAVEFORM(getExpectedEventCount(0)),
+			TRIGGER_WAVEFORM(getExpectedEventCount(1)),
+			TRIGGER_WAVEFORM(getExpectedEventCount(2)));
 	triggerCentral.triggerState.setTriggerErrorState();
 
 
@@ -402,9 +404,9 @@ void Engine::OnTriggerStateDecodingError() {
 #if EFI_PROD_CODE
 		efiPrintf("error: synchronizationPoint @ index %d expected %d/%d/%d got %d/%d/%d",
 				triggerCentral.triggerState.currentCycle.current_index,
-				TRIGGER_WAVEFORM(expectedEventCount[0]),
-				TRIGGER_WAVEFORM(expectedEventCount[1]),
-				TRIGGER_WAVEFORM(expectedEventCount[2]),
+				TRIGGER_WAVEFORM(getExpectedEventCount(0)),
+				TRIGGER_WAVEFORM(getExpectedEventCount(1)),
+				TRIGGER_WAVEFORM(getExpectedEventCount(2)),
 				triggerCentral.triggerState.currentCycle.eventCount[0],
 				triggerCentral.triggerState.currentCycle.eventCount[1],
 				triggerCentral.triggerState.currentCycle.eventCount[2]);
@@ -451,8 +453,9 @@ void Engine::OnTriggerSyncronization(bool wasSynchronized) {
 
 		if (isTriggerDecoderError(PASS_ENGINE_PARAMETER_SIGNATURE)) {
 			warning(CUSTOM_OBD_TRG_DECODING, "trigger decoding issue. expected %d/%d/%d got %d/%d/%d",
-					TRIGGER_WAVEFORM(expectedEventCount[0]), TRIGGER_WAVEFORM(expectedEventCount[1]),
-					TRIGGER_WAVEFORM(expectedEventCount[2]),
+					TRIGGER_WAVEFORM(getExpectedEventCount(0)),
+					TRIGGER_WAVEFORM(getExpectedEventCount(1)),
+					TRIGGER_WAVEFORM(getExpectedEventCount(2)),
 					triggerCentral.triggerState.currentCycle.eventCount[0],
 					triggerCentral.triggerState.currentCycle.eventCount[1],
 					triggerCentral.triggerState.currentCycle.eventCount[2]);
