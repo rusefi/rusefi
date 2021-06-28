@@ -317,7 +317,7 @@ void hwHandleShaftSignal(int signalIndex, bool isRising, efitick_t timestamp DEC
 	palWritePad(criticalErrorLedPort, criticalErrorLedPin, 0);
 #endif // VR_HW_CHECK_MODE
 
-	handleShaftSignal(signalIndex, isRising, timestamp, PASS_ENGINE_PARAMETER_SUFFIX);
+	handleShaftSignal(signalIndex, isRising, timestamp PASS_ENGINE_PARAMETER_SUFFIX);
 }
 
 // Handle all shaft signals - hardware or emulated both
