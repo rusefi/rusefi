@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Sun Jun 27 22:52:41 UTC 2021
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Mon Jun 28 12:53:52 UTC 2021
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -686,11 +686,13 @@ struct engine_configuration_s {
 	offset 76 bit 5 */
 	bool enableFan2WithAc : 1;
 	/**
+	 * Inhibit operation of this fan while the engine is not running.
 	offset 76 bit 6 */
-	bool unused_294_6 : 1;
+	bool disableFan1WhenStopped : 1;
 	/**
+	 * Inhibit operation of this fan while the engine is not running.
 	offset 76 bit 7 */
-	bool unused_294_7 : 1;
+	bool disableFan2WhenStopped : 1;
 	/**
 	offset 76 bit 8 */
 	bool unused_294_8 : 1;
@@ -4234,4 +4236,4 @@ struct persistent_config_s {
 };
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Sun Jun 27 22:52:41 UTC 2021
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Mon Jun 28 12:53:52 UTC 2021
