@@ -46,4 +46,29 @@ TEST(FanControl, fan1) {
 	engine->acSwitchState = false;
 	updateFans(PASS_ENGINE_PARAMETER_SIGNATURE);
 	EXPECT_EQ(false, enginePins.fanRelay.getLogicValue());
+
+	// Back to hot, fan should turn on
+	Sensor::setMockValue(SensorType::Clt, 95);
+	updateFans(PASS_ENGINE_PARAMETER_SIGNATURE);
+	EXPECT_EQ(true, enginePins.fanRelay.getLogicValue());
+
+	// Engine starts cranking, fan should turn off
+	ENGINE(rpmCalculator).setRpmValue(100);
+	updateFans(PASS_ENGINE_PARAMETER_SIGNATURE);
+	EXPECT_EQ(false, enginePins.fanRelay.getLogicValue());
+
+	// Engine running, fan should turn back on
+	ENGINE(rpmCalculator).setRpmValue(1000);
+	updateFans(PASS_ENGINE_PARAMETER_SIGNATURE);
+	EXPECT_EQ(true, enginePins.fanRelay.getLogicValue());
+
+	// Stop the engine, fan should stay on
+	ENGINE(rpmCalculator).setRpmValue(0);
+	updateFans(PASS_ENGINE_PARAMETER_SIGNATURE);
+	EXPECT_EQ(true, enginePins.fanRelay.getLogicValue());
+
+	// Set configuration to inhibit fan while engine is stopped, fan should stop
+	engineConfiguration->disableFan1WhenStopped = true;
+	updateFans(PASS_ENGINE_PARAMETER_SIGNATURE);
+	EXPECT_EQ(false, enginePins.fanRelay.getLogicValue());
 }
