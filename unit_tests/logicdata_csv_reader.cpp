@@ -21,6 +21,7 @@ static char* trim(char *str) {
 }
 
 void CsvReader::open(const char *fileName, int *columnIndeces) {
+	printf("Reading from %s\r\n", fileName);
 	fp = fopen(fileName, "r");
 	this->columnIndeces = columnIndeces;
 	ASSERT_TRUE(fp != nullptr);
@@ -64,7 +65,7 @@ void CsvReader::processLine(EngineTestHelper *eth) {
 		trigger_event_e event =
 				(newState[index] ? riseEvents : fallEvents)[index];
 		efitick_t nowNt = getTimeNowNt();
-		engine->triggerCentral.handleShaftSignal(event, nowNt PASS_ENGINE_PARAMETER_SUFFIX);
+		handleShaftSignal2(event, nowNt PASS_ENGINE_PARAMETER_SUFFIX);
 
 		currentState[index] = newState[index];
 	}

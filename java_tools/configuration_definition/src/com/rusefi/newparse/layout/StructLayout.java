@@ -177,9 +177,9 @@ public class StructLayout extends Layout {
     }
 
     @Override
-    public void writeCLayout(PrintStream ps, int arrayLength) {
+    public void writeCLayout(PrintStream ps, int[] arrayLength) {
         this.writeCOffsetHeader(ps, null, null);
-        ps.println("\t" + this.typeName + " " + this.name + "[" + arrayLength + "];");
+        ps.println("\t" + this.typeName + " " + this.name + "[" + arrayLength[0] + "];");
     }
 
     public void writeCLayoutRoot(PrintStream ps) {

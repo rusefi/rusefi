@@ -88,6 +88,22 @@ static int atTriggerVersion = 0;
 extern WaveChart waveChart;
 #endif /* EFI_ENGINE_SNIFFER */
 
+/**
+ * todo: why is this method NOT reciprocal to getCrankDivider?!
+ * todo: oh this method has only one usage? there must me another very similar method!
+ */
+static float getRpmMultiplier(operation_mode_e mode) {
+	if (mode == FOUR_STROKE_SYMMETRICAL_CRANK_SENSOR) {
+		return 2;
+	} else if (mode == FOUR_STROKE_CAM_SENSOR) {
+		return 0.5;
+	} else if (mode == FOUR_STROKE_CRANK_SENSOR) {
+		// unit test coverage still runs if the value below is changed to '2' not a great sign!
+		return 1;
+	}
+	return 1;
+}
+
 void setTriggerEmulatorRPM(int rpm DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	engineConfiguration->triggerSimulatorFrequency = rpm;
 	/**

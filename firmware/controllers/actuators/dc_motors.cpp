@@ -103,8 +103,6 @@ public:
 
 			dcMotor.configure(m_pwm1, wrappedDir1, wrappedDir2);
 		}
-		
-		dcMotor.setType(useTwoWires ? TwoPinDcMotor::ControlType::PwmDirectionPins : TwoPinDcMotor::ControlType::PwmEnablePin);
 	}
 };
 

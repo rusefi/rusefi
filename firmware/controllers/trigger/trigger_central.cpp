@@ -291,13 +291,11 @@ int maxTriggerReentraint = 0;
 uint32_t triggerDuration;
 uint32_t triggerMaxDuration = 0;
 
-#if EFI_PROD_CODE || EFI_SIMULATOR
-
 /**
  * this method is invoked only by real hardware call-backs
  */
 
-void hwHandleShaftSignal(trigger_event_e signal, efitick_t timestamp) {
+void hwHandleShaftSignal(trigger_event_e signal, efitick_t timestamp DECLARE_ENGINE_PARAMETER_SUFFIX) {
 #if VR_HW_CHECK_MODE
 	// some boards do not have hardware VR input LEDs which makes such boards harder to validate
 	// from experience we know that assembly mistakes happen and quality control is required
@@ -317,11 +315,9 @@ void hwHandleShaftSignal(trigger_event_e signal, efitick_t timestamp) {
 	palWritePad(criticalErrorLedPort, criticalErrorLedPin, 0);
 #endif // VR_HW_CHECK_MODE
 
-	handleShaftSignal2(signal, timestamp);
+	handleShaftSignal2(signal, timestamp PASS_ENGINE_PARAMETER_SUFFIX);
 
 }
-
-#endif /* EFI_PROD_CODE */
 
 /**
  * this method is invoked by both real hardware and self-stimulator
@@ -446,7 +442,7 @@ bool TriggerNoiseFilter::noiseFilter(efitick_t nowNt,
 
 	// but first check if we're expecting a gap
 	bool isGapExpected = TRIGGER_WAVEFORM(isSynchronizationNeeded) && triggerState->shaft_is_synchronized &&
-			(triggerState->currentCycle.eventCount[ti] + 1) == TRIGGER_WAVEFORM(expectedEventCount[ti]);
+			(triggerState->currentCycle.eventCount[ti] + 1) == TRIGGER_WAVEFORM(getExpectedEventCount(ti));
 	
 	if (isGapExpected) {
 		// usually we need to extend the period for gaps, based on the trigger info
@@ -472,6 +468,18 @@ bool TriggerNoiseFilter::noiseFilter(efitick_t nowNt,
 	}
 	// all premature or extra-long events are ignored - treated as interference
 	return false;
+}
+
+/**
+ * todo: why is this method NOT reciprocal to getRpmMultiplier?!
+ */
+int getCrankDivider(operation_mode_e operationMode) {
+	if (operationMode == FOUR_STROKE_CAM_SENSOR || operationMode == TWO_STROKE) {
+		// That's easy - trigger cycle matches engine cycle
+		return 1;
+	} else {
+		return operationMode == FOUR_STROKE_CRANK_SENSOR ? 2 : SYMMETRICAL_CRANK_SENSOR_DIVIDER;
+	}
 }
 
 /**
@@ -518,18 +526,10 @@ void TriggerCentral::handleShaftSignal(trigger_event_e signal, efitick_t timesta
 	 * If we only have a crank position sensor with four stroke, here we are extending crank revolutions with a 360 degree
 	 * cycle into a four stroke, 720 degrees cycle.
 	 */
-	int triggerIndexForListeners;
 	operation_mode_e operationMode = engine->getOperationMode(PASS_ENGINE_PARAMETER_SIGNATURE);
-	if (operationMode == FOUR_STROKE_CAM_SENSOR || operationMode == TWO_STROKE) {
-		// That's easy - trigger cycle matches engine cycle
-		triggerIndexForListeners = triggerState.getCurrentIndex();
-	} else {
-		int crankDivider = operationMode == FOUR_STROKE_CRANK_SENSOR ? 2 : SYMMETRICAL_CRANK_SENSOR_DIVIDER;
-
-		int crankInternalIndex = triggerState.getTotalRevolutionCounter() % crankDivider;
-
-		triggerIndexForListeners = triggerState.getCurrentIndex() + (crankInternalIndex * getTriggerSize());
-	}
+	int crankDivider = getCrankDivider(operationMode);
+	int crankInternalIndex = triggerState.getTotalRevolutionCounter() % crankDivider;
+	int triggerIndexForListeners = triggerState.getCurrentIndex() + (crankInternalIndex * getTriggerSize());
 	if (triggerIndexForListeners == 0) {
 		virtualZeroTimer.reset(timestamp);
 	}
@@ -623,8 +623,10 @@ void triggerInfo(void) {
 		efiPrintf("trigger#2 event counters up=%d/down=%d", engine->triggerCentral.getHwEventCounter(2),
 				engine->triggerCentral.getHwEventCounter(3));
 	}
-	efiPrintf("expected cycle events %d/%d/%d", TRIGGER_WAVEFORM(expectedEventCount[0]),
-			TRIGGER_WAVEFORM(expectedEventCount[1]), TRIGGER_WAVEFORM(expectedEventCount[2]));
+	efiPrintf("expected cycle events %d/%d/%d",
+			TRIGGER_WAVEFORM(getExpectedEventCount(0)),
+			TRIGGER_WAVEFORM(getExpectedEventCount(1)),
+			TRIGGER_WAVEFORM(getExpectedEventCount(2)));
 
 	efiPrintf("trigger type=%d/need2ndChannel=%s", engineConfiguration->trigger.type,
 			boolToString(TRIGGER_WAVEFORM(needSecondTriggerInput)));

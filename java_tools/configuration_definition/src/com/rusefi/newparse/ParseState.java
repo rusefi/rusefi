@@ -224,14 +224,12 @@ public class ParseState extends RusefiConfigGrammarBaseListener {
 
     @Override
     public void exitArrayTypedefSuffix(RusefiConfigGrammarParser.ArrayTypedefSuffixContext ctx) {
-        int arrayLength = this.arrayDim;
-
         Type datatype = Type.findByTsType(ctx.Datatype().getText());
 
         FieldOptions options = new FieldOptions();
         handleFieldOptionsList(options, ctx.fieldOptionsList());
 
-        this.typedefs.put(this.typedefName, new ArrayTypedef(this.typedefName, arrayLength, datatype, options));
+        this.typedefs.put(this.typedefName, new ArrayTypedef(this.typedefName, this.arrayDim, datatype, options));
     }
 
     @Override
@@ -349,7 +347,7 @@ public class ParseState extends RusefiConfigGrammarBaseListener {
                 handleFieldOptionsList(options, ctx.fieldOptionsList());
 
                 ScalarField prototype = new ScalarField(arTypedef.type, name, options);
-                scope.structFields.add(new ArrayField<ScalarField>(prototype, arTypedef.length, false));
+                scope.structFields.add(new ArrayField<>(prototype, arTypedef.length, false));
                 return;
             } else if (typedef instanceof EnumTypedef) {
                 EnumTypedef bTypedef = (EnumTypedef) typedef;
@@ -421,7 +419,7 @@ public class ParseState extends RusefiConfigGrammarBaseListener {
     public void exitArrayField(RusefiConfigGrammarParser.ArrayFieldContext ctx) {
         String type = ctx.identifier(0).getText();
         String name = ctx.identifier(1).getText();
-        int length = this.arrayDim;
+        int[] length = this.arrayDim;
         // check if the iterate token is present
         boolean iterate = ctx.Iterate() != null;
 
@@ -453,7 +451,7 @@ public class ParseState extends RusefiConfigGrammarBaseListener {
 
                 EnumField prototype = new EnumField(bTypedef.type, type, name, bTypedef.endBit, bTypedef.values, options);
 
-                scope.structFields.add(new ArrayField<EnumField>(prototype, length, iterate));
+                scope.structFields.add(new ArrayField<>(prototype, length, iterate));
                 return;
             } else if (typedef instanceof StringTypedef) {
                 StringTypedef sTypedef = (StringTypedef) typedef;
@@ -462,7 +460,7 @@ public class ParseState extends RusefiConfigGrammarBaseListener {
                 assert(iterate);
 
                 StringField prototype = new StringField(name, sTypedef.size);
-                scope.structFields.add(new ArrayField<StringField>(prototype, length, iterate));
+                scope.structFields.add(new ArrayField<>(prototype, length, iterate));
                 return;
             } else {
                 throw new RuntimeException("didn't understand type " + type + " for element " + name);
@@ -482,17 +480,19 @@ public class ParseState extends RusefiConfigGrammarBaseListener {
 
         ScalarField prototype = new ScalarField(Type.findByCtype(type).get(), name, options);
 
-        scope.structFields.add(new ArrayField(prototype, length, iterate));
+        scope.structFields.add(new ArrayField<>(prototype, length, iterate));
     }
 
-    private int arrayDim = 0;
+    private int[] arrayDim = null;
 
     @Override
     public void exitArrayLengthSpec(RusefiConfigGrammarParser.ArrayLengthSpecContext ctx) {
-        arrayDim = evalResults.remove().intValue();
+        int arrayDim0 = evalResults.remove().intValue();
 
         if (ctx.ArrayDimensionSeparator() != null) {
-            arrayDim *= evalResults.remove().intValue();
+            this.arrayDim = new int[] { arrayDim0, evalResults.remove().intValue() };
+        } else {
+            this.arrayDim = new int[] { arrayDim0 };
         }
     }
 

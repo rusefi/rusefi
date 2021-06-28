@@ -178,6 +178,8 @@ public:
 
 	void calculateExpectedEventCounts(bool useOnlyRisingEdgeForTrigger);
 
+	int getExpectedEventCount(int channelIndex) const;
+
 	/**
 	 * This is used for signal validation
 	 */
@@ -321,6 +323,6 @@ void findTriggerPosition(
 
 void setToothedWheelConfiguration(TriggerWaveform *s, int total, int skipped, operation_mode_e operationMode);
 
-#define TRIGGER_WAVEFORM(x) ENGINE(triggerCentral.triggerShape.x)
+#define TRIGGER_WAVEFORM(x) ENGINE(triggerCentral.triggerShape).x
 
 #define getTriggerSize() TRIGGER_WAVEFORM(privateTriggerDefinitionSize)
