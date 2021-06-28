@@ -151,6 +151,7 @@ void setBoardDefaultConfiguration(void) {
 	engineConfiguration->canTxPin = GPIOD_1;
 	engineConfiguration->canRxPin = GPIOD_0;
 
+	engineConfiguration->acRelayPin = GPIOH_15; // 1J - AC Relay
 	engineConfiguration->fuelPumpPin = GPIOG_2;	// OUT_IO9
 	engineConfiguration->idle.solenoidPin = GPIOD_14;	// OUT_PWM5
 	engineConfiguration->fanPin = GPIOD_12;	// OUT_PWM8
