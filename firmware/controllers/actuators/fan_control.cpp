@@ -7,11 +7,17 @@
 
 EXTERN_ENGINE;
 
-static void fanControl(OutputPin& pin, int8_t fanOnTemp, int8_t fanOffTemp, bool enableWithAc DECLARE_ENGINE_PARAMETER_SUFFIX) {
+static void fanControl(OutputPin& pin, int8_t fanOnTemp, int8_t fanOffTemp, bool enableWithAc, bool disableWhenStopped DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	auto [cltValid, clt] = Sensor::get(SensorType::Clt);
 
-	if (!ENGINE(rpmCalculator).isRunning()) {
-		// Engine stopped, turn off the fan
+	bool isCranking = ENGINE(rpmCalculator).isCranking();
+	bool isRunning = ENGINE(rpmCalculator).isRunning();
+
+	if (isCranking) {
+		// Inhibit while cranking
+		pin.setValue(false);
+	} else if (disableWhenStopped && !isRunning) {
+		// Inhibit while not running (if so configured)
 		pin.setValue(false);
 	} else if (!cltValid) {
 		// If CLT is broken, turn the fan on
@@ -36,6 +42,6 @@ void updateFans(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	}
 #endif
 
-	fanControl(enginePins.fanRelay, CONFIG(fanOnTemperature), CONFIG(fanOffTemperature), CONFIG(enableFan1WithAc) PASS_ENGINE_PARAMETER_SUFFIX);
-	fanControl(enginePins.fanRelay2, CONFIG(fan2OnTemperature), CONFIG(fan2OffTemperature), CONFIG(enableFan2WithAc) PASS_ENGINE_PARAMETER_SUFFIX);
+	fanControl(enginePins.fanRelay, CONFIG(fanOnTemperature), CONFIG(fanOffTemperature), CONFIG(enableFan1WithAc), CONFIG(disableFan1WhenStopped) PASS_ENGINE_PARAMETER_SUFFIX);
+	fanControl(enginePins.fanRelay2, CONFIG(fan2OnTemperature), CONFIG(fan2OffTemperature), CONFIG(enableFan2WithAc), CONFIG(disableFan2WhenStopped) PASS_ENGINE_PARAMETER_SUFFIX);
 }
