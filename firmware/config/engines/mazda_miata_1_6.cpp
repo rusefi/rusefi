@@ -157,6 +157,9 @@ static void miataNAcommonEngineSettings(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	engineConfiguration->knockBandCustom = 6.8;
 	engineConfiguration->vehicleWeight = 950;
 
+	engineConfiguration->enableFan1WithAc = true;
+	engineConfiguration->enableFan2WithAc = true;
+
 	CONFIG(tachPulsePerRev) = 2;
 
 	engineConfiguration->debugMode = DBG_TRIGGER_COUNTERS;
@@ -471,6 +474,13 @@ void setHellenNA94(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	engineConfiguration->specs.displacement = 1.8;
 	engineConfiguration->injectionMode = IM_SEQUENTIAL;
 	engineConfiguration->map.sensor.type = MT_MPX4250;
+
+	engineConfiguration->fanOnTemperature = 100;
+	engineConfiguration->fanOffTemperature = 96;
+	engineConfiguration->fan2OnTemperature = 95;
+	engineConfiguration->fan2OffTemperature = 91;
+
+	engineConfiguration->fan2Pin = GPIOD_9; // 3S - A/C Fan 94-95
 }
 
 void setHellenNA6(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
