@@ -292,10 +292,12 @@ uint32_t triggerDuration;
 uint32_t triggerMaxDuration = 0;
 
 /**
- * this method is invoked only by real hardware call-backs
+ * This function is called by all "hardaware" trigger inputs:
+ *  - Hardware triggers
+ *  - Trigger replay from CSV (unit tests)
  */
-
-void hwHandleShaftSignal(trigger_event_e signal, efitick_t timestamp DECLARE_ENGINE_PARAMETER_SUFFIX) {
+void hwHandleShaftSignal(int signalIndex, bool isRising, efitick_t timestamp DECLARE_ENGINE_PARAMETER_SUFFIX) {
+	ScopePerf perf(PE::HandleShaftSignal);
 #if VR_HW_CHECK_MODE
 	// some boards do not have hardware VR input LEDs which makes such boards harder to validate
 	// from experience we know that assembly mistakes happen and quality control is required
@@ -315,21 +317,32 @@ void hwHandleShaftSignal(trigger_event_e signal, efitick_t timestamp DECLARE_ENG
 	palWritePad(criticalErrorLedPort, criticalErrorLedPin, 0);
 #endif // VR_HW_CHECK_MODE
 
-	handleShaftSignal2(signal, timestamp PASS_ENGINE_PARAMETER_SUFFIX);
-
+	handleShaftSignal(signalIndex, isRising, timestamp PASS_ENGINE_PARAMETER_SUFFIX);
 }
 
-/**
- * this method is invoked by both real hardware and self-stimulator
- */
-void handleShaftSignal2(trigger_event_e signal, efitick_t timestamp DECLARE_ENGINE_PARAMETER_SUFFIX) {
-	ScopePerf perf(PE::HandleShaftSignal);
+// Handle all shaft signals - hardware or emulated both
+void handleShaftSignal(int signalIndex, bool isRising, efitick_t timestamp DECLARE_ENGINE_PARAMETER_SUFFIX) {
+	bool isPrimary = signalIndex == 0;
+	if (!isPrimary && !TRIGGER_WAVEFORM(needSecondTriggerInput)) {
+		return;
+	}
+
+	trigger_event_e signal;
+	// todo: add support for 3rd channel
+	if (isRising) {
+		signal = isPrimary ?
+					(engineConfiguration->invertPrimaryTriggerSignal ? SHAFT_PRIMARY_FALLING : SHAFT_PRIMARY_RISING) :
+					(engineConfiguration->invertSecondaryTriggerSignal ? SHAFT_SECONDARY_FALLING : SHAFT_SECONDARY_RISING);
+	} else {
+		signal = isPrimary ?
+					(engineConfiguration->invertPrimaryTriggerSignal ? SHAFT_PRIMARY_RISING : SHAFT_PRIMARY_FALLING) :
+					(engineConfiguration->invertSecondaryTriggerSignal ? SHAFT_SECONDARY_RISING : SHAFT_SECONDARY_FALLING);
+	}
 
 	// Don't accept trigger input in case of some problems
 	if (!engine->limpManager.allowTriggerInput()) {
 		return;
 	}
-
 
 #if EFI_TOOTH_LOGGER
 	// Log to the Tunerstudio tooth logger
