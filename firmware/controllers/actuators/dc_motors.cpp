@@ -19,6 +19,7 @@
 
 EXTERN_ENGINE;
 
+// Simple wrapper to use an OutputPin as "PWM" that can only do 0 or 1
 struct PwmWrapper : public IPwm {
 	OutputPin& m_pin;
 
