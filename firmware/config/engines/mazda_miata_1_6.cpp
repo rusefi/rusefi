@@ -157,6 +157,8 @@ static void miataNAcommonEngineSettings(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	engineConfiguration->knockBandCustom = 6.8;
 	engineConfiguration->vehicleWeight = 950;
 
+	CONFIG(tachPulsePerRev) = 2;
+
 	engineConfiguration->debugMode = DBG_TRIGGER_COUNTERS;
 
 	setCommonNTCSensor(&engineConfiguration->clt, 2700);
@@ -196,7 +198,7 @@ static void miataNAcommonEngineSettings(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	 * http://miataturbo.wikidot.com/fuel-injectors
 	 * 90-93 (Blue) - #195500-1970
 	 */
-	engineConfiguration->injector.flow = 230;
+	engineConfiguration->injector.flow = 212;
 
 	// set cranking_timing_angle 10
 	engineConfiguration->crankingTimingAngle = 10;
@@ -453,12 +455,25 @@ void setMiata94_MAP_MRE(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	strcpy(CONFIG(engineMake), ENGINE_MAKE_MAZDA);
 	strcpy(CONFIG(engineCode), "94");
 
+	engineConfiguration->map.sensor.type = MT_MPX4250;
+
 }
 
 void setHellenNA94(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	miataNAcommonEngineSettings(PASS_CONFIG_PARAMETER_SIGNATURE);
+	strcpy(CONFIG(engineCode), "94");
+	/**
+	 * http://miataturbo.wikidot.com/fuel-injectors
+	 * 94-97 Tan - #195500-2180
+	 */
+	engineConfiguration->injector.flow = 254;
+
+	engineConfiguration->specs.displacement = 1.8;
+	engineConfiguration->injectionMode = IM_SEQUENTIAL;
+	engineConfiguration->map.sensor.type = MT_MPX4250;
 }
 
 void setHellenNA6(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	miataNAcommonEngineSettings(PASS_CONFIG_PARAMETER_SIGNATURE);
+	engineConfiguration->map.sensor.type = MT_MPX4250;
 }
