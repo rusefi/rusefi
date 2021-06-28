@@ -2690,6 +2690,7 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 		field = "On temperature",					fanOnTemperature
 		field = "Off temperature",					fanOffTemperature
 		field = "Enable with AC",					enableFan1WithAc
+		field = "Disable when engine stopped",		disableFan1WhenStopped
 
 	dialog = fan2Settings, "Fan 2"
 		field = "Pin",								fan2Pin
@@ -2697,6 +2698,7 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 		field = "On temperature",					fan2OnTemperature
 		field = "Off temperature",					fan2OffTemperature
 		field = "Enable with AC",					enableFan2WithAc
+		field = "Disable when engine stopped",		disableFan2WhenStopped
 
 	dialog = acSettings, "A/C Settings"
 		field = "A/C Relay",						acRelayPin
