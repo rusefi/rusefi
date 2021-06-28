@@ -292,9 +292,8 @@ uint32_t triggerDuration;
 uint32_t triggerMaxDuration = 0;
 
 /**
- * This function is called by all trigger inputs:
+ * This function is called by all "hardaware" trigger inputs:
  *  - Hardware triggers
- *  - Trigger simulator (on ECU)
  *  - Trigger replay from CSV (unit tests)
  */
 void hwHandleShaftSignal(int signalIndex, bool isRising, efitick_t timestamp DECLARE_ENGINE_PARAMETER_SUFFIX) {
@@ -318,6 +317,11 @@ void hwHandleShaftSignal(int signalIndex, bool isRising, efitick_t timestamp DEC
 	palWritePad(criticalErrorLedPort, criticalErrorLedPin, 0);
 #endif // VR_HW_CHECK_MODE
 
+	handleShaftSignal(signalIndex, isRising, timestamp, PASS_ENGINE_PARAMETER_SUFFIX);
+}
+
+// Handle all shaft signals - hardware or emulated both
+void handleShaftSignal(int signalIndex, bool isRising, efitick_t timestamp DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	bool isPrimary = signalIndex == 0;
 	if (!isPrimary && !TRIGGER_WAVEFORM(needSecondTriggerInput)) {
 		return;
