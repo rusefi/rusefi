@@ -9,6 +9,7 @@
 
 TEST(cranking, testFasterEngineSpinningUp) {
 	WITH_ENGINE_TEST_HELPER(TEST_ENGINE);
+	ENGINE(tdcMarkEnabled) = false;
 	// turn on FasterEngineSpinUp mode
 	engineConfiguration->isFasterEngineSpinUpEnabled = true;
 	engineConfiguration->cranking.baseFuel = 12;

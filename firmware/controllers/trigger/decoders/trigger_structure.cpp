@@ -183,18 +183,20 @@ operation_mode_e TriggerWaveform::getOperationMode() const {
 extern bool printTriggerDebug;
 #endif
 
-void TriggerWaveform::calculateExpectedEventCounts(bool useOnlyRisingEdgeForTrigger) {
-	UNUSED(useOnlyRisingEdgeForTrigger);
+int TriggerWaveform::getExpectedEventCount(int channelIndex) const {
+	return expectedEventCount[channelIndex];
+}
 
+void TriggerWaveform::calculateExpectedEventCounts(bool useOnlyRisingEdgeForTrigger) {
 	if (!useOnlyRisingEdgeForTrigger) {
 		for (size_t i = 0; i < efi::size(expectedEventCount); i++) {
-			if (expectedEventCount[i] % 2 != 0) {
-				firmwareError(ERROR_TRIGGER_DRAMA, "Trigger: should be even %d %d", i, expectedEventCount[i]);
+			if (getExpectedEventCount(i) % 2 != 0) {
+				firmwareError(ERROR_TRIGGER_DRAMA, "Trigger: should be even %d %d", i, getExpectedEventCount(i));
 			}
 		}
 	}
 
-	bool isSingleToothOnPrimaryChannel = useOnlyRisingEdgeForTrigger ? expectedEventCount[0] == 1 : expectedEventCount[0] == 2;
+	bool isSingleToothOnPrimaryChannel = useOnlyRisingEdgeForTrigger ? getExpectedEventCount(0) == 1 : getExpectedEventCount(0) == 2;
 	// todo: next step would be to set 'isSynchronizationNeeded' automatically based on the logic we have here
 	if (!shapeWithoutTdc && isSingleToothOnPrimaryChannel != !isSynchronizationNeeded) {
 		firmwareError(ERROR_TRIGGER_DRAMA, "trigger sync constraint violation");
@@ -589,10 +591,12 @@ void TriggerWaveform::initializeTriggerWaveform(operation_mode_e ambiguousOperat
 
 	case TT_TOOTHED_WHEEL_60_2:
 		setToothedWheelConfiguration(this, 60, 2, ambiguousOperationMode);
+		setSecondTriggerSynchronizationGap(1); // this gap is not required to synch on perfect signal but is needed to handle to reject cranking transition noise
 		break;
 
 	case TT_TOOTHED_WHEEL_36_2:
 		setToothedWheelConfiguration(this, 36, 2, ambiguousOperationMode);
+		setSecondTriggerSynchronizationGap(1); // this gap is not required to synch on perfect signal but is needed to handle to reject cranking transition noise
 		break;
 
 	case TT_60_2_VW:
@@ -601,6 +605,7 @@ void TriggerWaveform::initializeTriggerWaveform(operation_mode_e ambiguousOperat
 
 	case TT_TOOTHED_WHEEL_36_1:
 		setToothedWheelConfiguration(this, 36, 1, ambiguousOperationMode);
+		setSecondTriggerSynchronizationGap(1); // this gap is not required to synch on perfect signal but is needed to handle to reject cranking transition noise
 		break;
 
 	case TT_VVT_BOSCH_QUICK_START:

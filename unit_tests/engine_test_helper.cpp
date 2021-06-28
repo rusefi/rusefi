@@ -28,6 +28,7 @@ extern int timeNowUs;
 extern WarningCodeState unitTestWarningCodeState;
 extern engine_configuration_s & activeConfiguration;
 extern bool printTriggerDebug;
+extern bool printTriggerTrace;
 extern bool printFuelDebug;
 extern int minCrankingRpm;
 
@@ -44,6 +45,14 @@ EngineTestHelper::EngineTestHelper(engine_type_e engineType, configuration_callb
 
 EngineTestHelper::EngineTestHelper(engine_type_e engineType, const std::unordered_map<SensorType, float>& sensorValues)
 	: EngineTestHelper(engineType, &emptyCallbackWithConfiguration, sensorValues) {
+}
+
+warningBuffer_t *EngineTestHelper::recentWarnings() {
+	return &unitTestWarningCodeState.recentWarnings;
+}
+
+int EngineTestHelper::getWarningCounter() {
+	return unitTestWarningCodeState.warningCounter;
 }
 
 EngineTestHelper::EngineTestHelper(engine_type_e engineType, configuration_callback_t configurationCallback, const std::unordered_map<SensorType, float>& sensorValues) {
@@ -106,7 +115,7 @@ EngineTestHelper::EngineTestHelper(engine_type_e engineType, configuration_callb
 EngineTestHelper::~EngineTestHelper() {
 	// Write history to file
 	std::stringstream filePath;
-	filePath << ::testing::UnitTest::GetInstance()->current_test_info()->name() << ".logicdata";
+	filePath << "unittest_" << ::testing::UnitTest::GetInstance()->current_test_info()->name() << ".logicdata";
 	writeEvents(filePath.str().c_str());
 
 	// Cleanup
@@ -229,8 +238,10 @@ void EngineTestHelper::moveTimeForwardAndInvokeEventsUs(int deltaTimeUs) {
 	if (printTriggerDebug || printFuelDebug) {
 		printf("moveTimeForwardAndInvokeEventsUs %.1fms\r\n", deltaTimeUs / 1000.0);
 	}
-	int targetTime = timeNowUs + deltaTimeUs;
+	setTimeAndInvokeEventsUs(timeNowUs + deltaTimeUs);
+}
 
+void EngineTestHelper::setTimeAndInvokeEventsUs(int targetTime) {
 	while (true) {
 		scheduling_s* nextScheduledEvent = engine.executor.getHead();
 		if (nextScheduledEvent == nullptr) {
@@ -369,4 +380,9 @@ void EngineTestHelper::setTriggerType(trigger_type_e trigger DECLARE_ENGINE_PARA
 
 void setupSimpleTestEngineWithMafAndTT_ONE_trigger(EngineTestHelper *eth, injection_mode_e injectionMode) {
 	setupSimpleTestEngineWithMaf(eth, injectionMode, TT_ONE);
+}
+
+void setVerboseTrigger(bool isEnabled) {
+	printTriggerDebug = isEnabled;
+	printTriggerTrace = isEnabled;
 }

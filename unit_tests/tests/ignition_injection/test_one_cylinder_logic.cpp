@@ -8,6 +8,7 @@
 
 TEST(issues, issueOneCylinderSpecialCase968) {
 	WITH_ENGINE_TEST_HELPER(GY6_139QMB);
+	ENGINE(tdcMarkEnabled) = false;
 	// set injection_mode 1
 	engineConfiguration->injectionMode = IM_SEQUENTIAL;
 

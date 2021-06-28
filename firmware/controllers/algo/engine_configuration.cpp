@@ -198,7 +198,7 @@ void incrementGlobalConfigurationVersion(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 #if EFI_SHAFT_POSITION_INPUT
 	onConfigurationChangeTriggerCallback(PASS_ENGINE_PARAMETER_SIGNATURE);
 #endif /* EFI_SHAFT_POSITION_INPUT */
-#if EFI_EMULATE_POSITION_SENSORS
+#if EFI_EMULATE_POSITION_SENSORS && ! EFI_UNIT_TEST
 	onConfigurationChangeRpmEmulatorCallback(&activeConfiguration);
 #endif /* EFI_EMULATE_POSITION_SENSORS */
 
@@ -1152,17 +1152,6 @@ void prepareShapes(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 }
 
 #endif
-
-float getRpmMultiplier(operation_mode_e mode) {
-	if (mode == FOUR_STROKE_SYMMETRICAL_CRANK_SENSOR) {
-		return 2;
-	} else if (mode == FOUR_STROKE_CAM_SENSOR) {
-		return 0.5;
-	} else if (mode == FOUR_STROKE_CRANK_SENSOR) {
-		return 1;
-	}
-	return 1;
-}
 
 void setOperationMode(engine_configuration_s *engineConfiguration, operation_mode_e mode) {
 	engineConfiguration->ambiguousOperationMode = mode;

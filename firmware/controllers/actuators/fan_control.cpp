@@ -7,7 +7,7 @@
 
 EXTERN_ENGINE;
 
-static void fanControl(OutputPin& pin, int8_t fanOnTemp, int8_t fanOffTemp, bool enableWithAc, bool disableWhenStopped DECLARE_ENGINE_PARAMETER_SUFFIX) {
+static void fanControl(bool acActive, OutputPin& pin, int8_t fanOnTemp, int8_t fanOffTemp, bool enableWithAc, bool disableWhenStopped DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	auto [cltValid, clt] = Sensor::get(SensorType::Clt);
 
 	bool isCranking = ENGINE(rpmCalculator).isCranking();
@@ -22,7 +22,7 @@ static void fanControl(OutputPin& pin, int8_t fanOnTemp, int8_t fanOffTemp, bool
 	} else if (!cltValid) {
 		// If CLT is broken, turn the fan on
 		pin.setValue(true);
-	} else if (enableWithAc && ENGINE(acSwitchState)) {
+	} else if (enableWithAc && acActive) {
 		pin.setValue(true);
 	} else if (clt > fanOnTemp) {
 		// If hot, turn the fan on
@@ -35,13 +35,13 @@ static void fanControl(OutputPin& pin, int8_t fanOnTemp, int8_t fanOffTemp, bool
 	}
 }
 
-void updateFans(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+void updateFans(bool acActive DECLARE_ENGINE_PARAMETER_SUFFIX) {
 #if EFI_PROD_CODE
 	if (isRunningBenchTest()) {
 		return; // let's not mess with bench testing
 	}
 #endif
 
-	fanControl(enginePins.fanRelay, CONFIG(fanOnTemperature), CONFIG(fanOffTemperature), CONFIG(enableFan1WithAc), CONFIG(disableFan1WhenStopped) PASS_ENGINE_PARAMETER_SUFFIX);
-	fanControl(enginePins.fanRelay2, CONFIG(fan2OnTemperature), CONFIG(fan2OffTemperature), CONFIG(enableFan2WithAc), CONFIG(disableFan2WhenStopped) PASS_ENGINE_PARAMETER_SUFFIX);
+	fanControl(acActive, enginePins.fanRelay, CONFIG(fanOnTemperature), CONFIG(fanOffTemperature), CONFIG(enableFan1WithAc), CONFIG(disableFan1WhenStopped) PASS_ENGINE_PARAMETER_SUFFIX);
+	fanControl(acActive, enginePins.fanRelay2, CONFIG(fan2OnTemperature), CONFIG(fan2OffTemperature), CONFIG(enableFan2WithAc), CONFIG(disableFan2WhenStopped) PASS_ENGINE_PARAMETER_SUFFIX);
 }

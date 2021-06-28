@@ -28,6 +28,10 @@ systime_t chThdSleepUntilWindowed(systime_t prev, systime_t next) {
 	return 0;
 }
 
+bool chThdShouldTerminateX(void) {
+	return false;
+}
+
 class taskq {
 public:
 //  int trigger(taskq &tq);

@@ -298,6 +298,8 @@ extern bool_t debugSignalExecutor;
 TEST(misc, testRpmCalculator) {
 	WITH_ENGINE_TEST_HELPER(FORD_INLINE_6_1995);
 
+	ENGINE(tdcMarkEnabled) = false;
+
 	// These tests were written when the default target AFR was 14.0, so replicate that
 	engineConfiguration->stoichRatioPrimary = 140;
 
@@ -517,7 +519,7 @@ TEST(misc, testTriggerDecoder) {
 		applyNonPersistentConfiguration(PASS_ENGINE_PARAMETER_SIGNATURE);
 
 	}
-	testTriggerDecoder2("miata 1990", MIATA_1990, 11, 0.2985, 0.3890);
+	testTriggerDecoder2("miata 1990", MIATA_1990, 8, 0.7015, 0.3890);
 	testTriggerDecoder3("citroen", CITROEN_TU3JP, 0, 0.4833, 0.0, 2.9994);
 
 	testTriggerDecoder2("CAMARO_4", CAMARO_4, 40, 0.5, 0);
@@ -689,6 +691,7 @@ void doTestFuelSchedulerBug299smallAndMedium(int startUpDelayMs) {
 	printf("*************************************************** testFuelSchedulerBug299 small to medium\r\n");
 
 	WITH_ENGINE_TEST_HELPER(TEST_ENGINE);
+	ENGINE(tdcMarkEnabled) = false;
 	eth.moveTimeForwardMs(startUpDelayMs); // nice to know that same test works the same with different anount of idle time on start
 	setTestBug299(&eth);
 
@@ -987,6 +990,7 @@ TEST(big, testSequential) {
 
 TEST(big, testFuelSchedulerBug299smallAndLarge) {
 	WITH_ENGINE_TEST_HELPER(TEST_ENGINE);
+	ENGINE(tdcMarkEnabled) = false;
 	setTestBug299(&eth);
 	ASSERT_EQ( 4,  engine->executor.size()) << "Lqs#0";
 
@@ -1101,6 +1105,7 @@ TEST(big, testSparkReverseOrderBug319) {
 	printf("*************************************************** testSparkReverseOrderBug319 small to medium\r\n");
 
 	WITH_ENGINE_TEST_HELPER(TEST_ENGINE);
+	ENGINE(tdcMarkEnabled) = false;
 
 	engineConfiguration->useOnlyRisingEdgeForTrigger = false;
 	engineConfiguration->isInjectionEnabled = false;

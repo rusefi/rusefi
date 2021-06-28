@@ -27,11 +27,12 @@ All notable user-facing or behavior-altering changes will be documented in this 
 
 ## Month 202x Release - "Release Name"
 
-## June 2021 Release "Garbage Man Day"
+## June 2021 Release "Please Take My Children to Work Day"
 
 ### Fixed
  - Improved cranking defaults
  - Simplified/clarified idle and cranking TunerStudio pages
+ - Minor change of Miata NA trigger shape #2855   
 
 ### Added
  - Idle improvements! Open loop corrections are now applied in closed loop mode.

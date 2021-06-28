@@ -34,14 +34,14 @@ public class VssHardwareLoopTest extends RusefiTestBase {
         // moving second trigger to another pin
         ecu.sendCommand(CMD_TRIGGER_PIN + " 1 PA8");
 
-        EcuTestHelper.assertEquals("VSS no input", 0, SensorCentral.getInstance().getValue(Sensor.VSS));
+        EcuTestHelper.assertSomewhatClose("VSS no input", 0, SensorCentral.getInstance().getValue(Sensor.VSS));
 
         // attaching VSS to trigger simulator since there is a jumper on test discovery
         ecu.sendCommand("set " + CMD_VSS_PIN + " pa5");
 
         sleep(2 * Timeouts.SECOND);
 
-        EcuTestHelper.assertEquals("VSS with input", 3, SensorCentral.getInstance().getValue(Sensor.VSS));
+        EcuTestHelper.assertSomewhatClose("VSS with input", 3, SensorCentral.getInstance().getValue(Sensor.VSS));
 
         // not related to VSS test, just need to validate this somewhere, so this random test is as good as any
         if (ControllerConnectorState.firmwareVersion == null)

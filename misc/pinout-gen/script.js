@@ -32,7 +32,7 @@ function addRow(table, pin, pdiv) {
   var cells = row.children;
   for (var i = 0; i < cells.length; i++) {
     var cell = cells[i];
-    cell.textContent = pin[cell.dataset.field];
+    cell.textContent = Array.isArray(pin[cell.dataset.field]) ? pin[cell.dataset.field].join(", ") : pin[cell.dataset.field];
   }
   clone.querySelector(".pin-data").dataset.type = pin.type;
   if (pdiv) {
@@ -43,6 +43,7 @@ function addRow(table, pin, pdiv) {
   }
   table.appendChild(clone);
 }
+
 function clickPin(table, pin, pdiv) {
   table.parentElement.style.display = "table";
   table.innerHTML = "";

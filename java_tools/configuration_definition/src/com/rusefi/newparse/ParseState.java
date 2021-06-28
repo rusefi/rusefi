@@ -1,11 +1,16 @@
 package com.rusefi.newparse;
 
+import com.rusefi.EnumsReader;
+import com.rusefi.enum_reader.Value;
 import com.rusefi.generated.RusefiConfigGrammarBaseListener;
 import com.rusefi.generated.RusefiConfigGrammarParser;
 import com.rusefi.newparse.parsing.*;
 import jdk.nashorn.internal.runtime.regexp.joni.constants.StringType;
+import org.jetbrains.annotations.Nullable;
 
+import java.io.PrintStream;
 import java.util.*;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 public class ParseState extends RusefiConfigGrammarBaseListener {
@@ -13,6 +18,50 @@ public class ParseState extends RusefiConfigGrammarBaseListener {
     Map<String, Struct> structs = new HashMap<>();
     List<Struct> structList = new ArrayList<>();
     Map<String, Typedef> typedefs = new HashMap<>();
+
+    private final EnumsReader enumsReader;
+
+    public ParseState(EnumsReader enumsReader) {
+        this.enumsReader = enumsReader;
+    }
+
+    private static boolean isNumeric(String str) {
+        try {
+            Integer.parseInt(str);
+            return true;
+        } catch (NumberFormatException e) {
+            return false;
+        }
+    }
+
+    private String[] resolveEnumValues(String enumName) {
+        TreeMap<Integer, String> valueNameById = new TreeMap<>();
+
+        Map<String, Value> stringValueMap = this.enumsReader.getEnums().get(enumName);
+        if (stringValueMap == null)
+            return null;
+        for (Value value : stringValueMap.values()) {
+            if (value.getValue().contains("ENUM_32_BITS"))
+                continue;
+
+            if (isNumeric(value.getValue())) {
+                valueNameById.put(value.getIntValue(), value.getName());
+            } else {
+                Definition def = this.definitions.get(value.getValue());
+                if (def == null)
+                    throw new IllegalStateException("No value for " + value);;
+                valueNameById.put((Integer)def.value, value.getName());
+            }
+        }
+
+        // Now iterate over all values, assembling as an array in-order
+        String[] result = new String[valueNameById.lastKey() + 1];
+        for (int i = 0; i < result.length; i++) {
+            result[i] = valueNameById.getOrDefault(i, "INVALID");
+        }
+
+        return result;
+    }
 
     public List<Struct> getStructs() {
         return structList;
@@ -38,8 +87,12 @@ public class ParseState extends RusefiConfigGrammarBaseListener {
 
     private Definition.OverwritePolicy definitionOverwritePolicy = Definition.OverwritePolicy.NotAllowed;
 
-    public void addDefinition(String name, String value, Definition.OverwritePolicy overwritePolicy) {
-        Definition existingDefinition = definitions.getOrDefault(name, null);
+    private void addDefinition(String name, Object value) {
+        addDefinition(name, value, this.definitionOverwritePolicy);
+    }
+
+    public void addDefinition(String name, Object value, Definition.OverwritePolicy overwritePolicy) {
+        Definition existingDefinition = this.definitions.getOrDefault(name, null);
 
         if (existingDefinition != null) {
             switch (existingDefinition.overwritePolicy) {
@@ -56,24 +109,52 @@ public class ParseState extends RusefiConfigGrammarBaseListener {
         definitions.put(name, new Definition(name, value, overwritePolicy));
     }
 
+    public Definition findDefinition(String name) {
+        return this.definitions.getOrDefault(name, null);
+    }
+
     public void setDefinitionPolicy(Definition.OverwritePolicy policy) {
         this.definitionOverwritePolicy = policy;
+    }
+
+    private static final Pattern CHAR_LITERAL = Pattern.compile("'.'");
+
+    private void handleIntDefinition(String name, int value) {
+        addDefinition(name, value);
+
+        // Also add ints as 16b hex
+        addDefinition(name + "_16_hex", String.format("\\\\x%02x\\\\x%02x", (value >> 8) & 0xFF, value & 0xFF));
     }
 
     @Override
     public void exitDefinition(RusefiConfigGrammarParser.DefinitionContext ctx) {
         String name = ctx.identifier().getText();
 
-        String value;
+        if (ctx.integer() != null) {
+            handleIntDefinition(name, Integer.parseInt(ctx.integer().getText()));
+        } else if (ctx.floatNum() != null) {
+            addDefinition(name, Double.parseDouble(ctx.floatNum().getText()));
+        } else if (ctx.numexpr() != null) {
+            double evalResult = this.evalResults.remove();
+            double floored = Math.floor(evalResult);
 
-        if (!this.evalResults.isEmpty()) {
-            value = this.evalResults.remove().toString();
+            if (Math.abs(floored - evalResult) < 0.001) {
+                // value is an int, process as such
+                handleIntDefinition(name, (int)floored);
+            } else {
+                // Value is a double, add it
+                addDefinition(name, evalResult);
+            }
         } else {
             // glue the list of definitions back together
-            value = ctx.restOfLine().getText();
-        }
+            String defText = ctx.restOfLine().getText();
+            addDefinition(name, defText);
 
-        addDefinition(name, value, this.definitionOverwritePolicy);
+            // If the definition matches a char literal, add a special definition for that
+            if (CHAR_LITERAL.matcher(defText).find()) {
+                addDefinition(name + "_char", defText.charAt(1));
+            }
+        }
     }
 
     String typedefName = null;
@@ -100,42 +181,60 @@ public class ParseState extends RusefiConfigGrammarBaseListener {
 
     @Override
     public void enterEnumTypedefSuffix(RusefiConfigGrammarParser.EnumTypedefSuffixContext ctx) {
-        int startBit = Integer.parseInt(ctx.integer(1).getText());
         int endBit = Integer.parseInt(ctx.integer(2).getText());
         Type datatype = Type.findByTsType(ctx.Datatype().getText());
 
-        String values = ctx.enumRhs().getText();
+        String rhs = ctx.enumRhs().getText();
 
-        // TODO: many enum defs are missing so this doesn't work yet
-        /*
-        if (values.startsWith("@@")) {
-            Definition def = this.definitions.get(values.replaceAll("@", ""));
+        String[] values = null;
 
-            if (def == null) {
-                throw new RuntimeException("couldn't find definition for " + values);
+        if (rhs.startsWith("@@")) {
+            String defName = rhs.replaceAll("@", "");
+
+            if (defName.endsWith("_auto_enum")) {
+                // clip off the "_auto_enum" part
+                defName = defName.substring(0, defName.length() - 10);
+                values = resolveEnumValues(defName);
+            } else {
+                Definition def = this.definitions.get(defName);
+
+                if (def == null) {
+                    throw new RuntimeException("couldn't find definition for " + rhs);
+                }
+
+                Object value = def.value;
+
+                if (!(value instanceof String)) {
+                    throw new RuntimeException("Found definition for " + rhs + " but it wasn't a string as expected");
+                }
+
+                rhs = (String)value;
             }
+        }
 
-            values = def.value;
-        }*/
+        if (values == null) {
+            values = Arrays.stream(rhs.split(","))                    // Split on commas
+                        .map(s -> s.trim())                                 // trim whitespace
+                        .map(s -> s.replaceAll("\"", ""))   // Remove quotes
+                        .toArray(n -> new String[n]);                       // Convert back to array
+        }
 
-        this.typedefs.put(this.typedefName, new EnumTypedef(this.typedefName, datatype, startBit, endBit, values));
+        this.typedefs.put(this.typedefName, new EnumTypedef(this.typedefName, datatype, endBit, values));
     }
 
     @Override
     public void exitArrayTypedefSuffix(RusefiConfigGrammarParser.ArrayTypedefSuffixContext ctx) {
-        int arrayLength = this.arrayDim;
-
         Type datatype = Type.findByTsType(ctx.Datatype().getText());
 
         FieldOptions options = new FieldOptions();
         handleFieldOptionsList(options, ctx.fieldOptionsList());
 
-        this.typedefs.put(this.typedefName, new ArrayTypedef(this.typedefName, arrayLength, datatype, options));
+        this.typedefs.put(this.typedefName, new ArrayTypedef(this.typedefName, this.arrayDim, datatype, options));
     }
 
     @Override
     public void exitStringTypedefSuffix(RusefiConfigGrammarParser.StringTypedefSuffixContext ctx) {
-        Float stringLength = this.evalResults.remove();
+        Double stringLength = this.evalResults.remove();
 
         this.typedefs.put(this.typedefName, new StringTypedef(this.typedefName, stringLength.intValue()));
     }
@@ -166,9 +265,10 @@ public class ParseState extends RusefiConfigGrammarBaseListener {
 
         if (ctx.fieldOption().size() == 0) {
             if (ctx.SemicolonedString() != null) {
-                options.comment = ctx.SemicolonedString().getText();
+                String text = ctx.SemicolonedString().getText();
+                options.comment = text.substring(1, text.length() - 1).trim();
             } else if (ctx.SemicolonedSuffix() != null) {
-                options.comment = ctx.SemicolonedSuffix().getText();
+                options.comment = ctx.SemicolonedSuffix().getText().substring(1).trim();
             } else {
                 options.comment = "";
             }
@@ -176,10 +276,10 @@ public class ParseState extends RusefiConfigGrammarBaseListener {
             // this is a legacy field option list, parse it as such
             if (!ctx.numexpr().isEmpty()) {
                 options.units = ctx.QuotedString().getText();
-                options.scale = evalResults.remove();
-                options.offset = evalResults.remove();
-                options.min = evalResults.remove();
-                options.max = evalResults.remove();
+                options.scale = evalResults.remove().floatValue();
+                options.offset = evalResults.remove().floatValue();
+                options.min = evalResults.remove().floatValue();
+                options.max = evalResults.remove().floatValue();
                 options.digits = Integer.parseInt(ctx.integer().getText());
 
                 // we should have consumed everything on the results list
@@ -201,13 +301,13 @@ public class ParseState extends RusefiConfigGrammarBaseListener {
             } else if (key.equals("digits")) {
                 options.digits = Integer.parseInt(sValue);
             } else {
-                Float value = evalResults.remove();
+                Double value = evalResults.remove();
 
                 switch (key) {
-                    case "min": options.min = value; break;
-                    case "max": options.max = value; break;
-                    case "scale": options.scale = value; break;
-                    case "offset": options.offset = value; break;
+                    case "min": options.min = value.floatValue(); break;
+                    case "max": options.max = value.floatValue(); break;
+                    case "scale": options.scale = value.floatValue(); break;
+                    case "offset": options.offset = value.floatValue(); break;
                 }
             }
         }
@@ -247,7 +347,7 @@ public class ParseState extends RusefiConfigGrammarBaseListener {
                 handleFieldOptionsList(options, ctx.fieldOptionsList());
 
                 ScalarField prototype = new ScalarField(arTypedef.type, name, options);
-                scope.structFields.add(new ArrayField<ScalarField>(prototype, arTypedef.length, false));
+                scope.structFields.add(new ArrayField<>(prototype, arTypedef.length, false));
                 return;
             } else if (typedef instanceof EnumTypedef) {
                 EnumTypedef bTypedef = (EnumTypedef) typedef;
@@ -257,7 +357,7 @@ public class ParseState extends RusefiConfigGrammarBaseListener {
                 // Merge the read-in options list with the default from the typedef (if exists)
                 handleFieldOptionsList(options, ctx.fieldOptionsList());
 
-                scope.structFields.add(new EnumField(bTypedef.type, type, name, bTypedef.values, options));
+                scope.structFields.add(new EnumField(bTypedef.type, type, name, bTypedef.endBit, bTypedef.values, options));
                 return;
             } else if (typedef instanceof StringTypedef) {
                 StringTypedef sTypedef = (StringTypedef) typedef;
@@ -302,16 +402,24 @@ public class ParseState extends RusefiConfigGrammarBaseListener {
             scope.structFields.add(group);
         }
 
-        String comment = ctx.SemicolonedSuffix() == null ? null : ctx.SemicolonedSuffix().getText();
+        String comment = ctx.SemicolonedSuffix() == null ? null : ctx.SemicolonedSuffix().getText().substring(1).trim();
 
-        group.addBitField(new BitField(name, comment));
+        String trueValue = "\"true\"";
+        String falseValue = "\"false\"";
+
+        if (!ctx.QuotedString().isEmpty()) {
+            trueValue = ctx.QuotedString(0).getText();
+            falseValue = ctx.QuotedString(1).getText();
+        }
+
+        group.addBitField(new BitField(name, comment, trueValue, falseValue));
     }
 
     @Override
     public void exitArrayField(RusefiConfigGrammarParser.ArrayFieldContext ctx) {
         String type = ctx.identifier(0).getText();
         String name = ctx.identifier(1).getText();
-        int length = this.arrayDim;
+        int[] length = this.arrayDim;
         // check if the iterate token is present
         boolean iterate = ctx.Iterate() != null;
 
@@ -341,9 +449,9 @@ public class ParseState extends RusefiConfigGrammarBaseListener {
                 options = new FieldOptions();
                 handleFieldOptionsList(options, ctx.fieldOptionsList());
 
-                EnumField prototype = new EnumField(bTypedef.type, type, name, bTypedef.values, options);
+                EnumField prototype = new EnumField(bTypedef.type, type, name, bTypedef.endBit, bTypedef.values, options);
 
-                scope.structFields.add(new ArrayField<EnumField>(prototype, length, iterate));
+                scope.structFields.add(new ArrayField<>(prototype, length, iterate));
                 return;
             } else if (typedef instanceof StringTypedef) {
                 StringTypedef sTypedef = (StringTypedef) typedef;
@@ -352,7 +460,7 @@ public class ParseState extends RusefiConfigGrammarBaseListener {
                 assert(iterate);
 
                 StringField prototype = new StringField(name, sTypedef.size);
-                scope.structFields.add(new ArrayField<StringField>(prototype, length, iterate));
+                scope.structFields.add(new ArrayField<>(prototype, length, iterate));
                 return;
             } else {
                 throw new RuntimeException("didn't understand type " + type + " for element " + name);
@@ -372,17 +480,19 @@ public class ParseState extends RusefiConfigGrammarBaseListener {
 
         ScalarField prototype = new ScalarField(Type.findByCtype(type).get(), name, options);
 
-        scope.structFields.add(new ArrayField(prototype, length, iterate));
+        scope.structFields.add(new ArrayField<>(prototype, length, iterate));
     }
 
-    private int arrayDim = 0;
+    private int[] arrayDim = null;
 
     @Override
     public void exitArrayLengthSpec(RusefiConfigGrammarParser.ArrayLengthSpecContext ctx) {
-        arrayDim = evalResults.remove().intValue();
+        int arrayDim0 = evalResults.remove().intValue();
 
         if (ctx.ArrayDimensionSeparator() != null) {
-            arrayDim *= evalResults.remove().intValue();
+            this.arrayDim = new int[] { arrayDim0, evalResults.remove().intValue() };
+        } else {
+            this.arrayDim = new int[] { arrayDim0 };
         }
     }
 
@@ -436,12 +546,12 @@ public class ParseState extends RusefiConfigGrammarBaseListener {
         scope.structFields.add(u);
     }
 
-    private Stack<Float> evalStack = new Stack<>();
+    private Stack<Double> evalStack = new Stack<>();
 
 
     @Override
     public void exitEvalNumber(RusefiConfigGrammarParser.EvalNumberContext ctx) {
-        evalStack.push(Float.parseFloat(ctx.floatNum().getText()));
+        evalStack.push(Double.parseDouble(ctx.floatNum().getText()));
     }
 
     @Override
@@ -453,43 +563,49 @@ public class ParseState extends RusefiConfigGrammarBaseListener {
             throw new RuntimeException("Definition not found for " + ctx.getText());
         }
 
-        // Find the matching definition, parse it, and push on to the eval stack
-        evalStack.push(Float.parseFloat(this.definitions.get(defName).value));
+        // Find the matching definition and push on to the eval stack
+        Definition def = this.definitions.get(defName);
+
+        if (!def.isNumeric()) {
+            throw new RuntimeException("Tried to use symbol " + defName + " in an expression, but it wasn't a number");
+        }
+
+        evalStack.push(def.asDouble());
     }
 
     @Override
     public void exitEvalMul(RusefiConfigGrammarParser.EvalMulContext ctx) {
-        Float right = evalStack.pop();
-        Float left = evalStack.pop();
+        Double right = evalStack.pop();
+        Double left = evalStack.pop();
 
         evalStack.push(left * right);
     }
 
     @Override
     public void exitEvalDiv(RusefiConfigGrammarParser.EvalDivContext ctx) {
-        Float right = evalStack.pop();
-        Float left = evalStack.pop();
+        Double right = evalStack.pop();
+        Double left = evalStack.pop();
 
         evalStack.push(left / right);
     }
 
     @Override
     public void exitEvalAdd(RusefiConfigGrammarParser.EvalAddContext ctx) {
-        Float right = evalStack.pop();
-        Float left = evalStack.pop();
+        Double right = evalStack.pop();
+        Double left = evalStack.pop();
 
         evalStack.push(left + right);
     }
 
     @Override
     public void exitEvalSub(RusefiConfigGrammarParser.EvalSubContext ctx) {
-        Float right = evalStack.pop();
-        Float left = evalStack.pop();
+        Double right = evalStack.pop();
+        Double left = evalStack.pop();
 
         evalStack.push(left - right);
     }
 
-    private Queue<Float> evalResults = new LinkedList<>();
+    private Queue<Double> evalResults = new LinkedList<>();
 
     @Override
     public void exitNumexpr(RusefiConfigGrammarParser.NumexprContext ctx) {

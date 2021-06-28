@@ -1,10 +1,27 @@
-name: Firmware Hardware CI (Proteus)
+name: Firmware Hardware CI
 
 on: [push, pull_request]
 
 jobs:
   build-firmware:
-    runs-on: hw-ci-proteus
+    strategy:
+      # Let all builds finish even if one fails early
+      fail-fast: false
+      matrix:
+        build-target: [f4-disco, proteus]
+
+        include:
+          - build-target: f4-disco
+            script: hardware_ci_f4_discovery
+            board: st_stm32f4
+            runs-on: hw-ci-f4-discovery
+
+          - build-target: proteus
+            script: hardware_ci_proteus
+            board: proteus
+            runs-on: hw-ci-proteus
+
+    runs-on: ${{matrix.runs-on}}
 
     steps:
     - uses: actions/checkout@v1
@@ -41,7 +58,7 @@ jobs:
 
     - name: Build Firmware
       working-directory: ./firmware
-      run: make -j4 EXTRA_PARAMS="-DHARDWARE_CI" PROJECT_BOARD=proteus
+      run: make -j6 EXTRA_PARAMS="-DHARDWARE_CI" PROJECT_BOARD=${{matrix.board}}
 
     - name: OpenOCD wipe & flash STM32
       working-directory: ./firmware
@@ -54,4 +71,4 @@ jobs:
     # This both compiles and runs HW CI tests
     - name: Run Hardware CI
       working-directory: ./java_console
-      run: ant hardware_ci_proteus
+      run: ant ${{matrix.script}}

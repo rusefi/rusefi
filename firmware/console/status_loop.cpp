@@ -404,7 +404,6 @@ extern int totalLoggedBytes;
 				offTimeMs = 50;
 				onTimeMs = 450;
 			} else if (consoleByteArrived) {
-				consoleByteArrived = false;
 				offTimeMs = 100;
 				onTimeMs = 33;
 #if EFI_INTERNAL_FLASH
@@ -524,6 +523,9 @@ void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels DECLARE_
 
 	// Set raw sensors
 	tsOutputChannels->rawTps1Primary = Sensor::getRaw(SensorType::Tps1Primary);
+	tsOutputChannels->rawTps1Secondary = Sensor::getRaw(SensorType::Tps1Secondary);
+	tsOutputChannels->rawTps2Primary = Sensor::getRaw(SensorType::Tps2Primary);
+	tsOutputChannels->rawTps2Secondary = Sensor::getRaw(SensorType::Tps2Secondary);
 	tsOutputChannels->rawPpsPrimary = Sensor::getRaw(SensorType::AcceleratorPedalPrimary);
 	tsOutputChannels->rawPpsSecondary = Sensor::getRaw(SensorType::AcceleratorPedalSecondary);
 	tsOutputChannels->rawClt = Sensor::getRaw(SensorType::Clt);
@@ -566,9 +568,9 @@ void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels DECLARE_
 	// offset 116
 	// TPS acceleration
 	tsOutputChannels->deltaTps = engine->tpsAccelEnrichment.getMaxDelta();
-	// 128
+
 	tsOutputChannels->totalTriggerErrorCounter = engine->triggerCentral.triggerState.totalTriggerErrorCounter;
-	// 132
+
 	tsOutputChannels->orderingErrorCounter = engine->triggerCentral.triggerState.orderingErrorCounter;
 	// 68
 	tsOutputChannels->baroCorrection = engine->engineState.baroCorrection;
@@ -576,17 +578,17 @@ void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels DECLARE_
 #if EFI_ENGINE_CONTROL
 	tsOutputChannels->injectorDutyCycle = getInjectorDutyCycle(rpm PASS_ENGINE_PARAMETER_SUFFIX);
 #endif
-	// 148
+
 	tsOutputChannels->fuelTankLevel = Sensor::get(SensorType::FuelLevel).value_or(0);
 	// 160
 	const auto& wallFuel = ENGINE(injectionEvents.elements[0].wallFuel);
 	tsOutputChannels->wallFuelAmount = wallFuel.getWallFuel();
-	// 168
+
 	tsOutputChannels->wallFuelCorrection = wallFuel.wallFuelCorrection;
 
-	// 164
+
 	tsOutputChannels->iatCorrection = ENGINE(engineState.running.intakeTemperatureCoefficient);
-	// 184
+
 	tsOutputChannels->cltCorrection = ENGINE(engineState.running.coolantTemperatureCoefficient);
 	// 188
 	tsOutputChannels->fuelRunning = ENGINE(engineState.running.fuel);
@@ -727,7 +729,6 @@ void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels DECLARE_
 	tsOutputChannels->clutchUpState = engine->clutchUpState;
 	tsOutputChannels->clutchDownState = engine->clutchDownState;
 	tsOutputChannels->brakePedalState = engine->brakePedalState;
-	tsOutputChannels->acSwitchState = engine->acSwitchState;
 
 #if EFI_ENGINE_CONTROL
 	// tCharge depends on the previous state, so we should use the stored value.
@@ -867,6 +868,9 @@ void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels DECLARE_
 		tsOutputChannels->debugFloatField3 = Sensor::get(SensorType::Tps1).value_or(0) - Sensor::get(SensorType::Tps2).value_or(0);
 		// Pedal pri/sec split
 		tsOutputChannels->debugFloatField4 = Sensor::get(SensorType::AcceleratorPedalPrimary).value_or(0) - Sensor::get(SensorType::AcceleratorPedalSecondary).value_or(0);
+
+		// TPS 1 pri/sec ratio - useful for ford ETB that has partial-range second channel
+		tsOutputChannels->debugFloatField5 = 100 * Sensor::get(SensorType::Tps1Primary).value_or(0) / Sensor::get(SensorType::Tps1Secondary).value_or(0);
 		break;
 	case DBG_INSTANT_RPM:
 		{

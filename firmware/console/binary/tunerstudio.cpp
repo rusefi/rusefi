@@ -99,6 +99,9 @@
 
 EXTERN_ENGINE;
 
+/* 1S */
+#define TS_COMMUNICATION_TIMEOUT	TIME_MS2I(1000)
+
 extern persistent_config_container_s persistentState;
 
 #if !defined(EFI_NO_CONFIG_WORKING_COPY)
@@ -323,7 +326,9 @@ static void handleCrc32Check(TsChannelBase *tsChannel, ts_response_format_e mode
 
 	const char* start = getWorkingPageAddr() + offset;
 
-	uint32_t crc = SWAP_UINT32(crc32(start, count));
+	uint32_t crc = crc32(start, count);
+	// do not pass function as macro parameter that would cause same code to be invoked 4 times!
+	crc = SWAP_UINT32(crc);
 	tsChannel->sendResponse(mode, (const uint8_t *) &crc, 4);
 }
 
@@ -437,24 +442,18 @@ static bool isKnownCommand(char command) {
 
 TunerStudio tsInstance;
 
-static void tsProcessOne(TsChannelBase* tsChannel) {
+static int tsProcessOne(TsChannelBase* tsChannel) {
 	validateStack("communication", STACK_USAGE_COMMUNICATION, 128);
 
 	if (!tsChannel->isReady()) {
 		chThdSleepMilliseconds(10);
-		tsChannel->wasReady = false;
-		return;
-	}
-
-	if (!tsChannel->wasReady) {
-		tsChannel->wasReady = true;
-//			scheduleSimpleMsg(&logger, "ts channel is now ready ", hTimeNow());
+		return -1;
 	}
 
 	tsState.totalCounter++;
 
 	uint8_t firstByte;
-	int received = tsChannel->read(&firstByte, 1);
+	int received = tsChannel->readTimeout(&firstByte, 1, TS_COMMUNICATION_TIMEOUT);
 #if EFI_SIMULATOR
 		logMsg("received %d\r\n", received);
 #endif
@@ -465,18 +464,18 @@ static void tsProcessOne(TsChannelBase* tsChannel) {
 		// assume there's connection loss and notify the bluetooth init code
 		bluetoothSoftwareDisconnectNotify();
 #endif  /* EFI_BLUETOOTH_SETUP */
-		return;
+		return -1;
 	}
-	onDataArrived();
 
-	if (handlePlainCommand(tsChannel, firstByte))
-		return;
+	if (handlePlainCommand(tsChannel, firstByte)) {
+		return -1;
+	}
 
 	uint8_t secondByte;
-	received = tsChannel->read(&secondByte, 1);
+	received = tsChannel->readTimeout(&secondByte, 1, TS_COMMUNICATION_TIMEOUT);
 	if (received != 1) {
 		tunerStudioError("TS: ERROR: no second byte");
-		return;
+		return -1;
 	}
 
 	uint16_t incomingPacketSize = firstByte << 8 | secondByte;
@@ -485,36 +484,35 @@ static void tsProcessOne(TsChannelBase* tsChannel) {
 		efiPrintf("TunerStudio: invalid size: %d", incomingPacketSize);
 		tunerStudioError("ERROR: CRC header size");
 		sendErrorCode(tsChannel, TS_RESPONSE_UNDERRUN);
-		return;
+		return -1;
 	}
 
-	received = tsChannel->read((uint8_t* )tsChannel->scratchBuffer, 1);
+	received = tsChannel->readTimeout((uint8_t* )tsChannel->scratchBuffer, 1, TS_COMMUNICATION_TIMEOUT);
 	if (received != 1) {
 		tunerStudioError("ERROR: did not receive command");
 		sendErrorCode(tsChannel, TS_RESPONSE_UNDERRUN);
-		return;
+		return -1;
 	}
 
 	char command = tsChannel->scratchBuffer[0];
 	if (!isKnownCommand(command)) {
 		efiPrintf("unexpected command %x", command);
 		sendErrorCode(tsChannel, TS_RESPONSE_UNRECOGNIZED_COMMAND);
-		return;
+		return -1;
 	}
 
 #if EFI_SIMULATOR
 		logMsg("command %c\r\n", command);
 #endif
 
-	received = tsChannel->read((uint8_t*)(tsChannel->scratchBuffer + 1),
-			incomingPacketSize + CRC_VALUE_SIZE - 1);
 	int expectedSize = incomingPacketSize + CRC_VALUE_SIZE - 1;
+	received = tsChannel->readTimeout((uint8_t*)(tsChannel->scratchBuffer + 1), expectedSize, TS_COMMUNICATION_TIMEOUT);
 	if (received != expectedSize) {
 		efiPrintf("Got only %d bytes while expecting %d for command %c", received,
 				expectedSize, command);
 		tunerStudioError("ERROR: not enough bytes in stream");
 		sendErrorCode(tsChannel, TS_RESPONSE_UNDERRUN);
-		return;
+		return -1;
 	}
 
 	uint32_t expectedCrc = *(uint32_t*) (tsChannel->scratchBuffer + incomingPacketSize);
@@ -531,14 +529,17 @@ static void tsProcessOne(TsChannelBase* tsChannel) {
 				actualCrc, expectedCrc);
 		tunerStudioError("ERROR: CRC issue");
 		sendErrorCode(tsChannel, TS_RESPONSE_CRC_FAILURE);
-		return;
+		return -1;
 	}
 
 	int success = tsInstance.handleCrcCommand(tsChannel, tsChannel->scratchBuffer, incomingPacketSize);
 
 	if (!success) {
 		efiPrintf("got unexpected TunerStudio command %x:%c", command, command);
+		return -1;
 	}
+
+	return 0;
 }
 
 void TunerstudioThread::ThreadTask() {
@@ -551,7 +552,10 @@ void TunerstudioThread::ThreadTask() {
 
 	// Until the end of time, process incoming messages.
 	while(true) {
-		tsProcessOne(channel);
+		if (tsProcessOne(channel) == 0)
+			onDataArrived(true);
+		else
+			onDataArrived(false);
 	}
 }
 

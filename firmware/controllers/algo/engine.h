@@ -87,6 +87,10 @@ public:
 	bool isPwmEnabled = true;
 	int triggerActivitySecond = 0;
 
+	const char *prevOutputName = nullptr;
+
+	InjectionEvent primeInjEvent;
+
 	IEtbController *etbControllers[ETB_COUNT] = {nullptr};
 	IFuelComputer *fuelComputer = nullptr;
 	IInjectorModel *injectorModel = nullptr;
@@ -167,6 +171,8 @@ public:
 #if EFI_ENGINE_CONTROL
 	FuelSchedule injectionEvents;
 	IgnitionEventList ignitionEvents;
+	scheduling_s tdcScheduler[2];
+
 #endif /* EFI_ENGINE_CONTROL */
 
 	bool needToStopEngine(efitick_t nowNt) const;
@@ -181,6 +187,9 @@ public:
 	 * this is based on isEngineChartEnabled and engineSnifferRpmThreshold settings
 	 */
 	bool isEngineChartEnabled = false;
+
+	bool tdcMarkEnabled = true; // used by unit tests only
+
 	/**
 	 * this is based on sensorChartMode and sensorSnifferRpmThreshold settings
 	 */

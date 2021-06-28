@@ -320,8 +320,6 @@ float RpmCalculator::getTimeSinceEngineStart(efitick_t nowNt) const {
 	return engineStartTimer.getElapsedSeconds(nowNt);
 }
 
-static scheduling_s tdcScheduler[2];
-
 static char rpmBuffer[_MAX_FILLER];
 
 /**
@@ -352,7 +350,7 @@ static void onTdcCallback(Engine *engine) {
 void tdcMarkCallback(
 		uint32_t index0, efitick_t edgeTimestamp DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	bool isTriggerSynchronizationPoint = index0 == 0;
-	if (isTriggerSynchronizationPoint && ENGINE(isEngineChartEnabled)) {
+	if (isTriggerSynchronizationPoint && ENGINE(isEngineChartEnabled) && ENGINE(tdcMarkEnabled)) {
 		// two instances of scheduling_s are needed to properly handle event overlap
 		int revIndex2 = getRevolutionCounter() % 2;
 		int rpm = GET_RPM();
@@ -361,7 +359,7 @@ void tdcMarkCallback(
 			angle_t tdcPosition = tdcPosition();
 			// we need a positive angle offset here
 			fixAngle(tdcPosition, "tdcPosition", CUSTOM_ERR_6553);
-			scheduleByAngle(&tdcScheduler[revIndex2], edgeTimestamp, tdcPosition,
+			scheduleByAngle(&engine->tdcScheduler[revIndex2], edgeTimestamp, tdcPosition,
 					{ onTdcCallback, engine } PASS_ENGINE_PARAMETER_SUFFIX);
 		}
 	}
