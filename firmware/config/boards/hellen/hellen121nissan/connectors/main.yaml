@@ -13,6 +13,20 @@ pins:
     ts_name: ETB_OUT-
     function: -ETB_OUT
 
+  - pin: 13a
+    function: Crank Sensor
+# IN_CRANK AIN24 A24
+    id: [GPIOB_1]
+    class: [event_inputs]
+    ts_name: 13 - Crank
+
+  - pin: 14a
+    function: Cam Sensor Left
+# IN_CAM_L IN_CAM AIN19 A19
+    id: [GPIOA_6]
+    class: [event_inputs]
+    ts_name: 14 - Cam Left
+
   - pin: 21a
     id: GPIOD_9
     class: outputs
@@ -33,6 +47,13 @@ pins:
     ts_name: 23 - INJ_1
     function: Injector 1
     type: inj
+
+  - pin: 33a
+    function: Cam Sensor Right
+# IN_CAM_R IN_AUX4 AIN20 A20
+    id: [GPIOA_7]
+    class: [event_inputs]
+    ts_name: 33 - Cam Right
 
   - pin: 40a
     id: GPIOF_12
@@ -63,7 +84,8 @@ pins:
 
 
   - pin: 50a
-#    id: EFI_ADC_4
+# in_tps AIN17 PA4
+    id: EFI_ADC_4
     class: analog_inputs
     ts_name: 50 - TPS 1
     function: TPS 1 sensor input  
@@ -97,7 +119,8 @@ pins:
     function: GNDA
 
   - pin: 69a
-#    id: EFI_ADC_4
+# in_aux1 AIN23 PB0
+    id: EFI_ADC_8
     class: analog_inputs
     ts_name: 69 - TPS 2
     function: TPS 2 sensor input  
@@ -148,6 +171,21 @@ pins:
   - pin: 94a
     function: CAN bus high
     type: can
+
+  - pin: 98a
+# IN_AUX2 AIN21 A21 PC4
+    id: EFI_ADC_14
+    class: analog_inputs
+    ts_name: 98 - PPS 2
+    function: PPS 2 sensor input  
+
+  - pin: 106a
+# IN_PPS, AIN18, A18, PA3
+    id: EFI_ADC_3
+    class: analog_inputs
+    ts_name: 106 - PPS 1
+    function: PPS 1 sensor input  
+
 
   - pin: 109a
 #    id: EFI_ADC_5
