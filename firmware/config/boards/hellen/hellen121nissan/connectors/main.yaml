@@ -196,7 +196,8 @@ pins:
 
 
   - pin: 109a
-#    id: EFI_ADC_5
+# VIGN PA5
+    id: EFI_ADC_5
     class: analog_inputs
     ts_name: 109 Ignition Key Voltage
     function: +12V engine ECU power source, run/start
