@@ -194,9 +194,9 @@ pins:
     function: OUT_FUEL_CONSUMPTION
     
   - pin: 82a
-    function: Crank Sensor
-    id: [GPIOB_1]
-    class: [event_inputs]
+    function: Crank Sensor +
+    id: [GPIOB_1, EFI_ADC_9]
+    class: [event_inputs, analog_inputs]
     ts_name: 82 - VR
 
     
@@ -241,8 +241,8 @@ pins:
     function: Injector #2
     type: inj
   
-  - pin: 90a
-    function: IN_CRANK-
+  - pin: 90a    
+    function: Crank Sensor -
     
   - pin: 91a
     function: GNDA  
