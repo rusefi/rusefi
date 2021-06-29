@@ -7,6 +7,7 @@ else
  CONNECTORS=$1
  echo "Processing $CONNECTORS"
 fi
+yq -V
 for c in $CONNECTORS; do
   echo "processing "$c
   DIR="pinouts/"$(echo $c | tr '/' '\n' | tail -n +5 | head -n -2 | tr '\n' '/')
