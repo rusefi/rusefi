@@ -223,6 +223,12 @@ void setWholeIgnitionIatCorr(float value DECLARE_CONFIG_PARAMETER_SUFFIX) {
 	setTable(config->ignitionIatCorrTable, value);
 }
 
+void setFuelTablesLoadBin(float minValue, float maxValue DECLARE_CONFIG_PARAMETER_SUFFIX) {
+	setLinearCurve(config->injPhaseLoadBins, minValue, maxValue, 1);
+	setLinearCurve(config->veLoadBins, minValue, maxValue, 1);
+	setLinearCurve(config->lambdaLoadBins, minValue, maxValue, 1);
+}
+
 void setWholeIatCorrTimingTable(float value DECLARE_CONFIG_PARAMETER_SUFFIX) {
 	setTable(config->ignitionIatCorrTable, value);
 }

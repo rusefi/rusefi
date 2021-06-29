@@ -163,12 +163,6 @@ static void setMazdaMiataNbTpsTps(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	copyTable(config->tpsTpsAccelTable, tpsTpsTable);
 }
 
-static void setFuelTablesLoadBin(float minValue, float maxValue DECLARE_CONFIG_PARAMETER_SUFFIX) {
-	setLinearCurve(config->injPhaseLoadBins, minValue, maxValue, 1);
-	setLinearCurve(config->veLoadBins, minValue, maxValue, 1);
-	setLinearCurve(config->lambdaLoadBins, minValue, maxValue, 1);
-}
-
 static void setDefaultLambdaTable(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	setTable(config->lambdaTable, 1);
 }
