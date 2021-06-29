@@ -179,6 +179,14 @@ pins:
     ts_name: 98 - PPS 2
     function: PPS 2 sensor input  
 
+  - pin: 104a
+# LOW6_DIODE _IO4
+    id: GPIOG_5
+    class: outputs
+    ts_name: 104 ETB Relay
+    function: ETB relay control
+    type: ls
+
   - pin: 106a
 # IN_PPS, AIN18, A18, PA3
     id: EFI_ADC_3
@@ -194,10 +202,19 @@ pins:
     function: +12V engine ECU power source, run/start
 
   - pin: 111a
-#    id: GPIOI_2
+# OUT_IO3
+    id: GPIOG_14
     class: outputs
     ts_name: 111 Main Relay
     function: Main relay control
+    type: ls
+
+  - pin: 113a
+# OUT_PWM8
+    id: GPIOD_12
+    class: outputs
+    ts_name: 113 Fuel Pump Relay
+    function: Fuel Pump control
     type: ls
 
   - pin: 115a
