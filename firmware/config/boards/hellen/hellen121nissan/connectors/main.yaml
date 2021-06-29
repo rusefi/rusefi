@@ -13,19 +13,137 @@ pins:
     ts_name: ETB_OUT-
     function: -ETB_OUT
 
+  - pin: 21a
+    id: GPIOD_9
+    class: outputs
+    ts_name: 21 - INJ_5
+    function: Injector 5
+    type: inj
+
+  - pin: 22a
+    id: GPIOD_11
+    class: outputs
+    ts_name: 22 - INJ_3
+    function: Injector 3
+    type: inj
+
+  - pin: 23a
+    id: GPIOG_7
+    class: outputs
+    ts_name: 23 - INJ_1
+    function: Injector 1
+    type: inj
+
+  - pin: 40a
+    id: GPIOF_12
+    class: outputs
+    ts_name: 40 - INJ_6
+    function: Injector 6
+    type: inj
+
+  - pin: 41a
+    id: GPIOD_10
+    class: outputs
+    ts_name: 41 - INJ_4
+    function: Injector 4
+    type: inj
+
+  - pin: 42a
+    id: GPIOG_8
+    class: outputs
+    ts_name: 42 - INJ_2
+    function: Injector 2
+    type: inj
+
+  - pin: 47a
+    function: +5v
+
+  - pin: 48a
+    function: +5v
+
+
+  - pin: 50a
+#    id: EFI_ADC_4
+    class: analog_inputs
+    ts_name: 50 - TPS 1
+    function: TPS 1 sensor input  
+
+  - pin: 60a
+    id: GPIOE_2
+    class: outputs
+    ts_name: 60 - Coil 5
+    function: Coil 5
+    type: ign
+
+  - pin: 61a
+    id: GPIOE_4
+    class: outputs
+    ts_name: 61 - Coil 3
+    function: Coil 3
+    type: ign
+
+  - pin: 62a
+    id: GPIOC_13
+    class: outputs
+    ts_name: 62 - Coil 1
+    function: Coil 1
+    type: ign
+
+
   - pin: 66a
     function: GNDA
 
   - pin: 67a
     function: GNDA
 
+  - pin: 69a
+#    id: EFI_ADC_4
+    class: analog_inputs
+    ts_name: 69 - TPS 2
+    function: TPS 2 sensor input  
+
   - pin: 78a
+    function: GNDA
+
+  - pin: 79a
+    id: GPIOB_8
+    class: outputs
+    ts_name: 79 - Coil 6
+    function: Coil 6
+    type: ign
+
+  - pin: 80a
+    id: GPIOE_3
+    class: outputs
+    ts_name: 80 - Coil 4
+    function: Coil 4
+    type: ign
+
+  - pin: 81a
+    id: GPIOE_5
+    class: outputs
+    ts_name: 81 - Coil 2
+    function: Coil 2
+    type: ign
+
+
+  - pin: 82a
+    function: GNDA
+
+  - pin: 83a
     function: GNDA
 
 
   - pin: 86a
     function: CAN bus low
     type: can
+
+  - pin: 90a
+    function: +5v
+
+  - pin: 91a
+    function: +5v
+
 
   - pin: 94a
     function: CAN bus high
@@ -51,6 +169,12 @@ pins:
   - pin: 116a
     function: GND
     type: GND
+
+  - pin: 119a
+    function: +12v from main relay
+
+  - pin: 120a
+    function: +12v from main relay
 
   - pin: 121a
     function: Bat+ (Hot all times), 12v 20A fuse from battery
