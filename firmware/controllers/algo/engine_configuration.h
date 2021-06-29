@@ -26,7 +26,6 @@ void setOperationMode(engine_configuration_s *engineConfiguration, operation_mod
 void prepareVoidConfiguration(engine_configuration_s *activeConfiguration);
 void setTargetRpmCurve(int rpm DECLARE_CONFIG_PARAMETER_SUFFIX);
 void setWholeIgnitionIatCorr(float value DECLARE_CONFIG_PARAMETER_SUFFIX);
-void setFuelTablesLoadBin(float minValue, float maxValue DECLARE_CONFIG_PARAMETER_SUFFIX);
 void setWholeIatCorrTimingTable(float value DECLARE_CONFIG_PARAMETER_SUFFIX);
 void setWholeTimingTable_d(angle_t value DECLARE_CONFIG_PARAMETER_SUFFIX);
 #define setWholeTimingTable(x) setWholeTimingTable_d(x PASS_CONFIG_PARAMETER_SUFFIX);
