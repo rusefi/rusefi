@@ -358,6 +358,8 @@
 #define digitalPotentiometerChipSelect4_offset 671
 #define digitalPotentiometerSpiDevice_offset 677
 #define disableEtbWhenEngineStopped_offset 744
+#define disableFan1WhenStopped_offset 76
+#define disableFan2WhenStopped_offset 76
 #define displacement_offset 396
 #define display_mode_e_auto_enum "DM_NONE", "DM_HD44780", "DM_HD44780_OVER_PCF8574"
 #define displayLogicLevelsInEngineSniffer_offset 76
@@ -1296,8 +1298,8 @@
 #define showHumanReadableWarning_offset 976
 #define showSdCardWarning_offset 76
 #define SIGNATURE_BOARD subaru_eg33_f7
-#define SIGNATURE_DATE 2021.06.27
-#define SIGNATURE_HASH 3794652064
+#define SIGNATURE_DATE 2021.06.28
+#define SIGNATURE_HASH 1890409194
 #define silentTriggerError_offset 1464
 #define slowAdcAlpha_offset 2088
 #define sparkDwellRpmBins_offset 332
@@ -1650,7 +1652,7 @@
 #define ts_show_spi true
 #define ts_show_trigger_comparator false
 #define ts_show_tunerstudio_port false
-#define TS_SIGNATURE "rusEFI 2021.06.27.subaru_eg33_f7.3794652064"
+#define TS_SIGNATURE "rusEFI 2021.06.28.subaru_eg33_f7.1890409194"
 #define TS_SINGLE_WRITE_COMMAND 'W'
 #define TS_SINGLE_WRITE_COMMAND_char W
 #define TS_TEST_COMMAND 't'
@@ -1741,8 +1743,6 @@
 #define unused_1484_bit_29_offset 1476
 #define unused_1484_bit_30_offset 1476
 #define unused_1484_bit_31_offset 1476
-#define unused_294_6_offset 76
-#define unused_294_7_offset 76
 #define unused_294_8_offset 76
 #define unusedAtOldBoardConfigurationEnd_offset 1228
 #define unusedBit4_1476_offset 1476

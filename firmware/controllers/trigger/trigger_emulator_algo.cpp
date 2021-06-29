@@ -55,13 +55,8 @@ void TriggerEmulatorHelper::handleEmulatorCallback(const int size, const MultiCh
 	for (size_t i = 0; i < PWM_PHASE_MAX_WAVE_PER_PWM; i++) {
 		if (needEvent(stateIndex, size, multiChannelStateSequence, i)) {
 			pin_state_t currentValue = multiChannelStateSequence.getChannelState(/*phaseIndex*/i, stateIndex);
-			
-			constexpr trigger_event_e riseEvents[] = { SHAFT_PRIMARY_RISING, SHAFT_SECONDARY_RISING, SHAFT_3RD_RISING };
-			constexpr trigger_event_e fallEvents[] = { SHAFT_PRIMARY_FALLING, SHAFT_SECONDARY_FALLING, SHAFT_3RD_FALLING };
 
-			trigger_event_e event = (currentValue ? riseEvents : fallEvents)[i];
-
-			handleShaftSignal2(event, stamp PASS_ENGINE_PARAMETER_SUFFIX);
+			handleShaftSignal(i, currentValue, stamp PASS_ENGINE_PARAMETER_SUFFIX);
 		}
 	}
 }

@@ -112,20 +112,8 @@ static void onTriggerChanged(efitick_t stamp, bool isPrimary, bool isRising) {
 	// todo: support for 3rd trigger input channel
 	// todo: start using real event time from HW event, not just software timer?
 
-	if (!isPrimary && !TRIGGER_WAVEFORM(needSecondTriggerInput)) {
-		return;
-	}
-	trigger_event_e signal;
-	if (isRising) {
-		signal = isPrimary ? (engineConfiguration->invertPrimaryTriggerSignal ? SHAFT_PRIMARY_FALLING : SHAFT_PRIMARY_RISING) : 
-			(engineConfiguration->invertSecondaryTriggerSignal ? SHAFT_SECONDARY_FALLING : SHAFT_SECONDARY_RISING);
-	}
-	else {
-		signal = isPrimary ? (engineConfiguration->invertPrimaryTriggerSignal ? SHAFT_PRIMARY_RISING : SHAFT_PRIMARY_FALLING) : 
-			(engineConfiguration->invertSecondaryTriggerSignal ? SHAFT_SECONDARY_RISING : SHAFT_SECONDARY_FALLING);
-	}
 	// call the main trigger handler
-	hwHandleShaftSignal(signal, stamp);
+	hwHandleShaftSignal(isPrimary ? 0 : 1, isRising, stamp);
 #endif
 }
 
