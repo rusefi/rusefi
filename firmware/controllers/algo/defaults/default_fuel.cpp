@@ -87,7 +87,6 @@ static void setDefaultVETable(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 //	ve2Map.setAll(0.81);
 
 	setRpmTableBin(config->lambdaRpmBins, FUEL_RPM_COUNT);
-	setTable(config->lambdaTable, 1);
 
 	setRpmTableBin(engineConfiguration->baroCorrRpmBins, BARO_CORR_SIZE);
 	setLinearCurve(engineConfiguration->baroCorrPressureBins, 75, 105, 1);
@@ -164,6 +163,27 @@ static void setMazdaMiataNbTpsTps(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	copyTable(config->tpsTpsAccelTable, tpsTpsTable);
 }
 
+static void setDefaultLambdaTable(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
+	constexpr float mapBins[] = {
+		30, 40, 50, 60, 70, 80, 90, 100, 110, 120, 130, 150, 175, 200, 225, 250
+	};
+	copyArray(config->lambdaLoadBins, mapBins);
+
+	constexpr float rowValues[] = {
+		1,		1,		1,		1,		// 30, 40, 50, 60 kpa
+		1,		0.95,	0.92,	0.90,	// 70, 80, 90, 100 kpa
+		0.89,	0.88,	0.86,	0.84,	// 110, 120, 130, 150 kpa
+		0.8,	0.77,	0.75,	0.73,	// 175, 200, 225, 250 kpa
+	};
+
+	// Set each row to the corresponding value from rowValues
+	for (size_t i = 0; i < efi::size(config->lambdaTable); i++) {
+		for (size_t j = 0; j < efi::size(config->lambdaTable[i]); j++) {
+			config->lambdaTable[i][j] = rowValues[i];
+		}
+	}
+}
+
 void setDefaultFuel(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	// Base injection configuration
 	engineConfiguration->isInjectionEnabled = true;
@@ -186,6 +206,7 @@ void setDefaultFuel(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	setRpmTableBin(config->injPhaseRpmBins, FUEL_RPM_COUNT);
 	setDefaultVETable(PASS_CONFIG_PARAMETER_SIGNATURE);
 	setTable(config->injectionPhase, -180.0f);
+	setDefaultLambdaTable(PASS_CONFIG_PARAMETER_SIGNATURE);
 
 	// Charge temperature estimation
 	engineConfiguration->tChargeMinRpmMinTps = 0.25;
