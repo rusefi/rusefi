@@ -2,7 +2,6 @@ pins:
   - pin: 1a
     function: GND
     type: GND
-    color: black
 
   - pin: 4a
     class: outputs
@@ -27,7 +26,6 @@ pins:
     id: [GPIOA_6]
     class: [event_inputs]
     ts_name: 14 - Cam Left
-    color: pink
 
   - pin: 21a
     id: GPIOD_9
@@ -56,7 +54,6 @@ pins:
     id: [GPIOA_7]
     class: [event_inputs]
     ts_name: 33 - Cam Right
-    color: pink
 
   - pin: 40a
     id: GPIOF_12
@@ -81,11 +78,9 @@ pins:
 
   - pin: 47a
     function: +5v
-    color: orange
 
   - pin: 48a
     function: +5v
-    color: orange
 
 
   - pin: 50a
@@ -165,21 +160,17 @@ pins:
   - pin: 86a
     function: CAN bus low
     type: can
-    color: yellow
 
   - pin: 90a
     function: +5v
-    color: orange
 
   - pin: 91a
     function: +5v
-    color: orange
 
 
   - pin: 94a
     function: CAN bus high
     type: can
-    color: yellow
 
   - pin: 98a
 # IN_AUX2 AIN21 A21 PC4
