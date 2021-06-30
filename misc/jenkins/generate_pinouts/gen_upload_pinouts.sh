@@ -16,12 +16,12 @@ for c in $CONNECTORS; do
   echo "NAME "$NAME
   mkdir -p $DIR
   if [ -f $DIR/index.html ]; then
-    bash misc/pinout-gen/append.sh "$(yq -j r $c)" $DIR/index.html
+    bash misc/pinout-gen/append.sh "$(yq -j e $c)" $DIR/index.html
   else
-    bash misc/pinout-gen/gen.sh "$(yq -j r $c)" $DIR/index.html
+    bash misc/pinout-gen/gen.sh "$(yq -j e $c)" $DIR/index.html
   fi
   file $DIR/index.html
-  IMG=$(yq r $c 'info.image.file')
+  IMG=$(yq e '.info.image.file' $c)
   if [ $? -ne 0 ]; then
     exit 1;
   fi
