@@ -7,6 +7,7 @@ else
  CONNECTORS=$1
  echo "Processing $CONNECTORS"
 fi
+# yq 3 and 4 have incompatible syntax. We use yq 4.
 yq -V
 for c in $CONNECTORS; do
   echo "processing "$c
