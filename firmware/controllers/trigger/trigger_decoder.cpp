@@ -203,11 +203,24 @@ int TriggerState::getTotalRevolutionCounter() const {
 void TriggerStateWithRunningStatistics::movePreSynchTimestamps(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	// here we take timestamps of events which happened prior to synchronization and place them
 	// at appropriate locations
-	for (int i = 0; i < spinningEventIndex;i++) {
-		int newIndex = getTriggerSize() - i;
-		assertIsInBounds(newIndex, timeOfLastEvent, "move timeOfLastEvent");
-		timeOfLastEvent[newIndex] = spinningEvents[i];
+	auto triggerSize = getTriggerSize();
+
+	int eventsToCopy = minI(spinningEventIndex, triggerSize);
+
+	size_t firstSrc;
+	size_t firstDst;
+
+	if (eventsToCopy >= triggerSize) {
+		// Only copy one trigger length worth of events, filling the whole buffer
+		firstSrc = spinningEventIndex - triggerSize;
+		firstDst = 0;
+	} else {
+		// There is less than one full cycle, copy to the end of the buffer
+		firstSrc = 0;
+		firstDst = triggerSize - spinningEventIndex;
 	}
+
+	memcpy(timeOfLastEvent + firstDst, spinningEvents + firstSrc, eventsToCopy * sizeof(timeOfLastEvent[0]));
 }
 
 float TriggerStateWithRunningStatistics::calculateInstantRpm(TriggerFormDetails *triggerFormDetails, efitick_t nowNt DECLARE_ENGINE_PARAMETER_SUFFIX) {
@@ -650,7 +663,7 @@ void TriggerState::decodeTriggerEvent(
 
 		toothed_previous_time = nowNt;
 	}
-	if (!isValidIndex(triggerShape) && triggerStateListener) {
+	if (shaft_is_synchronized && !isValidIndex(triggerShape) && triggerStateListener) {
 		triggerStateListener->OnTriggerInvalidIndex(currentCycle.current_index);
 		return;
 	}
