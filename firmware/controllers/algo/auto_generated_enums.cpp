@@ -1,7 +1,7 @@
 #include "global.h"
 #include "rusefi_enums.h"
 #include "rusefi_hw_enums.h"
-// was generated automatically by rusEFI tool  from rusefi_hw_enums.h // was generated automatically by rusEFI tool  from rusefi_enums.h // by enum2string.jar tool on Sun Jun 13 21:14:31 EDT 2021
+// was generated automatically by rusEFI tool  from rusefi_hw_enums.h // was generated automatically by rusEFI tool  from rusefi_enums.h // by enum2string.jar tool on Thu Jul 01 16:59:55 EDT 2021
 // see also gen_config_and_enums.bat
 
 
@@ -1517,6 +1517,8 @@ case VVT_INACTIVE:
   return "VVT_INACTIVE";
 case VVT_MIATA_NB2:
   return "VVT_MIATA_NB2";
+case VVT_NISSAN_VQ:
+  return "VVT_NISSAN_VQ";
 case VVT_SECOND_HALF:
   return "VVT_SECOND_HALF";
   }
