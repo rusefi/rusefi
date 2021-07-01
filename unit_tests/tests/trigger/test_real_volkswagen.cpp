@@ -44,8 +44,8 @@ TEST(crankingVW, crankingTwiceWithGap) {
 	}
 
 	{
-		// Offset by random time offset, 5m15.4s
-		CsvReader reader(1, 315.4);
+		// Offset by random time offset, 5m14.1s
+		CsvReader reader(1, 3.141);
 		int indeces[1] = {0};
 
 		reader.open("tests/trigger/recourses/nick_1.csv", indeces);
