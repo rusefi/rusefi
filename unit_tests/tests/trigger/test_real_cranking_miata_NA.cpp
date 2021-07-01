@@ -22,10 +22,9 @@ TEST(cranking, realCrankingFromFile) {
 		reader.readLine(&eth);
 	}
 
-	ASSERT_EQ( 42, GET_RPM())<< reader.lineIndex << " @ 0";
+	ASSERT_EQ( 229, GET_RPM())<< reader.lineIndex << " @ 0";
 	ASSERT_EQ( 0, eth.recentWarnings()->getCount())<< "warningCounter#got synch";
 
-	ASSERT_EQ(0, engine->tdcScheduler[1].momentX);
 	reader.readLine(&eth);
 
 	ASSERT_EQ( 213, GET_RPM())<< reader.lineIndex << " @ 1";
@@ -47,6 +46,6 @@ TEST(cranking, realCrankingFromFile) {
 
 	// TODO: we should avoid this warning
 	// See https://github.com/rusefi/rusefi/issues/2889
-	ASSERT_EQ(1, eth.recentWarnings()->getCount())<< "warningCounter#realCranking";
+	ASSERT_EQ(0, eth.recentWarnings()->getCount())<< "warningCounter#realCranking";
 	ASSERT_EQ(560, GET_RPM())<< reader.lineIndex;
 }
