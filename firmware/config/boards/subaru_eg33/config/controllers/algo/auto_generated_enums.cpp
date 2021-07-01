@@ -1,7 +1,7 @@
 #include "global.h"
 #include "rusefi_enums.h"
 #include "rusefi_hw_enums.h"
-// was generated automatically by rusEFI tool  from rusefi_hw_enums.h // was generated automatically by rusEFI tool  from rusefi_enums.h // by enum2string.jar tool on Thu Jul 01 16:59:56 EDT 2021
+// was generated automatically by rusEFI tool  from rusefi_hw_enums.h // was generated automatically by rusEFI tool  from rusefi_enums.h // by enum2string.jar tool on Thu Jul 01 17:26:03 EDT 2021
 // see also gen_config_and_enums.bat
 
 
@@ -1434,6 +1434,8 @@ case TT_NISSAN_SR20VE:
   return "TT_NISSAN_SR20VE";
 case TT_NISSAN_SR20VE_360:
   return "TT_NISSAN_SR20VE_360";
+case TT_NISSAN_VQ:
+  return "TT_NISSAN_VQ";
 case TT_ONE:
   return "TT_ONE";
 case TT_ONE_PLUS_ONE:
