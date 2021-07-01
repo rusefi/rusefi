@@ -43,9 +43,11 @@ TEST(crankingVW, crankingTwiceWithGap) {
 		ASSERT_EQ(1687, GET_RPM())<< reader.lineIndex();
 	}
 
+	auto now = getTimeNowNt();
+
 	{
-		// Offset by random time offset, 5m14.15s
-		CsvReader reader(1, 314.15);
+		// Offset by a short time offset, 10 seconds
+		CsvReader reader(1, 10);
 		int indeces[1] = {0};
 
 		reader.open("tests/trigger/recourses/nick_1.csv", indeces);
@@ -54,7 +56,22 @@ TEST(crankingVW, crankingTwiceWithGap) {
 			reader.processLine(&eth);
 		}
 
-		ASSERT_EQ(0, eth.recentWarnings()->getCount())<< "warningCounter#vwRealCranking";
+		ASSERT_EQ(0, eth.recentWarnings()->getCount());
+		ASSERT_EQ(1687, GET_RPM())<< reader.lineIndex();
+	}
+
+	{
+		// Offset by long time offset, 5m14.15s
+		CsvReader reader(1, 314.159);
+		int indeces[1] = {0};
+
+		reader.open("tests/trigger/recourses/nick_1.csv", indeces);
+		
+		while (reader.haveMore()) {
+			reader.processLine(&eth);
+		}
+
+		ASSERT_EQ(0, eth.recentWarnings()->getCount());
 		ASSERT_EQ(1688, GET_RPM())<< reader.lineIndex();
 	}
 }
