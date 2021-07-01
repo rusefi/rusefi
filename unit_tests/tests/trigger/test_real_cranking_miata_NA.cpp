@@ -18,16 +18,17 @@ TEST(cranking, realCrankingFromFile) {
 
 	ssize_t read;
 
-	for (int i = 0; i < 18; i++) {
+	for (int i = 0; i < 23; i++) {
 		reader.readLine(&eth);
 	}
 
-	EXPECT_EQ( 229, GET_RPM())<< reader.lineIndex << " @ 0";
-	EXPECT_EQ( 0, eth.recentWarnings()->getCount())<< "warningCounter#got synch";
+	EXPECT_EQ( 0, GET_RPM())<< reader.lineIndex;
+	EXPECT_EQ( 0, eth.recentWarnings()->getCount());
 
+	// This tooth should be first sync point
 	reader.readLine(&eth);
 
-	EXPECT_EQ( 213, GET_RPM())<< reader.lineIndex << " @ 1";
+	EXPECT_EQ( 32, GET_RPM())<< reader.lineIndex << " @ 1";
 
 	for (int i = 0; i < 30; i++) {
 		reader.readLine(&eth);
@@ -38,7 +39,7 @@ TEST(cranking, realCrankingFromFile) {
 	for (int i = 0; i < 30; i++) {
 		reader.readLine(&eth);
 	}
-	EXPECT_EQ( 461, GET_RPM())<< reader.lineIndex << " @ 2";
+	EXPECT_EQ( 456, GET_RPM())<< reader.lineIndex << " @ 2";
 
 	while (reader.haveMore()) {
 		reader.processLine(&eth);
@@ -47,5 +48,5 @@ TEST(cranking, realCrankingFromFile) {
 	// TODO: we should avoid this warning
 	// See https://github.com/rusefi/rusefi/issues/2889
 	ASSERT_EQ(0, eth.recentWarnings()->getCount())<< "warningCounter#realCranking";
-	ASSERT_EQ(400, GET_RPM())<< reader.lineIndex;
+	ASSERT_EQ(407, GET_RPM())<< reader.lineIndex;
 }
