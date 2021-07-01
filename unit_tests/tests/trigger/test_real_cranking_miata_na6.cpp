@@ -56,11 +56,11 @@ TEST(cranking, hardcodedRealCranking) {
 	EXPECT_EQ(0, GET_RPM());
 	/* 14 */ EVENT(/* timestamp*/1.194742, T_PRIMARY, /*value*/true);
 	// first synch & fast spinning RPM
-	EXPECT_EQ( 31,  GET_RPM());
+	EXPECT_EQ(227, GET_RPM());
 	/* 15 */ EVENT(/* timestamp*/1.20417975, T_SECONDARY, /*value*/false);
-	EXPECT_EQ(36, GET_RPM());
+	EXPECT_EQ(233, GET_RPM());
 	/* 16 */ EVENT(/* timestamp*/1.25380075, T_SECONDARY, /*value*/true);
-	EXPECT_EQ(53, GET_RPM());
+	EXPECT_EQ(234, GET_RPM());
 	/* 17 */ EVENT(/* timestamp*/1.30114225, T_PRIMARY, /*value*/true);
 	EXPECT_EQ(219, GET_RPM());
 	/* 18 */ EVENT(/* timestamp*/1.3341915, T_SECONDARY, /*value*/false);
