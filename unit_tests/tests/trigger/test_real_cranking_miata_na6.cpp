@@ -69,9 +69,9 @@ TEST(cranking, hardcodedRealCranking) {
 	// THIS TOOTH IS SYNC POINT!
 	// Should get instantRpm from here on
 	/* 25 */ EVENT(/* timestamp*/1.49939025, T_PRIMARY, /*value*/false);
-	EXPECT_EQ(39, GET_RPM());
+	EXPECT_EQ(239, GET_RPM());
 	/* 27 */ EVENT(/* timestamp*/1.511785, T_SECONDARY, /*value*/true);
-	EXPECT_EQ(42, GET_RPM());
+	EXPECT_EQ(234, GET_RPM());
 	/* 28 */ EVENT(/* timestamp*/1.5908545, T_SECONDARY, /*value*/false);
 	EXPECT_EQ(231, GET_RPM());
 	/* 31 */ EVENT(/* timestamp*/1.6399845, T_SECONDARY, /*value*/true);
