@@ -11,13 +11,13 @@
 #include "closed_loop_controller.h"
 #include "pid.h"
 
-class SimplePwm;
+class IPwm;
 
 class BoostController : public ClosedLoopController<float, percent_t> {
 public:
 	DECLARE_ENGINE_PTR;
 
-	void init(SimplePwm* pmw, const ValueProvider3D* openLoopMap, const ValueProvider3D* closedLoopTargetMap, pid_s* pidParams);
+	void init(IPwm* pmw, const ValueProvider3D* openLoopMap, const ValueProvider3D* closedLoopTargetMap, pid_s* pidParams);
 	void update();
 
 	// Called when the configuration may have changed.  Controller will
@@ -39,7 +39,7 @@ private:
 
 	const ValueProvider3D* m_openLoopMap = nullptr;
 	const ValueProvider3D* m_closedLoopTargetMap = nullptr;
-	SimplePwm* m_pwm = nullptr;
+	IPwm* m_pwm = nullptr;
 };
 
 void startBoostPin();
