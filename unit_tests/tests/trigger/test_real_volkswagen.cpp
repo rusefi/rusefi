@@ -10,10 +10,8 @@
 #include "logicdata_csv_reader.h"
 
 TEST(crankingVW, vwRealCrankingFromFile) {
-	CsvReader reader;
-	reader.triggerCount = 1;
+	CsvReader reader(1);
 	int indeces[1] = {0};
-//	setVerboseTrigger(true);
 
 	reader.open("tests/trigger/recourses/nick_1.csv", indeces);
 	WITH_ENGINE_TEST_HELPER (VW_ABA);
@@ -25,5 +23,38 @@ TEST(crankingVW, vwRealCrankingFromFile) {
 
 	ASSERT_EQ( 0, eth.recentWarnings()->getCount())<< "warningCounter#vwRealCranking";
 	ASSERT_EQ( 1687, GET_RPM())<< reader.lineIndex;
+}
 
+TEST(crankingVW, crankingTwiceWithGap) {
+	WITH_ENGINE_TEST_HELPER (VW_ABA);
+	eth.setTriggerType(TT_60_2_VW PASS_ENGINE_PARAMETER_SUFFIX);
+
+	{
+		CsvReader reader(1);
+		int indeces[1] = {0};
+
+		reader.open("tests/trigger/recourses/nick_1.csv", indeces);
+		
+		while (reader.haveMore()) {
+			reader.processLine(&eth);
+		}
+
+		ASSERT_EQ(0, eth.recentWarnings()->getCount())<< "warningCounter#vwRealCranking";
+		ASSERT_EQ(1687, GET_RPM())<< reader.lineIndex;
+	}
+
+	{
+		// Offset by random time offset, 5m15.4s
+		CsvReader reader(1, 315.4);
+		int indeces[1] = {0};
+
+		reader.open("tests/trigger/recourses/nick_1.csv", indeces);
+		
+		while (reader.haveMore()) {
+			reader.processLine(&eth);
+		}
+
+		ASSERT_EQ(0, eth.recentWarnings()->getCount())<< "warningCounter#vwRealCranking";
+		ASSERT_EQ(1688, GET_RPM())<< reader.lineIndex;
+	}
 }
