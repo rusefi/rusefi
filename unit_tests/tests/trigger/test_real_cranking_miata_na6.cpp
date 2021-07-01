@@ -167,7 +167,7 @@ TEST(cranking, hardcodedRealCranking) {
 }
 
 TEST(cranking, naCrankFromFile) {
-	CsvReader reader;
+	CsvReader reader(2);
 	int indeces[2] = {1, 0};
 	reader.open("tests/trigger/recourses/cranking_na_4.csv", indeces);
 
