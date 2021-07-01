@@ -27,7 +27,7 @@ All notable user-facing or behavior-altering changes will be documented in this 
 
 ## Month 202x Release - "Release Name"
 
-## June 2021 Release "Please Take My Children to Work Day"
+## June 2021 Release "National Logistics Day"
 
 ### Fixed
  - Improved cranking defaults
