@@ -4,8 +4,6 @@
  * @date Jun 26, 2021
  * @author Andrey Belomutskiy, (c) 2012-2021
  */
-
-
 class CsvReader {
 public:
 	CsvReader(size_t triggerCount) : CsvReader(triggerCount, 0.0) {}
@@ -15,12 +13,16 @@ public:
 	{
 	}
 
-	void open(const char *fileName, int * columnIndeces);
+	void open(const char *fileName, const int* columnIndeces);
 	bool haveMore();
 	void processLine(EngineTestHelper *eth);
 	void readLine(EngineTestHelper *eth);
 
-//private:
+	int lineIndex() const {
+		return m_lineIndex;
+	}
+
+private:
 	const size_t m_triggerCount;
 	const double m_timestampOffset;
 
@@ -29,9 +31,8 @@ public:
 
 	bool currentState[2];
 
-	int lineIndex = -1;
+	int m_lineIndex = -1;
 
-	int * columnIndeces;
-
+	const int* columnIndeces;
 };
 

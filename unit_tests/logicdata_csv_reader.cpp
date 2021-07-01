@@ -15,7 +15,7 @@ static char* trim(char *str) {
 	return str;
 }
 
-void CsvReader::open(const char *fileName, int *columnIndeces) {
+void CsvReader::open(const char *fileName, const int* columnIndeces) {
 	printf("Reading from %s\r\n", fileName);
 	fp = fopen(fileName, "r");
 	this->columnIndeces = columnIndeces;
@@ -24,8 +24,8 @@ void CsvReader::open(const char *fileName, int *columnIndeces) {
 
 bool CsvReader::haveMore() {
 	bool result = fgets(buffer, sizeof(buffer), fp) != nullptr;
-	lineIndex++;
-	if (lineIndex == 0) {
+	m_lineIndex++;
+	if (m_lineIndex == 0) {
 		// skip header
 		return haveMore();
 	}
