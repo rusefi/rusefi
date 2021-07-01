@@ -169,7 +169,7 @@ TEST(cranking, hardcodedRealCranking) {
 
 	EXPECT_EQ( 0,  unitTestWarningCodeState.recentWarnings.getCount()) << "warningCounter#realCranking";
 
-	EXPECT_EQ( 755,  GET_RPM()) << "RPM at the end";
+	EXPECT_EQ(756,  GET_RPM()) << "RPM at the end";
 }
 
 TEST(cranking, naCrankFromFile) {
