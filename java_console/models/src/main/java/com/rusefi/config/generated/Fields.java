@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Tue Jun 29 05:13:20 UTC 2021
+// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Thu Jul 01 21:04:43 UTC 2021
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -1250,6 +1250,7 @@ public class Fields {
 	public static final int servoOutputPins8_offset = 3147;
 	public static final int showHumanReadableWarning_offset = 976;
 	public static final int showSdCardWarning_offset = 76;
+	public static final int SIGNATURE_HASH = 1821061498;
 	public static final int silentTriggerError_offset = 1464;
 	public static final int slowAdcAlpha_offset = 2088;
 	public static final int sparkDwellRpmBins_offset = 332;
@@ -1551,7 +1552,7 @@ public class Fields {
 	public static final char TS_SD_R_COMMAND = 'r';
 	public static final char TS_SD_W_COMMAND = 'w';
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI 2021.06.29.all.2598559691";
+	public static final String TS_SIGNATURE = "rusEFI 2021.07.01.all.1821061498";
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final char TS_TEST_COMMAND = 't';
 	public static final int TT_TT_1_16 = 50;
@@ -1581,6 +1582,7 @@ public class Fields {
 	public static final int TT_TT_MAZDA_MIATA_NB1 = 4;
 	public static final int TT_TT_MAZDA_SOHC_4 = 7;
 	public static final int TT_TT_MIATA_VVT = 33;
+	public static final int TT_TT_NISSAN_VQ = 58;
 	public static final int TT_TT_ONE = 18;
 	public static final int TT_TT_RENIX_44_2_2 = 44;
 	public static final int TT_TT_RENIX_66_2_2_2 = 45;
