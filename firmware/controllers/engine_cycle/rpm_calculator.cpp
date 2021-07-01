@@ -278,11 +278,14 @@ void rpmShaftPositionCallback(trigger_event_e ckpSignalType,
 
 				rpmState->setRpmValue(rpm > UNREALISTIC_RPM ? NOISY_RPM : rpm);
 			}
+		} else {
+			// we are here only once trigger is synchronized for the first time
+			// while transitioning  from 'spinning' to 'running'
+			engine->triggerCentral.triggerState.movePreSynchTimestamps(PASS_ENGINE_PARAMETER_SIGNATURE);
 		}
 
 		rpmState->onNewEngineCycle();
 	}
-
 
 #if EFI_SENSOR_CHART
 	// this 'index==0' case is here so that it happens after cycle callback so
@@ -293,13 +296,6 @@ void rpmShaftPositionCallback(trigger_event_e ckpSignalType,
 		scAddData(crankAngle, signal);
 	}
 #endif /* EFI_SENSOR_CHART */
-
-	if (rpmState->isSpinningUp()) {
-		// we are here only once trigger is synchronized for the first time
-		// while transitioning  from 'spinning' to 'running'
-		// Replace 'normal' RPM with instant RPM for the initial spin-up period
-		engine->triggerCentral.triggerState.movePreSynchTimestamps(PASS_ENGINE_PARAMETER_SIGNATURE);
-	}
 
 	// Always update instant RPM even when not spinning up
 	engine->triggerCentral.triggerState.updateInstantRpm(&engine->triggerCentral.triggerFormDetails, nowNt PASS_ENGINE_PARAMETER_SUFFIX);

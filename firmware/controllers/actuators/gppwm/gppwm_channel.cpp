@@ -59,7 +59,7 @@ void GppwmChannel::setOutput(float result) {
 	}
 }
 
-void GppwmChannel::init(bool usePwm, SimplePwm* pwm, OutputPin* outputPin, const ValueProvider3D* table, const gppwm_channel* config) {
+void GppwmChannel::init(bool usePwm, IPwm* pwm, OutputPin* outputPin, const ValueProvider3D* table, const gppwm_channel* config) {
 	m_usePwm = usePwm;
 	m_pwm = pwm;
 	m_output = outputPin;

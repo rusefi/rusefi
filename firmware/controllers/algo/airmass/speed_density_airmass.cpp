@@ -5,7 +5,7 @@
 
 EXTERN_ENGINE;
 
-AirmassResult SpeedDensityAirmass::getAirmass(int rpm) const {
+AirmassResult SpeedDensityAirmass::getAirmass(int rpm) {
 	ScopePerf perf(PE::GetSpeedDensityFuel);
 
 	/**
