@@ -400,7 +400,7 @@ typedef enum {
 	//
 	// Another point: once you add a new trigger, run get_trigger_images.bat which would run rusefi_test.exe from unit_tests
 	//
-	TT_UNUSED = 58, // this is used if we want to iterate over all trigger types
+	TT_UNUSED = 59, // this is used if we want to iterate over all trigger types
 
 	Force_4_bytes_size_trigger_type = ENUM_32_BITS,
 } trigger_type_e; // TriggerProcessor.java has this "trigger_type_e" name hard-coded!
@@ -475,6 +475,8 @@ typedef enum  __attribute__ ((__packed__)) {
 	VVT_FORD_ST170 = 7,
 
 	VVT_BARRA_3_PLUS_1 = 8,
+
+	VVT_NISSAN_VQ = 9,
 } vvt_mode_e;
 
 /**

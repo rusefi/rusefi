@@ -447,6 +447,7 @@ end_struct
 #define TT_TT_SKODA_FAVORIT 55
 #define TT_TT_VVT_BARRA_3_PLUS_1 56
 #define TT_TT_KAWA_KX450F 57
+#define TT_TT_NISSAN_VQ 58
 
 
 ! todo https://github.com/rusefi/rusefi/issues/2102
