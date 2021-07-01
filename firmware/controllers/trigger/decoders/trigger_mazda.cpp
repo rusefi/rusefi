@@ -25,16 +25,18 @@
 
 void initializeMazdaMiataNaShape(TriggerWaveform *s) {
 	s->initialize(FOUR_STROKE_CAM_SENSOR);
-	// nominal gap is 3.54
-	s->setTriggerSynchronizationGap2(3.2, 4.1);
-	// nominal gap ~0.15
-	s->setSecondTriggerSynchronizationGap2(0.08, 0.20);
+
+	// nominal gap is 0.278
+	s->setTriggerSynchronizationGap2(0.2, 0.38);
+	// nominal gap is 3.55
+	s->setSecondTriggerSynchronizationGap2(3.2, 4.1);
+
 	s->useRiseEdge = false;
 
 	s->bothFrontsRequired = true;
 	s->gapBothDirections = true;
 
-	s->tdcPosition = 5.181;
+	s->tdcPosition = -8.646;
 
 	/**
 	 * http://rusefi.com/forum/viewtopic.php?f=3&t=729&p=12983#p12983
@@ -44,8 +46,8 @@ void initializeMazdaMiataNaShape(TriggerWaveform *s) {
 
 	s->addEvent720(216.897031, T_PRIMARY, TV_RISE);
 	s->addEvent720(232.640068, T_SECONDARY, TV_RISE);
-	s->addEvent720(288.819688, T_PRIMARY, TV_FALL);		// <-- This edge is the sync point
-	s->addEvent720(302.646323, T_SECONDARY, TV_FALL);
+	s->addEvent720(288.819688, T_PRIMARY, TV_FALL);
+	s->addEvent720(302.646323, T_SECONDARY, TV_FALL);	// <-- This edge is the sync point
 
 	s->addEvent720(412.448056, T_SECONDARY, TV_RISE);
 	s->addEvent720(482.816719, T_SECONDARY, TV_FALL);
