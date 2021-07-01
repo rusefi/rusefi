@@ -53,38 +53,55 @@ TEST(cranking, hardcodedRealCranking) {
 	/* 11 */ EVENT(/* timestamp*/0.99523975, T_SECONDARY, /*value*/true);
 	/* 12 */ EVENT(/* timestamp*/1.076422, T_SECONDARY, /*value*/false);
 	/* 13 */ EVENT(/* timestamp*/1.125428, T_SECONDARY, /*value*/true);
-	ASSERT_EQ( 0,  GET_RPM()) << "RPM at the 14";
+	EXPECT_EQ(0, GET_RPM());
 	/* 14 */ EVENT(/* timestamp*/1.194742, T_PRIMARY, /*value*/true);
 	// first synch & fast spinning RPM
-	ASSERT_EQ( 31,  GET_RPM()) << "RPM at the 14";
+	EXPECT_EQ( 31,  GET_RPM());
 	/* 15 */ EVENT(/* timestamp*/1.20417975, T_SECONDARY, /*value*/false);
+	EXPECT_EQ(36, GET_RPM());
 	/* 16 */ EVENT(/* timestamp*/1.25380075, T_SECONDARY, /*value*/true);
+	EXPECT_EQ(53, GET_RPM());
 	/* 17 */ EVENT(/* timestamp*/1.30114225, T_PRIMARY, /*value*/true);
-	ASSERT_EQ( 0,  unitTestWarningCodeState.recentWarnings.getCount()) << "warningCounter#realCranking";
+	EXPECT_EQ(219, GET_RPM());
 	/* 18 */ EVENT(/* timestamp*/1.3341915, T_SECONDARY, /*value*/false);
+	EXPECT_EQ(88, GET_RPM());
 	/* 19 */ EVENT(/* timestamp*/1.383534, T_SECONDARY, /*value*/true);
-	ASSERT_EQ( 67,  GET_RPM()) << "RPM at the 19";
+	EXPECT_EQ( 67,  GET_RPM());
+
+	// WHY DOES RPM GO SO LOW HERE?
+	// It doesn't look like it drops in the logic analyzer trace (hint: it doesn't, there's a bug)
 
 	// second synch
 	/* 22 */ EVENT(/* timestamp*/1.45352675, T_PRIMARY, /*value*/true);
-	ASSERT_EQ( 33,  GET_RPM()) << "RPM at the 22";
+	EXPECT_EQ(33, GET_RPM());
 	/* 23 */ EVENT(/* timestamp*/1.46291525, T_SECONDARY, /*value*/false);
+	EXPECT_EQ(38, GET_RPM());
 	/* 25 */ EVENT(/* timestamp*/1.49939025, T_PRIMARY, /*value*/false);
+	EXPECT_EQ(54, GET_RPM());
 	/* 27 */ EVENT(/* timestamp*/1.511785, T_SECONDARY, /*value*/true);
+	EXPECT_EQ(57, GET_RPM());
 	/* 28 */ EVENT(/* timestamp*/1.5908545, T_SECONDARY, /*value*/false);
+	EXPECT_EQ(57, GET_RPM());
 	/* 31 */ EVENT(/* timestamp*/1.6399845, T_SECONDARY, /*value*/true);
+	EXPECT_EQ(35, GET_RPM());
 	/* 32 */ EVENT(/* timestamp*/1.70975875, T_PRIMARY, /*value*/true);
+	EXPECT_EQ(233, GET_RPM());
 	/* 33 */ EVENT(/* timestamp*/1.7194455, T_SECONDARY, /*value*/false);
+	EXPECT_EQ(233, GET_RPM());
 	/* 36 */ EVENT(/* timestamp*/1.7697125, T_SECONDARY, /*value*/true);
+	EXPECT_EQ(233, GET_RPM());
 	/* 37 */ EVENT(/* timestamp*/1.817179, T_PRIMARY, /*value*/true);
+	EXPECT_EQ(233, GET_RPM());
 	/* 38 */ EVENT(/* timestamp*/1.8511055, T_SECONDARY, /*value*/false);
+	EXPECT_EQ(233, GET_RPM());
 	/* 41 */ EVENT(/* timestamp*/1.9011835, T_SECONDARY, /*value*/true);
+	EXPECT_EQ(233, GET_RPM());
 	/* 42 */ EVENT(/* timestamp*/1.97691675, T_PRIMARY, /*value*/true);
+	EXPECT_EQ(233, GET_RPM());
 	/* 43 */ EVENT(/* timestamp*/1.9822455, T_SECONDARY, /*value*/false);
-	ASSERT_EQ( 233,  GET_RPM()) << "RPM at the 17";
+	EXPECT_EQ(233, GET_RPM());
 	/* 44 */ EVENT(/* timestamp*/2.001249, T_PRIMARY, /*value*/false);
-	ASSERT_EQ( 233,  GET_RPM()) << "RPM at the 17";
-
+	EXPECT_EQ(233, GET_RPM());
 
 	/* 45 */ EVENT(/* timestamp*/2.0070235, T_SECONDARY, /*value*/true);
 	/* 48 */ EVENT(/* timestamp*/2.04448175, T_SECONDARY, /*value*/false);
@@ -137,9 +154,7 @@ TEST(cranking, hardcodedRealCranking) {
 	/* 119 */ EVENT(/* timestamp*/2.8642345, T_SECONDARY, /*value*/true);
 	/* 120 */ EVENT(/* timestamp*/2.89112225, T_SECONDARY, /*value*/false);
 	/* 123 */ EVENT(/* timestamp*/2.9089625, T_SECONDARY, /*value*/true);
-
 	/* 124 */ EVENT(/* timestamp*/2.93429275, T_PRIMARY, /*value*/true);
-
 	/* 125 */ EVENT(/* timestamp*/2.93850475, T_SECONDARY, /*value*/false);
 	/* 128 */ EVENT(/* timestamp*/2.958108, T_SECONDARY, /*value*/true);
 	/* 129 */ EVENT(/* timestamp*/2.974461, T_PRIMARY, /*value*/true);
@@ -147,8 +162,6 @@ TEST(cranking, hardcodedRealCranking) {
 	/* 133 */ EVENT(/* timestamp*/3.00650825, T_SECONDARY, /*value*/true);
 	/* 134 */ EVENT(/* timestamp*/3.031735, T_PRIMARY, /*value*/true);
 
-
-	ASSERT_EQ( 0,  unitTestWarningCodeState.recentWarnings.getCount()) << "warningCounter#realCranking";
-
-	ASSERT_EQ( 719,  GET_RPM()) << "RPM at the end";
+	EXPECT_EQ(0, unitTestWarningCodeState.recentWarnings.getCount()) << "warningCounter#realCranking";
+	EXPECT_EQ(719, GET_RPM()) << "RPM at the end";
 }
