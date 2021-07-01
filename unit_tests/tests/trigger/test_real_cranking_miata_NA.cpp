@@ -46,6 +46,7 @@ TEST(cranking, realCrankingFromFile) {
 	}
 
 	// TODO: we should avoid this warning
+	// See https://github.com/rusefi/rusefi/issues/2889
 	ASSERT_EQ(1, eth.recentWarnings()->getCount())<< "warningCounter#realCranking";
 	ASSERT_EQ(560, GET_RPM())<< reader.lineIndex;
 }
