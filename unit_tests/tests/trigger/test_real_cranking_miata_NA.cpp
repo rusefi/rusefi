@@ -10,7 +10,7 @@
 #include <string>
 
 TEST(cranking, realCrankingFromFile) {
-	CsvReader reader;
+	CsvReader reader(2);
 	int indeces[2] = {1, 0}; // this logic data file has first trigger channel in second column and second trigger channel in first column
 	reader.open("tests/trigger/recourses/cranking_na_3.csv", indeces);
 
@@ -22,23 +22,23 @@ TEST(cranking, realCrankingFromFile) {
 		reader.readLine(&eth);
 	}
 
-	ASSERT_EQ( 229, GET_RPM())<< reader.lineIndex << " @ 0";
+	ASSERT_EQ( 229, GET_RPM())<< reader.lineIndex() << " @ 0";
 	ASSERT_EQ( 0, eth.recentWarnings()->getCount())<< "warningCounter#got synch";
 
 	reader.readLine(&eth);
 
-	ASSERT_EQ( 213, GET_RPM())<< reader.lineIndex << " @ 1";
+	ASSERT_EQ( 213, GET_RPM())<< reader.lineIndex() << " @ 1";
 
 	for (int i = 0; i < 30; i++) {
 		reader.readLine(&eth);
 	}
-	ASSERT_EQ( 223, GET_RPM())<< reader.lineIndex;
+	ASSERT_EQ( 223, GET_RPM())<< reader.lineIndex();
 
 
 	for (int i = 0; i < 30; i++) {
 		reader.readLine(&eth);
 	}
-	ASSERT_EQ( 297, GET_RPM())<< reader.lineIndex << " @ 2";
+	ASSERT_EQ( 297, GET_RPM())<< reader.lineIndex() << " @ 2";
 
 	while (reader.haveMore()) {
 		reader.processLine(&eth);
@@ -47,5 +47,5 @@ TEST(cranking, realCrankingFromFile) {
 	// TODO: we should avoid this warning
 	// See https://github.com/rusefi/rusefi/issues/2889
 	ASSERT_EQ(0, eth.recentWarnings()->getCount())<< "warningCounter#realCranking";
-	ASSERT_EQ(560, GET_RPM())<< reader.lineIndex;
+	ASSERT_EQ(560, GET_RPM())<< reader.lineIndex();
 }
