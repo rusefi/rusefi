@@ -64,26 +64,26 @@ TEST(cranking, hardcodedRealCranking) {
 	/* 17 */ EVENT(/* timestamp*/1.30114225, T_PRIMARY, /*value*/true);
 	EXPECT_EQ(219, GET_RPM());
 	/* 18 */ EVENT(/* timestamp*/1.3341915, T_SECONDARY, /*value*/false);
-	EXPECT_EQ(88, GET_RPM());
+	EXPECT_EQ(228, GET_RPM());
 	/* 19 */ EVENT(/* timestamp*/1.383534, T_SECONDARY, /*value*/true);
-	EXPECT_EQ( 67,  GET_RPM());
+	EXPECT_EQ( 248,  GET_RPM());
 
 	// WHY DOES RPM GO SO LOW HERE?
 	// It doesn't look like it drops in the logic analyzer trace (hint: it doesn't, there's a bug)
 
 	// second synch
 	/* 22 */ EVENT(/* timestamp*/1.45352675, T_PRIMARY, /*value*/true);
-	EXPECT_EQ(33, GET_RPM());
+	EXPECT_EQ(224, GET_RPM());
 	/* 23 */ EVENT(/* timestamp*/1.46291525, T_SECONDARY, /*value*/false);
-	EXPECT_EQ(38, GET_RPM());
+	EXPECT_EQ(231, GET_RPM());
 	/* 25 */ EVENT(/* timestamp*/1.49939025, T_PRIMARY, /*value*/false);
-	EXPECT_EQ(54, GET_RPM());
+	EXPECT_EQ(239, GET_RPM());
 	/* 27 */ EVENT(/* timestamp*/1.511785, T_SECONDARY, /*value*/true);
-	EXPECT_EQ(57, GET_RPM());
+	EXPECT_EQ(234, GET_RPM());
 	/* 28 */ EVENT(/* timestamp*/1.5908545, T_SECONDARY, /*value*/false);
-	EXPECT_EQ(57, GET_RPM());
+	EXPECT_EQ(231, GET_RPM());
 	/* 31 */ EVENT(/* timestamp*/1.6399845, T_SECONDARY, /*value*/true);
-	EXPECT_EQ(35, GET_RPM());
+	EXPECT_EQ(234, GET_RPM());
 	/* 32 */ EVENT(/* timestamp*/1.70975875, T_PRIMARY, /*value*/true);
 	EXPECT_EQ(233, GET_RPM());
 	/* 33 */ EVENT(/* timestamp*/1.7194455, T_SECONDARY, /*value*/false);

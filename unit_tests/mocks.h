@@ -42,7 +42,7 @@ public:
 	MOCK_METHOD(float, getValue, (float xColumn, float yRow), (const, override));
 };
 
-class MockPwm : public SimplePwm {
+class MockPwm : public IPwm {
 public:
 	MOCK_METHOD(void, setSimplePwmDutyCycle, (float dutyCycle), (override));
 };
