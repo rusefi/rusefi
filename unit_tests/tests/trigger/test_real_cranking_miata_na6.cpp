@@ -30,8 +30,7 @@ static void fireTriggerEvent(EngineTestHelper*eth, double timestampS, trigger_wh
 	EXPAND_Engine;
 	timeNowUs = 1'000'000 * timestampS;
 	printf("MIATANA: posting time=%d event=%d\n", timeNowUs, event);
-	hwHandleShaftSignal(channel == T_PRIMARY ? 0 : 1, !isFall, getTimeNowNt() PASS_ENGINE_PARAMETER_SUFFIX);
-	//engine->triggerCentral.handleShaftSignal(event, getTimeNowNt() PASS_ENGINE_PARAMETER_SUFFIX);
+	engine->triggerCentral.handleShaftSignal(event, getTimeNowNt() PASS_ENGINE_PARAMETER_SUFFIX);
 }
 
 TEST(cranking, hardcodedRealCranking) {
