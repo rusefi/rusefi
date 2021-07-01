@@ -181,5 +181,5 @@ TEST(cranking, naCrankFromFile) {
 	}
 
 	EXPECT_EQ(0, eth.recentWarnings()->getCount());
-	EXPECT_EQ(755, GET_RPM());
+	EXPECT_EQ(698, GET_RPM());
 }
