@@ -394,6 +394,8 @@ typedef enum {
 
 	TT_KAWA_KX450F = TT_TT_KAWA_KX450F,
 
+	TT_NISSAN_VQ = TT_TT_NISSAN_VQ,
+
 	// do not forget to edit "#define trigger_type_e_enum" line in integration/rusefi_config.txt file to propogate new value to rusefi.ini TS project
 	// do not forget to invoke "gen_config.bat" once you make changes to integration/rusefi_config.txt
 	// todo: one day a hero would integrate some of these things into Makefile in order to reduce manual magic

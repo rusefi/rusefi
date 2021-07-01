@@ -545,6 +545,7 @@ void TriggerWaveform::initializeTriggerWaveform(operation_mode_e ambiguousOperat
 		configureFordAspireTriggerWaveform(this);
 		break;
 
+	case TT_TT_NISSAN_VQ:
 	case TT_KAWA_KX450F:
 		configureKawaKX450F(this);
 		break;
