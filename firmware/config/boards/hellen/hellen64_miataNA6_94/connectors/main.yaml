@@ -31,12 +31,8 @@ pins:
     type: ls
 
   - pin: 1F
-    id: GPIOF_12
-    class: outputs
-    ts_name: 1F - Tachometer 95.5
     function: Tachometer
-    type: ls
-
+    
   - pin: 1G
     id: GPIOI_8
     class: outputs
@@ -168,7 +164,7 @@ pins:
   - pin: 3I
     id: GPIOF_12
     class: outputs
-    ts_name: 3I - Tachometer 90-95.5
+    ts_name: Tachometer
     function: tachometer
     
   - pin: 3K
