@@ -454,7 +454,8 @@ public class ConfigDefinition {
             String id = (String) listPins.get(i).get("id");
             for (int ii = i + 1; ii < listPins.size(); ii++) {
                 if (id.equals(listPins.get(ii).get("id"))) {
-                    throw new IllegalStateException("ID used multiple times: " + id);
+                    // todo: re-enable once we fix https://github.com/rusefi/rusefi/issues/2897
+                    //throw new IllegalStateException("ID used multiple times: " + id);
                 }
             }
             String className = (String) listPins.get(i).get("class");
