@@ -11,26 +11,50 @@
 class TriggerCallback {
 public:
 	Engine *engine;
-	int index;
+	int toothIndex;
 	TriggerWaveform *form;
+	bool isVvt;
 };
 
 void func(TriggerCallback *callback) {
-	int formIndex = callback->index % callback->form->getSize();
+	int formIndex = callback->toothIndex % callback->form->getSize();
 	Engine *engine = callback->engine;
 	EXPAND_Engine;
 
 	int value = callback->form->wave.channels[0].getState(formIndex);
-	trigger_event_e signal;
-	if (value) {
-		 signal = SHAFT_PRIMARY_RISING;
-	} else {
-		 signal = SHAFT_PRIMARY_FALLING;
-	}
 	efitick_t nowNt = getTimeNowNt();
-	engine->triggerCentral.handleShaftSignal(signal, nowNt PASS_ENGINE_PARAMETER_SUFFIX);
-
+	if (callback->isVvt) {
+		trigger_value_e v = value ? TV_RISE : TV_FALL;
+		hwHandleVvtCamSignal(v, nowNt, 0 PASS_ENGINE_PARAMETER_SUFFIX);
+	} else {
+		handleShaftSignal(0, value, nowNt PASS_ENGINE_PARAMETER_SUFFIX);
+	}
 }
+
+
+static void scheduleTriggerEvents(TriggerWaveform *shape, bool isVvt DECLARE_ENGINE_PARAMETER_SUFFIX) {
+	int totalIndex = 0;
+
+	/**
+	 * yet another approach to trigger testing: let's schedule a huge list of events from heap
+	 * and then execute those one
+	 */
+	for (int r = 0; r < 20; r++) {
+		for (int i = 0; i < shape->getSize(); i++) {
+			float angle = shape->getAngle(totalIndex);
+			TriggerCallback *param = new TriggerCallback();
+			param->engine = engine;
+			param->toothIndex = totalIndex;
+			param->form = shape;
+			param->isVvt = isVvt;
+
+			scheduling_s *sch = new scheduling_s();
+			engine->executor.scheduleByTimestamp(sch, 1000 * angle, { func, param });
+			totalIndex++;
+		}
+	}
+}
+
 
 TEST(nissan, vq_vvt) {
 	WITH_ENGINE_TEST_HELPER (HELLEN_121_NISSAN);
@@ -41,26 +65,16 @@ TEST(nissan, vq_vvt) {
 		static TriggerWaveform crank;
 		initializeNissanVQcrank(&crank);
 
-		int totalIndex = 0;
-
-		/**
-		 * yet another approach to trigger testing: let's schedule a huge list of events from heap
-		 * and then execute those one
-		 */
-		for (int r = 0; r < 20; r++) {
-			for (int i = 0; i < crank.getSize(); i++) {
-				float angle = crank.getAngle(totalIndex);
-				TriggerCallback *param = new TriggerCallback();
-				param->engine = engine;
-				param->index = totalIndex;
-				param->form = &crank;
-
-				scheduling_s *sch = new scheduling_s();
-				engine->executor.scheduleByTimestamp(sch, 1000 * angle, { func, param });
-				totalIndex++;
-			}
-		}
+		scheduleTriggerEvents(&crank, false PASS_ENGINE_PARAMETER_SUFFIX);
 	}
+
+	{
+		static TriggerWaveform vvt;
+		initializeNissanVQvvt(&vvt);
+
+		scheduleTriggerEvents(&vvt, true PASS_ENGINE_PARAMETER_SUFFIX);
+	}
+
 
 	scheduling_s *head;
 	while ((head = engine->executor.getHead()) != nullptr) {
