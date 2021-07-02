@@ -8,7 +8,6 @@
 #include "global_execution_queue.h"
 
 bool_t debugSignalExecutor = false;
-extern bool verboseMode;
 
 TestExecutor::~TestExecutor() {
 	// Flush the queue and reset all scheduling_s at the end of a test's execution
