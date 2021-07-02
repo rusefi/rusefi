@@ -133,11 +133,12 @@ void initializeNissanVQcrank(TriggerWaveform *s) {
 	s->initialize(FOUR_STROKE_THREE_TIMES_CRANK_SENSOR);
 	s->setTriggerSynchronizationGap(0.33);
 
+	s->tdcPosition = 675;
+
 	float currentAngle = 20;
 	for (int i = 0;i < 10;i++) {
 		currentAngle += 10;
 		s->addEventAngle(currentAngle - 5, T_PRIMARY, TV_RISE);
 		s->addEventAngle(currentAngle, T_PRIMARY, TV_FALL);
 	}
-
 }
