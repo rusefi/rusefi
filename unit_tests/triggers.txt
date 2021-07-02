@@ -51,20 +51,20 @@ event 32 1 1 643.00
 event 33 1 0 648.00
 event 34 1 1 671.00
 event 35 1 0 676.00
-TRIGGERTYPE 3 12 TT_MAZDA_MIATA_NA 436.96
-# duty 0.70 0.39
-event 0 0 1 0.00
-event 1 1 1 15.84
-event 2 1 0 85.86
-event 3 0 0 142.96
-event 4 1 1 195.92
-event 5 1 0 265.60
-event 6 0 1 359.86
-event 7 1 1 375.60
-event 8 0 0 431.78
-event 9 1 0 445.61
-event 10 1 1 555.41
-event 11 1 0 625.78
+TRIGGERTYPE 3 12 TT_MAZDA_MIATA_NA 5.18
+# duty 0.30 0.61
+event 0 0 0 0.00
+event 1 1 0 13.83
+event 2 1 1 123.63
+event 3 1 0 194.00
+event 4 0 1 288.22
+event 5 1 1 304.06
+event 6 1 0 374.08
+event 7 0 0 431.18
+event 8 1 1 484.14
+event 9 1 0 553.82
+event 10 0 1 648.08
+event 11 1 1 663.82
 TRIGGERTYPE 4 22 TT_MAZDA_MIATA_NB1 276.00
 # duty 0.08 0.04
 event 0 0 0 0.00
