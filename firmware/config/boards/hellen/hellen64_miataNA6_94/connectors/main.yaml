@@ -63,7 +63,7 @@ pins:
   - pin: 1L
     id: GPIOD_12
     class: outputs
-    ts_name: 1L - Radiator Fan 94-95
+    ts_name: Radiator Fan
     function: Radiator Fan Relay
     type: ls
 
@@ -84,12 +84,9 @@ pins:
     function: A/C switch input
     type: din
 
-  - pin: 1R
-    id: GPIOD_12
-    class: outputs
-    ts_name: 1R - Coolant Fan
+  - pin: 1R      
     function: Coolant Fan Relay
-    type: ls
+    
 
   - pin: 1S
     ts_name: 1S - Heate Input
