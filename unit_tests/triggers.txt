@@ -3539,3 +3539,17 @@ event 68 0 1 680.00
 event 69 0 0 683.00
 event 70 0 1 692.20
 event 71 0 0 703.00
+TRIGGERTYPE 59 12 TT_VVT_NISSAN_VQ 0.00
+# duty 0.83 0.00
+event 0 0 1 0.00
+event 1 0 0 20.00
+event 2 0 1 40.00
+event 3 0 0 60.00
+event 4 0 1 240.00
+event 5 0 0 260.00
+event 6 0 1 480.00
+event 7 0 0 500.00
+event 8 0 1 600.00
+event 9 0 0 620.00
+event 10 0 1 640.00
+event 11 0 0 660.00
