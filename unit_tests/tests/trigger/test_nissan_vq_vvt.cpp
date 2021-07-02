@@ -32,14 +32,14 @@ void func(TriggerCallback *callback) {
 }
 
 
-static void scheduleTriggerEvents(TriggerWaveform *shape, bool isVvt DECLARE_ENGINE_PARAMETER_SUFFIX) {
+static void scheduleTriggerEvents(TriggerWaveform *shape, int count, bool isVvt DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	int totalIndex = 0;
 
 	/**
 	 * yet another approach to trigger testing: let's schedule a huge list of events from heap
 	 * and then execute those one
 	 */
-	for (int r = 0; r < 20; r++) {
+	for (int r = 0; r < count; r++) {
 		for (int i = 0; i < shape->getSize(); i++) {
 			float angle = shape->getAngle(totalIndex);
 			TriggerCallback *param = new TriggerCallback();
@@ -61,18 +61,20 @@ TEST(nissan, vq_vvt) {
 	engineConfiguration->isIgnitionEnabled = false;
 	engineConfiguration->isInjectionEnabled = false;
 
+	int cyclesCount = 12;
+
 	{
 		static TriggerWaveform crank;
 		initializeNissanVQcrank(&crank);
 
-		scheduleTriggerEvents(&crank, false PASS_ENGINE_PARAMETER_SUFFIX);
+		scheduleTriggerEvents(&crank, cyclesCount, false PASS_ENGINE_PARAMETER_SUFFIX);
 	}
 
 	{
 		static TriggerWaveform vvt;
 		initializeNissanVQvvt(&vvt);
 
-		scheduleTriggerEvents(&vvt, true PASS_ENGINE_PARAMETER_SUFFIX);
+		scheduleTriggerEvents(&vvt, cyclesCount / 6, true PASS_ENGINE_PARAMETER_SUFFIX);
 	}
 
 

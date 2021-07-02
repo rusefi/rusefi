@@ -150,10 +150,6 @@ size_t TriggerWaveform::getLength() const {
 }
 
 angle_t TriggerWaveform::getAngle(int index) const {
-	// todo: why is this check here? looks like the code below could be used universally
-	if (operationMode == FOUR_STROKE_CAM_SENSOR) {
-		return getSwitchAngle(index);
-	}
 	/**
 	 * FOUR_STROKE_CRANK_SENSOR magic:
 	 * We have two crank shaft revolutions for each engine cycle
