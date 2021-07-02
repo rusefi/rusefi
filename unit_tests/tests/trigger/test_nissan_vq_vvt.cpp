@@ -28,26 +28,32 @@ void func(TriggerCallback *callback) {
 		 signal = SHAFT_PRIMARY_FALLING;
 	}
 	efitick_t nowNt = getTimeNowNt();
-	engine->triggerCentral.handleShaftSignal(SHAFT_PRIMARY_RISING, nowNt PASS_ENGINE_PARAMETER_SUFFIX);
+	engine->triggerCentral.handleShaftSignal(signal, nowNt PASS_ENGINE_PARAMETER_SUFFIX);
 
 }
 
 TEST(nissan, vq_vvt) {
 	WITH_ENGINE_TEST_HELPER (HELLEN_121_NISSAN);
+	engineConfiguration->isIgnitionEnabled = false;
+	engineConfiguration->isInjectionEnabled = false;
 
 	{
-
-		TriggerWaveform crank;
+		static TriggerWaveform crank;
 		initializeNissanVQcrank(&crank);
 
 		int totalIndex = 0;
 
+		/**
+		 * yet another approach to trigger testing: let's schedule a huge list of events from heap
+		 * and then execute those one
+		 */
 		for (int r = 0; r < 20; r++) {
 			for (int i = 0; i < crank.getSize(); i++) {
 				float angle = crank.getAngle(totalIndex);
 				TriggerCallback *param = new TriggerCallback();
 				param->engine = engine;
 				param->index = totalIndex;
+				param->form = &crank;
 
 				scheduling_s *sch = new scheduling_s();
 				engine->executor.scheduleByTimestamp(sch, 1000 * angle, { func, param });
@@ -56,11 +62,10 @@ TEST(nissan, vq_vvt) {
 		}
 	}
 
-	for (int r = 0; r < 20 * 720; r++) {
-//		eth.moveTimeForwardMs(1);
-//		eth.executeActions();
+	scheduling_s *head;
+	while ((head = engine->executor.getHead()) != nullptr) {
+		eth.setTimeAndInvokeEventsUs(head->momentX);
 	}
-	ASSERT_EQ(0, GET_RPM());
 
-
+	ASSERT_EQ(250, GET_RPM());
 }
