@@ -30,8 +30,10 @@ float interpolateMsg(const char *msg, float x1, float y1, float x2, float y2, fl
 template<typename TValue, int TSize>
 void ensureArrayIsAscending(const char* msg, const TValue (&values)[TSize]) {
 	for (size_t i = 0; i < TSize - 1; i++) {
-		if (values[i + 1] < values[i]) {
-			firmwareError(CUSTOM_ERR_AXIS_ORDER, "Invalid table axis (must be ascending!): %s", msg);
+		auto cur = values[i];
+		auto next = values[i + 1];
+		if (next < cur) {
+			firmwareError(CUSTOM_ERR_AXIS_ORDER, "Invalid table axis (must be ascending!): %s %f %f", msg, cur, next);
 		}
 	}
 }
