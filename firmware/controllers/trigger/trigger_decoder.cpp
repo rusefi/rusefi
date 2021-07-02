@@ -155,7 +155,11 @@ void calculateTriggerSynchPoint(
 
 void prepareEventAngles(TriggerWaveform *shape,
 		TriggerFormDetails *details DECLARE_ENGINE_PARAMETER_SUFFIX) {
-	float firstAngle = shape->getAngle(shape->triggerShapeSynchPointIndex);
+	int triggerShapeSynchPointIndex = shape->triggerShapeSynchPointIndex;
+	if (triggerShapeSynchPointIndex == EFI_ERROR_CODE) {
+		return;
+	}
+	float firstAngle = shape->getAngle(triggerShapeSynchPointIndex);
 	assertAngleRange(firstAngle, "firstAngle", CUSTOM_TRIGGER_SYNC_ANGLE);
 
 	int riseOnlyIndex = 0;
