@@ -127,6 +127,7 @@ void hwHandleVvtCamSignal(trigger_value_e front, efitick_t nowNt, int index DECL
 		addEngineSnifferEvent(vvtName, front == TV_RISE ? PROTOCOL_ES_UP : PROTOCOL_ES_DOWN);
 
 #if EFI_TOOTH_LOGGER
+// todo: we need to start logging different VVT channels differently!!!
 		if (front == TV_RISE) {
 			LogTriggerTooth(SHAFT_SECONDARY_RISING, nowNt PASS_ENGINE_PARAMETER_SUFFIX);
 		} else {
