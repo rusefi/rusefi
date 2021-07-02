@@ -157,7 +157,7 @@ void setBoardDefaultConfiguration(void) {
 
 	// Some sensible defaults for other options
 	setOperationMode(engineConfiguration, FOUR_STROKE_CRANK_SENSOR);
-	engineConfiguration->trigger.type = TT_TOOTHED_WHEEL_60_2;
+
 	engineConfiguration->useOnlyRisingEdgeForTrigger = true;
 	setAlgorithm(LM_SPEED_DENSITY PASS_CONFIG_PARAMETER_SUFFIX);
 
