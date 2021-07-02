@@ -173,15 +173,12 @@ pins:
     function: 5v reference
     
   - pin: 3L
-    id: EFI_ADC_4
-    class: analog_inputs
-    ts_name: 3L - TPS 90-93
     function: TPS INPUT
     
   - pin: 3M
     id: EFI_ADC_4
     class: analog_inputs
-    ts_name: 3M - TPS 94-95
+    ts_name: TPS Input
     function: TPS INPUT
 
   - pin: 3O
@@ -197,7 +194,7 @@ pins:
     function: IAT sensor
             
   - pin: 3S
-    id: GPIOD_9
+    id: GPIOD_9  
     class: outputs
     ts_name: 3S - A/C Fan 94-95
     function: A/C Fan
