@@ -117,6 +117,7 @@ int TriggerWaveform::getTriggerWaveformSynchPointIndex() const {
 /**
  * physical primary trigger duration
  * @see getEngineCycle
+ * @see getCrankDivider
  */
 angle_t TriggerWaveform::getCycleDuration() const {
 	switch (operationMode) {
@@ -550,6 +551,9 @@ void TriggerWaveform::initializeTriggerWaveform(operation_mode_e ambiguousOperat
 		break;
 
 	case TT_TT_NISSAN_VQ:
+		initializeNissanVQcrank(this);
+		break;
+
 	case TT_KAWA_KX450F:
 		configureKawaKX450F(this);
 		break;

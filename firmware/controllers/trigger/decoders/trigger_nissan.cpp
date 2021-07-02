@@ -119,19 +119,25 @@ void initializeNissanVQvvt(TriggerWaveform *s) {
 
 	int offset = 720 - 520;
 
-
-
 	addPrimaryToothEndingAt(s, offset + 40);
-
 	addPrimaryToothEndingAt(s, offset + 160);
 	addPrimaryToothEndingAt(s, offset + 200);
-
-
 	addPrimaryToothEndingAt(s, offset + 280);
-
-
 	addPrimaryToothEndingAt(s, offset + 320);
-
 	addPrimaryToothEndingAt(s, offset + 520);
+
+	s->setTriggerSynchronizationGap(5);
+}
+
+void initializeNissanVQcrank(TriggerWaveform *s) {
+	s->initialize(FOUR_STROKE_THREE_TIMES_CRANK_SENSOR);
+	s->setTriggerSynchronizationGap(0.33);
+
+	float currentAngle = 20;
+	for (int i = 0;i < 10;i++) {
+		currentAngle += 10;
+		s->addEventAngle(currentAngle - 5, T_PRIMARY, TV_RISE);
+		s->addEventAngle(currentAngle, T_PRIMARY, TV_FALL);
+	}
 
 }
