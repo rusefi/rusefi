@@ -50,6 +50,7 @@
 #include "ford_1995_inline_6.h"
 
 #include "nissan_primera.h"
+#include "nissan_vq.h"
 #include "honda_accord.h"
 #include "GY6_139QMB.h"
 

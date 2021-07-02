@@ -8,5 +8,6 @@
 #include "engine_test_helper.h"
 
 TEST(nissan, vq_vvt) {
+	WITH_ENGINE_TEST_HELPER(HELLEN_121_NISSAN);
 
 }
