@@ -451,21 +451,22 @@ public class ConfigDefinition {
         names.put("event_inputs", new ArrayList<>());
         names.put("switch_inputs", new ArrayList<>());
         for (int i = 0; i < listPins.size(); i++) {
+            String id = (String) listPins.get(i).get("id");
             for (int ii = i + 1; ii < listPins.size(); ii++) {
-                if (listPins.get(i).get("id") == listPins.get(ii).get("id")) {
-                    throw new RuntimeException("ID used multiple times: " + listPins.get(i).get("id"));
+                if (id.equals(listPins.get(ii).get("id"))) {
+                    throw new IllegalStateException("ID used multiple times: " + id);
                 }
             }
             String className = (String) listPins.get(i).get("class");
             ArrayList<String> classList = names.get(className);
             if (classList == null) {
-                throw new RuntimeException("Class not found:  " + className);
+                throw new IllegalStateException("Class not found:  " + className);
             }
             PinType listPinType = PinType.find((String) listPins.get(i).get("class"));
             String pinType = listPinType.getPinType();
             Map<String, Value> enumList = state.enumsReader.getEnums().get(pinType);
             for (Map.Entry<String, Value> kv : enumList.entrySet()) {
-                if (kv.getKey().equals(listPins.get(i).get("id"))) {
+                if (kv.getKey().equals(id)) {
                     int index = kv.getValue().getIntValue();
                     classList.ensureCapacity(index + 1);
                     for (int ii = classList.size(); ii <= index; ii++) {
