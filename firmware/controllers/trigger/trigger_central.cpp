@@ -87,13 +87,12 @@ angle_t TriggerCentral::getVVTPosition(uint8_t bankIndex, uint8_t camIndex) {
 
 #define miataNbIndex (0)
 
-// todo: should we hard-code the list of 'not real decoder' modes instead of adding to list of 'real decoders'? these days we only add 'real decode' modes
 static bool vvtWithRealDecoder(vvt_mode_e vvtMode) {
-	return vvtMode == VVT_MIATA_NB2
-			|| vvtMode == VVT_BOSCH_QUICK_START
-			|| vvtMode == VVT_FORD_ST170
-			|| vvtMode == VVT_4_1
-			|| vvtMode == VVT_BARRA_3_PLUS_1;
+	// todo: why does VVT_2JZ not use real decoder?
+	return vvtMode != VVT_INACTIVE
+			&& vvtMode != VVT_2JZ
+			&& vvtMode != VVT_SECOND_HALF
+			&& vvtMode != VVT_FIRST_HALF;
 }
 
 void hwHandleVvtCamSignal(trigger_value_e front, efitick_t nowNt, int index DECLARE_ENGINE_PARAMETER_SUFFIX) {
@@ -178,8 +177,8 @@ void hwHandleVvtCamSignal(trigger_value_e front, efitick_t nowNt, int index DECL
 		return;
 	}
 
-	ENGINE(triggerCentral).vvtState[bankIndex][camIndex].decodeTriggerEvent(
-			ENGINE(triggerCentral).vvtShape[camIndex],
+	tc->vvtState[bankIndex][camIndex].decodeTriggerEvent(
+			tc->vvtShape[camIndex],
 			nullptr,
 			nullptr,
 			engine->vvtTriggerConfiguration[camIndex],
@@ -217,7 +216,7 @@ void hwHandleVvtCamSignal(trigger_value_e front, efitick_t nowNt, int index DECL
 	case VVT_BOSCH_QUICK_START:
 	case VVT_BARRA_3_PLUS_1:
 	 {
-		if (engine->triggerCentral.vvtState[bankIndex][camIndex].currentCycle.current_index != 0) {
+		if (tc->vvtState[bankIndex][camIndex].currentCycle.current_index != 0) {
 			// this is not sync tooth - exiting
 			return;
 		}
