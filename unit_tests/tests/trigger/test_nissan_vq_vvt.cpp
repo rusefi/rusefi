@@ -118,8 +118,8 @@ TEST(nissan, vq_vvt) {
 	TriggerCentral *tc = &engine->triggerCentral;
 
 
-	ASSERT_TRUE(tc->vvtState[0][0].shaft_is_synchronized);
-	//huh? ASSERT_TRUE(tc->vvtState[0][1].shaft_is_synchronized);
+	ASSERT_TRUE(tc->vvtState[0][0].getShaftSynchronized());
+	//huh? ASSERT_TRUE(tc->vvtState[0][1].getShaftSynchronized());
 
 	angle_t firstVVTangle = 27.5;
 	ASSERT_NEAR(firstVVTangle, tc->vvtPosition[0][0], EPS2D);

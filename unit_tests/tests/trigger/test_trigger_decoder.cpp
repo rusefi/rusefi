@@ -70,7 +70,7 @@ static void testDodgeNeonDecoder(void) {
 
 	TriggerState state;
 
-	ASSERT_FALSE(state.shaft_is_synchronized) << "1 shaft_is_synchronized";
+	ASSERT_FALSE(state.getShaftSynchronized()) << "1 shaft_is_synchronized";
 
 //	int r = 0;
 //	processTriggerEvent(&state, shape, &ec->triggerConfig, SHAFT_PRIMARY_RISING, r + 60);
@@ -339,7 +339,7 @@ TEST(misc, testRpmCalculator) {
 
 //	debugSignalExecutor = true;
 
-	ASSERT_EQ(engine->triggerCentral.triggerState.shaft_is_synchronized, 1);
+	ASSERT_EQ(engine->triggerCentral.triggerState.getShaftSynchronized(), 1);
 
 	eth.moveTimeForwardMs(5 /*ms*/);
 
