@@ -133,7 +133,7 @@ void hwHandleVvtCamSignal(trigger_value_e front, efitick_t nowNt, int index DECL
 			tooth = front == TV_RISE ? SHAFT_SECONDARY_RISING : SHAFT_SECONDARY_FALLING;
 		} else {
 			// todo: nicer solution is needed
-			tooth = front == TV_RISE ? SHAFT_3RD_FALLING : SHAFT_3RD_FALLING;
+			tooth = front == TV_RISE ? SHAFT_3RD_RISING : SHAFT_3RD_FALLING;
 		}
 
 		LogTriggerTooth(tooth, nowNt PASS_ENGINE_PARAMETER_SUFFIX);
