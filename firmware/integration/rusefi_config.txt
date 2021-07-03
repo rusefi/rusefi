@@ -1251,7 +1251,7 @@ int16_t tps2Max;Full throttle#2. tpsMax value as 10 bit ADC value. Not Voltage!\
 
 	int tpsAccelLength;+This is the number of engine cycles that the TPS position change can occur over, a longer duration will make the enrichment more active but too long may affect steady state driving, a good default is 30-60 cycles. ;"cycles", 1, 0, 1, 200, 0
 	float tpsAccelEnrichmentThreshold;+Maximum change delta of TPS percentage over the 'length'. Actual TPS change has to be above this value in order for TPS/TPS acceleration to kick in.;"roc", 1, 0, 0, 200, 3
-	float vvtOffset;+Angle between cam sensor and VVT zero position\nset vvt_offset X;"value", 1, 0, -720, 1000, 1
+	float unusedVvtOffsetWasHere;;"v", 1, 0, -720, 1000, 1
 	
 	int engineLoadAccelLength;;"cycles", 1, 0, 1, 200, 0
 	
