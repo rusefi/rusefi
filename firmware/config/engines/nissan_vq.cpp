@@ -13,4 +13,7 @@ void setHellen121nissan(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	engineConfiguration->trigger.type = TT_NISSAN_VQ;
 
 	engineConfiguration->vvtMode[0] = VVT_NISSAN_VQ;
+
+	engineConfiguration->vvtOffsets[0] = NISSAN_VQ_VVT_OFFSET;
+	engineConfiguration->vvtOffsets[1 * CAMS_PER_BANK] = NISSAN_VQ_VVT_OFFSET - NISSAN_VQ_CAM_OFFSET;
 }
