@@ -711,13 +711,11 @@ static void resetRunningTriggerCounters() {
 void onConfigurationChangeTriggerCallback(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	bool changed = false;
 	// todo: how do we static_assert here?
-	efiAssertVoid(OBD_PCM_Processor_Fault, efi::size(CONFIG(camInputs)) == efi::size(CONFIG(vvtMode)), "sizes");
 	efiAssertVoid(OBD_PCM_Processor_Fault, efi::size(CONFIG(camInputs)) == efi::size(CONFIG(vvtOffsets)), "sizes");
 
 	for (size_t camIndex = 0; camIndex < efi::size(CONFIG(camInputs)); camIndex++) {
 		changed |= isConfigurationChanged(camInputs[camIndex]);
 		changed |= isConfigurationChanged(vvtOffsets[camIndex]);
-		changed |= isConfigurationChanged(vvtMode[camIndex]);
 	}
 
 	for (size_t i = 0; i < efi::size(CONFIG(triggerGapOverride)); i++) {
@@ -726,6 +724,10 @@ void onConfigurationChangeTriggerCallback(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 
 	for (size_t i = 0; i < efi::size(CONFIG(triggerInputPins)); i++) {
 		changed |= isConfigurationChanged(triggerInputPins[i]);
+	}
+
+	for (size_t i = 0; i < efi::size(CONFIG(vvtMode)); i++) {
+		changed |= isConfigurationChanged(vvtMode[i]);
 	}
 
 	changed |= isConfigurationChanged(trigger.type);
