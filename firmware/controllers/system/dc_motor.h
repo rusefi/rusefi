@@ -71,9 +71,9 @@ public:
 	};
 
 private:
-	IPwm* m_enable;
-	IPwm* m_dir1;
-	IPwm* m_dir2;
+	IPwm* m_enable = nullptr;
+	IPwm* m_dir1 = nullptr;
+	IPwm* m_dir2 = nullptr;
 	OutputPin* const m_disable;
 	float m_value = 0;
 

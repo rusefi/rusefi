@@ -157,9 +157,13 @@ void setBoardDefaultConfiguration(void) {
 
 	// Some sensible defaults for other options
 	setOperationMode(engineConfiguration, FOUR_STROKE_CRANK_SENSOR);
-	engineConfiguration->trigger.type = TT_TOOTHED_WHEEL_60_2;
+
 	engineConfiguration->useOnlyRisingEdgeForTrigger = true;
 	setAlgorithm(LM_SPEED_DENSITY PASS_CONFIG_PARAMETER_SUFFIX);
+
+
+	// Bosch VQ40 VR56 VK56 0280158007
+	engineConfiguration->injector.flow = 296.2;
 
 	engineConfiguration->specs.cylindersCount = 6;
 	engineConfiguration->specs.firingOrder = FO_1_2_3_4_5_6;

@@ -11,6 +11,7 @@ TESTS_SRC_CPP = \
 	tests/trigger/test_real_volkswagen.cpp \
 	tests/trigger/test_rpm_multiplier.cpp \
 	tests/trigger/test_quad_cam.cpp \
+	tests/trigger/test_nissan_vq_vvt.cpp \
 	tests/trigger/test_override_gaps.cpp \
 	tests/trigger/test_injection_scheduling.cpp \
 	tests/ignition_injection/injection_mode_transition.cpp \
@@ -38,6 +39,7 @@ TESTS_SRC_CPP = \
 	tests/test_idle_controller.cpp \
 	tests/test_issue_898.cpp \
 	tests/test_etb.cpp \
+	tests/test_dc_motor.cpp \
 	tests/test_fan_control.cpp \
 	tests/test_vvt.cpp \
 	tests/test_launch.cpp \

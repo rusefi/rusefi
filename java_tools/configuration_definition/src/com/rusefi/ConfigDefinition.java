@@ -1,30 +1,29 @@
 package com.rusefi;
 
-import com.rusefi.generated.*;
+import com.rusefi.enum_reader.Value;
+import com.rusefi.generated.RusefiConfigGrammarLexer;
+import com.rusefi.generated.RusefiConfigGrammarParser;
 import com.rusefi.newparse.ParseState;
-import com.rusefi.newparse.outputs.CStructWriter;
-import com.rusefi.newparse.outputs.TsWriter;
 import com.rusefi.newparse.parsing.Definition;
 import com.rusefi.output.*;
-import com.rusefi.util.*;
+import com.rusefi.util.CachingStrategy;
+import com.rusefi.util.IoUtils;
+import com.rusefi.util.LazyFile;
+import com.rusefi.util.SystemOut;
 import org.antlr.v4.runtime.*;
 import org.antlr.v4.runtime.tree.ParseTree;
 import org.antlr.v4.runtime.tree.ParseTreeWalker;
-
-import com.rusefi.enum_reader.Value;
 import org.yaml.snakeyaml.Yaml;
 
 import java.io.*;
-import java.math.BigInteger;
-import java.nio.file.*;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
+import java.nio.file.Files;
 import java.util.*;
 import java.util.zip.CRC32;
 
 /**
  * Andrey Belomutskiy, (c) 2013-2020
  * 1/12/15
+ *
  * @see ConfigurationConsumer
  */
 @SuppressWarnings("StringConcatenationInsideStringBufferAppend")
@@ -205,8 +204,8 @@ public class ConfigDefinition {
                     FilenameFilter filter = (f, name) -> name.endsWith(".yaml");
                     yamlFiles = dirName.listFiles(filter);
                     if (yamlFiles != null) {
-                        for (int f = 0; f < yamlFiles.length; f++) {
-                            inputFiles.add("config/boards/" + boardName + "/connectors/" + yamlFiles[f].getName());
+                        for (File yamlFile : yamlFiles) {
+                            inputFiles.add("config/boards/" + boardName + "/connectors/" + yamlFile.getName());
                         }
                     }
                     break;
@@ -247,7 +246,7 @@ public class ConfigDefinition {
             readPrependValues(VariableRegistry.INSTANCE, prependFile);
 
         if (yamlFiles != null) {
-           processYamls(VariableRegistry.INSTANCE, yamlFiles, state);
+            processYamls(VariableRegistry.INSTANCE, yamlFiles, state);
         }
 
         // Parse the input files
@@ -265,10 +264,10 @@ public class ConfigDefinition {
                 // Ignore duplicates of definitions made during prepend phase
                 listener.setDefinitionPolicy(Definition.OverwritePolicy.IgnoreNew);
 
-                for (String prependFile : prependFiles) {
+                //for (String prependFile : prependFiles) {
                     // TODO: fix signature define file parsing
                     //parseFile(listener, prependFile);
-                }
+                //}
             }
 
             // Now load the main config file
@@ -392,15 +391,15 @@ public class ConfigDefinition {
     }
 
     public static void processYamls(VariableRegistry registry, File[] yamlFiles, ReaderState state) throws IOException {
-        ArrayList<Map<String, Object>> listPins = new ArrayList();
+        ArrayList<Map<String, Object>> listPins = new ArrayList<>();
         for (File yamlFile : yamlFiles) {
-            processYamlFile(yamlFile, state, listPins);
+            processYamlFile(yamlFile, listPins);
         }
         registerPins(listPins, registry, state);
     }
 
     @SuppressWarnings("unchecked")
-    private static void processYamlFile(File yamlFile, ReaderState state,
+    private static void processYamlFile(File yamlFile,
                                         ArrayList<Map<String, Object>> listPins) throws IOException {
         Yaml yaml = new Yaml();
         Map<String, Object> yamlData = yaml.load(new FileReader(yamlFile));
@@ -419,19 +418,19 @@ public class ConfigDefinition {
                 continue;
             }
             if (pinId instanceof ArrayList) {
-                ArrayList pinIds = (ArrayList) pinId;
+                ArrayList<String> pinIds = (ArrayList<String>) pinId;
                 if (!(pinClass instanceof ArrayList))
                     throw new IllegalStateException("Expected multiple classes for " + pinIds);
                 for (int i = 0; i < pinIds.size(); i++) {
-                    String id = (String) pinIds.get(i);
-                    Map<String, Object> thisPin = new HashMap();
-                    thisPin.put("id", pinIds.get(i));
+                    String id = pinIds.get(i);
+                    Map<String, Object> thisPin = new HashMap<>();
+                    thisPin.put("id", id);
                     thisPin.put("ts_name", pinName);
-                    thisPin.put("class", ((ArrayList) pinClass).get(i));
+                    thisPin.put("class", ((ArrayList<String>) pinClass).get(i));
                     listPins.add(thisPin);
                 }
-            } else if (pinId instanceof String ) {
-                Map<String, Object> thisPin = new HashMap();
+            } else if (pinId instanceof String) {
+                Map<String, Object> thisPin = new HashMap<>();
                 thisPin.put("id", pinId);
                 thisPin.put("ts_name", pinName);
                 thisPin.put("class", pinClass);
@@ -446,27 +445,29 @@ public class ConfigDefinition {
         if (listPins == null || listPins.isEmpty()) {
             return;
         }
-        Map<String, ArrayList<String>> names = new HashMap();
-        names.put("outputs", new ArrayList<String>());
-        names.put("analog_inputs", new ArrayList<String>());
-        names.put("event_inputs", new ArrayList<String>());
-        names.put("switch_inputs", new ArrayList<String>());
+        Map<String, ArrayList<String>> names = new HashMap<>();
+        names.put("outputs", new ArrayList<>());
+        names.put("analog_inputs", new ArrayList<>());
+        names.put("event_inputs", new ArrayList<>());
+        names.put("switch_inputs", new ArrayList<>());
         for (int i = 0; i < listPins.size(); i++) {
+            String id = (String) listPins.get(i).get("id");
             for (int ii = i + 1; ii < listPins.size(); ii++) {
-                if (listPins.get(i).get("id") == listPins.get(ii).get("id")) {
-                    throw new RuntimeException("ID used multiple times: " + listPins.get(i).get("id"));
+                if (id.equals(listPins.get(ii).get("id"))) {
+                    // todo: re-enable once we fix https://github.com/rusefi/rusefi/issues/2897
+                    //throw new IllegalStateException("ID used multiple times: " + id);
                 }
             }
             String className = (String) listPins.get(i).get("class");
             ArrayList<String> classList = names.get(className);
             if (classList == null) {
-                throw new RuntimeException("Class not found:  " + className);
+                throw new IllegalStateException("Class not found:  " + className);
             }
             PinType listPinType = PinType.find((String) listPins.get(i).get("class"));
             String pinType = listPinType.getPinType();
             Map<String, Value> enumList = state.enumsReader.getEnums().get(pinType);
-            for (Map.Entry<String, Value> kv : enumList.entrySet()){
-                if (kv.getKey().equals(listPins.get(i).get("id"))){
+            for (Map.Entry<String, Value> kv : enumList.entrySet()) {
+                if (kv.getKey().equals(id)) {
                     int index = kv.getValue().getIntValue();
                     classList.ensureCapacity(index + 1);
                     for (int ii = classList.size(); ii <= index; ii++) {
@@ -578,34 +579,10 @@ public class ConfigDefinition {
             line = line.substring(index).trim();
         }
         if (VariableRegistry.isNumeric(line)) {
-            Integer v = Integer.valueOf(line);
+            int v = Integer.parseInt(line);
             registry.register(name, v);
         } else {
             registry.register(name, line);
-        }
-    }
-
-    private static String getMd5(byte[] content) {
-        try {
-            // Static getInstance method is called with hashing MD5
-            MessageDigest md = MessageDigest.getInstance("MD5");
-
-            // digest() method is called to calculate message digest
-            //  of an input digest() return array of byte
-            byte[] messageDigest = md.digest(content);
-
-            // Convert byte array into signum representation
-            BigInteger no = new BigInteger(1, messageDigest);
-
-            // Convert message digest into hex value
-            String hashtext = no.toString(16);
-            while (hashtext.length() < 32) {
-                hashtext = "0" + hashtext;
-            }
-            return hashtext;
-        } catch (NoSuchAlgorithmException e) {
-            // For specifying wrong message digest algorithms
-            throw new RuntimeException(e);
         }
     }
 
@@ -644,7 +621,7 @@ public class ConfigDefinition {
         }
     }
 
-    private static void parseFile(ParseState listener, String filePath) throws FileNotFoundException, IOException {
+    private static void parseFile(ParseState listener, String filePath) throws IOException {
         SystemOut.println("Parsing file (Antlr) " + filePath);
 
         CharStream in = new ANTLRInputStream(new FileInputStream(filePath));
