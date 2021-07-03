@@ -106,6 +106,9 @@ void hwHandleVvtCamSignal(trigger_value_e front, efitick_t nowNt, int index DECL
 	}
 	extern const char *vvtNames[];
 	const char *vvtName = vvtNames[index];
+	if (CONFIG(vvtMode[camIndex]) == VVT_INACTIVE) {
+		warning(CUSTOM_VVT_MODE_NOT_SELECTED, "VVT: event on %d but no mode", camIndex);
+	}
 
 #if VR_HW_CHECK_MODE
 	// some boards do not have hardware VR input LEDs which makes such boards harder to validate

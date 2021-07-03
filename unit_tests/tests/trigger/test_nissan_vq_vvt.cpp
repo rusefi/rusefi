@@ -14,7 +14,7 @@ public:
 	int toothIndex;
 	TriggerWaveform *form;
 	bool isVvt;
-	int vvtIndex;
+	int vvtBankIndex;
 };
 
 static void func(TriggerCallback *callback) {
@@ -26,7 +26,7 @@ static void func(TriggerCallback *callback) {
 	efitick_t nowNt = getTimeNowNt();
 	if (callback->isVvt) {
 		trigger_value_e v = value ? TV_RISE : TV_FALL;
-		hwHandleVvtCamSignal(v, nowNt, callback->vvtIndex PASS_ENGINE_PARAMETER_SUFFIX);
+		hwHandleVvtCamSignal(v, nowNt, callback->vvtBankIndex * CAMS_PER_BANK PASS_ENGINE_PARAMETER_SUFFIX);
 	} else {
 		handleShaftSignal(0, value, nowNt PASS_ENGINE_PARAMETER_SUFFIX);
 	}
@@ -37,7 +37,7 @@ static void scheduleTriggerEvents(TriggerWaveform *shape,
 		float timeScale,
 		int count,
 		bool isVvt,
-		int vvtIndex,
+		int vvtBankIndex,
 		int vvtOffset
 		DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	int totalIndex = 0;
@@ -47,14 +47,14 @@ static void scheduleTriggerEvents(TriggerWaveform *shape,
 	 * and then execute those one
 	 */
 	for (int r = 0; r < count; r++) {
-		for (int i = 0; i < shape->getSize(); i++) {
+		for (size_t i = 0; i < shape->getSize(); i++) {
 			float angle = vvtOffset + shape->getAngle(totalIndex);
 			TriggerCallback *param = new TriggerCallback();
 			param->engine = engine;
 			param->toothIndex = totalIndex;
 			param->form = shape;
 			param->isVvt = isVvt;
-			param->vvtIndex = vvtIndex;
+			param->vvtBankIndex = vvtBankIndex;
 
 			scheduling_s *sch = new scheduling_s();
 			engine->executor.scheduleByTimestamp(sch, timeScale * 1000 * angle, { func, param });
@@ -91,7 +91,7 @@ TEST(nissan, vq_vvt) {
 		scheduleTriggerEvents(&vvt,
 				/* timeScale */ vvtTimeScale,
 				cyclesCount / 6, true,
-				/* vvtIndex */ 0,
+				/* vvtBankIndex */ 0,
 				/* vvtOffset */ 0
 				PASS_ENGINE_PARAMETER_SUFFIX);
 	}
@@ -103,7 +103,7 @@ TEST(nissan, vq_vvt) {
 		scheduleTriggerEvents(&vvt,
 				/* timeScale */ vvtTimeScale,
 				cyclesCount / 6, true,
-				/* vvtIndex */1,
+				/* vvtBankIndex */1,
 				/* vvtOffset */ offsetBetweenCams
 				PASS_ENGINE_PARAMETER_SUFFIX);
 	}
@@ -119,10 +119,12 @@ TEST(nissan, vq_vvt) {
 
 
 	ASSERT_TRUE(tc->vvtState[0][0].getShaftSynchronized());
-	//huh? ASSERT_TRUE(tc->vvtState[0][1].getShaftSynchronized());
+	ASSERT_TRUE(tc->vvtState[1][0].getShaftSynchronized());
 
 	angle_t firstVVTangle = 27.5;
 	ASSERT_NEAR(firstVVTangle, tc->vvtPosition[0][0], EPS2D);
-	// hmm, why 340 not 360?
-	ASSERT_EQ(firstVVTangle + 360 - 20, tc->vvtPosition[0][1]);
+	ASSERT_NEAR(firstVVTangle + offsetBetweenCams, tc->vvtPosition[1][0], EPS2D);
+
+	// todo
+	EXPECT_EQ(1, eth.recentWarnings()->getCount());
 }
