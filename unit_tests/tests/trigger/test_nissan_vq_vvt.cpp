@@ -68,6 +68,8 @@ TEST(nissan, vq_vvt) {
 
 	int cyclesCount = 12;
 
+	angle_t offsetBetweenCams = 360;
+
 	{
 		static TriggerWaveform crank;
 		initializeNissanVQcrank(&crank);
@@ -91,7 +93,7 @@ TEST(nissan, vq_vvt) {
 
 		scheduleTriggerEvents(&vvt, cyclesCount / 6, true,
 				/* vvtIndex */1,
-				/* vvtOffset */ 360
+				/* vvtOffset */ offsetBetweenCams
 				PASS_ENGINE_PARAMETER_SUFFIX);
 	}
 
@@ -101,4 +103,9 @@ TEST(nissan, vq_vvt) {
 	}
 
 	ASSERT_EQ(250, GET_RPM());
+	angle_t firstVVTangle = -7.5;
+	ASSERT_EQ(firstVVTangle, engine->triggerCentral.currentVVTEventPosition[0][0]);
+	// hmm, why 540 not 360?
+	// actually for any vvtOffset in this test the offset between cam shafts is somehow 1.5 * offsetBetweenCams?
+	ASSERT_EQ(firstVVTangle + offsetBetweenCams * 1.5, engine->triggerCentral.currentVVTEventPosition[0][1]);
 }
