@@ -1283,7 +1283,7 @@
 #define showSdCardWarning_offset 76
 #define SIGNATURE_BOARD kin
 #define SIGNATURE_DATE 2021.07.03
-#define SIGNATURE_HASH 782708599
+#define SIGNATURE_HASH 830702744
 #define silentTriggerError_offset 1464
 #define slowAdcAlpha_offset 2088
 #define sparkDwellRpmBins_offset 332
@@ -1636,7 +1636,7 @@
 #define ts_show_spi true
 #define ts_show_trigger_comparator true
 #define ts_show_tunerstudio_port true
-#define TS_SIGNATURE "rusEFI 2021.07.03.kin.782708599"
+#define TS_SIGNATURE "rusEFI 2021.07.03.kin.830702744"
 #define TS_SINGLE_WRITE_COMMAND 'W'
 #define TS_SINGLE_WRITE_COMMAND_char W
 #define TS_TEST_COMMAND 't'
@@ -1764,6 +1764,7 @@
 #define unusedOldIgnitionOffset_offset 445
 #define unusedSpiPadding4_offset 2585
 #define unusedSpiPadding8_offset 3982
+#define unusedVvtOffsetWasHere_offset 2052
 #define useAdvanceCorrectionsForCranking_offset 1476
 #define useCicPidForIdle_offset 76
 #define useETBforIdleControl_offset 744
@@ -1828,7 +1829,6 @@
 #define vvtCamSensorUseRise_offset 744
 #define vvtMode1_offset 2320
 #define vvtModePadding_offset 2321
-#define vvtOffset_offset 2052
 #define vvtOffsets1_offset 1228
 #define vvtOffsetsPadding_offset 1232
 #define vvtTable1_offset 15748

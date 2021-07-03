@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Sat Jul 03 15:31:53 UTC 2021
+// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Sat Jul 03 16:10:52 UTC 2021
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -1551,7 +1551,7 @@ public class Fields {
 	public static final char TS_SD_R_COMMAND = 'r';
 	public static final char TS_SD_W_COMMAND = 'w';
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI 2021.07.03.all.2474522715";
+	public static final String TS_SIGNATURE = "rusEFI 2021.07.03.all.2354746292";
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final char TS_TEST_COMMAND = 't';
 	public static final int TT_TT_1_16 = 50;
@@ -1676,6 +1676,7 @@ public class Fields {
 	public static final int unusedOldIgnitionOffset_offset = 445;
 	public static final int unusedSpiPadding4_offset = 2593;
 	public static final int unusedSpiPadding8_offset = 4010;
+	public static final int unusedVvtOffsetWasHere_offset = 2052;
 	public static final int useAdvanceCorrectionsForCranking_offset = 1476;
 	public static final int useCicPidForIdle_offset = 76;
 	public static final int useETBforIdleControl_offset = 744;
@@ -1736,7 +1737,6 @@ public class Fields {
 	public static final int vvtMode1_offset = 2328;
 	public static final int vvtMode2_offset = 2329;
 	public static final int vvtModePadding_offset = 2330;
-	public static final int vvtOffset_offset = 2052;
 	public static final int vvtOffsets1_offset = 1228;
 	public static final int vvtOffsets2_offset = 1232;
 	public static final int vvtOffsets3_offset = 1236;
@@ -2500,7 +2500,7 @@ public class Fields {
 	public static final Field LIS302DLCSPIN = Field.create("LIS302DLCSPIN", 2043, FieldType.INT8, brain_pin_e);
 	public static final Field TPSACCELLENGTH = Field.create("TPSACCELLENGTH", 2044, FieldType.INT);
 	public static final Field TPSACCELENRICHMENTTHRESHOLD = Field.create("TPSACCELENRICHMENTTHRESHOLD", 2048, FieldType.FLOAT);
-	public static final Field VVTOFFSET = Field.create("VVTOFFSET", 2052, FieldType.FLOAT);
+	public static final Field UNUSEDVVTOFFSETWASHERE = Field.create("UNUSEDVVTOFFSETWASHERE", 2052, FieldType.FLOAT);
 	public static final Field ENGINELOADACCELLENGTH = Field.create("ENGINELOADACCELLENGTH", 2056, FieldType.INT);
 	public static final Field ENGINELOADDECELENLEANMENTTHRESHOLD = Field.create("ENGINELOADDECELENLEANMENTTHRESHOLD", 2060, FieldType.FLOAT);
 	public static final Field ENGINELOADDECELENLEANMENTMULTIPLIER = Field.create("ENGINELOADDECELENLEANMENTMULTIPLIER", 2064, FieldType.FLOAT);
@@ -3608,7 +3608,7 @@ public class Fields {
 	LIS302DLCSPIN,
 	TPSACCELLENGTH,
 	TPSACCELENRICHMENTTHRESHOLD,
-	VVTOFFSET,
+	UNUSEDVVTOFFSETWASHERE,
 	ENGINELOADACCELLENGTH,
 	ENGINELOADDECELENLEANMENTTHRESHOLD,
 	ENGINELOADDECELENLEANMENTMULTIPLIER,
