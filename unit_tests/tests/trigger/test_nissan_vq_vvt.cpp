@@ -7,6 +7,7 @@
 
 #include "engine_test_helper.h"
 #include "trigger_nissan.h"
+#include "nissan_vq.h"
 
 class TriggerCallback {
 public:
@@ -71,8 +72,6 @@ TEST(nissan, vq_vvt) {
 
 	int cyclesCount = 36;
 
-	angle_t offsetBetweenCams = 360;
-
 	{
 		static TriggerWaveform crank;
 		initializeNissanVQcrank(&crank);
@@ -84,6 +83,8 @@ TEST(nissan, vq_vvt) {
 	// crank being FOUR_STROKE_THREE_TIMES_CRANK_SENSOR means 120 degrees cycle duration which does not match cam shaft cycle duration
 	float vvtTimeScale = 1 / 1.5;
 
+	angle_t testVvtOffset = 2;
+
 	{
 		static TriggerWaveform vvt;
 		initializeNissanVQvvt(&vvt);
@@ -92,7 +93,7 @@ TEST(nissan, vq_vvt) {
 				/* timeScale */ vvtTimeScale,
 				cyclesCount / 6, true,
 				/* vvtBankIndex */ 0,
-				/* vvtOffset */ 0
+				/* vvtOffset */ testVvtOffset
 				PASS_ENGINE_PARAMETER_SUFFIX);
 	}
 
@@ -104,7 +105,7 @@ TEST(nissan, vq_vvt) {
 				/* timeScale */ vvtTimeScale,
 				cyclesCount / 6, true,
 				/* vvtBankIndex */1,
-				/* vvtOffset */ offsetBetweenCams
+				/* vvtOffset */ testVvtOffset + NISSAN_VQ_CAM_OFFSET
 				PASS_ENGINE_PARAMETER_SUFFIX);
 	}
 
@@ -121,10 +122,8 @@ TEST(nissan, vq_vvt) {
 	ASSERT_TRUE(tc->vvtState[0][0].getShaftSynchronized());
 	ASSERT_TRUE(tc->vvtState[1][0].getShaftSynchronized());
 
-	angle_t firstVVTangle = 27.5;
-	ASSERT_NEAR(firstVVTangle, tc->vvtPosition[0][0], EPS2D);
-	ASSERT_NEAR(firstVVTangle + offsetBetweenCams, tc->vvtPosition[1][0], EPS2D);
+	ASSERT_NEAR(-testVvtOffset, tc->vvtPosition[0][0], EPS2D);
+	ASSERT_NEAR(-testVvtOffset, tc->vvtPosition[1][0], EPS2D);
 
-	// todo
-	EXPECT_EQ(1, eth.recentWarnings()->getCount());
+	EXPECT_EQ(0, eth.recentWarnings()->getCount());
 }
