@@ -14,6 +14,7 @@ public:
 	int toothIndex;
 	TriggerWaveform *form;
 	bool isVvt;
+	int vvtIndex;
 };
 
 void func(TriggerCallback *callback) {
@@ -25,14 +26,17 @@ void func(TriggerCallback *callback) {
 	efitick_t nowNt = getTimeNowNt();
 	if (callback->isVvt) {
 		trigger_value_e v = value ? TV_RISE : TV_FALL;
-		hwHandleVvtCamSignal(v, nowNt, 0 PASS_ENGINE_PARAMETER_SUFFIX);
+		hwHandleVvtCamSignal(v, nowNt, callback->vvtIndex PASS_ENGINE_PARAMETER_SUFFIX);
 	} else {
 		handleShaftSignal(0, value, nowNt PASS_ENGINE_PARAMETER_SUFFIX);
 	}
 }
 
 
-static void scheduleTriggerEvents(TriggerWaveform *shape, int count, bool isVvt DECLARE_ENGINE_PARAMETER_SUFFIX) {
+static void scheduleTriggerEvents(TriggerWaveform *shape, int count, bool isVvt,
+		int vvtIndex,
+		int vvtOffset
+		DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	int totalIndex = 0;
 
 	/**
@@ -41,12 +45,13 @@ static void scheduleTriggerEvents(TriggerWaveform *shape, int count, bool isVvt 
 	 */
 	for (int r = 0; r < count; r++) {
 		for (int i = 0; i < shape->getSize(); i++) {
-			float angle = shape->getAngle(totalIndex);
+			float angle = vvtOffset + shape->getAngle(totalIndex);
 			TriggerCallback *param = new TriggerCallback();
 			param->engine = engine;
 			param->toothIndex = totalIndex;
 			param->form = shape;
 			param->isVvt = isVvt;
+			param->vvtIndex = vvtIndex;
 
 			scheduling_s *sch = new scheduling_s();
 			engine->executor.scheduleByTimestamp(sch, 1000 * angle, { func, param });
@@ -67,16 +72,28 @@ TEST(nissan, vq_vvt) {
 		static TriggerWaveform crank;
 		initializeNissanVQcrank(&crank);
 
-		scheduleTriggerEvents(&crank, cyclesCount, false PASS_ENGINE_PARAMETER_SUFFIX);
+		scheduleTriggerEvents(&crank, cyclesCount, false, -1, 0 PASS_ENGINE_PARAMETER_SUFFIX);
 	}
 
 	{
 		static TriggerWaveform vvt;
 		initializeNissanVQvvt(&vvt);
 
-		scheduleTriggerEvents(&vvt, cyclesCount / 6, true PASS_ENGINE_PARAMETER_SUFFIX);
+		scheduleTriggerEvents(&vvt, cyclesCount / 6, true,
+				/* vvtIndex */ 0,
+				/* vvtOffset */ 0
+				PASS_ENGINE_PARAMETER_SUFFIX);
 	}
 
+	{
+		static TriggerWaveform vvt;
+		initializeNissanVQvvt(&vvt);
+
+		scheduleTriggerEvents(&vvt, cyclesCount / 6, true,
+				/* vvtIndex */1,
+				/* vvtOffset */ 360
+				PASS_ENGINE_PARAMETER_SUFFIX);
+	}
 
 	scheduling_s *head;
 	while ((head = engine->executor.getHead()) != nullptr) {
