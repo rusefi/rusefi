@@ -128,11 +128,15 @@ void hwHandleVvtCamSignal(trigger_value_e front, efitick_t nowNt, int index DECL
 
 #if EFI_TOOTH_LOGGER
 // todo: we need to start logging different VVT channels differently!!!
-		if (front == TV_RISE) {
-			LogTriggerTooth(SHAFT_SECONDARY_RISING, nowNt PASS_ENGINE_PARAMETER_SUFFIX);
+		trigger_event_e tooth;
+		if (index == 0) {
+			tooth = front == TV_RISE ? SHAFT_SECONDARY_RISING : SHAFT_SECONDARY_FALLING;
 		} else {
-			LogTriggerTooth(SHAFT_SECONDARY_FALLING, nowNt PASS_ENGINE_PARAMETER_SUFFIX);
+			// todo: nicer solution is needed
+			tooth = front == TV_RISE ? SHAFT_3RD_FALLING : SHAFT_3RD_FALLING;
 		}
+
+		LogTriggerTooth(tooth, nowNt PASS_ENGINE_PARAMETER_SUFFIX);
 #endif /* EFI_TOOTH_LOGGER */
 	}
 
