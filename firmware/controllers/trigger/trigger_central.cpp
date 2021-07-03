@@ -215,6 +215,7 @@ void hwHandleVvtCamSignal(trigger_value_e front, efitick_t nowNt, int index DECL
 	case VVT_MIATA_NB2:
 	case VVT_BOSCH_QUICK_START:
 	case VVT_BARRA_3_PLUS_1:
+	case VVT_NISSAN_VQ:
 	 {
 		if (tc->vvtState[bankIndex][camIndex].currentCycle.current_index != 0) {
 			// this is not sync tooth - exiting

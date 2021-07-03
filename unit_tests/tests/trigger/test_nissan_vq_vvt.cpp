@@ -17,7 +17,7 @@ public:
 	int vvtIndex;
 };
 
-void func(TriggerCallback *callback) {
+static void func(TriggerCallback *callback) {
 	int formIndex = callback->toothIndex % callback->form->getSize();
 	Engine *engine = callback->engine;
 	EXPAND_Engine;
@@ -33,7 +33,10 @@ void func(TriggerCallback *callback) {
 }
 
 
-static void scheduleTriggerEvents(TriggerWaveform *shape, int count, bool isVvt,
+static void scheduleTriggerEvents(TriggerWaveform *shape,
+		float timeScale,
+		int count,
+		bool isVvt,
 		int vvtIndex,
 		int vvtOffset
 		DECLARE_ENGINE_PARAMETER_SUFFIX) {
@@ -54,7 +57,7 @@ static void scheduleTriggerEvents(TriggerWaveform *shape, int count, bool isVvt,
 			param->vvtIndex = vvtIndex;
 
 			scheduling_s *sch = new scheduling_s();
-			engine->executor.scheduleByTimestamp(sch, 1000 * angle, { func, param });
+			engine->executor.scheduleByTimestamp(sch, timeScale * 1000 * angle, { func, param });
 			totalIndex++;
 		}
 	}
@@ -66,7 +69,7 @@ TEST(nissan, vq_vvt) {
 	engineConfiguration->isIgnitionEnabled = false;
 	engineConfiguration->isInjectionEnabled = false;
 
-	int cyclesCount = 12;
+	int cyclesCount = 36;
 
 	angle_t offsetBetweenCams = 360;
 
@@ -74,14 +77,20 @@ TEST(nissan, vq_vvt) {
 		static TriggerWaveform crank;
 		initializeNissanVQcrank(&crank);
 
-		scheduleTriggerEvents(&crank, cyclesCount, false, -1, 0 PASS_ENGINE_PARAMETER_SUFFIX);
+		scheduleTriggerEvents(&crank,
+				/* timeScale */ 1,
+				cyclesCount, false, -1, 0 PASS_ENGINE_PARAMETER_SUFFIX);
 	}
+	// crank being FOUR_STROKE_THREE_TIMES_CRANK_SENSOR means 120 degrees cycle duration which does not match cam shaft cycle duration
+	float vvtTimeScale = 1 / 1.5;
 
 	{
 		static TriggerWaveform vvt;
 		initializeNissanVQvvt(&vvt);
 
-		scheduleTriggerEvents(&vvt, cyclesCount / 6, true,
+		scheduleTriggerEvents(&vvt,
+				/* timeScale */ vvtTimeScale,
+				cyclesCount / 6, true,
 				/* vvtIndex */ 0,
 				/* vvtOffset */ 0
 				PASS_ENGINE_PARAMETER_SUFFIX);
@@ -91,7 +100,9 @@ TEST(nissan, vq_vvt) {
 		static TriggerWaveform vvt;
 		initializeNissanVQvvt(&vvt);
 
-		scheduleTriggerEvents(&vvt, cyclesCount / 6, true,
+		scheduleTriggerEvents(&vvt,
+				/* timeScale */ vvtTimeScale,
+				cyclesCount / 6, true,
 				/* vvtIndex */1,
 				/* vvtOffset */ offsetBetweenCams
 				PASS_ENGINE_PARAMETER_SUFFIX);
@@ -103,9 +114,15 @@ TEST(nissan, vq_vvt) {
 	}
 
 	ASSERT_EQ(250, GET_RPM());
-	angle_t firstVVTangle = -7.5;
-	ASSERT_EQ(firstVVTangle, engine->triggerCentral.currentVVTEventPosition[0][0]);
-	// hmm, why 540 not 360?
-	// actually for any vvtOffset in this test the offset between cam shafts is somehow 1.5 * offsetBetweenCams?
-	ASSERT_EQ(firstVVTangle + offsetBetweenCams * 1.5, engine->triggerCentral.currentVVTEventPosition[0][1]);
+
+	TriggerCentral *tc = &engine->triggerCentral;
+
+
+	ASSERT_TRUE(tc->vvtState[0][0].shaft_is_synchronized);
+	//huh? ASSERT_TRUE(tc->vvtState[0][1].shaft_is_synchronized);
+
+	angle_t firstVVTangle = 27.5;
+	ASSERT_NEAR(firstVVTangle, tc->vvtPosition[0][0], EPS2D);
+	// hmm, why 340 not 360?
+	ASSERT_EQ(firstVVTangle + 360 - 20, tc->vvtPosition[0][1]);
 }
