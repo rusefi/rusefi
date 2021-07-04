@@ -498,7 +498,6 @@ static void setDefaultEngineConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	engineConfiguration->canSleepPeriodMs = 50;
 	engineConfiguration->canReadEnabled = true;
 	engineConfiguration->canWriteEnabled = true;
-	engineConfiguration->canNbcType = CAN_BUS_MAZDA_RX8;
 
 	// Don't enable, but set default address
 	engineConfiguration->verboseCanBaseAddress = CAN_DEFAULT_BASE;
@@ -516,8 +515,9 @@ static void setDefaultEngineConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	engineConfiguration->idlePidRpmDeadZone = 50;
 	engineConfiguration->startOfCrankingPrimingPulse = 0;
 
-	engineConfiguration->acCutoffLowRpm = 700;
-	engineConfiguration->acCutoffHighRpm = 5000;
+	engineConfiguration->maxAcRpm = 5000;
+	engineConfiguration->maxAcClt = 100;
+	engineConfiguration->maxAcTps = 75;
 
 	initTemperatureCurve(IAT_FUEL_CORRECTION_CURVE, 1);
 
