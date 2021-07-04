@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Sun Jul 04 13:23:50 UTC 2021
+// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Sun Jul 04 13:36:14 UTC 2021
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -1121,6 +1121,7 @@ public class Fields {
 	public static final int maxAcClt_offset = 1711;
 	public static final int maxAcRpm_offset = 1708;
 	public static final int maxAcTps_offset = 1710;
+	public static final int maxIdleVss_offset = 445;
 	public static final int maxKnockSubDeg_offset = 552;
 	public static final int mc33816_cs_offset = 3107;
 	public static final int mc33816_driven_offset = 2607;
@@ -1249,6 +1250,7 @@ public class Fields {
 	public static final int servoOutputPins8_offset = 3147;
 	public static final int showHumanReadableWarning_offset = 976;
 	public static final int showSdCardWarning_offset = 76;
+	public static final int SIGNATURE_HASH = 1129013170;
 	public static final int silentTriggerError_offset = 1464;
 	public static final int slowAdcAlpha_offset = 2088;
 	public static final int sparkDwellRpmBins_offset = 332;
@@ -1550,7 +1552,7 @@ public class Fields {
 	public static final char TS_SD_R_COMMAND = 'r';
 	public static final char TS_SD_W_COMMAND = 'w';
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI 2021.07.04.all.2843303364";
+	public static final String TS_SIGNATURE = "rusEFI 2021.07.04.all.1129013170";
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final char TS_TEST_COMMAND = 't';
 	public static final int TT_TT_1_16 = 50;
@@ -1674,7 +1676,6 @@ public class Fields {
 	public static final int unusedBit_498_8_offset = 2116;
 	public static final int unusedBit_498_9_offset = 2116;
 	public static final int unusedOldBiquad_offset = 2331;
-	public static final int unusedOldIgnitionOffset_offset = 445;
 	public static final int unusedSpiPadding4_offset = 2593;
 	public static final int unusedSpiPadding8_offset = 4010;
 	public static final int unusedVvtOffsetWasHere_offset = 2052;
@@ -1842,7 +1843,7 @@ public class Fields {
 	public static final Field CRANKINGTIMINGANGLE = Field.create("CRANKINGTIMINGANGLE", 436, FieldType.FLOAT);
 	public static final Field IGNITIONMODE = Field.create("IGNITIONMODE", 440, FieldType.INT);
 	public static final Field GAPTRACKINGLENGTHOVERRIDE = Field.create("GAPTRACKINGLENGTHOVERRIDE", 444, FieldType.INT8);
-	public static final Field UNUSEDOLDIGNITIONOFFSET = Field.create("UNUSEDOLDIGNITIONOFFSET", 445, FieldType.INT8);
+	public static final Field MAXIDLEVSS = Field.create("MAXIDLEVSS", 445, FieldType.INT8);
 	public static final Field MINOILPRESSUREAFTERSTART = Field.create("MINOILPRESSUREAFTERSTART", 446, FieldType.INT16);
 	public static final Field TIMINGMODE = Field.create("TIMINGMODE", 448, FieldType.INT);
 	public static final Field FIXEDMODETIMING = Field.create("FIXEDMODETIMING", 452, FieldType.FLOAT);
@@ -2962,7 +2963,7 @@ public class Fields {
 	CRANKINGTIMINGANGLE,
 	IGNITIONMODE,
 	GAPTRACKINGLENGTHOVERRIDE,
-	UNUSEDOLDIGNITIONOFFSET,
+	MAXIDLEVSS,
 	MINOILPRESSUREAFTERSTART,
 	TIMINGMODE,
 	FIXEDMODETIMING,

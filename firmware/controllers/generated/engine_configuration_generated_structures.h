@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Sun Jul 04 13:23:50 UTC 2021
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Sun Jul 04 13:36:14 UTC 2021
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -961,10 +961,11 @@ struct engine_configuration_s {
 	 */
 	int8_t gapTrackingLengthOverride;
 	/**
-	unused
+	 * Above this speed, disable closed loop idle control. Set to 0 to disable (allow closed loop idle at any speed).
+	kph
 	 * offset 445
 	 */
-	int8_t unusedOldIgnitionOffset[1];
+	uint8_t maxIdleVss;
 	/**
 	 * Expected oil pressure after starting the engine. If oil pressure does not reach this level within 5 seconds of engine start, fuel will be cut. Set to 0 to disable and always allow starting.
 	kPa
@@ -4249,4 +4250,4 @@ struct persistent_config_s {
 };
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Sun Jul 04 13:23:50 UTC 2021
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Sun Jul 04 13:36:14 UTC 2021
