@@ -39,6 +39,7 @@
 #include "engine.h"
 #include "periodic_task.h"
 #include "allsensors.h"
+#include "vehicle_speed.h"
 #include "sensor.h"
 #include "dc_motors.h"
 
@@ -207,7 +208,7 @@ int IdleController::getTargetRpm(float clt) const {
 	return target;
 }
 
-IIdleController::Phase IdleController::determinePhase(int rpm, int targetRpm, SensorResult tps) const {
+IIdleController::Phase IdleController::determinePhase(int rpm, int targetRpm, SensorResult tps, float vss) const {
 	if (!engine->rpmCalculator.isRunning()) {
 		return Phase::Cranking;
 	}
@@ -226,6 +227,12 @@ IIdleController::Phase IdleController::determinePhase(int rpm, int targetRpm, Se
 	int maximumIdleRpm = targetRpm + CONFIG(idlePidRpmUpperLimit);
 	if (rpm > maximumIdleRpm) {
 		return Phase::Coasting;
+	}
+
+	// If the vehicle is moving too quickly, disable CL idle
+	auto maxVss = CONFIG(maxIdleVss);
+	if (maxVss != 0 && vss > maxVss) {
+		return Phase::Running;
 	}
 
 	// No other conditions met, we are idling!
@@ -467,7 +474,7 @@ float IdleController::getClosedLoop(IIdleController::Phase phase, float tpsPos, 
 		m_lastTargetRpm = targetRpm;
 
 		// Determine what operation phase we're in - idling or not
-		auto phase = determinePhase(rpm, targetRpm, tps);
+		auto phase = determinePhase(rpm, targetRpm, tps, getVehicleSpeed());
 		m_lastPhase = phase;
 
 		engine->engineState.isAutomaticIdle = tps.Valid && engineConfiguration->idleMode == IM_AUTO;

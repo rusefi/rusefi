@@ -21,7 +21,7 @@ struct IIdleController {
 		Running,	// On throttle
 	};
 
-	virtual Phase determinePhase(int rpm, int targetRpm, SensorResult tps) const = 0;
+	virtual Phase determinePhase(int rpm, int targetRpm, SensorResult tps, float vss) const = 0;
 	virtual int getTargetRpm(float clt) const = 0;
 	virtual float getCrankingOpenLoop(float clt) const = 0;
 	virtual float getRunningOpenLoop(float clt, SensorResult tps) const = 0;
@@ -42,7 +42,7 @@ public:
 	int getTargetRpm(float clt) const override;
 
 	// PHASE DETERMINATION: what is the driver trying to do right now?
-	Phase determinePhase(int rpm, int targetRpm, SensorResult tps) const override;
+	Phase determinePhase(int rpm, int targetRpm, SensorResult tps, float vss) const override;
 
 	// OPEN LOOP CORRECTIONS
 	float getCrankingOpenLoop(float clt) const override;
