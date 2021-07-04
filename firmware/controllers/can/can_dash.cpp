@@ -155,9 +155,7 @@ void canMazdaRX8(CanCycle cycle) {
 
 			float kph = getVehicleSpeed();
 
-			int rpm = GET_RPM();
-	        // do not pass function as macro parameter that would cause same code to be invoked 2 times!
-			msg.setShortValue(SWAP_UINT16(rpm * 4), 0);
+			msg.setShortValue(SWAP_UINT16(GET_RPM() * 4), 0);
 			msg.setShortValue(0xFFFF, 2);
 			msg.setShortValue(SWAP_UINT16((int )(100 * kph + 10000)), 4);
 			msg.setShortValue(0, 6);
