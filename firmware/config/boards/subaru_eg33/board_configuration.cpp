@@ -242,8 +242,7 @@ void setBoardDefaultConfiguration(void) {
 
 	/* This board also has AC clutch output: */
 	engineConfiguration->acRelayPin = TLE6240_PIN_15;
-	engineConfiguration->acCutoffLowRpm = 400;
-	engineConfiguration->acCutoffHighRpm = 3000;
+	engineConfiguration->maxAcRpm = 3000;
 	engineConfiguration->acIdleRpmBump = 200;
 
 	engineConfiguration->isCJ125Enabled = false;
