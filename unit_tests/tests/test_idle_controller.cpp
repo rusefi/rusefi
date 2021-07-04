@@ -472,7 +472,7 @@ TEST(idle_v2, IntegrationClamping) {
 		.WillOnce(Return(1000));
 
 	// Determine phase will claim we're idling
-	EXPECT_CALL(dut, determinePhase(950, 1000, expectedTps, 0, 0))
+	EXPECT_CALL(dut, determinePhase(950, 1000, expectedTps, 0))
 		.WillOnce(Return(ICP::Idling));
 
 	// Open loop should be asked for an open loop position
