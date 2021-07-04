@@ -6,7 +6,7 @@
 set -e
 
 export GTEST_TOTAL_SHARDS=500
-for IDX in {0..500}
+for IDX in {0..499}
 do
 	export GTEST_SHARD_INDEX=$IDX
 	build/rusefi_test
