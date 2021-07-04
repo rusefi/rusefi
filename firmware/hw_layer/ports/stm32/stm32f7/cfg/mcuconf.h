@@ -159,4 +159,7 @@
 
 #include "mcuconf_common_f4_f7.h"
 
+/* common for all STM32 */
+#include "../../cfg/mcuconf_community.h"
+
 #endif /* MCUCONF_H */
