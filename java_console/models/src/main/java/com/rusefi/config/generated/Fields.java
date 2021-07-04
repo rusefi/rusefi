@@ -1,14 +1,12 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Sun Jul 04 03:48:29 UTC 2021
+// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Sun Jul 04 13:23:50 UTC 2021
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
 
 public class Fields {
 	public static final int accelerometerSpiDevice_offset = 2712;
-	public static final int acCutoffHighRpm_offset = 1494;
-	public static final int acCutoffLowRpm_offset = 1492;
 	public static final int acFanPin_offset = 762;
 	public static final int acFanPinMode_offset = 763;
 	public static final int acIdleExtraMin_offset = 761;
@@ -1251,7 +1249,6 @@ public class Fields {
 	public static final int servoOutputPins8_offset = 3147;
 	public static final int showHumanReadableWarning_offset = 976;
 	public static final int showSdCardWarning_offset = 76;
-	public static final int SIGNATURE_HASH = 1353184059;
 	public static final int silentTriggerError_offset = 1464;
 	public static final int slowAdcAlpha_offset = 2088;
 	public static final int sparkDwellRpmBins_offset = 332;
@@ -1553,7 +1550,7 @@ public class Fields {
 	public static final char TS_SD_R_COMMAND = 'r';
 	public static final char TS_SD_W_COMMAND = 'w';
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI 2021.07.04.all.1353184059";
+	public static final String TS_SIGNATURE = "rusEFI 2021.07.04.all.2843303364";
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final char TS_TEST_COMMAND = 't';
 	public static final int TT_TT_1_16 = 50;
@@ -1619,6 +1616,8 @@ public class Fields {
 	public static final int unused1476b20_offset = 1476;
 	public static final int unused1476b3_offset = 1476;
 	public static final int unused1476b8_offset = 1476;
+	public static final int unused1492_offset = 1492;
+	public static final int unused1494_offset = 1494;
 	public static final int unused1756_offset = 1756;
 	public static final int unused2260_offset = 2260;
 	public static final int unused2432_offset = 2432;
@@ -2411,8 +2410,8 @@ public class Fields {
 	public static final Field IDLEPIDRPMUPPERLIMIT = Field.create("IDLEPIDRPMUPPERLIMIT", 1484, FieldType.INT16);
 	public static final Field PRIMEINJFALLOFFTEMPERATURE = Field.create("PRIMEINJFALLOFFTEMPERATURE", 1486, FieldType.INT16);
 	public static final Field IGNMATHCALCULATEATINDEX = Field.create("IGNMATHCALCULATEATINDEX", 1488, FieldType.INT);
-	public static final Field ACCUTOFFLOWRPM = Field.create("ACCUTOFFLOWRPM", 1492, FieldType.INT16);
-	public static final Field ACCUTOFFHIGHRPM = Field.create("ACCUTOFFHIGHRPM", 1494, FieldType.INT16);
+	public static final Field UNUSED1492 = Field.create("UNUSED1492", 1492, FieldType.INT16);
+	public static final Field UNUSED1494 = Field.create("UNUSED1494", 1494, FieldType.INT16);
 	public static final Field ACIDLERPMBUMP = Field.create("ACIDLERPMBUMP", 1496, FieldType.INT16);
 	public static final Field WARNINGPERIOD = Field.create("WARNINGPERIOD", 1498, FieldType.INT16);
 	public static final Field KNOCKDETECTIONWINDOWSTART = Field.create("KNOCKDETECTIONWINDOWSTART", 1500, FieldType.FLOAT);
@@ -3519,8 +3518,8 @@ public class Fields {
 	IDLEPIDRPMUPPERLIMIT,
 	PRIMEINJFALLOFFTEMPERATURE,
 	IGNMATHCALCULATEATINDEX,
-	ACCUTOFFLOWRPM,
-	ACCUTOFFHIGHRPM,
+	UNUSED1492,
+	UNUSED1494,
 	ACIDLERPMBUMP,
 	WARNINGPERIOD,
 	KNOCKDETECTIONWINDOWSTART,

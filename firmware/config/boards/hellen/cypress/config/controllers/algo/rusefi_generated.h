@@ -3,8 +3,6 @@
 //
 
 #define accelerometerSpiDevice_offset 2712
-#define acCutoffHighRpm_offset 1494
-#define acCutoffLowRpm_offset 1492
 #define acFanPin_offset 762
 #define acFanPinMode_offset 763
 #define acIdleExtraMin_offset 761
@@ -1300,7 +1298,7 @@
 #define showSdCardWarning_offset 76
 #define SIGNATURE_BOARD hellen_cypress
 #define SIGNATURE_DATE 2021.07.04
-#define SIGNATURE_HASH 316352747
+#define SIGNATURE_HASH 3943007764
 #define silentTriggerError_offset 1464
 #define slowAdcAlpha_offset 2088
 #define sparkDwellRpmBins_offset 332
@@ -1653,7 +1651,7 @@
 #define ts_show_spi true
 #define ts_show_trigger_comparator false
 #define ts_show_tunerstudio_port true
-#define TS_SIGNATURE "rusEFI 2021.07.04.hellen_cypress.316352747"
+#define TS_SIGNATURE "rusEFI 2021.07.04.hellen_cypress.3943007764"
 #define TS_SINGLE_WRITE_COMMAND 'W'
 #define TS_SINGLE_WRITE_COMMAND_char W
 #define TS_TEST_COMMAND 't'
@@ -1722,6 +1720,8 @@
 #define unused1476b20_offset 1476
 #define unused1476b3_offset 1476
 #define unused1476b8_offset 1476
+#define unused1492_offset 1492
+#define unused1494_offset 1494
 #define unused1756_offset 1756
 #define unused2260_offset 2260
 #define unused2432_offset 2432
