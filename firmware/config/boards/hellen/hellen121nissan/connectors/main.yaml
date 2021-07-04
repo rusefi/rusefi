@@ -77,10 +77,10 @@ pins:
     type: inj
 
   - pin: 47a
-    function: +5v
+    function: +5v TPS sensors
 
   - pin: 48a
-    function: +5v
+    function: +5v EVAP sensor
 
 
   - pin: 50a
@@ -113,10 +113,10 @@ pins:
 
 
   - pin: 66a
-    function: GNDA
+    function: GNDA TPS sensors
 
   - pin: 67a
-    function: GNDA
+    function: GNDA many sensors
 
   - pin: 69a
 # in_aux1 AIN23 PB0
@@ -151,10 +151,10 @@ pins:
 
 
   - pin: 82a
-    function: GNDA
+    function: GNDA pedal sensor 1
 
   - pin: 83a
-    function: GNDA
+    function: GNDA pedal sensor 2
 
 
   - pin: 86a
@@ -162,10 +162,10 @@ pins:
     type: can
 
   - pin: 90a
-    function: +5v
+    function: +5v pedal sensor 1
 
   - pin: 91a
-    function: +5v
+    function: +5v pedal sensor 2
 
 
   - pin: 94a
