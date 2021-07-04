@@ -15,6 +15,7 @@
 #include "engine_controller.h"
 #include "electronic_throttle.h"
 #include "sensor.h"
+#include "vehicle_speed.h"
 
 using ::testing::StrictMock;
 using ::testing::_;
@@ -402,6 +403,7 @@ TEST(idle_v2, IntegrationManual) {
 	float expectedClt = 37;
 	Sensor::setMockValue(SensorType::DriverThrottleIntent, expectedTps.Value);
 	Sensor::setMockValue(SensorType::Clt, expectedClt);
+	setMockVehicleSpeed(15);
 	ENGINE(rpmCalculator.mockRpm) = 950;
 
 	// Target of 1000 rpm
@@ -409,7 +411,7 @@ TEST(idle_v2, IntegrationManual) {
 		.WillOnce(Return(1000));
 
 	// Determine phase will claim we're idling
-	EXPECT_CALL(dut, determinePhase(950, 1000, expectedTps, 0))
+	EXPECT_CALL(dut, determinePhase(950, 1000, expectedTps, 15))
 		.WillOnce(Return(ICP::Idling));
 
 	// Open loop should be asked for an open loop position
@@ -432,6 +434,7 @@ TEST(idle_v2, IntegrationAutomatic) {
 	float expectedClt = 37;
 	Sensor::setMockValue(SensorType::DriverThrottleIntent, expectedTps.Value);
 	Sensor::setMockValue(SensorType::Clt, expectedClt);
+	setMockVehicleSpeed(15);
 	ENGINE(rpmCalculator.mockRpm) = 950;
 
 	// Target of 1000 rpm
@@ -439,7 +442,7 @@ TEST(idle_v2, IntegrationAutomatic) {
 		.WillOnce(Return(1000));
 
 	// Determine phase will claim we're idling
-	EXPECT_CALL(dut, determinePhase(950, 1000, expectedTps, 0))
+	EXPECT_CALL(dut, determinePhase(950, 1000, expectedTps, 15))
 		.WillOnce(Return(ICP::Idling));
 
 	// Open loop should be asked for an open loop position
@@ -465,6 +468,7 @@ TEST(idle_v2, IntegrationClamping) {
 	float expectedClt = 37;
 	Sensor::setMockValue(SensorType::DriverThrottleIntent, expectedTps.Value);
 	Sensor::setMockValue(SensorType::Clt, expectedClt);
+	setMockVehicleSpeed(15);
 	ENGINE(rpmCalculator.mockRpm) = 950;
 
 	// Target of 1000 rpm
@@ -472,7 +476,7 @@ TEST(idle_v2, IntegrationClamping) {
 		.WillOnce(Return(1000));
 
 	// Determine phase will claim we're idling
-	EXPECT_CALL(dut, determinePhase(950, 1000, expectedTps, 0))
+	EXPECT_CALL(dut, determinePhase(950, 1000, expectedTps, 15))
 		.WillOnce(Return(ICP::Idling));
 
 	// Open loop should be asked for an open loop position
