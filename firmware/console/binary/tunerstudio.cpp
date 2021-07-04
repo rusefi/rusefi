@@ -326,9 +326,7 @@ static void handleCrc32Check(TsChannelBase *tsChannel, ts_response_format_e mode
 
 	const char* start = getWorkingPageAddr() + offset;
 
-	uint32_t crc = crc32(start, count);
-	// do not pass function as macro parameter that would cause same code to be invoked 4 times!
-	crc = SWAP_UINT32(crc);
+	uint32_t crc = SWAP_UINT32(crc32(start, count));
 	tsChannel->sendResponse(mode, (const uint8_t *) &crc, 4);
 }
 
