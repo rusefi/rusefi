@@ -2650,6 +2650,7 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 		field = "TPS threshold",	idlePidDeactivationTpsThreshold
 		field = "RPM upper limit",	idlePidRpmUpperLimit
 		field = "RPM deadzone",	idlePidRpmDeadZone
+		field = "Max vehicle speed", maxIdleVss
 
 	dialog = idleExtra, "Extra Idle Features"
 		field = "Use idle ignition table",	useSeparateAdvanceForIdle
