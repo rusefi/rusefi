@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Mon Jul 05 22:07:23 UTC 2021
+// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Mon Jul 05 23:54:58 UTC 2021
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -373,6 +373,7 @@ public class Fields {
 	public static final String ENGINE_MAKE_LADA = "Lada";
 	public static final String ENGINE_MAKE_MAZDA = "Mazda";
 	public static final String ENGINE_MAKE_MERCEDES = "Mercedes";
+	public static final String ENGINE_MAKE_NISSAN = "Nissan";
 	public static final String ENGINE_MAKE_SUBARU = "Subaru";
 	public static final String ENGINE_MAKE_TOYOTA = "Toyota";
 	public static final String ENGINE_MAKE_VAG = "VAG";
@@ -1250,6 +1251,7 @@ public class Fields {
 	public static final int servoOutputPins8_offset = 3147;
 	public static final int showHumanReadableWarning_offset = 976;
 	public static final int showSdCardWarning_offset = 76;
+	public static final int SIGNATURE_HASH = 1254010164;
 	public static final int silentTriggerError_offset = 1464;
 	public static final int slowAdcAlpha_offset = 2088;
 	public static final int sparkDwellRpmBins_offset = 332;
@@ -1551,7 +1553,7 @@ public class Fields {
 	public static final char TS_SD_R_COMMAND = 'r';
 	public static final char TS_SD_W_COMMAND = 'w';
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI 2021.07.05.all.2871364235";
+	public static final String TS_SIGNATURE = "rusEFI 2021.07.06.all.1254010164";
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final char TS_TEST_COMMAND = 't';
 	public static final int TT_TT_1_16 = 50;

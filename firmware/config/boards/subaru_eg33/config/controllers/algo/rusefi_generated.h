@@ -392,6 +392,7 @@
 #define ENGINE_MAKE_LADA "Lada"
 #define ENGINE_MAKE_MAZDA "Mazda"
 #define ENGINE_MAKE_MERCEDES "Mercedes"
+#define ENGINE_MAKE_NISSAN "Nissan"
 #define ENGINE_MAKE_SUBARU "Subaru"
 #define ENGINE_MAKE_TOYOTA "Toyota"
 #define ENGINE_MAKE_VAG "VAG"
@@ -1298,8 +1299,8 @@
 #define showHumanReadableWarning_offset 976
 #define showSdCardWarning_offset 76
 #define SIGNATURE_BOARD subaru_eg33_f7
-#define SIGNATURE_DATE 2021.07.05
-#define SIGNATURE_HASH 108627101
+#define SIGNATURE_DATE 2021.07.06
+#define SIGNATURE_HASH 3890389794
 #define silentTriggerError_offset 1464
 #define slowAdcAlpha_offset 2088
 #define sparkDwellRpmBins_offset 332
@@ -1652,7 +1653,7 @@
 #define ts_show_spi true
 #define ts_show_trigger_comparator false
 #define ts_show_tunerstudio_port false
-#define TS_SIGNATURE "rusEFI 2021.07.05.subaru_eg33_f7.108627101"
+#define TS_SIGNATURE "rusEFI 2021.07.06.subaru_eg33_f7.3890389794"
 #define TS_SINGLE_WRITE_COMMAND 'W'
 #define TS_SINGLE_WRITE_COMMAND_char W
 #define TS_TEST_COMMAND 't'
