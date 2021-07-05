@@ -485,4 +485,7 @@
 
 #define STM32_SYSCLK STM32_SYS_CK
 
+/* common for all STM32 */
+#include "../../cfg/mcuconf_community.h"
+
 #endif /* MCUCONF_H */
