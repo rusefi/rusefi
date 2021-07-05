@@ -362,6 +362,12 @@ void TriggerCentral::validateCamVvtCounters() {
 	}
 }
 
+void TriggerState::syncSymmetricalCrank(int mod, int remainder) {
+	while (getTotalRevolutionCounter() % mod != remainder) {
+		incrementTotalEventCounter();
+	}
+}
+
 void TriggerState::incrementTotalEventCounter() {
 	totalRevolutionCounter++;
 }
