@@ -15,7 +15,7 @@ static char* trim(char *str) {
 	return str;
 }
 
-void CsvReader::open(const char *fileName, int *columnIndeces) {
+void CsvReader::open(const char *fileName, const int* columnIndeces) {
 	printf("Reading from %s\r\n", fileName);
 	fp = fopen(fileName, "r");
 	this->columnIndeces = columnIndeces;
@@ -24,8 +24,8 @@ void CsvReader::open(const char *fileName, int *columnIndeces) {
 
 bool CsvReader::haveMore() {
 	bool result = fgets(buffer, sizeof(buffer), fp) != nullptr;
-	lineIndex++;
-	if (lineIndex == 0) {
+	m_lineIndex++;
+	if (m_lineIndex == 0) {
 		// skip header
 		return haveMore();
 	}
@@ -46,14 +46,16 @@ void CsvReader::processLine(EngineTestHelper *eth) {
 	char *secondToken = trim(strtok(NULL, s));
 
 	newState[columnIndeces[0]] = firstToken[0] == '1';
-	if (secondToken != nullptr && triggerCount > 1) {
+	if (secondToken != nullptr && m_triggerCount > 1) {
 		newState[columnIndeces[1]] = secondToken[0] == '1';
 	}
 
 	double timeStamp = std::stod(timeStampstr);
 
+	timeStamp += m_timestampOffset;
+
 	eth->setTimeAndInvokeEventsUs(1'000'000 * timeStamp);
-	for (int index = 0; index < 2; index++) {
+	for (int index = 0; index < m_triggerCount; index++) {
 		if (currentState[index] == newState[index]) {
 			continue;
 		}

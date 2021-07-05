@@ -30,7 +30,7 @@ TEST(tachometer, testPulsePerRev) {
 
     // ensure engine speed
 	ASSERT_EQ(1500,  GET_RPM()) << "RPM";
-    ASSERT_EQ(engine->triggerCentral.triggerState.shaft_is_synchronized, true);
+    ASSERT_EQ(engine->triggerCentral.triggerState.getShaftSynchronized(), true);
 
 	// Poke the fast callback to update the tach
 	engine->periodicFastCallback(PASS_ENGINE_PARAMETER_SIGNATURE);

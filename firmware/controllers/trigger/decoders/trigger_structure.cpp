@@ -117,6 +117,7 @@ int TriggerWaveform::getTriggerWaveformSynchPointIndex() const {
 /**
  * physical primary trigger duration
  * @see getEngineCycle
+ * @see getCrankDivider
  */
 angle_t TriggerWaveform::getCycleDuration() const {
 	switch (operationMode) {
@@ -149,10 +150,6 @@ size_t TriggerWaveform::getLength() const {
 }
 
 angle_t TriggerWaveform::getAngle(int index) const {
-	// todo: why is this check here? looks like the code below could be used universally
-	if (operationMode == FOUR_STROKE_CAM_SENSOR) {
-		return getSwitchAngle(index);
-	}
 	/**
 	 * FOUR_STROKE_CRANK_SENSOR magic:
 	 * We have two crank shaft revolutions for each engine cycle
@@ -543,6 +540,14 @@ void TriggerWaveform::initializeTriggerWaveform(operation_mode_e ambiguousOperat
 
 	case TT_FORD_ASPIRE:
 		configureFordAspireTriggerWaveform(this);
+		break;
+
+	case TT_VVT_NISSAN_VQ:
+		initializeNissanVQvvt(this);
+		break;
+
+	case TT_TT_NISSAN_VQ:
+		initializeNissanVQcrank(this);
 		break;
 
 	case TT_KAWA_KX450F:

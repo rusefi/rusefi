@@ -148,7 +148,7 @@ uint32_t TriggerStimulatorHelper::findTriggerSyncPoint(
 				triggerConfiguration,
 				state, shape, i);
 
-		if (state.shaft_is_synchronized) {
+		if (state.getShaftSynchronized()) {
 			return i;
 		}
 	}

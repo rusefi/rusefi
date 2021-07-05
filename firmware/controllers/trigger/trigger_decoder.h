@@ -143,6 +143,7 @@ public:
 
 	void resetTriggerState();
 	void setShaftSynchronized(bool value);
+	bool getShaftSynchronized();
 
 	/**
 	 * this is start of real trigger cycle

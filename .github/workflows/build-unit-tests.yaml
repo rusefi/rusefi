@@ -90,3 +90,7 @@ jobs:
       with:
         github_token: ${{ github.token }}
         branch: master
+
+    - name: Run Tests (sharded)
+      working-directory: ./unit_tests/
+      run: bash ./run_sharded_tests.sh

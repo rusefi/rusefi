@@ -105,3 +105,40 @@ void initializeNissanSR20VE_4(TriggerWaveform *s) {
 void initializeNissanSR20VE_4_360(TriggerWaveform *s) {
 	initializeNissanSR20VE_4_optional_360(s, true);
 }
+
+static void addPrimaryToothEndingAt(TriggerWaveform *s, float fallAngle) {
+	int vvtWidth = 20;
+
+	s->addEventAngle(fallAngle - vvtWidth, T_PRIMARY, TV_RISE);
+	s->addEventAngle(fallAngle, T_PRIMARY, TV_FALL);
+
+}
+
+void initializeNissanVQvvt(TriggerWaveform *s) {
+	s->initialize(FOUR_STROKE_CAM_SENSOR);
+
+	int offset = 720 - 520;
+
+	addPrimaryToothEndingAt(s, offset + 40);
+	addPrimaryToothEndingAt(s, offset + 160);
+	addPrimaryToothEndingAt(s, offset + 200);
+	addPrimaryToothEndingAt(s, offset + 280);
+	addPrimaryToothEndingAt(s, offset + 320);
+	addPrimaryToothEndingAt(s, offset + 520);
+
+	s->setTriggerSynchronizationGap(5);
+}
+
+void initializeNissanVQcrank(TriggerWaveform *s) {
+	s->initialize(FOUR_STROKE_THREE_TIMES_CRANK_SENSOR);
+	s->setTriggerSynchronizationGap(0.33);
+
+	s->tdcPosition = 675;
+
+	float currentAngle = 20;
+	for (int i = 0;i < 10;i++) {
+		currentAngle += 10;
+		s->addEventAngle(currentAngle - 5, T_PRIMARY, TV_RISE);
+		s->addEventAngle(currentAngle, T_PRIMARY, TV_FALL);
+	}
+}

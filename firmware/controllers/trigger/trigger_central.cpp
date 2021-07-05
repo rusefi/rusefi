@@ -87,13 +87,12 @@ angle_t TriggerCentral::getVVTPosition(uint8_t bankIndex, uint8_t camIndex) {
 
 #define miataNbIndex (0)
 
-// todo: should we hard-code the list of 'not real decoder' modes instead of adding to list of 'real decoders'? these days we only add 'real decode' modes
 static bool vvtWithRealDecoder(vvt_mode_e vvtMode) {
-	return vvtMode == VVT_MIATA_NB2
-			|| vvtMode == VVT_BOSCH_QUICK_START
-			|| vvtMode == VVT_FORD_ST170
-			|| vvtMode == VVT_4_1
-			|| vvtMode == VVT_BARRA_3_PLUS_1;
+	// todo: why does VVT_2JZ not use real decoder?
+	return vvtMode != VVT_INACTIVE
+			&& vvtMode != VVT_2JZ
+			&& vvtMode != VVT_SECOND_HALF
+			&& vvtMode != VVT_FIRST_HALF;
 }
 
 void hwHandleVvtCamSignal(trigger_value_e front, efitick_t nowNt, int index DECLARE_ENGINE_PARAMETER_SUFFIX) {
@@ -107,6 +106,9 @@ void hwHandleVvtCamSignal(trigger_value_e front, efitick_t nowNt, int index DECL
 	}
 	extern const char *vvtNames[];
 	const char *vvtName = vvtNames[index];
+	if (CONFIG(vvtMode[camIndex]) == VVT_INACTIVE) {
+		warning(CUSTOM_VVT_MODE_NOT_SELECTED, "VVT: event on %d but no mode", camIndex);
+	}
 
 #if VR_HW_CHECK_MODE
 	// some boards do not have hardware VR input LEDs which makes such boards harder to validate
@@ -127,11 +129,16 @@ void hwHandleVvtCamSignal(trigger_value_e front, efitick_t nowNt, int index DECL
 		addEngineSnifferEvent(vvtName, front == TV_RISE ? PROTOCOL_ES_UP : PROTOCOL_ES_DOWN);
 
 #if EFI_TOOTH_LOGGER
-		if (front == TV_RISE) {
-			LogTriggerTooth(SHAFT_SECONDARY_RISING, nowNt PASS_ENGINE_PARAMETER_SUFFIX);
+// todo: we need to start logging different VVT channels differently!!!
+		trigger_event_e tooth;
+		if (index == 0) {
+			tooth = front == TV_RISE ? SHAFT_SECONDARY_RISING : SHAFT_SECONDARY_FALLING;
 		} else {
-			LogTriggerTooth(SHAFT_SECONDARY_FALLING, nowNt PASS_ENGINE_PARAMETER_SUFFIX);
+			// todo: nicer solution is needed
+			tooth = front == TV_RISE ? SHAFT_3RD_RISING : SHAFT_3RD_FALLING;
 		}
+
+		LogTriggerTooth(tooth, nowNt PASS_ENGINE_PARAMETER_SUFFIX);
 #endif /* EFI_TOOTH_LOGGER */
 	}
 
@@ -173,8 +180,8 @@ void hwHandleVvtCamSignal(trigger_value_e front, efitick_t nowNt, int index DECL
 		return;
 	}
 
-	ENGINE(triggerCentral).vvtState[bankIndex][camIndex].decodeTriggerEvent(
-			ENGINE(triggerCentral).vvtShape[camIndex],
+	tc->vvtState[bankIndex][camIndex].decodeTriggerEvent(
+			tc->vvtShape[camIndex],
 			nullptr,
 			nullptr,
 			engine->vvtTriggerConfiguration[camIndex],
@@ -211,8 +218,9 @@ void hwHandleVvtCamSignal(trigger_value_e front, efitick_t nowNt, int index DECL
 	case VVT_MIATA_NB2:
 	case VVT_BOSCH_QUICK_START:
 	case VVT_BARRA_3_PLUS_1:
+	case VVT_NISSAN_VQ:
 	 {
-		if (engine->triggerCentral.vvtState[bankIndex][camIndex].currentCycle.current_index != 0) {
+		if (tc->vvtState[bankIndex][camIndex].currentCycle.current_index != 0) {
 			// this is not sync tooth - exiting
 			return;
 		}
@@ -231,7 +239,7 @@ void hwHandleVvtCamSignal(trigger_value_e front, efitick_t nowNt, int index DECL
 
     // we do NOT clamp VVT position into the [0, engineCycle) range - we expect vvtOffset to be configured so that
     // it's not necessary
-	tc->vvtPosition[bankIndex][camIndex] = engineConfiguration->vvtOffset - currentPosition;
+	tc->vvtPosition[bankIndex][camIndex] = engineConfiguration->vvtOffsets[bankIndex * CAMS_PER_BANK + camIndex] - currentPosition;
 	if (tc->vvtPosition[bankIndex][camIndex] < -ENGINE(engineCycle) / 2 || tc->vvtPosition[bankIndex][camIndex] > ENGINE(engineCycle) / 2) {
 		warning(CUSTOM_ERR_VVT_OUT_OF_RANGE, "Please adjust vvtOffset since position %f", tc->vvtPosition);
 	}
@@ -454,7 +462,7 @@ bool TriggerNoiseFilter::noiseFilter(efitick_t nowNt,
 	efitick_t allowedPeriod = accumSignalPrevPeriods[os];
 
 	// but first check if we're expecting a gap
-	bool isGapExpected = TRIGGER_WAVEFORM(isSynchronizationNeeded) && triggerState->shaft_is_synchronized &&
+	bool isGapExpected = TRIGGER_WAVEFORM(isSynchronizationNeeded) && triggerState->getShaftSynchronized() &&
 			(triggerState->currentCycle.eventCount[ti] + 1) == TRIGGER_WAVEFORM(getExpectedEventCount(ti));
 	
 	if (isGapExpected) {
@@ -548,7 +556,7 @@ void TriggerCentral::handleShaftSignal(trigger_event_e signal, efitick_t timesta
 	}
 	reportEventToWaveChart(signal, triggerIndexForListeners PASS_ENGINE_PARAMETER_SUFFIX);
 
-	if (!triggerState.shaft_is_synchronized) {
+	if (!triggerState.getShaftSynchronized()) {
 		// we should not propagate event if we do not know where we are
 		return;
 	}
@@ -702,8 +710,12 @@ static void resetRunningTriggerCounters() {
 
 void onConfigurationChangeTriggerCallback(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	bool changed = false;
-	for (size_t i = 0; i < efi::size(CONFIG(camInputs)); i++) {
-		changed |= isConfigurationChanged(camInputs[i]);
+	// todo: how do we static_assert here?
+	efiAssertVoid(OBD_PCM_Processor_Fault, efi::size(CONFIG(camInputs)) == efi::size(CONFIG(vvtOffsets)), "sizes");
+
+	for (size_t camIndex = 0; camIndex < efi::size(CONFIG(camInputs)); camIndex++) {
+		changed |= isConfigurationChanged(camInputs[camIndex]);
+		changed |= isConfigurationChanged(vvtOffsets[camIndex]);
 	}
 
 	for (size_t i = 0; i < efi::size(CONFIG(triggerGapOverride)); i++) {
@@ -726,7 +738,6 @@ void onConfigurationChangeTriggerCallback(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	changed |= isConfigurationChanged(trigger.customSkippedToothCount);
 	changed |= isConfigurationChanged(vvtCamSensorUseRise);
 	changed |= isConfigurationChanged(overrideTriggerGaps);
-	changed |= isConfigurationChanged(vvtOffset);
 
 	if (changed) {
 		assertEngineReference();

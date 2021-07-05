@@ -1,14 +1,12 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Tue Jun 29 05:13:20 UTC 2021
+// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Mon Jul 05 22:07:23 UTC 2021
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
 
 public class Fields {
 	public static final int accelerometerSpiDevice_offset = 2712;
-	public static final int acCutoffHighRpm_offset = 1494;
-	public static final int acCutoffLowRpm_offset = 1492;
 	public static final int acFanPin_offset = 762;
 	public static final int acFanPinMode_offset = 763;
 	public static final int acIdleExtraMin_offset = 761;
@@ -1076,6 +1074,7 @@ public class Fields {
 	public static final int mafDecoding_offset = 10784;
 	public static final int mafDecodingBins_offset = 11808;
 	public static final int mafSensorType_offset = 948;
+	public static final String MAIN_HELP_URL = "http://www.rusefi.com/";
 	public static final int mainRelayPin_offset = 706;
 	public static final int mainRelayPinMode_offset = 752;
 	public static final int mainUnusedEnd_offset = 4612;
@@ -1122,6 +1121,7 @@ public class Fields {
 	public static final int maxAcClt_offset = 1711;
 	public static final int maxAcRpm_offset = 1708;
 	public static final int maxAcTps_offset = 1710;
+	public static final int maxIdleVss_offset = 445;
 	public static final int maxKnockSubDeg_offset = 552;
 	public static final int mc33816_cs_offset = 3107;
 	public static final int mc33816_driven_offset = 2607;
@@ -1551,7 +1551,7 @@ public class Fields {
 	public static final char TS_SD_R_COMMAND = 'r';
 	public static final char TS_SD_W_COMMAND = 'w';
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI 2021.06.29.all.2598559691";
+	public static final String TS_SIGNATURE = "rusEFI 2021.07.05.all.2871364235";
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final char TS_TEST_COMMAND = 't';
 	public static final int TT_TT_1_16 = 50;
@@ -1581,6 +1581,7 @@ public class Fields {
 	public static final int TT_TT_MAZDA_MIATA_NB1 = 4;
 	public static final int TT_TT_MAZDA_SOHC_4 = 7;
 	public static final int TT_TT_MIATA_VVT = 33;
+	public static final int TT_TT_NISSAN_VQ = 58;
 	public static final int TT_TT_ONE = 18;
 	public static final int TT_TT_RENIX_44_2_2 = 44;
 	public static final int TT_TT_RENIX_66_2_2_2 = 45;
@@ -1598,6 +1599,7 @@ public class Fields {
 	public static final int TT_TT_VVT_BOSCH_QUICK_START = 47;
 	public static final int TT_TT_VVT_JZ = 17;
 	public static final int TT_TT_VVT_MIATA_NB2 = 43;
+	public static final int TT_TT_VVT_NISSAN_VQ = 59;
 	public static final int tunerStudioSerialSpeed_offset = 728;
 	public static final int twoWireBatchIgnition_offset = 1476;
 	public static final int twoWireBatchInjection_offset = 1476;
@@ -1615,6 +1617,8 @@ public class Fields {
 	public static final int unused1476b20_offset = 1476;
 	public static final int unused1476b3_offset = 1476;
 	public static final int unused1476b8_offset = 1476;
+	public static final int unused1492_offset = 1492;
+	public static final int unused1494_offset = 1494;
 	public static final int unused1756_offset = 1756;
 	public static final int unused2260_offset = 2260;
 	public static final int unused2432_offset = 2432;
@@ -1640,40 +1644,40 @@ public class Fields {
 	public static final int unused_1484_bit_30_offset = 1476;
 	public static final int unused_1484_bit_31_offset = 1476;
 	public static final int unused_294_8_offset = 76;
-	public static final int unusedAtOldBoardConfigurationEnd_offset = 1228;
+	public static final int unusedAtOldBoardConfigurationEnd_offset = 1244;
 	public static final int unusedBit4_1476_offset = 1476;
 	public static final int unusedBit_251_29_offset = 976;
 	public static final int unusedBit_291_30_offset = 976;
 	public static final int unusedBit_291_31_offset = 976;
 	public static final int unusedBit_34_31_offset = 76;
-	public static final int unusedBit_496_10_offset = 2116;
-	public static final int unusedBit_496_11_offset = 2116;
-	public static final int unusedBit_496_12_offset = 2116;
-	public static final int unusedBit_496_13_offset = 2116;
-	public static final int unusedBit_496_14_offset = 2116;
-	public static final int unusedBit_496_15_offset = 2116;
-	public static final int unusedBit_496_16_offset = 2116;
-	public static final int unusedBit_496_17_offset = 2116;
-	public static final int unusedBit_496_18_offset = 2116;
-	public static final int unusedBit_496_19_offset = 2116;
-	public static final int unusedBit_496_20_offset = 2116;
-	public static final int unusedBit_496_21_offset = 2116;
-	public static final int unusedBit_496_22_offset = 2116;
-	public static final int unusedBit_496_23_offset = 2116;
-	public static final int unusedBit_496_24_offset = 2116;
-	public static final int unusedBit_496_25_offset = 2116;
-	public static final int unusedBit_496_26_offset = 2116;
-	public static final int unusedBit_496_27_offset = 2116;
-	public static final int unusedBit_496_28_offset = 2116;
-	public static final int unusedBit_496_29_offset = 2116;
-	public static final int unusedBit_496_30_offset = 2116;
-	public static final int unusedBit_496_31_offset = 2116;
-	public static final int unusedBit_496_8_offset = 2116;
-	public static final int unusedBit_496_9_offset = 2116;
+	public static final int unusedBit_498_10_offset = 2116;
+	public static final int unusedBit_498_11_offset = 2116;
+	public static final int unusedBit_498_12_offset = 2116;
+	public static final int unusedBit_498_13_offset = 2116;
+	public static final int unusedBit_498_14_offset = 2116;
+	public static final int unusedBit_498_15_offset = 2116;
+	public static final int unusedBit_498_16_offset = 2116;
+	public static final int unusedBit_498_17_offset = 2116;
+	public static final int unusedBit_498_18_offset = 2116;
+	public static final int unusedBit_498_19_offset = 2116;
+	public static final int unusedBit_498_20_offset = 2116;
+	public static final int unusedBit_498_21_offset = 2116;
+	public static final int unusedBit_498_22_offset = 2116;
+	public static final int unusedBit_498_23_offset = 2116;
+	public static final int unusedBit_498_24_offset = 2116;
+	public static final int unusedBit_498_25_offset = 2116;
+	public static final int unusedBit_498_26_offset = 2116;
+	public static final int unusedBit_498_27_offset = 2116;
+	public static final int unusedBit_498_28_offset = 2116;
+	public static final int unusedBit_498_29_offset = 2116;
+	public static final int unusedBit_498_30_offset = 2116;
+	public static final int unusedBit_498_31_offset = 2116;
+	public static final int unusedBit_498_8_offset = 2116;
+	public static final int unusedBit_498_9_offset = 2116;
 	public static final int unusedOldBiquad_offset = 2331;
-	public static final int unusedOldIgnitionOffset_offset = 445;
 	public static final int unusedSpiPadding4_offset = 2593;
 	public static final int unusedSpiPadding8_offset = 4010;
+	public static final int unusedVvtOffsetWasHere_offset = 2052;
 	public static final int useAdvanceCorrectionsForCranking_offset = 1476;
 	public static final int useCicPidForIdle_offset = 76;
 	public static final int useETBforIdleControl_offset = 744;
@@ -1734,7 +1738,11 @@ public class Fields {
 	public static final int vvtMode1_offset = 2328;
 	public static final int vvtMode2_offset = 2329;
 	public static final int vvtModePadding_offset = 2330;
-	public static final int vvtOffset_offset = 2052;
+	public static final int vvtOffsets1_offset = 1228;
+	public static final int vvtOffsets2_offset = 1232;
+	public static final int vvtOffsets3_offset = 1236;
+	public static final int vvtOffsets4_offset = 1240;
+	public static final int vvtOffsetsPadding_offset = 1244;
 	public static final int vvtTable1_offset = 15776;
 	public static final int vvtTable1LoadBins_offset = 15840;
 	public static final int vvtTable1RpmBins_offset = 15872;
@@ -1834,7 +1842,7 @@ public class Fields {
 	public static final Field CRANKINGTIMINGANGLE = Field.create("CRANKINGTIMINGANGLE", 436, FieldType.FLOAT);
 	public static final Field IGNITIONMODE = Field.create("IGNITIONMODE", 440, FieldType.INT);
 	public static final Field GAPTRACKINGLENGTHOVERRIDE = Field.create("GAPTRACKINGLENGTHOVERRIDE", 444, FieldType.INT8);
-	public static final Field UNUSEDOLDIGNITIONOFFSET = Field.create("UNUSEDOLDIGNITIONOFFSET", 445, FieldType.INT8);
+	public static final Field MAXIDLEVSS = Field.create("MAXIDLEVSS", 445, FieldType.INT8);
 	public static final Field MINOILPRESSUREAFTERSTART = Field.create("MINOILPRESSUREAFTERSTART", 446, FieldType.INT16);
 	public static final Field TIMINGMODE = Field.create("TIMINGMODE", 448, FieldType.INT);
 	public static final Field FIXEDMODETIMING = Field.create("FIXEDMODETIMING", 452, FieldType.FLOAT);
@@ -2320,6 +2328,10 @@ public class Fields {
 	public static final Field LUAOUTPUTPINS6 = Field.create("LUAOUTPUTPINS6", 1225, FieldType.INT8, output_pin_e);
 	public static final Field LUAOUTPUTPINS7 = Field.create("LUAOUTPUTPINS7", 1226, FieldType.INT8, output_pin_e);
 	public static final Field LUAOUTPUTPINS8 = Field.create("LUAOUTPUTPINS8", 1227, FieldType.INT8, output_pin_e);
+	public static final Field VVTOFFSETS1 = Field.create("VVTOFFSETS1", 1228, FieldType.FLOAT);
+	public static final Field VVTOFFSETS2 = Field.create("VVTOFFSETS2", 1232, FieldType.FLOAT);
+	public static final Field VVTOFFSETS3 = Field.create("VVTOFFSETS3", 1236, FieldType.FLOAT);
+	public static final Field VVTOFFSETS4 = Field.create("VVTOFFSETS4", 1240, FieldType.FLOAT);
 	public static final Field VEHICLEWEIGHT = Field.create("VEHICLEWEIGHT", 1456, FieldType.INT16);
 	public static final Field LPS25BAROSENSORSCL = Field.create("LPS25BAROSENSORSCL", 1458, FieldType.INT8, brain_pin_e);
 	public static final Field LPS25BAROSENSORSDA = Field.create("LPS25BAROSENSORSDA", 1459, FieldType.INT8, brain_pin_e);
@@ -2398,8 +2410,8 @@ public class Fields {
 	public static final Field IDLEPIDRPMUPPERLIMIT = Field.create("IDLEPIDRPMUPPERLIMIT", 1484, FieldType.INT16);
 	public static final Field PRIMEINJFALLOFFTEMPERATURE = Field.create("PRIMEINJFALLOFFTEMPERATURE", 1486, FieldType.INT16);
 	public static final Field IGNMATHCALCULATEATINDEX = Field.create("IGNMATHCALCULATEATINDEX", 1488, FieldType.INT);
-	public static final Field ACCUTOFFLOWRPM = Field.create("ACCUTOFFLOWRPM", 1492, FieldType.INT16);
-	public static final Field ACCUTOFFHIGHRPM = Field.create("ACCUTOFFHIGHRPM", 1494, FieldType.INT16);
+	public static final Field UNUSED1492 = Field.create("UNUSED1492", 1492, FieldType.INT16);
+	public static final Field UNUSED1494 = Field.create("UNUSED1494", 1494, FieldType.INT16);
 	public static final Field ACIDLERPMBUMP = Field.create("ACIDLERPMBUMP", 1496, FieldType.INT16);
 	public static final Field WARNINGPERIOD = Field.create("WARNINGPERIOD", 1498, FieldType.INT16);
 	public static final Field KNOCKDETECTIONWINDOWSTART = Field.create("KNOCKDETECTIONWINDOWSTART", 1500, FieldType.FLOAT);
@@ -2489,7 +2501,7 @@ public class Fields {
 	public static final Field LIS302DLCSPIN = Field.create("LIS302DLCSPIN", 2043, FieldType.INT8, brain_pin_e);
 	public static final Field TPSACCELLENGTH = Field.create("TPSACCELLENGTH", 2044, FieldType.INT);
 	public static final Field TPSACCELENRICHMENTTHRESHOLD = Field.create("TPSACCELENRICHMENTTHRESHOLD", 2048, FieldType.FLOAT);
-	public static final Field VVTOFFSET = Field.create("VVTOFFSET", 2052, FieldType.FLOAT);
+	public static final Field UNUSEDVVTOFFSETWASHERE = Field.create("UNUSEDVVTOFFSETWASHERE", 2052, FieldType.FLOAT);
 	public static final Field ENGINELOADACCELLENGTH = Field.create("ENGINELOADACCELLENGTH", 2056, FieldType.INT);
 	public static final Field ENGINELOADDECELENLEANMENTTHRESHOLD = Field.create("ENGINELOADDECELENLEANMENTTHRESHOLD", 2060, FieldType.FLOAT);
 	public static final Field ENGINELOADDECELENLEANMENTMULTIPLIER = Field.create("ENGINELOADDECELENLEANMENTMULTIPLIER", 2064, FieldType.FLOAT);
@@ -2520,30 +2532,30 @@ public class Fields {
 	public static final Field UNUSED1128 = Field.create("UNUSED1128", 2116, FieldType.BIT, 5);
 	public static final Field UNUSED1129 = Field.create("UNUSED1129", 2116, FieldType.BIT, 6);
 	public static final Field UNUSED1130 = Field.create("UNUSED1130", 2116, FieldType.BIT, 7);
-	public static final Field UNUSEDBIT_496_8 = Field.create("UNUSEDBIT_496_8", 2116, FieldType.BIT, 8);
-	public static final Field UNUSEDBIT_496_9 = Field.create("UNUSEDBIT_496_9", 2116, FieldType.BIT, 9);
-	public static final Field UNUSEDBIT_496_10 = Field.create("UNUSEDBIT_496_10", 2116, FieldType.BIT, 10);
-	public static final Field UNUSEDBIT_496_11 = Field.create("UNUSEDBIT_496_11", 2116, FieldType.BIT, 11);
-	public static final Field UNUSEDBIT_496_12 = Field.create("UNUSEDBIT_496_12", 2116, FieldType.BIT, 12);
-	public static final Field UNUSEDBIT_496_13 = Field.create("UNUSEDBIT_496_13", 2116, FieldType.BIT, 13);
-	public static final Field UNUSEDBIT_496_14 = Field.create("UNUSEDBIT_496_14", 2116, FieldType.BIT, 14);
-	public static final Field UNUSEDBIT_496_15 = Field.create("UNUSEDBIT_496_15", 2116, FieldType.BIT, 15);
-	public static final Field UNUSEDBIT_496_16 = Field.create("UNUSEDBIT_496_16", 2116, FieldType.BIT, 16);
-	public static final Field UNUSEDBIT_496_17 = Field.create("UNUSEDBIT_496_17", 2116, FieldType.BIT, 17);
-	public static final Field UNUSEDBIT_496_18 = Field.create("UNUSEDBIT_496_18", 2116, FieldType.BIT, 18);
-	public static final Field UNUSEDBIT_496_19 = Field.create("UNUSEDBIT_496_19", 2116, FieldType.BIT, 19);
-	public static final Field UNUSEDBIT_496_20 = Field.create("UNUSEDBIT_496_20", 2116, FieldType.BIT, 20);
-	public static final Field UNUSEDBIT_496_21 = Field.create("UNUSEDBIT_496_21", 2116, FieldType.BIT, 21);
-	public static final Field UNUSEDBIT_496_22 = Field.create("UNUSEDBIT_496_22", 2116, FieldType.BIT, 22);
-	public static final Field UNUSEDBIT_496_23 = Field.create("UNUSEDBIT_496_23", 2116, FieldType.BIT, 23);
-	public static final Field UNUSEDBIT_496_24 = Field.create("UNUSEDBIT_496_24", 2116, FieldType.BIT, 24);
-	public static final Field UNUSEDBIT_496_25 = Field.create("UNUSEDBIT_496_25", 2116, FieldType.BIT, 25);
-	public static final Field UNUSEDBIT_496_26 = Field.create("UNUSEDBIT_496_26", 2116, FieldType.BIT, 26);
-	public static final Field UNUSEDBIT_496_27 = Field.create("UNUSEDBIT_496_27", 2116, FieldType.BIT, 27);
-	public static final Field UNUSEDBIT_496_28 = Field.create("UNUSEDBIT_496_28", 2116, FieldType.BIT, 28);
-	public static final Field UNUSEDBIT_496_29 = Field.create("UNUSEDBIT_496_29", 2116, FieldType.BIT, 29);
-	public static final Field UNUSEDBIT_496_30 = Field.create("UNUSEDBIT_496_30", 2116, FieldType.BIT, 30);
-	public static final Field UNUSEDBIT_496_31 = Field.create("UNUSEDBIT_496_31", 2116, FieldType.BIT, 31);
+	public static final Field UNUSEDBIT_498_8 = Field.create("UNUSEDBIT_498_8", 2116, FieldType.BIT, 8);
+	public static final Field UNUSEDBIT_498_9 = Field.create("UNUSEDBIT_498_9", 2116, FieldType.BIT, 9);
+	public static final Field UNUSEDBIT_498_10 = Field.create("UNUSEDBIT_498_10", 2116, FieldType.BIT, 10);
+	public static final Field UNUSEDBIT_498_11 = Field.create("UNUSEDBIT_498_11", 2116, FieldType.BIT, 11);
+	public static final Field UNUSEDBIT_498_12 = Field.create("UNUSEDBIT_498_12", 2116, FieldType.BIT, 12);
+	public static final Field UNUSEDBIT_498_13 = Field.create("UNUSEDBIT_498_13", 2116, FieldType.BIT, 13);
+	public static final Field UNUSEDBIT_498_14 = Field.create("UNUSEDBIT_498_14", 2116, FieldType.BIT, 14);
+	public static final Field UNUSEDBIT_498_15 = Field.create("UNUSEDBIT_498_15", 2116, FieldType.BIT, 15);
+	public static final Field UNUSEDBIT_498_16 = Field.create("UNUSEDBIT_498_16", 2116, FieldType.BIT, 16);
+	public static final Field UNUSEDBIT_498_17 = Field.create("UNUSEDBIT_498_17", 2116, FieldType.BIT, 17);
+	public static final Field UNUSEDBIT_498_18 = Field.create("UNUSEDBIT_498_18", 2116, FieldType.BIT, 18);
+	public static final Field UNUSEDBIT_498_19 = Field.create("UNUSEDBIT_498_19", 2116, FieldType.BIT, 19);
+	public static final Field UNUSEDBIT_498_20 = Field.create("UNUSEDBIT_498_20", 2116, FieldType.BIT, 20);
+	public static final Field UNUSEDBIT_498_21 = Field.create("UNUSEDBIT_498_21", 2116, FieldType.BIT, 21);
+	public static final Field UNUSEDBIT_498_22 = Field.create("UNUSEDBIT_498_22", 2116, FieldType.BIT, 22);
+	public static final Field UNUSEDBIT_498_23 = Field.create("UNUSEDBIT_498_23", 2116, FieldType.BIT, 23);
+	public static final Field UNUSEDBIT_498_24 = Field.create("UNUSEDBIT_498_24", 2116, FieldType.BIT, 24);
+	public static final Field UNUSEDBIT_498_25 = Field.create("UNUSEDBIT_498_25", 2116, FieldType.BIT, 25);
+	public static final Field UNUSEDBIT_498_26 = Field.create("UNUSEDBIT_498_26", 2116, FieldType.BIT, 26);
+	public static final Field UNUSEDBIT_498_27 = Field.create("UNUSEDBIT_498_27", 2116, FieldType.BIT, 27);
+	public static final Field UNUSEDBIT_498_28 = Field.create("UNUSEDBIT_498_28", 2116, FieldType.BIT, 28);
+	public static final Field UNUSEDBIT_498_29 = Field.create("UNUSEDBIT_498_29", 2116, FieldType.BIT, 29);
+	public static final Field UNUSEDBIT_498_30 = Field.create("UNUSEDBIT_498_30", 2116, FieldType.BIT, 30);
+	public static final Field UNUSEDBIT_498_31 = Field.create("UNUSEDBIT_498_31", 2116, FieldType.BIT, 31);
 	public static final Field CAN2NBCTYPE = Field.create("CAN2NBCTYPE", 2120, FieldType.INT);
 	public static final Field CAN2TXPIN = Field.create("CAN2TXPIN", 2124, FieldType.INT8, brain_pin_e);
 	public static final Field CAN2RXPIN = Field.create("CAN2RXPIN", 2125, FieldType.INT8, brain_pin_e);
@@ -2950,7 +2962,7 @@ public class Fields {
 	CRANKINGTIMINGANGLE,
 	IGNITIONMODE,
 	GAPTRACKINGLENGTHOVERRIDE,
-	UNUSEDOLDIGNITIONOFFSET,
+	MAXIDLEVSS,
 	MINOILPRESSUREAFTERSTART,
 	TIMINGMODE,
 	FIXEDMODETIMING,
@@ -3424,6 +3436,10 @@ public class Fields {
 	LUAOUTPUTPINS6,
 	LUAOUTPUTPINS7,
 	LUAOUTPUTPINS8,
+	VVTOFFSETS1,
+	VVTOFFSETS2,
+	VVTOFFSETS3,
+	VVTOFFSETS4,
 	VEHICLEWEIGHT,
 	LPS25BAROSENSORSCL,
 	LPS25BAROSENSORSDA,
@@ -3502,8 +3518,8 @@ public class Fields {
 	IDLEPIDRPMUPPERLIMIT,
 	PRIMEINJFALLOFFTEMPERATURE,
 	IGNMATHCALCULATEATINDEX,
-	ACCUTOFFLOWRPM,
-	ACCUTOFFHIGHRPM,
+	UNUSED1492,
+	UNUSED1494,
 	ACIDLERPMBUMP,
 	WARNINGPERIOD,
 	KNOCKDETECTIONWINDOWSTART,
@@ -3593,7 +3609,7 @@ public class Fields {
 	LIS302DLCSPIN,
 	TPSACCELLENGTH,
 	TPSACCELENRICHMENTTHRESHOLD,
-	VVTOFFSET,
+	UNUSEDVVTOFFSETWASHERE,
 	ENGINELOADACCELLENGTH,
 	ENGINELOADDECELENLEANMENTTHRESHOLD,
 	ENGINELOADDECELENLEANMENTMULTIPLIER,
@@ -3620,30 +3636,30 @@ public class Fields {
 	UNUSED1128,
 	UNUSED1129,
 	UNUSED1130,
-	UNUSEDBIT_496_8,
-	UNUSEDBIT_496_9,
-	UNUSEDBIT_496_10,
-	UNUSEDBIT_496_11,
-	UNUSEDBIT_496_12,
-	UNUSEDBIT_496_13,
-	UNUSEDBIT_496_14,
-	UNUSEDBIT_496_15,
-	UNUSEDBIT_496_16,
-	UNUSEDBIT_496_17,
-	UNUSEDBIT_496_18,
-	UNUSEDBIT_496_19,
-	UNUSEDBIT_496_20,
-	UNUSEDBIT_496_21,
-	UNUSEDBIT_496_22,
-	UNUSEDBIT_496_23,
-	UNUSEDBIT_496_24,
-	UNUSEDBIT_496_25,
-	UNUSEDBIT_496_26,
-	UNUSEDBIT_496_27,
-	UNUSEDBIT_496_28,
-	UNUSEDBIT_496_29,
-	UNUSEDBIT_496_30,
-	UNUSEDBIT_496_31,
+	UNUSEDBIT_498_8,
+	UNUSEDBIT_498_9,
+	UNUSEDBIT_498_10,
+	UNUSEDBIT_498_11,
+	UNUSEDBIT_498_12,
+	UNUSEDBIT_498_13,
+	UNUSEDBIT_498_14,
+	UNUSEDBIT_498_15,
+	UNUSEDBIT_498_16,
+	UNUSEDBIT_498_17,
+	UNUSEDBIT_498_18,
+	UNUSEDBIT_498_19,
+	UNUSEDBIT_498_20,
+	UNUSEDBIT_498_21,
+	UNUSEDBIT_498_22,
+	UNUSEDBIT_498_23,
+	UNUSEDBIT_498_24,
+	UNUSEDBIT_498_25,
+	UNUSEDBIT_498_26,
+	UNUSEDBIT_498_27,
+	UNUSEDBIT_498_28,
+	UNUSEDBIT_498_29,
+	UNUSEDBIT_498_30,
+	UNUSEDBIT_498_31,
 	CAN2NBCTYPE,
 	CAN2TXPIN,
 	CAN2RXPIN,

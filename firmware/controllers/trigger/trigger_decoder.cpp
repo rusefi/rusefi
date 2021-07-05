@@ -45,6 +45,10 @@ TriggerState::TriggerState() {
 	resetTriggerState();
 }
 
+bool TriggerState::getShaftSynchronized() {
+	return shaft_is_synchronized;
+}
+
 void TriggerState::setShaftSynchronized(bool value) {
 	if (value) {
 		if (!shaft_is_synchronized) {
@@ -155,7 +159,11 @@ void calculateTriggerSynchPoint(
 
 void prepareEventAngles(TriggerWaveform *shape,
 		TriggerFormDetails *details DECLARE_ENGINE_PARAMETER_SUFFIX) {
-	float firstAngle = shape->getAngle(shape->triggerShapeSynchPointIndex);
+	int triggerShapeSynchPointIndex = shape->triggerShapeSynchPointIndex;
+	if (triggerShapeSynchPointIndex == EFI_ERROR_CODE) {
+		return;
+	}
+	float firstAngle = shape->getAngle(triggerShapeSynchPointIndex);
 	assertAngleRange(firstAngle, "firstAngle", CUSTOM_TRIGGER_SYNC_ANGLE);
 
 	int riseOnlyIndex = 0;
@@ -203,11 +211,24 @@ int TriggerState::getTotalRevolutionCounter() const {
 void TriggerStateWithRunningStatistics::movePreSynchTimestamps(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	// here we take timestamps of events which happened prior to synchronization and place them
 	// at appropriate locations
-	for (int i = 0; i < spinningEventIndex;i++) {
-		int newIndex = getTriggerSize() - i;
-		assertIsInBounds(newIndex, timeOfLastEvent, "move timeOfLastEvent");
-		timeOfLastEvent[newIndex] = spinningEvents[i];
+	auto triggerSize = getTriggerSize();
+
+	int eventsToCopy = minI(spinningEventIndex, triggerSize);
+
+	size_t firstSrc;
+	size_t firstDst;
+
+	if (eventsToCopy >= triggerSize) {
+		// Only copy one trigger length worth of events, filling the whole buffer
+		firstSrc = spinningEventIndex - triggerSize;
+		firstDst = 0;
+	} else {
+		// There is less than one full cycle, copy to the end of the buffer
+		firstSrc = 0;
+		firstDst = triggerSize - spinningEventIndex;
 	}
+
+	memcpy(timeOfLastEvent + firstDst, spinningEvents + firstSrc, eventsToCopy * sizeof(timeOfLastEvent[0]));
 }
 
 float TriggerStateWithRunningStatistics::calculateInstantRpm(TriggerFormDetails *triggerFormDetails, efitick_t nowNt DECLARE_ENGINE_PARAMETER_SUFFIX) {
@@ -261,7 +282,7 @@ float TriggerStateWithRunningStatistics::calculateInstantRpm(TriggerFormDetails 
 }
 
 void TriggerStateWithRunningStatistics::setLastEventTimeForInstantRpm(efitick_t nowNt DECLARE_ENGINE_PARAMETER_SUFFIX) {
-	if (shaft_is_synchronized) {
+	if (getShaftSynchronized()) {
 		return;
 	}
 	// here we remember tooth timestamps which happen prior to synchronization
@@ -481,7 +502,7 @@ void TriggerState::decodeTriggerEvent(
 
 		isFirstEvent = false;
 		bool isSynchronizationPoint;
-		bool wasSynchronized = shaft_is_synchronized;
+		bool wasSynchronized = getShaftSynchronized();
 
 		DISPLAY_STATE(Trigger_State)
 		DISPLAY_TEXT(Current_Gap);
@@ -606,12 +627,12 @@ void TriggerState::decodeTriggerEvent(
 
 			unsigned int endOfCycleIndex = triggerShape.getSize() - (triggerConfiguration.UseOnlyRisingEdgeForTrigger ? 2 : 1);
 
-			isSynchronizationPoint = !shaft_is_synchronized || (currentCycle.current_index >= endOfCycleIndex);
+			isSynchronizationPoint = !getShaftSynchronized() || (currentCycle.current_index >= endOfCycleIndex);
 
 #if EFI_UNIT_TEST
 			if (printTriggerTrace) {
 				printf("decodeTriggerEvent sync=%d isSynchronizationPoint=%d index=%d size=%d\r\n",
-					shaft_is_synchronized,
+						getShaftSynchronized(),
 					isSynchronizationPoint,
 					currentCycle.current_index,
 					triggerShape.getSize());
@@ -650,7 +671,7 @@ void TriggerState::decodeTriggerEvent(
 
 		toothed_previous_time = nowNt;
 	}
-	if (!isValidIndex(triggerShape) && triggerStateListener) {
+	if (getShaftSynchronized() && !isValidIndex(triggerShape) && triggerStateListener) {
 		triggerStateListener->OnTriggerInvalidIndex(currentCycle.current_index);
 		return;
 	}

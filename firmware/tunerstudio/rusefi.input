@@ -819,12 +819,12 @@ enable2ndByteCanID = false
       yBins       = boostTpsBins,  TPSValue
       zBins       = boostTableClosedLoop
 
-   table = vvtTable1Tbl,  vvtTable1Map,  "vvt Table #1",   1
+   table = vvtTable1Tbl,  vvtTable1Map,  "vvt Table Intake",   1
       xBins       = vvtTable1RpmBins,  RPMValue
       yBins       = vvtTable1LoadBins,  fuelingLoad
       zBins       = vvtTable1
 
-   table = vvtTable2Tbl,  vvtTable2Map,  "vvt Table #2",   1
+   table = vvtTable2Tbl,  vvtTable2Map,  "vvt Table Exhaust",   1
       xBins       = vvtTable2RpmBins,  RPMValue
       yBins       = vvtTable2LoadBins,  fuelingLoad
       zBins       = vvtTable2
@@ -1869,10 +1869,10 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 	    field = "Cam mode (exhaust cams)",				    vvtMode2, {trigger_type != @@TT_TT_MAZDA_MIATA_NA@@}
 	    field = "VVT use only rising edge",					vvtCamSensorUseRise, {trigger_type != @@TT_TT_MAZDA_MIATA_NA@@}
 	    field = "#Set offset so VVT indicates 0 degrees in default position"
-		field = "VVT offset bank 1 intake",				vvtOffset
-		;field = "VVT offset bank 1 exhaust",			vvtOffset2
-		;field = "VVT offset bank 2 intake",			vvtOffset3
-		;field = "VVT offset bank 2 exhaust",			vvtOffset4
+		field = "VVT offset bank 1 intake",				vvtOffsets1
+		field = "VVT offset bank 1 exhaust",			vvtOffsets2
+		field = "VVT offset bank 2 intake",			    vvtOffsets3
+		field = "VVT offset bank 2 exhaust",			vvtOffsets4
 	    field = "Print verbose VVT sync details to console",verboseVVTDecoding
 	    field = "Print verbose trigger sync to console",   verboseTriggerSynchDetails
 	    field = "Do not print messages in case of sync error",  silentTriggerError
@@ -2650,6 +2650,7 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 		field = "TPS threshold",	idlePidDeactivationTpsThreshold
 		field = "RPM upper limit",	idlePidRpmUpperLimit
 		field = "RPM deadzone",	idlePidRpmDeadZone
+		field = "Max vehicle speed", maxIdleVss
 
 	dialog = idleExtra, "Extra Idle Features"
 		field = "Use idle ignition table",	useSeparateAdvanceForIdle
@@ -2970,26 +2971,24 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 		field = "RX pin",                               binarySerialRxPin, {useSerialPort == 1}
 
 	dialog = canBus, "CAN Bus"
-		field = "Can Read Enabled",						canReadEnabled
-		field = "Can Write Enabled",					canWriteEnabled
-	    field = "consumeObdSensors",                    consumeObdSensors, { canReadEnabled == 1 && canWriteEnabled == 1}
-		field = "Can Nbc Type",							canNbcType
-		field = "Can Baud Rate",						canBaudRate
+		field = "CAN read enabled",						canReadEnabled
+		field = "CAN write enabled",					canWriteEnabled
+		field = "CAN bitrate",							canBaudRate
+		field = "CAN dash type",						canNbcType
 		field = "Enable rusEFI CAN broadcast",			enableVerboseCanTx
-		field = "use FSIO Table CAN Sniffing Filtering",useFSIOTableForCanSniffingFiltering
 		field = "rusEFI CAN data base address",			verboseCanBaseAddress
-		field = "Can Sleep Period",						canSleepPeriodMs
+		field = "rusEFI CAN data period",				canSleepPeriodMs
 		field = "RX pin",								canRxPin @@if_ts_show_can_pins
 		field = "TX pin",								canTxPin @@if_ts_show_can_pins
 
 	dialog = canBus2, "Secondary CAN Bus"
-		field = "Can Read Enabled",						can2ReadEnabled
-		field = "Can Write Enabled",					can2WriteEnabled
-		field = "Can Nbc Type",							can2NbcType
-		field = "Can Baud Rate",						can2BaudRate
+		field = "CAN read enabled",						can2ReadEnabled
+		field = "CAN write enabled",					can2WriteEnabled
+		field = "CAN bitrate",							can2BaudRate
+		field = "CAN dash type",						can2NbcType
 		field = "Enable rusEFI CAN broadcast",			enableVerboseCan2Tx
 		field = "rusEFI CAN data base address",			verboseCan2BaseAddress
-		field = "Can Sleep Period",						can2SleepPeriodMs
+		field = "rusEFI CAN data period",				can2SleepPeriodMs
 		field = "RX pin",								can2RxPin @@if_ts_show_can_pins
 		field = "TX pin",								can2TxPin @@if_ts_show_can_pins
 
@@ -3577,11 +3576,14 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 		field = "Ignition Math Logic @",				ignMathCalculateAtIndex
 		field = "MAP Averaging Logic @",				mapAveragingSchedulingAtIndex
 		field = "showHumanReadableWarning (affects Burn)",	showHumanReadableWarning
+		field = "Warning Message",                      warning_message
 		field = "Ford redundant TPS mode",				useFordRedundantTps
+		field = "consumeObdSensors",                    consumeObdSensors, { canReadEnabled == 1 && canWriteEnabled == 1}
+		field = "use FSIO Table CAN Sniffing Filtering",useFSIOTableForCanSniffingFiltering
 
 
        help = helpGeneral, "rusEFI General Help"
-        webHelp = "http://www.rusefi.com/"
+        webHelp = @@MAIN_HELP_URL@@
         text = "<img src='https://rusefi.com/style/logo_100.gif'>"
 
 	dialog = gppwm1left, ""

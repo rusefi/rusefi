@@ -93,6 +93,7 @@ struct_no_prefix engine_configuration_s
 #define SERVO_COUNT 8
 
 #define CONSOLE_DATA_PROTOCOL_TAG " @"
+#define MAIN_HELP_URL "http://www.rusefi.com/"
 
 #define ETB_BIAS_CURVE_LENGTH 8
 
@@ -447,6 +448,8 @@ end_struct
 #define TT_TT_SKODA_FAVORIT 55
 #define TT_TT_VVT_BARRA_3_PLUS_1 56
 #define TT_TT_KAWA_KX450F 57
+#define TT_TT_NISSAN_VQ 58
+#define TT_TT_VVT_NISSAN_VQ 59
 
 
 ! todo https://github.com/rusefi/rusefi/issues/2102
@@ -625,7 +628,7 @@ custom ignition_mode_e 4 bits, U32, @OFFSET@, [0:1], "Single Coil", "Individual 
 ignition_mode_e ignitionMode;+Single coil = distributor\nIndividual coils = one coil per cylinder (COP, coil-near-plug), requires sequential mode\nWasted spark = Fires pairs of cylinders together, either one coil per pair of cylinders or one coil per cylinder\nTwo distributors = A pair of distributors, found on some BMW, Toyota and other engines\nset ignition_mode X
 
 int8_t gapTrackingLengthOverride;;"count", 1, 0, 0, @@GAP_TRACKING_LENGTH@@, 0
- int8_t[1] unusedOldIgnitionOffset;;"unused", 1, 0, 0, 1, 0
+ uint8_t maxIdleVss;+Above this speed, disable closed loop idle control. Set to 0 to disable (allow closed loop idle at any speed).;"kph", 1, 0, 0, 100, 0
  uint16_t minOilPressureAfterStart;+Expected oil pressure after starting the engine. If oil pressure does not reach this level within 5 seconds of engine start, fuel will be cut. Set to 0 to disable and always allow starting.;"kPa", 1, 0, 0, 1000, 0
 
 custom timing_mode_e 4 bits, U32, @OFFSET@, [0:0], "dynamic", "fixed"
@@ -646,7 +649,7 @@ float fanOffTemperature;+Cooling fan turn-off temperature threshold, in Celsius;
 
 float vehicleSpeedCoef;+This coefficient translates vehicle speed input frequency (in Hz) into vehicle speed, km/h;"coef", 1, 0, 0.01, 2000, 2
 
-custom can_nbc_e 4 bits, U32, @OFFSET@, [0:4], "None", "FIAT", "VAG", "MAZDA RX8", "BMW", "W202", "BMW E90", "Haltech", "VAG MQB", "type 9", "type 10", "INVALID", "INVALID"
+custom can_nbc_e 4 bits, U32, @OFFSET@, [0:4], "None", "FIAT", "VAG", "MAZDA RX8", "BMW", "W202", "BMW E90", "Haltech", "VAG MQB", "Nissan VQ", "type 10", "INVALID", "INVALID"
 can_nbc_e canNbcType;set can_mode X
 
 int canSleepPeriodMs;CANbus thread period, ms;"ms", 1, 0, 0, 1000, 2
@@ -1055,7 +1058,10 @@ custom maf_sensor_type_e 4 bits, S32, @OFFSET@, [0:1], @@maf_sensor_type_e_enum@
 
 	output_pin_e[LUA_PWM_COUNT iterate] luaOutputPins
 
-	int[57] unusedAtOldBoardConfigurationEnd;;"units", 1, 0, -20, 100, 0
+    float[CAM_INPUTS_COUNT iterate] vvtOffsets;+Angle between cam sensor and VVT zero position\nset vvt_offset X;"value", 1, 0, -720, 1000, 1
+    float[CAM_INPUTS_COUNT_padding] vvtOffsetsPadding;;
+
+	int[53] unusedAtOldBoardConfigurationEnd;;"units", 1, 0, -20, 100, 0
 	uint16_t vehicleWeight;;"kg", 1, 0, 0, 10000, 0
 	brain_pin_e lps25BaroSensorScl
 	brain_pin_e lps25BaroSensorSda
@@ -1146,9 +1152,8 @@ bit unused_1484_bit_31
 
 	int ignMathCalculateAtIndex;+At what trigger index should some ignition-related math be executed? This is a performance trick to reduce load on synchronization trigger callback.;"index", 1, 0, 0, 7000, 0
 
-! todo: start using these parameters!
-	int16_t acCutoffLowRpm;;"RPM", 1, 0, 1, 15000, 0
-	int16_t acCutoffHighRpm;;"RPM", 1, 0, 1, 15000, 0
+	int16_t unused1492;;"", 1, 0, 1, 15000, 0
+	int16_t unused1494;;"", 1, 0, 1, 15000, 0
 	int16_t acIdleRpmBump;+Extra idle target speed when A/C is enabled. Some cars need the extra speed to keep the AC efficient while idling.;"RPM", 1, 0, 0, 1000, 0
 
 	int16_t warningPeriod;set warningPeriod X;"seconds", 1, 0, 0, 60, 0
@@ -1246,7 +1251,7 @@ int16_t tps2Max;Full throttle#2. tpsMax value as 10 bit ADC value. Not Voltage!\
 
 	int tpsAccelLength;+This is the number of engine cycles that the TPS position change can occur over, a longer duration will make the enrichment more active but too long may affect steady state driving, a good default is 30-60 cycles. ;"cycles", 1, 0, 1, 200, 0
 	float tpsAccelEnrichmentThreshold;+Maximum change delta of TPS percentage over the 'length'. Actual TPS change has to be above this value in order for TPS/TPS acceleration to kick in.;"roc", 1, 0, 0, 200, 3
-	float vvtOffset;+Angle between cam sensor and VVT zero position\nset vvt_offset X;"value", 1, 0, -720, 1000, 1
+	float unusedVvtOffsetWasHere;;"v", 1, 0, -720, 1000, 1
 	
 	int engineLoadAccelLength;;"cycles", 1, 0, 1, 200, 0
 	
