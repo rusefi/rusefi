@@ -14,6 +14,7 @@
 
 
 CHIBIOS = ../firmware/ChibiOS
+CHIBIOS_CONTRIB= ../firmware/ChibiOS-Contrib
 RULESPATH = $(CHIBIOS)/os/common/startup/SIMIA32/compilers/GCC
 RULESFILE = $(RULESPATH)/rules.mk
 
