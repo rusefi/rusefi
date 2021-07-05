@@ -89,6 +89,7 @@ void canMazdaRX8(CanCycle cycle);
 void canDashboardW202(CanCycle cycle);
 void canDashboardBMWE90(CanCycle cycle);
 void canDashboardVagMqb(CanCycle cycle);
+void canDashboardNissanVQ(CanCycle cycle);
 
 void updateDash(CanCycle cycle) {
 
@@ -114,6 +115,9 @@ void updateDash(CanCycle cycle) {
 		break;
 	case CAN_BUS_MQB:
 		canDashboardVagMqb(cycle);
+		break;
+	case CAN_BUS_NISSAN_VQ:
+		canDashboardNissanVQ(cycle);
 		break;
 	default:
 		break;
@@ -290,6 +294,13 @@ void canDashboardW202(CanCycle cycle) {
 			msg[6] = 0x33; // Const
 			msg[7] = 0x05; // Const
 		}
+	}
+}
+
+void canDashboardNissanVQ(CanCycle cycle) {
+	if (cycle.isInterval(CI::_50ms)) {
+
+
 	}
 }
 

@@ -649,7 +649,7 @@ float fanOffTemperature;+Cooling fan turn-off temperature threshold, in Celsius;
 
 float vehicleSpeedCoef;+This coefficient translates vehicle speed input frequency (in Hz) into vehicle speed, km/h;"coef", 1, 0, 0.01, 2000, 2
 
-custom can_nbc_e 4 bits, U32, @OFFSET@, [0:4], "None", "FIAT", "VAG", "MAZDA RX8", "BMW", "W202", "BMW E90", "Haltech", "VAG MQB", "type 9", "type 10", "INVALID", "INVALID"
+custom can_nbc_e 4 bits, U32, @OFFSET@, [0:4], "None", "FIAT", "VAG", "MAZDA RX8", "BMW", "W202", "BMW E90", "Haltech", "VAG MQB", "Nissan VQ", "type 10", "INVALID", "INVALID"
 can_nbc_e canNbcType;set can_mode X
 
 int canSleepPeriodMs;CANbus thread period, ms;"ms", 1, 0, 0, 1000, 2
