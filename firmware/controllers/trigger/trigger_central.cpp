@@ -282,9 +282,10 @@ void hwHandleVvtCamSignal(trigger_value_e front, efitick_t nowNt, int index DECL
 		/**
 		 * NB2 is a symmetrical crank, there are four phases total
 		 */
-		while (tc->triggerState.getTotalRevolutionCounter() % 4 != miataNbIndex) {
-			tc->triggerState.incrementTotalEventCounter();
-		}
+		tc->triggerState.syncSymmetricalCrank(4, miataNbIndex);
+		break;
+	case VVT_NISSAN_VQ:
+//		tc->triggerState.syncSymmetricalCrank(6, 0);
 		break;
 	default:
 	case VVT_INACTIVE:
