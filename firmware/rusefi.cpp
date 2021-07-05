@@ -231,6 +231,8 @@ static bool validateConfig() {
 
 static jmp_buf jmpEnv;
 void onAssertionFailure() {
+	// There's been an assertion failure: instead of hanging, jump back to where we check
+	// if (setjmp(jmpEnv)) (see below for more complete explanation)
 	longjmp(jmpEnv, 1);
 }
 
@@ -288,6 +290,9 @@ void runRusEfi(void) {
 
 void runRusEfiWithConfig() {
 	// If some config operation caused an OS assertion failure, return immediately
+	// This sets the "unwind point" that we can jump back to later with longjmp if we have
+	// an assertion failure. If that happens, setjmp() will return non-zero, so we will
+	// return immediately from this function instead of trying to init hardware again (which failed last time)
 	if (setjmp(jmpEnv)) {
 		return;
 	}
