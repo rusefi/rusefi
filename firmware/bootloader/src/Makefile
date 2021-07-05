@@ -120,7 +120,8 @@ PROJECT_DIR = ..
 
 # Imported source files and paths
 CHIBIOS = $(PROJECT_DIR)/ChibiOS
-CHIBIOS_CONTRIB = $(PROJECT_DIR)/ChibiOS-Contrib
+# todo: looks like 'CHIBIOS_CONTRIB' path is universal shall we defined it only once?
+CHIBIOS_CONTRIB = $(CHIBIOS)/../ChibiOS-Contrib
 
 RULESPATH = $(CHIBIOS)/os/common/startup/ARMCMx/compilers/GCC/mk
 RULESFILE = $(RULESPATH)/rules.mk
