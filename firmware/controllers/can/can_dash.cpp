@@ -299,7 +299,14 @@ void canDashboardW202(CanCycle cycle) {
 
 void canDashboardNissanVQ(CanCycle cycle) {
 	if (cycle.isInterval(CI::_50ms)) {
+		{
+			CanTxMessage msg(NISSAN_RPM_CLT, 8);
 
+			msg[4] = ((int)(GET_RPM() / 4)) & 0xFF;
+			msg[5] = ((int)(GET_RPM() / 4)) >> 8;
+
+			msg[7] = 0x70; // todo: CLT decoding?
+		}
 
 	}
 }

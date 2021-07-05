@@ -143,6 +143,7 @@ void setBoardDefaultConfiguration(void) {
 	engineConfiguration->isSdCardEnabled = true;
 
 	CONFIG(enableSoftwareKnock) = true;
+	CONFIG(canNbcType) = CAN_BUS_NISSAN_VQ;
 
 	engineConfiguration->canTxPin = GPIOD_1;
 	engineConfiguration->canRxPin = GPIOD_0;
