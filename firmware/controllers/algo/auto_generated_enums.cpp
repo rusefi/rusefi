@@ -1,7 +1,7 @@
 #include "global.h"
 #include "rusefi_enums.h"
 #include "rusefi_hw_enums.h"
-// was generated automatically by rusEFI tool  from rusefi_hw_enums.h // was generated automatically by rusEFI tool  from rusefi_enums.h // by enum2string.jar tool on Thu Jul 01 19:48:33 EDT 2021
+// was generated automatically by rusEFI tool  from rusefi_hw_enums.h // was generated automatically by rusEFI tool  from rusefi_enums.h // by enum2string.jar tool on Mon Jul 05 17:58:13 EDT 2021
 // see also gen_config_and_enums.bat
 
 
@@ -611,6 +611,8 @@ case CAN_BUS_NBC_NONE:
   return "CAN_BUS_NBC_NONE";
 case CAN_BUS_NBC_VAG:
   return "CAN_BUS_NBC_VAG";
+case CAN_BUS_NISSAN_VQ:
+  return "CAN_BUS_NISSAN_VQ";
 case CAN_BUS_W202_C180:
   return "CAN_BUS_W202_C180";
 case Internal_ForceMyEnumIntSize_can_nbc:
