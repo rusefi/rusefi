@@ -168,6 +168,7 @@ void setBoardDefaultConfiguration(void) {
 
 	engineConfiguration->specs.cylindersCount = 6;
 	engineConfiguration->specs.firingOrder = FO_1_2_3_4_5_6;
+	engineConfiguration->specs.displacement = 4;
 
 	engineConfiguration->ignitionMode = IM_INDIVIDUAL_COILS; // IM_WASTED_SPARK
 	engineConfiguration->crankingInjectionMode = IM_SIMULTANEOUS;

@@ -1799,6 +1799,7 @@ end_struct
 
 #define ENGINE_MAKE_MAZDA "Mazda"
 #define ENGINE_MAKE_LADA "Lada"
+#define ENGINE_MAKE_NISSAN "Nissan"
 #define ENGINE_MAKE_GM "GM"
 #define ENGINE_MAKE_SUBARU "Subaru"
 #define ENGINE_MAKE_BMW "BMW"
