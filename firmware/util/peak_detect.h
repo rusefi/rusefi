@@ -6,9 +6,9 @@ template <typename TValue, efitick_t TTimeoutPeriod>
 class PeakDetect {
 public:
 	TValue detect(TValue currentValue, efitick_t nowNt) {
-		if (
-			(nowNt > m_lastPeakTime + TTimeoutPeriod) ||
-			(currentValue > m_peak)) {
+		if ((nowNt > m_lastPeakTime + TTimeoutPeriod) ||	// if timed out
+			(currentValue > m_peak)) {						// or current is higher than the previous peak
+			// store new peak and time
 			m_peak = currentValue;
 			m_lastPeakTime = nowNt;
 		}
