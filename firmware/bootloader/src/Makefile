@@ -1,6 +1,5 @@
-##############################################################################
-# Build global options
-# NOTE: Can be overridden externally.
+#
+# this Makefile is intended to be invoked from one level above - see ..\compile_bootloader.sh
 #
 
 # by default EXTRA_PARAMS is empty and we create 'debug' version of the firmware with additional assertions and statistics
@@ -116,7 +115,7 @@ endif
 
 # Define project name here
 PROJECT = bootloader
-PROJECT_DIR = ../..
+PROJECT_DIR = ..
 
 # Imported source files and paths
 CHIBIOS = $(PROJECT_DIR)/ChibiOS
@@ -210,7 +209,7 @@ TCPPSRC =
 ASMXSRC = $(STARTUPASM) $(PORTASM) $(OSALASM)
 
 INCDIR = $(ALLINC) \
-	../.. \
+	.. \
 	$(CHIBIOS)/os/various \
 	$(CHIBIOS)/os/ex/ST \
 	$(CHIBIOS)/os/hal/lib/peripherals/sensors \
