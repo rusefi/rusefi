@@ -2,6 +2,9 @@
 
 #include "rusefi_types.h"
 
+/**
+ * Stores the recent peak value, preventing loss of intermittent peaks in a signal.
+ */
 template <typename TValue, efitick_t TTimeoutPeriod>
 class PeakDetect {
 public:
