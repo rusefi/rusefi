@@ -108,7 +108,11 @@
 /*
  * CRC driver system settings.
  */
+#if defined (STM32F7xx_MCUCONF) || defined (STM32H7xx_MCUCONF)
+#define STM32_CRC_USE_CRC1                  TRUE
+#else
 #define STM32_CRC_USE_CRC1                  FALSE
+#endif
 #define STM32_CRC_CRC1_DMA_IRQ_PRIORITY     1
 #define STM32_CRC_CRC1_DMA_PRIORITY         2
 #define STM32_CRC_CRC1_DMA_STREAM           STM32_DMA1_STREAM2
