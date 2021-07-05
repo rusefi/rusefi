@@ -285,7 +285,7 @@ void hwHandleVvtCamSignal(trigger_value_e front, efitick_t nowNt, int index DECL
 		tc->triggerState.syncSymmetricalCrank(4, miataNbIndex);
 		break;
 	case VVT_NISSAN_VQ:
-//		tc->triggerState.syncSymmetricalCrank(6, 0);
+		tc->triggerState.syncSymmetricalCrank(6, 1);
 		break;
 	default:
 	case VVT_INACTIVE:
