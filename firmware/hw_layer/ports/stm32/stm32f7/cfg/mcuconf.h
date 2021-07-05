@@ -44,22 +44,6 @@
 #include "efifeatures.h"
 
 /*
- * STM32F7xx drivers configuration.
- * The following settings override the default settings present in
- * the various device driver implementation headers.
- * Note that the settings for each driver only have effect if the whole
- * driver is enabled in halconf.h.
- *
- * IRQ priorities:
- * 15...0       Lowest...Highest.
- *
- * DMA priorities:
- * 0...3        Lowest...Highest.
- */
-
-#define STM32F7xx_MCUCONF
-
-/*
  * HAL driver system settings.
  */
 #define STM32_NO_INIT                       FALSE
