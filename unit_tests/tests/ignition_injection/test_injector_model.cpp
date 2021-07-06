@@ -58,8 +58,8 @@ TEST(InjectorModel, getInjectionDurationNonlinear) {
 
 	dut.prepare();
 
-	EXPECT_NEAR(dut.getInjectionDuration(0.01f), 2 * (10 / 4.8f + 2.0f), EPS4D);
-	EXPECT_NEAR(dut.getInjectionDuration(0.02f), 2 * (20 / 4.8f + 2.0f), EPS4D);
+	EXPECT_NEAR(dut.getInjectionDuration(0.01f), 2 * 10 / 4.8f + 2.0f, EPS4D);
+	EXPECT_NEAR(dut.getInjectionDuration(0.02f), 2 * 20 / 4.8f + 2.0f, EPS4D);
 }
 
 TEST(InjectorModel, Deadtime) {
