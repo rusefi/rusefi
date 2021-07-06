@@ -62,7 +62,7 @@ typedef enum {
 
 
 	// 16 cylinder
-	// unfortunately not supported by default firmware because INJECTION_PIN_COUNT=IGNITION_PIN_COUNT=12 by default
+	// unfortunately not supported by default firmware because MAX_CYLINDER_COUNT=12 by default
 	FO_1_14_9_4_7_12_15_6_13_8_3_16_11_2_5_10 = 22, // WR16
 
 	// max used = 26

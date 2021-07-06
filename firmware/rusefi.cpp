@@ -158,7 +158,7 @@ static void scheduleReboot(void) {
 
 // Returns false if there's an obvious problem with the loaded configuration
 static bool validateConfig() {
-	if (CONFIG(specs.cylindersCount) > minI(INJECTION_PIN_COUNT, IGNITION_PIN_COUNT)) {
+	if (CONFIG(specs.cylindersCount) > MAX_CYLINDER_COUNT) {
 		firmwareError(OBD_PCM_Processor_Fault, "Invalid cylinder count: %d", CONFIG(specs.cylindersCount));
 		return false;
 	}

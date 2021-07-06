@@ -14,7 +14,7 @@ EXTERN_ENGINE;
 #if EFI_ENGINE_CONTROL
 
 FuelSchedule::FuelSchedule() {
-	for (int cylinderIndex = 0; cylinderIndex < MAX_INJECTION_OUTPUT_COUNT; cylinderIndex++) {
+	for (int cylinderIndex = 0; cylinderIndex < MAX_CYLINDER_COUNT; cylinderIndex++) {
 		InjectionEvent *ev = &elements[cylinderIndex];
 		ev->ownIndex = cylinderIndex;
 	}

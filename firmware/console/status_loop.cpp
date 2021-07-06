@@ -226,7 +226,7 @@ void printOverallStatus(efitimesec_t nowSeconds) {
 	printOutPin(PROTOCOL_WA_CHANNEL_2, CONFIG(logicAnalyzerPins)[1]);
 #endif /* EFI_LOGIC_ANALYZER */
 
-	int cylCount = minI(minI(CONFIG(specs.cylindersCount), INJECTION_PIN_COUNT), IGNITION_PIN_COUNT);
+	int cylCount = minI(CONFIG(specs.cylindersCount), MAX_CYLINDER_COUNT);
 	for (int i = 0; i < cylCount; i++) {
 		printOutPin(enginePins.coils[i].getShortName(), CONFIG(ignitionPins)[i]);
 
