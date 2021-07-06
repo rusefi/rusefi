@@ -28,14 +28,13 @@ static void setInjectorPins() {
 	engineConfiguration->injectionPins[1] = GPIOG_8;
 	engineConfiguration->injectionPins[2] = GPIOD_11;
 	engineConfiguration->injectionPins[3] = GPIOD_10;
-
-	//engineConfiguration->injectionPins[4] = GPIOD_9;
-	//engineConfiguration->injectionPins[5] = GPIOF_12;
-	//engineConfiguration->injectionPins[6] = GPIOF_13;
-	//engineConfiguration->injectionPins[7] = GPIOF_14;
+	engineConfiguration->injectionPins[4] = GPIOD_9;
+	engineConfiguration->injectionPins[5] = GPIOF_12;
+	engineConfiguration->injectionPins[6] = GPIOF_13;
+	engineConfiguration->injectionPins[7] = GPIOF_14;
 
 	// Disable remainder
-	for (int i = 4; i < INJECTION_PIN_COUNT;i++) {
+	for (int i = 8; i < INJECTION_PIN_COUNT;i++) {
 		engineConfiguration->injectionPins[i] = GPIO_UNASSIGNED;
 	}
 
@@ -47,14 +46,13 @@ static void setIgnitionPins() {
 	engineConfiguration->ignitionPins[1] = GPIO_UNASSIGNED ; // GPIOE_4
 	engineConfiguration->ignitionPins[2] = GPIOE_5; // 3I - IGN_2 (2&3)
 	engineConfiguration->ignitionPins[3] = GPIO_UNASSIGNED; // GPIOE_3
-
-	//engineConfiguration->ignitionPins[4] = GPIOE_2;
-	//engineConfiguration->ignitionPins[5] = GPIOI_5;
-	//engineConfiguration->ignitionPins[6] = GPIOI_6;
-	//engineConfiguration->ignitionPins[7] = GPIOI_7;
+	engineConfiguration->ignitionPins[4] = GPIOE_2;
+	engineConfiguration->ignitionPins[5] = GPIOI_5;
+	engineConfiguration->ignitionPins[6] = GPIOI_6;
+	engineConfiguration->ignitionPins[7] = GPIOI_7;
 	
 	// disable remainder
-	for (int i = 4; i < IGNITION_PIN_COUNT; i++) {
+	for (int i = 8; i < IGNITION_PIN_COUNT; i++) {
 		engineConfiguration->ignitionPins[i] = GPIO_UNASSIGNED;
 	}
 
