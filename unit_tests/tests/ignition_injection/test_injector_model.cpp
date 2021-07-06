@@ -43,6 +43,25 @@ TEST(InjectorModel, getInjectionDuration) {
 	EXPECT_NEAR(dut.getInjectionDuration(0.02f), 20 / 4.8f + 2.0f, EPS4D);
 }
 
+TEST(InjectorModel, getInjectionDurationNonlinear) {
+	StrictMock<MockInjectorModel> dut;
+
+	EXPECT_CALL(dut, getDeadtime())
+		.WillOnce(Return(2.0f));
+	EXPECT_CALL(dut, getInjectorMassFlowRate())
+		.WillOnce(Return(4.8f)); // 400cc/min
+
+	// Dummy nonlinearity correction: just doubles the pulse
+	EXPECT_CALL(dut, correctShortPulse(_))
+		.Times(2)
+		.WillRepeatedly([](float b) { return 2 * b; });
+
+	dut.prepare();
+
+	EXPECT_NEAR(dut.getInjectionDuration(0.01f), 2 * (10 / 4.8f + 2.0f), EPS4D);
+	EXPECT_NEAR(dut.getInjectionDuration(0.02f), 2 * (20 / 4.8f + 2.0f), EPS4D);
+}
+
 TEST(InjectorModel, Deadtime) {
 	WITH_ENGINE_TEST_HELPER(TEST_ENGINE);
 
