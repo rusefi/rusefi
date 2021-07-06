@@ -87,6 +87,7 @@ static void setupDefaultSensorInputs() {
 	engineConfiguration->triggerInputPins[2] = GPIO_UNASSIGNED;
 	// Direct hall-only cam input
 	engineConfiguration->camInputs[0] = GPIOA_6;
+	engineConfiguration->camInputs[1 * 2] = GPIOA_7;
 
 	engineConfiguration->tps1_1AdcChannel = EFI_ADC_4;
 	engineConfiguration->tps2_1AdcChannel = EFI_ADC_NONE;
@@ -151,7 +152,7 @@ void setBoardDefaultConfiguration(void) {
 //	engineConfiguration->fuelPumpPin = GPIOG_2;	// OUT_IO9
 //	engineConfiguration->idle.solenoidPin = GPIOD_14;	// OUT_PWM5
 //	engineConfiguration->fanPin = GPIOD_12;	// OUT_PWM8
-//	engineConfiguration->mainRelayPin = GPIOI_2;	// OUT_LOW3
+	engineConfiguration->mainRelayPin = GPIOG_14;	// pin: 111a, OUT_IO3
 
 	// "required" hardware is done - set some reasonable defaults
 	setupDefaultSensorInputs();
@@ -169,6 +170,8 @@ void setBoardDefaultConfiguration(void) {
 	engineConfiguration->specs.cylindersCount = 6;
 	engineConfiguration->specs.firingOrder = FO_1_2_3_4_5_6;
 	engineConfiguration->specs.displacement = 4;
+	strcpy(CONFIG(engineMake), ENGINE_MAKE_NISSAN);
+	strcpy(CONFIG(engineCode), "VQ");
 
 	engineConfiguration->ignitionMode = IM_INDIVIDUAL_COILS; // IM_WASTED_SPARK
 	engineConfiguration->crankingInjectionMode = IM_SIMULTANEOUS;
