@@ -91,7 +91,7 @@ public:
 	 */
 	bool isEvenRevolution() const;
 	void incrementTotalEventCounter();
-	void syncSymmetricalCrank(int mod, int remainder);
+	bool syncSymmetricalCrank(int mod, int remainder);
 	efitime_t getTotalEventCounter() const;
 
 	void decodeTriggerEvent(
