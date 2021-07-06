@@ -85,6 +85,25 @@ angle_t TriggerCentral::getVVTPosition(uint8_t bankIndex, uint8_t camIndex) {
 	return vvtPosition[bankIndex][camIndex];
 }
 
+/**
+ * todo: why is this method NOT reciprocal to getRpmMultiplier?!
+ */
+static int getCrankDivider(operation_mode_e operationMode) {
+	switch (operationMode) {
+	case FOUR_STROKE_CRANK_SENSOR:
+		return 2;
+	case FOUR_STROKE_SYMMETRICAL_CRANK_SENSOR:
+		return SYMMETRICAL_CRANK_SENSOR_DIVIDER;
+	case FOUR_STROKE_THREE_TIMES_CRANK_SENSOR:
+		return SYMMETRICAL_THREE_TIMES_CRANK_SENSOR_DIVIDER;
+	default:
+	case FOUR_STROKE_CAM_SENSOR:
+	case TWO_STROKE:
+		// That's easy - trigger cycle matches engine cycle
+		return 1;
+	}
+}
+
 #define miataNbIndex (0)
 
 static bool vvtWithRealDecoder(vvt_mode_e vvtMode) {
@@ -93,6 +112,15 @@ static bool vvtWithRealDecoder(vvt_mode_e vvtMode) {
 			&& vvtMode != VVT_2JZ
 			&& vvtMode != VVT_SECOND_HALF
 			&& vvtMode != VVT_FIRST_HALF;
+}
+
+static void syncAndReport(TriggerCentral *tc, int mod, int remainder DECLARE_ENGINE_PARAMETER_SUFFIX) {
+	bool wasChanged = tc->triggerState.syncSymmetricalCrank(mod, remainder);
+	if (wasChanged && engineConfiguration->debugMode == DBG_VVT) {
+#if EFI_TUNER_STUDIO
+		tsOutputChannels.debugIntField1++;
+#endif /* EFI_TUNER_STUDIO */
+	}
 }
 
 void hwHandleVvtCamSignal(trigger_value_e front, efitick_t nowNt, int index DECLARE_ENGINE_PARAMETER_SUFFIX) {
@@ -249,48 +277,23 @@ void hwHandleVvtCamSignal(trigger_value_e front, efitick_t nowNt, int index DECL
 		return;
 	}
 
+	operation_mode_e operationMode = engine->getOperationMode(PASS_ENGINE_PARAMETER_SIGNATURE);
+
 	switch (engineConfiguration->vvtMode[camIndex]) {
 	case VVT_FIRST_HALF:
-	{
-
-		bool isEven = tc->triggerState.isEvenRevolution();
-		if (!isEven) {
-			/**
-			 * we are here if we've detected the cam sensor within the wrong crank phase
-			 * let's increase the trigger event counter, that would adjust the state of
-			 * virtual crank-based trigger
-			 */
-			tc->triggerState.incrementTotalEventCounter();
-			if (engineConfiguration->debugMode == DBG_VVT) {
-#if EFI_TUNER_STUDIO
-				tsOutputChannels.debugIntField1++;
-#endif /* EFI_TUNER_STUDIO */
-			}
-		}
-	}
+		syncAndReport(tc, getCrankDivider(operationMode), 1 PASS_ENGINE_PARAMETER_SUFFIX);
 		break;
 	case VVT_SECOND_HALF:
-	{
-		bool isEven = tc->triggerState.isEvenRevolution();
-		if (isEven) {
-			// see above comment
-			tc->triggerState.incrementTotalEventCounter();
-			if (engineConfiguration->debugMode == DBG_VVT) {
-#if EFI_TUNER_STUDIO
-				tsOutputChannels.debugIntField1++;
-#endif /* EFI_TUNER_STUDIO */
-			}
-		}
-	}
+		syncAndReport(tc, getCrankDivider(operationMode), 0 PASS_ENGINE_PARAMETER_SUFFIX);
 		break;
 	case VVT_MIATA_NB2:
 		/**
 		 * NB2 is a symmetrical crank, there are four phases total
 		 */
-		tc->triggerState.syncSymmetricalCrank(4, miataNbIndex);
+		syncAndReport(tc, getCrankDivider(operationMode), miataNbIndex PASS_ENGINE_PARAMETER_SUFFIX);
 		break;
 	case VVT_NISSAN_VQ:
-		tc->triggerState.syncSymmetricalCrank(6, 0);
+		syncAndReport(tc, getCrankDivider(operationMode), 0 PASS_ENGINE_PARAMETER_SUFFIX);
 		break;
 	default:
 	case VVT_INACTIVE:
@@ -495,25 +498,6 @@ bool TriggerNoiseFilter::noiseFilter(efitick_t nowNt,
 	}
 	// all premature or extra-long events are ignored - treated as interference
 	return false;
-}
-
-/**
- * todo: why is this method NOT reciprocal to getRpmMultiplier?!
- */
-int getCrankDivider(operation_mode_e operationMode) {
-	switch (operationMode) {
-	case FOUR_STROKE_CRANK_SENSOR:
-		return 2;
-	case FOUR_STROKE_SYMMETRICAL_CRANK_SENSOR:
-		return SYMMETRICAL_CRANK_SENSOR_DIVIDER;
-	case FOUR_STROKE_THREE_TIMES_CRANK_SENSOR:
-		return SYMMETRICAL_THREE_TIMES_CRANK_SENSOR_DIVIDER;
-	default:
-	case FOUR_STROKE_CAM_SENSOR:
-	case TWO_STROKE:
-		// That's easy - trigger cycle matches engine cycle
-		return 1;
-	}
 }
 
 /**
