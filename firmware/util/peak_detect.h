@@ -20,6 +20,6 @@ public:
 	}
 
 private:
-	TValue m_peak = std::numeric_limits<TValue>::min;
-	efitick_t m_lastPeakTime = std::numeric_limits<efitick_t>::min;
+	TValue m_peak = std::numeric_limits<TValue>::min();
+	efitick_t m_lastPeakTime = std::numeric_limits<efitick_t>::min();
 };
