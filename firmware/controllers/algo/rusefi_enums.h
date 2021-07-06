@@ -1056,3 +1056,8 @@ typedef enum __attribute__ ((__packed__)) {
 	ICM_FixedRailPressure = 1,
 	ICM_SensedRailPressure = 2,
 } injector_compensation_mode_e;
+
+enum class InjectorNonlinearMode : unsigned char {
+	None = 0,
+	PolynomialAdder = 1,
+};
