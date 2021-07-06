@@ -31,7 +31,7 @@ static boostOpenLoop_Map3D_t boostMapOpen;
 static boostOpenLoop_Map3D_t boostMapClosed;
 static SimplePwm boostPwmControl("boost");
 
-void BoostController::init(SimplePwm* pwm, const ValueProvider3D* openLoopMap, const ValueProvider3D* closedLoopTargetMap, pid_s* pidParams) {
+void BoostController::init(IPwm* pwm, const ValueProvider3D* openLoopMap, const ValueProvider3D* closedLoopTargetMap, pid_s* pidParams) {
 	m_pwm = pwm;
 	m_openLoopMap = openLoopMap;
 	m_closedLoopTargetMap = closedLoopTargetMap;

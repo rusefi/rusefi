@@ -89,6 +89,7 @@ void canMazdaRX8(CanCycle cycle);
 void canDashboardW202(CanCycle cycle);
 void canDashboardBMWE90(CanCycle cycle);
 void canDashboardVagMqb(CanCycle cycle);
+void canDashboardNissanVQ(CanCycle cycle);
 
 void updateDash(CanCycle cycle) {
 
@@ -114,6 +115,9 @@ void updateDash(CanCycle cycle) {
 		break;
 	case CAN_BUS_MQB:
 		canDashboardVagMqb(cycle);
+		break;
+	case CAN_BUS_NISSAN_VQ:
+		canDashboardNissanVQ(cycle);
 		break;
 	default:
 		break;
@@ -155,9 +159,7 @@ void canMazdaRX8(CanCycle cycle) {
 
 			float kph = getVehicleSpeed();
 
-			int rpm = GET_RPM();
-	        // do not pass function as macro parameter that would cause same code to be invoked 2 times!
-			msg.setShortValue(SWAP_UINT16(rpm * 4), 0);
+			msg.setShortValue(SWAP_UINT16(GET_RPM() * 4), 0);
 			msg.setShortValue(0xFFFF, 2);
 			msg.setShortValue(SWAP_UINT16((int )(100 * kph + 10000)), 4);
 			msg.setShortValue(0, 6);
@@ -292,6 +294,20 @@ void canDashboardW202(CanCycle cycle) {
 			msg[6] = 0x33; // Const
 			msg[7] = 0x05; // Const
 		}
+	}
+}
+
+void canDashboardNissanVQ(CanCycle cycle) {
+	if (cycle.isInterval(CI::_50ms)) {
+		{
+			CanTxMessage msg(NISSAN_RPM_CLT, 8);
+
+			msg[4] = ((int)(GET_RPM() / 4)) & 0xFF;
+			msg[5] = ((int)(GET_RPM() / 4)) >> 8;
+
+			msg[7] = 0x70; // todo: CLT decoding?
+		}
+
 	}
 }
 

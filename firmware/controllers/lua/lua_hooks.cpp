@@ -101,6 +101,13 @@ static int lua_startPwm(lua_State* l) {
 	return 0;
 }
 
+void luaDeInitPins() {
+	// Simply de-init all pins - when the script runs again, they will be re-init'd
+	for (size_t i = 0; i < efi::size(pins); i++) {
+		pins[i].deInit();
+	}
+}
+
 static int lua_setPwmDuty(lua_State* l) {
 	auto p = luaL_checkPwmIndex(l, 1);
 	auto duty = luaL_checknumber(l, 2);

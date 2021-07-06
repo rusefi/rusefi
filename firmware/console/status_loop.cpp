@@ -729,7 +729,6 @@ void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels DECLARE_
 	tsOutputChannels->clutchUpState = engine->clutchUpState;
 	tsOutputChannels->clutchDownState = engine->clutchDownState;
 	tsOutputChannels->brakePedalState = engine->brakePedalState;
-	tsOutputChannels->acSwitchState = engine->acSwitchState;
 
 #if EFI_ENGINE_CONTROL
 	// tCharge depends on the previous state, so we should use the stored value.

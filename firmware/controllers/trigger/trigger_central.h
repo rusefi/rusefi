@@ -86,8 +86,8 @@ public:
 };
 
 void triggerInfo(void);
-void handleShaftSignal2(trigger_event_e signal, efitick_t timestamp DECLARE_ENGINE_PARAMETER_SUFFIX);
-void hwHandleShaftSignal(trigger_event_e signal, efitick_t timestamp);
+void hwHandleShaftSignal(int signalIndex, bool isRising, efitick_t timestamp DECLARE_ENGINE_PARAMETER_SUFFIX);
+void handleShaftSignal(int signalIndex, bool isRising, efitick_t timestamp DECLARE_ENGINE_PARAMETER_SUFFIX);
 void hwHandleVvtCamSignal(trigger_value_e front, efitick_t timestamp, int index DECLARE_ENGINE_PARAMETER_SUFFIX);
 
 void initTriggerCentral();
@@ -101,3 +101,4 @@ bool isTriggerConfigChanged(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 bool isTriggerDecoderError(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 
 #define SYMMETRICAL_CRANK_SENSOR_DIVIDER 4
+#define SYMMETRICAL_THREE_TIMES_CRANK_SENSOR_DIVIDER 6

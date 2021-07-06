@@ -247,6 +247,9 @@ static bool runOneLua() {
 		chThdSleepMilliseconds(luaTickPeriodMs);
 	}
 
+	// De-init pins, they will reinit next start of the script.
+	luaDeInitPins();
+
 	return true;
 }
 

@@ -39,6 +39,7 @@
 #include "engine.h"
 #include "periodic_task.h"
 #include "allsensors.h"
+#include "vehicle_speed.h"
 #include "sensor.h"
 #include "dc_motors.h"
 
@@ -207,7 +208,7 @@ int IdleController::getTargetRpm(float clt) const {
 	return target;
 }
 
-IIdleController::Phase IdleController::determinePhase(int rpm, int targetRpm, SensorResult tps) const {
+IIdleController::Phase IdleController::determinePhase(int rpm, int targetRpm, SensorResult tps, float vss, float crankingTaperFraction) const {
 	if (!engine->rpmCalculator.isRunning()) {
 		return Phase::Cranking;
 	}
@@ -228,8 +229,23 @@ IIdleController::Phase IdleController::determinePhase(int rpm, int targetRpm, Se
 		return Phase::Coasting;
 	}
 
+	// If the vehicle is moving too quickly, disable CL idle
+	auto maxVss = CONFIG(maxIdleVss);
+	if (maxVss != 0 && vss > maxVss) {
+		return Phase::Running;
+	}
+
+	// If still in the cranking taper, disable closed loop idle
+	if (crankingTaperFraction < 1) {
+		return Phase::CrankToRunTaper;
+	}
+
 	// No other conditions met, we are idling!
 	return Phase::Idling;
+}
+
+float IdleController::getCrankingTaperFraction() const {
+	return (float)engine->rpmCalculator.getRevolutionCounterSinceStart() / CONFIG(afterCrankingIACtaperDuration);
 }
 
 float IdleController::getCrankingOpenLoop(float clt) const {
@@ -263,13 +279,20 @@ float IdleController::getRunningOpenLoop(float clt, SensorResult tps) const {
 	return clampF(0, running, 100);
 }
 
-float IdleController::getOpenLoop(Phase phase, float clt, SensorResult tps) const {
-	float running = getRunningOpenLoop(clt, tps);
+float IdleController::getOpenLoop(Phase phase, float clt, SensorResult tps, float crankingTaperFraction) const {
 	float cranking = getCrankingOpenLoop(clt);
 
 	// if we're cranking, nothing more to do.
 	if (phase == Phase::Cranking) {
 		return cranking;
+	}
+
+	float running = getRunningOpenLoop(clt, tps);
+
+	if (phase == Phase::CrankToRunTaper) {
+		// Interpolate between cranking and running over a short time
+		// This clamps once you fall off the end, so no explicit check for >1 required
+		return interpolateClamped(0, cranking, 1, running, crankingTaperFraction);
 	}
 
 	// If coasting (and enabled), use the coasting position table instead of normal open loop
@@ -278,10 +301,7 @@ float IdleController::getOpenLoop(Phase phase, float clt, SensorResult tps) cons
 		return interpolate2d(clt, CONFIG(iacCoastingBins), CONFIG(iacCoasting));
 	}
 
-	// Interpolate between cranking and running over a short time
-	// This clamps once you fall off the end, so no explicit check for running required
-	auto revsSinceStart = engine->rpmCalculator.getRevolutionCounterSinceStart();
-	return interpolateClamped(0, cranking, CONFIG(afterCrankingIACtaperDuration), running, revsSinceStart);
+	return running;
 }
 
 float IdleController::getIdleTimingAdjustment(int rpm) {
@@ -466,8 +486,11 @@ float IdleController::getClosedLoop(IIdleController::Phase phase, float tpsPos, 
 		auto targetRpm = getTargetRpm(clt);
 		m_lastTargetRpm = targetRpm;
 
+		// Determine cranking taper
+		float crankingTaper = getCrankingTaperFraction();
+
 		// Determine what operation phase we're in - idling or not
-		auto phase = determinePhase(rpm, targetRpm, tps);
+		auto phase = determinePhase(rpm, targetRpm, tps, getVehicleSpeed(), crankingTaper);
 		m_lastPhase = phase;
 
 		engine->engineState.isAutomaticIdle = tps.Valid && engineConfiguration->idleMode == IM_AUTO;
@@ -487,7 +510,7 @@ float IdleController::getClosedLoop(IIdleController::Phase phase, float tpsPos, 
 			engine->engineState.idle.idleState = BLIP;
 		} else {
 			// Always apply closed loop correction
-			iacPosition = getOpenLoop(phase, clt, tps);
+			iacPosition = getOpenLoop(phase, clt, tps, crankingTaper);
 			engine->engineState.idle.baseIdlePosition = iacPosition;
 
 			// If TPS is working and automatic mode enabled, add any automatic correction
@@ -497,7 +520,6 @@ float IdleController::getClosedLoop(IIdleController::Phase phase, float tpsPos, 
 
 			iacPosition = clampPercentValue(iacPosition);
 		}
-
 
 #if EFI_TUNER_STUDIO
 		tsOutputChannels.isIdleClosedLoop = phase == Phase::Idling;

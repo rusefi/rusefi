@@ -6,6 +6,7 @@
  */
 
 #include "engine_test_helper.h"
+#include "logicdata_csv_reader.h"
 
 extern int timeNowUs;
 extern WarningCodeState unitTestWarningCodeState;
@@ -53,39 +54,47 @@ TEST(cranking, hardcodedRealCranking) {
 	/* 11 */ EVENT(/* timestamp*/0.99523975, T_SECONDARY, /*value*/true);
 	/* 12 */ EVENT(/* timestamp*/1.076422, T_SECONDARY, /*value*/false);
 	/* 13 */ EVENT(/* timestamp*/1.125428, T_SECONDARY, /*value*/true);
-	ASSERT_EQ( 0,  GET_RPM()) << "RPM at the 14";
 	/* 14 */ EVENT(/* timestamp*/1.194742, T_PRIMARY, /*value*/true);
-	// first synch & fast spinning RPM
-	ASSERT_EQ( 31,  GET_RPM()) << "RPM at the 14";
 	/* 15 */ EVENT(/* timestamp*/1.20417975, T_SECONDARY, /*value*/false);
 	/* 16 */ EVENT(/* timestamp*/1.25380075, T_SECONDARY, /*value*/true);
 	/* 17 */ EVENT(/* timestamp*/1.30114225, T_PRIMARY, /*value*/true);
-	ASSERT_EQ( 0,  unitTestWarningCodeState.recentWarnings.getCount()) << "warningCounter#realCranking";
 	/* 18 */ EVENT(/* timestamp*/1.3341915, T_SECONDARY, /*value*/false);
 	/* 19 */ EVENT(/* timestamp*/1.383534, T_SECONDARY, /*value*/true);
-	ASSERT_EQ( 67,  GET_RPM()) << "RPM at the 19";
-
-	// second synch
 	/* 22 */ EVENT(/* timestamp*/1.45352675, T_PRIMARY, /*value*/true);
-	ASSERT_EQ( 33,  GET_RPM()) << "RPM at the 22";
 	/* 23 */ EVENT(/* timestamp*/1.46291525, T_SECONDARY, /*value*/false);
+	EXPECT_EQ(0, GET_RPM());
+	// ^^ All teeth above are pre-sync ^^
+
+	// THIS TOOTH IS SYNC POINT!
+	// Should get instantRpm from here on
 	/* 25 */ EVENT(/* timestamp*/1.49939025, T_PRIMARY, /*value*/false);
+	EXPECT_EQ(239, GET_RPM());
 	/* 27 */ EVENT(/* timestamp*/1.511785, T_SECONDARY, /*value*/true);
+	EXPECT_EQ(234, GET_RPM());
 	/* 28 */ EVENT(/* timestamp*/1.5908545, T_SECONDARY, /*value*/false);
+	EXPECT_EQ(231, GET_RPM());
 	/* 31 */ EVENT(/* timestamp*/1.6399845, T_SECONDARY, /*value*/true);
+	EXPECT_EQ(234, GET_RPM());
 	/* 32 */ EVENT(/* timestamp*/1.70975875, T_PRIMARY, /*value*/true);
+	EXPECT_EQ(225, GET_RPM());
 	/* 33 */ EVENT(/* timestamp*/1.7194455, T_SECONDARY, /*value*/false);
+	EXPECT_EQ(231, GET_RPM());
 	/* 36 */ EVENT(/* timestamp*/1.7697125, T_SECONDARY, /*value*/true);
+	EXPECT_EQ(231, GET_RPM());
 	/* 37 */ EVENT(/* timestamp*/1.817179, T_PRIMARY, /*value*/true);
+	EXPECT_EQ(217, GET_RPM());
 	/* 38 */ EVENT(/* timestamp*/1.8511055, T_SECONDARY, /*value*/false);
+	EXPECT_EQ(225, GET_RPM());
 	/* 41 */ EVENT(/* timestamp*/1.9011835, T_SECONDARY, /*value*/true);
+	EXPECT_EQ(243, GET_RPM());
 	/* 42 */ EVENT(/* timestamp*/1.97691675, T_PRIMARY, /*value*/true);
+	EXPECT_EQ(207, GET_RPM());
 	/* 43 */ EVENT(/* timestamp*/1.9822455, T_SECONDARY, /*value*/false);
-	ASSERT_EQ( 233,  GET_RPM()) << "RPM at the 17";
+	EXPECT_EQ(226, GET_RPM());
+
+	// Second sync point, should transition to non-instant RPM
 	/* 44 */ EVENT(/* timestamp*/2.001249, T_PRIMARY, /*value*/false);
-	ASSERT_EQ( 233,  GET_RPM()) << "RPM at the 17";
-
-
+	EXPECT_EQ(239, GET_RPM());
 	/* 45 */ EVENT(/* timestamp*/2.0070235, T_SECONDARY, /*value*/true);
 	/* 48 */ EVENT(/* timestamp*/2.04448175, T_SECONDARY, /*value*/false);
 	/* 49 */ EVENT(/* timestamp*/2.06135875, T_SECONDARY, /*value*/true);
@@ -97,7 +106,13 @@ TEST(cranking, hardcodedRealCranking) {
 	/* 59 */ EVENT(/* timestamp*/2.1560195, T_SECONDARY, /*value*/true);
 	/* 60 */ EVENT(/* timestamp*/2.18365925, T_PRIMARY, /*value*/true);
 	/* 61 */ EVENT(/* timestamp*/2.188138, T_SECONDARY, /*value*/false);
+
+	// rpm should now only update at sync point
+	EXPECT_EQ(239, GET_RPM());
+	// Third sync point
 	/* 62 */ EVENT(/* timestamp*/2.20460875, T_PRIMARY, /*value*/false);
+	EXPECT_EQ(590, GET_RPM());
+
 	/* 63 */ EVENT(/* timestamp*/2.20940075, T_SECONDARY, /*value*/true);
 	/* 64 */ EVENT(/* timestamp*/2.2446445, T_SECONDARY, /*value*/false);
 	/* 65 */ EVENT(/* timestamp*/2.26826475, T_SECONDARY, /*value*/true);
@@ -137,9 +152,7 @@ TEST(cranking, hardcodedRealCranking) {
 	/* 119 */ EVENT(/* timestamp*/2.8642345, T_SECONDARY, /*value*/true);
 	/* 120 */ EVENT(/* timestamp*/2.89112225, T_SECONDARY, /*value*/false);
 	/* 123 */ EVENT(/* timestamp*/2.9089625, T_SECONDARY, /*value*/true);
-
 	/* 124 */ EVENT(/* timestamp*/2.93429275, T_PRIMARY, /*value*/true);
-
 	/* 125 */ EVENT(/* timestamp*/2.93850475, T_SECONDARY, /*value*/false);
 	/* 128 */ EVENT(/* timestamp*/2.958108, T_SECONDARY, /*value*/true);
 	/* 129 */ EVENT(/* timestamp*/2.974461, T_PRIMARY, /*value*/true);
@@ -147,8 +160,22 @@ TEST(cranking, hardcodedRealCranking) {
 	/* 133 */ EVENT(/* timestamp*/3.00650825, T_SECONDARY, /*value*/true);
 	/* 134 */ EVENT(/* timestamp*/3.031735, T_PRIMARY, /*value*/true);
 
+	EXPECT_EQ( 0,  unitTestWarningCodeState.recentWarnings.getCount()) << "warningCounter#realCranking";
 
-	ASSERT_EQ( 0,  unitTestWarningCodeState.recentWarnings.getCount()) << "warningCounter#realCranking";
+	EXPECT_EQ(755,  GET_RPM()) << "RPM at the end";
+}
 
-	ASSERT_EQ( 719,  GET_RPM()) << "RPM at the end";
+TEST(cranking, naCrankFromFile) {
+	CsvReader reader(2);
+	int indeces[2] = {1, 0};
+	reader.open("tests/trigger/recourses/cranking_na_4.csv", indeces);
+
+	WITH_ENGINE_TEST_HELPER(MIATA_NA6_VAF);
+
+	while (reader.haveMore()) {
+		reader.processLine(&eth);
+	}
+
+	EXPECT_EQ(0, eth.recentWarnings()->getCount());
+	EXPECT_EQ(698, GET_RPM());
 }

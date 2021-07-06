@@ -47,13 +47,13 @@ static volatile bool ToothLoggerEnabled = false;
 static volatile bool firstBuffer = true;
 static uint32_t lastEdgeTimestamp = 0;
 
-static bool trigger1 = false;
-static bool trigger2 = false;
-static bool trigger = false;
+static bool currentTrigger1 = false;
+static bool currentTrigger2 = false;
+static bool currentTdc = false;
 // any coil, all coils thrown together
-static bool coil = false;
+static bool currentCoilState = false;
 // same about injectors
-static bool injector = false;
+static bool currentInjectorState = false;
 
 int getCompositeRecordCount() {
 	return NextIdx;
@@ -78,18 +78,17 @@ int copyCompositeEvents(CompositeEvent *events) {
 
 #endif // EFI_UNIT_TEST
 
-static void SetNextCompositeEntry(efitick_t timestamp, bool trigger1, bool trigger2,
-		bool trigger DECLARE_ENGINE_PARAMETER_SUFFIX) {
+static void SetNextCompositeEntry(efitick_t timestamp DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	uint32_t nowUs = NT2US(timestamp);
 	
 	// TS uses big endian, grumble
 	buffer[NextIdx].timestamp = SWAP_UINT32(nowUs);
-	buffer[NextIdx].priLevel = trigger1;
-	buffer[NextIdx].secLevel = trigger2;
-	buffer[NextIdx].trigger = trigger;
-	buffer[NextIdx].sync = engine->triggerCentral.triggerState.shaft_is_synchronized;
-	buffer[NextIdx].coil = coil;
-	buffer[NextIdx].injector = injector;
+	buffer[NextIdx].priLevel = currentTrigger1;
+	buffer[NextIdx].secLevel = currentTrigger2;
+	buffer[NextIdx].trigger = currentTdc;
+	buffer[NextIdx].sync = engine->triggerCentral.triggerState.getShaftSynchronized();
+	buffer[NextIdx].coil = currentCoilState;
+	buffer[NextIdx].injector = currentInjectorState;
 
 	NextIdx++;
 
@@ -146,26 +145,31 @@ void LogTriggerTooth(trigger_event_e tooth, efitick_t timestamp DECLARE_ENGINE_P
 
 	switch (tooth) {
 	case SHAFT_PRIMARY_FALLING:
-		trigger1 = false;
-		trigger = false;
+		currentTrigger1 = false;
 		break;
 	case SHAFT_PRIMARY_RISING:
-		trigger1 = true;
-		trigger = false;
+		currentTrigger1 = true;
 		break;
 	case SHAFT_SECONDARY_FALLING:
-		trigger2 = false;
-		trigger = true;
+		currentTrigger2 = false;
 		break;
 	case SHAFT_SECONDARY_RISING:
-		trigger2 = true;
-		trigger = true;
+		currentTrigger2 = true;
 		break;
+// major hack to get most value of limited logic data write
+#if EFI_UNIT_TEST
+	case SHAFT_3RD_FALLING:
+		currentCoilState = false;
+		break;
+	case SHAFT_3RD_RISING:
+		currentCoilState = true;
+		break;
+#endif
 	default:
 		break;
 	}
 
-	SetNextCompositeEntry(timestamp, trigger1, trigger2, trigger PASS_ENGINE_PARAMETER_SUFFIX);
+	SetNextCompositeEntry(timestamp PASS_ENGINE_PARAMETER_SUFFIX);
 }
 
 void LogTriggerTopDeadCenter(efitick_t timestamp DECLARE_ENGINE_PARAMETER_SUFFIX) {
@@ -173,16 +177,17 @@ void LogTriggerTopDeadCenter(efitick_t timestamp DECLARE_ENGINE_PARAMETER_SUFFIX
 	if (!ToothLoggerEnabled) {
 		return;
 	}
-	UNUSED(timestamp);
-	//SetNextCompositeEntry(timestamp, trigger1, trigger2, true PASS_ENGINE_PARAMETER_SUFFIX);
-	//SetNextCompositeEntry(timestamp + 10, trigger1, trigger2, false PASS_ENGINE_PARAMETER_SUFFIX);
+	currentTdc = true;
+	SetNextCompositeEntry(timestamp PASS_ENGINE_PARAMETER_SUFFIX);
+	currentTdc = false;
+	SetNextCompositeEntry(timestamp + 10 PASS_ENGINE_PARAMETER_SUFFIX);
 }
 
 void LogTriggerCoilState(efitick_t timestamp, bool state DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	if (!ToothLoggerEnabled) {
 		return;
 	}
-	coil = state;
+	currentCoilState = state;
 	UNUSED(timestamp);
 	//SetNextCompositeEntry(timestamp, trigger1, trigger2, trigger PASS_ENGINE_PARAMETER_SUFFIX);
 }
@@ -191,7 +196,7 @@ void LogTriggerInjectorState(efitick_t timestamp, bool state DECLARE_ENGINE_PARA
 	if (!ToothLoggerEnabled) {
 		return;
 	}
-	injector = state;
+	currentInjectorState = state;
 	UNUSED(timestamp);
 	//SetNextCompositeEntry(timestamp, trigger1, trigger2, trigger PASS_ENGINE_PARAMETER_SUFFIX);
 }

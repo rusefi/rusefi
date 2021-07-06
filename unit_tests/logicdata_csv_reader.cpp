@@ -15,7 +15,7 @@ static char* trim(char *str) {
 	return str;
 }
 
-void CsvReader::open(const char *fileName, int *columnIndeces) {
+void CsvReader::open(const char *fileName, const int* columnIndeces) {
 	printf("Reading from %s\r\n", fileName);
 	fp = fopen(fileName, "r");
 	this->columnIndeces = columnIndeces;
@@ -24,8 +24,8 @@ void CsvReader::open(const char *fileName, int *columnIndeces) {
 
 bool CsvReader::haveMore() {
 	bool result = fgets(buffer, sizeof(buffer), fp) != nullptr;
-	lineIndex++;
-	if (lineIndex == 0) {
+	m_lineIndex++;
+	if (m_lineIndex == 0) {
 		// skip header
 		return haveMore();
 	}
@@ -46,35 +46,22 @@ void CsvReader::processLine(EngineTestHelper *eth) {
 	char *secondToken = trim(strtok(NULL, s));
 
 	newState[columnIndeces[0]] = firstToken[0] == '1';
-	if (secondToken != nullptr && triggerCount > 1) {
+	if (secondToken != nullptr && m_triggerCount > 1) {
 		newState[columnIndeces[1]] = secondToken[0] == '1';
 	}
 
 	double timeStamp = std::stod(timeStampstr);
 
+	timeStamp += m_timestampOffset;
+
 	eth->setTimeAndInvokeEventsUs(1'000'000 * timeStamp);
-	for (int index = 0; index < 2; index++) {
+	for (int index = 0; index < m_triggerCount; index++) {
 		if (currentState[index] == newState[index]) {
 			continue;
 		}
 
-		bool isPrimary = index == 0;
-		bool rise = newState[index];
-
-		trigger_event_e signal;
-		// todo: add support for 3rd channel
-		if (rise) {
-			signal = isPrimary ?
-						(engineConfiguration->invertPrimaryTriggerSignal ? SHAFT_PRIMARY_FALLING : SHAFT_PRIMARY_RISING) :
-						(engineConfiguration->invertSecondaryTriggerSignal ? SHAFT_SECONDARY_FALLING : SHAFT_SECONDARY_RISING);
-		} else {
-			signal = isPrimary ?
-						(engineConfiguration->invertPrimaryTriggerSignal ? SHAFT_PRIMARY_RISING : SHAFT_PRIMARY_FALLING) :
-						(engineConfiguration->invertSecondaryTriggerSignal ? SHAFT_SECONDARY_RISING : SHAFT_SECONDARY_FALLING);
-		}
-
 		efitick_t nowNt = getTimeNowNt();
-		handleShaftSignal2(signal, nowNt PASS_ENGINE_PARAMETER_SUFFIX);
+		hwHandleShaftSignal(index, newState[index], nowNt PASS_ENGINE_PARAMETER_SUFFIX);
 
 		currentState[index] = newState[index];
 	}

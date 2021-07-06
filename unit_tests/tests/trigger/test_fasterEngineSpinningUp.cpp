@@ -115,7 +115,7 @@ static void doTestFasterEngineSpinningUp60_2(int startUpDelayMs, int rpm1, int e
 }
 
 TEST(cranking, testFasterEngineSpinningUp60_2) {
-	doTestFasterEngineSpinningUp60_2(0, 288, 263);
-	doTestFasterEngineSpinningUp60_2(100, 288, 263);
-	doTestFasterEngineSpinningUp60_2(1000, 288, 263);
+	doTestFasterEngineSpinningUp60_2(0, 549, 549);
+	doTestFasterEngineSpinningUp60_2(100, 549, 549);
+	doTestFasterEngineSpinningUp60_2(1000, 549, 549);
 }

@@ -87,12 +87,11 @@ static void setupVbatt() {
 }
 
 static void setupDefaultSensorInputs() {
-	// trigger inputs
-	engineConfiguration->triggerInputPins[0] = GPIOB_1;
-	engineConfiguration->triggerInputPins[1] = GPIO_UNASSIGNED;
+	// trigger inputs, hall
+	engineConfiguration->triggerInputPins[0] = GPIOA_6;
+	engineConfiguration->triggerInputPins[1] = GPIOB_1;
 	engineConfiguration->triggerInputPins[2] = GPIO_UNASSIGNED;
-	// Direct hall-only cam input
-	engineConfiguration->camInputs[0] = GPIOA_6;
+	engineConfiguration->camInputs[0] = GPIO_UNASSIGNED;
 
 	engineConfiguration->tps1_1AdcChannel = EFI_ADC_4;
 	engineConfiguration->tps2_1AdcChannel = EFI_ADC_NONE;
@@ -149,9 +148,7 @@ void setBoardDefaultConfiguration(void) {
 
 	CONFIG(enableSoftwareKnock) = true;
 
-	engineConfiguration->canTxPin = GPIOD_1;
-	engineConfiguration->canRxPin = GPIOD_0;
-
+	engineConfiguration->acRelayPin = GPIOH_15; // 1J - AC Relay
 	engineConfiguration->fuelPumpPin = GPIOG_2;	// OUT_IO9
 	engineConfiguration->idle.solenoidPin = GPIOD_14;	// OUT_PWM5
 	engineConfiguration->fanPin = GPIOD_12;	// OUT_PWM8

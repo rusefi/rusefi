@@ -35,6 +35,7 @@
 #include "dynoview.h"
 #include "boost_control.h"
 #include "fan_control.h"
+#include "ac_control.h"
 #if EFI_MC33816
  #include "mc33816.h"
 #endif // EFI_MC33816
@@ -99,8 +100,11 @@ trigger_type_e getVvtTriggerType(vvt_mode_e vvtMode) {
 		return TT_FORD_ST170;
 	case VVT_BARRA_3_PLUS_1:
 		return TT_VVT_BARRA_3_PLUS_1;
+	case VVT_NISSAN_VQ:
+		return TT_VVT_NISSAN_VQ;
 	default:
-		return TT_ONE;
+		firmwareError(OBD_PCM_Processor_Fault, "getVvtTriggerType for %s", getVvt_mode_e(vvtMode));
+		return TT_ONE; // we have to return something for the sake of -Werror=return-type
 	}
 }
 
@@ -229,7 +233,8 @@ void Engine::periodicSlowCallback(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	runHardcodedFsio(PASS_ENGINE_PARAMETER_SIGNATURE);
 #endif /* EFI_FSIO */
 
-	updateFans(PASS_ENGINE_PARAMETER_SIGNATURE);
+	bool acActive = updateAc(PASS_ENGINE_PARAMETER_SIGNATURE);
+	updateFans(acActive PASS_ENGINE_PARAMETER_SUFFIX);
 
 	updateGppwm();
 

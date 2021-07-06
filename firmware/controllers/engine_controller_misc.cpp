@@ -14,7 +14,6 @@ EXTERN_ENGINE;
 
 extern ButtonDebounce startStopButtonDebounce;
 
-#if ENABLE_PERF_TRACE
 static uint8_t nextThreadId = 0;
 void threadInitHook(void* vtp) {
 	// No lock required, this is already under lock
@@ -22,6 +21,7 @@ void threadInitHook(void* vtp) {
 	tp->threadId = ++nextThreadId;
 }
 
+#if ENABLE_PERF_TRACE
 void irqEnterHook() {
 	perfEventBegin(PE::ISR);
 }
@@ -35,7 +35,6 @@ void contextSwitchHook() {
 }
 
 #else
-void threadInitHook(void*) {}
 void irqEnterHook() {}
 void irqExitHook() {}
 void contextSwitchHook() {}

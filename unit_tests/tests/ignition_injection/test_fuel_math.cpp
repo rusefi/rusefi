@@ -115,7 +115,7 @@ TEST(AirmassModes, VeOverride) {
 	struct DummyAirmassModel : public AirmassVeModelBase {
 		DummyAirmassModel(const ValueProvider3D& veTable) : AirmassVeModelBase(veTable) {}
 
-		AirmassResult getAirmass(int rpm) const override {
+		AirmassResult getAirmass(int rpm) override {
 			// Default load value 10, will be overriden
 			getVe(rpm, 10.0f);
 

@@ -199,6 +199,7 @@ enable2ndByteCanID = false
 ;      ind_map_error   = bits,    U32,      0,  [20:20], "true", "false";
 
       ind_iat_error   = bits,    U32,      0,  [21:21], "true", "false";
+	  acState         = bits,    U32,      0,  [22:22], "true", "false";
       ind_isTriggerError = bits, U32,      0,  [23:23], "true", "false";
       ind_hasFatalError=bits,    U32,      0,  [24:24], "true", "false";
 	  ind_isWarnNow    =bits,    U32,      0,  [25:25], "true", "false";
@@ -818,12 +819,12 @@ enable2ndByteCanID = false
       yBins       = boostTpsBins,  TPSValue
       zBins       = boostTableClosedLoop
 
-   table = vvtTable1Tbl,  vvtTable1Map,  "vvt Table #1",   1
+   table = vvtTable1Tbl,  vvtTable1Map,  "vvt Table Intake",   1
       xBins       = vvtTable1RpmBins,  RPMValue
       yBins       = vvtTable1LoadBins,  fuelingLoad
       zBins       = vvtTable1
 
-   table = vvtTable2Tbl,  vvtTable2Map,  "vvt Table #2",   1
+   table = vvtTable2Tbl,  vvtTable2Map,  "vvt Table Exhaust",   1
       xBins       = vvtTable2RpmBins,  RPMValue
       yBins       = vvtTable2LoadBins,  fuelingLoad
       zBins       = vvtTable2
@@ -1203,7 +1204,8 @@ gaugeCategory = DynoView
     indicator = { clutchUpState }, "clutch",   "cltch Up",   white, black, red,   black
     indicator = { clutchDownState }, "clutch",   "cltch Down",   white, black, yellow,   black
     indicator = { brakePedalIndicator }, "brake",   "brake down",   white, black, red,   black
-    indicator = { acSwitchState }, "AC off",   "AC on",   white, black, blue,   white
+    indicator = { acSwitchState }, "AC switch off", "AC switch on", white, black, blue, white
+	indicator = { acState }, "AC off", "AC on", white, black, blue, white
 	indicator = { isIdleClosedLoop }, "not idling", "idling", white, black, green, black
 	indicator = { isIdleCoasting }, "not coasting", "coasting", white, black, green, black
 
@@ -1392,6 +1394,7 @@ menuDialog = main
 		subMenu = starterRelay,				"Starter Disable relay"
 		subMenu = fuelPump,					"Fuel pump"
 		subMenu = fanSetting,				"Fan"
+		subMenu = acSettings,				"Air Conditioning"
 		subMenu = tachSettings,				"Tachometer"
 		subMenu = malfunction,				"Check engine light"
 		subMenu = statusLeds,				"Status LEDs"
@@ -1686,22 +1689,22 @@ cmd_test_check_engine_light  	= "@@TS_IO_TEST_COMMAND_char@@@@CMD_TS_BENCH_CATEG
 cmd_test_idle_valve          	= "@@TS_IO_TEST_COMMAND_char@@@@CMD_TS_BENCH_CATEGORY_16_hex@@@@CMD_TS_BENCH_IDLE_VALVE_16_hex@@"
 cmd_test_hpfp_valve          	= "@@TS_IO_TEST_COMMAND_char@@@@CMD_TS_BENCH_CATEGORY_16_hex@@@@CMD_TS_BENCH_HPFP_VALVE_16_hex@@"
 
-cmd_calibrate_tps_1_closed   = "@@TS_IO_TEST_COMMAND_char@@\x00\x14\x00\x02"
-cmd_calibrate_tps_1_wot      = "@@TS_IO_TEST_COMMAND_char@@\x00\x14\x00\x03"
-cmd_calibrate_tps_2_closed   = "@@TS_IO_TEST_COMMAND_char@@\x00\x14\x00\x04"
-cmd_calibrate_tps_2_wot      = "@@TS_IO_TEST_COMMAND_char@@\x00\x14\x00\x05"
-cmd_calibrate_pedal_up       = "@@TS_IO_TEST_COMMAND_char@@\x00\x14\x00\x06"
-cmd_calibrate_pedal_down     = "@@TS_IO_TEST_COMMAND_char@@\x00\x14\x00\x07"
-cmd_tle8888_init     		 = "@@TS_IO_TEST_COMMAND_char@@\x00\x14\x00\x08"
-cmd_write_config     		 = "@@TS_IO_TEST_COMMAND_char@@\x00\x14\x00\x0A"
-cmd_etb_autotune             = "@@TS_IO_TEST_COMMAND_char@@\x00\x14\x00\x0C"
-cmd_enable_self_stim         = "@@TS_IO_TEST_COMMAND_char@@\x00\x14\x00\x0D"
-cmb_etb_auto_calibrate       = "@@TS_IO_TEST_COMMAND_char@@\x00\x14\x00\x0E"
-cmd_disable_self_stim        = "@@TS_IO_TEST_COMMAND_char@@\x00\x14\x00\x0F"
-cmd_etb_autotune_stop        = "@@TS_IO_TEST_COMMAND_char@@\x00\x14\x00\x10"
-cmb_etb_auto_calibrate_2     = "@@TS_IO_TEST_COMMAND_char@@\x00@@CMD_TS_X14_16_hex@@\x00\x11"
-cmd_wideband_firmare_update  = "@@TS_IO_TEST_COMMAND_char@@\x00@@CMD_TS_X14_16_hex@@\x00\x12"
-cmd_enable_ext_stim          = "@@TS_IO_TEST_COMMAND_char@@\x00@@CMD_TS_X14_16_hex@@\x00\x13"
+cmd_calibrate_tps_1_closed   = "@@TS_IO_TEST_COMMAND_char@@@@CMD_TS_X14_16_hex@@\x00\x02"
+cmd_calibrate_tps_1_wot      = "@@TS_IO_TEST_COMMAND_char@@@@CMD_TS_X14_16_hex@@\x00\x03"
+cmd_calibrate_tps_2_closed   = "@@TS_IO_TEST_COMMAND_char@@@@CMD_TS_X14_16_hex@@\x00\x04"
+cmd_calibrate_tps_2_wot      = "@@TS_IO_TEST_COMMAND_char@@@@CMD_TS_X14_16_hex@@\x00\x05"
+cmd_calibrate_pedal_up       = "@@TS_IO_TEST_COMMAND_char@@@@CMD_TS_X14_16_hex@@\x00\x06"
+cmd_calibrate_pedal_down     = "@@TS_IO_TEST_COMMAND_char@@@@CMD_TS_X14_16_hex@@\x00\x07"
+cmd_tle8888_init     		 = "@@TS_IO_TEST_COMMAND_char@@@@CMD_TS_X14_16_hex@@\x00\x08"
+cmd_write_config     		 = "@@TS_IO_TEST_COMMAND_char@@@@CMD_TS_X14_16_hex@@\x00\x0A"
+cmd_etb_autotune             = "@@TS_IO_TEST_COMMAND_char@@@@CMD_TS_X14_16_hex@@\x00\x0C"
+cmd_enable_self_stim         = "@@TS_IO_TEST_COMMAND_char@@@@CMD_TS_X14_16_hex@@\x00\x0D"
+cmb_etb_auto_calibrate       = "@@TS_IO_TEST_COMMAND_char@@@@CMD_TS_X14_16_hex@@\x00\x0E"
+cmd_disable_self_stim        = "@@TS_IO_TEST_COMMAND_char@@@@CMD_TS_X14_16_hex@@\x00\x0F"
+cmd_etb_autotune_stop        = "@@TS_IO_TEST_COMMAND_char@@@@CMD_TS_X14_16_hex@@\x00\x10"
+cmb_etb_auto_calibrate_2     = "@@TS_IO_TEST_COMMAND_char@@@@CMD_TS_X14_16_hex@@\x00\x11"
+cmd_wideband_firmare_update  = "@@TS_IO_TEST_COMMAND_char@@@@CMD_TS_X14_16_hex@@\x00\x12"
+cmd_enable_ext_stim          = "@@TS_IO_TEST_COMMAND_char@@@@CMD_TS_X14_16_hex@@\x00\x13"
 
 cmd_set_wideband_idx_0       = "@@TS_IO_TEST_COMMAND_char@@\x00\x15\x00\x00"
 cmd_set_wideband_idx_1       = "@@TS_IO_TEST_COMMAND_char@@\x00\x15\x00\x01"
@@ -1866,10 +1869,10 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 	    field = "Cam mode (exhaust cams)",				    vvtMode2, {trigger_type != @@TT_TT_MAZDA_MIATA_NA@@}
 	    field = "VVT use only rising edge",					vvtCamSensorUseRise, {trigger_type != @@TT_TT_MAZDA_MIATA_NA@@}
 	    field = "#Set offset so VVT indicates 0 degrees in default position"
-		field = "VVT offset bank 1 intake",				vvtOffset
-		;field = "VVT offset bank 1 exhaust",			vvtOffset2
-		;field = "VVT offset bank 2 intake",			vvtOffset3
-		;field = "VVT offset bank 2 exhaust",			vvtOffset4
+		field = "VVT offset bank 1 intake",				vvtOffsets1
+		field = "VVT offset bank 1 exhaust",			vvtOffsets2
+		field = "VVT offset bank 2 intake",			    vvtOffsets3
+		field = "VVT offset bank 2 exhaust",			vvtOffsets4
 	    field = "Print verbose VVT sync details to console",verboseVVTDecoding
 	    field = "Print verbose trigger sync to console",   verboseTriggerSynchDetails
 	    field = "Do not print messages in case of sync error",  silentTriggerError
@@ -2647,6 +2650,7 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 		field = "TPS threshold",	idlePidDeactivationTpsThreshold
 		field = "RPM upper limit",	idlePidRpmUpperLimit
 		field = "RPM deadzone",	idlePidRpmDeadZone
+		field = "Max vehicle speed", maxIdleVss
 
 	dialog = idleExtra, "Extra Idle Features"
 		field = "Use idle ignition table",	useSeparateAdvanceForIdle
@@ -2687,6 +2691,7 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 		field = "On temperature",					fanOnTemperature
 		field = "Off temperature",					fanOffTemperature
 		field = "Enable with AC",					enableFan1WithAc
+		field = "Disable when engine stopped",		disableFan1WhenStopped
 
 	dialog = fan2Settings, "Fan 2"
 		field = "Pin",								fan2Pin
@@ -2694,15 +2699,18 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 		field = "On temperature",					fan2OnTemperature
 		field = "Off temperature",					fan2OffTemperature
 		field = "Enable with AC",					enableFan2WithAc
+		field = "Disable when engine stopped",		disableFan2WhenStopped
 
 	dialog = acSettings, "A/C Settings"
 		field = "A/C Relay",						acRelayPin
 		field = "A/C Relay Mode",					acRelayPinMode
+		field = "Max RPM",						maxAcRpm
+		field = "Max CLT",						maxAcClt
+		field = "Max TPS",						maxAcTps
 
 	dialog = fanSetting, "Fan Settings"
 		panel = fan1Settings
 		panel = fan2Settings
-		panel = acSettings
 
 	dialog = fuelPump, "Fuel Pump"
 		field = "Pin",						fuelPumpPin
@@ -2963,26 +2971,24 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 		field = "RX pin",                               binarySerialRxPin, {useSerialPort == 1}
 
 	dialog = canBus, "CAN Bus"
-		field = "Can Read Enabled",						canReadEnabled
-		field = "Can Write Enabled",					canWriteEnabled
-	    field = "consumeObdSensors",                    consumeObdSensors, { canReadEnabled == 1 && canWriteEnabled == 1}
-		field = "Can Nbc Type",							canNbcType
-		field = "Can Baud Rate",						canBaudRate
+		field = "CAN read enabled",						canReadEnabled
+		field = "CAN write enabled",					canWriteEnabled
+		field = "CAN bitrate",							canBaudRate
+		field = "CAN dash type",						canNbcType
 		field = "Enable rusEFI CAN broadcast",			enableVerboseCanTx
-		field = "use FSIO Table CAN Sniffing Filtering",useFSIOTableForCanSniffingFiltering
 		field = "rusEFI CAN data base address",			verboseCanBaseAddress
-		field = "Can Sleep Period",						canSleepPeriodMs
+		field = "rusEFI CAN data period",				canSleepPeriodMs
 		field = "RX pin",								canRxPin @@if_ts_show_can_pins
 		field = "TX pin",								canTxPin @@if_ts_show_can_pins
 
 	dialog = canBus2, "Secondary CAN Bus"
-		field = "Can Read Enabled",						can2ReadEnabled
-		field = "Can Write Enabled",					can2WriteEnabled
-		field = "Can Nbc Type",							can2NbcType
-		field = "Can Baud Rate",						can2BaudRate
+		field = "CAN read enabled",						can2ReadEnabled
+		field = "CAN write enabled",					can2WriteEnabled
+		field = "CAN bitrate",							can2BaudRate
+		field = "CAN dash type",						can2NbcType
 		field = "Enable rusEFI CAN broadcast",			enableVerboseCan2Tx
 		field = "rusEFI CAN data base address",			verboseCan2BaseAddress
-		field = "Can Sleep Period",						can2SleepPeriodMs
+		field = "rusEFI CAN data period",				can2SleepPeriodMs
 		field = "RX pin",								can2RxPin @@if_ts_show_can_pins
 		field = "TX pin",								can2TxPin @@if_ts_show_can_pins
 
@@ -3570,11 +3576,14 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 		field = "Ignition Math Logic @",				ignMathCalculateAtIndex
 		field = "MAP Averaging Logic @",				mapAveragingSchedulingAtIndex
 		field = "showHumanReadableWarning (affects Burn)",	showHumanReadableWarning
+		field = "Warning Message",                      warning_message
 		field = "Ford redundant TPS mode",				useFordRedundantTps
+		field = "consumeObdSensors",                    consumeObdSensors, { canReadEnabled == 1 && canWriteEnabled == 1}
+		field = "use FSIO Table CAN Sniffing Filtering",useFSIOTableForCanSniffingFiltering
 
 
        help = helpGeneral, "rusEFI General Help"
-        webHelp = "http://www.rusefi.com/"
+        webHelp = @@MAIN_HELP_URL@@
         text = "<img src='https://rusefi.com/style/logo_100.gif'>"
 
 	dialog = gppwm1left, ""

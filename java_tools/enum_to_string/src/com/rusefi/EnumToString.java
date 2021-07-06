@@ -29,6 +29,8 @@ public class EnumToString {
     private final static String KEY_INPUT_PATH = "-enumInputPath";
     public final static String KEY_ENUM_INPUT_FILE = "-enumInputFile";
     private final static String KEY_OUTPUT = "-outputPath";
+    private final static String KEY_OUTPUT_FILE = "-generatedFile";
+    private static String fileSuffix = "enums";
 
     public static void main(String[] args) throws IOException {
         if (args.length < 4) {
@@ -49,6 +51,8 @@ public class EnumToString {
             } else if (key.equals(KEY_ENUM_INPUT_FILE)) {
                 String headerInputFile = args[i + 1];
                 consumeFile(enumsReader, inputPath, headerInputFile);
+            } else if (key.equals(KEY_OUTPUT_FILE)) {
+                fileSuffix = args[i + 1];
             } else if (key.equals(KEY_OUTPUT)) {
                 outputPath = args[i + 1];
             }
@@ -69,7 +73,8 @@ public class EnumToString {
         headerFileContent.insert(0, bothFilesHeader.toString());
 
         new File(outputPath).mkdirs();
-        writeCppAndHeaderFiles(outputPath + File.separator + "auto_generated_enums");
+        writeCppAndHeaderFiles(outputPath + File.separator + "auto_generated_" +
+                fileSuffix);
         SystemOut.close();
     }
 

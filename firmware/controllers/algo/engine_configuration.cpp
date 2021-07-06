@@ -50,6 +50,7 @@
 #include "ford_1995_inline_6.h"
 
 #include "nissan_primera.h"
+#include "nissan_vq.h"
 #include "honda_accord.h"
 #include "GY6_139QMB.h"
 
@@ -497,7 +498,6 @@ static void setDefaultEngineConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	engineConfiguration->canSleepPeriodMs = 50;
 	engineConfiguration->canReadEnabled = true;
 	engineConfiguration->canWriteEnabled = true;
-	engineConfiguration->canNbcType = CAN_BUS_MAZDA_RX8;
 
 	// Don't enable, but set default address
 	engineConfiguration->verboseCanBaseAddress = CAN_DEFAULT_BASE;
@@ -515,8 +515,9 @@ static void setDefaultEngineConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	engineConfiguration->idlePidRpmDeadZone = 50;
 	engineConfiguration->startOfCrankingPrimingPulse = 0;
 
-	engineConfiguration->acCutoffLowRpm = 700;
-	engineConfiguration->acCutoffHighRpm = 5000;
+	engineConfiguration->maxAcRpm = 5000;
+	engineConfiguration->maxAcClt = 100;
+	engineConfiguration->maxAcTps = 75;
 
 	initTemperatureCurve(IAT_FUEL_CORRECTION_CURVE, 1);
 
@@ -858,6 +859,7 @@ void resetConfigurationExt(configuration_callback_t boardCallback, engine_type_e
 // todo: is it time to replace MICRO_RUS_EFI, PROTEUS, PROMETHEUS_DEFAULTS with MINIMAL_PINS? maybe rename MINIMAL_PINS to DEFAULT?
 	case PROTEUS_DEFAULTS:
 	case PROMETHEUS_DEFAULTS:
+	case HELLEN_128_MERCEDES:
 	case MINIMAL_PINS:
 		// all basic settings are already set in prepareVoidConfiguration(), no need to set anything here
 		// nothing to do - we do it all in setBoardDefaultConfiguration
@@ -942,9 +944,10 @@ void resetConfigurationExt(configuration_callback_t boardCallback, engine_type_e
 	case HELLEN72_ETB:
 		setHellen72etb(PASS_CONFIG_PARAMETER_SIGNATURE);
 		break;
-	case HELLEN_128_MERCEDES:
-	case HELLEN_121_VAG:
 	case HELLEN_121_NISSAN:
+		setHellen121nissan(PASS_CONFIG_PARAMETER_SIGNATURE);
+		break;
+	case HELLEN_121_VAG:
 	case HELLEN_55_BMW:
 	case HELLEN_88_BMW:
 	case HELLEN_134_BMW:

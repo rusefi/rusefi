@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Wed Jun 23 21:06:20 UTC 2021
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Mon Jul 05 23:54:58 UTC 2021
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -689,11 +689,13 @@ struct engine_configuration_s {
 	offset 76 bit 5 */
 	bool enableFan2WithAc : 1;
 	/**
+	 * Inhibit operation of this fan while the engine is not running.
 	offset 76 bit 6 */
-	bool unused_294_6 : 1;
+	bool disableFan1WhenStopped : 1;
 	/**
+	 * Inhibit operation of this fan while the engine is not running.
 	offset 76 bit 7 */
-	bool unused_294_7 : 1;
+	bool disableFan2WhenStopped : 1;
 	/**
 	offset 76 bit 8 */
 	bool unused_294_8 : 1;
@@ -959,10 +961,11 @@ struct engine_configuration_s {
 	 */
 	int8_t gapTrackingLengthOverride;
 	/**
-	unused
+	 * Above this speed, disable closed loop idle control. Set to 0 to disable (allow closed loop idle at any speed).
+	kph
 	 * offset 445
 	 */
-	int8_t unusedOldIgnitionOffset[1];
+	uint8_t maxIdleVss;
 	/**
 	 * Expected oil pressure after starting the engine. If oil pressure does not reach this level within 5 seconds of engine start, fuel will be cut. Set to 0 to disable and always allow starting.
 	kPa
@@ -2130,10 +2133,21 @@ struct engine_configuration_s {
 	 */
 	output_pin_e luaOutputPins[LUA_PWM_COUNT];
 	/**
-	units
+	 * Angle between cam sensor and VVT zero position
+	 * set vvt_offset X
+	value
 	 * offset 1228
 	 */
-	int unusedAtOldBoardConfigurationEnd[57];
+	float vvtOffsets[CAM_INPUTS_COUNT];
+	/**
+	 * offset 1244
+	 */
+	float vvtOffsetsPadding[CAM_INPUTS_COUNT_padding];
+	/**
+	units
+	 * offset 1244
+	 */
+	int unusedAtOldBoardConfigurationEnd[53];
 	/**
 	kg
 	 * offset 1456
@@ -2436,15 +2450,13 @@ struct engine_configuration_s {
 	 */
 	int ignMathCalculateAtIndex;
 	/**
-	RPM
 	 * offset 1492
 	 */
-	int16_t acCutoffLowRpm;
+	int16_t unused1492;
 	/**
-	RPM
 	 * offset 1494
 	 */
-	int16_t acCutoffHighRpm;
+	int16_t unused1494;
 	/**
 	 * Extra idle target speed when A/C is enabled. Some cars need the extra speed to keep the AC efficient while idling.
 	RPM
@@ -2528,10 +2540,23 @@ struct engine_configuration_s {
 	 */
 	float tachPulseDuractionMs;
 	/**
-	units
+	 * Above this RPM, disable AC. Set to 0 to disable check.
+	rpm
 	 * offset 1708
 	 */
-	int unused1708;
+	uint16_t maxAcRpm;
+	/**
+	 * Above this TPS, disable AC. Set to 0 to disable check.
+	%
+	 * offset 1710
+	 */
+	uint8_t maxAcTps;
+	/**
+	 * Above this CLT, disable AC to prevent overheating the engine. Set to 0 to disable check.
+	deg C
+	 * offset 1711
+	 */
+	uint8_t maxAcClt;
 	/**
 	 * Length of time the deposited wall fuel takes to dissipate after the start of acceleration. 
 	Seconds
@@ -2773,12 +2798,10 @@ struct engine_configuration_s {
 	 */
 	float tpsAccelEnrichmentThreshold;
 	/**
-	 * Angle between cam sensor and VVT zero position
-	 * set vvt_offset X
-	value
+	v
 	 * offset 2052
 	 */
-	float vvtOffset;
+	float unusedVvtOffsetWasHere;
 	/**
 	cycles
 	 * offset 2056
@@ -2904,76 +2927,76 @@ struct engine_configuration_s {
 	bool unused1130 : 1;
 	/**
 	offset 2116 bit 8 */
-	bool unusedBit_494_8 : 1;
+	bool unusedBit_498_8 : 1;
 	/**
 	offset 2116 bit 9 */
-	bool unusedBit_494_9 : 1;
+	bool unusedBit_498_9 : 1;
 	/**
 	offset 2116 bit 10 */
-	bool unusedBit_494_10 : 1;
+	bool unusedBit_498_10 : 1;
 	/**
 	offset 2116 bit 11 */
-	bool unusedBit_494_11 : 1;
+	bool unusedBit_498_11 : 1;
 	/**
 	offset 2116 bit 12 */
-	bool unusedBit_494_12 : 1;
+	bool unusedBit_498_12 : 1;
 	/**
 	offset 2116 bit 13 */
-	bool unusedBit_494_13 : 1;
+	bool unusedBit_498_13 : 1;
 	/**
 	offset 2116 bit 14 */
-	bool unusedBit_494_14 : 1;
+	bool unusedBit_498_14 : 1;
 	/**
 	offset 2116 bit 15 */
-	bool unusedBit_494_15 : 1;
+	bool unusedBit_498_15 : 1;
 	/**
 	offset 2116 bit 16 */
-	bool unusedBit_494_16 : 1;
+	bool unusedBit_498_16 : 1;
 	/**
 	offset 2116 bit 17 */
-	bool unusedBit_494_17 : 1;
+	bool unusedBit_498_17 : 1;
 	/**
 	offset 2116 bit 18 */
-	bool unusedBit_494_18 : 1;
+	bool unusedBit_498_18 : 1;
 	/**
 	offset 2116 bit 19 */
-	bool unusedBit_494_19 : 1;
+	bool unusedBit_498_19 : 1;
 	/**
 	offset 2116 bit 20 */
-	bool unusedBit_494_20 : 1;
+	bool unusedBit_498_20 : 1;
 	/**
 	offset 2116 bit 21 */
-	bool unusedBit_494_21 : 1;
+	bool unusedBit_498_21 : 1;
 	/**
 	offset 2116 bit 22 */
-	bool unusedBit_494_22 : 1;
+	bool unusedBit_498_22 : 1;
 	/**
 	offset 2116 bit 23 */
-	bool unusedBit_494_23 : 1;
+	bool unusedBit_498_23 : 1;
 	/**
 	offset 2116 bit 24 */
-	bool unusedBit_494_24 : 1;
+	bool unusedBit_498_24 : 1;
 	/**
 	offset 2116 bit 25 */
-	bool unusedBit_494_25 : 1;
+	bool unusedBit_498_25 : 1;
 	/**
 	offset 2116 bit 26 */
-	bool unusedBit_494_26 : 1;
+	bool unusedBit_498_26 : 1;
 	/**
 	offset 2116 bit 27 */
-	bool unusedBit_494_27 : 1;
+	bool unusedBit_498_27 : 1;
 	/**
 	offset 2116 bit 28 */
-	bool unusedBit_494_28 : 1;
+	bool unusedBit_498_28 : 1;
 	/**
 	offset 2116 bit 29 */
-	bool unusedBit_494_29 : 1;
+	bool unusedBit_498_29 : 1;
 	/**
 	offset 2116 bit 30 */
-	bool unusedBit_494_30 : 1;
+	bool unusedBit_498_30 : 1;
 	/**
 	offset 2116 bit 31 */
-	bool unusedBit_494_31 : 1;
+	bool unusedBit_498_31 : 1;
 	/**
 	 * set can_mode X
 	 * offset 2120
@@ -4227,4 +4250,4 @@ struct persistent_config_s {
 };
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Wed Jun 23 21:06:20 UTC 2021
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Mon Jul 05 23:54:58 UTC 2021

@@ -33,7 +33,7 @@ typedef enum {
 	// 6 cylinder
 	FO_1_5_3_6_2_4 = 4,
 	FO_1_4_2_5_3_6 = 7,
-	FO_1_2_3_4_5_6 = 9,
+	FO_1_2_3_4_5_6 = 9, // all Nissan v6
 	FO_1_6_3_2_5_4 = 13, // EG33
 
 	// todo: one day we shall support 7 cylinder radial, probably not before one actually approaches us

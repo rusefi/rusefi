@@ -86,7 +86,7 @@ TEST(trigger, testCamInput) {
 	setOperationMode(engineConfiguration, FOUR_STROKE_CRANK_SENSOR);
 	engineConfiguration->useOnlyRisingEdgeForTrigger = true;
 	engineConfiguration->vvtMode[0] = VVT_FIRST_HALF;
-	engineConfiguration->vvtOffset = 360;
+	engineConfiguration->vvtOffsets[0] = 360;
 	eth.setTriggerType(TT_ONE PASS_ENGINE_PARAMETER_SUFFIX);
 	engineConfiguration->camInputs[0] = GPIOA_10; // we just need to indicate that we have CAM
 

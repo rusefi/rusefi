@@ -163,9 +163,6 @@ void setBoardDefaultConfiguration(void) {
 
 	CONFIG(enableSoftwareKnock) = true;
 
-	engineConfiguration->canTxPin = GPIOD_1;
-	engineConfiguration->canRxPin = GPIOD_0;
-
 	engineConfiguration->fuelPumpPin = GPIOH_14;	// 65 - Fuel Pump
 	engineConfiguration->malfunctionIndicatorPin = GPIOG_4; // 47 - CEL
 	engineConfiguration->tachOutputPin = GPIOD_13; // 37 - TACH

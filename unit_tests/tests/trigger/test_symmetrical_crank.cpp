@@ -34,9 +34,9 @@ TEST(engine, testSymmetricalCrank) {
 	eth.fireFall(mult * 384);
 	eth.fireRise(mult * 16);
 	eth.fireFall(mult * 304);
-	ASSERT_FALSE(engine->triggerCentral.triggerState.shaft_is_synchronized);
+	ASSERT_FALSE(engine->triggerCentral.triggerState.getShaftSynchronized());
 	eth.fireRise(mult * 16);
-	ASSERT_TRUE(engine->triggerCentral.triggerState.shaft_is_synchronized);
+	ASSERT_TRUE(engine->triggerCentral.triggerState.getShaftSynchronized());
 
 	ASSERT_EQ( 0,  GET_RPM()) << "RPM#0";
 
