@@ -149,9 +149,6 @@ void setBoardDefaultConfiguration(void) {
 
 	CONFIG(enableSoftwareKnock) = true;
 
-	engineConfiguration->canTxPin = GPIOD_1;
-	engineConfiguration->canRxPin = GPIOD_0;
-
 	engineConfiguration->acRelayPin = GPIOH_15;
 	engineConfiguration->acSwitch = GPIOB_0;
 	engineConfiguration->acSwitchMode = PI_PULLUP;
