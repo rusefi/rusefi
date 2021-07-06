@@ -5,6 +5,7 @@
 
 #include "gtest/gtest.h"
 
+using ::testing::_;
 using ::testing::StrictMock;
 
 class MockInjectorModel : public InjectorModelBase {
@@ -13,6 +14,7 @@ public:
 	MOCK_METHOD(float, getInjectorMassFlowRate, (), (const, override));
 	MOCK_METHOD(float, getInjectorFlowRatio, (), (const, override));
 	MOCK_METHOD(expected<float>, getAbsoluteRailPressure, (), (const, override));
+	MOCK_METHOD(float, correctShortPulse, (float baseDuration), (const, override));
 };
 
 TEST(InjectorModel, Prepare) {
@@ -28,9 +30,12 @@ TEST(InjectorModel, getInjectionDuration) {
 	StrictMock<MockInjectorModel> dut;
 
 	EXPECT_CALL(dut, getDeadtime())
-		.WillRepeatedly(Return(2.0f));
+		.WillOnce(Return(2.0f));
 	EXPECT_CALL(dut, getInjectorMassFlowRate())
-		.WillRepeatedly(Return(4.8f)); // 400cc/min
+		.WillOnce(Return(4.8f)); // 400cc/min
+	EXPECT_CALL(dut, correctShortPulse(_))
+		.Times(2)
+		.WillRepeatedly([](float b) { return b; });
 
 	dut.prepare();
 
