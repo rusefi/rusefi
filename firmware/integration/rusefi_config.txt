@@ -628,7 +628,7 @@ custom ignition_mode_e 4 bits, U32, @OFFSET@, [0:1], "Single Coil", "Individual 
 ignition_mode_e ignitionMode;+Single coil = distributor\nIndividual coils = one coil per cylinder (COP, coil-near-plug), requires sequential mode\nWasted spark = Fires pairs of cylinders together, either one coil per pair of cylinders or one coil per cylinder\nTwo distributors = A pair of distributors, found on some BMW, Toyota and other engines\nset ignition_mode X
 
 int8_t gapTrackingLengthOverride;;"count", 1, 0, 0, @@GAP_TRACKING_LENGTH@@, 0
- int8_t[1] unusedOldIgnitionOffset;;"unused", 1, 0, 0, 1, 0
+ uint8_t maxIdleVss;+Above this speed, disable closed loop idle control. Set to 0 to disable (allow closed loop idle at any speed).;"kph", 1, 0, 0, 100, 0
  uint16_t minOilPressureAfterStart;+Expected oil pressure after starting the engine. If oil pressure does not reach this level within 5 seconds of engine start, fuel will be cut. Set to 0 to disable and always allow starting.;"kPa", 1, 0, 0, 1000, 0
 
 custom timing_mode_e 4 bits, U32, @OFFSET@, [0:0], "dynamic", "fixed"
@@ -649,7 +649,7 @@ float fanOffTemperature;+Cooling fan turn-off temperature threshold, in Celsius;
 
 float vehicleSpeedCoef;+This coefficient translates vehicle speed input frequency (in Hz) into vehicle speed, km/h;"coef", 1, 0, 0.01, 2000, 2
 
-custom can_nbc_e 4 bits, U32, @OFFSET@, [0:4], "None", "FIAT", "VAG", "MAZDA RX8", "BMW", "W202", "BMW E90", "Haltech", "VAG MQB", "type 9", "type 10", "INVALID", "INVALID"
+custom can_nbc_e 4 bits, U32, @OFFSET@, [0:4], "None", "FIAT", "VAG", "MAZDA RX8", "BMW", "W202", "BMW E90", "Haltech", "VAG MQB", "Nissan VQ", "type 10", "INVALID", "INVALID"
 can_nbc_e canNbcType;set can_mode X
 
 int canSleepPeriodMs;CANbus thread period, ms;"ms", 1, 0, 0, 1000, 2
@@ -1152,9 +1152,8 @@ bit unused_1484_bit_31
 
 	int ignMathCalculateAtIndex;+At what trigger index should some ignition-related math be executed? This is a performance trick to reduce load on synchronization trigger callback.;"index", 1, 0, 0, 7000, 0
 
-! todo: start using these parameters!
-	int16_t acCutoffLowRpm;;"RPM", 1, 0, 1, 15000, 0
-	int16_t acCutoffHighRpm;;"RPM", 1, 0, 1, 15000, 0
+	int16_t unused1492;;"", 1, 0, 1, 15000, 0
+	int16_t unused1494;;"", 1, 0, 1, 15000, 0
 	int16_t acIdleRpmBump;+Extra idle target speed when A/C is enabled. Some cars need the extra speed to keep the AC efficient while idling.;"RPM", 1, 0, 0, 1000, 0
 
 	int16_t warningPeriod;set warningPeriod X;"seconds", 1, 0, 0, 60, 0
@@ -1800,6 +1799,7 @@ end_struct
 
 #define ENGINE_MAKE_MAZDA "Mazda"
 #define ENGINE_MAKE_LADA "Lada"
+#define ENGINE_MAKE_NISSAN "Nissan"
 #define ENGINE_MAKE_GM "GM"
 #define ENGINE_MAKE_SUBARU "Subaru"
 #define ENGINE_MAKE_BMW "BMW"

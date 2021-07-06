@@ -206,6 +206,11 @@ void hwHandleVvtCamSignal(trigger_value_e front, efitick_t nowNt, int index DECL
 #endif /* EFI_TUNER_STUDIO */
 	}
 
+	if (index != 0) {
+		// at the moment we use only primary VVT to sync crank phase
+		return;
+	}
+
 	switch(engineConfiguration->vvtMode[camIndex]) {
 	case VVT_2JZ:
 		// we do not know if we are in sync or out of sync, so we have to be looking for both possibilities
@@ -282,9 +287,10 @@ void hwHandleVvtCamSignal(trigger_value_e front, efitick_t nowNt, int index DECL
 		/**
 		 * NB2 is a symmetrical crank, there are four phases total
 		 */
-		while (tc->triggerState.getTotalRevolutionCounter() % 4 != miataNbIndex) {
-			tc->triggerState.incrementTotalEventCounter();
-		}
+		tc->triggerState.syncSymmetricalCrank(4, miataNbIndex);
+		break;
+	case VVT_NISSAN_VQ:
+		tc->triggerState.syncSymmetricalCrank(6, 1);
 		break;
 	default:
 	case VVT_INACTIVE:

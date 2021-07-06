@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Sun Jul 04 03:48:58 UTC 2021
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Mon Jul 05 23:55:33 UTC 2021
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -961,10 +961,11 @@ struct engine_configuration_s {
 	 */
 	int8_t gapTrackingLengthOverride;
 	/**
-	unused
+	 * Above this speed, disable closed loop idle control. Set to 0 to disable (allow closed loop idle at any speed).
+	kph
 	 * offset 445
 	 */
-	int8_t unusedOldIgnitionOffset[1];
+	uint8_t maxIdleVss;
 	/**
 	 * Expected oil pressure after starting the engine. If oil pressure does not reach this level within 5 seconds of engine start, fuel will be cut. Set to 0 to disable and always allow starting.
 	kPa
@@ -2449,15 +2450,13 @@ struct engine_configuration_s {
 	 */
 	int ignMathCalculateAtIndex;
 	/**
-	RPM
 	 * offset 1492
 	 */
-	int16_t acCutoffLowRpm;
+	int16_t unused1492;
 	/**
-	RPM
 	 * offset 1494
 	 */
-	int16_t acCutoffHighRpm;
+	int16_t unused1494;
 	/**
 	 * Extra idle target speed when A/C is enabled. Some cars need the extra speed to keep the AC efficient while idling.
 	RPM
@@ -4245,4 +4244,4 @@ struct persistent_config_s {
 };
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Sun Jul 04 03:48:58 UTC 2021
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Mon Jul 05 23:55:33 UTC 2021

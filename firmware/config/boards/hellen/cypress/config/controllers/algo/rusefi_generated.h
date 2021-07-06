@@ -3,8 +3,6 @@
 //
 
 #define accelerometerSpiDevice_offset 2712
-#define acCutoffHighRpm_offset 1494
-#define acCutoffLowRpm_offset 1492
 #define acFanPin_offset 762
 #define acFanPinMode_offset 763
 #define acIdleExtraMin_offset 761
@@ -178,7 +176,7 @@
 #define can_baudrate_e_auto_enum "B100KBPS", "B250KBPS", "B500KBPS", "B1MBPS"
 #define can_baudrate_e_enum "100kbps", "250kbps", "500kbps", "1Mbps"
 #define CAN_DEFAULT_BASE 0x200
-#define can_nbc_e_auto_enum "CAN_BUS_NBC_NONE", "CAN_BUS_NBC_FIAT", "CAN_BUS_NBC_VAG", "CAN_BUS_MAZDA_RX8", "CAN_BUS_NBC_BMW", "CAN_BUS_W202_C180", "CAN_BUS_BMW_E90", "CAN_BUS_Haltech", "CAN_BUS_MQB"
+#define can_nbc_e_auto_enum "CAN_BUS_NBC_NONE", "CAN_BUS_NBC_FIAT", "CAN_BUS_NBC_VAG", "CAN_BUS_MAZDA_RX8", "CAN_BUS_NBC_BMW", "CAN_BUS_W202_C180", "CAN_BUS_BMW_E90", "CAN_BUS_Haltech", "CAN_BUS_MQB", "CAN_BUS_NISSAN_VQ"
 #define CAN_RX_PREFIX "CAN_rx"
 #define can_vss_nbc_e_auto_enum "BMW_e46", "W202"
 #define canBaudRate_offset 2108
@@ -394,6 +392,7 @@
 #define ENGINE_MAKE_LADA "Lada"
 #define ENGINE_MAKE_MAZDA "Mazda"
 #define ENGINE_MAKE_MERCEDES "Mercedes"
+#define ENGINE_MAKE_NISSAN "Nissan"
 #define ENGINE_MAKE_SUBARU "Subaru"
 #define ENGINE_MAKE_TOYOTA "Toyota"
 #define ENGINE_MAKE_VAG "VAG"
@@ -1156,6 +1155,7 @@
 #define maxAcClt_offset 1711
 #define maxAcRpm_offset 1708
 #define maxAcTps_offset 1710
+#define maxIdleVss_offset 445
 #define maxKnockSubDeg_offset 552
 #define mc33816_cs_offset 3107
 #define mc33816_driven_offset 2607
@@ -1299,8 +1299,8 @@
 #define showHumanReadableWarning_offset 976
 #define showSdCardWarning_offset 76
 #define SIGNATURE_BOARD hellen_cypress
-#define SIGNATURE_DATE 2021.07.04
-#define SIGNATURE_HASH 316352747
+#define SIGNATURE_DATE 2021.07.06
+#define SIGNATURE_HASH 146962148
 #define silentTriggerError_offset 1464
 #define slowAdcAlpha_offset 2088
 #define sparkDwellRpmBins_offset 332
@@ -1653,7 +1653,7 @@
 #define ts_show_spi true
 #define ts_show_trigger_comparator false
 #define ts_show_tunerstudio_port true
-#define TS_SIGNATURE "rusEFI 2021.07.04.hellen_cypress.316352747"
+#define TS_SIGNATURE "rusEFI 2021.07.06.hellen_cypress.146962148"
 #define TS_SINGLE_WRITE_COMMAND 'W'
 #define TS_SINGLE_WRITE_COMMAND_char W
 #define TS_TEST_COMMAND 't'
@@ -1722,6 +1722,8 @@
 #define unused1476b20_offset 1476
 #define unused1476b3_offset 1476
 #define unused1476b8_offset 1476
+#define unused1492_offset 1492
+#define unused1494_offset 1494
 #define unused1756_offset 1756
 #define unused2260_offset 2260
 #define unused2432_offset 2432
@@ -1778,7 +1780,6 @@
 #define unusedBit_498_8_offset 2116
 #define unusedBit_498_9_offset 2116
 #define unusedOldBiquad_offset 2331
-#define unusedOldIgnitionOffset_offset 445
 #define unusedSpiPadding4_offset 2593
 #define unusedSpiPadding8_offset 4010
 #define unusedVvtOffsetWasHere_offset 2052

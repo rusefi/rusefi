@@ -636,6 +636,7 @@
  * @details User fields added to the end of the @p thread_t structure.
  */
 #define CH_CFG_THREAD_EXTRA_FIELDS                                          \
+  unsigned char threadId;                                                   \
   /* Add threads custom fields here.*/
 
 /**
