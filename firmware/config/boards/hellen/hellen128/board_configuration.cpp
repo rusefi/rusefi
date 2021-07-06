@@ -166,10 +166,14 @@ void setBoardDefaultConfiguration(void) {
 
 	engineConfiguration->specs.cylindersCount = 4;
 	engineConfiguration->specs.firingOrder = FO_1_3_4_2;
+	engineConfiguration->specs.displacement = 2.295f;
 
 	engineConfiguration->ignitionMode = IM_INDIVIDUAL_COILS; // IM_WASTED_SPARK
-	engineConfiguration->crankingInjectionMode = IM_SIMULTANEOUS;
-	engineConfiguration->injectionMode = IM_SIMULTANEOUS;//IM_BATCH;// IM_SEQUENTIAL;
+	engineConfiguration->crankingInjectionMode = IM_SEQUENTIAL;
+	engineConfiguration->injectionMode = IM_SEQUENTIAL;//IM_BATCH;// IM_SEQUENTIAL;
+
+	strcpy(CONFIG(engineMake), ENGINE_MAKE_MERCEDES);
+	strcpy(CONFIG(engineCode), "");
 }
 
 /**
