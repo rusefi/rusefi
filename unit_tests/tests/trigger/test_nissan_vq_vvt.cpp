@@ -82,7 +82,7 @@ TEST(nissan, vq_vvt) {
 	}
 	float vvtTimeScale = 1;
 
-	angle_t testVvtOffset = 19;
+	angle_t testVvtOffset = 13;
 
 	{
 		static TriggerWaveform vvt;
@@ -113,7 +113,7 @@ TEST(nissan, vq_vvt) {
 		eth.setTimeAndInvokeEventsUs(head->momentX);
 	}
 
-	ASSERT_EQ(250, GET_RPM());
+	ASSERT_EQ(167, GET_RPM());
 
 	TriggerCentral *tc = &engine->triggerCentral;
 
@@ -121,8 +121,9 @@ TEST(nissan, vq_vvt) {
 	ASSERT_TRUE(tc->vvtState[0][0].getShaftSynchronized());
 	ASSERT_TRUE(tc->vvtState[1][0].getShaftSynchronized());
 
-	ASSERT_NEAR(-testVvtOffset * 1.5, tc->vvtPosition[0][0], EPS2D);
-//	ASSERT_NEAR(-testVvtOffset * 1.5, tc->vvtPosition[1][0], EPS2D);
+	ASSERT_NEAR(-testVvtOffset, tc->vvtPosition[0][0], EPS2D);
+	ASSERT_NEAR(-testVvtOffset, tc->vvtPosition[1][0], EPS2D);
 
-//todo	EXPECT_EQ(0, eth.recentWarnings()->getCount());
+// todo: reducing warning here is a separate story
+	EXPECT_EQ(1, eth.recentWarnings()->getCount());
 }
