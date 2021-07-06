@@ -206,11 +206,6 @@ void hwHandleVvtCamSignal(trigger_value_e front, efitick_t nowNt, int index DECL
 #endif /* EFI_TUNER_STUDIO */
 	}
 
-	if (index != 0) {
-		// at the moment we use only primary VVT to sync crank phase
-		return;
-	}
-
 	switch(engineConfiguration->vvtMode[camIndex]) {
 	case VVT_2JZ:
 		// we do not know if we are in sync or out of sync, so we have to be looking for both possibilities
@@ -247,6 +242,11 @@ void hwHandleVvtCamSignal(trigger_value_e front, efitick_t nowNt, int index DECL
 	tc->vvtPosition[bankIndex][camIndex] = engineConfiguration->vvtOffsets[bankIndex * CAMS_PER_BANK + camIndex] - currentPosition;
 	if (tc->vvtPosition[bankIndex][camIndex] < -ENGINE(engineCycle) / 2 || tc->vvtPosition[bankIndex][camIndex] > ENGINE(engineCycle) / 2) {
 		warning(CUSTOM_ERR_VVT_OUT_OF_RANGE, "Please adjust vvtOffset since position %f", tc->vvtPosition);
+	}
+
+	if (index != 0) {
+		// at the moment we use only primary VVT to sync crank phase
+		return;
 	}
 
 	switch (engineConfiguration->vvtMode[camIndex]) {
