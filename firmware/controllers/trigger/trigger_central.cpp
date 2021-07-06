@@ -501,11 +501,18 @@ bool TriggerNoiseFilter::noiseFilter(efitick_t nowNt,
  * todo: why is this method NOT reciprocal to getRpmMultiplier?!
  */
 int getCrankDivider(operation_mode_e operationMode) {
-	if (operationMode == FOUR_STROKE_CAM_SENSOR || operationMode == TWO_STROKE) {
+	switch (operationMode) {
+	case FOUR_STROKE_CRANK_SENSOR:
+		return 2;
+	case FOUR_STROKE_SYMMETRICAL_CRANK_SENSOR:
+		return SYMMETRICAL_CRANK_SENSOR_DIVIDER;
+	case FOUR_STROKE_THREE_TIMES_CRANK_SENSOR:
+		return SYMMETRICAL_THREE_TIMES_CRANK_SENSOR_DIVIDER;
+	default:
+	case FOUR_STROKE_CAM_SENSOR:
+	case TWO_STROKE:
 		// That's easy - trigger cycle matches engine cycle
 		return 1;
-	} else {
-		return operationMode == FOUR_STROKE_CRANK_SENSOR ? 2 : SYMMETRICAL_CRANK_SENSOR_DIVIDER;
 	}
 }
 
