@@ -230,7 +230,7 @@ IIdleController::Phase IdleController::determinePhase(int rpm, int targetRpm, Se
 
 	// If still in the cranking taper, disable closed loop idle
 	if (crankingTaperFraction < 1) {
-		return Phase::Running;
+		return Phase::CrankToRunTaper;
 	}
 
 	// No other conditions met, we are idling!
@@ -273,12 +273,19 @@ float IdleController::getRunningOpenLoop(float clt, SensorResult tps) const {
 }
 
 float IdleController::getOpenLoop(Phase phase, float clt, SensorResult tps, float crankingTaperFraction) const {
-	float running = getRunningOpenLoop(clt, tps);
 	float cranking = getCrankingOpenLoop(clt);
 
 	// if we're cranking, nothing more to do.
 	if (phase == Phase::Cranking) {
 		return cranking;
+	}
+
+	float running = getRunningOpenLoop(clt, tps);
+
+	if (phase == Phase::CrankToRunTaper) {
+		// Interpolate between cranking and running over a short time
+		// This clamps once you fall off the end, so no explicit check for >1 required
+		return interpolateClamped(0, cranking, 1, running, crankingTaperFraction);
 	}
 
 	// If coasting (and enabled), use the coasting position table instead of normal open loop
@@ -287,9 +294,7 @@ float IdleController::getOpenLoop(Phase phase, float clt, SensorResult tps, floa
 		return interpolate2d(clt, CONFIG(iacCoastingBins), CONFIG(iacCoasting));
 	}
 
-	// Interpolate between cranking and running over a short time
-	// This clamps once you fall off the end, so no explicit check for >1 required
-	return interpolateClamped(0, cranking, 1, running, crankingTaperFraction);
+	return running;
 }
 
 float IdleController::getIdleTimingAdjustment(int rpm) {
