@@ -574,10 +574,8 @@ void proteusBoardTest(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 #endif // HW_PROTEUS
 
 void mreBCM(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
-	for (int i = 0; i < IGNITION_PIN_COUNT;i++) {
+	for (int i = 0; i < MAX_CYLINDER_COUNT;i++) {
 		engineConfiguration->ignitionPins[i] = GPIO_UNASSIGNED;
-	}
-	for (int i = 0; i < INJECTION_PIN_COUNT;i++) {
 		engineConfiguration->injectionPins[i] = GPIO_UNASSIGNED;
 	}
 	engineConfiguration->fanPin = GPIO_UNASSIGNED;
