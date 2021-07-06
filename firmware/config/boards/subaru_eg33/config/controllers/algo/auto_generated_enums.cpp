@@ -1,7 +1,7 @@
 #include "global.h"
 #include "rusefi_enums.h"
 #include "rusefi_hw_enums.h"
-// was generated automatically by rusEFI tool  from rusefi_hw_enums.h // was generated automatically by rusEFI tool  from rusefi_enums.h // by enum2string.jar tool on Mon Jul 05 17:58:14 EDT 2021
+// was generated automatically by rusEFI tool  from rusefi_hw_enums.h // was generated automatically by rusEFI tool  from rusefi_enums.h // by enum2string.jar tool on Tue Jul 06 19:57:21 EDT 2021
 // see also gen_config_and_enums.bat
 
 
@@ -691,8 +691,6 @@ case DBG_ANALOG_INPUTS:
   return "DBG_ANALOG_INPUTS";
 case DBG_ANALOG_INPUTS2:
   return "DBG_ANALOG_INPUTS2";
-case DBG_AUX_PID_1:
-  return "DBG_AUX_PID_1";
 case DBG_AUX_VALVES:
   return "DBG_AUX_VALVES";
 case DBG_BENCH_TEST:
@@ -779,8 +777,20 @@ case DBG_VEHICLE_SPEED_SENSOR:
   return "DBG_VEHICLE_SPEED_SENSOR";
 case DBG_VVT:
   return "DBG_VVT";
+case DBG_VVT_1_PID:
+  return "DBG_VVT_1_PID";
+case DBG_VVT_2_PID:
+  return "DBG_VVT_2_PID";
+case DBG_VVT_3_PID:
+  return "DBG_VVT_3_PID";
+case DBG_VVT_4_PID:
+  return "DBG_VVT_4_PID";
 case Force_4_bytes_size_debug_mode_e:
   return "Force_4_bytes_size_debug_mode_e";
+case MODE_52:
+  return "MODE_52";
+case MODE_53:
+  return "MODE_53";
   }
  return NULL;
 }
