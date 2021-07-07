@@ -362,12 +362,22 @@ void TriggerCentral::validateCamVvtCounters() {
 	}
 }
 
-void TriggerState::incrementTotalEventCounter() {
-	totalRevolutionCounter++;
+bool TriggerState::syncSymmetricalCrank(int mod, int remainder) {
+	bool isSync = false;
+	while (getTotalRevolutionCounter() % mod != remainder) {
+		/**
+		 * we are here if we've detected the cam sensor within the wrong crank phase
+		 * let's increase the trigger event counter, that would adjust the state of
+		 * virtual crank-based trigger
+		 */
+		incrementTotalEventCounter();
+		isSync = true;
+	}
+	return isSync;
 }
 
-bool TriggerState::isEvenRevolution() const {
-	return totalRevolutionCounter & 1;
+void TriggerState::incrementTotalEventCounter() {
+	totalRevolutionCounter++;
 }
 
 bool TriggerState::validateEventCounters(const TriggerWaveform& triggerShape) const {

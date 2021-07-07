@@ -300,7 +300,7 @@ int getCylinderId(int index DECLARE_ENGINE_PARAMETER_SUFFIX) {
 
 	const int firingOrderLength = getFiringOrderLength(PASS_ENGINE_PARAMETER_SIGNATURE);
 
-	if (firingOrderLength < 1 || firingOrderLength > INJECTION_PIN_COUNT) {
+	if (firingOrderLength < 1 || firingOrderLength > MAX_CYLINDER_COUNT) {
 		firmwareError(CUSTOM_ERR_6687, "fol %d", firingOrderLength);
 		return 1;
 	}

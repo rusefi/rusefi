@@ -651,10 +651,6 @@ void initEngineContoller(DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	initCJ125(PASS_ENGINE_PARAMETER_SIGNATURE);
 #endif /* EFI_CJ125 */
 
-
-	// periodic events need to be initialized after fuel&spark pins to avoid a warning
-	initPeriodicEvents(PASS_ENGINE_PARAMETER_SIGNATURE);
-
 	if (hasFirmwareError()) {
 		return;
 	}

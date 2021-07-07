@@ -743,10 +743,8 @@ typedef enum {
 	DBG_EL_ACCEL = 4,
 	DBG_TRIGGER_COUNTERS = 5,
 	DBG_FSIO_ADC = 6,
-	/**
-	 * VVT valve control often uses AUX pid #1
-	 */
-	DBG_AUX_PID_1 = 7,
+
+	DBG_VVT_1_PID = 7,
 	/**
 	 * VVT position debugging - not VVT valve control. See AUX pid #1 debug for valve position.
 	 */
@@ -807,6 +805,11 @@ typedef enum {
 	DBG_RUSEFI_WIDEBAND = 46,
 	DBG_TCU = 47,
 	DBG_LUA = 48,
+	DBG_VVT_2_PID = 49,
+	DBG_VVT_3_PID = 50,
+	DBG_VVT_4_PID = 51,
+	MODE_52 = 52,
+	MODE_53 = 53,
 
 	Force_4_bytes_size_debug_mode_e = ENUM_32_BITS,
 } debug_mode_e;
@@ -938,6 +941,7 @@ typedef enum {
     CAN_BUS_BMW_E90 = 6,
 	CAN_BUS_Haltech = 7,
 	CAN_BUS_MQB = 8,
+	CAN_BUS_NISSAN_VQ = 9,
 
 	Internal_ForceMyEnumIntSize_can_nbc = ENUM_32_BITS,
 } can_nbc_e;

@@ -129,6 +129,8 @@
 #include "trigger_emulator_algo.h"
 #include "rusefi_lua.h"
 
+#include <setjmp.h>
+
 #if EFI_ENGINE_EMULATOR
 #include "engine_emulator.h"
 #endif /* EFI_ENGINE_EMULATOR */
@@ -158,7 +160,7 @@ static void scheduleReboot(void) {
 
 // Returns false if there's an obvious problem with the loaded configuration
 static bool validateConfig() {
-	if (CONFIG(specs.cylindersCount) > minI(INJECTION_PIN_COUNT, IGNITION_PIN_COUNT)) {
+	if (CONFIG(specs.cylindersCount) > MAX_CYLINDER_COUNT) {
 		firmwareError(OBD_PCM_Processor_Fault, "Invalid cylinder count: %d", CONFIG(specs.cylindersCount));
 		return false;
 	}
@@ -227,6 +229,16 @@ static bool validateConfig() {
 	return true;
 }
 
+static jmp_buf jmpEnv;
+void onAssertionFailure() {
+	// There's been an assertion failure: instead of hanging, jump back to where we check
+	// if (setjmp(jmpEnv)) (see below for more complete explanation)
+	longjmp(jmpEnv, 1);
+}
+
+void runRusEfiWithConfig();
+void runMainLoop();
+
 void runRusEfi(void) {
 	efiAssertVoid(CUSTOM_RM_STACK_1, getCurrentRemainingStack() > 512, "init s");
 	assertEngineReference();
@@ -248,9 +260,6 @@ void runRusEfi(void) {
 	// Perform hardware initialization that doesn't need configuration
 	initHardwareNoConfig();
 
-	// Read configuration from flash memory
-	loadConfiguration(PASS_ENGINE_PARAMETER_SIGNATURE);
-
 #if EFI_USB_SERIAL
 	startUsbConsole();
 #endif
@@ -264,6 +273,9 @@ void runRusEfi(void) {
 	 */
 	initializeConsole();
 
+	// Read configuration from flash memory
+	loadConfiguration(PASS_ENGINE_PARAMETER_SIGNATURE);
+
 #if EFI_TUNER_STUDIO
 	startTunerStudioConnectivity();
 #endif /* EFI_TUNER_STUDIO */
@@ -271,10 +283,27 @@ void runRusEfi(void) {
 	// Start hardware serial ports (including bluetooth, if present)
 	startSerialChannels();
 
+	runRusEfiWithConfig();
+
+	runMainLoop();
+}
+
+void runRusEfiWithConfig() {
+	// If some config operation caused an OS assertion failure, return immediately
+	// This sets the "unwind point" that we can jump back to later with longjmp if we have
+	// an assertion failure. If that happens, setjmp() will return non-zero, so we will
+	// return immediately from this function instead of trying to init hardware again (which failed last time)
+	if (setjmp(jmpEnv)) {
+		return;
+	}
+
 	/**
 	 * Initialize hardware drivers
 	 */
 	initHardware();
+
+	// periodic events need to be initialized after fuel&spark pins to avoid a warning
+	initPeriodicEvents(PASS_ENGINE_PARAMETER_SIGNATURE);
 
 #if EFI_FILE_LOGGING
 	initMmcCard();
@@ -314,7 +343,9 @@ void runRusEfi(void) {
 
 		runSchedulingPrecisionTestIfNeeded();
 	}
+}
 
+void runMainLoop() {
 	efiPrintf("Running main loop");
 	main_loop_started = true;
 	/**

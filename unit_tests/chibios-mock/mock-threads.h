@@ -9,9 +9,10 @@ typedef uint32_t systime_t;
 class thread_t {
 public:
 	const char *name;
-	  tfunc_t           funcp;
-	  void              *arg;
+	tfunc_t           funcp;
+	void              *arg;
 
+	unsigned char threadId;
 };
 
 bool chThdShouldTerminateX(void);

@@ -88,8 +88,10 @@ extern WaveChart waveChart;
  * todo: oh this method has only one usage? there must me another very similar method!
  */
 static float getRpmMultiplier(operation_mode_e mode) {
-	if (mode == FOUR_STROKE_SYMMETRICAL_CRANK_SENSOR) {
-		return 2;
+	if (mode == FOUR_STROKE_THREE_TIMES_CRANK_SENSOR) {
+		return SYMMETRICAL_THREE_TIMES_CRANK_SENSOR_DIVIDER / 2;
+	} else if (mode == FOUR_STROKE_SYMMETRICAL_CRANK_SENSOR) {
+		return SYMMETRICAL_CRANK_SENSOR_DIVIDER / 2;
 	} else if (mode == FOUR_STROKE_CAM_SENSOR) {
 		return 0.5;
 	} else if (mode == FOUR_STROKE_CRANK_SENSOR) {

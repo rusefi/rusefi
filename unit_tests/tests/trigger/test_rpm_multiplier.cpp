@@ -37,5 +37,5 @@ TEST(engine, testRpmOfCrankOnly) {
 }
 
 TEST(engine, testRpmOfThreeTimesCrank) {
-	runRpmTest(FOUR_STROKE_THREE_TIMES_CRANK_SENSOR, 375);
+	runRpmTest(FOUR_STROKE_THREE_TIMES_CRANK_SENSOR, 250);
 }

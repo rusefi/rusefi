@@ -81,7 +81,7 @@ static volatile int mapMeasurementsCounter = 0;
 static float v_averagedMapValue;
 
 // allow a bit more smoothing
-#define MAX_MAP_BUFFER_LENGTH (INJECTION_PIN_COUNT * 2)
+#define MAX_MAP_BUFFER_LENGTH (MAX_CYLINDER_COUNT * 2)
 // in MAP units, not voltage!
 static float averagedMapRunningBuffer[MAX_MAP_BUFFER_LENGTH];
 int mapMinBufferLength = 0;
@@ -97,8 +97,8 @@ EXTERN_ENGINE;
 /**
  * here we have averaging start and averaging end points for each cylinder
  */
-static scheduling_s startTimers[INJECTION_PIN_COUNT][2];
-static scheduling_s endTimers[INJECTION_PIN_COUNT][2];
+static scheduling_s startTimers[MAX_CYLINDER_COUNT][2];
+static scheduling_s endTimers[MAX_CYLINDER_COUNT][2];
 
 /**
  * that's a performance optimization: let's not bother averaging

@@ -160,7 +160,7 @@
 #define can_baudrate_e_auto_enum "B100KBPS", "B250KBPS", "B500KBPS", "B1MBPS"
 #define can_baudrate_e_enum "100kbps", "250kbps", "500kbps", "1Mbps"
 #define CAN_DEFAULT_BASE 0x200
-#define can_nbc_e_auto_enum "CAN_BUS_NBC_NONE", "CAN_BUS_NBC_FIAT", "CAN_BUS_NBC_VAG", "CAN_BUS_MAZDA_RX8", "CAN_BUS_NBC_BMW", "CAN_BUS_W202_C180", "CAN_BUS_BMW_E90", "CAN_BUS_Haltech", "CAN_BUS_MQB"
+#define can_nbc_e_auto_enum "CAN_BUS_NBC_NONE", "CAN_BUS_NBC_FIAT", "CAN_BUS_NBC_VAG", "CAN_BUS_MAZDA_RX8", "CAN_BUS_NBC_BMW", "CAN_BUS_W202_C180", "CAN_BUS_BMW_E90", "CAN_BUS_Haltech", "CAN_BUS_MQB", "CAN_BUS_NISSAN_VQ"
 #define CAN_RX_PREFIX "CAN_rx"
 #define can_vss_nbc_e_auto_enum "BMW_e46", "W202"
 #define canBaudRate_offset 2108
@@ -376,6 +376,7 @@
 #define ENGINE_MAKE_LADA "Lada"
 #define ENGINE_MAKE_MAZDA "Mazda"
 #define ENGINE_MAKE_MERCEDES "Mercedes"
+#define ENGINE_MAKE_NISSAN "Nissan"
 #define ENGINE_MAKE_SUBARU "Subaru"
 #define ENGINE_MAKE_TOYOTA "Toyota"
 #define ENGINE_MAKE_VAG "VAG"
@@ -1282,8 +1283,8 @@
 #define showHumanReadableWarning_offset 976
 #define showSdCardWarning_offset 76
 #define SIGNATURE_BOARD kin
-#define SIGNATURE_DATE 2021.07.04
-#define SIGNATURE_HASH 4270999710
+#define SIGNATURE_DATE 2021.07.06
+#define SIGNATURE_HASH 4150770200
 #define silentTriggerError_offset 1464
 #define slowAdcAlpha_offset 2088
 #define sparkDwellRpmBins_offset 332
@@ -1636,7 +1637,7 @@
 #define ts_show_spi true
 #define ts_show_trigger_comparator true
 #define ts_show_tunerstudio_port true
-#define TS_SIGNATURE "rusEFI 2021.07.04.kin.4270999710"
+#define TS_SIGNATURE "rusEFI 2021.07.06.kin.4150770200"
 #define TS_SINGLE_WRITE_COMMAND 'W'
 #define TS_SINGLE_WRITE_COMMAND_char W
 #define TS_TEST_COMMAND 't'
