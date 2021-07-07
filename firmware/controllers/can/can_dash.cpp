@@ -79,6 +79,8 @@ static time_msecs_t mph_ctr;
 // 19500 value would be 100 kph
 #define NISSAN_WHEEL_SPEED 0x285
 
+#define NISSAN_CLT_551 0x551
+
 static uint8_t rpmcounter;
 static uint8_t seatbeltcnt;
 static uint8_t abscounter = 0xF0;
@@ -314,6 +316,13 @@ void canDashboardNissanVQ(CanCycle cycle) {
 			int rpm8 = (int)(GET_RPM() * 8);
 			msg[2] = rpm8 >> 8;
 			msg[3] = rpm8 & 0xFF;
+		}
+
+		{
+			CanTxMessage msg(NISSAN_CLT_551, 8);
+
+			int clt = 40; // todo read sensor
+			msg[0] = clt + 45;
 		}
 
 
