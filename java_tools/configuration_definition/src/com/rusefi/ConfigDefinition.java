@@ -411,6 +411,7 @@ public class ConfigDefinition {
         SystemOut.println(data);
         Objects.requireNonNull(data, "data");
         for (Map<String, Object> pin : data) {
+            ArrayList<Map<String, Object>> thisPinList = new ArrayList<>();
             Object pinId = pin.get("id");
             Object pinClass = pin.get("class");
             Object pinName = pin.get("ts_name");
@@ -423,25 +424,31 @@ public class ConfigDefinition {
                     throw new IllegalStateException("Expected multiple classes for " + pinIds);
                 for (int i = 0; i < pinIds.size(); i++) {
                     String id = pinIds.get(i);
-                    Map<String, Object> thisPin = new HashMap<>();
-                    thisPin.put("id", id);
-                    thisPin.put("ts_name", pinName);
-                    thisPin.put("class", ((ArrayList<String>) pinClass).get(i));
-                    listPins.add(thisPin);
+                    addPinToList(thisPinList, id, pinName, ((ArrayList<String>) pinClass).get(i))
                 }
             } else if (pinId instanceof String) {
                 if (pinId.length() == 0) {
                     throw new IllegalStateException("Unexpected empty ID field");
                 }
-                Map<String, Object> thisPin = new HashMap<>();
-                thisPin.put("id", pinId);
-                thisPin.put("ts_name", pinName);
-                thisPin.put("class", pinClass);
-                listPins.add(thisPin);
+                addPinToList(thisPinList, id, pinName, pinClass)
             } else {
                 throw new IllegalStateException("Unexpected type of ID field: " + pinId.getClass().getSimpleName());
             }
+            pinList.addAll(thisPinList);
         }
+    }
+
+    private static void addPinToList(ArrayList<Map<String, Object>> listPins, ArrayList<Map<String, Object>> thisPinList, id, pinName, pinClass) {
+        for (int ii = i + 1; ii < listPins.size(); ii++) {
+            if (id.equals(listPins.get(ii).get("id"))) {
+                throw new IllegalStateException("ID used multiple times: " + id);
+            }
+        }
+        Map<String, Object> thisPin = new HashMap<>();
+        thisPin.put("id", id);
+        thisPin.put("ts_name", pinName);
+        thisPin.put("class", pinClass);
+        thisPinList.add(thisPin);
     }
 
     private static void registerPins(ArrayList<Map<String, Object>> listPins, VariableRegistry registry, ReaderState state) {
@@ -455,12 +462,6 @@ public class ConfigDefinition {
         names.put("switch_inputs", new ArrayList<>());
         for (int i = 0; i < listPins.size(); i++) {
             String id = (String) listPins.get(i).get("id");
-            for (int ii = i + 1; ii < listPins.size(); ii++) {
-                if (id.equals(listPins.get(ii).get("id"))) {
-                    // todo: re-enable once we fix https://github.com/rusefi/rusefi/issues/2897
-                    //throw new IllegalStateException("ID used multiple times: " + id);
-                }
-            }
             String className = (String) listPins.get(i).get("class");
             ArrayList<String> classList = names.get(className);
             if (classList == null) {
