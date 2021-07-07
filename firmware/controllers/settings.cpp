@@ -478,7 +478,7 @@ static void setPotSpi(int spi) {
  */
 static void setIgnitionPin(const char *indexStr, const char *pinName) {
 	int index = atoi(indexStr) - 1; // convert from human index into software index
-	if (index < 0 || index >= IGNITION_PIN_COUNT)
+	if (index < 0 || index >= MAX_CYLINDER_COUNT)
 		return;
 	brain_pin_e pin = parseBrainPin(pinName);
 	// todo: extract method - code duplication with other 'set_xxx_pin' methods?
@@ -573,7 +573,7 @@ static void setFuelPumpPin(const char *pinName) {
 
 static void setInjectionPin(const char *indexStr, const char *pinName) {
 	int index = atoi(indexStr) - 1; // convert from human index into software index
-	if (index < 0 || index >= INJECTION_PIN_COUNT)
+	if (index < 0 || index >= MAX_CYLINDER_COUNT)
 		return;
 	brain_pin_e pin = parseBrainPin(pinName);
 	// todo: extract method - code duplication with other 'set_xxx_pin' methods?

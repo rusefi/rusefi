@@ -127,14 +127,12 @@ EnginePins::EnginePins() :
 	tachOut.name = PROTOCOL_TACH_NAME;
 	hpfpValve.name = PROTOCOL_HPFP_NAME;
 
-	static_assert(efi::size(sparkNames) >= IGNITION_PIN_COUNT, "Too many ignition pins");
-	for (int i = 0; i < IGNITION_PIN_COUNT;i++) {
+	static_assert(efi::size(sparkNames) >= MAX_CYLINDER_COUNT, "Too many ignition pins");
+	static_assert(efi::size(injectorNames) >= MAX_CYLINDER_COUNT, "Too many injection pins");
+	for (int i = 0; i < MAX_CYLINDER_COUNT;i++) {
 		enginePins.coils[i].name = sparkNames[i];
 		enginePins.coils[i].shortName = sparkShortNames[i];
-	}
 
-	static_assert(efi::size(injectorNames) >= INJECTION_PIN_COUNT, "Too many injection pins");
-	for (int i = 0; i < INJECTION_PIN_COUNT;i++) {
 		enginePins.injectors[i].injectorIndex = i;
 		enginePins.injectors[i].name = injectorNames[i];
 		enginePins.injectors[i].shortName = injectorShortNames[i];
@@ -167,10 +165,8 @@ EnginePins::EnginePins() :
 
 bool EnginePins::stopPins() {
 	bool result = false;
-	for (int i = 0; i < IGNITION_PIN_COUNT; i++) {
+	for (int i = 0; i < MAX_CYLINDER_COUNT; i++) {
 		result |= coils[i].stop();
-	}
-	for (int i = 0; i < INJECTION_PIN_COUNT; i++) {
 		result |= injectors[i].stop();
 	}
 	for (int i = 0; i < AUX_DIGITAL_VALVE_COUNT; i++) {
@@ -229,17 +225,15 @@ void EnginePins::startPins(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 }
 
 void EnginePins::reset() {
-	for (int i = 0; i < INJECTION_PIN_COUNT;i++) {
+	for (int i = 0; i < MAX_CYLINDER_COUNT;i++) {
 		injectors[i].reset();
-	}
-	for (int i = 0; i < IGNITION_PIN_COUNT;i++) {
 		coils[i].reset();
 	}
 }
 
 void EnginePins::stopIgnitionPins(void) {
 #if EFI_PROD_CODE
-	for (int i = 0; i < IGNITION_PIN_COUNT; i++) {
+	for (int i = 0; i < MAX_CYLINDER_COUNT; i++) {
 		unregisterOutputIfPinOrModeChanged(enginePins.coils[i], ignitionPins[i], ignitionPinMode);
 	}
 #endif /* EFI_PROD_CODE */
@@ -247,7 +241,7 @@ void EnginePins::stopIgnitionPins(void) {
 
 void EnginePins::stopInjectionPins(void) {
 #if EFI_PROD_CODE
-	for (int i = 0; i < INJECTION_PIN_COUNT; i++) {
+	for (int i = 0; i < MAX_CYLINDER_COUNT; i++) {
 		unregisterOutputIfPinOrModeChanged(enginePins.injectors[i], injectionPins[i], injectionPinMode);
 	}
 #endif /* EFI_PROD_CODE */
@@ -617,10 +611,8 @@ void initPrimaryPins() {
  * The whole method is pretty naive, but that's at least something.
  */
 void turnAllPinsOff(void) {
-	for (int i = 0; i < INJECTION_PIN_COUNT; i++) {
+	for (int i = 0; i < MAX_CYLINDER_COUNT; i++) {
 		enginePins.injectors[i].setValue(false);
-	}
-	for (int i = 0; i < IGNITION_PIN_COUNT; i++) {
 		enginePins.coils[i].setValue(false);
 	}
 }

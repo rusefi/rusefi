@@ -68,9 +68,18 @@ EXTERN_ENGINE;
 
 static time_msecs_t mph_timer;
 static time_msecs_t mph_ctr;
+
+#define NISSAN_RPM_1F9 0x1F9
 // Nissan z33 350Z and else
 // 0x23d = 573
 #define NISSAN_RPM_CLT       0x23D
+
+#define NISSAN_VEHICLE_SPEED_280 0x280
+// wheel speed see "102 CAN Communication decoded"
+// 19500 value would be 100 kph
+#define NISSAN_WHEEL_SPEED 0x285
+
+#define NISSAN_CLT_551 0x551
 
 static uint8_t rpmcounter;
 static uint8_t seatbeltcnt;
@@ -297,17 +306,43 @@ void canDashboardW202(CanCycle cycle) {
 	}
 }
 
+static int rollingId = 0;
+
 void canDashboardNissanVQ(CanCycle cycle) {
 	if (cycle.isInterval(CI::_50ms)) {
 		{
+			CanTxMessage msg(NISSAN_RPM_1F9, 8);
+			msg[0] = 0x20;
+			int rpm8 = (int)(GET_RPM() * 8);
+			msg[2] = rpm8 >> 8;
+			msg[3] = rpm8 & 0xFF;
+		}
+
+		{
+			CanTxMessage msg(NISSAN_CLT_551, 8);
+
+			int clt = 40; // todo read sensor
+			msg[0] = clt + 45;
+		}
+
+
+		{
 			CanTxMessage msg(NISSAN_RPM_CLT, 8);
 
-			msg[4] = ((int)(GET_RPM() / 4)) & 0xFF;
-			msg[5] = ((int)(GET_RPM() / 4)) >> 8;
+			rollingId = (rollingId + 1) % 4;
+			const uint8_t magicByte[4] = {0x03, 0x23, 0x42, 0x63};
+
+			msg[0] = magicByte[rollingId];
+			msg[1] = (int)(Sensor::get(SensorType::AcceleratorPedal).value_or(0) * 255 / 100);
+
+			// thank you "102 CAN Communication decoded"
+#define CAN_23D_RPM_MULT 3.15
+			int rpm315 = (int)(GET_RPM() / CAN_23D_RPM_MULT);
+			msg[3] = rpm315 & 0xFF;
+			msg[4] = rpm315 >> 8;
 
 			msg[7] = 0x70; // todo: CLT decoding?
 		}
-
 	}
 }
 
