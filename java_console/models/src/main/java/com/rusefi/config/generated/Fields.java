@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Mon Jul 05 23:54:58 UTC 2021
+// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Tue Jul 06 16:59:56 PDT 2021
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -900,7 +900,6 @@ public class Fields {
 	public static final int idleVeBins_offset = 6608;
 	public static final int IGN_LOAD_COUNT = 16;
 	public static final int IGN_RPM_COUNT = 16;
-	public static final int IGNITION_PIN_COUNT = 12;
 	public static final int ignitionDwellForCrankingMs_offset = 100;
 	public static final int ignitionIatCorrLoadBins_offset = 13856;
 	public static final int ignitionIatCorrRpmBins_offset = 13920;
@@ -929,7 +928,6 @@ public class Fields {
 	public static final String INDICATOR_NAME_BRAKE_DOWN = "brake: down";
 	public static final String INDICATOR_NAME_CLUTCH_DOWN = "clutch: down";
 	public static final String INDICATOR_NAME_CLUTCH_UP = "clutch: up";
-	public static final int INJECTION_PIN_COUNT = 12;
 	public static final int injectionMode_offset = 428;
 	public static final int injectionPhase_offset = 13984;
 	public static final int injectionPinMode_offset = 648;
@@ -1119,6 +1117,7 @@ public class Fields {
 	public static final int max31855_cs7_offset = 802;
 	public static final int max31855_cs8_offset = 803;
 	public static final int max31855spiDevice_offset = 675;
+	public static final int MAX_CYLINDER_COUNT = 12;
 	public static final int maxAcClt_offset = 1711;
 	public static final int maxAcRpm_offset = 1708;
 	public static final int maxAcTps_offset = 1710;
@@ -1251,7 +1250,7 @@ public class Fields {
 	public static final int servoOutputPins8_offset = 3147;
 	public static final int showHumanReadableWarning_offset = 976;
 	public static final int showSdCardWarning_offset = 76;
-	public static final int SIGNATURE_HASH = 1254010164;
+	public static final int SIGNATURE_HASH = 1177193027;
 	public static final int silentTriggerError_offset = 1464;
 	public static final int slowAdcAlpha_offset = 2088;
 	public static final int sparkDwellRpmBins_offset = 332;
@@ -1553,7 +1552,7 @@ public class Fields {
 	public static final char TS_SD_R_COMMAND = 'r';
 	public static final char TS_SD_W_COMMAND = 'w';
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI 2021.07.06.all.1254010164";
+	public static final String TS_SIGNATURE = "rusEFI 2021.07.07.all.1177193027";
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final char TS_TEST_COMMAND = 't';
 	public static final int TT_TT_1_16 = 50;
