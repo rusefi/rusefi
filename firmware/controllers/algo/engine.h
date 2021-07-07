@@ -312,13 +312,13 @@ public:
 	 * pre-calculated offset for given sequence index within engine cycle
 	 * (not cylinder ID)
 	 */
-	angle_t ignitionPositionWithinEngineCycle[IGNITION_PIN_COUNT];
+	angle_t ignitionPositionWithinEngineCycle[MAX_CYLINDER_COUNT];
 	/**
 	 * pre-calculated reference to which output pin should be used for
 	 * given sequence index within engine cycle
 	 * todo: update documentation
 	 */
-	int ignitionPin[IGNITION_PIN_COUNT];
+	int ignitionPin[MAX_CYLINDER_COUNT];
 
 	/**
 	 * this is invoked each time we register a trigger tooth signal
