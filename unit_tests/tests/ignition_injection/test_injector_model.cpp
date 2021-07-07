@@ -73,6 +73,7 @@ TEST(InjectorModel, nonlinearPolynomial) {
 		CONFIG(injectorCorrectionPolynomial)[i] = i + 1;
 	}
 
+	// expect return of the original value, plus polynomial f(x)
 	EXPECT_NEAR(dut.correctInjectionPolynomial(-3), -3 + -13532, EPS4D);
 	EXPECT_NEAR(dut.correctInjectionPolynomial(-2), -2 +   -711, EPS4D);
 	EXPECT_NEAR(dut.correctInjectionPolynomial(-1), -1 +     -4, EPS4D);
