@@ -152,6 +152,15 @@ static void miataNAcommonEngineSettings(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	engineConfiguration->specs.cylindersCount = 4;
 	engineConfiguration->specs.firingOrder = FO_1_3_4_2;
 	engineConfiguration->compressionRatio = 9.1;
+	engineConfiguration->cranking.rpm = 450;
+	engineConfiguration->cylinderBore = 78;
+	engineConfiguration->knockBandCustom = 6.8;
+	engineConfiguration->vehicleWeight = 950;
+
+	engineConfiguration->enableFan1WithAc = true;
+	engineConfiguration->enableFan2WithAc = true;
+
+	CONFIG(tachPulsePerRev) = 2;
 
 	engineConfiguration->debugMode = DBG_TRIGGER_COUNTERS;
 
@@ -165,9 +174,6 @@ static void miataNAcommonEngineSettings(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	engineConfiguration->silentTriggerError = false;
 
 	engineConfiguration->manIdlePosition = 34;
-
-	miataNA_setCrankingCycleBins(PASS_CONFIG_PARAMETER_SIGNATURE);
-	miataNA_setCrankingFuelBins(PASS_CONFIG_PARAMETER_SIGNATURE);
 
 	miataNA_setCltIdleCorrBins(PASS_CONFIG_PARAMETER_SIGNATURE);
 	miataNA_setCltIdleRpmBins(PASS_CONFIG_PARAMETER_SIGNATURE);
@@ -195,7 +201,7 @@ static void miataNAcommonEngineSettings(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	 * http://miataturbo.wikidot.com/fuel-injectors
 	 * 90-93 (Blue) - #195500-1970
 	 */
-	engineConfiguration->injector.flow = 230;
+	engineConfiguration->injector.flow = 212;
 
 	// set cranking_timing_angle 10
 	engineConfiguration->crankingTimingAngle = 10;
@@ -390,25 +396,16 @@ void setMiataNA6_MAP_MRE(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	engineConfiguration->idle_antiwindupFreq = 0.1;
 	engineConfiguration->idle_derivativeFilterLoss = 0.1;
 	engineConfiguration->idleRpmPid.dFactor = 0.002;
-	engineConfiguration->idleRpmPid.offset = 37;
+	engineConfiguration->idleRpmPid.offset = 0;
 	engineConfiguration->acIdleExtraOffset = 14;
-	engineConfiguration->idleRpmPid.minValue = 30;
-	engineConfiguration->acIdleExtraMin = 14;
-	engineConfiguration->idleRpmPid.maxValue = 70;
+	engineConfiguration->idleRpmPid.minValue = -7;
+	engineConfiguration->idleRpmPid.maxValue = 35;
 	engineConfiguration->idleRpmPid.periodMs = 40;
 	engineConfiguration->idlerpmpid_iTermMin = -6;
 	engineConfiguration->idlerpmpid_iTermMax = 30;
 	engineConfiguration->pidExtraForLowRpm = 25;
 	engineConfiguration->idlePidRpmDeadZone = 25;
 	engineConfiguration->idlePidRpmUpperLimit = 1000;
-
-
-	engineConfiguration->useFSIO12ForIdleOffset = true;
-    setFsioExpression(QUOTE(MAGIC_OFFSET_FOR_IDLE_OFFSET), "ac_on_switch 0 cfg_acIdleExtraOffset if" PASS_CONFIG_PARAMETER_SUFFIX);
-
-	engineConfiguration->useFSIO13ForIdleMinValue = true;
-	setFsioExpression(QUOTE(MAGIC_OFFSET_FOR_IDLE_MIN_VALUE), "ac_on_switch 0 cfg_acIdleExtraMin if" PASS_CONFIG_PARAMETER_SUFFIX);
-
 
 	engineConfiguration->useIdleTimingPidControl = true;
 	engineConfiguration->idleTimingPid.pFactor = 0.05;
@@ -461,9 +458,32 @@ void setMiata94_MAP_MRE(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	strcpy(CONFIG(engineMake), ENGINE_MAKE_MAZDA);
 	strcpy(CONFIG(engineCode), "94");
 
+	engineConfiguration->map.sensor.type = MT_MPX4250;
+
+}
+
+void setHellenNA94(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
+	miataNAcommonEngineSettings(PASS_CONFIG_PARAMETER_SIGNATURE);
+	strcpy(CONFIG(engineCode), "94");
+	/**
+	 * http://miataturbo.wikidot.com/fuel-injectors
+	 * 94-97 Tan - #195500-2180
+	 */
+	engineConfiguration->injector.flow = 254;
+
+	engineConfiguration->specs.displacement = 1.8;
+	engineConfiguration->injectionMode = IM_SEQUENTIAL;
+	engineConfiguration->map.sensor.type = MT_MPX4250;
+
+	engineConfiguration->fanOnTemperature = 100;
+	engineConfiguration->fanOffTemperature = 96;
+	engineConfiguration->fan2OnTemperature = 95;
+	engineConfiguration->fan2OffTemperature = 91;
+
+	engineConfiguration->fan2Pin = GPIOD_9; // 3S - A/C Fan 94-95
 }
 
 void setHellenNA6(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	miataNAcommonEngineSettings(PASS_CONFIG_PARAMETER_SIGNATURE);
-
+	engineConfiguration->map.sensor.type = MT_MPX4250;
 }

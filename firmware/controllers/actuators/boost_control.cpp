@@ -27,11 +27,11 @@
 
 EXTERN_ENGINE;
 
-static boostOpenLoop_Map3D_t boostMapOpen("boostmapopen");
-static boostOpenLoop_Map3D_t boostMapClosed("boostmapclosed");
+static boostOpenLoop_Map3D_t boostMapOpen;
+static boostOpenLoop_Map3D_t boostMapClosed;
 static SimplePwm boostPwmControl("boost");
 
-void BoostController::init(SimplePwm* pwm, const ValueProvider3D* openLoopMap, const ValueProvider3D* closedLoopTargetMap, pid_s* pidParams) {
+void BoostController::init(IPwm* pwm, const ValueProvider3D* openLoopMap, const ValueProvider3D* closedLoopTargetMap, pid_s* pidParams) {
 	m_pwm = pwm;
 	m_openLoopMap = openLoopMap;
 	m_closedLoopTargetMap = closedLoopTargetMap;
@@ -128,8 +128,7 @@ expected<percent_t> BoostController::getClosedLoop(float target, float manifoldP
 }
 
 void BoostController::setOutput(expected<float> output) {
-	// TODO: hook up safe duty cycle
-	percent_t percent = output.value_or(/*CONFIG(boostControlSafeDutyCycle)*/ 0);
+	percent_t percent = output.value_or(CONFIG(boostControlSafeDutyCycle));
 	float duty = PERCENT_TO_DUTY(percent);
 
 	if (m_pwm) {

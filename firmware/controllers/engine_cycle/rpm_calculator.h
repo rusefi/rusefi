@@ -105,6 +105,10 @@ public:
 	 * see also SC_RPM_ACCEL
 	 */
 	float getRpmAcceleration() const;
+
+	// Get elapsed time (seconds) since the engine transitioned to the running state.
+	float getTimeSinceEngineStart(efitick_t nowNt) const;
+
 	/**
 	 * this is RPM on previous engine cycle.
 	 */
@@ -153,6 +157,8 @@ private:
 	 * Needed by spinning-up logic.
 	 */
 	bool isSpinning = false;
+
+	Timer engineStartTimer;
 };
 
 // Just a getter for rpmValue which also handles mockRpm if not EFI_PROD_CODE
@@ -175,7 +181,7 @@ float getCrankshaftAngleNt(efitick_t timeNt DECLARE_ENGINE_PARAMETER_SUFFIX);
 #define getRevolutionCounter() ENGINE(rpmCalculator.getRevolutionCounterM())
 
 #if EFI_ENGINE_SNIFFER
-#define addEngineSnifferEvent(name, msg) if (ENGINE(isEngineChartEnabled)) { waveChart.addEvent3((name), (msg)); }
+#define addEngineSnifferEvent(name, msg) { efiAssertVoid(OBD_PCM_Processor_Fault, engine!=NULL, "engine ptr missing");  if (ENGINE(isEngineChartEnabled)) { waveChart.addEvent3((name), (msg)); } }
  #else
 #define addEngineSnifferEvent(n, msg) {}
 #endif /* EFI_ENGINE_SNIFFER */

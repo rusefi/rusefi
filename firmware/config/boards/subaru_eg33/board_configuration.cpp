@@ -14,6 +14,7 @@
 #include "fsio_impl.h"
 #include "engine_configuration.h"
 #include "smart_gpio.h"
+#include "drivers/gpio/mc33810.h"
 
 EXTERN_ENGINE;
 
@@ -88,16 +89,18 @@ void setBoardDefaultConfiguration(void) {
 	engineConfiguration->injectionPins[4 - 1] = MC33810_1_OUT_1;
 	engineConfiguration->injectionPins[5 - 1] = MC33810_0_OUT_2;
 	engineConfiguration->injectionPins[6 - 1] = MC33810_1_OUT_2;
+	/* Additional, not used for EG33 */
 	engineConfiguration->injectionPins[7 - 1] = MC33810_0_OUT_3;
 	engineConfiguration->injectionPins[8 - 1] = MC33810_1_OUT_3;
 
 	/* Ignition */
-	engineConfiguration->ignitionPins[1 - 1] = MC33810_0_GD_0;
+	engineConfiguration->ignitionPins[1 - 1] = MC33810_1_GD_3;
 	engineConfiguration->ignitionPins[2 - 1] = MC33810_1_GD_2;
 	engineConfiguration->ignitionPins[3 - 1] = MC33810_0_GD_1;
-	engineConfiguration->ignitionPins[4 - 1] = MC33810_1_GD_3;
+	engineConfiguration->ignitionPins[4 - 1] = MC33810_0_GD_0;
 	engineConfiguration->ignitionPins[5 - 1] = MC33810_0_GD_3;
 	engineConfiguration->ignitionPins[6 - 1] = MC33810_1_GD_1;
+	/* Additional, not used for EG33 */
 	engineConfiguration->ignitionPins[7 - 1] = MC33810_0_GD_2;
 	engineConfiguration->ignitionPins[8 - 1] = MC33810_1_GD_0;
 	//engineConfiguration->ignitionPinMode = OM_INVERTED;
@@ -138,9 +141,15 @@ void setBoardDefaultConfiguration(void) {
 	engineConfiguration->fuelPumpPin = TLE6240_PIN_5;
 	engineConfiguration->fuelPumpPinMode = OM_DEFAULT;
 
-	/* self shutdown? */
-	engineConfiguration->mainRelayPin = GPIOH_7;
-	engineConfiguration->mainRelayPinMode = OM_DEFAULT;
+	/* Self shutdown ouput:
+	 * High level on this pin will keep Main Relay enabled in any position of ignition key
+	 * This cause inability to stop engine by key.
+	 * From other side main relay is powered from key position "IGN" OR this output (through diodes)
+	 * So ECU does not need to drive this signal.
+	 * The only puprose of this output is to keep ECU powered to finish some stuff before power off itself
+	 * To support this we need to sense ING input from key switch */
+	//engineConfiguration->mainRelayPin = GPIOH_7;
+	//engineConfiguration->mainRelayPinMode = OM_DEFAULT;
 
 	/* spi driven - TLE6240 - OUT1, OUT2 */
 	engineConfiguration->fanPin = TLE6240_PIN_1;
@@ -233,8 +242,7 @@ void setBoardDefaultConfiguration(void) {
 
 	/* This board also has AC clutch output: */
 	engineConfiguration->acRelayPin = TLE6240_PIN_15;
-	engineConfiguration->acCutoffLowRpm = 400;
-	engineConfiguration->acCutoffHighRpm = 3000;
+	engineConfiguration->maxAcRpm = 3000;
 	engineConfiguration->acIdleRpmBump = 200;
 
 	engineConfiguration->isCJ125Enabled = false;
@@ -261,4 +269,97 @@ void setBoardDefaultConfiguration(void) {
 		setAlgorithm(LM_SPEED_DENSITY PASS_CONFIG_PARAMETER_SUFFIX);
 	if (engineConfiguration->fuelAlgorithm == LM_ALPHA_N)
 		setAlgorithm(LM_ALPHA_N PASS_CONFIG_PARAMETER_SUFFIX);
+}
+
+static const struct mc33810_config mc33810_odd = {
+	.spi_bus = &SPID5,
+	.spi_config = {
+		.circular = false,
+		.end_cb = NULL,
+		.ssport = GPIOF,
+		.sspad = 1,
+		.cr1 =
+			//SPI_CR1_16BIT_MODE |
+			SPI_CR1_SSM |
+			SPI_CR1_SSI |
+			((3 << SPI_CR1_BR_Pos) & SPI_CR1_BR) |	/* div = 16 */
+			SPI_CR1_MSTR |
+			/* SPI_CR1_CPOL | */ // = 0
+			SPI_CR1_CPHA | // = 1
+			0,
+		.cr2 = //SPI_CR2_16BIT_MODE |
+			SPI_CR2_DS_3 | SPI_CR2_DS_2 | SPI_CR2_DS_1 | SPI_CR2_DS_0
+	},
+	.direct_io = {
+		/* injector drivers */
+		[0] = {.port = GPIOI, .pad = 6},	/* INJ 1 */
+		[1] = {.port = GPIOI, .pad = 5},	/* INJ 3 */
+		[2] = {.port = GPIOI, .pad = 4},	/* INJ 5 */
+		[3] = {.port = GPIOB, .pad = 9},	/* INJ 7 */
+		/* ignition pre-dirvers */
+		[4] = {.port = GPIOB, .pad = 3},	/* IGN 1 */
+		[5] = {.port = GPIOB, .pad = 4},	/* IGN 3 */
+		[6] = {.port = GPIOB, .pad = 5},	/* IGN 7 */
+		[7] = {.port = GPIOB, .pad = 8},	/* IGN 5 */
+	},
+	/* en shared between two chips */
+	.en = {.port = GPIOI, .pad = 7}
+};
+
+static const struct mc33810_config mc33810_even = {
+	.spi_bus = &SPID5,
+	.spi_config = {
+		.circular = false,
+		.end_cb = NULL,
+		.ssport = GPIOF,
+		.sspad = 2,
+		.cr1 =
+			//SPI_CR1_16BIT_MODE |
+			SPI_CR1_SSM |
+			SPI_CR1_SSI |
+			((3 << SPI_CR1_BR_Pos) & SPI_CR1_BR) |	/* div = 16 */
+			SPI_CR1_MSTR |
+			/* SPI_CR1_CPOL | */ // = 0
+			SPI_CR1_CPHA | // = 1
+			0,
+		.cr2 = //SPI_CR2_16BIT_MODE |
+			SPI_CR2_DS_3 | SPI_CR2_DS_2 | SPI_CR2_DS_1 | SPI_CR2_DS_0
+	},
+	.direct_io = {
+		/* injector drivers */
+		[0] = {.port = GPIOE, .pad = 3},	/* INJ 2 */
+		[1] = {.port = GPIOE, .pad = 4},	/* INJ 4 */
+		[2] = {.port = GPIOE, .pad = 5},	/* INJ 6 */
+		[3] = {.port = GPIOE, .pad = 6},	/* INJ 8 */
+		/* ignition pre-dirvers */
+		[4] = {.port = GPIOC, .pad = 14},	/* IGN 2 */
+		[5] = {.port = GPIOC, .pad = 13},	/* IGN 4 */
+		[6] = {.port = GPIOC, .pad = 15},	/* IGN 6 */
+		[7] = {.port = GPIOI, .pad = 9},	/* IGN 8 */
+	},
+	/* en shared between two chips */
+	.en = {.port = nullptr, .pad = 0}
+};
+
+static void board_init_ext_gpios(void)
+{
+	int ret;
+
+	ret = mc33810_add(MC33810_0_OUT_0, 0, &mc33810_odd);
+	if (ret < 0) {
+		/* error */
+	}
+	ret = mc33810_add(MC33810_1_OUT_0, 1, &mc33810_even);
+	if (ret < 0) {
+		/* error */
+	}
+}
+
+/**
+ * @brief Board-specific initialization code.
+ * @todo  Add your board-specific code, if any.
+ */
+void boardInit(void)
+{
+	board_init_ext_gpios();
 }

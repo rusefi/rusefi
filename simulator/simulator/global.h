@@ -46,8 +46,6 @@
 // project-wide default thread stack size
 #define UTILITY_THREAD_STACK_SIZE 1384
 
-extern BaseChannel serialAdapterInstance;
-
 #define UNIT_TEST_BUSY_WAIT_CALLBACK() {}
 
 #ifdef __cplusplus

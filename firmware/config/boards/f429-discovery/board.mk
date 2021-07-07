@@ -1,0 +1,3 @@
+BOARD_DIR = $(PROJECT_DIR)/config/boards/$(PROJECT_BOARD)
+
+BOARDINC = $(BOARD_DIR)

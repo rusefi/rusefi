@@ -30,6 +30,8 @@ expected<float> readGppwmChannel(gppwm_channel_e channel DECLARE_ENGINE_PARAMETE
 		return Sensor::get(SensorType::AuxTemp2);
 	case GPPWM_Zero:
 		return 0;
+	case GPPWM_AccelPedal:
+		return Sensor::get(SensorType::AcceleratorPedal);
 	}
 
 	return unexpected;
@@ -57,7 +59,7 @@ void GppwmChannel::setOutput(float result) {
 	}
 }
 
-void GppwmChannel::init(bool usePwm, SimplePwm* pwm, OutputPin* outputPin, const ValueProvider3D* table, const gppwm_channel* config) {
+void GppwmChannel::init(bool usePwm, IPwm* pwm, OutputPin* outputPin, const ValueProvider3D* table, const gppwm_channel* config) {
 	m_usePwm = usePwm;
 	m_pwm = pwm;
 	m_output = outputPin;

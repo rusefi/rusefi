@@ -103,49 +103,6 @@ static void printOutputs(const engine_configuration_s *engineConfiguration) {
 			hwPortname(engineConfiguration->alternatorControlPin));
 }
 
-
-/**
- * These should be not very long because these are displayed on the LCD as is
- */
-const char* getConfigurationName(engine_type_e engineType) {
-	switch (engineType) {
-	case DEFAULT_FRANKENSO:
-		return "DEFAULT_FRANKENSO";
-	case DODGE_NEON_1995:
-		return "Neon95";
-	case FORD_ASPIRE_1996:
-		return "Aspire";
-	case NISSAN_PRIMERA:
-		return "Primera";
-	case HONDA_ACCORD_CD:
-		return "Accord3";
-	case HONDA_ACCORD_CD_TWO_WIRES:
-		return "Accord2";
-	case HONDA_ACCORD_1_24_SHIFTED:
-		return "Accord24sh";
-	case HONDA_ACCORD_CD_DIP:
-		return "HondaD";
-	case FORD_INLINE_6_1995:
-		return "Fordi6";
-	case GY6_139QMB:
-		return "Gy6139";
-	case MAZDA_MIATA_NB1:
-		return "MiataNB1";
-	case FORD_ESCORT_GT:
-		return "EscrtGT";
-	case CITROEN_TU3JP:
-		return "TU3JP";
-	case MITSU_4G93:
-		return "Mi4G93";
-	case MIATA_1990:
-		return "MX590";
-	case MIATA_1996:
-		return "MX596";
-	default:
-		return getEngine_type_e(engineType);
-	}
-}
-
 /**
  * @brief	Prints current engine configuration to human-readable console.
  */
@@ -167,12 +124,7 @@ void printConfiguration(const engine_configuration_s *engineConfiguration) {
 	efiPrintf("crankingRpm: %d", engineConfiguration->cranking.rpm);
 	efiPrintf("cranking injection %s", getInjection_mode_e(engineConfiguration->crankingInjectionMode));
 
-	if (engineConfiguration->useConstantDwellDuringCranking) {
-		efiPrintf("ignitionDwellForCrankingMs=%.2f", engineConfiguration->ignitionDwellForCrankingMs);
-	} else {
-		efiPrintf("cranking charge charge angle=%.2f fire at %.2f", engineConfiguration->crankingChargeAngle,
-				engineConfiguration->crankingTimingAngle);
-	}
+	efiPrintf("cranking timing %.2f", engineConfiguration->crankingTimingAngle);
 
 	efiPrintf("=== ignition ===");
 
@@ -462,12 +414,6 @@ static void setToothedWheel(int total, int skipped DECLARE_ENGINE_PARAMETER_SUFF
 	doPrintConfiguration();
 }
 
-static void setCrankingChargeAngle(float value) {
-	engineConfiguration->crankingChargeAngle = value;
-	incrementGlobalConfigurationVersion(PASS_ENGINE_PARAMETER_SIGNATURE);
-	doPrintConfiguration();
-}
-
 static void setGlobalFuelCorrection(float value) {
 	if (value < 0.01 || value > 50)
 		return;
@@ -532,7 +478,7 @@ static void setPotSpi(int spi) {
  */
 static void setIgnitionPin(const char *indexStr, const char *pinName) {
 	int index = atoi(indexStr) - 1; // convert from human index into software index
-	if (index < 0 || index >= IGNITION_PIN_COUNT)
+	if (index < 0 || index >= MAX_CYLINDER_COUNT)
 		return;
 	brain_pin_e pin = parseBrainPin(pinName);
 	// todo: extract method - code duplication with other 'set_xxx_pin' methods?
@@ -627,7 +573,7 @@ static void setFuelPumpPin(const char *pinName) {
 
 static void setInjectionPin(const char *indexStr, const char *pinName) {
 	int index = atoi(indexStr) - 1; // convert from human index into software index
-	if (index < 0 || index >= INJECTION_PIN_COUNT)
+	if (index < 0 || index >= MAX_CYLINDER_COUNT)
 		return;
 	brain_pin_e pin = parseBrainPin(pinName);
 	// todo: extract method - code duplication with other 'set_xxx_pin' methods?
@@ -812,8 +758,6 @@ static void enableOrDisable(const char *param, bool isEnabled) {
 		CONFIG(enableVerboseCanTx) = isEnabled;
 	} else if (strEqualCaseInsensitive(param, "etb_auto")) {
 		engine->etbAutoTune = isEnabled;
-	} else if (strEqualCaseInsensitive(param, "cranking_constant_dwell")) {
-		engineConfiguration->useConstantDwellDuringCranking = isEnabled;
 	} else if (strEqualCaseInsensitive(param, "cj125")) {
 		engineConfiguration->isCJ125Enabled = isEnabled;
 	} else if (strEqualCaseInsensitive(param, "cj125verbose")) {
@@ -943,20 +887,20 @@ static void printAllInfo(void) {
 #endif
 }
 
-typedef struct {
+struct plain_get_integer_s {
 	const char *token;
 	int *value;
-} plain_get_integer_s;
+};
 
-typedef struct {
+struct plain_get_short_s {
 	const char *token;
 	uint16_t *value;
-} plain_get_short_s;
+};
 
-typedef struct {
+struct plain_get_float_s {
 	const char *token;
 	float *value;
-} plain_get_float_s;
+};
 
 
 #if ! EFI_UNIT_TEST
@@ -1007,7 +951,6 @@ const plain_get_float_s getF_plain[] = {
 		{"iat_bias", &engineConfiguration->iat.config.bias_resistor},
 		{"cranking_fuel", &engineConfiguration->cranking.baseFuel},
 		{"cranking_timing_angle", &engineConfiguration->crankingTimingAngle},
-		{"cranking_charge_angle", &engineConfiguration->crankingChargeAngle},
 };
 #endif /* EFI_UNIT_TEST */
 
@@ -1087,15 +1030,15 @@ static void setFsioCurve2Value(float value) {
 	setLinearCurve(engineConfiguration->fsioCurve2, value, value, 1);
 }
 
-typedef struct {
+struct command_i_s {
 	const char *token;
 	VoidInt callback;
-} command_i_s;
+};
 
-typedef struct {
+struct command_f_s {
 	const char *token;
 	VoidFloat callback;
-} command_f_s;
+};
 
 const command_f_s commandsF[] = {
 #if EFI_ENGINE_CONTROL
@@ -1112,7 +1055,6 @@ const command_f_s commandsF[] = {
 		{"cranking_fuel", setCrankingFuel},
 		{"cranking_iac", setCrankingIACExtra},
 		{"cranking_timing_angle", setCrankingTimingAngle},
-		{"cranking_charge_angle", setCrankingChargeAngle},
 		{"tps_accel_threshold", setTpsAccelThr},
 		{"tps_decel_threshold", setTpsDecelThr},
 		{"tps_decel_multiplier", setTpsDecelMult},
@@ -1272,7 +1214,7 @@ static void setValue(const char *paramStr, const char *valueStr) {
 		setTriggerEmulatorRPM(valueI);
 #endif /* EFI_EMULATE_POSITION_SENSORS */
 	} else if (strEqualCaseInsensitive(paramStr, "vvt_offset")) {
-		engineConfiguration->vvtOffset = valueF;
+		engineConfiguration->vvtOffsets[0] = valueF;
 	} else if (strEqualCaseInsensitive(paramStr, "vvt_mode")) {
 		engineConfiguration->vvtMode[0] = (vvt_mode_e)valueI;
 	} else if (strEqualCaseInsensitive(paramStr, "operation_mode")) {
@@ -1370,6 +1312,9 @@ void initSettings(void) {
 	addConsoleActionS("set_cj125_heater_pin", setCj125HeaterPin);
 	addConsoleActionS("set_trigger_sync_pin", setTriggerSyncPin);
 
+	/**
+	 * as of today we still do not have desperate time debugging "writepin" command
+	 */
 	addConsoleActionS("readpin", readPin);
 	addConsoleActionS("set_can_rx_pin", setCanRxPin);
 	addConsoleActionS("set_can_tx_pin", setCanTxPin);
@@ -1386,3 +1331,45 @@ void initSettings(void) {
 }
 
 #endif /* !EFI_UNIT_TEST */
+
+/**
+ * These should be not very long because these are displayed on the LCD as is
+ */
+const char* getConfigurationName(engine_type_e engineType) {
+	switch (engineType) {
+	case DEFAULT_FRANKENSO:
+		return "DEFAULT_FRANKENSO";
+	case DODGE_NEON_1995:
+		return "Neon95";
+	case FORD_ASPIRE_1996:
+		return "Aspire";
+	case NISSAN_PRIMERA:
+		return "Primera";
+	case HONDA_ACCORD_CD:
+		return "Accord3";
+	case HONDA_ACCORD_CD_TWO_WIRES:
+		return "Accord2";
+	case HONDA_ACCORD_1_24_SHIFTED:
+		return "Accord24sh";
+	case HONDA_ACCORD_CD_DIP:
+		return "HondaD";
+	case FORD_INLINE_6_1995:
+		return "Fordi6";
+	case GY6_139QMB:
+		return "Gy6139";
+	case MAZDA_MIATA_NB1:
+		return "MiataNB1";
+	case FORD_ESCORT_GT:
+		return "EscrtGT";
+	case CITROEN_TU3JP:
+		return "TU3JP";
+	case MITSU_4G93:
+		return "Mi4G93";
+	case MIATA_1990:
+		return "MX590";
+	case MIATA_1996:
+		return "MX596";
+	default:
+		return getEngine_type_e(engineType);
+	}
+}

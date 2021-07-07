@@ -29,9 +29,10 @@ static void doRevolution(EngineTestHelper& eth, int periodMs) {
 // https://github.com/rusefi/rusefi/issues/1592
 TEST(fuelControl, transitionIssue1592) {
 	WITH_ENGINE_TEST_HELPER(TEST_ENGINE);
+	ENGINE(tdcMarkEnabled) = false;
 	setupSimpleTestEngineWithMafAndTT_ONE_trigger(&eth, IM_SEQUENTIAL);
 
-	EXPECT_CALL(eth.mockAirmass, getAirmass(400))
+	EXPECT_CALL(eth.mockAirmass, getAirmass(499))
 		.WillRepeatedly(Return(AirmassResult{0.1008f, 50.0f}));
 
 	// This is easiest to trip on a wheel that requires sync
@@ -41,8 +42,7 @@ TEST(fuelControl, transitionIssue1592) {
 	engineConfiguration->ambiguousOperationMode = FOUR_STROKE_CAM_SENSOR;
 	engineConfiguration->isFasterEngineSpinUpEnabled = true;
 
-	extern fuel_Map3D_t fuelPhaseMap;
-	fuelPhaseMap.setAll(0);
+	setTable(config->injectionPhase, 0.0f);
 	setArrayValues(config->crankingFuelCoef, 1.0f);
 	setArrayValues(config->crankingCycleCoef, 1.0f);
 

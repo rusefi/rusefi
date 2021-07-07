@@ -7,13 +7,14 @@
 #include "mocks.h"
 
 using ::testing::InSequence;
+using ::testing::StrictMock;
 
 TEST(GpPwm, OutputWithPwm) {
 	GppwmChannel ch;
 
 	gppwm_channel cfg;
 
-	MockPwm pwm;
+	StrictMock<MockPwm> pwm;
 
 	// Shouldn't throw with no config
 	EXPECT_NO_THROW(ch.setOutput(10));

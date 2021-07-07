@@ -8,6 +8,7 @@
 
 TEST(issues, issueOneCylinderSpecialCase968) {
 	WITH_ENGINE_TEST_HELPER(GY6_139QMB);
+	ENGINE(tdcMarkEnabled) = false;
 	// set injection_mode 1
 	engineConfiguration->injectionMode = IM_SEQUENTIAL;
 
@@ -25,8 +26,8 @@ TEST(issues, issueOneCylinderSpecialCase968) {
 	eth.fireTriggerEvents2(/* count */ 1, 50 /* ms */);
 
 	ASSERT_EQ( 2,  engine->executor.size()) << "first revolution(s)";
-	eth.assertEvent5("spark up#0", 0, (void*)turnSparkPinHigh, -43500);
-	eth.assertEvent5("spark down#0", 1, (void*)fireSparkAndPrepareNextSchedule, -37500);
+	eth.assertEvent5("spark up#0", 0, (void*)turnSparkPinHigh, -45167);
+	eth.assertEvent5("spark down#0", 1, (void*)fireSparkAndPrepareNextSchedule, -39167);
 
 
 	eth.fireTriggerEvents2(/* count */ 1, 50 /* ms */);

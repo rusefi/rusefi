@@ -108,7 +108,7 @@ typedef enum {
 
 	HELLEN72_ETB = 33,
 
-	HELLEN_NA6 = 34,
+	HELLEN_NA6 = ET_HELLEN_NA6,
 
 	CAMARO_4 = ET_CAMARO,
 
@@ -200,6 +200,11 @@ typedef enum {
 	HELLEN_134_BMW = ET_HELLEN_134_BMW,
 	HELLEN_154_VAG = ET_HELLEN_154_VAG,
 
+	HELLEN_121_VAG_5_CYL = ET_HELLEN_121_VAG_5_CYL,
+	HELLEN_121_VAG_6_CYL = ET_HELLEN_121_VAG_6_CYL,
+	HELLEN_121_VAG_8_CYL = ET_HELLEN_121_VAG_8_CYL,
+
+	HELLEN_NA94 = ET_HELLEN_NA94,
 
 	/**
 	 * this configuration has as few pins configured as possible
@@ -389,13 +394,17 @@ typedef enum {
 
 	TT_KAWA_KX450F = TT_TT_KAWA_KX450F,
 
+	TT_NISSAN_VQ = TT_TT_NISSAN_VQ,
+
+	TT_VVT_NISSAN_VQ = TT_TT_VVT_NISSAN_VQ,
+
 	// do not forget to edit "#define trigger_type_e_enum" line in integration/rusefi_config.txt file to propogate new value to rusefi.ini TS project
 	// do not forget to invoke "gen_config.bat" once you make changes to integration/rusefi_config.txt
 	// todo: one day a hero would integrate some of these things into Makefile in order to reduce manual magic
 	//
 	// Another point: once you add a new trigger, run get_trigger_images.bat which would run rusefi_test.exe from unit_tests
 	//
-	TT_UNUSED = 58, // this is used if we want to iterate over all trigger types
+	TT_UNUSED = 60, // this is used if we want to iterate over all trigger types
 
 	Force_4_bytes_size_trigger_type = ENUM_32_BITS,
 } trigger_type_e; // TriggerProcessor.java has this "trigger_type_e" name hard-coded!
@@ -470,6 +479,8 @@ typedef enum  __attribute__ ((__packed__)) {
 	VVT_FORD_ST170 = 7,
 
 	VVT_BARRA_3_PLUS_1 = 8,
+
+	VVT_NISSAN_VQ = 9,
 } vvt_mode_e;
 
 /**
@@ -734,10 +745,8 @@ typedef enum {
 	DBG_EL_ACCEL = 4,
 	DBG_TRIGGER_COUNTERS = 5,
 	DBG_FSIO_ADC = 6,
-	/**
-	 * VVT valve control often uses AUX pid #1
-	 */
-	DBG_AUX_PID_1 = 7,
+
+	DBG_VVT_1_PID = 7,
 	/**
 	 * VVT position debugging - not VVT valve control. See AUX pid #1 debug for valve position.
 	 */
@@ -798,6 +807,11 @@ typedef enum {
 	DBG_RUSEFI_WIDEBAND = 46,
 	DBG_TCU = 47,
 	DBG_LUA = 48,
+	DBG_VVT_2_PID = 49,
+	DBG_VVT_3_PID = 50,
+	DBG_VVT_4_PID = 51,
+	MODE_52 = 52,
+	MODE_53 = 53,
 
 	Force_4_bytes_size_debug_mode_e = ENUM_32_BITS,
 } debug_mode_e;
@@ -929,6 +943,7 @@ typedef enum {
     CAN_BUS_BMW_E90 = 6,
 	CAN_BUS_Haltech = 7,
 	CAN_BUS_MQB = 8,
+	CAN_BUS_NISSAN_VQ = 9,
 
 	Internal_ForceMyEnumIntSize_can_nbc = ENUM_32_BITS,
 } can_nbc_e;
@@ -999,6 +1014,7 @@ typedef enum __attribute__ ((__packed__)) {
 	GPPWM_AuxTemp1 = 6,
 	GPPWM_AuxTemp2 = 7,
 	GPPWM_Zero = 8,
+	GPPWM_AccelPedal = 9,
 } gppwm_channel_e;
 
 typedef enum __attribute__ ((__packed__)) {

@@ -4,7 +4,6 @@ include $(PROJECT_DIR)/controllers/math/math.mk
 include $(PROJECT_DIR)/controllers/trigger/trigger.mk
 include $(PROJECT_DIR)/controllers/sensors/sensors.mk
 include $(PROJECT_DIR)/controllers/system/system.mk
-include $(PROJECT_DIR)/controllers/lua/lua.mk
 #include $(PROJECT_DIR)/controllers/gauges/gauges.mk
 
 CONTROLLERS_DIR=$(PROJECT_DIR)/controllers
@@ -13,9 +12,11 @@ CONTROLLERSSRC =
 	
 CONTROLLERS_SRC_CPP = \
 	$(CONTROLLERS_DIR)/actuators/electronic_throttle.cpp \
+	$(CONTROLLERS_DIR)/actuators/ac_control.cpp \
 	$(CONTROLLERS_DIR)/actuators/alternator_controller.cpp \
 	$(CONTROLLERS_DIR)/actuators/boost_control.cpp \
 	$(CONTROLLERS_DIR)/actuators/dc_motors.cpp \
+	$(CONTROLLERS_DIR)/actuators/fan_control.cpp \
 	$(CONTROLLERS_DIR)/actuators/idle_hardware.cpp \
 	$(CONTROLLERS_DIR)/actuators/idle_thread.cpp \
 	$(CONTROLLERS_DIR)/actuators/pwm_tester.cpp \
@@ -66,6 +67,7 @@ CONTROLLERS_INC=\
 	$(CONTROLLERS_DIR)/system/timer \
 	$(CONTROLLERS_DIR)/algo \
 	$(CONTROLLERS_DIR)/algo/airmass \
+	$(CONTROLLERS_DIR)/algo/defaults \
 	$(CONTROLLERS_DIR)/algo/fuel \
 	$(CONTROLLERS_DIR)/engine_cycle \
 	$(CONTROLLERS_DIR)/trigger/decoders \

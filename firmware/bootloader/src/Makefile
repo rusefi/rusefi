@@ -1,6 +1,5 @@
-##############################################################################
-# Build global options
-# NOTE: Can be overridden externally.
+#
+# this Makefile is intended to be invoked from one level above - see ..\compile_bootloader.sh
 #
 
 # by default EXTRA_PARAMS is empty and we create 'debug' version of the firmware with additional assertions and statistics
@@ -14,7 +13,7 @@ endif
 
 # disable some modules to shrink bootloader binary
 DDEFS += -DEFI_BOOTLOADER
-DDEFS += -DHAL_USE_EXT=FALSE -DHAL_USE_ICU=FALSE -DHAL_USE_PWM=FALSE -DHAL_USE_RTC=FALSE
+DDEFS += -DHAL_USE_EXT=FALSE -DHAL_USE_ICU=FALSE -DHAL_USE_PWM=FALSE -DHAL_USE_RTC=FALSE -DEF_LUA=FALSE
 #disable ChibiOS flsah driver and prevent header from include
 DDEFS += -DHAL_USE_FLASH=FALSE
 
@@ -62,7 +61,7 @@ endif
 
 # Enable this if you want link time optimizations (LTO)
 ifeq ($(USE_LTO),)
-  USE_LTO = no
+  USE_LTO = yes
 endif
 
 # If enabled, this option allows to compile the application in THUMB mode.
@@ -120,7 +119,8 @@ PROJECT_DIR = ..
 
 # Imported source files and paths
 CHIBIOS = $(PROJECT_DIR)/ChibiOS
-CHIBIOS_CONTRIB = $(PROJECT_DIR)/ChibiOS-Contrib
+# todo: looks like 'CHIBIOS_CONTRIB' path is universal shall we defined it only once?
+CHIBIOS_CONTRIB = $(CHIBIOS)/../ChibiOS-Contrib
 
 RULESPATH = $(CHIBIOS)/os/common/startup/ARMCMx/compilers/GCC/mk
 RULESFILE = $(RULESPATH)/rules.mk
@@ -136,7 +136,7 @@ include $(CHIBIOS)/os/license/license.mk
 include $(CHIBIOS)/os/common/startup/ARMCMx/compilers/GCC/mk/$(CPU_STARTUP)
 # HAL-OSAL files (optional).
 include $(CHIBIOS_CONTRIB)/os/hal/hal.mk
-include $(CHIBIOS)/os/hal/ports/STM32/$(CPU_PLATFORM)
+include $(CPU_PLATFORM)
 include $(CHIBIOS)/os/hal/osal/rt-nil/osal.mk
 # RTOS files (optional).
 include $(CHIBIOS)/os/rt/rt.mk

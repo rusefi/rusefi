@@ -9,6 +9,7 @@
 
 TEST(cranking, testFasterEngineSpinningUp) {
 	WITH_ENGINE_TEST_HELPER(TEST_ENGINE);
+	ENGINE(tdcMarkEnabled) = false;
 	// turn on FasterEngineSpinUp mode
 	engineConfiguration->isFasterEngineSpinUpEnabled = true;
 	engineConfiguration->cranking.baseFuel = 12;
@@ -50,8 +51,8 @@ TEST(cranking, testFasterEngineSpinningUp) {
 	// test if ignition mode is temporary changed to wasted spark, if set to individual coils
 	ASSERT_EQ(IM_WASTED_SPARK, getCurrentIgnitionMode(PASS_ENGINE_PARAMETER_SIGNATURE));
 	// check real events
-	eth.assertEvent5("inj start#1", 0, (void*)startSimultaniousInjection, 98125);
-	eth.assertEvent5("inj end#1", 1, (void*)endSimultaniousInjection, 99999);
+	eth.assertEvent5("inj start#1", 0, (void*)startSimultaniousInjection, 97500);
+	eth.assertEvent5("inj end#1", 1, (void*)endSimultaniousInjection, 100000);
 
 	// skip the rest of the cycle
 	eth.fireFall(200);
@@ -72,7 +73,7 @@ TEST(cranking, testFasterEngineSpinningUp) {
 	// two simultaneous injections
 	ASSERT_EQ( 4,  engine->executor.size()) << "plain#2";
 	// check real events
-	eth.assertEvent5("inj start#2", 0, (void*)startSimultaniousInjection, 148125);
+	eth.assertEvent5("inj start#2", 0, (void*)startSimultaniousInjection, 148375);
 	eth.assertEvent5("inj end#2", 1, (void*)endSimultaniousInjection, 149999);
 
 	// skip, clear & advance 1 more revolution at higher RPM
@@ -92,7 +93,7 @@ TEST(cranking, testFasterEngineSpinningUp) {
 
 	// check real events for sequential injection
 	// Note: See addFuelEvents() fix inside setRpmValue()!
-	eth.assertEvent5("inj start#3", 0, (void*)turnInjectionPinHigh, -31875);
+	eth.assertEvent5("inj start#3", 0, (void*)turnInjectionPinHigh, -31625);
 	eth.assertEvent5("inj end#3", 1, (void*)turnInjectionPinLow, -30001);
 }
 
@@ -114,7 +115,7 @@ static void doTestFasterEngineSpinningUp60_2(int startUpDelayMs, int rpm1, int e
 }
 
 TEST(cranking, testFasterEngineSpinningUp60_2) {
-	doTestFasterEngineSpinningUp60_2(0, 288, 263);
-	doTestFasterEngineSpinningUp60_2(100, 288, 263);
-	doTestFasterEngineSpinningUp60_2(1000, 288, 263);
+	doTestFasterEngineSpinningUp60_2(0, 549, 549);
+	doTestFasterEngineSpinningUp60_2(100, 549, 549);
+	doTestFasterEngineSpinningUp60_2(1000, 549, 549);
 }

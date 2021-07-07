@@ -29,14 +29,14 @@
 	#define FLASH_BASE 0x08100000
 
 	// QW bit supercedes the older BSY bit
-	#define intFlashWaitWhileBusy() { while (FLASH_SR & FLASH_SR_QW) {} }
+	#define intFlashWaitWhileBusy() do { __DSB(); } while (FLASH_SR & FLASH_SR_QW);
 #else
 	#define FLASH_CR FLASH->CR
 	#define FLASH_SR FLASH->SR
 	#define FLASH_KEYR FLASH->KEYR
 
 	// Wait for the flash operation to finish
-	#define intFlashWaitWhileBusy() { while (FLASH->SR & FLASH_SR_BSY) {} }
+	#define intFlashWaitWhileBusy() do { __DSB(); } while (FLASH->SR & FLASH_SR_BSY);
 #endif
 
 flashaddr_t intFlashSectorBegin(flashsector_t sector) {
@@ -84,7 +84,29 @@ static bool intFlashUnlock(void) {
  */
 #define intFlashLock() { FLASH_CR |= FLASH_CR_LOCK; }
 
+#ifdef STM32F7XX
+static bool isDualBank(void) {
+	// cleared bit indicates dual bank
+	return (FLASH->OPTCR & FLASH_OPTCR_nDBANK) == 0;
+}
+#endif
+
 int intFlashSectorErase(flashsector_t sector) {
+	uint8_t sectorRegIdx = sector;
+#ifdef STM32F7XX
+	// On dual bank STM32F7, sector index doesn't match register value.
+	// High bit indicates bank, low 4 bits indicate sector within bank.
+	// Since each bank has 12 sectors, increment second-bank sector idx
+	// by 4 so that the first sector of the second bank (12) ends up with
+	// index 16 (0b10000)
+	if (isDualBank() && sectorRegIdx >= 12) {
+		sectorRegIdx -= 12;
+		/* bit 4 defines bank.
+		 * Sectors starting from 12 are in bank #2 */
+		sectorRegIdx |= 0x10;
+	}
+#endif
+
 	/* Unlock flash for write access */
 	if (intFlashUnlock() == HAL_FAILED)
 		return FLASH_RETURN_NO_PERMISSION;
@@ -102,32 +124,15 @@ int intFlashSectorErase(flashsector_t sector) {
 	 * 00001 sector 1
 	 * ...
 	 * 01011 sector 11 (the end of 1st bank, 1Mb border)
-	 * 01100 sector 12 (start of 2nd bank)
+	 * 10000 sector 12 (start of 2nd bank)
 	 * ...
-	 * 10111 sector 23 (the end of 2nd bank, 2Mb border)
+	 * 11011 sector 23 (the end of 2nd bank, 2Mb border)
 	 * others not allowed */
-#ifndef FLASH_CR_SNB_3
-	FLASH_CR &= ~(FLASH_CR_SNB_0 | FLASH_CR_SNB_1 | FLASH_CR_SNB_2);
-#elif !defined(FLASH_CR_SNB_4)
-	FLASH_CR &= ~(FLASH_CR_SNB_0 | FLASH_CR_SNB_1 | FLASH_CR_SNB_2 | FLASH_CR_SNB_3);
-#else
-	FLASH_CR &= ~(FLASH_CR_SNB_0 | FLASH_CR_SNB_1 | FLASH_CR_SNB_2 | FLASH_CR_SNB_3 | FLASH_CR_SNB_4);
-#endif
-	if (sector & 0x1)
-		FLASH_CR |= FLASH_CR_SNB_0;
-	if (sector & 0x2)
-		FLASH_CR |= FLASH_CR_SNB_1;
-	if (sector & 0x4)
-		FLASH_CR |= FLASH_CR_SNB_2;
-#ifdef FLASH_CR_SNB_4
-	if (sector & 0x8)
-		FLASH_CR |= FLASH_CR_SNB_3;
-#endif
-#ifdef FLASH_CR_SNB_4
-	if (sector & 0x10)
-		FLASH_CR |= FLASH_CR_SNB_4;
-#endif
+	FLASH_CR &= ~FLASH_CR_SNB_Msk;
+	FLASH_CR |= (sectorRegIdx << FLASH_CR_SNB_Pos) & FLASH_CR_SNB_Msk;
+	/* sector erase */
 	FLASH_CR |= FLASH_CR_SER;
+	/* start erase operation */
 	FLASH_CR |= FLASH_CR_STRT;
 
 	/* Wait until it's finished. */

@@ -7,6 +7,8 @@ else
  CONNECTORS=$1
  echo "Processing $CONNECTORS"
 fi
+# yq 3 and 4 have incompatible syntax. We use yq 4.
+yq -V
 for c in $CONNECTORS; do
   echo "processing "$c
   DIR="pinouts/"$(echo $c | tr '/' '\n' | tail -n +5 | head -n -2 | tr '\n' '/')
@@ -15,12 +17,12 @@ for c in $CONNECTORS; do
   echo "NAME "$NAME
   mkdir -p $DIR
   if [ -f $DIR/index.html ]; then
-    bash misc/pinout-gen/append.sh $c $DIR/index.html
+    bash misc/pinout-gen/append.sh "$(yq -j e $c)" $DIR/index.html
   else
-    bash misc/pinout-gen/gen.sh $c $DIR/index.html
+    bash misc/pinout-gen/gen.sh "$(yq -j e $c)" $DIR/index.html
   fi
   file $DIR/index.html
-  IMG=$(yq r $c 'info.image.file')
+  IMG=$(yq e '.info.image.file' $c)
   if [ $? -ne 0 ]; then
     exit 1;
   fi
@@ -28,8 +30,6 @@ for c in $CONNECTORS; do
   if [ $IMG ]; then
     cp $(dirname $c)/$IMG $DIR
   fi
-  ls $DIR
-  cp misc/pinout-gen/yaml.min.js $DIR
   ls $DIR
 done
 

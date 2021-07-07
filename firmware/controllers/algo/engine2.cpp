@@ -132,8 +132,8 @@ void EngineState::periodicFastCallback(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	fuelCutoffCorrection = getFuelCutOffCorrection(nowNt, rpm PASS_ENGINE_PARAMETER_SUFFIX);
 
 	// post-cranking fuel enrichment.
-	// for compatibility reasons, apply only if the factor is greater than zero (0.01 margin used)
-	if (engineConfiguration->postCrankingFactor > 0.01f) {
+	// for compatibility reasons, apply only if the factor is greater than unity (only allow adding fuel)
+	if (engineConfiguration->postCrankingFactor > 1.0f) {
 		// convert to microsecs and then to seconds
 		running.timeSinceCrankingInSecs = NT2US(timeSinceCranking) / 1000000.0f;
 		// use interpolation for correction taper
@@ -177,7 +177,7 @@ void EngineState::periodicFastCallback(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	updateLaunchConditions(PASS_ENGINE_PARAMETER_SIGNATURE);
 #endif //EFI_LAUNCH_CONTROL
 
-	engine->limpManager.updateState(rpm);
+	engine->limpManager.updateState(rpm, nowNt);
 
 #endif // EFI_ENGINE_CONTROL
 }

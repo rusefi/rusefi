@@ -87,6 +87,10 @@ public:
 	bool isPwmEnabled = true;
 	int triggerActivitySecond = 0;
 
+	const char *prevOutputName = nullptr;
+
+	InjectionEvent primeInjEvent;
+
 	IEtbController *etbControllers[ETB_COUNT] = {nullptr};
 	IFuelComputer *fuelComputer = nullptr;
 	IInjectorModel *injectorModel = nullptr;
@@ -167,6 +171,8 @@ public:
 #if EFI_ENGINE_CONTROL
 	FuelSchedule injectionEvents;
 	IgnitionEventList ignitionEvents;
+	scheduling_s tdcScheduler[2];
+
 #endif /* EFI_ENGINE_CONTROL */
 
 	bool needToStopEngine(efitick_t nowNt) const;
@@ -181,6 +187,9 @@ public:
 	 * this is based on isEngineChartEnabled and engineSnifferRpmThreshold settings
 	 */
 	bool isEngineChartEnabled = false;
+
+	bool tdcMarkEnabled = true; // used by unit tests only
+
 	/**
 	 * this is based on sensorChartMode and sensorSnifferRpmThreshold settings
 	 */
@@ -303,13 +312,13 @@ public:
 	 * pre-calculated offset for given sequence index within engine cycle
 	 * (not cylinder ID)
 	 */
-	angle_t ignitionPositionWithinEngineCycle[IGNITION_PIN_COUNT];
+	angle_t ignitionPositionWithinEngineCycle[MAX_CYLINDER_COUNT];
 	/**
 	 * pre-calculated reference to which output pin should be used for
 	 * given sequence index within engine cycle
 	 * todo: update documentation
 	 */
-	int ignitionPin[IGNITION_PIN_COUNT];
+	int ignitionPin[MAX_CYLINDER_COUNT];
 
 	/**
 	 * this is invoked each time we register a trigger tooth signal

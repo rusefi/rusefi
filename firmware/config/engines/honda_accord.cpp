@@ -67,9 +67,7 @@ static void setHondaAccordConfigurationCommon(DECLARE_CONFIG_PARAMETER_SIGNATURE
 	 */
 	setCommonNTCSensor(&engineConfiguration->clt, 1500);
 	setCommonNTCSensor(&engineConfiguration->iat, 1500);
-	
-	// set cranking_charge_angle 35
-	engineConfiguration->crankingChargeAngle = 70;
+
 	// set cranking_timing_angle 0
 	engineConfiguration->crankingTimingAngle = -45;
 

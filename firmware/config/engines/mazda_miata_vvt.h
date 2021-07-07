@@ -12,7 +12,6 @@
 #include "engine_configuration.h"
 
 void setMazdaMiataNbInjectorLag(DECLARE_CONFIG_PARAMETER_SIGNATURE);
-void setMazdaMiataNbTpsTps(DECLARE_CONFIG_PARAMETER_SIGNATURE);
 void setMazdaNB2VVTSettings(DECLARE_CONFIG_PARAMETER_SIGNATURE);
 
 /**

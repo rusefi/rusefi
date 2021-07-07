@@ -85,7 +85,7 @@ static void setupEtb() {
 
 	// Throttle #1
 	// PWM pin
-	engineConfiguration->etbIo[0].controlPin1 = GPIOD_12;
+	engineConfiguration->etbIo[0].controlPin = GPIOD_12;
 	// DIR pin
 	engineConfiguration->etbIo[0].directionPin1 = GPIOD_10;
 	// Disable pin
@@ -95,7 +95,7 @@ static void setupEtb() {
 
 	// Throttle #2
 	// PWM pin
-	engineConfiguration->etbIo[1].controlPin1 = GPIOD_13;
+	engineConfiguration->etbIo[1].controlPin = GPIOD_13;
 	// DIR pin
 	engineConfiguration->etbIo[1].directionPin1 = GPIOD_9;
 	// Disable pin

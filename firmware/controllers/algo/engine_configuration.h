@@ -21,12 +21,10 @@
 
 #define MOCK_UNDEFINED -1
 
-float getRpmMultiplier(operation_mode_e mode);
 void setOperationMode(engine_configuration_s *engineConfiguration, operation_mode_e mode);
 
 void prepareVoidConfiguration(engine_configuration_s *activeConfiguration);
 void setTargetRpmCurve(int rpm DECLARE_CONFIG_PARAMETER_SUFFIX);
-void setLambdaMap(lambda_table_t table, float value);
 void setWholeIgnitionIatCorr(float value DECLARE_CONFIG_PARAMETER_SUFFIX);
 void setFuelTablesLoadBin(float minValue, float maxValue DECLARE_CONFIG_PARAMETER_SUFFIX);
 void setWholeIatCorrTimingTable(float value DECLARE_CONFIG_PARAMETER_SUFFIX);
@@ -61,6 +59,3 @@ void rememberCurrentConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 
 void setBoardDefaultConfiguration(void);
 void setBoardConfigOverrides(void);
-
-// TODO: remove me
-#define CONFIG_OVERRIDE(__x__) CONFIG(__x__)

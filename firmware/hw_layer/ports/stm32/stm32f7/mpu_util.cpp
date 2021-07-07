@@ -49,6 +49,11 @@ static DeviceType determineDevice() {
 	return DeviceType::Unknown;
 }
 
+bool allowFlashWhileRunning() {
+	// Allow flash-while-running if dual bank mode is enabled, and we're a 2MB device (ie, no code located in second bank)
+	return determineDevice() == DeviceType::DualBank2MB;
+}
+
 // See ST AN4826
 size_t flashSectorSize(flashsector_t sector) {
 	// 1MB devices have 8 sectors per bank
@@ -58,6 +63,13 @@ size_t flashSectorSize(flashsector_t sector) {
 	if (sector >= 12) {
 		// The second bank has the same structure as the first
 		return flashSectorSize(sector - 12);
+	}
+
+	// On 1MB devices, sectors 8-11 don't exist, therefore have zero size.
+	if (flashSize() == 1024) {
+		if (sector > 7 && sector < 12) {
+			return 0;
+		}
 	}
 
 	// Pages are twice the size when in single bank mode

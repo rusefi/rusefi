@@ -129,9 +129,7 @@
 #include "trigger_emulator_algo.h"
 #include "rusefi_lua.h"
 
-#if EFI_HD44780_LCD
-#include "lcd_HD44780.h"
-#endif /* EFI_HD44780_LCD */
+#include <setjmp.h>
 
 #if EFI_ENGINE_EMULATOR
 #include "engine_emulator.h"
@@ -162,13 +160,84 @@ static void scheduleReboot(void) {
 
 // Returns false if there's an obvious problem with the loaded configuration
 static bool validateConfig() {
-	if (CONFIG(specs.cylindersCount) > minI(INJECTION_PIN_COUNT, IGNITION_PIN_COUNT)) {
+	if (CONFIG(specs.cylindersCount) > MAX_CYLINDER_COUNT) {
 		firmwareError(OBD_PCM_Processor_Fault, "Invalid cylinder count: %d", CONFIG(specs.cylindersCount));
 		return false;
 	}
 
+	// Fueling
+	{
+		ensureArrayIsAscending("VE load", config->veLoadBins);
+		ensureArrayIsAscending("VE RPM", config->veRpmBins);
+
+		ensureArrayIsAscending("Lambda/AFR load", config->lambdaLoadBins);
+		ensureArrayIsAscending("Lambda/AFR RPM", config->lambdaRpmBins);
+
+		ensureArrayIsAscending("Fuel CLT mult", config->cltFuelCorrBins);
+		ensureArrayIsAscending("Fuel IAT mult", config->iatFuelCorrBins);
+
+		ensureArrayIsAscending("Injection phase load", config->injPhaseLoadBins);
+		ensureArrayIsAscending("Injection phase RPM", config->injPhaseRpmBins);
+
+		ensureArrayIsAscending("TPS/TPS AE from", config->tpsTpsAccelFromRpmBins);
+		ensureArrayIsAscending("TPS/TPS AE to", config->tpsTpsAccelToRpmBins);
+	}
+
+	// Ignition
+	{
+		ensureArrayIsAscending("Dwell RPM", engineConfiguration->sparkDwellRpmBins);
+
+		ensureArrayIsAscending("Ignition load", config->ignitionLoadBins);
+		ensureArrayIsAscending("Ignition RPM", config->ignitionRpmBins);
+
+		ensureArrayIsAscending("Ignition CLT corr", engineConfiguration->cltTimingBins);
+
+		ensureArrayIsAscending("Ignition IAT corr IAT", config->ignitionIatCorrLoadBins);
+		ensureArrayIsAscending("Ignition IAT corr RPM", config->ignitionIatCorrRpmBins);
+	}
+
+	ensureArrayIsAscending("Map estimate TPS", config->mapEstimateTpsBins);
+	ensureArrayIsAscending("Map estimate RPM", config->mapEstimateRpmBins);
+	ensureArrayIsAscending("Ignition load", config->mafDecodingBins);
+
+	// Cranking tables
+	ensureArrayIsAscending("Cranking fuel mult", config->crankingFuelBins);
+	ensureArrayIsAscending("Cranking duration", config->crankingCycleBins);
+	ensureArrayIsAscending("Cranking TPS", engineConfiguration->crankingTpsBins);
+
+	// Idle tables
+	ensureArrayIsAscending("Idle target RPM", engineConfiguration->cltIdleRpmBins);
+	ensureArrayIsAscending("Idle warmup mult", config->cltIdleCorrBins);
+	ensureArrayIsAscending("Idle coasting position", engineConfiguration->iacCoastingBins);
+	ensureArrayIsAscending("Idle VE", config->idleVeBins);
+	ensureArrayIsAscending("Idle timing", config->idleAdvanceBins);
+
+	// Boost
+	ensureArrayIsAscending("Boost control TPS", config->boostTpsBins);
+	ensureArrayIsAscending("Boost control RPM", config->boostRpmBins);
+
+	// ETB
+	ensureArrayIsAscending("Pedal map pedal", config->pedalToTpsPedalBins);
+	ensureArrayIsAscending("Pedal map RPM", config->pedalToTpsRpmBins);
+
+	// VVT
+	ensureArrayIsAscending("VVT intake load", config->vvtTable1LoadBins);
+	ensureArrayIsAscending("VVT intake RPM", config->vvtTable1RpmBins);
+	ensureArrayIsAscending("VVT exhaust load", config->vvtTable2LoadBins);
+	ensureArrayIsAscending("VVT exhaust RPM", config->vvtTable2RpmBins);
+
 	return true;
 }
+
+static jmp_buf jmpEnv;
+void onAssertionFailure() {
+	// There's been an assertion failure: instead of hanging, jump back to where we check
+	// if (setjmp(jmpEnv)) (see below for more complete explanation)
+	longjmp(jmpEnv, 1);
+}
+
+void runRusEfiWithConfig();
+void runMainLoop();
 
 void runRusEfi(void) {
 	efiAssertVoid(CUSTOM_RM_STACK_1, getCurrentRemainingStack() > 512, "init s");
@@ -191,9 +260,6 @@ void runRusEfi(void) {
 	// Perform hardware initialization that doesn't need configuration
 	initHardwareNoConfig();
 
-	// Read configuration from flash memory
-	loadConfiguration(PASS_ENGINE_PARAMETER_SIGNATURE);
-
 #if EFI_USB_SERIAL
 	startUsbConsole();
 #endif
@@ -207,6 +273,9 @@ void runRusEfi(void) {
 	 */
 	initializeConsole();
 
+	// Read configuration from flash memory
+	loadConfiguration(PASS_ENGINE_PARAMETER_SIGNATURE);
+
 #if EFI_TUNER_STUDIO
 	startTunerStudioConnectivity();
 #endif /* EFI_TUNER_STUDIO */
@@ -214,10 +283,27 @@ void runRusEfi(void) {
 	// Start hardware serial ports (including bluetooth, if present)
 	startSerialChannels();
 
+	runRusEfiWithConfig();
+
+	runMainLoop();
+}
+
+void runRusEfiWithConfig() {
+	// If some config operation caused an OS assertion failure, return immediately
+	// This sets the "unwind point" that we can jump back to later with longjmp if we have
+	// an assertion failure. If that happens, setjmp() will return non-zero, so we will
+	// return immediately from this function instead of trying to init hardware again (which failed last time)
+	if (setjmp(jmpEnv)) {
+		return;
+	}
+
 	/**
 	 * Initialize hardware drivers
 	 */
 	initHardware();
+
+	// periodic events need to be initialized after fuel&spark pins to avoid a warning
+	initPeriodicEvents(PASS_ENGINE_PARAMETER_SIGNATURE);
 
 #if EFI_FILE_LOGGING
 	initMmcCard();
@@ -242,21 +328,24 @@ void runRusEfi(void) {
 		 */
 		initEngineContoller(PASS_ENGINE_PARAMETER_SIGNATURE);
 
+	#if EFI_ENGINE_EMULATOR
+		initEngineEmulator(PASS_ENGINE_PARAMETER_SIGNATURE);
+	#endif
+
 		// This has to happen after RegisteredOutputPins are init'd: otherwise no change will be detected, and no init will happen
 		rememberCurrentConfiguration(PASS_ENGINE_PARAMETER_SIGNATURE);
 
 	#if EFI_PERF_METRICS
 		initTimePerfActions();
 	#endif
-			
-	#if EFI_ENGINE_EMULATOR
-		initEngineEmulator(PASS_ENGINE_PARAMETER_SIGNATURE);
-	#endif
+
 		startStatusThreads();
 
 		runSchedulingPrecisionTestIfNeeded();
 	}
+}
 
+void runMainLoop() {
 	efiPrintf("Running main loop");
 	main_loop_started = true;
 	/**

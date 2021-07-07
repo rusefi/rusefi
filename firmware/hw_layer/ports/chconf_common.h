@@ -16,11 +16,6 @@
 
 #define CHPRINTF_USE_FLOAT          	TRUE
 
-#if !defined(ENABLE_PERF_TRACE) || defined(__DOXYGEN__)
-// looks like this value could not be defined in efifeatures.h - please define either externally or just change the value here
- #define ENABLE_PERF_TRACE TRUE
-#endif /* ENABLE_PERF_TRACE */
-
 #if !defined(_FROM_ASM_)
 #include "obd_error_codes.h"
 #endif /* _FROM_ASM_ */
@@ -120,16 +115,6 @@ extern "C" {
 #else
 #define hasOsPanicError() (FALSE)
 #endif
-
-#define chDbgAssert(c, remark) do {                                         \
-  if (CH_DBG_ENABLE_ASSERTS != FALSE) {                                     \
-    if (!(c)) {                                                             \
-  /*lint -restore*/                                                         \
-	  firmwareError(OBD_PCM_Processor_Fault, "chDbg %s", remark);           \
-      chSysHalt(remark);                                                    \
-    }                                                                       \
-  }                                                                         \
-} while (false)
 
 #ifndef __ASSEMBLER__
  #ifdef __cplusplus

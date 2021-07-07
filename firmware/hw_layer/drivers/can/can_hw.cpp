@@ -78,51 +78,54 @@ static bool isCanEnabled = false;
  */
 #if defined(STM32F4XX) || defined(STM32F7XX)
 static const CANConfig canConfig100 = {
-CAN_MCR_ABOM | CAN_MCR_AWUM | CAN_MCR_TXFP,
-CAN_BTR_100 };
+	.mcr = CAN_MCR_ABOM | CAN_MCR_AWUM | CAN_MCR_TXFP,
+	.btr = CAN_BTR_100
+};
 
 static const CANConfig canConfig250 = {
-CAN_MCR_ABOM | CAN_MCR_AWUM | CAN_MCR_TXFP,
-CAN_BTR_250 };
+	.mcr = CAN_MCR_ABOM | CAN_MCR_AWUM | CAN_MCR_TXFP,
+	.btr = CAN_BTR_250
+};
 
 static const CANConfig canConfig500 = {
-CAN_MCR_ABOM | CAN_MCR_AWUM | CAN_MCR_TXFP,
-CAN_BTR_500 };
+	.mcr = CAN_MCR_ABOM | CAN_MCR_AWUM | CAN_MCR_TXFP,
+	.btr = CAN_BTR_500
+};
 
 static const CANConfig canConfig1000 = {
 CAN_MCR_ABOM | CAN_MCR_AWUM | CAN_MCR_TXFP,
 CAN_BTR_1k0 };
 #elif defined(STM32H7XX)
 static const CANConfig canConfig100 = {
-	CAN_NBTP_100,
-	CAN_DBTP_100,
-	0, // CCCR
-	0, // TEST
-	0,
+	.NBTP = CAN_NBTP_100,
+	.DBTP = CAN_DBTP_100,
+	.CCCR = 0,
+	.TEST = 0,
+	.RXGFC = 0,
 };
 
 static const CANConfig canConfig250 = {
-	CAN_NBTP_250,
-	CAN_DBTP_250,
-	0, // CCCR
-	0, // TEST
-	0,
+	.NBTP = CAN_NBTP_250,
+	.DBTP = CAN_DBTP_250,
+	.CCCR = 0,
+	.TEST = 0,
+	.RXGFC = 0,
 };
 
 static const CANConfig canConfig500 = {
-	CAN_NBTP_500,
-	CAN_DBTP_500,
-	0, // CCCR
-	0, // TEST
-	0,
+	.NBTP = CAN_NBTP_500,
+	.DBTP = CAN_DBTP_500,
+	.CCCR = 0,
+	.TEST = 0,
+	.RXGFC = 0,
 };
 
 static const CANConfig canConfig1000 = {
-	CAN_NBTP_1k0,
-	CAN_DBTP_1k0,
-	0, // CCCR
-	0, // TEST
-	0,
+	.NBTP = CAN_NBTP_1k0,
+	.DBTP = CAN_DBTP_1k0,
+	.CCCR = 0,
+	.TEST = 0,
+	.RXGFC = 0,
 };
 #endif
 
@@ -136,7 +139,7 @@ public:
 	}
 
 	void ThreadTask() override {
-		CANDriver* device = detectCanDevice(CONFIG_OVERRIDE(canRxPin), CONFIG_OVERRIDE(canTxPin));
+		CANDriver* device = detectCanDevice(CONFIG(canRxPin), CONFIG(canTxPin));
 
 		if (!device) {
 			warning(CUSTOM_ERR_CAN_CONFIGURATION, "CAN configuration issue");
@@ -171,8 +174,8 @@ static void canInfo(void) {
 		return;
 	}
 
-	efiPrintf("CAN TX %s", hwPortname(CONFIG_OVERRIDE(canTxPin)));
-	efiPrintf("CAN RX %s", hwPortname(CONFIG_OVERRIDE(canRxPin)));
+	efiPrintf("CAN TX %s", hwPortname(CONFIG(canTxPin)));
+	efiPrintf("CAN RX %s", hwPortname(CONFIG(canRxPin)));
 	efiPrintf("type=%d canReadEnabled=%s canWriteEnabled=%s period=%d", engineConfiguration->canNbcType,
 			boolToString(engineConfiguration->canReadEnabled), boolToString(engineConfiguration->canWriteEnabled),
 			engineConfiguration->canSleepPeriodMs);
@@ -211,8 +214,8 @@ void stopCanPins(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 
 void startCanPins(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	// Store pins so we can disable later
-	currentTxPin = CONFIG_OVERRIDE(canTxPin);
-	currentRxPin = CONFIG_OVERRIDE(canRxPin);
+	currentTxPin = CONFIG(canTxPin);
+	currentRxPin = CONFIG(canRxPin);
 
 	efiSetPadMode("CAN TX", currentTxPin, PAL_MODE_ALTERNATE(EFI_CAN_TX_AF));
 	efiSetPadMode("CAN RX", currentRxPin, PAL_MODE_ALTERNATE(EFI_CAN_RX_AF));
@@ -222,8 +225,8 @@ void initCan(void) {
 	addConsoleAction("caninfo", canInfo);
 
 	isCanEnabled = 
-		(isBrainPinValid(CONFIG_OVERRIDE(canTxPin))) && // both pins are set...
-		(isBrainPinValid(CONFIG_OVERRIDE(canRxPin))) &&
+		(isBrainPinValid(CONFIG(canTxPin))) && // both pins are set...
+		(isBrainPinValid(CONFIG(canRxPin))) &&
 		(CONFIG(canWriteEnabled) || CONFIG(canReadEnabled)) ; // ...and either read or write is enabled
 
 	// nothing to do if we aren't enabled...
@@ -232,13 +235,13 @@ void initCan(void) {
 	}
 
 	// Validate pins
-	if (!isValidCanTxPin(CONFIG_OVERRIDE(canTxPin))) {
-		firmwareError(CUSTOM_OBD_70, "invalid CAN TX %s", hwPortname(CONFIG_OVERRIDE(canTxPin)));
+	if (!isValidCanTxPin(CONFIG(canTxPin))) {
+		firmwareError(CUSTOM_OBD_70, "invalid CAN TX %s", hwPortname(CONFIG(canTxPin)));
 		return;
 	}
 
-	if (!isValidCanRxPin(CONFIG_OVERRIDE(canRxPin))) {
-		firmwareError(CUSTOM_OBD_70, "invalid CAN RX %s", hwPortname(CONFIG_OVERRIDE(canRxPin)));
+	if (!isValidCanRxPin(CONFIG(canRxPin))) {
+		firmwareError(CUSTOM_OBD_70, "invalid CAN RX %s", hwPortname(CONFIG(canRxPin)));
 		return;
 	}
 
@@ -272,8 +275,8 @@ void initCan(void) {
 
 	// Plumb CAN device to tx system
 	CanTxMessage::setDevice(detectCanDevice(
-		CONFIG_OVERRIDE(canRxPin),
-		CONFIG_OVERRIDE(canTxPin)
+		CONFIG(canRxPin),
+		CONFIG(canTxPin)
 	));
 
 	// fire up threads, as necessary

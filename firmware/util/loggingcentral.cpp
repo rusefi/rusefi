@@ -72,7 +72,7 @@ void LogBuffer<TBufferSize>::writeInternal(const char* buffer) {
 // for unit tests
 template class LogBuffer<10>;
 
-#if EFI_PROD_CODE && EFI_TEXT_LOGGING
+#if (EFI_PROD_CODE || EFI_SIMULATOR) && EFI_TEXT_LOGGING
 
 // This mutex protects the LogBuffer instances below
 chibios_rt::Mutex logBufferMutex;
@@ -167,12 +167,6 @@ void startLoggingProcessor() {
 
 #endif // EFI_PROD_CODE
 
-#if EFI_SIMULATOR
-const char* swapOutputBuffers(size_t* actualOutputBufferSize) {
-	return nullptr;
-}
-#endif
-
 #if EFI_UNIT_TEST || EFI_SIMULATOR
 extern bool verboseMode;
 #endif
@@ -189,7 +183,7 @@ void efiPrintfInternal(const char *format, ...) {
 		printf("\r\n");
 	}
 #endif
-#if EFI_PROD_CODE && EFI_TEXT_LOGGING
+#if (EFI_PROD_CODE || EFI_SIMULATOR) && EFI_TEXT_LOGGING
 	for (unsigned int i = 0; i < strlen(format); i++) {
 		// todo: open question which layer would not handle CR/LF properly?
 		efiAssertVoid(OBD_PCM_Processor_Fault, format[i] != '\n', "No CRLF please");
@@ -222,10 +216,6 @@ void efiPrintfInternal(const char *format, ...) {
 		// Push the buffer in to the written list so it can be written back
 		chibios_rt::CriticalSectionLocker csl;
 
-		if ((void*)lineBuffer == (void*)&filledBuffers) {
-			__asm volatile("BKPT #0\n");
-		}
-
 		filledBuffers.postI(lineBuffer);
 	}
 #endif
@@ -239,7 +229,7 @@ void efiPrintfInternal(const char *format, ...) {
  * This is a legacy function, most normal logging should use efiPrintf
  */
 void scheduleLogging(Logging *logging) {
-#if EFI_PROD_CODE && EFI_TEXT_LOGGING
+#if (EFI_PROD_CODE || EFI_SIMULATOR) && EFI_TEXT_LOGGING
 	// Lock the buffer mutex - inhibit buffer swaps while writing
 	{
 		chibios_rt::MutexLocker lock(logBufferMutex);

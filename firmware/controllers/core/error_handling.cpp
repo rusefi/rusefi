@@ -13,13 +13,12 @@ static critical_msg_t warningBuffer;
 static critical_msg_t criticalErrorMessageBuffer;
 
 #if EFI_HD44780_LCD
-#include "lcd_HD44780.h"
+#include "HD44780.h"
 #endif /* EFI_HD44780_LCD */
 
 EXTERN_ENGINE;
 
 extern int warningEnabled;
-extern bool main_loop_started;
 
 bool hasFirmwareErrorFlag = false;
 
@@ -72,8 +71,21 @@ void chDbgPanic3(const char *msg, const char * file, int line) {
 	lcdShowPanicMessage((char *) msg);
 #endif /* EFI_HD44780_LCD */
 
-	if (!main_loop_started) {
-		chSysHalt("Main loop did not start");
+	firmwareError(OBD_PCM_Processor_Fault, "assert fail %s %s:%d", msg, file, line);
+
+	// Force unlock, since we may be throwing-under-lock
+	chSysUnconditionalUnlock();
+
+	// there was a port_disable in chSysHalt, reenable interrupts so USB works
+	port_enable();
+
+	// If on the main thread, longjmp back to the init process so we can keep USB alive
+	if (chThdGetSelfX()->threadId == 0) {
+		void onAssertionFailure();
+		onAssertionFailure();
+	} else {
+		// Not the main thread, simply try to terminate ourselves and let other threads continue living (so the user can diagnose, etc)
+		chThdTerminate(chThdGetSelfX());
 	}
 }
 

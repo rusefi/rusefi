@@ -12,8 +12,6 @@
 
 #include "board_io.h"
 
-#include "drivers/gpio/mc33810.h"
-
 /* drivers */
 
 /*==========================================================================*/
@@ -195,97 +193,4 @@ void BLIIINK(int t) {
 		}
 		chThdSleepMilliseconds(1000);
 	}
-}
-
-static const struct mc33810_config mc33810_odd = {
-	.spi_bus = &SPID5,
-	.spi_config = {
-		.circular = false,
-		.end_cb = NULL,
-		.ssport = GPIOF,
-		.sspad = 1,
-		.cr1 =
-			//SPI_CR1_16BIT_MODE |
-			SPI_CR1_SSM |
-			SPI_CR1_SSI |
-			((3 << SPI_CR1_BR_Pos) & SPI_CR1_BR) |	/* div = 16 */
-			SPI_CR1_MSTR |
-			/* SPI_CR1_CPOL | */ // = 0
-			SPI_CR1_CPHA | // = 1
-			0,
-		.cr2 = //SPI_CR2_16BIT_MODE |
-			SPI_CR2_DS_3 | SPI_CR2_DS_2 | SPI_CR2_DS_1 | SPI_CR2_DS_0
-	},
-	.direct_io = {
-		/* injector drivers */
-		[0] = {.port = GPIOI, .pad = 6},	/* INJ 1 */
-		[1] = {.port = GPIOI, .pad = 5},	/* INJ 3 */
-		[2] = {.port = GPIOI, .pad = 4},	/* INJ 5 */
-		[3] = {.port = GPIOB, .pad = 9},	/* INJ 7 */
-		/* ignition pre-dirvers */
-		[4] = {.port = GPIOB, .pad = 3},	/* IGN 1 */
-		[5] = {.port = GPIOB, .pad = 4},	/* IGN 3 */
-		[6] = {.port = GPIOB, .pad = 5},	/* IGN 7 */
-		[7] = {.port = GPIOB, .pad = 8},	/* IGN 5 */
-	},
-	/* en shared between two chips */
-	.en = {.port = GPIOI, .pad = 7}
-};
-
-static const struct mc33810_config mc33810_even = {
-	.spi_bus = &SPID5,
-	.spi_config = {
-		.circular = false,
-		.end_cb = NULL,
-		.ssport = GPIOF,
-		.sspad = 2,
-		.cr1 =
-			//SPI_CR1_16BIT_MODE |
-			SPI_CR1_SSM |
-			SPI_CR1_SSI |
-			((3 << SPI_CR1_BR_Pos) & SPI_CR1_BR) |	/* div = 16 */
-			SPI_CR1_MSTR |
-			/* SPI_CR1_CPOL | */ // = 0
-			SPI_CR1_CPHA | // = 1
-			0,
-		.cr2 = //SPI_CR2_16BIT_MODE |
-			SPI_CR2_DS_3 | SPI_CR2_DS_2 | SPI_CR2_DS_1 | SPI_CR2_DS_0
-	},
-	.direct_io = {
-		/* injector drivers */
-		[0] = {.port = GPIOE, .pad = 3},	/* INJ 2 */
-		[1] = {.port = GPIOE, .pad = 4},	/* INJ 4 */
-		[2] = {.port = GPIOE, .pad = 5},	/* INJ 6 */
-		[3] = {.port = GPIOE, .pad = 6},	/* INJ 8 */
-		/* ignition pre-dirvers */
-		[4] = {.port = GPIOC, .pad = 14},	/* IGN 2 */
-		[5] = {.port = GPIOC, .pad = 13},	/* IGN 4 */
-		[6] = {.port = GPIOC, .pad = 15},	/* IGN 6 */
-		[7] = {.port = GPIOI, .pad = 9},	/* IGN 8 */
-	},
-	/* en shared between two chips */
-	//.en = {.port = GPIOI, .pad = 7}
-};
-
-static void board_init_ext_gpios(void)
-{
-	int ret;
-
-	ret = mc33810_add(MC33810_0_OUT_0, 0, &mc33810_odd);
-	if (ret < 0) {
-		/* error */
-	}
-	ret = mc33810_add(MC33810_1_OUT_0, 1, &mc33810_even);
-	if (ret < 0) {
-		/* error */
-	}
-}
-
-/**
- * @brief Board-specific initialization code.
- * @todo  Add your board-specific code, if any.
- */
-void boardInit(void)
-{
-	board_init_ext_gpios();
 }

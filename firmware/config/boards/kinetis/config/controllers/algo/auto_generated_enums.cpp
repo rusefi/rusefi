@@ -1,7 +1,7 @@
 #include "global.h"
 #include "rusefi_enums.h"
 #include "rusefi_hw_enums.h"
-// was generated automatically by rusEFI tool  from rusefi_hw_enums.h // was generated automatically by rusEFI tool  from rusefi_enums.h // by enum2string.jar tool on Sat May 08 16:52:29 MSK 2021
+// was generated automatically by rusEFI tool  from rusefi_hw_enums.h // was generated automatically by rusEFI tool  from rusefi_enums.h // by enum2string.jar tool on Tue Jul 06 19:57:20 EDT 2021
 // see also gen_config_and_enums.bat
 
 
@@ -435,6 +435,8 @@ case CAN_BUS_NBC_NONE:
   return "CAN_BUS_NBC_NONE";
 case CAN_BUS_NBC_VAG:
   return "CAN_BUS_NBC_VAG";
+case CAN_BUS_NISSAN_VQ:
+  return "CAN_BUS_NISSAN_VQ";
 case CAN_BUS_W202_C180:
   return "CAN_BUS_W202_C180";
 case Internal_ForceMyEnumIntSize_can_nbc:
@@ -489,8 +491,6 @@ case DBG_ANALOG_INPUTS:
   return "DBG_ANALOG_INPUTS";
 case DBG_ANALOG_INPUTS2:
   return "DBG_ANALOG_INPUTS2";
-case DBG_AUX_PID_1:
-  return "DBG_AUX_PID_1";
 case DBG_AUX_VALVES:
   return "DBG_AUX_VALVES";
 case DBG_BENCH_TEST:
@@ -577,8 +577,20 @@ case DBG_VEHICLE_SPEED_SENSOR:
   return "DBG_VEHICLE_SPEED_SENSOR";
 case DBG_VVT:
   return "DBG_VVT";
+case DBG_VVT_1_PID:
+  return "DBG_VVT_1_PID";
+case DBG_VVT_2_PID:
+  return "DBG_VVT_2_PID";
+case DBG_VVT_3_PID:
+  return "DBG_VVT_3_PID";
+case DBG_VVT_4_PID:
+  return "DBG_VVT_4_PID";
 case Force_4_bytes_size_debug_mode_e:
   return "Force_4_bytes_size_debug_mode_e";
+case MODE_52:
+  return "MODE_52";
+case MODE_53:
+  return "MODE_53";
   }
  return NULL;
 }
@@ -675,6 +687,12 @@ case HELLEN_121_NISSAN:
   return "HELLEN_121_NISSAN";
 case HELLEN_121_VAG:
   return "HELLEN_121_VAG";
+case HELLEN_121_VAG_5_CYL:
+  return "HELLEN_121_VAG_5_CYL";
+case HELLEN_121_VAG_6_CYL:
+  return "HELLEN_121_VAG_6_CYL";
+case HELLEN_121_VAG_8_CYL:
+  return "HELLEN_121_VAG_8_CYL";
 case HELLEN_128_MERCEDES:
   return "HELLEN_128_MERCEDES";
 case HELLEN_134_BMW:
@@ -687,6 +705,8 @@ case HELLEN_88_BMW:
   return "HELLEN_88_BMW";
 case HELLEN_NA6:
   return "HELLEN_NA6";
+case HELLEN_NA94:
+  return "HELLEN_NA94";
 case HELLEN_NB2:
   return "HELLEN_NB2";
 case HONDA_600:
@@ -836,6 +856,8 @@ case REVERSE:
 }
 const char *getGppwm_channel_e(gppwm_channel_e value){
 switch(value) {
+case GPPWM_AccelPedal:
+  return "GPPWM_AccelPedal";
 case GPPWM_AuxTemp1:
   return "GPPWM_AuxTemp1";
 case GPPWM_AuxTemp2:
@@ -1224,6 +1246,8 @@ case TT_NISSAN_SR20VE:
   return "TT_NISSAN_SR20VE";
 case TT_NISSAN_SR20VE_360:
   return "TT_NISSAN_SR20VE_360";
+case TT_NISSAN_VQ:
+  return "TT_NISSAN_VQ";
 case TT_ONE:
   return "TT_ONE";
 case TT_ONE_PLUS_ONE:
@@ -1262,6 +1286,8 @@ case TT_VVT_JZ:
   return "TT_VVT_JZ";
 case TT_VVT_MIATA_NB2:
   return "TT_VVT_MIATA_NB2";
+case TT_VVT_NISSAN_VQ:
+  return "TT_VVT_NISSAN_VQ";
   }
  return NULL;
 }
@@ -1331,6 +1357,8 @@ case VVT_INACTIVE:
   return "VVT_INACTIVE";
 case VVT_MIATA_NB2:
   return "VVT_MIATA_NB2";
+case VVT_NISSAN_VQ:
+  return "VVT_NISSAN_VQ";
 case VVT_SECOND_HALF:
   return "VVT_SECOND_HALF";
   }

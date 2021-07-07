@@ -268,7 +268,7 @@ void setEtbTestConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	 */
 	CONFIG(etbIo[0].directionPin1) = GPIOC_7; // Frankenso high-side in order to get 5v control
 	CONFIG(etbIo[0].directionPin2) = GPIOC_9;
-	CONFIG(etbIo[0].controlPin1) = GPIOE_14;
+	CONFIG(etbIo[0].controlPin) = GPIOE_14;
 
 #if EFI_ELECTRONIC_THROTTLE_BODY
 	setBoschVNH2SP30Curve(PASS_CONFIG_PARAMETER_SIGNATURE);
@@ -574,10 +574,8 @@ void proteusBoardTest(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 #endif // HW_PROTEUS
 
 void mreBCM(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
-	for (int i = 0; i < IGNITION_PIN_COUNT;i++) {
+	for (int i = 0; i < MAX_CYLINDER_COUNT;i++) {
 		engineConfiguration->ignitionPins[i] = GPIO_UNASSIGNED;
-	}
-	for (int i = 0; i < INJECTION_PIN_COUNT;i++) {
 		engineConfiguration->injectionPins[i] = GPIO_UNASSIGNED;
 	}
 	engineConfiguration->fanPin = GPIO_UNASSIGNED;

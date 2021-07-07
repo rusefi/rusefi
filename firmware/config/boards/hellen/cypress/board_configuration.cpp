@@ -43,7 +43,6 @@ void setBoardDefaultConfiguration(void) {
 	engineConfiguration->injector.flow = 200;
 	
 	engineConfiguration->cranking.baseFuel = 25;		// ???
-	engineConfiguration->crankingChargeAngle = 70;
 	engineConfiguration->cranking.rpm = 600;
 
 	engineConfiguration->rpmHardLimit = 3000; // yes, 3k. let's play it safe for now
@@ -120,9 +119,9 @@ void setBoardDefaultConfiguration(void) {
 
 	// todo:
 	int i;
-	for (i = 0; i < INJECTION_PIN_COUNT; i++)
+	for (i = 0; i < MAX_CYLINDER_COUNT; i++)
 		engineConfiguration->injectionPins[i] = GPIO_UNASSIGNED;
-	for (i = 0; i < IGNITION_PIN_COUNT; i++)
+	for (i = 0; i < MAX_CYLINDER_COUNT; i++)
 		engineConfiguration->ignitionPins[i] = GPIO_UNASSIGNED;
 	
 	engineConfiguration->adcVcc = 5.0f;

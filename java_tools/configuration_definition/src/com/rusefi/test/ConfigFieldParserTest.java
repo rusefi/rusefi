@@ -119,7 +119,7 @@ public class ConfigFieldParserTest {
         state.readBufferedReader(reader, Collections.singletonList(javaFieldsConsumer));
 
         assertEquals("periodMs = scalar, S16, 0, \"ms\", 0.1, 0, 0, 3000, 0\n" +
-                "periodMs2 = scalar, S16, 2, \"ms\", 1.0, 0, 0, 3000, 0\n" +
+                "periodMs2 = scalar, S16, 2, \"ms\", 1, 0, 0, 3000, 0\n" +
                 "afrTable = array, U08, 4, [4x4],\"deg\", 0.1, 0, 0, 25.0, 1\n" +
                 "; total TS size = 20\n", new String(writer.toCharArray()));
     }
@@ -315,8 +315,6 @@ public class ConfigFieldParserTest {
                 "\tint field[ERROR_BUFFER_SIZE];\n" +
                 "\t/** total size 4*/\n" +
                 "};\n" +
-                "\n" +
-                "typedef struct pid_s pid_s;\n" +
                 "\n", consumer.getContent().toString());
     }
 

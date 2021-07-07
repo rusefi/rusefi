@@ -76,16 +76,6 @@ void setSingleCoilDwell(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	engineConfiguration->sparkDwellValues[7] = 0;
 }
 
-static floatms_t getCrankingSparkDwell(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
-	if (engineConfiguration->useConstantDwellDuringCranking) {
-		return engineConfiguration->ignitionDwellForCrankingMs;
-	} else {
-		// technically this could be implemented via interpolate2d
-		float angle = engineConfiguration->crankingChargeAngle;
-		return getOneDegreeTimeMs(GET_RPM()) * angle;
-	}
-}
-
 /**
  * @return Spark dwell time, in milliseconds. 0 if tables are not ready.
  */
@@ -93,7 +83,7 @@ floatms_t getSparkDwell(int rpm DECLARE_ENGINE_PARAMETER_SUFFIX) {
 #if EFI_ENGINE_CONTROL && EFI_SHAFT_POSITION_INPUT
 	float dwellMs;
 	if (ENGINE(rpmCalculator).isCranking()) {
-		dwellMs = getCrankingSparkDwell(PASS_ENGINE_PARAMETER_SIGNATURE);
+		dwellMs = CONFIG(ignitionDwellForCrankingMs);
 	} else {
 		efiAssert(CUSTOM_ERR_ASSERT, !cisnan(rpm), "invalid rpm", NAN);
 
@@ -310,7 +300,7 @@ int getCylinderId(int index DECLARE_ENGINE_PARAMETER_SUFFIX) {
 
 	const int firingOrderLength = getFiringOrderLength(PASS_ENGINE_PARAMETER_SIGNATURE);
 
-	if (firingOrderLength < 1 || firingOrderLength > INJECTION_PIN_COUNT) {
+	if (firingOrderLength < 1 || firingOrderLength > MAX_CYLINDER_COUNT) {
 		firmwareError(CUSTOM_ERR_6687, "fol %d", firingOrderLength);
 		return 1;
 	}
@@ -379,7 +369,7 @@ static int getIgnitionPinForIndex(int cylinderIndex DECLARE_ENGINE_PARAMETER_SUF
 void prepareIgnitionPinIndices(ignition_mode_e ignitionMode DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	(void)ignitionMode;
 #if EFI_ENGINE_CONTROL
-	for (cylinders_count_t cylinderIndex = 0; cylinderIndex < CONFIG(specs.cylindersCount); cylinderIndex++) {
+	for (size_t cylinderIndex = 0; cylinderIndex < CONFIG(specs.cylindersCount); cylinderIndex++) {
 		ENGINE(ignitionPin[cylinderIndex]) = getIgnitionPinForIndex(cylinderIndex PASS_ENGINE_PARAMETER_SUFFIX);
 	}
 #endif /* EFI_ENGINE_CONTROL */
@@ -423,7 +413,7 @@ void prepareOutputSignals(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	}
 #endif /* EFI_UNIT_TEST */
 
-	for (cylinders_count_t i = 0; i < CONFIG(specs.cylindersCount); i++) {
+	for (size_t i = 0; i < CONFIG(specs.cylindersCount); i++) {
 		ENGINE(ignitionPositionWithinEngineCycle[i]) = ENGINE(engineCycle) * i / CONFIG(specs.cylindersCount);
 	}
 

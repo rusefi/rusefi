@@ -73,7 +73,7 @@ static void fireSparkBySettingPinLow(IgnitionEvent *event, IgnitionOutputPin *ou
 // todo: make this a class method?
 #define assertPinAssigned(output) { \
 		if (!output->isInitialized()) { \
-			warning(CUSTOM_OBD_COIL_PIN_NOT_ASSIGNED, "no_pin_cl #%s", (output)->getName()); \
+			warning(CUSTOM_OBD_COIL_PIN_NOT_ASSIGNED, "Pin Not Assigned check configuration #%s", (output)->getName()); \
 		} \
 }
 
@@ -87,7 +87,7 @@ static void prepareCylinderIgnitionSchedule(angle_t dwellAngleDuration, floatms_
 	angle_t ignitionPositionWithinEngineCycle = ENGINE(ignitionPositionWithinEngineCycle[event->cylinderIndex]);
 	assertAngleRange(ignitionPositionWithinEngineCycle, "aPWEC", CUSTOM_ERR_6566);
 	// this correction is usually zero (not used)
-	cfg_float_t_1f perCylinderCorrection = CONFIG(timing_offset_cylinder[event->cylinderIndex]);
+	float perCylinderCorrection = CONFIG(timing_offset_cylinder[event->cylinderIndex]);
 	const angle_t sparkAngle = -ENGINE(engineState.timingAdvance) + ignitionPositionWithinEngineCycle + perCylinderCorrection;
 	efiAssertVoid(CUSTOM_SPARK_ANGLE_9, !cisnan(sparkAngle), "findAngle#9");
 

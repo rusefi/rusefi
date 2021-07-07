@@ -13,9 +13,16 @@
 
 // http://en.wikipedia.org/wiki/Endianness
 
-#define SWAP_UINT16(x) (((x) << 8) | ((x) >> 8))
+static inline uint16_t SWAP_UINT16(uint16_t x)
+{
+	return ((x << 8) | (x >> 8));
+}
 
-#define SWAP_UINT32(x) ((((x) >> 24) & 0xff) | (((x) << 8) & 0xff0000) | (((x) >> 8) & 0xff00) | (((x) << 24) & 0xff000000))
+static inline uint32_t SWAP_UINT32(uint32_t x)
+{
+	return (((x >> 24) & 0x000000ff) | ((x <<  8) & 0x00ff0000) |
+			((x >>  8) & 0x0000ff00) | ((x << 24) & 0xff000000));
+}
 
 #define BIT(n) (UINT32_C(1) << (n))
 
@@ -94,6 +101,7 @@ float tanf_taylor(float theta);
 }
 
 #include <cstddef>
+#include <cstring>
 
 #define IS_NEGATIVE_ZERO(value) (__builtin_signbit(value) && value==0)
 #define fixNegativeZero(value) (IS_NEGATIVE_ZERO(value) ? 0 : value)
@@ -104,6 +112,21 @@ namespace efi
 template <typename T, size_t N>
 constexpr size_t size(const T(&)[N]) {
     return N;
+}
+
+// Zero the passed object
+template <typename T>
+constexpr void clear(T* obj) {
+	// The cast to void* is to prevent errors like:
+	//    clearing an object of non-trivial type 'struct persistent_config_s'; use assignment or value-initialization instead
+	// This is technically wrong, but we know config objects only ever actually
+	// contain integral types, though they may be wrapped in a scaled_channel
+	memset(reinterpret_cast<void*>(obj), 0, sizeof(T));
+}
+
+template <typename T>
+constexpr void clear(T& obj) {
+	clear(&obj);
 }
 } // namespace efi
 

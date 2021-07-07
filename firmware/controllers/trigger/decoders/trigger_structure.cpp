@@ -117,13 +117,14 @@ int TriggerWaveform::getTriggerWaveformSynchPointIndex() const {
 /**
  * physical primary trigger duration
  * @see getEngineCycle
+ * @see getCrankDivider
  */
 angle_t TriggerWaveform::getCycleDuration() const {
 	switch (operationMode) {
 	case FOUR_STROKE_THREE_TIMES_CRANK_SENSOR:
-		return 120;
+		return 720 / SYMMETRICAL_THREE_TIMES_CRANK_SENSOR_DIVIDER;
 	case FOUR_STROKE_SYMMETRICAL_CRANK_SENSOR:
-		return 180;
+		return 720 / SYMMETRICAL_CRANK_SENSOR_DIVIDER;
 	case FOUR_STROKE_CRANK_SENSOR:
 	case TWO_STROKE:
 		return 360;
@@ -140,6 +141,7 @@ angle_t TriggerWaveform::getCycleDuration() const {
  */
 size_t TriggerWaveform::getLength() const {
 	/**
+	 * 6 for FOUR_STROKE_THREE_TIMES_CRANK_SENSOR
 	 * 4 for FOUR_STROKE_SYMMETRICAL_CRANK_SENSOR
 	 * 2 for FOUR_STROKE_CRANK_SENSOR
 	 * 1 otherwise
@@ -149,10 +151,6 @@ size_t TriggerWaveform::getLength() const {
 }
 
 angle_t TriggerWaveform::getAngle(int index) const {
-	// todo: why is this check here? looks like the code below could be used universally
-	if (operationMode == FOUR_STROKE_CAM_SENSOR) {
-		return getSwitchAngle(index);
-	}
 	/**
 	 * FOUR_STROKE_CRANK_SENSOR magic:
 	 * We have two crank shaft revolutions for each engine cycle
@@ -183,18 +181,20 @@ operation_mode_e TriggerWaveform::getOperationMode() const {
 extern bool printTriggerDebug;
 #endif
 
-void TriggerWaveform::calculateExpectedEventCounts(bool useOnlyRisingEdgeForTrigger) {
-	UNUSED(useOnlyRisingEdgeForTrigger);
+int TriggerWaveform::getExpectedEventCount(int channelIndex) const {
+	return expectedEventCount[channelIndex];
+}
 
+void TriggerWaveform::calculateExpectedEventCounts(bool useOnlyRisingEdgeForTrigger) {
 	if (!useOnlyRisingEdgeForTrigger) {
 		for (size_t i = 0; i < efi::size(expectedEventCount); i++) {
-			if (expectedEventCount[i] % 2 != 0) {
-				firmwareError(ERROR_TRIGGER_DRAMA, "Trigger: should be even %d %d", i, expectedEventCount[i]);
+			if (getExpectedEventCount(i) % 2 != 0) {
+				firmwareError(ERROR_TRIGGER_DRAMA, "Trigger: should be even %d %d", i, getExpectedEventCount(i));
 			}
 		}
 	}
 
-	bool isSingleToothOnPrimaryChannel = useOnlyRisingEdgeForTrigger ? expectedEventCount[0] == 1 : expectedEventCount[0] == 2;
+	bool isSingleToothOnPrimaryChannel = useOnlyRisingEdgeForTrigger ? getExpectedEventCount(0) == 1 : getExpectedEventCount(0) == 2;
 	// todo: next step would be to set 'isSynchronizationNeeded' automatically based on the logic we have here
 	if (!shapeWithoutTdc && isSingleToothOnPrimaryChannel != !isSynchronizationNeeded) {
 		firmwareError(ERROR_TRIGGER_DRAMA, "trigger sync constraint violation");
@@ -345,8 +345,8 @@ void TriggerWaveform::setTriggerSynchronizationGap2(float syncRatioFrom, float s
 void TriggerWaveform::setTriggerSynchronizationGap3(int gapIndex, float syncRatioFrom, float syncRatioTo) {
 	isSynchronizationNeeded = true;
 	efiAssertVoid(OBD_PCM_Processor_Fault, gapIndex >= 0 && gapIndex < GAP_TRACKING_LENGTH, "gapIndex out of range");
-	this->syncronizationRatioFrom[gapIndex] = syncRatioFrom;
-	this->syncronizationRatioTo[gapIndex] = syncRatioTo;
+	syncronizationRatioFrom[gapIndex] = syncRatioFrom;
+	syncronizationRatioTo[gapIndex] = syncRatioTo;
 	if (gapIndex == 0) {
 		// we have a special case here - only sync with one gap has this feature
 		this->syncRatioAvg = (int)efiRound((syncRatioFrom + syncRatioTo) * 0.5f, 1.0f);
@@ -543,6 +543,14 @@ void TriggerWaveform::initializeTriggerWaveform(operation_mode_e ambiguousOperat
 		configureFordAspireTriggerWaveform(this);
 		break;
 
+	case TT_VVT_NISSAN_VQ:
+		initializeNissanVQvvt(this);
+		break;
+
+	case TT_TT_NISSAN_VQ:
+		initializeNissanVQcrank(this);
+		break;
+
 	case TT_KAWA_KX450F:
 		configureKawaKX450F(this);
 		break;
@@ -589,10 +597,12 @@ void TriggerWaveform::initializeTriggerWaveform(operation_mode_e ambiguousOperat
 
 	case TT_TOOTHED_WHEEL_60_2:
 		setToothedWheelConfiguration(this, 60, 2, ambiguousOperationMode);
+		setSecondTriggerSynchronizationGap(1); // this gap is not required to synch on perfect signal but is needed to handle to reject cranking transition noise
 		break;
 
 	case TT_TOOTHED_WHEEL_36_2:
 		setToothedWheelConfiguration(this, 36, 2, ambiguousOperationMode);
+		setSecondTriggerSynchronizationGap(1); // this gap is not required to synch on perfect signal but is needed to handle to reject cranking transition noise
 		break;
 
 	case TT_60_2_VW:
@@ -601,6 +611,7 @@ void TriggerWaveform::initializeTriggerWaveform(operation_mode_e ambiguousOperat
 
 	case TT_TOOTHED_WHEEL_36_1:
 		setToothedWheelConfiguration(this, 36, 1, ambiguousOperationMode);
+		setSecondTriggerSynchronizationGap(1); // this gap is not required to synch on perfect signal but is needed to handle to reject cranking transition noise
 		break;
 
 	case TT_VVT_BOSCH_QUICK_START:

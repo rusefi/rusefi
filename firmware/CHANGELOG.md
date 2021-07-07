@@ -26,6 +26,26 @@ Release template (copy/paste this for new release):
 All notable user-facing or behavior-altering changes will be documented in this file.
 
 ## Month 202x Release - "Release Name"
+
+### Breaking Changes
+ - vvtOffset field migrated to four vvtOffsets fields. Anyone using VVT would need to manually adjust their configuration.  
+
+## June 2021 Release "National Logistics Day"
+
+### Fixed
+ - Improved cranking defaults
+ - Simplified/clarified idle and cranking TunerStudio pages
+ - Minor change of Miata NA trigger shape #2855
+ - Improved trigger sync for 60/2 36/1 36/22 triggers as part of VW warnings on cranking part #1 #2861   
+
+### Added
+ - Idle improvements! Open loop corrections are now applied in closed loop mode.
+ - Electronic throttle rev limiter: close the throttle before hitting hard limit, OEM style.
+ - "inhibit start until oil pressure" prevents starting the engine with no/low oil pressure #2799
+ - Dual cooling fans, with new "enable fan with AC" option
+ - Lua scripting: implement custom ECU behavior with a Lua script. https://github.com/rusefi/rusefi/wiki/Lua-Scripting
+
+# 2021 May "Piercing Day"
 ### Fixed
  - LCD screen works again #2576
  - Support STM32F7 1MB devices

@@ -26,6 +26,9 @@ typedef unsigned int time_t;
 #define DEFAULT_FUEL_LOAD_COUNT 16
 #define DEFAULT_IGN_LOAD_COUNT 16
 
+// gasoline E0
+#define STOICH_RATIO				14.7f
+
 // time in seconds
 typedef time_t efitimesec_t;
 
@@ -36,8 +39,6 @@ typedef time_t efitimesec_t;
  * See getTimeNowUs()
  */
 typedef uint32_t efitimems_t;
-
-typedef int pid_dt;
 
 /**
  * We use a signed type here so that subtraction result is a proper negative value.
@@ -81,6 +82,8 @@ typedef float percent_t;
 
 typedef void (*Void)(void);
 
+typedef char lua_script_t[LUA_SCRIPT_SIZE];
+
 typedef char error_message_t[ERROR_BUFFER_SIZE];
 
 typedef char vehicle_info_t[VEHICLE_INFO_SIZE];
@@ -89,9 +92,12 @@ typedef char le_formula_t[LE_COMMAND_LENGTH];
 
 typedef brain_pin_e egt_cs_array_t[EGT_CHANNEL_COUNT];
 
-typedef uint8_t lambda_table_t[FUEL_LOAD_COUNT][FUEL_RPM_COUNT];
-// todo: merge these two types together? but these tables have different TS parameters like ranges etc
-typedef float fuel_table_t[FUEL_LOAD_COUNT][FUEL_RPM_COUNT];
+#if __cplusplus
+#include "scaled_channel.h"
+using ve_table_t = scaled_channel<float, 1>[FUEL_LOAD_COUNT][FUEL_RPM_COUNT];
+using lambda_table_t = scaled_channel<uint8_t, PACK_MULT_LAMBDA_CFG>[FUEL_LOAD_COUNT][FUEL_RPM_COUNT];
+#endif
+
 typedef uint16_t map_estimate_table_t[FUEL_LOAD_COUNT][FUEL_RPM_COUNT];
 typedef float ignition_table_t[IGN_LOAD_COUNT][IGN_RPM_COUNT];
 typedef int16_t ignition_tps_table_t[IGN_LOAD_COUNT][IGN_RPM_COUNT];
@@ -113,19 +119,12 @@ typedef uint8_t gppwm_table_t[GPPWM_LOAD_COUNT][GPPWM_RPM_COUNT];
 // this is different type simply to have different hi/low range in rusefi.ini
 typedef ignition_table_t angle_table_t;
 
-typedef uint32_t cylinders_count_t;
-
-typedef int32_t bool32_t;
-
 typedef int16_t fsio_pwm_freq_t;
 
 typedef float fsio_setting_t;
-typedef float cfg_float_t_1f;
 
 typedef brain_pin_e brain_input_pin_e;
 typedef brain_pin_e switch_input_pin_e;
-
-typedef fuel_table_t ve_table_t;
 
 typedef void (*VoidPtr)(void*);
 

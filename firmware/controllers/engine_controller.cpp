@@ -651,10 +651,6 @@ void initEngineContoller(DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	initCJ125(PASS_ENGINE_PARAMETER_SIGNATURE);
 #endif /* EFI_CJ125 */
 
-
-	// periodic events need to be initialized after fuel&spark pins to avoid a warning
-	initPeriodicEvents(PASS_ENGINE_PARAMETER_SIGNATURE);
-
 	if (hasFirmwareError()) {
 		return;
 	}
@@ -702,7 +698,7 @@ void initEngineContoller(DECLARE_ENGINE_PARAMETER_SUFFIX) {
  * UNUSED_SIZE constants.
  */
 #ifndef RAM_UNUSED_SIZE
-#define RAM_UNUSED_SIZE 5900
+#define RAM_UNUSED_SIZE 1400
 #endif
 #ifndef CCM_UNUSED_SIZE
 #define CCM_UNUSED_SIZE 300

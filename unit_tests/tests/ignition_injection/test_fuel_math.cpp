@@ -115,7 +115,7 @@ TEST(AirmassModes, VeOverride) {
 	struct DummyAirmassModel : public AirmassVeModelBase {
 		DummyAirmassModel(const ValueProvider3D& veTable) : AirmassVeModelBase(veTable) {}
 
-		AirmassResult getAirmass(int rpm) const override {
+		AirmassResult getAirmass(int rpm) override {
 			// Default load value 10, will be overriden
 			getVe(rpm, 10.0f);
 
@@ -139,7 +139,6 @@ TEST(AirmassModes, VeOverride) {
 }
 
 void setInjectionMode(int value DECLARE_ENGINE_PARAMETER_SUFFIX);
-extern WarningCodeState unitTestWarningCodeState;
 
 TEST(FuelMath, testDifferentInjectionModes) {
 	WITH_ENGINE_TEST_HELPER(TEST_ENGINE);
@@ -163,7 +162,7 @@ TEST(FuelMath, testDifferentInjectionModes) {
 	setInjectionMode((int)IM_SINGLE_POINT PASS_ENGINE_PARAMETER_SUFFIX);
 	engine->periodicFastCallback(PASS_ENGINE_PARAMETER_SIGNATURE);
 	EXPECT_FLOAT_EQ( 40,  engine->injectionDuration) << "injection while IM_SINGLE_POINT";
-	EXPECT_EQ( 0, unitTestWarningCodeState.recentWarnings.getCount()) << "warningCounter#testDifferentInjectionModes";
+	EXPECT_EQ( 0, eth.recentWarnings()->getCount()) << "warningCounter#testDifferentInjectionModes";
 }
 
 TEST(FuelMath, deadtime) {

@@ -34,6 +34,8 @@
 #include "tachometer.h"
 #include "dynoview.h"
 #include "boost_control.h"
+#include "fan_control.h"
+#include "ac_control.h"
 #if EFI_MC33816
  #include "mc33816.h"
 #endif // EFI_MC33816
@@ -98,8 +100,11 @@ trigger_type_e getVvtTriggerType(vvt_mode_e vvtMode) {
 		return TT_FORD_ST170;
 	case VVT_BARRA_3_PLUS_1:
 		return TT_VVT_BARRA_3_PLUS_1;
+	case VVT_NISSAN_VQ:
+		return TT_VVT_NISSAN_VQ;
 	default:
-		return TT_ONE;
+		firmwareError(OBD_PCM_Processor_Fault, "getVvtTriggerType for %s", getVvt_mode_e(vvtMode));
+		return TT_ONE; // we have to return something for the sake of -Werror=return-type
 	}
 }
 
@@ -146,6 +151,22 @@ void Engine::initializeTriggerWaveform(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 			engineConfiguration->ambiguousOperationMode,
 			engineConfiguration->useOnlyRisingEdgeForTrigger, &engineConfiguration->trigger));
 
+	/**
+	 * this is only useful while troubleshooting a new trigger shape in the field
+	 * in very VERY rare circumstances
+	 */
+	if (CONFIG(overrideTriggerGaps)) {
+		int gapIndex = 0;
+		for (;gapIndex<=CONFIG(overrideTriggerGaps);gapIndex++) {
+			float gapOverride = CONFIG(triggerGapOverride[gapIndex]);
+			TRIGGER_WAVEFORM(setTriggerSynchronizationGap3(/*gapIndex*/gapIndex, gapOverride * TRIGGER_GAP_DEVIATION_LOW, gapOverride * TRIGGER_GAP_DEVIATION_HIGH));
+		}
+		for (;gapIndex<GAP_TRACKING_LENGTH;gapIndex++) {
+			ENGINE(triggerCentral.triggerShape).syncronizationRatioFrom[gapIndex] = NAN;
+			ENGINE(triggerCentral.triggerShape).syncronizationRatioTo[gapIndex] = NAN;
+		}
+	}
+
 	if (!TRIGGER_WAVEFORM(shapeDefinitionError)) {
 		/**
 	 	 * 'initState' instance of TriggerState is used only to initialize 'this' TriggerWaveform instance
@@ -159,8 +180,9 @@ void Engine::initializeTriggerWaveform(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	}
 
 
-	initVvtShape(0, initState PASS_ENGINE_PARAMETER_SUFFIX);
-	initVvtShape(1, initState PASS_ENGINE_PARAMETER_SUFFIX);
+	for (int camIndex = 0;camIndex < CAMS_PER_BANK;camIndex++) {
+		initVvtShape(camIndex, initState PASS_ENGINE_PARAMETER_SUFFIX);
+	}
 
 
 	if (!TRIGGER_WAVEFORM(shapeDefinitionError)) {
@@ -210,6 +232,9 @@ void Engine::periodicSlowCallback(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 #else
 	runHardcodedFsio(PASS_ENGINE_PARAMETER_SIGNATURE);
 #endif /* EFI_FSIO */
+
+	bool acActive = updateAc(PASS_ENGINE_PARAMETER_SIGNATURE);
+	updateFans(acActive PASS_ENGINE_PARAMETER_SUFFIX);
 
 	updateGppwm();
 
@@ -371,9 +396,9 @@ void Engine::OnTriggerStateDecodingError() {
 			triggerCentral.triggerState.currentCycle.eventCount[0],
 			triggerCentral.triggerState.currentCycle.eventCount[1],
 			triggerCentral.triggerState.currentCycle.eventCount[2],
-			TRIGGER_WAVEFORM(expectedEventCount[0]),
-			TRIGGER_WAVEFORM(expectedEventCount[1]),
-			TRIGGER_WAVEFORM(expectedEventCount[2]));
+			TRIGGER_WAVEFORM(getExpectedEventCount(0)),
+			TRIGGER_WAVEFORM(getExpectedEventCount(1)),
+			TRIGGER_WAVEFORM(getExpectedEventCount(2)));
 	triggerCentral.triggerState.setTriggerErrorState();
 
 
@@ -382,9 +407,9 @@ void Engine::OnTriggerStateDecodingError() {
 #if EFI_PROD_CODE
 		efiPrintf("error: synchronizationPoint @ index %d expected %d/%d/%d got %d/%d/%d",
 				triggerCentral.triggerState.currentCycle.current_index,
-				TRIGGER_WAVEFORM(expectedEventCount[0]),
-				TRIGGER_WAVEFORM(expectedEventCount[1]),
-				TRIGGER_WAVEFORM(expectedEventCount[2]),
+				TRIGGER_WAVEFORM(getExpectedEventCount(0)),
+				TRIGGER_WAVEFORM(getExpectedEventCount(1)),
+				TRIGGER_WAVEFORM(getExpectedEventCount(2)),
 				triggerCentral.triggerState.currentCycle.eventCount[0],
 				triggerCentral.triggerState.currentCycle.eventCount[1],
 				triggerCentral.triggerState.currentCycle.eventCount[2]);
@@ -431,8 +456,9 @@ void Engine::OnTriggerSyncronization(bool wasSynchronized) {
 
 		if (isTriggerDecoderError(PASS_ENGINE_PARAMETER_SIGNATURE)) {
 			warning(CUSTOM_OBD_TRG_DECODING, "trigger decoding issue. expected %d/%d/%d got %d/%d/%d",
-					TRIGGER_WAVEFORM(expectedEventCount[0]), TRIGGER_WAVEFORM(expectedEventCount[1]),
-					TRIGGER_WAVEFORM(expectedEventCount[2]),
+					TRIGGER_WAVEFORM(getExpectedEventCount(0)),
+					TRIGGER_WAVEFORM(getExpectedEventCount(1)),
+					TRIGGER_WAVEFORM(getExpectedEventCount(2)),
 					triggerCentral.triggerState.currentCycle.eventCount[0],
 					triggerCentral.triggerState.currentCycle.eventCount[1],
 					triggerCentral.triggerState.currentCycle.eventCount[2]);
@@ -458,7 +484,7 @@ void Engine::injectEngineReferences() {
 
 void Engine::setConfig(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	INJECT_ENGINE_REFERENCE(this);
-	memset(config, 0, sizeof(persistent_config_s));
+	efi::clear(config);
 
 	injectEngineReferences();
 }

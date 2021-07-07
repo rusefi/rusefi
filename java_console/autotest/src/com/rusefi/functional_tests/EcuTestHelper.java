@@ -62,15 +62,18 @@ public class EcuTestHelper {
         return linkManager;
     }
 
-    public static void assertEquals(double expected, double actual) {
-        EcuTestHelper.assertEquals("", expected, actual);
+    public static void assertSomewhatClose(double expected, double actual) {
+        EcuTestHelper.assertSomewhatClose("", expected, actual);
     }
 
-    public static void assertEquals(String msg, double expected, double actual) {
-        EcuTestHelper.assertEquals(msg, expected, actual, EngineReport.RATIO);
+    public static void assertSomewhatClose(String msg, double expected, double actual) {
+        EcuTestHelper.assertSomewhatClose(msg, expected, actual, EngineReport.RATIO);
     }
 
-    public static void assertEquals(String msg, double expected, double actual, double ratio) {
+    /**
+     * todo: it's time to leverage junit a bit more properly
+     */
+    public static void assertSomewhatClose(String msg, double expected, double actual, double ratio) {
         if (!isCloseEnough(expected, actual, ratio))
             throw new IllegalStateException(msg + " Expected " + expected + " but got " + actual);
     }

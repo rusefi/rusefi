@@ -78,16 +78,16 @@ TEST(misc, testFuelMap) {
 
 	// Should use 20 degree correction in case of failed sensor
 	Sensor::resetMockValue(SensorType::Clt);
-	EXPECT_NEAR( 9.71999,  getCrankingFuel3(2, 0 PASS_ENGINE_PARAMETER_SUFFIX), EPS4D);
+	EXPECT_NEAR(12.4, getCrankingFuel3(2, 0 PASS_ENGINE_PARAMETER_SUFFIX), EPS4D);
 
 	Sensor::setMockValue(SensorType::Clt, 0);
-	EXPECT_NEAR(11.6, getCrankingFuel3(2, 4 PASS_ENGINE_PARAMETER_SUFFIX), EPS4D);
+	EXPECT_NEAR(7.7333, getCrankingFuel3(2, 4 PASS_ENGINE_PARAMETER_SUFFIX), EPS4D);
 	Sensor::setMockValue(SensorType::Clt, 8);
-	EXPECT_NEAR(5.82120, getCrankingFuel3(2, 15 PASS_ENGINE_PARAMETER_SUFFIX), EPS4D);
+	EXPECT_NEAR(7, getCrankingFuel3(2, 15 PASS_ENGINE_PARAMETER_SUFFIX), EPS4D);
 	Sensor::setMockValue(SensorType::Clt, 70);
-	EXPECT_NEAR(6.000, getCrankingFuel3(2, 0 PASS_ENGINE_PARAMETER_SUFFIX), EPS4D);
+	EXPECT_NEAR(8, getCrankingFuel3(2, 0 PASS_ENGINE_PARAMETER_SUFFIX), EPS4D);
 	Sensor::setMockValue(SensorType::Clt, 70);
-	EXPECT_NEAR(2.41379, getCrankingFuel3(2, 50 PASS_ENGINE_PARAMETER_SUFFIX), EPS4D);
+	EXPECT_NEAR(4, getCrankingFuel3(2, 50 PASS_ENGINE_PARAMETER_SUFFIX), EPS4D);
 }
 
 

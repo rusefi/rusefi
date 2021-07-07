@@ -105,7 +105,15 @@ public class TSProjectConsumer implements ConfigurationConsumer {
                  * Evaluate static math on .ini layer to simplify rusEFI java and rusEFI PHP project consumers
                  * https://github.com/rusefi/web_backend/issues/97
                  */
-                fields[mutliplierIndex] = " " + IniField.parseDouble(fields[mutliplierIndex]);
+                double val = IniField.parseDouble(fields[mutliplierIndex]);
+
+                if (val == 0) {
+                    fields[mutliplierIndex] = " 0";
+                } else if (val == 1) {
+                    fields[mutliplierIndex] = " 1";
+                } else {
+                    fields[mutliplierIndex] = " " + val;
+                }
             }
             StringBuilder sb = new StringBuilder();
             for (String f : fields) {

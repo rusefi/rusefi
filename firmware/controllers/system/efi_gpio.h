@@ -176,6 +176,8 @@ public:
 	RegisteredOutputPin starterRelayDisable;
 
 	RegisteredOutputPin fanRelay;
+	RegisteredOutputPin fanRelay2;
+
 	// see acRelayPin
 	RegisteredOutputPin acRelay;
 	RegisteredOutputPin fuelPumpRelay;
@@ -205,8 +207,8 @@ public:
 	OutputPin sdCsPin;
 	OutputPin accelerometerCs;
 
-	InjectorOutputPin injectors[INJECTION_PIN_COUNT];
-	IgnitionOutputPin coils[IGNITION_PIN_COUNT];
+	InjectorOutputPin injectors[MAX_CYLINDER_COUNT];
+	IgnitionOutputPin coils[MAX_CYLINDER_COUNT];
 	NamedOutputPin auxValve[AUX_DIGITAL_VALVE_COUNT];
 	OutputPin tcuSolenoids[TCU_SOLENOID_COUNT];
 

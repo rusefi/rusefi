@@ -9,8 +9,7 @@
  * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
-#ifndef HW_LAYER_DRV8860_H_
-#define HW_LAYER_DRV8860_H_
+#pragma once
 
 #include "efifeatures.h"
 #include <hal.h>
@@ -31,15 +30,4 @@ struct drv8860_config {
 	} reset;
 };
 
-#ifdef __cplusplus
-extern "C"
-{
-#endif /* __cplusplus */
-
 int drv8860_add(brain_pin_e base, unsigned int index, const struct drv8860_config *cfg);
-
-#ifdef __cplusplus
-}
-#endif /* __cplusplus */
-
-#endif /* HW_LAYER_DRV8860_H_ */

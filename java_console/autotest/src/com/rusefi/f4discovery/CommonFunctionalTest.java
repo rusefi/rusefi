@@ -2,8 +2,6 @@ package com.rusefi.f4discovery;
 
 
 import com.rusefi.RusefiTestBase;
-import com.rusefi.TestingUtils;
-import com.rusefi.Timeouts;
 import com.rusefi.core.Sensor;
 import com.rusefi.core.SensorCentral;
 import com.rusefi.functional_tests.EcuTestHelper;
@@ -13,7 +11,7 @@ import org.junit.Test;
 import java.util.Arrays;
 
 import static com.rusefi.IoUtil.getEnableCommand;
-import static com.rusefi.TestingUtils.*;
+import static com.rusefi.TestingUtils.assertNull;
 import static com.rusefi.config.generated.Fields.*;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
@@ -216,7 +214,7 @@ public class CommonFunctionalTest extends RusefiTestBase {
         ecu.changeRpm(200);
         ecu.changeRpm(250); // another approach to artificial delay
         ecu.changeRpm(200);
-        EcuTestHelper.assertEquals("VBatt", 12, SensorCentral.getInstance().getValue(Sensor.VBATT));
+        EcuTestHelper.assertSomewhatClose("VBatt", 12, SensorCentral.getInstance().getValue(Sensor.VBATT));
 
         chart = nextChart();
         double x = 100;
@@ -286,7 +284,7 @@ public class CommonFunctionalTest extends RusefiTestBase {
         ecu.changeRpm(200);
         String msg = "ProtegeLX cranking";
         chart = nextChart();
-        EcuTestHelper.assertEquals("", 12, SensorCentral.getInstance().getValue(Sensor.VBATT), 0.1);
+        EcuTestHelper.assertSomewhatClose("", 12, SensorCentral.getInstance().getValue(Sensor.VBATT), 0.1);
         assertWaveNotNull(msg, chart, EngineChart.SPARK_3);
         assertWaveNotNull(msg, chart, EngineChart.SPARK_1);
         assertWaveNotNull(msg, chart, EngineChart.INJECTOR_1);
@@ -344,7 +342,7 @@ public class CommonFunctionalTest extends RusefiTestBase {
         assertWaveNotNull(msg, chart, EngineChart.SPARK_1);
 
         assertWaveNull(msg, chart, EngineChart.TRIGGER_2);
-        sendComplexCommand("set " + "trigger_type" + " 1"); // TT_FORD_ASPIRE
+        sendComplexCommand("set " + "trigger_type" + " " + TT_TT_FORD_ASPIRE);
         chart = nextChart();
         assertTrue(chart.get(EngineChart.TRIGGER_2) != null);
     }
@@ -361,9 +359,8 @@ public class CommonFunctionalTest extends RusefiTestBase {
         sendComplexCommand("set cranking_rpm 500");
         ecu.changeRpm(200);
 
-        double x;
         chart = nextChart();
-        EcuTestHelper.assertEquals(12, SensorCentral.getInstance().getValue(Sensor.VBATT));
+        EcuTestHelper.assertSomewhatClose(12, SensorCentral.getInstance().getValue(Sensor.VBATT));
         assertWaveNotNull("aspire default cranking ", chart, EngineChart.SPARK_1);
 
         ecu.changeRpm(600);
@@ -447,7 +444,7 @@ public class CommonFunctionalTest extends RusefiTestBase {
         ecu.changeRpm(2400);
         ecu.changeRpm(2000);
         chart = nextChart();
-        EcuTestHelper.assertEquals("MAP", 69.12, SensorCentral.getInstance().getValue(Sensor.MAP));
+        EcuTestHelper.assertSomewhatClose("MAP", 69.12, SensorCentral.getInstance().getValue(Sensor.MAP));
         //assertEquals(1, SensorCentral.getInstance().getValue(Sensor.));
 
         assertWaveNotNull(msg + " fuel SD #1", chart, EngineChart.INJECTOR_1);
@@ -463,9 +460,10 @@ public class CommonFunctionalTest extends RusefiTestBase {
 
     /**
      * This method waits for longer then usual.
+     * todo: inline this method? complex and less complex seem to have same timeout these days?
      */
     private void sendComplexCommand(String command) {
-        ecu.sendCommand(command, Timeouts.CMD_TIMEOUT);
+        ecu.sendCommand(command);
     }
 
     private static void assertWaveNull(EngineChart chart, String key) {
@@ -508,7 +506,4 @@ public class CommonFunctionalTest extends RusefiTestBase {
         Arrays.stream(keys).peek(k -> assertWaveNoRises(chart, k));
     }
 
-    private EngineChart nextChart() {
-        return TestingUtils.nextChart(ecu.commandQueue);
-    }
 }

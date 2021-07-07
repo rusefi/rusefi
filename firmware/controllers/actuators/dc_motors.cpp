@@ -31,7 +31,7 @@ private:
 	SimplePwm m_pwmDir2;
 
 public:
-	DcHardware() : dcMotor(&m_pwmEnable, &m_pwmDir1, &m_pwmDir2, &m_disablePin) {}
+	DcHardware() : dcMotor(m_disablePin) {}
 
 	TwoPinDcMotor dcMotor;
 	
@@ -83,6 +83,8 @@ public:
 			0
 		);
 #endif /* EFI_UNIT_TEST */
+
+		dcMotor.configure(m_pwmEnable, m_pwmDir1, m_pwmDir2);
 	}
 };
 
@@ -93,7 +95,7 @@ DcMotor* initDcMotor(const dc_io& io, size_t index, bool useTwoWires DECLARE_ENG
 
 	hw.start(
 		useTwoWires,
-		io.controlPin1,
+		io.controlPin,
 		io.directionPin1,
 		io.directionPin2,
 		io.disablePin,

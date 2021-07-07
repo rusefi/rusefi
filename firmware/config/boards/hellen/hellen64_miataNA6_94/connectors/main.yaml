@@ -31,12 +31,8 @@ pins:
     type: ls
 
   - pin: 1F
-    id: GPIOF_12
-    class: outputs
-    ts_name: 1F - Tachometer 95.5
     function: Tachometer
-    type: ls
-
+    
   - pin: 1G
     id: GPIOI_8
     class: outputs
@@ -54,7 +50,7 @@ pins:
     type: gnd
 
   - pin: 1J
-    id: GPIOB_0
+    id: GPIOH_15
     class: outputs
     ts_name: 1J - AC Relay
     function: A/C Relay
@@ -63,7 +59,7 @@ pins:
   - pin: 1L
     id: GPIOD_12
     class: outputs
-    ts_name: 1L - Radiator Fan 94-95
+    ts_name: Radiator Fan
     function: Radiator Fan Relay
     type: ls
 
@@ -78,17 +74,15 @@ pins:
     function: Sensor +5V
 
   - pin: 1Q
-    id: GPIOE_12
-    class: switch_inputs
+    id: [GPIOC_5, EFI_ADC_15]
+    class: [switch_inputs, analog_inputs]
+    ts_name: 1Q AC Switch
     function: A/C switch input
     type: din
 
-  - pin: 1R
-    id: GPIOD_12
-    class: outputs
-    ts_name: 1R - Coolant Fan
+  - pin: 1R      
     function: Coolant Fan Relay
-    type: ls
+    
 
   - pin: 1S
     ts_name: 1S - Heate Input
@@ -105,20 +99,20 @@ pins:
     type: din
 
   - pin: 2A
-    id: GPIOA_9
+    id: GPIOC_6
     class: outputs
     ts_name: 2A - Boost Control
     function: Boost Control Solenoid
 
   - pin: 2B
     id: GPIOF_7
-    class: analog_input
+    class: analog_inputs
     ts_name: 2B - Knock Sensor
     function: Knock Sensor Input
     
   - pin: 2L
     id: GPIOE_13
-    class: outputs
+    class: analog_inputs
     ts_name: 2L - Flex Fuel
     function: Flex Fuel Input
   
@@ -170,7 +164,7 @@ pins:
   - pin: 3I
     id: GPIOF_12
     class: outputs
-    ts_name: 3I - Tachometer 90-95.5
+    ts_name: Tachometer
     function: tachometer
     
   - pin: 3K
@@ -179,22 +173,19 @@ pins:
     function: 5v reference
     
   - pin: 3L
-    id: EFI_ADC_4
-    class: analog_inputs
-    ts_name: 3L - TPS 90-93
     function: TPS INPUT
     
   - pin: 3M
     id: EFI_ADC_4
     class: analog_inputs
-    ts_name: 3M - TPS 94-95
+    ts_name: TPS Input
     function: TPS INPUT
 
   - pin: 3O
-    id: GPIOG_2
-    class: outputs
-    ts_name: 3O - Fuel Pump NA6
-    function: FUEL PUMP OUTPUT
+    id: EFI_ADC_10
+    class: analog_inputs
+    ts_name: 3O - MAF
+    function: MAF Input
 
   - pin: 3P
     id: EFI_ADC_13
@@ -203,7 +194,7 @@ pins:
     function: IAT sensor
             
   - pin: 3S
-    id: GPIOD_9
+    id: GPIOD_9  
     class: outputs
     ts_name: 3S - A/C Fan 94-95
     function: A/C Fan
@@ -211,7 +202,7 @@ pins:
   - pin: 3T
     id: GPIOG_2
     class: outputs
-    ts_name: 3T - Fuel Pump Relay
+    ts_name: Fuel Pump Relay
     function: Fuel Pump Relay
     type: ls
 
@@ -389,3 +380,4 @@ info:
     - pin: 3Z
       x: 200
       y: 512
+

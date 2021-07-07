@@ -93,6 +93,8 @@ public class DfuFlasher {
                         wnd.appendMsg("ERROR: Maybe DFU device not attached? Please check Device Manager.");
                         wnd.appendMsg("ERROR: Maybe ST DFU Driver is missing?");
                         wnd.appendMsg("ERROR: Maybe driver conflict with STM32Cube?");
+                        wnd.appendMsg("ERROR: Reminder about 'Install Drivers' button on top of rusEFI splash screen");
+                        wnd.appendMsg(System.getProperty("os.name") + " " + System.getProperty("os.version") + " " + System.getProperty("os.arch"));
                         wnd.appendMsg("   ***************");
                         wnd.appendMsg("   ***************");
                     }
