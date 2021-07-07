@@ -11,7 +11,7 @@
 #include "closed_loop_controller.h"
 #include "pid.h"
 
-class IPwm;
+struct IPwm;
 
 class BoostController : public ClosedLoopController<float, percent_t> {
 public:
