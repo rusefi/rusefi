@@ -424,13 +424,13 @@ public class ConfigDefinition {
                     throw new IllegalStateException("Expected multiple classes for " + pinIds);
                 for (int i = 0; i < pinIds.size(); i++) {
                     String id = pinIds.get(i);
-                    addPinToList(thisPinList, id, pinName, ((ArrayList<String>) pinClass).get(i))
+                    addPinToList(thisPinList, id, pinName, ((ArrayList<String>) pinClass).get(i));
                 }
             } else if (pinId instanceof String) {
                 if (pinId.length() == 0) {
                     throw new IllegalStateException("Unexpected empty ID field");
                 }
-                addPinToList(thisPinList, id, pinName, pinClass)
+                addPinToList(thisPinList, id, pinName, pinClass);
             } else {
                 throw new IllegalStateException("Unexpected type of ID field: " + pinId.getClass().getSimpleName());
             }
@@ -438,7 +438,7 @@ public class ConfigDefinition {
         }
     }
 
-    private static void addPinToList(ArrayList<Map<String, Object>> listPins, ArrayList<Map<String, Object>> thisPinList, id, pinName, pinClass) {
+    private static void addPinToList(ArrayList<Map<String, Object>> listPins, ArrayList<Map<String, Object>> thisPinList, Object id, Object pinName, Object pinClass) {
         for (int ii = i + 1; ii < listPins.size(); ii++) {
             if (id.equals(listPins.get(ii).get("id"))) {
                 throw new IllegalStateException("ID used multiple times: " + id);
