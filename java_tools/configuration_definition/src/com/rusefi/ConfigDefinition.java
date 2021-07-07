@@ -430,13 +430,16 @@ public class ConfigDefinition {
                     listPins.add(thisPin);
                 }
             } else if (pinId instanceof String) {
+                if (pinId.length() == 0) {
+                    throw new IllegalStateException("Unexpected empty ID field");
+                }
                 Map<String, Object> thisPin = new HashMap<>();
                 thisPin.put("id", pinId);
                 thisPin.put("ts_name", pinName);
                 thisPin.put("class", pinClass);
                 listPins.add(thisPin);
             } else {
-                throw new IllegalStateException("Unexpected type of id field: " + pinId.getClass().getSimpleName());
+                throw new IllegalStateException("Unexpected type of ID field: " + pinId.getClass().getSimpleName());
             }
         }
     }
