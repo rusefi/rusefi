@@ -152,7 +152,7 @@ void setBoardDefaultConfiguration(void) {
 	engineConfiguration->injectionPins[2] = GPIOE_12;
 	engineConfiguration->injectionPins[3] = GPIOE_11;
 	// Disable the remainder only when they may never be assigned
-	for (int i = 4; i < INJECTION_PIN_COUNT;i++) {
+	for (int i = 4; i < MAX_CYLINDER_COUNT;i++) {
 		engineConfiguration->injectionPins[i] = GPIO_UNASSIGNED;
 	}
 
@@ -163,7 +163,7 @@ void setBoardDefaultConfiguration(void) {
 	engineConfiguration->ignitionPins[2] = GPIOD_2;
 	engineConfiguration->ignitionPins[3] = GPIOD_1;
 	// Disable remainder
-	for (int i = 4; i < IGNITION_PIN_COUNT; i++) {
+	for (int i = 4; i < MAX_CYLINDER_COUNT; i++) {
 		engineConfiguration->ignitionPins[i] = GPIO_UNASSIGNED;
 	}
 

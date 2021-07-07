@@ -34,7 +34,7 @@ static void setInjectorPins() {
 	engineConfiguration->injectionPins[7] = GPIOF_14;
 
 	// Disable remainder
-	for (int i = 8; i < INJECTION_PIN_COUNT;i++) {
+	for (int i = 8; i < MAX_CYLINDER_COUNT;i++) {
 		engineConfiguration->injectionPins[i] = GPIO_UNASSIGNED;
 	}
 
@@ -52,7 +52,7 @@ static void setIgnitionPins() {
 	engineConfiguration->ignitionPins[7] = GPIOI_7;
 	
 	// disable remainder
-	for (int i = 8; i < IGNITION_PIN_COUNT; i++) {
+	for (int i = 8; i < MAX_CYLINDER_COUNT; i++) {
 		engineConfiguration->ignitionPins[i] = GPIO_UNASSIGNED;
 	}
 

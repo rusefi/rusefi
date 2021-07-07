@@ -40,7 +40,7 @@ public:
 	/**
 	 * MAP averaging angle start, in relation to 'mapAveragingSchedulingAtIndex' trigger index index
 	 */
-	angle_t mapAveragingStart[INJECTION_PIN_COUNT];
+	angle_t mapAveragingStart[MAX_CYLINDER_COUNT];
 	angle_t mapAveragingDuration = 0;
 
 	/**
