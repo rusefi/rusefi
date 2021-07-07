@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on hellen_cypress_gen_config.bat integration/rusefi_config.txt Mon Jul 05 23:55:35 UTC 2021
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on hellen_cypress_gen_config.bat integration/rusefi_config.txt Wed Jul 07 00:56:17 UTC 2021
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -1210,11 +1210,11 @@ struct engine_configuration_s {
 	/**
 	 * offset 624
 	 */
-	output_pin_e injectionPins[INJECTION_PIN_COUNT];
+	output_pin_e injectionPins[MAX_CYLINDER_COUNT];
 	/**
 	 * offset 636
 	 */
-	output_pin_e ignitionPins[IGNITION_PIN_COUNT];
+	output_pin_e ignitionPins[MAX_CYLINDER_COUNT];
 	/**
 	 * offset 648
 	 */
@@ -3288,7 +3288,7 @@ struct engine_configuration_s {
 	deg
 	 * offset 2540
 	 */
-	angle_t timing_offset_cylinder[IGNITION_PIN_COUNT];
+	angle_t timing_offset_cylinder[MAX_CYLINDER_COUNT];
 	/**
 	seconds
 	 * offset 2588
@@ -3722,7 +3722,7 @@ struct engine_configuration_s {
 	 * Select which fuel correction bank this cylinder belongs to. Group cylinders that share the same O2 sensor
 	 * offset 4016
 	 */
-	uint8_t cylinderBankSelect[INJECTION_PIN_COUNT];
+	uint8_t cylinderBankSelect[MAX_CYLINDER_COUNT];
 	/**
 	units
 	 * offset 4028
@@ -4250,4 +4250,4 @@ struct persistent_config_s {
 };
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on hellen_cypress_gen_config.bat integration/rusefi_config.txt Mon Jul 05 23:55:35 UTC 2021
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on hellen_cypress_gen_config.bat integration/rusefi_config.txt Wed Jul 07 00:56:17 UTC 2021
