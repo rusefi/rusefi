@@ -121,9 +121,9 @@ float InjectorModelBase::getFuelMassForDuration(floatms_t duration) const {
 
 float InjectorModel::correctShortPulse(float baseDuration) const {
 	switch (CONFIG(injectorNonlinearMode)) {
-	case InjectorNonlinearMode::PolynomialAdder:
+	case INJ_PolynomialAdder:
 		return correctInjectionPolynomial(baseDuration);
-	case InjectorNonlinearMode::None:
+	case INJ_None:
 	default:
 		return baseDuration;
 	}
