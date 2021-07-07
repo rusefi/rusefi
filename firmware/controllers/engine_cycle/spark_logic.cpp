@@ -101,7 +101,7 @@ static void prepareCylinderIgnitionSchedule(angle_t dwellAngleDuration, floatms_
 	// We need two outputs if:
 	//  - we are running wasted spark, and have "two wire" mode enabled
 	//  - We are running sequential mode, but we're cranking, so we should run in two wire wasted mode (not one wire wasted)
-	bool isTwoWireWasted = CONFIG(twoWireBatchIgnition) || (CONFIG(ignitionMode) == IM_SEQUENTIAL);
+	bool isTwoWireWasted = CONFIG(twoWireBatchIgnition) || (CONFIG(ignitionMode) == IM_INDIVIDUAL_COILS);
 	if (getCurrentIgnitionMode(PASS_ENGINE_PARAMETER_SIGNATURE) == IM_WASTED_SPARK && isTwoWireWasted) {
 		int secondIndex = index + CONFIG(specs.cylindersCount) / 2;
 		int secondCoilIndex = ID2INDEX(getCylinderId(secondIndex PASS_ENGINE_PARAMETER_SUFFIX));
