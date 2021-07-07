@@ -62,6 +62,26 @@ TEST(InjectorModel, getInjectionDurationNonlinear) {
 	EXPECT_NEAR(dut.getInjectionDuration(0.02f), 2 * 20 / 4.8f + 2.0f, EPS4D);
 }
 
+TEST(InjectorModel, nonlinearPolynomial) {
+	WITH_ENGINE_TEST_HELPER(TEST_ENGINE);
+	InjectorModel dut;
+	INJECT_ENGINE_REFERENCE(&dut);
+
+	CONFIG(applyNonlinearBelowPulse) = 10;
+
+	for (int i = 0; i < 8; i++) {
+		CONFIG(injectorCorrectionPolynomial)[i] = i + 1;
+	}
+
+	EXPECT_NEAR(dut.correctInjectionPolynomial(-3), -3 + -13532, EPS4D);
+	EXPECT_NEAR(dut.correctInjectionPolynomial(-2), -2 +   -711, EPS4D);
+	EXPECT_NEAR(dut.correctInjectionPolynomial(-1), -1 +     -4, EPS4D);
+	EXPECT_NEAR(dut.correctInjectionPolynomial(0),   0 +      1, EPS4D);
+	EXPECT_NEAR(dut.correctInjectionPolynomial(1),   1 +     36, EPS4D);
+	EXPECT_NEAR(dut.correctInjectionPolynomial(2),   2 +   1793, EPS4D);
+	EXPECT_NEAR(dut.correctInjectionPolynomial(3),   3 +  24604, EPS4D);
+}
+
 TEST(InjectorModel, Deadtime) {
 	WITH_ENGINE_TEST_HELPER(TEST_ENGINE);
 

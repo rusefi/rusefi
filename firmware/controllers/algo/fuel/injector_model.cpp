@@ -138,11 +138,13 @@ float InjectorModel::correctInjectionPolynomial(float baseDuration) const {
 	auto& is = CONFIG(injectorCorrectionPolynomial);
 	float xi = 1;
 
+	float adder = 0;
+
 	// Add polynomial terms, starting with x^0
 	for (size_t i = 0; i < efi::size(is); i++) {
-		baseDuration += is[i] * xi;
+		adder += is[i] * xi;
 		xi *= baseDuration;
 	}
 
-	return baseDuration;
+	return baseDuration + adder;
 }
