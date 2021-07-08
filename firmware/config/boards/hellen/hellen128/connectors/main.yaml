@@ -15,15 +15,13 @@ pins:
 
   - pin: A4 
     function: NC
-    type:
     
   - pin: A5
     function: NC
-    type:
     
   - pin: A6
-    id: GPIOPD_12
-    class: 
+    id: GPIOD_12
+    class: outputs
     ts_name: A6 - OUT_FAN_CONTROL
     function: low side control, unknown current probably low?
     type: ls
@@ -38,15 +36,12 @@ pins:
 
   - pin: B1 
     function: NC
-    type:
 
   - pin: B2 
     function: NC
-    type:
 
   - pin: B3
     function: NC
-    type:
 
   - pin: B4
     function: 12V Constant
@@ -113,12 +108,11 @@ pins:
     function: NC
     
   - pin: C21
-    id: GPIOPH_14
+    id: GPIOH_14
     class: outputs
     ts_name: C21 - purge control
     function: low side solenoid control
     type: ls
-    color:
 
   - pin: C22 
     class: outputs
@@ -157,7 +151,7 @@ pins:
     function: NC
 
   - pin: C29
-    id: GPIOPD_15
+    id: GPIOD_15
     class: outputs
     ts_name: C29 - Fuel Pump
     function: low side relay control
@@ -220,10 +214,9 @@ pins:
   - pin: D8
     id: 
     class: 
-    ts_name: 
+    ts_name: D8 - WBO
     function: analog input WBO
     type: av
-    color:
 
   - pin: D9
     id: 
@@ -231,7 +224,6 @@ pins:
     ts_name: 
     function: analog input WBO
     type: av
-    color:
 
   - pin: D10
     function: NC
@@ -283,28 +275,28 @@ pins:
     function: proto via
     
   - pin: E1 
-    id: GPIOPG_7
+    id: GPIOG_7
     class: outputs
     ts_name: E1 - INJ_1
     function: injector output 1
     type: inj
 
   - pin: E2
-    id: GPIOPG_8
+    id: GPIOG_8
     class: outputs
     ts_name: E2- INJ_2
     function: injector output 2
     type: inj
 
   - pin: E3
-    id: GPIOPD_11
+    id: GPIOD_11
     class: outputs
     ts_name: E3 - INJ_3
     function: injector output 3
     type: inj
 
   - pin: E4
-    id: GPIOPD_10
+    id: GPIOD_10
     class: outputs
     ts_name: E4 - INJ_4/VVT
     function: "230: 1.5A low side VVT solenoid / 430 injector output 4"
@@ -335,14 +327,14 @@ pins:
     function: NC
 
   - pin: E13
-    id: GPIOPD_9
+    id: GPIOD_9
     class: outputs 
     ts_name: E13 - INJ_5
     function: injector output 5
     type: inj
 
   - pin: E14
-    id: GPIOPF_12
+    id: GPIOF_12
     class: outputs  
     ts_name: E14 - INJ_6 
     function: injector output 6
@@ -386,14 +378,14 @@ pins:
     type: gnd
 
   - pin: E25
-    id: GPIOPF_13
+    id: GPIOF_13
     class: outputs
     ts_name: E25 - INJ_7
     function: injector output 7
     type: inj
 
   - pin: E26
-    id: GPIOPF_14
+    id: GPIOF_14
     class: outputs
     ts_name: E26 - INJ_8
     function: injector output 8
@@ -526,28 +518,28 @@ pins:
     function: NC
 
   - pin: F4 
-    id: GPIOPE_2
+    id: GPIOE_2
     class: outputs 
     ts_name: F4 - IGN_5 (HV1)
     function: igniter
     type: ign
 
   - pin: F5
-    id: GPIOPE_2 
+    id: GPIOE_2 
     class: outputs 
     ts_name: F5 - IGN_5 (HV2)
     function: igniter
     type: ign
 
   - pin: F6
-    id: GPIOPE_4 
+    id: GPIOE_4 
     class: outputs 
     ts_name: F6 - IGN_3 (HV3)
     function: igniter
     type: ign
 
   - pin: F7
-    id: GPIOPE_4 
+    id: GPIOE_4 
     class: outputs
     ts_name: F7 - IGN_3 (HV4)
     function: igniter
@@ -558,42 +550,42 @@ pins:
     type: gnd
 
   - pin: F9
-    id: GPIOPI_6 
+    id: GPIOI_6 
     class: outputs 
     ts_name: F9 - IGN_7 (HV5)
     function: igniter
     type: ign
 
   - pin: F10
-    id: GPIOPI_6 
+    id: GPIOI_6 
     class: outputs 
     ts_name: F10 - IGN_7 (HV6)
     function: igniter
     type: ign
 
   - pin: F11
-    id: GPIOPI_7 
+    id: GPIOI_7 
     class: outputs 
     ts_name: F11 - IGN_8 (HV7) 
     function: igniter
     type: ign
 
   - pin: F12
-    id: GPIOPI_7 
+    id: GPIOI_7 
     class: outputs 
     ts_name: F12 - IGN_8 (HV8) 
     function: igniter
     type: ign
 
   - pin: F13
-    id: GPIOPE_3 
+    id: GPIOE_3 
     class: outputs 
     ts_name: F13 - IGN_4 (HV9)
     function: igniter
     type: ign
 
   - pin: F14
-    id: GPIOPE_3 
+    id: GPIOE_3 
     class: outputs 
     ts_name: F14 - IGN_4 (HV10)
     function: igniter
@@ -604,42 +596,42 @@ pins:
     type: gnd
 
   - pin: F16
-    id: GPIOPE_5
+    id: GPIOE_5
     class: outputs
     ts_name: F16 - IGN_2 (HV11) 
     function: igniter
     type: ign
 
   - pin: F17
-    id: GPIOPI_5 
+    id: GPIOI_5 
     class: outputs
     ts_name: F17 - IGN_6 (HV12) 
     function: igniter
     type: ign
 
   - pin: F18
-    id: GPIOPI_5 
+    id: GPIOI_5 
     class: outputs 
     ts_name: F18 - IGN_6 (HV13) 
     function: igniter
     type: ign
 
   - pin: F19
-    id: GPIOPE_5 
+    id: GPIOE_5 
     class: outputs 
     ts_name: F19 - IGN_2 (HV14) 
     function: igniter
     type: ign
     
   - pin: F20
-    id: GPIOPI_8
+    id: GPIOI_8
     class: outputs 
     ts_name: F20 - IGN_1 (HV15) 
     function: igniter
     type: ign
 
   - pin: F21
-    id: GPIOPI_8 
+    id: GPIOI_8 
     class: outputs 
     ts_name: F21 - IGN_1 (HV16)
     function: igniter
