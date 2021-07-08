@@ -237,7 +237,7 @@ enable2ndByteCanID = false
 ; misc sensors
       VBatt           = scalar,	 U16,     38,        "V",{1/@@PACK_MULT_VOLTAGE@@},       0.0
       oilPressure     = scalar,  U16,     40,     "kPa",{1/@@PACK_MULT_PRESSURE@@},       0.0
-      vvtPosition     = scalar,  U16,     42,      "deg",{1/@@PACK_MULT_ANGLE@@},         0
+      vvtPositionB1I  = scalar,  S16,     42,      "deg",{1/@@PACK_MULT_ANGLE@@},         0
 
       ; 10 bit TPS ADC value (from 0 to 1023 in 5v scale)
       ;tpsADC2         = scalar,  U16,    44,             "ADC",            1,       0.0;
@@ -399,9 +399,9 @@ enable2ndByteCanID = false
 	VssAcceleration = scalar,  S16,     284,      "m/s2", {1/@@PACK_MULT_MS@@}, 0.0
 	lambdaValue2    = scalar,  U16,     286,      "",{1/@@PACK_MULT_LAMBDA@@},       0.0
 	AFRValue2       = scalar,  U16,     288,      "AFR",{1/@@PACK_MULT_AFR@@},       0.0
-	secondVvtPositionBank1=scalar,U16,  290,      "deg",{1/@@PACK_MULT_ANGLE@@},         0
-	vvtPositionBank2= scalar,  U16,     292,      "deg",{1/@@PACK_MULT_ANGLE@@},         0
-	secondVvtPositionBank2=scalar,U16,  294,      "deg",{1/@@PACK_MULT_ANGLE@@},         0
+	vvtPositionB1E=scalar,S16,  290,      "deg",{1/@@PACK_MULT_ANGLE@@},         0
+	vvtPositionB2I= scalar,  S16,     292,      "deg",{1/@@PACK_MULT_ANGLE@@},         0
+	vvtPositionB2E=scalar,S16,  294,      "deg",{1/@@PACK_MULT_ANGLE@@},         0
 
 	rawTps1Secondary  = scalar,	 U16,    300, "V",{1/@@PACK_MULT_VOLTAGE@@}, 0.0
 	rawTps2Primary    = scalar,	 U16,    302, "V",{1/@@PACK_MULT_VOLTAGE@@}, 0.0
@@ -1032,10 +1032,10 @@ gaugeCategory = Sensors - Extra 1
    accelerationXGauge = accelerationX,       @@GAUGE_NAME_ACCEL_X@@,      "acc",        -11,   11,     1.0,    1.2,      100,    100,   3, 1
    accelerationYGauge = accelerationY,       @@GAUGE_NAME_ACCEL_Y@@,      "acc",        -11,   11,     1.0,    1.2,      100,    100,   3, 1
    atmPresCGauge     = baroPressure,          @@GAUGE_NAME_BARO_PRESSURE@@,       "kPa",        0,   1024,       0,      0,       0,     0,   0,   0
-   vvtPositionGauge = vvtPosition, @@GAUGE_NAME_VVT@@, "deg",     0,   100,     0,    0,    720,  720,   0,   0
-   secondVvtPositionBank1Gauge=secondVvtPositionBank1, @@GAUGE_NAME_SECOND_VVT_BANK_1@@, "deg",     0,   100,     0,    0,    720,  720,   0,   0
-   vvtPositionBank2Gauge=vvtPositionBank2, @@GAUGE_NAME_VVT_BANK_2@@, "deg",     0,   100,     0,    0,    720,  720,   0,   0
-   secondVvtPositionBank2Gauge=secondVvtPositionBank2, @@GAUGE_NAME_SECOND_VVT_BANK_2@@, "deg",     0,   100,     0,    0,    720,  720,   0,   0
+   vvtPositionB1IGauge=vvtPositionB1I, @@GAUGE_NAME_VVT@@, "deg",     0,   100,     0,    0,    720,  720,   0,   0
+   vvtPositionB1EGauge=vvtPositionB1E, @@GAUGE_NAME_SECOND_VVT_BANK_1@@, "deg",     0,   100,     0,    0,    720,  720,   0,   0
+   vvtPositionB2IGauge=vvtPositionB2I, @@GAUGE_NAME_VVT_BANK_2@@, "deg",     0,   100,     0,    0,    720,  720,   0,   0
+   vvtPositionB2EGauge=vvtPositionB2E, @@GAUGE_NAME_SECOND_VVT_BANK_2@@, "deg",     0,   100,     0,    0,    720,  720,   0,   0
    internalMcuTemperatureGauge = internalMcuTemperature, @@GAUGE_NAME_ECU_TEMPERATURE@@, "C",     0,   100,     0,    0,    75,  100,   0,   0
    OilPressGauge   	 = oilPressure,   @@GAUGE_NAME_OIL_PRESSURE@@,       @@GAUGE_NAME_OIL_PRESSURE_UNITS@@,        0,    750,      35,     75,     550,   700,   0,   0	
    idleAirValvePositionGauge = idleAirValvePosition, "Idle position", "%",     0,   100,     0,    0,    100,  100,   1,   1
