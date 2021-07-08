@@ -1,4 +1,4 @@
-// was generated automatically by rusEFI tool  from rusefi_hw_enums.h // was generated automatically by rusEFI tool  from rusefi_enums.h // by enum2string.jar tool on Sat Jun 12 18:06:26 UTC 2021
+// was generated automatically by rusEFI tool  from rusefi_hw_enums.h // was generated automatically by rusEFI tool  from rusefi_enums.h // by enum2string.jar tool on Thu Jul 08 03:47:44 UTC 2021
 // see also gen_config_and_enums.bat
 
 
@@ -6,6 +6,7 @@
 #include "rusefi_enums.h"
 #include "rusefi_hw_enums.h"
 #pragma once
+const char *getInjectorNonlinearMode(InjectorNonlinearMode value);
 const char *getPidAutoTune_AutoTunerState(PidAutoTune_AutoTunerState value);
 const char *getPidAutoTune_Peak(PidAutoTune_Peak value);
 const char *getAdc_channel_e(adc_channel_e value);

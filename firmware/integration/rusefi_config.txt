@@ -1357,9 +1357,12 @@ tle8888_mode_e tle8888mode;
 	float unused2432;;"units", 1, 0, -20, 100, 0
 	float postCrankingFactor;+Fuel multiplier (enrichment) immediately after engine start;"mult", 1, 0, 1, 3, 2
 	float postCrankingDurationSec;+Time over which to taper out after start enrichment;"seconds", 1, 0, 0, 30, 0
-	ThermistorConf auxTempSensor1;todo: finish implementation #332
-	ThermistorConf auxTempSensor2;todo: finish implementation #332
-	uint8_t[6] unused2508;;"units", 1, 0, -20, 100, 0
+	ThermistorConf auxTempSensor1
+	ThermistorConf auxTempSensor2
+	uint16_t applyNonlinearBelowPulse;+Apply nonlinearity correction below a pulse of this duration. Pulses longer than this duration will receive no adjustment.;"ms", {1/1000}, 0, 0, 30, 3
+	custom InjectorNonlinearMode 1 bits, U08, @OFFSET@, [0:0], "None", "Polynomial"
+	InjectorNonlinearMode injectorNonlinearMode
+	uint8_t[3] unused2508;;"units", 1, 0, -20, 100, 0
 	int16_t etbFreq;;"Hz", 1, 0, 0, @@ETB_HW_MAX_FREQUENCY@@, 0
 	pid_s etbWastegatePid;
 	uint8_t[4] unused2536;;"units", 1, 0, -20, 100, 0
@@ -1395,7 +1398,8 @@ tle8888_mode_e tle8888mode;
 
 
 	pid_s[CAMS_PER_BANK iterate] auxPid;
-	uint8_t[40] unused1366;;"units", 1, 0, -20, 100, 0
+	float[8 iterate] injectorCorrectionPolynomial;;"", 1, 0, -1000, 1000, 4
+	uint8_t[8] unused1366;;"units", 1, 0, -20, 100, 0
 
 	linear_sensor_s oilPressure;
 

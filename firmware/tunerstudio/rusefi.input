@@ -1404,7 +1404,8 @@ menuDialog = main
 		# basic
 		subMenu = injectorConfig,			"Injection configuration"
 		subMenu = injectionSettings,		"Injection hardware", 0, {isInjectionEnabled == 1}
-		subMenu = cylinderBankSelect,		"Cylinder bank selection"
+		subMenu = cylinderBankSelect,		"Cylinder bank selection", 0, {isInjectionEnabled == 1}
+		subMenu = injectorNonlinear,		"Injector small-pulse correction", 0, {isInjectionEnabled == 1}
 		subMenu = std_separator
 
 		# Air mass model
@@ -1941,6 +1942,21 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 		field = "Cylinder 11 ",						cylinderBankSelect11, {isInjectionEnabled == 1 && cylindersCount > 10}
 		field = "Cylinder 12 ",						cylinderBankSelect12, {isInjectionEnabled == 1 && cylindersCount > 11}
 
+	dialog = injectorNonlinearPolynomial, "Polynomial Adder", yAxis
+		field = "Add nonlinearity below pulse",		applyNonlinearBelowPulse
+		field = "constant",							injectorCorrectionPolynomial1
+		field = "x^1",								injectorCorrectionPolynomial2
+		field = "x^2",								injectorCorrectionPolynomial3
+		field = "x^3",								injectorCorrectionPolynomial4
+		field = "x^4",								injectorCorrectionPolynomial5
+		field = "x^5",								injectorCorrectionPolynomial6
+		field = "x^6",								injectorCorrectionPolynomial7
+		field = "x^7",								injectorCorrectionPolynomial8
+
+	dialog = injectorNonlinear
+		field = "Small pulse correction mode",		injectorNonlinearMode
+		panel = injectorNonlinearPolynomial, {1}, { injectorNonlinearMode != 0 }
+
 	dialog = testFsio, "FSIO Test"
 		commandButton = "FSIO#1",	cmd_test_fsio1
 		commandButton = "FSIO#2",	cmd_test_fsio2
@@ -2169,8 +2185,6 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 		field = "Clutch up inverted",					clutchUpPinMode
 		field = "Throttle Up switch",					throttlePedalUpPin
 		field = "Brake pedal switch",					brakePedalPin
-		field = "A/C switch",						acSwitch
-		field = "A/C switch mode",					acSwitchMode
 		field = "Flex fuel sensor",					flexSensorPin
 
 	dialog = fuelLevelDialog,				"Fuel Level Sensor"
@@ -2703,6 +2717,8 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 		field = "Disable when engine stopped",		disableFan2WhenStopped
 
 	dialog = acSettings, "A/C Settings"
+		field = "A/C switch",						acSwitch
+		field = "A/C switch mode",					acSwitchMode
 		field = "A/C Relay",						acRelayPin
 		field = "A/C Relay Mode",					acRelayPinMode
 		field = "Max RPM",						maxAcRpm

@@ -19,6 +19,7 @@ public:
 	virtual float getInjectorMassFlowRate() const = 0;
 	virtual float getInjectorFlowRatio() const = 0;
 	virtual expected<float> getAbsoluteRailPressure() const = 0;
+	virtual float correctShortPulse(float baseDuration) const = 0;
 
 	virtual void postState(float deadTime) const { (void)deadTime; };
 
@@ -36,4 +37,8 @@ public:
 	float getInjectorMassFlowRate() const override;
 	float getInjectorFlowRatio() const override;
 	expected<float> getAbsoluteRailPressure() const override;
+
+	// Small pulse correction logic
+	float correctShortPulse(float baseDuration) const override;
+	virtual float correctInjectionPolynomial(float baseDuration) const;
 };

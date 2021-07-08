@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Wed Jul 07 12:39:38 UTC 2021
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Thu Jul 08 03:48:16 UTC 2021
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -3249,20 +3249,28 @@ struct engine_configuration_s {
 	 */
 	float postCrankingDurationSec;
 	/**
-	 * todo: finish implementation #332
 	 * offset 2436
 	 */
 	ThermistorConf auxTempSensor1;
 	/**
-	 * todo: finish implementation #332
 	 * offset 2468
 	 */
 	ThermistorConf auxTempSensor2;
 	/**
-	units
+	 * Apply nonlinearity correction below a pulse of this duration. Pulses longer than this duration will receive no adjustment.
+	ms
 	 * offset 2500
 	 */
-	uint8_t unused2508[6];
+	uint16_t applyNonlinearBelowPulse;
+	/**
+	 * offset 2502
+	 */
+	InjectorNonlinearMode injectorNonlinearMode;
+	/**
+	units
+	 * offset 2503
+	 */
+	uint8_t unused2508[3];
 	/**
 	Hz
 	 * offset 2506
@@ -3371,10 +3379,14 @@ struct engine_configuration_s {
 	 */
 	pid_s auxPid[CAMS_PER_BANK];
 	/**
-	units
 	 * offset 2624
 	 */
-	uint8_t unused1366[40];
+	float injectorCorrectionPolynomial[8];
+	/**
+	units
+	 * offset 2656
+	 */
+	uint8_t unused1366[8];
 	/**
 	 * offset 2664
 	 */
@@ -4244,4 +4256,4 @@ struct persistent_config_s {
 };
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Wed Jul 07 12:39:38 UTC 2021
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Thu Jul 08 03:48:16 UTC 2021
