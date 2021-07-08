@@ -400,7 +400,7 @@ enable2ndByteCanID = false
 	lambdaValue2    = scalar,  U16,     286,      "",{1/@@PACK_MULT_LAMBDA@@},       0.0
 	AFRValue2       = scalar,  U16,     288,      "AFR",{1/@@PACK_MULT_AFR@@},       0.0
 	vvtPositionB1E=scalar,S16,  290,      "deg",{1/@@PACK_MULT_ANGLE@@},         0
-	vvtPositionB2I= scalar,  S16,     292,      "deg",{1/@@PACK_MULT_ANGLE@@},         0
+	vvtPositionB2I=scalar,S16,  292,      "deg",{1/@@PACK_MULT_ANGLE@@},         0
 	vvtPositionB2E=scalar,S16,  294,      "deg",{1/@@PACK_MULT_ANGLE@@},         0
 
 	rawTps1Secondary  = scalar,	 U16,    300, "V",{1/@@PACK_MULT_VOLTAGE@@}, 0.0

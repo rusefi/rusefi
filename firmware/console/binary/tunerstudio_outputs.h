@@ -268,7 +268,6 @@ struct TunerStudioOutputChannels {
 	scaled_lambda lambda2; // 286
 	scaled_afr airFuelRatio2; // 288
 
-	//288
 	scaled_angle vvtPositionB1E; // 290
 	scaled_angle vvtPositionB2I; // 292
 	scaled_angle vvtPositionB2E; // 294
