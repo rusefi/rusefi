@@ -277,11 +277,6 @@ void hwHandleVvtCamSignal(trigger_value_e front, efitick_t nowNt, int index DECL
 
 	tc->vvtPosition[bankIndex][camIndex] = vvtPosition;
 
-	// No engine has this much VVT range - properly configured VVT will never hit +-90 deg
-	if (absF(vvtPosition) > 90) {
-		warning(CUSTOM_ERR_VVT_OUT_OF_RANGE, "Please adjust vvtOffset since position %f", vvtPosition);
-	}
-
 	if (index != 0) {
 		// at the moment we use only primary VVT to sync crank phase
 		return;
