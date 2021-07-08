@@ -30,6 +30,9 @@ All notable user-facing or behavior-altering changes will be documented in this 
 ### Breaking Changes
  - vvtOffset field migrated to four vvtOffsets fields. Anyone using VVT would need to manually adjust their configuration.  
 
+### Added
+ - Injector nonlinearity (small pulse) correction - so far just polynomial, but table modes coming soon.
+
 ## June 2021 Release "National Logistics Day"
 
 ### Fixed
