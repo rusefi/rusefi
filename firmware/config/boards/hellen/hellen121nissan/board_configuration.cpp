@@ -113,8 +113,6 @@ void setBoardConfigOverrides(void) {
 	engineConfiguration->clt.config.bias_resistor = 4700;
 	engineConfiguration->iat.config.bias_resistor = 4700;
 
-	engineConfiguration->canTxPin = GPIOD_1;
-	engineConfiguration->canRxPin = GPIOD_0;
 	hellenWbo();
 }
 
