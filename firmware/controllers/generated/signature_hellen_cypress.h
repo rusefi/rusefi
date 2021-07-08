@@ -4,5 +4,5 @@
 
 #define SIGNATURE_BOARD hellen_cypress
 #define SIGNATURE_DATE 2021.07.08
-#define SIGNATURE_HASH 897905603
-#define TS_SIGNATURE "rusEFI 2021.07.08.hellen_cypress.897905603"
+#define SIGNATURE_HASH 3781736464
+#define TS_SIGNATURE "rusEFI 2021.07.08.hellen_cypress.3781736464"
