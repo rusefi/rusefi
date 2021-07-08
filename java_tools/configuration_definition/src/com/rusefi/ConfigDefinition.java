@@ -427,14 +427,14 @@ public class ConfigDefinition {
                     addPinToList(listPins, thisPinList, id, pinName, ((ArrayList<String>) pinClass).get(i));
                 }
             } else if (pinId instanceof String) {
-                if (pinId.length() == 0) {
+                if (((String) pinId).length() == 0) {
                     throw new IllegalStateException("Unexpected empty ID field");
                 }
                 addPinToList(listPins, thisPinList, pinId, pinName, pinClass);
             } else {
                 throw new IllegalStateException("Unexpected type of ID field: " + pinId.getClass().getSimpleName());
             }
-            pinList.addAll(thisPinList);
+            listPins.addAll(thisPinList);
         }
     }
 
