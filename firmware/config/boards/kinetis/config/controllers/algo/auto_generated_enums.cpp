@@ -1,11 +1,20 @@
 #include "global.h"
 #include "rusefi_enums.h"
 #include "rusefi_hw_enums.h"
-// was generated automatically by rusEFI tool  from rusefi_hw_enums.h // was generated automatically by rusEFI tool  from rusefi_enums.h // by enum2string.jar tool on Tue Jul 06 19:57:20 EDT 2021
+// was generated automatically by rusEFI tool  from rusefi_hw_enums.h // was generated automatically by rusEFI tool  from rusefi_enums.h // by enum2string.jar tool on Thu Jul 08 03:47:44 UTC 2021
 // see also gen_config_and_enums.bat
 
 
 
+const char *getInjectorNonlinearMode(InjectorNonlinearMode value){
+switch(value) {
+case INJ_None:
+  return "INJ_None";
+case INJ_PolynomialAdder:
+  return "INJ_PolynomialAdder";
+  }
+ return NULL;
+}
 const char *getPidAutoTune_AutoTunerState(PidAutoTune_AutoTunerState value){
 switch(value) {
 case AUTOTUNER_OFF:

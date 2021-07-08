@@ -64,6 +64,7 @@
 #define antiLagActivationMode_offset 1024
 #define antiLagEnabled_offset 76
 #define antiLagRpmTreshold_offset 824
+#define applyNonlinearBelowPulse_offset 2500
 #define AUX_DIGITAL_VALVE_COUNT 2
 #define auxFastSensor1_adcChannel_offset 680
 #define auxPid1_dFactor_offset 2612
@@ -961,6 +962,16 @@
 #define injector_pressure_type_e_auto_enum "IPT_Low", "IPT_High"
 #define injector_s_size 68
 #define injectorCompensationMode_offset 2410
+#define injectorCorrectionPolynomial1_offset 2624
+#define injectorCorrectionPolynomial2_offset 2628
+#define injectorCorrectionPolynomial3_offset 2632
+#define injectorCorrectionPolynomial4_offset 2636
+#define injectorCorrectionPolynomial5_offset 2640
+#define injectorCorrectionPolynomial6_offset 2644
+#define injectorCorrectionPolynomial7_offset 2648
+#define injectorCorrectionPolynomial8_offset 2652
+#define InjectorNonlinearMode_auto_enum "INJ_None", "INJ_PolynomialAdder"
+#define injectorNonlinearMode_offset 2502
 #define injectorPressureType_offset 2129
 #define injPhaseLoadBins_offset 14980
 #define injPhaseRpmBins_offset 15044
@@ -1282,8 +1293,8 @@
 #define showHumanReadableWarning_offset 976
 #define showSdCardWarning_offset 76
 #define SIGNATURE_BOARD kin
-#define SIGNATURE_DATE 2021.07.07
-#define SIGNATURE_HASH 3345496313
+#define SIGNATURE_DATE 2021.07.08
+#define SIGNATURE_HASH 2439312167
 #define silentTriggerError_offset 1464
 #define slowAdcAlpha_offset 2088
 #define sparkDwellRpmBins_offset 332
@@ -1636,7 +1647,7 @@
 #define ts_show_spi true
 #define ts_show_trigger_comparator true
 #define ts_show_tunerstudio_port true
-#define TS_SIGNATURE "rusEFI 2021.07.07.kin.3345496313"
+#define TS_SIGNATURE "rusEFI 2021.07.08.kin.2439312167"
 #define TS_SINGLE_WRITE_COMMAND 'W'
 #define TS_SINGLE_WRITE_COMMAND_char W
 #define TS_TEST_COMMAND 't'
@@ -1698,7 +1709,7 @@
 #define unused1128_offset 2116
 #define unused1129_offset 2116
 #define unused1130_offset 2116
-#define unused1366_offset 2624
+#define unused1366_offset 2656
 #define unused1464b0_offset 1464
 #define unused1464b4_offset 1464
 #define unused1476b19_offset 1476
@@ -1712,7 +1723,7 @@
 #define unused2432_offset 2424
 #define unused244_2_offset 2416
 #define unused244_3_offset 2420
-#define unused2508_offset 2500
+#define unused2508_offset 2503
 #define unused2536_offset 2528
 #define unused3328_offset 3312
 #define unused3942_offset 3964

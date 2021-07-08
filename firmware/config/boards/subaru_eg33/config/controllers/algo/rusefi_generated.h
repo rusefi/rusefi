@@ -65,6 +65,7 @@
 #define antiLagActivationMode_offset 1024
 #define antiLagEnabled_offset 76
 #define antiLagRpmTreshold_offset 824
+#define applyNonlinearBelowPulse_offset 2508
 #define AUX_DIGITAL_VALVE_COUNT 2
 #define auxFastSensor1_adcChannel_offset 680
 #define auxPid1_dFactor_offset 2620
@@ -977,6 +978,16 @@
 #define injector_pressure_type_e_auto_enum "IPT_Low", "IPT_High"
 #define injector_s_size 68
 #define injectorCompensationMode_offset 2418
+#define injectorCorrectionPolynomial1_offset 2652
+#define injectorCorrectionPolynomial2_offset 2656
+#define injectorCorrectionPolynomial3_offset 2660
+#define injectorCorrectionPolynomial4_offset 2664
+#define injectorCorrectionPolynomial5_offset 2668
+#define injectorCorrectionPolynomial6_offset 2672
+#define injectorCorrectionPolynomial7_offset 2676
+#define injectorCorrectionPolynomial8_offset 2680
+#define InjectorNonlinearMode_auto_enum "INJ_None", "INJ_PolynomialAdder"
+#define injectorNonlinearMode_offset 2510
 #define injectorPressureType_offset 2129
 #define injPhaseLoadBins_offset 15008
 #define injPhaseRpmBins_offset 15072
@@ -1298,8 +1309,8 @@
 #define showHumanReadableWarning_offset 976
 #define showSdCardWarning_offset 76
 #define SIGNATURE_BOARD subaru_eg33_f7
-#define SIGNATURE_DATE 2021.07.07
-#define SIGNATURE_HASH 3622642115
+#define SIGNATURE_DATE 2021.07.08
+#define SIGNATURE_HASH 2179066397
 #define silentTriggerError_offset 1464
 #define slowAdcAlpha_offset 2088
 #define sparkDwellRpmBins_offset 332
@@ -1652,7 +1663,7 @@
 #define ts_show_spi true
 #define ts_show_trigger_comparator false
 #define ts_show_tunerstudio_port false
-#define TS_SIGNATURE "rusEFI 2021.07.07.subaru_eg33_f7.3622642115"
+#define TS_SIGNATURE "rusEFI 2021.07.08.subaru_eg33_f7.2179066397"
 #define TS_SINGLE_WRITE_COMMAND 'W'
 #define TS_SINGLE_WRITE_COMMAND_char W
 #define TS_TEST_COMMAND 't'
@@ -1714,7 +1725,7 @@
 #define unused1128_offset 2116
 #define unused1129_offset 2116
 #define unused1130_offset 2116
-#define unused1366_offset 2652
+#define unused1366_offset 2684
 #define unused1464b0_offset 1464
 #define unused1464b4_offset 1464
 #define unused1476b19_offset 1476
@@ -1728,7 +1739,7 @@
 #define unused2432_offset 2432
 #define unused244_2_offset 2424
 #define unused244_3_offset 2428
-#define unused2508_offset 2508
+#define unused2508_offset 2511
 #define unused2536_offset 2536
 #define unused3328_offset 3340
 #define unused3942_offset 3992

@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Wed Jul 07 12:39:02 UTC 2021
+// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Thu Jul 08 03:47:46 UTC 2021
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -61,6 +61,7 @@ public class Fields {
 	public static final int antiLagActivationMode_offset = 1024;
 	public static final int antiLagEnabled_offset = 76;
 	public static final int antiLagRpmTreshold_offset = 824;
+	public static final int applyNonlinearBelowPulse_offset = 2508;
 	public static final int AUX_DIGITAL_VALVE_COUNT = 2;
 	public static final int auxFastSensor1_adcChannel_offset = 680;
 	public static final int auxPid1_dFactor_offset = 2620;
@@ -949,6 +950,15 @@ public class Fields {
 	public static final int injector_offset = 8;
 	public static final int injector_s_size = 68;
 	public static final int injectorCompensationMode_offset = 2418;
+	public static final int injectorCorrectionPolynomial1_offset = 2652;
+	public static final int injectorCorrectionPolynomial2_offset = 2656;
+	public static final int injectorCorrectionPolynomial3_offset = 2660;
+	public static final int injectorCorrectionPolynomial4_offset = 2664;
+	public static final int injectorCorrectionPolynomial5_offset = 2668;
+	public static final int injectorCorrectionPolynomial6_offset = 2672;
+	public static final int injectorCorrectionPolynomial7_offset = 2676;
+	public static final int injectorCorrectionPolynomial8_offset = 2680;
+	public static final int injectorNonlinearMode_offset = 2510;
 	public static final int injectorPressureType_offset = 2129;
 	public static final int injPhaseLoadBins_offset = 15008;
 	public static final int injPhaseRpmBins_offset = 15072;
@@ -1250,7 +1260,7 @@ public class Fields {
 	public static final int servoOutputPins8_offset = 3147;
 	public static final int showHumanReadableWarning_offset = 976;
 	public static final int showSdCardWarning_offset = 76;
-	public static final int SIGNATURE_HASH = 2058432469;
+	public static final int SIGNATURE_HASH = 750642187;
 	public static final int silentTriggerError_offset = 1464;
 	public static final int slowAdcAlpha_offset = 2088;
 	public static final int sparkDwellRpmBins_offset = 332;
@@ -1552,7 +1562,7 @@ public class Fields {
 	public static final char TS_SD_R_COMMAND = 'r';
 	public static final char TS_SD_W_COMMAND = 'w';
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI 2021.07.07.all.2058432469";
+	public static final String TS_SIGNATURE = "rusEFI 2021.07.08.all.750642187";
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final char TS_TEST_COMMAND = 't';
 	public static final int TT_TT_1_16 = 50;
@@ -1611,7 +1621,7 @@ public class Fields {
 	public static final int unused1128_offset = 2116;
 	public static final int unused1129_offset = 2116;
 	public static final int unused1130_offset = 2116;
-	public static final int unused1366_offset = 2652;
+	public static final int unused1366_offset = 2684;
 	public static final int unused1464b0_offset = 1464;
 	public static final int unused1464b4_offset = 1464;
 	public static final int unused1476b19_offset = 1476;
@@ -1625,7 +1635,7 @@ public class Fields {
 	public static final int unused2432_offset = 2432;
 	public static final int unused244_2_offset = 2424;
 	public static final int unused244_3_offset = 2428;
-	public static final int unused2508_offset = 2508;
+	public static final int unused2508_offset = 2511;
 	public static final int unused2536_offset = 2536;
 	public static final int unused3328_offset = 3340;
 	public static final int unused3942_offset = 3992;
@@ -2623,6 +2633,8 @@ public class Fields {
 	public static final Field AUXTEMPSENSOR2_RESISTANCE_3 = Field.create("AUXTEMPSENSOR2_RESISTANCE_3", 2496, FieldType.FLOAT);
 	public static final Field AUXTEMPSENSOR2_BIAS_RESISTOR = Field.create("AUXTEMPSENSOR2_BIAS_RESISTOR", 2500, FieldType.FLOAT);
 	public static final Field AUXTEMPSENSOR2_ADCCHANNEL = Field.create("AUXTEMPSENSOR2_ADCCHANNEL", 2504, FieldType.INT8, adc_channel_e);
+	public static final Field APPLYNONLINEARBELOWPULSE = Field.create("APPLYNONLINEARBELOWPULSE", 2508, FieldType.INT16);
+	public static final Field INJECTORNONLINEARMODE = Field.create("INJECTORNONLINEARMODE", 2510, FieldType.INT8);
 	public static final Field ETBFREQ = Field.create("ETBFREQ", 2514, FieldType.INT16);
 	public static final Field ETBWASTEGATEPID_PFACTOR = Field.create("ETBWASTEGATEPID_PFACTOR", 2516, FieldType.FLOAT);
 	public static final Field ETBWASTEGATEPID_IFACTOR = Field.create("ETBWASTEGATEPID_IFACTOR", 2520, FieldType.FLOAT);
@@ -2676,6 +2688,14 @@ public class Fields {
 	public static final Field AUXPID2_PERIODMS = Field.create("AUXPID2_PERIODMS", 2646, FieldType.INT16);
 	public static final Field AUXPID2_MINVALUE = Field.create("AUXPID2_MINVALUE", 2648, FieldType.INT16);
 	public static final Field AUXPID2_MAXVALUE = Field.create("AUXPID2_MAXVALUE", 2650, FieldType.INT16);
+	public static final Field INJECTORCORRECTIONPOLYNOMIAL1 = Field.create("INJECTORCORRECTIONPOLYNOMIAL1", 2652, FieldType.FLOAT);
+	public static final Field INJECTORCORRECTIONPOLYNOMIAL2 = Field.create("INJECTORCORRECTIONPOLYNOMIAL2", 2656, FieldType.FLOAT);
+	public static final Field INJECTORCORRECTIONPOLYNOMIAL3 = Field.create("INJECTORCORRECTIONPOLYNOMIAL3", 2660, FieldType.FLOAT);
+	public static final Field INJECTORCORRECTIONPOLYNOMIAL4 = Field.create("INJECTORCORRECTIONPOLYNOMIAL4", 2664, FieldType.FLOAT);
+	public static final Field INJECTORCORRECTIONPOLYNOMIAL5 = Field.create("INJECTORCORRECTIONPOLYNOMIAL5", 2668, FieldType.FLOAT);
+	public static final Field INJECTORCORRECTIONPOLYNOMIAL6 = Field.create("INJECTORCORRECTIONPOLYNOMIAL6", 2672, FieldType.FLOAT);
+	public static final Field INJECTORCORRECTIONPOLYNOMIAL7 = Field.create("INJECTORCORRECTIONPOLYNOMIAL7", 2676, FieldType.FLOAT);
+	public static final Field INJECTORCORRECTIONPOLYNOMIAL8 = Field.create("INJECTORCORRECTIONPOLYNOMIAL8", 2680, FieldType.FLOAT);
 	public static final Field OILPRESSURE_HWCHANNEL = Field.create("OILPRESSURE_HWCHANNEL", 2692, FieldType.INT8, adc_channel_e);
 	public static final Field OILPRESSURE_V1 = Field.create("OILPRESSURE_V1", 2696, FieldType.FLOAT);
 	public static final Field OILPRESSURE_VALUE1 = Field.create("OILPRESSURE_VALUE1", 2700, FieldType.FLOAT);
@@ -3726,6 +3746,8 @@ public class Fields {
 	AUXTEMPSENSOR2_RESISTANCE_3,
 	AUXTEMPSENSOR2_BIAS_RESISTOR,
 	AUXTEMPSENSOR2_ADCCHANNEL,
+	APPLYNONLINEARBELOWPULSE,
+	INJECTORNONLINEARMODE,
 	ETBFREQ,
 	ETBWASTEGATEPID_PFACTOR,
 	ETBWASTEGATEPID_IFACTOR,
@@ -3778,6 +3800,14 @@ public class Fields {
 	AUXPID2_PERIODMS,
 	AUXPID2_MINVALUE,
 	AUXPID2_MAXVALUE,
+	INJECTORCORRECTIONPOLYNOMIAL1,
+	INJECTORCORRECTIONPOLYNOMIAL2,
+	INJECTORCORRECTIONPOLYNOMIAL3,
+	INJECTORCORRECTIONPOLYNOMIAL4,
+	INJECTORCORRECTIONPOLYNOMIAL5,
+	INJECTORCORRECTIONPOLYNOMIAL6,
+	INJECTORCORRECTIONPOLYNOMIAL7,
+	INJECTORCORRECTIONPOLYNOMIAL8,
 	OILPRESSURE_HWCHANNEL,
 	OILPRESSURE_V1,
 	OILPRESSURE_VALUE1,
