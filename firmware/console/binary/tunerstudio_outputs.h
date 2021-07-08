@@ -112,7 +112,7 @@ struct TunerStudioOutputChannels {
 	// misc sensors
 	scaled_voltage vBatt; // 38
 	scaled_pressure oilPressure; // 40
-	scaled_angle vvtPosition; // 42
+	scaled_angle vvtPositionB1I; // 42
 
 	// Fuel math
 	scaled_channel<uint16_t, 1000> chargeAirMass; // 44  cylinder airmass in mg, 0-65 grams
@@ -268,10 +268,9 @@ struct TunerStudioOutputChannels {
 	scaled_lambda lambda2; // 286
 	scaled_afr airFuelRatio2; // 288
 
-	//288
-	scaled_angle secondVvtPositionBank1; // 290
-	scaled_angle vvtPositionBank2; // 292
-	scaled_angle secondVvtPositionBank2; // 294
+	scaled_angle vvtPositionB1E; // 290
+	scaled_angle vvtPositionB2I; // 292
+	scaled_angle vvtPositionB2E; // 294
 
 	scaled_percent fuelTrim[2];	// 296 & 298
 
