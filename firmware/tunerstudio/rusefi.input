@@ -2184,8 +2184,6 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 		field = "Clutch up inverted",					clutchUpPinMode
 		field = "Throttle Up switch",					throttlePedalUpPin
 		field = "Brake pedal switch",					brakePedalPin
-		field = "A/C switch",						acSwitch
-		field = "A/C switch mode",					acSwitchMode
 		field = "Flex fuel sensor",					flexSensorPin
 
 	dialog = fuelLevelDialog,				"Fuel Level Sensor"
@@ -2718,6 +2716,8 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 		field = "Disable when engine stopped",		disableFan2WhenStopped
 
 	dialog = acSettings, "A/C Settings"
+		field = "A/C switch",						acSwitch
+		field = "A/C switch mode",					acSwitchMode
 		field = "A/C Relay",						acRelayPin
 		field = "A/C Relay Mode",					acRelayPinMode
 		field = "Max RPM",						maxAcRpm
