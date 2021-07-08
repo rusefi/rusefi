@@ -1684,10 +1684,10 @@ end_struct
 #define GAUGE_NAME_VERSION "firmware"
 #define GAUGE_NAME_TRG_ERR "trg err"
 
-#define GAUGE_NAME_VVT "VVT position"
-#define GAUGE_NAME_SECOND_VVT_BANK_1 "VVT second position bank 1"
-#define GAUGE_NAME_VVT_BANK_2 "VVT position bank 2"
-#define GAUGE_NAME_SECOND_VVT_BANK_2 "VVT second position bank 2"
+#define GAUGE_NAME_VVT_B1I "VVT: bank 1 intake"
+#define GAUGE_NAME_VVT_B1E "VVT: bank 1 exhaust"
+#define GAUGE_NAME_VVT_B2I "VVT: bank 2 intake"
+#define GAUGE_NAME_VVT_B2E "VVT: bank 2 exhaust"
 
 #define GAUGE_NAME_TIMING_ADVANCE "timing"
 #define GAUGE_NAME_VVS "Vehicle Speed"
