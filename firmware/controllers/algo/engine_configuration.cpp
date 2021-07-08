@@ -951,7 +951,7 @@ void resetConfigurationExt(configuration_callback_t boardCallback, engine_type_e
 	    setHellen121Vag_5_cyl(PASS_CONFIG_PARAMETER_SIGNATURE);
         break;
 	case HELLEN_121_VAG_6_CYL:
-	    setHellen121Vag_6а_cyl(PASS_CONFIG_PARAMETER_SIGNATURE);
+	    setHellen121Vag_6_cyl(PASS_CONFIG_PARAMETER_SIGNATURE);
         break;
 	case HELLEN_121_VAG_8_CYL:
 	    setHellen121Vag_8_cyl(PASS_CONFIG_PARAMETER_SIGNATURE);
