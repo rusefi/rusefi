@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Wed Jul 07 00:56:15 UTC 2021
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Wed Jul 07 12:39:38 UTC 2021
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -436,7 +436,7 @@ struct specs_s {
 	/**
 	 * offset 4
 	 */
-	cylinders_count_t cylindersCount;
+	uint32_t cylindersCount;
 	/**
 	 * offset 8
 	 */
@@ -4244,4 +4244,4 @@ struct persistent_config_s {
 };
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Wed Jul 07 00:56:15 UTC 2021
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Wed Jul 07 12:39:38 UTC 2021

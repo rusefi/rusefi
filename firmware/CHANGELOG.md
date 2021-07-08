@@ -35,7 +35,8 @@ All notable user-facing or behavior-altering changes will be documented in this 
 ### Fixed
  - Improved cranking defaults
  - Simplified/clarified idle and cranking TunerStudio pages
- - Minor change of Miata NA trigger shape #2855   
+ - Minor change of Miata NA trigger shape #2855
+ - Improved trigger sync for 60/2 36/1 36/22 triggers as part of VW warnings on cranking part #1 #2861   
 
 ### Added
  - Idle improvements! Open loop corrections are now applied in closed loop mode.
