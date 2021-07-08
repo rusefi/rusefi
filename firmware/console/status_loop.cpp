@@ -600,10 +600,10 @@ void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels DECLARE_
 
 #if EFI_SHAFT_POSITION_INPUT
 	// 248
-	tsOutputChannels->vvtPosition = engine->triggerCentral.getVVTPosition(/*bankIndex*/0, /*camIndex*/0);
-	tsOutputChannels->secondVvtPositionBank1 = engine->triggerCentral.getVVTPosition(/*bankIndex*/0, /*camIndex*/1);
-	tsOutputChannels->vvtPositionBank2 = engine->triggerCentral.getVVTPosition(/*bankIndex*/1, /*camIndex*/0);
-	tsOutputChannels->secondVvtPositionBank2 = engine->triggerCentral.getVVTPosition(/*bankIndex*/1, /*camIndex*/1);
+	tsOutputChannels->vvtPositionB1I = engine->triggerCentral.getVVTPosition(/*bankIndex*/0, /*camIndex*/0);
+	tsOutputChannels->vvtPositionB1E = engine->triggerCentral.getVVTPosition(/*bankIndex*/0, /*camIndex*/1);
+	tsOutputChannels->vvtPositionB2I = engine->triggerCentral.getVVTPosition(/*bankIndex*/1, /*camIndex*/0);
+	tsOutputChannels->vvtPositionB2E = engine->triggerCentral.getVVTPosition(/*bankIndex*/1, /*camIndex*/1);
 #endif
 
 	// 252
