@@ -208,7 +208,7 @@ if (engineConfiguration->debugMode == DBG_DWELL_METRIC) {
 			// Trailing sparks are enabled - schedule an event for the corresponding trailing coil
 			scheduleByAngle(
 				&event->trailingSparkFire, nowNt, ENGINE(engineState.trailingSparkAngle),
-				{ &chargeTrailingSpark, &enginePins.trailingCoils[event->cylinderNumber] }
+				{ &fireTrailingSpark, &enginePins.trailingCoils[event->cylinderNumber] }
 				PASS_ENGINE_PARAMETER_SUFFIX
 			);
 		}
