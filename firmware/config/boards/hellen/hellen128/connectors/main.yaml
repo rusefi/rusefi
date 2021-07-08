@@ -1,473 +1,221 @@
 pins:
   - pin: A1
-    id: 
-    class: 
-    ts_name: 
     function: NC
     type: 
-    color: 
 
-  - pin: A2
-    id: 
-    class: 
-    ts_name: 
+  - pin: A2 
+    class: analog_inputs
+    ts_name: A2 - Key On Power (+12v)
     function: ECU power supply from ignition key
     type: 12v
-    color:
 
   - pin: A3
-    id: 
-    class: 
-    ts_name: 
-    function: power GND
+    function: PCM (ECU) GND
     type: gnd
-    color:
 
-  - pin: A4
-    id: 
-    class: 
-    ts_name: 
+  - pin: A4 
     function: NC
-    type: 
-    color:
+    type:
     
   - pin: A5
-    id: 
-    class: 
-    ts_name: 
     function: NC
     type:
-    color:
     
   - pin: A6
-    id: 
+    id: GPIOPD_12
     class: 
-    ts_name: 
+    ts_name: A6 - OUT_FAN_CONTROL
     function: low side control, unknown current probably low?
     type: ls
-    color:
 
   - pin: A7
-    id: 
-    class: 
-    ts_name: 
     function: power GND
     type: gnd
-    color:
 
   - pin: A8 
-    id: 
-    class: 
-    ts_name: 
     function: power GND
     type: gnd
-    color:
 
-  - pin: B1
-    id: 
-    class: 
-    ts_name: 
+  - pin: B1 
     function: NC
     type:
-    color:
 
-  - pin: B2
-    id: 
-    class: 
-    ts_name: 
+  - pin: B2 
     function: NC
     type:
-    color:
 
   - pin: B3
-    id: 
-    class: 
-    ts_name: 
     function: NC
     type:
-    color:
 
   - pin: B4
-    id: 
-    class: 
-    ts_name: 
     function: 12V Constant
     type: 12v
-    color:
 
   - pin: C1
-    id: 
-    class: 
-    ts_name: 
     function: NC
-    type:
-    color:
 
   - pin: C2 
-    id: 
-    class: 
-    ts_name: 
     function: NC
-    type:
-    color:
 
-  - pin: C3
-    id: 
-    class: 
-    ts_name: 
+  - pin: C3 
     function: NC
-    type:
-    color:
 
   - pin: C4
-    id: 
-    class: 
-    ts_name: 
     function: NC
-    type:
-    color:
 
   - pin: C5
-    id: 
-    class: 
-    ts_name: 
     function: NC
-    type:
-    color:
 
   - pin: C6
-    id: 
-    class: 
-    ts_name: 
     function: NC
-    type:
-    color:
 
   - pin: C7
-    id: 
-    class: 
-    ts_name: 
     function: NC
-    type:
-    color:
 
   - pin: C8
-    id: 
-    class: 
-    ts_name: 
     function: NC
-    type:
-    color:
 
   - pin: C9
-    id: 
-    class: 
-    ts_name: 
     function: NC
-    type:
-    color:
 
   - pin: C10
-    id: 
-    class: 
-    ts_name: 
     function: NC
-    type:
-    color:
 
   - pin: C11
-    id: 
-    class: 
-    ts_name: 
     function: NC
-    type:
-    color:
 
   - pin: C12
-    id: 
-    class: 
-    ts_name: 
     function: NC
-    type:
-    color:
 
   - pin: C13
-    id: 
-    class: 
-    ts_name: 
     function: NC
-    type:
-    color:
 
   - pin: C14
-    id: 
-    class: 
-    ts_name: 
     function: NC
-    type:
-    color:
 
   - pin: C15
-    id: 
-    class: 
-    ts_name: 
     function: NC
-    type:
-    color:
 
   - pin: C16
-    id: 
-    class: 
-    ts_name: 
     function: NC
-    type:
-    color:
-
+    
   - pin: C17
-    id: 
-    class: 
-    ts_name: 
     function: NC
-    type:
-    color:
-
+    
   - pin: C18
-    id: 
-    class: 
-    ts_name: 
     function: NC
-    type:
-    color:
 
   - pin: C19
-    
     function: NC
-    type:
-    color:
 
   - pin: C20
-    id: 
-    class: 
-    ts_name: 
     function: NC
-    type:
-    color:
-
+    
   - pin: C21
-    id: 
-    class: 
-    ts_name: 
+    id: GPIOPH_14
+    class: outputs
+    ts_name: C21 - purge control
     function: low side solenoid control
     type: ls
     color:
 
-  - pin: C22
-    id: 
-    class: 
-    ts_name: 
+  - pin: C22 
+    class: outputs
+    ts_name: C22 - sensor +5V feed
     function: sensor +5v feed
     type: 5v
-    color:
 
   - pin: C23
-    id: 
-    class: 
-    ts_name: 
     function: analog GND
     type: gnd
-    color:
 
   - pin: C24
     id: 
-    class: 
-    ts_name: 
+    class: analog_inputs
+    ts_name: C24 - PPS1
     function: PPS1 analog input
     type: av
-    color:
 
   - pin: C25
     id: 
-    class: 
-    ts_name: 
+    class: analog_inputs
+    ts_name: C25 - PPS2
     function: PPS2 analog input
     type: av
-    color:
 
   - pin: C26
-    id: 
-    class: 
-    ts_name: 
     function: analog GND
     type: gnd
-    color:
 
   - pin: C27
-    id: 
-    class: 
-    ts_name: 
+    ts_name: C27 - sensor +5V feed
     function: sensor +5v feed
     type: 5v
-    color:
 
   - pin: C28
-    id: 
-    class: 
-    ts_name: 
     function: NC
-    type: 
-    color:
 
   - pin: C29
-    id: 
-    class: 
-    ts_name: 
+    id: GPIOPD_15
+    class: outputs
+    ts_name: C29 - Fuel Pump
     function: low side relay control
     type: ls
-    color:
 
   - pin: C30
-    id: 
-    class: 
-    ts_name: 
     function: NC
-    type: 
-    color:
 
   - pin: C31
-    id: 
-    class: 
-    ts_name: 
     function: NC
-    type: 
-    color:
 
   - pin: C32
-    id: 
-    class: 
-    ts_name: 
     function: NC
-    type: 
-    color:
 
   - pin: C33
-    id: 
-    class: 
-    ts_name: 
     function: NC
-    type: 
-    color:
 
   - pin: C34
-    id: 
-    class: 
-    ts_name: 
     function: NC
-    type: 
-    color:
 
   - pin: C35
-    id: 
-    class: 
-    ts_name: 
     function: proto via
-    type: 
-    color:
 
   - pin: C36
-    id: 
-    class: 
-    ts_name: 
     function: NC
-    type: 
-    color:
 
   - pin: C37
-    id: 
-    class: 
-    ts_name: 
     function: NC
-    type: 
-    color:
 
   - pin: C38
-    id: 
-    class: 
-    ts_name: 
     function: proto via
-    type: 
-    color:
 
   - pin: C39
-    id: 
-    class: 
-    ts_name: 
     function: NC K line
-    type: 
-    color:
-
-  - pin: C40
-    id: 
-    class: 
-    ts_name: 
+ 
+  - pin: C40 
     function: proto via
-    type: 
-    color:
 
   - pin: D1 
-    id: 
-    class: 
-    ts_name: 
     function: NC
-    type: 
-    color:
 
   - pin: D2
-    id: 
-    class: 
-    ts_name: 
     function: proto via
-    type: 
-    color:
 
   - pin: D3
-    id: 
-    class: 
-    ts_name: 
     function: proto via
-    type: 
-    color:
 
   - pin: D4
-    id: 
-    class: 
-    ts_name: 
     function: NC
-    type: 
-    color:
 
   - pin: D5
-    id: 
-    class: 
-    ts_name: 
     function: NC
-    type: 
-    color:
 
   - pin: D6
-    id: 
-    class: 
-    ts_name: 
     function: NC
-    type: 
-    color:
 
   - pin: D7
-    id: 
-    class: 
-    ts_name: 
     function: NC
-    type: 
-    color:
 
   - pin: D8
     id: 
@@ -486,676 +234,416 @@ pins:
     color:
 
   - pin: D10
-    id: 
-    class: 
-    ts_name: 
     function: NC
-    type:
-    color:
 
   - pin: D11
-    id: 
-    class: 
-    ts_name: 
+    ts_name: D11 - CAN high (+)
     function: CAN_H
     type: can
-    color:
 
   - pin: D12
-    id: 
-    class: 
-    ts_name: 
+    ts_name: D12 - CAN low (-)
     function: CAN_L
     type: can
-    color:
 
   - pin: D13
-    id: 
-    class: 
-    ts_name: 
     function: NC
-    type:
-    color:
 
   - pin: D14
-    id: 
-    class: 
-    ts_name: 
     function: proto via
-    type:
-    color:
 
   - pin: D15
-    id: 
-    class: 
-    ts_name: 
     function: NC
-    type:
-    color:
 
   - pin: D16
-    id: 
-    class: 
-    ts_name: 
     function: NC
-    type:
-    color:
 
   - pin: D17
-    id: 
-    class: 
-    ts_name: 
     function: NC
-    type:
-    color:
 
   - pin: D18
-    id: 
-    class: 
-    ts_name: 
     function: NC
-    type:
-    color:
 
   - pin: D19
-    id: 
-    class: 
-    ts_name: 
     function: proto via
-    type:
-    color:
 
   - pin: D20
-    id: 
-    class: 
-    ts_name: 
     function: proto via
-    type:
-    color:
 
   - pin: D21
-    id: 
-    class: 
-    ts_name: 
     function: proto via
-    type:
-    color:
 
   - pin: D22
-    id: 
-    class: 
-    ts_name: 
     function: proto via
-    type:
-    color:
 
   - pin: D23
-    id: 
-    class: 
-    ts_name: 
     function: proto via
-    type:
-    color:
 
   - pin: D24
-    id: 
-    class: 
-    ts_name: 
     function: proto via
-    type:
-    color:
-
+    
   - pin: E1 
-    id: 
-    class: 
-    ts_name: 
+    id: GPIOPG_7
+    class: outputs
+    ts_name: E1 - INJ_1
     function: injector output 1
     type: inj
-    color:
 
   - pin: E2
-    id: 
-    class: 
-    ts_name: 
+    id: GPIOPG_8
+    class: outputs
+    ts_name: E2- INJ_2
     function: injector output 2
     type: inj
-    color:
 
   - pin: E3
-    id: 
-    class: 
-    ts_name: 
+    id: GPIOPD_11
+    class: outputs
+    ts_name: E3 - INJ_3
     function: injector output 3
     type: inj
-    color:
 
   - pin: E4
-    id: 
-    class: 
-    ts_name: 
+    id: GPIOPD_10
+    class: outputs
+    ts_name: E4 - INJ_4/VVT
     function: "230: 1.5A low side VVT solenoid / 430 injector output 4"
     type: inj
-    color:
 
   - pin: E5
-    id: 
-    class: 
-    ts_name: 
     function: NC
-    type:
-    color:
 
   - pin: E6
-    id: 
-    class: 
-    ts_name: 
     function: NC
-    type:
-    color:
 
   - pin: E7
-    id: 
-    class: 
-    ts_name: 
     function: NC
-    type:
-    color:
 
   - pin: E8
-    id: 
-    class: 
-    ts_name: 
     function: NC
-    type:
-    color:
 
   - pin: E9
-    id: 
-    class: 
-    ts_name: 
     function: NC
-    type:
-    color:
 
   - pin: E10
-    id: 
-    class: 
-    ts_name: 
     function: NC
-    type:
-    color:
 
   - pin: E11
-    id: 
-    class: 
-    ts_name: 
     function: NC
-    type:
-    color:
 
   - pin: E12
-    id: 
-    class: 
-    ts_name: 
     function: NC
-    type:
-    color:
 
   - pin: E13
-    id: 
-    class: 
-    ts_name: 
+    id: GPIOPD_9
+    class: outputs 
+    ts_name: E13 - INJ_5
     function: injector output 5
     type: inj
-    color:
 
   - pin: E14
-    id: 
-    class: 
-    ts_name: 
+    id: GPIOPF_12
+    class: outputs  
+    ts_name: E14 - INJ_6 
     function: injector output 6
     type: inj
-    color:
 
   - pin: E15
-    id: 
-    class: 
-    ts_name: 
     function: proto via
-    type:
-    color:
 
   - pin: E16
-    id: 
-    class: 
-    ts_name: 
     function: proto via
-    type:
-    color:
 
   - pin: E17
-    id: 
-    class: 
-    ts_name: 
     function: proto via
-    type:
-    color:
 
   - pin: E18
-    id: 
-    class: 
-    ts_name: 
     function: NC
-    type:
-    color:
 
   - pin: E19
-    id: 
-    class: 
-    ts_name: 
     function: NC
-    type:
-    color:
-
+    
   - pin: E20
-    id: 
-    class: 
-    ts_name: 
     function: NC
-    type:
-    color:
 
   - pin: E21
-    id: 
-    class: 
-    ts_name: 
     function: NC
-    type:
-    color:
 
   - pin: E22
-    id: 
-    class: 
-    ts_name: 
+    ts_name: E22 - sensor +5V feed
     function: sensor +5v feed
     type: 5v
-    color:
 
   - pin: E23
     id: 
-    class: 
-    ts_name: 
+    class: analog_inputs
+    ts_name: E23 - MAP
     function: analog input MAP
-    type: av
-    color:   
+    type: av  
 
   - pin: E24
-    id: 
-    class: 
-    ts_name: 
     function: analog GND
     type: gnd
-    color:
 
   - pin: E25
-    id: 
-    class: 
-    ts_name: 
+    id: GPIOPF_13
+    class: outputs
+    ts_name: E25 - INJ_7
     function: injector output 7
     type: inj
-    color:
 
   - pin: E26
-    id: 
-    class: 
-    ts_name: 
+    id: GPIOPF_14
+    class: outputs
+    ts_name: E26 - INJ_8
     function: injector output 8
     type: inj
-    color:
 
   - pin: E27
-    id: 
-    class: 
-    ts_name: 
     function: NC
-    type:
-    color:
 
   - pin: E28
-    id: 
-    class: 
-    ts_name: 
     function: analog GND
     type: gnd
-    color:
 
   - pin: E29
     id: 
-    class: 
-    ts_name: 
+    class: analog_inputs
+    ts_name: E29 - CLT
     function: analog input CLT
     type: av
-    color:
 
   - pin: E30
-    id: 
-    class: 
-    ts_name: 
     function: NC
-    type:
-    color:
 
   - pin: E31
     id: 
-    class: 
-    ts_name: 
+    class: analog_inputs
+    ts_name: E31 - TPS1
     function: analog input TPS1
     type: av
     color:
 
-  - pin: E32
-    id: 
-    class: 
-    ts_name: 
+  - pin: E32 
     function: analog GND
     type: gnd
-    color:
 
   - pin: E33
-    id: 
-    class: 
-    ts_name: 
+    ts_name: E33 - sensor +5V feed
     function: sensor +5v feed
     type: 5v
-    color:
 
   - pin: E34
     id: 
-    class: 
-    ts_name: 
+    class: analog_inputs
+    ts_name: E34 - TPS2
     function: analog input TPS2
     type: av
-    color:
 
   - pin: E35
-    id: 
-    class: 
-    ts_name: 
     function: NC
-    type:
-    color:
 
   - pin: E36
-    id: 
-    class: 
-    ts_name: 
     function: NC
-    type:
-    color:
 
   - pin: E37
     id: 
-    class: 
-    ts_name: 
+    class: [event_inputs, analog_inputs]
+    ts_name: E37 - IN_CRANK (-)
     function: VR-
     type: vr
-    color:
 
   - pin: E38
     id: 
-    class: 
-    ts_name: 
+    class: [event_inputs, analog_inputs]
+    ts_name: E38 - IN_CRANK (+)
     function: VR+
     type: vr
-    color:
 
   - pin: E39
-    id: 
-    class: 
-    ts_name: 
     function: analog GND
     type: gnd
-    color:
 
   - pin: E40
     id: 
-    class: 
-    ts_name: 
+    class:  [event_inputs, analog_inputs]
+    ts_name: E40 - IN_CAM
     function: digital input CAM input
-    type:
-    color:
+    type: vr
 
   - pin: E41
-    id: 
-    class: 
-    ts_name: 
     function: knock sensor GND
-    type:
-    color:
-
+    type: gnd
+        
   - pin: E42
     id: 
-    class: 
-    ts_name: 
+    class: analog_inputs
+    ts_name: E42 - KNOCK
     function: knock sensor signal
-    type:
-    color:
 
   - pin: E43
-    id: 
-    class: 
-    ts_name: 
     function: NC
-    type:
-    color:
 
   - pin: E44
-    id: 
-    class: 
-    ts_name: 
     function: NC
-    type:
-    color:
 
   - pin: E45
     id: 
-    class: 
-    ts_name: 
+    class: analog_inputs
+    ts_name: E45 - IAT
     function: analog input IAT
     type: av
-    color:
 
   - pin: E46
-    id: 
-    class: 
-    ts_name: 
+    ts_name: E46 - sensor +5V feed
     function: sensor +5v feed
     type: 5v
-    color:
 
   - pin: E47
     id: 
-    class: 
-    ts_name: 
+    class: analog_inputs
+    ts_name: E47 - MAF
     function: analog input + proto via
     type: av
-    color:
 
   - pin: E48
-    id: 
-    class: 
-    ts_name: 
     function: analog GND
     type: gnd
-    color:
 
   - pin: F1
     id: 
-    class: 
-    ts_name: 
+    class: outputs
+    ts_name: F1 - OUT_ETB (-)
     function: DC Motor -
-    type:
-    color:
 
   - pin: F2
     id: 
-    class: 
-    ts_name: 
+    class: ouputs
+    ts_name: F2 OUT_ETB (+)
     function: DC Motor +
-    type:
-    color:
 
   - pin: F3
-    id: 
-    class: 
-    ts_name: 
     function: NC
-    type:
-    color:
 
   - pin: F4 
-    id: 
-    class: 
-    ts_name: 
+    id: GPIOPE_2
+    class: outputs 
+    ts_name: F4 - IGN_5 (HV1)
     function: igniter
-    type:
-    color:
+    type: ign
 
   - pin: F5
-    id: 
-    class: 
-    ts_name: 
+    id: GPIOPE_2 
+    class: outputs 
+    ts_name: F5 - IGN_5 (HV2)
     function: igniter
-    type:
-    color:
+    type: ign
 
   - pin: F6
-    id: 
-    class: 
-    ts_name: 
+    id: GPIOPE_4 
+    class: outputs 
+    ts_name: F6 - IGN_3 (HV3)
     function: igniter
-    type:
-    color:
+    type: ign
 
   - pin: F7
-    id: 
-    class: 
-    ts_name: 
+    id: GPIOPE_4 
+    class: outputs
+    ts_name: F7 - IGN_3 (HV4)
     function: igniter
-    type:
-    color:
+    type: ign
 
   - pin: F8
-    id: 
-    class: 
-    ts_name: 
     function: power GND
     type: gnd
-    color:
 
   - pin: F9
-    id: 
-    class: 
-    ts_name: 
+    id: GPIOPI_6 
+    class: outputs 
+    ts_name: F9 - IGN_7 (HV5)
     function: igniter
-    type:
-    color:
+    type: ign
 
   - pin: F10
-    id: 
-    class: 
-    ts_name: 
+    id: GPIOPI_6 
+    class: outputs 
+    ts_name: F10 - IGN_7 (HV6)
     function: igniter
-    type:
-    color:
+    type: ign
 
   - pin: F11
-    id: 
-    class: 
-    ts_name: 
+    id: GPIOPI_7 
+    class: outputs 
+    ts_name: F11 - IGN_8 (HV7) 
     function: igniter
-    type:
-    color:
+    type: ign
 
   - pin: F12
-    id: 
-    class: 
-    ts_name: 
+    id: GPIOPI_7 
+    class: outputs 
+    ts_name: F12 - IGN_8 (HV8) 
     function: igniter
-    type:
-    color:
+    type: ign
 
   - pin: F13
-    id: 
-    class: 
-    ts_name: 
+    id: GPIOPE_3 
+    class: outputs 
+    ts_name: F13 - IGN_4 (HV9)
     function: igniter
-    type:
-    color:
+    type: ign
 
   - pin: F14
-    id: 
-    class: 
-    ts_name: 
+    id: GPIOPE_3 
+    class: outputs 
+    ts_name: F14 - IGN_4 (HV10)
     function: igniter
-    type:
-    color:
+    type: ign
 
   - pin: F15
-    id: 
-    class: 
-    ts_name: 
     function: power GND
     type: gnd
-    color:
 
   - pin: F16
-    id: 
-    class: 
-    ts_name: 
+    id: GPIOPE_5
+    class: outputs
+    ts_name: F16 - IGN_2 (HV11) 
     function: igniter
-    type:
-    color:
+    type: ign
 
   - pin: F17
-    id: 
-    class: 
-    ts_name: 
+    id: GPIOPI_5 
+    class: outputs
+    ts_name: F17 - IGN_6 (HV12) 
     function: igniter
-    type:
-    color:
+    type: ign
 
   - pin: F18
-    id: 
-    class: 
-    ts_name: 
+    id: GPIOPI_5 
+    class: outputs 
+    ts_name: F18 - IGN_6 (HV13) 
     function: igniter
-    type:
-    color:
+    type: ign
 
   - pin: F19
-    id: 
-    class: 
-    ts_name: 
+    id: GPIOPE_5 
+    class: outputs 
+    ts_name: F19 - IGN_2 (HV14) 
     function: igniter
-    type:
-    color:
-
+    type: ign
+    
   - pin: F20
-    id: 
-    class: 
-    ts_name: 
+    id: GPIOPI_8
+    class: outputs 
+    ts_name: F20 - IGN_1 (HV15) 
     function: igniter
-    type:
-    color:
+    type: ign
 
   - pin: F21
-    id: 
-    class: 
-    ts_name: 
+    id: GPIOPI_8 
+    class: outputs 
+    ts_name: F21 - IGN_1 (HV16)
     function: igniter
-    type:
-    color:
+    type: ign
 
 info:
   image:
