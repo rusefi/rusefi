@@ -271,7 +271,7 @@ void hwHandleVvtCamSignal(trigger_value_e front, efitick_t nowNt, int index DECL
 	while (vvtPosition < -360) {
 		vvtPosition += 720;
 	}
-	while (vvtPosition > 360) {
+	while (vvtPosition >= 360) {
 		vvtPosition -= 720;
 	}
 
