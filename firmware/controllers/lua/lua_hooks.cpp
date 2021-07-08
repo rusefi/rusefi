@@ -218,6 +218,8 @@ static int lua_setAirmass(lua_State* l) {
 	engineLoadPercent = clampF(0, engineLoadPercent, 1000);
 
 	luaAirmass.setAirmass({airmass, engineLoadPercent});
+
+	return 0;
 }
 
 static int lua_stopEngine(lua_State*) {
