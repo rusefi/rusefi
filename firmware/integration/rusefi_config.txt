@@ -536,7 +536,7 @@ bit enableFan1WithAc;+Turn on this fan when AC is on.
 bit enableFan2WithAc;+Turn on this fan when AC is on.
 bit disableFan1WhenStopped;+Inhibit operation of this fan while the engine is not running.
 bit disableFan2WhenStopped;+Inhibit operation of this fan while the engine is not running.
-bit unused_294_8
+bit enableTrailingSparks;+Enable secondary spark outputs that fire after the primary (rotaries, twin plug engines).
 bit isCJ125Verbose;enable cj125verbose/disable cj125verbose
 bit cj125isUaDivided;+Is your UA CJ125 output wired to MCU via resistor divider? Ua can go over 3.3v but only at lambda >3, i.e very lean AFR above 44.1\nWhen exposed to free air and 17x gain, Ua will be 4.17 volt
 bit cj125isLsu49
