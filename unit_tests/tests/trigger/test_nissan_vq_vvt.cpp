@@ -108,17 +108,25 @@ TEST(nissan, vq_vvt) {
 				PASS_ENGINE_PARAMETER_SUFFIX);
 	}
 
+	eth.executeUntil(1473000);
+	ASSERT_EQ(0, GET_RPM());
+
+	eth.executeUntil(1475000);
+	ASSERT_EQ(167, GET_RPM());
+	TriggerCentral *tc = &engine->triggerCentral;
+
+	eth.executeUntil(3593000);
+	ASSERT_TRUE(tc->vvtState[0][0].getShaftSynchronized());
+
 	scheduling_s *head;
 	while ((head = engine->executor.getHead()) != nullptr) {
 		eth.setTimeAndInvokeEventsUs(head->momentX);
+
+		ASSERT_TRUE(tc->vvtState[0][0].getShaftSynchronized());
+		// let's celebrate that vvtPosition stays the same
+    	ASSERT_NEAR(-testVvtOffset, tc->vvtPosition[0][0], EPS2D);
 	}
 
-	ASSERT_EQ(167, GET_RPM());
-
-	TriggerCentral *tc = &engine->triggerCentral;
-
-
-	ASSERT_TRUE(tc->vvtState[0][0].getShaftSynchronized());
 	ASSERT_TRUE(tc->vvtState[1][0].getShaftSynchronized());
 
 	ASSERT_NEAR(-testVvtOffset, tc->vvtPosition[0][0], EPS2D);
