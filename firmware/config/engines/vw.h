@@ -10,3 +10,8 @@
 #include "engine_configuration.h"
 
 void setVwAba(DECLARE_CONFIG_PARAMETER_SIGNATURE);
+
+
+void setHellen121Vag_5_cyl(DECLARE_CONFIG_PARAMETER_SIGNATURE);
+void setHellen121Vag_6_cyl(DECLARE_CONFIG_PARAMETER_SIGNATURE);
+void setHellen121Vag_8_cyl(DECLARE_CONFIG_PARAMETER_SIGNATURE);
