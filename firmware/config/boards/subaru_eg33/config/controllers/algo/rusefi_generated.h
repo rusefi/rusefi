@@ -1313,7 +1313,7 @@
 #define showSdCardWarning_offset 76
 #define SIGNATURE_BOARD subaru_eg33_f7
 #define SIGNATURE_DATE 2021.07.09
-#define SIGNATURE_HASH 3122366600
+#define SIGNATURE_HASH 2339282615
 #define silentTriggerError_offset 1464
 #define slowAdcAlpha_offset 2088
 #define sparkDwellRpmBins_offset 332
@@ -1505,6 +1505,19 @@
 #define tpsTpsAccelFromRpmBins_offset 19232
 #define tpsTpsAccelTable_offset 18976
 #define tpsTpsAccelToRpmBins_offset 19264
+#define trailingCoilPins10_offset 2349
+#define trailingCoilPins11_offset 2350
+#define trailingCoilPins12_offset 2351
+#define trailingCoilPins1_offset 2340
+#define trailingCoilPins2_offset 2341
+#define trailingCoilPins3_offset 2342
+#define trailingCoilPins4_offset 2343
+#define trailingCoilPins5_offset 2344
+#define trailingCoilPins6_offset 2345
+#define trailingCoilPins7_offset 2346
+#define trailingCoilPins8_offset 2347
+#define trailingCoilPins9_offset 2348
+#define trailingSparkAngle_offset 520
 #define trigger_config_s_size 16
 #define trigger_customSkippedToothCount_offset 536
 #define trigger_customTotalToothCount_offset 532
@@ -1666,7 +1679,7 @@
 #define ts_show_spi true
 #define ts_show_trigger_comparator false
 #define ts_show_tunerstudio_port false
-#define TS_SIGNATURE "rusEFI 2021.07.09.subaru_eg33_f7.3122366600"
+#define TS_SIGNATURE "rusEFI 2021.07.09.subaru_eg33_f7.2339282615"
 #define TS_SINGLE_WRITE_COMMAND 'W'
 #define TS_SINGLE_WRITE_COMMAND_char W
 #define TS_TEST_COMMAND 't'
@@ -1748,7 +1761,6 @@
 #define unused3942_offset 3992
 #define unused3988_offset 3988
 #define unused4028_offset 4028
-#define unused520_offset 520
 #define unused6312_offset 6312
 #define unused744b4_offset 744
 #define unused76b19_offset 76

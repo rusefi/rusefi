@@ -1297,7 +1297,7 @@
 #define showSdCardWarning_offset 76
 #define SIGNATURE_BOARD kin
 #define SIGNATURE_DATE 2021.07.09
-#define SIGNATURE_HASH 2862518706
+#define SIGNATURE_HASH 2615904141
 #define silentTriggerError_offset 1464
 #define slowAdcAlpha_offset 2088
 #define sparkDwellRpmBins_offset 332
@@ -1489,6 +1489,19 @@
 #define tpsTpsAccelFromRpmBins_offset 19204
 #define tpsTpsAccelTable_offset 18948
 #define tpsTpsAccelToRpmBins_offset 19236
+#define trailingCoilPins10_offset 2341
+#define trailingCoilPins11_offset 2342
+#define trailingCoilPins12_offset 2343
+#define trailingCoilPins1_offset 2332
+#define trailingCoilPins2_offset 2333
+#define trailingCoilPins3_offset 2334
+#define trailingCoilPins4_offset 2335
+#define trailingCoilPins5_offset 2336
+#define trailingCoilPins6_offset 2337
+#define trailingCoilPins7_offset 2338
+#define trailingCoilPins8_offset 2339
+#define trailingCoilPins9_offset 2340
+#define trailingSparkAngle_offset 520
 #define trigger_config_s_size 16
 #define trigger_customSkippedToothCount_offset 536
 #define trigger_customTotalToothCount_offset 532
@@ -1650,7 +1663,7 @@
 #define ts_show_spi true
 #define ts_show_trigger_comparator true
 #define ts_show_tunerstudio_port true
-#define TS_SIGNATURE "rusEFI 2021.07.09.kin.2862518706"
+#define TS_SIGNATURE "rusEFI 2021.07.09.kin.2615904141"
 #define TS_SINGLE_WRITE_COMMAND 'W'
 #define TS_SINGLE_WRITE_COMMAND_char W
 #define TS_TEST_COMMAND 't'
@@ -1732,7 +1745,6 @@
 #define unused3942_offset 3964
 #define unused3988_offset 3960
 #define unused4028_offset 4000
-#define unused520_offset 520
 #define unused6312_offset 6284
 #define unused744b4_offset 744
 #define unused76b19_offset 76
