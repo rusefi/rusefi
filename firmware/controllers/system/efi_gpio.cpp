@@ -42,6 +42,8 @@ static const char *sparkNames[] = { "Coil 1", "Coil 2", "Coil 3", "Coil 4", "Coi
 static const char *trailNames[] = { "Trail 1", "Trail 2", "Trail 3", "Trail 4", "Trail 5", "Trail 6", "Trail 7", "Trail 8",
 		"Trail 9", "Trail 10", "Trail 11", "Trail 12"};
 
+static const char* trailShortNames[] = { "t1", "t2", "t3", "t4", "t5", "t6", "t7", "t8", "t9", "tA", "tB", "tD" };
+
 const char *vvtNames[] = {
 		PROTOCOL_VVT1_NAME,
 		PROTOCOL_VVT2_NAME,
@@ -138,6 +140,7 @@ EnginePins::EnginePins() :
 		enginePins.coils[i].shortName = sparkShortNames[i];
 
 		enginePins.trailingCoils[i].name = trailNames[i];
+		enginePins.trailingCoils[i].shortName = trailShortNames[i];
 
 		enginePins.injectors[i].injectorIndex = i;
 		enginePins.injectors[i].name = injectorNames[i];
@@ -243,6 +246,7 @@ void EnginePins::stopIgnitionPins(void) {
 #if EFI_PROD_CODE
 	for (int i = 0; i < MAX_CYLINDER_COUNT; i++) {
 		unregisterOutputIfPinOrModeChanged(enginePins.coils[i], ignitionPins[i], ignitionPinMode);
+		unregisterOutputIfPinOrModeChanged(enginePins.trailingCoils[i], trailingCoilPins[i], ignitionPinMode);
 	}
 #endif /* EFI_PROD_CODE */
 }

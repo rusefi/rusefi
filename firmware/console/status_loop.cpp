@@ -229,7 +229,7 @@ void printOverallStatus(efitimesec_t nowSeconds) {
 	int cylCount = minI(CONFIG(specs.cylindersCount), MAX_CYLINDER_COUNT);
 	for (int i = 0; i < cylCount; i++) {
 		printOutPin(enginePins.coils[i].getShortName(), CONFIG(ignitionPins)[i]);
-
+		printOutPin(enginePins.trailingCoils[i].getShortName(), CONFIG(trailingCoilPins)[i]);
 		printOutPin(enginePins.injectors[i].getShortName(), CONFIG(injectionPins)[i]);
 	}
 	for (int i = 0; i < AUX_DIGITAL_VALVE_COUNT;i++) {
