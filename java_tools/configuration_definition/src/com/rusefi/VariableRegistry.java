@@ -171,7 +171,7 @@ public class VariableRegistry  {
         }
     }
 
-    private static boolean isQuoted(String value, char quote) {
+    public static boolean isQuoted(String value, char quote) {
         if (value == null)
             return false;
         value = value.trim();
