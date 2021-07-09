@@ -182,6 +182,9 @@ void setBoardDefaultConfiguration(void) {
 	engineConfiguration->useOnlyRisingEdgeForTrigger = true;
 	setAlgorithm(LM_SPEED_DENSITY PASS_CONFIG_PARAMETER_SUFFIX);
 
+	strcpy(CONFIG(engineMake), ENGINE_MAKE_VAG);
+	strcpy(CONFIG(engineCode), "base");
+
 	engineConfiguration->specs.cylindersCount = 4;
 	engineConfiguration->specs.firingOrder = FO_1_3_4_2;
 
