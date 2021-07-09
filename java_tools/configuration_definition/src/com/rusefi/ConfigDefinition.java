@@ -441,6 +441,8 @@ public class ConfigDefinition {
     private static void addPinToList(ArrayList<Map<String, Object>> listPins, ArrayList<Map<String, Object>> thisPinList, Object id, Object pinName, Object pinClass) {
 /*
  This doesn't work as expected because it's possible that a board has multiple connector pins connected to the same MCU pin.
+ https://github.com/rusefi/rusefi/issues/2897
+ https://github.com/rusefi/rusefi/issues/2925
         for (int i = 0; i < listPins.size(); i++) {
             if (id.equals(listPins.get(i).get("id"))) {
                 throw new IllegalStateException("ID used multiple times: " + id);
