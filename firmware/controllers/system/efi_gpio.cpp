@@ -39,6 +39,9 @@ pin_output_mode_e INVERTED_OUTPUT = OM_INVERTED;
 static const char *sparkNames[] = { "Coil 1", "Coil 2", "Coil 3", "Coil 4", "Coil 5", "Coil 6", "Coil 7", "Coil 8",
 		"Coil 9", "Coil 10", "Coil 11", "Coil 12"};
 
+static const char *trailNames[] = { "Trail 1", "Trail 2", "Trail 3", "Trail 4", "Trail 5", "Trail 6", "Trail 7", "Trail 8",
+		"Trail 9", "Trail 10", "Trail 11", "Trail 12"};
+
 const char *vvtNames[] = {
 		PROTOCOL_VVT1_NAME,
 		PROTOCOL_VVT2_NAME,
@@ -128,10 +131,13 @@ EnginePins::EnginePins() :
 	hpfpValve.name = PROTOCOL_HPFP_NAME;
 
 	static_assert(efi::size(sparkNames) >= MAX_CYLINDER_COUNT, "Too many ignition pins");
+	static_assert(efi::size(trailNames) >= MAX_CYLINDER_COUNT, "Too many ignition pins");
 	static_assert(efi::size(injectorNames) >= MAX_CYLINDER_COUNT, "Too many injection pins");
 	for (int i = 0; i < MAX_CYLINDER_COUNT;i++) {
 		enginePins.coils[i].name = sparkNames[i];
 		enginePins.coils[i].shortName = sparkShortNames[i];
+
+		enginePins.trailingCoils[i].name = trailNames[i];
 
 		enginePins.injectors[i].injectorIndex = i;
 		enginePins.injectors[i].name = injectorNames[i];
@@ -168,6 +174,7 @@ bool EnginePins::stopPins() {
 	for (int i = 0; i < MAX_CYLINDER_COUNT; i++) {
 		result |= coils[i].stop();
 		result |= injectors[i].stop();
+		result |= trailingCoils[i].stop();
 	}
 	for (int i = 0; i < AUX_DIGITAL_VALVE_COUNT; i++) {
 		result |= auxValve[i].stop();
@@ -228,6 +235,7 @@ void EnginePins::reset() {
 	for (int i = 0; i < MAX_CYLINDER_COUNT;i++) {
 		injectors[i].reset();
 		coils[i].reset();
+		trailingCoils[i].reset();
 	}
 }
 
@@ -274,6 +282,11 @@ void EnginePins::startAuxValves(void) {
 void EnginePins::startIgnitionPins(void) {
 #if EFI_PROD_CODE
 	for (size_t i = 0; i < engineConfiguration->specs.cylindersCount; i++) {
+		NamedOutputPin *trailingOutput = &enginePins.trailingCoils[i];
+		if (isPinOrModeChanged(trailingCoilPins[i], ignitionPinMode)) {
+			trailingOutput->initPin(trailingOutput->name, CONFIG(trailingCoilPins)[i], &CONFIG(ignitionPinMode));
+		}
+
 		NamedOutputPin *output = &enginePins.coils[i];
 		if (isPinOrModeChanged(ignitionPins[i], ignitionPinMode)) {
 			output->initPin(output->name, CONFIG(ignitionPins)[i], &CONFIG(ignitionPinMode));
@@ -614,6 +627,7 @@ void turnAllPinsOff(void) {
 	for (int i = 0; i < MAX_CYLINDER_COUNT; i++) {
 		enginePins.injectors[i].setValue(false);
 		enginePins.coils[i].setValue(false);
+		enginePins.trailingCoils[i].setValue(false);
 	}
 }
 #endif /* EFI_GPIO_HARDWARE */
