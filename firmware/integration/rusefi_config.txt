@@ -507,8 +507,13 @@ end_struct
 
 #define ET_HELLEN_121_VAG_5_CYL 77
 #define ET_HELLEN_121_VAG_6_CYL 78
-#define ET_HELLEN_121_VAG_8_CYL 79
+! v6 and vr6 are different firing orders
+#define ET_HELLEN_121_VAG_V6_CYL 78
+#define ET_HELLEN_121_VAG_VR6_CYL 79
 #define ET_HELLEN_NA94 80
+
+#define ET_HELLEN_121_VAG_8_CYL 81
+! 
 
 #define ET_PROTEUS_ANALOG_PWM_TEST 106
 
