@@ -84,7 +84,7 @@ struct_no_prefix engine_configuration_s
 #define CAMS_PER_BANK 2
 #define CAMS_PER_BANK_padding 0
 
-#define CAM_INPUTS_COUNT @@BANKS_COUNT@@ * @@CAMS_PER_BANK@@
+#define CAM_INPUTS_COUNT @@BANKS_COUNT@@*@@CAMS_PER_BANK@@
 #define CAM_INPUTS_COUNT_padding 0
 
 ! https://github.com/rusefi/rusefi/issues/2010 shows the corner case wheel with huge depth requirement
@@ -99,11 +99,11 @@ struct_no_prefix engine_configuration_s
 
 #define TOOTH_PACKET_COUNT 1000
 #define TOOTH_PACKET_SIZE 2
-#define TOOTH_DATA_LENGTH @@TOOTH_PACKET_SIZE@@ * @@TOOTH_PACKET_COUNT@@
+#define TOOTH_DATA_LENGTH @@TOOTH_PACKET_SIZE@@*@@TOOTH_PACKET_COUNT@@
 
 #define COMPOSITE_PACKET_COUNT 500
 #define COMPOSITE_PACKET_SIZE 5
-#define COMPOSITE_DATA_LENGTH @@COMPOSITE_PACKET_SIZE@@ * @@COMPOSITE_PACKET_COUNT@@
+#define COMPOSITE_DATA_LENGTH @@COMPOSITE_PACKET_SIZE@@*@@COMPOSITE_PACKET_COUNT@@
 #define COMPOSITE_DATA_LENGTH_HALF 1250
 
 #define MAP_ANGLE_SIZE 8
