@@ -71,8 +71,9 @@ EngineTestHelper::EngineTestHelper(engine_type_e engineType, configuration_callb
 
 	memset(&activeConfiguration, 0, sizeof(activeConfiguration));
 
+	INJECT_ENGINE_REFERENCE(&enginePins);
 	enginePins.reset();
-	enginePins.unregisterPins(PASS_ENGINE_PARAMETER_SIGNATURE);
+	enginePins.unregisterPins();
 
 	INJECT_ENGINE_REFERENCE(&waveChart);
 	waveChart.init();
@@ -94,7 +95,7 @@ EngineTestHelper::EngineTestHelper(engine_type_e engineType, configuration_callb
 
 	resetConfigurationExt(configurationCallback, engineType PASS_ENGINE_PARAMETER_SUFFIX);
 
-	enginePins.startPins(PASS_ENGINE_PARAMETER_SIGNATURE);
+	enginePins.startPins();
 
 	commonInitEngineController(PASS_ENGINE_PARAMETER_SIGNATURE);
 
@@ -122,7 +123,7 @@ EngineTestHelper::~EngineTestHelper() {
 
 	// Cleanup
 	enginePins.reset();
-	enginePins.unregisterPins(PASS_ENGINE_PARAMETER_SIGNATURE);
+	enginePins.unregisterPins();
 	Sensor::resetRegistry();
 	memset(mockPinStates, 0, sizeof(mockPinStates));
 }

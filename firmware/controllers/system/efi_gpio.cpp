@@ -179,10 +179,10 @@ bool EnginePins::stopPins() {
 	return result;
 }
 
-void EnginePins::unregisterPins(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
-	stopInjectionPins(PASS_ENGINE_PARAMETER_SIGNATURE);
-    stopIgnitionPins(PASS_ENGINE_PARAMETER_SIGNATURE);
-    stopAuxValves(PASS_ENGINE_PARAMETER_SIGNATURE);
+void EnginePins::unregisterPins() {
+	stopInjectionPins();
+	stopIgnitionPins();
+	stopAuxValves();
 
 #if EFI_ELECTRONIC_THROTTLE_BODY
 	unregisterEtbPins();
@@ -211,11 +211,11 @@ void EnginePins::debug() {
 	}
 }
 
-void EnginePins::startPins(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+void EnginePins::startPins() {
 #if EFI_ENGINE_CONTROL
-	startInjectionPins(PASS_ENGINE_PARAMETER_SIGNATURE);
-	startIgnitionPins(PASS_ENGINE_PARAMETER_SIGNATURE);
-	startAuxValves(PASS_ENGINE_PARAMETER_SIGNATURE);
+	startInjectionPins();
+	startIgnitionPins();
+	startAuxValves();
 #endif /* EFI_ENGINE_CONTROL */
 
 	RegisteredOutputPin * pin = registeredOutputHead;
@@ -233,19 +233,19 @@ void EnginePins::reset() {
 	}
 }
 
-void EnginePins::stopIgnitionPins(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+void EnginePins::stopIgnitionPins() {
 	for (int i = 0; i < MAX_CYLINDER_COUNT; i++) {
 		unregisterOutputIfPinOrModeChanged(enginePins.coils[i], ignitionPins[i], ignitionPinMode);
 	}
 }
 
-void EnginePins::stopInjectionPins(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+void EnginePins::stopInjectionPins() {
 	for (int i = 0; i < MAX_CYLINDER_COUNT; i++) {
 		unregisterOutputIfPinOrModeChanged(enginePins.injectors[i], injectionPins[i], injectionPinMode);
 	}
 }
 
-void EnginePins::stopAuxValves(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+void EnginePins::stopAuxValves() {
 	for (int i = 0; i < AUX_DIGITAL_VALVE_COUNT; i++) {
 		NamedOutputPin *output = &enginePins.auxValve[i];
 		// todo: do we need auxValveMode and reuse code?
@@ -255,7 +255,7 @@ void EnginePins::stopAuxValves(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	}
 }
 
-void EnginePins::startAuxValves(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+void EnginePins::startAuxValves() {
 #if EFI_PROD_CODE
 	for (int i = 0; i < AUX_DIGITAL_VALVE_COUNT; i++) {
 		NamedOutputPin *output = &enginePins.auxValve[i];
@@ -267,7 +267,7 @@ void EnginePins::startAuxValves(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 #endif /* EFI_PROD_CODE */
 }
 
-void EnginePins::startIgnitionPins(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+void EnginePins::startIgnitionPins() {
 #if EFI_PROD_CODE
 	for (size_t i = 0; i < engineConfiguration->specs.cylindersCount; i++) {
 		NamedOutputPin *trailingOutput = &enginePins.trailingCoils[i];
@@ -283,7 +283,7 @@ void EnginePins::startIgnitionPins(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 #endif /* EFI_PROD_CODE */
 }
 
-void EnginePins::startInjectionPins(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+void EnginePins::startInjectionPins() {
 #if EFI_PROD_CODE
 	// todo: should we move this code closer to the injection logic?
 	for (size_t i = 0; i < engineConfiguration->specs.cylindersCount; i++) {
