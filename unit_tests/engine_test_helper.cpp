@@ -56,6 +56,10 @@ int EngineTestHelper::getWarningCounter() {
 }
 
 EngineTestHelper::EngineTestHelper(engine_type_e engineType, configuration_callback_t configurationCallback, const std::unordered_map<SensorType, float>& sensorValues) {
+	Engine *engine = &this->engine;
+	engine->setConfig(engine, &persistentConfig.engineConfiguration, &persistentConfig);
+	EXPAND_Engine;
+
 	Sensor::setMockValue(SensorType::Clt, 70);
 	Sensor::setMockValue(SensorType::Iat, 30);
 
@@ -68,11 +72,7 @@ EngineTestHelper::EngineTestHelper(engine_type_e engineType, configuration_callb
 	memset(&activeConfiguration, 0, sizeof(activeConfiguration));
 
 	enginePins.reset();
-	enginePins.unregisterPins();
-
-	Engine *engine = &this->engine;
-	engine->setConfig(engine, &persistentConfig.engineConfiguration, &persistentConfig);
-	EXPAND_Engine;
+	enginePins.unregisterPins(PASS_ENGINE_PARAMETER_SIGNATURE);
 
 	INJECT_ENGINE_REFERENCE(&waveChart);
 	waveChart.init();
@@ -113,6 +113,8 @@ EngineTestHelper::EngineTestHelper(engine_type_e engineType, configuration_callb
 }
 
 EngineTestHelper::~EngineTestHelper() {
+	Engine *engine = &this->engine;
+	EXPAND_Engine;
 	// Write history to file
 	std::stringstream filePath;
 	filePath << "unittest_" << ::testing::UnitTest::GetInstance()->current_test_info()->name() << ".logicdata";
@@ -120,7 +122,7 @@ EngineTestHelper::~EngineTestHelper() {
 
 	// Cleanup
 	enginePins.reset();
-	enginePins.unregisterPins();
+	enginePins.unregisterPins(PASS_ENGINE_PARAMETER_SIGNATURE);
 	Sensor::resetRegistry();
 	memset(mockPinStates, 0, sizeof(mockPinStates));
 }
