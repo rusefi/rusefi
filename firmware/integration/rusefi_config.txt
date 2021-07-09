@@ -677,7 +677,7 @@ adc_channel_e fuelLevelSensor;+This is the processor pin that your fuel level se
 
 
 	float idle_derivativeFilterLoss;+0.1 is a good default value;"x", 1, 0, -1000000, 1000000, 4
-	int unused520;;"index", 1, 0, 0, 300, 0
+	int trailingSparkAngle;+just a temporary solution;"angle", 1, 0, 0, 720, 0
 
 struct trigger_config_s @brief Trigger wheel(s) configuration
 
@@ -1341,10 +1341,13 @@ float[MAP_ACCEL_TAPER] mapAccelTaperMult;;"mult", 1, 0, 0, 300, 2
 
 	float[NARROW_BAND_WIDE_BAND_CONVERSION_SIZE] narrowToWideOxygenBins;Narrow Band WBO Approximation;"V", 1, 0, -10, 10, 3
 	float[NARROW_BAND_WIDE_BAND_CONVERSION_SIZE] narrowToWideOxygen;;"ratio", 1, 0, -40, 40, 2
+
 	vvt_mode_e[CAMS_PER_BANK iterate] vvtMode;set vvt_mode X
 	uint8_t[CAMS_PER_BANK_padding] vvtModePadding;;
 	uint8_t fan2ExtraIdle;+Additional idle % when fan #2 is active;"%", 1, 0, 0, 100, 0
-	uint8_t[21] unusedOldBiquad;;"units", 1, 0, -20, 100, 0
+	uint8_t[9] unusedOldBiquad;;"units", 1, 0, -20, 100, 0
+
+	output_pin_e[MAX_CYLINDER_COUNT iterate] trailingCoilPins;
 	float[CLT_TIMING_CURVE_SIZE] cltTimingBins;CLT-based timing correction;"C", 1, 0, -100, 250, 1
 	float[CLT_TIMING_CURVE_SIZE] cltTimingExtra;;"degree", 1, 0, -400, 400, 0
 custom tle8888_mode_e 1 bits, U08, @OFFSET@, [0:1], "Auto", "SemiAuto", "Manual", "Hall"
