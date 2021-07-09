@@ -1751,7 +1751,8 @@ cmd_set_engine_type_hellen_NA94						= "@@TS_IO_TEST_COMMAND_char@@\x00\x30@@ET_
 
 cmd_set_engine_type_hellen_121_vag_4				= "@@TS_IO_TEST_COMMAND_char@@\x00\x30@@ET_HELLEN_121_VAG_16_hex@@"
 cmd_set_engine_type_hellen_121_vag_5				= "@@TS_IO_TEST_COMMAND_char@@\x00\x30@@ET_HELLEN_121_VAG_5_CYL_16_hex@@"
-cmd_set_engine_type_hellen_121_vag_6				= "@@TS_IO_TEST_COMMAND_char@@\x00\x30@@ET_HELLEN_121_VAG_6_CYL_16_hex@@"
+cmd_set_engine_type_hellen_121_vag_v6				= "@@TS_IO_TEST_COMMAND_char@@\x00\x30@@ET_HELLEN_121_VAG_V6_CYL_16_hex@@"
+cmd_set_engine_type_hellen_121_vag_vr6				= "@@TS_IO_TEST_COMMAND_char@@\x00\x30@@ET_HELLEN_121_VAG_VR6_CYL_16_hex@@"
 cmd_set_engine_type_hellen_121_vag_8				= "@@TS_IO_TEST_COMMAND_char@@\x00\x30@@ET_HELLEN_121_VAG_8_CYL_16_hex@@"
 
 
@@ -3510,8 +3511,9 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 		commandButton = "Hellen NA8 94-95",			cmd_set_engine_type_hellen_NA94@@if_show_HellenNA6_presets
 
 		commandButton = "Hellen 121 VAG i4",			cmd_set_engine_type_hellen_121_vag_4@@if_show_Hellen121vag_presets
-		commandButton = "Hellen 121 VAG v6",			cmd_set_engine_type_hellen_121_vag_5@@if_show_Hellen121vag_presets
-		commandButton = "Hellen 121 VAG i5",			cmd_set_engine_type_hellen_121_vag_6@@if_show_Hellen121vag_presets
+		commandButton = "Hellen 121 VAG i5",			cmd_set_engine_type_hellen_121_vag_5@@if_show_Hellen121vag_presets
+		commandButton = "Hellen 121 VAG v6",			cmd_set_engine_type_hellen_121_vag_v6@@if_show_Hellen121vag_presets
+		commandButton = "Hellen 121 VAG vr6",			cmd_set_engine_type_hellen_121_vag_vr6@@if_show_Hellen121vag_presets
 		commandButton = "Hellen 121 VAG v8",			cmd_set_engine_type_hellen_121_vag_8@@if_show_Hellen121vag_presets
 
 		commandButton = "ETB test bench", cmd_set_engine_type_etb_test@@if_show_test_presets
