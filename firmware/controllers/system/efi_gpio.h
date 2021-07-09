@@ -159,12 +159,14 @@ public:
 
 class EnginePins {
 public:
+	DECLARE_ENGINE_PTR;
+
 	EnginePins();
-	void startPins(DECLARE_ENGINE_PARAMETER_SIGNATURE);
+	void startPins();
 	void reset();
 	static void debug();
 	bool stopPins();
-	void unregisterPins(DECLARE_ENGINE_PARAMETER_SIGNATURE);
+	void unregisterPins();
 	RegisteredOutputPin mainRelay;
 	/**
 	 * High Pressure Fuel Pump valve control
@@ -214,13 +216,13 @@ public:
 	OutputPin tcuSolenoids[TCU_SOLENOID_COUNT];
 
 private:
-	void startInjectionPins(DECLARE_ENGINE_PARAMETER_SIGNATURE);
-	void startIgnitionPins(DECLARE_ENGINE_PARAMETER_SIGNATURE);
-	void startAuxValves(DECLARE_ENGINE_PARAMETER_SIGNATURE);
+	void startInjectionPins();
+	void startIgnitionPins();
+	void startAuxValves();
 
-	void stopInjectionPins(DECLARE_ENGINE_PARAMETER_SIGNATURE);
-	void stopIgnitionPins(DECLARE_ENGINE_PARAMETER_SIGNATURE);
-	void stopAuxValves(DECLARE_ENGINE_PARAMETER_SIGNATURE);
+	void stopInjectionPins();
+	void stopIgnitionPins();
+	void stopAuxValves();
 };
 
 #endif /* __cplusplus */
