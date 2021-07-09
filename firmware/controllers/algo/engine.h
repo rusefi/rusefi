@@ -85,7 +85,6 @@ public:
 
 	Engine();
 	bool isPwmEnabled = true;
-	int triggerActivitySecond = 0;
 
 	const char *prevOutputName = nullptr;
 

@@ -105,7 +105,6 @@ FsioPointers::FsioPointers() : fsioLogics() {
 
 static FsioPointers state;
 
-static LEElement * fuelPumpLogic;
 static LEElement * starterRelayDisableLogic;
 
 #if EFI_MAIN_RELAY_CONTROL
@@ -468,12 +467,6 @@ void runFsio(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 		runFsioCalculation(index PASS_ENGINE_PARAMETER_SUFFIX);
 	}
 
-#if EFI_FUEL_PUMP
-	if (isBrainPinValid(CONFIG(fuelPumpPin))) {
-		setPinState("pump", &enginePins.fuelPumpRelay, fuelPumpLogic PASS_ENGINE_PARAMETER_SUFFIX);
-	}
-#endif /* EFI_FUEL_PUMP */
-
 #if EFI_MAIN_RELAY_CONTROL
 	if (isBrainPinValid(CONFIG(mainRelayPin)))
 		// the MAIN_RELAY_LOGIC calls engine->isInShutdownMode()
@@ -562,7 +555,6 @@ static void showFsio(const char *msg, LEElement *element) {
 static void showFsioInfo(void) {
 #if EFI_PROD_CODE || EFI_SIMULATOR
 	efiPrintf("sys used %d/user used %d", sysPool.getSize(), userPool.getSize());
-	showFsio("fuel", fuelPumpLogic);
 
 	for (int i = 0; i < CAM_INPUTS_COUNT ; i++) {
 		brain_pin_e pin = engineConfiguration->auxPidPins[i];
@@ -680,10 +672,6 @@ void initFsioImpl(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	sysPool.reset();
 #endif
 
-#if EFI_FUEL_PUMP
-	fuelPumpLogic = sysPool.parseExpression(FUEL_PUMP_LOGIC);
-#endif /* EFI_FUEL_PUMP */
-
 #if EFI_MAIN_RELAY_CONTROL
 	if (isBrainPinValid(CONFIG(mainRelayPin)))
 		mainRelayLogic = sysPool.parseExpression(MAIN_RELAY_LOGIC);
@@ -759,11 +747,7 @@ void runHardcodedFsio(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	if (isBrainPinValid(CONFIG(starterRelayDisablePin))) {
 		enginePins.starterRelayDisable.setValue(engine->rpmCalculator.getRpm() < engineConfiguration->cranking.rpm);
 	}
-	// see FUEL_PUMP_LOGIC
-	if (isBrainPinValid(CONFIG(fuelPumpPin))) {
-		enginePins.fuelPumpRelay.setValue((getTimeNowSeconds() < engine->triggerActivitySecond + engineConfiguration->startUpFuelPumpDuration) || (engine->rpmCalculator.getRpm() > 0));
-	}
-	
+
 	enginePins.o2heater.setValue(engine->rpmCalculator.isRunning());
 }
 

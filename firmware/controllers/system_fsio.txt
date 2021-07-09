@@ -9,8 +9,6 @@
 # Andrey Belomutskiy, (c) 2012-2017
 #
 
-FUEL_PUMP_LOGIC=((time_since_boot >= 0) & (time_since_boot < startup_fuel_pump_duration)) | (time_since_trigger < 1)
-
 TOO_HOT_LOGIC=coolant > 120
 
 # Combined RPM, CLT and VBATT warning light

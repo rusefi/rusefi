@@ -402,15 +402,6 @@ void mainTriggerCallback(uint32_t trgEventIndex, efitick_t edgeTimestamp DECLARE
 
 	int rpm = GET_RPM();
 	if (rpm == 0) {
-		// this happens while we just start cranking
-		/**
-		 * While we have start-up priming pulse, we also want to start pumping fuel again as soon as possible.
-		 * Hopefully battery would handle both cranking and fuel pump simultaneously?
-		 */
-		enginePins.fuelPumpRelay.setValue(true); // quickly set pin right from the callback here! todo: would it work OK for smart SPI pin?!
-#if EFI_PROD_CODE
-		engine->triggerActivitySecond = getTimeNowSeconds();
-#endif
 		// todo: check for 'trigger->is_synchnonized?'
 		// TODO: add 'pin shutdown' invocation somewhere - coils might be still open here!
 		return;
