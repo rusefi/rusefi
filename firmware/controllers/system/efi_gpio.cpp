@@ -154,7 +154,6 @@ EnginePins::EnginePins() :
  * Sets the value of the pin. On this layer the value is assigned as is, without any conversion.
  */
 
-#if EFI_PROD_CODE
 #define unregisterOutputIfPinChanged(output, pin) {                                \
 	if (isConfigurationChanged(pin)) {                                             \
 		(output).deInit();                        \
@@ -166,8 +165,6 @@ EnginePins::EnginePins() :
 		(output).deInit();                        \
 	}                                                                              \
 }
-
-#endif /* EFI_PROD_CODE */
 
 bool EnginePins::stopPins() {
 	bool result = false;
@@ -190,7 +187,7 @@ void EnginePins::unregisterPins(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 #if EFI_ELECTRONIC_THROTTLE_BODY
 	unregisterEtbPins();
 #endif /* EFI_ELECTRONIC_THROTTLE_BODY */
-#if EFI_PROD_CODE
+
 	// todo: add pinMode
 	unregisterOutputIfPinChanged(sdCsPin, sdCardCsPin);
 	unregisterOutputIfPinChanged(accelerometerCs, LIS302DLCsPin);
@@ -198,7 +195,6 @@ void EnginePins::unregisterPins(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	for (int i = 0;i < FSIO_COMMAND_COUNT;i++) {
 		unregisterOutputIfPinChanged(fsioOutputs[i], fsioOutputPins[i]);
 	}
-#endif /* EFI_PROD_CODE */
 
 	RegisteredOutputPin * pin = registeredOutputHead;
 	while (pin != nullptr) {
@@ -208,13 +204,11 @@ void EnginePins::unregisterPins(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 }
 
 void EnginePins::debug() {
-#if EFI_PROD_CODE
 	RegisteredOutputPin * pin = registeredOutputHead;
 	while (pin != nullptr) {
 		efiPrintf("%s %d", pin->registrationName, pin->currentLogicValue);
 		pin = pin->next;
 	}
-#endif // EFI_PROD_CODE
 }
 
 void EnginePins::startPins(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
@@ -240,23 +234,18 @@ void EnginePins::reset() {
 }
 
 void EnginePins::stopIgnitionPins(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
-#if EFI_PROD_CODE
 	for (int i = 0; i < MAX_CYLINDER_COUNT; i++) {
 		unregisterOutputIfPinOrModeChanged(enginePins.coils[i], ignitionPins[i], ignitionPinMode);
 	}
-#endif /* EFI_PROD_CODE */
 }
 
 void EnginePins::stopInjectionPins(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
-#if EFI_PROD_CODE
 	for (int i = 0; i < MAX_CYLINDER_COUNT; i++) {
 		unregisterOutputIfPinOrModeChanged(enginePins.injectors[i], injectionPins[i], injectionPinMode);
 	}
-#endif /* EFI_PROD_CODE */
 }
 
 void EnginePins::stopAuxValves(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
-#if EFI_PROD_CODE
 	for (int i = 0; i < AUX_DIGITAL_VALVE_COUNT; i++) {
 		NamedOutputPin *output = &enginePins.auxValve[i];
 		// todo: do we need auxValveMode and reuse code?
@@ -264,7 +253,6 @@ void EnginePins::stopAuxValves(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 			(output)->deInit();
 		}
 	}
-#endif /* EFI_PROD_CODE */
 }
 
 void EnginePins::startAuxValves(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
