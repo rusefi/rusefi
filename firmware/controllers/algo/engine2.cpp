@@ -171,6 +171,10 @@ void EngineState::periodicFastCallback(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 
 	float ignitionLoad = getIgnitionLoad(PASS_ENGINE_PARAMETER_SIGNATURE);
 	timingAdvance = getAdvance(rpm, ignitionLoad PASS_ENGINE_PARAMETER_SUFFIX);
+
+	// TODO: calculate me from a table!
+	trailingSparkAngle = CONFIG(trailingSparkAngle);
+
 	multispark.count = getMultiSparkCount(rpm PASS_ENGINE_PARAMETER_SUFFIX);
 
 #if EFI_LAUNCH_CONTROL

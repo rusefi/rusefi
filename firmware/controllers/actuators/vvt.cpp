@@ -65,8 +65,8 @@ expected<percent_t> VvtController::getOpenLoop(angle_t target) const {
 	return 0;
 }
 
-expected<percent_t> VvtController::getClosedLoop(angle_t setpoint, angle_t observation) {
-	float retVal = m_pid.getOutput(setpoint, observation);
+expected<percent_t> VvtController::getClosedLoop(angle_t target, angle_t observation) {
+	float retVal = m_pid.getOutput(target, observation);
 
 	if (engineConfiguration->isVerboseAuxPid1) {
 		efiPrintf("aux duty: %.2f/value=%.2f/p=%.2f/i=%.2f/d=%.2f int=%.2f", retVal, observation,
@@ -74,9 +74,11 @@ expected<percent_t> VvtController::getClosedLoop(angle_t setpoint, angle_t obser
 	}
 
 #if EFI_TUNER_STUDIO
-	if (engineConfiguration->debugMode == DBG_AUX_PID_1) {
+	static debug_mode_e debugModeByIndex[4] = {DBG_VVT_1_PID, DBG_VVT_2_PID, DBG_VVT_3_PID, DBG_VVT_4_PID};
+
+	if (engineConfiguration->debugMode == debugModeByIndex[index]) {
 		m_pid.postState(&tsOutputChannels);
-		tsOutputChannels.debugIntField3 = (int)(10 * setpoint);
+		tsOutputChannels.debugIntField3 = (int)(10 * target);
 	}
 #endif /* EFI_TUNER_STUDIO */
 

@@ -201,7 +201,8 @@ typedef enum {
 	HELLEN_154_VAG = ET_HELLEN_154_VAG,
 
 	HELLEN_121_VAG_5_CYL = ET_HELLEN_121_VAG_5_CYL,
-	HELLEN_121_VAG_6_CYL = ET_HELLEN_121_VAG_6_CYL,
+	HELLEN_121_VAG_V6_CYL = ET_HELLEN_121_VAG_V6_CYL,
+	HELLEN_121_VAG_VR6_CYL = ET_HELLEN_121_VAG_VR6_CYL,
 	HELLEN_121_VAG_8_CYL = ET_HELLEN_121_VAG_8_CYL,
 
 	HELLEN_NA94 = ET_HELLEN_NA94,
@@ -743,10 +744,8 @@ typedef enum {
 	DBG_EL_ACCEL = 4,
 	DBG_TRIGGER_COUNTERS = 5,
 	DBG_FSIO_ADC = 6,
-	/**
-	 * VVT valve control often uses AUX pid #1
-	 */
-	DBG_AUX_PID_1 = 7,
+
+	DBG_VVT_1_PID = 7,
 	/**
 	 * VVT position debugging - not VVT valve control. See AUX pid #1 debug for valve position.
 	 */
@@ -807,6 +806,11 @@ typedef enum {
 	DBG_RUSEFI_WIDEBAND = 46,
 	DBG_TCU = 47,
 	DBG_LUA = 48,
+	DBG_VVT_2_PID = 49,
+	DBG_VVT_3_PID = 50,
+	DBG_VVT_4_PID = 51,
+	MODE_52 = 52,
+	MODE_53 = 53,
 
 	Force_4_bytes_size_debug_mode_e = ENUM_32_BITS,
 } debug_mode_e;
@@ -938,6 +942,7 @@ typedef enum {
     CAN_BUS_BMW_E90 = 6,
 	CAN_BUS_Haltech = 7,
 	CAN_BUS_MQB = 8,
+	CAN_BUS_NISSAN_VQ = 9,
 
 	Internal_ForceMyEnumIntSize_can_nbc = ENUM_32_BITS,
 } can_nbc_e;
@@ -1055,3 +1060,8 @@ typedef enum __attribute__ ((__packed__)) {
 	ICM_FixedRailPressure = 1,
 	ICM_SensedRailPressure = 2,
 } injector_compensation_mode_e;
+
+typedef enum __attribute__ ((__packed__)) {
+	INJ_None = 0,
+	INJ_PolynomialAdder = 1,
+} InjectorNonlinearMode;

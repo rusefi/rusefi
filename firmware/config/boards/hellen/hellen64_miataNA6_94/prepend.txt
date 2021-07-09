@@ -25,3 +25,4 @@
 #define show_microRusEFI_presets false
 #define show_Proteus_presets false
 #define show_Hellen_presets true
+#define show_HellenNA6_presets true

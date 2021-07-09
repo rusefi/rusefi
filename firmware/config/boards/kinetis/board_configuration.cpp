@@ -84,9 +84,9 @@ void setBoardDefaultConfiguration(void) {
 	
 	// todo:
 	int i;
-	for (i = 0; i < INJECTION_PIN_COUNT; i++)
+	for (i = 0; i < MAX_CYLINDER_COUNT; i++)
 		engineConfiguration->injectionPins[i] = GPIO_UNASSIGNED;
-	for (i = 0; i < IGNITION_PIN_COUNT; i++)
+	for (i = 0; i < MAX_CYLINDER_COUNT; i++)
 		engineConfiguration->ignitionPins[i] = GPIO_UNASSIGNED;
 	
 	engineConfiguration->adcVcc = 5.0f;
@@ -122,4 +122,16 @@ void setAdcChannelOverrides(void) {
 	
 	removeChannel("TPS", engineConfiguration->tps1_1AdcChannel);
 	addChannel("TPS", engineConfiguration->tps1_1AdcChannel, ADC_SLOW);
+}
+
+#include <setjmp.h>
+
+void longjmp(jmp_buf /*env*/, int /*status*/) {
+	// noop, but noreturn
+	while (1) { }
+}
+
+int setjmp(jmp_buf /*env*/) {
+	// Fake return 0, not implemented
+	return 0;
 }

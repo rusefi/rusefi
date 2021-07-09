@@ -40,13 +40,17 @@ public:
 	/**
 	 * MAP averaging angle start, in relation to 'mapAveragingSchedulingAtIndex' trigger index index
 	 */
-	angle_t mapAveragingStart[INJECTION_PIN_COUNT];
+	angle_t mapAveragingStart[MAX_CYLINDER_COUNT];
 	angle_t mapAveragingDuration = 0;
 
 	/**
 	 * timing advance is angle distance before Top Dead Center (TDP), i.e. "10 degree timing advance" means "happens 10 degrees before TDC"
 	 */
 	angle_t timingAdvance = 0;
+
+	// Angle between firing the main (primary) spark and the secondary (trailing) spark
+	angle_t trailingSparkAngle = 0;
+
 	// fuel-related;
 	float fuelCutoffCorrection = 0;
 	efitick_t coastingFuelCutStartTime = 0;

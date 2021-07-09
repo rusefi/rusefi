@@ -30,12 +30,17 @@ All notable user-facing or behavior-altering changes will be documented in this 
 ### Breaking Changes
  - vvtOffset field migrated to four vvtOffsets fields. Anyone using VVT would need to manually adjust their configuration.  
 
+### Added
+ - Injector nonlinearity (small pulse) correction - so far just polynomial, but table modes coming soon.
+ - 1-4-3-6-2-5 firing order for VAG v6  
+
 ## June 2021 Release "National Logistics Day"
 
 ### Fixed
  - Improved cranking defaults
  - Simplified/clarified idle and cranking TunerStudio pages
- - Minor change of Miata NA trigger shape #2855   
+ - Minor change of Miata NA trigger shape #2855
+ - Improved trigger sync for 60/2 36/1 36/22 triggers as part of VW warnings on cranking part #1 #2861   
 
 ### Added
  - Idle improvements! Open loop corrections are now applied in closed loop mode.

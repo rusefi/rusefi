@@ -89,8 +89,9 @@ public:
 	/**
 	 * this is important for crank-based virtual trigger and VVT magic
 	 */
-	bool isEvenRevolution() const;
 	void incrementTotalEventCounter();
+	bool syncSymmetricalCrank(int mod, int remainder);
+
 	efitime_t getTotalEventCounter() const;
 
 	void decodeTriggerEvent(

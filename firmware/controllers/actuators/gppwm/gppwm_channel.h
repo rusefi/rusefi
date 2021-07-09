@@ -6,7 +6,7 @@
 
 struct gppwm_channel;
 class OutputPin;
-class IPwm;
+struct IPwm;
 class ValueProvider3D;
 
 class GppwmChannel {

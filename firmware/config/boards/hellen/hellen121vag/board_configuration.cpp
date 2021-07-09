@@ -35,7 +35,7 @@ static void setInjectorPins() {
 	//engineConfiguration->injectionPins[7] = GPIOF_14;
 
 	// Disable remainder
-	for (int i = 4; i < INJECTION_PIN_COUNT;i++) {
+	for (int i = 4; i < MAX_CYLINDER_COUNT;i++) {
 		engineConfiguration->injectionPins[i] = GPIO_UNASSIGNED;
 	}
 
@@ -54,7 +54,7 @@ static void setIgnitionPins() {
 	//engineConfiguration->ignitionPins[7] = GPIOI_7;
 	
 	// disable remainder
-	for (int i = 4; i < IGNITION_PIN_COUNT; i++) {
+	for (int i = 4; i < MAX_CYLINDER_COUNT; i++) {
 		engineConfiguration->ignitionPins[i] = GPIO_UNASSIGNED;
 	}
 
@@ -163,9 +163,6 @@ void setBoardDefaultConfiguration(void) {
 
 	CONFIG(enableSoftwareKnock) = true;
 
-	engineConfiguration->canTxPin = GPIOD_1;
-	engineConfiguration->canRxPin = GPIOD_0;
-
 	engineConfiguration->fuelPumpPin = GPIOH_14;	// 65 - Fuel Pump
 	engineConfiguration->malfunctionIndicatorPin = GPIOG_4; // 47 - CEL
 	engineConfiguration->tachOutputPin = GPIOD_13; // 37 - TACH
@@ -184,6 +181,9 @@ void setBoardDefaultConfiguration(void) {
 	engineConfiguration->trigger.type = TT_TOOTHED_WHEEL_60_2;
 	engineConfiguration->useOnlyRisingEdgeForTrigger = true;
 	setAlgorithm(LM_SPEED_DENSITY PASS_CONFIG_PARAMETER_SUFFIX);
+
+	strcpy(CONFIG(engineMake), ENGINE_MAKE_VAG);
+	strcpy(CONFIG(engineCode), "base");
 
 	engineConfiguration->specs.cylindersCount = 4;
 	engineConfiguration->specs.firingOrder = FO_1_3_4_2;

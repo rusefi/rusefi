@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Sun Jul 04 13:36:44 UTC 2021
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Fri Jul 09 14:08:41 UTC 2021
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -436,7 +436,7 @@ struct specs_s {
 	/**
 	 * offset 4
 	 */
-	cylinders_count_t cylindersCount;
+	uint32_t cylindersCount;
 	/**
 	 * offset 8
 	 */
@@ -697,8 +697,9 @@ struct engine_configuration_s {
 	offset 76 bit 7 */
 	bool disableFan2WhenStopped : 1;
 	/**
+	 * Enable secondary spark outputs that fire after the primary (rotaries, twin plug engines).
 	offset 76 bit 8 */
-	bool unused_294_8 : 1;
+	bool enableTrailingSparks : 1;
 	/**
 	 * enable cj125verbose/disable cj125verbose
 	offset 76 bit 9 */
@@ -1092,10 +1093,11 @@ struct engine_configuration_s {
 	 */
 	float idle_derivativeFilterLoss;
 	/**
-	index
+	 * just a temporary solution
+	angle
 	 * offset 520
 	 */
-	int unused520;
+	int trailingSparkAngle;
 	/**
 	 * offset 524
 	 */
@@ -1210,11 +1212,11 @@ struct engine_configuration_s {
 	/**
 	 * offset 624
 	 */
-	output_pin_e injectionPins[INJECTION_PIN_COUNT];
+	output_pin_e injectionPins[MAX_CYLINDER_COUNT];
 	/**
 	 * offset 636
 	 */
-	output_pin_e ignitionPins[IGNITION_PIN_COUNT];
+	output_pin_e ignitionPins[MAX_CYLINDER_COUNT];
 	/**
 	 * offset 648
 	 */
@@ -3183,7 +3185,11 @@ struct engine_configuration_s {
 	units
 	 * offset 2323
 	 */
-	uint8_t unusedOldBiquad[21];
+	uint8_t unusedOldBiquad[9];
+	/**
+	 * offset 2332
+	 */
+	output_pin_e trailingCoilPins[MAX_CYLINDER_COUNT];
 	/**
 	 * CLT-based timing correction
 	C
@@ -3249,20 +3255,28 @@ struct engine_configuration_s {
 	 */
 	float postCrankingDurationSec;
 	/**
-	 * todo: finish implementation #332
 	 * offset 2436
 	 */
 	ThermistorConf auxTempSensor1;
 	/**
-	 * todo: finish implementation #332
 	 * offset 2468
 	 */
 	ThermistorConf auxTempSensor2;
 	/**
-	units
+	 * Apply nonlinearity correction below a pulse of this duration. Pulses longer than this duration will receive no adjustment.
+	ms
 	 * offset 2500
 	 */
-	uint8_t unused2508[6];
+	uint16_t applyNonlinearBelowPulse;
+	/**
+	 * offset 2502
+	 */
+	InjectorNonlinearMode injectorNonlinearMode;
+	/**
+	units
+	 * offset 2503
+	 */
+	uint8_t unused2508[3];
 	/**
 	Hz
 	 * offset 2506
@@ -3282,7 +3296,7 @@ struct engine_configuration_s {
 	deg
 	 * offset 2532
 	 */
-	angle_t timing_offset_cylinder[IGNITION_PIN_COUNT];
+	angle_t timing_offset_cylinder[MAX_CYLINDER_COUNT];
 	/**
 	seconds
 	 * offset 2580
@@ -3371,10 +3385,14 @@ struct engine_configuration_s {
 	 */
 	pid_s auxPid[CAMS_PER_BANK];
 	/**
-	units
 	 * offset 2624
 	 */
-	uint8_t unused1366[40];
+	float injectorCorrectionPolynomial[8];
+	/**
+	units
+	 * offset 2656
+	 */
+	uint8_t unused1366[8];
 	/**
 	 * offset 2664
 	 */
@@ -3716,7 +3734,7 @@ struct engine_configuration_s {
 	 * Select which fuel correction bank this cylinder belongs to. Group cylinders that share the same O2 sensor
 	 * offset 3988
 	 */
-	uint8_t cylinderBankSelect[INJECTION_PIN_COUNT];
+	uint8_t cylinderBankSelect[MAX_CYLINDER_COUNT];
 	/**
 	units
 	 * offset 4000
@@ -4244,4 +4262,4 @@ struct persistent_config_s {
 };
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Sun Jul 04 13:36:44 UTC 2021
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Fri Jul 09 14:08:41 UTC 2021

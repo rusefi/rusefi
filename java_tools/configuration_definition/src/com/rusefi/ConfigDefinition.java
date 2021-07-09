@@ -589,6 +589,10 @@ public class ConfigDefinition {
             int v = Integer.parseInt(line);
             registry.register(name, v);
         } else {
+            if (line.contains(" ") && !VariableRegistry.isQuoted(line, '\"') && !VariableRegistry.isQuoted(line, '\'')) {
+                throw new IllegalStateException("Unexpected space in unquoted " + line);
+            }
+
             registry.register(name, line);
         }
     }
