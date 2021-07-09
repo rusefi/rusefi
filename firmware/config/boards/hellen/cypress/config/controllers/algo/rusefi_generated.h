@@ -383,6 +383,7 @@
 #define enableLaunchRetard_offset 976
 #define enableMapEstimationTableFallback_offset 76
 #define enableSoftwareKnock_offset 976
+#define enableTrailingSparks_offset 76
 #define enableVerboseCan2Tx_offset 2116
 #define enableVerboseCanTx_offset 744
 #define engine_configuration_s_size 6000
@@ -1312,7 +1313,7 @@
 #define showSdCardWarning_offset 76
 #define SIGNATURE_BOARD hellen_cypress
 #define SIGNATURE_DATE 2021.07.09
-#define SIGNATURE_HASH 550412469
+#define SIGNATURE_HASH 1429953870
 #define silentTriggerError_offset 1464
 #define slowAdcAlpha_offset 2088
 #define sparkDwellRpmBins_offset 332
@@ -1665,7 +1666,7 @@
 #define ts_show_spi true
 #define ts_show_trigger_comparator false
 #define ts_show_tunerstudio_port true
-#define TS_SIGNATURE "rusEFI 2021.07.09.hellen_cypress.550412469"
+#define TS_SIGNATURE "rusEFI 2021.07.09.hellen_cypress.1429953870"
 #define TS_SINGLE_WRITE_COMMAND 'W'
 #define TS_SINGLE_WRITE_COMMAND_char W
 #define TS_TEST_COMMAND 't'
@@ -1760,7 +1761,6 @@
 #define unused_1484_bit_29_offset 1476
 #define unused_1484_bit_30_offset 1476
 #define unused_1484_bit_31_offset 1476
-#define unused_294_8_offset 76
 #define unusedAtOldBoardConfigurationEnd_offset 1244
 #define unusedBit4_1476_offset 1476
 #define unusedBit_251_29_offset 976
