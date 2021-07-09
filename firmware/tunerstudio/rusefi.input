@@ -3520,7 +3520,6 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 		commandButton = "TLE8888 test bench", cmd_set_engine_type_8888_test@@if_show_test_presets
 		commandButton = "Reset firmware settings", cmd_set_engine_type_default
 
-
 ;			Board->ECU stimulator
 	dialog = ecuStimulator, "ECU stimulator"
 		field = "Trigger Simulator",   					triggerSimulatorFrequency
