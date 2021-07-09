@@ -36,6 +36,7 @@
 #include "boost_control.h"
 #include "fan_control.h"
 #include "ac_control.h"
+#include "fuel_pump.h"
 #if EFI_MC33816
  #include "mc33816.h"
 #endif // EFI_MC33816
@@ -235,6 +236,7 @@ void Engine::periodicSlowCallback(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 
 	bool acActive = updateAc(PASS_ENGINE_PARAMETER_SIGNATURE);
 	updateFans(acActive PASS_ENGINE_PARAMETER_SUFFIX);
+	updateFuelPump(PASS_ENGINE_PARAMETER_SIGNATURE);
 
 	updateGppwm();
 
