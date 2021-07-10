@@ -34,7 +34,7 @@ for c in $CONNECTORS; do
     exit 1;
   fi
   echo "IMG "$IMG
-  if [ $IMG ]; then
+  if [ "$IMG" != "null" ]; then
     cp $(dirname $c)/$IMG $DIR
   fi
   ls $DIR
