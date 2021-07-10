@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Fri Jul 09 04:46:20 UTC 2021
+// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Fri Jul 09 14:08:11 UTC 2021
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -366,6 +366,7 @@ public class Fields {
 	public static final int enableLaunchRetard_offset = 976;
 	public static final int enableMapEstimationTableFallback_offset = 76;
 	public static final int enableSoftwareKnock_offset = 976;
+	public static final int enableTrailingSparks_offset = 76;
 	public static final int enableVerboseCan2Tx_offset = 2116;
 	public static final int enableVerboseCanTx_offset = 744;
 	public static final int engine_configuration_s_size = 6000;
@@ -1262,7 +1263,7 @@ public class Fields {
 	public static final int servoOutputPins8_offset = 3147;
 	public static final int showHumanReadableWarning_offset = 976;
 	public static final int showSdCardWarning_offset = 76;
-	public static final int SIGNATURE_HASH = 1655864165;
+	public static final int SIGNATURE_HASH = 640848033;
 	public static final int silentTriggerError_offset = 1464;
 	public static final int slowAdcAlpha_offset = 2088;
 	public static final int sparkDwellRpmBins_offset = 332;
@@ -1448,6 +1449,19 @@ public class Fields {
 	public static final int tpsTpsAccelFromRpmBins_offset = 19232;
 	public static final int tpsTpsAccelTable_offset = 18976;
 	public static final int tpsTpsAccelToRpmBins_offset = 19264;
+	public static final int trailingCoilPins10_offset = 2349;
+	public static final int trailingCoilPins11_offset = 2350;
+	public static final int trailingCoilPins12_offset = 2351;
+	public static final int trailingCoilPins1_offset = 2340;
+	public static final int trailingCoilPins2_offset = 2341;
+	public static final int trailingCoilPins3_offset = 2342;
+	public static final int trailingCoilPins4_offset = 2343;
+	public static final int trailingCoilPins5_offset = 2344;
+	public static final int trailingCoilPins6_offset = 2345;
+	public static final int trailingCoilPins7_offset = 2346;
+	public static final int trailingCoilPins8_offset = 2347;
+	public static final int trailingCoilPins9_offset = 2348;
+	public static final int trailingSparkAngle_offset = 520;
 	public static final int trigger_config_s_size = 16;
 	public static final int trigger_customSkippedToothCount_offset = 536;
 	public static final int trigger_customTotalToothCount_offset = 532;
@@ -1564,7 +1578,7 @@ public class Fields {
 	public static final char TS_SD_R_COMMAND = 'r';
 	public static final char TS_SD_W_COMMAND = 'w';
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI 2021.07.09.all.1655864165";
+	public static final String TS_SIGNATURE = "rusEFI 2021.07.09.all.640848033";
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final char TS_TEST_COMMAND = 't';
 	public static final int TT_TT_1_16 = 50;
@@ -1643,7 +1657,6 @@ public class Fields {
 	public static final int unused3942_offset = 3992;
 	public static final int unused3988_offset = 3988;
 	public static final int unused4028_offset = 4028;
-	public static final int unused520_offset = 520;
 	public static final int unused6312_offset = 6312;
 	public static final int unused744b4_offset = 744;
 	public static final int unused76b19_offset = 76;
@@ -1656,7 +1669,6 @@ public class Fields {
 	public static final int unused_1484_bit_29_offset = 1476;
 	public static final int unused_1484_bit_30_offset = 1476;
 	public static final int unused_1484_bit_31_offset = 1476;
-	public static final int unused_294_8_offset = 76;
 	public static final int unusedAtOldBoardConfigurationEnd_offset = 1244;
 	public static final int unusedBit4_1476_offset = 1476;
 	public static final int unusedBit_251_29_offset = 976;
@@ -1782,7 +1794,7 @@ public class Fields {
 	public static final Field ENABLEFAN2WITHAC = Field.create("ENABLEFAN2WITHAC", 76, FieldType.BIT, 5);
 	public static final Field DISABLEFAN1WHENSTOPPED = Field.create("DISABLEFAN1WHENSTOPPED", 76, FieldType.BIT, 6);
 	public static final Field DISABLEFAN2WHENSTOPPED = Field.create("DISABLEFAN2WHENSTOPPED", 76, FieldType.BIT, 7);
-	public static final Field UNUSED_294_8 = Field.create("UNUSED_294_8", 76, FieldType.BIT, 8);
+	public static final Field ENABLETRAILINGSPARKS = Field.create("ENABLETRAILINGSPARKS", 76, FieldType.BIT, 8);
 	public static final Field ISCJ125VERBOSE = Field.create("ISCJ125VERBOSE", 76, FieldType.BIT, 9);
 	public static final Field CJ125ISUADIVIDED = Field.create("CJ125ISUADIVIDED", 76, FieldType.BIT, 10);
 	public static final Field CJ125ISLSU49 = Field.create("CJ125ISLSU49", 76, FieldType.BIT, 11);
@@ -1878,7 +1890,7 @@ public class Fields {
 	public static final Field FUELLEVELSENSOR = Field.create("FUELLEVELSENSOR", 514, FieldType.INT8, adc_channel_e);
 	public static final Field TPS2_1ADCCHANNEL = Field.create("TPS2_1ADCCHANNEL", 515, FieldType.INT8, adc_channel_e);
 	public static final Field IDLE_DERIVATIVEFILTERLOSS = Field.create("IDLE_DERIVATIVEFILTERLOSS", 516, FieldType.FLOAT);
-	public static final Field UNUSED520 = Field.create("UNUSED520", 520, FieldType.INT);
+	public static final Field TRAILINGSPARKANGLE = Field.create("TRAILINGSPARKANGLE", 520, FieldType.INT);
 	public static final String[] trigger_type_e = {"custom toothed wheel", "Ford Aspire", "Dodge Neon 1995", "Miata NA", "Miata NB", "GM_7X", "Cooper R50", "Mazda SOHC 4", "60/2", "36/1", "Honda 4+24+1", "Mitsubishi", "Honda 4+24", "Honda 1+4+24", "Dodge Neon 2003", "Mazda DOHC 1+4", "1+1", "INVALID", "Single Tooth", "Dodge Ram 1+16", "60/2 VW", "Honda 1+24", "Dodge Stratus", "36_2_2_2", "Nissan Primera", "dev 2JZ 3/34 simulator", "Rover K", "GM LS 24", "Honda CBR 600", "2JZ_1_12", "Honda CBR 600 custom", "3/1 skipped", "Dodge Neon 2003 crank", "Miata VVT", "trg34", "trg35", "Subaru 7+6", "Jeep 18-2-2-2", "WIP", "Dodge Neon 1995 crank only", "Jeep XJ 4 cyl", "FiatIAQ_P8", "Mazda Z5", "trg43", "Renix 44-2-2", "Renix 66-2-2-2", "Honda K 12+1", "trg47", "36/2", "Subaru SVX", "1+16", "Subaru 7 without 6", "trg52", "TriTach", "GM 60/2/2/2", "Skoda Favorit", "Barra 3+1 Cam", "Kawa KX450F", "trg58", "trg59", "trg60", "INVALID"};
 	public static final Field TRIGGER_TYPE = Field.create("TRIGGER_TYPE", 524, FieldType.INT, trigger_type_e);
 	public static final Field TRIGGER_TODOREMOVEMEONEDAY0 = Field.create("TRIGGER_TODOREMOVEMEONEDAY0", 528, FieldType.BIT, 0);
@@ -2609,6 +2621,18 @@ public class Fields {
 	public static final Field VVTMODE1 = Field.create("VVTMODE1", 2328, FieldType.INT8, vvt_mode_e);
 	public static final Field VVTMODE2 = Field.create("VVTMODE2", 2329, FieldType.INT8, vvt_mode_e);
 	public static final Field FAN2EXTRAIDLE = Field.create("FAN2EXTRAIDLE", 2330, FieldType.INT8);
+	public static final Field TRAILINGCOILPINS1 = Field.create("TRAILINGCOILPINS1", 2340, FieldType.INT8, output_pin_e);
+	public static final Field TRAILINGCOILPINS2 = Field.create("TRAILINGCOILPINS2", 2341, FieldType.INT8, output_pin_e);
+	public static final Field TRAILINGCOILPINS3 = Field.create("TRAILINGCOILPINS3", 2342, FieldType.INT8, output_pin_e);
+	public static final Field TRAILINGCOILPINS4 = Field.create("TRAILINGCOILPINS4", 2343, FieldType.INT8, output_pin_e);
+	public static final Field TRAILINGCOILPINS5 = Field.create("TRAILINGCOILPINS5", 2344, FieldType.INT8, output_pin_e);
+	public static final Field TRAILINGCOILPINS6 = Field.create("TRAILINGCOILPINS6", 2345, FieldType.INT8, output_pin_e);
+	public static final Field TRAILINGCOILPINS7 = Field.create("TRAILINGCOILPINS7", 2346, FieldType.INT8, output_pin_e);
+	public static final Field TRAILINGCOILPINS8 = Field.create("TRAILINGCOILPINS8", 2347, FieldType.INT8, output_pin_e);
+	public static final Field TRAILINGCOILPINS9 = Field.create("TRAILINGCOILPINS9", 2348, FieldType.INT8, output_pin_e);
+	public static final Field TRAILINGCOILPINS10 = Field.create("TRAILINGCOILPINS10", 2349, FieldType.INT8, output_pin_e);
+	public static final Field TRAILINGCOILPINS11 = Field.create("TRAILINGCOILPINS11", 2350, FieldType.INT8, output_pin_e);
+	public static final Field TRAILINGCOILPINS12 = Field.create("TRAILINGCOILPINS12", 2351, FieldType.INT8, output_pin_e);
 	public static final Field TLE8888MODE = Field.create("TLE8888MODE", 2416, FieldType.INT8);
 	public static final Field LIS302DLCSPINMODE = Field.create("LIS302DLCSPINMODE", 2417, FieldType.INT8, pin_output_mode_e);
 	public static final Field INJECTORCOMPENSATIONMODE = Field.create("INJECTORCOMPENSATIONMODE", 2418, FieldType.INT8);
@@ -2914,7 +2938,7 @@ public class Fields {
 	ENABLEFAN2WITHAC,
 	DISABLEFAN1WHENSTOPPED,
 	DISABLEFAN2WHENSTOPPED,
-	UNUSED_294_8,
+	ENABLETRAILINGSPARKS,
 	ISCJ125VERBOSE,
 	CJ125ISUADIVIDED,
 	CJ125ISLSU49,
@@ -3008,7 +3032,7 @@ public class Fields {
 	FUELLEVELSENSOR,
 	TPS2_1ADCCHANNEL,
 	IDLE_DERIVATIVEFILTERLOSS,
-	UNUSED520,
+	TRAILINGSPARKANGLE,
 	TRIGGER_TYPE,
 	TRIGGER_TODOREMOVEMEONEDAY0,
 	TRIGGER_TODOREMOVEMEONEDAY1,
@@ -3722,6 +3746,18 @@ public class Fields {
 	VVTMODE1,
 	VVTMODE2,
 	FAN2EXTRAIDLE,
+	TRAILINGCOILPINS1,
+	TRAILINGCOILPINS2,
+	TRAILINGCOILPINS3,
+	TRAILINGCOILPINS4,
+	TRAILINGCOILPINS5,
+	TRAILINGCOILPINS6,
+	TRAILINGCOILPINS7,
+	TRAILINGCOILPINS8,
+	TRAILINGCOILPINS9,
+	TRAILINGCOILPINS10,
+	TRAILINGCOILPINS11,
+	TRAILINGCOILPINS12,
 	TLE8888MODE,
 	LIS302DLCSPINMODE,
 	INJECTORCOMPENSATIONMODE,

@@ -540,7 +540,7 @@ void initHardware() {
 	initOutputPins(PASS_ENGINE_PARAMETER_SIGNATURE);
 
 #if EFI_ENGINE_CONTROL
-	enginePins.startPins(PASS_ENGINE_PARAMETER_SIGNATURE);
+	enginePins.startPins();
 #endif /* EFI_ENGINE_CONTROL */
 
 #if EFI_MC33816

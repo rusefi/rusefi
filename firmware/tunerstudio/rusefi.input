@@ -1596,6 +1596,7 @@ menuDialog = main
 
 		# EXPERIMENTAL FEATURES
 		subMenu = parkingLot,				"Experimental/Broken"
+		subMenu = rotaryDialog, 			"Rotary"
 		subMenu = mc33Dialog,			"GDI Dreams"
 		subMenu = std_separator
 		
@@ -3596,6 +3597,14 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 		field = "Restore fuel below",	coastingFuelCutRpmLow, {coastingFuelCutEnabled == 1}
 		field = "Cut fuel below TPS",			coastingFuelCutTps, {coastingFuelCutEnabled == 1}
 		field = "Cut fuel below MAP",      coastingFuelCutMap, {coastingFuelCutEnabled == 1}
+
+    dialog = rotaryDialog, "Rotary"
+        field = "Enable Trailing Sparks", enableTrailingSparks
+        field = "Trailing Spark Offset", trailingSparkAngle
+		field = "Trailing Pin 1",						trailingCoilPins1
+		field = "Trailing Pin 2",						trailingCoilPins2
+		field = "Trailing Pin 3",						trailingCoilPins3
+		field = "Trailing Pin 4",						trailingCoilPins4
 
 	dialog = parkingLot, "Experimental/Broken"
 		field = "#System hacks"

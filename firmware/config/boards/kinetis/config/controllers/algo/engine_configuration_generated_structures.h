@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Fri Jul 09 04:46:54 UTC 2021
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Fri Jul 09 14:08:41 UTC 2021
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -697,8 +697,9 @@ struct engine_configuration_s {
 	offset 76 bit 7 */
 	bool disableFan2WhenStopped : 1;
 	/**
+	 * Enable secondary spark outputs that fire after the primary (rotaries, twin plug engines).
 	offset 76 bit 8 */
-	bool unused_294_8 : 1;
+	bool enableTrailingSparks : 1;
 	/**
 	 * enable cj125verbose/disable cj125verbose
 	offset 76 bit 9 */
@@ -1092,10 +1093,11 @@ struct engine_configuration_s {
 	 */
 	float idle_derivativeFilterLoss;
 	/**
-	index
+	 * just a temporary solution
+	angle
 	 * offset 520
 	 */
-	int unused520;
+	int trailingSparkAngle;
 	/**
 	 * offset 524
 	 */
@@ -3183,7 +3185,11 @@ struct engine_configuration_s {
 	units
 	 * offset 2323
 	 */
-	uint8_t unusedOldBiquad[21];
+	uint8_t unusedOldBiquad[9];
+	/**
+	 * offset 2332
+	 */
+	output_pin_e trailingCoilPins[MAX_CYLINDER_COUNT];
 	/**
 	 * CLT-based timing correction
 	C
@@ -4256,4 +4262,4 @@ struct persistent_config_s {
 };
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Fri Jul 09 04:46:54 UTC 2021
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Fri Jul 09 14:08:41 UTC 2021

@@ -81,6 +81,9 @@ void setHellen121Vag_vr6_cyl(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 void setHellen121Vag_v6_cyl(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	engineConfiguration->specs.cylindersCount = 6;
 	engineConfiguration->specs.displacement = 2.7;
+
+	engineConfiguration->camInputs[1 * CAMS_PER_BANK] = GPIOA_7; // 87a
+
 	engineConfiguration->specs.firingOrder = FO_1_4_3_6_2_5;
 }
 

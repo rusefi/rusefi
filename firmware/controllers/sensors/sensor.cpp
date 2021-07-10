@@ -3,7 +3,7 @@
 #include "efilib.h"
 #include "loggingcentral.h"
 
-static const char* s_sensorNames[] = {
+static const char* const s_sensorNames[] = {
 	"Invalid",
 	"CLT",
 	"IAT",
