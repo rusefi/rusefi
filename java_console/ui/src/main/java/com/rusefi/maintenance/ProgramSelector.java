@@ -56,7 +56,7 @@ public class ProgramSelector {
                 // todo: add ST-LINK no-assert mode
 
                 if (isAutoDfu) {
-                    DfuFlasher.doAutoDfu(comboPorts);
+                    DfuFlasher.doAutoDfu(comboPorts.getSelectedItem());
                 } else if (isManualDfu){
                     DfuFlasher.runDfuProgramming();
                 } else {
