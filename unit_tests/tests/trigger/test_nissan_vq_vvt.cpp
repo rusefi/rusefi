@@ -132,6 +132,5 @@ TEST(nissan, vq_vvt) {
 	ASSERT_NEAR(-testVvtOffset, tc->vvtPosition[0][0], EPS2D);
 	ASSERT_NEAR(-testVvtOffset, tc->vvtPosition[1][0], EPS2D);
 
-// todo: reducing warning here is a separate story
-	EXPECT_EQ(1, eth.recentWarnings()->getCount());
+	EXPECT_EQ(0, eth.recentWarnings()->getCount());
 }
