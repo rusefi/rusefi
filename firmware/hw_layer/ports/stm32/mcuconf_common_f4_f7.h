@@ -323,3 +323,12 @@
  * WDG driver system settings.
  */
 #define STM32_WDG_USE_IWDG                  FALSE
+
+
+extern unsigned char detected_hse_mhz;
+
+#define STM32_PLLM_VALUE 8
+
+#ifndef STM32_PLLM_VALUE
+#define STM32_PLLM_VALUE                    (detected_hse_mhz)
+#endif
