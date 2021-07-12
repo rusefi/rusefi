@@ -11,10 +11,6 @@
 
 #include "../../../hw_layer/ports/stm32/stm32f7/cfg/mcuconf.h"
 
-/* clocks adjust for 25 MHz ocs */
-#undef STM32_PLLM_VALUE
-#define STM32_PLLM_VALUE				25
-
 //#undef STM32_LSE_ENABLED
 //#define STM32_LSE_ENABLED FALSE
 
