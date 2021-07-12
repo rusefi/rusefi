@@ -11,7 +11,14 @@ static void useHsi() {
 
 static void useHse() {
 	// Switch to HSE clock
+	RCC->CFGR &= ~RCC_CFGR_SW;
 	RCC->CFGR |= RCC_CFGR_SW_HSE;
+}
+
+static void usePll() {
+	RCC->CFGR &= ~RCC_CFGR_SW;
+	RCC->CFGR |= RCC_CFGR_SW_PLL;
+	while ((RCC->CFGR & RCC_CFGR_SWS) != (STM32_SW << 2));
 }
 
 static uint32_t getOneCapture() {
@@ -48,8 +55,8 @@ static_assert(STM32_LSI_ENABLED);
 static_assert(STM32_HSE_ENABLED);
 
 static void reprogramPll(uint8_t pllM) {
-	// clear SW to use HSI
-	RCC->CFGR &= ~RCC_CFGR_SW;
+	// Switch back to HSI to configure PLL
+	useHsi()
 
 	// Stop the PLL
 	RCC->CR &= ~RCC_CR_PLLON;
@@ -65,8 +72,7 @@ static void reprogramPll(uint8_t pllM) {
 	while (!(RCC->CR & RCC_CR_PLLRDY));
 
 	// Switch clock source back to PLL
-	RCC->CFGR |= RCC_CFGR_SW_PLL;
-	while ((RCC->CFGR & RCC_CFGR_SWS) != (STM32_SW << 2));
+	usePll();
 }
 
 extern "C" void __late_init() {
@@ -93,6 +99,9 @@ extern "C" void __late_init() {
 
 	// Measure LSI against HSE
 	auto hseCounts = getAverageLsiCounts();
+
+	// Turn off timer 5 now that we're done with it
+	RCC->APB1ENR &= ~RCC_APB1ENR_TIM5EN;
 
 	// The external clocks's frequency is the ratio of the measured LSI speed, times HSI's speed (16MHz)
 	float hseFrequencyMhz = 16.0f * hseCounts / hsiCounts;
