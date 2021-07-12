@@ -1,90 +1,100 @@
 
 #include "hal.h"
+#include "efilib.h"
 
-unsigned char detected_hse_mhz;
+#ifdef ENABLE_AUTO_DETECT_HSE
 
-static void startClocksUseHsi() {
-	/* PWR clock enable.*/
-	RCC->APB1ENR = RCC_APB1ENR_PWREN;
+static void useHsi() {
+	// clear SW to use HSI
+	RCC->CFGR &= ~RCC_CFGR_SW;
+}
 
-  /* PWR initialization.*/
-#if defined(STM32F4XX) || defined(__DOXYGEN__)
-	PWR->CR = STM32_VOS;
-#else
-	PWR->CR = 0;
-#endif
-
-	/* HSI setup, it enforces the reset situation in order to handle possible
-		problems with JTAG probes and re-initializations.*/
-	RCC->CR |= RCC_CR_HSION;                  /* Make sure HSI is ON.         */
-	while (!(RCC->CR & RCC_CR_HSIRDY))
-	;                                       /* Wait until HSI is stable.    */
-
-	/* HSI is selected as new source without touching the other fields in
-		CFGR. Clearing the register has to be postponed after HSI is the
-		new source.*/
-	RCC->CFGR &= ~RCC_CFGR_SW;                /* Reset SW, selecting HSI.     */
-	while ((RCC->CFGR & RCC_CFGR_SWS) != RCC_CFGR_SWS_HSI)
-	;                                       /* Wait until HSI is selected.  */
-
-	/* Registers finally cleared to reset values.*/
-	RCC->CR &= RCC_CR_HSITRIM | RCC_CR_HSION; /* CR Reset value.              */
-	RCC->CFGR = 0;                            /* CFGR reset value.            */
-
-	// Start LSI
-	RCC->CSR |= RCC_CSR_LSION;
-	while ((RCC->CSR & RCC_CSR_LSIRDY) == 0)
-		;                           /* Waits until LSI is stable.               */
-
-	// Start HSE
-	RCC->CR |= RCC_CR_HSEON;
-	while ((RCC->CR & RCC_CR_HSERDY) == 0)
-		;                           /* Waits until HSE is stable.               */
+static void useHse() {
+	// Switch to HSE clock
+	RCC->CFGR |= RCC_CFGR_SW_HSE;
 }
 
 uint32_t getOneCapture() {
 	// wait for input capture
-	while ((TIM5->SR & TIM_SR_CC1IF) == 0);
+	while ((TIM5->SR & TIM_SR_CC4IF) == 0);
 
 	// Return captured count
-	return TIM5->CCR1;
+	return TIM5->CCR4;
 }
 
 uint32_t getAverageLsiCounts() {
 	// Burn one count
 	getOneCapture();
 
+	uint32_t lastCapture = getOneCapture();
 	uint32_t sum = 0;
 
-	for (size_t i = 0; i < 16; i++)
+	for (size_t i = 0; i < 20; i++)
 	{
-		sum += getOneCapture();
+		auto capture = getOneCapture();
+		sum += (capture - lastCapture);
+		lastCapture = capture;
 	}
 
-	return sum / 16;
+	return sum;
 }
 
-extern "C" void __core_init() {
-	// Start clocks running, switch to use HSI
-	startClocksUseHsi();
+// This only works if you're using the PLL as the configured clock source!
+static_assert(STM32_SW == RCC_CFGR_SW_PLL);
 
+void reprogramPll(uint8_t pllM) {
+	// clear SW to use HSI
+	RCC->CFGR &= ~RCC_CFGR_SW;
+
+	// Stop the PLL
+	RCC->CR &= ~RCC_CR_PLLON;
+
+	// Mask out the old PLLM val
+	RCC->PLLCFGR &= ~RCC_PLLCFGR_PLLM_Msk;
+
+	// Stick in the new PLLM value
+	RCC->PLLCFGR |= (pllM << RCC_PLLCFGR_PLLM_Pos) & RCC_PLLCFGR_PLLM_Msk;
+
+	// Reenable PLL, wait for lock
+	RCC->CR |= RCC_CR_PLLON;
+	while (!(RCC->CR & RCC_CR_PLLRDY));
+
+	// Switch clock source back to PLL
+	RCC->CFGR |= RCC_CFGR_SW_PLL;
+	while ((RCC->CFGR & RCC_CFGR_SWS) != (STM32_SW << 2));
+}
+
+extern "C" void __late_init() {
 	// Turn on timer 5
 	RCC->APB1ENR |= RCC_APB1ENR_TIM5EN;
 
 	// Remap to connect LSI to input capture channel 4
-	TIM5->OR = TIM_OR_TI4_RMP;
+	TIM5->OR = TIM_OR_TI4_RMP_0;
+
+	// Enable capture on channel 4
+	TIM5->CCMR2 = TIM_CCMR2_CC4S_0;
+	TIM5->CCER = TIM_CCER_CC4E;
 
 	// Start TIM5
-	TIM5->CR |= TIM_CR1_CEN;
+	TIM5->CR1 |= TIM_CR1_CEN;
 
+	// Use HSI
+	useHsi();
+
+	// Measure LSI against HSI
 	auto hsiCounts = getAverageLsiCounts();
 
 	useHse();
 
+	// Measure LSI against HSE
 	auto hseCounts = getAverageLsiCounts();
 
 	// The external clocks's frequency is the ratio of the measured LSI speed, times HSI's speed (16MHz)
-	uint32_t internalClockMhz = 16 * hseCounts / hsiCounts;
+	float internalClockMhz = 16.0f * hseCounts / hsiCounts;
 
-	
+	uint8_t pllMValue = efiRound(internalClockMhz, 1);
+
+	reprogramPll(pllMValue);
 }
+
+#endif // defined ENABLE_AUTO_DETECT_HSE
