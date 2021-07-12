@@ -5,6 +5,7 @@
 #include "ch.h"
 #include "can_msg_tx.h"
 #include "rusefi_wideband.h"
+#include "sensor.h"
 
 // This file contains an array called build_wideband_noboot_bin
 // This array contains the firmware image for the wideband contoller
