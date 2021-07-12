@@ -135,7 +135,8 @@ void hwHandleVvtCamSignal(trigger_value_e front, efitick_t nowNt, int index DECL
 	extern const char *vvtNames[];
 	const char *vvtName = vvtNames[index];
 	if (CONFIG(vvtMode[camIndex]) == VVT_INACTIVE) {
-		warning(CUSTOM_VVT_MODE_NOT_SELECTED, "VVT: event on %d but no mode", camIndex);
+		firmwareError(CUSTOM_VVT_MODE_NOT_SELECTED, "Please select VVT mode for cam index %d", camIndex);
+		return;
 	}
 
 #if VR_HW_CHECK_MODE
