@@ -95,9 +95,9 @@ extern "C" void __late_init() {
 	auto hseCounts = getAverageLsiCounts();
 
 	// The external clocks's frequency is the ratio of the measured LSI speed, times HSI's speed (16MHz)
-	float internalClockMhz = 16.0f * hseCounts / hsiCounts;
+	float hseFrequencyMhz = 16.0f * hseCounts / hsiCounts;
 
-	uint8_t pllMValue = efiRound(internalClockMhz, 1);
+	uint8_t pllMValue = efiRound(hseFrequencyMhz, 1);
 
 	reprogramPll(pllMValue);
 }
