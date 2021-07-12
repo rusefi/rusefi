@@ -14,7 +14,7 @@ static void useHse() {
 	RCC->CFGR |= RCC_CFGR_SW_HSE;
 }
 
-uint32_t getOneCapture() {
+static uint32_t getOneCapture() {
 	// wait for input capture
 	while ((TIM5->SR & TIM_SR_CC4IF) == 0);
 
@@ -22,7 +22,7 @@ uint32_t getOneCapture() {
 	return TIM5->CCR4;
 }
 
-uint32_t getAverageLsiCounts() {
+static uint32_t getAverageLsiCounts() {
 	// Burn one count
 	getOneCapture();
 
@@ -42,7 +42,12 @@ uint32_t getAverageLsiCounts() {
 // This only works if you're using the PLL as the configured clock source!
 static_assert(STM32_SW == RCC_CFGR_SW_PLL);
 
-void reprogramPll(uint8_t pllM) {
+// These clocks must all be enabled for this to work
+static_assert(STM32_HSI_ENABLED);
+static_assert(STM32_LSI_ENABLED);
+static_assert(STM32_HSE_ENABLED);
+
+static void reprogramPll(uint8_t pllM) {
 	// clear SW to use HSI
 	RCC->CFGR &= ~RCC_CFGR_SW;
 
