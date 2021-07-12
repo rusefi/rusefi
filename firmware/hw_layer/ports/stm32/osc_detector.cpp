@@ -56,7 +56,7 @@ static_assert(STM32_HSE_ENABLED);
 
 static void reprogramPll(uint8_t pllM) {
 	// Switch back to HSI to configure PLL
-	useHsi()
+	useHsi();
 
 	// Stop the PLL
 	RCC->CR &= ~RCC_CR_PLLON;
