@@ -28,6 +28,6 @@ void updateFuelPump(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	enginePins.fuelPumpRelay.setValue(state);
 
 #if EFI_TUNER_STUDIO
-	tsOutputChannels->isFuelPumpOn = state;
+	tsOutputChannels.isFuelPumpOn = state;
 #endif // EFI_TUNER_STUDIO
 }
