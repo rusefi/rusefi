@@ -6,9 +6,10 @@
  */
 class CsvReader {
 public:
-	CsvReader(size_t triggerCount) : CsvReader(triggerCount, 0.0) {}
-	CsvReader(size_t triggerCount, double timestampOffset)
+	CsvReader(size_t triggerCount, size_t vvtCount) : CsvReader(triggerCount, vvtCount, 0.0) {}
+	CsvReader(size_t triggerCount, size_t vvtCount, double timestampOffset)
 		: m_triggerCount(triggerCount)
+		, m_vvtCount(vvtCount)
 		, m_timestampOffset(timestampOffset)
 	{
 	}
@@ -24,6 +25,7 @@ public:
 
 private:
 	const size_t m_triggerCount;
+	const size_t m_vvtCount;
 	const double m_timestampOffset;
 
 	FILE *fp;

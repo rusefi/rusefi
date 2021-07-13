@@ -10,7 +10,7 @@
 #include <string>
 
 TEST(cranking, realCrankingFromFile) {
-	CsvReader reader(2);
+	CsvReader reader(2, /* vvtCount */ 0);
 	int indeces[2] = {1, 0}; // this logic data file has first trigger channel in second column and second trigger channel in first column
 	reader.open("tests/trigger/resources/cranking_na_3.csv", indeces);
 
