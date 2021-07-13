@@ -32,6 +32,7 @@ private:
 	char buffer[255];
 
 	bool currentState[2];
+	bool currentVvtState[CAM_INPUTS_COUNT];
 
 	int m_lineIndex = -1;
 
