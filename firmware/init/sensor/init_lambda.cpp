@@ -34,6 +34,11 @@ void initLambda(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 
 #if EFI_CAN_SUPPORT
 	if (CONFIG(enableAemXSeries)) {
+		if (!CONFIG(canWriteEnabled) || !CONFIG(canReadEnabled)) {
+			firmwareError(OBD_PCM_Processor_Fault, "CAN read and write are required to use CAN wideband.");
+			return;
+		}
+
 		registerCanSensor(aem1);
 		registerCanSensor(aem2);
 
