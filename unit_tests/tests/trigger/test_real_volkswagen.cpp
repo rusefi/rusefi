@@ -10,7 +10,7 @@
 #include "logicdata_csv_reader.h"
 
 TEST(crankingVW, vwRealCrankingFromFile) {
-	CsvReader reader(1);
+	CsvReader reader(1, /* vvtCount */ 0);
 	int indeces[1] = {0};
 
 	reader.open("tests/trigger/resources/nick_1.csv", indeces);
@@ -30,7 +30,7 @@ TEST(crankingVW, crankingTwiceWithGap) {
 	eth.setTriggerType(TT_60_2_VW PASS_ENGINE_PARAMETER_SUFFIX);
 
 	{
-		CsvReader reader(1);
+		CsvReader reader(1, /* vvtCount */ 0);
 		int indeces[1] = {0};
 
 		reader.open("tests/trigger/resources/nick_1.csv", indeces);
@@ -47,7 +47,7 @@ TEST(crankingVW, crankingTwiceWithGap) {
 
 	{
 		// Offset by a short time offset, 10 seconds
-		CsvReader reader(1, 10);
+		CsvReader reader(1, /* vvtCount */ 0, 10);
 		int indeces[1] = {0};
 
 		reader.open("tests/trigger/resources/nick_1.csv", indeces);
@@ -62,7 +62,7 @@ TEST(crankingVW, crankingTwiceWithGap) {
 
 	{
 		// Offset by long time offset, 5m14.15s
-		CsvReader reader(1, 314.159);
+		CsvReader reader(1, /* vvtCount */ 0, 314.159);
 		int indeces[1] = {0};
 
 		reader.open("tests/trigger/resources/nick_1.csv", indeces);
