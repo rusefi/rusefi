@@ -403,6 +403,8 @@ struct ThermistorConf @brief Thermistor curve parameters
 	adc_channel_e adcChannel;
 end_struct
 
+#define VM_VVT_INACTIVE 0
+
 #define TT_TT_TOOTHED_WHEEL 0
 #define TT_TT_FORD_ASPIRE 1
 #define TT_TT_MAZDA_MIATA_NA 3

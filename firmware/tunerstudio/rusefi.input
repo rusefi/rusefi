@@ -1861,7 +1861,7 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 	    field = "Display logic signals",				displayLogicLevelsInEngineSniffer
 
 	dialog = triggerConfiguration_gap, "Trigger Gap Override"
-		field = "!This is a pretty advanced feature for when you are debugging trigger syncronizaion"
+		field = "!This is a pretty advanced feature for when you are debugging trigger synchronization"
 		field = "Override well known trigger gaps",    overrideTriggerGaps
 		field = gapTrackingLengthOverride,				gapTrackingLengthOverride, { overrideTriggerGaps == 1 }
 		field = "First gap",							triggerGapOverride1, { overrideTriggerGaps == 1 }
@@ -1894,10 +1894,10 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 		field = "Invert Secondary",				    	invertSecondaryTriggerSignal, { trigger_type != @@TT_TT_TOOTHED_WHEEL@@ && trigger_type != @@TT_TT_TOOTHED_WHEEL_60_2@@ && trigger_type != @@TT_TT_TOOTHED_WHEEL_36_1@@ && trigger_type != @@TT_TT_ONE@@ && trigger_type != @@TT_TT_60_2_VW@@ && trigger_type != @@TT_TT_TOOTHED_WHEEL_36_2@@}
 		field = "#VVT or Cam for 60/2 goes below"
 		field = "#If your engine has no exhaust cam sensor, use intake cam inputs"
-		field = "Cam sensor bank 1 intake",	        camInputs1
-        field = "Cam sensor bank 1 exhaust",        camInputs2
-        field = "Cam sensor bank 2 intake",         camInputs3
-        field = "Cam sensor bank 2 exhaust",        camInputs4
+		field = "Cam sensor bank 1 intake",	        camInputs1, { vvtMode1 != @@VM_VVT_INACTIVE@@ }
+        field = "Cam sensor bank 1 exhaust",        camInputs2, { vvtMode2 != @@VM_VVT_INACTIVE@@ }
+        field = "Cam sensor bank 2 intake",         camInputs3, { vvtMode1 != @@VM_VVT_INACTIVE@@ }
+        field = "Cam sensor bank 2 exhaust",        camInputs4, { vvtMode2 != @@VM_VVT_INACTIVE@@ }
 		field = "Invert cam inputs",                invertCamVVTSignal
 		panel = triggerInputComparator @@if_ts_show_trigger_comparator
 
