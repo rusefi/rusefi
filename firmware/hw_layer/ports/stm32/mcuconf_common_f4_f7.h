@@ -323,3 +323,15 @@
  * WDG driver system settings.
  */
 #define STM32_WDG_USE_IWDG                  FALSE
+
+// We auto detect the value of HSE, so set the default PLLM value to the maximum,
+// so we don't accidentially overclock to processor before we know how fast HSE is
+#define STM32_PLLM_VALUE 25
+
+// This also means we have to pretend (for now) we have a 25MHz HSE fitted
+#define STM32_HSECLK 25000000
+
+// After boot, we will detect the real frequency, and adjust the PLL M value to suit
+
+#define ENABLE_AUTO_DETECT_HSE
+
