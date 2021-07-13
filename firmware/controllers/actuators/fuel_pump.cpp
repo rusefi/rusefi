@@ -16,7 +16,7 @@ auto timeSinceBoot(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 static bool getFuelPumpState(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	auto uptime = timeSinceBoot(PASS_ENGINE_PARAMETER_SIGNATURE);
 
-	bool isPrime = uptime > 0 && uptime < CONFIG(startUpFuelPumpDuration);
+	bool isPrime = uptime >= 0 && uptime < CONFIG(startUpFuelPumpDuration);
 	bool engineTurnedRecently = engine->triggerCentral.getTimeSinceTriggerEvent(getTimeNowNt()) < 1;
 
 	return isPrime || engineTurnedRecently;
