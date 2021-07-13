@@ -259,9 +259,16 @@ TEST(fsio, testLogicExpressions) {
 	}
 }
 
+#include "fuel_pump.h"
+
+extern int timeNowUs;
+
 TEST(fsio, fuelPump) {
-	// this will init fuel pump fsio logic
 	WITH_ENGINE_TEST_HELPER(TEST_ENGINE);
+	CONFIG(startUpFuelPumpDuration) = 5;
+
+	// Start at T = 0
+	timeNowUs = 0;
 
 	// Mock a fuel pump pin
 	CONFIG(fuelPumpPin) = GPIOA_0;
@@ -269,30 +276,36 @@ TEST(fsio, fuelPump) {
 	enginePins.fuelPumpRelay.init(PASS_ENGINE_PARAMETER_SIGNATURE);
 
 	// ECU just started, haven't seen trigger yet
-	engine->fsioState.mockTimeSinceBoot = 0.5f;
-	engine->fsioState.mockTimeSinceTrigger = 100;
-	runFsio(PASS_ENGINE_PARAMETER_SIGNATURE);
+	timeNowUs = 1e6 * 0.5f;
+	updateFuelPump(PASS_ENGINE_PARAMETER_SIGNATURE);
+	// Pump should be on!
+	EXPECT_TRUE(efiReadPin(GPIOA_0));
+
+	// ECU running for 2 seconds, haven't seen trigger yet
+	timeNowUs = 1e6 * 2.0f;
+	updateFuelPump(PASS_ENGINE_PARAMETER_SIGNATURE);
 	// Pump should be on!
 	EXPECT_TRUE(efiReadPin(GPIOA_0));
 
 	// Long time since ecu start, haven't seen trigger yet
-	engine->fsioState.mockTimeSinceBoot = 60;
-	engine->fsioState.mockTimeSinceTrigger = 100;
-	runFsio(PASS_ENGINE_PARAMETER_SIGNATURE);
+	timeNowUs = 1e6 * 60;
+	updateFuelPump(PASS_ENGINE_PARAMETER_SIGNATURE);
 	// Pump should be off!
 	EXPECT_FALSE(efiReadPin(GPIOA_0));
 
-	// Long time since ecu start, just saw a trigger!
-	engine->fsioState.mockTimeSinceBoot = 60;
-	engine->fsioState.mockTimeSinceTrigger = 0.1f;
-	runFsio(PASS_ENGINE_PARAMETER_SIGNATURE);
+	// ECU just started, and we just saw a trigger!
+	timeNowUs = 1e6 * 0.5f;
+	// inject a fake trigger event that happened NOW
+	engine->triggerCentral.handleShaftSignal(SHAFT_PRIMARY_RISING, getTimeNowNt() PASS_ENGINE_PARAMETER_SUFFIX);
+	updateFuelPump(PASS_ENGINE_PARAMETER_SIGNATURE);
 	// Pump should be on!
 	EXPECT_TRUE(efiReadPin(GPIOA_0));
 
-	// ECU just started, and we just saw a trigger!
-	engine->fsioState.mockTimeSinceBoot = 0.5f;
-	engine->fsioState.mockTimeSinceTrigger = 0.1f;
-	runFsio(PASS_ENGINE_PARAMETER_SIGNATURE);
+	// Long time since ecu start, just saw a trigger!
+	timeNowUs = 1e6 * 60;
+	// inject a fake trigger event that happened NOW
+	engine->triggerCentral.handleShaftSignal(SHAFT_PRIMARY_RISING, getTimeNowNt() PASS_ENGINE_PARAMETER_SUFFIX);
+	updateFuelPump(PASS_ENGINE_PARAMETER_SIGNATURE);
 	// Pump should be on!
 	EXPECT_TRUE(efiReadPin(GPIOA_0));
 }
