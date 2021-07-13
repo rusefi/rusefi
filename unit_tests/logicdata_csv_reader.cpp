@@ -66,7 +66,7 @@ void CsvReader::processLine(EngineTestHelper *eth) {
 	timeStamp += m_timestampOffset;
 
 	eth->setTimeAndInvokeEventsUs(1'000'000 * timeStamp);
-	for (int index = 0; index < m_triggerCount; index++) {
+	for (size_t index = 0; index < m_triggerCount; index++) {
 		if (currentState[index] == newState[index]) {
 			continue;
 		}
@@ -77,7 +77,7 @@ void CsvReader::processLine(EngineTestHelper *eth) {
 		currentState[index] = newState[index];
 	}
 
-	for (int vvtIndex = 0; vvtIndex < m_vvtCount ; vvtIndex++) {
+	for (size_t vvtIndex = 0; vvtIndex < m_vvtCount ; vvtIndex++) {
 		if (currentVvtState[vvtIndex] == newVvtState[vvtIndex]) {
 			continue;
 		}
@@ -86,7 +86,7 @@ void CsvReader::processLine(EngineTestHelper *eth) {
 		trigger_value_e event = newVvtState[vvtIndex] ? TV_RISE : TV_FALL;
 		hwHandleVvtCamSignal(event, nowNt, vvtIndex PASS_ENGINE_PARAMETER_SUFFIX);
 
-		currentVvtState[vvtIndex] == newVvtState[vvtIndex];
+		currentVvtState[vvtIndex] = newVvtState[vvtIndex];
 
 	}
 }
