@@ -45,6 +45,11 @@ void CsvReader::processLine(EngineTestHelper *eth) {
 	char *firstToken = trim(strtok(NULL, s));
 	char *secondToken = trim(strtok(NULL, s));
 
+	if (timeStampstr == nullptr) {
+		firmwareError(OBD_PCM_Processor_Fault, "End of File");
+		return;
+	}
+
 	newState[columnIndeces[0]] = firstToken[0] == '1';
 	if (secondToken != nullptr && m_triggerCount > 1) {
 		newState[columnIndeces[1]] = secondToken[0] == '1';
