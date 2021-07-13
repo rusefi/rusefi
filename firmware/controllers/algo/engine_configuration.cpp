@@ -950,8 +950,11 @@ void resetConfigurationExt(configuration_callback_t boardCallback, engine_type_e
 	case HELLEN_121_VAG_5_CYL:
 	    setHellen121Vag_5_cyl(PASS_CONFIG_PARAMETER_SIGNATURE);
         break;
-	case HELLEN_121_VAG_6_CYL:
-	    setHellen121Vag_6_cyl(PASS_CONFIG_PARAMETER_SIGNATURE);
+	case HELLEN_121_VAG_V6_CYL:
+	    setHellen121Vag_v6_cyl(PASS_CONFIG_PARAMETER_SIGNATURE);
+        break;
+	case HELLEN_121_VAG_VR6_CYL:
+	    setHellen121Vag_vr6_cyl(PASS_CONFIG_PARAMETER_SIGNATURE);
         break;
 	case HELLEN_121_VAG_8_CYL:
 	    setHellen121Vag_8_cyl(PASS_CONFIG_PARAMETER_SIGNATURE);
@@ -961,6 +964,7 @@ void resetConfigurationExt(configuration_callback_t boardCallback, engine_type_e
 	case HELLEN_88_BMW:
 	case HELLEN_134_BMW:
 	case HELLEN_154_VAG:
+		break;
 	case HELLEN_NA6:
 	case HELLEN_NA94:
 		setHellenNA6(PASS_CONFIG_PARAMETER_SIGNATURE);

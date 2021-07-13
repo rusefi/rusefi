@@ -87,7 +87,7 @@ TEST(trigger, testQuadCam) {
 	// this third important front would give us first comparison between two real gaps
 	hwHandleVvtCamSignal(TV_RISE, getTimeNowNt(), secondCamSecondBank PASS_ENGINE_PARAMETER_SUFFIX);
 
-	ASSERT_NEAR(-2571.4, engine->triggerCentral.getVVTPosition(secondBank, secondCam), EPS3D);
+	ASSERT_NEAR(308.6, engine->triggerCentral.getVVTPosition(secondBank, secondCam), EPS3D);
 	// actually position based on VVT!
 	ASSERT_EQ(totalRevolutionCountBeforeVvtSync, engine->triggerCentral.triggerState.getTotalRevolutionCounter());
 

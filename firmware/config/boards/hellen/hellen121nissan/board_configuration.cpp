@@ -87,7 +87,7 @@ static void setupDefaultSensorInputs() {
 	engineConfiguration->triggerInputPins[2] = GPIO_UNASSIGNED;
 	// Direct hall-only cam input
 	engineConfiguration->camInputs[0] = GPIOA_6;
-	engineConfiguration->camInputs[1 * 2] = GPIOA_7;
+	engineConfiguration->camInputs[1 * CAMS_PER_BANK] = GPIOA_7;
 
 	engineConfiguration->tps1_1AdcChannel = EFI_ADC_4;
 	engineConfiguration->tps2_1AdcChannel = EFI_ADC_NONE;
@@ -112,8 +112,6 @@ void setBoardConfigOverrides(void) {
 
 	engineConfiguration->clt.config.bias_resistor = 4700;
 	engineConfiguration->iat.config.bias_resistor = 4700;
-
-	hellenWbo();
 }
 
 void setPinConfigurationOverrides(void) {
@@ -174,6 +172,8 @@ void setBoardDefaultConfiguration(void) {
 	engineConfiguration->ignitionMode = IM_INDIVIDUAL_COILS; // IM_WASTED_SPARK
 	engineConfiguration->crankingInjectionMode = IM_SIMULTANEOUS;
 	engineConfiguration->injectionMode = IM_SIMULTANEOUS;//IM_BATCH;// IM_SEQUENTIAL;
+
+	hellenWbo();
 }
 
 /**

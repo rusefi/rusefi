@@ -159,8 +159,10 @@ public:
 
 class EnginePins {
 public:
+	DECLARE_ENGINE_PTR;
+
 	EnginePins();
-	void startPins(DECLARE_ENGINE_PARAMETER_SIGNATURE);
+	void startPins();
 	void reset();
 	static void debug();
 	bool stopPins();
@@ -209,6 +211,7 @@ public:
 
 	InjectorOutputPin injectors[MAX_CYLINDER_COUNT];
 	IgnitionOutputPin coils[MAX_CYLINDER_COUNT];
+	IgnitionOutputPin trailingCoils[MAX_CYLINDER_COUNT];
 	NamedOutputPin auxValve[AUX_DIGITAL_VALVE_COUNT];
 	OutputPin tcuSolenoids[TCU_SOLENOID_COUNT];
 
