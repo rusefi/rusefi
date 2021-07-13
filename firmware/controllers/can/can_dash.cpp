@@ -29,6 +29,8 @@ EXTERN_ENGINE;
  *
  * All the below packets are using 500kb/s
  *
+ * for verbose use "set debug_mode 26" command in console
+ *
  */
 #define CAN_BMW_E46_SPEED             0x153
 #define CAN_BMW_E46_RPM               0x316
