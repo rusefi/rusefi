@@ -16,10 +16,13 @@ jobs:
 
     - name: Install prerequisite software
       run: |
-        sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys CC86BB64
-        sudo add-apt-repository ppa:rmescandon/yq
         sudo apt-get update
-        sudo apt-get install yq ncftp
+        sudo apt-get install ncftp
+        wget https://github.com/mikefarah/yq/releases/download/v4.9.6/yq_linux_amd64
+        chmod a+x yq_linux_amd64
+        mkdir yqdir
+        mv yq_linux_amd64 yqdir/yq
+        echo "::add-path::`pwd`/yqdir/"
 
     - name: Set FTP variables
       env:
