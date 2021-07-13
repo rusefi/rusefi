@@ -58,10 +58,6 @@
 
 #define STM32_LSEDRV                (3U << 3U)
 
-#if !defined(STM32_HSECLK)
-#define STM32_HSECLK                8000000U
-#endif
-
 // Nucleo boards use MCO signal from St-Link and NOT oscillator - these need STM32_HSE_BYPASS
 // if you do not have Sl-Link and MCO on your board, you need EFI_USE_OSC
 
