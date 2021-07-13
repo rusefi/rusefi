@@ -76,11 +76,13 @@ static void reprogramPll(uint8_t pllM) {
 	// Stop the PLL
 	RCC->CR &= ~RCC_CR_PLLON;
 
-	// Mask out the old PLLM val
-	RCC->PLLCFGR &= ~RCC_PLLCFGR_PLLM_Msk;
+	// Mask out the old PLLM and PLLSRC
+	RCC->PLLCFGR &= ~(RCC_PLLCFGR_PLLM_Msk | RCC_PLLCFGR_PLLSRC_Msk);
 
 	// Stick in the new PLLM value
 	RCC->PLLCFGR |= (pllM << RCC_PLLCFGR_PLLM_Pos) & RCC_PLLCFGR_PLLM_Msk;
+	// Set PLLSRC to HSE
+	RCC->PLLCFGR |= RCC_PLLCFGR_PLLSRC_HSE;
 
 	// Reenable PLL, wait for lock
 	RCC->CR |= RCC_CR_PLLON;
@@ -120,7 +122,8 @@ extern "C" void __late_init() {
 	RCC->APB1ENR &= ~RCC_APB1ENR_TIM5EN;
 
 	// The external clocks's frequency is the ratio of the measured LSI speed, times HSI's speed (16MHz)
-	float hseFrequencyMhz = 16.0f * hseCounts / hsiCounts;
+	constexpr float hsiMhz = STM32_HSICLK * 1e-6;
+	float hseFrequencyMhz = hsiMhz * hseCounts / hsiCounts;
 
 	uint8_t pllMValue = efiRound(hseFrequencyMhz, 1);
 
