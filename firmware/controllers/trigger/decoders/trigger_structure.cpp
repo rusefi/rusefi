@@ -181,7 +181,7 @@ operation_mode_e TriggerWaveform::getOperationMode() const {
 extern bool printTriggerDebug;
 #endif
 
-int TriggerWaveform::getExpectedEventCount(int channelIndex) const {
+size_t TriggerWaveform::getExpectedEventCount(int channelIndex) const {
 	return expectedEventCount[channelIndex];
 }
 
