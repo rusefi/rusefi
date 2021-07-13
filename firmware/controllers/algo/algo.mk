@@ -3,6 +3,7 @@ CONTROLLERS_ALGO_SRC =
 CONTROLLERS_ALGO_SRC_CPP = $(PROJECT_DIR)/controllers/algo/advance_map.cpp \
 	$(PROJECT_DIR)/controllers/algo/malfunction_central.cpp \
 	$(GENERATED_ENUMS_DIR)/auto_generated_enums.cpp \
+	$(GENERATED_ENUMS_DIR)/auto_generated_commonenum.cpp \
 	$(PROJECT_DIR)/controllers/algo/fuel_math.cpp \
 	$(PROJECT_DIR)/controllers/algo/accel_enrichment.cpp \
 	$(PROJECT_DIR)/controllers/algo/launch_control.cpp \
