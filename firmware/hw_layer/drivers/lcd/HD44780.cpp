@@ -73,11 +73,6 @@ static void lcdSleep(int period) {
 //static char txbuf[1];
 #define LCD_PORT_EXP_ADDR 0x20
 
-// todo: use this method wider!
-static void writePad(const char *msg, brain_pin_e pin, int bit) {
-	palWritePad(getHwPort(msg, pin), getHwPin(msg, pin), bit);
-}
-
 static bool lcd_HD44780_is_enabled(void) {
 	/* check for valid LCD setting */
 	return ((engineConfiguration->displayMode == DM_HD44780) &&

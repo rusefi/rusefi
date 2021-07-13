@@ -130,7 +130,11 @@ void efiIcuStart(const char *msg, ICUDriver *icup, const ICUConfig *config) {
 }
 #endif /* HAL_USE_ICU */
 
-#else
+void writePad(const char *msg, brain_pin_e pin, int bit) {
+	palWritePad(getHwPort(msg, pin), getHwPin(msg, pin), bit);
+}
+
+#else /* EFI_PROD_CODE */
 
 // This has been made global so we don't need to worry about efiReadPin having access the object
 //  we store it in, every time we need to use efiReadPin.
