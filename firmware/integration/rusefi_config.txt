@@ -1158,7 +1158,7 @@ bit unused_1484_bit_31
 	int ignMathCalculateAtIndex;+At what trigger index should some ignition-related math be executed? This is a performance trick to reduce load on synchronization trigger callback.;"index", 1, 0, 0, 7000, 0
 
 	brain_pin_e[CAM_INPUTS_COUNT iterate] camInputsDebug;
-	uint8_t[CAM_INPUTS_COUNT_padding] camInputsDebugPadding;
+	uint8_t[CAM_INPUTS_COUNT_padding] camInputsDebugPadding;;
 	int16_t acIdleRpmBump;+Extra idle target speed when A/C is enabled. Some cars need the extra speed to keep the AC efficient while idling.;"RPM", 1, 0, 0, 1000, 0
 
 	int16_t warningPeriod;set warningPeriod X;"seconds", 1, 0, 0, 60, 0
