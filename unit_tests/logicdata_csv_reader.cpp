@@ -42,12 +42,23 @@ void CsvReader::processLine(EngineTestHelper *eth) {
 
 	char *timeStampstr = trim(strtok(line, s));
 	bool newState[2];
+	bool newVvtState[CAM_INPUTS_COUNT];
 	char *firstToken = trim(strtok(NULL, s));
 	char *secondToken = trim(strtok(NULL, s));
+
+	if (timeStampstr == nullptr) {
+		firmwareError(OBD_PCM_Processor_Fault, "End of File");
+		return;
+	}
 
 	newState[columnIndeces[0]] = firstToken[0] == '1';
 	if (secondToken != nullptr && m_triggerCount > 1) {
 		newState[columnIndeces[1]] = secondToken[0] == '1';
+	}
+
+	// todo: start reading states much smarter, start reading all 4 cam channels!
+	if (m_vvtCount > 0) {
+		newVvtState[0] = secondToken[0] == '1';
 	}
 
 	double timeStamp = std::stod(timeStampstr);
@@ -55,7 +66,7 @@ void CsvReader::processLine(EngineTestHelper *eth) {
 	timeStamp += m_timestampOffset;
 
 	eth->setTimeAndInvokeEventsUs(1'000'000 * timeStamp);
-	for (int index = 0; index < m_triggerCount; index++) {
+	for (size_t index = 0; index < m_triggerCount; index++) {
 		if (currentState[index] == newState[index]) {
 			continue;
 		}
@@ -64,6 +75,19 @@ void CsvReader::processLine(EngineTestHelper *eth) {
 		hwHandleShaftSignal(index, newState[index], nowNt PASS_ENGINE_PARAMETER_SUFFIX);
 
 		currentState[index] = newState[index];
+	}
+
+	for (size_t vvtIndex = 0; vvtIndex < m_vvtCount ; vvtIndex++) {
+		if (currentVvtState[vvtIndex] == newVvtState[vvtIndex]) {
+			continue;
+		}
+
+		efitick_t nowNt = getTimeNowNt();
+		trigger_value_e event = newVvtState[vvtIndex] ? TV_RISE : TV_FALL;
+		hwHandleVvtCamSignal(event, nowNt, vvtIndex PASS_ENGINE_PARAMETER_SUFFIX);
+
+		currentVvtState[vvtIndex] = newVvtState[vvtIndex];
+
 	}
 }
 

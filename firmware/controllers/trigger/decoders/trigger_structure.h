@@ -178,12 +178,12 @@ public:
 
 	void calculateExpectedEventCounts(bool useOnlyRisingEdgeForTrigger);
 
-	int getExpectedEventCount(int channelIndex) const;
+	size_t getExpectedEventCount(int channelIndex) const;
 
 	/**
 	 * This is used for signal validation
 	 */
-	uint32_t expectedEventCount[PWM_PHASE_MAX_WAVE_PER_PWM];
+	size_t expectedEventCount[PWM_PHASE_MAX_WAVE_PER_PWM];
 
 #if EFI_UNIT_TEST
 	/**

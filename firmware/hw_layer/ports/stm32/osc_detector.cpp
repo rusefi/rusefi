@@ -19,6 +19,8 @@
 
 #ifdef ENABLE_AUTO_DETECT_HSE
 
+uint8_t autoDetectedPllMValue;
+
 static void useHsi() {
 	// clear SW to use HSI
 	RCC->CFGR &= ~RCC_CFGR_SW;
@@ -123,9 +125,9 @@ extern "C" void __late_init() {
 	constexpr float hsiMhz = STM32_HSICLK * 1e-6;
 	float hseFrequencyMhz = hsiMhz * hseCounts / hsiCounts;
 
-	uint8_t pllMValue = efiRound(hseFrequencyMhz, 1);
+	autoDetectedPllMValue = efiRound(hseFrequencyMhz, 1);
 
-	reprogramPll(pllMValue);
+	reprogramPll(autoDetectedPllMValue);
 }
 
 #endif // defined ENABLE_AUTO_DETECT_HSE

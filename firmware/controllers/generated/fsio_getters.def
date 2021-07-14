@@ -1,4 +1,4 @@
-// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Tue Jul 13 02:30:11 UTC 2021
+// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Wed Jul 14 02:25:16 UTC 2021
 
 // by class com.rusefi.output.FileFsioSettingsConsumer
 	case FSIO_SETTING_ACIDLEEXTRAOFFSET:

@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on config/boards/subaru_eg33/config/gen_config.sh integration/rusefi_config.txt Tue Jul 13 02:30:44 UTC 2021
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on config/boards/subaru_eg33/config/gen_config.sh integration/rusefi_config.txt Wed Jul 14 02:25:52 UTC 2021
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -2454,11 +2454,11 @@ struct engine_configuration_s {
 	/**
 	 * offset 1492
 	 */
-	int16_t unused1492;
+	brain_pin_e camInputsDebug[CAM_INPUTS_COUNT];
 	/**
-	 * offset 1494
+	 * offset 1496
 	 */
-	int16_t unused1494;
+	uint8_t camInputsDebugPadding[CAM_INPUTS_COUNT_padding];
 	/**
 	 * Extra idle target speed when A/C is enabled. Some cars need the extra speed to keep the AC efficient while idling.
 	RPM
@@ -2538,6 +2538,7 @@ struct engine_configuration_s {
 	 */
 	float crankingTpsBins[CRANKING_CURVE_SIZE];
 	/**
+	 * Duration in ms or duty cycle depending on selected mode
 	 * offset 1704
 	 */
 	float tachPulseDuractionMs;
@@ -2576,7 +2577,12 @@ struct engine_configuration_s {
 	/**
 	 * offset 1756
 	 */
-	float unused1756;
+	brain_pin_e triggerInputDebugPins[TRIGGER_INPUT_PIN_COUNT];
+	/**
+	Pulse
+	 * offset 1759
+	 */
+	uint8_t unused1756;
 	/**
 	x
 	 * offset 1760
@@ -2929,76 +2935,76 @@ struct engine_configuration_s {
 	bool unused1130 : 1;
 	/**
 	offset 2116 bit 8 */
-	bool unusedBit_498_8 : 1;
+	bool unusedBit_499_8 : 1;
 	/**
 	offset 2116 bit 9 */
-	bool unusedBit_498_9 : 1;
+	bool unusedBit_499_9 : 1;
 	/**
 	offset 2116 bit 10 */
-	bool unusedBit_498_10 : 1;
+	bool unusedBit_499_10 : 1;
 	/**
 	offset 2116 bit 11 */
-	bool unusedBit_498_11 : 1;
+	bool unusedBit_499_11 : 1;
 	/**
 	offset 2116 bit 12 */
-	bool unusedBit_498_12 : 1;
+	bool unusedBit_499_12 : 1;
 	/**
 	offset 2116 bit 13 */
-	bool unusedBit_498_13 : 1;
+	bool unusedBit_499_13 : 1;
 	/**
 	offset 2116 bit 14 */
-	bool unusedBit_498_14 : 1;
+	bool unusedBit_499_14 : 1;
 	/**
 	offset 2116 bit 15 */
-	bool unusedBit_498_15 : 1;
+	bool unusedBit_499_15 : 1;
 	/**
 	offset 2116 bit 16 */
-	bool unusedBit_498_16 : 1;
+	bool unusedBit_499_16 : 1;
 	/**
 	offset 2116 bit 17 */
-	bool unusedBit_498_17 : 1;
+	bool unusedBit_499_17 : 1;
 	/**
 	offset 2116 bit 18 */
-	bool unusedBit_498_18 : 1;
+	bool unusedBit_499_18 : 1;
 	/**
 	offset 2116 bit 19 */
-	bool unusedBit_498_19 : 1;
+	bool unusedBit_499_19 : 1;
 	/**
 	offset 2116 bit 20 */
-	bool unusedBit_498_20 : 1;
+	bool unusedBit_499_20 : 1;
 	/**
 	offset 2116 bit 21 */
-	bool unusedBit_498_21 : 1;
+	bool unusedBit_499_21 : 1;
 	/**
 	offset 2116 bit 22 */
-	bool unusedBit_498_22 : 1;
+	bool unusedBit_499_22 : 1;
 	/**
 	offset 2116 bit 23 */
-	bool unusedBit_498_23 : 1;
+	bool unusedBit_499_23 : 1;
 	/**
 	offset 2116 bit 24 */
-	bool unusedBit_498_24 : 1;
+	bool unusedBit_499_24 : 1;
 	/**
 	offset 2116 bit 25 */
-	bool unusedBit_498_25 : 1;
+	bool unusedBit_499_25 : 1;
 	/**
 	offset 2116 bit 26 */
-	bool unusedBit_498_26 : 1;
+	bool unusedBit_499_26 : 1;
 	/**
 	offset 2116 bit 27 */
-	bool unusedBit_498_27 : 1;
+	bool unusedBit_499_27 : 1;
 	/**
 	offset 2116 bit 28 */
-	bool unusedBit_498_28 : 1;
+	bool unusedBit_499_28 : 1;
 	/**
 	offset 2116 bit 29 */
-	bool unusedBit_498_29 : 1;
+	bool unusedBit_499_29 : 1;
 	/**
 	offset 2116 bit 30 */
-	bool unusedBit_498_30 : 1;
+	bool unusedBit_499_30 : 1;
 	/**
 	offset 2116 bit 31 */
-	bool unusedBit_498_31 : 1;
+	bool unusedBit_499_31 : 1;
 	/**
 	 * set can_mode X
 	 * offset 2120
@@ -4268,4 +4274,4 @@ struct persistent_config_s {
 };
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on config/boards/subaru_eg33/config/gen_config.sh integration/rusefi_config.txt Tue Jul 13 02:30:44 UTC 2021
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on config/boards/subaru_eg33/config/gen_config.sh integration/rusefi_config.txt Wed Jul 14 02:25:52 UTC 2021

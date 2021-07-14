@@ -46,7 +46,7 @@
 #include "microsecond_timer.h"
 
 #if EFI_WIDEBAND_FIRMWARE_UPDATE
-#include "can.h"
+#include "rusefi_wideband.h"
 #endif // EFI_WIDEBAND_FIRMWARE_UPDATE
 
 #if EFI_PROD_CODE

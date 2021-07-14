@@ -4,6 +4,8 @@
 
 #include "ch.h"
 #include "can_msg_tx.h"
+#include "rusefi_wideband.h"
+#include "sensor.h"
 
 // This file contains an array called build_wideband_noboot_bin
 // This array contains the firmware image for the wideband contoller
@@ -117,6 +119,17 @@ void setWidebandOffset(uint8_t index) {
 	}
 
 	waitingBootloaderThread = nullptr;
+}
+
+void sendWidebandInfo() {
+	CanTxMessage m(0xEF5'0000, 2, true);
+
+	float vbatt = Sensor::get(SensorType::BatteryVoltage).value_or(0) * 10;
+
+	m[0] = vbatt;
+
+	// TODO: send real enable bit!
+	m[1] = 0x1;
 }
 
 #endif // EFI_WIDEBAND_FIRMWARE_UPDATE && HAL_USE_CAN

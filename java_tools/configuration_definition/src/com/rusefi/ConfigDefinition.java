@@ -92,7 +92,7 @@ public class ConfigDefinition {
             return;
         }
 
-        SystemOut.println("Invoked with " + Arrays.toString(args));
+        SystemOut.println(ConfigDefinition.class + " Invoked with " + Arrays.toString(args));
 
         String tsPath = null;
         String destCHeaderFileName = null;

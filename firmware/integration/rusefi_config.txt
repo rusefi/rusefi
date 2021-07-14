@@ -1157,8 +1157,8 @@ bit unused_1484_bit_31
 
 	int ignMathCalculateAtIndex;+At what trigger index should some ignition-related math be executed? This is a performance trick to reduce load on synchronization trigger callback.;"index", 1, 0, 0, 7000, 0
 
-	int16_t unused1492;;"", 1, 0, 1, 15000, 0
-	int16_t unused1494;;"", 1, 0, 1, 15000, 0
+	brain_pin_e[CAM_INPUTS_COUNT iterate] camInputsDebug;
+	uint8_t[CAM_INPUTS_COUNT_padding] camInputsDebugPadding;;
 	int16_t acIdleRpmBump;+Extra idle target speed when A/C is enabled. Some cars need the extra speed to keep the AC efficient while idling.;"RPM", 1, 0, 0, 1000, 0
 
 	int16_t warningPeriod;set warningPeriod X;"seconds", 1, 0, 0, 60, 0
@@ -1190,8 +1190,8 @@ custom pin_mode_e 1 bits, U08, @OFFSET@, [0:6], @@pin_mode_e_enum@@
 	float[CRANKING_CURVE_SIZE] crankingTpsCoef;Cranking fuel correction coefficient based on TPS;"Ratio", 1, 0, 0, 700, 2
 	float[CRANKING_CURVE_SIZE] crankingTpsBins;;"%", 1, 0, 0, 100, 2
 	
-! todo: rename field remove 'ms' since unusual case of dual-purpose field - it could be either ms or percent	
-	float tachPulseDuractionMs;;"", 1, 0, 0, 100, 2
+! todo: rename field remove 'ms', also fix typo in name should be 'tachPulseDuration' and that would be an incompatible breaking change for users :(
+	float tachPulseDuractionMs;+Duration in ms or duty cycle depending on selected mode;"", 1, 0, 0, 100, 2
 	uint16_t maxAcRpm;+Above this RPM, disable AC. Set to 0 to disable check.;"rpm", 1, 0, 0, 10000, 0
 	uint8_t maxAcTps;+Above this TPS, disable AC. Set to 0 to disable check.;"%", 1, 0, 0, 100, 0
 	uint8_t maxAcClt;+Above this CLT, disable AC to prevent overheating the engine. Set to 0 to disable check.;"deg C", 1, 0, 0, 150, 0
@@ -1200,7 +1200,8 @@ custom pin_mode_e 1 bits, U08, @OFFSET@, [0:6], @@pin_mode_e_enum@@
 	float wwaeTau;+Length of time the deposited wall fuel takes to dissipate after the start of acceleration. ;"Seconds", 1, 0, 0, 3, 2
 	pid_s alternatorControl;
 	pid_s etb;
-	float unused1756;;"", 1, 0, 0, 1, 0
+	brain_pin_e[TRIGGER_INPUT_PIN_COUNT iterate] triggerInputDebugPins;
+	uint8_t unused1756;;"Pulse", 1, 0, 1, 5, 0
 	float alternator_derivativeFilterLoss;;"x", 1, 0, -1000000, 1000000, 4
 	float alternator_antiwindupFreq;;"x", 1, 0, -1000000, 1000000, 4
 int16_t tps2Min;Closed throttle#2. todo: extract these two fields into a structure\nSee also tps2_1AdcChannel\nset tps2_min X;"ADC", 1, 0, 0, 1023, 0

@@ -1,6 +1,6 @@
 /**
  * @file	io_pins.h
- * @brief	his file is about general input/output utility methods, not much EFI-specifics
+ * @brief	this file is about general input/output utility methods, not much EFI-specifics
  *
  * @date Jan 24, 2013
  * @author Andrey Belomutskiy, (c) 2012-2020
@@ -32,6 +32,8 @@ EXTERNC void efiIcuStart(const char *msg, ICUDriver *icup, const ICUConfig *conf
 #endif /* HAL_USE_ICU */
 
 #endif /* EFI_GPIO_HARDWARE */
+
+void writePad(const char *msg, brain_pin_e pin, int bit);
 
 #if ! EFI_PROD_CODE
 #define BRAIN_PIN_COUNT (1 << 8 * sizeof(brain_pin_e))
