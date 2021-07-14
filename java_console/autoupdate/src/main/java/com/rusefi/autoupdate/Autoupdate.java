@@ -197,7 +197,7 @@ public class Autoupdate {
                 return null; // just paranoia check
             return fullName;
         } catch (IOException e) {
-            System.err.println("Error reading " + BUNDLE_NAME_FILE);
+            System.err.println(new Date() + ": Error reading " + BUNDLE_NAME_FILE);
             return null;
         }
     }
