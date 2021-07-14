@@ -19,6 +19,7 @@
 
 #ifdef ENABLE_AUTO_DETECT_HSE
 
+float hseFrequencyMhz;
 uint8_t autoDetectedPllMValue;
 
 static void useHsi() {
@@ -123,8 +124,8 @@ extern "C" void __late_init() {
 
 	// The external clocks's frequency is the ratio of the measured LSI speed, times HSI's speed (16MHz)
 	constexpr float hsiMhz = STM32_HSICLK * 1e-6;
-	float hseFrequencyMhz = hsiMhz * hseCounts / hsiCounts;
 
+	hseFrequencyMhz = hsiMhz * hseCounts / hsiCounts;
 	autoDetectedPllMValue = efiRound(hseFrequencyMhz, 1);
 
 	reprogramPll(autoDetectedPllMValue);

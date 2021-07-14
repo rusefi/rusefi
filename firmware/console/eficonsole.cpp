@@ -43,8 +43,9 @@ static void sayHello(void) {
 	efiPrintf(PROTOCOL_HELLO_PREFIX " COMPILER=%s", __VERSION__);
 
 #ifdef ENABLE_AUTO_DETECT_HSE
+	extern float hseFrequencyMhz;
 	extern uint8_t autoDetectedPllMValue;
-	efiPrintf(PROTOCOL_HELLO_PREFIX " autoDetectedPllMValue=%d", autoDetectedPllMValue);
+	efiPrintf(PROTOCOL_HELLO_PREFIX " detected crystal %.2f MHz, PLLM = %d", hseFrequencyMhz, autoDetectedPllMValue);
 #endif /* ENABLE_AUTO_DETECT_HSE */
 
 #if defined(STM32F4) || defined(STM32F7)
