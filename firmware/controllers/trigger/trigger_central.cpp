@@ -200,7 +200,7 @@ void hwHandleVvtCamSignal(trigger_value_e front, efitick_t nowNt, int index DECL
 #if EFI_PROD_CODE
 		writePad("cam debug", CONFIG(camInputsDebug[index]), 1);
 #endif /* EFI_PROD_CODE */
-		engine->executor.scheduleByTimestamp(&debugToggleScheduling, nowNt + DEBUG_PIN_DELAY, &turnOffAllDebugFields);
+		engine->executor.scheduleByTimestamp("dbg_on", &debugToggleScheduling, nowNt + DEBUG_PIN_DELAY, &turnOffAllDebugFields);
 	}
 
 	if (CONFIG(displayLogicLevelsInEngineSniffer) && isImportantFront) {
@@ -421,7 +421,7 @@ void handleShaftSignal(int signalIndex, bool isRising, efitick_t timestamp DECLA
 #if EFI_PROD_CODE
 		writePad("trigger debug", CONFIG(triggerInputDebugPins[signalIndex]), 1);
 #endif /* EFI_PROD_CODE */
-		engine->executor.scheduleByTimestamp(&debugToggleScheduling, timestamp + DEBUG_PIN_DELAY, &turnOffAllDebugFields);
+		engine->executor.scheduleByTimestamp("dbg_off", &debugToggleScheduling, timestamp + DEBUG_PIN_DELAY, &turnOffAllDebugFields);
 	}
 
 #if EFI_TOOTH_LOGGER

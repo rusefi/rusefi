@@ -404,7 +404,7 @@ efitick_t scheduleByAngle(scheduling_s *timer, efitick_t edgeTimestamp, angle_t 
 	int32_t delayNt = USF2NT(delayUs);
 	efitime_t delayedTime = edgeTimestamp + delayNt;
 
-	ENGINE(executor.scheduleByTimestampNt(timer, delayedTime, action));
+	ENGINE(executor.scheduleByTimestampNt("angle", timer, delayedTime, action));
 
 	return delayedTime;
 }

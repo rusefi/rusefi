@@ -24,7 +24,7 @@ void TestExecutor::scheduleForLater(scheduling_s *scheduling, int delayUs, actio
 		return;
 	}
 
-	scheduleByTimestamp(scheduling, getTimeNowUs() + delayUs, action);
+	scheduleByTimestamp("test", scheduling, getTimeNowUs() + delayUs, action);
 }
 
 int TestExecutor::executeAll(efitime_t now) {
@@ -47,26 +47,26 @@ scheduling_s* TestExecutor::getForUnitTest(int index) {
 	return schedulingQueue.getElementAtIndexForUnitText(index);
 }
 
-void TestExecutor::scheduleByTimestamp(scheduling_s *scheduling, efitimeus_t timeUs, action_s action) {
+void TestExecutor::scheduleByTimestamp(const char *msg, scheduling_s *scheduling, efitimeus_t timeUs, action_s action) {
 	if (debugSignalExecutor) {
 		printf("scheduleByTime %d\r\n", timeUs);
 	}
 
 	if (m_mockExecutor) {
-		m_mockExecutor->scheduleByTimestamp(scheduling, timeUs, action);
+		m_mockExecutor->scheduleByTimestamp("test", scheduling, timeUs, action);
 		return;
 	}
 
 	schedulingQueue.insertTask(scheduling, timeUs, action);
 }
 
-void TestExecutor::scheduleByTimestampNt(scheduling_s* scheduling, efitick_t timeNt, action_s action) {
+void TestExecutor::scheduleByTimestampNt(const char *msg, scheduling_s* scheduling, efitick_t timeNt, action_s action) {
 	if (m_mockExecutor) {
-		m_mockExecutor->scheduleByTimestampNt(scheduling, timeNt, action);
+		m_mockExecutor->scheduleByTimestampNt(msg, scheduling, timeNt, action);
 		return;
 	}
 
-	scheduleByTimestamp(scheduling, NT2US(timeNt), action);
+	scheduleByTimestamp("test", scheduling, NT2US(timeNt), action);
 }
 
 void TestExecutor::setMockExecutor(ExecutorInterface* exec) {

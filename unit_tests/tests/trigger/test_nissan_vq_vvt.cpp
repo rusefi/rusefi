@@ -58,7 +58,7 @@ static void scheduleTriggerEvents(TriggerWaveform *shape,
 			param->vvtBankIndex = vvtBankIndex;
 
 			scheduling_s *sch = new scheduling_s();
-			engine->executor.scheduleByTimestamp(sch, timeScale * 1000 * angle, { func, param });
+			engine->executor.scheduleByTimestamp("test", sch, timeScale * 1000 * angle, { func, param });
 			totalIndex++;
 		}
 	}

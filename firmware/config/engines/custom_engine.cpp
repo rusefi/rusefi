@@ -44,7 +44,7 @@ static void toggleTestAndScheduleNext(void *) {
 	testPin.toggle();
 	periodIndex = (periodIndex + 1) % TEST_LEN;
 	testTime += test557[periodIndex];
-	engine->executor.scheduleByTimestamp(&testScheduling, testTime, &toggleTestAndScheduleNext);
+	engine->executor.scheduleByTimestamp("test", &testScheduling, testTime, &toggleTestAndScheduleNext);
 }
 
 /**
