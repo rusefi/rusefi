@@ -48,17 +48,15 @@ static uint32_t getAverageLsiCounts() {
 	// Burn one count
 	getOneCapture();
 
-	uint32_t lastCapture = getOneCapture();
-	uint32_t sum = 0;
+	uint32_t firstCapture = getOneCapture();
+	uint32_t lastCapture;
 
 	for (size_t i = 0; i < 20; i++)
 	{
-		auto capture = getOneCapture();
-		sum += (capture - lastCapture);
-		lastCapture = capture;
+		lastCapture = getOneCapture();
 	}
 
-	return sum;
+	return lastCapture - firstCapture;
 }
 
 // This only works if you're using the PLL as the configured clock source!
