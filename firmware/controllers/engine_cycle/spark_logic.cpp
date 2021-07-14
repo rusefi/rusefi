@@ -201,8 +201,8 @@ if (engineConfiguration->debugMode == DBG_DWELL_METRIC) {
 		efitick_t nextFiring = nextDwellStart + engine->engineState.multispark.dwell;
 
 		// We can schedule both of these right away, since we're going for "asap" not "particular angle"
-		engine->executor.scheduleByTimestampNt(&event->dwellStartTimer, nextDwellStart, { &turnSparkPinHigh, event });
-		engine->executor.scheduleByTimestampNt(&event->sparkEvent.scheduling, nextFiring, { fireSparkAndPrepareNextSchedule, event });
+		engine->executor.scheduleByTimestampNt("dwell", &event->dwellStartTimer, nextDwellStart, { &turnSparkPinHigh, event });
+		engine->executor.scheduleByTimestampNt("firing", &event->sparkEvent.scheduling, nextFiring, { fireSparkAndPrepareNextSchedule, event });
 	} else {
 		if (CONFIG(enableTrailingSparks)) {
 			// Trailing sparks are enabled - schedule an event for the corresponding trailing coil

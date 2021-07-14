@@ -50,7 +50,7 @@ SingleTimerExecutor::SingleTimerExecutor()
 }
 
 void SingleTimerExecutor::scheduleForLater(scheduling_s *scheduling, int delayUs, action_s action) {
-	scheduleByTimestamp(scheduling, getTimeNowUs() + delayUs, action);
+	scheduleByTimestamp("scheduleForLater", scheduling, getTimeNowUs() + delayUs, action);
 }
 
 /**
@@ -63,11 +63,11 @@ void SingleTimerExecutor::scheduleForLater(scheduling_s *scheduling, int delayUs
  * @param [in] delayUs the number of microseconds before the output signal immediate output if delay is zero.
  * @param [in] dwell the number of ticks of output duration.
  */
-void SingleTimerExecutor::scheduleByTimestamp(scheduling_s *scheduling, efitimeus_t timeUs, action_s action) {
-	scheduleByTimestampNt(scheduling, US2NT(timeUs), action);
+void SingleTimerExecutor::scheduleByTimestamp(const char *msg, scheduling_s *scheduling, efitimeus_t timeUs, action_s action) {
+	scheduleByTimestampNt(msg, scheduling, US2NT(timeUs), action);
 }
 
-void SingleTimerExecutor::scheduleByTimestampNt(scheduling_s* scheduling, efitime_t nt, action_s action) {
+void SingleTimerExecutor::scheduleByTimestampNt(const char *msg, scheduling_s* scheduling, efitime_t nt, action_s action) {
 	ScopePerf perf(PE::SingleTimerExecutorScheduleByTimestamp);
 
 #if EFI_ENABLE_ASSERTS

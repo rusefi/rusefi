@@ -102,8 +102,8 @@ static void runBench(brain_pin_e brainPin, OutputPin *output, float delayMs, flo
 		efitick_t endTime = startTime + US2NT(onTimeUs);
 
 		// Schedule both events
-		engine->executor.scheduleByTimestampNt(&benchSchedStart, startTime, {benchOn, output});
-		engine->executor.scheduleByTimestampNt(&benchSchedEnd, endTime, {benchOff, output});
+		engine->executor.scheduleByTimestampNt("bstart", &benchSchedStart, startTime, {benchOn, output});
+		engine->executor.scheduleByTimestampNt("bend", &benchSchedEnd, endTime, {benchOff, output});
 
 		// Wait one full cycle time for the event + delay to happen
 		chThdSleepMicroseconds(onTimeUs + offTimeUs);

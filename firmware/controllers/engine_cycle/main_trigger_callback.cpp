@@ -296,7 +296,7 @@ void InjectionEvent::onTriggerTooth(size_t trgEventIndex, int rpm, efitick_t now
 
 	efitick_t startTime = scheduleByAngle(&signalTimerUp, nowNt, injectionStart.angleOffsetFromTriggerEvent, startAction PASS_ENGINE_PARAMETER_SUFFIX);
 	efitick_t turnOffTime = startTime + US2NT((int)durationUs);
-	engine->executor.scheduleByTimestampNt(&endOfInjectionEvent, turnOffTime, endAction);
+	engine->executor.scheduleByTimestampNt("inj", &endOfInjectionEvent, turnOffTime, endAction);
 
 #if EFI_UNIT_TEST
 		printf("scheduling injection angle=%.2f/delay=%.2f injectionDuration=%.2f\r\n", injectionStart.angleOffsetFromTriggerEvent, NT2US(startTime - nowNt), injectionDuration);
