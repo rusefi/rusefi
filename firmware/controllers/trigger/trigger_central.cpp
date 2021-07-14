@@ -200,7 +200,7 @@ void hwHandleVvtCamSignal(trigger_value_e front, efitick_t nowNt, int index DECL
 #if EFI_PROD_CODE
 		writePad("cam debug", CONFIG(camInputsDebug[index]), 1);
 #endif /* EFI_PROD_CODE */
-		engine->executor.scheduleByTimestamp("dbg_on", &debugToggleScheduling, nowNt + DEBUG_PIN_DELAY, &turnOffAllDebugFields);
+		engine->executor.scheduleByTimestampNt("dbg_on", &debugToggleScheduling, nowNt + DEBUG_PIN_DELAY, &turnOffAllDebugFields);
 	}
 
 	if (CONFIG(displayLogicLevelsInEngineSniffer) && isImportantFront) {
