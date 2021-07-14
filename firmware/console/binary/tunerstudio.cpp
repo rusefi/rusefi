@@ -594,7 +594,7 @@ void handleQueryCommand(TsChannelBase* tsChannel, ts_response_format_e mode) {
  */
 static void handleTestCommand(TsChannelBase* tsChannel) {
 	tsState.testCommandCounter++;
-	static char testOutputBuffer[24];
+	static char testOutputBuffer[64];
 	/**
 	 * this is NOT a standard TunerStudio command, this is my own
 	 * extension of the protocol to simplify troubleshooting
