@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.net.Socket;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Date;
 
 /**
  * @author Andrey Belomutskiy
@@ -70,7 +71,7 @@ public class TcpConnector {
             s.close();
             return true;
         } catch (IOException e) {
-            System.out.println("Connection refused in getAvailablePorts(): simulator not running");
+            System.out.println(new Date() + ": Connection refused in getAvailablePorts(): simulator not running");
             return false;
         }
     }
