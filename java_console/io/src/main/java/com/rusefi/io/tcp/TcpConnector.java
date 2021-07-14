@@ -62,16 +62,17 @@ public class TcpConnector {
     }
 
     public static Collection<String> getAvailablePorts() {
-        return isTcpPortOpened() ? Collections.singletonList("" + DEFAULT_PORT) : Collections.<String>emptyList();
+        return isTcpPortOpened() ? Collections.singletonList("" + DEFAULT_PORT) : Collections.emptyList();
     }
 
     public static boolean isTcpPortOpened() {
+        long now = System.currentTimeMillis();
         try {
             Socket s = new Socket(LOCALHOST, DEFAULT_PORT);
             s.close();
             return true;
         } catch (IOException e) {
-            System.out.println(new Date() + ": Connection refused in getAvailablePorts(): simulator not running");
+            System.out.println(new Date() + ": Connection refused in getAvailablePorts(): simulator not running in " + (System.currentTimeMillis() - now) + "ms");
             return false;
         }
     }
