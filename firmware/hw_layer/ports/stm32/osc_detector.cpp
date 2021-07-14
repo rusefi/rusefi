@@ -19,6 +19,8 @@
 
 #ifdef ENABLE_AUTO_DETECT_HSE
 
+uint8_t autoDetectedPllMValue;
+
 static void useHsi() {
 	// clear SW to use HSI
 	RCC->CFGR &= ~RCC_CFGR_SW;
@@ -122,9 +124,9 @@ extern "C" void __late_init() {
 	// The external clocks's frequency is the ratio of the measured LSI speed, times HSI's speed (16MHz)
 	float hseFrequencyMhz = 16.0f * hseCounts / hsiCounts;
 
-	uint8_t pllMValue = efiRound(hseFrequencyMhz, 1);
+	autoDetectedPllMValue = efiRound(hseFrequencyMhz, 1);
 
-	reprogramPll(pllMValue);
+	reprogramPll(autoDetectedPllMValue);
 }
 
 #endif // defined ENABLE_AUTO_DETECT_HSE
