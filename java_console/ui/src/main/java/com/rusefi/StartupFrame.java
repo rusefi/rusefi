@@ -23,8 +23,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static com.rusefi.ui.storage.PersistentConfiguration.getConfig;
-import static com.rusefi.ui.util.UiUtils.getAllComponents;
-import static com.rusefi.ui.util.UiUtils.setToolTip;
+import static com.rusefi.ui.util.UiUtils.*;
 import static javax.swing.JOptionPane.YES_NO_OPTION;
 
 /**
@@ -151,26 +150,11 @@ public class StartupFrame {
             realHardwarePanel.add(new EraseChip().getButton(), "right, wrap");
         }
 
-        SerialPortScanner.INSTANCE.listeners.add(() -> SwingUtilities.invokeLater(() -> {
-            List<String> ports = SerialPortScanner.INSTANCE.getKnownPorts();
-            if (!currentlyDisplayedPorts.equals(ports) || isFirstTimeApplyingPorts) {
-                FileLog.MAIN.logLine("Available ports " + ports);
-                isFirstTimeApplyingPorts = false;
-                connectPanel.setVisible(!ports.isEmpty());
-                noPortsMessage.setVisible(ports.isEmpty());
-//        panel.add(comboSpeeds); // todo: finish speed selector UI component
-//            horizontalLine.setVisible(!ports.isEmpty());
-
-                applyPortSelectionToUIcontrol(ports);
-                currentlyDisplayedPorts = ports;
-                UiUtils.trueLayout(connectPanel);
-                frame.pack();
-            }
-        }));
-
+        SerialPortScanner.INSTANCE.listeners.add(() -> SwingUtilities.invokeLater(this::applyKnownPorts));
 
         // todo: invoke this NOT on AWT thread?
-        SerialPortScanner.INSTANCE.findAllAvailablePorts();
+        SerialPortScanner.INSTANCE.findAllAvailablePorts(false);
+        applyKnownPorts();
 
         final JButton buttonLogViewer = new JButton();
         buttonLogViewer.setText("Start " + LinkManager.LOG_VIEWER);
@@ -208,6 +192,23 @@ public class StartupFrame {
 
         for (Component component : getAllComponents(frame)) {
             component.addKeyListener(hwTestEasterEgg);
+        }
+    }
+
+    private void applyKnownPorts() {
+        List<String> ports = SerialPortScanner.INSTANCE.getKnownPorts();
+        if (!currentlyDisplayedPorts.equals(ports) || isFirstTimeApplyingPorts) {
+            FileLog.MAIN.logLine("Rendering available ports: " + ports);
+            isFirstTimeApplyingPorts = false;
+            connectPanel.setVisible(!ports.isEmpty());
+            noPortsMessage.setVisible(ports.isEmpty());
+//        panel.add(comboSpeeds); // todo: finish speed selector UI component
+//            horizontalLine.setVisible(!ports.isEmpty());
+
+            applyPortSelectionToUIcontrol(ports);
+            currentlyDisplayedPorts = ports;
+            UiUtils.trueLayout(connectPanel);
+            frame.pack();
         }
     }
 
@@ -301,6 +302,7 @@ public class StartupFrame {
             comboPorts.addItem(port);
         String defaultPort = getConfig().getRoot().getProperty(ConsoleUI.PORT_KEY);
         comboPorts.setSelectedItem(defaultPort);
+        trueLayout(comboPorts);
     }
 
     private static JComboBox<String> createSpeedCombo() {
