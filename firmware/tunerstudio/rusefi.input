@@ -3617,8 +3617,11 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 		field = "use FSIO Table CAN Sniffing Filtering",useFSIOTableForCanSniffingFiltering
         field = "trigger 1 debug",                      triggerInputDebugPins1
         field = "trigger 2 debug",                      triggerInputDebugPins2
+        field = "trigger 3 debug",                      triggerInputDebugPins3
         field = "cam 1 debug",                          camInputsDebug1
         field = "cam 2 debug",                          camInputsDebug2
+        field = "cam 3 debug",                          camInputsDebug3
+        field = "cam 4 debug",                          camInputsDebug4
 
        help = helpGeneral, "rusEFI General Help"
         webHelp = @@MAIN_HELP_URL@@
