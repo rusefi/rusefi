@@ -139,6 +139,7 @@ void stopTriggerInputPins(void) {
 			turnOffTriggerInputPin(i, true);
 		}
 		if (isConfigurationChanged(triggerInputDebugPins[i])) {
+			efiSetPadUnused(CONFIG(triggerInputDebugPins[i]));
 		}
 	}
 	for (int i = 0; i < CAM_INPUTS_COUNT; i++) {
@@ -146,6 +147,7 @@ void stopTriggerInputPins(void) {
 			turnOffTriggerInputPin(i, false);
 		}
 		if (isConfigurationChanged(camInputsDebug[i])) {
+			efiSetPadUnused(CONFIG(camInputsDebug[i]));
 		}
 	}
 }
@@ -157,6 +159,7 @@ void startTriggerInputPins(void) {
 			turnOnTriggerInputPin(msg, i, true);
 		}
 		if (isConfigurationChanged(triggerInputDebugPins[i])) {
+			efiSetPadMode("trigger debug", CONFIG(triggerInputDebugPins[i]), PAL_MODE_OUTPUT_PUSHPULL);
 		}
 	}
 
@@ -165,6 +168,7 @@ void startTriggerInputPins(void) {
 			turnOnTriggerInputPin("Cam", i, false);
 		}
 		if (isConfigurationChanged(camInputsDebug[i])) {
+			efiSetPadMode("cam debug", CONFIG(camInputsDebug[i]), PAL_MODE_OUTPUT_PUSHPULL);
 		}
 	}
 }

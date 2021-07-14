@@ -45,6 +45,8 @@
 WaveChart waveChart;
 #endif /* EFI_ENGINE_SNIFFER */
 
+static scheduling_s debugToggleScheduling;
+
 trigger_central_s::trigger_central_s() : hwEventCounters() {
 }
 
@@ -123,6 +125,22 @@ static void syncAndReport(TriggerCentral *tc, int mod, int remainder DECLARE_ENG
 	}
 }
 
+static void turnOffAllDebugFields(void *arg) {
+	(void)arg;
+#if EFI_PROD_CODE
+	for (int index = 0;index<TRIGGER_INPUT_PIN_COUNT;index++) {
+		if (CONFIG(triggerInputDebugPins[index]) != GPIO_UNASSIGNED) {
+			writePad("trigger debug", CONFIG(triggerInputDebugPins[index]), 0);
+		}
+	}
+	for (int index = 0;index<CAM_INPUTS_COUNT;index++) {
+		if (CONFIG(camInputsDebug[index]) != GPIO_UNASSIGNED) {
+			writePad("cam debug", CONFIG(camInputsDebug[index]), 0);
+		}
+	}
+#endif /* EFI_PROD_CODE */
+}
+
 void hwHandleVvtCamSignal(trigger_value_e front, efitick_t nowNt, int index DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	int bankIndex = index / CAMS_PER_BANK;
 	int camIndex = index % CAMS_PER_BANK;
@@ -178,7 +196,10 @@ void hwHandleVvtCamSignal(trigger_value_e front, efitick_t nowNt, int index DECL
 	}
 
 	if (isImportantFront && CONFIG(camInputsDebug[index]) != GPIO_UNASSIGNED) {
-
+#if EFI_PROD_CODE
+		writePad("cam debug", CONFIG(camInputsDebug[index]), 1);
+#endif /* EFI_PROD_CODE */
+		engine->executor.scheduleByTimestamp(&debugToggleScheduling, nowNt + MS2NT(100), &turnOffAllDebugFields);
 	}
 
 	if (CONFIG(displayLogicLevelsInEngineSniffer) && isImportantFront) {
