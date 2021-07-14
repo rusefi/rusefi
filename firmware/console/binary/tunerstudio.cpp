@@ -610,6 +610,12 @@ static void handleTestCommand(TsChannelBase* tsChannel) {
 
 	chsnprintf(testOutputBuffer, sizeof(testOutputBuffer), " %s\r\n", PROTOCOL_TEST_RESPONSE_TAG);
 	tsChannel->write((const uint8_t*)testOutputBuffer, strlen(testOutputBuffer));
+
+	if (hasFirmwareError()) {
+		const char* error = getFirmwareError();
+		chsnprintf(testOutputBuffer, sizeof(testOutputBuffer), "error=%s\r\n", error);
+		tsChannel->write((const uint8_t*)testOutputBuffer, strlen(testOutputBuffer));
+	}
 }
 
 extern CommandHandler console_line_callback;
