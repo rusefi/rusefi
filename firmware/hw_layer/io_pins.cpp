@@ -11,19 +11,47 @@
 #include "io_pins.h"
 #include "efi_gpio.h"
 #include "engine.h"
-
-EXTERN_ENGINE;
+#include "pin_repository.h"
 
 #if EFI_PROD_CODE
-
 #include "os_access.h"
 #include "drivers/gpio/gpio_ext.h"
 
-#include "pin_repository.h"
 #include "status_loop.h"
-#include "engine_configuration.h"
 #include "console_io.h"
+#endif /* EFI_PROD_CODE */
 
+EXTERN_ENGINE;
+
+
+void efiSetPadUnused(brain_pin_e brainPin) {
+#if EFI_PROD_CODE
+	/* input with pull up, is it safe? */
+	iomode_t mode = PAL_STM32_MODE_INPUT | PAL_STM32_PUPDR_PULLUP;
+
+	if (brain_pin_is_onchip(brainPin)) {
+		ioportid_t port = getHwPort("unused", brainPin);
+		ioportmask_t pin = getHwPin("unused", brainPin);
+
+		/* input with pull up, is it safe?
+		 * todo: shall we reuse 'default state' constants with board.h?
+		 * */
+		palSetPadMode(port, pin, mode);
+		palWritePad(port, pin, 0);
+	}
+	#if (BOARD_EXT_GPIOCHIPS > 0)
+		else {
+			gpiochips_setPadMode(brainPin, mode);
+		}
+	#endif
+#endif /* EFI_PROD_CODE */
+
+	brain_pin_markUnused(brainPin);
+}
+
+
+
+#if EFI_PROD_CODE
 
 #if EFI_ENGINE_CONTROL
 #include "main_trigger_callback.h"
@@ -79,30 +107,6 @@ void efiSetPadMode(const char *msg, brain_pin_e brainPin, iomode_t mode)
 	if (!wasUsed) {
 		efiSetPadModeWithoutOwnershipAcquisition(msg, brainPin, mode);
 	}
-}
-
-void efiSetPadUnused(brain_pin_e brainPin)
-{
-	/* input with pull up, is it safe? */
-	iomode_t mode = PAL_STM32_MODE_INPUT | PAL_STM32_PUPDR_PULLUP;
-
-	if (brain_pin_is_onchip(brainPin)) {
-		ioportid_t port = getHwPort("unused", brainPin);
-		ioportmask_t pin = getHwPin("unused", brainPin);
-
-		/* input with pull up, is it safe?
-		 * todo: shall we reuse 'default state' constants with board.h?
-		 * */
-		palSetPadMode(port, pin, mode);
-		palWritePad(port, pin, 0);
-	}
-	#if (BOARD_EXT_GPIOCHIPS > 0)
-		else {
-			gpiochips_setPadMode(brainPin, mode);
-		}
-	#endif
-
-	brain_pin_markUnused(brainPin);
 }
 
 iomode_t getInputMode(pin_input_mode_e mode) {
