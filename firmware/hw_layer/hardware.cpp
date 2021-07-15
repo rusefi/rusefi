@@ -331,7 +331,7 @@ void applyNewHardwareSettings(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	stopHip9001_pins();
 #endif /* EFI_HIP_9011 */
 
-#if (BOARD_EXT_GPIOCHIPS > 0)
+#if EFI_PROD_CODE && (BOARD_EXT_GPIOCHIPS > 0)
 	stopSmartCsPins();
 #endif /* (BOARD_EXT_GPIOCHIPS > 0) */
 
@@ -395,7 +395,7 @@ void applyNewHardwareSettings(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	startHD44780_pins();
 #endif /* #if EFI_HD44780_LCD */
 
-#if (BOARD_EXT_GPIOCHIPS > 0)
+#if EFI_PROD_CODE && (BOARD_EXT_GPIOCHIPS > 0)
 	/* TODO: properly restart gpio chips...
 	 * This is only workaround for "CS pin lost" bug
 	 * see: https://github.com/rusefi/rusefi/issues/2107
@@ -425,7 +425,7 @@ void applyNewHardwareSettings(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 #endif /* EFI_HIP_9011 */
 
 
-#if EFI_IDLE_CONTROL
+#if EFI_PROD_CODE && EFI_IDLE_CONTROL
 	if (isIdleHardwareRestartNeeded()) {
 		 initIdleHardware(PASS_ENGINE_PARAMETER_SIGNATURE);
 	}
@@ -471,7 +471,9 @@ void initHardwareNoConfig(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 
 	efiPrintf("initHardware()");
 
+#if EFI_PROD_CODE
 	initPinRepository();
+#endif
 
 #if EFI_HISTOGRAMS
 	/**
