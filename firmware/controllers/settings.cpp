@@ -7,11 +7,13 @@
  */
 
 #include "global.h"
+#include "engine_configuration.h"
+#include "engine_math.h"
+
 #if !EFI_UNIT_TEST
 #include "os_access.h"
 #include "settings.h"
 #include "eficonsole.h"
-#include "engine_configuration.h"
 #include "adc_inputs.h"
 #include "engine_controller.h"
 #include "thermistors.h"
@@ -22,7 +24,6 @@
 #include "console_io.h"
 #include "engine.h"
 #include "efi_gpio.h"
-#include "engine_math.h"
 #include "idle_thread.h"
 #include "allsensors.h"
 #include "alternator_controller.h"
@@ -181,22 +182,6 @@ static void setTimingMode(int value) {
 	engineConfiguration->timingMode = (timing_mode_e) value;
 	doPrintConfiguration();
 	incrementGlobalConfigurationVersion(PASS_ENGINE_PARAMETER_SIGNATURE);
-}
-
-void setEngineType(int value DECLARE_ENGINE_PARAMETER_SUFFIX) {
-	{
-		chibios_rt::CriticalSectionLocker csl;
-
-		engineConfiguration->engineType = (engine_type_e)value;
-		resetConfigurationExt((engine_type_e)value PASS_ENGINE_PARAMETER_SUFFIX);
-		engine->resetEngineSnifferIfInTestMode();
-
-	#if EFI_INTERNAL_FLASH
-		writeToFlashNow();
-	#endif /* EFI_INTERNAL_FLASH */
-	}
-	incrementGlobalConfigurationVersion(PASS_ENGINE_PARAMETER_SIGNATURE);
-	doPrintConfiguration();
 }
 
 static void setIdleSolenoidFrequency(int value) {
@@ -1371,4 +1356,24 @@ const char* getConfigurationName(engine_type_e engineType) {
 	default:
 		return getEngine_type_e(engineType);
 	}
+}
+
+void setEngineType(int value DECLARE_ENGINE_PARAMETER_SUFFIX) {
+	{
+#if EFI_PROD_CODE
+		chibios_rt::CriticalSectionLocker csl;
+#endif /* EFI_PROD_CODE */
+
+		engineConfiguration->engineType = (engine_type_e)value;
+		resetConfigurationExt((engine_type_e)value PASS_ENGINE_PARAMETER_SUFFIX);
+		engine->resetEngineSnifferIfInTestMode();
+
+	#if EFI_INTERNAL_FLASH
+		writeToFlashNow();
+	#endif /* EFI_INTERNAL_FLASH */
+	}
+	incrementGlobalConfigurationVersion(PASS_ENGINE_PARAMETER_SIGNATURE);
+#if ! EFI_UNIT_TEST
+	doPrintConfiguration();
+#endif /* EFI_UNIT_TEST */
 }
