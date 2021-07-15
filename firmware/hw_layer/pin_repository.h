@@ -23,6 +23,7 @@ class PinRepository {
 	 */
 	PinRepository();
 	int totalPinsUsed = 0;
+	const char *PIN_USED[BRAIN_PIN_TOTAL_PINS];
 };
 
 #endif /* __cplusplus */
@@ -55,7 +56,6 @@ ioportid_t getBrainPinPort(brain_pin_e brainPin);
 int getBrainPinIndex(brain_pin_e brainPin);
 unsigned int getBrainPinOnchipNum(void);
 unsigned int getBrainPinTotalNum(void);
-void initBrainUsedPins(void);
 
 #ifdef __cplusplus
 const char* & getBrainUsedPin(unsigned int idx DECLARE_ENGINE_PARAMETER_SUFFIX);

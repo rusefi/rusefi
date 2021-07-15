@@ -13,21 +13,14 @@
 
 EXTERN_ENGINE;
 
-// todo: move this into PinRepository class
-static const char *PIN_USED[BRAIN_PIN_TOTAL_PINS];
-
 unsigned int getBrainPinTotalNum(void) {
 	return BRAIN_PIN_TOTAL_PINS;
-}
-
-void initBrainUsedPins(void) {
-	memset(PIN_USED, 0, sizeof(PIN_USED));
 }
 
 const char* & getBrainUsedPin(unsigned int idx DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	/*if (idx >= getBrainPinTotalNum())
 		return NULL;*/
-	return PIN_USED[idx];
+	return ENGINE(pinRepository).PIN_USED[idx];
 }
 
 /* Common for firmware and unit tests */
@@ -112,7 +105,7 @@ PinRepository::PinRepository() {
 	msObjectInit(&portNameStream, (uint8_t*) portNameBuffer, sizeof(portNameBuffer), 0);
 #endif /* EFI_PROD_CODE */
 
-	initBrainUsedPins();
+	memset(PIN_USED, 0, sizeof(PIN_USED));
 }
 
 #if EFI_PROD_CODE
