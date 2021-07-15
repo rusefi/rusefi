@@ -94,15 +94,13 @@ bool brain_pin_markUsed(brain_pin_e brainPin, const char *msg DECLARE_ENGINE_PAR
  */
 
 void brain_pin_markUnused(brain_pin_e brainPin DECLARE_ENGINE_PARAMETER_SUFFIX) {
-#if EFI_PROD_CODE
 	int index = brainPin_to_index(brainPin);
 	if (index < 0)
 		return;
 
-	if (getBrainUsedPin(index) != nullptr)
+	if (getBrainUsedPin(index PASS_ENGINE_PARAMETER_SUFFIX) != nullptr)
 		pinRepository.totalPinsUsed--;
-	getBrainUsedPin(index) = nullptr;
-#endif /* EFI_PROD_CODE */
+	getBrainUsedPin(index PASS_ENGINE_PARAMETER_SUFFIX) = nullptr;
 }
 
 #if EFI_PROD_CODE
