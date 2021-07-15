@@ -33,6 +33,9 @@ void applyNewTriggerInputPins(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 void startTriggerInputPins(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 void stopTriggerInputPins(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 
+void stopTriggerDebugPins(DECLARE_ENGINE_PARAMETER_SIGNATURE);
+void startTriggerDebugPins(DECLARE_ENGINE_PARAMETER_SIGNATURE);
+
 #if HAL_TRIGGER_USE_ADC && HAL_USE_ADC
 // This detector has 2 modes for low-RPM (ADC) and fast-RPM (EXTI)
 enum triggerAdcMode_t {

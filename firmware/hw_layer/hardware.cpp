@@ -375,6 +375,8 @@ void applyNewHardwareSettings(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 		efiSetPadUnused(activeConfiguration.clutchUpPin);
 	}
 
+	stopTriggerDebugPins(PASS_ENGINE_PARAMETER_SIGNATURE);
+
 	enginePins.unregisterPins();
 
 	ButtonDebounce::startConfigurationList();
@@ -387,9 +389,7 @@ void applyNewHardwareSettings(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	startTriggerInputPins(PASS_ENGINE_PARAMETER_SIGNATURE);
 #endif /* EFI_SHAFT_POSITION_INPUT */
 
-#if (HAL_USE_PAL && EFI_JOYSTICK)
-	startJoystickPins();
-#endif /* HAL_USE_PAL && EFI_JOYSTICK */
+	startHardware(PASS_ENGINE_PARAMETER_SIGNATURE);
 
 #if EFI_HD44780_LCD
 	startHD44780_pins();
@@ -508,6 +508,17 @@ void initHardwareNoConfig(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 #endif // EFI_FILE_LOGGING
 }
 
+/**
+ * This method is invoked both on ECU start and configuration change
+ */
+void startHardware(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+#if (HAL_USE_PAL && EFI_JOYSTICK)
+	startJoystickPins();
+#endif /* HAL_USE_PAL && EFI_JOYSTICK */
+
+	startTriggerDebugPins(PASS_ENGINE_PARAMETER_SIGNATURE);
+}
+
 void initHardware(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 #if EFI_HD44780_LCD
 	lcd_HD44780_init();
@@ -607,6 +618,8 @@ void initHardware(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 #endif /* HAL_USE_PAL && EFI_JOYSTICK */
 
 	calcFastAdcIndexes();
+
+	startHardware(PASS_ENGINE_PARAMETER_SIGNATURE);
 
 	efiPrintf("initHardware() OK!");
 }

@@ -49,7 +49,43 @@ void efiSetPadUnused(brain_pin_e brainPin) {
 	brain_pin_markUnused(brainPin);
 }
 
+/**
+ * This method would set an error condition if pin is already used
+ */
+void efiSetPadMode(const char *msg, brain_pin_e brainPin, iomode_t mode DECLARE_CONFIG_PARAMETER_SUFFIX) {
+	if (!isBrainPinValid(brainPin)) {
+		// No pin configured, nothing to do here.
+		return;
+	}
 
+	bool wasUsed = brain_pin_markUsed(brainPin, msg PASS_CONFIG_PARAMETER_SUFFIX);
+
+	if (!wasUsed) {
+		efiSetPadModeWithoutOwnershipAcquisition(msg, brainPin, mode);
+	}
+}
+
+void efiSetPadModeWithoutOwnershipAcquisition(const char *msg, brain_pin_e brainPin, iomode_t mode) {
+#if EFI_PROD_CODE
+	/*check if on-chip pin or external */
+	if (brain_pin_is_onchip(brainPin)) {
+		/* on-chip */
+		ioportid_t port = getHwPort(msg, brainPin);
+		ioportmask_t pin = getHwPin(msg, brainPin);
+		/* paranoid */
+		if (port == GPIO_NULL)
+			return;
+
+		palSetPadMode(port, pin, mode);
+	}
+	#if (BOARD_EXT_GPIOCHIPS > 0)
+		else {
+			gpiochips_setPadMode(brainPin, mode);
+		}
+	#endif
+
+#endif /* EFI_PROD_CODE */
+}
 
 #if EFI_PROD_CODE
 
@@ -69,44 +105,6 @@ bool efiReadPin(brain_pin_e pin) {
 
 	/* incorrect pin */
 	return false;
-}
-
-
-void efiSetPadModeWithoutOwnershipAcquisition(const char *msg, brain_pin_e brainPin, iomode_t mode)
-{
-	/*check if on-chip pin or external */
-	if (brain_pin_is_onchip(brainPin)) {
-		/* on-chip */
-		ioportid_t port = getHwPort(msg, brainPin);
-		ioportmask_t pin = getHwPin(msg, brainPin);
-		/* paranoid */
-		if (port == GPIO_NULL)
-			return;
-
-		palSetPadMode(port, pin, mode);
-	}
-	#if (BOARD_EXT_GPIOCHIPS > 0)
-		else {
-			gpiochips_setPadMode(brainPin, mode);
-		}
-	#endif
-}
-
-/**
- * This method would set an error condition if pin is already used
- */
-void efiSetPadMode(const char *msg, brain_pin_e brainPin, iomode_t mode)
-{
-	if (!isBrainPinValid(brainPin)) {
-		// No pin configured, nothing to do here.
-		return;
-	}
-
-	bool wasUsed = brain_pin_markUsed(brainPin, msg);
-
-	if (!wasUsed) {
-		efiSetPadModeWithoutOwnershipAcquisition(msg, brainPin, mode);
-	}
 }
 
 iomode_t getInputMode(pin_input_mode_e mode) {
