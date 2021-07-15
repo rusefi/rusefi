@@ -11,7 +11,7 @@
 
 #include "pin_repository.h"
 
-EXTERN_CONFIG;
+EXTERN_ENGINE;
 
 static PinRepository pinRepository;
 
@@ -26,7 +26,7 @@ void initBrainUsedPins(void) {
 	memset(PIN_USED, 0, sizeof(PIN_USED));
 }
 
-const char* & getBrainUsedPin(unsigned int idx) {
+const char* & getBrainUsedPin(unsigned int idx DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	/*if (idx >= getBrainPinTotalNum())
 		return NULL;*/
 	return PIN_USED[idx];
@@ -65,7 +65,7 @@ static int brainPin_to_index(brain_pin_e brainPin)
  * @return true if this pin was already used, false otherwise
  */
 
-bool brain_pin_markUsed(brain_pin_e brainPin, const char *msg DECLARE_CONFIG_PARAMETER_SUFFIX) {
+bool brain_pin_markUsed(brain_pin_e brainPin, const char *msg DECLARE_ENGINE_PARAMETER_SUFFIX) {
 #if ! EFI_BOOTLOADER
 	efiPrintf("%s on %s", msg, hwPortname(brainPin));
 #endif
@@ -74,17 +74,17 @@ bool brain_pin_markUsed(brain_pin_e brainPin, const char *msg DECLARE_CONFIG_PAR
 	if (index < 0)
 		return true;
 
-	if (getBrainUsedPin(index) != NULL) {
+	if (getBrainUsedPin(index PASS_ENGINE_PARAMETER_SUFFIX) != NULL) {
 		/* TODO: get readable name of brainPin... */
 		firmwareError(CUSTOM_ERR_PIN_ALREADY_USED_1, "Pin \"%s\" required by \"%s\" but is used by \"%s\" %s",
 				hwPortname(brainPin),
 				msg,
-				getBrainUsedPin(index),
+				getBrainUsedPin(index PASS_ENGINE_PARAMETER_SUFFIX),
 				getEngine_type_e(engineConfiguration->engineType));
 		return true;
 	}
 
-	getBrainUsedPin(index) = msg;
+	getBrainUsedPin(index PASS_ENGINE_PARAMETER_SUFFIX) = msg;
 	pinRepository.totalPinsUsed++;
 	return false;
 }
@@ -93,7 +93,7 @@ bool brain_pin_markUsed(brain_pin_e brainPin, const char *msg DECLARE_CONFIG_PAR
  * See also brain_pin_markUsed()
  */
 
-void brain_pin_markUnused(brain_pin_e brainPin) {
+void brain_pin_markUnused(brain_pin_e brainPin DECLARE_ENGINE_PARAMETER_SUFFIX) {
 #if EFI_PROD_CODE
 	int index = brainPin_to_index(brainPin);
 	if (index < 0)

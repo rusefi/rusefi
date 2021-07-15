@@ -372,7 +372,7 @@ void applyNewHardwareSettings(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 #endif /* #if EFI_HD44780_LCD */
 
 	if (isPinOrModeChanged(clutchUpPin, clutchUpPinMode)) {
-		efiSetPadUnused(activeConfiguration.clutchUpPin);
+		efiSetPadUnused(activeConfiguration.clutchUpPin PASS_ENGINE_PARAMETER_SUFFIX);
 	}
 
 	stopTriggerDebugPins(PASS_ENGINE_PARAMETER_SIGNATURE);

@@ -36,11 +36,11 @@ EXTERNC bool brain_pin_is_ext(brain_pin_e brainPin);
 /**
  * Usually high-level code would invoke efiSetPadMode, not this method directly
  */
-EXTERNC bool brain_pin_markUsed(brain_pin_e brainPin, const char *msg DECLARE_CONFIG_PARAMETER_SUFFIX);
+EXTERNC bool brain_pin_markUsed(brain_pin_e brainPin, const char *msg DECLARE_ENGINE_PARAMETER_SUFFIX);
 /**
  * See also efiSetPadUnused
  */
-EXTERNC void brain_pin_markUnused(brain_pin_e brainPin);
+EXTERNC void brain_pin_markUnused(brain_pin_e brainPin DECLARE_ENGINE_PARAMETER_SUFFIX);
 const char * getPinFunction(brain_input_pin_e brainPin);
 
 #if EFI_PROD_CODE
@@ -58,6 +58,6 @@ unsigned int getBrainPinTotalNum(void);
 void initBrainUsedPins(void);
 
 #ifdef __cplusplus
-const char* & getBrainUsedPin(unsigned int idx);
+const char* & getBrainUsedPin(unsigned int idx DECLARE_ENGINE_PARAMETER_SUFFIX);
 #endif
 
