@@ -9,6 +9,8 @@
 
 #include "global.h"
 
+void startHardware(DECLARE_ENGINE_PARAMETER_SIGNATURE);
+
 #if HAL_USE_SPI
 
 // Peripherial Clock 42MHz SPI2 SPI3

@@ -36,7 +36,7 @@ EXTERNC bool brain_pin_is_ext(brain_pin_e brainPin);
 /**
  * Usually high-level code would invoke efiSetPadMode, not this method directly
  */
-EXTERNC bool brain_pin_markUsed(brain_pin_e brainPin, const char *msg);
+EXTERNC bool brain_pin_markUsed(brain_pin_e brainPin, const char *msg DECLARE_CONFIG_PARAMETER_SUFFIX);
 /**
  * See also efiSetPadUnused
  */

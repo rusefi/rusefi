@@ -11,6 +11,8 @@
 
 #include "pin_repository.h"
 
+EXTERN_CONFIG;
+
 static PinRepository pinRepository;
 
 // todo: move this into PinRepository class
@@ -56,6 +58,35 @@ static int brainPin_to_index(brain_pin_e brainPin)
 		return -1;
 
 	return i;
+}
+
+/**
+ * See also brain_pin_markUnused()
+ * @return true if this pin was already used, false otherwise
+ */
+
+bool brain_pin_markUsed(brain_pin_e brainPin, const char *msg DECLARE_CONFIG_PARAMETER_SUFFIX) {
+#if ! EFI_BOOTLOADER
+	efiPrintf("%s on %s", msg, hwPortname(brainPin));
+#endif
+
+	int index = brainPin_to_index(brainPin);
+	if (index < 0)
+		return true;
+
+	if (getBrainUsedPin(index) != NULL) {
+		/* TODO: get readable name of brainPin... */
+		firmwareError(CUSTOM_ERR_PIN_ALREADY_USED_1, "Pin \"%s\" required by \"%s\" but is used by \"%s\" %s",
+				hwPortname(brainPin),
+				msg,
+				getBrainUsedPin(index),
+				getEngine_type_e(engineConfiguration->engineType));
+		return true;
+	}
+
+	getBrainUsedPin(index) = msg;
+	pinRepository.totalPinsUsed++;
+	return false;
 }
 
 /**
@@ -234,35 +265,6 @@ bool brain_pin_is_ext(brain_pin_e brainPin)
 	if (brainPin > BRAIN_PIN_ONCHIP_LAST)
 		return true;
 
-	return false;
-}
-
-/**
- * See also brain_pin_markUnused()
- * @return true if this pin was already used, false otherwise
- */
-
-bool brain_pin_markUsed(brain_pin_e brainPin, const char *msg) {
-#if ! EFI_BOOTLOADER
-	efiPrintf("%s on %s", msg, hwPortname(brainPin));
-#endif
-
-	int index = brainPin_to_index(brainPin);
-	if (index < 0)
-		return true;
-
-	if (getBrainUsedPin(index) != NULL) {
-		/* TODO: get readable name of brainPin... */
-		firmwareError(CUSTOM_ERR_PIN_ALREADY_USED_1, "Pin \"%s\" required by \"%s\" but is used by \"%s\" %s",
-				hwPortname(brainPin),
-				msg,
-				getBrainUsedPin(index),
-				getEngine_type_e(engineConfiguration->engineType));
-		return true;
-	}
-
-	getBrainUsedPin(index) = msg;
-	pinRepository.totalPinsUsed++;
 	return false;
 }
 
