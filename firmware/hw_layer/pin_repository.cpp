@@ -9,7 +9,26 @@
  * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
-#include "global.h"
+#include "pin_repository.h"
+
+static PinRepository pinRepository;
+
+// todo: move this into PinRepository class
+static const char *PIN_USED[BRAIN_PIN_TOTAL_PINS];
+
+unsigned int getBrainPinTotalNum(void) {
+	return BRAIN_PIN_TOTAL_PINS;
+}
+
+void initBrainUsedPins(void) {
+	memset(PIN_USED, 0, sizeof(PIN_USED));
+}
+
+const char* & getBrainUsedPin(unsigned int idx) {
+	/*if (idx >= getBrainPinTotalNum())
+		return NULL;*/
+	return PIN_USED[idx];
+}
 
 /* Common for firmware and unit tests */
 bool isBrainPinValid(brain_pin_e brainPin)
@@ -23,19 +42,6 @@ bool isBrainPinValid(brain_pin_e brainPin)
 
 	return true;
 }
-
-#if EFI_PROD_CODE
-#include "os_access.h"
-#include "pin_repository.h"
-#include "eficonsole.h"
-#include "memstreams.h"
-#include "drivers/gpio/gpio_ext.h"
-#include "smart_gpio.h"
-#include "hardware.h"
-
-EXTERN_CONFIG;
-
-static PinRepository pinRepository;
 
 static int brainPin_to_index(brain_pin_e brainPin)
 {
@@ -52,21 +58,51 @@ static int brainPin_to_index(brain_pin_e brainPin)
 	return i;
 }
 
+/**
+ * See also brain_pin_markUsed()
+ */
+
+void brain_pin_markUnused(brain_pin_e brainPin) {
+#if EFI_PROD_CODE
+	int index = brainPin_to_index(brainPin);
+	if (index < 0)
+		return;
+
+	if (getBrainUsedPin(index) != nullptr)
+		pinRepository.totalPinsUsed--;
+	getBrainUsedPin(index) = nullptr;
+#endif /* EFI_PROD_CODE */
+}
+
+#if EFI_PROD_CODE
+#include "memstreams.h"
+static MemoryStream portNameStream;
+static char portNameBuffer[20];
+#endif /* EFI_PROD_CODE */
+
+PinRepository::PinRepository() {
+#if EFI_PROD_CODE
+	msObjectInit(&portNameStream, (uint8_t*) portNameBuffer, sizeof(portNameBuffer), 0);
+#endif /* EFI_PROD_CODE */
+
+	initBrainUsedPins();
+}
+
+#if EFI_PROD_CODE
+#include "os_access.h"
+#include "eficonsole.h"
+#include "drivers/gpio/gpio_ext.h"
+#include "smart_gpio.h"
+#include "hardware.h"
+
+EXTERN_CONFIG;
+
 static brain_pin_e index_to_brainPin(unsigned int i)
 {
 	if (i < getBrainPinTotalNum())
 		return (brain_pin_e)((int)GPIOA_0 + i);;
 
 	return GPIO_INVALID;
-}
-
-static MemoryStream portNameStream;
-static char portNameBuffer[20];
-
-PinRepository::PinRepository() {
-	msObjectInit(&portNameStream, (uint8_t*) portNameBuffer, sizeof(portNameBuffer), 0);
-
-	initBrainUsedPins();
 }
 
 static void reportPins(void) {
@@ -228,20 +264,6 @@ bool brain_pin_markUsed(brain_pin_e brainPin, const char *msg) {
 	getBrainUsedPin(index) = msg;
 	pinRepository.totalPinsUsed++;
 	return false;
-}
-
-/**
- * See also brain_pin_markUsed()
- */
-
-void brain_pin_markUnused(brain_pin_e brainPin) {
-	int index = brainPin_to_index(brainPin);
-	if (index < 0)
-		return;
-
-	if (getBrainUsedPin(index) != NULL)
-		pinRepository.totalPinsUsed--;
-	getBrainUsedPin(index) = nullptr;
 }
 
 /**
