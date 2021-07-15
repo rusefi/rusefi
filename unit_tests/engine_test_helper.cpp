@@ -17,6 +17,7 @@
 #include "sensor.h"
 #include "tooth_logger.h"
 #include "logicdata.h"
+#include "hardware.h"
 
 #if EFI_ENGINE_SNIFFER
 #include "engine_sniffer.h"
@@ -111,6 +112,8 @@ EngineTestHelper::EngineTestHelper(engine_type_e engineType, configuration_callb
 	engine->mockAirmassModel = &mockAirmass;
 
 	memset(mockPinStates, 0, sizeof(mockPinStates));
+
+	initHardware(PASS_ENGINE_PARAMETER_SIGNATURE);
 }
 
 EngineTestHelper::~EngineTestHelper() {

@@ -36,8 +36,7 @@ bool isBrainPinValid(brain_pin_e brainPin)
 	return true;
 }
 
-static int brainPin_to_index(brain_pin_e brainPin)
-{
+int brainPin_to_index(brain_pin_e brainPin) {
 	unsigned int i;
 
 	if (brainPin < GPIOA_0)
