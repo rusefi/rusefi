@@ -184,10 +184,12 @@ void turnOnTriggerInputPins(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 #endif /* (HAL_USE_ICU == TRUE) || (HAL_TRIGGER_USE_PAL == TRUE) */
 
 void applyNewTriggerInputPins(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+#if EFI_PROD_CODE
 	// first we will turn off all the changed pins
 	stopTriggerInputPins(PASS_ENGINE_PARAMETER_SIGNATURE);
 	// then we will enable all the changed pins
 	startTriggerInputPins(PASS_ENGINE_PARAMETER_SIGNATURE);
+#endif /* EFI_PROD_CODE */
 }
 
 #endif /* EFI_SHAFT_POSITION_INPUT */

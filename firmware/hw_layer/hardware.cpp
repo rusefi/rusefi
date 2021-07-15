@@ -310,7 +310,7 @@ void applyNewHardwareSettings(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
      */
 	ButtonDebounce::stopConfigurationList();
 
-#if EFI_SHAFT_POSITION_INPUT
+#if EFI_PROD_CODE && EFI_SHAFT_POSITION_INPUT
 	stopTriggerInputPins(PASS_ENGINE_PARAMETER_SIGNATURE);
 #endif /* EFI_SHAFT_POSITION_INPUT */
 
@@ -383,7 +383,7 @@ void applyNewHardwareSettings(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	 * Start everything back with new settings *
 	 ******************************************/
 
-#if EFI_SHAFT_POSITION_INPUT
+#if EFI_PROD_CODE && EFI_SHAFT_POSITION_INPUT
 	startTriggerInputPins(PASS_ENGINE_PARAMETER_SIGNATURE);
 #endif /* EFI_SHAFT_POSITION_INPUT */
 
