@@ -138,16 +138,10 @@ void stopTriggerInputPins(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 		if (isConfigurationChanged(triggerInputPins[i])) {
 			turnOffTriggerInputPin(i, true);
 		}
-		if (isConfigurationChanged(triggerInputDebugPins[i])) {
-			efiSetPadUnused(CONFIG(triggerInputDebugPins[i]));
-		}
 	}
 	for (int i = 0; i < CAM_INPUTS_COUNT; i++) {
 		if (isConfigurationChanged(camInputs[i])) {
 			turnOffTriggerInputPin(i, false);
-		}
-		if (isConfigurationChanged(camInputsDebug[i])) {
-			efiSetPadUnused(CONFIG(camInputsDebug[i]));
 		}
 	}
 }
@@ -158,17 +152,11 @@ void startTriggerInputPins(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 			const char * msg = (i == 0 ? "Trigger #1" : (i == 1 ? "Trigger #2" : "Trigger #3"));
 			turnOnTriggerInputPin(msg, i, true);
 		}
-		if (isConfigurationChanged(triggerInputDebugPins[i])) {
-			efiSetPadMode("trigger debug", CONFIG(triggerInputDebugPins[i]), PAL_MODE_OUTPUT_PUSHPULL);
-		}
 	}
 
 	for (int i = 0; i < CAM_INPUTS_COUNT; i++) {
 		if (isConfigurationChanged(camInputs[i])) {
 			turnOnTriggerInputPin("Cam", i, false);
-		}
-		if (isConfigurationChanged(camInputsDebug[i])) {
-			efiSetPadMode("cam debug", CONFIG(camInputsDebug[i]), PAL_MODE_OUTPUT_PUSHPULL);
 		}
 	}
 }
@@ -178,10 +166,37 @@ void turnOnTriggerInputPins(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	icuTriggerTurnOnInputPins();
 	extiTriggerTurnOnInputPins();
 
-	applyNewTriggerInputPins();
+	applyNewTriggerInputPins(PASS_ENGINE_PARAMETER_SIGNATURE);
 }
 
 #endif /* (HAL_USE_ICU == TRUE) || (HAL_TRIGGER_USE_PAL == TRUE) */
+
+
+void stopTriggerDebugPins(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+	for (int i = 0; i < TRIGGER_INPUT_PIN_COUNT; i++) {
+		if (isConfigurationChanged(triggerInputDebugPins[i])) {
+			efiSetPadUnused(CONFIG(triggerInputDebugPins[i]));
+		}
+	}
+	for (int i = 0; i < CAM_INPUTS_COUNT; i++) {
+		if (isConfigurationChanged(camInputsDebug[i])) {
+			efiSetPadUnused(CONFIG(camInputsDebug[i]));
+		}
+	}
+}
+
+void startTriggerDebugPins(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+	for (int i = 0; i < TRIGGER_INPUT_PIN_COUNT; i++) {
+		if (isConfigurationChanged(triggerInputDebugPins[i])) {
+			efiSetPadMode("trigger debug", CONFIG(triggerInputDebugPins[i]), PAL_MODE_OUTPUT_PUSHPULL);
+		}
+	}
+	for (int i = 0; i < CAM_INPUTS_COUNT; i++) {
+		if (isConfigurationChanged(camInputsDebug[i])) {
+			efiSetPadMode("cam debug", CONFIG(camInputsDebug[i]), PAL_MODE_OUTPUT_PUSHPULL);
+		}
+	}
+}
 
 void applyNewTriggerInputPins(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 #if EFI_PROD_CODE
