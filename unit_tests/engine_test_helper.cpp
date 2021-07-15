@@ -114,6 +114,7 @@ EngineTestHelper::EngineTestHelper(engine_type_e engineType, configuration_callb
 	memset(mockPinStates, 0, sizeof(mockPinStates));
 
 	initHardware(PASS_ENGINE_PARAMETER_SIGNATURE);
+	rememberCurrentConfiguration(PASS_ENGINE_PARAMETER_SIGNATURE);
 }
 
 EngineTestHelper::~EngineTestHelper() {
