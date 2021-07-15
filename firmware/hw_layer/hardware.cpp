@@ -269,7 +269,7 @@ static void adcConfigListener(Engine *engine) {
 	calcFastAdcIndexes();
 }
 
-static void turnOnHardware() {
+static void turnOnHardware(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 #if EFI_FASTER_UNIFORM_ADC
 	for (int i = 0; i < ADC_MAX_CHANNELS_COUNT; i++) {
 		averagedSamples[i] = 0;
@@ -278,7 +278,7 @@ static void turnOnHardware() {
 #endif /* EFI_FASTER_UNIFORM_ADC */
 
 #if EFI_SHAFT_POSITION_INPUT
-	turnOnTriggerInputPins();
+	turnOnTriggerInputPins(PASS_ENGINE_PARAMETER_SIGNATURE);
 #endif /* EFI_SHAFT_POSITION_INPUT */
 }
 
@@ -311,7 +311,7 @@ void applyNewHardwareSettings(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	ButtonDebounce::stopConfigurationList();
 
 #if EFI_SHAFT_POSITION_INPUT
-	stopTriggerInputPins();
+	stopTriggerInputPins(PASS_ENGINE_PARAMETER_SIGNATURE);
 #endif /* EFI_SHAFT_POSITION_INPUT */
 
 
@@ -384,7 +384,7 @@ void applyNewHardwareSettings(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	 ******************************************/
 
 #if EFI_SHAFT_POSITION_INPUT
-	startTriggerInputPins();
+	startTriggerInputPins(PASS_ENGINE_PARAMETER_SIGNATURE);
 #endif /* EFI_SHAFT_POSITION_INPUT */
 
 #if (HAL_USE_PAL && EFI_JOYSTICK)
@@ -562,7 +562,7 @@ void initHardware(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 //	init_adc_mcp3208(&adcState, &SPID2);
 //	requestAdcValue(&adcState, 0);
 
-	turnOnHardware();
+	turnOnHardware(PASS_ENGINE_PARAMETER_SIGNATURE);
 
 #if EFI_HIP_9011
 	initHip9011();

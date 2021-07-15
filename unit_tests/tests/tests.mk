@@ -25,6 +25,7 @@ TESTS_SRC_CPP = \
 	tests/lua/test_lua_basic.cpp \
 	tests/lua/test_lua_hooks.cpp \
 	tests/sensor/test_cj125.cpp \
+	tests/test_change_engine_type.cpp \
 	tests/util/test_timer.cpp \
 	tests/system/test_periodic_thread_controller.cpp \
 	tests/test_util.cpp \
