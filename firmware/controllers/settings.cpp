@@ -167,7 +167,7 @@ void printConfiguration(const engine_configuration_s *engineConfiguration) {
 #endif /* EFI_PROD_CODE */
 }
 
-static void doPrintConfiguration() {
+static void doPrintConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	printConfiguration(engineConfiguration);
 }
 
@@ -183,7 +183,7 @@ static void setTimingMode(int value) {
 	incrementGlobalConfigurationVersion(PASS_ENGINE_PARAMETER_SIGNATURE);
 }
 
-void setEngineType(int value) {
+void setEngineType(int value DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	{
 		chibios_rt::CriticalSectionLocker csl;
 
@@ -193,8 +193,7 @@ void setEngineType(int value) {
 
 	#if EFI_INTERNAL_FLASH
 		writeToFlashNow();
-	//	scheduleReset();
-	#endif /* EFI_PROD_CODE */
+	#endif /* EFI_INTERNAL_FLASH */
 	}
 	incrementGlobalConfigurationVersion(PASS_ENGINE_PARAMETER_SIGNATURE);
 	doPrintConfiguration();
