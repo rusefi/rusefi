@@ -133,7 +133,7 @@ static void turnOffTriggerInputPin(int index, bool isTriggerShaft) {
 /* Exported functions.														*/
 /*==========================================================================*/
 
-void stopTriggerInputPins(void) {
+void stopTriggerInputPins(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	for (int i = 0; i < TRIGGER_SUPPORTED_CHANNELS; i++) {
 		if (isConfigurationChanged(triggerInputPins[i])) {
 			turnOffTriggerInputPin(i, true);
@@ -152,7 +152,7 @@ void stopTriggerInputPins(void) {
 	}
 }
 
-void startTriggerInputPins(void) {
+void startTriggerInputPins(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	for (int i = 0; i < TRIGGER_SUPPORTED_CHANNELS; i++) {
 		if (isConfigurationChanged(triggerInputPins[i])) {
 			const char * msg = (i == 0 ? "Trigger #1" : (i == 1 ? "Trigger #2" : "Trigger #3"));
@@ -173,7 +173,7 @@ void startTriggerInputPins(void) {
 	}
 }
 
-void turnOnTriggerInputPins() {
+void turnOnTriggerInputPins(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	/* init all trigger HW available */
 	icuTriggerTurnOnInputPins();
 	extiTriggerTurnOnInputPins();
@@ -183,11 +183,11 @@ void turnOnTriggerInputPins() {
 
 #endif /* (HAL_USE_ICU == TRUE) || (HAL_TRIGGER_USE_PAL == TRUE) */
 
-void applyNewTriggerInputPins(void) {
+void applyNewTriggerInputPins(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	// first we will turn off all the changed pins
-	stopTriggerInputPins();
+	stopTriggerInputPins(PASS_ENGINE_PARAMETER_SIGNATURE);
 	// then we will enable all the changed pins
-	startTriggerInputPins();
+	startTriggerInputPins(PASS_ENGINE_PARAMETER_SIGNATURE);
 }
 
 #endif /* EFI_SHAFT_POSITION_INPUT */
