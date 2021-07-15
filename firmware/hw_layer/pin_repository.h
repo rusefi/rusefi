@@ -54,6 +54,7 @@ EXTERNC void gpio_pin_markUnused(ioportid_t port, ioportmask_t pin);
 int getPortPinIndex(ioportid_t port, ioportmask_t pin);
 ioportid_t getBrainPinPort(brain_pin_e brainPin);
 int getBrainPinIndex(brain_pin_e brainPin);
+int brainPin_to_index(brain_pin_e brainPin);
 unsigned int getBrainPinOnchipNum(void);
 unsigned int getBrainPinTotalNum(void);
 
