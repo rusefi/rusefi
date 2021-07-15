@@ -421,7 +421,7 @@ void handleShaftSignal(int signalIndex, bool isRising, efitick_t timestamp DECLA
 #if EFI_PROD_CODE
 		writePad("trigger debug", CONFIG(triggerInputDebugPins[signalIndex]), 1);
 #endif /* EFI_PROD_CODE */
-		engine->executor.scheduleByTimestamp("dbg_off", &debugToggleScheduling, timestamp + DEBUG_PIN_DELAY, &turnOffAllDebugFields);
+		engine->executor.scheduleByTimestampNt("dbg_off", &debugToggleScheduling, timestamp + DEBUG_PIN_DELAY, &turnOffAllDebugFields);
 	}
 
 #if EFI_TOOTH_LOGGER
