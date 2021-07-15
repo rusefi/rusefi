@@ -90,7 +90,7 @@ void setFordAspireEngineConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	engineConfiguration->useOnlyRisingEdgeForTrigger = true;
 	engineConfiguration->trigger.type = TT_FORD_ASPIRE;
 
-	engineConfiguration->triggerInputDebugPins[0] = GPIOC_15;
+// todo #2959	engineConfiguration->triggerInputDebugPins[0] = GPIOC_15;
 
 	engineConfiguration->injectionPins[4] = GPIO_UNASSIGNED;
 	engineConfiguration->injectionPins[5] = GPIO_UNASSIGNED;
