@@ -50,8 +50,10 @@ void AdcSubscription::SubscribeSensor(FunctionalSensor &sensor,
 		return;
 	}
 
+#if EFI_PROD_CODE
 	// Enable the input pin
 	efiSetPadMode(name, getAdcChannelBrainPin(name, channel), PAL_MODE_INPUT_ANALOG);
+#endif /* EFI_PROD_CODE */
 
 	// if 0, default to the board's divider coefficient
 	if (voltsPerAdcVolt == 0) {

@@ -692,7 +692,7 @@ void startIdleThread(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 			DISPLAY_TEXT(Manual_idle_control);
 	/* DISPLAY_ENDIF */
 
-#if ! EFI_UNIT_TEST
+#if EFI_PROD_CODE
 	// this is neutral/no gear switch input. on Miata it's wired both to clutch pedal and neutral in gearbox
 	// this switch is not used yet
 	if (isBrainPinValid(CONFIG(clutchDownPin))) {
@@ -711,11 +711,12 @@ void startIdleThread(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	}
 
 	if (isBrainPinValid(engineConfiguration->brakePedalPin)) {
-#if EFI_PROD_CODE
 		efiSetPadMode("brake pedal switch", engineConfiguration->brakePedalPin,
 				getInputMode(engineConfiguration->brakePedalPinMode));
-#endif /* EFI_PROD_CODE */
 	}
+#endif /* EFI_PROD_CODE */
+
+#if ! EFI_UNIT_TEST
 
 	addConsoleAction("idleinfo", showIdleInfo);
 

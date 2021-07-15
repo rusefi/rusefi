@@ -44,17 +44,18 @@ brain_pin_e getSckPin(spi_device_e device);
 
 #ifdef __cplusplus
 
-#if EFI_PROD_CODE
 #include "engine.h"
-#include "debounce.h"
 
-void applyNewHardwareSettings(void);
+void applyNewHardwareSettings(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 
 // Initialize hardware that doesn't require configuration to be loaded
-void initHardwareNoConfig();
+void initHardwareNoConfig(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 
 // Initialize hardware with configuration loaded
-void initHardware();
+void initHardware(DECLARE_ENGINE_PARAMETER_SIGNATURE);
+
+#if EFI_PROD_CODE
+#include "debounce.h"
 
 #endif /* EFI_PROD_CODE */
 

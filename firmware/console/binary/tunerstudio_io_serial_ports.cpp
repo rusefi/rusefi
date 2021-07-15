@@ -40,8 +40,10 @@ EXTERN_ENGINE;
 		PrimaryChannelThread() : TunerstudioThread("Primary TS Channel") { }
 
 		TsChannelBase* setupChannel() {
+#if EFI_PROD_CODE
 			efiSetPadMode("Primary Channel RX", EFI_CONSOLE_RX_BRAIN_PIN, PAL_MODE_ALTERNATE(EFI_CONSOLE_AF));
 			efiSetPadMode("Primary Channel TX", EFI_CONSOLE_TX_BRAIN_PIN, PAL_MODE_ALTERNATE(EFI_CONSOLE_AF));
+#endif /* EFI_PROD_CODE */
 
 			primaryChannel.start(CONFIG(uartConsoleSerialSpeed));
 
@@ -67,8 +69,10 @@ EXTERN_ENGINE;
 		SecondaryChannelThread() : TunerstudioThread("Secondary TS Channel") { }
 
 		TsChannelBase* setupChannel() {
+#if EFI_PROD_CODE
 			efiSetPadMode("Secondary Channel RX", engineConfiguration->binarySerialRxPin, PAL_MODE_ALTERNATE(TS_SERIAL_AF));
 			efiSetPadMode("Secondary Channel TX", engineConfiguration->binarySerialTxPin, PAL_MODE_ALTERNATE(TS_SERIAL_AF));
+#endif /* EFI_PROD_CODE */
 
 			secondaryChannel.start(CONFIG(uartConsoleSerialSpeed));
 

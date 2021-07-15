@@ -9,7 +9,6 @@
 #include "global.h"
 
 
-#if EFI_PROD_CODE
 #include "os_access.h"
 #include "trigger_input.h"
 #include "servo.h"
@@ -31,7 +30,10 @@
 #include "sensor_chart.h"
 #include "serial_hw.h"
 
+#if EFI_PROD_CODE
 #include "mpu_util.h"
+#endif /* EFI_PROD_CODE */
+
 #include "mmc_card.h"
 
 #include "AdcConfiguration.h"
@@ -136,8 +138,6 @@ SPIDriver * getSpiDevice(spi_device_e spiDevice) {
 	return NULL;
 }
 #endif
-
-#if EFI_PROD_CODE
 
 #define TPS_IS_SLOW -1
 
@@ -299,7 +299,7 @@ void stopSpi(spi_device_e device) {
  * todo: maybe start invoking this method on ECU start so that peripheral start-up initialization and restart are unified?
  */
 
-void applyNewHardwareSettings(void) {
+void applyNewHardwareSettings(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
     /**
      * All 'stop' methods need to go before we begin starting pins.
      *
@@ -427,7 +427,7 @@ void applyNewHardwareSettings(void) {
 
 #if EFI_IDLE_CONTROL
 	if (isIdleHardwareRestartNeeded()) {
-		 initIdleHardware();
+		 initIdleHardware(PASS_ENGINE_PARAMETER_SIGNATURE);
 	}
 #endif
 
@@ -439,7 +439,7 @@ void applyNewHardwareSettings(void) {
 	startBoostPin();
 #endif
 #if EFI_EMULATE_POSITION_SENSORS
-	startTriggerEmulatorPins();
+	startTriggerEmulatorPins(PASS_ENGINE_PARAMETER_SIGNATURE);
 #endif /* EFI_EMULATE_POSITION_SENSORS */
 #if EFI_LOGIC_ANALYZER
 	startLogicAnalyzerPins();
@@ -451,6 +451,7 @@ void applyNewHardwareSettings(void) {
 	adcConfigListener(engine);
 }
 
+#if EFI_PROD_CODE
 void setBor(int borValue) {
 	efiPrintf("setting BOR to %d", borValue);
 	BOR_Set((BOR_Level_t)borValue);
@@ -460,9 +461,10 @@ void setBor(int borValue) {
 void showBor(void) {
 	efiPrintf("BOR=%d", (int)BOR_Get());
 }
+#endif /* EFI_PROD_CODE */
 
 // This function initializes hardware that can do so before configuration is loaded
-void initHardwareNoConfig() {
+void initHardwareNoConfig(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	efiAssertVoid(CUSTOM_IH_STACK, getCurrentRemainingStack() > EXPECTED_REMAINING_STACK, "init h");
 	efiAssertVoid(CUSTOM_EC_NULL, engineConfiguration!=NULL, "engineConfiguration");
 	
@@ -483,10 +485,12 @@ void initHardwareNoConfig() {
 	 */
 	initPrimaryPins();
 
+#if EFI_PROD_CODE
 	// it's important to initialize this pretty early in the game before any scheduling usages
-	initSingleTimerExecutorHardware();
+	initSingleTimerExecutorHardware(PASS_ENGINE_PARAMETER_SIGNATURE);
 
 	initRtc();
+#endif /* EFI_PROD_CODE */
 
 #if EFI_INTERNAL_FLASH
 	initFlash();
@@ -502,7 +506,7 @@ void initHardwareNoConfig() {
 #endif // EFI_FILE_LOGGING
 }
 
-void initHardware() {
+void initHardware(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 #if EFI_HD44780_LCD
 	lcd_HD44780_init();
 	if (hasFirmwareError())
@@ -531,7 +535,7 @@ void initHardware() {
 	initSpiModules(engineConfiguration);
 #endif /* HAL_USE_SPI */
 
-#if BOARD_EXT_GPIOCHIPS > 0
+#if EFI_PROD_CODE && (BOARD_EXT_GPIOCHIPS > 0)
 	// initSmartGpio depends on 'initSpiModules'
 	initSmartGpio(PASS_ENGINE_PARAMETER_SIGNATURE);
 #endif
@@ -604,10 +608,6 @@ void initHardware() {
 
 	efiPrintf("initHardware() OK!");
 }
-
-#endif /* EFI_PROD_CODE */
-
-#endif  /* EFI_PROD_CODE || EFI_SIMULATOR */
 
 #if HAL_USE_SPI
 // this is F4 implementation but we will keep it here for now for simplicity
