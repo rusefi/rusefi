@@ -9,11 +9,9 @@
  * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
-#include "pin_repository.h"
+#include "engine.h"
 
 EXTERN_ENGINE;
-
-static PinRepository pinRepository;
 
 // todo: move this into PinRepository class
 static const char *PIN_USED[BRAIN_PIN_TOTAL_PINS];
@@ -85,7 +83,7 @@ bool brain_pin_markUsed(brain_pin_e brainPin, const char *msg DECLARE_ENGINE_PAR
 	}
 
 	getBrainUsedPin(index PASS_ENGINE_PARAMETER_SUFFIX) = msg;
-	pinRepository.totalPinsUsed++;
+	ENGINE(pinRepository).totalPinsUsed++;
 	return false;
 }
 
@@ -99,7 +97,7 @@ void brain_pin_markUnused(brain_pin_e brainPin DECLARE_ENGINE_PARAMETER_SUFFIX) 
 		return;
 
 	if (getBrainUsedPin(index PASS_ENGINE_PARAMETER_SUFFIX) != nullptr)
-		pinRepository.totalPinsUsed--;
+		ENGINE(pinRepository).totalPinsUsed--;
 	getBrainUsedPin(index PASS_ENGINE_PARAMETER_SUFFIX) = nullptr;
 }
 
@@ -190,7 +188,7 @@ static void reportPins(void) {
 		}
 	#endif
 
-	efiPrintf("Total pins count: %d", pinRepository.totalPinsUsed);
+	efiPrintf("Total pins count: %d", ENGINE(pinRepository).totalPinsUsed);
 }
 
 void printSpiConfig(const char *msg, spi_device_e device) {
@@ -284,7 +282,7 @@ bool gpio_pin_markUsed(ioportid_t port, ioportmask_t pin, const char *msg) {
 		return true;
 	}
 	getBrainUsedPin(index) = msg;
-	pinRepository.totalPinsUsed++;
+	engine->pinRepository.totalPinsUsed++;
 	return false;
 }
 
@@ -297,7 +295,7 @@ void gpio_pin_markUnused(ioportid_t port, ioportmask_t pin) {
 	int index = getPortPinIndex(port, pin);
 
 	if (getBrainUsedPin(index) != NULL)
-		pinRepository.totalPinsUsed--;
+		ENGINE(pinRepository).totalPinsUsed--;
 	getBrainUsedPin(index) = nullptr;
 }
 

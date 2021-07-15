@@ -19,6 +19,7 @@
 #include "buttonshift.h"
 #include "gear_controller.h"
 #include "limp_manager.h"
+#include "pin_repository.h"
 
 #if EFI_SIGNAL_EXECUTOR_ONE_TIMER
 // PROD real firmware uses this implementation
@@ -88,6 +89,8 @@ public:
 	int triggerActivitySecond = 0;
 
 	const char *prevOutputName = nullptr;
+
+	PinRepository pinRepository;
 
 	InjectionEvent primeInjEvent;
 
