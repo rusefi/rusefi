@@ -12,7 +12,7 @@
  * - merge comparator trigger
  */
 
-#if (EFI_PROD_CODE && EFI_SHAFT_POSITION_INPUT) || defined(__DOXYGEN__)
+#if (EFI_SHAFT_POSITION_INPUT) || defined(__DOXYGEN__)
 
 EXTERN_ENGINE;
 
@@ -109,7 +109,7 @@ static void turnOffTriggerInputPin(int index, bool isTriggerShaft) {
 		if (shaftTriggerType[index] == TRIGGER_ICU) {
 			icuTriggerTurnOffInputPin(brainPin);
 		}
-#endif
+#endif /* EFI_ICU_INPUTS */
 		if (shaftTriggerType[index] == TRIGGER_EXTI) {
 			extiTriggerTurnOffInputPin(brainPin);
 		}
@@ -120,7 +120,7 @@ static void turnOffTriggerInputPin(int index, bool isTriggerShaft) {
 		if (camTriggerType[index] == TRIGGER_ICU) {
 			icuTriggerTurnOffInputPin(brainPin);
 		}
-#endif
+#endif /* EFI_ICU_INPUTS */
 		if (camTriggerType[index] == TRIGGER_EXTI) {
 			extiTriggerTurnOffInputPin(brainPin);
 		}
