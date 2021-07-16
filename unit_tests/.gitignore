@@ -2,4 +2,4 @@
 build*/
 gcov_working_area
 triggers
-*.logicdata
+unittest*.logicdata

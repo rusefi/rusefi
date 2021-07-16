@@ -315,7 +315,7 @@ stm32_hardware_pwm* getNextPwmDevice() {
 #endif
 
 void jump_to_bootloader() {
-	// leave DFU breadcrumb which assmebly startup code would check, see [rusefi][DFU] section in assembly code
+	// leave DFU breadcrumb which assembly startup code would check, see [rusefi][DFU] section in assembly code
 	*((unsigned long *)0x2001FFF0) = 0xDEADBEEF; // End of RAM
 	// and now reboot
 	NVIC_SystemReset();

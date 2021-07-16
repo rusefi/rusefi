@@ -19,7 +19,7 @@ import static com.rusefi.ConfigField.BOOLEAN_T;
  */
 public class ReaderState {
     public static final String BIT = "bit";
-    protected static final String DEFINE = "#define";
+    public static final String DEFINE = "#define";
     private static final String CUSTOM = "custom";
     private static final String END_STRUCT = "end_struct";
     private static final String STRUCT_NO_PREFIX = "struct_no_prefix ";

@@ -8,7 +8,6 @@ import com.rusefi.autodetect.PortDetector;
 import com.rusefi.io.DfuHelper;
 import com.rusefi.io.IoStream;
 import com.rusefi.io.serial.SerialIoStreamJSerialComm;
-import com.rusefi.ui.StatusConsumer;
 import com.rusefi.ui.StatusWindow;
 import com.rusefi.ui.util.URLLabel;
 
@@ -33,15 +32,21 @@ public class DfuFlasher {
         button.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent event) {
-                doAutoDfu(comboPorts);
+                // todo: better usability would be to disable "Program" port in case of no ports found
+                Object selectedItem = comboPorts.getSelectedItem();
+                if (selectedItem == null) {
+                    JOptionPane.showMessageDialog(comboPorts, "Failed to located serial ports");
+                } else {
+                    doAutoDfu(selectedItem);
+                }
             }
         });
 
         manualButton.addActionListener(e -> runDfuProgramming());
     }
 
-    public static void doAutoDfu(JComboBox<String> comboPorts) {
-        String port = comboPorts.getSelectedItem().toString();
+    public static void doAutoDfu(Object selectedItem) {
+        String port = selectedItem.toString();
         StringBuilder messages = new StringBuilder();
 
         if (!PortDetector.isAutoPort(port)) {

@@ -13,9 +13,6 @@
 
 #if EFI_GPIO_HARDWARE
 
-// todo: move this into PinRepository class
-static const char *PIN_USED[BRAIN_PIN_TOTAL_PINS];
-
 // This is the radical departure from STM32
 #define PORT_SIZE 18
 
@@ -126,20 +123,6 @@ brain_pin_e parseBrainPin(const char *str) {
 
 unsigned int getBrainPinOnchipNum(void) {
 	return BRAIN_PIN_ONCHIP_PINS;
-}
-
-unsigned int getBrainPinTotalNum(void) {
-	return BRAIN_PIN_TOTAL_PINS;
-}
-
-void initBrainUsedPins(void) {
-	memset(PIN_USED, 0, sizeof(PIN_USED));
-}
-
-const char* & getBrainUsedPin(unsigned int idx) {
-	/* if (idx >= getBrainPinTotalNum())
-		return NULL; */
-	return PIN_USED[idx];
 }
 
 #endif /* EFI_GPIO_HARDWARE */

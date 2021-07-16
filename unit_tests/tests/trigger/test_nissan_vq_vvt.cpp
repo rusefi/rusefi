@@ -58,7 +58,7 @@ static void scheduleTriggerEvents(TriggerWaveform *shape,
 			param->vvtBankIndex = vvtBankIndex;
 
 			scheduling_s *sch = new scheduling_s();
-			engine->executor.scheduleByTimestamp(sch, timeScale * 1000 * angle, { func, param });
+			engine->executor.scheduleByTimestamp("test", sch, timeScale * 1000 * angle, { func, param });
 			totalIndex++;
 		}
 	}
@@ -108,22 +108,29 @@ TEST(nissan, vq_vvt) {
 				PASS_ENGINE_PARAMETER_SUFFIX);
 	}
 
+	eth.executeUntil(1473000);
+	ASSERT_EQ(0, GET_RPM());
+
+	eth.executeUntil(1475000);
+	ASSERT_EQ(167, GET_RPM());
+	TriggerCentral *tc = &engine->triggerCentral;
+
+	eth.executeUntil(3593000);
+	ASSERT_TRUE(tc->vvtState[0][0].getShaftSynchronized());
+
 	scheduling_s *head;
 	while ((head = engine->executor.getHead()) != nullptr) {
 		eth.setTimeAndInvokeEventsUs(head->momentX);
+
+		ASSERT_TRUE(tc->vvtState[0][0].getShaftSynchronized());
+		// let's celebrate that vvtPosition stays the same
+    	ASSERT_NEAR(-testVvtOffset, tc->vvtPosition[0][0], EPS2D);
 	}
 
-	ASSERT_EQ(167, GET_RPM());
-
-	TriggerCentral *tc = &engine->triggerCentral;
-
-
-	ASSERT_TRUE(tc->vvtState[0][0].getShaftSynchronized());
 	ASSERT_TRUE(tc->vvtState[1][0].getShaftSynchronized());
 
 	ASSERT_NEAR(-testVvtOffset, tc->vvtPosition[0][0], EPS2D);
 	ASSERT_NEAR(-testVvtOffset, tc->vvtPosition[1][0], EPS2D);
 
-// todo: reducing warning here is a separate story
-	EXPECT_EQ(1, eth.recentWarnings()->getCount());
+	EXPECT_EQ(0, eth.recentWarnings()->getCount());
 }

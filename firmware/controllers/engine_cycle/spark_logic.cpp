@@ -128,6 +128,14 @@ static void prepareCylinderIgnitionSchedule(angle_t dwellAngleDuration, floatms_
 #endif /* FUEL_MATH_EXTREME_LOGGING */
 }
 
+static void chargeTrailingSpark(IgnitionOutputPin* pin) {
+	pin->setValue(1);
+}
+
+static void fireTrailingSpark(IgnitionOutputPin* pin) {
+	pin->setValue(0);
+}
+
 void fireSparkAndPrepareNextSchedule(IgnitionEvent *event) {
 	for (int i = 0; i< MAX_OUTPUTS_FOR_IGNITION;i++) {
 		IgnitionOutputPin *output = event->outputs[i];
@@ -186,19 +194,25 @@ if (engineConfiguration->debugMode == DBG_DWELL_METRIC) {
 	}
 
 	// If there are more sparks to fire, schedule them
-	if (event->sparksRemaining > 0)
-	{
+	if (event->sparksRemaining > 0) {
 		event->sparksRemaining--;
 
 		efitick_t nextDwellStart = nowNt + engine->engineState.multispark.delay;
 		efitick_t nextFiring = nextDwellStart + engine->engineState.multispark.dwell;
 
 		// We can schedule both of these right away, since we're going for "asap" not "particular angle"
-		engine->executor.scheduleByTimestampNt(&event->dwellStartTimer, nextDwellStart, { &turnSparkPinHigh, event });
-		engine->executor.scheduleByTimestampNt(&event->sparkEvent.scheduling, nextFiring, { fireSparkAndPrepareNextSchedule, event });
-	}
-	else
-	{
+		engine->executor.scheduleByTimestampNt("dwell", &event->dwellStartTimer, nextDwellStart, { &turnSparkPinHigh, event });
+		engine->executor.scheduleByTimestampNt("firing", &event->sparkEvent.scheduling, nextFiring, { fireSparkAndPrepareNextSchedule, event });
+	} else {
+		if (CONFIG(enableTrailingSparks)) {
+			// Trailing sparks are enabled - schedule an event for the corresponding trailing coil
+			scheduleByAngle(
+				&event->trailingSparkFire, nowNt, ENGINE(engineState.trailingSparkAngle),
+				{ &fireTrailingSpark, &enginePins.trailingCoils[event->cylinderNumber] }
+				PASS_ENGINE_PARAMETER_SUFFIX
+			);
+		}
+
 		// If all events have been scheduled, prepare for next time.
 		prepareCylinderIgnitionSchedule(dwellAngleDuration, sparkDwell, event PASS_ENGINE_PARAMETER_SUFFIX);
 	}
@@ -268,6 +282,15 @@ void turnSparkPinHigh(IgnitionEvent *event) {
 		if (output != NULL) {
 			startDwellByTurningSparkPinHigh(event, output);
 		}
+	}
+
+	if (CONFIG(enableTrailingSparks)) {
+		// Trailing sparks are enabled - schedule an event for the corresponding trailing coil
+		scheduleByAngle(
+			&event->trailingSparkCharge, nowNt, ENGINE(engineState.trailingSparkAngle),
+			{ &chargeTrailingSpark, &enginePins.trailingCoils[event->cylinderNumber] }
+			PASS_ENGINE_PARAMETER_SUFFIX
+		);
 	}
 }
 

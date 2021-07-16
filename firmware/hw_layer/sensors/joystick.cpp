@@ -124,8 +124,6 @@ void initJoystick() {
 // not used so far	applyPin(CONFIG(joystickCPin));
 	channel = getHwPin("joy", CONFIG(joystickDPin));
 	efiExtiEnablePin("joy", CONFIG(joystickDPin), PAL_EVENT_MODE_RISING_EDGE, (palcallback_t)(void *)extCallback, (void *)channel);
-
-	startJoystickPins();
 }
 
 #endif /* HAL_USE_PAL && EFI_JOYSTICK */

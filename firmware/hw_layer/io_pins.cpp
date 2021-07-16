@@ -11,78 +11,20 @@
 #include "io_pins.h"
 #include "efi_gpio.h"
 #include "engine.h"
-
-EXTERN_ENGINE;
+#include "pin_repository.h"
 
 #if EFI_PROD_CODE
-
 #include "os_access.h"
 #include "drivers/gpio/gpio_ext.h"
 
-#include "pin_repository.h"
 #include "status_loop.h"
-#include "engine_configuration.h"
 #include "console_io.h"
+#endif /* EFI_PROD_CODE */
 
+EXTERN_ENGINE;
 
-#if EFI_ENGINE_CONTROL
-#include "main_trigger_callback.h"
-#endif /* EFI_ENGINE_CONTROL */
-
-bool efiReadPin(brain_pin_e pin) {
-	if (!isBrainPinValid(pin))
-		return false;
-	if (brain_pin_is_onchip(pin))
-		return palReadPad(getHwPort("readPin", pin), getHwPin("readPin", pin));
-	#if (BOARD_EXT_GPIOCHIPS > 0)
-		else if (brain_pin_is_ext(pin))
-			return (gpiochips_readPad(pin) > 0);
-	#endif
-
-	/* incorrect pin */
-	return false;
-}
-
-
-void efiSetPadModeWithoutOwnershipAcquisition(const char *msg, brain_pin_e brainPin, iomode_t mode)
-{
-	/*check if on-chip pin or external */
-	if (brain_pin_is_onchip(brainPin)) {
-		/* on-chip */
-		ioportid_t port = getHwPort(msg, brainPin);
-		ioportmask_t pin = getHwPin(msg, brainPin);
-		/* paranoid */
-		if (port == GPIO_NULL)
-			return;
-
-		palSetPadMode(port, pin, mode);
-	}
-	#if (BOARD_EXT_GPIOCHIPS > 0)
-		else {
-			gpiochips_setPadMode(brainPin, mode);
-		}
-	#endif
-}
-
-/**
- * This method would set an error condition if pin is already used
- */
-void efiSetPadMode(const char *msg, brain_pin_e brainPin, iomode_t mode)
-{
-	if (!isBrainPinValid(brainPin)) {
-		// No pin configured, nothing to do here.
-		return;
-	}
-
-	bool wasUsed = brain_pin_markUsed(brainPin, msg);
-
-	if (!wasUsed) {
-		efiSetPadModeWithoutOwnershipAcquisition(msg, brainPin, mode);
-	}
-}
-
-void efiSetPadUnused(brain_pin_e brainPin)
-{
+void efiSetPadUnused(brain_pin_e brainPin DECLARE_ENGINE_PARAMETER_SUFFIX) {
+#if EFI_PROD_CODE
 	/* input with pull up, is it safe? */
 	iomode_t mode = PAL_STM32_MODE_INPUT | PAL_STM32_PUPDR_PULLUP;
 
@@ -101,8 +43,67 @@ void efiSetPadUnused(brain_pin_e brainPin)
 			gpiochips_setPadMode(brainPin, mode);
 		}
 	#endif
+#endif /* EFI_PROD_CODE */
 
-	brain_pin_markUnused(brainPin);
+	brain_pin_markUnused(brainPin PASS_ENGINE_PARAMETER_SUFFIX);
+}
+
+/**
+ * This method would set an error condition if pin is already used
+ */
+void efiSetPadMode(const char *msg, brain_pin_e brainPin, iomode_t mode DECLARE_ENGINE_PARAMETER_SUFFIX) {
+	if (!isBrainPinValid(brainPin)) {
+		// No pin configured, nothing to do here.
+		return;
+	}
+
+	bool wasUsed = brain_pin_markUsed(brainPin, msg PASS_ENGINE_PARAMETER_SUFFIX);
+
+	if (!wasUsed) {
+		efiSetPadModeWithoutOwnershipAcquisition(msg, brainPin, mode);
+	}
+}
+
+void efiSetPadModeWithoutOwnershipAcquisition(const char *msg, brain_pin_e brainPin, iomode_t mode) {
+#if EFI_PROD_CODE
+	/*check if on-chip pin or external */
+	if (brain_pin_is_onchip(brainPin)) {
+		/* on-chip */
+		ioportid_t port = getHwPort(msg, brainPin);
+		ioportmask_t pin = getHwPin(msg, brainPin);
+		/* paranoid */
+		if (port == GPIO_NULL)
+			return;
+
+		palSetPadMode(port, pin, mode);
+	}
+	#if (BOARD_EXT_GPIOCHIPS > 0)
+		else {
+			gpiochips_setPadMode(brainPin, mode);
+		}
+	#endif
+
+#endif /* EFI_PROD_CODE */
+}
+
+#if EFI_PROD_CODE
+
+#if EFI_ENGINE_CONTROL
+#include "main_trigger_callback.h"
+#endif /* EFI_ENGINE_CONTROL */
+
+bool efiReadPin(brain_pin_e pin) {
+	if (!isBrainPinValid(pin))
+		return false;
+	if (brain_pin_is_onchip(pin))
+		return palReadPad(getHwPort("readPin", pin), getHwPin("readPin", pin));
+	#if (BOARD_EXT_GPIOCHIPS > 0)
+		else if (brain_pin_is_ext(pin))
+			return (gpiochips_readPad(pin) > 0);
+	#endif
+
+	/* incorrect pin */
+	return false;
 }
 
 iomode_t getInputMode(pin_input_mode_e mode) {
@@ -130,7 +131,11 @@ void efiIcuStart(const char *msg, ICUDriver *icup, const ICUConfig *config) {
 }
 #endif /* HAL_USE_ICU */
 
-#else
+void writePad(const char *msg, brain_pin_e pin, int bit) {
+	palWritePad(getHwPort(msg, pin), getHwPin(msg, pin), bit);
+}
+
+#else /* EFI_PROD_CODE */
 
 // This has been made global so we don't need to worry about efiReadPin having access the object
 //  we store it in, every time we need to use efiReadPin.

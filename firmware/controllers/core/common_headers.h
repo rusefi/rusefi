@@ -23,6 +23,7 @@
 
 #include "error_handling.h"
 #include "auto_generated_enums.h"
+#include "auto_generated_commonenum.h"
 #include "efilib.h"
 #include "efitime.h"
 

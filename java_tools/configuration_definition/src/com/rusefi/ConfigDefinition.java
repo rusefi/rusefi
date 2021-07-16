@@ -92,7 +92,7 @@ public class ConfigDefinition {
             return;
         }
 
-        SystemOut.println("Invoked with " + Arrays.toString(args));
+        SystemOut.println(ConfigDefinition.class + " Invoked with " + Arrays.toString(args));
 
         String tsPath = null;
         String destCHeaderFileName = null;
@@ -411,6 +411,7 @@ public class ConfigDefinition {
         SystemOut.println(data);
         Objects.requireNonNull(data, "data");
         for (Map<String, Object> pin : data) {
+            ArrayList<Map<String, Object>> thisPinList = new ArrayList<>();
             Object pinId = pin.get("id");
             Object pinClass = pin.get("class");
             Object pinName = pin.get("ts_name");
@@ -423,22 +424,36 @@ public class ConfigDefinition {
                     throw new IllegalStateException("Expected multiple classes for " + pinIds);
                 for (int i = 0; i < pinIds.size(); i++) {
                     String id = pinIds.get(i);
-                    Map<String, Object> thisPin = new HashMap<>();
-                    thisPin.put("id", id);
-                    thisPin.put("ts_name", pinName);
-                    thisPin.put("class", ((ArrayList<String>) pinClass).get(i));
-                    listPins.add(thisPin);
+                    addPinToList(listPins, thisPinList, id, pinName, ((ArrayList<String>) pinClass).get(i));
                 }
             } else if (pinId instanceof String) {
-                Map<String, Object> thisPin = new HashMap<>();
-                thisPin.put("id", pinId);
-                thisPin.put("ts_name", pinName);
-                thisPin.put("class", pinClass);
-                listPins.add(thisPin);
+                if (((String) pinId).length() == 0) {
+                    throw new IllegalStateException("Unexpected empty ID field");
+                }
+                addPinToList(listPins, thisPinList, pinId, pinName, pinClass);
             } else {
-                throw new IllegalStateException("Unexpected type of id field: " + pinId.getClass().getSimpleName());
+                throw new IllegalStateException("Unexpected type of ID field: " + pinId.getClass().getSimpleName());
+            }
+            listPins.addAll(thisPinList);
+        }
+    }
+
+    private static void addPinToList(ArrayList<Map<String, Object>> listPins, ArrayList<Map<String, Object>> thisPinList, Object id, Object pinName, Object pinClass) {
+/*
+ This doesn't work as expected because it's possible that a board has multiple connector pins connected to the same MCU pin.
+ https://github.com/rusefi/rusefi/issues/2897
+ https://github.com/rusefi/rusefi/issues/2925
+        for (int i = 0; i < listPins.size(); i++) {
+            if (id.equals(listPins.get(i).get("id"))) {
+                throw new IllegalStateException("ID used multiple times: " + id);
             }
         }
+*/
+        Map<String, Object> thisPin = new HashMap<>();
+        thisPin.put("id", id);
+        thisPin.put("ts_name", pinName);
+        thisPin.put("class", pinClass);
+        thisPinList.add(thisPin);
     }
 
     private static void registerPins(ArrayList<Map<String, Object>> listPins, VariableRegistry registry, ReaderState state) {
@@ -452,12 +467,6 @@ public class ConfigDefinition {
         names.put("switch_inputs", new ArrayList<>());
         for (int i = 0; i < listPins.size(); i++) {
             String id = (String) listPins.get(i).get("id");
-            for (int ii = i + 1; ii < listPins.size(); ii++) {
-                if (id.equals(listPins.get(ii).get("id"))) {
-                    // todo: re-enable once we fix https://github.com/rusefi/rusefi/issues/2897
-                    //throw new IllegalStateException("ID used multiple times: " + id);
-                }
-            }
             String className = (String) listPins.get(i).get("class");
             ArrayList<String> classList = names.get(className);
             if (classList == null) {
@@ -582,6 +591,10 @@ public class ConfigDefinition {
             int v = Integer.parseInt(line);
             registry.register(name, v);
         } else {
+            if (line.contains(" ") && !VariableRegistry.isQuoted(line, '\"') && !VariableRegistry.isQuoted(line, '\'')) {
+                throw new IllegalStateException("Unexpected space in unquoted " + line);
+            }
+
             registry.register(name, line);
         }
     }

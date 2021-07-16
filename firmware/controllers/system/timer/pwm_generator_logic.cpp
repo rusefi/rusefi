@@ -269,7 +269,7 @@ static void timerCallback(PwmConfig *state) {
 		return;
 	}
 
-	state->executor->scheduleByTimestampNt(&state->scheduling, switchTimeNt, { timerCallback, state });
+	state->executor->scheduleByTimestampNt("pwm", &state->scheduling, switchTimeNt, { timerCallback, state });
 	state->dbgNestingLevel--;
 }
 

@@ -92,9 +92,10 @@
 #include "hip9011.h"
 #endif
 
+#include "hardware.h"
+
 #if EFI_PROD_CODE
 #include "init.h"
-#include "hardware.h"
 #include "board.h"
 #endif /* EFI_PROD_CODE */
 
@@ -173,11 +174,13 @@ void incrementGlobalConfigurationVersion(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 #if EFI_DEFAILED_LOGGING
 	efiPrintf("set globalConfigurationVersion=%d", globalConfigurationVersion);
 #endif /* EFI_DEFAILED_LOGGING */
+
+	applyNewHardwareSettings(PASS_ENGINE_PARAMETER_SIGNATURE);
+
 /**
  * All these callbacks could be implemented as listeners, but these days I am saving RAM
  */
 #if EFI_PROD_CODE
-	applyNewHardwareSettings();
 	reconfigureSensors();
 #endif /* EFI_PROD_CODE */
 	engine->preCalculate(PASS_ENGINE_PARAMETER_SIGNATURE);
@@ -947,11 +950,24 @@ void resetConfigurationExt(configuration_callback_t boardCallback, engine_type_e
 	case HELLEN_121_NISSAN:
 		setHellen121nissan(PASS_CONFIG_PARAMETER_SIGNATURE);
 		break;
+	case HELLEN_121_VAG_5_CYL:
+	    setHellen121Vag_5_cyl(PASS_CONFIG_PARAMETER_SIGNATURE);
+        break;
+	case HELLEN_121_VAG_V6_CYL:
+	    setHellen121Vag_v6_cyl(PASS_CONFIG_PARAMETER_SIGNATURE);
+        break;
+	case HELLEN_121_VAG_VR6_CYL:
+	    setHellen121Vag_vr6_cyl(PASS_CONFIG_PARAMETER_SIGNATURE);
+        break;
+	case HELLEN_121_VAG_8_CYL:
+	    setHellen121Vag_8_cyl(PASS_CONFIG_PARAMETER_SIGNATURE);
+        break;
 	case HELLEN_121_VAG:
 	case HELLEN_55_BMW:
 	case HELLEN_88_BMW:
 	case HELLEN_134_BMW:
 	case HELLEN_154_VAG:
+		break;
 	case HELLEN_NA6:
 	case HELLEN_NA94:
 		setHellenNA6(PASS_CONFIG_PARAMETER_SIGNATURE);

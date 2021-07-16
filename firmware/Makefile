@@ -1,6 +1,6 @@
 ##############################################################################
-# Build global options
-# NOTE: Can be overridden externally.
+# see readme.md
+# see setup_linux_environment.sh but Windows is also totally fine
 #
 
 CHIBIOS = ChibiOS

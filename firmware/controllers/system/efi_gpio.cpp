@@ -36,8 +36,13 @@ EnginePins enginePins;
 pin_output_mode_e DEFAULT_OUTPUT = OM_DEFAULT;
 pin_output_mode_e INVERTED_OUTPUT = OM_INVERTED;
 
-static const char *sparkNames[] = { "Coil 1", "Coil 2", "Coil 3", "Coil 4", "Coil 5", "Coil 6", "Coil 7", "Coil 8",
+static const char* const sparkNames[] = { "Coil 1", "Coil 2", "Coil 3", "Coil 4", "Coil 5", "Coil 6", "Coil 7", "Coil 8",
 		"Coil 9", "Coil 10", "Coil 11", "Coil 12"};
+
+static const char* const trailNames[] = { "Trail 1", "Trail 2", "Trail 3", "Trail 4", "Trail 5", "Trail 6", "Trail 7", "Trail 8",
+		"Trail 9", "Trail 10", "Trail 11", "Trail 12"};
+
+static const char* const trailShortNames[] = { "t1", "t2", "t3", "t4", "t5", "t6", "t7", "t8", "t9", "tA", "tB", "tD" };
 
 const char *vvtNames[] = {
 		PROTOCOL_VVT1_NAME,
@@ -46,16 +51,16 @@ const char *vvtNames[] = {
 		PROTOCOL_VVT4_NAME};
 
 // these short names are part of engine sniffer protocol
-static const char *sparkShortNames[] = { PROTOCOL_COIL1_SHORT_NAME, "c2", "c3", "c4", "c5", "c6", "c7", "c8",
+static const char* const sparkShortNames[] = { PROTOCOL_COIL1_SHORT_NAME, "c2", "c3", "c4", "c5", "c6", "c7", "c8",
 		"c9", "cA", "cB", "cD"};
 
-static const char *injectorNames[] = { "Injector 1", "Injector 2", "Injector 3", "Injector 4", "Injector 5", "Injector 6",
+static const char* const injectorNames[] = { "Injector 1", "Injector 2", "Injector 3", "Injector 4", "Injector 5", "Injector 6",
 		"Injector 7", "Injector 8", "Injector 9", "Injector 10", "Injector 11", "Injector 12"};
 
-static const char *injectorShortNames[] = { PROTOCOL_INJ1_SHORT_NAME, "i2", "i3", "i4", "i5", "i6", "i7", "i8",
+static const char* const injectorShortNames[] = { PROTOCOL_INJ1_SHORT_NAME, "i2", "i3", "i4", "i5", "i6", "i7", "i8",
 		"j9", "iA", "iB", "iC"};
 
-static const char *auxValveShortNames[] = { "a1", "a2"};
+static const char* const auxValveShortNames[] = { "a1", "a2"};
 
 static RegisteredOutputPin * registeredOutputHead = nullptr;
 
@@ -128,10 +133,14 @@ EnginePins::EnginePins() :
 	hpfpValve.name = PROTOCOL_HPFP_NAME;
 
 	static_assert(efi::size(sparkNames) >= MAX_CYLINDER_COUNT, "Too many ignition pins");
+	static_assert(efi::size(trailNames) >= MAX_CYLINDER_COUNT, "Too many ignition pins");
 	static_assert(efi::size(injectorNames) >= MAX_CYLINDER_COUNT, "Too many injection pins");
 	for (int i = 0; i < MAX_CYLINDER_COUNT;i++) {
 		enginePins.coils[i].name = sparkNames[i];
 		enginePins.coils[i].shortName = sparkShortNames[i];
+
+		enginePins.trailingCoils[i].name = trailNames[i];
+		enginePins.trailingCoils[i].shortName = trailShortNames[i];
 
 		enginePins.injectors[i].injectorIndex = i;
 		enginePins.injectors[i].name = injectorNames[i];
@@ -148,7 +157,6 @@ EnginePins::EnginePins() :
  * Sets the value of the pin. On this layer the value is assigned as is, without any conversion.
  */
 
-#if EFI_PROD_CODE
 #define unregisterOutputIfPinChanged(output, pin) {                                \
 	if (isConfigurationChanged(pin)) {                                             \
 		(output).deInit();                        \
@@ -161,13 +169,12 @@ EnginePins::EnginePins() :
 	}                                                                              \
 }
 
-#endif /* EFI_PROD_CODE */
-
 bool EnginePins::stopPins() {
 	bool result = false;
 	for (int i = 0; i < MAX_CYLINDER_COUNT; i++) {
 		result |= coils[i].stop();
 		result |= injectors[i].stop();
+		result |= trailingCoils[i].stop();
 	}
 	for (int i = 0; i < AUX_DIGITAL_VALVE_COUNT; i++) {
 		result |= auxValve[i].stop();
@@ -177,13 +184,13 @@ bool EnginePins::stopPins() {
 
 void EnginePins::unregisterPins() {
 	stopInjectionPins();
-    stopIgnitionPins();
-    stopAuxValves();
+	stopIgnitionPins();
+	stopAuxValves();
 
 #if EFI_ELECTRONIC_THROTTLE_BODY
 	unregisterEtbPins();
 #endif /* EFI_ELECTRONIC_THROTTLE_BODY */
-#if EFI_PROD_CODE
+
 	// todo: add pinMode
 	unregisterOutputIfPinChanged(sdCsPin, sdCardCsPin);
 	unregisterOutputIfPinChanged(accelerometerCs, LIS302DLCsPin);
@@ -191,7 +198,6 @@ void EnginePins::unregisterPins() {
 	for (int i = 0;i < FSIO_COMMAND_COUNT;i++) {
 		unregisterOutputIfPinChanged(fsioOutputs[i], fsioOutputPins[i]);
 	}
-#endif /* EFI_PROD_CODE */
 
 	RegisteredOutputPin * pin = registeredOutputHead;
 	while (pin != nullptr) {
@@ -201,16 +207,14 @@ void EnginePins::unregisterPins() {
 }
 
 void EnginePins::debug() {
-#if EFI_PROD_CODE
 	RegisteredOutputPin * pin = registeredOutputHead;
 	while (pin != nullptr) {
 		efiPrintf("%s %d", pin->registrationName, pin->currentLogicValue);
 		pin = pin->next;
 	}
-#endif // EFI_PROD_CODE
 }
 
-void EnginePins::startPins(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+void EnginePins::startPins() {
 #if EFI_ENGINE_CONTROL
 	startInjectionPins();
 	startIgnitionPins();
@@ -228,27 +232,24 @@ void EnginePins::reset() {
 	for (int i = 0; i < MAX_CYLINDER_COUNT;i++) {
 		injectors[i].reset();
 		coils[i].reset();
+		trailingCoils[i].reset();
 	}
 }
 
-void EnginePins::stopIgnitionPins(void) {
-#if EFI_PROD_CODE
+void EnginePins::stopIgnitionPins() {
 	for (int i = 0; i < MAX_CYLINDER_COUNT; i++) {
 		unregisterOutputIfPinOrModeChanged(enginePins.coils[i], ignitionPins[i], ignitionPinMode);
+		unregisterOutputIfPinOrModeChanged(enginePins.trailingCoils[i], trailingCoilPins[i], ignitionPinMode);
 	}
-#endif /* EFI_PROD_CODE */
 }
 
-void EnginePins::stopInjectionPins(void) {
-#if EFI_PROD_CODE
+void EnginePins::stopInjectionPins() {
 	for (int i = 0; i < MAX_CYLINDER_COUNT; i++) {
 		unregisterOutputIfPinOrModeChanged(enginePins.injectors[i], injectionPins[i], injectionPinMode);
 	}
-#endif /* EFI_PROD_CODE */
 }
 
-void EnginePins::stopAuxValves(void) {
-#if EFI_PROD_CODE
+void EnginePins::stopAuxValves() {
 	for (int i = 0; i < AUX_DIGITAL_VALVE_COUNT; i++) {
 		NamedOutputPin *output = &enginePins.auxValve[i];
 		// todo: do we need auxValveMode and reuse code?
@@ -256,10 +257,9 @@ void EnginePins::stopAuxValves(void) {
 			(output)->deInit();
 		}
 	}
-#endif /* EFI_PROD_CODE */
 }
 
-void EnginePins::startAuxValves(void) {
+void EnginePins::startAuxValves() {
 #if EFI_PROD_CODE
 	for (int i = 0; i < AUX_DIGITAL_VALVE_COUNT; i++) {
 		NamedOutputPin *output = &enginePins.auxValve[i];
@@ -271,9 +271,14 @@ void EnginePins::startAuxValves(void) {
 #endif /* EFI_PROD_CODE */
 }
 
-void EnginePins::startIgnitionPins(void) {
+void EnginePins::startIgnitionPins() {
 #if EFI_PROD_CODE
 	for (size_t i = 0; i < engineConfiguration->specs.cylindersCount; i++) {
+		NamedOutputPin *trailingOutput = &enginePins.trailingCoils[i];
+		if (isPinOrModeChanged(trailingCoilPins[i], ignitionPinMode)) {
+			trailingOutput->initPin(trailingOutput->name, CONFIG(trailingCoilPins)[i], &CONFIG(ignitionPinMode));
+		}
+
 		NamedOutputPin *output = &enginePins.coils[i];
 		if (isPinOrModeChanged(ignitionPins[i], ignitionPinMode)) {
 			output->initPin(output->name, CONFIG(ignitionPins)[i], &CONFIG(ignitionPinMode));
@@ -282,7 +287,7 @@ void EnginePins::startIgnitionPins(void) {
 #endif /* EFI_PROD_CODE */
 }
 
-void EnginePins::startInjectionPins(void) {
+void EnginePins::startInjectionPins() {
 #if EFI_PROD_CODE
 	// todo: should we move this code closer to the injection logic?
 	for (size_t i = 0; i < engineConfiguration->specs.cylindersCount; i++) {
@@ -614,6 +619,7 @@ void turnAllPinsOff(void) {
 	for (int i = 0; i < MAX_CYLINDER_COUNT; i++) {
 		enginePins.injectors[i].setValue(false);
 		enginePins.coils[i].setValue(false);
+		enginePins.trailingCoils[i].setValue(false);
 	}
 }
 #endif /* EFI_GPIO_HARDWARE */

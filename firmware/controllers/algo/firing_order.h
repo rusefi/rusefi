@@ -31,10 +31,11 @@ typedef enum {
 	FO_1_2_4_5_3 = 6,
 
 	// 6 cylinder
-	FO_1_5_3_6_2_4 = 4,
+	FO_1_5_3_6_2_4 = 4, // VAG VR6
 	FO_1_4_2_5_3_6 = 7,
 	FO_1_2_3_4_5_6 = 9, // all Nissan v6
 	FO_1_6_3_2_5_4 = 13, // EG33
+	FO_1_4_3_6_2_5 = 27, // VAG v6 different from VAG VR6
 
 	// todo: one day we shall support 7 cylinder radial, probably not before one actually approaches us
 
@@ -65,7 +66,7 @@ typedef enum {
 	// unfortunately not supported by default firmware because MAX_CYLINDER_COUNT=12 by default
 	FO_1_14_9_4_7_12_15_6_13_8_3_16_11_2_5_10 = 22, // WR16
 
-	// max used = 26
+	// max used = 27
 
 	Force_4b_firing_order = ENUM_32_BITS,
 } firing_order_e;

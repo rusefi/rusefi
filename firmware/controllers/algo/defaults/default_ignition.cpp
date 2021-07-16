@@ -69,6 +69,8 @@ void setDefaultIgnition(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	setTimingLoadBin(1.2, 4.4 PASS_CONFIG_PARAMETER_SUFFIX);
 	setTimingRpmBin(800, 7000 PASS_CONFIG_PARAMETER_SUFFIX);
 
+	engineConfiguration->trailingSparkAngle = 10;
+
 	// CLT correction
 	setLinearCurve(engineConfiguration->cltTimingBins, CLT_CURVE_RANGE_FROM, 120, 1);
 	setArrayValues(engineConfiguration->cltTimingExtra, 0.0f);

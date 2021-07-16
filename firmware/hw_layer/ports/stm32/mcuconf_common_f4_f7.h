@@ -323,3 +323,13 @@
  * WDG driver system settings.
  */
 #define STM32_WDG_USE_IWDG                  FALSE
+
+// Pretend we have a 25MHz external crystal.  This value isn't actually used since we
+// configure the PLL to start on the HSI oscillator, then compute HSE's speed at runtime
+// and reconfigure the PLL appropriately.
+#define STM32_HSECLK 25000000
+
+// After boot, we will detect the real frequency, and adjust the PLL M value to suit
+
+#define ENABLE_AUTO_DETECT_HSE
+

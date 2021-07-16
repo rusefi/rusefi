@@ -201,7 +201,8 @@ typedef enum {
 	HELLEN_154_VAG = ET_HELLEN_154_VAG,
 
 	HELLEN_121_VAG_5_CYL = ET_HELLEN_121_VAG_5_CYL,
-	HELLEN_121_VAG_6_CYL = ET_HELLEN_121_VAG_6_CYL,
+	HELLEN_121_VAG_V6_CYL = ET_HELLEN_121_VAG_V6_CYL,
+	HELLEN_121_VAG_VR6_CYL = ET_HELLEN_121_VAG_VR6_CYL,
 	HELLEN_121_VAG_8_CYL = ET_HELLEN_121_VAG_8_CYL,
 
 	HELLEN_NA94 = ET_HELLEN_NA94,
@@ -446,7 +447,7 @@ typedef enum  __attribute__ ((__packed__)) {
 	/**
 	 * This mode is useful for troubleshooting and research - events are logged but no effects on phase synchronization
 	 */
-	VVT_INACTIVE = 0,
+	VVT_INACTIVE = VM_VVT_INACTIVE,
 
 	/**
 	 * Single-tooth cam sensor mode where TDC and cam signal happen in opposite 360 degree of 720 degree engine cycle
@@ -1061,3 +1062,8 @@ typedef enum __attribute__ ((__packed__)) {
 	ICM_FixedRailPressure = 1,
 	ICM_SensedRailPressure = 2,
 } injector_compensation_mode_e;
+
+typedef enum __attribute__ ((__packed__)) {
+	INJ_None = 0,
+	INJ_PolynomialAdder = 1,
+} InjectorNonlinearMode;

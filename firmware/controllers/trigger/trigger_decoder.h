@@ -54,7 +54,7 @@ typedef struct {
 	 * values are used to detect trigger signal errors.
 	 * see TriggerWaveform
 	 */
-	uint32_t eventCount[PWM_PHASE_MAX_WAVE_PER_PWM];
+	size_t eventCount[PWM_PHASE_MAX_WAVE_PER_PWM];
 	/**
 	 * This array is used to calculate duty cycle of each trigger channel.
 	 * Current implementation is a bit funny - it does not really consider if an event

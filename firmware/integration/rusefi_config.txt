@@ -84,7 +84,7 @@ struct_no_prefix engine_configuration_s
 #define CAMS_PER_BANK 2
 #define CAMS_PER_BANK_padding 0
 
-#define CAM_INPUTS_COUNT @@BANKS_COUNT@@ * @@CAMS_PER_BANK@@
+#define CAM_INPUTS_COUNT @@BANKS_COUNT@@*@@CAMS_PER_BANK@@
 #define CAM_INPUTS_COUNT_padding 0
 
 ! https://github.com/rusefi/rusefi/issues/2010 shows the corner case wheel with huge depth requirement
@@ -99,11 +99,11 @@ struct_no_prefix engine_configuration_s
 
 #define TOOTH_PACKET_COUNT 1000
 #define TOOTH_PACKET_SIZE 2
-#define TOOTH_DATA_LENGTH @@TOOTH_PACKET_SIZE@@ * @@TOOTH_PACKET_COUNT@@
+#define TOOTH_DATA_LENGTH @@TOOTH_PACKET_SIZE@@*@@TOOTH_PACKET_COUNT@@
 
 #define COMPOSITE_PACKET_COUNT 500
 #define COMPOSITE_PACKET_SIZE 5
-#define COMPOSITE_DATA_LENGTH @@COMPOSITE_PACKET_SIZE@@ * @@COMPOSITE_PACKET_COUNT@@
+#define COMPOSITE_DATA_LENGTH @@COMPOSITE_PACKET_SIZE@@*@@COMPOSITE_PACKET_COUNT@@
 #define COMPOSITE_DATA_LENGTH_HALF 1250
 
 #define MAP_ANGLE_SIZE 8
@@ -291,6 +291,8 @@ end_struct
 
 #define debug_mode_e_enum "Alternator PID", "TPS acceleration enrichment", "GPPWM", "Idle Control", "Engine Load accl enrich", "Trigger Counters", "FSIO_ADC", "VVT1 PID", "VVT input", "Cranking", "Timing", "Closed-loop fuel corr PID", "VSS", "SD card", "sr5", "Knock", "mode16", "Electronic Throttle", "Executor", "Bench Test / TS commands", "Aux Valves", "Analog inputs #1", "INSTANT_RPM", "FSIO_EXPRESSION_1_7", "Status", "CJ125", "CAN", "MAP", "Metrics", "ETB#2", "Ion Sense", "TLE8888", "Analog inputs #2", "Dwell Metric", "INVALID", "ETB Logic", "Boost Control", "Start/Stop", "Launch", "ETB Autotune", "FSIO_COMPOSITE_LOG", "FSIO_EXPRESSION_8_14", "FSIO_SPECIAL", "Injector Compensation", "Dyno_View", "Logic_Analyzer", "rusEFI Wideband", "TCU", "Lua", "VVT2 PID", "VVT3 PID", "VVT4 PID", "mode 52", "mode 53"
 custom debug_mode_e 4 bits, U32, @OFFSET@, [0:5], @@debug_mode_e_enum@@
+
+#define VM_VVT_INACTIVE 0
 
 #define vvt_mode_e_enum "Inactive", "Single Tooth Second Half", "2GZ", "Miata NB2", "Single Tooth First Half", "Bosch Quick Start", "4/1", "ST 170", "Ford Barra 3+1"
 custom vvt_mode_e 1 bits, U08, @OFFSET@, [0:3], @@vvt_mode_e_enum@@
@@ -507,8 +509,13 @@ end_struct
 
 #define ET_HELLEN_121_VAG_5_CYL 77
 #define ET_HELLEN_121_VAG_6_CYL 78
-#define ET_HELLEN_121_VAG_8_CYL 79
+! v6 and vr6 are different firing orders
+#define ET_HELLEN_121_VAG_V6_CYL 78
+#define ET_HELLEN_121_VAG_VR6_CYL 79
 #define ET_HELLEN_NA94 80
+
+#define ET_HELLEN_121_VAG_8_CYL 81
+! 
 
 #define ET_PROTEUS_ANALOG_PWM_TEST 106
 
@@ -536,7 +543,7 @@ bit enableFan1WithAc;+Turn on this fan when AC is on.
 bit enableFan2WithAc;+Turn on this fan when AC is on.
 bit disableFan1WhenStopped;+Inhibit operation of this fan while the engine is not running.
 bit disableFan2WhenStopped;+Inhibit operation of this fan while the engine is not running.
-bit unused_294_8
+bit enableTrailingSparks;+Enable secondary spark outputs that fire after the primary (rotaries, twin plug engines).
 bit isCJ125Verbose;enable cj125verbose/disable cj125verbose
 bit cj125isUaDivided;+Is your UA CJ125 output wired to MCU via resistor divider? Ua can go over 3.3v but only at lambda >3, i.e very lean AFR above 44.1\nWhen exposed to free air and 17x gain, Ua will be 4.17 volt
 bit cj125isLsu49
@@ -672,7 +679,7 @@ adc_channel_e fuelLevelSensor;+This is the processor pin that your fuel level se
 
 
 	float idle_derivativeFilterLoss;+0.1 is a good default value;"x", 1, 0, -1000000, 1000000, 4
-	int unused520;;"index", 1, 0, 0, 300, 0
+	int trailingSparkAngle;+just a temporary solution;"angle", 1, 0, 0, 720, 0
 
 struct trigger_config_s @brief Trigger wheel(s) configuration
 
@@ -1150,8 +1157,8 @@ bit unused_1484_bit_31
 
 	int ignMathCalculateAtIndex;+At what trigger index should some ignition-related math be executed? This is a performance trick to reduce load on synchronization trigger callback.;"index", 1, 0, 0, 7000, 0
 
-	int16_t unused1492;;"", 1, 0, 1, 15000, 0
-	int16_t unused1494;;"", 1, 0, 1, 15000, 0
+	brain_pin_e[CAM_INPUTS_COUNT iterate] camInputsDebug;
+	uint8_t[CAM_INPUTS_COUNT_padding] camInputsDebugPadding;;
 	int16_t acIdleRpmBump;+Extra idle target speed when A/C is enabled. Some cars need the extra speed to keep the AC efficient while idling.;"RPM", 1, 0, 0, 1000, 0
 
 	int16_t warningPeriod;set warningPeriod X;"seconds", 1, 0, 0, 60, 0
@@ -1183,8 +1190,8 @@ custom pin_mode_e 1 bits, U08, @OFFSET@, [0:6], @@pin_mode_e_enum@@
 	float[CRANKING_CURVE_SIZE] crankingTpsCoef;Cranking fuel correction coefficient based on TPS;"Ratio", 1, 0, 0, 700, 2
 	float[CRANKING_CURVE_SIZE] crankingTpsBins;;"%", 1, 0, 0, 100, 2
 	
-! todo: rename field remove 'ms' since unusual case of dual-purpose field - it could be either ms or percent	
-	float tachPulseDuractionMs;;"", 1, 0, 0, 100, 2
+! todo: rename field remove 'ms', also fix typo in name should be 'tachPulseDuration' and that would be an incompatible breaking change for users :(
+	float tachPulseDuractionMs;+Duration in ms or duty cycle depending on selected mode;"", 1, 0, 0, 100, 2
 	uint16_t maxAcRpm;+Above this RPM, disable AC. Set to 0 to disable check.;"rpm", 1, 0, 0, 10000, 0
 	uint8_t maxAcTps;+Above this TPS, disable AC. Set to 0 to disable check.;"%", 1, 0, 0, 100, 0
 	uint8_t maxAcClt;+Above this CLT, disable AC to prevent overheating the engine. Set to 0 to disable check.;"deg C", 1, 0, 0, 150, 0
@@ -1193,7 +1200,8 @@ custom pin_mode_e 1 bits, U08, @OFFSET@, [0:6], @@pin_mode_e_enum@@
 	float wwaeTau;+Length of time the deposited wall fuel takes to dissipate after the start of acceleration. ;"Seconds", 1, 0, 0, 3, 2
 	pid_s alternatorControl;
 	pid_s etb;
-	float unused1756;;"", 1, 0, 0, 1, 0
+	brain_pin_e[TRIGGER_INPUT_PIN_COUNT iterate] triggerInputDebugPins;
+	uint8_t unused1756;;"Pulse", 1, 0, 1, 5, 0
 	float alternator_derivativeFilterLoss;;"x", 1, 0, -1000000, 1000000, 4
 	float alternator_antiwindupFreq;;"x", 1, 0, -1000000, 1000000, 4
 int16_t tps2Min;Closed throttle#2. todo: extract these two fields into a structure\nSee also tps2_1AdcChannel\nset tps2_min X;"ADC", 1, 0, 0, 1023, 0
@@ -1336,10 +1344,13 @@ float[MAP_ACCEL_TAPER] mapAccelTaperMult;;"mult", 1, 0, 0, 300, 2
 
 	float[NARROW_BAND_WIDE_BAND_CONVERSION_SIZE] narrowToWideOxygenBins;Narrow Band WBO Approximation;"V", 1, 0, -10, 10, 3
 	float[NARROW_BAND_WIDE_BAND_CONVERSION_SIZE] narrowToWideOxygen;;"ratio", 1, 0, -40, 40, 2
+
 	vvt_mode_e[CAMS_PER_BANK iterate] vvtMode;set vvt_mode X
 	uint8_t[CAMS_PER_BANK_padding] vvtModePadding;;
 	uint8_t fan2ExtraIdle;+Additional idle % when fan #2 is active;"%", 1, 0, 0, 100, 0
-	uint8_t[21] unusedOldBiquad;;"units", 1, 0, -20, 100, 0
+	uint8_t[9] unusedOldBiquad;;"units", 1, 0, -20, 100, 0
+
+	output_pin_e[MAX_CYLINDER_COUNT iterate] trailingCoilPins;
 	float[CLT_TIMING_CURVE_SIZE] cltTimingBins;CLT-based timing correction;"C", 1, 0, -100, 250, 1
 	float[CLT_TIMING_CURVE_SIZE] cltTimingExtra;;"degree", 1, 0, -400, 400, 0
 custom tle8888_mode_e 1 bits, U08, @OFFSET@, [0:1], "Auto", "SemiAuto", "Manual", "Hall"
@@ -1357,9 +1368,12 @@ tle8888_mode_e tle8888mode;
 	float unused2432;;"units", 1, 0, -20, 100, 0
 	float postCrankingFactor;+Fuel multiplier (enrichment) immediately after engine start;"mult", 1, 0, 1, 3, 2
 	float postCrankingDurationSec;+Time over which to taper out after start enrichment;"seconds", 1, 0, 0, 30, 0
-	ThermistorConf auxTempSensor1;todo: finish implementation #332
-	ThermistorConf auxTempSensor2;todo: finish implementation #332
-	uint8_t[6] unused2508;;"units", 1, 0, -20, 100, 0
+	ThermistorConf auxTempSensor1
+	ThermistorConf auxTempSensor2
+	uint16_t applyNonlinearBelowPulse;+Apply nonlinearity correction below a pulse of this duration. Pulses longer than this duration will receive no adjustment.;"ms", {1/1000}, 0, 0, 30, 3
+	custom InjectorNonlinearMode 1 bits, U08, @OFFSET@, [0:0], "None", "Polynomial"
+	InjectorNonlinearMode injectorNonlinearMode
+	uint8_t[3] unused2508;;"units", 1, 0, -20, 100, 0
 	int16_t etbFreq;;"Hz", 1, 0, 0, @@ETB_HW_MAX_FREQUENCY@@, 0
 	pid_s etbWastegatePid;
 	uint8_t[4] unused2536;;"units", 1, 0, -20, 100, 0
@@ -1395,7 +1409,8 @@ tle8888_mode_e tle8888mode;
 
 
 	pid_s[CAMS_PER_BANK iterate] auxPid;
-	uint8_t[40] unused1366;;"units", 1, 0, -20, 100, 0
+	float[8 iterate] injectorCorrectionPolynomial;;"", 1, 0, -1000, 1000, 4
+	uint8_t[8] unused1366;;"units", 1, 0, -20, 100, 0
 
 	linear_sensor_s oilPressure;
 
@@ -1684,10 +1699,10 @@ end_struct
 #define GAUGE_NAME_VERSION "firmware"
 #define GAUGE_NAME_TRG_ERR "trg err"
 
-#define GAUGE_NAME_VVT "VVT position"
-#define GAUGE_NAME_SECOND_VVT_BANK_1 "VVT second position bank 1"
-#define GAUGE_NAME_VVT_BANK_2 "VVT position bank 2"
-#define GAUGE_NAME_SECOND_VVT_BANK_2 "VVT second position bank 2"
+#define GAUGE_NAME_VVT_B1I "VVT: bank 1 intake"
+#define GAUGE_NAME_VVT_B1E "VVT: bank 1 exhaust"
+#define GAUGE_NAME_VVT_B2I "VVT: bank 2 intake"
+#define GAUGE_NAME_VVT_B2E "VVT: bank 2 exhaust"
 
 #define GAUGE_NAME_TIMING_ADVANCE "timing"
 #define GAUGE_NAME_VVS "Vehicle Speed"

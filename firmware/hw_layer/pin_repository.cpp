@@ -9,7 +9,19 @@
  * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
-#include "global.h"
+#include "engine.h"
+
+EXTERN_ENGINE;
+
+unsigned int getBrainPinTotalNum(void) {
+	return BRAIN_PIN_TOTAL_PINS;
+}
+
+const char* & getBrainUsedPin(unsigned int idx DECLARE_ENGINE_PARAMETER_SUFFIX) {
+	/*if (idx >= getBrainPinTotalNum())
+		return NULL;*/
+	return ENGINE(pinRepository).PIN_USED[idx];
+}
 
 /* Common for firmware and unit tests */
 bool isBrainPinValid(brain_pin_e brainPin)
@@ -24,21 +36,7 @@ bool isBrainPinValid(brain_pin_e brainPin)
 	return true;
 }
 
-#if EFI_PROD_CODE
-#include "os_access.h"
-#include "pin_repository.h"
-#include "eficonsole.h"
-#include "memstreams.h"
-#include "drivers/gpio/gpio_ext.h"
-#include "smart_gpio.h"
-#include "hardware.h"
-
-EXTERN_CONFIG;
-
-static PinRepository pinRepository;
-
-static int brainPin_to_index(brain_pin_e brainPin)
-{
+int brainPin_to_index(brain_pin_e brainPin) {
 	unsigned int i;
 
 	if (brainPin < GPIOA_0)
@@ -52,21 +50,78 @@ static int brainPin_to_index(brain_pin_e brainPin)
 	return i;
 }
 
+/**
+ * See also brain_pin_markUnused()
+ * @return true if this pin was already used, false otherwise
+ */
+
+bool brain_pin_markUsed(brain_pin_e brainPin, const char *msg DECLARE_ENGINE_PARAMETER_SUFFIX) {
+#if ! EFI_BOOTLOADER
+	efiPrintf("%s on %s", msg, hwPortname(brainPin));
+#endif
+
+	int index = brainPin_to_index(brainPin);
+	if (index < 0)
+		return true;
+
+	if (getBrainUsedPin(index PASS_ENGINE_PARAMETER_SUFFIX) != NULL) {
+		/* TODO: get readable name of brainPin... */
+		firmwareError(CUSTOM_ERR_PIN_ALREADY_USED_1, "Pin \"%s\" required by \"%s\" but is used by \"%s\" %s",
+				hwPortname(brainPin),
+				msg,
+				getBrainUsedPin(index PASS_ENGINE_PARAMETER_SUFFIX),
+				getEngine_type_e(engineConfiguration->engineType));
+		return true;
+	}
+
+	getBrainUsedPin(index PASS_ENGINE_PARAMETER_SUFFIX) = msg;
+	ENGINE(pinRepository).totalPinsUsed++;
+	return false;
+}
+
+/**
+ * See also brain_pin_markUsed()
+ */
+
+void brain_pin_markUnused(brain_pin_e brainPin DECLARE_ENGINE_PARAMETER_SUFFIX) {
+	int index = brainPin_to_index(brainPin);
+	if (index < 0)
+		return;
+
+	if (getBrainUsedPin(index PASS_ENGINE_PARAMETER_SUFFIX) != nullptr)
+		ENGINE(pinRepository).totalPinsUsed--;
+	getBrainUsedPin(index PASS_ENGINE_PARAMETER_SUFFIX) = nullptr;
+}
+
+#if EFI_PROD_CODE
+#include "memstreams.h"
+static MemoryStream portNameStream;
+static char portNameBuffer[20];
+#endif /* EFI_PROD_CODE */
+
+PinRepository::PinRepository() {
+#if EFI_PROD_CODE
+	msObjectInit(&portNameStream, (uint8_t*) portNameBuffer, sizeof(portNameBuffer), 0);
+#endif /* EFI_PROD_CODE */
+
+	memset(PIN_USED, 0, sizeof(PIN_USED));
+}
+
+#if EFI_PROD_CODE
+#include "os_access.h"
+#include "eficonsole.h"
+#include "drivers/gpio/gpio_ext.h"
+#include "smart_gpio.h"
+#include "hardware.h"
+
+EXTERN_CONFIG;
+
 static brain_pin_e index_to_brainPin(unsigned int i)
 {
 	if (i < getBrainPinTotalNum())
 		return (brain_pin_e)((int)GPIOA_0 + i);;
 
 	return GPIO_INVALID;
-}
-
-static MemoryStream portNameStream;
-static char portNameBuffer[20];
-
-PinRepository::PinRepository() {
-	msObjectInit(&portNameStream, (uint8_t*) portNameBuffer, sizeof(portNameBuffer), 0);
-
-	initBrainUsedPins();
 }
 
 static void reportPins(void) {
@@ -125,7 +180,7 @@ static void reportPins(void) {
 		}
 	#endif
 
-	efiPrintf("Total pins count: %d", pinRepository.totalPinsUsed);
+	efiPrintf("Total pins count: %d", ENGINE(pinRepository).totalPinsUsed);
 }
 
 void printSpiConfig(const char *msg, spi_device_e device) {
@@ -202,49 +257,6 @@ bool brain_pin_is_ext(brain_pin_e brainPin)
 }
 
 /**
- * See also brain_pin_markUnused()
- * @return true if this pin was already used, false otherwise
- */
-
-bool brain_pin_markUsed(brain_pin_e brainPin, const char *msg) {
-#if ! EFI_BOOTLOADER
-	efiPrintf("%s on %s", msg, hwPortname(brainPin));
-#endif
-
-	int index = brainPin_to_index(brainPin);
-	if (index < 0)
-		return true;
-
-	if (getBrainUsedPin(index) != NULL) {
-		/* TODO: get readable name of brainPin... */
-		firmwareError(CUSTOM_ERR_PIN_ALREADY_USED_1, "Pin \"%s\" required by \"%s\" but is used by \"%s\" %s",
-				hwPortname(brainPin),
-				msg,
-				getBrainUsedPin(index),
-				getEngine_type_e(engineConfiguration->engineType));
-		return true;
-	}
-
-	getBrainUsedPin(index) = msg;
-	pinRepository.totalPinsUsed++;
-	return false;
-}
-
-/**
- * See also brain_pin_markUsed()
- */
-
-void brain_pin_markUnused(brain_pin_e brainPin) {
-	int index = brainPin_to_index(brainPin);
-	if (index < 0)
-		return;
-
-	if (getBrainUsedPin(index) != NULL)
-		pinRepository.totalPinsUsed--;
-	getBrainUsedPin(index) = nullptr;
-}
-
-/**
  * Marks on-chip gpio port-pin as used. Works only for on-chip gpios
  * To be replaced with brain_pin_markUsed later
  */
@@ -262,7 +274,7 @@ bool gpio_pin_markUsed(ioportid_t port, ioportmask_t pin, const char *msg) {
 		return true;
 	}
 	getBrainUsedPin(index) = msg;
-	pinRepository.totalPinsUsed++;
+	engine->pinRepository.totalPinsUsed++;
 	return false;
 }
 
@@ -275,7 +287,7 @@ void gpio_pin_markUnused(ioportid_t port, ioportmask_t pin) {
 	int index = getPortPinIndex(port, pin);
 
 	if (getBrainUsedPin(index) != NULL)
-		pinRepository.totalPinsUsed--;
+		ENGINE(pinRepository).totalPinsUsed--;
 	getBrainUsedPin(index) = nullptr;
 }
 

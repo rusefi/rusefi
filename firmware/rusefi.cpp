@@ -285,6 +285,9 @@ void runRusEfi(void) {
 
 	runRusEfiWithConfig();
 
+	// periodic events need to be initialized after fuel&spark pins to avoid a warning
+	initPeriodicEvents(PASS_ENGINE_PARAMETER_SIGNATURE);
+
 	runMainLoop();
 }
 
@@ -301,9 +304,6 @@ void runRusEfiWithConfig() {
 	 * Initialize hardware drivers
 	 */
 	initHardware();
-
-	// periodic events need to be initialized after fuel&spark pins to avoid a warning
-	initPeriodicEvents(PASS_ENGINE_PARAMETER_SIGNATURE);
 
 #if EFI_FILE_LOGGING
 	initMmcCard();

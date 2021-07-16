@@ -99,6 +99,9 @@ public:
 	scheduling_s dwellStartTimer;
 	AngleBasedEvent sparkEvent;
 
+	scheduling_s trailingSparkCharge;
+	scheduling_s trailingSparkFire;
+
 	// How many additional sparks should we fire after the first one?
 	// For single sparks, this should be zero.
 	uint8_t sparksRemaining = 0;

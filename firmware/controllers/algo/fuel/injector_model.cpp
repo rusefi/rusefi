@@ -104,14 +104,47 @@ float InjectorModelBase::getInjectionDuration(float fuelMassGram) const {
 	floatms_t baseDuration = fuelMassGram / m_massFlowRate * 1000;
 
 	if (baseDuration <= 0) {
-		// If 0 duration, don't add deadtime, just skip the injection.
+		// If 0 duration, don't correct or add deadtime, just skip the injection.
 		return 0.0f;
-	} else {
-		return baseDuration + m_deadtime;
 	}
+
+	// Correct short pulses (if enabled)
+	baseDuration = correctShortPulse(baseDuration);
+
+	return baseDuration + m_deadtime;
 }
 
 float InjectorModelBase::getFuelMassForDuration(floatms_t duration) const {
 	// Convert from ms -> grams
 	return duration * m_massFlowRate * 0.001f;
+}
+
+float InjectorModel::correctShortPulse(float baseDuration) const {
+	switch (CONFIG(injectorNonlinearMode)) {
+	case INJ_PolynomialAdder:
+		return correctInjectionPolynomial(baseDuration);
+	case INJ_None:
+	default:
+		return baseDuration;
+	}
+}
+
+float InjectorModel::correctInjectionPolynomial(float baseDuration) const {
+	if (baseDuration > CONFIG(applyNonlinearBelowPulse)) {
+		// Large pulse, skip correction.
+		return baseDuration;
+	}
+
+	auto& is = CONFIG(injectorCorrectionPolynomial);
+	float xi = 1;
+
+	float adder = 0;
+
+	// Add polynomial terms, starting with x^0
+	for (size_t i = 0; i < efi::size(is); i++) {
+		adder += is[i] * xi;
+		xi *= baseDuration;
+	}
+
+	return baseDuration + adder;
 }

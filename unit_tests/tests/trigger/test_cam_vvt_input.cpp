@@ -120,7 +120,7 @@ TEST(trigger, testCamInput) {
 	ASSERT_NEAR(360 - 181, engine->triggerCentral.getVVTPosition(0, 0), EPS3D);
 }
 
-TEST(sensors, testNB2CamInput) {
+TEST(trigger, testNB2CamInput) {
 	WITH_ENGINE_TEST_HELPER(MAZDA_MIATA_2003);
 
 	// this crank trigger would be easier to test, crank shape is less important for this test
@@ -167,7 +167,7 @@ TEST(sensors, testNB2CamInput) {
 	// this third important front would give us first comparison between two real gaps
 	hwHandleVvtCamSignal(TV_RISE, getTimeNowNt(), 0 PASS_ENGINE_PARAMETER_SUFFIX);
 
-	ASSERT_NEAR(-67.6 - 720 - 720, engine->triggerCentral.getVVTPosition(0, 0), EPS3D);
+	ASSERT_NEAR(-67.6, engine->triggerCentral.getVVTPosition(0, 0), EPS3D);
 	// actually position based on VVT!
 	ASSERT_EQ(totalRevolutionCountBeforeVvtSync + 2, engine->triggerCentral.triggerState.getTotalRevolutionCounter());
 

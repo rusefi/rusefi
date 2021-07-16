@@ -95,8 +95,8 @@ public class VariableRegistry  {
         return line;
     }
 
-    public void register(String var, String value) {
-        value = doRegister(var, value);
+    public void register(String var, String param) {
+        String value = doRegister(var, param);
         if (value == null)
             return;
         tryToRegisterAsInteger(var, value);
@@ -171,7 +171,7 @@ public class VariableRegistry  {
         }
     }
 
-    private boolean isQuoted(String value, char quote) {
+    public static boolean isQuoted(String value, char quote) {
         if (value == null)
             return false;
         value = value.trim();
@@ -180,7 +180,7 @@ public class VariableRegistry  {
         return isQ(value, quote);
     }
 
-    private boolean isQ(String value, char quote) {
+    private static boolean isQ(String value, char quote) {
         return value.charAt(0) == quote && value.charAt(value.length() - 1) == quote;
     }
 
