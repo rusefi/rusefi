@@ -92,7 +92,7 @@ void CanTxMessage::setBit(size_t byteIdx, size_t bitIdx) {
 
 #else
 
-CanTxMessage::CanTxMessage(uint32_t eid, uint8_t dlc = 8, bool isExtended = false) {
+CanTxMessage::CanTxMessage(uint32_t /*eid*/, uint8_t /*dlc*/ = 8, bool /*isExtended*/) {
 
 }
 
