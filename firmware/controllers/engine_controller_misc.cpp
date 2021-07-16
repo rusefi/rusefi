@@ -5,10 +5,13 @@
  * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
+#include "engine.h"
 #include "engine_controller.h"
+#include "engine_configuration.h"
 #include "perf_trace.h"
 #include "os_access.h"
 #include "settings.h"
+#include "debounce.h"
 
 extern ButtonDebounce startStopButtonDebounce;
 

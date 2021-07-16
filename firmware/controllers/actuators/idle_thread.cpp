@@ -42,6 +42,7 @@
 #include "vehicle_speed.h"
 #include "sensor.h"
 #include "dc_motors.h"
+#include "tunerstudio_outputs.h"
 
 #if EFI_TUNER_STUDIO
 #include "stepper.h"

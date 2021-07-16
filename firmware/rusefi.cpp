@@ -106,7 +106,7 @@
  *
  */
 
-#include "global.h"
+#include "engine.h"
 #include "os_access.h"
 #include "trigger_structure.h"
 #include "hardware.h"
@@ -128,6 +128,7 @@
 #include "mass_storage_init.h"
 #include "trigger_emulator_algo.h"
 #include "rusefi_lua.h"
+#include "interpolation.h"
 
 #include <setjmp.h>
 

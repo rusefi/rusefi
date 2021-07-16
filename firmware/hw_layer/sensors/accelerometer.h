@@ -7,7 +7,7 @@
 
 #pragma once
 
-#include "engine.h"
+#include "engine_ptr.h"
 
 void configureAccelerometerPins(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 

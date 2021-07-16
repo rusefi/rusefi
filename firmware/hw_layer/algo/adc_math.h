@@ -10,6 +10,8 @@
 
 #pragma once
 
+#include "engine_ptr.h"
+
 #if EFI_PROD_CODE
 #include "port_mpu_util.h"
 #include "rusefi_hw_enums.h"

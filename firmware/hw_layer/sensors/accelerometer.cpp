@@ -18,6 +18,7 @@
 
 #include "accelerometer.h"
 #include "hardware.h"
+#include "engine.h"
 
 #if EFI_MEMS
 #include "mpu_util.h"

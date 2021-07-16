@@ -8,7 +8,8 @@
 
 #pragma once
 
-#include "engine.h"
+#include "engine_ptr.h"
+#include "rusefi_types.h"
 
 char * getPinNameByAdcChannel(const char *msg, adc_channel_e hwChannel, char *buffer);
 void initPeriodicEvents(DECLARE_ENGINE_PARAMETER_SIGNATURE);
@@ -30,5 +31,6 @@ void setMockMafVoltage(float voltage DECLARE_ENGINE_PARAMETER_SUFFIX);
 void setMockIatVoltage(float voltage DECLARE_ENGINE_PARAMETER_SUFFIX);
 void setMockCltVoltage(float voltage DECLARE_ENGINE_PARAMETER_SUFFIX);
 
+class Logging;
 void printCurrentState(Logging *logging, int seconds, const char *engineTypeName, const char *firmwareBuildId);
 

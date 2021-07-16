@@ -9,7 +9,7 @@
 
 #pragma once
 
-#include "engine.h"
+#include "engine_ptr.h"
 
 void initIdleHardware(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 bool isIdleHardwareRestartNeeded();

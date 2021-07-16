@@ -12,6 +12,8 @@
 #include "high_pressure_fuel_pump.h"
 #include "spark_logic.h"
 #include "map.h"
+#include "event_registry.h"
+#include "sensor.h"
 
 #if EFI_HPFP
 

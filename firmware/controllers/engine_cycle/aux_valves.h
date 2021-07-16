@@ -7,7 +7,9 @@
 
 #pragma once
 
-#include "engine.h"
+#include "engine_ptr.h"
+
+class AuxActor;
 
 void initAuxValves(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 void recalculateAuxValveTiming(DECLARE_ENGINE_PARAMETER_SIGNATURE);

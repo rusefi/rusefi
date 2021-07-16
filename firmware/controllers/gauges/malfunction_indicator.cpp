@@ -34,6 +34,7 @@
 #include "efi_gpio.h"
 #include "os_access.h"
 #include "periodic_thread_controller.h"
+#include "engine.h"
 
 #define TEST_MIL_CODE FALSE
 

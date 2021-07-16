@@ -7,7 +7,7 @@
 
 #pragma once
 
-#include "engine.h"
+#include "engine_ptr.h"
 
 #if EFI_MAP_AVERAGING
 
@@ -22,6 +22,7 @@ void mapAveragingTriggerCallback(
 		uint32_t index, efitick_t edgeTimestamp DECLARE_ENGINE_PARAMETER_SUFFIX);
 
 #if EFI_TUNER_STUDIO
+struct TunerStudioOutputChannels;
 void postMapState(TunerStudioOutputChannels *tsOutputChannels);
 #endif
 

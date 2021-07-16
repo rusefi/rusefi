@@ -1,6 +1,10 @@
 #include "injector_model.h"
 #include "tunerstudio_outputs.h"
 #include "map.h"
+#include "engine.h"
+#include "engine_configuration.h"
+#include "sensor.h"
+#include "interpolation.h"
 
 void InjectorModelBase::prepare() {
 	m_massFlowRate = getInjectorMassFlowRate();

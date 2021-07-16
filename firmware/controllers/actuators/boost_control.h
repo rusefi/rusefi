@@ -6,12 +6,13 @@
  */
 #pragma once
 
-#include "engine.h"
+#include "engine_ptr.h"
 #include "periodic_task.h"
 #include "closed_loop_controller.h"
 #include "pid.h"
 
 struct IPwm;
+class ValueProvider3D;
 
 class BoostController : public ClosedLoopController<float, percent_t> {
 public:

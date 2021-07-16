@@ -7,6 +7,7 @@
 
 #pragma once
 
+#include "engine_ptr.h"
 #include "efifeatures.h"
 #include "rusefi_enums.h"
 

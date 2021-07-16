@@ -5,7 +5,8 @@
  *
  * @author Andrey Belomutskiy, (c) 2012-2020
  */
-#include "global.h"
+
+#include "engine.h"
 #include "engine_configuration.h"
 #include "engine_math.h"
 #include "adc_inputs.h"

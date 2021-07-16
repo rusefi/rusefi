@@ -7,7 +7,7 @@
 
 #pragma once
 
-#include "engine.h"
+#include "engine_ptr.h"
 
 void initTachometer(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 void tachSignalCallback(DECLARE_ENGINE_PARAMETER_SIGNATURE);

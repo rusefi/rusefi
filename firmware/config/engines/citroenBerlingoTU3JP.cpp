@@ -14,6 +14,7 @@
 #include "citroenBerlingoTU3JP.h"
 #include "custom_engine.h"
 #include "settings.h"
+#include "table_helper.h"
 
 #if IGN_LOAD_COUNT == DEFAULT_IGN_LOAD_COUNT
 static const uint8_t default_tps_advance_table[16][16] = {

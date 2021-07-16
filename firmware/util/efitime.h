@@ -9,6 +9,7 @@
 
 #pragma once
 
+#include "global.h"
 #include "efifeatures.h"
 #include "rusefi_types.h"
 

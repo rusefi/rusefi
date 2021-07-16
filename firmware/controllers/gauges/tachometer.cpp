@@ -10,6 +10,7 @@
 
 #include "pin_repository.h"
 #include "tachometer.h"
+#include "engine.h"
 #include "pwm_generator_logic.h"
 
 static SimplePwm tachControl("tach"); 

@@ -6,7 +6,8 @@
  */
 #pragma once
 
-#include "global.h"
+#include "engine_ptr.h"
+#include "rusefi_types.h"
 
 typedef void (*schfunc_t)(void *);
 

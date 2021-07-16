@@ -13,6 +13,7 @@
  * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
+#include "engine.h"
 #include "pin_repository.h"
 #include "engine_math.h"
 #include "aux_valves.h"

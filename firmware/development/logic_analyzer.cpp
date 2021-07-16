@@ -24,6 +24,7 @@
 #include "engine_math.h"
 #include "rpm_calculator.h"
 #include "engine_sniffer.h"
+#include "tunerstudio_outputs.h"
 
 #if EFI_LOGIC_ANALYZER
 

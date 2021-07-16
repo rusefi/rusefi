@@ -7,7 +7,8 @@
 
 #pragma once
 
-#include "engine.h"
+#include "engine_ptr.h"
+#include "expected.h"
 #include "fl_stack.h"
 
 #define MAX_TABLE_INDEX 4

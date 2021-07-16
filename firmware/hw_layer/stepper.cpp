@@ -17,6 +17,7 @@
 #include "adc_inputs.h"
 #include "sensor.h"
 #include "thread_priority.h"
+#include "tunerstudio_outputs.h"
 
 void StepperMotor::saveStepperPos(int pos) {
 	// use backup-power RTC registers to store the data

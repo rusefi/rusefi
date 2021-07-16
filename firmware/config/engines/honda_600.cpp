@@ -12,6 +12,7 @@
 #include "allsensors.h"
 #include "engine_math.h"
 #include "custom_engine.h"
+#include "table_helper.h"
 
 #if EFI_PROD_CODE
 #include "can_hw.h"

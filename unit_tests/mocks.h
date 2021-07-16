@@ -6,6 +6,7 @@
 #include "pwm_generator_logic.h"
 #include "airmass.h"
 #include "injector_model.h"
+#include "global_execution_queue.h"
 
 #include "gmock/gmock.h"
 

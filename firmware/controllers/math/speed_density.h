@@ -7,9 +7,8 @@
 
 #pragma once
 
-#include "engine.h"
-#include "airmass.h"
-#include "speed_density_base.h"
+#include "engine_ptr.h"
+#include "rusefi_types.h"
 
 #define gramm_second_to_cc_minute(gs) ((gs) / 0.0119997981)
 #define cc_minute_to_gramm_second(ccm) ((ccm) * 0.0119997981)

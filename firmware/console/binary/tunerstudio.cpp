@@ -59,7 +59,7 @@
  *
  */
 
-#include "global.h"
+#include "engine.h"
 #include "os_access.h"
 
 #include "allsensors.h"

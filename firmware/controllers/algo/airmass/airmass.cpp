@@ -1,6 +1,8 @@
 #include "airmass.h"
 #include "sensor.h"
 #include "idle_thread.h"
+#include "engine.h"
+#include "engine_configuration.h"
 
 AirmassVeModelBase::AirmassVeModelBase(const ValueProvider3D& veTable) : m_veTable(&veTable) {}
 

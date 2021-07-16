@@ -19,6 +19,7 @@
 #include "vehicle_speed.h"
 #include "rtc_helper.h"
 #include "fuel_math.h"
+#include "tunerstudio_outputs.h"
 // CAN Bus ID for broadcast
 /**
  * e46 data is from http://forums.bimmerforums.com/forum/showthread.php?1887229

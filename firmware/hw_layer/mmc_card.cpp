@@ -28,6 +28,7 @@
 #include "buffered_writer.h"
 #include "mass_storage_init.h"
 #include "thread_priority.h"
+#include "tunerstudio_outputs.h"
 
 #include "rtc_helper.h"
 

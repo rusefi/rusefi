@@ -17,6 +17,8 @@
 
 #include "hip9011.h"
 #include "engine_ptr.h"
+#include "engine.h"
+#include "engine_configuration.h"
 
 #if EFI_ENGINE_CONTROL
 

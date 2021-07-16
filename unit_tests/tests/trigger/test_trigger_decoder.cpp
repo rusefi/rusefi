@@ -293,7 +293,7 @@ static void assertREqualsM(const char *msg, void *expected, void *actual) {
 	assertEqualsM(msg, (float)(uint64_t)expected, (float)(uint64_t)actual);
 }
 
-extern bool_t debugSignalExecutor;
+extern bool debugSignalExecutor;
 
 TEST(misc, testRpmCalculator) {
 	WITH_ENGINE_TEST_HELPER(FORD_INLINE_6_1995);

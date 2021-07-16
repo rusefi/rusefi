@@ -13,6 +13,7 @@
 #include "pid.h"
 #include "math.h"
 #include "engine_configuration_generated_structures.h"
+#include "tunerstudio_outputs.h"
 
 Pid::Pid() {
 	initPidClass(NULL);

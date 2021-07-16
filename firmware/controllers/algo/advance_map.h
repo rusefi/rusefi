@@ -7,7 +7,8 @@
 
 #pragma once
 
-#include "engine.h"
+#include "engine_ptr.h"
+#include "rusefi_enums.h"
 
 angle_t getAdvance(int rpm, float engineLoad DECLARE_ENGINE_PARAMETER_SUFFIX);
 void initTimingMap(DECLARE_ENGINE_PARAMETER_SIGNATURE);

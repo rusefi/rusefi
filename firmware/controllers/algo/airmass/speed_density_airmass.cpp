@@ -2,6 +2,7 @@
 #include "engine.h"
 #include "speed_density_airmass.h"
 #include "perf_trace.h"
+#include "tunerstudio_outputs.h"
 
 AirmassResult SpeedDensityAirmass::getAirmass(int rpm) {
 	ScopePerf perf(PE::GetSpeedDensityFuel);

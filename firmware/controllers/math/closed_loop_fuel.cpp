@@ -6,6 +6,7 @@
 #include "sensor.h"
 #include "engine_math.h"
 #include "deadband.h"
+#include "tunerstudio_outputs.h"
 
 struct FuelingBank {
 	ClosedLoopFuelCellImpl cells[STFT_CELL_COUNT];

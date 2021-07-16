@@ -5,6 +5,7 @@
 
 #include "gppwm_channel.h"
 #include "pwm_generator_logic.h"
+#include "tunerstudio_outputs.h"
 
 static GppwmChannel channels[GPPWM_CHANNELS];
 static OutputPin pins[GPPWM_CHANNELS];

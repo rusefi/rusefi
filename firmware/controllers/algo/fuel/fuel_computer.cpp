@@ -1,4 +1,5 @@
 #include "fuel_computer.h"
+#include "engine.h"
 #include "map.h"
 
 mass_t FuelComputerBase::getCycleFuel(mass_t airmass, int rpm, float load) const {

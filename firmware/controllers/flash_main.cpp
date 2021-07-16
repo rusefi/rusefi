@@ -7,7 +7,7 @@
  * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
-#include "global.h"
+#include "engine.h"
 #if EFI_INTERNAL_FLASH
 #include "os_access.h"
 #include "flash_main.h"

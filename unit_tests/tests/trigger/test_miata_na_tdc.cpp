@@ -2,6 +2,7 @@
 #include "globalaccess.h"
 #include "trigger_simulator.h"
 #include "trigger_emulator_algo.h"
+#include "sensor.h"
 
 TEST(miata, miata_na_tdc) {
 	WITH_ENGINE_TEST_HELPER(MIATA_NA6_MAP);

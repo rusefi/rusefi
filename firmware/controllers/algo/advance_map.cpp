@@ -28,6 +28,7 @@
 #include "idle_thread.h"
 #include "allsensors.h"
 #include "launch_control.h"
+#include "tunerstudio_outputs.h"
 
 #if EFI_ENGINE_CONTROL
 

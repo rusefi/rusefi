@@ -7,7 +7,7 @@
 
 #include "tooth_logger.h"
 
-#include "global.h"
+#include "engine.h"
 #include "perf_trace.h"
 
 #if EFI_TOOTH_LOGGER

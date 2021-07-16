@@ -20,8 +20,7 @@
  * If not, see <http://www.gnu.org/licenses/>.
  */
 
-// todo: rename this file
-#include "global.h"
+#include "engine.h"
 
 #if EFI_ENGINE_CONTROL
 #if !EFI_UNIT_TEST

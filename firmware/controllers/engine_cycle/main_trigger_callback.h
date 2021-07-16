@@ -9,7 +9,7 @@
 
 #pragma once
 
-#include "engine.h"
+#include "engine_ptr.h"
 
 #include "event_registry.h"
 

@@ -7,7 +7,12 @@
 
 #pragma once
 
-#include "engine.h"
+#include "engine_ptr.h"
+#include "rusefi_types.h"
+#include "scheduler.h"
+
+class IgnitionEvent;
+class AngleBasedEvent;
 
 void onTriggerEventSparkLogic(bool limitedSpark, uint32_t trgEventIndex, int rpm, efitick_t edgeTimestamp DECLARE_ENGINE_PARAMETER_SUFFIX);
 void turnSparkPinHigh(IgnitionEvent *event);

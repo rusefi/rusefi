@@ -84,6 +84,7 @@
 #include "dc_motors.h"
 #include "pid_auto_tune.h"
 #include "thread_priority.h"
+#include "tunerstudio_outputs.h"
 
 #if defined(HAS_OS_ACCESS)
 #error "Unexpected OS ACCESS HERE"

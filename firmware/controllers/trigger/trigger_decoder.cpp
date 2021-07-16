@@ -36,6 +36,7 @@
 #include "trigger_central.h"
 #include "trigger_simulator.h"
 #include "perf_trace.h"
+#include "tunerstudio_outputs.h"
 
 #if EFI_SENSOR_CHART
 #include "sensor_chart.h"

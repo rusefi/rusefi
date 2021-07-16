@@ -7,14 +7,11 @@
 
 #pragma once
 
+#include "engine_ptr.h"
 #include "engine_state_generated.h"
 #include "pid_state_generated.h"
 
-#if EFI_PROD_CODE || EFI_SIMULATOR
-#include "tunerstudio_outputs.h"
-#else
-#include "engine.h"
-#endif
+struct TunerStudioOutputChannels;
 
 // See PidCic below
 #define PID_AVG_BUF_SIZE_SHIFT 5

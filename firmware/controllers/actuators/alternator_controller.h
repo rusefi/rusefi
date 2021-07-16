@@ -10,7 +10,8 @@
 
 #pragma once
 
-#include "engine.h"
+#include "engine_configuration_generated_structures.h"
+
 void initAlternatorCtrl();
 void startAlternatorPin(void);
 void stopAlternatorPin(void);

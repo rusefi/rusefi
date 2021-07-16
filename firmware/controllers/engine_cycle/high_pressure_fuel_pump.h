@@ -7,6 +7,6 @@
 
 #pragma once
 
-#include "engine.h"
+#include "engine_ptr.h"
 
 void initHPFP(DECLARE_ENGINE_PARAMETER_SIGNATURE);

@@ -7,11 +7,9 @@
 
 #pragma once
 
-#include "global.h"
+#include "engine_configuration_generated_structures.h"
 
 #define KELV 273.15f
-
-#include "engine.h"
 
 /**
  * converts Kelvin temperature into Celsius temperature

@@ -7,7 +7,8 @@
 
 #pragma once
 
-#include "global.h"
+#include "rusefi_types.h"
+#include "engine_ptr.h"
 
 void startHardware(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 
@@ -45,8 +46,6 @@ brain_pin_e getSckPin(spi_device_e device);
 #endif /* HAL_USE_SPI */
 
 #ifdef __cplusplus
-
-#include "engine.h"
 
 void applyNewHardwareSettings(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 

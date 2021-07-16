@@ -18,7 +18,7 @@
 #include "engine_configuration.h"
 #include "thermistors.h"
 #include "engine_math.h"
-#include "allsensors.h"
+#include "table_helper.h"
 
 #include "custom_engine.h"
 

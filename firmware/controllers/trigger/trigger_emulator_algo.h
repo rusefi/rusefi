@@ -7,8 +7,9 @@
 
 #pragma once
 
-#include "engine.h"
+#include "engine_ptr.h"
 
+struct engine_configuration_s;
 class PwmConfig;
 class MultiChannelStateSequence;
 

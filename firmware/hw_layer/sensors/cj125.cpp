@@ -19,6 +19,7 @@
 #include "pwm_generator_logic.h"
 #include "rpm_calculator.h"
 #include "thread_priority.h"
+#include "tunerstudio_outputs.h"
 
 #if EFI_CJ125
 
