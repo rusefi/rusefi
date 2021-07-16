@@ -254,3 +254,5 @@ const char *portname(ioportid_t GPIOx);
 void printSpiConfig(const char *msg, spi_device_e device);
 brain_pin_e parseBrainPin(const char *str);
 const char *hwPortname(brain_pin_e brainPin);
+
+extern EnginePins enginePins;
