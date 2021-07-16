@@ -5,8 +5,6 @@
 #include "functional_sensor.h"
 #include "table_func.h"
 
-EXTERN_CONFIG;
-
 static FunctionalSensor fuelSensor(SensorType::FuelLevel, /* timeout = */ MS2NT(500));
 
 #if !EFI_UNIT_TEST

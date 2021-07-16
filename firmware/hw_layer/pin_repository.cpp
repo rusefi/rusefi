@@ -112,8 +112,6 @@ PinRepository::PinRepository() {
 #include "smart_gpio.h"
 #include "hardware.h"
 
-EXTERN_CONFIG;
-
 static brain_pin_e index_to_brainPin(unsigned int i)
 {
 	if (i < getBrainPinTotalNum())

@@ -8,8 +8,6 @@
 #include "engine_template.h"
 #include "custom_engine.h"
 
-EXTERN_CONFIG;
-
 void setEngineTemplateConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	setFrankensoConfiguration(PASS_CONFIG_PARAMETER_SIGNATURE);
 }

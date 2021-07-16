@@ -60,4 +60,17 @@ void rememberCurrentConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 void setBoardDefaultConfiguration(void);
 void setBoardConfigOverrides(void);
 
-EXTERN_CONFIG;
+#if !EFI_UNIT_TEST
+extern engine_configuration_s *engineConfiguration;
+extern persistent_config_container_s persistentState;
+extern persistent_config_s *config;
+
+/**
+ * & is reference in C++ (not C)
+ * Ref is a pointer that:
+ *   you access with dot instead of arrow
+ *   Cannot be null
+ * This is about EFI_ACTIVE_CONFIGURATION_IN_FLASH
+ */
+extern engine_configuration_s & activeConfiguration;
+#endif // EFI_UNIT_TEST

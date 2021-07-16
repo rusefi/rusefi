@@ -3,8 +3,6 @@
 #include "engine_math.h"
 #include "table_helper.h"
 
-EXTERN_CONFIG;
-
 static void setDefaultMultisparkParameters(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	// 1ms spark + 2ms dwell
 	engineConfiguration->multisparkSparkDuration = 1000;

@@ -13,8 +13,6 @@
 #include "ego.h"
 #include "engine_math.h"
 
-EXTERN_CONFIG;
-
 // VW_ABA
 // set engine_type 32
 void setVwAba(DECLARE_CONFIG_PARAMETER_SIGNATURE) {

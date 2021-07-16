@@ -20,8 +20,6 @@
 #include "ego.h"
 #include "thermistors.h"
 
-EXTERN_CONFIG;
-
 // todo: why would this not work?
 //extern const float mazda_miata_nb2_RpmBins[FUEL_RPM_COUNT];
 //extern const float mazda_miata_nb2_LoadBins[FUEL_LOAD_COUNT];

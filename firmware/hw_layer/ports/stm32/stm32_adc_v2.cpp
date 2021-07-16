@@ -11,8 +11,6 @@
 
 #if HAL_USE_ADC
 
-EXTERN_CONFIG;
-
 /* Depth of the conversion buffer, channels are sampled X times each.*/
 #define SLOW_ADC_OVERSAMPLE      8
 

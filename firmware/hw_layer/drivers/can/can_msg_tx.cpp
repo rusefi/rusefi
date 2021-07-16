@@ -15,8 +15,6 @@
 #include "can_msg_tx.h"
 #include "engine_configuration.h"
 
-EXTERN_CONFIG
-
 extern int canWriteOk;
 extern int canWriteNotOk;
 
