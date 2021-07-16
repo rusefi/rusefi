@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Wed Jul 14 02:25:16 UTC 2021
+// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Fri Jul 16 04:50:16 UTC 2021
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -1585,7 +1585,7 @@ public class Fields {
 	public static final char TS_SD_R_COMMAND = 'r';
 	public static final char TS_SD_W_COMMAND = 'w';
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI 2021.07.14.all.2379427800";
+	public static final String TS_SIGNATURE = "rusEFI 2021.07.16.all.2234088504";
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final char TS_TEST_COMMAND = 't';
 	public static final int TT_TT_1_16 = 50;
@@ -1865,7 +1865,7 @@ public class Fields {
 	public static final Field CYLINDERBORE = Field.create("CYLINDERBORE", 408, FieldType.FLOAT);
 	public static final Field SENSORSNIFFERRPMTHRESHOLD = Field.create("SENSORSNIFFERRPMTHRESHOLD", 412, FieldType.INT);
 	public static final Field RPMHARDLIMIT = Field.create("RPMHARDLIMIT", 416, FieldType.INT);
-	public static final String[] engine_load_mode_e = {"INVALID", "INVALID", "INVALID", "Speed Density", "MAF Air Charge", "Alpha-N", "INVALID"};
+	public static final String[] engine_load_mode_e = {"INVALID", "INVALID", "INVALID", "Speed Density", "MAF Air Charge", "Alpha-N", "Lua"};
 	public static final Field FUELALGORITHM = Field.create("FUELALGORITHM", 420, FieldType.INT, engine_load_mode_e);
 	public static final Field CRANKINGINJECTIONMODE = Field.create("CRANKINGINJECTIONMODE", 424, FieldType.INT);
 	public static final Field INJECTIONMODE = Field.create("INJECTIONMODE", 428, FieldType.INT);
