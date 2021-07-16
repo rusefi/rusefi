@@ -8,6 +8,7 @@
 #include "efilib.h"
 #include "tunerstudio_outputs.h"
 #include "pwm_generator_logic.h"
+#include "can_msg_tx.h"
 
 // Some functions lean on existing FSIO implementation
 #include "fsio_impl.h"
@@ -62,6 +63,62 @@ static int lua_table3d(lua_State* l) {
 
 	lua_pushnumber(l, result);
 	return 1;
+}
+
+static int lua_txCan(lua_State* l) {
+	auto channel = luaL_checkinteger(l, 1);
+	// TODO: support multiple channels
+	luaL_argcheck(l, channel == 1, 1, "only channel 1 currently supported");
+
+	auto id = luaL_checkinteger(l, 2);
+	auto ext = luaL_checkinteger(l, 3);
+
+	// Check that ID is valid based on std vs. ext
+	if (ext == 0) {
+		luaL_argcheck(l, id <= 0x7FF, 2, "ID specified is greater than max std ID");
+	} else {
+		luaL_argcheck(l, id <= 0x1FFF'FFFF, 2, "ID specified is greater than max ext ID");
+	}
+
+	luaL_checktype(l, 4, LUA_TTABLE);
+
+	// conform ext parameter to true/false
+	CanTxMessage msg(id, 8, ext == 0 ? false : true);
+
+	// Unfortunately there is no way to inspect the length of a table,
+	// so we have to just iterate until we run out of numbers
+	uint8_t dlc = 0;
+
+	while (true) {
+		lua_pushnumber(l, dlc + 1);
+		auto elementType = lua_gettable(l, 4);
+		auto val = lua_tointeger(l, -1);
+		lua_pop(l, 1);
+
+		if (elementType == LUA_TNIL) {
+			// we're done, this is the end of the array.
+			break;
+		}
+
+		if (elementType != LUA_TNUMBER) {
+			// We're not at the end, but this isn't a number!
+			luaL_error(l, "Unexpected CAN data at position %d: %s", dlc, lua_tostring(l, -1));
+		}
+
+		// This element is valid, increment DLC
+		dlc++;
+
+		if (dlc > 8) {
+			luaL_error(l, "CAN frame length cannot be longer than 8");
+		}
+
+		msg[dlc - 1] = val;
+	}
+
+	msg.setDlc(dlc);
+
+	// no return value
+	return 0;
 }
 
 #if !EFI_UNIT_TEST
@@ -190,6 +247,7 @@ void configureRusefiLuaHooks(lua_State* l) {
 	lua_register(l, "getSensorRaw", lua_getSensorRaw);
 	lua_register(l, "hasSensor", lua_hasSensor);
 	lua_register(l, "table3d", lua_table3d);
+	lua_register(l, "txCan", lua_txCan);
 
 #if !EFI_UNIT_TEST
 	lua_register(l, "startPwm", lua_startPwm);
