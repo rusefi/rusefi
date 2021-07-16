@@ -9,10 +9,10 @@
 
 #include "efifeatures.h"
 #include "global.h"
+#include "can_msg_tx.h"
 
 #if EFI_CAN_SUPPORT
 #include "can.h"
-#include "can_msg_tx.h"
 #include "engine_configuration.h"
 
 EXTERN_CONFIG
@@ -43,7 +43,7 @@ CanTxMessage::CanTxMessage(uint32_t eid, uint8_t dlc, bool isExtended) {
 		CAN_SID(m_frame) = eid;
 	}
 
-	m_frame.DLC = dlc;
+	setDlc(dlc);
 
 	memset(m_frame.data8, 0, sizeof(m_frame.data8));
 }
@@ -73,6 +73,10 @@ CanTxMessage::~CanTxMessage() {
 	}
 }
 
+void CanTxMessage::setDlc(uint8_t) {
+	m_frame.DLC = dlc;
+}
+
 uint8_t& CanTxMessage::operator[](size_t index) {
 	return m_frame.data8[index];
 }
@@ -85,5 +89,21 @@ void CanTxMessage::setShortValue(uint16_t value, size_t offset) {
 void CanTxMessage::setBit(size_t byteIdx, size_t bitIdx) {
 	m_frame.data8[byteIdx] |= 1 << bitIdx;
 }
+
+#else
+
+CanTxMessage::CanTxMessage(uint32_t eid, uint8_t dlc = 8, bool isExtended = false) {
+
+}
+
+CanTxMessage::~CanTxMessage() {
+
+}
+
+uint8_t& CanTxMessage::operator[](size_t index) {
+	return m_data8[index];
+}
+
+void CanTxMessage::setDlc(uint8_t) { }
 
 #endif // EFI_CAN_SUPPORT
