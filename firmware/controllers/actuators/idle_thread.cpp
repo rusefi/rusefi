@@ -47,8 +47,6 @@
 #include "stepper.h"
 #endif
 
-EXTERN_ENGINE;
-
 // todo: move all static vars to engine->engineState.idle?
 
 static bool shouldResetPid = false;

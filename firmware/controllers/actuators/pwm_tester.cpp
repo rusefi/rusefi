@@ -19,8 +19,6 @@ static SimplePwm pwmTest[5];
 
 extern OutputPin warningLedPin;
 
-EXTERN_ENGINE;
-
 static void startPwmTest(int freq) {
 	efiPrintf("running pwm test @%d", freq);
 

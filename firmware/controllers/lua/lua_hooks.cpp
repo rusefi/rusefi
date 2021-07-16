@@ -15,8 +15,6 @@
 // Some functions lean on existing FSIO implementation
 #include "fsio_impl.h"
 
-EXTERN_ENGINE;
-
 static int lua_efi_print(lua_State* l) {
 	auto msg = luaL_checkstring(l, 1);
 

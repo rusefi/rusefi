@@ -11,8 +11,6 @@
 
 #include "engine.h"
 
-EXTERN_ENGINE;
-
 unsigned int getBrainPinTotalNum(void) {
 	return BRAIN_PIN_TOTAL_PINS;
 }

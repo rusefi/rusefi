@@ -26,8 +26,6 @@
 
 static bool needToWriteConfiguration = false;
 
-EXTERN_ENGINE;
-
 extern persistent_config_container_s persistentState;
 
 extern engine_configuration_s *engineConfiguration;

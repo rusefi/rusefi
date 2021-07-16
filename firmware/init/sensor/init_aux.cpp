@@ -5,8 +5,6 @@
 #include "global.h"
 #include "functional_sensor.h"
 
-EXTERN_ENGINE;
-
 // These aux sensors just read voltage - so the converter function has nothing to do
 struct IdentityFunction : public SensorConverter {
 	SensorResult convert(float raw) const {

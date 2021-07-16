@@ -3,8 +3,6 @@
 #include "tunerstudio_outputs.h"
 #include "engine_configuration.h"
 
-EXTERN_ENGINE;
-
 void SimpleTransmissionController::init() {
     for (size_t i = 0; i < efi::size(CONFIG(tcu_solenoid)); i++) {
         enginePins.tcuSolenoids[i].initPin("Transmission Solenoid", CONFIG(tcu_solenoid)[i], &CONFIG(tcu_solenoid_mode)[i]);

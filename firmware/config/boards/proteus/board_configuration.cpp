@@ -11,8 +11,6 @@
 #include "allsensors.h"
 #include "fsio_impl.h"
 
-EXTERN_ENGINE;
-
 static const brain_pin_e injPins[] = {
 	GPIOD_7,
 	GPIOG_9,

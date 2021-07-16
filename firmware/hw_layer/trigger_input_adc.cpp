@@ -20,8 +20,6 @@ extern "C" void toggleLed(int led, int mode);
 #define BOARD_MOD1_PORT GPIOD
 #define BOARD_MOD1_PIN 5
 
-EXTERN_ENGINE;
-
 #if 0
 static volatile int centeredDacValue = 127;
 static volatile int toothCnt = 0;

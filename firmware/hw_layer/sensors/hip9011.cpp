@@ -210,8 +210,6 @@ int Hip9011Hardware::sendSyncCommand(uint8_t tx, uint8_t *rx_ptr) {
 	return ret;
 }
 
-EXTERN_ENGINE;
-
 static int hip_wake_driver(void)
 {
     /* Entering a reentrant critical zone.*/

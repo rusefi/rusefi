@@ -15,8 +15,6 @@
 #include "pin_repository.h"
 #include "can_vss.h"
 
-EXTERN_ENGINE;
-
 static efitick_t lastSignalTimeNt = 0;
 static efitick_t vssDiff = 0;
 

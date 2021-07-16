@@ -141,8 +141,6 @@ static uint64_t binaryLogCount = 0;
 
 #endif /* EFI_FILE_LOGGING */
 
-EXTERN_ENGINE;
-
 /**
  * This is useful if we are changing engine mode dynamically
  * For example http://rusefi.com/forum/viewtopic.php?f=5&t=1085

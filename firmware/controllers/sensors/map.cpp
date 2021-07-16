@@ -22,8 +22,6 @@
 
 #if EFI_ANALOG_SENSORS
 
-EXTERN_ENGINE;
-
 static FastInterpolation customMap;
 static efitick_t prevWidthTimeNt = 0;
 

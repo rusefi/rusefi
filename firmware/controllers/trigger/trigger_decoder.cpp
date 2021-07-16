@@ -109,8 +109,6 @@ TriggerStateWithRunningStatistics::TriggerStateWithRunningStatistics() :
 
 #if EFI_SHAFT_POSITION_INPUT
 
-EXTERN_ENGINE;
-
 #if ! EFI_PROD_CODE
 bool printTriggerDebug = false;
 bool printTriggerTrace = false;

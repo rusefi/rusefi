@@ -141,8 +141,6 @@ static char panicMessage[200];
 
 static virtual_timer_t resetTimer;
 
-EXTERN_ENGINE;
-
 // todo: move this into a hw-specific file
 void rebootNow(void) {
 	NVIC_SystemReset();

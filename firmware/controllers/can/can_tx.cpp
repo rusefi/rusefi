@@ -19,8 +19,6 @@
 #include "thread_priority.h"
 #include "rusefi_wideband.h"
 
-EXTERN_ENGINE;
-
 extern CanListener* canListeners_head;
 
 

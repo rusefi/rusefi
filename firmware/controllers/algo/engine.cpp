@@ -55,8 +55,6 @@
 #include "gpio/tle8888.h"
 #endif
 
-EXTERN_ENGINE;
-
 #if EFI_ENGINE_SNIFFER
 #include "engine_sniffer.h"
 extern int waveChartUsedSize;

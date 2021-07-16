@@ -79,8 +79,6 @@ int TriggerCentral::getHwEventCounter(int index) const {
 
 #if EFI_SHAFT_POSITION_INPUT
 
-EXTERN_ENGINE;
-
 angle_t TriggerCentral::getVVTPosition(uint8_t bankIndex, uint8_t camIndex) {
 	if (bankIndex >= BANKS_COUNT || camIndex >= CAMS_PER_BANK) {
 		return NAN;
@@ -620,8 +618,6 @@ void TriggerCentral::handleShaftSignal(trigger_event_e signal, efitick_t timesta
 		mainTriggerCallback(triggerIndexForListeners, timestamp PASS_ENGINE_PARAMETER_SUFFIX);
 	}
 }
-
-EXTERN_ENGINE;
 
 static void triggerShapeInfo(void) {
 #if EFI_PROD_CODE || EFI_SIMULATOR

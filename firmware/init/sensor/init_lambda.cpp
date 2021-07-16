@@ -6,8 +6,6 @@
 #include "function_pointer_sensor.h"
 #include "ego.h"
 
-EXTERN_ENGINE;
-
 struct GetAfrWrapper {
 	DECLARE_ENGINE_PTR;
 

@@ -15,8 +15,6 @@
 #define NUM_INNOVATE_O2_SENSORS 1
 #define AFR_MULTIPLIER 147
 
-EXTERN_ENGINE;
-
 volatile float InnovateLC2AFR = AFR_ERROR;
 
 typedef enum

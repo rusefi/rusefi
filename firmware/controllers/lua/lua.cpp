@@ -16,8 +16,6 @@
 #include "engine.h"
 #include "tunerstudio_outputs.h"
 
-EXTERN_ENGINE;
-
 #define LUA_HEAP_SIZE 20000
 
 static memory_heap_t heap;

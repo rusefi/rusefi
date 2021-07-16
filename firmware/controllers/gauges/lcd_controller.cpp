@@ -43,8 +43,6 @@
 #include "sensor.h"
 
 
-EXTERN_ENGINE;
-
 static MenuItem ROOT(NULL, NULL);
 
 static MenuTree tree(&ROOT);

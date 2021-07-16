@@ -43,8 +43,6 @@ bool needEvent(const int currentIndex, const int size, const MultiChannelStateSe
 TriggerEmulatorHelper::TriggerEmulatorHelper() {
 }
 
-EXTERN_ENGINE;
-
 static OutputPin emulatorOutputs[PWM_PHASE_MAX_WAVE_PER_PWM];
 
 void TriggerEmulatorHelper::handleEmulatorCallback(const int size, const MultiChannelStateSequence& multiChannelStateSequence, int stateIndex DECLARE_ENGINE_PARAMETER_SUFFIX) {

@@ -7,8 +7,6 @@
 #if EFI_TUNER_STUDIO
 #include "tunerstudio_outputs.h"
 #include "engine.h"
-
-EXTERN_ENGINE;
 #endif
 
 AemXSeriesWideband::AemXSeriesWideband(uint8_t sensorIndex, SensorType type)

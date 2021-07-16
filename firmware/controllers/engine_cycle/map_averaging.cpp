@@ -92,8 +92,6 @@ static int averagedMapBufIdx = 0;
 // this is 'minimal averaged' MAP within avegaging window
 static float currentPressure = NO_VALUE_YET;
 
-EXTERN_ENGINE;
-
 /**
  * here we have averaging start and averaging end points for each cylinder
  */

@@ -9,8 +9,6 @@
 #include "engine.h"
 #include "error_handling.h"
 
-EXTERN_ENGINE;
-
 #define LOW_VOLTAGE "Low Voltage"
 
 CJ125::CJ125() : wboHeaterControl("wbo"),

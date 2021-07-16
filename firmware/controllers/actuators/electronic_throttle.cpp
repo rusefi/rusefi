@@ -95,8 +95,6 @@
 
 static pedal2tps_t pedal2tpsMap;
 
-EXTERN_ENGINE;
-
 constexpr float etbPeriodSeconds = 1.0f / ETB_LOOP_FREQUENCY;
 
 static bool startupPositionError = false;

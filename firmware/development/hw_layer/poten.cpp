@@ -18,8 +18,6 @@
 
 #if HAL_USE_SPI
 
-EXTERN_ENGINE;
-
 /**
  * MCP42010 digital potentiometer driver
  *

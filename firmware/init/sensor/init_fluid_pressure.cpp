@@ -8,8 +8,6 @@
 #include "proxy_sensor.h"
 #include "linear_func.h"
 
-EXTERN_ENGINE;
-
 static LinearFunc oilpSensorFunc;
 static FunctionalSensor oilpSensor(SensorType::OilPressure, /* timeout = */ MS2NT(50));
 

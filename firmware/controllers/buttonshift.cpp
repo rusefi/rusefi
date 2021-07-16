@@ -8,8 +8,6 @@
 #include "buttonshift.h"
 #include "engine.h"
 
-EXTERN_ENGINE;
-
 ButtonShiftController buttonShiftController;
 
 

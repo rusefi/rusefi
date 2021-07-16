@@ -2,8 +2,6 @@
 #include "engine.h"
 #include "efilib.h"
 
-EXTERN_ENGINE;
-
 void LimpManager::updateState(int rpm, efitick_t nowNt) {
 	Clearable allowFuel = CONFIG(isInjectionEnabled);
 	Clearable allowSpark = CONFIG(isIgnitionEnabled);

@@ -32,8 +32,6 @@
 #include "tunerstudio_outputs.h"
 #endif /* EFI_TUNER_STUDIO */
 
-EXTERN_ENGINE;
-
 static tps_tps_Map3D_t tpsTpsMap;
 
 void WallFuel::resetWF() {

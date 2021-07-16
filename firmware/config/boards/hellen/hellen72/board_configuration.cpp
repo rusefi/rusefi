@@ -17,8 +17,6 @@
 #include "fsio_impl.h"
 #include "engine_configuration.h"
 
-EXTERN_ENGINE;
-
 static void hellenWbo() {
 	engineConfiguration->enableAemXSeries = true;
 }

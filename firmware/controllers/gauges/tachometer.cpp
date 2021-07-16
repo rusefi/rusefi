@@ -12,8 +12,6 @@
 #include "tachometer.h"
 #include "pwm_generator_logic.h"
 
-EXTERN_ENGINE;
-
 static SimplePwm tachControl("tach"); 
 static float tachFreq;  
 static float duty;   

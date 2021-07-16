@@ -45,8 +45,6 @@
 static const char *sdStatus = SD_STATE_INIT;
 static bool fs_ready = false;
 
-EXTERN_ENGINE;
-
 // at about 20Hz we write about 2Kb per second, looks like we flush once every ~2 seconds
 #define F_SYNC_FREQUENCY 10
 

@@ -10,8 +10,6 @@
 
 #if EFI_SOFTWARE_KNOCK
 
-EXTERN_ENGINE;
-
 #include "knock_config.h"
 #include "ch.hpp"
 

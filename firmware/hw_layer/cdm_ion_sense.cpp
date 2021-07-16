@@ -51,8 +51,6 @@ void CdmState::onNewSignal(int currentRevolution) {
 
 #include "digital_input_exti.h"
 
-EXTERN_ENGINE;
-
 static CdmState instance;
 
 int getCurrentCdmValue(int currentRevolution) {

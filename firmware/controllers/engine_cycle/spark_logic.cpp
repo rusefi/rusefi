@@ -24,7 +24,6 @@
 #include "tunerstudio_outputs.h"
 #endif /* EFI_TUNER_STUDIO */
 
-EXTERN_ENGINE;
 #if EFI_UNIT_TEST
 extern bool verboseMode;
 #endif /* EFI_UNIT_TEST */

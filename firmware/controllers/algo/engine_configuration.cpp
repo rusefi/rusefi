@@ -107,8 +107,6 @@
 #include "tunerstudio.h"
 #endif
 
-EXTERN_ENGINE;
-
 //#define TS_DEFAULT_SPEED 115200
 #define TS_DEFAULT_SPEED 38400
 

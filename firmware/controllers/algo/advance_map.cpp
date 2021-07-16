@@ -31,8 +31,6 @@
 
 #if EFI_ENGINE_CONTROL
 
-EXTERN_ENGINE;
-
 static ign_Map3D_t advanceMap;
 static ign_Map3D_t iatAdvanceCorrectionMap;
 
