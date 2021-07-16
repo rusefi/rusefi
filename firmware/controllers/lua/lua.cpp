@@ -370,6 +370,22 @@ int testLuaReturnsInteger(const char* script) {
 	return lua_tointeger(ls, -1);
 }
 
+void testLuaExecString(const char* script) {
+	auto ls = setupLuaState();
+
+	if (!ls) {
+		throw new std::logic_error("Call to setupLuaState failed, returned null");
+	}
+
+	if (!loadScript(ls, script)) {
+		throw new std::logic_error("Call to loadScript failed");
+	}
+
+	if (lua_isnil(ls, -1)) {
+		return unexpected;
+	}
+}
+
 #endif // EFI_UNIT_TEST
 
 #endif // EFI_LUA

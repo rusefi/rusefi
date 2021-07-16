@@ -10,4 +10,5 @@ void startLua();
 expected<float> testLuaReturnsNumberOrNil(const char* script);
 float testLuaReturnsNumber(const char* script);
 int testLuaReturnsInteger(const char* script);
+void testLuaExecString(const char* script);
 #endif
