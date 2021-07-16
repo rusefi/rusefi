@@ -11,8 +11,6 @@
 #include "table_helper.h"
 #include "map.h"
 
-EXTERN_CONFIG;
-
 /**
  * set engine_type 62
  * VW_B6

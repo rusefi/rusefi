@@ -13,8 +13,6 @@
 #include "rusEfiFunctionalTest.h"
 #endif // EFI_SIMULATOR
 
-EXTERN_ENGINE;
-
 #if EFI_PROD_CODE || EFI_SIMULATOR
 size_t TsChannelBase::read(uint8_t* buffer, size_t size) {
 	return readTimeout(buffer, size, SR5_READ_TIMEOUT);

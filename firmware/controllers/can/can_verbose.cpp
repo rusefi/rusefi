@@ -20,8 +20,6 @@
 #include "spark_logic.h"
 #include "vehicle_speed.h"
 
-EXTERN_ENGINE;
-
 struct Status {
     uint16_t warningCounter;
     uint16_t lastErrorCode;

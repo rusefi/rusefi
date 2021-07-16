@@ -23,8 +23,6 @@
 #include "electronic_throttle.h"
 #endif /* EFI_ELECTRONIC_THROTTLE_BODY */
 
-EXTERN_ENGINE;
-
 #if EFI_ENGINE_SNIFFER
 #include "engine_sniffer.h"
 extern WaveChart waveChart;

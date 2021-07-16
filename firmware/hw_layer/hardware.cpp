@@ -70,8 +70,6 @@
 #include "can_vss.h"
 #endif
 
-EXTERN_ENGINE;
-
 /**
  * #311 we want to test RTC before engine start so that we do not test it while engine is running
  */

@@ -48,8 +48,6 @@ static NO_CACHE adcsample_t fastAdcSampleBuf[ADC_BUF_DEPTH_FAST * ADC_MAX_CHANNE
 
 static adc_channel_mode_e adcHwChannelEnabled[HW_MAX_ADC_INDEX];
 
-EXTERN_ENGINE;
-
 // Board voltage, with divider coefficient accounted for
 float getVoltageDivided(const char *msg, adc_channel_e hwChannel DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	return getVoltage(msg, hwChannel PASS_ENGINE_PARAMETER_SUFFIX) * engineConfiguration->analogInputDividerCoefficient;
@@ -99,8 +97,6 @@ static uint32_t slowAdcCounter = 0;
 
 // todo: move this flag to Engine god object
 static int adcDebugReporting = false;
-
-EXTERN_ENGINE;
 
 static adcsample_t getAvgAdcValue(int index, adcsample_t *samples, int bufDepth, int numChannels) {
 	uint32_t result = 0;

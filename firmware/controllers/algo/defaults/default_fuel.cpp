@@ -3,8 +3,6 @@
 #include "table_helper.h"
 #include "mazda_miata_vvt.h"
 
-EXTERN_CONFIG;
-
 static void setBosch02880155868(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	// http://www.boschdealer.com/specsheets/0280155868cs.jpg
 	engineConfiguration->injector.battLagCorrBins[0] = 6;

@@ -11,8 +11,6 @@
 #include "pin_repository.h"
 #include "allsensors.h"
 
-EXTERN_ENGINE;
-
 ButtonDebounce acDebounce("ac_switch");
 
 void initSensors(DECLARE_ENGINE_PARAMETER_SIGNATURE) {

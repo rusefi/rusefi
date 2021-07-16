@@ -2,8 +2,6 @@
 #include "engine.h"
 #include "maf.h"
 
-EXTERN_ENGINE;
-
 static void fillTheRest(persistent_config_s *e, int i) {
 	/**
 	 * unrealistic values just to make binary search happy

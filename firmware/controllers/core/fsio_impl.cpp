@@ -16,8 +16,6 @@
 #include "allsensors.h"
 #include "sensor.h"
 
-EXTERN_ENGINE;
-
 #if EFI_PROD_CODE
 
 // todo: that's about bench test mode, wrong header for sure!

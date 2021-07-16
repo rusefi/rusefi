@@ -2,8 +2,6 @@
 #include "tunerstudio_outputs.h"
 #include "map.h"
 
-EXTERN_ENGINE;
-
 void InjectorModelBase::prepare() {
 	m_massFlowRate = getInjectorMassFlowRate();
 	float deadtime = getDeadtime();

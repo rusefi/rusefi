@@ -82,8 +82,6 @@ int RpmCalculator::getRpm() const {
 
 #if EFI_SHAFT_POSITION_INPUT
 
-EXTERN_ENGINE;
-
 RpmCalculator::RpmCalculator() :
 		StoredValueSensor(SensorType::Rpm, 0)
 	{

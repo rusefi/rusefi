@@ -35,8 +35,6 @@
 #include "advance_map.h"
 #include "custom_engine.h"
 
-EXTERN_CONFIG;
-
 static void setHondaAccordConfigurationCommon(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	engineConfiguration->map.sensor.type = MT_DENSO183;
 

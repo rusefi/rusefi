@@ -15,8 +15,6 @@
 #include "test_engine.h"
 #include "engine_math.h"
 
-EXTERN_CONFIG;
-
 // TEST_ENGINE
 void setTestEngineConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	setDefaultFrankensoConfiguration(PASS_CONFIG_PARAMETER_SIGNATURE);

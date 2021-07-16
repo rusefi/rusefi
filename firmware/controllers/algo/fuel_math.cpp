@@ -40,8 +40,6 @@
 #include "speed_density_base.h"
 #include "lua_hooks.h"
 
-EXTERN_ENGINE;
-
 static fuel_Map3D_t fuelPhaseMap;
 extern fuel_Map3D_t veMap;
 extern lambda_Map3D_t lambdaMap;

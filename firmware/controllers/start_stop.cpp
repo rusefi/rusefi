@@ -1,8 +1,6 @@
 #include "start_stop.h"
 #include "engine.h"
 
-EXTERN_ENGINE;
-
 ButtonDebounce startStopButtonDebounce("start_button");
 
 void initStartStopButton(DECLARE_ENGINE_PARAMETER_SIGNATURE) {

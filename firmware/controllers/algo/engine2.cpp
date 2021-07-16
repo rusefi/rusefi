@@ -30,8 +30,6 @@
 #include "status_loop.h"
 #endif
 
-EXTERN_ENGINE;
-
 WarningCodeState::WarningCodeState() {
 	clear();
 }

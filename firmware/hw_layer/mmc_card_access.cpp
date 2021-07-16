@@ -36,9 +36,6 @@
 #include "efilib.h"
 #include "hardware.h"
 
-EXTERN_ENGINE
-;
-
 /**
  * for funny reasons file name has to be at least 4 symbols before the dot
  */

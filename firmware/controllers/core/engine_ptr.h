@@ -19,7 +19,6 @@
 class Engine;
 #endif // def __cplusplus
 
-
 struct engine_configuration_s;
 struct persistent_config_s;
 
@@ -49,11 +48,8 @@ struct persistent_config_s;
 	#define PASS_ENGINE_PARAMETER_SIGNATURE engine, PASS_CONFIG_PARAMETER_SIGNATURE
 	#define PASS_ENGINE_PARAMETER_SUFFIX , PASS_ENGINE_PARAMETER_SIGNATURE
 
-	#define EXTERN_ENGINE extern EnginePins enginePins; \
-		extern engine_configuration_s & activeConfiguration
+	#define EXTERN_ENGINE extern engine_configuration_s & activeConfiguration
 #endif // def __cplusplus
-
-	#define EXTERN_CONFIG
 
 	#define DEFINE_CONFIG_PARAM(x, y) , x y
 	#define PASS_CONFIG_PARAM(x) , x
@@ -88,12 +84,6 @@ struct persistent_config_s;
 	// Pass this after some other parameters are passed
 	#define PASS_ENGINE_PARAMETER_SUFFIX
 
-	#define EXTERN_ENGINE \
-			extern Engine ___engine; \
-			extern Engine *engine; \
-			EXTERN_CONFIG \
-			extern EnginePins enginePins \
-
 	#define ENGINE(x) ___engine.x
 #endif // def __cplusplus
 
@@ -106,23 +96,6 @@ struct persistent_config_s;
 	 * access in unit tests
 	 */
 	#define CONFIG(x) persistentState.persistentConfiguration.engineConfiguration.x
-
-	/**
-	 * & is reference in C++ (not C)
-	 * Ref is a pointer that:
-	 *   you access with dot instead of arrow
-	 *   Cannot be null
-	 * This is about EFI_ACTIVE_CONFIGURATION_IN_FLASH
-	 */
-	#define EXTERN_CONFIG \
-			EXTERN_ENGINE_CONFIGURATION \
-			extern engine_configuration_s & activeConfiguration; \
-
-	#define EXTERN_ENGINE_CONFIGURATION \
-			extern engine_configuration_s *engineConfiguration; \
-			extern persistent_config_container_s persistentState; \
-			extern persistent_config_s *config;
-
 
 	#define DEFINE_CONFIG_PARAM(x, y)
 	#define CONFIG_PARAM(x) CONFIG(x)

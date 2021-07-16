@@ -17,8 +17,6 @@
 
 #include "engine.h"
 
-EXTERN_ENGINE;
-
 enum {
 	LCD_HD44780_DISPLAY_CLEAR = 0x01,
 	LCD_HD44780_SHIFT_CURSOR_RIGHT = 0x06,

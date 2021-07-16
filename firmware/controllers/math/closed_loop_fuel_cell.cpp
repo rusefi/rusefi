@@ -3,8 +3,6 @@
 #include "engine_configuration_generated_structures.h"
 #include "sensor.h"
 
-EXTERN_ENGINE;
-
 constexpr float integrator_dt = FAST_CALLBACK_PERIOD_MS * 0.001f;
 
 void ClosedLoopFuelCellBase::update(float lambdaDeadband, bool ignoreErrorMagnitude DECLARE_ENGINE_PARAMETER_SUFFIX)

@@ -45,8 +45,6 @@
 #include "rusEfiFunctionalTest.h"
 #endif /*EFI_SIMULATOR */
 
-EXTERN_ENGINE;
-
 bool consoleByteArrived = false;
 
 void onDataArrived(bool valid) {

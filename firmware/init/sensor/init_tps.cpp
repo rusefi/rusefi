@@ -10,8 +10,6 @@
 #include "linear_func.h"
 #include "tps.h"
 
-EXTERN_ENGINE;
-
 LinearFunc tpsFunc1p(TPS_TS_CONVERSION);
 LinearFunc tpsFunc1s(TPS_TS_CONVERSION);
 LinearFunc tpsFunc2p(TPS_TS_CONVERSION);

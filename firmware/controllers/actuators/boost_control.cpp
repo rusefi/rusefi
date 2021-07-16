@@ -25,8 +25,6 @@
 #error "Unexpected OS ACCESS HERE"
 #endif
 
-EXTERN_ENGINE;
-
 static boostOpenLoop_Map3D_t boostMapOpen;
 static boostOpenLoop_Map3D_t boostMapClosed;
 static SimplePwm boostPwmControl("boost");

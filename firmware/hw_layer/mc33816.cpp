@@ -28,8 +28,6 @@
 #include "mpu_util.h"
 #include "allsensors.h"
 
-EXTERN_ENGINE;
-
 static bool isInitializaed = false;
 
 static OutputPin chipSelect;

@@ -6,8 +6,6 @@
 #include "gppwm_channel.h"
 #include "pwm_generator_logic.h"
 
-EXTERN_ENGINE;
-
 static GppwmChannel channels[GPPWM_CHANNELS];
 static OutputPin pins[GPPWM_CHANNELS];
 static SimplePwm outputs[GPPWM_CHANNELS];

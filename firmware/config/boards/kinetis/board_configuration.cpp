@@ -14,8 +14,6 @@
 #include "engine_math.h"
 #include "tps.h"
 
-EXTERN_ENGINE;
-
 #if 0
 char __debugBuffer[80];
 int __debugEnabled = 0;

@@ -8,8 +8,6 @@
 #include "sensor.h"
 #include "engine_math.h"
 
-EXTERN_ENGINE;
-
 expected<float> readGppwmChannel(gppwm_channel_e channel DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	switch (channel) {
 	case GPPWM_Tps:

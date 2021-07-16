@@ -12,8 +12,6 @@
 // This array contains the firmware image for the wideband contoller
 #include "wideband_firmware/for_rusefi/wideband_image.h"
 
-EXTERN_ENGINE;
-
 #define EVT_BOOTLOADER_ACK EVENT_MASK(0)
 
 static thread_t* waitingBootloaderThread = nullptr;

@@ -17,8 +17,6 @@
 #include "fsio_impl.h"
 #include "engine_configuration.h"
 
-EXTERN_ENGINE;
-
 static void setInjectorPins() {
 	engineConfiguration->injectionPins[0] = GPIOG_7;
 	engineConfiguration->injectionPins[1] = GPIOG_8;

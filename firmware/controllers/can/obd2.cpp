@@ -37,8 +37,6 @@
 #include "fuel_math.h"
 #include "thermistors.h"
 
-EXTERN_ENGINE;
-
 static const int16_t supportedPids0120[] = { 
 	PID_MONITOR_STATUS,
 	PID_FUEL_SYSTEM_STATUS,

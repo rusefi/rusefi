@@ -9,8 +9,6 @@
 #include "resistance_func.h"
 #include "thermistor_func.h"
 
-EXTERN_ENGINE;
-
 using resist = ResistanceFunc;
 using therm = ThermistorFunc;
 

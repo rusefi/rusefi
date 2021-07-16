@@ -17,8 +17,6 @@
 extern TunerStudioOutputChannels tsOutputChannels;
 #endif /* EFI_TUNER_STUDIO */
 
-EXTERN_ENGINE;
-
 DynoView dynoInstance;
 
 void DynoView::update(vssSrc src) {

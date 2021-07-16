@@ -21,8 +21,6 @@
 #include "cj125.h"
 #endif /* EFI_CJ125 */
 
-EXTERN_ENGINE;
-
 #ifdef EFI_NARROW_EGO_AVERAGING
 // Needed by narrow EGOs (see updateEgoAverage()).
 // getAfr() is called at ~50Hz, so we store at most (1<<3)*32 EGO values for ~5 secs.

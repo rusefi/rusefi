@@ -15,8 +15,6 @@
 #include "vehicle_speed.h"
 #include "dynoview.h"
 
-EXTERN_ENGINE;
-
 static bool isInit = false;
 static uint16_t filterCanID = 0;
 static efitick_t frameTime;

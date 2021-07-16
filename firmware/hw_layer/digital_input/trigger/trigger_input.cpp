@@ -14,8 +14,6 @@
 
 #if (EFI_SHAFT_POSITION_INPUT) || defined(__DOXYGEN__)
 
-EXTERN_ENGINE;
-
 #if (HAL_USE_ICU == TRUE) || (HAL_TRIGGER_USE_PAL == TRUE)
 
 #if (HAL_USE_ICU == TRUE)

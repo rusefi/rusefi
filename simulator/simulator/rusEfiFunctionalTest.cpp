@@ -34,8 +34,6 @@
 #define DEFAULT_SIM_RPM 1200
 #define DEFAULT_SNIFFER_THR 2500
 
-EXTERN_ENGINE;
-
 extern WaveChart waveChart;
 
 int getRemainingStack(thread_t *otp) {

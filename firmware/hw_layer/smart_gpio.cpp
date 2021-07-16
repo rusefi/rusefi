@@ -22,8 +22,6 @@
 #include "drivers/gpio/drv8860.h"
 #include "engine.h"
 
-EXTERN_ENGINE;
-
 #if (BOARD_TLE6240_COUNT > 0)
 // todo: migrate to TS or board config
 #ifndef TLE6240_RESET_PORT

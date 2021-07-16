@@ -5,8 +5,6 @@
 #include "perf_trace.h"
 #include "biquad.h"
 
-EXTERN_ENGINE;
-
 #if EFI_UNIT_TEST
 
 void AdcSubscription::SubscribeSensor(FunctionalSensor &sensor,

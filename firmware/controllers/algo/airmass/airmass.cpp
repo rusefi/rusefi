@@ -2,8 +2,6 @@
 #include "sensor.h"
 #include "idle_thread.h"
 
-EXTERN_ENGINE;
-
 AirmassVeModelBase::AirmassVeModelBase(const ValueProvider3D& veTable) : m_veTable(&veTable) {}
 
 float AirmassVeModelBase::getVeLoadAxis(float passedLoad) const {

@@ -19,8 +19,6 @@
 #include "vehicle_speed.h"
 #include "rtc_helper.h"
 #include "fuel_math.h"
-EXTERN_ENGINE;
-
 // CAN Bus ID for broadcast
 /**
  * e46 data is from http://forums.bimmerforums.com/forum/showthread.php?1887229

@@ -40,8 +40,6 @@ static const int8_t default_aspire_timing_table[16][16] = {
 };
 #endif
 
-EXTERN_CONFIG;
-
 static void setDefaultAspireMaps(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	setTimingLoadBin(1.2, 4.4 PASS_CONFIG_PARAMETER_SUFFIX);
 	setTimingRpmBin(800, 7000 PASS_CONFIG_PARAMETER_SUFFIX);
