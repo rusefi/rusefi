@@ -6,10 +6,13 @@
 #include "can_msg_tx.h"
 #include "rusefi_wideband.h"
 #include "sensor.h"
+#include "engine.h"
 
 // This file contains an array called build_wideband_noboot_bin
 // This array contains the firmware image for the wideband contoller
 #include "wideband_firmware/for_rusefi/wideband_image.h"
+
+EXTERN_ENGINE;
 
 #define EVT_BOOTLOADER_ACK EVENT_MASK(0)
 
@@ -128,8 +131,8 @@ void sendWidebandInfo() {
 
 	m[0] = vbatt;
 
-	// TODO: send real enable bit!
-	m[1] = 0x1;
+	// Offset 1 bit 0 = heater enable
+	m[1] = enginePins.o2heater.getLogicValue() ? 0x01 : 0x00;
 }
 
 #endif // EFI_WIDEBAND_FIRMWARE_UPDATE && HAL_USE_CAN
