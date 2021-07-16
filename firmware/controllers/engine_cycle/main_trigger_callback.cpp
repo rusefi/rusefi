@@ -59,8 +59,6 @@
 
 #include "backup_ram.h"
 
-EXTERN_ENGINE;
-
 // todo: figure out if this even helps?
 //#if defined __GNUC__
 //#define RAM_METHOD_PREFIX __attribute__((section(".ram")))

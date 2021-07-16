@@ -58,8 +58,6 @@
 #include "gpio/tle8888.h"
 #endif // BOARD_TLE8888_COUNT
 
-EXTERN_ENGINE;
-
 static bool isRunningBench = false;
 
 bool isRunningBenchTest(void) {

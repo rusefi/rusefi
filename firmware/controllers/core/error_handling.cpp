@@ -16,8 +16,6 @@ static critical_msg_t criticalErrorMessageBuffer;
 #include "HD44780.h"
 #endif /* EFI_HD44780_LCD */
 
-EXTERN_ENGINE;
-
 extern int warningEnabled;
 
 bool hasFirmwareErrorFlag = false;

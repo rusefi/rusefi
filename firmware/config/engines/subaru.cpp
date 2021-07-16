@@ -12,8 +12,6 @@
 #include "custom_engine.h"
 #include "allsensors.h"
 
-EXTERN_CONFIG;
-
 void setSubaru2003Wrx(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	setFrankenso_01_LCD(engineConfiguration);
 	setFrankenso0_1_joystick(engineConfiguration);

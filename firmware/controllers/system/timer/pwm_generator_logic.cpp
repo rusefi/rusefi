@@ -13,8 +13,6 @@
 #include "pwm_generator_logic.h"
 #include "perf_trace.h"
 
-EXTERN_ENGINE;
-
 #if EFI_PROD_CODE
 #include "mpu_util.h"
 #include "engine.h"

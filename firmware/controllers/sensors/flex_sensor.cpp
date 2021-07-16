@@ -2,8 +2,6 @@
 #include "digital_input_exti.h"
 #include "flex_sensor.h"
 
-EXTERN_ENGINE;
-
 static void flexExtiCallback(void* arg) {
 	auto inst = reinterpret_cast<FlexFuelSensor*>(arg);
 	inst->onEdge(getTimeNowNt());

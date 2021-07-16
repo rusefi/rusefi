@@ -9,8 +9,6 @@
 #include "knock_logic.h"
 #include "os_access.h"
 
-EXTERN_ENGINE;
-
 int getCylinderKnockBank(uint8_t cylinderIndex) {
 	// C/C++ can't index in to bit fields, we have to provide lookup ourselves
 	switch (cylinderIndex) {

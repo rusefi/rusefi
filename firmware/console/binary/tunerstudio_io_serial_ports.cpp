@@ -11,8 +11,6 @@
 #include "tunerstudio_io.h"
 #include "connector_uart_dma.h"
 
-EXTERN_ENGINE;
-
 #if (!defined(TS_NO_PRIMARY) && (defined(TS_PRIMARY_UART) || defined(TS_PRIMARY_SERIAL)))
 	#define HAS_PRIMARY true
 #else

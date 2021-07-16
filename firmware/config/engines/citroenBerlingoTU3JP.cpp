@@ -39,8 +39,6 @@ static const uint8_t default_tps_advance_table[16][16] = {
 //static const float rpmSteps[16] = {400, 800, 1200, 1600, 2000, 2400, 2800, 3200, 3600, 4000, 4400, 4800, 5200, 5600, 6000, 6400};
 //static const float mapSteps[16] = {25, 30, 35, 40, 45, 50, 55, 60, 65, 70, 75, 80, 85, 90, 95, 100};
 
-EXTERN_CONFIG;
-
 void setCitroenBerlingoTU3JPConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	setDefaultFrankensoConfiguration(PASS_CONFIG_PARAMETER_SIGNATURE);
 

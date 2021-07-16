@@ -21,8 +21,6 @@
 #include "console_io.h"
 #endif /* EFI_PROD_CODE */
 
-EXTERN_ENGINE;
-
 void efiSetPadUnused(brain_pin_e brainPin DECLARE_ENGINE_PARAMETER_SUFFIX) {
 #if EFI_PROD_CODE
 	/* input with pull up, is it safe? */

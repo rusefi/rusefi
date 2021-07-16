@@ -18,8 +18,6 @@
 #include "mpu_util.h"
 #include "engine.h"
 
-EXTERN_ENGINE;
-
 static bool isSerialEnabled = false;
 static bool isSerialTXEnabled = false;
 static bool isSerialRXEnabled = false;

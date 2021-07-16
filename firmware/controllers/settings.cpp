@@ -57,8 +57,6 @@ extern WaveChart waveChart;
 #define SETTINGS_LOGGING_BUFFER_SIZE 1000
 #endif /* SETTINGS_LOGGING_BUFFER_SIZE */
 
-EXTERN_ENGINE;
-
 void printSpiState(const engine_configuration_s *engineConfiguration) {
 	efiPrintf("spi 1=%s/2=%s/3=%s/4=%s",
 		boolToString(engineConfiguration->is_enabled_spi_1),

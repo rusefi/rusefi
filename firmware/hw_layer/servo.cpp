@@ -19,8 +19,6 @@
 #include "pin_repository.h"
 #include "thread_priority.h"
 
-EXTERN_ENGINE;
-
 // This thread calls scheduleForLater which eventually could trip the main trigger callback
 // if self stimulation (heh) is enabled, which uses a TON of stack space.
 // So this stack has to be pretty big, unfortunately.

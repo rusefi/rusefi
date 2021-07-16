@@ -6,8 +6,6 @@
 #include "sensor.h"
 #include "tunerstudio_outputs.h"
 
-EXTERN_ENGINE;
-
 // Deadbands to prevent rapid switching on/off of AC
 static Deadband<200> maxRpmDeadband;
 static Deadband<5> maxCltDeadband;

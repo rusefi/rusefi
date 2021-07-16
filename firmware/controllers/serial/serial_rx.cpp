@@ -19,8 +19,6 @@
 #include "vehicle_speed.h"
 #include "thread_priority.h"
 
-EXTERN_ENGINE;
-
 uint8_t ser_buffer[SERBUFFLEN] = {};
 size_t innovate_msg_len = 1;
 innovate_serial_id_state_t innovate_serial_id_state = UNKNOWN;

@@ -30,7 +30,6 @@
 #include "fuel_math.h"
 #include "advance_map.h"
 
-EXTERN_ENGINE;
 #if EFI_UNIT_TEST
 extern bool verboseMode;
 #endif /* EFI_UNIT_TEST */

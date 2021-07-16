@@ -26,8 +26,6 @@
 #include "scheduler.h"
 #endif /* EFI_PROD_CODE */
 
-EXTERN_ENGINE;
-
 
 #if EFI_PROD_CODE
 static int periodIndex = 0;

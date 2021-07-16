@@ -9,8 +9,6 @@
 #include "engine_math.h"
 #include "event_registry.h"
 
-EXTERN_ENGINE;
-
 #if EFI_ENGINE_CONTROL
 
 FuelSchedule::FuelSchedule() {

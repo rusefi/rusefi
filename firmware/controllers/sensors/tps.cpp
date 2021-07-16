@@ -8,8 +8,6 @@
 #include "settings.h"
 #endif /* EFI_PROD_CODE */
 
-EXTERN_ENGINE;
-
 void grabTPSIsClosed() {
 #if EFI_PROD_CODE
 	printTPSInfo();

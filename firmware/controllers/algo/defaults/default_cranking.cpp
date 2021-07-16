@@ -2,8 +2,6 @@
 #include "engine_configuration.h"
 #include "table_helper.h"
 
-EXTERN_CONFIG;
-
 void setDefaultCranking(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	engineConfiguration->cranking.rpm = 550;
 

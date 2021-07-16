@@ -20,8 +20,6 @@
 #include "rpm_calculator.h"
 #include "thread_priority.h"
 
-EXTERN_ENGINE;
-
 #if EFI_CJ125
 
 #include "adc_inputs.h"

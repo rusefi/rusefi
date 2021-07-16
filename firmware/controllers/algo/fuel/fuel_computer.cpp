@@ -1,8 +1,6 @@
 #include "fuel_computer.h"
 #include "map.h"
 
-EXTERN_ENGINE;
-
 mass_t FuelComputerBase::getCycleFuel(mass_t airmass, int rpm, float load) const {
 	load = getTargetLambdaLoadAxis(load);
 	

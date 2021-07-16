@@ -13,8 +13,6 @@
 #include "fsio_impl.h"
 #include "engine_configuration.h"
 
-EXTERN_ENGINE;
-
 // Warning! This is a test config!
 
 #undef SERIAL_SPEED

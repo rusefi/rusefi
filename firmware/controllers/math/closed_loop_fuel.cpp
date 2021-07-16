@@ -7,8 +7,6 @@
 #include "engine_math.h"
 #include "deadband.h"
 
-EXTERN_ENGINE;
-
 struct FuelingBank {
 	ClosedLoopFuelCellImpl cells[STFT_CELL_COUNT];
 };

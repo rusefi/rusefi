@@ -20,8 +20,6 @@
 #error "Unexpected OS ACCESS HERE"
 #endif /* HAS_OS_ACCESS */
 
-EXTERN_ENGINE;
-
 static fsio8_Map3D_u8t vvtTable1;
 static fsio8_Map3D_u8t vvtTable2;
 

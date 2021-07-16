@@ -11,8 +11,6 @@
 
 #include "engine.h"
 
-EXTERN_ENGINE;
-
 unsigned int getBrainPinTotalNum(void) {
 	return BRAIN_PIN_TOTAL_PINS;
 }
@@ -113,8 +111,6 @@ PinRepository::PinRepository() {
 #include "drivers/gpio/gpio_ext.h"
 #include "smart_gpio.h"
 #include "hardware.h"
-
-EXTERN_CONFIG;
 
 static brain_pin_e index_to_brainPin(unsigned int i)
 {

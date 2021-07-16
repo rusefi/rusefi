@@ -18,8 +18,6 @@
 #include "allsensors.h"
 #include "advance_map.h"
 
-EXTERN_CONFIG;
-
 static void setDefault139qmbMaps(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	setTimingLoadBin(1.2, 4.4 PASS_CONFIG_PARAMETER_SUFFIX);
 	setTimingRpmBin(1000, 11000 PASS_CONFIG_PARAMETER_SUFFIX);

@@ -29,8 +29,6 @@
 #error "Unexpected OS ACCESS HERE"
 #endif /* HAS_OS_ACCESS */
 
-EXTERN_ENGINE;
-
 static SimplePwm alternatorControl("alt");
 static PidIndustrial alternatorPid(&persistentState.persistentConfiguration.engineConfiguration.alternatorControl);
 

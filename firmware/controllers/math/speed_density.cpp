@@ -24,8 +24,6 @@
 #define rpmMin 500
 #define rpmMax 8000
 
-EXTERN_ENGINE;
-
 fuel_Map3D_t veMap;
 lambda_Map3D_t lambdaMap;
 baroCorr_Map3D_t baroCorrMap;

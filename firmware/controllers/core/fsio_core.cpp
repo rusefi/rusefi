@@ -21,8 +21,6 @@
 #include "fsio_core.h"
 #include "fsio_impl.h"
 
-EXTERN_ENGINE;
-
 LENameOrdinalPair * LE_FIRST = nullptr;
 
 /**

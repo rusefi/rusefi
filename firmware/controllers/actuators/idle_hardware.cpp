@@ -26,8 +26,6 @@ static DualHBridgeStepper iacHbridgeHw;
 StepperMotor iacMotor;
 #endif /* EFI_UNIT_TEST */
 
-EXTERN_ENGINE;
-
 /**
  * When the IAC position value change is insignificant (lower than this threshold), leave the poor valve alone
  * todo: why do we have this logic? is this ever useful?

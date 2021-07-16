@@ -21,8 +21,6 @@
 #include "trigger_central.h"
 #include "spark_logic.h"
 
-EXTERN_ENGINE;
-
 static void plainPinTurnOff(NamedOutputPin *output) {
 	output->setLow();
 }

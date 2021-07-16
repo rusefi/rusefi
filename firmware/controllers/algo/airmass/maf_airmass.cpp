@@ -3,8 +3,6 @@
 #include "maf_airmass.h"
 #include "maf.h"
 
-EXTERN_ENGINE;
-
 AirmassResult MafAirmass::getAirmass(int rpm) {
 	float maf = Sensor::get(SensorType::Maf).value_or(0) + engine->engineLoadAccelEnrichment.getEngineLoadEnrichment(PASS_ENGINE_PARAMETER_SIGNATURE);
 	return getAirmassImpl(maf, rpm);

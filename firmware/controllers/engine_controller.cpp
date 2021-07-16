@@ -101,8 +101,6 @@
 #include "cj125.h"
 #endif /* EFI_CJ125 */
 
-EXTERN_ENGINE;
-
 #if !EFI_UNIT_TEST
 
 /**

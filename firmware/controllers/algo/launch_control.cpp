@@ -33,8 +33,6 @@ LaunchControlBase launchInstance;
 extern TunerStudioOutputChannels tsOutputChannels;
 #endif /* EFI_TUNER_STUDIO */
 
-EXTERN_ENGINE;
-
 static int retardThresholdRpm;
 
 /**

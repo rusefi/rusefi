@@ -15,8 +15,6 @@
 #include "fsio_impl.h"
 #include "settings.h"
 
-EXTERN_CONFIG;
-
 void setMazda626EngineConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	setFrankensoConfiguration(PASS_CONFIG_PARAMETER_SIGNATURE);
 

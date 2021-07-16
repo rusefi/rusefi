@@ -33,8 +33,6 @@
 #include "os_util.h"
 
 #include "engine.h"
-EXTERN_ENGINE;
-
 uint32_t hwSetTimerDuration;
 
 void globalTimerCallback() {

@@ -30,8 +30,6 @@
 #include "backup_ram.h"
 #endif /* EFI_PROD_CODE */
 
-EXTERN_ENGINE;
-
 #if HAL_USE_ADC
 
 // ADC_CHANNEL_IN0 // PA0

@@ -10,8 +10,6 @@
 #include "trigger_simulator.h"
 #include "trigger_emulator_algo.h"
 
-EXTERN_ENGINE;
-
 #if EFI_UNIT_TEST
 	extern bool printTriggerTrace;
 #endif

@@ -10,8 +10,6 @@
 #include "os_access.h"
 #include "settings.h"
 
-EXTERN_ENGINE;
-
 extern ButtonDebounce startStopButtonDebounce;
 
 static uint8_t nextThreadId = 0;

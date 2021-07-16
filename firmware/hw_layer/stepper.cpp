@@ -18,8 +18,6 @@
 #include "sensor.h"
 #include "thread_priority.h"
 
-EXTERN_ENGINE;
-
 void StepperMotor::saveStepperPos(int pos) {
 	// use backup-power RTC registers to store the data
 #if EFI_PROD_CODE

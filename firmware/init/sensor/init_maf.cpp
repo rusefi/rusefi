@@ -5,8 +5,6 @@
 #include "functional_sensor.h"
 #include "table_func.h"
 
-EXTERN_CONFIG;
-
 static FunctionalSensor maf(SensorType::Maf, /* timeout = */ MS2NT(50));
 
 #if !EFI_UNIT_TEST

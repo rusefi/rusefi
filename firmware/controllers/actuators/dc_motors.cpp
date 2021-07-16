@@ -17,8 +17,6 @@
 #include "efi_gpio.h"
 #include "pwm_generator_logic.h"
 
-EXTERN_ENGINE;
-
 class DcHardware {
 private:
 	OutputPin m_pinEnable;
