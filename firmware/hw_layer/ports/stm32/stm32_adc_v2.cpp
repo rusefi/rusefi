@@ -7,7 +7,7 @@
  */
 
 #include "engine_ptr.h"
-#include "persistent_configuration.h"
+#include "engine_configuration.h"
 
 #if HAL_USE_ADC
 
