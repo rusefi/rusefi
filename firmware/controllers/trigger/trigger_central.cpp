@@ -46,7 +46,7 @@ WaveChart waveChart;
 #endif /* EFI_ENGINE_SNIFFER */
 
 static scheduling_s debugToggleScheduling;
-#define DEBUG_PIN_DELAY MS2NT(100)
+#define DEBUG_PIN_DELAY MS2NT(7)
 
 trigger_central_s::trigger_central_s() : hwEventCounters() {
 }
