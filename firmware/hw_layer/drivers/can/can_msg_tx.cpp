@@ -73,7 +73,7 @@ CanTxMessage::~CanTxMessage() {
 	}
 }
 
-void CanTxMessage::setDlc(uint8_t) {
+void CanTxMessage::setDlc(uint8_t dlc) {
 	m_frame.DLC = dlc;
 }
 
