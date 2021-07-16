@@ -616,7 +616,7 @@ end_struct
 int sensorSnifferRpmThreshold;+Disable sensor sniffer above this rpm;"RPM", 1, 0, 0, 30000, 0
 	int rpmHardLimit;set rpm_hard_limit X;"rpm", 1, 0, 0, 20000, 2
 
-#define engine_load_mode_e_enum "INVALID", "INVALID", "INVALID", "Speed Density", "MAF Air Charge", "Alpha-N", "INVALID"
+#define engine_load_mode_e_enum "INVALID", "INVALID", "INVALID", "Speed Density", "MAF Air Charge", "Alpha-N", "Lua"
 
 
 custom engine_load_mode_e 4 bits, U32, @OFFSET@, [0:2], @@engine_load_mode_e_enum@@
