@@ -59,3 +59,5 @@ void rememberCurrentConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 
 void setBoardDefaultConfiguration(void);
 void setBoardConfigOverrides(void);
+
+EXTERN_CONFIG;

@@ -85,10 +85,7 @@ struct persistent_config_s;
 	// Pass this after some other parameters are passed
 	#define PASS_ENGINE_PARAMETER_SUFFIX
 
-	#define EXTERN_ENGINE \
-			extern Engine ___engine; \
-			extern Engine *engine; \
-			EXTERN_CONFIG \
+	#define EXTERN_ENGINE EXTERN_CONFIG
 
 	#define ENGINE(x) ___engine.x
 #endif // def __cplusplus
