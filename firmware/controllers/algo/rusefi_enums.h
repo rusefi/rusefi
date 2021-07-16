@@ -501,6 +501,8 @@ typedef enum {
 
 	LM_ALPHA_N = 5,
 
+	LM_LUA = 6,
+
 	// This mode is for unit testing only, so that tests don't have to rely on a particular real airmass mode
 	LM_MOCK = 100,
 
