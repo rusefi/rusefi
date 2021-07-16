@@ -1,6 +1,6 @@
 #include "global.h"
 #include "rusefi_enums.h"
-// was generated automatically by rusEFI tool  from rusefi_enums.h // by enum2string.jar tool on Mon Jul 12 21:19:06 EDT 2021
+// was generated automatically by rusEFI tool  from rusefi_enums.h // by enum2string.jar tool on Fri Jul 16 04:50:15 UTC 2021
 // see also gen_config_and_enums.bat
 
 
@@ -359,6 +359,8 @@ case Force_4_bytes_size_engine_load_mode:
   return "Force_4_bytes_size_engine_load_mode";
 case LM_ALPHA_N:
   return "LM_ALPHA_N";
+case LM_LUA:
+  return "LM_LUA";
 case LM_MOCK:
   return "LM_MOCK";
 case LM_REAL_MAF:

@@ -7,6 +7,9 @@
 #include "adc_inputs.h"
 #include "efilib.h"
 #include "tunerstudio_outputs.h"
+#include "fuel_math.h"
+#include "airmass.h"
+#include "lua_airmass.h"
 #include "pwm_generator_logic.h"
 #include "can_msg_tx.h"
 
@@ -119,6 +122,12 @@ static int lua_txCan(lua_State* l) {
 
 	// no return value
 	return 0;
+}
+
+static LuaAirmass luaAirmass;
+
+AirmassModelBase& getLuaAirmassModel() {
+	return luaAirmass;
 }
 
 #if !EFI_UNIT_TEST
@@ -234,6 +243,42 @@ static int lua_setDebug(lua_State* l) {
 	return 0;
 }
 
+static auto lua_getAirmassResolveMode(lua_State* l) {
+	if (lua_gettop(l) == 0) {
+		// zero args, return configured mode
+		return CONFIG(fuelAlgorithm);
+	} else {
+		return static_cast<engine_load_mode_e>(luaL_checkinteger(l, 1));
+	}
+}
+
+static int lua_getAirmass(lua_State* l) {
+	auto airmassMode = lua_getAirmassResolveMode(l);
+	auto airmass = getAirmassModel(airmassMode);
+
+	if (!airmass) {
+		return luaL_error(l, "null airmass");
+	}
+
+	auto rpm = Sensor::get(SensorType::Rpm).value_or(0);
+	auto result = airmass->getAirmass(rpm).CylinderAirmass;
+
+	lua_pushnumber(l, result);
+	return 1;
+}
+
+static int lua_setAirmass(lua_State* l) {
+	float airmass = luaL_checknumber(l, 1);
+	float engineLoadPercent = luaL_checknumber(l, 2);
+
+	airmass = clampF(0, airmass, 10);
+	engineLoadPercent = clampF(0, engineLoadPercent, 1000);
+
+	luaAirmass.setAirmass({airmass, engineLoadPercent});
+
+	return 0;
+}
+
 static int lua_stopEngine(lua_State*) {
 	doScheduleStopEngine();
 
@@ -257,6 +302,8 @@ void configureRusefiLuaHooks(lua_State* l) {
 	lua_register(l, "getFan", lua_fan);
 	lua_register(l, "getDigital", lua_getDigital);
 	lua_register(l, "setDebug", lua_setDebug);
+	lua_register(l, "getAirmass", lua_getAirmass);
+	lua_register(l, "setAirmass", lua_setAirmass);
 
 	lua_register(l, "stopEngine", lua_stopEngine);
 #endif
