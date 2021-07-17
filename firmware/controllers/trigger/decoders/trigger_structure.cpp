@@ -212,6 +212,10 @@ void TriggerWaveform::addEvent720(angle_t angle, trigger_wheel_e const channelIn
 	addEvent(angle / 720, channelIndex, state);
 }
 
+void TriggerWaveform::addEvent360(angle_t angle, trigger_wheel_e const channelIndex, trigger_value_e const state) {
+	addEvent(CRANK_MODE_MULTIPLIER * angle / 720, channelIndex, state);
+}
+
 void TriggerWaveform::addEventAngle(angle_t angle, trigger_wheel_e const channelIndex, trigger_value_e const state) {
 	addEvent(angle / getCycleDuration(), channelIndex, state);
 }
@@ -547,7 +551,7 @@ void TriggerWaveform::initializeTriggerWaveform(operation_mode_e ambiguousOperat
 
 	case TT_NISSAN_VQ30:
 	case TT_NISSAN_VQ35:
-		initializeNissanVQcrank(this);
+		initializeNissanVQ35crank(this);
 		break;
 
 	case TT_KAWA_KX450F:
