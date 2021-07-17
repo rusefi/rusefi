@@ -17,6 +17,18 @@
 #include "pin_repository.h"
 #endif
 
+#if (!defined(TS_NO_PRIMARY) && (defined(TS_PRIMARY_UART) || defined(TS_PRIMARY_SERIAL)))
+	#define HAS_PRIMARY true
+#else
+	#define HAS_PRIMARY false
+#endif
+
+#if (!defined(TS_NO_SECONDARY) && (defined(TS_SECONDARY_UART) || defined(TS_SECONDARY_SERIAL)))
+	#define HAS_SECONDARY true
+#else
+	#define HAS_SECONDARY false
+#endif
+
 typedef enum {
 	TS_PLAIN = 0,
 	TS_CRC = 1
