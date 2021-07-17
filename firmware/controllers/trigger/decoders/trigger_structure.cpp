@@ -541,11 +541,12 @@ void TriggerWaveform::initializeTriggerWaveform(operation_mode_e ambiguousOperat
 		configureFordAspireTriggerWaveform(this);
 		break;
 
-	case TT_VVT_NISSAN_VQ:
+	case TT_VVT_NISSAN_VQ35:
 		initializeNissanVQvvt(this);
 		break;
 
-	case TT_TT_NISSAN_VQ:
+	case TT_NISSAN_VQ30:
+	case TT_NISSAN_VQ35:
 		initializeNissanVQcrank(this);
 		break;
 
