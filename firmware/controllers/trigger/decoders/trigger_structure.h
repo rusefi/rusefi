@@ -276,10 +276,11 @@ public:
 			const trigger_config_s& triggerConfig
 			);
 
+	uint16_t findAngleIndex(TriggerFormDetails *details, angle_t angle) const;
+
 private:
 	trigger_shape_helper h;
 
-	uint16_t findAngleIndex(TriggerFormDetails *details, float angle) const;
 
 	/**
 	 * Working buffer for 'wave' instance
