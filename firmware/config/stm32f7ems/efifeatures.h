@@ -36,10 +36,9 @@
 #undef EFI_USE_UART_DMA
 #define EFI_USE_UART_DMA FALSE
 
-#undef TS_PRIMARY_UART
-#undef TS_SECONDARY_UART
-#undef TS_PRIMARY_SERIAL
-#undef TS_SECONDARY_SERIAL
+// Disable hardware serial ports on F7 for now
+#define TS_NO_PRIMARY
+#define TS_NO_SECONDARY
 
 #define AUX_SERIAL_DEVICE (&SD6)
 
