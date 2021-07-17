@@ -1,3 +1,4 @@
+#include "engine_ptr.h"
 #include "global.h"
 #include "efi_gpio.h"
 #include "engine.h"
