@@ -143,7 +143,42 @@ void initializeNissanVQ35crank(TriggerWaveform *s) {
 	}
 }
 
+static void addvq30tooth(TriggerWaveform *s, float angle) {
+	s->addEvent360(angle - 4, T_PRIMARY, TV_RISE);
+	s->addEvent360(angle, T_PRIMARY, TV_FALL);
+}
+
 void initializeNissanVQ30cam(TriggerWaveform *s) {
 	s->initialize(FOUR_STROKE_CAM_SENSOR);
 
+	addvq30tooth(s, 52 + 9 * 0);
+	addvq30tooth(s, 52 + 9 * 1);
+
+	addvq30tooth(s, 85 + 9 * 0);
+	addvq30tooth(s, 85 + 9 * 1);
+	addvq30tooth(s, 85 + 9 * 2);
+	addvq30tooth(s, 85 + 9 * 3);
+	addvq30tooth(s, 85 + 9 * 4);
+
+	addvq30tooth(s, 152 + 9 * 0);
+	addvq30tooth(s, 152 + 9 * 1);
+	addvq30tooth(s, 152 + 9 * 2);
+	addvq30tooth(s, 152 + 9 * 3);
+
+	addvq30tooth(s, 236        );
+
+	addvq30tooth(s, 252 + 9 * 0);
+	addvq30tooth(s, 252 + 9 * 1);
+	addvq30tooth(s, 252 + 9 * 2);
+	addvq30tooth(s, 252 + 9 * 3);
+	addvq30tooth(s, 252 + 9 * 4);
+	addvq30tooth(s, 252 + 9 * 5);
+
+	addvq30tooth(s, 360 - 9 * 2);
+	addvq30tooth(s, 360 - 9 * 1);
+	addvq30tooth(s, 360 - 9 * 0);
+
+	s->setTriggerSynchronizationGap3(/*gapIndex*/0, 5.78 * TRIGGER_GAP_DEVIATION_LOW, 5.78 * TRIGGER_GAP_DEVIATION_HIGH);
+	s->setTriggerSynchronizationGap3(/*gapIndex*/1, 1.00 * TRIGGER_GAP_DEVIATION_LOW, 1.00 * TRIGGER_GAP_DEVIATION_HIGH);
+	s->setTriggerSynchronizationGap3(/*gapIndex*/2, 0.20 * TRIGGER_GAP_DEVIATION_LOW, 0.20 * TRIGGER_GAP_DEVIATION_HIGH);
 }
