@@ -33,6 +33,7 @@ All notable user-facing or behavior-altering changes will be documented in this 
 ### Added
  - Injector nonlinearity (small pulse) correction - so far just polynomial, but table modes coming soon.
  - 1-4-3-6-2-5 firing order for VAG v6
+ - vq30de trigger wheel decoder #2974
  
 ### Fixed
  - rusEFI console start-up speed #2964   
