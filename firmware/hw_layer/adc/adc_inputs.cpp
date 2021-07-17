@@ -321,7 +321,7 @@ static void printAdcValue(int channel) {
 static uint32_t slowAdcConversionCount = 0;
 static uint32_t slowAdcErrorsCount = 0;
 
-static void printFullAdcReport(void) {
+void printFullAdcReport(void) {
 #if EFI_USE_FAST_ADC
 	efiPrintf("fast %d samples", fastAdc.conversionCount);
 
