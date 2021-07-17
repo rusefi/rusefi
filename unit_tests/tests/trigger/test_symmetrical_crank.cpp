@@ -22,7 +22,18 @@ TEST(engine, testAngleLogicInSymmetricalCrankIssue2980) {
 	TriggerWaveform * form = &ENGINE(triggerCentral.triggerShape);
 
 	ASSERT_EQ(form->findAngleIndex(triggerForm, 10), 1);
+	ASSERT_EQ(form->findAngleIndex(triggerForm, 180), 5);
+
 	ASSERT_EQ(form->findAngleIndex(triggerForm, 310), 5);
+	ASSERT_EQ(form->findAngleIndex(triggerForm, 540), 5);
+
+	ASSERT_EQ(form->findAngleIndex(triggerForm, 640), 5);
+	ASSERT_EQ(form->findAngleIndex(triggerForm, 650), 7);
+	ASSERT_EQ(form->findAngleIndex(triggerForm, 660), 15);
+	ASSERT_EQ(form->findAngleIndex(triggerForm, 670), 15);
+	ASSERT_EQ(form->findAngleIndex(triggerForm, 680), 15);
+
+	ASSERT_EQ(form->findAngleIndex(triggerForm, 700), 15);
 	ASSERT_EQ(form->findAngleIndex(triggerForm, 710), 15);
 }
 
