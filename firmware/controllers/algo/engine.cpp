@@ -99,7 +99,7 @@ trigger_type_e getVvtTriggerType(vvt_mode_e vvtMode) {
 	case VVT_BARRA_3_PLUS_1:
 		return TT_VVT_BARRA_3_PLUS_1;
 	case VVT_NISSAN_VQ:
-		return TT_VVT_NISSAN_VQ;
+		return TT_VVT_NISSAN_VQ35;
 	default:
 		firmwareError(OBD_PCM_Processor_Fault, "getVvtTriggerType for %s", getVvt_mode_e(vvtMode));
 		return TT_ONE; // we have to return something for the sake of -Werror=return-type
