@@ -15,7 +15,7 @@ PROJECT_DIR = .
 
 # Configure precompiled header
 PCH_DIR = $(PROJECT_DIR)/pch
-PCHSRC = pch.h
+PCHSRC = $(PCH_DIR)/pch.h
 
 # Imported source files and paths
 CHIBIOS_CONTRIB = ChibiOS-Contrib
