@@ -450,7 +450,10 @@ end_struct
 #define TT_TT_VVT_BARRA_3_PLUS_1 56
 #define TT_TT_KAWA_KX450F 57
 #define TT_TT_NISSAN_VQ 58
+#define TT_TT_NISSAN_VQ35 58
 #define TT_TT_VVT_NISSAN_VQ 59
+#define TT_TT_VVT_NISSAN_VQ35 59
+#define TT_TT_NISSAN_VQ30 60
 
 
 ! todo https://github.com/rusefi/rusefi/issues/2102
