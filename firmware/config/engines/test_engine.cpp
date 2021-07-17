@@ -11,9 +11,7 @@
  * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
-#include "engine_configuration.h"
 #include "test_engine.h"
-#include "engine_math.h"
 
 // TEST_ENGINE
 void setTestEngineConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE) {

@@ -5,7 +5,6 @@
  * @author Andrey Belomutskiy, (c) 2012-2021
  */
 
-#include "global.h"
 #include "trigger_input.h"
 
 /* TODO:

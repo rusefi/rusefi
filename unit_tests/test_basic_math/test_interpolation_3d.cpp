@@ -8,7 +8,6 @@
 #include <stdlib.h>
 
 #include "interpolation.h"
-#include "global.h"
 #include "unit_test_framework.h"
 
 float rpmBins[5] = { 100, 200, 300, 400, 500 };

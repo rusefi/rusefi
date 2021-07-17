@@ -6,7 +6,6 @@
  * @author Matthew Kennedy, (c) 2021
  */
 
-#include "global.h"
 #include "hal.h"
 #include "mpu_util.h"
 

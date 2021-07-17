@@ -14,7 +14,6 @@
 #include "allsensors.h"
 #include "engine_controller.h"
 #include "advance_map.h"
-#include "sensor.h"
 #include "tooth_logger.h"
 #include "logicdata.h"
 #include "hardware.h"

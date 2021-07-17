@@ -10,7 +10,6 @@
 #include "globalaccess.h"
 
 #if EFI_AUX_SERIAL
-#include "engine.h"
 #include "serial.h"
 #include "serial_hw.h"
 #include "serial_sensor.h"

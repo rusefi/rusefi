@@ -6,7 +6,6 @@
  * @author David Holdeman, (c) 2020
  */
 #include "buttonshift.h"
-#include "engine.h"
 
 ButtonShiftController buttonShiftController;
 

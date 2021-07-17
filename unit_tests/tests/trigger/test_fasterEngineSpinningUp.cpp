@@ -4,7 +4,6 @@
  *  Created on: Mar 6, 2018
  */
 
-#include "engine_math.h"
 #include "engine_test_helper.h"
 
 TEST(cranking, testFasterEngineSpinningUp) {

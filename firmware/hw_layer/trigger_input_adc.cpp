@@ -7,7 +7,6 @@
  * @author Andrey Belomutskiy, (c) 2012-2020
  */
  
-#include "global.h"
 
 #if (EFI_SHAFT_POSITION_INPUT && HAL_TRIGGER_USE_ADC && HAL_USE_ADC) || defined(__DOXYGEN__)
 

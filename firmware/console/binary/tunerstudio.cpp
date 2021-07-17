@@ -59,7 +59,6 @@
  *
  */
 
-#include "global.h"
 #include "os_access.h"
 
 #include "allsensors.h"
@@ -70,7 +69,6 @@
 #include "flash_main.h"
 
 #include "tunerstudio_io.h"
-#include "tunerstudio_outputs.h"
 #include "malfunction_central.h"
 #include "console_io.h"
 #include "crc.h"
@@ -80,7 +78,6 @@
 #include "electronic_throttle.h"
 
 #include <string.h>
-#include "engine_configuration.h"
 #include "bench_test.h"
 #include "svnversion.h"
 #include "loggingcentral.h"

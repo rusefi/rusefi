@@ -9,9 +9,7 @@
 #include "allsensors.h"
 #include "vvt.h"
 
-#include "tunerstudio_outputs.h"
 #include "fsio_impl.h"
-#include "engine_math.h"
 #include "pin_repository.h"
 
 #define NO_PIN_PERIOD 500

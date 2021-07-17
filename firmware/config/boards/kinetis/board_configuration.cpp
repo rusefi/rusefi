@@ -7,11 +7,7 @@
  * @author andreika, (c) 2019
  */
 
-#include "global.h"
-#include "engine.h"
-#include "engine_configuration.h"
 #include "adc_inputs.h"
-#include "engine_math.h"
 #include "tps.h"
 
 #if 0

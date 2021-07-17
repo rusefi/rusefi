@@ -9,14 +9,11 @@
  * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
-#include "global.h"
 
 #include "ford_aspire.h"
 
 #include "allsensors.h"
-#include "engine_math.h"
 #include "advance_map.h"
-#include "engine_configuration.h"
 
 #if IGN_LOAD_COUNT == DEFAULT_IGN_LOAD_COUNT
 static const int8_t default_aspire_timing_table[16][16] = {

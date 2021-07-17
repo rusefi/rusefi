@@ -1,5 +1,4 @@
 #include "functional_sensor.h"
-#include "global.h"
 
 #include <gtest/gtest.h>
 

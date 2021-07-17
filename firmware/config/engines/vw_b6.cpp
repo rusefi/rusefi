@@ -5,7 +5,6 @@
  * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
-#include "engine.h"
 #include "vw_b6.h"
 #include "custom_engine.h"
 #include "table_helper.h"

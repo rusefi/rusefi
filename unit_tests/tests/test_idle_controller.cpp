@@ -14,7 +14,6 @@
 #include "allsensors.h"
 #include "engine_controller.h"
 #include "electronic_throttle.h"
-#include "sensor.h"
 #include "vehicle_speed.h"
 
 using ::testing::StrictMock;

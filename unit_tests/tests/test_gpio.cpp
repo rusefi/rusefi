@@ -1,4 +1,3 @@
-#include "efi_gpio.h"
 #include "engine_test_helper.h"
 #include "unit_test_framework.h"
 #include <gtest/gtest.h>

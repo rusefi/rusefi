@@ -5,7 +5,6 @@
  */
 
 #include "unit_test_framework.h"
-#include "global.h"
 #include "gpio/gpio_ext.h"
 
 using ::testing::_;

@@ -20,16 +20,12 @@
  *
  */
 
-#include "global.h"
 #include "os_access.h"
-#include "engine_configuration.h"
 #include "fsio_impl.h"
 #include "allsensors.h"
 #include "interpolation.h"
-#include "engine_math.h"
 #include "speed_density.h"
 #include "advance_map.h"
-#include "sensor.h"
 #include "flash_main.h"
 
 #include "hip9011_logic.h"

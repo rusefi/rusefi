@@ -6,8 +6,6 @@
  * @author Matthew Kennedy, (c) 2019
  */
 
-#include "engine_configuration.h"
-#include "engine_math.h"
 #include "allsensors.h"
 #include "fsio_impl.h"
 

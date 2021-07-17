@@ -7,11 +7,8 @@
 
 #include "me7pnp.h"
 
-#include "engine.h"
-#include "engine_math.h"
 #include "allsensors.h"
 #include "fsio_impl.h"
-#include "engine_configuration.h"
 #include "cj125.h"
 
 /**

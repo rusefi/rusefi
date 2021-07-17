@@ -6,9 +6,6 @@
  * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
-#include "global.h"
-#include "engine.h"
-#include "efi_gpio.h"
 #include "os_access.h"
 #include "drivers/gpio/gpio_ext.h"
 #include "perf_trace.h"

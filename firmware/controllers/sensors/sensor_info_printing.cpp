@@ -1,4 +1,3 @@
-#include "global.h"
 #include "proxy_sensor.h"
 #include "functional_sensor.h"
 #include "redundant_sensor.h"

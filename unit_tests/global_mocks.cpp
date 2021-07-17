@@ -1,11 +1,8 @@
 
-#include "global.h"
 
-#include "engine_configuration.h"
 
 #include "trigger_central.h"
 #include "map_resize.h"
-#include "engine_math.h"
 #include "engine_test_helper.h"
 
 bool verboseMode = false;

@@ -10,7 +10,6 @@
 
 #include "hal.h"
 
-#include "global.h"
 
 #include <cstring>
 

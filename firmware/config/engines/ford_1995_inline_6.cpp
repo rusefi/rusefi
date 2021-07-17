@@ -11,9 +11,7 @@
  * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
-#include "global.h"
 #include "ford_1995_inline_6.h"
-#include "engine_math.h"
 #include "allsensors.h"
 
 /**

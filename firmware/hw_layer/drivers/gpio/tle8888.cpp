@@ -29,7 +29,6 @@
  * Andrey Gusakov, (c) 2019
  */
 
-#include "global.h"
 
 #include "gpio/tle8888.h"
 

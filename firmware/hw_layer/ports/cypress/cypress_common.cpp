@@ -6,8 +6,6 @@
  * @author  andreika <prometheus.pcb@gmail.com>
  */
 
-#include "global.h"
-#include "engine.h"
 #include "pin_repository.h"
 
 #if HAL_USE_ADC || defined(__DOXYGEN__)

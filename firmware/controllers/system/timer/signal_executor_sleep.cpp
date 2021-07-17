@@ -22,14 +22,12 @@
  * If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "global.h"
 #include "os_access.h"
 #include "scheduler.h"
 #include "main_trigger_callback.h"
 
 #if EFI_SIMULATOR
 // this is about debugging
-#include "efi_gpio.h"
 #endif /* EFI_SIMULATOR */
 
 #if EFI_PRINTF_FUEL_DETAILS

@@ -12,7 +12,6 @@
  * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
-#include "global.h"
 #include "gpio/gpio_ext.h"
 #include "gpio/drv8860.h"
 #include "pin_repository.h"

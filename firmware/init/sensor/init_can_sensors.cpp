@@ -6,7 +6,6 @@
  */
 
 #include "pin_repository.h"
-#include "engine_configuration.h"
 
 #if EFI_CAN_SUPPORT
 #include "can_sensor.h"

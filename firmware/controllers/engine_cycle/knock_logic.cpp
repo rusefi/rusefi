@@ -5,7 +5,6 @@
  * @author Andrey Gusakov
  */
 
-#include "engine.h"
 #include "knock_logic.h"
 #include "os_access.h"
 

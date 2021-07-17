@@ -7,7 +7,6 @@
  */
 #include "debounce.h"
 #include "pin_repository.h"
-#include "engine_configuration.h"
 #include "hardware.h"
 
 ButtonDebounce* ButtonDebounce::s_firstDebounce = nullptr;

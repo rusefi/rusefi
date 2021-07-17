@@ -1,7 +1,5 @@
 #include "closed_loop_fuel_cell.h"
-#include "engine.h"
 #include "engine_configuration_generated_structures.h"
-#include "sensor.h"
 
 constexpr float integrator_dt = FAST_CALLBACK_PERIOD_MS * 0.001f;
 

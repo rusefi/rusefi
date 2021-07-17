@@ -6,13 +6,10 @@
  * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
-#include "global.h"
 #include "os_access.h"
 #include "poten.h"
 #include "eficonsole.h"
 #include "pin_repository.h"
-#include "engine_configuration.h"
-#include "engine.h"
 #include "hardware.h"
 #include "mpu_util.h"
 

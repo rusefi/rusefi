@@ -1,5 +1,4 @@
 #include "defaults.h"
-#include "engine_configuration.h"
 #include "table_helper.h"
 #include "mazda_miata_vvt.h"
 

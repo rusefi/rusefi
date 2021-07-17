@@ -10,7 +10,6 @@
 #include "globalaccess.h"
 #if EFI_CAN_SUPPORT
 
-#include "engine.h"
 #include "can.h"
 #include "can_hw.h"
 #include "can_dash.h"

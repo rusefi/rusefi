@@ -5,7 +5,6 @@
  * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
-#include "global.h"
 #include "pid_auto_tune.h"
 #include "unit_test_framework.h"
 #include "cyclic_buffer.h"

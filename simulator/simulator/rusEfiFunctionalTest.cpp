@@ -5,14 +5,11 @@
  * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
-#include "global.h"
 #include "boards.h"
 #include "rusEfiFunctionalTest.h"
 #include "console_io.h"
 #include "eficonsole.h"
-#include "engine_configuration.h"
 #include "rusefi_enums.h"
-#include "pwm_generator_logic.h"
 #include "trigger_central.h"
 #include "datalogging.h"
 #include "rpm_calculator.h"
@@ -23,7 +20,6 @@
 #include "allsensors.h"
 #include "sensor_chart.h"
 #include "bench_test.h"
-#include "engine.h"
 #include "tunerstudio.h"
 #include "engine_controller.h"
 #include "map_averaging.h"

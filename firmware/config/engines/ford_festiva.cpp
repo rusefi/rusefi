@@ -13,7 +13,6 @@
 
 #include "ford_festiva.h"
 #include "thermistors.h"
-#include "engine_math.h"
 #include "maf.h"
 #include "ego.h"
 #include "fsio_impl.h"

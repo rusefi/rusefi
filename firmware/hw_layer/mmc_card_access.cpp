@@ -8,7 +8,6 @@
  *
  */
 
-#include "engine.h"
 
 #if EFI_SIMULATOR
 #include <stdio.h>

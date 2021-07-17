@@ -7,12 +7,8 @@
  * @author Andrey Gusakov, 2021
  */
 
-#include "global.h"
-#include "engine.h"
-#include "engine_math.h"
 #include "allsensors.h"
 #include "fsio_impl.h"
-#include "engine_configuration.h"
 #include "smart_gpio.h"
 #include "drivers/gpio/mc33810.h"
 

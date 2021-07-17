@@ -14,7 +14,6 @@
 #include <string.h>
 // todo: MISRA does not like time.h
 #include <time.h>
-#include "global.h"
 
 #if EFI_UART_GPS
 
@@ -24,7 +23,6 @@
 #include "nmea.h"
 #include "gps_uart.h"
 #include "rtc_helper.h"
-#include "engine.h"
 
 static SerialConfig GPSserialConfig = { GPS_SERIAL_SPEED, 0, USART_CR2_STOP1_BITS | USART_CR2_LINEN, 0 };
 static THD_WORKING_AREA(gpsThreadStack, UTILITY_THREAD_STACK_SIZE);

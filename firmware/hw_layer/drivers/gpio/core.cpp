@@ -6,7 +6,6 @@
  * @author Andrey Gusakov, (c) 2019
  */
 
-#include "global.h"
 #include "gpio/gpio_ext.h"
 #include "smart_gpio.h"
 

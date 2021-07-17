@@ -12,12 +12,9 @@
  * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
-#include "global.h"
 
 #include "dodge_neon.h"
-#include "engine_configuration.h"
 #include "thermistors.h"
-#include "engine_math.h"
 #include "allsensors.h"
 
 #include "custom_engine.h"

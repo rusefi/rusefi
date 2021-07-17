@@ -5,14 +5,10 @@
  *
  * @author Andrey Belomutskiy, (c) 2012-2020
  */
-#include "global.h"
-#include "engine_configuration.h"
-#include "engine_math.h"
 #include "adc_inputs.h"
 #include "interpolation.h"
 #include "map.h"
 #include "engine_controller.h"
-#include "sensor.h"
 
 #if EFI_PROD_CODE
 #include "digital_input_icu.h"

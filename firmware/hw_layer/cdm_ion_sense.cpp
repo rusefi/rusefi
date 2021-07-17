@@ -10,7 +10,6 @@
  */
 
 #include "cdm_ion_sense.h"
-#include "engine.h"
 
 CdmState::CdmState() {
 	accumilatingAtRevolution = 0;

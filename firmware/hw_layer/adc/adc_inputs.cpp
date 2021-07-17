@@ -19,12 +19,10 @@
  * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
-#include "global.h"
 
 #if HAL_USE_ADC
 #include "os_access.h"
 
-#include "engine.h"
 #include "adc_inputs.h"
 #include "adc_subscription.h"
 #include "AdcConfiguration.h"
@@ -32,7 +30,6 @@
 #include "periodic_thread_controller.h"
 
 #include "pin_repository.h"
-#include "engine_math.h"
 #include "engine_controller.h"
 #include "maf.h"
 #include "perf_trace.h"

@@ -24,15 +24,12 @@
  * If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "engine.h"
-#include "global.h"
 #include "os_access.h"
 #include "engine_sniffer.h"
 #include "adc_inputs.h"
 
 #if EFI_ENGINE_SNIFFER
 
-#include "engine_configuration.h"
 #include "eficonsole.h"
 #include "status_loop.h"
 #include "perf_trace.h"

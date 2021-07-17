@@ -8,7 +8,6 @@
 
 #include <string.h> 
 #include <time.h>
-#include "global.h"
 #include "os_access.h"
 #include "os_util.h"
 #include "rtc_helper.h"

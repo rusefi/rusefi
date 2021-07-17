@@ -32,8 +32,6 @@
  * @Spilly
  */
 
-#include "global.h"
-#include "engine.h"
 #include "settings.h"
 #include "hardware.h"
 #include "rpm_calculator.h"

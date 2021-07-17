@@ -13,7 +13,6 @@
  * @author Matthew Kennedy, (c) 2012-2020
  */
 
-#include "global.h"
 
 #if EFI_PROD_CODE && HAL_USE_PWM
 

@@ -6,7 +6,6 @@
  * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
-#include "global.h"
 
 
 #include "os_access.h"
@@ -48,7 +47,6 @@
 #include "cdm_ion_sense.h"
 #include "trigger_central.h"
 #include "svnversion.h"
-#include "engine_configuration.h"
 #include "vvt.h"
 #include "perf_trace.h"
 #include "trigger_emulator_algo.h"

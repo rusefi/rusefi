@@ -14,9 +14,7 @@
  *
  */
 
-#include "engine.h"
 #include "cj125.h"
-#include "pwm_generator_logic.h"
 #include "rpm_calculator.h"
 #include "thread_priority.h"
 

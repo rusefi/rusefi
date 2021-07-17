@@ -7,11 +7,9 @@
  * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
-#include "global.h"
 #include "vw.h"
 #include "custom_engine.h"
 #include "ego.h"
-#include "engine_math.h"
 
 // VW_ABA
 // set engine_type 32

@@ -10,7 +10,6 @@
 #include "engine_template.h"
 #include "honda_600.h"
 #include "allsensors.h"
-#include "engine_math.h"
 #include "custom_engine.h"
 
 #if EFI_PROD_CODE

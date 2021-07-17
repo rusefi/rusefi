@@ -8,12 +8,10 @@
  */
 
 #include "efifeatures.h"
-#include "global.h"
 #include "can_msg_tx.h"
 
 #if EFI_CAN_SUPPORT
 #include "can.h"
-#include "engine_configuration.h"
 
 extern int canWriteOk;
 extern int canWriteNotOk;

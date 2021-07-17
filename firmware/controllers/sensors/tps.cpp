@@ -1,9 +1,7 @@
 /**
  * @author Andrey Belomutskiy, (c) 2012-2020
  */
-#include "engine.h"
 #include "tps.h"
-#include "sensor.h"
 #if EFI_PROD_CODE
 #include "settings.h"
 #endif /* EFI_PROD_CODE */

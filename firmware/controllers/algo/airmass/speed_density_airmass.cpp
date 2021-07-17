@@ -1,5 +1,3 @@
-#include "global.h"
-#include "engine.h"
 #include "speed_density_airmass.h"
 #include "perf_trace.h"
 

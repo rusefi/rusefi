@@ -5,17 +5,11 @@
  * @author Matthew Kennedy (c) 2020
  */
 
-#include "engine.h"
 #include "io_pins.h"
-#include "engine_configuration.h"
-#include "engine_controller.h"
 #include "periodic_task.h"
 
 #include "dc_motors.h"
 #include "dc_motor.h"
-
-#include "efi_gpio.h"
-#include "pwm_generator_logic.h"
 
 class DcHardware {
 private:

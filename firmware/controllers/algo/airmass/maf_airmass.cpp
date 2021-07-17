@@ -1,5 +1,3 @@
-#include "global.h"
-#include "engine.h"
 #include "maf_airmass.h"
 #include "maf.h"
 

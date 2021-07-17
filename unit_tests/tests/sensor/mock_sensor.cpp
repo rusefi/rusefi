@@ -1,6 +1,5 @@
 #include "mock/mock_sensor.h"
 
-#include "sensor.h"
 
 #include <gtest/gtest.h>
 

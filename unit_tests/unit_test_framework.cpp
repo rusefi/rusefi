@@ -6,7 +6,6 @@
  */
 
 #include <stdlib.h>
-#include "global.h"
 #include "unit_test_framework.h"
 
 /**

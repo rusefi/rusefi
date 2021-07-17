@@ -7,11 +7,9 @@
  * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
-#include "global.h"
 #include "dodge_ram.h"
 #include "custom_engine.h"
 #include "allsensors.h"
-#include "engine_math.h"
 
 void setDodgeRam1996(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	setFrankensoConfiguration(PASS_CONFIG_PARAMETER_SIGNATURE);

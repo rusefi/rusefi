@@ -1,7 +1,5 @@
-#include "efi_gpio.h"
 #include "engine_test_helper.h"
 #include "fan_control.h"
-#include "sensor.h"
 
 TEST(FanControl, fan1) {
 	WITH_ENGINE_TEST_HELPER(TEST_ENGINE);

@@ -1,9 +1,6 @@
 #include "fan_control.h"
-#include "engine.h"
 
 #include "bench_test.h"
-#include "efi_gpio.h"
-#include "sensor.h"
 
 static void fanControl(bool acActive, OutputPin& pin, int8_t fanOnTemp, int8_t fanOffTemp, bool enableWithAc, bool disableWhenStopped DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	auto [cltValid, clt] = Sensor::get(SensorType::Clt);

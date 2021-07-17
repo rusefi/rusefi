@@ -7,7 +7,6 @@
 
 #include "engine_test_helper.h"
 #include "aux_valves.h"
-#include "sensor.h"
 
 TEST(misc, testAuxValves) {
 	Sensor::setMockValue(SensorType::DriverThrottleIntent, 0);

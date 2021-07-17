@@ -6,12 +6,8 @@
  * @author andreika, (c) 2018
  */
 
-#include "global.h"
-#include "engine.h"
-#include "engine_math.h"
 #include "allsensors.h"
 #include "fsio_impl.h"
-#include "engine_configuration.h"
 
 // Warning! This is a test config!
 

@@ -5,9 +5,7 @@
  * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
-#include "global.h"
 #include "boards.h"
-#include "engine.h"
 #include "engine_sniffer.h"
 #include "adc_math.h"
 

@@ -10,7 +10,6 @@
  * @author Andrey Belomutskiy, (c) 2012-2021
  */
 
-#include "global.h"
 
 #if EFI_SHAFT_POSITION_INPUT && (HAL_TRIGGER_USE_PAL == TRUE)
 

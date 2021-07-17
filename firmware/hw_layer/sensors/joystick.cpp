@@ -13,7 +13,6 @@
  * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
-#include "engine.h"
 
 #if (HAL_USE_PAL && EFI_JOYSTICK)
 #include "joystick.h"

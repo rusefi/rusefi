@@ -15,12 +15,9 @@
 
 #include "globalaccess.h"
 #include "os_access.h"
-#include "engine.h"
 #include "rpm_calculator.h"
 
 #include "trigger_central.h"
-#include "engine_configuration.h"
-#include "engine_math.h"
 #include "perf_trace.h"
 #include "tooth_logger.h"
 

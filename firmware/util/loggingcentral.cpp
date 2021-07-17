@@ -21,7 +21,6 @@
  * @author Matthew Kennedy
  */
 
-#include "global.h"
 #include "os_access.h"
 #include "efilib.h"
 #include "loggingcentral.h"

@@ -14,10 +14,8 @@
  * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
-#include "global.h"
 #include "fsio_impl.h"
 #include "mazda_miata.h"
-#include "engine_math.h"
 #include "advance_map.h"
 #include "allsensors.h"
 #include "custom_engine.h"

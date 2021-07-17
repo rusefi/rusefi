@@ -10,14 +10,12 @@
  * @author andreika, (c) 2017
  */
 
-#include "global.h"
 #include "os_access.h"
 #include "allsensors.h"
 #include "tunerstudio.h"
 
 #include "tunerstudio_io.h"
 #include "bluetooth.h"
-#include "engine_configuration.h"
 #include "thread_priority.h"
 
 #if EFI_BLUETOOTH_SETUP

@@ -5,7 +5,6 @@
  * @author Alexandru Miculescu, (c) 2012-2020
  */
 
-#include "engine.h"
 #include "pin_repository.h"
 
 #if EFI_DYNO_VIEW
@@ -13,7 +12,6 @@
 #include "vehicle_speed.h"
 
 #if EFI_TUNER_STUDIO
-#include "tunerstudio_outputs.h"
 extern TunerStudioOutputChannels tsOutputChannels;
 #endif /* EFI_TUNER_STUDIO */
 

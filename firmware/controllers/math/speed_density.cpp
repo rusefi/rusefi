@@ -7,14 +7,10 @@
  * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
-#include "global.h"
 #include "speed_density.h"
 #include "fuel_math.h"
 #include "interpolation.h"
-#include "engine.h"
-#include "engine_math.h"
 #include "perf_trace.h"
-#include "sensor.h"
 #include "map.h"
 
 #if defined(HAS_OS_ACCESS)

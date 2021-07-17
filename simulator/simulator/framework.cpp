@@ -5,7 +5,6 @@
  * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
-#include "global.h"
 #include "efitime.h"
 
 efitick_t getTimeNowNt(void) {

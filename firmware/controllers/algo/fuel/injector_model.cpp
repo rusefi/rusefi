@@ -1,5 +1,4 @@
 #include "injector_model.h"
-#include "tunerstudio_outputs.h"
 #include "map.h"
 
 void InjectorModelBase::prepare() {

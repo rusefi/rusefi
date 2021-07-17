@@ -13,8 +13,6 @@
 
 #if EFI_PROD_CODE || EFI_SIMULATOR
 #include "ch.h"
-#include "engine.h"
-#include "tunerstudio_outputs.h"
 
 #define LUA_HEAP_SIZE 20000
 

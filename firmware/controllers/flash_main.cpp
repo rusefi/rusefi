@@ -7,14 +7,12 @@
  * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
-#include "global.h"
 #if EFI_INTERNAL_FLASH
 #include "os_access.h"
 #include "flash_main.h"
 #include "eficonsole.h"
 
 #include "flash_int.h"
-#include "engine_math.h"
 
 #if EFI_TUNER_STUDIO
 #include "tunerstudio.h"

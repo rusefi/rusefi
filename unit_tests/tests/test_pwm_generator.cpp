@@ -5,9 +5,7 @@
  *      Author: user
  */
 
-#include "global.h"
 #include "unit_test_framework.h"
-#include "pwm_generator_logic.h"
 
 #define LOW_VALUE 0
 #define HIGH_VALUE 1

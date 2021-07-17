@@ -1,4 +1,3 @@
-#include "global.h"
 
 #include "tunerstudio_impl.h"
 #include "tunerstudio.h"

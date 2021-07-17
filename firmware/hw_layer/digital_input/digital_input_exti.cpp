@@ -5,11 +5,9 @@
  * @author Andrey Belomutskiy, (c) 2012-2021
  */
 
-#include "global.h"
 
 #if HAL_USE_PAL && EFI_PROD_CODE
 #include "digital_input_exti.h"
-#include "efi_gpio.h"
 #include "error_handling.h"
 #include "pin_repository.h"
 

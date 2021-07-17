@@ -6,8 +6,6 @@
  * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
-#include "engine_ptr.h"
-#include "efi_gpio.h"
 #include "expected.h"
 #include "hardware.h"
 

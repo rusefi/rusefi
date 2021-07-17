@@ -12,7 +12,6 @@
  * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
-#include "engine.h"
 
 #if EFI_SERVO || EFI_SIMULATOR
 #include "servo.h"

@@ -21,7 +21,6 @@
  * If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "global.h"
 #include "os_access.h"
 
 #include "map.h"
@@ -32,10 +31,7 @@
 #include "trigger_central.h"
 #include "adc_inputs.h"
 #include "allsensors.h"
-#include "engine_configuration.h"
 #include "interpolation.h"
-#include "engine.h"
-#include "engine_math.h"
 #include "perf_trace.h"
 
 #if EFI_SENSOR_CHART

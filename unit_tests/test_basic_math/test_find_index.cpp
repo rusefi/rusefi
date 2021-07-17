@@ -5,8 +5,6 @@
  * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
-#include "global.h"
-#include "engine_math.h"
 #include "interpolation.h"
 #include "unit_test_framework.h"
 

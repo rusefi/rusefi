@@ -11,7 +11,6 @@
 
 #include <string.h>
 #include "histogram.h"
-#include "global.h"
 
 #if defined(HAS_OS_ACCESS)
 #error "Unexpected OS ACCESS HERE"

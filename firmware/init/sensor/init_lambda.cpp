@@ -1,8 +1,6 @@
 #include "init.h"
 #include "adc_subscription.h"
-#include "engine.h"
 #include "error_handling.h"
-#include "global.h"
 #include "function_pointer_sensor.h"
 #include "ego.h"
 

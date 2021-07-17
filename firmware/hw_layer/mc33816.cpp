@@ -14,14 +14,11 @@
  * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
-#include "global.h"
 
 #if EFI_MC33816
 
 #include "mc33816.h"
 #include "mc33816_memory_map.h"
-#include "engine.h"
-#include "efi_gpio.h"
 #include "pin_repository.h"
 #include "hardware.h"
 #include "mc33816_data.h"

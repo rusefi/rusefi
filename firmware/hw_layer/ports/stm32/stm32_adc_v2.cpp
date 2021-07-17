@@ -6,8 +6,6 @@
  * @author Matthew Kennedy, (c) 2021
  */
 
-#include "engine_ptr.h"
-#include "engine_configuration.h"
 
 #if HAL_USE_ADC
 

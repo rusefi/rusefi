@@ -21,7 +21,6 @@
  */
 
 // todo: rename this file
-#include "global.h"
 
 #if EFI_ENGINE_CONTROL
 #if !EFI_UNIT_TEST
@@ -31,9 +30,7 @@
 #include "bench_test.h"
 #include "io_pins.h"
 #include "main_trigger_callback.h"
-#include "engine_configuration.h"
 #include "pin_repository.h"
-#include "efi_gpio.h"
 #include "settings.h"
 #include "idle_thread.h"
 #include "periodic_thread_controller.h"
@@ -41,7 +38,6 @@
 #include "electronic_throttle.h"
 #include "cj125.h"
 #include "malfunction_central.h"
-#include "tunerstudio_outputs.h"
 #include "trigger_emulator_algo.h"
 #include "microsecond_timer.h"
 

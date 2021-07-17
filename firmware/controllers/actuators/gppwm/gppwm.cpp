@@ -1,10 +1,7 @@
 
-#include "global.h"
-#include "engine.h"
 #include "pin_repository.h"
 
 #include "gppwm_channel.h"
-#include "pwm_generator_logic.h"
 
 static GppwmChannel channels[GPPWM_CHANNELS];
 static OutputPin pins[GPPWM_CHANNELS];

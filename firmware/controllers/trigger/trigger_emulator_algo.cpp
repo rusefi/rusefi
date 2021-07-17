@@ -14,8 +14,6 @@
  * @author Andrey Belomutskiy, (c) 2012-2020
  */
 #include "state_sequence.h"
-#include "global.h"
-#include "efi_gpio.h"
 #include "pin_repository.h"
 
 int getPreviousIndex(const int currentIndex, const int size) {
@@ -32,13 +30,10 @@ bool needEvent(const int currentIndex, const int size, const MultiChannelStateSe
 
 #if EFI_EMULATE_POSITION_SENSORS
 
-#include "engine.h"
 #include "trigger_emulator_algo.h"
-#include "engine_configuration.h"
 #include "trigger_central.h"
 #include "trigger_simulator.h"
 #include "settings.h"
-#include "pwm_generator_logic.h"
 
 TriggerEmulatorHelper::TriggerEmulatorHelper() {
 }

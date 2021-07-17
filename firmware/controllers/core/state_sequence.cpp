@@ -5,7 +5,6 @@
  * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
-#include "global.h"
 #include "state_sequence.h"
 #include "trigger_structure.h"
 

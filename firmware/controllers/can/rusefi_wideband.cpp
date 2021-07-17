@@ -1,12 +1,9 @@
-#include "global.h"
 
 #if EFI_WIDEBAND_FIRMWARE_UPDATE && EFI_CAN_SUPPORT
 
 #include "ch.h"
 #include "can_msg_tx.h"
 #include "rusefi_wideband.h"
-#include "sensor.h"
-#include "engine.h"
 
 // This file contains an array called build_wideband_noboot_bin
 // This array contains the firmware image for the wideband contoller

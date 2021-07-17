@@ -1,5 +1,3 @@
-#include "global.h"
-#include "sensor.h"
 #include "efilib.h"
 #include "loggingcentral.h"
 

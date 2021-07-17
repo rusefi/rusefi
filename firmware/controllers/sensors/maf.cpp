@@ -1,5 +1,3 @@
-#include "global.h"
-#include "engine.h"
 #include "maf.h"
 
 static void fillTheRest(persistent_config_s *e, int i) {

@@ -5,7 +5,6 @@
  * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
-#include "global.h"
 #include "thermistors.h"
 #include "allsensors.h"
 #include "engine_test_helper.h"

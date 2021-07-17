@@ -5,12 +5,9 @@
  * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
-#include "global.h"
 
 #if EFI_PROD_CODE
 #include "smart_gpio.h"
-#include "efi_gpio.h"
-#include "engine_configuration.h"
 #include "hardware.h"
 #include "mpu_util.h"
 #include "gpio_ext.h"
@@ -20,7 +17,6 @@
 #include "drivers/gpio/mc33810.h"
 #include "drivers/gpio/tle8888.h"
 #include "drivers/gpio/drv8860.h"
-#include "engine.h"
 
 #if (BOARD_TLE6240_COUNT > 0)
 // todo: migrate to TS or board config

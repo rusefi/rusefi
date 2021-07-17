@@ -24,15 +24,11 @@
  * If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "global.h"
 #include "os_access.h"
 
 #include "obd_error_codes.h"
 #include "trigger_decoder.h"
 #include "cyclic_buffer.h"
-#include "efi_gpio.h"
-#include "engine.h"
-#include "engine_math.h"
 #include "trigger_central.h"
 #include "trigger_simulator.h"
 #include "perf_trace.h"

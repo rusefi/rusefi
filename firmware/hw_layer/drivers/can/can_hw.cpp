@@ -12,18 +12,15 @@
  * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
-#include "global.h"
 
 #if EFI_CAN_SUPPORT
 
 #include "can.h"
-#include "engine_configuration.h"
 #include "pin_repository.h"
 #include "can_hw.h"
 #include "can_msg_tx.h"
 #include "string.h"
 #include "mpu_util.h"
-#include "engine.h"
 #include "thread_priority.h"
 
 static int canReadCounter = 0;

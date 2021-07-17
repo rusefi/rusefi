@@ -7,7 +7,6 @@
  * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
-#include "global.h"
 
 #if EFI_HD44780_LCD
 
@@ -15,7 +14,6 @@
 #include "pin_repository.h"
 #include "string.h"
 
-#include "engine.h"
 
 enum {
 	LCD_HD44780_DISPLAY_CLEAR = 0x01,

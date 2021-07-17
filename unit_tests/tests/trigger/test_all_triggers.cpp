@@ -1,7 +1,6 @@
 /**
  * @file test_all_triggers.cpp
  */
-#include "engine.h"
 
 #include <gtest/gtest.h>
 

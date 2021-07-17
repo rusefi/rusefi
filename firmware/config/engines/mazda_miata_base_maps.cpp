@@ -5,7 +5,6 @@
  * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
-#include "engine_configuration.h"
 #include "table_helper.h"
 
 // todo: use these defaults wider? make them global defaults maybe?

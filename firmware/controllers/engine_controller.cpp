@@ -21,7 +21,6 @@
  * If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "global.h"
 #include "os_access.h"
 #include "trigger_central.h"
 #include "engine_controller.h"
@@ -35,7 +34,6 @@
 #include "flash_main.h"
 #include "bench_test.h"
 #include "os_util.h"
-#include "engine_math.h"
 #include "allsensors.h"
 #include "electronic_throttle.h"
 #include "map_averaging.h"
@@ -89,7 +87,6 @@
 #endif /* EFI_UNIT_TEST */
 
 #include "adc_inputs.h"
-#include "pwm_generator_logic.h"
 
 #if EFI_PROD_CODE
 #include "pwm_tester.h"

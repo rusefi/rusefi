@@ -1,7 +1,6 @@
 #include "rusefi_lua.h"
 #include <gtest/gtest.h>
 #include "engine_test_helper.h"
-#include "sensor.h"
 
 static const char* getSensorTest = R"(
 

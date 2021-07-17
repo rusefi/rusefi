@@ -13,7 +13,6 @@
  */
 #include "ego.h"
 #include "interpolation.h"
-#include "engine.h"
 #include "adc_inputs.h"
 #include "cyclic_buffer.h"
 

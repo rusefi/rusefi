@@ -10,10 +10,7 @@
  * http://en.wikipedia.org/wiki/Steinhart%E2%80%93Hart_equation
  */
 
-#include "global.h"
 #include "thermistors.h"
-#include "engine_configuration.h"
-#include "engine_math.h"
 
 void setDodgeSensor(ThermistorConf *thermistorConf, float pullup) {
 	thermistorConf->config = {-40, 30, 120, 336660, 7550, 390, pullup};

@@ -21,10 +21,8 @@
  * If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "global.h"
 #if !EFI_UNIT_TEST
 #include "sensor_chart.h"
-#include "engine_configuration.h"
 #include "trigger_central.h"
 #include "engine_controller.h"
 

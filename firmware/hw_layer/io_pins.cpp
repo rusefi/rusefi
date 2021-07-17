@@ -7,10 +7,7 @@
  * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
-#include "global.h"
 #include "io_pins.h"
-#include "efi_gpio.h"
-#include "engine.h"
 #include "pin_repository.h"
 
 #if EFI_PROD_CODE

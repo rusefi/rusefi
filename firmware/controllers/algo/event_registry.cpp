@@ -21,8 +21,6 @@
  */
 
 #include "event_registry.h"
-#include "global.h"
-#include "engine_math.h"
 
 InjectionEvent::InjectionEvent() {
 	memset(outputs, 0, sizeof(outputs));

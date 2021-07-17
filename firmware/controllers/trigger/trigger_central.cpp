@@ -6,21 +6,17 @@
  * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
-#include "global.h"
 #include "os_access.h"
 
 #include "trigger_central.h"
 #include "trigger_decoder.h"
 #include "main_trigger_callback.h"
-#include "engine_configuration.h"
 #include "listener_array.h"
-#include "pwm_generator_logic.h"
 #include "tooth_logger.h"
 #include "hip9011.h"
 #include "logic_analyzer.h"
 
 #include "settings.h"
-#include "engine_math.h"
 #include "local_version_holder.h"
 #include "trigger_simulator.h"
 #include "trigger_emulator_algo.h"

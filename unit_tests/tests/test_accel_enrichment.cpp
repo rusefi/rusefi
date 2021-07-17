@@ -10,7 +10,6 @@
 
 #include "engine_test_helper.h"
 #include "accel_enrichment.h"
-#include "sensor.h"
 
 TEST(fuel, testTpsAccelEnrichmentMath) {
 	printf("====================================================================================== testAccelEnrichment\r\n");

@@ -8,7 +8,6 @@
 #include <string.h>
 
 #include "cyclic_buffer.h"
-#include "global.h"
 #include "histogram.h"
 
 #include "malfunction_central.h"
@@ -22,7 +21,6 @@
 #include "crc.h"
 #include "fl_stack.h"
 #include "io_pins.h"
-#include "efi_gpio.h"
 #include "efilib.h"
 #include "peak_detect.h"
 

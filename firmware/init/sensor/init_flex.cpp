@@ -1,6 +1,5 @@
 #include "init.h"
 #include "pin_repository.h"
-#include "engine.h"
 #include "flex_sensor.h"
 
 static FlexFuelSensor flexSensor;

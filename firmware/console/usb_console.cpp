@@ -1,4 +1,3 @@
-#include "global.h"
 
 #if EFI_USB_SERIAL
 

@@ -2,7 +2,6 @@
 #include "engine_test_helper.h"
 #include "gppwm_channel.h"
 #include "gppwm.h"
-#include "sensor.h"
 
 #include "mocks.h"
 

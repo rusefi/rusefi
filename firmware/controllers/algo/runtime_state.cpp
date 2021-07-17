@@ -5,7 +5,6 @@
  * @author Andrey Belomutskiy, (c) 2012-2021
  */
 
-#include "global.h"
 #include "runtime_state.h"
 
 // todo: revive implementation! we shall measure how far is actual execution timestamp from desired execution timestamp

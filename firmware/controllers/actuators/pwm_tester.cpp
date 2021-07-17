@@ -6,14 +6,11 @@
  * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
-#include "global.h"
 
 #if EFI_PWM_TESTER
 
 #include "pwm_tester.h"
 #include "state_requence.h"
-#include "pwm_generator_logic.h"
-#include "engine.h"
 
 static SimplePwm pwmTest[5];
 

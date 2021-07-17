@@ -7,7 +7,6 @@
  * @author Matthew Kennedy, (C) 2020
  */
 
-#include "global.h"
 #include "speed_density_base.h"
 
 /**

@@ -1,4 +1,3 @@
-#include "global.h"
 #include "obd_error_codes.h"
 // was generated automatically by rusEFI tool  from obd_error_codes.h // by enum2string.jar tool on Tue Jul 13 10:52:36 EDT 2021
 // see also gen_config_and_enums.bat

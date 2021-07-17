@@ -10,7 +10,6 @@
  * @author Dmitry Sidin, (c) 2015
  */
 
-#include "global.h"
 
 
 #include "interpolation.h"

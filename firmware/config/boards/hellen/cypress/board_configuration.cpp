@@ -7,11 +7,7 @@
  * @author andreika <prometheus.pcb@gmail.com>
  */
 
-#include "global.h"
-#include "engine.h"
-#include "engine_configuration.h"
 #include "adc_inputs.h"
-#include "engine_math.h"
 #include "tps.h"
 #include "trigger_input.h"
 

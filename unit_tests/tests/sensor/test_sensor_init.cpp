@@ -1,6 +1,5 @@
 #include "unit_test_framework.h"
 #include "init.h"
-#include "sensor.h"
 #include "functional_sensor.h"
 
 #include "engine_test_helper.h"

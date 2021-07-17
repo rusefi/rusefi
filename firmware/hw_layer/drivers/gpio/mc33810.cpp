@@ -10,7 +10,6 @@
  * @author Andrey Gusakov <dron0gus@gmail.com>, (c) 2020
  */
 
-#include "global.h"
 #include "gpio/gpio_ext.h"
 #include "gpio/mc33810.h"
 #include "pin_repository.h"
