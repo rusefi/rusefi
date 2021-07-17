@@ -45,6 +45,10 @@ static void fireSparkBySettingPinLow(IgnitionEvent *event, IgnitionOutputPin *ou
 	Engine *engine = event->engine;
 #endif /* EFI_UNIT_TEST */
 
+	efitick_t nowNt = getTimeNowNt();
+	engine->mostRecentTimeBetweenSparkEvents = nowNt - engine->mostRecentSparkEvent;
+	engine->mostRecentSparkEvent = nowNt;
+
 #if SPARK_EXTREME_LOGGING
 	efiPrintf("spark goes low  %d %s %d current=%d cnt=%d id=%d", getRevolutionCounter(), output->name, (int)getTimeNowUs(),
 			output->currentLogicValue, output->outOfOrder, event->sparkId);
