@@ -224,6 +224,11 @@ public:
 	void addEvent720(angle_t angle, trigger_wheel_e const channelIndex, trigger_value_e const state);
 
 	/**
+	 * this method helps us use real world 350 degrees shape for FOUR_STROKE_CAM_SENSOR and FOUR_STROKE_CRANK_SENSOR
+	 */
+	void addEvent360(angle_t angle, trigger_wheel_e const channelIndex, trigger_value_e const state);
+
+	/**
 	 * This version of 'addEvent...' family considers the angle duration of operationMode in this trigger
 	 * For example, (0..180] for FOUR_STROKE_SYMMETRICAL_CRANK_SENSOR
 	 */
