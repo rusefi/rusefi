@@ -13,5 +13,6 @@ else
 	@$(CPPC) -c $(CPPFLAGS) $(AOPT) -I. $(IINCDIR) $< -o $@
 endif
 
-# Make all other objects explicitly depend on the PCH
-$(OBJS) : $(PCHOBJ)
+# Make all cpp objects explicitly depend on the PCH
+$(TCPPOBJS) : $(PCHOBJ)
+$(ACPPOBJS) : $(PCHOBJ)
