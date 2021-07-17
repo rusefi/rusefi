@@ -145,7 +145,8 @@ jobs:
           bash config/boards/subaru_eg33/config/gen_config.sh
           [ $? -eq 0 ] || { echo "ERROR generating board subaru_eg33 subaru_eg33_f7"; exit 1; }
         else
-          bash gen_config_board.sh ${{matrix.folder}} ${{matrix.build-target}}
+          # **HACK WARNING** gen_config_board.sh takes 2 params. If ini-file is empty, it will see the second as build-target
+          bash gen_config_board.sh ${{matrix.folder}} ${{matrix.ini-file}} ${{matrix.build-target}}
         fi
 
     - name: Generate Enum Strings
