@@ -23,6 +23,10 @@ PROJECT_CPU=simulator
 include ../firmware/rusefi.mk
 RULESFILE = ../firmware/rusefi_rules.mk
 
+# Configure precompiled header
+PCH_DIR = $(PROJECT_DIR)/pch
+PCHSRC = $(PCH_DIR)/pch.h
+
 # used by USE_SMART_BUILD
 CONFDIR = .
 
@@ -60,7 +64,7 @@ endif
 
 # C++ specific options here (added to USE_OPT).
 ifeq ($(USE_CPPOPT),)
-  USE_CPPOPT = -std=c++17 -Wno-register -fno-rtti
+  USE_CPPOPT = -std=c++17 -Wno-register -fno-rtti -Winvalid-pch -include $(PCHSRC)
 endif
 
 # Enable this if you want the linker to remove unused code and data.
@@ -290,3 +294,6 @@ endif
 ##############################################################################
 
 include $(RULESPATH)/rules.mk
+
+# Enable precompiled header
+include $(PROJECT_DIR)/rusefi_pch.mk
