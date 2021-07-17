@@ -7,3 +7,4 @@
 #include "tunerstudio_outputs.h"
 #include "engine_math.h"
 #include "pwm_generator_logic.h"
+#include "sensor.h"
