@@ -366,7 +366,7 @@ void TriggerWaveform::setTriggerSynchronizationGap3(int gapIndex, float syncRati
 /**
  * this method is only used on initialization
  */
-uint16_t TriggerWaveform::findAngleIndex(TriggerFormDetails *details, float target) const {
+uint16_t TriggerWaveform::findAngleIndex(TriggerFormDetails *details, angle_t targetAngle) const {
 	size_t engineCycleEventCount = getLength();
 
 	efiAssert(CUSTOM_ERR_ASSERT, engineCycleEventCount != 0 && engineCycleEventCount <= 0xFFFF, "engineCycleEventCount", 0);
@@ -382,9 +382,9 @@ uint16_t TriggerWaveform::findAngleIndex(TriggerFormDetails *details, float targ
         int middle = (left + right) / 2;
 		angle_t eventAngle = details->eventAngles[middle];
 
-        if (eventAngle < target) {
+        if (eventAngle < targetAngle) {
             left = middle + 1;
-        } else if (eventAngle > target) {
+        } else if (eventAngle > targetAngle) {
             right = middle - 1;
         } else {
             // Values are equal

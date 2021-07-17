@@ -14,6 +14,18 @@ static void postFourEvents(EngineTestHelper *eth, float mult) {
 	eth->fireRise(mult * 16);
 }
 
+TEST(engine, testAngleLogicInSymmetricalCrankIssue2980) {
+	WITH_ENGINE_TEST_HELPER(MAZDA_MIATA_2003);
+
+	TriggerFormDetails *triggerForm = &ENGINE(triggerCentral.triggerFormDetails);
+
+	TriggerWaveform * form = &ENGINE(triggerCentral.triggerShape);
+
+	ASSERT_EQ(form->findAngleIndex(triggerForm, 10), 1);
+	ASSERT_EQ(form->findAngleIndex(triggerForm, 310), 5);
+	ASSERT_EQ(form->findAngleIndex(triggerForm, 710), 15);
+}
+
 TEST(engine, testSymmetricalCrank) {
 
 	WITH_ENGINE_TEST_HELPER(MAZDA_MIATA_2003);
