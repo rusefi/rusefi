@@ -129,7 +129,7 @@ void initializeNissanVQvvt(TriggerWaveform *s) {
 	s->setTriggerSynchronizationGap(5);
 }
 
-void initializeNissanVQcrank(TriggerWaveform *s) {
+void initializeNissanVQ35crank(TriggerWaveform *s) {
 	s->initialize(FOUR_STROKE_THREE_TIMES_CRANK_SENSOR);
 	s->setTriggerSynchronizationGap(0.33);
 
@@ -141,4 +141,9 @@ void initializeNissanVQcrank(TriggerWaveform *s) {
 		s->addEventAngle(currentAngle - 5, T_PRIMARY, TV_RISE);
 		s->addEventAngle(currentAngle, T_PRIMARY, TV_FALL);
 	}
+}
+
+void initializeNissanVQ30cam(TriggerWaveform *s) {
+	s->initialize(FOUR_STROKE_CAM_SENSOR);
+
 }
