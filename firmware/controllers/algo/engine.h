@@ -103,6 +103,11 @@ public:
 
 	GearControllerBase *gearController;
 
+	efitick_t mostRecentSparkEvent;
+	efitick_t mostRecentTimeBetweenSparkEvents;
+	efitick_t mostRecentIgnitionEvent;
+	efitick_t mostRecentTimeBetweenIgnitionEvents;
+
 	PrimaryTriggerConfiguration primaryTriggerConfiguration;
 	VvtTriggerConfiguration vvtTriggerConfiguration[CAMS_PER_BANK];
 	efitick_t startStopStateLastPushTime = 0;
