@@ -74,7 +74,7 @@ TEST(nissan, vq_vvt) {
 
 	{
 		static TriggerWaveform crank;
-		initializeNissanVQcrank(&crank);
+		initializeNissanVQ35crank(&crank);
 
 		scheduleTriggerEvents(&crank,
 				/* timeScale */ 1,
