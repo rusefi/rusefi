@@ -418,7 +418,10 @@ void findTriggerPosition(TriggerWaveform *triggerShape,
 
 	int triggerEventIndex = details->triggerIndexByAngle[(int)angle];
 	angle_t triggerEventAngle = details->eventAngles[triggerEventIndex];
-	if (angle < triggerEventAngle) {
+	angle_t offsetFromTriggerEvent = angle - triggerEventAngle;
+
+	// Guarantee that we aren't going to try and schedule an event prior to the tooth
+	if (offsetFromTriggerEvent < 0) {
 		warning(CUSTOM_OBD_ANGLE_CONSTRAINT_VIOLATION, "angle constraint violation in findTriggerPosition(): %.2f/%.2f", angle, triggerEventAngle);
 		return;
 	}
@@ -428,7 +431,7 @@ void findTriggerPosition(TriggerWaveform *triggerShape,
 		chibios_rt::CriticalSectionLocker csl;
 
 		position->triggerEventIndex = triggerEventIndex;
-		position->angleOffsetFromTriggerEvent = angle - triggerEventAngle;
+		position->angleOffsetFromTriggerEvent = offsetFromTriggerEvent;
 	}
 }
 
