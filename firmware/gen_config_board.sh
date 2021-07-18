@@ -15,9 +15,9 @@ fi
 BOARDNAME=$1
 SHORT_BOARDNAME=$2
 if [ -n "$3" ]; then
-  INI="rusefi_$3.ini"
+  INI="$3"
 else
-  INI="$SHORT_BOARDNAME"
+  INI="rusefi_${SHORT_BOARDNAME}.ini"
 fi
 
 echo "BOARDNAME=${BOARDNAME} SHORT_BOARDNAME=${SHORT_BOARDNAME}"
