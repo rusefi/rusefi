@@ -145,7 +145,7 @@ jobs:
           bash config/boards/subaru_eg33/config/gen_config.sh
           [ $? -eq 0 ] || { echo "ERROR generating board subaru_eg33 subaru_eg33_f7"; exit 1; }
         else
-          bash gen_config_board.sh ${{matrix.folder}} ${{matrix.build-target}}
+          bash gen_config_board.sh ${{matrix.folder}} ${{matrix.build-target}} ${{matrix.ini-file}}
         fi
 
     - name: Generate Enum Strings
