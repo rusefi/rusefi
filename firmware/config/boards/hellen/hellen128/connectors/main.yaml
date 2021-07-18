@@ -154,7 +154,10 @@ pins:
     function: NC
 
   - pin: C31
-    function: NC
+    id: EFI_ADC_1
+    class: analog_inputs
+    ts_name: C31 - O2S
+    function: Front O2 Sensor Signal
 
   - pin: C32
     function: NC
