@@ -37,7 +37,8 @@ All notable user-facing or behavior-altering changes will be documented in this 
  - new hardware testing console commands #2978
  
 ### Fixed
- - rusEFI console start-up speed #2964   
+ - rusEFI console start-up speed #2964
+ - wrong handling of symmetrical crank wheels NB2 VQ35 Renix #2980   
 
 ## June 2021 Release "National Logistics Day"
 
