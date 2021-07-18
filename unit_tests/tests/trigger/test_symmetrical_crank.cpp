@@ -21,9 +21,9 @@ TEST(engine, testAngleLogicInSymmetricalCrankIssue2980) {
 
 	TriggerWaveform * form = &ENGINE(triggerCentral.triggerShape);
 
-	// Check one angle just after every trigger tooth, for two full revolutions (720 degrees, one engine cycle, 4 loops of the trigger)
-
 	#define EXPECT_FINDANGLE(angle, idx) EXPECT_EQ(form->findAngleIndex(triggerForm, angle) & 0xFFFF'FFFE, idx);
+
+	// Check one angle just after every trigger tooth, for two full revolutions (720 degrees, one engine cycle, 4 loops of the trigger)
 
 	// First quarter
 	EXPECT_FINDANGLE(0 * 180 + 5, 0);		// 5
