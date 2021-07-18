@@ -159,7 +159,10 @@ angle_t TriggerWaveform::getAngle(int index) const {
 	int crankCycle = index / privateTriggerDefinitionSize;
 	int remainder = index % privateTriggerDefinitionSize;
 
-	return getCycleDuration() * crankCycle + getSwitchAngle(remainder);
+	auto cycleStartAngle = getCycleDuration() * crankCycle;
+	auto positionWithinCycle = getSwitchAngle(remainder);
+
+	return cycleStartAngle + positionWithinCycle;
 }
 
 void TriggerWaveform::addEventClamped(angle_t angle, trigger_wheel_e const channelIndex, trigger_value_e const stateParam, float filterLeft, float filterRight) {
@@ -418,7 +421,10 @@ void findTriggerPosition(TriggerWaveform *triggerShape,
 
 	int triggerEventIndex = details->triggerIndexByAngle[(int)angle];
 	angle_t triggerEventAngle = details->eventAngles[triggerEventIndex];
-	if (angle < triggerEventAngle) {
+	angle_t offsetFromTriggerEvent = angle - triggerEventAngle;
+
+	// Guarantee that we aren't going to try and schedule an event prior to the tooth
+	if (offsetFromTriggerEvent < 0) {
 		warning(CUSTOM_OBD_ANGLE_CONSTRAINT_VIOLATION, "angle constraint violation in findTriggerPosition(): %.2f/%.2f", angle, triggerEventAngle);
 		return;
 	}
@@ -428,7 +434,7 @@ void findTriggerPosition(TriggerWaveform *triggerShape,
 		chibios_rt::CriticalSectionLocker csl;
 
 		position->triggerEventIndex = triggerEventIndex;
-		position->angleOffsetFromTriggerEvent = angle - triggerEventAngle;
+		position->angleOffsetFromTriggerEvent = offsetFromTriggerEvent;
 	}
 }
 
