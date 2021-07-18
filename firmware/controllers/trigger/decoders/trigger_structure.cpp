@@ -159,7 +159,10 @@ angle_t TriggerWaveform::getAngle(int index) const {
 	int crankCycle = index / privateTriggerDefinitionSize;
 	int remainder = index % privateTriggerDefinitionSize;
 
-	return getCycleDuration() * crankCycle + getSwitchAngle(remainder);
+	auto cycleStartAngle = getCycleDuration() * crankCycle;
+	auto positionWithinCycle = getSwitchAngle(remainder);
+
+	return cycleStartAngle + positionWithinCycle;
 }
 
 void TriggerWaveform::addEventClamped(angle_t angle, trigger_wheel_e const channelIndex, trigger_value_e const stateParam, float filterLeft, float filterRight) {
