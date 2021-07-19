@@ -9,3 +9,4 @@
 #include "engine_math.h"
 #include "pwm_generator_logic.h"
 #include "sensor.h"
+#include "error_handling.h"
