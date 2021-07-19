@@ -87,7 +87,12 @@ extern "C" void __late_init() {
 	RCC->APB2ENR |= RCC_APB2ENR_TIM11EN;
 
 	// Remap to connect HSERTC to TIM11 CH1
+#ifdef STM32F4xx
 	TIM11->OR = TIM_OR_TI1_RMP_1;
+#else
+	// the definition has a different name on F7 for whatever reason
+	TIM11->OR = TIM11_OR_TI1_RMP_1;
+#endif
 
 	// Enable capture on channel 4
 	TIM11->CCMR1 = TIM_CCMR1_CC1S_0;
