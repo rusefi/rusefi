@@ -95,7 +95,7 @@ static void reprogramPll(uint8_t roundedHseMhz) {
 }
 #else // not STM32H7
 
-static constexpr rtcpreDivider = 31;
+static constexpr float rtcpreDivider = 31;
 
 // This only works if you're using the PLL as the configured clock source!
 static_assert(STM32_SW == RCC_CFGR_SW_PLL);
