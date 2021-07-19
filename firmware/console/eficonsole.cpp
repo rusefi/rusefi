@@ -44,8 +44,8 @@ static void sayHello(void) {
 
 #ifdef ENABLE_AUTO_DETECT_HSE
 	extern float hseFrequencyMhz;
-	extern uint8_t autoDetectedPllMValue;
-	efiPrintf(PROTOCOL_HELLO_PREFIX " detected HSE clock %.2f MHz, PLLM = %d", hseFrequencyMhz, autoDetectedPllMValue);
+	extern uint8_t autoDetectedRoundedMhz;
+	efiPrintf(PROTOCOL_HELLO_PREFIX " detected HSE clock %.2f MHz PLLM = %d", hseFrequencyMhz, autoDetectedRoundedMhz);
 #endif /* ENABLE_AUTO_DETECT_HSE */
 
 #if defined(STM32F4) || defined(STM32F7)
