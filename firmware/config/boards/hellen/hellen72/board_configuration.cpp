@@ -156,6 +156,7 @@ void setBoardDefaultConfiguration(void) {
 	engineConfiguration->fan2Pin = GPIOD_9;
 	engineConfiguration->enableFan2WithAc = true;
 	engineConfiguration->mainRelayPin = GPIOI_2;	// OUT_LOW3
+	engineConfiguration->auxPidPins[0] = GPIOI_0;    // 4R - VVT (O5)
 
 	// "required" hardware is done - set some reasonable defaults
 	setupDefaultSensorInputs();
