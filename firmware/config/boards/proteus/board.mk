@@ -29,9 +29,7 @@ ifneq ($(PROJECT_CPU),ARCH_STM32H7)
 endif
 
 # disable hardware serial ports on H7
-ifeq ($(PROJECT_CPU),ARCH_STM32H7)
-  DDEFS += -DTS_NO_PRIMARY -DTS_NO_SECONDARY
-else
+ifneq ($(PROJECT_CPU),ARCH_STM32H7)
 	# Hardware serial port on UART 2 -> PD5/PD6
 	DDEFS += -DSTM32_UART_USE_USART2=TRUE
 	DDEFS += -DTS_PRIMARY_UART=UARTD2

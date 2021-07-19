@@ -9,10 +9,10 @@
  * @date Aug 29, 2013
  * @author Andrey Belomutskiy, (c) 2012-2020
  */
- 
-#include "../stm32f4ems/efifeatures.h"
 
 #pragma once
+
+#include "../stm32f4ems/efifeatures.h"
 
 #undef EFI_POTENTIOMETER
 #define EFI_POTENTIOMETER FALSE
