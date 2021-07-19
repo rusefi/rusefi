@@ -80,6 +80,10 @@
 /*
  * PLLs static settings.
  * Reading STM32 Reference Manual is required.
+ * 
+ * Configured to use HSI to generate 400mhz, but we will reconfigure to use HSE
+ * with appropriate PLLx_DIVM values for the detected external frequency.
+ * See osc_detector.cpp
  */
 #define STM32_PLLSRC                        STM32_PLLSRC_HSI_CK
 #define STM32_PLLCFGR_MASK                  ~0
