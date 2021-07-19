@@ -22,12 +22,18 @@
 float hseFrequencyMhz;
 uint8_t autoDetectedPllMValue;
 
+#ifdef STM32H7XX
+#define TIMER TIM17
+#else // not H7
+#define TIMER TIM11
+#endif
+
 static uint32_t getOneCapture() {
 	// wait for input capture
-	while ((TIM11->SR & TIM_SR_CC1IF) == 0);
+	while ((TIMER->SR & TIM_SR_CC1IF) == 0);
 
 	// Return captured count
-	return TIM11->CCR1;
+	return TIMER->CCR1;
 }
 
 static uint32_t getTimerCounts(size_t count) {
@@ -45,12 +51,62 @@ static uint32_t getTimerCounts(size_t count) {
 	return lastCapture - firstCapture;
 }
 
-// This only works if you're using the PLL as the configured clock source!
-static_assert(STM32_SW == RCC_CFGR_SW_PLL);
-
 // These clocks must all be enabled for this to work
 static_assert(STM32_HSI_ENABLED);
 static_assert(STM32_HSE_ENABLED);
+
+#ifdef STM32H7XX
+static constexpr float rtcpreDivider = 63;
+
+static void enableTimer() {
+	RCC->APB2ENR |= RCC_APB2ENR_TIM17EN;
+}
+
+static void disableTimer() {
+	RCC->APB2ENR &= RCC_APB2ENR_TIM17EN;
+}
+
+static void reprogramPll(uint8_t roundedHseMhz) {
+	// Switch system clock to HSI to configure PLL (SW = 0)
+	RCC->CFGR &= ~RCC_CFGR_SW;
+
+	// Stop all 3 PLLs
+	RCC->CR &= ~(RCC_CR_PLL1ON | RCC_CR_PLL2ON | RCC_CR_PLL3ON);
+
+	// H7 is configured for 2MHz input to PLL
+	auto pllm = roundedHseMhz / 2;
+	
+	// Set PLLM for all 3 PLLs to the new value, and select HSE as the clock source
+	RCC->PLLCKSELR = 
+		pllm << RCC_PLLCKSELR_DIVM1_Pos |
+		pllm << RCC_PLLCKSELR_DIVM2_Pos |
+		pllm << RCC_PLLCKSELR_DIVM3_Pos |
+		RCC_PLLCKSELR_PLLSRC_HSE;
+
+	// Enable PLLs
+	RCC->CR |= RCC_CR_PLL1ON | RCC_CR_PLL2ON | RCC_CR_PLL3ON;
+
+	// Wait for PLLs to lock
+	auto readyMask = RCC_CR_PLL1RDY | RCC_CR_PLL2RDY | RCC_CR_PLL3RDY;
+	while ((RCC->CR & readyMask) != readyMask) ;
+
+	// Switch system clock source back to PLL
+	RCC->CFGR |= RCC_CFGR_SW_PLL1;
+}
+#else // not STM32H7
+
+static constexpr rtcpreDivider = 31;
+
+// This only works if you're using the PLL as the configured clock source!
+static_assert(STM32_SW == RCC_CFGR_SW_PLL);
+
+static void enableTimer() {
+	RCC->APB2ENR |= RCC_APB2ENR_TIM11EN;
+}
+
+static void disableTimer() {
+	RCC->APB2ENR &= ~RCC_APB2ENR_TIM11EN;
+}
 
 static void reprogramPll(uint8_t pllM) {
 	// Switch back to HSI to configure PLL
@@ -77,37 +133,41 @@ static void reprogramPll(uint8_t pllM) {
 	RCC->CFGR |= RCC_CFGR_SW_PLL;
 	while ((RCC->CFGR & RCC_CFGR_SWS) != (STM32_SW << 2));
 }
+#endif
 
 // __late_init runs after bss/zero initialziation, but before static constructors and main
 extern "C" void __late_init() {
 	// Set RTCPRE to /31 - just set all the bits
 	RCC->CFGR |= RCC_CFGR_RTCPRE_Msk;
 
-	// Turn on timer 5
-	RCC->APB2ENR |= RCC_APB2ENR_TIM11EN;
+	// Turn on timer
+	enableTimer();
 
-	// Remap to connect HSERTC to TIM11 CH1
-#ifdef STM32F4xx
+	// Remap to connect HSERTC to CH1
+#ifdef STM32H7XX
+	// TI1SEL = 2, HSE_1MHz
+	TIMER->TISEL = TIM_TISEL_TI1SEL_1;
+#elif defined(STM32F4XX)
 	TIM11->OR = TIM_OR_TI1_RMP_1;
 #else
 	// the definition has a different name on F7 for whatever reason
 	TIM11->OR = TIM11_OR_TI1_RMP_1;
 #endif
 
-	// Enable capture on channel 4
-	TIM11->CCMR1 = TIM_CCMR1_CC1S_0;
-	TIM11->CCER = TIM_CCER_CC1E;
+	// Enable capture on channel 1
+	TIMER->CCMR1 = TIM_CCMR1_CC1S_0;
+	TIMER->CCER = TIM_CCER_CC1E;
 
-	// Start TIM11
-	TIM11->CR1 |= TIM_CR1_CEN;
+	// Start TIMER
+	TIMER->CR1 |= TIM_CR1_CEN;
 
 	// Measure HSE against SYSCLK
 	auto hseCounts = getTimerCounts(10);
 
-	// Turn off timer 11 now that we're done with it
-	RCC->APB2ENR &= ~RCC_APB2ENR_TIM11EN;
+	// Turn off timer now that we're done with it
+	disableTimer();
 
-	float hseFrequencyHz = 10 * 31.0f * STM32_SYSCLK / hseCounts;
+	float hseFrequencyHz = 10 * rtcpreDivider * STM32_TIMCLK2 / hseCounts;
 
 	hseFrequencyMhz = hseFrequencyHz / 1e6;
 	autoDetectedPllMValue = efiRound(hseFrequencyMhz, 1);
