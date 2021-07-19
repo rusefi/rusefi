@@ -20,41 +20,24 @@
 #ifdef ENABLE_AUTO_DETECT_HSE
 
 float hseFrequencyMhz;
-uint8_t autoDetectedPllMValue;
-
-static void useHsi() {
-	// clear SW to use HSI
-	RCC->CFGR &= ~RCC_CFGR_SW;
-}
-
-static void useHse() {
-	// Switch to HSE clock
-	RCC->CFGR &= ~RCC_CFGR_SW;
-	RCC->CFGR |= RCC_CFGR_SW_HSE;
-}
-
-static void usePll() {
-	RCC->CFGR &= ~RCC_CFGR_SW;
-	RCC->CFGR |= RCC_CFGR_SW_PLL;
-	while ((RCC->CFGR & RCC_CFGR_SWS) != (STM32_SW << 2));
-}
+uint8_t autoDetectedRoundedMhz;
 
 static uint32_t getOneCapture() {
 	// wait for input capture
-	while ((TIM5->SR & TIM_SR_CC4IF) == 0);
+	while ((TIM11->SR & TIM_SR_CC1IF) == 0);
 
 	// Return captured count
-	return TIM5->CCR4;
+	return TIM11->CCR1;
 }
 
-static uint32_t getAverageLsiCounts() {
+static uint32_t getTimerCounts(size_t count) {
 	// Burn one count
 	getOneCapture();
 
 	uint32_t firstCapture = getOneCapture();
 	uint32_t lastCapture;
 
-	for (size_t i = 0; i < 20; i++)
+	for (size_t i = 0; i < count; i++)
 	{
 		lastCapture = getOneCapture();
 	}
@@ -67,12 +50,12 @@ static_assert(STM32_SW == RCC_CFGR_SW_PLL);
 
 // These clocks must all be enabled for this to work
 static_assert(STM32_HSI_ENABLED);
-static_assert(STM32_LSI_ENABLED);
 static_assert(STM32_HSE_ENABLED);
 
-static void reprogramPll(uint8_t pllM) {
+static void reprogramPll(uint8_t roundedMhz) {
 	// Switch back to HSI to configure PLL
-	useHsi();
+	// clear SW to use HSI
+	RCC->CFGR &= ~RCC_CFGR_SW;
 
 	// Stop the PLL
 	RCC->CR &= ~RCC_CR_PLLON;
@@ -81,7 +64,7 @@ static void reprogramPll(uint8_t pllM) {
 	RCC->PLLCFGR &= ~(RCC_PLLCFGR_PLLM_Msk | RCC_PLLCFGR_PLLSRC_Msk);
 
 	// Stick in the new PLLM value
-	RCC->PLLCFGR |= (pllM << RCC_PLLCFGR_PLLM_Pos) & RCC_PLLCFGR_PLLM_Msk;
+	RCC->PLLCFGR |= (roundedMhz << RCC_PLLCFGR_PLLM_Pos) & RCC_PLLCFGR_PLLM_Msk;
 	// Set PLLSRC to HSE
 	RCC->PLLCFGR |= RCC_PLLCFGR_PLLSRC_HSE;
 
@@ -90,45 +73,46 @@ static void reprogramPll(uint8_t pllM) {
 	while (!(RCC->CR & RCC_CR_PLLRDY));
 
 	// Switch clock source back to PLL
-	usePll();
+	RCC->CFGR &= ~RCC_CFGR_SW;
+	RCC->CFGR |= RCC_CFGR_SW_PLL;
+	while ((RCC->CFGR & RCC_CFGR_SWS) != (STM32_SW << 2));
 }
 
 // __late_init runs after bss/zero initialziation, but before static constructors and main
 extern "C" void __late_init() {
-	// Turn on timer 5
-	RCC->APB1ENR |= RCC_APB1ENR_TIM5EN;
+	// Set RTCPRE to /31 - just set all the bits
+	RCC->CFGR |= RCC_CFGR_RTCPRE_Msk;
 
-	// Remap to connect LSI to input capture channel 4
-	TIM5->OR = TIM_OR_TI4_RMP_0;
+	// Turn on timer 11
+	RCC->APB2ENR |= RCC_APB2ENR_TIM11EN;
 
-	// Enable capture on channel 4
-	TIM5->CCMR2 = TIM_CCMR2_CC4S_0;
-	TIM5->CCER = TIM_CCER_CC4E;
+	// Remap to connect HSERTC to TIM11 CH1
+#ifdef STM32F4XX
+	TIM11->OR = TIM_OR_TI1_RMP_1;
+#else
+	// the definition has a different name on F7 for whatever reason
+	TIM11->OR = TIM11_OR_TI1_RMP_1;
+#endif
 
-	// Start TIM5
-	TIM5->CR1 |= TIM_CR1_CEN;
+	// Enable capture on channel 1
+	TIM11->CCMR1 = TIM_CCMR1_CC1S_0;
+	TIM11->CCER = TIM_CCER_CC1E;
 
-	// Use HSI
-	useHsi();
+	// Start TIM11
+	TIM11->CR1 |= TIM_CR1_CEN;
 
-	// Measure LSI against HSI
-	auto hsiCounts = getAverageLsiCounts();
+	// Measure HSE against SYSCLK
+	auto hseCounts = getTimerCounts(10);
 
-	useHse();
+	// Turn off timer 11 now that we're done with it
+	RCC->APB2ENR &= ~RCC_APB2ENR_TIM11EN;
 
-	// Measure LSI against HSE
-	auto hseCounts = getAverageLsiCounts();
+	float hseFrequencyHz = 10 * 31.0f * STM32_SYSCLK / hseCounts;
 
-	// Turn off timer 5 now that we're done with it
-	RCC->APB1ENR &= ~RCC_APB1ENR_TIM5EN;
+	hseFrequencyMhz = hseFrequencyHz / 1e6;
+	autoDetectedRoundedMhz = efiRound(hseFrequencyMhz, 1);
 
-	// The external clocks's frequency is the ratio of the measured LSI speed, times HSI's speed (16MHz)
-	constexpr float hsiMhz = STM32_HSICLK * 1e-6;
-
-	hseFrequencyMhz = hsiMhz * hseCounts / hsiCounts;
-	autoDetectedPllMValue = efiRound(hseFrequencyMhz, 1);
-
-	reprogramPll(autoDetectedPllMValue);
+	reprogramPll(autoDetectedRoundedMhz);
 }
 
 #endif // defined ENABLE_AUTO_DETECT_HSE
