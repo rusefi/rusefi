@@ -60,31 +60,28 @@ void configureGm60_2_2_2(TriggerWaveform *s) {
 void configureGmTriggerWaveform(TriggerWaveform *s) {
 	s->initialize(FOUR_STROKE_CRANK_SENSOR);
 
-	// all angles are x2 here - so, 5 degree width is 10
-	float w = 10;
+	float w = 5;
 
-	float m = CRANK_MODE_MULTIPLIER;
+	s->addEvent360(60 - w, T_PRIMARY, TV_RISE);
+	s->addEvent360(60, T_PRIMARY, TV_FALL);
 
-	s->addEvent720(m * 60 - w, T_PRIMARY, TV_RISE);
-	s->addEvent720(m * 60, T_PRIMARY, TV_FALL);
+	s->addEvent360(120 - w, T_PRIMARY, TV_RISE);
+	s->addEvent360(120.0, T_PRIMARY, TV_FALL);
 
-	s->addEvent720(m * 120 - w, T_PRIMARY, TV_RISE);
-	s->addEvent720(m * 120.0, T_PRIMARY, TV_FALL);
+	s->addEvent360(180 - w, T_PRIMARY, TV_RISE);
+	s->addEvent360(180, T_PRIMARY, TV_FALL);
 
-	s->addEvent720(m * 180 - w, T_PRIMARY, TV_RISE);
-	s->addEvent720(m * 180, T_PRIMARY, TV_FALL);
+	s->addEvent360(240 - w, T_PRIMARY, TV_RISE);
+	s->addEvent360(240.0, T_PRIMARY, TV_FALL);
 
-	s->addEvent720(m * 240 - w, T_PRIMARY, TV_RISE);
-	s->addEvent720(m * 240.0, T_PRIMARY, TV_FALL);
+	s->addEvent360(300 - w, T_PRIMARY, TV_RISE);
+	s->addEvent360(300.0, T_PRIMARY, TV_FALL);
 
-	s->addEvent720(m * 300 - w, T_PRIMARY, TV_RISE);
-	s->addEvent720(m * 300.0, T_PRIMARY, TV_FALL);
+	s->addEvent360(350 - w, T_PRIMARY, TV_RISE);
+	s->addEvent360(350.0, T_PRIMARY, TV_FALL);
 
-	s->addEvent720(m * 350 - w, T_PRIMARY, TV_RISE);
-	s->addEvent720(m * 350.0, T_PRIMARY, TV_FALL);
-
-	s->addEvent720(m * 360 - w, T_PRIMARY, TV_RISE);
-	s->addEvent720(m * 360.0, T_PRIMARY, TV_FALL);
+	s->addEvent360(360 - w, T_PRIMARY, TV_RISE);
+	s->addEvent360(360.0, T_PRIMARY, TV_FALL);
 
 	s->setTriggerSynchronizationGap(6);
 }

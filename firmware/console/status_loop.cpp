@@ -875,6 +875,9 @@ void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels DECLARE_
 			float instantRpm = engine->triggerCentral.triggerState.getInstantRpm();
 			tsOutputChannels->debugFloatField1 = instantRpm;
 			tsOutputChannels->debugFloatField2 = instantRpm / GET_RPM();
+
+			tsOutputChannels->debugIntField1 = engine->mostRecentTimeBetweenSparkEvents;
+			tsOutputChannels->debugIntField2 = engine->mostRecentTimeBetweenIgnitionEvents;
 		}
 		break;
 	case DBG_ION:

@@ -14,6 +14,34 @@ static void postFourEvents(EngineTestHelper *eth, float mult) {
 	eth->fireRise(mult * 16);
 }
 
+TEST(engine, testAngleLogicInSymmetricalCrankIssue2980) {
+	WITH_ENGINE_TEST_HELPER(MAZDA_MIATA_2003);
+
+	TriggerFormDetails *triggerForm = &ENGINE(triggerCentral.triggerFormDetails);
+
+	TriggerWaveform * form = &ENGINE(triggerCentral.triggerShape);
+
+	#define EXPECT_FINDANGLE(angle, idx) EXPECT_EQ(form->findAngleIndex(triggerForm, angle) & 0xFFFF'FFFE, idx);
+
+	// Check one angle just after every trigger tooth, for two full revolutions (720 degrees, one engine cycle, 4 loops of the trigger)
+
+	// First quarter
+	EXPECT_FINDANGLE(0 * 180 + 5, 0);		// 5
+	EXPECT_FINDANGLE(0 * 180 + 115, 2);		// 115
+
+	// Second quarter
+	EXPECT_FINDANGLE(1 * 180 + 5, 4);		// 180+5 = 185
+	EXPECT_FINDANGLE(1 * 180 + 115, 6);		// 180+115 = 295
+
+	// Third quarter
+	EXPECT_FINDANGLE(2 * 180 + 5, 8);		// 360+5 = 365
+	EXPECT_FINDANGLE(2 * 180 + 115, 10);	// 360+115 = 475
+
+	// Fourth quarter
+	EXPECT_FINDANGLE(3 * 180 + 5, 12);		// 540+5 = 545
+	EXPECT_FINDANGLE(3 * 180 + 115, 14);	// 540+115 = 655
+}
+
 TEST(engine, testSymmetricalCrank) {
 
 	WITH_ENGINE_TEST_HELPER(MAZDA_MIATA_2003);

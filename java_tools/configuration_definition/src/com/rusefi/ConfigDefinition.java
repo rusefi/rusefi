@@ -103,6 +103,7 @@ public class ConfigDefinition {
         String stringsCFileName = null;
         String javaDestinationFileName = null;
         String romRaiderDestination = null;
+        // we postpone reading so that in case of cache hit we do less work
         List<String> prependFiles = new ArrayList<>();
         String romRaiderInputFile = null;
         String firingEnumFileName = null;

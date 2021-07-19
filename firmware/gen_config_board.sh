@@ -1,6 +1,7 @@
 #!/bin/bash
 
 # file gen_config_board.sh
+# for example ./gen_config_board.sh hellen/hellen128 hellen128
 
 set -e
 
@@ -14,6 +15,11 @@ fi
 
 BOARDNAME=$1
 SHORT_BOARDNAME=$2
+if [ -n "$3" ]; then
+  INI="$3"
+else
+  INI="rusefi_${SHORT_BOARDNAME}.ini"
+fi
 
 echo "BOARDNAME=${BOARDNAME} SHORT_BOARDNAME=${SHORT_BOARDNAME}"
 
@@ -28,7 +34,7 @@ java -DSystemOut.name=gen_config_board \
 	-cache ${SHORT_BOARDNAME} \
 	-cache_zip_file tunerstudio/generated/cache.zip \
 	-firing_order controllers/algo/firing_order.h \
-	-ts_output_name generated/rusefi_${SHORT_BOARDNAME}.ini \
+	-ts_output_name generated/${INI} \
 	-signature tunerstudio/generated/signature_${SHORT_BOARDNAME}.txt \
 	-signature_destination controllers/generated/signature_${SHORT_BOARDNAME}.h \
 	-enumInputFile controllers/algo/rusefi_enums.h \
@@ -43,7 +49,7 @@ java -DSystemOut.name=gen_config_board \
 # 1) using unique file name for each configuration?
 # 2) leverage consistent caching mechanism so that image is generated only in case of fresh .ini. Laziest approach would be to return exit code from java process above
 #
-hw_layer/mass_storage/create_ini_image.sh ./tunerstudio/generated/rusefi_${SHORT_BOARDNAME}.ini ./hw_layer/mass_storage/ramdisk_image.h
-hw_layer/mass_storage/create_ini_image_compressed.sh ./tunerstudio/generated/rusefi_${SHORT_BOARDNAME}.ini ./hw_layer/mass_storage/ramdisk_image_compressed.h
+hw_layer/mass_storage/create_ini_image.sh ./tunerstudio/generated/${INI} ./hw_layer/mass_storage/ramdisk_image.h
+hw_layer/mass_storage/create_ini_image_compressed.sh ./tunerstudio/generated/${INI} ./hw_layer/mass_storage/ramdisk_image_compressed.h
 
 exit 0

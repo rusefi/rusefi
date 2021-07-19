@@ -170,6 +170,12 @@ void prepareEventAngles(TriggerWaveform *shape,
 
 	memset(details->eventAngles, 0, sizeof(details->eventAngles));
 
+	// this may be <length for some triggers like symmetrical crank Miata NB
+	int triggerShapeLength = shape->privateTriggerDefinitionSize;
+
+	assertAngleRange(shape->triggerShapeSynchPointIndex, "triggerShapeSynchPointIndex", CUSTOM_TRIGGER_SYNC_ANGLE2);
+	efiAssertVoid(CUSTOM_TRIGGER_CYCLE, engine->engineCycleEventCount != 0, "zero engineCycleEventCount");
+
 	for (int eventIndex = 0; eventIndex < length; eventIndex++) {
 		if (eventIndex == 0) {
 			// explicit check for zero to avoid issues where logical zero is not exactly zero due to float nature
@@ -177,15 +183,25 @@ void prepareEventAngles(TriggerWaveform *shape,
 			// this value would be used in case of front-only
 			details->eventAngles[1] = 0;
 		} else {
-			assertAngleRange(shape->triggerShapeSynchPointIndex, "triggerShapeSynchPointIndex", CUSTOM_TRIGGER_SYNC_ANGLE2);
-			unsigned int triggerDefinitionCoordinate = (shape->triggerShapeSynchPointIndex + eventIndex) % length;
-			efiAssertVoid(CUSTOM_TRIGGER_CYCLE, engine->engineCycleEventCount != 0, "zero engineCycleEventCount");
-			int triggerDefinitionIndex = triggerDefinitionCoordinate >= shape->privateTriggerDefinitionSize ? triggerDefinitionCoordinate - shape->privateTriggerDefinitionSize : triggerDefinitionCoordinate;
-			float angle = shape->getAngle(triggerDefinitionCoordinate) - firstAngle;
+			// Rotate the trigger around so that the sync point is at position 0
+			auto wrappedIndex = (shape->triggerShapeSynchPointIndex + eventIndex) % length;
+
+			// Compute this tooth's position within the trigger definition
+			// (wrap, as the trigger def may be smaller than total trigger length)
+			auto triggerDefinitionIndex = wrappedIndex % triggerShapeLength;
+
+			// Compute the relative angle of this tooth to the sync point's tooth
+			float angle = shape->getAngle(wrappedIndex) - firstAngle;
+
 			efiAssertVoid(CUSTOM_TRIGGER_CYCLE, !cisnan(angle), "trgSyncNaN");
+			// Wrap the angle back in to [0, 720)
 			fixAngle(angle, "trgSync", CUSTOM_TRIGGER_SYNC_ANGLE_RANGE);
+
 			if (engineConfiguration->useOnlyRisingEdgeForTrigger) {
-			    assertIsInBounds(triggerDefinitionIndex, shape->isRiseEvent, "isRise");
+				efiAssertVoid(OBD_PCM_Processor_Fault, triggerDefinitionIndex < triggerShapeLength, "trigger shape fail");
+				assertIsInBounds(triggerDefinitionIndex, shape->isRiseEvent, "isRise");
+
+				// In case this is a rising event, replace the following fall event with the rising as well
 				if (shape->isRiseEvent[triggerDefinitionIndex]) {
 					riseOnlyIndex += 2;
 					details->eventAngles[riseOnlyIndex] = angle;

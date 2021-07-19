@@ -395,9 +395,12 @@ typedef enum {
 
 	TT_KAWA_KX450F = TT_TT_KAWA_KX450F,
 
-	TT_NISSAN_VQ = TT_TT_NISSAN_VQ,
+	TT_NISSAN_VQ35 = TT_TT_NISSAN_VQ35,
 
-	TT_VVT_NISSAN_VQ = TT_TT_VVT_NISSAN_VQ,
+	TT_VVT_NISSAN_VQ35 = TT_TT_VVT_NISSAN_VQ35,
+
+	TT_NISSAN_VQ30 = TT_TT_NISSAN_VQ30,
+
 
 	// do not forget to edit "#define trigger_type_e_enum" line in integration/rusefi_config.txt file to propogate new value to rusefi.ini TS project
 	// do not forget to invoke "gen_config.bat" once you make changes to integration/rusefi_config.txt
@@ -405,7 +408,7 @@ typedef enum {
 	//
 	// Another point: once you add a new trigger, run get_trigger_images.bat which would run rusefi_test.exe from unit_tests
 	//
-	TT_UNUSED = 60, // this is used if we want to iterate over all trigger types
+	TT_UNUSED = 61, // this is used if we want to iterate over all trigger types
 
 	Force_4_bytes_size_trigger_type = ENUM_32_BITS,
 } trigger_type_e; // TriggerProcessor.java has this "trigger_type_e" name hard-coded!

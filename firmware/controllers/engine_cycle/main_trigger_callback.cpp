@@ -174,6 +174,9 @@ void turnInjectionPinLow(InjectionEvent *event) {
 	EXPAND_Engine;
 #endif
 
+	engine->mostRecentTimeBetweenIgnitionEvents = nowNt - engine->mostRecentIgnitionEvent;
+	engine->mostRecentIgnitionEvent = nowNt;
+
 	event->isScheduled = false;
 	for (int i = 0;i<MAX_WIRES_COUNT;i++) {
 		InjectorOutputPin *output = event->outputs[i];

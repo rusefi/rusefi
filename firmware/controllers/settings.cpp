@@ -452,6 +452,14 @@ static void setPotSpi(int spi) {
 	engineConfiguration->digitalPotentiometerSpiDevice = (spi_device_e) spi;
 }
 
+static brain_pin_e parseBrainPinWithErrorMessage(const char *pinName) {
+	brain_pin_e pin = parseBrainPin(pinName);
+	if (pin == GPIO_INVALID) {
+		efiPrintf("invalid pin name [%s]", pinName);
+	}
+	return pin;
+}
+
 /**
  * For example:
  *   set_ignition_pin 1 PD7
@@ -462,10 +470,8 @@ static void setIgnitionPin(const char *indexStr, const char *pinName) {
 	int index = atoi(indexStr) - 1; // convert from human index into software index
 	if (index < 0 || index >= MAX_CYLINDER_COUNT)
 		return;
-	brain_pin_e pin = parseBrainPin(pinName);
-	// todo: extract method - code duplication with other 'set_xxx_pin' methods?
+	brain_pin_e pin = parseBrainPinWithErrorMessage(pinName);
 	if (pin == GPIO_INVALID) {
-		efiPrintf("invalid pin name [%s]", pinName);
 		return;
 	}
 	efiPrintf("setting ignition pin[%d] to %s please save&restart", index, hwPortname(pin));
@@ -475,19 +481,37 @@ static void setIgnitionPin(const char *indexStr, const char *pinName) {
 
 // this method is useful for desperate time debugging
 static void readPin(const char *pinName) {
-	brain_pin_e pin = parseBrainPin(pinName);
+	brain_pin_e pin = parseBrainPinWithErrorMessage(pinName);
 	if (pin == GPIO_INVALID) {
-		efiPrintf("invalid pin name [%s]", pinName);
 		return;
 	}
 	int physicalValue = palReadPad(getHwPort("read", pin), getHwPin("read", pin));
 	efiPrintf("pin %s value %d", hwPortname(pin), physicalValue);
 }
 
-static void setIndividualPin(const char *pinName, brain_pin_e *targetPin, const char *name) {
-	brain_pin_e pin = parseBrainPin(pinName);
+
+// this method is useful for desperate time debugging or hardware validation
+static void benchSetPinValue(const char *pinName, int bit) {
+	brain_pin_e pin = parseBrainPinWithErrorMessage(pinName);
 	if (pin == GPIO_INVALID) {
-		efiPrintf("invalid pin name [%s]", pinName);
+		return;
+	}
+	palWritePad(getHwPort("write", pin), getHwPin("write", pin), bit);
+	efiPrintf("pin %s set value", hwPortname(pin));
+	readPin(pinName);
+}
+
+static void benchClearPin(const char *pinName) {
+	benchSetPinValue(pinName, 0);
+}
+
+static void benchSetPin(const char *pinName) {
+	benchSetPinValue(pinName, 1);
+}
+
+static void setIndividualPin(const char *pinName, brain_pin_e *targetPin, const char *name) {
+	brain_pin_e pin = parseBrainPinWithErrorMessage(pinName);
+	if (pin == GPIO_INVALID) {
 		return;
 	}
 	efiPrintf("setting %s pin to %s please save&restart", name, hwPortname(pin));
@@ -557,10 +581,8 @@ static void setInjectionPin(const char *indexStr, const char *pinName) {
 	int index = atoi(indexStr) - 1; // convert from human index into software index
 	if (index < 0 || index >= MAX_CYLINDER_COUNT)
 		return;
-	brain_pin_e pin = parseBrainPin(pinName);
-	// todo: extract method - code duplication with other 'set_xxx_pin' methods?
+	brain_pin_e pin = parseBrainPinWithErrorMessage(pinName);
 	if (pin == GPIO_INVALID) {
-		efiPrintf("invalid pin name [%s]", pinName);
 		return;
 	}
 	efiPrintf("setting injection pin[%d] to %s please save&restart", index, hwPortname(pin));
@@ -578,10 +600,8 @@ static void setTriggerInputPin(const char *indexStr, const char *pinName) {
 	int index = atoi(indexStr);
 	if (index < 0 || index > 2)
 		return;
-	brain_pin_e pin = parseBrainPin(pinName);
-	// todo: extract method - code duplication with other 'set_xxx_pin' methods?
+	brain_pin_e pin = parseBrainPinWithErrorMessage(pinName);
 	if (pin == GPIO_INVALID) {
-		efiPrintf("invalid pin name [%s]", pinName);
 		return;
 	}
 	efiPrintf("setting trigger pin[%d] to %s please save&restart", index, hwPortname(pin));
@@ -605,9 +625,8 @@ static void setEgtCSPin(const char *indexStr, const char *pinName) {
 	int index = atoi(indexStr);
 	if (index < 0 || index >= EGT_CHANNEL_COUNT)
 		return;
-	brain_pin_e pin = parseBrainPin(pinName);
+	brain_pin_e pin = parseBrainPinWithErrorMessage(pinName);
 	if (pin == GPIO_INVALID) {
-		efiPrintf("invalid pin name [%s]", pinName);
 		return;
 	}
 	efiPrintf("setting EGT CS pin[%d] to %s please save&restart", index, hwPortname(pin));
@@ -619,9 +638,8 @@ static void setTriggerSimulatorPin(const char *indexStr, const char *pinName) {
 	int index = atoi(indexStr);
 	if (index < 0 || index >= TRIGGER_SIMULATOR_PIN_COUNT)
 		return;
-	brain_pin_e pin = parseBrainPin(pinName);
+	brain_pin_e pin = parseBrainPinWithErrorMessage(pinName);
 	if (pin == GPIO_INVALID) {
-		efiPrintf("invalid pin name [%s]", pinName);
 		return;
 	}
 	efiPrintf("setting trigger simulator pin[%d] to %s please save&restart", index, hwPortname(pin));
@@ -633,9 +651,8 @@ static void setTriggerSimulatorPin(const char *indexStr, const char *pinName) {
 // set_analog_input_pin pps pa4
 // set_analog_input_pin afr none
 static void setAnalogInputPin(const char *sensorStr, const char *pinName) {
-	brain_pin_e pin = parseBrainPin(pinName);
+	brain_pin_e pin = parseBrainPinWithErrorMessage(pinName);
 	if (pin == GPIO_INVALID) {
-		efiPrintf("invalid pin name [%s]", pinName);
 		return;
 	}
 	adc_channel_e channel = getAdcChannel(pin);
@@ -674,9 +691,8 @@ static void setLogicInputPin(const char *indexStr, const char *pinName) {
 	if (index < 0 || index > 2) {
 		return;
 	}
-	brain_pin_e pin = parseBrainPin(pinName);
+	brain_pin_e pin = parseBrainPinWithErrorMessage(pinName);
 	if (pin == GPIO_INVALID) {
-		efiPrintf("invalid pin name [%s]", pinName);
 		return;
 	}
 	efiPrintf("setting logic input pin[%d] to %s please save&restart", index, hwPortname(pin));
@@ -685,9 +701,8 @@ static void setLogicInputPin(const char *indexStr, const char *pinName) {
 }
 
 static void showPinFunction(const char *pinName) {
-	brain_pin_e pin = parseBrainPin(pinName);
+	brain_pin_e pin = parseBrainPinWithErrorMessage(pinName);
 	if (pin == GPIO_INVALID) {
-		efiPrintf("invalid pin name [%s]", pinName);
 		return;
 	}
 	efiPrintf("Pin %s: [%s]", pinName, getPinFunction(pin));
@@ -1294,10 +1309,10 @@ void initSettings(void) {
 	addConsoleActionS("set_cj125_heater_pin", setCj125HeaterPin);
 	addConsoleActionS("set_trigger_sync_pin", setTriggerSyncPin);
 
-	/**
-	 * as of today we still do not have desperate time debugging "writepin" command
-	 */
+	addConsoleActionS("bench_clearpin", benchClearPin);
+	addConsoleActionS("bench_setpin", benchSetPin);
 	addConsoleActionS("readpin", readPin);
+	addConsoleAction("adc_report", printFullAdcReport);
 	addConsoleActionS("set_can_rx_pin", setCanRxPin);
 	addConsoleActionS("set_can_tx_pin", setCanTxPin);
 
