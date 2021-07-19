@@ -16,7 +16,6 @@
 
 #include "hal.h"
 #include "efilib.h"
-#include "error_handling.h"
 
 #ifdef ENABLE_AUTO_DETECT_HSE
 
