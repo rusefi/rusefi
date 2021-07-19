@@ -83,18 +83,18 @@ extern "C" void __late_init() {
 	// Set RTCPRE to /31 - just set all the bits
 	RCC->CFGR |= RCC_CFGR_RTCPRE_Msk;
 
-	// Turn on timer 5
+	// Turn on timer 11
 	RCC->APB2ENR |= RCC_APB2ENR_TIM11EN;
 
 	// Remap to connect HSERTC to TIM11 CH1
-#ifdef STM32F4xx
+#ifdef STM32F4XX
 	TIM11->OR = TIM_OR_TI1_RMP_1;
 #else
 	// the definition has a different name on F7 for whatever reason
 	TIM11->OR = TIM11_OR_TI1_RMP_1;
 #endif
 
-	// Enable capture on channel 4
+	// Enable capture on channel 1
 	TIM11->CCMR1 = TIM_CCMR1_CC1S_0;
 	TIM11->CCER = TIM_CCER_CC1E;
 
