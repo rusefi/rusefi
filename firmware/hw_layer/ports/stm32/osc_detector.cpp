@@ -148,10 +148,10 @@ extern "C" void __late_init() {
 	// TI1SEL = 2, HSE_1MHz
 	TIMER->TISEL = TIM_TISEL_TI1SEL_1;
 #elif defined(STM32F4XX)
-	TIM11->OR = TIM_OR_TI1_RMP_1;
+	TIMER->OR = TIM_OR_TI1_RMP_1;
 #else
 	// the definition has a different name on F7 for whatever reason
-	TIM11->OR = TIM11_OR_TI1_RMP_1;
+	TIMER->OR = TIM11_OR_TI1_RMP_1;
 #endif
 
 	// Enable capture on channel 1
