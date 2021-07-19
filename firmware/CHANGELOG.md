@@ -27,6 +27,8 @@ All notable user-facing or behavior-altering changes will be documented in this 
 
 ## Month 202x Release - "Release Name"
 
+## July 2021 Release "Ice Cream Day"
+
 ### Breaking Changes
  - vvtOffset field migrated to four vvtOffsets fields. Anyone using VVT would need to manually adjust their configuration.  
 
