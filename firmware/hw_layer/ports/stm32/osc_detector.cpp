@@ -20,7 +20,7 @@
 #ifdef ENABLE_AUTO_DETECT_HSE
 
 float hseFrequencyMhz;
-uint8_t autoDetectedPllMValue;
+uint8_t autoDetectedRoundedMhz;
 
 #ifdef STM32H7XX
 #define TIMER TIM17
@@ -108,7 +108,7 @@ static void disableTimer() {
 	RCC->APB2ENR &= ~RCC_APB2ENR_TIM11EN;
 }
 
-static void reprogramPll(uint8_t pllM) {
+static void reprogramPll(uint8_t roundedHseMhz) {
 	// Switch back to HSI to configure PLL
 	// clear SW to use HSI
 	RCC->CFGR &= ~RCC_CFGR_SW;
@@ -120,7 +120,7 @@ static void reprogramPll(uint8_t pllM) {
 	RCC->PLLCFGR &= ~(RCC_PLLCFGR_PLLM_Msk | RCC_PLLCFGR_PLLSRC_Msk);
 
 	// Stick in the new PLLM value
-	RCC->PLLCFGR |= (pllM << RCC_PLLCFGR_PLLM_Pos) & RCC_PLLCFGR_PLLM_Msk;
+	RCC->PLLCFGR |= (roundedHseMhz << RCC_PLLCFGR_PLLM_Pos) & RCC_PLLCFGR_PLLM_Msk;
 	// Set PLLSRC to HSE
 	RCC->PLLCFGR |= RCC_PLLCFGR_PLLSRC_HSE;
 
@@ -158,7 +158,7 @@ extern "C" void __late_init() {
 	TIMER->CCMR1 = TIM_CCMR1_CC1S_0;
 	TIMER->CCER = TIM_CCER_CC1E;
 
-	// Start TIMER
+	// Start timer
 	TIMER->CR1 |= TIM_CR1_CEN;
 
 	// Measure HSE against SYSCLK
@@ -170,9 +170,9 @@ extern "C" void __late_init() {
 	float hseFrequencyHz = 10 * rtcpreDivider * STM32_TIMCLK2 / hseCounts;
 
 	hseFrequencyMhz = hseFrequencyHz / 1e6;
-	autoDetectedPllMValue = efiRound(hseFrequencyMhz, 1);
+	autoDetectedRoundedMhz = efiRound(hseFrequencyMhz, 1);
 
-	reprogramPll(autoDetectedPllMValue);
+	reprogramPll(autoDetectedRoundedMhz);
 }
 
 #endif // defined ENABLE_AUTO_DETECT_HSE
