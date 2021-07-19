@@ -20,7 +20,7 @@
 #ifdef ENABLE_AUTO_DETECT_HSE
 
 float hseFrequencyMhz;
-uint8_t autoDetectedPllMValue;
+uint8_t autoDetectedRoundedMhz;
 
 static uint32_t getOneCapture() {
 	// wait for input capture
@@ -52,7 +52,7 @@ static_assert(STM32_SW == RCC_CFGR_SW_PLL);
 static_assert(STM32_HSI_ENABLED);
 static_assert(STM32_HSE_ENABLED);
 
-static void reprogramPll(uint8_t pllM) {
+static void reprogramPll(uint8_t roundedMhz) {
 	// Switch back to HSI to configure PLL
 	// clear SW to use HSI
 	RCC->CFGR &= ~RCC_CFGR_SW;
@@ -64,7 +64,7 @@ static void reprogramPll(uint8_t pllM) {
 	RCC->PLLCFGR &= ~(RCC_PLLCFGR_PLLM_Msk | RCC_PLLCFGR_PLLSRC_Msk);
 
 	// Stick in the new PLLM value
-	RCC->PLLCFGR |= (pllM << RCC_PLLCFGR_PLLM_Pos) & RCC_PLLCFGR_PLLM_Msk;
+	RCC->PLLCFGR |= (roundedMhz << RCC_PLLCFGR_PLLM_Pos) & RCC_PLLCFGR_PLLM_Msk;
 	// Set PLLSRC to HSE
 	RCC->PLLCFGR |= RCC_PLLCFGR_PLLSRC_HSE;
 
@@ -110,9 +110,9 @@ extern "C" void __late_init() {
 	float hseFrequencyHz = 10 * 31.0f * STM32_SYSCLK / hseCounts;
 
 	hseFrequencyMhz = hseFrequencyHz / 1e6;
-	autoDetectedPllMValue = efiRound(hseFrequencyMhz, 1);
+	autoDetectedRoundedMhz = efiRound(hseFrequencyMhz, 1);
 
-	reprogramPll(autoDetectedPllMValue);
+	reprogramPll(autoDetectedRoundedMhz);
 }
 
 #endif // defined ENABLE_AUTO_DETECT_HSE
