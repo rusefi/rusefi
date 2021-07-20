@@ -475,7 +475,7 @@ void OutputPin::initPin(const char *msg, brain_pin_e brainPin) {
 	initPin(msg, brainPin, &DEFAULT_OUTPUT);
 }
 
-void OutputPin::initPin(const char *msg, brain_pin_e brainPin, const pin_output_mode_e *outputMode) {
+void OutputPin::initPin(const char *msg, brain_pin_e brainPin, const pin_output_mode_e *outputMode, bool forceInitWithFatalError) {
 	if (!isBrainPinValid(brainPin)) {
 		return;
 	}
@@ -483,7 +483,7 @@ void OutputPin::initPin(const char *msg, brain_pin_e brainPin, const pin_output_
 	// Enter a critical section so that other threads can't change the pin state out from underneath us
 	chibios_rt::CriticalSectionLocker csl;
 
-	if (hasFirmwareError()) {
+	if (!forceInitWithFatalError && hasFirmwareError()) {
 		// Don't allow initializing more pins if we have a fatal error.
 		// Pins should have just been reset, so we shouldn't try to init more.
 		return;
