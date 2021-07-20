@@ -1177,18 +1177,17 @@ gaugeCategory = DynoView
 
 ;         =   expression,            off-label,            on-label,            off-bg, off-fg, on-bg, on-fg
 	; important status
+	; todo: do we want to drop this line since we have "config error" feature thing below?
     indicator = { ind_hasFatalError }, "",   "CRITICAL ERROR",   white, black, red,   black
+
+    indicator = { needBurn }, "",  "unsaved changes",   white, black, yellow,   black
     indicator = { ind_isWarnNow }, "",   "WARNING",   white, black, yellow,   black
     indicator = { ind_check_engine }, "",      "Check Engine",       white,  black,  red, black
+    indicator = { ind_isTriggerError}, "Trigger OK",      "Trigger ERR",       white,  black,  red, black
     indicator = { isIgnitionEnabledIndicator}, "no ignition",   "ignition",   yellow, black, white,   black
     indicator = { isInjectionEnabledIndicator}, "no injection",   "injection",   yellow, black, white,   black
-    indicator = { ind_isTriggerError}, "trigger ok",      "trigger err",       white,  black,  red, black
 
-   indicator = { sd_status & 1}, "No SD", "SD in",             white, black, green, black
-   indicator = { sd_status & 4}, "SD ready", "SD ready",       white, black, green, black
-   indicator = { sd_status & 8}, "SD Log", "SD Log",           white, black, green, black
-   indicator = { sd_status & 16}, "SD Err", "SD Err",           white, black, red, black
-    
+
 	; this is required so that the "config error" feature works in TS
 	; don't change this line - TS is looking for an indicator with particular text/styling
 	; you don't even have to show it by default
@@ -1197,11 +1196,9 @@ gaugeCategory = DynoView
 	; minor info	
     indicator = { ind_fan}, "fan off",   "fan on",   white, black, green,   black
     indicator = { isCylinderCleanupActivated}, "no cyl cleanup",   "cyl cleanup",   white, black, yellow,   black
-    indicator = { needBurn }, "config ok",  "unsaved changes",   white, black, yellow,   black
-    indicator = { hasSdCard}, "no SD",   "with SD",   white, black, green,   black
     indicator = { ind_fuel_pump}, "pump off",   "pump on",   white, black, green,   black
-    indicator = { clutchUpState }, "clutch",   "cltch Up",   white, black, red,   black
-    indicator = { clutchDownState }, "clutch",   "cltch Down",   white, black, yellow,   black
+    indicator = { clutchUpState }, "Clutch Up",   "clutch Up",   white, black, red,   black
+    indicator = { clutchDownState }, "Clutch Down",   "Clutch Down",   white, black, yellow,   black
     indicator = { brakePedalIndicator }, "brake",   "brake down",   white, black, red,   black
     indicator = { acSwitchState }, "AC switch off", "AC switch on", white, black, blue, white
 	indicator = { acState }, "AC off", "AC on", white, black, blue, white
@@ -1211,16 +1208,26 @@ gaugeCategory = DynoView
     ; error codes
     indicator = { isTpsError}, "tps",   "tps error",   white, black, red,   black
 	indicator = { isTps2Error}, "tps 2",   "tps 2 error",   white, black, red,   black
+	indicator = { ind_pedal_error}, "pedal",   "pedal error",   white, black, red,   black
     indicator = { ind_clt_error}, "clt",   "clt error",   white, black, red,   black
     indicator = { ind_iat_error}, "iat",   "iat error",   white, black, red,   black
 
 ;  not implemented
 ;    indicator = { ind_map_error}, "map",   "map error",   white, black, red,   black
 
-	indicator = { ind_pedal_error}, "pedal",   "pedal error",   white, black, red,   black
 
     indicator = { knockEverIndicator }, "",   "Knock recently",   white, black, red,   black
     indicator = { knockNowIndicator }, "no knock",   "Knock NOW",   white, black, red,   black
+
+   indicator = { sd_status & 1}, "No SD", "SD in",             white, black, green, black
+   indicator = { sd_status & 4}, "SD ready", "SD ready",       white, black, green, black
+   indicator = { sd_status & 8}, "SD Log", "SD Log",           white, black, green, black
+   indicator = { sd_status & 16}, "SD Err", "SD Err",           white, black, red, black
+; todo: duplication with 'SD in'?!
+    indicator = { hasSdCard}, "no SD",   "with SD",   white, black, green,   black
+
+; looks like TS would append four system indicators below: Data Logging, ???, Not Connected, Protocol Error
+
 
 [KeyActions]
 	showPanel = spi,  spiFunction
