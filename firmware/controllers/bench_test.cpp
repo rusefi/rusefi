@@ -386,6 +386,15 @@ static void handleCommandX14(uint16_t index) {
 	case 0x12:
 		widebandUpdatePending = true;
 		return;
+	case 0x14:
+#ifdef STM32F7
+		void sys_dual_bank(void);
+		sys_dual_bank();
+		//rebootNow();
+#else
+		firmwareError(OBD_PCM_Processor_Fault, "Unexpected dbank command", index);
+#endif
+		return;
 	default:
 		firmwareError(OBD_PCM_Processor_Fault, "Unexpected bench x14 %d", index);
 	}
