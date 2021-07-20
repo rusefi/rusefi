@@ -135,8 +135,7 @@ uintptr_t getFlashAddrSecondCopy() {
 
 static void flash_wait_complete(void)
 {
-    while ((FLASH_SR & FLASH_SR_BSY) == FLASH_SR_BSY)
-        ;
+	do { __DSB(); } while (FLASH->SR & FLASH_SR_BSY);
 }
 
 static void stm32f7_flash_mass_erase_dual_block(void)
@@ -151,10 +150,12 @@ static void stm32f7_flash_mass_erase_dual_block(void)
 // https://github.com/rusefi/rusefi/issues/2996
 void sys_dual_bank(void) {
     uint32_t reg;
+    efiPrintf("FLASH->SR before %x", FLASH->SR);
 
     /* Unlock OPTCR */
     FLASH_OPTKEYR = FLASH_OPTKEY1;
     FLASH_OPTKEYR = FLASH_OPTKEY2;
+    flash_wait_complete();
 
     /* Disable protection + Switch to dual bank */
     reg = FLASH_OPTCR;
@@ -162,7 +163,10 @@ void sys_dual_bank(void) {
     reg |= 0x0000AA00;
     reg &= ~(FLASH_OPTCR_nDBANK);
     FLASH_OPTCR = reg;
+    __DSB();
     FLASH_OPTCR |= FLASH_OPTCR_STRT;
+    flash_wait_complete();
+    efiPrintf("FLASH->SR after %x", FLASH->SR);
     /*
      * see https://github.com/danielinux/stm32f7-dualbank-tool/issues/1
      stm32f7_flash_mass_erase_dual_block();
