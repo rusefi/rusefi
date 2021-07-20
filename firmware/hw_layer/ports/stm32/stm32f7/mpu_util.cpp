@@ -120,3 +120,32 @@ uintptr_t getFlashAddrSecondCopy() {
 			return 0;
 	}
 }
+
+#define FLASH_ACR           (*(volatile uint32_t *)(FLASH_BASE + 0x00))
+#define FLASH_KEYR          (*(volatile uint32_t *)(FLASH_BASE + 0x04))
+#define FLASH_OPTKEYR       (*(volatile uint32_t *)(FLASH_BASE + 0x08))
+#define FLASH_SR            (*(volatile uint32_t *)(FLASH_BASE + 0x0C))
+#define FLASH_CR            (*(volatile uint32_t *)(FLASH_BASE + 0x10))
+#define FLASH_OPTCR         (*(volatile uint32_t *)(FLASH_BASE + 0x14))
+
+#define FLASH_OPTCR_STRT                       (1 << 1)
+
+#define FLASH_OPTKEY1                         (0x08192A3B)
+#define FLASH_OPTKEY2                         (0x4C5D6E7F)
+
+void sys_dual_bank(void) {
+    uint32_t reg;
+
+    /* Unlock OPTCR */
+    FLASH_OPTKEYR = FLASH_OPTKEY1;
+    FLASH_OPTKEYR = FLASH_OPTKEY2;
+
+    /* Disable protection + Switch to dual bank */
+    reg = FLASH_OPTCR;
+    reg &= ~0x000FF00;
+    reg |= 0x0000AA00;
+    reg &= ~(FLASH_OPTCR_nDBANK);
+    FLASH_OPTCR = reg;
+    FLASH_OPTCR |= FLASH_OPTCR_STRT;
+}
+
