@@ -133,6 +133,22 @@ uintptr_t getFlashAddrSecondCopy() {
 #define FLASH_OPTKEY1                         (0x08192A3B)
 #define FLASH_OPTKEY2                         (0x4C5D6E7F)
 
+static void flash_wait_complete(void)
+{
+    while ((FLASH_SR & FLASH_SR_BSY) == FLASH_SR_BSY)
+        ;
+}
+
+static void stm32f7_flash_mass_erase_dual_block(void)
+{
+    FLASH_CR |= FLASH_CR_MER1 | FLASH_CR_MER2;
+    FLASH_CR |= FLASH_CR_STRT;
+    flash_wait_complete();
+    FLASH_CR &= ~(FLASH_CR_MER1 | FLASH_CR_MER2);
+}
+
+// todo: at the moment this does not work :(
+// https://github.com/rusefi/rusefi/issues/2996
 void sys_dual_bank(void) {
     uint32_t reg;
 
@@ -147,5 +163,9 @@ void sys_dual_bank(void) {
     reg &= ~(FLASH_OPTCR_nDBANK);
     FLASH_OPTCR = reg;
     FLASH_OPTCR |= FLASH_OPTCR_STRT;
+    /*
+     * see https://github.com/danielinux/stm32f7-dualbank-tool/issues/1
+     stm32f7_flash_mass_erase_dual_block();
+     */
 }
 
