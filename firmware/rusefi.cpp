@@ -298,6 +298,9 @@ void runRusEfiWithConfig() {
 		return;
 	}
 
+	// Start this early - it will start LED blinking and such
+	startStatusThreads();
+
 	/**
 	 * Initialize hardware drivers
 	 */
@@ -336,8 +339,6 @@ void runRusEfiWithConfig() {
 	#if EFI_PERF_METRICS
 		initTimePerfActions();
 	#endif
-
-		startStatusThreads();
 
 		runSchedulingPrecisionTestIfNeeded();
 	}
