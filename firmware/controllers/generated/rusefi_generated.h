@@ -1308,14 +1308,12 @@
 #define servoOutputPins7_offset 3146
 #define servoOutputPins8_offset 3147
 #define show_Frankenso_presets true
-#define show_microRusEFI_presets true
-#define show_Proteus_presets true
 #define show_test_presets true
 #define showHumanReadableWarning_offset 976
 #define showSdCardWarning_offset 76
 #define SIGNATURE_BOARD all
-#define SIGNATURE_DATE 2021.07.17
-#define SIGNATURE_HASH 932027503
+#define SIGNATURE_DATE 2021.07.20
+#define SIGNATURE_HASH 2694474171
 #define silentTriggerError_offset 1464
 #define slowAdcAlpha_offset 2088
 #define sparkDwellRpmBins_offset 332
@@ -1684,7 +1682,7 @@
 #define ts_show_spi true
 #define ts_show_trigger_comparator false
 #define ts_show_tunerstudio_port true
-#define TS_SIGNATURE "rusEFI 2021.07.17.all.932027503"
+#define TS_SIGNATURE "rusEFI 2021.07.20.all.2694474171"
 #define TS_SINGLE_WRITE_COMMAND 'W'
 #define TS_SINGLE_WRITE_COMMAND_char W
 #define TS_TEST_COMMAND 't'
