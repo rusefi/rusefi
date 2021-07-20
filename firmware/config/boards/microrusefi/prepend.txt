@@ -24,5 +24,4 @@
 
 #define show_test_presets false
 #define show_Frankenso_presets false
-#define show_Hellen_presets false
-#define show_Proteus_presets false
+#define show_microRusEFI_presets true
