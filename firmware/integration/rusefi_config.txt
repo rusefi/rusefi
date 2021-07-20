@@ -2032,7 +2032,6 @@ end_struct
 #define ts_show_software_knock false
 #define ts_show_hardware_simulator true
 
+! we need to improve this further - at the moment we need too many boards to prepend 'false'
 #define show_test_presets true
 #define show_Frankenso_presets true
-#define show_microRusEFI_presets true
-#define show_Proteus_presets true
