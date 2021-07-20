@@ -655,7 +655,7 @@ enable2ndByteCanID = false
       gauge       = MAFGauge
 
    curve = iatFuelCorrCurve, "Intake air temperature fuel Multiplier"
-      columnLabel = "Coolant", "Multiplier"
+      columnLabel = "Air Temp", "Multiplier"
       xAxis       =  -40, 120, 9
       yAxis       =  0,  2, 11
       xBins       = iatFuelCorrBins, intake
