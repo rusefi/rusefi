@@ -42,7 +42,7 @@ public:
 	 * outputMode being a pointer allow us to change configuration (for example invert logical pin) in configuration and get resuts applied
 	 * away, or at least I hope that's why
 	 */
-	void initPin(const char *msg, brain_pin_e brainPin, const pin_output_mode_e *outputMode);
+	void initPin(const char *msg, brain_pin_e brainPin, const pin_output_mode_e *outputMode, bool forceInitWithFatalError = false);
 	/**
 	 * same as above, with DEFAULT_OUTPUT mode
 	 */
