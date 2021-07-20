@@ -315,6 +315,7 @@ stm32_hardware_pwm* getNextPwmDevice() {
 void jump_to_bootloader() {
 	#ifdef STM32H7XX
 		// H7 needs a forcible reset of the USB peripheral(s) in order for the bootloader to work properly.
+		// If you don't do this, the bootloader will execute, but USB doesn't work (nobody knows why)
 		RCC->AHB1ENR &= ~(RCC_AHB1ENR_USB1OTGHSEN | RCC_AHB1ENR_USB2OTGFSEN);
 	#endif
 
