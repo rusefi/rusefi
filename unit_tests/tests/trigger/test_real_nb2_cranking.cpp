@@ -25,5 +25,5 @@ TEST(realCrankingNB2, normalCranking) {
 
 	ASSERT_EQ(942, GET_RPM());
 
-	//ASSERT_EQ(0, eth.recentWarnings()->getCount());
+	ASSERT_EQ(0, eth.recentWarnings()->getCount());
 }
