@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Wed Jul 21 03:27:09 UTC 2021
+// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Wed Jul 21 18:32:44 UTC 2021
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -1268,7 +1268,7 @@ public class Fields {
 	public static final int servoOutputPins8_offset = 3147;
 	public static final int showHumanReadableWarning_offset = 976;
 	public static final int showSdCardWarning_offset = 76;
-	public static final int SIGNATURE_HASH = 1877142804;
+	public static final int SIGNATURE_HASH = 145940878;
 	public static final int silentTriggerError_offset = 1464;
 	public static final int slowAdcAlpha_offset = 2088;
 	public static final int sparkDwellRpmBins_offset = 332;
@@ -1576,17 +1576,8 @@ public class Fields {
 	public static final int TS_RESPONSE_OUT_OF_RANGE = 0x84;
 	public static final int TS_RESPONSE_UNDERRUN = 0x80;
 	public static final int TS_RESPONSE_UNRECOGNIZED_COMMAND = 0x83;
-	public static final int TS_SD_PROTOCOL_DO = 1;
-	public static final int TS_SD_PROTOCOL_FETCH_COMPRESSED = 8;
-	public static final int TS_SD_PROTOCOL_FETCH_DATA = 0x14;
-	public static final int TS_SD_PROTOCOL_FETCH_INFO = 0x11;
-	public static final int TS_SD_PROTOCOL_READ_DIR = 2;
-	public static final int TS_SD_PROTOCOL_REMOVE_FILE = 6;
-	public static final int TS_SD_PROTOCOL_RTC = 7;
-	public static final char TS_SD_R_COMMAND = 'r';
-	public static final char TS_SD_W_COMMAND = 'w';
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI 2021.07.21.all.1877142804";
+	public static final String TS_SIGNATURE = "rusEFI 2021.07.21.all.145940878";
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final char TS_TEST_COMMAND = 't';
 	public static final int TT_TT_1_16 = 50;
