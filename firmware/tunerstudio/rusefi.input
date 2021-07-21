@@ -177,7 +177,7 @@ enable2ndByteCanID = false
 ;
 
 ; Bit flags
-	  hasSdCard       = bits,    U32,      0,    [0:0], "true", "false";
+	  sd_present      = bits,    U32,      0,    [0:0], "true", "false";
 	  isIgnitionEnabledIndicator=bits,U32, 0,    [1:1], "true", "false";
 	  isInjectionEnabledIndicator=bits,U32,0,    [2:2], "true", "false";
 	  isCylinderCleanupActivated=bits,U32, 0,    [4:4], "true", "false";
@@ -365,7 +365,8 @@ enable2ndByteCanID = false
 
 	; we use this to match logs to tunes
 	tuneCrc16         = scalar,  U16,    244, "crc16",           1,         0
-    sd_status         = scalar,  U08,    246,  "", 1.0, 0.0
+	sd_logging_internal = bits,  U08,    246, [0:0], "true", "false"
+	sd_msd              = bits,  U08,    246, [1:1], "true", "false"
 
 ; Transmission
       tcuCurrentGear  = scalar,  S08,     247,   "gear",    1,         0
@@ -1219,14 +1220,9 @@ gaugeCategory = DynoView
     indicator = { knockEverIndicator }, "",   "Knock recently",   white, black, red,   black
     indicator = { knockNowIndicator }, "no knock",   "Knock NOW",   white, black, red,   black
 
-; this bit array has special meaning for TS - that's part of TS build in file transfer
-; we _probably_ should officially retire TS file transfer since we have something way cooler!
-   indicator = { sd_status & 1}, "No SD", "SD in",             white, black, green, black
-   indicator = { sd_status & 4}, "SD ready", "SD ready",       white, black, green, black
-   indicator = { sd_status & 8}, "SD Log", "SD Log",           white, black, green, black
-   indicator = { sd_status & 16}, "SD Err", "SD Err",           white, black, red, black
-; todo: duplication with 'SD in'?!
-    indicator = { hasSdCard}, "no SD",   "with SD",   white, black, green,   black
+	indicator = { sd_present }, "no SD card", "SD card OK",   white, black, green, black
+	indicator = { sd_logging_internal }, "SD logging", "SD logging", white, black, green, black
+	indicator = { sd_msd }, "SD USB", "SD USB", white, black, green, black
 
 ; looks like TS would append four system indicators below: Data Logging, ???, Not Connected, Protocol Error
 

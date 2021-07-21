@@ -49,7 +49,7 @@ struct TunerStudioOutputChannels {
 	 * Yes, I do not really enjoy packing bits into integers but we simply have too many boolean flags and I cannot
 	 * water 4 bytes per traffic - I want gauges to work as fast as possible
 	 */
-	unsigned int hasSdCard : 1; // bit 0, 72
+	unsigned int sd_present : 1; // bit 0, 72
 	unsigned int isIgnitionEnabledIndicator : 1; // bit 1
 	unsigned int isInjectionEnabledIndicator : 1; // bit 2
 	unsigned int unusedb3 : 1; // bit 3
@@ -237,7 +237,9 @@ struct TunerStudioOutputChannels {
 
 	int16_t tuneCrc16; // 244
 
-	uint8_t sd_status; // 246
+	// Offset 246: bits
+	uint8_t sd_logging_internal : 1;	// bit 0
+	uint8_t sd_msd : 1;					// bit 1
 
 	int8_t tcuCurrentGear; // 247
 
