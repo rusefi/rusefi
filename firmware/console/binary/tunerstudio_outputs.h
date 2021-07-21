@@ -240,6 +240,7 @@ struct TunerStudioOutputChannels {
 	// Offset 246: bits
 	uint8_t sd_logging_internal : 1;	// bit 0
 	uint8_t sd_msd : 1;					// bit 1
+	uint8_t isFan2On : 1;				// bit 2
 
 	int8_t tcuCurrentGear; // 247
 
