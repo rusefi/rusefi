@@ -516,9 +516,10 @@ end_struct
 #define ET_HELLEN_NA94 80
 
 #define ET_HELLEN_121_VAG_8_CYL 81
-! 
+ 
 
 #define ET_PROTEUS_ANALOG_PWM_TEST 106
+#define ET_TEST_ROTARY 107
 
 
 custom engine_type_e 4 bits, S32, @OFFSET@, [0:6], @@engine_type_e_auto_enum@@
