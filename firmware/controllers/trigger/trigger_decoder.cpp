@@ -377,6 +377,11 @@ void TriggerCentral::validateCamVvtCounters() {
 }
 
 bool TriggerState::syncSymmetricalCrank(int mod, int remainder) {
+	// In case this engine has the same "length" of primary trigger and VVT, we're already sync'd
+	if (mod == remainder) {
+		return false;
+	}
+	
 	bool isSync = false;
 	while (getTotalRevolutionCounter() % mod != remainder) {
 		/**
