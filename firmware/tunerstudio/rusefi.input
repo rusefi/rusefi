@@ -369,7 +369,6 @@ enable2ndByteCanID = false
 	sd_msd              = bits,  U08,    246, [1:1], "true", "false"
 	ind_fan_2           = bits,  U08,    246, [2:2], "true", "false"
 
-
 ; Transmission
       tcuCurrentGear  = scalar,  S08,     247,   "gear",    1,         0
       tcuDesiredGear  = scalar,  S08,     262,   "gear",    1,         0
@@ -3739,4 +3738,4 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
  addTool = afrTableGenerator, "AFR Table Generator", afrTableTbl
 #endif
 
-; poke
+; poke3
