@@ -41,7 +41,7 @@ TEST(realCrankingNB2, crankingMissingInjector) {
 	}
 
 	// VVT position nearly zero!
-	EXPECT_NEAR(engine->triggerCentral.getVVTPosition(0, 0), -17.8867f, 1e-4);
+	EXPECT_NEAR(engine->triggerCentral.getVVTPosition(0, 0), -7.1926f, 1e-4);
 
 	ASSERT_EQ(209, GET_RPM());
 
