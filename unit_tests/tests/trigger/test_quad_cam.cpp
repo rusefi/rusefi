@@ -9,6 +9,8 @@ TEST(trigger, testQuadCam) {
 	// setting some weird engine
 	WITH_ENGINE_TEST_HELPER(FORD_ESCORT_GT);
 
+	setOperationMode(engineConfiguration, FOUR_STROKE_CRANK_SENSOR);
+
 	// changing to 'ONE TOOTH' trigger on CRANK with CAM/VVT
 	engineConfiguration->useOnlyRisingEdgeForTrigger = true;
 	engineConfiguration->vvtMode[0] = VVT_FIRST_HALF;
@@ -22,20 +24,18 @@ TEST(trigger, testQuadCam) {
 	engineConfiguration->useOnlyRisingEdgeForTrigger = true;
 	engineConfiguration->vvtCamSensorUseRise = true;
 
-	ASSERT_EQ( 0,  GET_RPM());
-	for (int i = 0; i < 1;i++) {
+	ASSERT_EQ(0, GET_RPM());
+	for (int i = 0; i < 3;i++) {
 		eth.fireRise(25);
 		ASSERT_EQ( 0,  GET_RPM());
 	}
 	eth.fireRise(25);
 	// first time we have RPM
-	ASSERT_EQ(4800,  GET_RPM());
+	ASSERT_EQ(2400, GET_RPM());
 
-	int totalRevolutionCountBeforeVvtSync = 4;
 	// need to be out of VVT sync to see VVT sync in action
 	eth.fireRise(25);
 	eth.fireRise(25);
-	ASSERT_EQ(totalRevolutionCountBeforeVvtSync, engine->triggerCentral.triggerState.getTotalRevolutionCounter());
 
 	eth.moveTimeForwardUs(MS2US(3)); // shifting VVT phase a few angles
 
@@ -61,7 +61,7 @@ TEST(trigger, testQuadCam) {
 	hwHandleVvtCamSignal(TV_RISE, getTimeNowNt(), firstCamSecondBank PASS_ENGINE_PARAMETER_SUFFIX);
 	hwHandleVvtCamSignal(TV_RISE, getTimeNowNt(), secondCamSecondBank PASS_ENGINE_PARAMETER_SUFFIX);
 
-	float basePos = -123.4;
+	float basePos = -80.2f;
 
 	// All four cams should now have the same position
 	EXPECT_NEAR(basePos, engine->triggerCentral.getVVTPosition(firstBank, firstCam), EPS3D);
