@@ -463,6 +463,7 @@
 #define ET_PROTEUS_MIATA_NB2 67
 #define ET_PROTEUS_QC_TEST_BOARD 42
 #define ET_SACHS 29
+#define ET_TEST_ROTARY 107
 #define ET_VW_ABA 32
 #define ET_VW_B6 62
 #define ETB_BIAS_CURVE_LENGTH 8
@@ -1316,8 +1317,8 @@
 #define showHumanReadableWarning_offset 976
 #define showSdCardWarning_offset 76
 #define SIGNATURE_BOARD subaru_eg33_f7
-#define SIGNATURE_DATE 2021.07.21
-#define SIGNATURE_HASH 3457361976
+#define SIGNATURE_DATE 2021.07.22
+#define SIGNATURE_HASH 3919248692
 #define silentTriggerError_offset 1464
 #define slowAdcAlpha_offset 2088
 #define sparkDwellRpmBins_offset 332
@@ -1675,7 +1676,7 @@
 #define ts_show_spi true
 #define ts_show_trigger_comparator false
 #define ts_show_tunerstudio_port false
-#define TS_SIGNATURE "rusEFI 2021.07.21.subaru_eg33_f7.3457361976"
+#define TS_SIGNATURE "rusEFI 2021.07.22.subaru_eg33_f7.3919248692"
 #define TS_SINGLE_WRITE_COMMAND 'W'
 #define TS_SINGLE_WRITE_COMMAND_char W
 #define TS_TEST_COMMAND 't'
