@@ -68,20 +68,14 @@ TEST(engine, testSymmetricalCrank) {
 
 	ASSERT_EQ( 0,  GET_RPM()) << "RPM#0";
 
-
-
 	for (int i = 0; i < 6 ; i++) {
 		postFourEvents(&eth, mult);
-		ASSERT_EQ( 0,  GET_RPM()) << "RPM#0";
+		EXPECT_EQ( 0,  GET_RPM()) << "RPM#0";
 	}
 
-	mult = 0.1;
-	postFourEvents(&eth, mult);
-	ASSERT_EQ( 1042,  GET_RPM()) << "RPM#11";
-
-	postFourEvents(&eth, mult);
-	ASSERT_EQ( 1042,  GET_RPM()) << "RPM#11";
-
-	postFourEvents(&eth, mult);
-	ASSERT_EQ( 1042,  GET_RPM()) << "RPM#11";
+	// We should now have sync!
+	for (size_t i = 0; i < 10; i++) {
+		postFourEvents(&eth, mult);
+		EXPECT_EQ( 2083,  GET_RPM()) << "RPM#11";
+	}
 }
