@@ -1,6 +1,6 @@
 #include "global.h"
 #include "rusefi_enums.h"
-// was generated automatically by rusEFI tool  from rusefi_enums.h // by enum2string.jar tool on Sat Jul 17 00:25:01 EDT 2021
+// was generated automatically by rusEFI tool  from rusefi_enums.h // by enum2string.jar tool on Wed Jul 21 19:45:59 EDT 2021
 // see also gen_config_and_enums.bat
 
 
@@ -536,6 +536,8 @@ case TEST_ISSUE_366_RISE:
   return "TEST_ISSUE_366_RISE";
 case TEST_ISSUE_898:
   return "TEST_ISSUE_898";
+case TEST_ROTARY:
+  return "TEST_ROTARY";
 case TLE8888_BENCH_ENGINE:
   return "TLE8888_BENCH_ENGINE";
 case TOYOTA_2JZ_GTE_VVTi:
