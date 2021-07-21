@@ -1219,6 +1219,8 @@ gaugeCategory = DynoView
     indicator = { knockEverIndicator }, "",   "Knock recently",   white, black, red,   black
     indicator = { knockNowIndicator }, "no knock",   "Knock NOW",   white, black, red,   black
 
+; this bit array has special meaning for TS - that's part of TS build in file transfer
+; we _probably_ should officially retire TS file transfer since we have something way cooler!
    indicator = { sd_status & 1}, "No SD", "SD in",             white, black, green, black
    indicator = { sd_status & 4}, "SD ready", "SD ready",       white, black, green, black
    indicator = { sd_status & 8}, "SD Log", "SD Log",           white, black, green, black
