@@ -1,5 +1,7 @@
 TL,DR: we want to develop a much _smarter_ ECU. At the moment the two bottlenecks for us are:
+
 a) software developers
+
 b) actionable user feedback
 
 As of February 2021, rusEFI has a LOT of potential but is far from easy to use.
