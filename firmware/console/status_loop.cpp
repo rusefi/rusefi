@@ -480,10 +480,6 @@ void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels DECLARE_
 	executorStatistics();
 #endif /* EFI_PROD_CODE */
 
-#if EFI_SIMULATOR
-	tsOutputChannels->sd_status = 1 + 4;
-#endif
-
 	// header
 	tsOutputChannels->tsConfigVersion = TS_FILE_VERSION;
 
@@ -692,10 +688,6 @@ void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels DECLARE_
 #if EFI_INTERNAL_FLASH
 	tsOutputChannels->needBurn = getNeedToWriteConfiguration();
 #endif /* EFI_INTERNAL_FLASH */
-
-#if EFI_FILE_LOGGING
-	tsOutputChannels->hasSdCard = isSdCardAlive();
-#endif /* EFI_FILE_LOGGING */
 
 	tsOutputChannels->isFuelPumpOn = enginePins.fuelPumpRelay.getLogicValue();
 	tsOutputChannels->isFanOn = enginePins.fanRelay.getLogicValue();

@@ -1,6 +1,7 @@
 #include "mass_storage_init.h"
 #include "mass_storage_device.h"
 #include "null_device.h"
+#include "tunerstudio_outputs.h"
 
 #if HAL_USE_USB_MSD
 
@@ -66,6 +67,11 @@ static const scsi_inquiry_response_t sdCardInquiry = {
 
 void attachMsdSdCard(BaseBlockDevice* blkdev) {
 	msd.attachLun(1, blkdev, blkbuf1, &sdCardInquiry, nullptr);
+
+#if EFI_TUNER_STUDIO
+	// SD MSD attached, enable indicator in TS
+	tsOutputChannels.sd_msd = true;
+#endif
 }
 
 static BaseBlockDevice* getRamdiskDevice() {
