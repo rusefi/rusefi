@@ -1156,7 +1156,7 @@ bit unused_1484_bit_31
     int16_t primeInjFalloffTemperature;+This sets the temperature above which no priming pulse is used, The value at -40 is reduced until there is no more priming injection at this temperature.;"*C", 1, 0, 0, 1000, 0
 
 
-	int ignMathCalculateAtIndex;+At what trigger index should some ignition-related math be executed? This is a performance trick to reduce load on synchronization trigger callback.;"index", 1, 0, 0, 7000, 0
+	int unused1488;;"index", 1, 0, 0, 7000, 0
 
 	brain_pin_e[CAM_INPUTS_COUNT iterate] camInputsDebug;
 	uint8_t[CAM_INPUTS_COUNT_padding] camInputsDebugPadding;;
