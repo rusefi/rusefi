@@ -24,7 +24,7 @@ pins:
     type: can
 
   - pin: 1E
-    id: GPIOG_4
+    id: GPIOG_9
     class: outputs
     ts_name: 1E - Check Engine Light
     function: Check Engine Light
@@ -98,17 +98,11 @@ pins:
     function: Clutch switch input
     type: din
 
-  - pin: 2A
-    id: GPIOC_6
-    class: outputs
-    ts_name: 2A - Boost Control
-    function: Boost Control Solenoid
+  - pin: 2A     
+    function: GND
 
-  - pin: 2B
-    id: GPIOF_7
-    class: analog_inputs
-    ts_name: 2B - Knock Sensor
-    function: Knock Sensor Input
+  - pin: 2B    
+    function: GND
     
   - pin: 2L
     id: GPIOE_13
@@ -121,8 +115,13 @@ pins:
     type: Gnd
     
   - pin: 2J
-    function: +5v options port
-    type: +5v
+    id: GPIOF_12
+    class: outputs
+    ts_name: 2A - Boost Control
+    function: Boost Control Solenoid
+    
+  - pin: 2P
+    function: Knock Input   
 
   - pin: 3A
     function: Power GND
@@ -162,7 +161,7 @@ pins:
     function: Camshaft Sensor
     
   - pin: 3I
-    id: GPIOF_12
+    id: GPIOI_0
     class: outputs
     ts_name: Tachometer
     function: tachometer
