@@ -180,5 +180,5 @@ TEST(trigger, testNB2CamInput) {
 	EXPECT_FLOAT_EQ(27'000'000, dutyCycleNt);
 	EXPECT_FLOAT_EQ(0.056944445f, engine->triggerCentral.vvtShape[0].expectedDutyCycle[0]);
 
-	EXPECT_EQ(26, waveChart.getSize());
+	EXPECT_EQ(28, waveChart.getSize());
 }
