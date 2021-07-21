@@ -67,6 +67,8 @@ void initializeMazdaMiataNb2Crank(TriggerWaveform *s) {
 	 */
 	s->initialize(FOUR_STROKE_SYMMETRICAL_CRANK_SENSOR);
 
+	s->useRiseEdge = true;
+
 	s->tdcPosition = 60 + 655;
 
 	// Nominal gap 0.63
