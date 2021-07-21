@@ -220,6 +220,8 @@ typedef enum {
 	BMW_M73_MRE = 104,
 	BMW_M73_MRE_SLAVE = 105,
 
+	TEST_ROTARY = ET_TEST_ROTARY,
+
 	Force_4_bytes_size_engine_type = ENUM_32_BITS,
 } engine_type_e;
 
