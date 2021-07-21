@@ -691,6 +691,7 @@ void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels DECLARE_
 
 	tsOutputChannels->isFuelPumpOn = enginePins.fuelPumpRelay.getLogicValue();
 	tsOutputChannels->isFanOn = enginePins.fanRelay.getLogicValue();
+	tsOutputChannels->isFan2On = enginePins.fanRelay2.getLogicValue();
 	tsOutputChannels->isO2HeaterOn = enginePins.o2heater.getLogicValue();
 	tsOutputChannels->isIgnitionEnabledIndicator = ENGINE(limpManager).allowIgnition();
 	tsOutputChannels->isInjectionEnabledIndicator = ENGINE(limpManager).allowInjection();

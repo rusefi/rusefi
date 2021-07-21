@@ -320,7 +320,7 @@ static void handleBenchCategory(uint16_t index) {
 	case CMD_TS_BENCH_FAN_RELAY:
 		fanBench();
 		return;
-	case CMD_TS_BENCH_AC_FAN_RELAY:
+	case CMD_TS_BENCH_FAN_RELAY_2:
 		fan2Bench();
 		return;
 	default:
