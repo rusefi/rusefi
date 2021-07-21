@@ -376,18 +376,10 @@ void TriggerCentral::validateCamVvtCounters() {
 	}
 }
 
-bool TriggerState::syncSymmetricalCrank(int mod, int remainder) {
-	// In case this engine has the same "length" of primary trigger and VVT, we're already sync'd
-	// In theory this should only happen if you have a primary trigger at cam speed, AND VVT
-	//  - Two stroke engine with VVT (does this exist?)
-	//  - Cam speed primary trigger on 4 stroke, with vvt (does this exist?)
-	// The actual value is that it allows VVT bench/unit testing with a single tooth cam-speed trigger.
-	if (mod == remainder) {
-		return false;
-	}
-
+bool TriggerState::syncSymmetricalCrank(int divider, int remainder) {
+	efiAssert(OBD_PCM_Processor_Fault, remainder < divider, "syncSymmetricalCrank", false);
 	bool isSync = false;
-	while (getTotalRevolutionCounter() % mod != remainder) {
+	while (getTotalRevolutionCounter() % divider != remainder) {
 		/**
 		 * we are here if we've detected the cam sensor within the wrong crank phase
 		 * let's increase the trigger event counter, that would adjust the state of
