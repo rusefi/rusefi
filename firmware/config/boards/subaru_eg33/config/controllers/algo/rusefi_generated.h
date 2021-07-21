@@ -272,10 +272,10 @@
 #define CMD_TRIGGER_SIMULATOR_PIN "set_trigger_simulator_pin"
 #define CMD_TRIGGERINFO "triggerinfo"
 #define CMD_TS_BENCH_AC_COMPRESSOR_RELAY 6
-#define CMD_TS_BENCH_AC_FAN_RELAY 5
 #define CMD_TS_BENCH_CATEGORY 22
 #define CMD_TS_BENCH_CHECK_ENGINE_LIGHT 7
 #define CMD_TS_BENCH_FAN_RELAY 4
+#define CMD_TS_BENCH_FAN_RELAY_2 5
 #define CMD_TS_BENCH_FUEL_PUMP 1
 #define CMD_TS_BENCH_GPPWM1_VALVE 10
 #define CMD_TS_BENCH_GPPWM2_VALVE 11
@@ -1316,8 +1316,8 @@
 #define showHumanReadableWarning_offset 976
 #define showSdCardWarning_offset 76
 #define SIGNATURE_BOARD subaru_eg33_f7
-#define SIGNATURE_DATE 2021.07.20
-#define SIGNATURE_HASH 1715183629
+#define SIGNATURE_DATE 2021.07.21
+#define SIGNATURE_HASH 3457361976
 #define silentTriggerError_offset 1464
 #define slowAdcAlpha_offset 2088
 #define sparkDwellRpmBins_offset 332
@@ -1652,17 +1652,6 @@
 #define TS_RESPONSE_OUT_OF_RANGE 0x84
 #define TS_RESPONSE_UNDERRUN 0x80
 #define TS_RESPONSE_UNRECOGNIZED_COMMAND 0x83
-#define TS_SD_PROTOCOL_DO 1
-#define TS_SD_PROTOCOL_FETCH_COMPRESSED 8
-#define TS_SD_PROTOCOL_FETCH_DATA 0x14
-#define TS_SD_PROTOCOL_FETCH_INFO 0x11
-#define TS_SD_PROTOCOL_READ_DIR 2
-#define TS_SD_PROTOCOL_REMOVE_FILE 6
-#define TS_SD_PROTOCOL_RTC 7
-#define TS_SD_R_COMMAND 'r'
-#define TS_SD_R_COMMAND_char r
-#define TS_SD_W_COMMAND 'w'
-#define TS_SD_W_COMMAND_char w
 #define TS_SET_LOGGER_SWITCH 'l'
 #define TS_SET_LOGGER_SWITCH_char l
 #define ts_show_analog_divider false
@@ -1686,7 +1675,7 @@
 #define ts_show_spi true
 #define ts_show_trigger_comparator false
 #define ts_show_tunerstudio_port false
-#define TS_SIGNATURE "rusEFI 2021.07.20.subaru_eg33_f7.1715183629"
+#define TS_SIGNATURE "rusEFI 2021.07.21.subaru_eg33_f7.3457361976"
 #define TS_SINGLE_WRITE_COMMAND 'W'
 #define TS_SINGLE_WRITE_COMMAND_char W
 #define TS_TEST_COMMAND 't'

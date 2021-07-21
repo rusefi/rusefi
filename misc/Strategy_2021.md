@@ -1,3 +1,9 @@
+TL,DR: we want to develop a much _smarter_ ECU. At the moment the two bottlenecks for us are:
+
+a) software developers
+
+b) actionable user feedback
+
 As of February 2021, rusEFI has a LOT of potential but is far from easy to use.
 1) rusEFI has a number of great hardware options and stable features. More information about particular features and their status can be found on the Wiki here:
 https://github.com/rusefi/rusefi/wiki#features

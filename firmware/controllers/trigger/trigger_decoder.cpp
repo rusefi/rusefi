@@ -376,9 +376,10 @@ void TriggerCentral::validateCamVvtCounters() {
 	}
 }
 
-bool TriggerState::syncSymmetricalCrank(int mod, int remainder) {
+bool TriggerState::syncSymmetricalCrank(int divider, int remainder) {
+	efiAssert(OBD_PCM_Processor_Fault, remainder < divider, "syncSymmetricalCrank", false);
 	bool isSync = false;
-	while (getTotalRevolutionCounter() % mod != remainder) {
+	while (getTotalRevolutionCounter() % divider != remainder) {
 		/**
 		 * we are here if we've detected the cam sensor within the wrong crank phase
 		 * let's increase the trigger event counter, that would adjust the state of
