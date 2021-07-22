@@ -117,7 +117,7 @@ TEST(trigger, testCamInput) {
 
 	// asserting that error code has cleared
 	ASSERT_EQ(0,  unitTestWarningCodeState.recentWarnings.getCount()) << "warningCounter#testCamInput #3";
-	ASSERT_NEAR(360 - 181, engine->triggerCentral.getVVTPosition(0, 0), EPS3D);
+	ASSERT_NEAR(-181, engine->triggerCentral.getVVTPosition(0, 0), EPS3D);
 }
 
 TEST(trigger, testNB2CamInput) {
@@ -172,7 +172,7 @@ TEST(trigger, testNB2CamInput) {
 	eth.moveTimeForwardUs(MS2US( 30));
 	hwHandleVvtCamSignal(TV_RISE, getTimeNowNt(), 0 PASS_ENGINE_PARAMETER_SUFFIX);
 
-	EXPECT_NEAR(148.4f, engine->triggerCentral.getVVTPosition(0, 0), EPS3D);
+	EXPECT_NEAR(-211.59f, engine->triggerCentral.getVVTPosition(0, 0), EPS2D);
 	// actually position based on VVT!
 	ASSERT_EQ(totalRevolutionCountBeforeVvtSync + 2, engine->triggerCentral.triggerState.getTotalRevolutionCounter());
 

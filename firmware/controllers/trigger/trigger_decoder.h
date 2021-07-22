@@ -90,7 +90,7 @@ public:
 	 * this is important for crank-based virtual trigger and VVT magic
 	 */
 	void incrementTotalEventCounter();
-	bool syncSymmetricalCrank(int divider, int remainder);
+	angle_t syncSymmetricalCrank(int divider, int remainder, angle_t engineCycle);
 
 	efitime_t getTotalEventCounter() const;
 
