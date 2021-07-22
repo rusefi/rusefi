@@ -132,11 +132,11 @@ static void prepareCylinderIgnitionSchedule(angle_t dwellAngleDuration, floatms_
 }
 
 static void chargeTrailingSpark(IgnitionOutputPin* pin) {
-	pin->setValue(1);
+	pin->setHigh();
 }
 
 static void fireTrailingSpark(IgnitionOutputPin* pin) {
-	pin->setValue(0);
+	pin->setLow();
 }
 
 void fireSparkAndPrepareNextSchedule(IgnitionEvent *event) {
