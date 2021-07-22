@@ -70,7 +70,7 @@ protected:
 
 class VvtTriggerConfiguration final : public TriggerConfiguration {
 public:
-	VvtTriggerConfiguration() : TriggerConfiguration("TRG ") {}
+	VvtTriggerConfiguration() : TriggerConfiguration("VVT ") {}
 	// todo: is it possible to make 'index' constructor argument?
 	int index = 0;
 
