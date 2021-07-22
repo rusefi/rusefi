@@ -28,8 +28,7 @@ StepperMotor iacMotor;
 
 /**
  * When the IAC position value change is insignificant (lower than this threshold), leave the poor valve alone
- * todo: why do we have this logic? is this ever useful?
- * See
+ * This is about stepper motors, it equals to 1 step to avoid excessive micro-movement.
  */
 static percent_t idlePositionSensitivityThreshold = 0.0f;
 
