@@ -64,7 +64,7 @@ TEST(trigger, testQuadCam) {
 	float basePos = -80.2f;
 
 	// All four cams should now have the same position
-	EXPECT_NEAR(basePos, engine->triggerCentral.getVVTPosition(firstBank, firstCam), EPS3D);
+	EXPECT_NEAR(360 + basePos, engine->triggerCentral.getVVTPosition(firstBank, firstCam), EPS3D);
 	EXPECT_NEAR(basePos, engine->triggerCentral.getVVTPosition(firstBank, secondCam), EPS3D);
 	EXPECT_NEAR(basePos, engine->triggerCentral.getVVTPosition(secondBank, firstCam), EPS3D);
 	EXPECT_NEAR(basePos, engine->triggerCentral.getVVTPosition(secondBank, secondCam), EPS3D);

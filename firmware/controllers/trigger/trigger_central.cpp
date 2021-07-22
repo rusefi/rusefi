@@ -115,13 +115,16 @@ static bool vvtWithRealDecoder(vvt_mode_e vvtMode) {
 			&& vvtMode != VVT_FIRST_HALF;
 }
 
-static void syncAndReport(TriggerCentral *tc, int mod, int remainder DECLARE_ENGINE_PARAMETER_SUFFIX) {
-	bool wasChanged = tc->triggerState.syncSymmetricalCrank(mod, remainder);
-	if (wasChanged && engineConfiguration->debugMode == DBG_VVT) {
+static angle_t syncAndReport(TriggerCentral *tc, int divider, int remainder DECLARE_ENGINE_PARAMETER_SUFFIX) {
+	angle_t engineCycle = getEngineCycle(engine->getOperationMode(PASS_ENGINE_PARAMETER_SIGNATURE));
+
+	angle_t offset = tc->triggerState.syncSymmetricalCrank(divider, remainder, engineCycle);
+	if (offset > 0 && engineConfiguration->debugMode == DBG_VVT) {
 #if EFI_TUNER_STUDIO
 		tsOutputChannels.debugIntField1++;
 #endif /* EFI_TUNER_STUDIO */
 	}
+	return offset;
 }
 
 static void turnOffAllDebugFields(void *arg) {
@@ -138,6 +141,40 @@ static void turnOffAllDebugFields(void *arg) {
 		}
 	}
 #endif /* EFI_PROD_CODE */
+}
+
+static angle_t adjustCrankPhase(int camIndex DECLARE_ENGINE_PARAMETER_SUFFIX) {
+	TriggerCentral *tc = &engine->triggerCentral;
+	operation_mode_e operationMode = engine->getOperationMode(PASS_ENGINE_PARAMETER_SIGNATURE);
+
+	switch (engineConfiguration->vvtMode[camIndex]) {
+	case VVT_FIRST_HALF:
+		return syncAndReport(tc, getCrankDivider(operationMode), 1 PASS_ENGINE_PARAMETER_SUFFIX);
+	case VVT_SECOND_HALF:
+		return syncAndReport(tc, getCrankDivider(operationMode), 0 PASS_ENGINE_PARAMETER_SUFFIX);
+	case VVT_MIATA_NB2:
+		/**
+		 * NB2 is a symmetrical crank, there are four phases total
+		 */
+		return syncAndReport(tc, getCrankDivider(operationMode), miataNbIndex PASS_ENGINE_PARAMETER_SUFFIX);
+	case VVT_NISSAN_VQ:
+		return syncAndReport(tc, getCrankDivider(operationMode), 0 PASS_ENGINE_PARAMETER_SUFFIX);
+	default:
+	case VVT_INACTIVE:
+		// do nothing
+		return 0;
+	}
+}
+
+static angle_t wrapVvt(angle_t vvtPosition) {
+	// Wrap VVT position in to the range [-360, 360)
+	while (vvtPosition < -360) {
+		vvtPosition += 720;
+	}
+	while (vvtPosition >= 360) {
+		vvtPosition -= 720;
+	}
+	return vvtPosition;
 }
 
 void hwHandleVvtCamSignal(trigger_value_e front, efitick_t nowNt, int index DECLARE_ENGINE_PARAMETER_SUFFIX) {
@@ -291,45 +328,18 @@ void hwHandleVvtCamSignal(trigger_value_e front, efitick_t nowNt, int index DECL
 
 	auto vvtPosition = engineConfiguration->vvtOffsets[bankIndex * CAMS_PER_BANK + camIndex] - currentPosition;
 
-	// Wrap VVT position in to the range [-360, 360)
-	while (vvtPosition < -360) {
-		vvtPosition += 720;
-	}
-	while (vvtPosition >= 360) {
-		vvtPosition -= 720;
-	}
-
-	tc->vvtPosition[bankIndex][camIndex] = vvtPosition;
-
 	if (index != 0) {
+		// todo: only assign initial position of not first cam once cam was synchronized
+		tc->vvtPosition[bankIndex][camIndex] = wrapVvt(vvtPosition);
 		// at the moment we use only primary VVT to sync crank phase
 		return;
 	}
 
-	operation_mode_e operationMode = engine->getOperationMode(PASS_ENGINE_PARAMETER_SIGNATURE);
-
-	switch (engineConfiguration->vvtMode[camIndex]) {
-	case VVT_FIRST_HALF:
-		syncAndReport(tc, getCrankDivider(operationMode), 1 PASS_ENGINE_PARAMETER_SUFFIX);
-		break;
-	case VVT_SECOND_HALF:
-		syncAndReport(tc, getCrankDivider(operationMode), 0 PASS_ENGINE_PARAMETER_SUFFIX);
-		break;
-	case VVT_MIATA_NB2:
-		/**
-		 * NB2 is a symmetrical crank, there are four phases total
-		 */
-		syncAndReport(tc, getCrankDivider(operationMode), miataNbIndex PASS_ENGINE_PARAMETER_SUFFIX);
-		break;
-	case VVT_NISSAN_VQ:
-		syncAndReport(tc, getCrankDivider(operationMode), 0 PASS_ENGINE_PARAMETER_SUFFIX);
-		break;
-	default:
-	case VVT_INACTIVE:
-		// do nothing
-		break;
-	}
-
+	angle_t crankOffset = adjustCrankPhase(camIndex PASS_ENGINE_PARAMETER_SUFFIX);
+	// vvtPosition was calculated against wrong crank zero position. Now that we have adjusted crank position we
+	// shall adjust vvt position as well
+	vvtPosition -= crankOffset;
+	tc->vvtPosition[bankIndex][camIndex] = wrapVvt(vvtPosition);
 }
 
 int triggerReentraint = 0;

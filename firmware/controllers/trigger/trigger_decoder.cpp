@@ -376,9 +376,9 @@ void TriggerCentral::validateCamVvtCounters() {
 	}
 }
 
-bool TriggerState::syncSymmetricalCrank(int divider, int remainder) {
+angle_t TriggerState::syncSymmetricalCrank(int divider, int remainder, angle_t engineCycle) {
 	efiAssert(OBD_PCM_Processor_Fault, remainder < divider, "syncSymmetricalCrank", false);
-	bool isSync = false;
+	angle_t totalShift = 0;
 	while (getTotalRevolutionCounter() % divider != remainder) {
 		/**
 		 * we are here if we've detected the cam sensor within the wrong crank phase
@@ -386,9 +386,9 @@ bool TriggerState::syncSymmetricalCrank(int divider, int remainder) {
 		 * virtual crank-based trigger
 		 */
 		incrementTotalEventCounter();
-		isSync = true;
+		totalShift += engineCycle / divider;
 	}
-	return isSync;
+	return totalShift;
 }
 
 void TriggerState::incrementTotalEventCounter() {

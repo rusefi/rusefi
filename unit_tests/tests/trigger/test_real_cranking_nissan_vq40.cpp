@@ -15,8 +15,16 @@ TEST(realCrankingVQ40, normalCranking) {
 	reader.open("tests/trigger/resources/nissan_vq40_cranking-1.csv", indeces);
 	WITH_ENGINE_TEST_HELPER (HELLEN_121_NISSAN);
 
+	bool hasSeenFirstVvt = false;
+
 	while (reader.haveMore()) {
 		reader.processLine(&eth);
+		float vvt1 = engine->triggerCentral.getVVTPosition(/*bankIndex*/0, /*camIndex*/0);
+
+		if (vvt1 != 0 && !hasSeenFirstVvt) {
+			EXPECT_NEAR(vvt1, -38.69, 1);
+			hasSeenFirstVvt = true;
+		}
 	}
 
 	EXPECT_NEAR(engine->triggerCentral.getVVTPosition(/*bankIndex*/0, /*camIndex*/0), -46.817, 1e-2);
