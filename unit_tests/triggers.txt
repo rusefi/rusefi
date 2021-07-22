@@ -2027,7 +2027,7 @@ TRIGGERTYPE 43 6 TT_VVT_MIATA_NB2 0.00
 # duty 0.13 0.00
 event 0 0 1 0.00
 event 1 0 0 281.00
-event 2 0 1 317.00
+event 2 0 1 319.00
 event 3 0 0 340.00
 event 4 0 1 360.00
 event 5 0 0 685.00
