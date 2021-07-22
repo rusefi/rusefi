@@ -138,9 +138,11 @@ window.addEventListener('load', function() {
       hideEmptyColumns(sdiv.querySelector('.pinout-table'));
     }.bind(null, connector, sdiv, img));
     img.src = connector.info.image.file;
-    if (document.title.length == 0) {
+    if (document.title.length == 0 && typeof(connector.info.title) != "undefined") {
       document.title = connector.info.title;
     }
-    sdiv.querySelector(".connector-name").innerText = connector.info.name;
+    if (typeof(connector.info.name) != "undefined") {
+      sdiv.querySelector(".connector-name").innerText = connector.info.name;
+    }
   }
 });
