@@ -70,9 +70,11 @@ protected:
 
 class VvtTriggerConfiguration final : public TriggerConfiguration {
 public:
-	VvtTriggerConfiguration() : TriggerConfiguration("VVT ") {}
-	// todo: is it possible to make 'index' constructor argument?
-	int index = 0;
+	int index;
+
+	VvtTriggerConfiguration(const char * prefix, int index) : TriggerConfiguration(prefix) {
+		this->index = index;
+	}
 
 protected:
 	bool isUseOnlyRisingEdgeForTrigger() const override;
@@ -109,7 +111,7 @@ public:
 	efitick_t mostRecentTimeBetweenIgnitionEvents;
 
 	PrimaryTriggerConfiguration primaryTriggerConfiguration;
-	VvtTriggerConfiguration vvtTriggerConfiguration[CAMS_PER_BANK];
+	VvtTriggerConfiguration vvtTriggerConfiguration[CAMS_PER_BANK] = {{"VVT1 ", 0}, {"VVT2 ", 1}};
 	efitick_t startStopStateLastPushTime = 0;
 
 #if EFI_SHAFT_POSITION_INPUT
