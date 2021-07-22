@@ -1882,8 +1882,8 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 ; todo: code generator to hard-code all triggers not requiring VVT?
 ; todo: https://github.com/rusefi/rusefi/issues/2077
 	    field = "Cam mode (intake cams)",				vvtMode1, {trigger_type != @@TT_TT_MAZDA_MIATA_NA@@}
-	    field = "Cam mode (exhaust cams)",				    vvtMode2, {trigger_type != @@TT_TT_MAZDA_MIATA_NA@@}
-	    field = "VVT use only rising edge",					vvtCamSensorUseRise, {trigger_type != @@TT_TT_MAZDA_MIATA_NA@@}
+	    field = "Cam mode (exhaust cams)",			    vvtMode2, {trigger_type != @@TT_TT_MAZDA_MIATA_NA@@}
+	    field = "VVT sync edge",	    				vvtCamSensorUseRise, {trigger_type != @@TT_TT_MAZDA_MIATA_NA@@}
 	    field = "#Set offset so VVT indicates 0 degrees in default position"
 		field = "VVT offset bank 1 intake",				vvtOffsets1
 		field = "VVT offset bank 1 exhaust",			vvtOffsets2
