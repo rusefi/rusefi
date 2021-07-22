@@ -13,15 +13,16 @@ TEST(realCrankingVQ40, normalCranking) {
 	int indeces[] = {0};
 
 	reader.open("tests/trigger/resources/nissan_vq40_cranking-1.csv", indeces);
-	WITH_ENGINE_TEST_HELPER (ET_HELLEN_121_NISSAN);
+	WITH_ENGINE_TEST_HELPER (HELLEN_121_NISSAN);
 
 	while (reader.haveMore()) {
 		reader.processLine(&eth);
 	}
 
 	EXPECT_NEAR(engine->triggerCentral.getVVTPosition(/*bankIndex*/0, /*camIndex*/0), -46.817, 1e-2);
-	// todo: read second channel
-	EXPECT_NEAR(engine->triggerCentral.getVVTPosition(/*bankIndex*/1, /*camIndex*/0), 0, 1e-2);
+	EXPECT_NEAR(engine->triggerCentral.getVVTPosition(/*bankIndex*/1, /*camIndex*/0), -47.411, 1e-2);
 	ASSERT_EQ(241, GET_RPM())<< reader.lineIndex();
 
+	// TODO: why warnings?
+	ASSERT_EQ(2, eth.recentWarnings()->getCount());
 }
