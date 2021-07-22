@@ -40,7 +40,7 @@ static const char* const sparkNames[] = { "Coil 1", "Coil 2", "Coil 3", "Coil 4"
 static const char* const trailNames[] = { "Trail 1", "Trail 2", "Trail 3", "Trail 4", "Trail 5", "Trail 6", "Trail 7", "Trail 8",
 		"Trail 9", "Trail 10", "Trail 11", "Trail 12"};
 
-static const char* const trailShortNames[] = { "t1", "t2", "t3", "t4", "t5", "t6", "t7", "t8", "t9", "tA", "tB", "tD" };
+static const char* const trailShortNames[] = { "r1", "r2", "r3", "r4", "r5", "r6", "r7", "r8", "r9", "rA", "rB", "rD" };
 
 const char *vvtNames[] = {
 		PROTOCOL_VVT1_NAME,
