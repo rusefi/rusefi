@@ -65,3 +65,6 @@ void removeChannel(const char *name, adc_channel_e setting);
 #endif /* HAL_USE_ADC */
 
 void printFullAdcReport(void);
+
+// This callback is called by the ADC driver when a new fast ADC sample is ready
+void onFastAdcComplete(adcsample_t* samples);

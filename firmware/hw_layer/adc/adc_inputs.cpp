@@ -114,7 +114,12 @@ static adcsample_t getAvgAdcValue(int index, adcsample_t *samples, int bufDepth,
 #define ADC_SAMPLING_FAST ADC_SAMPLE_28
 
 #if EFI_USE_FAST_ADC
-void adc_callback_fast(ADCDriver *adcp);
+static void adc_callback_fast(ADCDriver *adcp) {
+	// State may not be complete if we get a callback for "half done"
+	if (adcp->state == ADC_COMPLETE) {
+		onFastAdcComplete(adcp->samples);
+	}
+}
 
 static ADCConversionGroup adcgrpcfgFast = {
 	.circular			= FALSE,
