@@ -615,7 +615,7 @@ void TriggerState::decodeTriggerEvent(
 						efiPrintf("index=%d NaN gap, you have noise issues?",
 								i);
 					} else {
-						efiPrintf("%s rpm=%d time=%d eventIndex=%d gapIndex=%d: gap=%.3f expected from %.3f to %.3f error=%s",
+						efiPrintf("%srpm=%d time=%d eventIndex=%d gapIndex=%d: gap=%.3f expected from %.3f to %.3f error=%s",
 								triggerConfiguration.PrintPrefix,
 								GET_RPM(),
 							/* cast is needed to make sure we do not put 64 bit value to stack*/ (int)getTimeNowSeconds(),
@@ -633,7 +633,8 @@ void TriggerState::decodeTriggerEvent(
 				float gap = 1.0 * toothDurations[0] / toothDurations[1];
 				for (int i = 0;i<triggerShape.gapTrackingLength;i++) {
 					float gap = 1.0 * toothDurations[i] / toothDurations[i + 1];
-					printf("index=%d: gap=%.2f expected from %.2f to %.2f error=%s\r\n",
+					printf("%sindex=%d: gap=%.2f expected from %.2f to %.2f error=%s\r\n",
+							triggerConfiguration.PrintPrefix,
 							i,
 							gap,
 							triggerShape.syncronizationRatioFrom[i],

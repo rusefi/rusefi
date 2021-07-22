@@ -72,6 +72,7 @@ void CsvReader::processLine(EngineTestHelper *eth) {
 		}
 
 		efitick_t nowNt = getTimeNowNt();
+		// todo: we invert VVT but we do not invert trigger input!!!
 		hwHandleShaftSignal(index, newState[index], nowNt PASS_ENGINE_PARAMETER_SUFFIX);
 
 		currentState[index] = newState[index];
@@ -83,7 +84,7 @@ void CsvReader::processLine(EngineTestHelper *eth) {
 		}
 
 		efitick_t nowNt = getTimeNowNt();
-		trigger_value_e event = newVvtState[vvtIndex] ? TV_RISE : TV_FALL;
+		trigger_value_e event = newVvtState[vvtIndex] ^ engineConfiguration->invertCamVVTSignal ? TV_RISE : TV_FALL;
 		hwHandleVvtCamSignal(event, nowNt, vvtIndex PASS_ENGINE_PARAMETER_SUFFIX);
 
 		currentVvtState[vvtIndex] = newVvtState[vvtIndex];
