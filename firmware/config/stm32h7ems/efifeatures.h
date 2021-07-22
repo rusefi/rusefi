@@ -34,3 +34,6 @@
 
 #undef ENABLE_PERF_TRACE
 #define ENABLE_PERF_TRACE TRUE
+
+// H7 runs faster "slow" ADC to make up for reduced oversampling
+#define SLOW_ADC_RATE 1000
