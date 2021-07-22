@@ -70,10 +70,9 @@ protected:
 
 class VvtTriggerConfiguration final : public TriggerConfiguration {
 public:
-	int index;
+	const int index;
 
-	VvtTriggerConfiguration(const char * prefix, int index) : TriggerConfiguration(prefix) {
-		this->index = index;
+	VvtTriggerConfiguration(const char * prefix, const int index) : index(index), TriggerConfiguration(prefix) {
 	}
 
 protected:
