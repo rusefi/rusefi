@@ -110,7 +110,12 @@ public:
 	efitick_t mostRecentTimeBetweenIgnitionEvents;
 
 	PrimaryTriggerConfiguration primaryTriggerConfiguration;
+#if CAMS_PER_BANK == 0
+	VvtTriggerConfiguration vvtTriggerConfiguration[CAMS_PER_BANK];
+#else
 	VvtTriggerConfiguration vvtTriggerConfiguration[CAMS_PER_BANK] = {{"VVT1 ", 0}, {"VVT2 ", 1}};
+#endif
+
 	efitick_t startStopStateLastPushTime = 0;
 
 #if EFI_SHAFT_POSITION_INPUT
