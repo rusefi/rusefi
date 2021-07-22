@@ -25,4 +25,6 @@ TEST(realCrankingVQ40, normalCranking) {
 
 	// TODO: why warnings?
 	ASSERT_EQ(2, eth.recentWarnings()->getCount());
+	ASSERT_EQ(CUSTOM_SYNC_COUNT_MISMATCH, eth.recentWarnings()->get(0));
+	ASSERT_EQ(CUSTOM_SYNC_ERROR, eth.recentWarnings()->get(1));
 }
