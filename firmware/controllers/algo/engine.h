@@ -72,7 +72,7 @@ class VvtTriggerConfiguration final : public TriggerConfiguration {
 public:
 	const int index;
 
-	VvtTriggerConfiguration(const char * prefix, const int index) : index(index), TriggerConfiguration(prefix) {
+	VvtTriggerConfiguration(const char * prefix, const int index) : TriggerConfiguration(prefix), index(index) {
 	}
 
 protected:
