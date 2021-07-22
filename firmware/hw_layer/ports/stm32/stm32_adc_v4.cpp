@@ -25,10 +25,10 @@ float getMcuTemperature() {
 }
 
 // ADC Clock is 25MHz
-// 32.5 sampling + 8.5 conversion = 41 cycles per sample total
-// 16 channels * 16x oversample = 256 samples per batch
-// (41 * 256) / 25MHz -> 419 microseconds to sample all channels
-#define ADC_SAMPLING_SLOW ADC_SMPR_SMP_32P5
+// 16.5 sampling + 8.5 conversion = 25 cycles per sample total
+// 16 channels * 4x oversample = 64 samples per batch
+// (25 * 64) / 25MHz -> 64 microseconds to sample all channels
+#define ADC_SAMPLING_SLOW ADC_SMPR_SMP_16P5
 
 // Sample the 16 channels that line up with the STM32F4/F7
 constexpr size_t slowChannelCount = 16;
@@ -108,8 +108,8 @@ bool readSlowAnalogInputs(adcsample_t* convertedSamples) {
 		adcStartConversionI(&ADCD1, &convGroupSlow, convertedSamples, 1);
 	}
 
-	constexpr uint32_t samplingRate = 8000;
-	constexpr uint32_t timerCountFrequency = samplingRate * 1000;
+	constexpr uint32_t samplingRate = 10000;
+	constexpr uint32_t timerCountFrequency = samplingRate * 100;
 	constexpr uint32_t timerPeriod = timerCountFrequency / samplingRate;
 
 	static constexpr GPTConfig gptCfg = {
