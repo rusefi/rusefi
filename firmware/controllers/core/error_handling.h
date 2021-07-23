@@ -7,6 +7,7 @@
 
 #pragma once
 
+#include "global.h"
 #include "obd_error_codes.h"
 
 #ifdef __cplusplus

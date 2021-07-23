@@ -197,6 +197,7 @@ CPPSRC = $(ALLCPPSRC) \
 ASMSRC = $(PORTASM)
 
 INCDIR = . \
+          $(PCH_DIR) \
           $(ALLINC) \
           $(CHIBIOS)/os/various/cpp_wrappers \
           $(UTIL_INC) \

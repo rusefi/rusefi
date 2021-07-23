@@ -274,7 +274,9 @@ TCPPSRC =
 ASMXSRC = $(ALLXASMSRC) \
 	$(RUSEFIASM)
 
-INCDIR = $(ALLINC) \
+INCDIR = \
+	$(PCH_DIR) \
+	$(ALLINC) \
 	$(TESTINC) \
 	$(BOOTLOADERINC) \
 	$(CHIBIOS)/os/various \

@@ -213,6 +213,7 @@ TCPPSRC =
 ASMXSRC = $(STARTUPASM) $(PORTASM) $(OSALASM)
 
 INCDIR = $(ALLINC) \
+	$(PCH_DIR) \
 	.. \
 	$(CHIBIOS)/os/various \
 	$(CHIBIOS)/os/ex/ST \

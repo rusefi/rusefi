@@ -4,6 +4,8 @@
  * @date Mar 26, 2021
  */
 
+#include "pch.h"
+
 #if EFI_PROD_CODE || EFI_SIMULATOR
 #include "tunerstudio.h"
 #include "tunerstudio_io.h"
