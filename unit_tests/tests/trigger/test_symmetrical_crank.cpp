@@ -8,9 +8,9 @@
 #include "engine_test_helper.h"
 
 static void postFourEvents(EngineTestHelper *eth, float mult) {
-	eth->fireFall(mult * 384);
+	eth->fireFall(mult * 394);
 	eth->fireRise(mult * 16);
-	eth->fireFall(mult * 304);
+	eth->fireFall(mult * 294);
 	eth->fireRise(mult * 16);
 }
 
@@ -59,9 +59,9 @@ TEST(engine, testSymmetricalCrank) {
 	postFourEvents(&eth, mult);
 	ASSERT_EQ( 0,  GET_RPM()) << "RPM#0";
 
-	eth.fireFall(mult * 384);
+	eth.fireFall(mult * 394);
 	eth.fireRise(mult * 16);
-	eth.fireFall(mult * 304);
+	eth.fireFall(mult * 294);
 	ASSERT_FALSE(engine->triggerCentral.triggerState.getShaftSynchronized());
 	eth.fireRise(mult * 16);
 	ASSERT_TRUE(engine->triggerCentral.triggerState.getShaftSynchronized());
@@ -70,18 +70,17 @@ TEST(engine, testSymmetricalCrank) {
 
 
 
-	for (int i = 0; i < 6 ; i++) {
+	for (int i = 0; i < 6; i++) {
 		postFourEvents(&eth, mult);
 		ASSERT_EQ( 0,  GET_RPM()) << "RPM#0";
 	}
 
-	mult = 0.1;
 	postFourEvents(&eth, mult);
-	ASSERT_EQ( 1042,  GET_RPM()) << "RPM#11";
+	ASSERT_EQ(2084,  GET_RPM()) << "RPM#11";
 
 	postFourEvents(&eth, mult);
-	ASSERT_EQ( 1042,  GET_RPM()) << "RPM#11";
+	ASSERT_EQ(2084,  GET_RPM()) << "RPM#11";
 
 	postFourEvents(&eth, mult);
-	ASSERT_EQ( 1042,  GET_RPM()) << "RPM#11";
+	ASSERT_EQ(2084,  GET_RPM()) << "RPM#11";
 }

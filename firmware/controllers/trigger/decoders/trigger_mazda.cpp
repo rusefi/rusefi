@@ -69,7 +69,11 @@ void initializeMazdaMiataNb2Crank(TriggerWaveform *s) {
 
 	s->tdcPosition = 60 + 655;
 
+	// Nominal gap 70/110 = 0.636
 	s->setTriggerSynchronizationGap2(0.35f, 0.98f);
+	// Nominal gap 110/70 = 1.571
+	s->setSecondTriggerSynchronizationGap2(1.05f, 1.8f);
+
 	// todo: NB2 fronts are inverted comparing to NB1, life is not perfect :(
 	s->addEventAngle(180.0f - NB_CRANK_MAGIC - 4, T_PRIMARY, TV_FALL);
 	s->addEventAngle(180.0f - NB_CRANK_MAGIC, T_PRIMARY, TV_RISE);
