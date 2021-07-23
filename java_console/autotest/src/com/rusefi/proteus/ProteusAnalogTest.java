@@ -30,12 +30,12 @@ public class ProteusAnalogTest extends RusefiTestBase {
         ecu.sendCommand("set idle_position " + idle);
 
         // wait a sec for sensors to update
-        sleepSeconds(1);
+        sleepSeconds(5);
 
         double actualTps = SensorCentral.getInstance().getValue(Sensor.TPS);
 
-        // Accept up to 5% error - the PWM is a bit noisy, but it should be at least close
-        assertEquals(expectedTps, actualTps, 5);
+        // Accept up to 2% error - the PWM is a bit noisy, but it should be at least close
+        assertEquals(expectedTps, actualTps, 2);
     }
 
     @Test
