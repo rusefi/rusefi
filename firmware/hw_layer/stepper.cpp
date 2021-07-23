@@ -130,8 +130,11 @@ void StepperMotor::ThreadTask() {
 
 		if (targetPosition == currentPosition) {
 			m_hw->pause();
+			m_isBusy = false;
 			continue;
 		}
+
+		m_isBusy = ture;
 
 		bool isIncrementing = targetPosition > currentPosition;
 
@@ -155,6 +158,8 @@ int StepperMotor::getTargetPosition() const {
 void StepperMotor::setTargetPosition(int targetPosition) {
 	// we accept a new target position only if the motor is powered from the main relay
 	if (engine->isMainRelayEnabled()) {
+		// When the IAC position value change is insignificant (lower than this threshold), leave the poor valve alone
+		// When we get a larger change, actually update the target stepper position
 		if (absF(m_targetPosition - targetPosition) > 1) {
 			m_targetPosition = targetPosition;
 		}
@@ -162,7 +167,7 @@ void StepperMotor::setTargetPosition(int targetPosition) {
 }
 
 bool StepperMotor::isBusy() const {
-	return absF(m_currentPosition - getTargetPosition()) > 1;
+	return m_isBusy;
 }
 
 void StepDirectionStepper::setDirection(bool isIncrementing) {

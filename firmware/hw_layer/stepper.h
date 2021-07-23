@@ -84,5 +84,6 @@ private:
 
 	float m_targetPosition = 0;
 	bool initialPositionSet = false;
+	bool m_isBusy = false;
 };
 
