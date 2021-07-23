@@ -34,18 +34,18 @@ public class DfuFlasher {
             public void actionPerformed(ActionEvent event) {
                 // todo: better usability would be to disable "Program" port in case of no ports found
                 Object selectedItem = comboPorts.getSelectedItem();
-                if (selectedItem == null) {
-                    JOptionPane.showMessageDialog(comboPorts, "Failed to located serial ports");
-                } else {
-                    doAutoDfu(selectedItem);
-                }
+                doAutoDfu(selectedItem, comboPorts);
             }
         });
 
         manualButton.addActionListener(e -> runDfuProgramming());
     }
 
-    public static void doAutoDfu(Object selectedItem) {
+    public static void doAutoDfu(Object selectedItem, JComponent parent) {
+        if (selectedItem == null) {
+            JOptionPane.showMessageDialog(parent, "Failed to located serial ports");
+            return;
+        }
         String port = selectedItem.toString();
         StringBuilder messages = new StringBuilder();
 
