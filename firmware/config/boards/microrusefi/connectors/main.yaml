@@ -364,6 +364,7 @@ pins:
 info:
   title: MicroRusEFI
   name: Main Connector
+  id: main
   image:
     file: main.jpg
   pins:
