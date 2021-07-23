@@ -34,7 +34,7 @@ public class ProteusAnalogTest extends RusefiTestBase {
 
         double actualTps = SensorCentral.getInstance().getValue(Sensor.TPS);
 
-        // Accept up to 2% error - the PWM is a bit noisy, but it should be at least close
+        // Accept up to 2% error - there is an analog filter installed, it should be at least be close
         assertEquals(expectedTps, actualTps, 2);
     }
 
