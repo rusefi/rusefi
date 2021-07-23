@@ -25,7 +25,7 @@ TEST(realCrankingNB2, normalCranking) {
 	ASSERT_EQ(942, GET_RPM());
 
 	// TODO: why warnings?
-	ASSERT_EQ(2, eth.recentWarnings()->getCount());
+	ASSERT_EQ(3, eth.recentWarnings()->getCount());
 }
 
 TEST(realCrankingNB2, crankingMissingInjector) {
@@ -42,7 +42,7 @@ TEST(realCrankingNB2, crankingMissingInjector) {
 	// VVT position nearly zero!
 	EXPECT_NEAR(engine->triggerCentral.getVVTPosition(0, 0), -7.1926f, 1e-4);
 
-	ASSERT_EQ(209, GET_RPM());
+	ASSERT_EQ(668, GET_RPM());
 
 	// TODO: why warnings?
 	ASSERT_EQ(2, eth.recentWarnings()->getCount());
