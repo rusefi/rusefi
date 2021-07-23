@@ -64,6 +64,10 @@ function clickPin(table, pin, cid) {
     url.searchParams.set("connector", cid);
     url.searchParams.set("pin", pin.pin);
     window.history.pushState({}, "", url)
+  } else {
+    var url = new URL(window.location);
+    url.search = "";
+    window.history.pushState({}, "", url)
   }
 }
 function checkparams() {
