@@ -18,3 +18,7 @@ endif
 # Make all cpp objects explicitly depend on the PCH
 $(TCPPOBJS) : $(PCHOBJ)
 $(ACPPOBJS) : $(PCHOBJ)
+
+# Delete PCH output on clean
+CLEAN_RULE_HOOK:
+	rm -f $(PCHOBJ)
