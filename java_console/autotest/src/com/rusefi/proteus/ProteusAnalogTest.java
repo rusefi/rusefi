@@ -14,7 +14,7 @@ import static org.junit.Assert.assertTrue;
  This test requires a particular hardware setup connected to a Proteus board.
     - External power supplied to the 12v_IGN pin, nominal 12 volts (but 11-13 will work, see testVbatt).
         Go buy some cheapie $8 12v power supply, cut the barrel jack off, and crimp pins on.
-    - A jumper wire from Ignition output 10 to Analog volt 2 (TPS, see testTpsAnalogInput)
+    - A jumper wire with a 1k resistor in series from Ignition output 10 to Analog volt 2 (TPS, see testTpsAnalogInput) and 100uF capacitor from AV2 to GND.
  */
 public class ProteusAnalogTest extends RusefiTestBase {
     @Test
