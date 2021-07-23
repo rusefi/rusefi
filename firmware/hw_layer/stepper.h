@@ -61,7 +61,7 @@ public:
 
 	void initialize(StepperHw *hardware, int totalSteps);
 
-	void setTargetPosition(float targetPosition);
+	void setTargetPosition(float targetPositionSteps);
 	int getTargetPosition() const;
 
 	bool isBusy() const;

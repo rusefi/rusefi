@@ -155,7 +155,7 @@ int StepperMotor::getTargetPosition() const {
 	return m_targetPosition;
 }
 
-void StepperMotor::setTargetPosition(float targetPosition) {
+void StepperMotor::setTargetPosition(float targetPositionSteps) {
 	// we accept a new target position only if the motor is powered from the main relay
 	if (engine->isMainRelayEnabled()) {
 		// When the IAC position value change is insignificant (lower than this threshold), leave the poor valve alone
