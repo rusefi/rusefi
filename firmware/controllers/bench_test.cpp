@@ -320,7 +320,7 @@ static void handleBenchCategory(uint16_t index) {
 	case CMD_TS_BENCH_FAN_RELAY:
 		fanBench();
 		return;
-	case CMD_TS_BENCH_AC_FAN_RELAY:
+	case CMD_TS_BENCH_FAN_RELAY_2:
 		fan2Bench();
 		return;
 	default:
@@ -385,6 +385,19 @@ static void handleCommandX14(uint16_t index) {
 #endif
 	case 0x12:
 		widebandUpdatePending = true;
+		return;
+	case 0x14:
+#ifdef STM32F7
+		void sys_dual_bank(void);
+		/**
+		 * yes, this would instantly cause a hard fault as a random sequence of bytes is decoded as instructions
+		 * and that's the intended behavious - the point is to set flash properly and to re-flash once in proper configuration
+		 */
+		sys_dual_bank();
+		rebootNow();
+#else
+		firmwareError(OBD_PCM_Processor_Fault, "Unexpected dbank command", index);
+#endif
 		return;
 	default:
 		firmwareError(OBD_PCM_Processor_Fault, "Unexpected bench x14 %d", index);

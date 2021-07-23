@@ -294,7 +294,7 @@ custom debug_mode_e 4 bits, U32, @OFFSET@, [0:5], @@debug_mode_e_enum@@
 
 #define VM_VVT_INACTIVE 0
 
-#define vvt_mode_e_enum "Inactive", "Single Tooth Second Half", "2GZ", "Miata NB2", "Single Tooth First Half", "Bosch Quick Start", "4/1", "ST 170", "Ford Barra 3+1"
+#define vvt_mode_e_enum "Inactive", "Single Tooth Second Half", "2GZ", "Miata NB2", "Single Tooth First Half", "Bosch Quick Start", "4/1", "ST 170", "Ford Barra 3+1", "Nissan VQ", "vvt10", "vvt11"
 custom vvt_mode_e 1 bits, U08, @OFFSET@, [0:3], @@vvt_mode_e_enum@@
 
 ! At the moment TIM1, TIM2, TIM3 and TIM9 are configured as ICU
@@ -516,9 +516,10 @@ end_struct
 #define ET_HELLEN_NA94 80
 
 #define ET_HELLEN_121_VAG_8_CYL 81
-! 
+ 
 
 #define ET_PROTEUS_ANALOG_PWM_TEST 106
+#define ET_TEST_ROTARY 107
 
 
 custom engine_type_e 4 bits, S32, @OFFSET@, [0:6], @@engine_type_e_auto_enum@@
@@ -608,7 +609,7 @@ uint32_t cylindersCount;;"", 1, 0, 1, @@MAX_CYLINDER_COUNT@@, 0
 ! FO_1_8_4_3_6_5_7_2 = 5
 ! FO_1_2_4_5_3 = 6
 
-custom firing_order_e 4 bits, U32, @OFFSET@, [0:4], "One Cylinder", "1-3-4-2", "1-2-4-3", "1-3-2-4", "1-5-3-6-2-4", "1-8-4-3-6-5-7-2", "1-2-4-5-3", "1-4-2-5-3-6", "1-2", "1-2-3-4-5-6", "1-2-3", "1-8-7-2-6-5-4-3", "1-5-4-2-6-3-7-8", "1-6-3-2-5-4", "1-10-9-4-3-6-5-8-7_2", "1-7-5-11-3-9-6-12-2-8-4-10", "1-7-4-10-2-8-6-12-3-9-5-11", "1-4-3-2", "1-12-5-8-3-10-6-7-2-11-4-9", "1-2-7-8-4-5-6-3", "1-3-7-2-6-5-4-8", "1-2-3-4-5-6-7-8-9", "INVALID", "1-2-3-4-5-6-7-8-9-10-11-12", "1-3-2", "1-2-3-4-5-6-7-8", "1-5-4-8-6-3-7-2"
+custom firing_order_e 4 bits, U32, @OFFSET@, [0:4], "One Cylinder", "1-3-4-2", "1-2-4-3", "1-3-2-4", "1-5-3-6-2-4", "1-8-4-3-6-5-7-2", "1-2-4-5-3", "1-4-2-5-3-6", "1-2", "1-2-3-4-5-6", "1-2-3", "1-8-7-2-6-5-4-3", "1-5-4-2-6-3-7-8", "1-6-3-2-5-4", "1-10-9-4-3-6-5-8-7_2", "1-7-5-11-3-9-6-12-2-8-4-10", "1-7-4-10-2-8-6-12-3-9-5-11", "1-4-3-2", "1-12-5-8-3-10-6-7-2-11-4-9", "1-2-7-8-4-5-6-3", "1-3-7-2-6-5-4-8", "1-2-3-4-5-6-7-8-9", "INVALID", "1-2-3-4-5-6-7-8-9-10-11-12", "1-3-2", "1-2-3-4-5-6-7-8", "1-5-4-8-6-3-7-2", "1-4-3-6-2-5", "1-8-7-3-6-5-4-2", "fo29", "fo30", "fo31"
 firing_order_e firingOrder;
 end_struct
 
@@ -860,7 +861,7 @@ bit is_enabled_spi_2
 	bit enableVerboseCanTx;+CAN broadcast using custom rusEFI protocol\nenable can_broadcast/disable can_broadcast
 	bit onOffAlternatorLogic;+This will cause the alternator to be operated in a basic on or off mode, this is the simplest alternator control.
 	bit isCJ125Enabled;enable cj125/disable cj125
-	bit vvtCamSensorUseRise;+Use rise or fall signal front\nget vvtCamSensorUseRise
+	bit vvtCamSensorUseRise,"Rising","Falling";+Use rise or fall signal front\nget vvtCamSensorUseRise
 	bit measureMapOnlyInOneCylinder;+Useful for individual intakes
 	bit stepperForceParkingEveryRestart
 	bit isFasterEngineSpinUpEnabled;+If enabled, try to fire the engine before a full engine cycle has been completed using RPM estimated from the last 90 degrees of engine rotation. As soon as the trigger syncs plus 90 degrees rotation, fuel and ignition events will occur. If disabled, worst case may require up to 4 full crank rotations before any events are scheduled.
@@ -1156,7 +1157,7 @@ bit unused_1484_bit_31
     int16_t primeInjFalloffTemperature;+This sets the temperature above which no priming pulse is used, The value at -40 is reduced until there is no more priming injection at this temperature.;"*C", 1, 0, 0, 1000, 0
 
 
-	int ignMathCalculateAtIndex;+At what trigger index should some ignition-related math be executed? This is a performance trick to reduce load on synchronization trigger callback.;"index", 1, 0, 0, 7000, 0
+	int unused1488;;"index", 1, 0, 0, 7000, 0
 
 	brain_pin_e[CAM_INPUTS_COUNT iterate] camInputsDebug;
 	uint8_t[CAM_INPUTS_COUNT_padding] camInputsDebugPadding;;
@@ -1867,7 +1868,7 @@ end_struct
 #define CMD_TS_BENCH_STARTER_ENABLE_RELAY 2
 #define CMD_TS_BENCH_STARTER_DISABLE_RELAY 3
 #define CMD_TS_BENCH_FAN_RELAY 4
-#define CMD_TS_BENCH_AC_FAN_RELAY 5
+#define CMD_TS_BENCH_FAN_RELAY_2 5
 #define CMD_TS_BENCH_AC_COMPRESSOR_RELAY 6
 #define CMD_TS_BENCH_CHECK_ENGINE_LIGHT 7
 #define CMD_TS_BENCH_IDLE_VALVE 8
@@ -1991,17 +1992,6 @@ end_struct
 ! 0x74
 #define TS_TEST_COMMAND 't'
 
-#define TS_SD_R_COMMAND 'r'
-#define TS_SD_W_COMMAND 'w'
-
-#define TS_SD_PROTOCOL_RTC 7
-#define TS_SD_PROTOCOL_FETCH_INFO 0x11
-#define TS_SD_PROTOCOL_FETCH_DATA 0x14
-#define TS_SD_PROTOCOL_DO 1
-#define TS_SD_PROTOCOL_READ_DIR 2
-#define TS_SD_PROTOCOL_REMOVE_FILE 6
-#define TS_SD_PROTOCOL_FETCH_COMPRESSED 8
-
 ! High speed logger commands
 #define TS_SET_LOGGER_SWITCH  'l'
 #define TS_GET_LOGGER_GET_BUFFER 'L'
@@ -2032,7 +2022,6 @@ end_struct
 #define ts_show_software_knock false
 #define ts_show_hardware_simulator true
 
+! we need to improve this further - at the moment we need too many boards to prepend 'false'
 #define show_test_presets true
 #define show_Frankenso_presets true
-#define show_microRusEFI_presets true
-#define show_Proteus_presets true

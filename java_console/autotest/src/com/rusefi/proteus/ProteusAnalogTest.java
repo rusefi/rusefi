@@ -14,7 +14,7 @@ import static org.junit.Assert.assertTrue;
  This test requires a particular hardware setup connected to a Proteus board.
     - External power supplied to the 12v_IGN pin, nominal 12 volts (but 11-13 will work, see testVbatt).
         Go buy some cheapie $8 12v power supply, cut the barrel jack off, and crimp pins on.
-    - A jumper wire from Ignition output 10 to Analog volt 2 (TPS, see testTpsAnalogInput)
+    - A jumper wire with a 1k resistor in series from Ignition output 10 to Analog volt 2 (TPS, see testTpsAnalogInput) and 100uF capacitor from AV2 to GND.
  */
 public class ProteusAnalogTest extends RusefiTestBase {
     @Test
@@ -30,12 +30,12 @@ public class ProteusAnalogTest extends RusefiTestBase {
         ecu.sendCommand("set idle_position " + idle);
 
         // wait a sec for sensors to update
-        sleepSeconds(1);
+        sleepSeconds(5);
 
         double actualTps = SensorCentral.getInstance().getValue(Sensor.TPS);
 
-        // Accept up to 5% error - the PWM is a bit noisy, but it should be at least close
-        assertEquals(expectedTps, actualTps, 5);
+        // Accept up to 2% error - there is an analog filter installed, it should be at least be close
+        assertEquals(expectedTps, actualTps, 2);
     }
 
     @Test

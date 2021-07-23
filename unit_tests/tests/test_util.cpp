@@ -28,13 +28,6 @@
 
 #include "gtest/gtest.h"
 
-TEST(util, isLogFileName) {
-	ASSERT_FALSE(isLogFile("aaaa"));
-	ASSERT_FALSE(isLogFile("aaa.mlq"));
-	ASSERT_TRUE (isLogFile("aaaa.mlg"));
-	ASSERT_FALSE(isLogFile("aaaa.aaa"));
-}
-
 TEST(util, negativeZero) {
 	ASSERT_TRUE(IS_NEGATIVE_ZERO(-0.0));
 

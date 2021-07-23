@@ -40,7 +40,7 @@ static const char* const sparkNames[] = { "Coil 1", "Coil 2", "Coil 3", "Coil 4"
 static const char* const trailNames[] = { "Trail 1", "Trail 2", "Trail 3", "Trail 4", "Trail 5", "Trail 6", "Trail 7", "Trail 8",
 		"Trail 9", "Trail 10", "Trail 11", "Trail 12"};
 
-static const char* const trailShortNames[] = { "t1", "t2", "t3", "t4", "t5", "t6", "t7", "t8", "t9", "tA", "tB", "tD" };
+static const char* const trailShortNames[] = { "r1", "r2", "r3", "r4", "r5", "r6", "r7", "r8", "r9", "rA", "rB", "rD" };
 
 const char *vvtNames[] = {
 		PROTOCOL_VVT1_NAME,
@@ -475,7 +475,7 @@ void OutputPin::initPin(const char *msg, brain_pin_e brainPin) {
 	initPin(msg, brainPin, &DEFAULT_OUTPUT);
 }
 
-void OutputPin::initPin(const char *msg, brain_pin_e brainPin, const pin_output_mode_e *outputMode) {
+void OutputPin::initPin(const char *msg, brain_pin_e brainPin, const pin_output_mode_e *outputMode, bool forceInitWithFatalError) {
 	if (!isBrainPinValid(brainPin)) {
 		return;
 	}
@@ -483,7 +483,7 @@ void OutputPin::initPin(const char *msg, brain_pin_e brainPin, const pin_output_
 	// Enter a critical section so that other threads can't change the pin state out from underneath us
 	chibios_rt::CriticalSectionLocker csl;
 
-	if (hasFirmwareError()) {
+	if (!forceInitWithFatalError && hasFirmwareError()) {
 		// Don't allow initializing more pins if we have a fatal error.
 		// Pins should have just been reset, so we shouldn't try to init more.
 		return;

@@ -177,7 +177,7 @@ enable2ndByteCanID = false
 ;
 
 ; Bit flags
-	  hasSdCard       = bits,    U32,      0,    [0:0], "true", "false";
+	  sd_present      = bits,    U32,      0,    [0:0], "true", "false";
 	  isIgnitionEnabledIndicator=bits,U32, 0,    [1:1], "true", "false";
 	  isInjectionEnabledIndicator=bits,U32,0,    [2:2], "true", "false";
 	  isCylinderCleanupActivated=bits,U32, 0,    [4:4], "true", "false";
@@ -365,7 +365,9 @@ enable2ndByteCanID = false
 
 	; we use this to match logs to tunes
 	tuneCrc16         = scalar,  U16,    244, "crc16",           1,         0
-    sd_status         = scalar,  U08,    246,  "", 1.0, 0.0
+	sd_logging_internal = bits,  U08,    246, [0:0], "true", "false"
+	sd_msd              = bits,  U08,    246, [1:1], "true", "false"
+	ind_fan_2           = bits,  U08,    246, [2:2], "true", "false"
 
 ; Transmission
       tcuCurrentGear  = scalar,  S08,     247,   "gear",    1,         0
@@ -655,7 +657,7 @@ enable2ndByteCanID = false
       gauge       = MAFGauge
 
    curve = iatFuelCorrCurve, "Intake air temperature fuel Multiplier"
-      columnLabel = "Coolant", "Multiplier"
+      columnLabel = "Air Temp", "Multiplier"
       xAxis       =  -40, 120, 9
       yAxis       =  0,  2, 11
       xBins       = iatFuelCorrBins, intake
@@ -1177,31 +1179,29 @@ gaugeCategory = DynoView
 
 ;         =   expression,            off-label,            on-label,            off-bg, off-fg, on-bg, on-fg
 	; important status
+	; todo: do we want to drop this line since we have "config error" feature thing below?
     indicator = { ind_hasFatalError }, "",   "CRITICAL ERROR",   white, black, red,   black
+
+    indicator = { needBurn }, "",  "unsaved changes",   white, black, yellow,   black
     indicator = { ind_isWarnNow }, "",   "WARNING",   white, black, yellow,   black
     indicator = { ind_check_engine }, "",      "Check Engine",       white,  black,  red, black
+    indicator = { ind_isTriggerError}, "Trigger OK",      "Trigger ERR",       white,  black,  red, black
     indicator = { isIgnitionEnabledIndicator}, "no ignition",   "ignition",   yellow, black, white,   black
     indicator = { isInjectionEnabledIndicator}, "no injection",   "injection",   yellow, black, white,   black
-    indicator = { ind_isTriggerError}, "trigger ok",      "trigger err",       white,  black,  red, black
 
-   indicator = { sd_status & 1}, "No SD", "SD in",             white, black, green, black
-   indicator = { sd_status & 4}, "SD ready", "SD ready",       white, black, green, black
-   indicator = { sd_status & 8}, "SD Log", "SD Log",           white, black, green, black
-   indicator = { sd_status & 16}, "SD Err", "SD Err",           white, black, red, black
-    
+
 	; this is required so that the "config error" feature works in TS
 	; don't change this line - TS is looking for an indicator with particular text/styling
 	; you don't even have to show it by default
 	indicator = { ind_hasFatalError }, "Config Error", "Config Error", white, black, red,   black
 
 	; minor info	
-    indicator = { ind_fan}, "fan off",   "fan on",   white, black, green,   black
+    indicator = { ind_fan },   "fan off",     "fan on",     white, black, green,   black
+	indicator = { ind_fan_2 }, "fan 2 off",   "fan 2 on",   white, black, green,   black
     indicator = { isCylinderCleanupActivated}, "no cyl cleanup",   "cyl cleanup",   white, black, yellow,   black
-    indicator = { needBurn }, "config ok",  "unsaved changes",   white, black, yellow,   black
-    indicator = { hasSdCard}, "no SD",   "with SD",   white, black, green,   black
     indicator = { ind_fuel_pump}, "pump off",   "pump on",   white, black, green,   black
-    indicator = { clutchUpState }, "clutch",   "cltch Up",   white, black, red,   black
-    indicator = { clutchDownState }, "clutch",   "cltch Down",   white, black, yellow,   black
+    indicator = { clutchUpState }, "Clutch Up",   "clutch Up",   white, black, red,   black
+    indicator = { clutchDownState }, "Clutch Down",   "Clutch Down",   white, black, yellow,   black
     indicator = { brakePedalIndicator }, "brake",   "brake down",   white, black, red,   black
     indicator = { acSwitchState }, "AC switch off", "AC switch on", white, black, blue, white
 	indicator = { acState }, "AC off", "AC on", white, black, blue, white
@@ -1211,16 +1211,23 @@ gaugeCategory = DynoView
     ; error codes
     indicator = { isTpsError}, "tps",   "tps error",   white, black, red,   black
 	indicator = { isTps2Error}, "tps 2",   "tps 2 error",   white, black, red,   black
+	indicator = { ind_pedal_error}, "pedal",   "pedal error",   white, black, red,   black
     indicator = { ind_clt_error}, "clt",   "clt error",   white, black, red,   black
     indicator = { ind_iat_error}, "iat",   "iat error",   white, black, red,   black
 
 ;  not implemented
 ;    indicator = { ind_map_error}, "map",   "map error",   white, black, red,   black
 
-	indicator = { ind_pedal_error}, "pedal",   "pedal error",   white, black, red,   black
 
     indicator = { knockEverIndicator }, "",   "Knock recently",   white, black, red,   black
     indicator = { knockNowIndicator }, "no knock",   "Knock NOW",   white, black, red,   black
+
+	indicator = { sd_present }, "no SD card", "SD card OK",   white, black, green, black
+	indicator = { sd_logging_internal }, "SD logging", "SD logging", white, black, green, black
+	indicator = { sd_msd }, "SD USB", "SD USB", white, black, green, black
+
+; looks like TS would append four system indicators below: Data Logging, ???, Not Connected, Protocol Error
+
 
 [KeyActions]
 	showPanel = spi,  spiFunction
@@ -1685,8 +1692,8 @@ cmd_test_fuel_pump           	= "@@TS_IO_TEST_COMMAND_char@@@@CMD_TS_BENCH_CATEG
 cmd_test_starter_relay     	 	= "@@TS_IO_TEST_COMMAND_char@@@@CMD_TS_BENCH_CATEGORY_16_hex@@@@CMD_TS_BENCH_STARTER_ENABLE_RELAY_16_hex@@"
 cmd_test_starter_disable_relay 	= "@@TS_IO_TEST_COMMAND_char@@@@CMD_TS_BENCH_CATEGORY_16_hex@@@@CMD_TS_BENCH_STARTER_DISABLE_RELAY_16_hex@@"
 cmd_test_ac_relay     		 	= "@@TS_IO_TEST_COMMAND_char@@@@CMD_TS_BENCH_CATEGORY_16_hex@@@@CMD_TS_BENCH_AC_COMPRESSOR_RELAY_16_hex@@"
-cmd_test_radiator_fan        	= "@@TS_IO_TEST_COMMAND_char@@@@CMD_TS_BENCH_CATEGORY_16_hex@@@@CMD_TS_BENCH_FAN_RELAY_16_hex@@"
-cmd_test_ac_radiator_fan       	= "@@TS_IO_TEST_COMMAND_char@@@@CMD_TS_BENCH_CATEGORY_16_hex@@@@CMD_TS_BENCH_AC_FAN_RELAY_16_hex@@"
+cmd_test_fan_1					= "@@TS_IO_TEST_COMMAND_char@@@@CMD_TS_BENCH_CATEGORY_16_hex@@@@CMD_TS_BENCH_FAN_RELAY_16_hex@@"
+cmd_test_fan_2					= "@@TS_IO_TEST_COMMAND_char@@@@CMD_TS_BENCH_CATEGORY_16_hex@@@@CMD_TS_BENCH_FAN_RELAY_2_16_hex@@"
 cmd_test_check_engine_light  	= "@@TS_IO_TEST_COMMAND_char@@@@CMD_TS_BENCH_CATEGORY_16_hex@@@@CMD_TS_BENCH_CHECK_ENGINE_LIGHT_16_hex@@"
 cmd_test_idle_valve          	= "@@TS_IO_TEST_COMMAND_char@@@@CMD_TS_BENCH_CATEGORY_16_hex@@@@CMD_TS_BENCH_IDLE_VALVE_16_hex@@"
 cmd_test_hpfp_valve          	= "@@TS_IO_TEST_COMMAND_char@@@@CMD_TS_BENCH_CATEGORY_16_hex@@@@CMD_TS_BENCH_HPFP_VALVE_16_hex@@"
@@ -1707,6 +1714,7 @@ cmd_etb_autotune_stop        = "@@TS_IO_TEST_COMMAND_char@@@@CMD_TS_X14_16_hex@@
 cmb_etb_auto_calibrate_2     = "@@TS_IO_TEST_COMMAND_char@@@@CMD_TS_X14_16_hex@@\x00\x11"
 cmd_wideband_firmare_update  = "@@TS_IO_TEST_COMMAND_char@@@@CMD_TS_X14_16_hex@@\x00\x12"
 cmd_enable_ext_stim          = "@@TS_IO_TEST_COMMAND_char@@@@CMD_TS_X14_16_hex@@\x00\x13"
+cmd_nDBANK                   = "@@TS_IO_TEST_COMMAND_char@@@@CMD_TS_X14_16_hex@@\x00\x14"@@if_ts_show_f7_presets
 
 cmd_set_wideband_idx_0       = "@@TS_IO_TEST_COMMAND_char@@\x00\x15\x00\x00"
 cmd_set_wideband_idx_1       = "@@TS_IO_TEST_COMMAND_char@@\x00\x15\x00\x01"
@@ -1874,8 +1882,8 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 ; todo: code generator to hard-code all triggers not requiring VVT?
 ; todo: https://github.com/rusefi/rusefi/issues/2077
 	    field = "Cam mode (intake cams)",				vvtMode1, {trigger_type != @@TT_TT_MAZDA_MIATA_NA@@}
-	    field = "Cam mode (exhaust cams)",				    vvtMode2, {trigger_type != @@TT_TT_MAZDA_MIATA_NA@@}
-	    field = "VVT use only rising edge",					vvtCamSensorUseRise, {trigger_type != @@TT_TT_MAZDA_MIATA_NA@@}
+	    field = "Cam mode (exhaust cams)",			    vvtMode2, {trigger_type != @@TT_TT_MAZDA_MIATA_NA@@}
+	    field = "VVT sync edge",	    				vvtCamSensorUseRise, {trigger_type != @@TT_TT_MAZDA_MIATA_NA@@}
 	    field = "#Set offset so VVT indicates 0 degrees in default position"
 		field = "VVT offset bank 1 intake",				vvtOffsets1
 		field = "VVT offset bank 1 exhaust",			vvtOffsets2
@@ -2722,6 +2730,14 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 		field = "Enable with AC",					enableFan2WithAc
 		field = "Disable when engine stopped",		disableFan2WhenStopped
 
+	dialog = fanTest, "", xAxis
+		commandButton = "Test Fan 1", cmd_test_fan_1
+		commandButton = "Test Fan 2", cmd_test_fan_2
+
+	indicatorPanel = fanIndicators, 2
+		indicator = { ind_fan },   "fan 1 off", "fan 1 on", white, black, green, black
+		indicator = { ind_fan_2 }, "fan 2 off", "fan 2 on", white, black, green, black
+
 	dialog = acSettings, "A/C Settings"
 		field = "A/C switch",						acSwitch
 		field = "A/C switch mode",					acSwitchMode
@@ -2734,6 +2750,8 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 	dialog = fanSetting, "Fan Settings"
 		panel = fan1Settings
 		panel = fan2Settings
+		panel = fanTest
+		panel = fanIndicators
 
 	dialog = fuelPump, "Fuel Pump"
 		field = "Pin",						fuelPumpPin
@@ -3458,8 +3476,8 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 ;		commandButton = "Come To Pit", cmd_call_from_pit
 		commandButton = "Main Relay", cmd_test_main_relay@@if_ts_show_main_relay
 		commandButton = "Fuel Pump", cmd_test_fuel_pump
-		commandButton = "Radiator Fan", cmd_test_radiator_fan
-		commandButton = "A/C Fan", cmd_test_ac_radiator_fan
+		commandButton = "Cooling Fan", cmd_test_fan_1
+		commandButton = "Cooling Fan 2", cmd_test_fan_2
 		commandButton = "A/C Relay", cmd_test_ac_relay
 		commandButton = "Check Engine", cmd_test_check_engine_light
 		commandButton = "Idle Air Valve", cmd_test_idle_valve
@@ -3469,6 +3487,7 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 		commandButton = "Write Config", cmd_write_config          
 		commandButton = "Reset ECU", cmd_reset_controller
 		commandButton = "Reset to DFU", cmd_dfu
+		commandButton = "F7 nDBANK fix", cmd_nDBANK@@if_ts_show_f7_presets
 
 	; bench test	
 	dialog = ioTest, "Bench Test & Commands", xAxis
@@ -3608,7 +3627,6 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 	dialog = parkingLot, "Experimental/Broken"
 		field = "#System hacks"
 		field = "Global fuel correction", 				globalFuelCorrection
-		field = "Ignition Math Logic @",				ignMathCalculateAtIndex
 		field = "MAP Averaging Logic @",				mapAveragingSchedulingAtIndex
 		field = "showHumanReadableWarning (affects Burn)",	showHumanReadableWarning
 		field = "Warning Message",                      warning_message
@@ -3718,5 +3736,3 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 #else
  addTool = afrTableGenerator, "AFR Table Generator", afrTableTbl
 #endif
-
-; poke

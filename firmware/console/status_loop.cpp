@@ -330,11 +330,11 @@ static OutputPin *leds[] = { &enginePins.warningLedPin, &enginePins.runningLedPi
 		&enginePins.errorLedPin, &enginePins.communicationLedPin, &enginePins.checkEnginePin };
 
 static void initStatusLeds(void) {
-	enginePins.communicationLedPin.initPin("led: comm status", engineConfiguration->communicationLedPin, &LED_COMMUNICATION_BRAIN_PIN_MODE);
+	enginePins.communicationLedPin.initPin("led: comm status", engineConfiguration->communicationLedPin, &LED_COMMUNICATION_BRAIN_PIN_MODE, true);
 	// checkEnginePin is already initialized by the time we get here
 
-	enginePins.warningLedPin.initPin("led: warning status", engineConfiguration->warningLedPin, &LED_WARNING_BRAIN_PIN_MODE);
-	enginePins.runningLedPin.initPin("led: running status", engineConfiguration->runningLedPin, &LED_RUNING_BRAIN_PIN_MODE);
+	enginePins.warningLedPin.initPin("led: warning status", engineConfiguration->warningLedPin, &LED_WARNING_BRAIN_PIN_MODE, true);
+	enginePins.runningLedPin.initPin("led: running status", engineConfiguration->runningLedPin, &LED_RUNING_BRAIN_PIN_MODE, true);
 }
 
 #if EFI_PROD_CODE
@@ -479,10 +479,6 @@ void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels DECLARE_
 #if EFI_PROD_CODE
 	executorStatistics();
 #endif /* EFI_PROD_CODE */
-
-#if EFI_SIMULATOR
-	tsOutputChannels->sd_status = 1 + 4;
-#endif
 
 	// header
 	tsOutputChannels->tsConfigVersion = TS_FILE_VERSION;
@@ -693,12 +689,9 @@ void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels DECLARE_
 	tsOutputChannels->needBurn = getNeedToWriteConfiguration();
 #endif /* EFI_INTERNAL_FLASH */
 
-#if EFI_FILE_LOGGING
-	tsOutputChannels->hasSdCard = isSdCardAlive();
-#endif /* EFI_FILE_LOGGING */
-
 	tsOutputChannels->isFuelPumpOn = enginePins.fuelPumpRelay.getLogicValue();
 	tsOutputChannels->isFanOn = enginePins.fanRelay.getLogicValue();
+	tsOutputChannels->isFan2On = enginePins.fanRelay2.getLogicValue();
 	tsOutputChannels->isO2HeaterOn = enginePins.o2heater.getLogicValue();
 	tsOutputChannels->isIgnitionEnabledIndicator = ENGINE(limpManager).allowIgnition();
 	tsOutputChannels->isInjectionEnabledIndicator = ENGINE(limpManager).allowInjection();

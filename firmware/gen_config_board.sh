@@ -1,7 +1,9 @@
 #!/bin/bash
 
 # file gen_config_board.sh
-# for example ./gen_config_board.sh hellen/hellen128 hellen128
+#        for example ./gen_config_board.sh hellen/hellen128 hellen128 rusefi_hellen128mercedes.ini
+#                 or ./gen_config_board.sh hellen/hellen128 hellen128
+# which is short for ./gen_config_board.sh hellen/hellen128 hellen128 rusefi_hellen128.ini
 
 set -e
 

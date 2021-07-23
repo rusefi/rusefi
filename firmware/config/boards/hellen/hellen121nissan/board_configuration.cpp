@@ -88,8 +88,11 @@ static void setupDefaultSensorInputs() {
 	engineConfiguration->camInputs[1 * CAMS_PER_BANK] = GPIOA_7;
 
 	engineConfiguration->tps1_1AdcChannel = EFI_ADC_4;
-	engineConfiguration->tps2_1AdcChannel = EFI_ADC_NONE;
+	engineConfiguration->tps1_2AdcChannel = EFI_ADC_8;
 
+	engineConfiguration->throttlePedalPositionAdcChannel = EFI_ADC_3;
+	engineConfiguration->throttlePedalPositionSecondAdcChannel = EFI_ADC_14;
+	engineConfiguration->throttlePedalSecondaryWOTVoltage = 5.0;
 	engineConfiguration->mafAdcChannel = EFI_ADC_10;
 	engineConfiguration->map.sensor.hwChannel = EFI_ADC_11;
 
@@ -151,6 +154,11 @@ void setBoardDefaultConfiguration(void) {
 
 	// "required" hardware is done - set some reasonable defaults
 	setupDefaultSensorInputs();
+
+	engineConfiguration->etbIo[0].directionPin1 = GPIOD_15; // out_pwm7
+	engineConfiguration->etbIo[0].directionPin2 = GPIOD_14; // out_pwm6
+	engineConfiguration->etbIo[0].controlPin = GPIOD_13; // ETB_EN out_pwm1
+	CONFIG(etb_use_two_wires) = true;
 
 	// Some sensible defaults for other options
 	setOperationMode(engineConfiguration, FOUR_STROKE_CRANK_SENSOR);

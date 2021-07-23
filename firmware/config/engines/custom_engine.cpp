@@ -689,6 +689,28 @@ void setBoschHDEV_5_injectors(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	CONFIG(mc33_t_hold_tot) = 10000;
 }
 
+/**
+ * set engine_type 107
+ */
+void setRotary(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
+	engineConfiguration->specs.cylindersCount = 2;
+	engineConfiguration->specs.firingOrder = FO_1_2;
+
+	engineConfiguration->trigger.type = TT_36_2_2_2;
+	setOperationMode(engineConfiguration, TWO_STROKE);
+
+	strcpy(CONFIG(engineMake), ENGINE_MAKE_MAZDA);
+	strcpy(CONFIG(engineCode), "13B");
+	strcpy(CONFIG(vehicleName), "test");
+
+	engineConfiguration->ignitionMode = IM_INDIVIDUAL_COILS;
+	engineConfiguration->injectionPins[2] = GPIO_UNASSIGNED; // injector in default pinout
+	engineConfiguration->injectionPins[3] = GPIO_UNASSIGNED;
+
+	engineConfiguration->enableTrailingSparks = true;
+	engineConfiguration->trailingCoilPins[0] = GPIOC_9;
+	engineConfiguration->trailingCoilPins[1] = GPIOE_10;
+}
 
 /**
  * set engine_type 103

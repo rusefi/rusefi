@@ -5,27 +5,45 @@
  * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
-
 #include "engine_test_helper.h"
 #include "logicdata_csv_reader.h"
 
-TEST(crankingNB2, nb2RealCrankingFromFile) {
+TEST(realCrankingNB2, normalCranking) {
 	CsvReader reader(1, /* vvtCount */ 1);
-	int indeces[1] = {0};
+	int indeces[] = {0};
 
-	reader.open("tests/trigger/resources/nb2_rev-d-4.csv", indeces);
+	reader.open("tests/trigger/resources/nb2-cranking-good.csv", indeces);
 	WITH_ENGINE_TEST_HELPER (HELLEN_NB2);
-
-	while (eth.getTimeNowUs() < 3'000'000) {
-		reader.readLine(&eth);
-		ASSERT_EQ(0, GET_RPM()) << "At line " << reader.lineIndex() << " time " << eth.getTimeNowUs();
-	}
 
 	while (reader.haveMore()) {
 		reader.processLine(&eth);
 	}
 
-//	ASSERT_EQ(243, GET_RPM()) << "At line " << reader.lineIndex() << " time " << eth.getTimeNowUs();
+	// VVT position nearly zero!
+	EXPECT_NEAR(engine->triggerCentral.getVVTPosition(0, 0), 3.6569f, 1e-4);
 
+	ASSERT_EQ(942, GET_RPM());
 
+	// TODO: why warnings?
+	ASSERT_EQ(2, eth.recentWarnings()->getCount());
+}
+
+TEST(realCrankingNB2, crankingMissingInjector) {
+	CsvReader reader(1, /* vvtCount */ 1);
+	int indeces[] = {0};
+
+	reader.open("tests/trigger/resources/nb2-cranking-good-missing-injector-1.csv", indeces);
+	WITH_ENGINE_TEST_HELPER (HELLEN_NB2);
+
+	while (reader.haveMore()) {
+		reader.processLine(&eth);
+	}
+
+	// VVT position nearly zero!
+	EXPECT_NEAR(engine->triggerCentral.getVVTPosition(0, 0), -7.1926f, 1e-4);
+
+	ASSERT_EQ(209, GET_RPM());
+
+	// TODO: why warnings?
+	ASSERT_EQ(2, eth.recentWarnings()->getCount());
 }

@@ -34,3 +34,18 @@
 
 #undef ENABLE_PERF_TRACE
 #define ENABLE_PERF_TRACE TRUE
+
+// H7 runs faster "slow" ADC to make up for reduced oversampling
+#define SLOW_ADC_RATE 1000
+
+#undef EFI_ICU_INPUTS
+#define EFI_ICU_INPUTS FALSE
+
+#undef HAL_TRIGGER_USE_PAL
+#define HAL_TRIGGER_USE_PAL TRUE
+
+#undef EFI_LOGIC_ANALYZER
+#define EFI_LOGIC_ANALYZER FALSE
+
+#undef HAL_VSS_USE_PAL
+#define HAL_VSS_USE_PAL TRUE

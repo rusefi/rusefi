@@ -247,6 +247,11 @@ void runRusEfi(void) {
 	startLoggingProcessor();
 #endif
 
+#ifdef STM32F7
+	void sys_dual_bank(void);
+	addConsoleAction("dual_bank", sys_dual_bank);
+#endif
+
 	addConsoleAction(CMD_REBOOT, scheduleReboot);
 	addConsoleAction(CMD_REBOOT_DFU, jump_to_bootloader);
 
@@ -298,6 +303,9 @@ void runRusEfiWithConfig() {
 		return;
 	}
 
+	// Start this early - it will start LED blinking and such
+	startStatusThreads();
+
 	/**
 	 * Initialize hardware drivers
 	 */
@@ -336,8 +344,6 @@ void runRusEfiWithConfig() {
 	#if EFI_PERF_METRICS
 		initTimePerfActions();
 	#endif
-
-		startStatusThreads();
 
 		runSchedulingPrecisionTestIfNeeded();
 	}

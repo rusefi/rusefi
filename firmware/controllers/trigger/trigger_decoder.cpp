@@ -376,18 +376,19 @@ void TriggerCentral::validateCamVvtCounters() {
 	}
 }
 
-bool TriggerState::syncSymmetricalCrank(int mod, int remainder) {
-	bool isSync = false;
-	while (getTotalRevolutionCounter() % mod != remainder) {
+angle_t TriggerState::syncSymmetricalCrank(int divider, int remainder, angle_t engineCycle) {
+	efiAssert(OBD_PCM_Processor_Fault, remainder < divider, "syncSymmetricalCrank", false);
+	angle_t totalShift = 0;
+	while (getTotalRevolutionCounter() % divider != remainder) {
 		/**
 		 * we are here if we've detected the cam sensor within the wrong crank phase
 		 * let's increase the trigger event counter, that would adjust the state of
 		 * virtual crank-based trigger
 		 */
 		incrementTotalEventCounter();
-		isSync = true;
+		totalShift += engineCycle / divider;
 	}
-	return isSync;
+	return totalShift;
 }
 
 void TriggerState::incrementTotalEventCounter() {
@@ -614,7 +615,7 @@ void TriggerState::decodeTriggerEvent(
 						efiPrintf("index=%d NaN gap, you have noise issues?",
 								i);
 					} else {
-						efiPrintf("%s rpm=%d time=%d eventIndex=%d gapIndex=%d: gap=%.3f expected from %.3f to %.3f error=%s",
+						efiPrintf("%srpm=%d time=%d eventIndex=%d gapIndex=%d: gap=%.3f expected from %.3f to %.3f error=%s",
 								triggerConfiguration.PrintPrefix,
 								GET_RPM(),
 							/* cast is needed to make sure we do not put 64 bit value to stack*/ (int)getTimeNowSeconds(),
@@ -632,7 +633,8 @@ void TriggerState::decodeTriggerEvent(
 				float gap = 1.0 * toothDurations[0] / toothDurations[1];
 				for (int i = 0;i<triggerShape.gapTrackingLength;i++) {
 					float gap = 1.0 * toothDurations[i] / toothDurations[i + 1];
-					printf("index=%d: gap=%.2f expected from %.2f to %.2f error=%s\r\n",
+					printf("%sindex=%d: gap=%.2f expected from %.2f to %.2f error=%s\r\n",
+							triggerConfiguration.PrintPrefix,
 							i,
 							gap,
 							triggerShape.syncronizationRatioFrom[i],
