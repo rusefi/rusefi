@@ -88,10 +88,10 @@ static void setupDefaultSensorInputs() {
 	engineConfiguration->camInputs[1 * CAMS_PER_BANK] = GPIOA_7;
 
 	engineConfiguration->tps1_1AdcChannel = EFI_ADC_4;
-	engineConfiguration->tps2_1AdcChannel = EFI_ADC_NONE;
+	engineConfiguration->tps2_1AdcChannel = EFI_ADC_8;
 
-	//engineConfiguration->throttlePedalPositionAdcChannel
-	//throttlePedalPositionSecondAdcChannel
+	engineConfiguration->throttlePedalPositionAdcChannel = EFI_ADC_3;
+	engineConfiguration->throttlePedalPositionSecondAdcChannel = EFI_ADC_14;
 	engineConfiguration->throttlePedalSecondaryWOTVoltage = 5.0;
 	engineConfiguration->mafAdcChannel = EFI_ADC_10;
 	engineConfiguration->map.sensor.hwChannel = EFI_ADC_11;
