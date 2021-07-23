@@ -117,6 +117,11 @@ endif
 PROJECT = bootloader
 PROJECT_DIR = ..
 
+# Configure precompiled header
+PCH_DIR = $(PROJECT_DIR)/pch
+PCHSRC = $(PCH_DIR)/pch.h
+USE_CPPOPT += -Winvalid-pch -include $(PCHSRC)
+
 # Imported source files and paths
 CHIBIOS = $(PROJECT_DIR)/ChibiOS
 # todo: looks like 'CHIBIOS_CONTRIB' path is universal shall we defined it only once?
@@ -317,3 +322,4 @@ ULIBS = -lm --specs=nano.specs
 ##############################################################################
 
 include $(RULESFILE)
+include $(PROJECT_DIR)/rusefi_pch.mk
