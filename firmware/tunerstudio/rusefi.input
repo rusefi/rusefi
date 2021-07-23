@@ -3627,7 +3627,6 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 	dialog = parkingLot, "Experimental/Broken"
 		field = "#System hacks"
 		field = "Global fuel correction", 				globalFuelCorrection
-		field = "Ignition Math Logic @",				ignMathCalculateAtIndex
 		field = "MAP Averaging Logic @",				mapAveragingSchedulingAtIndex
 		field = "showHumanReadableWarning (affects Burn)",	showHumanReadableWarning
 		field = "Warning Message",                      warning_message
