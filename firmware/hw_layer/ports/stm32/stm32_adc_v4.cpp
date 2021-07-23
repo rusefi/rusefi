@@ -25,10 +25,10 @@ float getMcuTemperature() {
 }
 
 // ADC Clock is 25MHz
-// 32.5 sampling + 8.5 conversion = 41 cycles per sample total
-// 16 channels * 16x oversample = 256 samples per batch
-// (41 * 256) / 25MHz -> 419 microseconds to sample all channels
-#define ADC_SAMPLING_SLOW ADC_SMPR_SMP_32P5
+// 16.5 sampling + 8.5 conversion = 25 cycles per sample total
+// 16 channels * 4x oversample = 64 samples per batch
+// (25 * 64) / 25MHz -> 64 microseconds to sample all channels
+#define ADC_SAMPLING_SLOW ADC_SMPR_SMP_16P5
 
 // Sample the 16 channels that line up with the STM32F4/F7
 constexpr size_t slowChannelCount = 16;
@@ -36,13 +36,13 @@ constexpr size_t slowChannelCount = 16;
 // Conversion group for slow channels
 // This simply samples every channel in sequence
 static constexpr ADCConversionGroup convGroupSlow = {
-	.circular			= FALSE,
+	.circular			= true,		// Continuous mode means we will auto re-trigger on every timer event
 	.num_channels		= slowChannelCount,
 	.end_cb				= nullptr,
 	.error_cb			= nullptr,
-	.cfgr				= 0,
-	.cfgr2				= 	15 << ADC_CFGR2_OVSR_Pos |	// Oversample by 16x (register contains N-1)
-							4 << ADC_CFGR2_OVSS_Pos |	// shift the result right 4 bits to make a 16 bit result
+	.cfgr				= ADC_CFGR_EXTEN_0 | (4 << ADC_CFGR_EXTSEL_Pos),	// External trigger ch4, rising edge: TIM3 TRGO
+	.cfgr2				= 	3 << ADC_CFGR2_OVSR_Pos |	// Oversample by 4x (register contains N-1)
+							2 << ADC_CFGR2_OVSS_Pos |	// shift the result right 2 bits to make a 16 bit result out of the 18 bit internal sum (4x oversampled)
 							ADC_CFGR2_ROVSE,			// Enable oversampling
 	.ccr				= 0,
 	.pcsel				= 0xFFFFFFFF, // enable analog switches on all channels
@@ -93,10 +93,36 @@ static constexpr ADCConversionGroup convGroupSlow = {
 	},
 };
 
+static bool didStart = false;
+
 bool readSlowAnalogInputs(adcsample_t* convertedSamples) {
-	// Oversampling and right-shift happen in hardware, so we can sample directly to the output buffer
-	msg_t result = adcConvert(&ADCD1, &convGroupSlow, convertedSamples, 1);
+	// This only needs to happen once, as the timer will continue firing the ADC and writing to the buffer without our help
+	if (didStart) {
+		return true;
+	}
+	didStart = true;
+
+	{
+		chibios_rt::CriticalSectionLocker csl;
+		// Oversampling and right-shift happen in hardware, so we can sample directly to the output buffer
+		adcStartConversionI(&ADCD1, &convGroupSlow, convertedSamples, 1);
+	}
+
+	constexpr uint32_t samplingRate = 10000;
+	constexpr uint32_t timerCountFrequency = samplingRate * 100;
+	constexpr uint32_t timerPeriod = timerCountFrequency / samplingRate;
+
+	static constexpr GPTConfig gptCfg = {
+		timerCountFrequency,
+		nullptr,
+		TIM_CR2_MMS_1,	// TRGO on update event
+		0
+	};
+
+	// Start timer
+	gptStart(&GPTD3, &gptCfg);
+	gptStartContinuous(&GPTD3, timerPeriod);
 
 	// Return true if OK
-	return result == MSG_OK;
+	return true;
 }
