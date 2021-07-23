@@ -155,7 +155,7 @@ static int adcCallbackCounter = 0;
 static volatile int averagedSamples[ADC_MAX_CHANNELS_COUNT];
 static adcsample_t avgBuf[ADC_MAX_CHANNELS_COUNT];
 
-void adc_callback_fast_internal(ADCDriver *adcp);
+void onFastAdcCompleteInternal(ADCDriver *adcp);
 
 void onFastAdcComplete(adcsample_t* samples) {
 #if HAL_TRIGGER_USE_ADC
