@@ -365,10 +365,6 @@ void Engine::reset() {
 	 */
 	engineCycle = getEngineCycle(FOUR_STROKE_CRANK_SENSOR);
 	memset(&ignitionPin, 0, sizeof(ignitionPin));
-	for (int camIndex = 0;camIndex < CAMS_PER_BANK;camIndex++) {
-		// todo: is it possible to make it constructor argument?
-		vvtTriggerConfiguration[camIndex].index = camIndex;
-	}
 }
 
 

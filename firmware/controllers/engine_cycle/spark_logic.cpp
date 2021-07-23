@@ -132,11 +132,11 @@ static void prepareCylinderIgnitionSchedule(angle_t dwellAngleDuration, floatms_
 }
 
 static void chargeTrailingSpark(IgnitionOutputPin* pin) {
-	pin->setValue(1);
+	pin->setHigh();
 }
 
 static void fireTrailingSpark(IgnitionOutputPin* pin) {
-	pin->setValue(0);
+	pin->setLow();
 }
 
 void fireSparkAndPrepareNextSchedule(IgnitionEvent *event) {
@@ -288,10 +288,12 @@ void turnSparkPinHigh(IgnitionEvent *event) {
 	}
 
 	if (CONFIG(enableTrailingSparks)) {
+		IgnitionOutputPin *output = &enginePins.trailingCoils[event->cylinderNumber];
+		INJECT_ENGINE_REFERENCE(output);
 		// Trailing sparks are enabled - schedule an event for the corresponding trailing coil
 		scheduleByAngle(
 			&event->trailingSparkCharge, nowNt, ENGINE(engineState.trailingSparkAngle),
-			{ &chargeTrailingSpark, &enginePins.trailingCoils[event->cylinderNumber] }
+			{ &chargeTrailingSpark, output }
 			PASS_ENGINE_PARAMETER_SUFFIX
 		);
 	}

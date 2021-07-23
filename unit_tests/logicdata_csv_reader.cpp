@@ -41,24 +41,23 @@ void CsvReader::processLine(EngineTestHelper *eth) {
 	char *line = buffer;
 
 	char *timeStampstr = trim(strtok(line, s));
-	bool newState[2];
+
+	bool newState[TRIGGER_INPUT_PIN_COUNT];
 	bool newVvtState[CAM_INPUTS_COUNT];
-	char *firstToken = trim(strtok(NULL, s));
-	char *secondToken = trim(strtok(NULL, s));
+
+	for (size_t i = 0;i<m_triggerCount;i++) {
+		char * triggerToken = trim(strtok(NULL, s));
+		newState[columnIndeces[i]] = triggerToken[0] == '1';
+	}
+
+	for (size_t i = 0;i<m_vvtCount;i++) {
+		char *vvtToken = trim(strtok(NULL, s));
+		newVvtState[i] = vvtToken[0] == '1';
+	}
 
 	if (timeStampstr == nullptr) {
 		firmwareError(OBD_PCM_Processor_Fault, "End of File");
 		return;
-	}
-
-	newState[columnIndeces[0]] = firstToken[0] == '1';
-	if (secondToken != nullptr && m_triggerCount > 1) {
-		newState[columnIndeces[1]] = secondToken[0] == '1';
-	}
-
-	// todo: start reading states much smarter, start reading all 4 cam channels!
-	if (m_vvtCount > 0) {
-		newVvtState[0] = secondToken[0] == '1';
 	}
 
 	double timeStamp = std::stod(timeStampstr);
@@ -72,6 +71,7 @@ void CsvReader::processLine(EngineTestHelper *eth) {
 		}
 
 		efitick_t nowNt = getTimeNowNt();
+		// todo: we invert VVT but we do not invert trigger input!!!
 		hwHandleShaftSignal(index, newState[index], nowNt PASS_ENGINE_PARAMETER_SUFFIX);
 
 		currentState[index] = newState[index];
@@ -83,8 +83,11 @@ void CsvReader::processLine(EngineTestHelper *eth) {
 		}
 
 		efitick_t nowNt = getTimeNowNt();
-		trigger_value_e event = newVvtState[vvtIndex] ? TV_RISE : TV_FALL;
-		hwHandleVvtCamSignal(event, nowNt, vvtIndex PASS_ENGINE_PARAMETER_SUFFIX);
+		trigger_value_e event = newVvtState[vvtIndex] ^ engineConfiguration->invertCamVVTSignal ? TV_RISE : TV_FALL;
+		// todo: configurable selection of vvt mode - dual bank or dual cam single bank
+		int bankIndex = vvtIndex;
+		int camIndex = 0;
+		hwHandleVvtCamSignal(event, nowNt, bankIndex *2 + camIndex PASS_ENGINE_PARAMETER_SUFFIX);
 
 		currentVvtState[vvtIndex] = newVvtState[vvtIndex];
 

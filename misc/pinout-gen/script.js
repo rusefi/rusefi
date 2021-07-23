@@ -25,7 +25,7 @@ function hideEmptyColumns(table) {
   }
 }
 
-function addRow(table, pin, pdiv) {
+function addRow(table, pin, cid) {
   var template = document.getElementById("table-template");
   var clone = template.content.cloneNode(true);
   var row = clone.querySelector(".data");
@@ -35,19 +35,19 @@ function addRow(table, pin, pdiv) {
     cell.textContent = Array.isArray(pin[cell.dataset.field]) ? pin[cell.dataset.field].join(", ") : pin[cell.dataset.field];
   }
   clone.querySelector(".pin-data").dataset.type = pin.type;
-  if (pdiv) {
-    row.addEventListener('click', function(table, pin, pdiv) {
-      clickPin(table.parentElement.parentElement.parentElement.querySelector(".info-table tbody"), pin, pdiv);
+  if (pin.pdiv) {
+    row.addEventListener('click', function(table, pin, cid) {
+      clickPin(table.parentElement.parentElement.parentElement.querySelector(".info-table tbody"), pin, cid);
       table.parentElement.parentElement.parentElement.scrollIntoView()
-    }.bind(null, table, pin, pdiv));
+    }.bind(null, table, pin, cid));
   }
   table.appendChild(clone);
 }
 
-function clickPin(table, pin, pdiv) {
+function clickPin(table, pin, cid) {
   table.parentElement.style.display = "table";
   table.innerHTML = "";
-  addRow(table, pin, pdiv);
+  addRow(table, pin, cid);
   var pins = document.querySelectorAll(".pin-marker");
   for (var i = 0; i < pins.length; i++) {
     if (pins[i].dataset.type == pin.type) {
@@ -57,20 +57,65 @@ function clickPin(table, pin, pdiv) {
     }
     pins[i].classList.remove("selected");
   }
-  pdiv.classList.add("selected");
+  pin.pdiv.classList.add("selected");
   hideEmptyColumns(table.parentElement);
+  if (typeof(cid) != "undefined") {
+    var url = new URL(window.location);
+    url.searchParams.set("connector", cid);
+    url.searchParams.set("pin", pin.pin);
+    window.history.pushState({}, "", url)
+  } else {
+    var url = new URL(window.location);
+    url.search = "";
+    window.history.pushState({}, "", url)
+  }
+}
+function checkparams() {
+  var params = new URLSearchParams(window.location.search);
+  var connector = params.get("connector");
+  var pin = params.get("pin");
+  for (var i = 0; i < connectorData.length; i++) {
+    var c = connectorData[i];
+    if (c.info.id == connector) {
+      var table = document.querySelectorAll(".info-table tbody")[i];
+      for (var iii = 0; iii < c.pins.length; iii++) {
+        if (c.pins[iii].pin == pin) {
+          clickPin(table, c.pins[iii], c.info.id);
+          return;
+        }
+      }
+      return;
+    }
+  }
+}
+
+var images = 0;
+
+function checkImagesLoaded() {
+  images -= 1;
+  if (images == 0) {
+    checkparams();
+  }
 }
 
 window.addEventListener('load', function() {
+  window.onpopstate = function(ev) {
+    if (event.state) {
+      checkparams();
+    }
+  };
   for (var c = 0; c < connectorData.length; c++) {
-    var connector = JSON.parse(connectorData[c]);
+    connectorData[c] = JSON.parse(connectorData[c]);
+    var connector = connectorData[c];
     var template = document.getElementById("connector-template");
     var clone = template.content.cloneNode(true);
     document.body.appendChild(clone);
     var sdiv = document.body.lastChild.previousSibling;
     var img = sdiv.querySelector(".connector-img");
+    images += 1;
     img.addEventListener('load', function(connector, sdiv, img) {
       var cdiv = sdiv.querySelector(".connector-div");
+      var cid = connector.info.id;
       var ptemplate = document.getElementById("pin-template");
       var imgHeight = img.naturalHeight;
       var imgWidth = img.naturalWidth;
@@ -89,7 +134,7 @@ window.addEventListener('load', function() {
           }
         }
         if (!pinfo.x) {
-          addRow(fullTable, connector.pins[i], null);
+          addRow(fullTable, connector.pins[i], cid);
           continue;
         }
         var closest = 1000000;
@@ -106,9 +151,10 @@ window.addEventListener('load', function() {
         pdiv.style.top = ((pinfo.y / imgHeight) * 100) + "%";
         pdiv.style.left = ((pinfo.x / imgWidth) * 100) + "%";
         pdiv.dataset.type = pin.type;
-        pdiv.addEventListener("click", function(table, pin, pdiv) {
-          clickPin(table, pin, pdiv);
-        }.bind(null, table, pin, pdiv));
+        pin.pdiv = pdiv;
+        pdiv.addEventListener("click", function(table, pin, cid) {
+          clickPin(table, pin, cid);
+        }.bind(null, table, pin, cid));
         closest = Math.sqrt(closest);
         var divheight = cdiv.clientHeight;
         var divwidth = cdiv.clientWidth;
@@ -133,14 +179,17 @@ window.addEventListener('load', function() {
           pdiv.style.fontSize = (pxheight * 0.5) + "px";
         }.bind(null, pdiv, pxheight));
         cdiv.appendChild(pdiv);
-        addRow(fullTable, connector.pins[i], pdiv);
+        addRow(fullTable, pin, cid);
       }
       hideEmptyColumns(sdiv.querySelector('.pinout-table'));
+      checkImagesLoaded();
     }.bind(null, connector, sdiv, img));
     img.src = connector.info.image.file;
-    if (document.title.length == 0) {
+    if (document.title.length == 0 && typeof(connector.info.title) != "undefined") {
       document.title = connector.info.title;
     }
-    sdiv.querySelector(".connector-name").innerText = connector.info.name;
+    if (typeof(connector.info.name) != "undefined") {
+      sdiv.querySelector(".connector-name").innerText = connector.info.name;
+    }
   }
 });

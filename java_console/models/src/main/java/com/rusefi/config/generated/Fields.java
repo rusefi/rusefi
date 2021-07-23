@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Wed Jul 21 23:39:02 UTC 2021
+// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Fri Jul 23 12:39:06 UTC 2021
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -931,7 +931,6 @@ public class Fields {
 	public static final int ignitionPins9_offset = 644;
 	public static final int ignitionRpmBins_offset = 17376;
 	public static final int ignitionTable_offset = 16288;
-	public static final int ignMathCalculateAtIndex_offset = 1488;
 	public static final int ignOverrideMode_offset = 2128;
 	public static final int IM_IM_SINGLE_POINT = 3;
 	public static final String INDICATOR_NAME_AC_SWITCH = "AC switch";
@@ -1269,7 +1268,6 @@ public class Fields {
 	public static final int servoOutputPins8_offset = 3147;
 	public static final int showHumanReadableWarning_offset = 976;
 	public static final int showSdCardWarning_offset = 76;
-	public static final int SIGNATURE_HASH = 792409218;
 	public static final int silentTriggerError_offset = 1464;
 	public static final int slowAdcAlpha_offset = 2088;
 	public static final int sparkDwellRpmBins_offset = 332;
@@ -1578,7 +1576,7 @@ public class Fields {
 	public static final int TS_RESPONSE_UNDERRUN = 0x80;
 	public static final int TS_RESPONSE_UNRECOGNIZED_COMMAND = 0x83;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI 2021.07.22.all.792409218";
+	public static final String TS_SIGNATURE = "rusEFI 2021.07.23.all.3645751849";
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final char TS_TEST_COMMAND = 't';
 	public static final int TT_TT_1_16 = 50;
@@ -1645,6 +1643,7 @@ public class Fields {
 	public static final int unused1476b20_offset = 1476;
 	public static final int unused1476b3_offset = 1476;
 	public static final int unused1476b8_offset = 1476;
+	public static final int unused1488_offset = 1488;
 	public static final int unused1756_offset = 1759;
 	public static final int unused2260_offset = 2260;
 	public static final int unused2432_offset = 2432;
@@ -2434,7 +2433,7 @@ public class Fields {
 	public static final Field ENGINECHARTSIZE = Field.create("ENGINECHARTSIZE", 1480, FieldType.INT);
 	public static final Field IDLEPIDRPMUPPERLIMIT = Field.create("IDLEPIDRPMUPPERLIMIT", 1484, FieldType.INT16);
 	public static final Field PRIMEINJFALLOFFTEMPERATURE = Field.create("PRIMEINJFALLOFFTEMPERATURE", 1486, FieldType.INT16);
-	public static final Field IGNMATHCALCULATEATINDEX = Field.create("IGNMATHCALCULATEATINDEX", 1488, FieldType.INT);
+	public static final Field UNUSED1488 = Field.create("UNUSED1488", 1488, FieldType.INT);
 	public static final Field CAMINPUTSDEBUG1 = Field.create("CAMINPUTSDEBUG1", 1492, FieldType.INT8, brain_pin_e);
 	public static final Field CAMINPUTSDEBUG2 = Field.create("CAMINPUTSDEBUG2", 1493, FieldType.INT8, brain_pin_e);
 	public static final Field CAMINPUTSDEBUG3 = Field.create("CAMINPUTSDEBUG3", 1494, FieldType.INT8, brain_pin_e);
@@ -2622,7 +2621,7 @@ public class Fields {
 	public static final Field FAN1EXTRAIDLE = Field.create("FAN1EXTRAIDLE", 2252, FieldType.INT8);
 	public static final Field ALTERNATORPWMFREQUENCY = Field.create("ALTERNATORPWMFREQUENCY", 2256, FieldType.INT);
 	public static final Field UNUSED2260 = Field.create("UNUSED2260", 2260, FieldType.INT);
-	public static final String[] vvt_mode_e = {"Inactive", "Single Tooth Second Half", "2GZ", "Miata NB2", "Single Tooth First Half", "Bosch Quick Start", "4/1", "ST 170", "Ford Barra 3+1"};
+	public static final String[] vvt_mode_e = {"Inactive", "Single Tooth Second Half", "2GZ", "Miata NB2", "Single Tooth First Half", "Bosch Quick Start", "4/1", "ST 170", "Ford Barra 3+1", "Nissan VQ", "vvt10", "vvt11"};
 	public static final Field VVTMODE1 = Field.create("VVTMODE1", 2328, FieldType.INT8, vvt_mode_e);
 	public static final Field VVTMODE2 = Field.create("VVTMODE2", 2329, FieldType.INT8, vvt_mode_e);
 	public static final Field FAN2EXTRAIDLE = Field.create("FAN2EXTRAIDLE", 2330, FieldType.INT8);
@@ -3569,7 +3568,7 @@ public class Fields {
 	ENGINECHARTSIZE,
 	IDLEPIDRPMUPPERLIMIT,
 	PRIMEINJFALLOFFTEMPERATURE,
-	IGNMATHCALCULATEATINDEX,
+	UNUSED1488,
 	CAMINPUTSDEBUG1,
 	CAMINPUTSDEBUG2,
 	CAMINPUTSDEBUG3,

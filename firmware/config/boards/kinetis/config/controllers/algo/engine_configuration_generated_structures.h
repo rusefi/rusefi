@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Wed Jul 21 23:39:37 UTC 2021
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Fri Jul 23 12:39:39 UTC 2021
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -2446,11 +2446,10 @@ struct engine_configuration_s {
 	 */
 	int16_t primeInjFalloffTemperature;
 	/**
-	 * At what trigger index should some ignition-related math be executed? This is a performance trick to reduce load on synchronization trigger callback.
 	index
 	 * offset 1488
 	 */
-	int ignMathCalculateAtIndex;
+	int unused1488;
 	/**
 	 * offset 1492
 	 */
@@ -4268,4 +4267,4 @@ struct persistent_config_s {
 };
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Wed Jul 21 23:39:37 UTC 2021
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Fri Jul 23 12:39:39 UTC 2021
