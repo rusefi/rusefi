@@ -231,10 +231,6 @@ static void doPeriodicSlowCallback(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 		}
 	}
 
-	// for performance reasons this assertion related to mainTriggerCallback should better be here
-	efiAssertVoid(CUSTOM_IGN_MATH_STATE, !CONFIG(useOnlyRisingEdgeForTrigger) || CONFIG(ignMathCalculateAtIndex) % 2 == 0, "invalid ignMathCalculateAtIndex");
-
-
 	/**
 	 * Update engine RPM state if needed (check timeouts).
 	 */
