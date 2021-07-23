@@ -160,7 +160,7 @@ void StepperMotor::setTargetPosition(float targetPosition) {
 	if (engine->isMainRelayEnabled()) {
 		// When the IAC position value change is insignificant (lower than this threshold), leave the poor valve alone
 		// When we get a larger change, actually update the target stepper position
-		if (absF(m_targetPosition - targetPosition) > 1) {
+		if (absF(m_targetPosition - targetPosition) >= 1) {
 			m_targetPosition = targetPosition;
 		}
 	}
