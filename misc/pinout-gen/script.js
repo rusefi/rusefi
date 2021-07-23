@@ -36,7 +36,7 @@ function addRow(table, pin, cid) {
   }
   clone.querySelector(".pin-data").dataset.type = pin.type;
   if (pin.pdiv) {
-    row.addEventListener('click', function(table, pin, pdiv, cid) {
+    row.addEventListener('click', function(table, pin, cid) {
       clickPin(table.parentElement.parentElement.parentElement.querySelector(".info-table tbody"), pin, cid);
       table.parentElement.parentElement.parentElement.scrollIntoView()
     }.bind(null, table, pin, cid));
@@ -59,10 +59,12 @@ function clickPin(table, pin, cid) {
   }
   pin.pdiv.classList.add("selected");
   hideEmptyColumns(table.parentElement);
-  var url = new URL(window.location);
-  url.searchParams.set("connector", cid);
-  url.searchParams.set("pin", pin.pin);
-  window.history.pushState({}, "", url)
+  if (typeof(cid) != "undefined") {
+    var url = new URL(window.location);
+    url.searchParams.set("connector", cid);
+    url.searchParams.set("pin", pin.pin);
+    window.history.pushState({}, "", url)
+  }
 }
 function checkparams() {
   var params = new URLSearchParams(window.location.search);
