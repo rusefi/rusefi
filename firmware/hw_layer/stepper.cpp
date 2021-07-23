@@ -114,7 +114,7 @@ void StepperMotor::ThreadTask() {
 	}
 
 	while (true) {
-		int targetPosition = getTargetPosition();
+		int targetPosition = efiRound(getTargetPosition(), 1);
 		int currentPosition = m_currentPosition;
 
 		// the stepper does not work if the main relay is turned off (it requires +12V)
@@ -155,12 +155,14 @@ int StepperMotor::getTargetPosition() const {
 void StepperMotor::setTargetPosition(int targetPosition) {
 	// we accept a new target position only if the motor is powered from the main relay
 	if (engine->isMainRelayEnabled()) {
-		m_targetPosition = targetPosition;
+		if (absF(m_targetPosition - targetPosition) > 1) {
+			m_targetPosition = targetPosition;
+		}
 	}
 }
 
 bool StepperMotor::isBusy() const {
-	return m_currentPosition != m_targetPosition;
+	return absF(m_currentPosition - getTargetPosition()) > 1;
 }
 
 void StepDirectionStepper::setDirection(bool isIncrementing) {
