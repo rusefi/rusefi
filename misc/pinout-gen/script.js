@@ -37,8 +37,14 @@ function addRow(table, pin, cid) {
   clone.querySelector(".pin-data").dataset.type = pin.type;
   if (pin.pdiv) {
     row.addEventListener('click', function(table, pin, cid) {
-      clickPin(table.parentElement.parentElement.parentElement.querySelector(".info-table tbody"), pin, cid);
-      table.parentElement.parentElement.parentElement.scrollIntoView()
+      var container;
+      for (var elem = table; elem && elem !== document; elem = elem.parentNode) {
+        if (elem.matches(".container")) {
+          var container = elem;
+        };
+      }
+      clickPin(container.querySelector(".info-table tbody"), pin, cid);
+      container.scrollIntoView()
     }.bind(null, table, pin, cid));
   }
   table.appendChild(clone);
