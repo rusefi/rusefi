@@ -489,6 +489,11 @@ enable2ndByteCanID = false
      requiresPowerCycle = binarySerialTxPin
      requiresPowerCycle = binarySerialRxPin
 
+    requiresPowerCycle = clutchUpPin
+    requiresPowerCycle = clutchUpPinMode
+    requiresPowerCycle = clutchDownPin
+    requiresPowerCycle = clutchDownPinMode
+
      requiresPowerCycle = etb_use_two_wires
      requiresPowerCycle = etbFreq
 
