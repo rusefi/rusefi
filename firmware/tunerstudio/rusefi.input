@@ -1811,7 +1811,7 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 		field = "Enabled",						isInjectionEnabled
 		field = "Mode",							injectionMode, {isInjectionEnabled == 1}
 		field = "#Batch injection with individual wiring"
-		field = "Two wire batch emulation",				twoWireBatchInjection, {isInjectionEnabled == 1 && injectionMode == 2}
+		field = "Individually wired Batch Fuel",				twoWireBatchInjection, {isInjectionEnabled == 1 && injectionMode == @@IM_IM_BATCH@@ }
 		field = "Override VE table load axis",			veOverrideMode, { isInjectionEnabled }
 		field = "Override AFR table load axis",			afrOverrideMode, { isInjectionEnabled }
 
@@ -1825,7 +1825,7 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 	dialog = ignitionBasic, ""
 		field = "Enabled",						isIgnitionEnabled
 		field = "Mode",							ignitionMode, {isIgnitionEnabled == 1}
-		field = "Two wire wasted",				twoWireBatchIgnition, {isIgnitionEnabled == 1 && ignitionMode == 2}
+		field = "Individually wired Wasted Spark",				twoWireBatchIgnition, {isIgnitionEnabled == 1 && ignitionMode == @@IM_IM_WASTED_SPARK @@ }
 		field = "Override ignition table load axis",	ignOverrideMode, {isIgnitionEnabled}
 		field = "#Use fixed timing while validating with a timing gun"
 		field = "Timing Mode",					timingMode, {isIgnitionEnabled == 1}
