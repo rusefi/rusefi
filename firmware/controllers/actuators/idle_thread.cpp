@@ -686,6 +686,25 @@ void startIdleThread(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 			DISPLAY_TEXT(Manual_idle_control);
 	/* DISPLAY_ENDIF */
 
+	startPedalPins(PASS_ENGINE_PARAMETER_SIGNATURE);
+
+#if ! EFI_UNIT_TEST
+
+	addConsoleAction("idleinfo", showIdleInfo);
+
+	addConsoleActionII("blipidle", blipIdle);
+
+	// split this whole file into manual controller and auto controller? move these commands into the file
+	// which would be dedicated to just auto-controller?
+
+	addConsoleAction("idlebench", startIdleBench);
+#endif /* EFI_UNIT_TEST */
+	applyPidSettings(PASS_ENGINE_PARAMETER_SIGNATURE);
+}
+
+#endif /* EFI_IDLE_CONTROL */
+
+void startPedalPins(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 #if EFI_PROD_CODE
 	// this is neutral/no gear switch input. on Miata it's wired both to clutch pedal and neutral in gearbox
 	// this switch is not used yet
@@ -709,19 +728,13 @@ void startIdleThread(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 				getInputMode(engineConfiguration->brakePedalPinMode));
 	}
 #endif /* EFI_PROD_CODE */
-
-#if ! EFI_UNIT_TEST
-
-	addConsoleAction("idleinfo", showIdleInfo);
-
-	addConsoleActionII("blipidle", blipIdle);
-
-	// split this whole file into manual controller and auto controller? move these commands into the file
-	// which would be dedicated to just auto-controller?
-
-	addConsoleAction("idlebench", startIdleBench);
-#endif /* EFI_UNIT_TEST */
-	applyPidSettings(PASS_ENGINE_PARAMETER_SIGNATURE);
 }
 
-#endif /* EFI_IDLE_CONTROL */
+void stopPedalPins(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+	brain_pin_markUsed(CONFIG(clutchUpPin), "clutch" PASS_ENGINE_PARAMETER_SIGNATURE);
+	brain_pin_markUsed(CONFIG(clutchDownPin), "clutch" PASS_ENGINE_PARAMETER_SIGNATURE);
+	brain_pin_markUsed(CONFIG(throttlePedalUpPin), "th_pedal" PASS_ENGINE_PARAMETER_SIGNATURE);
+	brain_pin_markUsed(CONFIG(brakePedalPin), "brake" PASS_ENGINE_PARAMETER_SIGNATURE);
+
+}
+
