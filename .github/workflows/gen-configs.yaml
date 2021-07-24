@@ -1,4 +1,4 @@
-name: Generate configs and live docs
+name: Configs & Live Docs
 
 on:
   push:
