@@ -1,4 +1,4 @@
-name: Build Simulator
+name: Simulator
 
 on: [push, pull_request]
 
