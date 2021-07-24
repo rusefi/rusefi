@@ -458,6 +458,8 @@ end_struct
 #define DBG_DBG_LOGIC_ANALYZER 45
 
 ! todo https://github.com/rusefi/rusefi/issues/2102
+#define IM_IM_WASTED_SPARK 2
+
 #define IM_IM_BATCH 2
 #define IM_IM_SINGLE_POINT 3
 
