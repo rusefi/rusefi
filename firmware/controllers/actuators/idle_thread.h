@@ -97,3 +97,6 @@ void onConfigurationChangeIdleCallback(engine_configuration_s *previousConfigura
 float getIdlePidOffset(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 Pid * getIdlePid(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 float getIdlePidMinValue(DECLARE_ENGINE_PARAMETER_SIGNATURE);
+void startPedalPins(DECLARE_ENGINE_PARAMETER_SIGNATURE);
+void stopPedalPins(DECLARE_ENGINE_PARAMETER_SIGNATURE);
+

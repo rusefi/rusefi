@@ -24,6 +24,8 @@ public class VariableRegistry  {
     private final TreeMap<String, String> data = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
     public static final VariableRegistry INSTANCE = new VariableRegistry();
 
+    // todo: smarter regex! See TsWriter.VAR which is a bit better but still not perfect
+    // todo: https://github.com/rusefi/rusefi/issues/3053 ?
     private final Pattern VAR = Pattern.compile("(@@(.*?)@@)");
 
     public Map<String, Integer> intValues = new HashMap<>();
@@ -86,9 +88,11 @@ public class VariableRegistry  {
             return null;
         Matcher m;
         while ((m = VAR.matcher(line)).find()) {
+            if (m.groupCount() < 2)
+                throw new IllegalStateException("Something broken in: [" + line + "]");
             String key = m.group(2);
             if (!data.containsKey(key))
-                throw new IllegalStateException("No such variable: " + key);
+                throw new IllegalStateException("No such variable: [" + key + "]");
             String s = data.get(key);
             line = m.replaceFirst(s);
         }

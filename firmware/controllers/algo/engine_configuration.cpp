@@ -589,7 +589,11 @@ static void setDefaultEngineConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 
 	engineConfiguration->idleRpmPid.minValue = 0;
 	engineConfiguration->idleRpmPid.maxValue = 99;
-	engineConfiguration->idlePidDeactivationTpsThreshold = 2;
+	/**
+	 * between variation between different sensor and weather and fabrication tolerance
+	 * five percent looks like a safer default
+	 */
+	engineConfiguration->idlePidDeactivationTpsThreshold = 5;
 
 	engineConfiguration->idle.solenoidFrequency = 200;
 	// set idle_position 50

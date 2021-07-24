@@ -957,7 +957,9 @@
 #define ignitionRpmBins_offset 17376
 #define ignitionTable_offset 16288
 #define ignOverrideMode_offset 2128
+#define IM_IM_BATCH 2
 #define IM_IM_SINGLE_POINT 3
+#define IM_IM_WASTED_SPARK 2
 #define INDICATOR_NAME_AC_SWITCH "AC switch"
 #define INDICATOR_NAME_BRAKE_DOWN "brake: down"
 #define INDICATOR_NAME_CLUTCH_DOWN "clutch: down"
@@ -1316,8 +1318,8 @@
 #define showHumanReadableWarning_offset 976
 #define showSdCardWarning_offset 76
 #define SIGNATURE_BOARD subaru_eg33_f7
-#define SIGNATURE_DATE 2021.07.23
-#define SIGNATURE_HASH 535563167
+#define SIGNATURE_DATE 2021.07.24
+#define SIGNATURE_HASH 882383225
 #define silentTriggerError_offset 1464
 #define slowAdcAlpha_offset 2088
 #define sparkDwellRpmBins_offset 332
@@ -1675,7 +1677,7 @@
 #define ts_show_spi true
 #define ts_show_trigger_comparator false
 #define ts_show_tunerstudio_port false
-#define TS_SIGNATURE "rusEFI 2021.07.23.subaru_eg33_f7.535563167"
+#define TS_SIGNATURE "rusEFI 2021.07.24.subaru_eg33_f7.882383225"
 #define TS_SINGLE_WRITE_COMMAND 'W'
 #define TS_SINGLE_WRITE_COMMAND_char W
 #define TS_TEST_COMMAND 't'
