@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on config/boards/subaru_eg33/config/gen_config.sh integration/rusefi_config.txt Sat Jul 24 14:51:20 UTC 2021
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on config/boards/subaru_eg33/config/gen_config.sh integration/rusefi_config.txt Sat Jul 24 17:27:40 UTC 2021
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -1283,7 +1283,7 @@ struct engine_configuration_s {
 	 */
 	output_pin_e fanPin;
 	/**
-	 * some cars have a switch to indicate that clutch pedal is all the way down
+	 * Some cars have a switch to indicate that clutch pedal is all the way down
 	 * offset 664
 	 */
 	switch_input_pin_e clutchDownPin;
@@ -4273,4 +4273,4 @@ struct persistent_config_s {
 };
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on config/boards/subaru_eg33/config/gen_config.sh integration/rusefi_config.txt Sat Jul 24 14:51:20 UTC 2021
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on config/boards/subaru_eg33/config/gen_config.sh integration/rusefi_config.txt Sat Jul 24 17:27:40 UTC 2021
