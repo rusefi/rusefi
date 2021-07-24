@@ -67,3 +67,54 @@ jobs:
       with:
         github_token: ${{ github.token }}
         branch: ${{ steps.extract_branch.outputs.branch }}
+
+
+    - name: Print Compiler version
+      # NOTE: on mac, this is actually symlink'd to clang, not gcc, but that's ok - we want to build on both
+      working-directory: .
+      run: gcc -v
+
+    - name: Build Tests
+      working-directory: ./unit_tests/
+      run: make -j4
+
+    - name: Run Tests
+      working-directory: ./unit_tests/
+      run: build/rusefi_test
+
+      # Commit changes and catch the error that occurs if nothing has been changed (without catching other errors)
+    - name: Commit fresh triggers.txt
+      if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/master' }}
+      env:
+        ACTIONS_ALLOW_UNSECURE_COMMANDS: 'true'
+      #
+      # we have minor drama - looks like unit_tests are invoked from root folder while a more natural is to invoke those
+      # from 'unit_tests' folder
+      # as a work-around to leverage unit_tests/.gitignore we move those files into expected folder for now
+      #
+      run: |
+        git config --local user.email "action@github.com"
+        git config --local user.name "GitHub build-unit-tests Action"
+        git status
+        git remote -v
+        echo See https://github.com/rusefi/rusefi/issues/2446
+        git pull https://github.com/rusefi/rusefi master
+        git add unit_tests/triggers.txt
+        git status
+        OUT=$(git commit -m "Trigger wheel definitions" unit_tests/triggers.txt 2>&1) || echo "commit failed, finding out why"
+        echo "$OUT"
+        if echo "$OUT" | grep -E 'nothing to commit|no changes added'; then
+          echo "::set-env name=NOCOMMIT::true"
+          exit 0
+        elif echo "$OUT" | grep 'changed'; then
+          exit 0
+        else
+          exit 1
+        fi
+
+    - name: Push fresh triggers.txt
+      if: ${{github.event_name == 'push' && github.ref == 'refs/heads/master' && env.NOCOMMIT != 'true' }}
+      uses: ad-m/github-push-action@master
+      with:
+        github_token: ${{ github.token }}
+        branch: master
