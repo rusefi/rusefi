@@ -29,6 +29,7 @@
 #include "console_io.h"
 #include "sensor_chart.h"
 #include "serial_hw.h"
+#include "idle_thread.h"
 
 #if EFI_PROD_CODE
 #include "mpu_util.h"
@@ -471,6 +472,8 @@ void initHardwareNoConfig(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 }
 
 void stopHardware(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+	stopPedalPins(PASS_ENGINE_PARAMETER_SIGNATURE);
+
 #if EFI_PROD_CODE && (BOARD_EXT_GPIOCHIPS > 0)
 	stopSmartCsPins();
 #endif /* (BOARD_EXT_GPIOCHIPS > 0) */
@@ -501,6 +504,8 @@ void startHardware(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 #endif /* HAL_USE_PAL && EFI_JOYSTICK */
 
 	startTriggerDebugPins(PASS_ENGINE_PARAMETER_SIGNATURE);
+
+	startPedalPins(PASS_ENGINE_PARAMETER_SIGNATURE);
 }
 
 void initHardware(DECLARE_ENGINE_PARAMETER_SIGNATURE) {

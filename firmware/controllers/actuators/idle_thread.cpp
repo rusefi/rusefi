@@ -686,8 +686,6 @@ void startIdleThread(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 			DISPLAY_TEXT(Manual_idle_control);
 	/* DISPLAY_ENDIF */
 
-	startPedalPins(PASS_ENGINE_PARAMETER_SIGNATURE);
-
 #if ! EFI_UNIT_TEST
 
 	addConsoleAction("idleinfo", showIdleInfo);
