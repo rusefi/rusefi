@@ -1,4 +1,4 @@
-name: Firmware Hardware CI
+name: Firmware HW CI
 
 on: [push, pull_request]
 
@@ -59,6 +59,9 @@ jobs:
     - name: Build Firmware
       working-directory: ./firmware
       run: make -j6 EXTRA_PARAMS="-DHARDWARE_CI" PROJECT_BOARD=${{matrix.board}}
+
+    - name: Check for STLINK
+      run: lsusb | grep STLINK
 
     - name: OpenOCD wipe & flash STM32
       working-directory: ./firmware
