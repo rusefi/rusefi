@@ -311,25 +311,7 @@ void applyNewHardwareSettings(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	stopHip9001_pins();
 #endif /* EFI_HIP_9011 */
 
-#if EFI_PROD_CODE && (BOARD_EXT_GPIOCHIPS > 0)
-	stopSmartCsPins();
-#endif /* (BOARD_EXT_GPIOCHIPS > 0) */
-
-#if EFI_VEHICLE_SPEED
-	stopVSSPins();
-#endif /* EFI_VEHICLE_SPEED */
-
-#if EFI_LOGIC_ANALYZER
-	stopLogicAnalyzerPins();
-#endif /* EFI_LOGIC_ANALYZER */
-
-#if EFI_EMULATE_POSITION_SENSORS
-	stopTriggerEmulatorPins();
-#endif /* EFI_EMULATE_POSITION_SENSORS */
-
-#if EFI_AUX_PID
-	stopVvtControlPins();
-#endif /* EFI_AUX_PID */
+	stopHardware(PASS_ENGINE_PARAMETER_SIGNATURE);
 
 	if (isConfigurationChanged(is_enabled_spi_1)) {
 		stopSpi(SPI_DEVICE_1);
@@ -486,6 +468,28 @@ void initHardwareNoConfig(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 #if EFI_FILE_LOGGING
 	initEarlyMmcCard();
 #endif // EFI_FILE_LOGGING
+}
+
+void stopHardware(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+#if EFI_PROD_CODE && (BOARD_EXT_GPIOCHIPS > 0)
+	stopSmartCsPins();
+#endif /* (BOARD_EXT_GPIOCHIPS > 0) */
+
+#if EFI_VEHICLE_SPEED
+	stopVSSPins();
+#endif /* EFI_VEHICLE_SPEED */
+
+#if EFI_LOGIC_ANALYZER
+	stopLogicAnalyzerPins();
+#endif /* EFI_LOGIC_ANALYZER */
+
+#if EFI_EMULATE_POSITION_SENSORS
+	stopTriggerEmulatorPins();
+#endif /* EFI_EMULATE_POSITION_SENSORS */
+
+#if EFI_AUX_PID
+	stopVvtControlPins();
+#endif /* EFI_AUX_PID */
 }
 
 /**
