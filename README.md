@@ -24,8 +24,11 @@ Important note - we now use submodules:
 
 # What do we have here?
  * [Firmware](/firmware) Source code for open source engine control unit for stm32 chips
- * [Hardware](/hardware) KiCAD files for all our PCBs
- * [rusEfi console](/java_console) rusEfi own naive tuning software
+ * [Hardware](/hardware) KiCAD files for our older 
+
+
+PCBs
+ * [rusEFI console](/java_console) rusEFI own naive tuning software
  * [Simulator](/simulator) win32 or posix version of firmware allows to explore without any hardware 
  * [Unit Tests](/unit_tests) Unit tests of firmware pieces
  * [Misc tools](/java_tools) Misc development utilities
