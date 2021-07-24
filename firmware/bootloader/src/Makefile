@@ -322,4 +322,6 @@ ULIBS = -lm --specs=nano.specs
 ##############################################################################
 
 include $(RULESFILE)
-include $(PROJECT_DIR)/rusefi_pch.mk
+
+# TODO: why does PCH not behave itself in bootloader?
+# include $(PROJECT_DIR)/rusefi_pch.mk
