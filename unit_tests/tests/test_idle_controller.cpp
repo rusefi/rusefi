@@ -292,15 +292,19 @@ TEST(idle_v2, openLoopRunningTaper) {
 	EXPECT_CALL(dut, getCrankingOpenLoop(30)).WillRepeatedly(Return(75));
 
 	// 0 cycles - no taper yet, pure cranking value
+	EXPECT_FLOAT_EQ(75, dut.getOpenLoop(ICP::Running, 30, 0, 0));
 	EXPECT_FLOAT_EQ(75, dut.getOpenLoop(ICP::CrankToRunTaper, 30, 0, 0));
 
 	// 1/2 taper - half way, 50% each value -> outputs 50
+	EXPECT_FLOAT_EQ(50, dut.getOpenLoop(ICP::Running, 30, 0, 0.5f));
 	EXPECT_FLOAT_EQ(50, dut.getOpenLoop(ICP::CrankToRunTaper, 30, 0, 0.5f));
 
 	// 1x taper - fully tapered, should be running value
+	EXPECT_FLOAT_EQ(25, dut.getOpenLoop(ICP::Running, 30, 0, 1.0f));
 	EXPECT_FLOAT_EQ(25, dut.getOpenLoop(ICP::CrankToRunTaper, 30, 0, 1.0f));
 
 	// 2x taper - still fully tapered, should be running value
+	EXPECT_FLOAT_EQ(25, dut.getOpenLoop(ICP::Running, 30, 0, 2.0f));
 	EXPECT_FLOAT_EQ(25, dut.getOpenLoop(ICP::CrankToRunTaper, 30, 0, 2.0f));
 }
 
