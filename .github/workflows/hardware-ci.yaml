@@ -61,7 +61,7 @@ jobs:
       run: make -j6 EXTRA_PARAMS="-DHARDWARE_CI" PROJECT_BOARD=${{matrix.board}}
 
     - name: Check for STLINK
-      run: lsusb | grep STLINK
+      run: lsusb | grep 'ST-LINK\|STLINK'
 
     - name: OpenOCD wipe & flash STM32
       working-directory: ./firmware
