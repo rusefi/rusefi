@@ -315,7 +315,7 @@ void Engine::updateSwitchInputs(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 #if EFI_GPIO_HARDWARE
 	// this value is not used yet
 	if (isBrainPinValid(CONFIG(clutchDownPin))) {
-		engine->clutchDownState = efiReadPin(CONFIG(clutchDownPin));
+		engine->clutchDownState = CONFIG(clutchDownPinInverted) ^ efiReadPin(CONFIG(clutchDownPin));
 	}
 	if (hasAcToggle(PASS_ENGINE_PARAMETER_SIGNATURE)) {
 		bool result = getAcToggle(PASS_ENGINE_PARAMETER_SIGNATURE);
@@ -326,7 +326,7 @@ void Engine::updateSwitchInputs(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 		engine->acSwitchState = result;
 	}
 	if (isBrainPinValid(CONFIG(clutchUpPin))) {
-		engine->clutchUpState = efiReadPin(CONFIG(clutchUpPin));
+		engine->clutchUpState = CONFIG(clutchUpPinInverted) ^ efiReadPin(CONFIG(clutchUpPin));
 	}
 	if (isBrainPinValid(CONFIG(throttlePedalUpPin))) {
 		engine->engineState.idle.throttlePedalUpState = efiReadPin(CONFIG(throttlePedalUpPin));
