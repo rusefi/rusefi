@@ -731,10 +731,8 @@ void startPedalPins(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 }
 
 void stopPedalPins(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
-	brain_pin_markUsed(CONFIG(clutchUpPin), "clutch" PASS_ENGINE_PARAMETER_SIGNATURE);
-	brain_pin_markUsed(CONFIG(clutchDownPin), "clutch" PASS_ENGINE_PARAMETER_SIGNATURE);
-	brain_pin_markUsed(CONFIG(throttlePedalUpPin), "th_pedal" PASS_ENGINE_PARAMETER_SIGNATURE);
-	brain_pin_markUsed(CONFIG(brakePedalPin), "brake" PASS_ENGINE_PARAMETER_SIGNATURE);
-
+	brain_pin_markUsed(activeConfiguration.clutchUpPin, "clutch" PASS_ENGINE_PARAMETER_SUFFIX);
+	brain_pin_markUsed(activeConfiguration.clutchDownPin, "clutch" PASS_ENGINE_PARAMETER_SUFFIX);
+	brain_pin_markUsed(activeConfiguration.throttlePedalUpPin, "th_pedal" PASS_ENGINE_PARAMETER_SUFFIX);
+	brain_pin_markUsed(activeConfiguration.brakePedalPin, "brake" PASS_ENGINE_PARAMETER_SUFFIX);
 }
-
