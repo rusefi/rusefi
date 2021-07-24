@@ -60,6 +60,9 @@ jobs:
       working-directory: ./firmware
       run: make -j6 EXTRA_PARAMS="-DHARDWARE_CI" PROJECT_BOARD=${{matrix.board}}
 
+    - name: Check for STLINK
+      run: lsusb | grep STLINK
+
     - name: OpenOCD wipe & flash STM32
       working-directory: ./firmware
       run: openocd -f "interface/stlink.cfg" -f "target/stm32f4x.cfg" -c init -c targets -c "reset halt" -c "flash erase_sector 0 0 11" -c "flash write_image "build/rusefi.bin" 0x08000000" -c "reset run" -c "shutdown"
