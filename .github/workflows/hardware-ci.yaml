@@ -1,4 +1,4 @@
-name: Firmware HW CI
+name: Firmware Hardware CI
 
 on: [push, pull_request]
 
