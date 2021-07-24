@@ -1,4 +1,4 @@
-name: rusEFI Android
+name: Android
 
 on: [push,pull_request]
 

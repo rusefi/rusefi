@@ -1,4 +1,4 @@
-name: rusEFI TS Plugin Body
+name: TS Plugin
 
 on: [push,pull_request]
 

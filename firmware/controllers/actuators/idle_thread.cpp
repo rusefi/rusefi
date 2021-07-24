@@ -285,21 +285,17 @@ float IdleController::getOpenLoop(Phase phase, float clt, SensorResult tps, floa
 		return cranking;
 	}
 
-	float running = getRunningOpenLoop(clt, tps);
-
-	if (phase == Phase::CrankToRunTaper) {
-		// Interpolate between cranking and running over a short time
-		// This clamps once you fall off the end, so no explicit check for >1 required
-		return interpolateClamped(0, cranking, 1, running, crankingTaperFraction);
-	}
-
 	// If coasting (and enabled), use the coasting position table instead of normal open loop
 	// TODO: this should be a table of open loop mult vs. RPM, not vs. clt
 	if (CONFIG(useIacTableForCoasting) && phase == Phase::Coasting) {
 		return interpolate2d(clt, CONFIG(iacCoastingBins), CONFIG(iacCoasting));
 	}
 
-	return running;
+	float running = getRunningOpenLoop(clt, tps);
+
+	// Interpolate between cranking and running over a short time
+	// This clamps once you fall off the end, so no explicit check for >1 required
+	return interpolateClamped(0, cranking, 1, running, crankingTaperFraction);
 }
 
 float IdleController::getIdleTimingAdjustment(int rpm) {
@@ -689,8 +685,6 @@ void startIdleThread(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	/* DISPLAY_ELSE */
 			DISPLAY_TEXT(Manual_idle_control);
 	/* DISPLAY_ENDIF */
-
-	startPedalPins(PASS_ENGINE_PARAMETER_SIGNATURE);
 
 #if ! EFI_UNIT_TEST
 
