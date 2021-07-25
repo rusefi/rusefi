@@ -3,6 +3,7 @@
 
 #include "engine_configuration.h"
 
+#include "test_signal_executor.h"
 #include "trigger_central.h"
 #include "map_resize.h"
 #include "engine_math.h"
