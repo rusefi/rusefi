@@ -8,5 +8,7 @@
 #include "tunerstudio_outputs.h"
 #include "engine_math.h"
 #include "pwm_generator_logic.h"
+#include "allsensors.h"
 #include "sensor.h"
 #include "error_handling.h"
+#include "settings.h"
