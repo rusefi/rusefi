@@ -647,7 +647,21 @@ enable2ndByteCanID = false
       yAxis       = 0, 2, 5
       xBins       = injector_battLagCorrBins, VBatt
       yBins       = injector_battLagCorr
-      
+
+	curve = vrThresholdCurve1, "VR 1 Threshold"
+	  columnLabel = "RPM", "Voltage"
+	  xAxis       = 0, 8000, 9
+	  yAxis       = 0, 2.5, 6
+	  xBins       = vrThreshold1_rpmBins, RPMValue
+	  yBins       = vrThreshold1_values
+
+	curve = vrThresholdCurve2, "VR 2 Threshold"
+	  columnLabel = "RPM", "Voltage"
+	  xAxis       = 0, 8000, 9
+	  yAxis       = 0, 2.5, 6
+	  xBins       = vrThreshold2_rpmBins, RPMValue
+	  yBins       = vrThreshold2_values
+
    curve = mafDecodingCurve, "MAF sensor"
       columnLabel = "Voltage", "kg/hour"
       xAxis       =  -1, 6, 10
@@ -1604,6 +1618,7 @@ menuDialog = main
 		subMenu = parkingLot,				"Experimental/Broken"
 		subMenu = rotaryDialog, 			"Rotary"
 		subMenu = mc33Dialog,			"GDI Dreams"
+		subMenu = vrThreshold,				"VR Sensor Threshold"
 		subMenu = std_separator
 		
 		subMenu = hipFunction,				"HIP9011 settings (knock sensor) (alpha version)" @@if_ts_show_hip9011
@@ -3647,6 +3662,18 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
        help = helpGeneral, "rusEFI General Help"
         webHelp = @@MAIN_HELP_URL@@
         text = "<img src='https://rusefi.com/style/logo_100.gif'>"
+
+	dialog = vrThreshold1, "VR 1 Threshold"
+		field = "Pin", vrThreshold1_pin
+		panel = vrThresholdCurve1
+
+	dialog = vrThreshold2, "VR 2 Threshold"
+		field = "Pin", vrThreshold2_pin
+		panel = vrThresholdCurve2
+
+	dialog = vrThreshold
+		panel = vrThreshold1
+		panel = vrThreshold2
 
 	dialog = gppwm1left, ""
 		field = "Pin", gppwm1_pin
