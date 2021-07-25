@@ -36,6 +36,7 @@
 #include "boost_control.h"
 #include "fan_control.h"
 #include "ac_control.h"
+#include "vr_pwm.h"
 #if EFI_MC33816
  #include "mc33816.h"
 #endif // EFI_MC33816
@@ -224,6 +225,8 @@ void Engine::periodicSlowCallback(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	watchdog();
 	updateSlowSensors(PASS_ENGINE_PARAMETER_SIGNATURE);
 	checkShutdown(PASS_ENGINE_PARAMETER_SIGNATURE);
+
+	updateVrPwm(PASS_ENGINE_PARAMETER_SIGNATURE);
 
 #if EFI_FSIO
 	runFsio(PASS_ENGINE_PARAMETER_SIGNATURE);
