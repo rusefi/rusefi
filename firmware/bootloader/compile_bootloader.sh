@@ -9,7 +9,6 @@ echo "Entering $SCRIPT_NAME"
 BOOTLOADER_CODE_DESTINATION_FILE=$BOOTLOADER_CODE_DESTINATION_PATH/bootloader_generated.hxx
 
 echo "$SCRIPT_NAME: Starting bootloader compilation..."
-make -f src/Makefile clean
 make -j$(nproc) -f src/Makefile $1 $2 $3
 
 # downstream scripts detect error condition by checking if the output file exists so we need to make sure we remove it
