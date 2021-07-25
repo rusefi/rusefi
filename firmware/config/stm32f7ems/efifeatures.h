@@ -10,9 +10,9 @@
  * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
-#pragma once
-
 #include "../stm32f4ems/efifeatures.h"
+
+#pragma once
 
 #undef EFI_POTENTIOMETER
 #define EFI_POTENTIOMETER FALSE
@@ -36,9 +36,10 @@
 #undef EFI_USE_UART_DMA
 #define EFI_USE_UART_DMA FALSE
 
-// Disable hardware serial ports on F7 for now
-#define TS_NO_PRIMARY
-#define TS_NO_SECONDARY
+#undef TS_PRIMARY_UART
+#undef TS_SECONDARY_UART
+#undef TS_PRIMARY_SERIAL
+#undef TS_SECONDARY_SERIAL
 
 #define AUX_SERIAL_DEVICE (&SD6)
 

@@ -1,6 +1,6 @@
-#pragma once
-
 #include "../stm32f7ems/efifeatures.h"
+
+#pragma once
 
 #undef EFI_MAP_AVERAGING
 #define EFI_MAP_AVERAGING FALSE
