@@ -11,6 +11,18 @@
 #include "tunerstudio_io.h"
 #include "connector_uart_dma.h"
 
+#if (!defined(TS_NO_PRIMARY) && (defined(TS_PRIMARY_UART) || defined(TS_PRIMARY_SERIAL)))
+	#define HAS_PRIMARY true
+#else
+	#define HAS_PRIMARY false
+#endif
+
+#if (!defined(TS_NO_SECONDARY) && (defined(TS_SECONDARY_UART) || defined(TS_SECONDARY_SERIAL)))
+	#define HAS_SECONDARY true
+#else
+	#define HAS_SECONDARY false
+#endif
+
 #if HAS_PRIMARY
 	#ifdef TS_PRIMARY_UART
 		#if EFI_USE_UART_DMA
