@@ -15,7 +15,7 @@ void setDefaultCranking(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 
 	// IAC
 	engineConfiguration->crankingIACposition = 50;
-	engineConfiguration->afterCrankingIACtaperDuration = 35;
+	engineConfiguration->afterCrankingIACtaperDuration = 200;
 
 	// After start enrichment
 #if !EFI_UNIT_TEST
