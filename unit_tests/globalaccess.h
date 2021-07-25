@@ -9,3 +9,6 @@
 
 #include "global.h"
 #include "engine_ptr.h"
+
+#define CONFIG(x) engineConfiguration->x
+#define ENGINE(x) engine->x

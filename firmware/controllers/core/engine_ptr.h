@@ -60,10 +60,6 @@ struct persistent_config_s;
 			persistent_config_s *config = engine->config; \
 			(void)engineConfiguration; \
 			(void)config;
-
-	#define CONFIG(x) engineConfiguration->x
-	#define ENGINE(x) engine->x
-
 #else // EFI_UNIT_TEST
 
 	// These are the non-unit-test (AKA real firmware) noop versions
