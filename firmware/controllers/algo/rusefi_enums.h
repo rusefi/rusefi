@@ -630,7 +630,7 @@ typedef enum {
 	 * in this mode we use as many coils as we have cylinders
 	 */
 	IM_INDIVIDUAL_COILS = 1,
-	IM_WASTED_SPARK = 2,
+	IM_WASTED_SPARK = IM_IM_WASTED_SPARK,
 
 	/**
 	 * some v12 engines line BMW M70 and M73 run two distributors, one for each bank of cylinders
@@ -658,7 +658,7 @@ typedef enum {
 	 * todo: we might want to implement one additional mode where each pair of injectors is floating twice per engine cycle.
 	 * todo: this could reduce phase offset from injection to stroke but would not work great for large injectors
 	 */
-	IM_BATCH = 2,
+	IM_BATCH = IM_IM_BATCH,
 	/**
 	 * only one injector located in throttle body
 	 */

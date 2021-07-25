@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on config/boards/subaru_eg33/config/gen_config.sh integration/rusefi_config.txt Thu Jul 22 04:19:44 UTC 2021
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on config/boards/subaru_eg33/config/gen_config.sh integration/rusefi_config.txt Sat Jul 24 23:24:36 UTC 2021
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -1283,7 +1283,7 @@ struct engine_configuration_s {
 	 */
 	output_pin_e fanPin;
 	/**
-	 * some cars have a switch to indicate that clutch pedal is all the way down
+	 * Some cars have a switch to indicate that clutch pedal is all the way down
 	 * offset 664
 	 */
 	switch_input_pin_e clutchDownPin;
@@ -1881,10 +1881,10 @@ struct engine_configuration_s {
 	uint8_t multisparkMaxExtraSparkCount;
 	/**
 	offset 976 bit 0 */
-	bool todoClutchUpPinInverted : 1;
+	bool clutchUpPinInverted : 1;
 	/**
 	offset 976 bit 1 */
-	bool todoClutchDownPinInverted : 1;
+	bool clutchDownPinInverted : 1;
 	/**
 	 * If enabled we use two H-bridges to drive stepper idle air valve
 	offset 976 bit 2 */
@@ -2446,11 +2446,10 @@ struct engine_configuration_s {
 	 */
 	int16_t primeInjFalloffTemperature;
 	/**
-	 * At what trigger index should some ignition-related math be executed? This is a performance trick to reduce load on synchronization trigger callback.
 	index
 	 * offset 1488
 	 */
-	int ignMathCalculateAtIndex;
+	int unused1488;
 	/**
 	 * offset 1492
 	 */
@@ -4274,4 +4273,4 @@ struct persistent_config_s {
 };
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on config/boards/subaru_eg33/config/gen_config.sh integration/rusefi_config.txt Thu Jul 22 04:19:44 UTC 2021
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on config/boards/subaru_eg33/config/gen_config.sh integration/rusefi_config.txt Sat Jul 24 23:24:36 UTC 2021

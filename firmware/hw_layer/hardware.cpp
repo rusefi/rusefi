@@ -29,6 +29,7 @@
 #include "console_io.h"
 #include "sensor_chart.h"
 #include "serial_hw.h"
+#include "idle_thread.h"
 
 #if EFI_PROD_CODE
 #include "mpu_util.h"
@@ -155,40 +156,35 @@ static int adcCallbackCounter = 0;
 static volatile int averagedSamples[ADC_MAX_CHANNELS_COUNT];
 static adcsample_t avgBuf[ADC_MAX_CHANNELS_COUNT];
 
-void adc_callback_fast_internal(ADCDriver *adcp);
+void onFastAdcCompleteInternal(adcsample_t* samples);
 
-void adc_callback_fast(ADCDriver *adcp) {
-	adcsample_t *buffer = adcp->samples;
-	//size_t n = adcp->depth;
-
-	if (adcp->state == ADC_COMPLETE) {
+void onFastAdcComplete(adcsample_t* samples) {
 #if HAL_TRIGGER_USE_ADC
-		// we need to call this ASAP, because trigger processing is time-critical
-		if (triggerSampleIndex >= 0)
-			triggerAdcCallback(buffer[triggerSampleIndex]);
+	// we need to call this ASAP, because trigger processing is time-critical
+	if (triggerSampleIndex >= 0)
+		triggerAdcCallback(samples[triggerSampleIndex]);
 #endif /* HAL_TRIGGER_USE_ADC */
 
-		// store the values for averaging
+	// store the values for averaging
+	for (int i = fastAdc.size() - 1; i >= 0; i--) {
+		averagedSamples[i] += samples[i];
+	}
+
+	// if it's time to process the data
+	if (++adcCallbackCounter >= ADC_BUF_NUM_AVG) {
+		// get an average
 		for (int i = fastAdc.size() - 1; i >= 0; i--) {
-			averagedSamples[i] += fastAdc.samples[i];
+			avgBuf[i] = (adcsample_t)(averagedSamples[i] / ADC_BUF_NUM_AVG);	// todo: rounding?
 		}
 
-		// if it's time to process the data
-		if (++adcCallbackCounter >= ADC_BUF_NUM_AVG) {
-			// get an average
-			for (int i = fastAdc.size() - 1; i >= 0; i--) {
-				avgBuf[i] = (adcsample_t)(averagedSamples[i] / ADC_BUF_NUM_AVG);	// todo: rounding?
-			}
+		// call the real callback (see below)
+		onFastAdcCompleteInternal(samples);
 
-			// call the real callback (see below)
-			adc_callback_fast_internal(adcp);
-
-			// reset the avg buffer & counter
-			for (int i = fastAdc.size() - 1; i >= 0; i--) {
-				averagedSamples[i] = 0;
-			}
-			adcCallbackCounter = 0;
+		// reset the avg buffer & counter
+		for (int i = fastAdc.size() - 1; i >= 0; i--) {
+			averagedSamples[i] = 0;
 		}
+		adcCallbackCounter = 0;
 	}
 }
 
@@ -198,48 +194,35 @@ void adc_callback_fast(ADCDriver *adcp) {
  * This method is not in the adc* lower-level file because it is more business logic then hardware.
  */
 #if EFI_FASTER_UNIFORM_ADC
-void adc_callback_fast_internal(ADCDriver *adcp) {
+void onFastAdcCompleteInternal(adcsample_t* buffer) {
 #else
-void adc_callback_fast(ADCDriver *adcp) {
+void onFastAdcComplete(adcsample_t* buffer) {
 #endif
-	adcsample_t *buffer = adcp->samples;
-	size_t n = adcp->depth;
-	(void) buffer;
-	(void) n;
-
 	ScopePerf perf(PE::AdcCallbackFast);
 
 	/**
-	 * Note, only in the ADC_COMPLETE state because the ADC driver fires an
-	 * intermediate callback when the buffer is half full.
-	 * */
-	if (adcp->state == ADC_COMPLETE) {
-		ScopePerf perf(PE::AdcCallbackFastComplete);
-
-		/**
-		 * this callback is executed 10 000 times a second, it needs to be as fast as possible
-		 */
-		efiAssertVoid(CUSTOM_ERR_6676, getCurrentRemainingStack() > 128, "lowstck#9b");
+	 * this callback is executed 10 000 times a second, it needs to be as fast as possible
+	 */
+	efiAssertVoid(CUSTOM_ERR_6676, getCurrentRemainingStack() > 128, "lowstck#9b");
 
 #if EFI_SENSOR_CHART && EFI_SHAFT_POSITION_INPUT
-		if (ENGINE(sensorChartMode) == SC_AUX_FAST1) {
-			float voltage = getAdcValue("fAux1", engineConfiguration->auxFastSensor1_adcChannel);
-			scAddData(getCrankshaftAngleNt(getTimeNowNt() PASS_ENGINE_PARAMETER_SUFFIX), voltage);
-		}
+	if (ENGINE(sensorChartMode) == SC_AUX_FAST1) {
+		float voltage = getAdcValue("fAux1", engineConfiguration->auxFastSensor1_adcChannel);
+		scAddData(getCrankshaftAngleNt(getTimeNowNt() PASS_ENGINE_PARAMETER_SUFFIX), voltage);
+	}
 #endif /* EFI_SENSOR_CHART */
 
 #if EFI_MAP_AVERAGING
-		mapAveragingAdcCallback(buffer[fastMapSampleIndex]);
+	mapAveragingAdcCallback(buffer[fastMapSampleIndex]);
 #endif /* EFI_MAP_AVERAGING */
 #if EFI_HIP_9011
-		if (CONFIG(isHip9011Enabled)) {
-			hipAdcCallback(buffer[hipSampleIndex]);
-		}
+	if (CONFIG(isHip9011Enabled)) {
+		hipAdcCallback(buffer[hipSampleIndex]);
+	}
 #endif /* EFI_HIP_9011 */
 //		if (tpsSampleIndex != TPS_IS_SLOW) {
 //			tpsFastAdc = buffer[tpsSampleIndex];
 //		}
-	}
 }
 #endif /* HAL_USE_ADC */
 
@@ -329,25 +312,7 @@ void applyNewHardwareSettings(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	stopHip9001_pins();
 #endif /* EFI_HIP_9011 */
 
-#if EFI_PROD_CODE && (BOARD_EXT_GPIOCHIPS > 0)
-	stopSmartCsPins();
-#endif /* (BOARD_EXT_GPIOCHIPS > 0) */
-
-#if EFI_VEHICLE_SPEED
-	stopVSSPins();
-#endif /* EFI_VEHICLE_SPEED */
-
-#if EFI_LOGIC_ANALYZER
-	stopLogicAnalyzerPins();
-#endif /* EFI_LOGIC_ANALYZER */
-
-#if EFI_EMULATE_POSITION_SENSORS
-	stopTriggerEmulatorPins();
-#endif /* EFI_EMULATE_POSITION_SENSORS */
-
-#if EFI_AUX_PID
-	stopVvtControlPins();
-#endif /* EFI_AUX_PID */
+	stopHardware(PASS_ENGINE_PARAMETER_SIGNATURE);
 
 	if (isConfigurationChanged(is_enabled_spi_1)) {
 		stopSpi(SPI_DEVICE_1);
@@ -506,6 +471,30 @@ void initHardwareNoConfig(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 #endif // EFI_FILE_LOGGING
 }
 
+void stopHardware(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+	stopPedalPins(PASS_ENGINE_PARAMETER_SIGNATURE);
+
+#if EFI_PROD_CODE && (BOARD_EXT_GPIOCHIPS > 0)
+	stopSmartCsPins();
+#endif /* (BOARD_EXT_GPIOCHIPS > 0) */
+
+#if EFI_VEHICLE_SPEED
+	stopVSSPins();
+#endif /* EFI_VEHICLE_SPEED */
+
+#if EFI_LOGIC_ANALYZER
+	stopLogicAnalyzerPins();
+#endif /* EFI_LOGIC_ANALYZER */
+
+#if EFI_EMULATE_POSITION_SENSORS
+	stopTriggerEmulatorPins();
+#endif /* EFI_EMULATE_POSITION_SENSORS */
+
+#if EFI_AUX_PID
+	stopVvtControlPins();
+#endif /* EFI_AUX_PID */
+}
+
 /**
  * This method is invoked both on ECU start and configuration change
  */
@@ -515,6 +504,8 @@ void startHardware(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 #endif /* HAL_USE_PAL && EFI_JOYSTICK */
 
 	startTriggerDebugPins(PASS_ENGINE_PARAMETER_SIGNATURE);
+
+	startPedalPins(PASS_ENGINE_PARAMETER_SIGNATURE);
 }
 
 void initHardware(DECLARE_ENGINE_PARAMETER_SIGNATURE) {

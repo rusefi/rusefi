@@ -45,7 +45,7 @@ enum class PE : uint8_t {
 	GetSpeedDensityFuel,
 	WallFuelAdjust,
 	MapAveragingTriggerCallback,
-	AdcCallbackFastComplete,
+	Unused1,
 	SingleTimerExecutorScheduleByTimestamp,
 	GetTimeNowUs,
 	EventQueueExecuteCallback,

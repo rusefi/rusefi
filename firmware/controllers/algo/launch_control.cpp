@@ -50,14 +50,7 @@ bool LaunchControlBase::isInsideSwitchCondition() const {
 
 	case CLUTCH_INPUT_LAUNCH:
 		if (isBrainPinValid(CONFIG(clutchDownPin))) {
-			engine->clutchDownState = efiReadPin(CONFIG(clutchDownPin));
-			
-			if (CONFIG(clutchDownPinMode) == PI_PULLDOWN)
-			{
-				return !engine->clutchDownState;
-			} else {
-				return engine->clutchDownState;
-			}
+			return engine->clutchDownState;
 		} else {
 			return false;
 		}

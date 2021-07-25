@@ -10,6 +10,7 @@
 #include "global.h"
 
 void startHardware(DECLARE_ENGINE_PARAMETER_SIGNATURE);
+void stopHardware(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 
 #if HAL_USE_SPI
 
