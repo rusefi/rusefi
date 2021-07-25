@@ -1,4 +1,7 @@
-#include "pch.h"
+#include "pwm_generator_logic.h"
+#include "interpolation.h"
+#include "rpm_calculator.h"
+#include "engine.h"
 
 #include "vr_pwm.h"
 
@@ -25,24 +28,24 @@ static void updateVrPwm(int rpm, size_t index DECLARE_ENGINE_PARAMETER_SUFFIX) {
 void updateVrPwm(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	auto rpm = GET_RPM();
 
-	for (size_t i = 0; i < efi::size(CONFIG(vrPwm)); i++) {
+	for (size_t i = 0; i < efi::size(CONFIG(vrThreshold)); i++) {
 		updateVrPwm(rpm, i PASS_CONFIG_PARAMETER_SUFFIX);
 	}
 }
 
 void initVrPwm(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
-	for (size_t i = 0; i < efi::size(CONFIG(vrPwm)); i++) {
-		auto& cfg = CONFIG(vrThreshold);
+	for (size_t i = 0; i < efi::size(CONFIG(vrThreshold)); i++) {
+		auto& cfg = CONFIG(vrThreshold)[i];
 
 		if (cfg.pin == GPIO_UNASSIGNED) {
 			continue;
 		}
 
 		startSimplePwmHard(&pwms[i], "VR PWM",
-			engine->executor,
+			&engine->executor,
 			cfg.pin,
 			&pins[i],
-			10000,
+			10000,	// it's guaranteed to be hardware PWM, the faster the PWM, the less noise makes it through
 			0
 		);
 	}

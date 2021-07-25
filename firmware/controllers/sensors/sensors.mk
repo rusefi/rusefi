@@ -18,4 +18,5 @@ CONTROLLERS_SENSORS_SRC_CPP = 	$(PROJECT_DIR)/controllers/sensors/thermistors.cp
 	$(PROJECT_DIR)/controllers/sensors/Lps25Sensor.cpp \
 	$(PROJECT_DIR)/controllers/sensors/converters/linear_func.cpp \
 	$(PROJECT_DIR)/controllers/sensors/converters/resistance_func.cpp \
-	$(PROJECT_DIR)/controllers/sensors/converters/thermistor_func.cpp
+	$(PROJECT_DIR)/controllers/sensors/converters/thermistor_func.cpp \
+	$(PROJECT_DIR)/controllers/sensors/vr_pwm.cpp
