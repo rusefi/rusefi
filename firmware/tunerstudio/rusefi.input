@@ -489,11 +489,6 @@ enable2ndByteCanID = false
      requiresPowerCycle = binarySerialTxPin
      requiresPowerCycle = binarySerialRxPin
 
-    requiresPowerCycle = clutchUpPin
-    requiresPowerCycle = clutchUpPinMode
-    requiresPowerCycle = clutchDownPin
-    requiresPowerCycle = clutchDownPinMode
-
      requiresPowerCycle = etb_use_two_wires
      requiresPowerCycle = etbFreq
 
@@ -2199,9 +2194,12 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 ;			Sensor Inputs
 	dialog = otherSensorInputs,					"Other Sensor Inputs"
 		field = "Clutch down switch",					clutchDownPin
-		field = "Clutch down inverted",					clutchDownPinMode
+		field = "Clutch down inverted",					clutchDownPinInverted
+		field = "Clutch down mode",						clutchDownPinMode
+		
 		field = "Clutch up switch",						clutchUpPin
-		field = "Clutch up inverted",					clutchUpPinMode
+		field = "Clutch up inverted",					clutchUpPinInverted					
+		field = "Clutch up mode",						clutchUpPinMode
 		field = "Throttle Up switch",					throttlePedalUpPin
 		field = "Brake pedal switch",					brakePedalPin
 		field = "Flex fuel sensor",					flexSensorPin
