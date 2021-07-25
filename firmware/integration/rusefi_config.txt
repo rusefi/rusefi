@@ -1071,13 +1071,13 @@ custom maf_sensor_type_e 4 bits, S32, @OFFSET@, [0:1], @@maf_sensor_type_e_enum@
     float[CAM_INPUTS_COUNT iterate] vvtOffsets;+Angle between cam sensor and VVT zero position\nset vvt_offset X;"value", 1, 0, -720, 1000, 1
     float[CAM_INPUTS_COUNT_padding] vvtOffsetsPadding;;
 
-struct vr_pwm_s
+struct vr_threshold_s
 	brain_pin_e pin;
 	uint8_t[6] rpmBins;;"rpm", {1/@@RPM_1_BYTE_PACKING_MULT@@}, 0, 0, 12000, 0
 	uint8_t[6] values;;"volts", 0.01, 0, 0, 2.5, 2
 end_struct
 
-	vr_pwm_s[2 iterate] vrPwm;
+	vr_threshold_s[2 iterate] vrThreshold;
 
 	int[45] unusedAtOldBoardConfigurationEnd;;"units", 1, 0, -20, 100, 0
 	uint16_t vehicleWeight;;"kg", 1, 0, 0, 10000, 0

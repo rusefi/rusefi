@@ -6,7 +6,7 @@ static OutputPin pins[2];
 static SimplePwm pwms[2];
 
 static void updateVrPwm(int rpm, size_t index DECLARE_ENGINE_PARAMETER_SUFFIX) {
-	auto& cfg = CONFIG(vrPwm)[index];
+	auto& cfg = CONFIG(vrThreshold)[index];
 
 	if (cfg.pin == GPIO_UNASSIGNED) {
 		return;
@@ -32,7 +32,7 @@ void updateVrPwm(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 
 void initVrPwm(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	for (size_t i = 0; i < efi::size(CONFIG(vrPwm)); i++) {
-		auto& cfg = CONFIG(vrPwm);
+		auto& cfg = CONFIG(vrThreshold);
 
 		if (cfg.pin == GPIO_UNASSIGNED) {
 			continue;
