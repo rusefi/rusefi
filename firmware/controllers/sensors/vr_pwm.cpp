@@ -15,12 +15,11 @@ static void updateVrPwm(int rpm, size_t index DECLARE_ENGINE_PARAMETER_SUFFIX) {
 		return;
 	}
 
-	float thresholdVoltage = interpolate2d(rpm * 0.02f, cfg.rpmBins, cfg.values) * 100.0f;
+	float thresholdVoltage = interpolate2d(rpm * 0.02f, cfg.rpmBins, cfg.values) / 100.0f;
 
-	// 0v   threshold voltage = 3.3v output from mcu
-	// 2.5v threshold voltage = 0v   output from mcu
-	float mcuVoltage = interpolateClamped(0, 3.3f, 2.5f, 0, thresholdVoltage);
-	float duty = mcuVoltage / 3.3f;
+	// 0v   threshold voltage = 3.3v output from mcu = 100% duty
+	// 2.5v threshold voltage = 0v   output from mcu = 0% duty
+	float duty = interpolateClamped(0, 1, 2.5f, 0, thresholdVoltage);
 
 	pwms[index].setSimplePwmDutyCycle(duty);
 }
