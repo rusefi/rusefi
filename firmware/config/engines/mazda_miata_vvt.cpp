@@ -296,7 +296,8 @@ static void setMazdaMiataEngineNB2Defaults(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	engineConfiguration->fuelReferencePressure = 400; // 400 kPa, 58 psi
 	engineConfiguration->injectorCompensationMode = ICM_FixedRailPressure;
 
-	engineConfiguration->crankingIACposition = 90;
+	engineConfiguration->crankingIACposition = 60;
+	engineConfiguration->afterCrankingIACtaperDuration = 250;
 
 	CONFIG(isAlternatorControlEnabled) = true;
 	// enable altdebug
