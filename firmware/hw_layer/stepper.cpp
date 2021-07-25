@@ -27,6 +27,12 @@ void StepperMotorBase::setTargetPosition(float targetPositionSteps) {
 	}
 }
 
+void StepperMotorBase::initialize(StepperHw *hardware, int totalSteps) {
+	m_totalSteps = maxI(3, totalSteps);
+
+	m_hw = hardware;
+}
+
 // todo: EFI_STEPPER macro
 #if EFI_PROD_CODE || EFI_SIMULATOR
 
@@ -126,18 +132,18 @@ void StepperMotorBase::doIteration() {
 	// the stepper does not work if the main relay is turned off (it requires +12V)
 	if (!engine->isMainRelayEnabled()) {
 		m_hw->pause();
-		continue;
+		return;
 	}
 
 	if (!initialPositionSet) {
 		setInitialPosition();
-		continue;
+		return;
 	}
 
 	if (targetPosition == currentPosition) {
 		m_hw->pause();
 		m_isBusy = false;
-		continue;
+		return;
 	}
 
 	m_isBusy = true;
@@ -199,10 +205,8 @@ bool StepDirectionStepper::step(bool positive) {
 	return pulse();
 }
 
-void StepperMotorBase::initialize(StepperHw *hardware, int totalSteps) {
-	m_totalSteps = maxI(3, totalSteps);
-
-	m_hw = hardware;
+void StepperMotor::initialize(StepperHw *hardware, int totalSteps) {
+	StepperMotorBase::initialize(hardware, totalSteps);
 
 	Start();
 }

@@ -57,7 +57,7 @@ private:
 
 class StepperMotorBase {
 public:
-	void initialize(StepperHw *hardware, int totalSteps);
+	virtual void initialize(StepperHw* hardware, int totalSteps);
 	void doIteration();
 
 	void setTargetPosition(float targetPositionSteps);
@@ -87,7 +87,9 @@ protected:
 #if !EFI_UNIT_TEST
 class StepperMotor final : public StepperMotorBase, private ThreadController<UTILITY_THREAD_STACK_SIZE> {
 public:
-	StepperMotor::StepperMotor() : ThreadController("stepper", PRIO_STEPPER) {}
+	StepperMotor() : ThreadController("stepper", PRIO_STEPPER) {}
+
+	void initialize(StepperHw* hardware, int totalSteps);
 
 	void ThreadTask() override {
 		// Require hardware to be set
@@ -99,5 +101,5 @@ public:
 			doIteration();
 		}
 	}
-}
+};
 #endif
