@@ -67,7 +67,7 @@ TEST(InjectorModel, nonlinearPolynomial) {
 	InjectorModel dut;
 	INJECT_ENGINE_REFERENCE(&dut);
 
-	CONFIG(applyNonlinearBelowPulse) = 10;
+	CONFIG(applyNonlinearBelowPulse) = MS2US(10);
 
 	for (int i = 0; i < 8; i++) {
 		CONFIG(injectorCorrectionPolynomial)[i] = i + 1;
