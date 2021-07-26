@@ -5,25 +5,21 @@
  * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
+#include "pch.h"
+
 #include <string.h>
 
 #include "cyclic_buffer.h"
-#include "global.h"
 #include "histogram.h"
 
 #include "malfunction_central.h"
 #include "cli_registry.h"
-#include "unit_test_framework.h"
-#include "engine_controller.h"
 
 #include "nmea.h"
 #include "mmc_card.h"
 #include "lcd_menu_tree.h"
 #include "crc.h"
 #include "fl_stack.h"
-#include "io_pins.h"
-#include "efi_gpio.h"
-#include "efilib.h"
 #include "peak_detect.h"
 
 #include "gtest/gtest.h"

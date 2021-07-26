@@ -24,10 +24,9 @@
  *
  */
 
-#include "global.h"
+#include "pch.h"
 #include "status_loop.h"
 #include "hip9011_logic.h"
-#include "engine_controller.h"
 
 #include "adc_inputs.h"
 #if EFI_LOGIC_ANALYZER
@@ -35,10 +34,7 @@
 #endif /* EFI_LOGIC_ANALYZER */
 
 #include "trigger_central.h"
-#include "allsensors.h"
 #include "sensor_reader.h"
-#include "io_pins.h"
-#include "efi_gpio.h"
 #include "mmc_card.h"
 #include "console_io.h"
 #include "malfunction_central.h"
@@ -48,15 +44,11 @@
 #include "tunerstudio.h"
 #include "fuel_math.h"
 #include "main_trigger_callback.h"
-#include "engine_math.h"
 #include "spark_logic.h"
 #include "idle_thread.h"
-#include "engine_configuration.h"
 #include "os_util.h"
 #include "svnversion.h"
-#include "engine.h"
 #include "lcd_controller.h"
-#include "settings.h"
 #include "can_hw.h"
 #include "periodic_thread_controller.h"
 #include "cdm_ion_sense.h"

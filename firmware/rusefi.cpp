@@ -106,12 +106,10 @@
  *
  */
 
-#include "global.h"
+#include "pch.h"
 #include "os_access.h"
 #include "trigger_structure.h"
 #include "hardware.h"
-#include "engine_controller.h"
-#include "efi_gpio.h"
 
 #include "rfi_perftest.h"
 #include "rusefi.h"
@@ -119,9 +117,7 @@
 
 #include "eficonsole.h"
 #include "status_loop.h"
-#include "pin_repository.h"
 #include "custom_engine.h"
-#include "engine_math.h"
 #include "mpu_util.h"
 #include "tunerstudio.h"
 #include "mmc_card.h"
