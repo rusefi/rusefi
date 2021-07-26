@@ -457,6 +457,8 @@ end_struct
 ! todo https://github.com/rusefi/rusefi/issues/2102
 #define DBG_DBG_LOGIC_ANALYZER 45
 
+#define ETB_ETB_None 0
+
 ! todo https://github.com/rusefi/rusefi/issues/2102
 #define IM_IM_WASTED_SPARK 2
 
