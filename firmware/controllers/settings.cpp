@@ -14,14 +14,12 @@
 #include "adc_inputs.h"
 #include "thermistors.h"
 #include "adc_inputs.h"
-#include "map.h"
 #include "trigger_decoder.h"
 #include "console_io.h"
 #include "idle_thread.h"
 #include "allsensors.h"
 #include "alternator_controller.h"
 #include "trigger_emulator_algo.h"
-#include "sensor.h"
 
 #if EFI_PROD_CODE
 #include "vehicle_speed.h"

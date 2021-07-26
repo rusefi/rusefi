@@ -2,9 +2,10 @@
  * @file init_sensorss.cpp
  */
 
+#include "pch.h"
+
 #include "init.h"
 #include "cli_registry.h"
-#include "sensor.h"
 
 static void initSensorCli();
 

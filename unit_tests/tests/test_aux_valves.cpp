@@ -5,9 +5,9 @@
  * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
-#include "engine_test_helper.h"
+#include "pch.h"
+
 #include "aux_valves.h"
-#include "sensor.h"
 
 TEST(misc, testAuxValves) {
 	Sensor::setMockValue(SensorType::DriverThrottleIntent, 0);
