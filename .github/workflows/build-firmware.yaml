@@ -15,7 +15,7 @@ jobs:
         #
         # see also gen_config where we have a similar list for all boards!
         #
-        build-target: [hellen72, hellenNA6, hellen128, hellen121vag, hellen121nissan, cypress, frankenso_na6, kinetis, mre_f4, mre_f4_recovery, mre_f4_hardware_QC_special_build, mre_f7, prometheus_405, prometheus_469, proteus_f4, proteus_f4_hardware_QC_special_build, proteus_f7, proteus_f7_hardware_QC_special_build, proteus_h7, proteus_legacy, stm32f767_nucleo, stm32h743_nucleo, subaru_eg33_f7]
+        build-target: [hellen72, hellenNA6, hellen128, hellen121vag, hellen121nissan, cypress, frankenso_na6, kinetis, mre_f4, mre_f4_recovery, mre_f4_hardware_QC_special_build, mre_f7, prometheus_405, prometheus_469, proteus_f4, proteus_f4_hardware_QC_special_build, proteus_f7, proteus_f7_hardware_QC_special_build, proteus_h7, proteus_legacy, stm32f767_nucleo, stm32h743_nucleo, subaru_eg33_f7, atlas]
         
         include:
           # Board configurations
@@ -114,6 +114,10 @@ jobs:
           - build-target: subaru_eg33_f7
             folder: subaru_eg33
             ini-file: rusefi_subaru_eg33_f7.ini
+
+          - build-target: atlas
+            folder: atlas
+            ini-file: rusefi_atlas.ini
 
     steps:
     - uses: actions/checkout@v1
