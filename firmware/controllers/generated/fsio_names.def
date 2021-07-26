@@ -1,4 +1,4 @@
-// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Mon Jul 26 01:46:16 UTC 2021
+// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Mon Jul 26 16:25:25 UTC 2021
 
 // by class com.rusefi.output.FileFsioSettingsConsumer
 static LENameOrdinalPair leacIdleExtraOffset(FSIO_SETTING_ACIDLEEXTRAOFFSET, "cfg_acIdleExtraOffset");
