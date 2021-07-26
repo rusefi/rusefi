@@ -32,7 +32,6 @@
 #if EFI_IDLE_CONTROL
 #include "idle_thread.h"
 #include "idle_hardware.h"
-#include "engine_math.h"
 
 #include "periodic_task.h"
 #include "vehicle_speed.h"

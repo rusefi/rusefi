@@ -15,7 +15,6 @@
 #include "eficonsole.h"
 
 #include "flash_int.h"
-#include "engine_math.h"
 
 #if EFI_TUNER_STUDIO
 #include "tunerstudio.h"
