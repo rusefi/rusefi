@@ -72,14 +72,11 @@
  * If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "global.h"
+#include "pch.h"
 
 #if EFI_ELECTRONIC_THROTTLE_BODY
 
 #include "electronic_throttle_impl.h"
-#include "engine.h"
-#include "tps.h"
-#include "sensor.h"
 #include "dc_motor.h"
 #include "dc_motors.h"
 #include "pid_auto_tune.h"

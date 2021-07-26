@@ -21,7 +21,8 @@
  * If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "global.h"
+#include "pch.h"
+
 #include "os_access.h"
 
 #if EFI_PRINTF_FUEL_DETAILS
@@ -31,27 +32,16 @@
 #if EFI_ENGINE_CONTROL && EFI_SHAFT_POSITION_INPUT
 
 #include "main_trigger_callback.h"
-#include "efi_gpio.h"
-#include "engine_math.h"
 #include "trigger_central.h"
 #include "spark_logic.h"
-#include "rpm_calculator.h"
-#include "engine_configuration.h"
-#include "interpolation.h"
 #include "advance_map.h"
-#include "allsensors.h"
 #include "cyclic_buffer.h"
 #include "fuel_math.h"
 #include "cdm_ion_sense.h"
-#include "engine_controller.h"
-#include "efi_gpio.h"
 #include "tooth_logger.h"
 #include "os_util.h"
 #include "local_version_holder.h"
 #include "event_queue.h"
-#include "engine.h"
-#include "perf_trace.h"
-#include "sensor.h"
 #include "injector_model.h"
 #if EFI_LAUNCH_CONTROL
 #include "launch_control.h"

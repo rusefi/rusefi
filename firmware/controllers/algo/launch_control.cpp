@@ -5,21 +5,13 @@
  *      Author: Ola Ruud
  */
 
-#include "engine.h"
+#include "pch.h"
 
 #if EFI_LAUNCH_CONTROL
 #include "boost_control.h"
 #include "vehicle_speed.h"
 #include "launch_control.h"
-#include "io_pins.h"
-#include "engine_configuration.h"
-#include "engine_controller.h"
 #include "periodic_task.h"
-#include "pin_repository.h"
-#include "allsensors.h"
-#include "sensor.h"
-#include "engine_math.h"
-#include "efi_gpio.h"
 #include "advance_map.h"
 #include "engine_state.h"
 #include "advance_map.h"
@@ -27,11 +19,6 @@
 static bool isInit = false;
 
 LaunchControlBase launchInstance;
-
-#if EFI_TUNER_STUDIO
-#include "tunerstudio_outputs.h"
-extern TunerStudioOutputChannels tsOutputChannels;
-#endif /* EFI_TUNER_STUDIO */
 
 static int retardThresholdRpm;
 

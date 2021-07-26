@@ -20,19 +20,17 @@
  * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
-#include "global.h"
+#include "pch.h"
+
 #include "os_access.h"
 #include "single_timer_executor.h"
 #include "efitime.h"
-#include "perf_trace.h"
 
 #if EFI_SIGNAL_EXECUTOR_ONE_TIMER
 
 #include "microsecond_timer.h"
-#include "tunerstudio_outputs.h"
 #include "os_util.h"
 
-#include "engine.h"
 uint32_t hwSetTimerDuration;
 
 void globalTimerCallback() {
