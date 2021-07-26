@@ -1,6 +1,6 @@
+#include "pch.h"
+
 #include "defaults.h"
-#include "engine_configuration.h"
-#include "engine_math.h"
 #include "table_helper.h"
 
 static void setDefaultMultisparkParameters(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
