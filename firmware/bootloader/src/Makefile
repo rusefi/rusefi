@@ -39,7 +39,7 @@ endif
 # C++ specific options here (added to USE_OPT).
 ifeq ($(USE_CPPOPT),)
   # constexpr float expf_taylor_impl probably needs just c++14 but why not go with 17?
-  USE_CPPOPT = -std=c++17 -Wno-register -fno-rtti -fno-exceptions -fno-use-cxa-atexit -Werror=write-strings -Werror=type-limits
+  USE_CPPOPT = -std=c++17 -Wno-register -fno-rtti -fno-exceptions -fno-use-cxa-atexit -Werror=write-strings -Werror=type-limits -Winvalid-pch
 endif
 
 # Enable this if you want the linker to remove unused code and data
@@ -116,6 +116,10 @@ endif
 # Define project name here
 PROJECT = bootloader
 PROJECT_DIR = ..
+
+# Configure precompiled header
+PCH_DIR = $(PROJECT_DIR)/pch
+PCHSRC = $(PCH_DIR)/pch.h
 
 # Imported source files and paths
 CHIBIOS = $(PROJECT_DIR)/ChibiOS
@@ -209,6 +213,7 @@ TCPPSRC =
 ASMXSRC = $(STARTUPASM) $(PORTASM) $(OSALASM)
 
 INCDIR = $(ALLINC) \
+	$(PCH_DIR) \
 	.. \
 	$(CHIBIOS)/os/various \
 	$(CHIBIOS)/os/ex/ST \
@@ -317,3 +322,4 @@ ULIBS = -lm --specs=nano.specs
 ##############################################################################
 
 include $(RULESFILE)
+include $(PROJECT_DIR)/rusefi_pch.mk
