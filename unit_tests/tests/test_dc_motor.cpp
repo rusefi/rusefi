@@ -1,6 +1,6 @@
-#include "dc_motor.h"
+#include "pch.h"
 
-#include "mocks.h"
+#include "dc_motor.h"
 
 using ::testing::InSequence;
 using ::testing::NiceMock;

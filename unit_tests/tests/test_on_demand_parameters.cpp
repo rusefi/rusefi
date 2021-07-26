@@ -5,7 +5,7 @@
  * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
-#include "unit_test_framework.h"
+#include "pch.h"
 #include "test_parameters.h"
 
 TestParameters* TestParameters::put(string key, float value) {

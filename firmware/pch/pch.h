@@ -13,7 +13,6 @@
 #include "rusefi_generated.h"
 #include "engine_ptr.h"
 #include "error_handling.h"
-#include "efilib.h"
 #include "global.h"
 #include "efi_gpio.h"
 #include "tunerstudio_outputs.h"
@@ -32,6 +31,6 @@
 #if EFI_UNIT_TEST
 #include <gtest/gtest.h>
 #include <gmock/gmock.h>
-#include "engine_test_helper.h"
 #include "mocks.h"
+#include "engine_test_helper.h"
 #endif
