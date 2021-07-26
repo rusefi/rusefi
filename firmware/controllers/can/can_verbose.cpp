@@ -6,16 +6,12 @@
  * @author Matthew Kennedy, (c) 2020
  */
 
-#include "globalaccess.h"
+#include "pch.h"
 #if EFI_CAN_SUPPORT
-
-#include "engine.h"
 
 #include "scaled_channel.h"
 #include "can_msg_tx.h"
-#include "sensor.h"
 #include "can.h"
-#include "allsensors.h"
 #include "fuel_math.h"
 #include "spark_logic.h"
 #include "vehicle_speed.h"

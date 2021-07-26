@@ -5,9 +5,8 @@
  * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
-#include "engine.h"
+#include "pch.h"
 #include "os_access.h"
-#include "perf_trace.h"
 
 static critical_msg_t warningBuffer;
 static critical_msg_t criticalErrorMessageBuffer;

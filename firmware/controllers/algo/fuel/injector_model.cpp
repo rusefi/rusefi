@@ -1,6 +1,6 @@
+#include "pch.h"
+
 #include "injector_model.h"
-#include "tunerstudio_outputs.h"
-#include "map.h"
 
 void InjectorModelBase::prepare() {
 	m_massFlowRate = getInjectorMassFlowRate();

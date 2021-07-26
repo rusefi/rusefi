@@ -7,15 +7,12 @@
  * @author Matthew Kennedy, (c) 2020
  */
 
-#include "globalaccess.h"
-#if EFI_CAN_SUPPORT
+#include "pch.h"
 
-#include "engine.h"
+#if EFI_CAN_SUPPORT
 #include "can_dash.h"
 #include "can_msg_tx.h"
 
-#include "sensor.h"
-#include "allsensors.h"
 #include "vehicle_speed.h"
 #include "rtc_helper.h"
 #include "fuel_math.h"

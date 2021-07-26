@@ -21,16 +21,9 @@
  * @author Matthew Kennedy
  */
 
-#include "global.h"
-#include "engine.h"
+#include "pch.h"
 #include "trigger_central.h"
 #include "accel_enrichment.h"
-#include "allsensors.h"
-#include "engine_math.h"
-#include "perf_trace.h"
-#if EFI_TUNER_STUDIO
-#include "tunerstudio_outputs.h"
-#endif /* EFI_TUNER_STUDIO */
 
 static tps_tps_Map3D_t tpsTpsMap;
 

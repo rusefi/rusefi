@@ -6,18 +6,10 @@
  * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
-#include "global.h"
-#include "engine.h"
-#include "efi_gpio.h"
+#include "pch.h"
+
 #include "os_access.h"
 #include "drivers/gpio/gpio_ext.h"
-#include "perf_trace.h"
-#include "engine_controller.h"
-
-#if EFI_GPIO_HARDWARE
-#include "pin_repository.h"
-#include "io_pins.h"
-#endif /* EFI_GPIO_HARDWARE */
 
 #if EFI_ELECTRONIC_THROTTLE_BODY
 #include "electronic_throttle.h"

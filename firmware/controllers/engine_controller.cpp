@@ -21,22 +21,18 @@
  * If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "global.h"
+#include "pch.h"
+
 #include "os_access.h"
 #include "trigger_central.h"
-#include "engine_controller.h"
 #include "fsio_core.h"
 #include "fsio_impl.h"
 #include "idle_thread.h"
 #include "advance_map.h"
-#include "rpm_calculator.h"
 #include "main_trigger_callback.h"
-#include "io_pins.h"
 #include "flash_main.h"
 #include "bench_test.h"
 #include "os_util.h"
-#include "engine_math.h"
-#include "allsensors.h"
 #include "electronic_throttle.h"
 #include "map_averaging.h"
 #include "high_pressure_fuel_pump.h"
@@ -46,12 +42,10 @@
 #include "local_version_holder.h"
 #include "alternator_controller.h"
 #include "fuel_math.h"
-#include "settings.h"
 #include "spark_logic.h"
 #include "aux_valves.h"
 #include "accelerometer.h"
 #include "vvt.h"
-#include "perf_trace.h"
 #include "boost_control.h"
 #include "launch_control.h"
 #include "tachometer.h"
@@ -89,12 +83,10 @@
 #endif /* EFI_UNIT_TEST */
 
 #include "adc_inputs.h"
-#include "pwm_generator_logic.h"
 
 #if EFI_PROD_CODE
 #include "pwm_tester.h"
 #include "lcd_controller.h"
-#include "pin_repository.h"
 #endif /* EFI_PROD_CODE */
 
 #if EFI_CJ125

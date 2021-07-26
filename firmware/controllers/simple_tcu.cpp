@@ -1,7 +1,6 @@
+#include "pch.h"
+
 #include "simple_tcu.h"
-#include "efi_gpio.h"
-#include "tunerstudio_outputs.h"
-#include "engine_configuration.h"
 
 void SimpleTransmissionController::init() {
     for (size_t i = 0; i < efi::size(CONFIG(tcu_solenoid)); i++) {

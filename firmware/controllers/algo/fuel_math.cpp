@@ -21,7 +21,8 @@
  *
  */
 
-#include "global.h"
+#include "pch.h"
+
 #include "airmass.h"
 #include "alphan_airmass.h"
 #include "maf_airmass.h"
@@ -29,14 +30,7 @@
 #include "fuel_math.h"
 #include "fuel_computer.h"
 #include "injector_model.h"
-#include "interpolation.h"
-#include "engine_configuration.h"
-#include "allsensors.h"
-#include "engine_math.h"
-#include "rpm_calculator.h"
 #include "speed_density.h"
-#include "perf_trace.h"
-#include "sensor.h"
 #include "speed_density_base.h"
 #include "lua_hooks.h"
 
