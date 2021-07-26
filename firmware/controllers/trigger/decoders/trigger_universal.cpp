@@ -5,8 +5,9 @@
  * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
+#include "pch.h"
+
 #include "trigger_universal.h"
-#include "error_handling.h"
 
 /**
  * @see getCycleDuration

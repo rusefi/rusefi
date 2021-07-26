@@ -22,8 +22,6 @@
 #include "fl_stack.h"
 #include "peak_detect.h"
 
-#include "gtest/gtest.h"
-
 TEST(util, negativeZero) {
 	ASSERT_TRUE(IS_NEGATIVE_ZERO(-0.0));
 

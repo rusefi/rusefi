@@ -18,8 +18,9 @@
  * If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include "pch.h"
+
 #include "trigger_mazda.h"
-#include "error_handling.h"
 
 #define NB_CRANK_MAGIC 70
 
