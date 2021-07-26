@@ -1,3 +1,9 @@
+July, 25 2021 status
+* we now have five or six Hellen boards too many of these untested
+* Matt is helping Hellen-Mercedes and H7 progress
+* AndreyB is testing Hellen-Nissan and working on VVT code
+* AndreiKA is focusing on Hellen81 and H7
+
 Feb 9, 2021 status
 * AndreiKA is focusing on Hellen-One
 * AndreyB is focusing on quad VVT
