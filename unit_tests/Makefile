@@ -62,7 +62,9 @@ CPPSRC += $(ALLCPPSRC) \
 	$(PROJECT_DIR)/console/binary/tooth_logger.cpp \
 	$(PROJECT_DIR)/console/binary_log/log_field.cpp \
 
-INCDIR += $(UNIT_TESTS_DIR) \
+INCDIR += \
+	$(PCH_DIR) \
+	$(UNIT_TESTS_DIR) \
 	$(ALLINC) \
 	$(UTIL_INC) \
 	$(PROJECT_DIR)/config/engines \
