@@ -83,12 +83,10 @@
 #endif /* EFI_UNIT_TEST */
 
 #include "adc_inputs.h"
-#include "pwm_generator_logic.h"
 
 #if EFI_PROD_CODE
 #include "pwm_tester.h"
 #include "lcd_controller.h"
-#include "pin_repository.h"
 #endif /* EFI_PROD_CODE */
 
 #if EFI_CJ125

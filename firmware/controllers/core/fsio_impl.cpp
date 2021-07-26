@@ -172,9 +172,6 @@ FsioResult getEngineValue(le_action_e action DECLARE_ENGINE_PARAMETER_SUFFIX) {
 
 #if EFI_PROD_CODE
 
-#include "pin_repository.h"
-#include "pwm_generator_logic.h"
-
 static void setFsioAnalogInputPin(const char *indexStr, const char *pinName) {
 // todo: reduce code duplication between all "set pin methods"
 	int index = atoi(indexStr) - 1;

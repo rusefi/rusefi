@@ -8,7 +8,6 @@
 #include "fuel_math.h"
 #include "airmass.h"
 #include "lua_airmass.h"
-#include "pwm_generator_logic.h"
 #include "can_msg_tx.h"
 
 // Some functions lean on existing FSIO implementation
