@@ -5,14 +5,14 @@
  * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
+#include "pch.h"
+
 #include "vehicle_speed.h"
 
 #if EFI_VEHICLE_SPEED
 
-#include "engine.h"
 #include "digital_input_icu.h"
 #include "digital_input_exti.h"
-#include "pin_repository.h"
 #include "can_vss.h"
 
 static efitick_t lastSignalTimeNt = 0;

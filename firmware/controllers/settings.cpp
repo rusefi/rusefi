@@ -11,13 +11,9 @@
 #if !EFI_UNIT_TEST
 #include "os_access.h"
 #include "eficonsole.h"
-#include "adc_inputs.h"
-#include "thermistors.h"
-#include "adc_inputs.h"
 #include "trigger_decoder.h"
 #include "console_io.h"
 #include "idle_thread.h"
-#include "allsensors.h"
 #include "alternator_controller.h"
 #include "trigger_emulator_algo.h"
 

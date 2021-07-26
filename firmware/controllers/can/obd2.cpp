@@ -30,7 +30,6 @@
 #include "can_msg_tx.h"
 #include "vehicle_speed.h"
 #include "fuel_math.h"
-#include "thermistors.h"
 
 static const int16_t supportedPids0120[] = { 
 	PID_MONITOR_STATUS,

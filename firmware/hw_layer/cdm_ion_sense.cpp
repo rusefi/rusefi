@@ -9,8 +9,9 @@
  * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
+#include "pch.h"
+
 #include "cdm_ion_sense.h"
-#include "engine.h"
 
 CdmState::CdmState() {
 	accumilatingAtRevolution = 0;

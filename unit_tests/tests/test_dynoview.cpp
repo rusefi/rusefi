@@ -1,10 +1,7 @@
-#include "engine_test_helper.h"
-#include "engine_controller.h"
+#include "pch.h"
+
 #include "dynoview.h"
 #include "vehicle_speed.h"
-
-#include <gtest/gtest.h>
-
 
 void printResults(DynoView *dut) {
 #ifdef DBG_TESTS    

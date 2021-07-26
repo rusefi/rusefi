@@ -9,7 +9,6 @@
 
 #pragma once
 
-#include "global.h"
 #include "cyclic_buffer.h"
 #include "table_helper.h"
 #include "wall_fuel_generated.h"

@@ -5,7 +5,7 @@
  * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
-#include "engine_test_helper.h"
+#include "pch.h"
 
 static void postFourEvents(EngineTestHelper *eth, float mult) {
 	eth->fireFall(mult * 394);

@@ -30,7 +30,7 @@
  *
  */
 
-#include "globalaccess.h"
+#include "pch.h"
 
 #if ! EFI_UNIT_TEST
 #include "os_access.h"

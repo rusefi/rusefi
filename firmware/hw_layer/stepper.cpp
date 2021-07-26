@@ -12,7 +12,6 @@
 // todo: EFI_STEPPER macro
 #if EFI_PROD_CODE || EFI_SIMULATOR
 #include "stepper.h"
-#include "adc_inputs.h"
 #include "thread_priority.h"
 
 void StepperMotor::saveStepperPos(int pos) {

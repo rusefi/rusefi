@@ -1,7 +1,5 @@
-#include "engine.h"
+#include "pch.h"
 #include "Lps25Sensor.h"
-
-#include "rusefi_hw_enums.h"
 
 static Lps25 device;
 static Lps25Sensor sensor(device);

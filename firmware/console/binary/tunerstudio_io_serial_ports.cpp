@@ -4,6 +4,8 @@
  * @date Mar 26, 2021
  */
 
+#include "error_handling.h"
+#include "tunerstudio_outputs.h"
 #include "engine.h"
 
 #if EFI_PROD_CODE || EFI_SIMULATOR

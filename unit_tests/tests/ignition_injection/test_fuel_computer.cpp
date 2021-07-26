@@ -1,11 +1,8 @@
-#include "engine_test_helper.h"
+#include "pch.h"
 
 // sneaky...
 #define protected public
 #include "fuel_computer.h"
-#include "mocks.h"
-
-#include "gtest/gtest.h"
 
 using ::testing::FloatEq;
 

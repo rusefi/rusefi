@@ -8,9 +8,7 @@
  * Use it when you need to mount *something* but don't have an SD card available.
  */
 
-#include "hal.h"
-
-#include "global.h"
+#include "pch.h"
 
 #include <cstring>
 

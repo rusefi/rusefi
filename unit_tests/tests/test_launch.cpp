@@ -1,9 +1,7 @@
-#include "engine_test_helper.h"
-#include "engine_controller.h"
+#include "pch.h"
+
 #include "launch_control.h"
 #include "vehicle_speed.h"
-
-#include <gtest/gtest.h>
 
 TEST(LaunchControl, TpsCondition) {
 	WITH_ENGINE_TEST_HELPER(TEST_ENGINE);

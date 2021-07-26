@@ -6,13 +6,11 @@
  * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
-#include "global.h"
-
+#include "pch.h"
 
 #include "os_access.h"
 #include "trigger_input.h"
 #include "servo.h"
-#include "adc_inputs.h"
 #include "can_hw.h"
 #include "hardware.h"
 #include "rtc_helper.h"
@@ -44,14 +42,11 @@
 #include "histogram.h"
 #include "gps_uart.h"
 #include "HD44780.h"
-#include "settings.h"
 #include "joystick.h"
 #include "cdm_ion_sense.h"
 #include "trigger_central.h"
 #include "svnversion.h"
-#include "engine_configuration.h"
 #include "vvt.h"
-#include "perf_trace.h"
 #include "trigger_emulator_algo.h"
 #include "boost_control.h"
 #include "software_knock.h"

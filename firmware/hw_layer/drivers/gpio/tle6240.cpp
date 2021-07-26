@@ -20,10 +20,9 @@
  * @author Andrey Gusakov, (c) 2019
  */
 
-#include "global.h"
+#include "pch.h"
 #include "gpio/gpio_ext.h"
 #include "gpio/tle6240.h"
-#include "pin_repository.h"
 #include "os_util.h"
 #include "thread_priority.h"
 

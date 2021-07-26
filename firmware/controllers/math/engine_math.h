@@ -7,11 +7,7 @@
 
 #pragma once
 
-#include "engine_configuration.h"
-
 #include "trigger_structure.h"
-#include "table_helper.h"
-#include "engine.h"
 
 void setAlgorithm(engine_load_mode_e algo DECLARE_CONFIG_PARAMETER_SUFFIX);
 

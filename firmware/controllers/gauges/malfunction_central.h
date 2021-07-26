@@ -8,7 +8,6 @@
 
 #pragma once
 
-#include "global.h"
 #include "obd_error_codes.h"
 
 #define MAX_ERROR_CODES_COUNT 10

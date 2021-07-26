@@ -34,7 +34,8 @@
  * If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "engine.h"
+#include "pch.h"
+
 #include "console_io.h"
 #include "os_util.h"
 #include "tunerstudio.h"

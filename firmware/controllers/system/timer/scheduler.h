@@ -6,8 +6,6 @@
  */
 #pragma once
 
-#include "global.h"
-
 typedef void (*schfunc_t)(void *);
 
 class action_s {

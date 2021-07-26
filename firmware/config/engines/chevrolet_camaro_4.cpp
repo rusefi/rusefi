@@ -8,8 +8,9 @@
  * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
+#include "pch.h"
+
 #include "chevrolet_camaro_4.h"
-#include "engine_math.h"
 #include "custom_engine.h"
 
 void setCamaro4(DECLARE_CONFIG_PARAMETER_SIGNATURE) {

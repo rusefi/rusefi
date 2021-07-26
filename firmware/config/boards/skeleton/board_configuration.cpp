@@ -27,12 +27,8 @@
  * Future: Clean up the distinction between these functions.
  */
 
-#include "global.h"
-#include "engine.h"
-#include "engine_math.h"
-#include "allsensors.h"
+#include "pch.h"
 #include "fsio_impl.h"
-#include "engine_configuration.h"
 
 // An example of how to configure complex features on the board.
 // Generally these should be local (static) functions, one function per chip.

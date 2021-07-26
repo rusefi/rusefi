@@ -6,9 +6,7 @@
  * @author Matthew Kennedy, (c) 2019
  */
 
-#include "engine_configuration.h"
-#include "engine_math.h"
-#include "allsensors.h"
+#include "pch.h"
 #include "fsio_impl.h"
 
 static const brain_pin_e injPins[] = {

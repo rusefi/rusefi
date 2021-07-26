@@ -24,15 +24,14 @@
  * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
-#include "digital_input_icu.h"
+#include "pch.h"
 
-#include "fl_stack.h"
+#include "digital_input_icu.h"
 
 #if EFI_ICU_INPUTS && HAL_USE_ICU
 
 #include "mpu_util.h"
 #include "eficonsole.h"
-#include "pin_repository.h"
 
 static void icuWidthCallback(ICUDriver *driver);
 static void icuPeriordCallBack(ICUDriver *driver);

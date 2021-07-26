@@ -8,6 +8,8 @@
  * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
+#include "pch.h"
+
 #include "malfunction_central.h"
 
 static error_codes_set_s error_codes_set;

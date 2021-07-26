@@ -1,6 +1,6 @@
-#include "engine_test_helper.h"
+#include "pch.h"
+
 #include "vvt.h"
-#include "mocks.h"
 
 using ::testing::StrictMock;
 using ::testing::Return;

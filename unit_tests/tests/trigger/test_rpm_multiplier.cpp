@@ -7,7 +7,7 @@
  * @author Andrey Belomutskiy, (c) 2012-2021
  */
 
-#include "engine_test_helper.h"
+#include "pch.h"
 
 static void runRpmTest(operation_mode_e mode, int expected) {
 	WITH_ENGINE_TEST_HELPER(TEST_ENGINE);

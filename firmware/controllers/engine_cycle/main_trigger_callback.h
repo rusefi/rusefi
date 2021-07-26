@@ -9,8 +9,6 @@
 
 #pragma once
 
-#include "engine.h"
-
 #include "event_registry.h"
 
 void initMainEventListener(DECLARE_ENGINE_PARAMETER_SIGNATURE);

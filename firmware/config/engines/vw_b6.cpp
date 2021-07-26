@@ -5,11 +5,11 @@
  * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
-#include "engine.h"
+#include "pch.h"
+
 #include "vw_b6.h"
 #include "custom_engine.h"
 #include "table_helper.h"
-#include "map.h"
 
 /**
  * set engine_type 62

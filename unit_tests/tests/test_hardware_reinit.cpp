@@ -1,6 +1,4 @@
-
-
-#include "engine_test_helper.h"
+#include "pch.h"
 
 TEST(hardware, reinit) {
 	WITH_ENGINE_TEST_HELPER(MIATA_NA6_MAP);

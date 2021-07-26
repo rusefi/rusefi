@@ -9,8 +9,6 @@
 
 #pragma once
 
-#include "engine.h"
-
 void initIdleHardware(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 bool isIdleHardwareRestartNeeded();
 bool isIdleMotorBusy(DECLARE_ENGINE_PARAMETER_SIGNATURE);

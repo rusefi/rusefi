@@ -5,7 +5,8 @@
  * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
-#include "engine_test_helper.h"
+#include "pch.h"
+
 extern WarningCodeState unitTestWarningCodeState;
 
 #include "engine_sniffer.h"

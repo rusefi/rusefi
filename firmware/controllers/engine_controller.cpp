@@ -82,8 +82,6 @@
 #include "init.h"
 #endif /* EFI_UNIT_TEST */
 
-#include "adc_inputs.h"
-
 #if EFI_PROD_CODE
 #include "pwm_tester.h"
 #include "lcd_controller.h"
