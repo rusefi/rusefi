@@ -1,5 +1,6 @@
+#include "pch.h"
+
 #include "defaults.h"
-#include "engine_configuration.h"
 #include "table_helper.h"
 
 void setDefaultCranking(DECLARE_CONFIG_PARAMETER_SIGNATURE) {

@@ -7,20 +7,15 @@
 
 // todo: move this code to more proper locations
 
-#include "engine.h"
+#include "pch.h"
 #include "thermistors.h"
 #include "speed_density.h"
-#include "allsensors.h"
 #include "fuel_math.h"
-#include "engine_math.h"
 #include "advance_map.h"
 #include "aux_valves.h"
-#include "perf_trace.h"
 #include "closed_loop_fuel.h"
-#include "sensor.h"
 #include "launch_control.h"
 #include "injector_model.h"
-
 
 #if EFI_PROD_CODE
 #include "svnversion.h"

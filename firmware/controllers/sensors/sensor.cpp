@@ -1,6 +1,5 @@
-#include "global.h"
-#include "sensor.h"
-#include "efilib.h"
+#include "pch.h"
+
 #include "loggingcentral.h"
 
 static const char* const s_sensorNames[] = {

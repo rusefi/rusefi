@@ -7,23 +7,13 @@
  * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
-#include "global.h"
-
-#if EFI_TUNER_STUDIO
-#include "tunerstudio_outputs.h"
-#endif /* EFI_TUNER_STUDIO */
+#include "pch.h"
 
 #if EFI_ALTERNATOR_CONTROL
-#include "engine.h"
-#include "rpm_calculator.h"
 #include "alternator_controller.h"
 #include "pid.h"
 #include "local_version_holder.h"
 #include "periodic_task.h"
-
-#include "pwm_generator_logic.h"
-#include "pin_repository.h"
-
 
 #if defined(HAS_OS_ACCESS)
 #error "Unexpected OS ACCESS HERE"

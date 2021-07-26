@@ -1,6 +1,6 @@
+#include "pch.h"
+
 #include "limp_manager.h"
-#include "engine.h"
-#include "efilib.h"
 
 void LimpManager::updateState(int rpm, efitick_t nowNt) {
 	Clearable allowFuel = CONFIG(isInjectionEnabled);

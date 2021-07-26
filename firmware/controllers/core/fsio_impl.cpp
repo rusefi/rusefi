@@ -11,10 +11,9 @@
  * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
-#include "global.h"
+#include "pch.h"
+
 #include "fsio_impl.h"
-#include "allsensors.h"
-#include "sensor.h"
 
 #if EFI_PROD_CODE
 
@@ -25,10 +24,6 @@
 #if EFI_FSIO
 
 #include "os_access.h"
-#include "settings.h"
-#include "rpm_calculator.h"
-#include "efi_gpio.h"
-#include "pwm_generator_logic.h"
 
 /**
  * in case of zero frequency pin is operating as simple on/off. '1' for ON and '0' for OFF
@@ -176,9 +171,6 @@ FsioResult getEngineValue(le_action_e action DECLARE_ENGINE_PARAMETER_SUFFIX) {
 
 
 #if EFI_PROD_CODE
-
-#include "pin_repository.h"
-#include "pwm_generator_logic.h"
 
 static void setFsioAnalogInputPin(const char *indexStr, const char *pinName) {
 // todo: reduce code duplication between all "set pin methods"

@@ -13,15 +13,10 @@
  * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
-#include "globalaccess.h"
+#include "pch.h"
 #include "os_access.h"
-#include "engine.h"
-#include "rpm_calculator.h"
 
 #include "trigger_central.h"
-#include "engine_configuration.h"
-#include "engine_math.h"
-#include "perf_trace.h"
 #include "tooth_logger.h"
 
 #if EFI_PROD_CODE

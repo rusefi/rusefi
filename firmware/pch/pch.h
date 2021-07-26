@@ -23,4 +23,12 @@
 #include "sensor.h"
 #include "error_handling.h"
 #include "settings.h"
+#include "interpolation.h"
+#include "perf_trace.h"
 
+#if EFI_UNIT_TEST
+#include <gtest/gtest.h>
+#include <gmock/gmock.h>
+#include "engine_test_helper.h"
+#include "mocks.h"
+#endif

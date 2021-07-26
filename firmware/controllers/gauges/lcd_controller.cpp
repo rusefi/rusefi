@@ -16,19 +16,14 @@
  * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
-#include "global.h"
+#include "pch.h"
 
 #if EFI_HD44780_LCD
 #include "os_access.h"
 
 #include "lcd_controller.h"
 #include "HD44780.h"
-#include "rpm_calculator.h"
-#include "allsensors.h"
-#include "engine.h"
 #include "rtc_helper.h"
-#include "io_pins.h"
-#include "efi_gpio.h"
 #include "svnversion.h"
 #include "joystick.h"
 #include "utlist.h"
@@ -36,12 +31,9 @@
 #include "memstreams.h"
 #include "settings.h"
 #include "bench_test.h"
-#include "engine_controller.h"
 #include "mmc_card.h"
 #include "idle_thread.h"
 #include "fuel_math.h"
-#include "sensor.h"
-
 
 static MenuItem ROOT(NULL, NULL);
 

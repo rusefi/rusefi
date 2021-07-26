@@ -8,9 +8,9 @@
  * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
-#include "pin_repository.h"
+#include "pch.h"
+
 #include "tachometer.h"
-#include "pwm_generator_logic.h"
 
 static SimplePwm tachControl("tach"); 
 static float tachFreq;  

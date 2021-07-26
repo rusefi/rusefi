@@ -18,15 +18,10 @@
  * If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "global.h"
-#include "engine_configuration.h"
-#include "engine.h"
+#include "pch.h"
+
 #include "advance_map.h"
-#include "interpolation.h"
-#include "engine_math.h"
-#include "sensor.h"
 #include "idle_thread.h"
-#include "allsensors.h"
 #include "launch_control.h"
 
 #if EFI_ENGINE_CONTROL

@@ -1,13 +1,7 @@
-#include "global.h"
+#include "pch.h"
 
 #if EFI_CAN_SUPPORT
 #include "AemXSeriesLambda.h"
-#include "efilib.h"
-
-#if EFI_TUNER_STUDIO
-#include "tunerstudio_outputs.h"
-#include "engine.h"
-#endif
 
 AemXSeriesWideband::AemXSeriesWideband(uint8_t sensorIndex, SensorType type)
 	: CanSensorBase(

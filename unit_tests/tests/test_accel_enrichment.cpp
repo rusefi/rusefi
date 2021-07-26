@@ -8,9 +8,9 @@
  * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
-#include "engine_test_helper.h"
+#include "pch.h"
+
 #include "accel_enrichment.h"
-#include "sensor.h"
 
 TEST(fuel, testTpsAccelEnrichmentMath) {
 	printf("====================================================================================== testAccelEnrichment\r\n");

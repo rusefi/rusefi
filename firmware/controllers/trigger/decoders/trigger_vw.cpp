@@ -5,9 +5,9 @@
  * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
+#include "pch.h"
 #include "trigger_vw.h"
 #include "trigger_universal.h"
-#include "error_handling.h"
 
 void setSkodaFavorit(TriggerWaveform *s) {
 	s->initialize(FOUR_STROKE_CRANK_SENSOR);
