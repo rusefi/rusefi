@@ -14,10 +14,8 @@
  *
  */
 
-#include "engine.h"
+#include "pch.h"
 #include "cj125.h"
-#include "pwm_generator_logic.h"
-#include "rpm_calculator.h"
 #include "thread_priority.h"
 
 #if EFI_CJ125
@@ -33,7 +31,6 @@
 
 #include "hardware.h"
 #include "backup_ram.h"
-#include "pin_repository.h"
 
 static CJ125 globalInstance;
 
