@@ -115,6 +115,10 @@ jobs:
             folder: subaru_eg33
             ini-file: rusefi_subaru_eg33_f7.ini
 
+          - build-target: atlas
+            folder: atlas
+            ini-file: rusefi_atlas.ini
+
     steps:
     - uses: actions/checkout@v1
       with:
