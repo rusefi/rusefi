@@ -1301,8 +1301,8 @@
 #define showHumanReadableWarning_offset 976
 #define showSdCardWarning_offset 76
 #define SIGNATURE_BOARD kin
-#define SIGNATURE_DATE 2021.07.26
-#define SIGNATURE_HASH 3632271323
+#define SIGNATURE_DATE 2021.07.27
+#define SIGNATURE_HASH 1230034925
 #define silentTriggerError_offset 1464
 #define slowAdcAlpha_offset 2088
 #define sparkDwellRpmBins_offset 332
@@ -1658,7 +1658,7 @@
 #define ts_show_spi true
 #define ts_show_trigger_comparator true
 #define ts_show_tunerstudio_port true
-#define TS_SIGNATURE "rusEFI 2021.07.26.kin.3632271323"
+#define TS_SIGNATURE "rusEFI 2021.07.27.kin.1230034925"
 #define TS_SINGLE_WRITE_COMMAND 'W'
 #define TS_SINGLE_WRITE_COMMAND_char W
 #define TS_TEST_COMMAND 't'
@@ -1711,6 +1711,8 @@
 #define TT_TT_VVT_MIATA_NB2 43
 #define TT_TT_VVT_NISSAN_VQ35 59
 #define tunerStudioSerialSpeed_offset 728
+#define turboSpeedSensorInputPin_offset 1759
+#define turboSpeedSensorMultiplier_offset 1488
 #define twoWireBatchIgnition_offset 1476
 #define twoWireBatchInjection_offset 1476
 #define uart_device_e_auto_enum "UART_NONE", "UART_DEVICE_1", "UART_DEVICE_2", "UART_DEVICE_3", "UART_DEVICE_4"
@@ -1728,8 +1730,6 @@
 #define unused1476b20_offset 1476
 #define unused1476b3_offset 1476
 #define unused1476b8_offset 1476
-#define unused1488_offset 1488
-#define unused1756_offset 1759
 #define unused2260_offset 2252
 #define unused2432_offset 2424
 #define unused244_2_offset 2416

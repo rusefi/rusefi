@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on hellen_cypress_gen_config.bat integration/rusefi_config.txt Mon Jul 26 16:26:07 UTC 2021
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on hellen_cypress_gen_config.bat integration/rusefi_config.txt Tue Jul 27 21:36:26 UTC 2021
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -2446,10 +2446,10 @@ struct engine_configuration_s {
 	 */
 	int16_t primeInjFalloffTemperature;
 	/**
-	index
+	mult
 	 * offset 1488
 	 */
-	int unused1488;
+	float turboSpeedSensorMultiplier;
 	/**
 	 * offset 1492
 	 */
@@ -2578,10 +2578,9 @@ struct engine_configuration_s {
 	 */
 	brain_pin_e triggerInputDebugPins[TRIGGER_INPUT_PIN_COUNT];
 	/**
-	Pulse
 	 * offset 1759
 	 */
-	uint8_t unused1756;
+	brain_input_pin_e turboSpeedSensorInputPin;
 	/**
 	x
 	 * offset 1760
@@ -4273,4 +4272,4 @@ struct persistent_config_s {
 };
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on hellen_cypress_gen_config.bat integration/rusefi_config.txt Mon Jul 26 16:26:07 UTC 2021
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on hellen_cypress_gen_config.bat integration/rusefi_config.txt Tue Jul 27 21:36:26 UTC 2021
