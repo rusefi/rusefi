@@ -1162,7 +1162,7 @@ bit unused_1484_bit_31
     int16_t primeInjFalloffTemperature;+This sets the temperature above which no priming pulse is used, The value at -40 is reduced until there is no more priming injection at this temperature.;"*C", 1, 0, 0, 1000, 0
 
 
-	int unused1488;;"index", 1, 0, 0, 7000, 0
+	float turboSpeedSensorMultiplier;;"mult", 1, 0, 0, 7000, 3
 
 	brain_pin_e[CAM_INPUTS_COUNT iterate] camInputsDebug;
 	uint8_t[CAM_INPUTS_COUNT_padding] camInputsDebugPadding;;
@@ -1208,7 +1208,7 @@ custom pin_mode_e 1 bits, U08, @OFFSET@, [0:6], @@pin_mode_e_enum@@
 	pid_s alternatorControl;
 	pid_s etb;
 	brain_pin_e[TRIGGER_INPUT_PIN_COUNT iterate] triggerInputDebugPins;
-	uint8_t unused1756;;"Pulse", 1, 0, 1, 5, 0
+	brain_input_pin_e turboSpeedSensorInputPin;
 	float alternator_derivativeFilterLoss;;"x", 1, 0, -1000000, 1000000, 4
 	float alternator_antiwindupFreq;;"x", 1, 0, -1000000, 1000000, 4
 int16_t tps2Min;Closed throttle#2. todo: extract these two fields into a structure\nSee also tps2_1AdcChannel\nset tps2_min X;"ADC", 1, 0, 0, 1023, 0
