@@ -96,7 +96,11 @@
                 <fileset dir="inifile/src/test/java" includes="**/test/**/*Test.java"/>
                 <fileset dir="models/src/test/java" includes="**/test/**/*Test.java"/>
                 <fileset dir="ui/src/test/java" includes="**/*Test.java"/>
+<<<<<<< HEAD
                 <fileset dir="romraider/src/main/java" includes="**/test/**/*Test.java"/>
+=======
+                <fileset dir="romraider/src" includes="**/test/**/*Test.java"/>
+>>>>>>> 892dba09f (feat: restructured logging for migrating to gradle; fix: corrected build.xml's)
                 <fileset dir="logging/src/main/java" includes="**/test/**/*Test.java"/>
             </batchtest>
         </junit>
