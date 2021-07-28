@@ -48,7 +48,7 @@
                classpath="${lib_list}">
             <src path="autotest/src/main/java"/>
             <src path="autoupdate/src/main/java"/>
-            <src path="../java_tools/configuration_definition/src"/>
+            <src path="../java_tools/configuration_definition/src/main/java"/>
             <src path="../java_tools/enum_to_string/src/main/java"/>
             <src path="../java_tools/proxy_server/src/main/java"/>
             <src path="../java_tools/proxy_server/src/test/java"/>
