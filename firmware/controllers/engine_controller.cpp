@@ -54,6 +54,7 @@
 #include "buttonshift.h"
 #include "start_stop.h"
 #include "dynoview.h"
+#include "vr_pwm.h"
 
 #if EFI_SENSOR_CHART
 #include "sensor_chart.h"
@@ -642,6 +643,8 @@ void initEngineContoller(DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	}
 
 	engineStateBlinkingTask.Start();
+
+	initVrPwm(PASS_ENGINE_PARAMETER_SIGNATURE);
 
 #if EFI_PWM_TESTER
 	initPwmTester();
