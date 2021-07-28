@@ -33,7 +33,7 @@ public final class Version {
 //    public static final String LOGGER_DEFS_URL = "http://www.romraider.com/forum/topic1642.html";
     public static final String CARS_DEFS_URL = "http://www.romraider.com/forum/topic5792.html";
     public static final String RELEASE_NOTES = "release_notes.txt";
-    public static final ImageIcon ABOUT_ICON = new ImageIcon(Version.class.getClass().getResource("/graphics/romraider-ico-large.gif"));
+    public static final ImageIcon ABOUT_ICON = new ImageIcon(Version.class.getClass().getResource( "/graphics/romraider-ico-large.gif" ));
     public static final int MIN_LOG_DEF_VERSION = 155;
 
     private Version() {
