@@ -100,13 +100,13 @@ public class TableToolBar extends JToolBar implements MouseListener, ItemListene
 //    private final JButton clearOverlay = new JButton("Clear Overlay");
     private final JLabel liveDataValue = new JLabel();
 
-    private final URL incrementFineImage = getClass().getResource("/graphics/icon-incfine.png");
-    private final URL decrementFineImage = getClass().getResource("/graphics/icon-decfine.png");
-    private final URL incrementCoarseImage = getClass().getResource("/graphics/icon-inccoarse.png");
-    private final URL decrementCoarseImage = getClass().getResource("/graphics/icon-deccoarse.png");
-    private final URL enable3dImage = getClass().getResource("/graphics/3d_render.png");
-    private final URL colorCellImage = getClass().getResource("/graphics/icon-palette.png");
-    private final URL refreshCompareImage = getClass().getResource("/graphics/table_refresh.png");
+    private final URL incrementFineImage = getClass().getResource( "/graphics/icon-incfine.png" );
+    private final URL decrementFineImage = getClass().getResource( "/graphics/icon-decfine.png" );
+    private final URL incrementCoarseImage = getClass().getResource( "/graphics/icon-inccoarse.png" );
+    private final URL decrementCoarseImage = getClass().getResource( "/graphics/icon-deccoarse.png" );
+    private final URL enable3dImage = getClass().getResource( "/graphics/3d_render.png" );
+    private final URL colorCellImage = getClass().getResource( "/graphics/icon-palette.png" );
+    private final URL refreshCompareImage = getClass().getResource( "/graphics/table_refresh.png" );
 
     private final TitledBorder toolbarBorder = BorderFactory.createTitledBorder(Settings.defaultTableToolBarName);
 
