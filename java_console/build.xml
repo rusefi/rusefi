@@ -65,7 +65,7 @@
             <src path="ui/src/main/java"/>
             <src path="ui/src/test/java"/>
             <src path="romraider/src"/>
-            <src path="logging/src"/>
+            <src path="logging/src/main/java"/>
             <!-- not really used at the moment but let's compile for the sake of Eclipse users -->
             <src path="tools/src"/>
             <!-- uncomment if you want to compile under java 11
@@ -97,7 +97,7 @@
                 <fileset dir="models/src/test/java" includes="**/test/**/*Test.java"/>
                 <fileset dir="ui/src/test/java" includes="**/*Test.java"/>
                 <fileset dir="romraider/src" includes="**/test/**/*Test.java"/>
-                <fileset dir="logging/src" includes="**/test/**/*Test.java"/>
+                <fileset dir="logging/src/main/java" includes="**/test/**/*Test.java"/>
             </batchtest>
         </junit>
     </target>

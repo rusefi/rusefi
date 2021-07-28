@@ -11,7 +11,7 @@
         <javac destdir="build/classes" classpath="${console_path}/lib/jsr305-2.0.1.jar:${console_path}/lib/junit.jar:${console_path}/lib/annotations.jar">
             <src path="src/main/java"/>
             <src path="${console_path}/logging-api/src/main/java"/>
-            <src path="${console_path}/logging/src"/>
+            <src path="${console_path}/logging/src/main/java"/>
         </javac>
     </target>
 

@@ -23,7 +23,7 @@
             <src path="src/main/java"/>
             <src path="${console_path}/autoupdate/src/main/java"/>
             <src path="${console_path}/inifile/src/main/java"/>
-            <src path="${console_path}/logging/src"/>
+            <src path="${console_path}/logging/src/main/java"/>
             <src path="${console_path}/logging-api/src/main/java"/>
             <src path="${console_path}/models/src/main/java"/>
             <src path="${console_path}/shared_io/src/main/java"/>
