@@ -104,7 +104,7 @@ public class ECUEditor {
     private CloseImageWorker closeImageWorker;
     private SetUserLevelWorker setUserLevelWorker;
     private LaunchLoggerWorker launchLoggerWorker;
-    private final ImageIcon editorIcon = new ImageIcon(getClass().getResource("/graphics/romraider-ico.gif"), "RomRaider ECU Editor");
+    private final ImageIcon editorIcon = new ImageIcon(getClass().getResource( "/graphics/romraider-ico.gif" ), "RomRaider ECU Editor");
 
     WindowListener wListenr = new WindowAdapter() {
         @Override

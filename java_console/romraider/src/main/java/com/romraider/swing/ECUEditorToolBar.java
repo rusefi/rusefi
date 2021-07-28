@@ -108,9 +108,9 @@ public class ECUEditorToolBar extends JToolBar {
     public void updateIcons() {
         int iconScale = getSettings().getEditorIconScale();
 //        saveImage.setIcon(rescaleImageIcon(new ImageIcon(getClass().getResource("/graphics/icon-save.png")), iconScale));
-        uploadImage.setIcon(rescaleImageIcon(new ImageIcon(getClass().getResource("/com/rusefi/upload48.jpg")), iconScale));
-        downloadImage.setIcon(rescaleImageIcon(new ImageIcon(getClass().getResource("/com/rusefi/download48.jpg")), iconScale));
-        burnImage.setIcon(rescaleImageIcon(new ImageIcon(getClass().getResource("/com/rusefi/writeconfig48.jpg")), iconScale));
+        uploadImage.setIcon(rescaleImageIcon(new ImageIcon(getClass().getResource( "/upload48.jpg" )), iconScale));
+        downloadImage.setIcon(rescaleImageIcon(new ImageIcon(getClass().getResource( "/download48.jpg" )), iconScale));
+        burnImage.setIcon(rescaleImageIcon(new ImageIcon(getClass().getResource( "/writeconfig48.jpg" )), iconScale));
 //        closeImage.setIcon(rescaleImageIcon(new ImageIcon( getClass().getResource("/graphics/icon-close.png")), iconScale));
         repaint();
     }

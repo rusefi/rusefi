@@ -110,13 +110,13 @@ public class RomCellRenderer implements TreeCellRenderer {
 
             // display icon
             if (table.getType() == Settings.TABLE_1D) {
-                tableName = new JLabel(table.getName() + " ", new ImageIcon(getClass().getResource("/graphics/1d.gif")), JLabel.LEFT);
+                tableName = new JLabel(table.getName() + " ", new ImageIcon(getClass().getResource( "/graphics/1d.gif" )), JLabel.LEFT);
             } else if (table.getType() == Settings.TABLE_2D) {
-                tableName = new JLabel(table.getName() + " ", new ImageIcon(getClass().getResource("/graphics/2d.gif")), JLabel.LEFT);
+                tableName = new JLabel(table.getName() + " ", new ImageIcon(getClass().getResource( "/graphics/2d.gif" )), JLabel.LEFT);
             } else if (table.getType() == Settings.TABLE_3D) {
-                tableName = new JLabel(table.getName() + " ", new ImageIcon(getClass().getResource("/graphics/3d.gif")), JLabel.LEFT);
+                tableName = new JLabel(table.getName() + " ", new ImageIcon(getClass().getResource( "/graphics/3d.gif" )), JLabel.LEFT);
             } else if (table.getType() == Settings.TABLE_SWITCH) {
-                tableName = new JLabel(table.getName() + " ", new ImageIcon(getClass().getResource("/graphics/switch.gif")), JLabel.LEFT);
+                tableName = new JLabel(table.getName() + " ", new ImageIcon(getClass().getResource( "/graphics/switch.gif" )), JLabel.LEFT);
             }
 
             // set color
