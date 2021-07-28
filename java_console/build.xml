@@ -46,7 +46,7 @@
         <mkdir dir="build/classes"/>
         <javac debug="yes" destdir="build/classes"
                classpath="${lib_list}">
-            <src path="autotest/src"/>
+            <src path="autotest/src/main/java"/>
             <src path="autoupdate/src/main/java"/>
             <src path="../java_tools/configuration_definition/src"/>
             <src path="../java_tools/enum_to_string/src"/>
@@ -90,7 +90,7 @@
                     path="build/classes:lib/junit.jar:${lib_list}:lib/commons-logging.jar"/>
             <batchtest todir="build">
 <!--                at the moment we do NOT have any tests matching this pattern - all hardware tests are not inside 'test' folders -->
-                <fileset dir="autotest/src" includes="**/test/**/*Test.java"/>
+                <fileset dir="autotest/src/main/java" includes="**/test/**/*Test.java"/>
                 <fileset dir="autoupdate/src" includes="**/test/**/*Test.java"/>
                 <fileset dir="io/src/test/java" includes="**/test/**/*Test.java"/>
                 <fileset dir="inifile/src/test/java" includes="**/test/**/*Test.java"/>
@@ -201,8 +201,8 @@
             <classpath
                     path="build/classes:lib/junit.jar:${lib_list}:lib/commons-logging.jar"/>
             <batchtest todir="${hw_tests}">
-                <fileset dir="autotest/src" includes="**/common/*.java"/>
-                <fileset dir="autotest/src" includes="**/f4discovery/*.java"/>
+                <fileset dir="autotest/src/main/java" includes="**/common/*.java"/>
+                <fileset dir="autotest/src/main/java" includes="**/f4discovery/*.java"/>
             </batchtest>
             <formatter type="plain" usefile="false" /> <!-- to screen -->
         </junit>
@@ -222,8 +222,8 @@
             <classpath
                     path="build/classes:lib/junit.jar:${lib_list}:lib/commons-logging.jar"/>
             <batchtest todir="${hw_tests}">
-                <fileset dir="autotest/src" includes="**/common/*.java"/>
-                <fileset dir="autotest/src" includes="**/proteus/*.java"/>
+                <fileset dir="autotest/src/main/java" includes="**/common/*.java"/>
+                <fileset dir="autotest/src/main/java" includes="**/proteus/*.java"/>
             </batchtest>
             <formatter type="plain" usefile="false" /> <!-- to screen -->
         </junit>
