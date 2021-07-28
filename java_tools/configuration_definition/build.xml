@@ -23,7 +23,11 @@
             <src path="src/main/java"/>
             <src path="${console_path}/autoupdate/src/main/java"/>
             <src path="${console_path}/inifile/src/main/java"/>
+<<<<<<< HEAD
             <src path="${console_path}/logging/src/main/java"/>
+=======
+            <src path="${console_path}/logging/src"/>
+>>>>>>> 37f047577 (feat: restructured configuration_definition for migrating to gradle; fix: corrected build.xml)
             <src path="${console_path}/logging-api/src/main/java"/>
             <src path="${console_path}/models/src/main/java"/>
             <src path="${console_path}/shared_io/src/main/java"/>

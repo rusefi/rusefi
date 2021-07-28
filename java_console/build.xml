@@ -49,10 +49,14 @@
             <src path="autotest/src/main/java"/>
             <src path="autoupdate/src/main/java"/>
 <<<<<<< HEAD
+<<<<<<< HEAD
             <src path="../java_tools/configuration_definition/src/main/java"/>
 =======
             <src path="../java_tools/configuration_definition/src"/>
 >>>>>>> a8d63e267 (feat: restructured enum_to_string for migrating to gradle)
+=======
+            <src path="../java_tools/configuration_definition/src/main/java"/>
+>>>>>>> 37f047577 (feat: restructured configuration_definition for migrating to gradle; fix: corrected build.xml)
             <src path="../java_tools/enum_to_string/src/main/java"/>
             <src path="../java_tools/proxy_server/src/main/java"/>
             <src path="../java_tools/proxy_server/src/test/java"/>
