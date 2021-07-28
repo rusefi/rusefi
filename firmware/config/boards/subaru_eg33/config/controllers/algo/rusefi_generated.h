@@ -182,7 +182,7 @@
 #define can_baudrate_e_auto_enum "B100KBPS", "B250KBPS", "B500KBPS", "B1MBPS"
 #define can_baudrate_e_enum "100kbps", "250kbps", "500kbps", "1Mbps"
 #define CAN_DEFAULT_BASE 0x200
-#define can_nbc_e_auto_enum "CAN_BUS_NBC_NONE", "CAN_BUS_NBC_FIAT", "CAN_BUS_NBC_VAG", "CAN_BUS_MAZDA_RX8", "CAN_BUS_NBC_BMW", "CAN_BUS_W202_C180", "CAN_BUS_BMW_E90", "CAN_BUS_Haltech", "CAN_BUS_MQB", "CAN_BUS_NISSAN_VQ"
+#define can_nbc_e_auto_enum "CAN_BUS_NBC_NONE", "CAN_BUS_NBC_FIAT", "CAN_BUS_NBC_VAG", "CAN_BUS_MAZDA_RX8", "CAN_BUS_NBC_BMW", "CAN_BUS_W202_C180", "CAN_BUS_BMW_E90", "CAN_BUS_Haltech", "CAN_BUS_MQB", "CAN_BUS_NISSAN_VQ", "CAN_BUS_GENESIS_COUPE"
 #define CAN_RX_PREFIX "CAN_rx"
 #define can_vss_nbc_e_auto_enum "BMW_e46", "W202"
 #define canBaudRate_offset 2108
@@ -1322,7 +1322,7 @@
 #define showSdCardWarning_offset 76
 #define SIGNATURE_BOARD subaru_eg33_f7
 #define SIGNATURE_DATE 2021.07.28
-#define SIGNATURE_HASH 4247341168
+#define SIGNATURE_HASH 3480323036
 #define silentTriggerError_offset 1464
 #define slowAdcAlpha_offset 2088
 #define sparkDwellRpmBins_offset 332
@@ -1678,7 +1678,7 @@
 #define ts_show_spi true
 #define ts_show_trigger_comparator false
 #define ts_show_tunerstudio_port false
-#define TS_SIGNATURE "rusEFI 2021.07.28.subaru_eg33_f7.4247341168"
+#define TS_SIGNATURE "rusEFI 2021.07.28.subaru_eg33_f7.3480323036"
 #define TS_SINGLE_WRITE_COMMAND 'W'
 #define TS_SINGLE_WRITE_COMMAND_char W
 #define TS_TEST_COMMAND 't'
