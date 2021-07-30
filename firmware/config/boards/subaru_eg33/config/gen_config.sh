@@ -1,5 +1,5 @@
 #/!bin/sh
-# This batch files reads rusefi_config.txt and produses firmware persistent configuration headers
+# This batch files reads rusefi_config.txt and produces firmware persistent configuration headers
 # the storage section of rusefi.ini is updated as well
 
 BOARDNAME=subaru_eg33
@@ -30,3 +30,5 @@ java \
  -prepend config/boards/${BOARDNAME}/prepend.txt
 
 [ $? -eq 0 ] || { echo "ERROR generating TunerStudio config for ${BOARDNAME}"; exit 1; }
+
+# EG33 does not get fancy mass storage device since it does not have create_ini_image.sh etc invocations like gen_config_board.sh does
