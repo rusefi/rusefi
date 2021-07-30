@@ -170,6 +170,13 @@ int intFlashErase(flashaddr_t address, size_t size) {
 }
 
 bool intFlashIsErased(flashaddr_t address, size_t size) {
+#if CORTEX_MODEL == 7
+	// If we have a cache, invalidate the relevant cache lines.
+	// They may still contain old data, leading us to believe that the 
+	// flash erase failed.
+	SCB_InvalidateDCache_by_Addr((uint32_t*)address, size);
+#endif
+
 	/* Check for default set bits in the flash memory
 	 * For efficiency, compare flashdata_t values as much as possible,
 	 * then, fallback to byte per byte comparison. */
@@ -211,6 +218,12 @@ bool intFlashCompare(flashaddr_t address, const char* buffer, size_t size) {
 }
 
 int intFlashRead(flashaddr_t address, char* buffer, size_t size) {
+#if CORTEX_MODEL == 7
+	// If we have a cache, invalidate the relevant cache lines.
+	// They may still contain old data, leading us to read invalid data.
+	SCB_InvalidateDCache_by_Addr((uint32_t*)address, size);
+#endif
+
 	memcpy(buffer, (char*) address, size);
 	return FLASH_RETURN_SUCCESS;
 }
