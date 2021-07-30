@@ -29,7 +29,7 @@ jobs:
     - name: Install required software (macos)
       if: ${{ matrix.os == 'macos-latest' }}
       run: |
-        sudo brew install mtools zip dosfstools
+        brew install mtools zip dosfstools
 
     - name: Generate Configs
       working-directory: ./firmware/
