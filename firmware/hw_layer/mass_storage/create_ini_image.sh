@@ -10,7 +10,6 @@ SHORT_BOARDNAME=$4
 
 echo "ini $FULL_INI to $H_OUTPUT size $FS_SIZE for $SHORT_BOARDNAME"
 
-
 rm -f rusefi.zip ramdisk_image.h
 
 # copy *count*KB of zeroes
@@ -18,7 +17,8 @@ dd if=/dev/zero of=ramdisk.image bs=1024 count=$FS_SIZE
 
 # create a FAT filesystem inside, name it RUSEFI
 mkfs.fat ramdisk.image
-fatlabel ramdisk.image "RUSEFI $SHORT_BOARDNAME"
+# labels can be no longer than 11 characters
+fatlabel ramdisk.image RUSEFI
 
 # -j option dumps all files in the root of the zip (instead of inside directories)
 zip -j rusefi.ini.zip $FULL_INI

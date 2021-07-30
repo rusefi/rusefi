@@ -2,11 +2,13 @@
 
 # fail on error
 set -e
-RUSEFI MSD to contain bundle-specific URL #2848
+
 FULL_INI=$1
 H_OUTPUT=$2
 FS_SIZE=$3
 SHORT_BOARDNAME=$4
+
+echo "ini $FULL_INI to $H_OUTPUT size $FS_SIZE for $SHORT_BOARDNAME"
 
 rm -f rusefi.zip ramdisk_image.h
 
@@ -15,6 +17,7 @@ dd if=/dev/zero of=ramdisk.image bs=1024 count=$FS_SIZE
 
 # create a FAT filesystem inside, name it RUSEFI
 mkfs.fat ramdisk.image
+# labels can be no longer than 11 characters
 fatlabel ramdisk.image RUSEFI
 
 
