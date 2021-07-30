@@ -126,6 +126,7 @@ TEST(trigger, testNB2CamInput) {
 
 	// this crank trigger would be easier to test, crank shape is less important for this test
 	eth.setTriggerType(TT_ONE PASS_ENGINE_PARAMETER_SUFFIX);
+	engineConfiguration->isFasterEngineSpinUpEnabled = false;
 
 	engineConfiguration->useOnlyRisingEdgeForTrigger = true;
 

@@ -25,7 +25,7 @@ TEST(realCrankingNB2, normalCranking) {
 	ASSERT_EQ(942, GET_RPM());
 
 	// TODO: why warnings?
-	ASSERT_EQ(3, eth.recentWarnings()->getCount());
+	ASSERT_EQ(2, eth.recentWarnings()->getCount());
 }
 
 TEST(realCrankingNB2, crankingMissingInjector) {

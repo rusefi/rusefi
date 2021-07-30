@@ -88,7 +88,6 @@ static void setupDefaultSensorInputs() {
 
 	engineConfiguration->throttlePedalPositionAdcChannel = EFI_ADC_3;
 	engineConfiguration->throttlePedalPositionSecondAdcChannel = EFI_ADC_14;
-	engineConfiguration->throttlePedalSecondaryWOTVoltage = 5.0;
 	engineConfiguration->mafAdcChannel = EFI_ADC_10;
 	engineConfiguration->map.sensor.hwChannel = EFI_ADC_11;
 
