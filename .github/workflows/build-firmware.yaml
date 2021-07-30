@@ -131,7 +131,7 @@ jobs:
     - name: Install multilib, mingw, ncftp and mtools
       run: |
         sudo apt-get update
-        sudo apt-get install gcc-multilib g++-multilib g++-mingw-w64 gcc-mingw-w64 ncftp mtools
+        sudo apt-get install gcc-multilib g++-multilib g++-mingw-w64 gcc-mingw-w64 ncftp mtools zip dosfstools
 
     - name: Generate Configs
       if: ${{ matrix.skip-config != 'yes' }}
@@ -281,7 +281,7 @@ jobs:
     - name: Install multilib, mingw, and ncftp
       run: |
         sudo apt-get update
-        sudo apt-get install gcc-multilib g++-multilib g++-mingw-w64 gcc-mingw-w64 ncftp mtools
+        sudo apt-get install gcc-multilib g++-multilib g++-mingw-w64 gcc-mingw-w64 ncftp mtools zip dosfstools
 
     # Make sure the compiler we just downloaded works - just print out the version
     - name: Test Compiler
