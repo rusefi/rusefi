@@ -23,7 +23,12 @@ INI=rusefi.ini
 
 
 
-
+echo "BOARDNAME=${BOARDNAME} SHORT_BOARDNAME=${SHORT_BOARDNAME}"
+if [ "${SHORT_BOARDNAME}" = "all" ]; then
+  SOMETHINGSOMETHING=false
+else
+  SOMETHINGSOMETHING=true
+fi
 
 bash gen_signature.sh all
 
@@ -38,8 +43,8 @@ java -DSystemOut.name=gen_config \
   -ts_output_name generated/${INI} \
   -cache ${SHORT_BOARDNAME} \
   -cache_zip_file tunerstudio/generated/cache.zip \
-  -with_c_defines false \
-  -initialize_to_zero false \
+  -with_c_defines $SOMETHINGSOMETHING \
+  -initialize_to_zero $SOMETHINGSOMETHING \
   -firing_order controllers/algo/firing_order.h \
   -signature tunerstudio/generated/signature_${SHORT_BOARDNAME}.txt \
   -signature_destination controllers/generated/signature_${SHORT_BOARDNAME}.h \
