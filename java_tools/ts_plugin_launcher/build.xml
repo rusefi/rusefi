@@ -16,7 +16,7 @@
         >
             <src path="${console_path}/autoupdate/src"/>
             <src path="${console_path}/shared_io/src/main/java"/>
-            <src path="src"/>
+            <src path="src/main/java"/>
         </javac>
 
     </target>
