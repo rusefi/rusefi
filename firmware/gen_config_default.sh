@@ -1,14 +1,14 @@
 #!/bin/bash
-
 # file gen_config_default.sh
 
-mkdir build
+bash gen_config_board.sh f407-discovery all rusefi.ini
+exit $?
 
 # todo gen_config.sh code duplication https://github.com/rusefi/rusefi/issues/2451
 set -e
 
-rm -f gen_config.log
-rm -f gen_config_board.log
+
+
 
 BOARDNAME=f407-discovery
 SHORT_BOARDNAME=all
