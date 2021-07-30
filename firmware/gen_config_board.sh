@@ -32,6 +32,16 @@ fi
 
 bash gen_signature.sh ${SHORT_BOARDNAME}
 
+PREPEND_FILE=config/boards/${BOARDNAME}/prepend.txt
+
+BOARD_SPECIFIC_URL=cat $PREPEND_FILE | grep MAIN_HELP_URL | cut -d " " -f 3
+
+echo "BOARD_SPECIFIC_URL=[$BOARD_SPECIFIC_URL]"
+if [ "" = "$BOARD_SPECIFIC_URL" ]; then
+  BOARD_SPECIFIC_URL=https://rusefi.com/s/wiki
+fi
+echo "BOARD_SPECIFIC_URL=[$BOARD_SPECIFIC_URL]"
+
 # work in progress: migrating to rusefi_${BUNDLE_NAME}.txt
 java -DSystemOut.name=gen_config_board \
 	-jar ../java_tools/ConfigDefinition.jar \
@@ -58,7 +68,7 @@ java -DSystemOut.name=gen_config_board \
   -c_fsio_getters   controllers/generated/fsio_getters.def \
   -c_fsio_names     controllers/generated/fsio_names.def \
   -c_fsio_strings   controllers/generated/fsio_strings.def \
-	-prepend config/boards/${BOARDNAME}/prepend.txt
+	-prepend $PREPEND_FILE
 
 [ $? -eq 0 ] || { echo "ERROR generating TunerStudio config for ${BOARDNAME}"; exit 1; }
 
