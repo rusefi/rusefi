@@ -31,17 +31,28 @@ bash gen_signature.sh ${SHORT_BOARDNAME}
 java -DSystemOut.name=gen_config_board \
 	-jar ../java_tools/ConfigDefinition.jar \
 	-definition integration/rusefi_config.txt \
+  -romraider integration \
 	-tool gen_config.sh \
 	-ts_destination tunerstudio \
+	-board ${BOARDNAME} \
+	-ts_output_name generated/${INI} \
 	-cache ${SHORT_BOARDNAME} \
 	-cache_zip_file tunerstudio/generated/cache.zip \
+  -with_c_defines true \
+  -initialize_to_zero true \
 	-firing_order controllers/algo/firing_order.h \
-	-ts_output_name generated/${INI} \
 	-signature tunerstudio/generated/signature_${SHORT_BOARDNAME}.txt \
 	-signature_destination controllers/generated/signature_${SHORT_BOARDNAME}.h \
+  -java_destination ../java_console/models/src/main/java/com/rusefi/config/generated/Fields.java \
 	-enumInputFile controllers/algo/rusefi_enums.h \
 	-enumInputFile controllers/algo/rusefi_hw_enums.h \
-	-board ${BOARDNAME} \
+	\
+	\
+	\
+	\
+	\
+	\
+	\
 	-prepend config/boards/${BOARDNAME}/prepend.txt
 
 [ $? -eq 0 ] || { echo "ERROR generating TunerStudio config for ${BOARDNAME}"; exit 1; }
