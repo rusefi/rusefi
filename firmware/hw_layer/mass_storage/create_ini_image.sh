@@ -28,7 +28,7 @@ mcopy -i ramdisk.image rusefi.ini.zip ::
 # Put a readme text file in there too
 mcopy -i ramdisk.image hw_layer/mass_storage/filesystem_contents/README.txt ::
 mcopy -i ramdisk.image hw_layer/mass_storage/filesystem_contents/rusEFI\ Forum.url ::
-mcopy -i ramdisk.image hw_layer/mass_storage/filesystem_contents/rusEFI\ Wiki.url ::
+mcopy -i ramdisk.image hw_layer/mass_storage/filesystem_contents/rusEFI\ Wiki.url ::rusEFI\ ${SHORT_BOARDNAME}\ Wiki.url
 
 
 
