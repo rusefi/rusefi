@@ -36,7 +36,7 @@ PREPEND_FILE=config/boards/${BOARDNAME}/prepend.txt
 
 BOARD_SPECIFIC_URL=cat $PREPEND_FILE | grep MAIN_HELP_URL | cut -d " " -f 3
 
-echo "BOARD_SPECIFIC_URL=[$BOARD_SPECIFIC_URL]"
+echo "BOARD_SPECIFIC_URL=[$BOARD_SPECIFIC_URL] for [$BOARDNAME] as [$SHORT_BOARDNAME]"
 if [ "" = "$BOARD_SPECIFIC_URL" ]; then
   BOARD_SPECIFIC_URL=https://rusefi.com/s/wiki
 fi

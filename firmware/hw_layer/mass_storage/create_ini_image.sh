@@ -8,7 +8,7 @@ H_OUTPUT=$2
 FS_SIZE=$3
 SHORT_BOARDNAME=$4
 
-echo "ini $FULL_INI to $H_OUTPUT size $FS_SIZE for $SHORT_BOARDNAME"
+echo "create_ini_image: ini $FULL_INI to $H_OUTPUT size $FS_SIZE for $SHORT_BOARDNAME"
 
 rm -f rusefi.zip ramdisk_image.h
 
