@@ -22,7 +22,7 @@ jobs:
       working-directory: ./firmware/
       run: bash gen_enum_to_string.sh
 
-    - name: Generate Configs
+    - name: Generate All Configs
       working-directory: ./firmware/
       run: bash gen_config.sh
 

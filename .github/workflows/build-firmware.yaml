@@ -133,7 +133,7 @@ jobs:
         sudo apt-get update
         sudo apt-get install gcc-multilib g++-multilib g++-mingw-w64 gcc-mingw-w64 ncftp mtools
 
-    - name: Generate Configs
+    - name: Generate Configs for firmware
       if: ${{ matrix.skip-config != 'yes' }}
       working-directory: ./firmware/
       run: |
@@ -261,7 +261,7 @@ jobs:
       working-directory: ./firmware/
       run: bash gen_enum_to_string.sh
 
-    - name: Generate Configs
+    - name: Generate Default Configs
       working-directory: ./firmware/
       run: bash gen_config_default.sh
 

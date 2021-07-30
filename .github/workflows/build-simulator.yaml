@@ -17,7 +17,7 @@ jobs:
         sudo apt-get update
         sudo apt-get install gcc-multilib g++-multilib
 
-    - name: Generate Configs
+    - name: Generate Configs for simulator
       working-directory: ./firmware/
       run: |
         bash gen_config_default.sh
