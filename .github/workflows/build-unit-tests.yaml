@@ -20,7 +20,7 @@ jobs:
       if: ${{ matrix.os != 'macos-latest' }}
       run: lscpu | egrep 'Model name|Socket|Thread|NUMA|CPU\(s\)'
 
-    - name: Generate Configs
+    - name: Generate Configs for unit tests
       working-directory: ./firmware/
       run: bash gen_config_default.sh
 
