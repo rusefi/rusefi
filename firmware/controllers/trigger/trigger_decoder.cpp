@@ -242,21 +242,21 @@ void TriggerStateWithRunningStatistics::movePreSynchTimestamps(DECLARE_ENGINE_PA
 	memcpy(timeOfLastEvent + firstDst, spinningEvents + firstSrc, eventsToCopy * sizeof(timeOfLastEvent[0]));
 }
 
-float TriggerStateWithRunningStatistics::calculateInstantRpm(TriggerFormDetails *triggerFormDetails, efitick_t nowNt DECLARE_ENGINE_PARAMETER_SUFFIX) {
-	int current_index = currentCycle.current_index; // local copy so that noone changes the value on us
-	assertIsInBoundsWithResult(current_index, timeOfLastEvent, "calc timeOfLastEvent", 0);
+float TriggerStateWithRunningStatistics::calculateInstantRpm(TriggerFormDetails *triggerFormDetails, uint32_t current_index, efitick_t nowNt DECLARE_ENGINE_PARAMETER_SUFFIX) {
+	assertIsInBoundsWithResult((int)current_index, timeOfLastEvent, "calc timeOfLastEvent", 0);
+
+	// Record the time of this event so we can calculate RPM from it later
 	timeOfLastEvent[current_index] = nowNt;
-	/**
-	 * Here we calculate RPM based on last 90 degrees
-	 */
+
+	// Determine where we currently are in the revolution
 	angle_t currentAngle = triggerFormDetails->eventAngles[current_index];
-	// todo: make this '90' depend on cylinder count or trigger shape?
 	if (cisnan(currentAngle)) {
 		return NOISY_RPM;
 	}
+
+	// Hunt for a tooth ~90 degrees ago to compare to the current time
 	angle_t previousAngle = currentAngle - 90;
 	fixAngle(previousAngle, "prevAngle", CUSTOM_ERR_TRIGGER_ANGLE_RANGE);
-	// todo: prevIndex should be pre-calculated
 	int prevIndex = triggerFormDetails->triggerIndexByAngle[(int)previousAngle];
 
 	// now let's get precise angle for that event
@@ -269,7 +269,8 @@ float TriggerStateWithRunningStatistics::calculateInstantRpm(TriggerFormDetails 
 	// OK for small time differences like this one
 	uint32_t time = nowNt - time90ago;
 	angle_t angleDiff = currentAngle - prevIndexAngle;
-	// todo: angle diff should be pre-calculated
+
+	// Wrap the angle in to the correct range (ie, could be -630 when we want +90)
 	fixAngle(angleDiff, "angleDiff", CUSTOM_ERR_6561);
 
 	// just for safety
@@ -277,7 +278,7 @@ float TriggerStateWithRunningStatistics::calculateInstantRpm(TriggerFormDetails 
 		return prevInstantRpmValue;
 
 	float instantRpm = (60000000.0 / 360 * US_TO_NT_MULTIPLIER) * angleDiff / time;
-	assertIsInBoundsWithResult(current_index, instantRpmValue, "instantRpmValue", 0);
+	assertIsInBoundsWithResult((int)current_index, instantRpmValue, "instantRpmValue", 0);
 	instantRpmValue[current_index] = instantRpm;
 
 	// This fixes early RPM instability based on incomplete data
@@ -306,8 +307,8 @@ void TriggerStateWithRunningStatistics::setLastEventTimeForInstantRpm(efitick_t 
 	spinningEvents[spinningEventIndex++] = nowNt;
 }
 
-void TriggerStateWithRunningStatistics::updateInstantRpm(TriggerFormDetails *triggerFormDetails, efitick_t nowNt DECLARE_ENGINE_PARAMETER_SUFFIX) {
-	m_instantRpm = calculateInstantRpm(triggerFormDetails, nowNt PASS_ENGINE_PARAMETER_SUFFIX);
+void TriggerStateWithRunningStatistics::updateInstantRpm(TriggerFormDetails *triggerFormDetails, uint32_t index, efitick_t nowNt DECLARE_ENGINE_PARAMETER_SUFFIX) {
+	m_instantRpm = calculateInstantRpm(triggerFormDetails, index, nowNt PASS_ENGINE_PARAMETER_SUFFIX);
 
 
 #if EFI_SENSOR_CHART

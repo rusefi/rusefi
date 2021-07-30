@@ -291,7 +291,7 @@ void rpmShaftPositionCallback(trigger_event_e ckpSignalType,
 #endif /* EFI_SENSOR_CHART */
 
 	// Always update instant RPM even when not spinning up
-	engine->triggerCentral.triggerState.updateInstantRpm(&engine->triggerCentral.triggerFormDetails, nowNt PASS_ENGINE_PARAMETER_SUFFIX);
+	engine->triggerCentral.triggerState.updateInstantRpm(&engine->triggerCentral.triggerFormDetails, index, nowNt PASS_ENGINE_PARAMETER_SUFFIX);
 
 	if (rpmState->isSpinningUp()) {
 		float instantRpm = engine->triggerCentral.triggerState.getInstantRpm();
