@@ -133,7 +133,12 @@ jobs:
         sudo apt-get update
         sudo apt-get install gcc-multilib g++-multilib g++-mingw-w64 gcc-mingw-w64 ncftp mtools
 
-    - name: Generate Configs for firmware
+    - name: Generate Default config
+      # todo: why do we even need this 'gen_config_default.sh' here?!
+      working-directory: ./firmware/
+      run: bash gen_config_default.sh
+
+    - name: Generate Configs for build-target
       if: ${{ matrix.skip-config != 'yes' }}
       working-directory: ./firmware/
       run: |
@@ -155,10 +160,6 @@ jobs:
     - name: Generate Enum Strings
       working-directory: ./firmware/
       run: bash gen_enum_to_string.sh
-
-    - name: Generate Default config
-      working-directory: ./firmware/
-      run: bash gen_config_default.sh
 
     - name: Generate Live Documentation
       working-directory: ./firmware/
