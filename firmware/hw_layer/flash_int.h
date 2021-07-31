@@ -15,6 +15,24 @@
 /** @brief Flash operation error because of denied access, corrupted memory.*/
 #define FLASH_RETURN_NO_PERMISSION -1
 
+/** @brief Flash operation error */
+#define FLASH_RETURN_OPERROR -2
+
+/** @brief Flash write protection error */
+#define FLASH_RETURN_WPERROR -3
+
+/** @brief Flash alignment error */
+#define FLASH_RETURN_ALIGNERROR -4
+
+/** @brief Flash programming parallelism error */
+#define FLASH_RETURN_PPARALLERROR -5
+
+/** @brief Flash erase sequence error */
+#define FLASH_RETURN_ESEQERROR -6
+
+/** @brief Flash programming sequence error */
+#define FLASH_RETURN_PSEQERROR -7
+
 /** @brief Flash operation error because of bad flash, corrupted memory */
 #define FLASH_RETURN_BAD_FLASH -11
 
