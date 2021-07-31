@@ -34,7 +34,7 @@ bash gen_signature.sh ${SHORT_BOARDNAME}
 
 PREPEND_FILE=config/boards/${BOARDNAME}/prepend.txt
 
-BOARD_SPECIFIC_URL=$(cat $PREPEND_FILE | grep MAIN_HELP_URL | cut -d " " -f 3)
+BOARD_SPECIFIC_URL=$(cat $PREPEND_FILE | grep MAIN_HELP_URL | cut -d " " -f 3 | sed -e 's/^"//' -e 's/"$//')
 
 echo "BOARD_SPECIFIC_URL=[$BOARD_SPECIFIC_URL] for [$BOARDNAME] as [$SHORT_BOARDNAME]"
 if [ "" = "$BOARD_SPECIFIC_URL" ]; then
@@ -77,7 +77,7 @@ java -DSystemOut.name=gen_config_board \
 # 1) using unique file name for each configuration?
 # 2) leverage consistent caching mechanism so that image is generated only in case of fresh .ini. Laziest approach would be to return exit code from java process above
 #
-hw_layer/mass_storage/create_ini_image.sh            ./tunerstudio/generated/${INI} ./hw_layer/mass_storage/ramdisk_image.h             112 ${SHORT_BOARDNAME}
-hw_layer/mass_storage/create_ini_image_compressed.sh ./tunerstudio/generated/${INI} ./hw_layer/mass_storage/ramdisk_image_compressed.h 1024 ${SHORT_BOARDNAME}
+hw_layer/mass_storage/create_ini_image.sh            ./tunerstudio/generated/${INI} ./hw_layer/mass_storage/ramdisk_image.h             112 ${SHORT_BOARDNAME} ${BOARD_SPECIFIC_URL}
+hw_layer/mass_storage/create_ini_image_compressed.sh ./tunerstudio/generated/${INI} ./hw_layer/mass_storage/ramdisk_image_compressed.h 1024 ${SHORT_BOARDNAME} ${BOARD_SPECIFIC_URL}
 
 exit 0
