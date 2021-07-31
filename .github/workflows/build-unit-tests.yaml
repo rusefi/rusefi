@@ -20,6 +20,17 @@ jobs:
       if: ${{ matrix.os != 'macos-latest' }}
       run: lscpu | egrep 'Model name|Socket|Thread|NUMA|CPU\(s\)'
 
+    - name: Install required software (ubuntu)
+      if: ${{ matrix.os != 'macos-latest' }}
+      run: |
+        sudo apt-get update
+        sudo apt-get install mtools zip dosfstools
+
+    - name: Install required software (macos)
+      if: ${{ matrix.os == 'macos-latest' }}
+      run: |
+        brew install mtools zip dosfstools
+
     - name: Generate Configs for unit tests
       working-directory: ./firmware/
       run: bash gen_config_default.sh

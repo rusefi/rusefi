@@ -15,7 +15,7 @@ jobs:
     - name: Install multilib
       run: |
         sudo apt-get update
-        sudo apt-get install gcc-multilib g++-multilib
+        sudo apt-get install gcc-multilib g++-multilib mtools dosfstools zip
 
     - name: Generate Configs for simulator
       working-directory: ./firmware/
