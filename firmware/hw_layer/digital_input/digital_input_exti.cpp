@@ -86,7 +86,7 @@ digital_input_s* startDigitalCaptureExti(const char *msg, brain_pin_e brainPin) 
 	return nullptr;
 }
 
-if ! EFI_ICU_INPUTS
+#if ! EFI_ICU_INPUTS
 digital_input_s* startDigitalCapture(const char *msg, brain_pin_e brainPin) {
 	return startDigitalCaptureExti(msg, brainPin);
 }
