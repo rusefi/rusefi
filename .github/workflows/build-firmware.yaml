@@ -131,7 +131,9 @@ jobs:
     - name: Install multilib, mingw, ncftp and mtools
       run: |
         sudo apt-get update
-        sudo apt-get install gcc-multilib g++-multilib g++-mingw-w64 gcc-mingw-w64 ncftp mtools zip dosfstools
+        sudo apt-get install gcc-multilib g++-multilib g++-mingw-w64 gcc-mingw-w64 ncftp mtools
+        sudo apt-get install zip
+        sudo apt-get install dosfstools
 
     - name: Generate Default config
       # todo: why do we even need this 'gen_config_default.sh' here?!
