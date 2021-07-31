@@ -31,13 +31,6 @@ jobs:
     - name: Identify Agent
       run: uname -a
 
-    - name: Install required software
-      run: |
-        sudo apt-get update
-        sudo apt-get install mtools
-        sudo apt-get install zip
-        sudo apt-get install dosfstools
-
     - name: Generate Configs for HW CI
       working-directory: ./firmware/
       run: bash gen_config_default.sh
