@@ -37,6 +37,7 @@ mcopy -i ramdisk.image $FULL_INI ::
 # Put a readme text file in there too
 mcopy -i ramdisk.image hw_layer/mass_storage/readme.temp ::README.txt
 mcopy -i ramdisk.image hw_layer/mass_storage/filesystem_contents/rusEFI\ Forum.url ::
+mcopy -i ramdisk.image hw_layer/mass_storage/filesystem_contents/rusEFI\ Quick\ Start.url ::
 mcopy -i ramdisk.image hw_layer/mass_storage/wiki.temp ::rusEFI\ ${SHORT_BOARDNAME}\ Wiki.url
 
 # Compress the image as DEFLATE with gzip
