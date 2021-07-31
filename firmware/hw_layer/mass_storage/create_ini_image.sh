@@ -8,7 +8,7 @@ H_OUTPUT=$2
 FS_SIZE=$3
 SHORT_BOARDNAME=$4
 
-echo "ini $FULL_INI to $H_OUTPUT size $FS_SIZE for $SHORT_BOARDNAME"
+echo "create_ini_image: ini $FULL_INI to $H_OUTPUT size $FS_SIZE for $SHORT_BOARDNAME"
 
 rm -f rusefi.zip ramdisk_image.h
 
@@ -28,7 +28,7 @@ mcopy -i ramdisk.image rusefi.ini.zip ::
 # Put a readme text file in there too
 mcopy -i ramdisk.image hw_layer/mass_storage/filesystem_contents/README.txt ::
 mcopy -i ramdisk.image hw_layer/mass_storage/filesystem_contents/rusEFI\ Forum.url ::
-mcopy -i ramdisk.image hw_layer/mass_storage/filesystem_contents/rusEFI\ Wiki.url ::
+mcopy -i ramdisk.image hw_layer/mass_storage/filesystem_contents/rusEFI\ Wiki.url ::rusEFI\ ${SHORT_BOARDNAME}\ Wiki.url
 
 
 
