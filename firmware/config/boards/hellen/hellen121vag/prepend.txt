@@ -1,3 +1,5 @@
+#define MAIN_HELP_URL "https://rusefi.com/s/hellen121vag"
+
 #define ts_show_hip9011 false
 #define ts_show_cj125 false
 
