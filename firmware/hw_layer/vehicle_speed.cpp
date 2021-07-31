@@ -88,8 +88,7 @@ void startVSSPins(void) {
 
 // todo: refactor https://github.com/rusefi/rusefi/issues/2123
 #if HAL_VSS_USE_PAL
-	ioline_t pal_line = PAL_LINE(getHwPort("vss", CONFIG(vehicleSpeedSensorInputPin)), getHwPin("vss", CONFIG(vehicleSpeedSensorInputPin)));
-	efiExtiEnablePin("VSS", CONFIG(vehicleSpeedSensorInputPin), PAL_EVENT_MODE_BOTH_EDGES, vsExtiCallback, (void *)pal_line);
+	efiExtiEnablePin("VSS", CONFIG(vehicleSpeedSensorInputPin), PAL_EVENT_MODE_BOTH_EDGES, vsExtiCallback, nullptr);
 #elif HAL_USE_ICU
 	digital_input_s* vehicleSpeedInput = startDigitalCapture("VSS", CONFIG(vehicleSpeedSensorInputPin));
 
