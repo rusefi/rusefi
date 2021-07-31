@@ -1,5 +1,6 @@
 /*
  * @file digital_input.h
+ * Universal input capture API hiding platform/hardware implementation details
  *
  * @date Nov 11, 2019
  * @author Andrey Belomutskiy, (c) 2012-2020
