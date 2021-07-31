@@ -28,12 +28,14 @@ fatlabel ramdisk.image RUSEFI
 zip -j rusefi.ini.zip $FULL_INI
 
 cp hw_layer/mass_storage/filesystem_contents/rusEFI_Wiki_template.url hw_layer/mass_storage/wiki.temp
-echo "URL=${BOARD_SPECIFIC_URL}" >>  hw_layer/mass_storage/wiki.temp
+echo "URL=${BOARD_SPECIFIC_URL}" >> hw_layer/mass_storage/wiki.temp
+cp hw_layer/mass_storage/filesystem_contents/README.template.txt hw_layer/mass_storage/readme.temp
+echo ${BOARD_SPECIFIC_URL}       >> hw_layer/mass_storage/readme.temp
 
 # Put the zip inside the filesystem
 mcopy -i ramdisk.image rusefi.ini.zip ::
 # Put a readme text file in there too
-mcopy -i ramdisk.image hw_layer/mass_storage/filesystem_contents/README.txt ::
+mcopy -i ramdisk.image hw_layer/mass_storage/readme.temp ::README.txt
 mcopy -i ramdisk.image hw_layer/mass_storage/filesystem_contents/rusEFI\ Forum.url ::
 mcopy -i ramdisk.image hw_layer/mass_storage/wiki.temp ::rusEFI\ ${SHORT_BOARDNAME}\ Wiki.url
 
