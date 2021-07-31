@@ -82,8 +82,10 @@ void efiExtiDisablePin(brain_pin_e brainPin)
 	ext_used &= ~PAL_PORT_BIT(index);
 }
 
+/*
 digital_input_s* startDigitalCapture(const char *msg, brain_pin_e brainPin) {
 	return nullptr;
 }
+*/
 
 #endif /* HAL_USE_PAL && EFI_PROD_CODE */
