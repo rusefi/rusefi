@@ -16,7 +16,6 @@ struct digital_input_s {
 	ICUDriver *driver;
 #endif /* HAL_USE_ICU */
 
-	bool isActiveHigh = false;
 	volatile bool started = false;
 	brain_pin_e brainPin = GPIO_UNASSIGNED;
 	IntListenerArray<1> widthListeners;
