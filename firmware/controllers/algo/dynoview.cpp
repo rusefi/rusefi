@@ -145,10 +145,11 @@ int getDynoviewPower(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
  * Only updates if we have Vss from input pin.
  */
 void updateDynoView(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
-    if (isBrainPinValid(CONFIG(vehicleSpeedSensorInputPin)) &&
-        (!CONFIG(enableCanVss))) {
-        dynoInstance.update(ICU);
-    }
+	if (isBrainPinValid(CONFIG(vehicleSpeedSensorInputPin)) &&
+		(!CONFIG(enableCanVss))) {
+		INJECT_ENGINE_REFERENCE(&dynoInstance);
+		dynoInstance.update(ICU);
+	}
 }
 
 /**
