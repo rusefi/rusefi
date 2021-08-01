@@ -77,7 +77,7 @@ bool hasVehicleSpeedSensor(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 
 #if HAL_VSS_USE_PAL
 static void vsExtiCallback(void *) {
-	vsAnaWidthCallback(engine);
+	vsAnaWidthCallback();
 }
 #endif /* HAL_VSS_USE_PAL */
 
