@@ -18,7 +18,7 @@ void DynoView::update(vssSrc src) {
     efitimeus_t timeNow, deltaTime = 0.0;
     float speed,deltaSpeed = 0.0;
     timeNow = getTimeNowUs();
-    speed = getVehicleSpeed();
+    speed = getVehicleSpeed(PASS_ENGINE_PARAMETER_SIGNATURE);
     if (src == ICU) {
         speed = efiRound(speed,1.0);
     } else {
