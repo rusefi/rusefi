@@ -395,7 +395,7 @@ void applyNewHardwareSettings(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	}
 #endif
 
-#if EFI_VEHICLE_SPEED
+#if EFI_VEHICLE_SPEED && ! EFI_UNIT_TEST
 	startVSSPins();
 #endif /* EFI_VEHICLE_SPEED */
 
