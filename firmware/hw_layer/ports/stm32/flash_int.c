@@ -59,6 +59,45 @@ flashsector_t intFlashSectorAt(flashaddr_t address) {
 	return sector;
 }
 
+static void intFlashClearErrors(void)
+{
+#ifdef STM32H7XX
+	FLASH->CCR2 = 0xffffffff;
+#else
+	FLASH_SR = 0x0000ffff;
+#endif
+}
+
+static int intFlashCheckErrors(void)
+{
+	uint32_t sr = FLASH_SR;
+
+#ifdef FLASH_SR_OPERR
+	if (sr & FLASH_SR_OPERR)
+		return FLASH_RETURN_OPERROR;
+#endif
+	if (sr & FLASH_SR_WRPERR)
+		return FLASH_RETURN_WPERROR;
+#ifdef FLASH_SR_PGAERR
+	if (sr & FLASH_SR_PGAERR)
+		return FLASH_RETURN_ALIGNERROR;
+#endif
+#ifdef FLASH_SR_PGPERR
+	if (sr & FLASH_SR_PGPERR)
+		return FLASH_RETURN_PPARALLERROR;
+#endif
+#ifdef FLASH_SR_ERSERR
+	if (sr & FLASH_SR_ERSERR)
+		return FLASH_RETURN_ESEQERROR;
+#endif
+#ifdef FLASH_SR_PGSERR
+	if (sr & FLASH_SR_PGSERR)
+		return FLASH_RETURN_PSEQERROR;
+#endif
+
+	return FLASH_RETURN_SUCCESS;
+}
+
 /**
  * @brief Unlock the flash memory for write access.
  * @return HAL_SUCCESS  Unlock was successful.
@@ -92,6 +131,7 @@ static bool isDualBank(void) {
 #endif
 
 int intFlashSectorErase(flashsector_t sector) {
+	int ret;
 	uint8_t sectorRegIdx = sector;
 #ifdef STM32F7XX
 	// On dual bank STM32F7, sector index doesn't match register value.
@@ -113,6 +153,9 @@ int intFlashSectorErase(flashsector_t sector) {
 
 	/* Wait for any busy flags. */
 	intFlashWaitWhileBusy();
+
+	/* Clearing error status bits.*/
+	intFlashClearErrors();
 
 	/* Setup parallelism before any program/erase */
 	FLASH_CR &= ~FLASH_CR_PSIZE_MASK;
@@ -144,6 +187,10 @@ int intFlashSectorErase(flashsector_t sector) {
 	/* Lock flash again */
 	intFlashLock()
 	;
+
+	ret = intFlashCheckErrors();
+	if (ret != FLASH_RETURN_SUCCESS)
+		return ret;
 
 	/* Check deleted sector for errors */
 	if (intFlashIsErased(intFlashSectorBegin(sector), flashSectorSize(sector)) == FALSE)
@@ -283,7 +330,10 @@ int intFlashWrite(flashaddr_t address, const char* buffer, size_t size) {
 }
 
 #else // not STM32H7XX
-static void intFlashWriteData(flashaddr_t address, const flashdata_t data) {
+static int intFlashWriteData(flashaddr_t address, const flashdata_t data) {
+	/* Clearing error status bits.*/
+	intFlashClearErrors();
+
 	/* Enter flash programming mode */
 	FLASH->CR |= FLASH_CR_PG;
 
@@ -301,9 +351,13 @@ static void intFlashWriteData(flashaddr_t address, const flashdata_t data) {
 
 	/* Exit flash programming mode */
 	FLASH->CR &= ~FLASH_CR_PG;
+
+	return intFlashCheckErrors();
 }
 
 int intFlashWrite(flashaddr_t address, const char* buffer, size_t size) {
+	int ret = FLASH_RETURN_SUCCESS;
+
 	/* Unlock flash for write access */
 	if (intFlashUnlock() == HAL_FAILED)
 		return FLASH_RETURN_NO_PERMISSION;
@@ -337,7 +391,9 @@ int intFlashWrite(flashaddr_t address, const char* buffer, size_t size) {
 		memcpy((char*) &tmp + alignOffset, buffer, chunkSize);
 
 		/* Write the new data in flash */
-		intFlashWriteData(alignedFlashAddress, tmp);
+		ret = intFlashWriteData(alignedFlashAddress, tmp);
+		if (ret != FLASH_RETURN_SUCCESS)
+			goto exit;
 
 		/* Advance */
 		address += chunkSize;
@@ -350,7 +406,9 @@ int intFlashWrite(flashaddr_t address, const char* buffer, size_t size) {
 	 * copied requires special treatment. */
 	while (size >= sizeof(flashdata_t)) {
 //		print("flash write size=%d\r\n", size);
-		intFlashWriteData(address, *(const flashdata_t*) buffer);
+		ret = intFlashWriteData(address, *(const flashdata_t*) buffer);
+		if (ret != FLASH_RETURN_SUCCESS)
+			goto exit;
 		address += sizeof(flashdata_t);
 		buffer += sizeof(flashdata_t);
 		size -= sizeof(flashdata_t);
@@ -363,14 +421,17 @@ int intFlashWrite(flashaddr_t address, const char* buffer, size_t size) {
 	if (size > 0) {
 		flashdata_t tmp = *(volatile flashdata_t*) address;
 		memcpy(&tmp, buffer, size);
-		intFlashWriteData(address, tmp);
+		ret = intFlashWriteData(address, tmp);
+		if (ret != FLASH_RETURN_SUCCESS)
+			goto exit;
 	}
 
+exit:
 	/* Lock flash again */
 	intFlashLock()
 	;
 
-	return FLASH_RETURN_SUCCESS;
+	return ret;
 }
 #endif
 
