@@ -174,7 +174,7 @@ void EngineTestHelper::firePrimaryTriggerRise() {
 	Engine *engine = &this->engine;
 	EXPAND_Engine;
 	LogTriggerTooth(SHAFT_PRIMARY_RISING, nowNt PASS_ENGINE_PARAMETER_SUFFIX);
-	engine->triggerCentral.handleShaftSignal(SHAFT_PRIMARY_RISING, nowNt PASS_ENGINE_PARAMETER_SUFFIX);
+	handleShaftSignal(0, true, nowNt PASS_ENGINE_PARAMETER_SUFFIX);
 }
 
 void EngineTestHelper::firePrimaryTriggerFall() {
@@ -182,7 +182,7 @@ void EngineTestHelper::firePrimaryTriggerFall() {
 	Engine *engine = &this->engine;
 	EXPAND_Engine;
 	LogTriggerTooth(SHAFT_PRIMARY_FALLING, nowNt PASS_ENGINE_PARAMETER_SUFFIX);
-	engine->triggerCentral.handleShaftSignal(SHAFT_PRIMARY_FALLING, nowNt PASS_ENGINE_PARAMETER_SUFFIX);
+	handleShaftSignal(0, false, nowNt PASS_ENGINE_PARAMETER_SUFFIX);
 }
 
 void EngineTestHelper::fireTriggerEventsWithDuration(float durationMs) {
