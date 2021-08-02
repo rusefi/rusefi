@@ -6,6 +6,7 @@
 #include "pwm_generator_logic.h"
 #include "airmass.h"
 #include "injector_model.h"
+#include "stepper.h"
 
 #include "gmock/gmock.h"
 
@@ -73,4 +74,9 @@ public:
 	MOCK_METHOD(void, prepare, (), (override));
 	MOCK_METHOD(floatms_t, getInjectionDuration, (float fuelMassGram), (const, override));
 	MOCK_METHOD(float, getFuelMassForDuration, (floatms_t duration), (const, override));
+};
+
+class MockStepperHardware : public StepperHw {
+public:
+	MOCK_METHOD(bool, step, (bool positive), (override));
 };
