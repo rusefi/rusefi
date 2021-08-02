@@ -78,7 +78,13 @@ bool FuelSchedule::addFuelEventsForCylinder(int i  DECLARE_ENGINE_PARAMETER_SUFF
 	}
 
 	InjectorOutputPin *secondOutput;
-	if (mode == IM_BATCH && CONFIG(twoWireBatchInjection)) {
+
+	// We need two outputs if:
+	// - we are running batch fuel, and have "use two wire batch" enabled
+	// - running mode is sequential, but cranking mode is batch, so we should run two wire batch while cranking
+	//     (if we didn't, only half of injectors would fire while cranking)
+	bool isTwoWireBatch = CONFIG(twoWireBatchInjection) || (CONFIG(injectionMode) == IM_SEQUENTIAL);
+	if (mode == IM_BATCH && isTwoWireBatch) {
 		/**
 		 * also fire the 2nd half of the injectors so that we can implement a batch mode on individual wires
 		 */
