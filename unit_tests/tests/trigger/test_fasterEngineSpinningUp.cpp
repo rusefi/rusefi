@@ -108,14 +108,14 @@ static void doTestFasterEngineSpinningUp60_2(int startUpDelayMs, int rpm1, int e
 	// fire 30 tooth rise/fall signals
 	eth.fireTriggerEvents2(30 /* count */, 1 /*ms*/);
 	// now fire missed tooth rise/fall
-	eth.fireRise(4 /*ms*/);
-	EXPECT_EQ(rpm1, GET_RPM()) << "test RPM: After rise " + std::to_string(startUpDelayMs);
-	eth.fireFall(4 /*ms*/);
-	EXPECT_EQ(expectedRpm, GET_RPM()) << "test RPM: with " + std::to_string(startUpDelayMs) + " startUpDelayMs";
+	eth.fireRise(5 /*ms*/);
+	EXPECT_EQ(rpm1, GET_RPM()) << "test RPM: After rise " << std::to_string(startUpDelayMs);
+	eth.fireFall(1 /*ms*/);
+	EXPECT_EQ(expectedRpm, GET_RPM()) << "test RPM: with " << std::to_string(startUpDelayMs) << " startUpDelayMs";
 }
 
 TEST(cranking, testFasterEngineSpinningUp60_2) {
-	doTestFasterEngineSpinningUp60_2(0, 549, 549);
-	doTestFasterEngineSpinningUp60_2(100, 549, 549);
-	doTestFasterEngineSpinningUp60_2(1000, 549, 549);
+	doTestFasterEngineSpinningUp60_2(0, 1000, 1000);
+	doTestFasterEngineSpinningUp60_2(100, 1000, 1000);
+	doTestFasterEngineSpinningUp60_2(1000, 1000, 1000);
 }
