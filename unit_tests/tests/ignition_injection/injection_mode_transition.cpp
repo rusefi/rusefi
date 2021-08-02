@@ -32,7 +32,7 @@ TEST(fuelControl, transitionIssue1592) {
 	ENGINE(tdcMarkEnabled) = false;
 	setupSimpleTestEngineWithMafAndTT_ONE_trigger(&eth, IM_SEQUENTIAL);
 
-	EXPECT_CALL(eth.mockAirmass, getAirmass(499))
+	EXPECT_CALL(eth.mockAirmass, getAirmass(500))
 		.WillRepeatedly(Return(AirmassResult{0.1008f, 50.0f}));
 
 	// This is easiest to trip on a wheel that requires sync
@@ -50,7 +50,7 @@ TEST(fuelControl, transitionIssue1592) {
 
 	// Yes, this is a ton of fuel but it makes the repro easier
 	engineConfiguration->cranking.baseFuel = 213.6;
-	engineConfiguration->cranking.rpm = 500;
+	engineConfiguration->cranking.rpm = 501;
 
 	// Test the transition from batch cranking to sequential running
 	engineConfiguration->crankingInjectionMode = IM_BATCH;
@@ -58,7 +58,7 @@ TEST(fuelControl, transitionIssue1592) {
 
 
 	// First sync point will schedule cranking pulse since we're in "faster spin up" mode
-	doRevolution(eth, 150);
+	doRevolution(eth, 240);
 
 	{
 		// Injector 2 should be scheduled to open then close
