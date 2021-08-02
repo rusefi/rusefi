@@ -951,6 +951,8 @@ typedef enum {
 	CAN_BUS_MQB = 8,
 	CAN_BUS_NISSAN_VQ = 9,
 	CAN_BUS_GENESIS_COUPE = 10,
+	CAN_BUS_HONDA_K = 11,
+
 
 	Internal_ForceMyEnumIntSize_can_nbc = ENUM_32_BITS,
 } can_nbc_e;
