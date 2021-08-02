@@ -55,14 +55,13 @@ private:
     uint8_t m_phase = 0;
 };
 
-class StepperMotor final : private ThreadController<UTILITY_THREAD_STACK_SIZE> {
+class StepperMotorBase {
 public:
-	StepperMotor();
+	virtual void initialize(StepperHw* hardware, int totalSteps);
+	void doIteration();
 
-	void initialize(StepperHw *hardware, int totalSteps);
-
-	void setTargetPosition(int targetPosition);
-	int getTargetPosition() const;
+	void setTargetPosition(float targetPositionSteps);
+	float getTargetPosition() const;
 
 	bool isBusy() const;
 
@@ -70,7 +69,6 @@ public:
 	int m_totalSteps = 0;
 
 protected:
-	void ThreadTask() override;
 	void setInitialPosition(void);
 
 	void saveStepperPos(int pos);
@@ -79,10 +77,32 @@ protected:
 	void changeCurrentPosition(bool positive);
 	void postCurrentPosition(void);
 
-private:
 	StepperHw* m_hw = nullptr;
 
-	int m_targetPosition = 0;
+	float m_targetPosition = 0;
 	bool initialPositionSet = false;
+	bool m_isBusy = false;
 };
 
+#if !EFI_UNIT_TEST
+
+#include "thread_priority.h"
+
+class StepperMotor final : public StepperMotorBase, private ThreadController<UTILITY_THREAD_STACK_SIZE> {
+public:
+	StepperMotor() : ThreadController("stepper", PRIO_STEPPER) {}
+
+	void initialize(StepperHw* hardware, int totalSteps);
+
+	void ThreadTask() override {
+		// Require hardware to be set
+		if (!m_hw) {
+			return;
+		}
+
+		while (true) {
+			doIteration();
+		}
+	}
+};
+#endif

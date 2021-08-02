@@ -9,13 +9,30 @@
 
 #include "pch.h"
 
+#include "stepper.h"
+
+float StepperMotorBase::getTargetPosition() const {
+	return m_targetPosition;
+}
+
+void StepperMotorBase::setTargetPosition(float targetPositionSteps) {
+	// When the IAC position value change is insignificant (lower than this threshold), leave the poor valve alone
+	// When we get a larger change, actually update the target stepper position
+	if (absF(m_targetPosition - targetPositionSteps) >= 1) {
+		m_targetPosition = targetPositionSteps;
+	}
+}
+
+void StepperMotorBase::initialize(StepperHw *hardware, int totalSteps) {
+	m_totalSteps = maxI(3, totalSteps);
+
+	m_hw = hardware;
+}
+
 // todo: EFI_STEPPER macro
 #if EFI_PROD_CODE || EFI_SIMULATOR
-#include "stepper.h"
-#include "adc_inputs.h"
-#include "thread_priority.h"
 
-void StepperMotor::saveStepperPos(int pos) {
+void StepperMotorBase::saveStepperPos(int pos) {
 	// use backup-power RTC registers to store the data
 #if EFI_PROD_CODE
 	backupRamSave(BACKUP_STEPPER_POS, pos + 1);
@@ -23,7 +40,7 @@ void StepperMotor::saveStepperPos(int pos) {
 	postCurrentPosition();
 }
 
-int StepperMotor::loadStepperPos() {
+int StepperMotorBase::loadStepperPos() {
 #if EFI_PROD_CODE
 	return (int)backupRamLoad(BACKUP_STEPPER_POS) - 1;
 #else
@@ -31,7 +48,7 @@ int StepperMotor::loadStepperPos() {
 #endif
 }
 
-void StepperMotor::changeCurrentPosition(bool positive) {
+void StepperMotorBase::changeCurrentPosition(bool positive) {
 	if (positive) {
 		m_currentPosition++;
 	} else {
@@ -40,7 +57,7 @@ void StepperMotor::changeCurrentPosition(bool positive) {
 	postCurrentPosition();
 }
 
-void StepperMotor::postCurrentPosition(void) {
+void StepperMotorBase::postCurrentPosition(void) {
 	if (engineConfiguration->debugMode == DBG_IDLE_CONTROL) {
 #if EFI_TUNER_STUDIO
 		tsOutputChannels.debugIntField5 = m_currentPosition;
@@ -48,7 +65,7 @@ void StepperMotor::postCurrentPosition(void) {
 	}
 }
 
-void StepperMotor::setInitialPosition(void) {
+void StepperMotorBase::setInitialPosition(void) {
 	// try to get saved stepper position (-1 for no data)
 	m_currentPosition = loadStepperPos();
 
@@ -104,60 +121,43 @@ void StepperMotor::setInitialPosition(void) {
 	initialPositionSet = true;
 }
 
-void StepperMotor::ThreadTask() {
-	// Require hardware to be set
-	if (!m_hw) {
+void StepperMotorBase::doIteration() {
+	int targetPosition = efiRound(getTargetPosition(), 1);
+	int currentPosition = m_currentPosition;
+
+	// the stepper does not work if the main relay is turned off (it requires +12V)
+	if (!engine->isMainRelayEnabled()) {
+		m_hw->pause();
 		return;
 	}
 
-	while (true) {
-		int targetPosition = getTargetPosition();
-		int currentPosition = m_currentPosition;
+	if (!initialPositionSet) {
+		setInitialPosition();
+		return;
+	}
 
-		// the stepper does not work if the main relay is turned off (it requires +12V)
-		if (!engine->isMainRelayEnabled()) {
-			m_hw->pause();
-			continue;
-		}
+	if (targetPosition == currentPosition) {
+		m_hw->pause();
+		m_isBusy = false;
+		return;
+	}
 
-		if (!initialPositionSet) {
-			setInitialPosition();
-			continue;
-		}
+	m_isBusy = true;
 
-		if (targetPosition == currentPosition) {
-			m_hw->pause();
-			continue;
-		}
+	bool isIncrementing = targetPosition > currentPosition;
 
-		bool isIncrementing = targetPosition > currentPosition;
+	if (m_hw->step(isIncrementing)) {
+		changeCurrentPosition(isIncrementing);
+	}
 
-		if (m_hw->step(isIncrementing)) {
-			changeCurrentPosition(isIncrementing);
-		}
-
-		// save position to backup RTC register
+	// save position to backup RTC register
 #if EFI_PROD_CODE
-		saveStepperPos(m_currentPosition);
+	saveStepperPos(m_currentPosition);
 #endif
-	}
 }
 
-StepperMotor::StepperMotor() : ThreadController("stepper", PRIO_STEPPER) {}
-
-int StepperMotor::getTargetPosition() const {
-	return m_targetPosition;
-}
-
-void StepperMotor::setTargetPosition(int targetPosition) {
-	// we accept a new target position only if the motor is powered from the main relay
-	if (engine->isMainRelayEnabled()) {
-		m_targetPosition = targetPosition;
-	}
-}
-
-bool StepperMotor::isBusy() const {
-	return m_currentPosition != m_targetPosition;
+bool StepperMotorBase::isBusy() const {
+	return m_isBusy;
 }
 
 void StepDirectionStepper::setDirection(bool isIncrementing) {
@@ -202,9 +202,7 @@ bool StepDirectionStepper::step(bool positive) {
 }
 
 void StepperMotor::initialize(StepperHw *hardware, int totalSteps) {
-	m_totalSteps = maxI(3, totalSteps);
-
-	m_hw = hardware;
+	StepperMotorBase::initialize(hardware, totalSteps);
 
 	Start();
 }
