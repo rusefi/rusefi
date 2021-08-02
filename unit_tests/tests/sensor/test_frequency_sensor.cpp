@@ -1,19 +1,29 @@
 #include "pch.h"
 
 #include "frequency_sensor.h"
+#include "sensor_type.h"
+
+// Fake converter just passes value straight though
+struct IdentityFunction : public SensorConverter {
+	SensorResult convert(float raw) const {
+		return raw;
+	}
+};
+
+static IdentityFunction identityFunc;
 
 class FrequencySensorTest : public ::testing::Test {
-protected:
+public:
+	FrequencySensorTest()
+		: dut(SensorType::FuelEthanolPercent, MS2NT(50))
+	{
+	}
+
 	void SetUp() override {
 		// If somehow prodcode will be unwrapped for test it MAYBE! will fire with error.
 		// At least we must init FlexSensor somehow
 		dut.init(GPIO_INVALID);
-
-		Sensor::resetRegistry();
-	}
-
-	void TearDown() override {
-		Sensor::resetRegistry();
+		dut.setFunction(identityFunc);
 	}
 
 	/*
@@ -22,18 +32,18 @@ protected:
 	 *  (as Sensor works by falling edge)
 	 */
 	void generatePwm(EngineTestHelper &eth, float freqHz) {
-		auto const PERIODS_TO_SIMULATE = 50;
+		constexpr auto periods = 50;
 		auto period = (1 / freqHz);
 
 		std::cout << "PERIOD: " << period << std::endl;
 
-		for (auto i = PERIODS_TO_SIMULATE; i > 0; i--) {
+		for (auto i = 0; i < periods; i++) {
 			eth.moveTimeForwardSec(period);
 			dut.onEdge(getTimeNowNt());
 		}
 	}
 
-	FrequencySensor dut(SensorType::FuelEthanolPercent, MS2NT(50));
+	FrequencySensor dut;
 };
 
 /*
@@ -51,7 +61,7 @@ TEST_F(FrequencySensorTest, testValidWithPwm) {
 
 	generatePwm(eth, 10);
 
-	// Should be valid
+	// Should be valid, correct frequency
 	{
 		auto s = Sensor::get(SensorType::FuelEthanolPercent);
 		EXPECT_TRUE(s.Valid);
