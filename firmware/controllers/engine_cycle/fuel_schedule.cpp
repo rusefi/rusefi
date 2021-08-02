@@ -62,11 +62,17 @@ bool FuelSchedule::addFuelEventsForCylinder(int i  DECLARE_ENGINE_PARAMETER_SUFF
 
 	injection_mode_e mode = engine->getCurrentInjectionMode(PASS_ENGINE_PARAMETER_SIGNATURE);
 
+	// We need two outputs if:
+	// - we are running batch fuel, and have "use two wire batch" enabled
+	// - running mode is sequential, but cranking mode is batch, so we should run two wire batch while cranking
+	//     (if we didn't, only half of injectors would fire while cranking)
+	bool isTwoWireBatch = CONFIG(twoWireBatchInjection) || (CONFIG(injectionMode) == IM_SEQUENTIAL);
+
 	int injectorIndex;
 	if (mode == IM_SIMULTANEOUS || mode == IM_SINGLE_POINT) {
 		// These modes only have one injector
 		injectorIndex = 0;
-	} else if (mode == IM_SEQUENTIAL || (mode == IM_BATCH && CONFIG(twoWireBatchInjection))) {
+	} else if (mode == IM_SEQUENTIAL || (mode == IM_BATCH && isTwoWireBatch)) {
 		// Map order index -> cylinder index (firing order)
 		injectorIndex = getCylinderId(i PASS_ENGINE_PARAMETER_SUFFIX) - 1;
 	} else if (mode == IM_BATCH) {
@@ -79,11 +85,6 @@ bool FuelSchedule::addFuelEventsForCylinder(int i  DECLARE_ENGINE_PARAMETER_SUFF
 
 	InjectorOutputPin *secondOutput;
 
-	// We need two outputs if:
-	// - we are running batch fuel, and have "use two wire batch" enabled
-	// - running mode is sequential, but cranking mode is batch, so we should run two wire batch while cranking
-	//     (if we didn't, only half of injectors would fire while cranking)
-	bool isTwoWireBatch = CONFIG(twoWireBatchInjection) || (CONFIG(injectionMode) == IM_SEQUENTIAL);
 	if (mode == IM_BATCH && isTwoWireBatch) {
 		/**
 		 * also fire the 2nd half of the injectors so that we can implement a batch mode on individual wires
