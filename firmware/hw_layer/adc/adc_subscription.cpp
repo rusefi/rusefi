@@ -92,6 +92,11 @@ static AdcSubscriptionEntry* findEntry() {
 		return;
 	}
 
+#if EFI_PROD_CODE
+	// Release the pin
+	efiSetPadUnused(getAdcChannelBrainPin("adc unsubscribe", entry->Channel));
+#endif // EFI_PROD_CODE
+
 	// clear the sensor first to mark this entry not in use
 	entry->Sensor = nullptr;
 
