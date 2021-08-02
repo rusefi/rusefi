@@ -123,7 +123,7 @@ TEST_F(FlexSensorForTests, testInvalidFrequency)
  *  Sensor must take PWM input on frequency with "known output value"
  *  and generate similiar output.
  */
-TEST_F(FlexSensorForTests, testInvalidFrequency)
+TEST_F(FlexSensorForTests, testFrequencyConversion)
 {
 
     ASSERT_TRUE(dut.Register ());
@@ -146,4 +146,3 @@ TEST_F(FlexSensorForTests, testInvalidFrequency)
             EXPECT_FLOAT_EQ(s.Value, expectedValue);
         }
 }
-
