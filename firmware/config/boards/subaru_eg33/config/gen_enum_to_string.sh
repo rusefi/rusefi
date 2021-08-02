@@ -1,6 +1,6 @@
 #!/bin/sh
 
-echo This batch files reads rusefi_enums.h and produses auto_generated_enums.* files
+echo This batch files reads rusefi_enums.h and produces auto_generated_enums.* files
 
 #cd ../../../..
 #cd ..

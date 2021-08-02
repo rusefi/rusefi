@@ -1,3 +1,7 @@
+/**
+ * @file Lps25Sensor.cpp
+ */
+
 #include "Lps25Sensor.h"
 #include "global.h"
 

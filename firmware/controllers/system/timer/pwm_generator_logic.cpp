@@ -8,14 +8,11 @@
  * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
-#include "global.h"
+#include "pch.h"
 #include "os_access.h"
-#include "pwm_generator_logic.h"
-#include "perf_trace.h"
 
 #if EFI_PROD_CODE
 #include "mpu_util.h"
-#include "engine.h"
 #endif // EFI_PROD_CODE
 
 // 1% duty cycle

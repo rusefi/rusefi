@@ -1,10 +1,8 @@
+#include "pch.h"
+
 #include "unit_test_framework.h"
 #include "init.h"
-#include "sensor.h"
 #include "functional_sensor.h"
-
-#include "engine_test_helper.h"
-#include <gtest/gtest.h>
 
 static void postToFuncSensor(Sensor* s, float value) {
 	static_cast<FunctionalSensor*>(s)->postRawValue(value, getTimeNowNt());

@@ -31,7 +31,7 @@ jobs:
     - name: Identify Agent
       run: uname -a
 
-    - name: Generate Configs
+    - name: Generate Configs for HW CI
       working-directory: ./firmware/
       run: bash gen_config_default.sh
 

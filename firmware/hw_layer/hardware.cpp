@@ -335,6 +335,7 @@ void applyNewHardwareSettings(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 #endif /* #if EFI_HD44780_LCD */
 
 	if (isPinOrModeChanged(clutchUpPin, clutchUpPinMode)) {
+		// bug? duplication with stopPedalPins?
 		efiSetPadUnused(activeConfiguration.clutchUpPin PASS_ENGINE_PARAMETER_SUFFIX);
 	}
 
@@ -394,7 +395,7 @@ void applyNewHardwareSettings(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	}
 #endif
 
-#if EFI_VEHICLE_SPEED
+#if EFI_VEHICLE_SPEED && ! EFI_UNIT_TEST
 	startVSSPins();
 #endif /* EFI_VEHICLE_SPEED */
 

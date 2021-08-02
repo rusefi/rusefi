@@ -27,6 +27,9 @@ All notable user-facing or behavior-altering changes will be documented in this 
 
 ## Month 202x Release - "Release Name"
 
+### Added
+ - RUSEFI MSD now contains bundle-specific URL #2848
+
 ## July 2021 Release "Ice Cream Day"
 
 ### Breaking Changes

@@ -950,6 +950,7 @@ typedef enum {
 	CAN_BUS_Haltech = 7,
 	CAN_BUS_MQB = 8,
 	CAN_BUS_NISSAN_VQ = 9,
+	CAN_BUS_GENESIS_COUPE = 10,
 
 	Internal_ForceMyEnumIntSize_can_nbc = ENUM_32_BITS,
 } can_nbc_e;
@@ -1021,6 +1022,7 @@ typedef enum __attribute__ ((__packed__)) {
 	GPPWM_AuxTemp2 = 7,
 	GPPWM_Zero = 8,
 	GPPWM_AccelPedal = 9,
+	GPPWM_Vbatt = 10,
 } gppwm_channel_e;
 
 typedef enum __attribute__ ((__packed__)) {

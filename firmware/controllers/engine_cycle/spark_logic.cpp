@@ -5,24 +5,19 @@
  * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
+#include "pch.h"
+
 #include "software_knock.h"
 #include "spark_logic.h"
 #include "os_access.h"
-#include "engine_math.h"
 
 #include "utlist.h"
 #include "event_queue.h"
-#include "perf_trace.h"
 #include "tooth_logger.h"
 
 #include "hip9011.h"
-#include "engine_ptr.h"
 
 #if EFI_ENGINE_CONTROL
-
-#if EFI_TUNER_STUDIO
-#include "tunerstudio_outputs.h"
-#endif /* EFI_TUNER_STUDIO */
 
 #if EFI_UNIT_TEST
 extern bool verboseMode;

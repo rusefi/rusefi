@@ -5,16 +5,13 @@
  * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
-#include "engine_test_helper.h"
+#include "pch.h"
+
 #include "advance_map.h"
-#include "tps.h"
 #include "pid.h"
 #include "fsio_impl.h"
 #include "idle_thread.h"
-#include "allsensors.h"
-#include "engine_controller.h"
 #include "electronic_throttle.h"
-#include "sensor.h"
 #include "vehicle_speed.h"
 
 using ::testing::StrictMock;

@@ -11,9 +11,9 @@
  * 3) CJ125 internal wideband controller is known to work with both 4.2 and 4.9
  *
  */
+#include "pch.h"
+
 #include "ego.h"
-#include "interpolation.h"
-#include "engine.h"
 #include "adc_inputs.h"
 #include "cyclic_buffer.h"
 

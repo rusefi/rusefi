@@ -1,12 +1,10 @@
 
+#include "pch.h"
+
 #include "gppwm_channel.h"
 
-#include "engine.h"
-#include "pwm_generator_logic.h"
 #include "table_helper.h"
 #include "expected.h"
-#include "sensor.h"
-#include "engine_math.h"
 
 expected<float> readGppwmChannel(gppwm_channel_e channel DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	switch (channel) {
@@ -30,6 +28,8 @@ expected<float> readGppwmChannel(gppwm_channel_e channel DECLARE_ENGINE_PARAMETE
 		return 0;
 	case GPPWM_AccelPedal:
 		return Sensor::get(SensorType::AcceleratorPedal);
+	case GPPWM_Vbatt:
+		return Sensor::get(SensorType::BatteryVoltage);
 	}
 
 	return unexpected;

@@ -1,0 +1,759 @@
+#
+#
+
+pins:
+  - pin: 1
+    function: Ignition 2 Output
+    id: GPIOE_5
+    class: outputs
+    ts_name: 1 - IGN_2
+    type: ign
+    color: red
+
+  - pin: 2
+    function: Ignition 3 (2+3) Output
+    id: GPIOE_4
+    class: outputs
+    ts_name: 2 - IGN_3
+    type: ign
+    color: red
+
+  - pin: 3
+    function: Ignition GND
+    type: gnd
+    color: black
+
+  - pin: 4
+    function: Ignition 4 Output
+    id: GPIOE_3
+    class: outputs
+    ts_name: 4 - IGN_4
+    type: ign
+    color: red
+
+  - pin: 5
+    function: Ignition 1 (1+4) Output
+    id: GPIOI_8
+    class: outputs
+    ts_name: 5 - IGN_1
+    type: ign
+    color: red
+
+  - pin: 6
+    function: Injector 2 Output
+    id: GPIOG_8
+    class: outputs
+    ts_name: 6 - INJ_2
+    type: inj
+    color: blue
+
+  - pin: 7
+    function: Injector 3 Output
+    id: GPIOD_11
+    class: outputs
+    ts_name: 7 - INJ_3
+    type: inj
+    color: blue
+
+  - pin: 8
+    function: Engine Speed (Tachometer) Signal Output (push-pull)
+    id: GPIOD_14
+    class: outputs
+    ts_name: 8 - OUT_TACH
+    color: green
+
+  - pin: 9
+    function: Fuel Level / CLT Analog Input
+    id: GPIOF_5
+    class: analog_inputs
+    ts_name: 9 - IN_SENS3
+    color: white
+
+  - pin: 10
+    function: Fuel consumption Output (push-pull) / CLT?
+    id: GPIOD_15
+    class: outputs
+    ts_name: 10 - OUT_FUEL
+    color: green
+
+  - pin: 11
+    function: Reserved High-side Output (high)
+    id: GPIOH_13
+    class: outputs
+    ts_name: 11 - OUT_HIGH
+    type: gp_high
+    color: green
+
+  - pin: 12
+    function: Battery Permanent Supply
+    color: black
+    type: 12v
+
+  - pin: 13
+    function: Ignition Switch KL15 / Battery Voltage Analog Input
+    id: EFI_ADC_5
+    class: analog_inputs
+    ts_name: 13 - IN_VIGN
+    color: white
+
+  - pin: 14
+    function: Main Relay Output
+    id: GPIOH_13
+    class: outputs
+    ts_name: 14 - OUT_MAIN
+    type: ls
+    color: orange
+
+  - pin: 15
+    function: Crankshaft Sensor (+) Input
+    id: [GPIOB_1, EFI_ADC_9]
+    class: [event_inputs, analog_inputs]
+    ts_name: 15 - IN_CRANK (A24)
+    color: white
+
+  - pin: 16
+    function: Throttle Position Sensor (TPS) Analog Input
+    id: EFI_ADC_4
+    class: analog_inputs
+    ts_name: 16 - IN_TPS
+    color: white
+
+  - pin: 17
+    function: TMOT, TPS sensor analog GND
+    type: gnd
+    color: black
+
+  - pin: 18
+    function: Lambda O2-Sensor (O2S) Analog Input
+    id: EFI_ADC_0
+    class: analog_inputs
+    ts_name: 18 - IN_O2S
+    color: white
+
+  - pin: 19
+    function: Knock Sensor (+) Analog Input
+    color: white
+
+  - pin: 20
+    function: Knock Sensor (-)
+    color: black
+
+  - pin: 21
+    function: Ignition 8 Output
+    id: GPIOE_6
+    class: outputs
+    ts_name: 21 - IGN_8
+    type: ign
+    color: red
+
+  - pin: 22
+    function: Ignition 7 Output
+    id: GPIOB_9
+    class: outputs
+    ts_name: 22 - IGN_7
+    type: ign
+    color: red
+
+  - pin: 23
+    function: Ignition 6 Output
+    id: GPIOB_8
+    class: outputs
+    ts_name: 23 - IGN_6
+    type: ign
+    color: red
+
+  - pin: 24
+    function: Ignition 5 Output
+    id: GPIOE_2
+    class: outputs
+    ts_name: 24 - IGN_5
+    type: ign
+    color: red
+
+  - pin: 25
+    function: Injector 6 Output
+    id: GPIOF_12
+    class: outputs
+    ts_name: 25 - INJ_6
+    type: inj
+    color: blue
+
+  - pin: 26
+    function: Solenoid B2 Output (push-pull) / Reserved
+    color: green
+
+  - pin: 27
+    function: Injector 1 Output
+    id: GPIOG_7
+    class: outputs
+    ts_name: 27 - INJ_1
+    type: inj
+    color: blue
+
+  - pin: 28
+    function: Oxygen Sensor 2 Heating Output (low)
+    id: GPIOA_9
+    class: outputs
+    ts_name: 28 - OUT_O2H2
+    type: ls
+    color: orange
+
+  - pin: 29
+    function: Solenoid B1 output / Reserved
+    color: green
+
+  - pin: 30
+    function: Injector 5 Output
+    id: GPIOD_9
+    class: outputs
+    ts_name: 30 - INJ_5
+    type: inj
+    color: blue
+
+  - pin: 31
+    function: CheckEngine Lamp Output (low)
+    id: GPIOG_4
+    class: outputs
+    ts_name: 31 - OUT_CE
+    type: ls
+    color: orange
+
+  - pin: 32
+    function: 5V Analog Supply (TPS)
+    color: black
+    type: 5v
+
+  - pin: 33
+    function: 5V Analog Supply (MAF/MAP Sensor)
+    color: black
+    type: 5v
+
+  - pin: 34
+    function: Crank Sensor (-)
+    color: black
+
+  - pin: 35
+    function: MAP/MAF Sensor Analog Gnd
+    color: black
+    type: gnd
+
+  - pin: 36
+    function: Lambda O2-sensor Gnd
+    color: black
+    type: gnd
+
+  - pin: 37
+    function: Manifold pressure (MAF/MAP1) Analog Input
+    id: EFI_ADC_10
+    class: analog_inputs
+    ts_name: 37 - IN_MAP1
+    color: white
+
+  - pin: 38
+    function: MAP2 Analog Input
+    id: EFI_ADC_11
+    class: analog_inputs
+    ts_name: 38 - IN_MAP2
+    color: white
+
+  - pin: 39
+    function: Engine Coolant Temp. (CLT) Analog Input
+    id: EFI_ADC_12
+    class: analog_inputs
+    ts_name: 39 - IN_CLT
+    color: white
+
+  - pin: 40
+    function: Intake Air Temperature (IAT) Analog Input
+    id: EFI_ADC_13
+    class: analog_inputs
+    ts_name: 40 - IN_IAT
+    color: white
+
+  - pin: 41
+    function: MAP3 Analog Input
+    id: EFI_ADC_2
+    class: analog_inputs
+    ts_name: 41 - IN_MAP3
+    color: white
+
+  - pin: 42
+    function: Reserved input (RES3) / Fuel level / IAT / RRS
+
+  - pin: 43
+    function: Reserved Analog Input (SENS2)
+
+  - pin: 44
+    function: Battery Switched Supply
+    type: 12v
+
+  - pin: 45
+    function: Battery Switched Supply
+    type: 12v
+
+  - pin: 46
+    function: Canister Purge Valve Output (low)
+    id: GPIOG_3
+    class: outputs
+    ts_name: 46 - OUT_CANIST
+    type: ls
+    color: orange
+
+  - pin: 47
+    function: Injector 4 Output
+    id: GPIOD_10
+    class: outputs
+    ts_name: 47 - INJ_4
+    type: inj
+    color: blue
+
+  - pin: 48
+    function: O2 LSF Heating Output (low)
+    id: GPIOH_14
+    class: outputs
+    ts_name: 48 - OUT_O2H
+    type: ls
+    color: orange
+
+  - pin: 49
+    function: Canister heater Output (low)
+    id: GPIOI_1
+    class: outputs
+    ts_name: 49 - OUT_HEATER
+    type: ls
+    color: orange
+
+  - pin: 50
+    function: Starter Relay Output (low) / HOTLamp / Idle2(Mikas)
+    id: GPIOI_0
+    class: outputs
+    ts_name: 50 - OUT_STARTER
+    type: ls
+    color: orange
+
+  - pin: 51
+    function: Power Ground
+    type: gnd
+    color: black
+
+  - pin: 52
+    function: K-Line (Immobiliser) / Solenoid Output A1
+
+  - pin: 53
+    function: Reserved Ground / Fuel Level Ground
+    type: gnd
+    color: black
+
+  - pin: 54
+    function: Solenoid Output A2 / Reserved
+
+  - pin: 55
+    function: Lambda O2-Sensor 2 Analog Input (O2S_2)
+    id: EFI_ADC_1
+    class: analog_inputs
+    ts_name: 55 - IN_O2S2
+    color: white
+
+  - pin: 56
+    function: Reserved input 1 (RES1)
+
+  - pin: 57
+    function: Reserved input 2 (RES2)
+
+  - pin: 58
+    function: Reserved Input (SENS1) / AC (Bosch)
+
+  - pin: 59
+    function: Vehicle Speed Sensor (VSS) digital input
+    id: GPIOF_11
+    class: event_inputs
+    ts_name: 59 - IN_VSS
+    color: white
+
+  - pin: 60
+    function: Reserved Push-Pull Output (push-pull)
+    id: GPIOD_13
+    class: outputs
+    ts_name: 60 - OUT_IO
+    color: green
+
+  - pin: 61
+    function: Power Ground
+    type: gnd
+    color: black
+
+  - pin: 62
+    function: CAN-H (ME7.8.8-compatible)
+
+  - pin: 63
+    function: Battery Switched Supply
+    type: 12v
+
+  - pin: 64
+    function: Solenoid B2 output (push-pull) / Stepper A (or D)
+    id: GPIOC_9
+    class: outputs
+    ts_name: 64 - OUT_COIL_B2
+    color: green
+
+  - pin: 65
+    function: Solenoid B1 output (push-pull) / Stepper D (or C)
+    id: GPIOC_8
+    class: outputs
+    ts_name: 65 - OUT_COIL_B1
+    color: green
+
+  - pin: 66
+    function: Solenoid A2 output (push-pull) / Stepper C (or B)
+    id: GPIOC_7
+    class: outputs
+    ts_name: 66 - OUT_COIL_A2
+    color: green
+
+  - pin: 67
+    function: Solenoid A1 output (push-pull) / Stepper B (or A)
+    id: GPIOC_6
+    class: outputs
+    ts_name: 67 - OUT_COIL_A1
+    color: green
+
+  - pin: 68
+    function: Electric Cooling Fan (ECF) Relay Output (low)
+    id: GPIOD_12
+    class: outputs
+    ts_name: 68 - OUT_ECF
+    type: ls
+    color: orange
+
+  - pin: 69
+    function: A/C Relay Output (low)
+    id: GPIOH_15
+    class: outputs
+    ts_name: 69 - OUT_AC
+    type: ls
+    color: orange
+
+  - pin: 70
+    function: Fuel Pump Relay Output (low)
+    id: GPIOG_2
+    class: outputs
+    ts_name: 70 - OUT_PUMP
+    type: ls
+    color: orange
+
+  - pin: 71
+    function: K-Line
+
+  - pin: 72
+    function: Injector 7 Output
+    id: GPIOF_13
+    class: outputs
+    ts_name: 72 - INJ_7
+    type: inj
+    color: blue
+
+  - pin: 73
+    function: Injector 8 Output
+    id: GPIOF_14
+    class: outputs
+    ts_name: 73 - INJ_8
+    type: inj
+    color: blue
+
+  - pin: 74
+    function: Inertia switch (crash detect) Input
+    id: [GPIOB_0, EFI_ADC_8]
+    class: [event_inputs, analog_inputs]
+    ts_name: 74 - IN_AUX1
+    color: white
+
+  - pin: 75
+    function: A/C Switch Input
+    id: [GPIOC_4, EFI_ADC_14]
+    class: [event_inputs, analog_inputs]
+    ts_name: 75 - IN_AUX2
+    color: white
+
+  - pin: 76
+    function: Power Steering Input
+    id: [GPIOC_5, EFI_ADC_15]
+    class: [event_inputs, analog_inputs]
+    ts_name: 76 - IN_AUX3
+    color: white
+
+  - pin: 77
+    function: Clutch switch Input
+    id: [GPIOA_7, EFI_ADC_7]
+    class: [event_inputs, analog_inputs]
+    ts_name: 77 - IN_AUX4
+    color: white
+
+  - pin: 78
+    function: Pedal Position Sensor (PPS) Analog Input / GND?
+    id: EFI_ADC_3
+    class: analog_inputs
+    ts_name: 78 - IN_PPS
+    color: white
+
+  - pin: 79
+    function: Cam/Phase Sensor Input
+    id: [GPIOA_6, EFI_ADC_6]
+    class: [event_inputs, analog_inputs]
+    ts_name: 79 - IN_CAM
+    color: white
+
+  - pin: 80
+    function: Power Ground
+    type: gnd
+    color: black
+
+  - pin: 81
+    function: CAN-L (ME7.8.8-compatible)
+
+info:
+  image:
+    file: main.jpg
+  pins:
+    - pin: 1
+      x: 809
+      y: 808
+    - pin: 2
+      x: 1028
+      y: 808
+    - pin: 3
+      x: 917
+      y: 611
+    - pin: 4
+      x: 797
+      y: 414
+    - pin: 5
+      x: 1025
+      y: 414
+    - pin: 6
+      x: 3234
+      y: 408
+    - pin: 7
+      x: 3129
+      y: 408
+    - pin: 8
+      x: 3024
+      y: 408
+    - pin: 9
+      x: 2920
+      y: 408
+    - pin: 10
+      x: 2815
+      y: 408
+    - pin: 11
+      x: 2710
+      y: 408
+    - pin: 12
+      x: 2605
+      y: 408
+    - pin: 13
+      x: 2500
+      y: 408
+    - pin: 14
+      x: 2395
+      y: 408
+    - pin: 15
+      x: 2291
+      y: 408
+    - pin: 16
+      x: 2186
+      y: 408
+    - pin: 17
+      x: 2081
+      y: 408
+    - pin: 18
+      x: 1976
+      y: 408
+    - pin: 19
+      x: 1871
+      y: 408
+    - pin: 20
+      x: 1766
+      y: 408
+    - pin: 21
+      x: 1662
+      y: 408
+    - pin: 22
+      x: 1557
+      y: 408
+    - pin: 23
+      x: 1452
+      y: 408
+    - pin: 24
+      x: 1347
+      y: 408
+    - pin: 25
+      x: 3234
+      y: 519
+    - pin: 26
+      x: 3129
+      y: 519
+    - pin: 27
+      x: 3024
+      y: 519
+    - pin: 28
+      x: 2920
+      y: 519
+    - pin: 29
+      x: 2815
+      y: 519
+    - pin: 30
+      x: 2710
+      y: 519
+    - pin: 31
+      x: 2605
+      y: 519
+    - pin: 32
+      x: 2500
+      y: 519
+    - pin: 33
+      x: 2395
+      y: 519
+    - pin: 34
+      x: 2291
+      y: 519
+    - pin: 35
+      x: 2186
+      y: 519
+    - pin: 36
+      x: 2081
+      y: 519
+    - pin: 37
+      x: 1976
+      y: 519
+    - pin: 38
+      x: 1871
+      y: 519
+    - pin: 39
+      x: 1766
+      y: 519
+    - pin: 40
+      x: 1662
+      y: 519
+    - pin: 41
+      x: 1557
+      y: 519
+    - pin: 42
+      x: 1452
+      y: 519
+    - pin: 43
+      x: 1347
+      y: 519
+    - pin: 44
+      x: 3234
+      y: 708
+    - pin: 45
+      x: 3129
+      y: 708
+    - pin: 46
+      x: 3024
+      y: 708
+    - pin: 47
+      x: 2920
+      y: 708
+    - pin: 48
+      x: 2815
+      y: 708
+    - pin: 49
+      x: 2710
+      y: 708
+    - pin: 50
+      x: 2605
+      y: 708
+    - pin: 51
+      x: 2500
+      y: 708
+    - pin: 52
+      x: 2395
+      y: 708
+    - pin: 53
+      x: 2291
+      y: 708
+    - pin: 54
+      x: 2186
+      y: 708
+    - pin: 55
+      x: 2081
+      y: 708
+    - pin: 56
+      x: 1976
+      y: 708
+    - pin: 57
+      x: 1871
+      y: 708
+    - pin: 58
+      x: 1766
+      y: 708
+    - pin: 59
+      x: 1662
+      y: 708
+    - pin: 60
+      x: 1557
+      y: 708
+    - pin: 61
+      x: 1452
+      y: 708
+    - pin: 62
+      x: 1347
+      y: 708
+    - pin: 63
+      x: 3234
+      y: 820
+    - pin: 64
+      x: 3129
+      y: 820
+    - pin: 65
+      x: 3024
+      y: 820
+    - pin: 66
+      x: 2920
+      y: 820
+    - pin: 67
+      x: 2815
+      y: 820
+    - pin: 68
+      x: 2710
+      y: 820
+    - pin: 69
+      x: 2605
+      y: 820
+    - pin: 70
+      x: 2500
+      y: 820
+    - pin: 71
+      x: 2395
+      y: 820
+    - pin: 72
+      x: 2291
+      y: 820
+    - pin: 73
+      x: 2186
+      y: 820
+    - pin: 74
+      x: 2081
+      y: 820
+    - pin: 75
+      x: 1976
+      y: 820
+    - pin: 76
+      x: 1871
+      y: 820
+    - pin: 77
+      x: 1766
+      y: 820
+    - pin: 78
+      x: 1662
+      y: 820
+    - pin: 79
+      x: 1557
+      y: 820
+    - pin: 80
+      x: 1452
+      y: 820
+    - pin: 81
+      x: 1347
+      y: 820

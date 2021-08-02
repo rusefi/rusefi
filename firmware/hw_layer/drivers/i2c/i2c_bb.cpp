@@ -6,11 +6,9 @@
  * @author Matthew Kennedy, (c) 2020
  */
 
-#include "i2c_bb.h"
+#include "pch.h"
 
-#include "io_pins.h"
-#include "efi_gpio.h"
-#include "pin_repository.h"
+#include "i2c_bb.h"
 
 void BitbangI2c::sda_high() {
 #if EFI_PROD_CODE

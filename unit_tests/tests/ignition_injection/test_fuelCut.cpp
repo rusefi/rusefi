@@ -5,10 +5,9 @@
  * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
-#include "engine_math.h"
-#include "engine_test_helper.h"
+#include "pch.h"
+
 #include "event_queue.h"
-#include "sensor.h"
 #include "fsio_impl.h"
 
 using ::testing::_;

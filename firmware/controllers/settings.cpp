@@ -6,36 +6,26 @@
  * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
-#include "global.h"
-#include "engine_configuration.h"
-#include "engine_math.h"
+#include "pch.h"
 
 #if !EFI_UNIT_TEST
 #include "os_access.h"
-#include "settings.h"
 #include "eficonsole.h"
 #include "adc_inputs.h"
-#include "engine_controller.h"
 #include "thermistors.h"
 #include "adc_inputs.h"
-#include "interpolation.h"
-#include "map.h"
 #include "trigger_decoder.h"
 #include "console_io.h"
-#include "engine.h"
-#include "efi_gpio.h"
 #include "idle_thread.h"
 #include "allsensors.h"
 #include "alternator_controller.h"
 #include "trigger_emulator_algo.h"
-#include "sensor.h"
 
 #if EFI_PROD_CODE
 #include "vehicle_speed.h"
 #include "rtc_helper.h"
 #include "can_hw.h"
 #include "rusefi.h"
-#include "pin_repository.h"
 #include "hardware.h"
 #endif /* EFI_PROD_CODE */
 

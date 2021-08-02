@@ -19,14 +19,9 @@
  * If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "global.h"
-#include "engine_math.h"
-#include "engine_configuration.h"
-#include "interpolation.h"
-#include "allsensors.h"
-#include "sensor.h"
+#include "pch.h"
+
 #include "event_registry.h"
-#include "efi_gpio.h"
 #include "fuel_math.h"
 #include "advance_map.h"
 

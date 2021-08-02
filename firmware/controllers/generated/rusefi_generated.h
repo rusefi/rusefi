@@ -12,6 +12,7 @@
 #define acRelayPinMode_offset 831
 #define acSwitch_offset 1469
 #define acSwitchMode_offset 4516
+#define adc_channel_e_auto_enum "EFI_ADC_NONE", "EFI_ADC_0", "EFI_ADC_1", "EFI_ADC_2", "EFI_ADC_3", "EFI_ADC_4", "EFI_ADC_5", "EFI_ADC_6", "EFI_ADC_7", "EFI_ADC_8", "EFI_ADC_9", "EFI_ADC_10", "EFI_ADC_11", "EFI_ADC_12", "EFI_ADC_13", "EFI_ADC_14", "EFI_ADC_15", "EFI_ADC_LAST_CHANNEL", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "EFI_ADC_ERROR"
 #define adc_channel_e_enum "Disabled", "PA0", "PA1", "PA2", "PA3", "PA4", "PA5", "PA6", "PA7", "PB0", "PB1", "PC0", "PC1", "PC2", "PC3", "PC4", "PC5"
 #define adc_channel_mode_e_auto_enum "ADC_OFF", "ADC_SLOW", "ADC_FAST"
 #define ADC_CHANNEL_NONE 0
@@ -152,6 +153,7 @@
 #define boostType_e_auto_enum "OPEN_LOOP", "CLOSED_LOOP"
 #define boostType_offset 1012
 #define brain_input_pin_e_enum "NONE", "INVALID", "INVALID", "PA1", "PA2", "PA3", "INVALID", "PA5", "PA6", "PA7", "PA8", "PA9", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "PA15", "INVALID", "INVALID", "INVALID", "PB3", "PB4", "PB5", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "PC6", "PC7", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "PE5", "PE6", "INVALID", "INVALID", "PE9", "INVALID", "PE11", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID"
+#define brain_pin_e_auto_enum "GPIO_UNASSIGNED", "GPIO_INVALID", "GPIOA_0", "GPIOA_1", "GPIOA_2", "GPIOA_3", "GPIOA_4", "GPIOA_5", "GPIOA_6", "GPIOA_7", "GPIOA_8", "GPIOA_9", "GPIOA_10", "GPIOA_11", "GPIOA_12", "GPIOA_13", "GPIOA_14", "GPIOA_15", "GPIOB_0", "GPIOB_1", "GPIOB_2", "GPIOB_3", "GPIOB_4", "GPIOB_5", "GPIOB_6", "GPIOB_7", "GPIOB_8", "GPIOB_9", "GPIOB_10", "GPIOB_11", "GPIOB_12", "GPIOB_13", "GPIOB_14", "GPIOB_15", "GPIOC_0", "GPIOC_1", "GPIOC_2", "GPIOC_3", "GPIOC_4", "GPIOC_5", "GPIOC_6", "GPIOC_7", "GPIOC_8", "GPIOC_9", "GPIOC_10", "GPIOC_11", "GPIOC_12", "GPIOC_13", "GPIOC_14", "GPIOC_15", "GPIOD_0", "GPIOD_1", "GPIOD_2", "GPIOD_3", "GPIOD_4", "GPIOD_5", "GPIOD_6", "GPIOD_7", "GPIOD_8", "GPIOD_9", "GPIOD_10", "GPIOD_11", "GPIOD_12", "GPIOD_13", "GPIOD_14", "GPIOD_15", "GPIOE_0", "GPIOE_1", "GPIOE_2", "GPIOE_3", "GPIOE_4", "GPIOE_5", "GPIOE_6", "GPIOE_7", "GPIOE_8", "GPIOE_9", "GPIOE_10", "GPIOE_11", "GPIOE_12", "GPIOE_13", "GPIOE_14", "GPIOE_15", "GPIOF_0", "GPIOF_1", "GPIOF_2", "GPIOF_3", "GPIOF_4", "GPIOF_5", "GPIOF_6", "GPIOF_7", "GPIOF_8", "GPIOF_9", "GPIOF_10", "GPIOF_11", "GPIOF_12", "GPIOF_13", "GPIOF_14", "GPIOF_15", "GPIOG_0", "GPIOG_1", "GPIOG_2", "GPIOG_3", "GPIOG_4", "GPIOG_5", "GPIOG_6", "GPIOG_7", "GPIOG_8", "GPIOG_9", "GPIOG_10", "GPIOG_11", "GPIOG_12", "GPIOG_13", "GPIOG_14", "GPIOG_15", "GPIOH_0", "GPIOH_1", "GPIOH_2", "GPIOH_3", "GPIOH_4", "GPIOH_5", "GPIOH_6", "GPIOH_7", "GPIOH_8", "GPIOH_9", "GPIOH_10", "GPIOH_11", "GPIOH_12", "GPIOH_13", "GPIOH_14", "GPIOH_15", "GPIOI_0", "GPIOI_1", "GPIOI_2", "GPIOI_3", "GPIOI_4", "GPIOI_5", "GPIOI_6", "GPIOI_7", "GPIOI_8", "GPIOI_9", "GPIOI_10", "GPIOI_11", "GPIOI_12", "GPIOI_13", "GPIOI_14", "GPIOI_15", "MC33972_PIN_1", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "MC33972_PIN_21", "MC33972_PIN_22", "TLE8888_PIN_1", "TLE8888_PIN_2", "TLE8888_PIN_3", "TLE8888_PIN_4", "TLE8888_PIN_5", "TLE8888_PIN_6", "TLE8888_PIN_7", "TLE8888_PIN_8", "TLE8888_PIN_9", "TLE8888_PIN_10", "TLE8888_PIN_11", "TLE8888_PIN_12", "TLE8888_PIN_13", "TLE8888_PIN_14", "TLE8888_PIN_15", "TLE8888_PIN_16", "TLE8888_PIN_17", "TLE8888_PIN_18", "TLE8888_PIN_19", "TLE8888_PIN_20", "TLE8888_PIN_21", "TLE8888_PIN_22", "TLE8888_PIN_23", "TLE8888_PIN_24", "TLE8888_PIN_25", "TLE8888_PIN_26", "TLE8888_PIN_27", "TLE8888_PIN_28", "TLE8888_PIN_MR", "TLE8888_PIN_KEY", "TLE8888_PIN_WAKE", "TLE6240_PIN_1", "TLE6240_PIN_2", "TLE6240_PIN_3", "TLE6240_PIN_4", "TLE6240_PIN_5", "TLE6240_PIN_6", "TLE6240_PIN_7", "TLE6240_PIN_8", "TLE6240_PIN_9", "TLE6240_PIN_10", "TLE6240_PIN_11", "TLE6240_PIN_12", "TLE6240_PIN_13", "TLE6240_PIN_14", "TLE6240_PIN_15", "TLE6240_PIN_16"
 #define brain_pin_e_enum "NONE", "INVALID", "PA0", "PA1", "PA2", "PA3", "PA4", "PA5", "PA6", "PA7", "PA8", "PA9", "PA10", "PA11", "PA12", "PA13", "PA14", "PA15", "PB0", "PB1", "PB2", "PB3", "PB4", "PB5", "PB6", "PB7", "PB8", "PB9", "PB10", "PB11", "PB12", "PB13", "PB14", "PB15", "PC0", "PC1", "PC2", "PC3", "PC4", "PC5", "PC6", "PC7", "PC8", "PC9", "PC10", "PC11", "PC12", "PC13", "PC14", "PC15", "PD0", "PD1", "PD2", "PD3", "PD4", "PD5", "PD6", "PD7", "PD8", "PD9", "PD10", "PD11", "PD12", "PD13", "PD14", "PD15", "PE0", "PE1", "PE2", "PE3", "PE4", "PE5", "PE6", "PE7", "PE8", "PE9", "PE10", "PE11", "PE12", "PE13", "PE14", "PE15", "PF0", "PF1", "PF2", "PF3", "PF4", "PF5", "PF6", "PF7", "PF8", "PF9", "PF10", "PF11", "PF12", "PF13", "PF14", "PF15", "PG0", "PG1", "PG2", "PG3", "PG4", "PG5", "PG6", "PG7", "PG8", "PG9", "PG10", "PG11", "PG12", "PG13", "PG14", "PG15", "PH0", "PH1", "PH2", "PH3", "PH4", "PH5", "PH6", "PH7", "PH8", "PH9", "PH10", "PH11", "PH12", "PH13", "PH14", "PH15", "PI0", "PI1", "PI2", "PI3", "PI4", "PI5", "PI6", "PI7", "PI8", "PI9", "PI10", "PI11", "PI12", "PI13", "PI14", "PI15", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID"
 #define brakePedalPin_offset 2608
 #define brakePedalPinMode_offset 2611
@@ -180,7 +182,7 @@
 #define can_baudrate_e_auto_enum "B100KBPS", "B250KBPS", "B500KBPS", "B1MBPS"
 #define can_baudrate_e_enum "100kbps", "250kbps", "500kbps", "1Mbps"
 #define CAN_DEFAULT_BASE 0x200
-#define can_nbc_e_auto_enum "CAN_BUS_NBC_NONE", "CAN_BUS_NBC_FIAT", "CAN_BUS_NBC_VAG", "CAN_BUS_MAZDA_RX8", "CAN_BUS_NBC_BMW", "CAN_BUS_W202_C180", "CAN_BUS_BMW_E90", "CAN_BUS_Haltech", "CAN_BUS_MQB", "CAN_BUS_NISSAN_VQ"
+#define can_nbc_e_auto_enum "CAN_BUS_NBC_NONE", "CAN_BUS_NBC_FIAT", "CAN_BUS_NBC_VAG", "CAN_BUS_MAZDA_RX8", "CAN_BUS_NBC_BMW", "CAN_BUS_W202_C180", "CAN_BUS_BMW_E90", "CAN_BUS_Haltech", "CAN_BUS_MQB", "CAN_BUS_NISSAN_VQ", "CAN_BUS_GENESIS_COUPE"
 #define CAN_RX_PREFIX "CAN_rx"
 #define can_vss_nbc_e_auto_enum "BMW_e46", "W202"
 #define canBaudRate_offset 2108
@@ -469,6 +471,7 @@
 #define ETB_BIAS_CURVE_LENGTH 8
 #define ETB_COUNT 2
 #define etb_dFactor_offset 1744
+#define ETB_ETB_None 0
 #define etb_function_e_auto_enum "ETB_None", "ETB_Throttle1", "ETB_Throttle2", "ETB_IdleValve", "ETB_Wastegate"
 #define ETB_HW_MAX_FREQUENCY 10000
 #define etb_iFactor_offset 1740
@@ -821,8 +824,8 @@
 #define gppwm4_pwmFrequency_offset 4410
 #define gppwm4_rpmBins_offset 4424
 #define gppwm4_table_offset 4432
-#define gppwm_channel_e_auto_enum "GPPWM_Tps", "GPPWM_Map", "GPPWM_Clt", "GPPWM_Iat", "GPPWM_FuelLoad", "GPPWM_IgnLoad", "GPPWM_AuxTemp1", "GPPWM_AuxTemp2", "GPPWM_Zero", "GPPWM_AccelPedal"
-#define gppwm_channel_e_enum "TPS", "MAP", "CLT", "IAT", "Fuel Load", "Ignition Load", "Aux Temp 1", "Aux Temp 2", "Zero", "Accel Pedal"
+#define gppwm_channel_e_auto_enum "GPPWM_Tps", "GPPWM_Map", "GPPWM_Clt", "GPPWM_Iat", "GPPWM_FuelLoad", "GPPWM_IgnLoad", "GPPWM_AuxTemp1", "GPPWM_AuxTemp2", "GPPWM_Zero", "GPPWM_AccelPedal", "GPPWM_Vbatt"
+#define gppwm_channel_e_enum "TPS", "MAP", "CLT", "IAT", "Fuel Load", "Ignition Load", "Aux Temp 1", "Aux Temp 2", "Zero", "Accel Pedal", "Battery Voltage"
 #define gppwm_channel_size 88
 #define GPPWM_CHANNELS 4
 #define GPPWM_LOAD_COUNT 8
@@ -1256,6 +1259,7 @@
 #define pidExtraForLowRpm_offset 3156
 #define pin_input_mode_e_auto_enum "PI_DEFAULT", "PI_PULLUP", "PI_PULLDOWN"
 #define pin_input_mode_e_enum "DEFAULT", "PULLUP", "PULLDOWN"
+#define pin_mode_e_auto_enum "PO_DEFAULT", "INVALID", "INVALID", "INVALID", "PO_OPENDRAIN", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "PO_PULLUP", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "PO_PULLDOWN"
 #define pin_mode_e_enum "default", "INVALID", "INVALID", "INVALID", "opendrain", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "PULLUP", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "PULLDOWN"
 #define pin_output_mode_e_auto_enum "OM_DEFAULT", "OM_INVERTED", "OM_OPENDRAIN", "OM_OPENDRAIN_INVERTED"
 #define pin_output_mode_e_enum "default", "default inverted", "open collector", "open collector inverted"
@@ -1316,8 +1320,8 @@
 #define showHumanReadableWarning_offset 976
 #define showSdCardWarning_offset 76
 #define SIGNATURE_BOARD all
-#define SIGNATURE_DATE 2021.07.25
-#define SIGNATURE_HASH 3751165502
+#define SIGNATURE_DATE 2021.08.01
+#define SIGNATURE_HASH 383067213
 #define silentTriggerError_offset 1464
 #define slowAdcAlpha_offset 2088
 #define sparkDwellRpmBins_offset 332
@@ -1673,7 +1677,7 @@
 #define ts_show_spi true
 #define ts_show_trigger_comparator false
 #define ts_show_tunerstudio_port true
-#define TS_SIGNATURE "rusEFI 2021.07.25.all.3751165502"
+#define TS_SIGNATURE "rusEFI 2021.08.01.all.383067213"
 #define TS_SINGLE_WRITE_COMMAND 'W'
 #define TS_SINGLE_WRITE_COMMAND_char W
 #define TS_TEST_COMMAND 't'
@@ -1726,6 +1730,8 @@
 #define TT_TT_VVT_MIATA_NB2 43
 #define TT_TT_VVT_NISSAN_VQ35 59
 #define tunerStudioSerialSpeed_offset 728
+#define turboSpeedSensorInputPin_offset 1759
+#define turboSpeedSensorMultiplier_offset 1488
 #define twoWireBatchIgnition_offset 1476
 #define twoWireBatchInjection_offset 1476
 #define uart_device_e_auto_enum "UART_NONE", "UART_DEVICE_1", "UART_DEVICE_2", "UART_DEVICE_3", "UART_DEVICE_4"
@@ -1743,8 +1749,6 @@
 #define unused1476b20_offset 1476
 #define unused1476b3_offset 1476
 #define unused1476b8_offset 1476
-#define unused1488_offset 1488
-#define unused1756_offset 1759
 #define unused2260_offset 2260
 #define unused2432_offset 2432
 #define unused244_2_offset 2424
@@ -1767,36 +1771,36 @@
 #define unused_1484_bit_29_offset 1476
 #define unused_1484_bit_30_offset 1476
 #define unused_1484_bit_31_offset 1476
-#define unusedAtOldBoardConfigurationEnd_offset 1244
+#define unusedAtOldBoardConfigurationEnd_offset 1276
 #define unusedBit4_1476_offset 1476
 #define unusedBit_251_29_offset 976
 #define unusedBit_291_30_offset 976
 #define unusedBit_291_31_offset 976
 #define unusedBit_34_31_offset 76
-#define unusedBit_499_10_offset 2116
-#define unusedBit_499_11_offset 2116
-#define unusedBit_499_12_offset 2116
-#define unusedBit_499_13_offset 2116
-#define unusedBit_499_14_offset 2116
-#define unusedBit_499_15_offset 2116
-#define unusedBit_499_16_offset 2116
-#define unusedBit_499_17_offset 2116
-#define unusedBit_499_18_offset 2116
-#define unusedBit_499_19_offset 2116
-#define unusedBit_499_20_offset 2116
-#define unusedBit_499_21_offset 2116
-#define unusedBit_499_22_offset 2116
-#define unusedBit_499_23_offset 2116
-#define unusedBit_499_24_offset 2116
-#define unusedBit_499_25_offset 2116
-#define unusedBit_499_26_offset 2116
-#define unusedBit_499_27_offset 2116
-#define unusedBit_499_28_offset 2116
-#define unusedBit_499_29_offset 2116
-#define unusedBit_499_30_offset 2116
-#define unusedBit_499_31_offset 2116
-#define unusedBit_499_8_offset 2116
-#define unusedBit_499_9_offset 2116
+#define unusedBit_500_10_offset 2116
+#define unusedBit_500_11_offset 2116
+#define unusedBit_500_12_offset 2116
+#define unusedBit_500_13_offset 2116
+#define unusedBit_500_14_offset 2116
+#define unusedBit_500_15_offset 2116
+#define unusedBit_500_16_offset 2116
+#define unusedBit_500_17_offset 2116
+#define unusedBit_500_18_offset 2116
+#define unusedBit_500_19_offset 2116
+#define unusedBit_500_20_offset 2116
+#define unusedBit_500_21_offset 2116
+#define unusedBit_500_22_offset 2116
+#define unusedBit_500_23_offset 2116
+#define unusedBit_500_24_offset 2116
+#define unusedBit_500_25_offset 2116
+#define unusedBit_500_26_offset 2116
+#define unusedBit_500_27_offset 2116
+#define unusedBit_500_28_offset 2116
+#define unusedBit_500_29_offset 2116
+#define unusedBit_500_30_offset 2116
+#define unusedBit_500_31_offset 2116
+#define unusedBit_500_8_offset 2116
+#define unusedBit_500_9_offset 2116
 #define unusedOldBiquad_offset 2331
 #define unusedSpiPadding4_offset 2593
 #define unusedSpiPadding8_offset 4010
@@ -1859,7 +1863,18 @@
 #define veTable_offset 17440
 #define VM_VVT_INACTIVE 0
 #define VOLTAGE_1_BYTE_PACKING_DIV 0.02
+#define vr_threshold_s_size 16
 #define vRefAdcChannel_offset 1470
+#define vrThreshold1_offset 1244
+#define vrThreshold1_pad_offset 1245
+#define vrThreshold1_pin_offset 1244
+#define vrThreshold1_rpmBins_offset 1248
+#define vrThreshold1_values_offset 1254
+#define vrThreshold2_offset 1260
+#define vrThreshold2_pad_offset 1261
+#define vrThreshold2_pin_offset 1260
+#define vrThreshold2_rpmBins_offset 1264
+#define vrThreshold2_values_offset 1270
 #define vssFilterReciprocal_offset 15196
 #define vvt_mode_e_auto_enum "VVT_INACTIVE", "VVT_SECOND_HALF", "VVT_2JZ", "VVT_MIATA_NB2", "VVT_FIRST_HALF", "VVT_BOSCH_QUICK_START", "VVT_4_1", "VVT_FORD_ST170", "VVT_BARRA_3_PLUS_1", "VVT_NISSAN_VQ"
 #define vvt_mode_e_enum "Inactive", "Single Tooth Second Half", "2GZ", "Miata NB2", "Single Tooth First Half", "Bosch Quick Start", "4/1", "ST 170", "Ford Barra 3+1", "Nissan VQ", "vvt10", "vvt11"

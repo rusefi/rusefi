@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on config/boards/subaru_eg33/config/gen_config.sh integration/rusefi_config.txt Sat Jul 24 23:24:36 UTC 2021
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on config/boards/subaru_eg33/config/gen_config.sh integration/rusefi_config.txt Sun Aug 01 01:23:46 UTC 2021
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -646,6 +646,29 @@ struct dc_io {
 	 */
 	brain_pin_e disablePin;
 	/** total size 4*/
+};
+
+// start of vr_threshold_s
+struct vr_threshold_s {
+	/**
+	 * offset 0
+	 */
+	brain_pin_e pin;
+	/**
+	 * offset 1
+	 */
+	uint8_t pad[3];
+	/**
+	rpm
+	 * offset 4
+	 */
+	uint8_t rpmBins[6];
+	/**
+	volts
+	 * offset 10
+	 */
+	uint8_t values[6];
+	/** total size 16*/
 };
 
 // start of engine_configuration_s
@@ -2146,10 +2169,14 @@ struct engine_configuration_s {
 	 */
 	float vvtOffsetsPadding[CAM_INPUTS_COUNT_padding];
 	/**
-	units
 	 * offset 1244
 	 */
-	int unusedAtOldBoardConfigurationEnd[53];
+	vr_threshold_s vrThreshold[2];
+	/**
+	units
+	 * offset 1276
+	 */
+	int unusedAtOldBoardConfigurationEnd[45];
 	/**
 	kg
 	 * offset 1456
@@ -2446,10 +2473,10 @@ struct engine_configuration_s {
 	 */
 	int16_t primeInjFalloffTemperature;
 	/**
-	index
+	mult
 	 * offset 1488
 	 */
-	int unused1488;
+	float turboSpeedSensorMultiplier;
 	/**
 	 * offset 1492
 	 */
@@ -2578,10 +2605,9 @@ struct engine_configuration_s {
 	 */
 	brain_pin_e triggerInputDebugPins[TRIGGER_INPUT_PIN_COUNT];
 	/**
-	Pulse
 	 * offset 1759
 	 */
-	uint8_t unused1756;
+	brain_input_pin_e turboSpeedSensorInputPin;
 	/**
 	x
 	 * offset 1760
@@ -2934,76 +2960,76 @@ struct engine_configuration_s {
 	bool unused1130 : 1;
 	/**
 	offset 2116 bit 8 */
-	bool unusedBit_499_8 : 1;
+	bool unusedBit_500_8 : 1;
 	/**
 	offset 2116 bit 9 */
-	bool unusedBit_499_9 : 1;
+	bool unusedBit_500_9 : 1;
 	/**
 	offset 2116 bit 10 */
-	bool unusedBit_499_10 : 1;
+	bool unusedBit_500_10 : 1;
 	/**
 	offset 2116 bit 11 */
-	bool unusedBit_499_11 : 1;
+	bool unusedBit_500_11 : 1;
 	/**
 	offset 2116 bit 12 */
-	bool unusedBit_499_12 : 1;
+	bool unusedBit_500_12 : 1;
 	/**
 	offset 2116 bit 13 */
-	bool unusedBit_499_13 : 1;
+	bool unusedBit_500_13 : 1;
 	/**
 	offset 2116 bit 14 */
-	bool unusedBit_499_14 : 1;
+	bool unusedBit_500_14 : 1;
 	/**
 	offset 2116 bit 15 */
-	bool unusedBit_499_15 : 1;
+	bool unusedBit_500_15 : 1;
 	/**
 	offset 2116 bit 16 */
-	bool unusedBit_499_16 : 1;
+	bool unusedBit_500_16 : 1;
 	/**
 	offset 2116 bit 17 */
-	bool unusedBit_499_17 : 1;
+	bool unusedBit_500_17 : 1;
 	/**
 	offset 2116 bit 18 */
-	bool unusedBit_499_18 : 1;
+	bool unusedBit_500_18 : 1;
 	/**
 	offset 2116 bit 19 */
-	bool unusedBit_499_19 : 1;
+	bool unusedBit_500_19 : 1;
 	/**
 	offset 2116 bit 20 */
-	bool unusedBit_499_20 : 1;
+	bool unusedBit_500_20 : 1;
 	/**
 	offset 2116 bit 21 */
-	bool unusedBit_499_21 : 1;
+	bool unusedBit_500_21 : 1;
 	/**
 	offset 2116 bit 22 */
-	bool unusedBit_499_22 : 1;
+	bool unusedBit_500_22 : 1;
 	/**
 	offset 2116 bit 23 */
-	bool unusedBit_499_23 : 1;
+	bool unusedBit_500_23 : 1;
 	/**
 	offset 2116 bit 24 */
-	bool unusedBit_499_24 : 1;
+	bool unusedBit_500_24 : 1;
 	/**
 	offset 2116 bit 25 */
-	bool unusedBit_499_25 : 1;
+	bool unusedBit_500_25 : 1;
 	/**
 	offset 2116 bit 26 */
-	bool unusedBit_499_26 : 1;
+	bool unusedBit_500_26 : 1;
 	/**
 	offset 2116 bit 27 */
-	bool unusedBit_499_27 : 1;
+	bool unusedBit_500_27 : 1;
 	/**
 	offset 2116 bit 28 */
-	bool unusedBit_499_28 : 1;
+	bool unusedBit_500_28 : 1;
 	/**
 	offset 2116 bit 29 */
-	bool unusedBit_499_29 : 1;
+	bool unusedBit_500_29 : 1;
 	/**
 	offset 2116 bit 30 */
-	bool unusedBit_499_30 : 1;
+	bool unusedBit_500_30 : 1;
 	/**
 	offset 2116 bit 31 */
-	bool unusedBit_499_31 : 1;
+	bool unusedBit_500_31 : 1;
 	/**
 	 * set can_mode X
 	 * offset 2120
@@ -4273,4 +4299,4 @@ struct persistent_config_s {
 };
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on config/boards/subaru_eg33/config/gen_config.sh integration/rusefi_config.txt Sat Jul 24 23:24:36 UTC 2021
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on config/boards/subaru_eg33/config/gen_config.sh integration/rusefi_config.txt Sun Aug 01 01:23:46 UTC 2021

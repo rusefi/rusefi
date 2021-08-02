@@ -1,17 +1,16 @@
 /**
  * @file	can_vss.cpp
  *
- * This file handles incomming vss values from can.
+ * This file handles incoming vss values from can.
  *
  * @date Apr 19, 2020
  * @author Alex Miculescu, (c) 2020
  */
 
-#include "globalaccess.h"
+#include "pch.h"
+
 #if EFI_CAN_SUPPORT
 #include "can.h"
-#include "engine_configuration.h"
-#include "engine.h"
 #include "vehicle_speed.h"
 #include "dynoview.h"
 

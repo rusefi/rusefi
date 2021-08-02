@@ -1,16 +1,13 @@
+#include "pch.h"
+
 #include "lua.hpp"
 #include "lua_hooks.h"
 
-#include "engine.h"
 #include "loggingcentral.h"
-#include "sensor.h"
 #include "adc_inputs.h"
-#include "efilib.h"
-#include "tunerstudio_outputs.h"
 #include "fuel_math.h"
 #include "airmass.h"
 #include "lua_airmass.h"
-#include "pwm_generator_logic.h"
 #include "can_msg_tx.h"
 
 // Some functions lean on existing FSIO implementation

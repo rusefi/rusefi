@@ -19,9 +19,9 @@
  */
 
 
-#include "global.h"
+#include "pch.h"
+
 #include "os_access.h"
-#include "engine.h"
 #include "trigger_chrysler.h"
 #include "trigger_gm.h"
 #include "trigger_nissan.h"
@@ -40,9 +40,6 @@
 #if EFI_SENSOR_CHART
 #include "sensor_chart.h"
 #endif /* EFI_SENSOR_CHART */
-
-#include "engine_configuration.h"
-		extern persistent_config_container_s persistentState;
 
 void event_trigger_position_s::setAngle(angle_t angle DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	findTriggerPosition(&ENGINE(triggerCentral.triggerShape),

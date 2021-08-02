@@ -5,17 +5,11 @@
  * @author Alexandru Miculescu, (c) 2012-2020
  */
 
-#include "engine.h"
-#include "pin_repository.h"
+#include "pch.h"
 
 #if EFI_DYNO_VIEW
 #include "dynoview.h"
 #include "vehicle_speed.h"
-
-#if EFI_TUNER_STUDIO
-#include "tunerstudio_outputs.h"
-extern TunerStudioOutputChannels tsOutputChannels;
-#endif /* EFI_TUNER_STUDIO */
 
 DynoView dynoInstance;
 
@@ -24,7 +18,7 @@ void DynoView::update(vssSrc src) {
     efitimeus_t timeNow, deltaTime = 0.0;
     float speed,deltaSpeed = 0.0;
     timeNow = getTimeNowUs();
-    speed = getVehicleSpeed();
+    speed = getVehicleSpeed(PASS_ENGINE_PARAMETER_SIGNATURE);
     if (src == ICU) {
         speed = efiRound(speed,1.0);
     } else {
@@ -151,10 +145,11 @@ int getDynoviewPower(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
  * Only updates if we have Vss from input pin.
  */
 void updateDynoView(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
-    if (isBrainPinValid(CONFIG(vehicleSpeedSensorInputPin)) &&
-        (!CONFIG(enableCanVss))) {
-        dynoInstance.update(ICU);
-    }
+	if (isBrainPinValid(CONFIG(vehicleSpeedSensorInputPin)) &&
+		(!CONFIG(enableCanVss))) {
+		INJECT_ENGINE_REFERENCE(&dynoInstance);
+		dynoInstance.update(ICU);
+	}
 }
 
 /**
