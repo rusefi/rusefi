@@ -85,6 +85,9 @@ protected:
 };
 
 #if !EFI_UNIT_TEST
+
+#include "thread_priority.h"
+
 class StepperMotor final : public StepperMotorBase, private ThreadController<UTILITY_THREAD_STACK_SIZE> {
 public:
 	StepperMotor() : ThreadController("stepper", PRIO_STEPPER) {}

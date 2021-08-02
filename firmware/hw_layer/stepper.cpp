@@ -10,7 +10,6 @@
 #include "pch.h"
 
 #include "stepper.h"
-#include "thread_priority.h"
 
 float StepperMotorBase::getTargetPosition() const {
 	return m_targetPosition;
