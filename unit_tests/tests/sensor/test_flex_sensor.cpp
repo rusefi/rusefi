@@ -9,12 +9,6 @@ class FlexSensorForTests : public ::testing::Test
 
 protected:
 
-    FlexSensorForTests () :
-            dut ()
-    {
-    }
-    ;
-
     void
     SetUp () override
     {
