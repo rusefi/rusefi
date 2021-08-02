@@ -7,9 +7,7 @@ class FlexSensorForTests : public ::testing::Test
 
 protected:
 
-    void
-    SetUp () override
-    {
+    void SetUp () override {
         // If somehow prodcode will be unwrapped for test it MAYBE! will fire with error.
         // At least we must init FlexSensor somehow
         dut.init (GPIO_INVALID);
@@ -17,9 +15,7 @@ protected:
         Sensor::resetRegistry (); // IDK why i must use this. Just copypaste.
     }
 
-    void
-    TearDown () override
-    {
+    void TearDown () override {
         Sensor::resetRegistry ();
     }
 
@@ -28,9 +24,7 @@ protected:
      *  and fire callback on every falling edge.
      *  (as Sensor works by falling edge)
      */
-    void
-    WithEngineHelperGenerateInputPWM (EngineTestHelper &eth, float freqHz)
-    {
+    void WithEngineHelperGenerateInputPWM (EngineTestHelper &eth, float freqHz) {
         auto const PERIODS_TO_SIMULATE = 50;
         auto period = (1 / freqHz);
 
@@ -43,9 +37,7 @@ protected:
     }
 
     // todo: some function to convert output value to frequency?
-    float
-    ConvertExpectedValueToFrequency (float expectedValue)
-    {
+    float ConvertExpectedValueToFrequency (float expectedValue) {
         return VALID_LOW_FREQ;
     }
 
@@ -68,17 +60,17 @@ TEST_F(FlexSensorForTests, testCreationAndGeneratingAnyValidResult)
     WITH_ENGINE_TEST_HELPER(TEST_ENGINE);
 
     // Should be invalid - not set yet
-        {
-            auto s = Sensor::get (SensorType::FuelEthanolPercent);
-            EXPECT_FALSE(s.Valid);
-        }
+    {
+        auto s = Sensor::get (SensorType::FuelEthanolPercent);
+        EXPECT_FALSE(s.Valid);
+    }
 
     WithEngineHelperGenerateInputPWM (eth, VALID_FREQ);
     // Should be valid
-        {
-            auto s = Sensor::get (SensorType::FuelEthanolPercent);
-            EXPECT_TRUE(s.Valid);
-        }
+    {
+        auto s = Sensor::get (SensorType::FuelEthanolPercent);
+        EXPECT_TRUE(s.Valid);
+    }
 }
 
 /*
@@ -91,24 +83,24 @@ TEST_F(FlexSensorForTests, testInvalidFrequency)
     WITH_ENGINE_TEST_HELPER(TEST_ENGINE);
 
     // Should be invalid - not set yet
-        {
-            auto s = Sensor::get (SensorType::FuelEthanolPercent);
-            EXPECT_FALSE(s.Valid);
-        }
+    {
+        auto s = Sensor::get (SensorType::FuelEthanolPercent);
+        EXPECT_FALSE(s.Valid);
+    }
 
     WithEngineHelperGenerateInputPWM (eth, INVALID_LOW_FREQ);
     // Should be invalid - too low freq
-        {
-            auto s = Sensor::get (SensorType::FuelEthanolPercent);
-            EXPECT_FALSE(s.Valid);
-        }
+    {
+        auto s = Sensor::get (SensorType::FuelEthanolPercent);
+        EXPECT_FALSE(s.Valid);
+    }
 
     WithEngineHelperGenerateInputPWM (eth, INVALID_HIGH_FREQ);
     // Should be invalid - too high freq
-        {
-            auto s = Sensor::get (SensorType::FuelEthanolPercent);
-            EXPECT_FALSE(s.Valid);
-        }
+    {
+        auto s = Sensor::get (SensorType::FuelEthanolPercent);
+        EXPECT_FALSE(s.Valid);
+    }
 }
 
 /*
@@ -122,19 +114,19 @@ TEST_F(FlexSensorForTests, testFrequencyConversion)
     WITH_ENGINE_TEST_HELPER(TEST_ENGINE);
 
     // Should be invalid - not set yet
-        {
-            auto s = Sensor::get (SensorType::FuelEthanolPercent);
-            EXPECT_FALSE(s.Valid);
-        }
+    {
+        auto s = Sensor::get (SensorType::FuelEthanolPercent);
+        EXPECT_FALSE(s.Valid);
+    }
 
     float expectedValue = 75; // Any between 0 and 100
     float freq = ConvertExpectedValueToFrequency (expectedValue);
 
     WithEngineHelperGenerateInputPWM (eth, freq);
     // Should be invalid - too low freq
-        {
-            auto s = Sensor::get (SensorType::FuelEthanolPercent);
-            EXPECT_TRUE(s.Valid);
-            EXPECT_FLOAT_EQ(s.Value, expectedValue);
-        }
+    {
+        auto s = Sensor::get (SensorType::FuelEthanolPercent);
+        EXPECT_TRUE(s.Valid);
+        EXPECT_FLOAT_EQ(s.Value, expectedValue);
+    }
 }
