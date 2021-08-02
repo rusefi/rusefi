@@ -7,31 +7,24 @@
  * This is just the hardware interface - deciding where to put the valve happens in idle_thread.cpp
  */
 
-#include "global.h"
+#include "pch.h"
 
 #if EFI_IDLE_CONTROL
-#include "engine_configuration.h"
 #include "idle_hardware.h"
 
-#include "engine.h"
 #include "electronic_throttle.h"
 
-#include "pwm_generator_logic.h"
 #include "dc_motors.h"
 #if ! EFI_UNIT_TEST
 #include "stepper.h"
-#include "pin_repository.h"
 static StepDirectionStepper iacStepperHw;
 static DualHBridgeStepper iacHbridgeHw;
 StepperMotor iacMotor;
 #endif /* EFI_UNIT_TEST */
 
-EXTERN_ENGINE;
-
 /**
  * When the IAC position value change is insignificant (lower than this threshold), leave the poor valve alone
- * todo: why do we have this logic? is this ever useful?
- * See
+ * This is about stepper motors, it equals to 1 step to avoid excessive micro-movement.
  */
 static percent_t idlePositionSensitivityThreshold = 0.0f;
 

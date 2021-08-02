@@ -13,6 +13,9 @@ Work in progress: SHORT_BOARDNAME becomes BUNDLE_NAME
 
 New board procedure
 
-1) manually add one .h and one .ini files into git - see gen_config.sh comment
+1) manually add one signature*.h and one .ini files into git - see gen_config.sh comment
 
 2) update gen_config.sh: add "board board" pair into 'for BOARD' iteration
+
+
+See also https://github.com/rusefi/rusefi/wiki/Hardware

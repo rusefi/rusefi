@@ -12,8 +12,6 @@
 #include "engine_math.h"
 #include "custom_engine.h"
 
-EXTERN_CONFIG;
-
 void setCamaro4(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	setFrankensoConfiguration(PASS_CONFIG_PARAMETER_SIGNATURE);
 

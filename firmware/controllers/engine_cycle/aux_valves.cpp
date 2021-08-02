@@ -13,15 +13,11 @@
  * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
-#include "pin_repository.h"
-#include "engine_math.h"
+#include "pch.h"
+
 #include "aux_valves.h"
-#include "allsensors.h"
-#include "sensor.h"
 #include "trigger_central.h"
 #include "spark_logic.h"
-
-EXTERN_ENGINE;
 
 static void plainPinTurnOff(NamedOutputPin *output) {
 	output->setLow();

@@ -82,16 +82,21 @@ TEST(LaunchControl, SwitchInputCondition) {
 	engineConfiguration->clutchDownPin = GPIOG_2;
 	engineConfiguration->clutchDownPinMode = PI_PULLUP;
 	setMockState(engineConfiguration->clutchDownPin, true);
+	engine->updateSwitchInputs(PASS_ENGINE_PARAMETER_SIGNATURE);
 	EXPECT_TRUE(dut.isInsideSwitchCondition());
 
 	setMockState(engineConfiguration->clutchDownPin, false);
+	engine->updateSwitchInputs(PASS_ENGINE_PARAMETER_SIGNATURE);
 	EXPECT_FALSE(dut.isInsideSwitchCondition());
 
 	engineConfiguration->clutchDownPinMode = PI_PULLDOWN;
+	engineConfiguration->clutchDownPinInverted = true;
 	setMockState(engineConfiguration->clutchDownPin, false);
+	engine->updateSwitchInputs(PASS_ENGINE_PARAMETER_SIGNATURE);
 	EXPECT_TRUE(dut.isInsideSwitchCondition());
 
 	setMockState(engineConfiguration->clutchDownPin, true);
+	engine->updateSwitchInputs(PASS_ENGINE_PARAMETER_SIGNATURE);
 	EXPECT_FALSE(dut.isInsideSwitchCondition());
 
 }

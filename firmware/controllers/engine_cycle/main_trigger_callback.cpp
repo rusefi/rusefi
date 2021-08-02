@@ -21,7 +21,8 @@
  * If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "global.h"
+#include "pch.h"
+
 #include "os_access.h"
 
 #if EFI_PRINTF_FUEL_DETAILS
@@ -31,35 +32,22 @@
 #if EFI_ENGINE_CONTROL && EFI_SHAFT_POSITION_INPUT
 
 #include "main_trigger_callback.h"
-#include "efi_gpio.h"
-#include "engine_math.h"
 #include "trigger_central.h"
 #include "spark_logic.h"
-#include "rpm_calculator.h"
-#include "engine_configuration.h"
-#include "interpolation.h"
 #include "advance_map.h"
-#include "allsensors.h"
 #include "cyclic_buffer.h"
 #include "fuel_math.h"
 #include "cdm_ion_sense.h"
-#include "engine_controller.h"
-#include "efi_gpio.h"
 #include "tooth_logger.h"
 #include "os_util.h"
 #include "local_version_holder.h"
 #include "event_queue.h"
-#include "engine.h"
-#include "perf_trace.h"
-#include "sensor.h"
 #include "injector_model.h"
 #if EFI_LAUNCH_CONTROL
 #include "launch_control.h"
 #endif
 
 #include "backup_ram.h"
-
-EXTERN_ENGINE;
 
 // todo: figure out if this even helps?
 //#if defined __GNUC__
@@ -175,6 +163,9 @@ void turnInjectionPinLow(InjectionEvent *event) {
 	Engine *engine = event->engine;
 	EXPAND_Engine;
 #endif
+
+	engine->mostRecentTimeBetweenIgnitionEvents = nowNt - engine->mostRecentIgnitionEvent;
+	engine->mostRecentIgnitionEvent = nowNt;
 
 	event->isScheduled = false;
 	for (int i = 0;i<MAX_WIRES_COUNT;i++) {
@@ -296,7 +287,7 @@ void InjectionEvent::onTriggerTooth(size_t trgEventIndex, int rpm, efitick_t now
 
 	efitick_t startTime = scheduleByAngle(&signalTimerUp, nowNt, injectionStart.angleOffsetFromTriggerEvent, startAction PASS_ENGINE_PARAMETER_SUFFIX);
 	efitick_t turnOffTime = startTime + US2NT((int)durationUs);
-	engine->executor.scheduleByTimestampNt(&endOfInjectionEvent, turnOffTime, endAction);
+	engine->executor.scheduleByTimestampNt("inj", &endOfInjectionEvent, turnOffTime, endAction);
 
 #if EFI_UNIT_TEST
 		printf("scheduling injection angle=%.2f/delay=%.2f injectionDuration=%.2f\r\n", injectionStart.angleOffsetFromTriggerEvent, NT2US(startTime - nowNt), injectionDuration);
@@ -446,7 +437,7 @@ void mainTriggerCallback(uint32_t trgEventIndex, efitick_t edgeTimestamp DECLARE
 		}
 	}
 
-	if (trgEventIndex == (uint32_t)CONFIG(ignMathCalculateAtIndex)) {
+	if (trgEventIndex == 0) {
 		if (isAdcChannelValid(CONFIG(externalKnockSenseAdc))) {
 			float externalKnockValue = getVoltageDivided("knock", engineConfiguration->externalKnockSenseAdc PASS_ENGINE_PARAMETER_SUFFIX);
 			engine->knockLogic(externalKnockValue PASS_ENGINE_PARAMETER_SUFFIX);

@@ -12,8 +12,6 @@
 
 #if EFI_TOOTH_LOGGER
 
-EXTERN_ENGINE;
-
 #include <cstddef>
 #include "efitime.h"
 #include "efilib.h"
@@ -86,7 +84,7 @@ static void SetNextCompositeEntry(efitick_t timestamp DECLARE_ENGINE_PARAMETER_S
 	buffer[NextIdx].priLevel = currentTrigger1;
 	buffer[NextIdx].secLevel = currentTrigger2;
 	buffer[NextIdx].trigger = currentTdc;
-	buffer[NextIdx].sync = engine->triggerCentral.triggerState.shaft_is_synchronized;
+	buffer[NextIdx].sync = engine->triggerCentral.triggerState.getShaftSynchronized();
 	buffer[NextIdx].coil = currentCoilState;
 	buffer[NextIdx].injector = currentInjectorState;
 

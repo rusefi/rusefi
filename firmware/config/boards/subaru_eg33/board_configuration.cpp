@@ -16,8 +16,6 @@
 #include "smart_gpio.h"
 #include "drivers/gpio/mc33810.h"
 
-EXTERN_ENGINE;
-
 void setPinConfigurationOverrides(void) {
 
 }
@@ -242,8 +240,7 @@ void setBoardDefaultConfiguration(void) {
 
 	/* This board also has AC clutch output: */
 	engineConfiguration->acRelayPin = TLE6240_PIN_15;
-	engineConfiguration->acCutoffLowRpm = 400;
-	engineConfiguration->acCutoffHighRpm = 3000;
+	engineConfiguration->maxAcRpm = 3000;
 	engineConfiguration->acIdleRpmBump = 200;
 
 	engineConfiguration->isCJ125Enabled = false;

@@ -14,8 +14,6 @@
 #include "engine_configuration.h"
 #include "cj125.h"
 
-EXTERN_ENGINE;
-
 /**
  * set engine_type 102
  */
@@ -184,8 +182,6 @@ void vag_18_Turbo(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	//Configuration 3 : 2 Wires
 
 	engineConfiguration->acRelayPin = GPIO_UNASSIGNED;
-	engineConfiguration->acCutoffLowRpm = 400;
-	engineConfiguration->acCutoffHighRpm = 4500;
 	engineConfiguration->acIdleRpmBump = 200;
 	// TODO: AC driver request input PE13 and AC compressor input-output PE7
 

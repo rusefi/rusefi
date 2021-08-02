@@ -13,8 +13,6 @@
 #include "allsensors.h"
 #include "engine_math.h"
 
-EXTERN_CONFIG;
-
 void setDodgeRam1996(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	setFrankensoConfiguration(PASS_CONFIG_PARAMETER_SIGNATURE);
 

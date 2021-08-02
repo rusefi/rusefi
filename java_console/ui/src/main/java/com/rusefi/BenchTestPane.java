@@ -106,7 +106,7 @@ public class BenchTestPane {
     }
 
     private Component createSparkTest() {
-        final JComboBox<Integer> indexes = createIndexCombo(Fields.IGNITION_PIN_COUNT);
+        final JComboBox<Integer> indexes = createIndexCombo(Fields.MAX_CYLINDER_COUNT);
         CommandControl panel = new CommandControl(uiContext,"Spark #", "spark.jpg", TEST, indexes) {
             @Override
             protected String getCommand() {
@@ -117,7 +117,7 @@ public class BenchTestPane {
     }
 
     private Component createInjectorTest() {
-        final JComboBox<Integer> indexes = createIndexCombo(Fields.INJECTION_PIN_COUNT);
+        final JComboBox<Integer> indexes = createIndexCombo(Fields.MAX_CYLINDER_COUNT);
         CommandControl panel = new CommandControl(uiContext,"Injector #", "injector.png", TEST, indexes) {
             @Override
             protected String getCommand() {

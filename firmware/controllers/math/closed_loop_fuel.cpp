@@ -1,13 +1,8 @@
+#include "pch.h"
+
 #include "closed_loop_fuel.h"
 #include "closed_loop_fuel_cell.h"
-
-#include "engine.h"
-
-#include "sensor.h"
-#include "engine_math.h"
 #include "deadband.h"
-
-EXTERN_ENGINE;
 
 struct FuelingBank {
 	ClosedLoopFuelCellImpl cells[STFT_CELL_COUNT];

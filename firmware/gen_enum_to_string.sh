@@ -1,13 +1,26 @@
 #!/bin/bash
 
-echo "This batch files reads rusefi_enums.h and produses auto_generated_enums.* files"
+echo "This batch files reads rusefi_enums.h and produces auto_generated_enums.* files"
 
 rm gen_enum_to_string.log
 
 java -DSystemOut.name=gen_enum_to_string \
 	-jar ../java_tools/enum2string.jar \
 	-outputPath controllers/algo \
-	-enumInputFile controllers/algo/rusefi_enums.h \
+	-generatedFile codes \
+	-enumInputFile controllers/algo/obd_error_codes.h
+
+java -DSystemOut.name=gen_enum_to_string \
+	-jar ../java_tools/enum2string.jar \
+	-outputPath controllers/algo \
+	-generatedFile commonenum \
+	-enumInputFile controllers/algo/rusefi_enums.h
+
+# TODO: rearrange enums so that we have WAY less duplicated generated code? at the moment too many enums are generated 4 times
+
+java -DSystemOut.name=gen_enum_to_string \
+	-jar ../java_tools/enum2string.jar \
+	-outputPath controllers/algo \
 	-enumInputFile controllers/algo/rusefi_hw_enums.h \
 
 pwd

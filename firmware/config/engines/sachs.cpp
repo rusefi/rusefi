@@ -12,8 +12,6 @@
 #include "allsensors.h"
 #include "engine_math.h"
 
-EXTERN_CONFIG;
-
 void setSachs(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	setDefaultFrankensoConfiguration(PASS_CONFIG_PARAMETER_SIGNATURE);
 

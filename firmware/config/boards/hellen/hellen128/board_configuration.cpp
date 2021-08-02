@@ -17,8 +17,6 @@
 #include "fsio_impl.h"
 #include "engine_configuration.h"
 
-EXTERN_ENGINE;
-
 static void hellenWbo() {
 	engineConfiguration->enableAemXSeries = true;
 }
@@ -28,14 +26,13 @@ static void setInjectorPins() {
 	engineConfiguration->injectionPins[1] = GPIOG_8;
 	engineConfiguration->injectionPins[2] = GPIOD_11;
 	engineConfiguration->injectionPins[3] = GPIOD_10;
-
-	//engineConfiguration->injectionPins[4] = GPIOD_9;
-	//engineConfiguration->injectionPins[5] = GPIOF_12;
-	//engineConfiguration->injectionPins[6] = GPIOF_13;
-	//engineConfiguration->injectionPins[7] = GPIOF_14;
+	engineConfiguration->injectionPins[4] = GPIOD_9;
+	engineConfiguration->injectionPins[5] = GPIOF_12;
+	engineConfiguration->injectionPins[6] = GPIOF_13;
+	engineConfiguration->injectionPins[7] = GPIOF_14;
 
 	// Disable remainder
-	for (int i = 4; i < INJECTION_PIN_COUNT;i++) {
+	for (int i = 8; i < MAX_CYLINDER_COUNT;i++) {
 		engineConfiguration->injectionPins[i] = GPIO_UNASSIGNED;
 	}
 
@@ -43,18 +40,17 @@ static void setInjectorPins() {
 }
 
 static void setIgnitionPins() {
-	engineConfiguration->ignitionPins[0] = GPIOI_8; // 3F - IGN_1 (1&4)
-	engineConfiguration->ignitionPins[1] = GPIO_UNASSIGNED ; // GPIOE_4
-	engineConfiguration->ignitionPins[2] = GPIOE_5; // 3I - IGN_2 (2&3)
-	engineConfiguration->ignitionPins[3] = GPIO_UNASSIGNED; // GPIOE_3
-
-	//engineConfiguration->ignitionPins[4] = GPIOE_2;
-	//engineConfiguration->ignitionPins[5] = GPIOI_5;
-	//engineConfiguration->ignitionPins[6] = GPIOI_6;
-	//engineConfiguration->ignitionPins[7] = GPIOI_7;
+	engineConfiguration->ignitionPins[0] = GPIOI_8;
+	engineConfiguration->ignitionPins[1] = GPIOE_5;
+	engineConfiguration->ignitionPins[2] = GPIOE_4;
+	engineConfiguration->ignitionPins[3] = GPIOE_3;
+	engineConfiguration->ignitionPins[4] = GPIOE_2;
+	engineConfiguration->ignitionPins[5] = GPIOI_5;
+	engineConfiguration->ignitionPins[6] = GPIOI_6;
+	engineConfiguration->ignitionPins[7] = GPIOI_7;
 	
 	// disable remainder
-	for (int i = 4; i < IGNITION_PIN_COUNT; i++) {
+	for (int i = 8; i < MAX_CYLINDER_COUNT; i++) {
 		engineConfiguration->ignitionPins[i] = GPIO_UNASSIGNED;
 	}
 
@@ -119,7 +115,8 @@ void setBoardConfigOverrides(void) {
 
 	engineConfiguration->canTxPin = GPIOD_1;
 	engineConfiguration->canRxPin = GPIOD_0;
-	hellenWbo();
+
+	engineConfiguration->vrThreshold[0].pin = GPIOD_14;
 }
 
 void setPinConfigurationOverrides(void) {
@@ -149,9 +146,6 @@ void setBoardDefaultConfiguration(void) {
 
 	CONFIG(enableSoftwareKnock) = true;
 
-	engineConfiguration->canTxPin = GPIOD_1;
-	engineConfiguration->canRxPin = GPIOD_0;
-
 	engineConfiguration->fuelPumpPin = GPIOG_2;	// OUT_IO9
 	engineConfiguration->idle.solenoidPin = GPIOD_14;	// OUT_PWM5
 	engineConfiguration->fanPin = GPIOD_12;	// OUT_PWM8
@@ -168,10 +162,16 @@ void setBoardDefaultConfiguration(void) {
 
 	engineConfiguration->specs.cylindersCount = 4;
 	engineConfiguration->specs.firingOrder = FO_1_3_4_2;
+	engineConfiguration->specs.displacement = 2.295f;
 
 	engineConfiguration->ignitionMode = IM_INDIVIDUAL_COILS; // IM_WASTED_SPARK
-	engineConfiguration->crankingInjectionMode = IM_SIMULTANEOUS;
-	engineConfiguration->injectionMode = IM_SIMULTANEOUS;//IM_BATCH;// IM_SEQUENTIAL;
+	engineConfiguration->crankingInjectionMode = IM_SEQUENTIAL;
+	engineConfiguration->injectionMode = IM_SEQUENTIAL;//IM_BATCH;// IM_SEQUENTIAL;
+
+	strcpy(CONFIG(engineMake), ENGINE_MAKE_MERCEDES);
+	strcpy(CONFIG(engineCode), "");
+
+	hellenWbo();
 }
 
 /**

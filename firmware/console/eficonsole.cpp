@@ -42,6 +42,12 @@ static void sayHello(void) {
 	efiPrintf(PROTOCOL_HELLO_PREFIX " Compiled:     " __DATE__ " - " __TIME__ "");
 	efiPrintf(PROTOCOL_HELLO_PREFIX " COMPILER=%s", __VERSION__);
 
+#ifdef ENABLE_AUTO_DETECT_HSE
+	extern float hseFrequencyMhz;
+	extern uint8_t autoDetectedRoundedMhz;
+	efiPrintf(PROTOCOL_HELLO_PREFIX " detected HSE clock %.2f MHz PLLM = %d", hseFrequencyMhz, autoDetectedRoundedMhz);
+#endif /* ENABLE_AUTO_DETECT_HSE */
+
 #if defined(STM32F4) || defined(STM32F7)
 	uint32_t *uid = ((uint32_t *)UID_BASE);
 	efiPrintf("UID=%x %x %x", uid[0], uid[1], uid[2]);

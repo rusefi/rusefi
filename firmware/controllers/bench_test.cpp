@@ -21,7 +21,7 @@
  */
 
 // todo: rename this file
-#include "global.h"
+#include "pch.h"
 
 #if EFI_ENGINE_CONTROL
 #if !EFI_UNIT_TEST
@@ -29,24 +29,17 @@
 #include "os_access.h"
 #include "flash_main.h"
 #include "bench_test.h"
-#include "io_pins.h"
 #include "main_trigger_callback.h"
-#include "engine_configuration.h"
-#include "pin_repository.h"
-#include "efi_gpio.h"
-#include "settings.h"
 #include "idle_thread.h"
 #include "periodic_thread_controller.h"
-#include "tps.h"
 #include "electronic_throttle.h"
 #include "cj125.h"
 #include "malfunction_central.h"
-#include "tunerstudio_outputs.h"
 #include "trigger_emulator_algo.h"
 #include "microsecond_timer.h"
 
 #if EFI_WIDEBAND_FIRMWARE_UPDATE
-#include "can.h"
+#include "rusefi_wideband.h"
 #endif // EFI_WIDEBAND_FIRMWARE_UPDATE
 
 #if EFI_PROD_CODE
@@ -57,8 +50,6 @@
 #if (BOARD_TLE8888_COUNT > 0)
 #include "gpio/tle8888.h"
 #endif // BOARD_TLE8888_COUNT
-
-EXTERN_ENGINE;
 
 static bool isRunningBench = false;
 
@@ -102,8 +93,8 @@ static void runBench(brain_pin_e brainPin, OutputPin *output, float delayMs, flo
 		efitick_t endTime = startTime + US2NT(onTimeUs);
 
 		// Schedule both events
-		engine->executor.scheduleByTimestampNt(&benchSchedStart, startTime, {benchOn, output});
-		engine->executor.scheduleByTimestampNt(&benchSchedEnd, endTime, {benchOff, output});
+		engine->executor.scheduleByTimestampNt("bstart", &benchSchedStart, startTime, {benchOn, output});
+		engine->executor.scheduleByTimestampNt("bend", &benchSchedEnd, endTime, {benchOff, output});
 
 		// Wait one full cycle time for the event + delay to happen
 		chThdSleepMicroseconds(onTimeUs + offTimeUs);
@@ -134,7 +125,7 @@ static void pinbench(const char *delayStr, const char *onTimeStr, const char *of
 	isBenchTestPending = true; // let's signal bench thread to wake up
 }
 
-static void doRunFuel(cylinders_count_t humanIndex, const char *delayStr, const char * onTimeStr, const char *offTimeStr,
+static void doRunFuel(size_t humanIndex, const char *delayStr, const char * onTimeStr, const char *offTimeStr,
 		const char *countStr) {
 	if (humanIndex < 1 || humanIndex > engineConfiguration->specs.cylindersCount) {
 		efiPrintf("Invalid index: %d", humanIndex);
@@ -243,7 +234,7 @@ static void fuelbench(const char * onTimeStr, const char *offTimeStr, const char
 	fuelbench2("0", "1", onTimeStr, offTimeStr, countStr);
 }
 
-static void doRunSpark(cylinders_count_t humanIndex, const char *delayStr, const char * onTimeStr, const char *offTimeStr,
+static void doRunSpark(size_t humanIndex, const char *delayStr, const char * onTimeStr, const char *offTimeStr,
 		const char *countStr) {
 	if (humanIndex < 1 || humanIndex > engineConfiguration->specs.cylindersCount) {
 		efiPrintf("Invalid index: %d", humanIndex);
@@ -322,7 +313,7 @@ static void handleBenchCategory(uint16_t index) {
 	case CMD_TS_BENCH_FAN_RELAY:
 		fanBench();
 		return;
-	case CMD_TS_BENCH_AC_FAN_RELAY:
+	case CMD_TS_BENCH_FAN_RELAY_2:
 		fan2Bench();
 		return;
 	default:
@@ -387,6 +378,19 @@ static void handleCommandX14(uint16_t index) {
 #endif
 	case 0x12:
 		widebandUpdatePending = true;
+		return;
+	case 0x14:
+#ifdef STM32F7
+		void sys_dual_bank(void);
+		/**
+		 * yes, this would instantly cause a hard fault as a random sequence of bytes is decoded as instructions
+		 * and that's the intended behavious - the point is to set flash properly and to re-flash once in proper configuration
+		 */
+		sys_dual_bank();
+		rebootNow();
+#else
+		firmwareError(OBD_PCM_Processor_Fault, "Unexpected dbank command", index);
+#endif
 		return;
 	default:
 		firmwareError(OBD_PCM_Processor_Fault, "Unexpected bench x14 %d", index);

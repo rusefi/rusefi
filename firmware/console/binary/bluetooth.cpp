@@ -44,8 +44,6 @@ static THD_WORKING_AREA(btThreadStack, UTILITY_THREAD_STACK_SIZE);
 static thread_t *btThread = nullptr;
 static thread_reference_t btThreadRef = nullptr; // used by thread suspend/resume as a flag
 
-EXTERN_ENGINE;
-
 
 // Main communication code
 // We assume that the user has disconnected the software before starting the code.

@@ -1,0 +1,38 @@
+# Aux 20-pin connector
+
+pins:
+  - pin: 12
+    function: "Sensors Analog supply (+5)"
+    type: 5v
+
+  - pin: 13
+    function: Sensors GND
+    type: sgnd
+
+  - pin: 14
+    id: TLE6240_PIN_14
+    class: outputs
+    function: AUX OD output 1
+    ts_name: AUX0_14 - AUX0 OD output 1
+    type: gp_low
+
+  - pin: 17
+    id: TLE6240_PIN_13
+    class: outputs
+    function: AUX OD output 0
+    ts_name: AUX0_17 - AUX0 OD output 0
+    type: gp_low
+
+  - pin: 18
+    id: EFI_ADC_0
+    class: analog_inputs
+    function: MAP input
+    ts_name: AUX0_18 - MAP Ain
+    type: av
+
+  - pin: 19
+    id: EFI_ADC_5
+    class: analog_inputs
+    function: MAP input
+    ts_name: AUX0_19 - IAT Ain
+    type: av

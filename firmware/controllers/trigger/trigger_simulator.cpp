@@ -5,12 +5,10 @@
  * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
-#include "global.h"
-#include "engine.h"
+#include "pch.h"
+
 #include "trigger_simulator.h"
 #include "trigger_emulator_algo.h"
-
-EXTERN_ENGINE;
 
 #if EFI_UNIT_TEST
 	extern bool printTriggerTrace;
@@ -148,7 +146,7 @@ uint32_t TriggerStimulatorHelper::findTriggerSyncPoint(
 				triggerConfiguration,
 				state, shape, i);
 
-		if (state.shaft_is_synchronized) {
+		if (state.getShaftSynchronized()) {
 			return i;
 		}
 	}

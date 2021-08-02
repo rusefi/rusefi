@@ -13,6 +13,26 @@ pins:
     ts_name: ETB_OUT-
     function: -ETB_OUT
 
+  - pin: 7a
+    function: USB +
+    
+  - pin: 8a
+    function: USB -
+    
+  - pin: 10a
+    id: GPIOF_13
+    ts_name: 10 - VTC Left
+    class: outputs
+    function: Intake VTC solenoid Bank 2
+ # OUT_C-IVC_L OUT_INJ7 
+
+  - pin: 11a
+    id: GPIOF_14
+    ts_name: 11 - VTC Right
+    class: outputs
+    function: Intake VTC solenoid Bank 1
+ # OUT_C-IVC_R OUT_INJ8
+ 
   - pin: 13a
     function: Crank Sensor
 # IN_CRANK AIN24 A24
@@ -47,6 +67,12 @@ pins:
     ts_name: 23 - INJ_1
     function: Injector 1
     type: inj
+    
+  - pin: 29a
+    id: GPIOD_3
+    ts_name: 29 - VIAS
+    class: outputs
+    function: VIAS control Solenoid
 
   - pin: 33a
     function: Cam Sensor Right
@@ -54,6 +80,12 @@ pins:
     id: [GPIOA_7]
     class: [event_inputs]
     ts_name: 33 - Cam Right
+    
+  - pin: 34a
+    id: EFI_ADC_13
+    class: analog_inputs
+    ts_name: 34 - IAT
+    function: IAT sensor
 
   - pin: 40a
     id: GPIOF_12
@@ -77,10 +109,10 @@ pins:
     type: inj
 
   - pin: 47a
-    function: +5v
+    function: +5v TPS sensors
 
   - pin: 48a
-    function: +5v
+    function: +5v EVAP sensor
 
 
   - pin: 50a
@@ -113,10 +145,10 @@ pins:
 
 
   - pin: 66a
-    function: GNDA
+    function: GNDA TPS sensors
 
   - pin: 67a
-    function: GNDA
+    function: GNDA many sensors
 
   - pin: 69a
 # in_aux1 AIN23 PB0
@@ -124,6 +156,12 @@ pins:
     class: analog_inputs
     ts_name: 69 - TPS 2
     function: TPS 2 sensor input  
+
+  - pin: 73a
+    id: EFI_ADC_12
+    class: analog_inputs
+    ts_name: 73 - CLT
+    function: CLT sensor
 
   - pin: 78a
     function: GNDA
@@ -151,10 +189,10 @@ pins:
 
 
   - pin: 82a
-    function: GNDA
+    function: GNDA pedal sensor 1
 
   - pin: 83a
-    function: GNDA
+    function: GNDA pedal sensor 2
 
 
   - pin: 86a
@@ -162,10 +200,10 @@ pins:
     type: can
 
   - pin: 90a
-    function: +5v
+    function: +5v pedal sensor 1
 
   - pin: 91a
-    function: +5v
+    function: +5v pedal sensor 2
 
 
   - pin: 94a
@@ -177,7 +215,19 @@ pins:
     id: EFI_ADC_14
     class: analog_inputs
     ts_name: 98 - PPS 2
-    function: PPS 2 sensor input  
+    function: PPS 2 sensor input 
+    
+  - pin: 101a
+    id: GPIOF_9
+    class: switch_inputs
+    ts_name: 101 - Brake Input
+    function: Brake Switch
+
+  - pin: 102a
+    id: GPIOF_10
+    class: switch_inputs
+    ts_name: 102 - Power Steering Input
+    function: Power Steering Switch
 
   - pin: 104a
 # LOW6_DIODE _IO4

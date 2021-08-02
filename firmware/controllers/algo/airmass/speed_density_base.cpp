@@ -10,8 +10,6 @@
 #include "global.h"
 #include "speed_density_base.h"
 
-EXTERN_ENGINE;
-
 /**
  * Derived via:
  * (8.31 J K mol^-1)  <- ideal gas constant R

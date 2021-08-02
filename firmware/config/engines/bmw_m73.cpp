@@ -80,8 +80,6 @@
 #include "electronic_throttle.h"
 #endif // EFI_ELECTRONIC_THROTTLE_BODY
 
-EXTERN_CONFIG;
-
 void m73engine(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	// 13641435991 injector
 	engineConfiguration->injector.flow = 180; // cc/min, who knows if this number is real - no good source of info

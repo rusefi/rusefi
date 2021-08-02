@@ -6,8 +6,8 @@
  * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
-#include "engine_ptr.h"
-#include "efi_gpio.h"
+#include "pch.h"
+
 #include "expected.h"
 #include "hardware.h"
 
@@ -29,8 +29,6 @@
 #include "mpu_util.h"
 #include "backup_ram.h"
 #endif /* EFI_PROD_CODE */
-
-EXTERN_ENGINE;
 
 #if HAL_USE_ADC
 
@@ -315,7 +313,14 @@ stm32_hardware_pwm* getNextPwmDevice() {
 #endif
 
 void jump_to_bootloader() {
-	// leave DFU breadcrumb which assmebly startup code would check, see [rusefi][DFU] section in assembly code
+	#ifdef STM32H7XX
+		// H7 needs a forcible reset of the USB peripheral(s) in order for the bootloader to work properly.
+		// If you don't do this, the bootloader will execute, but USB doesn't work (nobody knows why)
+		// See https://community.st.com/s/question/0D53W00000vQEWsSAO/stm32h743-dfu-entry-doesnt-work-unless-boot0-held-high-at-poweron
+		RCC->AHB1ENR &= ~(RCC_AHB1ENR_USB1OTGHSEN | RCC_AHB1ENR_USB2OTGFSEN);
+	#endif
+
+	// leave DFU breadcrumb which assembly startup code would check, see [rusefi][DFU] section in assembly code
 	*((unsigned long *)0x2001FFF0) = 0xDEADBEEF; // End of RAM
 	// and now reboot
 	NVIC_SystemReset();

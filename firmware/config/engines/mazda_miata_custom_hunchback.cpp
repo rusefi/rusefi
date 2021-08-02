@@ -20,8 +20,6 @@
 #include "ego.h"
 #include "thermistors.h"
 
-EXTERN_CONFIG;
-
 // todo: why would this not work?
 //extern const float mazda_miata_nb2_RpmBins[FUEL_RPM_COUNT];
 //extern const float mazda_miata_nb2_LoadBins[FUEL_LOAD_COUNT];
@@ -92,7 +90,7 @@ void setMazdaMiata2003EngineConfigurationNaFuelRail(DECLARE_CONFIG_PARAMETER_SIG
 	copyArray(config->veLoadBins, mazda_miata_nb2_LoadBins);
 	copyTable(config->veTable, mapBased18vvtVeTable_NA_fuel_rail);
 
-	engineConfiguration->vvtOffset = 83; // 2002 green car value
+	engineConfiguration->vvtOffsets[0] = 83; // 2002 green car value
 
 	copyArray(config->lambdaRpmBins, mazda_miata_nb2_targetLambdaRpmBins);
 	copyArray(config->lambdaLoadBins, mazda_miata_nb2_targetLambdaLoadBins);
@@ -111,7 +109,7 @@ void setMazdaMiata2003EngineConfigurationNaFuelRail(DECLARE_CONFIG_PARAMETER_SIG
 
 	engineConfiguration->ignitionDwellForCrankingMs = 8;
 
-	engineConfiguration->vvtOffset = 97;
+	engineConfiguration->vvtOffsets[0] = 97;
 
 
 	engineConfiguration->rpmHardLimit = 7200; // we want to survive the race, but we also want some fun!

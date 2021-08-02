@@ -1,23 +1,21 @@
+#include "pch.h"
 
-#include "global.h"
-#include "engine.h"
 #include "biquad.h"
-#include "perf_trace.h"
 #include "thread_controller.h"
 #include "knock_logic.h"
 #include "software_knock.h"
 #include "thread_priority.h"
+#include "peak_detect.h"
 
 #if EFI_SOFTWARE_KNOCK
-
-EXTERN_ENGINE;
 
 #include "knock_config.h"
 #include "ch.hpp"
 
-NO_CACHE adcsample_t sampleBuffer[2000];
-int8_t currentCylinderIndex = 0;
-Biquad knockFilter;
+static NO_CACHE adcsample_t sampleBuffer[2000];
+static int8_t currentCylinderIndex = 0;
+static efitick_t lastKnockSampleTime = 0;
+static Biquad knockFilter;
 
 static volatile bool knockIsSampling = false;
 static volatile bool knockNeedsProcess = false;
@@ -141,6 +139,7 @@ void startKnockSampling(uint8_t cylinderIndex) {
 	currentCylinderIndex = cylinderIndex;
 
 	adcStartConversionI(&KNOCK_ADC, conversionGroup, sampleBuffer, sampleCount);
+	lastKnockSampleTime = getTimeNowNt();
 }
 
 class KnockThread : public ThreadController<256> {
@@ -163,6 +162,10 @@ void initSoftwareKnock() {
 		kt.Start();
 	}
 }
+
+using PD = PeakDetect<float, MS2NT(100)>;
+static PD peakDetectors[12];
+static PD allCylinderPeakDetector;
 
 void processLastKnockEvent() {
 	if (!knockNeedsProcess) {
@@ -190,16 +193,27 @@ void processLastKnockEvent() {
 		sumSq += filtered * filtered;
 	}
 
+	// take a local copy
+	auto lastKnockTime = lastKnockSampleTime;
+
+	// We're done with inspecting the buffer, another sample can be taken
+	knockNeedsProcess = false;
+
 	// mean of squares (not yet root)
 	float meanSquares = sumSq / localCount;
 
 	// RMS
 	float db = 10 * log10(meanSquares);
 
-	tsOutputChannels.knockLevels[currentCylinderIndex] = roundf(clampF(-100, db, 100));
-	tsOutputChannels.knockLevel = db;
+	// clamp to reasonable range
+	db = clampF(-100, db, 100);
 
-	knockNeedsProcess = false;
+	// Pass through peak detector
+	float cylPeak = peakDetectors[currentCylinderIndex].detect(db, lastKnockTime);
+
+	tsOutputChannels.knockLevels[currentCylinderIndex] = roundf(cylPeak);
+	tsOutputChannels.knockLevel = allCylinderPeakDetector.detect(db, lastKnockTime);
+
 }
 
 void KnockThread::ThreadTask() {

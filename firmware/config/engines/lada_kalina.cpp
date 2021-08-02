@@ -11,8 +11,6 @@
 #include "custom_engine.h"
 #include "fsio_impl.h"
 
-EXTERN_CONFIG;
-
 #if (BOARD_TLE8888_COUNT > 0)
 void setLadaKalina(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	/* MRE uses TLE8888_PIN_21 for fuel pump */

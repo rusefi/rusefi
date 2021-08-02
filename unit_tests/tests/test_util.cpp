@@ -5,34 +5,22 @@
  * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
+#include "pch.h"
+
 #include <string.h>
 
 #include "cyclic_buffer.h"
-#include "global.h"
 #include "histogram.h"
 
 #include "malfunction_central.h"
 #include "cli_registry.h"
-#include "unit_test_framework.h"
-#include "engine_controller.h"
 
 #include "nmea.h"
 #include "mmc_card.h"
 #include "lcd_menu_tree.h"
 #include "crc.h"
 #include "fl_stack.h"
-#include "io_pins.h"
-#include "efi_gpio.h"
-#include "efilib.h"
-
-#include "gtest/gtest.h"
-
-TEST(util, isLogFileName) {
-	ASSERT_FALSE(isLogFile("aaaa"));
-	ASSERT_FALSE(isLogFile("aaa.mlq"));
-	ASSERT_TRUE (isLogFile("aaaa.mlg"));
-	ASSERT_FALSE(isLogFile("aaaa.aaa"));
-}
+#include "peak_detect.h"
 
 TEST(util, negativeZero) {
 	ASSERT_TRUE(IS_NEGATIVE_ZERO(-0.0));
@@ -489,4 +477,25 @@ TEST(util, datalogging) {
 	printCurrentState(&logger, 239, "DEFAULT_FRANKENSO", "ID");
 //	printf("Got [%s]\r\n", LOGGING_BUFFER);
 //	ASSERT_STREQ("rusEfiVersion,776655@321ID DEFAULT_FRANKENSO 239,", LOGGING_BUFFER);
+}
+
+TEST(util, PeakDetect) {
+	constexpr int startTime = 50;
+	constexpr int timeout = 100;
+	PeakDetect<int, timeout> dut;
+
+	// Set a peak
+	EXPECT_EQ(dut.detect(1000, startTime), 1000);
+
+	// Smaller value at the same time is ignored
+	EXPECT_EQ(dut.detect(500, startTime), 1000);
+
+	// Larger value at the same time raises the peak
+	EXPECT_EQ(dut.detect(1500, startTime), 1500);
+
+	// Small value at almost the timeout is ignored
+	EXPECT_EQ(dut.detect(500, startTime + timeout - 1), 1500);
+
+	// Small value past the timeout is used
+	EXPECT_EQ(dut.detect(500, startTime + timeout + 1), 500);
 }

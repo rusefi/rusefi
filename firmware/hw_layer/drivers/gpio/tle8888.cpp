@@ -42,8 +42,6 @@
 #include "os_util.h"
 #include "thread_priority.h"
 
-EXTERN_ENGINE_CONFIGURATION;
-
 /*
  * TODO list:
  */

@@ -86,7 +86,6 @@
  * probably want EFI_ENABLE_ASSERTS to be FALSE. Also you would probably want to FALSE
  * CH_DBG_ENABLE_CHECKS
  * CH_DBG_ENABLE_ASSERTS
- * CH_DBG_ENABLE_TRACE
  * in chconf.h
  *
  */

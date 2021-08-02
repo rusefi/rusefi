@@ -1,12 +1,7 @@
+#include "pch.h"
+
 #include "ac_control.h"
-#include "engine.h"
-
 #include "deadband.h"
-#include "efi_gpio.h"
-#include "sensor.h"
-#include "tunerstudio_outputs.h"
-
-EXTERN_ENGINE;
 
 // Deadbands to prevent rapid switching on/off of AC
 static Deadband<200> maxRpmDeadband;

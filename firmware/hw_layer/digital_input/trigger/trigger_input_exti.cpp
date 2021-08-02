@@ -21,8 +21,6 @@
 	#error "PAL_USE_CALLBACKS should be enabled to use HAL_TRIGGER_USE_PAL"
 #endif
 
-EXTERN_ENGINE;
-
 static ioline_t shaftLines[TRIGGER_SUPPORTED_CHANNELS];
 static ioline_t camLines[CAM_INPUTS_COUNT];
 

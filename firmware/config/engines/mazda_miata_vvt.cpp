@@ -54,8 +54,6 @@
 #include "mazda_miata_base_maps.h"
 #include "hip9011_logic.h"
 
-EXTERN_CONFIG;
-
 static const float injectorLagBins[VBAT_INJECTOR_CURVE_SIZE] = {
         6.0,         8.0,        10.0,        11.0,
         12.0,        13.0,  14.0,        15.0
@@ -298,7 +296,8 @@ static void setMazdaMiataEngineNB2Defaults(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	engineConfiguration->fuelReferencePressure = 400; // 400 kPa, 58 psi
 	engineConfiguration->injectorCompensationMode = ICM_FixedRailPressure;
 
-	engineConfiguration->crankingIACposition = 90;
+	engineConfiguration->crankingIACposition = 60;
+	engineConfiguration->afterCrankingIACtaperDuration = 250;
 
 	CONFIG(isAlternatorControlEnabled) = true;
 	// enable altdebug
@@ -313,7 +312,7 @@ static void setMazdaMiataEngineNB2Defaults(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	engineConfiguration->vvtCamSensorUseRise = true;
 	// set vvt_mode 3
 	engineConfiguration->vvtMode[0] = VVT_MIATA_NB2;
-	engineConfiguration->vvtOffset = 98; // 2003 red car value
+	engineConfiguration->vvtOffsets[0] = 98; // 2003 red car value
 
 	copyArray(config->veRpmBins, mazda_miata_nb2_RpmBins);
 	copyArray(config->veLoadBins, mazda_miata_nb2_LoadBins);
@@ -569,7 +568,7 @@ static void setMiataNB2_MRE_common(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 
 	engineConfiguration->ignitionDwellForCrankingMs = 8;
 
-	engineConfiguration->vvtOffset = 97;
+	engineConfiguration->vvtOffsets[0] = 97;
 
 
 	//   # TLE8888 high current low side: VVT1 IN10 / OUT6
@@ -790,5 +789,9 @@ void setMiataNB2_Hellen72(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 
     engineConfiguration->tachOutputPin = GPIOD_13; // 3O - TACH (PWM7)
     engineConfiguration->alternatorControlPin = GPIOD_15; // 3M - ALTERN (PWM6)
+
+	// set tps_min 90
+	engineConfiguration->tpsMin = 110; // convert 12to10 bit (ADC/4)
+
 }
 #endif // HW_HELLEN

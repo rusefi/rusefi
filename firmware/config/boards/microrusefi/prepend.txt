@@ -1,3 +1,5 @@
+#define MAIN_HELP_URL "https://rusefi.com/s/microrusefi"
+
 #define ts_show_hip9011 false
 #define ts_show_cj125 false
 
@@ -22,5 +24,4 @@
 
 #define show_test_presets false
 #define show_Frankenso_presets false
-#define show_Hellen_presets false
-#define show_Proteus_presets false
+#define show_microRusEFI_presets true

@@ -13,9 +13,16 @@
 
 // http://en.wikipedia.org/wiki/Endianness
 
-#define SWAP_UINT16(x) (((x) << 8) | ((x) >> 8))
+static inline uint16_t SWAP_UINT16(uint16_t x)
+{
+	return ((x << 8) | (x >> 8));
+}
 
-#define SWAP_UINT32(x) ((((x) >> 24) & 0xff) | (((x) << 8) & 0xff0000) | (((x) >> 8) & 0xff00) | (((x) << 24) & 0xff000000))
+static inline uint32_t SWAP_UINT32(uint32_t x)
+{
+	return (((x >> 24) & 0x000000ff) | ((x <<  8) & 0x00ff0000) |
+			((x >>  8) & 0x0000ff00) | ((x << 24) & 0xff000000));
+}
 
 #define BIT(n) (UINT32_C(1) << (n))
 

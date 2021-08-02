@@ -1,6 +1,5 @@
-##############################################################################
-# Build global options
-# NOTE: Can be overridden externally.
+#
+# this Makefile is intended to be invoked from one level above - see ..\compile_bootloader.sh
 #
 
 # by default EXTRA_PARAMS is empty and we create 'debug' version of the firmware with additional assertions and statistics
@@ -40,7 +39,7 @@ endif
 # C++ specific options here (added to USE_OPT).
 ifeq ($(USE_CPPOPT),)
   # constexpr float expf_taylor_impl probably needs just c++14 but why not go with 17?
-  USE_CPPOPT = -std=c++17 -Wno-register -fno-rtti -fno-exceptions -fno-use-cxa-atexit -Werror=write-strings -Werror=type-limits
+  USE_CPPOPT = -std=c++17 -Wno-register -fno-rtti -fno-exceptions -fno-use-cxa-atexit -Werror=write-strings -Werror=type-limits -Winvalid-pch
 endif
 
 # Enable this if you want the linker to remove unused code and data
@@ -118,9 +117,14 @@ endif
 PROJECT = bootloader
 PROJECT_DIR = ..
 
+# Configure precompiled header
+PCH_DIR = $(PROJECT_DIR)/pch
+PCHSRC = $(PCH_DIR)/pch.h
+
 # Imported source files and paths
 CHIBIOS = $(PROJECT_DIR)/ChibiOS
-CHIBIOS_CONTRIB = $(PROJECT_DIR)/ChibiOS-Contrib
+# todo: looks like 'CHIBIOS_CONTRIB' path is universal shall we defined it only once?
+CHIBIOS_CONTRIB = $(CHIBIOS)/../ChibiOS-Contrib
 
 RULESPATH = $(CHIBIOS)/os/common/startup/ARMCMx/compilers/GCC/mk
 RULESFILE = $(RULESPATH)/rules.mk
@@ -136,7 +140,7 @@ include $(CHIBIOS)/os/license/license.mk
 include $(CHIBIOS)/os/common/startup/ARMCMx/compilers/GCC/mk/$(CPU_STARTUP)
 # HAL-OSAL files (optional).
 include $(CHIBIOS_CONTRIB)/os/hal/hal.mk
-include $(CHIBIOS)/os/hal/ports/STM32/$(CPU_PLATFORM)
+include $(CPU_PLATFORM)
 include $(CHIBIOS)/os/hal/osal/rt-nil/osal.mk
 # RTOS files (optional).
 include $(CHIBIOS)/os/rt/rt.mk
@@ -209,6 +213,7 @@ TCPPSRC =
 ASMXSRC = $(STARTUPASM) $(PORTASM) $(OSALASM)
 
 INCDIR = $(ALLINC) \
+	$(PCH_DIR) \
 	.. \
 	$(CHIBIOS)/os/various \
 	$(CHIBIOS)/os/ex/ST \
@@ -317,3 +322,4 @@ ULIBS = -lm --specs=nano.specs
 ##############################################################################
 
 include $(RULESFILE)
+include $(PROJECT_DIR)/rusefi_pch.mk

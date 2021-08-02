@@ -6,35 +6,24 @@
  * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
-#include "global.h"
+#include "pch.h"
 #include "os_access.h"
 
 #include "trigger_central.h"
 #include "trigger_decoder.h"
 #include "main_trigger_callback.h"
-#include "engine_configuration.h"
 #include "listener_array.h"
-#include "pwm_generator_logic.h"
 #include "tooth_logger.h"
 #include "hip9011.h"
 #include "logic_analyzer.h"
 
-#include "settings.h"
-#include "engine_math.h"
 #include "local_version_holder.h"
 #include "trigger_simulator.h"
 #include "trigger_emulator_algo.h"
 
-#include "rpm_calculator.h"
 #include "tooth_logger.h"
-#include "perf_trace.h"
 #include "map_averaging.h"
 #include "main_trigger_callback.h"
-
-
-#if EFI_PROD_CODE
-#include "pin_repository.h"
-#endif /* EFI_PROD_CODE */
 
 #if EFI_TUNER_STUDIO
 #include "tunerstudio.h"
@@ -44,6 +33,9 @@
 #include "engine_sniffer.h"
 WaveChart waveChart;
 #endif /* EFI_ENGINE_SNIFFER */
+
+static scheduling_s debugToggleScheduling;
+#define DEBUG_PIN_DELAY US2NT(60)
 
 trigger_central_s::trigger_central_s() : hwEventCounters() {
 }
@@ -76,8 +68,6 @@ int TriggerCentral::getHwEventCounter(int index) const {
 
 #if EFI_SHAFT_POSITION_INPUT
 
-EXTERN_ENGINE;
-
 angle_t TriggerCentral::getVVTPosition(uint8_t bankIndex, uint8_t camIndex) {
 	if (bankIndex >= BANKS_COUNT || camIndex >= CAMS_PER_BANK) {
 		return NAN;
@@ -85,15 +75,95 @@ angle_t TriggerCentral::getVVTPosition(uint8_t bankIndex, uint8_t camIndex) {
 	return vvtPosition[bankIndex][camIndex];
 }
 
+/**
+ * todo: why is this method NOT reciprocal to getRpmMultiplier?!
+ */
+static int getCrankDivider(operation_mode_e operationMode) {
+	switch (operationMode) {
+	case FOUR_STROKE_CRANK_SENSOR:
+		return 2;
+	case FOUR_STROKE_SYMMETRICAL_CRANK_SENSOR:
+		return SYMMETRICAL_CRANK_SENSOR_DIVIDER;
+	case FOUR_STROKE_THREE_TIMES_CRANK_SENSOR:
+		return SYMMETRICAL_THREE_TIMES_CRANK_SENSOR_DIVIDER;
+	default:
+	case FOUR_STROKE_CAM_SENSOR:
+	case TWO_STROKE:
+		// That's easy - trigger cycle matches engine cycle
+		return 1;
+	}
+}
+
 #define miataNbIndex (0)
 
-// todo: should we hard-code the list of 'not real decoder' modes instead of adding to list of 'real decoders'? these days we only add 'real decode' modes
 static bool vvtWithRealDecoder(vvt_mode_e vvtMode) {
-	return vvtMode == VVT_MIATA_NB2
-			|| vvtMode == VVT_BOSCH_QUICK_START
-			|| vvtMode == VVT_FORD_ST170
-			|| vvtMode == VVT_4_1
-			|| vvtMode == VVT_BARRA_3_PLUS_1;
+	// todo: why does VVT_2JZ not use real decoder?
+	return vvtMode != VVT_INACTIVE
+			&& vvtMode != VVT_2JZ
+			&& vvtMode != VVT_SECOND_HALF
+			&& vvtMode != VVT_FIRST_HALF;
+}
+
+static angle_t syncAndReport(TriggerCentral *tc, int divider, int remainder DECLARE_ENGINE_PARAMETER_SUFFIX) {
+	angle_t engineCycle = getEngineCycle(engine->getOperationMode(PASS_ENGINE_PARAMETER_SIGNATURE));
+
+	angle_t offset = tc->triggerState.syncSymmetricalCrank(divider, remainder, engineCycle);
+	if (offset > 0 && engineConfiguration->debugMode == DBG_VVT) {
+#if EFI_TUNER_STUDIO
+		tsOutputChannels.debugIntField1++;
+#endif /* EFI_TUNER_STUDIO */
+	}
+	return offset;
+}
+
+static void turnOffAllDebugFields(void *arg) {
+	(void)arg;
+#if EFI_PROD_CODE
+	for (int index = 0;index<TRIGGER_INPUT_PIN_COUNT;index++) {
+		if (CONFIG(triggerInputDebugPins[index]) != GPIO_UNASSIGNED) {
+			writePad("trigger debug", CONFIG(triggerInputDebugPins[index]), 0);
+		}
+	}
+	for (int index = 0;index<CAM_INPUTS_COUNT;index++) {
+		if (CONFIG(camInputsDebug[index]) != GPIO_UNASSIGNED) {
+			writePad("cam debug", CONFIG(camInputsDebug[index]), 0);
+		}
+	}
+#endif /* EFI_PROD_CODE */
+}
+
+static angle_t adjustCrankPhase(int camIndex DECLARE_ENGINE_PARAMETER_SUFFIX) {
+	TriggerCentral *tc = &engine->triggerCentral;
+	operation_mode_e operationMode = engine->getOperationMode(PASS_ENGINE_PARAMETER_SIGNATURE);
+
+	switch (engineConfiguration->vvtMode[camIndex]) {
+	case VVT_FIRST_HALF:
+		return syncAndReport(tc, getCrankDivider(operationMode), 1 PASS_ENGINE_PARAMETER_SUFFIX);
+	case VVT_SECOND_HALF:
+		return syncAndReport(tc, getCrankDivider(operationMode), 0 PASS_ENGINE_PARAMETER_SUFFIX);
+	case VVT_MIATA_NB2:
+		/**
+		 * NB2 is a symmetrical crank, there are four phases total
+		 */
+		return syncAndReport(tc, getCrankDivider(operationMode), miataNbIndex PASS_ENGINE_PARAMETER_SUFFIX);
+	case VVT_NISSAN_VQ:
+		return syncAndReport(tc, getCrankDivider(operationMode), 0 PASS_ENGINE_PARAMETER_SUFFIX);
+	default:
+	case VVT_INACTIVE:
+		// do nothing
+		return 0;
+	}
+}
+
+static angle_t wrapVvt(angle_t vvtPosition) {
+	// Wrap VVT position in to the range [-360, 360)
+	while (vvtPosition < -360) {
+		vvtPosition += 720;
+	}
+	while (vvtPosition >= 360) {
+		vvtPosition -= 720;
+	}
+	return vvtPosition;
 }
 
 void hwHandleVvtCamSignal(trigger_value_e front, efitick_t nowNt, int index DECLARE_ENGINE_PARAMETER_SUFFIX) {
@@ -107,6 +177,9 @@ void hwHandleVvtCamSignal(trigger_value_e front, efitick_t nowNt, int index DECL
 	}
 	extern const char *vvtNames[];
 	const char *vvtName = vvtNames[index];
+	if (CONFIG(vvtMode[camIndex]) == VVT_INACTIVE) {
+		warning(CUSTOM_VVT_MODE_NOT_SELECTED, "VVT: event on %d but no mode", camIndex);
+	}
 
 #if VR_HW_CHECK_MODE
 	// some boards do not have hardware VR input LEDs which makes such boards harder to validate
@@ -147,6 +220,13 @@ void hwHandleVvtCamSignal(trigger_value_e front, efitick_t nowNt, int index DECL
 		return;
 	}
 
+	if (isImportantFront && CONFIG(camInputsDebug[index]) != GPIO_UNASSIGNED) {
+#if EFI_PROD_CODE
+		writePad("cam debug", CONFIG(camInputsDebug[index]), 1);
+#endif /* EFI_PROD_CODE */
+		engine->executor.scheduleByTimestampNt("dbg_on", &debugToggleScheduling, nowNt + DEBUG_PIN_DELAY, &turnOffAllDebugFields);
+	}
+
 	if (CONFIG(displayLogicLevelsInEngineSniffer) && isImportantFront) {
 		if (CONFIG(vvtCamSensorUseRise)) {
 			// todo: unify TS composite logger code with console Engine Sniffer
@@ -178,8 +258,8 @@ void hwHandleVvtCamSignal(trigger_value_e front, efitick_t nowNt, int index DECL
 		return;
 	}
 
-	ENGINE(triggerCentral).vvtState[bankIndex][camIndex].decodeTriggerEvent(
-			ENGINE(triggerCentral).vvtShape[camIndex],
+	tc->vvtState[bankIndex][camIndex].decodeTriggerEvent(
+			tc->vvtShape[camIndex],
 			nullptr,
 			nullptr,
 			engine->vvtTriggerConfiguration[camIndex],
@@ -216,8 +296,9 @@ void hwHandleVvtCamSignal(trigger_value_e front, efitick_t nowNt, int index DECL
 	case VVT_MIATA_NB2:
 	case VVT_BOSCH_QUICK_START:
 	case VVT_BARRA_3_PLUS_1:
+	case VVT_NISSAN_VQ:
 	 {
-		if (engine->triggerCentral.vvtState[bankIndex][camIndex].currentCycle.current_index != 0) {
+		if (tc->vvtState[bankIndex][camIndex].currentCycle.current_index != 0) {
 			// this is not sync tooth - exiting
 			return;
 		}
@@ -234,61 +315,20 @@ void hwHandleVvtCamSignal(trigger_value_e front, efitick_t nowNt, int index DECL
 
 	tc->vvtSyncTimeNt[bankIndex][camIndex] = nowNt;
 
-    // we do NOT clamp VVT position into the [0, engineCycle) range - we expect vvtOffset to be configured so that
-    // it's not necessary
-	tc->vvtPosition[bankIndex][camIndex] = engineConfiguration->vvtOffset - currentPosition;
-	if (tc->vvtPosition[bankIndex][camIndex] < -ENGINE(engineCycle) / 2 || tc->vvtPosition[bankIndex][camIndex] > ENGINE(engineCycle) / 2) {
-		warning(CUSTOM_ERR_VVT_OUT_OF_RANGE, "Please adjust vvtOffset since position %f", tc->vvtPosition);
+	auto vvtPosition = engineConfiguration->vvtOffsets[bankIndex * CAMS_PER_BANK + camIndex] - currentPosition;
+
+	if (index != 0) {
+		// todo: only assign initial position of not first cam once cam was synchronized
+		tc->vvtPosition[bankIndex][camIndex] = wrapVvt(vvtPosition);
+		// at the moment we use only primary VVT to sync crank phase
+		return;
 	}
 
-	switch (engineConfiguration->vvtMode[camIndex]) {
-	case VVT_FIRST_HALF:
-	{
-
-		bool isEven = tc->triggerState.isEvenRevolution();
-		if (!isEven) {
-			/**
-			 * we are here if we've detected the cam sensor within the wrong crank phase
-			 * let's increase the trigger event counter, that would adjust the state of
-			 * virtual crank-based trigger
-			 */
-			tc->triggerState.incrementTotalEventCounter();
-			if (engineConfiguration->debugMode == DBG_VVT) {
-#if EFI_TUNER_STUDIO
-				tsOutputChannels.debugIntField1++;
-#endif /* EFI_TUNER_STUDIO */
-			}
-		}
-	}
-		break;
-	case VVT_SECOND_HALF:
-	{
-		bool isEven = tc->triggerState.isEvenRevolution();
-		if (isEven) {
-			// see above comment
-			tc->triggerState.incrementTotalEventCounter();
-			if (engineConfiguration->debugMode == DBG_VVT) {
-#if EFI_TUNER_STUDIO
-				tsOutputChannels.debugIntField1++;
-#endif /* EFI_TUNER_STUDIO */
-			}
-		}
-	}
-		break;
-	case VVT_MIATA_NB2:
-		/**
-		 * NB2 is a symmetrical crank, there are four phases total
-		 */
-		while (tc->triggerState.getTotalRevolutionCounter() % 4 != miataNbIndex) {
-			tc->triggerState.incrementTotalEventCounter();
-		}
-		break;
-	default:
-	case VVT_INACTIVE:
-		// do nothing
-		break;
-	}
-
+	angle_t crankOffset = adjustCrankPhase(camIndex PASS_ENGINE_PARAMETER_SUFFIX);
+	// vvtPosition was calculated against wrong crank zero position. Now that we have adjusted crank position we
+	// shall adjust vvt position as well
+	vvtPosition -= crankOffset;
+	tc->vvtPosition[bankIndex][camIndex] = wrapVvt(vvtPosition);
 }
 
 int triggerReentraint = 0;
@@ -372,6 +412,13 @@ void handleShaftSignal(int signalIndex, bool isRising, efitick_t timestamp DECLA
 			 */
 			return;
 		}
+	}
+
+	if (CONFIG(triggerInputDebugPins[signalIndex]) != GPIO_UNASSIGNED) {
+#if EFI_PROD_CODE
+		writePad("trigger debug", CONFIG(triggerInputDebugPins[signalIndex]), 1);
+#endif /* EFI_PROD_CODE */
+		engine->executor.scheduleByTimestampNt("dbg_off", &debugToggleScheduling, timestamp + DEBUG_PIN_DELAY, &turnOffAllDebugFields);
 	}
 
 #if EFI_TOOTH_LOGGER
@@ -459,7 +506,7 @@ bool TriggerNoiseFilter::noiseFilter(efitick_t nowNt,
 	efitick_t allowedPeriod = accumSignalPrevPeriods[os];
 
 	// but first check if we're expecting a gap
-	bool isGapExpected = TRIGGER_WAVEFORM(isSynchronizationNeeded) && triggerState->shaft_is_synchronized &&
+	bool isGapExpected = TRIGGER_WAVEFORM(isSynchronizationNeeded) && triggerState->getShaftSynchronized() &&
 			(triggerState->currentCycle.eventCount[ti] + 1) == TRIGGER_WAVEFORM(getExpectedEventCount(ti));
 	
 	if (isGapExpected) {
@@ -486,18 +533,6 @@ bool TriggerNoiseFilter::noiseFilter(efitick_t nowNt,
 	}
 	// all premature or extra-long events are ignored - treated as interference
 	return false;
-}
-
-/**
- * todo: why is this method NOT reciprocal to getRpmMultiplier?!
- */
-int getCrankDivider(operation_mode_e operationMode) {
-	if (operationMode == FOUR_STROKE_CAM_SENSOR || operationMode == TWO_STROKE) {
-		// That's easy - trigger cycle matches engine cycle
-		return 1;
-	} else {
-		return operationMode == FOUR_STROKE_CRANK_SENSOR ? 2 : SYMMETRICAL_CRANK_SENSOR_DIVIDER;
-	}
 }
 
 /**
@@ -553,7 +588,7 @@ void TriggerCentral::handleShaftSignal(trigger_event_e signal, efitick_t timesta
 	}
 	reportEventToWaveChart(signal, triggerIndexForListeners PASS_ENGINE_PARAMETER_SUFFIX);
 
-	if (!triggerState.shaft_is_synchronized) {
+	if (!triggerState.getShaftSynchronized()) {
 		// we should not propagate event if we do not know where we are
 		return;
 	}
@@ -582,8 +617,6 @@ void TriggerCentral::handleShaftSignal(trigger_event_e signal, efitick_t timesta
 		mainTriggerCallback(triggerIndexForListeners, timestamp PASS_ENGINE_PARAMETER_SUFFIX);
 	}
 }
-
-EXTERN_ENGINE;
 
 static void triggerShapeInfo(void) {
 #if EFI_PROD_CODE || EFI_SIMULATOR
@@ -707,8 +740,12 @@ static void resetRunningTriggerCounters() {
 
 void onConfigurationChangeTriggerCallback(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	bool changed = false;
-	for (size_t i = 0; i < efi::size(CONFIG(camInputs)); i++) {
-		changed |= isConfigurationChanged(camInputs[i]);
+	// todo: how do we static_assert here?
+	efiAssertVoid(OBD_PCM_Processor_Fault, efi::size(CONFIG(camInputs)) == efi::size(CONFIG(vvtOffsets)), "sizes");
+
+	for (size_t camIndex = 0; camIndex < efi::size(CONFIG(camInputs)); camIndex++) {
+		changed |= isConfigurationChanged(camInputs[camIndex]);
+		changed |= isConfigurationChanged(vvtOffsets[camIndex]);
 	}
 
 	for (size_t i = 0; i < efi::size(CONFIG(triggerGapOverride)); i++) {
@@ -731,7 +768,6 @@ void onConfigurationChangeTriggerCallback(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	changed |= isConfigurationChanged(trigger.customSkippedToothCount);
 	changed |= isConfigurationChanged(vvtCamSensorUseRise);
 	changed |= isConfigurationChanged(overrideTriggerGaps);
-	changed |= isConfigurationChanged(vvtOffset);
 
 	if (changed) {
 		assertEngineReference();

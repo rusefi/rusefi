@@ -1,3 +1,7 @@
+/**
+ * @file functional_sensor.cpp
+ */
+
 #include "functional_sensor.h"
 
 void FunctionalSensor::postRawValue(float inputValue, efitick_t timestamp) {

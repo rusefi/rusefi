@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Thu Jul 01 21:42:48 UTC 2021
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Sun Aug 01 01:23:41 UTC 2021
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -137,6 +137,7 @@ struct cranking_parameters_s {
 	int16_t rpm;
 	/**
 	 * need 4 byte alignment
+	units
 	 * offset 6
 	 */
 	uint8_t alignmentFill_at_6[2];
@@ -159,6 +160,7 @@ struct spi_pins {
 	brain_pin_e sckPin;
 	/**
 	 * need 4 byte alignment
+	units
 	 * offset 3
 	 */
 	uint8_t alignmentFill_at_3[1];
@@ -388,6 +390,7 @@ struct ThermistorConf {
 	adc_channel_e adcChannel;
 	/**
 	 * need 4 byte alignment
+	units
 	 * offset 29
 	 */
 	uint8_t alignmentFill_at_29[3];
@@ -433,7 +436,7 @@ struct specs_s {
 	/**
 	 * offset 4
 	 */
-	cylinders_count_t cylindersCount;
+	uint32_t cylindersCount;
 	/**
 	 * offset 8
 	 */
@@ -645,6 +648,29 @@ struct dc_io {
 	/** total size 4*/
 };
 
+// start of vr_threshold_s
+struct vr_threshold_s {
+	/**
+	 * offset 0
+	 */
+	brain_pin_e pin;
+	/**
+	 * offset 1
+	 */
+	uint8_t pad[3];
+	/**
+	rpm
+	 * offset 4
+	 */
+	uint8_t rpmBins[6];
+	/**
+	volts
+	 * offset 10
+	 */
+	uint8_t values[6];
+	/** total size 16*/
+};
+
 // start of engine_configuration_s
 struct engine_configuration_s {
 	/**
@@ -694,8 +720,9 @@ struct engine_configuration_s {
 	offset 76 bit 7 */
 	bool disableFan2WhenStopped : 1;
 	/**
+	 * Enable secondary spark outputs that fire after the primary (rotaries, twin plug engines).
 	offset 76 bit 8 */
-	bool unused_294_8 : 1;
+	bool enableTrailingSparks : 1;
 	/**
 	 * enable cj125verbose/disable cj125verbose
 	offset 76 bit 9 */
@@ -958,10 +985,11 @@ struct engine_configuration_s {
 	 */
 	int8_t gapTrackingLengthOverride;
 	/**
-	unused
+	 * Above this speed, disable closed loop idle control. Set to 0 to disable (allow closed loop idle at any speed).
+	kph
 	 * offset 445
 	 */
-	int8_t unusedOldIgnitionOffset[1];
+	uint8_t maxIdleVss;
 	/**
 	 * Expected oil pressure after starting the engine. If oil pressure does not reach this level within 5 seconds of engine start, fuel will be cut. Set to 0 to disable and always allow starting.
 	kPa
@@ -1088,10 +1116,11 @@ struct engine_configuration_s {
 	 */
 	float idle_derivativeFilterLoss;
 	/**
-	index
+	 * just a temporary solution
+	angle
 	 * offset 520
 	 */
-	int unused520;
+	int trailingSparkAngle;
 	/**
 	 * offset 524
 	 */
@@ -1206,11 +1235,11 @@ struct engine_configuration_s {
 	/**
 	 * offset 624
 	 */
-	output_pin_e injectionPins[INJECTION_PIN_COUNT];
+	output_pin_e injectionPins[MAX_CYLINDER_COUNT];
 	/**
 	 * offset 636
 	 */
-	output_pin_e ignitionPins[IGNITION_PIN_COUNT];
+	output_pin_e ignitionPins[MAX_CYLINDER_COUNT];
 	/**
 	 * offset 648
 	 */
@@ -1277,7 +1306,7 @@ struct engine_configuration_s {
 	 */
 	output_pin_e fanPin;
 	/**
-	 * some cars have a switch to indicate that clutch pedal is all the way down
+	 * Some cars have a switch to indicate that clutch pedal is all the way down
 	 * offset 664
 	 */
 	switch_input_pin_e clutchDownPin;
@@ -1875,10 +1904,10 @@ struct engine_configuration_s {
 	uint8_t multisparkMaxExtraSparkCount;
 	/**
 	offset 976 bit 0 */
-	bool todoClutchUpPinInverted : 1;
+	bool clutchUpPinInverted : 1;
 	/**
 	offset 976 bit 1 */
-	bool todoClutchDownPinInverted : 1;
+	bool clutchDownPinInverted : 1;
 	/**
 	 * If enabled we use two H-bridges to drive stepper idle air valve
 	offset 976 bit 2 */
@@ -2129,10 +2158,25 @@ struct engine_configuration_s {
 	 */
 	output_pin_e luaOutputPins[LUA_PWM_COUNT];
 	/**
-	units
+	 * Angle between cam sensor and VVT zero position
+	 * set vvt_offset X
+	value
 	 * offset 1228
 	 */
-	int unusedAtOldBoardConfigurationEnd[57];
+	float vvtOffsets[CAM_INPUTS_COUNT];
+	/**
+	 * offset 1232
+	 */
+	float vvtOffsetsPadding[CAM_INPUTS_COUNT_padding];
+	/**
+	 * offset 1244
+	 */
+	vr_threshold_s vrThreshold[2];
+	/**
+	units
+	 * offset 1276
+	 */
+	int unusedAtOldBoardConfigurationEnd[45];
 	/**
 	kg
 	 * offset 1456
@@ -2429,21 +2473,18 @@ struct engine_configuration_s {
 	 */
 	int16_t primeInjFalloffTemperature;
 	/**
-	 * At what trigger index should some ignition-related math be executed? This is a performance trick to reduce load on synchronization trigger callback.
-	index
+	mult
 	 * offset 1488
 	 */
-	int ignMathCalculateAtIndex;
+	float turboSpeedSensorMultiplier;
 	/**
-	RPM
 	 * offset 1492
 	 */
-	int16_t acCutoffLowRpm;
+	brain_pin_e camInputsDebug[CAM_INPUTS_COUNT];
 	/**
-	RPM
-	 * offset 1494
+	 * offset 1493
 	 */
-	int16_t acCutoffHighRpm;
+	uint8_t camInputsDebugPadding[CAM_INPUTS_COUNT_padding];
 	/**
 	 * Extra idle target speed when A/C is enabled. Some cars need the extra speed to keep the AC efficient while idling.
 	RPM
@@ -2523,6 +2564,7 @@ struct engine_configuration_s {
 	 */
 	float crankingTpsBins[CRANKING_CURVE_SIZE];
 	/**
+	 * Duration in ms or duty cycle depending on selected mode
 	 * offset 1704
 	 */
 	float tachPulseDuractionMs;
@@ -2561,7 +2603,11 @@ struct engine_configuration_s {
 	/**
 	 * offset 1756
 	 */
-	float unused1756;
+	brain_pin_e triggerInputDebugPins[TRIGGER_INPUT_PIN_COUNT];
+	/**
+	 * offset 1759
+	 */
+	brain_input_pin_e turboSpeedSensorInputPin;
 	/**
 	x
 	 * offset 1760
@@ -2785,12 +2831,10 @@ struct engine_configuration_s {
 	 */
 	float tpsAccelEnrichmentThreshold;
 	/**
-	 * Angle between cam sensor and VVT zero position
-	 * set vvt_offset X
-	value
+	v
 	 * offset 2052
 	 */
-	float vvtOffset;
+	float unusedVvtOffsetWasHere;
 	/**
 	cycles
 	 * offset 2056
@@ -2916,76 +2960,76 @@ struct engine_configuration_s {
 	bool unused1130 : 1;
 	/**
 	offset 2116 bit 8 */
-	bool unusedBit_496_8 : 1;
+	bool unusedBit_500_8 : 1;
 	/**
 	offset 2116 bit 9 */
-	bool unusedBit_496_9 : 1;
+	bool unusedBit_500_9 : 1;
 	/**
 	offset 2116 bit 10 */
-	bool unusedBit_496_10 : 1;
+	bool unusedBit_500_10 : 1;
 	/**
 	offset 2116 bit 11 */
-	bool unusedBit_496_11 : 1;
+	bool unusedBit_500_11 : 1;
 	/**
 	offset 2116 bit 12 */
-	bool unusedBit_496_12 : 1;
+	bool unusedBit_500_12 : 1;
 	/**
 	offset 2116 bit 13 */
-	bool unusedBit_496_13 : 1;
+	bool unusedBit_500_13 : 1;
 	/**
 	offset 2116 bit 14 */
-	bool unusedBit_496_14 : 1;
+	bool unusedBit_500_14 : 1;
 	/**
 	offset 2116 bit 15 */
-	bool unusedBit_496_15 : 1;
+	bool unusedBit_500_15 : 1;
 	/**
 	offset 2116 bit 16 */
-	bool unusedBit_496_16 : 1;
+	bool unusedBit_500_16 : 1;
 	/**
 	offset 2116 bit 17 */
-	bool unusedBit_496_17 : 1;
+	bool unusedBit_500_17 : 1;
 	/**
 	offset 2116 bit 18 */
-	bool unusedBit_496_18 : 1;
+	bool unusedBit_500_18 : 1;
 	/**
 	offset 2116 bit 19 */
-	bool unusedBit_496_19 : 1;
+	bool unusedBit_500_19 : 1;
 	/**
 	offset 2116 bit 20 */
-	bool unusedBit_496_20 : 1;
+	bool unusedBit_500_20 : 1;
 	/**
 	offset 2116 bit 21 */
-	bool unusedBit_496_21 : 1;
+	bool unusedBit_500_21 : 1;
 	/**
 	offset 2116 bit 22 */
-	bool unusedBit_496_22 : 1;
+	bool unusedBit_500_22 : 1;
 	/**
 	offset 2116 bit 23 */
-	bool unusedBit_496_23 : 1;
+	bool unusedBit_500_23 : 1;
 	/**
 	offset 2116 bit 24 */
-	bool unusedBit_496_24 : 1;
+	bool unusedBit_500_24 : 1;
 	/**
 	offset 2116 bit 25 */
-	bool unusedBit_496_25 : 1;
+	bool unusedBit_500_25 : 1;
 	/**
 	offset 2116 bit 26 */
-	bool unusedBit_496_26 : 1;
+	bool unusedBit_500_26 : 1;
 	/**
 	offset 2116 bit 27 */
-	bool unusedBit_496_27 : 1;
+	bool unusedBit_500_27 : 1;
 	/**
 	offset 2116 bit 28 */
-	bool unusedBit_496_28 : 1;
+	bool unusedBit_500_28 : 1;
 	/**
 	offset 2116 bit 29 */
-	bool unusedBit_496_29 : 1;
+	bool unusedBit_500_29 : 1;
 	/**
 	offset 2116 bit 30 */
-	bool unusedBit_496_30 : 1;
+	bool unusedBit_500_30 : 1;
 	/**
 	offset 2116 bit 31 */
-	bool unusedBit_496_31 : 1;
+	bool unusedBit_500_31 : 1;
 	/**
 	 * set can_mode X
 	 * offset 2120
@@ -3128,6 +3172,7 @@ struct engine_configuration_s {
 	uint8_t fan1ExtraIdle;
 	/**
 	 * need 4 byte alignment
+	units
 	 * offset 2247
 	 */
 	uint8_t alignmentFill_at_2247[1];
@@ -3171,7 +3216,11 @@ struct engine_configuration_s {
 	units
 	 * offset 2323
 	 */
-	uint8_t unusedOldBiquad[21];
+	uint8_t unusedOldBiquad[9];
+	/**
+	 * offset 2332
+	 */
+	output_pin_e trailingCoilPins[MAX_CYLINDER_COUNT];
 	/**
 	 * CLT-based timing correction
 	C
@@ -3237,20 +3286,28 @@ struct engine_configuration_s {
 	 */
 	float postCrankingDurationSec;
 	/**
-	 * todo: finish implementation #332
 	 * offset 2436
 	 */
 	ThermistorConf auxTempSensor1;
 	/**
-	 * todo: finish implementation #332
 	 * offset 2468
 	 */
 	ThermistorConf auxTempSensor2;
 	/**
-	units
+	 * Apply nonlinearity correction below a pulse of this duration. Pulses longer than this duration will receive no adjustment.
+	ms
 	 * offset 2500
 	 */
-	uint8_t unused2508[6];
+	uint16_t applyNonlinearBelowPulse;
+	/**
+	 * offset 2502
+	 */
+	InjectorNonlinearMode injectorNonlinearMode;
+	/**
+	units
+	 * offset 2503
+	 */
+	uint8_t unused2508[3];
 	/**
 	Hz
 	 * offset 2506
@@ -3270,7 +3327,7 @@ struct engine_configuration_s {
 	deg
 	 * offset 2532
 	 */
-	angle_t timing_offset_cylinder[IGNITION_PIN_COUNT];
+	angle_t timing_offset_cylinder[MAX_CYLINDER_COUNT];
 	/**
 	seconds
 	 * offset 2580
@@ -3359,10 +3416,14 @@ struct engine_configuration_s {
 	 */
 	pid_s auxPid[CAMS_PER_BANK];
 	/**
-	units
 	 * offset 2624
 	 */
-	uint8_t unused1366[40];
+	float injectorCorrectionPolynomial[8];
+	/**
+	units
+	 * offset 2656
+	 */
+	uint8_t unused1366[8];
 	/**
 	 * offset 2664
 	 */
@@ -3704,7 +3765,7 @@ struct engine_configuration_s {
 	 * Select which fuel correction bank this cylinder belongs to. Group cylinders that share the same O2 sensor
 	 * offset 3988
 	 */
-	uint8_t cylinderBankSelect[INJECTION_PIN_COUNT];
+	uint8_t cylinderBankSelect[MAX_CYLINDER_COUNT];
 	/**
 	units
 	 * offset 4000
@@ -3829,6 +3890,7 @@ struct engine_configuration_s {
 	int8_t knockBaseNoise[IGN_RPM_COUNT];
 	/**
 	 * need 4 byte alignment
+	units
 	 * offset 4511
 	 */
 	uint8_t alignmentFill_at_4511[1];
@@ -4231,4 +4293,4 @@ struct persistent_config_s {
 };
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Thu Jul 01 21:42:48 UTC 2021
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Sun Aug 01 01:23:41 UTC 2021

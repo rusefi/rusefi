@@ -13,10 +13,8 @@
  * @date Mar 3, 2014
  * @author Andrey Belomutskiy, (c) 2012-2020
  */
-#include "state_sequence.h"
-#include "global.h"
-#include "efi_gpio.h"
-#include "pin_repository.h"
+
+#include "pch.h"
 
 int getPreviousIndex(const int currentIndex, const int size) {
 	return (currentIndex + size - 1) % size;
@@ -32,18 +30,12 @@ bool needEvent(const int currentIndex, const int size, const MultiChannelStateSe
 
 #if EFI_EMULATE_POSITION_SENSORS
 
-#include "engine.h"
 #include "trigger_emulator_algo.h"
-#include "engine_configuration.h"
 #include "trigger_central.h"
 #include "trigger_simulator.h"
-#include "settings.h"
-#include "pwm_generator_logic.h"
 
 TriggerEmulatorHelper::TriggerEmulatorHelper() {
 }
-
-EXTERN_ENGINE;
 
 static OutputPin emulatorOutputs[PWM_PHASE_MAX_WAVE_PER_PWM];
 
@@ -88,8 +80,10 @@ extern WaveChart waveChart;
  * todo: oh this method has only one usage? there must me another very similar method!
  */
 static float getRpmMultiplier(operation_mode_e mode) {
-	if (mode == FOUR_STROKE_SYMMETRICAL_CRANK_SENSOR) {
-		return 2;
+	if (mode == FOUR_STROKE_THREE_TIMES_CRANK_SENSOR) {
+		return SYMMETRICAL_THREE_TIMES_CRANK_SENSOR_DIVIDER / 2;
+	} else if (mode == FOUR_STROKE_SYMMETRICAL_CRANK_SENSOR) {
+		return SYMMETRICAL_CRANK_SENSOR_DIVIDER / 2;
 	} else if (mode == FOUR_STROKE_CAM_SENSOR) {
 		return 0.5;
 	} else if (mode == FOUR_STROKE_CRANK_SENSOR) {

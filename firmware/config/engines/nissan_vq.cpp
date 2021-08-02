@@ -7,10 +7,14 @@
 
 #include "nissan_vq.h"
 
-EXTERN_CONFIG;
-
 void setHellen121nissan(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
-	engineConfiguration->trigger.type = TT_NISSAN_VQ;
+	engineConfiguration->trigger.type = TT_NISSAN_VQ35;
 
 	engineConfiguration->vvtMode[0] = VVT_NISSAN_VQ;
+
+	// we have this here and not in board_configuration.cpp so that unit test would get this value
+	engineConfiguration->invertCamVVTSignal = true;
+
+	engineConfiguration->vvtOffsets[0] = NISSAN_VQ_VVT_OFFSET;
+	engineConfiguration->vvtOffsets[1 * CAMS_PER_BANK] = NISSAN_VQ_VVT_OFFSET - NISSAN_VQ_CAM_OFFSET;
 }

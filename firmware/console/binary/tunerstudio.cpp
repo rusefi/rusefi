@@ -97,8 +97,6 @@
 
 #if EFI_TUNER_STUDIO
 
-EXTERN_ENGINE;
-
 /* 1S */
 #define TS_COMMUNICATION_TIMEOUT	TIME_MS2I(1000)
 
@@ -326,9 +324,7 @@ static void handleCrc32Check(TsChannelBase *tsChannel, ts_response_format_e mode
 
 	const char* start = getWorkingPageAddr() + offset;
 
-	uint32_t crc = crc32(start, count);
-	// do not pass function as macro parameter that would cause same code to be invoked 4 times!
-	crc = SWAP_UINT32(crc);
+	uint32_t crc = SWAP_UINT32(crc32(start, count));
 	tsChannel->sendResponse(mode, (const uint8_t *) &crc, 4);
 }
 
@@ -435,8 +431,6 @@ static bool isKnownCommand(char command) {
 			|| command == TS_GET_FIRMWARE_VERSION
 			|| command == TS_PERF_TRACE_BEGIN
 			|| command == TS_PERF_TRACE_GET_BUFFER
-			|| command == TS_SD_R_COMMAND
-			|| command == TS_SD_W_COMMAND
 			|| command == TS_GET_CONFIG_ERROR;
 }
 
@@ -596,7 +590,7 @@ void handleQueryCommand(TsChannelBase* tsChannel, ts_response_format_e mode) {
  */
 static void handleTestCommand(TsChannelBase* tsChannel) {
 	tsState.testCommandCounter++;
-	static char testOutputBuffer[24];
+	static char testOutputBuffer[64];
 	/**
 	 * this is NOT a standard TunerStudio command, this is my own
 	 * extension of the protocol to simplify troubleshooting
@@ -612,6 +606,12 @@ static void handleTestCommand(TsChannelBase* tsChannel) {
 
 	chsnprintf(testOutputBuffer, sizeof(testOutputBuffer), " %s\r\n", PROTOCOL_TEST_RESPONSE_TAG);
 	tsChannel->write((const uint8_t*)testOutputBuffer, strlen(testOutputBuffer));
+
+	if (hasFirmwareError()) {
+		const char* error = getFirmwareError();
+		chsnprintf(testOutputBuffer, sizeof(testOutputBuffer), "error=%s\r\n", error);
+		tsChannel->write((const uint8_t*)testOutputBuffer, strlen(testOutputBuffer));
+	}
 }
 
 extern CommandHandler console_line_callback;
@@ -711,15 +711,6 @@ int TunerStudioBase::handleCrcCommand(TsChannelBase* tsChannel, char *data, int 
 	case TS_GET_FIRMWARE_VERSION:
 		handleGetVersion(tsChannel);
 		break;
-#if (EFI_FILE_LOGGING && !HAL_USE_USB_MSD) || EFI_SIMULATOR
-	// This is only enabled on ECUs without USB mass storage
-	case TS_SD_R_COMMAND:
-		handleTsR(tsChannel, data);
-		break;
-	case TS_SD_W_COMMAND:
-		handleTsW(tsChannel, data);
-		break;
-#endif // (EFI_FILE_LOGGING && !HAL_USE_USB_MSD)
 #if EFI_TEXT_LOGGING
 	case TS_GET_TEXT:
 		handleGetText(tsChannel);

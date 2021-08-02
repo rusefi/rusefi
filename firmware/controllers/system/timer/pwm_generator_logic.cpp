@@ -8,16 +8,11 @@
  * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
-#include "global.h"
+#include "pch.h"
 #include "os_access.h"
-#include "pwm_generator_logic.h"
-#include "perf_trace.h"
-
-EXTERN_ENGINE;
 
 #if EFI_PROD_CODE
 #include "mpu_util.h"
-#include "engine.h"
 #endif // EFI_PROD_CODE
 
 // 1% duty cycle
@@ -269,7 +264,7 @@ static void timerCallback(PwmConfig *state) {
 		return;
 	}
 
-	state->executor->scheduleByTimestampNt(&state->scheduling, switchTimeNt, { timerCallback, state });
+	state->executor->scheduleByTimestampNt("pwm", &state->scheduling, switchTimeNt, { timerCallback, state });
 	state->dbgNestingLevel--;
 }
 

@@ -591,17 +591,6 @@
 #endif
 
 /**
- * @brief   Debug option, trace buffer.
- * @details If enabled then the context switch circular trace buffer is
- *          activated.
- *
- * @note    The default is @p FALSE.
- */
-#ifndef CH_DBG_ENABLE_TRACE
-#define CH_DBG_ENABLE_TRACE                 FALSE
-#endif
-
-/**
  * @brief   Debug option, stack checks.
  * @details If enabled then a runtime stack check is performed.
  *

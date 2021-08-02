@@ -5,24 +5,16 @@
  *
  * @author Andrey Belomutskiy, (c) 2012-2020
  */
-#include "global.h"
-#include "engine_configuration.h"
-#include "engine_math.h"
+#include "pch.h"
+
 #include "adc_inputs.h"
-#include "interpolation.h"
-#include "map.h"
-#include "engine_controller.h"
-#include "sensor.h"
 
 #if EFI_PROD_CODE
 #include "digital_input_icu.h"
 #include "digital_input_exti.h"
-#include "pin_repository.h"
 #endif
 
 #if EFI_ANALOG_SENSORS
-
-EXTERN_ENGINE;
 
 static FastInterpolation customMap;
 static efitick_t prevWidthTimeNt = 0;

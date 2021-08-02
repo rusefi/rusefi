@@ -31,8 +31,6 @@ static SPIDriver *driver;
 
 static SPIConfig spiConfig[EGT_CHANNEL_COUNT];
 
-EXTERN_ENGINE;
-
 static void showEgtInfo(void) {
 #if EFI_PROD_CODE
 	printSpiState(engineConfiguration);

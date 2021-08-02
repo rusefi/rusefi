@@ -39,7 +39,6 @@
 
 #define CHART_DELIMETER	'!'
 
-EXTERN_ENGINE;
 extern uint32_t maxLockedDuration;
 
 /**

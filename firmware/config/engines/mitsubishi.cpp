@@ -14,8 +14,6 @@
 #include "mitsubishi.h"
 #include "allsensors.h"
 
-EXTERN_CONFIG;
-
 void setMitsubishiConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	setDefaultFrankensoConfiguration(PASS_CONFIG_PARAMETER_SIGNATURE);
 

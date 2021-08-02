@@ -5,22 +5,18 @@
  * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
+#include "pch.h"
+
 #include "local_version_holder.h"
-#include "allsensors.h"
 #include "vvt.h"
 
-#include "tunerstudio_outputs.h"
 #include "fsio_impl.h"
-#include "engine_math.h"
-#include "pin_repository.h"
 
 #define NO_PIN_PERIOD 500
 
 #if defined(HAS_OS_ACCESS)
 #error "Unexpected OS ACCESS HERE"
 #endif /* HAS_OS_ACCESS */
-
-EXTERN_ENGINE;
 
 static fsio8_Map3D_u8t vvtTable1;
 static fsio8_Map3D_u8t vvtTable2;
@@ -65,8 +61,8 @@ expected<percent_t> VvtController::getOpenLoop(angle_t target) const {
 	return 0;
 }
 
-expected<percent_t> VvtController::getClosedLoop(angle_t setpoint, angle_t observation) {
-	float retVal = m_pid.getOutput(setpoint, observation);
+expected<percent_t> VvtController::getClosedLoop(angle_t target, angle_t observation) {
+	float retVal = m_pid.getOutput(target, observation);
 
 	if (engineConfiguration->isVerboseAuxPid1) {
 		efiPrintf("aux duty: %.2f/value=%.2f/p=%.2f/i=%.2f/d=%.2f int=%.2f", retVal, observation,
@@ -74,9 +70,11 @@ expected<percent_t> VvtController::getClosedLoop(angle_t setpoint, angle_t obser
 	}
 
 #if EFI_TUNER_STUDIO
-	if (engineConfiguration->debugMode == DBG_AUX_PID_1) {
+	static debug_mode_e debugModeByIndex[4] = {DBG_VVT_1_PID, DBG_VVT_2_PID, DBG_VVT_3_PID, DBG_VVT_4_PID};
+
+	if (engineConfiguration->debugMode == debugModeByIndex[index]) {
 		m_pid.postState(&tsOutputChannels);
-		tsOutputChannels.debugIntField3 = (int)(10 * setpoint);
+		tsOutputChannels.debugIntField3 = (int)(10 * target);
 	}
 #endif /* EFI_TUNER_STUDIO */
 

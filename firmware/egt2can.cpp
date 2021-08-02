@@ -6,8 +6,6 @@
 
 egt_cs_array_t max31855_cs;
 
-int main_loop_started;
-
 void firmwareError(const char *fmt, ...) {
 
 }

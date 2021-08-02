@@ -9,19 +9,15 @@
  * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
-#include "engine.h"
-#include "allsensors.h"
-#include "efi_gpio.h"
-#include "pin_repository.h"
+#include "pch.h"
+
 #include "trigger_central.h"
 #include "fuel_math.h"
-#include "engine_math.h"
 #include "advance_map.h"
 #include "speed_density.h"
 #include "advance_map.h"
 #include "os_util.h"
 #include "os_access.h"
-#include "settings.h"
 #include "aux_valves.h"
 #include "map_averaging.h"
 #include "fsio_impl.h"
@@ -29,20 +25,16 @@
 #include "backup_ram.h"
 #include "idle_thread.h"
 #include "idle_hardware.h"
-#include "sensor.h"
 #include "gppwm.h"
 #include "tachometer.h"
 #include "dynoview.h"
 #include "boost_control.h"
 #include "fan_control.h"
 #include "ac_control.h"
+#include "vr_pwm.h"
 #if EFI_MC33816
  #include "mc33816.h"
 #endif // EFI_MC33816
-
-#if EFI_TUNER_STUDIO
-#include "tunerstudio_outputs.h"
-#endif /* EFI_TUNER_STUDIO */
 
 #if EFI_PROD_CODE
 #include "trigger_emulator_algo.h"
@@ -54,8 +46,6 @@
 #if (BOARD_TLE8888_COUNT > 0)
 #include "gpio/tle8888.h"
 #endif
-
-EXTERN_ENGINE;
 
 #if EFI_ENGINE_SNIFFER
 #include "engine_sniffer.h"
@@ -100,8 +90,11 @@ trigger_type_e getVvtTriggerType(vvt_mode_e vvtMode) {
 		return TT_FORD_ST170;
 	case VVT_BARRA_3_PLUS_1:
 		return TT_VVT_BARRA_3_PLUS_1;
+	case VVT_NISSAN_VQ:
+		return TT_VVT_NISSAN_VQ35;
 	default:
-		return TT_ONE;
+		firmwareError(OBD_PCM_Processor_Fault, "getVvtTriggerType for %s", getVvt_mode_e(vvtMode));
+		return TT_ONE; // we have to return something for the sake of -Werror=return-type
 	}
 }
 
@@ -224,6 +217,8 @@ void Engine::periodicSlowCallback(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	updateSlowSensors(PASS_ENGINE_PARAMETER_SIGNATURE);
 	checkShutdown(PASS_ENGINE_PARAMETER_SIGNATURE);
 
+	updateVrPwm(PASS_ENGINE_PARAMETER_SIGNATURE);
+
 #if EFI_FSIO
 	runFsio(PASS_ENGINE_PARAMETER_SIGNATURE);
 #else
@@ -314,7 +309,7 @@ void Engine::updateSwitchInputs(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 #if EFI_GPIO_HARDWARE
 	// this value is not used yet
 	if (isBrainPinValid(CONFIG(clutchDownPin))) {
-		engine->clutchDownState = efiReadPin(CONFIG(clutchDownPin));
+		engine->clutchDownState = CONFIG(clutchDownPinInverted) ^ efiReadPin(CONFIG(clutchDownPin));
 	}
 	if (hasAcToggle(PASS_ENGINE_PARAMETER_SIGNATURE)) {
 		bool result = getAcToggle(PASS_ENGINE_PARAMETER_SIGNATURE);
@@ -325,7 +320,7 @@ void Engine::updateSwitchInputs(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 		engine->acSwitchState = result;
 	}
 	if (isBrainPinValid(CONFIG(clutchUpPin))) {
-		engine->clutchUpState = efiReadPin(CONFIG(clutchUpPin));
+		engine->clutchUpState = CONFIG(clutchUpPinInverted) ^ efiReadPin(CONFIG(clutchUpPin));
 	}
 	if (isBrainPinValid(CONFIG(throttlePedalUpPin))) {
 		engine->engineState.idle.throttlePedalUpState = efiReadPin(CONFIG(throttlePedalUpPin));
@@ -364,10 +359,6 @@ void Engine::reset() {
 	 */
 	engineCycle = getEngineCycle(FOUR_STROKE_CRANK_SENSOR);
 	memset(&ignitionPin, 0, sizeof(ignitionPin));
-	for (int camIndex = 0;camIndex < CAMS_PER_BANK;camIndex++) {
-		// todo: is it possible to make it constructor argument?
-		vvtTriggerConfiguration[camIndex].index = camIndex;
-	}
 }
 
 

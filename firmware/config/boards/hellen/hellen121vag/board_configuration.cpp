@@ -17,8 +17,6 @@
 #include "fsio_impl.h"
 #include "engine_configuration.h"
 
-EXTERN_ENGINE;
-
 static void hellenWbo() {
 	engineConfiguration->enableAemXSeries = true;
 }
@@ -35,7 +33,7 @@ static void setInjectorPins() {
 	//engineConfiguration->injectionPins[7] = GPIOF_14;
 
 	// Disable remainder
-	for (int i = 4; i < INJECTION_PIN_COUNT;i++) {
+	for (int i = 4; i < MAX_CYLINDER_COUNT;i++) {
 		engineConfiguration->injectionPins[i] = GPIO_UNASSIGNED;
 	}
 
@@ -54,7 +52,7 @@ static void setIgnitionPins() {
 	//engineConfiguration->ignitionPins[7] = GPIOI_7;
 	
 	// disable remainder
-	for (int i = 4; i < IGNITION_PIN_COUNT; i++) {
+	for (int i = 4; i < MAX_CYLINDER_COUNT; i++) {
 		engineConfiguration->ignitionPins[i] = GPIO_UNASSIGNED;
 	}
 
@@ -122,7 +120,6 @@ void setBoardConfigOverrides(void) {
 
 	engineConfiguration->canTxPin = GPIOD_1;
 	engineConfiguration->canRxPin = GPIOD_0;
-	hellenWbo();
 }
 
 void setPinConfigurationOverrides(void) {
@@ -163,9 +160,6 @@ void setBoardDefaultConfiguration(void) {
 
 	CONFIG(enableSoftwareKnock) = true;
 
-	engineConfiguration->canTxPin = GPIOD_1;
-	engineConfiguration->canRxPin = GPIOD_0;
-
 	engineConfiguration->fuelPumpPin = GPIOH_14;	// 65 - Fuel Pump
 	engineConfiguration->malfunctionIndicatorPin = GPIOG_4; // 47 - CEL
 	engineConfiguration->tachOutputPin = GPIOD_13; // 37 - TACH
@@ -185,12 +179,17 @@ void setBoardDefaultConfiguration(void) {
 	engineConfiguration->useOnlyRisingEdgeForTrigger = true;
 	setAlgorithm(LM_SPEED_DENSITY PASS_CONFIG_PARAMETER_SUFFIX);
 
+	strcpy(CONFIG(engineMake), ENGINE_MAKE_VAG);
+	strcpy(CONFIG(engineCode), "base");
+
 	engineConfiguration->specs.cylindersCount = 4;
 	engineConfiguration->specs.firingOrder = FO_1_3_4_2;
 
 	engineConfiguration->ignitionMode = IM_INDIVIDUAL_COILS; // IM_WASTED_SPARK
 	engineConfiguration->crankingInjectionMode = IM_SIMULTANEOUS;
 	engineConfiguration->injectionMode = IM_SIMULTANEOUS;//IM_BATCH;// IM_SEQUENTIAL;
+
+	hellenWbo();
 }
 
 /**

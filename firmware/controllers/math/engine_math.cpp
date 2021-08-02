@@ -19,18 +19,12 @@
  * If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "global.h"
-#include "engine_math.h"
-#include "engine_configuration.h"
-#include "interpolation.h"
-#include "allsensors.h"
-#include "sensor.h"
+#include "pch.h"
+
 #include "event_registry.h"
-#include "efi_gpio.h"
 #include "fuel_math.h"
 #include "advance_map.h"
 
-EXTERN_ENGINE;
 #if EFI_UNIT_TEST
 extern bool verboseMode;
 #endif /* EFI_UNIT_TEST */
@@ -122,6 +116,7 @@ static const int order_1_THEN_5_THEN_3_THEN_6_THEN_2_THEN_4[] = { 1, 5, 3, 6, 2,
 static const int order_1_THEN_4_THEN_2_THEN_5_THEN_3_THEN_6[] = { 1, 4, 2, 5, 3, 6 };
 static const int order_1_THEN_2_THEN_3_THEN_4_THEN_5_THEN_6[] = { 1, 2, 3, 4, 5, 6 };
 static const int order_1_6_3_2_5_4[] = {1, 6, 3, 2, 5, 4};
+static const int order_1_4_3_6_2_5[] = {1, 4, 3, 6, 2, 5};
 
 // 8 cylinder
 static const int order_1_8_4_3_6_5_7_2[] = { 1, 8, 4, 3, 6, 5, 7, 2 };
@@ -131,6 +126,7 @@ static const int order_1_2_7_8_4_5_6_3[] = { 1, 2, 7, 8, 4, 5, 6, 3 };
 static const int order_1_3_7_2_6_5_4_8[] = { 1, 3, 7, 2, 6, 5, 4, 8 };
 static const int order_1_2_3_4_5_6_7_8[] = { 1, 2, 3, 4, 5, 6, 7, 8 };
 static const int order_1_5_4_8_6_3_7_2[] = { 1, 5, 4, 8, 6, 3, 7, 2 };
+static const int order_1_8_7_3_6_5_4_2[] = { 1, 8, 7, 3, 6, 5, 4, 2 };
 
 // 9 cylinder
 static const int order_1_2_3_4_5_6_7_8_9[] = { 1, 2, 3, 4, 5, 6, 7, 8, 9 };
@@ -174,6 +170,7 @@ static int getFiringOrderLength(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	case FO_1_4_2_5_3_6:
 	case FO_1_2_3_4_5_6:
 	case FO_1_6_3_2_5_4:
+	case FO_1_4_3_6_2_5:
 		return 6;
 
 // 8 cylinder
@@ -184,6 +181,7 @@ static int getFiringOrderLength(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	case FO_1_3_7_2_6_5_4_8:
 	case FO_1_2_3_4_5_6_7_8:
 	case FO_1_5_4_8_6_3_7_2:
+	case FO_1_8_7_3_6_5_4_2:
 		return 8;
 
 // 9 cylinder radial
@@ -245,6 +243,8 @@ static const int *getFiringOrderTable(DECLARE_ENGINE_PARAMETER_SIGNATURE)
 		return order_1_THEN_2_THEN_3_THEN_4_THEN_5_THEN_6;
 	case FO_1_6_3_2_5_4:
 		return order_1_6_3_2_5_4;
+	case FO_1_4_3_6_2_5:
+		return order_1_4_3_6_2_5;
 
 // 8 cylinder
 	case FO_1_8_4_3_6_5_7_2:
@@ -261,6 +261,9 @@ static const int *getFiringOrderTable(DECLARE_ENGINE_PARAMETER_SIGNATURE)
 		return order_1_2_3_4_5_6_7_8;
 	case FO_1_5_4_8_6_3_7_2:
 		return order_1_5_4_8_6_3_7_2;
+	case FO_1_8_7_3_6_5_4_2:
+		return order_1_8_7_3_6_5_4_2;
+
 
 // 9 cylinder
 	case FO_1_2_3_4_5_6_7_8_9:
@@ -300,7 +303,7 @@ int getCylinderId(int index DECLARE_ENGINE_PARAMETER_SUFFIX) {
 
 	const int firingOrderLength = getFiringOrderLength(PASS_ENGINE_PARAMETER_SIGNATURE);
 
-	if (firingOrderLength < 1 || firingOrderLength > INJECTION_PIN_COUNT) {
+	if (firingOrderLength < 1 || firingOrderLength > MAX_CYLINDER_COUNT) {
 		firmwareError(CUSTOM_ERR_6687, "fol %d", firingOrderLength);
 		return 1;
 	}
@@ -369,7 +372,7 @@ static int getIgnitionPinForIndex(int cylinderIndex DECLARE_ENGINE_PARAMETER_SUF
 void prepareIgnitionPinIndices(ignition_mode_e ignitionMode DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	(void)ignitionMode;
 #if EFI_ENGINE_CONTROL
-	for (cylinders_count_t cylinderIndex = 0; cylinderIndex < CONFIG(specs.cylindersCount); cylinderIndex++) {
+	for (size_t cylinderIndex = 0; cylinderIndex < CONFIG(specs.cylindersCount); cylinderIndex++) {
 		ENGINE(ignitionPin[cylinderIndex]) = getIgnitionPinForIndex(cylinderIndex PASS_ENGINE_PARAMETER_SUFFIX);
 	}
 #endif /* EFI_ENGINE_CONTROL */
@@ -413,7 +416,7 @@ void prepareOutputSignals(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	}
 #endif /* EFI_UNIT_TEST */
 
-	for (cylinders_count_t i = 0; i < CONFIG(specs.cylindersCount); i++) {
+	for (size_t i = 0; i < CONFIG(specs.cylindersCount); i++) {
 		ENGINE(ignitionPositionWithinEngineCycle[i]) = ENGINE(engineCycle) * i / CONFIG(specs.cylindersCount);
 	}
 

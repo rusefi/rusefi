@@ -1,4 +1,4 @@
-name: Unit Test CI
+name: Unit Tests
 
 on: [push,pull_request]
 
@@ -20,7 +20,20 @@ jobs:
       if: ${{ matrix.os != 'macos-latest' }}
       run: lscpu | egrep 'Model name|Socket|Thread|NUMA|CPU\(s\)'
 
-    - name: Generate Configs
+    - name: Install required software (ubuntu)
+      if: ${{ matrix.os != 'macos-latest' }}
+      run: |
+        sudo apt-get update
+        sudo apt-get install mtools
+        sudo apt-get install zip
+        sudo apt-get install dosfstools
+
+    - name: Install required software (macos)
+      if: ${{ matrix.os == 'macos-latest' }}
+      run: |
+        brew install mtools zip dosfstools
+
+    - name: Generate Configs for unit tests
       working-directory: ./firmware/
       run: bash gen_config_default.sh
 
@@ -54,39 +67,6 @@ jobs:
       working-directory: ./unit_tests/
       run: ./ci_gcov.sh ${{ secrets.RUSEFI_DOXYGEN_FTP_USER }} ${{ secrets.RUSEFI_DOXYGEN_FTP_PASS }} ${{ secrets.RUSEFI_FTP_SERVER }}
 
-    # Commit changes and catch the error that occurs if nothing has been changed (without catching other errors)
-    - name: Commit fresh triggers.txt
-      if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/master' && matrix.os != 'macos-latest' }}
-      env:
-        ACTIONS_ALLOW_UNSECURE_COMMANDS: 'true'
-      #
-      # we have minor drama - looks like unit_tests are invoked from root folder while a more natural is to invoke those
-      # from 'unit_tests' folder
-      # as a work-around to leverage unit_tests/.gitignore we move those files into expected folder for now
-      #
-      run: |
-        git config --local user.email "action@github.com"
-        git config --local user.name "GitHub build-unit-tests Action"
-        git status
-        git remote -v
-        echo See https://github.com/rusefi/rusefi/issues/2446
-        git pull https://github.com/rusefi/rusefi master
-        git add unit_tests/triggers.txt
-        git status
-        OUT=$(git commit -m "Trigger wheel definitions" unit_tests/triggers.txt 2>&1) || echo "commit failed, finding out why"
-        echo "$OUT"
-        if echo "$OUT" | grep -E 'nothing to commit|no changes added'; then
-          echo "::set-env name=NOCOMMIT::true"
-          exit 0
-        elif echo "$OUT" | grep 'changed'; then
-          exit 0
-        else
-          exit 1
-        fi
-
-    - name: Push configs
-      if: ${{github.event_name == 'push' && github.ref == 'refs/heads/master' && env.NOCOMMIT != 'true' && matrix.os != 'macos-latest'}}
-      uses: ad-m/github-push-action@master
-      with:
-        github_token: ${{ github.token }}
-        branch: master
+    - name: Run Tests (sharded)
+      working-directory: ./unit_tests/
+      run: bash ./run_sharded_tests.sh

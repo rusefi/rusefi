@@ -1,6 +1,6 @@
 ##############################################################################
-# Build global options
-# NOTE: Can be overridden externally.
+# see readme.md
+# see setup_linux_environment.sh but Windows is also totally fine
 #
 
 CHIBIOS = ChibiOS
@@ -12,6 +12,10 @@ include rusefi_rules.mk
 # Define project name here
 PROJECT = rusefi
 PROJECT_DIR = .
+
+# Configure precompiled header
+PCH_DIR = $(PROJECT_DIR)/pch
+PCHSRC = $(PCH_DIR)/pch.h
 
 # Imported source files and paths
 CHIBIOS_CONTRIB = ChibiOS-Contrib
@@ -55,7 +59,7 @@ endif
 
 # C++ specific options here (added to USE_OPT).
 ifeq ($(USE_CPPOPT),)
-  USE_CPPOPT = -std=c++17 -Wno-register -fno-rtti -fno-threadsafe-statics -fno-exceptions -fno-use-cxa-atexit
+  USE_CPPOPT = -std=c++17 -Wno-register -fno-rtti -fno-threadsafe-statics -fno-exceptions -fno-use-cxa-atexit -Winvalid-pch
 endif
 
 # Hellen is one of the boards which cares
@@ -151,7 +155,7 @@ include $(CHIBIOS)/os/license/license.mk
 include $(CPU_STARTUP_DIR)
 # HAL-OSAL files (optional).
 include $(CHIBIOS_CONTRIB)/os/hal/hal.mk
-include $(CPU_PLATFORM_DIR)
+include $(CPU_PLATFORM)
 include $(CHIBIOS)/os/hal/osal/rt-nil/osal.mk
 # RTOS files (optional).
 include $(CHIBIOS)/os/rt/rt.mk
@@ -270,7 +274,9 @@ TCPPSRC =
 ASMXSRC = $(ALLXASMSRC) \
 	$(RUSEFIASM)
 
-INCDIR = $(ALLINC) \
+INCDIR = \
+	$(PCH_DIR) \
+	$(ALLINC) \
 	$(TESTINC) \
 	$(BOOTLOADERINC) \
 	$(CHIBIOS)/os/various \
@@ -372,3 +378,6 @@ ULIBS = -lm --specs=nano.specs
 ##############################################################################
 
 include $(RULESFILE)
+
+# Enable precompiled header
+include rusefi_pch.mk

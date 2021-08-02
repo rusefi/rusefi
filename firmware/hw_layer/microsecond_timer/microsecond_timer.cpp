@@ -19,8 +19,6 @@
 
 #include "periodic_task.h"
 #include "engine.h"
-EXTERN_ENGINE;
-
 // Just in case we have a mechanism to validate that hardware timer is clocked right and all the
 // conversions between wall clock and hardware frequencies are done right
 // delay in milliseconds

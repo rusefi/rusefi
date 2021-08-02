@@ -67,7 +67,7 @@
  * @brief   Enables the ICU subsystem.
  */
 #if !defined(HAL_USE_ICU) || defined(__DOXYGEN__)
-#define HAL_USE_ICU                         TRUE
+#define HAL_USE_ICU                         FALSE
 #endif
 
 /**
@@ -293,6 +293,9 @@
 #if !defined(UART_USE_MUTUAL_EXCLUSION) || defined(__DOXYGEN__)
 #define UART_USE_MUTUAL_EXCLUSION           FALSE
 #endif
+
+/* common for all STM32 */
+#include "../../cfg/halconf_community.h"
 
 #endif /* HALCONF_H */
 

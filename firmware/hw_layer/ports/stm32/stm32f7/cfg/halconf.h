@@ -215,6 +215,9 @@
 #define UART_USE_MUTUAL_EXCLUSION   FALSE
 #endif
 
+/* common for all STM32 */
+#include "../../cfg/halconf_community.h"
+
 #endif /* HALCONF_H */
 
 /** @} */

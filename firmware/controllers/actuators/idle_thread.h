@@ -18,15 +18,17 @@ struct IIdleController {
 		Cranking,	// Below cranking threshold
 		Idling,		// Below idle RPM, off throttle
 		Coasting,	// Off throttle but above idle RPM
+		CrankToRunTaper, // Taper between cranking and running
 		Running,	// On throttle
 	};
 
-	virtual Phase determinePhase(int rpm, int targetRpm, SensorResult tps) const = 0;
+	virtual Phase determinePhase(int rpm, int targetRpm, SensorResult tps, float vss, float crankingTaperFraction) const = 0;
 	virtual int getTargetRpm(float clt) const = 0;
 	virtual float getCrankingOpenLoop(float clt) const = 0;
 	virtual float getRunningOpenLoop(float clt, SensorResult tps) const = 0;
-	virtual float getOpenLoop(Phase phase, float clt, SensorResult tps) const = 0;
+	virtual float getOpenLoop(Phase phase, float clt, SensorResult tps, float crankingTaperFraction) const = 0;
 	virtual float getClosedLoop(Phase phase, float tps, int rpm, int target) = 0;
+	virtual float getCrankingTaperFraction() const = 0;
 };
 
 class IdleController : public IIdleController {
@@ -42,12 +44,13 @@ public:
 	int getTargetRpm(float clt) const override;
 
 	// PHASE DETERMINATION: what is the driver trying to do right now?
-	Phase determinePhase(int rpm, int targetRpm, SensorResult tps) const override;
+	Phase determinePhase(int rpm, int targetRpm, SensorResult tps, float vss, float crankingTaperFraction) const override;
+	float getCrankingTaperFraction() const override;
 
 	// OPEN LOOP CORRECTIONS
 	float getCrankingOpenLoop(float clt) const override;
 	float getRunningOpenLoop(float clt, SensorResult tps) const override;
-	float getOpenLoop(Phase phase, float clt, SensorResult tps) const override;
+	float getOpenLoop(Phase phase, float clt, SensorResult tps, float crankingTaperFraction) const override;
 
 	float getIdleTimingAdjustment(int rpm);
 	float getIdleTimingAdjustment(int rpm, int targetRpm, Phase phase);
@@ -94,3 +97,6 @@ void onConfigurationChangeIdleCallback(engine_configuration_s *previousConfigura
 float getIdlePidOffset(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 Pid * getIdlePid(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 float getIdlePidMinValue(DECLARE_ENGINE_PARAMETER_SIGNATURE);
+void startPedalPins(DECLARE_ENGINE_PARAMETER_SIGNATURE);
+void stopPedalPins(DECLARE_ENGINE_PARAMETER_SIGNATURE);
+

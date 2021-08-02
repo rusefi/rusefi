@@ -17,8 +17,6 @@
 
 #include "engine.h"
 
-EXTERN_ENGINE;
-
 enum {
 	LCD_HD44780_DISPLAY_CLEAR = 0x01,
 	LCD_HD44780_SHIFT_CURSOR_RIGHT = 0x06,
@@ -72,11 +70,6 @@ static void lcdSleep(int period) {
 
 //static char txbuf[1];
 #define LCD_PORT_EXP_ADDR 0x20
-
-// todo: use this method wider!
-static void writePad(const char *msg, brain_pin_e pin, int bit) {
-	palWritePad(getHwPort(msg, pin), getHwPin(msg, pin), bit);
-}
 
 static bool lcd_HD44780_is_enabled(void) {
 	/* check for valid LCD setting */

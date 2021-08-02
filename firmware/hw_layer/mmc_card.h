@@ -14,15 +14,9 @@
 
 #define DOT_MLG ".mlg"
 
-bool isLogFile(const char *fileName);
 void initEarlyMmcCard();
 void initMmcCard();
 bool isSdCardAlive(void);
-
-void readLogFileContent(char *buffer, short fileId, short offset, short length);
-
-void handleTsR(TsChannelBase* tsChannel, char *input);
-void handleTsW(TsChannelBase* tsChannel, char *input);
 
 extern "C"
 #endif

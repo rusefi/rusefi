@@ -14,7 +14,6 @@
 #include "trigger_structure.h"
 #include "accel_enrichment.h"
 
-#define MAX_INJECTION_OUTPUT_COUNT INJECTION_PIN_COUNT
 #define MAX_WIRES_COUNT 2
 
 class Engine;
@@ -76,7 +75,7 @@ public:
 	/**
 	 * injection events, per cylinder
 	 */
-	InjectionEvent elements[MAX_INJECTION_OUTPUT_COUNT];
+	InjectionEvent elements[MAX_CYLINDER_COUNT];
 	bool isReady = false;
 };
 
@@ -99,6 +98,9 @@ public:
 	IgnitionOutputPin *outputs[MAX_OUTPUTS_FOR_IGNITION];
 	scheduling_s dwellStartTimer;
 	AngleBasedEvent sparkEvent;
+
+	scheduling_s trailingSparkCharge;
+	scheduling_s trailingSparkFire;
 
 	// How many additional sparks should we fire after the first one?
 	// For single sparks, this should be zero.
@@ -129,14 +131,12 @@ public:
 	IgnitionOutputPin *getOutputForLoggins();
 };
 
-#define MAX_IGNITION_EVENT_COUNT IGNITION_PIN_COUNT
-
 class IgnitionEventList {
 public:
 	/**
 	 * ignition events, per cylinder
 	 */
-	IgnitionEvent elements[MAX_IGNITION_EVENT_COUNT];
+	IgnitionEvent elements[MAX_CYLINDER_COUNT];
 	bool isReady = false;
 };
 

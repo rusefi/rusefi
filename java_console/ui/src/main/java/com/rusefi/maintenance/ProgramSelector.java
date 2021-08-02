@@ -50,13 +50,12 @@ public class ProgramSelector {
 
                 getConfig().getRoot().setProperty(getClass().getSimpleName(), selectedMode);
 
-
                 boolean isAutoDfu = selectedMode.equals(AUTO_DFU);
                 boolean isManualDfu = selectedMode.equals(MANUAL_DFU);
                 // todo: add ST-LINK no-assert mode
 
                 if (isAutoDfu) {
-                    DfuFlasher.doAutoDfu(comboPorts);
+                    DfuFlasher.doAutoDfu(comboPorts.getSelectedItem(), comboPorts);
                 } else if (isManualDfu){
                     DfuFlasher.runDfuProgramming();
                 } else {

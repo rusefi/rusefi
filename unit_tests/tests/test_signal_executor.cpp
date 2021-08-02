@@ -5,13 +5,9 @@
  * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
-#include "global.h"
+#include "pch.h"
 
-#include "test_signal_executor.h"
-#include "io_pins.h"
 #include "event_queue.h"
-#include "pwm_generator_logic.h"
-#include "unit_test_framework.h"
 
 static int callbackCounter = 0;
 

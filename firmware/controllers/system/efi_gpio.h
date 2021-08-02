@@ -42,7 +42,7 @@ public:
 	 * outputMode being a pointer allow us to change configuration (for example invert logical pin) in configuration and get resuts applied
 	 * away, or at least I hope that's why
 	 */
-	void initPin(const char *msg, brain_pin_e brainPin, const pin_output_mode_e *outputMode);
+	void initPin(const char *msg, brain_pin_e brainPin, const pin_output_mode_e *outputMode, bool forceInitWithFatalError = false);
 	/**
 	 * same as above, with DEFAULT_OUTPUT mode
 	 */
@@ -159,8 +159,10 @@ public:
 
 class EnginePins {
 public:
+	DECLARE_ENGINE_PTR;
+
 	EnginePins();
-	void startPins(DECLARE_ENGINE_PARAMETER_SIGNATURE);
+	void startPins();
 	void reset();
 	static void debug();
 	bool stopPins();
@@ -207,8 +209,9 @@ public:
 	OutputPin sdCsPin;
 	OutputPin accelerometerCs;
 
-	InjectorOutputPin injectors[INJECTION_PIN_COUNT];
-	IgnitionOutputPin coils[IGNITION_PIN_COUNT];
+	InjectorOutputPin injectors[MAX_CYLINDER_COUNT];
+	IgnitionOutputPin coils[MAX_CYLINDER_COUNT];
+	IgnitionOutputPin trailingCoils[MAX_CYLINDER_COUNT];
 	NamedOutputPin auxValve[AUX_DIGITAL_VALVE_COUNT];
 	OutputPin tcuSolenoids[TCU_SOLENOID_COUNT];
 
@@ -251,3 +254,5 @@ const char *portname(ioportid_t GPIOx);
 void printSpiConfig(const char *msg, spi_device_e device);
 brain_pin_e parseBrainPin(const char *str);
 const char *hwPortname(brain_pin_e brainPin);
+
+extern EnginePins enginePins;

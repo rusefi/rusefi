@@ -45,8 +45,6 @@
 static const char *sdStatus = SD_STATE_INIT;
 static bool fs_ready = false;
 
-EXTERN_ENGINE;
-
 // at about 20Hz we write about 2Kb per second, looks like we flush once every ~2 seconds
 #define F_SYNC_FREQUENCY 10
 
@@ -396,6 +394,11 @@ static BaseBlockDevice* initializeMmcBlockDevice() {
 static bool mountMmc() {
 	auto cardBlockDevice = initializeMmcBlockDevice();
 
+#if EFI_TUNER_STUDIO
+	// If not null, card is present
+	tsOutputChannels.sd_present = cardBlockDevice != nullptr;
+#endif
+
 #if HAL_USE_USB_MSD
 	// Wait for the USB stack to wake up, or a 5 second timeout, whichever occurs first
 	msg_t usbResult = usbConnectedSemaphore.wait(TIME_MS2I(5000));
@@ -481,6 +484,10 @@ static THD_FUNCTION(MMCmonThread, arg) {
 		// no card present (or mounted via USB), don't do internal logging
 		return;
 	}
+
+	#if EFI_TUNER_STUDIO
+		tsOutputChannels.sd_logging_internal = true;
+	#endif
 
 	while (true) {
 		// if the SPI device got un-picked somehow, cancel SD card

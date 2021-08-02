@@ -16,8 +16,6 @@
 #include "pin_repository.h"
 #include "os_util.h"
 
-EXTERN_ENGINE;
-
 extern "C" {
 	void _unhandled_exception(void);
 	void DebugMonitorVector(void);

@@ -1,6 +1,6 @@
-#include "global.h"
+#include "pch.h"
+
 #include "hardware.h"
-#include "efi_gpio.h"
 
 /*
  * We need only a small portion of code from rusEFI codebase in the bootloader.

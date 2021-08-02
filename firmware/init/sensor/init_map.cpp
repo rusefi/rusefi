@@ -3,8 +3,6 @@
 #include "function_pointer_sensor.h"
 #include "engine.h"
 
-EXTERN_ENGINE;
-
 struct GetMapWrapper {
 	DECLARE_ENGINE_PTR;
 

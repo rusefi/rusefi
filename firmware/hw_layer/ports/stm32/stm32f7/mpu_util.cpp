@@ -120,3 +120,56 @@ uintptr_t getFlashAddrSecondCopy() {
 			return 0;
 	}
 }
+
+#define FLASH_ACR           (*(volatile uint32_t *)(FLASH_BASE + 0x00))
+#define FLASH_KEYR          (*(volatile uint32_t *)(FLASH_BASE + 0x04))
+#define FLASH_OPTKEYR       (*(volatile uint32_t *)(FLASH_BASE + 0x08))
+#define FLASH_SR            (*(volatile uint32_t *)(FLASH_BASE + 0x0C))
+#define FLASH_CR            (*(volatile uint32_t *)(FLASH_BASE + 0x10))
+#define FLASH_OPTCR         (*(volatile uint32_t *)(FLASH_BASE + 0x14))
+
+#define FLASH_OPTCR_STRT                       (1 << 1)
+
+#define FLASH_OPTKEY1                         (0x08192A3B)
+#define FLASH_OPTKEY2                         (0x4C5D6E7F)
+
+static void flash_wait_complete(void)
+{
+	do { __DSB(); } while (FLASH->SR & FLASH_SR_BSY);
+}
+
+static void stm32f7_flash_mass_erase_dual_block(void)
+{
+    FLASH_CR |= FLASH_CR_MER1 | FLASH_CR_MER2;
+    FLASH_CR |= FLASH_CR_STRT;
+    flash_wait_complete();
+    FLASH_CR &= ~(FLASH_CR_MER1 | FLASH_CR_MER2);
+}
+
+// todo: at the moment this does not work :(
+// https://github.com/rusefi/rusefi/issues/2996
+void sys_dual_bank(void) {
+    uint32_t reg;
+    efiPrintf("FLASH->SR before %x", FLASH->SR);
+
+    /* Unlock OPTCR */
+    FLASH_OPTKEYR = FLASH_OPTKEY1;
+    FLASH_OPTKEYR = FLASH_OPTKEY2;
+    flash_wait_complete();
+
+    /* Disable protection + Switch to dual bank */
+    reg = FLASH_OPTCR;
+    reg &= ~0x000FF00;
+    reg |= 0x0000AA00;
+    reg &= ~(FLASH_OPTCR_nDBANK);
+    FLASH_OPTCR = reg;
+    __DSB();
+    FLASH_OPTCR |= FLASH_OPTCR_STRT;
+    flash_wait_complete();
+    efiPrintf("FLASH->SR after %x", FLASH->SR);
+    /*
+     * see https://github.com/danielinux/stm32f7-dualbank-tool/issues/1
+     stm32f7_flash_mass_erase_dual_block();
+     */
+}
+

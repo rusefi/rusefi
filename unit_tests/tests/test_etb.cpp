@@ -5,11 +5,10 @@
  * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
-#include "engine_test_helper.h"
+#include "pch.h"
+
 #include "electronic_throttle_impl.h"
 #include "dc_motor.h"
-#include "engine_controller.h"
-#include "sensor.h"
 #include "idle_thread.h"
 
 #include "mocks.h"
@@ -447,6 +446,9 @@ TEST(etb, etbTpsSensor) {
 	Sensor::setMockValue(SensorType::WastegatePosition, 33.0f);
 	Sensor::setMockValue(SensorType::IdlePosition, 66.0f);
 
+	// Redundant accelerator pedal required for init
+	Sensor::setMockValue(SensorType::AcceleratorPedal, 0, true);
+
 	// Test first throttle
 	{
 		EtbController etb;
@@ -478,6 +480,10 @@ TEST(etb, etbTpsSensor) {
 
 TEST(etb, setOutputInvalid) {
 	WITH_ENGINE_TEST_HELPER(TEST_ENGINE);
+
+	// Redundant TPS & accelerator pedal required for init
+	Sensor::setMockValue(SensorType::Tps1, 0, true);
+	Sensor::setMockValue(SensorType::AcceleratorPedal, 0, true);
 
 	StrictMock<MockMotor> motor;
 
@@ -644,6 +650,10 @@ TEST(etb, closedLoopPid) {
 TEST(etb, openLoopThrottle) {
 	WITH_ENGINE_TEST_HELPER(TEST_ENGINE);
 
+	// Redundant TPS & accelerator pedal required for init
+	Sensor::setMockValue(SensorType::Tps1, 0, true);
+	Sensor::setMockValue(SensorType::AcceleratorPedal, 0, true);
+
 	EtbController etb;
 	INJECT_ENGINE_REFERENCE(&etb);
 	etb.init(ETB_Throttle1, nullptr, nullptr, nullptr, true);
@@ -661,6 +671,10 @@ TEST(etb, openLoopThrottle) {
 
 TEST(etb, openLoopNonThrottle) {
 	WITH_ENGINE_TEST_HELPER(TEST_ENGINE);
+
+	// Redundant TPS & accelerator pedal required for init
+	Sensor::setMockValue(SensorType::Tps1, 0, true);
+	Sensor::setMockValue(SensorType::AcceleratorPedal, 0, true);
 
 	EtbController etb;
 	INJECT_ENGINE_REFERENCE(&etb);

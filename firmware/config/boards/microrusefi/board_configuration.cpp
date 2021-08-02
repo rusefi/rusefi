@@ -25,8 +25,6 @@
 #include "fsio_impl.h"
 #include "engine_configuration.h"
 
-EXTERN_ENGINE;
-
 static void setInjectorPins() {
 	engineConfiguration->injectionPins[0] = TLE8888_PIN_1;
 	engineConfiguration->injectionPins[1] = TLE8888_PIN_2;
@@ -34,7 +32,7 @@ static void setInjectorPins() {
 	engineConfiguration->injectionPins[3] = TLE8888_PIN_4;
 
 	// Disable remainder
-	for (int i = 4; i < INJECTION_PIN_COUNT;i++) {
+	for (int i = 4; i < MAX_CYLINDER_COUNT;i++) {
 		engineConfiguration->injectionPins[i] = GPIO_UNASSIGNED;
 	}
 
@@ -49,7 +47,7 @@ static void setIgnitionPins() {
 	engineConfiguration->ignitionPins[3] = GPIOD_1;
 
 	// disable remainder
-	for (int i = 4; i < IGNITION_PIN_COUNT; i++) {
+	for (int i = 4; i < MAX_CYLINDER_COUNT; i++) {
 		engineConfiguration->ignitionPins[i] = GPIO_UNASSIGNED;
 	}
 

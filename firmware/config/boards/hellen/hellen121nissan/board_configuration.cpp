@@ -17,8 +17,6 @@
 #include "fsio_impl.h"
 #include "engine_configuration.h"
 
-EXTERN_ENGINE;
-
 static void hellenWbo() {
 	engineConfiguration->enableAemXSeries = true;
 }
@@ -33,7 +31,7 @@ static void setInjectorPins() {
 
 
 	// Disable remainder
-	for (int i = 6; i < INJECTION_PIN_COUNT;i++) {
+	for (int i = 6; i < MAX_CYLINDER_COUNT;i++) {
 		engineConfiguration->injectionPins[i] = GPIO_UNASSIGNED;
 	}
 
@@ -49,7 +47,7 @@ static void setIgnitionPins() {
 	engineConfiguration->ignitionPins[5] = GPIOB_8;
 	
 	// disable remainder
-	for (int i = 6; i < IGNITION_PIN_COUNT; i++) {
+	for (int i = 6; i < MAX_CYLINDER_COUNT; i++) {
 		engineConfiguration->ignitionPins[i] = GPIO_UNASSIGNED;
 	}
 
@@ -87,10 +85,13 @@ static void setupDefaultSensorInputs() {
 	engineConfiguration->triggerInputPins[2] = GPIO_UNASSIGNED;
 	// Direct hall-only cam input
 	engineConfiguration->camInputs[0] = GPIOA_6;
+	engineConfiguration->camInputs[1 * CAMS_PER_BANK] = GPIOA_7;
 
 	engineConfiguration->tps1_1AdcChannel = EFI_ADC_4;
-	engineConfiguration->tps2_1AdcChannel = EFI_ADC_NONE;
+	engineConfiguration->tps1_2AdcChannel = EFI_ADC_8;
 
+	engineConfiguration->throttlePedalPositionAdcChannel = EFI_ADC_3;
+	engineConfiguration->throttlePedalPositionSecondAdcChannel = EFI_ADC_14;
 	engineConfiguration->mafAdcChannel = EFI_ADC_10;
 	engineConfiguration->map.sensor.hwChannel = EFI_ADC_11;
 
@@ -111,10 +112,6 @@ void setBoardConfigOverrides(void) {
 
 	engineConfiguration->clt.config.bias_resistor = 4700;
 	engineConfiguration->iat.config.bias_resistor = 4700;
-
-	engineConfiguration->canTxPin = GPIOD_1;
-	engineConfiguration->canRxPin = GPIOD_0;
-	hellenWbo();
 }
 
 void setPinConfigurationOverrides(void) {
@@ -140,9 +137,11 @@ void setBoardDefaultConfiguration(void) {
 	setInjectorPins();
 	setIgnitionPins();
 
+	engineConfiguration->displayLogicLevelsInEngineSniffer = true;
 	engineConfiguration->isSdCardEnabled = true;
 
 	CONFIG(enableSoftwareKnock) = true;
+	CONFIG(canNbcType) = CAN_BUS_NISSAN_VQ;
 
 	engineConfiguration->canTxPin = GPIOD_1;
 	engineConfiguration->canRxPin = GPIOD_0;
@@ -150,14 +149,20 @@ void setBoardDefaultConfiguration(void) {
 //	engineConfiguration->fuelPumpPin = GPIOG_2;	// OUT_IO9
 //	engineConfiguration->idle.solenoidPin = GPIOD_14;	// OUT_PWM5
 //	engineConfiguration->fanPin = GPIOD_12;	// OUT_PWM8
-//	engineConfiguration->mainRelayPin = GPIOI_2;	// OUT_LOW3
+	engineConfiguration->mainRelayPin = GPIOG_14;	// pin: 111a, OUT_IO3
 
 	// "required" hardware is done - set some reasonable defaults
 	setupDefaultSensorInputs();
 
+	engineConfiguration->etbIo[0].directionPin1 = GPIOD_15; // out_pwm7
+	engineConfiguration->etbIo[0].directionPin2 = GPIOD_14; // out_pwm6
+	engineConfiguration->etbIo[0].controlPin = GPIOD_13; // ETB_EN out_pwm1
+	CONFIG(etb_use_two_wires) = true;
+
 	// Some sensible defaults for other options
 	setOperationMode(engineConfiguration, FOUR_STROKE_CRANK_SENSOR);
 
+	engineConfiguration->vvtCamSensorUseRise = true;
 	engineConfiguration->useOnlyRisingEdgeForTrigger = true;
 	setAlgorithm(LM_SPEED_DENSITY PASS_CONFIG_PARAMETER_SUFFIX);
 
@@ -167,10 +172,15 @@ void setBoardDefaultConfiguration(void) {
 
 	engineConfiguration->specs.cylindersCount = 6;
 	engineConfiguration->specs.firingOrder = FO_1_2_3_4_5_6;
+	engineConfiguration->specs.displacement = 4;
+	strcpy(CONFIG(engineMake), ENGINE_MAKE_NISSAN);
+	strcpy(CONFIG(engineCode), "VQ");
 
 	engineConfiguration->ignitionMode = IM_INDIVIDUAL_COILS; // IM_WASTED_SPARK
 	engineConfiguration->crankingInjectionMode = IM_SIMULTANEOUS;
 	engineConfiguration->injectionMode = IM_SIMULTANEOUS;//IM_BATCH;// IM_SEQUENTIAL;
+
+	hellenWbo();
 }
 
 /**

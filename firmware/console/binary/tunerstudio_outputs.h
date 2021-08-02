@@ -49,7 +49,7 @@ struct TunerStudioOutputChannels {
 	 * Yes, I do not really enjoy packing bits into integers but we simply have too many boolean flags and I cannot
 	 * water 4 bytes per traffic - I want gauges to work as fast as possible
 	 */
-	unsigned int hasSdCard : 1; // bit 0, 72
+	unsigned int sd_present : 1; // bit 0, 72
 	unsigned int isIgnitionEnabledIndicator : 1; // bit 1
 	unsigned int isInjectionEnabledIndicator : 1; // bit 2
 	unsigned int unusedb3 : 1; // bit 3
@@ -112,7 +112,7 @@ struct TunerStudioOutputChannels {
 	// misc sensors
 	scaled_voltage vBatt; // 38
 	scaled_pressure oilPressure; // 40
-	scaled_angle vvtPosition; // 42
+	scaled_angle vvtPositionB1I; // 42
 
 	// Fuel math
 	scaled_channel<uint16_t, 1000> chargeAirMass; // 44  cylinder airmass in mg, 0-65 grams
@@ -237,7 +237,10 @@ struct TunerStudioOutputChannels {
 
 	int16_t tuneCrc16; // 244
 
-	uint8_t sd_status; // 246
+	// Offset 246: bits
+	uint8_t sd_logging_internal : 1;	// bit 0
+	uint8_t sd_msd : 1;					// bit 1
+	uint8_t isFan2On : 1;				// bit 2
 
 	int8_t tcuCurrentGear; // 247
 
@@ -268,10 +271,9 @@ struct TunerStudioOutputChannels {
 	scaled_lambda lambda2; // 286
 	scaled_afr airFuelRatio2; // 288
 
-	//288
-	scaled_angle secondVvtPositionBank1; // 290
-	scaled_angle vvtPositionBank2; // 292
-	scaled_angle secondVvtPositionBank2; // 294
+	scaled_angle vvtPositionB1E; // 290
+	scaled_angle vvtPositionB2I; // 292
+	scaled_angle vvtPositionB2E; // 294
 
 	scaled_percent fuelTrim[2];	// 296 & 298
 

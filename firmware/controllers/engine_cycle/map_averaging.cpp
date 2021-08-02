@@ -21,22 +21,15 @@
  * If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "global.h"
-#include "os_access.h"
+#include "pch.h"
 
-#include "map.h"
+#include "os_access.h"
 
 #if EFI_MAP_AVERAGING
 
 #include "map_averaging.h"
 #include "trigger_central.h"
 #include "adc_inputs.h"
-#include "allsensors.h"
-#include "engine_configuration.h"
-#include "interpolation.h"
-#include "engine.h"
-#include "engine_math.h"
-#include "perf_trace.h"
 
 #if EFI_SENSOR_CHART
 #include "sensor_chart.h"
@@ -81,7 +74,7 @@ static volatile int mapMeasurementsCounter = 0;
 static float v_averagedMapValue;
 
 // allow a bit more smoothing
-#define MAX_MAP_BUFFER_LENGTH (INJECTION_PIN_COUNT * 2)
+#define MAX_MAP_BUFFER_LENGTH (MAX_CYLINDER_COUNT * 2)
 // in MAP units, not voltage!
 static float averagedMapRunningBuffer[MAX_MAP_BUFFER_LENGTH];
 int mapMinBufferLength = 0;
@@ -92,13 +85,11 @@ static int averagedMapBufIdx = 0;
 // this is 'minimal averaged' MAP within avegaging window
 static float currentPressure = NO_VALUE_YET;
 
-EXTERN_ENGINE;
-
 /**
  * here we have averaging start and averaging end points for each cylinder
  */
-static scheduling_s startTimers[INJECTION_PIN_COUNT][2];
-static scheduling_s endTimers[INJECTION_PIN_COUNT][2];
+static scheduling_s startTimers[MAX_CYLINDER_COUNT][2];
+static scheduling_s endTimers[MAX_CYLINDER_COUNT][2];
 
 /**
  * that's a performance optimization: let's not bother averaging

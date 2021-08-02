@@ -8,6 +8,12 @@
 <br><br>
 gcov <a href="unit_tests_coverage">Unit Test Coverage</a>
 
+<br><br>
+<a href="pinouts">All pinouts</a>
+
+<br><br>
+<a href="ibom">All interactive BOMs</a>
+
 <br><br><br>
 
 <!--#include virtual="../footer.html" --> 

@@ -9,7 +9,6 @@
 #include "global.h"
 
 
-#if EFI_PROD_CODE
 #include "os_access.h"
 #include "trigger_input.h"
 #include "servo.h"
@@ -30,8 +29,12 @@
 #include "console_io.h"
 #include "sensor_chart.h"
 #include "serial_hw.h"
+#include "idle_thread.h"
 
+#if EFI_PROD_CODE
 #include "mpu_util.h"
+#endif /* EFI_PROD_CODE */
+
 #include "mmc_card.h"
 
 #include "AdcConfiguration.h"
@@ -67,8 +70,6 @@
 #if EFI_CAN_SUPPORT
 #include "can_vss.h"
 #endif
-
-EXTERN_ENGINE;
 
 /**
  * #311 we want to test RTC before engine start so that we do not test it while engine is running
@@ -137,8 +138,6 @@ SPIDriver * getSpiDevice(spi_device_e spiDevice) {
 }
 #endif
 
-#if EFI_PROD_CODE
-
 #define TPS_IS_SLOW -1
 
 static int fastMapSampleIndex;
@@ -157,40 +156,35 @@ static int adcCallbackCounter = 0;
 static volatile int averagedSamples[ADC_MAX_CHANNELS_COUNT];
 static adcsample_t avgBuf[ADC_MAX_CHANNELS_COUNT];
 
-void adc_callback_fast_internal(ADCDriver *adcp);
+void onFastAdcCompleteInternal(adcsample_t* samples);
 
-void adc_callback_fast(ADCDriver *adcp) {
-	adcsample_t *buffer = adcp->samples;
-	//size_t n = adcp->depth;
-
-	if (adcp->state == ADC_COMPLETE) {
+void onFastAdcComplete(adcsample_t* samples) {
 #if HAL_TRIGGER_USE_ADC
-		// we need to call this ASAP, because trigger processing is time-critical
-		if (triggerSampleIndex >= 0)
-			triggerAdcCallback(buffer[triggerSampleIndex]);
+	// we need to call this ASAP, because trigger processing is time-critical
+	if (triggerSampleIndex >= 0)
+		triggerAdcCallback(samples[triggerSampleIndex]);
 #endif /* HAL_TRIGGER_USE_ADC */
 
-		// store the values for averaging
+	// store the values for averaging
+	for (int i = fastAdc.size() - 1; i >= 0; i--) {
+		averagedSamples[i] += samples[i];
+	}
+
+	// if it's time to process the data
+	if (++adcCallbackCounter >= ADC_BUF_NUM_AVG) {
+		// get an average
 		for (int i = fastAdc.size() - 1; i >= 0; i--) {
-			averagedSamples[i] += fastAdc.samples[i];
+			avgBuf[i] = (adcsample_t)(averagedSamples[i] / ADC_BUF_NUM_AVG);	// todo: rounding?
 		}
 
-		// if it's time to process the data
-		if (++adcCallbackCounter >= ADC_BUF_NUM_AVG) {
-			// get an average
-			for (int i = fastAdc.size() - 1; i >= 0; i--) {
-				avgBuf[i] = (adcsample_t)(averagedSamples[i] / ADC_BUF_NUM_AVG);	// todo: rounding?
-			}
+		// call the real callback (see below)
+		onFastAdcCompleteInternal(samples);
 
-			// call the real callback (see below)
-			adc_callback_fast_internal(adcp);
-
-			// reset the avg buffer & counter
-			for (int i = fastAdc.size() - 1; i >= 0; i--) {
-				averagedSamples[i] = 0;
-			}
-			adcCallbackCounter = 0;
+		// reset the avg buffer & counter
+		for (int i = fastAdc.size() - 1; i >= 0; i--) {
+			averagedSamples[i] = 0;
 		}
+		adcCallbackCounter = 0;
 	}
 }
 
@@ -200,48 +194,35 @@ void adc_callback_fast(ADCDriver *adcp) {
  * This method is not in the adc* lower-level file because it is more business logic then hardware.
  */
 #if EFI_FASTER_UNIFORM_ADC
-void adc_callback_fast_internal(ADCDriver *adcp) {
+void onFastAdcCompleteInternal(adcsample_t* buffer) {
 #else
-void adc_callback_fast(ADCDriver *adcp) {
+void onFastAdcComplete(adcsample_t* buffer) {
 #endif
-	adcsample_t *buffer = adcp->samples;
-	size_t n = adcp->depth;
-	(void) buffer;
-	(void) n;
-
 	ScopePerf perf(PE::AdcCallbackFast);
 
 	/**
-	 * Note, only in the ADC_COMPLETE state because the ADC driver fires an
-	 * intermediate callback when the buffer is half full.
-	 * */
-	if (adcp->state == ADC_COMPLETE) {
-		ScopePerf perf(PE::AdcCallbackFastComplete);
-
-		/**
-		 * this callback is executed 10 000 times a second, it needs to be as fast as possible
-		 */
-		efiAssertVoid(CUSTOM_ERR_6676, getCurrentRemainingStack() > 128, "lowstck#9b");
+	 * this callback is executed 10 000 times a second, it needs to be as fast as possible
+	 */
+	efiAssertVoid(CUSTOM_ERR_6676, getCurrentRemainingStack() > 128, "lowstck#9b");
 
 #if EFI_SENSOR_CHART && EFI_SHAFT_POSITION_INPUT
-		if (ENGINE(sensorChartMode) == SC_AUX_FAST1) {
-			float voltage = getAdcValue("fAux1", engineConfiguration->auxFastSensor1_adcChannel);
-			scAddData(getCrankshaftAngleNt(getTimeNowNt() PASS_ENGINE_PARAMETER_SUFFIX), voltage);
-		}
+	if (ENGINE(sensorChartMode) == SC_AUX_FAST1) {
+		float voltage = getAdcValue("fAux1", engineConfiguration->auxFastSensor1_adcChannel);
+		scAddData(getCrankshaftAngleNt(getTimeNowNt() PASS_ENGINE_PARAMETER_SUFFIX), voltage);
+	}
 #endif /* EFI_SENSOR_CHART */
 
 #if EFI_MAP_AVERAGING
-		mapAveragingAdcCallback(buffer[fastMapSampleIndex]);
+	mapAveragingAdcCallback(buffer[fastMapSampleIndex]);
 #endif /* EFI_MAP_AVERAGING */
 #if EFI_HIP_9011
-		if (CONFIG(isHip9011Enabled)) {
-			hipAdcCallback(buffer[hipSampleIndex]);
-		}
+	if (CONFIG(isHip9011Enabled)) {
+		hipAdcCallback(buffer[hipSampleIndex]);
+	}
 #endif /* EFI_HIP_9011 */
 //		if (tpsSampleIndex != TPS_IS_SLOW) {
 //			tpsFastAdc = buffer[tpsSampleIndex];
 //		}
-	}
 }
 #endif /* HAL_USE_ADC */
 
@@ -269,7 +250,7 @@ static void adcConfigListener(Engine *engine) {
 	calcFastAdcIndexes();
 }
 
-static void turnOnHardware() {
+static void turnOnHardware(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 #if EFI_FASTER_UNIFORM_ADC
 	for (int i = 0; i < ADC_MAX_CHANNELS_COUNT; i++) {
 		averagedSamples[i] = 0;
@@ -277,8 +258,8 @@ static void turnOnHardware() {
 	adcCallbackCounter = 0;
 #endif /* EFI_FASTER_UNIFORM_ADC */
 
-#if EFI_SHAFT_POSITION_INPUT
-	turnOnTriggerInputPins();
+#if EFI_PROD_CODE && EFI_SHAFT_POSITION_INPUT
+	turnOnTriggerInputPins(PASS_ENGINE_PARAMETER_SIGNATURE);
 #endif /* EFI_SHAFT_POSITION_INPUT */
 }
 
@@ -299,7 +280,7 @@ void stopSpi(spi_device_e device) {
  * todo: maybe start invoking this method on ECU start so that peripheral start-up initialization and restart are unified?
  */
 
-void applyNewHardwareSettings(void) {
+void applyNewHardwareSettings(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
     /**
      * All 'stop' methods need to go before we begin starting pins.
      *
@@ -310,8 +291,8 @@ void applyNewHardwareSettings(void) {
      */
 	ButtonDebounce::stopConfigurationList();
 
-#if EFI_SHAFT_POSITION_INPUT
-	stopTriggerInputPins();
+#if EFI_PROD_CODE && EFI_SHAFT_POSITION_INPUT
+	stopTriggerInputPins(PASS_ENGINE_PARAMETER_SIGNATURE);
 #endif /* EFI_SHAFT_POSITION_INPUT */
 
 
@@ -331,25 +312,7 @@ void applyNewHardwareSettings(void) {
 	stopHip9001_pins();
 #endif /* EFI_HIP_9011 */
 
-#if (BOARD_EXT_GPIOCHIPS > 0)
-	stopSmartCsPins();
-#endif /* (BOARD_EXT_GPIOCHIPS > 0) */
-
-#if EFI_VEHICLE_SPEED
-	stopVSSPins();
-#endif /* EFI_VEHICLE_SPEED */
-
-#if EFI_LOGIC_ANALYZER
-	stopLogicAnalyzerPins();
-#endif /* EFI_LOGIC_ANALYZER */
-
-#if EFI_EMULATE_POSITION_SENSORS
-	stopTriggerEmulatorPins();
-#endif /* EFI_EMULATE_POSITION_SENSORS */
-
-#if EFI_AUX_PID
-	stopVvtControlPins();
-#endif /* EFI_AUX_PID */
+	stopHardware(PASS_ENGINE_PARAMETER_SIGNATURE);
 
 	if (isConfigurationChanged(is_enabled_spi_1)) {
 		stopSpi(SPI_DEVICE_1);
@@ -372,8 +335,11 @@ void applyNewHardwareSettings(void) {
 #endif /* #if EFI_HD44780_LCD */
 
 	if (isPinOrModeChanged(clutchUpPin, clutchUpPinMode)) {
-		efiSetPadUnused(activeConfiguration.clutchUpPin);
+		// bug? duplication with stopPedalPins?
+		efiSetPadUnused(activeConfiguration.clutchUpPin PASS_ENGINE_PARAMETER_SUFFIX);
 	}
+
+	stopTriggerDebugPins(PASS_ENGINE_PARAMETER_SIGNATURE);
 
 	enginePins.unregisterPins();
 
@@ -383,19 +349,17 @@ void applyNewHardwareSettings(void) {
 	 * Start everything back with new settings *
 	 ******************************************/
 
-#if EFI_SHAFT_POSITION_INPUT
-	startTriggerInputPins();
+#if EFI_PROD_CODE && EFI_SHAFT_POSITION_INPUT
+	startTriggerInputPins(PASS_ENGINE_PARAMETER_SIGNATURE);
 #endif /* EFI_SHAFT_POSITION_INPUT */
 
-#if (HAL_USE_PAL && EFI_JOYSTICK)
-	startJoystickPins();
-#endif /* HAL_USE_PAL && EFI_JOYSTICK */
+	startHardware(PASS_ENGINE_PARAMETER_SIGNATURE);
 
 #if EFI_HD44780_LCD
 	startHD44780_pins();
 #endif /* #if EFI_HD44780_LCD */
 
-#if (BOARD_EXT_GPIOCHIPS > 0)
+#if EFI_PROD_CODE && (BOARD_EXT_GPIOCHIPS > 0)
 	/* TODO: properly restart gpio chips...
 	 * This is only workaround for "CS pin lost" bug
 	 * see: https://github.com/rusefi/rusefi/issues/2107
@@ -425,13 +389,13 @@ void applyNewHardwareSettings(void) {
 #endif /* EFI_HIP_9011 */
 
 
-#if EFI_IDLE_CONTROL
+#if EFI_PROD_CODE && EFI_IDLE_CONTROL
 	if (isIdleHardwareRestartNeeded()) {
-		 initIdleHardware();
+		 initIdleHardware(PASS_ENGINE_PARAMETER_SIGNATURE);
 	}
 #endif
 
-#if EFI_VEHICLE_SPEED
+#if EFI_VEHICLE_SPEED && ! EFI_UNIT_TEST
 	startVSSPins();
 #endif /* EFI_VEHICLE_SPEED */
 
@@ -439,7 +403,7 @@ void applyNewHardwareSettings(void) {
 	startBoostPin();
 #endif
 #if EFI_EMULATE_POSITION_SENSORS
-	startTriggerEmulatorPins();
+	startTriggerEmulatorPins(PASS_ENGINE_PARAMETER_SIGNATURE);
 #endif /* EFI_EMULATE_POSITION_SENSORS */
 #if EFI_LOGIC_ANALYZER
 	startLogicAnalyzerPins();
@@ -451,6 +415,7 @@ void applyNewHardwareSettings(void) {
 	adcConfigListener(engine);
 }
 
+#if EFI_PROD_CODE
 void setBor(int borValue) {
 	efiPrintf("setting BOR to %d", borValue);
 	BOR_Set((BOR_Level_t)borValue);
@@ -460,16 +425,19 @@ void setBor(int borValue) {
 void showBor(void) {
 	efiPrintf("BOR=%d", (int)BOR_Get());
 }
+#endif /* EFI_PROD_CODE */
 
 // This function initializes hardware that can do so before configuration is loaded
-void initHardwareNoConfig() {
+void initHardwareNoConfig(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	efiAssertVoid(CUSTOM_IH_STACK, getCurrentRemainingStack() > EXPECTED_REMAINING_STACK, "init h");
 	efiAssertVoid(CUSTOM_EC_NULL, engineConfiguration!=NULL, "engineConfiguration");
 	
 
 	efiPrintf("initHardware()");
 
+#if EFI_PROD_CODE
 	initPinRepository();
+#endif
 
 #if EFI_HISTOGRAMS
 	/**
@@ -483,10 +451,12 @@ void initHardwareNoConfig() {
 	 */
 	initPrimaryPins();
 
+#if EFI_PROD_CODE
 	// it's important to initialize this pretty early in the game before any scheduling usages
-	initSingleTimerExecutorHardware();
+	initSingleTimerExecutorHardware(PASS_ENGINE_PARAMETER_SIGNATURE);
 
 	initRtc();
+#endif /* EFI_PROD_CODE */
 
 #if EFI_INTERNAL_FLASH
 	initFlash();
@@ -502,7 +472,44 @@ void initHardwareNoConfig() {
 #endif // EFI_FILE_LOGGING
 }
 
-void initHardware() {
+void stopHardware(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+	stopPedalPins(PASS_ENGINE_PARAMETER_SIGNATURE);
+
+#if EFI_PROD_CODE && (BOARD_EXT_GPIOCHIPS > 0)
+	stopSmartCsPins();
+#endif /* (BOARD_EXT_GPIOCHIPS > 0) */
+
+#if EFI_VEHICLE_SPEED
+	stopVSSPins();
+#endif /* EFI_VEHICLE_SPEED */
+
+#if EFI_LOGIC_ANALYZER
+	stopLogicAnalyzerPins();
+#endif /* EFI_LOGIC_ANALYZER */
+
+#if EFI_EMULATE_POSITION_SENSORS
+	stopTriggerEmulatorPins();
+#endif /* EFI_EMULATE_POSITION_SENSORS */
+
+#if EFI_AUX_PID
+	stopVvtControlPins();
+#endif /* EFI_AUX_PID */
+}
+
+/**
+ * This method is invoked both on ECU start and configuration change
+ */
+void startHardware(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+#if (HAL_USE_PAL && EFI_JOYSTICK)
+	startJoystickPins();
+#endif /* HAL_USE_PAL && EFI_JOYSTICK */
+
+	startTriggerDebugPins(PASS_ENGINE_PARAMETER_SIGNATURE);
+
+	startPedalPins(PASS_ENGINE_PARAMETER_SIGNATURE);
+}
+
+void initHardware(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 #if EFI_HD44780_LCD
 	lcd_HD44780_init();
 	if (hasFirmwareError())
@@ -531,7 +538,7 @@ void initHardware() {
 	initSpiModules(engineConfiguration);
 #endif /* HAL_USE_SPI */
 
-#if BOARD_EXT_GPIOCHIPS > 0
+#if EFI_PROD_CODE && (BOARD_EXT_GPIOCHIPS > 0)
 	// initSmartGpio depends on 'initSpiModules'
 	initSmartGpio(PASS_ENGINE_PARAMETER_SIGNATURE);
 #endif
@@ -540,7 +547,7 @@ void initHardware() {
 	initOutputPins(PASS_ENGINE_PARAMETER_SIGNATURE);
 
 #if EFI_ENGINE_CONTROL
-	enginePins.startPins(PASS_ENGINE_PARAMETER_SIGNATURE);
+	enginePins.startPins();
 #endif /* EFI_ENGINE_CONTROL */
 
 #if EFI_MC33816
@@ -558,7 +565,7 @@ void initHardware() {
 //	init_adc_mcp3208(&adcState, &SPID2);
 //	requestAdcValue(&adcState, 0);
 
-	turnOnHardware();
+	turnOnHardware(PASS_ENGINE_PARAMETER_SIGNATURE);
 
 #if EFI_HIP_9011
 	initHip9011();
@@ -602,12 +609,10 @@ void initHardware() {
 
 	calcFastAdcIndexes();
 
+	startHardware(PASS_ENGINE_PARAMETER_SIGNATURE);
+
 	efiPrintf("initHardware() OK!");
 }
-
-#endif /* EFI_PROD_CODE */
-
-#endif  /* EFI_PROD_CODE || EFI_SIMULATOR */
 
 #if HAL_USE_SPI
 // this is F4 implementation but we will keep it here for now for simplicity

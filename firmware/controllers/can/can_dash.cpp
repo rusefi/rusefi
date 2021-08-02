@@ -7,20 +7,15 @@
  * @author Matthew Kennedy, (c) 2020
  */
 
-#include "globalaccess.h"
-#if EFI_CAN_SUPPORT
+#include "pch.h"
 
-#include "engine.h"
+#if EFI_CAN_SUPPORT
 #include "can_dash.h"
 #include "can_msg_tx.h"
 
-#include "sensor.h"
-#include "allsensors.h"
 #include "vehicle_speed.h"
 #include "rtc_helper.h"
 #include "fuel_math.h"
-EXTERN_ENGINE;
-
 // CAN Bus ID for broadcast
 /**
  * e46 data is from http://forums.bimmerforums.com/forum/showthread.php?1887229
@@ -28,6 +23,8 @@ EXTERN_ENGINE;
  * Same for Mini Cooper? http://vehicle-reverse-engineering.wikia.com/wiki/MINI
  *
  * All the below packets are using 500kb/s
+ *
+ * for verbose use "set debug_mode 26" command in console
  *
  */
 #define CAN_BMW_E46_SPEED             0x153
@@ -68,9 +65,21 @@ EXTERN_ENGINE;
 
 static time_msecs_t mph_timer;
 static time_msecs_t mph_ctr;
+
+#define GENESIS_COUPLE_RPM_316 0x316
+#define GENESIS_COUPLE_COOLANT_329 0x329
+
+#define NISSAN_RPM_1F9 0x1F9
 // Nissan z33 350Z and else
 // 0x23d = 573
 #define NISSAN_RPM_CLT       0x23D
+
+#define NISSAN_VEHICLE_SPEED_280 0x280
+// wheel speed see "102 CAN Communication decoded"
+// 19500 value would be 100 kph
+#define NISSAN_WHEEL_SPEED 0x285
+
+#define NISSAN_CLT_551 0x551
 
 static uint8_t rpmcounter;
 static uint8_t seatbeltcnt;
@@ -89,6 +98,8 @@ void canMazdaRX8(CanCycle cycle);
 void canDashboardW202(CanCycle cycle);
 void canDashboardBMWE90(CanCycle cycle);
 void canDashboardVagMqb(CanCycle cycle);
+void canDashboardNissanVQ(CanCycle cycle);
+void canDashboardGenesisCoupe(CanCycle cycle);
 
 void updateDash(CanCycle cycle) {
 
@@ -114,6 +125,12 @@ void updateDash(CanCycle cycle) {
 		break;
 	case CAN_BUS_MQB:
 		canDashboardVagMqb(cycle);
+		break;
+	case CAN_BUS_NISSAN_VQ:
+		canDashboardNissanVQ(cycle);
+		break;
+	case CAN_BUS_GENESIS_COUPE:
+		canDashboardGenesisCoupe(cycle);
 		break;
 	default:
 		break;
@@ -155,9 +172,7 @@ void canMazdaRX8(CanCycle cycle) {
 
 			float kph = getVehicleSpeed();
 
-			int rpm = GET_RPM();
-	        // do not pass function as macro parameter that would cause same code to be invoked 2 times!
-			msg.setShortValue(SWAP_UINT16(rpm * 4), 0);
+			msg.setShortValue(SWAP_UINT16(GET_RPM() * 4), 0);
 			msg.setShortValue(0xFFFF, 2);
 			msg.setShortValue(SWAP_UINT16((int )(100 * kph + 10000)), 4);
 			msg.setShortValue(0, 6);
@@ -291,6 +306,62 @@ void canDashboardW202(CanCycle cycle) {
 			msg[5] = 0x07; // Const
 			msg[6] = 0x33; // Const
 			msg[7] = 0x05; // Const
+		}
+	}
+}
+
+static int rollingId = 0;
+
+void canDashboardGenesisCoupe(CanCycle cycle) {
+	if (cycle.isInterval(CI::_50ms)) {
+		{
+			CanTxMessage msg(GENESIS_COUPLE_RPM_316, 8);
+			int rpm8 = GET_RPM() * 4;
+			msg[3] = rpm8 >> 8;
+			msg[4] = rpm8 & 0xFF;
+		}
+		{
+			CanTxMessage msg(GENESIS_COUPLE_COOLANT_329, 8);
+			int clt = Sensor::get(SensorType::Clt).value_or(0) * 2;
+			msg[1] = clt;
+		}
+	}
+}
+
+void canDashboardNissanVQ(CanCycle cycle) {
+	if (cycle.isInterval(CI::_50ms)) {
+		{
+			CanTxMessage msg(NISSAN_RPM_1F9, 8);
+			msg[0] = 0x20;
+			int rpm8 = (int)(GET_RPM() * 8);
+			msg[2] = rpm8 >> 8;
+			msg[3] = rpm8 & 0xFF;
+		}
+
+		{
+			CanTxMessage msg(NISSAN_CLT_551, 8);
+
+			int clt = Sensor::get(SensorType::Clt).value_or(0);
+			msg[0] = clt + 45;
+		}
+
+
+		{
+			CanTxMessage msg(NISSAN_RPM_CLT, 8);
+
+			rollingId = (rollingId + 1) % 4;
+			const uint8_t magicByte[4] = {0x03, 0x23, 0x42, 0x63};
+
+			msg[0] = magicByte[rollingId];
+			msg[1] = (int)(Sensor::get(SensorType::AcceleratorPedal).value_or(0) * 255 / 100);
+
+			// thank you "102 CAN Communication decoded"
+#define CAN_23D_RPM_MULT 3.15
+			int rpm315 = (int)(GET_RPM() / CAN_23D_RPM_MULT);
+			msg[3] = rpm315 & 0xFF;
+			msg[4] = rpm315 >> 8;
+
+			msg[7] = 0x70; // todo: CLT decoding?
 		}
 	}
 }

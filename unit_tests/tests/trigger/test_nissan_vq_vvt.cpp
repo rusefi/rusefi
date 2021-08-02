@@ -7,6 +7,7 @@
 
 #include "engine_test_helper.h"
 #include "trigger_nissan.h"
+#include "nissan_vq.h"
 
 class TriggerCallback {
 public:
@@ -14,10 +15,10 @@ public:
 	int toothIndex;
 	TriggerWaveform *form;
 	bool isVvt;
-	int vvtIndex;
+	int vvtBankIndex;
 };
 
-void func(TriggerCallback *callback) {
+static void func(TriggerCallback *callback) {
 	int formIndex = callback->toothIndex % callback->form->getSize();
 	Engine *engine = callback->engine;
 	EXPAND_Engine;
@@ -26,15 +27,18 @@ void func(TriggerCallback *callback) {
 	efitick_t nowNt = getTimeNowNt();
 	if (callback->isVvt) {
 		trigger_value_e v = value ? TV_RISE : TV_FALL;
-		hwHandleVvtCamSignal(v, nowNt, callback->vvtIndex PASS_ENGINE_PARAMETER_SUFFIX);
+		hwHandleVvtCamSignal(v, nowNt, callback->vvtBankIndex * CAMS_PER_BANK PASS_ENGINE_PARAMETER_SUFFIX);
 	} else {
 		handleShaftSignal(0, value, nowNt PASS_ENGINE_PARAMETER_SUFFIX);
 	}
 }
 
 
-static void scheduleTriggerEvents(TriggerWaveform *shape, int count, bool isVvt,
-		int vvtIndex,
+static void scheduleTriggerEvents(TriggerWaveform *shape,
+		float timeScale,
+		int count,
+		bool isVvt,
+		int vvtBankIndex,
 		int vvtOffset
 		DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	int totalIndex = 0;
@@ -44,17 +48,17 @@ static void scheduleTriggerEvents(TriggerWaveform *shape, int count, bool isVvt,
 	 * and then execute those one
 	 */
 	for (int r = 0; r < count; r++) {
-		for (int i = 0; i < shape->getSize(); i++) {
+		for (size_t i = 0; i < shape->getSize(); i++) {
 			float angle = vvtOffset + shape->getAngle(totalIndex);
 			TriggerCallback *param = new TriggerCallback();
 			param->engine = engine;
 			param->toothIndex = totalIndex;
 			param->form = shape;
 			param->isVvt = isVvt;
-			param->vvtIndex = vvtIndex;
+			param->vvtBankIndex = vvtBankIndex;
 
 			scheduling_s *sch = new scheduling_s();
-			engine->executor.scheduleByTimestamp(sch, 1000 * angle, { func, param });
+			engine->executor.scheduleByTimestamp("test", sch, timeScale * 1000 * angle, { func, param });
 			totalIndex++;
 		}
 	}
@@ -66,22 +70,29 @@ TEST(nissan, vq_vvt) {
 	engineConfiguration->isIgnitionEnabled = false;
 	engineConfiguration->isInjectionEnabled = false;
 
-	int cyclesCount = 12;
+	int cyclesCount = 48;
 
 	{
 		static TriggerWaveform crank;
-		initializeNissanVQcrank(&crank);
+		initializeNissanVQ35crank(&crank);
 
-		scheduleTriggerEvents(&crank, cyclesCount, false, -1, 0 PASS_ENGINE_PARAMETER_SUFFIX);
+		scheduleTriggerEvents(&crank,
+				/* timeScale */ 1,
+				cyclesCount, false, -1, 0 PASS_ENGINE_PARAMETER_SUFFIX);
 	}
+	float vvtTimeScale = 1;
+
+	angle_t testVvtOffset = 13;
 
 	{
 		static TriggerWaveform vvt;
 		initializeNissanVQvvt(&vvt);
 
-		scheduleTriggerEvents(&vvt, cyclesCount / 6, true,
-				/* vvtIndex */ 0,
-				/* vvtOffset */ 0
+		scheduleTriggerEvents(&vvt,
+				/* timeScale */ vvtTimeScale,
+				cyclesCount / 6, true,
+				/* vvtBankIndex */ 0,
+				/* vvtOffset */ testVvtOffset
 				PASS_ENGINE_PARAMETER_SUFFIX);
 	}
 
@@ -89,16 +100,37 @@ TEST(nissan, vq_vvt) {
 		static TriggerWaveform vvt;
 		initializeNissanVQvvt(&vvt);
 
-		scheduleTriggerEvents(&vvt, cyclesCount / 6, true,
-				/* vvtIndex */1,
-				/* vvtOffset */ 360
+		scheduleTriggerEvents(&vvt,
+				/* timeScale */ vvtTimeScale,
+				cyclesCount / 6, true,
+				/* vvtBankIndex */1,
+				/* vvtOffset */ testVvtOffset + NISSAN_VQ_CAM_OFFSET
 				PASS_ENGINE_PARAMETER_SUFFIX);
 	}
+
+	eth.executeUntil(1473000);
+	ASSERT_EQ(0, GET_RPM());
+
+	eth.executeUntil(1475000);
+	ASSERT_EQ(167, GET_RPM());
+	TriggerCentral *tc = &engine->triggerCentral;
+
+	eth.executeUntil(3593000);
+	ASSERT_TRUE(tc->vvtState[0][0].getShaftSynchronized());
 
 	scheduling_s *head;
 	while ((head = engine->executor.getHead()) != nullptr) {
 		eth.setTimeAndInvokeEventsUs(head->momentX);
+
+		ASSERT_TRUE(tc->vvtState[0][0].getShaftSynchronized());
+		// let's celebrate that vvtPosition stays the same
+    	ASSERT_NEAR(-testVvtOffset, tc->vvtPosition[0][0], EPS2D);
 	}
 
-	ASSERT_EQ(250, GET_RPM());
+	ASSERT_TRUE(tc->vvtState[1][0].getShaftSynchronized());
+
+	ASSERT_NEAR(-testVvtOffset, tc->vvtPosition[0][0], EPS2D);
+	ASSERT_NEAR(-testVvtOffset, tc->vvtPosition[1][0], EPS2D);
+
+	EXPECT_EQ(0, eth.recentWarnings()->getCount());
 }

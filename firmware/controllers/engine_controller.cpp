@@ -21,22 +21,18 @@
  * If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "global.h"
+#include "pch.h"
+
 #include "os_access.h"
 #include "trigger_central.h"
-#include "engine_controller.h"
 #include "fsio_core.h"
 #include "fsio_impl.h"
 #include "idle_thread.h"
 #include "advance_map.h"
-#include "rpm_calculator.h"
 #include "main_trigger_callback.h"
-#include "io_pins.h"
 #include "flash_main.h"
 #include "bench_test.h"
 #include "os_util.h"
-#include "engine_math.h"
-#include "allsensors.h"
 #include "electronic_throttle.h"
 #include "map_averaging.h"
 #include "high_pressure_fuel_pump.h"
@@ -46,12 +42,10 @@
 #include "local_version_holder.h"
 #include "alternator_controller.h"
 #include "fuel_math.h"
-#include "settings.h"
 #include "spark_logic.h"
 #include "aux_valves.h"
 #include "accelerometer.h"
 #include "vvt.h"
-#include "perf_trace.h"
 #include "boost_control.h"
 #include "launch_control.h"
 #include "tachometer.h"
@@ -60,6 +54,7 @@
 #include "buttonshift.h"
 #include "start_stop.h"
 #include "dynoview.h"
+#include "vr_pwm.h"
 
 #if EFI_SENSOR_CHART
 #include "sensor_chart.h"
@@ -89,19 +84,15 @@
 #endif /* EFI_UNIT_TEST */
 
 #include "adc_inputs.h"
-#include "pwm_generator_logic.h"
 
 #if EFI_PROD_CODE
 #include "pwm_tester.h"
 #include "lcd_controller.h"
-#include "pin_repository.h"
 #endif /* EFI_PROD_CODE */
 
 #if EFI_CJ125
 #include "cj125.h"
 #endif /* EFI_CJ125 */
-
-EXTERN_ENGINE;
 
 #if !EFI_UNIT_TEST
 
@@ -232,10 +223,6 @@ static void doPeriodicSlowCallback(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 			}
 		}
 	}
-
-	// for performance reasons this assertion related to mainTriggerCallback should better be here
-	efiAssertVoid(CUSTOM_IGN_MATH_STATE, !CONFIG(useOnlyRisingEdgeForTrigger) || CONFIG(ignMathCalculateAtIndex) % 2 == 0, "invalid ignMathCalculateAtIndex");
-
 
 	/**
 	 * Update engine RPM state if needed (check timeouts).
@@ -651,15 +638,13 @@ void initEngineContoller(DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	initCJ125(PASS_ENGINE_PARAMETER_SIGNATURE);
 #endif /* EFI_CJ125 */
 
-
-	// periodic events need to be initialized after fuel&spark pins to avoid a warning
-	initPeriodicEvents(PASS_ENGINE_PARAMETER_SIGNATURE);
-
 	if (hasFirmwareError()) {
 		return;
 	}
 
 	engineStateBlinkingTask.Start();
+
+	initVrPwm(PASS_ENGINE_PARAMETER_SIGNATURE);
 
 #if EFI_PWM_TESTER
 	initPwmTester();
@@ -702,7 +687,7 @@ void initEngineContoller(DECLARE_ENGINE_PARAMETER_SUFFIX) {
  * UNUSED_SIZE constants.
  */
 #ifndef RAM_UNUSED_SIZE
-#define RAM_UNUSED_SIZE 1500
+#define RAM_UNUSED_SIZE 1300
 #endif
 #ifndef CCM_UNUSED_SIZE
 #define CCM_UNUSED_SIZE 300

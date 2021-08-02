@@ -26,8 +26,6 @@
 #include "engine.h"
 #include "thread_priority.h"
 
-EXTERN_ENGINE;
-
 static int canReadCounter = 0;
 int canWriteOk = 0;
 int canWriteNotOk = 0;

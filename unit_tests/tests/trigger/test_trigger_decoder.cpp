@@ -5,11 +5,9 @@
  * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
-#include "engine_test_helper.h"
+#include "pch.h"
+
 #include "trigger_decoder.h"
-#include "engine_math.h"
-#include "allsensors.h"
-#include "engine_controller.h"
 #include "ford_aspire.h"
 #include "dodge_neon.h"
 #include "ford_1995_inline_6.h"
@@ -21,7 +19,6 @@
 #include "fuel_math.h"
 #include "spark_logic.h"
 #include "trigger_universal.h"
-#include "sensor.h"
 
 using ::testing::_;
 
@@ -70,7 +67,7 @@ static void testDodgeNeonDecoder(void) {
 
 	TriggerState state;
 
-	ASSERT_FALSE(state.shaft_is_synchronized) << "1 shaft_is_synchronized";
+	ASSERT_FALSE(state.getShaftSynchronized()) << "1 shaft_is_synchronized";
 
 //	int r = 0;
 //	processTriggerEvent(&state, shape, &ec->triggerConfig, SHAFT_PRIMARY_RISING, r + 60);
@@ -339,7 +336,7 @@ TEST(misc, testRpmCalculator) {
 
 //	debugSignalExecutor = true;
 
-	ASSERT_EQ(engine->triggerCentral.triggerState.shaft_is_synchronized, 1);
+	ASSERT_EQ(engine->triggerCentral.triggerState.getShaftSynchronized(), 1);
 
 	eth.moveTimeForwardMs(5 /*ms*/);
 

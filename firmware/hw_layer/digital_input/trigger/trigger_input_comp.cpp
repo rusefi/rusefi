@@ -16,8 +16,6 @@
 #include "trigger_input.h"
 #include "digital_input_icu.h"
 
-EXTERN_ENGINE;
-
 static volatile int centeredDacValue = 127;
 static volatile int toothCnt = 0;
 static volatile int dacHysteresisMin = 1;	// = 5V * 1/256 (8-bit DAC) = ~20mV
