@@ -1,3 +1,7 @@
+/**
+ * @file frequency_sensor.cpp
+ */
+
 #include "pch.h"
 
 #include "frequency_sensor.h"
