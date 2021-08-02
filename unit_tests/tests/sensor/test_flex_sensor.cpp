@@ -1,8 +1,6 @@
-#include "flex_sensor.h"
-#include "engine_test_helper.h" // Used for timesourcing
-#include "global.h"
+#include "pch.h"
 
-#include <gtest/gtest.h>
+#include "flex_sensor.h"
 
 class FlexSensorForTests : public ::testing::Test
 {
