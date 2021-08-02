@@ -5,16 +5,12 @@
  * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
+#include "pch.h"
+
 #include "fuel_math.h"
 #include "trigger_structure.h"
-#include "allsensors.h"
-#include "engine_math.h"
 #include "trigger_decoder.h"
-#include "engine_test_helper.h"
-#include "efi_gpio.h"
 #include "advance_map.h"
-#include "sensor.h"
-#include "mocks.h"
 
 using ::testing::FloatNear;
 

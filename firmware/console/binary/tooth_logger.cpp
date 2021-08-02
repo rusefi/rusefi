@@ -12,8 +12,6 @@
 
 #if EFI_TOOTH_LOGGER
 
-EXTERN_ENGINE;
-
 #include <cstddef>
 #include "efitime.h"
 #include "efilib.h"

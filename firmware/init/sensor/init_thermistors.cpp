@@ -1,15 +1,12 @@
-#include "global.h"
+#include "pch.h"
+
 #include "adc_inputs.h"
 #include "adc_subscription.h"
-#include "engine.h"
-#include "error_handling.h"
 #include "functional_sensor.h"
 #include "func_chain.h"
 #include "linear_func.h"
 #include "resistance_func.h"
 #include "thermistor_func.h"
-
-EXTERN_ENGINE;
 
 using resist = ResistanceFunc;
 using therm = ThermistorFunc;

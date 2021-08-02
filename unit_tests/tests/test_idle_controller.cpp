@@ -5,16 +5,13 @@
  * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
-#include "engine_test_helper.h"
+#include "pch.h"
+
 #include "advance_map.h"
-#include "tps.h"
 #include "pid.h"
 #include "fsio_impl.h"
 #include "idle_thread.h"
-#include "allsensors.h"
-#include "engine_controller.h"
 #include "electronic_throttle.h"
-#include "sensor.h"
 #include "vehicle_speed.h"
 
 using ::testing::StrictMock;
@@ -292,15 +289,19 @@ TEST(idle_v2, openLoopRunningTaper) {
 	EXPECT_CALL(dut, getCrankingOpenLoop(30)).WillRepeatedly(Return(75));
 
 	// 0 cycles - no taper yet, pure cranking value
+	EXPECT_FLOAT_EQ(75, dut.getOpenLoop(ICP::Running, 30, 0, 0));
 	EXPECT_FLOAT_EQ(75, dut.getOpenLoop(ICP::CrankToRunTaper, 30, 0, 0));
 
 	// 1/2 taper - half way, 50% each value -> outputs 50
+	EXPECT_FLOAT_EQ(50, dut.getOpenLoop(ICP::Running, 30, 0, 0.5f));
 	EXPECT_FLOAT_EQ(50, dut.getOpenLoop(ICP::CrankToRunTaper, 30, 0, 0.5f));
 
 	// 1x taper - fully tapered, should be running value
+	EXPECT_FLOAT_EQ(25, dut.getOpenLoop(ICP::Running, 30, 0, 1.0f));
 	EXPECT_FLOAT_EQ(25, dut.getOpenLoop(ICP::CrankToRunTaper, 30, 0, 1.0f));
 
 	// 2x taper - still fully tapered, should be running value
+	EXPECT_FLOAT_EQ(25, dut.getOpenLoop(ICP::Running, 30, 0, 2.0f));
 	EXPECT_FLOAT_EQ(25, dut.getOpenLoop(ICP::CrankToRunTaper, 30, 0, 2.0f));
 }
 

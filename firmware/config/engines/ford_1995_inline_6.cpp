@@ -16,8 +16,6 @@
 #include "engine_math.h"
 #include "allsensors.h"
 
-EXTERN_CONFIG;
-
 /**
  * @brief Default values for persistent properties
  */

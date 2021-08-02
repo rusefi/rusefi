@@ -1,16 +1,13 @@
-#include "global.h"
+#include "pch.h"
+
 #include "adc_inputs.h"
 #include "adc_subscription.h"
-#include "engine.h"
-#include "error_handling.h"
 #include "functional_sensor.h"
 #include "redundant_sensor.h"
 #include "redundant_ford_tps.h"
 #include "proxy_sensor.h"
 #include "linear_func.h"
 #include "tps.h"
-
-EXTERN_ENGINE;
 
 LinearFunc tpsFunc1p(TPS_TS_CONVERSION);
 LinearFunc tpsFunc1s(TPS_TS_CONVERSION);

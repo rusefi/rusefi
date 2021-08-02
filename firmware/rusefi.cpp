@@ -106,12 +106,10 @@
  *
  */
 
-#include "global.h"
+#include "pch.h"
 #include "os_access.h"
 #include "trigger_structure.h"
 #include "hardware.h"
-#include "engine_controller.h"
-#include "efi_gpio.h"
 
 #include "rfi_perftest.h"
 #include "rusefi.h"
@@ -119,9 +117,7 @@
 
 #include "eficonsole.h"
 #include "status_loop.h"
-#include "pin_repository.h"
 #include "custom_engine.h"
-#include "engine_math.h"
 #include "mpu_util.h"
 #include "tunerstudio.h"
 #include "mmc_card.h"
@@ -140,8 +136,6 @@ bool main_loop_started = false;
 static char panicMessage[200];
 
 static virtual_timer_t resetTimer;
-
-EXTERN_ENGINE;
 
 // todo: move this into a hw-specific file
 void rebootNow(void) {
@@ -249,6 +243,11 @@ void runRusEfi(void) {
 	startLoggingProcessor();
 #endif
 
+#ifdef STM32F7
+	void sys_dual_bank(void);
+	addConsoleAction("dual_bank", sys_dual_bank);
+#endif
+
 	addConsoleAction(CMD_REBOOT, scheduleReboot);
 	addConsoleAction(CMD_REBOOT_DFU, jump_to_bootloader);
 
@@ -285,6 +284,9 @@ void runRusEfi(void) {
 
 	runRusEfiWithConfig();
 
+	// periodic events need to be initialized after fuel&spark pins to avoid a warning
+	initPeriodicEvents(PASS_ENGINE_PARAMETER_SIGNATURE);
+
 	runMainLoop();
 }
 
@@ -297,13 +299,13 @@ void runRusEfiWithConfig() {
 		return;
 	}
 
+	// Start this early - it will start LED blinking and such
+	startStatusThreads();
+
 	/**
 	 * Initialize hardware drivers
 	 */
 	initHardware();
-
-	// periodic events need to be initialized after fuel&spark pins to avoid a warning
-	initPeriodicEvents(PASS_ENGINE_PARAMETER_SIGNATURE);
 
 #if EFI_FILE_LOGGING
 	initMmcCard();
@@ -338,8 +340,6 @@ void runRusEfiWithConfig() {
 	#if EFI_PERF_METRICS
 		initTimePerfActions();
 	#endif
-
-		startStatusThreads();
 
 		runSchedulingPrecisionTestIfNeeded();
 	}

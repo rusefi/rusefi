@@ -7,20 +7,15 @@
  * @author Matthew Kennedy, (c) 2020
  */
 
-#include "globalaccess.h"
-#if EFI_CAN_SUPPORT
+#include "pch.h"
 
-#include "engine.h"
+#if EFI_CAN_SUPPORT
 #include "can_dash.h"
 #include "can_msg_tx.h"
 
-#include "sensor.h"
-#include "allsensors.h"
 #include "vehicle_speed.h"
 #include "rtc_helper.h"
 #include "fuel_math.h"
-EXTERN_ENGINE;
-
 // CAN Bus ID for broadcast
 /**
  * e46 data is from http://forums.bimmerforums.com/forum/showthread.php?1887229
@@ -28,6 +23,8 @@ EXTERN_ENGINE;
  * Same for Mini Cooper? http://vehicle-reverse-engineering.wikia.com/wiki/MINI
  *
  * All the below packets are using 500kb/s
+ *
+ * for verbose use "set debug_mode 26" command in console
  *
  */
 #define CAN_BMW_E46_SPEED             0x153
@@ -69,6 +66,9 @@ EXTERN_ENGINE;
 static time_msecs_t mph_timer;
 static time_msecs_t mph_ctr;
 
+#define GENESIS_COUPLE_RPM_316 0x316
+#define GENESIS_COUPLE_COOLANT_329 0x329
+
 #define NISSAN_RPM_1F9 0x1F9
 // Nissan z33 350Z and else
 // 0x23d = 573
@@ -99,6 +99,7 @@ void canDashboardW202(CanCycle cycle);
 void canDashboardBMWE90(CanCycle cycle);
 void canDashboardVagMqb(CanCycle cycle);
 void canDashboardNissanVQ(CanCycle cycle);
+void canDashboardGenesisCoupe(CanCycle cycle);
 
 void updateDash(CanCycle cycle) {
 
@@ -127,6 +128,9 @@ void updateDash(CanCycle cycle) {
 		break;
 	case CAN_BUS_NISSAN_VQ:
 		canDashboardNissanVQ(cycle);
+		break;
+	case CAN_BUS_GENESIS_COUPE:
+		canDashboardGenesisCoupe(cycle);
 		break;
 	default:
 		break;
@@ -308,6 +312,22 @@ void canDashboardW202(CanCycle cycle) {
 
 static int rollingId = 0;
 
+void canDashboardGenesisCoupe(CanCycle cycle) {
+	if (cycle.isInterval(CI::_50ms)) {
+		{
+			CanTxMessage msg(GENESIS_COUPLE_RPM_316, 8);
+			int rpm8 = GET_RPM() * 4;
+			msg[3] = rpm8 >> 8;
+			msg[4] = rpm8 & 0xFF;
+		}
+		{
+			CanTxMessage msg(GENESIS_COUPLE_COOLANT_329, 8);
+			int clt = Sensor::get(SensorType::Clt).value_or(0) * 2;
+			msg[1] = clt;
+		}
+	}
+}
+
 void canDashboardNissanVQ(CanCycle cycle) {
 	if (cycle.isInterval(CI::_50ms)) {
 		{
@@ -321,7 +341,7 @@ void canDashboardNissanVQ(CanCycle cycle) {
 		{
 			CanTxMessage msg(NISSAN_CLT_551, 8);
 
-			int clt = 40; // todo read sensor
+			int clt = Sensor::get(SensorType::Clt).value_or(0);
 			msg[0] = clt + 45;
 		}
 

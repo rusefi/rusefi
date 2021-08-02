@@ -21,8 +21,6 @@ static Logging scLogging("analog chart", LOGGING_BUFFER, sizeof(LOGGING_BUFFER))
 
 static int initialized = false;
 
-EXTERN_ENGINE;
-
 enum class ScState {
 	PreArm,
 	Armed,

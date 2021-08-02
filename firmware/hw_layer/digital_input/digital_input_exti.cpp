@@ -5,13 +5,10 @@
  * @author Andrey Belomutskiy, (c) 2012-2021
  */
 
-#include "global.h"
+#include "pch.h"
 
 #if HAL_USE_PAL && EFI_PROD_CODE
 #include "digital_input_exti.h"
-#include "efi_gpio.h"
-#include "error_handling.h"
-#include "pin_repository.h"
 
 /**
  * EXTI is a funny thing: you can only use same pin on one port. For example, you can use
@@ -85,4 +82,19 @@ void efiExtiDisablePin(brain_pin_e brainPin)
 	ext_used &= ~PAL_PORT_BIT(index);
 }
 
+digital_input_s* startDigitalCaptureExti(const char *msg, brain_pin_e brainPin) {
+	return nullptr;
+}
+
+#if ! EFI_ICU_INPUTS
+digital_input_s* startDigitalCapture(const char *msg, brain_pin_e brainPin) {
+	return startDigitalCaptureExti(msg, brainPin);
+}
+#endif // EFI_ICU_INPUTS
+
 #endif /* HAL_USE_PAL && EFI_PROD_CODE */
+
+
+
+
+

@@ -5,6 +5,7 @@
 
 pins:
   - pin: 2A
+# INJ1 Q312
     id: GPIOG_7
     class: outputs
     ts_name: 2A - INJ_1
@@ -28,6 +29,7 @@ pins:
     type: inj
 
   - pin: 2D
+#INJ2 Q305
     id: GPIOG_8
     class: outputs
     ts_name: 2D - INJ_2
@@ -50,6 +52,7 @@ pins:
     type: ls
 
   - pin: 2G
+#INJ3 Q309
     id: GPIOD_11
     class: outputs
     ts_name: 2G - INJ_3
@@ -72,6 +75,7 @@ pins:
     type: ls
 
   - pin: 2J
+#INJ4 Q310
     id: GPIOD_10
     class: outputs
     ts_name: 2J - INJ_4

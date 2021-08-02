@@ -27,15 +27,31 @@ All notable user-facing or behavior-altering changes will be documented in this 
 
 ## Month 202x Release - "Release Name"
 
+### Added
+ - RUSEFI MSD now contains bundle-specific URL #2848
+
+## July 2021 Release "Ice Cream Day"
+
 ### Breaking Changes
  - vvtOffset field migrated to four vvtOffsets fields. Anyone using VVT would need to manually adjust their configuration.  
+
+### Added
+ - Injector nonlinearity (small pulse) correction - so far just polynomial, but table modes coming soon.
+ - 1-4-3-6-2-5 firing order for VAG v6
+ - vq30de trigger wheel decoder #2974
+ - new hardware testing console commands #2978
+ 
+### Fixed
+ - rusEFI console start-up speed #2964
+ - wrong handling of symmetrical crank wheels NB2 VQ35 Renix #2980   
 
 ## June 2021 Release "National Logistics Day"
 
 ### Fixed
  - Improved cranking defaults
  - Simplified/clarified idle and cranking TunerStudio pages
- - Minor change of Miata NA trigger shape #2855   
+ - Minor change of Miata NA trigger shape #2855
+ - Improved trigger sync for 60/2 36/1 36/22 triggers as part of VW warnings on cranking part #1 #2861   
 
 ### Added
  - Idle improvements! Open loop corrections are now applied in closed loop mode.

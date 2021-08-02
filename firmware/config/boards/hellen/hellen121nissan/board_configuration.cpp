@@ -17,8 +17,6 @@
 #include "fsio_impl.h"
 #include "engine_configuration.h"
 
-EXTERN_ENGINE;
-
 static void hellenWbo() {
 	engineConfiguration->enableAemXSeries = true;
 }
@@ -87,11 +85,13 @@ static void setupDefaultSensorInputs() {
 	engineConfiguration->triggerInputPins[2] = GPIO_UNASSIGNED;
 	// Direct hall-only cam input
 	engineConfiguration->camInputs[0] = GPIOA_6;
-	engineConfiguration->camInputs[1 * 2] = GPIOA_7;
+	engineConfiguration->camInputs[1 * CAMS_PER_BANK] = GPIOA_7;
 
 	engineConfiguration->tps1_1AdcChannel = EFI_ADC_4;
-	engineConfiguration->tps2_1AdcChannel = EFI_ADC_NONE;
+	engineConfiguration->tps1_2AdcChannel = EFI_ADC_8;
 
+	engineConfiguration->throttlePedalPositionAdcChannel = EFI_ADC_3;
+	engineConfiguration->throttlePedalPositionSecondAdcChannel = EFI_ADC_14;
 	engineConfiguration->mafAdcChannel = EFI_ADC_10;
 	engineConfiguration->map.sensor.hwChannel = EFI_ADC_11;
 
@@ -112,10 +112,6 @@ void setBoardConfigOverrides(void) {
 
 	engineConfiguration->clt.config.bias_resistor = 4700;
 	engineConfiguration->iat.config.bias_resistor = 4700;
-
-	engineConfiguration->canTxPin = GPIOD_1;
-	engineConfiguration->canRxPin = GPIOD_0;
-	hellenWbo();
 }
 
 void setPinConfigurationOverrides(void) {
@@ -141,6 +137,7 @@ void setBoardDefaultConfiguration(void) {
 	setInjectorPins();
 	setIgnitionPins();
 
+	engineConfiguration->displayLogicLevelsInEngineSniffer = true;
 	engineConfiguration->isSdCardEnabled = true;
 
 	CONFIG(enableSoftwareKnock) = true;
@@ -157,9 +154,15 @@ void setBoardDefaultConfiguration(void) {
 	// "required" hardware is done - set some reasonable defaults
 	setupDefaultSensorInputs();
 
+	engineConfiguration->etbIo[0].directionPin1 = GPIOD_15; // out_pwm7
+	engineConfiguration->etbIo[0].directionPin2 = GPIOD_14; // out_pwm6
+	engineConfiguration->etbIo[0].controlPin = GPIOD_13; // ETB_EN out_pwm1
+	CONFIG(etb_use_two_wires) = true;
+
 	// Some sensible defaults for other options
 	setOperationMode(engineConfiguration, FOUR_STROKE_CRANK_SENSOR);
 
+	engineConfiguration->vvtCamSensorUseRise = true;
 	engineConfiguration->useOnlyRisingEdgeForTrigger = true;
 	setAlgorithm(LM_SPEED_DENSITY PASS_CONFIG_PARAMETER_SUFFIX);
 
@@ -176,6 +179,8 @@ void setBoardDefaultConfiguration(void) {
 	engineConfiguration->ignitionMode = IM_INDIVIDUAL_COILS; // IM_WASTED_SPARK
 	engineConfiguration->crankingInjectionMode = IM_SIMULTANEOUS;
 	engineConfiguration->injectionMode = IM_SIMULTANEOUS;//IM_BATCH;// IM_SEQUENTIAL;
+
+	hellenWbo();
 }
 
 /**

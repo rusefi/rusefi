@@ -7,12 +7,12 @@
  * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
+#include "pch.h"
+
 #include <string.h>
 #include <math.h>
-#include "efilib.h"
 #include "datalogging.h"
 #include "histogram.h"
-#include "error_handling.h"
 
 const char * boolToString(bool value) {
 	return value ? "Yes" : "No";

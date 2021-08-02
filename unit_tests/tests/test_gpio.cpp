@@ -1,7 +1,4 @@
-#include "efi_gpio.h"
-#include "engine_test_helper.h"
-#include "unit_test_framework.h"
-#include <gtest/gtest.h>
+#include "pch.h"
 
 TEST(gpio, testPinInitNonInverted) {
 	WITH_ENGINE_TEST_HELPER(TEST_ENGINE);

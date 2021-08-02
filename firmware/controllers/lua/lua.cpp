@@ -1,7 +1,7 @@
+#include "pch.h"
 
 #include "rusefi_lua.h"
 #include "thread_controller.h"
-#include "perf_trace.h"
 #include "thread_priority.h"
 
 #if EFI_LUA
@@ -13,10 +13,6 @@
 
 #if EFI_PROD_CODE || EFI_SIMULATOR
 #include "ch.h"
-#include "engine.h"
-#include "tunerstudio_outputs.h"
-
-EXTERN_ENGINE;
 
 #define LUA_HEAP_SIZE 20000
 
@@ -368,6 +364,18 @@ int testLuaReturnsInteger(const char* script) {
 	}
 
 	return lua_tointeger(ls, -1);
+}
+
+void testLuaExecString(const char* script) {
+	auto ls = setupLuaState();
+
+	if (!ls) {
+		throw new std::logic_error("Call to setupLuaState failed, returned null");
+	}
+
+	if (!loadScript(ls, script)) {
+		throw new std::logic_error("Call to loadScript failed");
+	}
 }
 
 #endif // EFI_UNIT_TEST

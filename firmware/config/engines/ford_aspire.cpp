@@ -40,8 +40,6 @@ static const int8_t default_aspire_timing_table[16][16] = {
 };
 #endif
 
-EXTERN_CONFIG;
-
 static void setDefaultAspireMaps(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	setTimingLoadBin(1.2, 4.4 PASS_CONFIG_PARAMETER_SUFFIX);
 	setTimingRpmBin(800, 7000 PASS_CONFIG_PARAMETER_SUFFIX);
@@ -89,6 +87,8 @@ void setFordAspireEngineConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	setOperationMode(engineConfiguration, FOUR_STROKE_CAM_SENSOR);
 	engineConfiguration->useOnlyRisingEdgeForTrigger = true;
 	engineConfiguration->trigger.type = TT_FORD_ASPIRE;
+
+	engineConfiguration->triggerInputDebugPins[0] = GPIOC_15;
 
 	engineConfiguration->injectionPins[4] = GPIO_UNASSIGNED;
 	engineConfiguration->injectionPins[5] = GPIO_UNASSIGNED;

@@ -13,8 +13,6 @@
 #include "custom_engine.h"
 #include "mazda_miata_1_6.h"
 
-EXTERN_CONFIG;
-
 /**
  * 1994, 1995 NA
  * Note that ODB-II car have different wiring!

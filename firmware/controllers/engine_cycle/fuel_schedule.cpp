@@ -4,12 +4,8 @@
  * Handles injection scheduling
  */
 
-#include "global.h"
-#include "engine.h"
-#include "engine_math.h"
+#include "pch.h"
 #include "event_registry.h"
-
-EXTERN_ENGINE;
 
 #if EFI_ENGINE_CONTROL
 
@@ -133,7 +129,7 @@ bool FuelSchedule::addFuelEventsForCylinder(int i  DECLARE_ENGINE_PARAMETER_SUFF
 }
 
 void FuelSchedule::addFuelEvents(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
-	for (cylinders_count_t cylinderIndex = 0; cylinderIndex < CONFIG(specs.cylindersCount); cylinderIndex++) {
+	for (size_t cylinderIndex = 0; cylinderIndex < CONFIG(specs.cylindersCount); cylinderIndex++) {
 		InjectionEvent *ev = &elements[cylinderIndex];
 		ev->ownIndex = cylinderIndex;  // todo: is this assignment needed here? we now initialize in constructor
 		bool result = addFuelEventsForCylinder(cylinderIndex PASS_ENGINE_PARAMETER_SUFFIX);
@@ -153,7 +149,7 @@ void FuelSchedule::onTriggerTooth(size_t toothIndex, int rpm, efitick_t nowNt DE
 		return;
 	}
 
-	for (cylinders_count_t i = 0; i < CONFIG(specs.cylindersCount); i++) {
+	for (size_t i = 0; i < CONFIG(specs.cylindersCount); i++) {
 		elements[i].onTriggerTooth(toothIndex, rpm, nowNt);
 	}
 }

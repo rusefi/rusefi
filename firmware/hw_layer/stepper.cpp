@@ -7,18 +7,13 @@
  * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
-#include "engine.h"
+#include "pch.h"
 
 // todo: EFI_STEPPER macro
 #if EFI_PROD_CODE || EFI_SIMULATOR
 #include "stepper.h"
-#include "pin_repository.h"
-#include "engine_controller.h"
 #include "adc_inputs.h"
-#include "sensor.h"
 #include "thread_priority.h"
-
-EXTERN_ENGINE;
 
 void StepperMotor::saveStepperPos(int pos) {
 	// use backup-power RTC registers to store the data

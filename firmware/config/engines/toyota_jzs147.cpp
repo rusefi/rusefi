@@ -22,8 +22,6 @@
 #include "thermistors.h"
 #include "mazda_miata_vvt.h"
 
-EXTERN_CONFIG;
-
 static void common2jz(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	setFrankensoConfiguration(PASS_CONFIG_PARAMETER_SIGNATURE); // default pinout
 

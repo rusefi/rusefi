@@ -24,8 +24,6 @@
 #include "eficonsole.h"
 #endif /* __cplusplus */
 
-#define efiSetPadMode(msg, brainPin, mode) {}
-
 #define hasOsPanicError() (FALSE)
 
 #define US_TO_NT_MULTIPLIER 100

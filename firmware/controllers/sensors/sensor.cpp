@@ -1,9 +1,8 @@
-#include "global.h"
-#include "sensor.h"
-#include "efilib.h"
+#include "pch.h"
+
 #include "loggingcentral.h"
 
-static const char* s_sensorNames[] = {
+static const char* const s_sensorNames[] = {
 	"Invalid",
 	"CLT",
 	"IAT",

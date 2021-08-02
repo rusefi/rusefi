@@ -201,7 +201,8 @@ typedef enum {
 	HELLEN_154_VAG = ET_HELLEN_154_VAG,
 
 	HELLEN_121_VAG_5_CYL = ET_HELLEN_121_VAG_5_CYL,
-	HELLEN_121_VAG_6_CYL = ET_HELLEN_121_VAG_6_CYL,
+	HELLEN_121_VAG_V6_CYL = ET_HELLEN_121_VAG_V6_CYL,
+	HELLEN_121_VAG_VR6_CYL = ET_HELLEN_121_VAG_VR6_CYL,
 	HELLEN_121_VAG_8_CYL = ET_HELLEN_121_VAG_8_CYL,
 
 	HELLEN_NA94 = ET_HELLEN_NA94,
@@ -218,6 +219,8 @@ typedef enum {
 
 	BMW_M73_MRE = 104,
 	BMW_M73_MRE_SLAVE = 105,
+
+	TEST_ROTARY = ET_TEST_ROTARY,
 
 	Force_4_bytes_size_engine_type = ENUM_32_BITS,
 } engine_type_e;
@@ -394,9 +397,12 @@ typedef enum {
 
 	TT_KAWA_KX450F = TT_TT_KAWA_KX450F,
 
-	TT_NISSAN_VQ = TT_TT_NISSAN_VQ,
+	TT_NISSAN_VQ35 = TT_TT_NISSAN_VQ35,
 
-	TT_VVT_NISSAN_VQ = TT_TT_VVT_NISSAN_VQ,
+	TT_VVT_NISSAN_VQ35 = TT_TT_VVT_NISSAN_VQ35,
+
+	TT_NISSAN_VQ30 = TT_TT_NISSAN_VQ30,
+
 
 	// do not forget to edit "#define trigger_type_e_enum" line in integration/rusefi_config.txt file to propogate new value to rusefi.ini TS project
 	// do not forget to invoke "gen_config.bat" once you make changes to integration/rusefi_config.txt
@@ -404,7 +410,7 @@ typedef enum {
 	//
 	// Another point: once you add a new trigger, run get_trigger_images.bat which would run rusefi_test.exe from unit_tests
 	//
-	TT_UNUSED = 60, // this is used if we want to iterate over all trigger types
+	TT_UNUSED = 61, // this is used if we want to iterate over all trigger types
 
 	Force_4_bytes_size_trigger_type = ENUM_32_BITS,
 } trigger_type_e; // TriggerProcessor.java has this "trigger_type_e" name hard-coded!
@@ -446,7 +452,7 @@ typedef enum  __attribute__ ((__packed__)) {
 	/**
 	 * This mode is useful for troubleshooting and research - events are logged but no effects on phase synchronization
 	 */
-	VVT_INACTIVE = 0,
+	VVT_INACTIVE = VM_VVT_INACTIVE,
 
 	/**
 	 * Single-tooth cam sensor mode where TDC and cam signal happen in opposite 360 degree of 720 degree engine cycle
@@ -499,6 +505,8 @@ typedef enum {
 	LM_REAL_MAF = 4,
 
 	LM_ALPHA_N = 5,
+
+	LM_LUA = 6,
 
 	// This mode is for unit testing only, so that tests don't have to rely on a particular real airmass mode
 	LM_MOCK = 100,
@@ -622,7 +630,7 @@ typedef enum {
 	 * in this mode we use as many coils as we have cylinders
 	 */
 	IM_INDIVIDUAL_COILS = 1,
-	IM_WASTED_SPARK = 2,
+	IM_WASTED_SPARK = IM_IM_WASTED_SPARK,
 
 	/**
 	 * some v12 engines line BMW M70 and M73 run two distributors, one for each bank of cylinders
@@ -650,7 +658,7 @@ typedef enum {
 	 * todo: we might want to implement one additional mode where each pair of injectors is floating twice per engine cycle.
 	 * todo: this could reduce phase offset from injection to stroke but would not work great for large injectors
 	 */
-	IM_BATCH = 2,
+	IM_BATCH = IM_IM_BATCH,
 	/**
 	 * only one injector located in throttle body
 	 */
@@ -942,6 +950,7 @@ typedef enum {
 	CAN_BUS_Haltech = 7,
 	CAN_BUS_MQB = 8,
 	CAN_BUS_NISSAN_VQ = 9,
+	CAN_BUS_GENESIS_COUPE = 10,
 
 	Internal_ForceMyEnumIntSize_can_nbc = ENUM_32_BITS,
 } can_nbc_e;
@@ -1013,6 +1022,7 @@ typedef enum __attribute__ ((__packed__)) {
 	GPPWM_AuxTemp2 = 7,
 	GPPWM_Zero = 8,
 	GPPWM_AccelPedal = 9,
+	GPPWM_Vbatt = 10,
 } gppwm_channel_e;
 
 typedef enum __attribute__ ((__packed__)) {
@@ -1059,3 +1069,8 @@ typedef enum __attribute__ ((__packed__)) {
 	ICM_FixedRailPressure = 1,
 	ICM_SensedRailPressure = 2,
 } injector_compensation_mode_e;
+
+typedef enum __attribute__ ((__packed__)) {
+	INJ_None = 0,
+	INJ_PolynomialAdder = 1,
+} InjectorNonlinearMode;

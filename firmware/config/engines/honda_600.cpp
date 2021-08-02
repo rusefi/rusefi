@@ -34,8 +34,6 @@ static const uint8_t default_custom_timing_table[16][16] = {
 };
 #endif
 
-EXTERN_CONFIG;
-
 static void setDefaultCustomMaps(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	setTimingLoadBin(0,100 PASS_CONFIG_PARAMETER_SUFFIX);
 	setTimingRpmBin(0,7000 PASS_CONFIG_PARAMETER_SUFFIX);

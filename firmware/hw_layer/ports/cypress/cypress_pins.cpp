@@ -33,9 +33,6 @@ static brain_pin_e portMap[16] = {
 	GPIOA_0, GPIOB_0, GPIOC_0, GPIOD_0, GPIOE_0, GPIOF_0, GPIO_INVALID, GPIOG_0, GPIO_INVALID, GPIO_INVALID, GPIOH_0, GPIOI_0, GPIOJ_0, GPIO_INVALID, GPIO_INVALID, GPIOK_0
 };
 
-// todo: move this into PinRepository class
-static const char *PIN_USED[BRAIN_PIN_TOTAL_PINS];
-
 #include "pin_repository.h"
 #include "io_pins.h"
 
@@ -164,20 +161,6 @@ brain_pin_e parseBrainPin(const char *str) {
 
 unsigned int getBrainPinOnchipNum(void) {
 	return BRAIN_PIN_ONCHIP_PINS;
-}
-
-unsigned int getBrainPinTotalNum(void) {
-	return BRAIN_PIN_TOTAL_PINS;
-}
-
-void initBrainUsedPins(void) {
-	memset(PIN_USED, 0, sizeof(PIN_USED));
-}
-
-const char* & getBrainUsedPin(unsigned int idx) {
-	/*if (idx >= getBrainPinTotalNum())
-		return NULL;*/
-	return PIN_USED[idx];
 }
 
 #endif /* EFI_GPIO_HARDWARE */

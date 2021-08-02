@@ -14,8 +14,6 @@
 #include "engine_configuration.h"
 #include "cj125.h"
 
-EXTERN_ENGINE;
-
 /**
  * set engine_type 102
  */

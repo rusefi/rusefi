@@ -23,8 +23,6 @@ int icuFallingCallbackCounter = 0;
 #include "digital_input_icu.h"
 #include "tooth_logger.h"
 
-EXTERN_ENGINE;
-
 static void vvtRisingCallback(void *arg) {
 	efitick_t now = getTimeNowNt();
 	TRIGGER_BAIL_IF_DISABLED

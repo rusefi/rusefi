@@ -86,8 +86,6 @@ static const uint8_t veDodgeNeon2003Table[16][16] = {
 };
 
 
-EXTERN_CONFIG;
-
 void setDodgeNeon1995EngineConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	setDefaultFrankensoConfiguration(PASS_CONFIG_PARAMETER_SIGNATURE);
 

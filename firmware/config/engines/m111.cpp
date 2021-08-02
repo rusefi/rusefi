@@ -8,8 +8,6 @@
 
 #include "m111.h"
 
-EXTERN_CONFIG;
-
 void setM111EngineConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 
 }

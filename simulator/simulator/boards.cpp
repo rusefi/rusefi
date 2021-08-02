@@ -11,8 +11,6 @@
 #include "engine_sniffer.h"
 #include "adc_math.h"
 
-EXTERN_ENGINE;
-
 int getAdcValue(const char *msg, int hwChannel) {
 	return engine->engineState.mockAdcState.getMockAdcValue(hwChannel);
 }

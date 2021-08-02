@@ -14,8 +14,6 @@
 #include "fsio_impl.h"
 #include "engine_configuration.h"
 
-EXTERN_ENGINE;
-
 #ifdef STM32F469xx
 static bool is469 = true;
 #else

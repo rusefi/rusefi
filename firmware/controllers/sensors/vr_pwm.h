@@ -1,0 +1,4 @@
+#pragma once
+
+void initVrPwm(DECLARE_ENGINE_PARAMETER_SIGNATURE);
+void updateVrPwm(DECLARE_ENGINE_PARAMETER_SIGNATURE);

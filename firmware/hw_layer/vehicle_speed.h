@@ -12,9 +12,9 @@
 /**
  * @return vehicle speed, in kilometers per hour
  */
-float getVehicleSpeed(void);
+float getVehicleSpeed(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 void initVehicleSpeed();
 void setMockVehicleSpeed(float speedKPH);
-bool hasVehicleSpeedSensor();
+bool hasVehicleSpeedSensor(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 void stopVSSPins(void);
 void startVSSPins(void);

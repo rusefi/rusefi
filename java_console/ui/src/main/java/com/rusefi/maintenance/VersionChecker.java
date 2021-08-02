@@ -10,6 +10,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URL;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -64,9 +65,9 @@ public class VersionChecker {
         }
 
         final Integer javaVersion = parseNotNull(map.get(JAVA_CONSOLE_TAG), "VC value");
-        System.out.println("Server recommends java_console version " + javaVersion + " or newer");
+        System.out.println(new Date() + ": Server recommends java_console version " + javaVersion + " or newer");
         showUpdateWarningIfNeeded("dev console", javaVersion, CONSOLE_VERSION);
-        System.out.println("Server recommends firmware " + map.get(FIRMWARE_TAG) + " or newer");
+        System.out.println(new Date() + ": Server recommends firmware " + map.get(FIRMWARE_TAG) + " or newer");
 
         String criticalUrl = map.get("critical_url");
         if (criticalUrl != null && !criticalUrl.trim().isEmpty()) {

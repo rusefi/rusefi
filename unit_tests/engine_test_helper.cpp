@@ -5,18 +5,17 @@
  * @author Andrey Belomutskiy, (c) 2012-2014
  */
 
+#include "pch.h"
+
 #include "engine_test_helper.h"
-#include "stddef.h"
 #include "trigger_decoder.h"
 #include "speed_density.h"
 #include "fuel_math.h"
 #include "accel_enrichment.h"
-#include "allsensors.h"
-#include "engine_controller.h"
 #include "advance_map.h"
-#include "sensor.h"
 #include "tooth_logger.h"
 #include "logicdata.h"
+#include "hardware.h"
 
 #if EFI_ENGINE_SNIFFER
 #include "engine_sniffer.h"
@@ -56,6 +55,10 @@ int EngineTestHelper::getWarningCounter() {
 }
 
 EngineTestHelper::EngineTestHelper(engine_type_e engineType, configuration_callback_t configurationCallback, const std::unordered_map<SensorType, float>& sensorValues) {
+	Engine *engine = &this->engine;
+	engine->setConfig(engine, &persistentConfig.engineConfiguration, &persistentConfig);
+	EXPAND_Engine;
+
 	Sensor::setMockValue(SensorType::Clt, 70);
 	Sensor::setMockValue(SensorType::Iat, 30);
 
@@ -67,12 +70,9 @@ EngineTestHelper::EngineTestHelper(engine_type_e engineType, configuration_callb
 
 	memset(&activeConfiguration, 0, sizeof(activeConfiguration));
 
+	INJECT_ENGINE_REFERENCE(&enginePins);
 	enginePins.reset();
 	enginePins.unregisterPins();
-
-	Engine *engine = &this->engine;
-	engine->setConfig(engine, &persistentConfig.engineConfiguration, &persistentConfig);
-	EXPAND_Engine;
 
 	INJECT_ENGINE_REFERENCE(&waveChart);
 	waveChart.init();
@@ -94,7 +94,7 @@ EngineTestHelper::EngineTestHelper(engine_type_e engineType, configuration_callb
 
 	resetConfigurationExt(configurationCallback, engineType PASS_ENGINE_PARAMETER_SUFFIX);
 
-	enginePins.startPins(PASS_ENGINE_PARAMETER_SIGNATURE);
+	enginePins.startPins();
 
 	commonInitEngineController(PASS_ENGINE_PARAMETER_SIGNATURE);
 
@@ -110,9 +110,14 @@ EngineTestHelper::EngineTestHelper(engine_type_e engineType, configuration_callb
 	engine->mockAirmassModel = &mockAirmass;
 
 	memset(mockPinStates, 0, sizeof(mockPinStates));
+
+	initHardware(PASS_ENGINE_PARAMETER_SIGNATURE);
+	rememberCurrentConfiguration(PASS_ENGINE_PARAMETER_SIGNATURE);
 }
 
 EngineTestHelper::~EngineTestHelper() {
+	Engine *engine = &this->engine;
+	EXPAND_Engine;
 	// Write history to file
 	std::stringstream filePath;
 	filePath << "unittest_" << ::testing::UnitTest::GetInstance()->current_test_info()->name() << ".logicdata";
@@ -376,6 +381,16 @@ void EngineTestHelper::setTriggerType(trigger_type_e trigger DECLARE_ENGINE_PARA
 	incrementGlobalConfigurationVersion(PASS_ENGINE_PARAMETER_SIGNATURE);
 	ASSERT_EQ( 1,  isTriggerConfigChanged(PASS_ENGINE_PARAMETER_SIGNATURE)) << "trigger #2";
 	applyTriggerWaveform();
+}
+
+void EngineTestHelper::executeUntil(int timeUs) {
+	scheduling_s *head;
+	while ((head = engine.executor.getHead()) != nullptr) {
+		if (head->momentX > timeUs) {
+			break;
+		}
+		setTimeAndInvokeEventsUs(head->momentX);
+	}
 }
 
 void setupSimpleTestEngineWithMafAndTT_ONE_trigger(EngineTestHelper *eth, injection_mode_e injectionMode) {

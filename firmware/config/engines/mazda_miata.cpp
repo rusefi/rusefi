@@ -75,8 +75,6 @@ static const uint8_t miataNA8_maf_advance_table[16][16] = { {/*0  engineLoad=1.2
 		+29, /*12 5760.0*/+28, /*13 6173.0*/+28, /*14 6586.0*/+27, /*15 7000.0*/+27 } };
 #endif
 
-EXTERN_ENGINE;
-
 static void commonMiataNa(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	engineConfiguration->trigger.type = TT_MAZDA_MIATA_NA;
 	engineConfiguration->engineChartSize = 100;

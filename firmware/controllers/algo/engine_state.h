@@ -47,6 +47,10 @@ public:
 	 * timing advance is angle distance before Top Dead Center (TDP), i.e. "10 degree timing advance" means "happens 10 degrees before TDC"
 	 */
 	angle_t timingAdvance = 0;
+
+	// Angle between firing the main (primary) spark and the secondary (trailing) spark
+	angle_t trailingSparkAngle = 0;
+
 	// fuel-related;
 	float fuelCutoffCorrection = 0;
 	efitick_t coastingFuelCutStartTime = 0;

@@ -4,26 +4,12 @@
  * @date Mar 26, 2021
  */
 
-#include "engine.h"
+#include "pch.h"
 
 #if EFI_PROD_CODE || EFI_SIMULATOR
 #include "tunerstudio.h"
 #include "tunerstudio_io.h"
 #include "connector_uart_dma.h"
-
-EXTERN_ENGINE;
-
-#if (!defined(TS_NO_PRIMARY) && (defined(TS_PRIMARY_UART) || defined(TS_PRIMARY_SERIAL)))
-	#define HAS_PRIMARY true
-#else
-	#define HAS_PRIMARY false
-#endif
-
-#if (!defined(TS_NO_SECONDARY) && (defined(TS_SECONDARY_UART) || defined(TS_SECONDARY_SERIAL)))
-	#define HAS_SECONDARY true
-#else
-	#define HAS_SECONDARY false
-#endif
 
 #if HAS_PRIMARY
 	#ifdef TS_PRIMARY_UART
@@ -40,8 +26,10 @@ EXTERN_ENGINE;
 		PrimaryChannelThread() : TunerstudioThread("Primary TS Channel") { }
 
 		TsChannelBase* setupChannel() {
+#if EFI_PROD_CODE
 			efiSetPadMode("Primary Channel RX", EFI_CONSOLE_RX_BRAIN_PIN, PAL_MODE_ALTERNATE(EFI_CONSOLE_AF));
 			efiSetPadMode("Primary Channel TX", EFI_CONSOLE_TX_BRAIN_PIN, PAL_MODE_ALTERNATE(EFI_CONSOLE_AF));
+#endif /* EFI_PROD_CODE */
 
 			primaryChannel.start(CONFIG(uartConsoleSerialSpeed));
 
@@ -67,8 +55,10 @@ EXTERN_ENGINE;
 		SecondaryChannelThread() : TunerstudioThread("Secondary TS Channel") { }
 
 		TsChannelBase* setupChannel() {
+#if EFI_PROD_CODE
 			efiSetPadMode("Secondary Channel RX", engineConfiguration->binarySerialRxPin, PAL_MODE_ALTERNATE(TS_SERIAL_AF));
 			efiSetPadMode("Secondary Channel TX", engineConfiguration->binarySerialTxPin, PAL_MODE_ALTERNATE(TS_SERIAL_AF));
+#endif /* EFI_PROD_CODE */
 
 			secondaryChannel.start(CONFIG(uartConsoleSerialSpeed));
 

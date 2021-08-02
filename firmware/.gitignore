@@ -4,3 +4,7 @@ gen_*.log
 deliver/
 rusefi_tool.log
 build*
+
+# precompiled headers
+*.h.gch
+*.h.gcno

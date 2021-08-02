@@ -3,8 +3,6 @@
 
 #include "rusefi_hw_enums.h"
 
-EXTERN_ENGINE;
-
 static Lps25 device;
 static Lps25Sensor sensor(device);
 

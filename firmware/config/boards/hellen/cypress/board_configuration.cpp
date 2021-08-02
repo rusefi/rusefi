@@ -15,8 +15,6 @@
 #include "tps.h"
 #include "trigger_input.h"
 
-EXTERN_ENGINE;
-
 void setBoardDefaultConfiguration(void) {
 	setOperationMode(engineConfiguration, FOUR_STROKE_CRANK_SENSOR);
 

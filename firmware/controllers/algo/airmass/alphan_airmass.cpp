@@ -1,5 +1,6 @@
+#include "pch.h"
+
 #include "alphan_airmass.h"
-#include "sensor.h"
 
 AirmassResult AlphaNAirmass::getAirmass(int rpm) {
 	auto tps = Sensor::get(SensorType::Tps1);

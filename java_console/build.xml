@@ -21,7 +21,7 @@
                 destdir="autoupdate_build/classes"
                 classpath="lib/annotations.jar"
         >
-            <src path="autoupdate/src"/>
+            <src path="autoupdate/src/main/java"/>
             <src path="shared_io/src/main/java"/>
         </javac>
     </target>
@@ -46,10 +46,10 @@
         <mkdir dir="build/classes"/>
         <javac debug="yes" destdir="build/classes"
                classpath="${lib_list}">
-            <src path="autotest/src"/>
+            <src path="autotest/src/main/java"/>
             <src path="autoupdate/src/main/java"/>
-            <src path="../java_tools/configuration_definition/src"/>
-            <src path="../java_tools/enum_to_string/src"/>
+            <src path="../java_tools/configuration_definition/src/main/java"/>
+            <src path="../java_tools/enum_to_string/src/main/java"/>
             <src path="../java_tools/proxy_server/src/main/java"/>
             <src path="../java_tools/proxy_server/src/test/java"/>
             <src path="io/src/main/java"/>
@@ -58,16 +58,16 @@
             <src path="models/src/test/java"/>
             <src path="inifile/src/main/java"/>
             <src path="inifile/src/test/java"/>
-            <src path="shared_ui/src"/>
+            <src path="shared_ui/src/main/java"/>
             <src path="shared_io/src/main/java"/>
 <!--            <src path="shared_io/src/test/java"/>-->
             <src path="logging-api/src/main/java"/>
             <src path="ui/src/main/java"/>
             <src path="ui/src/test/java"/>
-            <src path="romraider/src"/>
-            <src path="logging/src"/>
+            <src path="romraider/src/main/java"/>
+            <src path="logging/src/main/java"/>
             <!-- not really used at the moment but let's compile for the sake of Eclipse users -->
-            <src path="tools/src"/>
+            <src path="tools/src/main/java"/>
             <!-- uncomment if you want to compile under java 11
             // see https://github.com/rusefi/rusefi/issues/1526
             please remove the space between '-' and '-add-exports' it should be double-dash
@@ -90,14 +90,14 @@
                     path="build/classes:lib/junit.jar:${lib_list}:lib/commons-logging.jar"/>
             <batchtest todir="build">
 <!--                at the moment we do NOT have any tests matching this pattern - all hardware tests are not inside 'test' folders -->
-                <fileset dir="autotest/src" includes="**/test/**/*Test.java"/>
-                <fileset dir="autoupdate/src" includes="**/test/**/*Test.java"/>
+                <fileset dir="autotest/src/main/java" includes="**/test/**/*Test.java"/>
+                <fileset dir="autoupdate/src/main/java" includes="**/test/**/*Test.java"/>
                 <fileset dir="io/src/test/java" includes="**/test/**/*Test.java"/>
                 <fileset dir="inifile/src/test/java" includes="**/test/**/*Test.java"/>
                 <fileset dir="models/src/test/java" includes="**/test/**/*Test.java"/>
                 <fileset dir="ui/src/test/java" includes="**/*Test.java"/>
-                <fileset dir="romraider/src" includes="**/test/**/*Test.java"/>
-                <fileset dir="logging/src" includes="**/test/**/*Test.java"/>
+                <fileset dir="romraider/src/main/java" includes="**/test/**/*Test.java"/>
+                <fileset dir="logging/src/main/java" includes="**/test/**/*Test.java"/>
             </batchtest>
         </junit>
     </target>
@@ -201,8 +201,8 @@
             <classpath
                     path="build/classes:lib/junit.jar:${lib_list}:lib/commons-logging.jar"/>
             <batchtest todir="${hw_tests}">
-                <fileset dir="autotest/src" includes="**/common/*.java"/>
-                <fileset dir="autotest/src" includes="**/f4discovery/*.java"/>
+                <fileset dir="autotest/src/main/java" includes="**/common/*.java"/>
+                <fileset dir="autotest/src/main/java" includes="**/f4discovery/*.java"/>
             </batchtest>
             <formatter type="plain" usefile="false" /> <!-- to screen -->
         </junit>
@@ -222,8 +222,8 @@
             <classpath
                     path="build/classes:lib/junit.jar:${lib_list}:lib/commons-logging.jar"/>
             <batchtest todir="${hw_tests}">
-                <fileset dir="autotest/src" includes="**/common/*.java"/>
-                <fileset dir="autotest/src" includes="**/proteus/*.java"/>
+                <fileset dir="autotest/src/main/java" includes="**/common/*.java"/>
+                <fileset dir="autotest/src/main/java" includes="**/proteus/*.java"/>
             </batchtest>
             <formatter type="plain" usefile="false" /> <!-- to screen -->
         </junit>

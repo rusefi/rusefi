@@ -5,11 +5,10 @@
  * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
-#include "engine_test_helper.h"
+#include "pch.h"
+
 #include "electronic_throttle_impl.h"
 #include "dc_motor.h"
-#include "engine_controller.h"
-#include "sensor.h"
 #include "idle_thread.h"
 
 #include "mocks.h"

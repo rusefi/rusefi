@@ -1,9 +1,7 @@
-#include "defaults.h"
-#include "engine_configuration.h"
-#include "engine_math.h"
-#include "table_helper.h"
+#include "pch.h"
 
-EXTERN_CONFIG;
+#include "defaults.h"
+#include "table_helper.h"
 
 static void setDefaultMultisparkParameters(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	// 1ms spark + 2ms dwell
@@ -68,6 +66,8 @@ void setDefaultIgnition(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	// TODO: populate some values that aren't all 0?
 	setTimingLoadBin(1.2, 4.4 PASS_CONFIG_PARAMETER_SUFFIX);
 	setTimingRpmBin(800, 7000 PASS_CONFIG_PARAMETER_SUFFIX);
+
+	engineConfiguration->trailingSparkAngle = 10;
 
 	// CLT correction
 	setLinearCurve(engineConfiguration->cltTimingBins, CLT_CURVE_RANGE_FROM, 120, 1);

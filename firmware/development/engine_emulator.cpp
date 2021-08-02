@@ -14,8 +14,6 @@
 #include "poten.h"
 #include "trigger_emulator_algo.h"
 
-EXTERN_ENGINE;
-
 void initEngineEmulator(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	if (hasFirmwareError())
 		return;

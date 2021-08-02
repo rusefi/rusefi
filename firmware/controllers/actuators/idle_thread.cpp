@@ -27,27 +27,19 @@
  *
  */
 
-#include "global.h"
+#include "pch.h"
 
 #if EFI_IDLE_CONTROL
-#include "engine_configuration.h"
-#include "rpm_calculator.h"
 #include "idle_thread.h"
 #include "idle_hardware.h"
-#include "engine_math.h"
 
-#include "engine.h"
 #include "periodic_task.h"
-#include "allsensors.h"
 #include "vehicle_speed.h"
-#include "sensor.h"
 #include "dc_motors.h"
 
 #if EFI_TUNER_STUDIO
 #include "stepper.h"
 #endif
-
-EXTERN_ENGINE;
 
 // todo: move all static vars to engine->engineState.idle?
 
@@ -287,21 +279,17 @@ float IdleController::getOpenLoop(Phase phase, float clt, SensorResult tps, floa
 		return cranking;
 	}
 
-	float running = getRunningOpenLoop(clt, tps);
-
-	if (phase == Phase::CrankToRunTaper) {
-		// Interpolate between cranking and running over a short time
-		// This clamps once you fall off the end, so no explicit check for >1 required
-		return interpolateClamped(0, cranking, 1, running, crankingTaperFraction);
-	}
-
 	// If coasting (and enabled), use the coasting position table instead of normal open loop
 	// TODO: this should be a table of open loop mult vs. RPM, not vs. clt
 	if (CONFIG(useIacTableForCoasting) && phase == Phase::Coasting) {
 		return interpolate2d(clt, CONFIG(iacCoastingBins), CONFIG(iacCoasting));
 	}
 
-	return running;
+	float running = getRunningOpenLoop(clt, tps);
+
+	// Interpolate between cranking and running over a short time
+	// This clamps once you fall off the end, so no explicit check for >1 required
+	return interpolateClamped(0, cranking, 1, running, crankingTaperFraction);
 }
 
 float IdleController::getIdleTimingAdjustment(int rpm) {
@@ -490,7 +478,7 @@ float IdleController::getClosedLoop(IIdleController::Phase phase, float tpsPos, 
 		float crankingTaper = getCrankingTaperFraction();
 
 		// Determine what operation phase we're in - idling or not
-		auto phase = determinePhase(rpm, targetRpm, tps, getVehicleSpeed(), crankingTaper);
+		auto phase = determinePhase(rpm, targetRpm, tps, getVehicleSpeed(PASS_ENGINE_PARAMETER_SIGNATURE), crankingTaper);
 		m_lastPhase = phase;
 
 		engine->engineState.isAutomaticIdle = tps.Valid && engineConfiguration->idleMode == IM_AUTO;
@@ -693,6 +681,23 @@ void startIdleThread(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	/* DISPLAY_ENDIF */
 
 #if ! EFI_UNIT_TEST
+
+	addConsoleAction("idleinfo", showIdleInfo);
+
+	addConsoleActionII("blipidle", blipIdle);
+
+	// split this whole file into manual controller and auto controller? move these commands into the file
+	// which would be dedicated to just auto-controller?
+
+	addConsoleAction("idlebench", startIdleBench);
+#endif /* EFI_UNIT_TEST */
+	applyPidSettings(PASS_ENGINE_PARAMETER_SIGNATURE);
+}
+
+#endif /* EFI_IDLE_CONTROL */
+
+void startPedalPins(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+#if EFI_PROD_CODE
 	// this is neutral/no gear switch input. on Miata it's wired both to clutch pedal and neutral in gearbox
 	// this switch is not used yet
 	if (isBrainPinValid(CONFIG(clutchDownPin))) {
@@ -711,22 +716,15 @@ void startIdleThread(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	}
 
 	if (isBrainPinValid(engineConfiguration->brakePedalPin)) {
-#if EFI_PROD_CODE
 		efiSetPadMode("brake pedal switch", engineConfiguration->brakePedalPin,
 				getInputMode(engineConfiguration->brakePedalPinMode));
-#endif /* EFI_PROD_CODE */
 	}
-
-	addConsoleAction("idleinfo", showIdleInfo);
-
-	addConsoleActionII("blipidle", blipIdle);
-
-	// split this whole file into manual controller and auto controller? move these commands into the file
-	// which would be dedicated to just auto-controller?
-
-	addConsoleAction("idlebench", startIdleBench);
-#endif /* EFI_UNIT_TEST */
-	applyPidSettings(PASS_ENGINE_PARAMETER_SIGNATURE);
+#endif /* EFI_PROD_CODE */
 }
 
-#endif /* EFI_IDLE_CONTROL */
+void stopPedalPins(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+	brain_pin_markUnused(activeConfiguration.clutchUpPin PASS_ENGINE_PARAMETER_SUFFIX);
+	brain_pin_markUnused(activeConfiguration.clutchDownPin PASS_ENGINE_PARAMETER_SUFFIX);
+	brain_pin_markUnused(activeConfiguration.throttlePedalUpPin PASS_ENGINE_PARAMETER_SUFFIX);
+	brain_pin_markUnused(activeConfiguration.brakePedalPin PASS_ENGINE_PARAMETER_SUFFIX);
+}

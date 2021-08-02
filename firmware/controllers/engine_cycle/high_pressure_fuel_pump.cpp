@@ -15,9 +15,6 @@
 
 #if EFI_HPFP
 
-EXTERN_ENGINE
-;
-
 #define LOBE_COUNT 3
 
 class HpfpActor {

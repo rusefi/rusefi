@@ -25,8 +25,6 @@
 #include "fsio_impl.h"
 #include "engine_configuration.h"
 
-EXTERN_ENGINE;
-
 static void setInjectorPins() {
 	engineConfiguration->injectionPins[0] = TLE8888_PIN_1;
 	engineConfiguration->injectionPins[1] = TLE8888_PIN_2;

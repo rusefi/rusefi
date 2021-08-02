@@ -5,9 +5,10 @@
  * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
+#include "pch.h"
+
 #include "stddef.h"
 #include "lcd_menu_tree.h"
-#include "error_handling.h"
 
 MenuTree::MenuTree(MenuItem *root) {
 	this->root = root;

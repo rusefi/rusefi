@@ -1,7 +1,6 @@
-#include "defaults.h"
-#include "engine_configuration.h"
+#include "pch.h"
 
-EXTERN_CONFIG;
+#include "defaults.h"
 
 static void setDefaultAlternatorParameters(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	engineConfiguration->alternatorOffAboveTps = 120;

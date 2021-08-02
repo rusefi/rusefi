@@ -15,8 +15,6 @@
 #include "mazda_miata_nb.h"
 #include "thermistors.h"
 
-EXTERN_CONFIG;
-
 void setMazdaMiataNb1EngineConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	setDefaultFrankensoConfiguration(PASS_CONFIG_PARAMETER_SIGNATURE);
 

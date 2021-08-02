@@ -6,16 +6,14 @@
  * @author Konstantin Smola, (c) 2020
  */
 
-#include "global.h"
+#include "pch.h"
+
 #if EFI_AUX_SERIAL
 #include "serial.h"
 #include "serial_sensor.h"
-#include "engine.h"
 
 #define NUM_INNOVATE_O2_SENSORS 1
 #define AFR_MULTIPLIER 147
-
-EXTERN_ENGINE;
 
 volatile float InnovateLC2AFR = AFR_ERROR;
 

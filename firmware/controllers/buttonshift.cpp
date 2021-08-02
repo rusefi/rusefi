@@ -5,10 +5,10 @@
  * @date Aug 31, 2020
  * @author David Holdeman, (c) 2020
  */
-#include "buttonshift.h"
-#include "engine.h"
 
-EXTERN_ENGINE;
+#include "pch.h"
+
+#include "buttonshift.h"
 
 ButtonShiftController buttonShiftController;
 

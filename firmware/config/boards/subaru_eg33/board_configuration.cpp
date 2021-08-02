@@ -16,8 +16,6 @@
 #include "smart_gpio.h"
 #include "drivers/gpio/mc33810.h"
 
-EXTERN_ENGINE;
-
 void setPinConfigurationOverrides(void) {
 
 }

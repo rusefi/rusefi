@@ -1,7 +1,6 @@
-#include "global.h"
-#include "engine.h"
+#include "pch.h"
+
 #include "biquad.h"
-#include "perf_trace.h"
 #include "thread_controller.h"
 #include "knock_logic.h"
 #include "software_knock.h"
@@ -9,8 +8,6 @@
 #include "peak_detect.h"
 
 #if EFI_SOFTWARE_KNOCK
-
-EXTERN_ENGINE;
 
 #include "knock_config.h"
 #include "ch.hpp"
