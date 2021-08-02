@@ -32,6 +32,6 @@ void initAuxSensors(DECLARE_CONFIG_PARAMETER_SIGNATURE);
 
 // Sensor reconfiguration
 void reconfigureVbatt(DECLARE_CONFIG_PARAMETER_SIGNATURE);
-void reconfigureTps(DECLARE_CONFIG_PARAMETER_SIGNATURE);
+void deinitTps();
 void reconfigureThermistors(DECLARE_CONFIG_PARAMETER_SIGNATURE);
 void reconfigureOilPressure(DECLARE_CONFIG_PARAMETER_SIGNATURE);
