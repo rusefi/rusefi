@@ -91,8 +91,9 @@ TEST(SensorInit, TpsValuesTooClose) {
 	EXPECT_NO_FATAL_ERROR(initTps(PASS_CONFIG_PARAMETER_SIGNATURE));
 	Sensor::resetRegistry();
 
-	// Reconfiguration should also work without error
-	EXPECT_NO_FATAL_ERROR(reconfigureTps(PASS_CONFIG_PARAMETER_SIGNATURE));
+	// de-init and re-init should also work without error
+	EXPECT_NO_FATAL_ERROR(deinitTps());
+	EXPECT_NO_FATAL_ERROR(initTps(PASS_CONFIG_PARAMETER_SIGNATURE));
 }
 
 TEST(SensorInit, Pedal) {
