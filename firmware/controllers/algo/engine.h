@@ -81,6 +81,8 @@ protected:
 	trigger_type_e getType() const override;
 };
 
+#define DEFAULT_MOCK_SPEED -1
+
 class Engine final : public TriggerStateListener {
 public:
 	DECLARE_ENGINE_PTR;
@@ -103,6 +105,12 @@ public:
 	cyclic_buffer<int> triggerErrorDetection;
 
 	GearControllerBase *gearController;
+
+
+	float mockVehicleSpeed = DEFAULT_MOCK_SPEED; // in kilometers per hour
+
+	efitick_t vssLastSignalTimeNt = 0;
+	efitick_t vssDiff = 0;
 
 	efitick_t mostRecentSparkEvent;
 	efitick_t mostRecentTimeBetweenSparkEvents;
