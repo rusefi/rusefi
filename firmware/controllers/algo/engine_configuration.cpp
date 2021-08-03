@@ -965,6 +965,7 @@ void resetConfigurationExt(configuration_callback_t boardCallback, engine_type_e
 	case HELLEN_88_BMW:
 	case HELLEN_134_BMW:
 	case HELLEN_154_VAG:
+	case HELLEN_154_HYUNDAI:
 		break;
 	case HELLEN_NA6:
 	case HELLEN_NA94:
