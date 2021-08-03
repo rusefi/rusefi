@@ -9,6 +9,18 @@
 
 static void initSensorCli();
 
+static void initAfrInput(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+	auto name = "AFR";
+	brain_pin_e pin = getAdcChannelBrainPin(name, engineConfiguration->afr.hwChannel);
+	efiSetPadMode(name, pin, PAL_MODE_INPUT_ANALOG PASS_ENGINE_PARAMETER_SUFFIX);
+}
+
+static void deinitAfrInput(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+	auto name = "AFR";
+	brain_pin_e pin = getAdcChannelBrainPin(name, engineConfiguration->afr.hwChannel);
+	efiSetPadUnused(pin PASS_ENGINE_PARAMETER_SUFFIX);
+}
+
 void initNewSensors(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 #if EFI_CAN_SUPPORT
 	initCanSensors();
@@ -29,6 +41,8 @@ void initNewSensors(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 		initMaf(PASS_CONFIG_PARAMETER_SIGNATURE);
 	#endif
 
+	initAfrInput(PASS_ENGINE_PARAMETER_SIGNATURE);
+
 	// Init CLI functionality for sensors (mocking)
 	initSensorCli();
 }
@@ -36,10 +50,14 @@ void initNewSensors(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 void reconfigureSensors(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	deinitTps();
 
+	deinitAfrInput(PASS_ENGINE_PARAMETER_SIGNATURE);
+
 	reconfigureVbatt(PASS_CONFIG_PARAMETER_SIGNATURE);
 	initTps(PASS_CONFIG_PARAMETER_SIGNATURE);
 	reconfigureOilPressure(PASS_CONFIG_PARAMETER_SIGNATURE);
 	reconfigureThermistors(PASS_CONFIG_PARAMETER_SIGNATURE);
+
+	initAfrInput(PASS_ENGINE_PARAMETER_SIGNATURE);
 }
 
 // Mocking/testing helpers

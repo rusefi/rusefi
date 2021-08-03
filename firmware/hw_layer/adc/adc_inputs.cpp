@@ -469,8 +469,6 @@ static void configureInputs(void) {
 
 	addChannel("AUXF#1", engineConfiguration->auxFastSensor1_adcChannel, ADC_FAST);
 
-	addChannel("AFR", engineConfiguration->afr.hwChannel, ADC_SLOW);
-
 	if (CONFIG(isCJ125Enabled)) {
 		addChannel("CJ125 UR", engineConfiguration->cj125ur, ADC_SLOW);
 		addChannel("CJ125 UA", engineConfiguration->cj125ua, ADC_SLOW);
