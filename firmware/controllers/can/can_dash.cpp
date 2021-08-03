@@ -63,6 +63,9 @@
 #define E90_EBRAKE           0x34F
 #define E90_TIME             0x39E
 
+#define HONDA_SPEED_158 0x158
+#define HONDA_TACH_1DC 0x1DC
+
 static time_msecs_t mph_timer;
 static time_msecs_t mph_ctr;
 
