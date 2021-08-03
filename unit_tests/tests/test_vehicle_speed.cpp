@@ -5,11 +5,13 @@
 extern void vsCallback(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 typedef void(*vss_callback_fp)(DECLARE_ENGINE_PARAMETER_SIGNATURE) ;
 
+static constexpr brain_pin_e anyPin = GPIOA_0;
+static constexpr const char* const vehicleSpeedSensorMessage = "VSS";
+
 /*
  * 	Used to convert expected speed into simulation frequency
  */
-static float speedToSimulationFrequency(float speedCoef, float speed)
-{
+static float speedToSimulationFrequency(float speedCoef, float speed) {
 	return speed/speedCoef;
 }
 
@@ -35,7 +37,6 @@ static void simulatePeriodicSignalForCallback(
 
 }
 
-
 TEST(VehicleSpeedSensor, testValidSpeedDetection) {
 	WITH_ENGINE_TEST_HELPER(TEST_ENGINE);
 
@@ -43,8 +44,8 @@ TEST(VehicleSpeedSensor, testValidSpeedDetection) {
 	constexpr float speedCoef = 0.5f;
 
 	// Init global variables
-	CONFIG(vehicleSpeedSensorInputPin) = GPIOA_0;
-	brain_pin_markUsed(GPIOA_0, "VSS" PASS_ENGINE_PARAMETER_SUFFIX);
+	CONFIG(vehicleSpeedSensorInputPin) = anyPin;
+	brain_pin_markUsed(anyPin, vehicleSpeedSensorMessage PASS_ENGINE_PARAMETER_SUFFIX);
 	engineConfiguration->vehicleSpeedCoef = speedCoef;
 
 	float freq = speedToSimulationFrequency(engineConfiguration->vehicleSpeedCoef, expectedSpeed);
@@ -62,8 +63,8 @@ TEST(VehicleSpeedSensor, testInvalidSpeed) {
 	constexpr float speedCoef = 0.5f;
 
 	// Init global variables
-	CONFIG(vehicleSpeedSensorInputPin) = GPIOA_0;
-	brain_pin_markUsed(GPIOA_0, "VSS" PASS_ENGINE_PARAMETER_SUFFIX);
+	CONFIG(vehicleSpeedSensorInputPin) = anyPin;
+	brain_pin_markUsed(anyPin, vehicleSpeedSensorMessage PASS_ENGINE_PARAMETER_SUFFIX);
 	engineConfiguration->vehicleSpeedCoef = speedCoef;
 
 	simulatePeriodicSignalForCallback(eth, freq, vsCallback PASS_ENGINE_PARAMETER_SUFFIX);
