@@ -40,35 +40,30 @@ static void simulatePeriodicSignalForCallback(
 TEST(VehicleSpeedSensor, testValidSpeedDetection) {
 	WITH_ENGINE_TEST_HELPER(TEST_ENGINE);
 
-	constexpr float expectedSpeed = 15.0f;
-	constexpr float speedCoef = 0.5f;
-
 	// Init global variables
 	CONFIG(vehicleSpeedSensorInputPin) = anyPin;
 	brain_pin_markUsed(anyPin, vehicleSpeedSensorMessage PASS_ENGINE_PARAMETER_SUFFIX);
-	engineConfiguration->vehicleSpeedCoef = speedCoef;
+	engineConfiguration->vehicleSpeedCoef = 0.5f;
 
-	float freq = speedToSimulationFrequency(engineConfiguration->vehicleSpeedCoef, expectedSpeed);
+	// Valid speed 15kmh should be returned
+	float freq = speedToSimulationFrequency(engineConfiguration->vehicleSpeedCoef, 15.0f);
 	simulatePeriodicSignalForCallback(eth, freq, vsCallback PASS_ENGINE_PARAMETER_SUFFIX);
 	float measuredSpeed = getVehicleSpeed(PASS_ENGINE_PARAMETER_SIGNATURE);
-	EXPECT_NEAR(expectedSpeed, measuredSpeed, 0.01);
+	EXPECT_NEAR(15.0f, measuredSpeed, 0.01);
 
 }
 
 TEST(VehicleSpeedSensor, testInvalidSpeed) {
 	WITH_ENGINE_TEST_HELPER(TEST_ENGINE);
 
-	constexpr float freq = 0.5f; // Invalid period > 1sec
-	constexpr float returnedOnInvalidFreq = 0.0f;
-	constexpr float speedCoef = 0.5f;
-
 	// Init global variables
 	CONFIG(vehicleSpeedSensorInputPin) = anyPin;
 	brain_pin_markUsed(anyPin, vehicleSpeedSensorMessage PASS_ENGINE_PARAMETER_SUFFIX);
-	engineConfiguration->vehicleSpeedCoef = speedCoef;
+	engineConfiguration->vehicleSpeedCoef = 0.5f;
 
-	simulatePeriodicSignalForCallback(eth, freq, vsCallback PASS_ENGINE_PARAMETER_SUFFIX);
+	// Invalid (slow) interval, should return 0 speed
+	simulatePeriodicSignalForCallback(eth, 0.5f, vsCallback PASS_ENGINE_PARAMETER_SUFFIX);
 	float measuredSpeed = getVehicleSpeed(PASS_ENGINE_PARAMETER_SIGNATURE);
-	EXPECT_EQ(returnedOnInvalidFreq, measuredSpeed);
+	EXPECT_EQ(0.0f, measuredSpeed);
 }
 
