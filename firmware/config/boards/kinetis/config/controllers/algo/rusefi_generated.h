@@ -422,6 +422,7 @@
 #define ET_HELLEN_121_VAG_VR6_CYL 79
 #define ET_HELLEN_128_MERCEDES 36
 #define ET_HELLEN_134_BMW 75
+#define ET_HELLEN_154_HYUNDAI 82
 #define ET_HELLEN_154_VAG 76
 #define ET_HELLEN_55_BMW 73
 #define ET_HELLEN_88_BMW 74
@@ -1301,8 +1302,8 @@
 #define showHumanReadableWarning_offset 976
 #define showSdCardWarning_offset 76
 #define SIGNATURE_BOARD kin
-#define SIGNATURE_DATE 2021.08.02
-#define SIGNATURE_HASH 3091357543
+#define SIGNATURE_DATE 2021.08.03
+#define SIGNATURE_HASH 196336372
 #define silentTriggerError_offset 1464
 #define slowAdcAlpha_offset 2088
 #define sparkDwellRpmBins_offset 332
@@ -1658,7 +1659,7 @@
 #define ts_show_spi true
 #define ts_show_trigger_comparator true
 #define ts_show_tunerstudio_port true
-#define TS_SIGNATURE "rusEFI 2021.08.02.kin.3091357543"
+#define TS_SIGNATURE "rusEFI 2021.08.03.kin.196336372"
 #define TS_SINGLE_WRITE_COMMAND 'W'
 #define TS_SINGLE_WRITE_COMMAND_char W
 #define TS_TEST_COMMAND 't'
