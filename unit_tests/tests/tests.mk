@@ -86,4 +86,5 @@ TESTS_SRC_CPP = \
 	tests/trigger/test_all_triggers.cpp \
 	tests/test_stepper.cpp \
 	tests/sensor/test_frequency_sensor.cpp \
+	tests/sensor/test_vehicle_speed.cpp \
 

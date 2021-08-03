@@ -1,0 +1,74 @@
+#include "pch.h"
+
+#include "vehicle_speed.h"
+
+extern void vsCallback(DECLARE_ENGINE_PARAMETER_SIGNATURE);
+typedef void(*vss_callback_fp)(DECLARE_ENGINE_PARAMETER_SIGNATURE) ;
+
+static constexpr brain_pin_e anyPin = GPIOA_0;
+static constexpr const char* const vehicleSpeedSensorMessage = "VSS";
+
+/*
+ * 	Used to convert expected speed into simulation frequency
+ */
+static float speedToSimulationFrequency(float speedCoef, float speed) {
+	return speed/speedCoef;
+}
+
+/*
+ * 	Use engine test helper as time source,
+ * 	to simulate periodic signal on input pin with passed callback.
+ */
+static void simulatePeriodicSignalForCallback(
+	EngineTestHelper& eth,
+	float freqHz,
+	vss_callback_fp cb
+	DECLARE_ENGINE_PARAMETER_SUFFIX)
+{
+	constexpr auto periods = 50;
+	auto period = (1 / freqHz);
+
+	for (auto i = 0; i < periods; i++) {
+		cb(PASS_ENGINE_PARAMETER_SIGNATURE);
+		// Time rewind after the callback, due internal vehicle_speed.cpp logic
+		// (last signal time check for stop tracking)
+		eth.moveTimeForwardSec(period);
+	}
+
+}
+
+TEST(VehicleSpeedSensor, testValidSpeedDetection) {
+	// Setup
+	setMockVehicleSpeed(-1);
+	WITH_ENGINE_TEST_HELPER(TEST_ENGINE);
+	CONFIG(vehicleSpeedSensorInputPin) = anyPin;
+	engineConfiguration->vehicleSpeedCoef = 0.5f;
+
+	// Valid speed 15kmh should be returned
+	float freq = speedToSimulationFrequency(engineConfiguration->vehicleSpeedCoef, 15.0f);
+	simulatePeriodicSignalForCallback(eth, freq, vsCallback PASS_ENGINE_PARAMETER_SUFFIX);
+	float measuredSpeed = getVehicleSpeed(PASS_ENGINE_PARAMETER_SIGNATURE);
+	EXPECT_NEAR(15.0f, measuredSpeed, 0.01);
+
+	// Tear down
+	setMockVehicleSpeed(-1);
+}
+
+TEST(VehicleSpeedSensor, testInvalidSpeed) {
+	// Setup
+	setMockVehicleSpeed(-1);
+	WITH_ENGINE_TEST_HELPER(TEST_ENGINE);
+	CONFIG(vehicleSpeedSensorInputPin) = anyPin;
+	engineConfiguration->vehicleSpeedCoef = 0.5f;
+
+	// Invalid (slow) interval, should return 0 speed
+	simulatePeriodicSignalForCallback(eth, 0.5f, vsCallback PASS_ENGINE_PARAMETER_SUFFIX);
+	float measuredSpeed = getVehicleSpeed(PASS_ENGINE_PARAMETER_SIGNATURE);
+
+	// Direct comparasion as invalid speed shoud return true zero
+	EXPECT_EQ(0.0f, measuredSpeed);
+
+	// Tear down
+	setMockVehicleSpeed(-1);
+}
+
