@@ -76,5 +76,3 @@
 #define EFI_FUEL_PUMP TRUE
 
 #define EFI_LUA TRUE
-
-#define EFI_VEHICLE_SPEED TRUE
