@@ -38,9 +38,9 @@ static void simulatePeriodicSignalForCallback(
 }
 
 TEST(VehicleSpeedSensor, testValidSpeedDetection) {
+	// Setup
+	setMockVehicleSpeed(-1);
 	WITH_ENGINE_TEST_HELPER(TEST_ENGINE);
-
-	// Init global variables
 	CONFIG(vehicleSpeedSensorInputPin) = anyPin;
 	engineConfiguration->vehicleSpeedCoef = 0.5f;
 
@@ -50,12 +50,14 @@ TEST(VehicleSpeedSensor, testValidSpeedDetection) {
 	float measuredSpeed = getVehicleSpeed(PASS_ENGINE_PARAMETER_SIGNATURE);
 	EXPECT_NEAR(15.0f, measuredSpeed, 0.01);
 
+	// Tear down
+	setMockVehicleSpeed(-1);
 }
 
 TEST(VehicleSpeedSensor, testInvalidSpeed) {
+	// Setup
+	setMockVehicleSpeed(-1);
 	WITH_ENGINE_TEST_HELPER(TEST_ENGINE);
-
-	// Init global variables
 	CONFIG(vehicleSpeedSensorInputPin) = anyPin;
 	engineConfiguration->vehicleSpeedCoef = 0.5f;
 
@@ -65,5 +67,8 @@ TEST(VehicleSpeedSensor, testInvalidSpeed) {
 
 	// Direct comparasion as invalid speed shoud return true zero
 	EXPECT_EQ(0.0f, measuredSpeed);
+
+	// Tear down
+	setMockVehicleSpeed(-1);
 }
 
