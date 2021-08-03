@@ -42,7 +42,6 @@ TEST(VehicleSpeedSensor, testValidSpeedDetection) {
 
 	// Init global variables
 	CONFIG(vehicleSpeedSensorInputPin) = anyPin;
-	brain_pin_markUsed(anyPin, vehicleSpeedSensorMessage PASS_ENGINE_PARAMETER_SUFFIX);
 	engineConfiguration->vehicleSpeedCoef = 0.5f;
 
 	// Valid speed 15kmh should be returned
@@ -58,12 +57,13 @@ TEST(VehicleSpeedSensor, testInvalidSpeed) {
 
 	// Init global variables
 	CONFIG(vehicleSpeedSensorInputPin) = anyPin;
-	brain_pin_markUsed(anyPin, vehicleSpeedSensorMessage PASS_ENGINE_PARAMETER_SUFFIX);
 	engineConfiguration->vehicleSpeedCoef = 0.5f;
 
 	// Invalid (slow) interval, should return 0 speed
 	simulatePeriodicSignalForCallback(eth, 0.5f, vsCallback PASS_ENGINE_PARAMETER_SUFFIX);
 	float measuredSpeed = getVehicleSpeed(PASS_ENGINE_PARAMETER_SIGNATURE);
+
+	// Direct comparasion as invalid speed shoud return true zero
 	EXPECT_EQ(0.0f, measuredSpeed);
 }
 
