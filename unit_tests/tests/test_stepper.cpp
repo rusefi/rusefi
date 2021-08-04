@@ -1,6 +1,6 @@
+#include "pch.h"
+
 #include "stepper.h"
-#include "engine_test_helper.h"
-#include "mocks.h"
 
 TEST(Stepper, IgnoreSmallChanges) {
 	StepperMotorBase dut;

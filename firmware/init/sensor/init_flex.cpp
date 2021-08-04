@@ -1,6 +1,6 @@
+#include "pch.h"
+
 #include "init.h"
-#include "pin_repository.h"
-#include "engine.h"
 #include "frequency_sensor.h"
 #include "flex_sensor.h"
 

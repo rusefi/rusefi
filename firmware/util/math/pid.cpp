@@ -8,11 +8,10 @@
  * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
-#include "global.h"
+#include "pch.h"
 #include "os_access.h"
 #include "pid.h"
 #include "math.h"
-#include "engine_configuration_generated_structures.h"
 
 Pid::Pid() {
 	initPidClass(NULL);

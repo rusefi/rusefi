@@ -10,7 +10,6 @@
 
 #pragma once
 
-#include "engine.h"
 void initAlternatorCtrl();
 void startAlternatorPin(void);
 void stopAlternatorPin(void);

@@ -7,17 +7,14 @@
  * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
-#include "global.h"
+#include "pch.h"
 #include "rfi_perftest.h"
-#include "engine_math.h"
 #include "fuel_math.h"
 
 #include "eficonsole.h"
 #include "time.h"
-#include "efi_gpio.h"
 
 #include "console_io.h"
-#include "engine.h"
 
 #if EFI_PERF_METRICS
 #include "test.h"

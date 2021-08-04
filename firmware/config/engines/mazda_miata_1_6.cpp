@@ -12,9 +12,10 @@
  * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
+#include "pch.h"
+
 #include "custom_engine.h"
 #include "fsio_impl.h"
-#include "thermistors.h"
 #include "mazda_miata_1_6.h"
 #include "mazda_miata_base_maps.h"
 

@@ -11,10 +11,9 @@
  * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
-#include "global.h"
+#include "pch.h"
+
 #include "ford_1995_inline_6.h"
-#include "engine_math.h"
-#include "allsensors.h"
 
 /**
  * @brief Default values for persistent properties

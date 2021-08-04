@@ -7,13 +7,9 @@
 
 #pragma once
 
-#include "engine.h"
 #include "trigger_central.h"
-#include "rpm_calculator.h"
 #include "main_trigger_callback.h"
 #include "unit_test_framework.h"
-#include "sensor.h"
-#include "mocks.h"
 
 #include <unordered_map>
 

@@ -7,7 +7,6 @@
 
 #include "pch.h"
 
-#include "engine_test_helper.h"
 #include "trigger_decoder.h"
 #include "speed_density.h"
 #include "fuel_math.h"

@@ -1,6 +1,5 @@
 #pragma once
 
-#include "engine.h"
 #include "expected.h"
 
 struct IInjectorModel {

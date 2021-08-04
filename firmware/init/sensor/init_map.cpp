@@ -1,7 +1,6 @@
-#include "map.h"
-#include "adc_inputs.h"
+#include "pch.h"
+
 #include "function_pointer_sensor.h"
-#include "engine.h"
 
 struct GetMapWrapper {
 	DECLARE_ENGINE_PTR;

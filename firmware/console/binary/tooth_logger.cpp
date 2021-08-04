@@ -5,17 +5,11 @@
  * @author Matthew Kennedy
  */
 
+#include "pch.h"
+
 #include "tooth_logger.h"
 
-#include "global.h"
-#include "perf_trace.h"
-
 #if EFI_TOOTH_LOGGER
-
-#include <cstddef>
-#include "efitime.h"
-#include "efilib.h"
-#include "tunerstudio_outputs.h"
 
 typedef struct __attribute__ ((packed)) {
     uint16_t timestamp;

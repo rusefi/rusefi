@@ -4,8 +4,7 @@
  *  Created on: Mar 6, 2018
  */
 
-#include "engine_math.h"
-#include "engine_test_helper.h"
+#include "pch.h"
 
 TEST(cranking, testFasterEngineSpinningUp) {
 	WITH_ENGINE_TEST_HELPER(TEST_ENGINE);

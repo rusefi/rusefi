@@ -5,8 +5,7 @@
  * @author Andrey Belomutskiy, (c) 2012-2021
  */
 
-#include "engine_test_helper.h"
-#include "settings.h"
+#include "pch.h"
 
 extern engine_configuration_s & activeConfiguration;
 

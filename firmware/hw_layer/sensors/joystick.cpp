@@ -13,11 +13,10 @@
  * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
-#include "engine.h"
+#include "pch.h"
 
 #if (HAL_USE_PAL && EFI_JOYSTICK)
 #include "joystick.h"
-#include "pin_repository.h"
 #include "digital_input_exti.h"
 
 static int joyTotal = 0;

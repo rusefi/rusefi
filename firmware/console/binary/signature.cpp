@@ -29,7 +29,7 @@
 #define SIGNATURE_H QUOTE(SIGNATURE_NAME SHORT_BOARD_NAME SIGNATURE_EXT)
 
 #if !EFI_UNIT_TEST
-#include SIGNATURE_H
+#include "signature_proteus_f4.h"
 
 #pragma message ("TS_SIGNATURE: " TS_SIGNATURE)
 

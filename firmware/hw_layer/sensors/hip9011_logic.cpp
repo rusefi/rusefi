@@ -5,10 +5,8 @@
  * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
-#include "global.h"
-#include "engine.h"
-/* getNextFiringCylinderId */
-#include "engine_math.h"
+#include "pch.h"
+
 /* getCylinderKnockBank */
 #include "knock_logic.h"
 #include "hip9011_logic.h"

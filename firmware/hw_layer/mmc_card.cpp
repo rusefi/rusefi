@@ -12,7 +12,7 @@
  * todo: extract some logic into a controller file
  */
 
-#include "global.h"
+#include "pch.h"
 
 #if EFI_FILE_LOGGING
 
@@ -20,10 +20,8 @@
 #include <stdio.h>
 #include <string.h>
 #include "mmc_card.h"
-#include "pin_repository.h"
 #include "ff.h"
 #include "hardware.h"
-#include "engine_configuration.h"
 #include "status_loop.h"
 #include "buffered_writer.h"
 #include "mass_storage_init.h"

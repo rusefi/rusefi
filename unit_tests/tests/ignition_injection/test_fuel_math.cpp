@@ -1,10 +1,7 @@
-#include "engine_test_helper.h"
+#include "pch.h"
 #include "fuel_math.h"
 #include "alphan_airmass.h"
 #include "maf_airmass.h"
-#include "mocks.h"
-
-#include "gtest/gtest.h"
 
 using ::testing::StrictMock;
 using ::testing::FloatNear;
