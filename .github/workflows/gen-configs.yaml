@@ -43,6 +43,7 @@ jobs:
         git config --local user.email "action@github.com"
         git config --local user.name "GitHub build-firmware Action"
         git add firmware/tunerstudio/generated
+        git add firmware/controllers/generated
         # get the original ramdisk images back in order to not overwrite the default placeholder
         git checkout -- firmware/hw_layer/mass_storage/ramdisk_image.h firmware/hw_layer/mass_storage/ramdisk_image_compressed.h
         git status
