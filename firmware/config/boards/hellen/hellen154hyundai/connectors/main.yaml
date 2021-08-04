@@ -1,12 +1,55 @@
 pins:
-  - pin: S2
-    function: Power GND
+  - pin: K1
+    function: GND
     type: gnd
+  - pin: K2
+    function: V ign
+
+  - pin: K3
+    function: GND
+    type: gnd
+  - pin: K4
+    function: V raw
+
+  - pin: K5
+    function: GND
+    type: gnd
+  - pin: K6
+    function: 12v perm
+
+
 
 info:
   image:
     file: main.jpg
   pins:
-    - pin: S2
+    - pin: K1
+      x: 1900
+      y: 660
+    - pin: K2
       x: 2055
       y: 660
+
+    - pin: K3
+      x: 1900
+      y: 458
+    - pin: K4
+      x: 2055
+      y: 458
+
+    - pin: K5
+      x: 1900
+      y: 259
+    - pin: K6
+      x: 2055
+      y: 259
+
+    - pin: K7
+      x: 2251
+      y: 660
+    - pin: K8
+      x: 2340
+      y: 660
+
+
+
