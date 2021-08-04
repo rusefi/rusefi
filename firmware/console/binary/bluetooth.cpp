@@ -17,7 +17,6 @@
 
 #include "tunerstudio_io.h"
 #include "bluetooth.h"
-#include "thread_priority.h"
 
 #if EFI_BLUETOOTH_SETUP
 

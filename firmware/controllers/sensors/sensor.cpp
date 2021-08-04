@@ -1,7 +1,5 @@
 #include "pch.h"
 
-#include "loggingcentral.h"
-
 static const char* const s_sensorNames[] = {
 	"Invalid",
 	"CLT",

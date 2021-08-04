@@ -8,7 +8,8 @@
  * @author andreika (c) 2020
  */
 
-#include "efilib.h"
+#include "pch.h"
+
 #include "signature.h"
 
 // We take these precautions to avoid redefinition of signature in generated .h files

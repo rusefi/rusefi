@@ -21,7 +21,6 @@
 #include "can_msg_tx.h"
 #include "string.h"
 #include "mpu_util.h"
-#include "thread_priority.h"
 
 static int canReadCounter = 0;
 int canWriteOk = 0;
