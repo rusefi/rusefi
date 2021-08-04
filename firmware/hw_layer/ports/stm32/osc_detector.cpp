@@ -14,8 +14,7 @@
  * (PLLM is set to N for an N-MHz HSE crystal).
  */
 
-#include "hal.h"
-#include "efilib.h"
+#include "pch.h"
 
 #ifdef ENABLE_AUTO_DETECT_HSE
 

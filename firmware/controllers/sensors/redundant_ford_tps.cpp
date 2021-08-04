@@ -1,6 +1,6 @@
-#include "redundant_ford_tps.h"
+#include "pch.h"
 
-#include "efilib.h"
+#include "redundant_ford_tps.h"
 
 RedundantFordTps::RedundantFordTps(SensorType outputType, SensorType first, SensorType second)
 	: Sensor(outputType)
