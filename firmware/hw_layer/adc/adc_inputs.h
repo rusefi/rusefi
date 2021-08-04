@@ -62,8 +62,6 @@ void removeChannel(const char *name, adc_channel_e setting);
 
 #define adcToVoltsDivided(adc) (adcToVolts(adc) * engineConfiguration->analogInputDividerCoefficient)
 
-#else
-#define getAdcValue(msg, channel) 0
 #endif /* HAL_USE_ADC */
 
 void printFullAdcReport(void);
