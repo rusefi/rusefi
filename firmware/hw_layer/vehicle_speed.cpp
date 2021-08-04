@@ -8,7 +8,7 @@
 #include "pch.h"
 
 #include "vehicle_speed.h"
-
+#include "pch.h"
 
 #if EFI_VEHICLE_SPEED
 
