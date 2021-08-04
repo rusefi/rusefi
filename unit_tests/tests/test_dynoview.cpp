@@ -27,11 +27,11 @@ TEST(DynoView, VSS_T1) {
     engineConfiguration->vehicleWeight = 900; 
     eth.moveTimeForwardMs(50);
 	
-    setMockVehicleSpeed(18.0);
+    setMockVehicleSpeed(18.0 PASS_ENGINE_PARAMETER_SUFFIX);
     dut.update(ICU);
 
     eth.moveTimeForwardAndInvokeEventsSec(20);
-    setMockVehicleSpeed(126.0);
+    setMockVehicleSpeed(126.0 PASS_ENGINE_PARAMETER_SUFFIX);
     dut.update(ICU);
 
     ASSERT_EQ(1.5, dut.getAcceleration()); 
@@ -47,7 +47,7 @@ TEST(DynoView, algo) {
     engineConfiguration->vehicleWeight = 900; 
 
     //to capture vss
-    setMockVehicleSpeed(35*3.6);
+    setMockVehicleSpeed(35*3.6 PASS_ENGINE_PARAMETER_SUFFIX);
     dut.update(ICU);
 
     dut.setAcceleration(1.5);
@@ -73,12 +73,12 @@ TEST(DynoView, VSS_fast) {
     engine->rpmCalculator.mockRpm = 2200;
     eth.moveTimeForwardMs(50);
 	
-    setMockVehicleSpeed(50.0);
+    setMockVehicleSpeed(50.0 PASS_ENGINE_PARAMETER_SUFFIX);
     dut.update(CAN);
 
     //delay 50ms
     eth.moveTimeForwardMs(50);
-    setMockVehicleSpeed(50.252);
+    setMockVehicleSpeed(50.252 PASS_ENGINE_PARAMETER_SUFFIX);
     dut.update(CAN);
 
     ASSERT_EQ(1259, dut.getEngineForce());
@@ -97,12 +97,12 @@ TEST(DynoView, VSS_Torque) {
     engine->rpmCalculator.mockRpm = 2200;
     eth.moveTimeForwardMs(50);
 	
-    setMockVehicleSpeed(80.0);
+    setMockVehicleSpeed(80.0 PASS_ENGINE_PARAMETER_SUFFIX);
     dut.update(CAN);
 
     //delay 50ms
     eth.moveTimeForwardMs(50);
-    setMockVehicleSpeed(80.504);
+    setMockVehicleSpeed(80.504 PASS_ENGINE_PARAMETER_SUFFIX);
     dut.update(CAN);
 
     ASSERT_EQ(242, dut.getEngineTorque());

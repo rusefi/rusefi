@@ -336,7 +336,7 @@ struct spi_pins
 end_struct
 
 
-#define gppwm_channel_e_enum "TPS", "MAP", "CLT", "IAT", "Fuel Load", "Ignition Load", "Aux Temp 1", "Aux Temp 2", "Zero", "Accel Pedal"
+#define gppwm_channel_e_enum "TPS", "MAP", "CLT", "IAT", "Fuel Load", "Ignition Load", "Aux Temp 1", "Aux Temp 2", "Zero", "Accel Pedal", "Battery Voltage"
 custom gppwm_channel_e 1 bits, U08, @OFFSET@, [0:3], @@gppwm_channel_e_enum@@
 
 struct gppwm_channel
@@ -521,7 +521,8 @@ end_struct
 #define ET_HELLEN_NA94 80
 
 #define ET_HELLEN_121_VAG_8_CYL 81
- 
+#define ET_HELLEN_154_HYUNDAI 82
+
 
 #define ET_PROTEUS_ANALOG_PWM_TEST 106
 #define ET_TEST_ROTARY 107
@@ -661,7 +662,7 @@ float fanOffTemperature;+Cooling fan turn-off temperature threshold, in Celsius;
 
 float vehicleSpeedCoef;+This coefficient translates vehicle speed input frequency (in Hz) into vehicle speed, km/h;"coef", 1, 0, 0.01, 2000, 2
 
-custom can_nbc_e 4 bits, U32, @OFFSET@, [0:4], "None", "FIAT", "VAG", "MAZDA RX8", "BMW", "W202", "BMW E90", "Haltech", "VAG MQB", "Nissan VQ35", "Genesis Coupe", "type 11", "type 12", "INVALID", "INVALID"
+custom can_nbc_e 4 bits, U32, @OFFSET@, [0:4], "None", "FIAT", "VAG", "MAZDA RX8", "BMW", "W202", "BMW E90", "Haltech", "VAG MQB", "Nissan VQ35", "Genesis Coupe", "Honda K", "type 12", "type 13", "type 14", "INVALID"
 can_nbc_e canNbcType;set can_mode X
 
 int canSleepPeriodMs;CANbus thread period, ms;"ms", 1, 0, 0, 1000, 2

@@ -19,10 +19,6 @@
 #include "stm32h7xx_hal_flash.h"
 #endif
 
-#ifndef EFI_PIN_ADC9
-#define EFI_PIN_ADC9 GPIOB_1
-#endif /* EFI_PIN_ADC9 */
-
 #define _2_MHZ 2'000'000
 
 #if EFI_PROD_CODE
@@ -73,7 +69,7 @@ brain_pin_e getAdcChannelBrainPin(const char *msg, adc_channel_e hwChannel) {
 	case EFI_ADC_8:
 		return GPIOB_0;
 	case EFI_ADC_9:
-		return EFI_PIN_ADC9;
+		return GPIOB_1;
 	case EFI_ADC_10:
 		return GPIOC_0;
 	case EFI_ADC_11:
@@ -112,7 +108,7 @@ adc_channel_e getAdcChannel(brain_pin_e pin) {
 		return EFI_ADC_7;
 	case GPIOB_0:
 		return EFI_ADC_8;
-	case EFI_PIN_ADC9:
+	case GPIOB_1:
 		return EFI_ADC_9;
 	case GPIOC_0:
 		return EFI_ADC_10;

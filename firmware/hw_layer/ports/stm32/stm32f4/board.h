@@ -21,16 +21,10 @@
 
 #ifndef BOARD_H
 #define BOARD_H
-
-
-/*
- * Setup for STMicroelectronics STM32F4-Discovery board.
- */
-
 /*
  * Board identifier.
  */
-#define BOARD_NAME                  "STM32F407 for RusEFI"
+#define BOARD_NAME                  "F4 for rusEFI"
 
 #define EFI_USB_AF 10U
 #define EFI_USB_SERIAL_DM GPIOA_11

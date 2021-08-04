@@ -1,6 +1,6 @@
 #include "global.h"
 #include "rusefi_enums.h"
-// was generated automatically by rusEFI tool  from rusefi_enums.h // by enum2string.jar tool on Wed Jul 28 14:47:14 EDT 2021
+// was generated automatically by rusEFI tool  from rusefi_enums.h // by enum2string.jar tool on Tue Aug 03 05:50:08 EDT 2021
 // see also gen_config_and_enums.bat
 
 
@@ -148,6 +148,8 @@ case CAN_BUS_BMW_E90:
   return "CAN_BUS_BMW_E90";
 case CAN_BUS_GENESIS_COUPE:
   return "CAN_BUS_GENESIS_COUPE";
+case CAN_BUS_HONDA_K:
+  return "CAN_BUS_HONDA_K";
 case CAN_BUS_Haltech:
   return "CAN_BUS_Haltech";
 case CAN_BUS_MAZDA_RX8:
@@ -428,6 +430,8 @@ case HELLEN_128_MERCEDES:
   return "HELLEN_128_MERCEDES";
 case HELLEN_134_BMW:
   return "HELLEN_134_BMW";
+case HELLEN_154_HYUNDAI:
+  return "HELLEN_154_HYUNDAI";
 case HELLEN_154_VAG:
   return "HELLEN_154_VAG";
 case HELLEN_55_BMW:
@@ -607,6 +611,8 @@ case GPPWM_Map:
   return "GPPWM_Map";
 case GPPWM_Tps:
   return "GPPWM_Tps";
+case GPPWM_Vbatt:
+  return "GPPWM_Vbatt";
 case GPPWM_Zero:
   return "GPPWM_Zero";
   }

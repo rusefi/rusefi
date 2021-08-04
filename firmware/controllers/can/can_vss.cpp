@@ -1,7 +1,7 @@
 /**
  * @file	can_vss.cpp
  *
- * This file handles incomming vss values from can.
+ * This file handles incoming vss values from can.
  *
  * @date Apr 19, 2020
  * @author Alex Miculescu, (c) 2020

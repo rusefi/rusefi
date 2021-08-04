@@ -1,3 +1,7 @@
+/**
+ * @file Lps25Sensor.cpp
+ */
+
 #include "pch.h"
 
 #include "Lps25Sensor.h"

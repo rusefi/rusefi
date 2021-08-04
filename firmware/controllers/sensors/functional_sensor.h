@@ -23,7 +23,7 @@
  * Register an instance of the new class with an interface
  * that provides and posts raw values so the sensor can update.
  */
-class FunctionalSensor final : public StoredValueSensor {
+class FunctionalSensor : public StoredValueSensor {
 public:
 	FunctionalSensor(SensorType type, efitick_t timeoutPeriod)
 		: StoredValueSensor(type, timeoutPeriod) { }

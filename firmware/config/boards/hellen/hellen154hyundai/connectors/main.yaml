@@ -1,0 +1,12 @@
+pins:
+  - pin: S2
+    function: Power GND
+    type: gnd
+
+info:
+  image:
+    file: main.jpg
+  pins:
+    - pin: S2
+      x: 2055
+      y: 660

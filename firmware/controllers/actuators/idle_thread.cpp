@@ -478,7 +478,7 @@ float IdleController::getClosedLoop(IIdleController::Phase phase, float tpsPos, 
 		float crankingTaper = getCrankingTaperFraction();
 
 		// Determine what operation phase we're in - idling or not
-		auto phase = determinePhase(rpm, targetRpm, tps, getVehicleSpeed(), crankingTaper);
+		auto phase = determinePhase(rpm, targetRpm, tps, getVehicleSpeed(PASS_ENGINE_PARAMETER_SIGNATURE), crankingTaper);
 		m_lastPhase = phase;
 
 		engine->engineState.isAutomaticIdle = tps.Valid && engineConfiguration->idleMode == IM_AUTO;
