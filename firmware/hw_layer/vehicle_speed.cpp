@@ -6,11 +6,10 @@
  */
 
 #include "vehicle_speed.h"
-
+#include "pch.h"
 
 #if EFI_VEHICLE_SPEED
 
-#include "engine.h"
 #include "digital_input_icu.h"
 #include "digital_input_exti.h"
 #include "pin_repository.h"
