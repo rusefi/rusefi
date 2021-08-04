@@ -13,10 +13,10 @@
  */
 
 #include "pch.h"
+
 #include "gpio/gpio_ext.h"
 #include "gpio/drv8860.h"
 #include "os_util.h"
-#include "thread_priority.h"
 
 #if (BOARD_DRV8860_COUNT > 0)
 

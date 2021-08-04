@@ -15,7 +15,6 @@
 #include "serial_sensor.h"
 
 #include "vehicle_speed.h"
-#include "thread_priority.h"
 
 uint8_t ser_buffer[SERBUFFLEN] = {};
 size_t innovate_msg_len = 1;

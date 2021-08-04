@@ -40,7 +40,6 @@
 #include "os_util.h"
 #include "tunerstudio.h"
 #include "connector_uart_dma.h"
-#include "thread_priority.h"
 
 #if EFI_SIMULATOR
 #include "rusEfiFunctionalTest.h"

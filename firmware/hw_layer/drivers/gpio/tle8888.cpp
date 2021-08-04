@@ -39,7 +39,6 @@
 #include "hardware.h"
 #include "gpio/gpio_ext.h"
 #include "os_util.h"
-#include "thread_priority.h"
 
 /*
  * TODO list:

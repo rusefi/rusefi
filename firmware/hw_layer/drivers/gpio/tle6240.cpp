@@ -21,10 +21,10 @@
  */
 
 #include "pch.h"
+
 #include "gpio/gpio_ext.h"
 #include "gpio/tle6240.h"
 #include "os_util.h"
-#include "thread_priority.h"
 
 #if (BOARD_TLE6240_COUNT > 0)
 

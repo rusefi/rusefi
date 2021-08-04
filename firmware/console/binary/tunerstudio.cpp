@@ -83,7 +83,6 @@
 #include "loggingcentral.h"
 #include "status_loop.h"
 #include "mmc_card.h"
-#include "thread_priority.h"
 
 #include "signature.h"
 

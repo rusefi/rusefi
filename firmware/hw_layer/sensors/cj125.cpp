@@ -15,8 +15,8 @@
  */
 
 #include "pch.h"
+
 #include "cj125.h"
-#include "thread_priority.h"
 
 #if EFI_CJ125
 
