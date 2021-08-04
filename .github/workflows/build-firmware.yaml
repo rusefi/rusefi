@@ -39,6 +39,10 @@ jobs:
             folder: hellen/hellen121nissan
             ini-file: rusefi_hellen121nissan.ini
 
+          - build-target: hellen154hyundai
+            folder: hellen/hellen154hyundai
+            ini-file: rusefi_hellen154hyundai.ini
+
           - build-target: cypress
             folder: hellen
             ini-file: rusefi_hellen_cypress.ini
