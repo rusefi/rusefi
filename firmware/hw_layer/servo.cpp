@@ -16,7 +16,6 @@
 
 #if EFI_SERVO || EFI_SIMULATOR
 #include "servo.h"
-#include "thread_priority.h"
 
 // This thread calls scheduleForLater which eventually could trip the main trigger callback
 // if self stimulation (heh) is enabled, which uses a TON of stack space.

@@ -14,7 +14,6 @@
 #include "gpio/gpio_ext.h"
 #include "gpio/mc33810.h"
 #include "os_util.h"
-#include "thread_priority.h"
 
 #if (BOARD_MC33810_COUNT > 0)
 

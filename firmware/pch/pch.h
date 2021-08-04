@@ -11,6 +11,7 @@
 
 #include "efifeatures.h"
 #include "rusefi_generated.h"
+#include "loggingcentral.h"
 #include "engine_ptr.h"
 #include "error_handling.h"
 #include "global.h"
@@ -27,6 +28,7 @@
 #include "interpolation.h"
 #include "perf_trace.h"
 #include "hardware.h"
+#include "thread_priority.h"
 
 #if EFI_UNIT_TEST
 #include <gtest/gtest.h>

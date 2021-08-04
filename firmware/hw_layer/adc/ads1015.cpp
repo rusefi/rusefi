@@ -1,5 +1,6 @@
+#include "pch.h"
+
 #include "ads1015.h"
-#include "efilib.h"
 
 constexpr uint8_t addr = 0x48;
 

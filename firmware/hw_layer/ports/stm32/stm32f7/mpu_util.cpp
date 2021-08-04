@@ -5,7 +5,8 @@
  * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
-#include "hal.h"
+#include "pch.h"
+
 #include "flash_int.h"
 
 static bool isDualBank() {

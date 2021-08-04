@@ -4,7 +4,6 @@
 #include "thread_controller.h"
 #include "knock_logic.h"
 #include "software_knock.h"
-#include "thread_priority.h"
 #include "peak_detect.h"
 
 #if EFI_SOFTWARE_KNOCK

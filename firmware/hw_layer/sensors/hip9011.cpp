@@ -38,7 +38,6 @@
 #include "trigger_central.h"
 #include "hip9011_logic.h"
 #include "hip9011.h"
-#include "thread_priority.h"
 
 #if EFI_PROD_CODE
 #include "mpu_util.h"

@@ -29,7 +29,6 @@
 #ifdef __cplusplus
 #include "engine_ptr.h"
 #include "datalogging.h"
-#include "loggingcentral.h"
 #include "cli_registry.h"
 #endif /* __cplusplus */
 
