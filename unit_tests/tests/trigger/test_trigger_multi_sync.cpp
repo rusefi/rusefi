@@ -5,7 +5,7 @@
  * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
-#include "engine_test_helper.h"
+#include "pch.h"
 #include "trigger_mazda.h"
 
 TEST(trigger, miataNA) {

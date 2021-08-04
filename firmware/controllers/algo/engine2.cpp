@@ -8,7 +8,7 @@
 // todo: move this code to more proper locations
 
 #include "pch.h"
-#include "thermistors.h"
+
 #include "speed_density.h"
 #include "fuel_math.h"
 #include "advance_map.h"

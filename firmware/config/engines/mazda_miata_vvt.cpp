@@ -46,11 +46,11 @@
  * idle solenoid                  PC13 on middle harness plug. diodes seem to be in the harness
  */
 
+#include "pch.h"
+
 #include "mazda_miata_vvt.h"
 #include "custom_engine.h"
 #include "fsio_impl.h"
-#include "ego.h"
-#include "thermistors.h"
 #include "mazda_miata_base_maps.h"
 #include "hip9011_logic.h"
 

@@ -1,9 +1,7 @@
 /**
  * @file test_all_triggers.cpp
  */
-#include "engine.h"
-
-#include <gtest/gtest.h>
+#include "pch.h"
 
 // uncomment to test only newest trigger
 //#define TEST_FROM_TRIGGER_ID ((int)TT_UNUSED - 1)

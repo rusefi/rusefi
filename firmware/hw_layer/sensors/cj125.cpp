@@ -20,8 +20,6 @@
 
 #if EFI_CJ125
 
-#include "adc_inputs.h"
-
 #if HAL_USE_SPI
 #include "mpu_util.h"
 #endif /* HAL_USE_SPI */

@@ -1,14 +1,12 @@
-#include "global.h"
+#include "pch.h"
 #include "proxy_sensor.h"
 #include "functional_sensor.h"
 #include "redundant_sensor.h"
 #include "redundant_ford_tps.h"
-#include "rpm_calculator.h"
 #include "Lps25Sensor.h"
 #include "linear_func.h"
 #include "resistance_func.h"
 #include "thermistor_func.h"
-#include "efilib.h"
 #include "loggingcentral.h"
 
 void ProxySensor::showInfo(const char* sensorName) const {

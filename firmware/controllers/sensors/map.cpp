@@ -7,8 +7,6 @@
  */
 #include "pch.h"
 
-#include "adc_inputs.h"
-
 #if EFI_PROD_CODE
 #include "digital_input_icu.h"
 #include "digital_input_exti.h"

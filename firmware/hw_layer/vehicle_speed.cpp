@@ -5,6 +5,8 @@
  * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
+#include "pch.h"
+
 #include "vehicle_speed.h"
 #include "pch.h"
 
@@ -12,7 +14,6 @@
 
 #include "digital_input_icu.h"
 #include "digital_input_exti.h"
-#include "pin_repository.h"
 #include "can_vss.h"
 
 /**

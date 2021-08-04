@@ -28,7 +28,6 @@
 #include "status_loop.h"
 #include "hip9011_logic.h"
 
-#include "adc_inputs.h"
 #if EFI_LOGIC_ANALYZER
 #include "logic_analyzer.h"
 #endif /* EFI_LOGIC_ANALYZER */

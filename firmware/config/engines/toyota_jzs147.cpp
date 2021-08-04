@@ -17,9 +17,10 @@
  * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
+#include "pch.h"
+
 #include "toyota_jzs147.h"
 #include "custom_engine.h"
-#include "thermistors.h"
 #include "mazda_miata_vvt.h"
 
 static void common2jz(DECLARE_CONFIG_PARAMETER_SIGNATURE) {

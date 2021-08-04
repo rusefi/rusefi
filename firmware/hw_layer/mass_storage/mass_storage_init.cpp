@@ -1,7 +1,8 @@
+#include "pch.h"
+
 #include "mass_storage_init.h"
 #include "mass_storage_device.h"
 #include "null_device.h"
-#include "tunerstudio_outputs.h"
 
 #if HAL_USE_USB_MSD
 

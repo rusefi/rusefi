@@ -5,7 +5,7 @@
  * @author Andrey Belomutskiy, (c) 2012-2021
  */
 
-#include "engine_test_helper.h"
+#include "pch.h"
 #include "logicdata_csv_reader.h"
 
 static char* trim(char *str) {

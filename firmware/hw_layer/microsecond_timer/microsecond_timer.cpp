@@ -11,14 +11,14 @@
  * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
-#include "global.h"
+#include "pch.h"
 #include "microsecond_timer.h"
 #include "port_microsecond_timer.h"
 
 #if EFI_PROD_CODE
 
 #include "periodic_task.h"
-#include "engine.h"
+
 // Just in case we have a mechanism to validate that hardware timer is clocked right and all the
 // conversions between wall clock and hardware frequencies are done right
 // delay in milliseconds

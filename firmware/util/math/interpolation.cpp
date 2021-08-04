@@ -10,8 +10,7 @@
  * @author Dmitry Sidin, (c) 2015
  */
 
-#include "global.h"
-
+#include "pch.h"
 
 #include "interpolation.h"
 

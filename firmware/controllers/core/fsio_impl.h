@@ -10,8 +10,6 @@
 
 #include "fsio_core.h"
 #include "expected.h"
-#include "engine.h"
-#include "table_helper.h"
 #include "system_fsio.h"
 
 // see useFSIO4ForSeriousEngineWarning

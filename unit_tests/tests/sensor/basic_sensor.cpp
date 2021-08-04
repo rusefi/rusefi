@@ -1,8 +1,7 @@
+#include "pch.h"
+
 #include "mock/mock_sensor.h"
 #include "stored_value_sensor.h"
-#include "unit_test_framework.h"
-
-#include <gtest/gtest.h>
 
 class SensorBasic : public ::testing::Test {
 protected:

@@ -7,8 +7,6 @@
 
 #pragma once
 
-#include "engine.h"
-
 void configureAccelerometerPins(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 
 void initAccelerometer(DECLARE_ENGINE_PARAMETER_SIGNATURE);

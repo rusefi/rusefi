@@ -27,11 +27,9 @@
  * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
-#include "global.h"
-#include "thermistors.h"
+#include "pch.h"
+
 #include "honda_accord.h"
-#include "engine_math.h"
-#include "settings.h"
 #include "advance_map.h"
 #include "custom_engine.h"
 

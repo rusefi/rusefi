@@ -5,8 +5,7 @@
  * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
-#include "global.h"
-#include "efitime.h"
+#include "pch.h"
 
 efitick_t getTimeNowNt(void) {
 	return getTimeNowUs() * US_TO_NT_MULTIPLIER;

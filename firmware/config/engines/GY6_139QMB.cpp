@@ -11,11 +11,9 @@
  * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
-#include "global.h"
+#include "pch.h"
+
 #include "GY6_139QMB.h"
-#include "engine_math.h"
-#include "engine_configuration.h"
-#include "allsensors.h"
 #include "advance_map.h"
 
 static void setDefault139qmbMaps(DECLARE_CONFIG_PARAMETER_SIGNATURE) {

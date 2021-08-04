@@ -5,8 +5,8 @@
  * @author Andrey Belomutskiy, (c) 2012-2021
  */
 
+#include "pch.h"
 
-#include "engine_test_helper.h"
 #include "logicdata_csv_reader.h"
 
 TEST(crankingVW, vwRealCrankingFromFile) {

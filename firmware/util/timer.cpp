@@ -1,5 +1,6 @@
+#include "pch.h"
+
 #include "timer.h"
-#include "global.h"
 
 void Timer::reset() {
 	m_lastReset = getTimeNowNt();

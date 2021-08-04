@@ -7,13 +7,11 @@
  * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
-#include "global.h"
+#include "pch.h"
+
 #include "mazda_626.h"
-#include "engine_math.h"
 #include "custom_engine.h"
-#include "allsensors.h"
 #include "fsio_impl.h"
-#include "settings.h"
 
 void setMazda626EngineConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	setFrankensoConfiguration(PASS_CONFIG_PARAMETER_SIGNATURE);

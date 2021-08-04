@@ -1,7 +1,7 @@
+#include "pch.h"
+
 #include "init.h"
-#include "adc_inputs.h"
 #include "adc_subscription.h"
-#include "engine_configuration.h"
 #include "functional_sensor.h"
 #include "table_func.h"
 

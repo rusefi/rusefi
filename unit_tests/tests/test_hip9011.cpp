@@ -4,9 +4,10 @@
  *  Created on: Mar 22, 2018
  */
 
-#include "unit_test_framework.h"
+#include "pch.h"
 #include "hip9011_logic.h"
 #include "test_parameters.h"
+
 using ::testing::_;
 
 TEST(hip9011, lookup) {

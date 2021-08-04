@@ -7,6 +7,8 @@
  * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
+#include "pch.h"
+
 #include "lada_kalina.h"
 #include "custom_engine.h"
 #include "fsio_impl.h"

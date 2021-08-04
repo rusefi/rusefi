@@ -12,8 +12,9 @@
  * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
+#include "pch.h"
+
 #include "mazda_miata_nb.h"
-#include "thermistors.h"
 
 void setMazdaMiataNb1EngineConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	setDefaultFrankensoConfiguration(PASS_CONFIG_PARAMETER_SIGNATURE);

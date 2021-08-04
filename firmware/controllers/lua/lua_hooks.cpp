@@ -4,7 +4,6 @@
 #include "lua_hooks.h"
 
 #include "loggingcentral.h"
-#include "adc_inputs.h"
 #include "fuel_math.h"
 #include "airmass.h"
 #include "lua_airmass.h"

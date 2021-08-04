@@ -13,7 +13,7 @@
  * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
-#include "global.h"
+#include "pch.h"
 
 #if EFI_FSIO
 #include "os_access.h"

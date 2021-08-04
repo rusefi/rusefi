@@ -5,13 +5,10 @@
  *      Author: Ola
  */
 
-#include "me7pnp.h"
+#include "pch.h"
 
-#include "engine.h"
-#include "engine_math.h"
-#include "allsensors.h"
+#include "me7pnp.h"
 #include "fsio_impl.h"
-#include "engine_configuration.h"
 #include "cj125.h"
 
 /**

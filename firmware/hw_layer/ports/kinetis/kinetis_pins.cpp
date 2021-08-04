@@ -7,9 +7,7 @@
  * @author andreika <prometheus.pcb@gmail.com>
  */
 
-#include "global.h"
-#include "engine.h"
-#include "efi_gpio.h"
+#include "pch.h"
 
 #if EFI_GPIO_HARDWARE
 
@@ -22,9 +20,6 @@ static ioportid_t ports[] = {GPIOA,
 		GPIOD,
 		GPIOE
 };
-
-#include "pin_repository.h"
-#include "io_pins.h"
 
 /**
  * @deprecated - use hwPortname() instead

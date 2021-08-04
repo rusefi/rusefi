@@ -5,6 +5,7 @@
  * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
+#include "pch.h"
 #include "global_execution_queue.h"
 
 bool_t debugSignalExecutor = false;

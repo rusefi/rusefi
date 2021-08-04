@@ -21,7 +21,8 @@
  * If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "globalaccess.h"
+#include "pch.h"
+
 #include "os_access.h"
 #include "eficonsole.h"
 #include "console_io.h"

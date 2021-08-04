@@ -7,12 +7,8 @@
  * @author andreika, (c) 2017
  */
 
-#include "global.h"
-#include "engine.h"
-#include "engine_math.h"
-#include "allsensors.h"
+#include "pch.h"
 #include "fsio_impl.h"
-#include "engine_configuration.h"
 
 #ifdef STM32F469xx
 static bool is469 = true;

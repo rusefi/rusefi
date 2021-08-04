@@ -7,8 +7,6 @@
 
 #pragma once
 
-#include "engine.h"
-
 class PwmConfig;
 class MultiChannelStateSequence;
 
