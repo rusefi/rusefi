@@ -499,6 +499,8 @@ void startHardware(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	startJoystickPins();
 #endif /* HAL_USE_PAL && EFI_JOYSTICK */
 
+	validateTriggerInputs(PASS_ENGINE_PARAMETER_SIGNATURE);
+
 	startTriggerDebugPins(PASS_ENGINE_PARAMETER_SIGNATURE);
 
 	startPedalPins(PASS_ENGINE_PARAMETER_SIGNATURE);

@@ -90,6 +90,8 @@ void hwHandleShaftSignal(int signalIndex, bool isRising, efitick_t timestamp DEC
 void handleShaftSignal(int signalIndex, bool isRising, efitick_t timestamp DECLARE_ENGINE_PARAMETER_SUFFIX);
 void hwHandleVvtCamSignal(trigger_value_e front, efitick_t timestamp, int index DECLARE_ENGINE_PARAMETER_SUFFIX);
 
+void validateTriggerInputs(DECLARE_ENGINE_PARAMETER_SIGNATURE);
+
 void initTriggerCentral();
 
 int isSignalDecoderError(void);

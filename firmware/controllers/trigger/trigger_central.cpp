@@ -798,6 +798,20 @@ bool isTriggerConfigChanged(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	return engine->isTriggerConfigChanged;
 }
 
+void validateTriggerInputs(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+	if (CONFIG(triggerInputPins[0]) == GPIO_UNASSIGNED && CONFIG(triggerInputPins[1]) != GPIO_UNASSIGNED) {
+		firmwareError(OBD_PCM_Processor_Fault, "First trigger channel is missing");
+	}
+
+	if (CONFIG(camInputs[0]) == GPIO_UNASSIGNED && CONFIG(camInputs[1]) != GPIO_UNASSIGNED) {
+		firmwareError(OBD_PCM_Processor_Fault, "If you only have cam on exhaust please pretend that it's on intake in configuration");
+	}
+
+	if (CONFIG(camInputs[0]) == GPIO_UNASSIGNED && CONFIG(camInputs[2]) != GPIO_UNASSIGNED) {
+		firmwareError(OBD_PCM_Processor_Fault, "First bank cam input is required if second bank specified");
+	}
+}
+
 void initTriggerCentral() {
 	strcpy((char*) shaft_signal_msg_index, "x_");
 
