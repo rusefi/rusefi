@@ -29,8 +29,6 @@
 #include "mpu_util.h"
 #include "periodic_thread_controller.h"
 
-#include "thread_priority.h"
-
 /* Depth of the conversion buffer, channels are sampled X times each.*/
 #ifndef ADC_BUF_DEPTH_FAST
 #define ADC_BUF_DEPTH_FAST      4

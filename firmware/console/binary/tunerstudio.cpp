@@ -80,7 +80,6 @@
 #include <string.h>
 #include "bench_test.h"
 #include "svnversion.h"
-#include "loggingcentral.h"
 #include "status_loop.h"
 #include "mmc_card.h"
 

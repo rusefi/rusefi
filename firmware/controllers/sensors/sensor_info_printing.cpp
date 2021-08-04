@@ -7,7 +7,6 @@
 #include "linear_func.h"
 #include "resistance_func.h"
 #include "thermistor_func.h"
-#include "loggingcentral.h"
 
 void ProxySensor::showInfo(const char* sensorName) const {
 	efiPrintf("Sensor \"%s\" proxied from sensor \"%s\"", sensorName, getSensorName(m_proxiedSensor));
