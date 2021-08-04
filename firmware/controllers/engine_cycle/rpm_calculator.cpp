@@ -296,8 +296,6 @@ void rpmShaftPositionCallback(trigger_event_e ckpSignalType,
 	if (rpmState->isSpinningUp()) {
 		float instantRpm = engine->triggerCentral.triggerState.getInstantRpm();
 
-		// validate instant RPM - we shouldn't skip the cranking state
-		instantRpm = minF(instantRpm, CONFIG(cranking.rpm) - 1);
 		rpmState->assignRpmValue(instantRpm);
 #if 0
 		efiPrintf("** RPM: idx=%d sig=%d iRPM=%d", index, ckpSignalType, instantRpm);
