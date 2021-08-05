@@ -58,6 +58,27 @@ pins:
     function: Injector 1
     type: inj
 
+  - pin: K26
+    id: GPIOG_8
+    class: outputs
+    ts_name: INJ_2 k26
+    function: Injector 2
+    type: inj
+
+  - pin: K27
+    id: GPIOD_11
+    class: outputs
+    ts_name: INJ_3 k27
+    function: Injector 3
+    type: inj
+
+  - pin: K28
+    id: GPIOD_10
+    class: outputs
+    ts_name: INJ_4 k28
+    function: Injector 4
+    type: inj
+
   - pin: K30
     function: Sensor 5v
 
