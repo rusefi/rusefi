@@ -39,7 +39,9 @@
  * input-floating is the default pin mode. input-output boards should provision appropriate pull-ups/pull-downs.
  */
 #define EFI_PIN_MODE_DEFAULT PIN_MODE_INPUT
+#ifndef EFI_DR_DEFAULT
 #define EFI_DR_DEFAULT PIN_PUPDR_FLOATING
+#endif
 
 // See https://github.com/rusefi/rusefi/issues/397
 #define DEFAULT_GPIO_SPEED PIN_OSPEED_HIGH
