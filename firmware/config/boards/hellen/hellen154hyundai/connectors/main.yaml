@@ -17,6 +17,79 @@ pins:
   - pin: K6
     function: 12v perm
 
+  - pin: K10
+    function: presure sensor
+
+  - pin: K11
+    function: Analog Ground
+
+  - pin: K12
+    ts_name: KNOCK - k12
+    function: Knock sens. in
+
+  - pin: K13
+    function: Analog Ground
+
+  - pin: K14
+    function: Analog Ground
+
+  - pin: K15
+    function: Cam Sensor
+    ts_name: Cam - k15
+
+  - pin: K16
+    function: Analog Ground
+
+
+  - pin: K17
+    function: Crank Sensor
+    # IN_CRANK AIN24 A24
+    id: [GPIOB_1]
+    class: [event_inputs]
+    ts_name: Crank - k17
+
+  - pin: K22
+    ts_name: Wastegate Position - 22
+
+  - pin: K25
+    id: GPIOG_7
+    class: outputs
+    ts_name: INJ_1 k25
+    function: Injector 1
+    type: inj
+
+  - pin: K30
+    function: Sensor 5v
+
+  - pin: K34
+    function: Analog Ground
+
+  - pin: K37
+    function: Analog Ground
+
+  - pin: K39
+    function: Analog Ground
+
+  - pin: K44
+    function: Analog Ground
+
+  - pin: K57
+    function: Analog Ground
+
+  - pin: K59
+    function: Analog Ground
+
+  - pin: K61
+    function: Analog Ground
+
+  - pin: K79
+    function: Analog Ground
+
+  - pin: A2
+    function: Shield Ground
+
+  - pin: A15
+    function: Ground
 
 
 info:
@@ -50,6 +123,135 @@ info:
     - pin: K8
       x: 2340
       y: 660
+    - pin: K9
+      x: 2412
+      y: 660
+    - pin: K10
+      x: 2492
+      y: 660
+    - pin: K11
+      x: 2566
+      y: 660
+    - pin: K12
+      x: 2633
+      y: 660
+    - pin: K13
+      x: 2714
+      y: 660
+    - pin: K14
+      x: 2791
+      y: 660
+    - pin: K15
+      x: 2865
+      y: 660
+    - pin: K16
+      x: 2940
+      y: 660
+    - pin: K17
+      x: 3011
+      y: 660
+    - pin: K18
+      x: 3086
+      y: 660
+    - pin: K19
+      x: 3161
+      y: 660
+    - pin: K20
+      x: 3235
+      y: 660
+    - pin: K21
+      x: 3314
+      y: 660
+    - pin: K22
+      x: 3386
+      y: 660
+    - pin: K23
+      x: 3458
+      y: 660
+    - pin: K24
+      x: 3530
+      y: 660
+    - pin: K25
+      x: 3605
+      y: 660
+    - pin: K26
+      x: 3681
+      y: 660
+    - pin: K27
+      x: 3754
+      y: 660
+    - pin: K28
+      x: 3827
+      y: 660
 
+
+
+
+    - pin: K29
+      x: 2251
+      y: 571
+    - pin: K30
+      x: 2340
+      y: 571
+    - pin: K31
+      x: 2412
+      y: 571
+    - pin: K32
+      x: 2492
+      y: 571
+    - pin: K33
+      x: 2566
+      y: 571
+    - pin: K34
+      x: 2633
+      y: 571
+    - pin: K35
+      x: 2714
+      y: 571
+    - pin: K36
+      x: 2791
+      y: 571
+    - pin: K37
+      x: 2865
+      y: 571
+    - pin: K38
+      x: 2940
+      y: 571
+    - pin: K39
+      x: 3011
+      y: 571
+    - pin: K40
+      x: 3086
+      y: 571
+    - pin: K41
+      x: 3161
+      y: 571
+    - pin: K42
+      x: 3235
+      y: 571
+    - pin: K43
+      x: 3314
+      y: 571
+    - pin: K44
+      x: 3386
+      y: 571
+    - pin: K45
+      x: 3458
+      y: 571
+    - pin: K46
+      x: 3530
+      y: 571
+    - pin: K47
+      x: 3605
+      y: 571
+    - pin: K48
+      x: 3681
+      y: 571
+    - pin: K49
+      x: 3754
+      y: 571
+    - pin: K50
+      x: 3827
+      y: 571
 
 
