@@ -10,13 +10,16 @@ import com.rusefi.maintenance.VersionChecker;
 import com.rusefi.ui.storage.Node;
 import com.rusefi.ui.util.FrameHelper;
 import com.rusefi.ui.util.UiUtils;
+import org.jetbrains.annotations.NotNull;
 
+import java.util.Objects;
 import java.util.TimeZone;
 
 import static com.devexperts.logging.Logging.getLogging;
 import static com.rusefi.ui.storage.PersistentConfiguration.getConfig;
 
 public class MainFrame {
+    @NotNull
     private final ConsoleUI consoleUI;
     private final TabbedPanel tabbedPane;
     /**
@@ -46,7 +49,7 @@ public class MainFrame {
     public ConnectionFailedListener listener;
 
     public MainFrame(ConsoleUI consoleUI, TabbedPanel tabbedPane) {
-        this.consoleUI = consoleUI;
+        this.consoleUI = Objects.requireNonNull(consoleUI);
 
         this.tabbedPane = tabbedPane;
         listener = () -> {
@@ -102,7 +105,9 @@ public class MainFrame {
 
     private void setTitle() {
         String disconnected = ConnectionStatusLogic.INSTANCE.isConnected() ? "" : "DISCONNECTED ";
-        frame.getFrame().setTitle(disconnected + "Console " + Launcher.CONSOLE_VERSION + "; firmware=" + Launcher.firmwareVersion.get() + "@" + consoleUI.port);
+        BinaryProtocol bp = consoleUI.uiContext.getLinkManager().getCurrentStreamState();
+        String signature = bp == null ? "not loaded" : bp.signature;
+        frame.getFrame().setTitle(disconnected + "Console " + Launcher.CONSOLE_VERSION + "; firmware=" + Launcher.firmwareVersion.get() + "@" + consoleUI.port + " " + signature);
     }
 
     private void windowClosedHandler() {

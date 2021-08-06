@@ -13,8 +13,9 @@ import static com.rusefi.shared.FileUtil.RUSEFI_SETTINGS_FOLDER;
 public class SignatureHelper {
     private final static String LOCAL_INI = RUSEFI_SETTINGS_FOLDER + File.separator + "ini_database";
 
-    public static final String PREFIX = "rusEFI ";
-    public static final char SLASH = '/';
+    // todo: find a way to reference Fields.PROTOCOL_SIGNATURE_PREFIX
+    private static final String PREFIX = "rusEFI ";
+    private static final char SLASH = '/';
 
     public static Pair<String, String> getUrl(String signature) {
         if (signature == null || !signature.startsWith(PREFIX))
