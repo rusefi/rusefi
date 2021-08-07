@@ -30,6 +30,9 @@ All notable user-facing or behavior-altering changes will be documented in this 
 ### Added
  - RUSEFI MSD now contains bundle-specific URL #2848
 
+## Removed
+ -  TS file read feature #3004
+
 ## July 2021 Release "Ice Cream Day"
 
 ### Breaking Changes
