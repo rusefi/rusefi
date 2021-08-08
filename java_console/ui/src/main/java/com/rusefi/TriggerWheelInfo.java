@@ -104,6 +104,8 @@ class TriggerWheelInfo {
                 id == Fields.TT_TT_60_2_VW ||
                 id == Fields.TT_TT_SKODA_FAVORIT ||
                 id == Fields.TT_TT_KAWA_KX450F ||
+                id == Fields.TT_TT_NISSAN_VQ35 ||
+                id == Fields.TT_TT_NISSAN_QR25 ||
                 id == Fields.TT_TT_GM_7X;
     }
 
