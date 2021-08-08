@@ -1,6 +1,6 @@
 #include "global.h"
 #include "rusefi_enums.h"
-// was generated automatically by rusEFI tool  from rusefi_enums.h // by enum2string.jar tool on Tue Aug 03 05:50:08 EDT 2021
+// was generated automatically by rusEFI tool  from rusefi_enums.h // by enum2string.jar tool on Sun Aug 08 04:18:47 EDT 2021
 // see also gen_config_and_enums.bat
 
 
@@ -968,6 +968,8 @@ case TT_MIATA_VVT:
   return "TT_MIATA_VVT";
 case TT_MITSUBISHI:
   return "TT_MITSUBISHI";
+case TT_NISSAN_QR25:
+  return "TT_NISSAN_QR25";
 case TT_NISSAN_SR20VE:
   return "TT_NISSAN_SR20VE";
 case TT_NISSAN_SR20VE_360:
