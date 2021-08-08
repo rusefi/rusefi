@@ -66,7 +66,7 @@ static void scheduleTriggerEvents(TriggerWaveform *shape,
 
 
 TEST(nissan, vq_vvt) {
-	WITH_ENGINE_TEST_HELPER (HELLEN_121_NISSAN);
+	WITH_ENGINE_TEST_HELPER (HELLEN_121_NISSAN_6_CYL);
 	engineConfiguration->isIgnitionEnabled = false;
 	engineConfiguration->isInjectionEnabled = false;
 

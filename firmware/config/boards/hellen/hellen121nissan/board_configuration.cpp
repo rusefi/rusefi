@@ -166,11 +166,7 @@ void setBoardDefaultConfiguration(void) {
 	// Bosch VQ40 VR56 VK56 0280158007
 	engineConfiguration->injector.flow = 296.2;
 
-	engineConfiguration->specs.cylindersCount = 6;
-	engineConfiguration->specs.firingOrder = FO_1_2_3_4_5_6;
-	engineConfiguration->specs.displacement = 4;
 	strcpy(CONFIG(engineMake), ENGINE_MAKE_NISSAN);
-	strcpy(CONFIG(engineCode), "VQ");
 
 	engineConfiguration->ignitionMode = IM_INDIVIDUAL_COILS; // IM_WASTED_SPARK
 	engineConfiguration->crankingInjectionMode = IM_SIMULTANEOUS;
