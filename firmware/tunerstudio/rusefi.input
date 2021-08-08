@@ -1772,6 +1772,10 @@ cmd_set_engine_type_ET_MRE_M111						= "@@TS_IO_TEST_COMMAND_char@@\x00\x30@@ET_
 cmd_set_engine_type_hellen_NA6						= "@@TS_IO_TEST_COMMAND_char@@\x00\x30@@ET_HELLEN_NA6_16_hex@@"
 cmd_set_engine_type_hellen_NA94						= "@@TS_IO_TEST_COMMAND_char@@\x00\x30@@ET_HELLEN_NA94_16_hex@@"
 
+cmd_set_engine_type_hellen_nissan_121_4		    	= "@@TS_IO_TEST_COMMAND_char@@\x00\x30@@ET_HELLEN_121_NISSAN_4_CYL_16_hex@@"
+cmd_set_engine_type_hellen_nissan_121_6		    	= "@@TS_IO_TEST_COMMAND_char@@\x00\x30@@ET_HELLEN_121_NISSAN_6_CYL_16_hex@@"
+cmd_set_engine_type_hellen_nissan_121_8		    	= "@@TS_IO_TEST_COMMAND_char@@\x00\x30@@ET_HELLEN_121_NISSAN_8_CYL_16_hex@@"
+
 cmd_set_engine_type_hellen_121_vag_4				= "@@TS_IO_TEST_COMMAND_char@@\x00\x30@@ET_HELLEN_121_VAG_16_hex@@"
 cmd_set_engine_type_hellen_121_vag_5				= "@@TS_IO_TEST_COMMAND_char@@\x00\x30@@ET_HELLEN_121_VAG_5_CYL_16_hex@@"
 cmd_set_engine_type_hellen_121_vag_v6				= "@@TS_IO_TEST_COMMAND_char@@\x00\x30@@ET_HELLEN_121_VAG_V6_CYL_16_hex@@"
@@ -3556,6 +3560,10 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 		
 		commandButton = "Hellen NA6",				cmd_set_engine_type_hellen_NA6@@if_show_HellenNA6_presets
 		commandButton = "Hellen NA8 94-95",			cmd_set_engine_type_hellen_NA94@@if_show_HellenNA6_presets
+
+		commandButton = "Hellen Nissan 4 cylinder",			cmd_set_engine_type_hellen_nissan_121_4@@if_show_Hellen121nissan_presets
+		commandButton = "Hellen Nissan 6 cylinder",			cmd_set_engine_type_hellen_nissan_121_6@@if_show_Hellen121nissan_presets
+		commandButton = "Hellen Nissan 8 cylinder",			cmd_set_engine_type_hellen_nissan_121_8@@if_show_Hellen121nissan_presets
 
 		commandButton = "Hellen 121 VAG i4",			cmd_set_engine_type_hellen_121_vag_4@@if_show_Hellen121vag_presets
 		commandButton = "Hellen 121 VAG i5",			cmd_set_engine_type_hellen_121_vag_5@@if_show_Hellen121vag_presets
