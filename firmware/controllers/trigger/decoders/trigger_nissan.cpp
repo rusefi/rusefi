@@ -145,6 +145,10 @@ void initializeNissanVQ35crank(TriggerWaveform *s) {
 
 void initializeNissanQR25crank(TriggerWaveform *s) {
 	s->initialize(FOUR_STROKE_SYMMETRICAL_CRANK_SENSOR);
+	s->setTriggerSynchronizationGap(0.33);
+	s->setSecondTriggerSynchronizationGap(3);
+
+	s->tdcPosition = 675;
 
 	float currentAngle = 20;
 	for (int i = 0;i < 16;i++) {

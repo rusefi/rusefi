@@ -553,6 +553,9 @@ void TriggerWaveform::initializeTriggerWaveform(operation_mode_e ambiguousOperat
 		break;
 
 	case TT_NISSAN_QR25:
+		initializeNissanQR25crank(this);
+		break;
+
 	case TT_NISSAN_VQ30:
 		initializeNissanVQ30cam(this);
 		break;
