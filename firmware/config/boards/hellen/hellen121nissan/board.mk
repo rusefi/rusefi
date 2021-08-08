@@ -6,7 +6,7 @@ BOARDINC = $(BOARDS_DIR)/hellen/hellen121nissan
 
 # Set this if you want a default engine type other than normal hellen121nissan
 ifeq ($(DEFAULT_ENGINE_TYPE),)
-  DEFAULT_ENGINE_TYPE = -DDEFAULT_ENGINE_TYPE=HELLEN_121_NISSAN
+  DEFAULT_ENGINE_TYPE = -DDEFAULT_ENGINE_TYPE=HELLEN_121_NISSAN_6_CYL
 endif
 
 ifeq ($(LED_CRITICAL_ERROR_BRAIN_PIN),)
