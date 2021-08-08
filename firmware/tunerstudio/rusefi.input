@@ -2266,6 +2266,15 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 		field = "Aux Temperature #2",					auxTempSensor2_adcChannel
 		field = "Aux Fast Analog",						auxFastSensor1_adcChannel
 
+    dialog = allTriggerDebug, "Trigger Debug"
+        field = "trigger 1 debug",                      triggerInputDebugPins1
+        field = "trigger 2 debug",                      triggerInputDebugPins2
+        field = "trigger 3 debug",                      triggerInputDebugPins3
+        field = "cam 1 debug",                          camInputsDebug1
+        field = "cam 2 debug",                          camInputsDebug2
+        field = "cam 3 debug",                          camInputsDebug3
+        field = "cam 4 debug",                          camInputsDebug4
+
 	dialog = allPinsMC33, "MC33816"
 		field = "Chip Select",							mc33816_cs
 		field = rstb,									mc33816_rstb
@@ -2376,6 +2385,7 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 		field = "LCD D6 pin", 							HD44780_db6
 		field = "LCD D7 pin", 							HD44780_db7
 		field = "Debug Trigger Sync", 					debugTriggerSync
+		panel = allTriggerDebug
 		panel = allPinsMC33
 
 	dialog = allPins1_3
@@ -3653,13 +3663,7 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 		field = "use FSIO Table CAN Sniffing Filtering",useFSIOTableForCanSniffingFiltering
 		field = "turbo speed sensor",                   turboSpeedSensorInputPin
 		field = "turbo speed multiplier",               turboSpeedSensorMultiplier
-        field = "trigger 1 debug",                      triggerInputDebugPins1
-        field = "trigger 2 debug",                      triggerInputDebugPins2
-        field = "trigger 3 debug",                      triggerInputDebugPins3
-        field = "cam 1 debug",                          camInputsDebug1
-        field = "cam 2 debug",                          camInputsDebug2
-        field = "cam 3 debug",                          camInputsDebug3
-        field = "cam 4 debug",                          camInputsDebug4
+		panel = allTriggerDebug
 
        help = helpGeneral, "rusEFI General Help"
         webHelp = @@MAIN_HELP_URL@@
