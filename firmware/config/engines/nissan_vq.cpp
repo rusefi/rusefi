@@ -7,7 +7,11 @@
 
 #include "nissan_vq.h"
 
-void setHellen121nissan(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
+void setHellen121nissanQR(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
+
+}
+
+void setHellen121nissanVQ(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	engineConfiguration->trigger.type = TT_NISSAN_VQ35;
 
 	engineConfiguration->vvtMode[0] = VVT_NISSAN_VQ;
