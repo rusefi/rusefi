@@ -31,6 +31,7 @@ public class MiscTest extends RusefiTestBase {
         // You are probably indoors and not on fire
         String message = "mcuTemp is " + mcuTemp;
         assertTrue(message, mcuTemp > 10);
-        assertTrue(message, mcuTemp < 50);
+        // wow sometimes my utility closet is pretty warm?
+        assertTrue(message, mcuTemp < 52);
     }
 }
