@@ -148,7 +148,7 @@ void initializeNissanQR25crank(TriggerWaveform *s) {
 	s->setTriggerSynchronizationGap(0.33);
 	s->setSecondTriggerSynchronizationGap(3);
 
-	s->tdcPosition = 675;
+	s->tdcPosition = 585;
 
 	float currentAngle = 20;
 	for (int i = 0;i < 16;i++) {
