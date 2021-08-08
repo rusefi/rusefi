@@ -143,6 +143,17 @@ void initializeNissanVQ35crank(TriggerWaveform *s) {
 	}
 }
 
+void initializeNissanQR25crank(TriggerWaveform *s) {
+	s->initialize(FOUR_STROKE_SYMMETRICAL_CRANK_SENSOR);
+
+	float currentAngle = 20;
+	for (int i = 0;i < 16;i++) {
+		currentAngle += 10;
+		s->addEventAngle(currentAngle - 5, T_PRIMARY, TV_RISE);
+		s->addEventAngle(currentAngle, T_PRIMARY, TV_FALL);
+	}
+}
+
 static void addvq30tooth(TriggerWaveform *s, float angle) {
 	s->addEvent360(angle - 4, T_PRIMARY, TV_RISE);
 	s->addEvent360(angle, T_PRIMARY, TV_FALL);
