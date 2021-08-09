@@ -11,3 +11,5 @@ include ':models'
 project(':models').projectDir = new File('../java_console/models')
 include ':autoupdate'
 project(':autoupdate').projectDir = new File('../java_console/autoupdate')
+include ':gcc_map_reader'
+project(':gcc_map_reader').projectDir = new File('../java_tools/gcc_map_reader')
