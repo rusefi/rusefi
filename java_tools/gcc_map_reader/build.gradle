@@ -1,0 +1,27 @@
+plugins {
+    id 'java'
+    id 'application'
+}
+
+repositories {
+    mavenCentral()
+}
+
+defaultTasks 'jar'
+
+dependencies {
+    implementation 'junit:junit:4.8.2'
+}
+
+jar {
+    destinationDirectory = file( '$rootDir/../..' )
+    manifest {
+        attributes(
+            'Main-Class': 'rusefi.GccMapReader'
+        )
+    }
+}
+
+run {
+    classpath = files( '$rootDir/../../../java_console_binary/rusefi_console.jar' )
+}
