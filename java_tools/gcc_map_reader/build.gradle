@@ -16,7 +16,6 @@ dependencies {
 }
 
 jar {
-
     destinationDirectory = file( '$rootDir/../..' )
     manifest {
         attributes(
