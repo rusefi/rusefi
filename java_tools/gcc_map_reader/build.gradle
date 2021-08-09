@@ -14,7 +14,6 @@ dependencies {
 }
 
 jar {
-    mainClassName = 'rusefi.GccMapReader'
 
     destinationDirectory = file( '$rootDir/../..' )
     manifest {
