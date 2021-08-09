@@ -3,6 +3,8 @@ plugins {
     id 'application'
 }
 
+mainClassName = 'com.rusefi.Launcher'
+
 repositories {
     mavenCentral()
 }
