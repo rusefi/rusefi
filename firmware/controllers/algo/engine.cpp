@@ -623,7 +623,7 @@ float Engine::getTimeIgnitionSeconds(void) const {
 	// return negative if the ignition is turned off
 	if (ignitionOnTimeNt == 0)
 		return -1;
-	float numSeconds = (float)NT2US(getTimeNowNt() - ignitionOnTimeNt) / 1000000.0f;
+	float numSeconds = (float)NT2US(getTimeNowNt() - ignitionOnTimeNt) / US_PER_SECOND_F;
 	return numSeconds;
 }
 
