@@ -398,8 +398,10 @@ void setDefaultGppwmParameters(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	}
 }
 
-void setDefaultEngineNoiseTable(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+static void setDefaultEngineNoiseTable(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	setRpmTableBin(engineConfiguration->knockNoiseRpmBins, ENGINE_NOISE_CURVE_SIZE);
+
+	engineConfiguration->knockSamplingDuration = 45;
 
 	engineConfiguration->knockNoise[0] = 2; // 800
 	engineConfiguration->knockNoise[1] = 2; // 1700

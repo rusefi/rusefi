@@ -126,8 +126,8 @@ void startKnockSampling(uint8_t cylinderIndex) {
 		return;
 	}
 
-	// Sample for 45 degrees
-	float samplingSeconds = ENGINE(rpmCalculator).oneDegreeUs * 45 * 1e-6;
+	// Sample for XX degrees
+	float samplingSeconds = ENGINE(rpmCalculator).oneDegreeUs * CONFIG(knockSamplingDuration) / US_PER_SECOND_F;
 	constexpr int sampleRate = KNOCK_SAMPLE_RATE;
 	sampleCount = 0xFFFFFFFE & static_cast<size_t>(clampF(100, samplingSeconds * sampleRate, efi::size(sampleBuffer)));
 
@@ -188,6 +188,10 @@ void processLastKnockEvent() {
 		float volts = ratio * sampleBuffer[i];
 
 		float filtered = knockFilter.filter(volts);
+		if (i == localCount - 1 && engineConfiguration->debugMode == DBG_KNOCK) {
+			tsOutputChannels.debugFloatField1 = volts;
+			tsOutputChannels.debugFloatField2 = filtered;
+		}
 
 		sumSq += filtered * filtered;
 	}
