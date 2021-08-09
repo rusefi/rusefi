@@ -22,7 +22,7 @@
     </target>
 
     <target name="run" depends="jar">
-        <java jar="../java_console_binary/rusefi_console.jar" fork="true"/>
+        <java jar="../../java_console_binary/rusefi_console.jar" fork="true"/>
     </target>
 
 </project>
