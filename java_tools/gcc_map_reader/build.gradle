@@ -6,7 +6,7 @@ plugins {
 defaultTasks 'jar'
 
 dependencies {
-    compile fileTree( dir: 'lib', includes: [ 'junit.jar', 'annotations.jar' ] )
+    compileClasspath fileTree( dir: 'lib', includes: [ 'junit.jar', 'annotations.jar' ] )
 }
 
 /*
