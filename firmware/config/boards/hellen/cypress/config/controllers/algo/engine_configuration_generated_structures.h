@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on hellen_cypress_gen_config.bat integration/rusefi_config.txt Mon Aug 09 20:11:36 UTC 2021
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on hellen_cypress_gen_config.bat integration/rusefi_config.txt Mon Aug 09 20:39:26 UTC 2021
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -3314,7 +3314,12 @@ struct engine_configuration_s {
 	units
 	 * offset 2511
 	 */
-	uint8_t unused2508[3];
+	uint8_t unused2508;
+	/**
+	Deg
+	 * offset 2512
+	 */
+	int16_t knockSamplingDuration;
 	/**
 	Hz
 	 * offset 2514
@@ -4300,4 +4305,4 @@ struct persistent_config_s {
 };
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on hellen_cypress_gen_config.bat integration/rusefi_config.txt Mon Aug 09 20:11:36 UTC 2021
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on hellen_cypress_gen_config.bat integration/rusefi_config.txt Mon Aug 09 20:39:26 UTC 2021

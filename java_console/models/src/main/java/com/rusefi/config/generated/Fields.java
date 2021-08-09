@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Mon Aug 09 20:11:31 UTC 2021
+// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Mon Aug 09 20:39:22 UTC 2021
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -1033,6 +1033,7 @@ public class Fields {
 	public static final int knockDetectionWindowStart_offset = 1500;
 	public static final int knockNoise_offset = 1820;
 	public static final int knockNoiseRpmBins_offset = 1852;
+	public static final int knockSamplingDuration_offset = 2512;
 	public static final int knockVThreshold_offset = 1512;
 	public static final int lambdaLoadBins_offset = 18848;
 	public static final int lambdaRpmBins_offset = 18912;
@@ -1277,7 +1278,7 @@ public class Fields {
 	public static final int servoOutputPins8_offset = 3147;
 	public static final int showHumanReadableWarning_offset = 976;
 	public static final int showSdCardWarning_offset = 76;
-	public static final int SIGNATURE_HASH = 340551901;
+	public static final int SIGNATURE_HASH = 725154112;
 	public static final int silentTriggerError_offset = 1464;
 	public static final int slowAdcAlpha_offset = 2088;
 	public static final int sparkDwellRpmBins_offset = 332;
@@ -1584,7 +1585,7 @@ public class Fields {
 	public static final int TS_RESPONSE_UNDERRUN = 0x80;
 	public static final int TS_RESPONSE_UNRECOGNIZED_COMMAND = 0x83;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI 2021.08.09.all.340551901";
+	public static final String TS_SIGNATURE = "rusEFI 2021.08.09.all.725154112";
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final char TS_TEST_COMMAND = 't';
 	public static final int TT_TT_1_16 = 50;
@@ -2687,6 +2688,8 @@ public class Fields {
 	public static final Field AUXTEMPSENSOR2_ADCCHANNEL = Field.create("AUXTEMPSENSOR2_ADCCHANNEL", 2504, FieldType.INT8, adc_channel_e);
 	public static final Field APPLYNONLINEARBELOWPULSE = Field.create("APPLYNONLINEARBELOWPULSE", 2508, FieldType.INT16);
 	public static final Field INJECTORNONLINEARMODE = Field.create("INJECTORNONLINEARMODE", 2510, FieldType.INT8);
+	public static final Field UNUSED2508 = Field.create("UNUSED2508", 2511, FieldType.INT8);
+	public static final Field KNOCKSAMPLINGDURATION = Field.create("KNOCKSAMPLINGDURATION", 2512, FieldType.INT16);
 	public static final Field ETBFREQ = Field.create("ETBFREQ", 2514, FieldType.INT16);
 	public static final Field ETBWASTEGATEPID_PFACTOR = Field.create("ETBWASTEGATEPID_PFACTOR", 2516, FieldType.FLOAT);
 	public static final Field ETBWASTEGATEPID_IFACTOR = Field.create("ETBWASTEGATEPID_IFACTOR", 2520, FieldType.FLOAT);
@@ -3819,6 +3822,8 @@ public class Fields {
 	AUXTEMPSENSOR2_ADCCHANNEL,
 	APPLYNONLINEARBELOWPULSE,
 	INJECTORNONLINEARMODE,
+	UNUSED2508,
+	KNOCKSAMPLINGDURATION,
 	ETBFREQ,
 	ETBWASTEGATEPID_PFACTOR,
 	ETBWASTEGATEPID_IFACTOR,

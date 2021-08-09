@@ -1043,6 +1043,7 @@
 #define knockDetectionWindowStart_offset 1500
 #define knockNoise_offset 1820
 #define knockNoiseRpmBins_offset 1852
+#define knockSamplingDuration_offset 2504
 #define knockVThreshold_offset 1512
 #define lambdaLoadBins_offset 18820
 #define lambdaRpmBins_offset 18884
@@ -1306,7 +1307,7 @@
 #define showSdCardWarning_offset 76
 #define SIGNATURE_BOARD kin
 #define SIGNATURE_DATE 2021.08.09
-#define SIGNATURE_HASH 2845147121
+#define SIGNATURE_HASH 2531389036
 #define silentTriggerError_offset 1464
 #define slowAdcAlpha_offset 2088
 #define sparkDwellRpmBins_offset 332
@@ -1662,7 +1663,7 @@
 #define ts_show_spi true
 #define ts_show_trigger_comparator true
 #define ts_show_tunerstudio_port true
-#define TS_SIGNATURE "rusEFI 2021.08.09.kin.2845147121"
+#define TS_SIGNATURE "rusEFI 2021.08.09.kin.2531389036"
 #define TS_SINGLE_WRITE_COMMAND 'W'
 #define TS_SINGLE_WRITE_COMMAND_char W
 #define TS_TEST_COMMAND 't'
