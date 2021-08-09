@@ -9,20 +9,6 @@ dependencies {
     compileClasspath fileTree( dir: 'lib', includes: [ 'junit.jar', 'annotations.jar' ] )
 }
 
-/*
-  The deprecated now building by Ant script put the
-  generated classes into folder 'build/classes/<package-name>'.
-  But Gradle by default put the generated classes to
-  'build/classes/main/java'.
-  So, these lines are required to keep the old file structure for
-  generated binaries.
-*/
-sourceSets {
-    main {
-        java.outputDir = file( 'build/classes' )
-    }
-}
-
 jar {
     destinationDirectory = file( '$rootDir/../..' )
     manifest {
