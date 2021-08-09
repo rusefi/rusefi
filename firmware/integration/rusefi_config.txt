@@ -1392,7 +1392,8 @@ tle8888_mode_e tle8888mode;
 	uint16_t applyNonlinearBelowPulse;+Apply nonlinearity correction below a pulse of this duration. Pulses longer than this duration will receive no adjustment.;"ms", {1/1000}, 0, 0, 30, 3
 	custom InjectorNonlinearMode 1 bits, U08, @OFFSET@, [0:0], "None", "Polynomial"
 	InjectorNonlinearMode injectorNonlinearMode
-	uint8_t[3] unused2508;;"units", 1, 0, -20, 100, 0
+	uint8_t unused2508;;"units", 1, 0, -20, 100, 0
+	int16_t knockSamplingDuration;;"Deg", 1, 0, 0, 720, 0
 	int16_t etbFreq;;"Hz", 1, 0, 0, @@ETB_HW_MAX_FREQUENCY@@, 0
 	pid_s etbWastegatePid;
 	uint8_t[4] unused2536;;"units", 1, 0, -20, 100, 0
