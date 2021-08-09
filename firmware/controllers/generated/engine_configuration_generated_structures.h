@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Sun Aug 08 14:53:38 UTC 2021
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Mon Aug 09 20:11:31 UTC 2021
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -1925,6 +1925,7 @@ struct engine_configuration_s {
 	offset 976 bit 6 */
 	bool launchDisableBySpeed : 1;
 	/**
+	 * Read VSS from OEM CAN bus according to selected CAN vehicle configuration.
 	offset 976 bit 7 */
 	bool enableCanVss : 1;
 	/**
@@ -4299,4 +4300,4 @@ struct persistent_config_s {
 };
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Sun Aug 08 14:53:38 UTC 2021
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Mon Aug 09 20:11:31 UTC 2021
