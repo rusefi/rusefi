@@ -19,6 +19,7 @@ static Biquad knockFilter;
 static volatile bool knockIsSampling = false;
 static volatile bool knockNeedsProcess = false;
 static volatile size_t sampleCount = 0;
+static int cylinderIndexCopy;
 
 chibios_rt::BinarySemaphore knockSem(/* taken =*/ true);
 
@@ -105,7 +106,7 @@ const ADCConversionGroup* getConversionGroup(uint8_t cylinderIndex) {
 	return &adcConvGroupCh1;
 }
 
-void startKnockSampling(uint8_t cylinderIndex) {
+static void startKnockSampling(uint8_t cylinderIndex) {
 	if (!CONFIG(enableSoftwareKnock)) {
 		return;
 	}
@@ -139,6 +140,20 @@ void startKnockSampling(uint8_t cylinderIndex) {
 
 	adcStartConversionI(&KNOCK_ADC, conversionGroup, sampleBuffer, sampleCount);
 	lastKnockSampleTime = getTimeNowNt();
+}
+
+static void startKnockSamplingNoParam(void *arg) {
+	// ugly as hell but that's error: cast between incompatible function types from 'void (*)(uint8_t)' {aka 'void (*)(unsigned char)'} to 'schfunc_t' {aka 'void (*)(void*)'} [-Werror=cast-function-type]
+	startKnockSampling(cylinderIndexCopy);
+}
+
+static scheduling_s startSampling;
+
+void knockSamplingCallback(uint8_t cylinderIndex, efitick_t nowNt) {
+	cylinderIndexCopy = cylinderIndex;
+
+	scheduleByAngle(&startSampling, nowNt,
+			/*angle*/CONFIG(knockDetectionWindowStart), startKnockSamplingNoParam PASS_ENGINE_PARAMETER_SUFFIX);
 }
 
 class KnockThread : public ThreadController<256> {
