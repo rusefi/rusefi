@@ -105,7 +105,13 @@ int eraseAndFlashCopy(flashaddr_t storageAddress, const TStorage& data) {
 	return err;
 }
 
+bool burnWithoutFlash = false;
+
 void writeToFlashNow(void) {
+	if (burnWithoutFlash) {
+		needToWriteConfiguration = false;
+		return;
+	}
 	efiPrintf("Writing pending configuration...");
 
 	// Set up the container
