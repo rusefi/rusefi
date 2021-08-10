@@ -269,7 +269,7 @@ static void startInputDriver(const char *msg, /*nullable*/digital_input_s *hw) {
 digital_input_s* startDigitalCapture(const char *msg, brain_pin_e brainPin) {
 	ICUDriver *driver = getInputCaptureDriver(msg, brainPin);
 	if (!driver) {
-		firmwareError(CUSTOM_ERR_INVALID_INPUT_ICU_PIN, "Invalid ICU input pin %s", hwPortname(brainPin));
+		firmwareError(CUSTOM_ERR_INVALID_INPUT_ICU_PIN, "Invalid %s input pin: %s", msg, hwPortname(brainPin));
 		return nullptr;
 	}
 
