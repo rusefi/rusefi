@@ -1907,10 +1907,10 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 	    field = "Cam mode (exhaust cams)",			    vvtMode2, {trigger_type != @@TT_TT_MAZDA_MIATA_NA@@}
 	    field = "VVT sync edge",	    				vvtCamSensorUseRise, {trigger_type != @@TT_TT_MAZDA_MIATA_NA@@}
 	    field = "#Set offset so VVT indicates 0 degrees in default position"
-		field = "VVT offset bank 1 intake",				vvtOffsets1
-		field = "VVT offset bank 1 exhaust",			vvtOffsets2
-		field = "VVT offset bank 2 intake",			    vvtOffsets3
-		field = "VVT offset bank 2 exhaust",			vvtOffsets4
+		field = "VVT offset bank 1 intake",				vvtOffsets1, { camInputs1 != 0 }
+		field = "VVT offset bank 1 exhaust",			vvtOffsets2, { camInputs2 != 0 }
+		field = "VVT offset bank 2 intake",			    vvtOffsets3, { camInputs3 != 0 }
+		field = "VVT offset bank 2 exhaust",			vvtOffsets4, { camInputs4 != 0 }
 	    field = "Print verbose VVT sync details to console",verboseVVTDecoding
 	    field = "Print verbose trigger sync to console",   verboseTriggerSynchDetails
 	    field = "Do not print messages in case of sync error",  silentTriggerError
