@@ -451,6 +451,7 @@
 #define ET_HELLEN_NA94 80
 #define ET_HELLEN_NB1 83
 #define ET_HELLEN_NB2 69
+#define ET_HELLEN_NB2_36 86
 #define ET_MIATA_TCU_PROTEUS 1
 #define ET_MRE_BODY_CONTROL 23
 #define ET_MRE_DEFAULTS 60
@@ -1325,8 +1326,8 @@
 #define showHumanReadableWarning_offset 976
 #define showSdCardWarning_offset 76
 #define SIGNATURE_BOARD hellen_cypress
-#define SIGNATURE_DATE 2021.08.09
-#define SIGNATURE_HASH 1766072976
+#define SIGNATURE_DATE 2021.08.10
+#define SIGNATURE_HASH 2790526944
 #define silentTriggerError_offset 1464
 #define slowAdcAlpha_offset 2088
 #define sparkDwellRpmBins_offset 332
@@ -1682,7 +1683,7 @@
 #define ts_show_spi true
 #define ts_show_trigger_comparator false
 #define ts_show_tunerstudio_port true
-#define TS_SIGNATURE "rusEFI 2021.08.09.hellen_cypress.1766072976"
+#define TS_SIGNATURE "rusEFI 2021.08.10.hellen_cypress.2790526944"
 #define TS_SINGLE_WRITE_COMMAND 'W'
 #define TS_SINGLE_WRITE_COMMAND_char W
 #define TS_TEST_COMMAND 't'
