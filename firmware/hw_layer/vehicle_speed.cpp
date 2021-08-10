@@ -93,7 +93,9 @@ void startVSSPins(void) {
 #elif HAL_USE_ICU
 	digital_input_s* vehicleSpeedInput = startDigitalCapture("VSS", CONFIG(vehicleSpeedSensorInputPin));
 
-	vehicleSpeedInput->widthListeners.registerCallback((VoidInt) vsAnaWidthCallback, nullptr);
+	if (vehicleSpeedInput) {
+		vehicleSpeedInput->widthListeners.registerCallback((VoidInt) vsAnaWidthCallback, nullptr);
+	}
 #else
 	#error "HAL_USE_ICU or HAL_VSS_USE_PAL should be enabled to use EFI_VEHICLE_SPEED"
 #endif /* HAL_VSS_USE_PAL, HAL_USE_ICU */

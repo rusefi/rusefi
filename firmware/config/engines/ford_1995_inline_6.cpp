@@ -92,6 +92,4 @@ void setFordInline6(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 
 	engineConfiguration->triggerInputPins[0] = GPIOA_8;
 	engineConfiguration->triggerInputPins[1] = GPIOA_5;
-	engineConfiguration->logicAnalyzerPins[0] = GPIOC_6;
-	engineConfiguration->logicAnalyzerPins[1] = GPIOE_5;
 }
