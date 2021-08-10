@@ -689,13 +689,13 @@ void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels DECLARE_
 	tsOutputChannels->isCylinderCleanupActivated = engine->isCylinderCleanupMode;
 
 #if EFI_VEHICLE_SPEED
-	float vehicleSpeed = getVehicleSpeed();
+	float vehicleSpeed = Sensor::get(SensorType::VehicleSpeed).value_or(0);
 	tsOutputChannels->vehicleSpeedKph = vehicleSpeed;
 	tsOutputChannels->speedToRpmRatio = vehicleSpeed / rpm;
 
 #endif /* EFI_VEHICLE_SPEED */
 #endif /* EFI_PROD_CODE */
-
+	
 	tsOutputChannels->fuelFlowRate = engine->engineState.fuelConsumption.getConsumptionGramPerSecond();
 	tsOutputChannels->totalFuelConsumption = engine->engineState.fuelConsumption.getConsumedGrams();
 
