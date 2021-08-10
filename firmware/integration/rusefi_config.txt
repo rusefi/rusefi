@@ -453,6 +453,7 @@ end_struct
 #define TT_TT_VVT_NISSAN_VQ35 59
 #define TT_TT_NISSAN_VQ30 60
 #define TT_TT_NISSAN_QR25 61
+#define TT_TT_TEMP_62 62
 
 ! todo https://github.com/rusefi/rusefi/issues/2102
 #define DBG_DBG_LOGIC_ANALYZER 45
