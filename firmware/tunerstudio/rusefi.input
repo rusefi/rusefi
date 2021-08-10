@@ -2819,6 +2819,7 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 		field = "Enable",				enableSoftwareKnock
 		field = "Cylinder Bore",			cylinderBore
 		field = "Knock filter frequency",	knockBandCustom, {enableSoftwareKnock}
+		field = "knockDetectionWindowStart",knockDetectionWindowStart, {enableSoftwareKnock}
 		field = "knockSamplingDuration",    knockSamplingDuration, {enableSoftwareKnock}
 		field = ""
 		field = "Select the nearest sensor for each cylinder"
