@@ -1730,6 +1730,7 @@ cmb_etb_auto_calibrate_2     = "@@TS_IO_TEST_COMMAND_char@@@@CMD_TS_X14_16_hex@@
 cmd_wideband_firmare_update  = "@@TS_IO_TEST_COMMAND_char@@@@CMD_TS_X14_16_hex@@\x00\x12"
 cmd_enable_ext_stim          = "@@TS_IO_TEST_COMMAND_char@@@@CMD_TS_X14_16_hex@@\x00\x13"
 cmd_nDBANK                   = "@@TS_IO_TEST_COMMAND_char@@@@CMD_TS_X14_16_hex@@\x00\x14"@@if_ts_show_f7_presets
+cmd_burn_without_flash       = "@@TS_IO_TEST_COMMAND_char@@@@CMD_TS_X14_16_hex@@\x00\x15"
 
 cmd_set_wideband_idx_0       = "@@TS_IO_TEST_COMMAND_char@@\x00\x15\x00\x00"
 cmd_set_wideband_idx_1       = "@@TS_IO_TEST_COMMAND_char@@\x00\x15\x00\x01"
@@ -3524,6 +3525,7 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 		commandButton = "Reset ECU", cmd_reset_controller
 		commandButton = "Reset to DFU", cmd_dfu
 		commandButton = "F7 nDBANK fix", cmd_nDBANK@@if_ts_show_f7_presets
+		commandButton = "No flash Burn mode", cmd_burn_without_flash
 
 	; bench test	
 	dialog = ioTest, "Bench Test & Commands", xAxis
