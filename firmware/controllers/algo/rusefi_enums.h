@@ -210,6 +210,8 @@ typedef enum {
 	HELLEN_154_HYUNDAI = ET_HELLEN_154_HYUNDAI,
 	HELLEN_121_NISSAN_4_CYL = ET_HELLEN_121_NISSAN_4_CYL,
 
+	HELLEN_NB2_36 = ET_HELLEN_NB2_36,
+
 	/**
 	 * this configuration has as few pins configured as possible
 	 */
