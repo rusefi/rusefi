@@ -1052,6 +1052,8 @@ const command_f_s commandsF[] = {
 		{"fsio_curve_2_value", setFsioCurve2Value},
 #if EFI_PROD_CODE
 #if EFI_VEHICLE_SPEED
+		#warning DEPRECATED SOON
+		//todo: This function become deprecated soon
 		{"mock_vehicle_speed", setMockVehicleSpeed},
 #endif /* EFI_VEHICLE_SPEED */
 #if EFI_IDLE_CONTROL
