@@ -15,3 +15,5 @@ include ':gcc_map_reader'
 project(':gcc_map_reader').projectDir = new File('../java_tools/gcc_map_reader')
 include ':logicdata2c'
 project(':logicdata2c').projectDir = new File('../java_tools/logicdata2c')
+include ':version2header'
+project(':version2header').projectDir = new File('../java_tools/version2header')
