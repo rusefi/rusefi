@@ -2,7 +2,7 @@
 
 #include "fuel_pump.h"
 
-auto timeSinceBoot(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+static auto timeSinceBoot(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 #if EFI_MAIN_RELAY_CONTROL
 	// in main relay control mode, we return the number of seconds since the ignition is turned on
 	// (or negative if the ignition key is switched off)
